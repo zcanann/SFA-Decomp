@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
 
 extern uint FUN_80017690();
@@ -412,7 +413,7 @@ int nw_levcontrol_getExtraSize(void)
   return 0x14;
 }
 
-extern void** gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void   envFxActFn_800887f8(s32);
 extern void   gameTimerStop(void);
 
@@ -425,7 +426,7 @@ extern void   gameTimerStop(void);
 void nw_levcontrol_free(s8* obj)
 {
     s8 v = obj[0xac];
-    int ret = (*(int(**)(s32, int))((char*)*gMapEventInterface + 0x4c))((s32)v, 0);
+    int ret = (*gMapEventInterface)->getAnimEvent((s32)v, 0);
     if ((u8)ret == 0) {
         envFxActFn_800887f8(0);
     }

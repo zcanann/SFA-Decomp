@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/baddie/chuka.h"
 #include "main/dll/baddie/chukachuck.h"
 
@@ -15,7 +16,7 @@ u8 gDfpfloorbarModeTable[12] = {
     0, 0, 0, 0,
     0, 0, 0, 0,
 };
-extern undefined4 *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E6408;
 extern f32 lbl_803E640C;
@@ -57,7 +58,7 @@ void dfpfloorbar_update(int param_1)
     f32 zDelta;
 
     mode = *(s8 *)(param_1 + 0xac);
-    mode = (*(code *)(*gMapEventInterface + 0x40))(mode);
+    mode = (*gMapEventInterface)->getMode(mode);
 
     switch ((u8)mode) {
         case 1:
