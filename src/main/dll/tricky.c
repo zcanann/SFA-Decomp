@@ -2955,6 +2955,21 @@ extern void gameTextSetColor(int, int, int, int);
     drawViewFinderLine((u8 *)&_c, (B) + _sx, (A) - _cx, (B) - _sx, (A) + _cx, (C) - _sx, (A) + _cx, (C) + _sx, (A) - _cx); \
 } while (0)
 
+#define VBLK(gA1, gA2, A, B, C) do { \
+    GXColor _c; \
+    s16 _a; \
+    f32 _r, _cs, _sn, _cx, _sx; \
+    *(int *)&_c = lbl_803E1E2C; \
+    _c.a = (u8)(int)(hudElementOpacity * lbl_803DD7F0); \
+    _a = (s16)getAngle(gA1, gA2); \
+    _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94; \
+    _cs = fn_80293E80(_r); \
+    _sn = sin(_r); \
+    _cx = lbl_803E1E68 * _cs; \
+    _sx = lbl_803E1E68 * _sn; \
+    drawViewFinderLine((u8 *)&_c, (A) + _sx, (B) - _cx, (A) - _sx, (B) + _cx, (A) - _sx, (C) + _cx, (A) + _sx, (C) - _cx); \
+} while (0)
+
 void drawViewFinderHud(void) {
     f32 fovY;
     int slot;
@@ -2979,10 +2994,10 @@ void drawViewFinderHud(void) {
     VFTICK(lbl_803E1ED8, lbl_803E1E3C, lbl_803E1ECC, lbl_803E1EDC, lbl_803E1EE0);
     VFTICK(lbl_803E1EC4, lbl_803E1E3C, lbl_803E1EE4, lbl_803E1ED0, lbl_803E1ED4);
     VFTICK(lbl_803E1ED8, lbl_803E1E3C, lbl_803E1EE4, lbl_803E1EDC, lbl_803E1EE0);
-    VFTICK(lbl_803E1E3C, lbl_803E1EC4, lbl_803E1ED0, lbl_803E1ECC, lbl_803E1EE8);
-    VFTICK(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1ED0, lbl_803E1EE4, lbl_803E1ED4);
-    VFTICK(lbl_803E1E3C, lbl_803E1EC4, lbl_803E1EDC, lbl_803E1ECC, lbl_803E1EE8);
-    VFTICK(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE4, lbl_803E1ED4);
+    VBLK(lbl_803E1E3C, lbl_803E1EC4, lbl_803E1ED0, lbl_803E1ECC, lbl_803E1EE8);
+    VBLK(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1ED0, lbl_803E1EE4, lbl_803E1ED4);
+    VBLK(lbl_803E1E3C, lbl_803E1EC4, lbl_803E1EDC, lbl_803E1ECC, lbl_803E1EE8);
+    VBLK(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE4, lbl_803E1ED4);
 
     {
         char buf[64];
