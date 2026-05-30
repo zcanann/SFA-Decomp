@@ -2267,3 +2267,82 @@ void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, int p5, int p6, in
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct { u8 r, g, b, a; } GXColor;
+extern void GXSetTevColor(int id, GXColor c);
+extern void GXSetTevKColor(int id, GXColor c);
+extern void GXLoadPosMtxImm(void *m, int id);
+extern void GXLoadNrmMtxImm(void *m, int id);
+extern void GXSetCurrentMtx(int id);
+extern void GXSetNumTexGens(int n);
+extern void GXSetNumIndStages(int n);
+extern void GXSetNumChans(int n);
+extern void textureFn_8004c264(void *this, int x);
+extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
+extern void GXSetTevKColorSel(int stage, int sel);
+extern void GXSetTevDirect(int stage);
+extern void GXSetTevOrder(int stage, int a, int b, int c);
+extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevSwapMode(int stage, int a, int b);
+extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
+extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
+extern void GXSetNumTevStages(int n);
+extern void GXSetCullMode(int m);
+extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int a, int b);
+extern int lbl_803E1E34;
+extern int lbl_803E1E38;
+extern char lbl_803A8830[];
+#pragma scheduling off
+#pragma peephole off
+void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c) {
+    GXColor colA = *(GXColor *)&lbl_803E1E34;
+    GXColor colB = *(GXColor *)&lbl_803E1E38;
+    colA.a = (u8)a;
+    GXSetTevColor(1, colA);
+    GXLoadPosMtxImm(lbl_803A8830, 0);
+    GXLoadNrmMtxImm(lbl_803A8830, 0);
+    GXSetCurrentMtx(0);
+    GXSetNumTexGens(1);
+    GXSetNumIndStages(0);
+    GXSetNumChans(0);
+    textureFn_8004c264(this, 0);
+    GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
+    GXSetTevKColorSel(0, 0xc);
+    GXSetTevKColor(0, colB);
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 0, 0, 0xff);
+    GXSetTevColorIn(0, 2, 8, 0xe, 0xf);
+    GXSetTevAlphaIn(0, 7, 1, 4, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    if (*(void **)((char *)this + 0x50) != NULL) {
+        GXSetTevDirect(1);
+        GXSetTevOrder(1, 0, 1, 0xff);
+        GXSetTevColorIn(1, 0xf, 0xf, 0xf, 0);
+        GXSetTevAlphaIn(1, 7, 1, 4, 7);
+        GXSetTevSwapMode(1, 0, 0);
+        GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+        GXSetNumTevStages(2);
+    } else {
+        GXSetNumTevStages(1);
+    }
+    GXSetCullMode(0);
+    if ((u8)c != 0) {
+        GXSetBlendMode(1, 4, 1, 5);
+    } else {
+        GXSetBlendMode(1, 4, 5, 5);
+    }
+    gxSetZMode_(0, 7, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xd, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
