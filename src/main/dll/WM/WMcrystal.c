@@ -63,9 +63,18 @@ extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
 extern void objLightFn_8009a1dc(int obj, f32 scale, void *params, int mode, int arg);
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
+extern u8 Obj_IsLoadingLocked(void);
+extern u8 *Obj_AllocObjectSetup(int size, int objectId);
+extern int Obj_SetupObject(u8 *setup, int mode, int mapLayer, int objIndex, int parent);
 extern u8 fn_801DD1A8(ScTotemPuzzleObject *obj, ScTotemPuzzleState *state);
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
+extern f32 fn_80293E80(f32 angle);
+extern f32 sin(f32 angle);
+extern u16 lbl_80327A60[];
+extern u16 lbl_80327A70[];
+extern f32 lbl_803E5640;
+extern f32 lbl_803E5644;
 
 #define SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE 0x3c1
 #define SC_TOTEMPUZZLE_PEER_OBJECT_TYPE 0x282
@@ -81,6 +90,12 @@ extern int GameBit_Set(int eventId, int value);
 #define SC_TOTEMPUZZLE_WRONG_SFX_ID 0x487
 #define SC_TOTEMPUZZLE_COMPLETE_SFX_ID 0x7e
 #define SC_TOTEMPUZZLE_PROGRESS_SFX_ID 0x409
+
+#define SC_TOTEMBOND_ORB_COUNT 8
+#define SC_TOTEMBOND_ORB_SETUP_SIZE 0x38
+#define SC_TOTEMBOND_ORB_OBJECT_ID 0x27b
+#define SC_TOTEMBOND_ORB_TRIGGER_EVENT 0x64c
+#define SC_TOTEMBOND_ORB_ANGLE_STEP 0x2000
 
 /*
  * --INFO--
@@ -261,58 +276,49 @@ void FUN_801dd6e4(undefined2 *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sc_totembond_spawnGameBitOrbs(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *state,f32 radius)
 {
-  short *psVar1;
-  uint uVar2;
-  undefined2 *puVar3;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  char cVar4;
-  char cVar5;
-  int iVar6;
-  int iVar7;
-  double extraout_f1;
-  double dVar8;
-  double dVar9;
-  
-  psVar1 = (short *)FUN_80286830();
-  dVar9 = extraout_f1;
-  uVar2 = FUN_80017ae8();
-  if ((uVar2 & 0xff) != 0) {
-    cVar4 = '\x01';
-    iVar7 = 0;
-    for (cVar5 = '\0'; cVar5 < '\b'; cVar5 = cVar5 + '\x01') {
-      iVar6 = *(int *)(psVar1 + 0x26);
-      puVar3 = FUN_80017aa4(0x38,0x27b);
-      dVar8 = (double)FUN_80293f90();
-      *(float *)(puVar3 + 4) = (float)(dVar9 * dVar8 + (double)*(float *)(psVar1 + 6));
-      *(undefined4 *)(puVar3 + 6) = *(undefined4 *)(psVar1 + 8);
-      dVar8 = (double)FUN_80294964();
-      *(float *)(puVar3 + 8) = (float)(dVar9 * dVar8 + (double)*(float *)(psVar1 + 10));
-      *(undefined *)(puVar3 + 2) = *(undefined *)(iVar6 + 4);
-      *(byte *)((int)puVar3 + 5) = *(byte *)(iVar6 + 5) & 0xfe | 4;
-      *(undefined *)(puVar3 + 3) = *(undefined *)(iVar6 + 6);
-      *(undefined *)((int)puVar3 + 7) = 0x1e;
-      puVar3[0xc] = 0xffff;
-      puVar3[0xd] = 0x64c;
-      puVar3[0xe] = (&DAT_803286b0)[cVar4];
-      puVar3[0x18] = *(undefined2 *)(cVar4 * 2 + -0x7fcd7960);
-      *(char *)(puVar3 + 0x15) = (char)((uint)(*psVar1 + iVar7 + 0x8000) >> 8);
-      *(undefined *)(puVar3 + 0x19) = 1;
-      FUN_80017ae4(dVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,5,0xff,
-                   0xffffffff,(uint *)0x0,in_r8,in_r9,in_r10);
-      cVar4 = cVar4 + '\x01';
-      if ('\a' < cVar4) {
-        cVar4 = '\0';
+  u8 *setup;
+  u8 *definition;
+  s32 angleOffset;
+  s8 orbIndex;
+  s8 i;
+  f32 angleScale;
+  f32 angleDivisor;
+
+  if (Obj_IsLoadingLocked() != 0) {
+    i = 0;
+    orbIndex = 1;
+    angleOffset = 0;
+    angleScale = lbl_803E5640;
+    angleDivisor = lbl_803E5644;
+    while (i < SC_TOTEMBOND_ORB_COUNT) {
+      definition = obj->definition;
+      setup = Obj_AllocObjectSetup(SC_TOTEMBOND_ORB_SETUP_SIZE,SC_TOTEMBOND_ORB_OBJECT_ID);
+      *(f32 *)(setup + 0x08) = radius * fn_80293E80(
+          (angleScale * (f32)(s32)(obj->yaw + angleOffset)) / angleDivisor) + obj->x;
+      *(f32 *)(setup + 0x0c) = obj->y;
+      *(f32 *)(setup + 0x10) = radius * sin(
+          (angleScale * (f32)(s32)(obj->yaw + angleOffset)) / angleDivisor) + obj->z;
+      setup[0x04] = definition[0x04];
+      setup[0x05] = (definition[0x05] & ~1) | 4;
+      setup[0x06] = definition[0x06];
+      setup[0x07] = 0x1e;
+      *(s16 *)(setup + 0x18) = -1;
+      *(s16 *)(setup + 0x1a) = SC_TOTEMBOND_ORB_TRIGGER_EVENT;
+      *(s16 *)(setup + 0x1c) = (s16)lbl_80327A70[(s8)orbIndex];
+      *(s16 *)(setup + 0x30) = (s16)lbl_80327A60[(s8)orbIndex];
+      *(s8 *)(setup + 0x2a) = (s8)(((obj->yaw + 0x8000) + angleOffset) >> 8);
+      setup[0x32] = 1;
+      Obj_SetupObject(setup,5,-1,-1,0);
+      orbIndex++;
+      if (orbIndex > 7) {
+        orbIndex = 0;
       }
-      iVar7 = iVar7 + 0x2000;
+      angleOffset += SC_TOTEMBOND_ORB_ANGLE_STEP;
+      i++;
     }
   }
-  FUN_8028687c();
-  return;
 }
 
 /*
