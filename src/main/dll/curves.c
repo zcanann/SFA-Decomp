@@ -92,6 +92,7 @@ extern f32 lbl_803E0680;
 extern f32 lbl_803E0684;
 extern f32 lbl_803E0688;
 extern f32 lbl_803E0690;
+extern f32 lbl_803E06A0;
 extern f32 lbl_803E06A4;
 extern f32 lbl_803E06A8;
 extern f32 lbl_803E06B8;
@@ -3079,6 +3080,49 @@ void fn_800E5CBC(short *param_1,int param_2)
     *(float *)(param_2 + 0x1a8) = fVar1;
   }
   return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_800E5E38
+ * EN v1.0 Address: 0x800E5E38
+ * EN v1.0 Size: 228b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_800E5E38(int obj,u32 *state)
+{
+  u32 hitCount;
+  int hitIndex;
+  f32 currentY;
+  f32 window;
+  RomCurvePoint *point;
+
+  point = curves_getCurves(state[2],state[4],obj,&hitCount,0);
+  hitIndex = hitCount - 1;
+  currentY = *(f32 *)(obj + 0x1c);
+  window = lbl_803E06A0;
+  point = point + hitIndex;
+  while (hitIndex >= 0) {
+    if ((s8)point->type != 0xe) {
+      if ((currentY <= point->x) && (currentY >= (point->x - window))) {
+        *(f32 *)(obj + 0x1c) = point->x;
+        *(f32 *)((u8 *)state + 0x1a0) = point->y;
+        *(f32 *)((u8 *)state + 0x1a4) = point->z;
+        *(f32 *)((u8 *)state + 0x1a8) = point->w;
+        *(s8 *)((u8 *)state + 0x260) = *(s8 *)((u8 *)state + 0x260) | 0x11;
+        *(u8 *)((u8 *)state + 0x261) = *(u8 *)((u8 *)state + 0x261) + 1;
+      }
+      window = lbl_803E0688;
+    }
+    point--;
+    hitIndex--;
+  }
 }
 
 /*
