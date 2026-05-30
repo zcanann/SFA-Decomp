@@ -86,6 +86,7 @@ extern f32 lbl_803E067C;
 extern f32 lbl_803E0680;
 extern f32 lbl_803E0684;
 extern f32 lbl_803E0688;
+extern f32 lbl_803E0690;
 extern f32 lbl_803E12C4;
 extern f32 lbl_803E12D8;
 extern f32 lbl_803E12DC;
@@ -116,6 +117,15 @@ typedef struct CurvesHitScratch {
   u8 type;
   u8 unk55[0x13];
 } CurvesHitScratch;
+
+typedef struct CurvesTransformScratch {
+  s16 angles[3];
+  s16 pad06;
+  f32 scale;
+  f32 x;
+  f32 y;
+  f32 z;
+} CurvesTransformScratch;
 
 static inline u32 RomCurve_GetId(RomCurveDef *curve) {
   return curve->id;
@@ -2888,104 +2898,107 @@ void fn_800E56A4(int obj,f32 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800E58FC(void)
+void fn_800E58FC(int obj,f32 *state)
 {
-  float fVar1;
-  float fVar2;
-  int iVar3;
-  short *psVar4;
-  uint *puVar5;
-  int iVar6;
-  uint *puVar7;
-  uint *puVar8;
-  short sVar9;
-  float *pfVar10;
-  float *pfVar11;
-  float *pfVar12;
-  undefined8 uVar13;
-  float local_b8 [4];
-  float local_a8 [4];
-  float local_98 [4];
-  short local_88;
-  short local_86;
-  short local_84;
-  float local_80;
-  float local_7c;
-  float local_78;
-  float local_74;
-  float afStack_70 [16];
-  undefined4 local_30;
-  int iStack_2c;
-  
-  uVar13 = FUN_80286834();
-  psVar4 = (short *)((ulonglong)uVar13 >> 0x20);
-  puVar7 = (uint *)uVar13;
-  puVar7[0x68] = puVar7[0x1a];
-  puVar7[0x69] = puVar7[0x1b];
-  puVar7[0x6a] = puVar7[0x1c];
-  fVar2 = lbl_803E12E8;
-  iVar3 = (int)(uint)*(byte *)(puVar7 + 0x97) >> 4;
-  if ((iVar3 == 2) || (iVar3 == 4)) {
-    *(float *)(psVar4 + 0xc) = lbl_803E12E8;
-    *(float *)(psVar4 + 0xe) = fVar2;
-    *(float *)(psVar4 + 0x10) = fVar2;
-    puVar5 = puVar7;
-    puVar8 = puVar7;
-    for (sVar9 = 0; fVar2 = lbl_803E130C, (int)sVar9 < iVar3 * 3; sVar9 = sVar9 + 3) {
-      *(float *)(psVar4 + 0xc) = *(float *)(psVar4 + 0xc) + (float)puVar5[2];
-      *(float *)(psVar4 + 0xe) = *(float *)(psVar4 + 0xe) + (float)puVar8[3];
-      *(float *)(psVar4 + 0x10) = *(float *)(psVar4 + 0x10) + (float)puVar8[4];
-      puVar5 = puVar5 + 3;
-      puVar8 = puVar8 + 3;
+  CurvesTransformScratch transform;
+  f32 localX[4];
+  f32 localY[4];
+  f32 localZ[4];
+  f32 matrix[16];
+  f32 averageScale;
+  f32 zero;
+  u32 pointCount;
+  s32 pointLimit;
+  s16 pointIndex;
+  s8 idx1;
+  s8 idx2;
+  s8 idx3;
+  f32 *point;
+  f32 *outZ;
+  f32 *outY;
+  f32 *outX;
+  s16 angle;
+
+  state[0x68] = state[0x1a];
+  state[0x69] = state[0x1b];
+  state[0x6a] = state[0x1c];
+  pointCount = *(u8 *)((u8 *)state + 0x25c) >> 4;
+  if ((pointCount == 2) || (pointCount == 4)) {
+    zero = lbl_803E0668;
+    *(f32 *)(obj + 0x18) = zero;
+    *(f32 *)(obj + 0x1c) = zero;
+    *(f32 *)(obj + 0x20) = zero;
+
+    point = state;
+    pointLimit = pointCount * 3;
+    for (pointIndex = 0; pointIndex < pointLimit; pointIndex += 3) {
+      *(f32 *)(obj + 0x18) += point[2];
+      *(f32 *)(obj + 0x1c) += point[3];
+      *(f32 *)(obj + 0x20) += point[4];
+      point += 3;
     }
-    local_30 = 0x43300000;
-    fVar1 = lbl_803E130C / (float)((double)CONCAT44(0x43300000,iVar3) - DOUBLE_803e1318);
-    *(float *)(psVar4 + 0xc) = *(float *)(psVar4 + 0xc) * fVar1;
-    *(float *)(psVar4 + 0xe) = *(float *)(psVar4 + 0xe) * fVar1;
-    *(float *)(psVar4 + 0x10) = *(float *)(psVar4 + 0x10) * fVar1;
-    iStack_2c = iVar3;
-    if ((*puVar7 & 0x8600) != 0) {
-      local_88 = -*psVar4;
-      local_86 = -psVar4[1];
-      local_84 = -psVar4[2];
-      local_80 = fVar2;
-      local_7c = -*(float *)(psVar4 + 0xc);
-      local_78 = -*(float *)(psVar4 + 0xe);
-      local_74 = -*(float *)(psVar4 + 0x10);
-      FUN_8001774c(afStack_70,(int)&local_88);
-      pfVar12 = local_b8;
-      pfVar10 = local_a8;
-      pfVar11 = local_98;
-      puVar5 = puVar7;
-      for (sVar9 = 0; sVar9 < iVar3; sVar9 = sVar9 + 1) {
-        FUN_80017778((double)(float)puVar5[2],(double)(float)puVar5[3],(double)(float)puVar5[4],
-                     afStack_70,pfVar11,pfVar10,pfVar12);
-        puVar5 = puVar5 + 3;
-        pfVar12 = pfVar12 + 1;
-        pfVar10 = pfVar10 + 1;
-        pfVar11 = pfVar11 + 1;
+
+    averageScale = lbl_803E068C / (f32)(s32)pointCount;
+    *(f32 *)(obj + 0x18) *= averageScale;
+    *(f32 *)(obj + 0x1c) *= averageScale;
+    *(f32 *)(obj + 0x20) *= averageScale;
+
+    if ((*(u32 *)state & 0x8600) != 0) {
+      transform.angles[0] = -*(s16 *)obj;
+      transform.angles[1] = -*(s16 *)(obj + 2);
+      transform.angles[2] = -*(s16 *)(obj + 4);
+      transform.scale = lbl_803E068C;
+      transform.x = -*(f32 *)(obj + 0x18);
+      transform.y = -*(f32 *)(obj + 0x1c);
+      transform.z = -*(f32 *)(obj + 0x20);
+      mtxRotateByVec3s(matrix,transform.angles);
+
+      outZ = localZ;
+      outY = localY;
+      outX = localX;
+      point = state;
+      for (pointIndex = 0; pointIndex < (s32)pointCount; pointIndex++) {
+        Matrix_TransformPoint(matrix,point[2],point[3],point[4],outX,outY,outZ);
+        point += 3;
+        outZ++;
+        outY++;
+        outX++;
       }
-      if ((*puVar7 & 0x8000) != 0) {
-        iVar6 = FUN_80017730();
-        *psVar4 = *psVar4 + ((short)((short)iVar6 + -0x8000) >> 2);
+
+      idx1 = 1;
+      idx2 = 2;
+      idx3 = 3;
+      if (pointCount == 2) {
+        idx1 = 0;
+        idx2 = 1;
+        idx3 = 1;
       }
-      if ((*puVar7 & 0x200) != 0) {
-        iVar6 = FUN_80017730();
-        *(short *)(puVar7 + 0x66) = -(short)iVar6;
+      if ((*(u32 *)state & 0x8000) != 0) {
+        angle = getAngle((localX[0] + localX[idx1]) - (localX[idx2] + localX[idx3]),
+                         (localZ[0] + localZ[idx1]) - (localZ[idx2] + localZ[idx3]));
+        *(s16 *)obj += (s16)(angle - 0x8000) >> 2;
       }
-      if ((iVar3 == 4) && ((*puVar7 & 0x400) != 0)) {
-        iVar3 = FUN_80017730();
-        *(short *)((int)puVar7 + 0x19a) = (short)iVar3;
+      if ((*(u32 *)state & 0x200) != 0) {
+        angle = getAngle(((localY[idx2] - localY[idx1]) + (localY[idx3] - localY[0])) *
+                             lbl_803E0690,
+                         ((localZ[idx2] - localZ[idx1]) + (localZ[idx3] - localZ[0])) *
+                             lbl_803E0690);
+        *(s16 *)((u8 *)state + 0x198) = -angle;
+      }
+      if ((pointCount == 4) && ((*(u32 *)state & 0x400) != 0)) {
+        angle = getAngle(((localY[idx1] - localY[0]) + (localY[idx2] - localY[idx3])) *
+                             lbl_803E0690,
+                         ((localX[idx1] - localX[0]) + (localX[idx2] - localX[idx3])) *
+                             lbl_803E0690);
+        *(s16 *)((u8 *)state + 0x19a) = angle;
       }
     }
   }
   else {
-    *(uint *)(psVar4 + 0xc) = puVar7[2];
-    *(uint *)(psVar4 + 0xe) = puVar7[3];
-    *(uint *)(psVar4 + 0x10) = puVar7[4];
+    *(f32 *)(obj + 0x18) = state[2];
+    *(f32 *)(obj + 0x1c) = state[3];
+    *(f32 *)(obj + 0x20) = state[4];
   }
-  FUN_80286880();
-  return;
 }
 
 /*
@@ -3812,7 +3825,7 @@ void dll_15_func08(void)
         }
         else {
 LAB_800e7350:
-          fn_800E58FC();
+          fn_800E58FC((int)puVar4,(f32 *)puVar8);
         }
       }
       else {
