@@ -135,13 +135,15 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
             }
         }
     } else if (mode == 6) {
-        void *p = *(void **)(state + 0);
-        if (p != NULL) {
-            renderFn_8008f904(p);
+        if (*(void **)(state + 0) != NULL) {
+            u32 frame;
+            renderFn_8008f904(*(void **)(state + 0));
             *(f32 *)(state + 4) += timeDelta;
-            *(u16 *)((int)p + 0x20) = (u16)(lbl_803E7458 + *(f32 *)(state + 4));
-            if (*(u16 *)((int)p + 0x20) >= *(u16 *)((int)p + 0x22)) {
-                mm_free(p);
+            frame = (u16)(lbl_803E7458 + *(f32 *)(state + 4));
+            *(u16 *)((int)*(void **)(state + 0) + 0x20) = frame;
+            if (*(u16 *)((int)*(void **)(state + 0) + 0x20) >=
+                *(u16 *)((int)*(void **)(state + 0) + 0x22)) {
+                mm_free(*(void **)(state + 0));
                 *(void **)(state + 0) = NULL;
                 f->hi = 0;
                 *(s16 *)(obj + 6) |= 0x4000;
