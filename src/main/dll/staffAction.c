@@ -51,6 +51,9 @@ extern f32 lbl_803E2FF4;
 extern f32 lbl_803E3004;
 extern f32 lbl_803E3020;
 extern f32 lbl_803E3024;
+extern f32 lbl_803E3028;
+extern f32 lbl_803E302C;
+extern f32 lbl_803E3030;
 extern f32 lbl_803E3C70;
 extern f32 lbl_803E3C74;
 extern f32 lbl_803E3C8C;
@@ -1264,6 +1267,115 @@ void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,
     *(f32 *)(obj + 0x28) = vy;
     *(f32 *)(obj + 0x2c) = vz;
   }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80166444(int obj,int state)
+{
+  f32 distanceRemaining;
+  int hitFound;
+  int stepCount;
+  f32 traveled;
+  f32 segmentLen;
+  f32 stepScale;
+  f32 radius;
+  f32 start[3];
+  f32 end[3];
+  uint bounds[6];
+  struct {
+    f32 hit[16];
+    f32 hitRadius;
+    undefined pad[0x10];
+    undefined hitType;
+  } hitScratch;
+  f32 fVar1;
+
+  distanceRemaining = sqrtf(*(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c) +
+                            (*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) +
+                             *(f32 *)(obj + 0x28) * *(f32 *)(obj + 0x28)));
+  traveled = lbl_803E2FDC;
+  stepCount = 0;
+  hitScratch.hitRadius = lbl_803E2FDC;
+  hitScratch.hitType = 3;
+  start[0] = *(f32 *)(obj + 0xc);
+  start[1] = *(f32 *)(obj + 0x10);
+  start[2] = *(f32 *)(obj + 0x14);
+  end[0] = start[0] + *(f32 *)(obj + 0x24);
+  end[1] = start[1] + *(f32 *)(obj + 0x28);
+  end[2] = start[2] + *(f32 *)(obj + 0x2c);
+  radius = lbl_803E3020;
+  fn_8006961C(bounds,start,end,&radius,1);
+  hitDetectFn_800691c0(obj,bounds,0,1);
+  while ((traveled < distanceRemaining) && (++stepCount < 10)) {
+    start[0] = *(f32 *)(obj + 0xc);
+    start[1] = *(f32 *)(obj + 0x10);
+    start[2] = *(f32 *)(obj + 0x14);
+    stepScale = lbl_803E2FF4 - (traveled / distanceRemaining);
+    end[0] = *(f32 *)(obj + 0x24) * stepScale + start[0];
+    end[1] = *(f32 *)(obj + 0x28) * stepScale + start[1];
+    end[2] = *(f32 *)(obj + 0x2c) * stepScale + start[2];
+    hitFound = hitDetectFn_80067958(obj,start,end,1,hitScratch.hit,0x20);
+    if (hitFound != 0) {
+      segmentLen = sqrtf((end[2] - start[2]) * (end[2] - start[2]) +
+                         ((end[0] - start[0]) * (end[0] - start[0]) +
+                          (end[1] - start[1]) * (end[1] - start[1])));
+      traveled = (f32)(traveled + segmentLen);
+      fn_80166840(obj,state,hitScratch.hit,end);
+    } else {
+      *(f32 *)(obj + 0xc) = end[0];
+      *(f32 *)(obj + 0x10) = end[1];
+      *(f32 *)(obj + 0x14) = end[2];
+      traveled = distanceRemaining;
+    }
+  }
+  start[0] = *(f32 *)(obj + 0xc);
+  start[1] = *(f32 *)(obj + 0x10);
+  start[2] = *(f32 *)(obj + 0x14);
+  end[0] = -(lbl_803E3028 * *(f32 *)(state + 0x7c) - start[0]);
+  end[1] = -(lbl_803E3028 * *(f32 *)(state + 0x80) - start[1]);
+  end[2] = -(lbl_803E3028 * *(f32 *)(state + 0x84) - start[2]);
+  hitScratch.hitRadius = lbl_803E2FDC;
+  hitScratch.hitType = 3;
+  hitFound = hitDetectFn_80067958(obj,start,end,1,hitScratch.hit,0x20);
+  if (hitFound != 0) {
+    if ((((hitScratch.hit[0] == *(f32 *)(state + 0x7c)) &&
+          (hitScratch.hit[1] == *(f32 *)(state + 0x80))) &&
+         (hitScratch.hit[2] == *(f32 *)(state + 0x84))) &&
+        (hitScratch.hit[3] == *(f32 *)(state + 0x88))) {
+      *(f32 *)(obj + 0xc) = end[0];
+      *(f32 *)(obj + 0x10) = end[1];
+      *(f32 *)(obj + 0x14) = end[2];
+    } else {
+      fn_80166840(obj,state,hitScratch.hit,end);
+    }
+  } else {
+    start[0] = end[0];
+    start[1] = end[1];
+    start[2] = end[2];
+    end[0] = -*(f32 *)(obj + 0x24);
+    end[1] = -*(f32 *)(obj + 0x28);
+    end[2] = -*(f32 *)(obj + 0x2c);
+    Vec3_Normalize(end);
+    end[0] = lbl_803E302C * end[0] + start[0];
+    end[1] = lbl_803E302C * end[1] + start[1];
+    end[2] = lbl_803E302C * end[2] + start[2];
+    hitScratch.hitRadius = lbl_803E2FDC;
+    hitScratch.hitType = 3;
+    hitFound = hitDetectFn_80067958(obj,start,end,1,hitScratch.hit,0x20);
+    fVar1 = lbl_803E3030;
+    if (hitFound == 0) {
+      *(f32 *)(obj + 0x24) = lbl_803E3030 * *(f32 *)(state + 0x7c);
+      *(f32 *)(obj + 0x28) = fVar1 * *(f32 *)(state + 0x80);
+      *(f32 *)(obj + 0x2c) = fVar1 * *(f32 *)(state + 0x84);
+      *(u8 *)(state + 0x92) = (*(u8 *)(state + 0x92) & 0xfb) | 4;
+    } else {
+      fn_80166840(obj,state,hitScratch.hit,end);
+    }
+  }
+  *(u8 *)(state + 0x92) = (*(u8 *)(state + 0x92) & 0xf7) | 8;
 }
 #pragma peephole reset
 #pragma scheduling reset
