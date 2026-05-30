@@ -1945,8 +1945,52 @@ int fn_8014BE1C(int *node, int p2, u8 *cmds)
 #pragma peephole reset
 
 extern int getAngle(f32 a, f32 b);
+extern f32 sqrtf(f32 v);
 extern f32 timeDelta;
 extern f32 lbl_803E256C;
+extern f32 lbl_803E2574;
+
+void fn_8014BC98(int *node, int *sub) {
+    int *target = *(int**)((char*)sub + 0x29c);
+    if (target != NULL) {
+        f32 dx, dy, dz;
+        int angle;
+        int raw;
+        s32 delta;
+        f32 dist;
+        u16 d16;
+
+        if ((*(u32*)((char*)sub + 0x2e4) & 0x8000) != 0) {
+            dx = *(f32*)((char*)node + 0x18) - *(f32*)((char*)target + 0x18);
+            dy = lbl_803E2574;
+            dz = *(f32*)((char*)node + 0x20) - *(f32*)((char*)target + 0x20);
+        } else {
+            dx = *(f32*)((char*)node + 0x18) - *(f32*)((char*)target + 0x18);
+            dy = *(f32*)((char*)node + 0x1c) - *(f32*)((char*)target + 0x1c);
+            dz = *(f32*)((char*)node + 0x20) - *(f32*)((char*)target + 0x20);
+        }
+        angle = getAngle(-dx, -dz);
+        if (*(int**)((char*)node + 0x30) != NULL) {
+            raw = (s16)(*(s16*)node + **(s16**)((char*)node + 0x30));
+        } else {
+            raw = *(s16*)node;
+        }
+        delta = (s16)((u16)angle - (u16)(s16)raw);
+        if (delta > 0x8000) delta = (s16)(delta - 0xFFFF);
+        if ((s16)delta < -0x8000) delta = (s16)(delta + 0xFFFF);
+        d16 = (u16)delta;
+        *(u16*)((char*)sub + 0x2a2) = d16;
+        *(u16*)((char*)sub + 0x2a0) = d16 >> 13;
+
+        dist = sqrtf(dz*dz + (dx*dx + dy*dy));
+        *(s16*)((char*)sub + 0x2a4) = (s16)(s32)dist;
+
+        {
+            int *t = *(int**)((char*)sub + 0x29c);
+            *(s16*)((char*)sub + 0x2a6) = (s16)(s32)(*(f32*)((char*)t + 0x1c) - *(f32*)((char*)node + 0x1c));
+        }
+    }
+}
 
 void fn_8014CF7C(int *node, int p2, u16 p3, int p4, f32 fa, f32 fb) {
     int angle = getAngle(*(f32*)((char*)node + 0xc) - fa,
