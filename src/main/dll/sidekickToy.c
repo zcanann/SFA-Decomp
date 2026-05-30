@@ -1950,6 +1950,57 @@ extern f32 timeDelta;
 extern f32 lbl_803E256C;
 extern f32 lbl_803E2574;
 
+extern f32 lbl_803E25B8;
+extern f32 lbl_803E25EC;
+extern f32 lbl_803E25F0;
+extern f32 lbl_803E25F4;
+extern f32 oneOverTimeDelta;
+
+void fn_8014CD1C(int *node, int *sub, u16 p3, u8 p5, f32 fa, f32 fb) {
+    f32 dt;
+    int angle;
+    s32 delta;
+    f32 delta_f;
+    f32 spd2;
+
+    dt = timeDelta / (f32)(u32)p3;
+    if (dt > lbl_803E256C) dt = lbl_803E256C;
+
+    angle = getAngle(-*(f32*)((char*)sub + 0x2b8), -*(f32*)((char*)sub + 0x2c0));
+    delta = (u16)angle - (u16)*(s16*)node;
+    delta_f = (f32)delta;
+    if (delta_f > lbl_803E25B8) delta_f = lbl_803E25EC + delta_f;
+    if (delta_f < lbl_803E25F4) delta_f = lbl_803E25F0 + delta_f;
+    delta_f *= dt;
+    *(s16*)node = (s16)(*(s16*)node + (s32)delta_f);
+
+    if (fa != lbl_803E2574) {
+        if ((u8)p5 != 0) {
+            *(s16*)((char*)node + 4) = (s16)(*(s16*)((char*)node + 4) + (s32)(fa * (delta_f * dt)));
+        } else {
+            s32 step = (s32)(oneOverTimeDelta * (delta_f * fa));
+            *(s16*)((char*)node + 4) = (s16)step;
+            {
+                s16 v = *(s16*)((char*)node + 4);
+                if (v > 0x2000) *(s16*)((char*)node + 4) = 0x2000;
+                else if (v < -0x2000) *(s16*)((char*)node + 4) = -0x2000;
+            }
+        }
+    }
+
+    if (lbl_803E2574 != fb) {
+        f32 dx = *(f32*)((char*)sub + 0x2b8);
+        f32 dz = *(f32*)((char*)sub + 0x2c0);
+        f32 hyp = sqrtf(dz*dz + dx*dx);
+        int angle2 = getAngle(*(f32*)((char*)sub + 0x2bc) * fb, hyp);
+        s32 d2 = (u16)angle2 - (u16)*(s16*)((char*)node + 2);
+        f32 d2f = (f32)d2;
+        if (d2f > lbl_803E25B8) d2f = lbl_803E25EC + d2f;
+        if (d2f < lbl_803E25F4) d2f = lbl_803E25F0 + d2f;
+        *(s16*)((char*)node + 2) = (s16)(*(s16*)((char*)node + 2) + (s32)(d2f * dt));
+    }
+}
+
 void fn_8014BC98(int *node, int *sub) {
     int *target = *(int**)((char*)sub + 0x29c);
     if (target != NULL) {
