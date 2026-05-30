@@ -25,7 +25,8 @@ typedef struct FireEventInterface {
   u8 pad00[0x40];
   int (*getMode)(int mapId);
   void (*triggerEvent)(int eventId,int value);
-  u8 pad48[0x50 - 0x48];
+  u8 pad48[0x4C - 0x48];
+  int (*getAnimEvent)(int animId,int eventId);
   void (*setAnimEvent)(int animId,int eventId,int value);
 } FireEventInterface;
 
