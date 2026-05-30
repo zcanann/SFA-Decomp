@@ -1406,7 +1406,7 @@ void attractor_init(s16 *obj, void *data) {
 
 /* exploded_update: switch on state at obj->_b8->_69; case 1 calls fn_801A5298. Then countdown timer at _5c/_58 with framesThisStep, updates _36 byte and flags _06. */
 extern u8 framesThisStep;
-extern int fn_801A5298(void *p1, void *state);
+extern int fn_801A5298(s16 *obj, int state);
 #pragma scheduling off
 #pragma peephole off
 void exploded_update(int *obj) {
@@ -1418,7 +1418,7 @@ void exploded_update(int *obj) {
     case 0:
         break;
     case 1:
-        if (fn_801A5298(o, state) != 0) {
+        if (fn_801A5298((s16 *)o, (int)state) != 0) {
             *((u8*)state + 0x69) = 0;
         }
         break;
@@ -1701,12 +1701,160 @@ void cfforcefield_init(s16 *obj, void *data) {
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void Obj_TransformLocalPointByWorldMatrix(void *obj, void *state, f32 *out, int flags);
+extern void fn_80065684(double x, double y, double z, void *obj, f32 *out, int flags);
+extern f32 timeDelta;
+extern f32 lbl_803E43F0;
+extern f32 lbl_803E43F4;
+extern f32 lbl_803E4400;
+extern f32 lbl_803E4404;
+extern f32 lbl_803E4408;
+extern f64 lbl_803E4410;
+extern f32 lbl_803E4418;
+extern f32 lbl_803E441C;
+extern f32 lbl_803E4420;
+extern f32 lbl_803E4424;
+
+/* Exploded debris setup: seed object angles, linear velocity, angular velocity,
+ * ground clearance, and the randomized lifetime countdown. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801A4F90(s16 *obj, int state, int data)
+{
+  f32 floorY[2];
+
+  floorY[0] = lbl_803E43F0;
+  obj[0] = *(s16 *)(data + 0x1a);
+  obj[1] = *(s16 *)(data + 0x1c);
+  obj[2] = *(s16 *)(data + 0x1e);
+
+  *(f32 *)((char *)obj + 0x24) = (f32)(s32)*(s16 *)(data + 0x20) / lbl_803E4400;
+  *(f32 *)((char *)obj + 0x28) = (f32)(s32)*(s16 *)(data + 0x22) / lbl_803E4400;
+  *(f32 *)((char *)obj + 0x2c) = (f32)(s32)*(s16 *)(data + 0x24) / lbl_803E4400;
+  *(f32 *)(state + 0x18) = (f32)(s32)*(s16 *)(data + 0x2c);
+  *(f32 *)(state + 0x1c) = (f32)(s32)*(s16 *)(data + 0x2e);
+  *(f32 *)(state + 0x20) = (f32)(s32)*(s16 *)(data + 0x30);
+
+  if (*(s16 *)(data + 0x3a) == 0) {
+    fn_80065684((double)*(f32 *)((char *)obj + 0xc),
+                (double)(*(f32 *)((char *)obj + 0x10) - lbl_803E4404),
+                (double)*(f32 *)((char *)obj + 0x14), obj, floorY, 0);
+    *(f32 *)(state + 0x54) = *(f32 *)((char *)obj + 0x10) - floorY[0];
+  }
+  else {
+    *(f32 *)(state + 0x54) =
+        *(f32 *)((char *)obj + 0x10) + (f32)(s32)*(s16 *)(data + 0x3a);
+  }
+
+  *(f32 *)(state + 0x24) = (f32)(s32)*(s16 *)(data + 0x32) / lbl_803E4404;
+  *(f32 *)(state + 0x28) = (f32)(s32)*(s16 *)(data + 0x34) / lbl_803E4404;
+  *(f32 *)(state + 0x2c) = (f32)(s32)*(s16 *)(data + 0x36) / lbl_803E4404;
+  *(f32 *)(state + 0x30) = (f32)(s32)*(s16 *)(data + 0x26) / lbl_803E4408;
+  *(f32 *)(state + 0x34) = (f32)(s32)*(s16 *)(data + 0x28) / lbl_803E4408;
+  *(f32 *)(state + 0x38) = (f32)(s32)*(s16 *)(data + 0x2a) / lbl_803E4408;
+
+  *(s32 *)(state + 0x58) = 0;
+  if (*(s16 *)(data + 0x38) == 0) {
+    *(s32 *)(state + 0x5c) = -1;
+  }
+  else {
+    int lifetime = (u16)*(s16 *)(data + 0x38) * ((int)randomGetRange(0, 100) + 100);
+    lifetime = lifetime / 200 + (lifetime >> 31);
+    *(s32 *)(state + 0x5c) = lifetime - (lifetime >> 31);
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* Exploded debris physics step: integrate local velocity and spin, bounce from
+ * the stored floor height, and return nonzero once the shard comes to rest. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801A5298(s16 *obj, int state)
+{
+  int stopped;
+  f32 speed;
+  f32 worldBefore[3];
+  f32 worldAfter[3];
+
+  stopped = 0;
+  Obj_TransformLocalPointByWorldMatrix(obj, (void *)state, worldBefore, 0);
+  *(f32 *)((char *)obj + 0x24) =
+      timeDelta * *(f32 *)(state + 0x30) + *(f32 *)((char *)obj + 0x24);
+  *(f32 *)((char *)obj + 0x28) =
+      timeDelta * *(f32 *)(state + 0x34) + *(f32 *)((char *)obj + 0x28);
+  *(f32 *)((char *)obj + 0x2c) =
+      timeDelta * *(f32 *)(state + 0x38) + *(f32 *)((char *)obj + 0x2c);
+  *(f32 *)(state + 0x18) = timeDelta * *(f32 *)(state + 0x24) + *(f32 *)(state + 0x18);
+  *(f32 *)(state + 0x1c) = timeDelta * *(f32 *)(state + 0x28) + *(f32 *)(state + 0x1c);
+  *(f32 *)(state + 0x20) = timeDelta * *(f32 *)(state + 0x2c) + *(f32 *)(state + 0x20);
+
+  if (*(f32 *)(state + 0x54) <= worldBefore[1]) {
+    *(u8 *)(state + 0x66) &= ~0x04;
+  }
+  else {
+    if (((*(f32 *)((char *)obj + 0x28) < lbl_803E43F0) && ((*(u8 *)(state + 0x66) & 4) != 0)) ||
+        (lbl_803E43F0 == *(f32 *)((char *)obj + 0x28))) {
+      *(f32 *)(state + 0x34) = lbl_803E43F0;
+      *(f32 *)(state + 0x2c) = lbl_803E43F0;
+      *(f32 *)(state + 0x20) = lbl_803E43F0;
+      *(f32 *)(state + 0x28) = lbl_803E43F0;
+      *(f32 *)(state + 0x1c) = lbl_803E43F0;
+      *(f32 *)(state + 0x24) = lbl_803E43F0;
+      *(f32 *)(state + 0x18) = lbl_803E43F0;
+      *(f32 *)((char *)obj + 0x28) = lbl_803E43F0;
+      *(f32 *)(state + 0x30) = *(f32 *)(state + 0x30) * lbl_803E4418;
+      *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4418;
+      *(f32 *)(state + 0x38) = *(f32 *)(state + 0x38) * lbl_803E4418;
+      *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4418;
+      speed = *(f32 *)((char *)obj + 0x24);
+      if (speed < lbl_803E43F0) {
+        speed = -speed;
+      }
+      if (speed < lbl_803E441C) {
+        speed = *(f32 *)((char *)obj + 0x2c);
+        if (speed < lbl_803E43F0) {
+          speed = -speed;
+        }
+        if (speed < lbl_803E441C) {
+          stopped = 1;
+        }
+      }
+    }
+    if (*(f32 *)((char *)obj + 0x28) < lbl_803E43F0) {
+      *(f32 *)((char *)obj + 0x28) = lbl_803E4420 * -*(f32 *)((char *)obj + 0x28);
+      *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4418;
+      *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4418;
+      *(f32 *)(state + 0x34) = lbl_803E4424;
+      *(f32 *)(state + 0x2c) = -*(f32 *)(state + 0x2c);
+    }
+    *(u8 *)(state + 0x66) |= 4;
+  }
+
+  obj[0] = (s16)(s32)(*(f32 *)(state + 0x18) * timeDelta + (f32)(s32)obj[0]);
+  obj[1] = (s16)(s32)(*(f32 *)(state + 0x1c) * timeDelta + (f32)(s32)obj[1]);
+  obj[2] = (s16)(s32)(*(f32 *)(state + 0x20) * timeDelta + (f32)(s32)obj[2]);
+  Obj_TransformLocalPointByWorldMatrix(obj, (void *)state, worldAfter, 0);
+  *(f32 *)((char *)obj + 0xc) += worldBefore[0] - worldAfter[0];
+  *(f32 *)((char *)obj + 0x10) += worldBefore[1] - worldAfter[1];
+  *(f32 *)((char *)obj + 0x14) += worldBefore[2] - worldAfter[2];
+  *(f32 *)((char *)obj + 0xc) =
+      *(f32 *)((char *)obj + 0x24) * timeDelta + *(f32 *)((char *)obj + 0xc);
+  *(f32 *)((char *)obj + 0x10) =
+      *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
+  *(f32 *)((char *)obj + 0x14) =
+      *(f32 *)((char *)obj + 0x2c) * timeDelta + *(f32 *)((char *)obj + 0x14);
+  return stopped;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_801A4DB8(int p1, int p2, int flag, int p3)
 {
   extern void Model_GetVertexPosition(int, int, f32 *);
-  extern void fn_801A4F90(int, int, int);
+  extern void fn_801A4F90(s16 *, int, int);
   extern void fn_800218AC(int, int);
   extern f32 lbl_803E43F0;
   extern f32 lbl_803E43F4;
@@ -1744,7 +1892,7 @@ void fn_801A4DB8(int p1, int p2, int flag, int p3)
   *(f32 *)(p3 + 0xc) = *(f32 *)(p3 + 0);
   *(f32 *)(p3 + 0x10) = *(f32 *)(p3 + 4);
   *(f32 *)(p3 + 0x14) = *(f32 *)(p3 + 8);
-  fn_801A4F90(p1, p3, p2);
+  fn_801A4F90((s16 *)p1, p3, p2);
 
   {
     f32 tv[3];
