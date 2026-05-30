@@ -3175,14 +3175,17 @@ void fn_800E618C(int obj,f32 *state)
   u8 *stateBytes;
   u32 flags;
   f32 *point;
-  f32 *radiusTable;
   f32 *localPoint;
   u32 averageCount;
   u32 chunkCount;
-  int pointTriples;
+  u32 pointTriples;
+  u32 pointTripletDivisor;
   int pointIndex;
+  int radiusOffset;
   int mode;
   int localOffset;
+  f32 zero;
+  f32 averageScale;
   f32 tempX;
   f32 tempZ;
   CurvesTransformScratch transform;
@@ -3190,43 +3193,46 @@ void fn_800E618C(int obj,f32 *state)
 
   stateBytes = (u8 *)state;
   pointCount = stateBytes[0x25c] & 0xf;
-  stateBytes[0x25e] = 0;
+  radiusOffset = 0;
+  stateBytes[0x25e] = (u8)radiusOffset;
+  pointIndex = 0;
   point = state;
-  for (pointIndex = 0; pointIndex < pointCount; pointIndex++) {
-    radiusTable = *(f32 **)(stateBytes + 0xe0);
-    if ((*(u32 *)state & 0x200000) != 0) {
+  while (pointIndex < pointCount) {
+    if ((s32)(*(u32 *)state & 0x200000) != 0) {
       mode = 2;
     }
     else {
       mode = 4;
     }
-    stateBytes[0x25e] |= objBboxFn_800640cc(point + 0x45,point + 0x39,radiusTable[pointIndex],
-                                            mode,state + 0x51,obj,stateBytes[0x25d],-1,0,
-                                            (s8)stateBytes[0x264]) << pointIndex;
+    stateBytes[0x25e] |= objBboxFn_800640cc(
+        point + 0x45,point + 0x39,*(f32 *)(*(u32 *)(stateBytes + 0xe0) + radiusOffset),mode,
+        state + 0x51,obj,stateBytes[0x25d],-1,0,(s8)stateBytes[0x264]) << pointIndex;
     flags = *(u32 *)state;
-    if ((flags & 0x2000000) != 0) {
-      if ((flags & 0x200000) != 0) {
+    if ((s32)(flags & 0x2000000) != 0) {
+      if ((s32)(flags & 0x200000) != 0) {
         mode = 2;
       }
       else {
         mode = 4;
       }
-      objBboxFn_800640cc(point + 0x45,point + 0x39,radiusTable[pointIndex],mode,state + 0x51,
-                         obj,stateBytes[0x263],-1,0,(s8)stateBytes[0x264]);
+      objBboxFn_800640cc(point + 0x45,point + 0x39,
+                         *(f32 *)(*(u32 *)(stateBytes + 0xe0) + radiusOffset),mode,
+                         state + 0x51,obj,stateBytes[0x263],-1,0,(s8)stateBytes[0x264]);
     }
+    radiusOffset += sizeof(f32);
     point += 3;
+    pointIndex++;
   }
-  if (pointCount <= 1) {
-    if ((*(u32 *)state & 0x100000) == 0) {
-      *(f32 *)(obj + 0xc) = state[0x39];
-      *(f32 *)(obj + 0x14) = state[0x3b];
+  if (pointCount > 1) {
+    if ((s32)(*(u32 *)state & 0x100000) != 0) {
+      goto buildTransform;
     }
-  }
-  else if ((*(u32 *)state & 0x100000) == 0) {
-    *(f32 *)(obj + 0xc) = lbl_803E0668;
-    *(f32 *)(obj + 0x14) = lbl_803E0668;
+    zero = lbl_803E0668;
+    *(f32 *)(obj + 0xc) = zero;
+    *(f32 *)(obj + 0x14) = zero;
     pointTriples = pointCount * 3;
-    averageCount = (pointTriples + 2) / 3;
+    pointTripletDivisor = 3;
+    averageCount = (pointTriples + 2) / pointTripletDivisor;
     if (pointTriples != 0) {
       chunkCount = averageCount >> 2;
       point = state;
@@ -3256,11 +3262,17 @@ void fn_800E618C(int obj,f32 *state)
       } while (averageCount != 0);
     }
 scaleAverage:
-    *(f32 *)(obj + 0xc) *= lbl_803E068C / (f32)pointCount;
-    *(f32 *)(obj + 0x14) *= lbl_803E068C / (f32)pointCount;
+    averageScale = lbl_803E068C / (f32)pointCount;
+    *(f32 *)(obj + 0xc) *= averageScale;
+    *(f32 *)(obj + 0x14) *= averageScale;
   }
+  else if ((s32)(*(u32 *)state & 0x100000) == 0) {
+    *(f32 *)(obj + 0xc) = state[0x39];
+    *(f32 *)(obj + 0x14) = state[0x3b];
+  }
+buildTransform:
   transform.angles[0] = *(s16 *)obj;
-  if ((*(u32 *)state & 0x20) != 0) {
+  if ((s32)(*(u32 *)state & 0x20) != 0) {
     transform.angles[1] = 0;
     transform.angles[2] = 0;
   }
