@@ -911,7 +911,7 @@ extern void Camera_ApplyFullViewport(void);
 extern void *Camera_GetCurrentViewSlot(void);
 extern void _textSetColor(int reg, u8 r, u8 g, u8 b, u8 a);
 extern void fn_8000F83C(void);
-extern void fn_8009AD44(int param);
+extern void expgfx_updateResourceEntries(int unused);
 extern u32 randomGetRange(int min, int max);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern void angleToVec2(int angle, f32 *cosOut, f32 *sinOut);
@@ -1243,7 +1243,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
   } while (slotIndex < EXPGFX_SLOTS_PER_POOL);
 
   if (gExpgfxRenderResetPending != 0) {
-    fn_8009AD44(0);
+    expgfx_updateResourceEntries(0);
     gExpgfxRenderResetPending = 0;
   }
 }

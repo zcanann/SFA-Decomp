@@ -1,28 +1,29 @@
 #include "ghidra_import.h"
 #include "main/dll/fx_800944A0_shared.h"
+#include "main/expgfx_internal.h"
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8009AD44(void) {
-    int *e;
+void expgfx_updateResourceEntries(int unused) {
+    ExpgfxResourceEntry *entry;
     int i;
 
     i = 0;
-    e = gExpgfxRuntimeData;
-    for (; i < 0x20; i++) {
-        if (e[2] != 0) {
-            e[1] = e[1] - framesThisStep;
-            if (e[1] <= 0) {
-                e[2] = 0;
-                e[1] = 0;
-                e[3] = 0;
+    entry = EXPGFX_RUNTIME_DATA->resourceTable;
+    for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
+        if (entry->tableKeyType != 0) {
+            entry->evictionScore = entry->evictionScore - framesThisStep;
+            if (entry->evictionScore <= 0) {
+                entry->tableKeyType = 0;
+                entry->evictionScore = 0;
+                entry->wordC = 0;
                 gExpgfxTextureFreeInProgress = 1;
-                textureFree(e[0]);
+                textureFree((int)entry->resource);
                 gExpgfxTextureFreeInProgress = 0;
-                e[0] = 0;
+                entry->resource = NULL;
             }
         }
-        e += 4;
+        entry++;
     }
 }
 #pragma peephole reset
@@ -30,7 +31,7 @@ void fn_8009AD44(void) {
 
 #pragma scheduling off
 #pragma peephole off
-int expgfx_acquireResourceEntry(int arg) {
+int expgfx_acquireResourceEntry(int resourceId) {
     int minVal;
     int minIdx;
     int i;
@@ -41,47 +42,47 @@ int expgfx_acquireResourceEntry(int arg) {
     i = 0;
     base = gExpgfxRuntimeData;
     p = base;
-    for (; i < 0x20; i++) {
-        if (*(void **)p != NULL && arg == p[2]) {
+    for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
+        if (*(void **)p != NULL && resourceId == p[2]) {
             tex = *(void **)&gExpgfxRuntimeData[i * 4];
-            if (tex != NULL && *(u16 *)((char *)tex + 0xe) >= 0x4000) {
-                return -1;
+            if (tex != NULL && *(u16 *)((char *)tex + 0xe) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
+                return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
             }
-            gExpgfxRuntimeData[i * 4 + 1] = 1000;
+            gExpgfxRuntimeData[i * 4 + 1] = EXPGFX_RESOURCE_EVICTION_RESET;
             return (s16)i;
         }
         p += 4;
     }
     p = base;
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
         if (*(void **)p == NULL) {
-            gExpgfxRuntimeData[i * 4] = textureLoadAsset(arg);
+            gExpgfxRuntimeData[i * 4] = textureLoadAsset(resourceId);
             tex = *(void **)&gExpgfxRuntimeData[i * 4];
-            if (tex != NULL && *(u16 *)((char *)tex + 0xe) >= 0x4000) {
+            if (tex != NULL && *(u16 *)((char *)tex + 0xe) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
                 gExpgfxTextureFreeInProgress = 1;
                 if (tex != NULL) {
                     textureFree((int)tex);
                 }
                 gExpgfxTextureFreeInProgress = 0;
                 gExpgfxRuntimeData[i * 4] = 0;
-                return -1;
+                return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
             }
             if (tex != NULL) {
-                gExpgfxRuntimeData[i * 4 + 1] = 1000;
-                gExpgfxRuntimeData[i * 4 + 2] = arg;
+                gExpgfxRuntimeData[i * 4 + 1] = EXPGFX_RESOURCE_EVICTION_RESET;
+                gExpgfxRuntimeData[i * 4 + 2] = resourceId;
                 return (s16)i;
             }
-            return -2;
+            return EXPGFX_RESOURCE_ACQUIRE_LOAD_FAILED;
         }
         p += 4;
     }
     if (Obj_IsLoadingLocked() == 0) {
-        return -4;
+        return EXPGFX_RESOURCE_ACQUIRE_LOADING_UNLOCKED;
     }
-    minVal = 0xfa00;
+    minVal = EXPGFX_RESOURCE_EVICTION_SCAN_INITIAL;
     minIdx = 0;
     p = base;
-    for (i = 0; i < 0x20; i++) {
+    for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
         if (p[1] < minVal) {
             minVal = p[1];
             minIdx = i;
@@ -95,13 +96,13 @@ int expgfx_acquireResourceEntry(int arg) {
     }
     gExpgfxTextureFreeInProgress = 0;
     gExpgfxRuntimeData[minIdx * 4] = 0;
-    gExpgfxRuntimeData[minIdx * 4] = textureLoadAsset(arg);
+    gExpgfxRuntimeData[minIdx * 4] = textureLoadAsset(resourceId);
     if (*(void **)&gExpgfxRuntimeData[minIdx * 4] != NULL) {
-        gExpgfxRuntimeData[minIdx * 4 + 1] = 1000;
-        gExpgfxRuntimeData[minIdx * 4 + 2] = arg;
+        gExpgfxRuntimeData[minIdx * 4 + 1] = EXPGFX_RESOURCE_EVICTION_RESET;
+        gExpgfxRuntimeData[minIdx * 4 + 2] = resourceId;
         return (s16)minIdx;
     }
-    return -3;
+    return EXPGFX_RESOURCE_ACQUIRE_RELOAD_FAILED;
 }
 #pragma peephole reset
 #pragma scheduling reset
