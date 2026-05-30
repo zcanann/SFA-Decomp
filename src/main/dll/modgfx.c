@@ -5477,3 +5477,58 @@ void fn_800A0524(void *state, void *p, int mode)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_800A0C78(void *state, void *p, int mode, u8 idx)
+{
+  extern f32 lbl_803DD284;
+  extern f32 lbl_803DF434;
+  char *base = (char *)state + idx * 2 * 0xc;
+  int j;
+
+  if (mode == 1) {
+    f32 tx = *(f32 *)((char *)p + 0x4);
+    f32 ty = *(f32 *)((char *)p + 0x8);
+    f32 tz = *(f32 *)((char *)p + 0xc);
+    if (*(s16 *)((char *)state + 0xfe) != 0) {
+      *(f32 *)(base + 0x3c) = (tx - *(f32 *)(base + 0x30)) / (f32)*(s16 *)((char *)state + 0xfe);
+      *(f32 *)(base + 0x40) = (ty - *(f32 *)(base + 0x34)) / (f32)*(s16 *)((char *)state + 0xfe);
+      *(f32 *)(base + 0x44) = (tz - *(f32 *)(base + 0x38)) / (f32)*(s16 *)((char *)state + 0xfe);
+    } else {
+      u8 *buf = *(u8 **)((char *)state + 0x80);
+      u8 *buf2 = *(u8 **)((char *)state + *(u8 *)((char *)state + 0x130) * 4 + 0x78);
+      for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
+        s16 v = (*(s16 **)((char *)p + 0x10))[j];
+        *(s16 *)(buf + v * 16 + 0) = (int)((f32)*(s16 *)(buf + v * 16 + 0) * tx);
+        *(s16 *)(buf + v * 16 + 2) = (int)((f32)*(s16 *)(buf + v * 16 + 2) * ty);
+        *(s16 *)(buf + v * 16 + 4) = (int)((f32)*(s16 *)(buf + v * 16 + 4) * tz);
+        *(s16 *)(buf2 + v * 16 + 0) = *(s16 *)(buf + v * 16 + 0);
+        *(s16 *)(buf2 + v * 16 + 2) = *(s16 *)(buf + v * 16 + 2);
+        *(s16 *)(buf2 + v * 16 + 4) = *(s16 *)(buf + v * 16 + 4);
+      }
+      return;
+    }
+  }
+  *(f32 *)(base + 0x30) = *(f32 *)(base + 0x30) + *(f32 *)(base + 0x3c) * lbl_803DD284;
+  *(f32 *)(base + 0x34) = *(f32 *)(base + 0x34) + *(f32 *)(base + 0x40) * lbl_803DD284;
+  *(f32 *)(base + 0x38) = *(f32 *)(base + 0x38) + *(f32 *)(base + 0x44) * lbl_803DD284;
+  {
+    u8 *buf = *(u8 **)((char *)state + 0x80);
+    u8 *buf2 = *(u8 **)((char *)state + *(u8 *)((char *)state + 0x130) * 4 + 0x78);
+    for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
+      s16 v = (*(s16 **)((char *)p + 0x10))[j];
+      if (lbl_803DF434 != *(f32 *)(base + 0x30)) {
+        *(s16 *)(buf2 + v * 16 + 0) = (int)(*(f32 *)(base + 0x30) * (f32)*(s16 *)(buf + v * 16 + 0));
+      }
+      if (lbl_803DF434 != *(f32 *)(base + 0x34)) {
+        *(s16 *)(buf2 + v * 16 + 2) = (int)(*(f32 *)(base + 0x34) * (f32)*(s16 *)(buf + v * 16 + 2));
+      }
+      if (lbl_803DF434 != *(f32 *)(base + 0x38)) {
+        *(s16 *)(buf2 + v * 16 + 4) = (int)(*(f32 *)(base + 0x38) * (f32)*(s16 *)(buf + v * 16 + 4));
+      }
+    }
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
