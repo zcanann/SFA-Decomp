@@ -30,6 +30,7 @@ void voiceSetPriority(int state, u8 newGroup)
     u32 oldFirst;
     u16 prev;
     u16 cur;
+    u16 scan;
 
     /* if already assigned to a group: short-circuit if same group, else remove */
     if (*(u16 *)(slot + 2) == 1) {
@@ -51,17 +52,19 @@ void voiceSetPriority(int state, u8 newGroup)
         *(u8 *)(slot + 1) = oldFirst;
         if (oldFirst != 0xff) {
             /* group had voices: link old first to new voice */
-            *(u8 *)(nodes + 0x8c0 + oldFirst * 4) = (u8)voiceId;
+            (nodes + *groupHead * 4)[0x8c0] = (u8)voiceId;
         } else {
             /* group was empty: insert into the global priority list */
             cur = voicePrioSortRootListRoot;
             if (cur != 0xffff) {
                 if (group >= cur) {
                     /* walk list: find first node with id > group */
-                    while ((cur != 0xffff) && (cur <= group)) {
-                        prev = cur;
-                        cur = *(u16 *)(nodes + 0xac0 + cur * 4);
+                    scan = cur;
+                    while ((scan != 0xffff) && (scan <= group)) {
+                        prev = scan;
+                        scan = *(u16 *)(nodes + 0xac0 + scan * 4);
                     }
+                    cur = scan;
                     /* insert after prev */
                     *(u16 *)(nodes + 0xac0 + prev * 4) = (u16)group;
                     *(u16 *)(nodes + 0xac2 + group * 4) = prev;
@@ -88,8 +91,7 @@ void voiceSetPriority(int state, u8 newGroup)
 
     *(u8 *)(state + 0x10c) = newGroup;
     {
-        u32 prio = *(u32 *)(state + 0x110) >> 15;
-        prio |= ((u32)newGroup & 0xff) << 24;
+        u32 prio = (*(u32 *)(state + 0x110) >> 15) | (((u32)newGroup & 0xff) << 24);
         hwSetPriority((u8)*(u32 *)(state + 0xf4), prio);
     }
 }
