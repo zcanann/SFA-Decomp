@@ -8,7 +8,8 @@ typedef struct SCGameBitLatchState {
 } SCGameBitLatchState;
 
 typedef struct SCTotemLogPuzzleEventInterface {
-    u8 pad00[0x50];
+    u8 pad00[0x4C];
+    int (*getAnimEvent)(int animId, int eventId);
     void (*setAnimEvent)(int animId, int eventId, int value);
 } SCTotemLogPuzzleEventInterface;
 

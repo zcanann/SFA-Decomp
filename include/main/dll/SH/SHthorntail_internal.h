@@ -82,7 +82,8 @@ typedef struct SHthorntailAnimationInterface {
 typedef struct SHthorntailEventInterface {
   u8 pad00[0x44];
   void (*triggerEvent)(int,int);
-  u8 pad48[0x50 - 0x48];
+  u8 pad48[0x4C - 0x48];
+  int (*getAnimEvent)(int,int);
   void (*setAnimEvent)(int,int,int);
 } SHthorntailEventInterface;
 

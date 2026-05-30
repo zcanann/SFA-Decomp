@@ -152,7 +152,8 @@ typedef struct DIMbossMapEventInterface {
   u8 pad00[0x40];
   u8 (*getAreaState)(int areaId);
   void (*setAreaState)(int areaId,int state);
-  u8 pad48[0x50 - 0x48];
+  u8 pad48[0x4C - 0x48];
+  int (*getAnimEvent)(int mapDir,int areaId);
   void (*triggerArea)(int mapDir,int areaId,int enabled);
 } DIMbossMapEventInterface;
 
