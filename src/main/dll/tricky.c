@@ -2518,3 +2518,65 @@ void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern char hudTextures[];
+extern s16 lbl_803DD76C;
+extern u8 lbl_803DBAF0;
+extern f32 lbl_803E1E9C;
+extern u8 lbl_803DBAEE;
+extern u8 lbl_803DBAEF;
+extern void drawScaledTexture(void *tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
+extern void GXGetScissor(int *a, int *b, int *c, int *d);
+extern void GXSetScissor(int a, int b, int c, int d);
+extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
+#pragma scheduling off
+#pragma peephole off
+void fearTestMeterDraw(void) {
+    int sc0, sc1, sc2, sc3;
+    GXColor col;
+    void *texB = *(void **)(hudTextures + 0x180);
+    u16 hgt = *(u16 *)((char *)texB + 0xc);
+    int gap = (u8)lbl_803DBA58 - (u8)lbl_803DBA59;
+    void *texA = *(void **)(hudTextures + 0x17c);
+    int wid = (u8)*(u16 *)((char *)texA + 0xa);
+    if (lbl_803DD76E != 0) {
+        lbl_803DD76C = lbl_803DD76C + lbl_803DBAF0 * framesThisStep;
+    } else {
+        lbl_803DD76C = lbl_803DD76C - lbl_803DBAF0 * framesThisStep;
+    }
+    if (lbl_803DD76C < 0) {
+        lbl_803DD76C = 0;
+    } else if (lbl_803DD76C > 0xff) {
+        lbl_803DD76C = 0xff;
+    }
+    if (lbl_803DD76C == 0) return;
+    GXGetScissor(&sc0, &sc1, &sc2, &sc3);
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    drawScaledTexture(*(void **)(hudTextures + 0x17c),
+                      (f32)(int)(0x140 - (u8)lbl_803DBA58 - wid), lbl_803E1E9C,
+                      (u8)lbl_803DD76C, 0x100, wid, hgt, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x180),
+                      (f32)(int)(0x140 - (u8)lbl_803DBA59), lbl_803E1E9C,
+                      (u8)lbl_803DD76C, 0x100, (u8)lbl_803DBA59 << 1, hgt, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x184),
+                      (f32)(int)(0x140 - (u8)lbl_803DBA58), lbl_803E1E9C,
+                      (u8)lbl_803DD76C, 0x100, gap, hgt, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x184),
+                      (f32)(int)((u8)lbl_803DBA59 + 0x140), lbl_803E1E9C,
+                      (u8)lbl_803DD76C, 0x100, gap, hgt, 0);
+    drawTexture(*(void **)(hudTextures + 0x17c),
+                (f32)(int)((u8)lbl_803DBA58 + 0x140), lbl_803E1E9C,
+                (u8)lbl_803DD76C, 0x100);
+    col.r = 0xff;
+    col.g = 0;
+    col.b = 0;
+    col.a = (u8)lbl_803DD76C;
+    hudDrawRect((lbl_803DBA5A + 0x140) - (u8)lbl_803DBAEF,
+                (u8)lbl_803DBAEE + 0x32,
+                (u8)lbl_803DBAEF + (lbl_803DBA5A + 0x140),
+                (hgt + 0x32) - (u8)lbl_803DBAEE,
+                col);
+    GXSetScissor(sc0, sc1, sc2, sc3);
+}
+#pragma peephole reset
+#pragma scheduling reset
