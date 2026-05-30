@@ -347,6 +347,12 @@ extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 __AR_Callback;
 extern f32 __AR_Size;
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f);
+extern f32 lbl_803DCED8;
+extern f32 lbl_803DCEDC;
+extern f32 lbl_803DB650;
+extern int textureLoad(int a, int b);
+extern int textureAlloc512(void);
+extern int textureFn_8006c5c4(void);
 extern f32 lbl_803DF8E8;
 extern f32 lbl_803DF8EC;
 extern f32 lbl_803DF8F0;
@@ -4760,4 +4766,45 @@ int fn_80062D60(int a, f32 b, f32 lo, f32 d, f32 hi, f32 *out1, int *out2)
     }
   }
   return 0;
+}
+
+void *shadowInit(int *obj, int size)
+{
+  int rounded;
+  void *base;
+  void *state;
+
+  rounded = roundUpTo4(size);
+  *(int *)((char *)obj + 0x64) = rounded;
+  base = *(void **)((char *)obj + 0x64);
+  state = *(void **)((char *)obj + 0x50);
+  if (*(s16 *)((char *)state + 0x4a) != -1 && *(s16 *)((char *)state + 0x48) != 2) {
+    *(int *)((char *)base + 0x4) = textureLoad(-*(s16 *)((char *)state + 0x4a), 0);
+  } else if (*(u8 *)((char *)state + 0x5f) & 0x4) {
+    *(int *)((char *)base + 0x4) = textureAlloc512();
+  } else if (*(u8 *)((char *)state + 0x5f) & 0x2) {
+    *(int *)((char *)base + 0x4) = 0;
+    *(int *)((char *)base + 0x8) = 0;
+  } else {
+    *(int *)((char *)base + 0x4) = textureFn_8006c5c4();
+  }
+  state = *(void **)((char *)obj + 0x50);
+  if (*(s16 *)((char *)state + 0x48) == 1) {
+    *(int *)((char *)base + 0x10) = 0;
+  } else {
+    *(int *)((char *)base + 0x10) = -1;
+  }
+  *(f32 *)base = *(f32 *)*(void **)((char *)obj + 0x50);
+  *(f32 *)((char *)base + 0x2c) = *(f32 *)((char *)*(void **)((char *)obj + 0x50) + 0x88);
+  *(f32 *)((char *)base + 0x14) = lbl_803DCED8;
+  *(f32 *)((char *)base + 0x18) = lbl_803DB650;
+  *(f32 *)((char *)base + 0x1c) = lbl_803DCEDC;
+  *(s16 *)((char *)base + 0x36) = 0x4000;
+  *(int *)((char *)base + 0x30) = 4;
+  *(u8 *)((char *)base + 0x38) = 0x19;
+  *(u8 *)((char *)base + 0x39) = 0x4b;
+  *(u8 *)((char *)base + 0x3a) = 0x96;
+  *(u8 *)((char *)base + 0x3b) = 0x64;
+  lbl_803DB658 = 1;
+  return (char *)rounded + 0x44;
 }
