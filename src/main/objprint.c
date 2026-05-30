@@ -43,8 +43,8 @@ extern void newshadows_getShadowTextureTable4x8();
 extern void newshadows_getShadowTextureTable16();
 extern void newshadows_getShadowNoiseTexture(int *textureOut);
 extern void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut);
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
+extern void gxSetPeControl_ZCompLoc_();
+extern void gxSetZMode_();
 extern void trackIntersect_drawColorBand(void);
 extern undefined4 FUN_802420e0();
 extern undefined4 FUN_80247618();
@@ -2920,8 +2920,8 @@ undefined4 FUN_8003c1f8(int param_1,int *param_2,int param_3)
     local_190 = DAT_803dc0c8;
     dVar8 = (double)lbl_803DF684;
     FUN_8025ca38(dVar8,dVar8,dVar8,dVar8,0,(uint3 *)&local_190);
-    FUN_8006f8fc(1,3,0);
-    FUN_8006f8a4(1);
+    gxSetZMode_(1,3,0);
+    gxSetPeControl_ZCompLoc_(1);
     FUN_8025cce8(1,4,5,5);
     uVar4 = 1;
   }

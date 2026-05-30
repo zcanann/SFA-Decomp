@@ -111,8 +111,8 @@ extern uint FUN_8005375c();
 extern void newshadows_getShadowTextureTable4x8();
 extern undefined4 FUN_8006b03c();
 extern int FUN_8006f690();
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
+extern void gxSetPeControl_ZCompLoc_();
+extern void gxSetZMode_();
 extern void trackIntersect_drawColorBand(void);
 extern void trackIntersect_getColorRgb();
 extern undefined4 FUN_8006fb14();
@@ -391,8 +391,8 @@ void objRenderFuzzFn_8003d6f8(int param_1)
   local_58 = DAT_803dc0c8;
   dVar2 = (double)lbl_803DF684;
   FUN_8025ca38(dVar2,dVar2,dVar2,dVar2,0,(uint3 *)&local_58);
-  FUN_8006f8fc(1,3,0);
-  FUN_8006f8a4(1);
+  gxSetZMode_(1,3,0);
+  gxSetPeControl_ZCompLoc_(1);
   FUN_8025cce8(1,4,5,5);
   return;
 }
@@ -1527,44 +1527,44 @@ LAB_8003f328:
         FUN_8025cce8(1, 4, 5, 5);
         if ((*(ushort *)(iVar13 + 2) & 0x400) == 0) {
           if ((*(ushort *)(iVar13 + 2) & 0x2000) == 0) {
-            FUN_8006f8fc(1, 3, 0);
+            gxSetZMode_(1, 3, 0);
             FUN_8025c754(7, 0, 0, 7, 0);
           }
           else {
             uVar16 = 0;
-            FUN_8006f8fc(1, 3, 1);
+            gxSetZMode_(1, 3, 1);
             FUN_8025c754(4, (uint)DAT_803dd8bc, 0, 4, (uint)DAT_803dd8bc);
           }
         }
         else {
-          FUN_8006f8fc(0, 3, 0);
+          gxSetZMode_(0, 3, 0);
           FUN_8025c754(7, 0, 0, 7, 0);
         }
       }
       else if ((*(uint *)(iVar7 + 0x3c) & 0x400) == 0) {
         FUN_8025cce8(0, 1, 0, 5);
         if ((*(ushort *)(iVar13 + 2) & 0x400) == 0) {
-          FUN_8006f8fc(1, 3, 1);
+          gxSetZMode_(1, 3, 1);
         }
         else {
-          FUN_8006f8fc(0, 3, 0);
+          gxSetZMode_(0, 3, 0);
         }
         FUN_8025c754(7, 0, 0, 7, 0);
       }
       else {
         FUN_8025cce8(0, 1, 0, 5);
         if ((*(ushort *)(iVar13 + 2) & 0x400) == 0) {
-          FUN_8006f8fc(1, 3, 1);
+          gxSetZMode_(1, 3, 1);
         }
         else {
-          FUN_8006f8fc(0, 3, 0);
+          gxSetZMode_(0, 3, 0);
         }
         FUN_8025c754(4, 0x40, 0, 4, 0x40);
       }
       if ((*(uint *)(iVar7 + 0x3c) & 0x400) != 0) {
         uVar16 = 0;
       }
-      FUN_8006f8a4(uVar16);
+      gxSetPeControl_ZCompLoc_(uVar16);
     }
     else {
       (*pcVar8)(puVar6, param_3, uVar16);
@@ -1660,12 +1660,12 @@ void FUN_8003f3b4(undefined4 param_1,undefined4 param_2,int param_3)
     }
   }
   if ((DAT_803dc0e0 != uVar6) || (DAT_803dc0e1 != uVar5)) {
-    FUN_8006f8fc(uVar6,3,uVar5);
+    gxSetZMode_(uVar6,3,uVar5);
     DAT_803dc0e0 = (byte)uVar6;
     DAT_803dc0e1 = (byte)uVar5;
   }
   if (DAT_803dc0d9 != uVar4) {
-    FUN_8006f8a4(uVar4);
+    gxSetPeControl_ZCompLoc_(uVar4);
     DAT_803dc0d9 = (byte)uVar4;
   }
   if (DAT_803dc0dc != uVar3) {
@@ -2014,16 +2014,16 @@ void fn_8003FDA8(undefined4 param_1,undefined4 param_2,int param_3)
   local_108 = DAT_803dc0c8;
   dVar15 = (double)lbl_803DF684;
   FUN_8025ca38(dVar15, dVar15, dVar15, dVar15, 0, (uint3 *)&local_108);
-  FUN_8006f8a4(1);
+  gxSetPeControl_ZCompLoc_(1);
   FUN_8025c754(7, 0, 0, 7, 0);
   FUN_8025a608(4, 0, 0, 0, 0, 0, 2);
   FUN_8025a5bc(1);
   if ((*(byte *)(*(int *)(puVar5 + 0x28) + 0x5f) & 4) == 0) {
-    FUN_8006f8fc(0, 3, 0);
+    gxSetZMode_(0, 3, 0);
     FUN_80259288(0);
   }
   else {
-    FUN_8006f8fc(1, 3, 1);
+    gxSetZMode_(1, 3, 1);
     FUN_80259288(1);
   }
   FUN_802585d8(9, piVar6[(*(ushort *)(piVar6 + 6) >> 1 & 1) + 7], 6);

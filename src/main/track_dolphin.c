@@ -56,7 +56,7 @@ extern int FUN_8006af98();
 extern int newshadows_getSmallShadowTexture(void);
 extern undefined4 FUN_8006c2d8();
 extern int FUN_8006f690();
-extern undefined4 FUN_8006f8fc();
+extern void gxSetZMode_();
 extern undefined4 FUN_800709ec();
 extern undefined4 FUN_80070c74();
 extern undefined4 FUN_80070ec0();

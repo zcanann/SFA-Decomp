@@ -28,8 +28,8 @@ extern undefined4 FUN_80052904();
 extern uint FUN_80053078();
 extern undefined8 FUN_80053754();
 extern int FUN_8005398c();
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
+extern void gxSetPeControl_ZCompLoc_();
+extern void gxSetZMode_();
 extern undefined4 FUN_800709e8();
 extern undefined4 FUN_8011f048();
 extern undefined8 FUN_8011f04c();
@@ -266,8 +266,8 @@ undefined4 fn_80124A78(int param_1,int *param_2,int param_3)
   FUN_80051fc4(uVar2,0,0,(char *)&uVar3,0,1);
   FUN_800528d0();
   FUN_8025cce8(1,4,5,5);
-  FUN_8006f8fc(0,7,0);
-  FUN_8006f8a4(0);
+  gxSetZMode_(0,7,0);
+  gxSetPeControl_ZCompLoc_(0);
   FUN_8025c754(7,0,0,7,0);
   return 1;
 }
@@ -321,8 +321,8 @@ undefined4 fn_80124B38(int param_1,int *param_2,int param_3)
   }
   FUN_800528d0();
   FUN_8025cce8(1,4,5,5);
-  FUN_8006f8fc(0,7,0);
-  FUN_8006f8a4(0);
+  gxSetZMode_(0,7,0);
+  gxSetPeControl_ZCompLoc_(0);
   FUN_8025c754(7,0,0,7,0);
   return 1;
 }

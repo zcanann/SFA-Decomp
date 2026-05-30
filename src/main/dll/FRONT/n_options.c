@@ -12,8 +12,8 @@
 #pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
+extern void gxSetPeControl_ZCompLoc_();
+extern void gxSetZMode_();
 extern undefined4 CreateAudioDecodeThread();
 extern undefined4 FUN_801175ac();
 extern undefined4 FUN_801175b4();
@@ -164,12 +164,12 @@ void THPPlayerDrawCurrentFrame(void *param_1,void *param_2,void *param_3,uint pa
   uint auStack_44 [17];
   
   uVar4 = FUN_80286840();
-  FUN_8006f8fc(1,3,1);
+  gxSetZMode_(1,3,1);
   FUN_8025cce8(0,1,0,0);
   FUN_8025cdec(1);
   FUN_8025ce2c(0);
   FUN_80259288(2);
-  FUN_8006f8a4(1);
+  gxSetPeControl_ZCompLoc_(1);
   FUN_8025c754(7,0,0,7,0);
   FUN_80258944(2);
   FUN_80258674(0,1,4,0x3c,0,0x7d);

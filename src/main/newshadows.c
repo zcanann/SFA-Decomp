@@ -44,7 +44,7 @@ extern undefined4 FUN_80064384();
 extern undefined4 objAudioFn_8006ef38();
 extern undefined4 FUN_8006f788();
 extern undefined4 FUN_8006f790();
-extern undefined4 FUN_8006f8fc();
+extern void gxSetZMode_();
 extern undefined4 FUN_800709e8();
 extern undefined4 FUN_80080f6c();
 extern undefined4 FUN_802420b0();
@@ -296,7 +296,7 @@ void newshadows_captureProjectedShadow(ushort *object)
     *(float *)(object + 4) = (float)dVar5;
     iVar2 = FUN_80017a54((int)object);
     *(ushort *)(iVar2 + 0x18) = *(ushort *)(iVar2 + 0x18) & ~0x8;
-    FUN_8006f8fc(1,3,1);
+    gxSetZMode_(1,3,1);
     FUN_80259400(0x100,0xb0,0x80,0x80);
     FUN_80259504(0x80,0x80,0x2a,0);
     FUN_80259c0c((&DAT_8038ee3c)[DAT_803ddc0c] + 0x60,1);
@@ -684,7 +684,7 @@ void newshadows_renderQueuedShadowCasters(void)
           (&DAT_8038fd7d)[iVar4] = (&DAT_803dc2c8)[bVar17];
           FUN_8003b7dc(iVar13);
           if (*(char *)(piVar19 + 2) == '\x02') {
-            FUN_8006f8fc(1,3,1);
+            gxSetZMode_(1,3,1);
             dVar23 = (double)lbl_803DF9A8;
             FUN_80247a7c(dVar23,dVar23,dVar23,(float *)(&DAT_8038fd48 + iVar4));
             (&DAT_8038fd50)[uVar3 * 0x1a] = lbl_803DF9F0;
@@ -700,7 +700,7 @@ void newshadows_renderQueuedShadowCasters(void)
           }
           else {
             if (bVar17 == 0) {
-              FUN_8006f8fc(1,3,1);
+              gxSetZMode_(1,3,1);
               FUN_80259400(0,0,uVar15,uVar15);
               FUN_80259504((ushort)uVar14,(ushort)uVar14,0x20,1);
               FUN_80259c0c(*piVar7 + 0x60,1);
@@ -745,7 +745,7 @@ void newshadows_renderQueuedShadowCasters(void)
       piVar19 = piVar19 + 3;
     }
     if (1 < bVar17) {
-      FUN_8006f8fc(1,3,1);
+      gxSetZMode_(1,3,1);
       FUN_80259858('\0',(byte *)(DAT_803dd970 + 0x1a),'\0',(byte *)(DAT_803dd970 + 0x32));
       FUN_80259400(0,0,0x100,0x100);
       FUN_80259504(0x100,0x100,0x28,0);

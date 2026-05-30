@@ -38,8 +38,8 @@ extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80048000();
 extern undefined4 FUN_8004800c();
 extern undefined4 FUN_8005d1e8();
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
+extern void gxSetPeControl_ZCompLoc_();
+extern void gxSetZMode_();
 extern undefined4 FUN_80081028();
 extern undefined4 FUN_80081030();
 extern undefined4 FUN_80081038();
@@ -486,8 +486,8 @@ void FUN_8018c4a0(int param_1)
   else {
     FUN_8025cce8(1,4,1,5);
   }
-  FUN_8006f8fc(1,3,0);
-  FUN_8006f8a4(1);
+  gxSetZMode_(1,3,0);
+  gxSetPeControl_ZCompLoc_(1);
   FUN_8025c754(7,0,0,7,0);
   return;
 }

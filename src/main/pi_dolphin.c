@@ -72,8 +72,8 @@ extern int newshadows_getInverseShadowRampTexture(void);
 extern int newshadows_getRadialFalloffTexture(void);
 extern void newshadows_bindShadowCaptureTexture(int textureSlot);
 extern void newshadows_getShadowNoiseScroll(float *xOffsetOut,float *yOffsetOut);
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
+extern void gxSetPeControl_ZCompLoc_();
+extern void gxSetZMode_();
 extern undefined4 FUN_800723a0();
 extern undefined4 FUN_80080f88();
 extern undefined4 FUN_8011810c();
@@ -1635,7 +1635,7 @@ undefined4 FUN_80045c4c(char param_1)
   uint local_18;
   
   uVar2 = 1;
-  FUN_8006f8fc(1,3,1);
+  gxSetZMode_(1,3,1);
   uVar4 = FUN_8025ce2c(1);
   FUN_80258a04((int)((ulonglong)uVar4 >> 0x20),(int)uVar4,uVar2);
   puVar3 = &local_28;

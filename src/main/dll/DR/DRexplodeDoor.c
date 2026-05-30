@@ -3,8 +3,8 @@
 
 extern undefined4 FUN_80006974();
 extern undefined4 FUN_8004812c();
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
+extern void gxSetPeControl_ZCompLoc_();
+extern void gxSetZMode_();
 extern undefined4 FUN_80071e78();
 extern undefined4 FUN_80071f8c();
 extern undefined4 FUN_80071f90();

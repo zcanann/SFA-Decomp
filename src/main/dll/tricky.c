@@ -42,8 +42,8 @@ extern char FUN_80053be4();
 extern int FUN_8005b024();
 extern void newshadows_getShadowDiskTexture(int *textureOut);
 extern undefined4 FUN_8006f690();
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
+extern void gxSetPeControl_ZCompLoc_();
+extern void gxSetZMode_();
 extern undefined4 FUN_8006fd90();
 extern undefined4 FUN_8007005c();
 extern undefined4 FUN_800709d8();
@@ -479,8 +479,8 @@ void FUN_8011dc74(int param_1,undefined param_2,undefined4 param_3,char param_4)
   else {
     FUN_8025cce8(1,4,1,5);
   }
-  FUN_8006f8fc(0,7,0);
-  FUN_8006f8a4(1);
+  gxSetZMode_(0,7,0);
+  gxSetPeControl_ZCompLoc_(1);
   FUN_8025c754(7,0,0,7,0);
   FUN_80257b5c();
   FUN_802570dc(9,1);
@@ -628,8 +628,8 @@ undefined4 FUN_8011df18(int param_1,int *param_2,int param_3)
     FUN_80259288(2);
   }
   FUN_8025cce8(1,4,5,5);
-  FUN_8006f8fc(0,7,0);
-  FUN_8006f8a4(1);
+  gxSetZMode_(0,7,0);
+  gxSetPeControl_ZCompLoc_(1);
   FUN_8025c754(7,0,0,7,0);
   FUN_80257b5c();
   FUN_802570dc(9,1);

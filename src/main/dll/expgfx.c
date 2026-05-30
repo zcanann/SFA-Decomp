@@ -30,8 +30,8 @@ extern void lightmap_queueExternalRenderEntry(uint slotPoolBase,int poolIndex,fl
 extern uint FUN_8005e558();
 extern u8 fn_8005E97C(float minX,float maxX,float minY,float maxY,float minZ,float maxZ,
                       ExpgfxBounds *boundsTemplate);
-extern undefined4 FUN_8006f8a4();
-extern undefined4 FUN_8006f8fc();
+extern void gxSetPeControl_ZCompLoc_();
+extern void gxSetZMode_();
 extern void trackIntersect_drawColorBand(void);
 extern int FUN_80080f40();
 extern undefined4 FUN_80080f84();
