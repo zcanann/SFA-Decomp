@@ -1052,114 +1052,83 @@ LAB_800e3130:
  */
 #pragma scheduling off
 #pragma peephole off
-int RomCurve_getRandomLinkedOfTypes(int param_1,int param_2,int param_3,int *param_4)
+int RomCurve_getRandomLinkedOfTypes(RomCurveDef *curve,int *types,int typeCount,int *previousLinkId)
 {
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int *piVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  uint uVar9;
-  int iVar10;
-  uint uVar11;
-  int local_28 [7];
-  
-  if (param_1 == 0) {
-    local_28[0] = -1;
-  }
-  else {
-    iVar2 = 0;
-    iVar10 = 4;
-    iVar7 = param_1;
-    do {
-      uVar9 = *(uint *)(iVar7 + 0x1c);
-      if (-1 < (int)uVar9) {
-        if ((int)uVar9 < 0) {
-          iVar8 = 0;
-        }
-        else {
-          iVar3 = 0;
-          iVar6 = nRomCurves + -1;
-          while (iVar3 <= iVar6) {
-            iVar4 = iVar6 + iVar3 >> 1;
-            iVar8 = (int)romCurves[iVar4];
-            if (*(uint *)(iVar8 + 0x14) < uVar9) {
-              iVar3 = iVar4 + 1;
-            }
-            else {
-              if (*(uint *)(iVar8 + 0x14) <= uVar9) goto LAB_800e3290;
-              iVar6 = iVar4 + -1;
+  int candidates[7];
+  int candidateCount;
+  int linkIndex;
+  int typeIndex;
+  int low;
+  int high;
+  int mid;
+  int removeCount;
+  int *candidate;
+  u32 linkId;
+  RomCurveDef *linkedCurve;
+
+  if (curve == NULL) {
+    candidates[0] = ROMCURVE_LINK_ID_NONE;
+  } else {
+    candidateCount = 0;
+    for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++) {
+      linkId = curve->linkIds[linkIndex];
+      if ((s32)linkId > -1) {
+        if ((s32)linkId < 0) {
+          linkedCurve = NULL;
+        } else {
+          low = 0;
+          high = nRomCurves - 1;
+          while (low <= high) {
+            mid = (high + low) >> 1;
+            linkedCurve = romCurves[mid];
+            if (linkedCurve->id < linkId) {
+              low = mid + 1;
+            } else {
+              if (linkedCurve->id <= linkId) {
+                goto foundLinkedCurve;
+              }
+              high = mid - 1;
             }
           }
-          iVar8 = 0;
+          linkedCurve = NULL;
         }
-LAB_800e3290:
-        for (iVar6 = 0; iVar6 < param_3; iVar6 = iVar6 + 1) {
-          iVar3 = iVar2;
-          if ((int)*(char *)(iVar8 + 0x19) == *(int *)(param_2 + iVar6 * 4)) {
-            iVar3 = iVar2 + 1;
-            local_28[iVar2] = *(int *)(iVar7 + 0x1c);
-            iVar6 = param_3;
+
+foundLinkedCurve:
+        for (typeIndex = 0; typeIndex < typeCount; typeIndex++) {
+          if (linkedCurve->type == types[typeIndex]) {
+            candidates[candidateCount] = linkId;
+            candidateCount++;
+            typeIndex = typeCount;
           }
-          iVar2 = iVar3;
         }
       }
-      iVar7 = iVar7 + 4;
-      iVar10 = iVar10 + -1;
-    } while (iVar10 != 0);
-    if (iVar2 == 0) {
-      local_28[0] = -1;
     }
-    else if (iVar2 == 1) {
-      *param_4 = *(int *)(param_1 + 0x14);
-    }
-    else if (iVar2 < 2) {
-      local_28[0] = -1;
-    }
-    else {
-      iVar7 = 0;
-      for (iVar10 = 0; iVar10 < iVar2; iVar10 = iVar10 + 1) {
-        piVar5 = (int *)((int)local_28 + iVar7);
-        if (*param_4 == *piVar5) {
-          uVar9 = (iVar2 + -1) - iVar10;
-          if (iVar10 < iVar2 + -1) {
-            uVar11 = uVar9 >> 3;
-            uVar1 = uVar9;
-            if (uVar11 == 0) goto LAB_800e33ac;
-            do {
-              *piVar5 = piVar5[1];
-              piVar5[1] = piVar5[2];
-              piVar5[2] = piVar5[3];
-              piVar5[3] = piVar5[4];
-              piVar5[4] = piVar5[5];
-              piVar5[5] = piVar5[6];
-              piVar5[6] = piVar5[7];
-              piVar5[7] = piVar5[8];
-              piVar5 = piVar5 + 8;
-              iVar7 = iVar7 + 0x20;
-              uVar11 = uVar11 - 1;
-            } while (uVar11 != 0);
-            for (uVar1 = uVar9 & 7; uVar1 != 0; uVar1 = uVar1 - 1) {
-LAB_800e33ac:
-              *piVar5 = piVar5[1];
-              piVar5 = piVar5 + 1;
-              iVar7 = iVar7 + 4;
-            }
-            iVar10 = iVar10 + uVar9;
+
+    if (candidateCount == 0) {
+      candidates[0] = ROMCURVE_LINK_ID_NONE;
+    } else if (candidateCount == 1) {
+      *previousLinkId = curve->id;
+    } else if (candidateCount < 2) {
+      candidates[0] = ROMCURVE_LINK_ID_NONE;
+    } else {
+      for (linkIndex = 0; linkIndex < candidateCount; linkIndex++) {
+        candidate = &candidates[linkIndex];
+        if (*previousLinkId == *candidate) {
+          removeCount = (candidateCount - 1) - linkIndex;
+          while (linkIndex < candidateCount - 1) {
+            *candidate = candidate[1];
+            candidate++;
+            linkIndex++;
           }
-          iVar2 = iVar2 + -1;
+          linkIndex += removeCount - 1;
+          candidateCount--;
         }
-        iVar7 = iVar7 + 4;
       }
-      *param_4 = *(int *)(param_1 + 0x14);
-      uVar9 = randomGetRange(0,iVar2 - 1);
-      local_28[0] = local_28[uVar9];
+      *previousLinkId = curve->id;
+      candidates[0] = candidates[randomGetRange(0,candidateCount - 1)];
     }
   }
-  return local_28[0];
+  return candidates[0];
 }
 #pragma peephole reset
 #pragma scheduling reset
