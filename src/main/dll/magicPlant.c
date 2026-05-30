@@ -1140,7 +1140,7 @@ extern f32 lbl_803E2950;
 extern f32 lbl_803E2954;
 extern f32 lbl_803E2958;
 extern int lbl_803DBCB8;
-extern int lbl_803DBCC0;
+extern u8 lbl_803DBCC0[8];
 extern int lbl_803DBCC8;
 extern uint countLeadingZeros(uint x);
 extern u8 Obj_IsLoadingLocked(void);
@@ -1257,7 +1257,7 @@ void fn_80153640(int obj, int state)
 #pragma peephole off
 void fn_8015383C(int obj, int state)
 {
-    int hit;
+    u32 hit;
     int losDetected;
     f32 worldPos[3];
     f32 vec[3];
@@ -1323,7 +1323,7 @@ void fn_8015383C(int obj, int state)
             mode = (u8)*(s16*)(obj + 0xa0);
         } else if (*(s16*)(obj + 0xa0) != 5 && losDetected) {
             mode = 5;
-            *(u8*)(state + 0x33a) = (&lbl_803DBCC0)[*(u8*)(state + 0x33b) & 3];
+            *(u8*)(state + 0x33a) = lbl_803DBCC0[*(u8*)(state + 0x33b) & 3];
             *(u8*)(state + 0x33b) = (u8)((*(s8*)(state + 0x33b) + 1) & 0xc3);
         } else {
             mode = 4;
