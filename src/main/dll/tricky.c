@@ -2661,3 +2661,133 @@ void hudDrawAirMeter(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void PSMTXCopy(f32 *src, f32 *dst);
+extern void GXLoadTexMtxImm(f32 *m, int id, int type);
+extern void GXSetIndTexOrder(int stage, int a, int b);
+extern void GXSetIndTexCoordScale(int stage, int a, int b);
+extern void GXSetIndTexMtx(int id, f32 *m, int scale);
+extern void GXSetTevIndirect(int stage, int a, int b, int c, int d, int e, int f, int g, int h, int i);
+extern void GXSetChanCtrl(int chan, int a, int b, int c, int d, int e, int f);
+extern void GXSetChanMatColor(int chan, GXColor c);
+extern void GXSetTevKAlphaSel(int stage, int sel);
+extern void *ObjModel_GetRenderOp(int op, int x);
+extern void *Shader_getLayer(void *op, int idx);
+extern void *textureIdxToPtr(int idx);
+extern void selectTexture(void *tex, int x);
+extern void fn_8006C5CC(int *out);
+extern int lbl_803E1E30;
+extern int lbl_802C21AC[];
+extern f32 lbl_803A8950[];
+extern f32 lbl_803E1E64, lbl_803E1E6C, lbl_803E1E70;
+extern f32 lbl_803DD850;
+extern f32 lbl_80396820[];
+extern f32 lbl_803DBB14;
+extern int lbl_803DBB10;
+typedef struct { int w[6]; } _IndMtx;
+#pragma scheduling off
+#pragma peephole off
+int fn_8011E0D8(int *this, int *p2, int p3) {
+    f32 m1[12];
+    f32 m2[12];
+    f32 m3[12];
+    f32 mtex[12];
+    _IndMtx indmtx;
+    GXColor chanCol;
+    int kcolor;
+    int tex2;
+    void *op, *layer, *tex0;
+    f32 sval;
+
+    chanCol = *(GXColor *)&lbl_803E1E30;
+    indmtx = *(_IndMtx *)lbl_802C21AC;
+    op = ObjModel_GetRenderOp(*p2, p3);
+    layer = Shader_getLayer(op, 0);
+    tex0 = textureIdxToPtr(*(int *)layer);
+
+    PSMTXCopy(lbl_803A8950, m1);
+    m1[3] = lbl_803E1E3C;
+    m1[7] = lbl_803E1E3C;
+    m1[11] = lbl_803E1E3C;
+    PSMTXScale(m2, lbl_803E1E64 / lbl_803DD80C, lbl_803E1E64 / lbl_803DD80C, lbl_803E1E68 / lbl_803DD80C);
+    m2[2] = lbl_803E1E6C / lbl_803DD80C;
+    m2[6] = lbl_803E1E6C / lbl_803DD80C;
+    PSMTXConcat(m2, m1, m1);
+    GXLoadTexMtxImm(m1, 0x1e, 1);
+    GXSetNumTexGens(3);
+    GXSetNumTevStages(3);
+    GXSetNumIndStages(2);
+    GXSetNumChans(1);
+    GXSetIndTexOrder(0, 0, 2);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, (f32 *)&indmtx, 0);
+    GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    selectTexture(tex0, 0);
+    GXSetTexCoordGen2(0, 1, 1, 0x1e, 0, 0x7d);
+    GXSetTevOrder(0, 0, 0, 4);
+    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xa);
+    GXSetTevAlphaIn(0, 7, 7, 7, 5);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanMatColor(4, chanCol);
+    GXSetIndTexOrder(1, 0, 2);
+    GXSetIndTexCoordScale(1, 0, 0);
+    GXSetTevIndirect(1, 1, 0, 7, 1, 0, 0, 1, 0, 0);
+    PSMTXConcat(lbl_80396820, lbl_803A8950, m1);
+    sval = lbl_803E1E70 * (lbl_803DD850 * lbl_803DD850);
+    PSMTXScale(m3, sval, sval, lbl_803E1E68);
+    PSMTXConcat(m3, m1, m1);
+    PSMTXTrans(m3, lbl_803E1E70 * (lbl_803E1E68 - sval), lbl_803E1E70 * (lbl_803E1E68 - sval), lbl_803E1E3C);
+    PSMTXConcat(m3, m1, m1);
+    GXLoadTexMtxImm(m1, 0x21, 0);
+    GXSetTexCoordGen2(1, 1, 0, 0x21, 0, 0x7d);
+    GXSetTevOrder(1, 1, 0, 0xff);
+    GXSetTevColorIn(1, 0xf, 0xf, 0xf, 8);
+    GXSetTevAlphaIn(1, 7, 7, 7, 0);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    mtex[0] = lbl_803DBB14;
+    mtex[1] = lbl_803E1E3C;
+    mtex[2] = lbl_803E1E3C;
+    mtex[3] = lbl_803E1E70;
+    mtex[4] = lbl_803E1E3C;
+    mtex[5] = lbl_803DBB14;
+    mtex[6] = lbl_803E1E3C;
+    mtex[7] = lbl_803E1E70;
+    mtex[8] = lbl_803E1E3C;
+    mtex[9] = lbl_803E1E3C;
+    mtex[10] = lbl_803E1E3C;
+    mtex[11] = lbl_803E1E68;
+    GXLoadTexMtxImm(mtex, 0x24, 1);
+    GXSetTexCoordGen2(2, 1, 1, 0x24, 0, 0x7d);
+    fn_8006C5CC(&tex2);
+    selectTexture((void *)tex2, 1);
+    GXSetTevKAlphaSel(2, 0x1c);
+    kcolor = lbl_803DBB10;
+    GXSetTevKColor(0, *(GXColor *)&kcolor);
+    GXSetTevDirect(2);
+    GXSetTevOrder(2, 2, 1, 0xff);
+    GXSetTevColorIn(2, 0xf, 0xf, 0xf, 0);
+    GXSetTevAlphaIn(2, 7, 4, 6, 0);
+    GXSetTevSwapMode(2, 0, 0);
+    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(2, 1, 0, 0, 1, 0);
+    if (*(s16 *)((char *)this + 0x46) == 0x755) {
+        GXSetCullMode(1);
+    } else {
+        GXSetCullMode(2);
+    }
+    GXSetBlendMode(1, 4, 5, 5);
+    gxSetZMode_(0, 7, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xa, 1);
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
