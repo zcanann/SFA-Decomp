@@ -2081,3 +2081,51 @@ void GameUI_airMeterRun(int v) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 cMenuEnabled;
+extern u16 curGameText;
+extern s16 lbl_803DD8D0;
+extern u8 lbl_803DD7A8;
+extern s16 lbl_803DD778;
+extern int lbl_803DD730;
+extern s16 lbl_803DD770;
+extern f32 lbl_803DD760;
+extern int lbl_803A9410[];
+extern u8 lbl_803DD75B;
+extern s16 lbl_803DD772;
+extern u8 pauseMenuFrameCounter;
+extern void Obj_FreeObject(int *obj);
+#pragma scheduling off
+#pragma peephole off
+void gameUiResetMenuState(void) {
+    int i;
+    cMenuEnabled = 0;
+    curGameText = 0xffff;
+    lbl_803DD8D0 = 0;
+    lbl_803DD7A8 = 0;
+    GameUI_airMeterShutdown();
+    pauseMenuState = 0;
+    lbl_803DD778 = 0;
+    lbl_803DD730 = 0;
+    lbl_803DD770 = 0;
+    lbl_803DD760 = lbl_803E1E3C;
+    {
+        int **p = (int **)lbl_803A9410;
+        for (i = 0; i < 4; i++, p++) {
+            if (*p != NULL) {
+                ((int *)(*p)[0x19])[1] = 0;
+                ((int *)(*p)[0x19])[2] = 0;
+                if ((u32)(*p)[0x13] > 0x90000000) (*p)[0x13] = 0;
+                Obj_FreeObject(*p);
+                *p = NULL;
+            }
+        }
+    }
+    lbl_803DD75A = 0;
+    lbl_803DD75B = 0;
+    lbl_803DD772 = 0;
+    pauseMenuFrameCounter = 0x3c;
+    lbl_803DD792 = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
