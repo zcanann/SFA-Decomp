@@ -76,7 +76,7 @@ void fn_800E5CBC(short *param_1,int param_2);
 void FUN_800e4db4(int param_1,int param_2);
 void FUN_800e4db8(int param_1,int param_2);
 void fn_800E618C(int obj,f32 *state);
-void objFn_800e64f4(void);
+void objFn_800e64f4(int obj,u32 *state);
 void objFn_800e67ac(void);
 void dll_15_func0A(void);
 double FUN_800e56bc(undefined8 param_1,double param_2,double param_3,double param_4,int param_5);

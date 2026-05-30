@@ -10,6 +10,7 @@ extern undefined4 FUN_80003494();
 extern undefined4 FUN_800068f4();
 extern undefined4 FUN_800068f8();
 extern uint GameBit_Get(int eventId);
+extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
 extern double FUN_80017714();
 extern int FUN_80017730();
 extern s16 getAngle(f32 deltaX,f32 deltaZ);
@@ -31,6 +32,7 @@ extern int FUN_800620e8();
 extern int objBboxFn_800640cc(void *hitOut,void *pos,f32 radius,int mode,void *bbox,int obj,
                               int p7,int p8,int p9,int p10);
 extern int FUN_800632f4();
+extern void fn_80063368(int obj);
 extern int hitDetectFn_80065e50(int obj,f32 x,f32 y,f32 z,void *out,int p5,int p6);
 extern undefined FUN_80063a68();
 extern undefined4 FUN_80063a74();
@@ -90,6 +92,10 @@ extern f32 lbl_803E0680;
 extern f32 lbl_803E0684;
 extern f32 lbl_803E0688;
 extern f32 lbl_803E0690;
+extern f32 lbl_803E06A4;
+extern f32 lbl_803E06A8;
+extern f32 lbl_803E06B8;
+extern f32 lbl_803E06BC;
 extern f32 lbl_803E12C4;
 extern f32 lbl_803E12D8;
 extern f32 lbl_803E12DC;
@@ -3251,125 +3257,106 @@ scaleAverage:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objFn_800e64f4(void)
+void objFn_800e64f4(int obj,u32 *state)
 {
-  uint uVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  ushort *puVar5;
-  int iVar6;
-  ushort uVar8;
-  uint *puVar7;
-  uint *puVar9;
-  float *pfVar10;
-  uint *puVar11;
-  int iVar12;
-  int iVar13;
-  undefined8 uVar14;
-  ushort local_78;
-  ushort local_76;
-  ushort local_74;
-  float local_70;
-  undefined4 local_6c;
-  undefined4 local_68;
-  undefined4 local_64;
-  float afStack_60 [24];
-  
-  uVar14 = FUN_8028683c();
-  puVar5 = (ushort *)((ulonglong)uVar14 >> 0x20);
-  puVar9 = (uint *)uVar14;
-  if ((*puVar9 & 0x4000000) != 0) {
-    iVar6 = *(int *)(puVar5 + 0x18);
-    if (iVar6 == 0) {
-      *(undefined4 *)(puVar5 + 0xc) = *(undefined4 *)(puVar5 + 6);
-      *(undefined4 *)(puVar5 + 0xe) = *(undefined4 *)(puVar5 + 8);
-      *(undefined4 *)(puVar5 + 0x10) = *(undefined4 *)(puVar5 + 10);
+  u8 *stateBytes;
+  u32 flags;
+  int parent;
+  int matrixSource;
+  int pointIndex;
+  int pointOffset;
+  int pointWordIndex;
+  f32 *localPoint;
+  f32 *point;
+  f32 *height;
+  CurvesTransformScratch transform;
+  f32 matrix[24];
+
+  stateBytes = (u8 *)state;
+  if ((*state & 0x4000000) != 0) {
+    parent = *(int *)(obj + 0x30);
+    if (parent == 0) {
+      *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
+      *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
+      *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
     }
-    else if ((*(int *)(iVar6 + 0x58) == 0) || (uVar8 = ObjHits_IsObjectEnabled(iVar6), uVar8 == 0)) {
-      FUN_800068f8((double)*(float *)(puVar5 + 6),(double)*(float *)(puVar5 + 8),
-                   (double)*(float *)(puVar5 + 10),(float *)(puVar5 + 0xc),(float *)(puVar5 + 0xe),
-                   (float *)(puVar5 + 0x10),*(int *)(puVar5 + 0x18));
+    else if ((*(int *)(parent + 0x58) == 0) || (ObjHits_IsObjectEnabled(parent) == 0)) {
+      Obj_TransformLocalPointToWorld(*(f32 *)(obj + 0xc),*(f32 *)(obj + 0x10),
+                                     *(f32 *)(obj + 0x14),(f32 *)(obj + 0x18),
+                                     (f32 *)(obj + 0x1c),(f32 *)(obj + 0x20),
+                                     *(u32 *)(obj + 0x30));
     }
     else {
-      FUN_80017778((double)*(float *)(puVar5 + 6),(double)*(float *)(puVar5 + 8),
-                   (double)*(float *)(puVar5 + 10),
-                   (float *)(*(int *)(*(int *)(puVar5 + 0x18) + 0x58) +
-                            (*(byte *)(*(int *)(*(int *)(puVar5 + 0x18) + 0x58) + 0x10c) + 2) * 0x40
-                            ),(float *)(puVar5 + 0xc),(float *)(puVar5 + 0xe),
-                   (float *)(puVar5 + 0x10));
+      matrixSource = *(int *)(parent + 0x58);
+      Matrix_TransformPoint((f32 *)(matrixSource + ((*(u8 *)(matrixSource + 0x10c) + 2) * 0x40)),
+                            *(f32 *)(obj + 0xc),*(f32 *)(obj + 0x10),*(f32 *)(obj + 0x14),
+                            (f32 *)(obj + 0x18),(f32 *)(obj + 0x1c),(f32 *)(obj + 0x20));
     }
-    if ((*puVar9 & 0x2000) != 0) {
-      local_78 = *puVar5;
-      if ((*puVar9 & 0x20) == 0) {
-        local_76 = puVar5[1];
-        local_74 = puVar5[2];
+    flags = *state;
+    if ((flags & 0x2000) != 0) {
+      transform.angles[0] = *(s16 *)obj;
+      if ((flags & 0x20) != 0) {
+        transform.angles[1] = 0;
+        transform.angles[2] = 0;
       }
       else {
-        local_76 = 0;
-        local_74 = 0;
+        transform.angles[1] = *(s16 *)(obj + 2);
+        transform.angles[2] = *(s16 *)(obj + 4);
       }
-      local_70 = lbl_803E130C;
-      local_6c = *(undefined4 *)(puVar5 + 0xc);
-      local_68 = *(undefined4 *)(puVar5 + 0xe);
-      local_64 = *(undefined4 *)(puVar5 + 0x10);
-      FUN_80017754(afStack_60,&local_78);
-      iVar13 = 0;
-      iVar6 = 0;
-      puVar7 = puVar9;
-      for (iVar12 = 0; fVar2 = lbl_803E1338, iVar12 < (int)(uint)*(byte *)(puVar9 + 0x97) >> 4;
-          iVar12 = iVar12 + 1) {
-        pfVar10 = (float *)(puVar9[1] + iVar6);
-        FUN_80017778((double)*pfVar10,(double)pfVar10[1],(double)pfVar10[2],afStack_60,
-                     (float *)(puVar7 + 2),(float *)(puVar9 + iVar13 + 3),
-                     (float *)(puVar9 + iVar13 + 4));
-        *(undefined *)((int)puVar9 + iVar12 + 0xb8) = 0xff;
-        puVar7 = puVar7 + 3;
-        iVar6 = iVar6 + 0xc;
-        iVar13 = iVar13 + 3;
+      transform.scale = lbl_803E068C;
+      transform.x = *(f32 *)(obj + 0x18);
+      transform.y = *(f32 *)(obj + 0x1c);
+      transform.z = *(f32 *)(obj + 0x20);
+      setMatrixFromObjectPos(matrix,&transform);
+      pointIndex = 0;
+      pointOffset = 0;
+      point = (f32 *)state;
+      pointWordIndex = 0;
+      while (pointIndex < ((s8)stateBytes[0x25c] >> 4)) {
+        localPoint = (f32 *)(state[1] + pointOffset);
+        Matrix_TransformPoint(matrix,localPoint[0],localPoint[1],localPoint[2],
+                              point + 2,(f32 *)(state + pointWordIndex + 3),
+                              (f32 *)(state + pointWordIndex + 4));
+        stateBytes[pointIndex + 0xb8] = 0xff;
+        point += 3;
+        pointOffset += 0xc;
+        pointWordIndex += 3;
+        pointIndex++;
       }
-      puVar7 = puVar9;
-      puVar11 = puVar9;
-      for (iVar6 = 0; iVar6 < (int)(uint)*(byte *)(puVar9 + 0x97) >> 4; iVar6 = iVar6 + 1) {
-        puVar7[0xe] = puVar7[2];
-        puVar7[0xf] = (uint)(fVar2 + (float)puVar7[3] + (float)puVar11[0x2a]);
-        puVar7[0x10] = puVar7[4];
-        puVar7 = puVar7 + 3;
-        puVar11 = puVar11 + 1;
+      point = (f32 *)state;
+      height = (f32 *)state;
+      for (pointIndex = 0; pointIndex < ((s8)stateBytes[0x25c] >> 4); pointIndex++) {
+        point[0xe] = point[2];
+        point[0xf] = lbl_803E06B8 + point[3] + height[0x2a];
+        point[0x10] = point[4];
+        point += 3;
+        height++;
       }
     }
-    if (puVar5[0x22] == 1) {
-      uVar1 = *(uint *)(puVar5 + 0xc);
-      puVar9[8] = uVar1;
-      puVar9[0x14] = uVar1;
-      fVar2 = lbl_803E133C + *(float *)(puVar5 + 0xe);
-      puVar9[9] = (uint)fVar2;
-      puVar9[0x15] = (uint)fVar2;
-      uVar1 = *(uint *)(puVar5 + 0x10);
-      puVar9[10] = uVar1;
-      puVar9[0x16] = uVar1;
+    if (*(s16 *)(obj + 0x44) == 1) {
+      state[8] = *(u32 *)(obj + 0x18);
+      state[0x14] = *(u32 *)(obj + 0x18);
+      *(f32 *)(state + 9) = lbl_803E06BC + *(f32 *)(obj + 0x1c);
+      *(f32 *)(state + 0x15) = *(f32 *)(state + 9);
+      state[10] = *(u32 *)(obj + 0x20);
+      state[0x16] = *(u32 *)(obj + 0x20);
     }
-    *(undefined *)(puVar9 + 0x98) = 0;
-    *(undefined *)((int)puVar9 + 0x25f) = 0;
-    fVar3 = lbl_803E1324;
-    puVar9[0x6f] = (uint)lbl_803E1324;
-    puVar9[0x6e] = (uint)fVar3;
-    fVar4 = lbl_803E1328;
-    puVar9[0x6c] = (uint)lbl_803E1328;
-    fVar2 = lbl_803E12E8;
-    puVar9[0x6d] = (uint)lbl_803E12E8;
-    puVar9[0x6b] = (uint)fVar2;
-    puVar9[0x36] = 0;
-    puVar7 = puVar9;
-    for (iVar6 = 0; iVar6 < (int)(uint)*(byte *)(puVar9 + 0x97) >> 4; iVar6 = iVar6 + 1) {
-      puVar7[0x80] = (uint)fVar3;
-      puVar7[0x7c] = (uint)fVar3;
-      puVar7[0x74] = (uint)fVar4;
-      puVar7 = puVar7 + 1;
+    stateBytes[0x260] = 0;
+    stateBytes[0x25f] = 0;
+    *(f32 *)(stateBytes + 0x1bc) = lbl_803E06A4;
+    *(f32 *)(stateBytes + 0x1b8) = lbl_803E06A4;
+    *(f32 *)(stateBytes + 0x1b0) = lbl_803E06A8;
+    *(f32 *)(stateBytes + 0x1b4) = lbl_803E0668;
+    *(f32 *)(stateBytes + 0x1ac) = lbl_803E0668;
+    state[0x36] = 0;
+    point = (f32 *)state;
+    for (pointIndex = 0; pointIndex < ((s8)stateBytes[0x25c] >> 4); pointIndex++) {
+      point[0x80] = lbl_803E06A4;
+      point[0x7c] = lbl_803E06A4;
+      point[0x74] = lbl_803E06A8;
+      point++;
     }
   }
-  FUN_80286888();
-  return;
 }
 
 /*
@@ -3488,7 +3475,7 @@ void dll_15_func0A(void)
   uVar10 = FUN_8028683c();
   puVar2 = (ushort *)((ulonglong)uVar10 >> 0x20);
   puVar4 = (uint *)uVar10;
-  objFn_800e64f4();
+  objFn_800e64f4((int)puVar2,puVar4);
   uVar3 = *puVar4;
   if (((uVar3 & 0x4000000) != 0) && ((uVar3 & 8) != 0)) {
     local_78 = *puVar2;
@@ -3874,7 +3861,7 @@ LAB_800e7350:
     }
   }
   else if (*(char *)((int)puVar8 + 0x25b) == '\x02') {
-    objFn_800e64f4();
+    objFn_800e64f4((int)puVar4,puVar8);
     uVar5 = *puVar8;
     if (((uVar5 & 0x4000000) != 0) && ((uVar5 & 8) != 0)) {
       local_1d0 = *puVar4;
@@ -3949,7 +3936,7 @@ LAB_800e7350:
     }
   }
   else {
-    objFn_800e64f4();
+    objFn_800e64f4((int)puVar4,puVar8);
     uVar5 = *puVar8;
     if (((uVar5 & 0x4000000) != 0) && ((uVar5 & 8) != 0)) {
       local_1e8 = *puVar4;
