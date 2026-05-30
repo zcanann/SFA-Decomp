@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 OBJDUMP_CANDIDATES = [
+    "build\\binutils\\powerpc-eabi-objdump.exe",
     "build/binutils/powerpc-eabi-objdump",
     "/home/jack/code/SFA-Decomp/build/binutils/powerpc-eabi-objdump",
     "powerpc-eabi-objdump",
