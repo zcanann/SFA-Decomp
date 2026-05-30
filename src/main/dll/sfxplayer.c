@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/mapEvent.h"
+#include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
 
 extern void Obj_FreeObject(int obj);
@@ -11,9 +12,6 @@ extern void gameTimerInit(int timerId,int frames);
 extern u32 GameBit_Get(int eventId);
 extern int isGameTimerDisabled(void);
 extern void timerSetToCountUp(void);
-extern void TrickyCurve_activateEffectHandleRing(void);
-extern void TrickyCurve_updateEffectHandleRing(int obj);
-
 extern MapEventInterface **gMapEventInterface;
 
 #define SFXPLAYER_OBJECT_MAP_ID_OFFSET 0xAC
@@ -165,7 +163,8 @@ void sfxplayer_init(int obj,int config)
 
   state = *(SfxplayerState **)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
   *(s16 *)obj = (s16)((s8)*(u8 *)(config + SFXPLAYER_CONFIG_MAP_ID_OFFSET) << 8);
-  *(void (**)(void))(obj + SFXPLAYER_OBJECT_CALLBACK_OFFSET) = TrickyCurve_activateEffectHandleRing;
+  *(void (**)(void))(obj + SFXPLAYER_OBJECT_CALLBACK_OFFSET) =
+      (void (*)(void))TrickyCurve_activateEffectHandleRing;
   state->config19 = *(u8 *)(config + SFXPLAYER_CONFIG_MODE_OFFSET);
   state->eventId = *(s16 *)(config + SFXPLAYER_CONFIG_EVENT_ID_OFFSET);
   state->unk2 = *(s16 *)(config + SFXPLAYER_CONFIG_FIELD20_OFFSET);

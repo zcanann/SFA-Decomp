@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
 
@@ -32,6 +33,44 @@ extern f32 lbl_803E70F4;
 extern f32 lbl_803E70F8;
 extern f32 lbl_803E70FC;
 extern f32 lbl_803E7100;
+
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int extraSize, int objType);
+extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
+extern void Obj_FreeObject(int obj);
+extern void gameTimerStop(void);
+extern void GameBit_Set(int eventId, int value);
+extern void mathFn_80021ac8(s16 *rotation, f32 *outVec);
+
+extern MapEventInterface **gMapEventInterface;
+extern u32 lbl_803E6450;
+extern u32 lbl_803E6454;
+extern f32 timeDelta;
+extern f32 lbl_803E6458;
+extern f32 lbl_803E645C;
+extern f32 lbl_803E6460;
+extern f32 lbl_803E6464;
+extern f32 lbl_803E6468;
+extern f64 lbl_803E6470;
+extern f32 lbl_803E6478;
+
+#define SFXPLAYER_OBJECT_MAP_ID_OFFSET 0xAC
+#define SFXPLAYER_OBJECT_FLAGS_OFFSET 0xB0
+#define SFXPLAYER_OBJECT_STATE_OFFSET 0xB8
+#define SFXPLAYER_EFFECT_RING_COUNT 4
+#define SFXPLAYER_EFFECT_HANDLES_PER_RING 2
+#define SFXPLAYER_MODE_SEQUENCE 2
+#define SFXPLAYER_RING_START_SFX 0x459
+#define SFXPLAYER_TIMEOUT_RESET_SFX 0x1CE
+#define SFXPLAYER_GAMEBIT_RING_ACTIVE 0xEDF
+#define SFXPLAYER_RING_VISUAL_SETUP_SIZE 0x2C
+#define SFXPLAYER_RING_VISUAL_OBJECT_ID 0x6E8
+#define SFXPLAYER_RING_HIT_SETUP_SIZE 4
+#define SFXPLAYER_RING_HIT_OBJECT_ID 0x71C
+#define SFXPLAYER_RING_SETUP_MODE 5
+#define SFXPLAYER_EFFECT_RING_ROT_STEP 0x3FFF
 
 /*
  * --INFO--
@@ -567,6 +606,202 @@ void sfxplayer_updateEffectHandlePositions(short *param_1)
   }
   return;
 }
+
+#define SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rot, angleStep) \
+    do { \
+        if ((handle) != 0) { \
+            *(f32 *)((handle) + 0xc) = lbl_803E6460; \
+            *(f32 *)((handle) + 0x10) = lbl_803E6464; \
+            *(f32 *)((handle) + 0x14) = lbl_803E6468; \
+            (rot)[0] = (s16)(*(s16 *)(obj) + (angleStep)); \
+            mathFn_80021ac8((rot), (f32 *)((handle) + 0xc)); \
+            *(f32 *)((handle) + 0xc) += *(f32 *)((obj) + 0xc); \
+            *(f32 *)((handle) + 0x10) += *(f32 *)((obj) + 0x10); \
+            *(f32 *)((handle) + 0x14) += *(f32 *)((obj) + 0x14); \
+        } \
+    } while (0)
+
+#pragma peephole off
+#pragma scheduling off
+void TrickyCurve_updateEffectHandleRing(int obj)
+{
+    SfxplayerState *state = *(SfxplayerState **)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
+    SfxplayerStateFlags *flags = &state->flags;
+    s16 rotation[3];
+    f32 baseVec[4];
+    int *handles;
+    s16 angleStep;
+    s16 i;
+    int handle;
+
+    if (flags->bit10 != 0 && flags->bit20 == 0 && state->variantSfxTimer > 0x32) {
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXPLAYER_RING_START_SFX);
+        if ((*gMapEventInterface)->getMode((s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET)) ==
+            SFXPLAYER_MODE_SEQUENCE) {
+            *(s16 *)obj += (s16)((lbl_803E6458 + (f32)state->config19) * lbl_803E645C * timeDelta);
+        } else {
+            *(s16 *)obj += (s16)(lbl_803E645C * timeDelta);
+        }
+    }
+
+    if (state->variantSfxTimer != 0 && flags->bit10 != 0) {
+        state->variantSfxTimer -= (s16)(int)timeDelta;
+        if (state->variantSfxTimer <= 0) {
+            state->variantSfxTimer = 200;
+        }
+    }
+
+    baseVec[1] = lbl_803E6460;
+    baseVec[2] = lbl_803E6460;
+    baseVec[3] = lbl_803E6460;
+    baseVec[0] = lbl_803E6458;
+    angleStep = 0;
+    rotation[2] = 0;
+    rotation[1] = 0;
+    handles = gSfxplayerEffectHandles;
+
+    for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++) {
+        handle = handles[0];
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rotation, angleStep);
+        handle = handles[1];
+        SFXPLAYER_UPDATE_EFFECT_HANDLE_POS(handle, obj, rotation, angleStep);
+        handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
+        angleStep += SFXPLAYER_EFFECT_RING_ROT_STEP;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+int sfxplayer_ensureEffectHandlePair(int obj, u8 ringIndex)
+{
+    u32 ringIdWords[2];
+    int *handles;
+    int *pair;
+    int setup;
+    int handleOffset;
+    s16 *ringIds;
+
+    ringIdWords[0] = lbl_803E6450;
+    ringIdWords[1] = lbl_803E6454;
+
+    if (Obj_IsLoadingLocked() == 0) {
+        return 0;
+    }
+
+    handleOffset = (ringIndex & 0xff) * 8;
+    handles = gSfxplayerEffectHandles;
+    if (*(int *)((int)handles + handleOffset) == 0) {
+        setup = Obj_AllocObjectSetup(SFXPLAYER_RING_VISUAL_SETUP_SIZE, SFXPLAYER_RING_VISUAL_OBJECT_ID);
+        *(u8 *)(setup + 6) = 0xff;
+        *(u8 *)(setup + 7) = 0xff;
+        *(u8 *)(setup + 4) = 2;
+        *(u8 *)(setup + 5) = 1;
+        *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+        *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
+        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(s16 *)(setup + 0x24) = -1;
+        *(u8 *)(setup + 0x1a) = 0;
+        *(u8 *)(setup + 0x18) = 0;
+        *(u8 *)(setup + 0x19) = 0;
+        if ((*gMapEventInterface)->getMode((s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET)) ==
+            SFXPLAYER_MODE_SEQUENCE) {
+            ringIds = (s16 *)ringIdWords;
+            *(u8 *)(setup + 0x1b) = (u8)ringIds[ringIndex & 0xff];
+        } else {
+            *(u8 *)(setup + 0x1b) = (u8)*(s16 *)((char *)ringIdWords + 6);
+        }
+        *(u8 *)(setup + 0x1c) = 0;
+        *(u8 *)(setup + 0x1d) = 0;
+        *(u8 *)(setup + 0x26) = 0x64;
+        *(u8 *)(setup + 0x27) = 0;
+        *(u8 *)(setup + 0x28) = 0;
+        *(f32 *)(setup + 0x20) = lbl_803E6478;
+        *(u8 *)(setup + 0x29) = 0xd2;
+        *(u8 *)(setup + 0x2a) = 0;
+        *(int *)((int)handles + handleOffset) =
+            Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
+                            (s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET), -1,
+                            *(int *)(obj + 0x30));
+    }
+
+    pair = (int *)((int)gSfxplayerEffectHandles + handleOffset + 4);
+    if (*pair == 0) {
+        setup = Obj_AllocObjectSetup(SFXPLAYER_RING_HIT_SETUP_SIZE, SFXPLAYER_RING_HIT_OBJECT_ID);
+        *(u8 *)(setup + 6) = 0xff;
+        *(u8 *)(setup + 7) = 0xff;
+        *(u8 *)(setup + 4) = 2;
+        *(u8 *)(setup + 5) = 1;
+        *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+        *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
+        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+        *pair = Obj_SetupObject(setup, SFXPLAYER_RING_SETUP_MODE,
+                                (s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET), -1,
+                                *(int *)(obj + 0x30));
+    }
+
+    return 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+int TrickyCurve_activateEffectHandleRing(int obj, int unused, u8 *eventData)
+{
+    SfxplayerState *state = *(SfxplayerState **)(obj + SFXPLAYER_OBJECT_STATE_OFFSET);
+    int i;
+
+    state->flags.bit80 = 1;
+    gameTimerStop();
+    for (i = 0; i < (s32)*(u8 *)(eventData + 0x8b); i++) {
+        if (*(u8 *)(eventData + i + 0x81) == 1) {
+            state->flags.bit10 = 1;
+            state->ringCount = 0;
+            GameBit_Set(state->eventId, 0);
+            GameBit_Set(SFXPLAYER_GAMEBIT_RING_ACTIVE, 1);
+            for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++) {
+                sfxplayer_ensureEffectHandlePair(obj, i);
+            }
+            state->flags.bit40 = 1;
+        }
+    }
+
+    TrickyCurve_updateEffectHandleRing(obj);
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void sfxplayer_free(int obj, int arg1)
+{
+    int *handles;
+    s16 i;
+
+    if (arg1 == 0) {
+        handles = gSfxplayerEffectHandles;
+        for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++) {
+            if (handles[0] != 0) {
+                Obj_FreeObject(handles[0]);
+            }
+            handles[0] = 0;
+            if (handles[1] != 0) {
+                Obj_FreeObject(handles[1]);
+            }
+            handles[1] = 0;
+            Sfx_PlayFromObject(obj, SFXPLAYER_TIMEOUT_RESET_SFX);
+            handles += SFXPLAYER_EFFECT_HANDLES_PER_RING;
+        }
+    }
+    gameTimerStop();
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#undef SFXPLAYER_UPDATE_EFFECT_HANDLE_POS
 
 
 /* Trivial 4b 0-arg blr leaves. */
