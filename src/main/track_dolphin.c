@@ -345,6 +345,7 @@ extern f32 lbl_803DEC50;
 extern f32 lbl_803DF8D8;
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 __AR_Callback;
+extern f32 __AR_Size;
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f);
 extern f32 lbl_803DF8E8;
 extern f32 lbl_803DF8EC;
@@ -4731,4 +4732,32 @@ int fn_80065768(int a, f32 b, f32 val, f32 d, f32 *out1, f32 *out2, int f)
   }
   *out1 = __AR_Callback;
   return 1;
+}
+
+int fn_80062D60(int a, f32 b, f32 lo, f32 d, f32 hi, f32 *out1, int *out2)
+{
+  void **arr;
+  int n;
+  int i;
+
+  if (lo > hi) {
+    f32 t = hi;
+    hi = lo;
+    lo = t;
+  }
+  n = hitDetectFn_80065e50(a, b, lo, d, &arr, 0, 1);
+  *out1 = lo;
+  *out2 = 0;
+  for (i = 0; i < n; i++) {
+    void *elem = arr[i];
+    if (*(s8 *)((char *)elem + 0x14) == 14) {
+      continue;
+    }
+    if (lo < *(f32 *)elem && hi > *(f32 *)elem) {
+      *out2 = *(int *)((char *)arr[i] + 0x10);
+      *out1 = *(f32 *)arr[i];
+      return (((f32 *)arr[i])[2] < __AR_Size) + 1;
+    }
+  }
+  return 0;
 }
