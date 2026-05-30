@@ -6,11 +6,10 @@ extern void GameBit_Set(int eventId,int value);
 extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80190148();
 extern undefined4 FUN_801905c4();
-extern undefined4 FUN_80190bd4();
 extern void Transporter_SeqFn(void);
-extern void objParticleFn_80097734(double scaleX,double scaleY,double scaleZ,double scaleW,
-                                   void *obj,int param_6,int param_7,int param_8,int param_9,
-                                   void *param_10,int param_11);
+extern void objParticleFn_80097734(int obj,int enabled,f32 radius,int particleKind,
+                                   int particleId,int lifetime,f32 scaleX,f32 scaleY,
+                                   f32 scaleZ,void *args,int arg9);
 extern void *objFindTexture(void *obj,int target,int param_3);
 
 extern undefined4 DAT_803ddb38;
@@ -31,6 +30,11 @@ typedef struct CfDoorLightDef {
   s16 doneEvent;
   s16 triggerEvent;
 } CfDoorLightDef;
+
+typedef struct BarrelPadParticleArgs {
+  u8 pad00[0xc];
+  f32 offset[3];
+} BarrelPadParticleArgs;
 
 /*
  * --INFO--
@@ -211,26 +215,21 @@ void cflightwall_render(void) { objRenderFn_8003b8f4(lbl_803E3EE8); }
 void barrelpad_render(void) { objRenderFn_8003b8f4(lbl_803E3F00); }
 
 void barrelpad_update(s16 *obj) {
-    float local_c;
-    float local_8;
-    float local_4;
-    undefined particleScratch[12];
+    BarrelPadParticleArgs particleArgs;
 
     if (obj[0x23] == 0x79) {
-        local_c = lbl_803E3F04;
-        local_8 = lbl_803E3F08;
-        local_4 = lbl_803E3F04;
-        objParticleFn_80097734((double)lbl_803E3F0C,(double)lbl_803E3F10,
-                               (double)lbl_803E3F10,(double)lbl_803E3F14,
-                               obj,5,5,2,0x19,particleScratch,0);
+        particleArgs.offset[0] = lbl_803E3F04;
+        particleArgs.offset[1] = lbl_803E3F08;
+        particleArgs.offset[2] = lbl_803E3F04;
+        objParticleFn_80097734((int)obj,5,lbl_803E3F0C,5,2,0x19,lbl_803E3F10,
+                               lbl_803E3F10,lbl_803E3F14,&particleArgs,0);
     }
     else if (obj[0x23] == 0x748) {
-        local_c = lbl_803E3F04;
-        local_8 = lbl_803E3F18;
-        local_4 = lbl_803E3F04;
-        objParticleFn_80097734((double)lbl_803E3F1C,(double)lbl_803E3F20,
-                               (double)lbl_803E3F20,(double)lbl_803E3F14,
-                               obj,5,5,2,5,particleScratch,0);
+        particleArgs.offset[0] = lbl_803E3F04;
+        particleArgs.offset[1] = lbl_803E3F18;
+        particleArgs.offset[2] = lbl_803E3F04;
+        objParticleFn_80097734((int)obj,5,lbl_803E3F1C,5,2,5,lbl_803E3F20,
+                               lbl_803E3F20,lbl_803E3F14,&particleArgs,0);
     }
 }
 
