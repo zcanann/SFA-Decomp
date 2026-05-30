@@ -87,7 +87,7 @@ typedef struct DrBarrelGrFlags {
 extern void dll_2E_func03(int obj, int p2);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void buttonDisable(int a, int b);
-extern ObjHitReactEntry lbl_8032AEC0[];
+extern ObjHitReactEntry gEarthWalkerHitReactEntries[];
 extern f32 lbl_803E6CE4;
 extern f32 lbl_803E6CDC;
 
