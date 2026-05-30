@@ -2026,9 +2026,9 @@ void fn_8014BC98(int *node, int *sub) {
         } else {
             raw = *(s16*)node;
         }
-        delta = (s16)((u16)angle - (u16)(s16)raw);
-        if (delta > 0x8000) delta = (s16)(delta - 0xFFFF);
-        if ((s16)delta < -0x8000) delta = (s16)(delta + 0xFFFF);
+        delta = (u16)angle - (u16)(s16)raw;
+        if (delta > 0x8000) delta -= 0xFFFF;
+        if (delta < -0x8000) delta += 0xFFFF;
         d16 = (u16)delta;
         *(u16*)((char*)sub + 0x2a2) = d16;
         *(u16*)((char*)sub + 0x2a0) = d16 >> 13;
