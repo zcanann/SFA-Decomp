@@ -5342,3 +5342,32 @@ void dll_0B_func08(void *param)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int dll_0B_func04(void *base, int z, void *c, void *b, void *e, void *d, int f);
+
+#pragma scheduling off
+#pragma peephole off
+void dll_0B_func16(void *a, void *b, void *c, void *d, void *e, int f, void *g)
+{
+  *(ModgfxPendingSpawn **)lbl_8039BE98 = lbl_8039BEF8;
+  *(s8 *)(lbl_8039BE98 + 0x5d) = lbl_803DD28C - lbl_803DD290;
+  if (g == NULL && f == 0) {
+    *(u32 *)(lbl_8039BE98 + 0x54) |= 0x2000000;
+  } else {
+    *(u32 *)(lbl_8039BE98 + 0x54) |= 0x4000000;
+  }
+  if (*(u32 *)(lbl_8039BE98 + 0x54) & 1) {
+    if (*(void **)(lbl_8039BE98 + 0x4) != NULL) {
+      *(f32 *)(lbl_8039BE98 + 0x2c) += *(f32 *)((char *)*(void **)(lbl_8039BE98 + 0x4) + 0x18);
+      *(f32 *)(lbl_8039BE98 + 0x30) += *(f32 *)((char *)*(void **)(lbl_8039BE98 + 0x4) + 0x1c);
+      *(f32 *)(lbl_8039BE98 + 0x34) += *(f32 *)((char *)*(void **)(lbl_8039BE98 + 0x4) + 0x20);
+    } else {
+      *(f32 *)(lbl_8039BE98 + 0x2c) += *(f32 *)((char *)a + 0xc);
+      *(f32 *)(lbl_8039BE98 + 0x30) += *(f32 *)((char *)a + 0x10);
+      *(f32 *)(lbl_8039BE98 + 0x34) += *(f32 *)((char *)a + 0x14);
+    }
+  }
+  lbl_803DD288 = dll_0B_func04(lbl_8039BE98, 0, c, b, e, d, f);
+}
+#pragma peephole reset
+#pragma scheduling reset
