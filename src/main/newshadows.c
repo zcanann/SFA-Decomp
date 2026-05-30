@@ -3123,3 +3123,67 @@ void maybeHudFn_8006c91c(void) {
     }
 }
 #pragma scheduling reset
+
+extern void Obj_BuildWorldTransformMatrix(int *obj, f32 *mtx, int x);
+extern f32 playerMapOffsetX, playerMapOffsetZ;
+extern f32 lbl_803DED0C, lbl_803DED10, lbl_803DED14, Chan_803DED18;
+extern f32 Enabled_803DED20, BarnacleEnabled_803DED24, lbl_803DED2C;
+extern void Camera_ProjectWorldSphere(f32 *a, f32 *b, f32 *c, f32 *d, f32 *e, f32 *f,
+                                      f32 x, f32 y, f32 z, f32 r);
+extern void GXSetViewport(f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
+extern void set_shadowFlag_803dcc29(int x);
+extern void objRender(int a, int b, int c, int d, int *obj, int e);
+extern int *Obj_GetActiveModel(int *obj);
+extern void fn_8006A028(u32 tex, int a, int b, int c);
+extern void Camera_ApplyFullViewport(void);
+#pragma scheduling off
+void shadowRenderFn_8006b558(int *obj) {
+    f32 mtx[12];
+    f32 vF, vE, vD, vC, vB, vA;
+    f32 sc, objScale, nx, ny, m;
+    f32 *o64;
+    Obj_BuildWorldTransformMatrix(obj, mtx, 0);
+    Camera_ProjectWorldSphere(&vA, &vB, &vC, &vD, &vE, &vF,
+        *(f32 *)((char *)obj + 0xc) - playerMapOffsetX,
+        *(f32 *)((char *)obj + 0x10),
+        *(f32 *)((char *)obj + 0x14) - playerMapOffsetZ,
+        lbl_803DED0C * (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 0x8)));
+    vD = lbl_803DED14 * vD + lbl_803DED10;
+    vE = Chan_803DED18 * vE + lbl_803DED10;
+    if (vD > vE) m = vD;
+    else m = vE;
+    sc = Dev_803DED1C / m;
+    objScale = *(f32 *)((char *)obj + 0x8) * sc;
+    nx = -vA;
+    ny = vB;
+    GXSetViewport(lbl_803DED14 * nx, Chan_803DED18 * ny, Enabled_803DED20,
+                  BarnacleEnabled_803DED24, lbl_803DED28, lbl_803DED2C);
+    if (vC < lbl_803DED28) {
+        f32 saved = *(f32 *)((char *)obj + 0x8);
+        int *model;
+        *(f32 *)((char *)obj + 0x8) = objScale;
+        set_shadowFlag_803dcc29(1);
+        objRender(0, 0, 0, 0, obj, 1);
+        set_shadowFlag_803dcc29(0);
+        *(f32 *)((char *)obj + 0x8) = saved;
+        model = Obj_GetActiveModel(obj);
+        *(u16 *)((char *)model + 0x18) &= ~0x8;
+        gxSetZMode_(1, 3, 1);
+        GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
+        GXSetTexCopyDst(0x80, 0x80, 0x2a, 0);
+        GXCopyTex((void *)(lbl_8038E1DC[lbl_803DCF8C] + 0x60), 1);
+        fn_8006A028(lbl_8038E1DC[(lbl_803DCF8C + 1) % 3], 0x80, 0x10, 0);
+        *(f32 *)obj[0x64 / 4] = lbl_803DED2C / sc;
+    } else {
+        *(f32 *)obj[0x64 / 4] = vE;
+    }
+    Camera_ApplyFullViewport();
+    o64 = (f32 *)obj[0x64 / 4];
+    o64[5] = lbl_803DED14 * vA;
+    o64[6] = Chan_803DED18 * -vB;
+    o64[5] = o64[5] + lbl_803DED14;
+    o64[6] = o64[6] + Chan_803DED18;
+    o64[5] = o64[5] - Dev_803DED1C * o64[0];
+    o64[6] = o64[6] - Dev_803DED1C * o64[0];
+}
+#pragma scheduling reset
