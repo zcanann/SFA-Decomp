@@ -5,7 +5,8 @@ extern undefined4 FUN_800068f4();
 extern undefined4 FUN_800068f8();
 extern double FUN_800176f4();
 extern int FUN_80017730();
-extern undefined4 camcontrol_traceMove();
+extern void camcontrol_traceMove(f32 radius, f32 *from, void *to, f32 *out, void *work, int a,
+                                 int b, int c);
 extern undefined4 camcontrol_updateTargetAction();
 extern undefined4 camMoveFn_80104040();
 extern void camcontrol_updateModeSettings(int camera);
@@ -186,8 +187,8 @@ LAB_80105bbc:
         local_124 = *(float *)(psVar4 + 0xe) + *(float *)(gCamcontrolModeSettings + 0x8c);
         local_120 = *(undefined4 *)(psVar4 + 0x10);
       }
-      camcontrol_traceMove((double)lbl_803E2308,&local_128,(float *)(param_1 + 0xc),
-                           (float *)(param_1 + 0xc),(int)auStack_ac,3,'\x01','\x01');
+      camcontrol_traceMove(lbl_803E2308,&local_128,(float *)(param_1 + 0xc),
+                           (float *)(param_1 + 0xc),auStack_ac,3,1,1);
       *(undefined4 *)(param_1 + 0x5c) = *(undefined4 *)(param_1 + 0xc);
       *(undefined4 *)(param_1 + 0x5e) = *(undefined4 *)(param_1 + 0xe);
       *(undefined4 *)(param_1 + 0x60) = *(undefined4 *)(param_1 + 0x10);
@@ -211,8 +212,8 @@ LAB_80105bbc:
         local_130 = *(float *)(psVar4 + 0xe) + *(float *)(gCamcontrolModeSettings + 0x8c);
         local_12c = *(undefined4 *)(psVar4 + 0x10);
       }
-      camcontrol_traceMove((double)lbl_803E2308,&local_134,(float *)(param_1 + 0xc),
-                           (float *)(param_1 + 0xc),(int)auStack_11c,3,'\x01','\x01');
+      camcontrol_traceMove(lbl_803E2308,&local_134,(float *)(param_1 + 0xc),
+                           (float *)(param_1 + 0xc),auStack_11c,3,1,1);
       *(undefined4 *)(param_1 + 0x5c) = *(undefined4 *)(param_1 + 0xc);
       *(undefined4 *)(param_1 + 0x5e) = *(undefined4 *)(param_1 + 0xe);
       *(undefined4 *)(param_1 + 0x60) = *(undefined4 *)(param_1 + 0x10);
