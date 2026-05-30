@@ -527,3 +527,40 @@ void sc_totembond_init(ScTotemBondObject *obj, int params) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+int fn_801DE320(u16 *gameBitIds,u16 newValue)
+{
+    u16 values[4];
+    int changed;
+    u8 readIndex;
+    u8 pass;
+    u8 sortIndex;
+    u8 writeIndex;
+    u16 current;
+    u16 next;
+
+    changed = 0;
+    for (readIndex = 0; readIndex < 3; readIndex++) {
+        values[readIndex] = (u16)GameBit_Get(gameBitIds[readIndex]);
+    }
+    values[3] = newValue;
+
+    for (pass = 0; pass < 3; pass++) {
+        for (sortIndex = 0; sortIndex < 3; sortIndex++) {
+            next = values[sortIndex + 1];
+            if (next != 0) {
+                current = values[sortIndex];
+                if ((next < current) || (current == 0)) {
+                    values[sortIndex] = next;
+                    values[sortIndex + 1] = current;
+                    changed = 1;
+                }
+            }
+        }
+    }
+
+    for (writeIndex = 0; writeIndex < 3; writeIndex++) {
+        GameBit_Set(gameBitIds[writeIndex],values[writeIndex]);
+    }
+    return changed;
+}

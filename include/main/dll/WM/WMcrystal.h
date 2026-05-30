@@ -62,5 +62,6 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject *obj,undefined4 pa
 void FUN_801ddb0c(void);
 void FUN_801ddb3c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void sc_totembond_init(ScTotemBondObject *obj,int params);
+int fn_801DE320(u16 *gameBitIds,u16 newValue);
 
 #endif /* MAIN_DLL_WM_WMCRYSTAL_H_ */
