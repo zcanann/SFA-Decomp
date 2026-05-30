@@ -4550,6 +4550,7 @@ void dll_0B_func07(void *p1)
     }
 }
 
+#pragma dont_inline on
 void fn_800A1040(s16 p1, int p2)
 {
     int **arr = (int**)lbl_8039C1F8;
@@ -4574,6 +4575,7 @@ void fn_800A1040(s16 p1, int p2)
         arr[i] = NULL;
     }
 }
+#pragma dont_inline reset
 
 void boneParticleEffect_release(void)
 {
@@ -5220,6 +5222,20 @@ void Effect9_func05(void)
     lbl_803DD3A4 = 0;
   }
   lbl_803DD3A8 = fn_80293E80(lbl_803DFEB0 * (f32)(s16)lbl_803DD3A4 / lbl_803DFEB4);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dll_0B_onMapSetup(void)
+{
+  int i;
+
+  fn_800A1040(0, 1);
+  for (i = 0; i < 0x32; i++) {
+    lbl_8039C1F8[i] = NULL;
+  }
 }
 #pragma peephole reset
 #pragma scheduling reset
