@@ -1410,6 +1410,148 @@ void cfmagicwall_update(int obj) {
     }
 }
 
+extern int ObjList_FindObjectById(int objectId);
+extern void fn_8017C294(int obj);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void getEnvfxActImmediately(void *obj, void *target, int animId, int flags);
+extern void skyFn_80088e54(int mode, f32 brightness);
+extern void unlockLevel(int a, int b, int c);
+extern int playerIsDisguised(int player);
+extern void fn_80295CF4(int player, int mode);
+extern int getCurMapLayer(void);
+extern int *gCameraInterface;
+extern int lbl_802C22E8[];
+extern f32 lbl_803E43EC;
+extern void SCGameBitLatch_Update(void *latch, int mask, int clearIfSetBit, int clearIfClearBit,
+                                  int latchBit, int musicId);
+extern void SCGameBitLatch_UpdateInverted(void *latch, int mask, int clearIfSetBit,
+                                          int clearIfClearBit, int latchBit, int musicId);
+
+void cflevelcontrol_update(int obj) {
+    u8 *state = *(u8 **)(obj + 0xb8);
+    int player = (int)Obj_GetPlayerObject();
+    int triggerPos[3];
+    u32 bit974;
+    u32 bit975;
+    u32 old974;
+    u32 bit94e;
+    int cameraMode;
+
+    triggerPos[0] = lbl_802C22E8[0];
+    triggerPos[1] = lbl_802C22E8[1];
+    triggerPos[2] = lbl_802C22E8[2];
+
+    if (((u32)state[0xc] >> 3 & 1) != 0) {
+        fn_8017C294(ObjList_FindObjectById(0x47fae));
+        fn_8017C294(ObjList_FindObjectById(0x47f83));
+        fn_8017C294(ObjList_FindObjectById(0x47f8f));
+        fn_8017C294(ObjList_FindObjectById(0x47fa2));
+        fn_8017C294(ObjList_FindObjectById(0x29f2));
+        fn_8017C294(ObjList_FindObjectById(0x29f3));
+        fn_8017C294(ObjList_FindObjectById(0x29ef));
+        fn_8017C294(ObjList_FindObjectById(0x29ee));
+        state[0xc] = (u8)(state[0xc] & ~0x08);
+    }
+
+    if (((u8 (*)(int))(*(int *)(*gMapEventInterface + 0x40)))(0x1d) == 1 &&
+        GameBit_Get(0x40) != 0) {
+        ((void (*)(int, int))(*(int *)(*gMapEventInterface + 0x44)))(0x1d, 2);
+    }
+
+    bit974 = (u8)GameBit_Get(0x974);
+    bit975 = (u8)GameBit_Get(0x975);
+    old974 = ((u32)state[0xc] >> 5) & 1;
+
+    if (old974 == 0 || (((u32)state[0xc] >> 4) & 1) == 0) {
+        if (old974 == 0 && (((u32)state[0xc] >> 4) & 1) == 0) {
+            if (bit974 != 0 || bit975 != 0) {
+                Sfx_PlayFromObject(0, 0x109);
+            }
+        } else if (bit974 != 0 && bit975 != 0) {
+            Sfx_PlayFromObject(0, 0x7e);
+        }
+    }
+
+    state[0xc] = (u8)((state[0xc] & ~0x20) | ((bit974 & 1) << 5));
+    state[0xc] = (u8)((state[0xc] & ~0x10) | ((bit975 & 1) << 4));
+
+    if (*(int *)(obj + 0xf4) == 0) {
+        getEnvfxActImmediately((void *)obj, (void *)obj, 0x56, 0);
+        if (GameBit_Get(0xd73) == 0) {
+            getEnvfxActImmediately((void *)obj, (void *)obj, 0xd, 0);
+            getEnvfxActImmediately((void *)obj, (void *)obj, 0x11, 0);
+            getEnvfxActImmediately((void *)obj, (void *)obj, 0xe, 0);
+            skyFn_80088e54(0, lbl_803E43EC);
+            GameBit_Set(0xd73, 1);
+        }
+
+        if (GameBit_Get(0xdca) != 0) {
+            getEnvfxActImmediately((void *)obj, (void *)obj, 0xd, 0);
+            getEnvfxActImmediately((void *)obj, (void *)obj, 0x7e, 0);
+            getEnvfxActImmediately((void *)obj, (void *)obj, 0x7d, 0);
+            skyFn_80088e54(1, lbl_803E43EC);
+            GameBit_Set(0xdca, 0);
+            unlockLevel(0, 0, 1);
+        }
+
+        *(int *)(obj + 0xf4) = 1;
+    }
+
+    if (GameBit_Get(0x94f) != 0 && (*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+        GameBit_Set(0x94e, 0);
+    }
+
+    bit94e = GameBit_Get(0x94e);
+    if (bit94e != 0) {
+        if (playerIsDisguised(player) == 0) {
+            fn_80295CF4((int)Obj_GetPlayerObject(), 0);
+        }
+    } else if (playerIsDisguised(player) == 0) {
+        fn_80295CF4((int)Obj_GetPlayerObject(), 1);
+    }
+
+    if (GameBit_Get(0xd3d) != 0) {
+        ((void (*)(int *, int, int, int))(*(int *)(*gMapEventInterface + 0x24)))(
+            triggerPos, 0, getCurMapLayer(), 1);
+        GameBit_Set(0xd3d, 0);
+        getEnvfxActImmediately((void *)obj, (void *)obj, 0xd, 0);
+        getEnvfxActImmediately((void *)obj, (void *)obj, 0x11, 0);
+        skyFn_80088e54(1, lbl_803E43E8);
+    }
+
+    cameraMode = ((int (*)(void))(*(int *)(*gCameraInterface + 0x10)))();
+    if (cameraMode == 0x47) {
+        if ((s8)state[0xd] != 0x47) {
+            GameBit_Set(0xc0, 1);
+        }
+    } else if ((s8)state[0xd] == 0x47) {
+        GameBit_Set(0x1a8, 1);
+    }
+    state[0xd] = (s8)((int (*)(void))(*(int *)(*gCameraInterface + 0x10)))();
+
+    SCGameBitLatch_Update(state + 8, 4, -1, -1, 0x983, 0xb0);
+    SCGameBitLatch_Update(state + 8, 8, -1, -1, 0x983, 0x38);
+    SCGameBitLatch_UpdateInverted(state + 8, 0x100, -1, -1, 0x983, 0x16);
+    SCGameBitLatch_UpdateInverted(state + 8, 0x80, -1, -1, 0x983, 0x39);
+
+    if (GameBit_Get(0x983) == 0) {
+        if (GameBit_Get(0xe23) == 0) {
+            SCGameBitLatch_UpdateInverted(state + 8, 0x200, -1, -1, 0x984, 0xad);
+            SCGameBitLatch_Update(state + 8, 0x40, -1, -1, 0x984, 0x16);
+        }
+        if (GameBit_Get(0x984) != 0) {
+            SCGameBitLatch_Update(state + 8, 0x20, -1, -1, 0xe23, 0x17);
+            SCGameBitLatch_UpdateInverted(state + 8, 0x400, -1, -1, 0xe23, 0x16);
+        }
+    }
+
+    SCGameBitLatch_Update(state + 8, 1, 0x1a8, 0xc0, 0xdb8, 0xae);
+    SCGameBitLatch_Update(state + 8, 0x10, -1, -1, 0xe1d, 0x36);
+    SCGameBitLatch_Update(state + 8, 0x1000, -1, -1, 0xe1d, 0xf1);
+    SCGameBitLatch_Update(state + 8, 2, -1, -1, 0xb46, 0xaf);
+    SCGameBitLatch_Update(state + 8, 0x800, -1, -1, 0xcbb, 0xc4);
+}
+
 /* ObjGroup_RemoveObject(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
