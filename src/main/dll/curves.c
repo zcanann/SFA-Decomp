@@ -3621,6 +3621,39 @@ void dll_15_func0A(int obj,u32 *state)
 /*
  * --INFO--
  *
+ * Function: dll_15_func0B
+ * EN v1.0 Address: 0x800E6A90
+ * EN v1.0 Size: 168b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+f32 dll_15_func0B(int obj,f32 x,f32 baseY,f32 z,f32 height)
+{
+  u32 hitCount;
+  int i;
+  f32 maxY;
+  RomCurvePoint *point;
+  RomCurvePoint *points;
+
+  points = curves_getCurves(x,z,obj,&hitCount,1);
+  maxY = baseY + height;
+  point = points;
+  for (i = 0; i < (int)hitCount; i++) {
+    if ((point->x < maxY) && (point->z > lbl_803E0668)) {
+      return points[i].x;
+    }
+    point++;
+  }
+  return baseY;
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_800e56bc
  * EN v1.0 Address: 0x800E56BC
  * EN v1.0 Size: 8b
