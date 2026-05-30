@@ -17,9 +17,14 @@ typedef struct ShopkeeperObject {
 typedef void (*ObjectTriggerRefreshFn)(int triggerId, int obj, int arg);
 typedef void (*ScreenTransitionStartFn)(int transitionId, int value);
 typedef int (*ScreenTransitionFinishedFn)(void);
-typedef void (*MapEventTriggerFn)(int mapId, int eventId, int value, int arg);
-typedef u8 (*MapEventGetAnimFn)(int mapId, int eventId);
-typedef void (*MapEventSetAnimFn)(int mapId, int eventId, int value);
+
+typedef struct ShopkeeperMapEventInterface {
+    u8 pad00[0x1C];
+    void (*triggerEvent)(int mapId, int eventId, int value, int arg);
+    u8 pad20[0x4C - 0x20];
+    u8 (*getAnimEvent)(int mapId, int eventId);
+    void (*setAnimEvent)(int mapId, int eventId, int value);
+} ShopkeeperMapEventInterface;
 
 extern u32 GameBit_Get(u32 id);
 extern void GameBit_Set(u32 id, u32 value);
@@ -33,7 +38,7 @@ extern int playerHasSpell(int obj, int spell);
 
 extern int *gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
-extern int *gMapEventInterface;
+extern ShopkeeperMapEventInterface **gMapEventInterface;
 
 #define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
     ((ObjectTriggerRefreshFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))((triggerId), (obj), (arg))
@@ -42,11 +47,11 @@ extern int *gMapEventInterface;
 #define SCREEN_TRANSITION_FINISHED() \
     ((ScreenTransitionFinishedFn)(*(u32 *)(*gScreenTransitionInterface + 0x14)))()
 #define MAP_EVENT_TRIGGER(mapId, eventId, value, arg) \
-    ((MapEventTriggerFn)(*(u32 *)(*gMapEventInterface + 0x1c)))((mapId), (eventId), (value), (arg))
+    (*gMapEventInterface)->triggerEvent((mapId), (eventId), (value), (arg))
 #define MAP_EVENT_GET_ANIM(mapId, eventId) \
-    ((MapEventGetAnimFn)(*(u32 *)(*gMapEventInterface + 0x4c)))((mapId), (eventId))
+    (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
-    ((MapEventSetAnimFn)(*(u32 *)(*gMapEventInterface + 0x50)))((mapId), (eventId), (value))
+    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 #define SHOPKEEPER_APPLY_MAP_OVERRIDE(state, enabledBit)      \
     if (GameBit_Get((enabledBit)) != 0) {                     \
         if ((state)->mapOverride != 0xcc) {                   \

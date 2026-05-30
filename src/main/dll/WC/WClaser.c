@@ -17,7 +17,13 @@ extern void textureFree(void *resource);
 extern int ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, void *events);
 extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 moveProgress, int flags);
 
-extern int *gMapEventInterface;
+typedef struct WCLaserMapEventInterface {
+    u8 pad00[0x4C];
+    int (*getAnimEvent)(int mapId, int eventId);
+    void (*setAnimEvent)(int mapId, int eventId, int value);
+} WCLaserMapEventInterface;
+
+extern WCLaserMapEventInterface **gMapEventInterface;
 extern int *gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
 extern int *gModgfxInterface;
@@ -40,9 +46,9 @@ extern f32 lbl_803E5D08;
 #define OBJ_PTR(obj, offset) (*(void **)((u8 *)(obj) + (offset)))
 
 #define MAP_EVENT_TEST(mapId, eventId) \
-    ((int (*)(int, int))(*(u32 *)((u8 *)*gMapEventInterface + 0x4c)))((mapId), (eventId))
+    (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
 #define MAP_EVENT_SET(mapId, eventId, value) \
-    ((void (*)(int, int, int))(*(u32 *)((u8 *)*gMapEventInterface + 0x50)))((mapId), (eventId), (value))
+    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 #define OBJECT_TRIGGER_REFRESH(eventId, obj, arg) \
     ((void (*)(int, int *, int))(*(u32 *)((u8 *)*gObjectTriggerInterface + 0x48)))((eventId), (obj), (arg))
 #define SCREEN_TRANSITION_START(kind, value) \
