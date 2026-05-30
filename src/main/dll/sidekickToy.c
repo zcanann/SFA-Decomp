@@ -1654,9 +1654,9 @@ null_obj:
 have_state:
     if (state == NULL) goto null_state;
     val = *(f32*)((char*)state + 728);
-    if (val == lbl_803E2574) goto fpu_zero;
-    return (u8)((s32)(val / lbl_803E2598) + 1);
-fpu_zero:
+    if (val != lbl_803E2574) {
+        return (u8)((s32)(val / lbl_803E2598) + 1);
+    }
     return 0;
 null_state:
     return 0;
