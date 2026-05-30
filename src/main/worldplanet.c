@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/worldplanet.h"
 
 extern void objRenderFn_8003b8f4(double scale);
@@ -8,7 +9,7 @@ extern f32 lbl_803E6618;
 extern u32 GameBit_Get(int id);
 extern int GameBit_Set(int id, int value);
 extern void unlockLevel(int a, int b, int c);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int lbl_8032A1B4[5];
 extern u8 lbl_803DC1B8[8];
 extern u8 lbl_803DC1C0[8];
@@ -122,7 +123,7 @@ void worldplanet_init(int obj) {
     unlockLevel(0, 0, 1);
     mapUnload(0x2d, 0x10000000);
     layer = getCurMapLayer();
-    (*(void (*)(int, int, int, int))(*(int *)(*gMapEventInterface + 0x1c)))(obj + 0xc, 0, 0, layer);
+    (*gMapEventInterface)->triggerEvent(obj + 0xc, 0, 0, layer);
     (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(0x1e, 1);
     lbl_803DDD0A = 0xa;
     GameBit_Set(lbl_8032A1B4[2], 1);
