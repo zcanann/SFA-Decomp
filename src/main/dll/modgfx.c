@@ -5307,3 +5307,38 @@ void boneParticleEffect_spawnAtBones(void *obj, void *arg1, void *arg2, u8 prob,
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dll_0B_func08(void *param)
+{
+  int **arr = (int **)lbl_8039C1F8;
+  int i;
+
+  for (i = 0; i < 0x32; i++) {
+    if (arr[i] != NULL && *(void **)((char *)arr[i] + 0x4) == param) {
+      if (*(u32 *)((char *)arr[i] + 0xa4) & 0x10000) {
+        fn_800A1040(*(s16 *)((char *)arr[i] + 0x10c), 0);
+      } else {
+        *(f32 *)((char *)arr[i] + 0x18) = *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x18);
+        *(f32 *)((char *)arr[i] + 0x1c) = *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x1c);
+        *(f32 *)((char *)arr[i] + 0x20) = *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x20);
+        *(f32 *)((char *)arr[i] + 0x14) = *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x8);
+        *(s16 *)((char *)arr[i] + 0x10) = *(s16 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x4);
+        *(s16 *)((char *)arr[i] + 0xe) = *(s16 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x2);
+        *(s16 *)((char *)arr[i] + 0xc) = *(s16 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x0);
+        if (*(u32 *)((char *)arr[i] + 0xa4) & 0x2) {
+          *(f32 *)((char *)arr[i] + 0x6c) += *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x24);
+          *(f32 *)((char *)arr[i] + 0x70) += *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x28);
+          *(f32 *)((char *)arr[i] + 0x74) += *(f32 *)((char *)*(void **)((char *)arr[i] + 0x4) + 0x2c);
+        }
+        if (!(*(u32 *)((char *)arr[i] + 0xa4) & 0x200000)) {
+          *(u32 *)((char *)arr[i] + 0xa4) |= 0x200000;
+        }
+        *(int *)((char *)arr[i] + 0x4) = 0;
+      }
+    }
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
