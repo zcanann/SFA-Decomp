@@ -29,6 +29,7 @@ typedef struct SCTotemPuzzleObject {
 } SCTotemPuzzleObject;
 
 typedef struct SCTotemPuzzleParticleBox {
+    u8 pad00[8];
     f32 alpha;
     f32 x;
     f32 y;
@@ -36,9 +37,9 @@ typedef struct SCTotemPuzzleParticleBox {
 } SCTotemPuzzleParticleBox;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void objParticleFn_80097734(double scaleX, double scaleY, double scaleZ, double scaleW,
-                                   void *obj, int param_6, int param_7, int param_8, int param_9,
-                                   void *param_10, int param_11);
+extern void objParticleFn_80097734(int obj, int enabled, f32 radius, int particleKind,
+                                   int particleId, int lifetime, f32 scaleX, f32 scaleY,
+                                   f32 scaleZ, void *args, int arg9);
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void objRenderFn_8003b8f4(f32);
 
@@ -61,8 +62,8 @@ static void sc_totempuzzle_markSolved(SCTotemPuzzleObject *obj, SCTotemPuzzleSta
 int fn_801DD1A8(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state)
 {
     SCTotemPuzzleParticleBox particleBox;
-    int objectCount;
     int objectIndex;
+    int objectCount;
     int *objects;
     int solvedCount;
     u8 solvedThisObject;
@@ -113,8 +114,8 @@ int fn_801DD1A8(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state)
 
         objectIndex = 20;
         while (objectIndex != 0) {
-            objParticleFn_80097734(lbl_803E5600, lbl_803E5604, lbl_803E5604, lbl_803E5608,
-                                   obj, 7, 5, 7, 100, &particleBox, 0);
+            objParticleFn_80097734((int)obj, 7, lbl_803E5600, 5, 7, 100, lbl_803E5604,
+                                   lbl_803E5604, lbl_803E5608, &particleBox, 0);
             objectIndex--;
         }
 

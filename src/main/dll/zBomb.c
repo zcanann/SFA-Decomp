@@ -7,7 +7,9 @@ extern undefined4 streamFn_8000a380();
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void Model_GetVertexPosition(int modelData,int vertexIndex,float *outPosition);
-extern undefined4 objParticleFn_80097734();
+extern void objParticleFn_80097734(int obj,int enabled,f32 radius,int particleKind,
+                                   int particleId,int lifetime,f32 scaleX,f32 scaleY,
+                                   f32 scaleZ,void *args,int arg9);
 
 extern undefined4* gPathControlInterface;
 extern s32 lbl_80329B78[];
@@ -45,8 +47,8 @@ void dfptargetblock_update(DfpTargetBlockObject *obj)
     buf[3] = lbl_803E648C;
     buf[4] = lbl_803E64C4;
     buf[5] = lbl_803E648C;
-    objParticleFn_80097734((double)lbl_803E64C8,(double)lbl_803E64C4,(double)lbl_803E64C4,
-                 (double)lbl_803E64B0,obj,5,1,2,0x32,buf,0);
+    objParticleFn_80097734((int)obj,5,lbl_803E64C8,1,2,0x32,lbl_803E64C4,
+                 lbl_803E64C4,lbl_803E64B0,buf,0);
   }
   else {
     if (state->completionSfxReady == '\0') {
