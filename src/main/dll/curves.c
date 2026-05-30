@@ -54,7 +54,6 @@ extern longlong FUN_8028683c();
 extern undefined4 FUN_80286858();
 extern undefined4 TRKNubMainLoop();
 extern undefined4 FUN_80286874();
-extern undefined4 FUN_80286878();
 extern undefined4 FUN_8028687c();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_80286884();
@@ -1785,7 +1784,6 @@ LAB_800e3ca0:
       }
     }
   }
-  FUN_80286878();
   return;
 }
 
@@ -2724,8 +2722,6 @@ void curves_countRandomPoints(int obj,uint *curve)
       *(short *)(iVar2 + 4) = (short)iVar8;
     }
   }
-  FUN_80286888();
-  return;
 }
 
 /*
