@@ -95,6 +95,9 @@ extern f32 lbl_803E0690;
 extern f32 lbl_803E06A0;
 extern f32 lbl_803E06A4;
 extern f32 lbl_803E06A8;
+extern f32 lbl_803E06AC;
+extern f32 lbl_803E06B0;
+extern f32 lbl_803E06B4;
 extern f32 lbl_803E06B8;
 extern f32 lbl_803E06BC;
 extern f32 lbl_803E12C4;
@@ -3128,6 +3131,83 @@ void fn_800E5E38(int obj,u32 *state)
 /*
  * --INFO--
  *
+ * Function: fn_800E5F1C
+ * EN v1.0 Address: 0x800E5F1C
+ * EN v1.0 Size: 624b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_800E5F1C(int obj,u32 *state)
+{
+  u32 hitCount;
+  int i;
+  s8 foundBelow;
+  RomCurvePoint *point;
+  RomCurvePoint *points;
+
+  foundBelow = 0;
+  points = curves_getCurves(state[2],state[4],obj,&hitCount,0);
+  *(f32 *)((u8 *)state + 0x200) = lbl_803E06A4;
+  *(f32 *)((u8 *)state + 0x1f0) = lbl_803E06A4;
+  *(f32 *)((u8 *)state + 0x1d0) = lbl_803E06A8;
+  *(f32 *)((u8 *)state + 0x1e0) = lbl_803E0668;
+  *(f32 *)((u8 *)state + 0x1c0) = lbl_803E0668;
+  *(f32 *)((u8 *)state + 0x210) = lbl_803E0668;
+  *(f32 *)((u8 *)state + 0x220) = lbl_803E068C;
+  *(f32 *)((u8 *)state + 0x230) = lbl_803E0668;
+  point = points;
+  for (i = 0; i < (int)hitCount; i++) {
+    if ((s8)point->type != 0xe) {
+      if ((foundBelow == 0) && (point->x < (state[3] + lbl_803E06AC)) &&
+          (point->z > lbl_803E0678)) {
+        *(f32 *)((u8 *)state + 0x1f0) = point->x;
+        *(f32 *)((u8 *)state + 0x1c0) = state[3] - point->x;
+        if (*(s8 *)((u8 *)state + 0xb8) == -1) {
+          *(u8 *)((u8 *)state + 0xb8) = point->type;
+        }
+        foundBelow = 1;
+      }
+      else if ((point->x >= (state[3] + lbl_803E06AC)) && (point->z < lbl_803E0668)) {
+        *(f32 *)((u8 *)state + 0x1d0) = point->x;
+      }
+    }
+    point++;
+  }
+  if (foundBelow == 0) {
+    *(f32 *)((u8 *)state + 0x1c0) = lbl_803E06B0;
+  }
+  if (((s8)*(u8 *)((u8 *)state + 0x260) & 0x10) != 0) {
+    *(f32 *)((u8 *)state + 0x1c0) = lbl_803E0668;
+  }
+  point = points;
+  for (i = 0; i < (int)hitCount; i++) {
+    if (((s8)point->type == 0xe) && (point->z > lbl_803E06B4) &&
+        (point->x < *(f32 *)((u8 *)state + 0x1d0)) &&
+        (point->x > *(f32 *)((u8 *)state + 0x1f0))) {
+      *(f32 *)((u8 *)state + 0x200) = point->x;
+      *(f32 *)((u8 *)state + 0x210) = point->y;
+      *(f32 *)((u8 *)state + 0x220) = point->z;
+      *(f32 *)((u8 *)state + 0x230) = point->w;
+    }
+    point++;
+  }
+  if (*(f32 *)((u8 *)state + 0x200) != lbl_803E06A4) {
+    *(f32 *)((u8 *)state + 0x1e0) = *(f32 *)((u8 *)state + 0x200) - state[3];
+  }
+  *(f32 *)((u8 *)state + 0x1bc) = *(f32 *)((u8 *)state + 0x200);
+  *(f32 *)((u8 *)state + 0x1b8) = *(f32 *)((u8 *)state + 0x1f0);
+  *(f32 *)((u8 *)state + 0x1b0) = *(f32 *)((u8 *)state + 0x1d0);
+  *(f32 *)((u8 *)state + 0x1b4) = *(f32 *)((u8 *)state + 0x1e0);
+  *(f32 *)((u8 *)state + 0x1ac) = *(f32 *)((u8 *)state + 0x1c0);
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_800e4db4
  * EN v1.0 Address: 0x800E4DB4
  * EN v1.0 Size: 4b
@@ -3838,13 +3918,13 @@ LAB_800e7350:
         }
       }
       if ((*puVar8 & 0x100) != 0) {
-        FUN_800e4db4((int)puVar4,(int)puVar8);
+        fn_800E5E38((int)puVar4,puVar8);
       }
       if ((*puVar8 & 0x80) != 0) {
         fn_800E5CBC((short *)puVar4,(int)puVar8);
       }
       if ((*puVar8 & 1) != 0) {
-        FUN_800e4db8((int)puVar4,(int)puVar8);
+        fn_800E5F1C((int)puVar4,puVar8);
       }
       FUN_80003494((uint)(puVar8 + 0xe),(uint)(puVar8 + 2),
                    ((int)(uint)*(byte *)(puVar8 + 0x97) >> 4) * 0xc);
@@ -3951,7 +4031,7 @@ LAB_800e7350:
       FUN_80003494((uint)(puVar8 + 0xe),(uint)(puVar8 + 2),
                    ((int)(uint)*(byte *)(puVar8 + 0x97) >> 4) * 0xc);
       if ((*puVar8 & 1) != 0) {
-        FUN_800e4db8((int)puVar4,(int)puVar8);
+        fn_800E5F1C((int)puVar4,puVar8);
       }
     }
   }
