@@ -349,6 +349,16 @@ extern f32 __AR_Size;
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f);
 extern void mathFn_80021ac8(void *xf, f32 *out);
 extern f32 lbl_8038D7DC[];
+extern void PSVECNormalize(f32 *src, f32 *dst);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803879B0[];
+extern s16 lbl_803DB65A;
+extern f32 lbl_803DCF00;
+extern int lbl_803DB65C;
+extern f32 __AR_init_flag;
+extern f32 __AR_BlockLength;
+extern f32 lbl_803DEC58;
+extern f32 lbl_803DEC68;
 extern f32 lbl_803DCED8;
 extern f32 lbl_803DCEDC;
 extern f32 lbl_803DB650;
@@ -4922,4 +4932,47 @@ void fn_80061094(f32 *vec, f32 *out, f32 scale)
     mathFn_80021ac8(&xf, out);
     out += 3;
   }
+}
+
+void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
+{
+  f32 vec[3];
+  f32 dot;
+  f32 mag;
+
+  vec[0] = a;
+  vec[1] = b;
+  vec[2] = c;
+  PSVECNormalize(vec, vec);
+  lbl_803DB65A = param;
+  lbl_803DCED8 = a * (f32)(s16)param;
+  lbl_803DB650 = b * (f32)(s16)param;
+  lbl_803DB654 = lbl_803DEC68;
+  if (lbl_803DB650 < (&lbl_803DEC90)[1]) {
+    lbl_803DB650 = (&lbl_803DEC90)[1];
+  }
+  lbl_803DCEDC = c * (f32)(s16)param;
+  dot = vec[0] * lbl_803879B0[0] + vec[1] * lbl_803879B0[1] + vec[2] * lbl_803879B0[2];
+  mag = (vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]) *
+        (lbl_803879B0[0] * lbl_803879B0[0] + lbl_803879B0[1] * lbl_803879B0[1] +
+         lbl_803879B0[2] * lbl_803879B0[2]);
+  if (mag != 0.0f) {
+    mag = sqrtf(mag);
+  }
+  if (mag != 0.0f) {
+    lbl_803DCF00 = dot / mag;
+    if (lbl_803DCF00 < 0.0f) {
+      lbl_803DCF00 = lbl_803DCF00 * __AR_init_flag;
+    }
+    if (lbl_803DCF00 <= __AR_BlockLength) {
+      lbl_803DB65C = 1;
+    }
+  }
+  if (lbl_803DB65C != 0) {
+    lbl_803879B0[0] = vec[0];
+    lbl_803879B0[1] = vec[1];
+    lbl_803879B0[2] = vec[2];
+    lbl_803DB65C = 0;
+  }
+  lbl_803DB658 = 1;
 }
