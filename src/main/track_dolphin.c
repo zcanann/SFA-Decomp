@@ -5194,6 +5194,104 @@ int objShadowFn_80062498(int *obj, int param2)
     return 0;
 }
 
+extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
+extern int fn_80067B84(int cur, void *desc, int model, int flags, f32 c, f32 x0, f32 y0, f32 z0, f32 x1, f32 y1, f32 z1);
+extern int modelFileHeaderGetCullDistance(void *hdr);
+extern u32 lbl_803DCF70;
+extern s16 lbl_803DCF6E;
+extern f32 lbl_803DECC4;
+
+void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
+{
+    f32 f31 = (f32)(ranges[0] - 5);
+    f32 f30 = (f32)(ranges[3] + 5);
+    f32 f29 = (f32)(ranges[1] - 5);
+    f32 f28 = (f32)(ranges[4] + 5);
+    f32 f27 = (f32)(ranges[2] - 5);
+    f32 f26 = (f32)(ranges[5] + 5);
+    u8 *tbl = lbl_8038DC64;
+    u8 *desc;
+    u8 *descEnd;
+    int cur;
+    int masked;
+
+    *(int *)tbl = 0;
+    *(s16 *)(tbl + 4) = 0;
+    desc = tbl + 0x18;
+    descEnd = tbl + 0x1e0;
+    lbl_803DCF70 = lbl_803DCF30 + 0x16440;
+    masked = a & 0xffff;
+    if ((masked & 0x10) == 0) {
+        cur = mapLoadBlocksFn_800685cc(lbl_803DCF30, (int)f31, (int)f29, (int)f27,
+                                       (int)f30, (int)f28, (int)f26, a, b);
+    } else {
+        cur = lbl_803DCF30;
+    }
+    if ((u32)cur < lbl_803DCF70 && (masked & 1) && obj != NULL) {
+        int count;
+        s16 i;
+        int flag80 = masked & 0x80;
+        void **p = (void **)ObjHitReact_GetResetObjects(&count);
+        for (i = 0; i < count; i++, p++) {
+            int *o = (int *)*p;
+            int *p54;
+            int *p58;
+            int sub;
+            int n;
+            int *model;
+            int hdr;
+            f32 r, c;
+
+            if (flag80 && (*(u32 *)(*(int *)((char *)o + 0x50) + 0x44) & 0x01000000)) continue;
+            p54 = *(int **)((char *)o + 0x54);
+            if (p54 == NULL) continue;
+            p58 = *(int **)((char *)o + 0x58);
+            if (p58 == NULL) continue;
+            if (*(u8 *)((char *)p58 + 0x10d) != 0) continue;
+            if (*(u8 *)((char *)p58 + 0x10e) != 0) continue;
+            model = *(int **)((char *)*(int **)((char *)o + 0x7c)
+                              + (s8)*(u8 *)((char *)p54 + 0xb0) * 4);
+            if (model == NULL) continue;
+            hdr = *(int *)model;
+            if (*(u16 *)(hdr + 0xf0) == 0) continue;
+            r = (f32)(u32)(u16)modelFileHeaderGetCullDistance((void *)hdr);
+            c = *(f32 *)((char *)o + 0x18);
+            if (f30 < c - r) continue;
+            if (f31 > c + r) continue;
+            c = *(f32 *)((char *)o + 0x1c);
+            if (f28 < c - r) continue;
+            if (f29 > c + r) continue;
+            c = *(f32 *)((char *)o + 0x20);
+            if (f26 < c - r) continue;
+            if (f27 > c + r) continue;
+
+            sub = *(int *)((char *)o + 0x58);
+            n = *(u8 *)(sub + 0x10c);
+            *(int *)(desc + 0xc) = sub + (n + 2) * 0x40;
+            sub = *(int *)((char *)o + 0x58);
+            n = *(u8 *)(sub + 0x10c);
+            *(int *)(desc + 0x8) = sub + n * 0x40;
+            sub = *(int *)((char *)o + 0x58);
+            n = *(u8 *)(sub + 0x10c) ^ 1;
+            *(int *)(desc + 0x14) = sub + (n + 2) * 0x40;
+            sub = *(int *)((char *)o + 0x58);
+            n = *(u8 *)(sub + 0x10c) ^ 1;
+            *(int *)(desc + 0x10) = sub + n * 0x40;
+
+            *(s16 *)(desc + 4) = (s16)((cur - (int)lbl_803DCF30) / 0x4c);
+            *(int *)desc = (int)o;
+            cur = fn_80067B84(cur, desc, (int)model, a & 0xff, lbl_803DECC4,
+                              f31, f29, f27, f30, f28, f26);
+            desc += 0x18;
+            if ((u32)cur >= lbl_803DCF70) break;
+            if (desc >= descEnd) break;
+        }
+    }
+    lbl_803DCF6E = (s16)((cur - (int)lbl_803DCF30) / 0x4c);
+    lbl_803DCF6C = (u8)((int)(desc - (u8 *)lbl_8038DC64) / 0x18);
+    *(s16 *)(desc + 4) = lbl_803DCF6E;
+}
+
 extern f32 lbl_803DECB8;
 extern f32 lbl_803DECBC;
 extern f32 lbl_803DECC0;
