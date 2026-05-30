@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/door.h"
 #include "main/dll/fruit.h"
 
@@ -16,7 +17,6 @@ typedef struct DfpTargetBlockPartfxArgs {
   f32 z;
 } DfpTargetBlockPartfxArgs;
 
-typedef u8 (*MapEventGetModeFn)(s32 mapId);
 typedef void (*PartfxSpawnObjectFn)(DfpTargetBlockObject *obj, int id, DfpTargetBlockPartfxArgs *args,
                                     int mode, int arg5, int arg6);
 
@@ -26,7 +26,7 @@ extern void Sfx_PlayFromObject(DfpTargetBlockObject *obj, u16 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(DfpTargetBlockObject *obj, u16 sfxId);
 extern f32 sqrtf(f32 value);
 
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *gPartfxInterface;
 extern f32 timeDelta;
 extern f32 lbl_803DDCF8;
@@ -177,7 +177,7 @@ void dfptargetblock_hitDetect(DfpTargetBlockObject *obj)
 
   dx = home->x - obj->x;
   dz = home->z - obj->z;
-  mode = ((MapEventGetModeFn)(*(u32 *)(*gMapEventInterface + 0x40)))(obj->mapId);
+  mode = (*gMapEventInterface)->getMode(obj->mapId);
 
   if (mode == 1) {
     if ((lbl_803E649C < dx) || (dx < lbl_803E64A0) || (dz < lbl_803E64A4) ||
