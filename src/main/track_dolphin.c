@@ -353,6 +353,12 @@ extern f32 lbl_803DB650;
 extern int textureLoad(int a, int b);
 extern int textureAlloc512(void);
 extern int textureFn_8006c5c4(void);
+extern f32 lbl_803DB654;
+extern f32 lbl_803DEC90;
+extern u8 *getCache(void);
+extern void memcpyToCache(void *dst, void *src, int n);
+extern int lbl_803DCFB8;
+extern u8 lbl_803DCF80;
 extern f32 lbl_803DF8E8;
 extern f32 lbl_803DF8EC;
 extern f32 lbl_803DF8F0;
@@ -4617,6 +4623,7 @@ void vecGetRanges(f32 *pts, f32 *base, int *out, f32 scale)
   }
 }
 
+#pragma dont_inline on
 int objShadowFn_80062378(void *obj, u8 param)
 {
   int lo;
@@ -4648,6 +4655,7 @@ int objShadowFn_80062378(void *obj, u8 param)
     return (n * (*(u8 *)((char *)obj + 0x37) + 1)) >> 8;
   }
 }
+#pragma dont_inline reset
 
 int fn_80065684(int a, f32 b, f32 val, f32 d, f32 *out, int e)
 {
@@ -4807,4 +4815,62 @@ void *shadowInit(int *obj, int size)
   *(u8 *)((char *)base + 0x3b) = 0x64;
   lbl_803DB658 = 1;
   return (char *)rounded + 0x44;
+}
+
+int fn_800626C8(int *obj, int delta)
+{
+  void *state;
+  s16 *flag;
+  f32 f31;
+  int v;
+
+  state = *(void **)((char *)obj + 0x64);
+  flag = (s16 *)((char *)state + 0x36);
+  if (*(u32 *)((char *)state + 0x30) & 0x1000) {
+    *flag = *flag - (delta << 9);
+    if (*flag <= 0) {
+      *flag = 0;
+    }
+    if (*flag == 0) {
+      *(int *)((char *)state + 0xc) = 0;
+      return 0;
+    }
+  } else if (!(*(u32 *)((char *)state + 0x30) & 0x10000)) {
+    *flag = *flag + (delta << 9);
+    if (*flag >= 0x4000) {
+      *flag = 0x4000;
+    }
+  }
+  f31 = lbl_803DB654 * (lbl_803DEC90 * (f32)*flag);
+  v = (int)((f32)objShadowFn_80062378(obj, *(u8 *)((char *)state + 0x3a)) * f31);
+  if (v > 0xff) {
+    v = 0xff;
+  } else if (v < 0) {
+    v = 0;
+  }
+  return v & 0xff;
+}
+
+void fn_80069EB8(int param)
+{
+  u8 *cache;
+  int blk;
+  u32 j;
+
+  cache = getCache();
+  for (blk = 0; blk < 0x40; blk++) {
+    int hi = (blk >> 2) << 8;
+    int mid = (blk & 3) << 3;
+    u32 scaled = (blk + param) * 0xff;
+    for (j = 0; j < 0x40; j++) {
+      int idx = (j & 7) + ((j >> 3) << 5) + mid + hi;
+      u32 s = scaled;
+      if (s > 0x3fc0) {
+        s = 0x3fc0;
+      }
+      cache[idx] = (s * j) >> 12;
+    }
+  }
+  memcpyToCache((void *)(lbl_803DCFB8 + 0x60), cache, 0);
+  lbl_803DCF80 = param;
 }
