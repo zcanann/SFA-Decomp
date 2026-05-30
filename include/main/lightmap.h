@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8005ab70(void);
+void updateVisibleGeometry(void);
 undefined4 FUN_8005af70(int param_1);
 undefined4 FUN_8005af9c(int param_1);
 undefined4 coordsToMapCell(int param_1,int param_2,int param_3);

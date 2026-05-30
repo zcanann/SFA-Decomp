@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_80055980(undefined4 param_1,undefined4 param_2,undefined4 param_3);
+void objShouldLoad(undefined4 param_1,undefined4 param_2,undefined4 param_3);
 void FUN_80055d0c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_80055d10(void);

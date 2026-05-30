@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8005f920(char param_1,undefined4 param_2,int param_3,int *param_4);
+void mapBlockRender_setVtxDcrs(char param_1,undefined4 param_2,int param_3,int *param_4);
 void FUN_8005fab0(int param_1,float *param_2);
 void FUN_8005fb68(void);
 void FUN_8005fdec(void);
