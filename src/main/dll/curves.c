@@ -1810,6 +1810,7 @@ int RomCurve_countRandomPoints(RomCurveDef *curve)
   int low;
   int high;
   int mid;
+  int mask;
   RomCurveDef *nextCurve;
 
   count = 1;
@@ -1818,23 +1819,27 @@ int RomCurve_countRandomPoints(RomCurveDef *curve)
 
 chooseNext:
   linkCount = 0;
+  mask = 1;
   linkId = curve->linkIds[0];
-  if (((s32)linkId > -1) && ((curve->blockedLinkMask & 1) == 0) && (linkId != 0)) {
+  if (((s32)linkId > -1) && ((curve->blockedLinkMask & mask) == 0) && (linkId != 0)) {
     linkCount = 1;
     linkIdList[0] = linkId;
   }
+  mask <<= 1;
   linkId = curve->linkIds[1];
-  if (((s32)linkId > -1) && ((curve->blockedLinkMask & 2) == 0) && (linkId != 0)) {
+  if (((s32)linkId > -1) && ((curve->blockedLinkMask & mask) == 0) && (linkId != 0)) {
     linkIdList[linkCount] = linkId;
     linkCount++;
   }
+  mask <<= 1;
   linkId = curve->linkIds[2];
-  if (((s32)linkId > -1) && ((curve->blockedLinkMask & 4) == 0) && (linkId != 0)) {
+  if (((s32)linkId > -1) && ((curve->blockedLinkMask & mask) == 0) && (linkId != 0)) {
     linkIdList[linkCount] = linkId;
     linkCount++;
   }
+  mask <<= 1;
   linkId = curve->linkIds[3];
-  if (((s32)linkId > -1) && ((curve->blockedLinkMask & 8) == 0) && (linkId != 0)) {
+  if (((s32)linkId > -1) && ((curve->blockedLinkMask & mask) == 0) && (linkId != 0)) {
     linkIdList[linkCount] = linkId;
     linkCount++;
   }
@@ -1875,16 +1880,20 @@ checkCurve:
   if (curve == NULL) {
     return count;
   }
-  if ((curve->linkIds[0] != ROMCURVE_LINK_ID_NONE) && ((curve->blockedLinkMask & 1) == 0)) {
+  mask = 1;
+  if (((s32)curve->linkIds[0] != -1) && ((curve->blockedLinkMask & mask) == 0)) {
     goto chooseNext;
   }
-  if ((curve->linkIds[1] != ROMCURVE_LINK_ID_NONE) && ((curve->blockedLinkMask & 2) == 0)) {
+  mask <<= 1;
+  if (((s32)curve->linkIds[1] != -1) && ((curve->blockedLinkMask & mask) == 0)) {
     goto chooseNext;
   }
-  if ((curve->linkIds[2] != ROMCURVE_LINK_ID_NONE) && ((curve->blockedLinkMask & 4) == 0)) {
+  mask <<= 1;
+  if (((s32)curve->linkIds[2] != -1) && ((curve->blockedLinkMask & mask) == 0)) {
     goto chooseNext;
   }
-  if ((curve->linkIds[3] != ROMCURVE_LINK_ID_NONE) && ((curve->blockedLinkMask & 8) == 0)) {
+  mask <<= 1;
+  if (((s32)curve->linkIds[3] != -1) && ((curve->blockedLinkMask & mask) == 0)) {
     goto chooseNext;
   }
   return count;
