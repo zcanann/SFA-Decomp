@@ -13,6 +13,7 @@ FUN_80165e74(undefined8 param_1,double param_2,double param_3,undefined8 param_4
             undefined8 param_6,undefined8 param_7,undefined8 param_8,short *param_9,uint *param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16);
+void fn_80165B3C(int obj,int state);
 void FUN_801660c0(int param_1,int param_2);
 void FUN_801661ec(short *param_1,int param_2);
 void FUN_8016693c(int param_1,int param_2);

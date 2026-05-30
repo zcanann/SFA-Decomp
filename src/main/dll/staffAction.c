@@ -18,8 +18,13 @@ extern undefined4 ObjHits_EnableObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8003b870();
+extern int hitDetectFn_80067958(int obj,f32 *startPoints,f32 *endPoints,int pointCount,
+                                void *hits,int hitCount);
+extern void hitDetectFn_800691c0(int obj,void *bounds,uint mask,int flags);
 extern int FUN_80063a68();
 extern undefined4 FUN_80063a74();
+extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,float *radii,
+                        int pointCount);
 extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
                                           float *radii,int pointCount);
 extern int FUN_8028683c();
@@ -35,6 +40,10 @@ extern f64 DOUBLE_803e3cb0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
+extern f32 lbl_803E2FDC;
+extern f32 lbl_803E2FF4;
+extern f32 lbl_803E3020;
+extern f32 lbl_803E3024;
 extern f32 lbl_803E3C70;
 extern f32 lbl_803E3C74;
 extern f32 lbl_803E3C8C;
@@ -1021,6 +1030,52 @@ void fn_80166E38(f32 *out, f32 *forward, f32 *up) {
         mat[1][0] = -upRecomputed[0]; mat[1][1] = -upRecomputed[1]; mat[1][2] = -upRecomputed[2];
         mat[2][0] = -fwd[0]; mat[2][1] = -fwd[1]; mat[2][2] = -fwd[2];
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80165B3C(int obj,int state)
+{
+  f32 radius;
+  f32 start[3];
+  f32 end[3];
+  uint bounds[6];
+  struct {
+    f32 hit[16];
+    f32 hitRadius;
+    undefined pad[0x10];
+    undefined hitType;
+  } hitScratch;
+  f32 damping;
+  int hitFound;
+
+  radius = lbl_803E3020;
+  *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) - lbl_803E2FF4;
+  damping = lbl_803E3024;
+  *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * lbl_803E3024;
+  *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) * damping;
+  *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * damping;
+  start[0] = *(f32 *)(obj + 0xc);
+  start[1] = *(f32 *)(obj + 0x10);
+  start[2] = *(f32 *)(obj + 0x14);
+  end[0] = start[0] + *(f32 *)(obj + 0x24);
+  end[1] = start[1] + *(f32 *)(obj + 0x28);
+  end[2] = start[2] + *(f32 *)(obj + 0x2c);
+  hitScratch.hitRadius = lbl_803E2FDC;
+  hitScratch.hitType = 3;
+  fn_8006961C(bounds,start,end,&radius,1);
+  hitDetectFn_800691c0(obj,bounds,0,1);
+  hitFound = hitDetectFn_80067958(obj,start,end,1,hitScratch.hit,0x20);
+  if (hitFound != 0) {
+    *(u8 *)(state + 0x92) = *(u8 *)(state + 0x92) & 0xfb;
+    FUN_80166c6c(obj,state,hitScratch.hit,end);
+  } else {
+    *(f32 *)(obj + 0xc) = end[0];
+    *(f32 *)(obj + 0x10) = end[1];
+    *(f32 *)(obj + 0x14) = end[2];
+  }
 }
 #pragma peephole reset
 #pragma scheduling reset
