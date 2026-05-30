@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/track_dolphin.h"
+#include "dolphin/os/OSFastCast.h"
 
 
 #pragma peephole off
@@ -4074,10 +4075,12 @@ extern u8 lbl_8038DE44[];
 /* fn_80069944 — store sbss byte into *p1 and return a fixed table base. */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void *fn_80069944(u32 *outVal) {
     *outVal = lbl_803DCF6C;
     return lbl_8038DC64;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -5290,6 +5293,110 @@ void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
     lbl_803DCF6E = (s16)((cur - (int)lbl_803DCF30) / 0x4c);
     lbl_803DCF6C = (u8)((int)(desc - (u8 *)lbl_8038DC64) / 0x18);
     *(s16 *)(desc + 4) = lbl_803DCF6E;
+}
+
+extern void *fn_80069944(u32 *outVal);
+extern void PSMTXMultVecArray(void *m, void *src, void *dst, u32 count);
+
+int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8, int p9)
+{
+    int j;
+    f32 lm[12];
+    u8 *d = (u8 *)fn_80069944((u32 *)&j);
+    u8 *end = d + j * 0x18;
+    int grp = 0;
+    int outOff = 0;
+    int total;
+    int mask;
+
+    j = 0;
+    total = 0;
+    mask = p9 ? 4 : 8;
+    for (; d < end; d += 0x18) {
+        int id = *(int *)d;
+        if (id == 0 || id == *(int *)((char *)obj + 0x30)) {
+            f32 fx = *(f32 *)((char *)obj + 0xc);
+            f32 fz = *(f32 *)((char *)obj + 0x14);
+            f32 *outA;
+
+            if (id == 0) {
+                fx -= a;
+                fz -= b;
+            }
+            j = (s16)*(s16 *)((char *)d + 4);
+            outA = (f32 *)((char *)p5 + outOff);
+            while (j < (s16)*(s16 *)((char *)d + 0x1c) && grp < 0x4b0 && total < 0xe10) {
+                if (mask & (s8)*(u8 *)((char *)p4 + j * 0x4c + 0x49)) {
+                    *(f32 *)((char *)p6 + 0x00) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10)) - fx;
+                    *(f32 *)((char *)p6 + 0x04) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16)) - *(f32 *)((char *)obj + 0x10);
+                    *(f32 *)((char *)p6 + 0x08) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c)) - fz;
+                    *(f32 *)((char *)p6 + 0x0c) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12)) - fx;
+                    *(f32 *)((char *)p6 + 0x10) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18)) - *(f32 *)((char *)obj + 0x10);
+                    *(f32 *)((char *)p6 + 0x14) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e)) - fz;
+                    *(f32 *)((char *)p6 + 0x18) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14)) - fx;
+                    *(f32 *)((char *)p6 + 0x1c) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a)) - *(f32 *)((char *)obj + 0x10);
+                    *(f32 *)((char *)p6 + 0x20) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20)) - fz;
+                    outA[0] = *(f32 *)((char *)p4 + j * 0x4c + 0x4);
+                    outA[1] = *(f32 *)((char *)p4 + j * 0x4c + 0x8);
+                    outA[2] = *(f32 *)((char *)p4 + j * 0x4c + 0xc);
+                    *(u8 *)((char *)outA + 0x10) = *(u8 *)((char *)p4 + j * 0x4c + 0x49);
+                    p6 += 0x24;
+                    total += 3;
+                    outA = (f32 *)((char *)outA + 0x14);
+                    grp += 1;
+                    outOff += 0x14;
+                }
+                j++;
+            }
+        } else {
+            f32 *m = *(f32 **)((char *)d + 0xc);
+            f32 *p6start = (f32 *)p6;
+            int totalStart = total;
+            f32 *outA;
+
+            lm[0] = m[0];
+            lm[1] = m[4];
+            lm[2] = m[8];
+            lm[3] = m[12] - *(f32 *)((char *)obj + 0xc);
+            lm[4] = m[1];
+            lm[5] = m[5];
+            lm[6] = m[9];
+            lm[7] = m[13] - *(f32 *)((char *)obj + 0x10);
+            lm[8] = m[2];
+            lm[9] = m[6];
+            lm[10] = m[10];
+            lm[11] = m[14] - *(f32 *)((char *)obj + 0x14);
+            j = (s16)*(s16 *)((char *)d + 4);
+            outA = (f32 *)((char *)p5 + outOff);
+            while (j < (s16)*(s16 *)((char *)d + 0x1c) && grp < 0x4b0 && total < 0xe10) {
+                if (mask & (s8)*(u8 *)((char *)p4 + j * 0x4c + 0x49)) {
+                    *(f32 *)((char *)p6 + 0x00) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x10));
+                    *(f32 *)((char *)p6 + 0x04) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x16));
+                    *(f32 *)((char *)p6 + 0x08) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1c));
+                    *(f32 *)((char *)p6 + 0x0c) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x12));
+                    *(f32 *)((char *)p6 + 0x10) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x18));
+                    *(f32 *)((char *)p6 + 0x14) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1e));
+                    *(f32 *)((char *)p6 + 0x18) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x14));
+                    *(f32 *)((char *)p6 + 0x1c) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x1a));
+                    *(f32 *)((char *)p6 + 0x20) = __OSs16tof32((s16 *)((char *)p4 + j * 0x4c + 0x20));
+                    outA[0] = *(f32 *)((char *)p4 + j * 0x4c + 0x4);
+                    outA[1] = *(f32 *)((char *)p4 + j * 0x4c + 0x8);
+                    outA[2] = *(f32 *)((char *)p4 + j * 0x4c + 0xc);
+                    *(u8 *)((char *)outA + 0x10) = *(u8 *)((char *)p4 + j * 0x4c + 0x49);
+                    p6 += 0x24;
+                    total += 3;
+                    outA = (f32 *)((char *)outA + 0x14);
+                    grp += 1;
+                    outOff += 0x14;
+                }
+                j++;
+            }
+            if (totalStart < total) {
+                PSMTXMultVecArray(lm, p6start, p6start, total - totalStart);
+            }
+        }
+    }
+    return grp;
 }
 
 extern f32 lbl_803DECB8;
