@@ -46,6 +46,26 @@ extern f32 FLOAT_803e62bc;
 extern f32 FLOAT_803e62c0;
 extern f32 FLOAT_803e62c4;
 extern f32 FLOAT_803e62c8;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 timeDelta;
+extern f32 lbl_803E55F0;
+extern f32 lbl_803E55F4;
+extern f64 lbl_803E5610;
+extern f32 lbl_803E5618;
+extern f32 lbl_803E561C;
+extern f32 lbl_803E5620;
+extern f32 lbl_803E5624;
+extern f32 lbl_803E5628;
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int maxCount);
+extern void objLightFn_8009a1dc(int obj, f32 scale, void *params, int mode, int arg);
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
+extern u8 fn_801DD1A8(ScTotemPuzzleObject *obj, ScTotemPuzzleState *state);
+extern uint GameBit_Get(int eventId);
+extern int GameBit_Set(int eventId, int value);
 
 #define SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE 0x3c1
 #define SC_TOTEMPUZZLE_PEER_OBJECT_TYPE 0x282
@@ -75,91 +95,102 @@ extern f32 FLOAT_803e62c8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sc_totempuzzle_update(void)
+void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
 {
-  bool bVar1;
-  undefined2 *puVar2;
-  int iVar3;
-  undefined4 *puVar4;
-  int iVar5;
-  undefined2 *puVar6;
-  int iVar7;
-  int iVar8;
-  undefined8 uVar9;
-  int local_48;
-  int local_44;
-  undefined auStack_40 [8];
-  float local_38;
-  float local_34;
-  float local_30;
-  float local_2c;
-  undefined8 local_28;
-  undefined8 local_20;
-  
-  uVar9 = FUN_80286840();
-  puVar2 = (undefined2 *)((ulonglong)uVar9 >> 0x20);
-  iVar5 = (int)uVar9;
-  bVar1 = false;
-  iVar8 = 0;
-  iVar3 = FUN_80017b00(&local_44,&local_48);
-  for (; local_44 < local_48; local_44 = local_44 + 1) {
-    puVar6 = *(undefined2 **)(iVar3 + local_44 * 4);
-    if (puVar6[0x23] == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) {
-      iVar7 = *(int *)(puVar6 + 0x5c);
-      if ((*(ushort *)(iVar7 + SC_TOTEMPUZZLE_STATE_FLAGS_OFFSET) &
-          SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0) {
-        if ((*(ushort *)(iVar7 + SC_TOTEMPUZZLE_STATE_FLAGS_OFFSET) &
-            SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) == 0) {
-          if (*(short *)(iVar7 + SC_TOTEMPUZZLE_STATE_STEP_OFFSET) == SC_TOTEMPUZZLE_FORWARD_STEP) {
-            iVar8 = iVar8 + 1;
-            if (puVar6 == puVar2) {
-              *(f32 *)(iVar5 + 0xc) = FLOAT_803e6288 * (f32)(s32)*(s16 *)(iVar5 + 0x10);
-              *puVar2 = (short)(int)*(f32 *)(iVar5 + 0xc);
-              bVar1 = true;
-            }
-          }
-          else if (puVar6 == puVar2) {
-            FUN_80006824(0,SC_TOTEMPUZZLE_WRONG_SFX_ID);
-          }
+  ScTotemPuzzleState *state;
+  int hitKind;
+  int startIndex;
+  int objectCount;
+  int *objects;
+  int other;
+  int *texture;
+  f32 lightArgs[6];
+
+  state = obj->state;
+  hitKind = ObjHits_GetPriorityHitWithPosition(obj, &lightArgs[0], &lightArgs[1], &lightArgs[2],
+                                               &lightArgs[3], &lightArgs[4], &lightArgs[5]);
+  if ((obj->puzzleIndex == 5) || (GameBit_Get(0x639) != 0) || (GameBit_Get(0xc10) == 0)) {
+    if ((hitKind != 0) && (hitKind != 0x11)) {
+      Sfx_PlayFromObject((int)obj, 0x138);
+      lightArgs[3] += playerMapOffsetX;
+      lightArgs[5] += playerMapOffsetZ;
+      objLightFn_8009a1dc((int)obj, lbl_803E5618, lightArgs, 1, 0);
+    }
+    return;
+  }
+
+  if ((hitKind != 0) && (hitKind != 0x11)) {
+    Sfx_PlayFromObject((int)obj, 0x138);
+    lightArgs[3] += playerMapOffsetX;
+    lightArgs[5] += playerMapOffsetZ;
+    objLightFn_8009a1dc((int)obj, lbl_803E5618, lightArgs, 1, 0);
+    state->flags ^= SC_TOTEMPUZZLE_STATE_READY_FLAG;
+    if ((state->flags & SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0) {
+      if (state->pulseTimer != lbl_803E55F4) {
+        GameBit_Set(0x639, fn_801DD1A8(obj, state));
+      }
+      objects = ObjList_GetObjects(&startIndex, &objectCount);
+      while (startIndex < objectCount) {
+        other = objects[startIndex];
+        if ((*(s16 *)(other + 0x46) == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
+            (other != (int)obj)) {
+          *(f32 *)(*(int *)(other + 0xb8) + 8) += lbl_803E561C;
         }
-        else if (*(short *)(iVar7 + SC_TOTEMPUZZLE_STATE_STEP_OFFSET) == SC_TOTEMPUZZLE_REVERSE_STEP) {
-          iVar8 = iVar8 + 1;
-          if (puVar6 == puVar2) {
-            *(f32 *)(iVar5 + 0xc) = FLOAT_803e6288 * (f32)(s32)((int)*(s16 *)(iVar5 + 0x10) + 1);
-            *puVar2 = (short)(int)*(f32 *)(iVar5 + 0xc);
-            bVar1 = true;
-          }
+        startIndex++;
+      }
+    } else {
+      objects = ObjList_GetObjects(&startIndex, &objectCount);
+      while (startIndex < objectCount) {
+        other = objects[startIndex];
+        if ((*(s16 *)(other + 0x46) == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
+            (other != (int)obj)) {
+          *(f32 *)(*(int *)(other + 0xb8) + 8) += lbl_803E5620;
         }
-        else if (puVar6 == puVar2) {
-          FUN_80006824(0,SC_TOTEMPUZZLE_WRONG_SFX_ID);
-        }
+        startIndex++;
+      }
+      texture = objFindTexture((int)obj, 0, 0);
+      if (texture != NULL) {
+        *texture = 0;
       }
     }
   }
-  if (bVar1) {
-    local_34 = FLOAT_803e628c;
-    local_30 = FLOAT_803e6290;
-    local_2c = FLOAT_803e628c;
-    local_38 = FLOAT_803e6294;
-    for (local_44 = 0x14; local_44 != 0; local_44 = local_44 + -1) {
-      FUN_800810f8((double)FLOAT_803e6298,(double)FLOAT_803e629c,(double)FLOAT_803e629c,
-                   (double)FLOAT_803e62a0,puVar2,7,5,7,100,(int)auStack_40,0);
+
+  if ((state->flags & SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0) {
+    return;
+  }
+
+  if ((state->flags & 4) != 0) {
+    state->pulseTimer -= timeDelta;
+    if (state->pulseTimer < lbl_803E55F4) {
+      state->flags &= ~4;
+      Sfx_PlayFromObjectLimited((int)obj, 0x137, 2);
+      if ((state->flags & SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) != 0) {
+        state->stepIndex--;
+        if (state->stepIndex < 0) {
+          state->angle += lbl_803E5624;
+          state->stepIndex = 7;
+        }
+      } else {
+        state->stepIndex++;
+        if (state->stepIndex > 7) {
+          state->angle -= lbl_803E5624;
+          state->stepIndex = 0;
+        }
+      }
     }
-    puVar4 = (undefined4 *)FUN_80039520((int)puVar2,0);
-    if (puVar4 != (undefined4 *)0x0) {
-      *puVar4 = 0x100;
+  } else {
+    if (((state->flags & SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) != 0) &&
+        (state->angle > (lbl_803E55F0 * (f32)(s32)(state->stepIndex + 1)))) {
+      state->angle -= lbl_803E5628 * state->peerPhaseOffset * timeDelta;
+    } else if (state->angle < (lbl_803E55F0 * (f32)(s32)state->stepIndex)) {
+      state->angle += lbl_803E5628 * state->peerPhaseOffset * timeDelta;
+    } else {
+      state->pulseTimer = state->pulseTimerReset / state->peerPhaseOffset;
+      state->flags |= 4;
     }
   }
-  if (iVar8 == SC_TOTEMPUZZLE_SOLVED_COUNT) {
-    if (bVar1) {
-      FUN_80006824(0,SC_TOTEMPUZZLE_COMPLETE_SFX_ID);
-    }
-  }
-  else if (bVar1) {
-    FUN_80006824(0,SC_TOTEMPUZZLE_PROGRESS_SFX_ID);
-  }
-  FUN_8028688c();
-  return;
+
+  obj->yaw = (s16)(s32)state->angle;
 }
 
 /*
@@ -403,7 +434,7 @@ extern f32 lbl_803E55FC;
 extern f32 lbl_803E562C;
 extern f32 lbl_803E5630;
 extern void fn_801DD170(int obj);
-extern void *objFindTexture(int obj, int a, int b);
+extern int *objFindTexture(int obj, int a, int b);
 extern uint GameBit_Get(int eventId);
 extern int randomGetRange(int lo, int hi);
 

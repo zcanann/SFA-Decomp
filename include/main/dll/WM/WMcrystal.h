@@ -44,7 +44,7 @@ typedef struct ScTotemBondObject {
     undefined4 (*animEventCallback)(int obj,undefined4 param2,ObjAnimUpdateState *animUpdate);
 } ScTotemBondObject;
 
-void sc_totempuzzle_update(void);
+void sc_totempuzzle_update(ScTotemPuzzleObject *obj);
 void sc_totempuzzle_init(ScTotemPuzzleObject *obj,ScTotemPuzzleMapData *params);
 void sc_totempuzzle_release(void);
 void sc_totempuzzle_initialise(void);
