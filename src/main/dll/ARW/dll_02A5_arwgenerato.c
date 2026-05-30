@@ -55,16 +55,17 @@ void arwgenerato_initialise(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
+#pragma peephole off
+#pragma scheduling off
 void arwgenerato_update(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     int setup = *(int *)(obj + 0x4c);
+    f32 timer = *(f32 *)state;
     f32 thr = lbl_803E7154;
 
-    if (*(f32 *)state > thr) {
-        *(f32 *)state -= timeDelta;
+    if (timer > thr) {
+        *(f32 *)state = timer - timeDelta;
         if (*(f32 *)state <= thr) {
             switch (*(u8 *)(setup + 0x25)) {
             case 0:
