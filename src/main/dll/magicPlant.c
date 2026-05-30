@@ -1215,6 +1215,7 @@ void fn_80153248(int obj, int state)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_80153640(int obj, int state)
@@ -1250,6 +1251,7 @@ void fn_80153640(int obj, int state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -1257,36 +1259,39 @@ void fn_8015383C(int obj, int state)
 {
     int hit;
     int losDetected;
-    f32 vec[3];
     f32 worldPos[3];
-    int gridB[3];
-    int gridA[3];
+    f32 vec[3];
+    int gridB[2];
+    int gridA[2];
     u8 hitOut;
     u8 flagByte;
     u32 rnd;
-    int p29c;
     s16 angle;
 
     *(u8*)(state + 0x33b) = *(u8*)(state + 0x33b) & 0x7f;
     losDetected = 0;
-    p29c = *(int*)(state + 0x29c);
-    vec[0] = *(f32*)(obj + 0xc) - *(f32*)(p29c + 0xc);
-    vec[1] = *(f32*)(obj + 0x10) - *(f32*)(p29c + 0x10);
-    vec[2] = *(f32*)(obj + 0x14) - *(f32*)(p29c + 0x14);
+    {
+        int p29c = *(int*)(state + 0x29c);
+        vec[0] = *(f32*)(obj + 0xc) - *(f32*)(p29c + 0xc);
+        vec[1] = *(f32*)(obj + 0x10) - *(f32*)(p29c + 0x10);
+        vec[2] = *(f32*)(obj + 0x14) - *(f32*)(p29c + 0x14);
+    }
     if (PSVECMag(vec) < lbl_803E2900
         && (*(u16*)(*(int*)(state + 0x29c) + 0xb0) & 0x1000) == 0) {
         worldPos[0] = *(f32*)(obj + 0xc);
         worldPos[1] = lbl_803E2904 + *(f32*)(obj + 0x10);
         worldPos[2] = *(f32*)(obj + 0x14);
         voxmaps_worldToGrid(worldPos, gridA);
-        p29c = *(int*)(state + 0x29c);
-        worldPos[0] = *(f32*)(p29c + 0xc);
-        worldPos[1] = lbl_803E2908 + *(f32*)(p29c + 0x10);
-        worldPos[2] = *(f32*)(p29c + 0x14);
+        {
+            int p29c = *(int*)(state + 0x29c);
+            worldPos[0] = *(f32*)(p29c + 0xc);
+            worldPos[1] = lbl_803E2908 + *(f32*)(p29c + 0x10);
+            worldPos[2] = *(f32*)(p29c + 0x14);
+        }
         voxmaps_worldToGrid(worldPos, gridB);
         hit = (u8)voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0);
         if (hit != 0) {
-            p29c = *(int*)(state + 0x29c);
+            int p29c = *(int*)(state + 0x29c);
             fn_8014CF7C(obj, state, 0x14, 0, *(f32*)(p29c + 0xc), *(f32*)(p29c + 0x14));
             angle = (s16)(getAngle(vec[0], vec[2]) - *(s16*)obj);
             if (angle > 0x8000) angle = angle + 1;
@@ -1330,7 +1335,7 @@ void fn_8015383C(int obj, int state)
     if (*(s16*)(obj + 0xa0) == 5) {
         f32 sct = *(f32*)(obj + 0x98);
         if ((double)sct >= lbl_803E2918
-            && (double)sct < lbl_803E2918 + (double)(f32)((double)*(f32*)(state + 0x308) * (double)timeDelta)) {
+            && (double)sct < lbl_803E2918 + *(f32*)(state + 0x308) * timeDelta) {
             fn_80153640(obj, state);
         } else {
             *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
