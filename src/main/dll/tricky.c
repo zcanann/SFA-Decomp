@@ -2936,6 +2936,11 @@ extern f32 lbl_803E1ED4, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE0, lbl_803E1EE4,
 extern f32 lbl_803E1F08, lbl_803E1F0C, lbl_803E1F10, lbl_803E1F14, lbl_803E1F18;
 extern f32 lbl_803E1F30, lbl_803E1F34, lbl_803E1F48, lbl_803E1F4C, lbl_803DBAE0, lbl_803DBAE4;
 extern double lbl_803E1F38, lbl_803E1F40;
+extern f32 lbl_803E1F94;
+extern char lbl_803DBB40;
+extern f32 Camera_GetFarPlane(void);
+extern f32 Camera_GetNearPlane(void);
+extern int maybeReadDepthBuffer(int x, int y, void *fn);
 extern s16 lbl_803DD7EC;
 extern int lbl_803E1E2C;
 extern char sTrickyDebugXCoordFormat[];
@@ -3081,6 +3086,17 @@ void drawViewFinderHud(void) {
                     _sx = lbl_803E1E68 * _sn;
                     drawViewFinderLine((u8 *)&_c, f27 + _sx, f15 - _cx, f27 - _sx, f15 + _cx, f31 - _sx, f16 + _cx, f31 + _sx, f16 - _cx);
                 }
+            }
+        }
+        {
+            f32 farP = Camera_GetFarPlane();
+            f32 nearP = Camera_GetNearPlane();
+            int depth = maybeReadDepthBuffer(0x140, 0xf0, (void *)drawViewFinderHud);
+            f32 dist = (-farP * nearP) / (((f32)(u32)depth / lbl_803E1F94 - lbl_803E1E68) * (farP - nearP) - nearP);
+            if (dist > lbl_803E1E3C && dist < lbl_803E1F98) {
+                sprintf(buf, &lbl_803DBB40, dist / lbl_803E1EC4);
+                gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * lbl_803DD7F0));
+                gameTextShowStr(buf, 0x93, 0x32, 0x46);
             }
         }
     }
