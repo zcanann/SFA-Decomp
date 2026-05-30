@@ -349,6 +349,7 @@ extern f32 __AR_Size;
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f);
 extern void mathFn_80021ac8(void *xf, f32 *out);
 extern f32 lbl_8038D7DC[];
+extern s16 lbl_803DCEF2;
 extern void PSVECNormalize(f32 *src, f32 *dst);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803879B0[];
@@ -4975,4 +4976,48 @@ void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
     lbl_803DB65C = 0;
   }
   lbl_803DB658 = 1;
+}
+
+int fn_80061DD8(void *obj, void *u1, void *u2, int count, f32 *outBase, f32 *outPtr, f32 *input, int limit)
+{
+  void *state = *(void **)((char *)obj + 0x64);
+  int i = 0;
+  int outCount = 0;
+  int n;
+
+  lbl_803DCEF2 = 0;
+  for (n = 0; n < count; n++) {
+    int vis = 1;
+    f32 dot = *(f32 *)((char *)state + 0x18) * input[1] +
+              *(f32 *)((char *)state + 0x14) * input[0] +
+              *(f32 *)((char *)state + 0x1c) * input[2];
+    if (dot < 0.0f) {
+      vis = -1;
+    }
+    if (vis == 1) {
+      lbl_803DCEF2++;
+      outPtr[0] = *(f32 *)((char *)outBase + i * 0xc + 0);
+      outPtr[1] = *(f32 *)((char *)outBase + i * 0xc + 4);
+      outPtr[2] = *(f32 *)((char *)outBase + i * 0xc + 8);
+      if (++outCount >= limit) {
+        return 0;
+      }
+      outPtr[3] = *(f32 *)((char *)outBase + (i + 1) * 0xc + 0);
+      outPtr[4] = *(f32 *)((char *)outBase + (i + 1) * 0xc + 4);
+      outPtr[5] = *(f32 *)((char *)outBase + (i + 1) * 0xc + 8);
+      if (++outCount >= limit) {
+        return 0;
+      }
+      outPtr[6] = *(f32 *)((char *)outBase + (i + 2) * 0xc + 0);
+      outPtr[7] = *(f32 *)((char *)outBase + (i + 2) * 0xc + 4);
+      outPtr[8] = *(f32 *)((char *)outBase + (i + 2) * 0xc + 8);
+      outPtr += 9;
+      if (++outCount >= limit) {
+        return 0;
+      }
+    }
+    i += 3;
+    input += 5;
+  }
+  return lbl_803DCEF2 != 0;
 }
