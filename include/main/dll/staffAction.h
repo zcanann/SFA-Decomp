@@ -17,6 +17,7 @@ void fn_80165B3C(int obj,int state);
 void FUN_801660c0(int param_1,int param_2);
 void FUN_801661ec(short *param_1,int param_2);
 void FUN_8016693c(int param_1,int param_2);
+void fn_80166840(int obj,int state,float *hit,float *end);
 void FUN_80166c6c(int param_1,int param_2,float *param_3,float *param_4);
 void FUN_80166e9c(double param_1,double param_2,double param_3,double param_4,int param_5);
 void FUN_8016716c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,

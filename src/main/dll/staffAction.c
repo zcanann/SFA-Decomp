@@ -29,6 +29,7 @@ extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,flo
                                           float *radii,int pointCount);
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
+extern f32 sqrtf(f32 x);
 extern double FUN_80293900();
 extern undefined4 FUN_80293bc4();
 extern undefined4 FUN_80293f80();
@@ -42,6 +43,7 @@ extern f32 lbl_803DDA58;
 extern f32 lbl_803DDA5C;
 extern f32 lbl_803E2FDC;
 extern f32 lbl_803E2FF4;
+extern f32 lbl_803E3004;
 extern f32 lbl_803E3020;
 extern f32 lbl_803E3024;
 extern f32 lbl_803E3C70;
@@ -1070,12 +1072,77 @@ void fn_80165B3C(int obj,int state)
   hitFound = hitDetectFn_80067958(obj,start,end,1,hitScratch.hit,0x20);
   if (hitFound != 0) {
     *(u8 *)(state + 0x92) = *(u8 *)(state + 0x92) & 0xfb;
-    FUN_80166c6c(obj,state,hitScratch.hit,end);
+    fn_80166840(obj,state,hitScratch.hit,end);
   } else {
     *(f32 *)(obj + 0xc) = end[0];
     *(f32 *)(obj + 0x10) = end[1];
     *(f32 *)(obj + 0x14) = end[2];
   }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80166840(int obj,int state,f32 *hit,f32 *end)
+{
+  f32 fVar1;
+  f32 planeX;
+  f32 planeY;
+  f32 planeZ;
+  f32 planeW;
+  f32 response[3];
+  f32 plane[4];
+  f32 scale;
+  f32 objX;
+  f32 objY;
+  f32 objZ;
+  f32 stateX;
+  f32 stateY;
+  f32 stateZ;
+  f32 velX;
+  f32 velY;
+  f32 velZ;
+  f32 len;
+
+  scale = lbl_803E3020;
+  objX = *(f32 *)(obj + 0xc);
+  stateX = scale * *(f32 *)(state + 0x7c) + objX;
+  objY = *(f32 *)(obj + 0x10);
+  stateY = scale * *(f32 *)(state + 0x80) + objY;
+  objZ = *(f32 *)(obj + 0x14);
+  stateZ = scale * *(f32 *)(state + 0x84) + objZ;
+  velX = scale * *(f32 *)(obj + 0x24) + objX;
+  velY = scale * *(f32 *)(obj + 0x28) + objY;
+  velZ = scale * *(f32 *)(obj + 0x2c) + objZ;
+  planeX = objY * (stateZ - velZ) + (stateY * (velZ - objZ) + velY * (objZ - stateZ));
+  planeY = objZ * (stateX - velX) + (stateZ * (velX - objX) + velZ * (objX - stateX));
+  planeZ = objX * (stateY - velY) + (stateX * (velY - objY) + velX * (objY - stateY));
+  len = sqrtf(planeX * planeX + (planeY * planeY + planeZ * planeZ));
+  if (lbl_803E2FDC < len) {
+    len = lbl_803E2FF4 / len;
+    planeX *= len;
+    planeY *= len;
+    planeZ *= len;
+  }
+  planeW = -(stateZ * planeZ + (stateX * planeX + stateY * planeY));
+  plane[0] = planeX;
+  plane[1] = planeY;
+  plane[2] = planeZ;
+  plane[3] = planeW;
+  Vec3_Cross(plane,hit,response);
+  Vec3_Normalize(response);
+  fVar1 = lbl_803E3004;
+  *(f32 *)(obj + 0x24) = lbl_803E3004 * response[0];
+  *(f32 *)(obj + 0x28) = fVar1 * response[1];
+  *(f32 *)(obj + 0x2c) = fVar1 * response[2];
+  *(f32 *)(state + 0x7c) = hit[0];
+  *(f32 *)(state + 0x80) = hit[1];
+  *(f32 *)(state + 0x84) = hit[2];
+  *(f32 *)(state + 0x88) = hit[3];
+  *(f32 *)(obj + 0xc) = end[0] + *(f32 *)(state + 0x7c);
+  *(f32 *)(obj + 0x10) = end[1] + *(f32 *)(state + 0x80);
+  *(f32 *)(obj + 0x14) = end[2] + *(f32 *)(state + 0x84);
 }
 #pragma peephole reset
 #pragma scheduling reset
