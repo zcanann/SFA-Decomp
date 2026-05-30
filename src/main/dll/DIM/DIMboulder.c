@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/DIM/DIMboulder.h"
 
 extern undefined4 getLActions();
@@ -1027,14 +1028,14 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 void imicemountain_free(void) {}
 void imicemountain_hitDetect(void) {}
 
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void gameBitFn_800ea2e0(int idx);
 extern void unlockLevel(int a, int b, int c);
 extern f32 lbl_803E46E0;
 
-#define MEVT_TRIGGER(a, b, c) ((void (*)(int, int, int))((int *)*gMapEventInterface)[0x50 / 4])((a), (b), (c))
-#define MEVT_SET(a, b)        ((void (*)(int, int))((int *)*gMapEventInterface)[0x44 / 4])((a), (b))
-#define MEVT_QUERY(a)         ((int (*)(int))((int *)*gMapEventInterface)[0x40 / 4])((a))
+#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
+#define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
+#define MEVT_QUERY(a)         (*gMapEventInterface)->getMode((a))
 
 /* EN v1.0 0x801AC9C0  size: 828b  imicemountain_init: clear the ice-mountain
  * gamebit block, arm the map-event triggers, then branch on the queried level
@@ -1424,8 +1425,8 @@ extern void fn_801AC108(int *obj, int *extra);
 extern int *gCloudActionInterface;
 extern void warpToMap(int mapId, int flags);
 
-#define MEVT_TRIGGER(a, b, c) ((void (*)(int, int, int))((int *)*gMapEventInterface)[0x50 / 4])((a), (b), (c))
-#define MEVT_SET(a, b)        ((void (*)(int, int))((int *)*gMapEventInterface)[0x44 / 4])((a), (b))
+#define MEVT_TRIGGER(a, b, c) (*gMapEventInterface)->setAnimEvent((a), (b), (c))
+#define MEVT_SET(a, b)        (*gMapEventInterface)->setMode((a), (b))
 
 /* EN v1.0 0x801AC248  imicemountain_updateEventState: 8-state ice-mountain event machine dispatched
  * through jumptable_80323698 (states 1..7; state 0 idles). */
