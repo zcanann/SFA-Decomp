@@ -5371,3 +5371,50 @@ void dll_0B_func16(void *a, void *b, void *c, void *d, void *e, int f, void *g)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_800A0AB4(void *state, void *p, int mode, u8 idx)
+{
+  extern f32 lbl_803DD284;
+  extern f32 lbl_803DF430;
+  extern f32 lbl_803DF43C;
+  s16 *verts = *(s16 **)((char *)p + 0x10);
+  u8 *bufB = *(u8 **)((char *)state + *(u8 *)((char *)state + 0x130) * 4 + 0x78);
+  u8 *bufA = *(u8 **)((char *)state + 0x80);
+  int j;
+
+  if (mode == 1) {
+    f32 target = *(f32 *)((char *)p + 0x4);
+    s16 frames = *(s16 *)((char *)state + 0xfe);
+    if (frames != 0) {
+      *(f32 *)((char *)state + idx * 8 + 0xac) =
+          (target - (f32)(u32)bufA[verts[0] * 16 + 0xf]) / (f32)frames;
+      *(f32 *)((char *)state + idx * 8 + 0xb0) = (f32)(u32)bufA[verts[0] * 16 + 0xf];
+      goto animate;
+    }
+    {
+      int val = (int)target;
+      for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
+        bufA[verts[j] * 16 + 0xf] = val;
+        bufB[verts[j] * 16 + 0xf] = bufA[verts[j] * 16 + 0xf];
+      }
+    }
+    return;
+  }
+animate:
+  *(f32 *)((char *)state + idx * 8 + 0xb0) =
+      *(f32 *)((char *)state + idx * 8 + 0xb0) +
+      *(f32 *)((char *)state + idx * 8 + 0xac) * lbl_803DD284;
+  if (*(f32 *)((char *)state + idx * 8 + 0xb0) < lbl_803DF430) {
+    *(f32 *)((char *)state + idx * 8 + 0xb0) = lbl_803DF430;
+  } else if (*(f32 *)((char *)state + idx * 8 + 0xb0) > lbl_803DF43C) {
+    *(f32 *)((char *)state + idx * 8 + 0xb0) = lbl_803DF43C;
+  }
+  for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
+    bufB[verts[j] * 16 + 0xf] = (int)*(f32 *)((char *)state + idx * 8 + 0xb0);
+    bufA[verts[j] * 16 + 0xf] = bufB[verts[j] * 16 + 0xf];
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
