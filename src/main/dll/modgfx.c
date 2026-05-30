@@ -7381,7 +7381,7 @@ void dll_0B_func05(void)
                     q[2] = lbl_803DF430;
                     q[3] = lbl_803DF430;
                     q[0] = lbl_803DF434;
-                    if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                    if (*(int *)((char *)eff + 0xa4) & 1) {
                         ang[0] = *(s16 *)((char *)eff + 0xc);
                     } else {
                         ang[0] = *(s16 *)(*(int **)((char *)eff + 4));
@@ -7392,7 +7392,7 @@ void dll_0B_func05(void)
                     if (*(int *)eff == 0) {
                         if (Obj_IsLoadingLocked()) {
                             int *o;
-                            if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                            if (*(int *)((char *)eff + 0xa4) & 1) {
                                 tmpl.x += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x18);
                                 tmpl.y += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x1c);
                                 tmpl.z += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x20);
@@ -7409,7 +7409,7 @@ void dll_0B_func05(void)
                             *(int *)(*(int *)eff + 0xf8) = 1;
                         }
                     } else if (*(int *)eff != 0) {
-                        if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                        if (*(int *)((char *)eff + 0xa4) & 1) {
                             tmpl.x += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x18);
                             tmpl.y += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x1c);
                             tmpl.z += *(f32 *)((char *)*(int **)((char *)eff + 4) + 0x20);
@@ -7508,7 +7508,7 @@ void dll_0B_func05(void)
                     if ((*(int *)(E9 + emOff) & 0x1000000) && lbl_803DF430 == *(f32 *)(E9 + emOff + 0x8)) {
                         for (k = 0; k < (int)*(f32 *)(E9 + emOff + 0x4); k++) {
                             if (randomGetRange(0, (int)*(f32 *)(E9 + emOff + 0xc)) == 0) {
-                                if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                                if (*(int *)((char *)eff + 0xa4) & 1) {
                                     (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10001, -1, NULL);
                                 } else {
                                     (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10001, -1, NULL);
@@ -7517,14 +7517,14 @@ void dll_0B_func05(void)
                         }
                     } else if (lbl_803DF430 == *(f32 *)(E9 + emOff + 0x8)) {
                         for (k = 0; k < (int)*(f32 *)(E9 + emOff + 0x4); k++) {
-                            if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                            if (*(int *)((char *)eff + 0xa4) & 1) {
                                 (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), (char *)eff + 0xc, 0x10002, -1, NULL);
                             } else {
                                 (*(ExpSpawn6 *)(*(int *)gPartfxInterface + 8))(*(int **)((char *)eff + 4), *(s16 *)(E9 + emOff + 0x14), NULL, 0x10002, -1, NULL);
                             }
                         }
                     } else if (lbl_803DF434 == *(f32 *)(E9 + emOff + 0x8)) {
-                        if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                        if (*(int *)((char *)eff + 0xa4) & 1) {
                             tmpl.x = *(f32 *)((char *)eff + 0x60);
                             tmpl.y = *(f32 *)((char *)eff + 0x64);
                             tmpl.z = *(f32 *)((char *)eff + 0x68);
@@ -7546,7 +7546,7 @@ void dll_0B_func05(void)
                     if (*(int *)(E9 + emOff) & 0x1000000) {
                         for (k = 0; k < (int)*(f32 *)(E9 + emOff + 0x4); k++) {
                             if (randomGetRange(0, 5) == 0) {
-                                if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                                if (*(int *)((char *)eff + 0xa4) & 1) {
                                     (*(ExpResFn6 *)(*(int *)res + 4))(NULL, 0, (char *)eff + 0xc, 1, -1, NULL);
                                 } else {
                                     (*(ExpResFn6 *)(*(int *)res + 4))(*(int **)((char *)eff + 4), 0, NULL, 1, -1, NULL);
@@ -7555,7 +7555,7 @@ void dll_0B_func05(void)
                         }
                     } else {
                         for (k = 0; k < (int)*(f32 *)(E9 + emOff + 0x4); k++) {
-                            if (*(u32 *)((char *)eff + 0xa4) & 1) {
+                            if (*(int *)((char *)eff + 0xa4) & 1) {
                                 (*(ExpResFn6 *)(*(int *)res + 4))(NULL, 0, (char *)eff + 0xc, 1, -1, NULL);
                             } else {
                                 (*(ExpResFn6 *)(*(int *)res + 4))(*(int **)((char *)eff + 4), 0, NULL, 1, -1, NULL);
