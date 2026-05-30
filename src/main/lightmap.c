@@ -2893,16 +2893,16 @@ void *RomList_GetLoadedPages(void) {
     return gLoadedRomListPages;
 }
 
-extern f32 lbl_803DEBB4;
+extern f32 gMapBlockWorldSize;
 extern f32 fastFloorf(f32 v);
 #pragma scheduling off
 #pragma peephole off
-void fn_8005B0A8(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z) {
+void mapGetBlockOriginForPos(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z) {
     s32 ix, iz;
     f32 s;
-    ix = (s32)fastFloorf(x / lbl_803DEBB4);
-    iz = (s32)fastFloorf(z / lbl_803DEBB4);
-    s = lbl_803DEBB4;
+    ix = (s32)fastFloorf(x / gMapBlockWorldSize);
+    iz = (s32)fastFloorf(z / gMapBlockWorldSize);
+    s = gMapBlockWorldSize;
     *outX = s * (f32)ix;
     *outZ = s * (f32)iz;
 }
@@ -2911,12 +2911,12 @@ void fn_8005B0A8(f32 *outX, f32 *outZ, f32 x, f32 y, f32 z) {
 
 extern int lbl_803DCDD0;
 extern int lbl_803DCDD4;
-extern void *lbl_803822B4[];
+extern void *gMapBlockLayerTables[];
 #pragma scheduling off
 #pragma peephole off
 int isInBounds(f32 x, f32 z) {
-    int ix = (int)(fastFloorf(x / lbl_803DEBB4) - (f32)lbl_803DCDD0);
-    int iz = (int)(fastFloorf(z / lbl_803DEBB4) - (f32)lbl_803DCDD4);
+    int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
+    int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)lbl_803DCDD4);
     int linear;
     void **p;
     if (ix < 0 || ix >= 16) return -1;
@@ -2924,7 +2924,7 @@ int isInBounds(f32 x, f32 z) {
     linear = ix + (iz << 4);
     {
         int i;
-        p = &lbl_803822B4[0];
+        p = &gMapBlockLayerTables[0];
         for (i = 0; i < 5; i++) {
             if (((s8 *)*p)[linear] > -1) return 1;
             p++;
@@ -2939,15 +2939,15 @@ extern void **lbl_803DCE9C;
 #pragma scheduling off
 #pragma peephole off
 int objPosToMapBlockIdx(f32 x, f32 y, f32 z) {
-    int ix = (int)(fastFloorf(x / lbl_803DEBB4) - (f32)lbl_803DCDD0);
-    int iz = (int)(fastFloorf(z / lbl_803DEBB4) - (f32)lbl_803DCDD4);
+    int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
+    int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)lbl_803DCDD4);
     int linear;
     void **p;
     int i;
     if (ix < 0 || ix >= 16) return -1;
     if (iz < 0 || iz >= 16) return -1;
     linear = ix + (iz << 4);
-    p = &lbl_803822B4[0];
+    p = &gMapBlockLayerTables[0];
     for (i = 0; i < 5; i++) {
         s8 *table = (s8 *)*p;
         int idx = table[linear];
@@ -2990,20 +2990,20 @@ void setTextColor(int unused, int a, int b, int c, int d) {
 #pragma scheduling reset
 
 /* Map-block accessors backed by a per-layer table + indirect block list. */
-extern void *lbl_803822B4[];     /* layer -> block-index-table */
+extern void *gMapBlockLayerTables[];     /* layer -> block-index-table */
 extern u8 lbl_803DCE98;          /* count of allocated blocks */
 extern void **lbl_803DCE9C;      /* block array */
 #pragma scheduling off
 #pragma peephole off
 void *mapGetBlockIdx(int layer) {
-    return lbl_803822B4[layer];
+    return gMapBlockLayerTables[layer];
 }
 void *mapGetBlock(int i) {
     if (i < 0 || i >= lbl_803DCE98) return 0;
     return lbl_803DCE9C[i];
 }
 void *mapGetBlockAtPos(int x, int y, int layer) {
-    s8 *table = (s8 *)lbl_803822B4[layer];
+    s8 *table = (s8 *)gMapBlockLayerTables[layer];
     s32 idx;
     if (x < 0 || y < 0 || x >= 0x10 || y >= 0x10) return 0;
     idx = table[x + (y << 4)];

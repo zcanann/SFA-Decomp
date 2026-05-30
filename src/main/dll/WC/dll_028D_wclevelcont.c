@@ -68,7 +68,7 @@ void wclevelcont_func12(int obj, s16 *outRow, s16 *outCol, f32 px, f32 pz)
 {
     f32 outX, outZ;
 
-    fn_8005B0A8(&outX, &outZ, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+    mapGetBlockOriginForPos(&outX, &outZ, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
     *outRow = (s16)((s16)(px - outX - lbl_803E6DB8) / 48);
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DC0) / 48);
 }
@@ -81,7 +81,7 @@ void wclevelcont_func11(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
 {
     f32 outX, outZ;
 
-    fn_8005B0A8(&outX, &outZ, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+    mapGetBlockOriginForPos(&outX, &outZ, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
     *outXp = lbl_803E6DB4 + (lbl_803E6DB8 + outX + (f32)(col * 48));
     *outZp = lbl_803E6DB4 + (lbl_803E6DC0 + outZ + (f32)(row * 48));
 }
@@ -156,7 +156,7 @@ void wclevelcont_func0B(int obj, s16 *outRow, s16 *outCol, f32 px, f32 pz)
 {
     f32 outX, outZ;
 
-    fn_8005B0A8(&outX, &outZ, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+    mapGetBlockOriginForPos(&outX, &outZ, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
     *outRow = (s16)((s16)(px - outX - lbl_803E6DD0) / 48);
     *outCol = (s16)((s16)(pz - outZ - lbl_803E6DD4) / 48);
 }
@@ -169,7 +169,7 @@ void wclevelcont_setScale(int obj, s16 col, s16 row, f32 *outXp, f32 *outZp)
 {
     f32 outX, outZ;
 
-    fn_8005B0A8(&outX, &outZ, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+    mapGetBlockOriginForPos(&outX, &outZ, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
     *outXp = lbl_803E6DB4 + (lbl_803E6DD0 + outX + (f32)(col * 48));
     *outZp = lbl_803E6DB4 + (lbl_803E6DD4 + outZ + (f32)(row * 48));
 }
@@ -319,14 +319,14 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int 
         int bi = b;
         if (dx == -1) {
             f32 pz, px;
-            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
             *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + lbl_803E6DBC);
             *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)(bi * 48));
             a += 1;
             limit = 8;
         } else {
             f32 pz, px;
-            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
             *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + lbl_803E6DA8);
             *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)(bi * 48));
             a -= 1;
@@ -337,13 +337,13 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int 
                 if (lbl_803AD2D8[i][b] <= 4) {
                     f32 pz, px;
                     i += dx;
-                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
                     *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)((s16)i * 48));
                     return 1;
                 }
                 {
                     f32 pz, px;
-                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
                     *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)((s16)i * 48));
                     return 2;
                 }
@@ -354,14 +354,14 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int 
         int ai = a;
         if (dy == -1) {
             f32 pz, px;
-            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
             *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)(ai * 48));
             *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + lbl_803E6DBC);
             b += 1;
             limit = 8;
         } else {
             f32 pz, px;
-            fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+            mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
             *outX = lbl_803E6DB4 + (lbl_803E6DD0 + px + (f32)(ai * 48));
             *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + lbl_803E6DA8);
             b -= 1;
@@ -372,13 +372,13 @@ int wclevelcont_func10(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int 
                 if (lbl_803AD2D8[a][i] <= 4) {
                     f32 pz, px;
                     i += dy;
-                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
                     *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)((s16)i * 48));
                     return 1;
                 }
                 {
                     f32 pz, px;
-                    fn_8005B0A8(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+                    mapGetBlockOriginForPos(&px, &pz, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
                     *outZ = lbl_803E6DB4 + (lbl_803E6DD4 + pz + (f32)((s16)i * 48));
                     return 2;
                 }

@@ -2507,7 +2507,7 @@ void mapTextureScrollSetStep(int idx, int xStep, int yStep, int texWidthFixed, i
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803DEBB4;
+extern f32 gMapBlockWorldSize;
 extern s8 lbl_803DB624;
 extern int lbl_803DCE78;
 extern int* gMapEventInterface;
@@ -2544,8 +2544,8 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
         }
     }
     curMapLayer = 0;
-    mapY = (s32)fastFloorf(c / lbl_803DEBB4);
-    mapId = mapCoordsToId((s32)fastFloorf(a / lbl_803DEBB4), mapY, layer);
+    mapY = (s32)fastFloorf(c / gMapBlockWorldSize);
+    mapId = mapCoordsToId((s32)fastFloorf(a / gMapBlockWorldSize), mapY, layer);
     if (mapId < 0 || mapId >= (getDataFileSize(0x1f) >> 5)) {
         lbl_803DCEA4 = 0;
     } else {
@@ -2566,7 +2566,7 @@ void mapSetup(int mapType, s32* outMapId, s32* outEvent, f32 a, f32 b, f32 c)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int lbl_803822B4[5];
+extern int gMapBlockLayerTables[5];
 extern s16* lbl_803DCE94;
 extern u8 lbl_803DCE98;
 extern u8* lbl_803DCE8C;
@@ -2595,7 +2595,7 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     int byteOff;
 
     entry = (char*)lbl_803822A0[layer];
-    statusArr = (s8*)lbl_803822B4[layer];
+    statusArr = (s8*)gMapBlockLayerTables[layer];
     slotIdx = p1 + (p2 << 4);
     entry += slotIdx * 12;
 
@@ -2747,7 +2747,7 @@ void trackLoadBlockEnd(void* blk, int blockId, int slotIdx, int layer)
             OSReport(sTrackLoadBlockOverrunError);
         }
     }
-    statusArr = (s8*)lbl_803822B4[layer];
+    statusArr = (s8*)gMapBlockLayerTables[layer];
     statusArr[slotIdx] = (s8)i;
     lbl_803DCE9C[i] = (int)blk;
     lbl_803DCE94[i] = (s16)blockId;
@@ -3069,7 +3069,7 @@ void unloadMap(void)
     Sfx_ClearLoopedObjectSounds();
     doNothing_8001F678(1, 0);
     for (layer = 0; layer < 5; layer++) {
-        cur = (s8*)lbl_803822B4[layer];
+        cur = (s8*)gMapBlockLayerTables[layer];
         for (i = 0; i < 256; i++) {
             mapType = cur[i];
             if (mapType >= 0) {

@@ -4066,15 +4066,15 @@ u32 mapBlockFn_80060678(int *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* mapGetBlocks — write a fixed table base and an sbss u32 into two
+/* mapGetBlocks: write a fixed table base and an sbss u32 into two
  * out-pointers. */
-extern u8 lbl_803822B4[];
+extern u8 gMapBlockLayerTables[];
 extern u32 lbl_803DCE9C;
 #pragma scheduling off
 #pragma peephole off
 void mapGetBlocks(void **outPtr, u32 *outVal)
 {
-    *outPtr = lbl_803822B4;
+    *outPtr = gMapBlockLayerTables;
     *outVal = lbl_803DCE9C;
 }
 #pragma peephole reset
