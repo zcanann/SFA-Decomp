@@ -5193,3 +5193,83 @@ int objShadowFn_80062498(int *obj, int param2)
     objDrawFn_80061f0c(cache, blockData, obj, (int)lbl_803DCEF2, &drawScratch, buf48, yOff);
     return 0;
 }
+
+extern f32 lbl_803DECB8;
+extern f32 lbl_803DECBC;
+extern f32 lbl_803DECC0;
+extern f32 lbl_803DECC4;
+extern f32 lbl_803DECC8;
+extern f32 lbl_803DCF54;
+extern f32 lbl_803DCF50;
+extern f32 lbl_803DCF58;
+
+int fn_800630D8(f32 cx, f32 cy, f32 r, f32 *p4, f32 *p5, s8 flag)
+{
+    f32 px;
+    f32 dx, dy, sum, cc;
+    f32 dx2, dy2;
+    f32 B, nB, disc, root, denom;
+    f32 t1, t2, t;
+    f32 hitX, hitY, nx, ny, dot, proj;
+    f32 vy4, vy5;
+    f32 step8, step_x, step_y;
+    f32 len2;
+
+    if (__AR_Callback == r) return 0;
+
+    px = p4[0];
+    dx = px - cx;
+    dy = p5[0] - cy;
+    sum = dx * dx + dy * dy;
+    cc = sum - r * r;
+    if (cc < __AR_Callback) {
+        if (flag != 0) {
+            p4[1] = px + lbl_803DCF54;
+            p5[1] = p5[0] + lbl_803DCF50;
+        }
+        return 0;
+    }
+
+    dx2 = p4[1] - px;
+    dy2 = p5[1] - p5[0];
+    len2 = dx2 * dx2 + dy2 * dy2;
+    if (len2 > __AR_Callback) {
+        B = lbl_803DECB8 * (dx2 * dx + dy2 * dy);
+        disc = B * B - lbl_803DECBC * len2 * cc;
+        if (disc >= __AR_Callback) {
+            root = sqrtf(disc);
+            nB = -B;
+            denom = lbl_803DECB8 * len2;
+            t1 = (nB + root) / denom;
+            t2 = (nB - root) / denom;
+            if (t1 < __AR_Callback) t1 = lbl_803DECC0;
+            if (t2 < __AR_Callback) t2 = lbl_803DECC0;
+            if (t2 < t1) t1 = t2;
+            t = t1;
+            if (t >= __AR_Callback && t <= lbl_803DECC4) {
+                lbl_803DCF58 = t;
+                if (flag != 0) {
+                    hitX = t * dx2 + p4[0];
+                    hitY = t * dy2 + p5[0];
+                    nx = (hitX - cx) / r;
+                    ny = (hitY - cy) / r;
+                    dot = -(hitX * nx + hitY * ny);
+                    vy4 = p4[1];
+                    vy5 = p5[1];
+                    proj = dot + (nx * vy4 + ny * vy5);
+                    p4[1] = vy4 - proj * nx;
+                    p5[1] = vy5 - proj * ny;
+                    step8 = lbl_803DECC8;
+                    step_x = step8 * nx;
+                    step_y = step8 * ny;
+                    while (dot + (nx * p4[1] + ny * p5[1]) < step8) {
+                        p4[1] += step_x;
+                        p5[1] += step_y;
+                    }
+                }
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
