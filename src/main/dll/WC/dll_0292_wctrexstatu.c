@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/mapEventTypes.h"
 
 #pragma peephole on
 #pragma scheduling off
@@ -93,7 +94,7 @@ void wctrexstatu_init(int obj, int setup, int fromLoad)
 
     *(s16 *)obj = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
     if (fromLoad == 0) {
-        if ((u32)(*(int (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+        if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
             *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + lbl_803E6E14;
         }
     }

@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/mapEventTypes.h"
 
 int wmnewcrystal_getExtraSize(void) { return 0x6c; }
 
@@ -27,7 +28,7 @@ void wmnewcrystal_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
 void wmnewcrystal_init(int *obj, u8 *init) {
     int *inner = *(int **)((char *)obj + 0xb8);
     *(void **)((char *)obj + 0xbc) = (void *)fn_801F943C;
-    if ((u8)(*(int (*)(int))(*(int *)(*gMapEventInterface + 0x40)))(*(s8 *)((char *)obj + 0xac)) > 1) {
+    if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)((char *)obj + 0xac)) > 1) {
         GameBit_Set(0xd27, 1);
         *(u8 *)((char *)inner + 0x68) = 1;
     }

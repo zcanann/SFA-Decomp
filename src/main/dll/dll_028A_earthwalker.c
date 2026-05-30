@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/mapEventTypes.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -109,7 +110,7 @@ void earthwalker_update(int obj)
             int newState;
             switch (*(u8 *)(state + 0x65b)) {
             case 0:
-                if ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
                     if (*(s8 *)(state + 0x65c) == 0x14) {
                         newState = 0x15;
                     } else {
@@ -132,7 +133,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 9:
-                if ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
                     if (*(s8 *)(state + 0x65c) == 0x16) {
                         newState = 0x17;
                     } else {
@@ -153,7 +154,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 10:
-                if ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
                     if (*(s8 *)(state + 0x65c) == 0x18) {
                         newState = 0x19;
                     } else if (*(s8 *)(state + 0x65c) == 0x19) {
@@ -178,7 +179,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 11:
-                if ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
                     if (*(s8 *)(state + 0x65c) == 0x1c) {
                         newState = 0x1d;
                     } else if (*(s8 *)(state + 0x65c) == 0x1d) {
@@ -203,7 +204,7 @@ void earthwalker_update(int obj)
                 }
                 break;
             case 1:
-                if ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
                     if (GameBit_Get(0xc92) != 0) {
                         *(u8 *)(obj + 0xaf) |= 8;
                         newState = -1;
@@ -442,7 +443,7 @@ void earthwalker_init(int obj, int setup)
     *(u8 *)(state + 0x65b) = *(u8 *)(setup + 0x19);
     if (*(u8 *)(state + 0x65b) == 1) {
         if (GameBit_Get(0x7fc) != 0 ||
-            (u8)(*(int (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+            ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
             *(u8 *)(state + 0x658) = 2;
         } else {
             *(u8 *)(state + 0x658) = 0;
