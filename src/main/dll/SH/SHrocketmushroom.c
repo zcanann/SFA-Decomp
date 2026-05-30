@@ -31,7 +31,8 @@ extern void lightSetFieldBC_8001db14(void *light, int value);
 extern void lightDistAttenFn_8001dc38(void *light, f32 min, f32 max);
 extern void ObjMsg_AllocQueue(void *obj, int count);
 extern void ObjMsg_SendToObject(void *dst, int msg, void *src, void *payload);
-extern void objFn_800972dc(f32 f1, f32 f2, void *obj, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void objFn_800972dc(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
+                           int flags, f32 f8val, f32 mult);
 extern int randomGetRange(int min, int max);
 extern void bombplantspore_startDriftBurst(void *obj, void *state);
 extern void bombplantspore_updateDrift(void *obj, void *state);
@@ -98,7 +99,7 @@ void bombplantspore_update(void *obj) {
                 Sfx_PlayFromObject(obj, 0xa7);
                 (*(void (***)(void *))gExpgfxInterface)[5](obj);
                 for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++) {
-                    objFn_800972dc(lbl_803E53B0, lbl_803E53B8, obj, 5, 7, 1, 0x3c, 0, 0);
+                    objFn_800972dc(obj, 5, 7, 1, 0x3c, NULL, 0, lbl_803E53B0, lbl_803E53B8);
                     (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
                         obj, 0x3f3, 0, 4, -1, 0);
                 }
@@ -125,11 +126,10 @@ void bombplantspore_update(void *obj) {
 
         if (*(f32 *)((u8 *)state + 0x274) < lbl_803E53C0) {
             particleAlpha = (s32)-(lbl_803E53C8 * *(f32 *)((u8 *)state + 0x274) - lbl_803E53C4);
-            objFn_800972dc(lbl_803E53B0,
+            objFn_800972dc(obj, 5, 7, 1, particleAlpha & 0xff, NULL, 0, lbl_803E53B0,
                            (f32)(lbl_803E53D8 *
                                      (double)(lbl_803E53C0 - *(f32 *)((u8 *)state + 0x274)) +
-                                 lbl_803E53D0),
-                           obj, 5, 7, 1, particleAlpha & 0xff, 0, 0);
+                                 lbl_803E53D0));
         }
         ObjHits_GetPriorityHit(obj, hitPosition, 0, 0);
         hitObj = **(void ***)((u8 *)obj + 0x54);
@@ -216,7 +216,7 @@ void bombplantspore_update(void *obj) {
                 Sfx_PlayFromObject(obj, 0xa2);
                 (*(void (***)(void *))gExpgfxInterface)[5](obj);
                 for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++) {
-                    objFn_800972dc(lbl_803E53B0, lbl_803E53B8, obj, 5, 7, 1, 0x3c, 0, 0);
+                    objFn_800972dc(obj, 5, 7, 1, 0x3c, NULL, 0, lbl_803E53B0, lbl_803E53B8);
                     (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
                         obj, 0x3f3, 0, 4, -1, 0);
                 }
