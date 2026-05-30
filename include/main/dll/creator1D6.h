@@ -6,5 +6,6 @@
 void nw_tricky_update(undefined2 *param_1,int param_2,int param_3);
 undefined4 FUN_801cf7ec(void);
 void FUN_801cf818(void);
+void nw_ice_update(int *obj);
 
 #endif /* MAIN_DLL_CREATOR1D6_H_ */
