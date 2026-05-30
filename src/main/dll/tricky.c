@@ -2441,3 +2441,142 @@ void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void PSMTXRotRad(f32 *m, int axis, f32 rad);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
+extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
+extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+extern void C_MTXPerspective(f32 *m, f32 fovY, f32 aspect, f32 nearP, f32 farP);
+extern f32 Camera_GetFovY(void);
+extern void Camera_SetFovY(f32);
+extern void Camera_RebuildProjectionMatrix(void);
+extern void Camera_SetCurrentViewIndex(s32);
+extern void Camera_SetCurrentViewPosition(f32, f32, f32);
+extern void Camera_SetCurrentViewRotation(s32, s32, s32);
+extern void Camera_UpdateViewMatrices(void);
+extern f32 lbl_803DD818, lbl_803DD814, lbl_803DD810, lbl_803DD80C;
+extern f32 lbl_803DD808, lbl_803DD804, lbl_803DD800, lbl_803DD7FC;
+extern f32 lbl_803E1E90, lbl_803E1E94, lbl_803E1E98;
+extern f32 lbl_803DBB04, lbl_803DBB08, lbl_803DBB0C;
+extern f32 lbl_803DBAF4, lbl_803DBAF8, lbl_803DBAFC, lbl_803DBB00;
+extern char lbl_803A87F0[];
+extern char *lbl_803DD860[2];
+#pragma scheduling off
+#pragma peephole off
+void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4) {
+    char *base = lbl_803A87F0;
+    f32 mB[12];
+    f32 mA[12];
+    lbl_803DD818 = f1;
+    lbl_803DD814 = f2;
+    lbl_803DD810 = f3;
+    lbl_803DD80C = f4;
+    lbl_803DD808 = lbl_803E1E90 * (f32)(u32)a / lbl_803E1E94;
+    lbl_803DD804 = lbl_803E1E90 * (f32)(u32)b / lbl_803E1E94;
+    lbl_803DD800 = lbl_803E1E90 * (f32)(u32)c / lbl_803E1E94;
+    PSMTXRotRad(mA, 0x79, lbl_803DD800);
+    PSMTXRotRad(mB, 0x78, lbl_803DD804);
+    PSMTXConcat(mB, mA, mA);
+    PSMTXRotRad(mB, 0x7a, lbl_803DD808);
+    PSMTXConcat(mB, mA, mA);
+    PSMTXScale(mB, lbl_803DD80C, lbl_803DD80C, lbl_803DD80C);
+    PSMTXConcat(mB, mA, mA);
+    PSMTXTrans(mB, lbl_803DD818, lbl_803DD814, lbl_803DD810);
+    PSMTXConcat(mB, mA, (f32 *)(base + 0x160));
+    PSMTXScale(mA, lbl_803DBB04, -lbl_803DBB08, lbl_803DBB0C);
+    PSMTXTrans(mB, lbl_803E1E98, lbl_803E1E68, lbl_803E1E3C);
+    PSMTXConcat(mB, mA, mB);
+    PSMTXConcat((f32 *)(base + 0x160), mB, (f32 *)(base + 0x40));
+    C_MTXPerspective((f32 *)base, lbl_803DBAF4, lbl_803DBAF8, lbl_803DBAFC, lbl_803DBB00);
+    lbl_803DD7FC = Camera_GetFovY();
+    Camera_SetFovY(lbl_803DBAF4);
+    Camera_RebuildProjectionMatrix();
+    Camera_SetCurrentViewIndex(1);
+    Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
+    Camera_SetCurrentViewRotation(0x8000, 0, 0);
+    Camera_UpdateViewMatrices();
+    *(f32 *)(lbl_803DD860[0] + 0xc) = lbl_803DD818;
+    *(f32 *)(lbl_803DD860[0] + 0x10) = lbl_803DD814;
+    *(f32 *)(lbl_803DD860[0] + 0x14) = lbl_803DD810;
+    *(f32 *)(lbl_803DD860[0] + 0x18) = lbl_803DD818;
+    *(f32 *)(lbl_803DD860[0] + 0x1c) = lbl_803DD814;
+    *(f32 *)(lbl_803DD860[0] + 0x20) = lbl_803DD810;
+    *(f32 *)(lbl_803DD860[0] + 0x8) = f4;
+    *(s16 *)(lbl_803DD860[0] + 0x4) = (s16)a;
+    *(s16 *)(lbl_803DD860[0] + 0x2) = (s16)b;
+    *(s16 *)(lbl_803DD860[0] + 0x0) = (s16)c;
+    *(f32 *)(lbl_803DD860[1] + 0xc) = lbl_803DD818;
+    *(f32 *)(lbl_803DD860[1] + 0x10) = lbl_803DD814;
+    *(f32 *)(lbl_803DD860[1] + 0x14) = lbl_803DD810;
+    *(f32 *)(lbl_803DD860[1] + 0x18) = lbl_803DD818;
+    *(f32 *)(lbl_803DD860[1] + 0x1c) = lbl_803DD814;
+    *(f32 *)(lbl_803DD860[1] + 0x20) = lbl_803DD810;
+    *(f32 *)(lbl_803DD860[1] + 0x8) = f4;
+    *(s16 *)(lbl_803DD860[1] + 0x4) = (s16)a;
+    *(s16 *)(lbl_803DD860[1] + 0x2) = (s16)b;
+    *(s16 *)(lbl_803DD860[1] + 0x0) = (s16)c;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern char hudTextures[];
+extern s16 lbl_803DD76C;
+extern u8 lbl_803DBAF0;
+extern f32 lbl_803E1E9C;
+extern u8 lbl_803DBAEE;
+extern u8 lbl_803DBAEF;
+extern void drawScaledTexture(void *tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8);
+extern void GXGetScissor(int *a, int *b, int *c, int *d);
+extern void GXSetScissor(int a, int b, int c, int d);
+extern void hudDrawRect(int x0, int y0, int x1, int y1, GXColor col);
+#pragma scheduling off
+#pragma peephole off
+void fearTestMeterDraw(void) {
+    int sc0, sc1, sc2, sc3;
+    GXColor col;
+    void *texB = *(void **)(hudTextures + 0x180);
+    u16 hgt = *(u16 *)((char *)texB + 0xc);
+    int gap = (u8)lbl_803DBA58 - (u8)lbl_803DBA59;
+    void *texA = *(void **)(hudTextures + 0x17c);
+    int wid = (u8)*(u16 *)((char *)texA + 0xa);
+    if (lbl_803DD76E != 0) {
+        lbl_803DD76C = lbl_803DD76C + lbl_803DBAF0 * framesThisStep;
+    } else {
+        lbl_803DD76C = lbl_803DD76C - lbl_803DBAF0 * framesThisStep;
+    }
+    if (lbl_803DD76C < 0) {
+        lbl_803DD76C = 0;
+    } else if (lbl_803DD76C > 0xff) {
+        lbl_803DD76C = 0xff;
+    }
+    if (lbl_803DD76C == 0) return;
+    GXGetScissor(&sc0, &sc1, &sc2, &sc3);
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    drawScaledTexture(*(void **)(hudTextures + 0x17c),
+                      (f32)(int)(0x140 - (u8)lbl_803DBA58 - wid), lbl_803E1E9C,
+                      (u8)lbl_803DD76C, 0x100, wid, hgt, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x180),
+                      (f32)(int)(0x140 - (u8)lbl_803DBA59), lbl_803E1E9C,
+                      (u8)lbl_803DD76C, 0x100, (u8)lbl_803DBA59 << 1, hgt, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x184),
+                      (f32)(int)(0x140 - (u8)lbl_803DBA58), lbl_803E1E9C,
+                      (u8)lbl_803DD76C, 0x100, gap, hgt, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x184),
+                      (f32)(int)((u8)lbl_803DBA59 + 0x140), lbl_803E1E9C,
+                      (u8)lbl_803DD76C, 0x100, gap, hgt, 0);
+    drawTexture(*(void **)(hudTextures + 0x17c),
+                (f32)(int)((u8)lbl_803DBA58 + 0x140), lbl_803E1E9C,
+                (u8)lbl_803DD76C, 0x100);
+    col.r = 0xff;
+    col.g = 0;
+    col.b = 0;
+    col.a = (u8)lbl_803DD76C;
+    hudDrawRect((lbl_803DBA5A + 0x140) - (u8)lbl_803DBAEF,
+                (u8)lbl_803DBAEE + 0x32,
+                (u8)lbl_803DBAEF + (lbl_803DBA5A + 0x140),
+                (hgt + 0x32) - (u8)lbl_803DBAEE,
+                col);
+    GXSetScissor(sc0, sc1, sc2, sc3);
+}
+#pragma peephole reset
+#pragma scheduling reset
