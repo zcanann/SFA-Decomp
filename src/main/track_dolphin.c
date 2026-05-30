@@ -347,6 +347,8 @@ extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 __AR_Callback;
 extern f32 __AR_Size;
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f);
+extern void mathFn_80021ac8(void *xf, f32 *out);
+extern f32 lbl_8038D7DC[];
 extern f32 lbl_803DCED8;
 extern f32 lbl_803DCEDC;
 extern f32 lbl_803DB650;
@@ -4873,4 +4875,51 @@ void fn_80069EB8(int param)
   }
   memcpyToCache((void *)(lbl_803DCFB8 + 0x60), cache, 0);
   lbl_803DCF80 = param;
+}
+
+typedef struct AngleXf {
+  s16 rotX;
+  s16 rotY;
+  s16 rotZ;
+  s16 pad6;
+  f32 scale;
+  f32 tx;
+  f32 ty;
+  f32 tz;
+} AngleXf;
+
+void fn_80061094(f32 *vec, f32 *out, f32 scale)
+{
+  AngleXf xf;
+  f32 ax;
+  f32 az;
+  int i;
+
+  xf.tx = 0.0f;
+  xf.ty = 0.0f;
+  xf.tz = 0.0f;
+  xf.scale = 1.0f;
+  xf.rotZ = 0;
+  ax = (f32)__fabs(vec[0]);
+  az = (f32)__fabs(vec[2]);
+  if (ax > az) {
+    xf.rotY = (u16)getAngle(ax, vec[1]);
+  } else {
+    xf.rotY = (u16)getAngle(az, vec[1]);
+  }
+  if (xf.rotY > 0x2000) {
+    xf.rotY = 0x2000;
+  }
+  xf.rotX = getAngle(vec[0], vec[2]);
+  for (i = 0; i < 8; i++) {
+    out[0] = lbl_8038D7DC[i * 3 + 0];
+    if (lbl_8038D7DC[i * 3 + 1] > 0.0f) {
+      out[1] = lbl_8038D7DC[i * 3 + 1];
+    } else {
+      out[1] = scale * lbl_8038D7DC[i * 3 + 1];
+    }
+    out[2] = lbl_8038D7DC[i * 3 + 2];
+    mathFn_80021ac8(&xf, out);
+    out += 3;
+  }
 }
