@@ -19,6 +19,10 @@ extern void ObjAnim_SetCurrentMove(int obj,int moveId,f32 blend,int flags);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8003b870();
+extern void initRotationMtx(f32 *mtx,f32 xScale,f32 yScale,f32 zScale);
+extern void mtx44_mult(f32 *lhs,f32 *rhs,f32 *out);
+extern void fn_8003B950(void *mtx);
+extern void objRenderFn_8003b8f4(int obj,int p2,int p3,int p4,int p5,f32 scale);
 extern int hitDetectFn_80067958(int obj,f32 *startPoints,f32 *endPoints,int pointCount,
                                 void *hits,int hitCount);
 extern void hitDetectFn_800691c0(int obj,void *bounds,uint mask,int flags);
@@ -42,6 +46,8 @@ extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd738;
 extern int *gPathControlInterface;
 extern f32 timeDelta;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
 extern f64 DOUBLE_803e3cb0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DDA58;
@@ -1022,6 +1028,7 @@ void dll_D3_free(int obj) {
 
 extern void Vec3_Normalize(f32 *v);
 extern void Vec3_Cross(f32 *a, f32 *b, f32 *out);
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_80166E38(f32 *out, f32 *forward, f32 *up) {
@@ -1040,6 +1047,40 @@ void fn_80166E38(f32 *out, f32 *forward, f32 *up) {
         mat[1][0] = -upRecomputed[0]; mat[1][1] = -upRecomputed[1]; mat[1][2] = -upRecomputed[2];
         mat[2][0] = -fwd[0]; mat[2][1] = -fwd[1]; mat[2][2] = -fwd[2];
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma dont_inline reset
+
+#pragma scheduling off
+#pragma peephole off
+void dll_D3_render(int obj,int p2,int p3,int p4,int p5,s8 visible)
+{
+  int state;
+  f32 *slideMtx;
+  f32 mtx[15];
+  f32 scale;
+
+  state = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+  slideMtx = (f32 *)(state + 4);
+  if ((visible != 0) && (*(int *)(obj + 0xf4) == 0)) {
+    if ((*(u8 *)(state + 0x90) == 6) && (((*(u8 *)(state + 0x92) >> 3) & 1) != 0)) {
+      if (((*(u8 *)(state + 0x92) >> 2) & 1) == 0) {
+        fn_80166E38(slideMtx,(f32 *)(obj + 0x24),(f32 *)(state + 0x7c));
+      }
+      scale = *(f32 *)(obj + 8);
+      initRotationMtx(mtx,scale,scale,scale);
+      mtx44_mult(mtx,slideMtx,mtx);
+      mtx[12] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
+      mtx[13] = *(f32 *)(obj + 0x10);
+      mtx[14] = *(f32 *)(obj + 0x14) - playerMapOffsetZ;
+      fn_8003B950(mtx);
+      objRenderFn_8003b8f4(obj,p2,p3,p4,p5,lbl_803E2FF4);
+      fn_8003B950(0);
+    } else {
+      objRenderFn_8003b8f4(obj,p2,p3,p4,p5,lbl_803E2FF4);
+    }
+  }
 }
 #pragma peephole reset
 #pragma scheduling reset
