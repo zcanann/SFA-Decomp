@@ -2837,12 +2837,14 @@ void fn_800E58FC(int obj,f32 *state)
   f32 matrix[16];
   f32 averageScale;
   f32 zero;
-  u32 pointCount;
+  u8 pointCount;
   s32 pointLimit;
   s16 pointIndex;
   s8 idx1;
   s8 idx2;
   s8 idx3;
+  f32 *pointX;
+  f32 *pointYZ;
   f32 *point;
   f32 *outZ;
   f32 *outY;
@@ -2859,16 +2861,18 @@ void fn_800E58FC(int obj,f32 *state)
     *(f32 *)(obj + 0x1c) = zero;
     *(f32 *)(obj + 0x20) = zero;
 
-    point = state;
+    pointX = state;
+    pointYZ = state;
     pointLimit = pointCount * 3;
     for (pointIndex = 0; pointIndex < pointLimit; pointIndex += 3) {
-      *(f32 *)(obj + 0x18) += point[2];
-      *(f32 *)(obj + 0x1c) += point[3];
-      *(f32 *)(obj + 0x20) += point[4];
-      point += 3;
+      *(f32 *)(obj + 0x18) += pointX[2];
+      *(f32 *)(obj + 0x1c) += pointYZ[3];
+      *(f32 *)(obj + 0x20) += pointYZ[4];
+      pointX += 3;
+      pointYZ += 3;
     }
 
-    averageScale = lbl_803E068C / (f32)(s32)pointCount;
+    averageScale = lbl_803E068C / (f32)pointCount;
     *(f32 *)(obj + 0x18) *= averageScale;
     *(f32 *)(obj + 0x1c) *= averageScale;
     *(f32 *)(obj + 0x20) *= averageScale;
@@ -3015,7 +3019,7 @@ void fn_800E5CBC(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800E5E38(int obj,u32 *state)
+void fn_800E5E38(int obj,f32 *state)
 {
   u32 hitCount;
   int hitIndex;
@@ -3036,7 +3040,7 @@ void fn_800E5E38(int obj,u32 *state)
         *(f32 *)((u8 *)state + 0x1a4) = point->z;
         *(f32 *)((u8 *)state + 0x1a8) = point->w;
         *(s8 *)((u8 *)state + 0x260) = *(s8 *)((u8 *)state + 0x260) | 0x11;
-        *(u8 *)((u8 *)state + 0x261) = *(u8 *)((u8 *)state + 0x261) + 1;
+        (*(u8 *)((u8 *)state + 0x261))++;
       }
       window = lbl_803E0688;
     }
@@ -3898,7 +3902,7 @@ LAB_800e7350:
         }
       }
       if ((*puVar8 & 0x100) != 0) {
-        fn_800E5E38((int)puVar4,puVar8);
+        fn_800E5E38((int)puVar4,(f32 *)puVar8);
       }
       if ((*puVar8 & 0x80) != 0) {
         fn_800E5CBC((short *)puVar4,(int)puVar8);
