@@ -343,6 +343,7 @@ extern f32 lbl_803DF8C0;
 extern f32 lbl_803DF8D0;
 extern f32 lbl_803DEC50;
 extern f32 lbl_803DF8D8;
+extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DF8E8;
 extern f32 lbl_803DF8EC;
 extern f32 lbl_803DF8F0;
@@ -4604,5 +4605,37 @@ void vecGetRanges(f32 *pts, f32 *base, int *out, f32 scale)
     if (z < (f32)out[2]) out[2] = (int)z;
     if (z > (f32)out[5]) out[5] = (int)z;
     pts += 3;
+  }
+}
+
+int objShadowFn_80062378(void *obj, u8 param)
+{
+  int lo;
+  int hi;
+  f32 t;
+  void *p;
+
+  p = *(void **)((char *)obj + 0x50);
+  if (*(u8 *)((char *)p + 0x5f) & 0x4) {
+    lo = 1000;
+    hi = 2000;
+  } else {
+    lo = 400;
+    hi = 500;
+  }
+  t = (Camera_DistanceToCurrentViewPosition(*(f32 *)((char *)obj + 0x18),
+                                            *(f32 *)((char *)obj + 0x1c),
+                                            *(f32 *)((char *)obj + 0x20)) -
+       (f32)lo) /
+      (f32)(hi - lo);
+  if (t < 0.0f) {
+    t = 0.0f;
+  } else if (t > 1.0f) {
+    t = 1.0f;
+  }
+  {
+    f32 inv = 1.0f - t;
+    int n = (int)((f32)param * inv);
+    return (n * (*(u8 *)((char *)obj + 0x37) + 1)) >> 8;
   }
 }
