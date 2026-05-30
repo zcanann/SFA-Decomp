@@ -30,8 +30,13 @@ extern undefined4 FUN_80081120();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_8013651c();
 extern undefined4 FUN_801d2db8();
+extern int GameBit_Get(int eventId);
+extern void fn_801D286C(void);
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
+
+extern f32 lbl_803E5358;
+extern f32 lbl_803E535C;
 
 extern undefined4 DAT_80327960;
 extern undefined4 DAT_80327964;
@@ -224,22 +229,17 @@ void bombplantspore_free(void *obj)
  */
 void bombplantspore_startDriftBurst(void *obj, void *state)
 {
-  void *params;
   s16 baseAngle;
-  u32 randAsDouble[2];
+  void *params;
   s32 angleDelta;
-  
+
   params = *(void **)((u8 *)obj + 0x4c);
   baseAngle = *(s16 *)((u8 *)params + 0x1c);
 
-  randAsDouble[0] = 0x43300000;
-  randAsDouble[1] = randomGetRange(0x1e, 0x2d) ^ 0x80000000;
-  *(f32 *)((u8 *)state + 0x298) = *(f64 *)randAsDouble - lbl_803E53A0;
+  *(f32 *)((u8 *)state + 0x298) = (f32)(int)randomGetRange(0x1e, 0x2d);
 
-  randAsDouble[0] = 0x43300000;
-  randAsDouble[1] = randomGetRange(0x78, 0xb4) ^ 0x80000000;
   *(f32 *)((u8 *)state + 0x284) =
-      *(f32 *)((u8 *)state + 0x298) + (*(f64 *)randAsDouble - lbl_803E53A0);
+      *(f32 *)((u8 *)state + 0x298) + (f32)(int)randomGetRange(0x78, 0xb4);
 
   *(s16 *)((u8 *)state + 0x2aa) =
       *(s16 *)((u8 *)state + 0x2a8) + (s16)randomGetRange(-2000, 2000);
@@ -257,9 +257,7 @@ void bombplantspore_startDriftBurst(void *obj, void *state)
     *(s16 *)((u8 *)state + 0x2aa) = (s16)(baseAngle - *(s16 *)((u8 *)params + 0x1a));
   }
 
-  randAsDouble[0] = 0x43300000;
-  randAsDouble[1] = randomGetRange(900, 0x514) ^ 0x80000000;
-  *(f32 *)((u8 *)state + 0x29c) = (*(f64 *)randAsDouble - lbl_803E53A0) / lbl_803E5390;
+  *(f32 *)((u8 *)state + 0x29c) = (f32)(int)randomGetRange(900, 0x514) / lbl_803E5390;
   *(f32 *)((u8 *)state + 0x27c) = lbl_803E5394;
 
   *(f32 *)((u8 *)state + 0x290) =
@@ -283,11 +281,10 @@ void bombplantspore_startDriftBurst(void *obj, void *state)
  */
 void bombplantspore_updateDrift(void *obj, void *state)
 {
-  void *params;
   s16 baseAngle;
+  void *params;
   s32 angleDelta;
-  u32 randAsDouble[2];
-  
+
   params = *(void **)((u8 *)obj + 0x4c);
   baseAngle = *(s16 *)((u8 *)params + 0x1c);
 
@@ -315,10 +312,8 @@ void bombplantspore_updateDrift(void *obj, void *state)
   }
 
   if (randomGetRange(0, 100) < 10 && *(f32 *)((u8 *)state + 0x2a0) <= lbl_803E5394) {
-    randAsDouble[0] = 0x43300000;
-    randAsDouble[1] = randomGetRange(-200, 200) ^ 0x80000000;
     *(f32 *)((u8 *)state + 0x280) =
-        *(f32 *)((u8 *)state + 0x278) + (*(f64 *)randAsDouble - lbl_803E53A0) / lbl_803E5390;
+        *(f32 *)((u8 *)state + 0x278) + (f32)(int)randomGetRange(-200, 200) / lbl_803E5390;
     if (*(f32 *)((u8 *)state + 0x280) < lbl_803E53AC) {
       *(f32 *)((u8 *)state + 0x280) = lbl_803E53AC;
     } else if (lbl_803E53B0 < *(f32 *)((u8 *)state + 0x280)) {
@@ -333,8 +328,7 @@ void bombplantspore_updateDrift(void *obj, void *state)
   if (angleDelta < -0x8000) {
     angleDelta += 0xffff;
   }
-  *(s16 *)((u8 *)state + 0x2a8) =
-      *(s16 *)((u8 *)state + 0x2a8) + (s16)((angleDelta * (s32)framesThisStep) >> 4);
+  *(s16 *)((u8 *)state + 0x2a8) += (s16)((angleDelta * (s32)framesThisStep) >> 4);
   *(f32 *)((u8 *)state + 0x278) =
       lbl_803E53B4 * (*(f32 *)((u8 *)state + 0x280) - *(f32 *)((u8 *)state + 0x278)) *
           timeDelta +
@@ -346,4 +340,54 @@ void bombplantspore_updateDrift(void *obj, void *state)
   *(f32 *)((u8 *)state + 0x28c) =
       *(f32 *)((u8 *)state + 0x278) *
       sin((lbl_803E5398 * (f32)*(s16 *)((u8 *)state + 0x2a8)) / lbl_803E539C);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: bombplant_init
+ * EN v1.0 Address: 0x801D3238
+ * EN v1.0 Size: 320b
+ */
+void bombplant_init(void *obj, void *param, int flag)
+{
+  void *state;
+  void *p4c;
+  s16 bitId;
+
+  state = *(void **)((u8 *)obj + 0xb8);
+  *(s16 *)obj = (s16)((s32)(s8) * ((u8 *)param + 0x1f) << 8);
+  *(u16 *)((u8 *)obj + 0xb0) |= 0x2000;
+  *(void **)((u8 *)obj + 0xbc) = (void *)fn_801D286C;
+  *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)obj + 0x8);
+
+  if (flag != 0) {
+    return;
+  }
+
+  bitId = *(s16 *)((u8 *)param + 0x1c);
+  if (bitId != -1 && GameBit_Get(bitId) == 0) {
+    p4c = *(void **)((u8 *)obj + 0x4c);
+    *(u8 *)((u8 *)obj + 0x36) = 0xff;
+    *(s16 *)((u8 *)obj + 0x6) &= ~0x4000;
+    *(f32 *)((u8 *)obj + 0xc) = *(f32 *)((u8 *)p4c + 0x8);
+    *(f32 *)((u8 *)obj + 0x10) = *(f32 *)((u8 *)p4c + 0xc);
+    *(f32 *)((u8 *)obj + 0x14) = *(f32 *)((u8 *)p4c + 0x10);
+    *(f32 *)((u8 *)obj + 0x8) = lbl_803E5358;
+    *(f32 *)((u8 *)state + 0x8) = lbl_803E535C;
+    *(f32 *)((u8 *)state + 0x4) = *(f32 *)((u8 *)state + 0xc);
+    *(f32 *)((u8 *)state + 0x10) =
+        *(f32 *)((u8 *)state + 0x4) / *(f32 *)((u8 *)state + 0x8);
+    *(f32 *)state = *(f32 *)((u8 *)state + 0x8);
+    ObjHits_RefreshObjectState(obj);
+    *(u8 *)((u8 *)state + 0x14) = 1;
+  } else {
+    p4c = *(void **)((u8 *)obj + 0x4c);
+    *(u8 *)((u8 *)obj + 0x36) = 0xff;
+    *(s16 *)((u8 *)obj + 0x6) &= ~0x4000;
+    *(f32 *)((u8 *)obj + 0xc) = *(f32 *)((u8 *)p4c + 0x8);
+    *(f32 *)((u8 *)obj + 0x10) = *(f32 *)((u8 *)p4c + 0xc);
+    *(f32 *)((u8 *)obj + 0x14) = *(f32 *)((u8 *)p4c + 0x10);
+    ObjHits_RefreshObjectState(obj);
+  }
 }
