@@ -2728,7 +2728,7 @@ void renderShadowType3(u8 *obj, u32 b, s32 offset) {
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8005DE94(u32 a, u32 b, f32 *p) {
+void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32 *p) {
     s32 t, v;
     if (lbl_803DCE30 == 1000) {
         sceneDrawTransparentPolys();
@@ -3202,7 +3202,7 @@ typedef struct {
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8005D270(void)
+void lightmap_sortTransparentDrawQueue(void)
 {
     int gap = 1;
     int i, j;

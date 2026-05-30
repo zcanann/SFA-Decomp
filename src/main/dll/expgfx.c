@@ -26,7 +26,7 @@ extern void textureFree(void *resource);
 extern int FUN_8005b024();
 extern undefined4 FUN_8005d340();
 extern undefined4 FUN_8005e1d8();
-extern void fn_8005DE94(uint slotPoolBase,int poolIndex,float *position);
+extern void lightmap_queueExternalRenderEntry(uint slotPoolBase,int poolIndex,float *position);
 extern uint FUN_8005e558();
 extern u8 fn_8005E97C(float minX,float maxX,float minY,float maxY,float minZ,float maxZ,
                       ExpgfxBounds *boundsTemplate);
@@ -1320,7 +1320,7 @@ void renderParticles(void)
           queuePosition[2] =
               queuePosition[2] - (float)(*poolSlotTypeIds & EXPGFX_QUEUE_DEPTH_SLOT_TYPE_MASK);
         }
-        fn_8005DE94(*slotPoolBases,poolIndex,queuePosition);
+        lightmap_queueExternalRenderEntry(*slotPoolBases,poolIndex,queuePosition);
       }
     }
     poolActiveCounts = poolActiveCounts + 1;
