@@ -5273,3 +5273,71 @@ int fn_800630D8(f32 cx, f32 cy, f32 r, f32 *p4, f32 *p5, s8 flag)
     }
     return 0;
 }
+
+extern f32 __PADFixBits;
+extern void DCStoreRange(void *addr, int nBytes);
+
+void fn_80069B1C(u8 *a, u8 *b, u8 *c, f32 t)
+{
+    u8 fmt;
+    int i, j;
+    u32 uVar7, uVar8;
+    u16 v2, v3;
+
+    if (a == NULL || b == NULL || c == NULL) return;
+    fmt = *(u8 *)(a + 0x16);
+    if (fmt != 4 && fmt != 6) return;
+    if (*(u8 *)(b + 0x16) != fmt) return;
+    if (*(u8 *)(c + 0x16) != fmt) return;
+    if (*(u16 *)(a + 0xa) != *(u16 *)(b + 0xa)) return;
+    if (*(u16 *)(a + 0xc) != *(u16 *)(b + 0xc)) return;
+    if (*(u16 *)(a + 0xa) != *(u16 *)(c + 0xa)) return;
+    if (*(u16 *)(a + 0xc) == *(u16 *)(c + 0xc)) {
+        uVar7 = (int)(__PADFixBits * t) & 0xff;
+        uVar8 = (0xff - uVar7) & 0xff;
+        if (fmt == 4) {
+            for (i = 0; i < (int)*(u16 *)(a + 0xc); i++) {
+                int i5 = (i & 3) * 8;
+                for (j = 0; j < (int)*(u16 *)(a + 0xa); j++) {
+                    int i6 = (j & 3) * 2;
+                    int i4 = (j >> 2) * 0x20;
+                    int i12 = (int)*(u16 *)(a + 0xa) * (i & 0xfffffffc) * 2;
+                    int off = i6 + i4 + i5 + i12 + 0x60;
+                    v2 = *(u16 *)(a + off);
+                    v3 = *(u16 *)(b + off);
+                    *(u16 *)(c + off) =
+                        (u16)((int)(((int)(uVar7 * ((v2 & 0x1f) << 3 | (int)(v2 & 0x1c) >> 2)) >> 8)
+                                    + ((int)(uVar8 * ((v3 & 0x1f) << 3 | (int)(v3 & 0x1c) >> 2)) >> 8) & 0xf8U) >> 3)
+                        | (u16)((((int)(((int)(v2 & 0xf800) >> 8 | (int)(v2 & 0xe000) >> 0xd) * uVar7) >> 8)
+                                 + ((int)(((int)(v3 & 0xf800) >> 8 | (int)(v3 & 0xe000) >> 0xd) * uVar8) >> 8) & 0xf8U) << 8)
+                        | (u16)((((int)(uVar7 * ((int)(v2 & 0x7e0) >> 3 | (int)(v2 & 0x600) >> 9)) >> 8)
+                                 + ((int)(uVar8 * ((int)(v3 & 0x7e0) >> 3 | (int)(v3 & 0x600) >> 9)) >> 8) & 0xfcU) << 3);
+                }
+            }
+        } else {
+            for (i = 0; i < (int)*(u16 *)(a + 0xc); i++) {
+                int i5 = (i >> 2) * 8;
+                int i4 = (i & 3) * 8;
+                for (j = 0; j < (int)*(u16 *)(a + 0xa); j++) {
+                    int i9 = (j & 3) * 2;
+                    int i12 = (j >> 2) * 0x40;
+                    int i6 = (int)*(u16 *)(a + 0xa) * i5 * 2;
+                    u8 *ad = a + i9 + i12 + i4 + i6;
+                    u8 *bd = b + i9 + i12 + i4 + i6;
+                    u8 *cd;
+                    v2 = *(u16 *)(ad + 0x80);
+                    v3 = *(u16 *)(bd + 0x80);
+                    cd = c + i9 + i12 + i4 + 0x60;
+                    *(u16 *)(cd + i6) =
+                        (short)((*(u16 *)(ad + 0x60) & 0xff) * uVar7 >> 8)
+                        + (short)((*(u16 *)(bd + 0x60) & 0xff) * uVar8 >> 8) & 0xff;
+                    *(u16 *)(cd + (int)*(u16 *)(a + 0xa) * i5 * 2 + 0x20) =
+                        (u16)((((int)(((int)(v2 & 0xff00) >> 8) * uVar7) >> 8)
+                               + ((int)(((int)(v3 & 0xff00) >> 8) * uVar8) >> 8) & 0xffU) << 8)
+                        | (short)(uVar7 * (v2 & 0xff) >> 8) + (short)(uVar8 * (v3 & 0xff) >> 8) & 0xffU;
+                }
+            }
+        }
+        DCStoreRange(c + 0x60, *(int *)(c + 0x44));
+    }
+}
