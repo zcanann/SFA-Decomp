@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/LGT/LGTprojectedlight.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
@@ -48,7 +49,7 @@ extern undefined4 DAT_803dcd84;
 extern undefined4 DAT_803dcd88;
 extern undefined4 DAT_803dcd8c;
 extern undefined4* DAT_803dd72c;
-extern undefined4* gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern undefined4 DAT_803de910;
 extern undefined4 DAT_803de914;
 extern undefined4 DAT_803de918;
@@ -330,7 +331,7 @@ void wmlevelcontrol_update(int obj)
     }
   }
   if (*(u8 *)(state + 5) == 0) {
-    areaId = (*(code *)(*gMapEventInterface + 0x40))((int)*(char *)(obj + 0xac));
+    areaId = (*gMapEventInterface)->getMode((int)*(char *)(obj + 0xac));
     areaId = __cntlzw(6 - (areaId & 0xff));
     areaId = areaId >> 5;
     if (((areaId == 0) || (loadingDone = getCurSeqNo(), loadingDone == 0)) ||

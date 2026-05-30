@@ -345,7 +345,7 @@ void sh_levelcontrol_init(int obj) {
         *(int *)state |= 0x40;
     }
 
-    *(u8 *)((char *)state + 5) = (*(int (**)(int))((char *)*gMapEventInterface + 0x40))((int)*(s8 *)((char *)obj + 0xAC));
+    *(u8 *)((char *)state + 5) = (*gMapEventInterface)->getMode((int)*(s8 *)((char *)obj + 0xAC));
 
     *(s16 *)((char *)state + 0x12) = -1;
     Music_Trigger(34, 0);
