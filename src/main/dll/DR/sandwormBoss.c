@@ -3692,8 +3692,8 @@ void cfprisoncage_update(int *obj) {
     int v;
     if (*(int*)((char*)obj + 0xf4) != 0) {
         switch (*(s16*)((char*)obj + 0x46)) {
-        case 0x128: v = 1; break;
         case 0x127: v = 0; break;
+        case 0x128:
         default:    v = 1; break;
         }
         ((void(*)(int, int*, int))((void**)*(int*)gObjectTriggerInterface)[18])(v, obj, -1);
