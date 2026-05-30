@@ -137,7 +137,7 @@ void drcloudper_init(int obj, int setup)
         (state->normalX * cloud->posX + state->normalY * cloud->posY);
     cloud->flagsB0 |= 0xe000;
     if (setupData->cloudIndex == GameBit_Get(0x7a9)) {
-        (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(cloud->mapDir, 0xc, 1);
+        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(cloud->mapDir, 0xc, 1);
     }
 }
 #pragma scheduling reset

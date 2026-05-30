@@ -265,9 +265,9 @@ void wmspiritplace_update(int obj)
                         getEnvfxActImmediately(obj, obj, 0x216, 0);
                         getEnvfxActImmediately(obj, obj, 0x229, 0);
                         getEnvfxActImmediately(obj, obj, 0x22a, 0);
-                        (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 4, 1);
-                        (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 10, 0);
-                        (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 0xb, 1);
+                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
+                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
+                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
                     }
                 } else {
                     if ((*(u8 *)(obj + 0xaf) & 0x10) != 0) {

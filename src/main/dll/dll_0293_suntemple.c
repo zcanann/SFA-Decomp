@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/mapEventTypes.h"
 
 #pragma peephole on
 #pragma scheduling on
@@ -92,7 +93,7 @@ void suntemple_init(u8 *obj, u8 *setup)
     }
     state = *(u8 **)(obj + 0xb8);
     state[0] = (u8)GameBit_Get(*(s16 *)(setup + 0x1c));
-    state[1] = (*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
+    state[1] = ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     if ((setup[0x1b] & 1) != 0 && state[0] != 0) {
         obj[0x36] = 0;
     }

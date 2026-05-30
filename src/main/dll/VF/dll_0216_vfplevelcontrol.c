@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/mapEventTypes.h"
 
 typedef union VFPLevelControlLatch {
     u8 raw[8];
@@ -67,7 +68,7 @@ void vfplevelcontrol_update(int obj) {
 
     coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
     mapEventState =
-        ((u8 (*)(int))(*(int *)(*gMapEventInterface + 0x40)))((s8)*(u8 *)((char *)obj + 0xac));
+        ((MapEventInterface *)*gMapEventInterface)->getMode((s8)*(u8 *)((char *)obj + 0xac));
     switch (mapEventState) {
     case 1:
         vfplevelcontrol_tickGlobalTimer();
@@ -134,7 +135,7 @@ void vfplevelcontrol_init(int *obj, u8 *init) {
         state->areaMode = setup->areaMode;
     }
     lbl_803DC148 = 0x82;
-    (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x40)))((s8)*(u8 *)((char *)obj + 0xac));
+    ((MapEventInterface *)*gMapEventInterface)->getMode((s8)*(u8 *)((char *)obj + 0xac));
     state->cueTimers[4] = 0;
     state->cueTimers[5] = 0;
     *(u16 *)((char *)obj + 0xb0) |= 0x6000;
