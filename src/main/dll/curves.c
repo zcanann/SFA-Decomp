@@ -31,7 +31,11 @@ extern int FUN_800632f4();
 extern int hitDetectFn_80065e50(int obj,f32 x,f32 y,f32 z,void *out,int p5,int p6);
 extern undefined FUN_80063a68();
 extern undefined4 FUN_80063a74();
+extern void hitDetectFn_80067958(int obj,void *startPoints,void *endPoints,int pointCount,
+                                 void *hitResults,int arg6);
 extern undefined4 FUN_800723a0();
+extern void PSVECSubtract(f32 *a,f32 *b,f32 *out);
+extern f32 PSVECMag(f32 *v);
 extern undefined4 FUN_80247eb8();
 extern double SeekTwiceBeforeRead();
 extern undefined8 FUN_8028680c();
@@ -77,6 +81,11 @@ extern f32 lbl_803E12B4;
 extern f32 lbl_803E12B8;
 extern f32 lbl_803E065C;
 extern f32 lbl_803E0660;
+extern f32 lbl_803E0678;
+extern f32 lbl_803E067C;
+extern f32 lbl_803E0680;
+extern f32 lbl_803E0684;
+extern f32 lbl_803E0688;
 extern f32 lbl_803E12C4;
 extern f32 lbl_803E12D8;
 extern f32 lbl_803E12DC;
@@ -99,6 +108,14 @@ extern f32 lbl_803E1338;
 extern f32 lbl_803E133C;
 extern f32 lbl_803E1340;
 extern char sCurvesMaxRomCurvesExceeded[];
+
+typedef struct CurvesHitScratch {
+  u8 unk0[0x40];
+  f32 scale;
+  u8 unk44[0x10];
+  u8 type;
+  u8 unk55[0x13];
+} CurvesHitScratch;
 
 static inline u32 RomCurve_GetId(RomCurveDef *curve) {
   return curve->id;
@@ -2788,6 +2805,76 @@ void FUN_800e49c0(int param_1,uint *param_2)
 {
 }
 
+void fn_800E56A4(int obj,f32 *state)
+{
+  RomCurvePoint *point;
+  RomCurvePoint *points;
+  u32 hitCount;
+  int pointIndex;
+  f32 delta[3];
+  CurvesHitScratch hitScratch;
+  f32 startX;
+  f32 startZ;
+
+  startX = state[5];
+  startZ = state[7];
+  if ((*(s32 *)state & 0x100000) == 0) {
+    *(f32 *)(obj + 0x18) = startX;
+    *(f32 *)(obj + 0x20) = startZ;
+    *(f32 *)(obj + 0x1c) = state[3];
+  }
+
+  points = curves_getCurves(state[5],state[7],obj,&hitCount,0);
+  point = points;
+  pointIndex = 0;
+  while (pointIndex < (int)hitCount) {
+    if (((s8)point->type != 0xe) && (point->z > lbl_803E0678) &&
+        (point->x <= state[6]) && (point->x > state[3])) {
+      state[0xe] = state[5];
+      state[0xf] = state[6];
+      state[0x10] = state[7];
+      state[2] = state[5];
+      state[3] = points[pointIndex].x;
+      state[4] = state[7];
+      hitDetectFn_80067958(obj,state + 0xe,state + 2,1,state + 0x1a,0);
+      break;
+    }
+    point++;
+    pointIndex++;
+  }
+
+  if (*(s16 *)(obj + 0x44) == 1) {
+    state[0x14] = state[5];
+    state[0x15] = state[6];
+    state[0x16] = state[7];
+    state[8] = state[5];
+    state[9] = lbl_803E067C + state[6];
+    state[10] = state[7];
+    hitScratch.scale = lbl_803E0680;
+    hitScratch.type = 3;
+    hitDetectFn_80067958(obj,state + 0x14,state + 8,1,&hitScratch,0);
+  }
+
+  PSVECSubtract((f32 *)(state + 2),(f32 *)(state + 5),delta);
+  if (((*(s32 *)state & 0x8000000) != 0) || (PSVECMag(delta) > lbl_803E0684)) {
+    state[0xe] = state[5];
+    state[0xf] = state[6];
+    state[0x10] = state[7];
+    state[2] = state[5];
+    state[3] = state[6] - lbl_803E0688;
+    state[4] = state[7];
+    hitDetectFn_80067958(obj,state + 0xe,state + 2,1,state + 0x1a,0);
+  }
+
+  state[0x68] = state[0x1a];
+  state[0x69] = state[0x1b];
+  state[0x6a] = state[0x1c];
+  ((u32 *)state)[0x36] = ((u32 *)state)[0x31];
+  if (((u32 *)state)[0x36] != 0) {
+    ObjHits_AddContactObject(((u32 *)state)[0x36],obj);
+  }
+}
+
 /*
  * --INFO--
  *
@@ -3721,7 +3808,7 @@ void dll_15_func08(void)
       }
       else if (bVar1 < 3) {
         if (bVar1 == 1) {
-          FUN_800e49c0((int)puVar4,puVar8);
+          fn_800E56A4((int)puVar4,(f32 *)puVar8);
         }
         else {
 LAB_800e7350:

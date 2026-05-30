@@ -70,6 +70,7 @@ void curves_initialise(void);
 void curves_release(void);
 void curves_countRandomPoints(int obj,uint *curve);
 void FUN_800e49c0(int param_1,uint *param_2);
+void fn_800E56A4(int obj,f32 *state);
 void fn_800E58FC(void);
 void fn_800E5CBC(short *param_1,int param_2);
 void FUN_800e4db4(int param_1,int param_2);
