@@ -2928,11 +2928,16 @@ extern int getAngle(f32, f32);
 extern f32 fn_80293E80(f32);
 extern f32 sin(f32);
 extern void drawViewFinderLine(u8 *color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
+extern f32 fn_8029454C(f32);
 extern f64 lbl_803E1E78, lbl_803E1EA0, lbl_803E1EA8, lbl_803E1EB0, lbl_803E1EB8;
+extern f64 lbl_803E1EF0, lbl_803E1EF8, lbl_803E1F00, lbl_803E1F20, lbl_803E1F28;
 extern f32 lbl_803DD7F0, lbl_803DD7F4, lbl_803E1EC4, lbl_803E1EC8, lbl_803E1ECC, lbl_803E1ED0;
 extern f32 lbl_803E1ED4, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE0, lbl_803E1EE4, lbl_803E1EE8, lbl_803E1E94;
+extern f32 lbl_803E1F08, lbl_803E1F0C, lbl_803E1F10, lbl_803E1F14, lbl_803E1F18;
 extern s16 lbl_803DD7EC;
 extern int lbl_803E1E2C;
+extern char sTrickyDebugXCoordFormat[];
+extern void gameTextSetColor(int, int, int, int);
 #pragma scheduling off
 
 #define VFTICK(gA1, gA2, A, B, C) do { \
@@ -2969,7 +2974,6 @@ void drawViewFinderHud(void) {
     if (v == lbl_803E1E3C) return;
     lbl_803DD7F4 = (f32)(lbl_803E1EB0 - lbl_803E1EB8 * v);
     lbl_803DD7EC = (s16)-*(s16 *)slot;
-    (void)fovY;
 
     VFTICK(lbl_803E1EC4, lbl_803E1E3C, lbl_803E1ECC, lbl_803E1ED0, lbl_803E1ED4);
     VFTICK(lbl_803E1ED8, lbl_803E1E3C, lbl_803E1ECC, lbl_803E1EDC, lbl_803E1EE0);
@@ -2979,5 +2983,38 @@ void drawViewFinderHud(void) {
     VFTICK(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1ED0, lbl_803E1EE4, lbl_803E1ED4);
     VFTICK(lbl_803E1E3C, lbl_803E1EC4, lbl_803E1EDC, lbl_803E1ECC, lbl_803E1EE8);
     VFTICK(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE4, lbl_803E1ED4);
+
+    {
+        char buf[64];
+        f32 f15v = (f32)(lbl_803E1EF0 * ((fovY - lbl_803E1EF8) / lbl_803E1F00) + lbl_803E1EB0);
+        f32 f18v = -(lbl_803E1F0C * lbl_803DD7F0) + lbl_803E1F08;
+        f32 f19v;
+        f32 xc;
+        {
+            GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
+            *(int *)&_c = lbl_803E1E2C;
+            _c.a = (u8)(int)(hudElementOpacity * lbl_803DD7F0);
+            _a = (s16)getAngle(lbl_803E1E3C, lbl_803E1F08 - f18v);
+            _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
+            _cs = fn_80293E80(_r); _sn = sin(_r);
+            _cx = lbl_803E1E68 * _cs; _sx = lbl_803E1E68 * _sn;
+            drawViewFinderLine((u8 *)&_c, lbl_803E1F10 + _sx, f18v - _cx, lbl_803E1F10 - _sx, f18v + _cx, lbl_803E1F10 - _sx, lbl_803E1F08 + _cx, lbl_803E1F10 + _sx, lbl_803E1F08 - _cx);
+        }
+        f19v = lbl_803E1F14 + f15v;
+        {
+            GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
+            *(int *)&_c = lbl_803E1E2C;
+            _c.a = (u8)(int)(hudElementOpacity * lbl_803DD7F0);
+            _a = (s16)getAngle(lbl_803E1E3C, f19v - f15v);
+            _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
+            _cs = fn_80293E80(_r); _sn = sin(_r);
+            _cx = lbl_803E1F18 * _cs; _sx = lbl_803E1F18 * _sn;
+            drawViewFinderLine((u8 *)&_c, lbl_803E1F10 + _sx, f15v - _cx, lbl_803E1F10 - _sx, f15v + _cx, lbl_803E1F10 - _sx, f19v + _cx, lbl_803E1F10 + _sx, f19v - _cx);
+        }
+        xc = (f32)(lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28)));
+        sprintf(buf, sTrickyDebugXCoordFormat, xc);
+        gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * lbl_803DD7F0));
+        gameTextShowStr(buf, 0x93, 0x21c, 0x46);
+    }
 }
 #pragma scheduling reset

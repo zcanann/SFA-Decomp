@@ -5422,3 +5422,81 @@ void objHitDetectFn_80062e84(u8 *p1, u8 *p2, int p3)
         *(f32 *)(iVar1 + 0x24) = *(f32 *)(p1 + 0x20);
     }
 }
+
+extern u8 lbl_8038D840[];
+extern int lbl_803DCF64;
+extern int lbl_803DCF68;
+extern s8 lbl_803DCF60;
+extern f32 lbl_803DECE8;
+extern void Matrix_TransformPoint(void *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern void fn_800659A8(f32 a, f32 b, void *p3, void *p4, void *desc, int e);
+
+int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f)
+{
+    u8 *base = lbl_8038D840;
+    u8 *desc;
+    u8 *end;
+    u8 *ptr;
+    int i, j;
+    int bVar7;
+    int conv[6];
+    f32 tx, ty, tz;
+
+    if (e >= 0) {
+        conv[0] = conv[3] = (int)b;
+        conv[1] = (int)(c - lbl_803DECE8);
+        conv[4] = (int)(lbl_803DECE8 + c);
+        conv[2] = conv[5] = (int)d;
+        hitDetectFn_800691c0((int *)a, conv, f, 1);
+    } else {
+        if (e == -1) e = 0;
+        else e = 1;
+    }
+
+    lbl_803DCF68 = (int)(base + 0xdc);
+    lbl_803DCF64 = (int)(base + 0x50);
+    lbl_803DCF60 = 0;
+    end = base + (u32)lbl_803DCF6C * 0x18 + 0x424;
+    for (desc = base + 0x424; desc < end; desc += 0x18) {
+        if (lbl_803DCF60 >= 0x23) break;
+        if (*(void **)desc != NULL) {
+            Matrix_TransformPoint(*(void **)(desc + 8), b, __AR_Callback, d, &tx, &ty, &tz);
+            fn_800659A8(tx, tz,
+                        (void *)(lbl_803DCF30 + *(s16 *)(desc + 4) * 0x4c),
+                        (void *)(lbl_803DCF30 + *(s16 *)(desc + 0x1c) * 0x4c),
+                        desc, e);
+        } else {
+            fn_800659A8(b, d,
+                        (void *)(lbl_803DCF30 + *(s16 *)(desc + 4) * 0x4c),
+                        (void *)(lbl_803DCF30 + *(s16 *)(desc + 0x1c) * 0x4c),
+                        desc, e);
+        }
+    }
+
+    ptr = base + 0xdc;
+    i = 0;
+    for (j = 0; j < lbl_803DCF60; j++) {
+        *(u8 **)(lbl_803DCF64 + i) = ptr;
+        ptr += 0x18;
+        i += 4;
+    }
+
+    bVar7 = 0;
+    while (!bVar7) {
+        bVar7 = 1;
+        i = 0;
+        for (j = 0; j < lbl_803DCF60 - 1; j++) {
+            f32 **pp = (f32 **)(lbl_803DCF64 + i);
+            f32 *p5 = pp[0];
+            if (*p5 < *pp[1]) {
+                bVar7 = 0;
+                pp[0] = pp[1];
+                *(f32 **)(lbl_803DCF64 + i + 4) = p5;
+            }
+            i += 4;
+        }
+    }
+
+    *(u8 **)out = base + 0x50;
+    return lbl_803DCF60;
+}
