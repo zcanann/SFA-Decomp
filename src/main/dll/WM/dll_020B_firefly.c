@@ -13,7 +13,7 @@ void FireFlyFn_801f4f88(int obj)
     }
     if (*(f32 *)(state + 0x40) > lbl_803E5EB4) {
         *(f32 *)(state + 0x40) = *(f32 *)(state + 0x40) - lbl_803E5EB4;
-        if (*(u8 *)(state + 0x68) < 4) {
+        if (*(u8 *)(state + 0x68) >= 4) {
             *(u8 *)(state + 0x68) = *(u8 *)(state + 0x68) + 1;
         } else {
             fn_801F4D54(obj, state);
@@ -100,20 +100,34 @@ void firefly_update(int obj)
     int *def;
     int msg[2];
     u8 isActive;
+    f32 despawnTimer;
+    int fireflyMessage;
 
     state = *(int **)(obj + 0xB8);
     def = *(int **)(obj + 0x4C);
+    fireflyMessage = 0x7000B;
+    despawnTimer = lbl_803E5EA8;
     while (ObjMsg_Pop(obj, msg, 0, 0) != 0) {
-        if (msg[0] == 0x7000B) {
+        if (msg[0] == fireflyMessage) {
             *(s16 *)(obj + 0x6) = (s16)(*(s16 *)(obj + 0x6) | 0x4000);
-            *(f32 *)((u8 *)state + 0x70) = lbl_803E5EA8;
+            *(f32 *)((u8 *)state + 0x70) = despawnTimer;
             gameBitIncrement(0x13D);
             gameBitIncrement(0x5D6);
             Sfx_PlayFromObject(obj, 0x49);
         }
     }
 
-    if ((*(u8 *)((u8 *)state + 0x6C) & 0x80) != 0) {
+    if ((*(u8 *)((u8 *)state + 0x6C) & 0x80) == 0) {
+        isActive = 0;
+        if ((*(s16 *)((u8 *)def + 0x20) == -1) || ((u32)GameBit_Get(*(s16 *)((u8 *)def + 0x20)) != 0)) {
+            isActive = 1;
+        }
+        *(u8 *)((u8 *)state + 0x6C) =
+            (u8)((*(u8 *)((u8 *)state + 0x6C) & 0x7F) | (isActive << 7));
+        if ((*(u8 *)((u8 *)state + 0x6C) & 0x80) != 0) {
+            *state = fn_8001CC9C(obj, 100, 0xFF, 100, 0);
+        }
+    } else {
         if (timerCountDown((u8 *)state + 0x74) != 0) {
             *(f32 *)((u8 *)state + 0x70) = lbl_803E5EA8;
         }
@@ -127,16 +141,6 @@ void firefly_update(int obj)
             }
         } else {
             FireFlyFn_801f4f88(obj);
-        }
-    } else {
-        isActive = 0;
-        if ((*(s16 *)((u8 *)def + 0x20) == -1) || (GameBit_Get(*(s16 *)((u8 *)def + 0x20)) != 0)) {
-            isActive = 1;
-        }
-        *(u8 *)((u8 *)state + 0x6C) =
-            (u8)((*(u8 *)((u8 *)state + 0x6C) & 0x7F) | (isActive << 7));
-        if ((*(u8 *)((u8 *)state + 0x6C) & 0x80) != 0) {
-            *state = fn_8001CC9C(obj, 100, 0xFF, 100, 0);
         }
     }
 }
