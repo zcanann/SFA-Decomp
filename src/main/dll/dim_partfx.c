@@ -359,12 +359,7 @@ extern f32 lbl_803E1188;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-Effect16_func04(int param_1,undefined4 param_2,undefined2 *param_3,uint param_4,undefined param_5,
-            int param_6)
-{
-    return 0;
-}
+/* Effect16_func04 is defined further below (full recovered body). */
 
 /*
  * --INFO--
@@ -2268,6 +2263,18 @@ extern f32 lbl_803E01F8; extern f32 lbl_803E01FC;
 extern f32 lbl_803E0200; extern f32 lbl_803E0204;
 extern f32 lbl_803E0208; extern f32 lbl_803E020C;
 
+extern f32 lbl_803DB840; extern f32 lbl_803DB844;
+extern f32 lbl_803E00B4; extern f32 lbl_803E00BC;
+extern f32 lbl_803E00C0; extern f32 lbl_803E00C4;
+extern f32 lbl_803E00C8; extern f32 lbl_803E00CC;
+extern f32 lbl_803E00D0; extern f32 lbl_803E00D4;
+extern f32 lbl_803E00D8; extern f32 lbl_803E00DC;
+extern f32 lbl_803E00E0; extern f32 lbl_803E00E4;
+extern f32 lbl_803E00E8; extern f32 lbl_803E00EC;
+extern f32 lbl_803E00F0; extern f32 lbl_803E00F4;
+extern f32 lbl_803E00F8;
+extern WaterfxCfg lbl_8039C410;
+
 extern f32 lbl_803DB888; extern f32 lbl_803DB88C;
 extern f32 lbl_803E0310; extern f32 lbl_803E0314;
 extern f32 lbl_803E0318; extern f32 lbl_803E0320;
@@ -2971,6 +2978,365 @@ int Effect17_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         }
         cfg.f48 = 0x2000000;
         cfg.f42 = 0x88;
+        break;
+    default:
+        return -1;
+    }
+    cfg.f44 = cfg.f44 | param_4;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if ((cfg.f44 & 1) != 0) {
+        if ((param_4 & 0x200000) != 0) {
+            cfg.f30 = cfg.f30 + cfg.f18;
+            cfg.f34 = cfg.f34 + cfg.f1c;
+            cfg.f38 = cfg.f38 + cfg.f20;
+        } else {
+            if (cfg.f00 != 0) {
+                cfg.f30 = cfg.f30 + *(f32 *)((char *)cfg.f00 + 0x18);
+                cfg.f34 = cfg.f34 + *(f32 *)((char *)cfg.f00 + 0x1c);
+                cfg.f38 = cfg.f38 + *(f32 *)((char *)cfg.f00 + 0x20);
+            }
+        }
+    }
+    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    return uVar1;
+}
+
+int Effect16_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
+                    u8 param_5, int param_6)
+{
+    int uVar1;
+    PartFxSpawn cfg;
+
+    lbl_803DB840 = lbl_803DB840 + lbl_803E00A8;
+    if (lbl_803DB840 > lbl_803E00B0) lbl_803DB840 = lbl_803E00AC;
+    lbl_803DB844 = lbl_803DB844 + lbl_803E00B4;
+    if (lbl_803DB844 > lbl_803E00B0) lbl_803DB844 = lbl_803E00B8;
+    if (param_1 == 0) return -1;
+    if ((param_4 & 0x200000) != 0) {
+        if (param_3 == 0) return -1;
+        cfg.f18 = *(f32 *)(param_3 + 6);
+        cfg.f1c = *(f32 *)(param_3 + 8);
+        cfg.f20 = *(f32 *)(param_3 + 10);
+        cfg.f14 = *(f32 *)(param_3 + 4);
+        cfg.f10 = param_3[2];
+        cfg.f0e = param_3[1];
+        cfg.f0c = *param_3;
+        cfg.f62 = param_5;
+    }
+    cfg.f44 = 0;
+    cfg.f48 = 0;
+    cfg.f5e = (u8)param_2;
+    cfg.f00 = param_1;
+    cfg.f30 = lbl_803E00BC;
+    cfg.f34 = lbl_803E00BC;
+    cfg.f38 = lbl_803E00BC;
+    cfg.f24 = lbl_803E00BC;
+    cfg.f28 = lbl_803E00BC;
+    cfg.f2c = lbl_803E00BC;
+    cfg.f3c = lbl_803E00BC;
+    cfg.f08 = 0;
+    cfg.f04 = -1;
+    cfg.f60 = 0xff;
+    cfg.f61 = 0;
+    cfg.f42 = 0;
+    cfg.f58 = 0xffff;
+    cfg.f5a = 0xffff;
+    cfg.f5c = 0xffff;
+    cfg.f4c = 0xffff;
+    cfg.f50 = 0xffff;
+    cfg.f54 = 0xffff;
+    switch (param_2) {
+    case 0x6d7:
+        if (param_3 == 0) {
+            lbl_8039C410.fc = lbl_803E00BC;
+            lbl_8039C410.f10 = lbl_803E00BC;
+            lbl_8039C410.f14 = lbl_803E00BC;
+            lbl_8039C410.f8 = lbl_803E00B0;
+            lbl_8039C410.x = 0;
+            lbl_8039C410.y = 0;
+            lbl_8039C410.z = 0;
+            param_3 = (s16 *)&lbl_8039C410;
+        }
+        cfg.f30 = *(f32 *)(param_3 + 6);
+        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f3c = lbl_803E00A8 * (f32)(s32)randomGetRange(0xa, 0x1e);
+        cfg.f08 = randomGetRange(0x118, 0x12c);
+        cfg.f44 = 0x80180214;
+        cfg.f42 = 0x5c;
+        break;
+    case 0x6d8:
+        if (param_3 == 0) {
+            lbl_8039C410.fc = lbl_803E00BC;
+            lbl_8039C410.f10 = lbl_803E00BC;
+            lbl_8039C410.f14 = lbl_803E00BC;
+            lbl_8039C410.f8 = lbl_803E00B0;
+            lbl_8039C410.x = 0;
+            lbl_8039C410.y = 0;
+            lbl_8039C410.z = 0;
+            param_3 = (s16 *)&lbl_8039C410;
+        }
+        cfg.f30 = *(f32 *)(param_3 + 6);
+        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f3c = lbl_803E00A8 * (f32)(s32)randomGetRange(0xa, 0x14);
+        cfg.f08 = randomGetRange(0x118, 0x12c);
+        cfg.f44 = 0x80180214;
+        cfg.f42 = 0xc79;
+        break;
+    case 0x6d9:
+        cfg.f24 = lbl_803E00C0 * (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.f28 = lbl_803E00C0 * (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.f2c = lbl_803E00C0 * (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.f3c = lbl_803E00C4 * (f32)(s32)randomGetRange(0xa, 0x14);
+        cfg.f08 = 0x64;
+        cfg.f60 = 0xff;
+        cfg.f44 = 0x80114;
+        cfg.f48 = 0x10008;
+        cfg.f42 = 0x157;
+        break;
+    case 0x6da:
+        cfg.f3c = lbl_803E00C8;
+        cfg.f08 = 0x14;
+        cfg.f44 = 0x80480210;
+        cfg.f42 = 0xc79;
+        cfg.f60 = 0x9d;
+        break;
+    case 0x6db:
+        if (param_6 != 0) {
+            cfg.f24 = lbl_803E00CC * (f32)(s32)randomGetRange(-0x96, 0x96);
+            cfg.f2c = lbl_803E00CC * (f32)(s32)randomGetRange(-0x96, 0x96);
+            cfg.f28 = lbl_803E00CC * (f32)(s32)randomGetRange(0x64, 0x190);
+            cfg.f3c = lbl_803E00D0 * (f32)(s32)randomGetRange(0xf, 0x14);
+            cfg.f08 = 0x32;
+            cfg.f58 = 0xffff;
+            cfg.f5a = 0xffff;
+            cfg.f5c = 0xffff;
+            cfg.f4c = 0xffff;
+            cfg.f50 = 0;
+            cfg.f54 = 0;
+            cfg.f44 = 0x3000200;
+            cfg.f48 = 0x200022;
+        } else {
+            cfg.f3c = lbl_803E00D4 * (f32)(s32)randomGetRange(0xf, 0x14);
+            cfg.f08 = 1;
+            cfg.f44 = 0x80000;
+        }
+        cfg.f60 = 0xff;
+        cfg.f42 = 0xc79;
+        break;
+    case 0x6dc:
+        cfg.f28 = lbl_803E00D8 * (f32)(s32)randomGetRange(8, 0xa);
+        cfg.f3c = lbl_803E00A8 * (f32)(s32)randomGetRange(0x12, 0x1c);
+        cfg.f08 = randomGetRange(0x32, 0x64);
+        cfg.f44 = 0x80180200;
+        cfg.f42 = 0xc0b;
+        cfg.f60 = 0xff;
+        break;
+    case 0x6dd:
+        cfg.f3c = lbl_803E00AC;
+        cfg.f08 = 0xa;
+        cfg.f60 = 0xc3;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x580110;
+        cfg.f42 = 0xc79;
+        break;
+    case 0x6de:
+        cfg.f24 = lbl_803E00DC * lbl_803DB840 * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f2c = lbl_803E00DC * lbl_803DB840 * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f28 = lbl_803E00DC * lbl_803DB840 * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f60 = 0x7d;
+        cfg.f3c = lbl_803E00E0 * (f32)(s32)randomGetRange(0xa, 0x14);
+        cfg.f44 = 0x3000000;
+        cfg.f48 = 0x300000;
+        cfg.f08 = 0x14;
+        cfg.f42 = 0xc79;
+        break;
+    case 0x6df:
+        cfg.f24 = lbl_803E00CC * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f2c = lbl_803E00CC * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f28 = lbl_803E00CC * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f60 = 0xff;
+        cfg.f3c = lbl_803E00E4 * (f32)(s32)randomGetRange(0xa, 0x14);
+        cfg.f44 = 0x80200;
+        cfg.f48 = 0x100000;
+        cfg.f08 = 0x64;
+        cfg.f42 = 0x125;
+        break;
+    case 0x6e0:
+        cfg.f24 = lbl_803E00E8 * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f2c = lbl_803E00E8 * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f28 = lbl_803E00E8 * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f60 = 0xff;
+        cfg.f3c = lbl_803E00E0 * (f32)(s32)randomGetRange(0xa, 0x14);
+        cfg.f44 = 0x2000200;
+        cfg.f48 = 0x300000;
+        cfg.f08 = 0x1e;
+        cfg.f42 = 0x33;
+        break;
+    case 0x6e1:
+        cfg.f08 = 0x46;
+        cfg.f3c = lbl_803E00EC;
+        cfg.f58 = 0xff00;
+        cfg.f5a = 0xff00;
+        cfg.f5c = 0xff00;
+        cfg.f4c = 0xff00;
+        cfg.f50 = 0;
+        cfg.f54 = 0xff00;
+        cfg.f44 = 0x100100;
+        cfg.f48 = 0x20;
+        cfg.f60 = 0x7f;
+        cfg.f42 = 0x72;
+        break;
+    case 0x6f2:
+        if (param_3 == 0) {
+            lbl_8039C410.fc = lbl_803E00BC;
+            lbl_8039C410.f10 = lbl_803E00BC;
+            lbl_8039C410.f14 = lbl_803E00BC;
+            lbl_8039C410.f8 = lbl_803E00B0;
+            lbl_8039C410.x = 0;
+            lbl_8039C410.y = 0;
+            lbl_8039C410.z = 0;
+            param_3 = (s16 *)&lbl_8039C410;
+        }
+        cfg.f30 = *(f32 *)(param_3 + 6);
+        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f24 = lbl_803E00C0 * (f32)(s32)randomGetRange(-7, 3);
+        cfg.f28 = lbl_803E00C0 * (f32)(s32)randomGetRange(5, 0xf);
+        cfg.f2c = lbl_803E00C0 * (f32)(s32)randomGetRange(-7, 3);
+        cfg.f3c = lbl_803E00F0 * (f32)(s32)randomGetRange(0x32, 0x3c);
+        cfg.f08 = randomGetRange(0x3c, 0x5a);
+        cfg.f44 = 0x580004;
+        cfg.f48 = 0x400000;
+        cfg.f60 = 0xff;
+        cfg.f42 = 0xc0d;
+        break;
+    case 0x6f3:
+        if (param_3 == 0) {
+            lbl_8039C410.fc = lbl_803E00BC;
+            lbl_8039C410.f10 = lbl_803E00BC;
+            lbl_8039C410.f14 = lbl_803E00BC;
+            lbl_8039C410.f8 = lbl_803E00B0;
+            lbl_8039C410.x = 0;
+            lbl_8039C410.y = 0;
+            lbl_8039C410.z = 0;
+            param_3 = (s16 *)&lbl_8039C410;
+        }
+        cfg.f30 = *(f32 *)(param_3 + 6);
+        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f3c = lbl_803E00F4 * (f32)(s32)randomGetRange(0x32, 0x64);
+        cfg.f08 = 0x64;
+        cfg.f44 = 0xc0804;
+        cfg.f48 = 0x8800001;
+        cfg.f60 = 0xff;
+        cfg.f42 = 0x58f;
+        break;
+    case 0x6f4:
+        if (param_3 == 0) {
+            lbl_8039C410.fc = lbl_803E00BC;
+            lbl_8039C410.f10 = lbl_803E00BC;
+            lbl_8039C410.f14 = lbl_803E00BC;
+            lbl_8039C410.f8 = lbl_803E00B0;
+            lbl_8039C410.x = 0;
+            lbl_8039C410.y = 0;
+            lbl_8039C410.z = 0;
+            param_3 = (s16 *)&lbl_8039C410;
+        }
+        cfg.f30 = *(f32 *)(param_3 + 6);
+        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f3c = lbl_803E00F8 * (f32)(s32)randomGetRange(0x32, 0x64);
+        cfg.f08 = 0x64;
+        cfg.f44 = 0xc0804;
+        cfg.f48 = 0x4800001;
+        cfg.f60 = 0xff;
+        cfg.f42 = 0x590;
+        break;
+    case 0x6f5:
+        if (param_3 == 0) {
+            lbl_8039C410.fc = lbl_803E00BC;
+            lbl_8039C410.f10 = lbl_803E00BC;
+            lbl_8039C410.f14 = lbl_803E00BC;
+            lbl_8039C410.f8 = lbl_803E00B0;
+            lbl_8039C410.x = 0;
+            lbl_8039C410.y = 0;
+            lbl_8039C410.z = 0;
+            param_3 = (s16 *)&lbl_8039C410;
+        }
+        cfg.f30 = *(f32 *)(param_3 + 6);
+        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f3c = lbl_803E00F4 * (f32)(s32)randomGetRange(0x32, 0x64);
+        cfg.f08 = 0x64;
+        cfg.f44 = 0xc0804;
+        cfg.f48 = 0x8800001;
+        cfg.f60 = 0xff;
+        cfg.f42 = 0x403;
+        break;
+    case 0x6f6:
+        if (param_3 == 0) {
+            lbl_8039C410.fc = lbl_803E00BC;
+            lbl_8039C410.f10 = lbl_803E00BC;
+            lbl_8039C410.f14 = lbl_803E00BC;
+            lbl_8039C410.f8 = lbl_803E00B0;
+            lbl_8039C410.x = 0;
+            lbl_8039C410.y = 0;
+            lbl_8039C410.z = 0;
+            param_3 = (s16 *)&lbl_8039C410;
+        }
+        cfg.f30 = *(f32 *)(param_3 + 6);
+        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f3c = lbl_803E00F8 * (f32)(s32)randomGetRange(0x32, 0x64);
+        cfg.f08 = 0x64;
+        cfg.f44 = 0xc0804;
+        cfg.f48 = 0x4800001;
+        cfg.f60 = 0xff;
+        cfg.f42 = 0x404;
+        break;
+    case 0x6f7:
+        if (param_3 == 0) {
+            lbl_8039C410.fc = lbl_803E00BC;
+            lbl_8039C410.f10 = lbl_803E00BC;
+            lbl_8039C410.f14 = lbl_803E00BC;
+            lbl_8039C410.f8 = lbl_803E00B0;
+            lbl_8039C410.x = 0;
+            lbl_8039C410.y = 0;
+            lbl_8039C410.z = 0;
+            param_3 = (s16 *)&lbl_8039C410;
+        }
+        cfg.f30 = *(f32 *)(param_3 + 6);
+        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f3c = lbl_803E00F4 * (f32)(s32)randomGetRange(0x32, 0x64);
+        cfg.f08 = 0x64;
+        cfg.f44 = 0xc0804;
+        cfg.f48 = 0x8800001;
+        cfg.f60 = 0xff;
+        cfg.f42 = 0x405;
+        break;
+    case 0x6f8:
+        if (param_3 == 0) {
+            lbl_8039C410.fc = lbl_803E00BC;
+            lbl_8039C410.f10 = lbl_803E00BC;
+            lbl_8039C410.f14 = lbl_803E00BC;
+            lbl_8039C410.f8 = lbl_803E00B0;
+            lbl_8039C410.x = 0;
+            lbl_8039C410.y = 0;
+            lbl_8039C410.z = 0;
+            param_3 = (s16 *)&lbl_8039C410;
+        }
+        cfg.f30 = *(f32 *)(param_3 + 6);
+        cfg.f34 = *(f32 *)(param_3 + 8);
+        cfg.f38 = *(f32 *)(param_3 + 10);
+        cfg.f3c = lbl_803E00F8 * (f32)(s32)randomGetRange(0x32, 0x64);
+        cfg.f08 = 0x64;
+        cfg.f44 = 0xc0804;
+        cfg.f48 = 0x8800001;
+        cfg.f60 = 0xff;
+        cfg.f42 = 0x406;
         break;
     default:
         return -1;
