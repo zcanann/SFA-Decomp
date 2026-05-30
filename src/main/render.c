@@ -145,8 +145,9 @@ u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int 
 int fn_80006B1C(ModelRenderInstrsState *src, ModelRenderInstrsState *dst, int count, int gap, u8 bitWidth)
 {
     int startBit = modelRenderInstrsState_getBit(dst);
-    u32 mask = ~(-1 << bitWidth);
-    int sh16 = 0x10 - bitWidth;
+    int bw = bitWidth;
+    u32 mask = ~(-1 << bw);
+    int sh16 = 0x10 - bw;
     int i;
     for (i = 0; i < count; i++) {
         int sbit = src->bit;
