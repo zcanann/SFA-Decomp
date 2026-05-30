@@ -1943,3 +1943,21 @@ int fn_8014BE1C(int *node, int p2, u8 *cmds)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int getAngle(f32 a, f32 b);
+extern f32 timeDelta;
+extern f32 lbl_803E256C;
+
+void fn_8014CF7C(int *node, int p2, u16 p3, int p4, f32 fa, f32 fb) {
+    int angle = getAngle(*(f32*)((char*)node + 0xc) - fa,
+                         *(f32*)((char*)node + 0x14) - fb);
+    s32 delta = (s16)(angle - (u16)*(s16*)node);
+    if (delta > 0x8000) delta = (s16)(delta - 0xFFFF);
+    if ((s16)delta < -0x8000) delta = (s16)(delta + 0xFFFF);
+    {
+        s32 sum = delta + p4;
+        f32 dt = timeDelta / (f32)(u32)p3;
+        if (dt > lbl_803E256C) dt = lbl_803E256C;
+        *(s16*)node = (s16)(*(s16*)node + (s32)((f32)sum * dt));
+    }
+}
