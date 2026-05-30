@@ -136,7 +136,7 @@ void worldplanet_init(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void worldplanet_readMapInput(int obj, u8 *outX, u8 *outY) {
-    s8 *inner = *(s8 **)(obj + 0xb8);
+    char *inner = *(char **)(obj + 0xb8);
     int stickX;
     int stickY;
     int resX;
@@ -147,43 +147,43 @@ void worldplanet_readMapInput(int obj, u8 *outX, u8 *outY) {
     resX = 0;
     resY = 0;
     if (getLoadedFileFlags(0) == 0) {
-        if ((s8)stickX < -0x23 && inner[0xa] >= -0x23) {
+        if ((s8)stickX < -0x23 && (s8)inner[0xa] >= -0x23) {
             resX = -1;
             inner[0xc] = 0;
         }
-        if ((s8)stickX > 0x23 && inner[0xa] <= 0x23) {
+        if ((s8)stickX > 0x23 && (s8)inner[0xa] <= 0x23) {
             resX = 1;
             inner[0xc] = 0;
         }
-        if ((s8)stickY < -0x23 && inner[0xb] >= -0x23) {
+        if ((s8)stickY < -0x23 && (s8)inner[0xb] >= -0x23) {
             resY = -1;
             inner[0xd] = 0;
         }
-        if ((s8)stickY > 0x23 && inner[0xb] <= 0x23) {
+        if ((s8)stickY > 0x23 && (s8)inner[0xb] <= 0x23) {
             resY = 1;
             inner[0xd] = 0;
         }
         inner[0xb] = stickY;
-        if (inner[0xb] < -0x23) {
+        if ((s8)inner[0xb] < -0x23) {
             inner[0xd]++;
-        } else if (inner[0xb] > 0x23) {
+        } else if ((s8)inner[0xb] > 0x23) {
             inner[0xd]++;
         } else {
             inner[0xd] = 0;
         }
-        if (inner[0xd] > 0x32) {
+        if ((s8)inner[0xd] > 0x32) {
             inner[0xb] = 0;
             inner[0xd] = 0;
         }
         inner[0xa] = stickX;
-        if (inner[0xa] < -0x23) {
+        if ((s8)inner[0xa] < -0x23) {
             inner[0xc]++;
-        } else if (inner[0xa] > 0x23) {
+        } else if ((s8)inner[0xa] > 0x23) {
             inner[0xc]++;
         } else {
             inner[0xc] = 0;
         }
-        if (inner[0xc] > 0x32) {
+        if ((s8)inner[0xc] > 0x32) {
             inner[0xa] = 0;
             inner[0xc] = 0;
         }
