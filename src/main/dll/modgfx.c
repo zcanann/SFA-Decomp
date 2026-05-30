@@ -6279,6 +6279,292 @@ int dll_0B_func04(void *base, int z, int c, void *b, int e, void *d, int f, void
 #pragma peephole reset
 #pragma scheduling reset
 
+extern s16 renderModeSetOrGet(int mode);
+extern void *Camera_GetCurrentViewSlot(void);
+extern void *Camera_GetViewMatrix(void);
+extern void GXLoadPosMtxImm(void *mtx, int id);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
+extern void GXSetCullMode(int mode);
+extern void setTextColor(void *ctx, int r, int g, int b, int a);
+extern void _textSetColor(void *ctx, int r, int g, int b, int a);
+extern void selectTexture(void *tex, int slot);
+extern void drawFn_8005cf8c(void *a, void *b, int count);
+extern f32 sqrtf(f32 x);
+extern int getAngle(f32 dx, f32 dz);
+extern void mathFn_80021ac8(void *obj, f32 *vec);
+extern void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex);
+extern void setMatrixFromObjectPos(f32 *mtx, s16 *src);
+extern void mtx44Transpose(f32 *src, f32 *dst);
+extern void textureSetupFn_800799c0(void);
+extern void textRenderSetupFn_80079804(void);
+extern void fn_80079328(void);
+extern void fn_80078DFC(void);
+extern void fn_80078ED0(void);
+extern void geomDrawFn_800796f0(void);
+extern void gxTexColorFn_80079254(void);
+extern void gxBlendFn_80078b4c(void);
+extern void textBlendSetupFn_80078a7c(void);
+extern void fn_800542F4(void);
+extern f32 lbl_803DF450;
+extern f32 lbl_803DF454;
+extern f32 lbl_803DF458;
+extern f32 lbl_803DF45C;
+
+typedef struct {
+    s16 ang[3];
+    s16 pad;
+    f32 scale;
+    f32 pos[3];
+} EffXform;
+
+#pragma scheduling off
+#pragma peephole off
+int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
+{
+    u8 ar;
+    u8 ag;
+    u8 ab;
+    f32 rot[3];
+    f32 pos[3];
+    EffXform xf;
+    f32 mtxA[12];
+    f32 mtxB[16];
+    int **p;
+    int slot;
+    void *view;
+    void *buf1;
+    void *buf2;
+    u8 aligned;
+    void *tex;
+    int texCount;
+    int n131;
+    int n131p1;
+    f32 dirX;
+    f32 dirZ;
+    f32 dscale;
+
+    n131 = 0;
+    n131p1 = 0;
+    if (a4 != NULL) {
+        getAmbientColor(*(u8 *)((char *)a4 + 0xf2), &ar, &ag, &ab);
+    } else {
+        getAmbientColor(0, &ar, &ag, &ab);
+    }
+    GXSetCullMode(0);
+    if (renderModeSetOrGet(-1) == 1) {
+        return 1;
+    }
+    view = Camera_GetCurrentViewSlot();
+    p = (int **)lbl_8039C1F8;
+    for (slot = 0; slot < 50; slot++, p++) {
+        if (*p == NULL) continue;
+        if (*(s16 *)((char *)*p + 0x10c) == -1) continue;
+        if (a3) {
+            if ((*(int *)((char *)*p + 0xa4) & 0x2000) == 0) continue;
+        }
+        if (a3) {
+            if (*(void **)((char *)*p + 4) != a4) continue;
+        }
+        if (!a3) {
+            if (*(int *)((char *)*p + 0xa4) & 0x2000) continue;
+        }
+        if (*(int *)((char *)*p + 0xa4) & 0x800) {
+            *(u8 *)((char *)*p + 0x13e) = 0;
+        }
+        aligned = 0;
+        buf1 = *(void **)((char *)*p + (int)*(u8 *)((char *)*p + 0x130) * 4 + 0x78);
+        buf2 = *(void **)((char *)*p + (int)*(u8 *)((char *)*p + 0x130) * 4 + 0x84);
+        xf.pos[0] = lbl_803DF430;
+        xf.pos[1] = lbl_803DF430;
+        xf.pos[2] = lbl_803DF430;
+        xf.scale = lbl_803DF434;
+        xf.ang[2] = 0;
+        xf.ang[1] = 0;
+        pos[0] = *(f32 *)((char *)*p + 0x60);
+        pos[1] = *(f32 *)((char *)*p + 0x64);
+        pos[2] = *(f32 *)((char *)*p + 0x68);
+        if (*(int *)((char *)*p + 0xa4) & 0x4) {
+            if (lbl_803DF430 == pos[2] + (pos[0] + pos[1])) {
+                aligned = 1;
+            }
+            if (!aligned) {
+                if (*(void **)((char *)*p + 4) != NULL) {
+                    xf.ang[0] = *(s16 *)(*(char **)((char *)*p + 4));
+                    xf.ang[1] = *(s16 *)(*(char **)((char *)*p + 4) + 2);
+                    xf.ang[2] = *(s16 *)(*(char **)((char *)*p + 4) + 4);
+                    mathFn_80021ac8(&xf.ang[0], &pos[0]);
+                }
+            }
+        }
+        rot[0] = lbl_803DF430;
+        rot[1] = lbl_803DF430;
+        rot[2] = lbl_803DF430;
+        if ((*(int *)((char *)*p + 0xa4) & 1) == 0) {
+            if (*(void **)((char *)*p + 4) != NULL) {
+                rot[0] = *(f32 *)(*(char **)((char *)*p + 4) + 0x18);
+                rot[1] = *(f32 *)(*(char **)((char *)*p + 4) + 0x1c);
+                rot[2] = *(f32 *)(*(char **)((char *)*p + 4) + 0x20);
+            } else {
+                rot[0] = *(f32 *)((char *)*p + 0x18);
+                rot[1] = *(f32 *)((char *)*p + 0x1c);
+                rot[2] = *(f32 *)((char *)*p + 0x20);
+                Obj_RotateLocalOffsetByYaw((f32 *)((char *)*p + 0x18), &rot[0], *(s8 *)((char *)*p + 0x135));
+            }
+        }
+        if (rot[0] > lbl_803DF450 || rot[0] < lbl_803DF454) {
+            rot[0] = -playerMapOffsetX;
+        }
+        if (rot[1] > lbl_803DF450 || rot[1] < lbl_803DF454) {
+            rot[1] = lbl_803DF430;
+        }
+        if (rot[2] > lbl_803DF450 || rot[2] < lbl_803DF454) {
+            rot[2] = -playerMapOffsetZ;
+        }
+        xf.pos[0] = rot[0] + pos[0];
+        xf.pos[1] = rot[1] + pos[1];
+        xf.pos[2] = rot[2] + pos[2];
+        if (*(int *)((char *)*p + 0xa4) & 0x400000) {
+            dscale = lbl_803DF458 * *(f32 *)((char *)*p + 0xd4);
+            xf.scale = dscale + dscale / (f32)randomGetRange(1, 10);
+        } else {
+            xf.scale = lbl_803DF45C * *(f32 *)((char *)*p + 0xd4);
+        }
+        if (*(int *)((char *)*p + 0xa4) & 0x80000) {
+            xf.ang[2] = *(s16 *)(*(char **)((char *)*p + 4) + 4);
+            xf.ang[1] = *(s16 *)(*(char **)((char *)*p + 4) + 2);
+            xf.ang[0] = *(s16 *)(*(char **)((char *)*p + 4));
+        } else if (aligned && *(void **)((char *)*p + 4) != NULL) {
+            xf.ang[2] = *(s16 *)((char *)*p + 0x106) + *(s16 *)(*(char **)((char *)*p + 4) + 4);
+            xf.ang[1] = *(s16 *)((char *)*p + 0x108) + *(s16 *)(*(char **)((char *)*p + 4) + 2);
+            xf.ang[0] = *(s16 *)((char *)*p + 0x10a) + *(s16 *)(*(char **)((char *)*p + 4));
+        } else if (aligned) {
+            xf.ang[2] = *(s16 *)((char *)*p + 0x106) + *(s16 *)((char *)*p + 0x10);
+            xf.ang[1] = *(s16 *)((char *)*p + 0x108) + *(s16 *)((char *)*p + 0xe);
+            xf.ang[0] = *(s16 *)((char *)*p + 0x10a) + *(s16 *)((char *)*p + 0xc);
+        } else {
+            xf.ang[2] = *(s16 *)((char *)*p + 0x106);
+            xf.ang[1] = *(s16 *)((char *)*p + 0x108);
+            xf.ang[0] = *(s16 *)((char *)*p + 0x10a);
+        }
+        if (*(int *)((char *)*p + 0xa4) & 0x1000) {
+            if (*(void **)((char *)*p + 4) != NULL) {
+                dirX = *(f32 *)((char *)view + 0x44) - *(f32 *)(*(char **)((char *)*p + 4) + 0x18);
+                dirZ = *(f32 *)((char *)view + 0x4c) - *(f32 *)(*(char **)((char *)*p + 4) + 0x20);
+                dscale = sqrtf(dirX * dirX + dirZ * dirZ);
+                if (dscale != lbl_803DF430) {
+                    dirX = dirX / dscale;
+                    dirZ = dirZ / dscale;
+                }
+                xf.ang[0] = xf.ang[0] + (int)(f32)(u16)getAngle(dirX, dirZ);
+            }
+        }
+        xf.pos[0] = xf.pos[0] - playerMapOffsetX;
+        xf.pos[2] = xf.pos[2] - playerMapOffsetZ;
+        setMatrixFromObjectPos(mtxB, &xf.ang[0]);
+        mtx44Transpose(mtxB, mtxA);
+        PSMTXConcat((f32 *)Camera_GetViewMatrix(), mtxA, mtxA);
+        GXLoadPosMtxImm(mtxA, 0);
+        tex = *(void **)((char *)*p + 0x98);
+        if (tex != NULL) {
+            texCount = (u8)(*(u16 *)((char *)tex + 0x10) >> 8);
+        }
+        if (tex != NULL && *(u8 *)((char *)*p + 0x132) != 0) {
+            *(u8 *)((char *)*p + 0x133) = *(u8 *)((char *)*p + 0x133) - 1;
+            if (*(u8 *)((char *)*p + 0x133) == 0) {
+                *(u8 *)((char *)*p + 0x133) = 0x3c / *(u8 *)((char *)*p + 0x132);
+                *(u8 *)((char *)*p + 0x131) = *(u8 *)((char *)*p + 0x131) + 1;
+                if ((u8)*(u8 *)((char *)*p + 0x131) >= (u32)texCount) {
+                    *(u8 *)((char *)*p + 0x131) = 0;
+                }
+            }
+        }
+        if (*(int *)((char *)*p + 0xa4) & 0x8) {
+            setTextColor(a0, ar, ag, ab, 0xff);
+        } else if (*(void **)((char *)*p + 4) != NULL && (*(int *)((char *)*p + 0xa4) & 0x4000)) {
+            setTextColor(a0, 0xff, 0xff, 0xff, *(u8 *)(*(char **)((char *)*p + 4) + 0x37));
+        } else {
+            setTextColor(a0, 0xff, 0xff, 0xff, 0xff);
+        }
+        tex = *(void **)((char *)*p + 0x98);
+        if (tex != NULL) {
+            n131 = *(u8 *)((char *)*p + 0x131);
+            n131p1 = (u8)(n131 + 1);
+            if (n131p1 > texCount - 1) {
+                n131p1 = 0;
+            }
+        }
+        if (*(int *)((char *)*p + 0xa4) & 0x1000000) {
+            if (*(u8 *)((char *)*p + 0x13e) != 0 || (*(int *)((char *)*p + 0xa4) & 0x400)) {
+                int j;
+                for (j = 0; j < (u8)n131p1; j++) {
+                    tex = *(void **)tex;
+                }
+                _textSetColor(a0, 0xff, 0xff, 0xff,
+                              (u8)(0xff - *(u8 *)((char *)*p + 0x133) * *(u8 *)((char *)*p + 0x134)));
+                textureSetupFn_800799c0();
+                fn_80079328();
+                fn_80078DFC();
+                textRenderSetupFn_80079804();
+                selectTexture(tex, 1);
+            }
+        } else if (*(int *)((char *)*p + 0xa4) & 0x2000000) {
+            textureSetupFn_800799c0();
+            fn_80078ED0();
+            textRenderSetupFn_80079804();
+        } else if (*(int *)((char *)*p + 0xa4) & 0x4000000) {
+            textureSetupFn_800799c0();
+            geomDrawFn_800796f0();
+            gxTexColorFn_80079254();
+            textRenderSetupFn_80079804();
+        }
+        if (*(int *)((char *)*p + 0xa4) & 0x05000000) {
+            if (*(u8 *)((char *)*p + 0x13e) != 0 || (*(int *)((char *)*p + 0xa4) & 0x400)) {
+                int j;
+                tex = *(void **)((char *)*p + 0x98);
+                for (j = 0; j < (u8)n131; j++) {
+                    tex = *(void **)tex;
+                }
+                selectTexture(tex, 0);
+            }
+        }
+        if (*(int *)((char *)*p + 0xa4) & 0x100) {
+            gxBlendFn_80078b4c();
+        } else if ((*(int *)((char *)*p + 0xa4) & 0x10) && (*(int *)((char *)*p + 0xa4) & 0x80)) {
+            textBlendSetupFn_80078a7c();
+        } else if (*(int *)((char *)*p + 0xa4) & 0x80) {
+            gxBlendFn_80078b4c();
+        } else if (*(int *)((char *)*p + 0xa4) & 0x10) {
+            textBlendSetupFn_80078a7c();
+        } else {
+            gxBlendFn_80078b4c();
+        }
+        if (*(int *)((char *)*p + 0xa4) & 0x40) {
+            GXSetCullMode(1);
+        } else {
+            GXSetCullMode(0);
+        }
+        if (*(u8 *)((char *)*p + 0x13e) != 0 || (*(int *)((char *)*p + 0xa4) & 0x400)) {
+            int di;
+            for (di = 0; di < (u8)*(u8 *)((char *)*p + 0x136); di++) {
+                if (*(int *)((char *)*p + 0xa4) & 0x8000000) {
+                    drawFn_8005cf8c(buf1, buf2, *(s16 *)((char *)*p + 0xec) / (u8)*(u8 *)((char *)*p + 0x136));
+                } else {
+                    drawFn_8005cf8c(buf1, buf2, *(s16 *)((char *)*p + 0xec));
+                }
+                buf1 = (char *)buf1 + ((u8)*(u8 *)((char *)*p + 0x137) << 4);
+                if (*(int *)((char *)*p + 0xa4) & 0x8000000) {
+                    buf2 = (char *)buf2 + ((*(s16 *)((char *)*p + 0xec) / (u8)*(u8 *)((char *)*p + 0x136)) << 4);
+                }
+            }
+            fn_800542F4();
+            *(u8 *)((char *)*p + 0x130) = 1 - *(u8 *)((char *)*p + 0x130);
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_800A0AB4(void *state, void *p, int mode, u8 idx)
