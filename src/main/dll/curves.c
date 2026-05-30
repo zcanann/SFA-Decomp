@@ -3439,71 +3439,59 @@ void objFn_800e67ac(int obj,u32 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_15_func0A(void)
+void dll_15_func0A(int obj,u32 *state)
 {
-  float fVar1;
-  ushort *puVar2;
-  uint uVar3;
-  uint *puVar4;
-  float *pfVar5;
-  uint *puVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  undefined8 uVar10;
-  ushort local_78;
-  ushort local_76;
-  ushort local_74;
-  float local_70;
-  undefined4 local_6c;
-  undefined4 local_68;
-  undefined4 local_64;
-  float afStack_60 [24];
-  
-  uVar10 = FUN_8028683c();
-  puVar2 = (ushort *)((ulonglong)uVar10 >> 0x20);
-  puVar4 = (uint *)uVar10;
-  objFn_800e64f4((int)puVar2,puVar4);
-  uVar3 = *puVar4;
-  if (((uVar3 & 0x4000000) != 0) && ((uVar3 & 8) != 0)) {
-    local_78 = *puVar2;
-    if ((uVar3 & 0x20) == 0) {
-      local_76 = puVar2[1];
-      local_74 = puVar2[2];
+  u8 *stateBytes;
+  u32 flags;
+  int pointIndex;
+  int pointOffset;
+  int pointWordIndex;
+  f32 *localPoint;
+  f32 *point;
+  CurvesTransformScratch transform;
+  f32 matrix[24];
+
+  stateBytes = (u8 *)state;
+  objFn_800e64f4(obj,state);
+  flags = *state;
+  if (((flags & 0x4000000) != 0) && ((flags & 8) != 0)) {
+    transform.angles[0] = *(s16 *)obj;
+    if ((flags & 0x20) != 0) {
+      transform.angles[1] = 0;
+      transform.angles[2] = 0;
     }
     else {
-      local_76 = 0;
-      local_74 = 0;
+      transform.angles[1] = *(s16 *)(obj + 2);
+      transform.angles[2] = *(s16 *)(obj + 4);
     }
-    local_70 = lbl_803E130C;
-    local_6c = *(undefined4 *)(puVar2 + 6);
-    local_68 = *(undefined4 *)(puVar2 + 8);
-    local_64 = *(undefined4 *)(puVar2 + 10);
-    FUN_80017754(afStack_60,&local_78);
-    iVar9 = 0;
-    iVar7 = 0;
-    puVar6 = puVar4;
-    for (iVar8 = 0; fVar1 = lbl_803E130C, iVar8 < (int)(*(byte *)(puVar4 + 0x97) & 0xf);
-        iVar8 = iVar8 + 1) {
-      pfVar5 = (float *)(puVar4[0x37] + iVar7);
-      FUN_80017778((double)*pfVar5,(double)pfVar5[1],(double)pfVar5[2],afStack_60,
-                   (float *)(puVar6 + 0x39),(float *)(puVar4 + iVar9 + 0x3a),
-                   (float *)(puVar4 + iVar9 + 0x3b));
-      puVar6 = puVar6 + 3;
-      iVar7 = iVar7 + 0xc;
-      iVar9 = iVar9 + 3;
+    transform.scale = lbl_803E068C;
+    transform.x = *(f32 *)(obj + 0xc);
+    transform.y = *(f32 *)(obj + 0x10);
+    transform.z = *(f32 *)(obj + 0x14);
+    setMatrixFromObjectPos(matrix,&transform);
+    pointIndex = 0;
+    pointOffset = 0;
+    point = (f32 *)state;
+    pointWordIndex = 0;
+    while (pointIndex < (stateBytes[0x25c] & 0xf)) {
+      localPoint = (f32 *)(*(u32 *)(stateBytes + 0xdc) + pointOffset);
+      Matrix_TransformPoint(matrix,localPoint[0],localPoint[1],localPoint[2],
+                            point + 0x39,(f32 *)(state + pointWordIndex + 0x3a),
+                            (f32 *)(state + pointWordIndex + 0x3b));
+      point += 3;
+      pointOffset += 0xc;
+      pointWordIndex += 3;
+      pointIndex++;
     }
-    puVar6 = puVar4;
-    for (iVar7 = 0; iVar7 < (int)(*(byte *)(puVar4 + 0x97) & 0xf); iVar7 = iVar7 + 1) {
-      puVar6[0x45] = puVar6[0x39];
-      puVar6[0x46] = (uint)(fVar1 + (float)puVar6[0x3a]);
-      puVar6[0x47] = puVar6[0x3b];
-      puVar6 = puVar6 + 3;
+    point = (f32 *)state;
+    for (pointIndex = 0; pointIndex < (stateBytes[0x25c] & 0xf); pointIndex++) {
+      point[0x45] = point[0x39];
+      point[0x46] = lbl_803E068C + point[0x3a];
+      point[0x47] = point[0x3b];
+      point += 3;
     }
-    FUN_80061fc8((int)puVar2);
+    fn_80063368(obj);
   }
-  FUN_80286888();
-  return;
 }
 
 /*
