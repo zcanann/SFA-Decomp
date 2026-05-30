@@ -5239,3 +5239,71 @@ void dll_0B_onMapSetup(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *Obj_GetActiveModel(void);
+extern void *ObjModel_GetJointMatrix(void *model, int joint);
+extern void PSMTXMultVec(void *m, void *src, void *dst);
+extern int *gPartfxInterface;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803DF4A8;
+extern f32 lbl_803DF4B8;
+
+typedef struct BoneSpawnData {
+  s16 unk0;
+  s16 unk2;
+  s16 unk4;
+  s16 unk6;
+  f32 scale;
+  f32 x;
+  f32 y;
+  f32 z;
+} BoneSpawnData;
+
+typedef void (*BoneSpawnFn)(void *, void *, void *, int, int, void *);
+
+#pragma scheduling off
+#pragma peephole off
+void boneParticleEffect_spawnAtBones(void *obj, void *arg1, void *arg2, u8 prob, short *src)
+{
+  void *model;
+  int i;
+  BoneSpawnData data;
+
+  model = Obj_GetActiveModel();
+  for (i = 0; i < *(u8 *)(*(int *)model + 0xf3); i++) {
+    if (randomGetRange(1, 0x64) <= prob) {
+      void *mtx;
+      data.x = lbl_803DF4A8;
+      data.y = lbl_803DF4A8;
+      data.z = lbl_803DF4A8;
+      data.scale = lbl_803DF4B8;
+      data.unk4 = 0;
+      data.unk2 = 0;
+      data.unk0 = 0;
+      mtx = ObjModel_GetJointMatrix(model, i);
+      PSMTXMultVec(mtx, &data.x, &data.x);
+      data.x = data.x - *(f32 *)((char *)obj + 0x18);
+      data.y = data.y - *(f32 *)((char *)obj + 0x1c);
+      data.z = data.z - *(f32 *)((char *)obj + 0x20);
+      data.x = data.x + playerMapOffsetX;
+      data.z = data.z + playerMapOffsetZ;
+      if (src != NULL) {
+        data.scale = *(f32 *)((char *)src + 0x8);
+        data.unk0 = src[0];
+        data.unk4 = src[2];
+        data.unk2 = src[1];
+        data.unk6 = src[3];
+      } else {
+        data.scale = lbl_803DF4B8;
+        data.unk0 = 0;
+        data.unk4 = 0;
+        data.unk2 = 0;
+        data.unk6 = 0;
+      }
+      (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(obj, arg1, &data, 2, -1, arg2);
+    }
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
