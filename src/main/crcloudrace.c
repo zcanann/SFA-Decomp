@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/crcloudrace.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
@@ -16,7 +17,7 @@ extern f32 lbl_803E6748;
 extern void loadMapAndParent(int mapId);
 extern int lockLevel(int mapDir, int flags);
 extern int mapGetDirIdx(int mapId);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int Obj_GetPlayerObject(void);
 extern void setMotionBlur(int mode, f32 amount);
 extern u32 fn_802972A8(int obj);
@@ -143,7 +144,7 @@ int crcloudrace_completionCallback(int obj, int arg2, u8 *data) {
             loadMapAndParent(0xc);
             unlockLevel(0, 0, 1);
             lockLevel(mapGetDirIdx(0xc), 0);
-            (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(0xc, 1, 1);
+            (*gMapEventInterface)->setAnimEvent(0xc, 1, 1);
             break;
         }
     }
