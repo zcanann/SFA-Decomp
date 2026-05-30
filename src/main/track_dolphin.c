@@ -5551,3 +5551,114 @@ u8 hitDetectFn_80067958(void *param_1, int param_2, int param_3, int param_4, vo
     *(u8 *)((u8 *)param_5 + 0x6e) = uVar4;
     return uVar4;
 }
+
+typedef union { u8 u8; u16 u16; u32 u32; s16 s16; s32 s32; f32 f32; } GolfWGPipe;
+extern volatile GolfWGPipe GXWGFifo : (0xCC008000);
+
+extern void *Camera_GetViewMatrix(void);
+extern void Obj_BuildWorldTransformMatrix(int obj, f32 *out, int flag);
+extern void PSMTXConcat(void *a, void *b, void *out);
+extern void GXLoadPosMtxImm(void *mtx, int id);
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern void GXSetNumTexGens(int n);
+extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
+extern void GXSetTevKColor(int id, void *color);
+extern void GXSetTevKAlphaSel(int stage, int sel);
+extern void GXSetNumTevStages(int n);
+extern void GXSetNumIndStages(int n);
+extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
+extern void GXSetNumChans(int n);
+extern void GXSetTevOrder(int a, int b, int c, int d);
+extern void GXSetTevDirect(int stage);
+extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
+extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
+extern void gxSetZMode_(int a, int b, int c);
+extern void GXSetCullMode(int mode);
+extern void GXSetCurrentMtx(int id);
+extern void GXSetBlendMode(int a, int b, int c, int d);
+extern void selectTexture(int tex, int slot);
+extern void GXBegin(int type, int fmt, int count);
+
+void objDrawFn_80061654(int param_1, int param_2)
+{
+    s16 *p;
+    u8 alpha;
+    void *viewMtx;
+    int local_94;
+    int local_98;
+    f32 mtx[16];
+    f32 outMtx[16];
+
+    p = *(s16 **)(param_2 + 0x54);
+    if (*(u8 *)((u8 *)p + 0x18) == 0) {
+        fn_8006135C(p, (void *)param_1);
+    }
+    if (*(u8 *)((u8 *)p + 0x18) != 0xff) {
+        alpha = (u8)objShadowFn_80062378((void *)param_1, 0x96);
+        *((u8 *)&local_94 + 3) = alpha;
+        if (alpha != 0) {
+            viewMtx = Camera_GetViewMatrix();
+            Obj_BuildWorldTransformMatrix(param_1, mtx, 0);
+            mtx[0] = lbl_803DEC68;
+            mtx[1] = lbl_803DEC58;
+            mtx[2] = lbl_803DEC58;
+            mtx[4] = lbl_803DEC58;
+            mtx[5] = lbl_803DEC68;
+            mtx[6] = lbl_803DEC58;
+            mtx[8] = lbl_803DEC58;
+            mtx[9] = lbl_803DEC58;
+            mtx[10] = lbl_803DEC68;
+            PSMTXConcat(viewMtx, mtx, outMtx);
+            GXLoadPosMtxImm(outMtx, 0x1b);
+            GXClearVtxDesc();
+            GXSetVtxDesc(9, 1);
+            GXSetVtxDesc(0xd, 1);
+            GXSetNumTexGens(1);
+            GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
+            local_98 = local_94;
+            GXSetTevKColor(0, &local_98);
+            GXSetTevKAlphaSel(0, 0x1c);
+            GXSetNumTevStages(1);
+            GXSetNumIndStages(0);
+            GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+            GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+            GXSetNumChans(0);
+            GXSetTevOrder(0, 0, 0, 0xff);
+            GXSetTevDirect(0);
+            GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
+            GXSetTevAlphaIn(0, 7, 6, 4, 7);
+            GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+            GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+            gxSetZMode_(1, 3, 0);
+            GXSetCullMode(0);
+            GXSetCurrentMtx(0x1b);
+            GXSetBlendMode(1, 4, 5, 5);
+            selectTexture(*(int *)(*(int *)(param_1 + 0x64) + 4), 0);
+            GXBegin(0x80, 6, 4);
+            GXWGFifo.s16 = p[0];
+            GXWGFifo.s16 = p[1];
+            GXWGFifo.s16 = p[2];
+            GXWGFifo.s16 = 0;
+            GXWGFifo.s16 = 0;
+            GXWGFifo.s16 = p[3];
+            GXWGFifo.s16 = p[4];
+            GXWGFifo.s16 = p[5];
+            GXWGFifo.s16 = 0x400;
+            GXWGFifo.s16 = 0;
+            GXWGFifo.s16 = p[6];
+            GXWGFifo.s16 = p[7];
+            GXWGFifo.s16 = p[8];
+            GXWGFifo.s16 = 0x400;
+            GXWGFifo.s16 = 0x400;
+            GXWGFifo.s16 = p[9];
+            GXWGFifo.s16 = p[10];
+            GXWGFifo.s16 = p[11];
+            GXWGFifo.s16 = 0;
+            GXWGFifo.s16 = 0x400;
+            GXSetCurrentMtx(0);
+        }
+    }
+}
