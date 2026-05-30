@@ -2151,3 +2151,29 @@ void GameUI_airMeterInitType0(int a, int b, int c) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int lbl_8031B5D8[];
+#pragma scheduling off
+#pragma peephole off
+void GameUI_func14(s16 a, int b, int c) {
+    int *entry = lbl_8031B5D8;
+    lbl_803A9398[0] = 0;
+    while (*(void **)entry != NULL) {
+        s16 *row = (s16 *)*entry;
+        while (row[0] != -1) {
+            if (row[0] == a) {
+                lbl_803A9398[0] = (int)textureLoadAsset(row[3]);
+                break;
+            }
+            row += 8;
+        }
+        entry = (int *)((char *)entry + 0x10);
+    }
+    if (*(void **)lbl_803A9398 != NULL) {
+        lbl_803A9398[1] = b;
+        *(s16 *)((char *)lbl_803A9398 + 0xc) = (s16)c;
+        *(f32 *)((char *)lbl_803A9398 + 0x8) = lbl_803E1E3C;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
