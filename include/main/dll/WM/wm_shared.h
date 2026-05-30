@@ -259,7 +259,7 @@ extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern void gameBitIncrement(int eventId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int val);
 extern u32 randomGetRange(int min, int max);
 extern void fn_801F4D54(int obj, int state);

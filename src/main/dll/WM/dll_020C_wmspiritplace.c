@@ -136,7 +136,12 @@ void wmspiritplace_update(int obj)
     int mapId;
 
     state = *(WmSpiritPlaceState **)(obj + 0xb8);
-    if (state->transitionDelay == 0) {
+    if (state->transitionDelay != 0) {
+        state->transitionDelay--;
+        if (state->transitionDelay == 0) {
+            GameBit_Set(state->secondaryGameBit, 1);
+        }
+    } else {
         state->flags12 = (u8)(state->flags12 & ~1);
         mapId = *(int *)(*(int *)(obj + 0x4c) + 0x14);
         if (mapId == 0x47295) {
@@ -318,11 +323,6 @@ void wmspiritplace_update(int obj)
         if ((s8)state->flags15 < 0) {
             *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
         }
-    } else {
-        state->transitionDelay--;
-        if (state->transitionDelay == 0) {
-            GameBit_Set(state->secondaryGameBit, 1);
-        }
     }
 }
 
@@ -349,7 +349,7 @@ void wmspiritplace_init(int obj, int setup)
         if (GameBit_Get(0x1fc) != 0 || GameBit_Get(0xeaf) != 0 || state->mapEventState > 2) {
             *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) - lbl_803E5F00;
         }
-    } else if (*(int *)(*(int *)(obj + 0x4c) + 0x14) == 0x4a5e6 && state->mapEventState > 5) {
+    } else if (*(int *)(*(int *)(obj + 0x4c) + 0x14) == 0x4a5e6 && state->mapEventState >= 6) {
         *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + lbl_803E5F00;
     }
 }
