@@ -2316,7 +2316,7 @@ int RomCurve_getRandomBlockedLink(RomCurveDef *curve,int excludeLinkId)
 /*
  * --INFO--
  *
- * Function: curves_getIds_18
+ * Function: RomCurve_getLinkIds
  * EN v1.0 Address: 0x800E4E64
  * EN v1.0 Size: 156b
  * EN v1.1 Address: TODO
@@ -2326,7 +2326,7 @@ int RomCurve_getRandomBlockedLink(RomCurveDef *curve,int excludeLinkId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int curves_getIds_18(RomCurveDef *curve,int excludeLinkId,int *outIds)
+int RomCurve_getLinkIds(RomCurveDef *curve,int excludeLinkId,int *outIds)
 {
   int count;
   int linkId;

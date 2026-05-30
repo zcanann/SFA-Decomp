@@ -39,7 +39,7 @@
  * - curves_distXZ
  * - curves_findByAction
  * - curves_findNearObj
- * - curves_getIds_18
+ * - RomCurve_getLinkIds
  * - curves_getPos
  * - curves_isNotPoint
  * - curves_isPoint
