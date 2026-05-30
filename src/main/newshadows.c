@@ -2999,3 +2999,28 @@ void fn_8006B830(ShadowSortEntry *arr, int count)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern u8 lbl_8030E8B0[];
+#pragma scheduling off
+#pragma peephole off
+u16 audioPickSoundEffect_8006ed24(s8 a, u8 b) {
+    u8 *base = lbl_8030E8B0;
+    int idx = (u8)a;
+    u8 v;
+    if (idx < 0 || idx >= 0x23) v = 0;
+    else v = base[idx + 0xb4];
+    switch ((u8)b) {
+        case 1: break;
+        case 3: base += 0x14; break;
+        case 4: base += 0x3c; break;
+        case 5: base += 0x64; break;
+        case 6: base += 0x50; break;
+        case 8: base += 0x78; break;
+        case 9: base += 0xa0; break;
+        case 0xa: base += 0x8c; break;
+        default: base += 0x28; break;
+    }
+    return *(u16 *)(base + v * 2);
+}
+#pragma peephole reset
+#pragma scheduling reset
