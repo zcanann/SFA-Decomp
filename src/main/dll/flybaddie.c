@@ -1,13 +1,11 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/flybaddie.h"
 #include "main/dll/creator1C6.h"
 
 #define DBSH_SHRINE_GB_FIRST_RISE 0x15f
 #define DBSH_SHRINE_GB_ACTIVE 0xefa
 #define DBSH_SHRINE_GB_INITIALIZED 0xf08
-
-typedef u8 (*MapEventGetAnimFn)(int mapId, int eventId);
-typedef void (*MapEventSetAnimFn)(int mapId, int eventId, int value);
 
 typedef struct DbshShrineFlags {
     u8 latchStarted : 1;
@@ -50,12 +48,12 @@ typedef struct DbshShrineObject {
 extern void ObjMsg_AllocQueue(DbshShrineObject *obj, int capacity);
 extern void *objCreateLight(int obj, int lightType);
 extern void GameBit_Set(u32 id, u32 value);
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 #define MAP_EVENT_GET_ANIM(mapId, eventId) \
-    ((MapEventGetAnimFn)(*(u32 *)(*gMapEventInterface + 0x4c)))((mapId), (eventId))
+    (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
-    ((MapEventSetAnimFn)(*(u32 *)(*gMapEventInterface + 0x50)))((mapId), (eventId), (value))
+    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 
 /*
  * --INFO--

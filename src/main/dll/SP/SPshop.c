@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/SP/SPshop.h"
 
 extern undefined4 FUN_800067c0();
@@ -11,7 +12,6 @@ extern undefined4 FUN_80286884();
 extern uint countLeadingZeros();
 
 extern undefined4* DAT_803dd6d8;
-extern int *gMapEventInterface;
 extern int *gGameUIInterface;
 extern int *gScreenTransitionInterface;
 extern int *gObjectTriggerInterface;
@@ -27,6 +27,8 @@ extern void fn_80137948(char *fmt, ...);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void SCGameBitLatch_Update(int state, int mask, int clearIfSetBit, int clearIfClearBit,
                                   int setBit, int textId);
+
+extern MapEventInterface **gMapEventInterface;
 
 /*
  * --INFO--
@@ -47,8 +49,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
   u8 i;
   u8 bloopsRemaining;
 
-  if (((u8)(*(int (*)(int, int))(*(int *)(*gMapEventInterface + 0x4c)))(
-          (s8)*(u8 *)(obj + 0xac), 0) == 0) &&
+  if (((*gMapEventInterface)->getAnimEvent((s8)*(u8 *)(obj + 0xac), 0) == 0) &&
       (GameBit_Get(0x13f) == 0)) {
     *(u8 *)(state + 6) = 0;
     (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x64)))(*gGameUIInterface);
@@ -68,8 +69,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     break;
   case 1:
     if (GameBit_Get(0x124) != 0) {
-      (*(void (*)(int, int, int, int))(*(int *)(*gMapEventInterface + 0x1c)))(
-          player + 0xc, *(s16 *)player, 1, 0);
+      (*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
       *(f32 *)(state + 8) = lbl_803E54B0;
       (*(void (*)(int, int))(*(int *)(*gGameUIInterface + 0x58)))(100000, 0x5db);
       *(u8 *)(state + 6) = 2;
@@ -92,8 +92,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
       *(f32 *)(state + 8) -= (f32)bloopsRemaining * timeDelta;
       if (*(f32 *)(state + 8) >= lbl_803E54B4) {
         (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))((int)*(f32 *)(state + 8));
-      } else if ((u8)(*(int (*)(int, int))(*(int *)(*gMapEventInterface + 0x4c)))(
-                     (s8)*(u8 *)(obj + 0xac), 0) == 0) {
+      } else if ((*gMapEventInterface)->getAnimEvent((s8)*(u8 *)(obj + 0xac), 0) == 0) {
         *(f32 *)(state + 8) = lbl_803E54B4;
         (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(1);
       } else {
@@ -124,7 +123,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     }
     break;
   case 6:
-    (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x28)))(*gMapEventInterface);
+    (*gMapEventInterface)->finishCurrentEvent(*gMapEventInterface);
     break;
   case 7:
     if (GameBit_Get(0xea6) == 0) {
@@ -150,7 +149,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
 
   if ((GameBit_Get(0xea8) == 0) && (GameBit_Get(0x91b) != 0)) {
     GameBit_Set(0xea8, 1);
-    (*(void (*)(int, int, int, int))(*(int *)(*gMapEventInterface + 0x1c)))(0, 0, 1, 0);
+    (*gMapEventInterface)->triggerEvent(0, 0, 1, 0);
   }
 }
 

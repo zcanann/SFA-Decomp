@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/scene1C7.h"
 #include "main/dll/SC/SCtotemlogpuz.h"
 
@@ -52,8 +53,6 @@ typedef struct DbshShrineObject {
 } DbshShrineObject;
 
 typedef void (*ObjectTriggerRefreshFn)(int triggerId, DbshShrineObject *obj, int arg);
-typedef int (*MapEventGetAnimFn)(int mapId, int eventId);
-typedef void (*MapEventSetAnimFn)(int mapId, int eventId, int value);
 
 typedef union SceneIntToDouble {
     u64 bits;
@@ -72,7 +71,7 @@ extern void Music_Trigger(int musicId, int value);
 extern void audioStopByMask(int mask);
 
 extern int *gObjectTriggerInterface;
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern f32 timeDelta;
 extern f32 lbl_803E50DC;
 extern f64 lbl_803E50D0;
@@ -80,9 +79,9 @@ extern f64 lbl_803E50D0;
 #define OBJECT_TRIGGER_REFRESH(triggerId, obj, arg) \
     ((ObjectTriggerRefreshFn)(*(u32 *)(*gObjectTriggerInterface + 0x48)))((triggerId), (obj), (arg))
 #define MAP_EVENT_GET_ANIM(mapId, eventId) \
-    ((MapEventGetAnimFn)(*(u32 *)(*gMapEventInterface + 0x4c)))((mapId), (eventId))
+    (*gMapEventInterface)->getAnimEvent((mapId), (eventId))
 #define MAP_EVENT_SET_ANIM(mapId, eventId, value) \
-    ((MapEventSetAnimFn)(*(u32 *)(*gMapEventInterface + 0x50)))((mapId), (eventId), (value))
+    (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 
 /*
  * --INFO--
