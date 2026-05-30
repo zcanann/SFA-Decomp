@@ -31,8 +31,8 @@ void ring_hitDetect(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
-#pragma scheduling on
+#pragma peephole off
+#pragma scheduling off
 void ring_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     int state = *(int *)(obj + 0xb8);
