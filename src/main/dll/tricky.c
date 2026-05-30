@@ -2934,6 +2934,8 @@ extern f64 lbl_803E1EF0, lbl_803E1EF8, lbl_803E1F00, lbl_803E1F20, lbl_803E1F28;
 extern f32 lbl_803DD7F0, lbl_803DD7F4, lbl_803E1EC4, lbl_803E1EC8, lbl_803E1ECC, lbl_803E1ED0;
 extern f32 lbl_803E1ED4, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE0, lbl_803E1EE4, lbl_803E1EE8, lbl_803E1E94;
 extern f32 lbl_803E1F08, lbl_803E1F0C, lbl_803E1F10, lbl_803E1F14, lbl_803E1F18;
+extern f32 lbl_803E1F30, lbl_803E1F34, lbl_803E1F48, lbl_803E1F4C, lbl_803DBAE0, lbl_803DBAE4;
+extern double lbl_803E1F38, lbl_803E1F40;
 extern s16 lbl_803DD7EC;
 extern int lbl_803E1E2C;
 extern char sTrickyDebugXCoordFormat[];
@@ -3030,6 +3032,57 @@ void drawViewFinderHud(void) {
         sprintf(buf, sTrickyDebugXCoordFormat, xc);
         gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * lbl_803DD7F0));
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);
+
+        {
+            f32 f27;
+            for (f27 = lbl_803E1E3C; f27 < lbl_803E1F4C; f27 += lbl_803E1EC4) {
+                f32 f31 = lbl_803E1EC4 + f27;
+                f32 f30 = lbl_803E1F34 - f31;
+                f32 f29 = lbl_803E1F34 - f27;
+                {
+                    GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
+                    f32 f15 = lbl_803DD7F4 + (lbl_803E1F38 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f30 * lbl_803DBAE0) / lbl_803E1E94));
+                    f32 f16 = lbl_803DD7F4 + (lbl_803E1F38 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f29 * lbl_803DBAE0) / lbl_803E1E94));
+                    *(int *)&_c = lbl_803E1E2C;
+                    _c.a = (u8)(int)(lbl_803E1F30 * lbl_803DD7F0);
+                    _a = (s16)getAngle(f31 - f27, f15 - f16);
+                    _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
+                    _cs = fn_80293E80(_r);
+                    _sn = sin(_r);
+                    _cx = lbl_803E1E68 * _cs;
+                    _sx = lbl_803E1E68 * _sn;
+                    drawViewFinderLine((u8 *)&_c, f27 + _sx, f16 - _cx, f27 - _sx, f16 + _cx, f31 - _sx, f15 + _cx, f31 + _sx, f15 - _cx);
+                }
+                {
+                    GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
+                    f32 f16 = lbl_803DD7F4 + (lbl_803E1F40 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f30 * lbl_803DBAE0) / lbl_803E1E94));
+                    f32 f15 = lbl_803DD7F4 + (lbl_803E1F40 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f29 * lbl_803DBAE0) / lbl_803E1E94));
+                    *(int *)&_c = lbl_803E1E2C;
+                    _c.a = (u8)(int)(lbl_803E1F30 * lbl_803DD7F0);
+                    _a = (s16)getAngle(f31 - f27, f16 - f15);
+                    _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
+                    _cs = fn_80293E80(_r);
+                    _sn = sin(_r);
+                    _cx = lbl_803E1E68 * _cs;
+                    _sx = lbl_803E1E68 * _sn;
+                    drawViewFinderLine((u8 *)&_c, f27 + _sx, f15 - _cx, f27 - _sx, f15 + _cx, f31 - _sx, f16 + _cx, f31 + _sx, f16 - _cx);
+                }
+                {
+                    GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
+                    f32 f16 = lbl_803DD7F4 + (lbl_803E1F48 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f30 * lbl_803DBAE0) / lbl_803E1E94));
+                    f32 f15 = lbl_803DD7F4 + (lbl_803E1F48 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f29 * lbl_803DBAE0) / lbl_803E1E94));
+                    *(int *)&_c = lbl_803E1E2C;
+                    _c.a = (u8)(int)(hudElementOpacity * lbl_803DD7F0);
+                    _a = (s16)getAngle(f31 - f27, f16 - f15);
+                    _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
+                    _cs = fn_80293E80(_r);
+                    _sn = sin(_r);
+                    _cx = lbl_803E1E68 * _cs;
+                    _sx = lbl_803E1E68 * _sn;
+                    drawViewFinderLine((u8 *)&_c, f27 + _sx, f15 - _cx, f27 - _sx, f15 + _cx, f31 - _sx, f16 + _cx, f31 + _sx, f16 - _cx);
+                }
+            }
+        }
     }
 }
 #pragma scheduling reset
