@@ -72,6 +72,7 @@ extern undefined4 DAT_803de7ac;
 extern undefined4 DAT_803de7b0;
 extern undefined4 DAT_803e50f8;
 extern undefined4 DAT_803e50fc;
+extern f32 timeDelta;
 extern f64 DOUBLE_803e5120;
 extern f64 DOUBLE_803e5178;
 extern f64 DOUBLE_803e5188;
@@ -126,13 +127,27 @@ extern f32 lbl_803E5224;
 extern f32 lbl_803E5228;
 extern f32 lbl_803E522C;
 extern f32 lbl_803E5238;
+extern f32 lbl_803DDB28;
+extern int lbl_803DDB2C;
+extern f32 lbl_803E44C0;
+
+extern void *Obj_GetPlayerObject(void);
+extern void gameTextShow(int textId);
+extern void envFxActFn_800887f8(int value);
+extern void skyFn_80088c94(int flags, int mode);
+extern int getEnvfxActImmediately(int obj, int target, int actId, int flags);
+extern int getEnvfxAct(int obj, int target, int actId, int flags);
+extern int coordsToMapCell(f32 x, f32 z);
+extern void Music_Trigger(int id, int mode);
+extern void SCGameBitLatch_Update(void *latch, int mask, int clearIfSetBit, int clearIfClearBit,
+                                  int setBit, int textId);
 
 /*
  * --INFO--
  *
  * Function: MMP_levelcontrol_update
  * EN v1.0 Address: 0x801A6778
- * EN v1.0 Size: 320b
+ * EN v1.0 Size: 972b
  * EN v1.1 Address: 0x801A6AD0
  * EN v1.1 Size: 284b
  * JP Address: TODO
@@ -140,44 +155,83 @@ extern f32 lbl_803E5238;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void MMP_levelcontrol_update(int param_1,int param_2)
+void MMP_levelcontrol_update(int obj)
 {
-  float fVar1;
-  double dVar2;
-  int iVar3;
-  undefined4 local_18;
-  undefined4 local_14;
-  undefined4 local_10;
-  uint uStack_c;
-  undefined4 local_8;
-  uint uStack_4;
-  
-  iVar3 = *(int *)(param_1 + 0xb8);
-  local_18 = DAT_803e50f8;
-  local_14 = DAT_803e50fc;
-  *(undefined4 *)(param_2 + 0x14) = 0xffffffff;
-  *(ushort *)(param_1 + 6) = *(ushort *)(param_1 + 6) & 0xbfff;
-  *(undefined2 *)(param_1 + 4) = 0x4000;
-  *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(param_2 + 8);
-  *(undefined4 *)(param_1 + 0x18) = *(undefined4 *)(param_2 + 8);
-  *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(param_2 + 0xc);
-  *(undefined4 *)(param_1 + 0x1c) = *(undefined4 *)(param_2 + 0xc);
-  *(undefined4 *)(param_1 + 0x14) = *(undefined4 *)(param_2 + 0x10);
-  *(undefined4 *)(param_1 + 0x20) = *(undefined4 *)(param_2 + 0x10);
-  dVar2 = DOUBLE_803e5120;
-  fVar1 = lbl_803E5114;
-  uStack_c = (int)*(short *)(param_2 + 0x1a) ^ 0x80000000;
-  local_10 = 0x43300000;
-  *(float *)(iVar3 + 0x10c) =
-       (float)((double)CONCAT44(0x43300000,uStack_c) - DOUBLE_803e5120) / lbl_803E5114;
-  uStack_4 = (int)*(short *)(param_2 + 0x1c) ^ 0x80000000;
-  local_8 = 0x43300000;
-  *(float *)(iVar3 + 0x108) = (float)((double)CONCAT44(0x43300000,uStack_4) - dVar2) / fVar1;
-  *(undefined *)(iVar3 + 0x114) = 0;
-  *(undefined *)(iVar3 + 0x115) = 1;
-  *(float *)(iVar3 + 0x110) = lbl_803E5100;
-  (**(code **)(*DAT_803dd71c + 0x8c))((double)lbl_803E5150,iVar3,param_1,&local_18,0xffffffff);
-  return;
+  int playerForMap;
+  int playerForFx;
+
+  playerForMap = (int)Obj_GetPlayerObject();
+  playerForFx = (int)Obj_GetPlayerObject();
+
+  if (lbl_803DDB28 > lbl_803E44C0) {
+    gameTextShow(0x34f);
+    lbl_803DDB28 -= timeDelta;
+    if (lbl_803DDB28 < lbl_803E44C0) {
+      lbl_803DDB28 = lbl_803E44C0;
+    }
+  }
+
+  if (*(int *)(obj + 0xf4) != 0) {
+    envFxActFn_800887f8(0);
+    if (GameBit_Get(0xd47) != 0) {
+      skyFn_80088c94(7, 1);
+      if (*(int *)(obj + 0xf4) == 2) {
+        getEnvfxActImmediately(obj, playerForFx, 0x13a, 0);
+        getEnvfxActImmediately(obj, playerForFx, 0x234, 0);
+        getEnvfxActImmediately(obj, playerForFx, 0x235, 0);
+      } else {
+        getEnvfxAct(obj, playerForFx, 0x13a, 0);
+        getEnvfxAct(obj, playerForFx, 0x234, 0);
+        getEnvfxAct(obj, playerForFx, 0x235, 0);
+      }
+      *(int *)(obj + 0xf8) = 0;
+    } else if (GameBit_Get(0xf33) != 0) {
+      skyFn_80088c94(7, 1);
+      if (*(int *)(obj + 0xf4) == 2) {
+        getEnvfxActImmediately(obj, playerForFx, 0x13a, 0);
+        getEnvfxActImmediately(obj, playerForFx, 0x10c, 0);
+        getEnvfxActImmediately(obj, playerForFx, 0x10d, 0);
+      } else {
+        getEnvfxAct(obj, playerForFx, 0x13a, 0);
+        getEnvfxAct(obj, playerForFx, 0x10c, 0);
+        getEnvfxAct(obj, playerForFx, 0x10d, 0);
+      }
+      *(int *)(obj + 0xf8) = 1;
+    } else if (coordsToMapCell(*(f32 *)(playerForMap + 0xc), *(f32 *)(playerForMap + 0x14)) == 0x12) {
+      skyFn_80088c94(7, 0);
+      if (*(int *)(obj + 0xf4) == 2) {
+        getEnvfxActImmediately(obj, playerForFx, 0x13a, 0);
+        getEnvfxActImmediately(obj, playerForFx, 0x138, 0);
+        getEnvfxActImmediately(obj, playerForFx, 0x139, 0);
+      } else {
+        getEnvfxAct(obj, playerForFx, 0x13a, 0);
+        getEnvfxAct(obj, playerForFx, 0x138, 0);
+        getEnvfxAct(obj, playerForFx, 0x139, 0);
+      }
+      *(int *)(obj + 0xf8) = 0;
+    }
+    Music_Trigger(0x31, 1);
+    *(int *)(obj + 0xf4) = 0;
+  }
+
+  if (*(int *)(obj + 0xf8) != 0) {
+    if (GameBit_Get(0xf33) == 0) {
+      skyFn_80088c94(7, 0);
+      getEnvfxAct(obj, playerForFx, 0x13a, 0);
+      getEnvfxAct(obj, playerForFx, 0x138, 0);
+      getEnvfxAct(obj, playerForFx, 0x139, 0);
+      *(int *)(obj + 0xf8) = 0;
+    }
+  } else if (GameBit_Get(0xf33) != 0) {
+    skyFn_80088c94(7, 1);
+    getEnvfxAct(obj, playerForFx, 0x13a, 0);
+    getEnvfxAct(obj, playerForFx, 0x10c, 0);
+    getEnvfxAct(obj, playerForFx, 0x10d, 0);
+    *(int *)(obj + 0xf8) = 1;
+  }
+
+  SCGameBitLatch_Update(&lbl_803DDB2C, 1, -1, -1, 0x389, 0xd5);
+  SCGameBitLatch_Update(&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
 }
 
 /*
