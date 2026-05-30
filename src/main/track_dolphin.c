@@ -5760,3 +5760,93 @@ void fn_80061954(int *obj, void *buf48, void *bufA8)
     param_3[0x1b] = -nrm[2];
     param_3[0x1c] = -(param_3[0x1b] * param_2[2] + param_3[0x19] * param_2[0] + param_3[0x1a] * param_2[1]);
 }
+
+void gxErrorFn_80060b40(void)
+{
+    int iVar3 = 0;
+    int uVar2 = lbl_803DCE98;
+    int uVar4;
+    int iVar1;
+
+    if (uVar2 <= 0) {
+        return;
+    }
+    if ((8 < uVar2) && (uVar4 = uVar2 - 1 >> 3, 0 < uVar2 - 8)) {
+        do {
+            iVar3 = iVar3 + 8;
+            uVar4 = uVar4 - 1;
+        } while (uVar4 != 0);
+    }
+    iVar1 = uVar2 - iVar3;
+    if (uVar2 <= iVar3) {
+        return;
+    }
+    do {
+        iVar1 = iVar1 + -1;
+    } while (iVar1 != 0);
+}
+
+extern f32 lbl_8038D77C[];
+extern f32 lbl_803DECA0;
+extern f32 lbl_803DECA4;
+extern f32 lbl_803DECA8;
+extern f32 lbl_803DECAC;
+extern void fn_8006D5E8(void);
+
+void initTextures(void)
+{
+    f32 *a = lbl_8038D77C;
+    f32 *b = lbl_8038D7DC;
+
+    lbl_803DB658 = 10;
+    lbl_803DCF2C = (int)mmAlloc(0xa8c0, 0x18, 0);
+    a[0] = __AR_init_flag;
+    b[0] = __AR_init_flag;
+    a[1] = __AR_init_flag;
+    b[1] = __AR_init_flag;
+    a[2] = __AR_init_flag;
+    b[2] = __AR_init_flag;
+    a[3] = __AR_init_flag;
+    b[3] = __AR_init_flag;
+    a[4] = lbl_803DEC58;
+    b[4] = lbl_803DEC58;
+    a[5] = __AR_init_flag;
+    b[5] = __AR_init_flag;
+    a[6] = lbl_803DEC68;
+    b[6] = lbl_803DEC68;
+    a[7] = lbl_803DEC58;
+    b[7] = lbl_803DEC58;
+    a[8] = __AR_init_flag;
+    b[8] = __AR_init_flag;
+    a[9] = lbl_803DEC68;
+    b[9] = lbl_803DEC68;
+    a[10] = __AR_init_flag;
+    b[10] = __AR_init_flag;
+    a[11] = __AR_init_flag;
+    b[11] = __AR_init_flag;
+    b[12] = __AR_init_flag;
+    b[13] = __AR_init_flag;
+    b[14] = lbl_803DEC68;
+    b[15] = __AR_init_flag;
+    b[16] = lbl_803DEC58;
+    b[17] = lbl_803DEC68;
+    b[18] = lbl_803DEC68;
+    b[19] = lbl_803DEC58;
+    b[20] = lbl_803DEC68;
+    b[21] = lbl_803DEC68;
+    b[22] = __AR_init_flag;
+    b[23] = lbl_803DEC68;
+    a[12] = lbl_803DECA0;
+    a[13] = lbl_803DEC58;
+    a[14] = lbl_803DECA4;
+    a[15] = lbl_803DECA0;
+    a[16] = lbl_803DECA8;
+    a[17] = lbl_803DECA4;
+    a[18] = lbl_803DECAC;
+    a[19] = lbl_803DECA8;
+    a[20] = lbl_803DECA4;
+    a[21] = lbl_803DECAC;
+    a[22] = lbl_803DEC58;
+    a[23] = lbl_803DECA4;
+    fn_8006D5E8();
+}
