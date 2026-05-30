@@ -4084,9 +4084,11 @@ void *fn_80069944(u32 *outVal) {
 /* fn_80069958 — write a fixed table base address into *out. */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void fn_80069958(void **out) {
     *out = lbl_8038DE44;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -4167,12 +4169,14 @@ void fn_80062894(void) {
  * pair so MWCC doesn't route the table base through r0. */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void fn_80069968(s32 *out1, u32 *out2) {
     u8 *base = lbl_8038DC64;
     u32 off = (u32)lbl_803DCF6C * 0x18;
     *out1 = *(s16 *)(base + off + 4);
     *out2 = lbl_803DCF30;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -4617,6 +4621,7 @@ void fn_8006058C(short *param_1, float *param_2)
   param_1[2] = (short)iVar2;
 }
 
+#pragma dont_inline on
 void vecGetRanges(f32 *pts, f32 *base, int *out, f32 scale)
 {
   int i;
@@ -4640,6 +4645,7 @@ void vecGetRanges(f32 *pts, f32 *base, int *out, f32 scale)
     pts += 3;
   }
 }
+#pragma dont_inline reset
 
 #pragma dont_inline on
 int objShadowFn_80062378(void *obj, u8 param)
@@ -4906,6 +4912,7 @@ typedef struct AngleXf {
   f32 tz;
 } AngleXf;
 
+#pragma dont_inline on
 void fn_80061094(f32 *vec, f32 *out, f32 scale)
 {
   AngleXf xf;
@@ -4941,6 +4948,7 @@ void fn_80061094(f32 *vec, f32 *out, f32 scale)
     out += 3;
   }
 }
+#pragma dont_inline reset
 
 void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
 {
@@ -4985,6 +4993,7 @@ void skyFn_80062a54(int param, f32 a, f32 b, f32 c)
   lbl_803DB658 = 1;
 }
 
+#pragma dont_inline on
 int fn_80061DD8(void *obj, void *u1, void *u2, int count, f32 *outBase, f32 *outPtr, f32 *input, int limit)
 {
   void *state = *(void **)((char *)obj + 0x64);
@@ -5028,6 +5037,7 @@ int fn_80061DD8(void *obj, void *u1, void *u2, int count, f32 *outBase, f32 *out
   }
   return lbl_803DCEF2 != 0;
 }
+#pragma dont_inline reset
 
 void fn_8006135C(s16 *out, void *obj)
 {
@@ -5107,4 +5117,79 @@ void fn_8006961C(int *out, f32 *p4, f32 *p5, f32 *rad, int n)
     p5 += 3;
     rad += 1;
   }
+}
+
+extern int shouldDrawShadows(void);
+extern void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b);
+extern int fn_80060C14(f32 a, f32 b, int *obj, int p4, void *p5, int p6, int p7, int p8, int p9);
+extern void fn_80061954(int *obj, void *buf48, void *bufA8);
+extern void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *p7, void *buf48, f32 f);
+extern u8 lbl_803879BC[];
+extern int lbl_803DCF2C;
+extern int lbl_803DCEE0;
+extern int lbl_803DCEE4;
+extern s16 lbl_803DCEF0;
+
+int objShadowFn_80062498(int *obj, int param2)
+{
+    int *blockData;
+    u8 *cache;
+    f32 yOff;
+    int idxOut = 0;
+    int drawScratch;
+    u32 *vtx;
+    int alphaOut = 0;
+    int alpha;
+    u32 handle;
+    f32 vec[3];
+    f32 base[3];
+    int ranges[6];
+    u8 buf48[96];
+    u8 bufA8[304];
+
+    cache = getCache();
+    blockData = *(int **)((char *)obj + 0x64);
+    if (shouldDrawShadows() == 0) {
+        *(int *)(*(int *)((char *)obj + 0x64) + 0xc) = 0;
+        return 0;
+    }
+
+    handle = *(u32 *)((char *)blockData + 0x10);
+    if (handle == 0 || handle == 0xFFFFFFFF) {
+        vec[0] = *(f32 *)((char *)blockData + 0x14);
+        vec[1] = *(f32 *)((char *)blockData + 0x18);
+        vec[2] = *(f32 *)((char *)blockData + 0x1c);
+        fn_80061094(vec, (f32 *)buf48, *(f32 *)((char *)blockData + 0x2c));
+
+        {
+            void *p54 = *(void **)((char *)obj + 0x54);
+            if (p54 != NULL) {
+                yOff = (f32)((int)*(s16 *)((char *)p54 + 0x5e) / 2);
+            } else {
+                yOff = lbl_803DEC58;
+            }
+        }
+
+        base[0] = *(f32 *)((char *)obj + 0x18);
+        base[1] = *(f32 *)((char *)obj + 0x1c) + yOff;
+        base[2] = *(f32 *)((char *)obj + 0x20);
+        vecGetRanges((f32 *)buf48, base, ranges, *(f32 *)blockData);
+
+        hitDetectFn_800691c0(obj, ranges, 0x81, 0);
+        fn_80069958((void **)&vtx);
+        fn_80069968((s32 *)&idxOut, (u32 *)&alphaOut);
+
+        alpha = alphaOut;
+        idxOut = fn_80060C14((f32)(int)vtx[0], (f32)(int)vtx[2], obj, alpha,
+                             lbl_803879BC, lbl_803DCF2C, idxOut, param2,
+                             *(int *)((char *)blockData + 0x30) & 0x40000);
+        lbl_803DCEE0 = alpha;
+        lbl_803DCEF0 = (s16)idxOut;
+        lbl_803DCEE4 = (int)vtx;
+        fn_80061954(obj, buf48, bufA8);
+        fn_80061DD8(obj, buf48, bufA8, idxOut, (f32 *)lbl_803DCF2C, (f32 *)cache,
+                    (f32 *)lbl_803879BC, 0x555);
+    }
+    objDrawFn_80061f0c(cache, blockData, obj, (int)lbl_803DCEF2, &drawScratch, buf48, yOff);
+    return 0;
 }
