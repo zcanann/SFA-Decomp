@@ -5,8 +5,12 @@ extern undefined4 FUN_80006b14();
 extern int FUN_80017730();
 extern undefined4 FUN_80017748();
 extern undefined4 ObjHits_DisableObject();
+extern int Obj_GetActiveModel(int obj);
 extern byte FUN_80063a68();
 extern undefined4 FUN_80063a74();
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+extern void objFn_800972dc(int obj, u8 idx, f32 scale, int model, int mode, u8 chance,
+                           f32 alpha, int flags, int unused);
 extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
                                           float *radii,int pointCount);
 extern undefined4 FUN_80183c74();
@@ -25,6 +29,7 @@ extern undefined4 DAT_803ad404;
 extern undefined4 DAT_803ad408;
 extern undefined4 DAT_803ad40c;
 extern undefined4 DAT_803de748;
+extern u8 lbl_803DBDBC;
 extern f64 DOUBLE_803e4660;
 extern f32 FLOAT_803e4644;
 extern f32 FLOAT_803e4680;
@@ -32,6 +37,8 @@ extern f32 FLOAT_803e468c;
 extern f32 FLOAT_803e4690;
 extern f32 FLOAT_803e4694;
 extern f32 FLOAT_803e4698;
+extern f32 lbl_803E3A00;
+extern f32 lbl_803E3A04;
 
 /*
  * --INFO--
@@ -262,6 +269,54 @@ int scarab_getExtraSize(void)
 void scarab_free(void)
 {
 }
+
+#pragma scheduling off
+#pragma peephole off
+void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+  int state;
+  int model;
+  int displayList;
+  u8 *shellColors;
+  int i;
+
+  state = *(int *)(obj + 0xb8);
+  model = Obj_GetActiveModel(obj);
+  if (*(s16 *)(obj + 0x46) == 0x3d6) {
+    i = 0;
+    shellColors = &lbl_803DBDBC;
+    for (; i < 7; i++) {
+      if (*shellColors == *(u8 *)(*(int *)(model + 0x34) + 8)) {
+        displayList = *(int *)(model + 0x34);
+        i++;
+        if (i == 7) {
+          i = 0;
+        }
+        *(u8 *)(displayList + 8) = (&lbl_803DBDBC)[i];
+        break;
+      }
+      shellColors++;
+    }
+  }
+
+  if (*(s16 *)(state + 0x10) == 0) {
+    if (*(int *)(obj + 0xf8) != 0) {
+      if (visible != -1) {
+        return;
+      }
+    } else if (visible == 0) {
+      return;
+    }
+
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3A00);
+    if ((visible != 0) && (*(u8 *)(obj + 0x36) != 0)) {
+      objFn_800972dc(obj, 5, lbl_803E3A00, (u8)*(s16 *)(state + 0x22), 1, 0x14,
+                     lbl_803E3A04, 0, 0);
+    }
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
