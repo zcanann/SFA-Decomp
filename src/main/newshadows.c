@@ -3067,3 +3067,16 @@ void shadowCreate(int *obj) {
     }
     lbl_803DCF78 = lbl_803DCF78 + 1;
 }
+
+void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2) {
+    s8 buf[0x1c];
+    int bit;
+    memset(buf, 0, 0x1c);
+    for (bit = 0; bit < 16; bit++) {
+        if ((mask >> bit) & 1) {
+            buf[buf[0x1b] + 0x13] = (s8)bit;
+            buf[0x1b]++;
+        }
+    }
+    objAudioFn_8006ef38(p1, buf, p5, p6, p7, f1, f2);
+}
