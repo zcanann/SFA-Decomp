@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_Lazerwall.h"
 
 extern u32 GameBit_Get(int eventId);
@@ -19,7 +20,7 @@ extern void hudFn_8011f38c(int x);
 extern undefined4 *gTitleMenuControlInterfaceCopy;
 #define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 extern undefined4 *gRomCurveInterface;
-extern undefined4 *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 
 extern f32 lbl_803E59DC;
 extern f32 lbl_803E59E0;
@@ -150,8 +151,7 @@ int TREX_Lazerwall_updateTimedChallenge(int arg1)
 
         hudFn_8011f38c(2);
 
-        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(
-            (s32)*(s8 *)(arg1 + 0xac), 6, 0);
+        (*gMapEventInterface)->setAnimEvent((s32)*(s8 *)(arg1 + 0xac), 6, 0);
 
         (*(void (**)(int, int, int, int, int))((char *)*gTitleMenuControlInterface + 0x4))(0, 0xf3, 0, 0, 0);
     }

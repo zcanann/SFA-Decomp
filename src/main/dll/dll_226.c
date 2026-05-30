@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/DIM/DIMbosstonsil.h"
 
 
@@ -21,7 +22,7 @@ extern int dimBossTonsil_newState_hitFightMain(void *obj,ObjAnimUpdateState *ani
 extern void ObjGroup_RemoveObject(void *obj,int group);
 extern void ModelLightStruct_free(void *light);
 
-extern void *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void *gObjectTriggerInterface;
 extern void *gBaddieControlInterface;
 extern void *gPlayerInterface;
@@ -102,12 +103,10 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
       Music_Trigger(DIMBOSSTONSIL_STEAM_MUSIC,1);
       break;
     case DIMBOSSTONSIL_ANIM_EVENT_ENABLE_AREA:
-      (*(void (**)(int,int,int))(*(int *)gMapEventInterface + 0x50))
-          (DIMBOSSTONSIL_MAP_DIR,DIMBOSSTONSIL_MAP_AREA,1);
+      (*gMapEventInterface)->setAnimEvent(DIMBOSSTONSIL_MAP_DIR,DIMBOSSTONSIL_MAP_AREA,1);
       break;
     case DIMBOSSTONSIL_ANIM_EVENT_DISABLE_AREA:
-      (*(void (**)(int,int,int))(*(int *)gMapEventInterface + 0x50))
-          (DIMBOSSTONSIL_MAP_DIR,DIMBOSSTONSIL_MAP_AREA,0);
+      (*gMapEventInterface)->setAnimEvent(DIMBOSSTONSIL_MAP_DIR,DIMBOSSTONSIL_MAP_AREA,0);
       break;
     case DIMBOSSTONSIL_ANIM_EVENT_ENABLE_LIGHT:
       if (gDIMbosstonsilLight != NULL) {

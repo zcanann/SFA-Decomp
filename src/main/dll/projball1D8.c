@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/projball1D8.h"
 
 extern undefined4 Music_Trigger();
@@ -240,7 +241,7 @@ void sh_tricky_init(int* obj)
 
 extern char lbl_803269F8[];
 extern f32 lbl_803E5280;
-extern int* gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void fn_80088870(char* a, char* b, char* c, char* d);
 extern int getSaveGameLoadStatus(void);
 extern void envFxActFn_800887f8(int id);
@@ -277,12 +278,12 @@ void nw_levcontrol_init(int* obj)
         getEnvfxAct(0, 0, 0x23c, 0);
     }
 
-    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 0, 0);
-    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 2, 0);
-    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 5, 0);
-    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 10, 0);
-    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 0x1c, 0);
-    (*(void(**)(int, int, int))(*gMapEventInterface + 0x50))(7, 9, 1);
+    (*gMapEventInterface)->setAnimEvent(7, 0, 0);
+    (*gMapEventInterface)->setAnimEvent(7, 2, 0);
+    (*gMapEventInterface)->setAnimEvent(7, 5, 0);
+    (*gMapEventInterface)->setAnimEvent(7, 10, 0);
+    (*gMapEventInterface)->setAnimEvent(7, 0x1c, 0);
+    (*gMapEventInterface)->setAnimEvent(7, 9, 1);
 }
 #pragma peephole reset
 #pragma scheduling reset
