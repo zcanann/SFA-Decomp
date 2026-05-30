@@ -15,6 +15,7 @@ extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
+extern void ObjAnim_SetCurrentMove(int obj,int moveId,f32 blend,int flags);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8003b870();
@@ -29,6 +30,8 @@ extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,flo
                                           float *radii,int pointCount);
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
+extern f32 fsin16Precise(int angle);
+extern f32 fcos16Precise(int angle);
 extern f32 sqrtf(f32 x);
 extern double FUN_80293900();
 extern undefined4 FUN_80293bc4();
@@ -37,6 +40,8 @@ extern undefined4 FUN_80293f80();
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd728;
 extern undefined4* DAT_803dd738;
+extern int *gPathControlInterface;
+extern f32 timeDelta;
 extern f64 DOUBLE_803e3cb0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DDA58;
@@ -1032,6 +1037,45 @@ void fn_80166E38(f32 *out, f32 *forward, f32 *up) {
         mat[1][0] = -upRecomputed[0]; mat[1][1] = -upRecomputed[1]; mat[1][2] = -upRecomputed[2];
         mat[2][0] = -fwd[0]; mat[2][1] = -fwd[1]; mat[2][2] = -fwd[2];
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+undefined4 fn_801659B8(s16 *obj,u32 *params)
+{
+  int state;
+
+  state = *(int *)(*(int *)(obj + 0x5c) + 0x40c);
+  *(undefined *)((int)params + 0x34d) = 1;
+  if (*(s8 *)((int)params + 0x27a) != 0) {
+    *(f32 *)(state + 0x60) = lbl_803E3004;
+    ObjHits_EnableObject((int)obj);
+    *(f32 *)(obj + 0x12) = -(*(f32 *)(state + 0x60)) * fsin16Precise((u16)*obj);
+    *(f32 *)(obj + 0x14) = lbl_803E2FDC;
+    *(f32 *)(obj + 0x16) = -(*(f32 *)(state + 0x60)) * fcos16Precise((u16)*obj);
+    *params |= 0x2004000;
+    ObjAnim_SetCurrentMove((int)obj,0,lbl_803E2FDC,0);
+    *(f32 *)(state + 0x44) = lbl_803E2FDC;
+  }
+  ObjHits_SetHitVolumeSlot((int)obj,9,1,-1);
+  *(undefined *)(*(int *)(obj + 0x2a) + 0x6c) = 9;
+  *(undefined *)(*(int *)(obj + 0x2a) + 0x6d) = 1;
+  ObjHits_RegisterActiveHitVolumeObject(obj);
+  (*(void (**)(int,u32 *,f32))(*(int *)gPathControlInterface + 0x18))((int)obj,params + 1,timeDelta);
+  if (*(s8 *)((int)params + 0x27a) != 0) {
+    if (*(s8 *)(state + 0x90) == 6) {
+      if (((*(u8 *)(state + 0x92) >> 2) & 1) == 0) {
+        FUN_8016693c((int)obj,state);
+      } else {
+        fn_80165B3C((int)obj,state);
+      }
+    } else {
+      FUN_801661ec(obj,state);
+    }
+  }
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
