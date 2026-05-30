@@ -17,8 +17,8 @@ extern void fn_80179678(int slot, int obj);
 extern void fn_8017962C(int slot);
 extern int fn_801793A4(int obj);
 extern void fn_801796BC(int slot, int obj, double a, double b, double c);
-extern double fn_80293E80(double x);
-extern double sin(double x);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
 extern int ViewFrustum_IsSphereVisible(int posPtr, float radius);
 extern void Obj_FreeObject(int obj);
 
