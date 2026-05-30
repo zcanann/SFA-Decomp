@@ -1190,3 +1190,80 @@ void fn_80166840(int obj,int state,f32 *hit,f32 *end)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void updateConstrainedChaseVelocity(int obj,f32 targetX,f32 targetY,f32 targetZ,f32 blend)
+{
+  int state;
+  int mode;
+  f32 vx;
+  f32 vy;
+  f32 vz;
+  f32 len;
+  f32 scale;
+  f32 dot;
+
+  state = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+  if ((*(u8 *)(state + 0x92) & 4) == 0) {
+    vx = targetX - *(f32 *)(obj + 0xc);
+    vy = targetY - *(f32 *)(obj + 0x10);
+    vz = targetZ - *(f32 *)(obj + 0x14);
+    len = sqrtf(vz * vz + (vx * vx + vy * vy));
+    if (len >= lbl_803E2FDC) {
+      scale = *(f32 *)(state + 0x60) / len;
+      vx *= scale;
+      vy *= scale;
+      vz *= scale;
+    }
+    vx = blend * (vx - *(f32 *)(obj + 0x24)) + *(f32 *)(obj + 0x24);
+    vy = blend * (vy - *(f32 *)(obj + 0x28)) + *(f32 *)(obj + 0x28);
+    vz = blend * (vz - *(f32 *)(obj + 0x2c)) + *(f32 *)(obj + 0x2c);
+    mode = *(u8 *)(state + 0x90);
+    if (mode < 4) {
+      if (mode < 2) {
+        vx = lbl_803E2FDC;
+        len = sqrtf(vy * vy + vz * vz);
+        if (len != lbl_803E2FDC) {
+          scale = *(f32 *)(state + 0x60) / len;
+          vy *= scale;
+          vz *= scale;
+        }
+      } else {
+        vz = lbl_803E2FDC;
+        len = sqrtf(vx * vx + vy * vy);
+        if (len != lbl_803E2FDC) {
+          scale = *(f32 *)(state + 0x60) / len;
+          vx *= scale;
+          vy *= scale;
+        }
+      }
+    } else if (mode == 6) {
+      dot = vz * *(f32 *)(state + 0x84) +
+            (vx * *(f32 *)(state + 0x7c) + vy * *(f32 *)(state + 0x80));
+      vx = -(dot * *(f32 *)(state + 0x7c) - vx);
+      vy = -(dot * *(f32 *)(state + 0x80) - vy);
+      vz = -(dot * *(f32 *)(state + 0x84) - vz);
+      len = sqrtf(vz * vz + (vx * vx + vy * vy));
+      if (len != lbl_803E2FDC) {
+        scale = *(f32 *)(state + 0x60) / len;
+        vx *= scale;
+        vy *= scale;
+        vz *= scale;
+      }
+    } else if (mode < 6) {
+      vy = lbl_803E2FDC;
+      len = sqrtf(vx * vx + vz * vz);
+      if (len != lbl_803E2FDC) {
+        scale = *(f32 *)(state + 0x60) / len;
+        vx *= scale;
+        vz *= scale;
+      }
+    }
+    *(f32 *)(obj + 0x24) = vx;
+    *(f32 *)(obj + 0x28) = vy;
+    *(f32 *)(obj + 0x2c) = vz;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
