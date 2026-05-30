@@ -6351,6 +6351,136 @@ void boneParticleEffect_spawnAtBones(void *obj, void *arg1, void *arg2, u8 prob,
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void *Camera_GetCurrentViewSlot(void);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_8030FDE8[];
+extern s16 lbl_803DD29A;
+extern s16 lbl_803DD29C;
+extern f32 lbl_803DF468;
+extern f32 lbl_803DF46C;
+extern f32 lbl_803DF470;
+extern f32 lbl_803DF474;
+extern f32 lbl_803DF478;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_800A3AF0(void *table, int count, void *ctx, f32 a, f32 b)
+{
+    BoneSpawnData data;
+    void *cam;
+    int found;
+    int i;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 len;
+    f32 sc;
+    f32 p0x;
+    f32 p0y;
+    f32 p0z;
+    f32 p1x;
+    f32 p1y;
+    f32 p1z;
+    f32 p2x;
+    f32 p2y;
+    f32 p2z;
+    f32 r1;
+    f32 r2;
+    f32 s;
+    f32 w0;
+    f32 w1;
+    f32 w2;
+
+    found = 0;
+    cam = Camera_GetCurrentViewSlot();
+    lbl_803DD29A = *(s16 *)cam;
+    lbl_803DD29C = *(s16 *)((char *)cam + 2);
+    dx = *(f32 *)((char *)cam + 0xc) - *(f32 *)((char *)ctx + 0xc);
+    dy = *(f32 *)((char *)cam + 0x10) - *(f32 *)((char *)ctx + 0x10);
+    dz = *(f32 *)((char *)cam + 0x14) - *(f32 *)((char *)ctx + 0x14);
+    for (i = 0; i < count; i++) {
+        int t = *(s8 *)((char *)table + i * 0x4c + 0x48);
+        if (t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || t == 0x17) {
+            lbl_8030FDE8[0] = dx;
+            lbl_8030FDE8[1] = dy;
+            lbl_8030FDE8[2] = dz;
+            len = sqrtf(dy * dy + dx * dx + dz * dz);
+            sc = lbl_803DF468 * len;
+            if (lbl_803DF46C != len) {
+                dx = dx / len;
+                dy = dy / len;
+                dz = dz / len;
+            }
+            dx = dx * sc;
+            dy = dy * sc;
+            dz = dz * sc;
+            data.x = lbl_803DF46C;
+            data.y = lbl_803DF46C;
+            data.z = lbl_803DF46C;
+            data.scale = lbl_803DF470;
+            data.unk4 = 0;
+            data.unk2 = 0;
+            data.unk0 = 0;
+            found = 1;
+            i = count;
+        }
+    }
+    if (found) {
+        int j;
+        char *e = (char *)table;
+        for (j = 0; j < count; j++) {
+            int t = *(s8 *)(e + 0x48);
+            if (t == 0x12 || (u8)(t - 0x10) <= 1 || (u8)(t - 0x14) <= 1 || t == 0x17) {
+                int rt;
+                p0x = *(f32 *)((char *)ctx + 0xc) + ((f32)*(s16 *)(e + 0x10) - a);
+                p0y = (f32)*(s16 *)(e + 0x16);
+                p0z = *(f32 *)((char *)ctx + 0x14) + ((f32)*(s16 *)(e + 0x1c) - b);
+                p1x = *(f32 *)((char *)ctx + 0xc) + ((f32)*(s16 *)(e + 0x12) - a);
+                p1y = (f32)*(s16 *)(e + 0x18);
+                p1z = *(f32 *)((char *)ctx + 0x14) + ((f32)*(s16 *)(e + 0x1e) - b);
+                p2x = *(f32 *)((char *)ctx + 0xc) + ((f32)*(s16 *)(e + 0x14) - a);
+                p2y = (f32)*(s16 *)(e + 0x1a);
+                p2z = *(f32 *)((char *)ctx + 0x14) + ((f32)*(s16 *)(e + 0x20) - b);
+                r1 = (f32)randomGetRange(1, 1000) / lbl_803DF474;
+                r2 = (f32)randomGetRange(1, 1000) / lbl_803DF474;
+                s = sqrtf(r2);
+                w0 = lbl_803DF470 - s;
+                w1 = (lbl_803DF470 - r1) * s;
+                w2 = r1 * s;
+                data.x = w0 * p0x + w1 * p1x + w2 * p2x;
+                data.y = w0 * p0y + w1 * p1y + w2 * p2y;
+                data.z = w0 * p0z + w1 * p1z + w2 * p2z;
+                data.y = data.y + lbl_803DF478;
+                rt = *(s8 *)(e + 0x48);
+                if (rt == 0x12 || rt == 0x10) {
+                    if (randomGetRange(0, 0x1e) == 1) {
+                        (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x72, &data, 0x200001, -1, NULL);
+                    }
+                } else if (rt == 0x11) {
+                    if (randomGetRange(0, 8) == 2) {
+                        (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x73, &data, 0x111, -1, NULL);
+                    }
+                } else if (rt == 0x14) {
+                    if (randomGetRange(0, 8) == 2) {
+                        (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x73, &data, 0x111, -1, NULL);
+                    }
+                } else if (rt == 0x15) {
+                    if (randomGetRange(0, 8) == 2) {
+                        (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x73, &data, 0x111, -1, NULL);
+                    }
+                } else if (rt == 0x17) {
+                    (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x190, &data, 0x111, -1, NULL);
+                    (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x190, &data, 0x111, -1, NULL);
+                    (*(BoneSpawnFn *)(*(int *)gPartfxInterface + 8))(ctx, (void *)0x190, &data, 0x111, -1, NULL);
+                }
+            }
+            e += 0x4c;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void dll_0B_func08(void *param)
