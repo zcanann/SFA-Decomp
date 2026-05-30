@@ -56,18 +56,7 @@ extern undefined4 FUN_8025c754();
 extern undefined4 FUN_8025cce8();
 extern undefined4 FUN_8025d80c();
 extern undefined4 FUN_8025d888();
-extern undefined8 FUN_8028680c();
-extern undefined8 FUN_80286824();
-extern int FUN_80286828();
-extern undefined8 FUN_8028682c();
 extern undefined8 FUN_80286830();
-extern undefined8 FUN_80286838();
-extern undefined4 FUN_80286858();
-extern undefined4 FUN_80286870();
-extern undefined4 FUN_80286874();
-extern undefined4 FUN_80286878();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286884();
 extern undefined4 FUN_80293470();
 extern double FUN_80293900();
 extern double FUN_80294c4c();
@@ -460,7 +449,6 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
   expgfxBase = gExpgfxRuntimeData;
   poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
   poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
-  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
   poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
   foundPool = 0;
   poolIndex = EXPGFX_INVALID_POOL_INDEX;
@@ -475,6 +463,7 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
   }
 
   if (foundPool) {
+    poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
     for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
       activeBit = 1 << slotIndex;
       if ((poolActiveMasks[poolIndex] & activeBit) == 0) {
@@ -505,6 +494,7 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
     return EXPGFX_INVALID_POOL_INDEX;
   }
 
+  poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
   for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
     activeBit = 1 << slotIndex;
     if ((poolActiveMasks[poolIndex] & activeBit) == 0) {
