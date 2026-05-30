@@ -343,6 +343,9 @@ extern f32 lbl_803DF8C0;
 extern f32 lbl_803DF8D0;
 extern f32 lbl_803DEC50;
 extern f32 lbl_803DF8D8;
+extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
+extern f32 __AR_Callback;
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f);
 extern f32 lbl_803DF8E8;
 extern f32 lbl_803DF8EC;
 extern f32 lbl_803DF8F0;
@@ -4605,4 +4608,95 @@ void vecGetRanges(f32 *pts, f32 *base, int *out, f32 scale)
     if (z > (f32)out[5]) out[5] = (int)z;
     pts += 3;
   }
+}
+
+int objShadowFn_80062378(void *obj, u8 param)
+{
+  int lo;
+  int hi;
+  f32 t;
+  void *p;
+
+  p = *(void **)((char *)obj + 0x50);
+  if (*(u8 *)((char *)p + 0x5f) & 0x4) {
+    lo = 1000;
+    hi = 2000;
+  } else {
+    lo = 400;
+    hi = 500;
+  }
+  t = (Camera_DistanceToCurrentViewPosition(*(f32 *)((char *)obj + 0x18),
+                                            *(f32 *)((char *)obj + 0x1c),
+                                            *(f32 *)((char *)obj + 0x20)) -
+       (f32)lo) /
+      (f32)(hi - lo);
+  if (t < 0.0f) {
+    t = 0.0f;
+  } else if (t > 1.0f) {
+    t = 1.0f;
+  }
+  {
+    f32 inv = 1.0f - t;
+    int n = (int)((f32)param * inv);
+    return (n * (*(u8 *)((char *)obj + 0x37) + 1)) >> 8;
+  }
+}
+
+int fn_80065684(int a, f32 b, f32 val, f32 d, f32 *out, int e)
+{
+  void **arr;
+  int n;
+  int i;
+  f32 best;
+  f32 cur;
+
+  n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
+  if (n != 0) {
+    best = val - *(f32 *)arr[0];
+    for (i = 1; i < n; i++) {
+      cur = val - *(f32 *)arr[i];
+      if (cur >= __AR_Callback) {
+        if (best < __AR_Callback || cur < best) {
+          best = cur;
+        }
+      }
+    }
+    if (best >= __AR_Callback) {
+      *out = best;
+      return 1;
+    }
+    *out = __AR_Callback;
+    return 0;
+  }
+  *out = __AR_Callback;
+  return 0;
+}
+
+int hitDetectFn_800658a4(int a, f32 b, f32 val, f32 d, f32 *out, int e)
+{
+  void **arr;
+  int n;
+  int i;
+  int bestIdx;
+  f32 best;
+  f32 cur;
+
+  n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
+  if (n != 0) {
+    best = val - *(f32 *)arr[0];
+    best = best >= __AR_Callback ? best : -best;
+    bestIdx = 0;
+    for (i = 1; i < n; i++) {
+      cur = val - *(f32 *)arr[i];
+      cur = cur >= __AR_Callback ? cur : -cur;
+      if (cur < best) {
+        best = cur;
+        bestIdx = i;
+      }
+    }
+    *out = val - *(f32 *)arr[bestIdx];
+    return 0;
+  }
+  *out = __AR_Callback;
+  return 1;
 }
