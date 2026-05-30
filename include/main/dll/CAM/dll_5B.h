@@ -33,6 +33,6 @@ void CameraModeStatic_free(void);
 void CameraModeStatic_release(void);
 void CameraModeStatic_initialise(void);
 void fn_8010A104(int *p1, int *p2, f32 x, f32 y, f32 z, int tag);
-void fn_8010A47C(undefined4 param_1,undefined4 param_2,uint param_3);
+int fn_8010A47C(int curve, int *count, int tag);
 
 #endif /* MAIN_DLL_CAM_DLL_5B_H_ */

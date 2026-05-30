@@ -8,7 +8,8 @@
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006824();
-extern undefined4 Obj_TransformWorldPointToLocal();
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
+                                           int obj);
 extern double FUN_800069f8();
 extern int FUN_80006a10();
 extern undefined4 FUN_80006a1c();
@@ -40,12 +41,10 @@ extern undefined4 firstPersonExit();
 extern double fn_8010AEA8();
 extern undefined4 FUN_80135814();
 extern undefined8 FUN_8028683c();
-extern undefined8 FUN_80286840();
 extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern double sqrtf();
-extern undefined4 fn_80293E80();
-extern undefined4 sin();
+extern f32 sqrtf(f32 x);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
 extern undefined4 FUN_80294c64();
 extern undefined4 FUN_80294d00();
 
@@ -98,6 +97,8 @@ extern f32 lbl_803E1870;
 extern f32 lbl_803E1878;
 extern f32 lbl_803E1888;
 extern f32 lbl_803E188C;
+
+int fn_8010A47C(int curve, int *count, int tag);
 
 /*
  * --INFO--
@@ -539,7 +540,7 @@ void *fn_80109B04(int filter1, int filter2, f32 x, f32 y, f32 z)
             dx = x - *(f32 *)((char *)obj + 0x18);
             dy = y - *(f32 *)((char *)obj + 0x1c);
             dz = z - *(f32 *)((char *)obj + 0x20);
-            dist = sqrtf((double)(dy*dy + dx*dx + dz*dz));
+            dist = sqrtf(dy*dy + dx*dx + dz*dz);
             if (dist < bestDist) {
                 bestDist = dist;
                 best = obj;
@@ -620,7 +621,7 @@ void CameraModeStatic_update(short *param_1)
       *param_1 = -0x8000 - (short)iVar1;
     }
     if ((*(byte *)(iVar4 + 0x1b) & 2) != 0) {
-      uVar2 = getAngle(dVar7,sqrtf((double)(float)(dVar6 * dVar6 + (double)(float)(dVar5 * dVar5))));
+      uVar2 = getAngle(dVar7,sqrtf((float)(dVar6 * dVar6 + (double)(float)(dVar5 * dVar5))));
       iVar1 = ((uVar2 & 0xffff) - (int)*(short *)(iVar4 + 0x1e)) - (uint)(ushort)param_1[1];
       if (0x8000 < iVar1) {
         iVar1 = iVar1 + -0xffff;
@@ -640,8 +641,8 @@ void CameraModeStatic_update(short *param_1)
       }
       param_1[2] = param_1[2] + (short)((int)(iVar3 * (uint)framesThisStep) >> 3);
     }
-    Obj_TransformWorldPointToLocal((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0xe),
-                 (double)*(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
+    Obj_TransformWorldPointToLocal(*(float *)(param_1 + 0xc),*(float *)(param_1 + 0xe),
+                 *(float *)(param_1 + 0x10),(float *)(param_1 + 6),(float *)(param_1 + 8),
                  (float *)(param_1 + 10),*(int *)(param_1 + 0x18));
   }
   return;
@@ -785,9 +786,9 @@ void fn_8010A104(int *p1, int *p2, f32 x, f32 y, f32 z, int tag)
     }
   } while (done == 0);
   curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p1);
-  ((void (*)(int, int *, int))fn_8010A47C)(curve, &count, tag);
+  fn_8010A47C(curve, &count, tag);
   curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p2);
-  *p2 = *(int *)(((int (*)(int, int *, int))fn_8010A47C)(curve, &dummy, tag) + 20);
+  *p2 = *(int *)(fn_8010A47C(curve, &dummy, tag) + 20);
   for (k = 0; k < count; k++) {
     curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p2);
     for (i = 0; i < 5; i++) {
@@ -818,41 +819,37 @@ void fn_8010A104(int *p1, int *p2, f32 x, f32 y, f32 z, int tag)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8010A47C(undefined4 param_1,undefined4 param_2,uint param_3)
+int fn_8010A47C(int curve, int *count, int tag)
 {
-  bool bVar1;
-  int iVar2;
-  int *piVar3;
-  int iVar4;
-  int iVar5;
-  undefined8 uVar6;
+  int i;
+  int done;
+  int linked;
   
-  uVar6 = FUN_80286840();
-  iVar4 = (int)((ulonglong)uVar6 >> 0x20);
-  piVar3 = (int *)uVar6;
-  bVar1 = false;
-  *piVar3 = 0;
-  while (!bVar1) {
-    bVar1 = true;
-    if ((*(char *)(iVar4 + 0x19) != '\x1b') && (*(char *)(iVar4 + 0x19) != '\x1a')) {
-      for (iVar5 = 0; iVar5 < 5; iVar5 = iVar5 + 1) {
-        if ((((-1 < *(int *)(iVar4 + iVar5 * 4 + 0x1c)) &&
-             (((int)*(char *)(iVar4 + 0x1b) & 1 << iVar5) != 0)) &&
-            (iVar2 = (**(code **)(*gRomCurveInterface + 0x1c))(), iVar2 != 0)) &&
-           (((*(byte *)(iVar2 + 0x31) == param_3 || (*(byte *)(iVar2 + 0x32) == param_3)) ||
-            (*(byte *)(iVar2 + 0x33) == param_3)))) {
-          bVar1 = false;
-          iVar5 = 5;
-          iVar4 = iVar2;
+  done = 0;
+  *count = 0;
+  while (done == 0) {
+    done = 1;
+    if ((*(char *)(curve + 0x19) != '\x1b') && (*(char *)(curve + 0x19) != '\x1a')) {
+      for (i = 0; i < 5; i = i + 1) {
+        if ((*(int *)(curve + i * 4 + 0x1c) > -1) &&
+            (((int)*(char *)(curve + 0x1b) & (1 << i)) != 0)) {
+          linked = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))
+                     (*(int *)(curve + i * 4 + 0x1c));
+          if ((linked != 0) &&
+              ((*(u8 *)(linked + 0x31) == tag || (*(u8 *)(linked + 0x32) == tag)) ||
+               (*(u8 *)(linked + 0x33) == tag))) {
+            curve = linked;
+            done = 0;
+            i = 5;
+          }
         }
       }
     }
-    if (!bVar1) {
-      *piVar3 = *piVar3 + 1;
+    if (done == 0) {
+      *count = *count + 1;
     }
   }
-  FUN_8028688c();
-  return;
+  return curve;
 }
 
 
