@@ -2223,12 +2223,12 @@ f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment)
   endZ = segment[5];
   startZ = segment[2];
   deltaZ = endZ - startZ;
-  projection = lbl_803E12B8;
+  projection = gFloatZero;
   if (((projection != deltaX) || (projection != deltaY)) || (projection != deltaZ)) {
     projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
                  (deltaY * deltaY + deltaX * deltaX + deltaZ * deltaZ);
   }
-  if (projection < lbl_803E12B8) {
+  if (projection < gFloatZero) {
     nearestX = startX;
     nearestY = startY;
     nearestZ = startZ;
@@ -2237,7 +2237,7 @@ f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment)
     diffY = startY - y;
     distance = -(diffZ * diffZ + diffX * diffX + diffY * diffY);
   }
-  else if (projection > lbl_803E12B4) {
+  else if (projection > gFloatOne) {
     nearestX = endX;
     nearestY = endY;
     nearestZ = endZ;
@@ -3600,7 +3600,7 @@ double FUN_800e56bc(undefined8 param_1,double param_2,double param_3,double para
  * PAL Size: TODO
  */
 RomCurvePoint *
-curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5)
+curves_getCurves(f32 x,f32 z,int obj,u32 *outCount,int queryAll)
 {
   int queryMode;
   RomCurvePoint *outPoint;
@@ -3608,27 +3608,29 @@ curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5)
   uint remaining;
   uint pairCount;
   RomCurvePoint **hitPoints;
+  RomCurvePoint **hitPointCursor;
   
-  if ((u32)curve != sCurvesCachedHitObj) {
-    sCurvesCachedHitObj = curve;
-    if (param_5 != 0) {
+  if ((u32)obj != sCurvesCachedHitObj) {
+    sCurvesCachedHitObj = obj;
+    if (queryAll != 0) {
       queryMode = 1;
     }
     else {
       queryMode = -2;
     }
-    sCurvesCachedHitCount = hitDetectFn_80065e50(curve,x,*(float *)(curve + 0x1c),z,
+    sCurvesCachedHitCount = hitDetectFn_80065e50(obj,x,*(float *)(obj + 0x1c),z,
                                                  &hitPoints,queryMode,0);
     if (ROMCURVE_GETCURVES_MAX_POINTS < (int)sCurvesCachedHitCount) {
       sCurvesCachedHitCount = ROMCURVE_GETCURVES_MAX_POINTS;
     }
     remaining = sCurvesCachedHitCount;
     outPoint = sCurvesHitPoints;
+    hitPointCursor = hitPoints;
     if (0 < (int)sCurvesCachedHitCount) {
       pairCount = sCurvesCachedHitCount >> 1;
       if (pairCount != 0) {
         do {
-          point = *hitPoints;
+          point = *hitPointCursor;
           outPoint->x = point->x;
           outPoint->y = point->y;
           outPoint->z = point->z;
@@ -3636,14 +3638,14 @@ curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5)
           outPoint->flags = point->flags;
           outPoint->type = point->type;
           outPoint = outPoint + 1;
-          point = hitPoints[1];
+          point = hitPointCursor[1];
           outPoint->x = point->x;
           outPoint->y = point->y;
           outPoint->z = point->z;
           outPoint->w = point->w;
           outPoint->flags = point->flags;
           outPoint->type = point->type;
-          hitPoints = hitPoints + 2;
+          hitPointCursor = hitPointCursor + 2;
           outPoint = outPoint + 1;
           pairCount = pairCount - 1;
         } while (pairCount != 0);
@@ -3651,14 +3653,14 @@ curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5)
         if (remaining == 0) goto LAB_800e6f44;
       }
       do {
-        point = *hitPoints;
+        point = *hitPointCursor;
         outPoint->x = point->x;
         outPoint->y = point->y;
         outPoint->z = point->z;
         outPoint->w = point->w;
         outPoint->flags = point->flags;
         outPoint->type = point->type;
-        hitPoints = hitPoints + 1;
+        hitPointCursor = hitPointCursor + 1;
         outPoint = outPoint + 1;
         remaining = remaining - 1;
       } while (remaining != 0);

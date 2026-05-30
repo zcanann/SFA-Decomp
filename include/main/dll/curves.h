@@ -82,7 +82,7 @@ void objFn_800e67ac(int obj,u32 *state);
 void dll_15_func0A(int obj,u32 *state);
 f32 dll_15_func0B(int obj,f32 x,f32 baseY,f32 z,f32 height);
 double FUN_800e56bc(undefined8 param_1,double param_2,double param_3,double param_4,int param_5);
-RomCurvePoint *curves_getCurves(f32 x,f32 z,int curve,u32 *outCount,int param_5);
+RomCurvePoint *curves_getCurves(f32 x,f32 z,int obj,u32 *outCount,int queryAll);
 void dll_15_func08(void);
 void FUN_800e6140(undefined4 param_1,uint *param_2);
 void dll_15_func05(u32 *state,int count,u32 source,f32 *radii,s8 *types);
