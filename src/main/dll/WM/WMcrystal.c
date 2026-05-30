@@ -62,18 +62,33 @@ extern void objLightFn_8009a1dc(int obj, f32 scale, void *params, int mode, int 
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_GetPlayerObject(void);
 extern u8 *Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(u8 *setup, int mode, int mapLayer, int objIndex, int parent);
+extern void ObjHits_DisableObject(ScTotemBondObject *obj);
+extern void ObjHits_EnableObject(ScTotemBondObject *obj);
 extern u8 fn_801DD1A8(ScTotemPuzzleObject *obj, ScTotemPuzzleState *state);
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern f32 fn_80293E80(f32 angle);
 extern f32 sin(f32 angle);
 extern int *gObjectTriggerInterface;
+extern int *gGameUIInterface;
+extern int *gScreenTransitionInterface;
+extern int *gCameraInterface;
+extern int *gMapEventInterface;
 extern u16 lbl_80327A60[];
 extern u16 lbl_80327A70[];
 extern f32 lbl_803E5640;
 extern f32 lbl_803E5644;
+extern f32 lbl_803E5638;
+extern f32 lbl_803E563C;
+extern f32 lbl_803E5654;
+extern f32 lbl_803E5658;
+extern f32 lbl_803E565C;
+extern f32 lbl_803E5660;
+extern void hudFn_8011f38c(int visible);
+extern void fn_80296124(int player, void *pos, void *obj, int arg);
 
 #define SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE 0x3c1
 #define SC_TOTEMPUZZLE_PEER_OBJECT_TYPE 0x282
@@ -512,6 +527,112 @@ void sc_totembond_free(int obj) {
     fn_8011F6D4(0);
 }
 #pragma scheduling reset
+
+#pragma dont_inline on
+void sc_totembond_update(ScTotemBondObject *obj)
+{
+    ScTotemBondState *state;
+    int player;
+    u8 availableOrbs[8];
+    u8 availableCount;
+    u8 orbIndex;
+    u8 nextRing;
+    u8 allOrbsCollected;
+
+    state = obj->state;
+    player = Obj_GetPlayerObject();
+    if ((state->eventFlags & 1) != 0) {
+        state->active = 1;
+        obj->yaw = 0x3fff;
+        state->ringIndex = (s16)(u16)((s32)obj->yaw / SC_TOTEMBOND_ORB_ANGLE_STEP);
+        ObjHits_DisableObject(obj);
+        sc_totembond_spawnGameBitOrbs(obj,state,lbl_803E5638);
+        GameBit_Set(lbl_80327A60[state->ringIndex],1);
+        obj->mapAlpha = 0;
+        state->eventFlags &= ~1;
+        state->eventFlags |= 2;
+        (*(code *)(*gGameUIInterface + 0x40))(1);
+        hudFn_8011f38c(1);
+        (*(code *)(*gScreenTransitionInterface + 0x0c))(0x1e,1);
+        state->spawnTimer = lbl_803E563C;
+        Music_Trigger(0xf0,1);
+    }
+
+    if ((state->eventFlags & 2) != 0) {
+        if (state->spawnTimer != lbl_803E5654) {
+            state->spawnTimer -= timeDelta;
+            if (state->spawnTimer < lbl_803E5654) {
+                state->spawnTimer = lbl_803E5654;
+            }
+        } else if (state->completionTimer != lbl_803E5654) {
+            state->completionTimer -= timeDelta;
+            if (state->completionTimer <= lbl_803E5654) {
+                state->completionTimer = lbl_803E5654;
+                player = Obj_GetPlayerObject();
+                (*(code *)(*gMapEventInterface + 0x2c))();
+                (*(code *)(*gCameraInterface + 0x1c))(0x42,0,3,0,0,0,0);
+                obj->mapAlpha = 0xff;
+                fn_80296124(player,NULL,NULL,0);
+                ObjHits_EnableObject(obj);
+                hudFn_8011f38c(0);
+                GameBit_Set(0x2bc,1);
+                state->eventFlags = 0;
+                Music_Trigger(0xf0,0);
+                return;
+            }
+        } else {
+            if (GameBit_Get(SC_TOTEMBOND_ORB_TRIGGER_EVENT) != 0) {
+                GameBit_Set(SC_TOTEMBOND_ORB_TRIGGER_EVENT,0);
+                availableCount = 0;
+                for (orbIndex = 0; orbIndex < SC_TOTEMBOND_ORB_COUNT; orbIndex++) {
+                    if (GameBit_Get(lbl_80327A70[orbIndex]) == 0) {
+                        availableOrbs[availableCount++] = orbIndex;
+                    }
+                }
+                if (availableCount == 0) {
+                    allOrbsCollected = 1;
+                } else {
+                    nextRing = availableOrbs[randomGetRange(0,availableCount - 1)];
+                    if (state->ringIndex == nextRing) {
+                        GameBit_Set(lbl_80327A60[state->ringIndex],1);
+                    }
+                    if (state->ringIndex != nextRing) {
+                        state->ringIndex = nextRing;
+                        Sfx_PlayFromObject((int)obj,0x137);
+                    }
+                    allOrbsCollected = 0;
+                }
+                if (allOrbsCollected) {
+                    state->completionTimer = lbl_803E5658;
+                    fn_8011F6D4(0);
+                    (*(code *)(*gScreenTransitionInterface + 0x08))(0x1e,1);
+                }
+            }
+            if (((u32)(u16)obj->yaw >> 13) != state->ringIndex) {
+                obj->yaw = (s32)-((lbl_803E565C * timeDelta) - (f32)(s32)obj->yaw);
+                if (((u32)(u16)obj->yaw >> 13) == state->ringIndex) {
+                    GameBit_Set(lbl_80327A60[state->ringIndex],1);
+                }
+            }
+        }
+
+        fn_80296124(player,&obj->x,obj,0);
+        state->x = obj->x;
+        state->y = lbl_803E563C + obj->y;
+        state->z = obj->z;
+        state->yaw = (s16)(0x8000 - obj->yaw);
+        state->pitch = obj->pitch;
+        state->roll = obj->roll;
+        state->cameraDistance = lbl_803E5660;
+        (*(code *)(*gCameraInterface + 0x60))(state,0x18);
+    }
+
+    if ((state->eventFlags & 0x10) != 0) {
+        (*(code *)(*gMapEventInterface + 0x44))(0xe,6);
+        state->eventFlags &= ~0x10;
+    }
+}
+#pragma dont_inline reset
 
 #pragma scheduling off
 #pragma peephole off

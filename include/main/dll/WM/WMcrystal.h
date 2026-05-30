@@ -30,18 +30,32 @@ typedef struct ScTotemPuzzleMapData {
 } ScTotemPuzzleMapData;
 
 typedef struct ScTotemBondState {
-    u8 pad00[0x24];
+    s16 yaw;
+    s16 pitch;
+    s16 roll;
+    u8 pad06[0x08 - 0x06];
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 cameraDistance;
+    f32 spawnTimer;
+    f32 completionTimer;
+    s32 active;
     s16 ringIndex;
     u8 eventFlags;
 } ScTotemBondState;
 
 typedef struct ScTotemBondObject {
     s16 yaw;
-    u8 pad02[0x0C - 0x02];
+    s16 pitch;
+    s16 roll;
+    u8 pad06[0x0C - 0x06];
     f32 x;
     f32 y;
     f32 z;
-    u8 pad18[0x4C - 0x18];
+    u8 pad18[0x36 - 0x18];
+    u8 mapAlpha;
+    u8 pad37[0x4C - 0x37];
     u8 *definition;
     u8 pad50[0xB0 - 0x50];
     u16 objectFlags;
@@ -61,6 +75,7 @@ void sc_totembond_spawnGameBitOrbs(ScTotemBondObject *obj,ScTotemBondState *stat
 undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 void FUN_801ddb0c(void);
 void FUN_801ddb3c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
+void sc_totembond_update(ScTotemBondObject *obj);
 void sc_totembond_init(ScTotemBondObject *obj,int params);
 int fn_801DE320(u16 *gameBitIds,u16 newValue);
 
