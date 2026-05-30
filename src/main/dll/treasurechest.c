@@ -75,12 +75,11 @@ void dll_D3_update(int *obj)
     player = (int *)Obj_GetPlayerObject();
     local_90 = lbl_803E3034;
 
-    if (*(int *)extra == 0) {
+    if (*(void **)extra == NULL) {
         *(u8 *)((char *)extra + 0x90) = 6;
-        if ((*(u8 *)((char *)extra + 0x92) >> 4) != 0) {
-            iVar3 = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &local_90);
-            *(int *)extra = iVar3;
-            if (iVar3 != 0) {
+        if (((u32)*(u8 *)((char *)extra + 0x92) >> 4) != 0) {
+            *(int *)extra = ObjList_FindNearestObjectByDefNo(obj, 0x4ad, &local_90);
+            if (*(void **)extra != NULL) {
                 (*(void (**)(int, int, int))(*(int **)(*(int *)extra + 0x68) + 0x20 / 4))(
                     *(int *)extra,
                     (int)((char *)extra + 0x48),
@@ -124,7 +123,7 @@ void dll_D3_update(int *obj)
         if (rc != 0) {
             ((void (*)(int *, int *, int, int, int, int, int, int, int))((void **)*(int *)gBaddieControlInterface)[0x28 / 4])(
                 obj, state,
-                (int)((char *)state + 0x35c),
+                (int)state + 0x35c,
                 (int)*(s16 *)((char *)state + 0x3f4),
                 0, 0, 1, 0, -1);
             *(int *)((char *)state + 0x2d0) = rc;
@@ -217,7 +216,8 @@ void dll_D3_init(int obj, int def, int flag)
     int state;
     int extra;
     u8 setupFlags;
-    f32 zero;
+    f32 fz;
+    s16 ftag;
 
     state = *(int *)(obj + 0xb8);
     setupFlags = 6;
@@ -232,31 +232,39 @@ void dll_D3_init(int obj, int def, int flag)
     memset((void *)extra, 0, 0x94);
     *(u8 *)(extra + 0x90) = 5;
     *(u8 *)(extra + 0x92) = (*(u8 *)(extra + 0x92) & 0xf) | 0x30;
-    *(f32 *)(extra + 0x7c) = lbl_803E2FDC;
+    fz = lbl_803E2FDC;
+    *(f32 *)(extra + 0x7c) = fz;
     *(f32 *)(extra + 0x80) = lbl_803E2FF4;
-    *(f32 *)(extra + 0x84) = lbl_803E2FDC;
+    *(f32 *)(extra + 0x84) = fz;
     *(f32 *)(extra + 0x88) = -*(f32 *)(obj + 0x10);
     *(f32 *)(extra + 0x70) = *(f32 *)(obj + 0xc);
     *(f32 *)(extra + 0x74) = *(f32 *)(obj + 0x10);
     *(f32 *)(extra + 0x78) = *(f32 *)(obj + 0x14);
 
     ObjAnim_SetCurrentMove(obj, 0, 0.0f, 0);
-    *(s16 *)(state + 0x274) = *(u8 *)(def + 0x2b) != 0;
+    if (*(u8 *)(def + 0x2b) != 0) {
+        ftag = 1;
+    } else {
+        ftag = 0;
+    }
+    *(s16 *)(state + 0x274) = ftag;
     *(s16 *)(state + 0x270) = 0;
     *(s16 *)(state + 0x402) = 0;
     *(u8 *)(state + 0x405) = 0;
     *(u8 *)(state + 0x25f) = 0;
     ObjHits_DisableObject(obj);
 
-    zero = lbl_803E2FF4;
-    *(f32 *)(extra + 4) = zero;
-    *(f32 *)(extra + 0x18) = zero;
-    *(f32 *)(extra + 0x2c) = zero;
-    *(f32 *)(extra + 0x40) = zero;
+    fz = lbl_803E2FF4;
+    *(f32 *)(extra + 4) = fz;
+    *(f32 *)(extra + 0x18) = fz;
+    *(f32 *)(extra + 0x2c) = fz;
+    *(f32 *)(extra + 0x40) = fz;
 }
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void dll_D3_initialise(void)
 {
     lbl_803AC650[0] = fn_801659B8;
@@ -266,6 +274,8 @@ void dll_D3_initialise(void)
     lbl_803AC650[4] = LandedArwing_TriggerLaunchTarget;
     lbl_803DDA88 = LandedArwing_ReturnZero;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -284,7 +294,8 @@ int skeetlawall_getObjectTypeId(void) { return 0x0; }
 #pragma peephole off
 void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     if (visible != 0) {
-        if (*(int *)((char *)obj + 0xF4) == 0) {
+        if (*(int *)((char *)obj + 0xF4) != 0) {
+        } else {
             ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3058);
         }
     }
