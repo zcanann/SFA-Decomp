@@ -4944,3 +4944,45 @@ void partfx_release(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803DF720;
+extern f32 lbl_803DF724;
+extern f32 lbl_803DF728;
+extern f32 lbl_803DF730;
+extern f32 lbl_803DF868;
+extern f32 lbl_803DF86C;
+extern f32 lbl_803DB7B8;
+extern f32 lbl_803DB7BC;
+extern int lbl_803DD328;
+extern int lbl_803DD32C;
+extern f32 lbl_803DD330;
+extern f32 lbl_803DD334;
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 fn_80293E80(f32);
+
+#pragma scheduling off
+#pragma peephole off
+void Effect1_func05(void)
+{
+  lbl_803DB7B8 = lbl_803DB7B8 + lbl_803DF720 * timeDelta;
+  if (lbl_803DB7B8 > lbl_803DF728) {
+    lbl_803DB7B8 = lbl_803DF724;
+  }
+  lbl_803DB7BC = lbl_803DB7BC + lbl_803DF720 * timeDelta;
+  if (lbl_803DB7BC > lbl_803DF728) {
+    lbl_803DB7BC = lbl_803DF730;
+  }
+  lbl_803DD328 = lbl_803DD328 + framesThisStep * 0x64;
+  if (lbl_803DD328 > 0x7fff) {
+    lbl_803DD328 = 0;
+  }
+  lbl_803DD334 = fn_80293E80(lbl_803DF868 * (f32)(s16)lbl_803DD328 / lbl_803DF86C);
+  lbl_803DD32C = lbl_803DD32C + framesThisStep * 0x32;
+  if (lbl_803DD32C > 0x7fff) {
+    lbl_803DD32C = 0;
+  }
+  lbl_803DD330 = fn_80293E80(lbl_803DF868 * (f32)(s16)lbl_803DD32C / lbl_803DF86C);
+}
+#pragma peephole reset
+#pragma scheduling reset
