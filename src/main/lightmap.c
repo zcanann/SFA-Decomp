@@ -2747,9 +2747,9 @@ void fn_8005DE94(u32 a, u32 b, f32 *p) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u32 lbl_803868D8[];
+extern u32 gVisibleObjectSortKeys[];
 extern int lbl_803DCDF0;
-extern s16 lbl_803DCEAE;
+extern s16 gVisibleObjectSortKeyCount;
 extern int *gModgfxInterface;
 extern void objRender(int a, int b, int c, int d, void *obj, int f);
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
@@ -2767,8 +2767,8 @@ void renderObjects(s8 *arg0) {
     int *objects;
 
     objects = ObjList_GetObjects((int *)0, (int *)0);
-    for (i = 1; i < (int)lbl_803DCEAE; i++) {
-        idx = lbl_803868D8[i] & 0x3ff;
+    for (i = 1; i < (int)gVisibleObjectSortKeyCount; i++) {
+        idx = gVisibleObjectSortKeys[i] & 0x3ff;
         obj = (u8 *)objects[idx];
         state = *(u8 **)(obj + 0x50);
         flags = *(u32 *)(state + 0x44);
@@ -3230,7 +3230,7 @@ void fn_8005D270(void)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8005B56C(u32 *arr, int n)
+void sortVisibleObjectKeysDescending(u32 *arr, int n)
 {
     int gap = 1;
     int i, j;
