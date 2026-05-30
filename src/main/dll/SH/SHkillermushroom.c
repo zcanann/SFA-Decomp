@@ -30,13 +30,34 @@ extern undefined4 FUN_80081120();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_8013651c();
 extern undefined4 FUN_801d2db8();
-extern int GameBit_Get(int eventId);
+extern u32 GameBit_Get(int eventId);
 extern void fn_801D286C(void);
+extern void fn_801D2B70(void *obj, void *stateEntry, void *state);
+extern void *Obj_GetPlayerObject(void);
+extern f32 vec3f_distanceSquared(f32 *p1, f32 *p2);
+extern void Sfx_PlayFromObject(void *obj, int sndId);
+extern void Sfx_KeepAliveLoopedObjectSound(void *obj, int sndId);
+extern void Obj_StartModelFadeIn(void *obj, int duration);
+extern void objLightFn_8009a1dc(void *obj, f32 *pos, int a, int b, f32 intensity);
+extern void Obj_SetModelColorFadeRecursive(void *obj, int a, int b, int c, int d, int e);
+extern void ObjAnim_SetCurrentMove(void *obj, s16 animId, int a, f32 startTime);
+extern int ObjAnim_AdvanceCurrentMove(void *obj, int mode, f32 ts1, f32 ts2);
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
 
 extern f32 lbl_803E5358;
 extern f32 lbl_803E535C;
+extern f64 lbl_803E5360;
+extern f32 lbl_803E5368;
+extern f32 lbl_803E536C;
+extern f32 lbl_803E537C;
+extern f32 lbl_803E5380;
+
+extern u8 lbl_80326D20[];
+extern void *gPartfxInterface;
+extern void *gObjectTriggerInterface;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
 
 extern undefined4 DAT_80327960;
 extern undefined4 DAT_80327964;
@@ -390,4 +411,194 @@ void bombplant_init(void *obj, void *param, int flag)
     *(f32 *)((u8 *)obj + 0x14) = *(f32 *)((u8 *)p4c + 0x10);
     ObjHits_RefreshObjectState(obj);
   }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: bombplant_update
+ * EN v1.0 Address: 0x801D2C54
+ * EN v1.0 Size: 1508b
+ */
+void bombplant_update(void *obj)
+{
+  void *state;
+  u8 *entry;
+  void *param;
+  void *p4c;
+  void *plr;
+  void *p50;
+  f32 dist;
+  s16 bitId;
+  int hitType;
+  int outA;
+  int outB;
+  int outC;
+  f32 hitX;
+  f32 hitY;
+  f32 hitZ;
+  f32 lightVec[3];
+
+  Obj_GetPlayerObject();
+  if (objIsFrozen(obj) != 0) {
+    goto epilogue;
+  }
+
+  state = *(void **)((u8 *)obj + 0xb8);
+  entry = &lbl_80326D20[*(u8 *)((u8 *)state + 0x14) * 0xc];
+
+  switch (*(u8 *)((u8 *)state + 0x14)) {
+  case 1:
+    param = *(void **)((u8 *)obj + 0x4c);
+    if ((*(u8 *)((u8 *)state + 0x15) & 0x2) != 0) {
+      *(u8 *)((u8 *)state + 0x15) &= ~0x2;
+      *(f32 *)state = (f32)(int)*(s16 *)((u8 *)param + 0x18);
+    }
+    bitId = *(s16 *)((u8 *)param + 0x1c);
+    if (bitId != -1) {
+      if (GameBit_Get(bitId) != 0) {
+        plr = Obj_GetPlayerObject();
+        dist =
+            vec3f_distanceSquared((f32 *)((u8 *)obj + 0x18), (f32 *)((u8 *)plr + 0x18));
+        if (dist > lbl_803E5368) {
+          *(u8 *)((u8 *)state + 0x14) = 2;
+          *(u8 *)((u8 *)state + 0x15) |= 0x2;
+        }
+      }
+    } else {
+      f32 t = *(f32 *)state - timeDelta;
+      *(f32 *)state = t;
+      if (t <= lbl_803E536C) {
+        plr = Obj_GetPlayerObject();
+        dist =
+            vec3f_distanceSquared((f32 *)((u8 *)obj + 0x18), (f32 *)((u8 *)plr + 0x18));
+        if (dist > lbl_803E5368) {
+          *(u8 *)((u8 *)state + 0x14) = 2;
+          *(u8 *)((u8 *)state + 0x15) |= 0x2;
+        }
+        *(f32 *)state = lbl_803E536C;
+      }
+    }
+    break;
+
+  case 2:
+    if ((*(u8 *)((u8 *)state + 0x15) & 0x2) != 0) {
+      Sfx_PlayFromObject(obj, 0xa1);
+      *(u8 *)((u8 *)state + 0x15) &= ~0x2;
+      p4c = *(void **)((u8 *)obj + 0x4c);
+      *(u8 *)((u8 *)obj + 0x36) = 0xff;
+      *(s16 *)((u8 *)obj + 0x6) &= ~0x4000;
+      *(f32 *)((u8 *)obj + 0xc) = *(f32 *)((u8 *)p4c + 0x8);
+      *(f32 *)((u8 *)obj + 0x10) = *(f32 *)((u8 *)p4c + 0xc);
+      *(f32 *)((u8 *)obj + 0x14) = *(f32 *)((u8 *)p4c + 0x10);
+      *(f32 *)((u8 *)obj + 0x8) = lbl_803E5358;
+      *(f32 *)((u8 *)state + 0x8) = lbl_803E535C;
+      *(f32 *)((u8 *)state + 0x4) = *(f32 *)((u8 *)state + 0xc);
+      *(f32 *)((u8 *)state + 0x10) =
+          *(f32 *)((u8 *)state + 0x4) / *(f32 *)((u8 *)state + 0x8);
+      *(f32 *)state = *(f32 *)((u8 *)state + 0x8);
+      ObjHits_RefreshObjectState(obj);
+    }
+    if (*(f32 *)((u8 *)obj + 0x8) > *(f32 *)((u8 *)state + 0x4)) {
+      *(f32 *)((u8 *)state + 0x10) = *(f32 *)((u8 *)state + 0x10) / lbl_803E537C;
+    }
+    if (*(f32 *)((u8 *)state + 0x10) < lbl_803E5358) {
+      *(f32 *)((u8 *)state + 0x10) = lbl_803E536C;
+    }
+    *(f32 *)((u8 *)obj + 0x8) =
+        *(f32 *)((u8 *)state + 0x10) * timeDelta + *(f32 *)((u8 *)obj + 0x8);
+    {
+      f32 t = *(f32 *)state - timeDelta;
+      *(f32 *)state = t;
+      if (t < lbl_803E536C) {
+        *(u8 *)((u8 *)state + 0x14) = 0;
+        *(u8 *)((u8 *)state + 0x15) |= 0x2;
+      }
+    }
+    break;
+
+  case 4:
+    fn_801D2B70(obj, entry, state);
+    break;
+
+  case 0:
+    Sfx_KeepAliveLoopedObjectSound(obj, 0x3fd);
+    /* fallthrough */
+  default:
+    param = *(void **)((u8 *)obj + 0x4c);
+    if ((*(u8 *)((u8 *)state + 0x15) & 0x2) != 0) {
+      *(u8 *)((u8 *)state + 0x15) &= ~0x2;
+      *(f32 *)state =
+          (f32)(int)(*(s16 *)((u8 *)param + 0x1a) + randomGetRange(-0x32, 0x32));
+    }
+    if ((*(u16 *)((u8 *)obj + 0xb0) & 0x800) != 0) {
+      (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
+          obj, 0x7f1, 0, 2, -1, 0);
+    }
+    break;
+  }
+
+  if ((entry[8] & 0x1) != 0) {
+    hitType = ObjHits_GetPriorityHitWithPosition(obj, &outA, &outB, &outC, &hitX,
+                                                 &hitY, &hitZ);
+    if (hitType != 0 && outC != 0) {
+      if (hitType == 0x10) {
+        Obj_StartModelFadeIn(obj, 0x12c);
+      } else if (hitType - 0xe <= 1 || hitType == 0x11) {
+        Sfx_PlayFromObject(obj, 0x9d);
+        hitX = hitX + playerMapOffsetX;
+        hitZ = hitZ + playerMapOffsetZ;
+        objLightFn_8009a1dc(obj, lightVec, 1, 0, lbl_803E5380);
+        Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
+        *(u8 *)((u8 *)state + 0x14) = 4;
+        *(u8 *)((u8 *)state + 0x15) |= 0x2;
+        p50 = *(void **)((u8 *)obj + 0x50);
+        ObjHitbox_SetCapsuleBounds(obj, (s16)(*(u8 *)((u8 *)p50 + 0x62) + 0x50),
+                                   (s16)(*(s16 *)((u8 *)p50 + 0x68) - 0x50),
+                                   (s16)(*(s16 *)((u8 *)p50 + 0x6a) + 0x50));
+        ObjHits_MarkObjectPositionDirty(obj);
+      }
+    }
+  }
+
+  if ((entry[8] & 0x8) != 0) {
+    ObjHits_EnableObject(obj);
+  } else {
+    ObjHits_DisableObject(obj);
+  }
+
+  if ((entry[8] & 0x10) != 0) {
+    ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
+  } else {
+    ObjHits_ClearHitVolumes(obj);
+  }
+
+  if ((entry[8] & 0x2) != 0) {
+    *(u8 *)((u8 *)obj + 0xaf) &= ~0x8;
+    if ((*(u8 *)((u8 *)obj + 0xaf) & 0x4) != 0 && GameBit_Get(0x189) == 0) {
+      (*(void (***)(int, void *, int))gObjectTriggerInterface)[18](0, obj, -1);
+      GameBit_Set(0x189, 1);
+    }
+  } else {
+    *(u8 *)((u8 *)obj + 0xaf) |= 0x8;
+  }
+
+  if ((entry[8] & 0x4) != 0) {
+    *(s16 *)((u8 *)obj + 0x6) |= 0x4000;
+  } else {
+    *(s16 *)((u8 *)obj + 0x6) &= ~0x4000;
+  }
+
+  if (*(s16 *)((u8 *)obj + 0xa0) != *(s16 *)entry) {
+    ObjAnim_SetCurrentMove(obj, *(s16 *)entry, 0, lbl_803E536C);
+  }
+
+  if (ObjAnim_AdvanceCurrentMove(obj, 0, *(f32 *)(entry + 0x4), timeDelta) != 0) {
+    *(u8 *)((u8 *)state + 0x15) |= 0x1;
+  } else {
+    *(u8 *)((u8 *)state + 0x15) &= ~0x1;
+  }
+
+epilogue:
+  return;
 }
