@@ -32,6 +32,8 @@ extern f64 DOUBLE_803e5cc8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5CD4;
 extern f32 lbl_803E5CD8;
+extern void fn_801C7444(void);
+extern void *objCreateLight(int obj, int kind);
 
 /*
  * --INFO--
@@ -285,6 +287,37 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
 #pragma peephole reset
 #pragma scheduling reset
 
+
+#pragma scheduling off
+#pragma peephole off
+void gpsh_shrine_init(int *obj, int *def) {
+    u8 *state;
+
+    state = *(u8 **)((char *)obj + 0xb8);
+    *(s16 *)obj = 0;
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801C7444;
+    *(f32 *)((char *)obj + 0x18) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)obj + 0x1c) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)obj + 0x20) = *(f32 *)((char *)obj + 0x14);
+    state[0x14] = 0;
+    state[0x15] &= 0x7f;
+    GameBit_Set(0x129, 1);
+    GameBit_Set(0x12b, 0);
+    GameBit_Set(0x149, 0);
+    GameBit_Set(0x14c, 0);
+    GameBit_Set(0x14d, 0);
+    GameBit_Set(0x14e, 0);
+    GameBit_Set(0x14a, 0);
+    GameBit_Set(0x14b, 0);
+    *(int *)((char *)obj + 0xf4) = 1;
+    if (*(void **)state == NULL) {
+        *(void **)state = objCreateLight(0, 1);
+    }
+    GameBit_Set(0xea1, 1);
+    GameBit_Set(0xefa, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* Trivial 4b 0-arg blr leaves. */
 void gpsh_shrine_release(void) {}
