@@ -128,8 +128,8 @@ extern void objAudioFn_800393f8(int obj, void *p2, int p3, int p4, int p5, int p
 extern char lbl_8031D2E8[];
 extern void **gRomCurveInterface;
 extern f32 timeDelta;
-extern double fn_80293E80(double);
-extern double sin(double);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
 extern int getAngle(f32 x, f32 z);
 extern u32 randomGetRange(int min, int max);
 extern f32 getXZDistance(float *a, float *b);
@@ -437,10 +437,10 @@ void trickyGuard(int p1, int p2) {
         trickyDebugPrint(strBase + 0x648);
         *(int *)(p2 + 0x730) = fn_800DBCFC((float *)(*(int *)(p2 + 0x28)), (void *)0x0);
         *(f32 *)(p2 + 0x71c) = (f32)(*(f32 *)(*(int *)(p2 + 0x24) + 0x18) - lbl_803E247C *
-            fn_80293E80(((double)(int)*(s16 *)*(int *)(p2 + 0x24) * lbl_803E2454) / lbl_803E2458));
+            fn_80293E80(((int)*(s16 *)*(int *)(p2 + 0x24) * lbl_803E2454) / lbl_803E2458));
         *(f32 *)(p2 + 0x720) = *(f32 *)(*(int *)(p2 + 0x24) + 0x1c);
         *(f32 *)(p2 + 0x724) = (f32)(*(f32 *)(*(int *)(p2 + 0x24) + 0x20) - lbl_803E247C *
-            sin(((double)(int)*(s16 *)*(int *)(p2 + 0x24) * lbl_803E2454) / lbl_803E2458));
+            sin(((int)*(s16 *)*(int *)(p2 + 0x24) * lbl_803E2454) / lbl_803E2458));
         *(u8 *)(p2 + 0x734) = 0;
         *(u8 *)(p2 + 0xa) = 1;
         break;

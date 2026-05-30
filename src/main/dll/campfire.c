@@ -43,7 +43,7 @@ extern undefined4 FUN_80286888();
 extern undefined4 FUN_8028688c();
 extern double sqrtf();
 extern double FUN_80293900();
-extern double fn_80293E80();
+extern f32 fn_80293E80(f32 x);
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294c68();
 extern undefined4 fn_802961FC();
@@ -525,7 +525,7 @@ void kaldachom_update(int param_1)
   undefined4 uVar4;
   int iVar8;
   int iVar9;
-  double dVar10;
+  f32 dVar10;
   
   iVar9 = *(int *)(param_1 + 0xb8);
   iVar8 = *(int *)(param_1 + 0x4c);
@@ -574,8 +574,8 @@ void kaldachom_update(int param_1)
         iVar8 = *(int *)(iVar9 + 0x40c);
         piVar3 = (int *)objFindTexture(param_1,0,0);
         *(short *)(iVar8 + 0x48) = *(short *)(iVar8 + 0x48) + 0x1000;
-        dVar10 = (f64)fn_80293E80((f64)((lbl_803E30B4 * (f32)(s32)*(s16 *)(iVar8 + 0x48)) / lbl_803E30B8));
-        *piVar3 = (int)(lbl_803E30B0 * (float)((double)lbl_803E3078 + dVar10));
+        dVar10 = fn_80293E80((lbl_803E30B4 * (f32)(s32)*(s16 *)(iVar8 + 0x48)) / lbl_803E30B8);
+        *piVar3 = (int)(lbl_803E30B0 * (lbl_803E3078 + dVar10));
         uVar3 = Obj_GetPlayerObject();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;
         fn_8016855C(param_1,iVar9,iVar9);
