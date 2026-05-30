@@ -51,11 +51,80 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
             goto signed_input;
         }
 
+        goto unsigned_input;
+
+signed_input:
+        signedValue = (int)(signedValue * (entry->scale >> 1)) >> 0xf;
+        if (signedValue < -0x2000) {
+            signedValue = -0x2000;
+        } else if (signedValue > 0x1fff) {
+            signedValue = 0x1fff;
+        }
+        switch (entry->combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK) {
+        case MCMD_INPUT_COMBINE_SET:
+            result = signedValue + 0x2000;
+            signedMode = 1;
+            break;
+        case MCMD_INPUT_COMBINE_ADD:
+            if (signedMode != 0) {
+                signedValue = result + signedValue - 0x2000;
+                if (signedValue < -0x2000) {
+                    signedValue = -0x2000;
+                } else if (signedValue > 0x1fff) {
+                    signedValue = 0x1fff;
+                }
+                result = signedValue + 0x2000;
+            } else {
+                result += signedValue;
+                if ((int)result >= 0x4000) {
+                    result = 0x3fff;
+                } else if ((int)result < 0) {
+                    result = 0;
+                }
+            }
+            break;
+        case MCMD_INPUT_COMBINE_MUL:
+            if (signedMode != 0) {
+                signedValue = (int)((result - 0x2000) * signedValue) >> 0xd;
+            } else {
+                signedValue = (signedValue * result) >> 0xd;
+                signedMode = 1;
+            }
+            if (signedValue < -0x2000) {
+                signedValue = -0x2000;
+            } else if (signedValue > 0x1fff) {
+                signedValue = 0x1fff;
+            }
+            result = signedValue + 0x2000;
+            break;
+        case MCMD_INPUT_COMBINE_SUB:
+            if (signedMode != 0) {
+                signedValue = (result - 0x2000) - signedValue;
+                if (signedValue < -0x2000) {
+                    signedValue = -0x2000;
+                } else if (signedValue > 0x1fff) {
+                    signedValue = 0x1fff;
+                }
+                result = signedValue + 0x2000;
+            } else {
+                result -= signedValue;
+                if ((int)result >= 0x4000) {
+                    result = 0x3fff;
+                } else if ((int)result < 0) {
+                    result = 0;
+                }
+            }
+            break;
+        }
+
+        goto advance_entry;
+
+unsigned_input:
         if (ctrl == MCMD_CTRL_VOICE_AGE) {
             if (statePtr == NULL) {
                 ctrl = 0;
             } else {
-                ctrl = statePtr->volume >> 9;
+                ctrl = statePtr->volumeBase >> 9;
             }
         } else if (ctrl < MCMD_CTRL_VOICE_AGE) {
             if (ctrl < MCMD_CTRL_MIDI_LAYER) {
@@ -146,70 +215,6 @@ u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlo
         }
 
         goto advance_entry;
-
-signed_input:
-        signedValue = (int)(signedValue * (entry->scale >> 1)) >> 0xf;
-        if (signedValue < -0x2000) {
-            signedValue = -0x2000;
-        } else if (signedValue > 0x1fff) {
-            signedValue = 0x1fff;
-        }
-        switch (entry->combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK) {
-        case MCMD_INPUT_COMBINE_SET:
-            result = signedValue + 0x2000;
-            signedMode = 1;
-            break;
-        case MCMD_INPUT_COMBINE_ADD:
-            if (signedMode != 0) {
-                signedValue = result + signedValue - 0x2000;
-                if (signedValue < -0x2000) {
-                    signedValue = -0x2000;
-                } else if (signedValue > 0x1fff) {
-                    signedValue = 0x1fff;
-                }
-                result = signedValue + 0x2000;
-            } else {
-                result += signedValue;
-                if ((int)result >= 0x4000) {
-                    result = 0x3fff;
-                } else if ((int)result < 0) {
-                    result = 0;
-                }
-            }
-            break;
-        case MCMD_INPUT_COMBINE_MUL:
-            if (signedMode != 0) {
-                signedValue = (int)((result - 0x2000) * signedValue) >> 0xd;
-            } else {
-                signedValue = (signedValue * result) >> 0xd;
-                signedMode = 1;
-            }
-            if (signedValue < -0x2000) {
-                signedValue = -0x2000;
-            } else if (signedValue > 0x1fff) {
-                signedValue = 0x1fff;
-            }
-            result = signedValue + 0x2000;
-            break;
-        case MCMD_INPUT_COMBINE_SUB:
-            if (signedMode != 0) {
-                signedValue = (result - 0x2000) - signedValue;
-                if (signedValue < -0x2000) {
-                    signedValue = -0x2000;
-                } else if (signedValue > 0x1fff) {
-                    signedValue = 0x1fff;
-                }
-                result = signedValue + 0x2000;
-            } else {
-                result -= signedValue;
-                if ((int)result >= 0x4000) {
-                    result = 0x3fff;
-                } else if ((int)result < 0) {
-                    result = 0;
-                }
-            }
-            break;
-        }
 
 advance_entry:
         entry++;
