@@ -5500,3 +5500,54 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f)
     *(u8 **)out = base + 0x50;
     return lbl_803DCF60;
 }
+
+extern u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p5, int z);
+extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32 *a, f32 *b);
+
+u8 hitDetectFn_80067958(void *param_1, int param_2, int param_3, int param_4, void *param_5)
+{
+    f32 fVar2, fVar1;
+    f32 *pfVar5;
+    void **pfVar6;
+    s16 sVar7;
+    u8 uVar4;
+    u8 *tbl = lbl_8038DC64;
+
+    if (param_4 > 4) param_4 = 4;
+    *(u16 *)((u8 *)param_5 + 0x6c) = 0;
+
+    fVar1 = __AR_Callback;
+    fVar2 = lbl_803DECC4;
+    pfVar5 = (f32 *)param_5;
+    pfVar6 = (void **)param_5;
+    for (sVar7 = 0; sVar7 < param_4; sVar7++) {
+        pfVar5[0] = fVar1;
+        pfVar5[1] = fVar2;
+        pfVar5[2] = fVar1;
+        pfVar5[3] = fVar1;
+        pfVar6[0x17] = NULL;
+        pfVar5 += 4;
+        pfVar6 += 1;
+    }
+
+    uVar4 = hitDetect_800667ec(0,
+                (void *)(lbl_803DCF30 + *(s16 *)(tbl + 4) * 0x4c),
+                (void *)(lbl_803DCF30 + *(s16 *)(tbl + 0x1c) * 0x4c),
+                param_2, param_3, param_4, param_5, 0);
+
+    pfVar5 = (f32 *)param_5;
+    pfVar6 = (void **)param_5;
+    for (sVar7 = 0; sVar7 < param_4; sVar7++) {
+        if (pfVar6[0x17] != NULL) {
+            Obj_TransformLocalVectorByWorldMatrix((int)pfVar6[0x17], pfVar5, pfVar5);
+            if (param_1 != NULL) {
+                ObjHits_AddContactObject(pfVar6[0x17], param_1);
+            }
+        }
+        pfVar6 += 1;
+        pfVar5 += 4;
+    }
+
+    *(u8 *)((u8 *)param_5 + 0x6e) = uVar4;
+    return uVar4;
+}
