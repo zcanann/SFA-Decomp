@@ -4,6 +4,10 @@ extern f32 lbl_803E60A8;
 extern f32 lbl_803E60AC;
 extern f32 lbl_803E60B0;
 
+#define DLL_219_MOVING_OBJECT_ID 0x3a6
+#define DLL_219_OBJECT_ID_GATE 0x3ad
+#define DLL_219_UNUSED_OBJECT_ID 0x3af
+
 typedef struct Dll219State {
     s16 gameBit;
 } Dll219State;
@@ -42,28 +46,39 @@ void dll_219_free(int obj) {
 #pragma peephole off
 #pragma scheduling off
 void dll_219_update(Dll219Object *obj) {
+    u8 *setup = obj->setup;
+    Dll219State *state = obj->state;
+    s16 objectId = obj->objectId;
     f32 targetX;
     f32 loweredTargetX;
 
-    if (obj->objectId == 0x3a6) {
-        if (GameBit_Get(obj->state->gameBit) != 0) {
-            loweredTargetX = *(f32 *)(obj->setup + 0x8) - lbl_803E60A8;
-            if (obj->x > loweredTargetX) {
-                obj->x -= lbl_803E60AC;
-                targetX = *(f32 *)(obj->setup + 0x8) - lbl_803E60A8;
-                if (obj->x < targetX) {
-                    obj->x = targetX;
-                }
-                return;
-            }
+    if (objectId < DLL_219_OBJECT_ID_GATE) {
+        if (objectId != DLL_219_MOVING_OBJECT_ID) {
+            return;
         }
-        if (GameBit_Get(obj->state->gameBit) == 0) {
-            targetX = *(f32 *)(obj->setup + 0x8);
+    } else {
+        if (objectId == DLL_219_UNUSED_OBJECT_ID) {
+        }
+        return;
+    }
+
+    if ((u32)GameBit_Get(state->gameBit) != 0) {
+        loweredTargetX = *(f32 *)(setup + 0x8) - lbl_803E60A8;
+        if (obj->x > loweredTargetX) {
+            obj->x -= lbl_803E60AC;
+            targetX = *(f32 *)(setup + 0x8) - lbl_803E60A8;
             if (obj->x < targetX) {
-                obj->x += lbl_803E60B0;
-                if (obj->x > *(f32 *)(obj->setup + 0x8)) {
-                    obj->x = *(f32 *)(obj->setup + 0x8);
-                }
+                obj->x = targetX;
+            }
+            return;
+        }
+    }
+    if ((u32)GameBit_Get(state->gameBit) == 0) {
+        targetX = *(f32 *)(setup + 0x8);
+        if (obj->x < targetX) {
+            obj->x += lbl_803E60B0;
+            if (obj->x > targetX) {
+                obj->x = targetX;
             }
         }
     }
