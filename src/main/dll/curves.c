@@ -1833,98 +1833,94 @@ LAB_800e3ca0:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int RomCurve_countRandomPoints(int param_1)
+int RomCurve_countRandomPoints(RomCurveDef *curve)
 {
-  bool bVar1;
-  int iVar2;
-  int iVar3;
-  uint uVar4;
-  int iVar5;
-  int iVar6;
-  uint local_18 [4];
-  
-  iVar6 = 1;
-  do {
-    if (param_1 == 0) {
-      return iVar6;
-    }
-    bVar1 = false;
-    if ((*(int *)(param_1 + 0x1c) == -1) || ((*(byte *)(param_1 + 0x1b) & 1) != 0)) {
-      if ((*(int *)(param_1 + 0x20) == -1) || ((*(byte *)(param_1 + 0x1b) & 2) != 0)) {
-        if ((*(int *)(param_1 + 0x24) == -1) || ((*(byte *)(param_1 + 0x1b) & 4) != 0)) {
-          if ((*(int *)(param_1 + 0x28) == -1) || ((*(byte *)(param_1 + 0x1b) & 8) != 0)) {
-            bVar1 = true;
-          }
-          else {
-            bVar1 = false;
-          }
+  u32 linkIds[ROMCURVE_LINK_COUNT];
+  u32 *linkIdList;
+  u32 linkId;
+  int linkCount;
+  int count;
+  int low;
+  int high;
+  int mid;
+  RomCurveDef *nextCurve;
+
+  count = 1;
+  linkIdList = linkIds;
+  goto checkCurve;
+
+chooseNext:
+  linkCount = 0;
+  linkId = curve->linkIds[0];
+  if (((s32)linkId > -1) && ((curve->blockedLinkMask & 1) == 0) && (linkId != 0)) {
+    linkCount = 1;
+    linkIdList[0] = linkId;
+  }
+  linkId = curve->linkIds[1];
+  if (((s32)linkId > -1) && ((curve->blockedLinkMask & 2) == 0) && (linkId != 0)) {
+    linkIdList[linkCount] = linkId;
+    linkCount++;
+  }
+  linkId = curve->linkIds[2];
+  if (((s32)linkId > -1) && ((curve->blockedLinkMask & 4) == 0) && (linkId != 0)) {
+    linkIdList[linkCount] = linkId;
+    linkCount++;
+  }
+  linkId = curve->linkIds[3];
+  if (((s32)linkId > -1) && ((curve->blockedLinkMask & 8) == 0) && (linkId != 0)) {
+    linkIdList[linkCount] = linkId;
+    linkCount++;
+  }
+
+  if (linkCount == 0) {
+    linkId = ROMCURVE_LINK_ID_NONE;
+  } else {
+    linkId = linkIdList[randomGetRange(0, linkCount - 1)];
+  }
+
+  if ((s32)linkId < 0) {
+    curve = NULL;
+  } else {
+    high = nRomCurves - 1;
+    low = 0;
+    while (low <= high) {
+      mid = (high + low) >> 1;
+      nextCurve = romCurves[mid];
+      if (nextCurve->id < linkId) {
+        low = mid + 1;
+      } else {
+        if (nextCurve->id <= linkId) {
+          curve = nextCurve;
+          goto foundCurve;
         }
-        else {
-          bVar1 = false;
-        }
+        high = mid - 1;
       }
-      else {
-        bVar1 = false;
-      }
     }
-    if (bVar1) {
-      return iVar6;
-    }
-    iVar2 = 0;
-    uVar4 = *(uint *)(param_1 + 0x1c);
-    if (((-1 < (int)uVar4) && ((*(byte *)(param_1 + 0x1b) & 1) == 0)) && (uVar4 != 0)) {
-      iVar2 = 1;
-      local_18[0] = uVar4;
-    }
-    uVar4 = *(uint *)(param_1 + 0x20);
-    iVar3 = iVar2;
-    if (((-1 < (int)uVar4) && ((*(byte *)(param_1 + 0x1b) & 2) == 0)) && (uVar4 != 0)) {
-      iVar3 = iVar2 + 1;
-      local_18[iVar2] = uVar4;
-    }
-    uVar4 = *(uint *)(param_1 + 0x24);
-    iVar2 = iVar3;
-    if (((-1 < (int)uVar4) && ((*(byte *)(param_1 + 0x1b) & 4) == 0)) && (uVar4 != 0)) {
-      iVar2 = iVar3 + 1;
-      local_18[iVar3] = uVar4;
-    }
-    uVar4 = *(uint *)(param_1 + 0x28);
-    iVar3 = iVar2;
-    if (((-1 < (int)uVar4) && ((*(byte *)(param_1 + 0x1b) & 8) == 0)) && (uVar4 != 0)) {
-      iVar3 = iVar2 + 1;
-      local_18[iVar2] = uVar4;
-    }
-    if (iVar3 == 0) {
-      uVar4 = 0xffffffff;
-    }
-    else {
-      uVar4 = randomGetRange(0,iVar3 - 1);
-      uVar4 = local_18[uVar4];
-    }
-    if ((int)uVar4 < 0) {
-      param_1 = 0;
-    }
-    else {
-      iVar3 = nRomCurves + -1;
-      iVar2 = 0;
-      while (iVar2 <= iVar3) {
-        iVar5 = iVar3 + iVar2 >> 1;
-        param_1 = (int)romCurves[iVar5];
-        if (*(uint *)(param_1 + 0x14) < uVar4) {
-          iVar2 = iVar5 + 1;
-        }
-        else {
-          if (*(uint *)(param_1 + 0x14) <= uVar4) goto LAB_800e4758;
-          iVar3 = iVar5 + -1;
-        }
-      }
-      param_1 = 0;
-    }
-LAB_800e4758:
-    if (param_1 != 0) {
-      iVar6 = iVar6 + 1;
-    }
-  } while( true );
+    curve = NULL;
+  }
+
+foundCurve:
+  if (curve != NULL) {
+    count++;
+  }
+
+checkCurve:
+  if (curve == NULL) {
+    return count;
+  }
+  if ((curve->linkIds[0] != ROMCURVE_LINK_ID_NONE) && ((curve->blockedLinkMask & 1) == 0)) {
+    goto chooseNext;
+  }
+  if ((curve->linkIds[1] != ROMCURVE_LINK_ID_NONE) && ((curve->blockedLinkMask & 2) == 0)) {
+    goto chooseNext;
+  }
+  if ((curve->linkIds[2] != ROMCURVE_LINK_ID_NONE) && ((curve->blockedLinkMask & 4) == 0)) {
+    goto chooseNext;
+  }
+  if ((curve->linkIds[3] != ROMCURVE_LINK_ID_NONE) && ((curve->blockedLinkMask & 8) == 0)) {
+    goto chooseNext;
+  }
+  return count;
 }
 
 /*
