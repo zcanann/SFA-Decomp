@@ -18,7 +18,7 @@ extern void lightDistAttenFn_8001dc38(void *p, f32 a, f32 b);
 extern f32 curveFn_80010320(void *state, f32 t);
 extern s16 getAngle(f32 dx, f32 dz);
 
-extern void ObjHitbox_SetSphereRadius(int obj, s16 r);
+extern void ObjHitbox_SetSphereRadius(int obj, int r);
 extern void ObjHits_SetHitVolumeSlot(int obj, u8 slot, int a, int b);
 extern void ObjHits_DisableObject(int obj);
 extern void ObjHits_EnableObject(int obj);
@@ -48,7 +48,7 @@ extern int *gRomCurveInterface;
 
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern int lbl_802C22F8;
+extern int lbl_802C22F8[4];
 extern s16 lbl_803DBED0;
 extern s32 lbl_803DBED4;
 extern s32 lbl_803DBED8;
@@ -231,23 +231,16 @@ void SpiritDoorLock_update(int obj)
     int *state;
     int *descriptor;
     int player;
-    int *list_ptr;
-    int *piTex;
-    int i;
     int local_68;
     f32 local_58[3];
     f32 local_5c[3];
-    s16 angle;
-    s16 stride;
-    f32 max_dist;
-    int cam_state;
+
+    ((int *)local_58)[0] = lbl_802C22F8[0];
+    ((int *)local_58)[1] = lbl_802C22F8[1];
+    ((int *)local_58)[2] = lbl_802C22F8[2];
 
     state = *(int **)((char *)obj + 0xb8);
     descriptor = *(int **)((char *)obj + 0x4c);
-
-    local_58[0] = ((f32 *)&lbl_802C22F8)[0];
-    local_58[1] = ((f32 *)&lbl_802C22F8)[1];
-    local_58[2] = ((f32 *)&lbl_802C22F8)[2];
 
     player = Obj_GetPlayerObject();
 
@@ -292,6 +285,13 @@ void SpiritDoorLock_update(int obj)
             }
         }
     } else {
+        int cam_state;
+        int *list_ptr;
+        int *piTex;
+        int i;
+        s16 angle;
+        s16 stride;
+        f32 max_dist;
         cam_state = ((int (*)(void))((void **)*gCameraInterface)[4])();
         if (cam_state != 0x51) {
             Sfx_KeepAliveLoopedObjectSound(obj, 0x423);
@@ -496,11 +496,6 @@ int MMP_LevelControl_SeqFn(int obj, int p2, u8 *seq)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801A5D88: bomb-detonation routine. Takes (obj, unused). Increments
- * lbl_803DDB20, plays sfx 0x106, then spawns the appropriate explosion
- * variant (first blast has p9=1, subsequent blasts have p9=0). Latches
- * state bits, sets hitbox radius from data byte 0x62, and on player
- * proximity fires CameraShake + doRumble with linear falloff. */
 #pragma scheduling off
 #pragma peephole off
 void fn_801A5D88(int obj, int unused) {
@@ -513,19 +508,23 @@ void fn_801A5D88(int obj, int unused) {
     lbl_803DDB20 += 1;
     Sfx_PlayFromObject(obj, 0x106);
     if (lbl_803DDB20 > 1) {
+        f32 size;
         r = randomGetRange(0, 1) & 0xff;
         r2 = randomGetRange(0x32, 0x3c);
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, (f32)(int)r2);
+        size = (f32)(int)r2;
+        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 0, 0, size);
     } else {
+        f32 size;
         r = randomGetRange(0, 1) & 0xff;
         r2 = randomGetRange(0x32, 0x3c);
-        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, (f32)(int)r2);
+        size = (f32)(int)r2;
+        spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, size);
     }
     *(u8*)(state + 0x114) = 1;
     *(f32*)(state + 0x110) = lbl_803E4468;
     *(s16*)(obj + 6) = (s16)(*(s16*)(obj + 6) | 0x4000);
     ObjHitbox_SetSphereRadius(obj,
-        (s16)(s32)(lbl_803E446C * (f32)(u32) * (u8*)(*(int*)(obj + 0x50) + 0x62)));
+        (s32)(lbl_803E446C * (f32)(u32) * (u8*)(*(int*)(obj + 0x50) + 0x62)));
     player = (int)Obj_GetPlayerObject();
     if ((*(u16*)(player + 0xb0) & 0x1000) == 0) {
         dist = Vec_distance((f32*)(obj + 0x18), (f32*)(player + 0x18));
