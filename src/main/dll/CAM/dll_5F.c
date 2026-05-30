@@ -491,10 +491,12 @@ void fn_8010BF08(int control, float *outX, float *outY, float *outZ, void *inFlo
       *outZ = dz - *(float *)(cameraObj + 0x20);
     }
   } else {
-    u8 ti = *(u8 *)(settings + 0xe4);
-    *outX = *(float *)((char *)paths + ti * 0x18 + 0xc) - *(float *)(cameraObj + 0x18);
-    *outY = *(float *)((char *)paths + ti * 0x18 + 0x10) - *(float *)inFloatPtr;
-    *outZ = *(float *)((char *)paths + ti * 0x18 + 0x14) - *(float *)(cameraObj + 0x20);
+    *outX = *(float *)((char *)paths + (u32)*(u8 *)(settings + 0xe4) * 0x18 + 0xc) -
+            *(float *)(cameraObj + 0x18);
+    *outY = *(float *)((char *)paths + (u32)*(u8 *)(settings + 0xe4) * 0x18 + 0x10) -
+            *(float *)inFloatPtr;
+    *outZ = *(float *)((char *)paths + (u32)*(u8 *)(settings + 0xe4) * 0x18 + 0x14) -
+            *(float *)(cameraObj + 0x20);
   }
   *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x14) = *(u8 *)(settings + 0xe4);
 }
