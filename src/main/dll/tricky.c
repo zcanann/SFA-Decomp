@@ -2081,3 +2081,99 @@ void GameUI_airMeterRun(int v) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 cMenuEnabled;
+extern u16 curGameText;
+extern s16 lbl_803DD8D0;
+extern u8 lbl_803DD7A8;
+extern s16 lbl_803DD778;
+extern int lbl_803DD730;
+extern s16 lbl_803DD770;
+extern f32 lbl_803DD760;
+extern int lbl_803A9410[];
+extern u8 lbl_803DD75B;
+extern s16 lbl_803DD772;
+extern u8 pauseMenuFrameCounter;
+extern void Obj_FreeObject(int *obj);
+#pragma scheduling off
+#pragma peephole off
+void gameUiResetMenuState(void) {
+    int i;
+    cMenuEnabled = 0;
+    curGameText = 0xffff;
+    lbl_803DD8D0 = 0;
+    lbl_803DD7A8 = 0;
+    GameUI_airMeterShutdown();
+    pauseMenuState = 0;
+    lbl_803DD778 = 0;
+    lbl_803DD730 = 0;
+    lbl_803DD770 = 0;
+    lbl_803DD760 = lbl_803E1E3C;
+    {
+        int **p = (int **)lbl_803A9410;
+        for (i = 0; i < 4; i++, p++) {
+            if (*p != NULL) {
+                ((int *)(*p)[0x19])[1] = 0;
+                ((int *)(*p)[0x19])[2] = 0;
+                if ((u32)(*p)[0x13] > 0x90000000) (*p)[0x13] = 0;
+                Obj_FreeObject(*p);
+                *p = NULL;
+            }
+        }
+    }
+    lbl_803DD75A = 0;
+    lbl_803DD75B = 0;
+    lbl_803DD772 = 0;
+    pauseMenuFrameCounter = 0x3c;
+    lbl_803DD792 = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E1E68;
+#pragma scheduling off
+#pragma peephole off
+void GameUI_airMeterInitType0(int a, int b, int c) {
+    int *m;
+    if (airMeter != NULL) return;
+    m = (int *)mmAlloc(0x48, 0x19, 0);
+    memset(m, 0, 0x48);
+    m[0] = 0;
+    m[1] = a;
+    m[0xb] = (int)textureLoadAsset(b);
+    m[0xc] = (int)textureLoadAsset(c);
+    m[4] = *(u16 *)((char *)m[0xb] + 0xa);
+    m[5] = *(u16 *)((char *)m[0xb] + 0xc);
+    airMeter = m;
+    *(u8 *)((char *)m + 0x18) = 0;
+    *(f32 *)((char *)m + 0x24) = lbl_803E1E68;
+    m[0x10] = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int lbl_8031B5D8[];
+#pragma scheduling off
+#pragma peephole off
+void GameUI_func14(s16 a, int b, int c) {
+    int *entry = lbl_8031B5D8;
+    lbl_803A9398[0] = 0;
+    while (*(void **)entry != NULL) {
+        s16 *row = (s16 *)*entry;
+        while (row[0] != -1) {
+            if (row[0] == a) {
+                lbl_803A9398[0] = (int)textureLoadAsset(row[3]);
+                break;
+            }
+            row += 8;
+        }
+        entry = (int *)((char *)entry + 0x10);
+    }
+    if (*(void **)lbl_803A9398 != NULL) {
+        lbl_803A9398[1] = b;
+        *(s16 *)((char *)lbl_803A9398 + 0xc) = (s16)c;
+        *(f32 *)((char *)lbl_803A9398 + 0x8) = lbl_803E1E3C;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

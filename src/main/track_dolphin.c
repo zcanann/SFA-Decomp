@@ -341,6 +341,7 @@ extern f32 lbl_803DF8B8;
 extern f32 lbl_803DF8BC;
 extern f32 lbl_803DF8C0;
 extern f32 lbl_803DF8D0;
+extern f32 lbl_803DEC50;
 extern f32 lbl_803DF8D8;
 extern f32 lbl_803DF8E8;
 extern f32 lbl_803DF8EC;
@@ -4568,4 +4569,40 @@ void mapInitFn_80069990(void)
     lbl_803DCF5C = 0;
     lbl_803DCF4E = 0;
     lbl_803DCF4F = 0;
+}
+
+void fn_8006058C(short *param_1, float *param_2)
+{
+  int iVar1;
+  int iVar2;
+
+  iVar1 = (int)(lbl_803DEC50 * param_2[1]);
+  iVar2 = (int)(lbl_803DEC50 * param_2[2]);
+  *param_1 = (short)(int)(lbl_803DEC50 * *param_2);
+  param_1[1] = (short)iVar1;
+  param_1[2] = (short)iVar2;
+}
+
+void vecGetRanges(f32 *pts, f32 *base, int *out, f32 scale)
+{
+  int i;
+
+  out[0] = 0x7fffffff;
+  out[3] = 0x80000000;
+  out[1] = 0x7fffffff;
+  out[4] = 0x80000000;
+  out[2] = 0x7fffffff;
+  out[5] = 0x80000000;
+  for (i = 0; i < 8; i++) {
+    f32 x = scale * pts[0] + base[0];
+    f32 y = scale * pts[1] + base[1];
+    f32 z = scale * pts[2] + base[2];
+    if (x < (f32)out[0]) out[0] = (int)x;
+    if (x > (f32)out[3]) out[3] = (int)x;
+    if (y < (f32)out[1]) out[1] = (int)y;
+    if (y > (f32)out[4]) out[4] = (int)y;
+    if (z < (f32)out[2]) out[2] = (int)z;
+    if (z > (f32)out[5]) out[5] = (int)z;
+    pts += 3;
+  }
 }
