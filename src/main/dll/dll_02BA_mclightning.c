@@ -1,7 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#pragma peephole on
-#pragma scheduling on
+#pragma peephole off
+#pragma scheduling off
 int mclightning_handleScriptEvents(int obj, int eventId, u8 *script) {
     int state = *(int *)(obj + 0xb8);
     int i;
