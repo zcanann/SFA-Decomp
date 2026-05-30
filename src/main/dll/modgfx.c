@@ -6290,7 +6290,7 @@ extern void _textSetColor(void *ctx, int r, int g, int b, int a);
 extern void selectTexture(void *tex, int slot);
 extern void drawFn_8005cf8c(void *a, void *b, int count);
 extern f32 sqrtf(f32 x);
-extern s16 getAngle(f32 dx, f32 dz);
+extern int getAngle(f32 dx, f32 dz);
 extern void mathFn_80021ac8(void *obj, f32 *vec);
 extern void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex);
 extern void setMatrixFromObjectPos(f32 *mtx, s16 *src);
@@ -6334,7 +6334,7 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
     void *view;
     void *buf1;
     void *buf2;
-    int aligned;
+    u8 aligned;
     void *tex;
     int texCount;
     int n131;
@@ -6360,15 +6360,15 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
         if (*p == NULL) continue;
         if (*(s16 *)((char *)*p + 0x10c) == -1) continue;
         if (a3) {
-            if ((*(u32 *)((char *)*p + 0xa4) & 0x2000) == 0) continue;
+            if ((*(int *)((char *)*p + 0xa4) & 0x2000) == 0) continue;
         }
         if (a3) {
             if (*(void **)((char *)*p + 4) != a4) continue;
         }
         if (!a3) {
-            if (*(u32 *)((char *)*p + 0xa4) & 0x2000) continue;
+            if (*(int *)((char *)*p + 0xa4) & 0x2000) continue;
         }
-        if (*(u32 *)((char *)*p + 0xa4) & 0x800) {
+        if (*(int *)((char *)*p + 0xa4) & 0x800) {
             *(u8 *)((char *)*p + 0x13e) = 0;
         }
         aligned = 0;
@@ -6383,7 +6383,7 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
         pos[0] = *(f32 *)((char *)*p + 0x60);
         pos[1] = *(f32 *)((char *)*p + 0x64);
         pos[2] = *(f32 *)((char *)*p + 0x68);
-        if (*(u32 *)((char *)*p + 0xa4) & 0x4) {
+        if (*(int *)((char *)*p + 0xa4) & 0x4) {
             if (lbl_803DF430 == pos[2] + (pos[0] + pos[1])) {
                 aligned = 1;
             }
@@ -6399,7 +6399,7 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
         rot[0] = lbl_803DF430;
         rot[1] = lbl_803DF430;
         rot[2] = lbl_803DF430;
-        if ((*(u32 *)((char *)*p + 0xa4) & 1) == 0) {
+        if ((*(int *)((char *)*p + 0xa4) & 1) == 0) {
             if (*(void **)((char *)*p + 4) != NULL) {
                 rot[0] = *(f32 *)(*(char **)((char *)*p + 4) + 0x18);
                 rot[1] = *(f32 *)(*(char **)((char *)*p + 4) + 0x1c);
@@ -6423,13 +6423,13 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
         xf.pos[0] = rot[0] + pos[0];
         xf.pos[1] = rot[1] + pos[1];
         xf.pos[2] = rot[2] + pos[2];
-        if (*(u32 *)((char *)*p + 0xa4) & 0x400000) {
+        if (*(int *)((char *)*p + 0xa4) & 0x400000) {
             dscale = lbl_803DF458 * *(f32 *)((char *)*p + 0xd4);
             xf.scale = dscale + dscale / (f32)randomGetRange(1, 10);
         } else {
             xf.scale = lbl_803DF45C * *(f32 *)((char *)*p + 0xd4);
         }
-        if (*(u32 *)((char *)*p + 0xa4) & 0x80000) {
+        if (*(int *)((char *)*p + 0xa4) & 0x80000) {
             xf.ang[2] = *(s16 *)(*(char **)((char *)*p + 4) + 4);
             xf.ang[1] = *(s16 *)(*(char **)((char *)*p + 4) + 2);
             xf.ang[0] = *(s16 *)(*(char **)((char *)*p + 4));
@@ -6446,7 +6446,7 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
             xf.ang[1] = *(s16 *)((char *)*p + 0x108);
             xf.ang[0] = *(s16 *)((char *)*p + 0x10a);
         }
-        if (*(u32 *)((char *)*p + 0xa4) & 0x1000) {
+        if (*(int *)((char *)*p + 0xa4) & 0x1000) {
             if (*(void **)((char *)*p + 4) != NULL) {
                 dirX = *(f32 *)((char *)view + 0x44) - *(f32 *)(*(char **)((char *)*p + 4) + 0x18);
                 dirZ = *(f32 *)((char *)view + 0x4c) - *(f32 *)(*(char **)((char *)*p + 4) + 0x20);
@@ -6478,9 +6478,9 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
                 }
             }
         }
-        if (*(u32 *)((char *)*p + 0xa4) & 0x8) {
+        if (*(int *)((char *)*p + 0xa4) & 0x8) {
             setTextColor(a0, ar, ag, ab, 0xff);
-        } else if (*(void **)((char *)*p + 4) != NULL && (*(u32 *)((char *)*p + 0xa4) & 0x4000)) {
+        } else if (*(void **)((char *)*p + 4) != NULL && (*(int *)((char *)*p + 0xa4) & 0x4000)) {
             setTextColor(a0, 0xff, 0xff, 0xff, *(u8 *)(*(char **)((char *)*p + 4) + 0x37));
         } else {
             setTextColor(a0, 0xff, 0xff, 0xff, 0xff);
@@ -6493,8 +6493,8 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
                 n131p1 = 0;
             }
         }
-        if (*(u32 *)((char *)*p + 0xa4) & 0x1000000) {
-            if (*(u8 *)((char *)*p + 0x13e) != 0 || (*(u32 *)((char *)*p + 0xa4) & 0x400)) {
+        if (*(int *)((char *)*p + 0xa4) & 0x1000000) {
+            if (*(u8 *)((char *)*p + 0x13e) != 0 || (*(int *)((char *)*p + 0xa4) & 0x400)) {
                 int j;
                 for (j = 0; j < (u8)n131p1; j++) {
                     tex = *(void **)tex;
@@ -6507,18 +6507,18 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
                 textRenderSetupFn_80079804();
                 selectTexture(tex, 1);
             }
-        } else if (*(u32 *)((char *)*p + 0xa4) & 0x2000000) {
+        } else if (*(int *)((char *)*p + 0xa4) & 0x2000000) {
             textureSetupFn_800799c0();
             fn_80078ED0();
             textRenderSetupFn_80079804();
-        } else if (*(u32 *)((char *)*p + 0xa4) & 0x4000000) {
+        } else if (*(int *)((char *)*p + 0xa4) & 0x4000000) {
             textureSetupFn_800799c0();
             geomDrawFn_800796f0();
             gxTexColorFn_80079254();
             textRenderSetupFn_80079804();
         }
-        if (*(u32 *)((char *)*p + 0xa4) & 0x05000000) {
-            if (*(u8 *)((char *)*p + 0x13e) != 0 || (*(u32 *)((char *)*p + 0xa4) & 0x400)) {
+        if (*(int *)((char *)*p + 0xa4) & 0x05000000) {
+            if (*(u8 *)((char *)*p + 0x13e) != 0 || (*(int *)((char *)*p + 0xa4) & 0x400)) {
                 int j;
                 tex = *(void **)((char *)*p + 0x98);
                 for (j = 0; j < (u8)n131; j++) {
@@ -6527,32 +6527,32 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
                 selectTexture(tex, 0);
             }
         }
-        if (*(u32 *)((char *)*p + 0xa4) & 0x100) {
+        if (*(int *)((char *)*p + 0xa4) & 0x100) {
             gxBlendFn_80078b4c();
-        } else if ((*(u32 *)((char *)*p + 0xa4) & 0x10) && (*(u32 *)((char *)*p + 0xa4) & 0x80)) {
+        } else if ((*(int *)((char *)*p + 0xa4) & 0x10) && (*(int *)((char *)*p + 0xa4) & 0x80)) {
             textBlendSetupFn_80078a7c();
-        } else if (*(u32 *)((char *)*p + 0xa4) & 0x80) {
+        } else if (*(int *)((char *)*p + 0xa4) & 0x80) {
             gxBlendFn_80078b4c();
-        } else if (*(u32 *)((char *)*p + 0xa4) & 0x10) {
+        } else if (*(int *)((char *)*p + 0xa4) & 0x10) {
             textBlendSetupFn_80078a7c();
         } else {
             gxBlendFn_80078b4c();
         }
-        if (*(u32 *)((char *)*p + 0xa4) & 0x40) {
+        if (*(int *)((char *)*p + 0xa4) & 0x40) {
             GXSetCullMode(1);
         } else {
             GXSetCullMode(0);
         }
-        if (*(u8 *)((char *)*p + 0x13e) != 0 || (*(u32 *)((char *)*p + 0xa4) & 0x400)) {
+        if (*(u8 *)((char *)*p + 0x13e) != 0 || (*(int *)((char *)*p + 0xa4) & 0x400)) {
             int di;
             for (di = 0; di < (u8)*(u8 *)((char *)*p + 0x136); di++) {
-                if (*(u32 *)((char *)*p + 0xa4) & 0x8000000) {
+                if (*(int *)((char *)*p + 0xa4) & 0x8000000) {
                     drawFn_8005cf8c(buf1, buf2, *(s16 *)((char *)*p + 0xec) / (u8)*(u8 *)((char *)*p + 0x136));
                 } else {
                     drawFn_8005cf8c(buf1, buf2, *(s16 *)((char *)*p + 0xec));
                 }
                 buf1 = (char *)buf1 + ((u8)*(u8 *)((char *)*p + 0x137) << 4);
-                if (*(u32 *)((char *)*p + 0xa4) & 0x8000000) {
+                if (*(int *)((char *)*p + 0xa4) & 0x8000000) {
                     buf2 = (char *)buf2 + ((*(s16 *)((char *)*p + 0xec) / (u8)*(u8 *)((char *)*p + 0x136)) << 4);
                 }
             }
