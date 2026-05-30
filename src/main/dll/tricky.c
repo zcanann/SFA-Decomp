@@ -2791,3 +2791,133 @@ int fn_8011E0D8(int *this, int *p2, int p3) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *getTrickyObject(void);
+extern int objIsCurModelNotZero(int *obj);
+extern int coordsToMapCell(f32 x, f32 z);
+extern int fn_802972A8(int *player);
+extern void drawPartialTexture(void *tex, f32 x, f32 y, int alpha, int p5, int p6, int p7, int p8, int p9);
+extern void hudDrawCounter(int id, int a, int b, int c, int d, int *e, int f);
+extern int *gCameraInterface;
+extern s16 cMenuFadeCounter;
+extern f32 lbl_803DD844, lbl_803DD83C;
+extern f32 lbl_803E1FA8, lbl_803E1FAC, lbl_803E1FB0, lbl_803E1FB4, lbl_803E1F98;
+extern f32 timeDelta;
+#pragma scheduling off
+#pragma peephole off
+void hudDrawFn_80121440(void) {
+    char *base = lbl_803A87F0;
+    int *player, *tricky;
+    int itemTex = 0;
+    int hcArg = 0;
+    int krazoa = 0;
+    int alpha;
+    int magicId;
+    int i;
+    f32 op;
+    player = (int *)Obj_GetPlayerObject();
+    tricky = (int *)getTrickyObject();
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    if (*(f32 *)(base + 0xafc) >= lbl_803E1E3C || *(f32 *)(base + 0xb18) >= lbl_803E1E3C ||
+        *(f32 *)(base + 0xb10) >= lbl_803E1E3C || cMenuFadeCounter != 0)
+        op = hudElementOpacity;
+    else
+        op = lbl_803E1E3C;
+    if (op > lbl_803DD844) {
+        lbl_803DD844 = lbl_803E1FA0 * timeDelta + lbl_803DD844;
+        if (lbl_803DD844 > hudElementOpacity) lbl_803DD844 = hudElementOpacity;
+    } else if (op < lbl_803DD844) {
+        lbl_803DD844 = lbl_803DD844 - lbl_803E1FA0 * timeDelta;
+        if (lbl_803DD844 < lbl_803E1E3C) lbl_803DD844 = lbl_803E1E3C;
+    }
+    alpha = (int)lbl_803DD83C;
+    if ((u8)alpha != 0) {
+        int cell = coordsToMapCell(*(f32 *)((char *)player + 0xc), *(f32 *)((char *)player + 0x14));
+        if (!(*(f32 *)(base + 0xafc) > lbl_803E1F9C && *(f32 *)(base + 0xafc) < lbl_803E1FA8 &&
+              ((int)*(f32 *)(base + 0xafc) & 8)) &&
+            !(*(f32 *)(base + 0xb18) > lbl_803E1F9C && *(f32 *)(base + 0xb18) < lbl_803E1FA8 &&
+              ((int)*(f32 *)(base + 0xb18) & 8)) &&
+            !(cell == 0 && fn_802972A8(player) != 0)) {
+            for (i = 0; (int)(u8)i < (*(int *)(base + 0xb90) >> 2); i++) {
+                int b74 = *(int *)(base + 0xb74);
+                int sel;
+                if ((int)(u8)i < (b74 >> 2)) sel = 0x16;
+                else if ((int)(u8)i > (b74 >> 2)) sel = 0x12;
+                else sel = (b74 & 3) + 0x12;
+                drawTexture(*(void **)(base + 0x1c0 + (u8)sel * 4),
+                            (f32)(int)((u8)i * 0x21 + 0x1e), lbl_803E1FAC, alpha, 0x100);
+            }
+        }
+    }
+    if ((u8)alpha != 0 && objIsCurModelNotZero(player) != 0 && GameBit_Get(0xeb1) != 0) {
+        hudDrawMagicBar(alpha, 0x100, 0);
+    }
+    krazoa = 0;
+    if (playerHasKrazoaSpirit(1, 0) != 0) krazoa = 1;
+    magicId = 0;
+    if (GameBit_Get(0x123) != 0 || GameBit_Get(0x83b) != 0) magicId = 0x63;
+    else if (GameBit_Get(0x2e8) != 0 || GameBit_Get(0x83c) != 0) magicId = 0x64;
+    if ((u8)magicId != 0) {
+        drawTexture(*(void **)(base + 0x1c0 + (u8)magicId * 4),
+                    (f32)(int)(s16)(krazoa ? 0x104 : 0x122), lbl_803E1FAC, alpha, 0x100);
+    }
+    if ((u8)krazoa != 0) {
+        drawTexture(*(void **)(base + 0x348),
+                    (f32)(int)(s16)((u8)magicId ? 0x140 : 0x122), lbl_803E1FAC, alpha, 0x100);
+    }
+    if ((u8)alpha != 0 && tricky != NULL) {
+        itemTex = 0x16;
+        if (!(*(f32 *)(base + 0xb20) > lbl_803E1F9C && *(f32 *)(base + 0xb20) < lbl_803E1FA8 &&
+              ((int)*(f32 *)(base + 0xb20) & 8))) {
+            drawTexture(*(void **)(base + 0x314), lbl_803E1F9C, lbl_803E1FB0, alpha, 0x100);
+        }
+        for (i = 0; (int)(u8)i < 0x14; i += 4) {
+            int b98 = *(int *)(base + 0xb98);
+            if ((b98 & 0xfc) == (int)(u8)i && (b98 & 2) != 0) {
+                int yo = ((u8)i * 0xf) / 4;
+                drawScaledTexture(*(void **)(base + 0x31c), (f32)(int)(yo + 0x40), lbl_803E1FB4,
+                                  alpha, 0x100, 6, 0x12, 0);
+                drawPartialTexture(*(void **)(base + 0x318), (f32)(int)(yo + 0x46), lbl_803E1FB4,
+                                   alpha, 0x100, 7, 0x12, 6, 0);
+            } else {
+                int sel = (b98 > (int)(u8)i) ? 0x57 : 0x56;
+                int yo = ((u8)i * 0xf) / 4;
+                drawTexture(*(void **)(base + 0x1c0 + (u8)sel * 4), (f32)(int)(yo + 0x40),
+                            lbl_803E1FB4, alpha, 0x100);
+            }
+        }
+    }
+    {
+        int camMode = (*(int (**)(void))(*(int *)gCameraInterface + 0x10))();
+        if (camMode >= 0x47 && camMode < 0x49) {
+            drawTexture(*(void **)(base + 0x354), lbl_803E1F9C,
+                        (f32)(int)((s8)itemTex + 0x5f), alpha, 0x100);
+        }
+    }
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    if (lbl_803DD75A != 0) {
+        int c0 = 0, c1 = 0, c2 = 0;
+        f32 radius = lbl_803E1F98;
+        int *near;
+        near = (int *)ObjGroup_FindNearestObject(9, Obj_GetPlayerObject(), &radius);
+        if (near != NULL && pauseMenuState == 0) {
+            (*(void (*)(int *, int *, int *))(*(int *)(*(int *)((char *)near + 0x68)) + 0x54))(&c2, &c1, &c0);
+            hcArg = 0x118;
+            hudDrawCounter(0x1e, (s16)(c1 - c2), (s16)c0, 0xff, 0, &hcArg, 1);
+        }
+    } else {
+        int style;
+        if (GameBit_Get(0x91b) != 0) style = 0xc8;
+        else if (GameBit_Get(0x91a) != 0) style = 0x64;
+        else if (GameBit_Get(0x919) != 0) style = 0x32;
+        else style = 0xa;
+        hudDrawCounter(0x1e, (s16)*(int *)(base + 0xb80), (s16)style, (int)*(f32 *)(base + 0xad4), (int)*(f32 *)(base + 0xb08), &hcArg, 0);
+        hudDrawCounter(0x19, (s16)*(int *)(base + 0xb84), 7, (int)*(f32 *)(base + 0xad8), (int)*(f32 *)(base + 0xb0c), &hcArg, 0);
+        hudDrawCounter(0x1a, (s16)*(int *)(base + 0xb78), 0xf, (int)*(f32 *)(base + 0xacc), (int)*(f32 *)(base + 0xb00), &hcArg, 0);
+        hudDrawCounter(0x18, (s16)*(int *)(base + 0xb9c), 0x1f, (int)*(f32 *)(base + 0xaf0), (int)*(f32 *)(base + 0xb24), &hcArg, 0);
+        hudDrawCounter(0x1b, (s16)*(int *)(base + 0xba0), 7, (int)*(f32 *)(base + 0xaf4), (int)*(f32 *)(base + 0xb28), &hcArg, 0);
+        hudDrawCounter(0x1c, (s16)*(int *)(base + 0xba4), 0xff, (int)*(f32 *)(base + 0xaf8), (int)*(f32 *)(base + 0xb2c), &hcArg, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
