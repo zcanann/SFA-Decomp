@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/DR/DRpushcart.h"
 
 extern undefined4 FUN_80006824();
@@ -404,8 +405,7 @@ void fn_801E7DC8(int p1, int p2, int count)
 
   if (Obj_IsLoadingLocked() == 0) return;
 
-  (**(void (**)(int, int, int))((char *)(*gMapEventInterface) + 0x50))(
-      (s32)(s8)*(u8 *)(p1 + 0xac), 6, 1);
+  ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s32)(s8)*(u8 *)(p1 + 0xac), 6, 1);
 
   hitDetectFn_800658a4(p1, &local, 0, *(f32 *)(p1 + 0xc), *(f32 *)(p1 + 0x10), *(f32 *)(p1 + 0x14));
 

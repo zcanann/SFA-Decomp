@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/mapEvent.h"
 
 int ktrex_stateHandlerA00(void) { return 0x0; }
 
@@ -1448,15 +1449,15 @@ int ktrex_stateHandlerA01(int obj, int runtime) {
         *(u8 *)((char *)obj + 0xad) = 1;
         GameBit_Set(1380, 1);
         GameBit_Set(874, 0);
-        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(13, 0, 1);
-        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(13, 1, 1);
-        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(13, 5, 1);
-        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(13, 10, 1);
-        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(13, 11, 1);
+        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(13, 0, 1);
+        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(13, 1, 1);
+        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(13, 5, 1);
+        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(13, 10, 1);
+        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(13, 11, 1);
         GameBit_Set(3589, 0);
         unlockLevel(53, 1, 0);
         GameBit_Set(2107, 1);
-        (*(void (**)(int, int))((char *)*gMapEventInterface + 0x44))(4, 2);
+        ((MapEventInterface *)*gMapEventInterface)->setMode(4, 2);
     }
     return 0;
 }

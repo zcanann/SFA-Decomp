@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/IM/IMicicle.h"
 
 
@@ -1531,9 +1532,9 @@ void cflevelcontrol_update(int obj) {
         state[0xc] = (u8)(state[0xc] & ~0x08);
     }
 
-    if (((u8 (*)(int))(*(int *)(*gMapEventInterface + 0x40)))(0x1d) == 1 &&
+    if (((MapEventInterface *)*gMapEventInterface)->getMode(0x1d) == 1 &&
         GameBit_Get(0x40) != 0) {
-        ((void (*)(int, int))(*(int *)(*gMapEventInterface + 0x44)))(0x1d, 2);
+        ((MapEventInterface *)*gMapEventInterface)->setMode(0x1d, 2);
     }
 
     bit974 = (u8)GameBit_Get(0x974);
