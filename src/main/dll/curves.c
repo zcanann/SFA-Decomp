@@ -4586,8 +4586,9 @@ typedef struct SaveData {
 extern SaveData saveData;
 void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
 {
-  SaveData *save;
+  volatile SaveData *save;
   u32 registeredDebugOptions;
+  u32 enabledDebugOptions;
   u32 mask;
 
   save = &saveData;
@@ -4600,8 +4601,9 @@ void saveFileStruct_setCheatActive(uint optionIndex, u8 active)
     save->enabledDebugOptions |= mask;
   }
   else {
+    enabledDebugOptions = save->enabledDebugOptions;
     mask = ~mask;
-    save->enabledDebugOptions &= mask;
+    save->enabledDebugOptions = enabledDebugOptions & mask;
   }
 }
 
@@ -4740,23 +4742,28 @@ void saveFileStruct_unlockCheat(u8 idx) {
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 int saveFileStruct_isCheatActive(u8 idx)
 {
-  SaveData *save;
+  volatile SaveData *save;
   u32 registeredDebugOptions;
   u32 mask;
+  u32 enabledDebugOptions;
 
   save = &saveData;
   registeredDebugOptions = save->registeredDebugOptions;
   mask = 1 << idx;
-  if ((registeredDebugOptions & mask) == 0) {
-    return 0;
+  if ((registeredDebugOptions & mask) != 0) {
+    enabledDebugOptions = save->enabledDebugOptions;
+    if ((enabledDebugOptions & mask) != 0) {
+      return 1;
+    }
   }
-  if ((save->enabledDebugOptions & mask) == 0) {
-    return 0;
-  }
-  return 1;
+  return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* curves_findByAction: scan romCurves for matching action curves, return curve id. */
 #pragma scheduling off
