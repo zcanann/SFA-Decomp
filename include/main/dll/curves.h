@@ -90,6 +90,7 @@ void dll_15_func06(void);
 void FUN_800e65c8(uint *param_1,byte param_2,uint param_3,uint param_4,undefined param_5,
                  undefined param_6);
 void curves_clear(uint *param_1,int param_2,uint param_3,int param_4);
+int pushable_savePos(int obj);
 uint playerHasKrazoaSpirit(u8 checkStoryBits,uint bit);
 void saveFileStruct_setCheatActive(uint param_1,u8 param_2);
 

@@ -4635,6 +4635,40 @@ void* getSaveFileStruct(void) { return &saveData; }
 extern u8 lbl_803A32A8[];
 void* getLastSavedGameTexts(void) { return lbl_803A32A8 + 0x558; }
 
+#define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
+#define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
+
+typedef struct CurvesSaveGameObjectPosition {
+  u32 objectId;
+  f32 x;
+  f32 y;
+  f32 z;
+} CurvesSaveGameObjectPosition;
+
+int pushable_savePos(int obj)
+{
+  int i;
+  CurvesSaveGameObjectPosition *position;
+  u32 objectId;
+
+  for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++) {
+    position = (CurvesSaveGameObjectPosition *)(lbl_803A32A8 + SAVEGAME_OBJECT_POSITION_OFFSET +
+                                                i * sizeof(CurvesSaveGameObjectPosition));
+    objectId = *(u32 *)(*(u32 *)(obj + 0x4c) + 0x14);
+    if (objectId == position->objectId) {
+      if ((*(f32 *)(obj + 0xc) == position->x) && (*(f32 *)(obj + 0x10) == position->y) &&
+          (*(f32 *)(obj + 0x14) == position->z)) {
+        return 0;
+      }
+      *(f32 *)(obj + 0xc) = position->x;
+      *(f32 *)(obj + 0x10) = position->y;
+      *(f32 *)(obj + 0x14) = position->z;
+      return 1;
+    }
+  }
+  return 0;
+}
+
 /* RomCurve_getCurves: *outCount = nRomCurves; return romCurves. */
 #pragma scheduling off
 #pragma peephole off
