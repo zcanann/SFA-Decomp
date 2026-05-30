@@ -3080,3 +3080,46 @@ void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f
     }
     objAudioFn_8006ef38(p1, buf, p5, p6, p7, f1, f2);
 }
+
+extern int getHudHiddenFrameCount(void);
+extern f32 timeDelta;
+extern int *Camera_GetCurrentViewSlot(void);
+extern u8 framesThisStep;
+extern f32 Udchuff_803DEDA0[];
+extern double floor(double);
+extern void fn_80060BB0(void);
+extern u8 lbl_803DCF80;
+extern int isHeavyFogEnabled(void);
+extern f32 *Camera_GetInverseViewMatrix(void);
+extern void fn_8004C234(f32 *a, f32 *b);
+extern f32 Dev_803DED1C;
+extern void fn_80069EB8(void);
+extern u16 lbl_803DCFA0;
+#pragma scheduling off
+void maybeHudFn_8006c91c(void) {
+    f32 lo, hi;
+    if (getHudHiddenFrameCount() == 0) {
+        f32 d = timeDelta;
+        lbl_803DCFAC = Ydchuff_803DED80[5] * d + lbl_803DCFAC;
+        lbl_803DCFA8 = Ydchuff_803DED80[6] * d + lbl_803DCFA8;
+        if (lbl_803DCFAC > Ydchuff_803DED80[7]) lbl_803DCFAC = lbl_803DCFAC - Ydchuff_803DED80[7];
+        if (lbl_803DCFA8 > Ydchuff_803DED80[7]) lbl_803DCFA8 = lbl_803DCFA8 - Ydchuff_803DED80[7];
+    }
+    lbl_803DCF78 = 0;
+    lbl_803DCFE8 = Camera_GetCurrentViewSlot();
+    lbl_803DCFA0 = (u16)(lbl_803DCFA0 + framesThisStep * 0x28a);
+    lbl_803DCFA4 = Udchuff_803DEDA0[0] *
+        floor(Udchuff_803DEDA0[1] * (f32)(u32)lbl_803DCFA0 / Udchuff_803DEDA0[2]);
+    fn_80060BB0();
+    lbl_803DCF8C = (lbl_803DCF8C + 1) % 3;
+    if (isHeavyFogEnabled()) {
+        f32 z = Camera_GetInverseViewMatrix()[7];
+        int v;
+        fn_8004C234(&hi, &lo);
+        if (z >= hi) v = 0;
+        else if (z <= lo) v = 0x40;
+        else v = (int)(Dev_803DED1C * (hi - z) / (hi - lo));
+        if ((u8)v != lbl_803DCF80) fn_80069EB8();
+    }
+}
+#pragma scheduling reset
