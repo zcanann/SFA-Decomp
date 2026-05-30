@@ -1,5 +1,37 @@
 #include "main/dll/WM/wm_shared.h"
 
+typedef struct WmPlanetsState {
+    s16 orbitYawStep;
+    s16 yawStep;
+    s16 orbitYaw;
+    s16 pad06;
+    s16 orbitPitch;
+    s16 pad0A;
+    f32 heightOffset;
+    f32 baseX;
+    f32 baseY;
+    f32 baseZ;
+} WmPlanetsState;
+
+typedef struct WmPlanetsRotationWork {
+    s16 yaw;
+    s16 pitch;
+    s16 roll;
+    s16 pad06;
+    f32 scale;
+    f32 zeroX;
+    f32 zeroY;
+    f32 zeroZ;
+} WmPlanetsRotationWork;
+
+typedef union WmPlanetsVector {
+    f32 f[3];
+    u32 word[3];
+} WmPlanetsVector;
+
+extern void mathFn_80021ac8(void *angles, void *outVec);
+extern u32 lbl_802C2500[3];
+
 int wmplanets_getExtraSize(void) { return 0x1c; }
 
 int wmplanets_getObjectTypeId(void) { return 0x0; }
@@ -11,6 +43,47 @@ void wmplanets_hitDetect(void) {}
 void wmplanets_release(void) {}
 
 void wmplanets_initialise(void) {}
+
+#pragma peephole off
+#pragma scheduling off
+void wmplanets_update(int *obj) {
+    WmPlanetsState *state;
+    WmPlanetsVector vec;
+    WmPlanetsRotationWork rotate;
+
+    state = *(WmPlanetsState **)((char *)obj + 0xb8);
+    vec.word[0] = lbl_802C2500[0];
+    vec.word[1] = lbl_802C2500[1];
+    vec.word[2] = lbl_802C2500[2];
+    vec.f[2] = state->heightOffset;
+
+    state->orbitYaw = state->orbitYaw + state->orbitYawStep;
+
+    rotate.zeroX = lbl_803E5F9C;
+    rotate.zeroY = lbl_803E5F9C;
+    rotate.zeroZ = lbl_803E5F9C;
+    rotate.scale = lbl_803E5F98;
+    rotate.roll = 0;
+    rotate.pitch = 0;
+    rotate.yaw = state->orbitYaw;
+    mathFn_80021ac8(&rotate, vec.f);
+
+    rotate.zeroX = lbl_803E5F9C;
+    rotate.zeroY = lbl_803E5F9C;
+    rotate.zeroZ = lbl_803E5F9C;
+    rotate.scale = lbl_803E5F98;
+    rotate.roll = 0;
+    rotate.pitch = state->orbitPitch;
+    rotate.yaw = 0;
+    mathFn_80021ac8(&rotate, vec.f);
+
+    *(f32 *)((char *)obj + 0xc) = vec.f[0] + state->baseX;
+    *(f32 *)((char *)obj + 0x10) = vec.f[1] + state->baseY;
+    *(f32 *)((char *)obj + 0x14) = vec.f[2] + state->baseZ;
+    *(s16 *)obj = (s16)(*(s16 *)obj + state->yawStep * (s32)timeDelta);
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off
