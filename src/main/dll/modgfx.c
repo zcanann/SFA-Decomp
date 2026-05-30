@@ -5379,7 +5379,6 @@ void fn_800A0AB4(void *state, void *p, int mode, u8 idx)
   extern f32 lbl_803DD284;
   extern f32 lbl_803DF430;
   extern f32 lbl_803DF43C;
-  s16 *verts = *(s16 **)((char *)p + 0x10);
   u8 *bufB = *(u8 **)((char *)state + *(u8 *)((char *)state + 0x130) * 4 + 0x78);
   u8 *bufA = *(u8 **)((char *)state + 0x80);
   int j;
@@ -5389,15 +5388,17 @@ void fn_800A0AB4(void *state, void *p, int mode, u8 idx)
     s16 frames = *(s16 *)((char *)state + 0xfe);
     if (frames != 0) {
       *(f32 *)((char *)state + idx * 8 + 0xac) =
-          (target - (f32)(u32)bufA[verts[0] * 16 + 0xf]) / (f32)frames;
-      *(f32 *)((char *)state + idx * 8 + 0xb0) = (f32)(u32)bufA[verts[0] * 16 + 0xf];
+          (target - (f32)(u32)bufA[(*(s16 **)((char *)p + 0x10))[0] * 16 + 0xf]) / (f32)frames;
+      *(f32 *)((char *)state + idx * 8 + 0xb0) =
+          (f32)(u32)bufA[(*(s16 **)((char *)p + 0x10))[0] * 16 + 0xf];
       goto animate;
     }
     {
       int val = (int)target;
       for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
-        bufA[verts[j] * 16 + 0xf] = val;
-        bufB[verts[j] * 16 + 0xf] = bufA[verts[j] * 16 + 0xf];
+        bufA[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xf] = val;
+        bufB[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xf] =
+            bufA[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xf];
       }
     }
     return;
@@ -5412,8 +5413,9 @@ animate:
     *(f32 *)((char *)state + idx * 8 + 0xb0) = lbl_803DF43C;
   }
   for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
-    bufB[verts[j] * 16 + 0xf] = (int)*(f32 *)((char *)state + idx * 8 + 0xb0);
-    bufA[verts[j] * 16 + 0xf] = bufB[verts[j] * 16 + 0xf];
+    bufB[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xf] = (int)*(f32 *)((char *)state + idx * 8 + 0xb0);
+    bufA[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xf] =
+        bufB[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xf];
   }
 }
 #pragma peephole reset
@@ -5473,6 +5475,61 @@ void fn_800A0524(void *state, void *p, int mode)
     buf[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xc] = (int)*(f32 *)((char *)state + 0xbc);
     buf[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xd] = (int)*(f32 *)((char *)state + 0xc0);
     buf[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xe] = (int)*(f32 *)((char *)state + 0xc4);
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_800A0C78(void *state, void *p, int mode, u8 idx)
+{
+  extern f32 lbl_803DD284;
+  extern f32 lbl_803DF434;
+  char *base = (char *)state + idx * 2 * 0xc;
+  int j;
+
+  if (mode == 1) {
+    f32 tx = *(f32 *)((char *)p + 0x4);
+    f32 ty = *(f32 *)((char *)p + 0x8);
+    f32 tz = *(f32 *)((char *)p + 0xc);
+    if (*(s16 *)((char *)state + 0xfe) != 0) {
+      *(f32 *)(base + 0x3c) = (tx - *(f32 *)(base + 0x30)) / (f32)*(s16 *)((char *)state + 0xfe);
+      *(f32 *)(base + 0x40) = (ty - *(f32 *)(base + 0x34)) / (f32)*(s16 *)((char *)state + 0xfe);
+      *(f32 *)(base + 0x44) = (tz - *(f32 *)(base + 0x38)) / (f32)*(s16 *)((char *)state + 0xfe);
+    } else {
+      u8 *buf = *(u8 **)((char *)state + 0x80);
+      u8 *buf2 = *(u8 **)((char *)state + *(u8 *)((char *)state + 0x130) * 4 + 0x78);
+      for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
+        s16 v = (*(s16 **)((char *)p + 0x10))[j];
+        *(s16 *)(buf + v * 16 + 0) = (int)((f32)*(s16 *)(buf + v * 16 + 0) * tx);
+        *(s16 *)(buf + v * 16 + 2) = (int)((f32)*(s16 *)(buf + v * 16 + 2) * ty);
+        *(s16 *)(buf + v * 16 + 4) = (int)((f32)*(s16 *)(buf + v * 16 + 4) * tz);
+        *(s16 *)(buf2 + v * 16 + 0) = *(s16 *)(buf + v * 16 + 0);
+        *(s16 *)(buf2 + v * 16 + 2) = *(s16 *)(buf + v * 16 + 2);
+        *(s16 *)(buf2 + v * 16 + 4) = *(s16 *)(buf + v * 16 + 4);
+      }
+      return;
+    }
+  }
+  *(f32 *)(base + 0x30) = *(f32 *)(base + 0x30) + *(f32 *)(base + 0x3c) * lbl_803DD284;
+  *(f32 *)(base + 0x34) = *(f32 *)(base + 0x34) + *(f32 *)(base + 0x40) * lbl_803DD284;
+  *(f32 *)(base + 0x38) = *(f32 *)(base + 0x38) + *(f32 *)(base + 0x44) * lbl_803DD284;
+  {
+    u8 *buf = *(u8 **)((char *)state + 0x80);
+    u8 *buf2 = *(u8 **)((char *)state + *(u8 *)((char *)state + 0x130) * 4 + 0x78);
+    for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
+      s16 v = (*(s16 **)((char *)p + 0x10))[j];
+      if (lbl_803DF434 != *(f32 *)(base + 0x30)) {
+        *(s16 *)(buf2 + v * 16 + 0) = (int)(*(f32 *)(base + 0x30) * (f32)*(s16 *)(buf + v * 16 + 0));
+      }
+      if (lbl_803DF434 != *(f32 *)(base + 0x34)) {
+        *(s16 *)(buf2 + v * 16 + 2) = (int)(*(f32 *)(base + 0x34) * (f32)*(s16 *)(buf + v * 16 + 2));
+      }
+      if (lbl_803DF434 != *(f32 *)(base + 0x38)) {
+        *(s16 *)(buf2 + v * 16 + 4) = (int)(*(f32 *)(base + 0x38) * (f32)*(s16 *)(buf + v * 16 + 4));
+      }
+    }
   }
 }
 #pragma peephole reset

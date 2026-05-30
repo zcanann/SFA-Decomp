@@ -498,12 +498,9 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
     int *model;
     s32 alpha;
     s32 ty;
+    s32 ty1;
     s32 i;
     s32 j;
-    s32 col;
-    s32 secs;
-    s32 mins;
-    f32 ratio;
     int *info;
 
     pauseMenuDoSave();
@@ -536,7 +533,9 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
         return;
     }
 
-    ty = (s32)((f32)(s16)alpha * lbl_803DD850);
+    ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);
+    ty = (s32)((double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C) * lbl_803E2088);
+    fn_80127F24(ty);
     if (lbl_803DD7C4 != 0) {
         for (i = 0x14; (s8)i >= 0; i -= 4) {
             s16 px = (s16)((s16)(0xf0 - (s8)i) - lbl_803DD75C);
@@ -548,24 +547,30 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
                             px, (u8)ty, 0x100, 0xf0, 4, 0);
         }
         lbl_803DD824 = (void *)lbl_8031BD90;
-        fn_80128470((s16)ty);
+        fn_80128470(ty1);
     } else {
         void *obj = *(void **)gMapEventInterface;
         char buf[0x80];
+        s32 hintCount;
+        s32 gbCount;
+        s32 h24;
+        s32 mins25;
+        f32 playRatio;
         info = (int *)(*(int (**)(void *))((u8 *)obj + 0x8c))(obj);
-        col = (s32)(getNextTaskHintText() * 0x64 / 0x32);
-        ratio = SaveGame_getPlayTime() / lbl_803E2020;
-        ty = (s32)((f32)(s16)alpha * lbl_803DD850);
+        hintCount = (u8)((u32)(u16)getNextTaskHintText() * 0x64 / 0x32);
+        playRatio = SaveGame_getPlayTime() / lbl_803E2020;
+        ty1 = (s32)((f32)(s16)alpha * lbl_803DD850);
+        ty = (s32)((double)(s16)ty1 * (lbl_803E2080 - (double)lbl_803DD75C) * lbl_803E2088);
         fn_80128120(arg1, (u8)ty);
         i = GameBit_Get(0x63c);
         j = GameBit_Get(0x4e9);
         i += GameBit_Get(0x5f3);
         i += GameBit_Get(0x5f4);
-        col = (u8)(j + i);
+        gbCount = (u8)(j + i);
         {
-            u8 *p = lbl_8031BB90 + 0xc0;
-            for (i = 0; (s8)i < col; i++) {
-                *(s16 *)p = (s8)i < col ? 0x22 + ((s8)i & 1) : 0x24;
+            u8 *p = lbl_8031BB90;
+            for (i = 0; (s8)i < 4; i++) {
+                *(s16 *)(p + 0xc0) = (s8)i < gbCount ? 0x22 + ((s8)i & 1) : 0x24;
                 p += 0x20;
             }
         }
@@ -589,55 +594,56 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
             sprintf(buf, &lbl_803DBB78, lbl_803A9364[3]);
             gameTextShowStr(buf, 0x93, 0x140, 0x10e);
         }
-        sprintf(buf, &lbl_803DBB80, col);
+        sprintf(buf, &lbl_803DBB80, hintCount);
         gameTextShowStr(buf, 0x93, 0x130, 0x12c);
-        secs = (s32)(SaveGame_getPlayTime() / lbl_803E20B0);
-        if (secs > 0x63) {
-            sprintf(buf, &lbl_803DBB88, secs);
+        h24 = (s32)(playRatio / lbl_803E20B0);
+        if (h24 > 0x63) {
+            sprintf(buf, &lbl_803DBB88, h24);
         } else {
-            sprintf(buf, &lbl_803DBB88, secs);
+            sprintf(buf, &lbl_803DBB88, h24);
         }
-        mins = secs - (s32)(SaveGame_getPlayTime() / lbl_803E2020) * 0x3c;
-        sprintf(buf, &lbl_803DBB90, buf, mins);
+        mins25 = (s32)(playRatio / lbl_803E2020) - h24 * 0x3c;
+        sprintf(buf, &lbl_803DBB90, buf, mins25);
         sprintf(buf, &lbl_803DBB98, buf,
-                (s32)(SaveGame_getPlayTime() - (f32)(secs * 0xe10) - (f32)(mins * 0x3c)));
+                (s32)(playRatio - (f32)(h24 * 0xe10) - (f32)(mins25 * 0x3c)));
         gameTextShowStr(buf, 0x93, 0x12c, 0x14a);
         gameTextSetDrawFunc(0);
 
         {
             s16 px = (s16)(0xe6 - lbl_803DD75C);
-            f32 f31 = lbl_803E1FAC;
             for (i = 0; (u16)i < 7; i++) {
-                int *t = *(int **)((u8 *)hudTextures + 0x5c);
-                f32 fy = f31 * ((f32)(s32)(u16)i - lbl_803E1E88) + lbl_803E1F30;
-                pauseMenuDrawElement(t, px, (u8)ty, (s32)lbl_803E20B8, 0, lbl_803E20B4, fy);
+                f32 fy = lbl_803E1FAC * (f32)(u32)(u16)i + lbl_803E1F30;
+                pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0x5c), px, (u8)ty,
+                                     (s32)lbl_803E20B8, 0, fy, lbl_803E20B4);
             }
         }
         for (j = 0; (u16)j < (*(int *)((u8 *)lbl_803A9364 + 0x1c) >> 2); j++) {
             s32 v = *(int *)lbl_803A9364;
             s32 tex;
-            if (j < (v >> 2)) {
+            f32 fyj;
+            if ((s32)(u16)j < (v >> 2)) {
                 tex = 0x16;
-            } else if (j > (v >> 2)) {
+            } else if ((s32)(u16)j > (v >> 2)) {
                 tex = 0x12;
             } else {
                 tex = (v & 3) + 0x12;
             }
+            fyj = lbl_803E1FAC * (f32)(u32)(u16)j + lbl_803E1F30;
             for (i = 0x14; (s8)i >= 0; i -= 4) {
                 s16 px = (s16)((s16)(0xff - (s8)i) - lbl_803DD75C);
-                pauseMenuDrawElement(*(int **)(lbl_8031BB90 + tex * 4), px, (u8)ty,
-                                     (s32)lbl_803E20B8, 0, lbl_803E20B4, lbl_803E1F30);
+                pauseMenuDrawElement(*(int **)(lbl_8031BB90 + (u8)tex * 4), px, (u8)ty,
+                                     (s32)lbl_803E20B8, 0, fyj, lbl_803E20B4);
             }
         }
         pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0xbc), (s16)(0x100 - lbl_803DD75C), (u8)ty,
-                             0x100, 0, lbl_803E1E78 ? lbl_803E1F30 : lbl_803E1F30, lbl_803E1F30);
-        drawFn_8011eb3c(*(void **)((u8 *)hudTextures + 0xb8), lbl_803E1F30, lbl_803E1F30,
+                             0x100, 0, (f32)lbl_803DBAD0, (f32)lbl_803DBAD4);
+        drawFn_8011eb3c(*(void **)((u8 *)hudTextures + 0xb8), (f32)(lbl_803DBAD0 + 0x18), (f32)lbl_803DBAD4,
                         (s16)(0x100 - lbl_803DD75C), (u8)ty, 0x100, 0x66, 0x12, 0);
         pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0xc0), (s16)(0x100 - lbl_803DD75C), (u8)ty,
-                             0x100, 0, lbl_803E1F30, lbl_803E1F30);
+                             0x100, 0, (f32)(lbl_803DBAD0 + 0x7e), (f32)lbl_803DBAD4);
         hudDrawMagicBar((u8)ty, 0x100 - lbl_803DD75C, 1);
         lbl_803DD824 = (void *)lbl_8031BB90;
-        fn_80128470(alpha);
+        fn_80128470(ty1);
     }
 
     model = Obj_GetActiveModel(lbl_803DD860[1]);
