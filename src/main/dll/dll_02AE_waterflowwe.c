@@ -1,5 +1,108 @@
 #include "main/dll/dll_80220608_shared.h"
 
+extern f32 lbl_803E72B4;
+extern f32 lbl_803E72B8;
+extern f32 lbl_803E72BC;
+extern f32 lbl_803E72C0;
+extern f32 lbl_803E72C4;
+extern f32 lbl_803E72C8;
+extern f32 lbl_803E72CC;
+extern f32 lbl_803E72D0;
+extern f32 lbl_803E72D4;
+
+#pragma peephole off
+#pragma scheduling off
+void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
+{
+    int count;
+    int i;
+    int anyCurrent;
+    int *objects;
+    int other;
+    u8 *setup;
+    f32 *current;
+    f32 currentX;
+    f32 currentZ;
+    f32 dx;
+    f32 dz;
+    f32 dy;
+    f32 distance;
+    f32 radius;
+    f32 strength;
+    f32 angle;
+
+    current = *(f32 **)(obj + 0xb8);
+    currentX = lbl_803E72B0;
+    currentZ = lbl_803E72B0;
+    objects = ObjGroup_GetObjects(0x14, &count);
+    anyCurrent = 0;
+    for (i = 0; i < count; i++) {
+        other = objects[i];
+        setup = *(u8 **)(other + 0x4c);
+        if ((setup[0x1a] & 2) != 0) {
+            anyCurrent = 1;
+            dy = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
+            if ((dy <= lbl_803E72B4) && (lbl_803E72B8 <= dy)) {
+                dx = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
+                dz = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
+                distance = sqrtf(dx * dx + dz * dz);
+                radius = lbl_803E72BC * (f32)(u32)setup[0x19];
+                if (distance < radius) {
+                    strength = ((radius - distance) / radius) * lbl_803E72C0 * *(f32 *)(other + 8);
+                    angle = (lbl_803E72C4 * (f32)*(s16 *)other) / lbl_803E72C8;
+                    currentX += strength * fn_80293E80(angle);
+                    currentZ += strength * sin(angle);
+                }
+            }
+        }
+    }
+
+    objects = ObjGroup_GetObjects(0x50, &count);
+    for (i = 0; i < count; i++) {
+        f32 objectStrength;
+        s16 currentAngle;
+
+        other = objects[i];
+        setup = *(u8 **)(other + 0x4c);
+        objectStrength = (f32)(u32)setup[0x32] / lbl_803E72C0;
+        anyCurrent = 1;
+        dy = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
+        if ((dy <= lbl_803E72B4) && (lbl_803E72B8 <= dy)) {
+            dx = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
+            dz = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
+            currentAngle = (s16)(getAngle(dx, dz) - 0x7b30);
+            distance = sqrtf(dx * dx + dz * dz);
+            radius = (f32)(s32)(setup[0x29] << 3);
+            if (distance < radius) {
+                strength = ((radius - distance) / radius) * objectStrength;
+                angle = (lbl_803E72C4 * (f32)currentAngle) / lbl_803E72C8;
+                currentX += strength * fn_80293E80(angle);
+                currentZ += strength * sin(angle);
+            }
+        }
+    }
+
+    if (anyCurrent == 0) {
+        *vx = lbl_803E72B0;
+        *vz = lbl_803E72B0;
+    } else {
+        current[0] = current[0] - lbl_803E72CC * currentX;
+        current[1] = current[1] - lbl_803E72CC * currentZ;
+        current[0] = current[0] * lbl_803E72D0;
+        current[1] = current[1] * lbl_803E72D0;
+        distance = sqrtf(current[0] * current[0] + current[1] * current[1]);
+        if (distance > lbl_803E72D4) {
+            strength = lbl_803E72D4 / distance;
+            current[0] = current[0] * strength;
+            current[1] = current[1] * strength;
+        }
+        *vx = current[0] * timeDelta;
+        *vz = current[1] * timeDelta;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #pragma peephole on
 #pragma scheduling on
 int waterflowwe_getExtraSize(void) { return 8; }
