@@ -2216,3 +2216,54 @@ void hudDrawTimedElement(int unused, int *e) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef union {
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+} PPCWGPipe;
+volatile PPCWGPipe GXWGFifo : (0xCC008000);
+
+extern void GXBegin(int type, int fmt, int n);
+extern f32 lbl_803E1E80;
+extern void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c);
+#pragma scheduling off
+#pragma peephole off
+void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, int p5, int p6, int p7) {
+    f32 sx, sy;
+    int w, dx, dy;
+    s16 z;
+    pauseMenuMapFn_8011de20(this, p5, (s16)p4, p7 & 4);
+    w = (u16)p6;
+    dx = (*(u16 *)((char *)this + 0xa) << 2) * w / 256;
+    dy = (*(u16 *)((char *)this + 0xc) << 2) * w / 256;
+    sx = lbl_803E1E80 * fx;
+    sy = lbl_803E1E80 * fy;
+    GXBegin(0x80, 1, 4);
+    z = (s16)(p4 << 2);
+    GXWGFifo.s16 = (s16)sx;
+    GXWGFifo.s16 = (s16)sy;
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = lbl_803E1E3C;
+    GXWGFifo.f32 = lbl_803E1E3C;
+    GXWGFifo.s16 = (s16)(sx + (f32)(u32)dx);
+    GXWGFifo.s16 = (s16)sy;
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = lbl_803E1E68;
+    GXWGFifo.f32 = lbl_803E1E3C;
+    GXWGFifo.s16 = (s16)(sx + (f32)(u32)dx);
+    GXWGFifo.s16 = (s16)(sy + (f32)(u32)dy);
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = lbl_803E1E68;
+    GXWGFifo.f32 = lbl_803E1E68;
+    GXWGFifo.s16 = (s16)sx;
+    GXWGFifo.s16 = (s16)(sy + (f32)(u32)dy);
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = lbl_803E1E3C;
+    GXWGFifo.f32 = lbl_803E1E68;
+}
+#pragma peephole reset
+#pragma scheduling reset
