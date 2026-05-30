@@ -3,9 +3,7 @@
 
 #include "ghidra_import.h"
 
-void dfsh_objcreator_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9);
+void dfsh_objcreator_update(int obj);
 void DFSH_LaserBeam_init(int *obj);
 void FUN_801c4098(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801c40c0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
@@ -15,7 +13,7 @@ void FUN_801c43b0(int param_1);
 void dfsh_objcreator_release(void);
 void dfsh_objcreator_initialise(void);
 int DFSH_LaserBeam_getExtraSize(void);
-int DFSH_LaserBeam_func08(void);
+int DFSH_LaserBeam_getObjectTypeId(void);
 void DFSH_LaserBeam_render(void);
 void DFSH_LaserBeam_hitDetect(void);
 

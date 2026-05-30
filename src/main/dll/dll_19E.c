@@ -19,6 +19,13 @@ extern undefined4 FUN_80017b00();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80053754();
 extern int FUN_8005b024();
+extern void *Resource_Acquire(int id, int mode);
+extern void Resource_Release(void *handle);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u8 Obj_IsLoadingLocked(void);
+extern void *Obj_AllocObjectSetup(int size, int objectId);
+extern void *Obj_SetupObject(void *setup, int mode, int mapLayer, int objIndex, int parent);
+extern f32 timeDelta;
 
 extern undefined4 DAT_803dc071;
 extern undefined4* DAT_803dd6d4;
@@ -31,6 +38,11 @@ extern f32 lbl_803E5B30;
 extern f32 lbl_803E5B34;
 extern f32 lbl_803E5B48;
 extern f32 lbl_803E5B4C;
+
+typedef struct DfshObjCreatorState {
+    s16 spawnTimer;
+    s16 spawnTimerStep;
+} DfshObjCreatorState;
 
 /*
  * --INFO--
@@ -45,79 +57,69 @@ extern f32 lbl_803E5B4C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dfsh_objcreator_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9)
+#pragma peephole off
+#pragma scheduling off
+void dfsh_objcreator_update(int obj)
 {
-  byte bVar1;
-  int iVar2;
-  int *piVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  undefined8 extraout_f1;
-  undefined8 uVar8;
-  int local_28;
-  int local_24 [5];
-  
-  iVar2 = *(int *)(param_9 + 0x4c);
-  iVar7 = *(int *)(param_9 + 0xb8);
-  if (((iVar2 != 0) && (*(short *)(iVar2 + 0x18) != -1)) && (*(int *)(iVar2 + 0x14) != 0x4ca62)) {
-    for (iVar2 = 0; iVar2 < (int)(uint)*(byte *)(iVar7 + 0x8b); iVar2 = iVar2 + 1) {
-      bVar1 = *(byte *)(iVar7 + iVar2 + 0x81);
-      if (bVar1 == 2) {
-        *(undefined *)(iVar7 + 0x144) = 1;
-      }
-      else if ((bVar1 < 2) && (bVar1 != 0)) {
-        *(undefined *)(iVar7 + 0x144) = 0;
-      }
+    u8 *setup = *(u8 **)(obj + 0x4c);
+    DfshObjCreatorState *state = *(DfshObjCreatorState **)(obj + 0xb8);
+    void *resource;
+    u8 *spawnSetup;
+
+    if (GameBit_Get(0x589) != 0) {
+        *(int *)(obj + 0xf8) = 0;
+        return;
     }
-    local_24[2] = (int)DAT_803dc071;
-    local_24[1] = 0x43300000;
-    local_28 = (**(code **)(*DAT_803dd6d4 + 0x14))
-                         ((double)(float)((double)CONCAT44(0x43300000,local_24[2]) - DOUBLE_803e5b38
-                                         ),param_9);
-    if ((local_28 != 0) && (*(short *)(param_9 + 0xb4) == -2)) {
-      iVar6 = (int)*(char *)(iVar7 + 0x57);
-      iVar2 = 0;
-      uVar8 = extraout_f1;
-      piVar3 = (int *)FUN_80017b00(&local_28,local_24);
-      iVar5 = 0;
-      for (local_28 = 0; local_28 < local_24[0]; local_28 = local_28 + 1) {
-        iVar4 = *piVar3;
-        if (*(short *)(iVar4 + 0xb4) == iVar6) {
-          iVar2 = iVar4;
+
+    if (*(int *)(obj + 0xf8) == 0 && GameBit_Get((s8)setup[0x1f] + 0xf6) != 0) {
+        resource = Resource_Acquire(0x82, 1);
+        (*(void (**)(int, int, int, int, int, int))(*(int *)resource + 4))(
+            obj, 0, 0, 1, -1, 0);
+        (*(void (**)(int, int, int, int, int, int))(*(int *)resource + 4))(
+            obj, 1, 0, 1, -1, 0);
+        Sfx_PlayFromObject(obj, 0xaf);
+        Resource_Release(resource);
+        state->spawnTimerStep = 1;
+        *(int *)(obj + 0xf8) = 1;
+    }
+
+    if (state->spawnTimerStep != 0) {
+        state->spawnTimer =
+            (s16)(state->spawnTimer - state->spawnTimerStep * (int)timeDelta);
+    }
+
+    if (Obj_IsLoadingLocked() != 0 && state->spawnTimer <= 0) {
+        spawnSetup = Obj_AllocObjectSetup(0x38, 0x11);
+        *(f32 *)(spawnSetup + 0x08) = *(f32 *)(setup + 0x08);
+        *(f32 *)(spawnSetup + 0x0c) = *(f32 *)(setup + 0x0c);
+        *(f32 *)(spawnSetup + 0x10) = *(f32 *)(setup + 0x10);
+        *(int *)(spawnSetup + 0x14) = *(int *)(setup + 0x14);
+        spawnSetup[0x04] = setup[0x04];
+        spawnSetup[0x05] = setup[0x05];
+        spawnSetup[0x06] = setup[0x06];
+        spawnSetup[0x07] = setup[0x07];
+        spawnSetup[0x27] = 3;
+        *(s16 *)(spawnSetup + 0x18) = 0x1e7;
+        *(s16 *)(spawnSetup + 0x30) = -1;
+        *(s16 *)(spawnSetup + 0x1a) = -1;
+        *(s16 *)(spawnSetup + 0x1c) = -1;
+        *(s8 *)(spawnSetup + 0x2a) = (s8)(*(s16 *)obj >> 8);
+        spawnSetup[0x2b] = 2;
+        if (GameBit_Get(0xfc) != 0) {
+            *(s16 *)(spawnSetup + 0x22) = 0x49;
+        } else {
+            *(s16 *)(spawnSetup + 0x22) = -1;
         }
-        if (((*(short *)(iVar4 + 0xb4) == -2) && (*(short *)(iVar4 + 0x44) == 0x10)) &&
-           (iVar6 == *(char *)(*(int *)(iVar4 + 0xb8) + 0x57))) {
-          iVar5 = iVar5 + 1;
-        }
-        piVar3 = piVar3 + 1;
-      }
-      if (((iVar5 < 2) && (iVar2 != 0)) && (*(short *)(iVar2 + 0xb4) != -1)) {
-        *(undefined2 *)(iVar2 + 0xb4) = 0xffff;
-        uVar8 = (**(code **)(*DAT_803dd6d4 + 0x4c))(iVar6);
-      }
-      *(undefined2 *)(param_9 + 0xb4) = 0xffff;
-      FUN_80017ac8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
+        spawnSetup[0x29] = 0xff;
+        *(s8 *)(spawnSetup + 0x2e) = -1;
+        *(u16 *)(spawnSetup + 0x34) = 0xffff;
+        Obj_SetupObject(spawnSetup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+        state->spawnTimer = 100;
+        state->spawnTimerStep = 0;
     }
-    *(float *)(iVar7 + 0x148) = *(float *)(iVar7 + 0x148) - lbl_803DC074;
-    if (*(float *)(iVar7 + 0x148) < lbl_803E5B34) {
-      iVar2 = FUN_80017a98();
-      local_24[2] = randomGetRange(0xb4,0xf0);
-      local_24[2] = local_24[2] ^ 0x80000000;
-      local_24[1] = 0x43300000;
-      *(float *)(iVar7 + 0x148) =
-           (float)((double)CONCAT44(0x43300000,local_24[2]) - DOUBLE_803e5b40);
-      if ((*(char *)(param_9 + 0xac) == -1) &&
-         ((iVar2 == 0 || (iVar2 = FUN_8005b024(), iVar2 == 0xb)))) {
-        FUN_80006824(param_9,0x4a0);
-      }
-    }
-  }
-  return;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
