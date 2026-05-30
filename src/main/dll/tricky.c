@@ -2921,3 +2921,63 @@ void hudDrawFn_80121440(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int Camera_GetCurrentViewSlot(void);
+extern u8 Rcp_GetViewFinderHudEnabled(void);
+extern int getAngle(f32, f32);
+extern f32 fn_80293E80(f32);
+extern f32 sin(f32);
+extern void drawViewFinderLine(u8 *color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
+extern f64 lbl_803E1E78, lbl_803E1EA0, lbl_803E1EA8, lbl_803E1EB0, lbl_803E1EB8;
+extern f32 lbl_803DD7F0, lbl_803DD7F4, lbl_803E1EC4, lbl_803E1EC8, lbl_803E1ECC, lbl_803E1ED0;
+extern f32 lbl_803E1ED4, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE0, lbl_803E1EE4, lbl_803E1EE8, lbl_803E1E94;
+extern s16 lbl_803DD7EC;
+extern int lbl_803E1E2C;
+#pragma scheduling off
+
+#define VFTICK(gA1, gA2, A, B, C) do { \
+    GXColor _c; \
+    s16 _a; \
+    f32 _r, _cs, _sn, _cx, _sx; \
+    *(int *)&_c = lbl_803E1E2C; \
+    _c.a = (u8)(int)(hudElementOpacity * lbl_803DD7F0); \
+    _a = (s16)getAngle(gA1, gA2); \
+    _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94; \
+    _cs = fn_80293E80(_r); \
+    _sn = sin(_r); \
+    _cx = lbl_803E1E68 * _cs; \
+    _sx = lbl_803E1E68 * _sn; \
+    drawViewFinderLine((u8 *)&_c, (B) + _sx, (A) - _cx, (B) - _sx, (A) + _cx, (C) - _sx, (A) + _cx, (C) + _sx, (A) - _cx); \
+} while (0)
+
+void drawViewFinderHud(void) {
+    f32 fovY;
+    int slot;
+    f32 v;
+
+    fovY = Camera_GetFovY();
+    slot = Camera_GetCurrentViewSlot();
+    if (Rcp_GetViewFinderHudEnabled() && pauseMenuState == 0) {
+        lbl_803DD7F0 = (f32)(lbl_803E1EA0 * timeDelta + lbl_803DD7F0);
+    } else {
+        lbl_803DD7F0 = (f32)(lbl_803DD7F0 - lbl_803E1EA8 * timeDelta);
+    }
+    v = lbl_803DD7F0;
+    if (v < lbl_803E1E3C) v = lbl_803E1E3C;
+    else if (v > lbl_803E1E68) v = lbl_803E1E68;
+    lbl_803DD7F0 = v;
+    if (v == lbl_803E1E3C) return;
+    lbl_803DD7F4 = (f32)(lbl_803E1EB0 - lbl_803E1EB8 * v);
+    lbl_803DD7EC = (s16)-*(s16 *)slot;
+    (void)fovY;
+
+    VFTICK(lbl_803E1EC4, lbl_803E1E3C, lbl_803E1ECC, lbl_803E1ED0, lbl_803E1ED4);
+    VFTICK(lbl_803E1ED8, lbl_803E1E3C, lbl_803E1ECC, lbl_803E1EDC, lbl_803E1EE0);
+    VFTICK(lbl_803E1EC4, lbl_803E1E3C, lbl_803E1EE4, lbl_803E1ED0, lbl_803E1ED4);
+    VFTICK(lbl_803E1ED8, lbl_803E1E3C, lbl_803E1EE4, lbl_803E1EDC, lbl_803E1EE0);
+    VFTICK(lbl_803E1E3C, lbl_803E1EC4, lbl_803E1ED0, lbl_803E1ECC, lbl_803E1EE8);
+    VFTICK(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1ED0, lbl_803E1EE4, lbl_803E1ED4);
+    VFTICK(lbl_803E1E3C, lbl_803E1EC4, lbl_803E1EDC, lbl_803E1ECC, lbl_803E1EE8);
+    VFTICK(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE4, lbl_803E1ED4);
+}
+#pragma scheduling reset
