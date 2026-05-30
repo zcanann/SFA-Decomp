@@ -110,7 +110,7 @@ typedef struct {
 
 extern u8 fn_80296414(int player, int obj, int dir);
 extern void Sfx_SetObjectSfxVolume(int obj, int sound, int vol, f32 v);
-extern int fn_802242A8(int obj, int state, int player);
+extern int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player);
 extern int Obj_GetPlayerObject(void);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32 *out);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
@@ -2284,7 +2284,7 @@ void fn_8023A268(int p1, int p2);
 void fn_80239FCC(int p1, int p2);
 int fn_8023A6A4(int p1, f32 a, f32 b, f32 c);
 void fn_8023A3E4(int p1, int p2);
-int fn_802242A8(int p1, int p2, int p3);
+int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player);
 void fn_8022D308(int obj);
 void arwarwingbo_update(int obj);
 void fn_8022A9C8(int obj, int state);

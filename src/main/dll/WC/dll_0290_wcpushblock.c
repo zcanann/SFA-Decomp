@@ -360,7 +360,7 @@ void wcpushblock_update(int obj)
             *(u8 *)(obj + 0x36) = a;
         }
         if (*(u8 *)(obj + 0x36) == 0) {
-            if (fn_802242A8(obj, state, Obj_GetPlayerObject()) != 0) {
+            if (wcblock_isPlayerAwayFromStoredCell(obj, state, Obj_GetPlayerObject()) != 0) {
                 if ((s8)*(u8 *)(obj + 0xad) == 1) {
                     (*(void (**)(int, int, int, int))(PB_IFACE + 0x30))(
                         *(u8 *)(state + 0x283), state + 0x27e, state + 0x280, PB_IFACE);

@@ -1,5 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define WCBLOCK_GRID_IFACE(state) (*(int *)(*(int *)(*(int *)((state) + 0x268) + 0x68)))
+
 #pragma peephole on
 #pragma scheduling on
 int wcbouncycra_getExtraSize(void) { return 0xc; }
@@ -107,34 +109,48 @@ void wcbouncycra_initialise(void) {}
 
 #pragma peephole off
 #pragma scheduling off
-int fn_802242A8(int p1, int p2, int p3)
+int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
 {
-    f32 cy;
-    f32 cx;
-    int result;
+    f32 cellX;
+    f32 cellZ;
+    f32 min;
+    f32 max;
+    f32 pos;
+    int iface;
 
-    if ((s8)*(u8 *)(p1 + 0xad) == 1) {
-        (*(void (**)(int, int, int, int))(*(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)) + 0x30))(
-            *(u8 *)(p2 + 0x283), p2 + 0x27e, p2 + 0x280,
-            *(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)));
-        (*(void (**)(int, int, int, f32 *, f32 *, int))(*(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)) + 0x20))(
-            p1, *(s16 *)(p2 + 0x27e), *(s16 *)(p2 + 0x280), &cy, &cx,
-            *(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)));
+    if ((s8)*(u8 *)(obj + 0xad) == 1) {
+        iface = WCBLOCK_GRID_IFACE(state);
+        (*(void (**)(int, int, int, int))(iface + 0x30))(
+            *(u8 *)(state + 0x283), state + 0x27e, state + 0x280, iface);
+        iface = WCBLOCK_GRID_IFACE(state);
+        (*(void (**)(int, int, int, f32 *, f32 *, int))(iface + 0x20))(
+            obj, *(s16 *)(state + 0x27e), *(s16 *)(state + 0x280), &cellX, &cellZ, iface);
     } else {
-        (*(void (**)(int, int, int, int))(*(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)) + 0x4c))(
-            *(u8 *)(p2 + 0x283), p2 + 0x27e, p2 + 0x280,
-            *(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)));
-        (*(void (**)(int, int, int, f32 *, f32 *, int))(*(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)) + 0x3c))(
-            p1, *(s16 *)(p2 + 0x27e), *(s16 *)(p2 + 0x280), &cy, &cx,
-            *(int *)(*(int *)(*(int *)(p2 + 0x268) + 0x68)));
+        iface = WCBLOCK_GRID_IFACE(state);
+        (*(void (**)(int, int, int, int))(iface + 0x4c))(
+            *(u8 *)(state + 0x283), state + 0x27e, state + 0x280, iface);
+        iface = WCBLOCK_GRID_IFACE(state);
+        (*(void (**)(int, int, int, f32 *, f32 *, int))(iface + 0x3c))(
+            obj, *(s16 *)(state + 0x27e), *(s16 *)(state + 0x280), &cellX, &cellZ, iface);
     }
-    if (*(f32 *)(p3 + 0xc) > cy + lbl_803E6D50 || *(f32 *)(p3 + 0xc) < cy - lbl_803E6D50)
-        result = 1;
-    else if (*(f32 *)(p3 + 0x14) > cx + lbl_803E6D50 || *(f32 *)(p3 + 0x14) < cx - lbl_803E6D50)
-        result = 1;
-    else
-        result = 0;
-    return result;
+
+    min = cellX - lbl_803E6D50;
+    pos = *(f32 *)(player + 0xc);
+    max = lbl_803E6D50 + cellX;
+    if (pos > max || pos < min) {
+        return 1;
+    }
+
+    min = cellZ - lbl_803E6D50;
+    pos = *(f32 *)(player + 0x14);
+    max = lbl_803E6D50 + cellZ;
+    if (pos > max || pos < min) {
+        return 1;
+    }
+
+    return 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#undef WCBLOCK_GRID_IFACE
