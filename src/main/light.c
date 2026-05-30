@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/light.h"
 #include "main/objanim.h"
 
@@ -1417,7 +1418,7 @@ void vfpdraghead_update(int *obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern void unlockLevel(int, int, int);
 extern undefined4 lockLevel(undefined4, int);
 extern int mapGetDirIdx(int);
@@ -1441,23 +1442,23 @@ void fn_801FC6F4(int obj, int param2, int ctx)
                 GameBit_Set(0x500, 0);
                 GameBit_Set(0xd72, 1);
                 GameBit_Set(0xd44, 1);
-                (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 1, 1);
-                (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 2, 1);
-                (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 22, 1);
-                if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 1) {
+                (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 1, 1);
+                (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 2, 1);
+                (*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 22, 1);
+                if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 1) {
                     unlockLevel(0, 0, 1);
                     lockLevel(mapGetDirIdx(70), 1);
                     lockLevel(mapGetDirIdx(4), 0);
                     loadMapAndParent(70);
-                    (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(18, 2);
+                    (*gMapEventInterface)->setMode(18, 2);
                     warpToMap(124, 0);
-                } else if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                } else if ((*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
                     unlockLevel(0, 0, 1);
                     lockLevel(mapGetDirIdx(70), 1);
                     lockLevel(mapGetDirIdx(4), 0);
                     loadMapAndParent(70);
-                    (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(11, 4);
-                    (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(8, 6);
+                    (*gMapEventInterface)->setMode(11, 4);
+                    (*gMapEventInterface)->setMode(8, 6);
                     warpToMap(124, 0);
                 }
             }

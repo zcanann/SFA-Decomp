@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/CF/laser.h"
 #include "main/dll/anim_internal.h"
 #include "main/main.h"
@@ -1333,7 +1334,7 @@ void dll_224_hitDetect(void *obj) {
 }
 
 /* dll_224_update: dispatch GameEvent id based on vtable[0x40](obj->field_0xac). */
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int lbl_803DDCC8;
 extern void spellStoneUseFn_801fd270(void *obj);
 #pragma scheduling off
@@ -1341,7 +1342,7 @@ extern void spellStoneUseFn_801fd270(void *obj);
 void dll_224_update(void *param_1) {
     void *obj = param_1;
     int v;
-    v = (*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(*((s8 *)obj + 0xac));
+    v = (*gMapEventInterface)->getMode(*((s8 *)obj + 0xac));
     v = (u8)v;
     switch (v) {
         case 1:
