@@ -284,7 +284,7 @@ void expgfxRemove(uint slotPoolBase,int poolIndex,int slotIndex,int skipTextureF
   expgfxBase = gExpgfxRuntimeData;
   activeBit = 1 << slotIndex;
   activeMask = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET + poolIndex * sizeof(u32));
-  if ((*activeMask & activeBit) == 0) {
+  if ((activeBit & *activeMask) == 0) {
     return;
   }
 
@@ -373,7 +373,7 @@ void expgfxRemoveAll(void)
     slotIndex = 0;
     while (slotIndex < EXPGFX_SLOTS_PER_POOL) {
       activeBit = 1 << slotIndex;
-      if ((*activeMasks & activeBit) != 0) {
+      if ((activeBit & *activeMasks) != 0) {
         tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
         tableEntry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset);
         if ((tableEntry->resource != 0) && (tableEntry->resource != 0)) {
@@ -466,7 +466,7 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
     poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
     for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
       activeBit = 1 << slotIndex;
-      if ((poolActiveMasks[poolIndex] & activeBit) == 0) {
+      if ((activeBit & poolActiveMasks[poolIndex]) == 0) {
         *slotIndexOut = (s16)slotIndex;
         *poolIndexOut = (s16)poolIndex;
         poolActiveMasks[poolIndex] |= activeBit;
@@ -497,7 +497,7 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
   poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
   for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
     activeBit = 1 << slotIndex;
-    if ((poolActiveMasks[poolIndex] & activeBit) == 0) {
+    if ((activeBit & poolActiveMasks[poolIndex]) == 0) {
       *slotIndexOut = (s16)slotIndex;
       *poolIndexOut = (s16)poolIndex;
       poolActiveMasks[poolIndex] |= activeBit;
