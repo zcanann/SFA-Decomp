@@ -4374,6 +4374,36 @@ void dll_15_func06(void)
 /*
  * --INFO--
  *
+ * Function: dll_15_func05
+ * EN v1.0 Address: 0x800E7AE8
+ * EN v1.0 Size: 412b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void dll_15_func05(u32 *state,int count,u32 source,f32 *radii,s8 *types)
+{
+  u8 *stateBytes;
+  int i;
+
+  stateBytes = (u8 *)state;
+  stateBytes[0x25c] &= 0xf;
+  stateBytes[0x25c] |= (count & 0xf) << 4;
+  state[1] = source;
+  for (i = 0; i < count; i++) {
+    stateBytes[0xbc + i] = types[i];
+    stateBytes[0xb8 + i] = 0xff;
+    *(f32 *)(stateBytes + 0xa8 + i * sizeof(f32)) = radii[i];
+  }
+  *state |= 0x2000;
+}
+
+/*
+ * --INFO--
+ *
  * Function: FUN_800e65c8
  * EN v1.0 Address: 0x800E65C8
  * EN v1.0 Size: 72b
