@@ -5371,3 +5371,109 @@ void dll_0B_func16(void *a, void *b, void *c, void *d, void *e, int f, void *g)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_800A0AB4(void *state, void *p, int mode, u8 idx)
+{
+  extern f32 lbl_803DD284;
+  extern f32 lbl_803DF430;
+  extern f32 lbl_803DF43C;
+  s16 *verts = *(s16 **)((char *)p + 0x10);
+  u8 *bufB = *(u8 **)((char *)state + *(u8 *)((char *)state + 0x130) * 4 + 0x78);
+  u8 *bufA = *(u8 **)((char *)state + 0x80);
+  int j;
+
+  if (mode == 1) {
+    f32 target = *(f32 *)((char *)p + 0x4);
+    s16 frames = *(s16 *)((char *)state + 0xfe);
+    if (frames != 0) {
+      *(f32 *)((char *)state + idx * 8 + 0xac) =
+          (target - (f32)(u32)bufA[verts[0] * 16 + 0xf]) / (f32)frames;
+      *(f32 *)((char *)state + idx * 8 + 0xb0) = (f32)(u32)bufA[verts[0] * 16 + 0xf];
+      goto animate;
+    }
+    {
+      int val = (int)target;
+      for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
+        bufA[verts[j] * 16 + 0xf] = val;
+        bufB[verts[j] * 16 + 0xf] = bufA[verts[j] * 16 + 0xf];
+      }
+    }
+    return;
+  }
+animate:
+  *(f32 *)((char *)state + idx * 8 + 0xb0) =
+      *(f32 *)((char *)state + idx * 8 + 0xb0) +
+      *(f32 *)((char *)state + idx * 8 + 0xac) * lbl_803DD284;
+  if (*(f32 *)((char *)state + idx * 8 + 0xb0) < lbl_803DF430) {
+    *(f32 *)((char *)state + idx * 8 + 0xb0) = lbl_803DF430;
+  } else if (*(f32 *)((char *)state + idx * 8 + 0xb0) > lbl_803DF43C) {
+    *(f32 *)((char *)state + idx * 8 + 0xb0) = lbl_803DF43C;
+  }
+  for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
+    bufB[verts[j] * 16 + 0xf] = (int)*(f32 *)((char *)state + idx * 8 + 0xb0);
+    bufA[verts[j] * 16 + 0xf] = bufB[verts[j] * 16 + 0xf];
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_800A0524(void *state, void *p, int mode)
+{
+  extern f32 lbl_803DF430;
+  extern f32 lbl_803DF43C;
+  u8 *buf = *(u8 **)((char *)state + *(u8 *)((char *)state + 0x130) * 4 + 0x78);
+  int j;
+
+  if (mode == 1) {
+    f32 tr = *(f32 *)((char *)p + 0x4);
+    f32 tg = *(f32 *)((char *)p + 0x8);
+    f32 tb = *(f32 *)((char *)p + 0xc);
+    if (*(s16 *)((char *)state + 0xfe) != 0) {
+      *(f32 *)((char *)state + 0xbc) = (f32)(u32)buf[(*(s16 **)((char *)p + 0x10))[0] * 16 + 0xc];
+      *(f32 *)((char *)state + 0xc0) = (f32)(u32)buf[(*(s16 **)((char *)p + 0x10))[0] * 16 + 0xd];
+      *(f32 *)((char *)state + 0xc4) = (f32)(u32)buf[(*(s16 **)((char *)p + 0x10))[0] * 16 + 0xe];
+      *(f32 *)((char *)state + 0xc8) =
+          (tr - (f32)(u32)buf[(*(s16 **)((char *)p + 0x10))[0] * 16 + 0xc]) / (f32)*(s16 *)((char *)state + 0xfe);
+      *(f32 *)((char *)state + 0xcc) =
+          (tg - (f32)(u32)buf[(*(s16 **)((char *)p + 0x10))[0] * 16 + 0xd]) / (f32)*(s16 *)((char *)state + 0xfe);
+      *(f32 *)((char *)state + 0xd0) =
+          (tb - (f32)(u32)buf[(*(s16 **)((char *)p + 0x10))[0] * 16 + 0xe]) / (f32)*(s16 *)((char *)state + 0xfe);
+    } else {
+      *(f32 *)((char *)state + 0xbc) = tr;
+      *(f32 *)((char *)state + 0xc0) = tg;
+      *(f32 *)((char *)state + 0xc4) = tb;
+      *(f32 *)((char *)state + 0xc8) = lbl_803DF430;
+      *(f32 *)((char *)state + 0xcc) = lbl_803DF430;
+      *(f32 *)((char *)state + 0xd0) = lbl_803DF430;
+    }
+  }
+  *(f32 *)((char *)state + 0xbc) += *(f32 *)((char *)state + 0xc8);
+  *(f32 *)((char *)state + 0xc0) += *(f32 *)((char *)state + 0xcc);
+  *(f32 *)((char *)state + 0xc4) += *(f32 *)((char *)state + 0xd0);
+  if (*(f32 *)((char *)state + 0xbc) < lbl_803DF430) {
+    *(f32 *)((char *)state + 0xbc) = lbl_803DF430;
+  } else if (*(f32 *)((char *)state + 0xbc) > lbl_803DF43C) {
+    *(f32 *)((char *)state + 0xbc) = lbl_803DF43C;
+  }
+  if (*(f32 *)((char *)state + 0xc0) < lbl_803DF430) {
+    *(f32 *)((char *)state + 0xc0) = lbl_803DF430;
+  } else if (*(f32 *)((char *)state + 0xc0) > lbl_803DF43C) {
+    *(f32 *)((char *)state + 0xc0) = lbl_803DF43C;
+  }
+  if (*(f32 *)((char *)state + 0xc4) < lbl_803DF430) {
+    *(f32 *)((char *)state + 0xc4) = lbl_803DF430;
+  } else if (*(f32 *)((char *)state + 0xc4) > lbl_803DF43C) {
+    *(f32 *)((char *)state + 0xc4) = lbl_803DF43C;
+  }
+  for (j = 0; j < *(s16 *)((char *)p + 0x14); j++) {
+    buf[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xc] = (int)*(f32 *)((char *)state + 0xbc);
+    buf[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xd] = (int)*(f32 *)((char *)state + 0xc0);
+    buf[(*(s16 **)((char *)p + 0x10))[j] * 16 + 0xe] = (int)*(f32 *)((char *)state + 0xc4);
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset

@@ -3219,3 +3219,288 @@ void fn_8006CB50(void) {
     }
     DCFlushRange((char *)lbl_803DCFBC + 0x60, *(u32 *)((char *)lbl_803DCFBC + 0x44));
 }
+
+extern void Camera_DisableViewYOffset(void);
+extern void Camera_EnableViewYOffset(void);
+extern f32 Camera_GetFovY(void);
+extern void Camera_SetFovY(f32 x);
+extern void Camera_SetAspectRatio(f32 x);
+extern void Camera_SetCurrentViewIndex(int i);
+extern void Camera_UpdateViewMatrices(void);
+extern void Camera_RebuildProjectionMatrix(void);
+extern void Camera_UpdateProjection(int a, int b);
+extern f32 *Camera_GetViewMatrix(void);
+extern void fn_80061094(f32 *v, f32 *out, f32 x);
+extern void mapGetBlocks(int *a, int *b);
+extern int fn_800626C8(int *obj, int frames);
+extern void fn_8008923C(int *obj, f32 *a, f32 *b, f32 *c);
+extern f32 PSVECDotProduct(f32 *a, f32 *b);
+extern f32 PSVECMag(f32 *v);
+extern void PSVECScale(f32 *v, f32 *out, f32 s);
+extern void PSVECNormalize(f32 *v, f32 *out);
+extern int getAngle(f32 a, f32 b);
+extern void setScreenWidth(int w);
+extern void clearScreenWidth(void);
+extern f32 *ObjModel_GetJointMatrix(int *model, int joint);
+extern void C_MTXOrtho(f32 *m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+extern void C_MTXLightOrtho(f32 *m, f32 t, f32 b, f32 l, f32 r, f32 sx, f32 sy, f32 tx, f32 ty);
+extern void GXSetProjection(f32 *m, int type);
+extern void PSMTXCopy(f32 *s, f32 *d);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *o);
+extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
+extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+extern void objRenderShadowIfVisible(int *obj, int a, int b, int c, int d, int e);
+extern void GXSetCopyFilter(int a, void *b, int c, void *d);
+extern void GXSetScissor(int a, int b, int c, int d);
+extern void setDisplayCopyFilter(void);
+extern int getDrawDistanceFlag_8005cd48(void);
+extern int isWidescreen(void);
+extern void *memcpy(void *d, const void *s, int n);
+extern f32 lbl_803DED28, lbl_803DED2C, lbl_803DED30, lbl_803DED34;
+extern f32 lbl_803DED70, lbl_803DED74, lbl_803DED78, lbl_803DED7C;
+extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40;
+extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
+extern f32 FinishQueue_803DED64[];
+extern f32 Ydchuff_803DED80[];
+extern u8 lbl_803DB668[];
+extern f32 lbl_803DB670;
+extern int lbl_803DCCF0;
+extern f32 lbl_803DCED0, lbl_803DCECC;
+extern int lbl_803DCF84, lbl_803DCF88;
+extern char lbl_8038DF48b[];
+#pragma scheduling off
+void renderShadows(void) {
+    char *B = (char *)lbl_8038DF48;
+    int *slot;
+    f32 savedFovY, sCamX, sCamY, sCamZ;
+    s16 s170, s14, s19;
+    f32 v30[3];
+    f32 om100[24];
+    int blkArr, blkCount;
+    f32 vA[4], vB[4], proj[4], dot24[4];
+    f32 mc48[3], mc54[3];
+    f32 mOrtho[16], mTrans[12], mScale[12];
+    int r22, r23, r24;
+    char *casterPtr;
+    f32 dirX, dirY, dirZ, f22, f21, f23;
+
+    if (lbl_803DCF78 == 0) return;
+    Camera_DisableViewYOffset();
+    fn_8006B830((ShadowSortEntry *)(B + 0x360), lbl_803DCF78);
+    Camera_SetCurrentViewIndex(1);
+    slot = Camera_GetCurrentViewSlot();
+    savedFovY = Camera_GetFovY();
+    Camera_SetFovY(lbl_803DED30);
+    Camera_SetAspectRatio(lbl_803DED2C);
+    sCamX = *(f32 *)((char *)slot + 0xc);
+    sCamY = *(f32 *)((char *)slot + 0x10);
+    sCamZ = *(f32 *)((char *)slot + 0x14);
+    s170 = *(s16 *)((char *)slot + 0x2);
+    s14 = *(s16 *)((char *)slot + 0x0);
+    s19 = *(s16 *)((char *)slot + 0x4);
+    *(s16 *)((char *)slot + 0x2) = 0;
+    v30[0] = lbl_803DED28;
+    v30[1] = lbl_803DED2C;
+    v30[2] = lbl_803DED28;
+    fn_80061094(v30, om100, lbl_803DED34);
+    mapGetBlocks(&blkArr, &blkCount);
+    r23 = 0;
+    r24 = 0;
+    casterPtr = B + 0x360;
+    for (r22 = 0; (s8)r22 < (int)lbl_803DCF78 && (s8)r22 < 0x64; r22++, casterPtr += 0xc) {
+        int *obj = *(int **)casterPtr;
+        int *of64 = (int *)obj[0x64 / 4];
+        int lod, screenW = 0, w = 0;
+        char *castSlot;
+        Camera_SetCurrentViewIndex(0);
+        lod = fn_800626C8(obj, framesThisStep);
+        Camera_SetCurrentViewIndex(1);
+        if ((u8)lod <= 4) continue;
+        if ((*(int *)((char *)of64 + 0x30) & 0x20) != 0) {
+            memcpy(mc48, (char *)obj + 0xc, 0xc);
+            memcpy(mc54, (char *)obj + 0x18, 0xc);
+            memcpy((char *)obj + 0xc, (char *)of64 + 0x20, 0xc);
+            memcpy((char *)obj + 0x18, (char *)of64 + 0x20, 0xc);
+        }
+        castSlot = B + (u8)r24 * 0x68 + 0x1170;
+        *(u8 *)(castSlot + 0x64) = (u8)lod;
+        if ((u8)r23 < 8 && *(u8 *)(casterPtr + 8) != 0) {
+            if ((u8)r23 < 3) { w = 0x100; f23 = CPUFifo_803DED38; }
+            else if ((u8)r23 < 5) { w = 0x80; f23 = GPFifo_803DED3C; }
+            else { w = 0x40; f23 = __GXCurrentThread_803DED40; }
+            if ((u8)r23 == 0) screenW = w << 1; else screenW = w;
+            if (*(u8 *)(casterPtr + 8) == 2) {
+                screenW = *(u16 *)((char *)((int *)obj[0x64 / 4])[1] + 0xa);
+            }
+            fn_8008923C(obj, vA, &mc54[0], &mc54[0]);
+            dot24[0] = -*(f32 *)((char *)of64 + 0x14);
+            dot24[1] = -*(f32 *)((char *)of64 + 0x18);
+            dot24[2] = -*(f32 *)((char *)of64 + 0x1c);
+            if (PSVECDotProduct(dot24, vA) < lbl_803DED2C && PSVECDotProduct(dot24, vA) > CPGPLinked_803DED44) {
+                proj[0] = GXOverflowSuspendInProgress_803DED48 * dot24[0] + BreakPointCB_803DED4C * vA[0];
+                proj[1] = GXOverflowSuspendInProgress_803DED48 * dot24[1] + BreakPointCB_803DED4C * vA[1];
+                proj[2] = GXOverflowSuspendInProgress_803DED48 * dot24[2] + BreakPointCB_803DED4C * vA[2];
+                if (PSVECMag(proj) > lbl_803DED28) {
+                    PSVECScale(proj, vA, lbl_803DED2C / PSVECMag(proj));
+                }
+            }
+            if (vA[1] > __GXOverflowCount_803DED50) {
+                vA[1] = __GXOverflowCount_803DED50;
+                PSVECNormalize(vA, vA);
+            }
+            f22 = vA[0];
+            dirX = -f22;
+            f21 = vA[2];
+            dirZ = -f21;
+            lbl_803DCF84 = (u16)getAngle(dirX, f21);
+            lbl_803DCF88 = getAngle(sqrtf(f22 * f22 + f21 * f21), vA[1]) - 0x3fc8;
+            *(s16 *)((char *)slot + 0x2) = (s16)lbl_803DCF88;
+            *(s16 *)((char *)slot + 0x0) = (s16)lbl_803DCF84;
+            dirY = -vA[1];
+            {
+                f32 mag = sqrtf(dirX * dirX + dirY * dirY + dirZ * dirZ);
+                if (mag > lbl_803DED28) {
+                    f32 inv = FinishQueue_803DED64[1] / mag;
+                    dirX *= inv;
+                    dirY *= inv;
+                    dirZ *= inv;
+                }
+            }
+            *(int *)((char *)slot + 0x40) = 0;
+            *(f32 *)((char *)of64 + 0x14) = -vA[0];
+            *(f32 *)((char *)of64 + 0x18) = -vA[1];
+            *(f32 *)((char *)of64 + 0x1c) = -vA[2];
+            setScreenWidth(screenW);
+            {
+                f32 *m = ObjModel_GetJointMatrix(Obj_GetActiveModel(obj), 0);
+                *(f32 *)((char *)slot + 0xc) = dirX + m[3];
+                *(f32 *)((char *)slot + 0x10) = dirY + m[7];
+                *(f32 *)((char *)slot + 0x14) = dirZ + m[11];
+            }
+            if (*(int *)((char *)obj + 0x30) == 0) {
+                *(f32 *)((char *)slot + 0xc) += lbl_803DCED0;
+                *(f32 *)((char *)slot + 0x14) += lbl_803DCECC;
+            }
+            f21 = *(f32 *)of64;
+            f22 = -f21;
+            if (*(int *)((char *)obj + 0x30) != 0) {
+                *(f32 *)((char *)slot + 0xc) += playerMapOffsetX;
+                *(f32 *)((char *)slot + 0x14) += playerMapOffsetZ;
+            }
+            GXSetScissor(2, 2, screenW - 4, screenW - 4);
+            GXSetViewport(lbl_803DED28, lbl_803DED28, (f32)(u32)screenW, (f32)(u32)screenW, lbl_803DED28, lbl_803DED2C);
+            C_MTXOrtho(mOrtho, f22, f21, f22, f21, lbl_803DED2C, FinishQueue_803DED64[2]);
+            GXSetProjection(mOrtho, 1);
+            Camera_UpdateViewMatrices();
+            C_MTXLightOrtho((f32 *)castSlot, f21, f22, f22, f21, f23, f23, f23, f23);
+            {
+                f32 *vm = Camera_GetViewMatrix();
+                PSMTXCopy(vm, (f32 *)(castSlot + 0x30));
+                PSMTXConcat((f32 *)castSlot, vm, (f32 *)castSlot);
+                *(int *)((char *)obj[0x64 / 4] + 0xc) = (int)castSlot;
+                {
+                    char *texSlot = B + (u8)r23 * 4 + 0x3a10;
+                    *(int *)(castSlot + 0x60) = *(int *)texSlot;
+                    *(u8 *)(castSlot + 0x65) = lbl_803DB668[(u8)r23];
+                    objRenderShadowIfVisible(obj, 0, 0, 0, 0, 0);
+                    if (*(u8 *)(casterPtr + 8) == 2) {
+                        gxSetZMode_(1, 3, 1);
+                        PSMTXScale((f32 *)(castSlot + 0x30), lbl_803DED28, lbl_803DED28, lbl_803DED28);
+                        *(f32 *)(castSlot + 0x38) = lbl_803DED70;
+                        *(f32 *)(castSlot + 0x3c) = lbl_803DED74;
+                        *(f32 *)(castSlot + 0x5c) = lbl_803DED2C;
+                        PSMTXConcat((f32 *)(castSlot + 0x30), vm, (f32 *)(castSlot + 0x30));
+                        GXSetTexCopySrc(0, 0, screenW, screenW);
+                        GXSetTexCopyDst(screenW, screenW, 0x11, 0);
+                        GXSetCopyFilter(0, (void *)(lbl_803DCCF0 + 0x1a), 0, (void *)(lbl_803DCCF0 + 0x32));
+                        GXCopyTex((void *)(*(int *)((char *)obj[0x64 / 4] + 4) + 0x60), 1);
+                        setDisplayCopyFilter();
+                        *(int *)(castSlot + 0x60) = *(int *)((char *)obj[0x64 / 4] + 4);
+                    } else {
+                        if ((u8)r23 == 0) {
+                            gxSetZMode_(1, 3, 1);
+                            GXSetTexCopySrc(0, 0, screenW, screenW);
+                            GXSetTexCopyDst(w, 0x20, 1, 0);
+                            GXCopyTex((void *)(*(int *)texSlot + 0x60), 1);
+                            *(int *)(castSlot + 0x60) = *(int *)texSlot;
+                        }
+                        r23++;
+                    }
+                }
+            }
+        } else {
+            f32 fx, fz;
+            *(int *)(castSlot + 0x60) = *(int *)((char *)obj[0x64 / 4] + 4);
+            fx = *(f32 *)((char *)obj + 0xc);
+            fz = *(f32 *)((char *)obj + 0x14);
+            if (*(int *)((char *)obj + 0x30) == 0) {
+                fx -= playerMapOffsetX;
+                fz -= playerMapOffsetZ;
+            }
+            PSMTXTrans(mTrans, -fx, -*(f32 *)((char *)obj + 0x10), -fz);
+            {
+                f32 s = CPUFifo_803DED38 / *(f32 *)of64;
+                mScale[0] = s;
+                mScale[1] = lbl_803DED28;
+                mScale[2] = lbl_803DED28;
+                mScale[3] = CPUFifo_803DED38;
+                mScale[4] = lbl_803DED28;
+                mScale[5] = lbl_803DED28;
+                mScale[6] = s;
+                mScale[7] = CPUFifo_803DED38;
+                mScale[8] = lbl_803DED28;
+                mScale[9] = lbl_803DED28;
+                mScale[10] = lbl_803DED28;
+                mScale[11] = lbl_803DED2C;
+            }
+            PSMTXConcat(mScale, mTrans, (f32 *)castSlot);
+            *(f32 *)((char *)of64 + 0x14) = v30[0];
+            *(f32 *)((char *)of64 + 0x18) = v30[1];
+            *(f32 *)((char *)of64 + 0x1c) = v30[2];
+            *(int *)((char *)obj[0x64 / 4] + 0xc) = (int)castSlot;
+        }
+        r24++;
+        if ((*(int *)((char *)of64 + 0x30) & 0x20) != 0) {
+            memcpy((char *)obj + 0xc, mc48, 0xc);
+            memcpy((char *)obj + 0x18, mc54, 0xc);
+        }
+    }
+    if ((u8)r23 > 1) {
+        gxSetZMode_(1, 3, 1);
+        GXSetCopyFilter(0, (void *)(lbl_803DCCF0 + 0x1a), 0, (void *)(lbl_803DCCF0 + 0x32));
+        GXSetTexCopySrc(0, 0, 0x100, 0x100);
+        GXSetTexCopyDst(0x100, 0x100, 0x28, 0);
+        GXCopyTex((void *)(*(int *)(B + 0x3a14) + 0x60), 1);
+        GXPixModeSync();
+        setDisplayCopyFilter();
+    }
+    clearScreenWidth();
+    *(f32 *)((char *)slot + 0xc) = sCamX;
+    *(f32 *)((char *)slot + 0x10) = sCamY;
+    *(f32 *)((char *)slot + 0x14) = sCamZ;
+    *(s16 *)((char *)slot + 0x2) = s170;
+    *(s16 *)((char *)slot + 0x0) = s14;
+    *(s16 *)((char *)slot + 0x4) = s19;
+    if (getDrawDistanceFlag_8005cd48() != 0) {
+        Camera_SetCurrentViewIndex(0);
+        Camera_SetFovY(savedFovY);
+        if (isWidescreen() != 0) Camera_SetAspectRatio(lbl_803DED78);
+        else Camera_SetAspectRatio(lbl_803DED7C);
+        Camera_UpdateProjection(0, 0);
+    } else if (isWidescreen() != 0) {
+        Camera_SetCurrentViewIndex(0);
+        Camera_SetFovY(savedFovY);
+        Camera_SetAspectRatio(Ydchuff_803DED80[0]);
+        Camera_UpdateProjection(0, 0);
+    } else {
+        Camera_SetCurrentViewIndex(0);
+        Camera_SetFovY(savedFovY);
+        Camera_SetAspectRatio(lbl_803DB670);
+        Camera_UpdateProjection(0, 0);
+    }
+    Camera_UpdateViewMatrices();
+    Camera_RebuildProjectionMatrix();
+    Camera_ApplyFullViewport();
+    Camera_EnableViewYOffset();
+}
+#pragma scheduling reset
