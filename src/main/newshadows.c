@@ -3097,6 +3097,110 @@ void fn_8006CD20(f32 *arr, int n, f32 *out1, f32 *out2, f32 a, f32 b, f32 c) {
     *out2 = acc5;
 }
 #pragma scheduling reset
+
+extern int testAndSet_onlyUseHeap3(int);
+extern f32 fn_802943F4(f32);
+extern double floor(double);
+extern f32 Yachuff_803DEDE0[];
+extern f32 __PADFixBits;
+extern f32 lbl_80391978[];
+extern u8 lbl_8038E268[0x40];
+extern u32 lbl_803DCFE0;
+extern f32 lbl_803DCFA8, lbl_803DCFAC;
+#pragma scheduling off
+void initFn_8006d020(void) {
+    u8 saved;
+    int placed, attempts, tex, row, col, collide, j;
+    f32 *e;
+    int *th;
+
+    saved = testAndSet_onlyUseHeap3(1);
+    placed = 0;
+    attempts = 0;
+    e = lbl_80391978;
+    while (placed < 0x32 && attempts < 10000) {
+        e[0] = (f32)(int)randomGetRange(8, 0x10);
+        e[3] = Vdchuff_803DEDC0[6] * (f32)(int)randomGetRange(5, 10);
+        e[4] = e[3] * (Vdchuff_803DEDC0[6] * (f32)(int)randomGetRange(0x14, 0x32));
+        attempts = 0;
+        do {
+            f32 *o;
+            e[1] = Vdchuff_803DEDC0[7] * (f32)(int)randomGetRange(0, 999);
+            e[2] = Vdchuff_803DEDC0[7] * (f32)(int)randomGetRange(0, 999);
+            collide = 0;
+            j = 0;
+            o = lbl_80391978;
+            while (j < placed && !collide) {
+                f32 mx, mz, tmp, d;
+                mx = (f32)__fabs(e[1] - o[1]);
+                tmp = (f32)__fabs((lbl_803DED2C + e[1]) - o[1]);
+                if (tmp < mx) mx = tmp;
+                tmp = (f32)__fabs((e[1] - lbl_803DED2C) - o[1]);
+                if (tmp < mx) mx = tmp;
+                mz = (f32)__fabs(e[2] - o[2]);
+                tmp = (f32)__fabs((lbl_803DED2C + e[2]) - o[2]);
+                if (tmp < mz) mz = tmp;
+                tmp = (f32)__fabs((e[2] - lbl_803DED2C) - o[2]);
+                if (tmp < mz) mz = tmp;
+                d = mx * mx + mz * mz;
+                if (d > lbl_803DED28) d = sqrtf(d);
+                if (d < e[4] + o[3]) collide = 1;
+                o += 5;
+                j++;
+            }
+            attempts++;
+        } while (collide && attempts < 10000);
+        e += 5;
+        placed++;
+    }
+
+    th = (int *)lbl_8038E268;
+    for (tex = 0; tex < 0x10; tex++, th++) {
+        *th = (int)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
+        for (row = 0; row < 0x40; row++) {
+            for (col = 0; col < 0x40; col++) {
+                f32 o2, o1;
+                int hi, lo;
+                u16 *dst = (u16 *)(*th + (row & 3) * 2 + (row >> 2) * 0x20
+                                   + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
+                fn_8006CD20(lbl_80391978, placed, &o1, &o2,
+                            (f32)row * Yachuff_803DEDE0[0],
+                            (f32)col * Yachuff_803DEDE0[0],
+                            (f32)tex);
+                hi = (int)(__PADFixBits * o2);
+                lo = (int)(__PADFixBits * o1);
+                *dst = (u16)(((hi & 0xffff) << 8) | lo);
+            }
+        }
+        DCFlushRange((void *)(*th + 0x60), *(u32 *)(*th + 0x44));
+    }
+
+    lbl_803DCFE0 = (u32)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
+    for (row = 0; row < 0x40; row++) {
+        f32 rv = Yachuff_803DEDE0[1] * (f32)row;
+        for (col = 0; col < 0x40; col++) {
+            f32 cv, n1, n2, prod, fa, fb;
+            int hi, lo;
+            u16 *dst = (u16 *)(lbl_803DCFE0 + (row & 3) * 2 + (row >> 2) * 0x20
+                               + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
+            cv = Yachuff_803DEDE0[2] * (f32)col;
+            n1 = fn_802943F4(CPUFifo_803DED38 * floor(cv) + rv);
+            n2 = fn_802943F4(cv);
+            prod = n1 * n2;
+            fb = Vdchuff_803DEDC0[0] * prod + Vdchuff_803DEDC0[0];
+            fa = Vdchuff_803DEDC0[0] * n1 + Vdchuff_803DEDC0[0];
+            lo = (int)fa;
+            hi = (int)fb;
+            *dst = (u16)(lo | ((hi & 0xffff) << 8));
+        }
+    }
+    DCFlushRange((void *)(lbl_803DCFE0 + 0x60), *(u32 *)(lbl_803DCFE0 + 0x44));
+
+    lbl_803DCFAC = lbl_803DED28;
+    lbl_803DCFA8 = lbl_803DED28;
+    testAndSet_onlyUseHeap3(saved);
+}
+#pragma scheduling reset
 void shadowCreate(int *obj) {
     int *cam;
     f32 dx, dy, dz, dist;
