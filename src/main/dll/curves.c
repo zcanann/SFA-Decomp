@@ -3058,24 +3058,32 @@ void fn_800E5E38(int obj,u32 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800E5F1C(int obj,u32 *state)
+void fn_800E5F1C(int obj,f32 *state)
 {
   u32 hitCount;
   int i;
   s8 foundBelow;
   RomCurvePoint *point;
   RomCurvePoint *points;
+  f32 topSentinel;
+  f32 floorSentinel;
+  f32 zero;
+  f32 one;
 
+  topSentinel = lbl_803E06A4;
+  floorSentinel = lbl_803E06A8;
+  zero = lbl_803E0668;
+  one = lbl_803E068C;
   foundBelow = 0;
   points = curves_getCurves(state[2],state[4],obj,&hitCount,0);
-  *(f32 *)((u8 *)state + 0x200) = lbl_803E06A4;
-  *(f32 *)((u8 *)state + 0x1f0) = lbl_803E06A4;
-  *(f32 *)((u8 *)state + 0x1d0) = lbl_803E06A8;
-  *(f32 *)((u8 *)state + 0x1e0) = lbl_803E0668;
-  *(f32 *)((u8 *)state + 0x1c0) = lbl_803E0668;
-  *(f32 *)((u8 *)state + 0x210) = lbl_803E0668;
-  *(f32 *)((u8 *)state + 0x220) = lbl_803E068C;
-  *(f32 *)((u8 *)state + 0x230) = lbl_803E0668;
+  *(f32 *)((u8 *)state + 0x200) = topSentinel;
+  *(f32 *)((u8 *)state + 0x1f0) = topSentinel;
+  *(f32 *)((u8 *)state + 0x1d0) = floorSentinel;
+  *(f32 *)((u8 *)state + 0x1e0) = zero;
+  *(f32 *)((u8 *)state + 0x1c0) = zero;
+  *(f32 *)((u8 *)state + 0x210) = zero;
+  *(f32 *)((u8 *)state + 0x220) = one;
+  *(f32 *)((u8 *)state + 0x230) = zero;
   point = points;
   for (i = 0; i < (int)hitCount; i++) {
     if ((s8)point->type != 0xe) {
@@ -3088,7 +3096,7 @@ void fn_800E5F1C(int obj,u32 *state)
         }
         foundBelow = 1;
       }
-      else if ((point->x >= (state[3] + lbl_803E06AC)) && (point->z < lbl_803E0668)) {
+      else if ((point->x >= (state[3] + lbl_803E06AC)) && (point->z < zero)) {
         *(f32 *)((u8 *)state + 0x1d0) = point->x;
       }
     }
@@ -3098,7 +3106,7 @@ void fn_800E5F1C(int obj,u32 *state)
     *(f32 *)((u8 *)state + 0x1c0) = lbl_803E06B0;
   }
   if (((s8)*(u8 *)((u8 *)state + 0x260) & 0x10) != 0) {
-    *(f32 *)((u8 *)state + 0x1c0) = lbl_803E0668;
+    *(f32 *)((u8 *)state + 0x1c0) = zero;
   }
   point = points;
   for (i = 0; i < (int)hitCount; i++) {
@@ -3112,7 +3120,7 @@ void fn_800E5F1C(int obj,u32 *state)
     }
     point++;
   }
-  if (*(f32 *)((u8 *)state + 0x200) != lbl_803E06A4) {
+  if (*(f32 *)((u8 *)state + 0x200) != topSentinel) {
     *(f32 *)((u8 *)state + 0x1e0) = *(f32 *)((u8 *)state + 0x200) - state[3];
   }
   *(f32 *)((u8 *)state + 0x1bc) = *(f32 *)((u8 *)state + 0x200);
@@ -3896,7 +3904,7 @@ LAB_800e7350:
         fn_800E5CBC((short *)puVar4,(int)puVar8);
       }
       if ((*puVar8 & 1) != 0) {
-        fn_800E5F1C((int)puVar4,puVar8);
+        fn_800E5F1C((int)puVar4,(f32 *)puVar8);
       }
       FUN_80003494((uint)(puVar8 + 0xe),(uint)(puVar8 + 2),
                    ((int)(uint)*(byte *)(puVar8 + 0x97) >> 4) * 0xc);
@@ -4003,7 +4011,7 @@ LAB_800e7350:
       FUN_80003494((uint)(puVar8 + 0xe),(uint)(puVar8 + 2),
                    ((int)(uint)*(byte *)(puVar8 + 0x97) >> 4) * 0xc);
       if ((*puVar8 & 1) != 0) {
-        fn_800E5F1C((int)puVar4,puVar8);
+        fn_800E5F1C((int)puVar4,(f32 *)puVar8);
       }
     }
   }
