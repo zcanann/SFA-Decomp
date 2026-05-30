@@ -18,7 +18,7 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern undefined4 FUN_80081120();
-extern undefined4 FUN_801d1e24();
+extern void enemymushroom_resetToSpawn(s16 *obj,float *state,int enableTimer);
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
@@ -153,7 +153,7 @@ void enemymushroom_update
           param_2 = (double)*pfVar14;
           local_30 = (double)CONCAT44(0x43300000,(int)*(short *)(pfVar14 + 0xd) ^ 0x80000000);
           if ((double)(float)(local_30 - DOUBLE_803e5fa0) < param_2) {
-            FUN_801d1e24(puVar3,pfVar14,1);
+            enemymushroom_resetToSpawn((s16 *)puVar3,pfVar14,1);
             *(undefined *)((int)pfVar14 + 0x36) = 1;
           }
         }
@@ -268,7 +268,7 @@ void enemymushroom_update
         param_2 = (double)*pfVar14;
         local_30 = (double)CONCAT44(0x43300000,(int)*(short *)(pfVar14 + 0xd) ^ 0x80000000);
         if ((double)(float)(local_30 - DOUBLE_803e5fa0) < param_2) {
-          FUN_801d1e24(puVar3,pfVar14,1);
+          enemymushroom_resetToSpawn((s16 *)puVar3,pfVar14,1);
           *(undefined *)((int)pfVar14 + 0x36) = 1;
           FUN_80017a68((int)puVar3);
         }

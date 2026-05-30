@@ -2,7 +2,7 @@
 #include "main/dll/dll_1E2.h"
 
 extern undefined4 ObjGroup_AddObject();
-extern undefined4 FUN_801d1e24();
+extern void enemymushroom_resetToSpawn(s16 *obj,float *state,int enableTimer);
 
 extern f32 lbl_803E5F94;
 extern f32 lbl_803E5FE8;
@@ -41,7 +41,7 @@ void bombplant_update(undefined2 *param_1,int param_2,int param_3)
     *(uint *)(iVar2 + 0x30) = *(uint *)(iVar2 + 0x30) | 0x810;
   }
   if (param_3 == 0) {
-    FUN_801d1e24(param_1,pfVar3,0);
+    enemymushroom_resetToSpawn((s16 *)param_1,pfVar3,0);
   }
   ObjGroup_AddObject((int)param_1,3);
   return;

@@ -160,7 +160,7 @@ void ediblemushroom_init(int obj, int aux)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801D1BFC(s16 *obj,float *state,int enableTimer)
+void enemymushroom_resetToSpawn(s16 *obj,float *state,int enableTimer)
 {
   int objDef;
   u32 randomValue;
