@@ -344,6 +344,8 @@ extern f32 lbl_803DF8D0;
 extern f32 lbl_803DEC50;
 extern f32 lbl_803DF8D8;
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
+extern f32 __AR_Callback;
+extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f);
 extern f32 lbl_803DF8E8;
 extern f32 lbl_803DF8EC;
 extern f32 lbl_803DF8F0;
@@ -4638,4 +4640,34 @@ int objShadowFn_80062378(void *obj, u8 param)
     int n = (int)((f32)param * inv);
     return (n * (*(u8 *)((char *)obj + 0x37) + 1)) >> 8;
   }
+}
+
+int fn_80065684(int a, f32 b, f32 val, f32 d, f32 *out, int e)
+{
+  void **arr;
+  int n;
+  int i;
+  f32 best;
+  f32 cur;
+
+  n = hitDetectFn_80065e50(a, b, val, d, &arr, 0, e);
+  if (n != 0) {
+    best = val - *(f32 *)arr[0];
+    for (i = 1; i < n; i++) {
+      cur = val - *(f32 *)arr[i];
+      if (cur >= __AR_Callback) {
+        if (best < __AR_Callback || cur < best) {
+          best = cur;
+        }
+      }
+    }
+    if (best >= __AR_Callback) {
+      *out = best;
+      return 1;
+    }
+    *out = __AR_Callback;
+    return 0;
+  }
+  *out = __AR_Callback;
+  return 0;
 }
