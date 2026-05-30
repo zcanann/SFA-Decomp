@@ -1121,3 +1121,327 @@ void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E28D4;
+extern f32 lbl_803E28D8;
+extern f32 lbl_803E28F0;
+extern f32 lbl_803E28F4;
+extern f32 lbl_803E2900;
+extern f32 lbl_803E2904;
+extern f32 lbl_803E2908;
+extern f64 lbl_803E2918;
+extern f64 lbl_803E2938;
+extern f32 lbl_803E2940;
+extern f32 lbl_803E2944;
+extern f32 lbl_803E2948;
+extern f32 lbl_803E2920;
+extern f32 lbl_803E294C;
+extern f32 lbl_803E2950;
+extern f32 lbl_803E2954;
+extern f32 lbl_803E2958;
+extern int lbl_803DBCB8;
+extern int lbl_803DBCC0;
+extern int lbl_803DBCC8;
+extern uint countLeadingZeros(uint x);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int size, int type);
+extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
+extern void voxmaps_worldToGrid(f32 *pos, int *grid);
+extern int voxmaps_traceLine(int *a, int *b, int c, u8 *out, int e);
+extern f32 PSVECMag(f32 *v);
+extern s16 getAngle(f32 dx, f32 dz);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80153248(int obj, int state)
+{
+    int *curve;
+    f32 vec[3];
+    f32 worldPos[3];
+    int gridB[3];
+    int gridA[3];
+    u8 hitOut;
+    int p29c;
+
+    curve = *(int **)state;
+    if (*(u8*)(state + 0x33b) != 0) {
+        *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x80;
+    }
+    if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
+        Sfx_PlayFromObject(obj, 0x25a);
+    }
+    if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
+        if (curveFn_80010320(curve, lbl_803E28D4 * *(f32*)(state + 0x2fc)) != 0
+            || curve[0x10/4] != 0) {
+            if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
+                if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
+                        *(int*)state, obj, lbl_803E28B8, &lbl_803DBCB8, -1, *(void**)gRomCurveInterface) != 0) {
+                    *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~0x2000;
+                }
+            }
+        }
+    }
+    ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
+    p29c = *(int*)(state + 0x29c);
+    vec[0] = *(f32*)(p29c + 0xc) - *(f32*)(obj + 0xc);
+    vec[1] = (lbl_803E28D8 + *(f32*)(p29c + 0x10)) - *(f32*)(obj + 0x10);
+    vec[2] = *(f32*)(p29c + 0x14) - *(f32*)(obj + 0x14);
+    PSVECMag(vec);
+    *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) + timeDelta;
+    if (*(u32*)(state + 0x340) != 0 || *(f32*)(state + 0x32c) > lbl_803E28C8) {
+        *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) | 0x10000;
+        *(f32*)(state + 0x324) = lbl_803E28B0;
+        *(f32*)(state + 0x32c) = lbl_803E28B0;
+    } else {
+        worldPos[0] = *(f32*)(obj + 0xc);
+        worldPos[1] = *(f32*)(obj + 0x10);
+        worldPos[2] = *(f32*)(obj + 0x14);
+        voxmaps_worldToGrid(worldPos, gridA);
+        worldPos[0] = *(f32*)((char*)curve + 0x68);
+        worldPos[1] = *(f32*)((char*)curve + 0x6c);
+        worldPos[2] = *(f32*)((char*)curve + 0x70);
+        voxmaps_worldToGrid(worldPos, gridB);
+        if (((countLeadingZeros(*(u32*)(state + 0x2dc)) >> 5) & 0x01000000) != 0) {
+            if (voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0) == 0) {
+                *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) | 0x10000;
+                *(f32*)(state + 0x324) = lbl_803E28B0;
+                *(f32*)(state + 0x32c) = lbl_803E28B0;
+            }
+        }
+    }
+    fn_8014C678(obj, state, vec, lbl_803E28BC, lbl_803E28C0, lbl_803E28C4, 1);
+    fn_8014CD1C(obj, state, 0xf, lbl_803E28CC, lbl_803E28D0, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80153640(int obj, int state)
+{
+    u8 *fx;
+    int newObj;
+    u32 rnd;
+    int p29c;
+
+    if ((u8)Obj_IsLoadingLocked() != 0) {
+        fx = (u8 *)Obj_AllocObjectSetup(0x24, 0x51b);
+        *(f32*)(fx + 0x8) = *(f32*)(obj + 0xc);
+        *(f32*)(fx + 0xc) = lbl_803E28F0 + *(f32*)(obj + 0x10);
+        *(f32*)(fx + 0x10) = *(f32*)(obj + 0x14);
+        *(u8*)(fx + 0x4) = 1;
+        *(u8*)(fx + 0x5) = 1;
+        *(u8*)(fx + 0x6) = 0xff;
+        *(u8*)(fx + 0x7) = 0xff;
+        newObj = Obj_SetupObject((int)fx, 5, -1, -1, 0);
+        if (newObj != 0) {
+            p29c = *(int*)(state + 0x29c);
+            *(f32*)(newObj + 0x24) = lbl_803E28F4 * (*(f32*)(p29c + 0xc) - *(f32*)(fx + 0x8));
+            rnd = randomGetRange(-10, 10);
+            p29c = *(int*)(state + 0x29c);
+            *(f32*)(newObj + 0x28) = lbl_803E28F4 *
+                ((lbl_803E28F0 + *(f32*)(p29c + 0x10) + (f32)(s32)rnd) - *(f32*)(fx + 0xc));
+            p29c = *(int*)(state + 0x29c);
+            *(f32*)(newObj + 0x2c) = lbl_803E28F4 * (*(f32*)(p29c + 0x14) - *(f32*)(fx + 0x10));
+            *(int*)(newObj + 0xc4) = obj;
+        }
+        Sfx_PlayFromObject(obj, 0x49a);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015383C(int obj, int state)
+{
+    int hit;
+    int losDetected;
+    f32 vec[3];
+    f32 worldPos[3];
+    int gridB[3];
+    int gridA[3];
+    u8 hitOut;
+    u8 flagByte;
+    u32 rnd;
+    int p29c;
+    s16 angle;
+
+    *(u8*)(state + 0x33b) = *(u8*)(state + 0x33b) & 0x7f;
+    losDetected = 0;
+    p29c = *(int*)(state + 0x29c);
+    vec[0] = *(f32*)(obj + 0xc) - *(f32*)(p29c + 0xc);
+    vec[1] = *(f32*)(obj + 0x10) - *(f32*)(p29c + 0x10);
+    vec[2] = *(f32*)(obj + 0x14) - *(f32*)(p29c + 0x14);
+    if (PSVECMag(vec) < lbl_803E2900
+        && (*(u16*)(*(int*)(state + 0x29c) + 0xb0) & 0x1000) == 0) {
+        worldPos[0] = *(f32*)(obj + 0xc);
+        worldPos[1] = lbl_803E2904 + *(f32*)(obj + 0x10);
+        worldPos[2] = *(f32*)(obj + 0x14);
+        voxmaps_worldToGrid(worldPos, gridA);
+        p29c = *(int*)(state + 0x29c);
+        worldPos[0] = *(f32*)(p29c + 0xc);
+        worldPos[1] = lbl_803E2908 + *(f32*)(p29c + 0x10);
+        worldPos[2] = *(f32*)(p29c + 0x14);
+        voxmaps_worldToGrid(worldPos, gridB);
+        hit = (u8)voxmaps_traceLine(gridB, gridA, 0, &hitOut, 0);
+        if (hit != 0) {
+            p29c = *(int*)(state + 0x29c);
+            fn_8014CF7C(obj, state, 0x14, 0, *(f32*)(p29c + 0xc), *(f32*)(p29c + 0x14));
+            angle = (s16)(getAngle(vec[0], vec[2]) - *(s16*)obj);
+            if (angle > 0x8000) angle = angle + 1;
+            if (angle < -0x8000) angle = angle - 1;
+            if (angle < 0) angle = -angle;
+            if (angle < 1000) losDetected = 1;
+        }
+    } else {
+        hit = 0;
+    }
+    flagByte = *(u8*)(state + 0x33b);
+    if ((flagByte & 0x40) == 0) {
+        Sfx_PlayFromObjectLimited(obj, 0x49b, 2);
+        ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 2, lbl_803E290C, 0, 0);
+        *(u8*)(state + 0x33b) = (u8)((*(u8*)(state + 0x33b)) | 0x40);
+        *(u8*)(state + 0x33a) = 0;
+    } else if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
+        u8 mode;
+        if ((u8)hit == 0) {
+            rnd = randomGetRange(2, 4);
+            mode = (u8)rnd;
+            if (mode == 2) {
+                mode = 0;
+            } else if (mode == 4) {
+                Sfx_PlayFromObject(obj, 0x357);
+            }
+        } else if (*(u8*)(state + 0x33a) != 0) {
+            *(u8*)(state + 0x33a) = *(u8*)(state + 0x33a) - 1;
+            mode = (u8)*(s16*)(obj + 0xa0);
+        } else if (*(s16*)(obj + 0xa0) != 5 && losDetected) {
+            mode = 5;
+            *(u8*)(state + 0x33a) = (&lbl_803DBCC0)[*(u8*)(state + 0x33b) & 3];
+            *(u8*)(state + 0x33b) = (u8)((*(s8*)(state + 0x33b) + 1) & 0xc3);
+        } else {
+            mode = 4;
+            rnd = randomGetRange(1, 2);
+            *(u8*)(state + 0x33a) = (u8)rnd;
+        }
+        ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, mode, lbl_803E2910, 0, 0);
+    }
+    if (*(s16*)(obj + 0xa0) == 5) {
+        f32 sct = *(f32*)(obj + 0x98);
+        if ((double)sct >= lbl_803E2918
+            && (double)sct < lbl_803E2918 + (double)(f32)((double)*(f32*)(state + 0x308) * (double)timeDelta)) {
+            fn_80153640(obj, state);
+        } else {
+            *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
+            if (*(f32*)(state + 0x324) <= lbl_803E2920) {
+                rnd = randomGetRange(0x96, 0x12c);
+                *(f32*)(state + 0x324) = (f32)(s32)rnd;
+                Sfx_PlayFromObject(obj, 0x245);
+            }
+        }
+    } else {
+        *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
+        if (*(f32*)(state + 0x324) <= lbl_803E2920) {
+            rnd = randomGetRange(0x96, 0x12c);
+            *(f32*)(state + 0x324) = (f32)(s32)rnd;
+            Sfx_PlayFromObject(obj, 0x245);
+        }
+    }
+    fn_8015355C(obj, state);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80153CF8(int obj, int state, int p3, int msgFlag)
+{
+    u8 cond = 0;
+    s16 kind = *(s16*)(obj + 0xa0);
+    if (kind == 5 || kind == 4
+        || (kind == 6 && (double)*(f32*)(obj + 0x98) < lbl_803E2938)) {
+        if (msgFlag != 0xe) cond = 1;
+    }
+    if (msgFlag == 0x10) {
+        if (cond != 0) {
+            *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x20;
+        }
+    } else if (cond != 0) {
+        if (*(u8*)(state + 0x33b) == 0) {
+            *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x8;
+            *(s16*)(state + 0x2b0) = 0;
+            Sfx_PlayFromObject(obj, 0x25f);
+        }
+    } else if (msgFlag == 0x11) {
+        *(f32*)(state + 0x32c) = lbl_803E2940;
+        *(f32*)(state + 0x324) = lbl_803E2944;
+        ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 4, lbl_803E2948, 0, 3);
+        *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) | 0x10000;
+        *(u8*)(state + 0x33b) = 0x3c;
+    } else {
+        *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x10;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80153E0C(int obj, int state)
+{
+    int *curve;
+    u32 rnd;
+    u8 ctr;
+
+    curve = *(int **)state;
+    *(u8*)(state + 0x33a) = 0;
+    *(f32*)(state + 0x328) = lbl_803E294C;
+    if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
+        if (curveFn_80010320(curve, *(f32*)(state + 0x2fc)) != 0 || curve[0x10/4] != 0) {
+            if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
+                if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
+                        *(int*)state, obj, lbl_803E2950, &lbl_803DBCC8, -1, *(void**)gRomCurveInterface) != 0) {
+                    *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~0x2000;
+                }
+            }
+        }
+        if (lbl_803E294C == *(f32*)(state + 0x32c)) {
+            if (*(s16*)(obj + 0xa0) == 0) {
+                fn_8014CF7C(obj, state, 0x3c, 0, *(f32*)((char*)curve + 0x68), *(f32*)((char*)curve + 0x70));
+            }
+            if (*(f32*)(state + 0x324) > lbl_803E294C) {
+                *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
+                if (*(f32*)(state + 0x324) <= lbl_803E294C) {
+                    *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) & 0xfffeffff;
+                    *(f32*)(state + 0x324) = lbl_803E294C;
+                }
+            }
+        }
+    }
+    if (*(f32*)(state + 0x32c) > lbl_803E294C) {
+        *(f32*)(state + 0x32c) = *(f32*)(state + 0x32c) - timeDelta;
+        if (*(f32*)(state + 0x32c) <= lbl_803E294C) {
+            ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 6, lbl_803E2948, 0, 3);
+            *(f32*)(state + 0x32c) = lbl_803E294C;
+        } else if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
+            ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 5, lbl_803E2954, 0, 3);
+        }
+    } else if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
+        ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, 0, lbl_803E2958, 0, 3);
+    }
+    *(s16*)(obj + 0x2) = *(s16*)(state + 0x19c);
+    *(s16*)(obj + 0x4) = *(s16*)(state + 0x19e);
+    *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
+    if (*(f32*)(state + 0x330) <= lbl_803E294C) {
+        rnd = randomGetRange(0x3c, 0x78);
+        *(f32*)(state + 0x330) = (f32)(s32)rnd;
+        Sfx_PlayFromObject(obj, 0x25e);
+    }
+    ctr = *(u8*)(state + 0x33b);
+    if (ctr != 0) {
+        *(u8*)(state + 0x33b) = ctr - 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
