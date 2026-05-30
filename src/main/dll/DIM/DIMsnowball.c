@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/DIM/DIMsnowball.h"
 
 extern undefined4 FUN_800067c0();
@@ -1627,7 +1628,7 @@ void fn_801AC108(int obj, int param2)
             r = 0;
         }
         GameBit_Set(0x4e5, 1);
-        (*(int (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 1, 1);
+        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 1, 1);
         if (r == 1) {
             (*(int (**)(int))(*(int *)gGameUIInterface + 0x40))(1);
             *(u8 *)(param2 + 0) = 5;

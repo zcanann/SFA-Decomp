@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
 
 extern undefined4 getLActions();
@@ -2871,9 +2872,9 @@ void shop_update(int obj)
     }
 
     if (*(int *)(obj + 0xf4) == 0) {
-        (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 0, 1);
-        (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 5, 1);
-        (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 6, 1);
+        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0, 1);
+        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 5, 1);
+        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 6, 1);
         GameBit_Set(0x617, 1);
         skyFn_80088c94(7, 1);
         *(int *)(obj + 0xf4) = 1;
