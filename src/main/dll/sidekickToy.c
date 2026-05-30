@@ -1962,6 +1962,8 @@ extern void baddieFn_8014a304(int *a, int *s, f32 v);
 extern f32 lbl_803E25D4;
 extern f32 lbl_803E25D8;
 
+#pragma scheduling off
+#pragma peephole off
 void fn_8014B878(int *arg1, int *sub) {
     int *player;
     int *tricky;
@@ -1974,29 +1976,28 @@ void fn_8014B878(int *arg1, int *sub) {
     if (target != NULL && (*(u32*)((char*)sub + 0x2e4) & 0x10000) == 0 &&
         (target != player || (*(u16*)((char*)player + 0xb0) & 0x1000) == 0)) {
         *(u32*)((char*)sub + 0x2dc) &= 0xff7fffff;
-        camTarget = (int*)(*(int(**)(void))(*(int*)*gCameraInterface + 0x3c))();
+        camTarget = (int*)(*(int(**)(void))((char*)*gCameraInterface + 0x3c))();
         if (camTarget == arg1) {
             *(u32*)((char*)sub + 0x2dc) |= 0x800200;
         }
         {
             u16 dist = *(u16*)((char*)sub + 0x2a4);
             u16 near = (u16)(int)*(f32*)((char*)sub + 0x2ac);
-            if (dist >= near) {
-                u16 dist2 = *(u16*)((char*)sub + 0x2a4);
-                f32 midf = *(f32*)((char*)sub + 0x2a8);
-                u16 mid = (u16)(int)midf;
-                if (dist2 >= mid) {
-                    u16 far = (u16)(int)(lbl_803E25D8 * midf);
-                    if (dist2 > far) {
-                        *(u32*)((char*)sub + 0x2dc) &= 0xdffff9ff;
-                    }
-                } else {
-                    *(u32*)((char*)sub + 0x2dc) |= 0x200;
-                    *(u32*)((char*)sub + 0x2dc) &= 0xfffffbff;
-                }
-            } else {
+            if (dist < near) {
                 *(u32*)((char*)sub + 0x2dc) |= 0x400;
                 *(u32*)((char*)sub + 0x2dc) &= 0xfffffdff;
+            } else {
+                f32 midf = *(f32*)((char*)sub + 0x2a8);
+                u16 mid = (u16)(int)midf;
+                if (dist < mid) {
+                    *(u32*)((char*)sub + 0x2dc) |= 0x200;
+                    *(u32*)((char*)sub + 0x2dc) &= 0xfffffbff;
+                } else {
+                    u16 far = (u16)(int)(lbl_803E25D8 * midf);
+                    if (dist > far) {
+                        *(u32*)((char*)sub + 0x2dc) &= 0xdffff9ff;
+                    }
+                }
             }
         }
     } else {
@@ -2008,7 +2009,7 @@ void fn_8014B878(int *arg1, int *sub) {
     }
     *(u32*)((char*)sub + 0x2dc) &= 0xf890fff7;
     if (tricky != NULL) {
-        u8 r = (*(u8(**)(int*))(*(int*)((char*)tricky + 0x68) + 0x40))(tricky);
+        u8 r = (*(u8(**)(int*))(*(int*)*(int*)((char*)tricky + 0x68) + 0x40))(tricky);
         if ((u8)r != 0) *(u32*)((char*)sub + 0x2dc) |= 0x200000;
     }
     if (*(int**)((char*)sub + 0x29c) == player) {
@@ -2060,6 +2061,8 @@ void fn_8014B878(int *arg1, int *sub) {
         *(u32*)((char*)sub + 0x2dc) |= 0x800;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern f32 PSVECMag(f32 *v);
 extern void PSVECNormalize(f32 *src, f32 *dst);
@@ -2205,10 +2208,12 @@ void fn_8014CD1C(int *node, int *sub, u16 p3, u8 p5, f32 fa, f32 fb) {
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void fn_8014BC98(int *node, int *sub) {
     int *target = *(int**)((char*)sub + 0x29c);
     if (target != NULL) {
-        f32 dx, dy, dz;
+        volatile f32 d[3];
         int angle;
         int raw;
         s32 delta;
@@ -2216,15 +2221,15 @@ void fn_8014BC98(int *node, int *sub) {
         u16 d16;
 
         if ((*(u32*)((char*)sub + 0x2e4) & 0x8000) != 0) {
-            dx = *(f32*)((char*)node + 0x18) - *(f32*)((char*)target + 0x18);
-            dy = lbl_803E2574;
-            dz = *(f32*)((char*)node + 0x20) - *(f32*)((char*)target + 0x20);
+            d[0] = *(f32*)((char*)node + 0x18) - *(f32*)((char*)target + 0x18);
+            d[1] = lbl_803E2574;
+            d[2] = *(f32*)((char*)node + 0x20) - *(f32*)((char*)target + 0x20);
         } else {
-            dx = *(f32*)((char*)node + 0x18) - *(f32*)((char*)target + 0x18);
-            dy = *(f32*)((char*)node + 0x1c) - *(f32*)((char*)target + 0x1c);
-            dz = *(f32*)((char*)node + 0x20) - *(f32*)((char*)target + 0x20);
+            d[0] = *(f32*)((char*)node + 0x18) - *(f32*)((char*)target + 0x18);
+            d[1] = *(f32*)((char*)node + 0x1c) - *(f32*)((char*)target + 0x1c);
+            d[2] = *(f32*)((char*)node + 0x20) - *(f32*)((char*)target + 0x20);
         }
-        angle = getAngle(-dx, -dz);
+        angle = getAngle(-d[0], -d[2]);
         if (*(int**)((char*)node + 0x30) != NULL) {
             raw = (s16)(*(s16*)node + **(s16**)((char*)node + 0x30));
         } else {
@@ -2237,7 +2242,7 @@ void fn_8014BC98(int *node, int *sub) {
         *(u16*)((char*)sub + 0x2a2) = d16;
         *(u16*)((char*)sub + 0x2a0) = d16 >> 13;
 
-        dist = sqrtf(dz*dz + (dx*dx + dy*dy));
+        dist = sqrtf(d[2]*d[2] + (d[0]*d[0] + d[1]*d[1]));
         *(s16*)((char*)sub + 0x2a4) = (s16)(s32)dist;
 
         {
@@ -2246,6 +2251,8 @@ void fn_8014BC98(int *node, int *sub) {
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
