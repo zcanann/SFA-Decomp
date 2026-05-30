@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/mapEvent.h"
 
 typedef struct WmSeqPointState {
     f32 radius;
@@ -27,17 +28,17 @@ void fn_801F654C(int obj)
             getEnvfxActImmediately(obj, obj, 0x22c, 0);
             getEnvfxActImmediately(obj, obj, 0x229, 0);
             getEnvfxActImmediately(obj, obj, 0x22a, 0);
-            (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 4, 1);
-            (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 10, 0);
-            (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 0xb, 0);
+            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
+            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
+            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 0);
         } else if (state->skyWasOn == 0 && skyOn != 0) {
             getEnvfxActImmediately(0, 0, 0x217, 0);
             getEnvfxActImmediately(obj, obj, 0x216, 0);
             getEnvfxActImmediately(obj, obj, 0x84, 0);
             getEnvfxActImmediately(obj, obj, 0x8a, 0);
-            (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 4, 0);
-            (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 10, 1);
-            (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 0xb, 1);
+            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 0);
+            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 1);
+            ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
         }
     }
 }
@@ -84,9 +85,9 @@ int fn_801F6750(int obj, int unused, int actor)
                 getEnvfxActImmediately(obj, obj, 0x216, 0);
                 getEnvfxActImmediately(obj, obj, 0x84, 0);
                 getEnvfxActImmediately(obj, obj, 0x8a, 0);
-                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 4, 0);
-                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 10, 1);
-                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 0xb, 1);
+                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 0);
+                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 1);
+                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
             }
         } else if (action == 0xa) {
             if ((getSkyColorFn_80088e08(0) & 0xff) == 0) {
@@ -94,9 +95,9 @@ int fn_801F6750(int obj, int unused, int actor)
                 getEnvfxActImmediately(obj, obj, 0x22c, 0);
                 getEnvfxActImmediately(obj, obj, 0x229, 0);
                 getEnvfxActImmediately(obj, obj, 0x22a, 0);
-                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 4, 1);
-                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 10, 0);
-                (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 0xb, 0);
+                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
+                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
+                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 0);
             }
         }
         *(u8 *)(actor + i + 0x81) = 0;

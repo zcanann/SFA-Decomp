@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/mapEvent.h"
 
 typedef struct WmSpiritPlaceState {
     f32 heightOffset;
@@ -84,20 +85,20 @@ int fn_801F5690(int obj, int unused, int actor)
                     loadMapAndParent(0x42);
                     lockLevel(mapGetDirIdx(0x42), 0);
                     lockLevel(mapGetDirIdx(0xb), 1);
-                    (*(void (**)(int, int))(*gMapEventInterface + 0x44))(0x42, 3);
-                    (*(void (**)(int, int))(*gMapEventInterface + 0x44))(7, 4);
+                    ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
+                    ((MapEventInterface *)*gMapEventInterface)->setMode(7, 4);
                 } else if (mapId == 0x49781) {
                     loadMapAndParent(0x42);
                     lockLevel(mapGetDirIdx(0x42), 0);
                     lockLevel(mapGetDirIdx(0xb), 1);
-                    (*(void (**)(int, int))(*gMapEventInterface + 0x44))(0x42, 3);
-                    (*(void (**)(int, int))(*gMapEventInterface + 0x44))(7, 5);
+                    ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
+                    ((MapEventInterface *)*gMapEventInterface)->setMode(7, 5);
                 } else if (mapId == 0x4a1c0) {
                     loadMapAndParent(0x42);
                     lockLevel(mapGetDirIdx(0x42), 0);
                     lockLevel(mapGetDirIdx(0xb), 1);
-                    (*(void (**)(int, int))(*gMapEventInterface + 0x44))(0x42, 3);
-                    (*(void (**)(int, int))(*gMapEventInterface + 0x44))(7, 7);
+                    ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
+                    ((MapEventInterface *)*gMapEventInterface)->setMode(7, 7);
                 }
                 break;
         }
@@ -342,7 +343,7 @@ void wmspiritplace_init(int obj, int setup)
     state->setupParam = (s16)*(s8 *)(setup + 0x19);
     state->flags15 = (u8)(state->flags15 & 0x7f);
     *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x6000);
-    state->mapEventState = (*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
+    state->mapEventState = ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
 
     if (*(int *)(*(int *)(obj + 0x4c) + 0x14) == 0x47295) {
         if (GameBit_Get(0x1fc) != 0 || GameBit_Get(0xeaf) != 0 || state->mapEventState > 2) {
