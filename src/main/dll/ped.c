@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/dll/ped.h"
 
 extern undefined4 FUN_80006b14();
@@ -269,10 +270,9 @@ void nw_geyser_init(int obj)
 
 char *fn_801CDE70(int *obj) { return *(char **)((char *)obj + 0xb8) + 0xc; }
 
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 void nw_geyser_free(int *obj) {
-    ((void (*)(int, int, int))((void**)*gMapEventInterface)[20])(
-        *(s8*)((char*)obj + 0xac), 0x1f, 0);
+    (*gMapEventInterface)->setAnimEvent(*(s8*)((char*)obj + 0xac), 0x1f, 0);
 }
 
 void nw_geyser_update(int obj)
