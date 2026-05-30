@@ -2050,115 +2050,73 @@ LAB_800e48f4:
  */
 #pragma scheduling off
 #pragma peephole off
-void RomCurve_getAdjacentWindow(int param_1,int *param_2)
+void RomCurve_getAdjacentWindow(RomCurveDef *curve,int *outIds)
 {
-  bool bVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  uint uVar5;
-  int iVar6;
-  
-  *param_2 = -1;
-  param_2[1] = -1;
-  param_2[2] = -1;
-  param_2[3] = -1;
-  if (param_1 == 0) {
+  u32 linkId;
+  u32 adjacentId;
+  int low;
+  int high;
+  int mid;
+  int i;
+  RomCurveDef *adjacent;
+
+  outIds[0] = ROMCURVE_LINK_ID_NONE;
+  outIds[1] = ROMCURVE_LINK_ID_NONE;
+  outIds[2] = ROMCURVE_LINK_ID_NONE;
+  outIds[3] = ROMCURVE_LINK_ID_NONE;
+  if (curve == NULL) {
     return;
   }
-  param_2[1] = *(int *)(param_1 + 0x14);
-  iVar3 = *(int *)(param_1 + 0x1c);
-  if (iVar3 != -1) {
-    bVar1 = (*(byte *)(param_1 + 0x1b) & 1) == 0;
-    if (bVar1) {
-      if (bVar1) {
-        param_2[2] = iVar3;
+
+  outIds[1] = curve->id;
+  for (i = 0; i < ROMCURVE_LINK_COUNT; i++) {
+    linkId = curve->linkIds[i];
+    if (linkId != ROMCURVE_LINK_ID_NONE) {
+      if ((curve->blockedLinkMask & (1 << i)) != 0) {
+        outIds[0] = linkId;
+      } else {
+        outIds[2] = linkId;
       }
     }
-    else {
-      *param_2 = iVar3;
-    }
   }
-  iVar3 = *(int *)(param_1 + 0x20);
-  if (iVar3 != -1) {
-    bVar1 = (*(byte *)(param_1 + 0x1b) & 2) == 0;
-    if (bVar1) {
-      if (bVar1) {
-        param_2[2] = iVar3;
-      }
-    }
-    else {
-      *param_2 = iVar3;
-    }
-  }
-  iVar3 = *(int *)(param_1 + 0x24);
-  if (iVar3 != -1) {
-    bVar1 = (*(byte *)(param_1 + 0x1b) & 4) == 0;
-    if (bVar1) {
-      if (bVar1) {
-        param_2[2] = iVar3;
-      }
-    }
-    else {
-      *param_2 = iVar3;
-    }
-  }
-  iVar3 = *(int *)(param_1 + 0x28);
-  if (iVar3 != -1) {
-    bVar1 = (*(byte *)(param_1 + 0x1b) & 8) == 0;
-    if (bVar1) {
-      if (bVar1) {
-        param_2[2] = iVar3;
-      }
-    }
-    else {
-      *param_2 = iVar3;
-    }
-  }
-  uVar5 = param_2[2];
-  if ((int)uVar5 < 0) {
+
+  adjacentId = outIds[2];
+  if ((s32)adjacentId <= -1) {
     return;
   }
-  if ((int)uVar5 < 0) {
-    iVar6 = 0;
-  }
-  else {
-    iVar4 = nRomCurves + -1;
-    iVar3 = 0;
-    while (iVar3 <= iVar4) {
-      iVar2 = iVar4 + iVar3 >> 1;
-      iVar6 = (int)romCurves[iVar2];
-      if (*(uint *)(iVar6 + 0x14) < uVar5) {
-        iVar3 = iVar2 + 1;
-      }
-      else {
-        if (*(uint *)(iVar6 + 0x14) <= uVar5) goto LAB_800e4bc4;
-        iVar4 = iVar2 + -1;
+  if ((s32)adjacentId < 0) {
+    adjacent = NULL;
+  } else {
+    high = nRomCurves - 1;
+    low = 0;
+    while (low <= high) {
+      mid = (high + low) >> 1;
+      adjacent = romCurves[mid];
+      if (adjacent->id < adjacentId) {
+        low = mid + 1;
+      } else {
+        if (adjacent->id <= adjacentId) {
+          goto foundAdjacent;
+        }
+        high = mid - 1;
       }
     }
-    iVar6 = 0;
+    adjacent = NULL;
   }
-LAB_800e4bc4:
-  if (iVar6 == 0) {
+
+foundAdjacent:
+  if (adjacent == NULL) {
     return;
   }
-  if ((*(int *)(iVar6 + 0x1c) != -1) && ((*(byte *)(iVar6 + 0x1b) & 1) == 0)) {
-    param_2[3] = *(int *)(iVar6 + 0x1c);
+
+  for (i = 0; i < ROMCURVE_LINK_COUNT; i++) {
+    linkId = adjacent->linkIds[i];
+    if (linkId != ROMCURVE_LINK_ID_NONE) {
+      if ((adjacent->blockedLinkMask & (1 << i)) == 0) {
+        outIds[3] = linkId;
+      }
+    }
   }
-  if ((*(int *)(iVar6 + 0x20) != -1) && ((*(byte *)(iVar6 + 0x1b) & 2) == 0)) {
-    param_2[3] = *(int *)(iVar6 + 0x20);
-  }
-  if ((*(int *)(iVar6 + 0x24) != -1) && ((*(byte *)(iVar6 + 0x1b) & 4) == 0)) {
-    param_2[3] = *(int *)(iVar6 + 0x24);
-  }
-  if (*(int *)(iVar6 + 0x28) == -1) {
-    return;
-  }
-  if ((*(byte *)(iVar6 + 0x1b) & 8) != 0) {
-    return;
-  }
-  param_2[3] = *(int *)(iVar6 + 0x28);
-  return;
 }
 #pragma peephole reset
 #pragma scheduling reset
