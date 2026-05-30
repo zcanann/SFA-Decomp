@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/mapEvent.h"
 #include "main/rcp_dolphin.h"
 
 extern undefined4 FUN_800033a8();
@@ -3030,7 +3031,7 @@ void textureAnimFn_80053f2c(u8 *def, u32 *node, int *cnt)
 
 extern char lbl_803822C8[];
 extern void *gLoadedRomListPages[];
-extern int *gMapEventInterface;
+extern MapEventInterface **gMapEventInterface;
 extern int *Obj_SetupObject(int *obj, int p1, int p2, int p3, int p4);
 
 #pragma scheduling off
@@ -3079,7 +3080,7 @@ void mapInstantiateObjects(int *p1, int mapId, int index, int p4)
             }
         }
         if (visible == 0) {
-            v = (*(u8 (*)(int))(*(int *)(*gMapEventInterface + 0x40)))(mapId);
+            v = (*gMapEventInterface)->getMode(mapId);
             if (v == -1) {
                 flag = 0;
             } else if (v == 0) {
