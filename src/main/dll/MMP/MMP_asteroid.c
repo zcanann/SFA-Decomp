@@ -998,6 +998,101 @@ void texframeanimator_release(void) {}
 void texframeanimator_initialise(void) {}
 void fogcontrol_hitDetect(void) {}
 
+typedef struct TexFrameAnimatorState {
+    int textureSlot;
+    u8 speed;
+    u8 pad5[3];
+    int endFrame;
+    int wrapFrame;
+    int frame;
+    u8 flag80 : 1;
+    u8 done : 1;
+    u8 active : 1;
+    u8 flagLow : 5;
+} TexFrameAnimatorState;
+
+extern u8 framesThisStep;
+extern char sTexFrameAnimDebugFormat[];
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
+extern int *mapGetBlock(int idx);
+extern int *return0_80056694(int *block, int textureSlot);
+extern int *mapTextureOverrideGetEntry(int idx);
+extern void fn_80137948(char *fmt, ...);
+
+#pragma scheduling off
+#pragma peephole off
+void texframeanimator_update(int *obj)
+{
+    TexFrameAnimatorState *state;
+    u8 *params;
+    int *block;
+    int *textureHit;
+    int *textureEntry;
+
+    state = *(TexFrameAnimatorState **)((char *)obj + 0xb8);
+    params = *(u8 **)((char *)obj + 0x4c);
+
+    if ((state->active == 0) &&
+        ((u32)GameBit_Get(*(s16 *)(params + 0x20)) != 0) &&
+        (state->done == 0)) {
+        state->active = 1;
+        state->frame = 0;
+    }
+
+    if ((state->active != 0) && (state->textureSlot != 0)) {
+        block = mapGetBlock(objPosToMapBlockIdx(*(f32 *)((char *)obj + 0xc),
+                                                *(f32 *)((char *)obj + 0x10),
+                                                *(f32 *)((char *)obj + 0x14)));
+        if ((block != NULL) && ((*(u16 *)((char *)block + 4) & 8) != 0)) {
+            textureHit = return0_80056694(block, state->textureSlot);
+            if (textureHit != NULL) {
+                textureEntry = mapTextureOverrideGetEntry(*(s16 *)textureHit);
+                state->frame += state->speed * framesThisStep;
+                fn_80137948(sTexFrameAnimDebugFormat, state->frame);
+                if (state->frame < 0) {
+                    state->frame = 0;
+                } else if (state->frame > state->endFrame) {
+                    if (*(s16 *)(params + 0x1e) != -1) {
+                        GameBit_Set(*(s16 *)(params + 0x1e), 1);
+                        state->active = 0;
+                        state->done = 1;
+                        state->frame = state->endFrame;
+                    } else {
+                        state->frame = state->wrapFrame;
+                    }
+                }
+                textureEntry[1] = state->frame;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void texframeanimator_init(int *obj, u8 *params)
+{
+    TexFrameAnimatorState *state;
+    u8 done;
+
+    state = *(TexFrameAnimatorState **)((char *)obj + 0xb8);
+    state->textureSlot = (s8)params[0x19];
+    state->endFrame = *(s16 *)(params + 0x1a) << 8;
+    state->speed = (u8)*(s16 *)(params + 0x1c);
+    state->wrapFrame = (s8)params[0x18] << 8;
+    done = (u8)GameBit_Get(*(s16 *)(params + 0x1e));
+    state->done = done;
+    if (done != 0) {
+        state->frame = state->endFrame;
+        state->active = 1;
+    }
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
+    *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x4000);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* 8b "li r3, N; blr" returners. */
 int explodeanimator_getExtraSize(void) { return 0x4; }
 int explodeanimator_getObjectTypeId(void) { return 0x0; }

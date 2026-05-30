@@ -20,5 +20,7 @@ void FUN_80195b9c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 void FUN_80196244(undefined2 *param_1,int param_2);
 void FUN_8019635c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_80196384(int param_1);
+void texframeanimator_update(int *obj);
+void texframeanimator_init(int *obj, u8 *params);
 
 #endif /* MAIN_DLL_MMP_MMP_ASTEROID_H_ */
