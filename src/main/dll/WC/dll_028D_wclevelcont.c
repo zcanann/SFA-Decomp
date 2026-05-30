@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/mapEventTypes.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -287,7 +288,7 @@ void wclevelcont_update(int obj)
         }
         *(int *)(obj + 0xf4) = 1;
     }
-    switch ((*(u8 (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac))) {
+    switch (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac))) {
     case 1:
     default:
         wcpushblock_updateLevelControlState(obj, state);
@@ -421,7 +422,7 @@ void wclevelcont_init(int obj)
     GameBit_Set(0x2a6, 1);
     GameBit_Set(0x206, 1);
     GameBit_Set(0x25f, 1);
-    (*(void (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
+    ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     ((WclevelcontFlags *)(state + 0x14))->b40 = GameBit_Get(0xc58);
     ((WclevelcontFlags *)(state + 0x14))->b20 = GameBit_Get(0xc59);
     ((WclevelcontFlags *)(state + 0x14))->b18 = GameBit_Get(0xc5a);

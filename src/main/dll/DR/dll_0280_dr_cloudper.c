@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/mapEventTypes.h"
 
 typedef struct DrCloudPerState {
     f32 normalX;
@@ -93,7 +94,7 @@ int drcloudper_setScale(int obj)
         return 0;
     }
     GameBit_Set(0x7a9, setup->cloudIndex);
-    (*(void (**)(int, int, int))(*gMapEventInterface + 0x50))(cloud->mapDir, 0xc, 1);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(cloud->mapDir, 0xc, 1);
     (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(2, obj, -1);
     return 1;
 }

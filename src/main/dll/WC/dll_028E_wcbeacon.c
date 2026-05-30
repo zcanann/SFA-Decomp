@@ -1,4 +1,5 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/mapEventTypes.h"
 
 #pragma peephole on
 #pragma scheduling off
@@ -55,7 +56,7 @@ void wcbeacon_init(u8 *obj, u8 *setup)
     u8 *state = *(u8 **)(obj + 0xb8);
     s16 objType;
 
-    (*(void (**)(int))(*gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
+    ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
     objType = (s16)((s8)setup[0x18] << 8);
     *(s16 *)obj = objType;
     obj[0xad] = setup[0x19];
