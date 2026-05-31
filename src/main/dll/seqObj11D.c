@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/seqObj11D.h"
 
+#define SFXdn_boar5_c 23
+#define SFXen_cavedirt22 35
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_8001766c();
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -117,7 +120,7 @@ void FUN_801511e8(undefined8 param_1,undefined8 param_2,double param_3,undefined
   if (cVar4 == '\0') {
     if (((*(uint *)(iVar5 + 0x2dc) & 0x20000000) != 0) &&
        ((*(uint *)(iVar5 + 0x2e0) & 0x20000000) == 0)) {
-      FUN_80006824((uint)psVar3,0x17);
+      FUN_80006824((uint)psVar3,SFXdn_boar5_c);
       *(uint *)(iVar5 + 0x2dc) = *(uint *)(iVar5 + 0x2dc) | 0x40000000;
     }
     if ((*(uint *)(iVar5 + 0x2dc) & 0x40000000) != 0) {
@@ -449,7 +452,7 @@ void FUN_8015209c(int param_1,int param_2)
 
 extern void Sfx_PlayFromObject(int obj, int sfx);
 void fn_80152004(int obj, int *state) {
-    Sfx_PlayFromObject(obj, 0x23);
+    Sfx_PlayFromObject(obj, SFXen_cavedirt22);
     *(u32*)((char*)state + 0x2e8) |= 0x10;
 }
 
