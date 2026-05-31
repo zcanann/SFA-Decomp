@@ -197,7 +197,7 @@ int arwarwing_getScore(int arwing)
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D574(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x44c); }
+int arwarwing_getBombCount(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x44c); }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -239,7 +239,7 @@ int fn_8022D5DC(int arwing) { return (*(u8 *)(*(int *)(arwing + 0xb8) + 0x472))+
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D5F0(int arwing)
+int arwarwing_incrementCollectedRingCount(int arwing)
 {
     int state = *(int *)(arwing + 0xb8);
     if (*(u8 *)(state + 0x470) == 9) {
@@ -598,7 +598,7 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
 
 #pragma peephole on
 #pragma scheduling on
-void fn_8022D6D0(int arwing)
+void arwarwing_addBomb(int arwing)
 {
     int state = *(int *)(arwing + 0xb8);
     if (*(u8 *)(state + 0x44c) < *(u8 *)(state + 0x44d)) {
@@ -610,7 +610,7 @@ void fn_8022D6D0(int arwing)
 
 #pragma peephole on
 #pragma scheduling on
-void fn_8022D6F0(int arwing)
+void arwarwing_upgradeLaserLevel(int arwing)
 {
     int state = *(int *)(arwing + 0xb8);
     if ((s8) * (u8 *)(state + 0x404) < 2) {

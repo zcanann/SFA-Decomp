@@ -127,7 +127,7 @@ void arwbombcoll_handleArwingHit(int obj, int state, int arwing) {
         Sfx_PlayFromObject(arwing, SFXbaddie_vambat_attack);
         if (*(s16 *)(arwing + 0x46) == 0x601) {
             int seg;
-            fn_8022D5F0(arwing);
+            arwarwing_incrementCollectedRingCount(arwing);
             arwarwing_addShield(arwing, 1);
             arwarwing_addScore(arwing, 0x14);
             seg = arwarwing_getRequiredRingCount(arwing);
@@ -253,11 +253,11 @@ active : {
             switch (*(s16 *)(obj + 0x46)) {
             case 0x609:
                 Sfx_PlayFromObject(obj, SFXbaddie_eba_hit);
-                fn_8022D6F0(arw);
+                arwarwing_upgradeLaserLevel(arw);
                 break;
             case 0x608:
                 Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesclose);
-                fn_8022D6D0(arw);
+                arwarwing_addBomb(arw);
                 break;
             case 0x6d8:
                 Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
