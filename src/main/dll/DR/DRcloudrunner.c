@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 
-extern int GameBit_Get(int id);
+extern u32 GameBit_Get(int id);
 extern void GameBit_Set(int id, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 randomGetRange(int min, int max);
@@ -267,27 +267,24 @@ void sc_totempole_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s
 
 void sc_totempole_hitDetect(void) {}
 
+#pragma scheduling off
 void sc_totempole_update(int obj)
 {
     int inner = *(int *)(obj + 0xb8);
-    int played = 0;
     f32 stk;
-    s32 v;
+    int played;
+    int i;
     int *arr;
     int idx;
     int count;
-    int i;
 
     *(u8 *)(inner + 3) = *(u8 *)(inner + 2);
-    v = GameBit_Get(*(u16 *)(inner + 0));
-    *(u8 *)(inner + 2) = (u8)v;
+    *(u8 *)(inner + 2) = (u8)GameBit_Get(*(u16 *)(inner + 0));
     if (*(u8 *)(inner + 3) != *(u8 *)(inner + 2)) {
-        if (*(u8 *)(inner + 2) == 0) {
-            Sfx_PlayFromObject(obj, 0x3ad);
-            *(f32 *)(inner + 4) = lbl_803E55DC;
-        } else {
+        if (*(u8 *)(inner + 2) != 0) {
             Sfx_PlayFromObject(obj, 0x3ad);
             *(f32 *)(inner + 4) = lbl_803E55D4;
+            played = 0;
             if (GameBit_Get(0x81) != 0 && GameBit_Get(0x82) != 0 && GameBit_Get(0x83) != 0 && GameBit_Get(0x84) != 0) {
                 Sfx_PlayFromObject(0, 0x7e);
                 played = 1;
@@ -299,8 +296,8 @@ void sc_totempole_update(int obj)
                     }
                 }
                 {
-                    f64 d = (f64)fn_8001461C();
-                    s32 t = (s32)(d / (f64)lbl_803E55D8);
+                    f64 d = (f64)fn_8001461C() / (f64)lbl_803E55D8;
+                    s32 t = (s32)d;
                     (void)t;
                 }
                 sc_totempole_sortCompletionGameBits((int *)&lbl_803DC068, 0);
@@ -308,11 +305,15 @@ void sc_totempole_update(int obj)
             if (!played) {
                 Sfx_PlayFromObject(0, 0x109);
             }
+        } else {
+            Sfx_PlayFromObject(obj, 0x3ad);
+            *(f32 *)(inner + 4) = lbl_803E55DC;
         }
     }
     ObjAnim_AdvanceCurrentMove(obj, &stk, *(f32 *)(inner + 4), timeDelta);
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int *)&lbl_803DDC08);
 }
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -375,10 +376,7 @@ void sc_cloudrunnera_update(int obj)
 
     if (sub = *(int *)(obj + 0x4c), sub == 0) goto tail;
     if (*(s16 *)(sub + 0x18) == -1) goto tail;
-    {
-        f64 d = (f64)(u32)lbl_803DB411 - lbl_803E55E8;
-        trig = ((int (*)(int, f32))(*(int *)(*(int *)*gObjectTriggerInterface + 0x14)))(obj, (f32)d);
-    }
+    trig = ((int (*)(int, f32))(*(int *)(*gObjectTriggerInterface + 0x14)))(obj, (f32)(u32)lbl_803DB411);
     if (trig != 0 && *(s16 *)(obj + 0xb4) == -2) {
         s32 mark = (s8)*(u8 *)(inner + 0x57);
         found = 0;
@@ -397,7 +395,7 @@ void sc_cloudrunnera_update(int obj)
         }
         if (matchCount <= 1 && found != 0 && *(s16 *)(found + 0xb4) != -1) {
             *(s16 *)(found + 0xb4) = -1;
-            ((void (*)(int))(*(int *)(*(int *)*gObjectTriggerInterface + 0x4c)))(mark);
+            ((void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(mark);
         }
         *(s16 *)(obj + 0xb4) = -1;
     }
@@ -407,7 +405,7 @@ void sc_cloudrunnera_update(int obj)
         if (mode == 1) {
             slot = *(int *)(obj + 0xc8);
             if (slot != 0) {
-                ((void (*)(int, int))(*(int *)(*(int *)*gObjectTriggerInterface + 0x4c)))(slot, 0);
+                ((void (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(slot, 0);
             }
         } else if (mode < 1) {
             if (mode < 0) continue;
@@ -455,30 +453,28 @@ tail:
     ;
 }
 
+#pragma scheduling off
 void sc_cloudrunnera_init(int obj, int p2)
 {
     int inner;
-    f64 d;
     f32 base;
-    s16 v;
 
     objSetSlot(obj, 0x64);
     inner = *(int *)(obj + 0xb8);
     *(s16 *)(inner + 0x6a) = *(s16 *)(p2 + 0x1a);
     *(s16 *)(inner + 0x6e) = -1;
     base = lbl_803E55E0;
-    d = (f64)(u32)*(u8 *)(p2 + 0x24) - lbl_803E55E8;
-    *(f32 *)(inner + 0x24) = base / (base + (f32)d);
+    *(f32 *)(inner + 0x24) = base / (base + (f32)(u32)*(u8 *)(p2 + 0x24));
     *(int *)(inner + 0x28) = -1;
     *(int *)(obj + 0xf8) = 0;
 
     if (*(int *)(obj + 0xf4) == 0 && *(s16 *)(p2 + 0x18) != 1) {
-        ((void (*)(int, int))(*(int *)(*(int *)*gObjectTriggerInterface + 0x1c)))(inner, p2);
+        ((void (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, p2);
         *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
     } else if (*(int *)(obj + 0xf4) != 0 && *(s16 *)(p2 + 0x18) != *(int *)(obj + 0xf4) - 1) {
-        ((void (*)(int))(*(int *)(*(int *)*gObjectTriggerInterface + 0x24)))(inner);
+        ((void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
         if (*(s16 *)(p2 + 0x18) != -1) {
-            ((void (*)(int, int))(*(int *)(*(int *)*gObjectTriggerInterface + 0x1c)))(inner, p2);
+            ((void (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, p2);
         }
         *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
     }
@@ -487,6 +483,7 @@ void sc_cloudrunnera_init(int obj, int p2)
         *(u8 *)(*(int *)(obj + 0x64) + 0x3b) = 0x96;
     }
 }
+#pragma scheduling reset
 
 void sc_cloudrunnera_release(void) {}
 void sc_cloudrunnera_initialise(void) {}
