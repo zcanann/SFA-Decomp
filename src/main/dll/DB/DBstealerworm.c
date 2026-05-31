@@ -2,6 +2,14 @@
 #include "main/dll/DB/DBbonedust.h"
 #include "main/dll/DB/DBstealerworm.h"
 
+#define SFXen_sbalhis6 0x37
+#define SFXen_scrap1_c 0x38
+#define SFXen_diallp_c 0x3f
+#define SFXwp_crthit6 0x144
+#define SFXwp_crtsmsh6 0x145
+#define SFXbaddie_eggsnatch_carry3 0x2c7
+#define SFXbaddie_eggsnatch_carry4 0x2c8
+#define SFXfend_rob_armin 0x312
 
 #pragma peephole off
 #pragma scheduling off
@@ -206,7 +214,7 @@ void FUN_801e1588(undefined8 param_1,double param_2,double param_3,undefined8 pa
       if ((double)lbl_803E6468 < dVar4) {
         uVar1 = GameBit_Get(0xa71);
         if (uVar1 == 0) {
-          FUN_80006824(param_9,0x145);
+          FUN_80006824(param_9,SFXwp_crtsmsh6);
         }
         *(undefined *)(iVar3 + 0x81) = 1;
       }
@@ -214,7 +222,7 @@ void FUN_801e1588(undefined8 param_1,double param_2,double param_3,undefined8 pa
     else {
       uVar1 = GameBit_Get(0xa71);
       if (uVar1 == 0) {
-        FUN_80006824(param_9,0x144);
+        FUN_80006824(param_9,SFXwp_crthit6);
       }
       *(undefined *)(iVar3 + 0x81) = 1;
     }
@@ -434,7 +442,7 @@ undefined4 FUN_801e1eec(uint param_1)
   }
   else {
     if ('\x01' < *(char *)(iVar3 + 0x29)) {
-      FUN_80006824(param_1,0x3f);
+      FUN_80006824(param_1,SFXen_diallp_c);
     }
     *(char *)(iVar3 + 0x2b) = *(char *)(iVar3 + 0x2b) + '\x01';
     uVar2 = 1;
@@ -747,7 +755,7 @@ void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
            (*(undefined4 *)(uVar1 + 0xf4) = 0x14, *(int *)(uVar1 + 0x30) != 0)))))) &&
         ((iVar2 == 2 || (iVar2 == 5)))) && (*(short *)(uVar1 + 0x46) == 0x69c)) {
       FUN_80017a28(uVar1,0xf,200,0,0,1);
-      FUN_80006824(uVar1,0x2c7);
+      FUN_80006824(uVar1,SFXbaddie_eggsnatch_carry3);
       *(char *)(pfVar6 + 3) = *(char *)(pfVar6 + 3) + -1;
       if (*(char *)(pfVar6 + 3) < '\x01') {
         *(undefined *)(pfVar6 + 3) = 0;
@@ -756,7 +764,7 @@ void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
         *(ushort *)(uVar1 + 6) = *(ushort *)(uVar1 + 6) | 0x4000;
         FUN_8008112c((double)lbl_803E64BC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                      uVar1,1,1,1,0,1,1,0);
-        FUN_80006824(uVar1,0x2c8);
+        FUN_80006824(uVar1,SFXbaddie_eggsnatch_carry4);
       }
     }
     if (*(int *)(uVar1 + 0xf4) == 0) {
@@ -966,7 +974,7 @@ void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 pa
         FUN_8000680c(uVar1,0x40);
       }
       else {
-        FUN_80006824(uVar1,0x312);
+        FUN_80006824(uVar1,SFXfend_rob_armin);
       }
     }
     iVar3 = *(int *)(iVar10 + 0xf4);
@@ -1000,7 +1008,7 @@ void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 pa
         in_r7 = 0;
         in_r8 = 1;
         FUN_80017a28(uVar1,0xf,200,0,0,1);
-        FUN_80006824(uVar1,0x37);
+        FUN_80006824(uVar1,SFXen_sbalhis6);
         *(char *)(piVar9 + 1) = *(char *)(piVar9 + 1) + -1;
         if (*(char *)(piVar9 + 1) < '\x01') {
           (**(code **)(**(int **)(iVar10 + 0x68) + 0x20))(iVar10);
@@ -1025,7 +1033,7 @@ void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 pa
         (DAT_803dccf8 == '\0')) && (uVar5 = FUN_80017ae8(), (uVar5 & 0xff) != 0)) {
       DAT_803dccf8 = '\x01';
       *(uint *)(uVar1 + 0xf4) = *(int *)(uVar1 + 0xf4) + (uint)DAT_803dc070;
-      FUN_80006824(uVar1,0x38);
+      FUN_80006824(uVar1,SFXen_scrap1_c);
       *(float *)(uVar1 + 0x10) = *(float *)(uVar1 + 0x10) + lbl_803E64E0;
       *(float *)(uVar1 + 0x14) = *(float *)(uVar1 + 0x14) - lbl_803E64E4;
       FUN_800068fc(uVar1,&local_74,&local_78,&local_7c);
@@ -1058,7 +1066,7 @@ void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 pa
       *(int *)(iVar10 + 0xf8) = *piVar9;
     }
     if ((iVar11 == 1) && (uVar5 = FUN_80017ae8(), (uVar5 & 0xff) != 0)) {
-      FUN_80006824(uVar1,0x38);
+      FUN_80006824(uVar1,SFXen_scrap1_c);
       iVar2 = FUN_80017a98();
       puVar6 = FUN_80017aa4(0x18,0x138);
       *(float *)(puVar6 + 4) = lbl_803E64EC + *(float *)(iVar2 + 0x18);
@@ -1209,7 +1217,7 @@ int SB_Galleon_setScale(int obj) {
     int s = p[0x29];
     if (s != 1) {
         if (s >= 2) {
-            Sfx_PlayFromObject(obj, 0x3f);
+            Sfx_PlayFromObject(obj, SFXen_diallp_c);
         }
         p[0x2b] = p[0x2b] + 1;
         return 1;
