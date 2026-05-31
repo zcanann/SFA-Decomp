@@ -1,6 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_131.h"
 
+#define SFXdoor_unlocked 562
+#define SFXdoor_creak 563
+#define SFXkr_climb2 628
+#define SFXsc_attack01 631
+
 extern undefined4 FUN_800033a8();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_800305f8();
@@ -245,9 +250,9 @@ void fn_80167B60(int obj, int p)
   }
   b8_40c = *(int *)(b8 + 0x40c);
   if ((*(u8 *)(b8_40c + 0x4b) & 0x1) == 0) {
-    Sfx_PlayFromObject(obj, 628);
-    Sfx_PlayFromObject(obj, 631);
-    Sfx_PlayFromObject(obj, 562);
+    Sfx_PlayFromObject(obj, SFXkr_climb2);
+    Sfx_PlayFromObject(obj, SFXsc_attack01);
+    Sfx_PlayFromObject(obj, SFXdoor_unlocked);
     *(u8 *)(b8_40c + 0x4b) |= 0x1;
     {
       int r = 0;
@@ -262,7 +267,7 @@ void fn_80167B60(int obj, int p)
   }
   if ((*(u8 *)(b8_40c + 0x4b) & 0x2) == 0) {
     if (*(f32 *)(obj + 0x98) > lbl_803E3088) {
-      Sfx_PlayFromObject(obj, 563);
+      Sfx_PlayFromObject(obj, SFXdoor_creak);
       *(u8 *)(b8_40c + 0x4b) |= 0x2;
     }
   }
