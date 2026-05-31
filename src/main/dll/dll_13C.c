@@ -1,6 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_13C.h"
 
+#define SFXsc_objselectyeah22 0xb6
+#define SFXsc_projhitneg22 0xb7
+#define SFXsc_attack02 0x278
+#define SFXsc_attack03 0x279
 
 #pragma peephole off
 #pragma scheduling off
@@ -294,7 +298,7 @@ void kaldachompspit_init(uint param_1)
   *(undefined4 *)(param_1 + 0xf4) = 400;
   ObjHits_DisableObject(param_1);
   *(undefined *)(param_1 + 0x36) = 0xff;
-  FUN_80006824(param_1,0x278);
+  FUN_80006824(param_1,SFXsc_attack02);
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
   if (*piVar3 == 0) {
     piVar2 = FUN_80017624(param_1,'\x01');
@@ -530,7 +534,7 @@ void FUN_8016a708(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         for (local_58 = 0; local_58 < 0x19; local_58 = local_58 + 1) {
           (**(code **)(*DAT_803dd708 + 8))(param_9,0x715,0,1,0xffffffff,&local_58);
         }
-        FUN_80006824((uint)param_9,0x279);
+        FUN_80006824((uint)param_9,SFXsc_attack03);
       }
     }
     else {
@@ -542,7 +546,7 @@ void FUN_8016a708(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       for (local_54[0] = 0; local_54[0] < 0x19; local_54[0] = local_54[0] + 1) {
         (**(code **)(*DAT_803dd708 + 8))(param_9,0x715,0,1,0xffffffff,local_54);
       }
-      FUN_80006824((uint)param_9,0x279);
+      FUN_80006824((uint)param_9,SFXsc_attack03);
     }
   }
   return;
@@ -566,7 +570,7 @@ void FUN_8016aa90(uint param_1)
   *(undefined4 *)(param_1 + 0xf4) = 0;
   ObjHits_DisableObject(param_1);
   *(undefined *)(param_1 + 0x36) = 0xff;
-  FUN_80006824(param_1,0x278);
+  FUN_80006824(param_1,SFXsc_attack02);
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x6000;
   return;
 }
@@ -672,7 +676,7 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     dVar4 = (double)lbl_803E3DD4;
     if ((dVar4 <= dVar5) && ((double)*(float *)(param_9 + 0x28) <= dVar4)) {
       FUN_8016ae64(dVar4,dVar5,param_3,param_4,param_5,param_6,param_7,param_8,param_9);
-      FUN_80006824(param_9,0xb7);
+      FUN_80006824(param_9,SFXsc_projhitneg22);
       *(undefined *)(param_9 + 0x36) = 0;
     }
     param_2 = (double)(*(float *)(param_9 + 0x28) * lbl_803DC074);
@@ -686,7 +690,7 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
         (iVar2 = FUN_80017a90(), *(int *)(*(int *)(param_9 + 0x54) + 0x50) == iVar2)))) {
       FUN_800069bc();
       FUN_80006920((double)lbl_803E3DD0);
-      FUN_80006824(param_9,0xb6);
+      FUN_80006824(param_9,SFXsc_objselectyeah22);
       *(undefined *)(param_9 + 0x36) = 0;
       *(undefined2 *)(iVar3 + 0x12) = 0x3c;
       param_1 = ObjHits_DisableObject(param_9);
@@ -1163,7 +1167,7 @@ void pinponspike_init(int obj) {
     *(int *)(obj + 0xf4) = 0;
     ObjHits_DisableObject(obj);
     *(u8 *)(obj + 0x36) = 0xff;
-    Sfx_PlayFromObject(obj, 0x278);
+    Sfx_PlayFromObject(obj, SFXsc_attack02);
     *(u16 *)(obj + 0xb0) |= 0x6000;
 }
 void pollen_hitDetect(int obj) {
