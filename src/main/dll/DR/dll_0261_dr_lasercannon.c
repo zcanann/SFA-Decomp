@@ -1,5 +1,9 @@
 #include "main/dll/DR/dr_shared.h"
 
+#define SFXfoot_dirt_run_1 427
+#define SFXfoot_dirt_run_2 428
+#define SFXfoot_dirt_run_3 429
+
 int drlasercannon_getExtraSize(void) { return 0x1ac; }
 
 int drlasercannon_getObjectTypeId(void) { return 0x0; }
@@ -323,7 +327,7 @@ void drlasercannon_update(int obj) {
         if (dist < (f32)*(s16 *)((char *)sub + 0x1a)) {
             hit = drlasercannon_aimAtTarget(obj, target, (int *)((char *)state + 0x130), 0x168, (f32 *)((char *)state + 0x10));
             if (hit != 0) {
-                Sfx_PlayFromObject(obj, 0x1ad);
+                Sfx_PlayFromObject(obj, SFXfoot_dirt_run_3);
             }
         } else {
             s16 *v;
@@ -375,8 +379,8 @@ void drlasercannon_update(int obj) {
                             *(int *)state = spawned;
                             ObjAnim_SetCurrentMove(obj, 1, lbl_803E690C, 0);
                             *(f32 *)((char *)state + 0x124) = lbl_803E6910;
-                            Sfx_PlayFromObject(obj, 0x1ab);
-                            Sfx_PlayFromObject(obj, 0x1ac);
+                            Sfx_PlayFromObject(obj, SFXfoot_dirt_run_1);
+                            Sfx_PlayFromObject(obj, SFXfoot_dirt_run_2);
                         }
                     }
                     s16toFloat((char *)state + 0x12c, (s16)((s8)*(s8 *)((char *)sub + 0x19) << 2));
