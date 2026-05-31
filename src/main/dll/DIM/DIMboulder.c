@@ -2,6 +2,10 @@
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMboulder.h"
 
+#define SFXmv_blockscrape_lp 165
+#define SFXwp_sexpl2_c 341
+#define SFXwp_simp1_c 342
+
 extern undefined4 getLActions();
 extern undefined4 FUN_80006724();
 extern undefined8 FUN_80006728();
@@ -662,9 +666,9 @@ void FUN_801ad350(undefined8 param_1,double param_2,double param_3,double param_
             *(undefined *)((int)piVar13 + 0xd) = 1;
             *(float *)(uVar7 + 0x28) = lbl_803E5380;
             if (*(short *)(uVar7 + 0x46) == 0x67) {
-              FUN_80006824(uVar7,0x155);
+              FUN_80006824(uVar7,SFXwp_sexpl2_c);
             }
-            FUN_80006824(uVar7,0xa5);
+            FUN_80006824(uVar7,SFXmv_blockscrape_lp);
             *(ushort *)(iVar12 + 0x60) = *(ushort *)(iVar12 + 0x60) | 1;
           }
           *(undefined4 *)(iVar12 + 0x48) = 0x10;
@@ -690,7 +694,7 @@ void FUN_801ad350(undefined8 param_1,double param_2,double param_3,double param_
         *(undefined *)(piVar13 + 3) = 3;
         FUN_8000680c(uVar7,8);
         if (*(short *)(uVar7 + 0x46) == 0x67) {
-          FUN_80006824(uVar7,0x156);
+          FUN_80006824(uVar7,SFXwp_simp1_c);
         }
         else {
           FUN_80006824(uVar7,0x3bb);
@@ -1959,9 +1963,9 @@ void crrockfall_update(int *obj)
                     *(u8 *)((char *)ex + 0xd) = 1;
                     *(f32 *)((char *)obj + 0x28) = lbl_803E46E8;
                     if (*(s16 *)((char *)obj + 0x46) == 103) {
-                        Sfx_PlayFromObject(obj, 341);
+                        Sfx_PlayFromObject(obj, SFXwp_sexpl2_c);
                     }
-                    Sfx_PlayFromObject(obj, 165);
+                    Sfx_PlayFromObject(obj, SFXmv_blockscrape_lp);
                     *(s16 *)((char *)s54 + 0x60) |= 1;
                 }
                 *(int *)((char *)s54 + 0x48) = 16;
@@ -1998,7 +2002,7 @@ void crrockfall_update(int *obj)
                 *(u8 *)((char *)ex + 0xc) = 3;
                 Sfx_StopObjectChannel(obj, 8);
                 if (*(s16 *)((char *)obj + 0x46) == 103) {
-                    Sfx_PlayFromObject(obj, 342);
+                    Sfx_PlayFromObject(obj, SFXwp_simp1_c);
                 } else {
                     Sfx_PlayFromObject(obj, 955);
                     spawnExplosion(obj, (f32)(u32)*(u8 *)((char *)p4c + 0x1b),
