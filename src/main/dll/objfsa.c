@@ -4340,20 +4340,33 @@ uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,uint groupId)
 {
   u8 patchListIndex;
   u8 patchIndex;
+  u8 edgeIndex;
+  ObjfsaWalkGroup *walkGroup;
   ObjfsaPatch *patch;
 
   patchListIndex = 0;
+  walkGroup = Objfsa_GetWalkGroup(patchGroupIndex);
   do {
     if (OBJFSA_PATCHGROUP_PATCH_COUNT <= patchListIndex) {
       OSReport(sObjfsaIsPointWithinPatchGroupError);
       return 0;
     }
 
-    patchIndex = Objfsa_GetPatchGroupPatchList(patchGroupIndex)[patchListIndex];
+    patchIndex = walkGroup->patchIndices[patchListIndex];
     if (patchIndex != 0) {
       patch = Objfsa_GetPatch(patchIndex);
       if (patch->groupId == groupId) {
-        return Objfsa_IsPointInsidePatch(point,patch);
+        if (point[1] < (f32)patch->maxY && (f32)patch->minY < point[1]) {
+          edgeIndex = 0;
+          while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
+                 patch->planeOffsets[edgeIndex] +
+                     point[0] * (f32)patch->planes[edgeIndex].normalX +
+                     point[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
+            edgeIndex++;
+          }
+          return edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT;
+        }
+        return 0;
       }
     }
     patchListIndex++;
@@ -4378,20 +4391,32 @@ u16 getPatchGroup(float *point,int patchGroupIndex,undefined4 param_3,undefined4
 {
   u8 patchListIndex;
   u8 patchIndex;
+  u8 edgeIndex;
+  ObjfsaWalkGroup *walkGroup;
   ObjfsaPatch *patch;
 
   patchListIndex = 0;
+  walkGroup = Objfsa_GetWalkGroup(patchGroupIndex);
   do {
     if (OBJFSA_PATCHGROUP_PATCH_COUNT <= patchListIndex) {
       return 0;
     }
 
     if (Objfsa_IsWalkGroupActive(patchGroupIndex) != 0) {
-      patchIndex = Objfsa_GetPatchGroupPatchList(patchGroupIndex)[patchListIndex];
+      patchIndex = walkGroup->patchIndices[patchListIndex];
       if (patchIndex != 0) {
         patch = Objfsa_GetPatch(patchIndex);
-        if (Objfsa_IsPointInsidePatch(point,patch)) {
-          return patch->groupId;
+        if (point[1] < (f32)patch->maxY && (f32)patch->minY < point[1]) {
+          edgeIndex = 0;
+          while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
+                 patch->planeOffsets[edgeIndex] +
+                     point[0] * (f32)patch->planes[edgeIndex].normalX +
+                     point[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
+            edgeIndex++;
+          }
+          if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
+            return patch->groupId;
+          }
         }
       }
     }
