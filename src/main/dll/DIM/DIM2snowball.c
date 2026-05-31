@@ -2,6 +2,14 @@
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 
+#define SFXmv_mushdizzylp12 0x9f
+#define SFXsp_lf_mutter4 0x109
+#define SFXfoot_metal_scuff 0x1f5
+#define SFXfoot_metal_land 0x1f6
+#define SFXfoot_ice_scuff 0x1f7
+#define SFXchar_puts_out_fire 0x1f9
+#define SFXfoot_run_jingle1 0x1fa
+
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -168,7 +176,7 @@ void FUN_801b64c4(undefined8 param_1,double param_2,double param_3,undefined8 pa
        (((uVar3 & 0xff) != 0 && ((*(byte *)((int)pfVar6 + 0xe) >> 6 & 1) == 0)))) ||
       (((uVar4 & 0xff) != 0 && ((*(byte *)((int)pfVar6 + 0xe) >> 5 & 1) == 0)))) ||
      (((uVar5 & 0xff) != 0 && ((*(byte *)((int)pfVar6 + 0xe) >> 4 & 1) == 0)))) {
-    uVar7 = FUN_80006824(0,0x109);
+    uVar7 = FUN_80006824(0,SFXsp_lf_mutter4);
   }
   *(byte *)((int)pfVar6 + 0xe) = (byte)((uVar2 & 0xff) << 7) | *(byte *)((int)pfVar6 + 0xe) & 0x7f;
   *(byte *)((int)pfVar6 + 0xe) =
@@ -178,7 +186,7 @@ void FUN_801b64c4(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(byte *)((int)pfVar6 + 0xe) =
        (byte)((uVar5 & 0xff) << 4) & 0x10 | *(byte *)((int)pfVar6 + 0xe) & 0xef;
   if (((*(byte *)((int)pfVar6 + 0xe) >> 3 & 1) == 0) && (uVar2 = GameBit_Get(0xa21), uVar2 != 0)) {
-    uVar7 = FUN_80006824(0,0x109);
+    uVar7 = FUN_80006824(0,SFXsp_lf_mutter4);
     *(byte *)((int)pfVar6 + 0xe) = *(byte *)((int)pfVar6 + 0xe) & 0xf7 | 8;
   }
   if (*(int *)(iVar1 + 0xf4) != 0) {
@@ -492,7 +500,7 @@ void FUN_801b7064(uint param_1)
     *(float *)(psVar3 + 2) = *(float *)(psVar3 + 2) + lbl_803DC074;
     if (lbl_803E56DC < *(float *)(psVar3 + 2)) {
       *(undefined *)((int)psVar3 + 3) = 2;
-      FUN_80006824(0,0x109);
+      FUN_80006824(0,SFXsp_lf_mutter4);
       FUN_80006824(param_1,0x47b);
       iVar2 = 0x1e;
       dVar5 = (double)lbl_803E56E0;
@@ -692,7 +700,7 @@ void FUN_801b74c4(uint param_1)
   int iVar2;
   
   iVar2 = *(int *)(param_1 + 0xb8);
-  FUN_80006824(param_1,0x1f5);
+  FUN_80006824(param_1,SFXfoot_metal_scuff);
   if ((*(int *)(iVar2 + 0x10) != 0) &&
      (*(int *)(iVar2 + 0x10) = *(int *)(iVar2 + 0x10) + -1, *(int *)(iVar2 + 0x10) == 0)) {
     FUN_800067c0((int *)0xdf,0);
@@ -869,7 +877,7 @@ void FUN_801b77a8(short *param_1)
         *(undefined2 *)(iVar9 + 0x1a) = 0xf;
       }
       *(byte *)(iVar9 + 0x1d) = *(byte *)(iVar9 + 0x1d) | 1;
-      FUN_80006824((uint)param_1,0x1f7);
+      FUN_80006824((uint)param_1,SFXfoot_ice_scuff);
       *(undefined *)(iVar9 + 0x1c) = 0x14;
     }
   }
@@ -885,7 +893,7 @@ void FUN_801b77a8(short *param_1)
     *(ushort *)(iVar9 + 0x1a) = *(short *)(iVar9 + 0x1a) - (ushort)DAT_803dc070;
     *(byte *)(iVar9 + 0x1c) = *(char *)(iVar9 + 0x1c) - DAT_803dc070;
     if (*(char *)(iVar9 + 0x1c) < '\x01') {
-      FUN_80006824((uint)param_1,0x9f);
+      FUN_80006824((uint)param_1,SFXmv_mushdizzylp12);
     }
     if (*(short *)(iVar9 + 0x1a) < 1) {
       FUN_800178e8((double)lbl_803E5718,
@@ -896,7 +904,7 @@ void FUN_801b77a8(short *param_1)
         *(undefined2 *)(iVar9 + 0x18) = 0xf;
       }
       *(byte *)(iVar9 + 0x1d) = *(byte *)(iVar9 + 0x1d) & 0xfe;
-      FUN_80006824((uint)param_1,0x1f6);
+      FUN_80006824((uint)param_1,SFXfoot_metal_land);
     }
   }
   iVar8 = FUN_80039520((int)param_1,0);
@@ -1262,7 +1270,7 @@ void dll_1DA_hitDetect(int obj) {
         Vec_distance((float*)(obj + 0x18), (float*)((int)player + 0x18));
         *(f32*)(obj + 0x24) = *(f32*)((int)hi + 0x24) * lbl_803E4ADC;
         *(f32*)(obj + 0x2c) = *(f32*)((int)hi + 0x2c) * lbl_803E4ADC;
-        Sfx_PlayFromObject(obj, 0x1f9);
+        Sfx_PlayFromObject(obj, SFXchar_puts_out_fire);
     }
 }
 #pragma peephole reset
@@ -1465,7 +1473,7 @@ void dim2conveyor_init(int *obj, u8 *params)
 void dim2conveyor_update(int *obj)
 {
     int *extra = *(int **)((char *)obj + 0xb8);
-    Sfx_PlayFromObject((int)obj, 501);
+    Sfx_PlayFromObject((int)obj, SFXfoot_metal_scuff);
     if (*(int *)((char *)extra + 0x10) != 0) {
         *(int *)((char *)extra + 0x10) = *(int *)((char *)extra + 0x10) - 1;
         if (*(int *)((char *)extra + 0x10) == 0) {
@@ -1592,7 +1600,7 @@ void dimtruthhornice_update(int *obj)
             int i;
             f32 scale = lbl_803E4A48;
             *(s8 *)((char *)extra + 3) = 2;
-            Sfx_PlayFromObject(0, 265);
+            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             Sfx_PlayFromObject((int)obj, 1147);
             for (i = 30; i != 0; i--) {
                 f32 desc[6];
@@ -1749,7 +1757,7 @@ void dll_1D6_update(int *obj)
         *(s16 *)((char *)extra + 0x1a) = *(s16 *)((char *)extra + 0x1a) - framesThisStep;
         *(s8 *)((char *)extra + 0x1c) = *(s8 *)((char *)extra + 0x1c) - framesThisStep;
         if (*(s8 *)((char *)extra + 0x1c) <= 0) {
-            Sfx_PlayFromObject((int)obj, 159);
+            Sfx_PlayFromObject((int)obj, SFXmv_mushdizzylp12);
         }
         if (*(s16 *)((char *)extra + 0x1a) <= 0) {
             model = (int *)(*(int **)((char *)obj + 0x7c))[(s8)*(s8 *)((char *)obj + 0xad)];
@@ -1759,7 +1767,7 @@ void dll_1D6_update(int *obj)
                 *(s16 *)((char *)extra + 0x18) = 15;
             }
             *(u8 *)((char *)extra + 0x1d) &= ~1;
-            Sfx_PlayFromObject((int)obj, 502);
+            Sfx_PlayFromObject((int)obj, SFXfoot_metal_land);
         }
     } else {
         model = (int *)(*(int **)((char *)obj + 0x7c))[(s8)*(s8 *)((char *)obj + 0xad)];
@@ -1776,7 +1784,7 @@ void dll_1D6_update(int *obj)
                 *(s16 *)((char *)extra + 0x1a) = 15;
             }
             *(u8 *)((char *)extra + 0x1d) |= 1;
-            Sfx_PlayFromObject((int)obj, 503);
+            Sfx_PlayFromObject((int)obj, SFXfoot_ice_scuff);
             *(s8 *)((char *)extra + 0x1c) = 20;
         }
     }
@@ -1924,7 +1932,7 @@ void dim2snowball_update(int *obj)
                 if (hit != NULL) {
                     (*(void (**)(int *))(**(int **)((char *)hit + 0x68) + 0x20))(hit);
                 }
-                Sfx_PlayFromObject((int)obj, 506);
+                Sfx_PlayFromObject((int)obj, SFXfoot_run_jingle1);
             }
             {
                 f32 pos[3];
