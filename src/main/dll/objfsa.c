@@ -5422,6 +5422,69 @@ int RomCurve_func29(float *state, int pickIdx)
     return 0;
 }
 
+int RomCurve_func2C(float *state, int unused, int startCurveId)
+{
+    char *stateBytes;
+    int currentCurve;
+    int nextId;
+    int nextCurve;
+
+    if (state == NULL) {
+        return 1;
+    }
+    if (startCurveId == -1) {
+        return 1;
+    }
+
+    stateBytes = (char *)state;
+    if (*(s32 *)(stateBytes + 0x80) != 0) {
+        currentCurve = Objfsa_FindRomCurveById(startCurveId);
+        *(s32 *)(stateBytes + 0xa0) = currentCurve;
+        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        if (nextId == -1) {
+            return 1;
+        }
+        startCurveId = nextId;
+    }
+
+    currentCurve = Objfsa_FindRomCurveById(startCurveId);
+    *(s32 *)(stateBytes + 0xa0) = currentCurve;
+    if (*(void **)(stateBytes + 0xa0) == NULL) {
+        *(void **)(stateBytes + 0xa0) = NULL;
+        return 1;
+    }
+
+    if (*(s32 *)(stateBytes + 0x80) == 0) {
+        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+    } else {
+        nextId = RomCurve_getControlPointId_2B(currentCurve, -1, -1);
+    }
+    if (nextId == -1) {
+        return 1;
+    }
+
+    nextCurve = Objfsa_FindRomCurveById(nextId);
+    *(s32 *)(stateBytes + 0xa4) = nextCurve;
+    if (*(void **)(stateBytes + 0xa4) == NULL) {
+        *(void **)(stateBytes + 0xa4) = NULL;
+        return 1;
+    }
+
+    RomCurve_RefreshForwardControls(stateBytes, 0xa4);
+    if (RomCurve_goNextPoint(state) != 0) {
+        return 1;
+    }
+
+    *(void **)(stateBytes + 0x94) = curveFn_80010dc0;
+    *(void **)(stateBytes + 0x98) = curveFn_80010d54;
+    *(void **)(stateBytes + 0x84) = stateBytes + 0xa8;
+    *(void **)(stateBytes + 0x88) = stateBytes + 0xc8;
+    *(void **)(stateBytes + 0x8c) = stateBytes + 0xe8;
+    *(s32 *)(stateBytes + 0x90) = 8;
+    curvesMove(state);
+    return 0;
+}
+
 /* fn_800DA928: clamp + curveFn call. */
 #pragma scheduling off
 void fn_800DA928(float *p) {
