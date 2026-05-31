@@ -4,6 +4,9 @@
 #include "main/dll/FRONT/title_menu.h"
 
 
+#define SFXsp_sa_off03 252
+#define SFXsp_snrot1_c 256
+
 #pragma peephole off
 #pragma scheduling off
 typedef struct SaveSelectPanel {
@@ -287,7 +290,7 @@ void FUN_8011a528(int param_1,char param_2)
 {
   DAT_803de330 = DAT_803de328;
   if (param_1 == 0) {
-    FUN_80006824(0,0x100);
+    FUN_80006824(0,SFXsp_snrot1_c);
     (**(code **)(*DAT_803dd6cc + 8))(0x14,5);
     DAT_803de34f = 0x23;
     DAT_803de34c = 1;
@@ -784,7 +787,7 @@ int FUN_8011b5d4(undefined8 param_1,double param_2,undefined8 param_3,undefined8
       iVar4 = (**(code **)(*DAT_803dd720 + 0x14))();
       uVar7 = extraout_f1_00;
       if (iVar4 != DAT_803de340) {
-        uVar7 = FUN_80006824(0,0xfc);
+        uVar7 = FUN_80006824(0,SFXsp_sa_off03);
       }
       DAT_803de340 = iVar4;
       if (DAT_803de338 != 0) {
@@ -941,7 +944,7 @@ void saveFileSelect_init(int param_1, int param_2)
 
   saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;
   if (param_1 == 0) {
-    Sfx_PlayFromObject(0, 0x100);
+    Sfx_PlayFromObject(0, SFXsp_snrot1_c);
     ((void (**)(int, int))gScreenTransitionInterface->vtable)[2](20, 5);
     lbl_803DD6CF = 0x23;
     lbl_803DD6CC = 1;
