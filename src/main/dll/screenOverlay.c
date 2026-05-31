@@ -1,6 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/screenOverlay.h"
 
+#define SFXms_windlift_loop 98
+#define SFXmn_cling01 99
+#define SFXsp_lf_mutter4 265
+
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void ObjHitbox_SetSphereRadius(int obj, short radius);
@@ -84,9 +88,9 @@ void ProjectileSwitch_hitDetect(int obj)
     if ((*(u8 *)(state2 + 0x1e) & 3) != 1) return;
     state = *(int *)(obj + 0xb8);
     if ((int)(signed char)*(u8 *)(obj + 0xac) == 0x2c) {
-      Sfx_PlayFromObject(obj, 0x109);
+      Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
     } else {
-      Sfx_PlayFromObject(obj, 0x63);
+      Sfx_PlayFromObject(obj, SFXmn_cling01);
     }
     tex = objFindTexture(obj, 0, 0);
     if (tex != 0) {
@@ -98,9 +102,9 @@ void ProjectileSwitch_hitDetect(int obj)
     /* activate */
     state = *(int *)(obj + 0xb8);
     if ((int)(signed char)*(u8 *)(obj + 0xac) == 0x2c) {
-      Sfx_PlayFromObject(obj, 0x109);
+      Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
     } else {
-      Sfx_PlayFromObject(obj, 0x62);
+      Sfx_PlayFromObject(obj, SFXms_windlift_loop);
     }
     tex = objFindTexture(obj, 0, 0);
     if (tex != 0) {
