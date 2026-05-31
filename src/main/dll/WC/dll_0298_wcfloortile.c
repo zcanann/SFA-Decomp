@@ -1,5 +1,9 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXsc_strafe_active 198
+#define SFXbaddie_rach_call3 675
+#define SFXbaddie_rach_death 676
+
 #pragma peephole on
 #pragma scheduling on
 int wcfloortile_getExtraSize(void) { return 8; }
@@ -80,7 +84,7 @@ void wcfloortile_update(int obj)
             for (i = 0, off = 0; i < *(s8 *)(*(int *)(obj + 0x58) + 0x10f); i++, off += 4) {
                 int e = *(int *)(*(int *)(obj + 0x58) + off + 0x100);
                 if (*(s16 *)(e + 0x44) == 1) {
-                    Sfx_PlayFromObject(obj, 198);
+                    Sfx_PlayFromObject(obj, SFXsc_strafe_active);
                     *(u8 *)(state + 6) = 1;
                     *(f32 *)(state + 0) = z;
                     *(f32 *)(obj + 0x28) = z;
@@ -374,7 +378,7 @@ void fn_8022B764(int p, int q, int idx) {
     *(int *)(q + 0x438) = loadObjectAtObject(p);
     fn_8022ED74(*(int *)(q + 0x438), *(u16 *)(q + 0x446));
     fn_8022ECE0(*(int *)(q + 0x438), *(f32 *)(q + 0x448));
-    Sfx_PlayFromObject(p, 0x2a3);
+    Sfx_PlayFromObject(p, SFXbaddie_rach_call3);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -464,7 +468,7 @@ void fn_8022A670(int obj, int state)
     if (*(u8 *)(state + 0x478) == 0) {
         btn = *(u16 *)(state + 0x3f4);
         if ((btn & 0x20) != 0) {
-            Sfx_PlayFromObject(obj, 0x2a4);
+            Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
             *(u8 *)(state + 0x478) = 1;
             *(int *)(state + 0x398) = *(s16 *)(obj + 4);
             *(f32 *)(state + 0x3a0) = *(f32 *)(state + 0x39c);
@@ -473,7 +477,7 @@ void fn_8022A670(int obj, int state)
             *(f32 *)(state + 0x60) = *(f32 *)(state + 0x60) * *(f32 *)(state + 0x3b0);
             arwarwingbo_setActiveVisible(*(int *)(state + 0x10), 1, 0);
         } else if ((btn & 0x40) != 0) {
-            Sfx_PlayFromObject(obj, 0x2a4);
+            Sfx_PlayFromObject(obj, SFXbaddie_rach_death);
             *(u8 *)(state + 0x478) = 1;
             *(int *)(state + 0x398) = *(s16 *)(obj + 4);
             *(f32 *)(state + 0x3a0) = -*(f32 *)(state + 0x39c);
