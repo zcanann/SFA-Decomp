@@ -1,6 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMExplosion.h"
 
+#define SFXfoot_run_jingle2 507
+#define SFXthorntail_chew1 518
+#define SFXthorntail_chew2 519
+
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -136,7 +140,7 @@ void FUN_801b13f0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                              *(float *)(param_9 + 0x24) * *(float *)(param_9 + 0x24) +
                              *(float *)(param_9 + 0x28) * *(float *)(param_9 + 0x28)));
         if ((*(ushort *)(iVar7 + 0xb0) & 0x1000) == 0) {
-          FUN_80006824(param_9,0x1fb);
+          FUN_80006824(param_9,SFXfoot_run_jingle2);
         }
         *(undefined *)(piVar11 + 3) = 0x1e;
       }
@@ -690,9 +694,9 @@ void dimbarrier_update(int *obj)
             if (v <= 0) {
                 *(s8 *)((char *)extra + 2) = 1;
                 *(s16 *)extra = 30;
-                Sfx_PlayFromObject((int)obj, 518);
+                Sfx_PlayFromObject((int)obj, SFXthorntail_chew1);
             } else {
-                Sfx_PlayFromObject((int)obj, 519);
+                Sfx_PlayFromObject((int)obj, SFXthorntail_chew2);
             }
         }
         break;
