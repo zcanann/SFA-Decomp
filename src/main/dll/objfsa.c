@@ -5463,6 +5463,52 @@ int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighb
     return -1;
 }
 
+int RomCurve_func16(double x, double y, double z) {
+    u32 candidateIds[20];
+    int candidateCount;
+    int i;
+    int curve;
+    int *curveList;
+    int out;
+    int category;
+    int currentId;
+    int currentCurve;
+
+    candidateCount = 0;
+    curveList = (int *)romCurves;
+    for (i = 0; i < nRomCurves && candidateCount < 20; i++) {
+        curve = *curveList;
+        if (*(s8 *)(curve + 0x19) == 0x17) {
+            candidateIds[candidateCount] = *(u32 *)(curve + 0x14);
+            candidateCount++;
+        }
+        curveList++;
+    }
+
+    while (candidateCount != 0) {
+        currentId = candidateIds[0];
+        if (curves_distFn15(x, y, z, currentId, &out) != 0) {
+            return currentId;
+        }
+
+        currentCurve = Objfsa_FindRomCurveById(currentId);
+        category = *(s8 *)(currentCurve + 0x18);
+        i = 0;
+        while (i < candidateCount) {
+            currentId = candidateIds[i];
+            currentCurve = Objfsa_FindRomCurveById(currentId);
+            if (*(s8 *)(currentCurve + 0x18) == category) {
+                candidateCount--;
+                candidateIds[i] = candidateIds[candidateCount];
+            } else {
+                i++;
+            }
+        }
+    }
+
+    return -1;
+}
+
 /* UIController dispatch through the shared GameUI interface. */
 extern int *gGameUIInterface;
 extern u8 gameTimerIsRunning(void *p, int a, int b);
