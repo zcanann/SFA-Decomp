@@ -2,6 +2,9 @@
 #include "main/dll/shrine1CE.h"
 
 
+#define SFXsc_gemrun1022 175
+#define SFXsc_mpick1_b 179
+
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 getLActions();
@@ -333,7 +336,7 @@ void FUN_801cc600(undefined8 param_1,double param_2,double param_3,undefined8 pa
     in_r8 = 0;
     in_r9 = *piVar2;
     (**(code **)(in_r9 + 4))(param_9,1,0,1,0xffffffff);
-    FUN_80006824(0,0xaf);
+    FUN_80006824(0,SFXsc_gemrun1022);
     FUN_80006b0c((undefined *)piVar2);
     *(undefined2 *)(iVar4 + 6) = 1;
     *(undefined4 *)(param_9 + 0xf8) = 1;
@@ -455,7 +458,7 @@ void dll_19C_update(int *obj) {
             res = Resource_Acquire(0x82, 1);
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 0, 0, 1, -1, 0);
             ((void(*)(int*, int, int, int, int, int))((void**)*(int*)res)[1])(obj, 1, 0, 1, -1, 0);
-            Sfx_PlayFromObject(0, 0xaf);
+            Sfx_PlayFromObject(0, SFXsc_gemrun1022);
             Resource_Release(res);
             *(s16*)(sub + 6) = 1;
             *(int*)((char*)obj + 0xf8) = 1;
@@ -678,7 +681,7 @@ void dll_19D_update(int obj)
 
     linkObj = *(int *)(self + 0x54);
     if (*(s8 *)(linkObj + 0xad) != 0) {
-        Sfx_PlayFromObject(self, 0xb3);
+        Sfx_PlayFromObject(self, SFXsc_mpick1_b);
         (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
         (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
         (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a0, vec, 1, -1, 0);
