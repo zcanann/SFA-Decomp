@@ -1,6 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/debug/dimenu.h"
 
+#define SFXsp_sa_off03 0xfc
+#define SFXsp_snrot1_c 0x100
+#define SFXqu_longsob2 0x103
+#define SFXqu_shortsob1 0x104
+
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006b84();
@@ -269,7 +274,7 @@ int FUN_8011d11c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
       iVar3 = (**(code **)(*DAT_803dd720 + 0xc))();
       iVar4 = (**(code **)(*DAT_803dd720 + 0x14))();
       if (iVar4 != DAT_803de380) {
-        FUN_80006824(0,0xfc);
+        FUN_80006824(0,SFXsp_sa_off03);
       }
       DAT_803de380 = iVar4;
       if (DAT_803dc690 == '\x02') {
@@ -305,7 +310,7 @@ int FUN_8011d11c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
       }
       else if (DAT_803dc690 < '\x04') {
         if (iVar3 == 0) {
-          FUN_80006824(0,0x100);
+          FUN_80006824(0,SFXsp_snrot1_c);
           (**(code **)(*DAT_803dd6cc + 8))(0x14,5);
           DAT_803de384 = '#';
           DAT_803de385 = '\x01';
@@ -437,13 +442,13 @@ FUN_8011d790(undefined8 param_1,double param_2,undefined8 param_3,undefined8 par
     iVar2 = (**(code **)(*DAT_803dd720 + 0x14))();
     if (iVar1 == 1) {
       if (iVar2 == 0) {
-        FUN_80006824(0,0x103);
+        FUN_80006824(0,SFXqu_longsob2);
         FUN_80006b84(1);
         FUN_800176cc();
         FUN_80006ba8(0,0x300);
       }
       else {
-        FUN_80006824(0,0x104);
+        FUN_80006824(0,SFXqu_shortsob1);
         DAT_803de392 = '\0';
         DAT_803de393 = '\x01';
         DAT_8031b986 = DAT_8031b986 | 0x1000;
