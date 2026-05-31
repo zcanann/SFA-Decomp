@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/FRONT/frontend_control.h"
 
+#define SFXen_waterblock_stop 88
+
 extern u32 getButtonsHeld(int port);
 extern u32 getButtonsJustPressed(int port);
 extern void Sfx_PlayFromObject(int sfx, int id);
@@ -70,7 +72,7 @@ void saveFileSelect_checkCheatCodes(void)
         }
         if (saveFileSelect_debugCheatProgress == 5) {
             enableDebugText = 1;
-            Sfx_PlayFromObject(0, 0x58);
+            Sfx_PlayFromObject(0, SFXen_waterblock_stop);
         }
     }
     if (saveFileSelect_debugCheatProgress != 0) return;
@@ -89,7 +91,7 @@ void saveFileSelect_checkCheatCodes(void)
         if (saveFileSelect_saveCheatProgress == 5) {
             saveFileSelect_saveSlots[(int)saveFileSelect_currentSlotIndex].cheatFlag = 5;
             saveFileSelect_saveDirty = 1;
-            Sfx_PlayFromObject(0, 0x58);
+            Sfx_PlayFromObject(0, SFXen_waterblock_stop);
         }
     }
 }

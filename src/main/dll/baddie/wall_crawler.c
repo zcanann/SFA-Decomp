@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/wall_crawler.h"
 
+#define SFXsp_sa_def03 245
+
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006948();
@@ -789,7 +791,7 @@ LAB_8012f884:
 LAB_8012fb2c:
   if (DAT_803de455 != 0) {
     if (DAT_803de415 == '\0') {
-      FUN_80006824(0,0xf5);
+      FUN_80006824(0,SFXsp_sa_def03);
     }
     else {
       FUN_80006824(0,0x37b);

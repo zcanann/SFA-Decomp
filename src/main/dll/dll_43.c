@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_43.h"
 
+#define SFXsp_snrot1_c 256
+
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void saveSelectGoToChooseSlot(int arg);
 
@@ -34,7 +36,7 @@ void saveSelectSetSlot(int param_1, int param_2)
       Sfx_PlayFromObject(0, 0x419);
       saveSelectGoToChooseSlot(0);
     } else {
-      Sfx_PlayFromObject(0, 0x100);
+      Sfx_PlayFromObject(0, SFXsp_snrot1_c);
       ((void (**)(int, int))gScreenTransitionInterface->vtable)[2](0x14, 5);
       lbl_803DD6CF = 0x23;
       lbl_803DD6CC = 1;

@@ -4,6 +4,13 @@
 
 #define SFXfoot_ice_run_2 0x1ea
 #define SFXfoot_ice_run_3 0x1eb
+#define SFXmn_spithit6 0x7a
+#define SFXfoot_wood_run_2 0x1c4
+#define SFXsp_lf_mutter4 0x109
+#define SFXfoot_water_run_1 0x1cb
+#define SFXsp_lfoot_taunt6 0x116
+#define SFXmn_eggylaugh216 0x72
+#define SFXmn_sml_trex_snap1 0x80
 
 #pragma peephole off
 #pragma scheduling off
@@ -2168,7 +2175,7 @@ void FUN_802019d8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(float *)(iVar2 + 0x280) = lbl_803E6F40;
   }
   if (*(char *)(iVar2 + 0x346) != '\0') {
-    FUN_80006824(uVar1,0x1ea);
+    FUN_80006824(uVar1,SFXfoot_ice_run_2);
     *(float *)(iVar4 + 4) = lbl_803E6F60;
     uVar6 = FUN_800305f8((double)lbl_803E6F40,param_2,param_3,param_4,param_5,param_6,param_7,
                          param_8,uVar1,8,0,in_r6,in_r7,in_r8,in_r9,in_r10);
@@ -3368,13 +3375,13 @@ void FUN_8020368c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   uVar3 = FUN_80017690(0x5e3);
   if (((uVar3 == 0) && (uVar3 = FUN_80017690(0x5e0), uVar3 != 0)) &&
      (uVar3 = FUN_80017690(0x5e1), uVar3 != 0)) {
-    FUN_80006824(uVar1,0x7a);
+    FUN_80006824(uVar1,SFXmn_spithit6);
     uVar8 = FUN_80017698(0x5e3,1);
   }
   uVar3 = FUN_80017690(0x792);
   if (((uVar3 == 0) && (uVar3 = FUN_80017690(0xb8c), uVar3 != 0)) &&
      (uVar3 = FUN_80017690(0xb8c), uVar3 != 0)) {
-    FUN_80006824(uVar1,0x7a);
+    FUN_80006824(uVar1,SFXmn_spithit6);
     uVar8 = FUN_80017698(0x792,1);
   }
   uVar3 = FUN_80017690(0xe58);
@@ -3388,7 +3395,7 @@ void FUN_8020368c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       }
     }
     else {
-      FUN_80006824(0,0x1c4);
+      FUN_80006824(0,SFXfoot_wood_run_2);
       puVar6 = &DAT_8032a488;
       for (sVar5 = 0; sVar5 < 9; sVar5 = sVar5 + 1) {
         uVar3 = randomGetRange(1,4);
@@ -3581,7 +3588,7 @@ void FUN_80203d00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   if (((((uVar3 & 0xff) != 0) && (-1 < *(char *)(iVar7 + 7))) ||
       (((uVar4 & 0xff) != 0 && ((*(byte *)(iVar7 + 7) >> 6 & 1) == 0)))) ||
      (((uVar5 & 0xff) != 0 && ((*(byte *)(iVar7 + 7) >> 5 & 1) == 0)))) {
-    FUN_80006824(0,0x109);
+    FUN_80006824(0,SFXsp_lf_mutter4);
   }
   *(byte *)(iVar7 + 7) = (byte)((uVar3 & 0xff) << 7) | *(byte *)(iVar7 + 7) & 0x7f;
   *(byte *)(iVar7 + 7) = (byte)((uVar4 & 0xff) << 6) & 0x40 | *(byte *)(iVar7 + 7) & 0xbf;
@@ -3868,7 +3875,7 @@ void FUN_80204348(uint param_1)
           *(undefined2 *)(iVar8 + 4) = 3;
           bVar6 = FUN_800067f0(param_1,8);
           if (!bVar6) {
-            FUN_80006824(param_1,0x1cb);
+            FUN_80006824(param_1,SFXfoot_water_run_1);
             *(undefined *)(iVar8 + 0xd) = 1;
           }
         }
@@ -3876,7 +3883,7 @@ void FUN_80204348(uint param_1)
           *(undefined2 *)(iVar8 + 4) = 4;
           bVar6 = FUN_800067f0(param_1,8);
           if (!bVar6) {
-            FUN_80006824(param_1,0x1cb);
+            FUN_80006824(param_1,SFXfoot_water_run_1);
             *(undefined *)(iVar8 + 0xd) = 1;
           }
         }
@@ -3909,7 +3916,7 @@ void FUN_80204348(uint param_1)
         else if (*(float *)(param_1 + 0x10) < lbl_803E7038 + *(float *)(iVar7 + 0xc)) {
           bVar6 = FUN_800067f0(param_1,8);
           if (!bVar6) {
-            FUN_80006824(param_1,0x116);
+            FUN_80006824(param_1,SFXsp_lfoot_taunt6);
             *(undefined *)(iVar8 + 0xd) = 1;
           }
           *(float *)(param_1 + 0x10) = *(float *)(param_1 + 0x10) + lbl_803DC074;
@@ -4435,7 +4442,7 @@ void FUN_802051e0(uint param_1)
   local_44 = DAT_802c2c94;
   local_40 = DAT_802c2c98;
   local_3c = DAT_802c2c9c;
-  FUN_80006824(param_1,0x72);
+  FUN_80006824(param_1,SFXmn_eggylaugh216);
   FUN_80057690(param_1);
   if (*(char *)((int)puVar4 + 9) == '\x01') {
     local_28 = lbl_803E7078;
@@ -4457,7 +4464,7 @@ void FUN_802051e0(uint param_1)
     if (((*(char *)((int)puVar4 + 10) != '\0') && (*(short *)(puVar4 + 1) < 1)) &&
        (*(char *)((int)puVar4 + 0xb) != '\0')) {
       *(undefined *)((int)puVar4 + 0xb) = 0;
-      FUN_80006824(param_1,0x80);
+      FUN_80006824(param_1,SFXmn_sml_trex_snap1);
     }
     if (*(char *)((int)puVar4 + 10) != *(char *)(puVar4 + 3)) {
       if (*(char *)((int)puVar4 + 10) == '\0') {
