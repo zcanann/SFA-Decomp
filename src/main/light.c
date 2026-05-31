@@ -3,6 +3,11 @@
 #include "main/light.h"
 #include "main/objanim.h"
 
+#define SFXsp_lf_mutter4 0x109
+#define SFXsp_skeep_mumb4 0x10d
+#define SFXsp_guardian_call2 0x110
+#define SFXsp_lfoot_taunt5 0x115
+
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
@@ -76,7 +81,7 @@ void vfpblock1_update(int obj)
     f32 dist = Vec_distance((void *)(player + 0x18), (void *)(obj + 0x18));
     if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0) {
         if (dist < lbl_803E6100) {
-            Sfx_PlayFromObject(obj, 0x110);
+            Sfx_PlayFromObject(obj, SFXsp_guardian_call2);
         }
     } else {
         if (dist >= lbl_803E6100) {
@@ -245,7 +250,7 @@ void FUN_801fbe2c(uint param_1)
   bVar2 = FUN_800067f0(param_1,0x40);
   if (bVar2) {
     if (dVar3 < (double)lbl_803E6D98) {
-      FUN_80006824(param_1,0x110);
+      FUN_80006824(param_1,SFXsp_guardian_call2);
     }
   }
   else if ((double)lbl_803E6D98 <= dVar3) {
@@ -478,31 +483,31 @@ void FUN_801fc1d8(void)
               if (cVar2 == '\0') {
                 if (uVar1 == uVar8 - 0x3c) {
                   *(undefined *)(psVar9 + 1) = 2;
-                  FUN_80006824(uVar5,0x115);
+                  FUN_80006824(uVar5,SFXsp_lfoot_taunt5);
                 }
                 if (uVar1 == uVar8) {
                   *(undefined *)(psVar9 + 1) = 3;
-                  FUN_80006824(uVar5,0x115);
+                  FUN_80006824(uVar5,SFXsp_lfoot_taunt5);
                 }
               }
               else if (cVar2 == '\x03') {
                 if (uVar6 == uVar7 - 0x3c) {
                   *(undefined *)(psVar9 + 1) = 2;
-                  FUN_80006824(uVar5,0x115);
+                  FUN_80006824(uVar5,SFXsp_lfoot_taunt5);
                 }
                 if (uVar6 == uVar7) {
                   *(undefined *)(psVar9 + 1) = 3;
-                  FUN_80006824(uVar5,0x115);
+                  FUN_80006824(uVar5,SFXsp_lfoot_taunt5);
                 }
               }
               else {
                 if (uVar1 == uVar8 + 0x3c) {
                   *(undefined *)(psVar9 + 1) = 4;
-                  FUN_80006824(uVar5,0x115);
+                  FUN_80006824(uVar5,SFXsp_lfoot_taunt5);
                 }
                 if (uVar1 == uVar8) {
                   *(undefined *)(psVar9 + 1) = 5;
-                  FUN_80006824(uVar5,0x115);
+                  FUN_80006824(uVar5,SFXsp_lfoot_taunt5);
                 }
               }
             }
@@ -607,8 +612,8 @@ void FUN_801fc75c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   psVar3 = *(short **)(param_9 + 0xb8);
   puVar1 = FUN_800069a8();
   if ((-1 < *(char *)(psVar3 + 1)) && (uVar2 = FUN_80017690((int)*psVar3), uVar2 != 0)) {
-    FUN_80006824(0,0x109);
-    FUN_80006824(param_9,0x10d);
+    FUN_80006824(0,SFXsp_lf_mutter4);
+    FUN_80006824(param_9,SFXsp_skeep_mumb4);
     FUN_80006824(param_9,0x494);
     *(byte *)(psVar3 + 1) = *(byte *)(psVar3 + 1) & 0x7f | 0x80;
   }
@@ -695,8 +700,8 @@ void FUN_801fc998(undefined8 param_1,undefined8 param_2,double param_3,undefined
   if (*(short *)(param_9 + 0x46) == 999) {
     psVar2 = *(short **)(param_9 + 0xb8);
     if ((-1 < *(char *)(psVar2 + 1)) && (uVar1 = FUN_80017690((int)*psVar2), uVar1 != 0)) {
-      FUN_80006824(0,0x109);
-      FUN_80006824(param_9,0x10d);
+      FUN_80006824(0,SFXsp_lf_mutter4);
+      FUN_80006824(param_9,SFXsp_skeep_mumb4);
       FUN_80006824(param_9,0x494);
       FUN_80017a78(param_9,1);
       *(byte *)(psVar2 + 1) = *(byte *)(psVar2 + 1) & 0x7f | 0x80;
@@ -1222,8 +1227,8 @@ void vfpdoorswitch_update(int obj)
     state = *(VfpDoorSwitchState **)(obj + 0xB8);
     if (state->activated != 0) return;
     if (GameBit_Get(state->gameBitId) == 0) return;
-    Sfx_PlayFromObject(0, 0x109);
-    Sfx_PlayFromObject(obj, 0x10d);
+    Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+    Sfx_PlayFromObject(obj, SFXsp_skeep_mumb4);
     Sfx_PlayFromObject(obj, 0x494);
     Obj_SetActiveModelIndex(obj, 1);
     state->activated = 1;
@@ -1265,8 +1270,8 @@ void fn_801FC378(int obj)
 
     if (state->activated == 0) {
         if (GameBit_Get(state->gameBitId) != 0) {
-            Sfx_PlayFromObject(0, 0x109);
-            Sfx_PlayFromObject(obj, 0x10D);
+            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+            Sfx_PlayFromObject(obj, SFXsp_skeep_mumb4);
             Sfx_PlayFromObject(obj, 0x494);
             state->activated = 1;
         }
@@ -1596,29 +1601,29 @@ void vfpplatform_update(int obj)
                     } else if (s3 == 0) {
                         if (yi == tyi - 60) {
                             *(u8 *)(state + 2) = 2;
-                            Sfx_PlayFromObject(obj, 277);
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                         }
                         if (yi == tyi) {
                             *(u8 *)(state + 2) = 3;
-                            Sfx_PlayFromObject(obj, 277);
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                         }
                     } else if (s3 == 3) {
                         if (xi == txi - 60) {
                             *(u8 *)(state + 2) = 2;
-                            Sfx_PlayFromObject(obj, 277);
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                         }
                         if (xi == txi) {
                             *(u8 *)(state + 2) = 3;
-                            Sfx_PlayFromObject(obj, 277);
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                         }
                     } else {
                         if (yi == tyi + 60) {
                             *(u8 *)(state + 2) = 4;
-                            Sfx_PlayFromObject(obj, 277);
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                         }
                         if (yi == tyi) {
                             *(u8 *)(state + 2) = 5;
-                            Sfx_PlayFromObject(obj, 277);
+                            Sfx_PlayFromObject(obj, SFXsp_lfoot_taunt5);
                         }
                     }
                     break;
