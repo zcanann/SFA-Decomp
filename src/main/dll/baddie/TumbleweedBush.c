@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/TumbleweedBush.h"
 
+#define SFXsp_sa_def01 243
+#define SFXsp_sa_def02 244
+
 #pragma peephole off
 #pragma scheduling off
 
@@ -558,12 +561,12 @@ void FUN_8013170c(int param_1)
       }
       DAT_803de5a0 = (char)sVar6;
       if (sVar5 < 0) {
-        FUN_80006824(0,0xf3);
+        FUN_80006824(0,SFXsp_sa_def01);
         *(short *)(param_1 + 0xc) = *(short *)(param_1 + 0xc) + -1;
         *(byte *)(param_1 + 4) = *(byte *)(param_1 + 4) | 4;
       }
       else if (0 < sVar5) {
-        FUN_80006824(0,0xf3);
+        FUN_80006824(0,SFXsp_sa_def01);
         *(short *)(param_1 + 0xc) = *(short *)(param_1 + 0xc) + 1;
         *(byte *)(param_1 + 4) = *(byte *)(param_1 + 4) | 8;
       }
@@ -571,7 +574,7 @@ void FUN_8013170c(int param_1)
     }
   }
   if (((*(byte *)(param_1 + 4) & 0x20) == 0) && (uVar3 = FUN_80006c00(0), (uVar3 & 0x100) != 0)) {
-    FUN_80006824(0,0xf4);
+    FUN_80006824(0,SFXsp_sa_def02);
     *(ushort *)(param_1 + 0xc) = *(ushort *)(param_1 + 0xc) ^ 1;
   }
 LAB_80131fc8:
