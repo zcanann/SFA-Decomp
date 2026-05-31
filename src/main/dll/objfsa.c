@@ -4277,6 +4277,7 @@ int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroup
   u8 linkedPatchListIndex;
   u8 patchIndex;
   u8 linkedPatchIndex;
+  u8 edgeIndex;
   u16 patchGroupId;
   u16 linkedWalkGroupIndex;
   ObjfsaWalkGroup *walkGroup;
@@ -4289,9 +4290,27 @@ int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroup
     patchIndex = walkGroup->patchIndices[patchListIndex];
     if (patchIndex != 0) {
       patch = Objfsa_GetPatch(patchIndex);
-      if (Objfsa_IsPointInsidePatch(prevPoint,patch) &&
-          Objfsa_IsPointInsidePatch(nextPoint,patch)) {
-        return currentWalkGroupIndex;
+      if (prevPoint[1] < (f32)patch->maxY && (f32)patch->minY < prevPoint[1]) {
+        edgeIndex = 0;
+        while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
+               patch->planeOffsets[edgeIndex] +
+                   prevPoint[0] * (f32)patch->planes[edgeIndex].normalX +
+                   prevPoint[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
+          edgeIndex++;
+        }
+        if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT &&
+            nextPoint[1] < (f32)patch->maxY && (f32)patch->minY < nextPoint[1]) {
+          edgeIndex = 0;
+          while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
+                 patch->planeOffsets[edgeIndex] +
+                     nextPoint[0] * (f32)patch->planes[edgeIndex].normalX +
+                     nextPoint[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
+            edgeIndex++;
+          }
+          if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
+            return currentWalkGroupIndex;
+          }
+        }
       }
     }
   }
@@ -4310,10 +4329,30 @@ int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroup
         if (linkedPatchIndex != 0) {
           linkedPatch = Objfsa_GetPatch(linkedPatchIndex);
           if (linkedPatch->groupId != patchGroupId &&
-              Objfsa_IsPointInsidePatch(prevPoint,linkedPatch) &&
-              Objfsa_IsPointInsidePatch(nextPoint,linkedPatch)) {
-            OSReport(sObjfsaFoundNewWalkGroupPatch,linkedWalkGroupIndex);
-            return linkedWalkGroupIndex;
+              prevPoint[1] < (f32)linkedPatch->maxY &&
+              (f32)linkedPatch->minY < prevPoint[1]) {
+            edgeIndex = 0;
+            while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
+                   linkedPatch->planeOffsets[edgeIndex] +
+                       prevPoint[0] * (f32)linkedPatch->planes[edgeIndex].normalX +
+                       prevPoint[2] * (f32)linkedPatch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
+              edgeIndex++;
+            }
+            if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT &&
+                nextPoint[1] < (f32)linkedPatch->maxY &&
+                (f32)linkedPatch->minY < nextPoint[1]) {
+              edgeIndex = 0;
+              while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
+                     linkedPatch->planeOffsets[edgeIndex] +
+                         nextPoint[0] * (f32)linkedPatch->planes[edgeIndex].normalX +
+                         nextPoint[2] * (f32)linkedPatch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
+                edgeIndex++;
+              }
+              if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
+                OSReport(sObjfsaFoundNewWalkGroupPatch,linkedWalkGroupIndex);
+                return linkedWalkGroupIndex;
+              }
+            }
           }
         }
       }
