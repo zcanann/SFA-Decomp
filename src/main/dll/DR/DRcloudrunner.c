@@ -94,8 +94,8 @@ void sc_musictree_update(int obj)
         p = (int *)inner;
         q = (int *)inner;
         for (i = 0; i < 3; i++) {
-            if (*p == 0) {
-                fn_801DBFA0(obj, inner, framesThisStep, i);
+            if (*(void **)p == NULL) {
+                fn_801DBFA0(obj, inner, framesThisStep, (s8)i);
             } else {
                 int r = (*(int (**)(int))(*(int *)(*p + 0x68) + 0x28))(*p);
                 if (r > 3) {
@@ -205,7 +205,7 @@ void sc_musictree_init(int obj, int p2)
     *(u16 *)(inner + 0x48) = (u16)((u32)*(u8 *)(p2 + 0x1b) << 1);
     *(u8 *)(inner + 0x4c) = *(u8 *)(p2 + 0x23);
     *(f32 *)(inner + 0x3c) = zero;
-    *(int *)(inner + 0x38) = *(int *)(p2 + 0x1c);
+    *(f32 *)(inner + 0x38) = *(f32 *)(p2 + 0x1c);
     *(s16 *)(obj + 4) = (s16)((*(u8 *)(p2 + 0x18) - 0x7f) << 7);
     *(s16 *)(obj + 2) = (s16)((*(u8 *)(p2 + 0x19) - 0x7f) << 7);
     *(s16 *)(obj + 0) = (s16)((u32)*(u8 *)(p2 + 0x1a) << 8);
@@ -215,7 +215,7 @@ void sc_musictree_init(int obj, int p2)
     rnd = randomGetRange(1, 99);
     ratio = (f32)(s32)rnd / lbl_803E55BC;
     ObjAnim_SetCurrentMove(obj, 0, ratio, 0);
-    ObjAnim_AdvanceCurrentMove(obj, &stk, lbl_803E5588, lbl_803E5588);
+    ObjAnim_AdvanceCurrentMove(obj, &stk, lbl_803E558C, lbl_803E558C);
     ObjHitbox_SetCapsuleBounds(obj, (s16)(s32)(lbl_803E55C0 * *(f32 *)(inner + 0x38)), -5, 0xff);
     if (*(u8 *)(inner + 0x4c) & 0x80) {
         *(u8 *)(inner + 0x4c) = *(u8 *)(inner + 0x4c) | 0x20;
@@ -227,6 +227,7 @@ void sc_musictree_init(int obj, int p2)
 void sc_musictree_release(void) {}
 void sc_musictree_initialise(void) {}
 
+#pragma dont_inline on
 void sc_totempole_sortCompletionGameBits(int *bits, int param2)
 {
     u16 stk[20];
@@ -256,6 +257,7 @@ void sc_totempole_sortCompletionGameBits(int *bits, int param2)
     }
     (void)changed;
 }
+#pragma dont_inline reset
 
 int sc_totempole_getExtraSize(void) { return 0x8; }
 int sc_totempole_getObjectTypeId(void) { return 0x0; }
@@ -362,26 +364,24 @@ void sc_cloudrunnera_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 
 void sc_cloudrunnera_hitDetect(void) {}
 
+#pragma scheduling off
 void sc_cloudrunnera_update(int obj)
 {
-    int trig;
     int inner = *(int *)(obj + 0xb8);
-    int sub;
-    int slot;
+    void *sub;
     int i;
-    int *arr;
-    int idx, count;
-    int matchCount;
-    int found;
 
-    if (sub = *(int *)(obj + 0x4c), sub == 0) goto tail;
-    if (*(s16 *)(sub + 0x18) == -1) goto tail;
-    trig = ((int (*)(int, f32))(*(int *)(*gObjectTriggerInterface + 0x14)))(obj, (f32)(u32)lbl_803DB411);
-    if (trig != 0 && *(s16 *)(obj + 0xb4) == -2) {
+    sub = *(void **)(obj + 0x4c);
+    if (sub == NULL) return;
+    if (*(s16 *)((char *)sub + 0x18) == -1) return;
+    if (((int (*)(int, f32))(*(int *)(*gObjectTriggerInterface + 0x14)))(obj, (f32)(u32)lbl_803DB411) != 0
+        && *(s16 *)(obj + 0xb4) == -2) {
         s32 mark = (s8)*(u8 *)(inner + 0x57);
-        found = 0;
+        int found = 0;
+        int matchCount = 0;
+        int *arr;
+        int idx, count;
         arr = ObjList_GetObjects(&idx, &count);
-        matchCount = 0;
         idx = 0;
         for (; idx < count; idx++) {
             int o = arr[idx];
@@ -401,14 +401,21 @@ void sc_cloudrunnera_update(int obj)
     }
 
     for (i = 0; i < *(u8 *)(inner + 0x8b); i++) {
-        s8 mode = *(s8 *)(inner + 0x81 + i);
+        int mode = *(u8 *)(inner + 0x81 + i);
         if (mode == 1) {
-            slot = *(int *)(obj + 0xc8);
+            int slot = *(int *)(obj + 0xc8);
             if (slot != 0) {
                 ((void (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(slot, 0);
             }
-        } else if (mode < 1) {
-            if (mode < 0) continue;
+        } else if (mode >= 1) {
+            if (mode < 3) {
+                int innerSlot = *(int *)(obj + 0xc8);
+                if (innerSlot != 0) {
+                    ObjLink_DetachChild(obj, innerSlot);
+                    Obj_FreeObject(innerSlot);
+                }
+            }
+        } else if (mode >= 0) {
             if (*(int *)(obj + 0xc8) != 0) continue;
             if (!Obj_IsLoadingLocked(obj)) continue;
             {
@@ -433,12 +440,6 @@ void sc_cloudrunnera_update(int obj)
                 ObjLink_AttachChild(obj, newObj, 0);
                 Sfx_PlayFromObject(obj, 0x10f);
             }
-        } else if (mode < 3) {
-            int innerSlot = *(int *)(obj + 0xc8);
-            if (innerSlot != 0) {
-                ObjLink_DetachChild(obj, innerSlot);
-                Obj_FreeObject(innerSlot);
-            }
         }
     }
     {
@@ -449,9 +450,8 @@ void sc_cloudrunnera_update(int obj)
             *(s16 *)(*(int *)(obj + 0xc8) + 0) = (s16)(*(s16 *)(obj + 0) + -0x8000);
         }
     }
-tail:
-    ;
 }
+#pragma scheduling reset
 
 #pragma scheduling off
 void sc_cloudrunnera_init(int obj, int p2)
