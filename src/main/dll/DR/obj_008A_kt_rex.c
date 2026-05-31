@@ -1,6 +1,22 @@
 #include "main/dll/DR/dr_shared.h"
 #include "main/mapEvent.h"
 
+#define SFXmv_bodyf4_c 0x86
+#define SFXmv_cagerat01 0x87
+#define SFXmv_cagesqk11 0x88
+#define SFXmv_canras_c 0x89
+#define SFXmv_cogstr_c 0x8a
+#define SFXmv_curtainopen16 0x8b
+#define SFXmv_deaththud16 0x8c
+#define SFXmv_dive4_c 0x8e
+#define SFXmv_gdtur2_c 0x8f
+#define SFXmv_icesmash16 0x90
+#define SFXmv_ladderslide16 0x91
+#define SFXmv_persquk1 0x92
+#define SFXmv_roothack16 0x94
+#define SFXmv_ropecreak22 0x95
+#define SFXbaddie_haga_talk1 0x2b9
+
 int ktrex_stateHandlerA00(void) { return 0x0; }
 
 void ktrex_func0B(void) {}
@@ -521,7 +537,7 @@ int ktrex_stateHandlerB08(int obj, int runtime) {
         ObjAnim_SetCurrentMove(obj, 13, lbl_803E67B8, 0);
         *(f32 *)((char *)runtime + 0x2a0) =
             lbl_803E67F4 + lbl_803E67F8 * (f32)(int)(*(u8 *)((char *)gKTRexState + 0x101) >> 1);
-        Sfx_PlayFromObject(obj, 136);
+        Sfx_PlayFromObject(obj, SFXmv_cagesqk11);
     }
     if ((*(int *)((char *)gKTRexRuntime + 0x314) & 1) != 0) {
         *(int *)((char *)gKTRexRuntime + 0x314) &= ~1;
@@ -786,34 +802,34 @@ void ktrex_updateAttackEffects(int obj) {
         mag = lbl_803E6818;
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x40) != 0) {
-        Sfx_PlayFromObject(obj, 0x86);
+        Sfx_PlayFromObject(obj, SFXmv_bodyf4_c);
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x80) != 0) {
-        Sfx_PlayFromObject(obj, 0x87);
+        Sfx_PlayFromObject(obj, SFXmv_cagerat01);
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x100) != 0) {
-        Sfx_PlayFromObject(obj, 0x88);
+        Sfx_PlayFromObject(obj, SFXmv_cagesqk11);
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x200) != 0) {
-        Sfx_PlayFromObject(obj, 0x89);
+        Sfx_PlayFromObject(obj, SFXmv_canras_c);
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x10000) != 0) {
-        Sfx_PlayFromObject(obj, 0x8a);
+        Sfx_PlayFromObject(obj, SFXmv_cogstr_c);
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x40000) != 0) {
-        Sfx_PlayFromObject(obj, 0x8b);
+        Sfx_PlayFromObject(obj, SFXmv_curtainopen16);
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x80000) != 0) {
-        Sfx_PlayFromObject(obj, 0x8c);
+        Sfx_PlayFromObject(obj, SFXmv_deaththud16);
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x2000) != 0) {
-        Sfx_PlayFromObject(obj, 0x8c);
+        Sfx_PlayFromObject(obj, SFXmv_deaththud16);
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x1000) != 0) {
         *(u32 *)((char *)gKTRexState + 0x104) &= ~0x1800;
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x20000) != 0) {
-        Sfx_PlayFromObject(obj, 0x8a);
+        Sfx_PlayFromObject(obj, SFXmv_cogstr_c);
         Camera_EnableViewYOffset();
         CameraShake_SetAllMagnitudes(lbl_803E67C8 * mag);
     }
@@ -825,15 +841,15 @@ void ktrex_updateAttackEffects(int obj) {
         }
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x4000) != 0) {
-        Sfx_PlayFromObject(obj, 0x8e);
+        Sfx_PlayFromObject(obj, SFXmv_dive4_c);
         *(u8 *)((char *)gKTRexState + 0x108) ^= 1;
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x8000) != 0) {
-        Sfx_PlayFromObject(obj, 0x8f);
+        Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
         *(u8 *)((char *)gKTRexState + 0x108) ^= 1;
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x3) != 0) {
-        Sfx_PlayFromObject(obj, 0x90);
+        Sfx_PlayFromObject(obj, SFXmv_icesmash16);
         doRumble(lbl_803E67CC);
         if (mag > lbl_803E67B4) {
             Camera_EnableViewYOffset();
@@ -843,7 +859,7 @@ void ktrex_updateAttackEffects(int obj) {
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0xc) != 0) {
         doRumble(lbl_803E682C);
-        Sfx_PlayFromObject(obj, 0x91);
+        Sfx_PlayFromObject(obj, SFXmv_ladderslide16);
         if (mag > lbl_803E67B4) {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E67C8 * mag);
@@ -852,7 +868,7 @@ void ktrex_updateAttackEffects(int obj) {
     }
     if ((*(u32 *)((char *)gKTRexState + 0x104) & 0x30) != 0) {
         doRumble(lbl_803E6830);
-        Sfx_PlayFromObject(obj, 0x92);
+        Sfx_PlayFromObject(obj, SFXmv_persquk1);
         if (mag > lbl_803E67B4) {
             Camera_EnableViewYOffset();
             CameraShake_SetAllMagnitudes(lbl_803E6834 * mag);
@@ -917,7 +933,7 @@ void ktrex_updateAttackEffects(int obj) {
     }
     *(u32 *)((char *)gKTRexState + 0x104) &= 0x1800;
     if (*(int *)(*(int *)((char *)obj + 0x54) + 0x50) == (int)Obj_GetPlayerObject()) {
-        Sfx_PlayFromObject((int)Obj_GetPlayerObject(), 0x2b9);
+        Sfx_PlayFromObject((int)Obj_GetPlayerObject(), SFXbaddie_haga_talk1);
     }
 }
 #pragma peephole reset
@@ -962,8 +978,8 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
         *(f32 *)((char *)lbl_803AD158 + 0xc) = playerMapOffsetX + pt[1];
         *(f32 *)((char *)lbl_803AD158 + 0x10) = pt[2];
         *(f32 *)((char *)lbl_803AD158 + 0x14) = playerMapOffsetZ + pt[3];
-        Sfx_PlayFromObject(obj, 0x8c);
-        Sfx_PlayFromObject(obj, 0x94);
+        Sfx_PlayFromObject(obj, SFXmv_deaththud16);
+        Sfx_PlayFromObject(obj, SFXmv_roothack16);
         (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(
             obj, 0x4b2, lbl_803AD158, 0x200001, -1, 0);
         (*(void (**)(int, int, void *, int, int, int))((char *)*gPartfxInterface + 0x8))(
@@ -980,7 +996,7 @@ void ktrex_updateContactEffects(int obj, void *runtime) {
         }
         *(u8 *)((char *)runtime + 0x34f) = (s8)hit;
     } else if (lbl_803DDD4C == 0) {
-        Sfx_PlayFromObject(obj, 0x95);
+        Sfx_PlayFromObject(obj, SFXmv_ropecreak22);
         row = *(int *)(*(int *)(*(int *)((char *)obj + 0x7c) + (s8)*(s8 *)((char *)obj + 0xad) * 4) + 0x50);
         pt = (f32 *)((char *)row + hitType * 16);
         *(f32 *)((char *)lbl_803AD158 + 0xc) = playerMapOffsetX + pt[1];
@@ -1205,7 +1221,7 @@ int ktrex_stateHandlerA05(int obj, int runtime) {
             *(f32 *)((char *)p + *(u8 *)((char *)gKTRexState + 0xfc) * 4 + 0x38) / lbl_803E67C4;
     }
     if (RandomTimer_UpdateRangeTrigger((char *)gKTRexState + 0x190, lbl_803E67C8, lbl_803E67CC) != 0) {
-        Sfx_PlayFromObject(obj, 143);
+        Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
     }
     if (ktrex_updateArenaPathProgress(runtime) != 0) {
         *(u8 *)((char *)gKTRexState + 0x103) -= 1;
@@ -1357,7 +1373,7 @@ int ktrex_stateHandlerA10(int obj, int runtime) {
         (*(void (**)(int, int, int))((char *)*gCameraInterface + 0x24))(3, 0, 0);
     }
     if (RandomTimer_UpdateRangeTrigger((char *)gKTRexState + 0x190, lbl_803E67C8, lbl_803E67CC) != 0) {
-        Sfx_PlayFromObject(obj, 0x8f);
+        Sfx_PlayFromObject(obj, SFXmv_gdtur2_c);
     }
     *(f32 *)((char *)gKTRexState + 4) -= timeDelta;
     if (*(f32 *)((char *)gKTRexState + 4) <= lbl_803E67B8) {
