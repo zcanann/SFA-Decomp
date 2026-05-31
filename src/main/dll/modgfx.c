@@ -8328,6 +8328,853 @@ int Effect3_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
 }
 #undef FILL350
 
+extern f32 lbl_803DB7D0;
+extern f32 lbl_803DB7D4;
+extern f32 lbl_803DFA94;
+extern f32 lbl_803DFA9C;
+extern f32 lbl_803DFAA0;
+extern f32 lbl_803DFAA4;
+extern f32 lbl_803DFAA8;
+extern f32 lbl_803DFAAC;
+extern f32 lbl_803DFAB0;
+extern f32 lbl_803DFAB4;
+extern f32 lbl_803DFAB8;
+extern f32 lbl_803DFABC;
+extern f32 lbl_803DFAC0;
+extern f32 lbl_803DFAC4;
+extern f32 lbl_803DFAC8;
+extern f32 lbl_803DFACC;
+extern f32 lbl_803DFAD0;
+extern f32 lbl_803DFAD4;
+extern f32 lbl_803DFAD8;
+extern f32 lbl_803DFADC;
+extern f32 lbl_803DFAE0;
+extern f32 lbl_803DFAE4;
+extern f32 lbl_803DFAE8;
+extern f32 lbl_803DFAEC;
+extern f32 lbl_803DFAF0;
+extern f32 lbl_803DFAF4;
+extern f32 lbl_803DFAF8;
+extern f32 lbl_803DFAFC;
+extern f32 lbl_803DFB00;
+extern f32 lbl_803DFB04;
+extern f32 lbl_803DFB08;
+extern f32 lbl_803DFB0C;
+extern f32 lbl_803DFB10;
+extern f32 lbl_803DFB14;
+extern f32 lbl_803DFB18;
+extern f32 lbl_803DFB1C;
+extern f32 lbl_803DFB20;
+extern f32 lbl_803DFB24;
+extern f32 lbl_803DFB28;
+extern f32 lbl_803DFB2C;
+extern f32 lbl_803DFB30;
+extern f32 lbl_803DFB34;
+extern f32 lbl_803DFB38;
+extern f32 lbl_803DFB3C;
+extern f32 lbl_803DFB40;
+extern f32 lbl_803DFB44;
+extern f32 lbl_803DFB48;
+extern f32 lbl_803DFB4C;
+extern f32 lbl_803DFB50;
+extern f32 lbl_803DFB54;
+extern f32 lbl_803DFB58;
+extern f32 lbl_803DFB5C;
+extern f32 lbl_803DFB60;
+extern f32 lbl_803DFB64;
+extern f32 lbl_803DFB68;
+extern f32 lbl_803DFB6C;
+extern f32 lbl_803DFB70;
+extern f32 lbl_803DFB74;
+extern f32 lbl_803DFB78;
+extern f32 lbl_803DFB7C;
+extern f32 lbl_803DFB80;
+extern f32 lbl_803DFB84;
+extern f32 lbl_803DFB88;
+extern f32 lbl_803DFB8C;
+extern f32 lbl_803DFB90;
+extern f32 lbl_803DFB94;
+extern f32 lbl_803DFB98;
+extern f32 lbl_803DFB9C;
+extern f32 lbl_803DFBA0;
+extern f32 lbl_803DFBA4;
+extern f32 lbl_803DFBA8;
+extern f32 lbl_803DFBAC;
+extern f32 lbl_803DFBB0;
+extern f32 lbl_803DFBB4;
+extern f32 lbl_803DFBB8;
+extern f32 lbl_803DFBBC;
+extern f32 lbl_803DFBC0;
+extern f32 lbl_803DFBC4;
+extern f32 lbl_803DFBC8;
+extern void ObjSeq_func20();
+extern void ObjSeq_func23();
+
+int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
+                   u8 param_5, s16 *param_6)
+{
+    int uVar1;
+    MtxBuildArg es;
+    PartFxSpawn cfg;
+
+    lbl_803DB7D0 = lbl_803DB7D0 + lbl_803DFA88;
+    if (lbl_803DB7D0 > lbl_803DFA90) lbl_803DB7D0 = lbl_803DFA8C;
+    lbl_803DB7D4 = lbl_803DB7D4 + lbl_803DFA94;
+    if (lbl_803DB7D4 > lbl_803DFA90) lbl_803DB7D4 = lbl_803DFA98;
+    if (param_1 == 0) return -1;
+    if ((param_4 & 0x200000) != 0) {
+        if (param_3 == 0) return -1;
+        cfg.f18 = *(f32 *)(param_3 + 6);
+        cfg.f1c = *(f32 *)(param_3 + 8);
+        cfg.f20 = *(f32 *)(param_3 + 10);
+        cfg.f14 = *(f32 *)(param_3 + 4);
+        cfg.f10 = param_3[2];
+        cfg.f0e = param_3[1];
+        cfg.f0c = *param_3;
+        cfg.f62 = param_5;
+    }
+    cfg.f44 = 0;
+    cfg.f48 = 0;
+    cfg.f5e = (u8)param_2;
+    cfg.f00 = param_1;
+    cfg.f30 = lbl_803DFA9C;
+    cfg.f34 = lbl_803DFA9C;
+    cfg.f38 = lbl_803DFA9C;
+    cfg.f24 = lbl_803DFA9C;
+    cfg.f28 = lbl_803DFA9C;
+    cfg.f2c = lbl_803DFA9C;
+    cfg.f3c = lbl_803DFA9C;
+    cfg.f08 = 0;
+    cfg.f04 = -1;
+    cfg.f60 = 0xff;
+    cfg.f61 = 0;
+    cfg.f42 = 0;
+    cfg.f58 = 0xffff;
+    cfg.f5a = 0xffff;
+    cfg.f5c = 0xffff;
+    cfg.f4c = 0xffff;
+    cfg.f50 = 0xffff;
+    cfg.f54 = 0xffff;
+    cfg.f40 = 0;
+    switch (param_2) {
+    case 0x1c8:
+        cfg.f34 = lbl_803DFA8C * (f32)(s32)randomGetRange(0, 0x64);
+        cfg.f24 = lbl_803DFAA0 * (f32)(s32)randomGetRange(-0x28, 0x28);
+        cfg.f2c = lbl_803DFAA0 * (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.f3c = lbl_803DFAA4 * (f32)(s32)randomGetRange(0xc8, 0x118);
+        cfg.f08 = 0x32;
+        cfg.f60 = 0xff;
+        cfg.f44 = 0x80118;
+        cfg.f48 = 0x8;
+        cfg.f42 = 0x566;
+        break;
+    case 0x1c9:
+        cfg.f38 = lbl_803DFAA8;
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
+        es.rz = 0;
+        es.ry = 0;
+        es.rx = (s16)randomGetRange(0, 0xffff);
+        mathFn_80021ac8(&es, &cfg.f30);
+        cfg.f3c = lbl_803DFAAC * (f32)(s32)randomGetRange(0xc8, 0x118);
+        cfg.f08 = 0x14;
+        cfg.f60 = 0xe1;
+        cfg.f44 = 0x400000;
+        cfg.f42 = 0x4f9;
+        break;
+    case 0x1ca:
+        cfg.f24 = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x1c, 0x1c);
+        cfg.f2c = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x1c, 0x1c);
+        cfg.f3c = lbl_803DFAB4 * (f32)(s32)randomGetRange(0xc8, 0x118);
+        cfg.f08 = 0xc8;
+        cfg.f60 = 0xe1;
+        cfg.f44 = 0x400110;
+        if (randomGetRange(0, 2) == 0) {
+            cfg.f48 = cfg.f48 | 0x100;
+        } else {
+            cfg.f48 = cfg.f48 | 0x400;
+        }
+        cfg.f42 = 0x4f9;
+        break;
+    case 0x1c7:
+        cfg.f24 = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x1c, 0x1c);
+        cfg.f28 = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x1c, 0x1c);
+        cfg.f2c = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x1c, 0x1c);
+        cfg.f30 = (f32)(s32)randomGetRange(-0x46, 0x46);
+        cfg.f34 = (f32)(s32)randomGetRange(0x82, 0xaa);
+        cfg.f38 = (f32)(s32)randomGetRange(-0x46, 0x46);
+        cfg.f3c = lbl_803DFAB0;
+        cfg.f08 = 0x190;
+        cfg.f60 = 0xff;
+        cfg.f58 = 0;
+        cfg.f44 = 0x80480108;
+        cfg.f48 = 0x20;
+        cfg.f42 = 0x33;
+        break;
+    case 0x1c5:
+        cfg.f38 = lbl_803DFAB8;
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
+        es.rz = (s16)randomGetRange(0, 0xffff);
+        es.ry = (s16)randomGetRange(0, 0xffff);
+        es.rx = (s16)randomGetRange(0, 0xffff);
+        mathFn_80021ac8(&es, &cfg.f30);
+        cfg.f3c = lbl_803DFABC;
+        cfg.f08 = 0xc8;
+        cfg.f60 = 0xff;
+        cfg.f44 = 0x480100;
+        cfg.f42 = 0x33;
+        break;
+    case 0x1c4:
+        cfg.f38 = lbl_803DFAC0;
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
+        es.rz = (s16)randomGetRange(0, 0xffff);
+        es.ry = (s16)randomGetRange(0, 0xffff);
+        es.rx = (s16)randomGetRange(0, 0xffff);
+        mathFn_80021ac8(&es, &cfg.f30);
+        cfg.f3c = lbl_803DFAC4;
+        cfg.f08 = 0xc8;
+        cfg.f60 = 0xff;
+        cfg.f44 = 0x480100;
+        cfg.f42 = 0x26c;
+        break;
+    case 0x1c6:
+        cfg.f30 = (f32)(s32)randomGetRange(0, 0x5a);
+        cfg.f34 = (f32)(s32)randomGetRange(-0xa, 0xa);
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
+        es.rz = 0;
+        es.ry = 0;
+        es.rx = (s16)randomGetRange(0, 0xffff);
+        mathFn_80021ac8(&es, &cfg.f30);
+        cfg.f3c = lbl_803DFACC * (f32)(s32)randomGetRange(1, 0x14);
+        cfg.f08 = 0xc8;
+        cfg.f60 = 0xff;
+        cfg.f44 = 0x480100;
+        cfg.f42 = 0x23c;
+        break;
+    case 0x1c3:
+        cfg.f28 = lbl_803DFA8C;
+        cfg.f3c = lbl_803DFAC4;
+        cfg.f08 = 0x3c;
+        cfg.f44 = 0xa100110;
+        cfg.f42 = 0x23b;
+        break;
+    case 0x190:
+        cfg.f3c = lbl_803DFAD0 * (f32)(s32)randomGetRange(1, 5);
+        cfg.f08 = randomGetRange(0xa, 0x14);
+        cfg.f48 = 0x2;
+        cfg.f61 = 0;
+        cfg.f42 = 0xdf;
+        break;
+    case 0x191:
+        cfg.f30 = (f32)(s32)randomGetRange(-0x8, 0x8);
+        cfg.f34 = (f32)(s32)randomGetRange(0, 0x50);
+        cfg.f38 = (f32)(s32)randomGetRange(-0x8, 0x8);
+        cfg.f28 = lbl_803DFAD4 * (f32)(s32)randomGetRange(-0x3, 0x3);
+        cfg.f3c = lbl_803DFA88;
+        cfg.f08 = 0x64;
+        cfg.f60 = 0x7d;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x110;
+        cfg.f42 = 0xde;
+        break;
+    case 0x192:
+        cfg.f30 = (f32)(s32)randomGetRange(-0x9e, 0x9e);
+        cfg.f34 = (f32)(s32)randomGetRange(0, 0x78);
+        cfg.f38 = (f32)(s32)randomGetRange(-0xd0, 0xd0);
+        cfg.f28 = lbl_803DFAD8 * (f32)(s32)randomGetRange(-0x3, 0x3);
+        cfg.f3c = lbl_803DFADC;
+        cfg.f08 = 0xc8;
+        cfg.f60 = 0x7d;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x80080112;
+        cfg.f42 = 0x1dd;
+        break;
+    case 0x193:
+        cfg.f30 = (f32)(s32)randomGetRange(-0x9e, 0x9e);
+        cfg.f34 = (f32)(s32)randomGetRange(0, 0x78);
+        cfg.f38 = (f32)(s32)randomGetRange(-0x3a, 0x3a);
+        cfg.f28 = lbl_803DFAD4 * (f32)(s32)randomGetRange(-0x3, 0x3);
+        cfg.f3c = lbl_803DFADC;
+        cfg.f08 = 0x64;
+        cfg.f60 = 0x7d;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x80080112;
+        cfg.f42 = 0xde;
+        break;
+    case 0x194:
+        cfg.f24 = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x3a, 0x3a);
+        cfg.f28 = lbl_803DFAB0 * (f32)(s32)randomGetRange(0, 0x78);
+        cfg.f2c = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x3a, 0x3a);
+        cfg.f30 = (f32)(s32)randomGetRange(-0x5, 0x5);
+        cfg.f34 = (f32)(s32)randomGetRange(0, 0x50);
+        cfg.f38 = (f32)(s32)randomGetRange(-0x5, 0x5);
+        cfg.f3c = lbl_803DFAE0;
+        cfg.f08 = 0x96;
+        cfg.f60 = 0x7d;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x80480110;
+        cfg.f48 = 0x8;
+        cfg.f42 = 0xde;
+        break;
+    case 0x195:
+        cfg.f3c = lbl_803DFAE4;
+        cfg.f08 = 0x14;
+        cfg.f60 = 0x9b;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x80480214;
+        cfg.f42 = 0xde;
+        break;
+    case 0x196:
+        cfg.f30 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.f38 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.f24 = lbl_803DFAE8 * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f28 = lbl_803DFAEC * (f32)(s32)randomGetRange(0xf, 0x23);
+        cfg.f2c = lbl_803DFAE8 * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f3c = lbl_803DFAF0;
+        cfg.f08 = 0x78;
+        cfg.f60 = 0xff;
+        cfg.f61 = 0x10;
+        cfg.f58 = 0xffff;
+        cfg.f5a = 0xffff;
+        cfg.f5c = 0x8acf;
+        cfg.f4c = 0xafc8;
+        cfg.f50 = 0x3a98;
+        cfg.f54 = 0x5dc;
+        cfg.f44 = 0x81080200;
+        cfg.f48 = 0x24;
+        cfg.f42 = 0x1dd;
+        break;
+    case 0x197:
+        cfg.f30 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.f38 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x1e, 0x1e);
+        cfg.f24 = lbl_803DFAF4 * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f28 = lbl_803DFAF8 * (f32)(s32)randomGetRange(0xf, 0x23);
+        cfg.f2c = lbl_803DFAF4 * (f32)(s32)randomGetRange(-0xf, 0xf);
+        cfg.f3c = lbl_803DFAB0;
+        cfg.f08 = 0x50;
+        cfg.f60 = 0xff;
+        cfg.f61 = 0x10;
+        cfg.f58 = 0xf82f;
+        cfg.f50 = 0;
+        cfg.f44 = (u32)((u8 *)ObjSeq_func20 + 0x90);
+        cfg.f48 = 0x24;
+        cfg.f42 = 0x1de;
+        break;
+    case 0x198:
+        cfg.f34 = lbl_803DFAFC * (f32)(s32)randomGetRange(0, 0x3c);
+        cfg.f3c = lbl_803DFB00;
+        cfg.f08 = 0x1e;
+        cfg.f60 = 0xff;
+        cfg.f44 = 0x8100200;
+        cfg.f42 = 0x91;
+        break;
+    case 0x199:
+        cfg.f3c = lbl_803DFB08 * (f32)(s32)randomGetRange(0, 0x32) + lbl_803DFB04;
+        cfg.f08 = randomGetRange(0, 0x37);
+        cfg.f60 = randomGetRange(0, 0x37) + 0xc8;
+        cfg.f61 = 0;
+        if (randomGetRange(0, 2) == 0) {
+            cfg.f42 = 0x156;
+        } else if (randomGetRange(0, 2) == 1) {
+            cfg.f42 = 0x157;
+        } else if (randomGetRange(0, 2) == 2) {
+            cfg.f42 = 0xc0e;
+        }
+        cfg.f44 = 0x80011;
+        cfg.f48 = 0x2;
+        break;
+    case 0x19a:
+        cfg.f3c = lbl_803DFB08 * (f32)(s32)randomGetRange(0, 0x32) + lbl_803DFB0C;
+        cfg.f08 = 0xc;
+        cfg.f60 = 0x37;
+        cfg.f61 = 0;
+        cfg.f42 = 0x153;
+        cfg.f44 = 0x180011;
+        cfg.f48 = 0x2;
+        break;
+    case 0x19b:
+        cfg.f3c = lbl_803DFB08 * (f32)(s32)randomGetRange(0, 0x32) + lbl_803DFB0C;
+        cfg.f08 = randomGetRange(0, 0x32);
+        cfg.f60 = 0x9b;
+        cfg.f42 = 0x153;
+        cfg.f44 = 0x80011;
+        cfg.f48 = 0x2;
+        break;
+    case 0x19c:
+        cfg.f3c = lbl_803DFB10;
+        cfg.f08 = 0x2;
+        cfg.f60 = 0x9b;
+        if (randomGetRange(0, 2) == 0) {
+            cfg.f42 = 0x156;
+        } else if (randomGetRange(0, 2) == 1) {
+            cfg.f42 = 0x157;
+        } else if (randomGetRange(0, 2) == 2) {
+            cfg.f42 = 0xc0e;
+        }
+        cfg.f44 = 0x480001;
+        break;
+    case 0x19d:
+        cfg.f3c = lbl_803DFB14;
+        cfg.f08 = 0xf;
+        cfg.f60 = 0x9b;
+        cfg.f42 = 0x153;
+        cfg.f44 = 0x180201;
+        break;
+    case 0x19f:
+        cfg.f30 = lbl_803DFABC * (f32)(s32)randomGetRange(-0x64, 0x64);
+        cfg.f34 = lbl_803DFABC * (f32)(s32)randomGetRange(-0x64, 0x64);
+        cfg.f38 = lbl_803DFABC * (f32)(s32)randomGetRange(-0x64, 0x64);
+        cfg.f3c = lbl_803DFB18 * (f32)(s32)randomGetRange(0x4b, 0x64);
+        cfg.f08 = randomGetRange(0x37, 0x4b);
+        cfg.f60 = 0x37;
+        cfg.f42 = 0xdb;
+        cfg.f48 = 0x4402800;
+        break;
+    case 0x1a0:
+        cfg.f3c = lbl_803DFB1C * (f32)(s32)randomGetRange(0x4b, 0x64);
+        cfg.f60 = 0x37;
+        cfg.f08 = 0xf;
+        cfg.f61 = 0x10;
+        cfg.f42 = 0xdb;
+        cfg.f44 = 0x80100;
+        cfg.f48 = 0x4000800;
+        break;
+    case 0x1bc:
+        cfg.f30 = lbl_803DFABC * (f32)(s32)randomGetRange(-0x64, 0x64);
+        cfg.f34 = lbl_803DFABC * (f32)(s32)randomGetRange(-0x64, 0x64);
+        cfg.f38 = lbl_803DFABC * (f32)(s32)randomGetRange(-0x64, 0x64);
+        cfg.f3c = lbl_803DFB18 * (f32)(s32)randomGetRange(0x4b, 0x64);
+        cfg.f08 = randomGetRange(0x8c, 0xa5);
+        cfg.f60 = 0x37;
+        cfg.f42 = 0x167;
+        break;
+    case 0x1bd:
+        cfg.f3c = lbl_803DFB1C * (f32)(s32)randomGetRange(0x4b, 0x64);
+        cfg.f60 = 0x37;
+        cfg.f08 = 0xf;
+        cfg.f61 = 0x10;
+        cfg.f42 = 0x64;
+        cfg.f44 = 0x4080100;
+        break;
+    case 0x1a1:
+        cfg.f30 = lbl_803DFB20 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f34 = lbl_803DFB20 * (f32)(s32)randomGetRange(-0xa, 0xa);
+        cfg.f24 = lbl_803DFAEC * (f32)(s32)randomGetRange(0xa, 0x14);
+        cfg.f2c = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f28 = lbl_803DFB24 * (f32)(s32)randomGetRange(0xa, 0x14);
+        cfg.f3c = lbl_803DFB28;
+        cfg.f08 = randomGetRange(0x28, 0x50);
+        cfg.f60 = 0xff;
+        cfg.f04 = 0x1a2;
+        cfg.f44 = 0x2000104;
+        cfg.f48 = 0x200;
+        cfg.f42 = 0x7b;
+        break;
+    case 0x1a2:
+        cfg.f3c = lbl_803DFB28;
+        cfg.f08 = 0x3c;
+        cfg.f44 = 0x2000104;
+        cfg.f48 = 0x200;
+        cfg.f42 = 0x7b;
+        break;
+    case 0x1a3:
+        cfg.f30 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f38 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f28 = lbl_803DFAB0 * (f32)(s32)randomGetRange(0, 0x1e) + lbl_803DFB20;
+        cfg.f3c = lbl_803DFB2C * (f32)(s32)randomGetRange(1, 0xa);
+        cfg.f08 = randomGetRange(0x5a, 0x8c);
+        cfg.f44 = 0x80500209;
+        cfg.f61 = 0;
+        cfg.f42 = 0x23b;
+        break;
+    case 0x1a4:
+        if (param_3 != 0) {
+            cfg.f34 = lbl_803DFB30;
+        } else {
+            cfg.f30 = lbl_803DFB34 * (f32)(s32)randomGetRange(-0xa, 0xa);
+            cfg.f38 = (f32)(s32)randomGetRange(-0xa, 0xa);
+        }
+        cfg.f24 = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f28 = lbl_803DFB38 * (f32)(s32)randomGetRange(0, 0x14);
+        cfg.f2c = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f3c = lbl_803DFB40 * (f32)(s32)randomGetRange(0, 0xa) + lbl_803DFB3C;
+        cfg.f08 = randomGetRange(0xbe, 0xfa);
+        cfg.f60 = 0x9b;
+        cfg.f04 = 0x281;
+        cfg.f44 = 0x81488000;
+        if (randomGetRange(0, 2) == 0) {
+            cfg.f42 = 0x208;
+        } else if (randomGetRange(0, 2) == 1) {
+            cfg.f42 = 0x209;
+        } else if (randomGetRange(0, 2) == 2) {
+            cfg.f42 = 0x20a;
+        }
+        break;
+    case 0x1a5:
+        if (param_3 != 0) {
+            cfg.f34 = lbl_803DFAB0;
+        } else {
+            cfg.f28 = lbl_803DFB44 * (f32)(s32)randomGetRange(0, 0x14);
+        }
+        cfg.f24 = lbl_803DFB48 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f2c = lbl_803DFB48 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f3c = lbl_803DFB4C * (f32)(s32)randomGetRange(2, 0xa);
+        cfg.f08 = randomGetRange(0x3c, 0x46);
+        cfg.f60 = 0xff;
+        cfg.f44 = 0x80480108;
+        cfg.f42 = 0xc13;
+        break;
+    case 0x1b6:
+        cfg.f24 = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f28 = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f2c = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f3c = lbl_803DFB74 * (f32)(s32)randomGetRange(0xc8, 0x3e8);
+        cfg.f08 = randomGetRange(0x64, 0xc8);
+        cfg.f30 = (f32)(s32)randomGetRange(0, 0x28);
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
+        es.rz = (s16)randomGetRange(0, 0xffff);
+        es.ry = (s16)randomGetRange(0, 0xffff);
+        es.rx = (s16)randomGetRange(0, 0xffff);
+        mathFn_80021ac8(&es, &cfg.f30);
+        cfg.f3c = lbl_803DFB8C * (f32)(s32)randomGetRange(0xc8, 0x3e8);
+        cfg.f08 = 0x50;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x80480504;
+        cfg.f42 = 0x30;
+        break;
+    case 0x1a7:
+        cfg.f30 = lbl_803DFB50 * (f32)(s32)randomGetRange(0, 0xfa);
+        cfg.f34 = lbl_803DFB54 * (f32)(s32)randomGetRange(0, 0xfa);
+        cfg.f3c = lbl_803DFB58;
+        cfg.f08 = 0xa0;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x6100214;
+        cfg.f42 = 0x167;
+        cfg.f18 = lbl_803DFA9C;
+        break;
+    case 0x1a8:
+        cfg.f30 = lbl_803DFB78 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f38 = lbl_803DFB78 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f3c = lbl_803DFB7C;
+        cfg.f60 = 0xff;
+        cfg.f08 = 0xa0;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x6100214;
+        cfg.f42 = 0x167;
+        cfg.f18 = lbl_803DFA9C;
+        break;
+    case 0x1a9:
+        cfg.f24 = lbl_803DFB58 * (f32)(s32)randomGetRange(0, 0x50);
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
+        es.rz = (s16)randomGetRange(0, 0xffff);
+        es.ry = (s16)randomGetRange(0, 0xffff);
+        es.rx = (s16)randomGetRange(0, 0xffff);
+        mathFn_80021ac8(&es, &cfg.f24);
+        cfg.f3c = lbl_803DFABC;
+        cfg.f08 = 0x1b4;
+        cfg.f60 = 0xff;
+        cfg.f61 = 0x10;
+        cfg.f04 = 0x1b4;
+        cfg.f44 = 0x480200;
+        cfg.f42 = 0x159;
+        break;
+    case 0x1b3:
+        cfg.f3c = lbl_803DFB6C * (f32)(s32)randomGetRange(0x14, 0x1e);
+        cfg.f60 = 0x37;
+        cfg.f08 = 0x14;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x80201;
+        cfg.f48 = 0x2;
+        cfg.f42 = 0x159;
+        break;
+    case 0x1b4:
+        cfg.f3c = lbl_803DFB6C * (f32)(s32)randomGetRange(0x14, 0x1e);
+        cfg.f60 = 0x37;
+        cfg.f08 = 0x14;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x80201;
+        cfg.f48 = 0x2;
+        cfg.f42 = 0x159;
+        break;
+    case 0x1aa:
+        if (param_3 == 0) return -1;
+        cfg.f24 = lbl_803DFA88 * (f32)(s32)randomGetRange(0, 0x640) + lbl_803DFB70;
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
+        es.rz = 0;
+        es.ry = 0;
+        es.rx = *param_3;
+        mathFn_80021ac8(&es, &cfg.f24);
+        if (randomGetRange(0, 1) != 0) {
+            cfg.f60 = 0xff;
+        } else {
+            cfg.f60 = 0x9b;
+        }
+        cfg.f08 = 0xf0;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x80480200;
+        cfg.f42 = 0xdf;
+        break;
+    case 0x1af:
+        if (param_3 == 0) return -1;
+        cfg.f24 = lbl_803DFA9C * (f32)(s32)randomGetRange(-1, 1);
+        cfg.f28 = lbl_803DFA9C * (f32)(s32)randomGetRange(-1, 1);
+        cfg.f2c = lbl_803DFA9C * (f32)(s32)randomGetRange(-1, 1);
+        cfg.f3c = lbl_803DFB74 * (f32)(s32)randomGetRange(0x190, 0x1f4);
+        cfg.f60 = 0xff;
+        cfg.f08 = randomGetRange(0, 0x14) + 0xa0;
+        cfg.f61 = 0x10;
+        cfg.f44 = (u32)((u8 *)ObjSeq_func23 + 0x18);
+        cfg.f42 = 0x5c;
+        cfg.f58 = 0xfffe;
+        cfg.f5a = 0x8ace;
+        cfg.f5c = 0;
+        cfg.f4c = 0x4e20;
+        cfg.f50 = 0x9c40;
+        cfg.f54 = 0xfffe;
+        cfg.f48 = 0x20;
+        break;
+    case 0x1b0:
+        if (param_3 == 0) return -1;
+        cfg.f30 = lbl_803DFB78 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f38 = lbl_803DFB78 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f3c = lbl_803DFB7C;
+        cfg.f60 = 0xff;
+        cfg.f18 = lbl_803DFA9C;
+        cfg.f08 = 0xa0;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x6100214;
+        cfg.f42 = 0x167;
+        break;
+    case 0x1b1:
+        if (param_3 == 0) return -1;
+        cfg.f30 = lbl_803DFB78 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f38 = lbl_803DFB78 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f3c = lbl_803DFB80 * (f32)(s32)randomGetRange(1, 5);
+        cfg.f60 = 0xff;
+        cfg.f18 = lbl_803DFA9C;
+        cfg.f08 = 0xa0;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x6100214;
+        cfg.f42 = 0x30;
+        break;
+    case 0x1b2:
+        cfg.f24 = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f28 = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f2c = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f3c = lbl_803DFB74 * (f32)(s32)randomGetRange(0xc8, 0x3e8);
+        cfg.f08 = randomGetRange(0x64, 0xc8);
+        cfg.f30 = (f32)(s32)randomGetRange(0, 0x28);
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x81480204;
+        cfg.f42 = 0x30;
+        break;
+    case 0x1ae:
+        cfg.f24 = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f28 = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f2c = lbl_803DFB84 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f3c = lbl_803DFB74 * (f32)(s32)randomGetRange(0xc8, 0x3e8);
+        cfg.f08 = randomGetRange(0x64, 0xc8);
+        cfg.f61 = 0x10;
+        cfg.f42 = 0x5c;
+        cfg.f5c = 0;
+        cfg.f4c = 0x4e20;
+        cfg.f48 = 0x20;
+        break;
+    case 0x1ab:
+        cfg.f30 = lbl_803DFB88 * (f32)(s32)randomGetRange(0, 0xffff);
+        es.a = lbl_803DFA9C;
+        es.b = lbl_803DFA9C;
+        es.c = lbl_803DFA9C;
+        es.w = lbl_803DFA90;
+        es.rz = (s16)randomGetRange(0, 0xffff);
+        es.ry = (s16)randomGetRange(0, 0xffff);
+        es.rx = (s16)randomGetRange(0, 0xffff);
+        mathFn_80021ac8(&es, &cfg.f30);
+        cfg.f3c = lbl_803DFB8C * (f32)(s32)randomGetRange(0xc8, 0x3e8);
+        cfg.f08 = randomGetRange(0x64, 0xc8);
+        cfg.f50 = 0x50;
+        cfg.f61 = 0x10;
+        cfg.f44 = 0x80480504;
+        cfg.f42 = 0x30;
+        break;
+    case 0x1ac:
+        cfg.f30 = lbl_803DFB90 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f34 = lbl_803DFB90 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f38 = lbl_803DFB90 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f3c = lbl_803DFB94 * (f32)(s32)randomGetRange(0x1f4, 0x3e8);
+        cfg.f60 = randomGetRange(0x9b, 0xff);
+        cfg.f08 = randomGetRange(0, 0x28) + 0x1e;
+        cfg.f61 = 0;
+        cfg.f42 = 0x60;
+        cfg.f44 = (u32)((u8 *)fn_8017FFD0 + 0x134);
+        cfg.f4c = 0x6400;
+        cfg.f50 = randomGetRange(0, 0x55) + 0xaa;
+        cfg.f54 = randomGetRange(0, 0x37) + 0xc8;
+        cfg.f58 = 0xff00;
+        cfg.f5a = 0xff00;
+        cfg.f5c = 0xff00;
+        cfg.f48 = 0x20;
+        break;
+    case 0x1ad:
+        cfg.f30 = lbl_803DFB78 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f34 = lbl_803DFB78 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f38 = lbl_803DFB78 * (f32)(s32)randomGetRange(-0x14, 0x14);
+        cfg.f3c = lbl_803DFB6C * (f32)(s32)randomGetRange(0xc8, 0x5dc);
+        cfg.f08 = randomGetRange(0, 0x28) + 0x1e;
+        cfg.f60 = randomGetRange(0xb4, 0xc8) + 0x37;
+        cfg.f61 = 0;
+        cfg.f44 = 0x80580104;
+        cfg.f42 = 0xc22;
+        cfg.f4c = randomGetRange(0, 0x37) + 0xc8;
+        cfg.f50 = randomGetRange(0, 0x19) + 0xe6;
+        cfg.f58 = 0xff00;
+        cfg.f5a = 0xff00;
+        cfg.f5c = 0xff00;
+        cfg.f48 = 0x20;
+        break;
+    case 0x1b9:
+        cfg.f38 = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x2bc, 0x2bc);
+        cfg.f30 = lbl_803DFB9C * (f32)(s32)randomGetRange(0, 0x3e8) + lbl_803DFB98;
+        cfg.f24 = lbl_803DFBA8 * (f32)(s32)randomGetRange(0, 0xa) + lbl_803DFBA4;
+        cfg.f3c = lbl_803DFBAC * (f32)(s32)randomGetRange(1, 6);
+        cfg.f08 = 0xbe;
+        cfg.f60 = 0xff;
+        cfg.f44 = 0x6000100;
+        cfg.f42 = 0x20;
+        cfg.f10 = 0;
+        cfg.f0e = 0x5fb4;
+        cfg.f0c = -0x3fff;
+        cfg.f18 = lbl_803DFA9C;
+        break;
+    case 0x1bf:
+        cfg.f30 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x64, 0x64);
+        cfg.f34 = lbl_803DFA8C * (f32)(s32)randomGetRange(0, 0x3e8);
+        cfg.f38 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x64, 0x64);
+        cfg.f24 = lbl_803DFB38 * (f32)(s32)randomGetRange(-0x28, 0x28);
+        cfg.f28 = lbl_803DFBB0 * (f32)(s32)randomGetRange(0x1f4, 0x258);
+        cfg.f2c = lbl_803DFB38 * (f32)(s32)randomGetRange(-0x28, 0x28);
+        cfg.f3c = lbl_803DFBB4;
+        cfg.f08 = 0x15e;
+        cfg.f60 = 0xff;
+        cfg.f48 = 0x300020;
+        cfg.f44 = 0x3008000;
+        cfg.f58 = 0xffff;
+        cfg.f5a = 0xffff;
+        cfg.f5c = 0xffff;
+        cfg.f4c = 0x63bf;
+        cfg.f50 = 0x9e7;
+        cfg.f54 = 0x3e8;
+        cfg.f42 = 0x23b;
+        break;
+    case 0x1c0:
+        cfg.f30 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x2bc, 0x2bc);
+        cfg.f38 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x2bc, 0x2bc);
+        cfg.f28 = lbl_803DFBB0 * (f32)(s32)randomGetRange(0x1f4, 0x258);
+        cfg.f3c = lbl_803DFBB4;
+        cfg.f08 = 0x96;
+        cfg.f60 = 0xff;
+        cfg.f48 = 0xff;
+        cfg.f44 = 0x2000200;
+        cfg.f42 = 0x23b;
+        break;
+    case 0x1c1:
+        cfg.f30 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x2bc, 0x2bc);
+        cfg.f38 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x2bc, 0x2bc);
+        cfg.f28 = lbl_803DFBB8 * (f32)(s32)randomGetRange(0x1f4, 0x258);
+        cfg.f3c = lbl_803DFB48 * (f32)(s32)randomGetRange(0x1e, 0x32);
+        cfg.f08 = 0x96;
+        cfg.f60 = 0x9b;
+        cfg.f48 = 0x20;
+        cfg.f44 = 0x80100;
+        cfg.f58 = randomGetRange(0, 0x7530) + 0x63bf;
+        cfg.f5a = (u16)cfg.f58 / randomGetRange(1, 3);
+        cfg.f5c = 0;
+        cfg.f4c = randomGetRange(0, 0x2710);
+        cfg.f50 = cfg.f4c / randomGetRange(1, 3);
+        cfg.f54 = 0;
+        cfg.f42 = 0x60;
+        break;
+    case 0x1c2:
+        cfg.f38 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0xc8, 0xc8);
+        cfg.f34 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0xc8, 0xc8);
+        if (randomGetRange(0, 1) == 0) {
+            cfg.f2c = lbl_803DFBB0 * (f32)(s32)randomGetRange(0xc8, 0x320);
+        } else {
+            cfg.f2c = lbl_803DFBBC * (f32)(s32)randomGetRange(0, 1);
+        }
+        if (randomGetRange(0, 1) == 0) {
+            cfg.f28 = lbl_803DFBB0 * (f32)(s32)randomGetRange(0xc8, 0x320);
+        } else {
+            cfg.f28 = lbl_803DFBBC * (f32)(s32)randomGetRange(0, 1);
+        }
+        cfg.f3c = lbl_803DFAC4;
+        cfg.f34 = (f32)(s32)randomGetRange(0, 0x1e);
+        cfg.f08 = 0x82;
+        cfg.f60 = 0xff;
+        cfg.f44 = 0xa100201;
+        cfg.f42 = 0x60;
+        break;
+    case 0x1ba:
+        cfg.f30 = lbl_803DFA8C * (f32)(s32)randomGetRange(-0x3e8, 0x3e8);
+        cfg.f38 = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0xc8, 0xc8);
+        cfg.f3c = lbl_803DFBC4 * (f32)(s32)randomGetRange(1, 6);
+        cfg.f08 = 0x82;
+        cfg.f60 = 0xff;
+        cfg.f44 = 0xff;
+        cfg.f48 = 0xff;
+        cfg.f42 = 0x20;
+        break;
+    case 0x1b8:
+        cfg.f30 = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0xbb8, 0xbb8);
+        cfg.f38 = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0xbb8, 0xbb8);
+        cfg.f3c = lbl_803DFBC8 * (f32)(s32)randomGetRange(1, 4);
+        cfg.f08 = 0x5a;
+        cfg.f60 = 0xff;
+        cfg.f44 = 0xa100100;
+        cfg.f42 = 0x56;
+        break;
+    default:
+        return -1;
+    }
+    cfg.f44 = cfg.f44 | param_4;
+    if (((cfg.f44 & 1) != 0) && ((cfg.f44 & 2) != 0)) cfg.f44 = cfg.f44 ^ 2;
+    if ((cfg.f44 & 1) != 0) {
+        if ((param_4 & 0x200000) != 0) {
+            cfg.f30 = cfg.f30 + cfg.f18;
+            cfg.f34 = cfg.f34 + cfg.f1c;
+            cfg.f38 = cfg.f38 + cfg.f20;
+        } else {
+            if (cfg.f00 != 0) {
+                cfg.f30 = cfg.f30 + *(f32 *)((char *)cfg.f00 + 0x18);
+                cfg.f34 = cfg.f34 + *(f32 *)((char *)cfg.f00 + 0x1c);
+                cfg.f38 = cfg.f38 + *(f32 *)((char *)cfg.f00 + 0x20);
+            }
+        }
+    }
+    uVar1 = (*(int (**)())(*gExpgfxInterface + 8))(&cfg, -1, param_2, 0);
+    return uVar1;
+}
+
 void Effect9_func05(void)
 {
   lbl_803DB828 = lbl_803DB828 + lbl_803DFE28 * timeDelta;
