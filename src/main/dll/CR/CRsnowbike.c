@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/CR/CRsnowbike.h"
 
+#define SFXmn_sml_trex_fstep 126
+#define SFXsp_skeep_mumb1 266
+
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -185,7 +188,7 @@ LAB_801db270:
         FUN_80006824(0,0x409);
       }
       else {
-        FUN_80006824(0,0x7e);
+        FUN_80006824(0,SFXmn_sml_trex_fstep);
       }
     }
   }
@@ -310,7 +313,7 @@ undefined4 sc_levelcontrol_processAnimEvents(int param_1,undefined4 param_2,ObjA
       }
       *(float *)(iVar3 + 0x10) = lbl_803E61E8;
       *(undefined *)(iVar3 + 0x1d) = 0;
-      FUN_80006824(0,0x10a);
+      FUN_80006824(0,SFXsp_skeep_mumb1);
       FUN_800067c0((int *)0xef,0);
     }
   }
@@ -673,7 +676,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
     pfVar8[4] = lbl_803E61E8;
     (**(code **)(*DAT_803dd6cc + 8))(0x73,1);
     *(undefined *)((int)pfVar8 + 0x1d) = 0;
-    FUN_80006824(0,0x10a);
+    FUN_80006824(0,SFXsp_skeep_mumb1);
   }
   uVar3 = FUN_80017690(0x647);
   if (uVar3 != 0) {
@@ -705,7 +708,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
       }
       *(float *)(iVar2 + 0x10) = lbl_803E61E8;
       *(undefined *)(iVar2 + 0x1d) = 0;
-      FUN_80006824(0,0x10a);
+      FUN_80006824(0,SFXsp_skeep_mumb1);
       FUN_800067c0((int *)0xef,0);
     }
   }
