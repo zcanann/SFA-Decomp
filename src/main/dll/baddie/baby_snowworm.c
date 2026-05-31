@@ -29,6 +29,9 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/baby_snowworm.h"
 
+#define SFXsp_sa_def01 243
+#define SFXsp_snrin2_c 255
+
 extern undefined4 FUN_800067c0();
 extern undefined8 FUN_80006824();
 extern int FUN_8000687c();
@@ -732,7 +735,7 @@ void FUN_8012c1c0(void)
       DAT_803de3db = '\x02';
     }
     if (DAT_803de3db != cVar1) {
-      FUN_80006824(0,0xf3);
+      FUN_80006824(0,SFXsp_sa_def01);
     }
     if ((uVar2 & 0x100) != 0) {
       FUN_80006ba8(0,0x100);
@@ -1322,7 +1325,7 @@ void timeListFn_8012be84(void)
         lbl_803DD75B = 2;
     }
     if (lbl_803DD75B != prev_state) {
-        Sfx_PlayFromObject(0, 0xf3);
+        Sfx_PlayFromObject(0, SFXsp_sa_def01);
     }
     if ((buttons & 0x100) != 0) {
         buttonDisable(0, 0x100);
@@ -1496,7 +1499,7 @@ void pauseMenuInit(void)
     }
     Music_Trigger(0x23, 1);
     Sfx_PlayFromObject(0, 0x3e5);
-    Sfx_PlayFromObject(0, 0xff);
+    Sfx_PlayFromObject(0, SFXsp_snrin2_c);
 }
 #pragma peephole reset
 #pragma scheduling reset
