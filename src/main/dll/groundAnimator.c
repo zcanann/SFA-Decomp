@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/groundAnimator.h"
 
+#define SFXen_bridge_stops 82
+#define SFXen_waterblock_stop 88
+
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80017710();
 extern undefined4 FUN_8001771c();
@@ -654,7 +657,7 @@ LAB_8017de10:
       if (*(int *)(param_1 + 0x54) != 0) {
         ObjHits_DisableObject(param_1);
       }
-      FUN_80006824(param_1,0x52);
+      FUN_80006824(param_1,SFXen_bridge_stops);
     }
     else {
       iVar3 = *(int *)(param_1 + 0xb8);
@@ -721,7 +724,7 @@ void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 pa
       FUN_80294d60(dVar4,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar1,
                    (uint)*(ushort *)(iVar3 + 0x38));
       FUN_80081118((double)lbl_803E4460,param_9,0xff,0x28);
-      uVar5 = FUN_80006824(param_9,0x58);
+      uVar5 = FUN_80006824(param_9,SFXen_waterblock_stop);
       iVar1 = *(int *)(param_9 + 0xb8);
       if ((*(ushort *)(param_9 + 6) & 0x2000) == 0) {
         if (*(int *)(param_9 + 0x54) != 0) {
@@ -769,7 +772,7 @@ void fn_8017DAF0(int obj)
     } else {
         playerAddHealth(player, *(u16 *)(state + 0x38));
         itemPickupDoParticleFx(obj, lbl_803E37C8, 0xff, 0x28);
-        Sfx_PlayFromObject(obj, 0x58);
+        Sfx_PlayFromObject(obj, SFXen_waterblock_stop);
         state = *(int *)(obj + 0xb8);
         if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
             Obj_FreeObject(obj);
