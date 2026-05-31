@@ -1,6 +1,13 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/windlift.h"
 
+#define SFXen_firlp6 0x40
+#define SFXen_lwfl1_c 0x45
+#define SFXen_mossyloop16 0x46
+#define SFXmn_dimbos46 0x6a
+#define SFXmn_dimspit6 0x70
+#define SFXmn_eggylaugh116 0x71
+
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
 extern undefined8 FUN_800068c0();
@@ -316,7 +323,7 @@ void scarab_update(int param_1)
         }
         if (ObjHits_GetPriorityHit(param_1, 0, 0, 0) == 0xe) {
             *(s16 *)(p_b8 + 0x1a) = 0xfa;
-            Sfx_PlayFromObject(param_1, 0x40);
+            Sfx_PlayFromObject(param_1, SFXen_firlp6);
             *(f32 *)(param_1 + 0x24) =
                 *(f32 *)(player + 0xc) - *(f32 *)(param_1 + 0xc);
             *(f32 *)(param_1 + 0x2c) =
@@ -576,7 +583,7 @@ void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       iVar17 = ObjHits_GetPriorityHit((int)puVar10,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if (iVar17 == 0xe) {
         *(undefined2 *)((int)pfVar16 + 0x1a) = 0xfa;
-        FUN_80006824((uint)puVar10,0x40);
+        FUN_80006824((uint)puVar10,SFXen_firlp6);
         *(float *)(puVar10 + 0x12) = *(float *)(iVar11 + 0xc) - *(float *)(puVar10 + 6);
         *(float *)(puVar10 + 0x16) = *(float *)(iVar11 + 0x14) - *(float *)(puVar10 + 10);
         *puVar10 = 0;
@@ -826,20 +833,20 @@ void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  FLOAT_803e46d8 * -*(float *)(puVar10 + 0x12) + *(float *)(puVar10 + 6);
             *(float *)(puVar10 + 10) =
                  fVar2 * -*(float *)(puVar10 + 0x16) + *(float *)(puVar10 + 10);
-            FUN_80006824((uint)puVar10,0x45);
+            FUN_80006824((uint)puVar10,SFXen_lwfl1_c);
           }
         }
         iVar17 = ObjHits_GetPriorityHit((int)puVar10,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
         if (iVar17 == 0xe) {
           *(undefined2 *)((int)pfVar16 + 0x1a) = 0xfa;
-          FUN_80006824((uint)puVar10,0x40);
+          FUN_80006824((uint)puVar10,SFXen_firlp6);
         }
       }
       else if ((*(short *)((int)pfVar16 + 0x1a) != 0) &&
               ((puVar10[0x23] == 0x3d6 &&
                (iVar17 = ObjHits_GetPriorityHit((int)puVar10,(undefined4 *)0x0,(int *)0x0,(uint *)0x0),
                iVar17 == 0xe)))) {
-        FUN_80006824((uint)puVar10,0x46);
+        FUN_80006824((uint)puVar10,SFXen_mossyloop16);
         local_170 = DAT_803e4688;
         FUN_80294d28(iVar11,(uint)*(byte *)((int)&local_170 + (uint)*(byte *)((int)pfVar16 + 0x27)))
         ;
@@ -958,7 +965,7 @@ void FUN_80185a48(double param_1,undefined8 param_2,undefined8 param_3,undefined
   uVar4 = 0;
   iVar5 = *DAT_803de754;
   (**(code **)(iVar5 + 4))(param_9,0,auStack_38,2);
-  FUN_80006824(param_9,0x71);
+  FUN_80006824(param_9,SFXmn_eggylaugh116);
   fVar1 = FLOAT_803e46f0;
   *(float *)(param_9 + 0x24) = FLOAT_803e46f0;
   *(float *)(param_9 + 0x2c) = fVar1;
@@ -1125,7 +1132,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     *(float *)(puVar2 + 0x16) = fVar1;
   }
   if (*(short *)((int)piVar8 + 0x1e) != 0) {
-    FUN_80006824((uint)puVar2,0x70);
+    FUN_80006824((uint)puVar2,SFXmn_dimspit6);
     *(ushort *)((int)piVar8 + 0x1e) = *(short *)((int)piVar8 + 0x1e) - (ushort)DAT_803dc070;
     uVar4 = randomGetRange(0,2);
     if (uVar4 == 2) {
@@ -1226,7 +1233,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         local_48[1] = 0;
         local_48[0] = *puVar3;
         FUN_80017748(local_48,(float *)(puVar2 + 0x12));
-        FUN_80006824((uint)puVar2,0x6a);
+        FUN_80006824((uint)puVar2,SFXmn_dimbos46);
       }
       else if ((*(char *)((int)piVar8 + 0x21) == '\x02') && (*(int *)(puVar2 + 0x7c) == 0)) {
         *(undefined *)((int)piVar8 + 0x21) = 0;
@@ -1235,7 +1242,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         *(float *)(puVar2 + 0x12) = FLOAT_803e46f0;
         *(float *)(puVar2 + 0x14) = fVar1;
         *(float *)(puVar2 + 0x16) = fVar1;
-        FUN_80006824((uint)puVar2,0x6a);
+        FUN_80006824((uint)puVar2,SFXmn_dimbos46);
       }
     }
   }
