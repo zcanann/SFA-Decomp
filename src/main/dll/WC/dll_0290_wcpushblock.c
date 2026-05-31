@@ -2,6 +2,12 @@
 #include "main/mapEventTypes.h"
 
 #define PB_IFACE (*(int *)(*(int *)(*(int *)(state + 0x268) + 0x68)))
+#define SFXmn_sml_trex_fstep 126
+#define SFXsc_lockon3_on 201
+#define SFXsc_lockon3_off 202
+#define SFXsc_lifeforcedoor 203
+#define SFXsc_golfbar_swipe 204
+#define SFXsp_lf_mutter4 265
 
 #pragma peephole on
 #pragma scheduling on
@@ -304,18 +310,18 @@ void wcpushblock_update(int obj)
                 ((PushBlockFlags *)(state + 0x285))->phase = 4;
                 if ((s8)*(u8 *)(obj + 0xad) == 1) {
                     if (gameBitIncrement(2064) != 4) {
-                        Sfx_PlayFromObject(0, 202);
+                        Sfx_PlayFromObject(0, SFXsc_lockon3_off);
                     }
                 } else {
                     if (gameBitIncrement(2065) != 4) {
-                        Sfx_PlayFromObject(0, 202);
+                        Sfx_PlayFromObject(0, SFXsc_lockon3_off);
                     }
                 }
             } else if (r == 1) {
                 ((PushBlockFlags *)(state + 0x285))->phase = 1;
                 if (((PushBlockFlags *)(state + 0x285))->sfxActive != 0) {
                     ((PushBlockFlags *)(state + 0x285))->sfxActive = 0;
-                    Sfx_PlayFromObject(obj, 201);
+                    Sfx_PlayFromObject(obj, SFXsc_lockon3_on);
                 }
             } else {
                 if ((s8)*(u8 *)(obj + 0xad) == 1) {
@@ -350,7 +356,7 @@ void wcpushblock_update(int obj)
     case 3:
         ObjHits_DisableObject(obj);
         if (*(u8 *)(obj + 0x36) == 255) {
-            Sfx_PlayFromObject(obj, 203);
+            Sfx_PlayFromObject(obj, SFXsc_lifeforcedoor);
         }
         {
             int a = *(u8 *)(obj + 0x36) - framesThisStep * 8;
@@ -381,7 +387,7 @@ void wcpushblock_update(int obj)
     case 5:
         if (*(u8 *)(obj + 0x36) == 0) {
             ObjHits_EnableObject(obj);
-            Sfx_PlayFromObject(0, 204);
+            Sfx_PlayFromObject(0, SFXsc_golfbar_swipe);
         }
         {
             int a = *(u8 *)(obj + 0x36) + framesThisStep * 8;
@@ -435,7 +441,7 @@ void fn_802251B4(int obj, int state)
             ((MapEventInterface *)*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
             *(u16 *)(state + 0x1a) |= 0x40;
             *(u8 *)(state + 0xc) = 0;
-            Sfx_PlayFromObject(0, 0x7e);
+            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             gameTimerStop();
         } else if (isGameTimerDisabled() != 0) {
             GameBit_Set(0x274, 0);
@@ -469,7 +475,7 @@ void fn_802251B4(int obj, int state)
     if (!(*(u16 *)(state + 0x1a) & 0x10)) {
         if ((u8)GameBit_Get(0x810) == 4) {
             GameBit_Set(0x812, 1);
-            Sfx_PlayFromObject(0, 0x7e);
+            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             *(u16 *)(state + 0x1a) |= 0x10;
         } else if ((u32)GameBit_Get(0x808) != 0) {
             if (*(f32 *)(state + 8) <= lbl_803E6DA8) {
@@ -488,7 +494,7 @@ void fn_802251B4(int obj, int state)
     if (!(*(u16 *)(state + 0x1a) & 0x20)) {
         if ((u8)GameBit_Get(0x811) == 4) {
             GameBit_Set(0x813, 1);
-            Sfx_PlayFromObject(0, 0x7e);
+            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             *(u16 *)(state + 0x1a) |= 0x20;
         } else if ((u32)GameBit_Get(0x809) != 0) {
             if (*(f32 *)(state + 4) <= lbl_803E6DA8) {
@@ -508,19 +514,19 @@ void fn_802251B4(int obj, int state)
         if ((u32)GameBit_Get(0xc58) != 0 && (u32)GameBit_Get(0xc59) != 0 &&
             (u32)GameBit_Get(0xc5a) != 0) {
             GameBit_Set(0x205, 1);
-            Sfx_PlayFromObject(0, 0x7e);
+            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             *(u16 *)(state + 0x1a) |= 0x80;
         } else if (!((WclevelcontFlags *)(state + 0x14))->b40 &&
                    (u32)GameBit_Get(0xc58) != 0) {
-            Sfx_PlayFromObject(0, 0x109);
+            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             ((WclevelcontFlags *)(state + 0x14))->b40 = 1;
         } else if (!((WclevelcontFlags *)(state + 0x14))->b20 &&
                    (u32)GameBit_Get(0xc59) != 0) {
-            Sfx_PlayFromObject(0, 0x109);
+            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             ((WclevelcontFlags *)(state + 0x14))->b20 = 1;
         } else if (!((WclevelcontFlags *)(state + 0x14))->b18 &&
                    (u32)GameBit_Get(0xc5a) != 0) {
-            Sfx_PlayFromObject(0, 0x109);
+            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             ((WclevelcontFlags *)(state + 0x14))->b18 = 1;
         }
     }
@@ -534,7 +540,7 @@ void fn_802251B4(int obj, int state)
             GameBit_Set(0xbd0, 0);
             player = Obj_GetPlayerObject();
             ((MapEventInterface *)*gMapEventInterface)->triggerEvent(player + 0xc, *(s16 *)player, 1, 0);
-            Sfx_PlayFromObject(0, 0x7e);
+            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             *(u16 *)(state + 0x1a) |= 0x100;
         }
     }
@@ -568,9 +574,9 @@ void wcpushblock_updateLevelControlState(int obj, int state)
             *(u16 *)(state + 0x1a) |= 0x4;
             gameTimerStop();
             if ((u32)GameBit_Get(0x7fa) != 0)
-                Sfx_PlayFromObject(0, 0x7e);
+                Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             else
-                Sfx_PlayFromObject(0, 0x109);
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             GameBit_Set(0xba6, 0);
             GameBit_Set(0xedd, 0);
             if ((u32)GameBit_Get(0x7fa) != 0) {
@@ -599,9 +605,9 @@ void wcpushblock_updateLevelControlState(int obj, int state)
             *(u16 *)(state + 0x1a) |= 0x8;
             gameTimerStop();
             if ((u32)GameBit_Get(0x7f9) != 0)
-                Sfx_PlayFromObject(0, 0x7e);
+                Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
             else
-                Sfx_PlayFromObject(0, 0x109);
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             GameBit_Set(0xba6, 0);
             GameBit_Set(0xedc, 0);
             if ((u32)GameBit_Get(0x7f9) != 0) {
@@ -776,3 +782,9 @@ int fn_80225D2C(int obj, s16 a, s16 b, f32 *outX, f32 *outZ, int dx, int dy)
 #pragma peephole reset
 
 #undef PB_IFACE
+#undef SFXmn_sml_trex_fstep
+#undef SFXsc_lockon3_on
+#undef SFXsc_lockon3_off
+#undef SFXsc_lifeforcedoor
+#undef SFXsc_golfbar_swipe
+#undef SFXsp_lf_mutter4
