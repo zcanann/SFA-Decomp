@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/objfsa.h"
 
+extern void OSReport(const char *fmt, ...);
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006a10();
@@ -28,6 +29,7 @@ extern undefined4 FUN_800d8240();
 extern int RomCurve_projectPointToAdjacentWindow();
 extern int curves_distFn15();
 extern int RomCurve_findByIdWithIndex();
+extern int mathFn_800dbff0(float *point);
 extern void *romCurves[];
 extern s32 nRomCurves;
 extern undefined4 RomCurve_getAdjacentWindow();
@@ -126,6 +128,61 @@ extern f32 lbl_803E12C8;
 extern f32 lbl_803E12CC;
 extern f32 lbl_803E12D0;
 extern f32 lbl_803E12D4;
+extern f32 lbl_803E05F0;
+extern int lbl_803DD468;
+extern char sObjfsaIsPointWithinPatchGroupError[];
+
+#define OBJFSA_PATCHGROUP_PATCH_COUNT 4
+#define OBJFSA_PATCHGROUP_STRIDE 0x28
+#define OBJFSA_PATCHGROUP_PATCHES_OFFSET 0x3024
+#define OBJFSA_ACTIVE_WALKGROUPS_OFFSET 0x4C48
+
+typedef struct ObjfsaPatchPlane {
+  s16 normalX;
+  s16 normalZ;
+} ObjfsaPatchPlane;
+
+typedef struct ObjfsaPatch {
+  ObjfsaPatchPlane planes[OBJFSA_PATCHGROUP_PATCH_COUNT];
+  f32 planeOffsets[OBJFSA_PATCHGROUP_PATCH_COUNT];
+  s16 minY;
+  s16 maxY;
+  u16 groupId;
+  u8 pad26[0x30 - 0x26];
+} ObjfsaPatch;
+
+extern ObjfsaPatch lbl_8039CAE8[];
+
+static inline ObjfsaPatch *Objfsa_GetPatch(int patchIndex) {
+  return &lbl_8039CAE8[patchIndex];
+}
+
+static inline u8 *Objfsa_GetPatchGroupPatchList(int groupIndex) {
+  return (u8 *)lbl_8039CAE8 + OBJFSA_PATCHGROUP_PATCHES_OFFSET +
+         groupIndex * OBJFSA_PATCHGROUP_STRIDE;
+}
+
+static inline u8 Objfsa_IsWalkGroupActive(int groupIndex) {
+  return *((u8 *)lbl_8039CAE8 + OBJFSA_ACTIVE_WALKGROUPS_OFFSET + groupIndex);
+}
+
+static int Objfsa_IsPointInsidePatch(const float *point, const ObjfsaPatch *patch) {
+  int edgeIndex;
+
+  if (point[1] >= (f32)patch->maxY || (f32)patch->minY >= point[1]) {
+    return 0;
+  }
+
+  for (edgeIndex = 0; edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; edgeIndex++) {
+    if (patch->planeOffsets[edgeIndex] +
+            point[0] * (f32)patch->planes[edgeIndex].normalX +
+            point[2] * (f32)patch->planes[edgeIndex].normalZ >
+        lbl_803E05F0) {
+      return 0;
+    }
+  }
+  return 1;
+}
 
 /*
  * --INFO--
@@ -4154,6 +4211,114 @@ LAB_800e19bc:
 /*
  * --INFO--
  *
+ * Function: isPointWithinPatchGroup
+ * EN v1.0 Address: 0x800DB8D8
+ * EN v1.0 Size: 372b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,uint groupId)
+{
+  u8 patchListIndex;
+  u8 patchIndex;
+  ObjfsaPatch *patch;
+
+  patchListIndex = 0;
+  do {
+    if (OBJFSA_PATCHGROUP_PATCH_COUNT <= patchListIndex) {
+      OSReport(sObjfsaIsPointWithinPatchGroupError);
+      return 0;
+    }
+
+    patchIndex = Objfsa_GetPatchGroupPatchList(patchGroupIndex)[patchListIndex];
+    if (patchIndex != 0) {
+      patch = Objfsa_GetPatch(patchIndex);
+      if (patch->groupId == groupId) {
+        return Objfsa_IsPointInsidePatch(point,patch);
+      }
+    }
+    patchListIndex++;
+  } while (true);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: getPatchGroup
+ * EN v1.0 Address: 0x800DBA4C
+ * EN v1.0 Size: 344b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+u16 getPatchGroup(float *point,int patchGroupIndex,undefined4 param_3,undefined4 param_4,
+                  u8 startPatchIndex)
+{
+  u8 patchListIndex;
+  u8 patchIndex;
+  ObjfsaPatch *patch;
+
+  patchListIndex = 0;
+  do {
+    if (OBJFSA_PATCHGROUP_PATCH_COUNT <= patchListIndex) {
+      return 0;
+    }
+
+    if (Objfsa_IsWalkGroupActive(patchGroupIndex) != 0) {
+      patchIndex = Objfsa_GetPatchGroupPatchList(patchGroupIndex)[patchListIndex];
+      if (patchIndex != 0) {
+        patch = Objfsa_GetPatch(patchIndex);
+        if (Objfsa_IsPointInsidePatch(point,patch)) {
+          return patch->groupId;
+        }
+      }
+    }
+    patchListIndex++;
+  } while (true);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: isInWalkGroupOrPatch
+ * EN v1.0 Address: 0x800DBBA4
+ * EN v1.0 Size: 344b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+uint isInWalkGroupOrPatch(float *point)
+{
+  s16 patchIndex;
+  ObjfsaPatch *patch;
+
+  if (mathFn_800dbff0(point) != 0) {
+    return 1;
+  }
+
+  patch = Objfsa_GetPatch(1);
+  for (patchIndex = 1; patchIndex < (s16)lbl_803DD468; patchIndex++) {
+    if (Objfsa_IsPointInsidePatch(point,patch)) {
+      return 1;
+    }
+    patch++;
+  }
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
  * Function: RomCurve_findProjectedCurveFromStart
  * EN v1.0 Address: 0x800DFE64
  * EN v1.0 Size: 720b
@@ -4890,16 +5055,15 @@ void fn_800D9EE8(float *p) {
 int fn_800DB240(int p1, f32 *outVec, u16 id)
 {
   extern f32 vec3f_distanceSquared(int, int);
-  extern char lbl_8039CAE8[];
   u8 i;
   char *entry;
   f32 d1;
 
   for (i = 0; i < 256; i++) {
-    if (*(u16 *)(lbl_8039CAE8 + (u32)i * 48 + 36) == id) break;
+    if (*(u16 *)((char *)lbl_8039CAE8 + (u32)i * 48 + 36) == id) break;
   }
 
-  entry = lbl_8039CAE8 + (u32)i * 48;
+  entry = (char *)lbl_8039CAE8 + (u32)i * 48;
 
   outVec[0] = (f32)(s32)*(s16 *)(entry + 38);
   outVec[1] = *(f32 *)(p1 + 4);
