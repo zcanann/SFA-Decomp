@@ -1,6 +1,15 @@
 #include "ghidra_import.h"
 #include "main/dll/mediumbasket.h"
 
+#define SFXsc_fox_commdown 0xcf
+#define SFXfoot_metal_run_2 0x1f2
+#define SFXdoor_unlocked 0x232
+#define SFXdoor_creak 0x233
+#define SFXfox_treadwater322 0x239
+#define SFXkr_jump2 0x26c
+#define SFXkr_panting1 0x26e
+#define SFXkr_panting2 0x26f
+
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006920();
@@ -814,17 +823,17 @@ FUN_8015c00c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   if ((*(byte *)(param_10 + 0x356) & 1) == 0) {
     iVar2 = FUN_80017a98();
     if (*(short *)(iVar2 + 0x46) == 0) {
-      FUN_80006824(param_9,0x239);
+      FUN_80006824(param_9,SFXfox_treadwater322);
     }
     else {
-      FUN_80006824(param_9,0x1f2);
+      FUN_80006824(param_9,SFXfoot_metal_run_2);
     }
-    FUN_80006824(param_9,0x232);
-    FUN_80006824(param_9,0x26f);
+    FUN_80006824(param_9,SFXdoor_unlocked);
+    FUN_80006824(param_9,SFXkr_panting2);
     *(byte *)(param_10 + 0x356) = *(byte *)(param_10 + 0x356) | 1;
   }
   if (((*(byte *)(param_10 + 0x356) & 2) == 0) && (lbl_803E39C4 < *(float *)(param_9 + 0x98))) {
-    FUN_80006824(param_9,0x233);
+    FUN_80006824(param_9,SFXdoor_creak);
     *(byte *)(param_10 + 0x356) = *(byte *)(param_10 + 0x356) | 2;
     (**(code **)(*DAT_803dd738 + 0x4c))(param_9,(int)*(short *)(iVar3 + 0x3f0),0xffffffff,0);
   }
@@ -962,12 +971,12 @@ FUN_8015c514(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     FUN_80017a98();
     iVar1 = FUN_80017a98();
     if (*(short *)(iVar1 + 0x46) == 0) {
-      FUN_80006824(param_9,0x239);
+      FUN_80006824(param_9,SFXfox_treadwater322);
     }
     else {
-      FUN_80006824(param_9,0x1f2);
+      FUN_80006824(param_9,SFXfoot_metal_run_2);
     }
-    FUN_80006824(param_9,0x26e);
+    FUN_80006824(param_9,SFXkr_panting1);
   }
   *(undefined *)(param_10 + 0x34d) = 3;
   *(float *)(param_10 + 0x2a0) = lbl_803E39CC;
@@ -1011,7 +1020,7 @@ FUN_8015c654(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     iVar1 = *(int *)(iVar2 + 0x40c);
     *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & ~1;
     *(byte *)(iVar1 + 0x44) = *(byte *)(iVar1 + 0x44) | 2;
-    FUN_80006824(param_9,0xcf);
+    FUN_80006824(param_9,SFXsc_fox_commdown);
   }
   (**(code **)(*DAT_803dd70c + 0x30))((double)lbl_803DC074,param_9,param_10,4);
   return 0;
@@ -1901,7 +1910,7 @@ void FUN_8015e21c(uint param_1,int param_2,int param_3)
     uVar1 = randomGetRange(0,200);
     *(short *)(iVar2 + 0x46) = (short)uVar1;
     if ((*(short *)(param_3 + 0x274) == 7) || (*(short *)(param_3 + 0x274) == 8)) {
-      FUN_80006824(param_1,0x26c);
+      FUN_80006824(param_1,SFXkr_jump2);
     }
   }
   if ((*(byte *)(param_2 + 0x404) & 2) == 0) {
@@ -2085,17 +2094,17 @@ int fn_8015B9B8(int obj, int state)
     if ((*(u8 *)(state + 0x356) & 1) == 0) {
         player = Obj_GetPlayerObject();
         if (*(s16 *)(player + 0x46) == 0) goto playGroundLandSound;
-        Sfx_PlayFromObject(obj, 0x1f2);
+        Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
         goto playLandingExtras;
 playGroundLandSound:
-        Sfx_PlayFromObject(obj, 0x239);
+        Sfx_PlayFromObject(obj, SFXfox_treadwater322);
 playLandingExtras:
-        Sfx_PlayFromObject(obj, 0x232);
-        Sfx_PlayFromObject(obj, 0x26f);
+        Sfx_PlayFromObject(obj, SFXdoor_unlocked);
+        Sfx_PlayFromObject(obj, SFXkr_panting2);
         *(u8 *)(state + 0x356) |= 1;
     }
     if ((*(u8 *)(state + 0x356) & 2) == 0 && *(f32 *)(obj + 0x98) > lbl_803E2D2C) {
-        Sfx_PlayFromObject(obj, 0x233);
+        Sfx_PlayFromObject(obj, SFXdoor_creak);
         *(u8 *)(state + 0x356) |= 2;
         ((void (*)(int, int, int, int))((void **)*gBaddieControlInterface)[19])(
             obj, (s32)*(s16 *)(sub + 0x3f0), -1, 0);
@@ -2188,12 +2197,12 @@ int fn_8015BD2C(int obj, int state)
         Obj_GetPlayerObject();
         player = Obj_GetPlayerObject();
         if (*(s16 *)(player + 0x46) == 0) goto playGroundDropSound;
-        Sfx_PlayFromObject(obj, 0x1f2);
+        Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
         goto playDropExtras;
 playGroundDropSound:
-        Sfx_PlayFromObject(obj, 0x239);
+        Sfx_PlayFromObject(obj, SFXfox_treadwater322);
 playDropExtras:
-        Sfx_PlayFromObject(obj, 0x26e);
+        Sfx_PlayFromObject(obj, SFXkr_panting1);
     }
     *(u8 *)(state + 0x34d) = 3;
     *(f32 *)(state + 0x2a0) = lbl_803E2D34;
@@ -2221,7 +2230,7 @@ int fn_8015BE08(int obj, int state)
         control = *(int *)(sub + 0x40c);
         *(u32 *)(state + 0x314) &= ~1;
         *(u8 *)(control + 0x44) |= 2;
-        Sfx_PlayFromObject(obj, 0xcf);
+        Sfx_PlayFromObject(obj, SFXsc_fox_commdown);
     }
     ((void (*)(int, int, f32, int))((void **)*gPlayerInterface)[12])(obj, state, timeDelta, 4);
     return 0;
@@ -2708,7 +2717,7 @@ void fn_8015D27C(int obj, int sub, int state)
     if (*(u16 *)(control + 0x46) >= 300) {
         *(u16 *)(control + 0x46) = randomGetRange(0, 200);
         if (*(s16 *)(state + 0x274) == 7 || *(s16 *)(state + 0x274) == 8) {
-            Sfx_PlayFromObject(obj, 0x26c);
+            Sfx_PlayFromObject(obj, SFXkr_jump2);
         }
     }
     if ((*(u8 *)(sub + 0x404) & 2) != 0) {
