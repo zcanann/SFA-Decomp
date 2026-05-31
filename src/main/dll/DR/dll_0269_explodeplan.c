@@ -1,5 +1,9 @@
 #include "main/dll/DR/dr_shared.h"
 
+#define SFXar_ring_pickup 402
+#define SFXar_generic_pickup 403
+#define SFXar_bomb_pickup 404
+
 void explodeplan_free(void) {}
 
 int explodeplan_getExtraSize(void) { return 0x4; }
@@ -76,10 +80,10 @@ int explodeplan_updateTriggerCallback(int obj) {
             return 4;
         }
         if (((BitFlags8 *)(runtime + 4))->b0 != GameBit_Get(*(s16 *)(q + 0x20))) {
-            Sfx_PlayFromObject(obj, 402);
-            Sfx_PlayFromObject(obj, 403);
+            Sfx_PlayFromObject(obj, SFXar_ring_pickup);
+            Sfx_PlayFromObject(obj, SFXar_generic_pickup);
             if (GameBit_Get(*(s16 *)(q + 0x20)) != 0) {
-                Sfx_PlayFromObject(obj, 404);
+                Sfx_PlayFromObject(obj, SFXar_bomb_pickup);
             } else {
                 Sfx_StopObjectChannel(obj, 8);
             }
