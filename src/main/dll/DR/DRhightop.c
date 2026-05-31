@@ -138,6 +138,8 @@ extern f32 lbl_803E685C;
 extern f32 lbl_803E6860;
 extern f32 lbl_803E6864;
 
+#define SFXsp_lfoot_taunt7 0x117
+
 /*
  * --INFO--
  *
@@ -472,7 +474,7 @@ void fn_801EB0D4(uint param_1,int param_2)
       if (lbl_803E5B20 < *(float *)(param_2 + 0x464)) {
         uVar4 = randomGetRange(0,10);
         if (uVar4 == 0) {
-          Sfx_PlayFromObject(0,0x117);
+          Sfx_PlayFromObject(0,SFXsp_lfoot_taunt7);
         }
         PSVECScale((float *)(param_2 + 0x464),(float *)(param_2 + 0x464),lbl_803E5B88);
         if ((*(byte *)(param_2 + 0x428) >> 7 & 1) != 0) {

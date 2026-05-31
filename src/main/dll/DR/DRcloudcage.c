@@ -51,6 +51,8 @@ extern f32 lbl_803E5B5C;
 extern f32 lbl_803E5B60;
 extern f32 lbl_803E5B64;
 
+#define SFXsp_htop_hurry2 0x11B
+
 #pragma scheduling off
 #pragma peephole off
 
@@ -331,7 +333,7 @@ void fn_801EA240(double distanceScale, int obj, int state, uint intensity, undef
     }
     if ((channelFlags & 4) != 0) {
         Sfx_PlayFromObject(obj, *(undefined2 *)(state + 0x440));
-        Sfx_PlayFromObject(obj, 0x11b);
+        Sfx_PlayFromObject(obj, SFXsp_htop_hurry2);
         if ((int)intensity < 6) {
             if (lbl_803E5B10 < *(float *)(state + 0x3f8)) {
                 *(float *)(state + 0x3f8) =

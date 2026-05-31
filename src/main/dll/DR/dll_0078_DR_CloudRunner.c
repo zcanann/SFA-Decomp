@@ -1,5 +1,7 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
+#define SFXtr_cnflyby6 0x11E
+
 int fn_802BF728(void) { return 0x0; }
 
 void DR_CloudRunner_func21(void) {}
@@ -558,7 +560,7 @@ void fn_802BF4D8(int obj)
     if (Obj_IsLoadingLocked(obj) == 0) {
         return;
     }
-    Sfx_PlayFromObject(obj, 0x11e);
+    Sfx_PlayFromObject(obj, SFXtr_cnflyby6);
     setup = Obj_AllocObjectSetup(0x24, 0x42a);
     *(u8 *)((char *)setup + 6) = 0xff;
     *(u8 *)((char *)setup + 7) = 0xff;

@@ -1,5 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 
+#define SFXfoot_stone_run_1 0x1B3
+
 int drshackle_getExtraSize(void) { return 0x20; }
 
 int drshackle_getObjectTypeId(void) { return 0x0; }
@@ -196,7 +198,7 @@ void drshackle_hitDetect(int obj) {
             n = 0xc8;
         }
         if ((int)randomGetRange(0, n) == 0) {
-            Sfx_PlayFromObject(obj, 0x1b3);
+            Sfx_PlayFromObject(obj, SFXfoot_stone_run_1);
         }
     }
 }
