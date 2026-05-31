@@ -4,6 +4,40 @@
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
 
+#define SFXdn_rexhurt13 16
+#define SFXdn_rexroarlng11 17
+#define SFXdn_hightop_hurt1 27
+#define SFXen_lflsh2_b 44
+#define SFXen_liftstpc 46
+#define SFXen_littletink22 47
+#define SFXmn_dimbos36 105
+#define SFXmn_dimraw26 109
+#define SFXsp_lf_mutter4 265
+#define SFXsp_skeep_mumb1 266
+#define SFXtr_gal_prophit 302
+#define SFXtr_jbike_snowhit 304
+#define SFXtr_barrelgrabber_eloop 307
+#define SFXtr_jbike_snowspray 309
+#define SFXtr_jbike_boost 310
+#define SFXmammoth_snowstep 520
+#define SFXmammoth_annoyed 521
+#define SFXmammoth_attacks 522
+#define SFXmammoth_suck 523
+#define SFXthorntail_injured2 528
+#define SFXthorntail_snort1 529
+#define SFXthorntail_snort2 530
+#define SFXhightop_call1 533
+#define SFXhightop_call2 534
+#define SFXmammoth_annoyed2 535
+#define SFXmammoth_breath1 536
+#define SFXmammoth_breath2 537
+#define SFXmammoth_huff1 538
+#define SFXmammoth_huff2 539
+#define SFXmammoth_dirtstep 540
+#define SFXbaddie_eggsnatch_sniff3 707
+#define SFXspirit_pool_wobble2 799
+#define SFXdrak_roar1 826
+
 void fn_802960E4(void) {}
 
 int fn_80297498(void) { return 0x0; }
@@ -792,7 +826,7 @@ void playerAddRemoveMagic(int obj, int amount)
     }
     *(s16 *)((char *)deref + 4) = (s16)m;
     if (amount > 0) {
-        Sfx_PlayFromObject(0, 0x21c);
+        Sfx_PlayFromObject(0, SFXmammoth_dirtstep);
     }
 }
 #pragma peephole reset
@@ -1071,7 +1105,7 @@ int fn_802A36EC(int obj, int state)
         }
         if ((((u32)*(u8 *)((char *)inner + 0x3f0) >> 5) & 1) || lbl_803DC6A0 == 0x1a) {
             if (*(int *)((char *)state + 0x314) & 0x80) {
-                Sfx_PlayFromObject(obj, 0x2f);
+                Sfx_PlayFromObject(obj, SFXen_littletink22);
             }
         }
     case 0xe:
@@ -1318,7 +1352,7 @@ void fn_802AA4B0(int obj, int p2, f32 unused)
 
     slot = Camera_GetCurrentViewSlot();
     if (Obj_IsLoadingLocked()) {
-        Sfx_PlayFromObject(obj, 0x20a);
+        Sfx_PlayFromObject(obj, SFXmammoth_attacks);
         setup = Obj_AllocObjectSetup(0x24, 0x14b);
         *(u8 *)((char *)setup + 0x4) = 2;
         *(u8 *)((char *)setup + 0x5) = 1;
@@ -2012,7 +2046,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
                         return r;
                     }
                 } else {
-                    Sfx_PlayFromObject(0, 0x10a);
+                    Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
                 }
                 break;
             }
@@ -2024,7 +2058,7 @@ int fn_8029ABD8(int obj, int state, f32 fv)
                         return r;
                     }
                 } else {
-                    Sfx_PlayFromObject(0, 0x10a);
+                    Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
                 }
                 break;
             }
@@ -4102,9 +4136,9 @@ void fn_802A13F4(int obj, int p2)
     if (*(int *)((char *)p2 + 0x314) & 1) {
         cell = coordsToMapCell(*(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x14));
         if (cell == 0x12) {
-            Sfx_PlayFromObject(obj, 0x211);
+            Sfx_PlayFromObject(obj, SFXthorntail_snort1);
         } else {
-            Sfx_PlayFromObject(obj, 0x10);
+            Sfx_PlayFromObject(obj, SFXdn_rexhurt13);
         }
     }
     if (lbl_803DE47C > 0) {
@@ -4460,7 +4494,7 @@ void fn_802B1E5C(int obj, int state, int cfg, f32 dt)
                 *(f32 *)((char *)state + 0x7c8) =
                     -(lbl_803E7E90 * dt - *(f32 *)((char *)state + 0x7c8));
                 if (lbl_803DE440 <= clamp) {
-                    Sfx_PlayFromObject(obj, 0x208);
+                    Sfx_PlayFromObject(obj, SFXmammoth_snowstep);
                     lbl_803DE440 = (f32)(int)randomGetRange(0x27, 0x3c);
                 } else {
                     lbl_803DE440 = lbl_803DE440 - dt;
@@ -4735,11 +4769,11 @@ void Lightfoot_ProcessHitResponseFlags(int obj, int inner)
 {
     if (*(int *)((char *)inner + 0x314) & 4) {
         *(int *)((char *)inner + 0x314) &= ~4;
-        Sfx_PlayFromObject(obj, 0x12e);
+        Sfx_PlayFromObject(obj, SFXtr_gal_prophit);
     }
     if (*(int *)((char *)inner + 0x314) & 2) {
         *(int *)((char *)inner + 0x314) &= ~2;
-        Sfx_PlayFromObject(obj, 0x12e);
+        Sfx_PlayFromObject(obj, SFXtr_gal_prophit);
     }
     if (*(int *)((char *)inner + 0x314) & 1) {
         *(int *)((char *)inner + 0x314) &= ~1;
@@ -4749,20 +4783,20 @@ void Lightfoot_ProcessHitResponseFlags(int obj, int inner)
     }
     if (*(int *)((char *)inner + 0x314) & 0x80) {
         *(int *)((char *)inner + 0x314) &= ~0x80;
-        Sfx_PlayFromObject(obj, 0x130);
+        Sfx_PlayFromObject(obj, SFXtr_jbike_snowhit);
     }
     if (*(int *)((char *)inner + 0x314) & 0x200) {
         *(int *)((char *)inner + 0x314) &= ~0x200;
-        Sfx_PlayFromObject(obj, 0x133);
+        Sfx_PlayFromObject(obj, SFXtr_barrelgrabber_eloop);
     }
     if (*(int *)((char *)inner + 0x314) & 0x40) {
         *(int *)((char *)inner + 0x314) &= ~0x40;
-        Sfx_PlayFromObject(obj, 0x135);
+        Sfx_PlayFromObject(obj, SFXtr_jbike_snowspray);
     }
     if (*(int *)((char *)inner + 0x314) & 0x800) {
         *(int *)((char *)inner + 0x314) &= ~0x800;
         ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 0x19, 2, 1);
-        Sfx_PlayFromObject(obj, 0x136);
+        Sfx_PlayFromObject(obj, SFXtr_jbike_boost);
         CameraShake_Start(lbl_803E81CC, lbl_803E81D0, lbl_803E81D4);
         doRumble(lbl_803E81D8);
     }
@@ -4908,7 +4942,7 @@ int fn_80298CCC(int obj, int state)
         }
         if (*(f32 *)((char *)obj + 0x98) > lbl_803E7F48 &&
             (*(u8 *)((char *)state + 0x356) & 1) == 0) {
-            Sfx_PlayFromObject(obj, 0x2c3);
+            Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff3);
             *(u8 *)((char *)state + 0x356) |= 1;
         }
         if (*(s8 *)((char *)state + 0x346) != 0) {
@@ -5010,7 +5044,7 @@ void fn_802AE83C(int obj, int inner)
         *(int *)((char *)inner + 0x7f8) = 0;
     }
     if (*(f32 *)((char *)obj + 0x28) < lbl_803E812C) {
-        Sfx_PlayFromObject(obj, 0x212);
+        Sfx_PlayFromObject(obj, SFXthorntail_snort2);
         (*(void (*)(int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x10)))(
             obj, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
             *(f32 *)((char *)obj + 0x14), lbl_803E7ED8);
@@ -5088,7 +5122,7 @@ int fn_802A4B78(int obj, int state)
         switch (*(s16 *)((char *)sub + 0x46)) {
         case 0x6d:
         case 0x754:
-            Sfx_PlayFromObject(obj, 0x31f);
+            Sfx_PlayFromObject(obj, SFXspirit_pool_wobble2);
             break;
         case 0x1f4:
         case 0x1f5:
@@ -5100,7 +5134,7 @@ int fn_802A4B78(int obj, int state)
             Sfx_PlayFromObject(obj, 0x39b);
             break;
         default:
-            Sfx_PlayFromObject(obj, 0x6d);
+            Sfx_PlayFromObject(obj, SFXmn_dimraw26);
             break;
         }
     }
@@ -5260,12 +5294,12 @@ int fn_80297AD0(int obj, int state, f32 fv)
     (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 1);
     if ((*(u8 *)((char *)state + 0x356) & 1) == 0 &&
         *(f32 *)((char *)obj + 0x98) > lbl_803E7F14) {
-        Sfx_PlayFromObject(obj, 0x1b);
+        Sfx_PlayFromObject(obj, SFXdn_hightop_hurt1);
         *(u8 *)((char *)state + 0x356) |= 1;
     }
     if ((*(u8 *)((char *)state + 0x356) & 2) == 0 &&
         *(f32 *)((char *)obj + 0x98) > lbl_803E7F18) {
-        Sfx_PlayFromObject(obj, 0x2e);
+        Sfx_PlayFromObject(obj, SFXen_liftstpc);
         *(u8 *)((char *)state + 0x356) |= 2;
     }
     if (*(s8 *)((char *)state + 0x346) != 0) {
@@ -5330,7 +5364,7 @@ int fn_80297D0C(int obj, int state, f32 fv)
     }
     if ((*(u8 *)((char *)state + 0x356) & 1) == 0 &&
         *(f32 *)((char *)obj + 0x98) > lbl_803E7F14) {
-        Sfx_PlayFromObject(obj, 0x2e);
+        Sfx_PlayFromObject(obj, SFXen_liftstpc);
         *(u8 *)((char *)state + 0x356) |= 1;
     }
     if (*(s8 *)((char *)state + 0x346) != 0) {
@@ -5395,7 +5429,7 @@ int fn_80297F48(int obj, int state, f32 fv)
     }
     if ((*(u8 *)((char *)state + 0x356) & 1) == 0 &&
         *(f32 *)((char *)obj + 0x98) > lbl_803E7F14) {
-        Sfx_PlayFromObject(obj, 0x2e);
+        Sfx_PlayFromObject(obj, SFXen_liftstpc);
         *(u8 *)((char *)state + 0x356) |= 1;
     }
     if (*(s8 *)((char *)state + 0x346) != 0) {
@@ -5510,7 +5544,7 @@ int fn_80297854(int obj, int state, f32 fv)
     }
     if ((*(u8 *)((char *)state + 0x356) & 1) == 0 &&
         *(f32 *)((char *)obj + 0x98) > lbl_803E7F14) {
-        Sfx_PlayFromObject(obj, 0x1b);
+        Sfx_PlayFromObject(obj, SFXdn_hightop_hurt1);
         *(u8 *)((char *)state + 0x356) |= 1;
     }
     if ((*(u8 *)((char *)state + 0x356) & 2) == 0 &&
@@ -6078,7 +6112,7 @@ void fn_80295E90(int obj, int mode)
             trickyImpress(tricky);
         }
         GameBit_Set(0xc30, 1);
-        Sfx_PlayFromObject(obj, 0x69);
+        Sfx_PlayFromObject(obj, SFXmn_dimbos36);
         (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))(obj, 0x801, 0, 0x50, 0);
         oldModel = Obj_GetActiveModel(obj);
         Obj_SetActiveModelIndex(obj, 2);
@@ -6099,7 +6133,7 @@ void fn_80295E90(int obj, int mode)
         memcpy((void *)*(int *)((char *)newModel + 0x2c), (void *)*(int *)((char *)oldModel + 0x2c), 0x68);
         memcpy((void *)*(int *)((char *)newModel + 0x30), (void *)*(int *)((char *)oldModel + 0x30), 0x68);
         GameBit_Set(0xc30, 0);
-        Sfx_PlayFromObject(obj, 0x69);
+        Sfx_PlayFromObject(obj, SFXmn_dimbos36);
     }
 }
 #pragma dont_inline reset
@@ -6651,7 +6685,7 @@ int fn_8029B7B0(int obj, int state)
     case 0x448:
         if (*(f32 *)((char *)obj + 0x98) > lbl_803E7E9C) {
             if (*(u8 *)((char *)inner + 0x8b3) == 0) {
-                Sfx_PlayFromObject(obj, 0x2c);
+                Sfx_PlayFromObject(obj, SFXen_lflsh2_b);
                 if (lbl_803DE44C != NULL) {
                     b = (*(u8 *)((char *)inner + 0x3f4) >> 6) & 1;
                     if (b != 0) {
@@ -7134,9 +7168,9 @@ int fn_802A2918(int obj, int state, f32 fv)
     }
     if ((*(int *)((char *)state + 0x314) & 1) != 0) {
         if (*(s8 *)((char *)inner + 0x546) == 4) {
-            Sfx_PlayFromObject(obj, 0x33a);
+            Sfx_PlayFromObject(obj, SFXdrak_roar1);
         } else {
-            Sfx_PlayFromObject(obj, 0x11);
+            Sfx_PlayFromObject(obj, SFXdn_rexroarlng11);
         }
     }
     if (*(s8 *)((char *)state + 0x27a) != 0) {
@@ -7610,7 +7644,7 @@ void fn_802AA014(int obj)
         *(f32 *)((char *)setup + 8) = *(f32 *)((char *)slot + 0xc);
         *(f32 *)((char *)setup + 0xc) = *(f32 *)((char *)slot + 0x10);
         *(f32 *)((char *)setup + 0x10) = *(f32 *)((char *)slot + 0x14);
-        Sfx_PlayFromObject(obj, 0x20b);
+        Sfx_PlayFromObject(obj, SFXmammoth_suck);
         o = (void *)Obj_SetupObject(setup, 5, -1, -1, 0);
         if (o != NULL) {
             f32 fov, cot, aspect, ycomp, xcomp, len;
@@ -7809,7 +7843,7 @@ void fn_802AA2B0(int obj, int state, f32 unused, f32 yoff)
     f32 dx, dy, dz, len;
 
     if (Obj_IsLoadingLocked() != 0) {
-        Sfx_PlayFromObject(0, 0x20b);
+        Sfx_PlayFromObject(0, SFXmammoth_suck);
         setup = Obj_AllocObjectSetup(0x24, 0x655);
         *(u8 *)((char *)setup + 4) = 2;
         *(u8 *)((char *)setup + 5) = 1;
@@ -7993,7 +8027,7 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
         if ((((u32 (*)(int))getButtonsJustPressed)(0) & 0x100) && *(int *)((char *)obj + 0xf8) == 0) {
             int a = v < 0 ? -v : v;
             if (a <= w) {
-                Sfx_PlayFromObject(0, 0x109);
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
                 *(int *)((char *)obj + 0xf8) = 2;
             } else {
                 Sfx_PlayFromObject(0, 0x487);
@@ -8162,7 +8196,7 @@ void fn_802AB38C(int a, int b, int c)
             *(s16 *)((char *)sub + 0x4) = v;
         }
         fn_80295E90(a, 1);
-        Sfx_PlayFromObject(a, 0x209);
+        Sfx_PlayFromObject(a, SFXmammoth_annoyed);
         break;
     case 0x5bd:
         c = -1;
@@ -8731,7 +8765,7 @@ int fn_802A16CC(int obj, int state, f32 fv)
             f32 f30 = lbl_803E7ED8 * -lbl_803DE498;
             f32 f3;
             if ((*(int *)((char *)state + 0x314) & 1) != 0) {
-                Sfx_PlayFromObject(obj, 0x210);
+                Sfx_PlayFromObject(obj, SFXthorntail_injured2);
             }
             f3 = *(f32 *)((char *)obj + 0x10) - (lbl_803E8010 + *(f32 *)((char *)inner + 0x4ec));
             if (f3 < lbl_803E7EA4) {
@@ -8894,7 +8928,7 @@ int fn_80298E54(int obj, int state, f32 fv)
         setAButtonIcon(2);
         if (lbl_803DE48C == 0) {
             if (*(f32 *)((char *)obj + 0x98) > lbl_803E7E9C) {
-                Sfx_PlayFromObject(obj, 0x218);
+                Sfx_PlayFromObject(obj, SFXmammoth_breath1);
                 lbl_803DE48C = 1;
             }
         }
@@ -8915,7 +8949,7 @@ int fn_80298E54(int obj, int state, f32 fv)
             *(f32 *)((char *)state + 0x2a0) = lbl_803E7EA4;
         } else if ((flags & 0x200) != 0) {
             buttonDisable(0, 0x200);
-            Sfx_PlayFromObject(obj, 0x218);
+            Sfx_PlayFromObject(obj, SFXmammoth_breath1);
             ObjAnim_SetCurrentMove(obj, 0xd1, lbl_803E7EA4, 0);
             *(f32 *)((char *)state + 0x2a0) = lbl_803E7F4C;
         }
@@ -8982,7 +9016,7 @@ int fn_80298E54(int obj, int state, f32 fv)
     case 0xd0:
         fn_8018A20C(lbl_803DE434, 0x800);
         if (*(s8 *)((char *)state + 0x346) != 0) {
-            Sfx_PlayFromObject(obj, 0x109);
+            Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
             ObjAnim_SetCurrentMove(obj, 0xb2, lbl_803E7EA4, 0);
             *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
         }
@@ -8991,7 +9025,7 @@ int fn_80298E54(int obj, int state, f32 fv)
         fn_8018A20C(lbl_803DE434, 0x800);
         if ((*(u16 *)((char *)inner + 0x6e2) & 0x200) != 0) {
             buttonDisable(0, 0x200);
-            Sfx_PlayFromObject(obj, 0x218);
+            Sfx_PlayFromObject(obj, SFXmammoth_breath1);
             ObjAnim_SetCurrentMove(obj, 0xad, lbl_803E7EA4, 0);
             *(f32 *)((char *)state + 0x2a0) = lbl_803E7F4C;
         }
@@ -9055,13 +9089,13 @@ int fn_802994D0(int obj, int state, f32 fv)
     case 0x4:
         if (lbl_803DE48D == 0) {
             if (*(f32 *)((char *)obj + 0x98) > lbl_803E7F74) {
-                Sfx_PlayFromObject(obj, 0x215);
+                Sfx_PlayFromObject(obj, SFXhightop_call1);
                 lbl_803DE48D = 1;
             }
         }
         if (*(s8 *)((char *)state + 0x346) != 0) {
             if ((*(u16 *)((char *)inner + 0x6e0) & mask) != 0) {
-                Sfx_PlayFromObject(obj, 0x216);
+                Sfx_PlayFromObject(obj, SFXhightop_call2);
                 ObjAnim_SetCurrentMove(obj, 0x87, lbl_803E7EA4, 0);
                 *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
             } else {
@@ -9090,7 +9124,7 @@ int fn_802994D0(int obj, int state, f32 fv)
                     v = *(s16 *)((char *)sub + 0x6);
                 }
                 *(s16 *)((char *)sub + 0x4) = v;
-                Sfx_PlayFromObject(obj, 0x217);
+                Sfx_PlayFromObject(obj, SFXmammoth_annoyed2);
                 ObjAnim_SetCurrentMove(obj, 0x88, lbl_803E7EA4, 0);
                 *(f32 *)((char *)state + 0x2a0) = lbl_803E7F6C;
             }
@@ -9101,7 +9135,7 @@ int fn_802994D0(int obj, int state, f32 fv)
         break;
     case 0x43:
         if ((*(u16 *)((char *)inner + 0x6e0) & mask) != 0) {
-            Sfx_PlayFromObject(obj, 0x216);
+            Sfx_PlayFromObject(obj, SFXhightop_call2);
             ObjAnim_SetCurrentMove(obj, 0x87, lbl_803E7EA4, 0);
             *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
         } else if ((*(u16 *)((char *)inner + 0x6e2) & 0x200) != 0) {
@@ -9614,7 +9648,7 @@ int fn_802985FC(int obj, int state, f32 fv)
             int amt;
             int r35c;
             int v;
-            Sfx_PlayFromObject(obj, 0x219);
+            Sfx_PlayFromObject(obj, SFXmammoth_breath2);
             amt = -*(u8 *)((char *)inner + 0x41c);
             r35c = *(int *)((char *)(*(int *)((char *)obj + 0xb8)) + 0x35c);
             v = *(s16 *)((char *)r35c + 4) + amt;
@@ -9625,7 +9659,7 @@ int fn_802985FC(int obj, int state, f32 fv)
             }
             *(s16 *)((char *)r35c + 4) = v;
             if (amt > 0) {
-                Sfx_PlayFromObject(0, 0x21c);
+                Sfx_PlayFromObject(0, SFXmammoth_dirtstep);
             }
             ObjAnim_SetCurrentMove(obj, 0x86, lbl_803E7EA4, 0);
             *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
@@ -9638,7 +9672,7 @@ int fn_802985FC(int obj, int state, f32 fv)
             if (tricky != NULL) {
                 trickyImpress(tricky);
             }
-            Sfx_PlayFromObject(obj, 0x21a);
+            Sfx_PlayFromObject(obj, SFXmammoth_huff1);
             superQuakeFn_8016d9fc((char *)obj + 0xc);
             ((ByteFlags *)((char *)inner + 0x3f3))->b10 = 1;
             doRumble(lbl_803E7F30);
@@ -9650,7 +9684,7 @@ int fn_802985FC(int obj, int state, f32 fv)
         }
         break;
     default:
-        Sfx_PlayFromObject(obj, 0x21b);
+        Sfx_PlayFromObject(obj, SFXmammoth_huff2);
         f = lbl_803E7EA4;
         *(f32 *)((char *)state + 0x294) = f;
         *(f32 *)((char *)state + 0x284) = f;
@@ -10090,7 +10124,7 @@ void fn_802AF410(int obj, int state)
             break;
         }
         if (noMatch) {
-            Sfx_PlayFromObject(0, 0x10a);
+            Sfx_PlayFromObject(0, SFXsp_skeep_mumb1);
         }
     }
 
