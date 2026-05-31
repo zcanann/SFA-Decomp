@@ -1,5 +1,8 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXpda_fper_camoff 808
+#define SFXpda_compassbeep 809
+
 #pragma peephole on
 #pragma scheduling on
 int barrelgener_getLinkId(int obj)
@@ -102,7 +105,7 @@ void barrelgener_update(int obj)
         if (*(f32 *)(state + 8) <= lbl_803E6C28 && *(u8 *)(state + 4) == 0) {
             *(u8 *)(state + 4) = 1;
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E6C2C, 0);
-            Sfx_PlayFromObject(obj, 808);
+            Sfx_PlayFromObject(obj, SFXpda_fper_camoff);
             *(u8 *)(state + 0xc) = 0;
         }
         if (timerCountDown((void *)(state + 8)) != 0) {
@@ -130,7 +133,7 @@ void barrelgener_update(int obj)
     if (*(u8 *)(state + 4) != 0) {
         if (*(f32 *)(obj + 0x98) > lbl_803E6C30) {
             if (*(u8 *)(state + 0xc) == 0) {
-                Sfx_PlayFromObject(obj, 809);
+                Sfx_PlayFromObject(obj, SFXpda_compassbeep);
                 *(u8 *)(state + 0xc) = 1;
             }
         }
