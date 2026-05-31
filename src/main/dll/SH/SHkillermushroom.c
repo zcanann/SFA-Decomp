@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/SHkillermushroom.h"
 
+#define SFXmv_curtainloop16 157
+#define SFXmv_sliftloop11 161
+#define SFXmv_curtainrustle 163
 
 #pragma peephole off
 #pragma scheduling off
@@ -149,7 +152,7 @@ void FUN_801d2c74(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if (iVar1 != 0) {
     FUN_8013651c(iVar1);
   }
-  FUN_80006824((uint)param_9,0xa3);
+  FUN_80006824((uint)param_9,SFXmv_curtainrustle);
   *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) = *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) | 0x40
   ;
   FUN_8008112c((double)FLOAT_803e6010,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
@@ -483,7 +486,7 @@ void bombplant_update(void *obj)
 
   case 2:
     if ((*(u8 *)((u8 *)state + 0x15) & 0x2) != 0) {
-      Sfx_PlayFromObject(obj, 0xa1);
+      Sfx_PlayFromObject(obj, SFXmv_sliftloop11);
       *(u8 *)((u8 *)state + 0x15) &= ~0x2;
       p4c = *(void **)((u8 *)obj + 0x4c);
       *(u8 *)((u8 *)obj + 0x36) = 0xff;
@@ -545,7 +548,7 @@ void bombplant_update(void *obj)
       if (hitType == 0x10) {
         Obj_StartModelFadeIn(obj, 0x12c);
       } else if (hitType - 0xe <= 1 || hitType == 0x11) {
-        Sfx_PlayFromObject(obj, 0x9d);
+        Sfx_PlayFromObject(obj, SFXmv_curtainloop16);
         hitX = hitX + playerMapOffsetX;
         hitZ = hitZ + playerMapOffsetZ;
         objLightFn_8009a1dc(obj, lightVec, 1, 0, lbl_803E5380);
