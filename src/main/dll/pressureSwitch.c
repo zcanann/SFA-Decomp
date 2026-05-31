@@ -618,6 +618,20 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void mm_free(void *p);
 extern void objRenderFn_8003b8f4(f32);
 extern void objParticleFn_80099d84(int obj, int p2, int p3, f32 f1, f32 f2);
+extern f32 lbl_803E2608;
+extern f32 lbl_803E260C;
+extern f32 lbl_803E2610;
+extern f32 lbl_803E2614;
+extern f32 lbl_803E2618;
+extern f32 lbl_803E261C;
+extern f32 lbl_803E2620;
+extern f32 lbl_803E2624;
+extern f32 lbl_803E2628;
+extern f32 lbl_803E262C;
+extern f32 lbl_803E2630;
+extern f32 lbl_803E2634;
+extern f32 lbl_803E2638;
+extern f32 lbl_803E263C;
 extern f32 lbl_803E2650;
 extern f32 lbl_803E2654;
 extern f64 lbl_803E2640; /* int->float magic */
@@ -684,8 +698,9 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void objLightFn_8009a1dc(int obj, f32 radius, void *pos, int type, int flags);
 extern f32 sqrtf(f32 x);
 extern f32 fn_80293E80(f32 x);
+extern int getAngle(f32 dx, f32 dz);
+extern void ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, void *events);
 extern void Sfx_SetObjectChannelVolume(double volumeScale, int obj, int channel, int volume);
-extern void fn_8014E1DC(int obj, int *state);
 
 typedef union PressureSwitchIntToDouble {
     u64 bits;
@@ -694,9 +709,124 @@ typedef union PressureSwitchIntToDouble {
 
 #pragma scheduling off
 #pragma peephole off
+void fn_8014E1DC(int obj, int *state) {
+    int curve;
+    int player;
+    int angleDelta;
+    int angle;
+    unsigned char *flags;
+    char animEvents[32];
+    f32 waveA;
+    f32 waveB;
+    f32 accel;
+    f32 damp;
+    f32 maxSpeed;
+    f32 minSpeed;
+
+    curve = state[0];
+    flags = (unsigned char *)state + 0x26;
+
+    if (((curveFn_80010320(curve, *(f32 *)(state + 2)) != 0) ||
+         (*(int *)(curve + 0x10) != *(int *)&lbl_803DDA58)) &&
+        ((*(int (**)(int))(*(int *)gRomCurveInterface + 0x90))(curve) != 0) &&
+        ((*(int (**)(int, f32, int, int *, int))(*(int *)gRomCurveInterface + 0x8c))
+             (state[0], lbl_803E2608, obj, &lbl_803DBC70, -1) != 0)) {
+        *flags &= 0xfe;
+    }
+
+    *(int *)&lbl_803DDA58 = *(int *)(curve + 0x10);
+
+    *(u16 *)((char *)state + 0x20) += (s16)(s32)(lbl_803E260C * timeDelta);
+    *(u16 *)((char *)state + 0x22) += (s16)(s32)(lbl_803E2610 * timeDelta);
+    *(u16 *)((char *)state + 0x24) += (s16)(s32)(lbl_803E2614 * timeDelta);
+
+    waveA = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x22)) /
+                        lbl_803E2620);
+    waveB = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x20)) /
+                        lbl_803E2620);
+    *(s16 *)(obj + 4) = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
+
+    waveA = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x24)) /
+                        lbl_803E2620);
+    waveB = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x20)) /
+                        lbl_803E2620);
+    *(s16 *)(obj + 2) = (s16)(s32)(lbl_803E2618 * (waveA + waveB));
+
+    accel = lbl_803E2624;
+    if ((*flags & 2) != 0) {
+        player = state[1];
+        *(f32 *)(obj + 0x24) += accel * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc));
+        *(f32 *)(obj + 0x28) += accel *
+                                ((lbl_803E2628 + *(f32 *)(player + 0x10)) -
+                                 *(f32 *)(obj + 0x10));
+        *(f32 *)(obj + 0x2c) += accel * (*(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14));
+    } else if ((*flags & 4) != 0) {
+        *(f32 *)(obj + 0x24) += accel * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc));
+        *(f32 *)(obj + 0x28) += accel * (*(f32 *)(curve + 0x6c) - *(f32 *)(obj + 0x10));
+        *(f32 *)(obj + 0x2c) += accel * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14));
+    } else {
+        *(f32 *)(obj + 0x24) += accel * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc));
+        waveA = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x22)) /
+                            lbl_803E2620);
+        waveB = fn_80293E80((lbl_803E261C * (f32)(u32)*(u16 *)((char *)state + 0x20)) /
+                            lbl_803E2620);
+        *(f32 *)(obj + 0x28) += accel *
+                                (((lbl_803E262C * (waveA + waveB)) +
+                                  *(f32 *)(curve + 0x6c)) -
+                                 *(f32 *)(obj + 0x10));
+        *(f32 *)(obj + 0x2c) += accel * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14));
+    }
+
+    damp = lbl_803E2630;
+    *(f32 *)(obj + 0x24) *= damp;
+    *(f32 *)(obj + 0x28) *= damp;
+    *(f32 *)(obj + 0x2c) *= damp;
+
+    maxSpeed = lbl_803E2634;
+    if (*(f32 *)(obj + 0x24) > maxSpeed) {
+        *(f32 *)(obj + 0x24) = maxSpeed;
+    }
+    if (*(f32 *)(obj + 0x28) > maxSpeed) {
+        *(f32 *)(obj + 0x28) = maxSpeed;
+    }
+    if (*(f32 *)(obj + 0x2c) > maxSpeed) {
+        *(f32 *)(obj + 0x2c) = maxSpeed;
+    }
+
+    minSpeed = lbl_803E2638;
+    if (*(f32 *)(obj + 0x24) < minSpeed) {
+        *(f32 *)(obj + 0x24) = minSpeed;
+    }
+    if (*(f32 *)(obj + 0x28) < minSpeed) {
+        *(f32 *)(obj + 0x28) = minSpeed;
+    }
+    if (*(f32 *)(obj + 0x2c) < minSpeed) {
+        *(f32 *)(obj + 0x2c) = minSpeed;
+    }
+
+    objMove(obj,
+            *(f32 *)(obj + 0x24) * timeDelta,
+            *(f32 *)(obj + 0x28) * timeDelta,
+            *(f32 *)(obj + 0x2c) * timeDelta);
+    ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(state + 3), timeDelta, animEvents);
+
+    player = state[1];
+    angle = (u16)getAngle(*(f32 *)(obj + 0x18) - *(f32 *)(player + 0x18),
+                          *(f32 *)(obj + 0x20) - *(f32 *)(player + 0x20));
+    angleDelta = angle - ((int)*(s16 *)obj & 0xffff);
+    if (angleDelta > 0x8000) {
+        angleDelta -= 0xffff;
+    }
+    if (angleDelta < -0x8000) {
+        angleDelta += 0xffff;
+    }
+
+    *(s16 *)obj += (s16)(s32)(((f32)angleDelta * timeDelta) / lbl_803E263C);
+}
+
 void hagabon_hitDetect(int obj) {
     if (*(u32 *)(*(int *)(obj + 0x54) + 0x50) != 0) {
-        Sfx_PlayFromObject(obj, 0x32B);
+        Sfx_PlayFromObject(obj, SFXand_swipe2);
     }
 }
 void swarmbaddie_free(int obj) {
