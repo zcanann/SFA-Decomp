@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/CFPrisonGuard.h"
 
+#define SFXmn_dimraw36 110
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b94();
 extern uint GameBit_Get(int eventId);
@@ -79,7 +81,7 @@ void fn_801899B4(int obj, int state)
       }
       if (*(s32 *)(state + 0x14) < 0) {
         if (*(s32 *)(state + 0x10) > 0) {
-          Sfx_PlayFromObject(obj, 0x6e);
+          Sfx_PlayFromObject(obj, SFXmn_dimraw36);
           rumbleStrength = *(s32 *)(state + 0x18) / 200;
           if (rumbleStrength > 0) {
             doRumble((f32)rumbleStrength);
@@ -400,7 +402,7 @@ void FUN_80189e0c(uint param_1,int param_2)
       }
       if (*(int *)(param_2 + 0x14) < 0) {
         if (0 < *(int *)(param_2 + 0x10)) {
-          FUN_80006824(param_1,0x6e);
+          FUN_80006824(param_1,SFXmn_dimraw36);
           iVar2 = *(int *)(param_2 + 0x18) / 200 + (*(int *)(param_2 + 0x18) >> 0x1f);
           uVar3 = iVar2 - (iVar2 >> 0x1f);
           if (0 < (int)uVar3) {

@@ -2,6 +2,8 @@
 #include "main/mapEvent.h"
 #include "main/dll/CF/CFBaby.h"
 
+#define SFXen_rfall5_c 72
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern undefined4 FUN_80006ba8();
@@ -710,7 +712,7 @@ void FUN_801880e0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     iVar4 = ObjHits_GetPriorityHit(param_9,(undefined4 *)0x0,(int *)0x0,auStack_18);
     if (iVar4 != 0) {
       (**(code **)(*DAT_803dd740 + 0x30))(param_9,iVar5);
-      FUN_80006824(param_9,0x48);
+      FUN_80006824(param_9,SFXen_rfall5_c);
       ObjHitbox_SetSphereRadius(param_9,0x28);
       uVar6 = ObjHits_SetHitVolumeSlot(param_9,5,4,0);
       uVar2 = FUN_80017ae8();
@@ -1760,7 +1762,7 @@ void fn_80187C70(int obj) {
             (*(void (*)(int, Dll109State *))(*(int *)(*lbl_803DCAC0 + 8)))(obj, state);
             if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0) {
                 (*(void (*)(int, Dll109State *))(*(int *)(*lbl_803DCAC0 + 0x30)))(obj, state);
-                Sfx_PlayFromObject(obj, 0x48);
+                Sfx_PlayFromObject(obj, SFXen_rfall5_c);
                 ObjHitbox_SetSphereRadius(obj, 0x28);
                 ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
                 if (Obj_IsLoadingLocked() != 0) {

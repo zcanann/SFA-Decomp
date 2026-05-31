@@ -1,5 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXbaddie_invin_hit 691
+
 #pragma peephole on
 #pragma scheduling on
 int arwingandrossstuff_getExtraSize(void) { return 0x20; }
@@ -69,7 +71,7 @@ void arwingandrossstuff_hitDetect(int obj)
     }
     if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL && *(u8 *)(state + 1) == 0) {
         if (*(s16 *)(obj + 0x46) != 0x6ae) {
-            Sfx_PlayFromObjectLimited(obj, 0x2b3, 4);
+            Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
         }
         if (*(s16 *)(obj + 0x46) == 0x7e4) {
             struct {
@@ -232,7 +234,7 @@ void arwingandrossstuff_update(int obj)
         }
         if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0) {
             if (*(s16 *)(obj + 0x46) != 0x6ae) {
-                Sfx_PlayFromObjectLimited(obj, 0x2b3, 4);
+                Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
             }
             *(f32 *)(state + 0x10) = lbl_803E7028;
             *(u8 *)(obj + 0x36) = 0;
