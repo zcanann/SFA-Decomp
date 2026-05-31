@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIM2flameburst.h"
 
+#define SFXthorntail_annoyed2 515
+
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
@@ -378,7 +380,7 @@ LAB_801b44b4:
     }
   }
   else if (cVar2 < '?') goto LAB_801b44b4;
-  FUN_80006824(uVar4,0x203);
+  FUN_80006824(uVar4,SFXthorntail_annoyed2);
 LAB_801b44d4:
   uVar4 = randomGetRange(0,0xffff);
   *(short *)(iVar6 + iVar7 + 0x28) = (short)uVar4;

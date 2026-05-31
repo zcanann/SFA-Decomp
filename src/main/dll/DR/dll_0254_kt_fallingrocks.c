@@ -1,5 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 
+#define SFXbaddie_haga_spin 696
+
 int ktfallingrocks_getExtraSize(void) { return 0x0; }
 
 int ktfallingrocks_getObjectTypeId(void) { return 0x0; }
@@ -58,7 +60,7 @@ void ktfallingrocks_update(int obj) {
         (*(void (**)(int, int, ObjPosParams *, int, int, int))((char *)*gPartfxInterface + 0x8))(
             obj, *(u16 *)(q + 0x20), &params, 0x200001, -1, 0);
     }
-    Sfx_PlayFromObject(obj, 696);
+    Sfx_PlayFromObject(obj, SFXbaddie_haga_spin);
     GameBit_Set(*(s16 *)(q + 0x24), 0);
 }
 #pragma peephole reset

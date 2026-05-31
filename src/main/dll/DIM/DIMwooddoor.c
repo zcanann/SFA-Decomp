@@ -2,6 +2,8 @@
 #include "main/dll/DIM/DIMwooddoor.h"
 #include "main/objanim.h"
 
+#define SFXfoot_run_jingle4 509
+
 typedef struct DIMWoodDoorConfig {
     u8 pad00[0x4];
     u8 setup04;
@@ -130,7 +132,7 @@ void DIMwooddoor_spawnShard(int obj, u8 variant)
             }
 
             ObjAnim_SetCurrentMove(obj, 0, lbl_803E48B8, 0);
-            Sfx_PlayFromObject(obj, 0x1fd);
+            Sfx_PlayFromObject(obj, SFXfoot_run_jingle4);
         }
     }
 }

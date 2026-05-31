@@ -1,5 +1,7 @@
 #include "main/dll/DR/dr_shared.h"
 
+#define SFXmv_bodyf2_c 133
+
 void ktrexfloorswitch_free(void) {}
 
 int ktrexfloorswitch_getExtraSize(void) { return 0x14; }
@@ -263,7 +265,7 @@ void ktrexfloorswitch_update(int obj) {
         GameBit_Set(*(s16 *)((char *)sub + 0x1a), 0);
     }
     if ((s8)anim != 0 && lbl_803DDD60 == 0) {
-        Sfx_PlayFromObject(obj, 0x85);
+        Sfx_PlayFromObject(obj, SFXmv_bodyf2_c);
     }
     lbl_803DDD60 = (s8)anim;
     if (*(int *)((char *)obj + 0xf4) == 2) {

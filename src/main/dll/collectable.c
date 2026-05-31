@@ -16,6 +16,7 @@
 #define TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR 0x10
 #define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
+#define SFXdoor_creak 563
 
 typedef struct TrickyInitFlags {
   u8 initBit7 : 1;
@@ -1363,7 +1364,7 @@ void trickyFn_80148d8c(int obj,int state)
       *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
     }
     *(u32 *)(state + 0x2e8) = *(u32 *)(state + 0x2e8) | 1;
-    Sfx_PlayFromObject(obj,0x233);
+    Sfx_PlayFromObject(obj,SFXdoor_creak);
     if (randomGetRange(0,100) > 50) {
       if ((*(u32 *)(state + 0x2e4) & 0x100000) != 0) {
         collectibleFn_80149cec(obj,state,*(u8 *)(state + 0x2f5),0,4);

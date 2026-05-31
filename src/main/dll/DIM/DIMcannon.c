@@ -2,6 +2,8 @@
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMcannon.h"
 
+#define SFXmn_eggylaugh216 114
+
 extern undefined4 FUN_80006724();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -2370,7 +2372,7 @@ extern void Sfx_StopObjectChannel(int *obj, int channel);
 int fn_801B0670(int *obj, int unused, int *p3) {
     int *state = *(int **)((char *)obj + 0xb8);
     if (*(u8 *)((char *)state + 0x1a) == 1) {
-        Sfx_PlayFromObject(obj, 114);
+        Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
     } else {
         Sfx_StopObjectChannel(obj, 64);
     }

@@ -10,6 +10,7 @@ extern void GameBit_Set(int eventId,int value);
 #define SFXPLAYER_EVENT_DEACTIVATE 2
 #define SFXPLAYER_EVENT_VARIANT 3
 #define SFXPLAYER_VARIANT_TIMER_FRAMES 0x96
+#define SFXfoot_water_run_4 462
 
 /*
  * --INFO--
@@ -106,7 +107,7 @@ void FUN_802081e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
         FUN_80017ac8(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,piVar2[1]);
       }
       piVar2[1] = 0;
-      param_1 = FUN_80006824(param_9,0x1ce);
+      param_1 = FUN_80006824(param_9,SFXfoot_water_run_4);
       piVar2 = piVar2 + 2;
     }
   }

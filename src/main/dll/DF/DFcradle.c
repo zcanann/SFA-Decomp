@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/DF/DFcradle.h"
 
+#define SFXar_boost16 392
+
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);
 extern void doRumble(f32 val);
@@ -159,7 +161,7 @@ void dimbossfire_update(int param_1)
           lightFn_8001db6c(*(float *)(pbVar5 + 4) / lbl_803E4DC0,*(int *)(pbVar5 + 0x10),0);
         }
       }
-      Sfx_PlayFromObject(param_1,0x188);
+      Sfx_PlayFromObject(param_1,SFXar_boost16);
     }
     *(float *)(pbVar5 + 4) = *(float *)(pbVar5 + 4) - timeDelta;
     if (*(float *)(pbVar5 + 4) > lbl_803E4DA0) {

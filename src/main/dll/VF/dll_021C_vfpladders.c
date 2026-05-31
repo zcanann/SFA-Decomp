@@ -1,5 +1,7 @@
 #include "main/dll/VF/vf_shared.h"
 
+#define SFXen_flybuzz_loop 84
+
 extern f32 lbl_803E60D8;
 extern f32 lbl_803E60DC;
 
@@ -38,7 +40,7 @@ void vfpladders_update(int obj) {
             *(s16 *)(state + 6) = countdown;
             if (*(s16 *)(state + 6) <= 0) {
                 *(s16 *)(state + 4) = 1;
-                Sfx_PlayFromObject(obj, 0x54);
+                Sfx_PlayFromObject(obj, SFXen_flybuzz_loop);
                 *(s16 *)(state + 6) = 0;
             }
         } else {

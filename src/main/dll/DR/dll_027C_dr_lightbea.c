@@ -1,5 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXfend_pep_snoreout 783
+
 #pragma peephole on
 #pragma scheduling on
 int drlightbea_getExtraSize(void) { return 0xc; }
@@ -107,7 +109,7 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
         }
         ((DrLightBeaFlags *)(state + 4))->bit80 = (u8)GameBit_Get(*(s16 *)(setup + 0x20));
         if (((DrLightBeaFlags *)(state + 4))->bit80) {
-            Sfx_PlayFromObject(obj, 0x30f);
+            Sfx_PlayFromObject(obj, SFXfend_pep_snoreout);
             vecA[0] = *(f32 *)(obj + 0xc);
             vecA[1] = *(f32 *)(obj + 0x10);
             vecA[2] = *(f32 *)(obj + 0x14);

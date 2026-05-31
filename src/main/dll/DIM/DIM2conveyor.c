@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIM2conveyor.h"
 
+#define SFXbaddie_eggsnatch_sniff1 705
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
@@ -153,7 +155,7 @@ uint FUN_801b376c(uint param_1,undefined4 param_2,int param_3)
       iVar2 = ObjHits_GetPriorityHit(param_1,local_18,(int *)0x0,(uint *)0x0);
       if ((iVar2 != 0) && (*(short *)(local_18[0] + 0x46) == 0x18d)) {
         *(undefined *)(iVar3 + 2) = 2;
-        FUN_80006824(param_1,0x2c1);
+        FUN_80006824(param_1,SFXbaddie_eggsnatch_sniff1);
         iVar2 = FUN_8005b398((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10));
         iVar2 = FUN_8005af70(iVar2);
         if (iVar2 != 0) {

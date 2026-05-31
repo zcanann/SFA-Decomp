@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/CFforcecontrol.h"
 
+#define SFXen_treadlpc 73
 
 #pragma peephole off
 #pragma scheduling off
@@ -752,7 +753,7 @@ void FUN_8018c928(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                      param_9,(uint)puVar5,in_r7,in_r8,in_r9,in_r10);
         *(byte *)(puVar5 + 0x2e) = *(byte *)(puVar5 + 0x2e) & 0xbf | 0x40;
         GameBit_Set(0xe97,1);
-        FUN_80006824(param_9,0x49);
+        FUN_80006824(param_9,SFXen_treadlpc);
       }
     }
   }

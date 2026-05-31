@@ -2,6 +2,8 @@
 #include "main/dll/backpack.h"
 #include "main/objanim.h"
 
+#define SFXen_treadlpc 73
+
 extern void tumbleweed_updateStateMachine(int obj);
 extern void tumbleweed_updateTargetedStateMachine(int obj);
 extern void tumbleweed_updateEffects(int obj);
@@ -237,7 +239,7 @@ void tumbleweed_updateStateMachine(int obj) {
         while (ObjMsg_Pop(obj, &popMsg, (u32*)0, (u32*)0) != 0) {
             if (popMsg == 0x7000b) {
                 gameBitIncrement(0x194);
-                Sfx_PlayFromObject(obj, 0x49);
+    Sfx_PlayFromObject(obj, SFXen_treadlpc);
                 *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
             }
         }
