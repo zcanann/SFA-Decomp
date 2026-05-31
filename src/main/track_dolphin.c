@@ -6057,6 +6057,155 @@ void fn_80061954(int *obj, void *buf48, void *bufA8)
     param_3[0x1c] = -(param_3[0x1b] * param_2[2] + param_3[0x19] * param_2[0] + param_3[0x1a] * param_2[1]);
 }
 
+extern void *Obj_GetPlayerObject(void);
+extern void fn_80077604(int hdr, void *col, void *mtx);
+extern void fn_8007788C(int hdr, void *col, void *mtx);
+extern void fn_80077AD8(int hdr, void *col, void *mtx, f32 f);
+extern void fn_80077EF8(int hdr, void *col, void *mtx, f32 f);
+extern void memcpy(void *dst, void *src, int n);
+extern f32 lbl_803DEC78[2];
+extern f32 lbl_803DEC80[2];
+
+void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *p7, void *buf48, f32 f)
+{
+    u8 col[4];
+    u8 save_c[12];
+    u8 save_18[12];
+    f32 outMtx[16];
+    f32 mtx[16];
+    f32 f31, f30;
+    s16 s31, s30, s29;
+    u32 handle;
+    int hdr;
+    void *viewMtx;
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    col[0] = 0;
+    col[1] = 0;
+    col[2] = 0;
+    col[3] = *(u8 *)(*(int *)((char *)blockData + 0xc) + 0x64);
+    f31 = *(f32 *)((char *)obj + 8);
+    s31 = *(s16 *)((char *)obj + 0);
+    s30 = *(s16 *)((char *)obj + 4);
+    s29 = *(s16 *)((char *)obj + 2);
+    handle = *(u32 *)((char *)blockData + 0x10);
+    if (handle == 0 || handle != 0xFFFFFFFF)
+        *(f32 *)((char *)obj + 8) = lbl_803DEC78[0];
+    else
+        *(f32 *)((char *)obj + 8) = lbl_803DEC68;
+    *(s16 *)((char *)obj + 0) = 0;
+    *(s16 *)((char *)obj + 2) = 0;
+    if ((*(u32 *)((char *)blockData + 0x30) & 0x2000) == 0)
+        *(s16 *)((char *)obj + 4) = 0;
+    if (*(u32 *)((char *)blockData + 0x30) & 0x20) {
+        memcpy(save_c, (char *)obj + 0xc, 0xc);
+        memcpy(save_18, (char *)obj + 0x18, 0xc);
+        memcpy((char *)obj + 0x18, (char *)blockData + 0x20, 0xc);
+        memcpy((char *)obj + 0xc, (char *)blockData + 0x20, 0xc);
+    }
+    Obj_BuildWorldTransformMatrix((int)obj, mtx, 0);
+    viewMtx = Camera_GetViewMatrix();
+    PSMTXConcat(viewMtx, mtx, outMtx);
+    GXLoadPosMtxImm(outMtx, 0);
+    if (*(u8 *)(*(int *)((char *)obj + 0x50) + 0x5f) & 0x4) {
+        int c = *(int *)col;
+        fn_80077604(*(int *)((char *)blockData + 0xc), &c, mtx);
+    } else {
+        if (obj == Obj_GetPlayerObject())
+            f30 = lbl_803DEC78[1];
+        else
+            f30 = *(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8);
+        handle = *(u32 *)((char *)blockData + 0x10);
+        if (handle == 0xFFFFFFFF) {
+            textureFn_8006c5c4();
+            hdr = *(int *)((char *)blockData + 0xc);
+            if (*(u32 *)(hdr + 0x60) != handle) {
+                if (*(u8 *)(hdr + 0x65) == 0xff) {
+                    int c = *(int *)col;
+                    fn_80077AD8(hdr, &c, mtx, f30);
+                } else {
+                    int c = *(int *)col;
+                    fn_80077EF8(hdr, &c, mtx, f30);
+                }
+                goto afterDraw;
+            }
+        }
+        {
+            int c = *(int *)col;
+            fn_8007788C(*(int *)((char *)blockData + 0xc), &c, mtx);
+        }
+    afterDraw:;
+    }
+    GXSetCullMode(1);
+    GXSetCurrentMtx(0);
+    *(f32 *)((char *)obj + 8) = f31;
+    *(s16 *)((char *)obj + 0) = s31;
+    *(s16 *)((char *)obj + 2) = s29;
+    *(s16 *)((char *)obj + 4) = s30;
+    if (*(int *)((char *)blockData + 0x10) == 0) {
+        f32 *cv;
+        int off;
+        int i;
+        int *vbuf = (int *)mmAlloc(slot * 0x12 + 8, 0x18, 0);
+        *(int *)((char *)blockData + 0x10) = (int)vbuf;
+        if (vbuf == NULL) return;
+        vbuf[0] = (int)vbuf + 8;
+        vbuf[1] = slot * 3;
+        cv = (f32 *)cache;
+        off = 0;
+        for (i = 0; i < *(int *)(*(int *)((char *)blockData + 0x10) + 4); i++) {
+            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 0) = (s16)(int)(lbl_803DEC80[0] * cv[0]);
+            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 2) = (s16)(int)(lbl_803DEC80[0] * cv[1]);
+            *(s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off + 4) = (s16)(int)(lbl_803DEC80[0] * cv[2]);
+            cv += 3;
+            off += 6;
+        }
+    }
+    handle = *(u32 *)((char *)blockData + 0x10);
+    if (handle != 0xFFFFFFFF) {
+        int k;
+        int off = 0;
+        GXBegin(0x90, 0, *(int *)(*(int *)((char *)blockData + 0x10) + 4) & 0xffff);
+        for (k = 0; k < *(int *)(*(int *)((char *)blockData + 0x10) + 4); k++) {
+            s16 *ep = (s16 *)(*(int *)(*(int *)((char *)blockData + 0x10)) + off);
+            GXWGFifo.s16 = ep[0];
+            GXWGFifo.s16 = ep[1];
+            GXWGFifo.s16 = ep[2];
+            off += 6;
+        }
+    } else {
+        int i;
+        int vi = 0;
+        int off = 0;
+        GXBegin(0x90, 2, (slot * 3) & 0xffff);
+        for (i = 0; i < slot; i++) {
+            f32 *v0 = (f32 *)((char *)cache + off);
+            GXWGFifo.f32 = v0[0];
+            GXWGFifo.f32 = v0[1];
+            GXWGFifo.f32 = v0[2];
+            {
+                f32 *v1 = (f32 *)((char *)cache + (vi + 1) * 0xc);
+                GXWGFifo.f32 = v1[0];
+                GXWGFifo.f32 = v1[1];
+                GXWGFifo.f32 = v1[2];
+            }
+            {
+                f32 *v2 = (f32 *)((char *)cache + (vi + 2) * 0xc);
+                GXWGFifo.f32 = v2[0];
+                GXWGFifo.f32 = v2[1];
+                GXWGFifo.f32 = v2[2];
+            }
+            vi += 3;
+            off += 0x24;
+        }
+    }
+    if (*(u32 *)((char *)blockData + 0x30) & 0x20) {
+        memcpy((char *)obj + 0xc, save_c, 0xc);
+        memcpy((char *)obj + 0x18, save_18, 0xc);
+    }
+}
+
 void gxErrorFn_80060b40(void)
 {
     int iVar3 = 0;
