@@ -4792,8 +4792,21 @@ extern float sqrtf(float x);
 extern u8 lbl_803DD440;
 extern u8 lbl_803DD450;
 extern f64 lbl_803E0598;
+extern f32 lbl_803E0570;
+extern f32 lbl_803E0588;
+extern f32 lbl_803E05B4;
 extern f32 lbl_803E05C0;
+extern f32 lbl_803E05C4;
+extern f32 lbl_803DD444;
+extern f32 lbl_803DD448;
+extern void *gPathControlInterface;
 extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimArg, void *events);
+extern void fn_800D915C(int pos, int *obj, void *fnTable, f32 fval);
+extern void fn_800D8414(char *pos, char *state);
+extern void fn_800D82A8(char *pos, char *state, f32 dt);
+extern void setMatrixFromObjectPos(f32 *matrix, void *objpos);
+extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ);
+extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 
 void playerRunStateMachine(char *pos, char *state, float dt, int stateFns) {
     int changed;
@@ -4893,6 +4906,147 @@ void playerRunStateMachine(char *pos, char *state, float dt, int stateFns) {
         *(s16 *)(pos + 2) = *(s16 *)(pos + 2) - (s16)decay;
         decay = (s32)((f32)((f64)*(s16 *)(pos + 4) - lbl_803E0598) * dt * lbl_803E05C0);
         *(s16 *)(pos + 4) = *(s16 *)(pos + 4) - (s16)decay;
+    }
+}
+
+void player_update(char *pos, char *state, float dt, float pathDt, int stateFns, int auxStateFns) {
+    struct {
+        s16 rotX;
+        s16 rotY;
+        s16 rotZ;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } localTransform;
+    f32 matrix[16];
+    int keepPathControls;
+    int attachment;
+    int mapBlock;
+    int overrideObj;
+    f32 dx;
+    f32 dz;
+    f32 dist;
+    f32 limit;
+
+    keepPathControls = 1;
+    lbl_803DD44E = 0;
+
+    attachment = *(int *)(state + 0x2d0);
+    if (attachment != 0) {
+        dx = *(f32 *)(attachment + 0xc) - *(f32 *)(pos + 0xc);
+        dz = *(f32 *)(attachment + 0x14) - *(f32 *)(pos + 0x14);
+        *(f32 *)(state + 0x2c0) = sqrtf(dx * dx + dz * dz);
+    } else {
+        *(f32 *)(state + 0x2c0) = lbl_803E0570;
+    }
+
+    if ((*(u32 *)state & 0x8000) != 0 && *(int *)(pos + 0xc0) == 0) {
+        fn_800D915C((int)pos, (int *)state, (void *)auxStateFns, dt);
+        *(s16 *)(state + 0x32e) = (s16)((f32)*(s16 *)(state + 0x32e) + dt);
+        if ((f32)*(s16 *)(state + 0x32e) > lbl_803E05C4) {
+            *(s16 *)(state + 0x32e) = 10000;
+        }
+    }
+
+    *(u32 *)state |= 0x8000;
+
+    if (*(int *)(state + 0x27c) != 0) {
+        localTransform.rotX = *(s16 *)(pos + 0);
+        localTransform.rotY = *(s16 *)(pos + 2);
+        localTransform.rotZ = *(s16 *)(pos + 4);
+        localTransform.scale = lbl_803E0588;
+        localTransform.x = lbl_803E0570;
+        localTransform.y = lbl_803E0570;
+        localTransform.z = lbl_803E0570;
+        setMatrixFromObjectPos(matrix, &localTransform);
+
+        attachment = *(int *)(state + 0x27c);
+        Matrix_TransformPoint(matrix, lbl_803E0570, lbl_803E0570, lbl_803E0588,
+                              (f32 *)(attachment + 0x4), (f32 *)(attachment + 0x8), (f32 *)(attachment + 0xc));
+        attachment = *(int *)(state + 0x27c);
+        Matrix_TransformPoint(matrix, lbl_803E0570, lbl_803E0588, lbl_803E0570,
+                              (f32 *)(attachment + 0x10), (f32 *)(attachment + 0x14), (f32 *)(attachment + 0x18));
+        attachment = *(int *)(state + 0x27c);
+        Matrix_TransformPoint(matrix, lbl_803E0588, lbl_803E0570, lbl_803E0570,
+                              (f32 *)(attachment + 0x1c), (f32 *)(attachment + 0x20), (f32 *)(attachment + 0x24));
+    }
+
+    if ((*(u32 *)state & 0x1000000) == 0) {
+        fn_800D8414(pos, state);
+    }
+
+    *(u32 *)state &= 0xffdfffff;
+    *(u8 *)(state + 0x34d) = 0;
+    lbl_803DD434 = 0;
+    *(u32 *)state &= 0xfff7ffff;
+    *(u8 *)(state + 0x34c) = 0;
+    lbl_803DD44F = 0;
+
+    playerRunStateMachine(pos, state, dt, stateFns);
+
+    *(s16 *)(state + 0x338) = (s16)((f32)*(s16 *)(state + 0x338) + dt);
+    if ((f32)*(s16 *)(state + 0x338) > lbl_803E05C4) {
+        *(s16 *)(state + 0x338) = 10000;
+    }
+
+    lbl_803DD448 = *(f32 *)(pos + 0xc);
+    lbl_803DD444 = *(f32 *)(pos + 0x14);
+    mapBlock = objPosToMapBlockIdx(*(f32 *)(pos + 0x18), *(f32 *)(pos + 0x1c), *(f32 *)(pos + 0x20));
+    if (mapBlock == -1 && *(int *)(pos + 0x30) == 0) {
+        *(u32 *)state |= 0x200000;
+        keepPathControls = 0;
+    }
+
+    if ((*(u32 *)state & 0x1000000) == 0) {
+        fn_800D82A8(pos, state, dt);
+    }
+
+    overrideObj = lbl_803DD430;
+    if (overrideObj != 0) {
+        dx = *(f32 *)(overrideObj + 0xc) - lbl_803DD448;
+        dz = *(f32 *)(overrideObj + 0x14) - lbl_803DD444;
+        dist = sqrtf(dx * dx + dz * dz);
+        if (dist < lbl_803E05BC) {
+            limit = sqrtf((*(f32 *)(pos + 0xc) - lbl_803DD448) * (*(f32 *)(pos + 0xc) - lbl_803DD448) +
+                          (*(f32 *)(pos + 0x14) - lbl_803DD444) * (*(f32 *)(pos + 0x14) - lbl_803DD444));
+            if (limit < lbl_803E05B4) {
+                limit = lbl_803E05B4;
+            }
+
+            if (dist < lbl_803E0588) {
+                *(f32 *)(pos + 0xc) = *(f32 *)(overrideObj + 0xc);
+                *(f32 *)(pos + 0x14) = *(f32 *)(overrideObj + 0x14);
+            } else {
+                if (limit > dist) {
+                    limit = dist;
+                }
+                *(f32 *)(pos + 0xc) = dx / dist * limit + lbl_803DD448;
+                *(f32 *)(pos + 0x14) = dz / dist * limit + lbl_803DD444;
+            }
+        }
+    }
+
+    lbl_803DD430 = 0;
+
+    if ((*(u32 *)state & 0x1000000) == 0 && (*(u32 *)state & 0x400000) == 0 && keepPathControls != 0) {
+        (*(void (**)(char *, char *, f32))(*(int *)gPathControlInterface + 0x10))(pos, state + 0x4, dt);
+        (*(void (**)(char *, char *))(*(int *)gPathControlInterface + 0x14))(pos, state + 0x4);
+        (*(void (**)(char *, char *, f32))(*(int *)gPathControlInterface + 0x18))(pos, state + 0x4, pathDt);
+
+        if (((s32)*(s8 *)(state + 0x264) & 0x10) == 0) {
+            *(u32 *)state &= 0xfffbffff;
+        } else {
+            *(u32 *)state |= 0x40000;
+        }
+
+        if ((*(u32 *)state & 0x800000) != 0) {
+            if (((s32)*(s8 *)(state + 0x264) & 2) != 0 || *(u8 *)(state + 0x262) != 0) {
+                *(f32 *)(pos + 0x24) = (*(f32 *)(pos + 0xc) - *(f32 *)(*(int *)(pos + 0x54) + 0x10)) / dt;
+                *(f32 *)(pos + 0x2c) = (*(f32 *)(pos + 0x14) - *(f32 *)(*(int *)(pos + 0x54) + 0x18)) / dt;
+            }
+            *(u32 *)state &= 0xff7fffff;
+        }
     }
 }
 
