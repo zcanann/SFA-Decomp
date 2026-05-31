@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/VF/VFlevcontrol.h"
 
+#define SFXtr_jbike_whine2 0x137
+
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
@@ -113,7 +115,7 @@ void FUN_801de430(undefined8 param_1,double param_2,double param_3,undefined8 pa
             }
             if ((int)psVar11[0x12] != (uint)bVar9) {
               psVar11[0x12] = (ushort)bVar9;
-              FUN_80006824((uint)puVar5,0x137);
+              FUN_80006824((uint)puVar5,SFXtr_jbike_whine2);
             }
             bVar3 = false;
           }

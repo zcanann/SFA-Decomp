@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/gfxEmit.h"
 
+#define SFXwp_whiz3_c 0x169
+
 extern undefined4 FUN_80006824();
 extern uint FUN_80017690();
 extern undefined8 FUN_80017698();
@@ -186,7 +188,7 @@ void FUN_801726ac(short *param_1)
             pfVar4[0xc] = (float)(local_18 - DOUBLE_803e40e0);
             uVar3 = randomGetRange(0xb4,0xf0);
             *(short *)(pfVar4 + 0xd) = (short)uVar3;
-            FUN_80006824((uint)param_1,0x169);
+            FUN_80006824((uint)param_1,SFXwp_whiz3_c);
           }
           param_1[1] = (short)(int)pfVar4[0xc];
           pfVar4[0xc] = pfVar4[0xc] * lbl_803E4110;

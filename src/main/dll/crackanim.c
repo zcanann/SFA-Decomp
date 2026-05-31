@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/crackanim.h"
 
+#define SFXen_waterblock_stop 88
+
 extern undefined8 FUN_80006824();
 extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_80017a78();
@@ -102,7 +104,7 @@ void appleontree_update(int param_1)
       if (local_78 == 0x7000b) {
         playerAddHealth(Obj_GetPlayerObject(), (int)*(u16 *)(iVar8 + 0x38));
         itemPickupDoParticleFx((int)puVar2, lbl_803E4460, 0xff, 0x28);
-        Sfx_PlayFromObject((int)puVar2, 0x58);
+        Sfx_PlayFromObject((int)puVar2, SFXen_waterblock_stop);
         iVar3 = *(int *)(puVar2 + 0x5c);
         if ((puVar2[3] & 0x2000) == 0) {
           if (*(int *)(puVar2 + 0x2a) != 0) {

@@ -4,6 +4,7 @@
 #include "string.h"
 
 #define SFXand_missilelaunch 812
+#define SFXand_suck_lp 813
 
 extern undefined4 fn_8001CB3C(int param_1);
 extern undefined4 GameBit_Get(int eventId);
@@ -322,7 +323,7 @@ sound_update:
         if (flags->bit5 == 0) {
             Sfx_PlayFromObjectLimited(obj,SFXand_missilelaunch,3);
         }
-        Sfx_KeepAliveLoopedObjectSoundLimited(obj,0x32d,2);
+        Sfx_KeepAliveLoopedObjectSoundLimited(obj,SFXand_suck_lp,2);
     }
     flags->bit5 = flags->bit6;
 

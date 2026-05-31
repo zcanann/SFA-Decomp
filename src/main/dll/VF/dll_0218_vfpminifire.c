@@ -12,6 +12,7 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 #define VFPMINIFIRE_BURST_EFFECT 0x38e
 #define VFPMINIFIRE_EFFECT_FLAGS 0x80001
 #define VFPMINIFIRE_BURST_COUNT 10
+#define SFXqu_longsob2 0x103
 
 typedef struct VfpMinifireState {
     f32 baseY;
@@ -153,7 +154,7 @@ void vfpminifire_init(int *obj, u8 *init) {
     *(f32 *)((char *)obj + 0x10) = lbl_803E60A4 + *(f32 *)((char *)init + 0xc);
     *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * lbl_803E609C;
     (*(void (*)(int *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x38c, 0, 2, -1, 0);
-    Sfx_PlayFromObject((int)obj, 0x103);
+    Sfx_PlayFromObject((int)obj, SFXqu_longsob2);
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
 }
 #pragma scheduling reset

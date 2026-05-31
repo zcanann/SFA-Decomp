@@ -6,6 +6,7 @@
 #define SFXfox_healthgasp2 0x25d
 #define SFXfox_healthgasp3 0x25e
 #define SFXfox_healthgasp4 0x25f
+#define SFXstaff_proj_putaway 565
 
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
@@ -280,7 +281,7 @@ void fn_80154328(int obj, int p)
           0, 3, stk_tx, *(f32 *)(p + 0x32c), stk_tz, lbl_803E2990);
     }
     if ((f32)sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c)) > lbl_803E29A4) {
-      Sfx_PlayAtPositionFromObject(obj, 565, stk_pos[0], stk_pos[1], stk_pos[2]);
+      Sfx_PlayAtPositionFromObject(obj, SFXstaff_proj_putaway, stk_pos[0], stk_pos[1], stk_pos[2]);
     }
   }
 }

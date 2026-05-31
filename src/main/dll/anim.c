@@ -11,6 +11,8 @@
 #define SFXsp_lfoot_taunt6 0x116
 #define SFXmn_eggylaugh216 0x72
 #define SFXmn_sml_trex_snap1 0x80
+#define SFXen_treadlpc 0x49
+#define SFXswapstone_move_long 0x2df
 
 #pragma peephole off
 #pragma scheduling off
@@ -471,7 +473,7 @@ void dbegg_update(void)
               fVar1 = -fVar1;
             }
             if (lbl_803E6EC8 < fVar1) {
-              FUN_80006824((uint)psVar3,0x2df);
+              FUN_80006824((uint)psVar3,SFXswapstone_move_long);
             }
           }
           dVar14 = (double)(*(float *)(psVar3 + 0x14) * lbl_803DC074);
@@ -880,7 +882,7 @@ void drakorenergy_update(undefined8 param_1,double param_2,double param_3,undefi
     else {
       FUN_80294d60(dVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,DAT_803dcdd8)
       ;
-      FUN_80006824((uint)param_9,0x49);
+      FUN_80006824((uint)param_9,SFXen_treadlpc);
       *(undefined *)(pfVar6 + 2) = 4;
     }
   }
