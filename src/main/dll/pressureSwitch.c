@@ -613,7 +613,16 @@ extern f64 lbl_803E2640; /* int->float magic */
 extern f32 lbl_803E266C;
 extern f32 lbl_803E2670;
 extern f32 lbl_803E2674;
+extern f32 lbl_803E2678;
+extern f32 lbl_803E267C;
+extern f32 lbl_803E2680;
+extern f32 lbl_803E2684;
+extern f32 lbl_803E2688;
+extern f32 lbl_803E268C;
+extern f32 lbl_803E2690;
+extern f32 lbl_803E2694;
 extern f32 lbl_803E2698;
+extern f32 lbl_803E269C;
 extern f32 lbl_803E26A0;
 extern f32 lbl_803E26A4;
 extern f64 lbl_803E26A8; /* int->float magic */
@@ -631,11 +640,19 @@ extern void *memset(void *dst, int val, u32 n);
 extern int *gRomCurveInterface;
 extern int *gPartfxInterface;
 extern int lbl_803DBC70;
+extern int lbl_803DDA60;
+extern f32 timeDelta;
 extern int Obj_GetPlayerObject(void);
+extern int curveFn_80010320(int curve, f32 t);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern f32 sqrtf(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern void Sfx_SetObjectChannelVolume(double volumeScale, int obj, int channel, int volume);
-extern void fn_8014EE8C(int obj, int *state);
+
+typedef union PressureSwitchIntToDouble {
+    u64 bits;
+    f64 value;
+} PressureSwitchIntToDouble;
 
 #pragma scheduling off
 #pragma peephole off
@@ -741,6 +758,90 @@ int wispbaddie_getObjectTypeId(void) { return 0x9; }
 void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8014EE8C(int obj, int *state)
+{
+    int curve;
+    int done;
+    int player;
+    f32 step;
+    f32 wave;
+    PressureSwitchIntToDouble angleAsDouble;
+
+    curve = state[0];
+    done = curveFn_80010320(curve, *(f32 *)(state + 2));
+    if (((done != 0) || (*(int *)(curve + 0x10) != lbl_803DDA60)) &&
+        ((*(u8(**)(int))(*gRomCurveInterface + 0x90))(curve) != 0) &&
+        ((*(u8(**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
+             state[0], obj, lbl_803E2678, &lbl_803DBC78, -1) != 0)) {
+        *(u8 *)(state + 7) &= 0xfe;
+    }
+    lbl_803DDA60 = *(int *)(curve + 0x10);
+    step = lbl_803E267C;
+    if ((*(u8 *)(state + 7) & 2) == 0) {
+        *(f32 *)(obj + 0x24) = step * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc)) +
+                               *(f32 *)(obj + 0x24);
+        *(f32 *)(obj + 0x28) = step * (*(f32 *)(curve + 0x6c) - *(f32 *)(obj + 0x10)) +
+                               *(f32 *)(obj + 0x28);
+        *(f32 *)(obj + 0x2c) = step * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14)) +
+                               *(f32 *)(obj + 0x2c);
+    } else {
+        player = state[1];
+        *(f32 *)(obj + 0x24) = step * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc)) +
+                               *(f32 *)(obj + 0x24);
+        *(f32 *)(obj + 0x28) =
+            step * ((lbl_803E2680 + *(f32 *)(player + 0x10)) - *(f32 *)(obj + 0x10)) +
+            *(f32 *)(obj + 0x28);
+        *(f32 *)(obj + 0x2c) = step * (*(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) +
+                               *(f32 *)(obj + 0x2c);
+    }
+
+    step = lbl_803E2684;
+    *(f32 *)(obj + 0x24) *= step;
+    *(f32 *)(obj + 0x28) *= step;
+    *(f32 *)(obj + 0x2c) *= step;
+
+    if (lbl_803E2688 < *(f32 *)(obj + 0x24)) {
+        *(f32 *)(obj + 0x24) = lbl_803E2688;
+    }
+    if (lbl_803E2688 < *(f32 *)(obj + 0x28)) {
+        *(f32 *)(obj + 0x28) = lbl_803E2688;
+    }
+    if (lbl_803E2688 < *(f32 *)(obj + 0x2c)) {
+        *(f32 *)(obj + 0x2c) = lbl_803E2688;
+    }
+    if (*(f32 *)(obj + 0x24) < lbl_803E268C) {
+        *(f32 *)(obj + 0x24) = lbl_803E268C;
+    }
+    if (*(f32 *)(obj + 0x28) < lbl_803E268C) {
+        *(f32 *)(obj + 0x28) = lbl_803E268C;
+    }
+    if (*(f32 *)(obj + 0x2c) < lbl_803E268C) {
+        *(f32 *)(obj + 0x2c) = lbl_803E268C;
+    }
+
+    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
+            *(f32 *)(obj + 0x2c) * timeDelta);
+
+    *(s16 *)((u8 *)state + 0x1e) =
+        *(s16 *)((u8 *)state + 0x1e) + (s16)(int)(lbl_803E2690 * timeDelta);
+    *(s16 *)(state + 8) = *(s16 *)(state + 8) + (s16)(int)(lbl_803E2694 * timeDelta);
+
+    angleAsDouble.bits =
+        CONCAT44(0x43300000, (s32)*(s16 *)((u8 *)state + 0x1e) ^ 0x80000000);
+    wave = fn_80293E80((lbl_803E26A0 * (f32)(angleAsDouble.value - lbl_803E26A8)) /
+                       lbl_803E26A4);
+    *(s16 *)obj = *(s16 *)obj + (s16)(int)(lbl_803E2698 * (lbl_803E269C * wave));
+
+    angleAsDouble.bits = CONCAT44(0x43300000, (s32)*(s16 *)(state + 8) ^ 0x80000000);
+    wave = fn_80293E80((lbl_803E26A0 * (f32)(angleAsDouble.value - lbl_803E26A8)) /
+                       lbl_803E26A4);
+    *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + (s16)(int)(lbl_803E2698 * (lbl_803E269C * wave));
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 void swarmbaddie_update(int obj)
 {
