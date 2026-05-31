@@ -6443,6 +6443,201 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     }
 }
 
+typedef struct { u8 r, g, b, a; } GlowGXColor;
+extern void Camera_RebuildProjectionMatrix(void);
+extern void textureSetupFn_800799c0(void);
+extern void textRenderSetupFn_80079804(void);
+extern void gxTextureFn_800794e0(void);
+extern void GXSetFog(int type, GlowGXColor col, f32 a, f32 b, f32 c, f32 d);
+extern void gxBlendFn_800789ac(void);
+extern u8 skyFn_8008919c(int);
+extern void fn_800897D4(int a, f32 *x, f32 *y, f32 *z);
+extern f32 PSVECDotProduct(f32 *a, f32 *b);
+extern void skyBuildSunModelMatrix(f32 *out);
+extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 *ox, f32 *oy, f32 *oz);
+extern void Camera_NdcToScreen(f32 x, f32 y, f32 z, int *ox, int *oy, int *oz);
+extern int maybeReadDepthBuffer(int x, int y, void *p);
+extern int pauseMenuGetState(void);
+extern void fn_8008912C(void);
+extern void getAmbientColor(int a, u8 *r, u8 *g, u8 *b);
+extern void _gxSetTevColor2(int r, int g, int b, int a);
+extern void GXLoadPosMtxImm(void *mtx, int id);
+extern int lbl_803E8440;
+extern int renderFlags;
+extern u8 colorScale;
+extern f32 lbl_803DCE18;
+extern int lbl_8030E634[];
+extern f32 lbl_803DEBD4, lbl_803DEBD8, lbl_803DEBDC;
+extern f32 displayOffsetH_803DEBFC, flushFlag_803DEBE4;
+extern f32 Initialized_803DEC30, EnabledBits_803DEC34, ResettingBits_803DEC38;
+extern f32 RecalibrateBits_803DEC3C, WaitingBits_803DEC40;
+
+void renderGlows(void)
+{
+    GlowGXColor fogCol;
+    int sx, sy, sz;
+    f32 px, py, pz;
+    f32 sunMtx[20];
+    f32 dir[3];
+    f32 cam[3];
+    int alpha = 0xff;
+    u8 sky;
+    f32 sunDot;
+
+    fogCol = *(GlowGXColor *)&lbl_803E8440;
+    GXSetCullMode(0);
+    Camera_RebuildProjectionMatrix();
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xd, 1);
+    textureSetupFn_800799c0();
+    gxTextureFn_800794e0();
+    textRenderSetupFn_80079804();
+    GXSetFog(0, fogCol, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC, lbl_803DEBCC);
+    gxBlendFn_800789ac();
+    lbl_803DCE10 = 0;
+    lbl_803DCE14 = 0;
+    sky = skyFn_8008919c(2);
+    if (sky != 0 && (renderFlags & 0x40)) {
+        void *viewMtx = Camera_GetViewMatrix();
+        fn_800897D4(0, &dir[0], &dir[1], &dir[2]);
+        cam[0] = *(f32 *)((char *)viewMtx + 0x20);
+        cam[1] = *(f32 *)((char *)viewMtx + 0x24);
+        cam[2] = *(f32 *)((char *)viewMtx + 0x28);
+        sunDot = PSVECDotProduct(dir, cam);
+        if (sunDot > lbl_803DEBCC) {
+            int occ;
+            int i;
+            f32 fade;
+            skyBuildSunModelMatrix(sunMtx);
+            Camera_ProjectWorldPointWithOffset(sunMtx[3], sunMtx[7], sunMtx[11], lbl_803DEBD4, &px, &py, &pz);
+            Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
+            lbl_803DCE08 = sx - 0x10;
+            lbl_803DCE10 = 0x20;
+            lbl_803DCE0C = sy - 0x10;
+            lbl_803DCE14 = 0x20;
+            if ((int)lbl_803DCE08 < 0)
+                lbl_803DCE08 = 0;
+            else if ((int)lbl_803DCE08 > 0x280)
+                lbl_803DCE08 = 0x280;
+            if ((int)lbl_803DCE0C < 0)
+                lbl_803DCE0C = 0;
+            else if ((int)lbl_803DCE0C > 0x1e0)
+                lbl_803DCE0C = 0x1e0;
+            if ((int)lbl_803DCE08 + 0x20 > 0x280)
+                lbl_803DCE10 = 0x280 - lbl_803DCE08;
+            if ((int)lbl_803DCE0C + 0x20 > 0x1e0)
+                lbl_803DCE14 = 0x1e0 - lbl_803DCE0C;
+            occ = 0;
+            for (i = 0; i < 5; i++) {
+                int d = maybeReadDepthBuffer(sx + lbl_8030E634[i * 2], sy + lbl_8030E634[i * 2 + 1], (void *)i);
+                if (sz <= d && pauseMenuGetState() == 0)
+                    occ++;
+            }
+            fade = (f32)(u32)occ / flushFlag_803DEBE4 - lbl_803DCE18;
+            if (fade > Initialized_803DEC30)
+                fade = Initialized_803DEC30;
+            else if (fade < EnabledBits_803DEC34)
+                fade = EnabledBits_803DEC34;
+            lbl_803DCE18 = lbl_803DCE18 + fade;
+            sunDot = sunDot * lbl_803DCE18;
+            if (sunDot > lbl_803DEBCC) {
+                u8 ar, ag, ab;
+                PSMTXConcat(viewMtx, sunMtx, sunMtx);
+                GXLoadPosMtxImm(sunMtx, 0);
+                GXSetCurrentMtx(0);
+                fn_8008912C();
+                selectTexture(0, 0);
+                getAmbientColor(0, &ar, &ag, &ab);
+                sunDot = (f32)(u32)sky * sunDot;
+                _gxSetTevColor2(ar, ag, ab, (int)(displayOffsetH_803DEBFC * sunDot));
+                alpha = (int)(lbl_803DEBD8 - ResettingBits_803DEC38 * sunDot);
+                sunDot = RecalibrateBits_803DEC3C * sunDot * WaitingBits_803DEC40;
+                GXBegin(0x80, 2, 4);
+                GXWGFifo.f32 = -sunDot;
+                GXWGFifo.f32 = -sunDot;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = sunDot;
+                GXWGFifo.f32 = -sunDot;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = sunDot;
+                GXWGFifo.f32 = sunDot;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                GXWGFifo.f32 = -sunDot;
+                GXWGFifo.f32 = sunDot;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+            }
+        }
+    }
+    colorScale = (u8)alpha;
+    if (lbl_803DCE06 != 0) {
+        int i;
+        for (i = 0; i < lbl_803DCE06; i++) {
+            int *e = (int *)lbl_80382038[i];
+            int d;
+            Camera_ProjectWorldPointWithOffset(*(f32 *)((char *)e + 0x10) - playerMapOffsetX,
+                                               *(f32 *)((char *)e + 0x14),
+                                               *(f32 *)((char *)e + 0x18) - playerMapOffsetZ,
+                                               *(f32 *)((char *)e + 0x2f4), &px, &py, &pz);
+            Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
+            d = maybeReadDepthBuffer(sx, sy, e);
+            if (sz <= d && pauseMenuGetState() == 0)
+                *(s8 *)((char *)e + 0x2fa) = 0x10;
+            else
+                *(s8 *)((char *)e + 0x2fa) = -0x10;
+        }
+        GXSetCurrentMtx(0x3c);
+        gxTextureFn_800794e0();
+        gxBlendFn_800789ac();
+        for (i = 0; i < lbl_803DCE06; i++) {
+            int *e = (int *)lbl_80382038[i];
+            if (*(u8 *)((char *)e + 0x2f9) != 0) {
+                f32 f = *(f32 *)((char *)e + 0x138);
+                f32 cx, cy, cz, hs;
+                selectTexture(*(int *)((char *)e + 0x2e8), 0);
+                _gxSetTevColor2((int)((f32)(u32)*(u8 *)((char *)e + 0x2ec) * f),
+                                (int)((f32)(u32)*(u8 *)((char *)e + 0x2ed) * f),
+                                (int)((f32)(u32)*(u8 *)((char *)e + 0x2ee) * f),
+                                (*(u8 *)((char *)e + 0x2ef) * *(u8 *)((char *)e + 0x2f9)) >> 8 & 0xff);
+                GXBegin(0x80, 2, 4);
+                cx = *(f32 *)((char *)e + 0x1c);
+                cy = *(f32 *)((char *)e + 0x20);
+                cz = *(f32 *)((char *)e + 0x24);
+                hs = *(f32 *)((char *)e + 0x2f0);
+                GXWGFifo.f32 = cx - hs;
+                GXWGFifo.f32 = cy - hs;
+                GXWGFifo.f32 = cz;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = cx + hs;
+                GXWGFifo.f32 = cy - hs;
+                GXWGFifo.f32 = cz;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = cx + hs;
+                GXWGFifo.f32 = cy + hs;
+                GXWGFifo.f32 = cz;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+                GXWGFifo.f32 = cx - hs;
+                GXWGFifo.f32 = cy + hs;
+                GXWGFifo.f32 = cz;
+                GXWGFifo.f32 = lbl_803DEBCC;
+                GXWGFifo.f32 = lbl_803DEBDC;
+            }
+        }
+        GXSetCurrentMtx(0);
+    }
+}
+
 void gxErrorFn_80060b40(void)
 {
     int iVar3 = 0;
