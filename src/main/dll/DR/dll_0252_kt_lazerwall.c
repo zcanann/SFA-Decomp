@@ -1,5 +1,9 @@
 #include "main/dll/DR/dr_shared.h"
 
+#define SFXmn_sml_trex_snap3 130
+#define SFXmv_bflconc1 131
+#define SFXmv_blkhit_c 132
+
 int ktlazerwall_getExtraSize(void) { return 0x14; }
 
 int ktlazerwall_getObjectTypeId(void) { return 0x0; }
@@ -74,7 +78,7 @@ void ktlazerwall_update(int obj) {
         mode = 1;
         (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
         if ((runtime[1] & 4) == 0) {
-            Sfx_PlayFromObject(obj, 130);
+            Sfx_PlayFromObject(obj, SFXmn_sml_trex_snap3);
         }
     }
     if (runtime[0] & 8) {
@@ -84,12 +88,12 @@ void ktlazerwall_update(int obj) {
         (*(void (**)(int, int, int, int, int, int *))((char *)*gPartfxInterface + 8))(obj, 1164, 0, 2, -1, &mode);
     }
     if ((runtime[0] & 8) == 0 && (runtime[1] & 8) != 0) {
-        Sfx_PlayFromObject(obj, 132);
+        Sfx_PlayFromObject(obj, SFXmv_blkhit_c);
     }
     if (*(f32 *)(runtime + 4) > lbl_803E6898) {
         *(f32 *)(runtime + 4) -= timeDelta;
         if (*(f32 *)(runtime + 4) <= lbl_803E6898) {
-            Sfx_PlayFromObject(obj, 131);
+            Sfx_PlayFromObject(obj, SFXmv_bflconc1);
             *(f32 *)(runtime + 4) = lbl_803E6898;
         }
     }
