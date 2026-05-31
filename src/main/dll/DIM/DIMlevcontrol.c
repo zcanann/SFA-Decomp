@@ -1,6 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
 
+#define SFXfoot_dinostep 0x1fe
+#define SFXfoot_water_roll 0x201
+#define SFXthorntail_annoyed1 0x202
+#define SFXbaddie_eggsnatch_sniff1 705
+
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
@@ -121,7 +126,7 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
         local_28 = (double)(longlong)iVar11;
         if (iVar11 == 0) {
           if (*(int *)(iVar12 + 0xa8) != 0) {
-            FUN_80006824((uint)psVar4,0x1fe);
+            FUN_80006824((uint)psVar4,SFXfoot_dinostep);
           }
         }
         else {
@@ -177,8 +182,8 @@ void FUN_801b2550(undefined8 param_1,undefined8 param_2,double param_3,undefined
             *(byte *)(iVar12 + 0xae) = *(char *)(iVar12 + 0xae) + DAT_803dc070;
             bVar8 = FUN_800067f0((int)psVar4,2);
             if (!bVar8) {
-              FUN_80006824((uint)psVar4,0x201);
-              FUN_80006824((uint)psVar4,0x202);
+              FUN_80006824((uint)psVar4,SFXfoot_water_roll);
+              FUN_80006824((uint)psVar4,SFXthorntail_annoyed1);
             }
           }
         }
@@ -591,7 +596,7 @@ int fn_801B3458(int obj, int p2, int *r5_arg)
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0) {
                 if (*(s16 *)((char *)hit + 0x46) == 397) {
                     *(u8 *)((char *)state + 2) = 2;
-                    Sfx_PlayFromObject(obj, 705);
+                    Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_sniff1);
                     objPosToMapBlockIdx(*(f32 *)((char *)obj + 0xc),
                                         *(f32 *)((char *)obj + 0x10),
                                         *(f32 *)((char *)obj + 0x14));
