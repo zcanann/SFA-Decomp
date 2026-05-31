@@ -131,6 +131,7 @@ extern f32 lbl_803E12D4;
 extern f32 lbl_803E05F0;
 extern int lbl_803DD464;
 extern int lbl_803DD468;
+extern char sObjfsaFoundNewWalkGroupPatch[];
 extern char sObjfsaIsPointWithinPatchGroupError[];
 
 #define OBJFSA_PATCHGROUP_PATCH_COUNT 4
@@ -222,6 +223,13 @@ static inline int Objfsa_IsPointInsideWalkGroup(const float *point,
     }
   }
   return 1;
+}
+
+static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId,uint currentWalkGroupIndex) {
+  if (((countLeadingZeros(0xff - currentWalkGroupIndex) >> 5) & patchGroupId) != 0) {
+    return (patchGroupId & 0xff00) >> 8;
+  }
+  return patchGroupId & 0xff;
 }
 
 /*
@@ -4246,6 +4254,71 @@ LAB_800e19bc:
     *outZ = (float)((double)(fVar3 - fVar4) * phase + (double)*(float *)(curve + 0x10));
   }
   return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: walkGroupFn_800db3e4
+ * EN v1.0 Address: 0x800DB3E4
+ * EN v1.0 Size: 1268b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroupIndex)
+{
+  u8 patchListIndex;
+  u8 linkedPatchListIndex;
+  u8 patchIndex;
+  u8 linkedPatchIndex;
+  u16 patchGroupId;
+  u16 linkedWalkGroupIndex;
+  ObjfsaWalkGroup *walkGroup;
+  ObjfsaWalkGroup *linkedWalkGroup;
+  ObjfsaPatch *patch;
+  ObjfsaPatch *linkedPatch;
+
+  walkGroup = Objfsa_GetWalkGroup(currentWalkGroupIndex);
+  for (patchListIndex = 0; patchListIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; patchListIndex++) {
+    patchIndex = walkGroup->patchIndices[patchListIndex];
+    if (patchIndex != 0) {
+      patch = Objfsa_GetPatch(patchIndex);
+      if (Objfsa_IsPointInsidePatch(prevPoint,patch) &&
+          Objfsa_IsPointInsidePatch(nextPoint,patch)) {
+        return currentWalkGroupIndex;
+      }
+    }
+  }
+
+  for (patchListIndex = 0; patchListIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; patchListIndex++) {
+    patchIndex = walkGroup->patchIndices[patchListIndex];
+    if (patchIndex != 0) {
+      patch = Objfsa_GetPatch(patchIndex);
+      patchGroupId = patch->groupId;
+      linkedWalkGroupIndex = Objfsa_GetLinkedWalkGroup(patchGroupId,currentWalkGroupIndex);
+      linkedWalkGroup = Objfsa_GetWalkGroup(linkedWalkGroupIndex);
+
+      for (linkedPatchListIndex = 0; linkedPatchListIndex < OBJFSA_PATCHGROUP_PATCH_COUNT;
+           linkedPatchListIndex++) {
+        linkedPatchIndex = linkedWalkGroup->patchIndices[linkedPatchListIndex];
+        if (linkedPatchIndex != 0) {
+          linkedPatch = Objfsa_GetPatch(linkedPatchIndex);
+          if (linkedPatch->groupId != patchGroupId &&
+              Objfsa_IsPointInsidePatch(prevPoint,linkedPatch) &&
+              Objfsa_IsPointInsidePatch(nextPoint,linkedPatch)) {
+            OSReport(sObjfsaFoundNewWalkGroupPatch,linkedWalkGroupIndex);
+            return linkedWalkGroupIndex;
+          }
+        }
+      }
+    }
+  }
+
+  return 0;
 }
 
 /*
