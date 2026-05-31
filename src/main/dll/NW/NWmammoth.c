@@ -3,6 +3,9 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 
+#define SFXen_waterblock_stop 88
+#define SFXmv_curtainloop16 157
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80017688();
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -299,7 +302,7 @@ void FUN_801d1b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
           else {
             FUN_80081118((double)FLOAT_803e5f40,puVar1,6,0x28);
           }
-          FUN_80006824((uint)puVar1,0x58);
+          FUN_80006824((uint)puVar1,SFXen_waterblock_stop);
         }
       }
     }
@@ -349,7 +352,7 @@ void FUN_801d1b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
           dVar8 = (double)FUN_80017a28(puVar1,0xf,200,0,0,1);
           if (*(short *)(local_34[0] + 0x46) != 0x416) {
             if ((*(byte *)((int)pfVar7 + 0x137) & 0x10) == 0) {
-              dVar8 = (double)FUN_80006824((uint)puVar1,0x9d);
+              dVar8 = (double)FUN_80006824((uint)puVar1,SFXmv_curtainloop16);
             }
             *(byte *)((int)pfVar7 + 0x137) = *(byte *)((int)pfVar7 + 0x137) | 0x10;
           }

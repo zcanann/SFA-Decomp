@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/NW/dll_1DB.h"
 
+#define SFXen_waterblock_stop 88
+#define SFXmv_curtainloop16 157
+
 extern f32 lbl_803E52A8;
 
 extern u8 *Obj_GetPlayerObject(void);
@@ -60,7 +63,7 @@ void ediblemushroom_update(u8 *self)
       } else {
         itemPickupDoParticleFx(self, lbl_803E52A8, 6, 0x28);
       }
-      Sfx_PlayFromObject(self, 0x58);
+      Sfx_PlayFromObject(self, SFXen_waterblock_stop);
     }
     goto end;
   }
@@ -98,7 +101,7 @@ void ediblemushroom_update(u8 *self)
       Obj_SetModelColorFadeRecursive(self, 0xF, 0xC8, 0, 0, 1);
       if (*(s16 *)((u8 *)hitObj + 0x46) != 0x416) {
         if ((state[0x137] & 0x10) == 0) {
-          Sfx_PlayFromObject(self, 0x9D);
+          Sfx_PlayFromObject(self, SFXmv_curtainloop16);
         }
         state[0x137] = (u8)(state[0x137] | 0x10);
       }
