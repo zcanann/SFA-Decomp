@@ -4479,6 +4479,7 @@ u16 getPatchGroup(float *point,int patchGroupIndex,undefined4 param_3,undefined4
 uint isInWalkGroupOrPatch(float *point)
 {
   s16 patchIndex;
+  s16 edgeIndex;
   ObjfsaPatch *patch;
 
   if (mathFn_800dbff0(point) != 0) {
@@ -4487,8 +4488,17 @@ uint isInWalkGroupOrPatch(float *point)
 
   patch = Objfsa_GetPatch(1);
   for (patchIndex = 1; patchIndex < (s16)lbl_803DD468; patchIndex++) {
-    if (Objfsa_IsPointInsidePatch(point,patch)) {
-      return 1;
+    if (point[1] < (f32)patch->maxY && (f32)patch->minY < point[1]) {
+      edgeIndex = 0;
+      while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
+             patch->planeOffsets[edgeIndex] +
+                 point[0] * (f32)patch->planes[edgeIndex].normalX +
+                 point[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
+        edgeIndex++;
+      }
+      if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
+        return 1;
+      }
     }
     patch++;
   }
