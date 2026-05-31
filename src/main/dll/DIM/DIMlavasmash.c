@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMlavasmash.h"
 
+#define SFXmn_eggylaugh216 114
+#define SFXfoot_run_jingle2 507
+
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_8001753c();
@@ -116,7 +119,7 @@ void dimlogfire_update(int obj)
         if (*state != 0) {
           lightFn_8001db6c(*state,1,lbl_803E4824);
         }
-        Sfx_PlayFromObject(obj,0x72);
+        Sfx_PlayFromObject(obj,SFXmn_eggylaugh216);
         *(float *)(state + 4) = *(float *)(state + 4) - timeDelta;
         if (lbl_803E4828 < *(float *)(state + 4)) {
           tricky = 0;
@@ -211,7 +214,7 @@ undefined4 FUN_801b09dc(uint param_1,undefined4 param_2,int param_3)
   
   iVar2 = *(int *)(param_1 + 0xb8);
   if (*(char *)(iVar2 + 0x1a) == '\x01') {
-    FUN_80006824(param_1,0x72);
+    FUN_80006824(param_1,SFXmn_eggylaugh216);
   }
   else {
     FUN_8000680c(param_1,0x40);
@@ -459,7 +462,7 @@ void dimsnowball_update(int obj)
                         *(float *)(obj + 0x24) * *(float *)(obj + 0x24) +
                         *(float *)(obj + 0x28) * *(float *)(obj + 0x28));
     if ((*(ushort *)(player + 0xb0) & 0x1000) == 0) {
-      Sfx_PlayFromObject(obj,0x1fb);
+      Sfx_PlayFromObject(obj,SFXfoot_run_jingle2);
     }
     *(undefined *)(state + 3) = 0x1e;
   }
