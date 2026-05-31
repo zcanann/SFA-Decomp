@@ -1,6 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_224.h"
 
+#define SFXar_deflect16 394
+#define SFXar_englp16 395
+#define SFXar_laser116 396
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006920();
 extern undefined4 FUN_80006b94();
@@ -95,13 +99,13 @@ void FUN_801be520(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     iVar2 = *DAT_803dd708;
     (**(code **)(iVar2 + 8))(param_9,0x4b3,auStack_2c,0x200001);
     FUN_80081120(param_9,auStack_2c,3,(int *)0x0);
-    FUN_80006824(param_9,0x18a);
+    FUN_80006824(param_9,SFXar_deflect16);
     FUN_80006b94((double)lbl_803E5940);
     if (*(char *)(param_10 + 0x354) == '\0') {
-      FUN_80006824(param_9,0x18c);
+      FUN_80006824(param_9,SFXar_laser116);
     }
     else {
-      FUN_80006824(param_9,0x18b);
+      FUN_80006824(param_9,SFXar_englp16);
     }
     FUN_80006920((double)lbl_803E5944);
     if (lbl_803E5928 == lbl_803DE818) {
