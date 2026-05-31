@@ -3,6 +3,9 @@
 #include "main/dll/dll_18E.h"
 
 
+#define SFXwmap_name 382
+#define SFXar_bblast16 390
+
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_80006824();
@@ -424,8 +427,8 @@ void DIMbossspit_updateBurst(int obj)
       i = i + 1;
     } while (i < 0x12);
     (*((int (***)(int, int, int, int, int, int))gPartfxInterface))[2](obj, 0x4bb, 0, 1, -1, 0);
-    Sfx_PlayFromObject(obj, 0x17e);
-    Sfx_PlayFromObject(obj, 0x186);
+    Sfx_PlayFromObject(obj, SFXwmap_name);
+    Sfx_PlayFromObject(obj, SFXar_bblast16);
     CameraShake_SetAllMagnitudes(lbl_803E4D3C);
     doRumble(lbl_803E4D40);
     if (*(void **)(state + 4) != NULL) {
