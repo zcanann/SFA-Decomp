@@ -2,6 +2,10 @@
 #include "main/dll/campfire.h"
 #include "main/objanim.h"
 
+#define SFXen_blkscrp6 0x22
+#define SFXfox_runbreath3 0x255
+#define SFXkr_pullup1 0x270
+#define SFXkr_pullup2 0x271
 #define SFXkr_climb1 0x273
 #define SFXkr_climb2 0x274
 #define SFXkr_land1 0x275
@@ -375,7 +379,7 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
         (**(code **)(*gPlayerInterface + 0x14))(puVar3,param_3,4);
         *(char *)(param_3 + 0x354) = *(char *)(param_3 + 0x354) + -1;
         Obj_SetModelColorFadeRecursive(puVar3,0xf,200,0,0,1);
-        Sfx_PlayFromObject((uint)puVar3,0x22);
+        Sfx_PlayFromObject((uint)puVar3,SFXen_blkscrp6);
       }
       if (*(char *)(param_3 + 0x354) < '\x01') {
         *(undefined2 *)(param_3 + 0x270) = 2;
@@ -394,7 +398,7 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
           *(undefined *)(param_3 + 0x27a) = 1;
           *(undefined2 *)(param_3 + 0x270) = 1;
           objLightFn_8009a1dc((double)lbl_803E30BC,puVar3,&DAT_803ad2c8,1,0);
-          Sfx_PlayFromObject((uint)puVar3,0x22);
+          Sfx_PlayFromObject((uint)puVar3,SFXen_blkscrp6);
           Sfx_PlayFromObject((uint)puVar3,0x3ac);
         }
       }
@@ -408,7 +412,7 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
         fn_802961FC(uVar4,2);
         (**(code **)(*gPlayerInterface + 0x14))(puVar3,param_3,5);
         objLightFn_8009a1dc((double)lbl_803E30BC,puVar3,&DAT_803ad2c8,4,0);
-        Sfx_PlayFromObject((uint)puVar3,0x255);
+        Sfx_PlayFromObject((uint)puVar3,SFXfox_runbreath3);
       }
     }
     if (*(char *)(param_3 + 0x354) < '\x01') {
@@ -540,7 +544,7 @@ void kaldachom_update(int param_1)
     {
       (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,param_1,iVar8,iVar9,8,6,0,0x26);
       *(undefined2 *)(iVar9 + 0x402) = 0;
-      Sfx_PlayFromObject(param_1,0x270);
+      Sfx_PlayFromObject(param_1,SFXkr_pullup1);
       ObjAnim_SetCurrentMove(param_1,4,lbl_803E3060,0x10);
       *(undefined *)(iVar9 + 0x346) = 0;
       *(undefined *)(param_1 + 0x36) = 0xff;
@@ -558,7 +562,7 @@ void kaldachom_update(int param_1)
         iVar8 = *(int *)(iVar9 + 0x40c);
         *(float *)(iVar8 + 0x34) = *(float *)(iVar8 + 0x34) - timeDelta;
         if (*(float *)(iVar8 + 0x34) <= lbl_803E3060) {
-          Sfx_PlayFromObject(param_1,0x271);
+          Sfx_PlayFromObject(param_1,SFXkr_pullup2);
           *(float *)(iVar8 + 0x34) = (f32)(int)randomGetRange(300,600);
         }
         uVar3 = Obj_GetPlayerObject();
