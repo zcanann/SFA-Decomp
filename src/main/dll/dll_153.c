@@ -1,6 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_153.h"
 
+#define SFXmn_dimexp01 0x6b
+#define SFXmn_dimprup6 0x6c
+#define SFXmn_dimraw26 0x6d
+#define SFXsp_skeep_mumb1 0x10a
+#define SFXfend_rob_wave 0x313
+
 extern undefined8 FUN_80006824();
 extern uint FUN_80006ba0();
 extern undefined4 FUN_80006ba8();
@@ -159,7 +165,7 @@ void fn_80183250(int obj, int def)
             if (adj == 0x65d7 || (u32)(adj - 0x65d5) <= 1 || v == 0x66 || adj == 0x65d0 || adj == 0x65d2) {
                 if (Vec_distance((f32*)(player + 0x18), (f32*)(obj + 0x18)) < lbl_803E39BC) {
                     if (GameBit_Get(0xa71) == 0) {
-                        Sfx_PlayFromObject(obj, 0x313);
+                        Sfx_PlayFromObject(obj, SFXfend_rob_wave);
                     }
                 }
             }
@@ -387,7 +393,7 @@ void dll153_updateExploderState
         if ((uVar9 & 0x100) != 0) {
           uVar9 = FUN_80294bec((int)puVar7);
           if (uVar9 == 0) {
-            dVar17 = (double)FUN_80006824(0,0x10a);
+            dVar17 = (double)FUN_80006824(0,SFXsp_skeep_mumb1);
           }
           else {
             *(undefined *)(puVar15 + 3) = 0;
@@ -419,7 +425,7 @@ void dll153_updateExploderState
               local_44[1] = 0;
               local_44[0] = *puVar7;
               FUN_80017748(local_44,(float *)(uVar6 + 0x24));
-              dVar17 = (double)FUN_80006824(uVar6,0x6b);
+              dVar17 = (double)FUN_80006824(uVar6,SFXmn_dimexp01);
               *(undefined *)(puVar15 + 3) = 0;
               *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) | 8;
             }
@@ -453,7 +459,7 @@ void dll153_updateExploderState
               local_44[0] = local_44[0] + **(short **)(puVar7 + 0x18);
             }
             FUN_80017748(local_44,(float *)(uVar6 + 0x24));
-            dVar17 = (double)FUN_80006824(uVar6,0x6b);
+            dVar17 = (double)FUN_80006824(uVar6,SFXmn_dimexp01);
           }
         }
         if (*(char *)(puVar15 + 3) != '\0') {
@@ -487,12 +493,12 @@ void dll153_updateExploderState
       if (((short)puVar15[7] < 1) && (*(char *)((int)puVar15 + 5) != '\0')) {
         cVar1 = *(char *)(puVar15 + 0xf);
         if ((cVar1 == '\x05') || (cVar1 == '\x06')) {
-          FUN_80006824(uVar6,0x6c);
+          FUN_80006824(uVar6,SFXmn_dimprup6);
           uVar9 = randomGetRange(0,100);
           puVar15[7] = (short)uVar9 + 300;
         }
         else if (((byte)(cVar1 - 1U) < 2) || (cVar1 == '\x03')) {
-          FUN_80006824(uVar6,0x6d);
+          FUN_80006824(uVar6,SFXmn_dimraw26);
           uVar9 = randomGetRange(0,100);
           puVar15[7] = (short)uVar9 + 300;
         }
