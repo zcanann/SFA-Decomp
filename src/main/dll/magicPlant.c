@@ -1,6 +1,19 @@
 #include "ghidra_import.h"
 #include "main/dll/magicPlant.h"
 
+#define SFXen_mazewall 0x31
+#define SFXwatery_bubble3 0x245
+#define SFXfox_bigfallgrunt1 0x246
+#define SFXfox_bigfallgrunt2 0x247
+#define SFXfox_cough1 0x248
+#define SFXfox_cough2 0x249
+#define SFXfox_bigfallrecover1 0x24a
+#define SFXfox_climbgrunt3 0x25a
+#define SFXfox_climbgrunt4 0x25b
+#define SFXfox_healthgasp1 0x25c
+#define SFXfox_healthgasp3 0x25e
+#define SFXfox_healthgasp4 0x25f
+
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068d0();
@@ -131,7 +144,7 @@ void FUN_80152ec0(uint param_1,int param_2)
 void FUN_80152f54(uint param_1,int param_2,undefined4 param_3,int param_4)
 {
   if ((param_4 != 0x10) && (param_4 != 0x11)) {
-    FUN_80006824(param_1,0x248);
+    FUN_80006824(param_1,SFXfox_cough1);
     *(undefined2 *)(param_2 + 0x2b0) = 0;
     *(uint *)(param_2 + 0x2e4) = *(uint *)(param_2 + 0x2e4) | 0x20;
     *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 8;
@@ -215,7 +228,7 @@ void FUN_80152fb4(ushort *param_1,int param_2)
           iVar4 = FUN_80017a5c(dVar6,dVar7,dVar8,in_f4,in_f5,in_f6,in_f7,in_f8,(int)param_1,puVar3);
           if (iVar4 != 0) {
             *(ushort **)(iVar4 + 0xc4) = param_1;
-            FUN_80006824((uint)param_1,0x249);
+            FUN_80006824((uint)param_1,SFXfox_cough2);
           }
         }
       }
@@ -239,12 +252,12 @@ void FUN_80152fb4(ushort *param_1,int param_2)
     uVar5 = randomGetRange(0x3c,0x78);
     local_28 = (double)CONCAT44(0x43300000,uVar5 ^ 0x80000000);
     *(float *)(param_2 + 0x334) = (float)(local_28 - DOUBLE_803e3508);
-    FUN_80006824((uint)param_1,0x31);
+    FUN_80006824((uint)param_1,SFXen_mazewall);
   }
   *(float *)(param_2 + 0x330) = *(float *)(param_2 + 0x330) - lbl_803DC074;
   if (*(float *)(param_2 + 0x330) <= lbl_803E3500) {
     *(float *)(param_2 + 0x330) = lbl_803E3504;
-    FUN_80006824((uint)param_1,0x24a);
+    FUN_80006824((uint)param_1,SFXfox_bigfallrecover1);
   }
   return;
 }
@@ -320,14 +333,14 @@ void FUN_80153440(uint param_1,int param_2,undefined4 param_3,int param_4)
       }
       else {
         *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 8;
-        FUN_80006824(param_1,0x25b);
+        FUN_80006824(param_1,SFXfox_climbgrunt4);
         *(undefined2 *)(param_2 + 0x2b0) = 0;
       }
     }
   }
   else if (param_4 == 0x10) {
     *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 0x28;
-    FUN_80006824(param_1,0x25b);
+    FUN_80006824(param_1,SFXfox_climbgrunt4);
     *(undefined2 *)(param_2 + 0x2b0) = 0;
   }
   return;
@@ -387,7 +400,7 @@ void FUN_801534d8(ushort *param_1,undefined4 *param_2)
   param_2[0xca] = (float)param_2[0xca] - lbl_803DC074;
   if ((float)param_2[0xca] <= lbl_803E3548) {
     param_2[0xca] = lbl_803E354C;
-    FUN_80006824((uint)param_1,0x25c);
+    FUN_80006824((uint)param_1,SFXfox_healthgasp1);
   }
   param_2[0xcb] = lbl_803E3548;
   return;
@@ -431,7 +444,7 @@ void FUN_80153738(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     param_10[0xba] = param_10[0xba] | 0x80;
   }
   if ((param_10[0xb7] & 0x80000000) != 0) {
-    FUN_80006824((uint)param_9,0x25a);
+    FUN_80006824((uint)param_9,SFXfox_climbgrunt3);
   }
   if ((((param_10[0xb7] & 0x2000) != 0) &&
       (((iVar3 = FUN_80006a10((double)(lbl_803E356C * (float)param_10[0xbf]),pfVar5), iVar3 != 0
@@ -646,11 +659,11 @@ void FUN_80153db4(uint param_1,int param_2,undefined4 param_3,int param_4,undefi
     else {
       *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 8;
       if ((int)(uint)*(ushort *)(param_2 + 0x2b0) < param_6) {
-        FUN_80006824(param_1,0x246);
+        FUN_80006824(param_1,SFXfox_bigfallgrunt1);
         *(undefined2 *)(param_2 + 0x2b0) = 0;
       }
       else {
-        FUN_80006824(param_1,0x247);
+        FUN_80006824(param_1,SFXfox_bigfallgrunt2);
         *(short *)(param_2 + 0x2b0) = *(short *)(param_2 + 0x2b0) - (short)param_6;
       }
     }
@@ -792,7 +805,7 @@ void FUN_80153e5c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     uStack_14 = randomGetRange(0x96,300);
     *(float *)(param_10 + 0x324) = (f32)(s32)uStack_14
     ;
-    FUN_80006824((uint)param_9,0x245);
+    FUN_80006824((uint)param_9,SFXwatery_bubble3);
   }
 LAB_8015407c:
   FUN_80153b00((int)param_9,param_10);
@@ -852,10 +865,10 @@ void fn_80153790(int obj, int state, int p3, int msgFlag, int p5, int p6)
     } else {
         *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x8;
         if (p6 > (s32)*(u16*)(state + 0x2b0)) {
-            Sfx_PlayFromObject(obj, 0x246);
+            Sfx_PlayFromObject(obj, SFXfox_bigfallgrunt1);
             *(s16*)(state + 0x2b0) = 0;
         } else {
-            Sfx_PlayFromObject(obj, 0x247);
+            Sfx_PlayFromObject(obj, SFXfox_bigfallgrunt2);
             *(u16*)(state + 0x2b0) = (u16)(*(u16*)(state + 0x2b0) - p6);
         }
     }
@@ -960,7 +973,7 @@ void fn_80153040(int obj, int state)
     *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
     if (*(f32*)(state + 0x328) <= lbl_803E28B0) {
         *(f32*)(state + 0x328) = lbl_803E28B4;
-        Sfx_PlayFromObject(obj, 0x25c);
+        Sfx_PlayFromObject(obj, SFXfox_healthgasp1);
     }
     *(f32*)(state + 0x32c) = lbl_803E28B0;
 }
@@ -1106,7 +1119,7 @@ void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
   if (*(u8 *)(p2 + 0x33b) != 0) {
     if (msgFlag == 16) {
       *(u32 *)(p2 + 0x2e8) = *(u32 *)(p2 + 0x2e8) | 0x28;
-      Sfx_PlayFromObject(obj, 603);
+      Sfx_PlayFromObject(obj, SFXfox_climbgrunt4);
       *(s16 *)(p2 + 0x2b0) = 0;
     }
   } else if (msgFlag != 17) {
@@ -1114,7 +1127,7 @@ void fn_80152FA8(int obj, int p2, int unused, int msgFlag)
       *(u32 *)(p2 + 0x2e8) = *(u32 *)(p2 + 0x2e8) | 0x20;
     } else {
       *(u32 *)(p2 + 0x2e8) = *(u32 *)(p2 + 0x2e8) | 0x8;
-      Sfx_PlayFromObject(obj, 603);
+      Sfx_PlayFromObject(obj, SFXfox_climbgrunt4);
       *(s16 *)(p2 + 0x2b0) = 0;
     }
   }
@@ -1168,7 +1181,7 @@ void fn_80153248(int obj, int state)
         *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x80;
     }
     if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
-        Sfx_PlayFromObject(obj, 0x25a);
+        Sfx_PlayFromObject(obj, SFXfox_climbgrunt3);
     }
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
         if (curveFn_80010320(curve, lbl_803E28D4 * *(f32*)(state + 0x2fc)) != 0
@@ -1342,7 +1355,7 @@ void fn_8015383C(int obj, int state)
             if (*(f32*)(state + 0x324) <= lbl_803E2920) {
                 rnd = randomGetRange(0x96, 0x12c);
                 *(f32*)(state + 0x324) = (f32)(s32)rnd;
-                Sfx_PlayFromObject(obj, 0x245);
+                Sfx_PlayFromObject(obj, SFXwatery_bubble3);
             }
         }
     } else {
@@ -1350,7 +1363,7 @@ void fn_8015383C(int obj, int state)
         if (*(f32*)(state + 0x324) <= lbl_803E2920) {
             rnd = randomGetRange(0x96, 0x12c);
             *(f32*)(state + 0x324) = (f32)(s32)rnd;
-            Sfx_PlayFromObject(obj, 0x245);
+            Sfx_PlayFromObject(obj, SFXwatery_bubble3);
         }
     }
     fn_8015355C(obj, state);
@@ -1376,7 +1389,7 @@ void fn_80153CF8(int obj, int state, int p3, int msgFlag)
         if (*(u8*)(state + 0x33b) == 0) {
             *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x8;
             *(s16*)(state + 0x2b0) = 0;
-            Sfx_PlayFromObject(obj, 0x25f);
+            Sfx_PlayFromObject(obj, SFXfox_healthgasp4);
         }
     } else if (msgFlag == 0x11) {
         *(f32*)(state + 0x32c) = lbl_803E2940;
@@ -1441,7 +1454,7 @@ void fn_80153E0C(int obj, int state)
     if (*(f32*)(state + 0x330) <= lbl_803E294C) {
         rnd = randomGetRange(0x3c, 0x78);
         *(f32*)(state + 0x330) = (f32)(s32)rnd;
-        Sfx_PlayFromObject(obj, 0x25e);
+        Sfx_PlayFromObject(obj, SFXfox_healthgasp3);
     }
     ctr = *(u8*)(state + 0x33b);
     if (ctr != 0) {
