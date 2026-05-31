@@ -1,6 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_1D3.h"
 
+#define SFXwp_gcfir1_c 331
+#define SFXwp_hitpos_6 332
+#define SFXwp_mpwru1 333
+
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
@@ -301,7 +305,7 @@ undefined4 FUN_801ce424(uint param_1,int param_2)
   bVar1 = *(byte *)(param_2 + 0x408);
   if (bVar1 == 0x15) {
     if (uVar3 != 0) {
-      FUN_80006824(param_1,0x14c);
+      FUN_80006824(param_1,SFXwp_hitpos_6);
     }
     *(float *)(param_2 + 4) = *(float *)(param_2 + 4) - lbl_803DC074;
     if ((cVar4 == '\0') && (*(float *)(param_2 + 4) <= lbl_803E5EA4)) {
@@ -322,7 +326,7 @@ undefined4 FUN_801ce424(uint param_1,int param_2)
   else if (bVar1 < 0x15) {
     if (0x13 < bVar1) {
       if (uVar3 != 0) {
-        FUN_80006824(param_1,0x14b);
+        FUN_80006824(param_1,SFXwp_gcfir1_c);
       }
       if ((*(byte *)(param_2 + 0x43c) & 2) != 0) {
         *(undefined *)(param_2 + 0x408) = 0x15;
@@ -334,7 +338,7 @@ undefined4 FUN_801ce424(uint param_1,int param_2)
   }
   else if (bVar1 < 0x17) {
     if (uVar3 != 0) {
-      FUN_80006824(param_1,0x14d);
+      FUN_80006824(param_1,SFXwp_mpwru1);
     }
     if ((*(byte *)(param_2 + 0x43c) & 2) != 0) {
       *(undefined *)(param_2 + 0x408) = *(undefined *)(param_2 + 0x409);
