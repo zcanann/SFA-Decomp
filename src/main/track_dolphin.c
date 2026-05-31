@@ -5797,7 +5797,8 @@ void fn_800659A8(f32 a, f32 b, void *p3, void *p4, void *desc, int e)
     }
 }
 
-extern void Vec3_Normalize(f32 *v);
+extern f32 Vec3_Normalize(f32 *v);
+extern void Vec3_Cross(f32 *a, f32 *b, f32 *out);
 extern f32 fn_802925C4(f32 x, f32 y);
 extern f32 fn_802943F4(f32 x);
 extern f32 floor(f32 x);
@@ -5894,6 +5895,71 @@ int fn_800660C8(f32 *a, f32 *b, f32 *c, f32 *p, int type, f32 f1p, f32 y)
         }
     }
     return 1;
+}
+
+int hitDetectFn_800664fc(void *tri, f32 *rayOrig, f32 *rayDir, f32 maxd, f32 *out29, f32 *outNrm, f32 *outDist)
+{
+    f32 hit[3];
+    f32 tmp14[3];
+    f32 e[3];
+    f32 nrm[3];
+    f32 len, f29, f12;
+    f32 *T = (f32 *)tri;
+
+    Vec3_Cross(rayDir, T + 6, nrm);
+    len = Vec3_Normalize(nrm);
+    if (__AR_Callback == len) return 0;
+    e[0] = rayOrig[0] - T[0];
+    e[1] = rayOrig[1] - T[1];
+    e[2] = rayOrig[2] - T[2];
+    f29 = nrm[1] * e[1] + nrm[0] * e[0] + nrm[2] * e[2];
+    f29 = f29 * f29;
+    if (f29 <= T[10]) {
+        Vec3_Cross(e, T + 6, tmp14);
+        len = (tmp14[1] * nrm[1] + tmp14[0] * nrm[0] - tmp14[2] * nrm[2]) / len;
+        Vec3_Cross(nrm, T + 6, tmp14);
+        Vec3_Normalize(tmp14);
+        {
+            f32 s = sqrtf(T[10] - f29);
+            f32 dn = rayDir[1] * tmp14[1] + rayDir[0] * tmp14[0] + rayDir[2] * tmp14[2];
+            f32 r = s / dn;
+            if (r < __AR_Callback) r = -r;
+            len = len - r;
+        }
+        if (len >= __AR_Callback) {
+            if (len <= maxd) {
+                hit[0] = rayDir[0] * len;
+                hit[1] = rayDir[1] * len;
+                hit[2] = rayDir[2] * len;
+                hit[0] = rayOrig[0] + hit[0];
+                hit[1] = rayOrig[1] + hit[1];
+                hit[2] = rayOrig[2] + hit[2];
+                f12 = (hit[1] * T[7] + hit[0] * T[6] + hit[2] * T[8]) -
+                      (T[7] * T[1] + T[6] * T[0] + T[8] * T[2]);
+                if (f12 >= __AR_Callback) {
+                    if (f12 <= T[11]) {
+                        tmp14[0] = T[6] * f12;
+                        tmp14[1] = T[7] * f12;
+                        tmp14[2] = T[8] * f12;
+                        tmp14[0] = T[0] + tmp14[0];
+                        tmp14[1] = T[1] + tmp14[1];
+                        tmp14[2] = T[2] + tmp14[2];
+                        outNrm[0] = hit[0] - tmp14[0];
+                        outNrm[1] = hit[1] - tmp14[1];
+                        outNrm[2] = hit[2] - tmp14[2];
+                        Vec3_Normalize(outNrm);
+                        outNrm[3] = T[9] - (hit[1] * outNrm[1] + hit[0] * outNrm[0] + hit[2] * outNrm[2]);
+                        out29[0] = hit[0];
+                        out29[1] = hit[1];
+                        out29[2] = hit[2];
+                        *outDist = len;
+                        return 3;
+                    }
+                }
+            }
+        }
+    }
+    return 0;
 }
 
 extern u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p5, int z);
