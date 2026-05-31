@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_148.h"
 
+#define SFXen_weetinkoneshot 75
+#define SFXms_baddie_beamin 97
+
 extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006810();
@@ -267,7 +270,7 @@ void pressureswitchfb_update(void)
       }
     }
     if (bVar4) {
-      FUN_80006824(uVar6,0x61);
+      FUN_80006824(uVar6,SFXms_baddie_beamin);
     }
     else {
       FUN_8000680c(uVar6,8);
@@ -351,13 +354,13 @@ void FUN_8017b3bc(undefined4 param_1,undefined4 param_2,int param_3)
     }
     if ((uVar3 != 0) && ((*(byte *)(puVar8 + 3) & 1) == 0)) {
       if (*(char *)(*(int *)(uVar1 + 0x50) + 0x59) != '\0') {
-        FUN_80006824(uVar1,0x4b);
+        FUN_80006824(uVar1,SFXen_weetinkoneshot);
       }
       *(byte *)(puVar8 + 3) = *(byte *)(puVar8 + 3) | 1;
     }
     if ((bVar5) && ((*(byte *)(puVar8 + 3) & 2) == 0)) {
       if (*(char *)(*(int *)(uVar1 + 0x50) + 0x59) != '\0') {
-        FUN_80006824(uVar1,0x4b);
+        FUN_80006824(uVar1,SFXen_weetinkoneshot);
       }
       *(byte *)(puVar8 + 3) = *(byte *)(puVar8 + 3) | 2;
     }
