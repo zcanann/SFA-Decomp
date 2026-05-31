@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/IM/IMspacecraft.h"
 
+#define SFXsp_lf_mutter1 262
+#define SFXsp_lf_mutter4 265
+
 /* SDK / engine externs */
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 *a, f32 *b);
@@ -267,7 +270,7 @@ void SpiritDoorLock_update(int obj)
             }
         } else {
             if (*(s8 *)((char *)obj + 0x36) == -1) {
-                Sfx_PlayFromObject(0, 0x109);
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             }
             if (*(u8 *)((char *)obj + 0x36) == 0) {
                 if (state[0] != 0) {
@@ -506,7 +509,7 @@ void fn_801A5D88(int obj, int unused) {
     f32 dist;
     f32 falloff;
     lbl_803DDB20 += 1;
-    Sfx_PlayFromObject(obj, 0x106);
+    Sfx_PlayFromObject(obj, SFXsp_lf_mutter1);
     if (lbl_803DDB20 > 1) {
         f32 size;
         r = randomGetRange(0, 1) & 0xff;
