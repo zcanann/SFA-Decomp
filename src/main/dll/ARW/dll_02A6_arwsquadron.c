@@ -1,5 +1,9 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXbaddie_mika_death 670
+#define SFXbaddie_invin_hit 691
+#define SFXbaddie_eba_smallswipe1 693
+
 #pragma peephole on
 #pragma scheduling on
 int arwsquadron_getExtraSize(void) { return 0x164; }
@@ -59,7 +63,7 @@ void arwsquadron_spawnProjectile(int obj, int pathIdx, int angle, u8 flag) {
         arwprojectile_createLinkedEffect(proj, 1);
     arwprojectile_setLifetime(proj, 0x4b);
     arwprojectile_placeForward(proj, lbl_803E71A8);
-    Sfx_PlayFromObjectLimited(proj, 0x2b5, 4);
+    Sfx_PlayFromObjectLimited(proj, SFXbaddie_eba_smallswipe1, 4);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -365,7 +369,7 @@ void arwsquadron_handleDamage(int obj, int state)
         *(void **)(*(int *)(obj + 0x54) + 0x50) != NULL) {
         if (flags->f10) {
             if (*(u8 *)(state + 0x154) == 0)
-                Sfx_PlayFromObjectLimited(obj, 0x29e, 4);
+                Sfx_PlayFromObjectLimited(obj, SFXbaddie_mika_death, 4);
             Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
             *(f32 *)(state + 0x110) = lbl_803E71B4;
             *(u8 *)(state + 0x154) = 1;
@@ -398,7 +402,7 @@ void arwsquadron_handleDamage(int obj, int state)
                     arwarwing_addScore(arwing, *(u8 *)(state + 0x158));
             }
         } else if (*(u8 *)(state + 0x154) == 0) {
-            Sfx_PlayFromObjectLimited(obj, 0x2b3, 4);
+            Sfx_PlayFromObjectLimited(obj, SFXbaddie_invin_hit, 4);
         }
     }
 }
