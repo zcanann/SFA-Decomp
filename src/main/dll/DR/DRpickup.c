@@ -36,8 +36,8 @@ void fn_801EC1AC(int param_1, int param_2)
     f32 fVar2;
     f32 fVar4;
     f32 fLim;
+    f32 out[3];
     f32 vec_args[4];
-    f32 out_x, out_y, out_z;
 
     flags = (PickupFlags *)(param_2 + 0x428);
     origBit4 = flags->b4;
@@ -110,11 +110,11 @@ void fn_801EC1AC(int param_1, int param_2)
                           *(f32 *)(param_2 + 0x4a0),
                           *(f32 *)(param_2 + 0x4a4),
                           *(f32 *)(param_2 + 0x4a8),
-                          &out_x, &out_y, &out_z);
+                          &out[0], &out[1], &out[2]);
     Matrix_TransformPoint((void *)(param_2 + 0x12c),
-                          out_x, out_y, out_z,
-                          &out_x, &out_y, &out_z);
-    PSVECAdd(&out_x, (void *)(param_2 + 0x494), (void *)(param_2 + 0x494));
+                          out[0], out[1], out[2],
+                          &out[0], &out[1], &out[2]);
+    PSVECAdd(out, (void *)(param_2 + 0x494), (void *)(param_2 + 0x494));
 
     /* 0x414 update with negated 0x45c * 0x52c then powfBitEstimate */
     *(f32 *)(param_2 + 0x414) =

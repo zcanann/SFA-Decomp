@@ -15,6 +15,6 @@ typedef struct PickupFlags {
     u8 b0 : 1;  /* 0x01 */
 } PickupFlags;
 
-void FUN_801ec1ac(int param_1,int param_2);
+void fn_801EC1AC(int param_1,int param_2);
 
 #endif /* MAIN_DLL_DR_DRPICKUP_H_ */

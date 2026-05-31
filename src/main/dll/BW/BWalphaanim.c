@@ -25,7 +25,7 @@ extern uint FUN_801eb0c0();
 extern undefined4 fn_801EAE4C();
 extern undefined4 fn_801EB0D4();
 extern undefined4 fn_801EB634();
-extern undefined4 FUN_801ec1ac();
+extern void fn_801EC1AC(int obj,int state);
 extern undefined4 FUN_801ec7a0();
 extern undefined4 FUN_801ecd30();
 extern undefined4 FUN_80247e94();
@@ -169,7 +169,7 @@ void SnowBike_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,un
             fVar2 = lbl_803E6784;
           }
           *(float *)(iVar6 + 0x45c) = fVar2;
-          FUN_801ec1ac((int)param_9,iVar6);
+          fn_801EC1AC((int)param_9,iVar6);
           FUN_801ecd30(param_9,iVar6);
           if (*(float *)(iVar6 + 0x3e4) == lbl_803E6780) {
             *(undefined4 *)(iVar6 + 0x47c) = *(undefined4 *)(iVar6 + 0x464);
@@ -221,7 +221,7 @@ void SnowBike_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,un
         else {
           uVar3 = FUN_801eb0c0(param_9,iVar6);
           if (uVar3 != 0) {
-            FUN_801ec1ac((int)param_9,iVar6);
+            fn_801EC1AC((int)param_9,iVar6);
             FUN_801ecd30(param_9,iVar6);
             if (*(float *)(iVar6 + 0x3e4) == lbl_803E6780) {
               *(undefined4 *)(iVar6 + 0x47c) = *(undefined4 *)(iVar6 + 0x464);
