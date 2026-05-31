@@ -1,5 +1,8 @@
 #include "main/dll/DR/dr_shared.h"
 
+#define SFXwp_barrel_bounce1 370
+#define SFXwp_barrel_bounce2 371
+
 int drakormissile_getExtraSize(void) { return 0x38; }
 
 int drakormissile_getObjectTypeId(void) { return 0x2; }
@@ -113,7 +116,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed) {
     *(void **)p = light;
     *(u8 *)((char *)obj + 0x36) = 255;
     *(f32 *)((char *)obj + 8) = lbl_803E6958 * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
-    Sfx_PlayFromObject(obj, 371);
+    Sfx_PlayFromObject(obj, SFXwp_barrel_bounce2);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -151,7 +154,7 @@ void drakormissile_update(int obj) {
         *(int *)(p + 8) += framesThisStep;
         if (*(int *)(p + 8) > 0x80) {
             ObjHits_DisableObject(obj);
-            Sfx_StopFromObject(obj, 0x173);
+            Sfx_StopFromObject(obj, SFXwp_barrel_bounce2);
             Sfx_StopFromObject(obj, 0x3c5);
             *(u8 *)(p + 4) = 1;
         }
@@ -219,7 +222,7 @@ void drakormissile_update(int obj) {
             *(u8 *)(p + 4) = 2;
             *(int *)(p + 8) = 0;
             if ((*(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) & 8) != 0) {
-                Sfx_PlayFromObject(obj, 0x172);
+                Sfx_PlayFromObject(obj, SFXwp_barrel_bounce1);
             }
             if (*(s8 *)((char *)obj + 0xac) == 2) {
                 spawnExplosion(obj, lbl_803E6940, 3, 0, 0, 0, 0, 0, 3);
