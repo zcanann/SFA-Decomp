@@ -4,6 +4,10 @@
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 
+#define SFXmn_eggylaugh216 0x72
+#define SFXmn_crusty9c 0x7d
+#define SFXmn_sml_trex_fstep 0x7e
+#define SFXmn_sml_trex_roar 0x7f
 
 #pragma peephole off
 #pragma scheduling off
@@ -472,7 +476,7 @@ void FUN_801f1104(void)
       }
       if (((pcVar9[1] == '\0') && (iVar7 != 0)) && (*(short *)(iVar7 + 0x46) == 0x146)) {
         if (dVar13 <= dVar12) {
-          FUN_80006824(uVar3,0x7e);
+          FUN_80006824(uVar3,SFXmn_sml_trex_fstep);
         }
         pcVar9[1] = '\x01';
       }
@@ -546,7 +550,7 @@ void FUN_801f1104(void)
     }
   }
   if (bVar11) {
-    FUN_80006824(uVar3,0x7f);
+    FUN_80006824(uVar3,SFXmn_sml_trex_roar);
   }
   else {
     FUN_8000680c(uVar3,8);
@@ -1483,7 +1487,7 @@ void FUN_801f2904(uint param_1)
     }
   }
   if (bVar3) {
-    FUN_80006824(param_1,0x7d);
+    FUN_80006824(param_1,SFXmn_crusty9c);
   }
   else {
     FUN_8000680c(param_1,8);
@@ -1544,7 +1548,7 @@ void FUN_801f2b94(short *param_1)
     FUN_8000680c((int)param_1,0x40);
   }
   else {
-    FUN_80006824((uint)param_1,0x72);
+    FUN_80006824((uint)param_1,SFXmn_eggylaugh216);
   }
   return;
 }
@@ -1707,7 +1711,7 @@ void WM_colrise_update(int *obj) {
         }
     }
     if ((s8)reached != 0) {
-        Sfx_PlayFromObject((int)obj, 0x7d);
+        Sfx_PlayFromObject((int)obj, SFXmn_crusty9c);
     } else {
         Sfx_StopObjectChannel((int)obj, 8);
     }
@@ -1878,7 +1882,7 @@ void wmtorch_update(int obj) {
         *(s16 *)obj += 0x32;
     }
     if (Vec_distance((f32 *)(Obj_GetPlayerObject() + 0x18), (f32 *)(obj + 0x18)) < lbl_803E5DE8) {
-        Sfx_PlayFromObject(obj, 0x72);
+        Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
     } else {
         Sfx_StopObjectChannel(obj, 0x40);
     }
