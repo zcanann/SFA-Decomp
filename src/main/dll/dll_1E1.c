@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_1E1.h"
 
+#define SFXmv_curtainloop16 157
+#define SFXmv_curtainrustle 163
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -286,7 +289,7 @@ void enemymushroom_update
         }
         else {
           if (*(char *)((int)pfVar14 + 0x36) != '\t') {
-            FUN_80006824((uint)puVar3,0x9d);
+            FUN_80006824((uint)puVar3,SFXmv_curtainloop16);
           }
           *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) & 0xfe;
           if ((int)*(short *)(iVar13 + 0x1c) != 0xffffffff) {
@@ -458,7 +461,7 @@ void fn_801D2B70(int *obj, int unused, int *p3) {
     if (trickyObj != NULL) {
         trickyImpress(trickyObj);
     }
-    Sfx_PlayFromObject(obj, 0xa3);
+    Sfx_PlayFromObject(obj, SFXmv_curtainrustle);
     {
         int *p = *(int **)((char *)obj + 0x54);
         *(s16 *)((char *)p + 0x60) = (s16)(*(s16 *)((char *)p + 0x60) | 0x40);
