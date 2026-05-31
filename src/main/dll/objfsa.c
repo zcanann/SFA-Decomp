@@ -5572,6 +5572,146 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, double m
     return 0;
 }
 
+int RomCurve_func1C(int startCurve, int unused1, int unused2, int unused3, int unused4, int *previousCurveId)
+{
+    int startIndex;
+    int candidateCount;
+    int directSlot;
+    int directLinkId;
+    int directCurve;
+    int directIndex;
+    int queueCount;
+    int queueIndex;
+    int queueCurve;
+    int linkSlot;
+    int linkId;
+    int linkCurve;
+    int linkIndex;
+    int insertIndex;
+    int selectedIndex;
+    int i;
+    int j;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distance;
+    f32 linkDistance;
+    f32 candidateDistances[4];
+    int candidateIds[4];
+    f32 queueDistances[40];
+    int queueIndices[40];
+    u8 visited[0x514];
+
+    if (startCurve == 0) {
+        return -1;
+    }
+    if (RomCurve_findByIdWithIndex(*(s32 *)(startCurve + 0x14), &startIndex) == 0) {
+        return -1;
+    }
+
+    candidateCount = 0;
+    for (directSlot = 0; directSlot < 4; directSlot++) {
+        directLinkId = *(s32 *)(startCurve + 0x1c + directSlot * 4);
+        if (directLinkId <= -1) {
+            continue;
+        }
+
+        for (i = 0; i < 0x514; i++) {
+            visited[i] = 0;
+        }
+        visited[startIndex] = 1;
+
+        directCurve = RomCurve_findByIdWithIndex(directLinkId, &directIndex);
+        if (directCurve == 0) {
+            continue;
+        }
+
+        dx = *(f32 *)(directCurve + 0x10) - *(f32 *)(startCurve + 0x10);
+        dy = *(f32 *)(directCurve + 0x8) - *(f32 *)(startCurve + 0x8);
+        dz = *(f32 *)(directCurve + 0xc) - *(f32 *)(startCurve + 0xc);
+        queueDistances[0] = dx * dx + dy * dy + dz * dz;
+        queueIndices[0] = directIndex;
+        visited[directIndex] = 1;
+        queueCount = 1;
+
+        while (queueCount > 0) {
+            queueCount--;
+            queueIndex = queueIndices[queueCount];
+            queueCurve = (int)romCurves[queueIndex];
+            distance = queueDistances[queueCount];
+
+            if (*(u8 *)(queueCurve + 0x34) == 1) {
+                candidateDistances[candidateCount] = distance;
+                candidateIds[candidateCount] = directLinkId;
+                candidateCount++;
+                break;
+            }
+
+            for (linkSlot = 0; linkSlot < 4; linkSlot++) {
+                linkId = *(s32 *)(queueCurve + 0x1c + linkSlot * 4);
+                if (linkId <= -1) {
+                    continue;
+                }
+
+                linkCurve = RomCurve_findByIdWithIndex(linkId, &linkIndex);
+                if (linkCurve == 0 || visited[linkIndex] != 0 || queueCount >= 0x28) {
+                    continue;
+                }
+
+                dx = *(f32 *)(queueCurve + 0x10) - *(f32 *)(linkCurve + 0x10);
+                dy = *(f32 *)(queueCurve + 0x8) - *(f32 *)(linkCurve + 0x8);
+                dz = *(f32 *)(queueCurve + 0xc) - *(f32 *)(linkCurve + 0xc);
+                linkDistance = distance + dx * dx + dy * dy + dz * dz;
+
+                insertIndex = 0;
+                while (insertIndex < queueCount && queueDistances[insertIndex] > linkDistance) {
+                    insertIndex++;
+                }
+                for (j = queueCount; j > insertIndex; j--) {
+                    queueIndices[j] = queueIndices[j - 1];
+                    queueDistances[j] = queueDistances[j - 1];
+                }
+                queueIndices[insertIndex] = linkIndex;
+                queueDistances[insertIndex] = linkDistance;
+                visited[linkIndex] = 1;
+                queueCount++;
+            }
+        }
+    }
+
+    if (candidateCount == 0) {
+        return -1;
+    }
+    if (candidateCount == 1) {
+        *previousCurveId = *(s32 *)(startCurve + 0x14);
+        return candidateIds[0];
+    }
+
+    for (i = 0; i < candidateCount; i++) {
+        if (*previousCurveId == candidateIds[i]) {
+            for (j = i; j < candidateCount - 1; j++) {
+                candidateIds[j] = candidateIds[j + 1];
+                candidateDistances[j] = candidateDistances[j + 1];
+            }
+            candidateCount--;
+            i--;
+        }
+    }
+
+    if (candidateCount <= 0) {
+        return -1;
+    }
+
+    *previousCurveId = *(s32 *)(startCurve + 0x14);
+    selectedIndex = 0;
+    for (i = 0; i < candidateCount; i++) {
+        if (candidateDistances[i] < candidateDistances[selectedIndex]) {
+            selectedIndex = i;
+        }
+    }
+    return candidateIds[selectedIndex];
+}
+
 /* fn_800DA928: clamp + curveFn call. */
 #pragma scheduling off
 void fn_800DA928(float *p) {
