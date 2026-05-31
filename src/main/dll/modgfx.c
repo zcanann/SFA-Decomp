@@ -39,6 +39,9 @@ typedef struct ModgfxState {
 
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
+#define SFXsc_mumble01 641
+#define SFXsc_mumble02 642
+#define SFXsc_snort02 645
 
 typedef struct ModgfxActiveEffect {
   int instanceHandle;
@@ -2786,7 +2789,7 @@ void FUN_800a1f80(undefined4 param_1,undefined4 param_2,uint param_3)
   if (uVar7 != 0) {
     GameBit_Set(0x468,0);
     DAT_803ddf3c = 0xf;
-    FUN_80006824(param_3,0x281);
+    FUN_80006824(param_3,SFXsc_mumble01);
   }
   piVar16 = *(int **)(*(int *)(param_3 + 0x7c) + *(char *)(param_3 + 0xad) * 4);
   if (6 < DAT_803ddf34) {
@@ -2804,13 +2807,13 @@ void FUN_800a1f80(undefined4 param_1,undefined4 param_2,uint param_3)
     if (lbl_803DDF2C < lbl_803E0134) {
       lbl_803DC3F8 = lbl_803DC3F8 * lbl_803E0130;
       lbl_803DDF2C = lbl_803E0134;
-      FUN_80006824(param_3,0x282);
+      FUN_80006824(param_3,SFXsc_mumble02);
     }
   }
   else {
     lbl_803DC3F8 = lbl_803DC3F8 * lbl_803E0130;
     lbl_803DDF2C = lbl_803E012C;
-    FUN_80006824(param_3,0x282);
+    FUN_80006824(param_3,SFXsc_mumble02);
   }
   local_b0 = 0;
   piVar5 = &DAT_8039cf20;
@@ -8050,7 +8053,7 @@ int Effect3_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f04 = 0x200;
         break;
     case 0x200:
-        Sfx_PlayFromObject(param_1, 0x285);
+        Sfx_PlayFromObject(param_1, SFXsc_snort02);
         cfg.f08 = 0x64;
         cfg.f3c = lbl_803DFA04 * (f32)cfg.f08;
         cfg.f44 = 0xa100201;
