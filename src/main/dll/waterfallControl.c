@@ -2,6 +2,9 @@
 #include "main/dll/waterfallControl.h"
 
 
+#define SFXsc_gethit02 638
+#define SFXsc_gethit03 639
+
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_80006824();
@@ -213,10 +216,10 @@ void FUN_80163e44(short *param_1,int param_2)
         iVar5 = 0x7f;
       }
       if (0x10 < iVar5) {
-        FUN_80006824((uint)param_1,0x27e);
+        FUN_80006824((uint)param_1,SFXsc_gethit02);
         uVar2 = randomGetRange(0,5);
         if ((uVar2 == 0) && ((*(byte *)(param_2 + 0x27a) & 8) != 0)) {
-          FUN_80006824((uint)param_1,0x27f);
+          FUN_80006824((uint)param_1,SFXsc_gethit03);
         }
       }
     }
