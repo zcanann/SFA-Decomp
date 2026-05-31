@@ -4514,6 +4514,7 @@ int fn_800DBCFC(float *point,ObjfsaWalkGroupPatchInfo *patchInfo)
   u8 patchListIndex;
   u8 patchMask;
   u8 patchIndex;
+  u8 edgeIndex;
   ObjfsaWalkGroup *walkGroup;
   ObjfsaPatch *patch;
 
@@ -4531,8 +4532,17 @@ int fn_800DBCFC(float *point,ObjfsaWalkGroupPatchInfo *patchInfo)
       else {
         patch = Objfsa_GetPatch(patchIndex);
         patchInfo->patchGroupIds[patchListIndex] = patch->groupId;
-        if (Objfsa_IsPointInsidePatch(point,patch)) {
-          patchInfo->patchMask |= patchMask;
+        if (point[1] < (f32)patch->maxY && (f32)patch->minY < point[1]) {
+          edgeIndex = 0;
+          while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
+                 patch->planeOffsets[edgeIndex] +
+                     point[0] * (f32)patch->planes[edgeIndex].normalX +
+                     point[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
+            edgeIndex++;
+          }
+          if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
+            patchInfo->patchMask |= patchMask;
+          }
         }
       }
       patchMask <<= 1;
