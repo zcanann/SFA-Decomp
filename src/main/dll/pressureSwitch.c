@@ -2,6 +2,15 @@
 #include "main/dll/pressureSwitch.h"
 #include "main/mapEvent.h"
 
+#define SFXfoot_metal_run_2 0x1f2
+#define SFXdoor_unlocked 0x232
+#define SFXdoor_creak 0x233
+#define SFXstaff_proj_outofmagic 0x236
+#define SFXfox_treadwater122 0x237
+#define SFXfox_treadwater222 0x238
+#define SFXfox_treadwater422 0x23a
+#define SFXand_swipe2 0x32b
+
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006810();
@@ -164,7 +173,7 @@ void FUN_8014e248(int param_1)
   
   puVar2 = *(uint **)(param_1 + 0xb8);
   ObjGroup_RemoveObject(param_1,3);
-  FUN_80006810(param_1,0x236);
+  FUN_80006810(param_1,SFXstaff_proj_outofmagic);
   uVar1 = *puVar2;
   if (uVar1 != 0) {
     FUN_80017814(uVar1);
@@ -223,7 +232,7 @@ void FUN_8014e2a8(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 void FUN_8014e374(uint param_1)
 {
   if (*(int *)(*(int *)(param_1 + 0x54) + 0x50) != 0) {
-    FUN_80006824(param_1,0x32b);
+    FUN_80006824(param_1,SFXand_swipe2);
   }
   return;
 }
@@ -270,11 +279,11 @@ void FUN_8014e3a8(ushort *param_1)
     dVar6 = (double)FUN_8001771c((float *)(param_1 + 0xc),(float *)(iVar2 + 0x18));
     if ((double)lbl_803E32F0 <= dVar6) {
       if ((double)lbl_803E32F4 < dVar6) {
-        FUN_80006810((int)param_1,0x236);
+        FUN_80006810((int)param_1,SFXstaff_proj_outofmagic);
       }
     }
     else {
-      FUN_80006824((uint)param_1,0x236);
+      FUN_80006824((uint)param_1,SFXstaff_proj_outofmagic);
     }
     if ((*(byte *)(param_1 + 0x1b) == 0) || ((*(byte *)((int)piVar5 + 0x26) & 0x18) == 0)) {
       iVar2 = ObjHits_GetPriorityHitWithPosition((int)param_1,&uStack_50,&iStack_54,&uStack_58,&local_34,&uStack_30,
@@ -282,10 +291,10 @@ void FUN_8014e3a8(ushort *param_1)
       if (iVar2 != 0) {
         FUN_8000680c((int)param_1,0x7f);
         *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) | 0x10;
-        FUN_80006824((uint)param_1,0x232);
-        FUN_80006824((uint)param_1,0x233);
-        FUN_80006824((uint)param_1,0x238);
-        FUN_80006824((uint)param_1,0x1f2);
+        FUN_80006824((uint)param_1,SFXdoor_unlocked);
+        FUN_80006824((uint)param_1,SFXdoor_creak);
+        FUN_80006824((uint)param_1,SFXfox_treadwater222);
+        FUN_80006824((uint)param_1,SFXfoot_metal_run_2);
         local_34 = local_34 + lbl_803DDA58;
         local_2c = local_2c + lbl_803DDA5C;
         FUN_80081120(param_1,auStack_40,3,(int *)0x0);
@@ -310,7 +319,7 @@ void FUN_8014e3a8(ushort *param_1)
           param_1[0x7b] = 1;
           *(undefined *)(param_1 + 0x1b) = 0;
           *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) & 0xef;
-          FUN_80006810((int)param_1,0x236);
+          FUN_80006810((int)param_1,SFXstaff_proj_outofmagic);
         }
         ObjHits_DisableObject((int)param_1);
       }
@@ -365,7 +374,7 @@ void FUN_8014e3a8(ushort *param_1)
     param_1[0x7b] = 0;
     *(undefined *)(param_1 + 0x1b) = 1;
     *(byte *)((int)piVar5 + 0x26) = *(byte *)((int)piVar5 + 0x26) | 8;
-    FUN_80006824((uint)param_1,0x237);
+    FUN_80006824((uint)param_1,SFXfox_treadwater122);
   }
   return;
 }
@@ -588,7 +597,7 @@ void FUN_8014ede4(uint param_1,int param_2,int param_3)
     if (cVar3 == '\0') {
       *(byte *)(piVar4 + 7) = *(byte *)(piVar4 + 7) | 1;
     }
-    FUN_80006824(param_1,0x23a);
+    FUN_80006824(param_1,SFXfox_treadwater422);
   }
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
   return;
@@ -709,7 +718,7 @@ void wispbaddie_free(int obj) {
 void hagabon_free(int obj) {
     void **state = *(void ***)(obj + 0xB8);
     ObjGroup_RemoveObject(obj, 3);
-    Sfx_StopFromObject(obj, 0x236);
+    Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
     if (*state != NULL) {
         mm_free(*state);
         *state = NULL;
@@ -1070,16 +1079,16 @@ void hagabon_update(int obj)
         *(int *)(obj + 0xf4) = 0;
         *(u8 *)(obj + 0x36) = 1;
         *(u8 *)((u8 *)state + 0x26) |= 8;
-        Sfx_PlayFromObject(obj, 0x237);
+        Sfx_PlayFromObject(obj, SFXfox_treadwater122);
         return;
     }
 
     player = Obj_GetPlayerObject();
     dist = Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18));
     if (dist < lbl_803E2658) {
-        Sfx_PlayFromObject(obj, 0x236);
+        Sfx_PlayFromObject(obj, SFXstaff_proj_outofmagic);
     } else if (dist > lbl_803E265C) {
-        Sfx_StopFromObject(obj, 0x236);
+        Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
     }
 
     if ((*(u8 *)(obj + 0x36) != 0) && ((*(u8 *)((u8 *)state + 0x26) & 0x18) != 0)) {
@@ -1091,7 +1100,7 @@ void hagabon_update(int obj)
                 *(int *)(obj + 0xf4) = 1;
                 *(u8 *)(obj + 0x36) = 0;
                 *(u8 *)((u8 *)state + 0x26) &= 0xef;
-                Sfx_StopFromObject(obj, 0x236);
+                Sfx_StopFromObject(obj, SFXstaff_proj_outofmagic);
             }
             ObjHits_DisableObject(obj);
         }
@@ -1109,10 +1118,10 @@ void hagabon_update(int obj)
                                                &hitZ) != 0) {
             Sfx_StopObjectChannel(obj, 0x7f);
             *(u8 *)((u8 *)state + 0x26) |= 0x10;
-            Sfx_PlayFromObject(obj, 0x232);
-            Sfx_PlayFromObject(obj, 0x233);
-            Sfx_PlayFromObject(obj, 0x238);
-            Sfx_PlayFromObject(obj, 0x1f2);
+            Sfx_PlayFromObject(obj, SFXdoor_unlocked);
+            Sfx_PlayFromObject(obj, SFXdoor_creak);
+            Sfx_PlayFromObject(obj, SFXfox_treadwater222);
+            Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
             hitX += playerMapOffsetX;
             hitZ += playerMapOffsetZ;
             lightPos[0] = hitX;
