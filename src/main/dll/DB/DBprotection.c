@@ -1,6 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/DB/DBprotection.h"
 
+#define SFXwp_cahit2_c 0x143
+#define SFXwp_crthit6 0x144
+#define SFXwp_crtsmsh6 0x145
+#define SFXwp_dsmk2_c 0x146
+
 extern undefined4 FUN_800067f0();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006810();
@@ -257,7 +262,7 @@ void fn_801DFA28(void)
     FUN_80006810((int)puVar7,0x143);
   }
   else {
-    FUN_80006824((uint)puVar7,0x143);
+    FUN_80006824((uint)puVar7,SFXwp_cahit2_c);
   }
   fVar11 = pfVar12[0x12];
   if (fVar11 == 0.0) goto LAB_801e1614;
@@ -486,7 +491,7 @@ LAB_801e0ac0:
       *(undefined2 *)((int)pfVar12 + 0x82) = 200;
       uVar9 = FUN_801e2184();
       FUN_80006810(uVar9,0x2c6);
-      FUN_80006824(uVar9,0x146);
+      FUN_80006824(uVar9,SFXwp_dsmk2_c);
       GameBit_Set(0xf1e,0);
     }
   }
@@ -930,12 +935,12 @@ void fn_801E12EC(int *obj)
   if (state[0x81] == 0) {
     if (angleCos < lbl_803E57CC) {
       if (GameBit_Get(0xa71) == 0) {
-        Sfx_PlayFromObject((int)obj, 0x144);
+        Sfx_PlayFromObject((int)obj, SFXwp_crthit6);
       }
       state[0x81] = 1;
     } else if (angleCos > lbl_803E57D0) {
       if (GameBit_Get(0xa71) == 0) {
-        Sfx_PlayFromObject((int)obj, 0x145);
+        Sfx_PlayFromObject((int)obj, SFXwp_crtsmsh6);
       }
       state[0x81] = 1;
     }
