@@ -1,6 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/creator19D.h"
 
+#define SFXmn_lummy311 0x77
+#define SFXmn_spdrcollapse11 0x78
+#define SFXmn_spdrmove11 0x79
+#define SFXmn_spithit6 0x7a
+
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006814();
 extern undefined4 FUN_80006824();
@@ -210,7 +215,7 @@ void DFSH_LaserBeam_update(uint param_1)
     if (DFSH_LASER_CYCLE_TIMER(runtime) < 0) {
       if (DFSH_LASER_BLOCKED(runtime) == 0) {
         DFSH_LASER_CYCLE_TIMER(runtime) = 0x190;
-        Sfx_PlayFromObject(obj,0x78);
+        Sfx_PlayFromObject(obj,SFXmn_spdrcollapse11);
         runtime->beamVolumeScale = lbl_803E4EC0;
       }
       else {
@@ -220,9 +225,9 @@ void DFSH_LaserBeam_update(uint param_1)
     }
     else if (DFSH_LASER_CYCLE_TIMER(runtime) < DFSH_LASER_WARMUP_THRESHOLD(runtime)) {
       if (DFSH_LASER_BLAST_PHASE(runtime) == 0) {
-        Sfx_PlayFromObject(obj,0x79);
+        Sfx_PlayFromObject(obj,SFXmn_spdrmove11);
         if (DFSH_LASER_BLOCKED(runtime) == 0) {
-          Sfx_PlayFromObject(obj,0x77);
+          Sfx_PlayFromObject(obj,SFXmn_lummy311);
         }
         DFSH_LASER_BLAST_PHASE(runtime) = 1;
         if (lbl_803DDBB8 != NULL) {
@@ -338,7 +343,7 @@ void DFSH_LaserBeam_update(uint param_1)
           }
           else {
             int i;
-            Sfx_PlayFromObject(obj,0x7A);
+            Sfx_PlayFromObject(obj,SFXmn_spithit6);
             for (i = 0; i < 4; i++) {
               PARTFX_SPAWN(Obj_GetPlayerObject(),0x28B,0,4,-1,0);
             }
