@@ -1,6 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/SHrocketmushroom.h"
 
+#define SFXen_tiles_lightup 89
+#define SFXmv_torclp_6 162
+#define SFXmv_totem_slide 167
+
 #pragma peephole off
 #pragma scheduling off
 
@@ -96,7 +100,7 @@ void bombplantspore_update(void *obj) {
         while (ObjMsg_Pop(obj, &poppedMessage, &poppedSender, NULL) != 0) {
             if (poppedMessage == detonateMessage) {
                 gameBitIncrement(BOMBPLANT_GAME_BIT_AVAILABLE_SPORES);
-                Sfx_PlayFromObject(obj, 0xa7);
+                Sfx_PlayFromObject(obj, SFXmv_totem_slide);
                 (*(void (***)(void *))gExpgfxInterface)[5](obj);
                 for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++) {
                     objFn_800972dc(obj, 5, 7, 1, 0x3c, NULL, 0, lbl_803E53B0, lbl_803E53B8);
@@ -185,7 +189,7 @@ void bombplantspore_update(void *obj) {
             if (hitObj != NULL &&
                 (hitId = *(s16 *)((u8 *)hitObj + 0x46), hitId != 0x36d) &&
                 hitId != 0x198 && hitId != 0x63c) {
-                Sfx_PlayFromObject(obj, 0x59);
+                Sfx_PlayFromObject(obj, SFXen_tiles_lightup);
                 *(u8 *)((u8 *)state + 0x2b0) =
                     *(u8 *)((u8 *)state + 0x2b0) & ~BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE |
                     BOMBPLANTSPORE_STATE_FLAG_HIT_SURFACE;
@@ -213,7 +217,7 @@ void bombplantspore_update(void *obj) {
         } else {
             *(f32 *)((u8 *)state + 0x274) -= timeDelta;
             if (*(f32 *)((u8 *)state + 0x274) <= lbl_803E5394) {
-                Sfx_PlayFromObject(obj, 0xa2);
+                Sfx_PlayFromObject(obj, SFXmv_torclp_6);
                 (*(void (***)(void *))gExpgfxInterface)[5](obj);
                 for (i = 0; i < BOMBPLANTSPORE_EXPLOSION_PARTICLE_COUNT; i++) {
                     objFn_800972dc(obj, 5, 7, 1, 0x3c, NULL, 0, lbl_803E53B0, lbl_803E53B8);
