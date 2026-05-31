@@ -12821,6 +12821,21 @@ typedef struct {
     u8 sourceId;
 } GameTextLoadSlot;
 
+#define GAMETEXT_PATH_BUFFER_OFFSET 0x380
+#define GAMETEXT_COMMAND_STRING_BUFFER_OFFSET 0x3c0
+#define GAMETEXT_LOAD_REQUESTS_OFFSET 0x15dc
+#define GAMETEXT_SEQUENCE_LOAD_STATE_OFFSET 0x1604
+#define GAMETEXT_FONT_SLOT_OFFSET 0x1610
+#define GAMETEXT_LOAD_SLOTS_OFFSET 0x1660
+#define GAMETEXT_PENDING_REQUEST_SCAN_OFFSET (GAMETEXT_LOAD_REQUESTS_OFFSET - 0x1c)
+#define GAMETEXT_LOAD_SLOT_COUNT 8
+#define GAMETEXT_PENDING_SOURCE_COUNT 4
+#define GAMETEXT_INVALID_DIR 0xff
+#define GAMETEXT_INVALID_LANGUAGE 6
+#define GAMETEXT_MAP_DIR_COUNT 0x49
+#define GAMETEXT_LANGUAGE_COUNT 6
+#define GAMETEXT_SEQUENCE_SOURCE_ID 1
+
 extern u8 lbl_80339980[];
 extern int lbl_803DC9D0;
 extern int lbl_803DC9D4;
@@ -12967,7 +12982,7 @@ void gameTextInitFn_8001a234(void) {
         }
     }
 
-    gameTextFonts = gameTextBase + 0x1610;
+    gameTextFonts = gameTextBase + GAMETEXT_FONT_SLOT_OFFSET;
     lbl_803DC9E8 = 2;
     curLanguage = -1;
     curGameTextDir = (void *)-1;
@@ -12980,7 +12995,7 @@ void gameTextInitFn_8001a234(void) {
     lbl_803DC9A5 = 0xff;
     lbl_803DC9A4 = 0xff;
     lbl_803DC9C8 = 0;
-    lbl_803DC9C4 = gameTextBase + 0x3c0;
+    lbl_803DC9C4 = gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET;
     lbl_803DC97C = 0;
     textWindow = gameTextBase + 0x40;
     lbl_803DC974 = textWindow;
@@ -13016,8 +13031,8 @@ void gameTextRun(void) {
 
     gameTextBase = lbl_80339980;
 
-    slot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
-    i = 7;
+    slot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do {
         if (slot->state == 2) {
             setLanguageFn_8001ad64(slot);
@@ -13026,11 +13041,11 @@ void gameTextRun(void) {
     } while (i-- != 0);
 
     sourceId = 0;
-    pending = gameTextBase + 0x15c0;
+    pending = gameTextBase + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET;
     do {
         dirId = pending[0x24];
-        if ((u8)dirId != 0xff) {
-            freeSlot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
+        if ((u8)dirId != GAMETEXT_INVALID_DIR) {
+            freeSlot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
             if (freeSlot->active != 0) {
                 freeSlot++;
                 if (freeSlot->active != 0) {
@@ -13063,23 +13078,23 @@ void gameTextRun(void) {
                 freeSlot->languageId = (u8)languageId;
                 freeSlot->active = 1;
                 freeSlot->sourceId = (u8)sourceId;
-                path = (char *)(gameTextBase + 0x380);
+                path = (char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET);
                 sprintf(path, sGameTextMapPathFormat, sMapDirectoryNameTable[dirId],
                         sLanguageNameTable[languageId][0]);
                 setFileInfo(freeSlot);
                 freeSlot->loadHandle =
                     loadFileByPathAsync(path, &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
                 setFileInfo(NULL);
-                pending[0x24] = 0xff;
-                pending[0x25] = 6;
+                pending[0x24] = GAMETEXT_INVALID_DIR;
+                pending[0x25] = GAMETEXT_INVALID_LANGUAGE;
             }
         }
         pending += 0x28;
         sourceId++;
-    } while (sourceId < 4);
+    } while (sourceId < GAMETEXT_PENDING_SOURCE_COUNT);
 
-    slot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
-    i = 7;
+    slot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do {
         if ((slot->state == 5 || slot->state == 6) && slot->loadHandle != NULL) {
             mm_free(slot->loadHandle);
@@ -13195,7 +13210,7 @@ void gameTextRun(void) {
             lbl_803DC988 = cmd->f8;
             break;
         case 15:
-            gameTextFonts = gameTextBase + 0x15c0 + cmd->f4 * 0x28;
+            gameTextFonts = gameTextBase + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET + cmd->f4 * 0x28;
             lbl_803DC9E8 = cmd->f4;
             if (cmd->f4 == 2) {
                 color = lbl_803DB3C8;
@@ -13211,7 +13226,7 @@ void gameTextRun(void) {
         Sfx_StopFromObject(0, 0x397);
     }
     lbl_803DC9C8 = 0;
-    lbl_803DC9C4 = gameTextBase + 0x3c0;
+    lbl_803DC9C4 = gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET;
 
     textWindow = lbl_802C7400 + 0x1280;
     for (i = 0x94; i > 0; i--) {
@@ -13249,10 +13264,10 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
         return;
     }
 
-    slot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
-    i = 7;
+    slot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do {
-        if (slot->sourceId == 1) {
+        if (slot->sourceId == GAMETEXT_SEQUENCE_SOURCE_ID) {
             if (slot->state == 1) {
                 slot->state = 4;
                 DVDCancelAsync(slot, dvdCancelCallback_8001b39c);
@@ -13269,8 +13284,8 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
         slot++;
     } while (i-- != 0);
 
-    *(int *)(gameTextBase + 0x1604) = 1;
-    freeSlot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
+    *(int *)(gameTextBase + GAMETEXT_SEQUENCE_LOAD_STATE_OFFSET) = 1;
+    freeSlot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
     if (freeSlot->active != 0) {
         freeSlot++;
         if (freeSlot->active != 0) {
@@ -13300,8 +13315,8 @@ void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
     freeSlot->dirId = (u8)sequenceSlotDir;
     freeSlot->languageId = (u8)curLanguage;
     freeSlot->active = 1;
-    freeSlot->sourceId = 1;
-    path = (char *)(gameTextBase + 0x380);
+    freeSlot->sourceId = GAMETEXT_SEQUENCE_SOURCE_ID;
+    path = (char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET);
     sprintf(path, sGameTextSequencePathFormat, sequenceId,
             *(char **)(languageTable + languageTableOffset));
     setFileInfo(freeSlot);
@@ -13333,13 +13348,14 @@ void gameTextLoadForCurMap(int sourceId) {
     languageId = curLanguage;
     lbl_803DC9D8 = dirId;
     lbl_803DC9E0 = languageId;
-    if (dirId < 0 || dirId >= 0x49 || languageId < 0 || languageId >= 6) {
+    if (dirId < 0 || dirId >= GAMETEXT_MAP_DIR_COUNT ||
+        languageId < 0 || languageId >= GAMETEXT_LANGUAGE_COUNT) {
         testAndSet_onlyUseHeap3(oldHeap);
         return;
     }
 
-    slot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
-    i = 7;
+    slot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
+    i = GAMETEXT_LOAD_SLOT_COUNT - 1;
     do {
         if (slot->sourceId == sourceId) {
             if (slot->state == 1) {
@@ -13360,12 +13376,13 @@ void gameTextLoadForCurMap(int sourceId) {
         slot++;
     } while (i-- != 0);
 
-    request = (GameTextLoadRequest *)(gameTextBase + 0x15dc + sourceId * 0x28);
+    request = (GameTextLoadRequest *)(gameTextBase + GAMETEXT_LOAD_REQUESTS_OFFSET +
+                                      sourceId * sizeof(GameTextLoadRequest));
     request->state = 1;
     request->dirId = (u8)curGameTextDir;
     request->languageId = (u8)curLanguage;
 
-    freeSlot = (GameTextLoadSlot *)(gameTextBase + 0x1660);
+    freeSlot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
     if (freeSlot->active != 0) {
         freeSlot++;
         if (freeSlot->active != 0) {
@@ -13399,15 +13416,15 @@ void gameTextLoadForCurMap(int sourceId) {
         freeSlot->languageId = (u8)languageId;
         freeSlot->active = 1;
         freeSlot->sourceId = (u8)sourceId;
-        path = (char *)(gameTextBase + 0x380);
+        path = (char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET);
         sprintf(path, sGameTextMapPathFormat, sMapDirectoryNameTable[dirId],
                 sLanguageNameTable[languageId][0]);
         setFileInfo(freeSlot);
         freeSlot->loadHandle =
             loadFileByPathAsync(path, &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
         setFileInfo(NULL);
-        request->dirId = 0xff;
-        request->languageId = 6;
+        request->dirId = GAMETEXT_INVALID_DIR;
+        request->languageId = GAMETEXT_INVALID_LANGUAGE;
     }
 
     testAndSet_onlyUseHeap3(oldHeap);
