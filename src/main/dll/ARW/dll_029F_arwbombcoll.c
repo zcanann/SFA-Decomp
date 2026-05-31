@@ -1,5 +1,11 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXbaddie_eba_hit 0x2a6
+#define SFXbaddie_eba_leavesclose 0x2a7
+#define SFXbaddie_eba_leavesopen 0x2a8
+#define SFXbaddie_eba_pollenspin 0x2a9
+#define SFXbaddie_vambat_attack 0x2ab
+
 #pragma peephole on
 #pragma scheduling on
 int arwbombcoll_getExtraSize(void) { return 8; }
@@ -103,22 +109,22 @@ void arwbombcoll_handleArwingHit(int obj, int state, int arwing) {
     int setup = *(int *)(obj + 0x4c);
     u8 mode = *(u8 *)(state + 0);
     if (mode == 0) {
-        Sfx_PlayFromObject(arwing, 0x2a9);
+        Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
         if (*(s16 *)(arwing + 0x46) == 0x601) {
             fn_8022D64C(arwing, 1);
             fn_8022D520(arwing, 0xa);
         }
     } else if (mode == 1) {
-        Sfx_PlayFromObject(arwing, 0x2a9);
+        Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
         if (*(s16 *)(arwing + 0x46) == 0x601) {
             fn_8022D634(arwing, 1);
             fn_8022D64C(arwing, fn_8022D580(arwing));
         }
     } else if (mode == 3 || mode == 4) {
-        Sfx_PlayFromObject(arwing, 0x2a9);
+        Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
         gameBitIncrement(*(s16 *)(setup + 0x1e));
     } else {
-        Sfx_PlayFromObject(arwing, 0x2ab);
+        Sfx_PlayFromObject(arwing, SFXbaddie_vambat_attack);
         if (*(s16 *)(arwing + 0x46) == 0x601) {
             int seg;
             fn_8022D5F0(arwing);
@@ -246,27 +252,27 @@ active : {
         if ((u32)arw != 0 && flags->b80 != 0) {
             switch (*(s16 *)(obj + 0x46)) {
             case 0x609:
-                Sfx_PlayFromObject(obj, 0x2a6);
+                Sfx_PlayFromObject(obj, SFXbaddie_eba_hit);
                 fn_8022D6F0(arw);
                 break;
             case 0x608:
-                Sfx_PlayFromObject(obj, 0x2a7);
+                Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesclose);
                 fn_8022D6D0(arw);
                 break;
             case 0x6d8:
-                Sfx_PlayFromObject(obj, 0x2a8);
+                Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
                 fn_8022D5DC(arw);
                 break;
             case 0x6d9:
-                Sfx_PlayFromObject(obj, 0x2a8);
+                Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
                 fn_8022D5C8(arw);
                 break;
             case 0x6db:
-                Sfx_PlayFromObject(obj, 0x2a8);
+                Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
                 fn_8022D5B4(arw);
                 break;
             case 0x6da:
-                Sfx_PlayFromObject(obj, 0x2a8);
+                Sfx_PlayFromObject(obj, SFXbaddie_eba_leavesopen);
                 fn_8022D5A0(arw);
                 break;
             }
