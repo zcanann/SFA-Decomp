@@ -794,6 +794,103 @@ void fn_801796BC(int* obj, f32 a, f32 b, f32 c)
     *(f32*)((char*)state + 696) = *(f32*)((char*)obj + 20);
 }
 
+extern int *Obj_GetPlayerObject(void);
+extern void getYButtonItem(s16 *out);
+extern u32 getButtonsJustPressed(int controller);
+extern int fn_80295BF0(int *player);
+extern int fn_8029669C(int *player);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void mathFn_80021ac8(void *inParams, f32 *outVec);
+/* extern void ObjMsg_SendToObject(int *target, int msg, int *src, int p4); — already declared */
+extern f32 lbl_803E3688;
+extern f32 lbl_803E368C;
+extern f32 lbl_803E3690;
+extern f32 lbl_803E3694;
+extern f32 lbl_803E3698;
+extern f32 lbl_803E36A4;
+
+void trickyBallFn_801793b8(int *obj, u8 *params)
+{
+    int *player;
+    int *playerState;
+    s16 yItem;
+    u32 btns;
+    f32 lcl[6];
+
+    player = Obj_GetPlayerObject();
+    playerState = *(int **)((char *)player + 0xb8);
+
+    if (params[0x2c8] == 1) goto end;
+
+    if (params[0x2c9] == 0) {
+        params[0x2c9] = 1;
+        if (params[0x2c9] == 0) goto end;
+        params[0x2ca] = 1;
+        goto end;
+    }
+
+    ObjHits_DisableObject(obj);
+    *(u8 *)((char *)obj + 0xaf) |= 8;
+
+    getYButtonItem(&yItem);
+    btns = getButtonsJustPressed(0);
+    if ((btns & 0x100) != 0 || (yItem == 5 && (getButtonsJustPressed(0) & 0x800) != 0)) {
+        if (fn_80295BF0(player) != 0) {
+            params[0x2ca] = 0;
+        } else {
+            Sfx_PlayFromObject(0, 0x10a);
+        }
+    }
+
+    if (*(int *)((char *)obj + 0xf8) == 1) {
+        params[0x2c9] = 2;
+    }
+    if (params[0x2c9] != 2) goto end;
+    if (*(int *)((char *)obj + 0xf8) != 0) goto end;
+
+    if (fn_8029669C(player) == 0) {
+        params[0x2c9] = 0;
+        params[0x2ca] = 0;
+        *(f32 *)((char *)params + 0x26c) = lbl_803E36A4;
+        params[0x274] = 5;
+        goto end;
+    }
+
+    params[0x2c9] = 0;
+    params[0x2c8] = 1;
+
+    {
+        f32 k = lbl_803E3688;
+        *(f32 *)((char *)obj + 0x28) =
+            k * (lbl_803E3690 * *(f32 *)((char *)playerState + 0x298) + lbl_803E368C);
+        *(f32 *)((char *)obj + 0x2c) =
+            k * (lbl_803E3698 * *(f32 *)((char *)playerState + 0x298) + lbl_803E3694);
+    }
+
+    *(f32 *)((char *)lcl + 0xc) = lbl_803E369C;
+    *(f32 *)((char *)lcl + 0x10) = lbl_803E369C;
+    *(f32 *)((char *)lcl + 0x14) = lbl_803E369C;
+    *(f32 *)((char *)lcl + 0x8) = lbl_803E36A0;
+    *(s16 *)((char *)lcl + 0x4) = 0;
+    *(s16 *)((char *)lcl + 0x2) = 0;
+    if (*(int *)((char *)player + 0x30) != 0) {
+        *(s16 *)lcl = (s16)(*(s16 *)*(int **)((char *)player + 0x30) + *(s16 *)player);
+    } else {
+        *(s16 *)lcl = *(s16 *)player;
+    }
+    mathFn_80021ac8(lcl, (f32 *)((char *)obj + 0x24));
+
+    fn_801796BC(obj,
+                *(f32 *)((char *)obj + 0x24),
+                *(f32 *)((char *)obj + 0x28),
+                *(f32 *)((char *)obj + 0x2c));
+
+end:
+    if (params[0x2ca] != 0) {
+        ObjMsg_SendToObject(player, 0x100010, obj, 0);
+    }
+}
+
 extern u32 GameBit_Get(int eventId);
 extern int **gObjectTriggerInterface;
 void doorf4_update(int *obj)
@@ -855,9 +952,6 @@ void doorf4_init(int *obj, int *params)
     case 196:
         state[5] = 68;
         break;
-    case 200:
-        *(f32 *)((char *)state + 0xc) = lbl_803E3684;
-        break;
     case 283:
         state[5] = 152;
         break;
@@ -866,14 +960,17 @@ void doorf4_init(int *obj, int *params)
         *(s16 *)((char *)state + 0x1c) = 830;
         *(s16 *)((char *)state + 0x1e) = 831;
         break;
+    case 200:
+        *(f32 *)((char *)state + 0xc) = lbl_803E3684;
+        break;
     default:
         state[5] = -1;
     }
 
     ObjGroup_AddObject(obj, 14);
 
-    *(f32 *)state = fn_80293E80((f32) * (s16 *)obj * lbl_803E364C / lbl_803E3650);
-    *(f32 *)((char *)state + 4) = sin((f32) * (s16 *)obj * lbl_803E364C / lbl_803E3650);
+    *(f32 *)state = fn_80293E80(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
+    *(f32 *)((char *)state + 4) = sin(lbl_803E364C * (f32)(int)*(s16 *)obj / lbl_803E3650);
     *(f32 *)((char *)state + 8) = -(*(f32 *)state * *(f32 *)((char *)obj + 12) +
                                     *(f32 *)((char *)state + 4) * *(f32 *)((char *)obj + 20));
 }
