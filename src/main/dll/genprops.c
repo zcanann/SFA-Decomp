@@ -1,6 +1,14 @@
 #include "ghidra_import.h"
 #include "main/dll/genprops.h"
 
+#define SFXen_treadlpc 0x49
+#define SFXen_weetinklp22 0x4a
+#define SFXen_waterblock_stop 0x58
+#define SFXsc_mpick1_b 0xb3
+#define SFXsc_scabshort32 0xba
+#define SFXsc_text_appears_lp 0xc0
+#define SFXsc_nolock 0xc1
+#define SFXwp_gprop2_c 0x16a
 
 #pragma peephole off
 #pragma scheduling off
@@ -493,7 +501,7 @@ void FUN_8016b3c4(uint param_1)
          ) {
         piVar4 = *(int **)(param_1 + 0xb8);
         local_28 = DAT_803e3e38;
-        FUN_80006824(param_1,0x4a);
+        FUN_80006824(param_1,SFXen_weetinklp22);
         uVar2 = randomGetRange(0,2);
         (**(code **)(*(int *)piVar4[2] + 4))(param_1,uVar2,0,2,0xffffffff,&local_28);
         local_18 = (double)CONCAT44(0x43300000,(uint)*(byte *)(*(int *)(param_1 + 0x50) + 0x62));
@@ -513,7 +521,7 @@ void FUN_8016b3c4(uint param_1)
       if (*(char *)(param_1 + 0x36) == -1) {
         piVar4 = *(int **)(param_1 + 0xb8);
         local_24 = DAT_803e3e38;
-        FUN_80006824(param_1,0x4a);
+        FUN_80006824(param_1,SFXen_weetinklp22);
         uVar2 = randomGetRange(0,2);
         (**(code **)(*(int *)piVar4[2] + 4))(param_1,uVar2,0,2,0xffffffff,&local_24);
         local_18 = (double)CONCAT44(0x43300000,(uint)*(byte *)(*(int *)(param_1 + 0x50) + 0x62));
@@ -2321,7 +2329,7 @@ void FUN_8016e5b0(uint param_1,char param_2,char param_3)
   iVar1 = *(int *)(param_1 + 0xb8);
   if (param_2 == '\0') {
     if (lbl_803E3F4C < *(float *)(iVar1 + 0x50)) {
-      FUN_80006824(param_1,0xc1);
+      FUN_80006824(param_1,SFXsc_nolock);
     }
     if (param_3 == '\0') {
       *(float *)(iVar1 + 0x50) = lbl_803E3FBC;
@@ -2332,7 +2340,7 @@ void FUN_8016e5b0(uint param_1,char param_2,char param_3)
   }
   else {
     if (*(float *)(iVar1 + 0x50) < lbl_803E3F4C) {
-      FUN_80006824(param_1,0xc0);
+      FUN_80006824(param_1,SFXsc_text_appears_lp);
     }
     if (param_3 == '\0') {
       *(float *)(iVar1 + 0x50) = lbl_803E3FB8;
@@ -3049,7 +3057,7 @@ void FUN_8016f3d8(undefined8 param_1,double param_2,double param_3,double param_
       }
       if (*(char *)(*(int *)(param_9 + 0x2a) + 0xad) != '\0') {
         if (*(char *)(*(int *)(param_9 + 0x2a) + 0xac) == '\x0e') {
-          FUN_80006824((uint)param_9,0xba);
+          FUN_80006824((uint)param_9,SFXsc_scabshort32);
           (**(code **)(*DAT_803dd718 + 0x10))
                     ((double)*(float *)(param_9 + 6),(double)*(float *)(param_9 + 8),
                      (double)*(float *)(param_9 + 10),(double)lbl_803E3FF8,param_9);
@@ -3059,7 +3067,7 @@ void FUN_8016f3d8(undefined8 param_1,double param_2,double param_3,double param_
           (**(code **)(*DAT_803dd718 + 0x14))((double)*(float *)(param_9 + 6),(int)*param_9,2);
         }
         else {
-          FUN_80006824((uint)param_9,0xb3);
+          FUN_80006824((uint)param_9,SFXsc_mpick1_b);
         }
         if (*(char *)((int)puVar6 + 0x71) == '\0') {
           FUN_80081114(param_9,3);
@@ -4349,26 +4357,26 @@ void FUN_801713ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
       iVar4 = FUN_80017a98();
       FUN_80294d60(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,2);
       uVar3 = FUN_80017a98();
-      FUN_80006824(uVar3,0x49);
+      FUN_80006824(uVar3,SFXen_treadlpc);
       FUN_80081118((double)lbl_803E40EC,param_9,1,0x28);
     }
     else if ((sVar1 < 0x3cd) && (sVar1 == 0xb)) {
       uVar3 = FUN_80017a98();
-      uVar7 = FUN_80006824(uVar3,0x49);
+      uVar7 = FUN_80006824(uVar3,SFXen_treadlpc);
       iVar4 = FUN_80017a98();
       FUN_80294d60(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,4);
       FUN_80081118((double)lbl_803E40EC,param_9,3,0x28);
     }
     else {
       uVar3 = FUN_80017a98();
-      FUN_80006824(uVar3,0x58);
+      FUN_80006824(uVar3,SFXen_waterblock_stop);
       FUN_80081118((double)lbl_803E40EC,param_9,0xff,0x28);
     }
   }
   else if ((sVar1 < 4) && (sVar1 == 1)) {
     sVar1 = *(short *)(param_9 + 0x46);
     if (sVar1 == 0x319) {
-      FUN_80006824(param_9,0x16a);
+      FUN_80006824(param_9,SFXwp_gprop2_c);
       FUN_80017698(0x3e9,1);
       *(undefined2 *)(iVar6 + 0x3c) = 0x4b0;
       FUN_80081118((double)lbl_803E40EC,param_9,0xff,0x28);
@@ -4376,12 +4384,12 @@ void FUN_801713ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
     else {
       if (sVar1 < 0x319) {
         if (sVar1 == 0x5a) {
-          FUN_80006824(param_9,0x49);
+          FUN_80006824(param_9,SFXen_treadlpc);
           FUN_80081118((double)lbl_803E40EC,param_9,2,0x28);
           goto LAB_801725bc;
         }
         if ((sVar1 < 0x5a) && (sVar1 == 0x22)) {
-          FUN_80006824(param_9,0x49);
+          FUN_80006824(param_9,SFXen_treadlpc);
           FUN_80081118((double)lbl_803E40EC,param_9,0xff,0x28);
           goto LAB_801725bc;
         }
@@ -4394,15 +4402,15 @@ void FUN_801713ac(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
         FUN_80017698(0x86a,(int)cVar2);
         FUN_80081118((double)lbl_803E40EC,param_9,6,0x28);
-        FUN_80006824(param_9,0x49);
+        FUN_80006824(param_9,SFXen_treadlpc);
         goto LAB_801725bc;
       }
-      FUN_80006824(param_9,0x58);
+      FUN_80006824(param_9,SFXen_waterblock_stop);
       FUN_80081118((double)lbl_803E40EC,param_9,0xff,0x28);
     }
   }
   else {
-    FUN_80006824(param_9,0x58);
+    FUN_80006824(param_9,SFXen_waterblock_stop);
     FUN_80081118((double)lbl_803E40EC,param_9,0xff,0x28);
   }
 LAB_801725bc:
@@ -5500,7 +5508,7 @@ void staffDoGrowShrinkAnim(int *obj, u8 grow, u8 flag2)
     int *state = *(int **)((char *)obj + 0xb8);
     if (grow != 0) {
         if (*(f32 *)((char *)state + 0x50) < lbl_803E32B4) {
-            Sfx_PlayFromObject(obj, 0xc0);
+            Sfx_PlayFromObject(obj, SFXsc_text_appears_lp);
         }
         if (flag2 == 0) {
             *(f32 *)((char *)state + 0x50) = lbl_803E3320;
@@ -5509,7 +5517,7 @@ void staffDoGrowShrinkAnim(int *obj, u8 grow, u8 flag2)
         }
     } else {
         if (*(f32 *)((char *)state + 0x50) > lbl_803E32B4) {
-            Sfx_PlayFromObject(obj, 0xc1);
+            Sfx_PlayFromObject(obj, SFXsc_nolock);
         }
         if (flag2 == 0) {
             *(f32 *)((char *)state + 0x50) = lbl_803E3324;
