@@ -1,5 +1,10 @@
 #include "main/dll/DR/dr_shared.h"
 
+#define SFXfend_fox_keytap2 0x308
+#define SFXfend_fox_keytap3 0x309
+#define SFXfend_pep_wakeup 0x30a
+#define SFXfend_rob_servo1 0x30b
+
 int drakorhoverpad_func0B(void) { return 0x1; }
 
 int drakorhoverpad_func0E(void) { return 0x1; }
@@ -91,7 +96,7 @@ int drakorhoverpad_init(int obj) {
                 }
             }
         }
-        Sfx_PlayFromObject(obj, 777);
+        Sfx_PlayFromObject(obj, SFXfend_fox_keytap3);
     }
     return 0;
 }
@@ -296,8 +301,8 @@ void drakorhoverpad_updateMain(int obj) {
             *(f32 *)((char *)obj + 0x10) = *(f32 *)(p + 0x70);
             *(f32 *)((char *)obj + 0x14) = *(f32 *)(p + 0x74);
             *(f32 *)p = lbl_803E6A38;
-            Sfx_PlayFromObject(obj, 0x308);
-            Sfx_PlayFromObject(obj, 0x30a);
+            Sfx_PlayFromObject(obj, SFXfend_fox_keytap2);
+            Sfx_PlayFromObject(obj, SFXfend_pep_wakeup);
         }
         return;
     }
@@ -534,7 +539,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         }
         f->state = 3;
         *(f32 *)p = lbl_803E6A3C;
-        Sfx_PlayFromObject(obj, 0x30b);
+        Sfx_PlayFromObject(obj, SFXfend_rob_servo1);
         break;
     case 17:
         if (*(f32 *)p < lbl_803E6A3C) {
@@ -542,7 +547,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         }
         f->state = 4;
         *(f32 *)p = lbl_803E6A3C;
-        Sfx_PlayFromObject(obj, 0x30b);
+        Sfx_PlayFromObject(obj, SFXfend_rob_servo1);
         break;
     case 10:
         if (g->p1 == 0) {
@@ -628,7 +633,7 @@ int drakorhoverpad_handlePathPointEvent(int obj, u8 a, u8 b, void *out) {
         } else {
             *(f32 *)p = lbl_803E6A38 * *(f32 *)p;
         }
-        Sfx_PlayFromObject(obj, 0x309);
+        Sfx_PlayFromObject(obj, SFXfend_fox_keytap3);
         break;
     case 20:
         g->f10 = !g->f10;
