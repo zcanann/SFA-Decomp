@@ -5103,6 +5103,90 @@ static inline f32 RomCurveNode_GetHermiteTangent(void *node, int angleOffset, in
 
 extern int curveFn_800da23c(float *state, void *targetCurve);
 
+int curveFn_800da23c(float *state,void *targetCurve)
+{
+    char *stateBytes;
+
+    stateBytes = (char *)state;
+    if (*(void **)(stateBytes + 0xa0) == NULL ||
+        *(void **)(stateBytes + 0xa4) == NULL ||
+        targetCurve == NULL) {
+        return 1;
+    }
+
+    *(void **)(stateBytes + 0x9c) = *(void **)(stateBytes + 0xa0);
+    *(void **)(stateBytes + 0xa0) = *(void **)(stateBytes + 0xa4);
+    *(void **)(stateBytes + 0xa4) = targetCurve;
+
+    if (*(int *)(stateBytes + 0x80) != 0) {
+        memcpy(stateBytes + 0xb8,stateBytes + 0xa8,0x10);
+        memcpy(stateBytes + 0xd8,stateBytes + 0xc8,0x10);
+        memcpy(stateBytes + 0xf8,stateBytes + 0xe8,0x10);
+
+        *(f32 *)(stateBytes + 0xa8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0x8);
+        *(f32 *)(stateBytes + 0xac) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0x8);
+        *(f32 *)(stateBytes + 0xb0) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2c,0);
+        *(f32 *)(stateBytes + 0xb4) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2c,0);
+
+        *(f32 *)(stateBytes + 0xc8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0xc);
+        *(f32 *)(stateBytes + 0xcc) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0xc);
+        *(f32 *)(stateBytes + 0xd0) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2d,0);
+        *(f32 *)(stateBytes + 0xd4) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2d,0);
+
+        *(f32 *)(stateBytes + 0xe8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0x10);
+        *(f32 *)(stateBytes + 0xec) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0x10);
+        *(f32 *)(stateBytes + 0xf0) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2c,1);
+        *(f32 *)(stateBytes + 0xf4) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2c,1);
+
+        if (*(s32 *)(stateBytes + 0x90) != 0) {
+            curvesSetupMoveNetworkCurve(state);
+            if (*state <= lbl_803E05F0) {
+                *state = lbl_803E05F4;
+            }
+        }
+    } else {
+        memcpy(stateBytes + 0xa8,stateBytes + 0xb8,0x10);
+        memcpy(stateBytes + 0xc8,stateBytes + 0xd8,0x10);
+        memcpy(stateBytes + 0xe8,stateBytes + 0xf8,0x10);
+
+        *(f32 *)(stateBytes + 0xb8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0x8);
+        *(f32 *)(stateBytes + 0xbc) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0x8);
+        *(f32 *)(stateBytes + 0xc0) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2c,0);
+        *(f32 *)(stateBytes + 0xc4) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2c,0);
+
+        *(f32 *)(stateBytes + 0xd8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0xc);
+        *(f32 *)(stateBytes + 0xdc) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0xc);
+        *(f32 *)(stateBytes + 0xe0) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2d,0);
+        *(f32 *)(stateBytes + 0xe4) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2d,0);
+
+        *(f32 *)(stateBytes + 0xf8) = *(f32 *)((char *)*(void **)(stateBytes + 0xa0) + 0x10);
+        *(f32 *)(stateBytes + 0xfc) = *(f32 *)((char *)*(void **)(stateBytes + 0xa4) + 0x10);
+        *(f32 *)(stateBytes + 0x100) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa0),0x2c,1);
+        *(f32 *)(stateBytes + 0x104) =
+            RomCurveNode_GetHermiteTangent(*(void **)(stateBytes + 0xa4),0x2c,1);
+
+        if (*(s32 *)(stateBytes + 0x90) != 0) {
+            curvesSetupMoveNetworkCurve(state);
+            if (*state >= lbl_803E05C8) {
+                *state = lbl_803E05CC;
+            }
+        }
+    }
+
+    return 0;
+}
+
 int fn_800DA980(float *state,void *fromCurve,void *toCurve,void *targetCurve)
 {
     char *stateBytes;
