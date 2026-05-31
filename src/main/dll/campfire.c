@@ -2,6 +2,11 @@
 #include "main/dll/campfire.h"
 #include "main/objanim.h"
 
+#define SFXkr_climb1 0x273
+#define SFXkr_climb2 0x274
+#define SFXkr_land1 0x275
+#define SFXkr_land2 0x276
+
 extern undefined4 FUN_80006824();
 extern undefined4 Sfx_PlayFromObject();
 extern undefined4 FUN_80017a28();
@@ -152,7 +157,7 @@ void kaldaChomFn_8016821c(int param_1,int *param_2)
        (float)((double)CONCAT44(0x43300000,(int)*(char *)(iVar3 + 0x28) ^ 0x80000000) -
               DOUBLE_803E3070) / lbl_803E30A4;
   param_2[0x10] = (int)lbl_803E308C;
-  Sfx_PlayFromObject(param_1,0x276);
+  Sfx_PlayFromObject(param_1,SFXkr_land2);
   iVar2 = 0x28;
   do {
     (**(code **)(*gPartfxInterface + 8))(param_1,0x717,0,4,0xffffffff,&lbl_803DDA94);
@@ -264,13 +269,13 @@ void fn_8016855C(int obj, int p2, int p3)
 
   if ((*(int *)(p3 + 0x314) &0x1) != 0) {
     *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x1;
-    Sfx_PlayFromObject(obj, 627);
+    Sfx_PlayFromObject(obj, SFXkr_climb1);
   }
   if ((*(int *)(p3 + 0x314) &0x80) != 0) {
     int n;
     *(u8 *)(sub_40c + 0x4a) = (u8)randomGetRange(0, 2);
     *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x80;
-    Sfx_PlayFromObject(obj, 628);
+    Sfx_PlayFromObject(obj, SFXkr_climb2);
     for (n = (2 - (s32)*(u8 *)(sub_40c + 0x4a)) * 10; n != 0; n--) {
       (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
           obj, 1809, 0, 4, -1, (int)&lbl_803DDA98);
@@ -286,7 +291,7 @@ void fn_8016855C(int obj, int p2, int p3)
   }
   if ((*(int *)(p3 + 0x314) &0x200) != 0) {
     *(u32 *)(p3 + 0x314) = *(u32 *)(p3 + 0x314) & ~0x200;
-    Sfx_PlayFromObject(obj, 629);
+    Sfx_PlayFromObject(obj, SFXkr_land1);
   }
   if ((*(int *)(p3 + 0x314) &0x400) != 0) {
     int n;
