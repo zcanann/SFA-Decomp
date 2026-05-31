@@ -5706,6 +5706,97 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f)
     return lbl_803DCF60;
 }
 
+extern void Matrix_TransformVector(void *mtx, f32 *in, f32 *out);
+extern f32 lbl_803DECC0;
+extern f32 lbl_803DECE0[2];
+
+void fn_800659A8(f32 a, f32 b, void *p3, void *p4, void *desc, int e)
+{
+    u8 *v;
+    f32 oz;
+    f32 planeC;
+    f32 ox;
+    f32 vec[3];
+    f32 arrC[4];
+    f32 arrB[4];
+    f32 arrA[4];
+
+    if (*(int *)desc == 0) {
+        a -= (f32)((int *)lbl_8038DE44)[0];
+        b -= (f32)((int *)lbl_8038DE44)[2];
+    }
+    for (v = (u8 *)p3; v < (u8 *)p4; v += 0x4c) {
+        s8 fl = *(s8 *)(v + 0x49);
+        int i;
+        int inside;
+
+        if (fl & 0x10) {
+            if (!(fl & 0x4)) continue;
+        }
+        vec[0] = *(f32 *)(v + 0x4);
+        vec[1] = *(f32 *)(v + 0x8);
+        vec[2] = *(f32 *)(v + 0xc);
+        if (!(vec[1] > __AR_Callback)) {
+            if (e == 0) continue;
+            if (__AR_Callback == vec[1]) continue;
+        }
+        planeC = -(vec[0] * a + vec[2] * b + *(f32 *)v) / vec[1];
+        arrA[0] = (f32)(s16)*(s16 *)(v + 0x10);
+        arrB[0] = (f32)(s16)*(s16 *)(v + 0x16);
+        arrC[0] = (f32)(s16)*(s16 *)(v + 0x1c);
+        arrA[1] = (f32)(s16)*(s16 *)(v + 0x12);
+        arrB[1] = (f32)(s16)*(s16 *)(v + 0x18);
+        arrC[1] = (f32)(s16)*(s16 *)(v + 0x1e);
+        arrA[2] = (f32)(s16)*(s16 *)(v + 0x14);
+        arrB[2] = (f32)(s16)*(s16 *)(v + 0x1a);
+        arrC[2] = (f32)(s16)*(s16 *)(v + 0x20);
+        inside = 1;
+        {
+            f32 c30 = lbl_803DECC0;
+            f32 c31 = __AR_Callback;
+            f32 c24 = lbl_803DECE0[1];
+            for (i = 0; i < 3; i++) {
+                int nxt = i + 1;
+                f32 nx, ny, nz, mag;
+
+                if (nxt > 2) nxt = 0;
+                arrA[3] = c30 * vec[0] + arrA[i];
+                arrB[3] = c30 * vec[1] + arrB[i];
+                arrC[3] = c30 * vec[2] + arrC[i];
+                nx = arrB[3] * (arrC[i] - arrC[nxt]) + (arrB[i] * (arrC[nxt] - arrC[3]) + arrB[nxt] * (arrC[3] - arrC[i]));
+                ny = arrC[3] * (arrA[i] - arrA[nxt]) + (arrC[i] * (arrA[nxt] - arrA[3]) + arrC[nxt] * (arrA[3] - arrA[i]));
+                nz = arrA[3] * (arrB[i] - arrB[nxt]) + (arrA[i] * (arrB[nxt] - arrB[3]) + arrA[nxt] * (arrB[3] - arrB[i]));
+                mag = sqrtf(nx * nx + ny * ny + nz * nz);
+                if (mag > c31) {
+                    f32 s = lbl_803DECC4 / mag;
+                    nx *= s;
+                    ny *= s;
+                    nz *= s;
+                }
+                if ((nx * arrA[i] + ny * arrB[i] - nz * arrC[i]) +
+                    (nx * a + ny * planeC + nz * b) > c24) {
+                    inside = 0;
+                    break;
+                }
+            }
+        }
+        if (inside == 0) continue;
+        if ((s8)lbl_803DCF60 >= 0x23) break;
+        if (*(int *)desc != 0) {
+            Matrix_TransformPoint(*(void **)((char *)desc + 0xc), a, planeC, b, &ox, &planeC, &oz);
+            Matrix_TransformVector(*(void **)((char *)desc + 0xc), vec, vec);
+        }
+        *(f32 *)(lbl_803DCF68 + 0) = planeC;
+        *(u8 *)(lbl_803DCF68 + 0x14) = *(u8 *)(v + 0x48);
+        *(f32 *)(lbl_803DCF68 + 0x4) = vec[0];
+        *(f32 *)(lbl_803DCF68 + 0x8) = vec[1];
+        *(f32 *)(lbl_803DCF68 + 0xc) = vec[2];
+        *(int *)(lbl_803DCF68 + 0x10) = *(int *)desc;
+        lbl_803DCF68 = lbl_803DCF68 + 0x18;
+        lbl_803DCF60 = lbl_803DCF60 + 1;
+    }
+}
+
 extern u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p5, int z);
 extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32 *a, f32 *b);
 
