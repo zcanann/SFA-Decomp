@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/cup1C3.h"
 
+#define SFXtr_jbike_lowfuel 314
+#define SFXfoot_stone_scuff 468
 
 #pragma peephole off
 #pragma scheduling off
@@ -142,7 +144,7 @@ void DBSH_Symbol_SeqFn(undefined8 param_1,double param_2,double param_3,undefine
       for (iVar8 = 0; iVar8 < (int)(uint)DAT_803dc070; iVar8 = iVar8 + 1) {
         bVar6 = FUN_80006b44();
         if (bVar6 != 0) {
-          FUN_80006824(uVar2,0x1d4);
+          FUN_80006824(uVar2,SFXfoot_stone_scuff);
           *(byte *)(piVar7 + 8) = *(byte *)(piVar7 + 8) & 0x7f;
           *(byte *)(piVar7 + 8) = *(byte *)(piVar7 + 8) & 0xbf | 0x40;
           (**(code **)(*DAT_803dd6d4 + 0x58))(param_11,0xbd);
@@ -158,7 +160,7 @@ void DBSH_Symbol_SeqFn(undefined8 param_1,double param_2,double param_3,undefine
         piVar7[4] = iVar4;
         if (0x7ef3 < piVar7[4]) {
           FUN_80006b4c();
-          FUN_80006824(uVar2,0x1d4);
+          FUN_80006824(uVar2,SFXfoot_stone_scuff);
           FUN_800305f8((double)lbl_803E5D84,param_2,param_3,param_4,param_5,param_6,param_7,
                        param_8,uVar3,0,0,param_12,param_13,param_14,param_15,param_16);
           *(byte *)(piVar7 + 8) = *(byte *)(piVar7 + 8) & 0x7f | 0x80;
@@ -210,7 +212,7 @@ void DBSH_Symbol_SeqFn(undefined8 param_1,double param_2,double param_3,undefine
           uVar5 = randomGetRange(0x28,100);
           piVar7[3] = (int)(f32)(s32)uVar5;
         }
-        FUN_80006824(uVar3,0x13a);
+        FUN_80006824(uVar3,SFXtr_jbike_lowfuel);
       }
       piVar7[2] = (int)((float)piVar7[2] - lbl_803DC074);
       if ((float)piVar7[2] < lbl_803E5D84) {
@@ -321,7 +323,7 @@ void FUN_801c9f84(uint param_1)
     else if (sVar1 == 1) {
       if (DAT_803dcbd0 != '\0') {
         DAT_803dcbd0 = 0;
-        FUN_80006824(param_1,0x1d4);
+        FUN_80006824(param_1,SFXfoot_stone_scuff);
       }
       *(undefined2 *)((int)puVar4 + 0x1e) = 2;
       DAT_803dcbd0 = '\x01';
