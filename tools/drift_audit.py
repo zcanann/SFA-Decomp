@@ -42,6 +42,7 @@ C_INFO_FUNC_RE = re.compile(r"Function:\s*([A-Za-z_][A-Za-z0-9_]*)", re.IGNORECA
 C_DEF_RE = re.compile(
     r"^[A-Za-z_][\w*\s]*?\b(FUN_[0-9A-Fa-f]+|fn_[0-9A-Fa-f]+|[A-Za-z_]\w*)\s*\([^;{]*?\)\s*(?:\{|$)"
 )
+SIG_NAME_RE = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\([^;{}]*\)\s*(?:\{|$)")
 STUB_NAME_RE = re.compile(r"^(?:FUN_[0-9A-Fa-f]+|fn_[0-9A-Fa-f]+)$")
 
 
@@ -94,29 +95,52 @@ def parse_c(path: Path) -> list[dict]:
     # Pass 2: walk lines and pick up definitions at column 0.
     seen = set()
     brace_depth = 0
-    in_decl = False
+    pending_sig: list[str] = []
+
+    def add_function(name: str) -> None:
+        if name in {"if", "for", "while", "switch", "return", "static"}:
+            return
+        if name in seen:
+            return
+        seen.add(name)
+        info = info_by_name.get(name, {})
+        funcs.append({"name": name, "addr": info.get("addr"), "size": info.get("size")})
+
     for line in text.splitlines():
         stripped = line.rstrip()
         # Skip pure comments/blank
         if not stripped or stripped.startswith("//") or stripped.startswith("/*"):
             continue
-        if brace_depth == 0 and (line and line[0] not in " \t"):
+        if stripped.lstrip().startswith("#"):
+            pending_sig = []
+            continue
+        if brace_depth == 0 and pending_sig:
+            pending_sig.append(stripped.strip())
+            joined = " ".join(pending_sig)
+            if ";" in stripped and "{" not in stripped:
+                pending_sig = []
+            elif "{" in stripped:
+                m = SIG_NAME_RE.search(joined)
+                if m:
+                    add_function(m.group(1))
+                pending_sig = []
+        elif brace_depth == 0 and (line and line[0] not in " \t"):
             m = C_DEF_RE.match(line)
             if m:
                 name = m.group(1)
                 # Heuristic: skip obvious typedef/extern/control keywords.
-                if name in {"if", "for", "while", "switch", "return", "static"}:
-                    continue
                 if line.lstrip().startswith(("extern ", "static extern ")):
                     continue
                 # Skip pure declarations without a body (no '{' on line and ends in ';')
                 # The C_DEF_RE requires '{' at end of line, but a multi-line signature
                 # may not include '{' yet.
-                if name in seen:
-                    continue
-                seen.add(name)
-                info = info_by_name.get(name, {})
-                funcs.append({"name": name, "addr": info.get("addr"), "size": info.get("size")})
+                add_function(name)
+            elif (
+                "(" in stripped
+                and ";" not in stripped
+                and not stripped.startswith(("extern ", "static extern ", "typedef "))
+            ):
+                pending_sig = [stripped.strip()]
         brace_depth += line.count("{") - line.count("}")
         if brace_depth < 0:
             brace_depth = 0
