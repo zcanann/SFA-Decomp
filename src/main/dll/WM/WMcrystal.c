@@ -105,6 +105,8 @@ extern void fn_80296124(int player, void *pos, void *obj, int arg);
 #define SC_TOTEMPUZZLE_WRONG_SFX_ID 0x487
 #define SC_TOTEMPUZZLE_COMPLETE_SFX_ID 0x7e
 #define SC_TOTEMPUZZLE_PROGRESS_SFX_ID 0x409
+#define SFXtr_jbike_whine2 311
+#define SFXtr_gal_prophitbird 312
 
 #define SC_TOTEMBOND_ORB_COUNT 8
 #define SC_TOTEMBOND_ORB_SETUP_SIZE 0x38
@@ -141,7 +143,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
                                                &lightArgs[3], &lightArgs[4], &lightArgs[5]);
   if ((obj->puzzleIndex == 5) || (GameBit_Get(0x639) != 0) || (GameBit_Get(0xc10) == 0)) {
     if ((hitKind != 0) && (hitKind != 0x11)) {
-      Sfx_PlayFromObject((int)obj, 0x138);
+      Sfx_PlayFromObject((int)obj, SFXtr_gal_prophitbird);
       lightArgs[3] += playerMapOffsetX;
       lightArgs[5] += playerMapOffsetZ;
       objLightFn_8009a1dc((int)obj, lbl_803E5618, lightArgs, 1, 0);
@@ -150,7 +152,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
   }
 
   if ((hitKind != 0) && (hitKind != 0x11)) {
-    Sfx_PlayFromObject((int)obj, 0x138);
+    Sfx_PlayFromObject((int)obj, SFXtr_gal_prophitbird);
     lightArgs[3] += playerMapOffsetX;
     lightArgs[5] += playerMapOffsetZ;
     objLightFn_8009a1dc((int)obj, lbl_803E5618, lightArgs, 1, 0);
@@ -193,7 +195,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
     state->pulseTimer -= timeDelta;
     if (state->pulseTimer < lbl_803E55F4) {
       state->flags &= ~4;
-      Sfx_PlayFromObjectLimited((int)obj, 0x137, 2);
+      Sfx_PlayFromObjectLimited((int)obj, SFXtr_jbike_whine2, 2);
       if ((state->flags & SC_TOTEMPUZZLE_STATE_REVERSED_FLAG) != 0) {
         state->stepIndex--;
         if (state->stepIndex < 0) {
@@ -599,7 +601,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
                     }
                     if (state->ringIndex != nextRing) {
                         state->ringIndex = nextRing;
-                        Sfx_PlayFromObject((int)obj,0x137);
+                        Sfx_PlayFromObject((int)obj,SFXtr_jbike_whine2);
                     }
                     allOrbsCollected = 0;
                 }
