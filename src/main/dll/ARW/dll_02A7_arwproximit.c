@@ -185,7 +185,7 @@ void arwproximit_update(int obj)
 
     if (*(u8 *)(state + 0x14) == 1 || *(u8 *)(state + 0x14) == 2) {
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
-            fn_8022D520(getArwing(), 0xa);
+            arwarwing_addScore(getArwing(), 0xa);
             if (*(u8 *)(state + 0x15) == 3)
                 gameTextFn_80125ba4(0xe);
             if (*(void **)(state + 4) != NULL)

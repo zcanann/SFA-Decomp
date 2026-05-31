@@ -161,7 +161,7 @@ void ring_update(int obj)
             if (ObjHits_GetPriorityHit(obj, &hitA, 0, 0) != 0 && (hit = hitA) != 0 &&
                 (*(s16 *)(hit + 0x46) == 0x604 || *(s16 *)(hit + 0x46) == 0x605)) {
                 getArwing();
-                fn_8022D520(getArwing(), 0xf);
+                arwarwing_addScore(getArwing(), 0xf);
                 *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4);
                 Obj_SetActiveModelIndex(obj, 0);
                 ObjHits_DisableObject(obj);
@@ -177,7 +177,7 @@ void ring_update(int obj)
             if (ObjHits_GetPriorityHit(obj, &hitB, 0, 0) != 0 && (hit = hitB) != 0 &&
                 (*(s16 *)(hit + 0x46) == 0x604 || *(s16 *)(hit + 0x46) == 0x605)) {
                 getArwing();
-                fn_8022D520(getArwing(), 0xf);
+                arwarwing_addScore(getArwing(), 0xf);
                 *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4);
                 Obj_SetActiveModelIndex(obj, 0);
                 ObjHits_DisableObject(obj);

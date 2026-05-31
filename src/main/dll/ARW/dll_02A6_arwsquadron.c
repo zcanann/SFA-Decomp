@@ -391,11 +391,11 @@ void arwsquadron_handleDamage(int obj, int state)
                 }
                 arwing = getArwing();
                 if (arwing != 0)
-                    fn_8022D520(arwing, *(u8 *)(state + 0x157));
+                    arwarwing_addScore(arwing, *(u8 *)(state + 0x157));
             } else {
                 arwing = getArwing();
                 if (arwing != 0)
-                    fn_8022D520(arwing, *(u8 *)(state + 0x158));
+                    arwarwing_addScore(arwing, *(u8 *)(state + 0x158));
             }
         } else if (*(u8 *)(state + 0x154) == 0) {
             Sfx_PlayFromObjectLimited(obj, 0x2b3, 4);

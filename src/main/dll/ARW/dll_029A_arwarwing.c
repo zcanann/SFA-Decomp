@@ -156,19 +156,19 @@ void fn_8022D4F8(int arwing) { *(int *)(*(int *)(arwing + 0xb8) + 0x438) = 0; }
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D508(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x471); }
+int arwarwing_getRequiredRingCount(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x471); }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D514(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x470); }
+int arwarwing_getCollectedRingCount(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x470); }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D520(int arwing, u8 amount)
+void arwarwing_addScore(int arwing, u8 amount)
 {
     int state = *(int *)(arwing + 0xb8);
     u16 v;
@@ -184,7 +184,7 @@ void fn_8022D520(int arwing, u8 amount)
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D550(int arwing)
+int arwarwing_getScore(int arwing)
 {
     int state = *(int *)(arwing + 0xb8);
     if (*(u16 *)(state + 0x47c) > 0x270f) {
@@ -203,13 +203,13 @@ int fn_8022D574(int arwing) { return *(u8 *)(*(int *)(arwing + 0xb8) + 0x44c); }
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D580(int arwing) { return *(s8 *)(*(int *)(arwing + 0xb8) + 0x469); }
+int arwarwing_getMaxShield(int arwing) { return *(s8 *)(*(int *)(arwing + 0xb8) + 0x469); }
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma peephole on
 #pragma scheduling off
-int fn_8022D590(int arwing) { return *(s8 *)(*(int *)(arwing + 0xb8) + 0x468); }
+int arwarwing_getShield(int arwing) { return *(s8 *)(*(int *)(arwing + 0xb8) + 0x468); }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -255,7 +255,7 @@ int fn_8022D5F0(int arwing)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8022D634(int arwing, int p2)
+void arwarwing_addMaxShield(int arwing, int p2)
 {
     int state = *(int *)(arwing + 0xb8);
     *(s8 *)(state + 0x469) = *(u8 *)(state + 0x469) + p2;
@@ -265,7 +265,7 @@ void fn_8022D634(int arwing, int p2)
 
 #pragma peephole on
 #pragma scheduling off
-void fn_8022D64C(int arwing, int p2)
+void arwarwing_addShield(int arwing, int p2)
 {
     int state = *(int *)(arwing + 0xb8);
     s8 v;

@@ -198,8 +198,8 @@ void arwlevelcon_update(int obj)
             int a, b;
             arwingHudSetVisible(2);
             (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x7c))(*(u16 *)(state + 0x20), 0, 0);
-            a = fn_8022D508(arwing);
-            b = fn_8022D514(arwing);
+            a = arwarwing_getRequiredRingCount(arwing);
+            b = arwarwing_getCollectedRingCount(arwing);
             if (b >= a) {
                 GameBit_Set(0x9d8, 1);
             } else {

@@ -111,14 +111,14 @@ void arwbombcoll_handleArwingHit(int obj, int state, int arwing) {
     if (mode == 0) {
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
         if (*(s16 *)(arwing + 0x46) == 0x601) {
-            fn_8022D64C(arwing, 1);
-            fn_8022D520(arwing, 0xa);
+            arwarwing_addShield(arwing, 1);
+            arwarwing_addScore(arwing, 0xa);
         }
     } else if (mode == 1) {
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
         if (*(s16 *)(arwing + 0x46) == 0x601) {
-            fn_8022D634(arwing, 1);
-            fn_8022D64C(arwing, fn_8022D580(arwing));
+            arwarwing_addMaxShield(arwing, 1);
+            arwarwing_addShield(arwing, arwarwing_getMaxShield(arwing));
         }
     } else if (mode == 3 || mode == 4) {
         Sfx_PlayFromObject(arwing, SFXbaddie_eba_pollenspin);
@@ -128,10 +128,10 @@ void arwbombcoll_handleArwingHit(int obj, int state, int arwing) {
         if (*(s16 *)(arwing + 0x46) == 0x601) {
             int seg;
             fn_8022D5F0(arwing);
-            fn_8022D64C(arwing, 1);
-            fn_8022D520(arwing, 0x14);
-            seg = fn_8022D508(arwing);
-            if (fn_8022D514(arwing) == seg) {
+            arwarwing_addShield(arwing, 1);
+            arwarwing_addScore(arwing, 0x14);
+            seg = arwarwing_getRequiredRingCount(arwing);
+            if (arwarwing_getCollectedRingCount(arwing) == seg) {
                 if (((RingFlags *)(state + 0x14))->bit20)
                     gameTextFn_80125ba4(7);
             } else {
@@ -228,7 +228,7 @@ active : {
         if (flags->b40 != 0) {
             if (*(void **)(*(int *)(obj + 0x54) + 0x50) != 0 &&
                 *(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)getArwing()) {
-                fn_8022D520(arw, 0x19);
+                arwarwing_addScore(arw, 0x19);
                 flags->b80 = 1;
                 *(s16 *)(obj + 0x6) |= 0x4000;
                 ObjHits_DisableObject(obj);
@@ -237,7 +237,7 @@ active : {
             int hit;
             if (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0 && (u32)hit != 0 &&
                 (*(s16 *)(hit + 0x46) == 0x604 || *(s16 *)(hit + 0x46) == 0x605)) {
-                fn_8022D520(arw, 0xf);
+                arwarwing_addScore(arw, 0xf);
                 flags->b40 = 1;
                 Obj_SetActiveModelIndex(obj, 1);
                 spawnExplosion(obj, lbl_803E708C, 1, 0, 0, 0, 0, 0, 2);
