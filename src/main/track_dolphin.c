@@ -6854,3 +6854,163 @@ void initTextures(void)
     a[23] = lbl_803DECA4;
     fn_8006D5E8();
 }
+
+extern int doLotsOfMath(void *a, void *b, int c, void *d, int *e, int g, int h, int i, int self, f32 f);
+extern char sTrackNoFreeLastLineError[];
+extern u8 lbl_803DCF4C;
+
+void objBboxFn_800640cc(f32 *p0, f32 *p1, int p5, int *out, int *self, int p8, int p9, int slot, f32 f, int arg8)
+{
+    f32 w1[3];
+    f32 w0[3];
+    f32 t20[3];
+    f32 t14[3];
+    int *objs;
+    int count;
+    int i;
+    int mtx;
+
+    lbl_803DCF4C = 0;
+    if (out != NULL) {
+        *(u8 *)((char *)out + 0x50) = -1;
+        *(u8 *)((char *)out + 0x51) = -1;
+    }
+    mtx = (self != NULL) ? *(int *)((char *)self + 0x30) : 0;
+    if (mtx != 0) {
+        Obj_TransformLocalPointToWorld(p0[0], p0[1], p0[2], &w0[0], &w0[1], &w0[2], (void *)mtx);
+        Obj_TransformLocalPointToWorld(p1[0], p1[1], p1[2], &w1[0], &w1[1], &w1[2], (void *)mtx);
+    } else {
+        memcpy(w0, p0, 0xc);
+        memcpy(w1, p1, 0xc);
+    }
+    objs = (int *)ObjGroup_GetObjects(6, &count);
+    for (i = 0; i < count; i++, objs++) {
+        int *o = (int *)*objs;
+        int *p54;
+        int hdr;
+        f32 rad;
+        int hit;
+        int *e;
+        int k;
+
+        if (o == self) continue;
+        if ((s8)*(u8 *)((char *)o + 0x35) <= -1) continue;
+        if (*(int *)(*(int *)((char *)o + 0x50) + 0x34) == 0) continue;
+        p54 = *(int **)((char *)o + 0x54);
+        if (p54 != NULL && (*(s16 *)((char *)p54 + 0x60) & 1) == 0) continue;
+        hdr = *(int *)(*(int *)(*(int *)((char *)o + 0x7c)
+                       + (s8)*(u8 *)((char *)p54 + 0xb0) * 4));
+        rad = (f32)((u16)modelFileHeaderGetCullDistance((void *)hdr) + 0x32);
+        rad = rad * rad;
+        hit = 0;
+        {
+            f32 dx = *(f32 *)((char *)o + 0xc) - w0[0];
+            f32 dy = *(f32 *)((char *)o + 0x10) - w0[1];
+            f32 dz = *(f32 *)((char *)o + 0x14) - w0[2];
+            if (dy * dy + dx * dx + dz * dz < rad) hit = 1;
+        }
+        if ((s8)hit == 0) {
+            f32 dx = *(f32 *)((char *)o + 0xc) - w1[0];
+            f32 dy = *(f32 *)((char *)o + 0x10) - w1[1];
+            f32 dz = *(f32 *)((char *)o + 0x14) - w1[2];
+            if (dy * dy + dx * dx + dz * dz < rad) hit = 1;
+        }
+        if ((s8)hit == 0) continue;
+        e = NULL;
+        if ((u8)slot != 0xff) {
+            char *fl = (char *)lbl_803DCF48;
+            for (k = 0; k < 0x40; k++, fl += 0x18) {
+                if (*(u8 *)(fl + 0x14) != 0 && *(int *)fl == (int)self &&
+                    *(int *)(fl + 4) == (int)o && *(u8 *)(fl + 0x15) == (u8)slot) {
+                    *(u8 *)(fl + 0x14) = 0;
+                    e = (int *)fl;
+                    break;
+                }
+            }
+        }
+        if (e != NULL) {
+            t20[0] = *(f32 *)((char *)e + 8);
+            t20[1] = *(f32 *)((char *)e + 0xc);
+            t20[2] = *(f32 *)((char *)e + 0x10);
+        } else {
+            Obj_TransformWorldPointToLocal(w0[0], w0[1], w0[2], &t20[0], &t20[1], &t20[2], o);
+        }
+        Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &t14[0], &t14[1], &t14[2], o);
+        if (doLotsOfMath(t20, t14, p5, out, o, p8, p9, arg8, (int)self, f) != 0)
+            Obj_TransformLocalPointToWorld(t14[0], t14[1], t14[2], &w1[0], &w1[1], &w1[2], o);
+        if ((u8)slot != 0xff) {
+            char *fl = (char *)lbl_803DCF48;
+            e = NULL;
+            for (k = 0; k < 0x40; k++, fl += 0x18) {
+                if (*(u8 *)(fl + 0x14) == 0) {
+                    *(int *)fl = (int)self;
+                    *(int *)(fl + 4) = (int)o;
+                    *(u8 *)(fl + 0x15) = (u8)slot;
+                    *(u8 *)(fl + 0x14) = 2;
+                    e = (int *)fl;
+                    break;
+                }
+            }
+            if (e == NULL) {
+                debugPrintf(sTrackNoFreeLastLineError);
+            }
+            if (e != NULL) {
+                *(f32 *)((char *)e + 8) = t14[0];
+                *(f32 *)((char *)e + 0xc) = t14[1];
+                *(f32 *)((char *)e + 0x10) = t14[2];
+            }
+        }
+    }
+    doLotsOfMath(w0, w1, p5, out, NULL, p8, p9, arg8, (int)self, f);
+    if (lbl_803DCF4C != 0 && out != NULL) {
+        f32 hx = *(f32 *)((char *)out + 0x3c) - *(f32 *)((char *)out + 0xc);
+        f32 hy = *(f32 *)((char *)out + 0x40) - *(f32 *)((char *)out + 0x10);
+        f32 len;
+        *(f32 *)((char *)out + 0x2c) = *(f32 *)((char *)out + 0x18) - *(f32 *)((char *)out + 0x14);
+        *(f32 *)((char *)out + 0x30) = __AR_Callback;
+        *(f32 *)((char *)out + 0x34) = *(f32 *)((char *)out + 0x4) - *(f32 *)((char *)out + 0x8);
+        len = lbl_803DECC4 / sqrtf(*(f32 *)((char *)out + 0x2c) * *(f32 *)((char *)out + 0x2c) +
+                                   *(f32 *)((char *)out + 0x34) * *(f32 *)((char *)out + 0x34));
+        *(f32 *)((char *)out + 0x2c) = *(f32 *)((char *)out + 0x2c) * len;
+        *(f32 *)((char *)out + 0x34) = *(f32 *)((char *)out + 0x34) * len;
+        *(f32 *)((char *)out + 0x38) = *(f32 *)((char *)out + 0x34) * *(f32 *)((char *)out + 0x14) -
+                                       *(f32 *)((char *)out + 0x2c) * *(f32 *)((char *)out + 0x4);
+        if (*(int *)out != 0) {
+            Obj_TransformLocalPointToWorld(*(f32 *)((char *)out + 4), *(f32 *)((char *)out + 0xc),
+                                           *(f32 *)((char *)out + 0x14), (f32 *)((char *)out + 4),
+                                           (f32 *)((char *)out + 0xc), (f32 *)((char *)out + 0x14),
+                                           (void *)*(int *)out);
+            Obj_TransformLocalPointToWorld(*(f32 *)((char *)out + 8), *(f32 *)((char *)out + 0x10),
+                                           *(f32 *)((char *)out + 0x18), (f32 *)((char *)out + 8),
+                                           (f32 *)((char *)out + 0x10), (f32 *)((char *)out + 0x18),
+                                           (void *)*(int *)out);
+        }
+        if (mtx != 0) {
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)out + 4), *(f32 *)((char *)out + 0xc),
+                                           *(f32 *)((char *)out + 0x14), (f32 *)((char *)out + 4),
+                                           (f32 *)((char *)out + 0xc), (f32 *)((char *)out + 0x14),
+                                           (void *)mtx);
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)out + 8), *(f32 *)((char *)out + 0x10),
+                                           *(f32 *)((char *)out + 0x18), (f32 *)((char *)out + 8),
+                                           (f32 *)((char *)out + 0x10), (f32 *)((char *)out + 0x18),
+                                           (void *)mtx);
+        }
+        *(f32 *)((char *)out + 0x1c) = *(f32 *)((char *)out + 0x18) - *(f32 *)((char *)out + 0x14);
+        *(f32 *)((char *)out + 0x20) = __AR_Callback;
+        *(f32 *)((char *)out + 0x24) = *(f32 *)((char *)out + 0x4) - *(f32 *)((char *)out + 0x8);
+        len = lbl_803DECC4 / sqrtf(*(f32 *)((char *)out + 0x1c) * *(f32 *)((char *)out + 0x1c) +
+                                   *(f32 *)((char *)out + 0x24) * *(f32 *)((char *)out + 0x24));
+        *(f32 *)((char *)out + 0x1c) = *(f32 *)((char *)out + 0x1c) * len;
+        *(f32 *)((char *)out + 0x24) = *(f32 *)((char *)out + 0x24) * len;
+        *(f32 *)((char *)out + 0x3c) = *(f32 *)((char *)out + 0xc) + hx;
+        *(f32 *)((char *)out + 0x40) = *(f32 *)((char *)out + 0x10) + hy;
+        *(f32 *)((char *)out + 0x28) = *(f32 *)((char *)out + 0x24) * *(f32 *)((char *)out + 0x14) -
+                                       *(f32 *)((char *)out + 0x1c) * *(f32 *)((char *)out + 0x4);
+    }
+    if (lbl_803DCF4C != 0) {
+        if (mtx != 0)
+            Obj_TransformWorldPointToLocal(w1[0], w1[1], w1[2], &p1[0], &p1[1], &p1[2], (void *)mtx);
+        else
+            memcpy(p1, w1, 0xc);
+    }
+}
