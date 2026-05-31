@@ -1,6 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/smallbasket.h"
 
+#define SFXen_blkscrp6 0x22
+#define SFXfox_swimstroke322 0x23d
+#define SFXfox_swimstroke422 0x23e
+#define SFXfox_outofwater122 0x23f
+#define SFXwatery_bubble2 0x244
 #define SFXfox_fightbreath4 0x24e
 
 extern undefined4 FUN_800067e8();
@@ -289,7 +294,7 @@ void FUN_80157168(uint param_1,int param_2,undefined4 param_3,int param_4)
   }
   else {
     *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 8;
-    FUN_80006824(param_1,0x244);
+    FUN_80006824(param_1,SFXwatery_bubble2);
     *(undefined2 *)(param_2 + 0x2b0) = 0;
   }
   return;
@@ -1016,7 +1021,7 @@ void FUN_80158540(undefined8 param_1,double param_2,double param_3,undefined8 pa
               sVar1 = *(short *)(param_11 + 0x46);
               if (sVar1 == 0x69) {
 LAB_801588ec:
-                FUN_80006824(uVar3,0x22);
+                FUN_80006824(uVar3,SFXen_blkscrp6);
               }
               else if (sVar1 < 0x69) {
                 if (sVar1 == 0) goto LAB_801588ec;
@@ -1029,7 +1034,7 @@ LAB_801588ec:
             }
           }
           else {
-            FUN_80006824(uVar3,0x23e);
+            FUN_80006824(uVar3,SFXfox_swimstroke422);
           }
         }
         *(uint *)(iVar4 + 0x2e8) = *(uint *)(iVar4 + 0x2e8) | 0x10;
@@ -1052,7 +1057,7 @@ LAB_801588ec:
             sVar1 = *(short *)(param_11 + 0x46);
             if (sVar1 == 0x69) {
 LAB_80158844:
-              FUN_80006824(uVar3,0x22);
+              FUN_80006824(uVar3,SFXen_blkscrp6);
             }
             else if (sVar1 < 0x69) {
               if (sVar1 == 0) goto LAB_80158844;
@@ -1065,7 +1070,7 @@ LAB_80158844:
           }
         }
         else {
-          FUN_80006824(uVar3,0x23e);
+          FUN_80006824(uVar3,SFXfox_swimstroke422);
         }
         *(uint *)(iVar4 + 0x2e8) = *(uint *)(iVar4 + 0x2e8) | 0x10;
         goto LAB_80158928;
@@ -1075,14 +1080,14 @@ LAB_80158844:
            (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar4 + 0x2ec)) - DOUBLE_803e3828);
       *(uint *)(iVar4 + 0x2e8) = *(uint *)(iVar4 + 0x2e8) | 8;
       if (*(short *)(uVar3 + 0x46) != 0x6a2) {
-        FUN_80006824(uVar3,0x23f);
+        FUN_80006824(uVar3,SFXfox_outofwater122);
         goto LAB_80158928;
       }
       if ((lbl_803E3840 < lbl_803DE6F0) || (param_11 == 0)) goto LAB_80158928;
       sVar1 = *(short *)(param_11 + 0x46);
       if (sVar1 == 0x69) {
 LAB_80158780:
-        FUN_80006824(uVar3,0x22);
+        FUN_80006824(uVar3,SFXen_blkscrp6);
       }
       else if (sVar1 < 0x69) {
         if (sVar1 == 0) goto LAB_80158780;
@@ -1113,7 +1118,7 @@ LAB_80158780:
         sVar1 = *(short *)(param_11 + 0x46);
         if (sVar1 == 0x69) {
 LAB_801585f4:
-          FUN_80006824(uVar3,0x22);
+          FUN_80006824(uVar3,SFXen_blkscrp6);
         }
         else if (sVar1 < 0x69) {
           if (sVar1 == 0) goto LAB_801585f4;
@@ -1126,7 +1131,7 @@ LAB_801585f4:
       }
     }
     else {
-      FUN_80006824(uVar3,0x23f);
+      FUN_80006824(uVar3,SFXfox_outofwater122);
     }
     if ((int)(uint)*(ushort *)(iVar4 + 0x2b0) < iVar6) {
       *(undefined2 *)(iVar4 + 0x2b0) = 0;
@@ -1145,7 +1150,7 @@ LAB_801585f4:
       sVar1 = *(short *)(param_11 + 0x46);
       if (sVar1 == 0x69) {
 LAB_80158484:
-        FUN_80006824(uVar3,0x22);
+        FUN_80006824(uVar3,SFXen_blkscrp6);
       }
       else if (sVar1 < 0x69) {
         if (sVar1 == 0) goto LAB_80158484;
@@ -1157,7 +1162,7 @@ LAB_80158484:
     }
   }
   else {
-    FUN_80006824(uVar3,0x23e);
+    FUN_80006824(uVar3,SFXfox_swimstroke422);
   }
   *(uint *)(iVar4 + 0x2e8) = *(uint *)(iVar4 + 0x2e8) | 0x10;
 LAB_80158928:
@@ -1870,7 +1875,7 @@ void FUN_80159ce0(short *param_1,int *param_2)
   }
   if ((param_2[0xd0] != 0) &&
      ((sVar1 = *(short *)(param_2[0xd0] + 0x46), sVar1 == 0x1f || (sVar1 == 0)))) {
-    FUN_80006824((uint)param_1,0x23d);
+    FUN_80006824((uint)param_1,SFXfox_swimstroke322);
   }
   return;
 }
@@ -1998,7 +2003,7 @@ void FUN_8015a4c4(undefined8 param_1,double param_2,double param_3,undefined8 pa
         FUN_80006824(uVar1,0x49e);
       }
       if (in_r6 != 0x1a) {
-        FUN_80006824(uVar1,0x22);
+        FUN_80006824(uVar1,SFXen_blkscrp6);
       }
     }
   }
@@ -2206,7 +2211,7 @@ void fn_8015A660(int obj, int *st, int p3, int cmd, int p5, int sub) {
         Sfx_PlayFromObject(obj, 0x49e);
     }
     if (cmd == 0x1a) return;
-    Sfx_PlayFromObject(obj, 0x22);
+    Sfx_PlayFromObject(obj, SFXen_blkscrp6);
 }
 #pragma peephole reset
 #pragma scheduling reset
