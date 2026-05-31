@@ -1,6 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRcloudrunner.h"
 
+#define SFXmn_sml_trex_fstep 0x7e
+#define SFXsp_lf_mutter4 0x109
+#define SFXtr_gal_sailflap3 0x12a
+#define SFXtr_gal_crateslide 299
+#define SFXtr_gal_lightning 300
+#define SFXtr_gal_doorslide 0x12d
 
 #pragma peephole off
 #pragma scheduling off
@@ -174,20 +180,20 @@ void FUN_801dc4c0(uint param_1,int param_2)
   }
   else if (iVar2 < 0x448c2) {
     if (iVar2 == 0x30d9c) {
-      FUN_80006824(param_1,299);
-      FUN_80006824(param_1,0x12a);
+      FUN_80006824(param_1,SFXtr_gal_crateslide);
+      FUN_80006824(param_1,SFXtr_gal_sailflap3);
       FUN_80017698(0x7d,1);
     }
     else if (iVar2 < 0x30d9c) {
       if (0x30d9a < iVar2) {
-        FUN_80006824(param_1,0x12d);
-        FUN_80006824(param_1,0x12a);
+        FUN_80006824(param_1,SFXtr_gal_doorslide);
+        FUN_80006824(param_1,SFXtr_gal_sailflap3);
         FUN_80017698(0x7f,1);
       }
     }
     else if (iVar2 < 0x30d9e) {
-      FUN_80006824(param_1,300);
-      FUN_80006824(param_1,0x12a);
+      FUN_80006824(param_1,SFXtr_gal_lightning);
+      FUN_80006824(param_1,SFXtr_gal_sailflap3);
       FUN_80017698(0x7e,1);
     }
   }
@@ -423,7 +429,7 @@ void sc_totempole_update(uint param_1)
       uVar2 = FUN_80017690(0x81);
       if ((((uVar2 != 0) && (uVar2 = FUN_80017690(0x82), uVar2 != 0)) &&
           (uVar2 = FUN_80017690(0x83), uVar2 != 0)) && (uVar2 = FUN_80017690(0x84), uVar2 != 0)) {
-        FUN_80006824(0,0x7e);
+        FUN_80006824(0,SFXmn_sml_trex_fstep);
         bVar1 = true;
         iVar3 = FUN_80017b00(&local_48,local_44);
         puVar4 = (uint *)(iVar3 + local_48 * 4);
@@ -440,7 +446,7 @@ void sc_totempole_update(uint param_1)
         sc_totempole_sortCompletionGameBits();
       }
       if (!bVar1) {
-        FUN_80006824(0,0x109);
+        FUN_80006824(0,SFXsp_lf_mutter4);
       }
     }
   }
