@@ -5112,6 +5112,7 @@ extern void curveFn_80010d54(void);
 extern void curveFn_80010dc0(void);
 extern void curvesMove(float *state);
 extern void curvesSetupMoveNetworkCurve(float *state);
+extern f32 gFloatZero;
 extern f32 gFloatNegOne;
 extern f32 gFloatOne;
 extern void *memcpy(void *dst, const void *src, u32 n);
@@ -5468,6 +5469,92 @@ int RomCurve_func2C(float *state, int unused, int startCurveId)
     if (*(void **)(stateBytes + 0xa4) == NULL) {
         *(void **)(stateBytes + 0xa4) = NULL;
         return 1;
+    }
+
+    RomCurve_RefreshForwardControls(stateBytes, 0xa4);
+    if (RomCurve_goNextPoint(state) != 0) {
+        return 1;
+    }
+
+    *(void **)(stateBytes + 0x94) = curveFn_80010dc0;
+    *(void **)(stateBytes + 0x98) = curveFn_80010d54;
+    *(void **)(stateBytes + 0x84) = stateBytes + 0xa8;
+    *(void **)(stateBytes + 0x88) = stateBytes + 0xc8;
+    *(void **)(stateBytes + 0x8c) = stateBytes + 0xe8;
+    *(s32 *)(stateBytes + 0x90) = 8;
+    curvesMove(state);
+    return 0;
+}
+
+int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, double maxDistance)
+{
+    char *stateBytes;
+    int curveId;
+    int currentCurve;
+    int nextId;
+    int nextCurve;
+    int distanceCurve;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distance;
+
+    if (state == NULL) {
+        return 1;
+    }
+
+    stateBytes = (char *)state;
+    curveId = ((int (*)(int, int *, int, int, char))curves_findNearObj)(obj, curveTypes, 1, curveType, 0xc);
+    if (curveId == -1) {
+        return 1;
+    }
+
+    if (*(s32 *)(stateBytes + 0x80) != 0) {
+        currentCurve = Objfsa_FindRomCurveById(curveId);
+        *(s32 *)(stateBytes + 0xa0) = currentCurve;
+        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+        if (nextId == -1) {
+            return 1;
+        }
+        curveId = nextId;
+    }
+
+    currentCurve = Objfsa_FindRomCurveById(curveId);
+    *(s32 *)(stateBytes + 0xa0) = currentCurve;
+    if (*(void **)(stateBytes + 0xa0) == NULL) {
+        *(void **)(stateBytes + 0xa0) = NULL;
+        return 1;
+    }
+
+    if (*(s32 *)(stateBytes + 0x80) == 0) {
+        nextId = RomCurve_getControlPointId_2A(currentCurve, -1, -1);
+    } else {
+        nextId = RomCurve_getControlPointId_2B(currentCurve, -1, -1);
+    }
+    if (nextId == -1) {
+        return 1;
+    }
+
+    nextCurve = Objfsa_FindRomCurveById(nextId);
+    *(s32 *)(stateBytes + 0xa4) = nextCurve;
+    if (*(void **)(stateBytes + 0xa4) == NULL) {
+        *(void **)(stateBytes + 0xa4) = NULL;
+        return 1;
+    }
+
+    if (maxDistance != (double)gFloatZero) {
+        if (*(s32 *)(stateBytes + 0x80) != 0) {
+            distanceCurve = *(s32 *)(stateBytes + 0xa4);
+        } else {
+            distanceCurve = *(s32 *)(stateBytes + 0xa0);
+        }
+        dx = *(f32 *)(distanceCurve + 0x8) - *(f32 *)(obj + 0xc);
+        dy = *(f32 *)(distanceCurve + 0xc) - *(f32 *)(obj + 0x10);
+        dz = *(f32 *)(distanceCurve + 0x10) - *(f32 *)(obj + 0x14);
+        distance = sqrtf(dx * dx + dy * dy + dz * dz);
+        if (distance > maxDistance) {
+            return 1;
+        }
     }
 
     RomCurve_RefreshForwardControls(stateBytes, 0xa4);
