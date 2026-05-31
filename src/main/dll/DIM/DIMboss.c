@@ -99,8 +99,6 @@ extern void fn_801BB598(DIMbossObject *obj,DIMbossRuntime *runtime);
 
 extern f32 timeDelta;
 extern undefined4 DAT_803ad60c;
-extern undefined4* lbl_803DCAB4;
-#define gBoneParticleEffectInterface lbl_803DCAB4
 extern u8 lbl_803DC950;
 extern u32 gDIMbossSequenceFlags;
 extern undefined4 DAT_803de808;
@@ -134,10 +132,19 @@ extern char sDIMBossLoadingAssetsForDIMTop[];
 
 #define gDIMbossAnimScratchBase lbl_803AC970
 
+#define DIMBOSS_BONE_PARTICLE_EFFECT_800 0x800
+#define DIMBOSS_BONE_PARTICLE_EFFECT_7FF 0x7FF
+#define DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES 100
+
 typedef void (*DIMbossAnimSetupFn)(DIMbossObject *obj,undefined4 param_2,DIMbossRuntime *runtime,
                                    int param_4,int param_5,int param_6,int param_7,float scale);
 typedef void (*DIMbossPlayerHitReactFn)(DIMbossObject *obj,DIMbossRuntime *runtime,f32 x,f32 y,
                                         void *hitDetectAnimTable,void *animTable);
+
+typedef struct DIMbossBoneParticleEffectInterface {
+  u8 pad00[0x0C];
+  void (*spawnEffect)(DIMbossObject *obj,int effectId,void *params,int frames,void *extra);
+} DIMbossBoneParticleEffectInterface;
 
 typedef struct DIMbossBaddieControlInterface {
   u8 pad00[0x2C];
@@ -164,10 +171,17 @@ typedef struct DIMbossObjectTriggerInterface {
   void (*triggerEvent)(ObjAnimUpdateState *animUpdate,int eventId);
 } DIMbossObjectTriggerInterface;
 
+extern DIMbossBoneParticleEffectInterface **lbl_803DCAB4;
 extern DIMbossMapEventInterface **gMapEventInterface;
+
+#define gBoneParticleEffectInterface lbl_803DCAB4
 
 static inline DIMbossBaddieControlInterface *DIMboss_GetBaddieControlInterface(void) {
   return (DIMbossBaddieControlInterface *)*gBaddieControlInterface;
+}
+
+static inline DIMbossBoneParticleEffectInterface *DIMboss_GetBoneParticleEffectInterface(void) {
+  return *gBoneParticleEffectInterface;
 }
 
 static inline DIMbossObjectTriggerInterface *DIMboss_GetObjectTriggerInterface(void) {
@@ -220,17 +234,21 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
                 (float *)(animScratchBase + DIMBOSS_ANIM_CONTROLLER_OFFSET),1,1);
   for (eventIndex = 0; eventIndex < (int)(uint)animUpdate->eventCount; eventIndex = eventIndex + 1) {
     switch(animUpdate->eventIds[eventIndex]) {
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG:
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_80000:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_80000;
       break;
-    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG:
+    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_80000:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_80000;
       break;
     case DIMBOSS_EVENT_CLEAR_RENDER_ATTACHMENT:
-      (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x800,0,100,0);
-      (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x800,0,100,0);
-      (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x7ff,0,100,0);
-      (*(code *)(*gBoneParticleEffectInterface + 0xc))(obj,0x7ff,0,100,0);
+      DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
+          obj,DIMBOSS_BONE_PARTICLE_EFFECT_800,NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES,NULL);
+      DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
+          obj,DIMBOSS_BONE_PARTICLE_EFFECT_800,NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES,NULL);
+      DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
+          obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF,NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES,NULL);
+      DIMboss_GetBoneParticleEffectInterface()->spawnEffect(
+          obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF,NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES,NULL);
       iVar4 = Obj_GetActiveModel((int)obj);
       ObjModel_ClearRenderAttachment(iVar4);
       Music_Trigger(0x27,1);
@@ -247,36 +265,36 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
     case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
       (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,0);
       break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_06:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_06;
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_40004:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_40004;
       break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_07:
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0002:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0002;
       break;
     case DIMBOSS_EVENT_QUEUE_STEAM_SFX:
       topState->steamSfxPending |= DIMBOSS_STEAM_SFX_PENDING_FLAG;
       Music_Trigger(0xee,0);
       break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_09:
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0040:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0040;
       break;
-    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_09:
+    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0040:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0040;
       break;
-    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0C:
+    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0080:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0080;
       break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0D:
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0100:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0100;
       break;
-    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0D:
+    case DIMBOSS_EVENT_CLEAR_SEQUENCE_FLAG_0100:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags & ~DIMBOSS_SEQUENCE_FLAG_0100;
       break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_0F:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_0F;
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_2001:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_2001;
       break;
-    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_10:
-      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_EVENT_10;
+    case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_8021:
+      gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_8021;
       break;
     case DIMBOSS_EVENT_TRIGGER_DEFEAT_FLAGS:
       topState->defeatTimer = DIMBOSS_DEFEAT_TIMER_START;
