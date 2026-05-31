@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/pressureSwitch.h"
+#include "main/mapEvent.h"
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_8000680c();
@@ -604,12 +605,19 @@ void wispbaddie_hitDetect(void) {}
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopFromObject(int obj, u16 sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
 extern void mm_free(void *p);
 extern void objRenderFn_8003b8f4(f32);
 extern void objParticleFn_80099d84(int obj, int p2, int p3, f32 f1, f32 f2);
 extern f32 lbl_803E2650;
 extern f32 lbl_803E2654;
 extern f64 lbl_803E2640; /* int->float magic */
+extern f64 lbl_803E2648; /* int->float magic */
+extern f32 lbl_803E2658;
+extern f32 lbl_803E265C;
+extern f32 lbl_803E2660;
+extern f32 lbl_803E2664;
+extern f32 lbl_803E2668;
 extern f32 lbl_803E266C;
 extern f32 lbl_803E2670;
 extern f32 lbl_803E2674;
@@ -657,12 +665,18 @@ extern int lbl_803DBC70;
 extern int lbl_803DDA60;
 extern int lbl_803DDA68;
 extern f32 timeDelta;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern MapEventInterface **gMapEventInterface;
 extern int Obj_GetPlayerObject(void);
+extern f32 Vec_distance(void *a, void *b);
 extern int curveFn_80010320(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern void objLightFn_8009a1dc(int obj, f32 radius, void *pos, int type, int flags);
 extern f32 sqrtf(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern void Sfx_SetObjectChannelVolume(double volumeScale, int obj, int channel, int volume);
+extern void fn_8014E1DC(int obj, int *state);
 
 typedef union PressureSwitchIntToDouble {
     u64 bits;
@@ -1020,10 +1034,135 @@ void swarmbaddie_update(int obj)
     fn_8014EE8C(obj, state);
 }
 
+#pragma scheduling off
+#pragma peephole off
+void hagabon_update(int obj)
+{
+    int player;
+    int data;
+    int oldCurve;
+    int *state;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 dist;
+    int hitA;
+    int hitB;
+    int hitC;
+    f32 lightPos[3];
+    f32 hitX;
+    f32 hitZ;
+    int fade;
+    PressureSwitchIntToDouble fadeAsDouble;
+    PressureSwitchIntToDouble eventAsDouble;
+
+    state = *(int **)(obj + 0xb8);
+    oldCurve = state[0];
+    data = *(int *)(obj + 0x4c);
+
+    if (*(int *)(obj + 0xf4) != 0) {
+        if ((*(s16 *)(data + 0x20) != -1) && (GameBit_Get(*(s16 *)(data + 0x20)) != 0)) {
+            return;
+        }
+        if ((*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(*(int *)(data + 0x14)) == 0) {
+            return;
+        }
+        *(int *)(obj + 0xf4) = 0;
+        *(u8 *)(obj + 0x36) = 1;
+        *(u8 *)((u8 *)state + 0x26) |= 8;
+        Sfx_PlayFromObject(obj, 0x237);
+        return;
+    }
+
+    player = Obj_GetPlayerObject();
+    dist = Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18));
+    if (dist < lbl_803E2658) {
+        Sfx_PlayFromObject(obj, 0x236);
+    } else if (dist > lbl_803E265C) {
+        Sfx_StopFromObject(obj, 0x236);
+    }
+
+    if ((*(u8 *)(obj + 0x36) != 0) && ((*(u8 *)((u8 *)state + 0x26) & 0x18) != 0)) {
+        if ((*(u8 *)((u8 *)state + 0x26) & 0x10) != 0) {
+            fadeAsDouble.bits = CONCAT44(0x43300000, (u32)*(u8 *)(obj + 0x36));
+            fade = (int)((f32)(fadeAsDouble.value - lbl_803E2640) - timeDelta);
+            *(u8 *)(obj + 0x36) = (u8)fade;
+            if (*(u8 *)(obj + 0x36) < 7) {
+                *(int *)(obj + 0xf4) = 1;
+                *(u8 *)(obj + 0x36) = 0;
+                *(u8 *)((u8 *)state + 0x26) &= 0xef;
+                Sfx_StopFromObject(obj, 0x236);
+            }
+            ObjHits_DisableObject(obj);
+        }
+        if ((*(u8 *)((u8 *)state + 0x26) & 8) != 0) {
+            fadeAsDouble.bits = CONCAT44(0x43300000, (u32)*(u8 *)(obj + 0x36));
+            fade = (int)((f32)(fadeAsDouble.value - lbl_803E2640) + timeDelta);
+            *(u8 *)(obj + 0x36) = (u8)fade;
+            if (*(u8 *)(obj + 0x36) > 0xf8) {
+                *(u8 *)(obj + 0x36) = 0xff;
+                *(u8 *)((u8 *)state + 0x26) &= 0xf7;
+            }
+        }
+    } else {
+        if (ObjHits_GetPriorityHitWithPosition(obj, &hitA, &hitB, &hitC, &hitX, &lightPos[1],
+                                               &hitZ) != 0) {
+            Sfx_StopObjectChannel(obj, 0x7f);
+            *(u8 *)((u8 *)state + 0x26) |= 0x10;
+            Sfx_PlayFromObject(obj, 0x232);
+            Sfx_PlayFromObject(obj, 0x233);
+            Sfx_PlayFromObject(obj, 0x238);
+            Sfx_PlayFromObject(obj, 0x1f2);
+            hitX += playerMapOffsetX;
+            hitZ += playerMapOffsetZ;
+            lightPos[0] = hitX;
+            lightPos[2] = hitZ;
+            objLightFn_8009a1dc(obj, lbl_803E2660, lightPos, 3, 0);
+            eventAsDouble.bits = CONCAT44(0x43300000,
+                                          (s32)(*(s16 *)(data + 0x1c) * 0x3c) ^ 0x80000000);
+            (*(void (**)(int, f32))(*(int *)gMapEventInterface + 0x64))(
+                *(int *)(data + 0x14), (f32)(eventAsDouble.value - lbl_803E2648));
+            if (*(s16 *)(data + 0x20) != -1) {
+                GameBit_Set(*(s16 *)(data + 0x20), 1);
+            }
+        }
+        ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
+        ObjHits_EnableObject(obj);
+    }
+
+    player = Obj_GetPlayerObject();
+    state[1] = player;
+    if (player != 0) {
+        dx = *(f32 *)(player + 0x18) - *(f32 *)(obj + 0x18);
+        dy = *(f32 *)(player + 0x1c) - *(f32 *)(obj + 0x1c);
+        dz = *(f32 *)(player + 0x20) - *(f32 *)(obj + 0x20);
+        *(f32 *)(state + 4) = sqrtf(dz * dz + dx * dx + dy * dy);
+    }
+    if (oldCurve != 0) {
+        dx = *(f32 *)(oldCurve + 0x68) - *(f32 *)(obj + 0x18);
+        dy = *(f32 *)(oldCurve + 0x6c) - *(f32 *)(obj + 0x1c);
+        dz = *(f32 *)(oldCurve + 0x70) - *(f32 *)(obj + 0x20);
+        *(f32 *)(state + 5) = sqrtf(dz * dz + dx * dx + dy * dy);
+    }
+    if (((*(u8 *)((u8 *)state + 0x26) & 2) != 0) && (lbl_803E2664 < *(f32 *)(state + 5))) {
+        *(u8 *)((u8 *)state + 0x26) &= 0xfd;
+        *(u8 *)((u8 *)state + 0x26) |= 4;
+    }
+    if (((*(u8 *)((u8 *)state + 0x26) & 4) != 0) && (*(f32 *)(state + 5) < lbl_803E2668)) {
+        *(u8 *)((u8 *)state + 0x26) &= 0xfb;
+    }
+    if (((*(u8 *)((u8 *)state + 0x26) & 6) == 0) && (*(s16 *)(data + 0x1e) == 0) &&
+        (state[1] != 0) && (*(f32 *)(state + 4) < *(f32 *)(state + 6))) {
+        *(u8 *)((u8 *)state + 0x26) |= 2;
+    }
+    fn_8014E1DC(obj, state);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void hagabon_free(int obj);
 extern void hagabon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void hagabon_hitDetect(int obj);
-extern void hagabon_update(void);
 extern void hagabon_init(int obj, int data, int skip_alloc);
 extern void swarmbaddie_free(int obj);
 extern void swarmbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
