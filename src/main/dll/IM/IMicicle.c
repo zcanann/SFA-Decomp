@@ -2,6 +2,8 @@
 #include "main/mapEvent.h"
 #include "main/dll/IM/IMicicle.h"
 
+#define SFXmn_sml_trex_fstep 126
+#define SFXsp_lf_mutter4 265
 
 #pragma peephole off
 #pragma scheduling off
@@ -1037,11 +1039,11 @@ void FUN_801a494c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   if ((bVar7 == 0) || ((*(byte *)(iVar9 + 0xc) >> 4 & 1) == 0)) {
     if ((bVar7 == 0) && ((*(byte *)(iVar9 + 0xc) >> 4 & 1) == 0)) {
       if ((uVar4 != 0) || (uVar5 != 0)) {
-        uVar10 = FUN_80006824(0,0x109);
+        uVar10 = FUN_80006824(0,SFXsp_lf_mutter4);
       }
     }
     else if ((uVar4 != 0) && (uVar5 != 0)) {
-      uVar10 = FUN_80006824(0,0x7e);
+      uVar10 = FUN_80006824(0,SFXmn_sml_trex_fstep);
     }
   }
   *(byte *)(iVar9 + 0xc) = (byte)(uVar4 << 5) & 0x20 | *(byte *)(iVar9 + 0xc) & 0xdf;
@@ -1544,10 +1546,10 @@ void cflevelcontrol_update(int obj) {
     if (old974 == 0 || (((u32)state[0xc] >> 4) & 1) == 0) {
         if (old974 == 0 && (((u32)state[0xc] >> 4) & 1) == 0) {
             if (bit974 != 0 || bit975 != 0) {
-                Sfx_PlayFromObject(0, 0x109);
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             }
         } else if (bit974 != 0 && bit975 != 0) {
-            Sfx_PlayFromObject(0, 0x7e);
+            Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
         }
     }
 
