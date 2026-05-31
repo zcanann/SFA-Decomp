@@ -130,6 +130,7 @@ extern f32 lbl_803E12D0;
 extern f32 lbl_803E12D4;
 extern f32 lbl_803E05F0;
 extern f32 lbl_803E0644;
+extern int lbl_803DD460;
 extern int lbl_803DD464;
 extern int lbl_803DD468;
 extern char sObjfsaFoundNewWalkGroupPatch[];
@@ -6043,6 +6044,171 @@ static inline int Objfsa_FindRomCurveById(int curveId) {
     }
 
     return 0;
+}
+
+extern void mapBlockFn_80059c2c(u8 *outFlags);
+extern f32 lbl_803E0600;
+extern f32 lbl_803E0604;
+extern f32 lbl_803E05FC;
+
+static void Objfsa_SetWalkGroupPlane(ObjfsaPatchPlane *plane, f32 *offset,
+                                     f32 x0, f32 z0, f32 x1, f32 z1)
+{
+    f32 normalX;
+    f32 normalZ;
+    f32 length;
+
+    normalX = z1 - z0;
+    normalZ = x0 - x1;
+    length = sqrtf(normalX * normalX + normalZ * normalZ);
+    if (length != lbl_803E05F0) {
+        normalX /= length;
+        normalZ /= length;
+    }
+
+    plane->normalX = (s16)(lbl_803E05FC * normalX);
+    plane->normalZ = (s16)(lbl_803E05FC * normalZ);
+    *offset = -((f32)plane->normalX * x0 + (f32)plane->normalZ * z0);
+}
+
+static void Objfsa_SetWalkGroupPatch(ObjfsaWalkGroup *walkGroup, int curve, f32 scale)
+{
+    f32 x0;
+    f32 z0;
+    f32 x1;
+    f32 z1;
+    f32 x2;
+    f32 z2;
+    f32 x3;
+    f32 z3;
+    f32 yMax;
+    f32 yMin;
+
+    x0 = *(f32 *)(curve + 0x8) + (f32)*(s8 *)(curve + 0x4) * scale;
+    z0 = *(f32 *)(curve + 0x10) + (f32)*(s8 *)(curve + 0x5) * scale;
+    x1 = *(f32 *)(curve + 0x8) + (f32)*(s8 *)(curve + 0x6) * scale;
+    z1 = *(f32 *)(curve + 0x10) + (f32)*(s8 *)(curve + 0x7) * scale;
+    x2 = *(f32 *)(curve + 0x8) + (f32)*(s8 *)(curve + 0x30) * scale;
+    z2 = *(f32 *)(curve + 0x10) + (f32)*(s8 *)(curve + 0x31) * scale;
+    x3 = *(f32 *)(curve + 0x8) + (f32)*(s8 *)(curve + 0x32) * scale;
+    z3 = *(f32 *)(curve + 0x10) + (f32)*(s8 *)(curve + 0x33) * scale;
+
+    Objfsa_SetWalkGroupPlane(&walkGroup->planes[0], &walkGroup->planeOffsets[0], x0, z0, x1, z1);
+    Objfsa_SetWalkGroupPlane(&walkGroup->planes[1], &walkGroup->planeOffsets[1], x1, z1, x2, z2);
+    Objfsa_SetWalkGroupPlane(&walkGroup->planes[2], &walkGroup->planeOffsets[2], x2, z2, x3, z3);
+    Objfsa_SetWalkGroupPlane(&walkGroup->planes[3], &walkGroup->planeOffsets[3], x3, z3, x0, z0);
+
+    yMax = lbl_803E05D0 * (f32)*(s8 *)(curve + 0x18) + *(f32 *)(curve + 0xc);
+    yMin = *(f32 *)(curve + 0xc) - lbl_803E05D0 * (f32)*(s8 *)(curve + 0x1a);
+    walkGroup->maxY = (s16)yMax;
+    walkGroup->minY = (s16)yMin;
+}
+
+static u16 Objfsa_MakePatchGroupId(u8 groupA, u8 groupB)
+{
+    if (groupA < groupB) {
+        return ((u16)groupB << 8) | groupA;
+    }
+    return ((u16)groupA << 8) | groupB;
+}
+
+static u8 Objfsa_FindOrCreatePatchGroup(u8 groupA, u8 groupB)
+{
+    u16 groupId;
+    int patchIndex;
+    ObjfsaPatch *patch;
+
+    groupId = Objfsa_MakePatchGroupId(groupA, groupB);
+    for (patchIndex = 1; patchIndex < lbl_803DD468; patchIndex++) {
+        if (lbl_8039CAE8[patchIndex].groupId == groupId) {
+            return (u8)patchIndex;
+        }
+    }
+
+    patchIndex = lbl_803DD468;
+    patch = &lbl_8039CAE8[patchIndex];
+    memset(patch, 0, sizeof(ObjfsaPatch));
+    patch->groupId = groupId;
+    lbl_803DD468++;
+    return (u8)patchIndex;
+}
+
+void walkgroupFindExitPointFn_800dc398(void)
+{
+    u8 blockFlags[0x80];
+    int checksum;
+    int flagIndex;
+    int curveCount;
+    int **curveList;
+    int listIndex;
+    int curve;
+    int groupIndex;
+    int linkSlot;
+    int linkedCurve;
+    int linkedGroupIndex;
+    int patchIndex;
+    ObjfsaWalkGroup *walkGroup;
+    f32 scale;
+
+    mapBlockFn_80059c2c(blockFlags);
+
+    checksum = 1;
+    for (flagIndex = 0; flagIndex < 120; flagIndex++) {
+        if (blockFlags[flagIndex] != 0) {
+            checksum *= flagIndex;
+        }
+    }
+
+    if (checksum == lbl_803DD460) {
+        return;
+    }
+    lbl_803DD460 = checksum;
+
+    if (blockFlags[2] != 0 || blockFlags[0x34] != 0) {
+        scale = lbl_803E0600;
+    } else {
+        scale = lbl_803E0604;
+    }
+
+    curveList = (int **)(*(void *(**)(int *))((int)*gRomCurveInterface + 0x10))(&curveCount);
+    memset(lbl_803A1730, 0, OBJFSA_WALKGROUP_COUNT);
+    memset(lbl_8039CAE8, 0, sizeof(ObjfsaPatch) * 0x100);
+
+    for (groupIndex = 0; groupIndex < OBJFSA_WALKGROUP_COUNT; groupIndex++) {
+        walkGroup = Objfsa_GetWalkGroup(groupIndex);
+        walkGroup->patchIndices[0] = 0;
+        walkGroup->patchIndices[1] = 0;
+        walkGroup->patchIndices[2] = 0;
+        walkGroup->patchIndices[3] = 0;
+    }
+
+    lbl_803DD468 = 1;
+    for (listIndex = 0; listIndex < curveCount; listIndex++) {
+        curve = (int)curveList[listIndex];
+        if (*(s8 *)(curve + 0x19) != 0x26) {
+            continue;
+        }
+
+        groupIndex = *(u8 *)(curve + 0x3);
+        lbl_803A1730[groupIndex] = 1;
+        walkGroup = Objfsa_GetWalkGroup(groupIndex);
+        Objfsa_SetWalkGroupPatch(walkGroup, curve, scale);
+
+        for (linkSlot = 0; linkSlot < OBJFSA_PATCHGROUP_PATCH_COUNT; linkSlot++) {
+            if (*(s32 *)(curve + 0x1c + linkSlot * 4) <= -1) {
+                continue;
+            }
+
+            linkedCurve = Objfsa_FindRomCurveById(*(s32 *)(curve + 0x1c + linkSlot * 4));
+            if (linkedCurve == 0 || *(s8 *)(linkedCurve + 0x19) != 0x26) {
+                continue;
+            }
+
+            linkedGroupIndex = *(u8 *)(linkedCurve + 0x3);
+            patchIndex = Objfsa_FindOrCreatePatchGroup((u8)groupIndex, (u8)linkedGroupIndex);
+            walkGroup->patchIndices[linkSlot] = (u8)patchIndex;
+        }
+    }
 }
 
 int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighborId) {
