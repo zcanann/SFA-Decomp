@@ -1,6 +1,9 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/mapEventTypes.h"
 
+#define SFXmv_liftloop 158
+#define SFXmv_mushdizzylp12 159
+
 #pragma peephole on
 #pragma scheduling off
 int wcbeacon_aButtonCallback(int obj)
@@ -99,8 +102,8 @@ void wcbeacon_update(int obj)
             }
         }
         if (*(u8 *)(state + 5) != 0) {
-            Sfx_PlayFromObject(obj, 159);
-            Sfx_PlayFromObject(obj, 158);
+            Sfx_PlayFromObject(obj, SFXmv_mushdizzylp12);
+            Sfx_PlayFromObject(obj, SFXmv_liftloop);
             *(u8 *)(state + 4) = 2;
             *(f32 *)(state + 0) = lbl_803E6DE4;
         }
