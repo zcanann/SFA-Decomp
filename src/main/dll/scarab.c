@@ -1,6 +1,23 @@
 #include "ghidra_import.h"
 #include "main/dll/scarab.h"
 
+#define SFXmv_ropecreak22 0x95
+#define SFXdoor_creak 0x233
+#define SFXfox_treadwater322 0x239
+#define SFXfoot_ice_run_4 0x1ec
+#define SFXfoot_metal_run_2 0x1f2
+#define SFXfoxcom_find 0x263
+#define SFXfoxcom_flame 0x264
+#define SFXfoxcom_gogetit 0x265
+#define SFXfoxcom_heel 0x266
+#define SFXfoxcom_stay 0x267
+#define SFXkr_impact1 0x268
+#define SFXkr_impact2 0x269
+#define SFXkr_impact3 0x26a
+#define SFXkr_jump1 0x26b
+#define SFXsc_attack04 0x27a
+#define SFXsc_death02 0x27c
+
 extern undefined8 FUN_80003494();
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80006920();
@@ -656,7 +673,7 @@ int fn_8015E3A0(int obj, int p2)
     int child = *(int *)(sub + 0x40c);
     *(u32 *)(p2 + 0x314) = *(u32 *)(p2 + 0x314) & ~0x1;
     *(u8 *)(child + 0x8) = (u8)(*(u8 *)(child + 0x8) | 0x1);
-    Sfx_PlayFromObject(obj, 614);
+    Sfx_PlayFromObject(obj, SFXfoxcom_heel);
   }
   return 0;
 }
@@ -748,18 +765,18 @@ int fn_8015E210(int *obj, u8 *p)
     r = (**(int (**)(int *))(*(int *)(*(int *)((char *)player_b8 + 0x68)) + 0x44))(player_b8);
     if (r != 0) {
       if (*(s16 *)((char *)player + 0x46) != 0) {
-        Sfx_PlayFromObject(obj, 498);
+        Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
       } else {
-        Sfx_PlayFromObject(obj, 149);
+        Sfx_PlayFromObject(obj, SFXmv_ropecreak22);
       }
     } else {
       if (*(s16 *)((char *)player + 0x46) != 0) {
-        Sfx_PlayFromObject(obj, 498);
+        Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
       } else {
-        Sfx_PlayFromObject(obj, 569);
+        Sfx_PlayFromObject(obj, SFXfox_treadwater322);
       }
     }
-    Sfx_PlayFromObject(obj, 615);
+    Sfx_PlayFromObject(obj, SFXfoxcom_stay);
   }
   *(s8 *)(p + 0x34d) = 3;
   *(f32 *)(p + 0x2a0) = lbl_803E2DD4;
@@ -839,17 +856,17 @@ FUN_8015e2e0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   if ((*(byte *)(param_10 + 0x356) & 1) == 0) {
     iVar2 = FUN_80017a98();
     if (*(short *)(iVar2 + 0x46) == 0) {
-      FUN_80006824(param_9,0x239);
+      FUN_80006824(param_9,SFXfox_treadwater322);
     }
     else {
-      FUN_80006824(param_9,0x1f2);
+      FUN_80006824(param_9,SFXfoot_metal_run_2);
     }
     FUN_80006824(param_9,0x232);
-    FUN_80006824(param_9,0x263);
+    FUN_80006824(param_9,SFXfoxcom_find);
     *(byte *)(param_10 + 0x356) = *(byte *)(param_10 + 0x356) | 1;
   }
   if (((*(byte *)(param_10 + 0x356) & 2) == 0) && (lbl_803E3A68 < *(float *)(param_9 + 0x98))) {
-    FUN_80006824(param_9,0x233);
+    FUN_80006824(param_9,SFXdoor_creak);
     *(byte *)(param_10 + 0x356) = *(byte *)(param_10 + 0x356) | 2;
     (**(code **)(*DAT_803dd738 + 0x4c))(param_9,(int)*(short *)(iVar3 + 0x3f0),0xffffffff,0);
   }
@@ -900,19 +917,19 @@ FUN_8015e488(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     iVar3 = (**(code **)(**(int **)(iVar3 + 0x68) + 0x44))(iVar3);
     if (iVar3 == 0) {
       if (*(short *)(iVar1 + 0x46) == 0) {
-        FUN_80006824(param_9,0x239);
+        FUN_80006824(param_9,SFXfox_treadwater322);
       }
       else {
-        FUN_80006824(param_9,0x1f2);
+        FUN_80006824(param_9,SFXfoot_metal_run_2);
       }
     }
     else if (*(short *)(iVar1 + 0x46) == 0) {
-      FUN_80006824(param_9,0x95);
+      FUN_80006824(param_9,SFXmv_ropecreak22);
     }
     else {
-      FUN_80006824(param_9,0x1f2);
+      FUN_80006824(param_9,SFXfoot_metal_run_2);
     }
-    FUN_80006824(param_9,0x267);
+    FUN_80006824(param_9,SFXfoxcom_stay);
   }
   *(undefined *)(param_10 + 0x34d) = 3;
   *(float *)(param_10 + 0x2a0) = lbl_803E3A6C;
@@ -1028,7 +1045,7 @@ FUN_8015e678(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     iVar4 = *(int *)(iVar4 + 0x40c);
     *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & ~1;
     *(byte *)(iVar4 + 8) = *(byte *)(iVar4 + 8) | 1;
-    FUN_80006824(param_9,0x266);
+    FUN_80006824(param_9,SFXfoxcom_heel);
   }
   return 0;
 }
@@ -1178,7 +1195,7 @@ void fn_8015EB6C(int obj, int p2, int p3)
     }
     if (*(f32 *)(sub + 0) > *(f32 *)(sub + 4)) {
       if (dist < lbl_803E2E00) {
-        Sfx_PlayFromObject(obj, 613);
+        Sfx_PlayFromObject(obj, SFXfoxcom_gogetit);
         *(f32 *)(sub + 4) += (f32)(s32)randomGetRange(50, 250);
       }
     }
@@ -1448,7 +1465,7 @@ void FUN_8015f224(undefined4 param_1,undefined4 param_2,int param_3)
       dVar8 = FUN_80293900((double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2));
     }
     if ((pfVar7[1] < *pfVar7) && (dVar8 < (double)lbl_803E3A98)) {
-      FUN_80006824(uVar5,0x265);
+      FUN_80006824(uVar5,SFXfoxcom_gogetit);
       uVar5 = randomGetRange(0x32,0xfa);
       pfVar7[1] = pfVar7[1] +
                   (f32)(s32)(uVar5);
@@ -1536,7 +1553,7 @@ void FUN_8015f534(uint param_1,byte param_2)
   }
   else if ((param_2 < 0x81) && (0x7f < param_2)) {
     *(byte *)(*(int *)(iVar1 + 0x40c) + 9) = *(byte *)(*(int *)(iVar1 + 0x40c) + 9) | 2;
-    FUN_80006824(param_1,0x264);
+    FUN_80006824(param_1,SFXfoxcom_flame);
     (**(code **)(*DAT_803dd70c + 0x14))(param_1,iVar1,1);
     *(undefined2 *)(iVar1 + 0x270) = 4;
     *(undefined *)(iVar1 + 0x27b) = 1;
@@ -1749,7 +1766,7 @@ void FUN_8015f910(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_8015fab4(uint param_1,char param_2)
 {
   if (param_2 == -0x80) {
-    FUN_80006824(param_1,0x26b);
+    FUN_80006824(param_1,SFXkr_jump1);
   }
   return;
 }
@@ -1796,7 +1813,7 @@ void fn_8015FBEC(int obj)
     }
   }
 
-  Sfx_PlayFromObject(obj, 618);
+  Sfx_PlayFromObject(obj, SFXkr_impact3);
   Camera_EnableViewYOffset();
   CameraShake_SetAllMagnitudes(lbl_803E2E50);
 }
@@ -1901,20 +1918,20 @@ void FUN_8015fb0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
           uVar6 = randomGetRange(0,99);
           if (((int)uVar6 < (int)(uint)*(byte *)(pfVar7 + 5)) ||
              ((*(byte *)((int)pfVar7 + 0x12) & 4) != 0)) {
-            uVar9 = FUN_80006824((uint)param_9,0x268);
+            uVar9 = FUN_80006824((uint)param_9,SFXkr_impact1);
             FUN_8015f910(uVar9,dVar8,param_3,param_4,param_5,param_6,param_7,param_8,(int)param_9);
           }
           else {
-            FUN_80006824((uint)param_9,0x269);
+            FUN_80006824((uint)param_9,SFXkr_impact2);
           }
         }
         else {
-          FUN_80006824((uint)param_9,0x269);
+          FUN_80006824((uint)param_9,SFXkr_impact2);
         }
       }
     }
     else if ((*(byte *)((int)pfVar7 + 0x12) & 1) != 0) {
-      FUN_80006824((uint)param_9,0x269);
+      FUN_80006824((uint)param_9,SFXkr_impact2);
     }
     *(short *)(pfVar7 + 4) = (short)uVar4;
     iVar5 = ObjHits_GetPriorityHit((int)param_9,&uStack_30,&iStack_34,&uStack_38);
@@ -1924,10 +1941,10 @@ void FUN_8015fb0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
       ObjHits_DisableObject((int)param_9);
       param_9[3] = param_9[3] | 0x4000;
       *(byte *)((int)pfVar7 + 0x12) = *(byte *)((int)pfVar7 + 0x12) | 2;
-      FUN_80006824((uint)param_9,0x26a);
+      FUN_80006824((uint)param_9,SFXkr_impact3);
       FUN_80017698((int)*(short *)((int)pfVar7 + 10),1);
       pfVar7[1] = lbl_803E3AD0;
-      FUN_80006824((uint)param_9,0x1ec);
+      FUN_80006824((uint)param_9,SFXfoot_ice_run_4);
     }
     *(byte *)((int)pfVar7 + 0x12) = *(byte *)((int)pfVar7 + 0x12) & 0xfa;
   }
@@ -2028,7 +2045,7 @@ void FUN_801600a8(uint param_1)
       iVar2 = iVar2 + 1;
     } while (iVar2 < 0x19);
   }
-  FUN_80006824(param_1,0x26a);
+  FUN_80006824(param_1,SFXkr_impact3);
   FUN_800069bc();
   FUN_80006920((double)lbl_803E3AE8);
   return;
@@ -2064,7 +2081,7 @@ void FUN_80160190(uint param_1)
   
   FUN_800069bc();
   FUN_80006920((double)lbl_803E3AE8);
-  FUN_80006824(param_1,0x26a);
+  FUN_80006824(param_1,SFXkr_impact3);
   sVar1 = *(short *)(param_1 + 0x46);
   if (sVar1 == 0x2cb) {
     iVar6 = *(int *)(param_1 + 0xc4);
@@ -3034,7 +3051,7 @@ bool FUN_80161a8c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(float *)(param_10 + 0x280) = lbl_803E3B50;
   *(float *)(param_10 + 0x284) = fVar1;
   if (*(char *)(param_10 + 0x27a) != '\0') {
-    FUN_80006824(param_9,0x27c);
+    FUN_80006824(param_9,SFXsc_death02);
     if (*(char *)(param_10 + 0x27a) != '\0') {
       FUN_800305f8((double)lbl_803E3B50,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                    param_9,2,0,param_12,param_13,param_14,param_15,param_16);
@@ -3077,7 +3094,7 @@ FUN_80161c08(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   *(float *)(param_10 + 0x2a0) = lbl_803E3B80;
   if ((*(uint *)(param_10 + 0x314) & 0x200) != 0) {
-    FUN_80006824(param_9,0x233);
+    FUN_80006824(param_9,SFXdoor_creak);
     *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & 0xfffffdff;
     (**(code **)(*DAT_803dd738 + 0x4c))(param_9,(int)*(short *)(iVar1 + 0x3f0),0xffffffff,1);
   }
@@ -3113,7 +3130,7 @@ bool FUN_80161d30(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)(param_10 + 0x346) = 0;
   }
   if (*(char *)(param_10 + 0x27a) != '\0') {
-    FUN_80006824((uint)param_9,0x27a);
+    FUN_80006824((uint)param_9,SFXsc_attack04);
   }
   *(float *)(param_10 + 0x2a0) = lbl_803E3B84;
   uVar1 = *(ushort *)(iVar3 + 0x58);
@@ -3372,12 +3389,12 @@ void iceball_free(void) { Camera_DisableViewYOffset(); }
 extern void chukchuk_update(void);
 extern void iceball_update(undefined2 *param_1,int param_2);
 
-/* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, 0x26b). */
+/* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, SFXkr_jump1). */
 #pragma peephole off
 void chukchuk_setScale(int obj, int v) {
     switch ((u8)v) {
     case 0x80:
-        Sfx_PlayFromObject(obj, 0x26b);
+        Sfx_PlayFromObject(obj, SFXkr_jump1);
         break;
     }
 }
@@ -3572,7 +3589,7 @@ int fn_801616AC(int* obj, u8* state)
     }
     *(f32*)((char*)state + 0x2a0) = lbl_803E2EE8;
     if ((*(int*)((char*)state + 0x314) & 0x200) != 0) {
-        Sfx_PlayFromObject(obj, 563);
+        Sfx_PlayFromObject(obj, SFXdoor_creak);
         *(int*)((char*)state + 0x314) &= ~0x200;
         ((void(*)(int*, int, int, int))((void**)*gBaddieControlInterface)[19])(obj, *(s16*)((char*)sub + 0x3f0), -1, 1);
     }
