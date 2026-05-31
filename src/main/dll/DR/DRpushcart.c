@@ -2,6 +2,8 @@
 #include "main/mapEvent.h"
 #include "main/dll/DR/DRpushcart.h"
 
+#define SFXsp_sa_def01 243
+
 extern undefined4 FUN_80006824();
 extern double FUN_80006a38();
 extern undefined4 FUN_80006ac8();
@@ -161,11 +163,11 @@ uint FUN_801e7724(int param_1,undefined4 param_2,int param_3)
     FUN_80006bb4(0,auStack_17,&local_18);
     if (local_18 < '\0') {
       *(short *)(iVar7 + 0x9d0) = *(short *)(iVar7 + 0x9d0) + -1;
-      FUN_80006824(0,0xf3);
+      FUN_80006824(0,SFXsp_sa_def01);
     }
     else if ('\0' < local_18) {
       *(short *)(iVar7 + 0x9d0) = *(short *)(iVar7 + 0x9d0) + 1;
-      FUN_80006824(0,0xf3);
+      FUN_80006824(0,SFXsp_sa_def01);
     }
     if (*(short *)(iVar7 + 0x9c8) < *(short *)(iVar7 + 0x9d0)) {
       *(short *)(iVar7 + 0x9d0) = *(short *)(iVar7 + 0x9c8);
@@ -202,11 +204,11 @@ uint FUN_801e7724(int param_1,undefined4 param_2,int param_3)
     FUN_80006bb4(0,auStack_17,&local_18);
     if (local_18 < '\0') {
       *(char *)(iVar7 + 0x9d5) = *(char *)(iVar7 + 0x9d5) + -1;
-      FUN_80006824(0,0xf3);
+      FUN_80006824(0,SFXsp_sa_def01);
     }
     else if ('\0' < local_18) {
       *(char *)(iVar7 + 0x9d5) = *(char *)(iVar7 + 0x9d5) + '\x01';
-      FUN_80006824(0,0xf3);
+      FUN_80006824(0,SFXsp_sa_def01);
     }
     if (*(short *)(iVar7 + 0x9c8) < (short)(ushort)*(byte *)(iVar7 + 0x9d5)) {
       *(char *)(iVar7 + 0x9d5) = (char)*(short *)(iVar7 + 0x9c8);
