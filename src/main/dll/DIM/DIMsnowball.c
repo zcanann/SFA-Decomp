@@ -2,6 +2,10 @@
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMsnowball.h"
 
+#define SFXsp_lf_mutter4 265
+#define SFXtr_gal_sailflap2 297
+#define SFXtr_jbike_bombbeep 308
+
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006818();
 extern undefined4 FUN_80006824();
@@ -677,7 +681,7 @@ LAB_801ab118:
       uVar4 = randomGetRange(0xb4,300);
       local_40 = (double)CONCAT44(0x43300000,uVar4 ^ 0x80000000);
       piVar10[5] = (int)(float)(local_40 - DOUBLE_803e5338);
-      dVar11 = (double)FUN_80006824((uint)psVar2,0x134);
+      dVar11 = (double)FUN_80006824((uint)psVar2,SFXtr_jbike_bombbeep);
     }
   }
   switch(*(undefined *)(piVar10 + 4)) {
@@ -884,7 +888,7 @@ LAB_801ab118:
         pfVar7 = (float *)0x0;
         FUN_80081120(psVar2,local_54 + 2,4,(int *)0x0);
       }
-      FUN_80006824((uint)psVar2,0x129);
+      FUN_80006824((uint)psVar2,SFXtr_gal_sailflap2);
     }
   }
   uVar4 = (uint)(byte)(&DAT_80324058)[*(byte *)(piVar10 + 4)];
@@ -964,7 +968,7 @@ void FUN_801aba9c(uint param_1)
     iVar2 = FUN_80017a98();
     dVar6 = FUN_80017714((float *)(param_1 + 0x18),(float *)(iVar2 + 0x18));
     if ((dVar6 < (double)lbl_803E535C) && (bVar4 = FUN_80294c20(iVar2), bVar4 != 0)) {
-      FUN_80006824(param_1,0x109);
+      FUN_80006824(param_1,SFXsp_lf_mutter4);
       GameBit_Set((int)*(short *)(*(int *)(param_1 + 0x4c) + 0x1a),1);
       *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
     }
