@@ -6,6 +6,8 @@
 #define SFXbaddie_rach_call2 0x2a2
 #define SFXbaddie_vambat_death 0x2ac
 #define SFXbaddie_eba_bigswipe 0x2b4
+#define SFXbaddie_eba_smallswipe2 0x2b6
+#define SFXbaddie_kalda_distress 0x2b7
 #define SFXbaddie_eggsnatch_movelp 0x2c0
 
 #pragma peephole on
@@ -670,7 +672,7 @@ void fn_8022C30C(int obj, int state)
                 *(u8 *)(state + 0x477) &= ~0x4;
                 *(u8 *)(state + 0x477) |= 0x2;
                 *(f32 *)(state + 0xb0) = lbl_803E6F58;
-                Sfx_PlayFromObjectLimited(obj, 0x2b6, 3);
+                Sfx_PlayFromObjectLimited(obj, SFXbaddie_eba_smallswipe2, 3);
             }
         } else {
             *(f32 *)(state + 0x6c) = *(f32 *)(state + 0x88);
@@ -685,7 +687,7 @@ void fn_8022C30C(int obj, int state)
                 *(u8 *)(state + 0x477) &= ~0x2;
                 *(u8 *)(state + 0x477) |= 0x4;
                 *(f32 *)(state + 0xb0) = lbl_803E6F60;
-                Sfx_PlayFromObjectLimited(obj, 0x2b7, 3);
+                Sfx_PlayFromObjectLimited(obj, SFXbaddie_kalda_distress, 3);
             }
         } else {
             *(f32 *)(state + 0x6c) = *(f32 *)(state + 0x8c);
