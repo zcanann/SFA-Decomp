@@ -5797,6 +5797,105 @@ void fn_800659A8(f32 a, f32 b, void *p3, void *p4, void *desc, int e)
     }
 }
 
+extern void Vec3_Normalize(f32 *v);
+extern f32 fn_802925C4(f32 x, f32 y);
+extern f32 fn_802943F4(f32 x);
+extern f32 floor(f32 x);
+extern f32 lbl_803DECEC;
+
+int fn_800660C8(f32 *a, f32 *b, f32 *c, f32 *p, int type, f32 f1p, f32 y)
+{
+    f32 d0[3];
+    f32 d1[3];
+
+    if ((u8)type == 3) {
+        f32 fa, fb, scale;
+        b[0] = c[0];
+        b[1] = c[1];
+        b[2] = c[2];
+        d0[0] = b[0] - a[0];
+        d0[1] = b[1] - a[1];
+        d0[2] = b[2] - a[2];
+        Vec3_Normalize(d0);
+        fb = (b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3]) - y;
+        fa = (a[1] * p[1] + a[0] * p[0] + a[2] * p[2] + p[3]) - y;
+        if (fa == fb)
+            scale = __AR_Callback;
+        else
+            scale = fa / (fa - fb);
+        d0[0] = b[0] - a[0];
+        d0[1] = b[1] - a[1];
+        d0[2] = b[2] - a[2];
+        b[0] = d0[0] * scale;
+        b[1] = d0[1] * scale;
+        b[2] = d0[2] * scale;
+        b[0] = b[0] + a[0];
+        b[1] = b[1] + a[1];
+        b[2] = b[2] + a[2];
+        return 1;
+    }
+    if (p[1] < __AR_Size && p[1] > lbl_803DECEC) {
+        switch ((u8)type) {
+        case 1:
+        case 8:
+        case 0xa: {
+            f32 dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+            y = y - dot;
+            if (y > __AR_Callback) {
+                f32 d = fn_802943F4(fn_802925C4(p[1], sqrtf(p[0] * p[0] + p[2] * p[2])));
+                if (__AR_Callback != d)
+                    y = y / d;
+                d1[0] = p[0];
+                d1[1] = __AR_Callback;
+                d1[2] = p[2];
+                Vec3_Normalize(d1);
+                b[0] = y * d1[0] + b[0];
+                b[2] = y * d1[2] + b[2];
+            }
+            break;
+        }
+        default: {
+            f32 dot, t;
+            b[0] = b[0] - f1p * p[0];
+            b[1] = b[1] - f1p * p[1];
+            b[2] = b[2] - f1p * p[2];
+            dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+            t = y - dot;
+            b[0] = t * p[0] + b[0];
+            b[1] = t * p[1] + b[1];
+            b[2] = t * p[2] + b[2];
+            break;
+        }
+        }
+    } else {
+        switch ((u8)type) {
+        case 5:
+        case 8: {
+            f32 dot, t;
+            b[0] = b[0] - f1p * p[0];
+            b[1] = b[1] - f1p * p[1];
+            b[2] = b[2] - f1p * p[2];
+            dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+            t = y - dot;
+            b[0] = t * p[0] + b[0];
+            b[1] = t * p[1] + b[1];
+            b[2] = t * p[2] + b[2];
+            break;
+        }
+        default: {
+            f32 dot = b[1] * p[1] + b[0] * p[0] + b[2] * p[2] + p[3];
+            y = y - dot;
+            if (y > __AR_Callback) {
+                f32 d = floor(fn_802925C4(p[1], sqrtf(p[0] * p[0] + p[2] * p[2])));
+                b[1] = b[1] + y / d;
+            }
+            break;
+        }
+        }
+    }
+    return 1;
+}
+
 extern u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p5, int z);
 extern void Obj_TransformLocalVectorByWorldMatrix(int v, f32 *a, f32 *b);
 
