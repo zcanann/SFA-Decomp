@@ -129,6 +129,7 @@ extern f32 lbl_803E12CC;
 extern f32 lbl_803E12D0;
 extern f32 lbl_803E12D4;
 extern f32 lbl_803E05F0;
+extern int lbl_803DD464;
 extern int lbl_803DD468;
 extern char sObjfsaIsPointWithinPatchGroupError[];
 
@@ -136,6 +137,7 @@ extern char sObjfsaIsPointWithinPatchGroupError[];
 #define OBJFSA_PATCHGROUP_STRIDE 0x28
 #define OBJFSA_PATCHGROUP_PATCHES_OFFSET 0x3024
 #define OBJFSA_ACTIVE_WALKGROUPS_OFFSET 0x4C48
+#define OBJFSA_WALKGROUP_COUNT 0xB5
 
 typedef struct ObjfsaPatchPlane {
   s16 normalX;
@@ -145,28 +147,47 @@ typedef struct ObjfsaPatchPlane {
 typedef struct ObjfsaPatch {
   ObjfsaPatchPlane planes[OBJFSA_PATCHGROUP_PATCH_COUNT];
   f32 planeOffsets[OBJFSA_PATCHGROUP_PATCH_COUNT];
-  s16 minY;
   s16 maxY;
+  s16 minY;
   u16 groupId;
   u8 pad26[0x30 - 0x26];
 } ObjfsaPatch;
 
+typedef struct ObjfsaWalkGroup {
+  ObjfsaPatchPlane planes[OBJFSA_PATCHGROUP_PATCH_COUNT];
+  f32 planeOffsets[OBJFSA_PATCHGROUP_PATCH_COUNT];
+  s16 maxY;
+  s16 minY;
+  u8 patchIndices[OBJFSA_PATCHGROUP_PATCH_COUNT];
+} ObjfsaWalkGroup;
+
+typedef struct ObjfsaWalkGroupPatchInfo {
+  u8 walkGroupIndex;
+  u8 patchMask;
+  u16 patchGroupIds[OBJFSA_PATCHGROUP_PATCH_COUNT];
+} ObjfsaWalkGroupPatchInfo;
+
 extern ObjfsaPatch lbl_8039CAE8[];
+extern ObjfsaWalkGroup lbl_8039FAE8[];
+extern u8 lbl_803A1730[];
 
 static inline ObjfsaPatch *Objfsa_GetPatch(int patchIndex) {
   return &lbl_8039CAE8[patchIndex];
 }
 
+static inline ObjfsaWalkGroup *Objfsa_GetWalkGroup(int groupIndex) {
+  return &lbl_8039FAE8[groupIndex];
+}
+
 static inline u8 *Objfsa_GetPatchGroupPatchList(int groupIndex) {
-  return (u8 *)lbl_8039CAE8 + OBJFSA_PATCHGROUP_PATCHES_OFFSET +
-         groupIndex * OBJFSA_PATCHGROUP_STRIDE;
+  return Objfsa_GetWalkGroup(groupIndex)->patchIndices;
 }
 
 static inline u8 Objfsa_IsWalkGroupActive(int groupIndex) {
-  return *((u8 *)lbl_8039CAE8 + OBJFSA_ACTIVE_WALKGROUPS_OFFSET + groupIndex);
+  return lbl_803A1730[groupIndex];
 }
 
-static int Objfsa_IsPointInsidePatch(const float *point, const ObjfsaPatch *patch) {
+static inline int Objfsa_IsPointInsidePatch(const float *point, const ObjfsaPatch *patch) {
   int edgeIndex;
 
   if (point[1] >= (f32)patch->maxY || (f32)patch->minY >= point[1]) {
@@ -177,6 +198,25 @@ static int Objfsa_IsPointInsidePatch(const float *point, const ObjfsaPatch *patc
     if (patch->planeOffsets[edgeIndex] +
             point[0] * (f32)patch->planes[edgeIndex].normalX +
             point[2] * (f32)patch->planes[edgeIndex].normalZ >
+        lbl_803E05F0) {
+      return 0;
+    }
+  }
+  return 1;
+}
+
+static inline int Objfsa_IsPointInsideWalkGroup(const float *point,
+                                                const ObjfsaWalkGroup *walkGroup) {
+  int edgeIndex;
+
+  if (point[1] >= (f32)walkGroup->maxY || (f32)walkGroup->minY >= point[1]) {
+    return 0;
+  }
+
+  for (edgeIndex = 0; edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; edgeIndex++) {
+    if (walkGroup->planeOffsets[edgeIndex] +
+            point[0] * (f32)walkGroup->planes[edgeIndex].normalX +
+            point[2] * (f32)walkGroup->planes[edgeIndex].normalZ >
         lbl_803E05F0) {
       return 0;
     }
@@ -4314,6 +4354,144 @@ uint isInWalkGroupOrPatch(float *point)
     patch++;
   }
   return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_800DBCFC
+ * EN v1.0 Address: 0x800DBCFC
+ * EN v1.0 Size: 464b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int fn_800DBCFC(float *point,ObjfsaWalkGroupPatchInfo *patchInfo)
+{
+  u8 walkGroupIndex;
+  u8 patchListIndex;
+  u8 patchMask;
+  u8 patchIndex;
+  ObjfsaWalkGroup *walkGroup;
+  ObjfsaPatch *patch;
+
+  walkGroupIndex = (u8)mathFn_800dbff0(point);
+  if (patchInfo != NULL && walkGroupIndex != 0) {
+    patchInfo->walkGroupIndex = walkGroupIndex;
+    patchInfo->patchMask = 0;
+    patchMask = 1;
+    walkGroup = Objfsa_GetWalkGroup(walkGroupIndex);
+    for (patchListIndex = 0; patchListIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; patchListIndex++) {
+      patchIndex = walkGroup->patchIndices[patchListIndex];
+      if (patchIndex == 0) {
+        patchInfo->patchGroupIds[patchListIndex] = 0;
+      }
+      else {
+        patch = Objfsa_GetPatch(patchIndex);
+        patchInfo->patchGroupIds[patchListIndex] = patch->groupId;
+        if (Objfsa_IsPointInsidePatch(point,patch)) {
+          patchInfo->patchMask |= patchMask;
+        }
+      }
+      patchMask <<= 1;
+    }
+  }
+  return walkGroupIndex;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_800DBECC
+ * EN v1.0 Address: 0x800DBECC
+ * EN v1.0 Size: 292b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+u16 fn_800DBECC(float *point)
+{
+  int patchCount;
+  ObjfsaPatch *patch;
+
+  patch = Objfsa_GetPatch(0);
+  patchCount = lbl_803DD468;
+  if (0 < patchCount) {
+    do {
+      if (Objfsa_IsPointInsidePatch(point,patch)) {
+        return patch->groupId;
+      }
+      patch++;
+      patchCount--;
+    } while (patchCount != 0);
+  }
+  return 0;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: mathFn_800dbff0
+ * EN v1.0 Address: 0x800DBFF0
+ * EN v1.0 Size: 936b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+int mathFn_800dbff0(float *point)
+{
+  s16 prevGroupIndex;
+  s16 nextGroupIndex;
+
+  prevGroupIndex = (s16)lbl_803DD464;
+  if (lbl_803DD464 == OBJFSA_WALKGROUP_COUNT - 1) {
+    nextGroupIndex = 0;
+  }
+  else {
+    nextGroupIndex = prevGroupIndex + 1;
+  }
+
+  do {
+    if (prevGroupIndex == nextGroupIndex) {
+      if (Objfsa_IsWalkGroupActive(prevGroupIndex) &&
+          Objfsa_IsPointInsideWalkGroup(point,Objfsa_GetWalkGroup(prevGroupIndex))) {
+        lbl_803DD464 = prevGroupIndex;
+        return prevGroupIndex;
+      }
+      return 0;
+    }
+
+    if (Objfsa_IsWalkGroupActive(prevGroupIndex) &&
+        Objfsa_IsPointInsideWalkGroup(point,Objfsa_GetWalkGroup(prevGroupIndex))) {
+      lbl_803DD464 = prevGroupIndex;
+      return prevGroupIndex;
+    }
+
+    if (Objfsa_IsWalkGroupActive(nextGroupIndex) &&
+        Objfsa_IsPointInsideWalkGroup(point,Objfsa_GetWalkGroup(nextGroupIndex))) {
+      lbl_803DD464 = nextGroupIndex;
+      return nextGroupIndex;
+    }
+
+    prevGroupIndex--;
+    if (prevGroupIndex == -1) {
+      prevGroupIndex = OBJFSA_WALKGROUP_COUNT - 1;
+    }
+
+    nextGroupIndex++;
+    if (nextGroupIndex == OBJFSA_WALKGROUP_COUNT) {
+      nextGroupIndex = 0;
+    }
+  } while (true);
 }
 
 /*
