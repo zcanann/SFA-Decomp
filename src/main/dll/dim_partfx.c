@@ -2,6 +2,8 @@
 #include "main/dll/dim_partfx.h"
 
 
+#define SFXsc_snort02 645
+
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_80006824();
@@ -2791,7 +2793,7 @@ int Effect13_func04(void *param_1, int param_2, s16 *param_3, u32 param_4, u8 pa
         (*(void (*)(int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface + 0x10)))(
             0, *(f32 *)(param_3 + 6), *(f32 *)(param_3 + 8), *(f32 *)(param_3 + 10),
             lbl_803E01A0);
-        Sfx_PlayFromObject((int)param_1, 0x285);
+        Sfx_PlayFromObject((int)param_1, SFXsc_snort02);
         cfg.f08 = 1;
         cfg.f3c = lbl_803E01A4;
         cfg.f44 = 0x0a000001;
@@ -2806,7 +2808,7 @@ int Effect13_func04(void *param_1, int param_2, s16 *param_3, u32 param_4, u8 pa
         cfg.f04 = 0x451;
         break;
     case 0x451:
-        Sfx_PlayFromObject((int)param_1, 0x285);
+        Sfx_PlayFromObject((int)param_1, SFXsc_snort02);
         cfg.f08 = 0x64;
         cfg.f3c = lbl_803E01AC * (f32)(s32)cfg.f08;
         cfg.f44 = 0x0a100201;

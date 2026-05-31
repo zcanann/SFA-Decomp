@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/barrel.h"
 
+#define SFXsc_death01 635
+
 extern undefined4 FUN_80006824();
 extern int FUN_80017730();
 extern u32 randomGetRange(int min, int max);
@@ -354,7 +356,7 @@ FUN_801628c4(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   (**(code **)(*DAT_803dd70c + 0x20))(param_1,param_9,param_10,0);
   if ((*(uint *)(param_10 + 0x314) & 1) != 0) {
     *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & ~1;
-    FUN_80006824(param_9,0x27b);
+    FUN_80006824(param_9,SFXsc_death01);
   }
   uStack_2c = *(char *)(iVar4 + 0x45) * -2 + 1U ^ 0x80000000;
   local_34[1] = 176.0;
@@ -464,7 +466,7 @@ FUN_80162b78(undefined8 param_1,double param_2,double param_3,undefined8 param_4
         ) || (*(char *)(param_10 + 0x346) == '\0')) {
       if ((*(uint *)(param_10 + 0x314) & 1) != 0) {
         *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & ~1;
-        FUN_80006824(param_9,0x27b);
+        FUN_80006824(param_9,SFXsc_death01);
       }
       (**(code **)(**(int **)(*(int *)(iVar3 + 0x38) + 0x68) + 0x24))
                 ((double)(*(float *)(iVar3 + 0x48) - lbl_803E3B94),*(int *)(iVar3 + 0x38),

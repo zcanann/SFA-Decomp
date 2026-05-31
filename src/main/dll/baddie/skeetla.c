@@ -5,6 +5,8 @@
 #include "types.h"
 #include "main/dll/baddie/skeetla.h"
 
+#define SFXfox_outofwater122 575
+
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;
 extern f32 lbl_803E23EC;
@@ -155,7 +157,7 @@ void fn_8013939C(u8 *obj)
             fn_80096F9C(hitPosPtr, 8, 0xff, 0x20, 0x20);
             objLightFn_8009a1dc(obj, lbl_803E2434, lightArgs, 4, 0);
             if (*(s16 *)((u8 *)lastContactObj + 0x46) == 0x69) {
-                Sfx_PlayFromObject(obj, 0x23f);
+                Sfx_PlayFromObject(obj, SFXfox_outofwater122);
             }
             break;
         case 0x1f:
@@ -1332,7 +1334,7 @@ void FUN_8013939c(uint param_1)
     FUN_800810e8(afStack_20,8,0xff,0x20,0x20);
     FUN_80081120(param_1,auStack_2c,4,(int *)0x0);
     if (*(short *)(local_34 + 0x46) == 0x69) {
-      FUN_80006824(param_1,0x23f);
+      FUN_80006824(param_1,SFXfox_outofwater122);
     }
     break;
   case 0x1f:
