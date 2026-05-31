@@ -1,6 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_134.h"
 
+#define SFXdoor_unlocked 0x232
+#define SFXdoor_creak 0x233
+#define SFXkr_climb2 0x274
+#define SFXsc_attack01 0x277
+
 extern undefined4 FUN_80006824();
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017ac8();
@@ -184,9 +189,9 @@ FUN_80167f3c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   iVar3 = *(int *)(iVar2 + 0x40c);
   if ((*(byte *)(iVar3 + 0x4b) & 1) == 0) {
-    FUN_80006824(param_9,0x274);
-    FUN_80006824(param_9,0x277);
-    FUN_80006824(param_9,0x232);
+    FUN_80006824(param_9,SFXkr_climb2);
+    FUN_80006824(param_9,SFXsc_attack01);
+    FUN_80006824(param_9,SFXdoor_unlocked);
     *(byte *)(iVar3 + 0x4b) = *(byte *)(iVar3 + 0x4b) | 1;
     if (*(short *)(iVar2 + 0x3f0) == 0) {
       iVar2 = 0;
@@ -200,7 +205,7 @@ FUN_80167f3c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     }
   }
   if (((*(byte *)(iVar3 + 0x4b) & 2) == 0) && (lbl_803E3D20 < *(float *)(param_9 + 0x98))) {
-    FUN_80006824(param_9,0x233);
+    FUN_80006824(param_9,SFXdoor_creak);
     *(byte *)(iVar3 + 0x4b) = *(byte *)(iVar3 + 0x4b) | 2;
   }
   *(char *)(param_9 + 0x36) =
@@ -236,7 +241,7 @@ FUN_8016814c(undefined8 param_1,double param_2,double param_3,undefined8 param_4
                    param_9,8,0,param_12,param_13,param_14,param_15,param_16);
       *(undefined *)(param_10 + 0x346) = 0;
     }
-    FUN_80006824((uint)param_9,0x277);
+    FUN_80006824((uint)param_9,SFXsc_attack01);
   }
   *param_9 = *param_9 + 0x222;
   *(undefined *)(param_10 + 0x34d) = 1;
@@ -311,7 +316,7 @@ FUN_80168368(undefined8 param_1,double param_2,double param_3,undefined8 param_4
                    param_9,3,0,param_12,param_13,param_14,param_15,param_16);
       *(undefined *)(param_10 + 0x346) = 0;
     }
-    FUN_80006824(param_9,0x277);
+    FUN_80006824(param_9,SFXsc_attack01);
   }
   *(undefined *)(param_10 + 0x34d) = 3;
   *(float *)(param_10 + 0x2a0) = lbl_803E3D28;
@@ -332,7 +337,7 @@ int fn_80167E3C(int obj, int p2)
       ObjAnim_SetCurrentMove(obj, 3, lbl_803E3060, 0);
       *(u8 *)(p2 + 0x346) = 0;
     }
-    Sfx_PlayFromObject(obj, 631);
+    Sfx_PlayFromObject(obj, SFXsc_attack01);
   }
   *(s8 *)(p2 + 0x34d) = 3;
   *(f32 *)(p2 + 0x2a0) = lbl_803E3090;
@@ -355,7 +360,7 @@ int fn_80167D10(int obj, int p2)
       ObjAnim_SetCurrentMove(obj, 8, lbl_803E3060, 0);
       *(u8 *)(p2 + 0x346) = 0;
     }
-    Sfx_PlayFromObject(obj, 631);
+    Sfx_PlayFromObject(obj, SFXsc_attack01);
   }
   *(s16 *)(obj + 0) += 546;
   *(s8 *)(p2 + 0x34d) = 1;
