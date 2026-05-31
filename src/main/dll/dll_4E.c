@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_4E.h"
 
+#define SFXsp_snrot1_c 256
+
 extern undefined4 FUN_80006768();
 extern undefined4 FUN_8000676c();
 extern undefined4 FUN_80006810();
@@ -81,7 +83,7 @@ void fn_8011BFC8(int p1,int p2)
         Sfx_StopFromObject(0, 0x3b9);
     }
     if (p1 == 0) {
-        Sfx_PlayFromObject(0, 0x100);
+        Sfx_PlayFromObject(0, SFXsp_snrot1_c);
         (*(void(**)(int, int))(*gScreenTransitionInterface + 0x8))(0x14, 5);
         lbl_803DD704 = 0x23;
         lbl_803DD705 = 1;
@@ -169,7 +171,7 @@ void fn_8011C318(int p1, int p2)
         }
     }
     if (p1 == 0) {
-        Sfx_PlayFromObject(0, 0x100);
+        Sfx_PlayFromObject(0, SFXsp_snrot1_c);
         (*(void(**)(int, int))(*gScreenTransitionInterface + 0x8))(0x14, 5);
         lbl_803DD704 = 0x23;
         lbl_803DD705 = 1;
@@ -195,7 +197,7 @@ int fn_8011C51C(int p1, int p2)
             return 1;
         }
     } else if (p1 == 0) {
-        Sfx_PlayFromObject(0, 0x100);
+        Sfx_PlayFromObject(0, SFXsp_snrot1_c);
         (*(void(**)(int, int))(*gScreenTransitionInterface + 0x8))(0x14, 5);
         lbl_803DD704 = 0x23;
         lbl_803DD705 = 1;
