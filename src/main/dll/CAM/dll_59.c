@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/dll_59.h"
 
+#define SFXsc_snort03 0x286
+
 extern void *mmAlloc(int size, int heap, int flags);
 extern void memset(void *ptr, int value, int size);
 extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY,
@@ -226,7 +228,7 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
       pathAngle = -pathAngle;
     }
     if ((pathAngle > 0x2000) && (settings[2] != 0)) {
-      Sfx_PlayFromObject(0, 0x286);
+      Sfx_PlayFromObject(0, SFXsc_snort03);
     }
 
     iface = *gCameraInterface;

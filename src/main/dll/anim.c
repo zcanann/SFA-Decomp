@@ -2,6 +2,8 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
 
+#define SFXfoot_ice_run_2 0x1ea
+#define SFXfoot_ice_run_3 0x1eb
 
 #pragma peephole off
 #pragma scheduling off
@@ -1359,7 +1361,7 @@ FUN_80200558(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     *(undefined4 *)(iVar1 + 0x2c) = 0;
     ObjMsg_SendToObject(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)(iVar1 + 0x18),0x11,param_9,0x12,param_13,param_14,param_15,param_16);
-    FUN_80006824(param_9,0x1eb);
+    FUN_80006824(param_9,SFXfoot_ice_run_3);
   }
   if (lbl_803E6F84 < *(float *)(param_9 + 0x98)) {
     *(undefined *)(iVar1 + 0x34) = 1;
@@ -1706,7 +1708,7 @@ void FUN_80200c9c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     in_r6 = 0x12;
     ObjMsg_SendToObject(uVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  *(int *)(iVar9 + 0x18),0x11,uVar3,0x12,in_r7,in_r8,in_r9,in_r10);
-    FUN_80006824(uVar3,0x1eb);
+    FUN_80006824(uVar3,SFXfoot_ice_run_3);
   }
   *(undefined *)(iVar6 + 0x34d) = 0x12;
   if (*(char *)(iVar6 + 0x27a) != '\0') {
@@ -2007,7 +2009,7 @@ int fn_802015EC(int obj, int p)
     *(s16 *)(sub_40c + 0x1c) = (s16)sub_40c_30;
     *(int *)(sub_40c + 0x2c) = 0;
     ObjMsg_SendToObject(*(int *)(sub_40c + 0x18), 17, obj, 18);
-    Sfx_PlayFromObject(obj, 491);
+    Sfx_PlayFromObject(obj, SFXfoot_ice_run_3);
   }
   *(s8 *)(p + 0x34d) = 18;
   if (*(char *)(p + 0x27a) != '\0') {
@@ -2827,7 +2829,7 @@ int fn_80202720(int obj, int p)
     *(f32 *)(p + 0x280) = lbl_803E62A8;
   }
   if (*(s8 *)(p + 0x346) != 0) {
-    Sfx_PlayFromObject(obj, 490);
+    Sfx_PlayFromObject(obj, SFXfoot_ice_run_2);
     *(f32 *)(sub_40c + 4) = lbl_803E62C8;
     ObjAnim_SetCurrentMove(obj, 8, lbl_803E62A8, 0);
     *(u32 *)(p + 0x2d0) = 0;
@@ -5256,7 +5258,7 @@ int fn_80200750(int obj, int param2)
         *(s16 *)(sub + 0x1c) = 0x24;
         *(int *)(sub + 0x2c) = 0;
         ObjMsg_SendToObject(*(int *)(sub + 0x18), 0x11, obj, 0x12);
-        Sfx_PlayFromObject(obj, 0x1eb);
+        Sfx_PlayFromObject(obj, SFXfoot_ice_run_3);
     }
     if (*(f32 *)(obj + 0x98) > lbl_803E62EC) {
         *(u8 *)(sub + 0x34) = 1;

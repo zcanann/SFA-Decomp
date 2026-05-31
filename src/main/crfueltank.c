@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/crfueltank.h"
 
+#define SFXsp_sabrepush162 0xee
+
 extern void *Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void *obj,u16 volumeId);
 extern u32 GameBit_Get(int eventId);
@@ -54,7 +56,7 @@ void crfueltank_hitDetect(CrFuelTankObject *obj)
     hitObj = collider->hitObj;
     if (hitObj->objType == 0x38c) {
       ObjHits_DisableObject(obj);
-      Sfx_PlayFromObject(Obj_GetPlayerObject(),0xee);
+      Sfx_PlayFromObject(Obj_GetPlayerObject(),SFXsp_sabrepush162);
       obj->fadeTimer = 0xfa;
       obj->triggered = 1;
       if (def->hitEvent != -1) {

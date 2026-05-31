@@ -4,6 +4,10 @@
 #include "main/objanim.h"
 #include "string.h"
 
+#define SFXsc_snort04 0x287
+#define SFXsc_spotfox01 0x288
+#define SFXsc_spotfox02 0x289
+
 extern void Sfx_PlayFromObject(int obj,int sfxId);
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
 extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
@@ -121,7 +125,7 @@ void camcontrol_updateTargetFeedback(void)
       objShowButtonGlow(psVar6,lbl_803E162C,3);
     }
     else if (cVar2 != 8) {
-      Sfx_PlayFromObject(0,0x288);
+      Sfx_PlayFromObject(0,SFXsc_spotfox01);
       objShowButtonGlow(psVar6,lbl_803E162C,1);
     }
   }
@@ -142,7 +146,7 @@ void camcontrol_updateTargetFeedback(void)
       }
     }
     else if ((buttonPressed) && (iVar8 = isTalkingToNpc(), iVar8 == 0)) {
-      Sfx_PlayFromObject(0,0x287);
+      Sfx_PlayFromObject(0,SFXsc_snort04);
     }
   }
   if (gCamcontrolTargetState == '\0') {
@@ -179,7 +183,7 @@ void camcontrol_updateTargetFeedback(void)
         Sfx_PlayFromObject(0,0x401);
       }
       else if (cVar2 != 8) {
-        Sfx_PlayFromObject(0,0x289);
+        Sfx_PlayFromObject(0,SFXsc_spotfox02);
       }
     }
     else {
