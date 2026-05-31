@@ -1,5 +1,8 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXmn_sml_trex_fstep 126
+#define SFXsp_lf_mutter4 265
+
 #pragma peephole on
 #pragma scheduling on
 int drmusiccont_getExtraSize(void) { return 4; }
@@ -107,9 +110,9 @@ void drmusiccont_update(int obj)
     if (f->b_e9c == 0 && a && b && c && d) {
         f->b_e9c = 1;
         GameBit_Set(0xe9c, 1);
-        Sfx_PlayFromObject(0, 0x7e);
+        Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
     } else if (a != f->b_e30 || b != f->b_e31 || c != f->b_e32 || d != f->b_e33) {
-        Sfx_PlayFromObject(0, 0x109);
+        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     }
     f->b_e30 = a;
     f->b_e31 = b;
@@ -122,9 +125,9 @@ void drmusiccont_update(int obj)
     d = (u8)GameBit_Get(0xe3e);
     if (f->b_e39 == 0 && a && b && c && d) {
         f->b_e39 = 1;
-        Sfx_PlayFromObject(0, 0x7e);
+        Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
     } else if (a != f->b_e38 || b != f->b_e3c || c != f->b_e3d || d != f->b_e3e) {
-        Sfx_PlayFromObject(0, 0x109);
+        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     }
     f->b_e38 = a;
     f->b_e3c = b;
