@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/transporter.h"
 
+#define SFXmn_cling02 100
+#define SFXmn_dimbos26 104
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068f8();
 extern undefined4 FUN_80006904();
@@ -491,7 +494,7 @@ LAB_801761f4:
   fVar5 = (float)piVar6[5] - *(float *)(iVar15 + 0x13c);
   if ((lbl_803E4220 < fVar4 * fVar4 + fVar5 * fVar5) &&
      ((*(ushort *)(iVar15 + 0x100) & 0x20) != 0)) {
-    FUN_80006824((uint)piVar6,100);
+    FUN_80006824((uint)piVar6,SFXmn_cling02);
     *(ushort *)(iVar15 + 0x100) = *(ushort *)(iVar15 + 0x100) & ~0x20;
   }
 LAB_801762c4:
@@ -916,7 +919,7 @@ LAB_80176c2c:
       if ((sVar1 < 0x21e) && (sVar1 == 0x108)) {
         if ((lbl_803E41C0 == *(float *)(iVar6 + 0xf8)) &&
            (lbl_803E41C0 < *(float *)(iVar6 + 0xf4))) {
-          FUN_80006824(param_9,0x68);
+          FUN_80006824(param_9,SFXmn_dimbos26);
           FUN_80017698(0x272,1);
         }
         uVar3 = FUN_80017690(0x272);
