@@ -4421,6 +4421,133 @@ int insertPoint(int val, s16 *arr, f32 x, f32 y, f32 z)
     return lbl_803DCF5C - 1;
 }
 
+extern char sTrackIntersectFuncOverflowFormat[];
+extern void debugPrintf(char *fmt, ...);
+extern s16 lbl_803DCF5E;
+extern int lbl_803DCF34;
+extern void *mmAlloc(int size, int type, int flag);
+extern void memcpy(void *dst, void *src, int n);
+
+void intersectModLineBuild(int *obj)
+{
+    s16 link[0xd48];
+    s16 segCount;
+    int seg;
+    u8 *sp;
+    int li;
+    int prev;
+
+    lbl_803DCF4E = 1;
+    lbl_803DCF5E = 0;
+    lbl_803DCF5C = 0;
+    segCount = *(u8 *)((char *)obj + 0x5c);
+    sp = *(u8 **)((char *)obj + 0x30);
+    for (seg = 0; seg < segCount; seg++, sp += 0x14) {
+        u8 *line;
+        int i;
+        if (lbl_803DCF5E >= 0x5dc) break;
+        line = (u8 *)lbl_803DCF34 + lbl_803DCF5E * 0x10;
+        line[0] = sp[0xc];
+        line[1] = sp[0xd];
+        line[3] = sp[0xf];
+        if (((s8)line[3] & 0x3f) == 0x11) {
+            line[3] = (s8)line[3] & ~0x3f;
+            line[3] = (s8)line[3] | 2;
+        }
+        line[2] = sp[0xe];
+        line[2] = (s8)line[2] ^ 0x10;
+        *(s16 *)(line + 0xc) = *(s16 *)(sp + 0x10);
+        for (i = 0; i < 3; i++) {
+            f32 x = (f32)(s16)*(s16 *)(sp + i * 2 + 0);
+            f32 y = (f32)(s16)*(s16 *)(sp + i * 2 + 4);
+            f32 z = (f32)(s16)*(s16 *)(sp + i * 2 + 8);
+            if (lbl_803DCF5C < 0x6a4)
+                *(s16 *)(line + 4 + i * 2) = (s16)insertPoint(lbl_803DCF5E, link, x, y, z);
+        }
+        lbl_803DCF5E++;
+    }
+    for (li = 0; li < lbl_803DCF5E; li++) {
+        u8 *L = (u8 *)lbl_803DCF34 + li * 0x10;
+        s16 *e0 = &link[*(s16 *)(L + 4) * 2];
+        s16 *e1;
+        if (e0[0] > -1 && e0[0] != li)
+            *(s16 *)(L + 8) = e0[0];
+        else if (e0[1] > -1 && e0[1] != li)
+            *(s16 *)(L + 8) = e0[1];
+        else
+            *(s16 *)(L + 8) = -1;
+        e1 = &link[*(s16 *)(L + 6) * 2];
+        if (e1[0] > -1 && e1[0] != li)
+            *(s16 *)(L + 0xa) = e1[0];
+        else if (e1[1] > -1 && e1[1] != li)
+            *(s16 *)(L + 0xa) = e1[1];
+        else
+            *(s16 *)(L + 0xa) = -1;
+    }
+    if (lbl_803DCF5E * 0x10 + lbl_803DCF5C * 0xc + 0x28 == 0)
+        return;
+    obj[0x34 / 4] = (int)mmAlloc(lbl_803DCF5E * 0x10 + lbl_803DCF5C * 0xc + 0x28, 0xffff00ff, 0);
+    *(int *)((char *)obj + 0x3c) = *(int *)((char *)obj + 0x34) + lbl_803DCF5E * 0x10;
+    *(int *)((char *)obj + 0x38) = *(int *)((char *)obj + 0x3c) + lbl_803DCF5C * 0xc;
+    {
+        int k;
+        for (k = 0; k < 40; k++)
+            *(u8 *)(*(int *)((char *)obj + 0x38) + k) = 0xff;
+    }
+    prev = -1;
+    for (li = 0; li < lbl_803DCF5E; li++) {
+        u8 *base = (u8 *)lbl_803DCF34;
+        int best = 0;
+        int j;
+        int grp;
+        for (j = 0; j < lbl_803DCF5E; j++) {
+            if (((s8)base[j * 0x10 + 3] & 0x3f) < ((s8)base[best * 0x10 + 3] & 0x3f))
+                best = (s16)j;
+        }
+        grp = (s16)((s8)base[best * 0x10 + 3] & 0x3f);
+        if (grp >= 0x14) {
+            grp = 1;
+            debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
+        }
+        if ((s16)grp != (s16)prev) {
+            *(u8 *)(*(int *)((char *)obj + 0x38) + grp * 2) = (u8)li;
+            if (prev != -1)
+                *(u8 *)(*(int *)((char *)obj + 0x38) + prev * 2 + 1) = (u8)li;
+            prev = grp;
+        }
+        {
+            int m;
+            u8 *so = (u8 *)*(int *)((char *)obj + 0x34);
+            for (m = 0; m < li; m++) {
+                if (*(s16 *)(so + m * 0x10 + 8) == (s16)best)
+                    *(s16 *)(so + m * 0x10 + 8) = (s16)li;
+                if (*(s16 *)(so + m * 0x10 + 0xa) == (s16)best)
+                    *(s16 *)(so + m * 0x10 + 0xa) = (s16)li;
+            }
+        }
+        {
+            int n;
+            for (n = 0; n < lbl_803DCF5E; n++) {
+                u8 *Ln = (u8 *)lbl_803DCF34 + n * 0x10;
+                if ((s8)Ln[3] != 0x14) {
+                    if ((s16)best == *(s16 *)(Ln + 8))
+                        *(s16 *)(Ln + 8) = (s16)li;
+                    if ((s16)best == *(s16 *)(Ln + 0xa))
+                        *(s16 *)(Ln + 0xa) = (s16)li;
+                }
+            }
+        }
+        memcpy((char *)*(int *)((char *)obj + 0x34) + li * 0x10,
+               (char *)lbl_803DCF34 + best * 0x10, 0x10);
+        *(u8 *)(lbl_803DCF34 + best * 0x10 + 3) = 0x14;
+    }
+    if ((s16)prev != -1)
+        *(u8 *)(*(int *)((char *)obj + 0x38) + prev * 2 + 1) = (u8)lbl_803DCF5E;
+    memcpy((void *)*(int *)((char *)obj + 0x3c), lbl_803DCF38, lbl_803DCF5C * 0xc);
+    lbl_803DCF5E = 0;
+    lbl_803DCF5C = 0;
+}
+
 extern f32 CurrTiming_803DEC20;
 
 void fn_800605F0(s16 *in, f32 *out)
