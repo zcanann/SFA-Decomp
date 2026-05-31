@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/smallbasket.h"
 
+#define SFXfox_fightbreath4 0x24e
+
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006818();
@@ -2037,7 +2039,7 @@ void FUN_8015a6c0(uint param_1,int param_2)
   case 4:
     if (*(short *)(param_2 + 0x2f8) != 0) {
       if (lbl_803E3954 <= *(float *)(param_1 + 0x98)) {
-        FUN_80006824(param_1,0x24e);
+        FUN_80006824(param_1,SFXfox_fightbreath4);
       }
       else {
         FUN_80006824(param_1,0x499);
@@ -2262,7 +2264,7 @@ void fn_8015A77C(int *obj, int *st) {
             if (*(f32*)((char*)obj + 0x98) < lbl_803E2CBC) {
                 Sfx_PlayFromObject((int)obj, 0x499);
             } else {
-                Sfx_PlayFromObject((int)obj, 0x24e);
+                Sfx_PlayFromObject((int)obj, SFXfox_fightbreath4);
             }
         }
         break;

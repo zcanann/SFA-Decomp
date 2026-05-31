@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_10B.h"
 
+#define SFXfox_fightbreath1 0x24b
+#define SFXfox_fightbreath2 0x24c
+
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int curveFn_80010320(double t, int curve);
 extern uint randomGetRange(int min, int max);
@@ -115,10 +118,10 @@ void fn_80154870(int obj, int *state)
                     *(char *)((int)state + 0x33b) = *(char *)((int)state + 0x33b) + 1;
                 }
             } else if ((double)*(float *)(obj + 0x98) <= lbl_803E29C8) {
-                Sfx_PlayFromObject(obj, 0x24c);
+                Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
                 state[0xc2] = (int)lbl_803E29D4;
             } else {
-                Sfx_PlayFromObject(obj, 0x24b);
+                Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
                 state[0xc2] = (int)lbl_803E29D0;
             }
         } else {
@@ -126,10 +129,10 @@ void fn_80154870(int obj, int *state)
             if ((float)state[0xca] <= fVar1) {
                 state[0xca] = (int)fVar1;
                 if ((double)*(float *)(obj + 0x98) <= lbl_803E29C8) {
-                    Sfx_PlayFromObject(obj, 0x24c);
+                    Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
                     state[0xc2] = (int)lbl_803E29B4;
                 } else {
-                    Sfx_PlayFromObject(obj, 0x24b);
+                    Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
                     state[0xc2] = (int)lbl_803E29D0;
                 }
             }
