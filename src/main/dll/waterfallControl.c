@@ -5,230 +5,131 @@
 #define SFXsc_gethit02 638
 #define SFXsc_gethit03 639
 
+extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int *hitsOut, int pointCount,
+                                int mask);
+extern u32 randomGetRange(int min, int max);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void ObjHits_EnableObject(int obj);
+extern void ObjHits_DisableObject(int *obj);
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+extern void ObjGroup_RemoveObject(int *obj, int group);
+extern void objRenderFn_8003b8f4(f32);
+
+extern f32 timeDelta;
+extern f32 lbl_803E2F5C;
+extern f32 lbl_803E2F60;
+extern f32 lbl_803E2F64;
+extern f32 lbl_803E2F68;
+extern f64 lbl_803E2F70;
+extern f32 lbl_803E2F78;
+extern f32 lbl_803E2F7C;
+extern f32 lbl_803E2F80;
+extern f32 lbl_803E2F84;
+extern f32 lbl_803E2F88;
+extern f64 lbl_803E2F90;
+extern f32 lbl_803E2F98;
+extern f32 lbl_803E2F9C;
+
 #pragma peephole off
 #pragma scheduling off
-extern undefined4 FUN_80006824();
-extern u32 randomGetRange(int min, int max);
-extern int FUN_800632d8();
-extern int FUN_800632f4();
 
-extern f64 DOUBLE_803e3c08;
-extern f64 DOUBLE_803e3c28;
-extern f32 lbl_803DC074;
-extern f32 lbl_803E3BF4;
-extern f32 lbl_803E3BF8;
-extern f32 lbl_803E3BFC;
-extern f32 lbl_803E3C00;
-extern f32 lbl_803E3C10;
-extern f32 lbl_803E3C14;
-extern f32 lbl_803E3C18;
-extern f32 lbl_803E3C1C;
-extern f32 lbl_803E3C20;
-
+#pragma peephole on
 /*
  * --INFO--
  *
  * Function: tumbleweed_updateRollingMotion
  * EN v1.0 Address: 0x80163BBC
- * EN v1.0 Size: 648b
- * EN v1.1 Address: 0x80163E3C
- * EN v1.1 Size: 556b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 976b
  */
-void tumbleweed_updateRollingMotion(short *param_1,int param_2)
-{
-  double dVar1;
-  int iVar2;
-  float local_58 [20];
-  
-  *(float *)(param_1 + 0x12) = *(float *)(param_1 + 0x12) / lbl_803E3BF4;
-  iVar2 = FUN_800632d8((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
-                       (double)*(float *)(param_1 + 10),param_1,local_58,0);
-  if (iVar2 != 0) {
-    if (local_58[0] <= lbl_803E3BF8) {
-      *(float *)(param_1 + 8) = *(float *)(param_1 + 8) - (local_58[0] - lbl_803E3BF8);
-      *(float *)(param_1 + 0x14) = lbl_803E3C00;
-    }
-    else {
-      *(float *)(param_1 + 0x14) = lbl_803E3BFC * lbl_803DC074 + *(float *)(param_1 + 0x14);
-    }
-  }
-  *(float *)(param_1 + 0x16) = *(float *)(param_1 + 0x16) / lbl_803E3BF4;
-  iVar2 = (int)*(short *)(param_2 + 0x27c) / 100 + ((int)*(short *)(param_2 + 0x27c) >> 0x1f);
-  *(short *)(param_2 + 0x27c) = (short)iVar2 - (short)(iVar2 >> 0x1f);
-  iVar2 = (int)*(short *)(param_2 + 0x27e) / 100 + ((int)*(short *)(param_2 + 0x27e) >> 0x1f);
-  *(short *)(param_2 + 0x27e) = (short)iVar2 - (short)(iVar2 >> 0x1f);
-  iVar2 = (int)*(short *)(param_2 + 0x280) / 100 + ((int)*(short *)(param_2 + 0x280) >> 0x1f);
-  *(short *)(param_2 + 0x280) = (short)iVar2 - (short)(iVar2 >> 0x1f);
-  *(float *)(param_1 + 6) = *(float *)(param_1 + 0x12) * lbl_803DC074 + *(float *)(param_1 + 6);
-  *(float *)(param_1 + 8) = *(float *)(param_1 + 0x14) * lbl_803DC074 + *(float *)(param_1 + 8);
-  *(float *)(param_1 + 10) = *(float *)(param_1 + 0x16) * lbl_803DC074 + *(float *)(param_1 + 10);
-  param_1[2] = (short)(int)((f32)(s32)*(s16 *)(param_2 + 0x27c) * lbl_803DC074 +
-                           (f32)(s32)param_1[2]);
-  param_1[1] = (short)(int)((f32)(s32)*(s16 *)(param_2 + 0x27e) * lbl_803DC074 +
-                           (f32)(s32)param_1[1]);
-  *param_1 = (short)(int)((f32)(s32)*(s16 *)(param_2 + 0x280) * lbl_803DC074 +
-                         (f32)(s32)*param_1);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80163e44
- * EN v1.0 Address: 0x80163E44
- * EN v1.0 Size: 1020b
- * EN v1.1 Address: 0x80164068
- * EN v1.1 Size: 976b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80163e44(short *param_1,int param_2)
+void tumbleweed_updateRollingMotion(short *param_1, int param_2)
 {
   int iVar1;
   uint uVar2;
   undefined4 *puVar3;
   int iVar4;
   int iVar5;
-  double dVar6;
-  double dVar7;
-  undefined4 *local_68 [2];
-  undefined4 local_60;
-  uint uStack_5c;
-  undefined4 local_58;
-  uint uStack_54;
-  longlong local_50;
-  undefined4 local_48;
-  uint uStack_44;
-  undefined4 local_40;
-  uint uStack_3c;
-  longlong local_38;
-  undefined4 local_30;
-  uint uStack_2c;
-  undefined4 local_28;
-  uint uStack_24;
-  undefined8 local_20;
-  
+  f32 dVar6;
+  f32 dVar7;
+  undefined4 *local_68[2];
+
   local_68[0] = (undefined4 *)0x0;
-  dVar7 = (double)lbl_803E3C10;
-  iVar1 = FUN_800632f4((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
-                       (double)*(float *)(param_1 + 10),param_1,local_68,0,0);
-  iVar4 = 0;
+  dVar7 = lbl_803E2F78;
+  iVar1 = hitDetectFn_80065e50(*(float *)(param_1 + 6), *(float *)(param_1 + 8),
+                               *(float *)(param_1 + 10), (int)param_1, (int *)local_68, 0, 0);
   iVar5 = 0;
   puVar3 = local_68[0];
-  if (0 < iVar1) {
-    do {
-      dVar6 = (double)(*(float *)(param_1 + 8) - *(float *)*puVar3);
-      if (dVar6 < (double)lbl_803E3C00) {
-        dVar6 = (double)(float)((double)lbl_803E3C14 * dVar6 + (double)lbl_803E3BF4);
-      }
-      if (dVar6 < dVar7) {
-        iVar5 = iVar4;
-        dVar7 = dVar6;
-      }
-      puVar3 = puVar3 + 1;
-      iVar4 = iVar4 + 1;
-      iVar1 = iVar1 + -1;
-    } while (iVar1 != 0);
-  }
-  if (*(float *)(param_1 + 0x12) <= lbl_803E3C18) {
-    if (*(float *)(param_1 + 0x12) < lbl_803E3C14) {
-      *(float *)(param_1 + 0x12) = lbl_803E3C14;
+  for (iVar4 = 0; iVar4 < iVar1; iVar4++) {
+    dVar6 = *(float *)(param_1 + 8) - *(float *)*puVar3;
+    if (dVar6 < lbl_803E2F68) {
+      dVar6 = lbl_803E2F7C * dVar6 + lbl_803E2F5C;
     }
-  }
-  else {
-    *(float *)(param_1 + 0x12) = lbl_803E3C18;
-  }
-  if (*(float *)(param_1 + 0x14) <= lbl_803E3C18) {
-    if (*(float *)(param_1 + 0x14) < lbl_803E3C14) {
-      *(float *)(param_1 + 0x14) = lbl_803E3C14;
+    if (dVar6 < dVar7) {
+      iVar5 = iVar4;
+      dVar7 = dVar6;
     }
+    puVar3 = puVar3 + 1;
   }
-  else {
-    *(float *)(param_1 + 0x14) = lbl_803E3C18;
+  if (*(float *)(param_1 + 0x12) > lbl_803E2F80) {
+    *(float *)(param_1 + 0x12) = lbl_803E2F80;
   }
-  if (*(float *)(param_1 + 0x16) <= lbl_803E3C18) {
-    if (*(float *)(param_1 + 0x16) < lbl_803E3C14) {
-      *(float *)(param_1 + 0x16) = lbl_803E3C14;
-    }
+  else if (*(float *)(param_1 + 0x12) < lbl_803E2F7C) {
+    *(float *)(param_1 + 0x12) = lbl_803E2F7C;
   }
-  else {
-    *(float *)(param_1 + 0x16) = lbl_803E3C18;
+  if (*(float *)(param_1 + 0x14) > lbl_803E2F80) {
+    *(float *)(param_1 + 0x14) = lbl_803E2F80;
   }
-  *(float *)(param_1 + 6) = *(float *)(param_1 + 0x12) * lbl_803DC074 + *(float *)(param_1 + 6);
-  *(float *)(param_1 + 8) = *(float *)(param_1 + 0x14) * lbl_803DC074 + *(float *)(param_1 + 8);
-  *(float *)(param_1 + 10) = *(float *)(param_1 + 0x16) * lbl_803DC074 + *(float *)(param_1 + 10);
-  dVar7 = DOUBLE_803e3c08;
-  uStack_5c = (int)*(short *)(param_2 + 0x27c) ^ 0x80000000;
-  local_60 = 0x43300000;
-  uStack_54 = (int)param_1[2] ^ 0x80000000;
-  local_58 = 0x43300000;
-  iVar1 = (int)((float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803e3c08) * lbl_803DC074 +
-               (float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e3c08));
-  local_50 = (longlong)iVar1;
+  else if (*(float *)(param_1 + 0x14) < lbl_803E2F7C) {
+    *(float *)(param_1 + 0x14) = lbl_803E2F7C;
+  }
+  if (*(float *)(param_1 + 0x16) > lbl_803E2F80) {
+    *(float *)(param_1 + 0x16) = lbl_803E2F80;
+  }
+  else if (*(float *)(param_1 + 0x16) < lbl_803E2F7C) {
+    *(float *)(param_1 + 0x16) = lbl_803E2F7C;
+  }
+  *(float *)(param_1 + 6) = *(float *)(param_1 + 0x12) * timeDelta + *(float *)(param_1 + 6);
+  *(float *)(param_1 + 8) = *(float *)(param_1 + 0x14) * timeDelta + *(float *)(param_1 + 8);
+  *(float *)(param_1 + 10) = *(float *)(param_1 + 0x16) * timeDelta + *(float *)(param_1 + 10);
+  iVar1 = (int)((f32)(int)*(s16 *)(param_2 + 0x27c) * timeDelta + (f32)(int)param_1[2]);
   param_1[2] = (short)iVar1;
-  uStack_44 = (int)*(short *)(param_2 + 0x27e) ^ 0x80000000;
-  local_48 = 0x43300000;
-  uStack_3c = (int)param_1[1] ^ 0x80000000;
-  local_40 = 0x43300000;
-  iVar1 = (int)((float)((double)CONCAT44(0x43300000,uStack_44) - dVar7) * lbl_803DC074 +
-               (float)((double)CONCAT44(0x43300000,uStack_3c) - dVar7));
-  local_38 = (longlong)iVar1;
+  iVar1 = (int)((f32)(int)*(s16 *)(param_2 + 0x27e) * timeDelta + (f32)(int)param_1[1]);
   param_1[1] = (short)iVar1;
-  uStack_2c = (int)*(short *)(param_2 + 0x280) ^ 0x80000000;
-  local_30 = 0x43300000;
-  uStack_24 = (int)*param_1 ^ 0x80000000;
-  local_28 = 0x43300000;
-  iVar1 = (int)((float)((double)CONCAT44(0x43300000,uStack_2c) - dVar7) * lbl_803DC074 +
-               (float)((double)CONCAT44(0x43300000,uStack_24) - dVar7));
-  local_20 = (double)(longlong)iVar1;
+  iVar1 = (int)((f32)(int)*(s16 *)(param_2 + 0x280) * timeDelta + (f32)(int)*param_1);
   *param_1 = (short)iVar1;
   if (local_68[0] != (undefined4 *)0x0) {
-    if (*(float *)(param_1 + 8) <= lbl_803E3BF8 + *(float *)local_68[0][iVar5]) {
-      *(float *)(param_1 + 8) = lbl_803E3BF8 + *(float *)local_68[0][iVar5];
+    if (lbl_803E2F60 + *(float *)local_68[0][iVar5] < *(float *)(param_1 + 8)) {
+      *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x14) + lbl_803E2F64;
+    }
+    else {
+      *(float *)(param_1 + 8) = lbl_803E2F60 + *(float *)local_68[0][iVar5];
       if (param_1[0x23] == 0x3fb) {
-        uVar2 = randomGetRange(0x8c,0xb4);
-        local_20 = (double)CONCAT44(0x43300000,uVar2 ^ 0x80000000);
-        uStack_24 = (uint)*(ushort *)(param_2 + 0x268);
-        *(float *)(param_1 + 0x14) =
-             -(lbl_803E3C1C * *(float *)(param_1 + 0x14) *
-              ((float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e3c28) /
-              (float)(local_20 - DOUBLE_803e3c08)));
+        uVar2 = randomGetRange(0x8c, 0xb4);
+        *(f32 *)(param_1 + 0x14) =
+            -(lbl_803E2F84 * *(f32 *)(param_1 + 0x14) *
+              ((f32)*(ushort *)(param_2 + 0x268) / (f32)(int)uVar2));
       }
       else {
-        uVar2 = randomGetRange(0x14,0x28);
-        local_20 = (double)CONCAT44(0x43300000,uVar2 ^ 0x80000000);
-        uStack_24 = (uint)*(ushort *)(param_2 + 0x268);
-        *(float *)(param_1 + 0x14) =
-             -(lbl_803E3C1C * *(float *)(param_1 + 0x14) *
-              ((float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e3c28) /
-              (float)(local_20 - DOUBLE_803e3c08)));
+        uVar2 = randomGetRange(0x14, 0x28);
+        *(f32 *)(param_1 + 0x14) =
+            -(lbl_803E2F84 * *(f32 *)(param_1 + 0x14) *
+              ((f32)*(ushort *)(param_2 + 0x268) / (f32)(int)uVar2));
       }
-      local_28 = 0x43300000;
-      iVar5 = (int)(lbl_803E3C20 * *(float *)(param_1 + 0x14));
-      local_20 = (double)(longlong)iVar5;
+      iVar5 = (int)(lbl_803E2F88 * *(f32 *)(param_1 + 0x14));
       if (0x7f < iVar5) {
         iVar5 = 0x7f;
       }
       if (0x10 < iVar5) {
-        FUN_80006824((uint)param_1,SFXsc_gethit02);
-        uVar2 = randomGetRange(0,5);
+        Sfx_PlayFromObject((int)param_1, SFXsc_gethit02);
+        uVar2 = randomGetRange(0, 5);
         if ((uVar2 == 0) && ((*(byte *)(param_2 + 0x27a) & 8) != 0)) {
-          FUN_80006824((uint)param_1,SFXsc_gethit03);
+          Sfx_PlayFromObject((int)param_1, SFXsc_gethit03);
         }
       }
-    }
-    else {
-      *(float *)(param_1 + 0x14) = *(float *)(param_1 + 0x14) + lbl_803E3BFC;
     }
   }
   return;
 }
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -236,12 +137,6 @@ void FUN_80163e44(short *param_1,int param_2)
  * Function: tumbleweed_func0F
  * EN v1.0 Address: 0x80163F8C
  * EN v1.0 Size: 12b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 void tumbleweed_func0F(int obj, int value)
 {
@@ -251,15 +146,71 @@ void tumbleweed_func0F(int obj, int value)
 /*
  * --INFO--
  *
+ * Function: tumbleweed_func0E
+ * EN v1.0 Address: 0x80163F98
+ * EN v1.0 Size: 24b
+ */
+int tumbleweed_func0E(int obj)
+{
+  return *(byte *)(*(int *)(obj + 0xb8) + 0x278) == 6;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: tumbleweed_render2
+ * EN v1.0 Address: 0x80163FB0
+ * EN v1.0 Size: 64b
+ */
+void tumbleweed_render2(int *obj, int p2) {
+    int *state = *(int**)((char*)obj + 0xb8);
+    *(u8*)((char*)state + 0x278) = 6;
+    *(int*)((char*)state + 0x290) = p2;
+    *(f32*)((char*)state + 0x294) = timeDelta * lbl_803E2F98;
+    ObjHits_DisableObject(obj);
+}
+
+/*
+ * --INFO--
+ *
+ * Function: tumbleweed_modelMtxFn
+ * EN v1.0 Address: 0x80163FF0
+ * EN v1.0 Size: 112b
+ */
+void tumbleweed_modelMtxFn(int obj)
+{
+  int state = *(int *)(obj + 0xb8);
+  if (*(u8 *)(state + 0x278) == 1) {
+    ObjHits_EnableObject(obj);
+    *(u8 *)(state + 0x278) = 2;
+    *(u8 *)(state + 0x27a) |= 3;
+    if (*(s16 *)(obj + 0x46) == 0x4c1) {
+      *(f32 *)(state + 0x2a0) = lbl_803E2F9C;
+    }
+  }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: tumbleweed_func0B
+ * EN v1.0 Address: 0x80164060
+ * EN v1.0 Size: 16b
+ */
+void tumbleweed_func0B(int obj, float x, float y)
+{
+  int extra = *(int *)(obj + 0xb8);
+
+  *(float *)(extra + 0x288) = x;
+  *(float *)(extra + 0x28c) = y;
+}
+
+/*
+ * --INFO--
+ *
  * Function: tumbleweed_setScale
  * EN v1.0 Address: 0x80164070
  * EN v1.0 Size: 12b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 int tumbleweed_setScale(int obj)
 {
@@ -272,12 +223,6 @@ int tumbleweed_setScale(int obj)
  * Function: tumbleweed_getExtraSize
  * EN v1.0 Address: 0x8016407C
  * EN v1.0 Size: 8b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
  */
 int tumbleweed_getExtraSize(void)
 {
@@ -287,59 +232,51 @@ int tumbleweed_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: tumbleweed_func0E
- * EN v1.0 Address: 0x80163F98
- * EN v1.0 Size: 24b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * Function: tumbleweed_free
+ * EN v1.0 Address: 0x80164084
+ * EN v1.0 Size: 252b
  */
-int tumbleweed_func0E(int obj)
+void tumbleweed_free(int *obj)
 {
-  return *(byte *)(*(int *)(obj + 0xb8) + 0x278) == 6;
+  int *items;
+  int counter;
+  int limit;
+  int target_id;
+
+  switch (*(s16 *)((int)obj + 0x46)) {
+  case 0x39d:
+    target_id = 0x28d;
+    break;
+  case 0x3fb:
+    target_id = 0x3fd;
+    break;
+  case 0x4ba:
+    target_id = 0x4b9;
+    break;
+  case 0x4c1:
+    target_id = 0x4be;
+    break;
+  }
+
+  items = ObjList_GetObjects(&counter, &limit);
+  while (counter < limit) {
+    int *o = (int *)items[counter];
+    if (target_id == *(s16 *)((int)o + 0x46)) {
+      (*(code *)(**(int **)((int)o + 0x68) + 0x20))(o, obj);
+    }
+    counter = counter + 1;
+  }
+  ObjGroup_RemoveObject(obj, 3);
+  ObjGroup_RemoveObject(obj, 0x31);
 }
 
 /*
  * --INFO--
  *
- * Function: tumbleweed_func0B
- * EN v1.0 Address: 0x80164060
- * EN v1.0 Size: 16b
- * EN v1.1 Address: TODO
- * EN v1.1 Size: TODO
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * Function: tumbleweed_render
+ * EN v1.0 Address: 0x80164180
+ * EN v1.0 Size: 48b
  */
-void tumbleweed_func0B(int obj,float x,float y)
-{
-  int extra = *(int *)(obj + 0xb8);
-
-  *(float *)(extra + 0x288) = x;
-  *(float *)(extra + 0x28c) = y;
-}
-
-extern f32 lbl_803E2F80;
-extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
 void tumbleweed_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
     if ((s32)visible >= 1) objRenderFn_8003b8f4(lbl_803E2F80);
 }
-#pragma peephole reset
-
-extern f32 lbl_803E2F98;
-extern f32 timeDelta;
-extern void ObjHits_DisableObject(int *obj);
-#pragma scheduling off
-void tumbleweed_render2(int *obj, int p2) {
-    int *state = *(int**)((char*)obj + 0xb8);
-    *(u8*)((char*)state + 0x278) = 6;
-    *(int*)((char*)state + 0x290) = p2;
-    *(f32*)((char*)state + 0x294) = timeDelta * lbl_803E2F98;
-    ObjHits_DisableObject(obj);
-}
-#pragma scheduling reset
