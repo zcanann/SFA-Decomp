@@ -1,6 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_10A.h"
 
+#define SFXdoor_unlocked 0x232
+#define SFXdoor_creak 0x233
+#define SFXfox_healthgasp2 0x25d
+#define SFXfox_healthgasp3 0x25e
+#define SFXfox_healthgasp4 0x25f
+
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
 extern int FUN_80006a10();
@@ -125,7 +131,7 @@ void FUN_80154108(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if (*(char *)(param_10 + 0x33b) == '\0') {
       *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) | 8;
       *(undefined2 *)(param_10 + 0x2b0) = 0;
-      FUN_80006824(param_9,0x25f);
+      FUN_80006824(param_9,SFXfox_healthgasp4);
     }
   }
   else if (param_12 == 0x11) {
@@ -224,7 +230,7 @@ void FUN_80154290(undefined8 param_1,undefined8 param_2,double param_3,undefined
   if ((float)param_10[0xcc] <= lbl_803E35E4) {
     uVar3 = randomGetRange(0x3c,0x78);
     param_10[0xcc] = (f32)(s32)(uVar3);
-    FUN_80006824((uint)param_9,0x25e);
+    FUN_80006824((uint)param_9,SFXfox_healthgasp3);
   }
   if (*(char *)((int)param_10 + 0x33b) != '\0') {
     *(char *)((int)param_10 + 0x33b) = *(char *)((int)param_10 + 0x33b) + -1;
@@ -343,7 +349,7 @@ void FUN_80154724(undefined8 param_1,double param_2,double param_3,undefined8 pa
           lbl_803E35E4 == *(float *)(param_10 + 0x328))) {
     *(float *)(param_10 + 0x328) = lbl_803E360C;
     FUN_8014d3d0(param_9,param_10,1,0);
-    FUN_80006824((uint)param_9,0x25d);
+    FUN_80006824((uint)param_9,SFXfox_healthgasp2);
   }
   param_9[1] = *(short *)(param_10 + 0x19c);
   param_9[2] = *(short *)(param_10 + 0x19e);
@@ -478,8 +484,8 @@ void FUN_80154cc8(uint param_1,int param_2,undefined4 param_3,int param_4)
     }
     else {
       *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 8;
-      FUN_80006824(param_1,0x232);
-      FUN_80006824(param_1,0x233);
+      FUN_80006824(param_1,SFXdoor_unlocked);
+      FUN_80006824(param_1,SFXdoor_creak);
       *(undefined2 *)(param_2 + 0x2b0) = 0;
       *(uint *)(param_2 + 0x2e4) = *(uint *)(param_2 + 0x2e4) | 0x20;
     }
@@ -505,8 +511,8 @@ void fn_801544E8(int* obj, u8* state, int p3, int p4) {
     if (p4 == 17 || p4 == 16) return;
     if (*(f32*)((char*)obj + 152) > lbl_803E29A4) {
         *(int*)((char*)state + 744) |= 8;
-        Sfx_PlayFromObject(obj, 562);
-        Sfx_PlayFromObject(obj, 563);
+        Sfx_PlayFromObject(obj, SFXdoor_unlocked);
+        Sfx_PlayFromObject(obj, SFXdoor_creak);
         *(s16*)((char*)state + 688) = 0;
         *(int*)((char*)state + 740) |= 32;
     } else {
