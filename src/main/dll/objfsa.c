@@ -4789,7 +4789,113 @@ extern u8 lbl_803DD44E;
 extern u8 lbl_803DD44F;
 extern f32 timeDelta;
 extern float sqrtf(float x);
-extern int playerRunStateMachine(void *a, void *b, float t, int c);
+extern u8 lbl_803DD440;
+extern u8 lbl_803DD450;
+extern f64 lbl_803E0598;
+extern f32 lbl_803E05C0;
+extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimArg, void *events);
+
+void playerRunStateMachine(char *pos, char *state, float dt, int stateFns) {
+    int changed;
+    int done;
+    int iterations;
+    int currentState;
+    int result;
+    void (*exitFn)(char *, char *);
+
+    changed = 0;
+    iterations = 0;
+    lbl_803DD450 = 0;
+    lbl_803DD440 = 0;
+
+    if (*(s16 *)(state + 0x274) != *(s16 *)(state + 0x276)) {
+        *(u8 *)(state + 0x27a) = 1;
+        *(s16 *)(state + 0x338) = 0;
+    }
+
+    do {
+        done = 0;
+        currentState = *(s16 *)(state + 0x274);
+        result = (*(int (**)(char *, char *, f32))(stateFns + currentState * 4))(pos, state, dt);
+        if (result > 0) {
+            *(s16 *)(state + 0x276) = *(s16 *)(state + 0x274);
+            *(s16 *)(state + 0x274) = (s16)(result - 1);
+            exitFn = *(void (**)(char *, char *))(state + 0x304);
+            if (exitFn != 0) {
+                exitFn(pos, state);
+                *(void **)(state + 0x304) = 0;
+            }
+            *(void **)(state + 0x304) = *(void **)(state + 0x308);
+            *(u8 *)(state + 0x27a) = 1;
+            *(s16 *)(state + 0x338) = 0;
+            *(u8 *)(state + 0x34d) = 0;
+            *(u8 *)(state + 0x34c) = 0;
+            *(u8 *)(state + 0x356) = 0;
+            *(s16 *)(state + 0x278) = 0;
+            if (*(int *)(pos + 0x54) != 0) {
+                *(u8 *)(*(int *)(pos + 0x54) + 0x70) = 0;
+            }
+        } else if (result < 0) {
+            result = -result;
+            *(s16 *)(state + 0x274) = (s16)result;
+            if (result != currentState) {
+                *(s16 *)(state + 0x276) = (s16)currentState;
+                exitFn = *(void (**)(char *, char *))(state + 0x304);
+                if (exitFn != 0) {
+                    exitFn(pos, state);
+                    *(void **)(state + 0x304) = 0;
+                }
+                *(void **)(state + 0x304) = *(void **)(state + 0x308);
+                *(u8 *)(state + 0x27a) = 1;
+                *(s16 *)(state + 0x338) = 0;
+                *(u8 *)(state + 0x34d) = 0;
+                *(u8 *)(state + 0x34c) = 0;
+                *(u8 *)(state + 0x356) = 0;
+                *(s16 *)(state + 0x278) = 0;
+                if (*(int *)(pos + 0x54) != 0) {
+                    *(u8 *)(*(int *)(pos + 0x54) + 0x70) = 0;
+                }
+            }
+            done = 1;
+            changed = 1;
+        } else {
+            done = 1;
+        }
+
+        iterations++;
+        if (iterations > 0xff) {
+            done = 1;
+        }
+    } while (done == 0);
+
+    if (changed == 0) {
+        *(u8 *)(state + 0x27a) = 0;
+    }
+    *(s16 *)(state + 0x276) = *(s16 *)(state + 0x274);
+
+    if (lbl_803DD440 == 0 && ((s32)*(s8 *)(state + 0x34c) & 1) == 0) {
+        u8 animEvents[0x1c];
+        int i;
+
+        animEvents[0x1b] = 0;
+        *(s8 *)(state + 0x346) = ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 0x2a0), dt, (int)pos, animEvents);
+        *(u32 *)(state + 0x314) = 0;
+        for (i = 0; i < (s8)animEvents[0x1b]; i++) {
+            *(u32 *)(state + 0x314) |= 1 << (s32)(s8)animEvents[0x13 + i];
+        }
+        *(u32 *)state &= 0xfffeffff;
+    }
+
+    if ((*(u32 *)state & 0x4000) == 0) {
+        int decay;
+
+        decay = (s32)((f32)((f64)*(s16 *)(pos + 2) - lbl_803E0598) * dt * lbl_803E05C0);
+        *(s16 *)(pos + 2) = *(s16 *)(pos + 2) - (s16)decay;
+        decay = (s32)((f32)((f64)*(s16 *)(pos + 4) - lbl_803E0598) * dt * lbl_803E05C0);
+        *(s16 *)(pos + 4) = *(s16 *)(pos + 4) - (s16)decay;
+    }
+}
+
 #pragma peephole off
 #pragma scheduling off
 void player_updateVel(char *p, char *obj, int unused) {
