@@ -1,5 +1,9 @@
 #include "main/dll/VF/vf_shared.h"
 
+#define SFXmn_sml_trex_snap1 128
+#define SFXsc_mpick1_b 179
+#define SFXsp_lf_mutter4 265
+
 extern void objFn_800972dc(int *obj, u8 idx, f32 scale, int model, int mode, u8 chance,
                            f32 alpha, int flags, int unused);
 extern u8 fn_8016F16C(int *obj);
@@ -74,7 +78,7 @@ void vfpstatueball_update(int *obj) {
             if ((u8)fn_8016F16C(hitObj) == *(s16 *)((char *)setup + 0x1a)) {
                 state->active = (u8)(1 - state->active);
             } else {
-                Sfx_PlayFromObject(0, 0xb3);
+                Sfx_PlayFromObject(0, SFXsc_mpick1_b);
             }
         }
 
@@ -83,8 +87,8 @@ void vfpstatueball_update(int *obj) {
 
     if ((state->active != 0) && (state->playActivateSfx != 0)) {
         state->playActivateSfx = 0;
-        Sfx_PlayFromObject((int)obj, 0x80);
-        Sfx_PlayFromObject(0, 0x109);
+        Sfx_PlayFromObject((int)obj, SFXmn_sml_trex_snap1);
+        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     }
 
     if (state->active != state->prevActive) {
