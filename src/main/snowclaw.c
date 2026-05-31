@@ -1,5 +1,9 @@
 #include "ghidra_import.h"
 
+#define SFXdn_rexthrash11 20
+#define SFXsp_sa_climb02 242
+#define SFXswapstone_mumble 740
+
 typedef struct {
     u8 b0 : 1;
     u8 flag6 : 1;
@@ -160,7 +164,7 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
         *(f32 *)(obj2 + 0x10) = *(f32 *)(obj + 0x14);
         *(s8 *)(obj2 + 0x18) = (s8)(u8)((((getAngle(*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc),
                                                    *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) & 0xffff) >> 8) + 0x8000) >> 8);
-        Sfx_PlayFromObject(obj, 0x2e4);
+        Sfx_PlayFromObject(obj, SFXswapstone_mumble);
         switch ((u8)b) {
         case 0:
             *(s16 *)(obj2 + 0x1a) = (s16)lbl_803DDD38;
@@ -298,8 +302,8 @@ void snowclaw_hitDetect(int obj) {
         ObjHits_RecordObjectHit(sub, hit, 0x15, 1, 0);
         if (*(s8 *)((char *)inner + 0xa5) < 0) {
             *(s8 *)((char *)inner + 0xa4) -= 1;
-            Sfx_PlayFromObject(obj, 0xf2);
-            Sfx_PlayFromObject(obj, 0x14);
+            Sfx_PlayFromObject(obj, SFXsp_sa_climb02);
+            Sfx_PlayFromObject(obj, SFXdn_rexthrash11);
             Sfx_PlayFromObject(obj, (u16)lbl_8032A350[*(s8 *)((char *)inner + 0xa4)]);
             *(s8 *)((char *)inner + 0xa5) = 0x14;
             *(int *)((char *)inner + 0x9c) -= 0x28;

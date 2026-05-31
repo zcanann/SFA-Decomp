@@ -3,6 +3,7 @@
 
 #define PB_IFACE (*(int *)(*(int *)(*(int *)(state + 0x268) + 0x68)))
 #define SFXmn_sml_trex_fstep 126
+#define SFXsc_lockon2_off 200
 #define SFXsc_lockon3_on 201
 #define SFXsc_lockon3_off 202
 #define SFXsc_lifeforcedoor 203
@@ -241,8 +242,8 @@ void wcpushblock_update(int obj)
             if (dist > lbl_803E6D74) {
                 dist = lbl_803E6D74;
             }
-            Sfx_KeepAliveLoopedObjectSound(obj, 200);
-            Sfx_SetObjectSfxVolume(obj, 200, (int)dist, lbl_803E6D78);
+            Sfx_KeepAliveLoopedObjectSound(obj, SFXsc_lockon2_off);
+            Sfx_SetObjectSfxVolume(obj, SFXsc_lockon2_off, (int)dist, lbl_803E6D78);
             ((PushBlockFlags *)(state + 0x285))->sfxActive = 1;
         }
         objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, lbl_803E6D64,

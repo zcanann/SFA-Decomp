@@ -1,6 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
 #define SFXmn_sml_trex_fstep 126
+#define SFXmn_sml_trex_roar 127
 
 #pragma peephole off
 #pragma scheduling off
@@ -99,10 +100,10 @@ void wctempledia_update(int obj)
     *(f32 *)state =
         timeDelta * (lbl_803E6E48 * (*(f32 *)(state + 4) - *(f32 *)state)) + *(f32 *)state;
     *(s16 *)(obj + 4) = (int)(timeDelta * *(f32 *)state + (f32)*(s16 *)(obj + 4));
-    Sfx_KeepAliveLoopedObjectSound(obj, 0x7f);
+    Sfx_KeepAliveLoopedObjectSound(obj, SFXmn_sml_trex_roar);
     {
         f32 ratio = *(f32 *)state / *(f32 *)(*(int *)(state + 0xc) + 8);
-        Sfx_SetObjectSfxVolume(obj, 0x7f, (u8)(lbl_803E6E60 * ratio + lbl_803E6E5C),
+        Sfx_SetObjectSfxVolume(obj, SFXmn_sml_trex_roar, (u8)(lbl_803E6E60 * ratio + lbl_803E6E5C),
                                lbl_803E6E68 * ratio + lbl_803E6E64);
     }
     for (i = 0; i < 3; i++) {

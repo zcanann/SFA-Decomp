@@ -3,6 +3,7 @@
 #include "main/dll/CF/CFBaby.h"
 
 #define SFXen_rfall5_c 72
+#define SFXmv_liftloop 158
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
@@ -2016,7 +2017,7 @@ checked_vine_use:
             pulseStyle = 0;
         }
         fn_80098B18(obj, lbl_803E3B1C * (*(f32 *)(state + 0x10) * *(f32 *)(obj + 8)), 3, 0, pulseStyle, 0);
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x9e);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
     }
 }
 #pragma peephole reset

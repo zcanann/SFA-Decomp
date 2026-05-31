@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/projswitch.h"
 
+#define SFXmv_liftloop 158
+
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_800068c4();
 extern int FUN_80006b7c();
@@ -505,11 +507,11 @@ void enemy_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
                                        *(int *)((char *)state + 0x368));
             }
     if ((*(u32 *)((char *)state + 0x2e8) & 0x40) != 0) {
-        Sfx_KeepAliveLoopedObjectSound(obj, 158);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
         objParticleFn_80099d84(obj, lbl_803E256C, 5, *(f32 *)((char *)state + 0x30c), 0);
     }
     if ((*(u32 *)((char *)state + 0x2e8) & 0x80) != 0) {
-        Sfx_KeepAliveLoopedObjectSound(obj, 158);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXmv_liftloop);
         objParticleFn_80099d84(obj, lbl_803E25F8, 6, *(f32 *)((char *)state + 0x30c), 0);
     }
     if ((*(u32 *)((char *)state + 0x2e8) & 0x100) != 0) {

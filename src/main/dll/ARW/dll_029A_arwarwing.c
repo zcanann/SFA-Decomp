@@ -8,6 +8,7 @@
 #define SFXbaddie_eba_bigswipe 0x2b4
 #define SFXbaddie_eba_smallswipe2 0x2b6
 #define SFXbaddie_kalda_distress 0x2b7
+#define SFXbaddie_pinpon_launch 0x29f
 #define SFXbaddie_eggsnatch_movelp 0x2c0
 
 #pragma peephole on
@@ -660,7 +661,7 @@ void fn_8022C30C(int obj, int state)
     if (*(u8 *)(state + 0x478) < 4 && (u32)GameBit_Get(0x9d6) == 0 && (u32)GameBit_Get(0x9d8) == 0) {
         vol = (f32)((lbl_803E6F48 + fn_802945E0(*(f32 *)(state + 0x50) / *(f32 *)(state + 0x5c))) *
                     lbl_803E6F50);
-        Sfx_KeepAliveLoopedObjectSound(obj, 0x29f);
+        Sfx_KeepAliveLoopedObjectSound(obj, SFXbaddie_pinpon_launch);
         Sfx_SetObjectChannelVolume(obj, 0x40, 0xfe, vol);
     }
 

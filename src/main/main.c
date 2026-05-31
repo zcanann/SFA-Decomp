@@ -4,6 +4,8 @@
 #include "main/dll/anim_internal.h"
 #include "main/main.h"
 
+#define SFXsp_lfoot_treasure 273
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
@@ -462,7 +464,7 @@ void FUN_801fdc60(uint param_1)
          lbl_803E6E00 /
          ((float)(local_30 - DOUBLE_803e6e40) / (float)(local_38 - DOUBLE_803e6e40));
     *(float *)(iVar4 + 0xc) = lbl_803E6E04;
-    FUN_80006824(param_1,0x111);
+    FUN_80006824(param_1,SFXsp_lfoot_treasure);
     fVar1 = lbl_803E6E08;
   }
   dVar6 = (double)fVar1;

@@ -3,6 +3,8 @@
 #include "main/dll/baddie/chuka.h"
 #include "main/dll/baddie/chukachuck.h"
 
+#define SFXfoot_water_walk_2 456
+
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
@@ -109,7 +111,7 @@ void dfpfloorbar_update(int param_1)
     active = state->active;
     if (active != 0) {
         if (*(f32 *)(param_1 + 0x10) > *(f32 *)(iVar6 + 0xc) - lbl_803E640C) {
-            Sfx_KeepAliveLoopedObjectSound(param_1, 0x1c8);
+            Sfx_KeepAliveLoopedObjectSound(param_1, SFXfoot_water_walk_2);
             *(f32 *)(param_1 + 0x10) = *(f32 *)(param_1 + 0x10) - timeDelta / lbl_803E6410;
             if (*(f32 *)(param_1 + 0x10) <= *(f32 *)(iVar6 + 0xc) - lbl_803E640C) {
                 *(f32 *)(param_1 + 0x10) = *(f32 *)(iVar6 + 0xc) - lbl_803E640C;
