@@ -2,6 +2,11 @@
 #include "main/dll/dll_14F.h"
 #include "main/objanim.h"
 
+#define SFXen_riverloop11 0x4c
+#define SFXen_trpcls_c 0x4d
+#define SFXen_generic_placeobj 0x4e
+#define SFXen_lrope_powerdown 0x5e
+
 extern bool FUN_800067f0();
 extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();
@@ -273,7 +278,7 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
     param_2 = (double)lbl_803E4510;
     dVar3 = (double)FUN_80294964();
     *(float *)(iVar2 + 0x2c) = (float)(dVar4 * dVar3);
-    FUN_80006824(param_9,0x5e);
+    FUN_80006824(param_9,SFXen_lrope_powerdown);
   }
   if (lbl_803E44F0 <= *(float *)(param_9 + 0x98)) {
     *(undefined *)((int)param_11 + 0xf) = 2;
@@ -918,7 +923,7 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   iVar3 = FUN_80017a98();
   while (iVar4 = ObjMsg_Pop((int)puVar2,&local_48,(uint *)0x0,(uint *)0x0), iVar4 != 0) {
     if (local_48 == 0x7000b) {
-      FUN_80006824((uint)puVar2,0x4e);
+      FUN_80006824((uint)puVar2,SFXen_generic_placeobj);
       (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
       (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
       in_r7 = 0xffffffff;
@@ -998,7 +1003,7 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
              (float)(dVar13 * (double)lbl_803DC074 + (double)*(float *)(puVar2 + 10));
       }
       else {
-        FUN_80006824((uint)puVar2,0x4c);
+        FUN_80006824((uint)puVar2,SFXen_riverloop11);
         (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51f,0,2,0xffffffff,0);
         in_r7 = 0xffffffff;
         in_r8 = 0;
@@ -1030,7 +1035,7 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
       iVar9 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if (iVar9 == 0xe) {
         *(undefined *)((int)pfVar10 + 0x19) = 1;
-        FUN_80006824((uint)puVar2,0x4d);
+        FUN_80006824((uint)puVar2,SFXen_trpcls_c);
       }
     }
     else {
@@ -1080,7 +1085,7 @@ void FUN_80180a0c(undefined8 param_1,undefined8 param_2,double param_3,undefined
       else {
         iVar3 = (**(code **)(*DAT_803dd72c + 0x8c))();
         if (*(byte *)(iVar3 + 9) < *(byte *)(iVar3 + 10)) {
-          FUN_80006824((uint)puVar2,0x4e);
+          FUN_80006824((uint)puVar2,SFXen_generic_placeobj);
           (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
           (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
           (**(code **)(*DAT_803dd708 + 8))(puVar2,0x51a,0,1,0xffffffff,0);
