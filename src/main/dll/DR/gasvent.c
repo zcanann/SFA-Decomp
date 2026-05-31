@@ -2,6 +2,9 @@
 #include "main/dll/DR/gasvent.h"
 
 
+#define SFXsk_bapt11_c 209
+#define SFXsk_baptr1_c 210
+
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_80006824();
@@ -185,7 +188,7 @@ void FUN_801a136c(undefined4 param_1,undefined4 param_2,short param_3)
         }
         sVar6 = extraout_r4;
         if ((double)lbl_803E4F74 <= dVar7) {
-          FUN_80006824(uVar2,0xd2);
+          FUN_80006824(uVar2,SFXsk_baptr1_c);
           dVar7 = (double)lbl_803E4F74;
           *(float *)(uVar2 + 0x28) = (float)dVar9;
           fVar1 = lbl_803E4F80;
@@ -334,7 +337,7 @@ void FUN_801a1654(undefined8 param_1,double param_2,double param_3,undefined8 pa
     ObjHits_EnableObject(uVar1);
     ObjHits_MarkObjectPositionDirty(uVar1);
     ObjHits_SetHitVolumeSlot(uVar1,5,4,0);
-    FUN_80006824(uVar1,0xd1);
+    FUN_80006824(uVar1,SFXsk_bapt11_c);
     *(float *)(uVar1 + 0x10) = *(float *)(uVar1 + 0x10) + lbl_803E4FA0;
     FUN_8008112c((double)lbl_803E4F58,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
                  uVar1,1,1,0,0,0,1,0);
