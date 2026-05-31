@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_138.h"
 
+#define SFXsp_lf_mutter4 265
+
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80017698();
@@ -220,7 +222,7 @@ LAB_80175568:
                     if ((0x21d < (short)uVar1) || (uVar1 != 0x1cb)) goto LAB_8017533c;
                     if (local_e7 == '\x01') {
                       FUN_80017698(uVar5,1);
-                      FUN_80006824(0,0x109);
+                      FUN_80006824(0,SFXsp_lf_mutter4);
                       *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) | 0x80;
                       *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) | 8;
                       FUN_800e8630((int)puVar3);
@@ -243,7 +245,7 @@ LAB_80175568:
 LAB_8017533c:
                   if ((-1 < *(char *)(iVar12 + 0x23)) && (*(char *)(iVar12 + 0x23) == local_e7)) {
                     FUN_80017698(uVar5,1);
-                    FUN_80006824(0,0x109);
+                    FUN_80006824(0,SFXsp_lf_mutter4);
                   }
                 }
               }

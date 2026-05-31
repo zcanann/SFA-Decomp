@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/MMP/mmp_levelcontrol.h"
 
+#define SFXsp_lf_mutter4 265
+
 extern undefined4 FUN_80006824();
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern uint GameBit_Get(int eventId);
@@ -422,7 +424,7 @@ void FUN_801948d8(uint param_1)
     else {
       *(byte *)(piVar2 + 1) = *(byte *)(piVar2 + 1) & 0x7f | 0x80;
       GameBit_Set((int)*(short *)(iVar3 + 0x18),1);
-      FUN_80006824(param_1,0x109);
+      FUN_80006824(param_1,SFXsp_lf_mutter4);
     }
   }
   return;

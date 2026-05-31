@@ -1,5 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXmn_sml_trex_fstep 126
+
 #pragma peephole off
 #pragma scheduling off
 void wctempledia_syncPartVisibility(int obj, u8 mask)
@@ -136,7 +138,7 @@ void wctempledia_update(int obj)
     wctempledia_syncPartVisibility(obj, *(u8 *)(state + 8));
     if (*(u8 *)(state + 8) == 7) {
         GameBit_Set(*(s16 *)(r4c + 0x1e), 1);
-        Sfx_PlayFromObject(0, 0x7e);
+        Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
         *(u8 *)(state + 9) |= 1;
     }
 }

@@ -1,5 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXmn_sml_trex_fstep 126
+
 #pragma peephole on
 #pragma scheduling on
 int timer_getExtraSize(void) { return 0x20; }
@@ -126,7 +128,7 @@ void timer_update(int obj)
             storeZeroToFloatParam((void *)state);
             if (*(u8 *)(state + 0xc) == 1) {
                 if (*(int *)(*(int *)(obj + 0x4c) + 0x14) != 0x466ED) {
-                    Sfx_PlayFromObject(obj, 126);
+                    Sfx_PlayFromObject(obj, SFXmn_sml_trex_fstep);
                 }
             }
             flag = 1;

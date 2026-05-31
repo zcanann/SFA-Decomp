@@ -4,6 +4,8 @@
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
 
+#define SFXmn_sml_trex_fstep 126
+
 #pragma scheduling off
 #pragma peephole off
 int lightfoot_getExtraSize(void)
@@ -135,7 +137,7 @@ void lightfoot_update(int obj)
                         objFn_800972dc(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
                     }
                     if (GameBit_Get(0xc3b) && GameBit_Get(0xc3c) && GameBit_Get(0xc3d)) {
-                        Sfx_PlayFromObject(0, 0x7e);
+                        Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
                     } else {
                         Sfx_PlayFromObject(0, 0x409);
                     }
@@ -160,7 +162,7 @@ void lightfoot_update(int obj)
                         objFn_800972dc(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
                     }
                     if (GameBit_Get(0xc3e) && GameBit_Get(0xc3f) && GameBit_Get(0xc40)) {
-                        Sfx_PlayFromObject(0, 0x7e);
+                        Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
                     } else {
                         Sfx_PlayFromObject(0, 0x409);
                     }

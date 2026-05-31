@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/torch1CD.h"
 
+#define SFXsc_gemrun1022 175
+
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();
@@ -178,7 +180,7 @@ void FUN_801cbac4(undefined8 param_1,double param_2,double param_3,undefined8 pa
       in_r8 = 0;
       in_r9 = *piVar2;
       (**(code **)(in_r9 + 4))(param_9,1,0,1,0xffffffff);
-      param_1 = FUN_80006824((uint)param_9,0xaf);
+      param_1 = FUN_80006824((uint)param_9,SFXsc_gemrun1022);
       FUN_80006b0c((undefined *)piVar2);
       psVar4[1] = 1;
       *(undefined4 *)(param_9 + 0x7c) = 1;

@@ -2,6 +2,8 @@
 #include "main/mapEvent.h"
 #include "main/dll/IM/IMsnowbike.h"
 
+#define SFXmn_sml_trex_fstep 126
+
 extern u32 GameBit_Get(u32 id);
 extern void GameBit_Set(u32 id, u32 value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
@@ -133,7 +135,7 @@ void sh_levelcontrol_update(int param_1)
     iVar1 = GameBit_Get(0xc2);
     iVar3 = GameBit_Get(0x66d);
     if ((iVar3 + iVar1 == 6) && (iVar1 = GameBit_Get(0xe5b), iVar1 == 0)) {
-      Sfx_PlayFromObject(param_1, 0x7e);
+      Sfx_PlayFromObject(param_1, SFXmn_sml_trex_fstep);
       GameBit_Set(0xe5b, 1);
     }
     break;

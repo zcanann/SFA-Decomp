@@ -2,6 +2,8 @@
 #include "main/mapEvent.h"
 #include "main/dll/SP/SPshop.h"
 
+#define SFXmn_sml_trex_fstep 126
+
 extern undefined4 FUN_800067c0();
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -87,7 +89,7 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
       (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x64)))(*gGameUIInterface);
       (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 8)))(0x14, 1);
       *(u8 *)(state + 6) = 3;
-      Sfx_PlayFromObject(0, 0x7e);
+      Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
     } else {
       *(f32 *)(state + 8) -= (f32)bloopsRemaining * timeDelta;
       if (*(f32 *)(state + 8) >= lbl_803E54B4) {
