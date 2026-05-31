@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/SC/SCanimobj.h"
 
+#define SFXbaddie_haga_death 700
+
 extern undefined8 FUN_80006824();
 extern undefined8 FUN_80006868();
 extern undefined4 FUN_80006898();
@@ -287,10 +289,10 @@ void FUN_801d7844(uint param_1)
     FUN_80081120(param_1,auStack_28,1,(int *)0x0);
     uVar2 = FUN_8007f66c(3);
     if (uVar2 == 0) {
-      FUN_80006824(param_1,700);
+      FUN_80006824(param_1,SFXbaddie_haga_death);
     }
     else {
-      FUN_80006824(param_1,700);
+      FUN_80006824(param_1,SFXbaddie_haga_death);
     }
     FUN_80039468(param_1,iVar3 + 0x14,0xab,-0x500,0xffffffff,0);
   }

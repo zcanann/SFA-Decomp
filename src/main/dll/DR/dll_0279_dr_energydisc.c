@@ -1,5 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXfend_rob_servo2 780
+
 int drenergydisc_getExtraSize(void) { return 1; }
 
 int drenergydisc_getObjectTypeId(void) { return 0; }
@@ -21,7 +23,7 @@ void drenergydisc_update(int obj)
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
         if (state->activated == 0) {
             state->activated = 1;
-            Sfx_PlayFromObject(obj, 0x30c);
+            Sfx_PlayFromObject(obj, SFXfend_rob_servo2);
         }
 
         texture = objFindTexture(obj, 0, 0);
@@ -58,7 +60,7 @@ void drenergydisc_init(u8 *obj, u8 *setup)
     *(s16 *)obj = objType;
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
         state->activated = 1;
-        Sfx_PlayFromObject((int)obj, 0x30c);
+        Sfx_PlayFromObject((int)obj, SFXfend_rob_servo2);
         texture = objFindTexture((int)obj, 0, 0);
         if (texture != NULL) {
             *texture = 0x100;

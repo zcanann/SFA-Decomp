@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIM2lift.h"
 
+#define SFXwmap_swoosh 381
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_8000691c();
 extern undefined4 FUN_800069bc();
@@ -480,7 +482,7 @@ FUN_801baefc(undefined8 param_1,double param_2,double param_3,undefined8 param_4
   }
   if ((*(uint *)(param_10 + 0x314) & 1) != 0) {
     DAT_803de800 = DAT_803de800 | 0x4004;
-    FUN_80006824(param_9,0x17d);
+    FUN_80006824(param_9,SFXwmap_swoosh);
     FUN_800069bc();
     FUN_8000691c((double)lbl_803E5860,(double)lbl_803E588C,(double)lbl_803E5890);
     FUN_80006b94((double)lbl_803E5894);
@@ -1137,7 +1139,7 @@ int fn_801BA880(int obj, int p2)
 
   if ((*(int *)(p2 + 0x314) & 0x1) != 0) {
     gDIMbossSequenceFlags |= 0x4004;
-    Sfx_PlayFromObject(obj, 381);
+    Sfx_PlayFromObject(obj, SFXwmap_swoosh);
     Camera_EnableViewYOffset();
     CameraShake_Start(lbl_803E4BC8, lbl_803E4BF4, lbl_803E4BF8);
     doRumble(lbl_803E4BFC);
