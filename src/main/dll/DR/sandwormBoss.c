@@ -2,6 +2,17 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objanim.h"
 
+#define SFXmn_sml_trex_fstep 0x7e
+#define SFXsk_baptr6_c 0xd3
+#define SFXsk_baptr9_c 0xd4
+#define SFXsk_planteater11 0xd5
+#define SFXsk_toysq2_c 0xd6
+#define SFXsk_trbark1 0xd7
+#define SFXsk_trwhin3 0xe1
+#define SFXsk_doggydig11 0xe3
+#define SFXsp_lf_mutter4 0x109
+#define SFXand_spitout 0x334
+
 extern undefined4 getLActions();
 extern undefined4 FUN_80006728();
 extern undefined4 FUN_800067c0();
@@ -299,7 +310,7 @@ void FUN_8019b1d8(undefined4 param_1,undefined4 param_2,ushort *param_3)
       }
       break;
     case 9:
-      FUN_80006824(uVar1,0xe1);
+      FUN_80006824(uVar1,SFXsk_trwhin3);
     }
   }
   if ((iVar2 != 0) && (param_3 != (ushort *)0x0)) {
@@ -1375,7 +1386,7 @@ void FUN_8019c7cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     if (uVar4 == 3) {
       if (*(short *)(pfVar9 + 0x54) == 0) {
-        uVar14 = FUN_80006824(0,0x7e);
+        uVar14 = FUN_80006824(0,SFXmn_sml_trex_fstep);
         FUN_80006728(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x7f,0,in_r7
                      ,in_r8,in_r9,in_r10);
       }
@@ -1413,7 +1424,7 @@ void FUN_8019c7cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
       FUN_80006814((double)pfVar9[0x55],(int)psVar2,0x40,100);
     }
     else {
-      FUN_80006824((uint)psVar2,0xd5);
+      FUN_80006824((uint)psVar2,SFXsk_planteater11);
       pfVar9[0x55] = lbl_803E4E90;
     }
   }
@@ -1423,10 +1434,10 @@ void FUN_8019c7cc(undefined8 param_1,double param_2,double param_3,undefined8 pa
     if ((sVar11 != 0) && (sVar11 < 0x80)) {
       *(ushort *)(pfVar9 + 0xc) = sVar11 + (ushort)DAT_803dc070;
       if ((sVar11 == 1) && (1 < *(short *)(pfVar9 + 0xc))) {
-        FUN_80006824((uint)psVar2,0xd6);
+        FUN_80006824((uint)psVar2,SFXsk_toysq2_c);
       }
       if ((sVar11 < 0x1e) && (0x1d < *(short *)(pfVar9 + 0xc))) {
-        FUN_80006824((uint)psVar2,0xd7);
+        FUN_80006824((uint)psVar2,SFXsk_trbark1);
       }
     }
     pfVar9 = (float *)((int)pfVar9 + 2);
@@ -1574,7 +1585,7 @@ FUN_8019d238(undefined8 param_1,double param_2,double param_3,undefined8 param_4
       *(byte *)(iVar1 + 0x244) = *(byte *)(iVar1 + 0x244) & 0xbf;
     }
     else if ((*(byte *)(iVar1 + 0x244) >> 6 & 1) == 0) {
-      FUN_80006824(param_9,0x334);
+      FUN_80006824(param_9,SFXand_spitout);
       *(byte *)(iVar1 + 0x244) = *(byte *)(iVar1 + 0x244) & 0xbf | 0x40;
     }
   }
@@ -1693,7 +1704,7 @@ void FUN_8019d710(void)
   }
   else {
     FUN_80039468(puVar2,pfVar5 + 0x1b,0x296,0x1000,0xffffffff,1);
-    FUN_80006824((uint)puVar2,0xd4);
+    FUN_80006824((uint)puVar2,SFXsk_baptr9_c);
   }
   FUN_8028688c();
   return;
@@ -1778,7 +1789,7 @@ void FUN_8019d874(undefined4 param_1,undefined4 param_2,int param_3)
     for (cVar10 = '\0'; (int)cVar10 < (int)(uint)*(byte *)(param_3 + 0x8b); cVar10 = cVar10 + '\x01'
         ) {
       if (*(char *)(param_3 + cVar10 + 0x81) == '\x01') {
-        FUN_80006824(0,0x109);
+        FUN_80006824(0,SFXsp_lf_mutter4);
       }
     }
     *(undefined4 *)(iVar12 + 0xc4) = 0;
@@ -2042,7 +2053,7 @@ void FUN_8019dcb8(undefined8 param_1,double param_2,double param_3,undefined8 pa
     *(undefined *)(iVar10 + 0x37) = 4;
   }
   if ((*(short *)(uVar4 + 0xa0) == 0x103) || (*(short *)(uVar4 + 0xa0) == 0x2e)) {
-    uVar12 = FUN_80006824(uVar4,0xe3);
+    uVar12 = FUN_80006824(uVar4,SFXsk_doggydig11);
   }
   else {
     uVar12 = FUN_8000680c(uVar4,0x10);
@@ -3138,7 +3149,7 @@ void FUN_8019f1dc(void)
   local_64[0] = *(ushort *)(iVar5 + 0x50);
   FUN_80017748(local_64,(float *)(iVar5 + 0x20));
   *(byte *)(iVar5 + 0x49) = *(byte *)(iVar5 + 0x49) | 1;
-  FUN_80006824(uVar1,0xd3);
+  FUN_80006824(uVar1,SFXsk_baptr6_c);
   *(byte *)(iVar5 + 0x49) = *(byte *)(iVar5 + 0x49) | 2;
   if ((*(byte *)(iVar5 + 0x48) >> 6 & 1) != 0) {
     iVar5 = *(int *)(uVar1 + 0x4c);
@@ -3404,7 +3415,7 @@ int babycloudrunner_func0B(int* obj)
         return 1;
     }
     objAudioFn_800393f8((int)obj, (char*)sub + 0x6c, 0x296, 0x1000, -1, 1);
-    Sfx_PlayFromObject((int)obj, 0xd4);
+    Sfx_PlayFromObject((int)obj, SFXsk_baptr9_c);
     return 0;
 }
 #pragma peephole reset
@@ -4367,7 +4378,7 @@ void fn_801A0C14(int obj, u8 flag) {
     stk[0] = *(s16*)(state + 0x50);
     mathFn_80021ac8(stk, (f32*)(state + 0x20));
     state[0x49] = (u8)(state[0x49] | 1);
-    Sfx_PlayFromObject(obj, 0xd3);
+    Sfx_PlayFromObject(obj, SFXsk_baptr6_c);
     state[0x49] = (u8)(state[0x49] | 2);
     if ((state[0x48] & 0x40) != 0) {
         u8* params = *(u8**)(obj + 0x4c);
