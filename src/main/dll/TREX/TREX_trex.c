@@ -2,6 +2,15 @@
 #include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
 
+#define SFXen_nlite1_c 0x34
+#define SFXen_ripefruit11 0x35
+#define SFXen_rockshat16 0x36
+#define SFXmn_eggylaugh216 0x72
+#define SFXbaddie_crater_call 0x2ca
+#define SFXfend_rob_beep2 0x315
+#define SFXfend_rob_beep3 0x316
+#define SFXspirit_voice4 0x31d
+
 extern undefined4 getLActions();
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
@@ -198,7 +207,7 @@ void FUN_801e4378(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     iVar2 = *(int *)(*(int *)(param_9 + 0x54) + 0x50);
     if ((((iVar2 != 0) && (sVar1 = *(short *)(iVar2 + 0x46), sVar1 != 0x119)) && (sVar1 != 0x113))
        && (dVar4 == dVar5)) {
-      FUN_80006824(param_9,0x31d);
+      FUN_80006824(param_9,SFXspirit_voice4);
       *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) =
            *(ushort *)(*(int *)(param_9 + 0x54) + 0x60) & ~1;
       *(float *)(iVar3 + 0x1c) = lbl_803E6550;
@@ -327,8 +336,8 @@ void FUN_801e481c(uint param_1)
        *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
   *(float *)(param_1 + 8) = *(float *)(param_1 + 8) * lbl_803E6568;
   *(byte *)(iVar2 + 0x1a) = *(byte *)(iVar2 + 0x1a) | 2;
-  FUN_80006824(param_1,0x35);
-  FUN_80006824(param_1,0x2ca);
+  FUN_80006824(param_1,SFXen_ripefruit11);
+  FUN_80006824(param_1,SFXbaddie_crater_call);
   return;
 }
 
@@ -540,7 +549,7 @@ void FUN_801e4cd8(uint param_1)
   iVar1 = *(int *)(*(int *)(param_1 + 0x54) + 0x50);
   if ((iVar1 != 0) && (*(float *)(iVar2 + 0x20) == lbl_803E6584)) {
     if (*(short *)(iVar1 + 0x46) == 0x8e) {
-      FUN_80006824(param_1,0x36);
+      FUN_80006824(param_1,SFXen_rockshat16);
     }
     *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) =
          *(ushort *)(*(int *)(param_1 + 0x54) + 0x60) & ~1;
@@ -714,7 +723,7 @@ undefined4 FUN_801e514c(uint param_1,undefined4 param_2,int param_3)
     *(ushort *)(param_3 + 0x6e) = *(ushort *)(param_3 + 0x6e) & ~0x4;
     iVar2 = FUN_8002fc3c((double)lbl_803E65B0,(double)lbl_803DC074);
     if (iVar2 != 0) {
-      FUN_80006824(param_1,0x315);
+      FUN_80006824(param_1,SFXfend_rob_beep2);
     }
   }
   *(undefined *)(param_3 + 0x56) = 0;
@@ -812,7 +821,7 @@ void FUN_801e524c(undefined8 param_1,double param_2,double param_3,undefined8 pa
     }
     iVar1 = FUN_8002fc3c((double)lbl_803E65B0,(double)lbl_803DC074);
     if (iVar1 != 0) {
-      FUN_80006824(param_9,0x315);
+      FUN_80006824(param_9,SFXfend_rob_beep2);
     }
   }
   else {
@@ -874,7 +883,7 @@ void FUN_801e55c4(uint param_1)
     randomGetRange(0,10);
     uVar2 = FUN_80017690(0xa71);
     if (uVar2 == 0) {
-      FUN_80006824(param_1,0x316);
+      FUN_80006824(param_1,SFXfend_rob_beep3);
     }
     uVar2 = randomGetRange(400,600);
     *psVar3 = (short)uVar2;
@@ -1092,8 +1101,8 @@ void FUN_801e59ec(uint param_1)
     DAT_803dcd00 = 1;
   }
   FUN_80006b0c((undefined *)piVar3);
-  FUN_80006824(param_1,0x35);
-  FUN_80006824(param_1,0x2ca);
+  FUN_80006824(param_1,SFXen_ripefruit11);
+  FUN_80006824(param_1,SFXbaddie_crater_call);
   return;
 }
 
@@ -1383,7 +1392,7 @@ void FUN_801e60cc(uint param_1)
     }
   }
   else if (dVar6 < (double)lbl_803E6618) {
-    FUN_80006824(param_1,0x72);
+    FUN_80006824(param_1,SFXmn_eggylaugh216);
   }
   if (*(short *)(param_1 + 0x46) != 0x3e4) {
     if (*(int *)(param_1 + 0xf8) == 0) {
@@ -1563,7 +1572,7 @@ void FUN_801e6510(uint param_1)
   
   uVar1 = FUN_80017690((int)*(short *)(*(int *)(param_1 + 0x4c) + 0x1e));
   if (uVar1 != 0) {
-    FUN_80006824(param_1,0x34);
+    FUN_80006824(param_1,SFXen_nlite1_c);
   }
   return;
 }
@@ -1817,7 +1826,7 @@ int SB_KyteCage_SeqFn(int obj, int unused, int seqState)
     if (*(s16 *)(obj + 0xb4) != -1) {
         *(s16 *)(seqState + 0x6e) = (s16)(*(s16 *)(seqState + 0x6e) & ~4);
         if (ObjAnim_AdvanceCurrentMove(obj, lbl_803E5918, timeDelta, 0) != 0) {
-            Sfx_PlayFromObject((int *)obj, 0x315);
+            Sfx_PlayFromObject((int *)obj, SFXfend_rob_beep2);
         }
     }
 
@@ -1967,7 +1976,7 @@ void Lamp_update(int obj)
     distance = Vec_distance((void *)((int)Obj_GetPlayerObject() + 0x18), (void *)(obj + 0x18));
     if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) == 0) {
         if (distance < lbl_803E5980) {
-            Sfx_PlayFromObject((int *)obj, 0x72);
+            Sfx_PlayFromObject((int *)obj, SFXmn_eggylaugh216);
         }
     } else if (distance >= lbl_803E5980) {
         Sfx_StopObjectChannel((int *)obj, 0x40);
@@ -2038,7 +2047,7 @@ void SB_CageKyte_update(int obj)
     if (*state <= 0) {
         randomGetRange(0, 10);
         if ((u32)GameBit_Get(0xa71) == 0u) {
-            Sfx_PlayFromObject((int *)obj, 0x316);
+            Sfx_PlayFromObject((int *)obj, SFXfend_rob_beep3);
         }
         *state = (s16)randomGetRange(400, 600);
     }
@@ -2077,7 +2086,7 @@ void SB_CloudBall_hitDetect(int *obj)
     if ((void *)target == NULL) return;
     if (*(f32 *)((char *)state + 0x20) != lbl_803E58EC) return;
     if (*(s16 *)((char *)target + 0x46) == 142) {
-        Sfx_PlayFromObject(obj, 54);
+        Sfx_PlayFromObject(obj, SFXen_rockshat16);
     }
     params = *(int **)((char *)obj + 0x54);
     *(s16 *)((char *)params + 0x60) = (s16)(*(s16 *)((char *)params + 0x60) & ~1);
@@ -2352,7 +2361,7 @@ void SB_KyteCage_update(int obj)
         }
     }
     if (ObjAnim_AdvanceCurrentMove(obj, lbl_803E5918, timeDelta, 0) != 0) {
-        Sfx_PlayFromObject((int *)obj, 0x315);
+        Sfx_PlayFromObject((int *)obj, SFXfend_rob_beep2);
     }
 }
 #pragma peephole reset
@@ -2394,8 +2403,8 @@ void SB_MiniFire_init(int obj)
         lbl_803DC098 = 1;
     }
     Resource_Release(resource);
-    Sfx_PlayFromObject((int *)obj, 53);
-    Sfx_PlayFromObject((int *)obj, 714);
+    Sfx_PlayFromObject((int *)obj, SFXen_ripefruit11);
+    Sfx_PlayFromObject((int *)obj, SFXbaddie_crater_call);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2516,7 +2525,7 @@ void SB_ShipGunBroke_update(int* obj)
 {
     int* p = *(int**)((char*)obj + 76);
     if ((u32)GameBit_Get(*(s16*)((char*)p + 30)) != 0u) {
-        Sfx_PlayFromObject(obj, 52);
+        Sfx_PlayFromObject(obj, SFXen_nlite1_c);
     }
 }
 #pragma peephole reset
