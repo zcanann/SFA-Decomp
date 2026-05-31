@@ -1,6 +1,11 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_141.h"
 
+#define SFXen_statue_wave 0x56
+#define SFXen_waterblock_wave 0x57
+#define SFXmn_craterspit11 0x66
+#define SFXmn_dimbos26 0x68
+#define SFXwp_iceywindlp16 0x16b
 
 #pragma peephole off
 #pragma scheduling off
@@ -153,7 +158,7 @@ void magicdust_update(int param_1)
       sVar2 = *(short *)(iVar8 + 0x278) - (ushort)DAT_803dc070;
       *(short *)(iVar8 + 0x278) = sVar2;
       if (sVar2 < 0) {
-        FUN_80006824((uint)psVar4,0x56);
+        FUN_80006824((uint)psVar4,SFXen_statue_wave);
         uVar7 = randomGetRange(0xf0,300);
         *(short *)(iVar8 + 0x278) = (short)uVar7;
       }
@@ -198,7 +203,7 @@ void magicdust_update(int param_1)
           }
         }
         *(undefined *)(psVar4 + 0x1b) = 1;
-        FUN_80006824((uint)psVar4,0x57);
+        FUN_80006824((uint)psVar4,SFXen_waterblock_wave);
       }
       objMove((float)(*(float *)(psVar4 + 0x12) * lbl_803DC074),
                   (float)(*(float *)(psVar4 + 0x14) * lbl_803DC074),
@@ -226,7 +231,7 @@ void magicdust_update(int param_1)
         float vz = -*(float *)(psVar4 + 0x16);
         float mag = sqrtf(vx*vx + vy*vy + vz*vz);
         if (lbl_803E4164 < mag) {
-          FUN_80006824((uint)psVar4,0x16b);
+          FUN_80006824((uint)psVar4,SFXwp_iceywindlp16);
         }
         if (*(float *)(iVar8 + 0x6c) < lbl_803E4168) {
           *(float *)(psVar4 + 0x12) = -*(float *)(psVar4 + 0x12);
@@ -657,7 +662,7 @@ undefined4 FUN_801743f0(uint param_1,int param_2)
   iVar1 = FUN_80017a98();
   if (((*(ushort *)(param_2 + 0x100) & 0x80) == 0) && (uVar2 = FUN_80294bd8(iVar1,10), uVar2 == 0))
   {
-    FUN_80006824(param_1,0x66);
+    FUN_80006824(param_1,SFXmn_craterspit11);
     *(ushort *)(param_2 + 0x100) = *(ushort *)(param_2 + 0x100) | 2;
     if ((*(ushort *)(param_2 + 0x100) & 4) == 0) {
       fn_80174BFC();
@@ -668,7 +673,7 @@ undefined4 FUN_801743f0(uint param_1,int param_2)
       *(float *)(param_1 + 0xc) = (float)((double)*(float *)(iVar3 + 8) - DOUBLE_803e41c8);
       *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(iVar3 + 0xc);
       *(float *)(param_1 + 0x14) = (float)(DOUBLE_803e41d0 + (double)*(float *)(iVar3 + 0x10));
-      FUN_80006824(param_1,0x68);
+      FUN_80006824(param_1,SFXmn_dimbos26);
     }
     uVar2 = GameBit_Get(0xa1a);
     if (uVar2 != 0) {
