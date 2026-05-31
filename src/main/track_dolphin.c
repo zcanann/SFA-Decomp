@@ -682,6 +682,7 @@ extern u8 lbl_803967F0[];
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void setupToRenderMapBlock(int *block, void *posMtx) {
     f32 out[12];
     f32 tmp[12];
@@ -701,8 +702,79 @@ void setupToRenderMapBlock(int *block, void *posMtx) {
     GXSetArray(13, *(void **)((char *)block + 0x60), 4);
     GXSetArray(14, *(void **)((char *)block + 0x60), 4);
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *Camera_GetViewMatrix(void);
+extern void modelRenderInstrsState_init(int *state, int ptr, int a, int b);
+extern int mapBlockRender_setShader(char a, int *obj, int *state);
+extern void mapBlockRender_callList(int a, int b, int *obj, int shader, int *state, f32 *m);
+
+void renderMapBlock(int *obj, u8 type)
+{
+    int state[5];
+    f32 m[12];
+    int ptr;
+    int count;
+    int shader = 0;
+    int flag = 0;
+    int done;
+    void *viewMtx;
+
+    if (type == 1) {
+        ptr = *(int *)((char *)obj + 0x7c);
+        count = *(u16 *)((char *)obj + 0x86);
+    } else if (type == 2) {
+        ptr = *(int *)((char *)obj + 0x80);
+        count = *(u16 *)((char *)obj + 0x88);
+    } else {
+        ptr = *(int *)((char *)obj + 0x78);
+        count = *(u16 *)((char *)obj + 0x84);
+        flag = 1;
+    }
+    if ((u16)count == 0) return;
+    viewMtx = Camera_GetViewMatrix();
+    PSMTXConcat(viewMtx, (char *)obj + 0xc, m);
+    if (flag != 0)
+        setupToRenderMapBlock(obj, m);
+    modelRenderInstrsState_init(state, ptr, count << 3, count << 3);
+    done = 0;
+    while (!done) {
+        int pos = state[4];
+        u8 *bp = (u8 *)(state[0] + (pos >> 3));
+        int word = bp[0] | (bp[1] << 8) | (bp[2] << 16);
+        int op;
+        state[4] = pos + 4;
+        op = (word >> (pos & 7)) & 0xf;
+        switch (op) {
+        case 3:
+            mapBlockRender_setVtxDcrs((char)flag, (int)obj, shader, state);
+            break;
+        case 1:
+            shader = mapBlockRender_setShader((char)flag, obj, state);
+            break;
+        case 2:
+            mapBlockRender_callList(flag, 0, obj, shader, state, m);
+            break;
+        case 5:
+            done = 1;
+            break;
+        case 4: {
+            int pos2 = state[4];
+            u8 *bp2 = (u8 *)(state[0] + (pos2 >> 3));
+            int word2 = bp2[0] | (bp2[1] << 8) | (bp2[2] << 16);
+            int cnt;
+            int j;
+            state[4] = pos2 + 4;
+            cnt = (word2 >> (pos2 & 7)) & 0xf;
+            for (j = 0; j < cnt; j++)
+                state[4] += 8;
+            break;
+        }
+        }
+    }
+}
 
 /*
  * --INFO--
