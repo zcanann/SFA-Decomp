@@ -1,6 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/creator1C4.h"
 
+#define SFXmn_sml_trex_fstep 126
+#define SFXsp_lf_mutter4 265
+#define SFXwp_swtst1_c 359
+
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
 extern undefined4 FUN_800067c0();
@@ -92,27 +96,27 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
         (((uVar7 & 0xff) == 0 || ((uVar8 & 0xff) == 0)))) || ((uVar9 & 0xff) == 0)) {
       if (((*(byte *)(iVar13 + 0x15) >> 6 & 1) == 0) && ((uVar4 & 0xff) != 0)) {
         *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xbf | 0x40;
-        FUN_80006824(0,0x109);
+        FUN_80006824(0,SFXsp_lf_mutter4);
       }
       else if (((*(byte *)(iVar13 + 0x15) >> 5 & 1) == 0) && ((uVar5 & 0xff) != 0)) {
         *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xdf | 0x20;
-        FUN_80006824(0,0x109);
+        FUN_80006824(0,SFXsp_lf_mutter4);
       }
       else if (((*(byte *)(iVar13 + 0x15) >> 4 & 1) == 0) && ((uVar6 & 0xff) != 0)) {
         *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xef | 0x10;
-        FUN_80006824(0,0x109);
+        FUN_80006824(0,SFXsp_lf_mutter4);
       }
       else if (((*(byte *)(iVar13 + 0x15) >> 3 & 1) == 0) && ((uVar7 & 0xff) != 0)) {
         *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xf7 | 8;
-        FUN_80006824(0,0x109);
+        FUN_80006824(0,SFXsp_lf_mutter4);
       }
       else if (((*(byte *)(iVar13 + 0x15) >> 2 & 1) == 0) && ((uVar8 & 0xff) != 0)) {
         *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xfb | 4;
-        FUN_80006824(0,0x109);
+        FUN_80006824(0,SFXsp_lf_mutter4);
       }
       else if (((*(byte *)(iVar13 + 0x15) >> 1 & 1) == 0) && ((uVar9 & 0xff) != 0)) {
         *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xfd | 2;
-        FUN_80006824(0,0x109);
+        FUN_80006824(0,SFXsp_lf_mutter4);
       }
     }
     if ((*(int *)(puVar2 + 0x7a) != 0) &&
@@ -197,7 +201,7 @@ void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefin
           FUN_80017698(0xdd2,0);
           *(float *)(iVar13 + 4) = lbl_803E5CD8;
           (*(code *)(*DAT_803dd6cc + 8))(0x1e,1);
-          FUN_80006824(0,0x7e);
+          FUN_80006824(0,SFXmn_sml_trex_fstep);
         }
         else {
           bVar12 = FUN_80006b44();
@@ -363,7 +367,7 @@ void gpsh_objcreator_update(int *obj) {
     *(f32*)sub = *(f32*)sub - timeDelta;
     hitDetectFn_80097070(obj, 2, 1, 1, 0, lbl_803E5054);
     if (*(f32*)sub > lbl_803E5050) return;
-    Sfx_PlayFromObjectLimited(0, 0x167, 1);
+    Sfx_PlayFromObjectLimited(0, SFXwp_swtst1_c, 1);
     setup = Obj_AllocObjectSetup(0x24, sub[4] + 0x1f4);
     sub[5] = (u8)(sub[5] | 0x80);
     *(u8*)((char*)setup + 7) = 0xff;
