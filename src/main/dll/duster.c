@@ -2,6 +2,24 @@
 #include "main/dll/duster.h"
 #include "main/objanim.h"
 
+#define SFXen_blkscrp6 0x22
+#define SFXwatery_bubble2 0x244
+#define SFXfox_fightbreath1 0x24b
+#define SFXfox_fightbreath2 0x24c
+#define SFXfox_fightbreath3 0x24d
+#define SFXfox_fightbreath4 0x24e
+#define SFXfox_roll1 0x24f
+#define SFXfox_roll2 0x250
+#define SFXfox_roll3 0x251
+#define SFXfox_roll4 0x252
+#define SFXfox_runbreath1 0x253
+#define SFXfox_runbreath2 0x254
+#define SFXfox_climbgrunt1 0x258
+#define SFXfox_climbgrunt2 0x259
+#define SFXfox_cough3 0x260
+#define SFXfox_cough4 0x261
+#define SFXfoxcom_decoy 0x262
+
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
@@ -283,7 +301,7 @@ void rachnopUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int pa
   }
   else if (param_4 != 0x11) {
     *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 8;
-    Sfx_PlayFromObject(param_1,0x254);
+    Sfx_PlayFromObject(param_1,SFXfox_runbreath2);
     *(undefined2 *)(param_2 + 0x2b0) = 0;
   }
   return;
@@ -315,7 +333,7 @@ void fn_801557D4(int *param_9,int param_10)
       *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) & ~0x10000;
     }
     if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
-      Sfx_PlayFromObject((uint)param_9,0x253);
+      Sfx_PlayFromObject((uint)param_9,SFXfox_runbreath1);
       fn_8014D08C((int)param_9,param_10,2,lbl_803E2A04,0,0);
     }
   }
@@ -347,7 +365,7 @@ void fn_80155884(int *param_9,int param_10)
     fn_80154FB4((double)lbl_803E2A30,(short *)param_9,param_10,0x19);
     if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
       fn_8014D08C((int)param_9,param_10,0,lbl_803E2A30,0,0);
-      Sfx_PlayFromObject((uint)param_9,0x252);
+      Sfx_PlayFromObject((uint)param_9,SFXfox_roll4);
     }
   }
   else {
@@ -393,7 +411,7 @@ void fn_80155948(int *param_9,int param_10)
     if (((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) ||
        ((local_18[0] < 0x5dc && (*(short *)(param_9 + 0x28) != 1)))) {
       if (local_18[0] < 0x5dc) {
-        Sfx_PlayFromObject((uint)param_9,0x251);
+        Sfx_PlayFromObject((uint)param_9,SFXfox_roll3);
         fn_8014D08C((int)param_9,param_10,1,lbl_803E2A30,0,0);
       }
       else {
@@ -522,7 +540,7 @@ void pollenFn_80155b10(uint param_9,int param_10)
       *(float *)(iVar2 + 0x28) = local_40;
       *(float *)(iVar2 + 0x2c) = local_44;
       *(uint *)(iVar2 + 0xc4) = param_9;
-      Sfx_PlayFromObject(param_9,0x259);
+      Sfx_PlayFromObject(param_9,SFXfox_climbgrunt2);
     }
   }
   return;
@@ -592,19 +610,19 @@ void baddieUpdateWhileFrozen_80155e10(uint param_9,int param_10,undefined4 param
   else if ((*(short *)(param_9 + 0xa0) == 5) || (*(short *)(param_9 + 0xa0) == 4)) {
     if (param_14 > (int)(uint)*(ushort *)(param_10 + 0x2b0)) {
       *(undefined2 *)(param_10 + 0x2b0) = 0;
-      Sfx_PlayFromObject(param_9,600);
-      Sfx_PlayFromObject(param_9,0x22);
+      Sfx_PlayFromObject(param_9,SFXfox_climbgrunt1);
+      Sfx_PlayFromObject(param_9,SFXen_blkscrp6);
     }
     else {
       *(ushort *)(param_10 + 0x2b0) = *(ushort *)(param_10 + 0x2b0) - param_14;
-      Sfx_PlayFromObject(param_9,0x24f);
-      Sfx_PlayFromObject(param_9,0x22);
+      Sfx_PlayFromObject(param_9,SFXfox_roll1);
+      Sfx_PlayFromObject(param_9,SFXen_blkscrp6);
     }
     *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) | 8;
   }
   else {
     *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) | 0x10;
-    Sfx_PlayFromObject(param_9,0x250);
+    Sfx_PlayFromObject(param_9,SFXfox_roll2);
   }
   return;
 }
@@ -679,7 +697,7 @@ void fn_80156010(uint param_9,int param_10)
     }
     else if ((sVar2 == 5) && (bVar1)) {
       fn_8014D08C(param_9,param_10,6,lbl_803E2A54,0,0);
-      Sfx_PlayFromObject(param_9,0x24c);
+      Sfx_PlayFromObject(param_9,SFXfox_fightbreath2);
     }
     else if (sVar2 == 6) {
       fn_8014D08C(param_9,param_10,2,lbl_803E2A54,0,0);
@@ -687,7 +705,7 @@ void fn_80156010(uint param_9,int param_10)
     }
     else if (((sVar2 == 2) && (bVar1)) && ((*(uint *)(param_10 + 0x2dc) & 0x4000000) != 0)) {
       fn_8014D08C(param_9,param_10,4,lbl_803E2A54,0,0);
-      dVar3 = (double)Sfx_PlayFromObject(param_9,0x24b);
+      dVar3 = (double)Sfx_PlayFromObject(param_9,SFXfox_fightbreath1);
     }
   }
   timeOfDayFn_80155cf8(param_9,param_10);
@@ -751,7 +769,7 @@ void wbUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int param_4
       *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 0x20;
     }
     else {
-      Sfx_PlayFromObject(param_1,0x260);
+      Sfx_PlayFromObject(param_1,SFXfox_cough3);
       *(undefined2 *)(param_2 + 0x2b0) = 0;
       *(uint *)(param_2 + 0x2e4) = *(uint *)(param_2 + 0x2e4) | 0x20;
       *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 8;
@@ -788,7 +806,7 @@ void fn_8015625C(ushort *param_9,int param_10)
   uVar4 = 0;
   ObjHits_SetHitVolumeSlot((int)param_9,10,1,0);
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
-    Sfx_PlayFromObject((uint)param_9,0x261);
+    Sfx_PlayFromObject((uint)param_9,SFXfox_cough4);
   }
   *(float *)(param_10 + 0x328) = *(float *)(param_10 + 0x328) - lbl_803DC074;
   if (*(float *)(param_10 + 0x328) <= lbl_803E2A98) {
@@ -802,7 +820,7 @@ void fn_8015625C(ushort *param_9,int param_10)
       *(float *)(param_10 + 0x328) =
            (float)(int)uVar2;
     }
-    Sfx_PlayFromObject((uint)param_9,0x262);
+    Sfx_PlayFromObject((uint)param_9,SFXfoxcom_decoy);
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
     ObjAnim_SetCurrentMove((int)param_9,3,lbl_803E2A98,(uint)*(byte *)(param_10 + 0x323));
@@ -886,7 +904,7 @@ void fn_8015652C(ushort *param_9,int param_10)
   *(undefined *)(*(int *)(param_9 + 0x2a) + 0x70) = 0;
   ObjHits_SetHitVolumeSlot((int)param_9,10,1,0);
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
-    Sfx_PlayFromObject((uint)param_9,0x261);
+    Sfx_PlayFromObject((uint)param_9,SFXfox_cough4);
   }
   *(float *)(param_10 + 0x328) = *(float *)(param_10 + 0x328) - lbl_803DC074;
   if (*(float *)(param_10 + 0x328) <= lbl_803E2A98) {
@@ -898,7 +916,7 @@ void fn_8015652C(ushort *param_9,int param_10)
       uVar2 = randomGetRange(600,0x352);
       *(float *)(param_10 + 0x328) = (float)(int)uVar2;
     }
-    Sfx_PlayFromObject((uint)param_9,0x262);
+    Sfx_PlayFromObject((uint)param_9,SFXfoxcom_decoy);
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
     ObjAnim_SetCurrentMove((int)param_9,0,lbl_803E2A98,(uint)*(byte *)(param_10 + 0x323));
@@ -1023,21 +1041,21 @@ void fn_80156950(uint param_1,int param_2)
   switch (*(short *)(param_1 + 0xa0)) {
   case 5:
     if (*(ushort *)(param_2 + 0x2f8) != 0) {
-      Sfx_PlayFromObject(param_1,0x24d);
+      Sfx_PlayFromObject(param_1,SFXfox_fightbreath3);
     }
     break;
   case 6:
     if (*(ushort *)(param_2 + 0x2f8) != 0) {
-      Sfx_PlayFromObject(param_1,0x24d);
+      Sfx_PlayFromObject(param_1,SFXfox_fightbreath3);
     }
     break;
   case 7:
     if (*(ushort *)(param_2 + 0x2f8) != 0) {
       if (*(float *)(param_1 + 0x98) >= lbl_803E2AF8) {
-        Sfx_PlayFromObject(param_1,0x24c);
+        Sfx_PlayFromObject(param_1,SFXfox_fightbreath2);
       }
       else {
-        Sfx_PlayFromObject(param_1,0x24d);
+        Sfx_PlayFromObject(param_1,SFXfox_fightbreath3);
       }
     }
     break;
@@ -1045,14 +1063,14 @@ void fn_80156950(uint param_1,int param_2)
     if (*(ushort *)(param_2 + 0x2f8) != 0) {
       if (*(float *)(param_1 + 0x98) >= lbl_803E2AFC) {
         if (*(float *)(param_1 + 0x98) >= lbl_803E2B00) {
-          Sfx_PlayFromObject(param_1,0x24c);
+          Sfx_PlayFromObject(param_1,SFXfox_fightbreath2);
         }
         else {
-          Sfx_PlayFromObject(param_1,0x24e);
+          Sfx_PlayFromObject(param_1,SFXfox_fightbreath4);
         }
       }
       else {
-        Sfx_PlayFromObject(param_1,0x24b);
+        Sfx_PlayFromObject(param_1,SFXfox_fightbreath1);
       }
     }
     break;
@@ -1084,13 +1102,13 @@ void mutatedEbaUpdateWhileFrozen(uint param_9,int param_10,undefined4 param_11,i
     else {
       sVar1 = *(short *)(param_9 + 0xa0);
       if ((((sVar1 == 0) || (sVar1 == 1)) || (sVar1 == 3)) || (sVar1 == 4)) {
-        Sfx_PlayFromObject(param_9,0x250);
+        Sfx_PlayFromObject(param_9,SFXfox_roll2);
         *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) | 0x10;
       }
       else {
         fn_8014D08C(param_9,param_10,4,lbl_803E2B04,0,0);
         *(undefined *)(param_10 + 0x33a) = 0;
-        Sfx_PlayFromObject(param_9,0x24f);
+        Sfx_PlayFromObject(param_9,SFXfox_roll1);
         *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) | 8;
       }
     }
@@ -1206,7 +1224,7 @@ void hoodedZyckUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int
   }
   else {
     *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 8;
-    Sfx_PlayFromObject(param_1,0x244);
+    Sfx_PlayFromObject(param_1,SFXwatery_bubble2);
     *(undefined2 *)(param_2 + 0x2b0) = 0;
   }
   return;
