@@ -1,6 +1,14 @@
 #include "ghidra_import.h"
 #include "main/dll/seqObj11E.h"
 
+#define SFXen_cavedirt22 35
+#define SFXsp_literun114 0xe7
+#define SFXsp_literun115 232
+#define SFXsp_literun116 0xe9
+#define SFXar_laser216 0x18d
+#define SFXfox_cough1 584
+#define SFXspirit_voice2 0x31b
+
 extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();
@@ -192,8 +200,8 @@ void fn_80152440(int obj, int p, int p3, int msg)
   sub = *(int *)(obj + 0x4c);
   if (msg == 16) return;
   if (msg == 17) return;
-  Sfx_PlayFromObject(obj, 35);
-  Sfx_PlayFromObject(obj, 795);
+  Sfx_PlayFromObject(obj, SFXen_cavedirt22);
+  Sfx_PlayFromObject(obj, SFXspirit_voice2);
   *(u32 *)(p + 0x2e8) |= 0x8;
   *(f32 *)(p + 0x32c) = (f32)(u32)(u16)*(s16 *)(sub + 0x2c);
   fn_8014D08C(obj, p, 1, 0, 0, lbl_803E2810);
@@ -251,7 +259,7 @@ int fn_80152370(int obj, int p2)
  */
 void FUN_801523bc(uint param_1,int param_2)
 {
-  FUN_80006824(param_1,0x23);
+  FUN_80006824(param_1,SFXen_cavedirt22);
   *(uint *)(param_2 + 0x2e8) = *(uint *)(param_2 + 0x2e8) | 0x10;
   return;
 }
@@ -469,7 +477,7 @@ void fn_80152A94(int obj, int p)
   *(f32 *)(p + 0x31c) = fz;
   *(f32 *)(p + 0x32c) = lbl_803E2814;
   *(f32 *)(obj + 0xa8) = lbl_803E2860;
-  Sfx_AddLoopedObjectSound(obj, 232);
+  Sfx_AddLoopedObjectSound(obj, SFXsp_literun115);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -482,7 +490,7 @@ void fn_80152B2C(int obj, int p, int param3, int msg)
 
   if (msg == 16) return;
   if (msg == 17) return;
-  Sfx_PlayFromObject(obj, 584);
+  Sfx_PlayFromObject(obj, SFXfox_cough1);
   *(s16 *)(p + 0x2b0) = 0;
   *(u32 *)(p + 0x2e4) |= 0x20;
   *(u32 *)(p + 0x2e8) |= 0x8;
@@ -513,8 +521,8 @@ void FUN_80152b8c(undefined8 param_1,double param_2,double param_3,undefined8 pa
   
   iVar2 = *(int *)(param_9 + 0x4c);
   if ((param_12 != 0x10) && (param_12 != 0x11)) {
-    FUN_80006824(param_9,0x23);
-    FUN_80006824(param_9,0x31b);
+    FUN_80006824(param_9,SFXen_cavedirt22);
+    FUN_80006824(param_9,SFXspirit_voice2);
     *(uint *)(param_10 + 0x2e8) = *(uint *)(param_10 + 0x2e8) | 8;
     *(float *)(param_10 + 0x32c) =
          (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar2 + 0x2c)) - DOUBLE_803e34b0);
@@ -602,7 +610,7 @@ void FUN_80152cf0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     else {
       bVar8 = FUN_800067f8((int)psVar1,0x18d);
       if (!bVar8) {
-        FUN_80006824((uint)psVar1,0x18d);
+        FUN_80006824((uint)psVar1,SFXar_laser216);
       }
       *(undefined *)((int)puVar10 + 0x33a) = 1;
     }
@@ -653,7 +661,7 @@ void FUN_80152cf0(undefined8 param_1,double param_2,double param_3,undefined8 pa
     else {
       bVar8 = FUN_800067f8((int)psVar1,0x18d);
       if (!bVar8) {
-        FUN_80006824((uint)psVar1,0x18d);
+        FUN_80006824((uint)psVar1,SFXar_laser216);
       }
       *(undefined *)((int)puVar10 + 0x33a) = 1;
     }
@@ -692,14 +700,14 @@ void FUN_80152cf0(undefined8 param_1,double param_2,double param_3,undefined8 pa
       ObjHits_RecordObjectHit(iVar2,(int)psVar1,'\x16',2,0);
       FUN_80152a30(dVar13,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)psVar1,0x3b2)
       ;
-      FUN_80006824((uint)psVar1,0xe9);
+      FUN_80006824((uint)psVar1,SFXsp_literun116);
       puVar10[0xcb] = lbl_803DC91C;
     }
     dVar13 = (double)lbl_803E34E4;
     local_28 = (longlong)(int)(dVar13 * (double)lbl_803DC078);
     uVar3 = randomGetRange(0,(int)(dVar13 * (double)lbl_803DC078));
     if (uVar3 == 0) {
-      dVar13 = (double)FUN_80006824((uint)psVar1,0xe7);
+      dVar13 = (double)FUN_80006824((uint)psVar1,SFXsp_literun114);
     }
     if (*(int *)(psVar1 + 100) == 0) {
       cVar7 = *(char *)(iVar12 + 0x2a);
