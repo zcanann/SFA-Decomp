@@ -634,13 +634,28 @@ extern f32 lbl_803E26C0;
 extern f32 lbl_803E26C4;
 extern f32 lbl_803E26C8;
 extern f32 lbl_803E26CC;
+extern f32 lbl_803E26D0;
+extern f32 lbl_803E26D4;
+extern f32 lbl_803E26D8;
+extern f32 lbl_803E26DC;
+extern f32 lbl_803E26E0;
+extern f32 lbl_803E26E4;
+extern f32 lbl_803E26E8;
+extern f32 lbl_803E26EC;
+extern f32 lbl_803E26F0;
+extern f32 lbl_803E26F4;
+extern f32 lbl_803E26F8;
+extern f32 lbl_803E26FC;
+extern f64 lbl_803E2700;
 extern int lbl_803DBC78;
+extern int lbl_803DBC80;
 extern void *mmAlloc(int size, int heap, int flags);
 extern void *memset(void *dst, int val, u32 n);
 extern int *gRomCurveInterface;
 extern int *gPartfxInterface;
 extern int lbl_803DBC70;
 extern int lbl_803DDA60;
+extern int lbl_803DDA68;
 extern f32 timeDelta;
 extern int Obj_GetPlayerObject(void);
 extern int curveFn_80010320(int curve, f32 t);
@@ -839,6 +854,97 @@ void fn_8014EE8C(int obj, int *state)
     wave = fn_80293E80((lbl_803E26A0 * (f32)(angleAsDouble.value - lbl_803E26A8)) /
                        lbl_803E26A4);
     *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + (s16)(int)(lbl_803E2698 * (lbl_803E269C * wave));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8014F620(int obj, int *state)
+{
+    int curve;
+    int done;
+    int player;
+    f32 step;
+    f32 wave;
+    PressureSwitchIntToDouble angleAsDouble;
+
+    curve = state[0];
+    *(s16 *)((u8 *)state + 0x26) =
+        *(s16 *)((u8 *)state + 0x26) + (int)(lbl_803E26D0 * timeDelta);
+    *(s16 *)(state + 10) = *(s16 *)(state + 10) + (int)(lbl_803E26D4 * timeDelta);
+
+    angleAsDouble.bits =
+        CONCAT44(0x43300000, (s32)*(s16 *)((u8 *)state + 0x26) ^ 0x80000000);
+    wave = fn_80293E80((lbl_803E26DC * (f32)(angleAsDouble.value - lbl_803E2700)) /
+                       lbl_803E26E0);
+    done = curveFn_80010320(curve, *(f32 *)(state + 2) * (lbl_803E26D8 + wave));
+    if (((done != 0) || (*(int *)(curve + 0x10) != lbl_803DDA68)) &&
+        ((*(u8(**)(int))(*gRomCurveInterface + 0x90))(curve) != 0) &&
+        ((*(u8(**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
+             state[0], obj, lbl_803E26E4, &lbl_803DBC80, -1) != 0)) {
+        *(u8 *)((u8 *)state + 0x24) &= 0xfe;
+    }
+    lbl_803DDA68 = *(int *)(curve + 0x10);
+
+    if ((*(u8 *)((u8 *)state + 0x24) & 2) == 0) {
+        *(f32 *)(obj + 0x24) = lbl_803E26E8 * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc)) +
+                               *(f32 *)(obj + 0x24);
+
+        angleAsDouble.bits = CONCAT44(0x43300000, (s32)*(s16 *)(state + 10) ^ 0x80000000);
+        wave = fn_80293E80((lbl_803E26DC * (f32)(angleAsDouble.value - lbl_803E2700)) /
+                           lbl_803E26E0);
+        *(f32 *)(obj + 0x28) =
+            lbl_803E26E8 *
+                ((lbl_803E26F0 * wave + *(f32 *)(curve + 0x6c)) - *(f32 *)(obj + 0x10)) +
+            *(f32 *)(obj + 0x28);
+        *(f32 *)(obj + 0x2c) = lbl_803E26E8 * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14)) +
+                               *(f32 *)(obj + 0x2c);
+    } else {
+        player = state[1];
+        *(f32 *)(obj + 0x24) =
+            lbl_803E26E8 * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc)) +
+            *(f32 *)(obj + 0x24);
+
+        angleAsDouble.bits = CONCAT44(0x43300000, (s32)*(s16 *)(state + 10) ^ 0x80000000);
+        wave = fn_80293E80((lbl_803E26DC * (f32)(angleAsDouble.value - lbl_803E2700)) /
+                           lbl_803E26E0);
+        *(f32 *)(obj + 0x28) =
+            lbl_803E26E8 *
+                ((lbl_803E26F0 * wave + (lbl_803E26EC + *(f32 *)(player + 0x10))) -
+                 *(f32 *)(obj + 0x10)) +
+            *(f32 *)(obj + 0x28);
+        *(f32 *)(obj + 0x2c) =
+            lbl_803E26E8 * (*(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) +
+            *(f32 *)(obj + 0x2c);
+    }
+
+    step = lbl_803E26F4;
+    *(f32 *)(obj + 0x24) *= step;
+    *(f32 *)(obj + 0x28) *= step;
+    *(f32 *)(obj + 0x2c) *= step;
+
+    if (lbl_803E26F8 < *(f32 *)(obj + 0x24)) {
+        *(f32 *)(obj + 0x24) = lbl_803E26F8;
+    }
+    if (lbl_803E26F8 < *(f32 *)(obj + 0x28)) {
+        *(f32 *)(obj + 0x28) = lbl_803E26F8;
+    }
+    if (lbl_803E26F8 < *(f32 *)(obj + 0x2c)) {
+        *(f32 *)(obj + 0x2c) = lbl_803E26F8;
+    }
+    if (*(f32 *)(obj + 0x24) < lbl_803E26FC) {
+        *(f32 *)(obj + 0x24) = lbl_803E26FC;
+    }
+    if (*(f32 *)(obj + 0x28) < lbl_803E26FC) {
+        *(f32 *)(obj + 0x28) = lbl_803E26FC;
+    }
+    if (*(f32 *)(obj + 0x2c) < lbl_803E26FC) {
+        *(f32 *)(obj + 0x2c) = lbl_803E26FC;
+    }
+
+    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
+            *(f32 *)(obj + 0x2c) * timeDelta);
 }
 #pragma peephole reset
 #pragma scheduling reset
