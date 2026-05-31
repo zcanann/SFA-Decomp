@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_1CA.h"
 
+#define SFXmn_eggylaugh216 114
+#define SFXmn_sml_trex_snap1 128
+
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();
 extern bool FUN_800067f0();
@@ -86,7 +89,7 @@ void dll_197_init(uint param_1)
     }
   }
   else if ((dVar6 < (double)lbl_803E5DD0) && (*(char *)(puVar5 + 3) != '\0')) {
-    FUN_80006824(param_1,0x72);
+    FUN_80006824(param_1,SFXmn_eggylaugh216);
   }
   FUN_80057690(param_1);
   if (0 < *(short *)(puVar5 + 2)) {
@@ -119,7 +122,7 @@ void dll_197_init(uint param_1)
     if (((*(char *)(puVar5 + 3) != '\0') && (*(short *)(puVar5 + 1) < 1)) &&
        (*(char *)((int)puVar5 + 0xd) != '\0')) {
       *(undefined *)((int)puVar5 + 0xd) = 0;
-      FUN_80006824(param_1,0x80);
+      FUN_80006824(param_1,SFXmn_sml_trex_snap1);
     }
     if (*(char *)(puVar5 + 3) != *(char *)((int)puVar5 + 0xe)) {
       if (*(char *)(puVar5 + 3) == '\0') {

@@ -1,6 +1,9 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_1D0.h"
 
+#define SFXmn_eggylaugh216 114
+#define SFXmn_sml_trex_snap1 128
+
 extern void *Resource_Acquire(int id, int mode);
 extern void Resource_Release(void *handle);
 extern void Sfx_PlayFromObject(void *obj, int sfxId);
@@ -58,7 +61,7 @@ void dll_19E_update(void *obj)
   resourceArgs[2] = lbl_802C23D8[2];
   resourceArgs[3] = lbl_802C23D8[3];
 
-  Sfx_PlayFromObject(obj, 0x72);
+  Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
   objUpdateOpacity(obj);
   if (state->settleTimer > 0) {
     *(u16 *)&state->settleTimer = state->settleTimer - (u16)framesThisStep;
@@ -93,7 +96,7 @@ void dll_19E_update(void *obj)
 
     if ((state->active != 0) && (state->delayTimer <= 0) && (state->needsOpenSfx != 0)) {
       state->needsOpenSfx = 0;
-      Sfx_PlayFromObject(obj, 0x80);
+      Sfx_PlayFromObject(obj, SFXmn_sml_trex_snap1);
     }
 
     if (state->active != state->previousActive) {
