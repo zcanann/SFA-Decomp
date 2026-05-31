@@ -1,6 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/mmshrine/shrine1C2.h"
 
+#define SFXmn_sml_trex_fstep 0x7e
+#define SFXwp_mflop7_c 0x16d
+#define SFXwp_roboalarm 0x16f
+#define SFXwp_fox_kick1 0x170
 
 #pragma peephole off
 #pragma scheduling off
@@ -215,7 +219,7 @@ void ecsh_shrine_update(ushort *param_9)
         *(undefined *)(iVar12 + 0x2f) = 2;
         *(float *)(iVar12 + 8) = lbl_803E5C68;
         *(undefined2 *)(iVar12 + 0x24) = 6;
-        FUN_80006824((uint)param_9,0x16f);
+        FUN_80006824((uint)param_9,SFXwp_roboalarm);
         *(float *)(iVar12 + 4) = lbl_803E5C64;
         FUN_80017698(0xb9d,1);
         (*(code *)(*DAT_803dd6cc + 0xc))(0x78,1);
@@ -391,7 +395,7 @@ void ecsh_shrine_update(ushort *param_9)
             (*(code *)(*DAT_803dd6cc + 8))(0x1e,1);
             *(float *)(iVar12 + 8) = lbl_803E5C80;
             *(undefined2 *)(iVar12 + 0x24) = 7;
-            FUN_80006824((uint)param_9,0x16f);
+            FUN_80006824((uint)param_9,SFXwp_roboalarm);
             *(undefined *)(iVar12 + 0x2f) = 10;
           }
           else if (*(short *)(iVar12 + 0x26) == 1) {
@@ -404,7 +408,7 @@ void ecsh_shrine_update(ushort *param_9)
               *(float *)(iVar12 + 4) = lbl_803E5C48;
               *(undefined2 *)(iVar12 + 0x22) = 7;
               *(undefined2 *)(iVar12 + 0x26) = 0xffff;
-              FUN_80006824((uint)param_9,0x170);
+              FUN_80006824((uint)param_9,SFXwp_fox_kick1);
               (*(code *)(*DAT_803dd6d4 + 0x48))(2,param_9,0xffffffff);
             }
             else if (*(char *)(iVar12 + 0x2f) == 0x04) {
@@ -416,7 +420,7 @@ void ecsh_shrine_update(ushort *param_9)
               *(float *)(iVar12 + 4) = lbl_803E5C48;
               *(undefined2 *)(iVar12 + 0x22) = 9;
               *(undefined2 *)(iVar12 + 0x26) = 0xffff;
-              FUN_80006824((uint)param_9,0x170);
+              FUN_80006824((uint)param_9,SFXwp_fox_kick1);
               (*(code *)(*DAT_803dd6d4 + 0x48))(2,param_9,0xffffffff);
             }
             else {
@@ -426,8 +430,8 @@ void ecsh_shrine_update(ushort *param_9)
               *(undefined2 *)(iVar12 + 0x24) = 3;
               *(undefined2 *)(iVar12 + 0x26) = 0;
               *(undefined2 *)(iVar12 + 0x24) = 7;
-              FUN_80006824((uint)param_9,0x7e);
-              FUN_80006824((uint)param_9,0x16f);
+              FUN_80006824((uint)param_9,SFXmn_sml_trex_fstep);
+              FUN_80006824((uint)param_9,SFXwp_roboalarm);
             }
           }
           else {
@@ -437,7 +441,7 @@ void ecsh_shrine_update(ushort *param_9)
               (*(code *)(*DAT_803dd6cc + 8))(0x1e,1);
               *(float *)(iVar12 + 8) = lbl_803E5C80;
               *(undefined2 *)(iVar12 + 0x24) = 7;
-              FUN_80006824((uint)param_9,0x16f);
+              FUN_80006824((uint)param_9,SFXwp_roboalarm);
             }
           }
           break;
@@ -594,7 +598,7 @@ void FUN_801c6e04(undefined8 param_1,double param_2,double param_3,undefined8 pa
     in_r8 = 0;
     in_r9 = *piVar2;
     (*(code *)(in_r9 + 4))(param_9,1,0,1,0xffffffff);
-    param_1 = FUN_80006824((uint)param_9,0x16d);
+    param_1 = FUN_80006824((uint)param_9,SFXwp_mflop7_c);
     FUN_80006b0c((undefined *)piVar2);
     psVar4[1] = 1;
     *(undefined4 *)(param_9 + 0x7c) = 1;
