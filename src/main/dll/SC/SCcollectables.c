@@ -2,6 +2,9 @@
 #include "main/mapEvent.h"
 #include "main/dll/SC/SCcollectables.h"
 
+#define SFXbaddie_haga_death 700
+#define SFXnewtricky_01o 756
+
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006bb4();
@@ -191,7 +194,7 @@ void FUN_801d7034(void)
       iVar4 = 2;
       break;
     case 9:
-      FUN_80006824((uint)psVar1,0x2f4);
+      FUN_80006824((uint)psVar1,SFXnewtricky_01o);
     }
     puVar3 = puVar3 + 1;
   }
@@ -418,9 +421,9 @@ void warpstone_hitDetect(int obj)
         pos[2] += playerMapOffsetZ;
         objLightFn_8009a1dc(obj, lbl_803E54A0, p, 1, 0);
         if (randFn_80080100(3) != 0) {
-            Sfx_PlayFromObject(obj, 700);
+            Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
         } else {
-            Sfx_PlayFromObject(obj, 700);
+            Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
         }
         objAudioFn_800393f8(obj, state + 5, 171, -1280, -1, 0);
     }
