@@ -1,5 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXbaddie_eba_death 0x2a5
+
 #pragma peephole on
 #pragma scheduling on
 int arwarwingbo_getExtraSize(void) { return 0xc; }
@@ -103,7 +105,7 @@ void arwarwingbo_update(int obj)
         if (*(f32 *)(state + 0) <= lbl_803E7044) {
             state = *(int *)(obj + 0xb8);
             fn_8022D4F8(getArwing());
-            Sfx_PlayFromObject(obj, 0x2a5);
+            Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
             *(f32 *)(state + 8) = lbl_803E7040;
             *(f32 *)(state + 0) = lbl_803E7044;
             *(u8 *)(obj + 0x36) = 0;
@@ -123,7 +125,7 @@ void arwarwingbo_update(int obj)
             (getButtonsJustPressed(0) & 0x200)) {
             state = *(int *)(obj + 0xb8);
             fn_8022D4F8(getArwing());
-            Sfx_PlayFromObject(obj, 0x2a5);
+            Sfx_PlayFromObject(obj, SFXbaddie_eba_death);
             *(f32 *)(state + 8) = lbl_803E7040;
             *(f32 *)(state + 0) = lbl_803E7044;
             *(u8 *)(obj + 0x36) = 0;

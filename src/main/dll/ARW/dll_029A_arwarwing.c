@@ -1,6 +1,13 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/mapEventTypes.h"
 
+#define SFXbaddie_rach_bite 0x2a0
+#define SFXbaddie_rach_call1 0x2a1
+#define SFXbaddie_rach_call2 0x2a2
+#define SFXbaddie_vambat_death 0x2ac
+#define SFXbaddie_eba_bigswipe 0x2b4
+#define SFXbaddie_eggsnatch_movelp 0x2c0
+
 #pragma peephole on
 #pragma scheduling on
 int getArwing(void) { return lbl_803DDD88; }
@@ -574,11 +581,11 @@ void arwarwing_spawnLaserShot(int obj, int state, int side, int level, int linkE
     if (proj == 0)
         return;
     if (level == 0) {
-        Sfx_PlayFromObject(proj, 0x2a1);
+        Sfx_PlayFromObject(proj, SFXbaddie_rach_call1);
     } else if (level == 1) {
-        Sfx_PlayFromObject(proj, 0x2a2);
+        Sfx_PlayFromObject(proj, SFXbaddie_rach_call2);
     } else {
-        Sfx_PlayFromObject(proj, 0x2b4);
+        Sfx_PlayFromObject(proj, SFXbaddie_eba_bigswipe);
         Obj_SetActiveModelIndex(proj, 1);
     }
     if (linkEffect != 0)
@@ -994,7 +1001,7 @@ void fn_8022BE14(int obj, int state)
         } else if ((s8)*(u8 *)(*(int *)(obj + 0xb8) + 0x468) <= 3) {
             Sfx_KeepAliveLoopedObjectSound(obj, 0x37f);
         }
-        Sfx_PlayFromObject(obj, 0x2a0);
+        Sfx_PlayFromObject(obj, SFXbaddie_rach_bite);
         *(u8 *)(state + 0x339) |= 0x80;
         Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
         *(f32 *)(state + 0x328) = lbl_803E6F34;
@@ -1030,12 +1037,12 @@ void fn_8022C0D0(int obj, int state)
             spawnExplosion(obj, lbl_803E6F28, 1, 0, 1, 1, 0, 1, 0);
         } else {
             if (*(s16 *)(hitObj + 0x46) == 0x6ae && *(u8 *)(state + 0x478) == 1) {
-                Sfx_PlayFromObject(obj, 0x2c0);
+                Sfx_PlayFromObject(obj, SFXbaddie_eggsnatch_movelp);
                 return;
             }
             doRumble(lbl_803E6F2C);
             *(u8 *)(state + 0x468) = *(u8 *)(state + 0x468) - hitVol;
-            Sfx_PlayFromObject(obj, 0x2ac);
+            Sfx_PlayFromObject(obj, SFXbaddie_vambat_death);
             *(u8 *)(state + 0x339) |= 0x80;
             Obj_SetModelColorFadeRecursive(obj, 0x4b, 0xc8, 0, 0, 1);
             *(f32 *)(state + 0x328) = lbl_803E6F34;
