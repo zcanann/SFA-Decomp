@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/WC/WClevcontrol.h"
 
+#define SFXtr_bcrek2_c 293
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();
 extern undefined4 FUN_80006b14();
@@ -390,7 +392,7 @@ void FUN_801eefd0(uint param_1,int param_2)
      (*(short *)(local_38 + 0x46) != 0x119)) {
     FUN_80017a28(param_1,0xaf,200,0,0,1);
     FUN_80006b94((double)lbl_803E6950);
-    FUN_80006824(0,0x125);
+    FUN_80006824(0,SFXtr_bcrek2_c);
     uVar2 = GameBit_Get(0xf1e);
     if (uVar2 != 0) {
       FUN_80006824(param_1,0x491);
@@ -943,7 +945,7 @@ void SB_CloudRunner_HandlePriorityHit(int obj, u8 *state) {
             if (*(s16 *)(hitObj + 0x46) != 281) {
                 Obj_SetModelColorFadeRecursive(obj, 175, 200, 0, 0, 1);
                 doRumble(lbl_803E5CB8);
-                Sfx_PlayFromObject(0, 293);
+                Sfx_PlayFromObject(0, SFXtr_bcrek2_c);
                 if (GameBit_Get(3870) != 0) {
                     Sfx_PlayFromObject(obj, 1169);
                 }

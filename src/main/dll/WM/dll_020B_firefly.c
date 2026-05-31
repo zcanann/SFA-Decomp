@@ -1,5 +1,7 @@
 #include "main/dll/WM/wm_shared.h"
 
+#define SFXen_treadlpc 73
+
 #pragma peephole off
 #pragma scheduling off
 void FireFlyFn_801f4f88(int obj)
@@ -79,7 +81,7 @@ void FireFlyFn_801f4f88(int obj)
                     *(f32 *)(state + 0x70) = lbl_803E5EA8;
                     gameBitIncrement(0x13d);
                     gameBitIncrement(0x5d6);
-                    Sfx_PlayFromObject(obj, 0x49);
+                    Sfx_PlayFromObject(obj, SFXen_treadlpc);
                 }
             }
         }
@@ -113,7 +115,7 @@ void firefly_update(int obj)
             *(f32 *)((u8 *)state + 0x70) = despawnTimer;
             gameBitIncrement(0x13D);
             gameBitIncrement(0x5D6);
-            Sfx_PlayFromObject(obj, 0x49);
+            Sfx_PlayFromObject(obj, SFXen_treadlpc);
         }
     }
 

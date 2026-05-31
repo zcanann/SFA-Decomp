@@ -1,5 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXsc_lockon2_on 199
+
 #pragma peephole on
 #pragma scheduling on
 int wcpressures_getExtraSize(void) { return 0x7c; }
@@ -136,7 +138,7 @@ void wcpressures_update(int obj)
     switch ((s8)*(s8 *)(state + 1)) {
     case 0:
         if (*(s8 *)state != 0 && *(f32 *)(obj + 0x10) >= thr) {
-            Sfx_PlayFromObject(obj, 0xc7);
+            Sfx_PlayFromObject(obj, SFXsc_lockon2_on);
             *(s8 *)(state + 1) = 3;
         }
         break;
@@ -149,7 +151,7 @@ void wcpressures_update(int obj)
         break;
     case 2:
         if ((u32)GameBit_Get(*(s16 *)(r4c + 0x1a)) == 0) {
-            Sfx_PlayFromObject(obj, 0xc7);
+            Sfx_PlayFromObject(obj, SFXsc_lockon2_on);
             *(s8 *)(state + 1) = 1;
         }
         break;
