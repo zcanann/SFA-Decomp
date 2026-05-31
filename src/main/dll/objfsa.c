@@ -129,6 +129,7 @@ extern f32 lbl_803E12CC;
 extern f32 lbl_803E12D0;
 extern f32 lbl_803E12D4;
 extern f32 lbl_803E05F0;
+extern f32 lbl_803E0644;
 extern int lbl_803DD464;
 extern int lbl_803DD468;
 extern char sObjfsaFoundNewWalkGroupPatch[];
@@ -5378,6 +5379,89 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+static inline int Objfsa_FindRomCurveById(int curveId) {
+    int lo;
+    int hi;
+    int mid;
+    int curve;
+    u32 id;
+
+    if (curveId < 0) {
+        return 0;
+    }
+
+    lo = 0;
+    hi = nRomCurves - 1;
+    id = (u32)curveId;
+    while (lo <= hi) {
+        mid = (hi + lo) >> 1;
+        curve = (int)romCurves[mid];
+        if (*(u32 *)(curve + 0x14) < id) {
+            lo = mid + 1;
+        } else if (*(u32 *)(curve + 0x14) <= id) {
+            return curve;
+        } else {
+            hi = mid - 1;
+        }
+    }
+
+    return 0;
+}
+
+int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighborId) {
+    float bestDistances[2];
+    int bestNeighborIds[2];
+    float segment[9];
+    int i;
+    int neighborId;
+    int neighborCurve;
+    int slot;
+    float dx;
+    float dy;
+    float dz;
+    float distance;
+
+    bestNeighborIds[1] = -1;
+    bestNeighborIds[0] = -1;
+    bestDistances[1] = lbl_803E0644;
+    bestDistances[0] = lbl_803E0644;
+
+    segment[0] = *(f32 *)(curve + 0x8);
+    segment[1] = *(f32 *)(curve + 0xc);
+    segment[2] = *(f32 *)(curve + 0x10);
+
+    for (i = 0; i < 4; i++) {
+        neighborId = *(int *)(curve + 0x1c + i * 4);
+        if (neighborId > -1) {
+            neighborCurve = Objfsa_FindRomCurveById(neighborId);
+            if (neighborCurve != 0) {
+                segment[3] = *(f32 *)(neighborCurve + 0x8);
+                segment[4] = *(f32 *)(neighborCurve + 0xc);
+                segment[5] = *(f32 *)(neighborCurve + 0x10);
+
+                RomCurve_distanceToSegment(x, y, z, segment);
+                dx = segment[6] - x;
+                dy = segment[7] - y;
+                dz = segment[8] - z;
+                distance = dz * dz + dx * dx + dy * dy;
+                slot = (preferredNeighborId == neighborId);
+                if (distance < bestDistances[slot]) {
+                    bestDistances[slot] = distance;
+                    bestNeighborIds[slot] = neighborId;
+                }
+            }
+        }
+    }
+
+    if (bestNeighborIds[0] != -1) {
+        return bestNeighborIds[0];
+    }
+    if (bestNeighborIds[1] != -1) {
+        return bestNeighborIds[1];
+    }
+    return -1;
+}
 
 /* UIController dispatch through the shared GameUI interface. */
 extern int *gGameUIInterface;
