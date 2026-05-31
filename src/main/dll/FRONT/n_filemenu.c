@@ -2,6 +2,8 @@
 #include "main/dll/FRONT/n_filemenu.h"
 #include "main/dll/FRONT/dll_39.h"
 
+#define SFXsp_snrin2_c 255
+
 extern void Sfx_PlayFromObject(uint obj, ushort sfxId);
 extern void buttonDisable(int controller, uint buttons);
 extern void padClearAnalogInputY(int controller);
@@ -265,7 +267,7 @@ int TitleMenu_run(void)
         titleScreenFn_801368a4(1);
         gTitleMenuLoadDelay = 1;
         titleScreenFn_80130464(1);
-        Sfx_PlayFromObject(0,0xff);
+        Sfx_PlayFromObject(0,SFXsp_snrin2_c);
         if (gTitleMenuSelection == 2) {
           gTitleMenuNextDllId = 7;
           lbl_803DD6F8 = 1;

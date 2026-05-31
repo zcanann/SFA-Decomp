@@ -2,6 +2,8 @@
 #include "main/dll/dll_13B.h"
 #include "main/objanim.h"
 
+#define SFXsc_attack03 633
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();
 extern undefined4 FUN_800175cc();
@@ -457,7 +459,7 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
     for (local_18[0] = 0; local_18[0] < 0x19; local_18[0] = local_18[0] + 1) {
       (**(code **)(*DAT_803dd708 + 8))(param_9,0x715,0,1,0xffffffff,local_18);
     }
-    FUN_80006824(param_9,0x279);
+    FUN_80006824(param_9,SFXsc_attack03);
   }
   return;
 }

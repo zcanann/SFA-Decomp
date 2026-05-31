@@ -15,6 +15,7 @@
 #define SFXkr_impact2 0x269
 #define SFXkr_impact3 0x26a
 #define SFXkr_jump1 0x26b
+#define SFXdoor_unlocked 562
 #define SFXsc_attack04 0x27a
 #define SFXsc_death02 0x27c
 
@@ -861,7 +862,7 @@ FUN_8015e2e0(undefined8 param_1,double param_2,double param_3,undefined8 param_4
     else {
       FUN_80006824(param_9,SFXfoot_metal_run_2);
     }
-    FUN_80006824(param_9,0x232);
+    FUN_80006824(param_9,SFXdoor_unlocked);
     FUN_80006824(param_9,SFXfoxcom_find);
     *(byte *)(param_10 + 0x356) = *(byte *)(param_10 + 0x356) | 1;
   }

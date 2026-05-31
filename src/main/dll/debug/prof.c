@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/debug/prof.h"
 
+#define SFXsp_snrot1_c 256
+
 extern undefined4 FUN_800067b4();
 extern undefined4 FUN_80006824();
 extern undefined4 saveFileStruct_isCheatActive();
@@ -83,7 +85,7 @@ undefined4 FUN_8011c7b4(int param_1,int param_2)
     }
   }
   else if (param_1 == 0) {
-    FUN_80006824(0,0x100);
+    FUN_80006824(0,SFXsp_snrot1_c);
     (**(code **)(*DAT_803dd6cc + 8))(0x14,5);
     DAT_803de384 = 0x23;
     DAT_803de385 = 1;

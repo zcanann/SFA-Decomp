@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_159.h"
 
+#define SFXfend_rob_wave 787
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
@@ -140,7 +142,7 @@ void FUN_801835c4(uint param_1,int param_2)
           (iVar4 == 0x66)) || ((iVar4 == 0x465d0 || (iVar4 == 0x465d2)))))) &&
        ((dVar5 = (double)FUN_8001771c((float *)(iVar2 + 0x18),(float *)(param_1 + 0x18)),
         dVar5 < (double)lbl_803E4654 && (uVar3 = GameBit_Get(0xa71), uVar3 == 0)))) {
-      FUN_80006824(param_1,0x313);
+      FUN_80006824(param_1,SFXfend_rob_wave);
     }
     *(float *)(param_1 + 0xc) = *(float *)(param_1 + 0xc) + *(float *)(param_1 + 0x24);
     fVar1 = lbl_803E4658 + *(float *)(param_2 + 0x24);

@@ -868,7 +868,7 @@ void swarmbaddie_init(int obj, int data, int skip_alloc) {
                 (*(void **)state, obj, *(f32 *)(state + 0x14), &lbl_803DBC78, -1) == 0) {
             *(u8 *)(state + 0x1C) |= 0x1;
         }
-        Sfx_PlayFromObject(obj, 0x23A);
+        Sfx_PlayFromObject(obj, SFXfox_treadwater422);
     }
     *(u16 *)(obj + 0xB0) |= 0x2000;
 }

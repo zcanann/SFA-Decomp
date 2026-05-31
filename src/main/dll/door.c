@@ -2,6 +2,8 @@
 #include "main/dll/door.h"
 #include "main/dll/fruit.h"
 
+#define SFXfoot_dirt_scuff 464
+
 extern undefined4 FUN_80006b4c();
 extern int objBboxFn_800640cc(f32 *from,f32 *to,f32 radius,int mode,void *hit,
                        DfpTargetBlockObject *obj,int flags,int mask,int arg9,int arg10);
@@ -76,7 +78,7 @@ void dfptargetblock_resolveCollisionPoints(DfpTargetBlockObject *obj,
         obj->velY = zero;
         obj->velZ = zero;
       }
-      Sfx_PlayFromObject(obj,0x1d0);
+      Sfx_PlayFromObject(obj,SFXfoot_dirt_scuff);
       return;
     }
     point += DFPTARGETBLOCK_POINT_STRIDE;

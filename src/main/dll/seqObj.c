@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/seqObj.h"
 
+#define SFXfox_swimstroke122 571
+
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
@@ -251,7 +253,7 @@ void FUN_8014fd84(uint param_1,int param_2,int param_3)
     if (cVar4 == '\0') {
       *(byte *)(piVar5 + 9) = *(byte *)(piVar5 + 9) | 1;
     }
-    FUN_80006824(param_1,0x23b);
+    FUN_80006824(param_1,SFXfox_swimstroke122);
   }
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
   return;

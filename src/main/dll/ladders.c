@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/ladders.h"
 
+#define SFXsc_gethit04 640
+
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);
@@ -644,7 +646,7 @@ void tumbleweedbush_update(int *obj) {
     if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, hitInfo, &hitData) != 0) {
         if (*(s16*)((char*)hitInfo[0] + 0x46) != 0x4ba) {
             fn_80096F9C(&hitData, 8, 0xff, 0xff, 0x78);
-            Sfx_PlayFromObject(obj, 0x280);
+            Sfx_PlayFromObject(obj, SFXsc_gethit04);
             for (i = 0; (u8)i < state->pieceCount; i++) {
                 int **slot = (int **)&state->pieceObjects[(u8)i];
                 if (*slot != NULL) {

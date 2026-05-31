@@ -3,6 +3,8 @@
 #include "main/dll/firepipe.h"
 #include "string.h"
 
+#define SFXand_missilelaunch 812
+
 extern undefined4 fn_8001CB3C(int param_1);
 extern undefined4 GameBit_Get(int eventId);
 extern undefined4 randomGetRange(int param_1, int param_2);
@@ -318,7 +320,7 @@ sound_update:
 
     if (flags->bit6 != 0) {
         if (flags->bit5 == 0) {
-            Sfx_PlayFromObjectLimited(obj,0x32c,3);
+            Sfx_PlayFromObjectLimited(obj,SFXand_missilelaunch,3);
         }
         Sfx_KeepAliveLoopedObjectSoundLimited(obj,0x32d,2);
     }

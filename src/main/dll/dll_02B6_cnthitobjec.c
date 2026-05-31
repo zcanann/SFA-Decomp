@@ -1,5 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 
+#define SFXdn_hightop_ambi1 24
+
 #pragma peephole on
 #pragma scheduling on
 int cnthitobjec_getExtraSize(void) { return 0xc; }
@@ -105,7 +107,7 @@ void cnthitobjec_hitDetect(int obj)
             }
         }
     } else {
-        Sfx_PlayFromObject(obj, 24);
+        Sfx_PlayFromObject(obj, SFXdn_hightop_ambi1);
     }
 }
 #pragma scheduling reset

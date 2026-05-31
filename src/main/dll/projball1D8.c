@@ -2,6 +2,8 @@
 #include "main/mapEvent.h"
 #include "main/dll/projball1D8.h"
 
+#define SFXsc_clubhit02 653
+
 extern undefined4 Music_Trigger();
 extern undefined4 FUN_80006824();
 extern byte gameTimerIsRunning();
@@ -189,7 +191,7 @@ void nw_levcontrol_update(int param_1)
     }
   }
   else {
-    FUN_80006824(0,0x28d);
+    FUN_80006824(0,SFXsc_clubhit02);
     (**(code **)(*DAT_803dd72c + 0x28))();
   }
   return;

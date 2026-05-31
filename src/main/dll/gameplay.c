@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/gameplay.h"
 
+#define SFXsp_skeep_mumb1 266
+
 typedef struct { u32 mode; f32 x, y, z; void *tex; u16 flags; u8 layer; } GfxCmd;
 extern undefined4* gModgfxInterface;
 
@@ -3366,7 +3368,7 @@ int FUN_800eafb4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
         *(undefined *)(puVar11 + 3) = 0;
       }
       else {
-        dVar13 = (double)FUN_80006824(0,0x10a);
+        dVar13 = (double)FUN_80006824(0,SFXsp_skeep_mumb1);
       }
     }
     if (*(int *)(param_9 + 0xf8) == 1) {

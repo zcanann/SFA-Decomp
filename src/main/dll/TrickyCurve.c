@@ -3,6 +3,8 @@
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
 
+#define SFXfoot_water_walk_3 457
+
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern uint FUN_80017690();
@@ -199,7 +201,7 @@ void TrickyCurve_updateBurstTrigger(void)
       if (0x14 < gTrickyCurveBurstCounter) {
         gTrickyCurveBurstCounter = 0;
         FUN_80017698(0x468,1);
-        FUN_80006824(uVar4,0x1c9);
+        FUN_80006824(uVar4,SFXfoot_water_walk_3);
       }
       (**(code **)(*DAT_803dd708 + 8))(iVar5,0x397,0,2,0xffffffff,0);
     }
@@ -208,7 +210,7 @@ void TrickyCurve_updateBurstTrigger(void)
       ObjMsg_SendToObject(uVar11,dVar12,dVar13,dVar14,in_f5,in_f6,in_f7,in_f8,iVar5,0x60004,uVar4,2,in_r7,
                    in_r8,in_r9,in_r10);
       (**(code **)(*DAT_803dd708 + 8))(uVar4,0x399,&local_38,2,0xffffffff,0);
-      FUN_80006824(uVar4,0x1c9);
+      FUN_80006824(uVar4,SFXfoot_water_walk_3);
     }
   }
   *(char *)(psVar10 + 8) = cVar9;
@@ -451,7 +453,7 @@ void TrickyCurve_updateEffectRingTrigger(undefined8 param_1,undefined8 param_2,u
         } while (iVar3 != -1);
       }
       FUN_80017698((int)psVar9[5],1);
-      FUN_80006824(uVar2,0x1c9);
+      FUN_80006824(uVar2,SFXfoot_water_walk_3);
     }
     *(char *)(psVar9 + 8) = cVar7;
     *(char *)((int)psVar9 + 0x11) = cVar6;

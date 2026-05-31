@@ -2,6 +2,8 @@
 #include "main/dll/newSeqObj.h"
 #include "main/objanim.h"
 
+#define SFXdn_boar5_c 23
+
 #pragma peephole off
 #pragma scheduling off
 
@@ -82,7 +84,7 @@ void fn_80150EDC(void *p1, void *p2) {
 
     if ((*(u32 *)((u8 *)p2 + 0x2dc) & 0x20000000) != 0 &&
         (*(u32 *)((u8 *)p2 + 0x2e0) & 0x20000000) == 0) {
-        Sfx_PlayFromObject(p1, 0x17);
+        Sfx_PlayFromObject(p1, SFXdn_boar5_c);
         *(u32 *)((u8 *)p2 + 0x2dc) |= 0x40000000;
     }
 
