@@ -21,6 +21,7 @@ extern undefined4 FUN_8001771c();
 extern uint FUN_80017730();
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
+extern void mm_free(void *ptr);
 extern undefined4 FUN_80017814();
 extern undefined8 FUN_80017a28();
 extern undefined4 FUN_80017a30();
@@ -32,6 +33,9 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
+extern u8 Obj_IsLoadingLocked(void);
+extern void *Obj_AllocObjectSetup(int extraSize,int objectId);
+extern int Obj_SetupObject(void *setup,int mode,int mapLayer,int objIndex,void *parent);
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined8 ObjHits_DisableObject();
 extern ushort ObjHits_IsObjectEnabled();
@@ -233,6 +237,54 @@ void fn_8017F4F4(undefined2 *param_1)
         *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
         *pbVar5 = 4;
       }
+    }
+  }
+  return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8017F7B8
+ * EN v1.0 Address: 0x8017F7B8
+ * EN v1.0 Size: 272b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+void fn_8017F7B8(int obj,int objectId)
+{
+  int mapData;
+  int *state;
+  u8 *setup;
+  int childObj;
+
+  mapData = *(int *)(obj + 0x4c);
+  state = *(int **)(obj + 0xb8);
+  if (Obj_IsLoadingLocked() != 0) {
+    setup = Obj_AllocObjectSetup(0x30,objectId);
+    setup[0x1a] = 0x14;
+    *(s16 *)(setup + 0x2c) = -1;
+    *(s16 *)(setup + 0x1c) = -1;
+    *(u32 *)(setup + 0x08) = *(u32 *)(obj + 0x0c);
+    *(u32 *)(setup + 0x0c) = *(u32 *)(obj + 0x10);
+    *(u32 *)(setup + 0x10) = *(u32 *)(obj + 0x14);
+    *(s16 *)(setup + 0x24) = -1;
+    setup[0x04] = *(u8 *)(mapData + 0x04);
+    setup[0x06] = *(u8 *)(mapData + 0x06);
+    setup[0x05] = *(u8 *)(mapData + 0x05);
+    setup[0x07] = *(u8 *)(mapData + 0x07) - 0xf;
+    childObj = Obj_SetupObject(setup,5,(s8)*(u8 *)(obj + 0xac),-1,*(void **)(obj + 0x30));
+    if (childObj == 0) {
+      mm_free(setup);
+      *state = 0;
+    }
+    else {
+      ObjLink_AttachChild(obj,childObj,0);
+      *state = childObj;
     }
   }
   return;
