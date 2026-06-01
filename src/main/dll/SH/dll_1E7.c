@@ -19,8 +19,6 @@ extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b444();
-extern undefined4 FUN_801d4810();
-extern undefined4 FUN_801d4814();
 
 extern undefined4 DAT_80327a58;
 extern u32 gSHthorntailDataTables[][4];
