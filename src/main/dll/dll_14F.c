@@ -22,6 +22,7 @@ extern uint FUN_80017730();
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
 extern void mm_free(void *ptr);
+extern u32 GameBit_Get(int eventId);
 extern undefined4 FUN_80017814();
 extern undefined8 FUN_80017a28();
 extern undefined4 FUN_80017a30();
@@ -33,6 +34,8 @@ extern void* FUN_80017aa4();
 extern undefined4 FUN_80017ac8();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
+extern void *getTrickyObject(void);
+extern void *Obj_GetPlayerObject(void);
 extern u8 Obj_IsLoadingLocked(void);
 extern void *Obj_AllocObjectSetup(int extraSize,int objectId);
 extern int Obj_SetupObject(void *setup,int mode,int mapLayer,int objIndex,void *parent);
@@ -62,6 +65,8 @@ extern int FUN_800d9de0();
 extern bool FUN_800da5e8();
 extern undefined4 FUN_800db110();
 extern uint FUN_800db47c();
+extern int fn_800DBCFC(f32 *pos,int param_2);
+extern int getPatchGroup(f32 *pos,int patchGroup);
 extern int FUN_8012efc4();
 extern int FUN_801365a0();
 extern undefined4 FUN_801816f8();
@@ -135,6 +140,9 @@ extern f32 lbl_803E45A8;
 extern f32 lbl_803E45AC;
 extern f32 lbl_803E45C0;
 extern f32 lbl_803E45D0;
+extern f32 lbl_803E38A0;
+extern void *gRomCurveInterface;
+extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 
 /*
  * --INFO--
@@ -1643,10 +1651,103 @@ void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma peephole reset
 
 void trickywarp_free(int obj) {
-  int state = *(int *)(obj + 0xb8);
-  if (*(u8 *)(state + 1) != 0) {
+  TrickyWarpState *state = *(TrickyWarpState **)(obj + 0xb8);
+  if (state->active != 0) {
     ObjGroup_RemoveObject(obj, 0x4b);
   }
+}
+
+typedef struct TrickyWarpCurveEntry {
+  u8 pad00[3];
+  u8 entryPatchGroup;
+  u8 linkPatchGroups[4];
+  u8 pad08[0xc];
+  u32 nodeId;
+  s8 action;
+  s8 type;
+} TrickyWarpCurveEntry;
+
+typedef struct TrickyWarpCurveNode {
+  u8 pad00[4];
+  u8 linkPatchGroups[4];
+  u8 pad08[0x28];
+  s16 requiredGameBit;
+  s16 forbiddenGameBit;
+} TrickyWarpCurveNode;
+
+int fn_8017FFD0(int obj, TrickyWarpState *state) {
+  int curveCount;
+  TrickyWarpCurveEntry **curveEntries;
+  TrickyWarpCurveEntry *entry;
+  TrickyWarpCurveNode *node;
+  int *outNodeId;
+  int playerObj;
+  int playerPatchGroup;
+  int i;
+  int linkIndex;
+
+  if (GameBit_Get(0x4e5) == 0) {
+    return 0;
+  }
+  if (getTrickyObject() == NULL) {
+    return 0;
+  }
+  if (state->patchGroup == 0) {
+    state->patchGroup = (u8)fn_800DBCFC((f32 *)(obj + 0xc),0);
+    if (state->patchGroup != 0) {
+      curveEntries = (*(TrickyWarpCurveEntry **(**)(int *))(*(int *)gRomCurveInterface + 0x10))(&curveCount);
+      outNodeId = state->curveNodeIds;
+      for (i = 0; i < curveCount; i++) {
+        entry = curveEntries[i];
+        if (entry->type == '$' && entry->entryPatchGroup == 0) {
+          for (linkIndex = 0; linkIndex < 4; linkIndex++) {
+            if (entry->linkPatchGroups[linkIndex] == state->patchGroup) {
+              *outNodeId = entry->nodeId;
+              outNodeId++;
+              break;
+            }
+          }
+        }
+      }
+    } else {
+      return 0;
+    }
+  }
+  if (ViewFrustum_IsSphereVisible((f32 *)(obj + 0xc),lbl_803E38A0) != 0) {
+    return 0;
+  }
+  playerObj = (int)Obj_GetPlayerObject();
+  playerPatchGroup = fn_800DBCFC((f32 *)(playerObj + 0xc),0);
+  if (playerPatchGroup != 0) {
+    if (playerPatchGroup == state->patchGroup) {
+      return 1;
+    }
+    for (i = 0; i < 0x18; i++) {
+      if (state->curveNodeIds[i] == 0) {
+        break;
+      }
+      node = (*(TrickyWarpCurveNode *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(state->curveNodeIds[i]);
+      if (node != NULL) {
+        if (node->requiredGameBit == -1 || GameBit_Get(node->requiredGameBit) != 0) {
+          if (node->forbiddenGameBit == -1 || GameBit_Get(node->forbiddenGameBit) == 0) {
+            if (node->linkPatchGroups[0] == playerPatchGroup) {
+              return 1;
+            }
+            if (node->linkPatchGroups[1] == playerPatchGroup) {
+              return 1;
+            }
+            if (node->linkPatchGroups[2] == playerPatchGroup) {
+              return 1;
+            }
+            if (node->linkPatchGroups[3] == playerPatchGroup) {
+              return 1;
+            }
+          }
+        }
+      }
+    }
+  }
+  return getPatchGroup((f32 *)(playerObj + 0xc),state->patchGroup);
 }
 
 #pragma peephole off
@@ -1758,24 +1859,23 @@ extern void duster_init();
 extern void curvefish_update();
 extern f32 lbl_803E3928;
 extern f64 lbl_803E3918;
-extern int fn_8017FFD0(int obj, int state);
 
 #pragma scheduling off
 #pragma peephole off
 void trickywarp_update(int param_1) {
   int obj = param_1;
-  int state;
+  TrickyWarpState *state;
   int r;
-  state = *(int *)(obj + 0xb8);
+  state = *(TrickyWarpState **)(obj + 0xb8);
   r = fn_8017FFD0(obj, state);
   if (r != 0) {
-    if (*(u8 *)(state + 1) == 0) {
-      *(u8 *)(state + 1) = 1;
+    if (state->active == 0) {
+      state->active = 1;
       ObjGroup_AddObject(obj, 0x4b);
     }
   } else {
-    if (*(u8 *)(state + 1) != 0) {
-      *(u8 *)(state + 1) = 0;
+    if (state->active != 0) {
+      state->active = 0;
       ObjGroup_RemoveObject(obj, 0x4b);
     }
   }

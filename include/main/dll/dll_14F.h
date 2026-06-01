@@ -30,9 +30,17 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  ushort *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
+typedef struct TrickyWarpState {
+  u8 patchGroup;
+  u8 active;
+  u8 pad02[2];
+  int curveNodeIds[0x18];
+} TrickyWarpState;
+
 int trickywarp_getExtraSize(void);
 void trickywarp_free(int obj);
 void trickywarp_update(int obj);
+int fn_8017FFD0(int obj, TrickyWarpState *state);
 void trickywarp_init(s16 *obj, u8 *param_2);
 void FUN_801804a0(short *param_1,int param_2);
 void FUN_801804a4(int param_1);
