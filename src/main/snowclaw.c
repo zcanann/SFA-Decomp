@@ -160,7 +160,7 @@ void snowclaw_init(int *obj, u8 *init) {
     s16toFloat((char *)inner + 0x98, (s16)*(int *)(table + 0x3c));
     objSeqInitFn_80080078(table, 6);
     lbl_803DDD38 = 0x96;
-    *(u8 *)((char *)inner + 0xaa) &= ~0x80;
+    ((SnowclawAaFlags *)((char *)inner + 0xaa))->b0 = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
