@@ -1,513 +1,356 @@
 #include "ghidra_import.h"
-#include "main/dll/DR/DRcloudrunner.h"
 
-#define SFXmn_sml_trex_fstep 0x7e
-#define SFXsp_lf_mutter4 0x109
-#define SFXtr_gal_sailflap3 0x12a
-#define SFXtr_gal_crateslide 299
-#define SFXtr_gal_lightning 300
-#define SFXtr_gal_doorslide 0x12d
-
-#pragma peephole off
-#pragma scheduling off
-extern undefined4 FUN_80006824();
-extern double FUN_80006b34();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern undefined4 FUN_80017748();
+extern u32 GameBit_Get(int id);
+extern void GameBit_Set(int id, int value);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 randomGetRange(int min, int max);
-extern undefined4 FUN_80017a28();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern int FUN_80017b00();
-extern undefined4 FUN_8002fc3c();
-extern undefined4 FUN_800305f8();
-extern undefined4 ObjHitbox_SetCapsuleBounds();
-extern undefined4 ObjHits_RecordObjectHit();
-extern int ObjHits_GetPriorityHitWithPosition();
-extern int ObjHits_PollPriorityHitEffectWithCooldown();
-extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_8003b56c();
-extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80042b9c();
-extern int FUN_80044404();
-extern undefined4 FUN_8004800c();
-extern undefined4 FUN_800810e4();
-extern undefined4 FUN_80081120();
-extern int FUN_800e8b98();
-extern undefined4 sc_levelcontrol_processAnimEvents();
-extern int FUN_8028683c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
+extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
+extern void ObjAnim_AdvanceCurrentMove(int obj, void *stk, f32 a, f32 b);
+extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
+extern int ObjHits_GetPriorityHitWithPosition(int obj, int *type, int *a, int *b, f32 *x, f32 *y, f32 *z);
+extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int *state);
+extern void ObjHits_RecordObjectHit(int target, int src, int a, int b, int c);
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int s, int a, int b, int c, int d);
+extern int ObjLink_AttachChild(int parent, int child, int a);
+extern int ObjLink_DetachChild(int parent, int child);
+extern void cmbsrc_setExternalActive(int obj, int active);
+extern void Obj_FreeObject(int obj);
+extern u8 Obj_IsLoadingLocked(int obj);
+extern void *Obj_GetPlayerObject(void);
+extern void objSetSlot(int obj, int slot);
+extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
+extern void objLightFn_8009a1dc(int obj, f32 *pos, int kind, int p4);
+extern void fn_80096C94(int obj, int mode, int p3, void *vec, f32 f, int flag);
+extern void mathFn_80021ac8(int obj, void *vec);
+extern f32 sqrtf(f32 x);
+extern f32 fn_8001461C(void);
+extern void fn_801DBFA0(int obj, int inner, u8 frames, int idx);
+extern void fn_801DC0BC(int obj, int inner, int p3);
 
-extern undefined4 DAT_803de888;
-extern f64 DOUBLE_803e6260;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
-extern f32 lbl_803E61FC;
-extern f32 lbl_803E6200;
-extern f32 lbl_803E6208;
-extern f32 lbl_803E620C;
-extern f32 lbl_803E6210;
-extern f32 lbl_803E6214;
-extern f32 lbl_803E6218;
-extern f32 lbl_803E6220;
-extern f32 lbl_803E6224;
-extern f32 lbl_803E6228;
-extern f32 lbl_803E622C;
-extern f32 lbl_803E6230;
-extern f32 lbl_803E6238;
-extern f32 lbl_803E6240;
-extern f32 lbl_803E6244;
-extern f32 lbl_803E6248;
-extern f32 lbl_803E624C;
-extern f32 lbl_803E6250;
-extern f32 lbl_803E6254;
-extern f32 lbl_803E6258;
-extern f32 lbl_803E626C;
-extern f32 lbl_803E6270;
-extern f32 lbl_803E6274;
+extern void objRenderFn_8003b8f4(f32);
 
-/*
- * --INFO--
- *
- * Function: sc_musictree_update
- * EN v1.0 Address: 0x801DC310
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801DC444
- * EN v1.1 Size: 332b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void sc_musictree_update(int param_1)
-{
-}
+extern int *gObjectTriggerInterface;
+extern int *gTitleMenuControlInterface;
 
-/*
- * --INFO--
- *
- * Function: FUN_801dc314
- * EN v1.0 Address: 0x801DC314
- * EN v1.0 Size: 428b
- * EN v1.1 Address: 0x801DC590
- * EN v1.1 Size: 284b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dc314(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
-{
-  int iVar1;
-  uint uVar2;
-  undefined2 *puVar3;
-  undefined4 uVar4;
-  char in_r6;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int iVar5;
-  undefined8 extraout_f1;
-  undefined8 uVar6;
-  undefined8 uVar7;
-  
-  uVar7 = FUN_80286840();
-  iVar1 = (int)((ulonglong)uVar7 >> 0x20);
-  iVar5 = *(int *)(iVar1 + 0x4c);
-  uVar6 = extraout_f1;
-  uVar2 = FUN_80017ae8();
-  if ((uVar2 & 0xff) != 0) {
-    puVar3 = FUN_80017aa4(0x28,0x210);
-    *(undefined *)(puVar3 + 2) = *(undefined *)(iVar5 + 4);
-    *(undefined *)(puVar3 + 3) = *(undefined *)(iVar5 + 6);
-    *(undefined *)((int)puVar3 + 5) = *(undefined *)(iVar5 + 5);
-    *(char *)((int)puVar3 + 7) = *(char *)(iVar5 + 7) + -10;
-    iVar5 = (int)uVar7 + in_r6 * 0xc;
-    *(undefined4 *)(puVar3 + 4) = *(undefined4 *)(iVar5 + 0xc);
-    *(undefined4 *)(puVar3 + 6) = *(undefined4 *)(iVar5 + 0x10);
-    *(undefined4 *)(puVar3 + 8) = *(undefined4 *)(iVar5 + 0x14);
-    uVar2 = randomGetRange(0x708,6000);
-    puVar3[0xe] = (short)uVar2;
-    puVar3[0xf] = 1;
-    *(undefined *)(puVar3 + 0x10) = 10;
-    *(undefined *)((int)puVar3 + 0x21) = 0x28;
-    *(undefined *)(puVar3 + 0x11) = 0x32;
-    *(undefined *)((int)puVar3 + 0x23) = 10;
-    *(undefined *)(puVar3 + 0x12) = 0x32;
-    *(undefined *)((int)puVar3 + 0x25) = 0xce;
-    puVar3[0x13] = 0xffff;
-    *(undefined4 *)(puVar3 + 0xc) = 0;
-    uVar4 = FUN_80017ae4(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,5,0xff
-                         ,0xffffffff,*(uint **)(iVar1 + 0x30),in_r8,in_r9,in_r10);
-    *(undefined4 *)((int)uVar7 + in_r6 * 4) = uVar4;
-  }
-  FUN_8028688c();
-  return;
-}
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
 
-/*
- * --INFO--
- *
- * Function: FUN_801dc4c0
- * EN v1.0 Address: 0x801DC4C0
- * EN v1.0 Size: 376b
- * EN v1.1 Address: 0x801DC6AC
- * EN v1.1 Size: 392b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dc4c0(uint param_1,int param_2)
-{
-  uint uVar1;
-  int iVar2;
-  
-  iVar2 = *(int *)(*(int *)(param_1 + 0x4c) + 0x14);
-  if (iVar2 == 0x448c2) {
-    uVar1 = FUN_80017690(0xc44);
-    if (uVar1 != 0) {
-      FUN_80017698(0xc41,1);
-    }
-  }
-  else if (iVar2 < 0x448c2) {
-    if (iVar2 == 0x30d9c) {
-      FUN_80006824(param_1,SFXtr_gal_crateslide);
-      FUN_80006824(param_1,SFXtr_gal_sailflap3);
-      FUN_80017698(0x7d,1);
-    }
-    else if (iVar2 < 0x30d9c) {
-      if (0x30d9a < iVar2) {
-        FUN_80006824(param_1,SFXtr_gal_doorslide);
-        FUN_80006824(param_1,SFXtr_gal_sailflap3);
-        FUN_80017698(0x7f,1);
-      }
-    }
-    else if (iVar2 < 0x30d9e) {
-      FUN_80006824(param_1,SFXtr_gal_lightning);
-      FUN_80006824(param_1,SFXtr_gal_sailflap3);
-      FUN_80017698(0x7e,1);
-    }
-  }
-  else if (iVar2 == 0x4517c) {
-    uVar1 = FUN_80017690(0xc44);
-    if (uVar1 != 0) {
-      FUN_80017698(0xc45,1);
-    }
-  }
-  else if (((iVar2 < 0x4517c) && (iVar2 == 0x45178)) && (uVar1 = FUN_80017690(0xc44), uVar1 != 0)) {
-    FUN_80017698(0xc43,1);
-  }
-  *(float *)(param_2 + 0x34) = lbl_803E6220;
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801dc638
- * EN v1.0 Address: 0x801DC638
- * EN v1.0 Size: 172b
- * EN v1.1 Address: 0x801DC834
- * EN v1.1 Size: 204b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dc638(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  
-  iVar1 = FUN_8028683c();
-  iVar2 = *(int *)(iVar1 + 0x4c);
-  iVar3 = *(int *)(iVar1 + 0xb8);
-  if (visible != 0) {
-    FUN_8003b56c((ushort)*(byte *)(iVar2 + 0x20),(ushort)*(byte *)(iVar2 + 0x21),
-                 (ushort)*(byte *)(iVar2 + 0x22));
-    FUN_8003b818(iVar1);
-    if ((*(byte *)(iVar3 + 0x4c) & 0x80) != 0) {
-      iVar2 = 0;
-      do {
-        ObjPath_GetPointWorldPosition(iVar1,iVar2,(float *)(iVar3 + 0xc),(undefined4 *)(iVar3 + 0x10),
-                     (float *)(iVar3 + 0x14),0);
-        iVar3 = iVar3 + 0xc;
-        iVar2 = iVar2 + 1;
-      } while (iVar2 < 3);
-    }
-    *(undefined4 *)(iVar1 + 0xf8) = 1;
-  }
-  FUN_80286888();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801dc6e4
- * EN v1.0 Address: 0x801DC6E4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801DC900
- * EN v1.1 Size: 1116b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dc6e4(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801dc6e8
- * EN v1.0 Address: 0x801DC6E8
- * EN v1.0 Size: 496b
- * EN v1.1 Address: 0x801DCD5C
- * EN v1.1 Size: 360b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dc6e8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9,int param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
-{
-  float fVar1;
-  uint uVar2;
-  int iVar3;
-  
-  iVar3 = *(int *)(param_9 + 0x5c);
-  *(float *)(iVar3 + 0x34) = lbl_803E622C;
-  fVar1 = lbl_803E6228;
-  *(float *)(iVar3 + 0x30) = lbl_803E6228;
-  *(ushort *)(iVar3 + 0x48) = (ushort)*(byte *)(param_10 + 0x1b) << 1;
-  *(undefined *)(iVar3 + 0x4c) = *(undefined *)(param_10 + 0x23);
-  *(float *)(iVar3 + 0x3c) = fVar1;
-  *(undefined4 *)(iVar3 + 0x38) = *(undefined4 *)(param_10 + 0x1c);
-  param_9[2] = (*(byte *)(param_10 + 0x18) - 0x7f) * 0x80;
-  param_9[1] = (*(byte *)(param_10 + 0x19) - 0x7f) * 0x80;
-  *param_9 = (ushort)*(byte *)(param_10 + 0x1a) << 8;
-  *(float *)(param_9 + 4) = lbl_803E6250 * *(float *)(param_10 + 0x1c);
-  param_9[0x7c] = 0;
-  param_9[0x7d] = 0;
-  param_9[0x58] = param_9[0x58] | 0x2000;
-  uVar2 = randomGetRange(1,99);
-  FUN_800305f8((double)((f32)(s32)(uVar2) /
-                       lbl_803E6254),param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-               param_9,0,0,param_12,param_13,param_14,param_15,param_16);
-  FUN_8002fc3c((double)lbl_803E6224,(double)lbl_803E6224);
-  ObjHitbox_SetCapsuleBounds((int)param_9,(short)(int)(lbl_803E6258 * *(float *)(iVar3 + 0x38)),-5,0xff);
-  if ((*(byte *)(iVar3 + 0x4c) & 0x80) != 0) {
-    *(byte *)(iVar3 + 0x4c) = *(byte *)(iVar3 + 0x4c) | 0x20;
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: sc_totempole_sortCompletionGameBits
- * EN v1.0 Address: 0x801DC8D8
- * EN v1.0 Size: 268b
- * EN v1.1 Address: 0x801DCEC4
- * EN v1.1 Size: 292b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void sc_totempole_sortCompletionGameBits(void)
-{
-  ushort uVar1;
-  ushort uVar2;
-  int iVar3;
-  uint uVar4;
-  undefined2 extraout_r4;
-  byte bVar5;
-  byte bVar6;
-  ushort local_28 [20];
-  
-  iVar3 = FUN_8028683c();
-  for (bVar6 = 0; bVar6 < 3; bVar6 = bVar6 + 1) {
-    uVar4 = FUN_80017690((uint)*(ushort *)(iVar3 + (uint)bVar6 * 2));
-    local_28[bVar6] = (ushort)uVar4;
-  }
-  local_28[3] = extraout_r4;
-  for (bVar6 = 0; bVar6 < 3; bVar6 = bVar6 + 1) {
-    for (bVar5 = 0; bVar5 < 3; bVar5 = bVar5 + 1) {
-      uVar1 = local_28[bVar5 + 1];
-      if (uVar1 != 0) {
-        uVar2 = local_28[bVar5];
-        if ((uVar1 < uVar2) || (uVar2 == 0)) {
-          local_28[bVar5] = uVar1;
-          local_28[bVar5 + 1] = uVar2;
-        }
-      }
-    }
-  }
-  for (bVar6 = 0; bVar6 < 3; bVar6 = bVar6 + 1) {
-    FUN_80017698((uint)*(ushort *)(iVar3 + (uint)bVar6 * 2),(uint)local_28[bVar6]);
-  }
-  FUN_80286888();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801dc9e4
- * EN v1.0 Address: 0x801DC9E4
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801DCFE8
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dc9e4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: sc_totempole_update
- * EN v1.0 Address: 0x801DCA0C
- * EN v1.0 Size: 648b
- * EN v1.1 Address: 0x801DD01C
- * EN v1.1 Size: 460b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void sc_totempole_update(uint param_1)
-{
-  bool bVar1;
-  uint uVar2;
-  int iVar3;
-  uint *puVar4;
-  ushort *puVar5;
-  double dVar6;
-  int local_48;
-  int local_44 [9];
-  longlong local_20;
-  
-  puVar5 = *(ushort **)(param_1 + 0xb8);
-  *(undefined *)((int)puVar5 + 3) = *(undefined *)(puVar5 + 1);
-  uVar2 = FUN_80017690((uint)*puVar5);
-  *(char *)(puVar5 + 1) = (char)uVar2;
-  if (*(char *)((int)puVar5 + 3) != *(char *)(puVar5 + 1)) {
-    if (*(char *)(puVar5 + 1) == '\0') {
-      FUN_80006824(param_1,0x3ad);
-      *(float *)(puVar5 + 2) = lbl_803E6274;
-    }
-    else {
-      FUN_80006824(param_1,0x3ad);
-      *(float *)(puVar5 + 2) = lbl_803E626C;
-      bVar1 = false;
-      uVar2 = FUN_80017690(0x81);
-      if ((((uVar2 != 0) && (uVar2 = FUN_80017690(0x82), uVar2 != 0)) &&
-          (uVar2 = FUN_80017690(0x83), uVar2 != 0)) && (uVar2 = FUN_80017690(0x84), uVar2 != 0)) {
-        FUN_80006824(0,SFXmn_sml_trex_fstep);
-        bVar1 = true;
-        iVar3 = FUN_80017b00(&local_48,local_44);
-        puVar4 = (uint *)(iVar3 + local_48 * 4);
-        for (; local_48 < local_44[0]; local_48 = local_48 + 1) {
-          if ((*puVar4 != param_1) && (*(short *)(*puVar4 + 0x46) == 0x282)) {
-            iVar3 = *(int *)(iVar3 + local_48 * 4);
-            (**(code **)(**(int **)(iVar3 + 0x68) + 0x20))(iVar3,6);
-            break;
-          }
-          puVar4 = puVar4 + 1;
-        }
-        dVar6 = FUN_80006b34();
-        local_20 = (longlong)(int)(dVar6 / (double)lbl_803E6270);
-        sc_totempole_sortCompletionGameBits();
-      }
-      if (!bVar1) {
-        FUN_80006824(0,SFXsp_lf_mutter4);
-      }
-    }
-  }
-  FUN_8002fc3c((double)*(float *)(puVar5 + 2),(double)lbl_803DC074);
-  ObjHits_PollPriorityHitEffectWithCooldown(param_1,8,0xff,0xff,0x78,0x129,(float *)&DAT_803de888);
-  return;
-}
-
-
-/* Trivial 4b 0-arg blr leaves. */
-void sc_musictree_release(void) {}
-void sc_musictree_initialise(void) {}
-void sc_totempole_free(void) {}
-void sc_totempole_hitDetect(void) {}
-void sc_totempole_release(void) {}
-void sc_totempole_initialise(void) {}
+extern u8 lbl_803DB411;
+extern int lbl_803DC068;
+extern int lbl_803DDC08;
+extern f32 lbl_803E5588;
+extern f32 lbl_803E558C;
+extern f32 lbl_803E5590;
+extern f32 lbl_803E5594;
+extern f32 lbl_803E5598;
+extern f32 lbl_803E559C;
+extern f32 lbl_803E55A0;
+extern f32 lbl_803E55A4;
+extern f32 lbl_803E55A8;
+extern f32 lbl_803E55AC;
+extern f32 lbl_803E55B0;
+extern f32 lbl_803E55B4;
+extern f32 lbl_803E55B8;
+extern f32 lbl_803E55BC;
+extern f32 lbl_803E55C0;
+extern f64 lbl_803E55C8;
+extern f32 lbl_803E55D0;
+extern f32 lbl_803E55D4;
+extern f32 lbl_803E55D8;
+extern f32 lbl_803E55DC;
+extern f32 lbl_803E55E0;
+extern f64 lbl_803E55E8;
 
 #pragma peephole off
 #pragma scheduling off
-void sc_totempole_init(u8* obj, u8* params) {
-    u8* sub = *(u8**)(obj + 0xb8);
-    switch (*(int*)(params + 0x14)) {
-    case 0x44916:
-        *(s16*)sub = 0x84;
-        break;
-    case 0x44909:
-        *(s16*)sub = 0x83;
-        break;
-    case 0x4490C:
-        *(s16*)sub = 0x81;
-        break;
-    case 0x4490F:
-        *(s16*)sub = 0x82;
-        break;
+void sc_musictree_update(int obj)
+{
+    int inner = *(int *)(obj + 0xb8);
+    f32 stk;
+    int rcType;
+    f32 hx, hy, hz;
+    int hr1, hr2, hr3;
+    int i;
+    int *p;
+    int *q;
+    f32 vec[3];
+    s16 dist;
+
+    ObjAnim_AdvanceCurrentMove(obj, &stk, *(f32 *)(inner + 0x34), timeDelta);
+    if (*(u8 *)(inner + 0x4c) == 0) {
+        return;
     }
-    *(s16*)obj = (s16)(params[0x1a] << 8);
+    if (*(f32 *)(inner + 0x3c) > lbl_803E5590) {
+        *(f32 *)(inner + 0x3c) = *(f32 *)(inner + 0x3c) - timeDelta;
+    }
+    if (*(f32 *)(inner + 0x34) > lbl_803E5594) {
+        *(f32 *)(inner + 0x34) = *(f32 *)(inner + 0x34) - lbl_803E5598;
+    }
+    if ((*(u8 *)(inner + 0x4c) & 0x80) && *(int *)(obj + 0xf8) != 0) {
+        p = (int *)inner;
+        q = (int *)inner;
+        for (i = 0; i < 3; i++) {
+            if (*(void **)p == NULL) {
+                fn_801DBFA0(obj, inner, framesThisStep, (s8)i);
+            } else {
+                int r = (*(int (**)(int))(*(int *)(*p + 0x68) + 0x28))(*p);
+                if (r > 3) {
+                    *p = 0;
+                } else {
+                    (*(void (**)(int, int))(*(int *)(*(int *)*p + 0x68) + 0x24))(*p, (int)q + 0xc);
+                }
+            }
+            p = (int *)((char *)p + 4);
+            q = (int *)((char *)q + 0xc);
+        }
+    }
+    if ((*(u8 *)(inner + 0x4c) & 0x20) == 0) {
+        goto end;
+    }
+    if (*(u8 *)(inner + 0x4c) & 0xc0) {
+        rcType = ObjHits_GetPriorityHitWithPosition(obj, &hr1, &hr2, &hr3, &hx, &hy, &hz);
+    } else {
+        rcType = ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int *)(inner + 0x44));
+    }
+    if (*(f32 *)(inner + 0x40) > lbl_803E5590) {
+        *(f32 *)(inner + 0x40) = *(f32 *)(inner + 0x40) - timeDelta;
+    }
+    if (rcType == 0) goto end;
+    if (rcType == 0x11) goto end;
+    if (*(f32 *)(inner + 0x40) >= lbl_803E5590) goto end;
+    if (*(u8 *)(inner + 0x4c) & 0xc0) {
+        hx = hx + playerMapOffsetX;
+        hz = hz + playerMapOffsetZ;
+        objLightFn_8009a1dc(obj, &hx, 1, 0);
+        Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
+        fn_801DC0BC(obj, inner, *(u8 *)(inner + 0x4c) & 0xf);
+    } else {
+        Sfx_PlayFromObject(obj, 0x129);
+        Sfx_PlayFromObject(obj, 0x12a);
+    }
+    {
+        f32 zero = lbl_803E5590;
+        vec[0] = zero;
+        vec[1] = lbl_803E55A0 * *(f32 *)(inner + 0x38);
+        vec[2] = zero;
+        fn_80096C94(obj, *(u8 *)(inner + 0x4c) & 0xf, 0x14, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
+    }
+    *(f32 *)(inner + 0x34) = lbl_803E5588;
+    *(f32 *)(inner + 0x40) = lbl_803E55A8;
+    if (*(u8 *)(inner + 0x4c) & 0x80) {
+        int *pp = (int *)inner;
+        int idx;
+        for (idx = 0; idx < 3; idx++) {
+            int rc = *pp;
+            if (rc != 0) {
+                int rr = (*(int (**)(int))(*(int *)(*(int *)rc + 0x68) + 0x28))(rc);
+                if (rr > 1) {
+                    ObjHits_RecordObjectHit(*pp, obj, 0xe, 1, 0);
+                }
+            }
+            pp = (int *)((char *)pp + 4);
+        }
+    }
+end:
+    {
+        void *player = Obj_GetPlayerObject();
+        f32 dx = *(f32 *)(obj + 0xc) - *(f32 *)((char *)player + 0xc);
+        f32 dz = *(f32 *)(obj + 0x14) - *(f32 *)((char *)player + 0x14);
+        f32 d = sqrtf(dx * dx + dz * dz);
+        s32 dl = (s32)d;
+        u16 du = (u16)dl;
+        s16 hr = *(s16 *)(inner + 0x48);
+        if (du < (u16)hr) {
+            if ((*(u8 *)(inner + 0x4c) & 0x10) && (u16)*(s16 *)(inner + 0x4a) >= du && *(f32 *)(inner + 0x3c) <= lbl_803E5590) {
+                vec[0] = lbl_803E5590;
+                vec[1] = lbl_803E55AC * (lbl_803E55A0 * *(f32 *)(inner + 0x38));
+                vec[2] = lbl_803E5590;
+                fn_80096C94(obj, *(u8 *)(inner + 0x4c) & 0xf, 0xa, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 1);
+                *(f32 *)(inner + 0x3c) = lbl_803E55B0;
+            }
+            *(f32 *)(inner + 0x30) = *(f32 *)(inner + 0x30) - timeDelta;
+            if (*(f32 *)(inner + 0x30) <= lbl_803E5590) {
+                vec[0] = lbl_803E5590;
+                vec[1] = lbl_803E55A0 * *(f32 *)(inner + 0x38);
+                vec[2] = lbl_803E5590;
+                mathFn_80021ac8(obj, vec);
+                fn_80096C94(obj, *(u8 *)(inner + 0x4c) & 0xf, 1, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
+                *(f32 *)(inner + 0x30) = *(f32 *)(inner + 0x30) + lbl_803E55B4;
+            }
+        }
+        dist = (s16)dl;
+        *(s16 *)(inner + 0x4a) = dist;
+    }
 }
 #pragma scheduling reset
 #pragma peephole reset
-void sc_cloudrunnera_hitDetect(void) {}
-void sc_cloudrunnera_release(void) {}
-void sc_cloudrunnera_initialise(void) {}
 
-/* 8b "li r3, N; blr" returners. */
+#pragma peephole off
+#pragma scheduling off
+void sc_musictree_init(int obj, int p2)
+{
+    int inner = *(int *)(obj + 0xb8);
+    f32 stk;
+    u32 rnd;
+    f32 ratio;
+    f32 zero;
+
+    *(f32 *)(inner + 0x34) = lbl_803E5594;
+    zero = lbl_803E5590;
+    *(f32 *)(inner + 0x30) = zero;
+    *(u16 *)(inner + 0x48) = (u16)((u32)*(u8 *)(p2 + 0x1b) << 1);
+    *(u8 *)(inner + 0x4c) = *(u8 *)(p2 + 0x23);
+    *(f32 *)(inner + 0x3c) = zero;
+    *(f32 *)(inner + 0x38) = *(f32 *)(p2 + 0x1c);
+    *(s16 *)(obj + 4) = (s16)((*(u8 *)(p2 + 0x18) - 0x7f) << 7);
+    *(s16 *)(obj + 2) = (s16)((*(u8 *)(p2 + 0x19) - 0x7f) << 7);
+    *(s16 *)(obj + 0) = (s16)((u32)*(u8 *)(p2 + 0x1a) << 8);
+    *(f32 *)(obj + 8) = lbl_803E55B8 * *(f32 *)(p2 + 0x1c);
+    *(int *)(obj + 0xf8) = 0;
+    *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
+    rnd = randomGetRange(1, 99);
+    ratio = (f32)(s32)rnd / lbl_803E55BC;
+    ObjAnim_SetCurrentMove(obj, 0, ratio, 0);
+    ObjAnim_AdvanceCurrentMove(obj, &stk, lbl_803E558C, lbl_803E558C);
+    ObjHitbox_SetCapsuleBounds(obj, (s16)(s32)(lbl_803E55C0 * *(f32 *)(inner + 0x38)), -5, 0xff);
+    if (*(u8 *)(inner + 0x4c) & 0x80) {
+        *(u8 *)(inner + 0x4c) = *(u8 *)(inner + 0x4c) | 0x20;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+void sc_musictree_release(void) {}
+void sc_musictree_initialise(void) {}
+
+#pragma dont_inline on
+void sc_totempole_sortCompletionGameBits(int *bits, int param2)
+{
+    u16 stk[20];
+    u8 i, j;
+    s32 changed = 0;
+
+    for (i = 0; i < 3; i++) {
+        u32 v = GameBit_Get(*(u16 *)((char *)bits + (u32)i * 2));
+        stk[i] = (u16)v;
+    }
+    stk[3] = (u16)param2;
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            u16 a = stk[j + 1];
+            if (a != 0) {
+                u16 b = stk[j];
+                if ((a < b) || (b == 0)) {
+                    stk[j] = a;
+                    stk[j + 1] = b;
+                    changed = 1;
+                }
+            }
+        }
+    }
+    for (i = 0; i < 3; i++) {
+        GameBit_Set(*(u16 *)((char *)bits + (u32)i * 2), (u32)stk[i]);
+    }
+    (void)changed;
+}
+#pragma dont_inline reset
+
 int sc_totempole_getExtraSize(void) { return 0x8; }
 int sc_totempole_getObjectTypeId(void) { return 0x0; }
+void sc_totempole_free(void) {}
+
+#pragma peephole off
+void sc_totempole_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E55D0); }
+#pragma peephole reset
+
+void sc_totempole_hitDetect(void) {}
+
+#pragma scheduling off
+void sc_totempole_update(int obj)
+{
+    int inner = *(int *)(obj + 0xb8);
+    f32 stk;
+    int played;
+    int i;
+    int *arr;
+    int idx;
+    int count;
+
+    *(u8 *)(inner + 3) = *(u8 *)(inner + 2);
+    *(u8 *)(inner + 2) = (u8)GameBit_Get(*(u16 *)(inner + 0));
+    if (*(u8 *)(inner + 3) != *(u8 *)(inner + 2)) {
+        if (*(u8 *)(inner + 2) != 0) {
+            Sfx_PlayFromObject(obj, 0x3ad);
+            *(f32 *)(inner + 4) = lbl_803E55D4;
+            played = 0;
+            if (GameBit_Get(0x81) != 0 && GameBit_Get(0x82) != 0 && GameBit_Get(0x83) != 0 && GameBit_Get(0x84) != 0) {
+                Sfx_PlayFromObject(0, 0x7e);
+                played = 1;
+                arr = ObjList_GetObjects(&idx, &count);
+                for (i = idx; i < count; i++) {
+                    if (arr[i] != obj && *(s16 *)(arr[i] + 0x46) == 0x282) {
+                        (*(void (**)(int, int))(*(int *)(*(int *)(arr[i] + 0x68)) + 0x20))(arr[i], 6);
+                        break;
+                    }
+                }
+                {
+                    f64 d = (f64)fn_8001461C() / (f64)lbl_803E55D8;
+                    s32 t = (s32)d;
+                    (void)t;
+                }
+                sc_totempole_sortCompletionGameBits((int *)&lbl_803DC068, 0);
+            }
+            if (!played) {
+                Sfx_PlayFromObject(0, 0x109);
+            }
+        } else {
+            Sfx_PlayFromObject(obj, 0x3ad);
+            *(f32 *)(inner + 4) = lbl_803E55DC;
+        }
+    }
+    ObjAnim_AdvanceCurrentMove(obj, &stk, *(f32 *)(inner + 4), timeDelta);
+    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int *)&lbl_803DDC08);
+}
+#pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void sc_totempole_init(int obj, int p2)
+{
+    int inner = *(int *)(obj + 0xb8);
+    switch (*(int *)(p2 + 0x14)) {
+    case 0x44916:
+        *(s16 *)inner = 0x84;
+        break;
+    case 0x44909:
+        *(s16 *)inner = 0x83;
+        break;
+    case 0x4490C:
+        *(s16 *)inner = 0x81;
+        break;
+    case 0x4490F:
+        *(s16 *)inner = 0x82;
+        break;
+    }
+    *(s16 *)obj = (s16)((u32)*(u8 *)(p2 + 0x1a) << 8);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+void sc_totempole_release(void) {}
+void sc_totempole_initialise(void) {}
+
 int sc_cloudrunnera_getExtraSize(void) { return 0x140; }
 int sc_cloudrunnera_getObjectTypeId(void) { return 0xb; }
 
-extern uint GameBit_Get(int id);
-extern int *gObjectTriggerInterface;
-extern int *gTitleMenuControlInterfaceCopy;
-#define gTitleMenuControlInterface gTitleMenuControlInterfaceCopy
 #pragma scheduling off
 #pragma peephole off
-int fn_801DD170(void) {
-    int r;
-    if (GameBit_Get(0x639) != 0) { r = 0; } else { r = 1; }
-    return r;
-}
-void sc_cloudrunnera_free(int *obj) {
+void sc_cloudrunnera_free(int *obj)
+{
     void *inner = *(void **)((char *)obj + 0xb8);
     ((void (*)(void *))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
     ((void (*)(int *, int, int, int, int))(*(int *)(*gTitleMenuControlInterface + 0x8)))(obj, 0xffff, 0, 0, 0);
@@ -515,11 +358,142 @@ void sc_cloudrunnera_free(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E55D0;
-extern void objRenderFn_8003b8f4(f32);
-extern f32 lbl_803E55E0;
 #pragma peephole off
-void sc_totempole_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E55D0); }
 void sc_cloudrunnera_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E55E0); }
 #pragma peephole reset
+
+void sc_cloudrunnera_hitDetect(void) {}
+
+#pragma scheduling off
+void sc_cloudrunnera_update(int obj)
+{
+    int inner = *(int *)(obj + 0xb8);
+    void *sub;
+    int i;
+
+    sub = *(void **)(obj + 0x4c);
+    if (sub == NULL) return;
+    if (*(s16 *)((char *)sub + 0x18) == -1) return;
+    if (((int (*)(int, f32))(*(int *)(*gObjectTriggerInterface + 0x14)))(obj, (f32)(u32)lbl_803DB411) != 0
+        && *(s16 *)(obj + 0xb4) == -2) {
+        s32 mark = (s8)*(u8 *)(inner + 0x57);
+        int found = 0;
+        int matchCount = 0;
+        int *arr;
+        int idx, count;
+        arr = ObjList_GetObjects(&idx, &count);
+        idx = 0;
+        for (; idx < count; idx++) {
+            int o = arr[idx];
+            s16 t = *(s16 *)(o + 0xb4);
+            if (t == mark) found = o;
+            if (t == -2 && *(s16 *)(o + 0x44) == 0x10) {
+                int innerO = *(int *)(o + 0xb8);
+                s32 v = (s8)*(u8 *)(innerO + 0x57);
+                if (mark == v) matchCount++;
+            }
+        }
+        if (matchCount <= 1 && found != 0 && *(s16 *)(found + 0xb4) != -1) {
+            *(s16 *)(found + 0xb4) = -1;
+            ((void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(mark);
+        }
+        *(s16 *)(obj + 0xb4) = -1;
+    }
+
+    for (i = 0; i < *(u8 *)(inner + 0x8b); i++) {
+        int mode = *(u8 *)(inner + 0x81 + i);
+        if (mode == 1) {
+            int slot = *(int *)(obj + 0xc8);
+            if (slot != 0) {
+                ((void (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x4c)))(slot, 0);
+            }
+        } else if (mode >= 1) {
+            if (mode < 3) {
+                int innerSlot = *(int *)(obj + 0xc8);
+                if (innerSlot != 0) {
+                    ObjLink_DetachChild(obj, innerSlot);
+                    Obj_FreeObject(innerSlot);
+                }
+            }
+        } else if (mode >= 0) {
+            if (*(int *)(obj + 0xc8) != 0) continue;
+            if (!Obj_IsLoadingLocked(obj)) continue;
+            {
+                int setup = Obj_AllocObjectSetup(0x30, 0x6e8);
+                int newObj;
+                *(u8 *)(setup + 0x1b) = 0x9;
+                *(u8 *)(setup + 0x1c) = 0;
+                *(u8 *)(setup + 0x1d) = 0;
+                *(f32 *)(setup + 0x20) = lbl_803E55E0;
+                *(u8 *)(setup + 0x26) = 0xff;
+                *(u8 *)(setup + 0x27) = 0xff;
+                *(u8 *)(setup + 0x28) = 0xff;
+                *(s16 *)(setup + 0x24) = -1;
+                *(u8 *)(setup + 0x4) = 2;
+                *(u8 *)(setup + 0x5) = 1;
+                *(u8 *)(setup + 0x6) = 0xff;
+                *(u8 *)(setup + 0x7) = 0xff;
+                *(u8 *)(setup + 0x29) = 1;
+                *(u8 *)(setup + 0x2a) = 0;
+                newObj = Obj_SetupObject(setup, 5, (s8)*(u8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                *(s16 *)(newObj + 6) = (s16)(*(s16 *)(newObj + 6) | 0x4000);
+                ObjLink_AttachChild(obj, newObj, 0);
+                Sfx_PlayFromObject(obj, 0x10f);
+            }
+        }
+    }
+    {
+        int s = *(int *)(obj + 0xc8);
+        if (s != 0) {
+            *(s16 *)(s + 4) = *(s16 *)(obj + 4);
+            *(s16 *)(*(int *)(obj + 0xc8) + 2) = (s16)(*(s16 *)(obj + 2) + 0xe38);
+            *(s16 *)(*(int *)(obj + 0xc8) + 0) = (s16)(*(s16 *)(obj + 0) + -0x8000);
+        }
+    }
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+void sc_cloudrunnera_init(int obj, int p2)
+{
+    int inner;
+    f32 base;
+
+    objSetSlot(obj, 0x64);
+    inner = *(int *)(obj + 0xb8);
+    *(s16 *)(inner + 0x6a) = *(s16 *)(p2 + 0x1a);
+    *(s16 *)(inner + 0x6e) = -1;
+    base = lbl_803E55E0;
+    *(f32 *)(inner + 0x24) = base / (base + (f32)(u32)*(u8 *)(p2 + 0x24));
+    *(int *)(inner + 0x28) = -1;
+    *(int *)(obj + 0xf8) = 0;
+
+    if (*(int *)(obj + 0xf4) == 0 && *(s16 *)(p2 + 0x18) != 1) {
+        ((void (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, p2);
+        *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
+    } else if (*(int *)(obj + 0xf4) != 0 && *(s16 *)(p2 + 0x18) != *(int *)(obj + 0xf4) - 1) {
+        ((void (*)(int))(*(int *)(*gObjectTriggerInterface + 0x24)))(inner);
+        if (*(s16 *)(p2 + 0x18) != -1) {
+            ((void (*)(int, int))(*(int *)(*gObjectTriggerInterface + 0x1c)))(inner, p2);
+        }
+        *(int *)(obj + 0xf4) = *(s16 *)(p2 + 0x18) + 1;
+    }
+    if (*(int *)(obj + 0x64) != 0) {
+        *(u8 *)(*(int *)(obj + 0x64) + 0x3a) = 0x64;
+        *(u8 *)(*(int *)(obj + 0x64) + 0x3b) = 0x96;
+    }
+}
+#pragma scheduling reset
+
+void sc_cloudrunnera_release(void) {}
+void sc_cloudrunnera_initialise(void) {}
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801DD170(void) {
+    int r;
+    if (GameBit_Get(0x639) != 0) { r = 0; } else { r = 1; }
+    return r;
+}
+#pragma peephole reset
+#pragma scheduling reset
