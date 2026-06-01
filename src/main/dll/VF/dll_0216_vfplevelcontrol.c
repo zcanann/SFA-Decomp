@@ -39,15 +39,6 @@ extern f32 lbl_803E6060;
 
 void fn_801F9804(int obj);
 
-static void vfplevelcontrol_tickGlobalTimer(void) {
-    if (lbl_803DC148 != 0) {
-        lbl_803DC148 -= (s16)(int)timeDelta;
-        if (lbl_803DC148 <= 0) {
-            lbl_803DC148 = 0;
-        }
-    }
-}
-
 #pragma peephole off
 #pragma scheduling off
 void vfplevelcontrol_update(int obj) {
@@ -71,7 +62,12 @@ void vfplevelcontrol_update(int obj) {
         ((MapEventInterface *)*gMapEventInterface)->getMode((s8)*(u8 *)((char *)obj + 0xac));
     switch (mapEventState) {
     case 1:
-        vfplevelcontrol_tickGlobalTimer();
+        if (lbl_803DC148 != 0) {
+            lbl_803DC148 -= (s16)(int)timeDelta;
+            if (lbl_803DC148 <= 0) {
+                lbl_803DC148 = 0;
+            }
+        }
         Obj_GetPlayerObject();
         if (GameBit_Get(0x4ec) == 0 && GameBit_Get(0x9b1) != 0 &&
             GameBit_Get(0x9b2) != 0) {
@@ -83,11 +79,21 @@ void vfplevelcontrol_update(int obj) {
         }
         break;
     case 2:
-        vfplevelcontrol_tickGlobalTimer();
+        if (lbl_803DC148 != 0) {
+            lbl_803DC148 -= (s16)(int)timeDelta;
+            if (lbl_803DC148 <= 0) {
+                lbl_803DC148 = 0;
+            }
+        }
         fn_801F9804(obj);
         break;
     case 3:
-        vfplevelcontrol_tickGlobalTimer();
+        if (lbl_803DC148 != 0) {
+            lbl_803DC148 -= (s16)(int)timeDelta;
+            if (lbl_803DC148 <= 0) {
+                lbl_803DC148 = 0;
+            }
+        }
         Obj_GetPlayerObject();
         break;
     }
