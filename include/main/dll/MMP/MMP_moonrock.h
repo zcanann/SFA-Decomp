@@ -38,6 +38,7 @@ void sfxplayerObj_free(u8 *obj);
 void sfxplayerObj_update(u8 *obj);
 int sfxplayerObj_getExtraSize(void);
 void fn_80198A00(u8 *obj, int seqArg);
+void fn_80198DE8(u8 *obj, int seqArg);
 
 void FUN_80197960(int param_1);
 void FUN_80197990(int param_1);

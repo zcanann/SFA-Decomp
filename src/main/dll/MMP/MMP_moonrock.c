@@ -45,6 +45,7 @@ extern f32 lbl_803E4090;
 extern f32 lbl_803E40A0;
 extern f64 lbl_803E40B0;
 extern f32 lbl_803E40B8;
+extern f32 lbl_803E40D8;
 extern f32 lbl_803E4D00;
 extern f32 lbl_803E4D04;
 extern f32 lbl_803E4D08;
@@ -65,6 +66,9 @@ extern u8 *Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 value);
 extern int getCurSeqNo(void);
 extern void Sfx_KeepAliveLoopedObjectSound(u8 *obj, int sfxId);
+extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
+extern void OSReport(const char *fmt, ...);
+extern const char sMoonrockTriggerIdentFormat[];
 
 /*
  * --INFO--
@@ -613,6 +617,87 @@ void fn_80198A00(u8 *obj, int seqArg)
     }
     else {
         objInterpretSeq(obj, seqArg, -2, (int)hitDistance);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80198DE8(u8 *obj, int seqArg)
+{
+    u8 *data;
+    u8 *state;
+    f32 planeBase;
+    f32 normalX;
+    f32 normalY;
+    f32 normalZ;
+    f32 nearX;
+    f32 nearY;
+    f32 nearZ;
+    f32 farX;
+    f32 farY;
+    f32 farZ;
+    f32 nearDist;
+    f32 farDist;
+    f32 deltaX;
+    f32 deltaY;
+    f32 deltaZ;
+    f32 t;
+    f32 localPos[3];
+    f32 radius;
+    s8 triggerState;
+
+    data = *(u8 **)(obj + 0x4c);
+    state = *(u8 **)(obj + 0xb8);
+
+    planeBase = *(f32 *)(state + 0x18);
+    normalZ = *(f32 *)(state + 0x14);
+    nearZ = *(f32 *)(state + 0x24);
+    normalX = *(f32 *)(state + 0x0c);
+    nearX = *(f32 *)(state + 0x1c);
+    normalY = *(f32 *)(state + 0x10);
+    nearY = *(f32 *)(state + 0x20);
+
+    nearDist = planeBase + ((normalZ * nearZ) + (normalX * nearX + normalY * nearY));
+    farZ = *(f32 *)(state + 0x30);
+    farX = *(f32 *)(state + 0x28);
+    farY = *(f32 *)(state + 0x2c);
+    farDist = planeBase + (normalZ * farZ + (normalX * farX + normalY * farY));
+
+    if (farDist < lbl_803E40D8) {
+        if (nearDist < lbl_803E40D8) {
+            triggerState = 2;
+        }
+        else {
+            triggerState = 1;
+        }
+    }
+    else if (nearDist < lbl_803E40D8) {
+        triggerState = -1;
+    }
+    else {
+        triggerState = -2;
+    }
+
+    if ((triggerState == 1) || (triggerState == -1)) {
+        deltaX = farX - nearX;
+        deltaY = farY - nearY;
+        deltaZ = farZ - nearZ;
+        t = (((-normalX * nearX - (normalY * nearY)) - (normalZ * nearZ)) - planeBase) /
+            ((normalY * deltaY) + (normalX * deltaX) + (normalZ * deltaZ));
+
+        localPos[0] = t * deltaX + nearX;
+        localPos[1] = t * deltaY + nearY;
+        localPos[2] = t * deltaZ + nearZ;
+        PSMTXMultVec((f32 *)(state + 0x38), localPos, localPos);
+
+        radius = *(f32 *)(state + 0x34);
+        if ((localPos[0] >= -radius) && (localPos[0] <= radius) &&
+            (localPos[1] >= -radius) && (localPos[1] <= radius)) {
+            OSReport(sMoonrockTriggerIdentFormat, (int)triggerState, *(u32 *)(data + 0x14));
+            objInterpretSeq(obj, seqArg, (int)triggerState, (int)farDist);
+        }
     }
 }
 #pragma peephole reset
