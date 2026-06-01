@@ -1052,6 +1052,12 @@ typedef struct SaveSelectInfo {
     u8 pad22[2];
 } SaveSelectInfo;
 
+typedef struct MapBitTransient {
+    s8 mapId;
+    u8 shift;
+    s8 timer;
+} MapBitTransient;
+
 extern SaveGameDefaultPosition lbl_802C2170;
 
 int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition *object)
@@ -1286,7 +1292,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     u32 newStatus;
     u32 bit;
     int i;
-    s8 *transient;
+    MapBitTransient *transient;
     u32 *groupStatuses;
     u16 *eventIds;
 
@@ -1338,19 +1344,19 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             }
 
             if (!createTransient) {
-                transient = mapBitBase;
-                for (i = 0; i < 20; i++, transient += 3) {
-                    if (transient[0] == idx && (u8)transient[1] == shift) {
+                transient = (MapBitTransient *)mapBitBase;
+                for (i = 0; i < 20; i++, transient++) {
+                    if (transient->mapId == idx && transient->shift == shift) {
                         return;
                     }
                 }
 
-                transient = mapBitBase;
-                for (i = 0; i < 20; i++, transient += 3) {
-                    if (transient[0] == -1) {
-                        transient[0] = (s8)idx;
-                        transient[1] = (s8)shift;
-                        transient[2] = 3;
+                transient = (MapBitTransient *)mapBitBase;
+                for (i = 0; i < 20; i++, transient++) {
+                    if (transient->mapId == -1) {
+                        transient->mapId = (s8)idx;
+                        transient->shift = (u8)shift;
+                        transient->timer = 3;
                         break;
                     }
                 }
@@ -13627,12 +13633,12 @@ void SaveGame_gplaySetAct(int idx, int act) {
 }
 s8 mapBitFindFn(int a, int b) {
     int i;
-    s8 *p;
-    for (i = 0, p = lbl_803A2F80; i < 20; i++) {
-        if (a == p[0] && b == ((u8 *)p)[1]) {
+    MapBitTransient *p;
+    for (i = 0, p = (MapBitTransient *)lbl_803A2F80; i < 20; i++) {
+        if (a == p->mapId && b == p->shift) {
             return (s8)i;
         }
-        p += 3;
+        p++;
     }
     return -1;
 }
@@ -13715,16 +13721,16 @@ void loadTaskTexts(void) {
     }
 }
 void mapBitsFn_800e9418(void) {
-    s8 *p;
+    MapBitTransient *p;
     int i;
-    for (i = 0, p = lbl_803A2F80; i < 20; i++) {
-        if (p[0] != -1) {
-            p[2]--;
-            if (p[2] <= 0) {
-                p[0] = -1;
+    for (i = 0, p = (MapBitTransient *)lbl_803A2F80; i < 20; i++) {
+        if (p->mapId != -1) {
+            p->timer--;
+            if (p->timer <= 0) {
+                p->mapId = -1;
             }
         }
-        p += 3;
+        p++;
     }
 }
 extern s16 lbl_803119E0[];
