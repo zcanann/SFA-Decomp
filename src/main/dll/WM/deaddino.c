@@ -51,12 +51,6 @@ extern f32 lbl_803E5600;
 extern f32 lbl_803E5604;
 extern f32 lbl_803E5608;
 
-static void sc_totempuzzle_markSolved(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state, int step)
-{
-    state->angleTarget = lbl_803E55F0 * (f32)step;
-    obj->angle = (s16)(s32)state->angleTarget;
-}
-
 #pragma scheduling off
 #pragma peephole off
 int fn_801DD1A8(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state)
@@ -86,7 +80,8 @@ int fn_801DD1A8(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state)
                     if (peerState->step + 1 == SC_TOTEMPUZZLE_FORWARD_STEP) {
                         solvedCount++;
                         if (peer == obj) {
-                            sc_totempuzzle_markSolved(obj, state, state->step + 1);
+                            state->angleTarget = lbl_803E55F0 * (f32)(state->step + 1);
+                            obj->angle = (s16)(s32)state->angleTarget;
                             solvedThisObject = 1;
                         }
                     } else if (peer == obj) {
@@ -95,7 +90,8 @@ int fn_801DD1A8(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state)
                 } else if (peerState->step == SC_TOTEMPUZZLE_FORWARD_STEP) {
                     solvedCount++;
                     if (peer == obj) {
-                        sc_totempuzzle_markSolved(obj, state, state->step);
+                        state->angleTarget = lbl_803E55F0 * (f32)state->step;
+                        obj->angle = (s16)(s32)state->angleTarget;
                         solvedThisObject = 1;
                     }
                 } else if (peer == obj) {
