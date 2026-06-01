@@ -440,7 +440,8 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
     p_xz = dz - dx;
     dz2 = dz * 2;
     p_yz = dy - dz;
-    steps = dx + (dy + dz);
+    steps = dy + dz;
+    steps += dx;
 
     voxmaps_updateActiveMap(&cur);
 
