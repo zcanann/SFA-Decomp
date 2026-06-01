@@ -37,6 +37,10 @@ extern f64 DOUBLE_803e4d40;
 extern f64 DOUBLE_803e4d48;
 extern f64 DOUBLE_803e4d58;
 extern f32 lbl_803DC074;
+extern f32 timeDelta;
+extern f32 lbl_803E4088;
+extern f32 lbl_803E408C;
+extern f32 lbl_803E4090;
 extern f32 lbl_803E40A0;
 extern f32 lbl_803E4D00;
 extern f32 lbl_803E4D04;
@@ -89,6 +93,105 @@ void lightning_render(u8* obj)
         renderFn_8008f904(handle);
     }
 }
+
+extern int fn_8008FB20(double radiusX,double radiusY,float *start,float *end,int param_5,
+                       int param_6,int param_7);
+extern void hitDetectFn_80097070(double radius,u8 *obj,int param_3,int param_4,int param_5,
+                                 int param_6);
+extern void objFn_800972dc(double radius,double scale,u8 *obj,int param_4,int param_5,
+                           int param_6,int param_7,int param_8,int param_9);
+
+#pragma scheduling off
+#pragma peephole off
+void lightning_update(u8 *obj)
+{
+    u8 *state;
+    u8 *data;
+    u32 *objects;
+    u8 *otherState;
+    int objectCount;
+    int objectIndex;
+    int spawnLightning;
+    s16 delayJitter;
+    int handle;
+
+    state = *(u8 **)(obj + 0xb8);
+    data = *(u8 **)(obj + 0x4c);
+    if (*(s16 *)(data + 0x24) != -1) {
+        if ((state[0x25] & 0x80) != 0) {
+            if (GameBit_Get(*(s16 *)(data + 0x24)) == 0) {
+                state[0x25] = state[0x25] & ~0x80;
+                if (*(u32 *)state != 0) {
+                    mm_free(*(void **)state);
+                    *(u32 *)state = 0;
+                }
+            }
+        }
+        else if (GameBit_Get(*(s16 *)(data + 0x24)) != 0) {
+            state[0x25] = (state[0x25] & ~0x80) | 0x80;
+        }
+    }
+
+    if (*(u32 *)state == 0 && (state[0x25] & 0x80) != 0) {
+        spawnLightning = 0;
+        *(f32 *)(state + 0x18) -= timeDelta;
+        if (*(f32 *)(state + 0x18) <= lbl_803E4088) {
+            *(f32 *)(state + 0x18) += (f32)(s32)((u32)data[0x23] * 0x3c);
+            spawnLightning = 1;
+        }
+        if (spawnLightning != 0) {
+            objects = (u32 *)ObjGroup_GetObjects(MMP_LIGHTNING_OBJGROUP,&objectCount);
+            objectIndex = 0;
+            while (objectIndex < objectCount) {
+                if (*(u32 *)(*(u32 *)(objects[objectIndex] + 0x4c) + 0x14) ==
+                    *(u32 *)(state + 0x20)) {
+                    break;
+                }
+                objectIndex++;
+            }
+            if (objectIndex == objectCount) {
+                state[0x25] = state[0x25] & ~0x80;
+                return;
+            }
+
+            delayJitter = (s16)randomGetRange(-5,5);
+            handle = fn_8008FB20(*(f32 *)(state + 0x08),*(f32 *)(state + 0x0c),
+                                 (float *)(obj + 0x0c),(float *)(objects[objectIndex] + 0x0c),
+                                 (u16)state[0x1c] + delayJitter,state[0x1d],
+                                 (state[0x25] >> 5) & 1);
+            *(int *)state = handle;
+            *(f32 *)(state + 0x04) = lbl_803E4088;
+            if ((state[0x24] & 1) != 0) {
+                hitDetectFn_80097070(*(f32 *)(state + 0x10),obj,1,7,0x1e,0);
+            }
+            otherState = *(u8 **)(objects[objectIndex] + 0xb8);
+            if ((otherState[0x24] & 1) != 0) {
+                hitDetectFn_80097070(*(f32 *)(otherState + 0x10),(u8 *)objects[objectIndex],1,7,
+                                     0x1e,0);
+            }
+            if ((state[0x24] & 2) != 0) {
+                objFn_800972dc(*(f32 *)(state + 0x14),lbl_803E408C,obj,5,1,1,100,0,0);
+            }
+            if ((otherState[0x24] & 2) != 0) {
+                objFn_800972dc(*(f32 *)(otherState + 0x14),lbl_803E408C,
+                               (u8 *)objects[objectIndex],5,1,1,100,0,0);
+            }
+        }
+    }
+
+    if (*(u32 *)state != 0) {
+        if (((state[0x25] >> 6) & 1) == 0) {
+            *(f32 *)(state + 0x04) += timeDelta;
+            *(s16 *)(*(u32 *)state + 0x20) = (s16)(int)(lbl_803E4090 + *(f32 *)(state + 0x04));
+        }
+        if (*(u16 *)(*(u32 *)state + 0x22) <= *(u16 *)(*(u32 *)state + 0x20)) {
+            mm_free(*(void **)state);
+            *(u32 *)state = 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
