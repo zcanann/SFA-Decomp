@@ -93,25 +93,6 @@ extern f32 lbl_803E53B4;
 /*
  * --INFO--
  *
- * Function: SHkillermushroom_free
- * EN v1.0 Address: 0x801D2C54
- * EN v1.0 Size: 32b
- * EN v1.1 Address: 0x801D3138
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void SHkillermushroom_free(int param_1)
-{
-  FUN_8003b818(param_1);
-  return;
-}
-
-/*
- * --INFO--
- *
  * Function: bombplantspore_getExtraSize
  * EN v1.0 Address: 0x801D3378
  * EN v1.0 Size: 8b
@@ -125,88 +106,6 @@ void SHkillermushroom_free(int param_1)
 int bombplantspore_getExtraSize(void)
 {
   return 0x2b4;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801d2c74
- * EN v1.0 Address: 0x801D2C74
- * EN v1.0 Size: 348b
- * EN v1.1 Address: 0x801D3160
- * EN v1.1 Size: 228b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801d2c74(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9,undefined4 param_10,int param_11)
-{
-  int iVar1;
-  int iVar2;
-  
-  iVar2 = *(int *)(param_9 + 0x26);
-  iVar1 = FUN_80017a90();
-  if (iVar1 != 0) {
-    FUN_8013651c(iVar1);
-  }
-  FUN_80006824((uint)param_9,SFXmv_curtainrustle);
-  *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) = *(ushort *)(*(int *)(param_9 + 0x2a) + 0x60) | 0x40
-  ;
-  FUN_8008112c((double)FLOAT_803e6010,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-               param_9,0,1,1,1,0,1,0);
-  *(undefined *)(param_11 + 0x14) = 1;
-  *(byte *)(param_11 + 0x15) = *(byte *)(param_11 + 0x15) | 2;
-  if ((int)*(short *)(iVar2 + 0x1c) == 0xffffffff) {
-    iVar1 = 0;
-    do {
-      FUN_801d2db8(param_9);
-      iVar1 = iVar1 + 1;
-    } while (iVar1 < 3);
-  }
-  else {
-    GameBit_Set((int)*(short *)(iVar2 + 0x1c),0);
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801d2dd0
- * EN v1.0 Address: 0x801D2DD0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801D3244
- * EN v1.1 Size: 1508b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801d2dd0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9,undefined4 param_10,undefined4 param_11,uint *param_12,
-                 float *param_13,undefined4 *param_14,float *param_15,undefined4 param_16)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801d2dd4
- * EN v1.0 Address: 0x801D2DD4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801D3828
- * EN v1.1 Size: 328b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801d2dd4(undefined2 *param_1,int param_2,int param_3)
-{
 }
 
 /*
