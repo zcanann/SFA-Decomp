@@ -15,9 +15,6 @@ void FUN_80185c48(void);
 void FUN_80185c9c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState);
 void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void FUN_8018671c(undefined2 *param_1,int param_2);
-void FUN_80186720(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_80186748(int param_1);
 
 extern ObjectDescriptor gDummy108ObjDescriptor;
 extern ObjectDescriptor gPortalSpellDoorObjDescriptor;
@@ -37,9 +34,15 @@ int portalspelldoor_func08(void);
 void portalspelldoor_free(void);
 void portalspelldoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void portalspelldoor_hitDetect(void);
-void portalspelldoor_update(void);
+void portalspelldoor_update(int obj);
 void portalspelldoor_init(u8* obj, u8* data);
 void portalspelldoor_release(void);
 void portalspelldoor_initialise(void);
+
+void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c);
+void LanternFireFly_func0B(int obj);
+void LanternFireFly_setScale(u8* obj, f32* vec);
+void fn_801868D0(int obj);
+void fn_801869DC(int obj);
 
 #endif /* MAIN_DLL_CF_WINDLIFT_H_ */

@@ -142,6 +142,14 @@ extern f32 lbl_803E3A28;
 extern f32 lbl_803E3A2C;
 extern f64 lbl_803E3A48;
 extern f64 lbl_803E3A50;
+extern f32 lbl_803E3AA0;
+extern f32 lbl_803E3AA4;
+extern f32 lbl_803E3AA8;
+extern f64 lbl_803E3AB0;
+extern f32 lbl_803E3AB8;
+extern f32 lbl_803E3ABC;
+extern f32 lbl_803E3AC0;
+extern f32 lbl_803E3AC4;
 extern f32 lbl_803DBDC4;
 extern f32 lbl_803DBDC8;
 extern f32 lbl_803DBDCC;
@@ -154,6 +162,10 @@ extern void Sfx_KeepAliveLoopedObjectSoundLimited(int obj, int sfx, int limit);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern u32 randomGetRange(int min, int max);
+extern void objHitDetectFn_80062e84(int obj, int a, int b);
+extern void mathFn_80021ac8(void *rotation, f32 *outVec);
+extern int gameBitIncrement(int eventId);
+extern f32 Vec_distance(void *a, void *b);
 extern void playerAddMoney(int player, u8 b);
 extern int objHitboxFn_801843c0(int obj);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
@@ -1381,45 +1393,7 @@ void fn_801862CC(int obj, int p)
 /*
  * --INFO--
  *
- * Function: FUN_8018671c
- * EN v1.0 Address: 0x8018671C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x80186824
- * EN v1.1 Size: 480b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8018671c(undefined2 *param_1,int param_2)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80186720
- * EN v1.0 Address: 0x80186720
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x80186A04
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80186720(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80186748
+ * Function: portalspelldoor_update
  * EN v1.0 Address: 0x80186748
  * EN v1.0 Size: 344b
  * EN v1.1 Address: 0x80186A38
@@ -1429,7 +1403,7 @@ void FUN_80186720(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80186748(int param_1)
+void portalspelldoor_update(int param_1)
 {
   uint uVar1;
   uint uVar2;
@@ -1510,6 +1484,116 @@ void LanternFireFly_modelMtxFn(u8* obj, f32 a, f32 b, f32 c) {
     *(f32*)(sub + 0x58) = b;
     *(f32*)(sub + 0x5c) = c;
 }
+
+typedef struct LanternFireFlyVectorParams {
+    s16 yaw;
+    s16 pitch;
+    s16 roll;
+    s16 pad06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} LanternFireFlyVectorParams;
+
+#pragma scheduling off
+#pragma peephole off
+void LanternFireFly_func0B(int obj)
+{
+    u8 *state;
+    u8 *setup;
+    int player;
+    f32 vec[3];
+    f32 playerY;
+    int i;
+
+    state = *(u8 **)(obj + 0xb8);
+    setup = *(u8 **)(obj + 0x4c);
+    *(s16 *)(state + 0x68) = (s16)(s8)setup[0x18];
+    state[0x6a] = setup[0x19];
+    *(f32 *)(state + 0x4c) = lbl_803E3AA0;
+    *(f32 *)(state + 0x50) = (f32)(s32)*(s16 *)(setup + 0x1c);
+    state[0x6f] = 0;
+    objHitDetectFn_80062e84(obj, 0, 1);
+
+    player = Obj_GetPlayerObject();
+    vec[0] = *(f32 *)(player + 0x18);
+    playerY = *(f32 *)(player + 0x1c);
+    vec[1] = playerY + lbl_803E3AA4;
+    vec[2] = *(f32 *)(player + 0x20);
+    *(f32 *)(state + 0x54) = vec[0];
+    *(f32 *)(state + 0x58) = playerY + lbl_803E3AA8;
+    *(f32 *)(state + 0x5c) = vec[2];
+    vec[0] -= *(f32 *)(state + 0x54);
+    vec[1] -= *(f32 *)(state + 0x58);
+    vec[2] -= *(f32 *)(state + 0x5c);
+    *(f32 *)(state + 0x34) = vec[0];
+    *(f32 *)(state + 0x38) = vec[1];
+    *(f32 *)(state + 0x3c) = vec[2];
+    state[0x6c] = 4;
+
+    for (i = 0; i < 6; i++) {
+        fn_801869DC(obj);
+    }
+    state[0x70] = (state[0x70] & 0x3f) | 0x40;
+    *(s32 *)(state + 0x60) = *(s16 *)(setup + 0x1a);
+    gameBitIncrement(0x698);
+}
+
+void fn_801868D0(int obj)
+{
+    u8 *state;
+    LanternFireFlyVectorParams params;
+    int randomHeight;
+
+    state = *(u8 **)(obj + 0xb8);
+    *(f32 *)(state + 0x34) = lbl_803E3AB8;
+    *(f32 *)(state + 0x38) = (f32)(s32)randomGetRange(-*(s16 *)(state + 0x68), *(s16 *)(state + 0x68));
+    if (*(f32 *)(state + 0x50) < lbl_803E3ABC) {
+        *(f32 *)(state + 0x3c) = lbl_803E3AB8;
+    } else {
+        randomHeight = randomGetRange(0x14, (s16)(s32)*(f32 *)(state + 0x50));
+        *(f32 *)(state + 0x3c) = *(f32 *)(state + 0x50) - (f32)randomHeight;
+    }
+    *(s16 *)(state + 0x64) = (s16)(*(s16 *)(state + 0x64) + (s16)randomGetRange(0xbb8, 0x1388));
+    params.yaw = *(s16 *)(state + 0x64);
+    params.pitch = 0;
+    params.roll = 0;
+    params.pad06 = 0;
+    params.scale = lbl_803E3AA0;
+    params.x = lbl_803E3AB8;
+    params.y = lbl_803E3AB8;
+    params.z = lbl_803E3AB8;
+    mathFn_80021ac8(&params, (f32 *)(state + 0x34));
+}
+
+void fn_801869DC(int obj)
+{
+    u8 *state;
+
+    state = *(u8 **)(obj + 0xb8);
+    *(f32 *)(state + 0x04) = *(f32 *)(state + 0x08);
+    *(f32 *)(state + 0x14) = *(f32 *)(state + 0x18);
+    *(f32 *)(state + 0x24) = *(f32 *)(state + 0x28);
+    *(f32 *)(state + 0x08) = *(f32 *)(state + 0x0c);
+    *(f32 *)(state + 0x18) = *(f32 *)(state + 0x1c);
+    *(f32 *)(state + 0x28) = *(f32 *)(state + 0x2c);
+    *(f32 *)(state + 0x0c) = *(f32 *)(state + 0x10);
+    *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x20);
+    *(f32 *)(state + 0x2c) = *(f32 *)(state + 0x30);
+    if ((state[0x70] >> 6) == 1) {
+        int player = Obj_GetPlayerObject();
+        *(f32 *)(state + 0x44) =
+            lbl_803E3AC4 * Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) + lbl_803E3AC0;
+    } else {
+        *(f32 *)(state + 0x44) = lbl_803E3AC4 * (f32)(s32)randomGetRange(0x3c, 0x5a);
+    }
+    *(f32 *)(state + 0x10) = *(f32 *)(state + 0x34);
+    *(f32 *)(state + 0x20) = *(f32 *)(state + 0x38);
+    *(f32 *)(state + 0x30) = *(f32 *)(state + 0x3c);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* portalspelldoor_init: byte<<8 / halfword<<8 stash at obj+0..+2, prime
  * obj+8 with lbl_803E3A8C, derive sub+4 = obj->_a8 * obj+8 * lbl_803E3A90,
