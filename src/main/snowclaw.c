@@ -25,7 +25,7 @@ extern f32 lbl_803E66EC;
 extern int lbl_803DDD38;
 extern void storeZeroToFloatParam(void *p);
 extern void objSeqInitFn_80080078(void *table, int n);
-extern void objRenderFn_8003b8f4(f32 e);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int randomGetRange(int min, int max);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern u8 Obj_IsLoadingLocked(void);
@@ -92,7 +92,7 @@ void snowclaw_init(int *obj, u8 *init);
 void snowclaw_spawnDropBomb(int obj, int a, int b, int c);
 void snowclaw_updateMountAttack(int obj, int mount);
 void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9);
-void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis);
+void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis);
 void snowclaw_hitDetect(int obj);
 void snowclaw_update(int obj);
 int snowclaw_animEventCallback(int obj, int a2, int evt);
@@ -303,11 +303,10 @@ void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p
 
 #pragma scheduling off
 #pragma peephole off
-void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis) {
+void snowclaw_render(int obj, int p2, int p3, int p4, int p5, int vis) {
     int *inner;
     int sub;
     int found;
-    int opacity;
     int oldFlag;
     f32 dist;
     int near;
@@ -319,20 +318,19 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis) {
         *(f32 *)((char *)inner + 0xac) = lbl_803E66F0;
     }
     found = 0;
-    opacity = vis;
     if (*(s8 *)((char *)inner + 0xa4) >= 0 && sub != 0) {
-        if ((*(int (*)(int))(*(int *)(*(int *)(sub + 0x68) + 0x38)))(sub) == 2) {
+        if ((*(int (*)(int))(*(int *)(*(int *)(*(int *)(sub + 0x68)) + 0x38)))(sub) == 2) {
             found = 1;
         }
     }
     if (found != 0) {
         *(s16 *)((char *)obj + 6) |= 8;
-        opacity = (s8)objUpdateOpacity(sub);
-        snowclaw_syncMountTransform(obj, sub, p2, p3, p4, p5, opacity, *(u8 *)((char *)inner + 0xa0), 1);
+        vis = (s8)objUpdateOpacity(sub);
+        snowclaw_syncMountTransform(obj, sub, p2, p3, p4, p5, vis, *(u8 *)((char *)inner + 0xa0), 1);
     } else {
         *(s16 *)((char *)obj + 6) &= ~8;
     }
-    if ((s8)opacity != 0 && *(u8 *)((char *)inner + 0xa0) != 0) {
+    if ((s8)vis != 0 && *(u8 *)((char *)inner + 0xa0) != 0) {
         oldFlag = *(u8 *)((char *)obj + 0x37);
         if (found != 0) {
             *(u8 *)((char *)obj + 0x37) = *(u8 *)((char *)inner + 0xa0);
@@ -341,19 +339,19 @@ void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis) {
             ((*(u8 *)((char *)inner + 0xaa) >> 7) & 1) != 0) {
             near = ObjGroup_FindNearestObject(0x1e, obj, &dist);
             if (near != 0 &&
-                (*(int (*)(int))(*(int *)(*(int *)(near + 0x68) + 0x24)))(near) != 0 &&
-                (*(int (*)(int, int))(*(int *)(*(int *)(near + 0x68) + 0x20)))(near, 0) != 0) {
+                (*(int (*)(int))(*(int *)(*(int *)(*(int *)(near + 0x68)) + 0x24)))(near) != 0 &&
+                (*(int (*)(int, int))(*(int *)(*(int *)(*(int *)(near + 0x68)) + 0x20)))(near, 0) != 0) {
                 ObjLink_AttachChild(obj, near, 0);
             }
         }
-        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E670C);
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E670C);
         ObjPath_GetPointWorldPosition(obj, 1, (f32 *)((char *)inner + 0x18), (f32 *)((char *)inner + 0x1c), (f32 *)((char *)inner + 0x20), 0);
         *(u8 *)((char *)obj + 0x37) = oldFlag;
         if (((*(u8 *)((char *)inner + 0xaa) >> 6) & 1) != 0) {
             if (*(f32 *)((char *)inner + 0xac) != lbl_803E66F0) {
                 *(f32 *)((char *)inner + 0xac) = lbl_803E670C + (f32)(s32)(0xff - *(u8 *)((char *)obj + 0x36)) / lbl_803E6710;
             } else {
-                *(u8 *)((char *)inner + 0xaa) &= ~0x40;
+                ((SnowclawAaFlags *)((char *)inner + 0xaa))->flag6 = 0;
             }
             objParticleFn_80099d84(obj, lbl_803E670C, 3, *(f32 *)((char *)inner + 0xac), 0);
         }
