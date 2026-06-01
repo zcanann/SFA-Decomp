@@ -8,6 +8,7 @@ void wmworm_init(s16 *obj, s8 *def);
 void wmworm_release(void);
 void wmworm_initialise(void);
 
+void fn_801F3F18(int obj);
 int wmlevelcontrol_getExtraSize(void);
 int wmlevelcontrol_getObjectTypeId(void);
 void wmlevelcontrol_free(int obj);
