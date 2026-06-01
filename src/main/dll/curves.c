@@ -67,8 +67,8 @@ extern uint countLeadingZeros();
 extern RomCurveDef *romCurves[];
 extern RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803de0e8;
-extern undefined4 DAT_803de0ec;
+extern RomCurveDef *lbl_803DD470;
+extern RomCurveDef *lbl_803DD474;
 extern int nRomCurves;
 extern u32 sCurvesCachedHitCount;
 extern u32 sCurvesCachedHitObj;
@@ -80,6 +80,7 @@ extern f32 lbl_803E1290;
 extern f32 gFloatOne;
 extern f32 gFloatZero;
 extern f32 gFloatHalf;
+extern f32 lbl_803E0644;
 extern f32 lbl_803E12B0;
 extern f32 lbl_803E12B4;
 extern f32 lbl_803E12B8;
@@ -1232,136 +1233,93 @@ int curves_isPoint(int *obj) {
  */
 #pragma scheduling off
 #pragma peephole off
-void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,undefined4 *param_6,undefined4 *param_7,undefined4 *param_8)
+f32 curves_find(int type,int action,f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ)
 {
-  float fVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  uint uVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  int *piVar10;
-  int iVar11;
-  double dVar12;
-  double extraout_f1;
-  double dVar13;
-  double dVar14;
-  double in_f28;
-  double dVar15;
-  double in_f29;
-  double in_f30;
-  double in_f31;
-  double dVar16;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar17;
-  float local_98;
-  undefined4 local_94;
-  undefined4 local_90;
-  undefined4 local_8c;
-  undefined4 local_88;
-  undefined4 local_84;
-  float local_80;
-  float local_7c;
-  float local_78;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  uVar17 = FUN_80286828();
-  fVar1 = lbl_803E12B8;
-  *param_8 = lbl_803E12B8;
-  *param_7 = fVar1;
-  *param_6 = fVar1;
-  dVar16 = (double)lbl_803E12C4;
-  iVar8 = 0;
-  piVar10 = (int *)romCurves;
-  dVar15 = extraout_f1;
-  do {
-    if (nRomCurves <= iVar8) {
-      FUN_80286874();
-      return;
-    }
-    iVar9 = *piVar10;
-    if (((int)*(char *)(iVar9 + 0x18) == (int)uVar17) &&
-       ((int)*(char *)(iVar9 + 0x19) == (int)((ulonglong)uVar17 >> 0x20))) {
-      local_98 = *(float *)(iVar9 + 8);
-      local_94 = *(undefined4 *)(iVar9 + 0xc);
-      local_90 = *(undefined4 *)(iVar9 + 0x10);
-      iVar7 = 0;
-      iVar11 = iVar9;
-      do {
-        if (((int)*(char *)(iVar9 + 0x1b) & 1 << iVar7) == 0) {
-          uVar5 = *(uint *)(iVar11 + 0x1c);
-          if ((int)uVar5 < 0) {
-            iVar6 = 0;
+  int curveIndex;
+  int linkIndex;
+  int high;
+  int low;
+  int mid;
+  u32 linkId;
+  RomCurveDef *curve;
+  RomCurveDef *linkedCurve;
+  f32 pointX;
+  f32 pointY;
+  f32 pointZ;
+  f32 zero;
+  f32 distance;
+  f32 bestDistance;
+  f32 absDistance;
+  f32 absBestDistance;
+  f32 segment[9];
+
+  pointX = x;
+  pointY = y;
+  pointZ = z;
+  zero = gFloatZero;
+  *outZ = zero;
+  *outY = zero;
+  *outX = zero;
+  bestDistance = lbl_803E0644;
+  for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++) {
+    curve = romCurves[curveIndex];
+    if ((curve->action == action) && (curve->type == type)) {
+      segment[0] = curve->x;
+      segment[1] = curve->y;
+      segment[2] = curve->z;
+      for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++) {
+        if (((s32)curve->blockedLinkMask & (1 << linkIndex)) == 0) {
+          linkId = curve->linkIds[linkIndex];
+          if ((s32)linkId < 0) {
+            linkedCurve = NULL;
           }
           else {
-            iVar4 = nRomCurves + -1;
-            iVar3 = 0;
-            while (iVar3 <= iVar4) {
-              iVar2 = iVar4 + iVar3 >> 1;
-              iVar6 = (int)romCurves[iVar2];
-              if (*(uint *)(iVar6 + 0x14) < uVar5) {
-                iVar3 = iVar2 + 1;
+            high = nRomCurves - 1;
+            low = 0;
+            while (low <= high) {
+              mid = (high + low) >> 1;
+              linkedCurve = romCurves[mid];
+              if (linkId > linkedCurve->id) {
+                low = mid + 1;
+              }
+              else if (linkId < linkedCurve->id) {
+                high = mid - 1;
               }
               else {
-                if (*(uint *)(iVar6 + 0x14) <= uVar5) goto LAB_800e3878;
-                iVar4 = iVar2 + -1;
+                goto foundLinkedCurve;
               }
             }
-            iVar6 = 0;
+            linkedCurve = NULL;
           }
-LAB_800e3878:
-          if (iVar6 != 0) {
-            local_8c = *(undefined4 *)(iVar6 + 8);
-            local_88 = *(undefined4 *)(iVar6 + 0xc);
-            local_84 = *(undefined4 *)(iVar6 + 0x10);
-            dVar13 = RomCurve_distanceToSegment(dVar15,param_2,param_3,&local_98);
-            dVar14 = dVar16;
-            if (dVar16 < (double)lbl_803E12B8) {
-              dVar14 = -dVar16;
+
+foundLinkedCurve:
+          if (linkedCurve != NULL) {
+            segment[3] = linkedCurve->x;
+            segment[4] = linkedCurve->y;
+            segment[5] = linkedCurve->z;
+            distance = RomCurve_distanceToSegment(pointX,pointY,pointZ,segment);
+            absBestDistance = bestDistance;
+            if (bestDistance < gFloatZero) {
+              absBestDistance = -bestDistance;
             }
-            dVar12 = dVar13;
-            if (dVar13 < (double)lbl_803E12B8) {
-              dVar12 = -dVar13;
+            absDistance = distance;
+            if (distance < gFloatZero) {
+              absDistance = -distance;
             }
-            if (dVar12 < dVar14) {
-              DAT_803de0e8 = iVar6;
-              DAT_803de0ec = iVar9;
-              *param_6 = local_80;
-              *param_7 = local_7c;
-              *param_8 = local_78;
-              dVar16 = dVar13;
+            if (absDistance < absBestDistance) {
+              lbl_803DD474 = curve;
+              lbl_803DD470 = linkedCurve;
+              bestDistance = distance;
+              *outX = segment[6];
+              *outY = segment[7];
+              *outZ = segment[8];
             }
           }
         }
-        iVar11 = iVar11 + 4;
-        iVar7 = iVar7 + 1;
-      } while (iVar7 < 4);
+      }
     }
-    piVar10 = piVar10 + 1;
-    iVar8 = iVar8 + 1;
-  } while( true );
+  }
+  return bestDistance;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4603,10 +4561,7 @@ void loadSaveSettings(void)
 /* Pattern wrappers. */
 void curves_initialise(void) { nRomCurves = 0x0; }
 
-/* *p1 = lbl1; *p2 = lbl2; (u32) */
-extern u32 lbl_803DD474;
-extern u32 lbl_803DD470;
-void RomCurve_func0D(u32 *p1, u32 *p2) { *p1 = lbl_803DD474; *p2 = lbl_803DD470; }
+void RomCurve_func0D(RomCurveDef **p1, RomCurveDef **p2) { *p1 = lbl_803DD474; *p2 = lbl_803DD470; }
 
 /* getSaveFileStruct: return &saveData (lis/addi). */
 void* getSaveFileStruct(void) { return &saveData; }

@@ -48,8 +48,7 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef *curve,int *types,int typeCount,
 int curves_findByAction(int action);
 f32 curves_distXZ(f32 x,f32 z,uint curveId);
 f32 curves_distFn0B(int obj,uint curveId);
-void curves_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,undefined4 *param_6,undefined4 *param_7,undefined4 *param_8);
+f32 curves_find(int type,int action,f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ);
 undefined4 RomCurve_findByIdWithIndex(uint curveId,int *outIndex);
 void RomCurve_func20(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5);
 int RomCurve_countRandomPoints(RomCurveDef *curve);
