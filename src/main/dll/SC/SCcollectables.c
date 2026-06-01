@@ -55,293 +55,6 @@ extern f32 lbl_803E6130;
 /*
  * --INFO--
  *
- * Function: FUN_801d6d98
- * EN v1.0 Address: 0x801D6D98
- * EN v1.0 Size: 668b
- * EN v1.1 Address: 0x801D6F04
- * EN v1.1 Size: 752b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801d6d98(int param_1)
-{
-  float fVar1;
-  undefined4 uVar2;
-  char cVar3;
-  int iVar4;
-  undefined2 local_38;
-  undefined2 local_36;
-  undefined2 local_34;
-  undefined2 local_32;
-  float local_30;
-  float local_2c;
-  float local_28;
-  float local_24;
-  undefined4 local_20;
-  uint uStack_1c;
-  
-  uVar2 = FUN_80017a98();
-  iVar4 = *(int *)(param_1 + 0xb8);
-  local_2c = lbl_803E60F8;
-  local_28 = lbl_803E60FC;
-  local_24 = lbl_803E60F8;
-  local_34 = 0xc0e;
-  local_36 = 1;
-  if ((*(byte *)(iVar4 + 0xd4) & 4) != 0) {
-    fVar1 = *(float *)(iVar4 + 4);
-    if (lbl_803E6100 <= fVar1) {
-      if (lbl_803E6108 <= fVar1) {
-        if (lbl_803E6118 <= fVar1) {
-          if (lbl_803E6120 <= fVar1) {
-            *(float *)(iVar4 + 4) = lbl_803E60F8;
-            *(byte *)(iVar4 + 0xd4) = *(byte *)(iVar4 + 0xd4) & 0xfb;
-          }
-        }
-        else {
-          uStack_1c = randomGetRange(0,0x1e0);
-          uStack_1c = uStack_1c ^ 0x80000000;
-          local_20 = 0x43300000;
-          if ((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6128) <
-              *(float *)(iVar4 + 4) * lbl_803E6104) {
-            (**(code **)(*DAT_803dd708 + 8))(uVar2,0x7ca,&local_38,2,0xffffffff,0);
-          }
-          if ((*(byte *)(iVar4 + 0xd4) & 2) != 0) {
-            *(byte *)(iVar4 + 0xd4) = *(byte *)(iVar4 + 0xd4) & 0xfd;
-            local_32 = 0x46;
-            local_30 = lbl_803E611C;
-            for (cVar3 = '\x0f'; cVar3 != '\0'; cVar3 = cVar3 + -1) {
-              (**(code **)(*DAT_803dd708 + 8))(uVar2,0x7d2,&local_38,2,0xffffffff,0);
-            }
-          }
-        }
-      }
-      else {
-        uStack_1c = randomGetRange(0,0x1e0);
-        uStack_1c = uStack_1c ^ 0x80000000;
-        local_20 = 0x43300000;
-        if ((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6128) <
-            *(float *)(iVar4 + 4) / lbl_803E610C) {
-          (**(code **)(*DAT_803dd708 + 8))(uVar2,0x7ca,&local_38,2,0xffffffff,0);
-        }
-        local_32 = 0x28;
-        local_38 = 0;
-        local_30 = lbl_803E6110 * ((*(float *)(iVar4 + 4) - lbl_803E6100) / lbl_803E6114);
-        (**(code **)(*DAT_803dd708 + 8))(uVar2,0x7d2,&local_38,2,0xffffffff,0);
-        *(byte *)(iVar4 + 0xd4) = *(byte *)(iVar4 + 0xd4) | 2;
-      }
-    }
-    else {
-      uStack_1c = randomGetRange(0,0x1e0);
-      uStack_1c = uStack_1c ^ 0x80000000;
-      local_20 = 0x43300000;
-      if ((float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e6128) <
-          *(float *)(iVar4 + 4) * lbl_803E6104) {
-        (**(code **)(*DAT_803dd708 + 8))(uVar2,0x7ca,&local_38,2,0xffffffff,0);
-      }
-    }
-    *(float *)(iVar4 + 4) = *(float *)(iVar4 + 4) + lbl_803DC074;
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801d7034
- * EN v1.0 Address: 0x801D7034
- * EN v1.0 Size: 356b
- * EN v1.1 Address: 0x801D71F4
- * EN v1.1 Size: 340b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801d7034(void)
-{
-  short *psVar1;
-  int iVar2;
-  undefined *puVar3;
-  int iVar4;
-  undefined8 extraout_f1;
-  float local_28;
-  float local_24;
-  float local_20 [8];
-  
-  psVar1 = (short *)FUN_8028683c();
-  iVar4 = 0;
-  DAT_803adcc3 = '\0';
-  DAT_803adcba = '\0';
-  FUN_8002fc3c(extraout_f1,(double)lbl_803DC074);
-  if (DAT_803adcba != '\0') {
-    *psVar1 = *psVar1 + DAT_803adcb6;
-  }
-  puVar3 = &DAT_803adca8;
-  for (iVar2 = 0; iVar2 < DAT_803adcc3; iVar2 = iVar2 + 1) {
-    switch(puVar3[0x13]) {
-    case 1:
-      iVar4 = 1;
-      break;
-    case 2:
-      iVar4 = 2;
-      break;
-    case 3:
-      iVar4 = 1;
-      break;
-    case 4:
-      iVar4 = 2;
-      break;
-    case 9:
-      FUN_80006824((uint)psVar1,SFXnewtricky_01o);
-    }
-    puVar3 = puVar3 + 1;
-  }
-  if ((iVar4 != 0) &&
-     ((ObjPath_GetPointWorldPosition(psVar1,iVar4 + -1,&local_28,&local_24,local_20,0), psVar1[0x50] != 0x1b ||
-      (lbl_803E6130 <= *(float *)(psVar1 + 0x4c))))) {
-    FUN_80006820((double)local_28,(double)local_24,(double)local_20[0],(uint)psVar1,0x415);
-  }
-  FUN_80286888();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801d7198
- * EN v1.0 Address: 0x801D7198
- * EN v1.0 Size: 68b
- * EN v1.1 Address: 0x801D7348
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_801d7198(void)
-{
-  int iVar1;
-  
-  (**(code **)(*DAT_803dd72c + 0x74))();
-  iVar1 = FUN_80017a98();
-  FUN_80294cd0(iVar1,0xff);
-  return 2;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801d71dc
- * EN v1.0 Address: 0x801D71DC
- * EN v1.0 Size: 1172b
- * EN v1.1 Address: 0x801D7388
- * EN v1.1 Size: 796b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4
-FUN_801d71dc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-            undefined4 param_9,undefined4 param_10,int param_11)
-{
-  undefined4 uVar1;
-  uint uVar2;
-  undefined8 uVar3;
-  char local_18;
-  char local_17 [19];
-  
-  FUN_80017a98();
-  uVar3 = FUN_80006bb4(0,local_17,&local_18);
-  if (param_11 == 0x17) {
-    uVar2 = playerHasKrazoaSpirit('\x01',0);
-    if (('\0' < local_17[0]) && (uVar2 == 0)) {
-      FUN_80006824(0,0x418);
-      return 1;
-    }
-  }
-  else if (param_11 < 0x17) {
-    if (param_11 == 0x15) {
-      if (('\0' < local_18) && (DAT_803dccb8 == 0)) {
-        FUN_80006824(0,0x418);
-        return 1;
-      }
-    }
-    else if (param_11 < 0x15) {
-      if ((0x13 < param_11) && (local_17[0] < '\0')) {
-        FUN_80041ff8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x42);
-        FUN_80042b9c(0,0,1);
-        uVar1 = FUN_80044404(0x42);
-        FUN_80042bec(uVar1,0);
-        uVar1 = FUN_80044404(7);
-        FUN_80042bec(uVar1,1);
-        (**(code **)(*DAT_803dd72c + 0x44))(0x42,1);
-        FUN_80006824(0,0x418);
-        return 1;
-      }
-    }
-    else if (('\0' < local_17[0]) && (uVar2 = playerHasKrazoaSpirit('\x01',0), uVar2 != 0)) {
-      FUN_80041ff8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x42);
-      uVar1 = FUN_80044404(0x42);
-      FUN_80042bec(uVar1,0);
-      uVar1 = FUN_80044404(7);
-      FUN_80042bec(uVar1,1);
-      uVar2 = GameBit_Get(0xbfd);
-      if (uVar2 == 0) {
-        uVar2 = GameBit_Get(0xff);
-        if (uVar2 == 0) {
-          uVar2 = GameBit_Get(0xc6e);
-          if (uVar2 == 0) {
-            uVar2 = GameBit_Get(0xc85);
-            if (uVar2 != 0) {
-              (**(code **)(*DAT_803dd72c + 0x44))(0x42,2);
-            }
-          }
-          else {
-            (**(code **)(*DAT_803dd72c + 0x44))(0x42,2);
-          }
-        }
-        else {
-          (**(code **)(*DAT_803dd72c + 0x44))(0x42,2);
-        }
-      }
-      else {
-        (**(code **)(*DAT_803dd72c + 0x44))(0x42,2);
-      }
-      FUN_80006824(0,0x418);
-      return 1;
-    }
-  }
-  else if (param_11 == 0x19) {
-    uVar2 = FUN_80006c00(0);
-    if ((uVar2 & 0x200) != 0) {
-      FUN_80042b9c(0,0,1);
-      FUN_80044404(0x42);
-      uVar3 = FUN_80043030(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-      FUN_80044404(0x17);
-      FUN_80043030(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-      FUN_80006824(0,0x419);
-      return 1;
-    }
-  }
-  else if ((param_11 < 0x19) && (DAT_803de874 = 1, '\0' < local_18)) {
-    FUN_80041ff8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,9);
-    uVar1 = FUN_80044404(9);
-    FUN_80042bec(uVar1,0);
-    uVar1 = FUN_80044404(7);
-    FUN_80042bec(uVar1,1);
-    FUN_80006824(0,0x418);
-    return 1;
-  }
-  return 0;
-}
-
-/*
- * --INFO--
- *
  * Function: warpstone_getExtraSize
  * EN v1.0 Address: 0x801D7468
  * EN v1.0 Size: 8b
@@ -477,31 +190,6 @@ extern MapEventInterface **gMapEventInterface;
 #define WARPSTONE_MAP_EVENT_ANIM(mapId, eventId, value) \
     (*gMapEventInterface)->setAnimEvent((mapId), (eventId), (value))
 
-static void warpstone_setSwapstoneLoaded(void)
-{
-    loadMapAndParent(0x42);
-    unlockLevel(0, 0, 1);
-    lockLevel(mapGetDirIdx(0x42), 0);
-    lockLevel(mapGetDirIdx(7), 1);
-}
-
-static void warpstone_setThorntailLoaded(void)
-{
-    loadMapAndParent(9);
-    lockLevel(mapGetDirIdx(9), 0);
-    lockLevel(mapGetDirIdx(7), 1);
-}
-
-static void warpstone_playAccept(void)
-{
-    Sfx_PlayFromObject(0, 0x418);
-}
-
-static void warpstone_setSwapstoneMapEvent(s32 value)
-{
-    WARPSTONE_MAP_EVENT_SET(0x42, value);
-}
-
 #pragma scheduling off
 #pragma peephole off
 int fn_801D6D98(undefined4 p1, undefined4 p2, int option)
@@ -515,16 +203,19 @@ int fn_801D6D98(undefined4 p1, undefined4 p2, int option)
     switch (option) {
     case 0x14:
         if (horizontal < 0) {
-            warpstone_setSwapstoneLoaded();
-            warpstone_setSwapstoneMapEvent(1);
-            warpstone_playAccept();
+            loadMapAndParent(0x42);
+            unlockLevel(0, 0, 1);
+            lockLevel(mapGetDirIdx(0x42), 0);
+            lockLevel(mapGetDirIdx(7), 1);
+            WARPSTONE_MAP_EVENT_SET(0x42, 1);
+            Sfx_PlayFromObject(0, 0x418);
             return 1;
         }
         break;
 
     case 0x15:
         if (vertical > 0 && lbl_803DC050 == 0) {
-            warpstone_playAccept();
+            Sfx_PlayFromObject(0, 0x418);
             return 1;
         }
         break;
@@ -535,15 +226,15 @@ int fn_801D6D98(undefined4 p1, undefined4 p2, int option)
             lockLevel(mapGetDirIdx(0x42), 0);
             lockLevel(mapGetDirIdx(7), 1);
             if (GameBit_Get(0xbfd) != 0) {
-                warpstone_setSwapstoneMapEvent(2);
+                WARPSTONE_MAP_EVENT_SET(0x42, 2);
             } else if (GameBit_Get(0xff) != 0) {
-                warpstone_setSwapstoneMapEvent(2);
+                WARPSTONE_MAP_EVENT_SET(0x42, 2);
             } else if (GameBit_Get(0xc6e) != 0) {
-                warpstone_setSwapstoneMapEvent(2);
+                WARPSTONE_MAP_EVENT_SET(0x42, 2);
             } else if (GameBit_Get(0xc85) != 0) {
-                warpstone_setSwapstoneMapEvent(2);
+                WARPSTONE_MAP_EVENT_SET(0x42, 2);
             }
-            warpstone_playAccept();
+            Sfx_PlayFromObject(0, 0x418);
             return 1;
         }
         break;
@@ -551,7 +242,7 @@ int fn_801D6D98(undefined4 p1, undefined4 p2, int option)
     case 0x17: {
         int hasSpirit = playerHasKrazoaSpirit(1, 0);
         if (horizontal > 0 && hasSpirit == 0) {
-            warpstone_playAccept();
+            Sfx_PlayFromObject(0, 0x418);
             return 1;
         }
         break;
@@ -560,8 +251,10 @@ int fn_801D6D98(undefined4 p1, undefined4 p2, int option)
     case 0x18:
         lbl_803DDBF4 = 1;
         if (vertical > 0) {
-            warpstone_setThorntailLoaded();
-            warpstone_playAccept();
+            loadMapAndParent(9);
+            lockLevel(mapGetDirIdx(9), 0);
+            lockLevel(mapGetDirIdx(7), 1);
+            Sfx_PlayFromObject(0, 0x418);
             return 1;
         }
         break;
