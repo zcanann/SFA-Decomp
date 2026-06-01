@@ -3661,7 +3661,7 @@ LAB_800e6f44:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_15_func08(void)
+void dll_15_func08(ushort *curveObj,uint *state,uint updateValue,f32 step)
 {
   byte bVar1;
   float fVar2;
@@ -3676,11 +3676,7 @@ void dll_15_func08(void)
   int iVar11;
   int iVar12;
   int iVar13;
-  double extraout_f1;
-  double in_f31;
   double dVar14;
-  double in_ps31_1;
-  undefined8 uVar15;
   ushort local_1e8;
   ushort local_1e6;
   ushort local_1e4;
@@ -3721,25 +3717,20 @@ void dll_15_func08(void)
   float afStack_f0 [16];
   float afStack_b0 [16];
   float afStack_70 [26];
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  uVar15 = FUN_8028683c();
+
   fVar3 = lbl_803E130C;
-  puVar4 = (ushort *)((ulonglong)uVar15 >> 0x20);
-  puVar8 = (uint *)uVar15;
+  puVar4 = curveObj;
+  puVar8 = state;
   if ((*puVar8 & 0x4000000) == 0) goto LAB_800e78f0;
-  dVar14 = (double)(float)((double)lbl_803E130C / extraout_f1);
-  puVar8[0x36] = 0;
+  dVar14 = (double)(float)((double)lbl_803E130C / step);
+  puVar8[0x36] = updateValue;
   fVar2 = lbl_803E12E8;
   if (*(char *)((int)puVar8 + 0x25b) == '\x01') {
     sCurvesCachedHitObj = 0;
     sCurvesCachedHitCount = 0;
-    puVar8[0x68] = (uint)lbl_803E12E8;
-    puVar8[0x69] = (uint)fVar3;
-    puVar8[0x6a] = (uint)fVar2;
+    *(f32 *)(puVar8 + 0x68) = lbl_803E12E8;
+    *(f32 *)(puVar8 + 0x69) = fVar3;
+    *(f32 *)(puVar8 + 0x6a) = fVar2;
     if (((*puVar8 & 8) != 0) && ((*(byte *)(puVar8 + 0x97) & 0xf) != 0)) {
       local_188 = *puVar4;
       if ((*puVar8 & 0x20) == 0) {
@@ -3754,15 +3745,16 @@ void dll_15_func08(void)
       local_17c = *(undefined4 *)(puVar4 + 6);
       local_178 = *(undefined4 *)(puVar4 + 8);
       local_174 = *(undefined4 *)(puVar4 + 10);
-      FUN_80017754(afStack_70,&local_188);
+      setMatrixFromObjectPos(afStack_70,&local_188);
       iVar13 = 0;
       iVar11 = 0;
       puVar10 = puVar8;
       for (iVar12 = 0; iVar12 < (int)(*(byte *)(puVar8 + 0x97) & 0xf); iVar12 = iVar12 + 1) {
         pfVar9 = (float *)(puVar8[0x37] + iVar11);
-        FUN_80017778((double)*pfVar9,(double)pfVar9[1],(double)pfVar9[2],afStack_70,
-                     (float *)(puVar10 + 0x39),(float *)(puVar8 + iVar13 + 0x3a),
-                     (float *)(puVar8 + iVar13 + 0x3b));
+        Matrix_TransformPoint(afStack_70,(double)*pfVar9,(double)pfVar9[1],
+                              (double)pfVar9[2],(float *)(puVar10 + 0x39),
+                              (float *)(puVar8 + iVar13 + 0x3a),
+                              (float *)(puVar8 + iVar13 + 0x3b));
         puVar10 = puVar10 + 3;
         iVar11 = iVar11 + 0xc;
         iVar13 = iVar13 + 3;
@@ -3780,12 +3772,16 @@ void dll_15_func08(void)
                      ,(float *)(puVar4 + 0x10),*(int *)(puVar4 + 0x18));
       }
       else {
-        FUN_80017778((double)*(float *)(puVar4 + 6),(double)*(float *)(puVar4 + 8),
-                     (double)*(float *)(puVar4 + 10),
-                     (float *)(*(int *)(*(int *)(puVar4 + 0x18) + 0x58) +
-                              (*(byte *)(*(int *)(*(int *)(puVar4 + 0x18) + 0x58) + 0x10c) + 2) *
-                              0x40),(float *)(puVar4 + 0xc),(float *)(puVar4 + 0xe),
-                     (float *)(puVar4 + 0x10));
+        Matrix_TransformPoint((float *)(*(int *)(*(int *)(puVar4 + 0x18) + 0x58) +
+                                         (*(byte *)(*(int *)(*(int *)(puVar4 + 0x18) +
+                                                            0x58) +
+                                                   0x10c) +
+                                          2) *
+                                             0x40),
+                              (double)*(float *)(puVar4 + 6),
+                              (double)*(float *)(puVar4 + 8),
+                              (double)*(float *)(puVar4 + 10),(float *)(puVar4 + 0xc),
+                              (float *)(puVar4 + 0xe),(float *)(puVar4 + 0x10));
       }
     }
     if (((*puVar8 & 0x2000) != 0) && ((*(byte *)(puVar8 + 0x97) & 0xf0) != 0)) {
@@ -3802,15 +3798,16 @@ void dll_15_func08(void)
       local_194 = *(undefined4 *)(puVar4 + 0xc);
       local_190 = *(undefined4 *)(puVar4 + 0xe);
       local_18c = *(undefined4 *)(puVar4 + 0x10);
-      FUN_80017754(afStack_b0,&local_1a0);
+      setMatrixFromObjectPos(afStack_b0,&local_1a0);
       iVar12 = 0;
       iVar11 = 0;
       puVar10 = puVar8;
       for (iVar13 = 0; iVar13 < (int)(uint)*(byte *)(puVar8 + 0x97) >> 4; iVar13 = iVar13 + 1) {
         pfVar9 = (float *)(puVar8[1] + iVar11);
-        FUN_80017778((double)*pfVar9,(double)pfVar9[1],(double)pfVar9[2],afStack_b0,
-                     (float *)(puVar10 + 2),(float *)(puVar8 + iVar12 + 3),
-                     (float *)(puVar8 + iVar12 + 4));
+        Matrix_TransformPoint(afStack_b0,(double)*pfVar9,(double)pfVar9[1],
+                              (double)pfVar9[2],(float *)(puVar10 + 2),
+                              (float *)(puVar8 + iVar12 + 3),
+                              (float *)(puVar8 + iVar12 + 4));
         *(undefined *)((int)puVar8 + iVar13 + 0xb8) = 0xff;
         puVar10 = puVar10 + 3;
         iVar11 = iVar11 + 0xc;
@@ -3837,9 +3834,9 @@ LAB_800e7350:
       }
       else {
         if (4 < bVar1) goto LAB_800e7350;
-        puVar8[0x68] = puVar8[0x1a];
-        puVar8[0x69] = puVar8[0x1b];
-        puVar8[0x6a] = puVar8[0x1c];
+        *(f32 *)(puVar8 + 0x68) = *(f32 *)(puVar8 + 0x1a);
+        *(f32 *)(puVar8 + 0x69) = *(f32 *)(puVar8 + 0x1b);
+        *(f32 *)(puVar8 + 0x6a) = *(f32 *)(puVar8 + 0x1c);
         if (((*(byte *)(puVar8 + 0x98) & 1) != 0) && (*(char *)(puVar8 + 0x2e) == '!')) {
           *(uint *)(puVar4 + 0xc) = puVar8[2];
           *(uint *)(puVar4 + 0xe) = puVar8[3];
@@ -3906,25 +3903,26 @@ LAB_800e7350:
       local_1c4 = *(undefined4 *)(puVar4 + 6);
       local_1c0 = *(undefined4 *)(puVar4 + 8);
       local_1bc = *(undefined4 *)(puVar4 + 10);
-      FUN_80017754(afStack_130,&local_1d0);
+      setMatrixFromObjectPos(afStack_130,&local_1d0);
       iVar12 = 0;
       iVar11 = 0;
       puVar10 = puVar8;
       for (iVar13 = 0; fVar3 = lbl_803E130C, iVar13 < (int)(*(byte *)(puVar8 + 0x97) & 0xf);
           iVar13 = iVar13 + 1) {
         pfVar9 = (float *)(puVar8[0x37] + iVar11);
-        FUN_80017778((double)*pfVar9,(double)pfVar9[1],(double)pfVar9[2],afStack_130,
-                     (float *)(puVar10 + 0x39),(float *)(puVar8 + iVar12 + 0x3a),
-                     (float *)(puVar8 + iVar12 + 0x3b));
+        Matrix_TransformPoint(afStack_130,(double)*pfVar9,(double)pfVar9[1],
+                              (double)pfVar9[2],(float *)(puVar10 + 0x39),
+                              (float *)(puVar8 + iVar12 + 0x3a),
+                              (float *)(puVar8 + iVar12 + 0x3b));
         puVar10 = puVar10 + 3;
         iVar11 = iVar11 + 0xc;
         iVar12 = iVar12 + 3;
       }
       puVar10 = puVar8;
       for (iVar11 = 0; iVar11 < (int)(*(byte *)(puVar8 + 0x97) & 0xf); iVar11 = iVar11 + 1) {
-        puVar10[0x45] = puVar10[0x39];
-        puVar10[0x46] = (uint)(fVar3 + (float)puVar10[0x3a]);
-        puVar10[0x47] = puVar10[0x3b];
+        *(f32 *)(puVar10 + 0x45) = *(f32 *)(puVar10 + 0x39);
+        *(f32 *)(puVar10 + 0x46) = fVar3 + *(f32 *)(puVar10 + 0x3a);
+        *(f32 *)(puVar10 + 0x47) = *(f32 *)(puVar10 + 0x3b);
         puVar10 = puVar10 + 3;
       }
       FUN_80061fc8((int)puVar4);
@@ -3943,15 +3941,16 @@ LAB_800e7350:
       local_1ac = *(undefined4 *)(puVar4 + 0xc);
       local_1a8 = *(undefined4 *)(puVar4 + 0xe);
       local_1a4 = *(undefined4 *)(puVar4 + 0x10);
-      FUN_80017754(afStack_f0,&local_1b8);
+      setMatrixFromObjectPos(afStack_f0,&local_1b8);
       iVar12 = 0;
       iVar11 = 0;
       puVar10 = puVar8;
       for (iVar13 = 0; iVar13 < (int)(uint)*(byte *)(puVar8 + 0x97) >> 4; iVar13 = iVar13 + 1) {
         pfVar9 = (float *)(puVar8[1] + iVar11);
-        FUN_80017778((double)*pfVar9,(double)pfVar9[1],(double)pfVar9[2],afStack_f0,
-                     (float *)(puVar10 + 2),(float *)(puVar8 + iVar12 + 3),
-                     (float *)(puVar8 + iVar12 + 4));
+        Matrix_TransformPoint(afStack_f0,(double)*pfVar9,(double)pfVar9[1],
+                              (double)pfVar9[2],(float *)(puVar10 + 2),
+                              (float *)(puVar8 + iVar12 + 3),
+                              (float *)(puVar8 + iVar12 + 4));
         *(undefined *)((int)puVar8 + iVar13 + 0xb8) = 0xff;
         puVar10 = puVar10 + 3;
         iVar11 = iVar11 + 0xc;
@@ -3981,25 +3980,26 @@ LAB_800e7350:
       local_1dc = *(undefined4 *)(puVar4 + 6);
       local_1d8 = *(undefined4 *)(puVar4 + 8);
       local_1d4 = *(undefined4 *)(puVar4 + 10);
-      FUN_80017754(afStack_170,&local_1e8);
+      setMatrixFromObjectPos(afStack_170,&local_1e8);
       iVar12 = 0;
       iVar11 = 0;
       puVar10 = puVar8;
       for (iVar13 = 0; fVar3 = lbl_803E130C, iVar13 < (int)(*(byte *)(puVar8 + 0x97) & 0xf);
           iVar13 = iVar13 + 1) {
         pfVar9 = (float *)(puVar8[0x37] + iVar11);
-        FUN_80017778((double)*pfVar9,(double)pfVar9[1],(double)pfVar9[2],afStack_170,
-                     (float *)(puVar10 + 0x39),(float *)(puVar8 + iVar12 + 0x3a),
-                     (float *)(puVar8 + iVar12 + 0x3b));
+        Matrix_TransformPoint(afStack_170,(double)*pfVar9,(double)pfVar9[1],
+                              (double)pfVar9[2],(float *)(puVar10 + 0x39),
+                              (float *)(puVar8 + iVar12 + 0x3a),
+                              (float *)(puVar8 + iVar12 + 0x3b));
         puVar10 = puVar10 + 3;
         iVar11 = iVar11 + 0xc;
         iVar12 = iVar12 + 3;
       }
       puVar10 = puVar8;
       for (iVar11 = 0; iVar11 < (int)(*(byte *)(puVar8 + 0x97) & 0xf); iVar11 = iVar11 + 1) {
-        puVar10[0x45] = puVar10[0x39];
-        puVar10[0x46] = (uint)(fVar3 + (float)puVar10[0x3a]);
-        puVar10[0x47] = puVar10[0x3b];
+        *(f32 *)(puVar10 + 0x45) = *(f32 *)(puVar10 + 0x39);
+        *(f32 *)(puVar10 + 0x46) = fVar3 + *(f32 *)(puVar10 + 0x3a);
+        *(f32 *)(puVar10 + 0x47) = *(f32 *)(puVar10 + 0x3b);
         puVar10 = puVar10 + 3;
       }
       FUN_80061fc8((int)puVar4);
@@ -4017,14 +4017,17 @@ LAB_800e7350:
                  (float *)(puVar4 + 10),*(int *)(puVar4 + 0x18));
   }
   else {
-    FUN_80017778((double)*(float *)(puVar4 + 0xc),(double)*(float *)(puVar4 + 0xe),
-                 (double)*(float *)(puVar4 + 0x10),
-                 (float *)(*(int *)(*(int *)(puVar4 + 0x18) + 0x58) +
-                          (uint)*(byte *)(*(int *)(*(int *)(puVar4 + 0x18) + 0x58) + 0x10c) * 0x40),
-                 (float *)(puVar4 + 6),(float *)(puVar4 + 8),(float *)(puVar4 + 10));
+    Matrix_TransformPoint((float *)(*(int *)(*(int *)(puVar4 + 0x18) + 0x58) +
+                                     (uint)*(byte *)(*(int *)(*(int *)(puVar4 + 0x18) +
+                                                        0x58) +
+                                               0x10c) *
+                                         0x40),
+                          (double)*(float *)(puVar4 + 0xc),
+                          (double)*(float *)(puVar4 + 0xe),
+                          (double)*(float *)(puVar4 + 0x10),(float *)(puVar4 + 6),
+                          (float *)(puVar4 + 8),(float *)(puVar4 + 10));
   }
 LAB_800e78f0:
-  FUN_80286888();
   return;
 }
 
