@@ -159,6 +159,7 @@ extern f32 lbl_803E45C0;
 extern f32 lbl_803E45D0;
 extern f32 lbl_803E38A0;
 extern f32 lbl_803E38A8;
+extern f32 lbl_803E38E0;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
 extern void *gRomCurveInterface;
@@ -1826,6 +1827,62 @@ void duster_hitDetect(int param_1) {
 #pragma peephole reset
 #pragma scheduling reset
 
+typedef struct DusterState {
+  f32 moveStepScale;
+  f32 floorY;
+  s16 settleTimer;
+  s16 hitReactTimer;
+  s16 completeGameBit;
+  s16 activeGameBit;
+  s16 heldObjectId;
+  u8 pad12[6];
+  u8 driftDir;
+  u8 hitReactActive;
+  u8 priorityHit;
+  u8 active;
+  u8 complete;
+  u8 useLaunchVelocity;
+  u8 flags;
+} DusterState;
+
+typedef struct DusterSetup {
+  u8 pad00[0x24];
+  s16 activeGameBit;
+} DusterSetup;
+
+#pragma scheduling off
+#pragma peephole off
+void duster_init(int obj, u8 *params) {
+  DusterState *state;
+  DusterSetup *setup;
+  void *hitData;
+
+  setup = (DusterSetup *)params;
+  state = *(DusterState **)(obj + 0xb8);
+  state->settleTimer = (s16)randomGetRange(0,0x32);
+  state->moveStepScale = lbl_803E38E0;
+  state->activeGameBit = setup->activeGameBit;
+  if (state->activeGameBit >= 0x6fe) {
+    state->active = 1;
+    state->completeGameBit = state->activeGameBit;
+  } else {
+    state->active = (u8)GameBit_Get(state->activeGameBit);
+    state->completeGameBit = state->activeGameBit + 0x64;
+  }
+  state->complete = (u8)GameBit_Get(state->completeGameBit);
+  hitData = *(void **)(obj + 0x54);
+  if (hitData != NULL && state->active == 0) {
+    *(s16 *)((int)hitData + 0x60) = (s16)(*(s16 *)((int)hitData + 0x60) | 1);
+  }
+  if ((state->complete != 0 || state->active == 0) && *(void **)(obj + 0x54) != NULL) {
+    ObjHits_DisableObject(obj);
+  }
+  ObjMsg_AllocQueue((void *)obj,1);
+  *(void **)(obj + 0xbc) = fn_801804C8;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void MagicPlant_update();
 extern f32 lbl_803E385C;
 extern void *gMapEventInterface;
@@ -1874,7 +1931,6 @@ void MagicPlant_init(int obj, u8 *params) {
 #pragma scheduling reset
 extern void trickyguard_update();
 extern void duster_update();
-extern void duster_init();
 extern void curvefish_update();
 extern f32 lbl_803E3928;
 extern f64 lbl_803E3918;
