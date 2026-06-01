@@ -956,9 +956,9 @@ typedef struct SkeetlaParticleSpawnArgs {
 extern u32 randomGetRange(int min, int max);
 extern void *gPartfxInterface;
 
-/* fn_8013ADFC  addr=0x8013ADFC  size=0x1E4  linkage=global */
+/* skeetla_spawnLinkedSparks  addr=0x8013ADFC  size=0x1E4  linkage=global */
 #pragma scheduling off
-void fn_8013ADFC(u8 *obj)
+void skeetla_spawnLinkedSparks(u8 *obj)
 {
     u8 *state;
     u8 *linkedObj;
