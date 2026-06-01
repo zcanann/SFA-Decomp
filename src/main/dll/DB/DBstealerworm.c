@@ -374,27 +374,6 @@ void fn_801E1588(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801e1edc
- * EN v1.0 Address: 0x801E1EDC
- * EN v1.0 Size: 8b
- * EN v1.1 Address: 0x801E209C
- * EN v1.1 Size: 764b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4
-FUN_801e1edc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
-            ,undefined4 param_10,int param_11)
-{
-    return 0;
-}
-
-/*
- * --INFO--
- *
  * Function: FUN_801e1ee4
  * EN v1.0 Address: 0x801E1EE4
  * EN v1.0 Size: 8b
@@ -413,45 +392,6 @@ undefined4 FUN_801e1ee4(void)
 /*
  * --INFO--
  *
- * Function: FUN_801e217c
- * EN v1.0 Address: 0x801E217C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801E279C
- * EN v1.1 Size: 568b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801e217c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801e2180
- * EN v1.0 Address: 0x801E2180
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801E29D4
- * EN v1.1 Size: 396b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801e2180(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined2 *param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
-{
-}
-
-/*
- * --INFO--
- *
  * Function: FUN_801e2184
  * EN v1.0 Address: 0x801E2184
  * EN v1.0 Size: 8b
@@ -465,27 +405,6 @@ void FUN_801e2180(undefined8 param_1,double param_2,double param_3,undefined8 pa
 undefined4 FUN_801e2184(void)
 {
   return DAT_803de8c0;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801e218c
- * EN v1.0 Address: 0x801E218C
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801E2B70
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801e218c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
 }
 
 /*
