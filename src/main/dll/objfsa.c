@@ -23,6 +23,8 @@ extern undefined FUN_8002fc3c();
 extern undefined4 FUN_800571f8();
 extern int FUN_8005b398();
 extern int FUN_800620e8();
+extern int objBboxFn_800640cc(f32 *from,f32 *to,f32 radius,int mode,void *hit,int obj,int p7,
+                              int p8,int p9,int p10);
 extern undefined4 FUN_800723a0();
 extern undefined4 FUN_800d8088();
 extern undefined4 FUN_800d8240();
@@ -49,7 +51,10 @@ extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
+extern f32 sqrtf(f32 x);
 extern uint countLeadingZeros();
+extern void voxmaps_worldToGrid(f32 *world,s16 *grid);
+extern int voxmaps_traceLine(s16 *start,s16 *end,void *coordOut,u8 *occOut,int skipFirst);
 
 extern char DAT_803120d8;
 extern undefined2 DAT_8039d748;
@@ -123,6 +128,20 @@ extern f32 lbl_803E12B4;
 extern f32 lbl_803E12B8;
 extern f32 lbl_803E12BC;
 extern f32 lbl_803E12C0;
+extern f32 gFloatOne;
+
+typedef struct ObjfsaRomCurveDef {
+  u8 pad00[0x08];
+  f32 x;
+  f32 y;
+  f32 z;
+  u32 id;
+  s8 action;
+  s8 type;
+  u8 pad1A;
+  s8 blockedLinkMask;
+  u32 linkIds[4];
+} ObjfsaRomCurveDef;
 extern f32 lbl_803E12C4;
 extern f32 lbl_803E12C8;
 extern f32 lbl_803E12CC;
@@ -3267,107 +3286,83 @@ FUN_800de998(double param_1,undefined8 param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_findNearObj(undefined4 param_1,undefined4 param_2,int param_3,int param_4,char param_5)
+int curves_findNearObj(int obj,int *curveTypes,int typeCount,int action,char bboxMode)
 {
-  float fVar1;
-  int *piVar2;
-  char cVar4;
-  int iVar3;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  int *piVar8;
-  double dVar9;
-  undefined8 uVar10;
-  double dVar11;
-  double dVar12;
-  undefined8 in_f4;
-  undefined8 in_f5;
-  undefined8 in_f6;
-  undefined8 in_f7;
-  undefined8 in_f8;
-  double in_f29;
-  double in_f30;
-  double in_f31;
-  double dVar13;
-  double dVar14;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar15;
-  char local_d0 [4];
-  short asStack_cc [4];
-  short asStack_c4 [4];
-  float local_bc;
-  float local_b8;
-  int local_b4;
-  int aiStack_b0 [34];
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  uVar15 = FUN_8028682c();
-  piVar2 = (int *)((ulonglong)uVar15 >> 0x20);
-  dVar13 = (double)lbl_803E12BC;
-  local_bc = (float)piVar2[3];
-  local_b8 = lbl_803E12C0 + (float)piVar2[4];
-  local_b4 = piVar2[5];
-  dVar14 = dVar13;
-  FUN_80006a68(&local_bc,asStack_cc);
-  piVar8 = (int *)romCurves;
-  for (iVar7 = 0; iVar7 < nRomCurves; iVar7 = iVar7 + 1) {
-    iVar6 = *piVar8;
-    iVar5 = 0;
+  ObjfsaRomCurveDef *curve;
+  ObjfsaRomCurveDef *bestCurve;
+  ObjfsaRomCurveDef *bestActionCurve;
+  f32 bestDistance;
+  f32 bestActionDistance;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 distance;
+  f32 objPos[3];
+  f32 curvePos[3];
+  s16 objGrid[4];
+  s16 curveGrid[4];
+  u8 traceHit;
+  int bboxHit[34];
+  int curveIndex;
+  int typeIndex;
+
+  bestDistance = lbl_803E12BC;
+  bestCurve = NULL;
+  bestActionDistance = bestDistance;
+  bestActionCurve = NULL;
+
+  objPos[0] = *(f32 *)(obj + 0xc);
+  objPos[1] = lbl_803E12C0 + *(f32 *)(obj + 0x10);
+  objPos[2] = *(f32 *)(obj + 0x14);
+  voxmaps_worldToGrid(objPos,objGrid);
+
+  for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++) {
+    curve = (ObjfsaRomCurveDef *)romCurves[curveIndex];
+    typeIndex = 0;
     do {
-      if (((int)*(char *)(iVar6 + 0x19) == *(int *)((int)uVar15 + iVar5 * 4)) || (param_3 < 1)) {
-        dVar11 = (double)(*(float *)(iVar6 + 8) - (float)piVar2[3]);
-        dVar12 = (double)(*(float *)(iVar6 + 0xc) - (float)piVar2[4]);
-        fVar1 = *(float *)(iVar6 + 0x10) - (float)piVar2[5];
-        dVar9 = FUN_80293900((double)(fVar1 * fVar1 +
-                                     (float)(dVar11 * dVar11 + (double)(float)(dVar12 * dVar12))));
-        if (dVar9 < dVar14) {
-          local_bc = *(float *)(iVar6 + 8);
-          local_b8 = lbl_803E12C0 + *(float *)(iVar6 + 0xc);
-          local_b4 = *(int *)(iVar6 + 0x10);
-          uVar10 = FUN_80006a68(&local_bc,asStack_c4);
-          cVar4 = FUN_80006a64(uVar10,dVar11,dVar12,in_f4,in_f5,in_f6,in_f7,in_f8,asStack_c4,
-                               asStack_cc,(undefined4 *)0x0,local_d0,0);
-          if (((local_d0[0] == '\x01') || (cVar4 != '\0')) &&
-             (iVar5 = FUN_800620e8(piVar2 + 3,&local_bc,(float *)0x0,aiStack_b0,piVar2,(int)param_5,
-                                   0xffffffff,0,0), iVar5 == 0)) {
-            dVar14 = dVar9;
+      if ((curve->type == curveTypes[typeIndex]) || (typeCount < 1)) {
+        dx = curve->x - *(f32 *)(obj + 0xc);
+        dy = curve->y - *(f32 *)(obj + 0x10);
+        dz = curve->z - *(f32 *)(obj + 0x14);
+        distance = sqrtf(dz * dz + (dx * dx + dy * dy));
+        if (distance < bestDistance) {
+          curvePos[0] = curve->x;
+          curvePos[1] = lbl_803E12C0 + curve->y;
+          curvePos[2] = curve->z;
+          voxmaps_worldToGrid(curvePos,curveGrid);
+          if (((traceHit = 0, voxmaps_traceLine(curveGrid,objGrid,NULL,&traceHit,0) != 0) ||
+               (traceHit == 1)) &&
+              (objBboxFn_800640cc((f32 *)(obj + 0xc),curvePos,gFloatOne,0,bboxHit,obj,
+                                  (s8)bboxMode,-1,0,0) == 0)) {
+            bestDistance = distance;
+            bestCurve = curve;
           }
         }
-        iVar5 = param_3;
-        if ((*(char *)(iVar6 + 0x18) == param_4) && (dVar9 < dVar13)) {
-          local_bc = *(float *)(iVar6 + 8);
-          local_b8 = lbl_803E12C0 + *(float *)(iVar6 + 0xc);
-          local_b4 = *(int *)(iVar6 + 0x10);
-          uVar10 = FUN_80006a68(&local_bc,asStack_c4);
-          cVar4 = FUN_80006a64(uVar10,dVar11,dVar12,in_f4,in_f5,in_f6,in_f7,in_f8,asStack_c4,
-                               asStack_cc,(undefined4 *)0x0,local_d0,0);
-          if (((local_d0[0] == '\x01') || (cVar4 != '\0')) &&
-             (iVar3 = FUN_800620e8(piVar2 + 3,&local_bc,(float *)0x0,aiStack_b0,piVar2,(int)param_5,
-                                   0xffffffff,0,0), iVar3 == 0)) {
-            dVar13 = dVar9;
+        typeIndex = typeCount;
+        if ((curve->action == action) && (distance < bestActionDistance)) {
+          curvePos[0] = curve->x;
+          curvePos[1] = lbl_803E12C0 + curve->y;
+          curvePos[2] = curve->z;
+          voxmaps_worldToGrid(curvePos,curveGrid);
+          if (((traceHit = 0, voxmaps_traceLine(curveGrid,objGrid,NULL,&traceHit,0) != 0) ||
+               (traceHit == 1)) &&
+              (objBboxFn_800640cc((f32 *)(obj + 0xc),curvePos,gFloatOne,0,bboxHit,obj,
+                                  (s8)bboxMode,-1,0,0) == 0)) {
+            bestActionDistance = distance;
+            bestActionCurve = curve;
           }
         }
       }
-      iVar5 = iVar5 + 1;
-    } while (iVar5 < param_3);
-    piVar8 = piVar8 + 1;
+      typeIndex++;
+    } while (typeIndex < typeCount);
   }
-  FUN_80286878();
-  return;
+  if (bestActionCurve != NULL) {
+    bestCurve = bestActionCurve;
+  }
+  if (bestCurve != NULL) {
+    return bestCurve->id;
+  }
+  return -1;
 }
 
 /*
