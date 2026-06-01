@@ -69,6 +69,8 @@ extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx,f32 dz);
 extern undefined4 FUN_80081120();
 extern void objLightFn_8009a1dc(int obj,f32 scale,void *pos,int count,int param_5);
+extern int hitDetectFn_80065e50(int obj,void *outHits,int param_3,int param_4,
+                                f32 x,f32 y,f32 z);
 extern int FUN_800d9de0();
 extern bool FUN_800da5e8();
 extern undefined4 FUN_800db110();
@@ -79,6 +81,7 @@ extern int cMenuGetSelectedItem(void);
 extern int FUN_8012efc4();
 extern int FUN_801365a0();
 extern int fn_80138F84(int tricky);
+extern int fn_8029622C(int obj);
 extern int fn_80296448(int obj);
 extern int fn_800DA980(int curveState,int firstNode,int secondNode,int thirdNode);
 extern int curveFn_80010320(int curveState,f32 step);
@@ -166,6 +169,16 @@ extern f32 lbl_803E45C0;
 extern f32 lbl_803E45D0;
 extern f32 lbl_803E38A0;
 extern f32 lbl_803E38A8;
+extern f32 lbl_803E38B0;
+extern f32 lbl_803E38B8;
+extern f32 lbl_803E38BC;
+extern f32 lbl_803E38C0;
+extern f32 lbl_803E38C4;
+extern f32 lbl_803E38C8;
+extern f32 lbl_803E38CC;
+extern f32 lbl_803E38D0;
+extern f32 lbl_803E38D4;
+extern f64 lbl_803E38D8;
 extern f32 lbl_803E38E0;
 extern u32 lbl_803E38E8;
 extern f32 lbl_803E38EC;
@@ -185,7 +198,10 @@ extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
 extern f32 timeDelta;
 extern void *gRomCurveInterface;
+extern void *gPartfxInterface;
+extern void *gMapEventInterface;
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
+extern void mathFn_80021ac8(void *angles,void *outVec);
 
 /*
  * --INFO--
@@ -1872,6 +1888,22 @@ typedef struct DusterSetup {
   s16 activeGameBit;
 } DusterSetup;
 
+typedef struct DusterMapEventState {
+  u8 pad00[9];
+  u8 collectedCount;
+  u8 maxCollectedCount;
+} DusterMapEventState;
+
+typedef struct DusterLaunchRotation {
+  s16 yaw;
+  s16 pitch;
+  s16 roll;
+  f32 scale;
+  f32 x;
+  f32 y;
+  f32 z;
+} DusterLaunchRotation;
+
 #pragma scheduling off
 #pragma peephole off
 void duster_init(int obj, u8 *params) {
@@ -1901,6 +1933,197 @@ void duster_init(int obj, u8 *params) {
   }
   ObjMsg_AllocQueue((void *)obj,1);
   *(void **)(obj + 0xbc) = fn_801804C8;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void duster_update(int obj) {
+  DusterState *state;
+  DusterSetup *setup;
+  int player;
+  int msg;
+  int completeMsg;
+  void *floorHits;
+  int floorHitCount;
+  int bestFloorIndex;
+  int i;
+  f32 bestFloorDelta;
+  f32 floorDelta;
+  DusterLaunchRotation launch;
+  DusterMapEventState *mapState;
+
+  state = *(DusterState **)(obj + 0xb8);
+  setup = *(DusterSetup **)(obj + 0x4c);
+  player = (int)Obj_GetPlayerObject();
+  completeMsg = 0x7000b;
+
+  while (ObjMsg_Pop(obj, &msg, 0, 0) != 0) {
+    if (msg == completeMsg) {
+      Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
+      (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
+          obj, 0x51a, 0, 1, -1, 0);
+      (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
+          obj, 0x51a, 0, 1, -1, 0);
+      (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
+          obj, 0x51a, 0, 1, -1, 0);
+      GameBit_Set(state->completeGameBit, 1);
+      mapState = (DusterMapEventState *)(*(int (**)(int))(*(int *)gMapEventInterface + 0x8c))(
+          *(int *)gMapEventInterface);
+      if (mapState->maxCollectedCount < (u8)(mapState->collectedCount + 1)) {
+        mapState->collectedCount = mapState->maxCollectedCount;
+      } else {
+        mapState->collectedCount++;
+      }
+      state->complete = 1;
+    }
+  }
+
+  if (state->active == 0 || state->complete == 1) {
+    if (state->active == 0) {
+      state->active = (u8)GameBit_Get(state->activeGameBit);
+      state->settleTimer = 0;
+    }
+    return;
+  }
+
+  if (*(f32 *)(obj + 0x28) > lbl_803E38B8) {
+    *(f32 *)(obj + 0x28) = lbl_803E38BC * timeDelta + *(f32 *)(obj + 0x28);
+  }
+
+  state->priorityHit = 0;
+  if ((s8)state->flags >= 0) {
+    floorHitCount = hitDetectFn_80065e50(obj, &floorHits, 0, 0, *(f32 *)(obj + 0xc),
+                                         *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+    bestFloorIndex = -1;
+    bestFloorDelta = lbl_803E38C0;
+    for (i = 0; i < floorHitCount; i++) {
+      floorDelta = **(f32 **)((int)floorHits + i * 4) - *(f32 *)(obj + 0x10);
+      if (floorDelta < lbl_803E38C4) {
+        floorDelta = -floorDelta;
+      }
+      if (floorDelta < bestFloorDelta) {
+        bestFloorIndex = i;
+        bestFloorDelta = floorDelta;
+      }
+    }
+    if (bestFloorIndex != -1) {
+      state->flags |= 0x80;
+      state->floorY = **(f32 **)((int)floorHits + bestFloorIndex * 4);
+      *(f32 *)(obj + 0x28) = lbl_803E38C4;
+    }
+    if ((s8)state->flags >= 0) {
+      state->floorY = *(f32 *)((u8 *)setup + 0xc);
+      state->flags |= 0x80;
+    }
+  }
+
+  if (*(f32 *)(obj + 0x10) < state->floorY) {
+    *(f32 *)(obj + 0x10) = state->floorY;
+    *(f32 *)(obj + 0x28) = lbl_803E38C4;
+  }
+
+  if (state->settleTimer == 0 && state->hitReactTimer == 0) {
+    if (ObjAnim_AdvanceCurrentMove(state->moveStepScale, timeDelta, obj, NULL) != 0 ||
+        state->priorityHit != 0) {
+      Sfx_PlayFromObject(obj, SFXen_riverloop11);
+      (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
+          obj, 0x51f, 0, 2, -1, 0);
+      (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
+          obj, 0x51f, 0, 2, -1, 0);
+      state->driftDir = (u8)randomGetRange(0, 4);
+      if (state->useLaunchVelocity != 0) {
+        *(f32 *)(obj + 0x24) = lbl_803E38C8;
+        *(f32 *)(obj + 0x2c) = lbl_803E38C4;
+        launch.y = lbl_803E38C4;
+        launch.z = lbl_803E38C4;
+        launch.scale = lbl_803E38B0;
+        launch.pitch = 0;
+        launch.roll = 0;
+        launch.yaw = *(s16 *)obj;
+        mathFn_80021ac8(&launch, (void *)(obj + 0x24));
+      } else {
+        *(f32 *)(obj + 0x24) = lbl_803E38C4;
+        *(f32 *)(obj + 0x2c) = lbl_803E38C4;
+      }
+      if (state->hitReactActive != 0) {
+        state->hitReactTimer = 0xfa;
+      }
+    } else {
+      *(f32 *)(obj + 0xc) += *(f32 *)(obj + 0x24) * timeDelta;
+      *(f32 *)(obj + 0x14) += *(f32 *)(obj + 0x2c) * timeDelta;
+    }
+
+    if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0xe) {
+      state->hitReactActive = 1;
+      Sfx_PlayFromObject(obj, SFXen_trpcls_c);
+    }
+  } else {
+    if (state->settleTimer != 0) {
+      state->settleTimer -= (int)timeDelta;
+      if (state->settleTimer <= 0) {
+        state->settleTimer = 0;
+      }
+    }
+    if (state->hitReactTimer != 0) {
+      state->hitReactTimer -= (int)timeDelta;
+      if (state->hitReactTimer <= 0) {
+        state->hitReactTimer = 0;
+        state->hitReactActive = 0;
+      }
+    }
+  }
+
+  if (state->driftDir == 4) {
+    if (state->priorityHit != 0) {
+      *(s16 *)obj = (s16)(*(s16 *)obj - 0x7fff);
+      state->driftDir = 0;
+    }
+    *(s16 *)obj = (s16)((f32)*(s16 *)obj + lbl_803E38CC * timeDelta);
+  }
+
+  floorDelta = *(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10);
+  if (floorDelta < lbl_803E38C4) {
+    floorDelta = -floorDelta;
+  }
+  if (floorDelta < lbl_803E38D0 &&
+      Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(obj + 0x18)) < lbl_803E38D4 &&
+      fn_8029622C(player) != 0) {
+    if (GameBit_Get(0xcc0) == 0) {
+      state->heldObjectId = -1;
+      ObjHits_DisableObject(obj);
+      ObjMsg_SendToObject(player, 0x7000a, obj, &state->heldObjectId);
+      GameBit_Set(0xcc0, 1);
+    } else {
+      mapState = (DusterMapEventState *)(*(int (**)(int))(*(int *)gMapEventInterface + 0x8c))(
+          *(int *)gMapEventInterface);
+      if (mapState->collectedCount < mapState->maxCollectedCount) {
+        Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
+        (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
+            obj, 0x51a, 0, 1, -1, 0);
+        (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
+            obj, 0x51a, 0, 1, -1, 0);
+        (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
+            obj, 0x51a, 0, 1, -1, 0);
+        GameBit_Set(state->completeGameBit, 1);
+        mapState = (DusterMapEventState *)(*(int (**)(int))(*(int *)gMapEventInterface + 0x8c))(
+            *(int *)gMapEventInterface);
+        if (mapState->maxCollectedCount < (u8)(mapState->collectedCount + 1)) {
+          mapState->collectedCount = mapState->maxCollectedCount;
+        } else {
+          mapState->collectedCount++;
+        }
+        state->complete = 1;
+        *(u8 *)(obj + 0x36) = 1;
+      }
+    }
+    if (*(void **)(obj + 0x54) != NULL) {
+      ObjHits_DisableObject(obj);
+    }
+  }
+
+  *(f32 *)(obj + 0x10) += *(f32 *)(obj + 0x28);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1952,7 +2175,6 @@ void MagicPlant_init(int obj, u8 *params) {
 #pragma peephole reset
 #pragma scheduling reset
 extern void trickyguard_update();
-extern void duster_update();
 extern f32 lbl_803E3928;
 
 typedef struct CurveFishSetup {

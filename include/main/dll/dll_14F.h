@@ -53,7 +53,7 @@ void StayPoint_init(u16 *obj);
 int duster_getExtraSize(void);
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void duster_hitDetect(int obj);
-void duster_update();
+void duster_update(int obj);
 void duster_init(int obj, u8 *params);
 void FUN_80180700(int param_1);
 void FUN_801807cc(int param_1);
