@@ -17,6 +17,9 @@ extern undefined4 FUN_80017710();
 extern int FUN_80017a98();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
+extern void ObjGroup_RemoveObject(int obj, int group);
+extern void Music_Trigger(int musicId, int param);
+extern void GameBit_Set(int eventId, int value);
 
 extern undefined4 DAT_802c2c08;
 extern undefined4 DAT_802c2c0c;
@@ -57,225 +60,7 @@ extern f32 lbl_803E6AF8;
  *
  * Function: wmworm_update
  * EN v1.0 Address: 0x801F3C7C
- * EN v1.0 Size: 1212b
- * EN v1.1 Address: 0x801F3E04
- * EN v1.1 Size: 1136b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void wmworm_update(void)
-{
-  int iVar1;
-  ushort uVar2;
-  int iVar3;
-  undefined2 *puVar4;
-  int *piVar5;
-  int iVar6;
-  int iVar7;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int *piVar8;
-  double dVar9;
-  double dVar10;
-  undefined8 in_f4;
-  undefined8 in_f5;
-  undefined8 in_f6;
-  undefined8 in_f7;
-  undefined8 in_f8;
-  undefined8 uVar11;
-  undefined4 local_78;
-  undefined4 local_74;
-  undefined4 local_70;
-  undefined4 local_6c;
-  undefined4 local_68;
-  undefined4 local_64;
-  undefined4 local_60;
-  undefined4 local_5c;
-  undefined4 local_58;
-  undefined4 local_54;
-  undefined4 local_50;
-  undefined local_4c;
-  undefined4 local_48;
-  uint uStack_44;
-  longlong local_40;
-  undefined4 local_38;
-  uint uStack_34;
-  longlong local_30;
-  undefined4 local_28;
-  uint uStack_24;
-  longlong local_20;
-  
-  uVar11 = FUN_80286840();
-  puVar4 = (undefined2 *)((ulonglong)uVar11 >> 0x20);
-  iVar6 = (int)uVar11;
-  piVar8 = *(int **)(puVar4 + 0x5c);
-  local_78 = DAT_802c2c08;
-  local_74 = DAT_802c2c0c;
-  local_70 = DAT_802c2c10;
-  local_6c = DAT_802c2c14;
-  local_68 = DAT_802c2c18;
-  local_64 = DAT_802c2c1c;
-  local_60 = DAT_802c2c20;
-  local_5c = DAT_802c2c24;
-  local_58 = DAT_802c2c28;
-  local_54 = DAT_802c2c2c;
-  local_50 = DAT_802c2c30;
-  local_4c = DAT_802c2c34;
-  *puVar4 = (short)(((int)*(char *)(iVar6 + 0x18) & 0x3fU) << 10);
-  if (*(short *)(iVar6 + 0x1a) < 1) {
-    *(float *)(puVar4 + 4) = lbl_803E6ABC;
-  }
-  else {
-    uStack_44 = (int)*(short *)(iVar6 + 0x1a) ^ 0x80000000;
-    local_48 = 0x43300000;
-    *(float *)(puVar4 + 4) =
-         (float)((double)CONCAT44(0x43300000,uStack_44) - DOUBLE_803e6ae0) / lbl_803E6AB8;
-  }
-  *(undefined *)(piVar8 + 5) = *(undefined *)(iVar6 + 0x19);
-  piVar8[4] = (int)*(short *)(iVar6 + 0x1e);
-  *(undefined *)((int)piVar8 + 0x15) = 1;
-  if ((*(ushort *)(iVar6 + 0x1c) & 0x20) == 0) {
-    *(undefined *)((int)piVar8 + 0x16) = 3;
-  }
-  else {
-    *(undefined *)((int)piVar8 + 0x16) = 0;
-  }
-  if ((*(byte *)(iVar6 + 0x22) & 1) == 0) {
-    *(undefined *)((int)piVar8 + 0x19) = 0;
-  }
-  else {
-    *(undefined *)((int)piVar8 + 0x19) = 1;
-  }
-  if (*(char *)(piVar8 + 5) == '\0') {
-    *(undefined *)((int)piVar8 + 0x17) = 1;
-    uVar2 = *(ushort *)(iVar6 + 0x1c);
-    if ((uVar2 & 4) == 0) {
-      if ((uVar2 & 8) == 0) {
-        if ((uVar2 & 0x10) == 0) {
-          if ((uVar2 & 1) != 0) {
-            *(undefined *)((int)piVar8 + 0x16) = 6;
-          }
-        }
-        else {
-          *(undefined *)((int)piVar8 + 0x15) = 6;
-        }
-      }
-      else {
-        *(undefined *)((int)piVar8 + 0x15) = 8;
-      }
-    }
-    else {
-      *(undefined *)((int)piVar8 + 0x15) = 4;
-    }
-  }
-  if ((*(ushort *)(iVar6 + 0x1c) & 0x40) == 0) {
-    *piVar8 = 0;
-  }
-  else {
-    if (*piVar8 == 0) {
-      piVar5 = FUN_80017624((int)puVar4,'\x01');
-      *piVar8 = (int)piVar5;
-      if (*piVar8 != 0) {
-        FUN_800175b0(*piVar8,2);
-      }
-    }
-    piVar5 = (int *)*piVar8;
-    if (piVar5 != (int *)0x0) {
-      if ((puVar4[0x23] == 0x705) || (puVar4[0x23] == 0x712)) {
-        dVar9 = (double)lbl_803E6AA4;
-        FUN_800175ec(dVar9,dVar9,dVar9,piVar5);
-      }
-      else {
-        dVar9 = (double)lbl_803E6AA4;
-        FUN_800175ec(dVar9,(double)lbl_803E6AC0,dVar9,piVar5);
-      }
-      iVar3 = (uint)*(byte *)((int)piVar8 + 0x15) * 3;
-      FUN_8001759c(*piVar8,*(undefined *)((int)&local_78 + iVar3),
-                   *(undefined *)((int)&local_78 + iVar3 + 1),
-                   *(undefined *)((int)&local_78 + iVar3 + 2),0xff);
-      iVar3 = (uint)*(byte *)((int)piVar8 + 0x15) * 3;
-      FUN_80017588(*piVar8,*(undefined *)((int)&local_78 + iVar3),
-                   *(undefined *)((int)&local_78 + iVar3 + 1),
-                   *(undefined *)((int)&local_78 + iVar3 + 2),0xff);
-      FUN_800175d0((double)lbl_803E6AC4,(double)lbl_803E6AC8,*piVar8);
-      FUN_800175cc((double)lbl_803E6AA4,*piVar8,'\x01');
-      FUN_8001753c(*piVar8,1,3);
-      iVar7 = (uint)*(byte *)((int)piVar8 + 0x15) * 3;
-      dVar10 = (double)lbl_803E6ACC;
-      uStack_44 = (uint)*(byte *)((int)&local_78 + iVar7);
-      local_48 = 0x43300000;
-      iVar3 = (int)(dVar10 * (double)(float)((double)CONCAT44(0x43300000,
-                                                              (uint)*(byte *)((int)&local_78 + iVar7
-                                                                             )) - DOUBLE_803e6ae8));
-      local_40 = (longlong)iVar3;
-      uStack_34 = (uint)*(byte *)((int)&local_78 + iVar7 + 1);
-      local_38 = 0x43300000;
-      iVar1 = (int)(dVar10 * (f64)(f32)(s32)uStack_34);
-      local_30 = (longlong)iVar1;
-      uStack_24 = (uint)*(byte *)((int)&local_78 + iVar7 + 2);
-      local_28 = 0x43300000;
-      iVar7 = (int)(dVar10 * (f64)(f32)(s32)uStack_24);
-      local_20 = (longlong)iVar7;
-      FUN_80017594(*piVar8,(char)iVar3,(char)iVar1,(char)iVar7,0xff);
-      FUN_800175bc(*piVar8,1);
-      if ((*(ushort *)(iVar6 + 0x1c) & 0x80) != 0) {
-        if ((puVar4[0x23] == 0x705) || (puVar4[0x23] == 0x712)) {
-          iVar3 = (uint)*(byte *)((int)piVar8 + 0x15) * 3;
-          FUN_8001754c((double)(float)((double)lbl_803E6AD0 *
-                                      (double)(lbl_803E6AD4 * *(float *)(puVar4 + 4))),
-                       (double)lbl_803E6AD0,dVar9,in_f4,in_f5,in_f6,in_f7,in_f8,*piVar8,0,
-                       (uint)*(byte *)((int)&local_78 + iVar3),
-                       (uint)*(byte *)((int)&local_78 + iVar3 + 1),
-                       (uint)*(byte *)((int)&local_78 + iVar3 + 2),0x8c,in_r9,in_r10);
-        }
-        else {
-          iVar3 = (uint)*(byte *)((int)piVar8 + 0x15) * 3;
-          FUN_8001754c((double)(lbl_803E6AD4 * *(float *)(puVar4 + 4)),dVar10,dVar9,in_f4,in_f5,
-                       in_f6,in_f7,in_f8,*piVar8,0,(uint)*(byte *)((int)&local_78 + iVar3),
-                       (uint)*(byte *)((int)&local_78 + iVar3 + 1),
-                       (uint)*(byte *)((int)&local_78 + iVar3 + 2),0x8c,in_r9,in_r10);
-        }
-        FUN_80017544((double)lbl_803E6AD8,*piVar8);
-      }
-    }
-  }
-  if ((*(ushort *)(iVar6 + 0x1c) & 2) != 0) {
-    *(undefined *)((int)piVar8 + 0x15) = 0;
-  }
-  puVar4[0x58] = puVar4[0x58] | 0x2000;
-  piVar8[1] = (int)lbl_803E6AA8;
-  piVar8[2] = (int)lbl_803E6AA0;
-  FUN_8028688c();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801f4138
- * EN v1.0 Address: 0x801F4138
- * EN v1.0 Size: 52b
- * EN v1.1 Address: 0x801F4274
- * EN v1.1 Size: 64b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801f4138(void)
-{
-  (**(code **)(*DAT_803dd6f8 + 0x18))();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801f416c
- * EN v1.0 Address: 0x801F416C
- * EN v1.0 Size: 568b
+ * EN v1.0 Size: 524b
  * EN v1.1 Address: 0x801F42B4
  * EN v1.1 Size: 524b
  * JP Address: TODO
@@ -283,7 +68,7 @@ void FUN_801f4138(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801f416c(short *param_1)
+void wmworm_update(short *param_1)
 {
   float fVar1;
   float fVar2;
@@ -340,23 +125,6 @@ void FUN_801f416c(short *param_1)
   return;
 }
 
-
-/* Trivial 4b 0-arg blr leaves. */
-void wmworm_release(void) {}
-void wmworm_initialise(void) {}
-void wmlevelcontrol_hitDetect(void) {}
-
-/* 8b "li r3, N; blr" returners. */
-int wmlevelcontrol_getExtraSize(void) { return 0x1c; }
-int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
-
-/* render-with-objRenderFn_8003b8f4 pattern. */
-extern f32 lbl_803E5E74;
-extern void objRenderFn_8003b8f4(f32);
-#pragma peephole off
-void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5E74); }
-#pragma peephole reset
-
 #pragma scheduling off
 #pragma peephole off
 void wmworm_init(s16* obj, s8* p2)
@@ -380,3 +148,33 @@ void wmworm_init(s16* obj, s8* p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+
+/* Trivial 4b 0-arg blr leaves. */
+void wmworm_release(void) {}
+void wmworm_initialise(void) {}
+void wmlevelcontrol_hitDetect(void) {}
+
+/* 8b "li r3, N; blr" returners. */
+int wmlevelcontrol_getExtraSize(void) { return 0x1c; }
+int wmlevelcontrol_getObjectTypeId(void) { return 0x0; }
+
+#pragma scheduling off
+#pragma peephole off
+void wmlevelcontrol_free(int obj)
+{
+    ObjGroup_RemoveObject(obj, 9);
+    Music_Trigger(0xa8, 0);
+    GameBit_Set(0xa7f, 0);
+    GameBit_Set(0x372, 1);
+    GameBit_Set(0x390, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* render-with-objRenderFn_8003b8f4 pattern. */
+extern f32 lbl_803E5E74;
+extern void objRenderFn_8003b8f4(f32);
+#pragma peephole off
+void wmlevelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5E74); }
+#pragma peephole reset
