@@ -413,91 +413,6 @@ undefined4 FUN_801e1ee4(void)
 /*
  * --INFO--
  *
- * Function: FUN_801e2034
- * EN v1.0 Address: 0x801E2034
- * EN v1.0 Size: 176b
- * EN v1.1 Address: 0x801E25CC
- * EN v1.1 Size: 280b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801e2034(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  int iVar1;
-  int iVar2;
-  undefined auStack_48 [6];
-  undefined2 local_42;
-  float local_3c;
-  float local_38;
-  float local_34;
-  longlong local_30;
-  longlong local_28;
-  
-  iVar1 = FUN_8028683c();
-  iVar2 = *(int *)(iVar1 + 0xb8);
-  if (visible != 0) {
-    if (*(char *)(iVar2 + 0x70) < '\x02') {
-      local_30 = (longlong)(int)*(float *)(iVar2 + 0x88);
-      local_42 = (undefined2)(int)*(float *)(iVar2 + 0x88);
-      local_34 = lbl_803E6494;
-      local_38 = lbl_803E6498;
-      local_3c = lbl_803E649C;
-      (**(code **)(*DAT_803dd708 + 8))(iVar1,0xa3,auStack_48,2,0xffffffff,0);
-      local_28 = (longlong)(int)*(float *)(iVar2 + 0x8c);
-      local_42 = (undefined2)(int)*(float *)(iVar2 + 0x8c);
-      local_3c = lbl_803E64A0;
-      (**(code **)(*DAT_803dd708 + 8))(iVar1,0xa3,auStack_48,2,0xffffffff,0);
-    }
-    FUN_8003b818(iVar1);
-  }
-  FUN_80286888();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801e20e4
- * EN v1.0 Address: 0x801E20E4
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801E26E4
- * EN v1.1 Size: 184b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801e20e4(int param_1)
-{
-  byte bVar1;
-  int iVar2;
-  undefined auStack_28 [6];
-  undefined2 local_22;
-  float local_20;
-  float local_1c;
-  float local_18;
-  float local_14;
-  
-  iVar2 = *(int *)(param_1 + 0xb8);
-  if ((*(char *)(iVar2 + 0x85) != '\0') && (*(int *)(iVar2 + 0x4c) != 0)) {
-    local_20 = lbl_803E63D0;
-    local_22 = 0xc0a;
-    local_1c = lbl_803E6364;
-    local_18 = lbl_803E6388;
-    local_14 = lbl_803E6360;
-    for (bVar1 = 0; bVar1 < DAT_803dc070; bVar1 = bVar1 + 1) {
-      (**(code **)(*DAT_803dd708 + 8))
-                (*(undefined4 *)(iVar2 + 0x4c),0x7aa,auStack_28,2,0xffffffff,0);
-    }
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
  * Function: FUN_801e217c
  * EN v1.0 Address: 0x801E217C
  * EN v1.0 Size: 4b
@@ -1159,12 +1074,42 @@ int SB_Galleon_setScale(int obj) {
 /* SB_Galleon_hitDetect: per-step expgfx spawn loop. */
 extern undefined4 *gPartfxInterface;
 extern u8 framesThisStep;
+extern f32 lbl_803E57A4;
+extern f32 lbl_803E57FC;
+extern f32 lbl_803E5800;
+extern f32 lbl_803E5804;
+extern f32 lbl_803E5808;
 extern f32 lbl_803E5738;
 extern f32 lbl_803E56CC;
 extern f32 lbl_803E56F0;
 extern f32 lbl_803E56C8;
 #pragma peephole off
 #pragma scheduling off
+void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
+    u8 *p = (u8*)((int**)obj)[0xb8/4];
+    struct {
+        u8 pad[6];
+        u16 mode;
+        f32 unused;
+        f32 a;
+        f32 b;
+        f32 c;
+    } stk;
+    if (visible != 0) {
+        if ((s8)p[0x70] < 2) {
+            stk.mode = (u16)(s32)*(f32*)(p + 0x88);
+            stk.a = lbl_803E5804;
+            stk.b = lbl_803E5800;
+            stk.c = lbl_803E57FC;
+            (**(code **)(*gPartfxInterface + 8))(obj, 0xa3, stk.pad, 2, 0xffffffff, 0);
+            stk.mode = (u16)(s32)*(f32*)(p + 0x8c);
+            stk.a = lbl_803E5808;
+            (**(code **)(*gPartfxInterface + 8))(obj, 0xa3, stk.pad, 2, 0xffffffff, 0);
+        }
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E57A4);
+    }
+}
+
 void SB_Galleon_hitDetect(int obj) {
     int *p = ((int**)obj)[0xb8/4];
     u8 i;

@@ -18,8 +18,6 @@ FUN_801e1edc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9
             ,undefined4 param_10,int param_11);
 undefined4 FUN_801e1ee4(void);
-void FUN_801e2034(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801e20e4(int param_1);
 void FUN_801e217c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
@@ -45,7 +43,7 @@ int SB_Galleon_setScale(int obj);
 int SB_Galleon_getExtraSize(void);
 int SB_Galleon_func08(void);
 void SB_Galleon_free(int obj, int p2);
-void SB_Galleon_render(void);
+void SB_Galleon_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void SB_Galleon_hitDetect(int obj);
 void SB_Galleon_update(void);
 void SB_Galleon_init(void);
