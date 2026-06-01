@@ -1076,13 +1076,12 @@ int RomCurve_getRandomLinkedOfTypes(RomCurveDef *curve,int *types,int typeCount,
           while (low <= high) {
             mid = (high + low) >> 1;
             linkedCurve = romCurves[mid];
-            if (linkedCurve->id < linkId) {
+            if (linkId > linkedCurve->id) {
               low = mid + 1;
-            } else {
-              if (linkedCurve->id <= linkId) {
-                goto foundLinkedCurve;
-              }
+            } else if (linkId < linkedCurve->id) {
               high = mid - 1;
+            } else {
+              goto foundLinkedCurve;
             }
           }
           linkedCurve = NULL;
@@ -1854,14 +1853,13 @@ chooseNext:
     while (low <= high) {
       mid = (high + low) >> 1;
       nextCurve = romCurves[mid];
-      if (nextCurve->id < linkId) {
+      if (linkId > nextCurve->id) {
         low = mid + 1;
-      } else {
-        if (nextCurve->id <= linkId) {
-          curve = nextCurve;
-          goto foundCurve;
-        }
+      } else if (linkId < nextCurve->id) {
         high = mid - 1;
+      } else {
+        curve = nextCurve;
+        goto foundCurve;
       }
     }
     curve = NULL;
@@ -2064,13 +2062,12 @@ void RomCurve_getAdjacentWindow(RomCurveDef *curve,int *outIds)
     while (low <= high) {
       mid = (high + low) >> 1;
       adjacent = romCurves[mid];
-      if (adjacent->id < adjacentId) {
+      if (adjacentId > adjacent->id) {
         low = mid + 1;
-      } else {
-        if (adjacent->id <= adjacentId) {
-          goto foundAdjacent;
-        }
+      } else if (adjacentId < adjacent->id) {
         high = mid - 1;
+      } else {
+        goto foundAdjacent;
       }
     }
     adjacent = NULL;
@@ -2144,13 +2141,12 @@ int RomCurve_getNearestAdjacentLink(f32 x,f32 y,f32 z,RomCurveDef *curve,int exc
         while (low <= high) {
           mid = (high + low) >> 1;
           linkedCurve = romCurves[mid];
-          if (linkedCurve->id < linkId) {
+          if (linkId > linkedCurve->id) {
             low = mid + 1;
-          } else {
-            if (linkedCurve->id <= linkId) {
-              goto foundLinkedCurve;
-            }
+          } else if (linkId < linkedCurve->id) {
             high = mid - 1;
+          } else {
+            goto foundLinkedCurve;
           }
         }
         linkedCurve = NULL;
