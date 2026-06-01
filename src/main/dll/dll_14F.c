@@ -103,6 +103,9 @@ extern uint countLeadingZeros();
 extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
 extern void Sfx_PlayFromObject(int obj,u16 sfxId);
 extern void Obj_SetModelColorFadeRecursive(int obj,int frames,int red,int green,int blue,int startAtHalf);
+extern void Obj_ResetModelColorState(int obj);
+extern void Obj_FreeObject(int obj);
+extern int objIsFrozen(int obj);
 extern void objRenderFn_80041018(int *obj);
 
 extern undefined4 DAT_803dc070;
@@ -196,12 +199,40 @@ extern f64 lbl_803E3918;
 extern f64 lbl_803E3920;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
+extern f32 lbl_803E3858;
+extern f32 lbl_803E385C;
+extern f64 lbl_803E3860;
+extern f64 lbl_803E3868;
+extern f32 lbl_803E3888;
 extern f32 timeDelta;
+extern u8 framesThisStep;
+extern s16 lbl_803DBD98[];
 extern void *gRomCurveInterface;
 extern void *gPartfxInterface;
 extern void *gMapEventInterface;
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 extern void mathFn_80021ac8(void *angles,void *outVec);
+
+struct MagicPlantSetup {
+  u8 pad00[0x14];
+  int eventId;
+  u16 eventDivisor;
+  u8 pad1A;
+  u8 variant;
+  u8 modelIndex;
+  u8 yawByte;
+};
+
+struct MagicPlantState {
+  int childObj;
+  f32 moveProgress;
+  f32 moveStepScale;
+  s16 timer;
+  u8 pad0E;
+  s8 mode;
+};
+
+extern void fn_8017F334(int obj, MagicPlantSetup *setup, MagicPlantState *state);
 
 /*
  * --INFO--
@@ -216,8 +247,9 @@ extern void mathFn_80021ac8(void *angles,void *outVec);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8017F4F4(undefined2 *param_1)
+void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *stateParam)
 {
+  undefined2 *param_1;
   byte bVar1;
   undefined4 uVar2;
   uint uVar3;
@@ -225,10 +257,11 @@ void fn_8017F4F4(undefined2 *param_1)
   byte *pbVar5;
   int iVar6;
   float local_18 [3];
-  
+
+  param_1 = (undefined2 *)obj;
   local_18[0] = lbl_803E44EC;
   iVar6 = *(int *)(param_1 + 0x26);
-  pbVar5 = *(byte **)(param_1 + 0x5c);
+  pbVar5 = (byte *)stateParam;
   if (*(int *)(pbVar5 + 4) == 0) {
     uVar2 = ObjGroup_FindNearestObject((uint)*(byte *)(iVar6 + 0x21),param_1,local_18);
     *(undefined4 *)(pbVar5 + 4) = uVar2;
@@ -420,10 +453,110 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void MagicPlant_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 ushort *param_9,undefined4 param_10,int param_11)
+void MagicPlant_update(int obj)
 {
+  MagicPlantSetup *setup;
+  MagicPlantState *state;
+  int hitObj;
+  int hitA;
+  int hitB;
+  u8 lightPos[0x0c];
+  f32 hitX;
+  f32 hitY;
+  f32 hitZ;
+  int hitKind;
+  s32 alpha;
+  f32 progress;
+  int divisor;
+
+  setup = *(MagicPlantSetup **)(obj + 0x4c);
+  state = *(MagicPlantState **)(obj + 0xb8);
+
+  if ((state->childObj != 0) && (*(u8 *)(obj + 0xeb) == 0)) {
+    state->childObj = 0;
+    Obj_FreeObject(obj);
+    return;
+  }
+
+  *(u8 *)(obj + 0xaf) |= 8;
+  if (objIsFrozen(obj) != 0) {
+    hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, &hitA, &hitB, &hitX, &hitY, &hitZ);
+    if ((hitKind != 0) && (hitKind != 0x10)) {
+      hitX += playerMapOffsetX;
+      hitZ += playerMapOffsetZ;
+      objLightFn_8009a1dc(obj, lbl_803E3888, lightPos, 1, 0);
+      Sfx_PlayFromObject(obj, 0x47b);
+      Obj_ResetModelColorState(obj);
+    }
+    return;
+  }
+
+  switch (state->mode) {
+    case 0:
+      if ((*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(setup->eventId) != 0) {
+        fn_8017F7B8(obj, lbl_803DBD98[setup->variant & 3]);
+        state->mode = 1;
+        state->timer = (s16)randomGetRange(300, 600);
+      } else {
+        progress = (*(f32 (**)(int))(*(int *)gMapEventInterface + 0x6c))(setup->eventId);
+        divisor = setup->eventDivisor;
+        if (divisor < 100) {
+          divisor = 100;
+        }
+        progress = progress / (f32)divisor;
+        if (progress > lbl_803E3858) {
+          progress = lbl_803E3858;
+        } else if (progress < lbl_803E385C) {
+          progress = lbl_803E385C;
+        }
+        state->moveProgress = lbl_803E3858 - progress;
+      }
+      if (*(s16 *)(obj + 0xa0) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0, state->moveProgress, 0);
+      }
+      ObjAnim_SetMoveProgress(state->moveProgress, (ObjAnimComponent *)obj);
+      break;
+
+    case 1:
+      fn_8017F4F4(obj, setup, state);
+      break;
+
+    case 2:
+      if (*(f32 *)(obj + 0x98) >= lbl_803E3858) {
+        alpha = *(u8 *)(obj + 0x36) - (framesThisStep * 2);
+        if (alpha < 0) {
+          alpha = 0;
+          state->mode = 3;
+          state->moveProgress = lbl_803E385C;
+          state->moveStepScale = lbl_803E385C;
+          ObjAnim_SetCurrentMove(obj, 0, lbl_803E385C, 0);
+          ObjAnim_SetMoveProgress(lbl_803E385C, (ObjAnimComponent *)obj);
+        }
+        *(u8 *)(obj + 0x36) = (u8)alpha;
+      }
+      *(s16 *)(*(int *)(obj + 0x54) + 0x60) =
+          (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~1);
+      break;
+
+    case 3:
+      alpha = *(u8 *)(obj + 0x36) + framesThisStep;
+      if (alpha >= 0xff) {
+        alpha = 0xff;
+        state->mode = 0;
+        (*(void (**)(int, f32))(*(int *)gMapEventInterface + 0x64))(setup->eventId,
+                                                                    (f32)setup->eventDivisor);
+      }
+      *(u8 *)(obj + 0x36) = (u8)alpha;
+      *(s16 *)(*(int *)(obj + 0x54) + 0x60) =
+          (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) | 1);
+      break;
+
+    case 4:
+      fn_8017F334(obj, setup, state);
+      break;
+  }
+
+  ObjAnim_AdvanceCurrentMove(state->moveStepScale, timeDelta, obj, NULL);
 }
 
 /*
@@ -657,8 +790,7 @@ void FUN_8017fd40(undefined8 param_1,double param_2,double param_3,undefined8 pa
           ObjAnim_SetMoveProgress((double)(float)piVar8[1],(ObjAnimComponent *)param_9);
         }
         else if (-1 < cVar2) {
-          MagicPlant_update(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar7
-                       ,(int)piVar8);
+          fn_8017F4F4((int)param_9, (MagicPlantSetup *)iVar7, (MagicPlantState *)piVar8);
         }
       }
       else if (cVar2 == '\x04') {
@@ -2128,7 +2260,6 @@ void duster_update(int obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void MagicPlant_update();
 extern f32 lbl_803E385C;
 extern void *gMapEventInterface;
 
