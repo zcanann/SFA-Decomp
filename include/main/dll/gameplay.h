@@ -8,6 +8,7 @@ void saveFileStruct_unlockCheat(uint param_1);
 uint isCheatUnlocked(uint param_1);
 void saveFileStruct_resetVolumes(void);
 u8 * getSaveFileStruct(void);
+void saveGame_unsaveObjectPos(u8 *obj);
 void loadSaveSettings(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                       undefined8 param_5,undefined8 param_6,undefined8 param_7,
                       undefined8 param_8);

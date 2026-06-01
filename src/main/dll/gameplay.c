@@ -983,9 +983,11 @@ extern char s______This_modgfx_needs_an_owner_o_80312af0[];
 extern undefined4 uRam803de108;
 extern undefined uRam803de10d;
 extern u8 lbl_803A32A8[];
+extern u8 lbl_803DD488;
 
 #define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
 #define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
+#define SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET 0x20158
 
 typedef struct SaveGameObjectPosition {
     u32 objectId;
@@ -1025,6 +1027,43 @@ int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition *object)
     } while (i < SAVEGAME_OBJECT_POSITION_COUNT);
 
     return 0;
+}
+
+void saveGame_unsaveObjectPos(u8 *obj)
+{
+    int i;
+    u8 *saveBase;
+    SaveGameObjectPosition *slot;
+    u32 objectId;
+
+    if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
+        return;
+    }
+    if (lbl_803DD488 == 0) {
+        i = 0;
+        saveBase = lbl_803A32A8;
+        objectId = *(u32 *)(*(u8 **)(obj + 0x4c) + 0x14);
+        do {
+            if (((SaveGameObjectPosition *)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId ==
+                objectId) {
+                break;
+            }
+            saveBase += sizeof(SaveGameObjectPosition);
+            i++;
+        } while (i < SAVEGAME_OBJECT_POSITION_COUNT);
+        if (i == SAVEGAME_OBJECT_POSITION_COUNT) {
+            return;
+        }
+
+        for (; i < SAVEGAME_OBJECT_POSITION_COUNT - 1; i++, saveBase += sizeof(SaveGameObjectPosition)) {
+            slot = (SaveGameObjectPosition *)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET);
+            slot[0].objectId = slot[1].objectId;
+            slot[0].x = slot[1].x;
+            slot[0].y = slot[1].y;
+            slot[0].z = slot[1].z;
+        }
+        *(u32 *)(lbl_803A32A8 + SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET) = 0;
+    }
 }
 
 /*
