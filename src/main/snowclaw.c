@@ -450,7 +450,7 @@ void snowclaw_update(int obj) {
     int objectCount;
     int i;
     int targetType;
-    int sub;
+    int *sub;
     int choice;
     int turnSign;
     int pulseIndex;
@@ -462,7 +462,7 @@ void snowclaw_update(int obj) {
 
     pulseTable = lbl_802C2520;
     inner = *(char **)(obj + 0xb8);
-    if (*(u8 *)(inner + 0xa1) != 0 && ((*(u8 *)(inner + 0xaa) >> 6) & 1) != 0) {
+    if (*(u8 *)(inner + 0xa1) != 0 && (u32)((*(u8 *)(inner + 0xaa) >> 6) & 1) != 0) {
         *(f32 *)(inner + 0xac) = lbl_803E66F0;
     }
     *(u8 *)(inner + 0xa1) = 0;
@@ -481,14 +481,14 @@ void snowclaw_update(int obj) {
     }
 
     ObjHits_EnableObject(obj);
-    sub = *(int *)inner;
-    if (sub != 0) {
-        ObjHits_EnableObject(sub);
+    sub = *(int **)inner;
+    if (sub != NULL) {
+        ObjHits_EnableObject((int)sub);
     }
 
     dropTable = *(SnowClawAnimTbl *)(pulseTable + 8);
     if (*(s8 *)(inner + 0xa2) != *(s8 *)(inner + 0xa3)) {
-        if (*(int *)(obj + 0xc8) != 0) {
+        if (*(void **)(obj + 0xc8) != NULL) {
             Obj_FreeObject(*(int *)(obj + 0xc8));
             *(int *)(obj + 0xc8) = 0;
             *(u8 *)(obj + 0xeb) = 0;
@@ -517,9 +517,9 @@ void snowclaw_update(int obj) {
         return;
     }
 
-    sub = *(int *)inner;
+    sub = *(int **)inner;
     if (sub != 0 && *(s8 *)(inner + 0xa4) != 0 &&
-        *(s16 *)(obj + 0xa0) == *(u16 *)(inner + 0xa8) && fn_801EC9F4(sub) != 0 &&
+        *(s16 *)(obj + 0xa0) == *(u16 *)(inner + 0xa8) && fn_801EC9F4((int)sub) != 0 &&
         timerCountDown(inner + 0x98) != 0) {
         choice = randomGetRange(0, 1);
         *(int *)(inner + 0x94) = *(u16 *)(inner + 0xa8) + 5;
@@ -534,9 +534,9 @@ void snowclaw_update(int obj) {
         s16toFloat(inner + 0x98, (s16)lbl_8032A340[fn_801EC9BC(*(int *)inner) - 1]);
     }
 
-    sub = *(int *)inner;
-    if (sub != 0) {
-        snowclaw_updateMountAttack(obj, sub);
+    sub = *(int **)inner;
+    if (sub != NULL) {
+        snowclaw_updateMountAttack(obj, (int)sub);
     }
 
     if (randFn_80080100(0x12c) != 0) {
