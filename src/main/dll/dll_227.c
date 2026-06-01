@@ -55,7 +55,7 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
             ObjPath_GetPointWorldPosition(obj, 0, outXPtr, outYPtr, outZPtr, 0);
             (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, partfxArgs, 0x200001, -1, 0);
 
-            if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0) {
+            if (gDIMbosstonsilLight != 0 && *((u8 *)gDIMbosstonsilLight + 0x2f8) != 0 && *((u8 *)gDIMbosstonsilLight + 0x4c) != 0) {
                 lightVecFn_8001dd88(*outXPtr, *outYPtr, *outZPtr);
                 queueGlowRender(gDIMbosstonsilLight);
             }
@@ -128,26 +128,26 @@ void DIMbosstonsil_update(void *obj)
     fn_8001D9F4(gDIMbosstonsilLight, &b1, &b2, &b3, &b4);
     fn_8001D71C(gDIMbosstonsilLight, b1, b2, b3, 0xc0);
 
-    if (gDIMbosstonsilLight->active == 0) return;
-    if (gDIMbosstonsilLight->visible == 0) return;
+    if (*((u8 *)gDIMbosstonsilLight + 0x2f8) == 0) return;
+    if (*((u8 *)gDIMbosstonsilLight + 0x4c) == 0) return;
 
     {
         s16 r30_local;
         int sum;
-        sum = gDIMbosstonsilLight->glowIntensity + gDIMbosstonsilLight->glowIntensityStep;
+        sum = (int)*((u8 *)gDIMbosstonsilLight + 0x2f9) + (int)*((s8 *)gDIMbosstonsilLight + 0x2fa);
         r30_local = (s16)sum;
         if (r30_local < 0) {
             r30_local = 0;
-            gDIMbosstonsilLight->glowIntensityStep = 0;
+            *((u8 *)gDIMbosstonsilLight + 0x2fa) = 0;
         } else if (r30_local > 0xc) {
             int rnd = randomGetRange(-0xc, 0xc);
             r30_local = (s16)(r30_local + rnd);
             if (r30_local > 0xff) {
                 r30_local = 0xff;
-                gDIMbosstonsilLight->glowIntensityStep = 0;
+                *((u8 *)gDIMbosstonsilLight + 0x2fa) = 0;
             }
         }
-        gDIMbosstonsilLight->glowIntensity = (u8)r30_local;
+        *((u8 *)gDIMbosstonsilLight + 0x2f9) = (u8)r30_local;
     }
 }
 #pragma scheduling reset
