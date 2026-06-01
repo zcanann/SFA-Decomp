@@ -454,6 +454,7 @@ void snowclaw_update(int obj) {
     int choice;
     int turnSign;
     int pulseIndex;
+    s8 healthState;
     u32 *pulseTable;
     u32 pulseTypes[4];
     u32 pulseModes[4];
@@ -468,14 +469,15 @@ void snowclaw_update(int obj) {
     *(u8 *)(inner + 0xa1) = 0;
     *(u8 *)(inner + 0xa0) = 0xff;
 
-    if (*(s8 *)(inner + 0xa4) < 0) {
-        if (*(s8 *)(inner + 0xa4) < -10) {
+    healthState = *(s8 *)(inner + 0xa4);
+    if (healthState < 0) {
+        if (healthState < -10) {
             *(s16 *)(obj + 6) |= 0x4000;
             *(s16 *)(*(int *)inner + 6) |= 0x4000;
             ObjHits_DisableObject(obj);
             ObjHits_DisableObject(*(int *)inner);
         } else {
-            *(s8 *)(inner + 0xa4) = *(s8 *)(inner + 0xa4) - 1;
+            *(u8 *)(inner + 0xa4) = healthState - 1;
         }
         return;
     }
@@ -572,11 +574,13 @@ void snowclaw_update(int obj) {
 int snowclaw_animEventCallback(int obj, int a2, int evt) {
     int *sub;
     int *inner;
+    u8 *eventBytes;
     int i;
     SnowClawAnimTbl tbl;
     f32 dist;
 
     dist = lbl_803E6708;
+    eventBytes = (u8 *)evt;
     inner = *(int **)((char *)obj + 0xb8);
     *(u8 *)((char *)inner + 0xa1) = 1;
     ObjHits_DisableObject(obj);
@@ -600,24 +604,24 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
             (*(void (*)(int *, int))(*(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x3c)))(sub, 2);
         }
     }
-    if (*(u8 *)((char *)evt + 0x7e) == 2) {
-        *(u8 *)((char *)evt + 0x90) |= 8;
+    if (eventBytes[0x7e] == 2) {
+        eventBytes[0x90] |= 8;
     }
     *(s16 *)((char *)evt + 0x6e) = *(s16 *)((char *)evt + 0x70);
-    for (i = 0; i < *(u8 *)((char *)evt + 0x8b); i++) {
+    for (i = 0; i < eventBytes[0x8b]; i++) {
         int idx = i + 0x81;
-        switch (*(u8 *)((char *)evt + idx)) {
+        switch (eventBytes[idx]) {
         case 3:
             *(s8 *)((char *)inner + 0xa2) = -1;
             break;
         case 4:
             if (GameBit_Get(0xb7d) != 0) {
-                *(u8 *)((char *)evt + 0x90) |= 4;
+                eventBytes[0x90] |= 4;
             }
             break;
         case 5:
             if (GameBit_Get(*(s16 *)(*(int *)((char *)inner + 4))) != 0) {
-                *(u8 *)((char *)evt + 0x90) |= 4;
+                eventBytes[0x90] |= 4;
             }
             break;
         case 2:
@@ -661,7 +665,7 @@ int snowclaw_animEventCallback(int obj, int a2, int evt) {
             break;
         }
         }
-        *(u8 *)((char *)evt + idx) = 0;
+        eventBytes[idx] = 0;
     }
     tbl = lbl_802C2540;
     if (*(s8 *)((char *)inner + 0xa2) != *(s8 *)((char *)inner + 0xa3)) {
