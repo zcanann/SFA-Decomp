@@ -4395,17 +4395,16 @@ uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,uint groupId)
     if (patchIndex != 0) {
       patch = Objfsa_GetPatch(patchIndex);
       if (patch->groupId == groupId) {
+        edgeIndex = 0;
         if (point[1] < (f32)patch->maxY && (f32)patch->minY < point[1]) {
-          edgeIndex = 0;
           while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
                  patch->planeOffsets[edgeIndex] +
                      point[0] * (f32)patch->planes[edgeIndex].normalX +
                      point[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
             edgeIndex++;
           }
-          return edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT;
         }
-        return 0;
+        return edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT;
       }
     }
     patchListIndex++;
