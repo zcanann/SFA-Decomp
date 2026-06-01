@@ -373,8 +373,8 @@ void snowclaw_hitDetect(int obj) {
     int *sub;
     int *near;
     int *player;
-    int hit;
     f32 dist;
+    int hit;
     s8 a5;
 
     inner = *(int **)(obj + 0xb8);
