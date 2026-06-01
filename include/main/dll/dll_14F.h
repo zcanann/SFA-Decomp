@@ -70,6 +70,7 @@ void FUN_80181b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
 int curvefish_getExtraSize(void);
 void curvefish_update();
 void curvefish_init(int obj, u8 *param_2);
+void fn_801814D0(int obj, int param_2, u8 *state);
 
 extern ObjectDescriptor gMagicPlantObjDescriptor;
 extern ObjectDescriptor gTrickyWarpObjDescriptor;

@@ -36,12 +36,13 @@ extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern void *getTrickyObject(void);
 extern void *Obj_GetPlayerObject(void);
+extern void Obj_StartModelFadeIn(int obj,int frames);
 extern u8 Obj_IsLoadingLocked(void);
 extern void *Obj_AllocObjectSetup(int extraSize,int objectId);
 extern int Obj_SetupObject(void *setup,int mode,int mapLayer,int objIndex,void *parent);
 extern undefined4 ObjHits_ClearHitVolumes();
 extern undefined8 ObjHits_DisableObject();
-extern ushort ObjHits_IsObjectEnabled();
+extern int ObjHits_IsObjectEnabled();
 extern undefined4 ObjHits_RecordObjectHit();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_GetPriorityHit();
@@ -60,7 +61,9 @@ extern undefined4 FUN_800400b0();
 extern int FUN_800575b4();
 extern int FUN_800620e8();
 extern int FUN_800632f4();
+extern f32 Vec_xzDistance(f32 *a,f32 *b);
 extern undefined4 FUN_80081120();
+extern void objLightFn_8009a1dc(int obj,f32 scale,void *pos,int count,int param_5);
 extern int FUN_800d9de0();
 extern bool FUN_800da5e8();
 extern undefined4 FUN_800db110();
@@ -70,6 +73,7 @@ extern int getPatchGroup(f32 *pos,int patchGroup);
 extern int FUN_8012efc4();
 extern int FUN_801365a0();
 extern undefined4 FUN_801816f8();
+extern void fn_801816F8(int obj,int param_2,u8 *state);
 extern undefined4 FUN_80286838();
 extern undefined8 FUN_8028683c();
 extern undefined8 FUN_80286840();
@@ -82,8 +86,12 @@ extern undefined4 FUN_80294964();
 extern uint FUN_80294c78();
 extern byte FUN_80294ca8();
 extern uint countLeadingZeros();
+extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
+extern void Sfx_PlayFromObject(int obj,u16 sfxId);
+extern void Obj_SetModelColorFadeRecursive(int obj,int frames,int red,int green,int blue,int startAtHalf);
 
 extern undefined4 DAT_803dc070;
+extern int lbl_803DBDA0;
 extern undefined4 DAT_803dca00;
 extern undefined4 DAT_803dca08;
 extern undefined4* DAT_803dd6d0;
@@ -99,6 +107,10 @@ extern f64 DOUBLE_803e4570;
 extern f64 DOUBLE_803e45b0;
 extern f64 DOUBLE_803e45b8;
 extern f32 lbl_803DC074;
+extern f32 lbl_803DBDA4;
+extern f32 lbl_803DBDA8;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
 extern f32 lbl_803DCA0C;
 extern f32 lbl_803DCA10;
 extern f32 lbl_803DDA58;
@@ -141,6 +153,8 @@ extern f32 lbl_803E45AC;
 extern f32 lbl_803E45C0;
 extern f32 lbl_803E45D0;
 extern f32 lbl_803E38A0;
+extern f32 lbl_803E3934;
+extern f32 lbl_803E3938;
 extern void *gRomCurveInterface;
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 
@@ -1896,6 +1910,77 @@ void curvefish_init(int obj, u8 *param_2) {
   *(u8 *)(state + 0x108) = 1;
   *(f32 *)(state + 0x110) = (f32)(u32)param_2[0x19] / lbl_803E3928;
 }
+#pragma scheduling reset
+
+typedef struct DusterHitEffectPos {
+  u8 pad00[0xc];
+  f32 x;
+  f32 y;
+  f32 z;
+} DusterHitEffectPos;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801814D0(int obj, int param_2, u8 *state) {
+  int hitWork[4];
+  DusterHitEffectPos effectPos;
+  int hitType;
+  int *objects;
+  int i;
+  f32 groupObjY;
+  f32 objY;
+  f32 f;
+
+  hitType = ObjHits_GetPriorityHitWithPosition(obj,&hitWork[3],&hitWork[2],&hitWork[1],
+                                               &effectPos.x,&effectPos.y,&effectPos.z);
+  if (hitType != 0) {
+    if (hitType == 0x10) {
+      Obj_StartModelFadeIn(obj,0x12c);
+    } else {
+      effectPos.x += playerMapOffsetX;
+      effectPos.z += playerMapOffsetZ;
+      if (state[0x20] != 0) {
+        if (hitType != 5) {
+          objLightFn_8009a1dc(obj,lbl_803E3934,&effectPos,4,0);
+          if (Sfx_IsPlayingFromObject(0,0x37e) == 0) {
+            Sfx_PlayFromObject(obj,0x37e);
+          }
+          return;
+        }
+        objects = (int *)ObjGroup_GetObjects(0x10,&hitWork[0]);
+        for (i = 0; i < hitWork[0]; i++) {
+          if (ObjHits_IsObjectEnabled(*objects) != 0) {
+            groupObjY = *(f32 *)(*objects + 0x10);
+            objY = *(f32 *)(obj + 0x10);
+            if (objY < groupObjY && groupObjY < objY + lbl_803DBDA8) {
+              if (Vec_xzDistance((f32 *)(*objects + 0x18),(f32 *)(obj + 0x18)) < lbl_803DBDA4) {
+                ObjHits_RecordObjectHit(*objects,hitWork[3],5,1,0);
+              }
+            }
+          }
+          objects++;
+        }
+      }
+      objLightFn_8009a1dc(obj,lbl_803E3934,&effectPos,1,0);
+      Obj_SetModelColorFadeRecursive(obj,0xf,0xc8,0,0,1);
+      if (Sfx_IsPlayingFromObject(0,(u16)*(s16 *)(state + 0x10)) == 0) {
+        Sfx_PlayFromObject(obj,(u16)*(s16 *)(state + 0x10));
+      }
+      *(s16 *)(state + 0xa) = 0x32;
+      state[9] = 0;
+      fn_801816F8(obj,param_2,state);
+      *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+      f = lbl_803E3938;
+      *(f32 *)(obj + 0x24) = lbl_803E3938;
+      *(f32 *)(obj + 0x2c) = f;
+      ObjHits_ClearHitVolumes(obj);
+      if (lbl_803DBDA0 != 0) {
+        ObjHits_DisableObject(obj);
+      }
+    }
+  }
+}
+#pragma peephole reset
 #pragma scheduling reset
 
 extern void *getTrickyObject(void);
