@@ -70,6 +70,18 @@ extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objA
 extern void Object_ObjAnimSetSecondaryBlendMove(int obj, uint moveId, int eventState);
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int randFn_80080100(int range);
+extern void ObjHits_EnableObject(int obj);
+extern int *ObjGroup_GetObjects(int group, int *countOut);
+extern int seqStreamLookupFn_8007fff8(void *table, int count, int key);
+extern int timerCountDown(void *timer);
+extern int fn_801EC9F4(int obj);
+extern int fn_801EC9BC(int obj);
+extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32 *vec);
+extern u32 lbl_802C2520[8];
+extern s16 lbl_8032A340[];
+extern int lbl_803DC220;
+extern f32 lbl_803DC218;
+extern f32 lbl_803DC21C;
 
 int snowclaw_getExtraSize(void);
 int snowclaw_getObjectTypeId(void);
@@ -82,6 +94,7 @@ void snowclaw_updateMountAttack(int obj, int mount);
 void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9);
 void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis);
 void snowclaw_hitDetect(int obj);
+void snowclaw_update(int obj);
 int snowclaw_animEventCallback(int obj, int a2, int evt);
 
 int snowclaw_getExtraSize(void) { return 0xb0; }
@@ -418,6 +431,127 @@ void snowclaw_hitDetect(int obj) {
     a5 = *(s8 *)((char *)inner + 0xa5);
     if (a5 >= 0) {
         *(s8 *)((char *)inner + 0xa5) = a5 - framesThisStep;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void snowclaw_update(int obj) {
+    char *inner;
+    int *objects;
+    int objectCount;
+    int i;
+    int targetType;
+    int sub;
+    int choice;
+    int turnSign;
+    int pulseIndex;
+    u32 pulseTypes[4];
+    u32 pulseModes[4];
+    f32 pulseVec[3];
+
+    inner = *(char **)(obj + 0xb8);
+    if (*(u8 *)(inner + 0xa1) != 0 && ((*(u8 *)(inner + 0xaa) >> 6) & 1) != 0) {
+        *(f32 *)(inner + 0xac) = lbl_803E66F0;
+    }
+    *(u8 *)(inner + 0xa1) = 0;
+    *(u8 *)(inner + 0xa0) = 0xff;
+
+    if (*(s8 *)(inner + 0xa4) < 0) {
+        if (*(s8 *)(inner + 0xa4) < -10) {
+            *(s16 *)(obj + 6) |= 0x4000;
+            *(s16 *)(*(int *)inner + 6) |= 0x4000;
+            ObjHits_DisableObject(obj);
+            ObjHits_DisableObject(*(int *)inner);
+        } else {
+            *(u8 *)(inner + 0xa4) = *(u8 *)(inner + 0xa4) - 1;
+        }
+        return;
+    }
+
+    ObjHits_EnableObject(obj);
+    sub = *(int *)inner;
+    if (sub != 0) {
+        ObjHits_EnableObject(sub);
+    }
+
+    if (*(s8 *)(inner + 0xa2) != *(s8 *)(inner + 0xa3)) {
+        if (*(int *)(obj + 0xc8) != 0) {
+            Obj_FreeObject(*(int *)(obj + 0xc8));
+            *(int *)(obj + 0xc8) = 0;
+            *(u8 *)(obj + 0xeb) = 0;
+        }
+        if (*(s8 *)(inner + 0xa2) > 0 && Obj_IsLoadingLocked() != 0) {
+            *(int *)(obj + 0xc8) =
+                Obj_SetupObject(Obj_AllocObjectSetup(0x18, lbl_802C2540.v[*(s8 *)(inner + 0xa2)]),
+                                4, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+            *(u8 *)(obj + 0xeb) = 1;
+        }
+        *(u8 *)(inner + 0xa3) = *(u8 *)(inner + 0xa2);
+    }
+
+    if (*(void **)inner == NULL) {
+        objects = ObjGroup_GetObjects(0xa, &objectCount);
+        targetType = seqStreamLookupFn_8007fff8(lbl_8032A310, 6, *(s16 *)(obj + 0x46));
+        for (i = 0; i < objectCount; i++) {
+            if (*(s16 *)(objects[i] + 0x46) == targetType) {
+                *(int *)inner = objects[i];
+                i = objectCount;
+            }
+        }
+    }
+
+    if (GameBit_Get(*(s16 *)(*(int *)(inner + 4))) == 0) {
+        return;
+    }
+
+    sub = *(int *)inner;
+    if (sub != 0 && *(s8 *)(inner + 0xa4) != 0 &&
+        *(s16 *)(obj + 0xa0) == *(u16 *)(inner + 0xa8) && fn_801EC9F4(sub) != 0 &&
+        timerCountDown(inner + 0x98) != 0) {
+        choice = randomGetRange(0, 1);
+        *(int *)(inner + 0x94) = *(u16 *)(inner + 0xa8) + 5;
+        turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, Obj_GetPlayerObject(), 0) >> 31;
+        if (turnSign == 0 || *(s16 *)(obj + 0x46) == 0x389) {
+            ObjAnim_SetCurrentMove(obj, *(u16 *)(inner + 0xa8) + 6, lbl_803E66F0, 0);
+            snowclaw_spawnDropBomb(*(int *)inner, obj, (u8)choice, 2);
+        } else {
+            ObjAnim_SetCurrentMove(obj, *(u16 *)(inner + 0xa8) + 5, lbl_803E66F0, 0);
+            snowclaw_spawnDropBomb(*(int *)inner, obj, (u8)choice, 0);
+        }
+        s16toFloat(inner + 0x98, lbl_8032A340[fn_801EC9BC(*(int *)inner) - 1]);
+    }
+
+    sub = *(int *)inner;
+    if (sub != 0) {
+        snowclaw_updateMountAttack(obj, sub);
+    }
+
+    if (randFn_80080100(0x12c) != 0) {
+        Sfx_PlayFromObject(obj, 0x2e5);
+    }
+
+    if (*(s8 *)(inner + 0xa4) < 4) {
+        pulseTypes[0] = lbl_802C2520[0];
+        pulseTypes[1] = lbl_802C2520[1];
+        pulseTypes[2] = lbl_802C2520[2];
+        pulseTypes[3] = lbl_802C2520[3];
+        pulseModes[0] = lbl_802C2520[4];
+        pulseModes[1] = lbl_802C2520[5];
+        pulseModes[2] = lbl_802C2520[6];
+        pulseModes[3] = lbl_802C2520[7];
+        pulseIndex = 3 - *(s8 *)(inner + 0xa4);
+        i = *(u8 *)(inner + 0xa6);
+        *(u8 *)(inner + 0xa6) = i + 1;
+        if ((i % lbl_803DC220) != 0) {
+            pulseVec[0] = lbl_803E66F0;
+            pulseVec[1] = lbl_803DC21C;
+            pulseVec[2] = lbl_803E66F0;
+            fn_80098B18(obj, lbl_803DC218, (u8)pulseTypes[pulseIndex],
+                        (u8)pulseModes[pulseIndex], 0, pulseVec);
+        }
     }
 }
 #pragma peephole reset
