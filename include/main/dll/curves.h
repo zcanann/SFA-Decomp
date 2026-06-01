@@ -1,10 +1,18 @@
 #ifndef MAIN_DLL_CURVES_H_
 #define MAIN_DLL_CURVES_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 
 #define ROMCURVE_MAX_CURVES 0x514
+#define ROMCURVE_DEF_SIZE 0x2c
+#define ROMCURVE_POINT_SIZE 0x18
+#define ROMCURVE_X_OFFSET 0x08
+#define ROMCURVE_Y_OFFSET 0x0c
+#define ROMCURVE_Z_OFFSET 0x10
 #define ROMCURVE_ID_OFFSET 0x14
+#define ROMCURVE_ACTION_OFFSET 0x18
+#define ROMCURVE_TYPE_OFFSET 0x19
 #define ROMCURVE_LINK_FLAGS_OFFSET 0x1b
 #define ROMCURVE_LINK_IDS_OFFSET 0x1c
 #define ROMCURVE_LINK_ID_STRIDE sizeof(u32)
@@ -34,6 +42,20 @@ typedef struct RomCurvePoint {
   u32 flags;
   u8 type;
 } RomCurvePoint;
+
+STATIC_ASSERT(sizeof(RomCurveDef) == ROMCURVE_DEF_SIZE);
+STATIC_ASSERT(offsetof(RomCurveDef, x) == ROMCURVE_X_OFFSET);
+STATIC_ASSERT(offsetof(RomCurveDef, y) == ROMCURVE_Y_OFFSET);
+STATIC_ASSERT(offsetof(RomCurveDef, z) == ROMCURVE_Z_OFFSET);
+STATIC_ASSERT(offsetof(RomCurveDef, id) == ROMCURVE_ID_OFFSET);
+STATIC_ASSERT(offsetof(RomCurveDef, action) == ROMCURVE_ACTION_OFFSET);
+STATIC_ASSERT(offsetof(RomCurveDef, type) == ROMCURVE_TYPE_OFFSET);
+STATIC_ASSERT(offsetof(RomCurveDef, blockedLinkMask) == ROMCURVE_LINK_FLAGS_OFFSET);
+STATIC_ASSERT(offsetof(RomCurveDef, linkIds) == ROMCURVE_LINK_IDS_OFFSET);
+
+STATIC_ASSERT(sizeof(RomCurvePoint) == ROMCURVE_POINT_SIZE);
+STATIC_ASSERT(offsetof(RomCurvePoint, flags) == 0x10);
+STATIC_ASSERT(offsetof(RomCurvePoint, type) == 0x14);
 
 undefined4
 RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
