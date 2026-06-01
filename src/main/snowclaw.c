@@ -62,6 +62,14 @@ extern f32 lbl_803E6738;
 extern f32 lbl_803E66F4;
 extern void ObjHits_DisableObject(int obj);
 extern SnowClawAnimTbl lbl_802C2540;
+extern f32 lbl_803DC224;
+extern f32 lbl_803E66E4;
+extern f32 lbl_803E66E8;
+extern f32 lbl_803E66F8;
+extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnim, void *events);
+extern void Object_ObjAnimSetSecondaryBlendMove(int obj, uint moveId, int eventState);
+extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
+extern int randFn_80080100(int range);
 
 int snowclaw_getExtraSize(void);
 int snowclaw_getObjectTypeId(void);
@@ -70,6 +78,7 @@ void snowclaw_initialise(void);
 void snowclaw_free(int obj);
 void snowclaw_init(int *obj, u8 *init);
 void snowclaw_spawnDropBomb(int obj, int a, int b, int c);
+void snowclaw_updateMountAttack(int obj, int mount);
 void snowclaw_syncMountTransform(int obj, int sub, int p2, int p3, int p4, int p5, int opacity, int a8, int a9);
 void snowclaw_render(int obj, int p2, int p3, int p4, int p5, s8 vis);
 void snowclaw_hitDetect(int obj);
@@ -178,6 +187,63 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
         if (spawned != NULL) {
             *(int *)(spawned + 0xf4) = (u8)c;
             *(int *)(spawned + 0xc4) = a;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void snowclaw_updateMountAttack(int obj, int mount) {
+    char *inner;
+    f32 moveStep;
+    f32 mountPhase;
+    int mountFlag;
+    int magnitude;
+    int turnSign;
+    int delay;
+
+    inner = *(char **)(obj + 0xb8);
+    mountPhase = (*(f32 (*)(int, f32 *))(*(int *)(*(int *)(*(int *)(mount + 0x68)) + 0x44)))(mount, &moveStep);
+    moveStep = lbl_803DC224 + lbl_803E66E4 * (mountPhase * lbl_803DC224);
+    (*(void (*)(int, f32 *, int *))(*(int *)(*(int *)(*(int *)(mount + 0x68)) + 0x40)))(mount, &mountPhase, &mountFlag);
+    magnitude = (int)(lbl_803E66E8 * mountPhase);
+    if (magnitude < 0) {
+        magnitude = -magnitude;
+    }
+
+    if (mountFlag != 0 && *(s16 *)(obj + 0xa0) == *(u16 *)(inner + 0xa8)) {
+        Object_ObjAnimSetSecondaryBlendMove(obj, *(u16 *)(inner + 0xa8) + 1, magnitude);
+    } else {
+        Object_ObjAnimSetSecondaryBlendMove(obj, *(u16 *)(inner + 0xa8) + 2, magnitude);
+    }
+
+    if (ObjAnim_AdvanceCurrentMove(moveStep, (f32)(u8)framesThisStep, obj, NULL) != 0 &&
+        *(s16 *)(obj + 0xa0) != *(u16 *)(inner + 0xa8)) {
+        *(f32 *)(inner + 0x30) = lbl_803E66EC;
+        delay = *(int *)(inner + 0x9c);
+        if (delay < 1) {
+            delay = 1;
+        } else if (delay > 0x190) {
+            delay = 0x190;
+        }
+        *(int *)(inner + 0x9c) = delay;
+
+        if (randFn_80080100(2) == 0) {
+            ObjAnim_SetCurrentMove(obj, *(u16 *)(inner + 0xa8), lbl_803E66F0, 0);
+        } else {
+            turnSign = (u32)(s16)Obj_GetYawDeltaToObject(obj, Obj_GetPlayerObject(), 0) >> 31;
+            if (turnSign == 0) {
+                *(f32 *)(inner + 0x30) = lbl_803E66F4;
+                Sfx_PlayFromObject(obj, 0x2e3);
+            } else {
+                *(f32 *)(inner + 0x30) = lbl_803E66F8;
+                Sfx_PlayFromObject(obj, 0x2e2);
+            }
+            ObjAnim_SetCurrentMove(obj, *(u16 *)(inner + 0xa8) + (turnSign != 0 ? 4 : 8),
+                                   lbl_803E66F0, 0);
+            *(int *)(inner + 0x9c) += 0x64;
         }
     }
 }
