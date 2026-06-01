@@ -1062,25 +1062,18 @@ extern SaveGameDefaultPosition lbl_802C2170;
 
 int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition *object)
 {
-    register int i;
-    register u8 *saveBase;
+    int i;
     SaveGameObjectPosition *position;
 
-    i = 0;
-    saveBase = lbl_803A32A8;
-    do {
-        if (object->objectId ==
-            ((SaveGameObjectPosition *)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId) {
-            position = (SaveGameObjectPosition *)(lbl_803A32A8 + i * sizeof(SaveGameObjectPosition) +
-                                                  SAVEGAME_OBJECT_POSITION_OFFSET);
+    position = (SaveGameObjectPosition *)(lbl_803A32A8 + SAVEGAME_OBJECT_POSITION_OFFSET);
+    for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++, position++) {
+        if (object->objectId == position->objectId) {
             object->x = position->x;
             object->y = position->y;
             object->z = position->z;
             return 1;
         }
-        saveBase += sizeof(SaveGameObjectPosition);
-        i++;
-    } while (i < SAVEGAME_OBJECT_POSITION_COUNT);
+    }
 
     return 0;
 }
@@ -1096,17 +1089,14 @@ void saveGame_unsaveObjectPos(u8 *obj)
         return;
     }
     if (lbl_803DD488 == 0) {
-        i = 0;
-        saveBase = lbl_803A32A8;
         objectId = *(u32 *)(*(u8 **)(obj + 0x4c) + 0x14);
-        do {
-            if (((SaveGameObjectPosition *)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId ==
-                objectId) {
+        saveBase = lbl_803A32A8;
+        for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++) {
+            if (((SaveGameObjectPosition *)(saveBase + SAVEGAME_OBJECT_POSITION_OFFSET))->objectId == objectId) {
                 break;
             }
             saveBase += sizeof(SaveGameObjectPosition);
-            i++;
-        } while (i < SAVEGAME_OBJECT_POSITION_COUNT);
+        }
         if (i == SAVEGAME_OBJECT_POSITION_COUNT) {
             return;
         }
@@ -13382,30 +13372,31 @@ extern int fn_802966D4(int obj, int *out);
 extern void playerSetHeldObject(void *player, int held);
 extern f32 lbl_803E06D8;
 void saveGame_saveObjectPos(int *obj) {
-    int i;
-    char *slot;
-    int key;
+    register u8 *slot;
+    register int v;
+    register int i;
     if (*(s16 *)((char *)obj + 6) & 0x2000) return;
-    if (lbl_803DD488 != 0) return;
-    key = *(int *)(*(int *)((char *)obj + 0x4c) + 0x14);
-    slot = (char *)lbl_803A32A8;
-    for (i = 0; i < 72; i++) {
-        int v = *(int *)(slot + 0x168);
-        if (v == 0) break;
-        if (v == key) break;
-        slot += 0x10;
+    if (lbl_803DD488 == 0) {
+        slot = lbl_803A32A8;
+        for (i = 0; i < SAVEGAME_OBJECT_POSITION_COUNT; i++) {
+            v = *(int *)(slot + SAVEGAME_OBJECT_POSITION_OFFSET);
+            if (v == 0) break;
+            if (*(u32 *)(*(u8 **)((char *)obj + 0x4c) + 0x14) == (u32)v) break;
+            slot += sizeof(SaveGameObjectPosition);
+        }
+        if (i == SAVEGAME_OBJECT_POSITION_COUNT) return;
+        {
+            register int objectId = *(int *)(*(int *)((char *)obj + 0x4c) + 0x14);
+            register char *entry = (char *)lbl_803A32A8 + i * sizeof(SaveGameObjectPosition);
+            *(int *)(entry + SAVEGAME_OBJECT_POSITION_OFFSET) = objectId;
+            *(f32 *)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 4) = *(f32 *)((char *)obj + 0xc);
+            *(f32 *)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 8) = *(f32 *)((char *)obj + 0x10);
+            *(f32 *)(entry + SAVEGAME_OBJECT_POSITION_OFFSET + 0xc) = *(f32 *)((char *)obj + 0x14);
+        }
+        *(f32 *)(*(int *)((char *)obj + 0x4c) + 8) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)(*(int *)((char *)obj + 0x4c) + 0xc) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)(*(int *)((char *)obj + 0x4c) + 0x10) = *(f32 *)((char *)obj + 0x14);
     }
-    if (i == 0x3f) return;
-    {
-        char *e = (char *)lbl_803A32A8 + i * 0x10;
-        *(int *)(e + 0x168) = *(int *)(*(int *)((char *)obj + 0x4c) + 0x14);
-        *(f32 *)(e + 0x16c) = *(f32 *)((char *)obj + 0xc);
-        *(f32 *)(e + 0x170) = *(f32 *)((char *)obj + 0x10);
-        *(f32 *)(e + 0x174) = *(f32 *)((char *)obj + 0x14);
-    }
-    *(f32 *)(*(int *)((char *)obj + 0x4c) + 8) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)(*(int *)((char *)obj + 0x4c) + 0xc) = *(f32 *)((char *)obj + 0x10);
-    *(f32 *)(*(int *)((char *)obj + 0x4c) + 0x10) = *(f32 *)((char *)obj + 0x14);
 }
 void Carryable_stopCarrying(int *obj, u8 *param2) {
     void *player = Obj_GetPlayerObject();
