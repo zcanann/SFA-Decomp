@@ -39,7 +39,7 @@ extern f32 lbl_803E3BBC;
 /*
  * --INFO--
  *
- * Function: FUN_80161f0c
+ * Function: fn_80161F0C
  * EN v1.0 Address: 0x80161F0C
  * EN v1.0 Size: 436b
  * EN v1.1 Address: 0x80161FA4
@@ -50,7 +50,7 @@ extern f32 lbl_803E3BBC;
  * PAL Size: TODO
  */
 undefined4
-FUN_80161f0c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
+fn_80161F0C(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
             undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
             undefined4 param_15,undefined4 param_16)
@@ -680,7 +680,6 @@ int cannonclaw_getObjectTypeId(void) { return 0x0; }
 /* plain forwarder. */
 extern void fn_80162518(void);
 extern void fn_801622D4(void);
-extern void fn_80161F0C(void);
 extern void fn_80161DA8(void);
 extern void fn_80161C44(void);
 extern void fn_80161AF8(void);
