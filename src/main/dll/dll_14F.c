@@ -63,6 +63,7 @@ extern int FUN_800575b4();
 extern int FUN_800620e8();
 extern int FUN_800632f4();
 extern f32 Vec_xzDistance(f32 *a,f32 *b);
+extern f32 Vec_distance(f32 *a,f32 *b);
 extern f32 vec3f_distanceSquared(f32 *a,f32 *b);
 extern f32 getXZDistance(f32 *a,f32 *b);
 extern f32 sqrtf(f32 x);
@@ -101,7 +102,9 @@ extern uint FUN_80294c78();
 extern byte FUN_80294ca8();
 extern uint countLeadingZeros();
 extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
+extern int Sfx_IsPlayingFromObjectChannel(int obj,int channel);
 extern void Sfx_PlayFromObject(int obj,u16 sfxId);
+extern void Sfx_StopObjectChannel(int obj,int channel);
 extern void Obj_SetModelColorFadeRecursive(int obj,int frames,int red,int green,int blue,int startAtHalf);
 extern void Obj_ResetModelColorState(int obj);
 extern void Obj_FreeObject(int obj);
@@ -203,7 +206,12 @@ extern f32 lbl_803E3858;
 extern f32 lbl_803E385C;
 extern f64 lbl_803E3860;
 extern f64 lbl_803E3868;
+extern f32 lbl_803E3884;
 extern f32 lbl_803E3888;
+extern f32 lbl_803E388C;
+extern f32 lbl_803E3890;
+extern f32 lbl_803E3894;
+extern f32 lbl_803E3898;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern s16 lbl_803DBD98[];
@@ -249,97 +257,73 @@ extern void fn_8017F334(int obj, MagicPlantSetup *setup, MagicPlantState *state)
  */
 void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *stateParam)
 {
-  undefined2 *param_1;
-  byte bVar1;
-  undefined4 uVar2;
-  uint uVar3;
-  int iVar4;
-  byte *pbVar5;
-  int iVar6;
-  float local_18 [3];
+  int player;
+  int hitObj;
+  int hitA;
+  int hitB;
+  u8 lightPos[0x0c];
+  f32 hitX;
+  f32 hitY;
+  f32 hitZ;
+  int hitKind;
+  int i;
+  s16 timer;
+  f32 distance;
 
-  param_1 = (undefined2 *)obj;
-  local_18[0] = lbl_803E44EC;
-  iVar6 = *(int *)(param_1 + 0x26);
-  pbVar5 = (byte *)stateParam;
-  if (*(int *)(pbVar5 + 4) == 0) {
-    uVar2 = ObjGroup_FindNearestObject((uint)*(byte *)(iVar6 + 0x21),param_1,local_18);
-    *(undefined4 *)(pbVar5 + 4) = uVar2;
-    if (*(int *)(pbVar5 + 4) == 0) {
-      return;
-    }
-    if ((int)*(short *)(iVar6 + 0x1a) == 0xffffffff) {
-      pbVar5[1] = 0;
-    }
-    else {
-      uVar3 = FUN_80017690((int)*(short *)(iVar6 + 0x1a));
-      pbVar5[1] = (byte)uVar3;
-    }
-    if ((pbVar5[1] == 0) || (*(short *)(iVar6 + 0x1e) == -1)) {
-      *pbVar5 = 2;
-    }
-    else {
-      *pbVar5 = 1;
-    }
-  }
-  *(undefined4 *)(param_1 + 6) = *(undefined4 *)(*(int *)(pbVar5 + 4) + 0xc);
-  *(undefined4 *)(param_1 + 8) = *(undefined4 *)(*(int *)(pbVar5 + 4) + 0x10);
-  *(undefined4 *)(param_1 + 10) = *(undefined4 *)(*(int *)(pbVar5 + 4) + 0x14);
-  *param_1 = **(undefined2 **)(pbVar5 + 4);
-  param_1[2] = *(undefined2 *)(*(int *)(pbVar5 + 4) + 4);
-  param_1[1] = *(undefined2 *)(*(int *)(pbVar5 + 4) + 2);
-  bVar1 = *pbVar5;
-  if (bVar1 == 3) {
-    uVar3 = FUN_80017690((int)*(short *)(iVar6 + 0x18));
-    if (uVar3 != 0) {
-      *pbVar5 = 2;
+  player = (int)Obj_GetPlayerObject();
+  *(u8 *)(obj + 0xaf) &= ~8;
+
+  hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitA, &hitB, &hitObj, &hitX, &hitY, &hitZ);
+  if ((hitKind != 0) && (hitObj != 0)) {
+    if (hitKind == 0x10) {
+      Obj_StartModelFadeIn(obj, 300);
+    } else {
+      Sfx_PlayFromObject(obj, 0x5c);
+      stateParam->mode = 4;
+      stateParam->moveStepScale = lbl_803E3884;
+      ObjAnim_SetCurrentMove(obj, 3, lbl_803E385C, 0);
+
+      i = 0x14;
+      do {
+        (*(void (**)(int,int,int,int,int,int))(*(int *)gPartfxInterface + 8))(obj, 0x34e, 0, 2, -1, 0);
+        i--;
+      } while (i != 0);
+
+      hitX += playerMapOffsetX;
+      hitZ += playerMapOffsetZ;
+      objLightFn_8009a1dc(obj, lbl_803E3888, lightPos, 1, 0);
+      Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
     }
   }
-  else if (bVar1 < 3) {
-    if (bVar1 == 1) {
-      *(byte *)(*(int *)(pbVar5 + 4) + 0xaf) = *(byte *)(*(int *)(pbVar5 + 4) + 0xaf) & 0xdf;
-      *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
-      (**(code **)(*DAT_803dd6d4 + 0x54))(param_1,(int)*(short *)(iVar6 + 0x1e));
-      (**(code **)(*DAT_803dd6d4 + 0x48))
-                (*(undefined *)(iVar6 + 0x22),param_1,*(undefined *)(iVar6 + 0x20));
-      *pbVar5 = 4;
-    }
-    else if (bVar1 != 0) {
-      if ((pbVar5[1] == 0) || ((*(byte *)(iVar6 + 0x23) & 1) != 0)) {
-        if (((int)*(short *)(iVar6 + 0x18) == 0xffffffff) ||
-           (uVar3 = FUN_80017690((int)*(short *)(iVar6 + 0x18)), uVar3 != 0)) {
-          if (((*(byte *)((int)param_1 + 0xaf) & 1) == 0) ||
-             ((*(short *)(iVar6 + 0x1c) != -1 &&
-              (iVar4 = (**(code **)(*DAT_803dd6e8 + 0x20))(), iVar4 == 0)))) {
-            *(byte *)(*(int *)(pbVar5 + 4) + 0xaf) = *(byte *)(*(int *)(pbVar5 + 4) + 0xaf) | 0x20;
-            *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xf7;
-          }
-          else {
-            if ((*(byte *)(iVar6 + 0x23) & 2) != 0) {
-              FUN_80017698((int)*(short *)(iVar6 + 0x18),0);
-            }
-            if ((int)*(short *)(iVar6 + 0x1a) != 0xffffffff) {
-              FUN_80017698((int)*(short *)(iVar6 + 0x1a),1);
-            }
-            *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
-            pbVar5[1] = 1;
-            (**(code **)(*DAT_803dd6d4 + 0x48))(*(undefined *)(iVar6 + 0x22),param_1,0xffffffff);
-          }
-        }
-        else {
-          *(byte *)(*(int *)(pbVar5 + 4) + 0xaf) = *(byte *)(*(int *)(pbVar5 + 4) + 0xaf) & 0xdf;
-          *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
-          *pbVar5 = 3;
-        }
+
+  if (stateParam->mode == 1) {
+    if (*(s16 *)(obj + 0xa0) == 1) {
+      if (*(f32 *)(obj + 0x98) >= lbl_803E3858) {
+        stateParam->moveStepScale = lbl_803E388C;
+        ObjAnim_SetCurrentMove(obj, 4, lbl_803E385C, 0);
+      } else {
+        stateParam->moveStepScale = lbl_803E3890;
       }
-      else {
-        *(byte *)(*(int *)(pbVar5 + 4) + 0xaf) = *(byte *)(*(int *)(pbVar5 + 4) + 0xaf) & 0xdf;
-        *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
-        *pbVar5 = 4;
+    } else {
+      timer = stateParam->timer - framesThisStep;
+      stateParam->timer = timer;
+      if (timer < 1) {
+        stateParam->timer = (s16)randomGetRange(300, 600);
+      } else if (*(s16 *)(obj + 0xa0) != 4) {
+        stateParam->moveStepScale = lbl_803E388C;
+        ObjAnim_SetCurrentMove(obj, 4, lbl_803E3890 * (f32)randomGetRange(0, 99), 0);
       }
     }
   }
-  return;
+
+  distance = Vec_distance((f32 *)(obj + 0x18), (f32 *)(player + 0x18));
+  if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) == 0) {
+    if (distance < lbl_803E3894) {
+      Sfx_PlayFromObject(obj, 0x5d);
+    }
+  } else if (distance > lbl_803E3898) {
+    Sfx_StopObjectChannel(obj, 0x40);
+  }
 }
 
 /*
