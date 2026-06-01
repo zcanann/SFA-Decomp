@@ -3,6 +3,4 @@
 
 #include "ghidra_import.h"
 
-void FUN_80118c88(undefined4 param_1);
-
 #endif /* MAIN_DLL_FRONT_DLL_40_H_ */

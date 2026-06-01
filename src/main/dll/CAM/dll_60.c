@@ -1,10 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/CAM/dll_60.h"
 
-extern undefined4 FUN_80017814();
-extern undefined4 FUN_80053ba4();
-
-extern undefined4* DAT_803dd6d0;
 extern undefined4 DAT_803de1e0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E2540;
@@ -72,30 +68,5 @@ void camdrakor_computeTargetOffset
     *param_4 = ((fVar3 - fVar4) * fVar5 + fVar4) - *(float *)(iVar6 + 0x20);
   }
   *(undefined *)(DAT_803de1e0 + 0x14) = *(undefined *)(iVar7 + 0xe4);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_8010c234
- * EN v1.0 Address: 0x8010C234
- * EN v1.0 Size: 112b
- * EN v1.1 Address: 0x8010C304
- * EN v1.1 Size: 112b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8010c234(int param_1)
-{
-  if (*(int *)(param_1 + 0x11c) != 0) {
-    (**(code **)(*DAT_803dd6d0 + 0x48))(0);
-  }
-  FUN_80017814(DAT_803de1e0);
-  DAT_803de1e0 = 0;
-  FUN_80053ba4();
-  *(byte *)(param_1 + 0x143) = *(byte *)(param_1 + 0x143) & 0x7f;
   return;
 }
