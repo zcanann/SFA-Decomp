@@ -1,57 +1,62 @@
 #include "ghidra_import.h"
 #include "main/dll/SC/SCanimobj.h"
+#include "main/dll/SC/SClantern.h"
 
 #define SFXbaddie_haga_death 700
 
 extern undefined8 FUN_80006824();
-extern undefined8 FUN_80006868();
-extern undefined4 FUN_80006898();
-extern undefined4 FUN_80006b74();
-extern int FUN_80006b7c();
-extern undefined8 FUN_80006b84();
-extern undefined4 FUN_800174e8();
-extern int FUN_80017a54();
-extern int FUN_80017a98();
-extern undefined4 FUN_80017ac8();
-extern undefined8 FUN_8002fc3c();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern undefined8 ObjLink_DetachChild();
+extern void ObjLink_DetachChild(int obj, int child);
+extern void Obj_FreeObject(int obj);
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80039468();
 extern undefined4 FUN_8003b818();
-extern undefined4 FUN_80042b9c();
-extern undefined8 FUN_80043030();
-extern undefined4 FUN_80044404();
-extern undefined8 FUN_80053c98();
 extern uint FUN_8007f66c();
-extern undefined4 FUN_8007f7a4();
-extern int FUN_8007f924();
-extern undefined4 FUN_8007f944();
 extern undefined4 FUN_80081120();
-extern undefined4 FUN_801302a4();
 extern int fn_801D70D8(int obj, undefined4 p2, int animObj);
 extern undefined8 FUN_80286838();
-extern int FUN_80286840();
 extern undefined4 FUN_80286884();
-extern undefined4 FUN_8028688c();
 extern undefined4 FUN_80294be0();
 extern uint FUN_80294cb8();
 extern undefined4 FUN_802950c8();
 
-extern undefined4* DAT_803dd72c;
-extern f32 lbl_803DC074;
-extern f32 lbl_803DDA58;
-extern f32 lbl_803DDA5C;
 extern u32 GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
+extern int Obj_GetPlayerObject(void);
+extern int ObjGroup_FindNearestObject(int group, int obj, f32 *outDistance);
+extern void fn_8003ADC4(int obj, int target, void *state, int a, int b, int c);
+extern s16 *objModelGetVecFn_800395d8(int obj, int index);
+extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);
+extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 moveProgress, int flags);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void objAnimFn_80038f38(int obj, int *animState);
+extern void characterDoEyeAnims(int obj, void *state);
+extern void objAudioFn_800393f8(int obj, void *state, int sfxId, int a, int b, int c);
 extern void ObjHits_EnableObject(int obj);
+extern int randFn_80080100(int max);
+
+extern s16 lbl_803DC044;
+extern s16 lbl_803DDBF0;
+extern s16 lbl_803DDBF2;
+extern int lbl_803DC038;
+extern int lbl_803DC03C;
+extern int lbl_803DC040;
+extern int lbl_803DC048;
+extern int lbl_803DC04C;
+extern f64 lbl_803E5490;
+extern f32 lbl_803E5460;
+extern f32 lbl_803E546C;
+extern f32 lbl_803E54A4;
+extern f32 lbl_803E54A8;
+extern f32 lbl_803E54AC;
 
 /*
  * --INFO--
  *
  * Function: warpstone_update
  * EN v1.0 Address: 0x801D7674
- * EN v1.0 Size: 36b
+ * EN v1.0 Size: 1164b
  * EN v1.1 Address: 0x801D76A4
  * EN v1.1 Size: 36b
  * JP Address: TODO
@@ -59,61 +64,135 @@ extern void ObjHits_EnableObject(int obj);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void warpstone_update(void)
+#pragma scheduling off
+#pragma peephole off
+void warpstone_update(int obj)
 {
-  FUN_80006b84(1);
-  return;
-}
+    int state;
+    int child;
+    int advanceResult;
+    int target;
+    s16 *modelVec;
+    s16 yawDelta;
+    int moveId;
 
-/*
- * --INFO--
- *
- * Function: FUN_801d7698
- * EN v1.0 Address: 0x801D7698
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801D76C8
- * EN v1.1 Size: 928b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801d7698(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,int param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
-{
-}
+    state = *(int *)(obj + 0xb8);
+    child = *(int *)state;
+    if (child != 0) {
+        ObjLink_DetachChild(obj, child);
+        Obj_FreeObject(*(int *)state);
+        *(int *)state = 0;
+    }
 
-/*
- * --INFO--
- *
- * Function: FUN_801d769c
- * EN v1.0 Address: 0x801D769C
- * EN v1.0 Size: 204b
- * EN v1.1 Address: 0x801D7A68
- * EN v1.1 Size: 76b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801d769c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,int param_10)
-{
-  int iVar1;
-  int *piVar2;
-  undefined8 uVar3;
-  
-  piVar2 = *(int **)(param_9 + 0xb8);
-  iVar1 = *piVar2;
-  if ((iVar1 != 0) && (param_10 == 0)) {
-    uVar3 = ObjLink_DetachChild(param_9,iVar1);
-    FUN_80017ac8(uVar3,param_2,param_3,param_4,param_5,param_6,param_7,param_8,*piVar2);
-  }
-  return;
+    advanceResult = SClantern_advanceAnimEvents(lbl_803E54A4, obj);
+    if (*(s16 *)(obj + 0xa0) == 0) {
+        if (randFn_80080100(100) != 0) {
+            objAudioFn_800393f8(obj, (void *)(state + 0x14), 0xab, -0x100, -1, 0);
+        }
+        if (randFn_80080100(500) != 0) {
+            objAudioFn_800393f8(obj, (void *)(state + 0x14), 0x417, -0x500, -1, 0);
+        }
+    }
+
+    if (GameBit_Get(0xc7d) != 0) {
+        if (randFn_80080100(lbl_803DC038) != 0) {
+            *(u8 *)(state + 0xd5) = (*(u8 *)(state + 0xd5) & ~0x40) |
+                ((((*(u8 *)(state + 0xd5) >> 6) & 1) == 0) << 6);
+        }
+        if (((*(u8 *)(state + 0xd5) >> 6) & 1) == 0) {
+            *(u8 *)(state + 0xd5) = (*(u8 *)(state + 0xd5) & ~0x40) |
+                ((GameBit_Get(0xa45) & 0xff) << 6);
+        }
+    }
+
+    if (((*(u8 *)(state + 0xd5) >> 6) & 1) != 0) {
+        target = Obj_GetPlayerObject();
+    } else {
+        target = ObjGroup_FindNearestObject(8, obj, 0);
+    }
+
+    *(f32 *)(obj + 0x10) += (f32)lbl_803DC040;
+    fn_8003ADC4(obj, target, (void *)(state + 0x74), 0x23, 1, lbl_803DC03C);
+    modelVec = objModelGetVecFn_800395d8(obj, 0);
+    *(f32 *)(obj + 0x10) -= (f32)lbl_803DC040;
+
+    if (modelVec != NULL) {
+        modelVec[1] += lbl_803DDBF2;
+        modelVec[0] = 0;
+        modelVec[0] += lbl_803DC044;
+    }
+
+    if (advanceResult != 0) {
+        *(u8 *)(state + 0xd5) &= ~0x10;
+        yawDelta = Obj_GetYawDeltaToObject(obj, target, 0);
+        yawDelta = yawDelta - lbl_803DDBF0;
+        if (ABS((s16)(yawDelta - 0x8000)) > 0x18e3) {
+            if (yawDelta > 0) {
+                if (yawDelta > 0xe38) {
+                    moveId = 0x17;
+                } else {
+                    moveId = 0x16;
+                }
+            } else if (yawDelta < -0xe38) {
+                moveId = 0x19;
+            } else {
+                moveId = 0x18;
+            }
+            if (*(s16 *)(obj + 0xa0) != moveId) {
+                ObjAnim_SetCurrentMove(obj, moveId, lbl_803E5460, 0);
+            }
+        } else if (*(s16 *)(obj + 0xa0) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E5460, 0);
+            Sfx_StopFromObject(obj, 0x2f1);
+        } else if (randFn_80080100(lbl_803DC048) != 0) {
+            Sfx_PlayFromObject(obj, 0x416);
+            ObjAnim_SetCurrentMove(obj, 0x1b, lbl_803E5460, 0);
+        } else if (randFn_80080100(lbl_803DC04C) != 0) {
+            Sfx_PlayFromObject(obj, 0x2f1);
+            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E5460, 0);
+        }
+    }
+
+    objAnimFn_80038f38(obj, (int *)(state + 0x14));
+    characterDoEyeAnims(obj, (void *)(state + 0x44));
+    if (GameBit_Get(0x887) == 0) {
+        *(u8 *)(state + 0xc) = 0;
+    }
+    if (((*(u8 *)(state + 0xd5) >> 4) & 1) != 0) {
+        return;
+    }
+
+    switch (*(s16 *)(obj + 0xa0)) {
+    case 0x17:
+    case 0x19:
+        if (*(f32 *)(obj + 0x98) > lbl_803E546C) {
+            Sfx_PlayFromObject(obj, 0x2f1);
+            *(u8 *)(state + 0xd5) |= 0x10;
+        }
+        break;
+    case 0x16:
+    case 0x18:
+        if (*(f32 *)(obj + 0x98) > lbl_803E546C) {
+            Sfx_PlayFromObject(obj, SFXbaddie_haga_death);
+            *(u8 *)(state + 0xd5) |= 0x10;
+        }
+        break;
+    case 0x1a:
+        if (*(f32 *)(obj + 0x98) > lbl_803E54A8) {
+            Sfx_PlayFromObject(obj, 0x417);
+            *(u8 *)(state + 0xd5) |= 0x10;
+        }
+        break;
+    case 0x1b:
+        if (*(f32 *)(obj + 0x98) > lbl_803E54AC) {
+            Sfx_PlayFromObject(obj, 0x2f4);
+            *(u8 *)(state + 0xd5) |= 0x10;
+        }
+        break;
+    }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -209,89 +288,3 @@ void sh_levelcontrol_free(void)
     }
 }
 #pragma scheduling reset
-
-/*
- * --INFO--
- *
- * Function: FUN_801d7768
- * EN v1.0 Address: 0x801D7768
- * EN v1.0 Size: 220b
- * EN v1.1 Address: 0x801D7AB4
- * EN v1.1 Size: 216b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801d7768(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                 undefined4 param_5,char param_6)
-{
-  int iVar1;
-  int iVar2;
-  uint uVar3;
-  int iVar4;
-  int iVar5;
-  undefined8 uVar6;
-  float local_38;
-  float local_34;
-  float local_30 [12];
-  
-  uVar6 = FUN_80286838();
-  iVar1 = (int)((ulonglong)uVar6 >> 0x20);
-  iVar5 = *(int *)(iVar1 + 0xb8);
-  if (param_6 != '\0') {
-    FUN_8003b818(iVar1);
-    iVar2 = FUN_80017a98();
-    if ((iVar2 != 0) && (uVar3 = FUN_80294cb8(iVar2), uVar3 != 0)) {
-      iVar4 = FUN_80017a54(iVar2);
-      *(ushort *)(iVar4 + 0x18) = *(ushort *)(iVar4 + 0x18) & ~0x8;
-      ObjPath_GetPointWorldPosition(iVar1,(uint)*(byte *)(iVar5 + 8),&local_38,&local_34,local_30,0);
-      FUN_80294be0((double)local_38,(double)local_34,(double)local_30[0],iVar2);
-      FUN_802950c8(iVar2,(int)uVar6,param_3,param_4,param_5,-1);
-    }
-  }
-  FUN_80286884();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801d7844
- * EN v1.0 Address: 0x801D7844
- * EN v1.0 Size: 212b
- * EN v1.1 Address: 0x801D7B8C
- * EN v1.1 Size: 216b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801d7844(uint param_1)
-{
-  int iVar1;
-  uint uVar2;
-  int iVar3;
-  undefined auStack_28 [12];
-  float local_1c;
-  undefined4 uStack_18;
-  float local_14 [3];
-  
-  iVar3 = *(int *)(param_1 + 0xb8);
-  iVar1 = ObjHits_GetPriorityHitWithPosition(param_1,(undefined4 *)0x0,(int *)0x0,(uint *)0x0,&local_1c,&uStack_18,
-                       local_14);
-  if (iVar1 != 0) {
-    local_1c = local_1c + lbl_803DDA58;
-    local_14[0] = local_14[0] + lbl_803DDA5C;
-    FUN_80081120(param_1,auStack_28,1,(int *)0x0);
-    uVar2 = FUN_8007f66c(3);
-    if (uVar2 == 0) {
-      FUN_80006824(param_1,SFXbaddie_haga_death);
-    }
-    else {
-      FUN_80006824(param_1,SFXbaddie_haga_death);
-    }
-    FUN_80039468(param_1,iVar3 + 0x14,0xab,-0x500,0xffffffff,0);
-  }
-  return;
-}
