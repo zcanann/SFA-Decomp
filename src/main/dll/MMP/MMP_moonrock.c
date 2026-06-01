@@ -577,6 +577,47 @@ void sfxplayerObj_update(u8 *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
+void fn_80198A00(u8 *obj, int seqArg)
+{
+    u8 *state;
+    f32 hitDistance;
+    int queryType;
+    int curveHit;
+    int frontBlocked;
+    int rearBlocked;
+
+    queryType = 0x17;
+    state = *(u8 **)(obj + 0xb8);
+    curveHit = (*(int (**)(f32, f32, f32, int *, int, int))(*gRomCurveInterface + 0x14))(
+        *(f32 *)(state + 0x28), *(f32 *)(state + 0x2c), *(f32 *)(state + 0x30),
+        &queryType, 1, *(s16 *)(*(u8 **)(obj + 0x4c) + 0x38));
+    frontBlocked = (*(int (**)(f32, f32, f32, int, f32 *))(*gRomCurveInterface + 0x4c))(
+        *(f32 *)(state + 0x28), *(f32 *)(state + 0x2c), *(f32 *)(state + 0x30),
+        curveHit, &hitDistance);
+    rearBlocked = (*(int (**)(f32, f32, f32, int, f32 *))(*gRomCurveInterface + 0x4c))(
+        *(f32 *)(state + 0x1c), *(f32 *)(state + 0x20), *(f32 *)(state + 0x24),
+        curveHit, &hitDistance);
+
+    if (frontBlocked != 0) {
+        if (rearBlocked == 0) {
+            objInterpretSeq(obj, seqArg, 1, (int)hitDistance);
+        }
+        else {
+            objInterpretSeq(obj, seqArg, 2, (int)hitDistance);
+        }
+    }
+    else if (rearBlocked != 0) {
+        objInterpretSeq(obj, seqArg, -1, (int)hitDistance);
+    }
+    else {
+        objInterpretSeq(obj, seqArg, -2, (int)hitDistance);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
