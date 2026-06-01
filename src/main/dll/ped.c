@@ -2,11 +2,7 @@
 #include "main/mapEvent.h"
 #include "main/dll/ped.h"
 
-extern undefined4 FUN_80006b14();
 extern uint GameBit_Get(int eventId);
-extern undefined4 ObjGroup_FindNearestObject();
-extern undefined4 ObjPath_GetPointWorldPosition();
-extern undefined4 FUN_8003b818();
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -15,19 +11,10 @@ extern void ObjHits_EnableObject(int obj);
 extern void GameBit_Set(int eventId, int value);
 extern void objAudioFn_8006ef38(int obj, void *events, int pointCount, void *points,
                                 void *scratch, f32 scaleX, f32 scaleZ);
-extern int FUN_80286840();
-extern undefined4 FUN_8028688c();
 
-extern undefined4* DAT_803dd6d4;
-extern undefined4* DAT_803dd708;
 extern int *gObjectTriggerInterface;
-extern f64 DOUBLE_803e5e88;
 extern f32 lbl_803E520C;
 extern f32 lbl_803E5210;
-extern f32 lbl_803E5E78;
-extern f32 lbl_803E5E7C;
-extern f32 lbl_803E5E80;
-extern f32 lbl_803E5E94;
 
 extern int TreeBird_SeqFn(int obj, int param_2, int data);
 void fn_801CDF94(int obj, int state, int flag);
@@ -74,176 +61,6 @@ void treebird_init(int obj,int setup)
 }
 #pragma peephole reset
 #pragma scheduling reset
-
-/*
- * --INFO--
- *
- * Function: FUN_801cdd1c
- * EN v1.0 Address: 0x801CDD1C
- * EN v1.0 Size: 616b
- * EN v1.1 Address: 0x801CDD90
- * EN v1.1 Size: 628b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801cdd1c(undefined4 param_1,undefined4 param_2,int param_3)
-{
-  byte bVar1;
-  short sVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  
-  iVar3 = FUN_80286840();
-  iVar6 = *(int *)(iVar3 + 0xb8);
-  for (iVar5 = 0; iVar5 < (int)(uint)*(byte *)(param_3 + 0x8b); iVar5 = iVar5 + 1) {
-    bVar1 = *(byte *)(param_3 + iVar5 + 0x81);
-    if (bVar1 == 2) {
-      iVar4 = 100;
-      if (*(short *)(iVar3 + 0x46) == 0x5d) {
-        do {
-          (**(code **)(*DAT_803dd708 + 8))(iVar3,0xd3,0,1,0xffffffff,0);
-          iVar4 = iVar4 + -1;
-        } while (iVar4 != 0);
-      }
-      else {
-        sVar2 = *(short *)(iVar6 + 2);
-        if (sVar2 == 0) {
-          do {
-            (**(code **)(*DAT_803dd708 + 8))(iVar3,0xcd,0,1,0xffffffff,0);
-            iVar4 = iVar4 + -1;
-          } while (iVar4 != 0);
-        }
-        else if (sVar2 == 1) {
-          do {
-            (**(code **)(*DAT_803dd708 + 8))(iVar3,0xcf,0,1,0xffffffff,0);
-            iVar4 = iVar4 + -1;
-          } while (iVar4 != 0);
-        }
-      }
-    }
-    else if (bVar1 < 2) {
-      if (bVar1 != 0) {
-        iVar4 = 200;
-        do {
-          (**(code **)(*DAT_803dd708 + 8))(iVar3,0xcc,0,1,0xffffffff,0);
-          iVar4 = iVar4 + -1;
-        } while (iVar4 != 0);
-      }
-    }
-    else if (bVar1 < 4) {
-      iVar4 = 5;
-      if (*(short *)(iVar3 + 0x46) == 0x5d) {
-        do {
-          (**(code **)(*DAT_803dd708 + 8))(iVar3,0xd4,0,1,0xffffffff,0);
-          iVar4 = iVar4 + -1;
-        } while (iVar4 != 0);
-      }
-      else {
-        sVar2 = *(short *)(iVar6 + 2);
-        if (sVar2 == 0) {
-          do {
-            (**(code **)(*DAT_803dd708 + 8))(iVar3,0xce,0,1,0xffffffff,0);
-            iVar4 = iVar4 + -1;
-          } while (iVar4 != 0);
-        }
-        else if (sVar2 == 1) {
-          do {
-            (**(code **)(*DAT_803dd708 + 8))(iVar3,0xd0,0,1,0xffffffff,0);
-            iVar4 = iVar4 + -1;
-          } while (iVar4 != 0);
-        }
-      }
-    }
-  }
-  FUN_8028688c();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801cdf84
- * EN v1.0 Address: 0x801CDF84
- * EN v1.0 Size: 132b
- * EN v1.1 Address: 0x801CE004
- * EN v1.1 Size: 136b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801cdf84(int param_1)
-{
-  int iVar1;
-  float local_18;
-  undefined4 local_14;
-  float local_10 [2];
-  
-  iVar1 = *(int *)(param_1 + 0xb8);
-  FUN_8003b818(param_1);
-  if (*(int *)(iVar1 + 8) != 0) {
-    ObjPath_GetPointWorldPosition(param_1,0,local_10,&local_14,&local_18,0);
-    *(float *)(*(int *)(iVar1 + 8) + 0xc) = local_10[0];
-    *(undefined4 *)(*(int *)(iVar1 + 8) + 0x10) = local_14;
-    *(float *)(*(int *)(iVar1 + 8) + 0x14) = local_18;
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801ce008
- * EN v1.0 Address: 0x801CE008
- * EN v1.0 Size: 288b
- * EN v1.1 Address: 0x801CE08C
- * EN v1.1 Size: 276b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801ce008(int param_1)
-{
-  undefined4 uVar1;
-  uint uVar2;
-  short *psVar3;
-  float local_18 [4];
-  
-  psVar3 = *(short **)(param_1 + 0xb8);
-  local_18[0] = lbl_803E5E94;
-  if (*(char *)((int)psVar3 + 7) == '\0') {
-    if (*(char *)(psVar3 + 3) == '\0') {
-      if (psVar3[2] == 0) {
-        uVar2 = GameBit_Get((int)*psVar3);
-        if (uVar2 != 0) {
-          (**(code **)(*DAT_803dd6d4 + 0x48))((int)psVar3[1],param_1,0xffffffff);
-          *(undefined *)(psVar3 + 3) = 1;
-        }
-      }
-      else {
-        (**(code **)(*DAT_803dd6d4 + 0x54))();
-        (**(code **)(*DAT_803dd6d4 + 0x48))((int)psVar3[1],param_1,1);
-        *(undefined *)(psVar3 + 3) = 1;
-      }
-    }
-  }
-  else {
-    uVar1 = ObjGroup_FindNearestObject(4,param_1,local_18);
-    *(undefined4 *)(psVar3 + 4) = uVar1;
-    if (*(int *)(psVar3 + 4) == 0) {
-      *(char *)((int)psVar3 + 7) = *(char *)((int)psVar3 + 7) + -1;
-    }
-    else {
-      *(undefined *)((int)psVar3 + 7) = 0;
-    }
-  }
-  return;
-}
 
 extern int NW_geyser_SeqFn(int *obj, int p2, void *p3);
 

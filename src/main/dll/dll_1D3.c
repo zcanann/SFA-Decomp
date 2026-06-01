@@ -31,7 +31,6 @@ extern undefined4 objAudioFn_8006ef38();
 extern undefined4 FUN_8014ccac();
 extern int FUN_80163ac8();
 extern undefined4 FUN_80163b8c();
-extern undefined4 FUN_801cdd1c();
 extern undefined8 FUN_80286834();
 extern undefined4 FUN_80286880();
 extern int FUN_80294c54();
