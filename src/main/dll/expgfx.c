@@ -678,12 +678,11 @@ int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 slotType
 
   for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeScan++, freeIndex++) {
     if (freeScan->refCount == 0) {
-      entry = &gExpgfxTableEntries[freeIndex];
-      entry->refCount = 1;
-      entry->resource = resource;
-      entry->sourceId = sourceId;
-      entry->attachedKey1 = attachedKey1;
-      entry->slotType = slotType;
+      gExpgfxTableEntries[freeIndex].refCount = 1;
+      gExpgfxTableEntries[freeIndex].resource = resource;
+      gExpgfxTableEntries[freeIndex].sourceId = sourceId;
+      gExpgfxTableEntries[freeIndex].attachedKey1 = attachedKey1;
+      gExpgfxTableEntries[freeIndex].slotType = slotType;
       return (s16)freeIndex;
     }
   }
