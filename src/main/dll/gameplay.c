@@ -13441,13 +13441,13 @@ extern f32 timeDelta;
 extern f32 lbl_803E06D0;
 extern f32 lbl_803E06D4;
 void SaveGame_updateTimes(void) {
+    u8 *p;
     int i;
     u8 *base;
-    u8 *p;
     s16 cnt;
+    i = 0;
     base = lbl_803A32A8;
     *(f32 *)(base + 0x560) = *(f32 *)(base + 0x560) + timeDelta;
-    i = 0;
     p = base;
     while (i < *(s16 *)(base + 0x6ec)) {
         if (*(f32 *)(base + 0x560) > *(f32 *)(p + 0x6f4)) {
@@ -13473,7 +13473,8 @@ f32 SaveGame_gplayGetTime(int id) {
     count = *(s16 *)(p + 0x6ec);
     for (; i < count; i++) {
         if (*(int *)(p + 0x6f0) == id) {
-            return *(f32 *)(lbl_803A32A8 + i * 8 + 0x6f4) - *(f32 *)(lbl_803A32A8 + 0x560);
+            p = lbl_803A32A8;
+            return *(f32 *)(p + i * 8 + 0x6f4) - *(f32 *)(p + 0x560);
         }
         p += 8;
     }
@@ -13514,8 +13515,10 @@ void SaveGame_gplayAddTime(int id, f32 time) {
     if (i == count) {
         (*(s16 *)(base + 0x6ec))++;
     }
-    *(int *)(lbl_803A32A8 + i * 8 + 0x6f0) = id;
-    *(f32 *)(lbl_803A32A8 + i * 8 + 0x6f4) = total;
+    base = lbl_803A32A8;
+    p = base + i * 8;
+    *(int *)(p + 0x6f0) = id;
+    *(f32 *)(p + 0x6f4) = total;
 }
 #pragma fp_contract reset
 void *SaveGame_getTrickyEnergy(void) { return (char *)lbl_803A32A8 + 0x18; }
