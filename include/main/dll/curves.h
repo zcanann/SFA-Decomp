@@ -36,7 +36,7 @@ typedef struct RomCurvePoint {
 } RomCurvePoint;
 
 undefined4
-RomCurve_projectPointToAdjacentWindow(double x,double y,double z,u32 *curveIds,
+RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
                                       float *outLateralOffset,float *outVerticalOffset,
                                       float *outPhase);
 undefined4 FUN_800e1b2c(double param_1,undefined8 param_2,double param_3,int param_4,int param_5);

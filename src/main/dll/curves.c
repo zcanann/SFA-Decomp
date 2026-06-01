@@ -192,7 +192,7 @@ int RomCurve_segmentIntersectsOriginRayXZ(RomCurveDef *a,RomCurveDef *b,f32 x,f3
  * PAL Size: TODO
  */
 undefined4
-RomCurve_projectPointToAdjacentWindow(double x,double y,double z,u32 *curveIds,
+RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
                                       float *outLateralOffset,float *outVerticalOffset,
                                       float *outPhase)
 {
@@ -250,7 +250,7 @@ RomCurve_projectPointToAdjacentWindow(double x,double y,double z,u32 *curveIds,
   if (startDenom != gFloatZero) {
     startPhase =
         -(-((tangentDx * segmentStart->x) + (tangentDz * segmentStart->z)) +
-          ((tangentDx * (f32)x) + (tangentDz * (f32)z))) /
+          ((tangentDx * x) + (tangentDz * z))) /
         startDenom;
   }
 
@@ -273,7 +273,7 @@ RomCurve_projectPointToAdjacentWindow(double x,double y,double z,u32 *curveIds,
   if (endDenom != gFloatZero) {
     endPhase =
         -(-((nextTangentDx * segmentEnd->x) + (nextTangentDz * segmentEnd->z)) +
-          ((nextTangentDx * (f32)x) + (nextTangentDz * (f32)z))) /
+          ((nextTangentDx * x) + (nextTangentDz * z))) /
         endDenom;
   }
 
@@ -293,8 +293,8 @@ RomCurve_projectPointToAdjacentWindow(double x,double y,double z,u32 *curveIds,
 
   *outLateralOffset = -(((segmentDx * phase + segmentStart->x) * lateralZ) -
                         ((segmentDz * phase + segmentStart->z) * lateralX)) +
-                      ((f32)x * lateralZ - (f32)z * lateralX);
-  *outVerticalOffset = (f32)y - (segmentDy * phase + segmentStart->y);
+                      (x * lateralZ - z * lateralX);
+  *outVerticalOffset = y - (segmentDy * phase + segmentStart->y);
   *outPhase = phase;
   return 1;
 }
