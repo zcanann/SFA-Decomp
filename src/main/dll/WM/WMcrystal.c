@@ -228,61 +228,6 @@ void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
 /*
  * --INFO--
  *
- * Function: FUN_801dd6b8
- * EN v1.0 Address: 0x801DD6B8
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801DDA28
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dd6b8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801dd6e0
- * EN v1.0 Address: 0x801DD6E0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801DDA5C
- * EN v1.1 Size: 1048b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dd6e0(undefined2 *param_1)
-{
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801dd6e4
- * EN v1.0 Address: 0x801DD6E4
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x801DDE74
- * EN v1.1 Size: 420b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801dd6e4(undefined2 *param_1,int param_2)
-{
-}
-
-/*
- * --INFO--
- *
  * Function: sc_totembond_spawnGameBitOrbs
  * EN v1.0 Address: 0x801DD6E8
  * EN v1.0 Size: 592b
@@ -408,48 +353,6 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject *obj,undefined4 pa
   }
   return 0;
 }
-
-/*
- * --INFO--
- *
- * Function: FUN_801ddb0c
- * EN v1.0 Address: 0x801DDB0C
- * EN v1.0 Size: 48b
- * EN v1.1 Address: 0x801DE3F4
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801ddb0c(void)
-{
-  FUN_800067c0((int *)0xf0,0);
-  FUN_8011eb10(0);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801ddb3c
- * EN v1.0 Address: 0x801DDB3C
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801DE424
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801ddb3c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
-
 
 /* Trivial 4b 0-arg blr leaves. */
 void sc_totempuzzle_release(void) {}
