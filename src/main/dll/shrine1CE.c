@@ -23,7 +23,6 @@ extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80135814();
-extern undefined4 FUN_801cbdb8();
 extern int FUN_80286834();
 extern undefined4 FUN_80286880();
 extern undefined4 FUN_80294d68();
