@@ -1,6 +1,7 @@
 #ifndef MAIN_OBJHITREACT_H_
 #define MAIN_OBJHITREACT_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 
 typedef struct ObjHitReactEntry ObjHitReactEntry;
@@ -90,6 +91,39 @@ struct ObjHitReactEntry {
   f32 cooldown;
   u8 pad10[4];
 };
+
+STATIC_ASSERT(sizeof(ObjHitReactEffectPos) == 0x0C);
+STATIC_ASSERT(offsetof(ObjHitReactEffectPos, x) == 0x00);
+STATIC_ASSERT(offsetof(ObjHitReactEffectPos, y) == 0x02);
+STATIC_ASSERT(offsetof(ObjHitReactEffectPos, z) == 0x04);
+STATIC_ASSERT(offsetof(ObjHitReactEffectPos, scale) == 0x08);
+
+STATIC_ASSERT(sizeof(ObjHitReactEffectColorArgs) == 0x10);
+STATIC_ASSERT(offsetof(ObjHitReactEffectVTable, spawn) == 0x04);
+STATIC_ASSERT(offsetof(ObjHitReactEffectHandle, vtable) == 0x00);
+
+STATIC_ASSERT(sizeof(ObjHitReactMoveEntry) == 0x06);
+STATIC_ASSERT(offsetof(ObjHitReactMoveEntry, moveId) == 0x00);
+STATIC_ASSERT(offsetof(ObjHitReactMoveEntry, firstEntryOffset) == 0x02);
+STATIC_ASSERT(offsetof(ObjHitReactMoveEntry, entryBytes) == 0x04);
+
+STATIC_ASSERT(sizeof(ObjHitReactState) == 0xB0);
+STATIC_ASSERT(offsetof(ObjHitReactState, activeHit) == 0x00);
+STATIC_ASSERT(offsetof(ObjHitReactState, activeEntryBytes) == 0x04);
+STATIC_ASSERT(offsetof(ObjHitReactState, entryByteCapacity) == 0x06);
+STATIC_ASSERT(offsetof(ObjHitReactState, entries) == 0x08);
+STATIC_ASSERT(offsetof(ObjHitReactState, resetFrameCount) == 0x58);
+STATIC_ASSERT(offsetof(ObjHitReactState, flags) == 0x60);
+STATIC_ASSERT(offsetof(ObjHitReactState, resetFlags) == 0x62);
+STATIC_ASSERT(offsetof(ObjHitReactState, activeHitboxMode) == 0xAE);
+STATIC_ASSERT(offsetof(ObjHitReactState, resetHitboxMode) == 0xAF);
+
+STATIC_ASSERT(sizeof(ObjHitReactEntry) == 0x14);
+STATIC_ASSERT(offsetof(ObjHitReactEntry, hitSfxA) == 0x00);
+STATIC_ASSERT(offsetof(ObjHitReactEntry, hitSfxB) == 0x02);
+STATIC_ASSERT(offsetof(ObjHitReactEntry, reactionAnim) == 0x04);
+STATIC_ASSERT(offsetof(ObjHitReactEntry, hitFxMode) == 0x08);
+STATIC_ASSERT(offsetof(ObjHitReactEntry, cooldown) == 0x0C);
 
 int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEntryCount,
                        u32 reactionState,float *reactionStepScale);
