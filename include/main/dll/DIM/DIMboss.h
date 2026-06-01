@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DIM_DIMBOSS_H_
 #define MAIN_DLL_DIM_DIMBOSS_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
@@ -154,6 +155,7 @@ typedef struct DIMbossRuntime {
   u8 hitReactMode;
   u8 pad406[0x40C - 0x406];
   DIMbossTopState *topState;
+  u8 pad410[DIMBOSS_RUNTIME_SIZE - 0x410];
 } DIMbossRuntime;
 
 typedef struct DIMbossConfig {
@@ -196,6 +198,60 @@ typedef struct DIMbossObject {
   int renderPause;
   int updateInitialized;
 } DIMbossObject;
+
+STATIC_ASSERT(sizeof(DIMbossEffect) == 0x2F9);
+STATIC_ASSERT(offsetof(DIMbossEffect, visible) == 0x4C);
+STATIC_ASSERT(offsetof(DIMbossEffect, active) == 0x2F8);
+
+STATIC_ASSERT(sizeof(DIMbossTopState) == 0xB8);
+STATIC_ASSERT(offsetof(DIMbossTopState, effect) == 0x00);
+STATIC_ASSERT(offsetof(DIMbossTopState, launchLift) == 0xA4);
+STATIC_ASSERT(offsetof(DIMbossTopState, idleLift) == 0xA8);
+STATIC_ASSERT(offsetof(DIMbossTopState, introSinkHeight) == 0xAC);
+STATIC_ASSERT(offsetof(DIMbossTopState, defeatTimer) == 0xB0);
+STATIC_ASSERT(offsetof(DIMbossTopState, stompDustDelay) == 0xB4);
+STATIC_ASSERT(offsetof(DIMbossTopState, steamSfxPending) == 0xB6);
+
+STATIC_ASSERT(sizeof(DIMbossAnimScratch) == 0x6D8);
+STATIC_ASSERT(offsetof(DIMbossAnimScratch, animController) == DIMBOSS_ANIM_CONTROLLER_OFFSET);
+STATIC_ASSERT(offsetof(DIMbossAnimScratch, animTable) == DIMBOSS_ANIM_TABLE_OFFSET);
+STATIC_ASSERT(offsetof(DIMbossAnimScratch, hitDetectAnimTable) ==
+              DIMBOSS_HITDETECT_ANIM_TABLE_OFFSET);
+
+STATIC_ASSERT(sizeof(DIMbossRuntime) == DIMBOSS_RUNTIME_SIZE);
+STATIC_ASSERT(offsetof(DIMbossRuntime, field270) == 0x270);
+STATIC_ASSERT(offsetof(DIMbossRuntime, scale) == 0x274);
+STATIC_ASSERT(offsetof(DIMbossRuntime, targetModel) == 0x2D0);
+STATIC_ASSERT(offsetof(DIMbossRuntime, animMode) == 0x354);
+STATIC_ASSERT(offsetof(DIMbossRuntime, moveScratch) == 0x35C);
+STATIC_ASSERT(offsetof(DIMbossRuntime, activeMoveId) == 0x3F4);
+STATIC_ASSERT(offsetof(DIMbossRuntime, eventGameBit) == 0x3F6);
+STATIC_ASSERT(offsetof(DIMbossRuntime, stateFlags) == 0x400);
+STATIC_ASSERT(offsetof(DIMbossRuntime, phase) == 0x402);
+STATIC_ASSERT(offsetof(DIMbossRuntime, hitReactMode) == 0x405);
+STATIC_ASSERT(offsetof(DIMbossRuntime, topState) == 0x40C);
+
+STATIC_ASSERT(sizeof(DIMbossConfig) == 0x30);
+STATIC_ASSERT(offsetof(DIMbossConfig, spawnX) == 0x08);
+STATIC_ASSERT(offsetof(DIMbossConfig, spawnY) == 0x0C);
+STATIC_ASSERT(offsetof(DIMbossConfig, spawnZ) == 0x10);
+STATIC_ASSERT(offsetof(DIMbossConfig, eventId) == 0x2C);
+STATIC_ASSERT(offsetof(DIMbossConfig, animObjId) == 0x2E);
+
+STATIC_ASSERT(offsetof(DIMbossObject, baseScale) == 0x08);
+STATIC_ASSERT(offsetof(DIMbossObject, posX) == 0x0C);
+STATIC_ASSERT(offsetof(DIMbossObject, facingAngle) == 0x30);
+STATIC_ASSERT(offsetof(DIMbossObject, config) == 0x4C);
+STATIC_ASSERT(offsetof(DIMbossObject, activeModelId) == 0xA2);
+STATIC_ASSERT(offsetof(DIMbossObject, modelScale) == 0xA8);
+STATIC_ASSERT(offsetof(DIMbossObject, objectFlags) == 0xAF);
+STATIC_ASSERT(offsetof(DIMbossObject, animStateId) == 0xB4);
+STATIC_ASSERT(offsetof(DIMbossObject, runtime) == 0xB8);
+STATIC_ASSERT(offsetof(DIMbossObject, updateState) == 0xBC);
+STATIC_ASSERT(offsetof(DIMbossObject, childObject) == 0xC8);
+STATIC_ASSERT(offsetof(DIMbossObject, updateMode) == 0xE4);
+STATIC_ASSERT(offsetof(DIMbossObject, renderPause) == 0xF4);
+STATIC_ASSERT(offsetof(DIMbossObject, updateInitialized) == 0xF8);
 
 int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
 void DIMboss_func0B(void);
