@@ -240,6 +240,25 @@ struct MagicPlantState {
   s8 mode;
 };
 
+typedef struct MagicPlantChildSetup {
+  u8 pad00[4];
+  u8 mapByte4;
+  u8 mapByte5;
+  u8 mapByte6;
+  u8 yawByte;
+  f32 x;
+  f32 y;
+  f32 z;
+  u8 pad14[6];
+  u8 field1A;
+  u8 pad1B;
+  s16 field1C;
+  u8 pad1E[6];
+  s16 field24;
+  u8 pad26[6];
+  s16 field2C;
+} MagicPlantChildSetup;
+
 extern void fn_8017F334(int obj, MagicPlantSetup *setup, MagicPlantState *state);
 
 /*
@@ -341,34 +360,34 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
  */
 void fn_8017F7B8(int obj,int objectId)
 {
-  int mapData;
-  int *state;
-  u8 *setup;
+  MagicPlantChildSetup *setup;
   int childObj;
+  u8 *mapData;
+  MagicPlantState *state;
 
-  mapData = *(int *)(obj + 0x4c);
-  state = *(int **)(obj + 0xb8);
-  if (Obj_IsLoadingLocked() != 0) {
+  mapData = *(u8 **)(obj + 0x4c);
+  state = *(MagicPlantState **)(obj + 0xb8);
+  if ((u8)Obj_IsLoadingLocked() != 0) {
     setup = Obj_AllocObjectSetup(0x30,objectId);
-    setup[0x1a] = 0x14;
-    *(s16 *)(setup + 0x2c) = -1;
-    *(s16 *)(setup + 0x1c) = -1;
-    *(u32 *)(setup + 0x08) = *(u32 *)(obj + 0x0c);
-    *(u32 *)(setup + 0x0c) = *(u32 *)(obj + 0x10);
-    *(u32 *)(setup + 0x10) = *(u32 *)(obj + 0x14);
-    *(s16 *)(setup + 0x24) = -1;
-    setup[0x04] = *(u8 *)(mapData + 0x04);
-    setup[0x06] = *(u8 *)(mapData + 0x06);
-    setup[0x05] = *(u8 *)(mapData + 0x05);
-    setup[0x07] = *(u8 *)(mapData + 0x07) - 0xf;
+    setup->field1A = 0x14;
+    setup->field2C = -1;
+    setup->field1C = -1;
+    setup->x = *(f32 *)(obj + 0x0c);
+    setup->y = *(f32 *)(obj + 0x10);
+    setup->z = *(f32 *)(obj + 0x14);
+    setup->field24 = -1;
+    setup->mapByte4 = mapData[0x04];
+    setup->mapByte6 = mapData[0x06];
+    setup->mapByte5 = mapData[0x05];
+    setup->yawByte = (u8)(mapData[0x07] - 0xf);
     childObj = Obj_SetupObject(setup,5,(s8)*(u8 *)(obj + 0xac),-1,*(void **)(obj + 0x30));
-    if (childObj == 0) {
-      mm_free(setup);
-      *state = 0;
+    if (childObj != 0) {
+      ObjLink_AttachChild(obj,childObj,0);
+      state->childObj = childObj;
     }
     else {
-      ObjLink_AttachChild(obj,childObj,0);
-      *state = childObj;
+      mm_free(setup);
+      state->childObj = 0;
     }
   }
   return;
