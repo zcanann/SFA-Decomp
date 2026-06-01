@@ -2554,45 +2554,13 @@ void curves_countRandomPoints(int obj,uint *curve)
   float *pfVar9;
   uint *puVar10;
   double dVar11;
-  double in_f28;
   double dVar12;
-  double in_f29;
   double dVar13;
-  double in_f30;
   double dVar14;
-  double in_f31;
   double dVar15;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
   undefined4 *local_98;
   float local_94 [5];
-  undefined4 local_80;
-  uint uStack_7c;
-  undefined4 local_78;
-  uint uStack_74;
-  undefined4 local_70;
-  uint uStack_6c;
-  undefined4 local_68;
-  uint uStack_64;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
+
   iVar2 = obj;
   puVar5 = curve;
   if ((int)(uint)*(byte *)(puVar5 + 0x97) >> 4 == 4) {
