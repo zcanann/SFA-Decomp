@@ -23,6 +23,9 @@ extern int Obj_GetPlayerObject(void);
 extern undefined8 ObjGroup_RemoveObject();
 extern void Sfx_PlayAtPositionFromObject(f32 x,f32 y,f32 z,int obj,int sfxId);
 extern void Sfx_PlayFromObject(int obj,int sfxId);
+extern f32 Vec_distance(f32 *a, f32 *b);
+extern void doRumble(f32 duration);
+extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitude);
 extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_8014d4c8();
 extern undefined4 FUN_80151844();
@@ -78,6 +81,10 @@ extern f32 lbl_803E2714;
 extern f32 lbl_803E2718;
 extern f32 lbl_803E271C;
 extern f32 lbl_803E2720;
+extern f32 lbl_803E2744;
+extern f32 lbl_803E2748;
+extern f32 lbl_803E2760;
+extern f32 lbl_803E2764;
 extern f32 timeDelta;
 extern int *gPartfxInterface;
 extern int *gRomCurveInterface;
@@ -642,6 +649,45 @@ void fn_8014FF58(int unused, char *p) {
 #pragma scheduling reset
 
 extern char lbl_8031F16C[];
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015039C(int obj, int animState) {
+    int player;
+    f32 distance;
+    f32 rumbleFalloff;
+
+    if ((*(u16 *)(animState + 0x2f8) & 0x200) != 0) {
+        Sfx_PlayFromObject(obj, 0x383);
+        player = Obj_GetPlayerObject();
+        if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+            distance = Vec_distance((f32 *)(obj + 0x18), (f32 *)(player + 0x18));
+            if (distance <= lbl_803E2760) {
+                rumbleFalloff = lbl_803E2748 - distance / lbl_803E2760;
+                rumbleFalloff = lbl_803E2744 * rumbleFalloff;
+                doRumble(rumbleFalloff);
+            }
+            CameraShake_ApplyRadial(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                                    *(f32 *)(obj + 0x14), lbl_803E2760,
+                                    lbl_803E2764);
+        }
+    }
+    if ((*(u16 *)(animState + 0x2f8) & 0x40) != 0) {
+        Sfx_PlayFromObject(obj, 0x19);
+    }
+    if ((*(u16 *)(animState + 0x2f8) & 0x1000) != 0) {
+        Sfx_PlayFromObject(obj, 0x257);
+    }
+    if ((*(u16 *)(animState + 0x2f8) & 1) != 0) {
+        Sfx_PlayFromObject(obj, 0x12);
+    }
+    if ((*(u16 *)(animState + 0x2f8) & 0x80) != 0) {
+        Sfx_PlayFromObject(obj, 0x15);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma peephole off
 void fn_801504BC(int obj, int delta) {
     u8 *inner = *(u8 **)(obj + 0xb8);
