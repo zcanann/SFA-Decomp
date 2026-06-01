@@ -165,6 +165,13 @@ typedef struct ExpgfxTableEntry {
   s16 slotType;
 } ExpgfxTableEntry;
 
+STATIC_ASSERT(sizeof(ExpgfxTableEntry) == EXPGFX_TABLE_ENTRY_SIZE);
+STATIC_ASSERT(offsetof(ExpgfxTableEntry, sourceId) == 0x00);
+STATIC_ASSERT(offsetof(ExpgfxTableEntry, attachedKey1) == 0x04);
+STATIC_ASSERT(offsetof(ExpgfxTableEntry, resource) == 0x08);
+STATIC_ASSERT(offsetof(ExpgfxTableEntry, refCount) == 0x0C);
+STATIC_ASSERT(offsetof(ExpgfxTableEntry, slotType) == 0x0E);
+
 /*
  * Some spawn requests materialize an inline attached-source block after the
  * fixed config prefix. That state can seed source vectors, source positions,
@@ -293,6 +300,21 @@ typedef struct ExpgfxRuntimeDataLayout {
   u32 slotPoolBases[EXPGFX_POOL_COUNT];
 } ExpgfxRuntimeDataLayout;
 
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, resourceTable) == EXPGFX_RESOURCE_TABLE_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolBounds) == EXPGFX_POOL_BOUNDS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, expTab) == EXPGFX_EXPTAB_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolSourceModes) == EXPGFX_POOL_SOURCE_MODES_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolSourceIds) == EXPGFX_POOL_SOURCE_IDS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, trackedSourceFrameMasks) ==
+              EXPGFX_TRACKED_SOURCE_FRAME_MASKS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolBoundsTemplateIds) ==
+              EXPGFX_POOL_BOUNDS_TEMPLATE_IDS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolActiveCounts) ==
+              EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, poolActiveMasks) ==
+              EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
+STATIC_ASSERT(offsetof(ExpgfxRuntimeDataLayout, slotPoolBases) ==
+              EXPGFX_SLOT_POOL_BASES_OFFSET);
 STATIC_ASSERT(sizeof(ExpgfxRuntimeDataLayout) == 0x1340);
 
 typedef union ExpgfxSlotStateBits {
@@ -366,6 +388,26 @@ typedef struct ExpgfxSlot {
   f32 renderZ;
   u8 pad9C[0xA0 - 0x9C];
 } ExpgfxSlot;
+
+STATIC_ASSERT(sizeof(ExpgfxSlot) == EXPGFX_SLOT_SIZE);
+STATIC_ASSERT(offsetof(ExpgfxSlot, lifetimeFrame) == 0x06);
+STATIC_ASSERT(offsetof(ExpgfxSlot, initialStateByte) == 0x0F);
+STATIC_ASSERT(offsetof(ExpgfxSlot, lifetimeFrameLimit) == 0x16);
+STATIC_ASSERT(offsetof(ExpgfxSlot, sequenceId) == 0x26);
+STATIC_ASSERT(offsetof(ExpgfxSlot, sourceVecX) == 0x40);
+STATIC_ASSERT(offsetof(ExpgfxSlot, sourcePosX) == 0x48);
+STATIC_ASSERT(offsetof(ExpgfxSlot, posX) == 0x58);
+STATIC_ASSERT(offsetof(ExpgfxSlot, startPosX) == 0x64);
+STATIC_ASSERT(offsetof(ExpgfxSlot, velocityX) == 0x70);
+STATIC_ASSERT(offsetof(ExpgfxSlot, behaviorFlags) == 0x7C);
+STATIC_ASSERT(offsetof(ExpgfxSlot, renderFlags) == 0x80);
+STATIC_ASSERT(offsetof(ExpgfxSlot, scaleCounter) == 0x84);
+STATIC_ASSERT(offsetof(ExpgfxSlot, scaleTarget) == 0x86);
+STATIC_ASSERT(offsetof(ExpgfxSlot, scaleFrames) == 0x88);
+STATIC_ASSERT(offsetof(ExpgfxSlot, encodedTableIndex) == 0x8A);
+STATIC_ASSERT(offsetof(ExpgfxSlot, stateBits) == 0x8B);
+STATIC_ASSERT(offsetof(ExpgfxSlot, colorByte0) == 0x8C);
+STATIC_ASSERT(offsetof(ExpgfxSlot, renderX) == 0x90);
 
 /*
  * These arrays are still linker-backed by recovered addresses, but the pool
