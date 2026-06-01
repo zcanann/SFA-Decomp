@@ -32,7 +32,6 @@ extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_8013651c();
-extern undefined4 FUN_801d2db8();
 extern u32 GameBit_Get(int eventId);
 extern void fn_801D286C(void);
 extern void fn_801D2B70(void *obj, void *stateEntry, void *state);

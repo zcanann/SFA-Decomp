@@ -4,10 +4,7 @@
 extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_RefreshObjectState();
-extern undefined8 ObjGroup_RemoveObject();
 
-extern undefined4* DAT_803dd6f8;
-extern f64 DOUBLE_803e5fa0;
 extern f32 FLOAT_803e5f90;
 extern f32 FLOAT_803e5f94;
 extern f32 FLOAT_803e5f98;
@@ -57,25 +54,5 @@ void enemymushroom_update(undefined2 *param_1,undefined4 *param_2,int param_3)
   }
   ObjHits_EnableObject((int)param_1);
   ObjHits_RefreshObjectState((int)param_1);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801d1fb8
- * EN v1.0 Address: 0x801D1FB8
- * EN v1.0 Size: 76b
- * EN v1.1 Address: 0x801D2364
- * EN v1.1 Size: 72b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801d1fb8(int param_1)
-{
-  (**(code **)(*DAT_803dd6f8 + 0x14))();
-  ObjGroup_RemoveObject(param_1,3);
   return;
 }
