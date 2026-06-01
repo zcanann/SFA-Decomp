@@ -469,7 +469,7 @@ int curves_distanceToNearestOfType16(f32 x,f32 y,f32 z,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void RomCurve_func13(undefined4 param_1,undefined4 param_2,uint param_3,int *param_4)
+void RomCurve_func13(uint curveId,int typeFilter,uint param_3,int *param_4)
 {
   float fVar1;
   float fVar2;
@@ -497,10 +497,7 @@ void RomCurve_func13(undefined4 param_1,undefined4 param_2,uint param_3,int *par
   int iVar24;
   int iVar25;
   uint uVar26;
-  double in_f31;
   double dVar27;
-  double in_ps31_1;
-  undefined8 uVar28;
   char local_6e4 [4];
   int local_6e0;
   int local_6dc;
@@ -510,13 +507,8 @@ void RomCurve_func13(undefined4 param_1,undefined4 param_2,uint param_3,int *par
   int local_618 [40];
   char local_578 [48];
   undefined local_548 [1344];
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  uVar28 = FUN_8028680c();
-  iVar5 = RomCurve_findByIdWithIndex((uint)((ulonglong)uVar28 >> 0x20),&local_6e0);
+
+  iVar5 = RomCurve_findByIdWithIndex(curveId,&local_6e0);
   if (iVar5 != 0) {
     iVar16 = 0;
     iVar17 = 0;
@@ -614,7 +606,7 @@ void RomCurve_func13(undefined4 param_1,undefined4 param_2,uint param_3,int *par
               local_6dc = local_618[iVar12];
               iVar25 = (int)romCurves[local_618[iVar12]];
               dVar27 = (double)local_6b8[iVar12];
-              if ((((int)*(char *)(iVar25 + 0x19) == (int)uVar28) || ((int)uVar28 == -1)) &&
+              if ((((int)*(char *)(iVar25 + 0x19) == typeFilter) || (typeFilter == -1)) &&
                  ((*(byte *)(iVar25 + 0x31) == param_3 ||
                   ((*(byte *)(iVar25 + 0x32) == param_3 || (*(byte *)(iVar25 + 0x33) == param_3)))))
                  ) {
@@ -722,7 +714,6 @@ LAB_800e2a50:
       }
     }
   }
-  FUN_80286858();
   return;
 }
 
@@ -739,7 +730,7 @@ LAB_800e2a50:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void RomCurve_func11(undefined4 param_1,undefined4 param_2,int param_3,int *param_4)
+void RomCurve_func11(RomCurveDef *curve,int typeFilter,int actionFilter,int *outCurveId)
 {
   float fVar1;
   float fVar2;
@@ -767,10 +758,7 @@ void RomCurve_func11(undefined4 param_1,undefined4 param_2,int param_3,int *para
   int iVar24;
   int iVar25;
   uint uVar26;
-  double in_f31;
   double dVar27;
-  double in_ps31_1;
-  undefined8 uVar28;
   int local_6d8;
   int local_6d4;
   float local_6d0 [4];
@@ -779,13 +767,8 @@ void RomCurve_func11(undefined4 param_1,undefined4 param_2,int param_3,int *para
   int local_610 [40];
   char local_570 [48];
   undefined local_540 [1336];
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  uVar28 = FUN_80286810();
-  iVar15 = (int)((ulonglong)uVar28 >> 0x20);
+
+  iVar15 = (int)curve;
   if ((iVar15 != 0) && (iVar5 = RomCurve_findByIdWithIndex(*(uint *)(iVar15 + 0x14),&local_6d8), iVar5 != 0)) {
     iVar5 = 0;
     iVar18 = 0;
@@ -881,8 +864,8 @@ void RomCurve_func11(undefined4 param_1,undefined4 param_2,int param_3,int *para
               local_6d4 = local_610[iVar13];
               iVar25 = (int)romCurves[local_610[iVar13]];
               dVar27 = (double)local_6b0[iVar13];
-              if (((int)*(char *)(iVar25 + 0x19) == (int)uVar28) &&
-                 ((param_3 == -1 || (param_3 == *(char *)(iVar25 + 0x18))))) {
+              if (((int)*(char *)(iVar25 + 0x19) == typeFilter) &&
+                 ((actionFilter == -1 || (actionFilter == *(char *)(iVar25 + 0x18))))) {
                 bVar4 = true;
                 *pfVar23 = local_6b0[iVar13];
                 pfVar20 = pfVar20 + 1;
@@ -966,13 +949,13 @@ LAB_800e2fbc:
     } while (iVar18 < 4);
     if (iVar5 != 0) {
       if (iVar5 == 1) {
-        *param_4 = *(int *)(iVar15 + 0x14);
+        *outCurveId = *(int *)(iVar15 + 0x14);
       }
       else if (1 < iVar5) {
         iVar21 = 0;
         for (iVar18 = 0; iVar18 < iVar5; iVar18 = iVar18 + 1) {
           piVar16 = (int *)((int)local_6c0 + iVar21);
-          if (*param_4 == *piVar16) {
+          if (*outCurveId == *piVar16) {
             puVar10 = (undefined4 *)((int)local_6d0 + iVar21);
             uVar11 = (iVar5 + -1) - iVar18;
             if (iVar18 < iVar5 + -1) {
@@ -1015,7 +998,7 @@ LAB_800e3130:
           }
           iVar21 = iVar21 + 4;
         }
-        *param_4 = *(int *)(iVar15 + 0x14);
+        *outCurveId = *(int *)(iVar15 + 0x14);
         iVar15 = 0;
         iVar21 = 0;
         if (0 < iVar5) {
