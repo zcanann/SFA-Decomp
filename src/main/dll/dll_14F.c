@@ -23,6 +23,7 @@ extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
 extern void mm_free(void *ptr);
 extern u32 GameBit_Get(int eventId);
+extern void GameBit_Set(int eventId,int value);
 extern undefined4 FUN_80017814();
 extern undefined8 FUN_80017a28();
 extern undefined4 FUN_80017a30();
@@ -62,6 +63,7 @@ extern int FUN_800575b4();
 extern int FUN_800620e8();
 extern int FUN_800632f4();
 extern f32 Vec_xzDistance(f32 *a,f32 *b);
+extern f32 vec3f_distanceSquared(f32 *a,f32 *b);
 extern undefined4 FUN_80081120();
 extern void objLightFn_8009a1dc(int obj,f32 scale,void *pos,int count,int param_5);
 extern int FUN_800d9de0();
@@ -70,8 +72,10 @@ extern undefined4 FUN_800db110();
 extern uint FUN_800db47c();
 extern int fn_800DBCFC(f32 *pos,int param_2);
 extern int getPatchGroup(f32 *pos,int patchGroup);
+extern int cMenuGetSelectedItem(void);
 extern int FUN_8012efc4();
 extern int FUN_801365a0();
+extern int fn_80138F84(int tricky);
 extern undefined4 FUN_801816f8();
 extern void fn_801816F8(int obj,int param_2,u8 *state);
 extern undefined4 FUN_80286838();
@@ -89,6 +93,7 @@ extern uint countLeadingZeros();
 extern int Sfx_IsPlayingFromObject(int obj,u16 sfxId);
 extern void Sfx_PlayFromObject(int obj,u16 sfxId);
 extern void Obj_SetModelColorFadeRecursive(int obj,int frames,int red,int green,int blue,int startAtHalf);
+extern void objRenderFn_80041018(int *obj);
 
 extern undefined4 DAT_803dc070;
 extern int lbl_803DBDA0;
@@ -153,6 +158,7 @@ extern f32 lbl_803E45AC;
 extern f32 lbl_803E45C0;
 extern f32 lbl_803E45D0;
 extern f32 lbl_803E38A0;
+extern f32 lbl_803E38A8;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
 extern void *gRomCurveInterface;
@@ -1867,7 +1873,6 @@ void MagicPlant_init(int obj, u8 *params) {
 #pragma peephole reset
 #pragma scheduling reset
 extern void trickyguard_update();
-extern void StayPoint_update();
 extern void duster_update();
 extern void duster_init();
 extern void curvefish_update();
@@ -1983,9 +1988,6 @@ void fn_801814D0(int obj, int param_2, u8 *state) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void *getTrickyObject(void);
-extern void objRenderFn_80041018(int *obj);
-
 #pragma scheduling off
 #pragma peephole off
 void trickyguard_update(int *obj) {
@@ -2003,6 +2005,54 @@ void trickyguard_update(int *obj) {
     }
     *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x08);
     objRenderFn_80041018(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct StayPointSetup {
+    u8 pad00[0x1e];
+    s16 activeGameBit;
+    s16 requiredGameBit;
+} StayPointSetup;
+
+#pragma scheduling off
+#pragma peephole off
+void StayPoint_update(int obj) {
+    StayPointSetup *setup;
+    void *tricky;
+    int isCurrentStayPoint;
+
+    setup = *(StayPointSetup **)(obj + 0x4c);
+    tricky = getTrickyObject();
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+    if (tricky != NULL) {
+        isCurrentStayPoint = (obj - fn_80138F84((int)tricky) == 0);
+        if (isCurrentStayPoint == 0 && setup->activeGameBit != -1) {
+            GameBit_Set(setup->activeGameBit,0);
+        }
+        if (setup->requiredGameBit == -1 || GameBit_Get(setup->requiredGameBit) != 0) {
+            if (isCurrentStayPoint != 0 &&
+                vec3f_distanceSquared((f32 *)(obj + 0x18),(f32 *)((int)tricky + 0x18)) < lbl_803E38A8) {
+                if (setup->activeGameBit != -1) {
+                    GameBit_Set(setup->activeGameBit,1);
+                }
+                return;
+            }
+            if (cMenuGetSelectedItem() == -1) {
+                *(u8 *)(*(int *)(*(int *)(obj + 0x50) + 0x40) + 0x11) = 0;
+            } else {
+                *(u8 *)(*(int *)(*(int *)(obj + 0x50) + 0x40) + 0x11) = 0x10;
+            }
+            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
+            if (((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0) && *(void **)(obj + 0x74) != NULL) {
+                objRenderFn_80041018((int *)obj);
+            }
+            if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+                ((void (*)(void *, int, int, int))(*(int *)(*(int *)(*(int *)((int)tricky + 0x68)) + 0x28)))(
+                    tricky,obj,1,3);
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

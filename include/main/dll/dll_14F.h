@@ -48,7 +48,7 @@ void FUN_801804d8(int param_1,undefined4 param_2,byte *param_3,int param_4,int p
 void FUN_801804dc(undefined4 param_1,undefined4 param_2,byte *param_3,int param_4,int param_5);
 void trickyguard_update();
 void trickyguard_init(s16 *obj, u8 *param_2);
-void StayPoint_update();
+void StayPoint_update(int obj);
 void StayPoint_init(u16 *obj);
 int duster_getExtraSize(void);
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
