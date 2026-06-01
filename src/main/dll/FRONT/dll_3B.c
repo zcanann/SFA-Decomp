@@ -51,41 +51,6 @@ extern TitleMenuControl *gTitleMenuLinkInterface;
 extern f32 lbl_803E1D10;
 extern f32 lbl_803E1D18;
 
-static void TitleMenu_OpenPanel(TitleMenuTextEntry *entries, int count)
-{
-  ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
-      gTitleMenuLinkInterface->vtable)[1](entries,count,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
-}
-
-static void TitleMenu_SetPanelSelection(int selection)
-{
-  ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](selection);
-}
-
-static void TitleMenu_BindEntries(TitleMenuTextEntry *entries)
-{
-  ((void (**)(TitleMenuTextEntry *))gTitleMenuLinkInterface->vtable)[11](entries);
-}
-
-static void TitleMenu_SetEntryHighlight(void)
-{
-  int i;
-
-  for (i = 0; i < 4; i++) {
-    if (i == gTitleMenuSelection) {
-      lbl_8031A214[i].flags &= ~0x4000;
-    } else {
-      lbl_8031A214[i].flags |= 0x4000;
-    }
-  }
-  TitleMenu_BindEntries(lbl_8031A214);
-}
-
-static void TitleMenu_PlayPopup(int id, int arg)
-{
-  ((void (**)(int, int))gScreenTransitionInterface->vtable)[3](id,arg);
-}
-
 /*
  * --INFO--
  *
@@ -103,6 +68,7 @@ static void TitleMenu_PlayPopup(int id, int arg)
 #pragma peephole off
 void TitleMenu_initialise(void)
 {
+  int i;
   int mode;
 
   if ((lbl_803DD498[0x21] & 0x80) != 0) {
@@ -118,27 +84,36 @@ void TitleMenu_initialise(void)
   gTitleMenuLoadDelay = 0;
   mode = getUiDllFn_80014930();
   if (mode == 3) {
-    TitleMenu_OpenPanel(lbl_8031A1D8,1);
+    ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
+        gTitleMenuLinkInterface->vtable)[1](lbl_8031A1D8,1,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
     gTitleMenuPanelOpen = 0;
   } else {
-    TitleMenu_OpenPanel(lbl_8031A214,4);
+    ((void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))
+        gTitleMenuLinkInterface->vtable)[1](lbl_8031A214,4,0,0,0,0,0x14,200,0xff,0xff,0xff,0xff);
     gTitleMenuPanelOpen = 1;
   }
-  TitleMenu_SetPanelSelection(gTitleMenuSelection);
+  ((void (**)(int))gTitleMenuLinkInterface->vtable)[6](gTitleMenuSelection);
   titleScreenFn_801368a4(0);
 
   mode = getUiDllFn_80014930();
   if ((((mode == 0xd) || (mode = getUiDllFn_80014930(), mode == 7)) ||
        (mode = getUiDllFn_80014930(), mode == 6)) ||
       (mode = getUiDllFn_80014930(), mode == 5)) {
-    TitleMenu_PlayPopup(0x23,5);
+    ((void (**)(int, int))gScreenTransitionInterface->vtable)[3](0x23,5);
   } else {
     audioStopByMask(0xf);
-    TitleMenu_PlayPopup(0x3c,1);
+    ((void (**)(int, int))gScreenTransitionInterface->vtable)[3](0x3c,1);
   }
 
   setLinkIsRotated();
-  TitleMenu_SetEntryHighlight();
+  for (i = 0; i < 4; i++) {
+    if (i == gTitleMenuSelection) {
+      lbl_8031A214[i].flags &= ~0x4000;
+    } else {
+      lbl_8031A214[i].flags |= 0x4000;
+    }
+  }
+  ((void (**)(TitleMenuTextEntry *))gTitleMenuLinkInterface->vtable)[11](lbl_8031A214);
   gAttractMoviePreparePending = 0;
   gAttractMovieRetraceCountdown = 0;
   gAttractMovieReplayCountdown = 1;
