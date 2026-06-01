@@ -34,9 +34,7 @@ extern u8 *getSaveFileStruct();
 extern void saveGame_save();
 extern undefined4 FUN_8011bfc8();
 extern undefined4 languageMenuInit();
-extern int FUN_8011c7b4();
-extern undefined4 FUN_8011c860();
-extern undefined4 FUN_8011ca28();
+extern int fn_8011C51C(int selection, int item);
 extern undefined4 FUN_80133790();
 extern char FUN_801339f8();
 extern undefined4 FUN_80133a68();
@@ -292,7 +290,7 @@ int FUN_8011d11c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
       else if (DAT_803dc690 < '\x02') {
         if (DAT_803dc690 == '\0') {
           DAT_803de38c = (undefined)iVar4;
-          iVar3 = FUN_8011c7b4(iVar3,iVar4);
+          iVar3 = fn_8011C51C(iVar3,iVar4);
           if (iVar3 != 0) {
             return 0;
           }
@@ -406,10 +404,10 @@ void FUN_8011d67c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     OptionsScreen_render();
   }
   else if (DAT_803de378 == '\x01') {
-    FUN_8011ca28();
+    fn_8011C7B4();
   }
   else {
-    FUN_8011c860();
+    fn_8011CA74();
   }
   DAT_803de386 = 2;
   DAT_803de385 = 0;
