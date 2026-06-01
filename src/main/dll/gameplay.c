@@ -990,6 +990,7 @@ extern u8 *lbl_803DD498;
 extern char sGameplayFoxName;
 extern u8 saveData[228];
 extern f32 lbl_803E06C8;
+extern f32 lbl_803E06CC;
 extern u16 lbl_80311720[];
 extern u16 lbl_80311810[];
 extern MapEventInterface **gMapEventInterface;
@@ -1037,6 +1038,19 @@ typedef struct SaveGameDefaultPosition {
     f32 y;
     f32 z;
 } SaveGameDefaultPosition;
+
+typedef struct SaveSelectInfo {
+    u8 name[4];
+    u8 percentComplete;
+    u8 rankA;
+    u8 rankB;
+    u8 pad7;
+    u32 playTime;
+    void *taskTexts[5];
+    u8 valid;
+    u8 active;
+    u8 pad22[2];
+} SaveSelectInfo;
 
 extern SaveGameDefaultPosition lbl_802C2170;
 
@@ -1110,6 +1124,7 @@ extern int _saveGame(int slot, int save, int data);
 extern void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value);
 extern void GameBit_Set(int eventId, int value);
 extern u32 GameBit_Get(int eventId);
+extern void *gameTextGetPhrase(int textId, int variant);
 
 int trySaveGame(int slot)
 {
@@ -1333,6 +1348,97 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             }
         }
     }
+}
+
+int saveSelect_getInfo(void *outPtr)
+{
+    u8 save[SAVEGAME_ACTIVE_SIZE];
+    int slot;
+    int i;
+    SaveSelectInfo *info;
+    u8 completion;
+    u8 *taskIds;
+
+    slot = 0;
+    info = (SaveSelectInfo *)outPtr;
+    do {
+        if (loadSaveGame((u8)slot, save) == 0) {
+            return 0;
+        }
+
+        info->valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
+        if (info->valid == 0) {
+            memset(info, 0, sizeof(SaveSelectInfo));
+        }
+        else {
+            memcpy(info, save + SAVEGAME_PLAYER_NAME_OFFSET, sizeof(info->name));
+
+            completion = save[0x55d];
+            info->percentComplete = (u8)((completion * 100) / 0xbb);
+            if (completion > 0xb3) {
+                info->rankA = 6;
+                info->rankB = 4;
+            }
+            else if (completion > 0xb0) {
+                info->rankA = 5;
+                info->rankB = 4;
+            }
+            else if (completion > 0xa1) {
+                info->rankA = 4;
+                info->rankB = 4;
+            }
+            else if (completion > 0x8a) {
+                info->rankA = 4;
+                info->rankB = 3;
+            }
+            else if (completion > 0x81) {
+                info->rankA = 3;
+                info->rankB = 3;
+            }
+            else if (completion > 0x71) {
+                info->rankA = 3;
+                info->rankB = 2;
+            }
+            else if (completion > 0x62) {
+                info->rankA = 2;
+                info->rankB = 2;
+            }
+            else if (completion > 0x48) {
+                info->rankA = 2;
+                info->rankB = 1;
+            }
+            else if (completion > 0x3d) {
+                info->rankA = 1;
+                info->rankB = 1;
+            }
+            else if (completion > 8) {
+                info->rankA = 1;
+                info->rankB = 0;
+            }
+            else {
+                info->rankA = 0;
+                info->rankB = 0;
+            }
+
+            info->playTime = (u32)(*(f32 *)(save + 0x560) / lbl_803E06CC);
+            info->taskTexts[0] = NULL;
+            info->taskTexts[1] = NULL;
+            info->taskTexts[2] = NULL;
+            info->taskTexts[3] = NULL;
+            info->taskTexts[4] = NULL;
+            taskIds = save + 0x558;
+            for (i = 0; i < save[0x55e]; i++) {
+                info->taskTexts[i] = gameTextGetPhrase(taskIds[i] + 0xf4, 0);
+            }
+            info->active = 0;
+            info->valid = save[SAVEGAME_NEW_FILE_FLAG_OFFSET];
+        }
+
+        info++;
+        slot++;
+    } while (slot < 3);
+
+    return 1;
 }
 
 /*
