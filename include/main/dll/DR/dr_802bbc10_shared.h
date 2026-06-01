@@ -2,6 +2,7 @@
 #define MAIN_DLL_DR_DR_802BBC10_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/objHitReact.h"
 #include "main/objanim.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 
@@ -74,7 +75,6 @@ extern uint FUN_80017ae8();
 extern int FUN_8002f6ac();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern undefined objHitReact_update();
 extern undefined4 ObjHits_MarkObjectPositionDirty();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_DisableObject();

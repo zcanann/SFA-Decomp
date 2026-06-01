@@ -1,5 +1,6 @@
 /* DLL 0x76 (DIMSnowHorn1 / dim2prisonmammoth) fragment: head/vtable live in placeholder_802BACC0 + placeholder_802BB4B0; consolidate when those adjacent units are graduated. */
 #include "ghidra_import.h"
+#include "main/objHitReact.h"
 #include "main/objanim.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 
@@ -57,7 +58,6 @@ extern uint FUN_80017ae8();
 extern int FUN_8002f6ac();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern undefined objHitReact_update();
 extern undefined4 ObjHits_MarkObjectPositionDirty();
 extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_DisableObject();
@@ -1815,7 +1815,7 @@ void fn_802BF0C8(int obj, int inner, int bit);
 
 
 extern u8 lbl_803DC750;
-extern u8 lbl_803351A8[];
+extern ObjHitReactEntry lbl_803351A8[];
 extern f32 timeDelta;
 extern void fn_8003A168(int obj, int q);
 extern void characterDoEyeAnims(int obj, int q);

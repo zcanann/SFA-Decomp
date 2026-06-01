@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/objHitReact.h"
 #include "main/objanim.h"
 #include "main/unknown/autos/placeholder_80209FE0.h"
 
@@ -144,7 +145,6 @@ extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern undefined8 FUN_800305f8();
 extern undefined8 ObjHits_RegisterActiveHitVolumeObject();
-extern char objHitReact_update();
 extern undefined4 ObjHitbox_SetStateIndex();
 extern undefined4 ObjHits_SetTargetMask();
 extern undefined4 ObjHitbox_SetSphereRadius();
