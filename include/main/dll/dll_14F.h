@@ -4,7 +4,7 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
-void FUN_8017f4f4(undefined2 *param_1);
+void fn_8017F4F4(undefined2 *param_1);
 void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9,undefined4 param_10,int *param_11,undefined4 param_12,

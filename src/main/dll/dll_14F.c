@@ -135,7 +135,7 @@ extern f32 lbl_803E45D0;
 /*
  * --INFO--
  *
- * Function: FUN_8017f4f4
+ * Function: fn_8017F4F4
  * EN v1.0 Address: 0x8017F4F4
  * EN v1.0 Size: 760b
  * EN v1.1 Address: 0x8017F548
@@ -145,7 +145,7 @@ extern f32 lbl_803E45D0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017f4f4(undefined2 *param_1)
+void fn_8017F4F4(undefined2 *param_1)
 {
   byte bVar1;
   undefined4 uVar2;
