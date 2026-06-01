@@ -167,6 +167,7 @@ void snowclaw_init(int *obj, u8 *init) {
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
     int player;
     int obj2;
@@ -203,6 +204,7 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
         }
     }
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
