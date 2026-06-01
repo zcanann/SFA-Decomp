@@ -4187,7 +4187,7 @@ void cfguardian_hitDetect(int *obj) {
 extern int *gRomCurveInterface;
 #pragma scheduling off
 #pragma peephole off
-int *fn_8019B3F8(int *obj, int p2, int *outVec, int p4) {
+int *findRomCurvePointNearObject(int *obj, int p2, int *outVec, int p4) {
     int *result = NULL;
     int local[2];
     int found;
