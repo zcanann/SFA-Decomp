@@ -140,7 +140,7 @@ extern short lbl_803DD8D6;
 extern short lbl_803DBA66;
 
 // v1.0 symbols for trickyBitFn_801241cc
-extern int lbl_803DD738;
+extern int gTrickyHudItemMask;
 extern short lbl_8031B4E0[];
 
 extern undefined4 DAT_803dc734;
@@ -1184,7 +1184,7 @@ int trickyBitFn_801241cc(short* arr, sbyte flag)
     }
   }
   else {
-    mask = lbl_803DD738;
+    mask = gTrickyHudItemMask;
     if (mask > 0) {
       entry = arr;
       while (entry[0] > -1) {

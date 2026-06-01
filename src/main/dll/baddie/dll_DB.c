@@ -95,8 +95,8 @@ extern f32 FLOAT_803e2e68;
 extern u8 lbl_803A87F0[];
 extern void gameUiResetMenuState(void);
 extern void *lbl_803DD7C8;
-extern s16 lbl_803DD830;
-extern void *lbl_803DD834;
+extern s16 gTrickyHudCachedIconIndex;
+extern void *gTrickyHudCachedIconTexture;
 extern void textureFree(void *p);
 
 #pragma scheduling off
@@ -118,11 +118,11 @@ void textureFreeFn_8012fcec(void)
         textureFree(lbl_803DD7C8);
         lbl_803DD7C8 = NULL;
     }
-    if (lbl_803DD834 != NULL) {
-        textureFree(lbl_803DD834);
+    if (gTrickyHudCachedIconTexture != NULL) {
+        textureFree(gTrickyHudCachedIconTexture);
     }
-    lbl_803DD830 = -1;
-    lbl_803DD834 = NULL;
+    gTrickyHudCachedIconIndex = -1;
+    gTrickyHudCachedIconTexture = NULL;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -832,7 +832,7 @@ void GameUI_initialise(void)
     lbl_803DD894 = -1;
     lbl_803DD8C2 = -1;
     lbl_803DD8B8 = 0;
-    lbl_803DD830 = -1;
+    gTrickyHudCachedIconIndex = -1;
     res = getScreenResolution();
     lbl_803DD744 = res;
     height = res >> 16;

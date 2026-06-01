@@ -592,18 +592,18 @@ extern int *gCameraInterface;
 extern u8 pauseMenuState;
 extern int hudTextures[];
 extern u8 lbl_803A9398[];
-extern s16 lbl_8031B618[];
-extern int lbl_803DD738;
-extern int lbl_803DD73C;
-extern s16 lbl_803DD830;
-extern void *lbl_803DD834;
+extern s16 gTrickyHudIconTextureIds[];
+extern int gTrickyHudItemMask;
+extern int gTrickyHudActionMask;
+extern s16 gTrickyHudCachedIconIndex;
+extern void *gTrickyHudCachedIconTexture;
 extern f32 lbl_803E2018;
 extern f32 lbl_803E2038;
 extern f32 lbl_803E203C;
 
 #pragma peephole off
 #pragma scheduling off
-void hudFn_80125244(int obj)
+void drawTrickyHudOverlay(int obj)
 {
     int player;
     int tricky;
@@ -613,11 +613,11 @@ void hudFn_80125244(int obj)
     GXSetScissor(0, 0, 0x280, 0x1e0);
     hudDrawTimedElement(obj, lbl_803A9398);
     if ((void *)tricky != 0) {
-        lbl_803DD738 = (*(int (**)(int))(*(int *)(*(int *)(tricky + 0x68)) + 0x24))(tricky);
-        lbl_803DD73C = (*(int (**)(int))(*(int *)(*(int *)(tricky + 0x68)) + 0x20))(tricky);
+        gTrickyHudItemMask = (*(int (**)(int))(*(int *)(*(int *)(tricky + 0x68)) + 0x24))(tricky);
+        gTrickyHudActionMask = (*(int (**)(int))(*(int *)(*(int *)(tricky + 0x68)) + 0x20))(tricky);
     } else {
-        lbl_803DD738 = 0;
-        lbl_803DD73C = 0;
+        gTrickyHudItemMask = 0;
+        gTrickyHudActionMask = 0;
     }
     drawViewFinderHud();
     if ((*(int (**)(void))(*(int *)gCameraInterface + 0x10))() != 0x44 &&
@@ -626,24 +626,24 @@ void hudFn_80125244(int obj)
         (void *)tricky != 0 &&
         getHudHiddenFrameCount() == 0) {
         (*(int (**)(int, int *))(*(int *)(*(int *)(tricky + 0x68)) + 0x48))(tricky, &local_8);
-        if (lbl_803DD834 != 0) {
-            if (lbl_803DD830 != local_8) {
+        if (gTrickyHudCachedIconTexture != 0) {
+            if (gTrickyHudCachedIconIndex != local_8) {
                 textureFree();
-                lbl_803DD830 = -1;
-                lbl_803DD834 = 0;
+                gTrickyHudCachedIconIndex = -1;
+                gTrickyHudCachedIconTexture = 0;
             }
         }
-        if (lbl_803DD834 == 0) {
+        if (gTrickyHudCachedIconTexture == 0) {
             if (local_8 > -1) {
-                if (lbl_8031B618[local_8] != -1) {
-                    lbl_803DD834 = textureLoadAsset(lbl_8031B618[local_8]);
+                if (gTrickyHudIconTextureIds[local_8] != -1) {
+                    gTrickyHudCachedIconTexture = textureLoadAsset(gTrickyHudIconTextureIds[local_8]);
                 }
             }
         }
-        lbl_803DD830 = (s16)local_8;
-        if (lbl_803DD834 != 0) {
+        gTrickyHudCachedIconIndex = (s16)local_8;
+        if (gTrickyHudCachedIconTexture != 0) {
             drawTexture((void *)hudTextures[0x1d], lbl_803E2018, lbl_803E2038, 0xff, 0x100);
-            drawTexture(lbl_803DD834, lbl_803E2018, lbl_803E203C, 0xff, 0x80);
+            drawTexture(gTrickyHudCachedIconTexture, lbl_803E2018, lbl_803E203C, 0xff, 0x80);
         }
     }
 }
