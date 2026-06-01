@@ -2519,6 +2519,7 @@ void curves_remove(RomCurveDef *curve)
 void curves_addCurveDef(RomCurveDef *curve)
 {
   RomCurveDef **slot;
+  RomCurveDef **shiftSlot;
   int count;
   int insertIndex;
 
@@ -2535,9 +2536,9 @@ void curves_addCurveDef(RomCurveDef *curve)
     insertIndex++;
   }
 
-  for (slot = romCurves + count; insertIndex < count; count--) {
-    slot[0] = slot[-1];
-    slot--;
+  for (shiftSlot = romCurves + count; insertIndex < count; count--) {
+    shiftSlot[0] = shiftSlot[-1];
+    shiftSlot--;
   }
 
   nRomCurves++;
