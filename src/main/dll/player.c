@@ -10021,7 +10021,11 @@ void fn_802AF410(int obj, int state)
     s16 item;
 
     if (*(u16 *)((char *)state + 0x6e2) & 0x800) {
-        if ((*(u16 *)((char *)state + 0x6e2) & 0x800) && getYButtonItem(&item) == 1) {
+        int yButtonItemResult;
+        if (*(u16 *)((char *)state + 0x6e2) & 0x800) {
+            yButtonItemResult = getYButtonItem(&item);
+        }
+        if (yButtonItemResult == 1) {
             buttonDisable(0, 0x800);
             *(u16 *)((char *)state + 0x6e2) &= ~0x800;
             *(s16 *)((char *)state + 0x80c) = item;
