@@ -3,7 +3,7 @@
 
 extern int Sfx_PlayFromObjectLimited(u8 *obj,int sfxId,int maxCount);
 extern u32 GameBit_Get(int eventId);
-extern u32 randomGetRange(int min,int max);
+extern int randomGetRange(int min,int max);
 extern void mm_free(u32 handle);
 extern u8 *Obj_GetPlayerObject(void);
 extern int ObjHits_GetPriorityHit(u8 *obj,int *out,int param_3,int param_4);
@@ -101,9 +101,9 @@ void dfplightni_update(u8 *obj)
   float *effectEnd;
   float start[3];
   float end[3];
-  u32 randomZ;
-  u32 randomY;
-  u32 randomX;
+  int randomZ;
+  int randomY;
+  int randomX;
 
   if (obj != 0) {
     state = dfplightni_getState(obj);
@@ -120,23 +120,23 @@ void dfplightni_update(u8 *obj)
         start[2] = *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_Z_OFFSET);
         if (eventActive != 0) {
           randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[0] = (f32)(s32)randomZ * lbl_803E64FC +
+          end[0] = (f32)randomZ * lbl_803E64FC +
                    *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_X_OFFSET);
           randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN,DFPLIGHTNI_RANDOM_Y_MAX);
-          end[1] = (f32)(s32)randomY * lbl_803E64FC +
+          end[1] = (f32)randomY * lbl_803E64FC +
                    *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_Y_OFFSET);
           randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[2] = (f32)(s32)randomX * lbl_803E64FC +
+          end[2] = (f32)randomX * lbl_803E64FC +
                    *(f32 *)(playerObj + DFPLIGHTNI_OBJECT_POS_Z_OFFSET);
         }
         else {
           randomX = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[0] = (f32)(s32)randomX * lbl_803E64FC + start[0];
+          end[0] = (f32)randomX * lbl_803E64FC + start[0];
           randomY = randomGetRange(DFPLIGHTNI_RANDOM_Y_MIN,DFPLIGHTNI_RANDOM_Y_MAX);
-          end[1] = (f32)(s32)randomY * lbl_803E64FC +
+          end[1] = (f32)randomY * lbl_803E64FC +
                    *(f32 *)(obj + DFPLIGHTNI_OBJECT_POS_Y_OFFSET);
           randomZ = randomGetRange(DFPLIGHTNI_RANDOM_XZ_MIN,DFPLIGHTNI_RANDOM_XZ_MAX);
-          end[2] = (f32)(s32)randomZ * lbl_803E64FC + start[2];
+          end[2] = (f32)randomZ * lbl_803E64FC + start[2];
         }
         if (state->effectHandle != 0) {
           mm_free(state->effectHandle);
@@ -192,12 +192,12 @@ void dfplightni_init(u8 *obj,DfpLightniMapData *mapData)
   DfpLightniState *state;
   f32 radiusMax;
   f32 radiusParamScale;
-  u32 randomValue;
+  int randomValue;
 
   if (obj != 0) {
     state = dfplightni_getState(obj);
     randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN,DFPLIGHTNI_RANDOM_TIMER_MAX);
-    state->timer = (f32)(s32)randomValue;
+    state->timer = (f32)randomValue;
     state->effectHandle = 0;
     if (mapData->radiusX <= 0) {
       mapData->radiusX = 1;
@@ -206,7 +206,7 @@ void dfplightni_init(u8 *obj,DfpLightniMapData *mapData)
       mapData->radiusY = 1;
     }
     randomValue = randomGetRange(DFPLIGHTNI_RANDOM_TIMER_MIN,DFPLIGHTNI_RANDOM_TIMER_MAX);
-    state->triggerTime = (f32)(s32)randomValue + lbl_803E6508;
+    state->triggerTime = (f32)randomValue + lbl_803E6508;
     radiusMax = lbl_803E6504;
     radiusParamScale = lbl_803E650C;
     state->radiusX = ((f32)(s32)mapData->radiusX / radiusParamScale) * radiusMax;
