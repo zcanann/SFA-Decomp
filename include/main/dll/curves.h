@@ -74,7 +74,7 @@ f32 curves_find(int type,int action,f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *o
 undefined4 RomCurve_findByIdWithIndex(uint curveId,int *outIndex);
 void RomCurve_func20(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5);
 int RomCurve_countRandomPoints(RomCurveDef *curve);
-void RomCurve_func1E(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4);
+void RomCurve_func1E(uint *curveIds,float *outX,float *outY,float *outZ);
 void RomCurve_getAdjacentWindow(RomCurveDef *curve,int *outIds);
 int RomCurve_getNearestAdjacentLink(f32 x,f32 y,f32 z,RomCurveDef *curve,int excludeLinkId);
 f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment);

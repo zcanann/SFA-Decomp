@@ -1849,10 +1849,11 @@ checkCurve:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void RomCurve_func1E(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
+void RomCurve_func1E(uint *curveIds,float *outX,float *outY,float *outZ)
 {
   uint *puVar1;
   float *pfVar2;
+  float *outXCursor;
   int *piVar3;
   int iVar4;
   int iVar5;
@@ -1864,19 +1865,18 @@ void RomCurve_func1E(undefined4 param_1,undefined4 param_2,float *param_3,float 
   int *piVar11;
   uint uVar12;
   int iVar13;
-  undefined8 uVar14;
   int local_28 [10];
   
-  uVar14 = FUN_8028683c();
-  pfVar2 = (float *)uVar14;
+  puVar1 = curveIds;
+  pfVar2 = outX;
+  outXCursor = outX;
   iVar4 = 0;
   piVar3 = local_28;
   iVar13 = 4;
-  pfVar9 = param_4;
-  pfVar10 = param_3;
+  pfVar9 = outZ;
+  pfVar10 = outY;
   piVar11 = piVar3;
   do {
-    puVar1 = (uint *)((ulonglong)uVar14 >> 0x20);
     uVar12 = *puVar1;
     if ((int)uVar12 < 0) {
       iVar8 = 0;
@@ -1901,13 +1901,14 @@ LAB_800e48f4:
     *piVar11 = iVar8;
     iVar5 = *piVar11;
     if (iVar5 != 0) {
-      *(undefined4 *)uVar14 = *(undefined4 *)(iVar5 + 8);
+      *outXCursor = *(float *)(iVar5 + 8);
       *pfVar10 = *(float *)(iVar5 + 0xc);
       *pfVar9 = *(float *)(iVar5 + 0x10);
       iVar4 = iVar4 + 1;
     }
     piVar11 = piVar11 + 1;
-    uVar14 = CONCAT44(puVar1 + 1,(undefined4 *)uVar14 + 1);
+    puVar1++;
+    outXCursor++;
     pfVar10 = pfVar10 + 1;
     pfVar9 = pfVar9 + 1;
     iVar13 = iVar13 + -1;
@@ -1920,29 +1921,28 @@ LAB_800e48f4:
             if (iVar4 == 0) {
               *pfVar2 = *(float *)(local_28[1] + 8) +
                         (*(float *)(local_28[1] + 8) - *(float *)(local_28[2] + 8));
-              *param_3 = *(float *)(local_28[1] + 0xc) +
-                         (*(float *)(local_28[1] + 0xc) - *(float *)(local_28[2] + 0xc));
-              *param_4 = *(float *)(local_28[1] + 0x10) +
-                         (*(float *)(local_28[1] + 0x10) - *(float *)(local_28[2] + 0x10));
+              *outY = *(float *)(local_28[1] + 0xc) +
+                      (*(float *)(local_28[1] + 0xc) - *(float *)(local_28[2] + 0xc));
+              *outZ = *(float *)(local_28[1] + 0x10) +
+                      (*(float *)(local_28[1] + 0x10) - *(float *)(local_28[2] + 0x10));
             }
             else if (iVar4 == 3) {
               *pfVar2 = *(float *)(local_28[2] + 8) +
                         (*(float *)(local_28[2] + 8) - *(float *)(local_28[1] + 8));
-              *param_3 = *(float *)(local_28[2] + 0xc) +
-                         (*(float *)(local_28[2] + 0xc) - *(float *)(local_28[1] + 0xc));
-              *param_4 = *(float *)(local_28[2] + 0x10) +
-                         (*(float *)(local_28[2] + 0x10) - *(float *)(local_28[1] + 0x10));
+              *outY = *(float *)(local_28[2] + 0xc) +
+                      (*(float *)(local_28[2] + 0xc) - *(float *)(local_28[1] + 0xc));
+              *outZ = *(float *)(local_28[2] + 0x10) +
+                      (*(float *)(local_28[2] + 0x10) - *(float *)(local_28[1] + 0x10));
             }
           }
           piVar3 = piVar3 + 1;
           pfVar2 = pfVar2 + 1;
-          param_3 = param_3 + 1;
-          param_4 = param_4 + 1;
+          outY = outY + 1;
+          outZ = outZ + 1;
           iVar4 = iVar4 + 1;
           iVar13 = iVar13 + -1;
         } while (iVar13 != 0);
       }
-      FUN_80286888();
       return;
     }
   } while( true );
