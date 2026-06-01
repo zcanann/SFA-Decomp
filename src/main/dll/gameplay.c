@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/gameplay.h"
+#include "main/mapEventTypes.h"
 
 #define SFXsp_skeep_mumb1 266
 
@@ -988,12 +989,19 @@ extern s8 lbl_803DB890;
 extern u8 *lbl_803DD498;
 extern char sGameplayFoxName;
 extern u8 saveData[228];
+extern f32 lbl_803E06C8;
+extern u16 lbl_80311720[];
+extern MapEventInterface **gMapEventInterface;
 
 #define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
 #define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
 #define SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET 0x20158
 #define SAVEGAME_LIVE_BUFFER_SIZE 0xf70
 #define SAVEGAME_ACTIVE_SIZE 0x6ec
+#define SAVEGAME_PLAYER_NAME_OFFSET 0x1c
+#define SAVEGAME_CURRENT_CHARACTER_OFFSET 0x20
+#define SAVEGAME_NEW_FILE_FLAG_OFFSET 0x21
+#define SAVEGAME_CHARACTER_POSITION_OFFSET 0x684
 #define SAVE_SCORE_FILE_STRIDE 0x28
 #define SAVE_SCORE_TABLE_OFFSET 0x1c
 #define SAVE_SCORE_ENTRY_COUNT 5
@@ -1018,6 +1026,14 @@ typedef struct SaveScoreEntry {
     u32 flag : 1;
     u8 initials[4];
 } SaveScoreEntry;
+
+typedef struct SaveGameDefaultPosition {
+    f32 x;
+    f32 y;
+    f32 z;
+} SaveGameDefaultPosition;
+
+extern SaveGameDefaultPosition lbl_802C2170;
 
 int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition *object)
 {
@@ -1085,6 +1101,9 @@ extern void *memset(void *dst, int val, u32 n);
 extern void *memcpy(void *dst, const void *src, u32 n);
 extern int loadSaveGame(int slot, void *save);
 extern int gplayNewGame(char *name, int slot);
+extern int _saveGame(int slot, int save, int data);
+extern void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value);
+extern void GameBit_Set(int eventId, int value);
 
 int trySaveGame(int slot)
 {
@@ -1140,6 +1159,102 @@ int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8 *initials)
     }
 
     return -1;
+}
+
+int gplayNewGame(char *name, int slot)
+{
+    SaveGameDefaultPosition defaultPos;
+    int i;
+    u8 *dst;
+    u8 c;
+    u8 *save;
+
+    defaultPos = lbl_802C2170;
+
+    memset(lbl_803A32A8, 0, SAVEGAME_LIVE_BUFFER_SIZE);
+    if ((lbl_803DD498[SAVEGAME_NEW_FILE_FLAG_OFFSET] & 0x80) == 0) {
+        memset(lbl_803DD498, 0, SAVEGAME_ACTIVE_SIZE);
+    }
+
+    save = lbl_803A32A8;
+    save[SAVEGAME_CURRENT_CHARACTER_OFFSET] = 0;
+    save[0] = 0xc;
+    save[1] = 0xc;
+    *(u16 *)(save + 6) = 0x19;
+    *(u16 *)(save + 4) = 0;
+    save[0xa] = 1;
+    save[0x692] = -1;
+    save[0xc] = 0xc;
+    save[0xd] = 0xc;
+    *(u16 *)(save + 0x12) = 0x19;
+    *(u16 *)(save + 0x10) = 0;
+    save[0x16] = 1;
+    save[0x6a2] = -1;
+    save[0x19] = 0x14;
+    *(s16 *)(save + 0x6a4) = -1;
+    *(f32 *)(save + 0x6a8) = lbl_803E06C8;
+    *(s16 *)(save + 0x6ac) = -1;
+    *(s16 *)(save + 0x6ae) = -1;
+    *(s16 *)(save + 0x6b2) = -1;
+    *(s16 *)(save + 0x6b4) = -1;
+    *(s16 *)(save + 0x6b6) = -1;
+    *(s16 *)(save + 0x6b8) = -1;
+    *(s16 *)(save + 0x6ba) = -1;
+    save[0x6e9] = -1;
+    save[0x6ea] = -1;
+    save[0x6eb] = -1;
+    save[0x6e8] = 9;
+    save[0x23] = 0;
+    save[SAVEGAME_NEW_FILE_FLAG_OFFSET] = 1;
+
+    for (i = 0; i < 0x78; i++) {
+        if (lbl_80311720[i] != 0) {
+            (*gMapEventInterface)->setMode(i, 1);
+        }
+    }
+
+    SaveGame_gplaySetObjGroupStatus(7, 0, 1);
+    SaveGame_gplaySetObjGroupStatus(7, 2, 1);
+    SaveGame_gplaySetObjGroupStatus(7, 3, 1);
+    SaveGame_gplaySetObjGroupStatus(7, 5, 1);
+    SaveGame_gplaySetObjGroupStatus(7, 10, 1);
+    SaveGame_gplaySetObjGroupStatus(0x1d, 0, 1);
+    SaveGame_gplaySetObjGroupStatus(0x1d, 0x1f, 1);
+    SaveGame_gplaySetObjGroupStatus(0x13, 0, 1);
+    SaveGame_gplaySetObjGroupStatus(0x13, 0x16, 1);
+    GameBit_Set(0x967, 1);
+
+    *(f32 *)(save + save[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
+             SAVEGAME_CHARACTER_POSITION_OFFSET) = defaultPos.x;
+    *(f32 *)(save + save[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
+             SAVEGAME_CHARACTER_POSITION_OFFSET + 4) = defaultPos.y;
+    *(f32 *)(save + save[SAVEGAME_CURRENT_CHARACTER_OFFSET] * 0x10 +
+             SAVEGAME_CHARACTER_POSITION_OFFSET + 8) = defaultPos.z;
+    save[0x55d] = 1;
+
+    if (name != NULL) {
+        dst = save + SAVEGAME_PLAYER_NAME_OFFSET;
+        do {
+            c = (u8)*name++;
+            *dst++ = c;
+        } while (c != '\0');
+    }
+    else {
+        save[SAVEGAME_PLAYER_NAME_OFFSET + 0] = 'F';
+        save[SAVEGAME_PLAYER_NAME_OFFSET + 1] = 'O';
+        save[SAVEGAME_PLAYER_NAME_OFFSET + 2] = 'X';
+        save[SAVEGAME_PLAYER_NAME_OFFSET + 3] = '\0';
+    }
+
+    memcpy(lbl_803DD498, save, SAVEGAME_ACTIVE_SIZE);
+    if ((s8)slot == -1) {
+        return 0;
+    }
+    lbl_803DB890 = (s8)slot;
+    if (name == NULL) {
+        return 0;
+    }
+    return _saveGame((u8)slot, (int)lbl_803DD498, (int)saveData);
 }
 
 /*
