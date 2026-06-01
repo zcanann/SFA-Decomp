@@ -6100,7 +6100,7 @@ void fn_8007BD8C(int handle1, int handle2)
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_8007C3D0(u8 flag)
+void setupReflectionIndirectTev(u8 flag)
 {
     extern f32 lbl_803DEEDC;
     extern f32 gSynthDelayedActionWord0;
