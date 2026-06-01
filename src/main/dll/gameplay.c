@@ -987,12 +987,16 @@ extern u8 lbl_803DD488;
 extern s8 lbl_803DB890;
 extern u8 *lbl_803DD498;
 extern char sGameplayFoxName;
+extern u8 saveData[228];
 
 #define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
 #define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
 #define SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET 0x20158
 #define SAVEGAME_LIVE_BUFFER_SIZE 0xf70
 #define SAVEGAME_ACTIVE_SIZE 0x6ec
+#define SAVE_SCORE_FILE_STRIDE 0x28
+#define SAVE_SCORE_TABLE_OFFSET 0x1c
+#define SAVE_SCORE_ENTRY_COUNT 5
 
 typedef struct SaveGameObjectPosition {
     u32 objectId;
@@ -1008,6 +1012,12 @@ typedef struct SaveGameRomListPosition {
     f32 z;
     u32 objectId;
 } SaveGameRomListPosition;
+
+typedef struct SaveScoreEntry {
+    u32 score : 31;
+    u32 flag : 1;
+    u8 initials[4];
+} SaveScoreEntry;
 
 int saveGame_restoreObjectPosToRomList(SaveGameRomListPosition *object)
 {
@@ -1099,6 +1109,37 @@ int trySaveGame(int slot)
         gplayNewGame(&sGameplayFoxName, -1);
     }
     return loaded;
+}
+
+int saveScoreFn_800e88b4(u8 slot, u8 flag, u32 score, u8 *initials)
+{
+    int rank;
+    int i;
+    SaveScoreEntry *scores;
+
+    scores = (SaveScoreEntry *)(saveData + slot * SAVE_SCORE_FILE_STRIDE + SAVE_SCORE_TABLE_OFFSET);
+    for (rank = 0; rank < SAVE_SCORE_ENTRY_COUNT; rank++) {
+        if (score > scores[rank].score) {
+            for (i = SAVE_SCORE_ENTRY_COUNT - 1; i > rank; i--) {
+                scores[i].score = scores[i - 1].score;
+                scores[i].flag = scores[i - 1].flag;
+                scores[i].initials[0] = scores[i - 1].initials[0];
+                scores[i].initials[1] = scores[i - 1].initials[1];
+                scores[i].initials[2] = scores[i - 1].initials[2];
+                scores[i].initials[3] = scores[i - 1].initials[3];
+            }
+
+            scores[rank].score = score;
+            scores[rank].flag = flag;
+            scores[rank].initials[0] = initials[0];
+            scores[rank].initials[1] = initials[1];
+            scores[rank].initials[2] = initials[2];
+            scores[rank].initials[3] = initials[3];
+            return rank;
+        }
+    }
+
+    return -1;
 }
 
 /*
