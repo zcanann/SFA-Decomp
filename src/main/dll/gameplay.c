@@ -984,10 +984,15 @@ extern undefined4 uRam803de108;
 extern undefined uRam803de10d;
 extern u8 lbl_803A32A8[];
 extern u8 lbl_803DD488;
+extern s8 lbl_803DB890;
+extern u8 *lbl_803DD498;
+extern char sGameplayFoxName;
 
 #define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
 #define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
 #define SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET 0x20158
+#define SAVEGAME_LIVE_BUFFER_SIZE 0xf70
+#define SAVEGAME_ACTIVE_SIZE 0x6ec
 
 typedef struct SaveGameObjectPosition {
     u32 objectId;
@@ -1064,6 +1069,36 @@ void saveGame_unsaveObjectPos(u8 *obj)
         }
         *(u32 *)(lbl_803A32A8 + SAVEGAME_OBJECT_POSITION_DIRTY_OFFSET) = 0;
     }
+}
+
+extern void *memset(void *dst, int val, u32 n);
+extern void *memcpy(void *dst, const void *src, u32 n);
+extern int loadSaveGame(int slot, void *save);
+extern int gplayNewGame(char *name, int slot);
+
+int trySaveGame(int slot)
+{
+    int loaded;
+
+    lbl_803DB890 = (s8)slot;
+    memset(lbl_803A32A8, 0, SAVEGAME_LIVE_BUFFER_SIZE);
+    if ((lbl_803DD498[0x21] & 0x80) == 0) {
+        memset(lbl_803DD498, 0, SAVEGAME_ACTIVE_SIZE);
+    }
+
+    loaded = loadSaveGame((u8)lbl_803DB890, lbl_803DD498);
+    if (loaded != 0) {
+        if (lbl_803DD498[0x21] == 0) {
+            loaded = gplayNewGame(&sGameplayFoxName, (u8)lbl_803DB890);
+        }
+        else {
+            memcpy(lbl_803A32A8, lbl_803DD498, SAVEGAME_ACTIVE_SIZE);
+        }
+    }
+    else {
+        gplayNewGame(&sGameplayFoxName, -1);
+    }
+    return loaded;
 }
 
 /*

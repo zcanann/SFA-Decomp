@@ -24,6 +24,7 @@ int saveFn_800e8508(void);
 void gplaySaveGame(int param);
 void titleDoLoadSave(void);
 void saveGame_save(void);
+int trySaveGame(int slot);
 void FUN_800e8b48(void);
 void FUN_800e8b54(void);
 uint FUN_800e8b6c(void);
