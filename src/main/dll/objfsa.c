@@ -5565,7 +5565,7 @@ int RomCurve_func2C(float *state, int unused, int startCurveId)
     return 0;
 }
 
-int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, double maxDistance)
+int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxDistance)
 {
     char *stateBytes;
     int curveId;
@@ -5621,7 +5621,7 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, double m
         return 1;
     }
 
-    if (maxDistance != (double)gFloatZero) {
+    if (maxDistance != gFloatZero) {
         if (*(s32 *)(stateBytes + 0x80) != 0) {
             distanceCurve = *(s32 *)(stateBytes + 0xa4);
         } else {
@@ -6112,12 +6112,12 @@ static inline int Objfsa_FindRomCurveById(int curveId) {
     while (lo <= hi) {
         mid = (hi + lo) >> 1;
         curve = (int)romCurves[mid];
-        if (*(u32 *)(curve + 0x14) < id) {
+        if (id > *(u32 *)(curve + 0x14)) {
             lo = mid + 1;
-        } else if (*(u32 *)(curve + 0x14) <= id) {
-            return curve;
-        } else {
+        } else if (id < *(u32 *)(curve + 0x14)) {
             hi = mid - 1;
+        } else {
+            return curve;
         }
     }
 
