@@ -24,7 +24,7 @@ extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017754();
 extern u32 randomGetRange(int min, int max);
 extern undefined4 FUN_80017778();
-extern undefined4 FUN_80017b00();
+extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
 extern int ObjHits_IsObjectEnabled();
 extern undefined4 ObjHits_AddContactObject();
 extern undefined4 FUN_80061fc8();
@@ -417,42 +417,39 @@ int curves_distFn15(u32 curveId,f32 x,f32 y,f32 z,f32 *outDistance)
  */
 #pragma scheduling off
 #pragma peephole off
-int curves_distanceToNearestOfType16(double param_1,double param_2,double param_3,int param_4)
+int curves_distanceToNearestOfType16(f32 x,f32 y,f32 z,int param_4)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  int *piVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  double dVar8;
-  double dVar9;
-  double dVar10;
-  int local_78;
-  undefined4 uStack_74;
-  undefined8 local_70;
+  float dx;
+  float dy;
+  float dz;
+  int *objects;
+  int obj;
+  RomCurveDef *curve;
+  int i;
+  float distance;
+  double nearestCurveId;
+  double nearestDistance;
+  int objectCount;
+  int startIndex;
   
-  piVar4 = (int *)FUN_80017b00(&uStack_74,&local_78);
-  dVar9 = (double)lbl_803E12B0;
-  dVar10 = (double)lbl_803E12B8;
-  for (iVar7 = 0; iVar7 < local_78; iVar7 = iVar7 + 1) {
-    iVar5 = *piVar4;
-    if ((((*(short *)(iVar5 + 0x44) == 0x2c) && (*(char *)(iVar5 + 0xac) != param_4)) &&
-        (iVar6 = *(int *)(iVar5 + 0x4c), iVar6 != 0)) &&
-       ((*(char *)(iVar6 + 0x19) == '\x16' &&
-        ((fVar1 = (float)((double)*(float *)(iVar5 + 0x18) - param_1),
-         fVar2 = (float)((double)*(float *)(iVar5 + 0x1c) - param_2),
-         fVar3 = (float)((double)*(float *)(iVar5 + 0x20) - param_3),
-         dVar8 = FUN_80293900((double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2)),
-         (double)lbl_803E12B0 == dVar9 || (dVar8 < dVar10)))))) {
-      local_70 = (double)CONCAT44(0x43300000,*(undefined4 *)(iVar6 + 0x14));
-      dVar9 = (double)(float)(local_70 - DOUBLE_803e12a8);
-      dVar10 = dVar8;
+  objects = ObjList_GetObjects(&startIndex,&objectCount);
+  nearestCurveId = (double)lbl_803E12B0;
+  nearestDistance = (double)lbl_803E12B8;
+  for (i = 0; i < objectCount; i = i + 1) {
+    obj = objects[i];
+    if ((((*(short *)(obj + 0x44) == 0x2c) && (*(char *)(obj + 0xac) != param_4)) &&
+        (curve = *(RomCurveDef **)(obj + 0x4c), curve != NULL)) &&
+       ((curve->type == 0x16 &&
+         ((dx = *(float *)(obj + 0x18) - x,
+         dy = *(float *)(obj + 0x1c) - y,
+         dz = *(float *)(obj + 0x20) - z,
+         distance = sqrtf(dz * dz + (dx * dx + dy * dy)),
+         (double)lbl_803E12B0 == nearestCurveId || (distance < nearestDistance)))))) {
+      nearestCurveId = (double)curve->id;
+      nearestDistance = distance;
     }
-    piVar4 = piVar4 + 1;
   }
-  return (int)dVar9;
+  return (int)nearestCurveId;
 }
 #pragma peephole reset
 #pragma scheduling reset
