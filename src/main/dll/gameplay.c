@@ -991,7 +991,12 @@ extern char sGameplayFoxName;
 extern u8 saveData[228];
 extern f32 lbl_803E06C8;
 extern u16 lbl_80311720[];
+extern u16 lbl_80311810[];
 extern MapEventInterface **gMapEventInterface;
+extern s8 lbl_803A2F80[];
+extern u32 lbl_803A2FBC[];
+extern u8 lbl_803A319C[];
+extern int lbl_803DD48C;
 
 #define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
 #define SAVEGAME_OBJECT_POSITION_OFFSET 0x168
@@ -1104,6 +1109,7 @@ extern int gplayNewGame(char *name, int slot);
 extern int _saveGame(int slot, int save, int data);
 extern void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value);
 extern void GameBit_Set(int eventId, int value);
+extern u32 GameBit_Get(int eventId);
 
 int trySaveGame(int slot)
 {
@@ -1255,6 +1261,78 @@ int gplayNewGame(char *name, int slot)
         return 0;
     }
     return _saveGame((u8)slot, (int)lbl_803DD498, (int)saveData);
+}
+
+void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
+{
+    int createTransient;
+    u32 oldStatus;
+    u32 newStatus;
+    u32 bit;
+    u16 eventId;
+    int i;
+    s8 *transient;
+
+    if (idx >= 0x50) {
+        idx = lbl_803A319C[idx - 0x50];
+    }
+    if (idx < 0x78 && lbl_80311810[idx] != 0) {
+        if (value == -1) {
+            value = 1;
+        }
+        createTransient = value == -2;
+        if (createTransient) {
+            value = 0;
+        }
+
+        eventId = lbl_80311810[idx];
+        oldStatus = GameBit_Get(eventId);
+        bit = 1 << shift;
+        if (value == 0) {
+            newStatus = oldStatus & ~bit;
+        }
+        else {
+            newStatus = oldStatus | bit;
+        }
+
+        GameBit_Set(eventId, newStatus);
+        lbl_803DD48C = idx;
+        (&lbl_803DD48C)[1] = newStatus;
+
+        if (value == 0) {
+            for (i = 0; i < 0x78; i++) {
+                if (lbl_80311810[i] == eventId) {
+                    lbl_803A2FBC[i] &= ~bit;
+                }
+            }
+
+            if (!createTransient) {
+                transient = lbl_803A2F80;
+                for (i = 0; i < 20; i++, transient += 3) {
+                    if (transient[0] == idx && (u8)transient[1] == shift) {
+                        return;
+                    }
+                }
+
+                transient = lbl_803A2F80;
+                for (i = 0; i < 20; i++, transient += 3) {
+                    if (transient[0] == -1) {
+                        transient[0] = (s8)idx;
+                        transient[1] = (s8)shift;
+                        transient[2] = 3;
+                        break;
+                    }
+                }
+            }
+        }
+        else if ((oldStatus & bit) == 0) {
+            for (i = 0; i < 0x78; i++) {
+                if (lbl_80311810[i] == eventId) {
+                    lbl_803A2FBC[i] |= bit;
+                }
+            }
+        }
+    }
 }
 
 /*
