@@ -4,6 +4,8 @@
 #define SFXfox_swimstroke122 571
 
 extern undefined4 FUN_800033a8();
+extern void *mmAlloc(int size,int tag,int flags);
+extern void *memset(void *dst,int value,uint size);
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
 extern int FUN_80006a10();
@@ -17,7 +19,10 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
+extern int Obj_GetPlayerObject(void);
 extern undefined8 ObjGroup_RemoveObject();
+extern void Sfx_PlayAtPositionFromObject(f32 x,f32 y,f32 z,int obj,int sfxId);
+extern void Sfx_PlayFromObject(int obj,int sfxId);
 extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_8014d4c8();
 extern undefined4 FUN_80151844();
@@ -34,6 +39,7 @@ extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd71c;
 extern undefined4 DAT_803de6e8;
 extern f64 DOUBLE_803e3398;
+extern f64 lbl_803E2700;
 extern f64 DOUBLE_803e33f0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E3368;
@@ -65,12 +71,25 @@ extern f32 lbl_803E33E0;
 extern f32 lbl_803E33E4;
 extern f32 lbl_803E33E8;
 extern f32 lbl_803E33EC;
+extern f32 lbl_803E2708;
+extern f32 lbl_803E270C;
+extern f32 lbl_803E2710;
+extern f32 lbl_803E2714;
+extern f32 lbl_803E2718;
+extern f32 lbl_803E271C;
+extern f32 lbl_803E2720;
+extern f32 timeDelta;
+extern int *gPartfxInterface;
+extern int *gRomCurveInterface;
+extern int lbl_803DBC80;
 extern void* PTR_DAT_8031fdc4;
+extern f32 sqrtf(f32 x);
+extern void fn_8014F620(int obj,WispBaddieState *state);
 
 extern void wispbaddie_free(void);
 extern void wispbaddie_render(void);
 extern void wispbaddie_hitDetect(void);
-extern void wispbaddie_init(void);
+extern void wispbaddie_init(int obj,int setup,int initialised);
 extern int wispbaddie_getObjectTypeId(void);
 extern int wispbaddie_getExtraSize(void);
 
@@ -87,83 +106,122 @@ extern int wispbaddie_getExtraSize(void);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void wispbaddie_update(int param_1,undefined4 *param_2)
+void wispbaddie_update(int obj)
 {
-  float fVar1;
-  int iVar2;
-  char cVar3;
-  float *pfVar4;
-  double dVar5;
-  
-  pfVar4 = (float *)*param_2;
-  *(short *)((int)param_2 + 0x26) =
-       *(short *)((int)param_2 + 0x26) + (short)(int)(lbl_803E3368 * lbl_803DC074);
-  *(short *)(param_2 + 10) =
-       *(short *)(param_2 + 10) + (short)(int)(lbl_803E336C * lbl_803DC074);
-  dVar5 = (double)FUN_80293f90();
-  iVar2 = FUN_80006a10((double)((float)param_2[2] * (float)((double)lbl_803E3370 + dVar5)),pfVar4)
-  ;
-  if ((((iVar2 != 0) || (pfVar4[4] != DAT_803de6e8)) &&
-      (cVar3 = (**(code **)(*DAT_803dd71c + 0x90))(pfVar4), cVar3 != '\0')) &&
-     (cVar3 = (**(code **)(*DAT_803dd71c + 0x8c))
-                        ((double)lbl_803E337C,*param_2,param_1,&DAT_803dc8e8,0xffffffff),
-     cVar3 != '\0')) {
-    *(byte *)(param_2 + 9) = *(byte *)(param_2 + 9) & 0xfe;
+  WispBaddieState *state;
+  int curve;
+  int hit;
+  f32 hitX;
+  f32 hitY;
+  f32 hitZ;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  int particleParam;
+
+  state = *(WispBaddieState **)(obj + 0xb8);
+  curve = state->curve;
+  hit = ObjHits_GetPriorityHitWithPosition(obj,&dx,&hitX,&hitY,&hitZ,&dy,&dz);
+  if (hit != 0) {
+    state->hitRadius = lbl_803E2708;
+    if ((state->flags & 2) != 0) {
+      state->flags = (u8)(state->flags & ~2);
+      state->flags = (u8)(state->flags | 4);
+    }
+    Sfx_PlayAtPositionFromObject(hitZ,dy,dz,obj,0x23c);
   }
-  DAT_803de6e8 = pfVar4[4];
-  if ((*(byte *)(param_2 + 9) & 2) == 0) {
-    *(float *)(param_1 + 0x24) =
-         lbl_803E3380 * (pfVar4[0x1a] - *(float *)(param_1 + 0xc)) + *(float *)(param_1 + 0x24);
-    dVar5 = (double)FUN_80293f90();
-    fVar1 = lbl_803E3380;
-    *(float *)(param_1 + 0x28) =
-         lbl_803E3380 *
-         ((float)((double)lbl_803E3388 * dVar5 + (double)pfVar4[0x1b]) -
-         *(float *)(param_1 + 0x10)) + *(float *)(param_1 + 0x28);
-    *(float *)(param_1 + 0x2c) =
-         fVar1 * (pfVar4[0x1c] - *(float *)(param_1 + 0x14)) + *(float *)(param_1 + 0x2c);
+
+  particleParam = 4;
+  (*(void (**)(int,int,int,int,int,int *))(*(int *)gPartfxInterface + 8))
+      (obj,state->particleId,0,1,-1,&particleParam);
+  particleParam = 3;
+  (*(void (**)(int,int,int,int,int,int *))(*(int *)gPartfxInterface + 8))
+      (obj,state->particleId,0,2,-1,&particleParam);
+
+  if (state->hitRadius < state->maxHitRadius) {
+    state->hitRadius += lbl_803E270C;
+    ObjHits_DisableObject(obj);
+  } else {
+    state->hitRadius = state->maxHitRadius;
+    particleParam = 2;
+    (*(void (**)(int,int,int,int,int,int *))(*(int *)gPartfxInterface + 8))
+        (obj,state->particleId,0,2,-1,&particleParam);
+    particleParam = 0;
+    (*(void (**)(int,int,int,int,int,int *))(*(int *)gPartfxInterface + 8))
+        (obj,state->particleId,0,2,-1,&particleParam);
+    ObjHits_SetHitVolumeSlot(obj,10,1,0);
+    ObjHits_EnableObject(obj);
   }
-  else {
-    *(float *)(param_1 + 0x24) =
-         lbl_803E3380 * (*(float *)(param_2[1] + 0xc) - *(float *)(param_1 + 0xc)) +
-         *(float *)(param_1 + 0x24);
-    dVar5 = (double)FUN_80293f90();
-    fVar1 = lbl_803E3380;
-    *(float *)(param_1 + 0x28) =
-         lbl_803E3380 *
-         ((float)((double)lbl_803E3388 * dVar5 +
-                 (double)(lbl_803E3384 + *(float *)(param_2[1] + 0x10))) -
-         *(float *)(param_1 + 0x10)) + *(float *)(param_1 + 0x28);
-    *(float *)(param_1 + 0x2c) =
-         fVar1 * (*(float *)(param_2[1] + 0x14) - *(float *)(param_1 + 0x14)) +
-         *(float *)(param_1 + 0x2c);
+
+  particleParam = 1;
+  (*(void (**)(int,int,int,int,int,int *))(*(int *)gPartfxInterface + 8))
+      (obj,state->particleId,0,2,-1,&particleParam);
+  state->playerObj = Obj_GetPlayerObject();
+  if (state->playerObj != 0) {
+    dx = *(f32 *)(state->playerObj + 0x18) - *(f32 *)(obj + 0x18);
+    dy = *(f32 *)(state->playerObj + 0x1c) - *(f32 *)(obj + 0x1c);
+    dz = *(f32 *)(state->playerObj + 0x20) - *(f32 *)(obj + 0x20);
+    state->playerDistance = sqrtf(dz * dz + dx * dx + dy * dy);
   }
-  fVar1 = lbl_803E338C;
-  *(float *)(param_1 + 0x24) = *(float *)(param_1 + 0x24) * lbl_803E338C;
-  *(float *)(param_1 + 0x28) = *(float *)(param_1 + 0x28) * fVar1;
-  *(float *)(param_1 + 0x2c) = *(float *)(param_1 + 0x2c) * fVar1;
-  if (lbl_803E3390 < *(float *)(param_1 + 0x24)) {
-    *(float *)(param_1 + 0x24) = lbl_803E3390;
+  if (curve != 0) {
+    dx = *(f32 *)(curve + 0x68) - *(f32 *)(obj + 0x18);
+    dy = *(f32 *)(curve + 0x6c) - *(f32 *)(obj + 0x1c);
+    dz = *(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x20);
+    state->curveDistance = sqrtf(dz * dz + dx * dx + dy * dy);
   }
-  if (lbl_803E3390 < *(float *)(param_1 + 0x28)) {
-    *(float *)(param_1 + 0x28) = lbl_803E3390;
+
+  if ((state->flags & 2) != 0) {
+    if (lbl_803E2710 < state->curveDistance) {
+      state->flags = (u8)(state->flags & ~2);
+      state->flags = (u8)(state->flags | 4);
+    }
+    state->cryTimer -= timeDelta;
+    if (state->cryTimer < lbl_803E2714) {
+      Sfx_PlayFromObject(obj,0x23d);
+      state->cryTimer = (f32)randomGetRange(0x3c,0x78);
+    }
+    state->particleId = 0x338;
   }
-  if (lbl_803E3390 < *(float *)(param_1 + 0x2c)) {
-    *(float *)(param_1 + 0x2c) = lbl_803E3390;
+  if ((state->flags & 4) != 0) {
+    if (state->curveDistance < lbl_803E2718) {
+      state->flags = (u8)(state->flags & ~4);
+    }
+    state->particleId = 0x337;
   }
-  if (*(float *)(param_1 + 0x24) < lbl_803E3394) {
-    *(float *)(param_1 + 0x24) = lbl_803E3394;
+  if ((state->flags & 6) == 0) {
+    if ((state->maxHitRadius <= state->hitRadius) && (state->playerObj != 0) &&
+        (state->playerDistance < state->triggerDistance)) {
+      state->flags = (u8)(state->flags | 2);
+    }
+    state->particleId = 0x337;
   }
-  if (*(float *)(param_1 + 0x28) < lbl_803E3394) {
-    *(float *)(param_1 + 0x28) = lbl_803E3394;
+  fn_8014F620(obj,state);
+}
+
+void wispbaddie_init(int obj,int setup,int initialised)
+{
+  WispBaddieState *state;
+  f32 value;
+
+  state = *(WispBaddieState **)(obj + 0xb8);
+  value = (f32)*(s16 *)(setup + 0x1a) / lbl_803E271C;
+  state->maxHitRadius = value;
+  state->hitRadius = value;
+  state->triggerDistance = lbl_803E2720 * (f32)*(s8 *)(setup + 0x19);
+  state->particleId = 0x337;
+
+  if (initialised == 0) {
+    state->curve = (int)mmAlloc(0x108,0x1a,0);
+    if (state->curve != 0) {
+      memset((void *)state->curve,0,0x108);
+    }
+    if (((u8 (**)(int,int,f32,int *,int))(*gRomCurveInterface))[0x23]
+            (state->curve,obj,state->triggerDistance,&lbl_803DBC80,-1) == 0) {
+      state->flags = (u8)(state->flags | 1);
+    }
+    Sfx_PlayFromObject(obj,0x23b);
   }
-  if (*(float *)(param_1 + 0x2c) < lbl_803E3394) {
-    *(float *)(param_1 + 0x2c) = lbl_803E3394;
-  }
-  FUN_80017a88((double)(*(float *)(param_1 + 0x24) * lbl_803DC074),
-               (double)(*(float *)(param_1 + 0x28) * lbl_803DC074),
-               (double)(*(float *)(param_1 + 0x2c) * lbl_803DC074),param_1);
-  return;
+  *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
 }
 
 /*
