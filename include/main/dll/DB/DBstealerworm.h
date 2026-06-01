@@ -9,13 +9,10 @@ extern ObjectDescriptor gSB_PropellerObjDescriptor;
 extern ObjectDescriptor gSB_ShipHeadObjDescriptor;
 extern ObjectDescriptor gSB_ShipMastObjDescriptor;
 
-void fn_801E1588(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9);
+void fn_801E1588(int param_1,int param_2);
 void fn_801E1AAC(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
-void FUN_801e1884(int param_1,int param_2);
 undefined4
 FUN_801e1edc(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
             undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,uint param_9

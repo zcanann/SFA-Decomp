@@ -199,7 +199,7 @@ void fn_801E1AAC(undefined8 param_1,double param_2,double param_3,undefined8 par
     GameBit_Set(0xa0,1);
     param_1 = (**(code **)(*DAT_803dd6cc + 8))(10,1);
   }
-  fn_801E1588(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3);
+  fn_801E1588(param_9,iVar3);
   if ((DAT_803de8ac != '\0') && (iVar2 = (**(code **)(*DAT_803dd6cc + 0x14))(), iVar2 != 0)) {
     (**(code **)(*DAT_803dd6cc + 0xc))(0x50,1);
     (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_9,0xffffffff);
@@ -241,9 +241,9 @@ void fn_801E1AAC(undefined8 param_1,double param_2,double param_3,undefined8 par
 /*
  * --INFO--
  *
- * Function: FUN_801e1884
- * EN v1.0 Address: 0x801E1884
- * EN v1.0 Size: 1624b
+ * Function: fn_801E1588
+ * EN v1.0 Address: 0x801E1588
+ * EN v1.0 Size: 1316b
  * EN v1.1 Address: 0x801E1B78
  * EN v1.1 Size: 1316b
  * JP Address: TODO
@@ -251,7 +251,7 @@ void fn_801E1AAC(undefined8 param_1,double param_2,double param_3,undefined8 par
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e1884(int param_1,int param_2)
+void fn_801E1588(int param_1,int param_2)
 {
   float fVar1;
   float fVar2;
