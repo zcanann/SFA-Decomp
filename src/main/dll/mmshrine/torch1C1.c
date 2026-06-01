@@ -32,28 +32,6 @@ extern f32 lbl_803E5C4C;
 extern f32 lbl_803E5C50;
 extern f32 lbl_803E5C60;
 
-/*
- * --INFO--
- *
- * Function: ecsh_shrine_func0B
- * EN v1.0 Address: 0x801C5ED8
- * EN v1.0 Size: 80b
- * EN v1.1 Address: 0x801C5EE0
- * EN v1.1 Size: 100b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_dropped_ecsh_shrine_func0B(int param_1,int param_2)
-{
-  ObjHits_EnableObject(param_1);
-  *(undefined4 *)(param_1 + 0xf4) = 0;
-  *(uint *)(param_1 + 0xf8) =
-       CONCAT22(*(undefined2 *)(param_2 + 0x1c),*(undefined2 *)(param_2 + 0x1a));
-  return;
-}
-
 extern void *lbl_803DDBC4;
 extern s16 lbl_80326238[];
 extern u8 lbl_80326208[];
@@ -265,41 +243,6 @@ void ecsh_shrine_hitDetect(void)
 {
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801c6358
- * EN v1.0 Address: 0x801C6358
- * EN v1.0 Size: 172b
- * EN v1.1 Address: 0x801C6504
- * EN v1.1 Size: 172b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c6358(int param_1)
-{
-  uint uVar1;
-  uint *puVar2;
-
-  puVar2 = *(uint **)(param_1 + 0xb8);
-  FUN_800067c0((int *)0xd8,0);
-  FUN_800067c0((int *)0xd9,0);
-  FUN_800067c0((int *)0x8,0);
-  FUN_800067c0((int *)0xd,0);
-  uVar1 = *puVar2;
-  if (uVar1 != 0) {
-    FUN_80017620(uVar1);
-    *puVar2 = 0;
-  }
-  ObjGroup_RemoveObject(param_1,0xb);
-  GameBit_Set(0xefa,0);
-  GameBit_Set(0xcbb,1);
-  GameBit_Set(0xa7f,1);
-  return;
-}
-
 extern void Music_Trigger(int trackId, int restart);
 extern void ModelLightStruct_free(void *p);
 extern void lightFn_8001db6c(int handle, int flag, f32 v);
@@ -339,39 +282,3 @@ void ecsh_shrine_free(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-
-/*
- * --INFO--
- *
- * Function: FUN_801c6404
- * EN v1.0 Address: 0x801C6404
- * EN v1.0 Size: 152b
- * EN v1.1 Address: 0x801C65B0
- * EN v1.1 Size: 188b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801c6404(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  int iVar1;
-  int *piVar2;
-  
-  iVar1 = FUN_8028683c();
-  piVar2 = *(int **)(iVar1 + 0xb8);
-  if (visible == 0) {
-    if (*piVar2 != 0) {
-      FUN_800175cc((double)lbl_803E5C60,*piVar2,'\0');
-    }
-  }
-  else {
-    if (*piVar2 != 0) {
-      FUN_800175cc((double)lbl_803E5C60,*piVar2,'\x01');
-    }
-    FUN_8003b818(iVar1);
-    FUN_8008111c((double)lbl_803E5C60,(double)lbl_803E5C60,iVar1,7,(int *)*piVar2);
-  }
-  FUN_80286888();
-  return;
-}
