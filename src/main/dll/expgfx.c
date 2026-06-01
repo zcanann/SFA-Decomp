@@ -357,6 +357,7 @@ void expgfxRemoveAll(void)
   u16 *refCount;
   ExpgfxTableEntry *tableEntry;
   u32 activeBit;
+  u32 inactiveBitMask;
   u32 tableOffset;
   int poolIndex;
   int slotIndex;
@@ -398,7 +399,8 @@ void expgfxRemoveAll(void)
         }
 
         slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-        *activeMasks &= ~activeBit;
+        inactiveBitMask = ~activeBit;
+        *activeMasks = *activeMasks & inactiveBitMask;
       }
 
       slot = (ExpgfxSlot *)((u8 *)slot + EXPGFX_SLOT_SIZE);
@@ -442,27 +444,30 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
   u32 *poolActiveMasks;
   s16 *poolSlotTypeIds;
   u32 activeBit;
+  int foundPool;
+  int foundPoolIndex;
   int poolIndex;
   int slotIndex;
-  int foundPool;
 
   expgfxBase = gExpgfxRuntimeData;
   poolActiveCounts = (s8 *)(expgfxBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
   poolSourceIds = (u32 *)(expgfxBase + EXPGFX_POOL_SOURCE_IDS_OFFSET);
   poolSlotTypeIds = gExpgfxStaticPoolSlotTypeIds;
   foundPool = 0;
-  poolIndex = EXPGFX_INVALID_POOL_INDEX;
+  foundPoolIndex = EXPGFX_INVALID_POOL_INDEX;
 
   for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT; poolIndex++) {
     if ((poolSourceIds[poolIndex] == sourceId) &&
         (poolSlotTypeIds[poolIndex] == slotType) &&
         (poolActiveCounts[poolIndex] < EXPGFX_SLOTS_PER_POOL)) {
+      foundPoolIndex = (s16)poolIndex;
       foundPool = 1;
       break;
     }
   }
 
   if (foundPool) {
+    poolIndex = (s16)foundPoolIndex;
     poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
     for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
       activeBit = 1 << slotIndex;
@@ -480,13 +485,14 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
   if (preferredPoolIndex == EXPGFX_INVALID_POOL_INDEX) {
     for (poolIndex = 0; poolIndex < EXPGFX_POOL_COUNT - 1; poolIndex++) {
       if (poolActiveCounts[poolIndex] <= 0) {
+        foundPoolIndex = (s16)poolIndex;
         foundPool = 1;
         poolActiveCounts[poolIndex] = 0;
         break;
       }
     }
   } else if (poolActiveCounts[preferredPoolIndex] < EXPGFX_SLOTS_PER_POOL) {
-    poolIndex = preferredPoolIndex;
+    foundPoolIndex = (s16)preferredPoolIndex;
     foundPool = 1;
   }
 
@@ -494,6 +500,7 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
     return EXPGFX_INVALID_POOL_INDEX;
   }
 
+  poolIndex = (s16)foundPoolIndex;
   poolActiveMasks = (u32 *)(expgfxBase + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
   for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
     activeBit = 1 << slotIndex;
@@ -1457,6 +1464,7 @@ void expgfx_resetAllPools(void)
   u8 *poolFrameFlags;
   u16 *refCount;
   u32 activeBit;
+  u32 inactiveBitMask;
   u32 tableOffset;
   int poolIndex;
   int slotIndex;
@@ -1498,7 +1506,8 @@ void expgfx_resetAllPools(void)
         }
 
         slot->sequenceId = EXPGFX_INVALID_SEQUENCE_ID;
-        *poolActiveMasks &= ~activeBit;
+        inactiveBitMask = ~activeBit;
+        *poolActiveMasks = *poolActiveMasks & inactiveBitMask;
       }
 
       slot = (ExpgfxSlot *)((u8 *)slot + EXPGFX_SLOT_SIZE);
