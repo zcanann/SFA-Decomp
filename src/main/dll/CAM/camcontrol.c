@@ -37,10 +37,10 @@ extern void voxmaps_resetLoadedMaps(void);
 extern void *gCamcontrolHandlers[20];
 extern u8 gCamcontrolStateStorage[];
 extern undefined4* gBaddieControlInterface;
-extern u8 gCamcontrolTargetChanged;
+extern s8 gCamcontrolTargetChanged;
 extern short* gCamcontrolTargetReticle;
 extern u16 lbl_803DD4C8;
-extern u8 gCamcontrolTargetState;
+extern s8 gCamcontrolTargetState;
 extern short* gCamcontrolState;
 extern f32 timeDelta;
 extern f64 lbl_803E1650;
@@ -97,8 +97,9 @@ void camcontrol_updateTargetFeedback(void)
   float fVar4;
   int iVar11;
   short *psVar6;
-  int buttonPressed;
+  u8 buttonPressed;
   byte bVar7;
+  u8 *targetSetup;
   int iVar8;
   uint uVar9;
   uint uVar10;
@@ -133,7 +134,8 @@ void camcontrol_updateTargetFeedback(void)
     *(byte *)(iVar11 + 0xaf) = *(byte *)(iVar11 + 0xaf) | 4;
     uVar9 = getButtonsJustPressed(0);
     uVar10 = 0x100;
-    bVar7 = *(byte *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5 + 4) & 0xf;
+    targetSetup = (u8 *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5);
+    bVar7 = targetSetup[4] & 0xf;
     if ((bVar7 == 4) || (bVar7 == 9)) {
       uVar10 = 0x900;
     }
@@ -156,8 +158,9 @@ void camcontrol_updateTargetFeedback(void)
       }
       else {
         CAMCONTROL_CAMERA->targetReticleFocus = iVar11;
+        targetSetup = (u8 *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5);
         CAMCONTROL_CAMERA->targetKind =
-             *(byte *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5 + 4) & 0xf;
+             targetSetup[4] & 0xf;
         gCamcontrolTargetState = '\x03';
         gCamcontrolTargetChanged = '\x01';
       }
