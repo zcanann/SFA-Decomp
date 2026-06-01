@@ -544,8 +544,8 @@ void expgfx_initSlotQuad(void *slotPtr)
   u32 resource;
   u32 behaviorFlags;
   s16 texS0;
-  s16 texS1;
   s16 texT0;
+  s16 texS1;
   s16 texT1;
   f32 step;
 
