@@ -5292,32 +5292,32 @@ void fn_8006135C(s16 *out, void *obj)
   *(u8 *)((char *)out + 0x18) = 1;
 }
 
-void fn_8006961C(int *out, f32 *p4, f32 *p5, f32 *rad, int n)
+void fn_8006961C(int *boundsOut, f32 *startPoints, f32 *endPoints, f32 *radii, int pointCount)
 {
   int i;
 
-  out[0] = 1000000;
-  out[3] = -1000000;
-  out[1] = 1000000;
-  out[4] = -1000000;
-  out[2] = 1000000;
-  out[5] = -1000000;
-  for (i = 0; i < n; i++) {
-    if (p4[0] - rad[0] < (f32)out[0]) out[0] = (int)(p4[0] - rad[0]);
-    if (p4[0] + rad[0] > (f32)out[3]) out[3] = (int)(p4[0] + rad[0]);
-    if (p4[1] - rad[0] < (f32)out[1]) out[1] = (int)(p4[1] - rad[0]);
-    if (p4[1] + rad[0] > (f32)out[4]) out[4] = (int)(p4[1] + rad[0]);
-    if (p4[2] - rad[0] < (f32)out[2]) out[2] = (int)(p4[2] - rad[0]);
-    if (p4[2] + rad[0] > (f32)out[5]) out[5] = (int)(p4[2] + rad[0]);
-    if (p5[0] - rad[0] < (f32)out[0]) out[0] = (int)(p5[0] - rad[0]);
-    if (p5[0] + rad[0] > (f32)out[3]) out[3] = (int)(p5[0] + rad[0]);
-    if (p5[1] - rad[0] < (f32)out[1]) out[1] = (int)(p5[1] - rad[0]);
-    if (p5[1] + rad[0] > (f32)out[4]) out[4] = (int)(p5[1] + rad[0]);
-    if (p5[2] - rad[0] < (f32)out[2]) out[2] = (int)(p5[2] - rad[0]);
-    if (p5[2] + rad[0] > (f32)out[5]) out[5] = (int)(p5[2] + rad[0]);
-    p4 += 3;
-    p5 += 3;
-    rad += 1;
+  boundsOut[0] = 1000000;
+  boundsOut[3] = -1000000;
+  boundsOut[1] = 1000000;
+  boundsOut[4] = -1000000;
+  boundsOut[2] = 1000000;
+  boundsOut[5] = -1000000;
+  for (i = pointCount; i != 0; i--) {
+    if (startPoints[0] - radii[0] < (f32)boundsOut[0]) boundsOut[0] = (int)(startPoints[0] - radii[0]);
+    if (startPoints[0] + radii[0] > (f32)boundsOut[3]) boundsOut[3] = (int)(startPoints[0] + radii[0]);
+    if (startPoints[1] - radii[0] < (f32)boundsOut[1]) boundsOut[1] = (int)(startPoints[1] - radii[0]);
+    if (startPoints[1] + radii[0] > (f32)boundsOut[4]) boundsOut[4] = (int)(startPoints[1] + radii[0]);
+    if (startPoints[2] - radii[0] < (f32)boundsOut[2]) boundsOut[2] = (int)(startPoints[2] - radii[0]);
+    if (startPoints[2] + radii[0] > (f32)boundsOut[5]) boundsOut[5] = (int)(startPoints[2] + radii[0]);
+    if (endPoints[0] - radii[0] < (f32)boundsOut[0]) boundsOut[0] = (int)(endPoints[0] - radii[0]);
+    if (endPoints[0] + radii[0] > (f32)boundsOut[3]) boundsOut[3] = (int)(endPoints[0] + radii[0]);
+    if (endPoints[1] - radii[0] < (f32)boundsOut[1]) boundsOut[1] = (int)(endPoints[1] - radii[0]);
+    if (endPoints[1] + radii[0] > (f32)boundsOut[4]) boundsOut[4] = (int)(endPoints[1] + radii[0]);
+    if (endPoints[2] - radii[0] < (f32)boundsOut[2]) boundsOut[2] = (int)(endPoints[2] - radii[0]);
+    if (endPoints[2] + radii[0] > (f32)boundsOut[5]) boundsOut[5] = (int)(endPoints[2] + radii[0]);
+    startPoints += 3;
+    endPoints += 3;
+    radii += 1;
   }
 }
 
