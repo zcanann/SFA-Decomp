@@ -78,14 +78,14 @@ void worldplanet_initialise(void) {}
 #pragma scheduling off
 #pragma peephole off
 void worldplanet_init(int obj) {
-    int inner;
+    WorldPlanetState *state;
     int mask;
     int i;
     int flag;
     int layer;
     int j;
 
-    inner = *(int *)(obj + 0xb8);
+    state = *(WorldPlanetState **)(obj + 0xb8);
     lbl_803DDD04 = 0;
     GameBit_Set(0xa63, 1);
     mask = 0;
@@ -102,13 +102,13 @@ void worldplanet_init(int obj) {
             }
         }
     }
-    *(u8 *)(inner + 0x11) = (u8)mask;
+    state->unlockedPlanetMask = (u8)mask;
     if (lbl_803DC1F0 != -1) {
-        *(s8 *)(inner + 0x10) = (s8)lbl_803DC1F0;
+        state->selectedPlanet = (s8)lbl_803DC1F0;
     } else {
         for (j = 0; j < 5; j++) {
             if (GameBit_Get(lbl_8032A1B4[lbl_803DC1C0[j]]) != 0) {
-                *(s8 *)(inner + 0x10) = (s8)lbl_803DC1C0[j];
+                state->selectedPlanet = (s8)lbl_803DC1C0[j];
                 break;
             }
         }
@@ -127,7 +127,7 @@ void worldplanet_init(int obj) {
     (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(0x1e, 1);
     lbl_803DDD0A = 0xa;
     GameBit_Set(lbl_8032A1B4[2], 1);
-    *(s16 *)(inner + 0x6) = 0x78;
+    state->foxSpawnTimer = 0x78;
     envFxActFn_800887f8(0);
 }
 #pragma peephole reset
@@ -136,7 +136,7 @@ void worldplanet_init(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void worldplanet_readMapInput(int obj, u8 *outX, u8 *outY) {
-    char *inner = *(char **)(obj + 0xb8);
+    WorldPlanetState *state = *(WorldPlanetState **)(obj + 0xb8);
     int stickX;
     int stickY;
     int resX;
@@ -147,45 +147,45 @@ void worldplanet_readMapInput(int obj, u8 *outX, u8 *outY) {
     resX = 0;
     resY = 0;
     if (getLoadedFileFlags(0) == 0) {
-        if ((s8)stickX < -0x23 && (s8)inner[0xa] >= -0x23) {
+        if ((s8)stickX < -0x23 && state->prevStickX >= -0x23) {
             resX = -1;
-            inner[0xc] = 0;
+            state->stickXRepeatFrames = 0;
         }
-        if ((s8)stickX > 0x23 && (s8)inner[0xa] <= 0x23) {
+        if ((s8)stickX > 0x23 && state->prevStickX <= 0x23) {
             resX = 1;
-            inner[0xc] = 0;
+            state->stickXRepeatFrames = 0;
         }
-        if ((s8)stickY < -0x23 && (s8)inner[0xb] >= -0x23) {
+        if ((s8)stickY < -0x23 && state->prevStickY >= -0x23) {
             resY = -1;
-            inner[0xd] = 0;
+            state->stickYRepeatFrames = 0;
         }
-        if ((s8)stickY > 0x23 && (s8)inner[0xb] <= 0x23) {
+        if ((s8)stickY > 0x23 && state->prevStickY <= 0x23) {
             resY = 1;
-            inner[0xd] = 0;
+            state->stickYRepeatFrames = 0;
         }
-        inner[0xb] = stickY;
-        if ((s8)inner[0xb] < -0x23) {
-            inner[0xd]++;
-        } else if ((s8)inner[0xb] > 0x23) {
-            inner[0xd]++;
+        state->prevStickY = stickY;
+        if (state->prevStickY < -0x23) {
+            state->stickYRepeatFrames++;
+        } else if (state->prevStickY > 0x23) {
+            state->stickYRepeatFrames++;
         } else {
-            inner[0xd] = 0;
+            state->stickYRepeatFrames = 0;
         }
-        if ((s8)inner[0xd] > 0x32) {
-            inner[0xb] = 0;
-            inner[0xd] = 0;
+        if (state->stickYRepeatFrames > 0x32) {
+            state->prevStickY = 0;
+            state->stickYRepeatFrames = 0;
         }
-        inner[0xa] = stickX;
-        if ((s8)inner[0xa] < -0x23) {
-            inner[0xc]++;
-        } else if ((s8)inner[0xa] > 0x23) {
-            inner[0xc]++;
+        state->prevStickX = stickX;
+        if (state->prevStickX < -0x23) {
+            state->stickXRepeatFrames++;
+        } else if (state->prevStickX > 0x23) {
+            state->stickXRepeatFrames++;
         } else {
-            inner[0xc] = 0;
+            state->stickXRepeatFrames = 0;
         }
-        if ((s8)inner[0xc] > 0x32) {
-            inner[0xa] = 0;
-            inner[0xc] = 0;
+        if (state->stickXRepeatFrames > 0x32) {
+            state->prevStickX = 0;
+            state->stickXRepeatFrames = 0;
         }
         *outX = resX;
         *outY = resY;
