@@ -10014,7 +10014,7 @@ int Lightfoot_UpdateChallengeGateInteraction(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_802AF410(int obj, int state)
+void playerProcessQueuedItemCommand(int obj, int state)
 {
     u8 noMatch;
     s16 cmd;

@@ -1593,7 +1593,7 @@ void fn_802AE83C(int obj, int inner);
 void fn_802AE9C8(int obj, int inner, int state);
 void fn_802AED2C(int obj, int state, int p3);
 void fn_802AEF34(int obj, int state);
-void fn_802AF410(int obj, int state);
+void playerProcessQueuedItemCommand(int obj, int state);
 void fn_802AF7F8(int obj, int state);
 void fn_802B066C(int obj, int state);
 void fn_802B07D8(int obj, int state);
