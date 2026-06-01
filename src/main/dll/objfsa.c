@@ -4660,7 +4660,7 @@ int mathFn_800dbff0(float *point)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int RomCurve_findProjectedCurveFromStart(double x,double y,double z,int curve,float *outPhase)
+int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outPhase)
 {
   bool noOpenLinks;
   int projected;
@@ -4747,11 +4747,11 @@ LAB_800e1c9c:
     while (projected <= linkCount) {
       mid = linkCount + projected >> 1;
       curve = (int)romCurves[mid];
-      if (*(uint *)(curve + 0x14) < linkId) {
+      if (linkId > *(uint *)(curve + 0x14)) {
         projected = mid + 1;
       }
       else {
-        if (*(uint *)(curve + 0x14) <= linkId) goto LAB_800e1c9c;
+        if (linkId >= *(uint *)(curve + 0x14)) goto LAB_800e1c9c;
         linkCount = mid + -1;
       }
     }
