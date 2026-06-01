@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_14D.h"
+#include "main/objanim.h"
 
 
 #pragma peephole off
@@ -10,9 +11,33 @@ extern u32 randomGetRange(int min, int max);
 extern undefined4 ObjGroup_FindNearestObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_800400b0();
+extern void *Obj_GetPlayerObject(void);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void ObjLink_DetachChild(int obj, int childObj);
+extern s16 getAngle(f32 dx, f32 dz);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 
 extern undefined4* DAT_803dd6d4;
 extern f32 lbl_803E44E4;
+extern f32 lbl_803E3858;
+extern f32 lbl_803E385C;
+extern f64 lbl_803E3860;
+extern f32 lbl_803E3870;
+extern f32 lbl_803E3874;
+extern f32 lbl_803E3878;
+extern f32 lbl_803E387C;
+extern f32 lbl_803E3880;
+
+typedef struct MagicPlantBridgeState {
+  int childObj;
+  f32 moveProgress;
+  f32 moveStepScale;
+  s16 timer;
+  u8 pad0E;
+  s8 mode;
+} MagicPlantBridgeState;
 
 /*
  * --INFO--
@@ -131,6 +156,43 @@ void dll_14D_init(int *obj)
     *p = 0;
     *(u32*)(p + 4) = 0;
     *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x4000);
+}
+
+void fn_8017F334(int obj, void *setup, void *stateArg)
+{
+  MagicPlantBridgeState *state;
+  int player;
+  int childObj;
+  f32 launchSpeed;
+  f32 launchAngle;
+  s16 angle;
+
+  state = (MagicPlantBridgeState *)stateArg;
+  player = (int)Obj_GetPlayerObject();
+  Sfx_StopObjectChannel(obj, 0x40);
+
+  childObj = state->childObj;
+  if ((childObj != 0) && (*(int *)(childObj + 0xc4) != 0) &&
+      (*(f32 *)(obj + 0x98) >= lbl_803E3870)) {
+    state->childObj = 0;
+    ObjLink_DetachChild(obj, childObj);
+
+    launchSpeed = (f32)randomGetRange(0x27, 0x2c) / lbl_803E3874;
+    angle = getAngle(*(f32 *)(obj + 0x0c) - *(f32 *)(player + 0x0c),
+                     *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14));
+    randomGetRange(((u16)angle) - 0x1000, ((u16)angle) + 0x1000);
+
+    launchAngle = (lbl_803E3878 * (f32)*(s16 *)obj) / lbl_803E387C;
+    *(f32 *)(childObj + 0x24) = launchSpeed * fn_80293E80(launchAngle);
+    *(f32 *)(childObj + 0x2c) = launchSpeed * sin(launchAngle);
+    Sfx_PlayFromObject(obj, 0x5e);
+  }
+
+  if (*(f32 *)(obj + 0x98) >= lbl_803E3858) {
+    state->mode = 2;
+    state->moveStepScale = lbl_803E3880;
+    ObjAnim_SetCurrentMove(obj, 2, lbl_803E385C, 0);
+  }
 }
 
 /*
