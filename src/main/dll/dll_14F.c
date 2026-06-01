@@ -64,6 +64,9 @@ extern int FUN_800620e8();
 extern int FUN_800632f4();
 extern f32 Vec_xzDistance(f32 *a,f32 *b);
 extern f32 vec3f_distanceSquared(f32 *a,f32 *b);
+extern f32 getXZDistance(f32 *a,f32 *b);
+extern f32 sqrtf(f32 x);
+extern s16 getAngle(f32 dx,f32 dz);
 extern undefined4 FUN_80081120();
 extern void objLightFn_8009a1dc(int obj,f32 scale,void *pos,int count,int param_5);
 extern int FUN_800d9de0();
@@ -76,6 +79,10 @@ extern int cMenuGetSelectedItem(void);
 extern int FUN_8012efc4();
 extern int FUN_801365a0();
 extern int fn_80138F84(int tricky);
+extern int fn_80296448(int obj);
+extern int fn_800DA980(int curveState,int firstNode,int secondNode,int thirdNode);
+extern int curveFn_80010320(int curveState,f32 step);
+extern int curveFn_800da23c(int curveState,int node);
 extern undefined4 FUN_801816f8();
 extern void fn_801816F8(int obj,int param_2,u8 *state);
 extern undefined4 FUN_80286838();
@@ -160,8 +167,23 @@ extern f32 lbl_803E45D0;
 extern f32 lbl_803E38A0;
 extern f32 lbl_803E38A8;
 extern f32 lbl_803E38E0;
+extern u32 lbl_803E38E8;
+extern f32 lbl_803E38EC;
+extern f32 lbl_803E38F0;
+extern f32 lbl_803E38F4;
+extern f32 lbl_803E38F8;
+extern f32 lbl_803E38FC;
+extern f32 lbl_803E3900;
+extern f32 lbl_803E3904;
+extern f32 lbl_803E3908;
+extern f32 lbl_803E390C;
+extern f32 lbl_803E3910;
+extern f32 lbl_803E3914;
+extern f64 lbl_803E3918;
+extern f64 lbl_803E3920;
 extern f32 lbl_803E3934;
 extern f32 lbl_803E3938;
+extern f32 timeDelta;
 extern void *gRomCurveInterface;
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
 
@@ -1931,9 +1953,39 @@ void MagicPlant_init(int obj, u8 *params) {
 #pragma scheduling reset
 extern void trickyguard_update();
 extern void duster_update();
-extern void curvefish_update();
 extern f32 lbl_803E3928;
-extern f64 lbl_803E3918;
+
+typedef struct CurveFishSetup {
+  u8 pad00[8];
+  f32 spawnX;
+  f32 spawnY;
+  f32 spawnZ;
+  u8 pad14[5];
+  u8 speedChange;
+  u8 pad1A[6];
+  u16 waitFrames;
+  u8 targetYOffset;
+  u8 playerRadius;
+} CurveFishSetup;
+
+typedef struct CurveFishState {
+  u8 pad00[0x10];
+  int hasRouteEdge;
+  u8 pad14[0x54];
+  f32 targetX;
+  f32 targetY;
+  f32 targetZ;
+  u8 pad74[0x30];
+  int routeCursor;
+  u8 padA8[0x60];
+  u8 mode;
+  u8 pad109[3];
+  f32 animTimer;
+  f32 maxSpeed;
+  f32 speed;
+  f32 moveStepScale;
+  f32 phaseTimer;
+} CurveFishState;
 
 #pragma scheduling off
 #pragma peephole off
@@ -1954,6 +2006,179 @@ void trickywarp_update(int param_1) {
       ObjGroup_RemoveObject(obj, 0x4b);
     }
   }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void curvefish_update(int obj) {
+  CurveFishState *state;
+  CurveFishSetup *setup;
+  void *player;
+  u32 curveQuery;
+  int firstNode;
+  int secondNode;
+  int thirdNode;
+  f32 maxHitSpeed;
+  f32 speedThreshold;
+  f32 distLimit;
+  f32 distance;
+  int i;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 mag;
+  s16 targetYaw;
+  int yawDelta;
+
+  state = *(CurveFishState **)(obj + 0xb8);
+  setup = *(CurveFishSetup **)(obj + 0x4c);
+  player = Obj_GetPlayerObject();
+  curveQuery = lbl_803E38E8;
+
+  state->phaseTimer += timeDelta;
+
+  if (state->mode == 0) {
+    f32 waitTime = lbl_803E38EC * (f32)(u32)setup->waitFrames;
+    if (state->phaseTimer < waitTime) {
+      return;
+    }
+    state->phaseTimer -= waitTime;
+    state->mode = 1;
+  }
+
+  if (state->mode == 1) {
+    *(f32 *)(obj + 0xc) = setup->spawnX;
+    *(f32 *)(obj + 0x10) = setup->spawnY;
+    *(f32 *)(obj + 0x14) = setup->spawnZ;
+
+    (*(void (**)(void *, int, int, f32, f32, f32))(*(int *)gRomCurveInterface + 0x14))(
+        &curveQuery, 1, -1, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
+    firstNode = (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))();
+    (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(firstNode, 0);
+    secondNode = (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))();
+    (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(secondNode, 0);
+    thirdNode = (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))();
+
+    if (fn_800DA980((int)state, firstNode, secondNode, thirdNode) != 0) {
+      return;
+    }
+    state->mode = 2;
+    state->speed = lbl_803E38F0;
+  }
+
+  if (state->mode == 2) {
+    if (state->phaseTimer <= lbl_803E38EC) {
+      *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E38F4 * (state->phaseTimer / lbl_803E38EC));
+      return;
+    }
+    *(u8 *)(obj + 0x36) = 0xff;
+    state->mode = 3;
+  } else if (state->mode >= 4) {
+    return;
+  }
+
+  if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
+    state->speed = lbl_803E38F8 * state->maxSpeed;
+  } else if (fn_80296448((int)player) != 0 &&
+             getXZDistance((f32 *)((u8 *)player + 0xc), (f32 *)(obj + 0xc)) <
+                 (f32)(u32)setup->playerRadius * (f32)(u32)setup->playerRadius) {
+    state->speed +=
+        ((lbl_803E38F8 * (f32)(u32)setup->speedChange) * timeDelta) / lbl_803E38FC;
+    maxHitSpeed = lbl_803E38F8 * state->maxSpeed;
+    if (state->speed > maxHitSpeed) {
+      state->speed = maxHitSpeed;
+    }
+  } else {
+    state->speed += ((f32)(int)randomGetRange(-(int)setup->speedChange,
+                                              (int)setup->speedChange << 1) *
+                     timeDelta) /
+                    lbl_803E38FC;
+    if (state->speed < lbl_803E38F0) {
+      state->speed = lbl_803E38F0;
+    } else if (state->speed > state->maxSpeed) {
+      state->speed = state->maxSpeed;
+    }
+  }
+
+  speedThreshold = state->maxSpeed * lbl_803E3900;
+  if (state->speed < speedThreshold) {
+    if (*(s16 *)(obj + 0xa0) == 0 && state->animTimer > lbl_803E3904) {
+      ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
+      ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x3c);
+      state->animTimer = lbl_803E38F0;
+    }
+    state->moveStepScale = lbl_803E3908;
+  } else if (state->speed > lbl_803E390C * state->maxSpeed * lbl_803E3900) {
+    if (*(s16 *)(obj + 0xa0) == 0 && state->animTimer > lbl_803E3910) {
+      ObjAnim_SetCurrentMove(obj, 1, lbl_803E38F0, 0);
+      ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x3c);
+      state->animTimer = lbl_803E38F0;
+    }
+    state->moveStepScale = lbl_803E3914;
+  } else {
+    if (*(s16 *)(obj + 0xa0) == 1 && state->animTimer > lbl_803E3910) {
+      ObjAnim_SetCurrentMove(obj, 0, lbl_803E38F0, 0);
+      ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x3c);
+      state->animTimer = lbl_803E38F0;
+    }
+    state->moveStepScale = (lbl_803E3914 * state->speed) / state->maxSpeed;
+  }
+
+  if (state->speed != lbl_803E38F0) {
+    distLimit = state->speed * timeDelta;
+    distLimit *= distLimit;
+    distance = getXZDistance(&state->targetX, (f32 *)(obj + 0xc));
+    i = 0;
+    while (distance < distLimit && i < 5) {
+      curveFn_80010320((int)state, lbl_803E38F8);
+      distance = getXZDistance(&state->targetX, (f32 *)(obj + 0xc));
+      i++;
+    }
+
+    if (state->hasRouteEdge != 0) {
+      (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(state->routeCursor, 0);
+      if (curveFn_800da23c((int)state,
+                           (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))()) != 0) {
+        state->mode = 0;
+        state->phaseTimer = lbl_803E38F0;
+        *(u8 *)(obj + 0x36) = 0;
+        return;
+      }
+    }
+
+    dx = state->targetX - *(f32 *)(obj + 0xc);
+    dy = (state->targetY + (f32)(u32)setup->targetYOffset) - *(f32 *)(obj + 0x10);
+    dz = state->targetZ - *(f32 *)(obj + 0x14);
+    mag = sqrtf(dx * dx + dy * dy + dz * dz);
+    dx /= mag;
+    dy /= mag;
+    dz /= mag;
+
+    *(f32 *)(obj + 0xc) += dx * state->speed;
+    *(f32 *)(obj + 0x10) += dy * state->speed;
+    *(f32 *)(obj + 0x14) += dz * state->speed;
+
+    targetYaw = getAngle(dx, dz);
+    yawDelta = (s16)targetYaw - ((u16)*(s16 *)obj);
+    if (yawDelta > 0x8000) {
+      yawDelta -= 0xffff;
+    }
+    if (yawDelta < -0x8000) {
+      yawDelta += 0xffff;
+    }
+    if (yawDelta > 0x180) {
+      *(s16 *)obj += 0x180;
+    } else if (yawDelta < -0x180) {
+      *(s16 *)obj -= 0x180;
+    } else {
+      *(s16 *)obj = targetYaw;
+    }
+  }
+
+  ObjAnim_AdvanceCurrentMove(state->moveStepScale, timeDelta, obj, NULL);
+  state->animTimer += timeDelta;
 }
 #pragma peephole reset
 #pragma scheduling reset

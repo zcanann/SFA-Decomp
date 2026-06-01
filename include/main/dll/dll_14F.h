@@ -68,7 +68,7 @@ void FUN_80181b50(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11);
 int curvefish_getExtraSize(void);
-void curvefish_update();
+void curvefish_update(int obj);
 void curvefish_init(int obj, u8 *param_2);
 void fn_801814D0(int obj, int param_2, u8 *state);
 
