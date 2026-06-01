@@ -1400,7 +1400,7 @@ extern void staffDoGrowShrinkAnim(void *a, int b, int c, int d);
 /* forward declarations for graduated functions */
 void fn_80295334(int a, int b, f32 *vec, int c, int mode, f32 angle);
 void fn_8029560C(int obj, int *state);
-int fn_80295674(int obj, int inner);
+void playerUpdatePathEffectCountdown(int obj, int inner);
 int fn_802957B4(int obj);
 void fn_80295918(int obj, int sel, f32 fval);
 int fn_80295A04(int obj, int sel);

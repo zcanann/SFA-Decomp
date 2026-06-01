@@ -7686,7 +7686,7 @@ void fn_802AA014(int obj)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-int fn_80295674(int obj, int inner)
+void playerUpdatePathEffectCountdown(int obj, int inner)
 {
     f32 outvec[3];
     struct {
@@ -7742,7 +7742,7 @@ void fn_802AAF80(int obj, int inner, int a, int b, int c)
         fn_802AA8D0(obj);
     }
     if ((*(int (**)(int))((char *)(*gSHthorntailAnimationInterface) + 0x34))(2) != 0) {
-        fn_80295674(obj, inner);
+        playerUpdatePathEffectCountdown(obj, inner);
     }
     v = *(int *)((char *)inner + 0x360);
     if ((v & 0x60000) != 0) {
