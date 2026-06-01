@@ -19,6 +19,7 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
+extern int ObjAnim_SetMoveProgress(f32 progress, void *objAnim);
 extern int Obj_GetPlayerObject(void);
 extern undefined8 ObjGroup_RemoveObject();
 extern void Sfx_PlayAtPositionFromObject(f32 x,f32 y,f32 z,int obj,int sfxId);
@@ -29,6 +30,9 @@ extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitu
 extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_8014d4c8();
 extern undefined4 FUN_80151844();
+extern void fn_8014CF7C(int obj, int state, int moveId, int flags, f32 x, f32 z);
+extern void fn_8014D08C(int obj, int state, int moveId, int flags, f32 speed, int attr);
+extern void fn_801513AC(int obj, int state);
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
@@ -81,8 +85,12 @@ extern f32 lbl_803E2714;
 extern f32 lbl_803E2718;
 extern f32 lbl_803E271C;
 extern f32 lbl_803E2720;
+extern f32 lbl_803E2740;
 extern f32 lbl_803E2744;
 extern f32 lbl_803E2748;
+extern f32 lbl_803E274C;
+extern f32 lbl_803E2750;
+extern f32 lbl_803E2754;
 extern f32 lbl_803E2760;
 extern f32 lbl_803E2764;
 extern f32 timeDelta;
@@ -649,6 +657,115 @@ void fn_8014FF58(int unused, char *p) {
 #pragma scheduling reset
 
 extern char lbl_8031F16C[];
+extern u8 lbl_8031DD30[];
+
+#pragma scheduling off
+#pragma peephole off
+u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent) {
+    u8 eventFlags;
+    f32 blendScale;
+    f32 blendTimer;
+    int eventTableIndex;
+    u32 result;
+    u32 eventIndex;
+    u8 sequenceIndex;
+    u32 stateFlags;
+    u8 *eventRows;
+    u8 *row;
+
+    result = 0;
+    sequenceIndex = *(u8 *)(state + 0x33b);
+    eventRows = *(u8 **)(lbl_8031DD30 + sequenceIndex * 0x28 + 0x1444);
+    stateFlags = *(u32 *)(state + 0x2dc);
+    if ((stateFlags & 0x4000) == 0) {
+        if ((*(f32 *)(state + 0x328) == lbl_803E2740) || (*(u16 *)(state + 0x338) == 0)) {
+            eventFlags = *(u8 *)(state + 0x2f1);
+            eventIndex = eventFlags & 0x1f;
+            if ((eventIndex & 0x10) != 0) {
+                eventIndex = eventFlags & 0x17;
+            }
+            if (eventIndex > 0x18) {
+                eventIndex = 0;
+            }
+            blendScale = lbl_803E2748;
+            if ((eventFlags & 0x20) != 0) {
+                eventIndex = 0;
+                blendScale = lbl_803E2744;
+            }
+            if (((allowNewEvent & 0xff) != 0) &&
+                (((eventFlags != 0 || (*(f32 *)(state + 0x324) != lbl_803E2740)) &&
+                  ((*(u32 *)(state + 0x2dc) & 0x40) == 0)) &&
+                 ((eventFlags & 0x20) == 0))) {
+                if (*(f32 *)(state + 0x324) == lbl_803E2740) {
+                    eventTableIndex = sequenceIndex * 2;
+                    eventIndex = randomGetRange((u8)lbl_8031DD30[eventTableIndex + 0x152c],
+                                                (u8)lbl_8031DD30[eventTableIndex + 0x152d]);
+                    *(f32 *)(state + 0x324) = *(f32 *)(state + 0x334) + (f32)(s32)eventIndex;
+                    *(f32 *)(state + 0x334) = lbl_803E2740;
+                    return result;
+                }
+                *(f32 *)(state + 0x324) = *(f32 *)(state + 0x324) - timeDelta;
+                if (lbl_803E2740 < *(f32 *)(state + 0x324)) {
+                    return result;
+                }
+                *(f32 *)(state + 0x324) = lbl_803E2740;
+            }
+            if (!((((((allowNewEvent & 0xff) == 0) || (*(u8 *)(state + 0x2f1) == 0)) ||
+                   (eventRows[eventIndex * 0xc + 8] == 0)) &&
+                  ((*(u8 *)(state + 0x2f1) & 0x20) == 0)) ||
+                 ((*(u8 *)(state + 0x33c) == eventIndex &&
+                   (lbl_803E2740 != *(f32 *)(state + 0x32c)))))) {
+                if (((*(u32 *)(state + 0x2dc) & 0x800080) == 0) &&
+                    ((*(u8 *)(state + 0x2f1) & 0x20) == 0)) {
+                    if ((*(u32 *)(state + 0x2dc) & 0x40000000) != 0) {
+                        fn_801513AC(obj, state);
+                    }
+                } else {
+                    row = eventRows + eventIndex * 0xc;
+                    blendTimer = lbl_803E274C * blendScale * *(f32 *)row;
+                    *(f32 *)(state + 0x330) = blendTimer;
+                    *(f32 *)(state + 0x32c) = blendTimer;
+                    *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) | 0x40;
+                    *(u8 *)(state + 0x2f2) = *(u8 *)(state + 0x2f2) | 0x80;
+                    *(u8 *)(state + 0x2f3) = 0;
+                    *(u8 *)(state + 0x2f4) = 0;
+                    fn_8014D08C(obj, state, row[8], 0, blendScale * *(f32 *)row,
+                                *(u32 *)(row + 4) & 0xff);
+                    ObjAnim_SetMoveProgress(*(f32 *)(lbl_8031DD30 + row[8] * 4), (void *)obj);
+                    *(u8 *)(state + 0x33c) = (u8)eventIndex;
+                    result = 1;
+                }
+            } else {
+                if (*(f32 *)(state + 0x32c) != lbl_803E2740) {
+                    int pos = *(int *)(state + 0x29c);
+                    fn_8014CF7C(obj, state, 0xf, 0, *(f32 *)(pos + 0xc), *(f32 *)(pos + 0x14));
+                    if (lbl_803E2750 < *(f32 *)(state + 0x308)) {
+                        *(f32 *)(state + 0x308) = *(f32 *)(state + 0x308) - lbl_803E2754;
+                    }
+                    if ((*(u32 *)(state + 0x2dc) & 0x40000000) != 0) {
+                        eventTableIndex = *(u8 *)(state + 0x33c) * 0xc;
+                        row = eventRows + eventTableIndex;
+                        fn_8014D08C(obj, state, row[8], 0, *(f32 *)row, *(u32 *)(row + 4) & 0xff);
+                        ObjAnim_SetMoveProgress(*(f32 *)(lbl_8031DD30 + row[8] * 4), (void *)obj);
+                    }
+                    *(f32 *)(state + 0x32c) = *(f32 *)(state + 0x32c) - timeDelta;
+                    if (lbl_803E2740 < *(f32 *)(state + 0x32c)) {
+                        result = 1;
+                    } else {
+                        *(f32 *)(state + 0x32c) = lbl_803E2740;
+                        *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) & 0xffffffbf;
+                        *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) | 0x40000000;
+                        *(u8 *)(state + 0x2f2) = *(u8 *)(state + 0x2f2) & 0x7f;
+                        *(u8 *)(state + 0x33c) = 0;
+                    }
+                }
+            }
+        }
+    }
+    return result;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
