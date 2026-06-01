@@ -30,6 +30,7 @@ void lightning_init(u8 *obj, u8 *data);
 void WaterFallSpray_free(u8 *obj);
 void WaterFallSpray_init(u8 *obj, u8 *data);
 void WaterFallSpray_render(void);
+void WaterFallSpray_update(int *obj);
 int WaterFallSpray_getExtraSize(void);
 int WaterFallSpray_SeqFn(int *obj);
 void sfxplayerObj_init(u8 *obj, u8 *data);

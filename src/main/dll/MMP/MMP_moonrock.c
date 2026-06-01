@@ -37,11 +37,13 @@ extern f64 DOUBLE_803e4d40;
 extern f64 DOUBLE_803e4d48;
 extern f64 DOUBLE_803e4d58;
 extern f32 lbl_803DC074;
+extern u8 framesThisStep;
 extern f32 timeDelta;
 extern f32 lbl_803E4088;
 extern f32 lbl_803E408C;
 extern f32 lbl_803E4090;
 extern f32 lbl_803E40A0;
+extern f64 lbl_803E40B0;
 extern f32 lbl_803E4D00;
 extern f32 lbl_803E4D04;
 extern f32 lbl_803E4D08;
@@ -54,6 +56,11 @@ extern f32 lbl_803E4D28;
 extern f32 lbl_803E4D38;
 extern f32 lbl_803E4D50;
 extern f32 lbl_803E4D54;
+
+extern int *gPartfxInterface;
+extern u8 *Obj_GetPlayerObject(void);
+extern f32 sqrtf(f32 value);
+extern void Sfx_KeepAliveLoopedObjectSound(u8 *obj, int sfxId);
 
 /*
  * --INFO--
@@ -251,6 +258,89 @@ void WaterFallSpray_free(u8* obj)
 {
     (*(void (***)(u8*))gExpgfxInterface)[6](obj);
 }
+
+typedef struct WaterFallSprayPartfxArgs {
+    u32 pad0;
+    u32 pad1;
+    u32 pad2;
+    f32 xOffset;
+    f32 yOffset;
+    f32 zOffset;
+} WaterFallSprayPartfxArgs;
+
+#define WATERFALLSPRAY_SPAWN_PARTICLE(obj, id, args) \
+    (*(void (**)(u8 *, int, WaterFallSprayPartfxArgs *, int, int, int))(*gPartfxInterface + 8))( \
+        (obj), (id), (args), 4, -1, 0)
+
+#pragma scheduling off
+#pragma peephole off
+void WaterFallSpray_update(int *objParam)
+{
+    u8 *obj;
+    u32 *state;
+    u8 *data;
+    u8 *player;
+    WaterFallSprayPartfxArgs partfxArgs;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distance;
+    int cooldown;
+    s16 i;
+
+    obj = (u8 *)objParam;
+    state = *(u32 **)(obj + 0xb8);
+    data = *(u8 **)(obj + 0x4c);
+    player = Obj_GetPlayerObject();
+    if (player != NULL) {
+        if (*(s16 *)(data + 0x18) != -1) {
+            i = GameBit_Get(*(s16 *)(data + 0x18));
+        }
+        else {
+            i = 1;
+        }
+        if (i != 0) {
+            if ((data[0x23] & 0x10) == 0) {
+                Sfx_KeepAliveLoopedObjectSound(obj, state[0] & 0xffff);
+                Sfx_KeepAliveLoopedObjectSound(obj, state[1] & 0xffff);
+            }
+
+            cooldown = *(int *)(obj + 0xf4);
+            if (cooldown <= 0) {
+                dx = *(f32 *)(obj + 0x18) - *(f32 *)(player + 0x18);
+                dy = *(f32 *)(obj + 0x1c) - *(f32 *)(player + 0x1c);
+                dz = *(f32 *)(obj + 0x20) - *(f32 *)(player + 0x20);
+                distance = sqrtf(dz * dz + (dx * dx + dy * dy));
+                if (((distance <= (f32)(s32)((u32)data[0x20] << 4)) || (data[0x20] == 0)) &&
+                    ((*(u16 *)(obj + 0xb0) & 0x800) != 0)) {
+                    for (i = 0; i < data[0x24]; i++) {
+                        partfxArgs.xOffset = (f32)(s32)randomGetRange(-data[0x1d], data[0x1d]);
+                        partfxArgs.yOffset = (f32)(s32)randomGetRange(-data[0x1f], data[0x1f]);
+                        partfxArgs.zOffset = (f32)(s32)randomGetRange(-data[0x1e], data[0x1e]);
+                        if ((data[0x23] & 1) != 0) {
+                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x320, &partfxArgs);
+                        }
+                        if ((data[0x23] & 2) != 0) {
+                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x321, &partfxArgs);
+                        }
+                        if ((data[0x23] & 4) != 0) {
+                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x322, &partfxArgs);
+                        }
+                        if ((data[0x23] & 8) != 0) {
+                            WATERFALLSPRAY_SPAWN_PARTICLE(obj, 0x351, &partfxArgs);
+                        }
+                    }
+                }
+                *(u32 *)(obj + 0xf4) = -(u32)data[0x24];
+            }
+            else if (cooldown > 0) {
+                *(u32 *)(obj + 0xf4) = cooldown - (u32)framesThisStep;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* WaterFallSpray_init: stash 3 signed-byte<<8 fields at obj+0..+4, clear
  * obj+0xf4, install WaterFallSpray_SeqFn as the think routine at obj+0xbc, then
