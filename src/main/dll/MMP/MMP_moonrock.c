@@ -37,6 +37,7 @@ extern f64 DOUBLE_803e4d40;
 extern f64 DOUBLE_803e4d48;
 extern f64 DOUBLE_803e4d58;
 extern f32 lbl_803DC074;
+extern f32 lbl_803E40A0;
 extern f32 lbl_803E4D00;
 extern f32 lbl_803E4D04;
 extern f32 lbl_803E4D08;
@@ -88,6 +89,58 @@ void lightning_render(u8* obj)
         renderFn_8008f904(handle);
     }
 }
+
+#pragma scheduling off
+#pragma peephole off
+void lightning_init(u8 *obj, u8 *data)
+{
+    u8 *state;
+    u8 flags;
+    f32 defaultScale;
+
+    state = *(u8 **)(obj + 0xb8);
+    ObjGroup_AddObject(obj, MMP_LIGHTNING_OBJGROUP);
+    state[0x24] = (state[0x24] & 0xf0) | (data[0x21] & 0x0f);
+    defaultScale = lbl_803E40A0;
+    *(f32 *)(state + 0x10) = defaultScale;
+    *(f32 *)(state + 0x14) = defaultScale;
+    *(f32 *)(state + 0x08) = (f32)(u32)data[0x1c];
+    *(f32 *)(state + 0x0c) = (f32)(u32)data[0x1d];
+    state[0x1c] = data[0x1e];
+    state[0x1d] = data[0x1f];
+    *(u32 *)(state + 0x20) = *(u32 *)(data + 0x18);
+
+    flags = state[0x25];
+    if ((data[0x20] & 1) != 0) {
+        flags |= 0x80;
+    }
+    else {
+        flags &= 0x7f;
+    }
+    state[0x25] = flags;
+
+    flags = state[0x25];
+    if ((data[0x20] & 2) != 0) {
+        flags |= 0x20;
+    }
+    else {
+        flags &= 0xdf;
+    }
+    state[0x25] = flags;
+
+    flags = state[0x25];
+    if ((data[0x20] & 4) != 0) {
+        flags |= 0x40;
+    }
+    else {
+        flags &= 0xbf;
+    }
+    state[0x25] = flags;
+
+    *(f32 *)(state + 0x18) = (f32)(s32)((u32)data[0x22] * 0x3c);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* WaterFallSpray_free: forward to vtable[6] of *gExpgfxInterface with obj. */
 extern void *gExpgfxInterface;

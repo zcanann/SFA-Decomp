@@ -25,6 +25,7 @@ extern ObjectDescriptor gSfxPlayerObjDescriptor;
 
 void lightning_free(u8 *obj, int p2);
 void lightning_render(u8 *obj);
+void lightning_init(u8 *obj, u8 *data);
 void WaterFallSpray_free(u8 *obj);
 void WaterFallSpray_init(u8 *obj, u8 *data);
 void WaterFallSpray_render(void);
