@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_CF_LASER_H_
 #define MAIN_DLL_CF_LASER_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 #include "main/objanim_update.h"
@@ -50,6 +51,28 @@ typedef struct LaserReleaseInterface {
   u8 pad00[0x48];
   void (*releaseObject)(int parent,undefined4 object,int flags);
 } LaserReleaseInterface;
+
+STATIC_ASSERT(sizeof(LaserState) == 0x06);
+STATIC_ASSERT(offsetof(LaserState, primarySequenceId) == 0x00);
+STATIC_ASSERT(offsetof(LaserState, secondarySequenceId) == 0x02);
+STATIC_ASSERT(offsetof(LaserState, sequenceLatched) == 0x04);
+
+STATIC_ASSERT(offsetof(LaserObjectMapData, modeIndex) == 0x18);
+STATIC_ASSERT(offsetof(LaserObjectMapData, primarySequenceId) == 0x1E);
+STATIC_ASSERT(offsetof(LaserObjectMapData, secondarySequenceId) == 0x20);
+
+STATIC_ASSERT(offsetof(LaserObject, modeWord) == 0x00);
+STATIC_ASSERT(offsetof(LaserObject, modeIndex) == 0xAC);
+STATIC_ASSERT(offsetof(LaserObject, statusFlags) == 0xAF);
+STATIC_ASSERT(offsetof(LaserObject, objectFlags) == 0xB0);
+STATIC_ASSERT(offsetof(LaserObject, state) == 0xB8);
+
+STATIC_ASSERT(offsetof(LaserTriggerInterface, isEventReady) == 0x20);
+STATIC_ASSERT(offsetof(LaserEventInterface, getMode) == 0x40);
+STATIC_ASSERT(offsetof(LaserEventInterface, triggerEvent) == 0x44);
+STATIC_ASSERT(offsetof(LaserEventInterface, getAnimEvent) == 0x4C);
+STATIC_ASSERT(offsetof(LaserEventInterface, setAnimEvent) == 0x50);
+STATIC_ASSERT(offsetof(LaserReleaseInterface, releaseObject) == 0x48);
 
 #define LASER_OBJECT_STATUS_ACTIVE 0x01
 #define LASER_OBJECT_STATUS_DISABLED 0x08
