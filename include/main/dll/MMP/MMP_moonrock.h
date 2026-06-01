@@ -35,6 +35,7 @@ int WaterFallSpray_getExtraSize(void);
 int WaterFallSpray_SeqFn(int *obj);
 void sfxplayerObj_init(u8 *obj, u8 *data);
 void sfxplayerObj_free(u8 *obj);
+void sfxplayerObj_update(u8 *obj);
 int sfxplayerObj_getExtraSize(void);
 
 void FUN_80197960(int param_1);

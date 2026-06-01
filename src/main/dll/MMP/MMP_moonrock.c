@@ -44,6 +44,7 @@ extern f32 lbl_803E408C;
 extern f32 lbl_803E4090;
 extern f32 lbl_803E40A0;
 extern f64 lbl_803E40B0;
+extern f32 lbl_803E40B8;
 extern f32 lbl_803E4D00;
 extern f32 lbl_803E4D04;
 extern f32 lbl_803E4D08;
@@ -58,8 +59,11 @@ extern f32 lbl_803E4D50;
 extern f32 lbl_803E4D54;
 
 extern int *gPartfxInterface;
+extern int *gCameraInterface;
+extern int *gRomCurveInterface;
 extern u8 *Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 value);
+extern int getCurSeqNo(void);
 extern void Sfx_KeepAliveLoopedObjectSound(u8 *obj, int sfxId);
 
 /*
@@ -411,6 +415,9 @@ void sfxplayerObj_init(u8* obj, u8* data) {
  * data->_1d: 1 → Sfx_RemoveLoopedObjectSound, else Sfx_StopFromObject. */
 extern void Sfx_RemoveLoopedObjectSound(u8* obj, u16 sfx);
 extern void Sfx_StopFromObject(u8* obj, u16 sfx);
+extern void Sfx_AddLoopedObjectSound(u8 *obj, u16 sfx);
+extern void Sfx_PlayFromObject(u8 *obj, u16 sfx);
+extern void Sfx_PlayAtPositionFromObject(f32 x, f32 y, f32 z, u8 *obj, u16 sfx);
 #pragma scheduling off
 #pragma peephole off
 void sfxplayerObj_free(u8* obj)
@@ -433,6 +440,137 @@ void sfxplayerObj_free(u8* obj)
         {
             u16 sfx2 = *(u16*)(data + 0x22);
             if (sfx2 != 0) Sfx_StopFromObject(obj, sfx2);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#define SFXPLAYER_START_SOUND(sfxExpr) \
+    do { \
+        soundId = (sfxExpr); \
+        if (soundId != 0) { \
+            state[4] = state[4] | SFXPLAYER_RUNTIME_ACTIVE_FLAG; \
+            soundObj = obj; \
+            if ((data[0x1c] & 0x10) == 0) { \
+                soundObj = NULL; \
+            } \
+            if (soundObj == NULL || (data[0x1c] & 1) != 0) { \
+                if (data[0x1d] == SFXPLAYER_MODE_LOOPED) { \
+                    Sfx_AddLoopedObjectSound(soundObj, soundId); \
+                } \
+                else { \
+                    Sfx_PlayFromObject(soundObj, soundId); \
+                } \
+            } \
+            else { \
+                Sfx_PlayAtPositionFromObject(*(f32 *)(soundObj + 0x0c), \
+                                             *(f32 *)(soundObj + 0x10), \
+                                             *(f32 *)(soundObj + 0x14), soundObj, soundId); \
+            } \
+        } \
+    } while (0)
+
+#define SFXPLAYER_STOP_SOUND(sfxExpr) \
+    do { \
+        soundId = (sfxExpr); \
+        if (soundId != 0) { \
+            if (data[0x1d] == SFXPLAYER_MODE_LOOPED) { \
+                Sfx_RemoveLoopedObjectSound(obj, soundId); \
+            } \
+            else { \
+                Sfx_StopFromObject(obj, soundId); \
+            } \
+        } \
+    } while (0)
+
+#pragma scheduling off
+#pragma peephole off
+void sfxplayerObj_update(u8 *obj)
+{
+    u8 *state;
+    u8 *data;
+    u8 *focusObj;
+    u8 *soundObj;
+    u16 soundId;
+    int bitState;
+    u8 mode;
+    int active;
+    int hasEventId;
+
+    state = *(u8 **)(obj + 0xb8);
+    data = *(u8 **)(obj + 0x4c);
+    if ((data[0x1c] & 8) != 0) {
+        if (getCurSeqNo() != 0) {
+            focusObj = (*(u8 *(**)(void))(*gCameraInterface + 0x0c))();
+        }
+        else {
+            focusObj = Obj_GetPlayerObject();
+        }
+        (*(void (**)(f32, f32, f32, int, int, u8 *, u8 *, u8 *))(*gRomCurveInterface + 0x20))(
+            *(f32 *)(focusObj + 0x18), *(f32 *)(focusObj + 0x1c), *(f32 *)(focusObj + 0x20),
+            7, (s8)data[0x20], obj + 0x0c, obj + 0x10, obj + 0x14);
+    }
+
+    bitState = 0;
+    hasEventId = *(s16 *)(data + 0x18) > 0;
+    if (hasEventId) {
+        bitState = GameBit_Get(*(s16 *)(data + 0x18));
+    }
+
+    mode = data[0x1d];
+    if (mode == SFXPLAYER_MODE_LOOPED) {
+        active = (*(s16 *)(data + 0x18) == -1) ||
+                 (((data[0x1c] & 2) != 0) && (bitState != 0)) ||
+                 (((data[0x1c] & 4) != 0) && (bitState == 0));
+        if (active) {
+            if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0) {
+                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
+                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+            }
+        }
+        else if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0) {
+            state[4] = state[4] & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG;
+            SFXPLAYER_STOP_SOUND(*(u16 *)(data + 0x1a));
+            SFXPLAYER_STOP_SOUND(*(u16 *)(data + 0x22));
+        }
+    }
+    else if (mode == SFXPLAYER_MODE_GAMEBIT) {
+        if (hasEventId) {
+            if (*(f32 *)state == lbl_803E40B8) {
+                if (bitState != 0) {
+                    *(u32 *)state = 1;
+                    if ((data[0x1c] & 2) != 0) {
+                        SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
+                        SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                    }
+                }
+            }
+            else if (bitState == 0) {
+                *(f32 *)state = lbl_803E40B8;
+                if ((data[0x1c] & 4) != 0) {
+                    SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
+                    SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                }
+            }
+        }
+    }
+    else if (mode < 3) {
+        active = (*(s16 *)(data + 0x18) == -1) ||
+                 (((data[0x1c] & 2) != 0) && (bitState != 0)) ||
+                 (((data[0x1c] & 4) != 0) && (bitState == 0));
+        if (active) {
+            *(f32 *)state -= lbl_803DC074;
+            if (*(f32 *)state <= lbl_803E40B8) {
+                *(f32 *)state = lbl_803E40BC * (f32)(s32)randomGetRange(data[0x1e], data[0x1f]);
+                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
+                SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+            }
+        }
+        else if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0) {
+            state[4] = state[4] & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG;
+            SFXPLAYER_STOP_SOUND(*(u16 *)(data + 0x1a));
+            SFXPLAYER_STOP_SOUND(*(u16 *)(data + 0x22));
         }
     }
 }
