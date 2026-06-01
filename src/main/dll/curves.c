@@ -162,13 +162,12 @@ static inline RomCurveDef *RomCurve_FindByIdInline(u32 curveId) {
   while (low <= high) {
     mid = (high + low) >> 1;
     curve = romCurves[mid];
-    if (curveId <= curve->id) {
-      if (curve->id <= curveId) {
-        return curve;
-      }
+    if (curveId > curve->id) {
+      low = mid + 1;
+    } else if (curveId < curve->id) {
       high = mid - 1;
     } else {
-      low = mid + 1;
+      return curve;
     }
   }
 
