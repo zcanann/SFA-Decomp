@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/mapEvent.h"
+#include "main/dll/flybaddie1D7.h"
 #include "main/dll/projball1D8.h"
 
 #define SFXsc_clubhit02 653
@@ -17,7 +18,6 @@ extern uint GameBit_Get();
 extern undefined4 GameBit_Set();
 extern undefined4 FUN_80017a98();
 extern undefined4 FUN_80080f14();
-extern int FUN_801d025c();
 extern undefined4 SCGameBitLatch_Update();
 extern int FUN_80286840();
 extern undefined4 FUN_8028688c();
@@ -127,7 +127,7 @@ void nw_levcontrol_update(int param_1)
       GameBit_Set(0xecd,1);
       break;
     case 2:
-      iVar1 = FUN_801d025c((int)pfVar10);
+      iVar1 = fn_801CFD68((u8 *)pfVar10);
       if (iVar1 != 0) {
         *(undefined *)((int)pfVar10 + 5) = 0x32;
         *((uint*)pfVar10 + 2) = *((uint*)pfVar10 + 2) | 1;
@@ -138,10 +138,10 @@ void nw_levcontrol_update(int param_1)
     case 5:
     case 6:
     case 7:
-      FUN_801d025c((int)pfVar10);
+      fn_801CFD68((u8 *)pfVar10);
       break;
     case 8:
-      iVar1 = FUN_801d025c((int)pfVar10);
+      iVar1 = fn_801CFD68((u8 *)pfVar10);
       if (iVar1 == 1) {
         *((uint*)pfVar10 + 2) = *((uint*)pfVar10 + 2) | 4;
       }
