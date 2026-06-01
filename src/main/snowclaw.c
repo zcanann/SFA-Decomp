@@ -78,7 +78,7 @@ extern int fn_801EC9F4(int obj);
 extern int fn_801EC9BC(int obj);
 extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32 *vec);
 extern u32 lbl_802C2520[8];
-extern s16 lbl_8032A340[];
+extern s32 lbl_8032A340[];
 extern int lbl_803DC220;
 extern f32 lbl_803DC218;
 extern f32 lbl_803DC21C;
@@ -455,10 +455,10 @@ void snowclaw_update(int obj) {
     int turnSign;
     int pulseIndex;
     u32 *pulseTable;
-    SnowClawAnimTbl dropTable;
     u32 pulseTypes[4];
     u32 pulseModes[4];
     f32 pulseVec[3];
+    SnowClawAnimTbl dropTable;
 
     pulseTable = lbl_802C2520;
     inner = *(char **)(obj + 0xb8);
@@ -475,7 +475,7 @@ void snowclaw_update(int obj) {
             ObjHits_DisableObject(obj);
             ObjHits_DisableObject(*(int *)inner);
         } else {
-            *(u8 *)(inner + 0xa4) = *(u8 *)(inner + 0xa4) - 1;
+            *(s8 *)(inner + 0xa4) = *(s8 *)(inner + 0xa4) - 1;
         }
         return;
     }
@@ -531,7 +531,7 @@ void snowclaw_update(int obj) {
             ObjAnim_SetCurrentMove(obj, *(u16 *)(inner + 0xa8) + 5, lbl_803E66F0, 0);
             snowclaw_spawnDropBomb(*(int *)inner, obj, (u8)choice, 0);
         }
-        s16toFloat(inner + 0x98, lbl_8032A340[fn_801EC9BC(*(int *)inner) - 1]);
+        s16toFloat(inner + 0x98, (s16)lbl_8032A340[fn_801EC9BC(*(int *)inner) - 1]);
     }
 
     sub = *(int *)inner;
