@@ -450,10 +450,13 @@ void snowclaw_update(int obj) {
     int choice;
     int turnSign;
     int pulseIndex;
+    u32 *pulseTable;
+    SnowClawAnimTbl dropTable;
     u32 pulseTypes[4];
     u32 pulseModes[4];
     f32 pulseVec[3];
 
+    pulseTable = lbl_802C2520;
     inner = *(char **)(obj + 0xb8);
     if (*(u8 *)(inner + 0xa1) != 0 && ((*(u8 *)(inner + 0xaa) >> 6) & 1) != 0) {
         *(f32 *)(inner + 0xac) = lbl_803E66F0;
@@ -479,6 +482,7 @@ void snowclaw_update(int obj) {
         ObjHits_EnableObject(sub);
     }
 
+    dropTable = *(SnowClawAnimTbl *)(pulseTable + 8);
     if (*(s8 *)(inner + 0xa2) != *(s8 *)(inner + 0xa3)) {
         if (*(int *)(obj + 0xc8) != 0) {
             Obj_FreeObject(*(int *)(obj + 0xc8));
@@ -487,7 +491,7 @@ void snowclaw_update(int obj) {
         }
         if (*(s8 *)(inner + 0xa2) > 0 && Obj_IsLoadingLocked() != 0) {
             *(int *)(obj + 0xc8) =
-                Obj_SetupObject(Obj_AllocObjectSetup(0x18, lbl_802C2540.v[*(s8 *)(inner + 0xa2)]),
+                Obj_SetupObject(Obj_AllocObjectSetup(0x18, dropTable.v[*(s8 *)(inner + 0xa2)]),
                                 4, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
             *(u8 *)(obj + 0xeb) = 1;
         }
@@ -536,14 +540,14 @@ void snowclaw_update(int obj) {
     }
 
     if (*(s8 *)(inner + 0xa4) < 4) {
-        pulseTypes[0] = lbl_802C2520[0];
-        pulseTypes[1] = lbl_802C2520[1];
-        pulseTypes[2] = lbl_802C2520[2];
-        pulseTypes[3] = lbl_802C2520[3];
-        pulseModes[0] = lbl_802C2520[4];
-        pulseModes[1] = lbl_802C2520[5];
-        pulseModes[2] = lbl_802C2520[6];
-        pulseModes[3] = lbl_802C2520[7];
+        pulseTypes[0] = pulseTable[0];
+        pulseTypes[1] = pulseTable[1];
+        pulseTypes[2] = pulseTable[2];
+        pulseTypes[3] = pulseTable[3];
+        pulseModes[0] = pulseTable[4];
+        pulseModes[1] = pulseTable[5];
+        pulseModes[2] = pulseTable[6];
+        pulseModes[3] = pulseTable[7];
         pulseIndex = 3 - *(s8 *)(inner + 0xa4);
         i = *(u8 *)(inner + 0xa6);
         *(u8 *)(inner + 0xa6) = i + 1;
