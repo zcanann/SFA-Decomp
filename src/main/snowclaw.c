@@ -212,16 +212,18 @@ void snowclaw_spawnDropBomb(int obj, int a, int b, int c) {
 #pragma peephole off
 void snowclaw_updateMountAttack(int obj, int mount) {
     char *inner;
-    f32 moveStep;
     f32 mountPhase;
+    f32 moveStep;
+    f32 movePhase;
     int mountFlag;
     int magnitude;
     int turnSign;
+    int moveId;
     int delay;
 
     inner = *(char **)(obj + 0xb8);
-    mountPhase = (*(f32 (*)(int, f32 *))(*(int *)(*(int *)(*(int *)(mount + 0x68)) + 0x44)))(mount, &moveStep);
-    moveStep = lbl_803DC224 + lbl_803E66E4 * (mountPhase * lbl_803DC224);
+    movePhase = (*(f32 (*)(int, f32 *))(*(int *)(*(int *)(*(int *)(mount + 0x68)) + 0x44)))(mount, &moveStep);
+    moveStep = lbl_803DC224 + lbl_803E66E4 * (movePhase * lbl_803DC224);
     (*(void (*)(int, f32 *, int *))(*(int *)(*(int *)(*(int *)(mount + 0x68)) + 0x40)))(mount, &mountPhase, &mountFlag);
     magnitude = (int)(lbl_803E66E8 * mountPhase);
     if (magnitude < 0) {
@@ -256,8 +258,12 @@ void snowclaw_updateMountAttack(int obj, int mount) {
                 *(f32 *)(inner + 0x30) = lbl_803E66F8;
                 Sfx_PlayFromObject(obj, 0x2e2);
             }
-            ObjAnim_SetCurrentMove(obj, *(u16 *)(inner + 0xa8) + (turnSign != 0 ? 4 : 8),
-                                   lbl_803E66F0, 0);
+            if (turnSign != 0) {
+                moveId = *(u16 *)(inner + 0xa8) + 4;
+            } else {
+                moveId = *(u16 *)(inner + 0xa8) + 8;
+            }
+            ObjAnim_SetCurrentMove(obj, moveId, lbl_803E66F0, 0);
             *(int *)(inner + 0x9c) += 0x64;
         }
     }
