@@ -1011,6 +1011,11 @@ extern int lbl_803DD48C;
 #define SAVE_SCORE_FILE_STRIDE 0x28
 #define SAVE_SCORE_TABLE_OFFSET 0x1c
 #define SAVE_SCORE_ENTRY_COUNT 5
+#define SAVEGAME_CHARACTER_POSITION(save)                                                     \
+    ((SaveGameCharacterPosition *)((save) +                                                     \
+                                  (save)[SAVEGAME_CURRENT_CHARACTER_OFFSET] *                  \
+                                      sizeof(SaveGameCharacterPosition) +                       \
+                                  SAVEGAME_CHARACTER_POSITION_OFFSET))
 
 typedef struct SaveGameObjectPosition {
     u32 objectId;
@@ -1038,6 +1043,15 @@ typedef struct SaveGameDefaultPosition {
     f32 y;
     f32 z;
 } SaveGameDefaultPosition;
+
+typedef struct SaveGameCharacterPosition {
+    f32 x;
+    f32 y;
+    f32 z;
+    s8 angle;
+    s8 map;
+    u8 padE[2];
+} SaveGameCharacterPosition;
 
 typedef struct SaveSelectInfo {
     u8 name[4];
@@ -13646,11 +13660,11 @@ void SaveGame_gplaySavePoint(f32 *pos, s16 angle, int flags, int mapByte) {
                 memcpy((void *)pRestartPoint, lbl_803A32A8, 0x5d8);
             }
         } else {
-            *(f32 *)(base + base[0x20] * 16 + 0x684) = pos[0];
-            *(f32 *)(base + base[0x20] * 16 + 0x688) = pos[1];
-            *(f32 *)(base + base[0x20] * 16 + 0x68c) = pos[2];
-            *(s8 *)(base + base[0x20] * 16 + 0x690) = (s8)(angle >> 8);
-            *(s8 *)(base + base[0x20] * 16 + 0x691) = (s8)mapByte;
+            SAVEGAME_CHARACTER_POSITION(base)->x = pos[0];
+            SAVEGAME_CHARACTER_POSITION(base)->y = pos[1];
+            SAVEGAME_CHARACTER_POSITION(base)->z = pos[2];
+            SAVEGAME_CHARACTER_POSITION(base)->angle = (s8)(angle >> 8);
+            SAVEGAME_CHARACTER_POSITION(base)->map = (s8)mapByte;
             memcpy(lbl_803DD498, base, 0x6ec);
             if (pRestartPoint != 0) {
                 mm_free(pRestartPoint);
@@ -13679,11 +13693,11 @@ void SaveGame_gplayRestartPoint(f32 *pos, s16 angle, int b691, int flag) {
         }
     }
     memcpy((void *)pRestartPoint, lbl_803A32A8, 0x6ec);
-    *(f32 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x684) = pos[0];
-    *(f32 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x688) = pos[1];
-    *(f32 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x68c) = pos[2];
-    *(s8 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x690) = (s8)(angle >> 8);
-    *(s8 *)((char *)pRestartPoint + ((u8 *)pRestartPoint)[0x20] * 16 + 0x691) = (s8)b691;
+    SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->x = pos[0];
+    SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->y = pos[1];
+    SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->z = pos[2];
+    SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->angle = (s8)(angle >> 8);
+    SAVEGAME_CHARACTER_POSITION((u8 *)pRestartPoint)->map = (s8)b691;
     GameBit_Set(0x970, 0);
     if (flag != 0 && healed != 0) {
         playerAddHealth((u8 *)Obj_GetPlayerObject(), 1);
