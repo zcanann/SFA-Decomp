@@ -875,75 +875,6 @@ LAB_80185bfc:
 /*
  * --INFO--
  *
- * Function: FUN_801858a8
- * EN v1.0 Address: 0x801858A8
- * EN v1.0 Size: 416b
- * EN v1.1 Address: 0x80185C1C
- * EN v1.1 Size: 420b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801858a8(int param_1,int param_2)
-{
-  short sVar1;
-  uint uVar2;
-  int iVar3;
-  int iVar4;
-  
-  iVar4 = *(int *)(param_1 + 0xb8);
-  *(undefined *)(iVar4 + 0x24) = 0;
-  *(undefined2 *)(iVar4 + 0x14) = *(undefined2 *)(param_2 + 0x1a);
-  uVar2 = randomGetRange(1000,4000);
-  *(short *)(iVar4 + 0x16) = (short)uVar2;
-  uVar2 = randomGetRange(0x32,100);
-  *(short *)(iVar4 + 0x1c) = (short)uVar2;
-  *(undefined4 *)(iVar4 + 0xc) = *(undefined4 *)(param_2 + 0xc);
-  iVar3 = FUN_80017a54(param_1);
-  sVar1 = *(short *)(param_1 + 0x46);
-  if (sVar1 == 0x3d5) {
-    uVar2 = randomGetRange(0,3);
-    *(undefined *)(*(int *)(iVar3 + 0x34) + 8) = (&DAT_803dca20)[uVar2];
-    *(undefined2 *)(iVar4 + 0x1e) = 0x43;
-    *(undefined2 *)(iVar4 + 0x20) = 2;
-    *(undefined2 *)(iVar4 + 0x22) = 4;
-    *(undefined *)(iVar4 + 0x27) = 2;
-    goto LAB_80185d98;
-  }
-  if (sVar1 < 0x3d5) {
-    if (sVar1 == 0x3d3) {
-      uVar2 = randomGetRange(0,2);
-      *(undefined *)(*(int *)(iVar3 + 0x34) + 8) = (&DAT_803dca18)[uVar2];
-      *(undefined2 *)(iVar4 + 0x1e) = 0x41;
-      *(undefined2 *)(iVar4 + 0x20) = 4;
-      *(undefined2 *)(iVar4 + 0x22) = 2;
-      *(undefined *)(iVar4 + 0x27) = 0;
-      goto LAB_80185d98;
-    }
-    if (0x3d2 < sVar1) {
-      uVar2 = randomGetRange(0,1);
-      *(undefined *)(*(int *)(iVar3 + 0x34) + 8) = (&DAT_803dca1c)[uVar2];
-      *(undefined2 *)(iVar4 + 0x1e) = 0x42;
-      *(undefined2 *)(iVar4 + 0x20) = 1;
-      *(undefined2 *)(iVar4 + 0x22) = 5;
-      *(undefined *)(iVar4 + 0x27) = 1;
-      goto LAB_80185d98;
-    }
-  }
-  *(undefined *)(*(int *)(iVar3 + 0x34) + 8) = 5;
-  *(undefined2 *)(iVar4 + 0x1e) = 0x44;
-  *(undefined2 *)(iVar4 + 0x20) = 6;
-  *(undefined2 *)(iVar4 + 0x22) = 1;
-  *(undefined *)(iVar4 + 0x27) = 3;
-LAB_80185d98:
-  ObjMsg_AllocQueue(param_1,2);
-  return;
-}
-
-/*
- * --INFO--
- *
  * Function: fn_80185868
  * EN v1.0 Address: 0x80185A48
  * EN v1.0 Size: 512b
@@ -999,29 +930,6 @@ void fn_80185868(double param_1,undefined8 param_2,undefined8 param_3,undefined8
   ObjHitbox_SetCapsuleBounds(param_9,(short)(int)*(float *)(iVar6 + 8),-5,10);
   ObjHits_SetHitVolumeSlot(param_9,0xe,1,0);
   ObjHits_EnableObject(param_9);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_80185c48
- * EN v1.0 Address: 0x80185C48
- * EN v1.0 Size: 84b
- * EN v1.1 Address: 0x80185F2C
- * EN v1.1 Size: 80b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_80185c48(void)
-{
-  (**(code **)(*DAT_803dd6fc + 0x18))();
-  FUN_80006b0c(DAT_803de750);
-  DAT_803de750 = (undefined4*)0x0;
-  FUN_80006b0c(DAT_803de754);
-  DAT_803de754 = (undefined4*)0x0;
   return;
 }
 
