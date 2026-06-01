@@ -12,6 +12,7 @@ extern undefined4 FUN_800068f8();
 extern uint GameBit_Get(int eventId);
 extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
 extern double FUN_80017714();
+extern f32 vec3f_distanceSquared(f32 *posA,f32 *posB);
 extern int FUN_80017730();
 extern s16 getAngle(f32 deltaX,f32 deltaZ);
 extern void mtxRotateByVec3s(float *outMtx, short *angles);
@@ -86,6 +87,7 @@ extern f32 lbl_803E12B4;
 extern f32 lbl_803E12B8;
 extern f32 lbl_803E065C;
 extern f32 lbl_803E0660;
+extern f32 lbl_803E0664;
 extern f32 lbl_803E0678;
 extern f32 lbl_803E067C;
 extern f32 lbl_803E0680;
@@ -2402,64 +2404,51 @@ RomCurveDef *RomCurve_getById(uint curveId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void RomCurve_find(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                 undefined4 param_5,int param_6)
+int RomCurve_find(int *types,int typeCount,f32 x,f32 y,f32 z,int action)
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  int *piVar5;
-  double extraout_f1;
-  double dVar6;
-  double in_f30;
-  double in_f31;
-  double dVar7;
-  double dVar8;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar9;
-  float local_58;
-  float local_54;
-  float local_50;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  uVar9 = FUN_80286834();
-  iVar1 = (int)uVar9;
-  dVar7 = (double)lbl_803E12E4;
-  local_58 = (float)extraout_f1;
-  local_54 = (float)param_2;
-  local_50 = (float)param_3;
-  piVar5 = (int *)romCurves;
-  dVar8 = dVar7;
-  for (iVar4 = 0; iVar4 < nRomCurves; iVar4 = iVar4 + 1) {
-    iVar3 = *piVar5;
-    iVar2 = 0;
+  RomCurveDef *curve;
+  RomCurveDef *bestCurve;
+  RomCurveDef *bestActionCurve;
+  f32 bestDistance;
+  f32 bestActionDistance;
+  f32 distance;
+  f32 point[3];
+  int curveIndex;
+  int typeIndex;
+
+  bestDistance = lbl_803E0664;
+  bestCurve = NULL;
+  bestActionDistance = bestDistance;
+  bestActionCurve = NULL;
+  point[0] = x;
+  point[1] = y;
+  point[2] = z;
+  for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++) {
+    curve = romCurves[curveIndex];
+    typeIndex = 0;
     do {
-      if ((iVar1 < 1) ||
-         ((int)*(char *)(iVar3 + 0x19) == *(int *)((int)((ulonglong)uVar9 >> 0x20) + iVar2 * 4))) {
-        dVar6 = FUN_80017714(&local_58,(float *)(iVar3 + 8));
-        if (dVar6 < dVar8) {
-          dVar8 = dVar6;
+      if ((typeCount <= 0) || (curve->type == types[typeIndex])) {
+        distance = vec3f_distanceSquared(point,&curve->x);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          bestCurve = curve;
         }
-        iVar2 = iVar1;
-        if ((*(char *)(iVar3 + 0x18) == param_6) && (dVar6 < dVar7)) {
-          dVar7 = dVar6;
+        if ((curve->action == action) && (distance < bestActionDistance)) {
+          bestActionDistance = distance;
+          bestActionCurve = curve;
         }
+        typeIndex = typeCount;
       }
-      iVar2 = iVar2 + 1;
-    } while (iVar2 < iVar1);
-    piVar5 = piVar5 + 1;
+      typeIndex++;
+    } while (typeIndex < typeCount);
   }
-  FUN_80286880();
-  return;
+  if (bestActionCurve != NULL) {
+    bestCurve = bestActionCurve;
+  }
+  if (bestCurve != NULL) {
+    return bestCurve->id;
+  }
+  return -1;
 }
 
 /*
