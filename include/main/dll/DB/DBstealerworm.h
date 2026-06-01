@@ -27,14 +27,6 @@ void FUN_801e2180(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 undefined4 FUN_801e2184(void);
 void FUN_801e218c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-void FUN_801e2708(int param_1,int param_2);
-void FUN_801e27a0(int param_1);
-void FUN_801e27c4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
-
 int SB_Galleon_func0E(int *obj);
 u8 SB_Galleon_render2(int *obj);
 int SB_Galleon_modelMtxFn(int *obj);
@@ -53,14 +45,16 @@ void SB_Galleon_initialise(void);
 int SB_Propeller_getExtraSize(void);
 void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void SB_Propeller_hitDetect(int obj);
-void SB_Propeller_update(void);
-void SB_Propeller_init(void);
+void SB_Propeller_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void SB_Propeller_init(int param_1,int param_2);
 
 int SB_ShipHead_getExtraSize(void);
 int SB_ShipHead_func08(void);
 void SB_ShipHead_free(int obj);
-void SB_ShipHead_render(void);
-void SB_ShipHead_update(void);
+void SB_ShipHead_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
+void SB_ShipHead_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void SB_ShipHead_init(int obj);
 
 int SB_ShipMast_getExtraSize(void);

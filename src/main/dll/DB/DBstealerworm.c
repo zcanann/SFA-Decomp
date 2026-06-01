@@ -491,7 +491,7 @@ void FUN_801e218c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 /*
  * --INFO--
  *
- * Function: FUN_801e21b4
+ * Function: SB_Propeller_update
  * EN v1.0 Address: 0x801E21B4
  * EN v1.0 Size: 1364b
  * EN v1.1 Address: 0x801E2BBC
@@ -501,7 +501,7 @@ void FUN_801e218c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void SB_Propeller_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   uint uVar1;
@@ -631,7 +631,7 @@ void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
 /*
  * --INFO--
  *
- * Function: FUN_801e2708
+ * Function: SB_Propeller_init
  * EN v1.0 Address: 0x801E2708
  * EN v1.0 Size: 152b
  * EN v1.1 Address: 0x801E3078
@@ -641,7 +641,7 @@ void FUN_801e21b4(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e2708(int param_1,int param_2)
+void SB_Propeller_init(int param_1,int param_2)
 {
   uint uVar1;
   float *pfVar2;
@@ -662,26 +662,7 @@ void FUN_801e2708(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: FUN_801e27a0
- * EN v1.0 Address: 0x801E27A0
- * EN v1.0 Size: 36b
- * EN v1.1 Address: 0x801E3128
- * EN v1.1 Size: 36b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801e27a0(int param_1)
-{
-  ObjGroup_RemoveObject(param_1,3);
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801e27c4
+ * Function: SB_ShipHead_render
  * EN v1.0 Address: 0x801E27C4
  * EN v1.0 Size: 380b
  * EN v1.1 Address: 0x801E314C
@@ -691,7 +672,7 @@ void FUN_801e27a0(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e27c4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
+void SB_ShipHead_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
 {
   int iVar1;
   int iVar2;
@@ -734,7 +715,7 @@ void FUN_801e27c4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 /*
  * --INFO--
  *
- * Function: FUN_801e2940
+ * Function: SB_ShipHead_update
  * EN v1.0 Address: 0x801E2940
  * EN v1.0 Size: 1892b
  * EN v1.1 Address: 0x801E32D4
@@ -744,7 +725,7 @@ void FUN_801e27c4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801e2940(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void SB_ShipHead_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   uint uVar1;
