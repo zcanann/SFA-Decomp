@@ -944,7 +944,7 @@ LAB_80185d98:
 /*
  * --INFO--
  *
- * Function: FUN_80185a48
+ * Function: fn_80185868
  * EN v1.0 Address: 0x80185A48
  * EN v1.0 Size: 512b
  * EN v1.1 Address: 0x80185DC0
@@ -954,7 +954,7 @@ LAB_80185d98:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80185a48(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void fn_80185868(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9)
 {
@@ -1028,7 +1028,7 @@ void FUN_80185c48(void)
 /*
  * --INFO--
  *
- * Function: FUN_80185c9c
+ * Function: fn_80185A24
  * EN v1.0 Address: 0x80185C9C
  * EN v1.0 Size: 296b
  * EN v1.1 Address: 0x80185F7C
@@ -1038,7 +1038,7 @@ void FUN_80185c48(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80185c9c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState)
+void fn_80185A24(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState)
 {
   short sVar1;
   int iVar2;
@@ -1078,7 +1078,7 @@ LAB_801860b0:
 /*
  * --INFO--
  *
- * Function: FUN_80185dc4
+ * Function: fn_80185B74
  * EN v1.0 Address: 0x80185DC4
  * EN v1.0 Size: 2392b
  * EN v1.1 Address: 0x801860CC
@@ -1088,7 +1088,7 @@ LAB_801860b0:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void fn_80185B74(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   float fVar1;
@@ -1154,7 +1154,7 @@ void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
       (**(code **)(in_r9 + 8))(puVar2,0x51c,0,1);
     }
     if (*(short *)((int)piVar8 + 0x1e) < 1) {
-      FUN_80185a48(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)puVar2);
+      fn_80185868(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)puVar2);
       goto LAB_80186804;
     }
   }

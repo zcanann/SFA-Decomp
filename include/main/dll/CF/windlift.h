@@ -8,12 +8,12 @@ void scarab_update(int param_1);
 void FUN_80184a54(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_801858a8(int param_1,int param_2);
-void FUN_80185a48(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void fn_80185868(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
 void FUN_80185c48(void);
-void FUN_80185c9c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState);
-void FUN_80185dc4(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
+void fn_80185A24(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState);
+void fn_80185B74(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 
 extern ObjectDescriptor gDummy108ObjDescriptor;
