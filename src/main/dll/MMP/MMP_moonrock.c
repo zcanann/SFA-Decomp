@@ -45,6 +45,9 @@ extern f32 lbl_803E4090;
 extern f32 lbl_803E40A0;
 extern f64 lbl_803E40B0;
 extern f32 lbl_803E40B8;
+extern f32 lbl_803E40C8;
+extern f32 lbl_803E40CC;
+extern f64 lbl_803E40D0;
 extern f32 lbl_803E40D8;
 extern f32 lbl_803E4D00;
 extern f32 lbl_803E4D04;
@@ -64,11 +67,15 @@ extern int *gCameraInterface;
 extern int *gRomCurveInterface;
 extern u8 *Obj_GetPlayerObject(void);
 extern f32 sqrtf(f32 value);
+extern f32 fn_80293E80(f32 angle);
+extern f32 sin(f32 angle);
 extern int getCurSeqNo(void);
 extern void Sfx_KeepAliveLoopedObjectSound(u8 *obj, int sfxId);
 extern void PSMTXMultVec(f32 *mtx, f32 *in, f32 *out);
 extern void OSReport(const char *fmt, ...);
 extern const char sMoonrockTriggerIdentFormat[];
+
+#define MOONROCK_ANGLE_TO_RADIANS(angle) ((lbl_803E40C8 * (f32)(s32)(-(angle))) / lbl_803E40CC)
 
 /*
  * --INFO--
@@ -618,6 +625,64 @@ void fn_80198A00(u8 *obj, int seqArg)
     else {
         objInterpretSeq(obj, seqArg, -2, (int)hitDistance);
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80198B68(u8 *obj, f32 *point)
+{
+    u8 *data;
+    f32 pointX;
+    f32 pointY;
+    f32 pointZ;
+    f32 yawCos;
+    f32 yawSin;
+    f32 pitchCos;
+    f32 pitchSin;
+    f32 relX;
+    f32 relY;
+    f32 relZ;
+    f32 localX;
+    f32 localY;
+    f32 localZ;
+    f32 forward;
+
+    data = *(u8 **)(obj + 0x4c);
+    pointX = point[0];
+    pointY = point[1];
+    pointZ = point[2];
+
+    yawCos = fn_80293E80(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
+    yawSin = sin(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)obj));
+    pitchCos = fn_80293E80(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)(obj + 2)));
+    pitchSin = sin(MOONROCK_ANGLE_TO_RADIANS(*(s16 *)(obj + 2)));
+
+    relX = pointX - *(f32 *)(obj + 0x18);
+    relY = pointY - *(f32 *)(obj + 0x1c);
+    relZ = pointZ - *(f32 *)(obj + 0x20);
+    localX = relX * yawSin - relZ * yawCos;
+    forward = relX * yawCos + relZ * yawSin;
+    localY = relY * pitchSin - forward * pitchCos;
+    localZ = relY * pitchCos + forward * pitchSin;
+
+    if (localX < lbl_803E40D8) {
+        localX = -localX;
+    }
+    if (localY < lbl_803E40D8) {
+        localY = -localY;
+    }
+    if (localZ < lbl_803E40D8) {
+        localZ = -localZ;
+    }
+
+    if ((localX <= (f32)(s32)(data[0x3a] << 1)) &&
+        (localY <= (f32)(s32)(data[0x3b] << 1)) &&
+        (localZ <= (f32)(s32)(data[0x3c] << 1))) {
+        return 1;
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
