@@ -1,6 +1,7 @@
 #ifndef MAIN_OBJANIM_INTERNAL_H_
 #define MAIN_OBJANIM_INTERNAL_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 
 typedef struct ObjHitReactState ObjHitReactState;
@@ -203,6 +204,92 @@ typedef struct ObjAnimEventList {
   s8 triggeredIds[OBJANIM_EVENT_TRIGGER_CAPACITY];
   s8 triggerCount;
 } ObjAnimEventList;
+
+STATIC_ASSERT(sizeof(ObjAnimHitReactRow) == 0x18);
+STATIC_ASSERT(offsetof(ObjAnimHitReactRow, entryIndex) == 0x16);
+
+STATIC_ASSERT(sizeof(ObjAnimDef) == 0xF0);
+STATIC_ASSERT(offsetof(ObjAnimDef, flags) == 0x02);
+STATIC_ASSERT(offsetof(ObjAnimDef, modNo) == 0x04);
+STATIC_ASSERT(offsetof(ObjAnimDef, eventMoveTable) == 0x20);
+STATIC_ASSERT(offsetof(ObjAnimDef, hitReactMoveTable) == 0x24);
+STATIC_ASSERT(offsetof(ObjAnimDef, hitReactTable) == 0x58);
+STATIC_ASSERT(offsetof(ObjAnimDef, moveData) == 0x64);
+STATIC_ASSERT(offsetof(ObjAnimDef, cachedAnimIds) == 0x6C);
+STATIC_ASSERT(offsetof(ObjAnimDef, moveGroupBaseIndices) == 0x70);
+STATIC_ASSERT(offsetof(ObjAnimDef, moveCount) == 0xEC);
+
+STATIC_ASSERT(sizeof(ObjAnimState) == 0x68);
+STATIC_ASSERT(offsetof(ObjAnimState, speed) == 0x04);
+STATIC_ASSERT(offsetof(ObjAnimState, progress) == 0x08);
+STATIC_ASSERT(offsetof(ObjAnimState, step) == 0x0C);
+STATIC_ASSERT(offsetof(ObjAnimState, savedStep) == 0x10);
+STATIC_ASSERT(offsetof(ObjAnimState, segmentLength) == 0x14);
+STATIC_ASSERT(offsetof(ObjAnimState, prevSegmentLength) == 0x18);
+STATIC_ASSERT(offsetof(ObjAnimState, moveCache) == 0x1C);
+STATIC_ASSERT(offsetof(ObjAnimState, blendMoveCache) == 0x24);
+STATIC_ASSERT(offsetof(ObjAnimState, frameData) == 0x34);
+STATIC_ASSERT(offsetof(ObjAnimState, prevFrameData) == 0x38);
+STATIC_ASSERT(offsetof(ObjAnimState, frameCmd) == 0x3C);
+STATIC_ASSERT(offsetof(ObjAnimState, prevFrameCmd) == 0x40);
+STATIC_ASSERT(offsetof(ObjAnimState, moveCacheSlot) == 0x44);
+STATIC_ASSERT(offsetof(ObjAnimState, prevMoveCacheSlot) == 0x46);
+STATIC_ASSERT(offsetof(ObjAnimState, blendCacheSlot) == 0x48);
+STATIC_ASSERT(offsetof(ObjAnimState, prevBlendCacheSlot) == 0x4A);
+STATIC_ASSERT(offsetof(ObjAnimState, eventCountdown) == 0x58);
+STATIC_ASSERT(offsetof(ObjAnimState, eventState) == 0x5A);
+STATIC_ASSERT(offsetof(ObjAnimState, prevEventState) == 0x5C);
+STATIC_ASSERT(offsetof(ObjAnimState, eventStep) == 0x5E);
+STATIC_ASSERT(offsetof(ObjAnimState, frameType) == 0x60);
+STATIC_ASSERT(offsetof(ObjAnimState, prevFrameType) == 0x61);
+STATIC_ASSERT(offsetof(ObjAnimState, blendToggle) == 0x62);
+STATIC_ASSERT(offsetof(ObjAnimState, flags) == 0x63);
+STATIC_ASSERT(offsetof(ObjAnimState, lastBlendMoveIndex) == 0x64);
+
+STATIC_ASSERT(sizeof(ObjModelInstance) == 0x5C);
+STATIC_ASSERT(offsetof(ObjModelInstance, rootMotionScaleBase) == 0x04);
+STATIC_ASSERT(offsetof(ObjModelInstance, jointData) == 0x10);
+STATIC_ASSERT(offsetof(ObjModelInstance, hitReactMoveTable) == 0x24);
+STATIC_ASSERT(offsetof(ObjModelInstance, flags) == 0x44);
+STATIC_ASSERT(offsetof(ObjModelInstance, modelCount) == 0x55);
+STATIC_ASSERT(offsetof(ObjModelInstance, jointCount) == 0x5A);
+
+STATIC_ASSERT(sizeof(ObjAnimMoveData) == 0x08);
+STATIC_ASSERT(offsetof(ObjAnimMoveData, frameInfo) == 0x01);
+STATIC_ASSERT(offsetof(ObjAnimMoveData, rootCurveOffset) == 0x04);
+STATIC_ASSERT(offsetof(ObjAnimMoveData, frameCmd) == OBJANIM_FRAME_CMD_OFFSET);
+
+STATIC_ASSERT(sizeof(ObjAnimBank) == 0x34);
+STATIC_ASSERT(offsetof(ObjAnimBank, animDef) == 0x00);
+STATIC_ASSERT(offsetof(ObjAnimBank, currentState) == 0x2C);
+STATIC_ASSERT(offsetof(ObjAnimBank, activeState) == 0x30);
+
+STATIC_ASSERT(sizeof(ObjAnimComponent) == 0xB0);
+STATIC_ASSERT(offsetof(ObjAnimComponent, rootMotionScale) == 0x08);
+STATIC_ASSERT(offsetof(ObjAnimComponent, objType) == 0x46);
+STATIC_ASSERT(offsetof(ObjAnimComponent, modelInstance) == 0x50);
+STATIC_ASSERT(offsetof(ObjAnimComponent, hitReactState) == 0x54);
+STATIC_ASSERT(offsetof(ObjAnimComponent, eventTable) == 0x60);
+STATIC_ASSERT(offsetof(ObjAnimComponent, jointPoseData) == 0x6C);
+STATIC_ASSERT(offsetof(ObjAnimComponent, banks) == 0x7C);
+STATIC_ASSERT(offsetof(ObjAnimComponent, currentMoveProgress) == 0x98);
+STATIC_ASSERT(offsetof(ObjAnimComponent, activeMoveProgress) == 0x9C);
+STATIC_ASSERT(offsetof(ObjAnimComponent, currentMove) == 0xA0);
+STATIC_ASSERT(offsetof(ObjAnimComponent, activeMove) == 0xA2);
+STATIC_ASSERT(offsetof(ObjAnimComponent, bankIndex) == 0xAD);
+STATIC_ASSERT(offsetof(ObjAnimComponent, activeHitboxMode) == 0xAE);
+STATIC_ASSERT(offsetof(ObjAnimComponent, resetHitboxMode) == 0xAF);
+
+STATIC_ASSERT(sizeof(ObjAnimEventTable) == 0x08);
+STATIC_ASSERT(offsetof(ObjAnimEventTable, byteCount) == 0x00);
+STATIC_ASSERT(offsetof(ObjAnimEventTable, entries) == 0x04);
+
+STATIC_ASSERT(sizeof(ObjAnimEventList) == 0x1C);
+STATIC_ASSERT(offsetof(ObjAnimEventList, rootDeltaX) == 0x00);
+STATIC_ASSERT(offsetof(ObjAnimEventList, rootYaw) == 0x0C);
+STATIC_ASSERT(offsetof(ObjAnimEventList, rootCurveValid) == 0x12);
+STATIC_ASSERT(offsetof(ObjAnimEventList, triggeredIds) == 0x13);
+STATIC_ASSERT(offsetof(ObjAnimEventList, triggerCount) == 0x1B);
 
 static inline ObjAnimBank *ObjAnim_GetActiveBank(ObjAnimComponent *objAnim) {
   return objAnim->banks[objAnim->bankIndex];
