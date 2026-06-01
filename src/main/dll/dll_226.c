@@ -70,21 +70,19 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
   if (gDIMbosstonsilLight != NULL) {
     fn_8001D9F4(gDIMbosstonsilLight,&red,&green,&blue,&alpha);
     fn_8001D71C(gDIMbosstonsilLight,red,green,blue,0xc0);
-    if ((*(u8 *)((u8 *)gDIMbosstonsilLight + 0x2f8) != 0) &&
-        (*(u8 *)((u8 *)gDIMbosstonsilLight + 0x4c) != 0)) {
-      lightValue = (u8)*(u8 *)((u8 *)gDIMbosstonsilLight + 0x2f9) +
-                   (s8)*(u8 *)((u8 *)gDIMbosstonsilLight + 0x2fa);
+    if (gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0) {
+      lightValue = gDIMbosstonsilLight->glowIntensity + gDIMbosstonsilLight->glowIntensityStep;
       if (lightValue < 0) {
         lightValue = 0;
-        *(u8 *)((u8 *)gDIMbosstonsilLight + 0x2fa) = 0;
+        gDIMbosstonsilLight->glowIntensityStep = 0;
       } else if (lightValue > 0xc) {
         lightValue = lightValue + randomGetRange(-0xc,0xc);
         if (lightValue > 0xff) {
           lightValue = 0xff;
-          *(u8 *)((u8 *)gDIMbosstonsilLight + 0x2fa) = 0;
+          gDIMbosstonsilLight->glowIntensityStep = 0;
         }
       }
-      *(u8 *)((u8 *)gDIMbosstonsilLight + 0x2f9) = (u8)lightValue;
+      gDIMbosstonsilLight->glowIntensity = (u8)lightValue;
     }
   }
 
@@ -142,8 +140,23 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
     }
 
     hitReactMode = *(u8 *)(state + DIMBOSSTONSIL_HIT_REACT_MODE_OFFSET);
-    switch (hitReactMode) {
-    case 1:
+    if (hitReactMode == 1) {
+      goto updateHitReaction;
+    }
+    if (hitReactMode < 1 || hitReactMode >= 3) {
+      goto clearHitVolumePair;
+    }
+    animUpdate->hitVolumePair = 0;
+    dimBossTonsil_newState_hitFightMain(obj,animUpdate,state,state);
+    if (*(u8 *)(state + DIMBOSSTONSIL_HIT_REACT_MODE_OFFSET) == 1) {
+      *(s16 *)(state + DIMBOSSTONSIL_FIELD270_OFFSET) = 0;
+      (*(void (**)(void *,u8 *,f32,f32,u8 *,u8 *))(*(int *)gPlayerInterface + 0x8))
+          (obj,state,lbl_803E4CB8,lbl_803E4CB8,&lbl_803DDBB0,&lbl_803DDBA8);
+      animUpdate->sequenceEventActive = 0;
+    }
+    goto updateDone;
+
+updateHitReaction:
       animOk = (*(int (**)(void *,ObjAnimUpdateState *,u8 *,u8 *,u8 *,int))
                 (*(int *)gBaddieControlInterface + 0x34))
           (obj,animUpdate,state,&lbl_803DDBB0,&lbl_803DDBA8,0);
@@ -151,22 +164,13 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
         (*(void (**)(void *,u8 *,f32,int))(*(int *)gBaddieControlInterface + 0x2c))
             (obj,state,lbl_803E4C90,1);
       }
-      break;
-    case 2:
-      animUpdate->hitVolumePair = 0;
-      dimBossTonsil_newState_hitFightMain(obj,animUpdate,state,state);
-      if (*(u8 *)(state + DIMBOSSTONSIL_HIT_REACT_MODE_OFFSET) == 1) {
-        *(s16 *)(state + DIMBOSSTONSIL_FIELD270_OFFSET) = 0;
-        (*(void (**)(void *,u8 *,f32,f32,u8 *,u8 *))(*(int *)gPlayerInterface + 0x8))
-            (obj,state,lbl_803E4CB8,lbl_803E4CB8,&lbl_803DDBB0,&lbl_803DDBA8);
-        animUpdate->sequenceEventActive = 0;
-      }
-      break;
-    default:
+    goto updateDone;
+
+clearHitVolumePair:
       animUpdate->hitVolumePair = -1;
       animUpdate->hitVolumePair &= ~0x40;
-      break;
-    }
+
+updateDone:;
   }
 
   if (*(s16 *)((u8 *)obj + 0xb4) == -1) {

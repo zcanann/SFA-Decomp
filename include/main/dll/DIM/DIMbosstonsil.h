@@ -1,6 +1,7 @@
 #ifndef MAIN_DLL_DIM_DIMBOSSTONSIL_H_
 #define MAIN_DLL_DIM_DIMBOSSTONSIL_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 #include "main/objanim_update.h"
 
@@ -26,7 +27,21 @@
 #define DIMBOSSTONSIL_RUMBLE_SFX 0x189
 #define DIMBOSSTONSIL_STATE_FLAG_START_MOVE 2
 
-extern void *gDIMbosstonsilLight;
+typedef struct DIMbosstonsilLight {
+  u8 pad00[0x4C];
+  u8 visible;
+  u8 pad4D[0x2F8 - 0x4D];
+  u8 active;
+  u8 glowIntensity;
+  s8 glowIntensityStep;
+} DIMbosstonsilLight;
+
+STATIC_ASSERT(offsetof(DIMbosstonsilLight, visible) == 0x4C);
+STATIC_ASSERT(offsetof(DIMbosstonsilLight, active) == 0x2F8);
+STATIC_ASSERT(offsetof(DIMbosstonsilLight, glowIntensity) == 0x2F9);
+STATIC_ASSERT(offsetof(DIMbosstonsilLight, glowIntensityStep) == 0x2FA);
+
+extern DIMbosstonsilLight *gDIMbosstonsilLight;
 extern s8 gDIMbosstonsilRoutePhase;
 
 int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate);
