@@ -4882,7 +4882,7 @@ extern void *gPathControlInterface;
 extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimArg, void *events);
 extern void fn_800D915C(int pos, int *obj, void *fnTable, f32 fval);
 extern void fn_800D8414(char *pos, char *state);
-extern void fn_800D82A8(char *pos, char *state, f32 dt);
+extern void player_applyVelocityStep(char *pos, char *state, f32 dt);
 extern void setMatrixFromObjectPos(f32 *matrix, void *objpos);
 extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
@@ -5078,7 +5078,7 @@ void player_update(char *pos, char *state, float dt, float pathDt, int stateFns,
     }
 
     if ((*(u32 *)state & 0x1000000) == 0) {
-        fn_800D82A8(pos, state, dt);
+        player_applyVelocityStep(pos, state, dt);
     }
 
     overrideObj = lbl_803DD430;

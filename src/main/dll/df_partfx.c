@@ -1991,7 +1991,7 @@ struct PartDesc {
 };
 #pragma scheduling off
 #pragma peephole off
-void fn_800D82A8(int *p, int *ctx, f32 t) {
+void player_applyVelocityStep(int *p, int *ctx, f32 t) {
     int flags;
     int b;
     struct PartDesc desc;
