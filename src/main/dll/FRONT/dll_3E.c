@@ -32,6 +32,9 @@ extern void InitAllMessageQueue(void);
 extern void VideoDecodeThreadStart(void);
 extern void AudioDecodeThreadStart(void);
 extern void ReadThreadStart(void);
+extern void VideoDecodeThreadCancel(void);
+extern void AudioDecodeThreadCancel(void);
+extern void ReadThreadCancel(void);
 
 extern OSMessageQueue lbl_803A5CCC;
 extern char lbl_803A57C0[];
@@ -301,6 +304,37 @@ bool FUN_80118574(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 }
 
 #pragma scheduling off
+void THPPlayerStop(void) {
+    OSMessage msg;
+
+    if ((lbl_803A5D60.isOpen != 0) && (lbl_803A5D60.state != 0)) {
+        lbl_803A5D60.internalState = 0;
+        lbl_803A5D60.state = 0;
+        VISetPostRetraceCallback((void (*)(u32))lbl_803DD664);
+
+        if (lbl_803A5D60.isOnMemory == 0) {
+            DVDCancel((DVDCommandBlock *)&lbl_803A5D60.fileInfo);
+            ReadThreadCancel();
+        }
+
+        VideoDecodeThreadCancel();
+        if (lbl_803A5D60.audioExists != 0) {
+            AudioDecodeThreadCancel();
+        }
+
+        do {
+            if (OSReceiveMessage(&lbl_803A5CCC, &msg, OS_MESSAGE_NOBLOCK) != TRUE) {
+                msg = NULL;
+            }
+        } while (msg != NULL);
+
+        lbl_803A5D60.curVolume = lbl_803A5D60.targetVolume;
+        lbl_803A5D60.rampCount = 0;
+        lbl_803A5D60.dvdError = 0;
+        lbl_803A5D60.videoError = 0;
+    }
+}
+
 BOOL THPPlayerPlay(void) {
     if ((lbl_803A5D60.isOpen != 0) &&
         ((lbl_803A5D60.state == 1) || (lbl_803A5D60.state == 4))) {
