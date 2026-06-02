@@ -193,7 +193,7 @@ void waterfx_func08(s16 p1, f32 a, f32 b, f32 c, f32 d) {
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void waterfx_func06(void *obj, f32 a, f32 b, f32 c, f32 d) {
+void waterfx_spawnSplashBurst(void *obj, f32 a, f32 b, f32 c, f32 d) {
     WaterParticle *p;
     int i;
     WaterParticle *base;
@@ -219,7 +219,7 @@ void waterfx_func06(void *obj, f32 a, f32 b, f32 c, f32 d) {
     lbl_803DD234 = (void *)((int)lbl_803DD234 + 1);
     slot->f0c = d;
     rnd = randomGetRange((int)slot->f0c, (int)(lbl_803DF2FC * slot->f0c));
-    slot->active = (u8)fn_80095B18(&((WaterParticle *)lbl_803DD230)[i], i, rnd, slot->f0c);
+    slot->active = (u8)waterfx_spawnSplashDrops(&((WaterParticle *)lbl_803DD230)[i], i, rnd, slot->f0c);
     slot->f10 = lbl_803DF300;
     slot->f14 = lbl_803DF2EC / (lbl_803DF320 * sqrtf(slot->f0c));
 }
@@ -229,7 +229,7 @@ void waterfx_func06(void *obj, f32 a, f32 b, f32 c, f32 d) {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80095B18(WaterParticle *src, int idx, int count, f32 v) {
+int waterfx_spawnSplashDrops(WaterParticle *src, int idx, int count, f32 v) {
     int cur;
     f32 scale;
     ExpParticle *p;
@@ -426,7 +426,7 @@ void waterfx_func04(u8 *p3, u16 mask, f32 *vecs, u8 *p6, f32 fval) {
             f32 vz = v[2];
             if (*(f32 *)(q + 0x1b4) < lbl_803DF338) {
                 if (fval > lbl_803DF33C) {
-                    waterfx_func06(p3, vx, *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4), vz, lbl_803DF300);
+                    waterfx_spawnSplashBurst(p3, vx, *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4), vz, lbl_803DF300);
                 }
             }
             lbl_803DD20C = lbl_803DF318;
