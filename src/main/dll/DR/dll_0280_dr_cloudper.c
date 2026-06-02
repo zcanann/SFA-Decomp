@@ -32,6 +32,12 @@ typedef struct DrCloudPerSetup {
     s16 gameBit;
 } DrCloudPerSetup;
 
+#define DRCLOUDPER_GROUP_TRIGGER 0x13
+#define DRCLOUDPER_GROUP_SURFACE 0x39
+#define DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT 0x7a9
+#define DRCLOUDPER_MAP_ANIM_EVENT 0x0c
+#define DRCLOUDPER_OBJECT_FLAGS 0xe000
+
 #pragma peephole on
 #pragma scheduling on
 int drcloudper_getExtraSize(void) { return 0x10; }
@@ -48,8 +54,8 @@ int drcloudper_getObjectTypeId(void) { return 0; }
 #pragma scheduling off
 void drcloudper_free(int obj)
 {
-    ObjGroup_RemoveObject(obj, 0x13);
-    ObjGroup_RemoveObject(obj, 0x39);
+    ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_TRIGGER);
+    ObjGroup_RemoveObject(obj, DRCLOUDPER_GROUP_SURFACE);
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -93,8 +99,8 @@ int drcloudper_setScale(int obj)
     if ((u32)GameBit_Get(setup->gameBit) == 0) {
         return 0;
     }
-    GameBit_Set(0x7a9, setup->cloudIndex);
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(cloud->mapDir, 0xc, 1);
+    GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(2, obj, -1);
     return 1;
 }
@@ -108,7 +114,7 @@ int drcloudper_selectActiveCloud(int obj)
     DrCloudPerObject *cloud = (DrCloudPerObject *)obj;
     DrCloudPerSetup *setup = (DrCloudPerSetup *)cloud->setup;
 
-    GameBit_Set(0x7a9, setup->cloudIndex);
+    GameBit_Set(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT, setup->cloudIndex);
     (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
     return 0;
 }
@@ -123,8 +129,8 @@ void drcloudper_init(int obj, int setup)
     DrCloudPerSetup *setupData;
     DrCloudPerState *state;
 
-    ObjGroup_AddObject(obj, 0x13);
-    ObjGroup_AddObject(obj, 0x39);
+    ObjGroup_AddObject(obj, DRCLOUDPER_GROUP_TRIGGER);
+    ObjGroup_AddObject(obj, DRCLOUDPER_GROUP_SURFACE);
     cloud = (DrCloudPerObject *)obj;
     setupData = (DrCloudPerSetup *)setup;
     cloud->yaw = (s16)(setupData->yawByte << 8);
@@ -135,9 +141,9 @@ void drcloudper_init(int obj, int setup)
     state->planeDistance =
         -(state->normalZ * cloud->posZ) +
         (state->normalX * cloud->posX + state->normalY * cloud->posY);
-    cloud->flagsB0 |= 0xe000;
-    if (setupData->cloudIndex == GameBit_Get(0x7a9)) {
-        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(cloud->mapDir, 0xc, 1);
+    cloud->flagsB0 |= DRCLOUDPER_OBJECT_FLAGS;
+    if (setupData->cloudIndex == GameBit_Get(DRCLOUDPER_ACTIVE_CLOUD_GAMEBIT)) {
+        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(cloud->mapDir, DRCLOUDPER_MAP_ANIM_EVENT, 1);
     }
 }
 #pragma scheduling reset
