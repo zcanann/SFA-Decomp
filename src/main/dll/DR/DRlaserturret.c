@@ -74,7 +74,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject *obj, DRLaserTurretAnimState *a
         ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
     }
     ObjHits_EnableObject(obj);
-    obj->hitFlags &= ~0x08;
+    obj->hitFlags &= ~DR_LASERTURRET_HITFLAG_CLEAR_PROMPT;
     if (GameBit_Get(DR_LASERTURRET_GAMEBIT_SHOP_OPEN) == 0) {
         v = DR_LASERTURRET_STATE_PUSH_IDLE;
         psStack = state->stateStack;
@@ -97,7 +97,7 @@ int DRlaserturret_updateIdle(DRLaserTurretObject *obj, DRLaserTurretAnimState *a
         state->bobAmplitude = (float)rng * lbl_803E59F0;
     }
     state->bobPhase = (u16)sum;
-    if ((obj->hitFlags & 1) != 0) {
+    if ((obj->hitFlags & DR_LASERTURRET_HITFLAG_CAN_PROMPT) != 0) {
         if (playerGetMoney(playerObj) >= 1) {
             GameBit_Set(DR_LASERTURRET_GAMEBIT_HAS_MONEY, 1);
             buttonDisable(0, DR_LASERTURRET_BUTTON_ACCEPT);
