@@ -903,16 +903,16 @@ main/dll/CF/CFchuckobj.c:
 main/dll/CF/CFwalltorch.c:
 	.text       start:0x80190BD4 end:0x801916A0
 
-main/dll/dll_17F.c:
+main/dll/moonseedbush.c:
 	.text       start:0x801916A0 end:0x801916A0
 
-main/dll/dll_180.c:
+main/dll/mmp_asteroid_re.c:
 	.text       start:0x801916A0 end:0x80191F2C
 
 main/dll/holoPoint.c:
 	.text       start:0x80191F2C end:0x80191F2C
 
-main/dll/dll_182.c:
+main/dll/mmp_moonrock.c:
 	.text       start:0x80191F2C end:0x801923C4
 
 main/dll/MMP/mmp_barrel.c:
@@ -1029,7 +1029,7 @@ main/dll/dll_227.c:
 main/dll/riverFlowRelated018D.c:
 	.text       start:0x801BEC70 end:0x801BEEA0
 
-main/dll/dll_18E.c:
+main/dll/mmsh_waterspike.c:
 	.text       start:0x801BEEA0 end:0x801BF048
 
 main/dll/DF/rope.c:
@@ -1098,7 +1098,7 @@ main/dll/mmshrine/shrine1C2.c:
 main/dll/creator1C4.c:
 	.text       start:0x801C7724 end:0x801C83D0
 
-main/dll/dll_1C5.c:
+main/dll/dimbarrier.c:
 	.text       start:0x801C83D0 end:0x801C8EBC
 
 main/dll/creator1C6.c:
@@ -1116,13 +1116,13 @@ main/dll/colrise.c:
 main/dll/cup1C3.c:
 	.text       start:0x801C9660 end:0x801CA5B4
 
-main/dll/dll_1CA.c:
+main/dll/explosion.c:
 	.text       start:0x801CA5B4 end:0x801CAD80
 
 main/dll/symbol.c:
 	.text       start:0x801CAD80 end:0x801CAD80
 
-main/dll/dll_1CC.c:
+main/dll/dimmagicbridge.c:
 	.text       start:0x801CAD80 end:0x801CBA98
 
 main/dll/torch1CD.c:
@@ -1134,22 +1134,22 @@ main/dll/shrine1CE.c:
 main/dll/creator1CF.c:
 	.text       start:0x801CCFB4 end:0x801CD258
 
-main/dll/dll_1D0.c:
+main/dll/dim_tricky.c:
 	.text       start:0x801CD258 end:0x801CD7DC
 
-main/dll/dll_1D1.c:
+main/dll/dimtruthhornice.c:
 	.text       start:0x801CD7DC end:0x801CDBEC
 
 main/dll/ped.c:
 	.text       start:0x801CDBEC end:0x801CE078
 
-main/dll/dll_1D3.c:
+main/dll/worldobj.c:
 	.text       start:0x801CE078 end:0x801CEFBC
 
 main/dll/creator1D4.c:
 	.text       start:0x801CEFBC end:0x801CF0AC
 
-main/dll/dll_1D5.c:
+main/dll/dim2conveyor.c:
 	.text       start:0x801CF0AC end:0x801CF7E8
 
 main/dll/creator1D6.c:

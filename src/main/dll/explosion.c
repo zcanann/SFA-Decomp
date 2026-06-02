@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_1CA.h"
+#include "main/dll/explosion.h"
 
 #define SFXmn_eggylaugh216 114
 #define SFXmn_sml_trex_snap1 128

@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_1CC.h"
+#include "main/dll/dimmagicbridge.h"
 
 
 #pragma peephole off

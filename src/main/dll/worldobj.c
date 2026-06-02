@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_1D3.h"
+#include "main/dll/worldobj.h"
 
 #define SFXwp_gcfir1_c 331
 #define SFXwp_hitpos_6 332

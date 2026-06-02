@@ -5,7 +5,7 @@
  *
  * Corridor evidence:
  * - exact debug-side neighborhood in the camcontrol -> DIMBoss interval:
- *   holoPoint.c -> dll_182.c -> dll_1A0.c -> dll_1A1.c
+ *   holoPoint.c -> mmp_moonrock.c -> dll_1A0.c -> dll_1A1.c
  * - debug-side path: dll/dll_1A1.c
  *
  * Why this stub exists:

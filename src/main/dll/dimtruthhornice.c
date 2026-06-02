@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_1D1.h"
+#include "main/dll/dimtruthhornice.h"
 
 extern undefined4 *gPartfxInterface;
 extern undefined4 *gObjectTriggerInterface;

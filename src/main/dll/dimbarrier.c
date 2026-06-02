@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_1C5.h"
+#include "main/dll/dimbarrier.h"
 #include "main/objanim.h"
 
 extern undefined4 FUN_800067e8();
