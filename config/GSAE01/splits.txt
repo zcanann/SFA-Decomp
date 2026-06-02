@@ -1682,7 +1682,7 @@ main/dll/barrelgener.c:
 main/dll/DR/dll_0283_dr_barrelgr.c:
 	.text       start:0x802227EC end:0x80223004
 
-main/dll/dll_028A_earthwalker.c:
+main/dll/earthwalker.c:
 	.text       start:0x80223004 end:0x80223D18
 
 main/dll/dll_028B.c:

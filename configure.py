@@ -1334,7 +1334,7 @@ config.libs = [
             Object(NonMatching, "main/dll/DR/dll_0281_dr_earthcal.c"),
             Object(NonMatching, "main/dll/barrelgener.c"),
             Object(NonMatching, "main/dll/DR/dll_0283_dr_barrelgr.c"),
-            Object(NonMatching, "main/dll/dll_028A_earthwalker.c"),
+            Object(NonMatching, "main/dll/earthwalker.c"),
             Object(NonMatching, "main/dll/dll_028B.c"),
             Object(NonMatching, "main/dll/WC/dll_028C_wcbouncycra.c"),
             Object(NonMatching, "main/dll/WC/dll_0290_wcpushblock.c"),
