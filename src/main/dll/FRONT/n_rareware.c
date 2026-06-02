@@ -111,7 +111,7 @@ void runLoadingScreens(void)
       colorBuf.bytes[1] = 0;
       colorBuf.bytes[2] = 0;
     }
-    colorBuf.bytes[3] = alpha;
+    *(char *)&colorBuf.bytes[3] = alpha;
     color = colorBuf.word;
     hudDrawColored(textureSlot,0x85,0xaa,&color,0x100,0);
   } else if (lbl_803DD5EC < 0x1e0) {
