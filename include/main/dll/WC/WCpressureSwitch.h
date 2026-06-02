@@ -6,5 +6,6 @@
 void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                           undefined8 param_5,undefined8 param_6,undefined8 param_7,
                           undefined8 param_8);
+void WM_Galleon_free(int *obj, int leavingMap);
 
 #endif /* MAIN_DLL_WC_WCPRESSURESWITCH_H_ */

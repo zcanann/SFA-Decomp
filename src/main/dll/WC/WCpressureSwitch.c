@@ -11,12 +11,14 @@ extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern void* ObjGroup_GetObjects();
+extern void Resource_Release(void *resource);
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd708;
 extern undefined4 DAT_803de8e8;
+extern void *lbl_803DDC74;
 extern f64 DOUBLE_803e6978;
 extern f32 lbl_803E6960;
 extern f32 lbl_803E6964;
@@ -380,6 +382,20 @@ void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undef
 void WM_ObjCreator_release(void) {}
 void WM_ObjCreator_initialise(void) {}
 void WM_Galleon_hitDetect(void) {}
+
+void WM_Galleon_free(int *obj, int leavingMap)
+{
+    if (*(s16 *)((char *)obj + 0x46) != 0x188) {
+        u8 *state = *(u8 **)((char *)obj + 0xb8);
+        if (state[0xc] != 0 && leavingMap == 0) {
+            state[0xc] = 0;
+        }
+        if (lbl_803DDC74 != NULL) {
+            Resource_Release(lbl_803DDC74);
+            lbl_803DDC74 = NULL;
+        }
+    }
+}
 
 /* 8b "li r3, N; blr" returners. */
 int WM_Galleon_getExtraSize(void) { return 0x10; }
