@@ -839,6 +839,7 @@ extern void* Obj_GetActiveModel(int* obj);
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern f32 lbl_803E3CC0;
 extern void fuelcell_modelMtxFn(void);
+extern void mm_free_(void *ptr);
 
 #pragma scheduling off
 #pragma peephole off
@@ -870,6 +871,23 @@ int fuelcell_func0B(int* obj)
     state[0x5c] |= 0x20;
     state[0x5c] |= 0x10;
     return 0;
+}
+
+void fuelcell_free(int *obj)
+{
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 i;
+
+    for (i = 0; i < 10; i++) {
+        void *slot = *(void **)(state + 8 + i * 4);
+        if (slot != NULL) {
+            mm_free_(slot);
+        }
+    }
+
+    if (((u32)state[0x5c] >> 7) & 1) {
+        ObjGroup_RemoveObject(obj, 0x4f);
+    }
 }
 
 void fuelcell_init(int* obj)
