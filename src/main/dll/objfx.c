@@ -179,7 +179,7 @@ void hitDetectFn_80097070(void *obj, u8 a, u8 b, u8 count, void *p7, f32 fval) {
 
 #pragma scheduling off
 #pragma peephole off
-void fn_800971A0(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fval) {
+void objfx_spawnMaskedHitEffect(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fval) {
     PartfxParams params;
     Tbl11 table1 = *(Tbl11 *)lbl_802C20EC;
     Tbl7 table2 = *(Tbl7 *)lbl_802C2104;

@@ -64,7 +64,7 @@ void dustmotesou_update(int obj)
         if (*(u8 *)(setup + 0x1c) == 0) {
             return;
         }
-        fn_800971A0(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), *(f32 *)(setup + 0x20),
+        objfx_spawnMaskedHitEffect(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), *(f32 *)(setup + 0x20),
                     *(u8 *)(setup + 0x1d), 0);
         return;
     }

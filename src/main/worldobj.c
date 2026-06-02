@@ -60,7 +60,7 @@ extern f32 lbl_803E6658;
 extern f32 lbl_803E6660;
 extern f32 lbl_803E6664;
 extern f32 lbl_803E666C;
-extern void fn_800971A0(int obj, int a, int b, int c, void *params, f32 scale);
+extern void objfx_spawnMaskedHitEffect(int obj, int a, int b, int c, void *params, f32 scale);
 extern void fn_8009837C(int obj, int a, int b, int c, void *params, f32 scale, f32 arg2);
 
 int worldobj_getExtraSize(void);
@@ -239,7 +239,7 @@ void worldobj_spawnGreatFoxEffects(int obj) {
         params.fc = k * (s * e->f0);
         params.f10 = k * (s * e->f4);
         params.f14 = k * (s * e->f8);
-        fn_800971A0(obj, 3, e->f10, e->f11, &params, s * e->fc);
+        objfx_spawnMaskedHitEffect(obj, 3, e->f10, e->f11, &params, s * e->fc);
     }
     s = *(f32 *)(obj + 8);
     params.f8 = lbl_803E6644;

@@ -546,7 +546,7 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, 
 
 
 
-extern void fn_800971A0(int obj, int a, int b, f32 c, int d, int e);
+extern void objfx_spawnMaskedHitEffect(int obj, int a, int b, f32 c, int d, int e);
 extern void hitDetectFn_80097070(int obj, int a, int b, f32 c, int d, int e);
 extern void fn_80097B30(int obj, int a, int b, int c, f32 e, f32 f, f32 g, f32 h, int i,
                         int j, int k);

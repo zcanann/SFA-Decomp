@@ -2159,7 +2159,7 @@ typedef struct LandedArwingHitFlagBits {
 extern LandedArwingFxPoint lbl_80321A28[];
 extern f32 lbl_803E3B98;
 extern f32 lbl_803E3B9C;
-extern void fn_800971A0(int obj, int arg4, int arg5, int arg6, void *pos, f32 scale);
+extern void objfx_spawnMaskedHitEffect(int obj, int arg4, int arg5, int arg6, void *pos, f32 scale);
 extern void fn_8009837C(int obj, int arg4, int arg5, int arg6, void *pos, f32 scale, f32 value);
 
 #pragma scheduling off
@@ -2185,7 +2185,7 @@ void fn_801889C8(int obj) {
             *xPtr -= *(f32 *)(obj + 0xc);
             *yPtr -= *(f32 *)(obj + 0x10);
             *zPtr -= *(f32 *)(obj + 0x14);
-            fn_800971A0(obj, 4, entry->arg5, entry->arg6, scratch.effectPos,
+            objfx_spawnMaskedHitEffect(obj, 4, entry->arg5, entry->arg6, scratch.effectPos,
                         *(f32 *)(obj + 8) * entry->scale);
             i++;
         }
