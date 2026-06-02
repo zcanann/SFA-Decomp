@@ -65,6 +65,10 @@ typedef struct LinkMenuItem {
 #define TITLE_MENU_FLAG_VOLUME_PREVIEW 0x40
 #define TITLE_MENU_FLAG_MUSIC_PREVIEW  0x80
 
+#define LINK_FLAG_DISABLE_NAV_TO 0x1000
+#define LINK_FLAG_NO_ACCEPT      0x0020
+#define LINK_IS_NAVIGABLE(index) ((lbl_803A9458[(index)].flags & LINK_FLAG_DISABLE_NAV_TO) == 0)
+
 #pragma peephole off
 #pragma scheduling off
 
@@ -78,8 +82,6 @@ extern undefined4 FUN_80006ba8();
 extern undefined4 FUN_80006bac();
 extern undefined4 FUN_80006bb0();
 extern undefined4 FUN_80006bb4();
-extern char FUN_80006bd0();
-extern uint FUN_80006c00();
 extern undefined4 FUN_80006c6c();
 extern undefined4 FUN_80017460();
 extern undefined4 FUN_80017480();
@@ -103,6 +105,23 @@ extern undefined2 FUN_80286840();
 extern undefined4 FUN_80286870();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_8028688c();
+extern int getHudHiddenFrameCount(void);
+extern void padGetAnalogInput(int pad, s8* x, s8* y);
+extern void padClearAnalogInputY(int pad);
+extern void padClearAnalogInputX(int pad);
+extern u32 getButtonsJustPressed(int pad);
+extern void buttonDisable(int pad, int mask);
+extern void linkDrawFn_801302c0(void);
+extern void linkDrawFn_80130484(void);
+extern u8 framesThisStep;
+extern u8 linkIsRotated;
+extern u8 linkFlag_803dd8f8;
+extern s16 linkCount_803dd90e;
+extern s8 lbl_803DD910;
+extern s8 lbl_803DD911;
+extern s8 linkSelected;
+extern s8 lbl_803DD913;
+extern LinkMenuItem lbl_803A9458[40];
 
 extern undefined4 DAT_8031cdf8;
 extern undefined4 DAT_8031ce04;
@@ -158,119 +177,110 @@ extern f32 FLOAT_803e2e88;
  */
 undefined4 Link_update(void)
 {
-  short sVar1;
-  char cVar2;
-  undefined4 uVar3;
-  int iVar4;
-  uint uVar5;
-  int iVar6;
-  char local_18;
-  char local_17 [15];
-  
-  iVar6 = DAT_803de592 * 0x3c;
-  if (DAT_803de591 == '\0') {
-    uVar3 = 0xffffffff;
-  }
-  else {
-    uVar3 = 0xffffffff;
-    iVar4 = FUN_800176d0();
-    if (iVar4 == 0) {
-      FUN_80006bb4(0,local_17,&local_18);
-      cVar2 = local_17[0];
-      if (DAT_803de579 != '\0') {
-        local_17[0] = local_18;
-        local_18 = -cVar2;
-      }
-      if (local_18 != '\0') {
-        local_17[0] = '\0';
-      }
-      if (((local_17[0] != '\0') || (local_18 != '\0')) && (DAT_803de578 != '\0')) {
-        if (((local_18 < '\0') && ((char)(&DAT_803aa0d3)[iVar6] != -1)) &&
-           (((&DAT_803aa0ce)[(char)(&DAT_803aa0d3)[iVar6] * 0x1e] & 0x1000) == 0)) {
-          FUN_80006bac(0);
-          DAT_803de592 = (&DAT_803aa0d3)[iVar6];
-          DAT_803de58e = 0xff;
-        }
-        else if ((('\0' < local_18) && ((char)(&DAT_803aa0d2)[iVar6] != -1)) &&
-                (((&DAT_803aa0ce)[(char)(&DAT_803aa0d2)[iVar6] * 0x1e] & 0x1000) == 0)) {
-          FUN_80006bac(0);
-          DAT_803de592 = (&DAT_803aa0d2)[iVar6];
-          DAT_803de58e = 0xff;
-        }
-        if ((char)(&DAT_803aa0d6)[iVar6] == -1) {
-          if (((local_17[0] < '\0') && ((char)(&DAT_803aa0d4)[iVar6] != -1)) &&
-             (((&DAT_803aa0ce)[(char)(&DAT_803aa0d4)[iVar6] * 0x1e] & 0x1000) == 0)) {
-            FUN_80006bb0(0);
-            DAT_803de592 = (&DAT_803aa0d4)[iVar6];
-            DAT_803de58e = 0xff;
-          }
-          else if ((('\0' < local_17[0]) && ((char)(&DAT_803aa0d5)[iVar6] != -1)) &&
-                  (((&DAT_803aa0ce)[(char)(&DAT_803aa0d5)[iVar6] * 0x1e] & 0x1000) == 0)) {
-            FUN_80006bb0(0);
-            DAT_803de592 = (&DAT_803aa0d5)[iVar6];
-            DAT_803de58e = 0xff;
-          }
-        }
-        else {
-          iVar6 = (char)(&DAT_803aa0d6)[iVar6] * 0x3c;
-          if ((local_17[0] < '\0') && ((&DAT_803aa0d4)[iVar6] != -1)) {
-            FUN_80006bb0(0);
-            (&DAT_803aa0d6)[DAT_803de592 * 0x3c] = (&DAT_803aa0d4)[iVar6];
-            DAT_803de58e = 0xff;
-          }
-          else if (('\0' < local_17[0]) && ((&DAT_803aa0d5)[iVar6] != -1)) {
-            FUN_80006bb0(0);
-            (&DAT_803aa0d6)[DAT_803de592 * 0x3c] = (&DAT_803aa0d5)[iVar6];
-            DAT_803de58e = 0xff;
-          }
-        }
-        if (DAT_803de592 < '\0') {
-          DAT_803de592 = DAT_803de591 + -1;
-        }
-        if (DAT_803de591 <= DAT_803de592) {
-          DAT_803de592 = '\0';
-        }
-      }
-      if (DAT_803de593 != '\0') {
-        uVar5 = FUN_80006c00(0);
-        if ((uVar5 & 0x1100) == 0) {
-          if ((uVar5 & 0x200) != 0) {
-            FUN_80006ba8(0,0x200);
-            uVar3 = 0;
-          }
-        }
-        else if ((((&DAT_803aa0ce)[DAT_803de592 * 0x1e] & 0x20) == 0) &&
-                (uVar5 = GameBit_Get(0x44f), uVar5 == 0)) {
-          FUN_80006ba8(0,0x1100);
-          uVar3 = 1;
-        }
-      }
-      if (DAT_803de590 == 0) {
-        sVar1 = (ushort)DAT_803dc070 * -5;
-      }
-      else {
-        sVar1 = (ushort)DAT_803dc070 * 5;
-      }
-      DAT_803de58e = DAT_803de58e + sVar1;
-      if (DAT_803de58e < 0x100) {
-        if (DAT_803de58e < 0) {
-          DAT_803de58e = -DAT_803de58e;
-          DAT_803de590 = DAT_803de590 ^ 1;
-        }
-      }
-      else {
-        DAT_803de58e = 0xff - (DAT_803de58e + -0xff);
-        DAT_803de590 = DAT_803de590 ^ 1;
-      }
-      DAT_803de593 = '\x01';
-      FUN_80130588();
-      FUN_8013074c();
+    LinkMenuItem* item;
+    int result;
+    u32 buttons;
+    s8 horizontalInput;
+    s8 verticalInput;
+
+    item = &lbl_803A9458[(s8)linkSelected];
+    if ((s8)lbl_803DD911 == 0) {
+        return -1;
     }
-    else {
-      uVar3 = 0xffffffff;
+
+    result = -1;
+    if (getHudHiddenFrameCount() != 0) {
+        return -1;
     }
-  }
-  return uVar3;
+
+    padGetAnalogInput(0, &horizontalInput, &verticalInput);
+    if (linkIsRotated != 0) {
+        s8 oldHorizontal = horizontalInput;
+        horizontalInput = verticalInput;
+        verticalInput = (s8)-oldHorizontal;
+    }
+
+    if (verticalInput != 0) {
+        horizontalInput = 0;
+    }
+
+    if (((horizontalInput != 0) || (verticalInput != 0)) && (linkFlag_803dd8f8 != 0)) {
+        if ((verticalInput < 0) && (item->downLink != -1) && LINK_IS_NAVIGABLE(item->downLink)) {
+            padClearAnalogInputY(0);
+            linkSelected = item->downLink;
+            linkCount_803dd90e = 0xff;
+        } else if ((verticalInput > 0) && (item->upLink != -1) &&
+                   LINK_IS_NAVIGABLE(item->upLink)) {
+            padClearAnalogInputY(0);
+            linkSelected = item->upLink;
+            linkCount_803dd90e = 0xff;
+        }
+
+        if (item->state != -1) {
+            item = &lbl_803A9458[item->state];
+            if ((horizontalInput < 0) && (item->leftLink != -1)) {
+                padClearAnalogInputX(0);
+                lbl_803A9458[(s8)linkSelected].state = item->leftLink;
+                linkCount_803dd90e = 0xff;
+            } else if ((horizontalInput > 0) && (item->rightLink != -1)) {
+                padClearAnalogInputX(0);
+                lbl_803A9458[(s8)linkSelected].state = item->rightLink;
+                linkCount_803dd90e = 0xff;
+            }
+        } else {
+            if ((horizontalInput < 0) && (item->leftLink != -1) &&
+                LINK_IS_NAVIGABLE(item->leftLink)) {
+                padClearAnalogInputX(0);
+                linkSelected = item->leftLink;
+                linkCount_803dd90e = 0xff;
+            } else if ((horizontalInput > 0) && (item->rightLink != -1) &&
+                       LINK_IS_NAVIGABLE(item->rightLink)) {
+                padClearAnalogInputX(0);
+                linkSelected = item->rightLink;
+                linkCount_803dd90e = 0xff;
+            }
+        }
+
+        if ((s8)linkSelected < 0) {
+            linkSelected = (s8)((s8)lbl_803DD911 - 1);
+        }
+        if ((s8)linkSelected >= (s8)lbl_803DD911) {
+            linkSelected = 0;
+        }
+    }
+
+    if (lbl_803DD913 != 0) {
+        buttons = getButtonsJustPressed(0);
+        if ((buttons & 0x1100) != 0) {
+            if (((lbl_803A9458[(s8)linkSelected].flags & LINK_FLAG_NO_ACCEPT) == 0) &&
+                (GameBit_Get(0x44f) == 0)) {
+                buttonDisable(0, 0x1100);
+                result = 1;
+            }
+        } else if ((buttons & 0x200) != 0) {
+            buttonDisable(0, 0x200);
+            result = 0;
+        }
+    }
+
+    if (lbl_803DD910 != 0) {
+        linkCount_803dd90e = (s16)(linkCount_803dd90e + framesThisStep * 5);
+    } else {
+        linkCount_803dd90e = (s16)(linkCount_803dd90e - framesThisStep * 5);
+    }
+
+    if (linkCount_803dd90e > 0xff) {
+        linkCount_803dd90e = (s16)(0xff - (linkCount_803dd90e - 0xff));
+        lbl_803DD910 = (s8)(lbl_803DD910 ^ 1);
+    } else if (linkCount_803dd90e < 0) {
+        linkCount_803dd90e = (s16)-linkCount_803dd90e;
+        lbl_803DD910 = (s8)(lbl_803DD910 ^ 1);
+    }
+
+    lbl_803DD913 = 1;
+    linkDrawFn_801302c0();
+    linkDrawFn_80130484();
+    return result;
 }
 
 /*
