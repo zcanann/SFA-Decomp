@@ -24,8 +24,17 @@ extern undefined4 FUN_8024bdfc();
 extern undefined4 FUN_8024c910();
 extern ushort FUN_8024df24();
 extern OSMessage PopDecodedTextureSet(s32 flags);
+extern s32 DVDRead(DVDFileInfo *fileInfo, void *addr, s32 length, s32 offset);
+extern BOOL CreateVideoDecodeThread(int priority, void *param);
+extern BOOL CreateAudioDecodeThread(int priority, void *param);
+extern BOOL CreateReadThread(int priority);
+extern void InitAllMessageQueue(void);
+extern void VideoDecodeThreadStart(void);
+extern void AudioDecodeThreadStart(void);
+extern void ReadThreadStart(void);
 
 extern OSMessageQueue lbl_803A5CCC;
+extern char lbl_803A57C0[];
 extern undefined4 DAT_803a692c;
 extern undefined4 DAT_803a694c;
 extern undefined4 DAT_803a6980;
@@ -64,6 +73,7 @@ extern undefined4* DAT_803de2e4;
 extern undefined4 DAT_803de300;
 extern void (*lbl_803DD664)(void);
 extern u8 gAttractMovieLoopCompleted;
+extern OSMessageQueue lbl_803A5CEC;
 
 /*
  * --INFO--
@@ -290,8 +300,90 @@ bool FUN_80118574(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     return 0;
 }
 
-extern OSMessageQueue lbl_803A5CEC;
 #pragma scheduling off
+BOOL prepareAttractMode(u32 movieIndex, s32 playFlags) {
+    char *base;
+    void *readyMsg;
+
+    base = lbl_803A57C0;
+    gAttractMovieLoopCompleted = 0;
+
+    if (*(s32 *)(base + 0x638) == 0) {
+        return FALSE;
+    }
+    if (*(u8 *)(base + 0x63c) != 0) {
+        return FALSE;
+    }
+
+    if ((s32)movieIndex > 0) {
+        u32 offsetTable = *(u32 *)(base + 0x600);
+
+        if (offsetTable == 0) {
+            return FALSE;
+        }
+        if (*(u32 *)(base + 0x5f0) <= movieIndex) {
+            return FALSE;
+        }
+        if (DVDRead((DVDFileInfo *)(base + 0x5a0), base + 0x560, 0x20,
+                    offsetTable + ((movieIndex - 1) * sizeof(u32))) < 0) {
+            return FALSE;
+        }
+
+        *(u32 *)(base + 0x650) = *(u32 *)(base + 0x604) + *(u32 *)(base + 0x560);
+        *(u32 *)(base + 0x658) = movieIndex;
+        *(u32 *)(base + 0x654) = *(u32 *)(base + 0x564) - *(u32 *)(base + 0x560);
+    } else {
+        *(u32 *)(base + 0x650) = *(u32 *)(base + 0x604);
+        *(u32 *)(base + 0x654) = *(u32 *)(base + 0x5f4);
+        *(u32 *)(base + 0x658) = movieIndex;
+    }
+
+    *(u8 *)(base + 0x63e) = (u8)playFlags;
+    *(u32 *)(base + 0x670) = 0;
+
+    if (*(s32 *)(base + 0x648) != 0) {
+        if (DVDRead((DVDFileInfo *)(base + 0x5a0), *(void **)(base + 0x64c),
+                    *(s32 *)(base + 0x5f8), *(s32 *)(base + 0x604)) < 0) {
+            return FALSE;
+        }
+        playFlags = ((s32)*(void **)(base + 0x64c) + *(s32 *)(base + 0x650)) -
+                    *(s32 *)(base + 0x604);
+        CreateVideoDecodeThread(0xf, (void *)playFlags);
+        if (*(u8 *)(base + 0x63f) != 0) {
+            CreateAudioDecodeThread(0xc, (void *)playFlags);
+        }
+    } else {
+        CreateVideoDecodeThread(0xf, NULL);
+        if (*(u8 *)(base + 0x63f) != 0) {
+            CreateAudioDecodeThread(0xc, NULL);
+        }
+        CreateReadThread(8);
+    }
+
+    InitAllMessageQueue();
+    VideoDecodeThreadStart();
+    if (*(u8 *)(base + 0x63f) != 0) {
+        AudioDecodeThreadStart();
+    }
+    if (*(s32 *)(base + 0x648) == 0) {
+        ReadThreadStart();
+    }
+
+    OSReceiveMessage((OSMessageQueue *)(base + 0x52c), &readyMsg, OS_MESSAGE_BLOCK);
+    if (readyMsg == NULL) {
+        return FALSE;
+    }
+
+    *(u8 *)(base + 0x63c) = 1;
+    *(u8 *)(base + 0x63d) = 0;
+    *(u32 *)(base + 0x68c) = 0;
+    *(u32 *)(base + 0x690) = 0;
+    *(u32 *)(base + 0x684) = 0;
+    *(u32 *)(base + 0x688) = 0;
+    lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
+    return TRUE;
+}
+
 void PrepareReady(void *msg) {
     OSSendMessage(&lbl_803A5CEC, msg, OS_MESSAGE_BLOCK);
 }
