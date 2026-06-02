@@ -160,7 +160,7 @@ void doorswitch_initialise(void);
 int dbegg_func0B(void);
 void dbegg_setScale(void);
 int dbegg_getExtraSize(void);
-int dbegg_func08(void);
+int dbegg_getObjectTypeId(void);
 void dbegg_free(void);
 void dbegg_render(void);
 void dbegg_hitDetect(void);
