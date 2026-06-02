@@ -1805,16 +1805,16 @@ main/dll/dll_02B1_cmbsrc.c:
 main/dll/dll_02B2_dustmotesou.c:
 	.text       start:0x80237574 end:0x80237808
 
-main/dll/dll_02B3_vortex.c:
+main/dll/vortex.c:
 	.text       start:0x80237808 end:0x802383E0
 
-main/dll/dll_02B4_cntcounter.c:
+main/dll/cntcounter.c:
 	.text       start:0x802383E0 end:0x8023852C
 
-main/dll/dll_02B5_timer.c:
+main/dll/timer.c:
 	.text       start:0x8023852C end:0x80238AB0
 
-main/dll/dll_02B6_cnthitobjec.c:
+main/dll/cnthitobjec.c:
 	.text       start:0x80238AB0 end:0x80238FA4
 
 main/dll/dll_02B7_mcupgrade.c:
