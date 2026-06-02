@@ -77,5 +77,6 @@ void wmlasertarget_update(int *obj);
 void wmlasertarget_init(char *obj, s8 *p);
 void wmlasertarget_release(void);
 void wmlasertarget_initialise(void);
+void lightsource_render(void *obj, int p1, int p2, int p3, int p4, s8 visible);
 
 #endif /* MAIN_DLL_ARW_ARWARWINGATTACHMENT_H_ */

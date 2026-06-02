@@ -1805,11 +1805,29 @@ extern f32 lbl_803E5D58;
 extern void objRenderFn_8003b8f4(f32);
 extern f32 lbl_803E5D90;
 extern f32 lbl_803E5DC8;
+extern f32 lbl_803E5E08;
+extern void queueGlowRender(void *light);
 #pragma peephole off
 void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5D58); }
 void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5D90); }
 void WM_colrise_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5DC8); }
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void lightsource_render(void *obj, int p1, int p2, int p3, int p4, s8 visible)
+{
+    extern void objRenderFn_8003b8f4(void *obj, int p1, int p2, int p3, int p4, f32 alpha);
+    void *light = *(void **)*(int *)((char *)obj + 0xb8);
+    if (light != NULL && *(u8 *)((char *)light + 0x2f8) != 0 && *(u8 *)((char *)light + 0x4c) != 0) {
+        queueGlowRender(light);
+    }
+    if (visible != 0) {
+        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E5E08);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* if (o->_X == K) return A; else return B; */
 #pragma peephole off
