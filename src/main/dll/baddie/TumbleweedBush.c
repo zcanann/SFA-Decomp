@@ -820,57 +820,57 @@ void FUN_80131de4(void)
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-/* EN v1.0 0x80131570  size: 12b  Read bit 0x10 from obj->_4. */
-int TitleMenuItem_isChanged(u8* obj)
+/* EN v1.0 0x80131570  size: 12b  Read bit 0x10 from item->flags. */
+int TitleMenuItem_isChanged(TitleMenuItem* item)
 {
-    return obj[4] & 0x10;
+    return item->flags & 0x10;
 }
 
-/* EN v1.0 0x8013157C  size: 20b  Set obj->_c (s16) = val and obj->_6 = 2.
+/* EN v1.0 0x8013157C  size: 20b  Set item->value and item->frameDelay = 2.
  * Logic-only ? target has `extsh r0,r4; sth r0,0xc(r3)` but MWCC -O4
  * strips the redundant extsh before sth (same family as GameUI_func0F /
  * CMenu_SetShouldClose). */
 #pragma scheduling off
 #pragma peephole off
-void TitleMenuItem_setVal(u8* obj, int val)
+void TitleMenuItem_setVal(TitleMenuItem* item, int val)
 {
-    *(s16*)(obj + 0xc) = (s16)val;
-    obj[6] = 2;
+    item->value = (s16)val;
+    item->frameDelay = 2;
 }
 #pragma peephole reset
 #pragma scheduling reset
 
-/* EN v1.0 0x80131590  size: 8b   s16 getter for obj->_c. */
-s16 TitleMenuItem_getVal(u8* obj)
+/* EN v1.0 0x80131590  size: 8b   Getter for item->value. */
+s16 TitleMenuItem_getVal(TitleMenuItem* item)
 {
-    return *(s16*)(obj + 0xc);
+    return item->value;
 }
 
 extern s16 lbl_803DD918;
 extern f32 lbl_803DD91C;
 
-/* EN v1.0 0x80131598  size: 116b  Toggle enabled bit 0x01 on obj->_4. */
+/* EN v1.0 0x80131598  size: 116b  Toggle enabled bit 0x01 on item->flags. */
 #pragma scheduling off
 #pragma peephole off
-void TitleMenuItem_setEnabled(u8* obj, int flag)
+void TitleMenuItem_setEnabled(TitleMenuItem* item, int flag)
 {
     if (flag != 0) {
-        if ((obj[4] & 1) == 0) {
+        if ((item->flags & 1) == 0) {
             lbl_803DD918 = 0;
-            lbl_803DD91C = (f32)*(s16*)(obj + 0xc);
+            lbl_803DD91C = (f32)item->value;
         }
-        obj[4] = (u8)(obj[4] | 1);
+        item->flags = (u8)(item->flags | 1);
     } else {
-        obj[4] = (u8)(obj[4] & ~1);
+        item->flags = (u8)(item->flags & ~1);
     }
 }
 #pragma peephole reset
 #pragma scheduling reset
 
-/* EN v1.0 0x8013160C  size: 12b  Read bit 0x01 from obj->_4. */
-int TitleMenuItem_isEnabled(u8* obj)
+/* EN v1.0 0x8013160C  size: 12b  Read bit 0x01 from item->flags. */
+int TitleMenuItem_isEnabled(TitleMenuItem* item)
 {
-    return obj[4] & 0x01;
+    return item->flags & 0x01;
 }
 
 /* EN v1.0 0x80132008  size: 8b   Trivial 1-returner. */
@@ -894,14 +894,14 @@ extern u8  lbl_803A9DB8[0x18];
 extern void mm_free(void);
 extern void fn_8001BDD4(int);
 
-/* EN v1.0 0x80131540  size: 48b  Toggle bit 0x20 of obj->_4. */
+/* EN v1.0 0x80131540  size: 48b  Toggle bit 0x20 of item->flags. */
 #pragma peephole off
-void TitleMenuItem_setAButtonToggle(u8* obj, int flag)
+void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
 {
     if (flag != 0) {
-        obj[4] = (u8)(obj[4] & ~0x20);
+        item->flags = (u8)(item->flags & ~0x20);
     } else {
-        obj[4] = (u8)(obj[4] | 0x20);
+        item->flags = (u8)(item->flags | 0x20);
     }
 }
 #pragma peephole reset
