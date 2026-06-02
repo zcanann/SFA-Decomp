@@ -901,7 +901,7 @@ s16 TitleMenuItem_getVal(TitleMenuItem* item)
 extern s16 lbl_803DD918;
 extern f32 lbl_803DD91C;
 extern s8 lbl_803DD920;
-extern u8 lbl_803A9DB8[0x18];
+extern void* lbl_803A9DB8[6];
 extern f32 lbl_803E21F0;
 extern f32 lbl_803E21F4;
 extern f32 lbl_803E21F8;
@@ -952,10 +952,10 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
 
     switch (item->kind) {
     case 0:
-        drawTexture(((void**)lbl_803A9DB8)[1], (u8)(((u8)alpha * 0xb4) >> 8),
+        drawTexture(lbl_803A9DB8[1], (u8)(((u8)alpha * 0xb4) >> 8),
                     (f32)item->x, (f32)item->y, 0x100);
 
-        texture = ((void**)lbl_803A9DB8)[0];
+        texture = lbl_803A9DB8[0];
         markerX = (f32)(int)((f32)item->extra.textId *
                              ((f32)(item->value - item->minValue) /
                               (f32)(item->maxValue - item->minValue)) +
@@ -980,7 +980,7 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
         if ((item->flags & TITLE_MENU_FLAG_A_TOGGLE) != 0) {
             drawAlpha >>= 1;
         }
-        drawTexture(((void**)lbl_803A9DB8)[textureIndex], (u8)drawAlpha,
+        drawTexture(lbl_803A9DB8[textureIndex], (u8)drawAlpha,
                     (f32)item->x, (f32)item->y, 0x100);
         break;
     case 2:
@@ -1131,7 +1131,7 @@ void Dummy3E_initialise(void) {}
 
 extern u8  linkTextures[0x30];
 extern s16 lbl_8031C2A8[6];
-extern u8  lbl_803A9DB8[0x18];
+extern void* lbl_803A9DB8[6];
 extern void mm_free(void);
 extern void fn_8001BDD4(int);
 
@@ -1156,7 +1156,7 @@ void TitleMenuItem_free(void)
 /* EN v1.0 0x80131FE0  size: 40b  Zero 6 u32s at lbl_803A9DB8. */
 void TitleMenuItem_initialise(void)
 {
-    u32* slots = (u32*)lbl_803A9DB8;
+    void** slots = lbl_803A9DB8;
     slots[0] = 0;
     slots[1] = 0;
     slots[2] = 0;
@@ -1273,16 +1273,16 @@ TitleMenuItem* TitleMenuItem_createWithText(s16 x, s16 y, s16 minValue, s16 maxV
 
 void fn_80131F0C(void)
 {
-    u32* p;
+    void** p;
     s16* assetIds;
     int i;
 
     i = 0;
-    p = (u32*)lbl_803A9DB8;
+    p = lbl_803A9DB8;
     assetIds = (s16*)lbl_8031C2A8;
     for (; i < 6; i++) {
         if (*p == 0) {
-            *p = (u32)textureLoadAsset(*assetIds);
+            *p = textureLoadAsset(*assetIds);
         }
         p++;
         assetIds++;
@@ -1412,14 +1412,14 @@ void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaul
 
 void TitleMenuItem_release(void)
 {
-    u32* p;
+    void** p;
     int i;
 
     i = 0;
-    p = (u32*)lbl_803A9DB8;
+    p = lbl_803A9DB8;
     for (; i < 6; i++) {
-        textureFree((void*)*p);
-        *p = 0;
+        textureFree(*p);
+        *p = NULL;
         p++;
     }
 }
