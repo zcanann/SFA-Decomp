@@ -6,6 +6,19 @@
 #define SFXwp_crtsmsh6 0x145
 #define SFXwp_dsmk2_c 0x146
 
+#define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c
+#define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING 0xa3d
+#define DBPROTECTION_GAMEBIT_CYCLE_A_DONE 0xa3e
+#define DBPROTECTION_GAMEBIT_CYCLE_B_DONE 0xa3f
+#define DBPROTECTION_GAMEBIT_TRANSITION_ARMED 0x9f
+#define DBPROTECTION_GAMEBIT_TRANSITION_USED 0xa0
+#define DBPROTECTION_GAMEBIT_TRANSITION_READY 0x91c
+#define DBPROTECTION_GAMEBIT_MUTE_SFX 0xa71
+#define DBPROTECTION_ENVFX_A 0x467e7
+#define DBPROTECTION_ENVFX_B 0x467e8
+#define DBPROTECTION_PLAYER_ENVFX_FLASH 0x96
+#define DBPROTECTION_PLAYER_ENVFX_SWAP 0x8a
+
 extern undefined4 FUN_800067f0();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006810();
@@ -853,57 +866,57 @@ LAB_801e1614:
   return;
 }
 
-void fn_801E108C(u8 *state)
+void DBprotection_updateEnvfxGameBits(u8 *state)
 {
   int player;
   int effectObj;
 
   player = Obj_GetPlayerObject();
-  if (GameBit_Get(0xa3c) != 0) {
-    effectObj = ObjList_FindObjectById(0x467e8);
+  if (GameBit_Get(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING) != 0) {
+    effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_B);
     getEnvfxAct(effectObj, player, state[state[0xa4] + 0xa9], 0);
-    effectObj = ObjList_FindObjectById(0x467e7);
+    effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_A);
     getEnvfxAct(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
-    getEnvfxAct(player, player, 0x96, 0);
-    GameBit_Set(0xa3c, 0);
-    *(u16 *)(state + 0xa2) = 0xa3e;
+    getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
+    GameBit_Set(DBPROTECTION_GAMEBIT_CYCLE_A_PENDING, 0);
+    *(u16 *)(state + 0xa2) = DBPROTECTION_GAMEBIT_CYCLE_A_DONE;
   }
 
-  if (GameBit_Get(0xa3d) != 0) {
-    effectObj = ObjList_FindObjectById(0x467e7);
+  if (GameBit_Get(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING) != 0) {
+    effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_A);
     getEnvfxAct(effectObj, player, state[state[0xa4] + 0xa9], 0);
-    effectObj = ObjList_FindObjectById(0x467e8);
+    effectObj = ObjList_FindObjectById(DBPROTECTION_ENVFX_B);
     getEnvfxAct(effectObj, player, state[(state[0xa4] ^ 1) + 0xa7], 0);
-    getEnvfxAct(player, player, 0x96, 0);
-    GameBit_Set(0xa3d, 0);
-    *(u16 *)(state + 0xa2) = 0xa3f;
+    getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_FLASH, 0);
+    GameBit_Set(DBPROTECTION_GAMEBIT_CYCLE_B_PENDING, 0);
+    *(u16 *)(state + 0xa2) = DBPROTECTION_GAMEBIT_CYCLE_B_DONE;
   }
 
-  if (GameBit_Get(0xa3e) != 0) {
-    if (*(u16 *)(state + 0xa2) != 0xa3e) {
+  if (GameBit_Get(DBPROTECTION_GAMEBIT_CYCLE_A_DONE) != 0) {
+    if (*(u16 *)(state + 0xa2) != DBPROTECTION_GAMEBIT_CYCLE_A_DONE) {
       state[0xa4] = (u8)(state[0xa4] ^ 1);
     }
     getEnvfxAct(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
     getEnvfxAct(player, player, state[state[0xa4] + 0xa9], 0);
-    getEnvfxAct(player, player, 0x8a, 0);
-    GameBit_Set(0xa3e, 0);
+    getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_SWAP, 0);
+    GameBit_Set(DBPROTECTION_GAMEBIT_CYCLE_A_DONE, 0);
   }
 
-  if (GameBit_Get(0xa3f) != 0) {
-    if (*(u16 *)(state + 0xa2) != 0xa3f) {
+  if (GameBit_Get(DBPROTECTION_GAMEBIT_CYCLE_B_DONE) != 0) {
+    if (*(u16 *)(state + 0xa2) != DBPROTECTION_GAMEBIT_CYCLE_B_DONE) {
       state[0xa4] = (u8)(state[0xa4] ^ 1);
     }
     getEnvfxAct(player, player, state[(state[0xa4] ^ 1) + 0xa5], 0);
     getEnvfxAct(player, player, state[state[0xa4] + 0xa9], 0);
-    getEnvfxAct(player, player, 0x8a, 0);
-    GameBit_Set(0xa3f, 0);
+    getEnvfxAct(player, player, DBPROTECTION_PLAYER_ENVFX_SWAP, 0);
+    GameBit_Set(DBPROTECTION_GAMEBIT_CYCLE_B_DONE, 0);
   }
 }
 
 /* 16b chained patterns. */
-int fn_801E12DC(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x70); }
+int DBprotection_getCameraState(int *obj) { return *(s8*)((char*)((int**)obj)[0xb8/4] + 0x70); }
 
-void fn_801E12EC(int *obj)
+void DBprotection_updateShield(int *obj)
 {
   u8 *state;
   f32 angleCos;
@@ -911,15 +924,15 @@ void fn_801E12EC(int *obj)
   state = *(u8 **)((u8 *)obj + 0xb8);
   *(int *)((u8 *)obj + 0xf4) = 7;
 
-  if (GameBit_Get(0x9f) != 0 &&
-      GameBit_Get(0xa0) == 0 &&
-      GameBit_Get(0x91c) != 0) {
+  if (GameBit_Get(DBPROTECTION_GAMEBIT_TRANSITION_ARMED) != 0 &&
+      GameBit_Get(DBPROTECTION_GAMEBIT_TRANSITION_USED) == 0 &&
+      GameBit_Get(DBPROTECTION_GAMEBIT_TRANSITION_READY) != 0) {
     lbl_803DDC2C = 1;
-    GameBit_Set(0xa0, 1);
+    GameBit_Set(DBPROTECTION_GAMEBIT_TRANSITION_USED, 1);
     SCREEN_TRANSITION_FADE(0xa, 1);
   }
 
-  fn_801E108C(state);
+  DBprotection_updateEnvfxGameBits(state);
 
   if (lbl_803DDC2C != 0 && SCREEN_TRANSITION_READY() != 0) {
     SCREEN_TRANSITION_START(0x50, 1);
@@ -934,12 +947,12 @@ void fn_801E12EC(int *obj)
   angleCos = fn_80293E80((lbl_803E56E4 * (f32)*(u16 *)(state + 0x68)) / lbl_803E56E8);
   if (state[0x81] == 0) {
     if (angleCos < lbl_803E57CC) {
-      if (GameBit_Get(0xa71) == 0) {
+      if (GameBit_Get(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0) {
         Sfx_PlayFromObject((int)obj, SFXwp_crthit6);
       }
       state[0x81] = 1;
     } else if (angleCos > lbl_803E57D0) {
-      if (GameBit_Get(0xa71) == 0) {
+      if (GameBit_Get(DBPROTECTION_GAMEBIT_MUTE_SFX) == 0) {
         Sfx_PlayFromObject((int)obj, SFXwp_crtsmsh6);
       }
       state[0x81] = 1;
@@ -952,7 +965,7 @@ void fn_801E12EC(int *obj)
   *(u16 *)(state + 0x68) = (u16)(s32)(lbl_803E57E0 * timeDelta + (f32)*(u16 *)(state + 0x68));
 }
 
-void fn_801E1568(int *obj) {
+void DBprotection_storeHomePosition(int *obj) {
     char *state = *(char**)((char*)obj + 0xb8);
     *(f32*)(state + 0x2c) = *(f32*)((char*)obj + 0xc);
     *(f32*)(state + 0x30) = *(f32*)((char*)obj + 0x10);
