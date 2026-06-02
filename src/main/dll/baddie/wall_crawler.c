@@ -54,7 +54,7 @@ extern undefined4 FUN_8012a21c();
 extern undefined4 FUN_8012c1c0();
 extern undefined4 FUN_8012cd38();
 extern undefined8 FUN_8012dab8();
-extern undefined4 FUN_8012fcec();
+extern undefined4 textureFreeFn_8012fcec();
 extern undefined8 FUN_8012fdac();
 extern int FUN_8020a6fc();
 extern undefined8 FUN_8025da88();
@@ -673,7 +673,7 @@ LAB_8012f884:
         DAT_803de536 = '\0';
         uVar11 = FUN_8012fdac(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0);
         if (bVar2) {
-          FUN_8012fcec(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0xc1);
+          textureFreeFn_8012fcec(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0xc1);
         }
         goto LAB_8012fb2c;
       }

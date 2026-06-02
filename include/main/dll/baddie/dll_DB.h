@@ -3,9 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8012fcec(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9,short param_10);
+void textureFreeFn_8012fcec(void);
 void FUN_8012fdac(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9);
