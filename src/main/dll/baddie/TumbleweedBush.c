@@ -1017,11 +1017,40 @@ void TitleMenuItem_update(TitleMenuItem* item)
         return;
     }
 
-    item->flags = (u8)(item->flags & 0xe3);
+    item->flags = (u8)(item->flags & ~(TITLE_MENU_FLAG_MOVED_LEFT |
+                                        TITLE_MENU_FLAG_MOVED_RIGHT |
+                                        TITLE_MENU_FLAG_CHANGED));
     oldValue = item->value;
     item->frameDelay = 4;
 
-    if (item->kind == 0) {
+    switch (item->kind) {
+    case 2:
+        stickX = padGetStickX(0);
+        if (stickX > 0x23) {
+            move = 1;
+        } else if (stickX < -0x23) {
+            move = -1;
+        } else {
+            move = 0;
+        }
+
+        gatedMove = move;
+        if (lbl_803DD920 != 0) {
+            gatedMove = 0;
+        }
+        lbl_803DD920 = (s8)move;
+
+        if (gatedMove < 0) {
+            Sfx_PlayFromObject(0, SFXsp_sa_def01);
+            item->value--;
+            item->flags = (u8)(item->flags | TITLE_MENU_FLAG_MOVED_LEFT);
+        } else if (gatedMove > 0) {
+            Sfx_PlayFromObject(0, SFXsp_sa_def01);
+            item->value++;
+            item->flags = (u8)(item->flags | TITLE_MENU_FLAG_MOVED_RIGHT);
+        }
+        break;
+    case 0:
         stickX = padGetStickX(0);
         sliderDelta = (s16)((s8)stickX / 16) * 0xa0;
 
@@ -1050,35 +1079,14 @@ void TitleMenuItem_update(TitleMenuItem* item)
             }
             Sfx_SetObjectSfxVolume(lbl_803E21F8, 0, 0x3b9, (u8)previewVolume);
         }
-    } else if (item->kind >= 2 && item->kind < 3) {
-        stickX = padGetStickX(0);
-        if (stickX > 0x23) {
-            move = 1;
-        } else if (stickX < -0x23) {
-            move = -1;
-        } else {
-            move = 0;
+        break;
+    default:
+        if (((item->flags & TITLE_MENU_FLAG_A_TOGGLE) == 0) &&
+            ((getButtonsJustPressed(0) & 0x100) != 0)) {
+            Sfx_PlayFromObject(0, SFXsp_sa_def02);
+            item->value = (s16)(item->value ^ 1);
         }
-
-        gatedMove = move;
-        if (lbl_803DD920 != 0) {
-            gatedMove = 0;
-        }
-        lbl_803DD920 = (s8)move;
-
-        if (gatedMove < 0) {
-            Sfx_PlayFromObject(0, SFXsp_sa_def01);
-            item->value--;
-            item->flags = (u8)(item->flags | TITLE_MENU_FLAG_MOVED_LEFT);
-        } else if (gatedMove > 0) {
-            Sfx_PlayFromObject(0, SFXsp_sa_def01);
-            item->value++;
-            item->flags = (u8)(item->flags | TITLE_MENU_FLAG_MOVED_RIGHT);
-        }
-    } else if (((item->flags & TITLE_MENU_FLAG_A_TOGGLE) == 0) &&
-               ((getButtonsJustPressed(0) & 0x100) != 0)) {
-        Sfx_PlayFromObject(0, SFXsp_sa_def02);
-        item->value = (s16)(item->value ^ 1);
+        break;
     }
 
     if (item->value > item->maxValue) {
