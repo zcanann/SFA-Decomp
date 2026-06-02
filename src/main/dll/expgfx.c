@@ -1536,7 +1536,7 @@ void expgfx_resetAllPools(void)
     }
     gExpgfxTextureFreeInProgress = 0;
     resourceEntry->resource = NULL;
-    resourceEntry->tableKeyType = 0;
+    resourceEntry->resourceId = 0;
     resourceEntry->evictionScore = 0;
     resourceEntry->wordC = 0;
     resourceIndex++;
@@ -1993,7 +1993,7 @@ void expgfx_onMapSetup(void)
       textureFree(resourceEntry->resource);
     }
     resourceEntry->resource = NULL;
-    resourceEntry->tableKeyType = 0;
+    resourceEntry->resourceId = 0;
     resourceEntry->evictionScore = 0;
     resourceEntry->wordC = 0;
   }

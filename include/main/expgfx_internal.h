@@ -233,7 +233,7 @@ typedef struct ExpgfxSpawnConfig {
 typedef struct ExpgfxResourceEntry {
   void *resource;
   s32 evictionScore;
-  s32 tableKeyType;
+  s32 resourceId;
   u32 wordC;
 } ExpgfxResourceEntry;
 
