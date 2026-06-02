@@ -55,12 +55,10 @@ void  AttractMovieVideo_Decoder(void);
 #pragma scheduling off
 BOOL movieLoad(const char* fileName, void* param2)
 {
-    char* pb;         /* r30 */
-    char* memBase1;   /* r29 */
-    char* memBase2;   /* r28 */
-    char* pb2;        /* r27 */
-    char* pbwalk;     /* r26 */
-    char* pNumEntry;  /* r25 */
+    char* pb; /* r30 */
+    AttractMovieVideoInfo* videoInfo; /* r29 */
+    AttractMovieAudioInfo* audioInfo; /* r28 */
+    THPFrameCompInfo* compInfo; /* r25 */
     u32 readOff;      /* r24 */
     s32 result;
     u32 i;
@@ -71,14 +69,14 @@ BOOL movieLoad(const char* fileName, void* param2)
 
     pb = (char*)&lbl_803A5D60;
 
-    if (*(s32*)(pb + 0x98) != 0) {
+    if (((AttractMoviePlayer*)pb)->isOpen != 0) {
         return 0;
     }
 
-    memBase1 = pb + 0x80;
-    memset(memBase1, 0, 8);
-    memBase2 = pb + 0x88;
-    memset(memBase2, 0, 0xC);
+    videoInfo = &((AttractMoviePlayer*)pb)->videoInfo;
+    memset(videoInfo, 0, sizeof(*videoInfo));
+    audioInfo = &((AttractMoviePlayer*)pb)->audioInfo;
+    memset(audioInfo, 0, sizeof(*audioInfo));
 
     if (!DVDOpen(fileName, (DVDFileInfo*)pb)) {
         return 0;
@@ -90,20 +88,20 @@ BOOL movieLoad(const char* fileName, void* param2)
         return 0;
     }
 
-    memcpy(pb + 0x3C, lbl_803A5D20, 0x30);
+    memcpy(&((AttractMoviePlayer*)pb)->header, lbl_803A5D20, sizeof(((AttractMoviePlayer*)pb)->header));
 
-    if (strcmp(pb + 0x3C, lbl_803DB9E8) != 0) {
+    if (strcmp(((AttractMoviePlayer*)pb)->header.mMagic, lbl_803DB9E8) != 0) {
         DVDClose((DVDFileInfo*)pb);
         return 0;
     }
 
-    if (*(u32*)(pb + 0x40) - 0x10000 != 0) {
+    if (((AttractMoviePlayer*)pb)->header.mVersion != 0x10000) {
         DVDClose((DVDFileInfo*)pb);
         return 0;
     }
 
     {
-        u32 compOff = *(u32*)(pb + 0x5C);
+        u32 compOff = ((AttractMoviePlayer*)pb)->header.mCompInfoDataOffsets;
 
         result = DVDRead((DVDFileInfo*)pb, lbl_803A5D20, 0x20, compOff);
         if (result < 0) {
@@ -111,48 +109,43 @@ BOOL movieLoad(const char* fileName, void* param2)
             return 0;
         }
 
-        pNumEntry = pb + 0x6C;
-        memcpy(pNumEntry, lbl_803A5D20, 0x14);
-        readOff = compOff + 0x14;
-        pb2 = (char*)&lbl_803A5D60;
-        pb2[0x9F] = 0;
+        compInfo = &((AttractMoviePlayer*)pb)->compInfo;
+        memcpy(compInfo, lbl_803A5D20, sizeof(*compInfo));
+        readOff = compOff + sizeof(*compInfo);
+        ((AttractMoviePlayer*)pb)->audioExists = 0;
     }
 
-    pbwalk = pb2;
-    for (i = 0; i < *(u32*)pNumEntry; pbwalk++, i++) {
-        if (pbwalk[0x70] == 1) {
+    for (i = 0; i < compInfo->mNumComponents; i++) {
+        if (compInfo->mFrameComp[i] == 1) {
             result = DVDRead((DVDFileInfo*)pb, lbl_803A5D20, 0x20, readOff);
             if (result < 0) {
                 DVDClose((DVDFileInfo*)pb);
                 return 0;
             }
-            memcpy(memBase2, lbl_803A5D20, 0xC);
-            pb2[0x9F] = 1;
-            readOff += 0xC;
-        } else if (pbwalk[0x70] == 0) {
+            memcpy(audioInfo, lbl_803A5D20, sizeof(*audioInfo));
+            ((AttractMoviePlayer*)pb)->audioExists = 1;
+            readOff += sizeof(*audioInfo);
+        } else if (compInfo->mFrameComp[i] == 0) {
             result = DVDRead((DVDFileInfo*)pb, lbl_803A5D20, 0x20, readOff);
             if (result < 0) {
                 DVDClose((DVDFileInfo*)pb);
                 return 0;
             }
-            memcpy(memBase1, lbl_803A5D20, 8);
-            readOff += 8;
+            memcpy(videoInfo, lbl_803A5D20, sizeof(*videoInfo));
+            readOff += sizeof(*videoInfo);
         } else {
             return 0;
         }
     }
 
-    {
-        char* q = (char*)&lbl_803A5D60;
-        q[0x9D] = 0;
-        q[0x9C] = 0;
-        q[0x9E] = 0;
-        *(u32*)(q + 0xA8) = (u32)param2;
-        *(u32*)(pb + 0x98) = 1;
-        *(f32*)(q + 0xD4) = lbl_803E1D54;
-        *(f32*)(q + 0xD8) = lbl_803E1D54;
-        *(u32*)(q + 0xE0) = 0;
-    }
+    ((AttractMoviePlayer*)pb)->internalState = 0;
+    ((AttractMoviePlayer*)pb)->state = 0;
+    ((AttractMoviePlayer*)pb)->playFlags = 0;
+    ((AttractMoviePlayer*)pb)->movieData = param2;
+    ((AttractMoviePlayer*)pb)->isOpen = 1;
+    ((AttractMoviePlayer*)pb)->curVolume = lbl_803E1D54;
+    ((AttractMoviePlayer*)pb)->targetVolume = lbl_803E1D54;
+    ((AttractMoviePlayer*)pb)->rampCount = 0;
 
     return 1;
 }
