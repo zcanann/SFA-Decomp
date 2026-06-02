@@ -141,7 +141,7 @@ void vfplevelcontrol_init(int *obj, u8 *init) {
         state->areaMode = setup->areaMode;
     }
     lbl_803DC148 = 0x82;
-    ((MapEventInterface *)*gMapEventInterface)->getMode((s8)*(u8 *)((char *)obj + 0xac));
+    ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)((char *)obj + 0xac));
     state->cueTimers[4] = 0;
     state->cueTimers[5] = 0;
     *(u16 *)((char *)obj + 0xb0) |= 0x6000;
