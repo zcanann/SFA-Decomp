@@ -512,16 +512,13 @@ bool FUN_80118164(uint param_1)
 void AttractMovieAudio_DmaCallback(void)
 {
   BOOL interrupts;
-  char *dmaBuffer;
 
   if (lbl_803DD66C == 0) {
     lbl_803DD678 ^= 1;
-    dmaBuffer = lbl_803A57C0 + (lbl_803DD678 * 0x280);
-    AIInitDMA((u32)dmaBuffer, 0x280);
+    AIInitDMA((u32)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), 0x280);
     interrupts = OSEnableInterrupts();
-    dmaBuffer = lbl_803A57C0 + (lbl_803DD678 * 0x280);
-    AttractMovieAudio_Mix((undefined2 *)dmaBuffer, NULL, 0xa0);
-    DCFlushRange(dmaBuffer, 0x280);
+    AttractMovieAudio_Mix((undefined2 *)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), NULL, 0xa0);
+    DCFlushRange(lbl_803A57C0 + (lbl_803DD678 * 0x280), 0x280);
     OSRestoreInterrupts(interrupts);
   }
   else {
@@ -538,15 +535,13 @@ void AttractMovieAudio_DmaCallback(void)
     }
 
     lbl_803DD678 ^= 1;
-    dmaBuffer = lbl_803A57C0 + (lbl_803DD678 * 0x280);
-    AIInitDMA((u32)dmaBuffer, 0x280);
+    AIInitDMA((u32)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), 0x280);
     interrupts = OSEnableInterrupts();
     if (lbl_803DD670 != 0) {
       DCInvalidateRange((void *)lbl_803DD670, 0x280);
     }
-    dmaBuffer = lbl_803A57C0 + (lbl_803DD678 * 0x280);
-    AttractMovieAudio_Mix((undefined2 *)dmaBuffer, (short *)lbl_803DD670, 0xa0);
-    DCFlushRange(dmaBuffer, 0x280);
+    AttractMovieAudio_Mix((undefined2 *)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), (short *)lbl_803DD670, 0xa0);
+    DCFlushRange(lbl_803A57C0 + (lbl_803DD678 * 0x280), 0x280);
     OSRestoreInterrupts(interrupts);
   }
 }
