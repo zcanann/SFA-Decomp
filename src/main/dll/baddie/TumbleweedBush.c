@@ -4,6 +4,25 @@
 #define SFXsp_sa_def01 243
 #define SFXsp_sa_def02 244
 
+typedef struct TitleMenuItem {
+    s16 x;
+    s16 y;
+    u8 flags;
+    u8 kind;
+    s8 frameDelay;
+    u8 pad7;
+    s16 minValue;
+    s16 maxValue;
+    s16 value;
+    union {
+        s16 textId;
+        struct {
+            u16 phraseId;
+            u16 windowId;
+        } window;
+    } extra;
+} TitleMenuItem;
+
 #pragma peephole off
 #pragma scheduling off
 
@@ -909,11 +928,87 @@ void TitleMenuItem_initialise(void)
 extern void* textureLoadAsset(int id);
 extern void textureFree(void* p);
 extern void fn_8001BDD4(int a);
+extern void* mmAlloc(int size, int heap, int flags);
 extern u8 lbl_803A9458[0x960];
 extern s8 lbl_803DD911;
 
 #pragma scheduling off
 #pragma peephole off
+
+/* EN v1.0 0x80131D14  size: 168b  Create text-window title menu item. */
+TitleMenuItem* TitleMenuItem_createWithWindow(int phraseId, int windowId, s16 minValue,
+                                              s16 maxValue, s16 value)
+{
+    TitleMenuItem* item;
+
+    if (value < minValue) {
+        value = minValue;
+    }
+    if (value > maxValue) {
+        value = maxValue;
+    }
+
+    item = (TitleMenuItem*)mmAlloc(0x12, 5, 0);
+    item->kind = 2;
+    item->extra.window.phraseId = phraseId;
+    item->extra.window.windowId = windowId;
+    item->value = value;
+    item->minValue = minValue;
+    item->maxValue = maxValue;
+    item->flags = 2;
+    item->frameDelay = 4;
+    return item;
+}
+
+/* EN v1.0 0x80131DBC  size: 164b  Create simple title menu item. */
+TitleMenuItem* TitleMenuItem_create(s16 x, s16 y, s16 minValue, s16 maxValue, s16 value)
+{
+    TitleMenuItem* item;
+
+    if (value < minValue) {
+        value = minValue;
+    }
+    if (value > maxValue) {
+        value = maxValue;
+    }
+
+    item = (TitleMenuItem*)mmAlloc(0xe, 5, 0);
+    item->kind = 1;
+    item->value = value;
+    item->minValue = minValue;
+    item->maxValue = maxValue;
+    item->x = x;
+    item->y = y;
+    item->flags = 0;
+    item->frameDelay = 4;
+    return item;
+}
+
+/* EN v1.0 0x80131E60  size: 172b  Create text-backed title menu item. */
+TitleMenuItem* TitleMenuItem_createWithText(s16 x, s16 y, s16 minValue, s16 maxValue,
+                                            s16 value, int textId)
+{
+    TitleMenuItem* item;
+
+    if (value < minValue) {
+        value = minValue;
+    }
+    if (value > maxValue) {
+        value = maxValue;
+    }
+
+    item = (TitleMenuItem*)mmAlloc(0x10, 5, 0);
+    item->kind = 0;
+    item->value = value;
+    item->minValue = minValue;
+    item->maxValue = maxValue;
+    item->x = x;
+    item->y = y;
+    item->flags = 0;
+    item->frameDelay = 4;
+    item->extra.textId = textId;
+    return item;
+}
 
 void fn_80131F0C(void)
 {
