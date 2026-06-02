@@ -958,6 +958,7 @@ extern void *gPartfxInterface;
 
 /* skeetla_spawnLinkedSparks  addr=0x8013ADFC  size=0x1E4  linkage=global */
 #pragma scheduling off
+#pragma peephole off
 void skeetla_spawnLinkedSparks(u8 *obj)
 {
     u8 *state;
@@ -1004,6 +1005,7 @@ void skeetla_spawnLinkedSparks(u8 *obj)
             obj, SKEETLA_PARTICLE_SPARK_B, &args, SKEETLA_PARTICLE_SPAWN_FLAGS, -1, 0);
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 /* fn_8013AFE0  addr=0x8013AFE0  size=0x200  linkage=global */
