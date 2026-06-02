@@ -1226,8 +1226,11 @@ void Link_release(void)
 
 void TitleMenuItem_release(void)
 {
-    int i = 0;
-    u32* p = (u32*)lbl_803A9DB8;
+    u32* p;
+    int i;
+
+    i = 0;
+    p = (u32*)lbl_803A9DB8;
     for (; i < 6; i++) {
         textureFree((void*)*p);
         *p = 0;
