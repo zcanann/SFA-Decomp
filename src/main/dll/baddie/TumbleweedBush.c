@@ -948,13 +948,11 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
     void* phrase;
     int textureIndex;
     int drawAlpha;
-    int alpha8;
     f32 markerX;
 
-    alpha8 = (u8)alpha;
-
-    if (item->kind == 0) {
-        drawTexture(((void**)lbl_803A9DB8)[1], (u8)((alpha8 * 0xb4) >> 8),
+    switch (item->kind) {
+    case 0:
+        drawTexture(((void**)lbl_803A9DB8)[1], (u8)(((u8)alpha * 0xb4) >> 8),
                     (f32)item->x, (f32)item->y, 0x100);
 
         texture = ((void**)lbl_803A9DB8)[0];
@@ -962,9 +960,10 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
                              ((f32)(item->value - item->minValue) /
                               (f32)(item->maxValue - item->minValue)) +
                              (f32)item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1));
-        drawTexture(texture, (u8)((alpha8 * 0xff) >> 8),
+        drawTexture(texture, (u8)(((u8)alpha * 0xff) >> 8),
                     markerX, (f32)(item->y - 4), 0x100);
-    } else if (item->kind == 1) {
+        break;
+    case 1:
         if ((item->flags & TITLE_MENU_FLAG_ENABLED) != 0) {
             if (item->value != 0) {
                 textureIndex = 2;
@@ -977,24 +976,26 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
             textureIndex = 5;
         }
 
-        drawAlpha = alpha8;
+        drawAlpha = (u8)alpha;
         if ((item->flags & TITLE_MENU_FLAG_A_TOGGLE) != 0) {
             drawAlpha >>= 1;
         }
         drawTexture(((void**)lbl_803A9DB8)[textureIndex], (u8)drawAlpha,
                     (f32)item->x, (f32)item->y, 0x100);
-    } else if (item->kind < 3) {
+        break;
+    case 2:
         if ((item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0) {
             phrase = gameTextGetPhrase(item->extra.window.phraseId, 0);
         } else {
             phrase = gameTextGetPhrase(item->extra.window.phraseId, item->value);
         }
-        gameTextSetColor(0, 0, 0, (u8)((alpha8 * 0x96) >> 8));
+        gameTextSetColor(0, 0, 0, (u8)((alpha * 0x96) >> 8));
         gameTextSetWindowStrPos(item->extra.window.windowId, 2, 2);
         gameTextAppendStr(phrase, item->extra.window.windowId);
-        gameTextSetColor(0xff, 0xff, 0xff, alpha8);
+        gameTextSetColor(0xff, 0xff, 0xff, alpha);
         gameTextSetWindowStrPos(item->extra.window.windowId, 0, 0);
         gameTextAppendStr(phrase, item->extra.window.windowId);
+        break;
     }
 
     item->frameDelay--;
