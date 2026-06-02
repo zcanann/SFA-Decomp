@@ -2105,10 +2105,10 @@ extern int *Obj_AllocObjectSetup(int p1, int p2);
 extern int *Obj_SetupObject(int *obj, int p1, int p2, int p3, int p4);
 extern void firepipe_setLinkedUpdateFlag(int *obj);
 
-/* fn_80157A58: 256b - alloc child object and attach to parent. */
+/* Spawns the linked firepipe child object and attaches it to this basket. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80157A58(int *obj) {
+void smallbasket_spawnLinkedFirepipe(int *obj) {
     int *child;
     if (Obj_IsLoadingLocked() != 0) {
         child = Obj_AllocObjectSetup(0x24, 0x710);
@@ -2342,10 +2342,10 @@ void fn_8015A424(int *obj, int *st) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_80157898: 240b - init basket with random factor. */
+/* Initializes a scaled smallbasket variant from placement params. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80157898(int *obj, int *st) {
+void smallbasket_initScaledVariantState(int *obj, int *st) {
     f32 ratio;
     f32 base_v;
     u32 v;
@@ -2459,7 +2459,7 @@ int fn_80157CDC(int obj, int p2)
   extern void *Obj_GetPlayerObject(void);
   extern f32 Vec_distance(int, int);
   extern void doRumble(f32);
-  extern void fn_80157A58(int, int);
+  extern void smallbasket_spawnLinkedFirepipe(int, int);
   extern void fn_80157B58(int, int);
   extern void firepipe_setLinkedUpdateFlag(int);
   extern void firepipe_clearLinkedUpdateFlag(int);
@@ -2498,7 +2498,7 @@ int fn_80157CDC(int obj, int p2)
           *(u8 *)(p2 + 0x33d) = (u8)(*(u8 *)(p2 + 0x33d) ^ 0x40);
           if ((*(u8 *)(p2 + 0x33d) & 0x40) != 0) {
             if (*(int *)(obj + 0xc8) == 0) {
-              fn_80157A58(obj, p2);
+              smallbasket_spawnLinkedFirepipe(obj, p2);
             } else {
               firepipe_setLinkedUpdateFlag(*(int *)(obj + 0xc8));
             }
@@ -2534,7 +2534,7 @@ extern f32 lbl_803E2C08;
 extern f32 lbl_803E2C0C;
 
 /* fn_80159654: smallbasket variant init. Dispatches on obj->modelType
- * (offset 0x46) — values 0x6a2/0x6a3/0x6a4 each pick a different float +
+ * (offset 0x46): values 0x6a2/0x6a3/0x6a4 each pick a different float +
  * byte tuple to seed state[0x2a8..0x322]. The trailing block sets
  * shared state floats and computes obj[0x8] from (s8)params[0x28]. */
 #pragma scheduling off
@@ -2602,14 +2602,14 @@ extern int lbl_803AC4A8[];
 extern void* gCameraInterface;
 extern f32 lbl_803E2B80;
 
-/* fn_80157988: nearby-object scan. Asks fn_8014C11C for up to 40 objects
+/* Nearby-object scan. Asks fn_8014C11C for up to 40 objects
  * within lbl_803E2B80, walks the result array of (obj, ?) pairs, and if
  * any entry's modelType is 0x6a3 with state[0x2dc] bit 0x20000000 set
  * AND bits 0x1800 clear, latches "found" and exits. If nothing matched,
  * fires gCameraInterface vtable[0x24/4] with (0, 0, 0). */
 #pragma scheduling off
 #pragma peephole off
-void fn_80157988(int obj) {
+void smallbasket_checkNearbyActiveBasket(int obj) {
     u8 count = (u8)fn_8014C11C(obj, lbl_803E2B80, 0, 0x28, lbl_803AC4A8);
     u8 noMatch = 1;
     if (count >= 1) {
