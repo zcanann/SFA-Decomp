@@ -36,6 +36,8 @@ extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
+extern int *gModgfxInterface;
+extern int *gExpgfxInterface;
 extern f64 DOUBLE_803e5da8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5D78;
@@ -519,6 +521,12 @@ extern void objRenderFn_8003b8f4(f32);
 void dll_197_render(void) { objRenderFn_8003b8f4(lbl_803E5104); }
 #pragma peephole reset
 #pragma scheduling reset
+
+void dll_197_free(int obj)
+{
+    (*(void (**)(int))(*(int *)gModgfxInterface + 0x18))(obj);
+    (*(void (**)(int))(*(int *)gExpgfxInterface + 0x18))(obj);
+}
 
 extern f32 lbl_803E50EC;
 extern f32 lbl_803E5118;

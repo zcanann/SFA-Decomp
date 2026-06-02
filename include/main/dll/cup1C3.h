@@ -18,6 +18,7 @@ void dbsh_symbol_update(void);
 void dbsh_symbol_init(int* obj);
 int dll_197_getExtraSize(void);
 int dll_197_getObjectTypeId(void);
+void dll_197_free(int obj);
 void dll_197_render(void);
 void dll_197_hitDetect(void);
 
