@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_13E.h"
+#include "main/dll/sidekickball.h"
 
 extern f32 timeDelta;
 extern f32 lbl_803E369C;

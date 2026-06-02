@@ -141,7 +141,7 @@ main/dll/dll_134.c
 main/dll/dll_138.c
 main/dll/dll_13B.c
 main/dll/dll_13C.c
-main/dll/dll_13E.c
+main/dll/sidekickball.c
 main/dll/dll_13F.c
 main/dll/dll_140.c
 main/dll/dll_141.c

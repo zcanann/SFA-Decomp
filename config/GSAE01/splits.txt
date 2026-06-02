@@ -779,7 +779,7 @@ main/dll/transporter.c:
 main/dll/autoTransporter.c:
 	.text       start:0x80178338 end:0x801797A4
 
-main/dll/dll_13E.c:
+main/dll/sidekickball.c:
 	.text       start:0x801797A4 end:0x80179A2C
 
 main/dll/dll_140.c:

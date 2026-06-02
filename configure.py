@@ -1067,7 +1067,7 @@ config.libs = [
             Object(NonMatching, "main/dll/dll_138.c"),
             Object(NonMatching, "main/dll/transporter.c"),
             Object(NonMatching, "main/dll/autoTransporter.c"),
-            Object(NonMatching, "main/dll/dll_13E.c"),
+            Object(NonMatching, "main/dll/sidekickball.c"),
             Object(NonMatching, "main/dll/dll_140.c"),
             Object(NonMatching, "main/dll/tFrameAnimator.c"),
             Object(NonMatching, "main/dll/screenOverlay.c"),
