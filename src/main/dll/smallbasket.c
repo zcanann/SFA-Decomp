@@ -2167,14 +2167,14 @@ extern int *gPartfxInterface;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 lbl_8031FD48[];
 
-extern void fn_8015A77C(int *obj, int *st);
+extern void smallbasket_playReactionEffects(int *obj, int *st);
 
 extern f32 lbl_803E2CB8;
 
-/* fn_8015A660: 284b - event handler. */
+/* Handles reaction event commands and updates the current reaction cue. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8015A660(int obj, int *st, int p3, int cmd, int p5, int sub) {
+void smallbasket_handleReactionEvent(int obj, int *st, int p3, int cmd, int p5, int sub) {
     u8 *base;
     u32 r;
 
@@ -2216,10 +2216,10 @@ void fn_8015A660(int obj, int *st, int p3, int cmd, int p5, int sub) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_8015ABFC: 196b - handle Sfx_PlayFromObject hit, then call fn_8015A77C. */
+/* Applies the current reaction table entry, then emits its effects. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8015ABFC(int *obj, int *st) {
+void smallbasket_applyReactionState(int *obj, int *st) {
     u8 *t1;
     {
         u32 idx = *(u16*)((char*)st + 0x338);
@@ -2242,15 +2242,15 @@ void fn_8015ABFC(int *obj, int *st) {
                         *(f32*)((char*)fbase + off), 0, 0);
         }
     }
-    fn_8015A77C(obj, st);
+    smallbasket_playReactionEffects(obj, st);
 }
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_8015A77C: 424b - switch on _a0, play sfx, optionally call vtable->8(). */
+/* Plays reaction SFX/particles selected by the object reaction state. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8015A77C(int *obj, int *st) {
+void smallbasket_playReactionEffects(int *obj, int *st) {
     u16 flag = 0;
     switch (*(s16*)((char*)obj + 0xa0)) {
     case 2:
