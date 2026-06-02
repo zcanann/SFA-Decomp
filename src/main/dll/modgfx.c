@@ -4426,6 +4426,22 @@ extern u8 gPlayerShadowMode;
 extern u8 lbl_803DD2C0;
 extern void fn_800A1040(s16 a, int b);
 extern u16 lbl_8039C2E0[];
+extern u32 lbl_802C2160[];
+extern f64 lbl_803DF480;
+extern f32 lbl_803DF46C;
+extern f32 lbl_803DF488;
+extern f32 lbl_803DF48C;
+extern f32 lbl_803DF490;
+extern f32 lbl_803DF494;
+extern f32 lbl_803DF498;
+extern f32 lbl_803DF49C;
+extern f32 lbl_803DF4A0;
+extern f32 lbl_803DF4A4;
+extern void fn_8006961C(void *out, void *top, void *bottom, void *params, int count);
+extern void hitDetectFn_800691c0(void *obj, void *hitData, int flags, int arg3);
+extern void fn_80069968(int *outA, int *outB);
+extern void fn_80069958(int **out);
+void fn_800A3AF0(void *table, int count, void *ctx, f32 a, f32 b);
 
 void dll_0B_func0B(void) {
     lbl_803DD282 = lbl_803DD282 + 1;
@@ -4450,6 +4466,120 @@ void playerShadow_setMode(u8 v) {
     }
 }
 #pragma peephole reset
+
+#pragma scheduling off
+#pragma peephole off
+void playerShadow_renderObject(void *obj)
+{
+    u32 *defaults;
+    u32 params[4];
+    int *tileInfo;
+    int hitTable;
+    int hitCount;
+    int hitTableValue;
+    u32 mode;
+    f32 hitData[6];
+    f32 verts[8][3];
+    f32 radius;
+    f32 height;
+    f32 minX;
+    f32 maxX;
+    f32 topY;
+    f32 bottomY;
+    f32 minZ;
+    f32 maxZ;
+
+    defaults = lbl_802C2160;
+    params[0] = defaults[0];
+    params[1] = defaults[1];
+    params[2] = defaults[2];
+    params[3] = defaults[3];
+    hitTable = 0;
+
+    if (gPlayerShadowMode == 0) {
+        return;
+    }
+
+    mode = gPlayerShadowMode - 0xb;
+    if (mode <= 6) {
+        switch (mode) {
+            case 0:
+                radius = lbl_803DF488;
+                height = radius;
+                break;
+            case 1:
+                radius = lbl_803DF48C;
+                height = lbl_803DF490;
+                break;
+            case 2:
+                radius = lbl_803DF494;
+                height = lbl_803DF488;
+                break;
+            case 3:
+                radius = lbl_803DF494;
+                height = lbl_803DF488;
+                break;
+            case 4:
+                radius = lbl_803DF498;
+                height = lbl_803DF490;
+                break;
+            case 5:
+                radius = lbl_803DF49C;
+                height = lbl_803DF4A0;
+                break;
+            case 6:
+                radius = lbl_803DF4A4;
+                height = radius;
+                break;
+        }
+    } else {
+        radius = lbl_803DF46C;
+        height = radius;
+    }
+
+    minX = *(f32 *)((char *)obj + 0xc) - radius;
+    maxX = *(f32 *)((char *)obj + 0xc) + radius;
+    topY = *(f32 *)((char *)obj + 0x10) + height;
+    bottomY = *(f32 *)((char *)obj + 0x10) - height;
+    minZ = *(f32 *)((char *)obj + 0x14) - radius;
+    maxZ = *(f32 *)((char *)obj + 0x14) + radius;
+
+    verts[0][0] = minX;
+    verts[0][1] = topY;
+    verts[0][2] = minZ;
+    verts[1][0] = minX;
+    verts[1][1] = topY;
+    verts[1][2] = maxZ;
+    verts[2][0] = maxX;
+    verts[2][1] = topY;
+    verts[2][2] = maxZ;
+    verts[3][0] = maxX;
+    verts[3][1] = topY;
+    verts[3][2] = minZ;
+    verts[4][0] = minX;
+    verts[4][1] = bottomY;
+    verts[4][2] = minZ;
+    verts[5][0] = minX;
+    verts[5][1] = bottomY;
+    verts[5][2] = maxZ;
+    verts[6][0] = maxX;
+    verts[6][1] = bottomY;
+    verts[6][2] = maxZ;
+    verts[7][0] = maxX;
+    verts[7][1] = bottomY;
+    verts[7][2] = minZ;
+
+    fn_8006961C(hitData, &verts[0], &verts[4], params, 4);
+    hitDetectFn_800691c0(obj, hitData, 0x84, 0);
+    fn_80069968(&hitCount, &hitTable);
+    hitTableValue = hitTable;
+    fn_80069958(&tileInfo);
+    fn_800A3AF0((void *)hitTableValue, hitCount, obj,
+        *(f32 *)((char *)obj + 0xc) - (f32)tileInfo[0],
+        *(f32 *)((char *)obj + 0x14) - (f32)tileInfo[2]);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 extern f32 lbl_803DF430;
 extern f32 lbl_803DF434;
