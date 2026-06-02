@@ -43,7 +43,7 @@ void FUN_801b6130(int param_1);
 void FUN_801b63c0(void);
 
 int explosion_getExtraSize(void);
-int explosion_func08(int obj);
+int explosion_getObjectTypeId(int obj);
 void explosion_free(int obj);
 void explosion_render(void);
 void explosion_hitDetect(void);
@@ -53,7 +53,7 @@ void explosion_release(uint param_1);
 void explosion_initialise(void);
 
 int dimwooddoor2_getExtraSize(void);
-int dimwooddoor2_func08(void);
+int dimwooddoor2_getObjectTypeId(void);
 void dimwooddoor2_free(void);
 void dimwooddoor2_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dimwooddoor2_hitDetect(void);
@@ -63,7 +63,7 @@ void dimwooddoor2_release(void);
 void dimwooddoor2_initialise(void);
 
 int dimmagicbridge_getExtraSize(void);
-int dimmagicbridge_func08(void);
+int dimmagicbridge_getObjectTypeId(void);
 void dimmagicbridge_free(void);
 void dimmagicbridge_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dimmagicbridge_hitDetect(void);
@@ -72,7 +72,7 @@ void dimmagicbridge_init(u8* obj, u8* params);
 void dimmagicbridge_release(void);
 void dimmagicbridge_initialise(void);
 int dll_1CE_getExtraSize(void);
-int dll_1CE_func08(void);
+int dll_1CE_getObjectTypeId(void);
 void dll_1CE_free(void);
 void dll_1CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_1CE_hitDetect(void);

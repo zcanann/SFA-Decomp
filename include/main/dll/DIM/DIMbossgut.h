@@ -7,7 +7,7 @@
 extern ObjectDescriptor gDIM_BossGutObjDescriptor;
 
 int DIMbossgut_getExtraSize(void);
-int DIMbossgut_func08(void);
+int DIMbossgut_getObjectTypeId(void);
 void DIMbossgut_free(void);
 void DIMbossgut_render(int obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                        undefined4 param_5,char shouldRender);

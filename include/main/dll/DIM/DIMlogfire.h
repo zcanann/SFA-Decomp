@@ -35,7 +35,7 @@ void FUN_801aa480(int param_1);
 undefined4 FUN_801aa4a4(void);
 
 int animsharpclaw_getExtraSize(void);
-int animsharpclaw_func08(void);
+int animsharpclaw_getObjectTypeId(void);
 void animsharpclaw_free(int obj);
 void animsharpclaw_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void animsharpclaw_hitDetect(void);
@@ -49,7 +49,7 @@ int MoonSeedPlantingSpot_modelMtxFn(void);
 int MoonSeedPlantingSpot_func0B(void);
 int MoonSeedPlantingSpot_setScale(int *obj, int arg);
 int MoonSeedPlantingSpot_getExtraSize(void);
-int MoonSeedPlantingSpot_func08(void);
+int MoonSeedPlantingSpot_getObjectTypeId(void);
 void MoonSeedPlantingSpot_free(int x);
 int MoonSeedPlantingSpot_SeqFn(int obj);
 void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible);

@@ -49,7 +49,7 @@ FUN_801addec(undefined8 param_1,double param_2,double param_3,undefined8 param_4
             ,undefined4 param_16);
 
 int imicemountain_getExtraSize(void);
-int imicemountain_func08(void);
+int imicemountain_getObjectTypeId(void);
 void imicemountain_free(void);
 int IMIceMountain_SeqFn(void *obj, int arg2, u8 *arg3);
 void imicemountain_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
@@ -58,7 +58,7 @@ void imicemountain_update(int* obj);
 void imicemountain_init(int* obj);
 
 int crrockfall_getExtraSize(void);
-int crrockfall_func08(void);
+int crrockfall_getObjectTypeId(void);
 void crrockfall_free(void);
 void crrockfall_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void crrockfall_hitDetect(void);
@@ -68,7 +68,7 @@ void crrockfall_release(void);
 void crrockfall_initialise(void);
 
 int magiclight_getExtraSize(int *obj);
-int magiclight_func08(void);
+int magiclight_getObjectTypeId(void);
 void magiclight_free(int obj);
 void magiclight_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void magiclight_hitDetect(void);
@@ -78,7 +78,7 @@ void magiclight_release(void);
 void magiclight_initialise(void);
 
 int dll_16C_getExtraSize(void);
-int dll_16C_func08(void);
+int dll_16C_getObjectTypeId(void);
 void dll_16C_free(int *obj);
 void dll_16C_hitDetect(void *obj);
 void dll_16C_init(void *obj, void *arg2);
@@ -86,7 +86,7 @@ void dll_16C_release(void);
 void dll_16C_initialise(void);
 
 int imicepillar_getExtraSize(void);
-int imicepillar_func08(void);
+int imicepillar_getObjectTypeId(void);
 void imicepillar_free(void);
 void imicepillar_render(void);
 void imicepillar_hitDetect(void);

@@ -37,7 +37,7 @@ void FUN_801ba434(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 void FUN_801ba45c(int param_1);
 
 int dim2icefloe_getExtraSize(void);
-int dim2icefloe_func08(void);
+int dim2icefloe_getObjectTypeId(void);
 void dim2icefloe_free(void);
 void dim2icefloe_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dim2icefloe_hitDetect(void);
@@ -47,7 +47,7 @@ void dim2icefloe_release(void);
 void dim2icefloe_initialise(void);
 
 int dim2icicle_getExtraSize(void);
-int dim2icicle_func08(void);
+int dim2icicle_getObjectTypeId(void);
 void dim2icicle_free(void);
 void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dim2icicle_hitDetect(void);
@@ -66,7 +66,7 @@ void dll_1DA_init(void* obj);
 void dll_1DA_release(void);
 void dll_1DA_initialise(void);
 int dll_1DB_getExtraSize(void);
-int dll_1DB_func08(void);
+int dll_1DB_getObjectTypeId(void);
 void dll_1DB_free(void);
 void dll_1DB_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_1DB_hitDetect(void);
@@ -74,7 +74,7 @@ void dll_1DB_init(void* obj, void* p);
 void dll_1DB_release(void);
 void dll_1DB_initialise(void);
 int dll_1DF_getExtraSize(void);
-int dll_1DF_func08(void);
+int dll_1DF_getObjectTypeId(void);
 void dll_1DF_free(void);
 void dll_1DF_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_1DF_hitDetect(void);
