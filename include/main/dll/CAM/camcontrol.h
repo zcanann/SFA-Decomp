@@ -11,10 +11,16 @@ typedef struct CamcontrolTriggeredAction {
   u8 pad0E[2];
 } CamcontrolTriggeredAction;
 
+STATIC_ASSERT(sizeof(CamcontrolTriggeredAction) == 0x10);
+STATIC_ASSERT(offsetof(CamcontrolTriggeredAction, triggerMode) == 0x0D);
+
 typedef struct CamcontrolQueuedActionParam {
   uint actionIndex;
   byte noBlendFlag;
 } CamcontrolQueuedActionParam;
+
+STATIC_ASSERT(sizeof(CamcontrolQueuedActionParam) == 0x08);
+STATIC_ASSERT(offsetof(CamcontrolQueuedActionParam, noBlendFlag) == 0x04);
 
 typedef struct CameraViewSlot {
   s16 yaw;
