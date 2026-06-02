@@ -901,24 +901,21 @@ int TitleMenuItem_isEnabled(TitleMenuItem* item)
 /* EN v1.0 0x80131618  size: 808b  Render title menu item. */
 void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
 {
-    void** textures;
     void* texture;
     void* phrase;
     int textureIndex;
     int drawAlpha;
     f32 markerX;
 
-    textures = (void**)lbl_803A9DB8;
-
     if (item->kind == 0) {
-        drawTexture(textures[1], (u8)((((u8)alpha) * 0xb4) >> 8),
+        drawTexture(((void**)lbl_803A9DB8)[1], (u8)((((u8)alpha) * 0xb4) >> 8),
                     (f32)item->x, (f32)item->y, 0x100);
 
-        texture = textures[0];
-        markerX = (f32)item->extra.textId *
-                  ((f32)(item->value - item->minValue) /
-                   (f32)(item->maxValue - item->minValue)) +
-                  (f32)item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1);
+        texture = ((void**)lbl_803A9DB8)[0];
+        markerX = (f32)(int)((f32)item->extra.textId *
+                             ((f32)(item->value - item->minValue) /
+                              (f32)(item->maxValue - item->minValue)) +
+                             (f32)item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1));
         drawTexture(texture, (u8)((((u8)alpha) * 0xff) >> 8),
                     markerX, (f32)(item->y - 4), 0x100);
     } else if (item->kind == 1) {
@@ -938,7 +935,8 @@ void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
         if ((item->flags & TITLE_MENU_FLAG_A_TOGGLE) != 0) {
             drawAlpha >>= 1;
         }
-        drawTexture(textures[textureIndex], (u8)drawAlpha, (f32)item->x, (f32)item->y, 0x100);
+        drawTexture(((void**)lbl_803A9DB8)[textureIndex], (u8)drawAlpha,
+                    (f32)item->x, (f32)item->y, 0x100);
     } else if (item->kind < 3) {
         if ((item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0) {
             phrase = gameTextGetPhrase(item->extra.window.phraseId, 0);
