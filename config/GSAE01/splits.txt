@@ -792,7 +792,7 @@ main/dll/tFrameAnimator.c:
 main/dll/screenOverlay.c:
 	.text       start:0x8017A38C end:0x8017AB20
 
-main/dll/dll_145.c:
+main/dll/cloudprisoncontrol.c:
 	.text       start:0x8017AB20 end:0x8017AC2C
 
 main/dll/texScroll.c:
@@ -801,7 +801,7 @@ main/dll/texScroll.c:
 main/dll/dll_147.c:
 	.text       start:0x8017ADB4 end:0x8017ADB4
 
-main/dll/dll_148.c:
+main/dll/cfguardian.c:
 	.text       start:0x8017ADB4 end:0x8017C178
 
 main/dll/alphaanim.c:
@@ -815,18 +815,18 @@ main/dll/crackanim.c:
 	.text       start:0x8017E1A0 end:0x8017EC94
 	.data       start:0x803214F8 end:0x80321530
 
-main/dll/dll_14C.c:
+main/dll/babycloudrunner.c:
 	.text       start:0x8017EC94 end:0x8017EFF0
 
 main/dll/dll_14D.c:
 	.text       start:0x8017EFF0 end:0x8017F4F4
 	.data       start:0x80321530 end:0x80321568
 
-main/dll/dll_14F.c:
+main/dll/cfprisonuncle.c:
 	.text       start:0x8017F4F4 end:0x801816F8
 	.data       start:0x80321568 end:0x803216B8
 
-main/dll/dll_150.c:
+main/dll/gcrobotlightbea.c:
 	.text       start:0x801816F8 end:0x801826E8
 	.data       start:0x803216B8 end:0x803216F0
 
@@ -836,16 +836,16 @@ main/dll/exploder.c:
 main/dll/dll_152.c:
 	.text       start:0x801826E8 end:0x801826E8
 
-main/dll/dll_153.c:
+main/dll/cfperch.c:
 	.text       start:0x801826E8 end:0x801833E4
 
-main/dll/dll_159.c:
+main/dll/blasted.c:
 	.text       start:0x801833E4 end:0x801833E4
 
-main/dll/dll_15A.c:
+main/dll/explodable.c:
 	.text       start:0x801833E4 end:0x80184180
 
-main/dll/dll_15B.c:
+main/dll/cfforcefield.c:
 	.text       start:0x80184180 end:0x801845FC
 
 main/dll/CF/CFguardian.c:

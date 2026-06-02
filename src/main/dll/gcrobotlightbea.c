@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_150.h"
+#include "main/dll/gcrobotlightbea.h"
 
 
 #pragma peephole off

@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_15A.h"
+#include "main/dll/explodable.h"
 
 extern undefined4 FUN_80006b0c();
 extern undefined8 GameBit_Set(int eventId, int value);

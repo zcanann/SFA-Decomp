@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_14C.h"
+#include "main/dll/babycloudrunner.h"
 
 extern void objRenderFn_80041018(void);
 extern int  ObjGroup_FindNearestObject(byte type, int obj, float *dist_out);

@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_148.h"
+#include "main/dll/cfguardian.h"
 
 #define SFXen_weetinkoneshot 75
 #define SFXms_baddie_beamin 97

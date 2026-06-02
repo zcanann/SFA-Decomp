@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_14F.h"
+#include "main/dll/cfprisonuncle.h"
 #include "main/objanim.h"
 
 #define SFXen_riverloop11 0x4c

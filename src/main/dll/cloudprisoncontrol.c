@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_145.h"
+#include "main/dll/cloudprisoncontrol.h"
 
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
 extern int GameBit_Get(int bitId);

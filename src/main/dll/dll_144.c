@@ -5,7 +5,7 @@
  *
  * Corridor evidence:
  * - exact debug-side neighborhood in the camcontrol -> DIMBoss interval:
- *   dll_152.c -> dll_153.c -> tFrameAnimator154.c -> dll_155.c -> dll_144.c
+ *   dll_152.c -> cfperch.c -> tFrameAnimator154.c -> dll_155.c -> dll_144.c
  * - debug-side path: dll/dll_144.c
  *
  * Why this stub exists:

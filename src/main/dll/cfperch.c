@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_153.h"
+#include "main/dll/cfperch.h"
 
 #define SFXmn_dimexp01 0x6b
 #define SFXmn_dimprup6 0x6c
