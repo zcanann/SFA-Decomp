@@ -26,8 +26,35 @@ typedef struct TitleMenuItem {
 typedef struct LinkTextureSlot {
     void* texture;
     s16 assetId;
-    s16 pad6;
+    u8 width;
+    u8 pad7;
 } LinkTextureSlot;
+
+typedef struct LinkMenuItem {
+    u16 textId;
+    u16 boxId;
+    s16 field04;
+    s16 field06;
+    s16 field08;
+    s16 x;
+    s16 y;
+    u8 pad0E[2];
+    union {
+        int textureAssetId;
+        void* texture;
+    };
+    u16 field14;
+    u16 flags;
+    u8 pad18[2];
+    s8 upLink;
+    s8 downLink;
+    s8 leftLink;
+    s8 rightLink;
+    s8 state;
+    s8 slots[25];
+    s8 timer;
+    u8 pad39[3];
+} LinkMenuItem;
 
 #define TITLE_MENU_FLAG_ENABLED        0x01
 #define TITLE_MENU_FLAG_WRAP           0x02
@@ -1125,12 +1152,27 @@ extern void textureFree(void* p);
 extern void fn_8001BDD4(int a);
 extern void fn_8001BE2C(int mode);
 extern void* mmAlloc(int size, int heap, int flags);
+extern void* memcpy(void* dst, const void* src, int size);
+extern void OSReport(const char* fmt, ...);
 extern void padFn_80014b18(int value);
 extern s16 linkItemOpacity;
+extern s16 linkCount_803dd90e;
 extern u8 linkIsRotated;
 extern u8 linkFlag_803dd8f8;
-extern u8 lbl_803A9458[0x960];
+extern s16 lbl_803DD8FA;
+extern s16 lbl_803DD8FC;
+extern s16 lbl_803DD8FE;
+extern s16 lbl_803DD900;
+extern s16 lbl_803DD902;
+extern s16 lbl_803DD904;
+extern const char* lbl_803DD908;
+extern s8 lbl_803DD910;
 extern s8 lbl_803DD911;
+extern s8 linkSelected;
+extern s8 lbl_803DD913;
+extern char lbl_8031C1A8[];
+extern LinkMenuItem lbl_803A9458[40];
+extern void linkInitTextures(LinkMenuItem* item);
 
 #pragma scheduling off
 #pragma peephole off
@@ -1261,6 +1303,94 @@ void Link_initialise(void)
     linkFlag_803dd8f8 = 1;
 }
 
+void Link_setup(LinkMenuItem* items, int count, int selected, const char* defaultMessage,
+                int unused1, int unused2, int baseRed, int baseGreen, int baseBlue,
+                int selectedRed, int selectedGreen, int selectedBlue)
+{
+    const char* defaultText;
+    LinkMenuItem* src;
+    LinkMenuItem* item;
+    int linkedIndex;
+    int i;
+
+    src = items;
+    defaultText = lbl_8031C1A8;
+    if (count <= 40) {
+        lbl_803DD911 = (s8)count;
+        linkCount_803dd90e = 0xff;
+        linkSelected = (s8)selected;
+        lbl_803DD910 = 0;
+        lbl_803DD913 = 0;
+
+        memcpy(lbl_803A9458, items, count * sizeof(LinkMenuItem));
+
+        item = lbl_803A9458;
+        for (i = 0; i < count; i++) {
+            linkedIndex = item->upLink;
+            if ((linkedIndex < -1) || (linkedIndex >= count)) {
+                OSReport(defaultText + 0xa4, linkedIndex);
+            }
+
+            linkedIndex = item->downLink;
+            if ((linkedIndex < -1) || (linkedIndex >= count)) {
+                OSReport(defaultText + 0xb8, linkedIndex);
+            }
+
+            linkedIndex = item->leftLink;
+            if ((linkedIndex < -1) || (linkedIndex >= count)) {
+                OSReport(defaultText + 0xd0, linkedIndex);
+            }
+
+            linkedIndex = item->rightLink;
+            if ((linkedIndex < -1) || (linkedIndex >= count)) {
+                OSReport(defaultText + 0xe8, linkedIndex);
+            }
+
+            if (src->textureAssetId != -1) {
+                item->texture = textureLoadAsset(src->textureAssetId);
+            } else {
+                item->texture = NULL;
+            }
+
+            if ((item->flags & 0x10) != 0) {
+                item->field14 = 0;
+                item->field08 = 0;
+            }
+
+            if ((item->flags & 0x04) != 0) {
+                linkInitTextures(item);
+            }
+
+            linkedIndex = item->leftLink;
+            if ((linkedIndex != -1) && ((item->flags & 0x08) != 0)) {
+                LinkMenuItem* linked = &lbl_803A9458[linkedIndex];
+                item->x = linked->x + linked->field14;
+                item->field04 = linked->field04 + linked->field14;
+            }
+
+            if ((item->flags & 0x0400) != 0) {
+                item->x -= (s16)(item->field14 >> 1);
+                item->field04 = item->x;
+            }
+
+            item->timer = 4;
+            item++;
+            src++;
+        }
+
+        lbl_803DD904 = baseRed;
+        lbl_803DD902 = baseGreen;
+        lbl_803DD900 = baseBlue;
+        lbl_803DD8FE = selectedRed;
+        lbl_803DD8FC = selectedGreen;
+        lbl_803DD8FA = selectedBlue;
+        if (defaultMessage != NULL) {
+            defaultText = defaultMessage;
+        }
+        lbl_803DD908 = defaultText;
+    }
+}
+
 void TitleMenuItem_release(void)
 {
     u32* p;
@@ -1277,16 +1407,16 @@ void TitleMenuItem_release(void)
 
 void Link_free(void)
 {
-    u8* p;
+    LinkMenuItem* item;
     int i;
 
     i = 0;
-    p = lbl_803A9458;
+    item = lbl_803A9458;
     for (; i < (s8)lbl_803DD911; i++) {
-        if (*(void**)(p + 16) != NULL) {
-            textureFree(*(void**)(p + 16));
+        if (item->texture != NULL) {
+            textureFree(item->texture);
         }
-        p += 60;
+        item++;
     }
     lbl_803DD911 = 0;
 }
