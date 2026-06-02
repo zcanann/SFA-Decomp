@@ -12,14 +12,18 @@ extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
 extern void* ObjGroup_GetObjects();
 extern void Resource_Release(void *resource);
+extern void objRenderFn_8003b8f4(void *obj, int p2, int p3, int p4, int p5, f32 scale);
 extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
 extern undefined4 DAT_803dc070;
+extern s8 lbl_803DDC70;
 extern undefined4* DAT_803dd708;
 extern undefined4 DAT_803de8e8;
+extern int *gScreensInterface;
 extern void *lbl_803DDC74;
 extern f64 DOUBLE_803e6978;
+extern f32 lbl_803E5CE8;
 extern f32 lbl_803E6960;
 extern f32 lbl_803E6964;
 extern f32 lbl_803E6968;
@@ -394,6 +398,25 @@ void WM_Galleon_free(int *obj, int leavingMap)
             Resource_Release(lbl_803DDC74);
             lbl_803DDC74 = NULL;
         }
+    }
+}
+
+void WM_Galleon_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (GameBit_Get(0x78) != 0) {
+        return;
+    }
+    if (visible == 0) {
+        return;
+    }
+    if (*(s16 *)((char *)obj + 0x46) == 0x188 && *(s32 *)(*(u8 **)((char *)obj + 0x30) + 0xf4) >= 7) {
+        return;
+    }
+
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E5CE8);
+
+    if (lbl_803DDC70 != 0) {
+        (*(void (**)(int))(*(int *)gScreensInterface + 0x4))(1);
     }
 }
 
