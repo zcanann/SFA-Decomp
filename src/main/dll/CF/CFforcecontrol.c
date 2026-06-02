@@ -39,6 +39,8 @@ extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80048000();
 extern undefined4 FUN_8004800c();
 extern undefined4 FUN_8005d1e8();
+extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
+extern void GXSetBlendMode(int type, int srcFactor, int dstFactor, int op);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 extern undefined4 FUN_80081028();
@@ -838,7 +840,6 @@ extern void deathRenderFn_8001fd98(int* obj);
 extern void* Obj_GetActiveModel(int* obj);
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern f32 lbl_803E3CC0;
-extern void fuelcell_modelMtxFn(void);
 extern void mm_free_(void *ptr);
 
 #pragma scheduling off
@@ -871,6 +872,18 @@ int fuelcell_func0B(int* obj)
     state[0x5c] |= 0x20;
     state[0x5c] |= 0x10;
     return 0;
+}
+
+void fuelcell_modelMtxFn(u8 *model)
+{
+    if (model[0x37] == 0xff) {
+        GXSetBlendMode(0, 1, 0, 5);
+    } else {
+        GXSetBlendMode(1, 4, 1, 5);
+    }
+    gxSetZMode_(1, 3, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
 
 void fuelcell_free(int *obj)

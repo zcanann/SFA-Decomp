@@ -20,5 +20,6 @@ void FUN_8018c928(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  uint param_9);
 void FUN_8018cbc8(int param_1);
 void FUN_8018cbcc(int param_1);
+void fuelcell_modelMtxFn(u8 *model);
 
 #endif /* MAIN_DLL_CF_CFFORCECONTROL_H_ */
