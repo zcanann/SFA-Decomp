@@ -251,41 +251,42 @@ void THPPlayerDrawCurrentFrame(void *param_1,void *param_2,void *param_3,uint pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 Movie_SetVolumeFade(uint param_1,int param_2)
+BOOL Movie_SetVolumeFade(int volume,int fadeFrames)
 {
-  undefined4 uVar1;
+  BOOL interrupts;
+  f32 targetVolume;
+  int rampCount;
   
-  if ((DAT_803a6a58 == 0) || (DAT_803a6a5f == '\0')) {
-    uVar1 = 0;
-  }
-  else {
-    if (0x7f < (int)param_1) {
-      param_1 = 0x7f;
+  if ((lbl_803A5D60.isOpen != 0) && (lbl_803A5D60.audioExists != 0)) {
+    if (volume > 0x7f) {
+      volume = 0x7f;
     }
-    if ((int)param_1 < 0) {
-      param_1 = 0;
+    if (volume < 0) {
+      volume = 0;
     }
-    if (60000 < param_2) {
-      param_2 = 60000;
+    if (fadeFrames > 60000) {
+      fadeFrames = 60000;
     }
-    if (param_2 < 0) {
-      param_2 = 0;
+    if (fadeFrames < 0) {
+      fadeFrames = 0;
     }
-    FUN_80243e74();
-    DAT_803a6a98 = (f32)(s32)(param_1);
-    if (param_2 == 0) {
-      DAT_803a6aa0 = 0;
-      DAT_803a6a94 = DAT_803a6a98;
+
+    interrupts = OSDisableInterrupts();
+    targetVolume = (f32)volume;
+    lbl_803A5D60.targetVolume = targetVolume;
+    if (fadeFrames != 0) {
+      rampCount = fadeFrames << 5;
+      lbl_803A5D60.rampCount = rampCount;
+      lbl_803A5D60.deltaVolume = (targetVolume - lbl_803A5D60.curVolume) / (f32)rampCount;
     }
     else {
-      DAT_803a6aa0 = param_2 << 5;
-      DAT_803a6a9c = (DAT_803a6a98 - DAT_803a6a94) /
-                     (f32)(s32)(DAT_803a6aa0);
+      lbl_803A5D60.rampCount = 0;
+      lbl_803A5D60.curVolume = targetVolume;
     }
-    FUN_80243e9c();
-    uVar1 = 1;
+    OSRestoreInterrupts(interrupts);
+    return TRUE;
   }
-  return uVar1;
+  return FALSE;
 }
 
 /*
