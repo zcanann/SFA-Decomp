@@ -838,7 +838,6 @@ extern void deathRenderFn_8001fd98(int* obj);
 extern void* Obj_GetActiveModel(int* obj);
 extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern f32 lbl_803E3CC0;
-extern int fuelcell_func0B(int* obj);
 extern void fuelcell_modelMtxFn(void);
 
 #pragma scheduling off
@@ -864,6 +863,14 @@ void deathgas_init(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+int fuelcell_func0B(int* obj)
+{
+    u8* state = *(u8**)((char*)obj + 0xb8);
+    state[0x5c] |= 0x20;
+    state[0x5c] |= 0x10;
+    return 0;
+}
 
 void fuelcell_init(int* obj)
 {
