@@ -73,12 +73,18 @@ typedef struct AttractMoviePlayer {
     f32 targetVolume;
     f32 deltaVolume;
     s32 rampCount;
-    s32 curAudioTrack;
+    union {
+        s32 curAudioTrack;
+        s32 curVideoFrameNumber;
+    };
     union {
         s32 curVideoNumber;
         s32 curAudioFrameNumber;
     };
-    s32 curAudioNumber;
+    union {
+        s32 curAudioNumber;
+        AttractMovieTextureSet *curTextureSet;
+    };
     union {
         AttractMovieTextureSet *dispTextureSet;
         AttractMovieAudioBuffer *curAudioBuffer;

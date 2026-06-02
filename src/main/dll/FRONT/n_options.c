@@ -605,7 +605,7 @@ void fn_80118240(void)
   AttractMovieTextureSet *textureSet;
 
   if (lbl_803DD610 == 2) {
-    textureSet = (AttractMovieTextureSet *)lbl_803A5D60.curAudioNumber;
+    textureSet = lbl_803A5D60.curTextureSet;
     fn_8004C7AC(textureSet->yTexture, textureSet->uTexture, textureSet->vTexture,
                 (s16)lbl_803A5D60.videoInfo.xSize, (s16)lbl_803A5D60.videoInfo.ySize);
   }
@@ -631,7 +631,7 @@ uint AttractMovie_DrawTextureCallback(undefined4 param_1, undefined4 *modelPtr, 
   }
 
   if (((renderOp == NULL) || (renderOp[0x29] == 1)) && (lbl_803DD610 == 2)) {
-    textureSet = (AttractMovieTextureSet *)lbl_803A5D60.curAudioNumber;
+    textureSet = lbl_803A5D60.curTextureSet;
     THPPlayerDrawCurrentFrame(textureSet->yTexture, textureSet->uTexture, textureSet->vTexture,
                               (s16)lbl_803A5D60.videoInfo.xSize,
                               (s16)lbl_803A5D60.videoInfo.ySize);
