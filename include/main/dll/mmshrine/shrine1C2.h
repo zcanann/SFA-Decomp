@@ -13,5 +13,7 @@ void FUN_801c70c4(ushort *param_1);
 void FUN_801c7390(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_801c74f0(int param_1);
 void FUN_801c75a4(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
+void gpsh_shrine_free(int *obj);
+void gpsh_shrine_render(void *obj, int p2, int p3, int p4, int p5, s8 visible);
 
 #endif /* MAIN_DLL_MMSHRINE_SHRINE1C2_H_ */

@@ -866,9 +866,64 @@ int ecsh_creator_getObjectTypeId(void) { return 0x0; }
 int gpsh_shrine_getExtraSize(void) { return 0x18; }
 int gpsh_shrine_getObjectTypeId(void) { return 0x0; }
 
+extern void ModelLightStruct_free(void *light);
+extern void gameTimerStop(void);
+extern void Music_Trigger(int id, int restart);
+extern void GameBit_Set(int bit, int value);
+extern int GameBit_Get(int bit);
+extern void lightFn_8001db6c(void *light, int enabled, f32 scale);
+extern void objRenderFn_8003b8f4(f32);
+extern void objParticleFn_80099d84(void *obj, int type, void *light, f32 scale, f32 extraScale);
+extern f32 lbl_803E5038;
+
+#pragma scheduling off
+#pragma peephole off
+void gpsh_shrine_free(int *obj)
+{
+    void **state = *(void ***)((char *)obj + 0xb8);
+    void *light = state[0];
+
+    if (light != NULL) {
+        ModelLightStruct_free(light);
+        state[0] = NULL;
+    }
+    gameTimerStop();
+    ObjGroup_RemoveObject(obj, 0xb);
+    Music_Trigger(0xd8, 0);
+    Music_Trigger(0xd9, 0);
+    Music_Trigger(8, 0);
+    Music_Trigger(0xb, 0);
+    GameBit_Set(0xefa, 0);
+    GameBit_Set(0xcbb, GameBit_Get(0xc91) == 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void gpsh_shrine_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    void **state = *(void ***)((char *)obj + 0xb8);
+
+    if (visible == 0) {
+        void *light = state[0];
+        if (light != NULL) {
+            lightFn_8001db6c(light, 0, lbl_803E5038);
+        }
+    } else {
+        void *light = state[0];
+        if (light != NULL) {
+            lightFn_8001db6c(light, 1, lbl_803E5038);
+        }
+        ((void (*)(void *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5038);
+        objParticleFn_80099d84(obj, 7, state[0], lbl_803E5038, lbl_803E5038);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4FF8;
-extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void ecsh_creator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4FF8); }
 #pragma peephole reset
