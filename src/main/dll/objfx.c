@@ -211,7 +211,7 @@ void objfx_spawnMaskedHitEffect(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fv
 
 #pragma scheduling off
 #pragma peephole off
-void objFn_800972dc(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
+void objfx_spawnDirectionalBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
                     int flags, f32 f8val, f32 mult) {
     PartfxParams params;
     ParticleTblA tA = *(ParticleTblA *)((char *)lbl_802C1FD8 + 0xd0);
@@ -293,7 +293,7 @@ void objFn_800972dc(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin
 
 #pragma scheduling off
 #pragma peephole off
-void objParticleFn_80097734(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
+void objfx_spawnArcedBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
                             void *origin, int flags, f32 f8val, f32 angBase,
                             f32 lo, f32 hi) {
     PartfxParams params;

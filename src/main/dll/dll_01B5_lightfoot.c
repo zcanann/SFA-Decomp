@@ -134,7 +134,7 @@ void lightfoot_update(int obj)
                     buf[4] = lbl_803E8218;
                     buf[5] = lbl_803E8180;
                     for (i = 0x14; i != 0; i--) {
-                        objFn_800972dc(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
+                        objfx_spawnDirectionalBurst(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
                     }
                     if (GameBit_Get(0xc3b) && GameBit_Get(0xc3c) && GameBit_Get(0xc3d)) {
                         Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
@@ -159,7 +159,7 @@ void lightfoot_update(int obj)
                     buf[4] = lbl_803E8218;
                     buf[5] = lbl_803E8180;
                     for (i = 0x14; i != 0; i--) {
-                        objFn_800972dc(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
+                        objfx_spawnDirectionalBurst(obj, 5, lbl_803E81D0, 5, 6, 0x64, lbl_803E8218, buf, 0);
                     }
                     if (GameBit_Get(0xc3e) && GameBit_Get(0xc3f) && GameBit_Get(0xc40)) {
                         Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
@@ -194,7 +194,7 @@ void lightfoot_update(int obj)
             buf[3] = lbl_803E8180;
             buf[4] = lbl_803E821C;
             buf[5] = lbl_803E8180;
-            objParticleFn_80097734(obj, 5, lbl_803E8220, 1, 6, 0x32, lbl_803E8214, lbl_803E8214,
+            objfx_spawnArcedBurst(obj, 5, lbl_803E8220, 1, 6, 0x32, lbl_803E8214, lbl_803E8214,
                                    lbl_803E8224, buf, 0);
         }
     } else {

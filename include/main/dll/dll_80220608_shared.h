@@ -550,8 +550,8 @@ extern void objfx_spawnMaskedHitEffect(int obj, int a, int b, f32 c, int d, int 
 extern void hitDetectFn_80097070(int obj, int a, int b, f32 c, int d, int e);
 extern void objfx_spawnBoxBurst(int obj, int a, int b, int c, f32 e, f32 f, f32 g, f32 h,
                                 int i, int j, int k);
-extern void objFn_800972dc(int obj, int a, int b, int c, f32 e, f32 f, int g, int h, int i);
-extern void objParticleFn_80097734(int obj, int enabled, f32 radius, int particleKind,
+extern void objfx_spawnDirectionalBurst(int obj, int a, int b, int c, f32 e, f32 f, int g, int h, int i);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                    int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                    f32 scaleZ, void *args, int arg9);
 
@@ -1582,7 +1582,7 @@ extern f32 lbl_803E6BC0;
 
 extern void *fn_802972A8(void);
 extern void setAButtonIcon(int icon);
-extern void objParticleFn_80097734(int obj, int enabled, f32 radius, int particleKind,
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                    int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                    f32 scaleZ, void *args, int arg9);
 extern f32 lbl_803E6C08;

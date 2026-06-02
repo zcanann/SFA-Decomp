@@ -4,7 +4,7 @@
 #define SFXsc_mpick1_b 179
 #define SFXsp_lf_mutter4 265
 
-extern void objFn_800972dc(int *obj, u8 idx, f32 scale, int model, int mode, u8 chance,
+extern void objfx_spawnDirectionalBurst(int *obj, u8 idx, f32 scale, int model, int mode, u8 chance,
                            f32 alpha, int flags, int unused);
 extern u8 fn_8016F16C(int *obj);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -58,13 +58,13 @@ void vfpstatueball_update(int *obj) {
 
     variant = *(s16 *)((char *)setup + 0x1a);
     if (variant == 0) {
-        objFn_800972dc(obj, state->particleIdx, lbl_803E60B8, 5, 1, state->particleChance,
+        objfx_spawnDirectionalBurst(obj, state->particleIdx, lbl_803E60B8, 5, 1, state->particleChance,
                        (f32)state->particleAlpha, 0, 0);
     } else if (variant == 1) {
-        objFn_800972dc(obj, state->particleIdx, lbl_803E60B8, 2, 1, state->particleChance,
+        objfx_spawnDirectionalBurst(obj, state->particleIdx, lbl_803E60B8, 2, 1, state->particleChance,
                        (f32)state->particleAlpha, 0, 0);
     } else {
-        objFn_800972dc(obj, state->particleIdx, lbl_803E60B8, 1, 1, state->particleChance,
+        objfx_spawnDirectionalBurst(obj, state->particleIdx, lbl_803E60B8, 1, 1, state->particleChance,
                        (f32)state->particleAlpha, 0, 0);
     }
 

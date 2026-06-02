@@ -36,7 +36,7 @@ extern void PSVECAdd(f32 *a, f32 *b, f32 *out);
 extern void spawnExplosion(int *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void WM_newcrystalFn_800969b0(int *obj, void *params, int enabled, f32 a, f32 b, f32 c,
                                      f32 d, f32 e);
-extern void objFn_800972dc(int *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
+extern void objfx_spawnDirectionalBurst(int *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
                            int flags, f32 f8val, f32 mult);
 extern f32 lbl_803E6038;
 extern f32 lbl_803E603C;
@@ -118,14 +118,14 @@ int fn_801F943C(int *obj, int unused, WmNewCrystalEventData *eventData) {
         params.y *= *(f32 *)((char *)obj + 8);
         params.z *= *(f32 *)((char *)obj + 8);
         params.pathPoint = 1;
-        objFn_800972dc(obj, 5, 1, 1, 10, &params, 0, lbl_803E6054, lbl_803E6058);
+        objfx_spawnDirectionalBurst(obj, 5, 1, 1, 10, &params, 0, lbl_803E6054, lbl_803E6058);
 
         ObjPath_GetPointLocalPosition((int)obj, 1, &params.x, &params.y, &params.z);
         params.x *= *(f32 *)((char *)obj + 8);
         params.y *= *(f32 *)((char *)obj + 8);
         params.z *= *(f32 *)((char *)obj + 8);
         params.pathPoint = 0;
-        objFn_800972dc(obj, 5, 1, 1, 10, &params, 0, lbl_803E6054, lbl_803E6058);
+        objfx_spawnDirectionalBurst(obj, 5, 1, 1, 10, &params, 0, lbl_803E6054, lbl_803E6058);
     }
     return 0;
 }

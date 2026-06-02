@@ -721,7 +721,7 @@ LAB_801ffe48:
 #pragma peephole off
 int fn_801FF884(int obj, int unused, int p3)
 {
-  extern void objFn_800972dc(int, int, int, int, int, int, int, f32, f32);
+  extern void objfx_spawnDirectionalBurst(int, int, int, int, int, int, int, f32, f32);
   extern f32 lbl_803E6270;
   extern f32 lbl_803E6274;
   int sub = *(int *)(obj + 0xb8);
@@ -734,8 +734,8 @@ int fn_801FF884(int obj, int unused, int p3)
   if ((*(u8 *)(sub + 4) & 0x80) != 0) {
     int s = *(int *)(sub + 0);
     if (s < 2 && s >= 0) {
-      objFn_800972dc(obj, 7, 5, 6, 100, 0, 0x200000, lbl_803E6270, lbl_803E6274);
-      objFn_800972dc(obj, 6, 1, 6, 100, 0, 0x200000, lbl_803E6270, lbl_803E6274);
+      objfx_spawnDirectionalBurst(obj, 7, 5, 6, 100, 0, 0x200000, lbl_803E6270, lbl_803E6274);
+      objfx_spawnDirectionalBurst(obj, 6, 1, 6, 100, 0, 0x200000, lbl_803E6270, lbl_803E6274);
     }
   }
   return 0;

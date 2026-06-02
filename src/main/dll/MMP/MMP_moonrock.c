@@ -120,7 +120,7 @@ extern int fn_8008FB20(double radiusX,double radiusY,float *start,float *end,int
                        int param_6,int param_7);
 extern void hitDetectFn_80097070(double radius,u8 *obj,int param_3,int param_4,int param_5,
                                  int param_6);
-extern void objFn_800972dc(double radius,double scale,u8 *obj,int param_4,int param_5,
+extern void objfx_spawnDirectionalBurst(double radius,double scale,u8 *obj,int param_4,int param_5,
                            int param_6,int param_7,int param_8,int param_9);
 
 #pragma scheduling off
@@ -192,10 +192,10 @@ void lightning_update(u8 *obj)
                                      0x1e,0);
             }
             if ((state[0x24] & 2) != 0) {
-                objFn_800972dc(*(f32 *)(state + 0x14),lbl_803E408C,obj,5,1,1,100,0,0);
+                objfx_spawnDirectionalBurst(*(f32 *)(state + 0x14),lbl_803E408C,obj,5,1,1,100,0,0);
             }
             if ((otherState[0x24] & 2) != 0) {
-                objFn_800972dc(*(f32 *)(otherState + 0x14),lbl_803E408C,
+                objfx_spawnDirectionalBurst(*(f32 *)(otherState + 0x14),lbl_803E408C,
                                (u8 *)objects[objectIndex],5,1,1,100,0,0);
             }
         }

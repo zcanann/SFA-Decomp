@@ -562,7 +562,7 @@ void collectible_hitDetect(void)
 extern uint GameBit_Get(int);
 extern f32 sin(f32 x);
 extern f32 fn_80293E80(f32 x);
-extern void objFn_800972dc(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
+extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
 extern int* gPartfxInterface;
 extern f32 lbl_803E3454;
 extern f32 lbl_803E3458;
@@ -588,7 +588,7 @@ int fn_80172680(int obj, int unused, u8* data)
     }
     if (*(u8*)((char*)state + 0x1e) == 0) {
         if (*(s16*)(obj + 0x46) == 0x6a6) {
-            objFn_800972dc(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
+            objfx_spawnDirectionalBurst(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
         }
     }
 

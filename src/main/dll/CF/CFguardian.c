@@ -9,7 +9,7 @@ extern int Obj_GetActiveModel(int obj);
 extern byte FUN_80063a68();
 extern undefined4 FUN_80063a74();
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
-extern void objFn_800972dc(int obj, u8 idx, f32 scale, int model, int mode, u8 chance,
+extern void objfx_spawnDirectionalBurst(int obj, u8 idx, f32 scale, int model, int mode, u8 chance,
                            f32 alpha, int flags, int unused);
 extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
                                           float *radii,int pointCount);
@@ -310,7 +310,7 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3A00);
     if ((visible != 0) && (*(u8 *)(obj + 0x36) != 0)) {
-      objFn_800972dc(obj, 5, lbl_803E3A00, (u8)*(s16 *)(state + 0x22), 1, 0x14,
+      objfx_spawnDirectionalBurst(obj, 5, lbl_803E3A00, (u8)*(s16 *)(state + 0x22), 1, 0x14,
                      lbl_803E3A04, 0, 0);
     }
   }

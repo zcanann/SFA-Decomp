@@ -16,7 +16,7 @@ extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, in
 extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);
 extern f32 getXZDistance(int *p1, int *p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
-extern void objFn_800972dc(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
+extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
 typedef void (*ObjAnimAdvanceObjectFirstFn)(int obj, f32 phase, f32 dt, int flags);
 
 extern f32 timeDelta;
@@ -109,7 +109,7 @@ void spscarab_update(int param_1)
 
     if ((*(u16 *)(param_1 + 0xb0) & 0x800) != 0) {
         if (*(s16 *)(p_b8 + 0x10) != 0) {
-            objFn_800972dc(param_1, 5, lbl_803E5A84, (u8)*(s16 *)(p_b8 + 0x10), 1, 0x14,
+            objfx_spawnDirectionalBurst(param_1, 5, lbl_803E5A84, (u8)*(s16 *)(p_b8 + 0x10), 1, 0x14,
                         lbl_803E5A88, 0, 0);
         }
     }

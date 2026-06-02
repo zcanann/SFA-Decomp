@@ -37,7 +37,7 @@ typedef struct SCTotemPuzzleParticleBox {
 } SCTotemPuzzleParticleBox;
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void objParticleFn_80097734(int obj, int enabled, f32 radius, int particleKind,
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                    int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                    f32 scaleZ, void *args, int arg9);
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
@@ -110,7 +110,7 @@ int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject *obj, SCTotemPuzzleSt
 
         objectIndex = 20;
         while (objectIndex != 0) {
-            objParticleFn_80097734((int)obj, 7, lbl_803E5600, 5, 7, 100, lbl_803E5604,
+            objfx_spawnArcedBurst((int)obj, 7, lbl_803E5600, 5, 7, 100, lbl_803E5604,
                                    lbl_803E5604, lbl_803E5608, &particleBox, 0);
             objectIndex--;
         }

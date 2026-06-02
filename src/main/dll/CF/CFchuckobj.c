@@ -25,7 +25,7 @@ extern void Obj_FreeObject(int obj);
 extern int ObjTrigger_IsSet();
 extern f32 Vec_xzDistance(f32* posA, f32* posB);
 extern f32 vec3f_distanceSquared(f32* posA, f32* posB);
-extern void objParticleFn_80097734(int obj, int enabled, f32 radius, int particleKind,
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
                                    int particleId, int lifetime, f32 scaleX, f32 scaleY,
                                    f32 scaleZ, void* args, int arg9);
 extern undefined4 FUN_800810f8();
@@ -950,10 +950,10 @@ void warpPadFn_8019042c(int param_1)
     } else if ((flags & 8) != 0) {
         if (vec3f_distanceSquared((f32 *)(param_1 + 0x18), (f32 *)(player + 0x18)) < lbl_803E3EA0) {
             if (((*(u8 *)(state + 0xe) & 0xa0) != 0) && (*(u8 *)(state + 0xc) == 0)) {
-                objParticleFn_80097734(param_1, 1, lbl_803E3EA4, 2, 7, 100,
+                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             } else {
-                objParticleFn_80097734(param_1, 1, lbl_803E3EB0, 1, 6, 100,
+                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EB0, 1, 6, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
         }
@@ -962,10 +962,10 @@ void warpPadFn_8019042c(int param_1)
     } else if ((flags & 0x10) != 0) {
         if (vec3f_distanceSquared((f32 *)(param_1 + 0x18), (f32 *)(player + 0x18)) < lbl_803E3EA0) {
             if (((*(u8 *)(state + 0xe) & 0xa0) != 0) && (*(u8 *)(state + 0xc) == 0)) {
-                objParticleFn_80097734(param_1, 1, lbl_803E3EA4, 2, 7, 100,
+                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             } else {
-                objParticleFn_80097734(param_1, 1, lbl_803E3EB0, 5, 6, 100,
+                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EB0, 5, 6, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
         }
@@ -974,10 +974,10 @@ void warpPadFn_8019042c(int param_1)
     } else {
         if (vec3f_distanceSquared((f32 *)(param_1 + 0x18), (f32 *)(player + 0x18)) < lbl_803E3EA0) {
             if (((*(u8 *)(state + 0xe) & 0xa0) != 0) && (*(u8 *)(state + 0xc) == 0)) {
-                objParticleFn_80097734(param_1, 1, lbl_803E3EA4, 2, 7, 100,
+                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EA4, 2, 7, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             } else {
-                objParticleFn_80097734(param_1, 1, lbl_803E3EB0, 3, 6, 100,
+                objfx_spawnArcedBurst(param_1, 1, lbl_803E3EB0, 3, 6, 100,
                                        lbl_803E3EA8, lbl_803E3EA8, lbl_803E3EAC, &fx, 0);
             }
         }

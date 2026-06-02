@@ -103,7 +103,7 @@ void drearthcal_update(int obj)
         part.vec[0] = lbl_803E6C0C;
         part.vec[1] = lbl_803E6C10;
         part.vec[2] = lbl_803E6C0C;
-        objParticleFn_80097734(obj, 5, lbl_803E6C14, 2, 2, 0xf, lbl_803E6C18, lbl_803E6C18,
+        objfx_spawnArcedBurst(obj, 5, lbl_803E6C14, 2, 2, 0xf, lbl_803E6C18, lbl_803E6C18,
                                lbl_803E6C1C, &part, 0);
     }
 }

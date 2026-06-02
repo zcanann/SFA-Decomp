@@ -7,7 +7,7 @@ extern undefined4 streamFn_8000a380();
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern void Model_GetVertexPosition(int modelData,int vertexIndex,float *outPosition);
-extern void objParticleFn_80097734(int obj,int enabled,f32 radius,int particleKind,
+extern void objfx_spawnArcedBurst(int obj,int enabled,f32 radius,int particleKind,
                                    int particleId,int lifetime,f32 scaleX,f32 scaleY,
                                    f32 scaleZ,void *args,int arg9);
 
@@ -47,7 +47,7 @@ void dfptargetblock_update(DfpTargetBlockObject *obj)
     buf[3] = lbl_803E648C;
     buf[4] = lbl_803E64C4;
     buf[5] = lbl_803E648C;
-    objParticleFn_80097734((int)obj,5,lbl_803E64C8,1,2,0x32,lbl_803E64C4,
+    objfx_spawnArcedBurst((int)obj,5,lbl_803E64C8,1,2,0x32,lbl_803E64C4,
                  lbl_803E64C4,lbl_803E64B0,buf,0);
   }
   else {

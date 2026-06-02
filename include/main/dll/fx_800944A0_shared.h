@@ -339,9 +339,9 @@ void objfx_spawnRandomBurst(void *obj, u8 type, u8 count, void *origin, u8 flagB
 void objfx_spawnHitEmitterAtPos(f32 *pos, u8 a, u8 b, u8 c, u8 d);
 void hitDetectFn_80097070(void *obj, u8 a, u8 b, u8 count, void *p7, f32 fval);
 void objfx_spawnMaskedHitEffect(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fval);
-void objFn_800972dc(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
+void objfx_spawnDirectionalBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
                     int flags, f32 f8val, f32 mult);
-void objParticleFn_80097734(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
+void objfx_spawnArcedBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
                             void *origin, int flags, f32 f8val, f32 angBase,
                             f32 lo, f32 hi);
 void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,

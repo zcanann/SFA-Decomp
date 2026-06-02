@@ -127,10 +127,10 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
                 hitDetectFn_80097070(objs[i], 1, 7, *(f32 *)(foundState + 0x10), 0x1e, 0);
             }
             if (f->lo & 2) {
-                objFn_800972dc(obj, 5, 1, 1, *(f32 *)(state + 0x14), lbl_803E7454, 0x64, 0, 0);
+                objfx_spawnDirectionalBurst(obj, 5, 1, 1, *(f32 *)(state + 0x14), lbl_803E7454, 0x64, 0, 0);
             }
             if (ff->lo & 2) {
-                objFn_800972dc(objs[i], 5, 1, 1, *(f32 *)(foundState + 0x14), lbl_803E7454, 0x64, 0,
+                objfx_spawnDirectionalBurst(objs[i], 5, 1, 1, *(f32 *)(foundState + 0x14), lbl_803E7454, 0x64, 0,
                                0);
             }
         }

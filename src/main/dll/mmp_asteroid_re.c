@@ -7,7 +7,7 @@ extern undefined4 FUN_800400b0();
 extern undefined4 FUN_80190148();
 extern undefined4 FUN_801905c4();
 extern void Transporter_SeqFn(void);
-extern void objParticleFn_80097734(int obj,int enabled,f32 radius,int particleKind,
+extern void objfx_spawnArcedBurst(int obj,int enabled,f32 radius,int particleKind,
                                    int particleId,int lifetime,f32 scaleX,f32 scaleY,
                                    f32 scaleZ,void *args,int arg9);
 extern void *objFindTexture(void *obj,int target,int param_3);
@@ -221,14 +221,14 @@ void barrelpad_update(s16 *obj) {
         particleArgs.offset[0] = lbl_803E3F04;
         particleArgs.offset[1] = lbl_803E3F08;
         particleArgs.offset[2] = lbl_803E3F04;
-        objParticleFn_80097734((int)obj,5,lbl_803E3F0C,5,2,0x19,lbl_803E3F10,
+        objfx_spawnArcedBurst((int)obj,5,lbl_803E3F0C,5,2,0x19,lbl_803E3F10,
                                lbl_803E3F10,lbl_803E3F14,&particleArgs,0);
     }
     else if (obj[0x23] == 0x748) {
         particleArgs.offset[0] = lbl_803E3F04;
         particleArgs.offset[1] = lbl_803E3F18;
         particleArgs.offset[2] = lbl_803E3F04;
-        objParticleFn_80097734((int)obj,5,lbl_803E3F1C,5,2,5,lbl_803E3F20,
+        objfx_spawnArcedBurst((int)obj,5,lbl_803E3F1C,5,2,5,lbl_803E3F20,
                                lbl_803E3F20,lbl_803E3F14,&particleArgs,0);
     }
 }
