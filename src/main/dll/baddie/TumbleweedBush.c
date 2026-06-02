@@ -23,6 +23,12 @@ typedef struct TitleMenuItem {
     } extra;
 } TitleMenuItem;
 
+typedef struct LinkTextureSlot {
+    void* texture;
+    s16 assetId;
+    s16 pad6;
+} LinkTextureSlot;
+
 #define TITLE_MENU_FLAG_ENABLED        0x01
 #define TITLE_MENU_FLAG_WRAP           0x02
 #define TITLE_MENU_FLAG_MOVED_LEFT     0x04
@@ -1117,7 +1123,12 @@ void TitleMenuItem_initialise(void)
 extern void* textureLoadAsset(int id);
 extern void textureFree(void* p);
 extern void fn_8001BDD4(int a);
+extern void fn_8001BE2C(int mode);
 extern void* mmAlloc(int size, int heap, int flags);
+extern void padFn_80014b18(int value);
+extern s16 linkItemOpacity;
+extern u8 linkIsRotated;
+extern u8 linkFlag_803dd8f8;
 extern u8 lbl_803A9458[0x960];
 extern s8 lbl_803DD911;
 
@@ -1229,6 +1240,25 @@ void Link_release(void)
         p += 8;
     }
     fn_8001BDD4(3);
+}
+
+void Link_initialise(void)
+{
+    LinkTextureSlot* slot;
+    int i;
+
+    i = 0;
+    slot = (LinkTextureSlot*)linkTextures;
+    for (; i < 6; i++) {
+        slot->texture = textureLoadAsset(slot->assetId);
+        slot++;
+    }
+
+    padFn_80014b18(10);
+    linkItemOpacity = 0xff;
+    fn_8001BE2C(3);
+    linkIsRotated = 0;
+    linkFlag_803dd8f8 = 1;
 }
 
 void TitleMenuItem_release(void)
