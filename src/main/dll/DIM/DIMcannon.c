@@ -2115,8 +2115,8 @@ void link_levcontrol_updateAreaMusic(int *obj) {
                     Music_Trigger(0x33, 1);
                 }
             }
-            SCGameBitLatch_Update((char *)sub + 0xc, 1, -1, -1, 0xe1e, 0x36);
         }
+        SCGameBitLatch_Update((char *)sub + 0xc, 1, -1, -1, 0xe1e, 0x36);
         break;
     }
 }
