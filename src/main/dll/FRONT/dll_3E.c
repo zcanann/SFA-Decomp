@@ -35,6 +35,9 @@ extern void ReadThreadStart(void);
 extern void VideoDecodeThreadCancel(void);
 extern void AudioDecodeThreadCancel(void);
 extern void ReadThreadCancel(void);
+extern void PushFreeReadBuffer(OSMessage msg);
+extern void PushFreeTextureSet(OSMessage msg);
+extern void PushFreeAudioBuffer(void *msg);
 
 extern OSMessageQueue lbl_803A5CCC;
 extern char lbl_803A57C0[];
@@ -77,6 +80,7 @@ extern undefined4 DAT_803de300;
 extern void (*lbl_803DD664)(void);
 extern u8 gAttractMovieLoopCompleted;
 extern OSMessageQueue lbl_803A5CEC;
+extern OSMessage lbl_803DD67C;
 
 /*
  * --INFO--
@@ -432,5 +436,41 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags) {
 
 void PrepareReady(void *msg) {
     OSSendMessage(&lbl_803A5CEC, msg, OS_MESSAGE_BLOCK);
+}
+
+void InitAllMessageQueue(void) {
+    char *player;
+    char *walk;
+    s32 i;
+
+    player = (char *)&lbl_803A5D60;
+    if (*(s32 *)(player + 0xa8) == 0) {
+        i = 0;
+        do {
+            PushFreeReadBuffer((OSMessage)(player + 0xf4));
+            player += sizeof(AttractMovieReadBuffer);
+            i++;
+        } while (i < 10);
+    }
+
+    i = 0;
+    player = (char *)&lbl_803A5D60;
+    walk = player;
+    do {
+        PushFreeTextureSet((OSMessage)(walk + 0x144));
+        walk += sizeof(AttractMovieTextureSet);
+        i++;
+    } while (i < 3);
+
+    if (lbl_803A5D60.audioExists != 0) {
+        i = 0;
+        do {
+            PushFreeAudioBuffer(player + 0x174);
+            player += sizeof(AttractMovieAudioBuffer);
+            i++;
+        } while (i < 3);
+    }
+
+    OSInitMessageQueue(&lbl_803A5CEC, &lbl_803DD67C, 1);
 }
 #pragma scheduling reset
