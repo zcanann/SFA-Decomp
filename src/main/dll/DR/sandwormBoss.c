@@ -3999,7 +3999,7 @@ extern void *fn_8001CC9C(int a, int b, int c, int d);
 extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
 extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
 extern void Obj_TransformLocalVectorByWorldMatrix(int *obj, void *out, void *in);
-extern void voxmaps_traceScaledVectorEnd(void *dst, void *posA, void *posB, f32 factor);
+extern void voxmaps_traceScaledVectorEnd(f32 *dst, void *posA, f32 *dir, f32 factor);
 extern f32 PSVECDistance(void *a, void *b);
 extern void PSVECScale(void *in, void *out, f32 scale);
 extern void getAmbientColor(int mode, u8 *r, u8 *g, u8 *b);

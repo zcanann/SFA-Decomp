@@ -467,7 +467,7 @@ int voxmaps_traceWorldLine(void *p1, void *p2)
 
 #pragma peephole on
 #pragma scheduling off
-void voxmaps_traceScaledVectorEnd(int p1, void *p2, f32 *p3, f32 scale)
+void voxmaps_traceScaledVectorEnd(f32 *p1, void *p2, f32 *p3, f32 scale)
 {
     f32 endPos[3];
     f32 scaled[3];
@@ -486,9 +486,9 @@ void voxmaps_traceScaledVectorEnd(int p1, void *p2, f32 *p3, f32 scale)
         voxmaps_gridToWorld(endPos, gridOut);
     e0 = *(int *)&endPos[0];
     e1 = *(int *)&endPos[1];
-    *(int *)(p1 + 0) = e0;
-    *(int *)(p1 + 4) = e1;
-    *(int *)(p1 + 8) = *(int *)&endPos[2];
+    *(int *)&p1[0] = e0;
+    *(int *)&p1[1] = e1;
+    *(int *)&p1[2] = *(int *)&endPos[2];
 }
 #pragma scheduling reset
 #pragma peephole reset

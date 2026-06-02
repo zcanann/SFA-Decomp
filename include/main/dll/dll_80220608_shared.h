@@ -2315,7 +2315,7 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
 void Obj_SmoothTurnAnglesTowardVelocity(int a, int b, int c, f32 d, f32 e);
 int fn_80221C18(int obj, f32 dt, int p3, int p4);
 int voxmaps_traceWorldLine(void *p1, void *p2);
-void voxmaps_traceScaledVectorEnd(int p1, void *p2, f32 *p3, f32 scale);
+void voxmaps_traceScaledVectorEnd(f32 *p1, void *p2, f32 *p3, f32 scale);
 void ring_update(int obj);
 void fn_8022A670(int obj, int state);
 void fn_8022AB68(int obj, int state);
