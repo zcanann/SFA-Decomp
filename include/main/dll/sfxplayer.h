@@ -14,10 +14,12 @@ typedef struct SfxplayerStateFlags {
 typedef struct SfxplayerState {
   union {
     s16 eventId;
+    s16 completionEventId;
     s16 unused0;
   };
   union {
     s16 unk2;
+    s16 activationEventId;
     s16 effectSfxBaseId;
   };
   union {

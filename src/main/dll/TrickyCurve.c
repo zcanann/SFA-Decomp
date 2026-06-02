@@ -630,7 +630,7 @@ void TrickyCurve_updateEffectHandleRing(int obj)
         Sfx_KeepAliveLoopedObjectSound(obj, SFXPLAYER_RING_START_SFX);
         if ((*gMapEventInterface)->getMode((s8)*(u8 *)(obj + SFXPLAYER_OBJECT_MAP_ID_OFFSET)) ==
             SFXPLAYER_MODE_SEQUENCE) {
-            *(s16 *)obj += (s16)((lbl_803E6458 + (f32)state->config19) * lbl_803E645C * timeDelta);
+            *(s16 *)obj += (s16)((lbl_803E6458 + (f32)state->ringCount) * lbl_803E645C * timeDelta);
         } else {
             *(s16 *)obj += (s16)(lbl_803E645C * timeDelta);
         }
@@ -751,7 +751,7 @@ int TrickyCurve_activateEffectHandleRing(int obj, int unused, u8 *eventData)
         if (*(u8 *)(eventData + i + 0x81) == 1) {
             state->flags.bit10 = 1;
             state->ringCount = 0;
-            GameBit_Set(state->eventId, 0);
+            GameBit_Set(state->activationEventId, 0);
             GameBit_Set(SFXPLAYER_GAMEBIT_RING_ACTIVE, 1);
             for (i = 0; i < SFXPLAYER_EFFECT_RING_COUNT; i++) {
                 sfxplayer_ensureEffectHandlePair(obj, i);
