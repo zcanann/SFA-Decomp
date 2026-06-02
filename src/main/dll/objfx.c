@@ -1,6 +1,69 @@
 #include "ghidra_import.h"
 #include "main/dll/fx_800944A0_shared.h"
 
+extern f32 lbl_8030F9D8[];
+extern s16 lbl_803DB788[];
+extern f64 lbl_803DF360;
+extern f32 fcos16(u16 angle);
+
+#pragma scheduling off
+#pragma peephole off
+void WM_newcrystalFn_800969b0(void *obj, u16 *state, u8 flags, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff)
+{
+    PartfxParams params;
+    f32 vec[3];
+    int i;
+    int j;
+    f32 cZero;
+    f32 cOne;
+    f32 cHalf;
+    f32 cFull;
+    f32 invPeriod;
+    int spawnFlags;
+    f32 phase;
+
+    cZero = lbl_803DF35C;
+    cOne = lbl_803DF354;
+    cHalf = lbl_803DF358;
+    cFull = lbl_803DF350;
+    invPeriod = cFull / period;
+
+    for (i = 0; i < 4; i++) {
+        state[0x12 + i] = (s16)((s32)(invPeriod + (f32)(i * randomGetRange(0x78, 0x7f))));
+        state[0xe + i] = (s16)((s32)((f32)state[0x12 + i] * timeDelta + (f32)(s16)state[0xe + i]));
+        phase = fcos16(state[0xe + i]);
+        *(f32 *)((char *)state + 0xc + i * 4) = lbl_8030F9D8[i] * ((cOne + phase) * cHalf);
+
+        state[0x16 + i] = (s16)((s32)(timeDelta * (f32)lbl_803DB788[i] + (f32)(s16)state[0x16 + i]));
+        state[0] = state[0x16 + i];
+        *(f32 *)((char *)state + 8) = *(f32 *)((char *)state + 0xc + i * 4);
+
+        for (j = 0; j < 0xffff; j += 0x7fff) {
+            vec[0] = *(f32 *)((char *)state + 8) * xMul + xOff;
+            vec[1] = *(f32 *)((char *)state + 8) * yMul + yOff;
+            vec[2] = cZero;
+            state[0] += 0x7fff;
+            mathFn_80021ac8(state, vec);
+            vec[0] += *(f32 *)((char *)obj + 0xc);
+            vec[1] += *(f32 *)((char *)obj + 0x10);
+            vec[2] += *(f32 *)((char *)obj + 0x14);
+
+            params.f8 = cOne;
+            params.vec[0] = vec[0];
+            params.vec[1] = vec[1];
+            params.vec[2] = vec[2];
+            spawnFlags = 0x200001;
+            if (flags != 0) {
+                spawnFlags = 0x20200001;
+            }
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x7ec, &params, spawnFlags, -1, 0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_80096C94(void *obj, u8 type, u8 count, void *origin, u8 flagByte, f32 mult) {
