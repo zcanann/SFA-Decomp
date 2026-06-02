@@ -112,6 +112,9 @@ extern void fn_80296124(int player, void *pos, void *obj, int arg);
 #define SC_TOTEMBOND_ORB_OBJECT_ID 0x27b
 #define SC_TOTEMBOND_ORB_TRIGGER_EVENT 0x64c
 #define SC_TOTEMBOND_ORB_ANGLE_STEP 0x2000
+#define SC_TOTEMBOND_EVENT_START_ORBS 0x01
+#define SC_TOTEMBOND_EVENT_ORBS_ACTIVE 0x02
+#define SC_TOTEMBOND_EVENT_SET_MAP_MODE 0x10
 
 /*
  * --INFO--
@@ -163,9 +166,9 @@ void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
       objects = ObjList_GetObjects(&startIndex, &objectCount);
       while (startIndex < objectCount) {
         other = objects[startIndex];
-        if ((*(s16 *)(other + 0x46) == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
-            (other != (int)obj)) {
-          *(f32 *)(*(int *)(other + 0xb8) + 8) += lbl_803E561C;
+        if ((((ScTotemPuzzleObject *)other)->objectType == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
+            ((ScTotemPuzzleObject *)other != obj)) {
+          ((ScTotemPuzzleObject *)other)->state->peerPhaseOffset += lbl_803E561C;
         }
         startIndex++;
       }
@@ -173,9 +176,9 @@ void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
       objects = ObjList_GetObjects(&startIndex, &objectCount);
       while (startIndex < objectCount) {
         other = objects[startIndex];
-        if ((*(s16 *)(other + 0x46) == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
-            (other != (int)obj)) {
-          *(f32 *)(*(int *)(other + 0xb8) + 8) += lbl_803E5620;
+        if ((((ScTotemPuzzleObject *)other)->objectType == SC_TOTEMPUZZLE_CRYSTAL_OBJECT_TYPE) &&
+            ((ScTotemPuzzleObject *)other != obj)) {
+          ((ScTotemPuzzleObject *)other)->state->peerPhaseOffset += lbl_803E5620;
         }
         startIndex++;
       }
@@ -323,7 +326,7 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject *obj,undefined4 pa
       while (startForEvent2 < countForEvent2) {
         peer = *objectPtr;
         if (((ScTotemBondObject *)peer != obj) &&
-            (*(s16 *)(peer + 0x46) == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
+            (((ScTotemBondObject *)peer)->objectType == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
           peer = objects[startForEvent2];
           (*(code *)(**(int **)(peer + 0x68) + 0x20))(peer,2);
           break;
@@ -331,7 +334,7 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject *obj,undefined4 pa
         objectPtr++;
         startForEvent2++;
       }
-      state->eventFlags |= 0x10;
+      state->eventFlags |= SC_TOTEMBOND_EVENT_SET_MAP_MODE;
       break;
     case 3:
       objects = ObjList_GetObjects(&startForEvent3,&countForEvent3);
@@ -339,7 +342,7 @@ undefined4 sc_totempuzzle_processAnimEvents(ScTotemBondObject *obj,undefined4 pa
       while (startForEvent3 < countForEvent3) {
         peer = *objectPtr;
         if (((ScTotemBondObject *)peer != obj) &&
-            (*(s16 *)(peer + 0x46) == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
+            (((ScTotemBondObject *)peer)->objectType == SC_TOTEMPUZZLE_PEER_OBJECT_TYPE)) {
           peer = objects[startForEvent3];
           (*(code *)(**(int **)(peer + 0x68) + 0x20))(peer,1);
           break;
@@ -446,7 +449,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
 
     state = obj->state;
     player = Obj_GetPlayerObject();
-    if ((state->eventFlags & 1) != 0) {
+    if ((state->eventFlags & SC_TOTEMBOND_EVENT_START_ORBS) != 0) {
         state->active = 1;
         obj->yaw = 0x3fff;
         state->ringIndex = (s16)(u16)((s32)obj->yaw / SC_TOTEMBOND_ORB_ANGLE_STEP);
@@ -454,8 +457,8 @@ void sc_totembond_update(ScTotemBondObject *obj)
         sc_totembond_spawnGameBitOrbs(obj,state,lbl_803E5638);
         GameBit_Set(lbl_80327A60[state->ringIndex],1);
         obj->mapAlpha = 0;
-        state->eventFlags &= ~1;
-        state->eventFlags |= 2;
+        state->eventFlags &= ~SC_TOTEMBOND_EVENT_START_ORBS;
+        state->eventFlags |= SC_TOTEMBOND_EVENT_ORBS_ACTIVE;
         (*(code *)(*gGameUIInterface + 0x40))(1);
         hudFn_8011f38c(1);
         (*(code *)(*gScreenTransitionInterface + 0x0c))(0x1e,1);
@@ -463,7 +466,7 @@ void sc_totembond_update(ScTotemBondObject *obj)
         Music_Trigger(0xf0,1);
     }
 
-    if ((state->eventFlags & 2) != 0) {
+    if ((state->eventFlags & SC_TOTEMBOND_EVENT_ORBS_ACTIVE) != 0) {
         if (state->spawnTimer != lbl_803E5654) {
             state->spawnTimer -= timeDelta;
             if (state->spawnTimer < lbl_803E5654) {
@@ -532,9 +535,9 @@ void sc_totembond_update(ScTotemBondObject *obj)
         (*(code *)(*gCameraInterface + 0x60))(state,0x18);
     }
 
-    if ((state->eventFlags & 0x10) != 0) {
+    if ((state->eventFlags & SC_TOTEMBOND_EVENT_SET_MAP_MODE) != 0) {
         ((MapEventInterface *)*gMapEventInterface)->setMode(0xe, 6);
-        state->eventFlags &= ~0x10;
+        state->eventFlags &= ~SC_TOTEMBOND_EVENT_SET_MAP_MODE;
     }
 }
 #pragma dont_inline reset

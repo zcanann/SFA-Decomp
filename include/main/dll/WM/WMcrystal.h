@@ -15,7 +15,9 @@ typedef struct ScTotemPuzzleState {
 
 typedef struct ScTotemPuzzleObject {
     s16 yaw;
-    u8 pad02[0xAD - 0x02];
+    u8 pad02[0x46 - 0x02];
+    s16 objectType;
+    u8 pad48[0xAD - 0x48];
     s8 puzzleIndex;
     u8 padAE[0xB0 - 0xAE];
     u16 objectFlags;
@@ -55,7 +57,9 @@ typedef struct ScTotemBondObject {
     f32 z;
     u8 pad18[0x36 - 0x18];
     u8 mapAlpha;
-    u8 pad37[0x4C - 0x37];
+    u8 pad37[0x46 - 0x37];
+    s16 objectType;
+    u8 pad48[0x4C - 0x48];
     u8 *definition;
     u8 pad50[0xB0 - 0x50];
     u16 objectFlags;
