@@ -2850,7 +2850,7 @@ void dll_CA_hitDetect(int obj)
 #pragma scheduling reset
 
 #pragma scheduling off
-void fn_8015AE68(int* obj, u8* state) {
+void mediumbasket_initWhirlpoolState(int* obj, u8* state) {
     f32 fz;
     *(f32*)((char*)state + 684) = lbl_803E2CE8;
     *(char *)((char *)state + 827) = (int)*(f32*)((char*)state + 680);
@@ -2954,7 +2954,7 @@ int fn_8015B748(int* obj, u8* state) {
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8015ADDC(int* obj, u8* state) {
+void mediumbasket_leaveWhirlpoolGroup(int* obj, u8* state) {
     if (state[827] != 0) {
         ObjGroup_RemoveObject(obj, 80);
         state[827] = 0;
@@ -2966,7 +2966,7 @@ void fn_8015ADDC(int* obj, u8* state) {
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8015AD60(int* obj, u8* state) {
+void mediumbasket_enterWhirlpoolGroup(int* obj, u8* state) {
     if (state[827] == 0) {
         ObjGroup_AddObject(obj, 80);
         state[827] = 1;
