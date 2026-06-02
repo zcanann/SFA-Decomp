@@ -100,15 +100,90 @@ extern undefined4* PTR_DAT_8031b928;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void OptionsScreen_render(void)
-{
-}
-
 extern void **gScreenTransitionInterface;
+extern int *gTitleMenuItemInterface;
+extern int *gTitleMenuLinkInterface;
+extern s8 lbl_803DBA28;
+extern u16 lbl_8031ACB8[];
+extern int lbl_803A87D0[8];
+extern f32 lbl_803E1DD4;
+extern f32 lbl_803E1DD8;
+extern f32 lbl_803E1DDC;
+extern f32 lbl_803E1DE0;
+extern f32 lbl_803E1DE4;
+extern u8 shouldShowCredits(void);
+extern void creditsStart_(void);
+extern void titleScreenTextDrawFunc(void);
+extern void titleScreenPositionElements(f32 x, f32 y);
+extern void gameTextSetDrawFunc(void *fn);
+extern void gameTextBoxFn_80134d40(int alpha, int p2, int p3);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern u32 gameTextGet(int textId);
+extern void *gameTextGetBox(int boxId);
+extern void gameTextShow(int textId);
+extern void titleScreenShowCopyright(int arg);
+extern s8 lbl_803DD706;
+#pragma scheduling off
+#pragma peephole off
+void OptionsScreen_render(int arg)
+{
+    int alpha;
+    int fade;
+    int i;
+    int *item;
+    u16 *panel = &lbl_8031ACB8[(s8)lbl_803DBA28 * 8];
+
+    if (shouldShowCredits()) {
+        creditsStart_();
+        return;
+    }
+
+    alpha = (int)(lbl_803E1DD4 -
+                  ((f32 (*)(void))((void **)*gScreenTransitionInterface)[6])());
+    gameTextSetDrawFunc(titleScreenTextDrawFunc);
+
+    if ((u8)alpha < 0x80) {
+        titleScreenPositionElements(lbl_803E1DD8,
+            -((f32)((u8)alpha * 0x86) * lbl_803E1DE0 - lbl_803E1DDC));
+        fade = 0;
+    } else {
+        titleScreenPositionElements(lbl_803E1DD8, lbl_803E1DE4);
+        fade = (((u8)alpha & 0x7f) << 1);
+    }
+
+    gameTextBoxFn_80134d40(fade, 0, 0);
+    if (panel[5] != 0xffff) {
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        *(u8 *)((char *)gameTextGetBox(*(u8 *)((char *)gameTextGet(panel[5]) + 4)) + 0x1e) = (u8)fade;
+        gameTextShow(panel[5]);
+    }
+    if (panel[6] != 0xffff) {
+        gameTextSetColor(0xff, 0xff, 0xff, fade);
+        gameTextShow(panel[6]);
+    }
+
+    item = lbl_803A87D0;
+    for (i = 0; i < 8; i++, item++) {
+        if (*item != 0) {
+            (*(void (*)(int, int, int))(*(int *)(*gTitleMenuItemInterface + 0x18)))(*item, arg, fade);
+        }
+    }
+    (*(void (*)(int))(*(int *)(*gTitleMenuLinkInterface + 0x30)))(fade);
+    (*(void (*)(int))(*(int *)(*gTitleMenuLinkInterface + 0x10)))(arg);
+    gameTextSetDrawFunc(0);
+    titleScreenShowCopyright(0);
+    lbl_803DD706--;
+    if ((s8)lbl_803DD706 < 0) {
+        lbl_803DD706 = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void gameTextLoadDir(int);
 extern u8 lbl_803DD70C;
 extern u32 lbl_803DD708;
-extern u8 lbl_803DD706;
+extern s8 lbl_803DD706;
 extern u8 lbl_803DD705;
 extern u8 lbl_803DD6F9;
 extern u8 lbl_803DD6F8;
@@ -135,95 +210,6 @@ void OptionsScreen_initialise(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
-
-/*
- * --INFO--
- *
- * Function: FUN_8011cd58
- * EN v1.0 Address: 0x8011CD58
- * EN v1.0 Size: 964b
- * EN v1.1 Address: 0x8011D038
- * EN v1.1 Size: 552b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_8011cd58(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9)
-{
-  uint uVar1;
-  char cVar4;
-  ushort *puVar2;
-  undefined *puVar3;
-  int iVar5;
-  int *piVar6;
-  int iVar7;
-  double dVar8;
-  undefined8 extraout_f1;
-  double dVar9;
-  undefined8 uVar10;
-  double dVar11;
-  undefined8 local_18;
-  
-  iVar7 = DAT_803dc690 * 0x10;
-  cVar4 = FUN_801339f8();
-  if (cVar4 == '\0') {
-    dVar9 = (double)(**(code **)(*DAT_803dd6cc + 0x18))();
-    dVar8 = (double)lbl_803E2A54;
-    FUN_800174d4(FUN_801348c0);
-    uVar1 = (int)(dVar8 - dVar9) & 0xff;
-    if (uVar1 < 0x80) {
-      local_18 = (double)CONCAT44(0x43300000,uVar1 * 0x86 ^ 0x80000000);
-      param_3 = (double)(float)(local_18 - DOUBLE_803e2a68);
-      dVar11 = -(double)(float)(param_3 * (double)lbl_803E2A60 - (double)lbl_803E2A5C);
-      FUN_80134830((double)lbl_803E2A58,dVar11);
-      iVar5 = 0;
-    }
-    else {
-      dVar11 = (double)lbl_803E2A64;
-      FUN_80134830((double)lbl_803E2A58,dVar11);
-      iVar5 = ((int)(dVar8 - dVar9) & 0x7fU) << 1;
-    }
-    FUN_80133c3c(iVar5,0,0);
-    if (*(short *)(&DAT_8031b912 + iVar7) != -1) {
-      uVar10 = FUN_80017484(0xff,0xff,0xff,0xff);
-      puVar2 = FUN_80017470(uVar10,dVar11,param_3,param_4,param_5,param_6,param_7,param_8,
-                            (uint)*(ushort *)(&DAT_8031b912 + iVar7));
-      puVar3 = FUN_80006c9c((uint)*(byte *)(puVar2 + 2));
-      puVar3[0x1e] = (byte)iVar5;
-      FUN_80006c88(uVar10,dVar11,param_3,param_4,param_5,param_6,param_7,param_8,
-                   (uint)*(ushort *)(&DAT_8031b912 + iVar7));
-    }
-    if (*(short *)(&DAT_8031b914 + iVar7) != -1) {
-      uVar10 = FUN_80017484(0xff,0xff,0xff,(byte)iVar5);
-      FUN_80006c88(uVar10,dVar11,param_3,param_4,param_5,param_6,param_7,param_8,
-                   (uint)*(ushort *)(&DAT_8031b914 + iVar7));
-    }
-    iVar7 = 0;
-    piVar6 = &DAT_803a9430;
-    do {
-      if (*piVar6 != 0) {
-        (**(code **)(*DAT_803dd724 + 0x18))(*piVar6,param_9,iVar5);
-      }
-      piVar6 = piVar6 + 1;
-      iVar7 = iVar7 + 1;
-    } while (iVar7 < 8);
-    (**(code **)(*DAT_803dd720 + 0x30))(iVar5);
-    (**(code **)(*DAT_803dd720 + 0x10))(param_9);
-    dVar8 = (double)FUN_800174d4(0);
-    FUN_80133a68(dVar8,dVar11,param_3,param_4,param_5,param_6,param_7,param_8,'\0');
-    DAT_803de386 = DAT_803de386 + -1;
-    if (DAT_803de386 < '\0') {
-      DAT_803de386 = '\0';
-    }
-  }
-  else {
-    FUN_80133790(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  }
-  return;
-}
 
 /*
  * --INFO--
@@ -401,7 +387,7 @@ void FUN_8011d67c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   DAT_803de38c = 0;
   DAT_803de388 = (undefined4)getSaveFileStruct();
   if (DAT_803de378 == '\0') {
-    OptionsScreen_render();
+    OptionsScreen_render(0);
   }
   else if (DAT_803de378 == '\x01') {
     fn_8011C7B4();
