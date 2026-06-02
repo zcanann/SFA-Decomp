@@ -1170,9 +1170,28 @@ void Trigger_update(void) {}
 void Trigger_release(void) {}
 void Trigger_initialise(void) {}
 
+extern void Sfx_StopFromObject(void *obj, int sfxId);
 extern void objSetSlot(void* obj, int slot);
 extern int GameBit_Get(int eventId);
 extern f32 lbl_803E40F8;
+
+#pragma peephole off
+#pragma scheduling off
+void Trigger_free(void *obj)
+{
+    u8 *entry = *(u8 **)((char *)obj + 0x4c) + 0x18;
+    u8 i = 0;
+
+    while (i < 8) {
+        if ((entry[0] & 3) != 0 && entry[1] != 3 && entry[1] == 4) {
+            Sfx_StopFromObject(obj, (u16)((entry[2] << 8) | entry[3]));
+        }
+        i++;
+        entry += 4;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

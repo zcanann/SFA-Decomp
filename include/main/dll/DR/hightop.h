@@ -18,5 +18,6 @@ void FUN_8019b86c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
 void FUN_8019bc2c(int param_1);
+void Trigger_free(void *obj);
 
 #endif /* MAIN_DLL_DR_HIGHTOP_H_ */
