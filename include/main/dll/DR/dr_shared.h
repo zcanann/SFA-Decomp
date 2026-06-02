@@ -444,7 +444,7 @@ extern s16 lbl_803DC2AC;
 extern f32 lbl_803DDD68;
 extern void ObjLink_AttachChild(int obj, int child, int v);
 extern void firepipe_setLinkedUpdateFlag(int handle);
-extern void fn_80098270(int obj, f32 a, int b, int c, f32 d);
+extern void objfx_spawnFrameTimedHitPulse(int obj, f32 a, int b, int c, f32 d);
 extern void fn_802966CC(int obj);
 extern int lbl_802C2550[];
 extern int lbl_803DDD4C;

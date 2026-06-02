@@ -311,7 +311,7 @@ void drlasercannon_update(int obj) {
             }
         }
     } else {
-        fn_80098270(obj, lbl_803E6900, 1, 5 - *(u8 *)((char *)state + 0x1a6), lbl_803E6904);
+        objfx_spawnFrameTimedHitPulse(obj, lbl_803E6900, 1, 5 - *(u8 *)((char *)state + 0x1a6), lbl_803E6904);
         if (*(int *)((char *)state + 0x190) != 0) {
             staffFn_80170380(*(int *)((char *)state + 0x190), 5);
         }

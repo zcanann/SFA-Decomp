@@ -611,7 +611,7 @@ int tumbleweedbush_getObjectTypeId(void) { return 0x0; }
 extern u8 lbl_803DDA80;
 extern void *gSHthorntailAnimationInterface;
 extern void *Obj_GetPlayerObject(void);
-extern void fn_80096F9C(int *p, int a, int b, int c, int d);
+extern void objfx_spawnHitEmitterAtPos(int *p, int a, int b, int c, int d);
 extern int Sfx_PlayFromObject(int *obj, int sfx);
 extern s8 fn_801631C8(int *obj);
 extern float sqrtf(float x);
@@ -645,7 +645,7 @@ void tumbleweedbush_update(int *obj) {
     player = (int*)Obj_GetPlayerObject();
     if (ObjHits_PollPriorityHitWithCooldown(obj, &lbl_803DDA80, hitInfo, &hitData) != 0) {
         if (*(s16*)((char*)hitInfo[0] + 0x46) != 0x4ba) {
-            fn_80096F9C(&hitData, 8, 0xff, 0xff, 0x78);
+            objfx_spawnHitEmitterAtPos(&hitData, 8, 0xff, 0xff, 0x78);
             Sfx_PlayFromObject(obj, SFXsc_gethit04);
             for (i = 0; (u8)i < state->pieceCount; i++) {
                 int **slot = (int **)&state->pieceObjects[(u8)i];

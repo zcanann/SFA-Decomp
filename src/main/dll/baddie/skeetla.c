@@ -26,7 +26,7 @@ extern void hitDetectFn_800658a4(u8 *obj, f32 x, f32 y, f32 z, f32 *out, int fla
 extern u8 *Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
 extern void objLightFn_8009a1dc(u8 *obj, f32 scale, void *args, int mode, int param);
-extern void fn_80096F9C(void *hitPos, int a, int b, int c, int d);
+extern void objfx_spawnHitEmitterAtPos(void *hitPos, int a, int b, int c, int d);
 extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
 extern int coordsToMapCell(f32 x, f32 z);
 extern int ObjGroup_FindNearestObject(int group, u8 *obj, f32 *outDistance);
@@ -154,7 +154,7 @@ void fn_8013939C(u8 *obj)
         case 0xa:
         case 0xb:
         case 0xc:
-            fn_80096F9C(hitPosPtr, 8, 0xff, 0x20, 0x20);
+            objfx_spawnHitEmitterAtPos(hitPosPtr, 8, 0xff, 0x20, 0x20);
             objLightFn_8009a1dc(obj, lbl_803E2434, lightArgs, 4, 0);
             if (*(s16 *)((u8 *)lastContactObj + 0x46) == 0x69) {
                 Sfx_PlayFromObject(obj, SFXfox_outofwater122);

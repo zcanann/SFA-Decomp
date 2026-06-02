@@ -22,7 +22,7 @@ extern void *Obj_GetPlayerObject(void);
 extern void objSetSlot(int obj, int slot);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void objLightFn_8009a1dc(int obj, f32 *pos, int kind, int p4);
-extern void fn_80096C94(int obj, int mode, int p3, void *vec, f32 f, int flag);
+extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void *vec, f32 f, int flag);
 extern void mathFn_80021ac8(int obj, void *vec);
 extern f32 sqrtf(f32 x);
 extern f32 fn_8001461C(void);
@@ -137,7 +137,7 @@ void sc_musictree_update(int obj)
         vec[0] = zero;
         vec[1] = lbl_803E55A0 * *(f32 *)(inner + 0x38);
         vec[2] = zero;
-        fn_80096C94(obj, *(u8 *)(inner + 0x4c) & 0xf, 0x14, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
+        objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0x14, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
     }
     *(f32 *)(inner + 0x34) = lbl_803E5588;
     *(f32 *)(inner + 0x40) = lbl_803E55A8;
@@ -169,7 +169,7 @@ end:
                 vec[0] = lbl_803E5590;
                 vec[1] = lbl_803E55AC * (lbl_803E55A0 * *(f32 *)(inner + 0x38));
                 vec[2] = lbl_803E5590;
-                fn_80096C94(obj, *(u8 *)(inner + 0x4c) & 0xf, 0xa, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 1);
+                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 0xa, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 1);
                 *(f32 *)(inner + 0x3c) = lbl_803E55B0;
             }
             *(f32 *)(inner + 0x30) = *(f32 *)(inner + 0x30) - timeDelta;
@@ -178,7 +178,7 @@ end:
                 vec[1] = lbl_803E55A0 * *(f32 *)(inner + 0x38);
                 vec[2] = lbl_803E5590;
                 mathFn_80021ac8(obj, vec);
-                fn_80096C94(obj, *(u8 *)(inner + 0x4c) & 0xf, 1, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
+                objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 1, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
                 *(f32 *)(inner + 0x30) = *(f32 *)(inner + 0x30) + lbl_803E55B4;
             }
         }

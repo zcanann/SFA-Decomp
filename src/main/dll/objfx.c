@@ -66,7 +66,7 @@ void WM_newcrystalFn_800969b0(void *obj, u16 *state, u8 flags, f32 period, f32 x
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80096C94(void *obj, u8 type, u8 count, void *origin, u8 flagByte, f32 mult) {
+void objfx_spawnRandomBurst(void *obj, u8 type, u8 count, void *origin, u8 flagByte, f32 mult) {
     PartfxParams params;
     ParticlePairTbl partbl = *(ParticlePairTbl *)lbl_802C212C;
     u16 rvec[3];
@@ -122,7 +122,7 @@ void fn_80096C94(void *obj, u8 type, u8 count, void *origin, u8 flagByte, f32 mu
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80096F9C(f32 *pos, u8 a, u8 b, u8 c, u8 d) {
+void objfx_spawnHitEmitterAtPos(f32 *pos, u8 a, u8 b, u8 c, u8 d) {
     int args[4];
     ParticleEmit s1;
     int *res;
@@ -517,7 +517,7 @@ void objShowButtonGlow(void *obj, u8 mode, f32 intensity) {
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80098270(void *obj, u8 a, u8 b, f32 c, f32 d) {
+void objfx_spawnFrameTimedHitPulse(void *obj, u8 a, u8 b, f32 c, f32 d) {
     Tbl5 t1 = *(Tbl5 *)lbl_802C1FF8;
     Tbl5 t2 = *(Tbl5 *)lbl_802C200C;
     f32 vec[3];

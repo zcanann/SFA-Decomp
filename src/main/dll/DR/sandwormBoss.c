@@ -3900,7 +3900,7 @@ extern f32 lbl_803E416C;
 extern void fn_8001CB3C(int* p);
 /* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 extern void dll_2E_func06(int* a, int* b, int c);
-extern void fn_80096F9C(f32* p, int a, int b, int c, int d);
+extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
 extern void* Obj_GetPlayerObject(void);
 extern f32 fn_80296214(void* p);
 /* ObjMsg_AllocQueue already declared as undefined */
@@ -4083,7 +4083,7 @@ void cfprisoncage_hitDetect(int* obj)
 {
     f32 pos_z, pos_y, pos_x;
     if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, 0, &pos_x, &pos_y, &pos_z) != 0) {
-        fn_80096F9C(&pos_x, 8, 200, 128, 0);
+        objfx_spawnHitEmitterAtPos(&pos_x, 8, 200, 128, 0);
     }
 }
 

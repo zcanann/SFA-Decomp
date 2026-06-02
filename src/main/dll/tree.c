@@ -231,8 +231,8 @@ void tree_update(int obj)
                     colorVec[1] = intensity * ctbl[1];
                     colorVec[2] = intensity * ctbl[2];
                     mathFn_80021ac8(obj, colorVec);
-                    fn_80096C94(obj, *(u16 *)(state + 0x58) & 0xf, 0x14, vec14,
-                                *(f32 *)(state + 0x48) * ctbl[3], 0);
+                    objfx_spawnRandomBurst(obj, *(u16 *)(state + 0x58) & 0xf, 0x14, vec14,
+                                           *(f32 *)(state + 0x48) * ctbl[3], 0);
                 }
                 *(f32 *)(state + 0x44) = lbl_803E7318;
                 *(f32 *)(state + 0x4c) = lbl_803E731C;
@@ -269,8 +269,8 @@ void tree_update(int obj)
                     colorVec[1] = intensity * ctbl[1];
                     colorVec[2] = intensity * ctbl[2];
                     mathFn_80021ac8(obj, colorVec);
-                    fn_80096C94(obj, *(u16 *)(state + 0x58) & 0xf, 0x14, vec14,
-                                *(f32 *)(state + 0x48) * ctbl[3], 1);
+                    objfx_spawnRandomBurst(obj, *(u16 *)(state + 0x58) & 0xf, 0x14, vec14,
+                                           *(f32 *)(state + 0x48) * ctbl[3], 1);
                     *(f32 *)(state + 0x3c) = lbl_803E7320;
                 }
                 *(f32 *)(state + 0x40) -= timeDelta;
@@ -281,8 +281,8 @@ void tree_update(int obj)
                     colorVec[1] = intensity * ctbl[1];
                     colorVec[2] = intensity * ctbl[2];
                     mathFn_80021ac8(obj, colorVec);
-                    fn_80096C94(obj, *(u16 *)(state + 0x58) & 0xf, 1, vec14,
-                                *(f32 *)(state + 0x48) * ctbl[3], 0);
+                    objfx_spawnRandomBurst(obj, *(u16 *)(state + 0x58) & 0xf, 1, vec14,
+                                           *(f32 *)(state + 0x48) * ctbl[3], 0);
                     *(f32 *)(state + 0x40) += lbl_803E7324;
                 }
             }

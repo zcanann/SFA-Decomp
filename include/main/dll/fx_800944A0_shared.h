@@ -335,8 +335,8 @@ void waterfx_release(void);
 void waterfx_initialise(void);
 void viewFinderSetZoom(f32 zoom);
 void viewFinderSetZoomTo50(void);
-void fn_80096C94(void *obj, u8 type, u8 count, void *origin, u8 flagByte, f32 mult);
-void fn_80096F9C(f32 *pos, u8 a, u8 b, u8 c, u8 d);
+void objfx_spawnRandomBurst(void *obj, u8 type, u8 count, void *origin, u8 flagByte, f32 mult);
+void objfx_spawnHitEmitterAtPos(f32 *pos, u8 a, u8 b, u8 c, u8 d);
 void hitDetectFn_80097070(void *obj, u8 a, u8 b, u8 count, void *p7, f32 fval);
 void objfx_spawnMaskedHitEffect(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fval);
 void objFn_800972dc(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
@@ -347,7 +347,7 @@ void objParticleFn_80097734(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
 void fn_80097B30(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
                  int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ);
 void objShowButtonGlow(void *obj, u8 mode, f32 intensity);
-void fn_80098270(void *obj, u8 a, u8 b, f32 c, f32 d);
+void objfx_spawnFrameTimedHitPulse(void *obj, u8 a, u8 b, f32 c, f32 d);
 void fn_8009837C(void *obj, u8 type, int a3, u8 mode, void *light, f32 fa, f32 fb);
 void fn_80098928(void *obj, u8 mode, int p5, int p6, int p7, f32 fval);
 void projectileParticleFxFn_80099660(void *obj, int mode);
