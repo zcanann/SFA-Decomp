@@ -43,6 +43,7 @@ extern int ObjTrigger_IsSetById();
 extern int ObjTrigger_IsSet();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b818();
+extern void objRenderFn_8003b8f4(f32);
 extern undefined4 FUN_80048000();
 extern undefined4 FUN_8004800c();
 extern undefined4 FUN_80080f14();
@@ -54,6 +55,7 @@ extern undefined4 FUN_801141e8();
 extern undefined4 FUN_801149bc();
 extern undefined4 FUN_80114b10();
 extern undefined4 dll_2E_func03();
+extern void dll_2E_func06(int *obj, void *state, int flags);
 extern undefined4 FUN_801150ac();
 extern undefined4 FUN_8012f744();
 extern char FUN_80132034();
@@ -88,6 +90,7 @@ extern f64 DOUBLE_803e5338;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E52B0;
 extern f32 lbl_803E52B4;
+extern f32 lbl_803E4660;
 extern f32 lbl_803E52BC;
 extern f32 lbl_803E52C0;
 extern f32 lbl_803E52C4;
@@ -132,57 +135,11 @@ extern f32 lbl_803E5368;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccqueen_render(void)
+void ccqueen_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-  char cVar1;
-  uint uVar2;
-  uint uVar3;
-  undefined4 *puVar4;
-  int iVar5;
-  int iVar6;
-  byte bVar7;
-  double dVar8;
-  double in_f31;
-  double dVar9;
-  double in_ps31_1;
-  undefined8 uVar10;
-  int aiStack_38 [12];
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  uVar10 = FUN_8028683c();
-  uVar2 = (uint)((ulonglong)uVar10 >> 0x20);
-  iVar6 = (int)uVar10;
-  cVar1 = '\0';
-  uVar3 = GameBit_Get(0x1c0);
-  if (uVar3 != 0) {
-    puVar4 = ObjGroup_GetObjects(0x3f,aiStack_38);
-    dVar9 = (double)lbl_803E52B0;
-    for (bVar7 = 0; bVar7 < 4; bVar7 = bVar7 + 1) {
-      iVar5 = ObjGroup_FindNearestObject(5,puVar4[bVar7],(float *)0x0);
-      dVar8 = FUN_80017708((float *)(puVar4[bVar7] + 0x18),(float *)(iVar5 + 0x18));
-      if (dVar9 < dVar8) {
-        cVar1 = cVar1 + '\x01';
-      }
-    }
-  }
-  if (cVar1 == '\0') {
-    if (*(char *)(iVar6 + 1) != '\0') {
-      FUN_800068cc();
-      *(undefined *)(iVar6 + 1) = 0;
-    }
-  }
-  else {
-    if (*(char *)(iVar6 + 1) == '\0') {
-      FUN_800068d0(uVar2,0x223);
-      *(undefined *)(iVar6 + 1) = 1;
-    }
-    FUN_80006818((double)lbl_803E52B4,uVar2,0x223,cVar1 * '\x0f' + 0x28);
-  }
-  FUN_80286888();
-  return;
+  void *state = *(void **)((char *)obj + 0xb8);
+  objRenderFn_8003b8f4(lbl_803E4660);
+  dll_2E_func06(obj, state, 0);
 }
 
 /*
