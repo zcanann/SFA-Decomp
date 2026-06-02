@@ -215,6 +215,14 @@ typedef struct ObjHitsSkeletonHit {
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, activeHitboxMode) == 0xAE);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, resetHitboxMode) == 0xAF);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, stateIndex) == 0xB0);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryRadiusSquared) == 0x0C);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, localPosX) == 0x10);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, worldPosX) == 0x1C);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryRadiusY) == 0x28);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryRadiusXZ) == 0x2C);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadiusY) == 0x30);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadiusXZ) == 0x34);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, sweepRadiusX) == 0x38);
 
 void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double param_3,
                                    undefined4 param_4,undefined4 param_5,int *param_6,

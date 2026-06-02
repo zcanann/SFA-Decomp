@@ -196,6 +196,9 @@ extern f32 lbl_803DF638;
 #define OBJ_POSITION_X_OFFSET 0x0c
 #define OBJ_POSITION_Y_OFFSET 0x10
 #define OBJ_POSITION_Z_OFFSET 0x14
+#define OBJ_WORLD_POSITION_X_OFFSET 0x18
+#define OBJ_WORLD_POSITION_Y_OFFSET 0x1c
+#define OBJ_WORLD_POSITION_Z_OFFSET 0x20
 
 #define OBJ_MODEL_JOINT_COUNT_OFFSET 0xf3
 #define OBJLIB_BLINK_LEFT_JOINT_TAG 5
@@ -830,12 +833,12 @@ void ObjHits_SyncObjectPositionIfDirty(u32 param_1)
     return;
   }
   hitState->flags = (s16)(flags & ~OBJHITS_PRIORITY_STATE_POSITION_DIRTY);
-  *(f32 *)((int)hitState + 0x10) = *(f32 *)(param_1 + 0xc);
-  *(f32 *)((int)hitState + 0x14) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)((int)hitState + 0x18) = *(f32 *)(param_1 + 0x14);
-  *(f32 *)((int)hitState + 0x1c) = *(f32 *)(param_1 + 0x18);
-  *(f32 *)((int)hitState + 0x20) = *(f32 *)(param_1 + 0x1c);
-  *(f32 *)((int)hitState + 0x24) = *(f32 *)(param_1 + 0x20);
+  hitState->localPosX = *(f32 *)(param_1 + OBJ_POSITION_X_OFFSET);
+  hitState->localPosY = *(f32 *)(param_1 + OBJ_POSITION_Y_OFFSET);
+  hitState->localPosZ = *(f32 *)(param_1 + OBJ_POSITION_Z_OFFSET);
+  hitState->worldPosX = *(f32 *)(param_1 + OBJ_WORLD_POSITION_X_OFFSET);
+  hitState->worldPosY = *(f32 *)(param_1 + OBJ_WORLD_POSITION_Y_OFFSET);
+  hitState->worldPosZ = *(f32 *)(param_1 + OBJ_WORLD_POSITION_Z_OFFSET);
   return;
 }
 #pragma peephole reset
@@ -895,12 +898,12 @@ void ObjHits_EnableObject(u32 param_1)
     return;
   }
   hitState->flags = (s16)(flags | OBJHITS_PRIORITY_STATE_ENABLED);
-  *(f32 *)((int)hitState + 0x10) = *(f32 *)(param_1 + 0xc);
-  *(f32 *)((int)hitState + 0x14) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)((int)hitState + 0x18) = *(f32 *)(param_1 + 0x14);
-  *(f32 *)((int)hitState + 0x1c) = *(f32 *)(param_1 + 0x18);
-  *(f32 *)((int)hitState + 0x20) = *(f32 *)(param_1 + 0x1c);
-  *(f32 *)((int)hitState + 0x24) = *(f32 *)(param_1 + 0x20);
+  hitState->localPosX = *(f32 *)(param_1 + OBJ_POSITION_X_OFFSET);
+  hitState->localPosY = *(f32 *)(param_1 + OBJ_POSITION_Y_OFFSET);
+  hitState->localPosZ = *(f32 *)(param_1 + OBJ_POSITION_Z_OFFSET);
+  hitState->worldPosX = *(f32 *)(param_1 + OBJ_WORLD_POSITION_X_OFFSET);
+  hitState->worldPosY = *(f32 *)(param_1 + OBJ_WORLD_POSITION_Y_OFFSET);
+  hitState->worldPosZ = *(f32 *)(param_1 + OBJ_WORLD_POSITION_Z_OFFSET);
   return;
 }
 #pragma peephole reset
@@ -944,12 +947,12 @@ void ObjHits_SyncObjectPosition(u32 param_1)
   if (hitState == 0) {
     return;
   }
-  *(f32 *)((int)hitState + 0x10) = *(f32 *)(param_1 + 0xc);
-  *(f32 *)((int)hitState + 0x14) = *(f32 *)(param_1 + 0x10);
-  *(f32 *)((int)hitState + 0x18) = *(f32 *)(param_1 + 0x14);
-  *(f32 *)((int)hitState + 0x1c) = *(f32 *)(param_1 + 0x18);
-  *(f32 *)((int)hitState + 0x20) = *(f32 *)(param_1 + 0x1c);
-  *(f32 *)((int)hitState + 0x24) = *(f32 *)(param_1 + 0x20);
+  hitState->localPosX = *(f32 *)(param_1 + OBJ_POSITION_X_OFFSET);
+  hitState->localPosY = *(f32 *)(param_1 + OBJ_POSITION_Y_OFFSET);
+  hitState->localPosZ = *(f32 *)(param_1 + OBJ_POSITION_Z_OFFSET);
+  hitState->worldPosX = *(f32 *)(param_1 + OBJ_WORLD_POSITION_X_OFFSET);
+  hitState->worldPosY = *(f32 *)(param_1 + OBJ_WORLD_POSITION_Y_OFFSET);
+  hitState->worldPosZ = *(f32 *)(param_1 + OBJ_WORLD_POSITION_Z_OFFSET);
   return;
 }
 
@@ -1027,16 +1030,16 @@ void ObjHits_RefreshObjectState(int param_1)
     hitState->stateIndex = *(undefined *)(*(int *)(param_1 + 0x50) + 0x60);
     hitState->capsuleScale = 0x400;
     fVar1 = (float)(s32)hitState->primaryRadius;
-    *(float *)((int)hitState + 0xc) = fVar1 * fVar1;
+    hitState->primaryRadiusSquared = fVar1 * fVar1;
     hitState->secondaryShapeFlags = *(undefined *)(*(int *)(param_1 + 0x50) + 0x90);
     hitState->secondaryRadius = (ushort)*(byte *)(*(int *)(param_1 + 0x50) + 0x77);
     hitState->secondaryCapsuleOffsetA = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6c);
     hitState->secondaryCapsuleOffsetB = *(s16 *)(*(int *)(param_1 + 0x50) + 0x6e);
-    *(float *)((int)hitState + 0x28) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
+    hitState->primaryRadiusY = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if ((hitState->shapeFlags & OBJHITS_SHAPE_CAPSULE) == 0) {
       if ((hitState->shapeFlags & OBJHITS_SHAPE_SPHERE) != 0) {
-        if ((float)(s32)hitState->primaryRadius > *(float *)((int)hitState + 0x28)) {
-          *(float *)((int)hitState + 0x28) = (float)(s32)hitState->primaryRadius;
+        if ((float)(s32)hitState->primaryRadius > hitState->primaryRadiusY) {
+          hitState->primaryRadiusY = (float)(s32)hitState->primaryRadius;
         }
       }
     }
@@ -1052,22 +1055,22 @@ void ObjHits_RefreshObjectState(int param_1)
       if (sVar4 < sVar3) {
         sVar4 = sVar3;
       }
-      if ((float)(s32)sVar4 > *(float *)((int)hitState + 0x28)) {
-        *(float *)((int)hitState + 0x28) = (float)(s32)sVar4;
+      if ((float)(s32)sVar4 > hitState->primaryRadiusY) {
+        hitState->primaryRadiusY = (float)(s32)sVar4;
       }
     }
-    *(float *)((int)hitState + 0x2c) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
+    hitState->primaryRadiusXZ = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if (((hitState->shapeFlags & OBJHITS_SHAPE_CAPSULE) != 0) ||
         ((hitState->shapeFlags & OBJHITS_SHAPE_SPHERE) != 0)) {
-      if ((float)(s32)hitState->primaryRadius > *(float *)((int)hitState + 0x2c)) {
-        *(float *)((int)hitState + 0x2c) = (float)(s32)hitState->primaryRadius;
+      if ((float)(s32)hitState->primaryRadius > hitState->primaryRadiusXZ) {
+        hitState->primaryRadiusXZ = (float)(s32)hitState->primaryRadius;
       }
     }
-    *(float *)((int)hitState + 0x30) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
+    hitState->secondaryRadiusY = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) == 0) {
       if ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_SPHERE) != 0) {
-        if ((float)(s32)hitState->secondaryRadius > *(float *)((int)hitState + 0x30)) {
-          *(float *)((int)hitState + 0x30) = (float)(s32)hitState->secondaryRadius;
+        if ((float)(s32)hitState->secondaryRadius > hitState->secondaryRadiusY) {
+          hitState->secondaryRadiusY = (float)(s32)hitState->secondaryRadius;
         }
       }
     }
@@ -1083,20 +1086,20 @@ void ObjHits_RefreshObjectState(int param_1)
       if (sVar4 < sVar3) {
         sVar4 = sVar3;
       }
-      if ((float)(s32)sVar4 > *(float *)((int)hitState + 0x30)) {
-        *(float *)((int)hitState + 0x30) = (float)(s32)sVar4;
+      if ((float)(s32)sVar4 > hitState->secondaryRadiusY) {
+        hitState->secondaryRadiusY = (float)(s32)sVar4;
       }
     }
-    *(float *)((int)hitState + 0x34) = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
+    hitState->secondaryRadiusXZ = *(float *)(param_1 + 0xa8) * *(float *)(param_1 + 8);
     if (((hitState->secondaryShapeFlags & OBJHITS_SHAPE_CAPSULE) != 0) ||
         ((hitState->secondaryShapeFlags & OBJHITS_SHAPE_SPHERE) != 0)) {
-      if ((float)(s32)hitState->secondaryRadius > *(float *)((int)hitState + 0x34)) {
-        *(float *)((int)hitState + 0x34) = (float)(s32)hitState->secondaryRadius;
+      if ((float)(s32)hitState->secondaryRadius > hitState->secondaryRadiusXZ) {
+        hitState->secondaryRadiusXZ = (float)(s32)hitState->secondaryRadius;
       }
     }
-    *(float *)((int)hitState + 0x38) = *(float *)((int)hitState + 0x2c);
-    if (*(float *)((int)hitState + 0x38) < *(float *)((int)hitState + 0x34)) {
-      *(float *)((int)hitState + 0x38) = *(float *)((int)hitState + 0x34);
+    hitState->sweepRadiusX = hitState->primaryRadiusXZ;
+    if (hitState->sweepRadiusX < hitState->secondaryRadiusXZ) {
+      hitState->sweepRadiusX = hitState->secondaryRadiusXZ;
     }
     hitState->sourceMask = *(undefined *)(*(int *)(param_1 + 0x50) + 0x70);
     hitState->targetMask = *(undefined *)(*(int *)(param_1 + 0x50) + 0x67);
