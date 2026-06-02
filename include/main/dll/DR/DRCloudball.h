@@ -11,7 +11,7 @@ void spscarab_init(int param_1, int param_2);
 void spscarab_release(void);
 void spscarab_initialise(void);
 int spdrape_getExtraSize(void);
-int spdrape_func08(void);
+int spdrape_getObjectTypeId(void);
 void spdrape_free(void);
 void spdrape_render(void);
 void spdrape_hitDetect(void);

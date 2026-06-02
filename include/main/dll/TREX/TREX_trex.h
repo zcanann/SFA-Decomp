@@ -83,7 +83,7 @@ void shop_update(int obj);
 void shop_hitDetect(void);
 void shop_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
 void shop_free(int* obj);
-int shop_func08(void);
+int shop_getObjectTypeId(void);
 int shop_getExtraSize(void);
 s32 shop_setScale(int *obj);
 void shop_func0B(int* obj, int v, int p3);
