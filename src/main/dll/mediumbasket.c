@@ -2709,7 +2709,7 @@ void mediumbasket_updateControlEffects(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8015D27C(int obj, int sub, int state)
+void mediumbasket_updateTargetMotion(int obj, int sub, int state)
 {
     int control = *(int *)(sub + 0x40c);
 
@@ -2981,7 +2981,7 @@ void fn_8015AD60(int* obj, u8* state) {
 #pragma scheduling off
 #pragma peephole off
 #pragma fp_contract off
-void fn_8015D098(int obj, int p2, int p3)
+void mediumbasket_tryAcquireTarget(int obj, int p2, int p3)
 {
   extern int *gBaddieControlInterface;
   extern int *gPlayerInterface;
@@ -3028,7 +3028,7 @@ void fn_8015D098(int obj, int p2, int p3)
 #pragma scheduling off
 #pragma peephole off
 #pragma fp_contract off
-int fn_8015B7EC(int obj, int p2)
+int mediumbasket_checkTargetState(int obj, int p2)
 {
   extern int *gPlayerInterface;
   extern int *gBaddieControlInterface;
