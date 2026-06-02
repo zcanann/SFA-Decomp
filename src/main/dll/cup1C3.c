@@ -29,13 +29,16 @@ extern undefined4 FUN_8003b818();
 extern uint FUN_8028683c();
 extern undefined4 FUN_80286888();
 extern double FUN_80293900();
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
 
 extern undefined4 DAT_803dc070;
-extern undefined4 DAT_803dcbd0;
 extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd6fc;
 extern undefined4* DAT_803dd708;
+extern u8 lbl_803DBF68;
+extern int *gObjectTriggerInterface;
 extern int *gModgfxInterface;
 extern int *gExpgfxInterface;
 extern f64 DOUBLE_803e5da8;
@@ -286,7 +289,7 @@ void FUN_801c9f64(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_801c9f84
+ * Function: dbsh_symbol_update
  * EN v1.0 Address: 0x801C9F84
  * EN v1.0 Size: 348b
  * EN v1.1 Address: 0x801CA234
@@ -296,7 +299,7 @@ void FUN_801c9f64(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801c9f84(uint param_1)
+void dbsh_symbol_update(uint param_1)
 {
   short sVar1;
   uint uVar2;
@@ -319,27 +322,27 @@ void FUN_801c9f84(uint param_1)
     }
     else if (sVar1 == 2) {
       *(undefined2 *)((int)puVar4 + 0x1e) = 3;
-      uVar3 = (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
+      uVar3 = ((int (*)(int, uint, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0,param_1,0xffffffff);
       puVar4[6] = uVar3;
     }
     else if (sVar1 == 1) {
-      if (DAT_803dcbd0 != '\0') {
-        DAT_803dcbd0 = 0;
-        FUN_80006824(param_1,SFXfoot_stone_scuff);
+      if (lbl_803DBF68 != '\0') {
+        lbl_803DBF68 = 0;
+        Sfx_PlayFromObject(param_1,SFXfoot_stone_scuff);
       }
       *(undefined2 *)((int)puVar4 + 0x1e) = 2;
-      DAT_803dcbd0 = '\x01';
+      lbl_803DBF68 = '\x01';
     }
     else if (sVar1 == 3) {
       *(uint *)(*(int *)(param_1 + 100) + 0x30) =
            *(uint *)(*(int *)(param_1 + 100) + 0x30) & 0xfffffffb;
-      if (*(char *)(puVar4 + 8) < '\0') {
+      if ((*(byte *)(puVar4 + 8) & 0x80) != 0) {
         GameBit_Set(0x16b,1);
       }
       else {
         GameBit_Set(0x16c,1);
       }
-      FUN_8000680c(param_1,0x7f);
+      Sfx_StopObjectChannel(param_1,0x7f);
       *(byte *)(puVar4 + 8) = *(byte *)(puVar4 + 8) & 0xbf | 0x40;
     }
   }
