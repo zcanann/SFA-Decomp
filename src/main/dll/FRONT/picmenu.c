@@ -419,7 +419,7 @@ void PushFreeTextureSet(OSMessage msg)
 #pragma scheduling off
 void AttractMovieVideo_Decode(void* param)
 {
-    char* pb;           /* 1st function-scope callee-saved → r31 */
+    AttractMoviePlayer* player; /* 1st function-scope callee-saved → r31 */
     char* db;           /* 2nd → r30 */
     u32 i;              /* 3rd → r29 */
     u32* compSizes;     /* 4th → r28 */
@@ -428,30 +428,30 @@ void AttractMovieVideo_Decode(void* param)
 
     db = lbl_803A72F0;
     compSizes = (u32*)(((AttractMovieReadBuffer*)param)->ptr + 8);
-    pb = (char*)&lbl_803A5D60;
+    player = &lbl_803A5D60;
     dvdData = (char*)((AttractMovieReadBuffer*)param)->ptr +
-              ((AttractMoviePlayer*)pb)->compInfo.mNumComponents * sizeof(u32) + 8;
+              player->compInfo.mNumComponents * sizeof(u32) + 8;
 
     {
-        char* pb2;          /* block-local → r25 */
+        AttractMoviePlayer* player2; /* block-local → r25 */
         void** readMsg;     /* block-local → r24 */
-        char* pbwalk;       /* block-local → r23 */
+        u8* componentKind;   /* block-local → r23 */
         OSMessage tmpBuf;
 
         OSReceiveMessage((OSMessageQueue*)(db + 0x38), &tmpBuf, OS_MESSAGE_BLOCK);
         readMsg = (void**)tmpBuf;
         i = 0;
-        pb2 = (char*)&lbl_803A5D60;
-        pbwalk = pb2;
+        player2 = &lbl_803A5D60;
+        componentKind = player2->compInfo.mFrameComp;
 
-        while (i < ((AttractMoviePlayer*)pb)->compInfo.mNumComponents) {
-            if (pbwalk[0x70] == 0) {
+        while (i < player->compInfo.mNumComponents) {
+            if (*componentKind == 0) {
                 s32 dec = THPVideoDecode(dvdData,
                                          ((AttractMovieTextureSet*)readMsg)->yTexture,
                                          ((AttractMovieTextureSet*)readMsg)->uTexture,
                                          ((AttractMovieTextureSet*)readMsg)->vTexture,
-                                         ((AttractMoviePlayer*)pb2)->thpWorkArea);
-                ((AttractMoviePlayer*)pb2)->videoError = dec;
+                                         player2->thpWorkArea);
+                player2->videoError = dec;
                 if (dec != 0) {
                     if (lbl_803DD694 != 0) {
                         PrepareReady(0);
@@ -464,14 +464,14 @@ void AttractMovieVideo_Decode(void* param)
                 OSSendMessage((OSMessageQueue*)(db + 0x18), (OSMessage)readMsg, OS_MESSAGE_BLOCK);
                 {
                     u32 intr = OSDisableInterrupts();
-                    ((AttractMoviePlayer*)pb2)->videoDecodeCount++;
+                    player2->videoDecodeCount++;
                     OSRestoreInterrupts(intr);
                 }
                 lbl_803DD698 = 0;
             }
             dvdData += *compSizes;
             compSizes++;
-            pbwalk++;
+            componentKind++;
             i++;
         }
     }
