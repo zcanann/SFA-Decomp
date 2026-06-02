@@ -9,7 +9,7 @@ extern ObjectDescriptor gFireFlyLanternObjDescriptor;
 extern ObjectDescriptor gFlammableVineObjDescriptor;
 
 int LanternFireFly_getExtraSize(void);
-int LanternFireFly_func08(void);
+int LanternFireFly_getObjectTypeId(void);
 void LanternFireFly_free(void);
 void LanternFireFly_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void LanternFireFly_hitDetect(void);
