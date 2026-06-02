@@ -14,7 +14,6 @@ typedef struct CamTalkTransformInput {
   f32 z;
 } CamTalkTransformInput;
 
-void FUN_80107b4c(void);
 void CameraModeBike_update(short *param_1);
 void CameraModeBike_init(int param_1);
 void CameraModeBike_release(void);

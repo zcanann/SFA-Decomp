@@ -4,9 +4,8 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
-void FUN_80166f2c(float *param_1,float *param_2,float *param_3);
 void FUN_8016702c(void);
-void dll_D3_update(float *param_1,float *param_2,float *param_3);
+void dll_D3_update(int *obj);
 void dll_D3_init(int obj, int def, int flag);
 void dll_D3_initialise(void);
 extern ObjectDescriptor11WithPadding gSkeetlaWallObjDescriptor;
