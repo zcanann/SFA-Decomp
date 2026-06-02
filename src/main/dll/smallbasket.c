@@ -2306,10 +2306,10 @@ void smallbasket_playReactionEffects(int *obj, int *st) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_8015A424: 264b - state-2 init. */
+/* Initializes the tail-model variant state. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8015A424(int *obj, int *st) {
+void smallbasket_initTailModelState(int *obj, int *st) {
     u8 *tab;
     *(f32*)((char*)st + 0x2ac) = lbl_803E2C7C;
     *(u32*)((char*)st + 0x2e4) = 0x405009;
