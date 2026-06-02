@@ -428,7 +428,7 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
     dx = end->x - cur.x;
     if (dx < 0) { xstep = -1; dx = -dx; }
     ystep = 1;
-    dy = end->unk2 - cur.unk2;
+    dy = end->y - cur.y;
     if (dy < 0) { ystep = -1; dy = -dy; }
     zstep = 1;
     dz = end->z - cur.z;
@@ -461,8 +461,8 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
         } else {
             VoxActiveMap *map = st->activeMap;
             if (map != NULL) {
-                if (map != cachedMap || cur.unk2 != found.unk2) {
-                    int y = cur.unk2;
+                if (map != cachedMap || cur.y != found.y) {
+                    int y = cur.y;
                     if (y < map->minY) {
                         slot = 0;
                     } else if (y >= map->maxY) {
@@ -472,7 +472,7 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
                     }
                     remap = 1;
                     cachedMap = map;
-                    found.unk2 = y;
+                    found.y = y;
                 }
                 {
                     u8 *bitmap = map->bitmap;
@@ -547,8 +547,8 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
                     remap = 1;
                 }
             } else {
-                found.unk2 = cur.unk2;
-                cur.unk2 = (s16)(cur.unk2 + ystep);
+                found.y = cur.y;
+                cur.y = (s16)(cur.y + ystep);
                 p_xy -= dx2;
                 p_yz -= dz2;
             }
@@ -1129,7 +1129,7 @@ int fn_800119FC(s16 *dest, s16 *start, s16 *out) {
             z6hi = z6lo + 1;
             bitmapCol = (voxZ << 1) + (voxX >> 3);
             for (row = 0; row < 3; row++) {
-                int y = row + cur.unk2 - 1;
+                int y = row + cur.y - 1;
                 if (y < map->minY) {
                     slot = 0;
                 } else if (y >= map->maxY) {
@@ -1197,7 +1197,7 @@ int fn_800119FC(s16 *dest, s16 *start, s16 *out) {
                 }
                 return 0;
             }
-            found.unk2 = cur.unk2 = (s16)(cur.unk2 + adj);
+            found.y = cur.y = (s16)(cur.y + adj);
         }
 
         if (err < 0) {

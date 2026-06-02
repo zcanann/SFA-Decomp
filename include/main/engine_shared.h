@@ -311,7 +311,7 @@ typedef struct {
 } VoxMaps;
 typedef struct {
     s16 x;
-    s16 unk2;
+    s16 y;
     s16 z;
 } VoxPos;
 typedef struct {
