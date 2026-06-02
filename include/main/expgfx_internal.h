@@ -162,7 +162,7 @@ typedef struct ExpgfxTableEntry {
   uint attachedKey1;
   uint resource;
   u16 refCount;
-  s16 slotType;
+  s16 resourceId;
 } ExpgfxTableEntry;
 
 STATIC_ASSERT(sizeof(ExpgfxTableEntry) == EXPGFX_TABLE_ENTRY_SIZE);
@@ -170,7 +170,7 @@ STATIC_ASSERT(offsetof(ExpgfxTableEntry, sourceId) == 0x00);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, attachedKey1) == 0x04);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, resource) == 0x08);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, refCount) == 0x0C);
-STATIC_ASSERT(offsetof(ExpgfxTableEntry, slotType) == 0x0E);
+STATIC_ASSERT(offsetof(ExpgfxTableEntry, resourceId) == 0x0E);
 
 /*
  * Some spawn requests materialize an inline attached-source block after the
@@ -216,7 +216,7 @@ typedef struct ExpgfxSpawnConfig {
   int startPosZBits;
   float scale;
   u8 pad40[0x42 - 0x40];
-  s16 tableKeyType;
+  s16 textureId;
   u32 behaviorFlags;
   u32 renderFlags;
   u32 overrideColor0;

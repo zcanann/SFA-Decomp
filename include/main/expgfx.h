@@ -12,7 +12,7 @@ int expgfxGetSlot(short *poolIndexOut,short *slotIndexOut,short slotType,
                        int preferredPoolIndex,uint sourceId);
 void expgfx_initSlotQuad(void *slot);
 void expgfx_updateActivePools(u8 sourceMode,int sourceId,int resetSourceFrameState);
-int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 slotType);
+int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 resourceId);
 int expgfx_updateSourceFrameFlags(void *sourceObject);
 void expgfx_ownerFree3(u32 sourceId);
 void expgfx_func0B_nop(void);

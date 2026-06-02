@@ -652,7 +652,7 @@ void expgfx_initSlotQuad(void *slotPtr)
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 slotType)
+int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 resourceId)
 {
   ExpgfxTableEntry *entry;
   ExpgfxTableEntry *freeScan;
@@ -682,7 +682,7 @@ int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 slotType
       gExpgfxTableEntries[freeIndex].resource = resource;
       gExpgfxTableEntries[freeIndex].sourceId = sourceId;
       gExpgfxTableEntries[freeIndex].attachedKey1 = attachedKey1;
-      gExpgfxTableEntries[freeIndex].slotType = slotType;
+      gExpgfxTableEntries[freeIndex].resourceId = resourceId;
       return (s16)freeIndex;
     }
   }
@@ -1614,7 +1614,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int expgfx_acquireResourceEntry(short slotType);
+extern int expgfx_acquireResourceEntry(short resourceId);
 extern void *Obj_GetPlayerObject(void);
 extern f32 lbl_803DF350;
 extern f32 lbl_803DF41C;
@@ -1708,7 +1708,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   slot->renderFlags = config->renderFlags;
   slot->stateBits.value = slot->stateBits.value & ~EXPGFX_SLOT_STATE_INIT_PHASE_MASK;
 
-  tableIndex = (int)(short)expgfx_acquireResourceEntry(config->tableKeyType);
+  tableIndex = (int)(short)expgfx_acquireResourceEntry(config->textureId);
   if (tableIndex < 0) {
     expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
@@ -1765,7 +1765,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   }
 
   subTableIndex = expgfx_addToTable((uint)resourceHandle, (uint)attachedSource, attachedKey1,
-                                     config->tableKeyType);
+                                     config->textureId);
   if ((short)subTableIndex == EXPGFX_INVALID_TABLE_INDEX) {
     debugPrintf(sExpgfxInvalidTabIndex);
     expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
