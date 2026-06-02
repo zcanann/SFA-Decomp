@@ -1332,7 +1332,7 @@ config.libs = [
             Object(NonMatching, "main/dll/DR/dll_027E_drmusiccont.c"),
             Object(NonMatching, "main/dll/DR/dll_0280_dr_cloudper.c"),
             Object(NonMatching, "main/dll/DR/dll_0281_dr_earthcal.c"),
-            Object(NonMatching, "main/dll/dll_0282_barrelgener.c"),
+            Object(NonMatching, "main/dll/barrelgener.c"),
             Object(NonMatching, "main/dll/DR/dll_0283_dr_barrelgr.c"),
             Object(NonMatching, "main/dll/dll_028A_earthwalker.c"),
             Object(NonMatching, "main/dll/dll_028B.c"),

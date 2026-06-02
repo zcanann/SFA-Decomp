@@ -1676,7 +1676,7 @@ main/dll/DR/dll_0280_dr_cloudper.c:
 main/dll/DR/dll_0281_dr_earthcal.c:
 	.text       start:0x80221430 end:0x80221670
 
-main/dll/dll_0282_barrelgener.c:
+main/dll/barrelgener.c:
 	.text       start:0x80221670 end:0x802227EC
 
 main/dll/DR/dll_0283_dr_barrelgr.c:
