@@ -25,7 +25,7 @@ extern double getXZDistance(float *a, float *b);
 extern u32 randomGetRange(int min, int max);
 extern void objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, int param5, int param6);
 extern void curveFn_800da23c(void *route, int node);
-extern void fn_800DA928(float *route, float speed);
+extern void RomCurve_stepClamped(float *route, float speed);
 extern void fn_800DA980(void *route, int curve, int fromNode, int toNode);
 extern int fn_800DBCFC(float *pos, void *flag);
 extern void fn_80139834(int obj, void *route, float speed);
@@ -231,9 +231,9 @@ void trickyFn_80141290(int obj, int ball)
 
             fn_800DA980((void *)(ball + CANNONBALL_ROUTE), curve, fromNode, targetNode);
             if (*(int *)(ball + CANNONBALL_ROUTE_REVERSING) != 0) {
-                fn_800DA928((float *)(ball + CANNONBALL_ROUTE), lbl_803E250C);
+                RomCurve_stepClamped((float *)(ball + CANNONBALL_ROUTE), lbl_803E250C);
             } else {
-                fn_800DA928((float *)(ball + CANNONBALL_ROUTE), lbl_803E23E0);
+                RomCurve_stepClamped((float *)(ball + CANNONBALL_ROUTE), lbl_803E23E0);
             }
 
             *(float *)(ball + CANNONBALL_SFX_TIMER) = lbl_803E23DC;

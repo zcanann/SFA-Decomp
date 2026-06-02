@@ -4794,7 +4794,7 @@ extern f32 lbl_803E05C8;
 extern f32 lbl_803E05CC;
 extern f32 lbl_803E05F0;
 extern f32 lbl_803E05F4;
-extern void curveFn_80010320(float *p);
+extern int curveFn_80010320(float *p, f32 dt);
 #pragma scheduling off
 #pragma peephole off
 void player_init(int unused, void *obj, int a, int b) {
@@ -5791,15 +5791,15 @@ int RomCurve_func1C(int startCurve, int unused1, int unused2, int unused3, int u
     return candidateIds[selectedIndex];
 }
 
-/* fn_800DA928: clamp + curveFn call. */
+/* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
 #pragma scheduling off
-void fn_800DA928(float *p) {
-    if (*p <= lbl_803E05F0) {
-        *p = lbl_803E05F4;
-    } else if (*p >= lbl_803E05C8) {
-        *p = lbl_803E05CC;
+void RomCurve_stepClamped(float *state, f32 dt) {
+    if (*state <= lbl_803E05F0) {
+        *state = lbl_803E05F4;
+    } else if (*state >= lbl_803E05C8) {
+        *state = lbl_803E05CC;
     }
-    curveFn_80010320(p);
+    curveFn_80010320(state, dt);
 }
 #pragma scheduling reset
 

@@ -193,7 +193,7 @@ extern f32 lbl_803E2424;
 extern f32 lbl_803E2450;
 extern f32 timeDelta;
 extern f32 getXZDistance(f32 *a, f32 *b);
-extern void fn_800DA928(int p1, f32 p2);
+extern void RomCurve_stepClamped(int state, f32 dt);
 
 /* fn_80139834  addr=0x80139834  size=0xFC  linkage=global */
 #pragma peephole off
@@ -218,7 +218,7 @@ int fn_80139834(f32 param_1, int param_2, int param_3)
     limit = lbl_803E2424;
     while (dist <= limit || maxSq >= dist) {
         result = 1;
-        fn_800DA928(param_3, f29_val);
+        RomCurve_stepClamped(param_3, f29_val);
         dist = getXZDistance((f32 *)(param_3 + 0x68), (f32 *)(param_2 + 0x18));
         iter++;
         if (iter > 4) {
