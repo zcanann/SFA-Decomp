@@ -1043,7 +1043,7 @@ config.libs = [
             Object(NonMatching, "main/dll/seqObj11E.c"),
             Object(NonMatching, "main/dll/magicPlant.c"),
             Object(NonMatching, "main/dll/fall_ladders.c"),
-            Object(NonMatching, "main/dll/dll_10B.c"),
+            Object(NonMatching, "main/dll/fireflyLantern.c"),
             Object(NonMatching, "main/dll/duster.c"),
             Object(NonMatching, "main/dll/smallbasket.c"),
             Object(NonMatching, "main/dll/mediumbasket.c"),

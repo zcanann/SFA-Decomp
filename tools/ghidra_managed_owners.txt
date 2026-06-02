@@ -135,7 +135,7 @@ main/dll/DIM/DIMwooddoor.c
 main/dll/DIM/dll_223.c
 main/dll/dim_partfx.c
 main/dll/fall_ladders.c
-main/dll/dll_10B.c
+main/dll/fireflyLantern.c
 main/dll/cf_doorlight.c
 main/dll/texscroll2.c
 main/dll/dll_138.c

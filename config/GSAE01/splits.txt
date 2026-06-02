@@ -699,7 +699,7 @@ main/dll/magicPlant.c:
 main/dll/fall_ladders.c:
 	.text       start:0x801540A0 end:0x80154870
 
-main/dll/dll_10B.c:
+main/dll/fireflyLantern.c:
 	.text       start:0x80154870 end:0x8015536C
 
 main/dll/duster.c:
