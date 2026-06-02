@@ -301,6 +301,18 @@ bool FUN_80118574(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 }
 
 #pragma scheduling off
+BOOL THPPlayerPlay(void) {
+    if ((lbl_803A5D60.isOpen != 0) &&
+        ((lbl_803A5D60.state == 1) || (lbl_803A5D60.state == 4))) {
+        lbl_803A5D60.state = 2;
+        lbl_803A5D60.prevCount = 0;
+        lbl_803A5D60.curCount = 0;
+        lbl_803A5D60.retraceCount = -1;
+        return TRUE;
+    }
+    return FALSE;
+}
+
 BOOL prepareAttractMode(u32 movieIndex, s32 playFlags) {
     char *base;
     void *readyMsg;
