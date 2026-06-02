@@ -20,7 +20,7 @@ void transporter_update(int obj);
 void transporter_init(void);
 
 int cflightwall_getExtraSize(void);
-int cflightwall_func08(void);
+int cflightwall_getObjectTypeId(void);
 void cflightwall_free(void);
 void cflightwall_render(void);
 void cflightwall_hitDetect(void);
@@ -30,7 +30,7 @@ void cflightwall_release(void);
 void cflightwall_initialise(void);
 
 int barrelpad_getExtraSize(void);
-int barrelpad_func08(void);
+int barrelpad_getObjectTypeId(void);
 void barrelpad_free(void);
 void barrelpad_render(void);
 void barrelpad_hitDetect(void);
@@ -40,7 +40,7 @@ void barrelpad_release(void);
 void barrelpad_initialise(void);
 
 int cf_doorlight_getExtraSize(void);
-int cf_doorlight_func08(void);
+int cf_doorlight_getObjectTypeId(void);
 void cf_doorlight_free(void);
 void cf_doorlight_render(void);
 void cf_doorlight_hitDetect(void);

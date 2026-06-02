@@ -73,7 +73,7 @@ void ccgasventcontrol_update(void);
 void ccgasventcontrol_init(int obj, u8 *p);
 
 int dimlogfire_getExtraSize(void);
-int dimlogfire_func08(void);
+int dimlogfire_getObjectTypeId(void);
 void dimlogfire_free(void);
 void dimlogfire_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 void dimlogfire_update(short *param_1, int param_2);

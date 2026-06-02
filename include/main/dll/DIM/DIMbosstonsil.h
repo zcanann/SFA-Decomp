@@ -50,7 +50,6 @@ int DIMbosstonsil_setScale(int obj);
 int DIMbosstonsil_getExtraSize(void);
 int DIMbosstonsil_getObjectTypeId(void);
 void DIMbosstonsil_free(void *obj);
-int DIMbosstonsil_func08(void);
 void DIMbosstonsil_render(void *obj,undefined4 p2,undefined4 p3,undefined4 p4,undefined4 p5,
                           char visible);
 void DIMbosstonsil_hitDetect(void *obj);
