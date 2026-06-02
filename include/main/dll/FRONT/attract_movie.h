@@ -6,6 +6,12 @@
 #include "dolphin/thp/THPFile.h"
 #include "dolphin/thp/THPInfo.h"
 
+#define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE 0x280
+#define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_COUNT 2
+#define ATTRACT_MOVIE_AUDIO_DMA_BUFFER_BYTES \
+    (ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_COUNT)
+#define ATTRACT_MOVIE_AUDIO_DMA_SAMPLE_COUNT 0xA0
+
 typedef struct AttractMovieVideoInfo {
     u32 xSize;
     u32 ySize;

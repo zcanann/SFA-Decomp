@@ -516,10 +516,12 @@ void AttractMovieAudio_DmaCallback(void)
 
   if (lbl_803DD66C == 0) {
     lbl_803DD678 ^= 1;
-    AIInitDMA((u32)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), 0x280);
+    AIInitDMA((u32)(lbl_803A57C0 + (lbl_803DD678 * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)), ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
     interrupts = OSEnableInterrupts();
-    AttractMovieAudio_Mix((s16 *)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), NULL, 0xa0);
-    DCFlushRange(lbl_803A57C0 + (lbl_803DD678 * 0x280), 0x280);
+    AttractMovieAudio_Mix((s16 *)(lbl_803A57C0 + (lbl_803DD678 * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)), NULL,
+                          ATTRACT_MOVIE_AUDIO_DMA_SAMPLE_COUNT);
+    DCFlushRange(lbl_803A57C0 + (lbl_803DD678 * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE),
+                 ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
     OSRestoreInterrupts(interrupts);
   }
   else {
@@ -536,13 +538,15 @@ void AttractMovieAudio_DmaCallback(void)
     }
 
     lbl_803DD678 ^= 1;
-    AIInitDMA((u32)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), 0x280);
+    AIInitDMA((u32)(lbl_803A57C0 + (lbl_803DD678 * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)), ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
     interrupts = OSEnableInterrupts();
     if (lbl_803DD670 != 0) {
-      DCInvalidateRange((void *)lbl_803DD670, 0x280);
+      DCInvalidateRange((void *)lbl_803DD670, ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
     }
-    AttractMovieAudio_Mix((s16 *)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), (s16 *)lbl_803DD670, 0xa0);
-    DCFlushRange(lbl_803A57C0 + (lbl_803DD678 * 0x280), 0x280);
+    AttractMovieAudio_Mix((s16 *)(lbl_803A57C0 + (lbl_803DD678 * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE)),
+                          (s16 *)lbl_803DD670, ATTRACT_MOVIE_AUDIO_DMA_SAMPLE_COUNT);
+    DCFlushRange(lbl_803A57C0 + (lbl_803DD678 * ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE),
+                 ATTRACT_MOVIE_AUDIO_DMA_BUFFER_SIZE);
     OSRestoreInterrupts(interrupts);
   }
 }
