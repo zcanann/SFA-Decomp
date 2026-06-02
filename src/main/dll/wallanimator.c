@@ -19,6 +19,7 @@ extern undefined4 FUN_8008112c();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern void objRenderFn_8003b8f4(double scale);
+extern void queueGlowRender(void *light);
 
 extern undefined4* DAT_803dd708;
 extern undefined4* DAT_803dd70c;
@@ -40,6 +41,7 @@ extern f32 lbl_803E3D78;
 extern f32 timeDelta;
 extern f32 lbl_803E30D0;
 extern f32 lbl_803E30D4;
+extern f32 lbl_803E30E0;
 
 /*
  * --INFO--
@@ -500,6 +502,21 @@ void kaldachompspit_free(int *obj) {
     void *p = *(void **)*(void **)((char *)obj + 0xb8);
     if (p != NULL) {
         ModelLightStruct_free(p);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void kaldachompspit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    u8 *light = **(u8 ***)((char *)obj + 0xb8);
+    if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0) {
+        queueGlowRender(light);
+    }
+    if (visible != 0) {
+        ((void (*)(void *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E30E0);
     }
 }
 #pragma peephole reset

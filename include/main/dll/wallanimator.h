@@ -31,6 +31,7 @@ void FUN_80169a44(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
 void FUN_80169c04(int param_1);
+void kaldachompspit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible);
 
 extern ObjectDescriptor gKaldaChompMeObjDescriptor;
 
