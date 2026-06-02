@@ -268,27 +268,27 @@ void voxmaps_worldToGrid(f32* in, s16* out)
 #pragma peephole off
 void voxmaps_resetLoadedMaps(void)
 {
-    VoxXY* xy = lbl_803387A0.xy;
+    VoxMapSlotOrigin* slotOrigin = lbl_803387A0.slotOrigin;
     u8* b = lbl_803DC8D0;
     int* timer = lbl_803387A0.timer;
-    int* f30 = lbl_803387A0.f30;
-    void** buf = lbl_803387A0.buf;
+    int* blockId = lbl_803387A0.blockId;
+    void** mapBuffer = lbl_803387A0.mapBuffer;
     int i;
     for (i = 0; i < 6; i++) {
-        if (*buf != NULL) {
-            mm_free(*buf);
-            *buf = NULL;
+        if (*mapBuffer != NULL) {
+            mm_free(*mapBuffer);
+            *mapBuffer = NULL;
         }
-        *f30 = -2;
+        *blockId = -2;
         *timer = 0x40000000;
         *b = 0;
-        xy->a = 0;
-        xy->b = 0;
-        buf++;
-        f30++;
+        slotOrigin->gridX = 0;
+        slotOrigin->gridZ = 0;
+        mapBuffer++;
+        blockId++;
         timer++;
         b++;
-        xy++;
+        slotOrigin++;
     }
 }
 #pragma peephole reset
@@ -313,12 +313,12 @@ void voxmaps_initialise(void)
     lbl_803DC8DC = mmAlloc(640, 16, NULL);
 
     for (i = 0; i < 6; i++) {
-        mgr->buf[i] = NULL;
-        mgr->f30[i] = -2;
+        mgr->mapBuffer[i] = NULL;
+        mgr->blockId[i] = -2;
         mgr->timer[i] = 0x40000000;
         lbl_803DC8D0[i] = 0;
-        mgr->xy[i].a = 0;
-        mgr->xy[i].b = 0;
+        mgr->slotOrigin[i].gridX = 0;
+        mgr->slotOrigin[i].gridZ = 0;
     }
 
     lbl_803DC8D8 = lbl_803DC8DC;
@@ -349,10 +349,10 @@ int *voxmaps_updateActiveMap(VoxPos *obj)
     gridX = (int)fastFloorf((f32)(obj->x * 10 + 5 - lbl_803DCDC8) / lbl_803DE6B4);
     gridY = (int)fastFloorf((f32)ay / lbl_803DE6B4);
 
-    vm->f48 = lbl_803DCDC8 + gridX * 640;
-    vm->f4c = lbl_803DCDCC + gridY * 640;
-    vm->f50 = vm->f48 / 10;
-    vm->f54 = vm->f4c / 10;
+    vm->blockOriginWorldX = lbl_803DCDC8 + gridX * 640;
+    vm->blockOriginWorldZ = lbl_803DCDCC + gridY * 640;
+    vm->blockOriginGridX = vm->blockOriginWorldX / 10;
+    vm->blockOriginGridZ = vm->blockOriginWorldZ / 10;
 
     blockId = -1;
     if (mapGetBlockAtPos(gridX, gridY, 0) != NULL) {
@@ -364,7 +364,7 @@ int *voxmaps_updateActiveMap(VoxPos *obj)
     } else {
         found = -1;
         for (i = 0; i < 6; i++) {
-            if (blockId == vm->f30[i]) {
+            if (blockId == vm->blockId[i]) {
                 found = i;
                 i = 6;
             }
@@ -386,21 +386,21 @@ int *voxmaps_updateActiveMap(VoxPos *obj)
             }
             b8 = block->f8;
             b9 = block->f9;
-            slot = &vm->buf[bestSlot];
+            slot = &vm->mapBuffer[bestSlot];
             if (*slot != NULL) {
                 int saved = mmSetFreeDelay(0);
                 mm_free(*slot);
                 mmSetFreeDelay(saved);
             }
             *slot = voxLoadVoxMapActual(blockId, bestSlot, b9, b8);
-            vm->f30[bestSlot] = blockId;
+            vm->blockId[bestSlot] = blockId;
             vm->timer[bestSlot] = 0;
-            vm->xy[bestSlot].a = (s16)vm->f50;
-            vm->xy[bestSlot].b = (s16)vm->f54;
+            vm->slotOrigin[bestSlot].gridX = (s16)vm->blockOriginGridX;
+            vm->slotOrigin[bestSlot].gridZ = (s16)vm->blockOriginGridZ;
             vm->f58 = 0;
         }
     }
-    return &vm->f48;
+    return &vm->blockOriginWorldX;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -448,7 +448,7 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
     st = &lbl_803387E8;
     voxX6 = (cur.x - st->originX) & 0x3f;
     voxX = voxX6 >> 2;
-    voxZ6 = (cur.z - st->originY) & 0x3f;
+    voxZ6 = (cur.z - st->originZ) & 0x3f;
     voxZ = voxZ6 >> 2;
     found = cur;
     cachedMap = NULL;
@@ -520,11 +520,11 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
                 p_xz -= dx2;
                 p_yz += dy2;
                 oldVox = voxZ;
-                if (((cur.z - st->originY) >> 6) != 0) {
+                if (((cur.z - st->originZ) >> 6) != 0) {
                     voxmaps_updateActiveMap(&cur);
                     cachedMap = NULL;
                 }
-                voxZ6 = (cur.z - st->originY) & 0x3f;
+                voxZ6 = (cur.z - st->originZ) & 0x3f;
                 voxZ = voxZ6 >> 2;
                 if (voxZ != oldVox) {
                     remap = 1;
@@ -537,11 +537,11 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
                 p_xz -= dx2;
                 p_yz += dy2;
                 oldVox = voxZ;
-                if (((cur.z - st->originY) >> 6) != 0) {
+                if (((cur.z - st->originZ) >> 6) != 0) {
                     voxmaps_updateActiveMap(&cur);
                     cachedMap = NULL;
                 }
-                voxZ6 = (cur.z - st->originY) & 0x3f;
+                voxZ6 = (cur.z - st->originZ) & 0x3f;
                 voxZ = voxZ6 >> 2;
                 if (voxZ != oldVox) {
                     remap = 1;
@@ -700,11 +700,11 @@ void voxmapsFn_80010ff4(struct RouteState *state, VoxBoxArg *a2, int a3, u16 cou
 
     vs = &lbl_803387E8;
     dx = box[0] - vs->originX;
-    dz = box[2] - vs->originY;
+    dz = box[2] - vs->originZ;
     if ((dx >> 6) != 0 || (dz >> 6) != 0) {
         voxmaps_updateActiveMap((VoxPos *)box);
         dx = box[0] - vs->originX;
-        dz = box[2] - vs->originY;
+        dz = box[2] - vs->originZ;
     }
     map = vs->activeMap;
     if (map == NULL) {
@@ -1115,7 +1115,7 @@ int fn_800119FC(s16 *dest, s16 *start, s16 *out) {
     st = &lbl_803387E8;
     voxX6 = (cur.x - st->originX) & 0x3f;
     voxX = voxX6 >> 2;
-    voxZ6 = (cur.z - st->originY) & 0x3f;
+    voxZ6 = (cur.z - st->originZ) & 0x3f;
     voxZ = voxZ6 >> 2;
     voxXand7 = voxX & 7;
     shiftLo = (voxX6 & 3) << 1;
@@ -1207,7 +1207,7 @@ int fn_800119FC(s16 *dest, s16 *start, s16 *out) {
             if (((cur.x - st->originX) >> 6) != 0) {
                 voxmaps_updateActiveMap(&cur);
             }
-            voxX6 = (cur.x - st->originY) & 0x3f;
+            voxX6 = (cur.x - st->originZ) & 0x3f;
             voxX = voxX6 >> 2;
             voxXand7 = voxX & 7;
             shiftLo = (voxX6 & 3) << 1;
@@ -1216,10 +1216,10 @@ int fn_800119FC(s16 *dest, s16 *start, s16 *out) {
             found.z = cur.z;
             cur.z = (s16)(cur.z + ystep);
             err -= dx2;
-            if (((cur.z - st->originY) >> 6) != 0) {
+            if (((cur.z - st->originZ) >> 6) != 0) {
                 voxmaps_updateActiveMap(&cur);
             }
-            voxZ6 = (cur.z - st->originY) & 0x3f;
+            voxZ6 = (cur.z - st->originZ) & 0x3f;
             voxZ = voxZ6 >> 2;
         }
     }

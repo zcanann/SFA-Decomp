@@ -295,19 +295,19 @@ typedef struct SynthVoice {
     u8 pad9[0x1868 - 9];
 } SynthVoice;
 typedef struct {
-    u16 a;
-    u16 b;
-} VoxXY;
+    u16 gridX;
+    u16 gridZ;
+} VoxMapSlotOrigin;
 typedef struct {
-    VoxXY xy[6];
+    VoxMapSlotOrigin slotOrigin[6];
     int timer[6];
-    int f30[6];
-    int f48;
-    int f4c;
-    int f50;
-    int f54;
+    int blockId[6];
+    int blockOriginWorldX;
+    int blockOriginWorldZ;
+    int blockOriginGridX;
+    int blockOriginGridZ;
     int f58;
-    void* buf[6];
+    void* mapBuffer[6];
 } VoxMaps;
 typedef struct {
     s16 x;
@@ -336,7 +336,7 @@ typedef struct {
     int unk00;
     int unk04;
     int originX;
-    int originY;
+    int originZ;
     VoxActiveMap *activeMap;
 } VoxState;
 typedef struct {
