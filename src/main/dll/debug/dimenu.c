@@ -418,74 +418,6 @@ void FUN_8011d67c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 /*
  * --INFO--
  *
- * Function: FUN_8011d790
- * EN v1.0 Address: 0x8011D790
- * EN v1.0 Size: 612b
- * EN v1.1 Address: 0x8011D808
- * EN v1.1 Size: 552b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4
-FUN_8011d790(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
-{
-  int iVar1;
-  int iVar2;
-  
-  if (DAT_803de393 == '\0') {
-    iVar1 = (**(code **)(*DAT_803dd720 + 0xc))();
-    iVar2 = (**(code **)(*DAT_803dd720 + 0x14))();
-    if (iVar1 == 1) {
-      if (iVar2 == 0) {
-        FUN_80006824(0,SFXqu_longsob2);
-        FUN_80006b84(1);
-        FUN_800176cc();
-        FUN_80006ba8(0,0x300);
-      }
-      else {
-        FUN_80006824(0,SFXqu_shortsob1);
-        DAT_803de392 = '\0';
-        DAT_803de393 = '\x01';
-        DAT_8031b986 = DAT_8031b986 | 0x1000;
-        DAT_8031b9c2 = DAT_8031b9c2 | 0x1000;
-        (**(code **)(*DAT_803dd720 + 0x2c))();
-      }
-    }
-    else if (iVar1 == 0) {
-      FUN_80006824(0,0x419);
-      FUN_80006b84(1);
-      FUN_800176cc();
-      FUN_80006ba8(0,0x300);
-    }
-  }
-  else if (DAT_803de393 == '\x01') {
-    if (DAT_803de392 == '\0') {
-      saveGame_save();
-    }
-    DAT_803de392 = (char)(int)((float)((double)CONCAT44(0x43300000,(int)DAT_803de392 ^ 0x80000000) -
-                                      DOUBLE_803e2a78) + lbl_803DC074);
-    if (lbl_803E2A70 <=
-        (float)((double)CONCAT44(0x43300000,(int)DAT_803de392 ^ 0x80000000) - DOUBLE_803e2a78)) {
-      DAT_803de393 = '\0';
-      DAT_8031b986 = DAT_8031b986 & 0xefff;
-      DAT_8031b9c2 = DAT_8031b9c2 & 0xefff;
-      (**(code **)(*DAT_803dd720 + 0x2c))();
-      (**(code **)(*DAT_803dd720 + 0x18))(0);
-    }
-  }
-  DAT_803de390 = DAT_803de390 + (ushort)DAT_803dc070 * 8;
-  if (0x8c < DAT_803de390) {
-    DAT_803de390 = 0x8c;
-  }
-  return 0;
-}
-
-/*
- * --INFO--
- *
  * Function: FUN_8011d9f4
  * EN v1.0 Address: 0x8011D9F4
  * EN v1.0 Size: 260b
@@ -663,8 +595,71 @@ void Dummy39_release(void) { textureFree(lbl_803DD72C); }
 extern u32 lbl_803DD714, lbl_803DD718, lbl_803DD71C;
 extern int *gTitleMenuLinkInterface;
 extern void warpToMap(int mapId, int spawnId);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void cutsceneExit(void);
+extern void buttonDisable(int index, int flags);
+extern f32 timeDelta;
+extern f32 lbl_803E1DF0;
+extern s8 lbl_803DD712;
+extern s16 lbl_803DD710;
+extern u8 lbl_803DD713;
+extern u32 lbl_8031AD20[];
+extern u8 framesThisStep;
+extern void loadUiDll(int);
 #pragma scheduling off
 #pragma peephole off
+int WeirdUnusedMenu_run(void) {
+    int selection;
+    int action;
+
+    if (lbl_803DD713 == 0) {
+        selection = (*(int (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0xc)))();
+        action = (*(int (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0x14)))();
+        if (selection == 1) {
+            if (action == 0) {
+                Sfx_PlayFromObject(0, SFXqu_longsob2);
+                loadUiDll(1);
+                cutsceneExit();
+                buttonDisable(0, 0x300);
+            } else {
+                Sfx_PlayFromObject(0, SFXqu_shortsob1);
+                lbl_803DD712 = 0;
+                lbl_803DD713 = 1;
+                *(u16 *)((char *)lbl_8031AD20 + 0x16) =
+                    (u16)(*(u16 *)((char *)lbl_8031AD20 + 0x16) | 0x1000);
+                *(u16 *)((char *)lbl_8031AD20 + 0x52) =
+                    (u16)(*(u16 *)((char *)lbl_8031AD20 + 0x52) | 0x1000);
+                (*(void (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0x2c)))();
+            }
+        } else if (selection == 0) {
+            Sfx_PlayFromObject(0, 0x419);
+            loadUiDll(1);
+            cutsceneExit();
+            buttonDisable(0, 0x300);
+        }
+    } else if (lbl_803DD713 == 1) {
+        if ((s8)lbl_803DD712 == 0) {
+            saveGame_save();
+        }
+        *(char *)&lbl_803DD712 = (int)((f32)(s8)lbl_803DD712 + timeDelta);
+        if ((f32)(s8)lbl_803DD712 >= lbl_803E1DF0) {
+            lbl_803DD713 = 0;
+            *(u16 *)((char *)lbl_8031AD20 + 0x16) =
+                (u16)(*(u16 *)((char *)lbl_8031AD20 + 0x16) & ~0x1000);
+            *(u16 *)((char *)lbl_8031AD20 + 0x52) =
+                (u16)(*(u16 *)((char *)lbl_8031AD20 + 0x52) & ~0x1000);
+            (*(void (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0x2c)))();
+            (*(void (*)(int))(*(int *)(*gTitleMenuLinkInterface + 0x18)))(0);
+        }
+    }
+
+    lbl_803DD710 = (s16)(lbl_803DD710 + (framesThisStep << 3));
+    if (lbl_803DD710 > 0x8c) {
+        lbl_803DD710 = 0x8c;
+    }
+    return 0;
+}
+
 void WeirdUnusedMenu_release(void) {
     textureFree(lbl_803DD71C);
     textureFree(lbl_803DD718);
@@ -676,7 +671,7 @@ void WeirdUnusedMenu_release(void) {
 #pragma scheduling reset
 
 extern u32 lbl_803DD720;
-extern u16 lbl_803DD710;
+extern s16 lbl_803DD710;
 extern u8 lbl_803DD713;
 extern u32 lbl_8031AD20[];
 extern u32 lbl_8031AD98[];
