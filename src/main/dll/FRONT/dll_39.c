@@ -127,6 +127,7 @@ extern f32 lbl_803E1D18;
 #define NATTRACTMODE_RESTRUCT_MOVIE_OFFSET 0x18C
 #define NATTRACTMODE_SOURCE_FILE_OFFSET 0x1B4
 #define NATTRACTMODE_FAIL_TO_PREPARE_OFFSET 0x1C4
+#define sNAttractModeStringBlock lbl_8031A1D8
 
 /*
  * --INFO--
@@ -284,7 +285,7 @@ void n_attractmode_releaseMovieBuffers(void)
 #pragma peephole off
 void n_attractmode_prepareMovie(void)
 {
-  char *attractModeData;
+  char *attractModeStrings;
   int ok;
   int freeDelay;
   int movieBuffer1Size;
@@ -294,11 +295,11 @@ void n_attractmode_prepareMovie(void)
   int workBufferSize;
   uint movieBuffer0Size[3];
   
-  attractModeData = lbl_8031A1D8;
+  attractModeStrings = sNAttractModeStringBlock;
   gAttractMoviePreparePending = NATTRACTMODE_MOVIE_BUSY;
   ok = AttractMovieAudio_Init(NATTRACTMODE_MOVIE_SETUP_ID);
   if (ok != 0) {
-    ok = movieLoad(attractModeData + NATTRACTMODE_MOVIE_PATH_OFFSET,
+    ok = movieLoad(attractModeStrings + NATTRACTMODE_MOVIE_PATH_OFFSET,
                    NATTRACTMODE_MOVIE_START_FRAME_DEFAULT);
     if (ok == 0) {
       AttractMovieAudio_Shutdown();
@@ -357,10 +358,10 @@ void n_attractmode_prepareMovie(void)
           gAttractMovieScratchBuffer = 0;
         }
         mmSetFreeDelay(freeDelay);
-        OSReport(attractModeData + NATTRACTMODE_MALLOC_FAILED_OFFSET);
+        OSReport(attractModeStrings + NATTRACTMODE_MALLOC_FAILED_OFFSET);
         printHeapStats(1);
         defragMemory(0);
-        OSReport(attractModeData + NATTRACTMODE_RESTRUCT_MOVIE_OFFSET);
+        OSReport(attractModeStrings + NATTRACTMODE_RESTRUCT_MOVIE_OFFSET);
         printHeapStats(1);
       }
       else {
@@ -379,9 +380,9 @@ void n_attractmode_prepareMovie(void)
                                    gAttractMovieOptionalBuffer,gAttractMovieWorkBuffer);
         ok = prepareAttractMode(0,1);
         if (ok == 0) {
-          OSPanic(attractModeData + NATTRACTMODE_SOURCE_FILE_OFFSET,
+          OSPanic(attractModeStrings + NATTRACTMODE_SOURCE_FILE_OFFSET,
                   NATTRACTMODE_PREPARE_FAIL_LINE,
-                  attractModeData + NATTRACTMODE_FAIL_TO_PREPARE_OFFSET);
+                  attractModeStrings + NATTRACTMODE_FAIL_TO_PREPARE_OFFSET);
         }
         THPPlayerPlay();
         gAttractMovieState = NATTRACTMODE_MOVIE_STATE_PREPARED;
