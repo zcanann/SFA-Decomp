@@ -128,10 +128,10 @@ STATIC_ASSERT(offsetof(ObjHitReactEntry, cooldown) == 0x0C);
 int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEntryCount,
                        u32 reactionState,float *reactionStepScale);
 void ObjHitReact_ResetActiveObjects(int objectCount);
-void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
+void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async);
 uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
-                           uint entryArena,int objAnim);
+                           uint entryArena,ObjAnimComponent *objAnim);
 void ObjHitReact_UpdateResetObjects(void);
 ObjAnimComponent **ObjHitReact_GetResetObjects(int *outObjectCount);
 

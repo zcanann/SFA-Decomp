@@ -293,7 +293,7 @@ int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
+void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async)
 {
   ObjHitReactMoveEntry *moveEntry;
@@ -301,7 +301,7 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
   s16 firstEntryByteOffset;
   ObjHitReactMoveEntry *moveEntryTable;
 
-  moveEntryTable = ((ObjAnimComponent *)objAnim)->modelInstance->hitReactMoveTable;
+  moveEntryTable = objAnim->modelInstance->hitReactMoveTable;
   hitState->activeEntryBytes = 0;
   if (moveEntryTable != (ObjHitReactMoveEntry *)0x0) {
     entryShortOffset = 0;
@@ -348,7 +348,7 @@ void ObjHitReact_LoadMoveEntries(int objAnim,ObjAnimBank *bank,int objType,
 #pragma scheduling off
 #pragma peephole off
 uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
-                           uint entryArena,int objAnim)
+                           uint entryArena,ObjAnimComponent *objAnim)
 {
   ObjHitReactEntry *entries;
 
