@@ -31,6 +31,13 @@ extern undefined4 FUN_80286888();
 extern double FUN_80293900();
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
+extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
+extern int Obj_GetPlayerObject(void);
+extern f32 Vec_distance(void *a, void *b);
+extern void objUpdateOpacity(int obj);
+extern int ObjHits_GetPriorityHit(int obj, int *outHit, int *outIdx, int *outVol);
+extern int Resource_Acquire(int id, int mode);
+extern void Resource_Release(int handle);
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6d4;
@@ -42,6 +49,11 @@ extern int *gObjectTriggerInterface;
 extern int *gModgfxInterface;
 extern int *gExpgfxInterface;
 extern int *gPartfxInterface;
+extern u8 framesThisStep;
+extern int lbl_802C23C8[];
+extern s8 lbl_803DDBD0;
+extern f32 lbl_803E5138;
+extern f32 lbl_803E513C;
 extern f64 DOUBLE_803e5da8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5D78;
@@ -61,6 +73,19 @@ extern f32 lbl_803E5DC0;
 extern f32 lbl_803E5DC4;
 extern f32 lbl_803E5DC8;
 extern f32 lbl_803E5DCC;
+
+typedef struct Cup197State {
+    s32 gameBit;
+    s16 sparkTimer;
+    s16 activeTimer;
+    s16 hitCooldown;
+    u8 visibleToCamera;
+    u8 mode;
+    u8 active;
+    u8 sparkArmed;
+    u8 previousActive;
+    u8 stage;
+} Cup197State;
 
 /*
  * --INFO--
@@ -513,6 +538,131 @@ void FUN_801ca13c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 /* Trivial 4b 0-arg blr leaves. */
 void dll_197_hitDetect(void) {}
 
+void dll_197_update(int obj)
+{
+    Cup197State *state = *(Cup197State **)(obj + 0xb8);
+    int resourceParams[4];
+    u8 callbackData[0x14];
+    int player;
+    f32 distance;
+    int resource;
+    int effect;
+    int stageEffectBase;
+    int *resourceDefaults;
+
+    resourceDefaults = lbl_802C23C8;
+    resourceParams[0] = resourceDefaults[0];
+    resourceParams[1] = resourceDefaults[1];
+    resourceParams[2] = resourceDefaults[2];
+    resourceParams[3] = resourceDefaults[3];
+
+    player = Obj_GetPlayerObject();
+    distance = Vec_distance((void *)(player + 0x18), (void *)(obj + 0x18));
+    if (Sfx_IsPlayingFromObjectChannel(obj, 0x40) != 0) {
+        if (distance >= lbl_803E5138 && state->active != 0) {
+            Sfx_StopObjectChannel(obj, 0x40);
+        }
+    } else if (distance < lbl_803E5138 && state->active != 0) {
+        Sfx_PlayFromObject(obj, 0x72);
+    }
+
+    objUpdateOpacity(obj);
+
+    if (state->hitCooldown > 0) {
+        state->hitCooldown -= framesThisStep;
+    }
+
+    switch (state->mode) {
+    case 1:
+        break;
+    default:
+        return;
+    }
+
+    *(f32 *)(callbackData + 0x10) = lbl_803E513C;
+    state->previousActive = state->active;
+    if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0 ||
+        (state->hitCooldown != 0 && state->hitCooldown <= 0x14)) {
+        state->active = 1 - state->active;
+        if (state->active != 0) {
+            state->activeTimer = 1000;
+        }
+        if (state->hitCooldown != 0) {
+            state->hitCooldown = 0;
+            lbl_803DDBD0 = 3;
+            state->activeTimer = 300;
+            if (state->stage == 2) {
+                GameBit_Set(0x472, 1);
+            }
+        }
+    }
+
+    if (state->active != 0 && state->activeTimer != 0) {
+        state->activeTimer -= framesThisStep;
+        if (state->activeTimer <= 0) {
+            state->activeTimer = 0;
+            state->active = 0;
+        }
+    }
+
+    if (state->active != 0 && state->sparkTimer <= 0 && state->sparkArmed != 0) {
+        state->sparkArmed = 0;
+        Sfx_PlayFromObject(obj, 0x80);
+    }
+
+    if (state->active == state->previousActive) {
+        return;
+    }
+
+    if (state->active != 0) {
+        resource = Resource_Acquire(0x69, 1);
+        stageEffectBase = state->stage * 2;
+        resourceParams[1] = stageEffectBase + 0x19d;
+        resourceParams[2] = stageEffectBase + 0x19e;
+        (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*(int *)resource + 4)))(
+            obj, 1, callbackData, 0x10004, -1, resourceParams);
+        Resource_Release(resource);
+
+        for (effect = 0; effect < 200; effect++) {
+            (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x1a3, 0, 0, -1, 0);
+        }
+
+        if (state->gameBit != -1 && GameBit_Get(state->gameBit) == 0) {
+            GameBit_Set(state->gameBit, 1);
+        }
+        if (lbl_803DDBD0 == 0 && state->stage == 0 && GameBit_Get(state->gameBit) != 0) {
+            lbl_803DDBD0 = 1;
+        }
+        if (lbl_803DDBD0 == 1 && state->stage == 1 && GameBit_Get(state->gameBit) != 0) {
+            lbl_803DDBD0 = 2;
+        }
+        if (lbl_803DDBD0 == 2 && state->stage == 2 && GameBit_Get(state->gameBit) != 0) {
+            GameBit_Set(0x472, 1);
+            lbl_803DDBD0 = 3;
+        }
+        state->sparkArmed = 1;
+        state->sparkTimer = 1;
+    } else {
+        Sfx_StopObjectChannel(obj, 0x7f);
+        (*(void (*)(int))(*(int *)(*gModgfxInterface + 0x18)))(obj);
+        (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+        if (state->gameBit != -1 && GameBit_Get(state->gameBit) != 0) {
+            GameBit_Set(state->gameBit, 0);
+        }
+        if (lbl_803DDBD0 == 1 && state->stage == 0) {
+            lbl_803DDBD0 = 0;
+        }
+        if (lbl_803DDBD0 == 2 && state->stage == 1) {
+            lbl_803DDBD0 = 0;
+        }
+        if (lbl_803DDBD0 == 3 && state->stage == 2 && GameBit_Get(0x474) == 0) {
+            GameBit_Set(0x472, 0);
+            lbl_803DDBD0 = 0;
+        }
+    }
+}
+
 /* 8b "li r3, N; blr" returners. */
 int dll_197_getExtraSize(void) { return 0x10; }
 int dll_197_getObjectTypeId(void) { return 0x1; }
@@ -525,7 +675,6 @@ extern f32 lbl_803E5128;
 extern f32 lbl_803E512C;
 extern f32 lbl_803E5130;
 extern f32 lbl_803E5134;
-extern u8 framesThisStep;
 extern void objRenderFn_8003b8f4(f32);
 extern void *Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32 x);
