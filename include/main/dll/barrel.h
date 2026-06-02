@@ -42,7 +42,7 @@ extern ObjectDescriptor gGrimbleObjDescriptor;
 extern ObjectDescriptor gCannonClawObjDescriptor;
 
 int grimble_getExtraSize(void);
-int grimble_func08(void);
+int grimble_getObjectTypeId(void);
 void grimble_free(int obj);
 void grimble_render(void);
 void grimble_hitDetect(int obj);
@@ -52,7 +52,7 @@ void grimble_release(void);
 void grimble_initialise(void);
 
 int cannonclaw_getExtraSize(void);
-int cannonclaw_func08(void);
+int cannonclaw_getObjectTypeId(void);
 void cannonclaw_free(void);
 void cannonclaw_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void cannonclaw_hitDetect(void);

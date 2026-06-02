@@ -25,7 +25,7 @@ void FUN_801df784(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  undefined4 param_9,undefined4 param_10,int param_11);
 void FUN_801df788(int param_1);
 int FEseqobject_getExtraSize(void);
-int FEseqobject_func08(void);
+int FEseqobject_getObjectTypeId(void);
 void FEseqobject_free(void);
 void FEseqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FEseqobject_hitDetect(void);

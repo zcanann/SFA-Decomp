@@ -16,7 +16,7 @@ void FUN_8017437c(int param_1,int param_2);
 undefined4 FUN_801743f0(uint param_1,int param_2);
 void FUN_80174524(int param_1,int param_2);
 int effectbox_getExtraSize(void);
-int effectbox_func08(void);
+int effectbox_getObjectTypeId(void);
 void effectbox_free(void);
 void effectbox_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
 void effectbox_hitDetect(void);

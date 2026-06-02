@@ -25,7 +25,7 @@ void FUN_801799bc(undefined2 *param_1,int param_2);
 uint FUN_801799c0(int param_1);
 
 int doorf4_getExtraSize(void);
-int doorf4_func08(void);
+int doorf4_getObjectTypeId(void);
 void doorf4_free(int obj);
 void doorf4_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void doorf4_hitDetect(void);

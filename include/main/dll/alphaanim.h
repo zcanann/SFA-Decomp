@@ -35,14 +35,14 @@ void doorlock_render(void);
 void doorlock_update(void);
 
 int seqobject_getExtraSize(void);
-int seqobject_func08(void);
+int seqobject_getObjectTypeId(void);
 void seqobject_free(int x);
 void seqobject_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void seqobject_update(void);
 void seqobject_init(int *obj, u8 *params);
 
 int seqobj2_getExtraSize(void);
-int seqobj2_func08(void);
+int seqobj2_getObjectTypeId(void);
 void seqobj2_free(int x);
 void seqobj2_render(void);
 void seqobj2_hitDetect(void);
@@ -52,7 +52,7 @@ void SeqObj2_release(void);
 void SeqObj2_initialise(void);
 
 int immultiseq_getExtraSize(void);
-int immultiseq_func08(void);
+int immultiseq_getObjectTypeId(void);
 void immultiseq_free(int x);
 void immultiseq_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void immultiseq_hitDetect(void);

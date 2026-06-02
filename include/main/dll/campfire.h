@@ -11,7 +11,7 @@ void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3);
 void kaldachom_func0B(void);
 s16 kaldachom_setScale(int *obj);
 int kaldachom_getExtraSize(void);
-int kaldachom_func08(void);
+int kaldachom_getObjectTypeId(void);
 void kaldachom_free(int param_1);
 void kaldachom_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                       undefined4 param_5,char param_6);

@@ -182,7 +182,7 @@ void GCRobotBlast_initialise(void);
 int DrakorEnergy_setScale(int *obj);
 void DrakorEnergy_func0B_nop(void);
 int drakorenergy_getExtraSize(void);
-int drakorenergy_func08(void);
+int drakorenergy_getObjectTypeId(void);
 void drakorenergy_free(void);
 void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible);
 void drakorenergy_hitDetect(void);
@@ -192,7 +192,7 @@ void drakorenergy_initialise(void);
 
 s16 DBstealerworm_setScale(int *obj);
 int dbstealerworm_getExtraSize(void);
-int dbstealerworm_func08(void);
+int dbstealerworm_getObjectTypeId(void);
 void dbstealerworm_free(int *obj);
 void dbstealerworm_render(void);
 void dbstealerworm_hitDetect(int obj);
@@ -202,7 +202,7 @@ void dbstealerworm_release(void);
 void dbstealerworm_initialise(void);
 
 int dbholecontrol1_getExtraSize(void);
-int dbholecontrol1_func08(void);
+int dbholecontrol1_getObjectTypeId(void);
 void dbholecontrol1_free(int x);
 void dbholecontrol1_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dbholecontrol1_hitDetect(void);

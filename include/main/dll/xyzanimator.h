@@ -50,7 +50,7 @@ void FUN_8016aae4(void);
 void FUN_8016ab18(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8016ab40(int param_1);
 int pinponspike_getExtraSize(void);
-int pinponspike_func08(void);
+int pinponspike_getObjectTypeId(void);
 void pinponspike_free(int obj);
 void pinponspike_render(void);
 void pinponspike_hitDetect(void);
@@ -64,7 +64,7 @@ void FUN_8016aba8(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5
                  ,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9);
 int pollen_getExtraSize(void);
-int pollen_func08(void);
+int pollen_getObjectTypeId(void);
 void pollen_free(int obj);
 void pollen_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
 void pollen_hitDetect(int obj);
@@ -73,7 +73,7 @@ void pollen_init(int *obj);
 void pollen_release(void);
 void pollen_initialise(void);
 int pollenfragment_getExtraSize(void);
-int pollenfragment_func08(void);
+int pollenfragment_getObjectTypeId(void);
 void pollenfragment_free(int obj);
 void pollenfragment_render(int *obj, int p2, int p3, int p4, int p5);
 void pollenfragment_hitDetect(void);

@@ -8,7 +8,7 @@ void FUN_80169360(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,int param_11);
 int kaldachompme_getExtraSize(void);
-int kaldachompme_func08(void);
+int kaldachompme_getObjectTypeId(void);
 void kaldachompme_free(void);
 void kaldachompme_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                          undefined4 param_5,s8 renderFlag);

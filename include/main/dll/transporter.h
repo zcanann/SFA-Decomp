@@ -48,20 +48,20 @@ FUN_801778e0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8
             int param_10);
 
 int pushable_getExtraSize(void);
-int pushable_func08(void);
+int pushable_getObjectTypeId(void);
 
 int WarpPoint_getExtraSize(void);
-int WarpPoint_func08(void);
+int WarpPoint_getObjectTypeId(void);
 
 int invhit_getExtraSize(void);
-int invhit_func08(void);
+int invhit_getObjectTypeId(void);
 void invhit_render(void);
 void invhit_hitDetect(void);
 void invhit_release(void);
 void invhit_initialise(void);
 
 int iceblast_getExtraSize(void);
-int iceblast_func08(void);
+int iceblast_getObjectTypeId(void);
 void iceblast_free(void);
 void iceblast_render(void);
 void iceblast_hitDetect(void);
