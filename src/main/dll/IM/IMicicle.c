@@ -1641,7 +1641,7 @@ void attractor_free(int x) { ObjGroup_RemoveObject(x, 0x1e); }
 #pragma scheduling reset
 
 /* state encode: ((obj->_X)->_Y << shift) | const. */
-u32 exploded_getObjectTypeId(int *obj) { return (*((u8*)((int**)obj)[0x4c/4] + 0x18) << 11) | 0x400; }
+u32 exploded_getObjectTypeId(ExplodedObject *obj) { return (obj->mapData->objectTypeTag << 11) | 0x400; }
 
 /* byte-to-short shift8 pattern. */
 #pragma peephole off
@@ -1674,7 +1674,7 @@ void attractor_init(s16 *obj, void *data) {
 #pragma scheduling reset
 
 extern u8 framesThisStep;
-extern int fn_801A5298(s16 *obj, int state);
+extern int fn_801A5298(ExplodedObject *obj, ExplodedObjectState *state);
 #pragma scheduling off
 #pragma peephole off
 void exploded_update(int *obj) {
@@ -1686,7 +1686,7 @@ void exploded_update(int *obj) {
     case 0:
         break;
     case 1:
-        if (fn_801A5298((s16 *)o, (int)state) != 0) {
+        if (fn_801A5298(o, state) != 0) {
             state->explodePhase = 0;
         }
         break;
@@ -1838,27 +1838,25 @@ void slidingdoor_update(u8* obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* exploded_init: store (s8)data[0x18] at obj->_ad, convert (s8)data[0x3d]
- * to f32 and stash (obj->_50->_04 * raw) / lbl_803E4428 at obj+0x8, then
- * invoke fn_801A4DB8(obj, data, ?, sub). Finally, set sub[0x69] = 1 if any
- * of the 6 halfwords at data+0x20..+0x2a is non-zero, else 0. */
+/* exploded_init: store the map object tag, scale the model using the map
+ * byte, then enable physics if any initial velocity/acceleration is present. */
 #pragma scheduling off
 #pragma peephole off
-void exploded_init(u8* obj, u8* data, int extra) {
-    u8* sub;
-    *(s8*)(obj + 0xad) = (s8)data[0x18];
-    sub = *(u8**)(obj + 0xb8);
-    *(f32*)(obj + 0x8) = (*(f32*)((char*)(*(u8**)(obj + 0x50)) + 4) * (f32)(s32)(s8)data[0x3d]) / lbl_803E4428;
-    fn_801A4DB8((int)obj, (int)data, extra, (int)sub);
-    if (*(s16*)(data + 0x20) != 0 ||
-        *(s16*)(data + 0x22) != 0 ||
-        *(s16*)(data + 0x24) != 0 ||
-        *(s16*)(data + 0x26) != 0 ||
-        *(s16*)(data + 0x28) != 0 ||
-        *(s16*)(data + 0x2a) != 0) {
-        sub[0x69] = 1;
+void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra) {
+    ExplodedObjectState* state;
+    obj->objectTypeTag = data->objectTypeTag;
+    state = obj->state;
+    obj->modelScale = (*(f32*)((char*)obj->modelData + 4) * (f32)(s32)data->scaleByte) / lbl_803E4428;
+    fn_801A4DB8((int)obj, (int)data, extra, (int)state);
+    if (data->initialVelocityX != 0 ||
+        data->initialVelocityY != 0 ||
+        data->initialVelocityZ != 0 ||
+        data->accelerationX != 0 ||
+        data->accelerationY != 0 ||
+        data->accelerationZ != 0) {
+        state->explodePhase = 1;
     } else {
-        sub[0x69] = 0;
+        state->explodePhase = 0;
     }
 }
 #pragma peephole reset
@@ -1987,48 +1985,45 @@ extern f32 lbl_803E4424;
  * ground clearance, and the randomized lifetime countdown. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801A4F90(s16 *obj, int state, int data)
+void fn_801A4F90(ExplodedObject *obj, ExplodedObjectState *state, ExplodedObjectMapData *data)
 {
   f32 floorY[2];
 
   floorY[0] = lbl_803E43F0;
-  obj[0] = *(s16 *)(data + 0x1a);
-  obj[1] = *(s16 *)(data + 0x1c);
-  obj[2] = *(s16 *)(data + 0x1e);
+  obj->angleX = data->initialAngleX;
+  obj->angleY = data->initialAngleY;
+  obj->angleZ = data->initialAngleZ;
 
-  *(f32 *)((char *)obj + 0x24) = (f32)(s32)*(s16 *)(data + 0x20) / lbl_803E4400;
-  *(f32 *)((char *)obj + 0x28) = (f32)(s32)*(s16 *)(data + 0x22) / lbl_803E4400;
-  *(f32 *)((char *)obj + 0x2c) = (f32)(s32)*(s16 *)(data + 0x24) / lbl_803E4400;
-  *(f32 *)(state + 0x18) = (f32)(s32)*(s16 *)(data + 0x2c);
-  *(f32 *)(state + 0x1c) = (f32)(s32)*(s16 *)(data + 0x2e);
-  *(f32 *)(state + 0x20) = (f32)(s32)*(s16 *)(data + 0x30);
+  obj->velocityX = (f32)(s32)data->initialVelocityX / lbl_803E4400;
+  obj->velocityY = (f32)(s32)data->initialVelocityY / lbl_803E4400;
+  obj->velocityZ = (f32)(s32)data->initialVelocityZ / lbl_803E4400;
+  state->spinX = (f32)(s32)data->spinX;
+  state->spinY = (f32)(s32)data->spinY;
+  state->spinZ = (f32)(s32)data->spinZ;
 
-  if (*(s16 *)(data + 0x3a) == 0) {
-    fn_80065684((double)*(f32 *)((char *)obj + 0xc),
-                (double)(*(f32 *)((char *)obj + 0x10) - lbl_803E4404),
-                (double)*(f32 *)((char *)obj + 0x14), obj, floorY, 0);
-    *(f32 *)(state + 0x54) = *(f32 *)((char *)obj + 0x10) - floorY[0];
+  if (data->floorOffset == 0) {
+    fn_80065684((double)obj->x, (double)(obj->y - lbl_803E4404), (double)obj->z, obj, floorY, 0);
+    state->floorHeight = obj->y - floorY[0];
   }
   else {
-    *(f32 *)(state + 0x54) =
-        *(f32 *)((char *)obj + 0x10) + (f32)(s32)*(s16 *)(data + 0x3a);
+    state->floorHeight = obj->y + (f32)(s32)data->floorOffset;
   }
 
-  *(f32 *)(state + 0x24) = (f32)(s32)*(s16 *)(data + 0x32) / lbl_803E4404;
-  *(f32 *)(state + 0x28) = (f32)(s32)*(s16 *)(data + 0x34) / lbl_803E4404;
-  *(f32 *)(state + 0x2c) = (f32)(s32)*(s16 *)(data + 0x36) / lbl_803E4404;
-  *(f32 *)(state + 0x30) = (f32)(s32)*(s16 *)(data + 0x26) / lbl_803E4408;
-  *(f32 *)(state + 0x34) = (f32)(s32)*(s16 *)(data + 0x28) / lbl_803E4408;
-  *(f32 *)(state + 0x38) = (f32)(s32)*(s16 *)(data + 0x2a) / lbl_803E4408;
+  state->spinVelocityX = (f32)(s32)data->spinVelocityX / lbl_803E4404;
+  state->spinVelocityY = (f32)(s32)data->spinVelocityY / lbl_803E4404;
+  state->spinVelocityZ = (f32)(s32)data->spinVelocityZ / lbl_803E4404;
+  state->accelerationX = (f32)(s32)data->accelerationX / lbl_803E4408;
+  state->accelerationY = (f32)(s32)data->accelerationY / lbl_803E4408;
+  state->accelerationZ = (f32)(s32)data->accelerationZ / lbl_803E4408;
 
-  *(s32 *)(state + 0x58) = 0;
-  if (*(s16 *)(data + 0x38) == 0) {
-    *(s32 *)(state + 0x5c) = -1;
+  state->elapsedFrames = 0;
+  if (data->lifetimeFrames == 0) {
+    state->durationFrames = -1;
   }
   else {
-    int lifetime = (u16)*(s16 *)(data + 0x38) * ((int)randomGetRange(0, 100) + 100);
+    int lifetime = (u16)data->lifetimeFrames * ((int)randomGetRange(0, 100) + 100);
     lifetime = lifetime / 200 + (lifetime >> 31);
-    *(s32 *)(state + 0x5c) = lifetime - (lifetime >> 31);
+    state->durationFrames = lifetime - (lifetime >> 31);
   }
 }
 #pragma peephole reset
@@ -2038,7 +2033,7 @@ void fn_801A4F90(s16 *obj, int state, int data)
  * the stored floor height, and return nonzero once the shard comes to rest. */
 #pragma scheduling off
 #pragma peephole off
-int fn_801A5298(s16 *obj, int state)
+int fn_801A5298(ExplodedObject *obj, ExplodedObjectState *state)
 {
   int stopped;
   f32 speed;
@@ -2046,41 +2041,38 @@ int fn_801A5298(s16 *obj, int state)
   f32 worldAfter[3];
 
   stopped = 0;
-  Obj_TransformLocalPointByWorldMatrix(obj, (void *)state, worldBefore, 0);
-  *(f32 *)((char *)obj + 0x24) =
-      timeDelta * *(f32 *)(state + 0x30) + *(f32 *)((char *)obj + 0x24);
-  *(f32 *)((char *)obj + 0x28) =
-      timeDelta * *(f32 *)(state + 0x34) + *(f32 *)((char *)obj + 0x28);
-  *(f32 *)((char *)obj + 0x2c) =
-      timeDelta * *(f32 *)(state + 0x38) + *(f32 *)((char *)obj + 0x2c);
-  *(f32 *)(state + 0x18) = timeDelta * *(f32 *)(state + 0x24) + *(f32 *)(state + 0x18);
-  *(f32 *)(state + 0x1c) = timeDelta * *(f32 *)(state + 0x28) + *(f32 *)(state + 0x1c);
-  *(f32 *)(state + 0x20) = timeDelta * *(f32 *)(state + 0x2c) + *(f32 *)(state + 0x20);
+  Obj_TransformLocalPointByWorldMatrix(obj, state, worldBefore, 0);
+  obj->velocityX = timeDelta * state->accelerationX + obj->velocityX;
+  obj->velocityY = timeDelta * state->accelerationY + obj->velocityY;
+  obj->velocityZ = timeDelta * state->accelerationZ + obj->velocityZ;
+  state->spinX = timeDelta * state->spinVelocityX + state->spinX;
+  state->spinY = timeDelta * state->spinVelocityY + state->spinY;
+  state->spinZ = timeDelta * state->spinVelocityZ + state->spinZ;
 
-  if (*(f32 *)(state + 0x54) <= worldBefore[1]) {
-    *(u8 *)(state + 0x66) &= ~0x04;
+  if (state->floorHeight <= worldBefore[1]) {
+    state->physicsFlags &= ~0x04;
   }
   else {
-    if (((*(f32 *)((char *)obj + 0x28) < lbl_803E43F0) && ((*(u8 *)(state + 0x66) & 4) != 0)) ||
-        (lbl_803E43F0 == *(f32 *)((char *)obj + 0x28))) {
-      *(f32 *)(state + 0x34) = lbl_803E43F0;
-      *(f32 *)(state + 0x2c) = lbl_803E43F0;
-      *(f32 *)(state + 0x20) = lbl_803E43F0;
-      *(f32 *)(state + 0x28) = lbl_803E43F0;
-      *(f32 *)(state + 0x1c) = lbl_803E43F0;
-      *(f32 *)(state + 0x24) = lbl_803E43F0;
-      *(f32 *)(state + 0x18) = lbl_803E43F0;
-      *(f32 *)((char *)obj + 0x28) = lbl_803E43F0;
-      *(f32 *)(state + 0x30) = *(f32 *)(state + 0x30) * lbl_803E4418;
-      *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4418;
-      *(f32 *)(state + 0x38) = *(f32 *)(state + 0x38) * lbl_803E4418;
-      *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4418;
-      speed = *(f32 *)((char *)obj + 0x24);
+    if (((obj->velocityY < lbl_803E43F0) && ((state->physicsFlags & 4) != 0)) ||
+        (lbl_803E43F0 == obj->velocityY)) {
+      state->accelerationY = lbl_803E43F0;
+      state->spinVelocityZ = lbl_803E43F0;
+      state->spinZ = lbl_803E43F0;
+      state->spinVelocityY = lbl_803E43F0;
+      state->spinY = lbl_803E43F0;
+      state->spinVelocityX = lbl_803E43F0;
+      state->spinX = lbl_803E43F0;
+      obj->velocityY = lbl_803E43F0;
+      state->accelerationX = state->accelerationX * lbl_803E4418;
+      obj->velocityX = obj->velocityX * lbl_803E4418;
+      state->accelerationZ = state->accelerationZ * lbl_803E4418;
+      obj->velocityZ = obj->velocityZ * lbl_803E4418;
+      speed = obj->velocityX;
       if (speed < lbl_803E43F0) {
         speed = -speed;
       }
       if (speed < lbl_803E441C) {
-        speed = *(f32 *)((char *)obj + 0x2c);
+        speed = obj->velocityZ;
         if (speed < lbl_803E43F0) {
           speed = -speed;
         }
@@ -2089,29 +2081,26 @@ int fn_801A5298(s16 *obj, int state)
         }
       }
     }
-    if (*(f32 *)((char *)obj + 0x28) < lbl_803E43F0) {
-      *(f32 *)((char *)obj + 0x28) = lbl_803E4420 * -*(f32 *)((char *)obj + 0x28);
-      *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4418;
-      *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4418;
-      *(f32 *)(state + 0x34) = lbl_803E4424;
-      *(f32 *)(state + 0x2c) = -*(f32 *)(state + 0x2c);
+    if (obj->velocityY < lbl_803E43F0) {
+      obj->velocityY = lbl_803E4420 * -obj->velocityY;
+      obj->velocityX = obj->velocityX * lbl_803E4418;
+      obj->velocityZ = obj->velocityZ * lbl_803E4418;
+      state->accelerationY = lbl_803E4424;
+      state->spinVelocityZ = -state->spinVelocityZ;
     }
-    *(u8 *)(state + 0x66) |= 4;
+    state->physicsFlags |= 4;
   }
 
-  obj[0] = (s16)(s32)(*(f32 *)(state + 0x18) * timeDelta + (f32)(s32)obj[0]);
-  obj[1] = (s16)(s32)(*(f32 *)(state + 0x1c) * timeDelta + (f32)(s32)obj[1]);
-  obj[2] = (s16)(s32)(*(f32 *)(state + 0x20) * timeDelta + (f32)(s32)obj[2]);
-  Obj_TransformLocalPointByWorldMatrix(obj, (void *)state, worldAfter, 0);
-  *(f32 *)((char *)obj + 0xc) += worldBefore[0] - worldAfter[0];
-  *(f32 *)((char *)obj + 0x10) += worldBefore[1] - worldAfter[1];
-  *(f32 *)((char *)obj + 0x14) += worldBefore[2] - worldAfter[2];
-  *(f32 *)((char *)obj + 0xc) =
-      *(f32 *)((char *)obj + 0x24) * timeDelta + *(f32 *)((char *)obj + 0xc);
-  *(f32 *)((char *)obj + 0x10) =
-      *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
-  *(f32 *)((char *)obj + 0x14) =
-      *(f32 *)((char *)obj + 0x2c) * timeDelta + *(f32 *)((char *)obj + 0x14);
+  obj->angleX = (s16)(s32)(state->spinX * timeDelta + (f32)(s32)obj->angleX);
+  obj->angleY = (s16)(s32)(state->spinY * timeDelta + (f32)(s32)obj->angleY);
+  obj->angleZ = (s16)(s32)(state->spinZ * timeDelta + (f32)(s32)obj->angleZ);
+  Obj_TransformLocalPointByWorldMatrix(obj, state, worldAfter, 0);
+  obj->x += worldBefore[0] - worldAfter[0];
+  obj->y += worldBefore[1] - worldAfter[1];
+  obj->z += worldBefore[2] - worldAfter[2];
+  obj->x = obj->velocityX * timeDelta + obj->x;
+  obj->y = obj->velocityY * timeDelta + obj->y;
+  obj->z = obj->velocityZ * timeDelta + obj->z;
   return stopped;
 }
 #pragma peephole reset
