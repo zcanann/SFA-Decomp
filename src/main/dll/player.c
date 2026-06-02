@@ -2412,7 +2412,8 @@ int fn_8029F108(int obj, int state)
             *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
         }
         ObjAnim_SetCurrentMove(obj, 0, lbl_803E7EA4, 1);
-        ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)(obj, 0, 0, 0);
+        ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)
+            (obj, OBJANIM_STATE_INDEX_CURRENT, OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
         (*(void (*)(int, int))(*(int *)(*(int *)*(int *)((char *)sub + 0x68) + 0x3c)))(sub, 0);
         fn_802AB5A4(obj, inner, 7);
         ObjHits_EnableObject(obj);
@@ -2865,7 +2866,8 @@ int fn_802A1114(int obj, int state)
             return 0x14;
         }
     }
-    ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 0, 1, *(s16 *)((char *)inner + 0x5a4));
+    ObjAnim_WriteStateWord((ObjAnimComponent *)obj, OBJANIM_STATE_INDEX_CURRENT,
+                           OBJANIM_STATE_WORD_EVENT_STATE, *(s16 *)((char *)inner + 0x5a4));
     (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(
         *(f32 *)((char *)obj + 0xc),
         *(f32 *)((char *)inner + 0x560) * *(f32 *)((char *)obj + 0x98) + *(f32 *)((char *)obj + 0x10),
@@ -3026,8 +3028,10 @@ int fn_8029F6E4(int obj, int state)
         *(s16 *)((char *)inner + 0x4d0) = *(s16 *)((char *)inner + 0x4d4) / 2;
     }
     if ((*(u8 *)((char *)inner + 0x6ec) & 0x1) != 0) {
-        ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 0, 2, 0);
-        ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 1, 2, 0);
+        ObjAnim_WriteStateWord((ObjAnimComponent *)obj, OBJANIM_STATE_INDEX_CURRENT,
+                               OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
+        ObjAnim_WriteStateWord((ObjAnimComponent *)obj, OBJANIM_STATE_INDEX_ACTIVE,
+                               OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
     }
     if ((*(int (*)(int, int))(*(int *)((char *)*(int *)*(int *)((char *)sub + 0x68) + 0x2c)))(
             (int)sub, obj) != 0) {
@@ -3532,7 +3536,8 @@ int fn_802A00E0(int obj, int state)
     *(f32 *)((char *)obj + 0x2c) = fz;
     *(int *)((char *)state + 4) |= 0x8000000;
     *(f32 *)((char *)obj + 0x28) = fz;
-    ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 0, 1, *(s16 *)((char *)inner + 0x5a4));
+    ObjAnim_WriteStateWord((ObjAnimComponent *)obj, OBJANIM_STATE_INDEX_CURRENT,
+                           OBJANIM_STATE_WORD_EVENT_STATE, *(s16 *)((char *)inner + 0x5a4));
     if ((*(int *)((char *)state + 0x314) & 0x400) != 0) {
         doRumble(lbl_803E7F10);
     }
@@ -3612,7 +3617,8 @@ int fn_802A03BC(int obj, int state)
     *(f32 *)((char *)obj + 0x2c) = fz;
     *(int *)((char *)state + 4) |= 0x8000000;
     *(f32 *)((char *)obj + 0x28) = fz;
-    ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 0, 1, *(s16 *)((char *)inner + 0x5a4));
+    ObjAnim_WriteStateWord((ObjAnimComponent *)obj, OBJANIM_STATE_INDEX_CURRENT,
+                           OBJANIM_STATE_WORD_EVENT_STATE, *(s16 *)((char *)inner + 0x5a4));
     obj98 = *(f32 *)((char *)obj + 0x98);
     if (obj98 > lbl_803E7F68) {
         *(f32 *)((char *)obj + 0x18) = *(f32 *)((char *)inner + 0x768);
@@ -6478,7 +6484,8 @@ void fn_802AABE4(int obj)
         movp++;
         outp++;
     }
-    ObjAnim_WriteStateWord((ObjAnimComponent *)obj, 0, 0, 0);
+    ObjAnim_WriteStateWord((ObjAnimComponent *)obj, OBJANIM_STATE_INDEX_CURRENT,
+                           OBJANIM_STATE_WORD_EVENT_COUNTDOWN, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -7266,9 +7273,13 @@ int fn_802A2918(int obj, int state, f32 fv)
         }
         *(f32 *)((char *)obj + 0x10) = c * (lbl_803DE43C - lbl_803DE438) + *(f32 *)((char *)inner + 0x4f8);
     }
-    ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)(obj, 0, 2, 0);
-    ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)(obj, 1, 2, 0);
-    ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)(obj, 1, 0, *(s16 *)((char *)inner + 0x544));
+    ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)
+        (obj, OBJANIM_STATE_INDEX_CURRENT, OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
+    ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)
+        (obj, OBJANIM_STATE_INDEX_ACTIVE, OBJANIM_STATE_WORD_PREV_EVENT_STATE, 0);
+    ((void (*)(int, int, int, int))ObjAnim_WriteStateWord)
+        (obj, OBJANIM_STATE_INDEX_ACTIVE, OBJANIM_STATE_WORD_EVENT_COUNTDOWN,
+         *(s16 *)((char *)inner + 0x544));
     ((int (*)(f32, f32, int, int))Object_ObjAnimAdvanceMove)(
         *(f32 *)((char *)state + 0x2a0), fv, obj, 0);
     (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(
