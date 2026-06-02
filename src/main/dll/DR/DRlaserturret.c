@@ -132,7 +132,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimStat
     void **arr;
 
     playerObj = Obj_GetPlayerObject();
-    state = *(DRLaserTurretState **)((char *)obj + 0xb8);
+    state = obj->state;
     if (animState->stateEntered != 0) {
         rng = randomGetRange(0x1f4, 0x3e8);
         state->actionTimer = (f32)rng;
@@ -140,13 +140,13 @@ int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimStat
     }
     if ((state->flags & DR_LASERTURRET_FLAG_ACTION_ACTIVE) != 0) {
         if (animState->moveComplete != 0) {
-            if (*(s16 *)((char *)obj + 0xa0) == DR_LASERTURRET_ANIM_TRACKING) {
+            if (obj->currentMove == DR_LASERTURRET_ANIM_TRACKING) {
                 if (animState->animStepScale > lbl_803E59DC) {
                     ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_ALERT, lbl_803E59DC, 0);
                     goto L_DE8;
                 }
             }
-            if (*(s16 *)((char *)obj + 0xa0) != 0) {
+            if (obj->currentMove != 0) {
                 ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
             }
         L_DE8:
@@ -156,8 +156,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimStat
             state->actionTimer = (f32)rng;
         }
     } else {
-        if (*(s16 *)((char *)obj + 0xa0) != DR_LASERTURRET_ANIM_ALERT &&
-            *(s16 *)((char *)obj + 0xa0) != 0) {
+        if (obj->currentMove != DR_LASERTURRET_ANIM_ALERT && obj->currentMove != 0) {
             ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_IDLE, lbl_803E59DC, 0);
             animState->animStepScale = lbl_803E59E4;
         }
@@ -166,7 +165,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimStat
     if (state->actionTimer <= lbl_803E59DC &&
         (state->flags & DR_LASERTURRET_FLAG_ACTION_ACTIVE) == 0) {
         Sfx_PlayFromObject((int)obj, DR_LASERTURRET_SFX_ACTION);
-        if (*(s16 *)((char *)obj + 0xa0) == DR_LASERTURRET_ANIM_ALERT) {
+        if (obj->currentMove == DR_LASERTURRET_ANIM_ALERT) {
             ObjAnim_SetCurrentMove((int)obj, DR_LASERTURRET_ANIM_TRACKING, lbl_803E5A08, 0);
             animState->animStepScale = lbl_803E5A0C;
         } else {
@@ -199,12 +198,11 @@ int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimStat
         }
         animState->aimBlend = lbl_803E59DC;
     }
-    count = hitDetectFn_80065e50(obj, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
-                        *(f32 *)((char *)obj + 0x14), &arr, 0, 0);
+    count = hitDetectFn_80065e50(obj, obj->x, obj->y, obj->z, &arr, 0, 0);
     fmin = lbl_803E5A20;
     if (count > 0) {
         for (idx = 0; idx < count; idx++) {
-            fdist = *(f32 *)arr[idx] - *(f32 *)((char *)obj + 0x10);
+            fdist = *(f32 *)arr[idx] - obj->y;
             if (fdist < lbl_803E59DC) {
                 fdist = -fdist;
             }
@@ -214,7 +212,7 @@ int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimStat
             }
         }
     }
-    *(f32 *)((char *)obj + 0x10) =
+    obj->y =
         state->bobAmplitude *
             fn_80293E80(
                 (double)(lbl_803E59E8 *
