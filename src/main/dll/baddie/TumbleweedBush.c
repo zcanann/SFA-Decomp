@@ -827,6 +827,27 @@ s16 TitleMenuItem_getVal(u8* obj)
     return *(s16*)(obj + 0xc);
 }
 
+extern s16 lbl_803DD918;
+extern f32 lbl_803DD91C;
+
+/* EN v1.0 0x80131598  size: 116b  Toggle enabled bit 0x01 on obj->_4. */
+#pragma scheduling off
+#pragma peephole off
+void TitleMenuItem_setEnabled(u8* obj, int flag)
+{
+    if (flag != 0) {
+        if ((obj[4] & 1) == 0) {
+            lbl_803DD918 = 0;
+            lbl_803DD91C = (f32)*(s16*)(obj + 0xc);
+        }
+        obj[4] = (u8)(obj[4] | 1);
+    } else {
+        obj[4] = (u8)(obj[4] & ~1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* EN v1.0 0x8013160C  size: 12b  Read bit 0x01 from obj->_4. */
 int TitleMenuItem_isEnabled(u8* obj)
 {
