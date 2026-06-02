@@ -1,5 +1,34 @@
 #include "main/dll/DR/dr_shared.h"
 
+typedef struct HighTopRuntime {
+    u8 pad000[0x3ec];
+    u8 lookController[0xb18 - 0x3ec];
+    f32 pathPointWorldPositions[12];
+    u8 padB48[0xb6c - 0xb48];
+    f32 pathPoint2X;
+    f32 pathPoint2Y;
+    f32 pathPoint2Z;
+    f32 pathPoint0X;
+    f32 pathPoint0Y;
+    f32 pathPoint0Z;
+    u8 padB84[0xc1c - 0xb84];
+    f32 lookTargetX;
+    f32 lookTargetY;
+    f32 lookTargetZ;
+    u8 padC28[0xc49 - 0xc28];
+    BitFlags8 flagsC49;
+} HighTopRuntime;
+
+typedef struct HighTopObject {
+    s16 yaw;
+    u8 pad02[0xc - 0x2];
+    f32 x;
+    f32 y;
+    f32 z;
+    u8 pad18[0xb8 - 0x18];
+    HighTopRuntime *runtime;
+} HighTopObject;
+
 int hightop_defaultStateHandler(void) { return 0x0; }
 
 void hightop_func15(void) {}
@@ -53,10 +82,10 @@ void hightop_func12(int obj, f32 *a, int *b) {
 #pragma scheduling off
 #pragma peephole off
 void hightop_modelMtxFn(int obj, f32 *a, f32 *b, f32 *c) {
-    f32 *p = *(f32 **)((char *)obj + 0xb8);
-    *a = *(f32 *)((char *)p + 0xb6c);
-    *b = *(f32 *)((char *)p + 0xb70);
-    *c = *(f32 *)((char *)p + 0xb74);
+    HighTopRuntime *runtime = ((HighTopObject *)obj)->runtime;
+    *a = runtime->pathPoint2X;
+    *b = runtime->pathPoint2Y;
+    *c = runtime->pathPoint2Z;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -271,18 +300,18 @@ void hightop_renderGroundMarker(int obj, f32 scale) {
 #pragma scheduling off
 #pragma peephole off
 void hightop_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, char visible) {
-    char *runtime = *(char **)((char *)obj + 0xb8);
+    HighTopRuntime *runtime = ((HighTopObject *)obj)->runtime;
     if (visible != 0) {
         int count;
         int **list;
         int i;
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6AB8);
-        ObjPath_GetPointWorldPosition((int)obj, 2, (f32 *)(runtime + 0xb6c), (f32 *)(runtime + 0xb70), (f32 *)(runtime + 0xb74), 0);
-        ObjPath_GetPointWorldPositionArray((int)obj, 3, 4, (f32 *)(runtime + 0xb18));
-        ObjPath_GetPointWorldPosition((int)obj, 0, (f32 *)(runtime + 0xb78), (f32 *)(runtime + 0xb7c), (f32 *)(runtime + 0xb80), 0);
-        ((BitFlags8 *)(runtime + 0xc49))->b5 = 1;
-        dll_2E_func06((int)obj, runtime + 0x3ec, 0);
-        if (((BitFlags8 *)(runtime + 0xc49))->b1 != 0) {
+        ObjPath_GetPointWorldPosition((int)obj, 2, &runtime->pathPoint2X, &runtime->pathPoint2Y, &runtime->pathPoint2Z, 0);
+        ObjPath_GetPointWorldPositionArray((int)obj, 3, 4, runtime->pathPointWorldPositions);
+        ObjPath_GetPointWorldPosition((int)obj, 0, &runtime->pathPoint0X, &runtime->pathPoint0Y, &runtime->pathPoint0Z, 0);
+        runtime->flagsC49.b5 = 1;
+        dll_2E_func06((int)obj, runtime->lookController, 0);
+        if (runtime->flagsC49.b1 != 0) {
             list = (int **)ObjGroup_GetObjects(55, &count);
             for (i = 0; i < count; i++) {
                 int idx = (*(int (**)(int *))((char *)**(int ***)((char *)*list + 0x68) + 0x24))(*list);
@@ -292,7 +321,7 @@ void hightop_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, unde
             }
         }
     } else {
-        ((BitFlags8 *)(runtime + 0xc49))->b5 = 0;
+        runtime->flagsC49.b5 = 0;
     }
 }
 #pragma peephole reset
