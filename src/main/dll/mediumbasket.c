@@ -2076,7 +2076,7 @@ int fn_8015B670(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015B9B8(int obj, int state)
+int mediumbasket_updateLandingState(int obj, int state)
 {
     int sub = *(int *)(obj + 0xb8);
     int player;
