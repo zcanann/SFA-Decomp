@@ -239,12 +239,12 @@ int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimStat
  * EN v1.0 Address: 0x801E7124
  * EN v1.0 Size: 128b
  */
-int DRlaserturret_startLinkedTarget(void *obj)
+int DRlaserturret_startLinkedTarget(DRLaserTurretObject *obj)
 {
     DRLaserTurretState *state;
     int v;
 
-    state = *(DRLaserTurretState **)((char *)obj + 0xb8);
+    state = obj->state;
     if (GameBit_Get(DR_LASERTURRET_GAMEBIT_LINK_READY) == 0) {
         return 0;
     }
@@ -265,7 +265,7 @@ int DRlaserturret_startLinkedTarget(void *obj)
  * EN v1.0 Address: 0x801E71A4
  * EN v1.0 Size: 1096b
  */
-int DRlaserturret_handlePromptChoice(void *obj, void *param2, int dispatch)
+int DRlaserturret_handlePromptChoice(DRLaserTurretObject *obj, void *param2, int dispatch)
 {
     DRLaserTurretState *state;
     char stickHi;
@@ -276,7 +276,7 @@ int DRlaserturret_handlePromptChoice(void *obj, void *param2, int dispatch)
     char nudge;
     int *texture;
 
-    state = *(DRLaserTurretState **)((char *)obj + 0xb8);
+    state = obj->state;
     if (dispatch == DR_LASERTURRET_PROMPT_COUNT) {
         padGetAnalogInput(0, &stickHi, &stickLo);
         if ((s8)stickLo < 0) {
@@ -375,11 +375,11 @@ int DRlaserturret_handlePromptChoice(void *obj, void *param2, int dispatch)
  * EN v1.0 Address: 0x801E75EC
  * EN v1.0 Size: 180b
  */
-void DRlaserturret_startTimedChallenge(void *obj)
+void DRlaserturret_startTimedChallenge(DRLaserTurretObject *obj)
 {
     DRLaserTurretState *state;
 
-    state = *(DRLaserTurretState **)((char *)obj + 0xb8);
+    state = obj->state;
     if ((state->flags & DR_LASERTURRET_FLAG_START_SEQUENCE) != 0) {
         int *target;
         gameTimerInit(0x11, 0x1e);

@@ -88,8 +88,8 @@ typedef struct DRLaserTurretAnimState {
 
 int DRlaserturret_updateIdle(DRLaserTurretObject *obj, DRLaserTurretAnimState *animState);
 int DRlaserturret_updateTracking(DRLaserTurretObject *obj, DRLaserTurretAnimState *animState);
-int DRlaserturret_startLinkedTarget(void *obj);
-int DRlaserturret_handlePromptChoice(void *obj, void *param2, int dispatch);
-void DRlaserturret_startTimedChallenge(void *obj);
+int DRlaserturret_startLinkedTarget(DRLaserTurretObject *obj);
+int DRlaserturret_handlePromptChoice(DRLaserTurretObject *obj, void *param2, int dispatch);
+void DRlaserturret_startTimedChallenge(DRLaserTurretObject *obj);
 
 #endif /* MAIN_DLL_DR_DRLASERTURRET_H_ */
