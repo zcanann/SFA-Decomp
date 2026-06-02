@@ -61,7 +61,7 @@ extern f32 lbl_803E6660;
 extern f32 lbl_803E6664;
 extern f32 lbl_803E666C;
 extern void objfx_spawnMaskedHitEffect(int obj, int a, int b, int c, void *params, f32 scale);
-extern void fn_8009837C(int obj, int a, int b, int c, void *params, f32 scale, f32 arg2);
+extern void objfx_spawnLightPulse(int obj, int a, int b, int c, void *params, f32 scale, f32 arg2);
 
 int worldobj_getExtraSize(void);
 void worldobj_hitDetect(void);
@@ -246,17 +246,17 @@ void worldobj_spawnGreatFoxEffects(int obj) {
     params.fc = lbl_803E6640 * (lbl_803E6648 * s);
     params.f10 = lbl_803E6640 * (lbl_803E664C * s);
     params.f14 = lbl_803E6640 * (lbl_803E6650 * s);
-    fn_8009837C(obj, 1, 0, 6, &params, lbl_803E6654 * s, lbl_803E6658);
+    objfx_spawnLightPulse(obj, 1, 0, 6, &params, lbl_803E6654 * s, lbl_803E6658);
     s = *(f32 *)(obj + 8);
     params.fc = lbl_803E665C;
     params.f10 = lbl_803E6640 * (lbl_803E6660 * s);
     params.f14 = lbl_803E6640 * (lbl_803E6664 * s);
-    fn_8009837C(obj, 1, 0, 6, &params, lbl_803E6654 * s, lbl_803E6668);
+    objfx_spawnLightPulse(obj, 1, 0, 6, &params, lbl_803E6654 * s, lbl_803E6668);
     s = *(f32 *)(obj + 8);
     params.fc = lbl_803E6640 * (lbl_803E666C * s);
     params.f10 = lbl_803E6640 * (lbl_803E664C * s);
     params.f14 = lbl_803E6640 * (lbl_803E6650 * s);
-    fn_8009837C(obj, 1, 0, 6, &params, lbl_803E6654 * s, lbl_803E6658);
+    objfx_spawnLightPulse(obj, 1, 0, 6, &params, lbl_803E6654 * s, lbl_803E6658);
 }
 #pragma peephole reset
 #pragma scheduling reset

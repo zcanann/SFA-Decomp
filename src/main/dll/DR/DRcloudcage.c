@@ -6,7 +6,7 @@ extern void Sfx_SetObjectChannelVolume(double volume, int obj, int channel, uint
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Obj_GetPlayerObject(void);
 extern double Vec_distance(int *from, int *to);
-extern void fn_8009837C();
+extern void objfx_spawnLightPulse();
 extern void setMatrixFromObjectPos(f32 *matrix, void *objpos);
 extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void *hitsOut, int unused, int mask);
@@ -375,11 +375,11 @@ void fn_801EA240(double distanceScale, int obj, int state, uint intensity, undef
         local_38 = lbl_803E5B50;
         local_34 = lbl_803E5B54;
         local_40 = lbl_803E5AE8;
-        fn_8009837C((double)lbl_803E5AF8, (double)(*(float *)(state + 0x3f4) / lbl_803E5B58),
-                    obj, 2, 0, 1, auStack72);
+        objfx_spawnLightPulse((double)lbl_803E5AF8, (double)(*(float *)(state + 0x3f4) / lbl_803E5B58),
+                              obj, 2, 0, 1, auStack72);
         local_3c = lbl_803E5B5C;
-        fn_8009837C((double)lbl_803E5AF8, (double)(*(float *)(state + 0x3f4) / lbl_803E5B58),
-                    obj, 2, 0, 1, auStack72);
+        objfx_spawnLightPulse((double)lbl_803E5AF8, (double)(*(float *)(state + 0x3f4) / lbl_803E5B58),
+                              obj, 2, 0, 1, auStack72);
     }
     fn_801E9C00(obj, state);
     (void)unused;

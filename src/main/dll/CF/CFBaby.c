@@ -2160,7 +2160,7 @@ extern LandedArwingFxPoint lbl_80321A28[];
 extern f32 lbl_803E3B98;
 extern f32 lbl_803E3B9C;
 extern void objfx_spawnMaskedHitEffect(int obj, int arg4, int arg5, int arg6, void *pos, f32 scale);
-extern void fn_8009837C(int obj, int arg4, int arg5, int arg6, void *pos, f32 scale, f32 value);
+extern void objfx_spawnLightPulse(int obj, int arg4, int arg5, int arg6, void *pos, f32 scale, f32 value);
 
 #pragma scheduling off
 #pragma peephole off
@@ -2196,7 +2196,7 @@ void fn_801889C8(int obj) {
         scratch.x -= *(f32 *)(obj + 0xc);
         scratch.y -= *(f32 *)(obj + 0x10);
         scratch.z -= *(f32 *)(obj + 0x14);
-        fn_8009837C(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path6Fx);
+        objfx_spawnLightPulse(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path6Fx);
     }
 
     if (state->path8Fx != lbl_803E3B98) {
@@ -2204,7 +2204,7 @@ void fn_801889C8(int obj) {
         scratch.x -= *(f32 *)(obj + 0xc);
         scratch.y -= *(f32 *)(obj + 0x10);
         scratch.z -= *(f32 *)(obj + 0x14);
-        fn_8009837C(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path8Fx);
+        objfx_spawnLightPulse(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path8Fx);
     }
 
     if (state->path7Fx != lbl_803E3B98) {
@@ -2212,7 +2212,7 @@ void fn_801889C8(int obj) {
         scratch.x -= *(f32 *)(obj + 0xc);
         scratch.y -= *(f32 *)(obj + 0x10);
         scratch.z -= *(f32 *)(obj + 0x14);
-        fn_8009837C(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path7Fx);
+        objfx_spawnLightPulse(obj, 4, 0, 0, scratch.effectPos, lbl_803E3B9C, state->path7Fx);
     }
 }
 #pragma peephole reset

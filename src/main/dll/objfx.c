@@ -374,8 +374,8 @@ void objParticleFn_80097734(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80097B30(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
-                 int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ) {
+void objfx_spawnBoxBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
+                         int flags, f32 f8val, f32 mulX, f32 mulY, f32 mulZ) {
     PartfxParams params;
     ParticleTblA tA = *(ParticleTblA *)((char *)lbl_802C1FD8 + 0x48);
     ParticleTbl8 tB = *(ParticleTbl8 *)((char *)lbl_802C1FD8 + 0x5c);
@@ -548,7 +548,7 @@ void objfx_spawnFrameTimedHitPulse(void *obj, u8 a, u8 b, f32 c, f32 d) {
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8009837C(void *obj, u8 type, int a3, u8 mode, void *light, f32 fa, f32 fb) {
+void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32 fa, f32 fb) {
     PartfxParams params;
     f32 lvec[3];
     f32 proj[3];
@@ -685,7 +685,7 @@ void fn_8009837C(void *obj, u8 type, int a3, u8 mode, void *light, f32 fa, f32 f
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80098928(void *obj, u8 mode, int p5, int p6, int p7, f32 fval) {
+void objfx_spawnFlaggedTrailBurst(void *obj, u8 mode, int p5, int p6, int p7, f32 fval) {
     PartfxFlags params;
     int i;
     u8 count;

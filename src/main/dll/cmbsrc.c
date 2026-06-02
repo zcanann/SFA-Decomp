@@ -298,8 +298,8 @@ void cmbsrc_updateVisuals(int obj, int state)
                     subMode = *(u8 *)(setup + 0x1d);
                 }
             }
-            fn_8009837C(obj, *(f32 *)(state + 0x18), colorIdx, effectMode, subMode,
-                        (f32)(u32)*(u8 *)(setup + 0x28) / lbl_803E7388, 0);
+            objfx_spawnLightPulse(obj, *(f32 *)(state + 0x18), colorIdx, effectMode, subMode,
+                                  (f32)(u32)*(u8 *)(setup + 0x28) / lbl_803E7388, 0);
             break;
         case 0x6e8:
         default:

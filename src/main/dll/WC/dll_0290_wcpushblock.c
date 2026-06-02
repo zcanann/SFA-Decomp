@@ -136,11 +136,11 @@ void wcpushblock_update(int obj)
         u32 ph = ((PushBlockFlags *)(state + 0x285))->phase;
         if (ph != 3 && ph != 5) {
             if ((s8)*(u8 *)(obj + 0xad) == 1) {
-                fn_80097B30(obj, 1, 3, 1, lbl_803E6D5C, lbl_803E6D60, lbl_803E6D5C, lbl_803E6D60,
-                            50, 0, 0);
+                objfx_spawnBoxBurst(obj, 1, 3, 1, lbl_803E6D5C, lbl_803E6D60, lbl_803E6D5C,
+                                    lbl_803E6D60, 50, 0, 0);
             } else {
-                fn_80097B30(obj, 1, 1, 1, lbl_803E6D5C, lbl_803E6D60, lbl_803E6D5C, lbl_803E6D60,
-                            50, 0, 0);
+                objfx_spawnBoxBurst(obj, 1, 1, 1, lbl_803E6D5C, lbl_803E6D60, lbl_803E6D5C,
+                                    lbl_803E6D60, 50, 0, 0);
             }
         }
     }

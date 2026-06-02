@@ -250,7 +250,7 @@ void drbarrelgr_render(int obj, int p2, int p3, int p4, int p5)
         ObjPath_GetPointWorldPosition(obj, i + 1, &vec[0], &vec[1], &vec[2], 0);
         PSVECSubtract(&vec[0], (void *)(obj + 0xc), &vec[0]);
         params.d = dval;
-        fn_8009837C(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, (int)&params);
+        objfx_spawnLightPulse(obj, lbl_803E6CA8, 3, 0, 0, lbl_803E6CAC, (int)&params);
     }
     objRef = *(int *)(state + 8);
     if (objRef != 0) {

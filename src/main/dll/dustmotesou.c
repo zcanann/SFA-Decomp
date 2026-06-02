@@ -89,10 +89,10 @@ void dustmotesou_update(int obj)
         return;
     }
     if (*(u8 *)(setup + 0x2a) == 0) {
-        fn_80097B30(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), *(u8 *)(setup + 0x1d),
-                    *(f32 *)(setup + 0x20), (f32)(u32)*(u8 *)(setup + 0x26),
-                    (f32)(u32)*(u8 *)(setup + 0x27), (f32)(u32)*(u8 *)(setup + 0x28),
-                    *(u8 *)(setup + 0x29), 0, 0);
+        objfx_spawnBoxBurst(obj, *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), *(u8 *)(setup + 0x1d),
+                            *(f32 *)(setup + 0x20), (f32)(u32)*(u8 *)(setup + 0x26),
+                            (f32)(u32)*(u8 *)(setup + 0x27), (f32)(u32)*(u8 *)(setup + 0x28),
+                            *(u8 *)(setup + 0x29), 0, 0);
     } else if (*(u8 *)(setup + 0x2a) == 1) {
         objParticleFn_80097734(obj, *(u8 *)(setup + 0x1b), *(f32 *)(setup + 0x20),
                                *(u8 *)(setup + 0x1c), *(u8 *)(setup + 0x1d), *(u8 *)(setup + 0x29),

@@ -401,7 +401,7 @@ extern f32 timeDelta;
 extern f32 lbl_803E58BC;
 extern f64 lbl_803E58C0;
 extern void Obj_FreeObject(int *obj);
-extern void fn_80098928(int *obj, f32 f, int a, int b, int c, int d);
+extern void objfx_spawnFlaggedTrailBurst(int *obj, f32 f, int a, int b, int c, int d);
 #pragma scheduling off
 #pragma peephole off
 void SB_CannonBall_update(int *obj) {
@@ -412,8 +412,8 @@ void SB_CannonBall_update(int *obj) {
         (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, SB_CANNONBALL_BURST_PARTICLE_ID, 0, 1, -1, 0);
         *(s8 *)((char *)state + 0x1a) = (s8)(*(s8 *)((char *)state + 0x1a) & ~SB_CANNONBALL_INITIAL_BURST_FLAG);
     } else {
-        fn_80098928(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
-        fn_80098928(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
+        objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
+        objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
     }
     (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, SB_CANNONBALL_TRAIL_PARTICLE_ID, 0, 1, -1, 0);
     *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) + SB_CANNONBALL_ROTATION_STEP;
