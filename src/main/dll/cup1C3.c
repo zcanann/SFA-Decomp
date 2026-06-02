@@ -41,6 +41,7 @@ extern u8 lbl_803DBF68;
 extern int *gObjectTriggerInterface;
 extern int *gModgfxInterface;
 extern int *gExpgfxInterface;
+extern int *gPartfxInterface;
 extern f64 DOUBLE_803e5da8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5D78;
@@ -516,12 +517,91 @@ void dll_197_hitDetect(void) {}
 int dll_197_getExtraSize(void) { return 0x10; }
 int dll_197_getObjectTypeId(void) { return 0x1; }
 
-/* render-with-fn(lbl) (no visibility check). */
+/* Render-side line-of-sight particle callback for the cup object. */
 extern f32 lbl_803E5104;
+extern f32 lbl_803E5120;
+extern f32 lbl_803E5124;
+extern f32 lbl_803E5128;
+extern f32 lbl_803E512C;
+extern f32 lbl_803E5130;
+extern f32 lbl_803E5134;
+extern u8 framesThisStep;
 extern void objRenderFn_8003b8f4(f32);
+extern void *Camera_GetCurrentViewSlot(void);
+extern f32 sqrtf(f32 x);
+extern void voxmaps_worldToGrid(void *world, void *grid);
+extern int voxmaps_traceLine(void *from, void *to, void *out, int p4, int p5);
 #pragma scheduling off
 #pragma peephole off
-void dll_197_render(void) { objRenderFn_8003b8f4(lbl_803E5104); }
+void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    u8 traceOut[8];
+    s16 endGrid[4];
+    s16 startGrid[4];
+    volatile f32 dir[3];
+    volatile f32 objTrace[3];
+    volatile f32 cameraTrace[3];
+    struct {
+        u8 pad[0xc];
+        f32 pos[3];
+    } particleParams;
+    u8 *state = *(u8 **)(obj + 0xb8);
+    u8 *camera;
+    f32 dist;
+    f32 scale;
+
+    if (visible == 0) {
+        *(s16 *)(state + 4) = 0;
+        state[0xa] = 0;
+        return;
+    }
+
+    if (state[0xc] == 0) {
+        return;
+    }
+
+    state[0xa] = 1;
+    camera = Camera_GetCurrentViewSlot();
+    dir[0] = *(f32 *)(camera + 0xc) - *(f32 *)(obj + 0xc);
+    dir[1] = *(f32 *)(camera + 0x10) - *(f32 *)(obj + 0x10);
+    dir[2] = *(f32 *)(camera + 0x14) - *(f32 *)(obj + 0x14);
+
+    dist = sqrtf(dir[2] * dir[2] + (dir[0] * dir[0] + dir[1] * dir[1]));
+    if (dist > lbl_803E5120) {
+        scale = lbl_803E5124 / dist;
+        dir[0] *= scale;
+        dir[1] *= scale;
+        dir[2] *= scale;
+
+        objTrace[0] = *(f32 *)(obj + 0xc) + lbl_803E5128 * dir[0];
+        objTrace[1] = *(f32 *)(obj + 0x10) + lbl_803E5128 * dir[1];
+        objTrace[2] = *(f32 *)(obj + 0x14) + lbl_803E5128 * dir[2];
+        cameraTrace[0] = *(f32 *)(camera + 0xc) + lbl_803E512C * dir[0];
+        cameraTrace[1] = *(f32 *)(camera + 0x10) + lbl_803E512C * dir[1];
+        cameraTrace[2] = *(f32 *)(camera + 0x14) + lbl_803E512C * dir[2];
+
+        voxmaps_worldToGrid((void *)objTrace, startGrid);
+        voxmaps_worldToGrid((void *)cameraTrace, endGrid);
+        if (voxmaps_traceLine(startGrid, endGrid, traceOut, 0, 0) == 0) {
+            state[0xa] = 0;
+            (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+        }
+    }
+
+    if (*(s16 *)(state + 4) > 0) {
+        *(s16 *)(state + 4) -= framesThisStep;
+        return;
+    }
+
+    if (state[0xa] != 0) {
+        particleParams.pos[0] = lbl_803E5130;
+        particleParams.pos[1] = lbl_803E5134;
+        particleParams.pos[2] = lbl_803E5130;
+        (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 0x1f7, &particleParams, 0x12, -1, 0);
+    }
+
+    *(s16 *)(state + 4) = randomGetRange(-10, 10) + 0x3c;
+}
 #pragma peephole reset
 #pragma scheduling reset
 
