@@ -1673,46 +1673,45 @@ void attractor_init(s16 *obj, void *data) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* exploded_update: switch on state at obj->_b8->_69; case 1 calls fn_801A5298. Then countdown timer at _5c/_58 with framesThisStep, updates _36 byte and flags _06. */
 extern u8 framesThisStep;
 extern int fn_801A5298(s16 *obj, int state);
 #pragma scheduling off
 #pragma peephole off
 void exploded_update(int *obj) {
-    int *o = obj;
-    int *state = (int*)o[0xb8/4];
-    u8 stateVal = *((u8*)state + 0x69);
+    ExplodedObject *o = (ExplodedObject *)obj;
+    ExplodedObjectState *state = o->state;
+    u8 stateVal = state->explodePhase;
     int flag;
     switch (stateVal) {
     case 0:
         break;
     case 1:
         if (fn_801A5298((s16 *)o, (int)state) != 0) {
-            *((u8*)state + 0x69) = 0;
+            state->explodePhase = 0;
         }
         break;
     case 2:
         break;
     }
-    if (state[0x5c/4] != -1) {
-        s32 elapsedFrames = state[0x58/4] + framesThisStep;
+    if (state->durationFrames != -1) {
+        s32 elapsedFrames = state->elapsedFrames + framesThisStep;
         s32 durationFrames;
-        state[0x58/4] = elapsedFrames;
-        durationFrames = state[0x5c/4];
+        state->elapsedFrames = elapsedFrames;
+        durationFrames = state->durationFrames;
         if (elapsedFrames >= durationFrames) {
-            state[0x5c/4] = -1;
-            *((u8*)o + 0x36) = 0;
-            *(s16*)((char*)o + 0x6) = (s16)(*(s16*)((char*)o + 0x6) | 0x4000);
+            state->durationFrames = -1;
+            o->alpha = 0;
+            o->flags06 = (s16)(o->flags06 | 0x4000);
             flag = 1;
         } else {
-            s32 remainingFrames = durationFrames - state[0x58/4];
+            s32 remainingFrames = durationFrames - state->elapsedFrames;
             if (remainingFrames < 0xff) {
-                *((u8*)o + 0x36) = (u8)remainingFrames;
+                o->alpha = (u8)remainingFrames;
             }
             flag = 0;
         }
         if (flag != 0) {
-            *((u8*)state + 0x69) = 2;
+            state->explodePhase = 2;
         }
     }
 }

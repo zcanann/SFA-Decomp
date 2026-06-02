@@ -3,6 +3,41 @@
 
 #include "ghidra_import.h"
 
+typedef struct ExplodedObjectMapData {
+  u8 pad00[0x18];
+  u8 objectTypeTag;
+  u8 pad19[0x20 - 0x19];
+  s16 triggerEventIds[6];
+  u8 pad2C[0x3D - 0x2C];
+  s8 scaleByte;
+} ExplodedObjectMapData;
+
+typedef struct ExplodedObjectState {
+  u8 pad00[0x58];
+  s32 elapsedFrames;
+  s32 durationFrames;
+  u8 pad60[0x69 - 0x60];
+  u8 explodePhase;
+  u8 pad6A[0x6C - 0x6A];
+} ExplodedObjectState;
+
+typedef struct ExplodedObject {
+  u8 pad00[0x06];
+  s16 flags06;
+  f32 modelScale;
+  f32 x;
+  f32 y;
+  f32 z;
+  u8 pad18[0x36 - 0x18];
+  u8 alpha;
+  u8 pad37[0x4C - 0x37];
+  ExplodedObjectMapData *mapData;
+  u8 pad50[0xAD - 0x50];
+  s8 objectTypeTag;
+  u8 padAE[0xB8 - 0xAE];
+  ExplodedObjectState *state;
+} ExplodedObject;
+
 void cfforcefield_update(u8 *obj);
 void FUN_801a3ac0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
