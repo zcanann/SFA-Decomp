@@ -1,5 +1,48 @@
 #include "main/dll/DR/dr_shared.h"
 
+typedef int (*KytesMumUpdateCallback)(int obj);
+
+typedef struct KytesMumMoveSet {
+    s16 moves[6];
+} KytesMumMoveSet;
+
+typedef struct KytesMumSetup {
+    u8 pad00[0x18];
+    s8 yaw;
+    s8 mode;
+    s16 interactionRange;
+    u8 pad1C[0x1e - 0x1c];
+    s16 completionGameBit;
+} KytesMumSetup;
+
+typedef struct KytesMumRuntime {
+    u8 pad000[0x654];
+    u8 eyeAnimState[0x684 - 0x654];
+    u8 modelSoundState[0x6b4 - 0x684];
+    u8 animEvents[0x6d0 - 0x6b4];
+    void *idleSfxTable;
+    KytesMumUpdateCallback updateCallback;
+    s16 *eventSfxTable;
+    KytesMumMoveSet *moveSet;
+    f32 animSpeed;
+    s16 idleSfxTimer;
+    u8 questComplete;
+} KytesMumRuntime;
+
+typedef struct KytesMumObject {
+    s16 yaw;
+    u8 pad02[0x4c - 0x2];
+    KytesMumSetup *setup;
+    u8 pad50[0xa0 - 0x50];
+    s16 currentMove;
+    u8 padA2[0xaf - 0xa2];
+    u8 flagsAF;
+    u16 objectFlags;
+    u8 padB2[0xb8 - 0xb2];
+    KytesMumRuntime *runtime;
+    void *interactionCallback;
+} KytesMumObject;
+
 int kytesmum_getExtraSize(void) { return 0x6ec; }
 
 int kytesmum_getObjectTypeId(void) { return 0x43; }
@@ -13,21 +56,22 @@ void kytesmum_release(void) {}
 #pragma scheduling off
 #pragma peephole off
 void kytesmum_update(int obj) {
-    u8 *p = *(u8 **)((char *)obj + 0xb8);
-    int q = *(int *)((char *)obj + 0x4c);
+    KytesMumObject *kytesMum = (KytesMumObject *)obj;
+    KytesMumRuntime *runtime = kytesMum->runtime;
+    KytesMumSetup *setup = kytesMum->setup;
     f32 nearDist;
     int diff;
     int moveIdx;
     int nearest;
 
     nearDist = lbl_803E6998;
-    if (*(u8 *)(p + 0x6e6) == 0) {
-        if ((*(int (**)(int))(p + 0x6d4))(obj) != 0) {
-            GameBit_Set(*(s16 *)((char *)q + 0x1e), 1);
-            *(u8 *)(p + 0x6e6) = 1;
+    if (runtime->questComplete == 0) {
+        if (runtime->updateCallback(obj) != 0) {
+            GameBit_Set(setup->completionGameBit, 1);
+            runtime->questComplete = 1;
         }
     }
-    diff = (s16)((*(s8 *)((char *)q + 0x18) << 8) - (u16)*(s16 *)obj);
+    diff = (s16)((setup->yaw << 8) - (u16)kytesMum->yaw);
     if (diff > 0x8000) {
         diff -= 0xFFFF;
     }
@@ -36,29 +80,29 @@ void kytesmum_update(int obj) {
     }
     if (diff != 0) {
         fn_80137948(sKytesMumYawDiffMessage);
-        if (*(s16 *)((char *)obj + 0xa0) != *(s16 *)(*(int *)(p + 0x6dc) + 4)) {
-            ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)(p + 0x6dc) + 4), lbl_803E698C, 0);
+        if (kytesMum->currentMove != runtime->moveSet->moves[2]) {
+            ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[2], lbl_803E698C, 0);
         }
-        *(s16 *)obj = (s16)(*(s16 *)obj + ((diff + 1) >> 4));
-        *(f32 *)(p + 0x6e0) = lbl_803E699C * (f32)(diff / 1024);
+        kytesMum->yaw = (s16)(kytesMum->yaw + ((diff + 1) >> 4));
+        runtime->animSpeed = lbl_803E699C * (f32)(diff / 1024);
         if (diff < 0) {
             diff = -diff;
         }
         if (diff < 0x400) {
-            *(s16 *)obj = (s16)(*(s8 *)((char *)q + 0x18) << 8);
-            ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)(p + 0x6dc) + randomGetRange(0, 1) * 2),
+            kytesMum->yaw = (s16)(setup->yaw << 8);
+            ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[randomGetRange(0, 1)],
                                    lbl_803E698C, 0);
-            *(f32 *)(p + 0x6e0) = lbl_803E699C;
+            runtime->animSpeed = lbl_803E699C;
         }
     }
-    *(s16 *)(p + 0x6e4) -= framesThisStep;
-    if (*(s16 *)(p + 0x6e4) < 0) {
-        *(s16 *)(p + 0x6e4) = randomGetRange(0x32, 0x1f4);
-        objSoundFn_800392f0(obj, (int)(p + 0x684),
-                            (void *)(*(int *)(p + 0x6d0) + randomGetRange(0, 3) * 6), 0);
+    runtime->idleSfxTimer -= framesThisStep;
+    if (runtime->idleSfxTimer < 0) {
+        runtime->idleSfxTimer = randomGetRange(0x32, 0x1f4);
+        objSoundFn_800392f0(obj, (int)runtime->modelSoundState,
+                            (void *)((char *)runtime->idleSfxTable + randomGetRange(0, 3) * 6), 0);
     }
-    if (ObjAnim_AdvanceCurrentMove(*(f32 *)(p + 0x6e0), timeDelta, obj,
-                                   (ObjAnimEventList *)(p + 0x6b4)) != 0) {
+    if (ObjAnim_AdvanceCurrentMove(runtime->animSpeed, timeDelta, obj,
+                                   (ObjAnimEventList *)runtime->animEvents) != 0) {
         if (randomGetRange(0, 7) != 0) {
             moveIdx = 0;
         } else if (randomGetRange(0, 1) != 0) {
@@ -66,16 +110,16 @@ void kytesmum_update(int obj) {
         } else {
             moveIdx = 4;
         }
-        ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)(p + 0x6dc) + moveIdx * 2), lbl_803E698C, 0);
+        ObjAnim_SetCurrentMove(obj, runtime->moveSet->moves[moveIdx], lbl_803E698C, 0);
         if (moveIdx == 0) {
-            *(f32 *)(p + 0x6e0) = lbl_803E699C;
+            runtime->animSpeed = lbl_803E699C;
         } else {
-            *(f32 *)(p + 0x6e0) = lbl_803E69A0;
+            runtime->animSpeed = lbl_803E69A0;
         }
     }
-    kytesmum_playAnimationEventSfx(obj, (u8 *)(p + 0x6b4), *(s16 **)(p + 0x6d8));
-    characterDoEyeAnims(obj, (void *)(p + 0x654));
-    objAnimFn_80038f38(obj, (void *)(p + 0x684));
+    kytesmum_playAnimationEventSfx(obj, runtime->animEvents, runtime->eventSfxTable);
+    characterDoEyeAnims(obj, runtime->eyeAnimState);
+    objAnimFn_80038f38(obj, runtime->modelSoundState);
     nearest = ObjGroup_FindNearestObject(1, obj, &nearDist);
     if (nearest != 0) {
         (*(void (**)(int, int, int, int))(*(int *)(*(int *)((char *)nearest + 0x68)) + 0x28))(
@@ -107,8 +151,8 @@ void kytesmum_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, und
 #pragma scheduling off
 #pragma peephole off
 void kytesmum_free(int obj) {
-    int p = *(int *)((char *)obj + 0x4c);
-    if (*(s8 *)(p + 0x19) != 0) {
+    KytesMumSetup *setup = ((KytesMumObject *)obj)->setup;
+    if (setup->mode != 0) {
         ObjGroup_RemoveObject(obj, 0x3);
     }
 }
@@ -135,11 +179,11 @@ int kytesmum_spawnInteractionCallback(int obj) {
 #pragma peephole off
 int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8 *arg) {
     int *player = Obj_GetPlayerObject();
-    int p = *(int *)((char *)obj + 0x4c);
+    KytesMumSetup *setup = ((KytesMumObject *)obj)->setup;
     f32 dist;
     ObjHits_DisableObject(obj);
     dist = Vec_xzDistance((f32 *)((char *)player + 0x18), (f32 *)((char *)obj + 0x18));
-    if (dist < (f32)*(s16 *)(p + 0x1a)) {
+    if (dist < (f32)setup->interactionRange) {
         arg[0x90] |= 4;
     } else {
         arg[0x90] &= ~4;
@@ -152,23 +196,21 @@ int kytesmum_updateInteractionRangeCallback(int obj, int unused, u8 *arg) {
 #pragma scheduling off
 #pragma peephole off
 int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
-    char *p = *(char **)((char *)obj + 0xb8);
-    int q;
+    KytesMumRuntime *runtime = ((KytesMumObject *)obj)->runtime;
+    KytesMumSetup *setup;
     int i;
-    int r;
     Obj_GetPlayerObject();
-    q = *(int *)((char *)obj + 0x4c);
+    setup = ((KytesMumObject *)obj)->setup;
     ObjHits_EnableObject(obj);
     ObjHits_RegisterActiveHitVolumeObject(obj);
     for (i = 0; i < arg[0x8b]; i++) {
-        if (arg[i + 0x81] == 1 && *(s8 *)(q + 0x19) != 0) {
+        if (arg[i + 0x81] == 1 && setup->mode != 0) {
             objRemoveFromListFn_8002ce88(obj);
             ObjHits_DisableObject(obj);
             *(s16 *)((char *)obj + 0x6) |= 0x4000;
         }
     }
-    r = *(int *)(p + 0x6dc);
-    return !!dll_2E_func07(obj, arg, p, *(s16 *)(r + 0x4), *(s16 *)(r + 0x4));
+    return !!dll_2E_func07(obj, arg, (char *)runtime, runtime->moveSet->moves[2], runtime->moveSet->moves[2]);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -176,47 +218,49 @@ int kytesmum_animEventCallback(int obj, int unused, u8 *arg) {
 #pragma scheduling off
 #pragma peephole off
 void kytesmum_init(int obj, char *arg) {
-    char *base = (char *)lbl_8032A7C0;
-    char *runtime = *(char **)((char *)obj + 0xb8);
+    KytesMumMoveSet *moveSets = (KytesMumMoveSet *)lbl_8032A7C0;
+    KytesMumObject *kytesMum = (KytesMumObject *)obj;
+    KytesMumRuntime *runtime = kytesMum->runtime;
+    KytesMumSetup *setup = (KytesMumSetup *)arg;
     int r;
-    *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
-    if (GameBit_Get(*(s16 *)(arg + 0x1e)) != 0) {
-        *(u8 *)(runtime + 0x6e6) = 1;
+    kytesMum->yaw = (s16)(setup->yaw << 8);
+    if (GameBit_Get(setup->completionGameBit) != 0) {
+        runtime->questComplete = 1;
     }
-    switch ((s8)arg[0x19]) {
+    switch (setup->mode) {
     case 1:
-        *(int *)(runtime + 0x6dc) = (int)base;
-        *(void **)(runtime + 0x6d4) = (void *)kytesmum_spawnInteractionCallback;
-        *(int *)(runtime + 0x6d8) = 0;
-        *(void **)((char *)obj + 0xbc) = (void *)kytesmum_animEventCallback;
+        runtime->moveSet = &moveSets[0];
+        runtime->updateCallback = (KytesMumUpdateCallback)kytesmum_spawnInteractionCallback;
+        runtime->eventSfxTable = 0;
+        kytesMum->interactionCallback = (void *)kytesmum_animEventCallback;
         break;
     case 2:
-        *(int *)(runtime + 0x6dc) = (int)(base + 0xc);
-        *(void **)(runtime + 0x6d4) = (void *)kytesmum_updateNearPlayerCallback;
-        *(int *)(runtime + 0x6d8) = (int)&lbl_803DC2C8;
+        runtime->moveSet = &moveSets[1];
+        runtime->updateCallback = (KytesMumUpdateCallback)kytesmum_updateNearPlayerCallback;
+        runtime->eventSfxTable = (s16 *)&lbl_803DC2C8;
         ObjGroup_AddObject(obj, 0x3);
-        if (*(u8 *)(runtime + 0x6e6) != 0) {
+        if (runtime->questComplete != 0) {
             objRemoveFromListFn_8002ce88(obj);
             *(s16 *)((char *)obj + 0x6) |= 0x4000;
         }
         ObjHits_RegisterActiveHitVolumeObject(obj);
-        *(void **)((char *)obj + 0xbc) = (void *)kytesmum_animEventCallback;
+        kytesMum->interactionCallback = (void *)kytesmum_animEventCallback;
         break;
     case 0:
     case 3:
         GameBit_Set(0x934, 0);
         GameBit_Set(0x933, 0);
-        *(int *)(runtime + 0x6dc) = (int)(base + 0x18);
-        *(void **)(runtime + 0x6d4) = (void *)kytesmum_updateQuestStateCallback;
-        *(int *)(runtime + 0x6d8) = (int)&lbl_803DC2D0;
-        *(void **)((char *)obj + 0xbc) = (void *)kytesmum_updateInteractionRangeCallback;
+        runtime->moveSet = &moveSets[2];
+        runtime->updateCallback = (KytesMumUpdateCallback)kytesmum_updateQuestStateCallback;
+        runtime->eventSfxTable = (s16 *)&lbl_803DC2D0;
+        kytesMum->interactionCallback = (void *)kytesmum_updateInteractionRangeCallback;
         break;
     }
-    *(int *)(runtime + 0x6d0) = (int)(base + 0x24);
-    *(f32 *)(runtime + 0x6e0) = lbl_803E699C;
+    runtime->idleSfxTable = &moveSets[3];
+    runtime->animSpeed = lbl_803E699C;
     r = randomGetRange(0, 1) * 2;
-    ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)(runtime + 0x6dc) + r), lbl_803E698C, 0);
-    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+    ObjAnim_SetCurrentMove(obj, *(s16 *)((char *)runtime->moveSet + r), lbl_803E698C, 0);
+    kytesMum->objectFlags |= 0x2000;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -226,7 +270,7 @@ void kytesmum_init(int obj, char *arg) {
 int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
     int *player = Obj_GetPlayerObject();
     int *tricky = getTrickyObject();
-    char *runtime = *(char **)((char *)obj + 0xb8);
+    KytesMumRuntime *runtime = ((KytesMumObject *)obj)->runtime;
     if (objGetAnimState80A(player) == 0x40) {
         return 1;
     }
@@ -242,7 +286,7 @@ int kytesmum_updateNearPlayerCallback(int obj, int unused, u8 *arg) {
         (player != 0 && Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18)) < lbl_803E6988)) {
         if (*(s16 *)((char *)obj + 0xa0) != 9) {
             ObjAnim_SetCurrentMove(obj, 9, lbl_803E698C, 0);
-            *(f32 *)(runtime + 0x6e0) = lbl_803E6990;
+            runtime->animSpeed = lbl_803E6990;
             if (tricky != 0) {
                 (*(void (**)(int *, int, int))((char *)*(void **)*(void **)((char *)tricky + 0x68) + 0x34))(tricky, 0, 0);
             }
