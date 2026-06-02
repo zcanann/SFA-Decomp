@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void hwRemoveInput(u32 idx);
+void hwRemoveInput(u32 idx, void *input);
 int hwChangeStudio(int slot);
 void hwGetPos(int dest, u32 streamPos, int byteCount, int stream, undefined4 callback,
               undefined4 callbackArg);

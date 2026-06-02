@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/hw_stream.h"
 
-extern void salRemoveStudioInput(void *p);
+extern void salRemoveStudioInput(void *p, void *input);
 extern int aramGetStreamBufferAddress(int stream, void *out);
 extern void aramUploadData(int dest, int src, u32 size, int mode, undefined4 callback,
                            undefined4 callbackArg);
@@ -17,9 +17,9 @@ extern u8 *dspVoice;
  * EN v1.0 Address: 0x80283BD4
  * EN v1.0 Size: 52b
  */
-void hwRemoveInput(u32 idx) {
+void hwRemoveInput(u32 idx, void *input) {
     u32 offset = (idx & 0xff) * 0xbc;
-    salRemoveStudioInput(lbl_803CC1E0 + offset);
+    salRemoveStudioInput(lbl_803CC1E0 + offset, input);
 }
 
 /*

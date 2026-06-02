@@ -12,7 +12,7 @@ extern void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
 extern int vidGetInternalId(u32 id);
 extern void synthRefreshJobVolumes(void);
 extern void hwAddInput(u8 idx, void *input);
-extern void hwRemoveInput(u8 idx);
+extern void hwRemoveInput(u8 idx, void *input);
 extern void hwActivateStudio(u8 slot, int a, int b);
 extern void hwDeactivateStudio(u8 slot);
 extern void hwSetAUXProcessingCallbacks(u32 studio, void *auxACallback, void *auxAUser,
@@ -325,7 +325,7 @@ void synthAddStudioInput(u8 idx, void *input)
  *
  * EN v1.1 Address: 0x80272E84, size 32b
  */
-void synthRemoveStudioInput(u8 idx)
+void synthRemoveStudioInput(u8 idx, void *input)
 {
-    hwRemoveInput(idx);
+    hwRemoveInput(idx, input);
 }

@@ -23,6 +23,6 @@ void sndSetAuxProcessingCallbacks(u32 studio, void *auxACallback, void *auxAUser
 void synthActivateStudio(u8 slot, int a, int b);
 void synthDeactivateStudio(u8 slot);
 void synthAddStudioInput(u8 idx, void *input);
-void synthRemoveStudioInput(u8 idx);
+void synthRemoveStudioInput(u8 idx, void *input);
 
 #endif /* MAIN_AUDIO_SND_SYNTH_API_H_ */
