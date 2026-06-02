@@ -2645,7 +2645,8 @@ void playerAddMoney(int obj, int amount)
     } else {
         cap = 0xa;
     }
-    total = *(u8 *)((char *)*(int *)((char *)inner + 0x35c) + 8) + amount;
+    total = *(u8 *)((char *)*(int *)((char *)inner + 0x35c) + 8);
+    total += amount;
     if (amount > *(u8 *)((char *)inner + 0x3e8)) {
         *(u8 *)((char *)inner + 0x3e8) = (u8)amount;
     }
