@@ -23,6 +23,15 @@ typedef struct TitleMenuItem {
     } extra;
 } TitleMenuItem;
 
+#define TITLE_MENU_FLAG_ENABLED        0x01
+#define TITLE_MENU_FLAG_WRAP           0x02
+#define TITLE_MENU_FLAG_MOVED_LEFT     0x04
+#define TITLE_MENU_FLAG_MOVED_RIGHT    0x08
+#define TITLE_MENU_FLAG_CHANGED        0x10
+#define TITLE_MENU_FLAG_A_TOGGLE       0x20
+#define TITLE_MENU_FLAG_VOLUME_PREVIEW 0x40
+#define TITLE_MENU_FLAG_MUSIC_PREVIEW  0x80
+
 #pragma peephole off
 #pragma scheduling off
 
@@ -820,10 +829,10 @@ void FUN_80131de4(void)
 
 /* ===== EN v1.0 retargeted leaves ========================================= */
 
-/* EN v1.0 0x80131570  size: 12b  Read bit 0x10 from item->flags. */
+/* EN v1.0 0x80131570  size: 12b  Read changed bit from item->flags. */
 int TitleMenuItem_isChanged(TitleMenuItem* item)
 {
-    return item->flags & 0x10;
+    return item->flags & TITLE_MENU_FLAG_CHANGED;
 }
 
 /* EN v1.0 0x8013157C  size: 20b  Set item->value and item->frameDelay = 2.
@@ -848,29 +857,141 @@ s16 TitleMenuItem_getVal(TitleMenuItem* item)
 
 extern s16 lbl_803DD918;
 extern f32 lbl_803DD91C;
+extern s8 lbl_803DD920;
+extern f32 lbl_803E21F0;
+extern f32 lbl_803E21F4;
+extern f32 lbl_803E21F8;
+extern s8 padGetStickX(int port);
+extern u32 getButtonsJustPressed(int port);
+extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
+extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u32 sfxId);
+extern void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume);
+extern void Music_PlayTrackByIndex(int index);
 
-/* EN v1.0 0x80131598  size: 116b  Toggle enabled bit 0x01 on item->flags. */
+/* EN v1.0 0x80131598  size: 116b  Toggle enabled bit on item->flags. */
 #pragma scheduling off
 #pragma peephole off
 void TitleMenuItem_setEnabled(TitleMenuItem* item, int flag)
 {
     if (flag != 0) {
-        if ((item->flags & 1) == 0) {
+        if ((item->flags & TITLE_MENU_FLAG_ENABLED) == 0) {
             lbl_803DD918 = 0;
             lbl_803DD91C = (f32)item->value;
         }
-        item->flags = (u8)(item->flags | 1);
+        item->flags = (u8)(item->flags | TITLE_MENU_FLAG_ENABLED);
     } else {
-        item->flags = (u8)(item->flags & ~1);
+        item->flags = (u8)(item->flags & ~TITLE_MENU_FLAG_ENABLED);
     }
 }
 #pragma peephole reset
 #pragma scheduling reset
 
-/* EN v1.0 0x8013160C  size: 12b  Read bit 0x01 from item->flags. */
+/* EN v1.0 0x8013160C  size: 12b  Read enabled bit from item->flags. */
 int TitleMenuItem_isEnabled(TitleMenuItem* item)
 {
-    return item->flags & 0x01;
+    return item->flags & TITLE_MENU_FLAG_ENABLED;
+}
+
+/* EN v1.0 0x80131940  size: 948b  Update title menu item input state. */
+void TitleMenuItem_update(TitleMenuItem* item)
+{
+    s16 oldValue;
+    s8 stickX;
+    s16 move;
+    s16 gatedMove;
+    s16 sliderDelta;
+    s16 previewVolume;
+
+    if ((item->flags & TITLE_MENU_FLAG_ENABLED) == 0) {
+        return;
+    }
+
+    item->flags = (u8)(item->flags & 0xe3);
+    oldValue = item->value;
+    item->frameDelay = 4;
+
+    if (item->kind == 0) {
+        stickX = padGetStickX(0);
+        sliderDelta = (s16)((s8)stickX / 16) * 0xa0;
+
+        if ((sliderDelta == 0) ||
+            ((lbl_803DD91C < (f32)item->minValue) && (sliderDelta < 0)) ||
+            (((f32)item->maxValue < lbl_803DD91C) && (sliderDelta > 0))) {
+            lbl_803DD918 = 0;
+        } else {
+            lbl_803DD918 = (s16)(lbl_803E21F0 * (f32)(s16)(sliderDelta - lbl_803DD918) +
+                                 (f32)lbl_803DD918);
+            Sfx_KeepAliveLoopedObjectSound(0, 0x3b9);
+        }
+
+        lbl_803DD91C += (f32)lbl_803DD918 / lbl_803E21F4;
+        item->value = (s16)(lbl_803E21F8 + lbl_803DD91C);
+
+        if ((item->flags & TITLE_MENU_FLAG_VOLUME_PREVIEW) != 0) {
+            previewVolume = item->value;
+            if (previewVolume > 0x7f) {
+                previewVolume = 0x7f;
+            }
+            if (previewVolume < 0) {
+                previewVolume = 0;
+            } else if (previewVolume > 0x7f) {
+                previewVolume = 0x7f;
+            }
+            Sfx_SetObjectSfxVolume(lbl_803E21F8, 0, 0x3b9, (u8)previewVolume);
+        }
+    } else if (item->kind >= 2 && item->kind < 3) {
+        stickX = padGetStickX(0);
+        if (stickX > 0x23) {
+            move = 1;
+        } else if (stickX < -0x23) {
+            move = -1;
+        } else {
+            move = 0;
+        }
+
+        gatedMove = move;
+        if (lbl_803DD920 != 0) {
+            gatedMove = 0;
+        }
+        lbl_803DD920 = (s8)move;
+
+        if (gatedMove < 0) {
+            Sfx_PlayFromObject(0, SFXsp_sa_def01);
+            item->value--;
+            item->flags = (u8)(item->flags | TITLE_MENU_FLAG_MOVED_LEFT);
+        } else if (gatedMove > 0) {
+            Sfx_PlayFromObject(0, SFXsp_sa_def01);
+            item->value++;
+            item->flags = (u8)(item->flags | TITLE_MENU_FLAG_MOVED_RIGHT);
+        }
+    } else if (((item->flags & TITLE_MENU_FLAG_A_TOGGLE) == 0) &&
+               ((getButtonsJustPressed(0) & 0x100) != 0)) {
+        Sfx_PlayFromObject(0, SFXsp_sa_def02);
+        item->value = (s16)(item->value ^ 1);
+    }
+
+    if (item->value > item->maxValue) {
+        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0) {
+            item->value = item->maxValue;
+        } else {
+            item->value = 0;
+        }
+    } else if (item->value < item->minValue) {
+        if ((item->flags & TITLE_MENU_FLAG_WRAP) == 0) {
+            item->value = item->minValue;
+        } else {
+            item->value = item->maxValue;
+        }
+    }
+
+    if (oldValue != item->value) {
+        item->flags = (u8)(item->flags | TITLE_MENU_FLAG_CHANGED);
+    }
+
+    if (((item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0) &&
+        ((item->flags & TITLE_MENU_FLAG_CHANGED) != 0)) {
+        Music_PlayTrackByIndex(item->value);
+    }
 }
 
 /* EN v1.0 0x80132008  size: 8b   Trivial 1-returner. */
@@ -894,14 +1015,14 @@ extern u8  lbl_803A9DB8[0x18];
 extern void mm_free(void);
 extern void fn_8001BDD4(int);
 
-/* EN v1.0 0x80131540  size: 48b  Toggle bit 0x20 of item->flags. */
+/* EN v1.0 0x80131540  size: 48b  Toggle A-button bit of item->flags. */
 #pragma peephole off
 void TitleMenuItem_setAButtonToggle(TitleMenuItem* item, int flag)
 {
     if (flag != 0) {
-        item->flags = (u8)(item->flags & ~0x20);
+        item->flags = (u8)(item->flags & ~TITLE_MENU_FLAG_A_TOGGLE);
     } else {
-        item->flags = (u8)(item->flags | 0x20);
+        item->flags = (u8)(item->flags | TITLE_MENU_FLAG_A_TOGGLE);
     }
 }
 #pragma peephole reset
