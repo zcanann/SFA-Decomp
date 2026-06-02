@@ -1748,7 +1748,7 @@ main/dll/dll_029E_Dummy29E.c:
 main/dll/ARW/dll_029F_arwbombcoll.c:
 	.text       start:0x8022F588 end:0x8022FE00
 
-main/dll/dll_02A0_ring.c:
+main/dll/ring.c:
 	.text       start:0x8022FE00 end:0x802308B4
 
 main/dll/ARW/dll_02A1_arwlevelcon.c:
@@ -1787,10 +1787,10 @@ main/dll/LGT/dll_02AB_projectedlight.c:
 main/dll/LGT/dll_02AC_controllight.c:
 	.text       start:0x80234C10 end:0x80234DC8
 
-main/dll/dll_02AD_softbody.c:
+main/dll/softbody.c:
 	.text       start:0x80234DC8 end:0x8023503C
 
-main/dll/dll_02AE_waterflowwe.c:
+main/dll/waterflowwe.c:
 	.text       start:0x8023503C end:0x802356CC
 
 main/dll/dll_02AF_tree.c:
