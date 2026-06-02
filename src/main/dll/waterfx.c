@@ -60,7 +60,7 @@ int fn_800956F4(int vec, f32 dist) {
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void waterfx_func07(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d) {
+void waterfx_spawnRipple(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d) {
     int i = 0;
     WaterEntry7 *p = lbl_803DD238;
     WaterVtx *q;
@@ -126,7 +126,7 @@ void waterfx_func07(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d) {
 
 #pragma scheduling off
 #pragma peephole off
-void waterfx_func0A(int flag, f32 val) {
+void waterfx_setRippleScale(int flag, f32 val) {
     if (flag != 0) {
         val = lbl_803DF318;
     }
@@ -407,7 +407,7 @@ void waterfx_run(void) {
                 d->idx = -1;
                 lbl_803DD224 = (void *)((int)lbl_803DD224 - 1);
                 lbl_803DD20C = lbl_803DF334;
-                waterfx_func07(0, 8, d->x, wp->y, d->z, lbl_803DF300);
+                waterfx_spawnRipple(0, 8, d->x, wp->y, d->z, lbl_803DF300);
             }
         }
     }
@@ -430,7 +430,7 @@ void waterfx_func04(u8 *p3, u16 mask, f32 *vecs, u8 *p6, f32 fval) {
                 }
             }
             lbl_803DD20C = lbl_803DF318;
-            waterfx_func07(*(s16 *)p3, 4, vx, *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4), vz, lbl_803DF300);
+            waterfx_spawnRipple(*(s16 *)p3, 4, vx, *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4), vz, lbl_803DF300);
             lbl_8039AB48[0] = vx;
             lbl_8039AB48[1] = *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4);
             lbl_8039AB48[2] = vz;
