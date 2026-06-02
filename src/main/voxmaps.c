@@ -408,54 +408,54 @@ int *voxmaps_updateActiveMap(VoxPos *obj)
 #pragma scheduling off
 #pragma peephole off
 int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, u8 skipFirst) {
-    int zstep, dx2, dy2, dz2;
-    int p_xy, p_xz, p_yz;
-    int steps;
-    int voxX6, slot, voxZ6, voxX, voxZ;
-    int remap;
+    int stepZ, twiceDx, twiceDy, twiceDz;
+    int errXY, errXZ, errYZ;
+    int stepsRemaining;
+    int localX64, ySlot, localZ64, tileX, tileZ;
+    int routeNodeDirty;
     VoxActiveMap *cachedMap;
     VoxState *st;
-    int oldVox;
+    int oldTile;
     u8 first;
     VoxPos cur = *start;
     VoxPos found;
-    u8 *node;
-    int xstep, ystep;
+    u8 *routeNode;
+    int stepX, stepY;
     int dx, dy, dz;
     unsigned int skip;
 
-    xstep = 1;
+    stepX = 1;
     dx = end->x - cur.x;
-    if (dx < 0) { xstep = -1; dx = -dx; }
-    ystep = 1;
+    if (dx < 0) { stepX = -1; dx = -dx; }
+    stepY = 1;
     dy = end->y - cur.y;
-    if (dy < 0) { ystep = -1; dy = -dy; }
-    zstep = 1;
+    if (dy < 0) { stepY = -1; dy = -dy; }
+    stepZ = 1;
     dz = end->z - cur.z;
-    if (dz < 0) { zstep = -1; dz = -dz; }
+    if (dz < 0) { stepZ = -1; dz = -dz; }
 
-    dx2 = dx * 2;
-    p_xy = dy - dx;
-    dy2 = dy * 2;
-    p_xz = dz - dx;
-    dz2 = dz * 2;
-    p_yz = dy - dz;
-    steps = dy + dz;
-    steps += dx;
+    twiceDx = dx * 2;
+    errXY = dy - dx;
+    twiceDy = dy * 2;
+    errXZ = dz - dx;
+    twiceDz = dz * 2;
+    errYZ = dy - dz;
+    stepsRemaining = dy + dz;
+    stepsRemaining += dx;
 
     voxmaps_updateActiveMap(&cur);
 
     st = &lbl_803387E8;
-    voxX6 = (cur.x - st->originX) & 0x3f;
-    voxX = voxX6 >> 2;
-    voxZ6 = (cur.z - st->originZ) & 0x3f;
-    voxZ = voxZ6 >> 2;
+    localX64 = (cur.x - st->originX) & 0x3f;
+    tileX = localX64 >> 2;
+    localZ64 = (cur.z - st->originZ) & 0x3f;
+    tileZ = localZ64 >> 2;
     found = cur;
     cachedMap = NULL;
     first = 1;
     skip = skipFirst;
 
-    while (steps-- != 0) {
+    while (stepsRemaining-- != 0) {
         if (skip != 0 && first != 0) {
             first = 0;
         } else {
@@ -464,26 +464,26 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
                 if (map != cachedMap || cur.y != found.y) {
                     int y = cur.y;
                     if (y < map->minY) {
-                        slot = 0;
+                        ySlot = 0;
                     } else if (y >= map->maxY) {
-                        slot = (map->maxY - 1) - map->minY;
+                        ySlot = (map->maxY - 1) - map->minY;
                     } else {
-                        slot = y - map->minY;
+                        ySlot = y - map->minY;
                     }
-                    remap = 1;
+                    routeNodeDirty = 1;
                     cachedMap = map;
                     found.y = y;
                 }
                 {
                     u8 *bitmap = map->bitmap;
-                    unsigned int bit = (bitmap[(slot << 5) | ((voxZ << 1) + (voxX >> 3))] >> (voxX & 7)) & 1;
+                    unsigned int bit = (bitmap[(ySlot << 5) | ((tileZ << 1) + (tileX >> 3))] >> (tileX & 7)) & 1;
                     if (bit != 0) {
                         unsigned int occ;
-                        if (remap != 0) {
-                            node = (u8 *)voxmaps_getRouteNode(map->header, map->nodeBase, bitmap, voxX, slot, voxZ);
-                            remap = 0;
+                        if (routeNodeDirty != 0) {
+                            routeNode = (u8 *)voxmaps_getRouteNode(map->header, map->nodeBase, bitmap, tileX, ySlot, tileZ);
+                            routeNodeDirty = 0;
                         }
-                        occ = (node[voxZ6 & 3] >> ((voxX6 & 3) << 1)) & 3;
+                        occ = (routeNode[localZ64 & 3] >> ((localX64 & 3) << 1)) & 3;
                         if (occ != 0) {
                             if (occOut != NULL) {
                                 *occOut = occ;
@@ -498,59 +498,59 @@ int voxmaps_traceLine(VoxPos *start, VoxPos *end, VoxPos *coordOut, u8 *occOut, 
             }
         }
 
-        if (p_xy < 0) {
-            if (p_xz < 0) {
+        if (errXY < 0) {
+            if (errXZ < 0) {
                 found.x = cur.x;
-                cur.x = (s16)(cur.x + xstep);
-                p_xy += dy2;
-                p_xz += dz2;
-                oldVox = voxX;
+                cur.x = (s16)(cur.x + stepX);
+                errXY += twiceDy;
+                errXZ += twiceDz;
+                oldTile = tileX;
                 if (((cur.x - st->originX) >> 6) != 0) {
                     voxmaps_updateActiveMap(&cur);
                     cachedMap = NULL;
                 }
-                voxX6 = (cur.x - st->originX) & 0x3f;
-                voxX = voxX6 >> 2;
-                if (voxX != oldVox) {
-                    remap = 1;
+                localX64 = (cur.x - st->originX) & 0x3f;
+                tileX = localX64 >> 2;
+                if (tileX != oldTile) {
+                    routeNodeDirty = 1;
                 }
             } else {
                 found.z = cur.z;
-                cur.z = (s16)(cur.z + zstep);
-                p_xz -= dx2;
-                p_yz += dy2;
-                oldVox = voxZ;
+                cur.z = (s16)(cur.z + stepZ);
+                errXZ -= twiceDx;
+                errYZ += twiceDy;
+                oldTile = tileZ;
                 if (((cur.z - st->originZ) >> 6) != 0) {
                     voxmaps_updateActiveMap(&cur);
                     cachedMap = NULL;
                 }
-                voxZ6 = (cur.z - st->originZ) & 0x3f;
-                voxZ = voxZ6 >> 2;
-                if (voxZ != oldVox) {
-                    remap = 1;
+                localZ64 = (cur.z - st->originZ) & 0x3f;
+                tileZ = localZ64 >> 2;
+                if (tileZ != oldTile) {
+                    routeNodeDirty = 1;
                 }
             }
         } else {
-            if (p_yz < 0) {
+            if (errYZ < 0) {
                 found.z = cur.z;
-                cur.z = (s16)(cur.z + zstep);
-                p_xz -= dx2;
-                p_yz += dy2;
-                oldVox = voxZ;
+                cur.z = (s16)(cur.z + stepZ);
+                errXZ -= twiceDx;
+                errYZ += twiceDy;
+                oldTile = tileZ;
                 if (((cur.z - st->originZ) >> 6) != 0) {
                     voxmaps_updateActiveMap(&cur);
                     cachedMap = NULL;
                 }
-                voxZ6 = (cur.z - st->originZ) & 0x3f;
-                voxZ = voxZ6 >> 2;
-                if (voxZ != oldVox) {
-                    remap = 1;
+                localZ64 = (cur.z - st->originZ) & 0x3f;
+                tileZ = localZ64 >> 2;
+                if (tileZ != oldTile) {
+                    routeNodeDirty = 1;
                 }
             } else {
                 found.y = cur.y;
-                cur.y = (s16)(cur.y + ystep);
-                p_xy -= dx2;
-                p_yz -= dz2;
+                cur.y = (s16)(cur.y + stepY);
+                errXY -= twiceDx;
+                errYZ -= twiceDz;
             }
         }
     }
