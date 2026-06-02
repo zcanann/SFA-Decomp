@@ -3,8 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_8012eb7c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+s32 GameUI_isOneOfItemsBeingUsed(s32* arr, int count);
 void FUN_8012ed00(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 int FUN_8012ef0c(void);

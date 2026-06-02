@@ -19,7 +19,7 @@ void FUN_801fc75c(undefined8 param_1,undefined8 param_2,double param_3,undefined
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);
 void FUN_801fc944(void);
-void FUN_801fc978(int param_1);
+void seqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FUN_801fc998(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  uint param_9);

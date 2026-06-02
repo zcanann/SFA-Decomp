@@ -9,9 +9,7 @@ extern ObjectDescriptor gCRrockfallObjDescriptor;
 extern ObjectDescriptor gMagicLightObjDescriptor;
 extern ObjectDescriptor gIMIcePillarObjDescriptor;
 
-void FUN_801ac248(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9);
+void imicemountain_updateEventState(int *obj);
 void FUN_801ac24c(int param_1);
 void FUN_801ac340(int param_1,undefined *param_2);
 void FUN_801ac490(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
