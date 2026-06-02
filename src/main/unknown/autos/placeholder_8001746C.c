@@ -11313,7 +11313,7 @@ f32 ModelLightStruct_getLightAmount(u8 *light, u8 *obj) {
 
     PSVECSubtract((f32 *)(obj + 0x18), (f32 *)(light + 0x10), delta);
     dist = PSVECMag(delta) - *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8);
-    if (dist > lbl_803DE768 || *(f32 *)(light + 0x144) < dist) {
+    if (dist > lbl_803DE768 || dist > *(f32 *)(light + 0x144)) {
         return lbl_803DE75C;
     }
 
