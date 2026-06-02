@@ -11916,6 +11916,7 @@ extern void objFreeObjDef(void *def, int flags);
 extern f32 lbl_803DE808;
 extern f32 lbl_803DE810;
 extern u8 *lbl_803DCADC;
+#define gGameBitTable lbl_803DCADC
 extern int lbl_803DCB94;
 extern void **lbl_803DCB98;
 
@@ -11947,6 +11948,8 @@ int randomGetRange(int lo, int hi) {
 
 extern s16 lbl_803DCAD8;
 extern u8 *lbl_803DCAE0;
+#define gGameBitCount lbl_803DCAD8
+#define gGameBitSaveData lbl_803DCAE0
 
 u32 GameBit_Get(int eventId) {
     s16 id = (s16)eventId & 0xfff;
@@ -11966,25 +11969,25 @@ u32 GameBit_Get(int eventId) {
     if (eventId == -1) {
         return 0;
     }
-    if (id < 0 || id >= lbl_803DCAD8) {
+    if (id < 0 || id >= gGameBitCount) {
         return 0;
     }
-    flags = lbl_803DCADC[id * 4 + 2];
+    flags = gGameBitTable[id * 4 + 2];
     switch (flags >> 6) {
     case 0:
-        base = lbl_803DCAE0 + 0xef0;
+        base = gGameBitSaveData + 0xef0;
         break;
     case 1:
-        base = lbl_803DCAE0 + 0x564;
+        base = gGameBitSaveData + 0x564;
         break;
     case 2:
-        base = lbl_803DCAE0 + 0x24;
+        base = gGameBitSaveData + 0x24;
         break;
     case 3:
-        base = lbl_803DCAE0 + 0x5d8;
+        base = gGameBitSaveData + 0x5d8;
         break;
     }
-    start = *(u16 *)(lbl_803DCADC + id * 4);
+    start = *(u16 *)(gGameBitTable + id * 4);
     result = 0;
     bit = 1;
     for (i = start; i <= (flags & 0x1f) + start; i++) {
@@ -12004,6 +12007,8 @@ extern int isSaveGameLoading(void);
 extern void gameBitFn_800ea2e0(int a);
 extern char lbl_802CA4E0[];
 extern void OSReport(char *fmt, ...);
+#define GameBit_RequestSync gameBitFn_800ea2e0
+#define sGameBitSetDuringSaveLoadWarning lbl_802CA4E0
 
 void GameBit_Set(int eventId, int value) {
     s16 id;
@@ -12016,7 +12021,7 @@ void GameBit_Set(int eventId, int value) {
     u32 bit;
 
     if (isSaveGameLoading()) {
-        OSReport(lbl_802CA4E0, eventId, value);
+        OSReport(sGameBitSetDuringSaveLoadWarning, eventId, value);
         return;
     }
     if (eventId & 0x8000) {
@@ -12032,34 +12037,34 @@ void GameBit_Set(int eventId, int value) {
     if (eventId == -1) {
         return;
     }
-    if (id < 0 || id >= lbl_803DCAD8) {
+    if (id < 0 || id >= gGameBitCount) {
         return;
     }
-    flags = lbl_803DCADC[id * 4 + 2];
+    flags = gGameBitTable[id * 4 + 2];
     switch (flags >> 6) {
     case 0:
-        base = lbl_803DCAE0 + 0xef0;
+        base = gGameBitSaveData + 0xef0;
         limit = 0x80;
         break;
     case 1:
-        base = lbl_803DCAE0 + 0x564;
+        base = gGameBitSaveData + 0x564;
         limit = 0x74;
         break;
     case 2:
-        base = lbl_803DCAE0 + 0x24;
+        base = gGameBitSaveData + 0x24;
         limit = 0x144;
         break;
     case 3:
-        base = lbl_803DCAE0 + 0x5d8;
+        base = gGameBitSaveData + 0x5d8;
         limit = 0xac;
         break;
     }
     if (flags & 0x20) {
-        gameBitFn_800ea2e0(lbl_803DCADC[id * 4 + 3]);
+        GameBit_RequestSync(gGameBitTable[id * 4 + 3]);
     }
-    start = *(u16 *)(lbl_803DCADC + id * 4);
+    start = *(u16 *)(gGameBitTable + id * 4);
     bit = 1;
-    end = (lbl_803DCADC[id * 4 + 2] & 0x1f) + start + 1;
+    end = (gGameBitTable[id * 4 + 2] & 0x1f) + start + 1;
     for (i = start; i < end; i++) {
         int byteIdx = i >> 3;
         int mask;
@@ -12107,7 +12112,7 @@ void Vec3_Normalize(f32 *v) {
 
 int gameBitIncrement(int bit) {
     int val = GameBit_Get(bit) + 1;
-    int max = 1 << ((lbl_803DCADC[bit * 4 + 2] & 0x1f) + 1);
+    int max = 1 << ((gGameBitTable[bit * 4 + 2] & 0x1f) + 1);
     if (val < max) {
         GameBit_Set(bit, val);
     } else {
