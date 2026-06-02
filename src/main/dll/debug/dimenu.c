@@ -133,7 +133,7 @@ void OptionsScreen_render(int arg)
     int *item;
     u16 *panel = &lbl_8031ACB8[(s8)lbl_803DBA28 * 8];
 
-    if (shouldShowCredits()) {
+    if (shouldShowCredits() != 0) {
         creditsStart_();
         return;
     }
@@ -189,6 +189,18 @@ extern u8 lbl_803DD6F9;
 extern u8 lbl_803DD6F8;
 extern void fn_8011CA74(void);
 extern void fn_8011C7B4(void);
+extern s8 lbl_803DD704;
+extern int lbl_803DD700;
+extern void loadUiDll(int id);
+extern void titleScreenFn_8005cdd4(int v);
+extern void setDrawCloudsAndLights(int v);
+extern void setWidescreen(u8 enabled);
+extern void setRumbleEnabled(u8 enabled);
+extern void setSubtitlesEnabled(u8 enabled);
+extern void fn_8011BFC8(int selection, int item);
+extern void fn_8011C318(int selection, int item);
+extern u8 framesThisStep;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
 #pragma scheduling off
 #pragma peephole off
 void OptionsScreen_initialise(void)
@@ -214,7 +226,7 @@ void OptionsScreen_initialise(void)
 /*
  * --INFO--
  *
- * Function: FUN_8011d11c
+ * Function: OptionsScreen_run
  * EN v1.0 Address: 0x8011D11C
  * EN v1.0 Size: 1376b
  * EN v1.1 Address: 0x8011D260
@@ -224,144 +236,118 @@ void OptionsScreen_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int FUN_8011d11c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+int OptionsScreen_run(void)
 {
-  char cVar1;
-  uint uVar2;
-  char cVar7;
-  int iVar3;
-  int iVar4;
-  undefined uVar8;
-  undefined4 uVar5;
-  int iVar6;
-  byte bVar9;
-  int *piVar10;
-  undefined8 extraout_f1;
-  
-  cVar1 = DAT_803de384;
-  bVar9 = DAT_803dc070;
-  cVar7 = FUN_801339f8();
-  if (cVar7 == '\0') {
-    if (3 < bVar9) {
-      bVar9 = 3;
+    int step = framesThisStep;
+    s8 oldFade = lbl_803DD704;
+    int selection;
+    int item;
+    int i;
+    int *slot;
+
+    if (shouldShowCredits()) {
+        return 0;
     }
-    if ('\0' < DAT_803de384) {
-      DAT_803de384 = DAT_803de384 - bVar9;
+    if (step > 3) {
+        step = 3;
     }
-    iVar3 = (**(code **)(*DAT_803dd6cc + 0x14))();
-    if (iVar3 == 0) {
-      (**(code **)(*DAT_803dd720 + 0x34))();
-      DAT_803de386 = 2;
+    if (lbl_803DD704 > 0) {
+        lbl_803DD704 = (s8)(lbl_803DD704 - step);
     }
-    if (DAT_803de385 == '\0') {
-      iVar3 = (**(code **)(*DAT_803dd720 + 0xc))();
-      iVar4 = (**(code **)(*DAT_803dd720 + 0x14))();
-      if (iVar4 != DAT_803de380) {
-        FUN_80006824(0,SFXsp_sa_off03);
-      }
-      DAT_803de380 = iVar4;
-      if (DAT_803dc690 == '\x02') {
-        languageMenuInit(iVar3,iVar4);
-        if (iVar3 == 0) {
-          uVar8 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9430);
-          *(undefined *)(DAT_803de388 + 6) = uVar8;
-          uVar5 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9434);
-          uVar2 = countLeadingZeros(uVar5);
-          *(char *)(DAT_803de388 + 8) = (char)(uVar2 >> 5);
-          FUN_8005d018(*(char *)(DAT_803de388 + 6));
-          FUN_80006c20(*(undefined *)(DAT_803de388 + 8));
-        }
-      }
-      else if (DAT_803dc690 < '\x02') {
-        if (DAT_803dc690 == '\0') {
-          DAT_803de38c = (undefined)iVar4;
-          iVar3 = fn_8011C51C(iVar3,iVar4);
-          if (iVar3 != 0) {
-            return 0;
-          }
-        }
-        else if ((-1 < DAT_803dc690) && (FUN_8011bfc8(iVar3,iVar4), iVar3 == 0)) {
-          uVar8 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9430);
-          *(undefined *)(DAT_803de388 + 9) = uVar8;
-          uVar8 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9434);
-          *(undefined *)(DAT_803de388 + 10) = uVar8;
-          uVar8 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9438);
-          *(undefined *)(DAT_803de388 + 0xb) = uVar8;
-          uVar8 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a943c);
-          *(undefined *)(DAT_803de388 + 0xc) = uVar8;
-        }
-      }
-      else if (DAT_803dc690 < '\x04') {
-        if (iVar3 == 0) {
-          FUN_80006824(0,SFXsp_snrot1_c);
-          (**(code **)(*DAT_803dd6cc + 8))(0x14,5);
-          DAT_803de384 = '#';
-          DAT_803de385 = '\x01';
-        }
-        if (((&DAT_803a9430)[iVar4] != 0) &&
-           (iVar3 = (**(code **)(*DAT_803dd724 + 0x2c))(), iVar3 != 0)) {
-          if (iVar4 == 0) {
-            uVar5 = (**(code **)(*DAT_803dd724 + 0x24))(DAT_803a9430);
-            uVar2 = countLeadingZeros(uVar5);
-            *(char *)(DAT_803de388 + 2) = (char)(uVar2 >> 5);
-            FUN_80017500(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                         (uint)*(byte *)(DAT_803de388 + 2));
-          }
-          else {
-            uVar5 = (**(code **)(*DAT_803dd724 + 0x24))((&DAT_803a9430)[iVar4]);
-            uVar2 = countLeadingZeros(uVar5);
-            saveFileStruct_setCheatActive(3,(char)(uVar2 >> 5));
-          }
-        }
-      }
-      if (DAT_803dc690 != '\0') {
-        iVar3 = 0;
-        piVar10 = &DAT_803a9430;
-        do {
-          iVar6 = *piVar10;
-          if (iVar6 != 0) {
-            if (iVar3 == iVar4) {
-              (**(code **)(*DAT_803dd724 + 0x20))(iVar6,1);
+    if (((int (*)(void))(*(int *)((int)*gScreenTransitionInterface + 0x14)))() == 0) {
+        (*(void (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0x34)))();
+        lbl_803DD706 = 2;
+    }
+
+    if (lbl_803DD705 != 0) {
+        if ((oldFade <= 0xc || lbl_803DD704 > 0xc) && lbl_803DD704 <= 0) {
+            if ((s8)lbl_803DBA28 != -1) {
+                (*(void (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0x8)))();
+                lbl_803DBA28 = -1;
             }
-            else {
-              (**(code **)(*DAT_803dd724 + 0x20))(iVar6,0);
+            slot = lbl_803A87D0;
+            for (i = 0; i < 8; i++, slot++) {
+                if (*slot != 0) {
+                    (*(void (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x10)))(*slot);
+                    *slot = 0;
+                }
             }
-            (**(code **)(*DAT_803dd724 + 0x14))(*piVar10);
-          }
-          piVar10 = piVar10 + 1;
-          iVar3 = iVar3 + 1;
-        } while (iVar3 < 8);
-      }
-      iVar3 = 0;
-    }
-    else {
-      if (((cVar1 < '\r') || ('\f' < DAT_803de384)) && (DAT_803de384 < '\x01')) {
-        if (DAT_803dc690 != -1) {
-          (**(code **)(*DAT_803dd720 + 8))();
-          DAT_803dc690 = -1;
+            titleScreenFn_8005cdd4(1);
+            setDrawCloudsAndLights(1);
+            loadUiDll(4);
         }
-        iVar3 = 0;
-        piVar10 = &DAT_803a9430;
-        do {
-          if (*piVar10 != 0) {
-            (**(code **)(*DAT_803dd724 + 0x10))();
-            *piVar10 = 0;
-          }
-          piVar10 = piVar10 + 1;
-          iVar3 = iVar3 + 1;
-        } while (iVar3 < 8);
-        FUN_8005d090(1);
-        FUN_8005d17c(1);
-        FUN_80006b84(4);
-      }
-      iVar3 = (uint)((uint)(int)DAT_803de384 < 0xd) - ((int)DAT_803de384 >> 0x1f);
+        return (uint)((uint)(int)lbl_803DD704 < 0xd) - ((int)lbl_803DD704 >> 0x1f);
     }
-  }
-  else {
-    iVar3 = 0;
-  }
-  return iVar3;
+
+    selection = (*(int (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0xc)))();
+    item = (*(int (*)(void))(*(int *)(*gTitleMenuLinkInterface + 0x14)))();
+    if (item != lbl_803DD700) {
+        Sfx_PlayFromObject(0, SFXsp_sa_off03);
+    }
+    lbl_803DD700 = item;
+
+    switch ((s8)lbl_803DBA28) {
+        case 0:
+            lbl_803DD70C = (s8)item;
+            if (fn_8011C51C(selection, item) != 0) {
+                return 0;
+            }
+            break;
+        case 2:
+            fn_8011C318(selection, item);
+            if (selection == 0) {
+                ((u8 *)lbl_803DD708)[6] =
+                    (*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
+                ((u8 *)lbl_803DD708)[8] =
+                    !(*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[1]);
+                setWidescreen(((u8 *)lbl_803DD708)[6]);
+                setRumbleEnabled(((u8 *)lbl_803DD708)[8]);
+            }
+            break;
+        case 1:
+            fn_8011BFC8(selection, item);
+            if (selection == 0) {
+                ((u8 *)lbl_803DD708)[9] =
+                    (*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
+                ((u8 *)lbl_803DD708)[10] =
+                    (*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[1]);
+                ((u8 *)lbl_803DD708)[11] =
+                    (*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[2]);
+                ((u8 *)lbl_803DD708)[12] =
+                    (*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[3]);
+            }
+            break;
+        case 3:
+            if (selection == 0) {
+                Sfx_PlayFromObject(0, SFXsp_snrot1_c);
+                (*(void (*)(int, int))(*(int *)((int)*gScreenTransitionInterface + 0x8)))(0x14, 5);
+                lbl_803DD704 = 0x23;
+                lbl_803DD705 = 1;
+            }
+            if (lbl_803A87D0[item] != 0 &&
+                (*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x2c)))(lbl_803A87D0[item]) != 0) {
+                if (item == 0) {
+                    ((u8 *)lbl_803DD708)[2] =
+                        !(*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
+                    setSubtitlesEnabled(((u8 *)lbl_803DD708)[2]);
+                } else {
+                    saveFileStruct_setCheatActive(3,
+                        !(*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[item]));
+                }
+            }
+            break;
+    }
+
+    if ((s8)lbl_803DBA28 != 0) {
+        slot = lbl_803A87D0;
+        for (i = 0; i < 8; i++, slot++) {
+            if (*slot != 0) {
+                (*(void (*)(int, int))(*(int *)(*gTitleMenuItemInterface + 0x20)))(*slot, i == item);
+                (*(void (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x14)))(*slot);
+            }
+        }
+    }
+    return 0;
 }
 
 /*
