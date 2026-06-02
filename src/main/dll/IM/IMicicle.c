@@ -1674,7 +1674,7 @@ void attractor_init(s16 *obj, void *data) {
 #pragma scheduling reset
 
 extern u8 framesThisStep;
-extern int fn_801A5298(ExplodedObject *obj, ExplodedObjectState *state);
+extern int exploded_stepDebrisPhysics(ExplodedObject *obj, ExplodedObjectState *state);
 #pragma scheduling off
 #pragma peephole off
 void exploded_update(int *obj) {
@@ -1686,7 +1686,7 @@ void exploded_update(int *obj) {
     case 0:
         break;
     case 1:
-        if (fn_801A5298(o, state) != 0) {
+        if (exploded_stepDebrisPhysics(o, state) != 0) {
             state->explodePhase = 0;
         }
         break;
@@ -1985,7 +1985,7 @@ extern f32 lbl_803E4424;
  * ground clearance, and the randomized lifetime countdown. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801A4F90(ExplodedObject *obj, ExplodedObjectState *state, ExplodedObjectMapData *data)
+void exploded_seedDebrisMotion(ExplodedObject *obj, ExplodedObjectState *state, ExplodedObjectMapData *data)
 {
   f32 floorY[2];
 
@@ -2033,7 +2033,7 @@ void fn_801A4F90(ExplodedObject *obj, ExplodedObjectState *state, ExplodedObject
  * the stored floor height, and return nonzero once the shard comes to rest. */
 #pragma scheduling off
 #pragma peephole off
-int fn_801A5298(ExplodedObject *obj, ExplodedObjectState *state)
+int exploded_stepDebrisPhysics(ExplodedObject *obj, ExplodedObjectState *state)
 {
   int stopped;
   f32 speed;
@@ -2111,7 +2111,6 @@ int fn_801A5298(ExplodedObject *obj, ExplodedObjectState *state)
 void fn_801A4DB8(int p1, int p2, int flag, int p3)
 {
   extern void Model_GetVertexPosition(int, int, f32 *);
-  extern void fn_801A4F90(s16 *, int, int);
   extern void fn_800218AC(int, int);
   extern f32 lbl_803E43F0;
   extern f32 lbl_803E43F4;
@@ -2149,7 +2148,8 @@ void fn_801A4DB8(int p1, int p2, int flag, int p3)
   *(f32 *)(p3 + 0xc) = *(f32 *)(p3 + 0);
   *(f32 *)(p3 + 0x10) = *(f32 *)(p3 + 4);
   *(f32 *)(p3 + 0x14) = *(f32 *)(p3 + 8);
-  fn_801A4F90((s16 *)p1, p3, p2);
+  exploded_seedDebrisMotion((ExplodedObject *)p1, (ExplodedObjectState *)p3,
+                            (ExplodedObjectMapData *)p2);
 
   {
     f32 tv[3];
