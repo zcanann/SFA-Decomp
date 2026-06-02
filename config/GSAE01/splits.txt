@@ -438,7 +438,7 @@ main/dll/dll_C4.c:
 main/dll/dll_C5.c:
 	.text       start:0x8010224C end:0x8010224C
 
-main/dll/dll_C6.c:
+main/dll/animatedobj.c:
 	.text       start:0x8010224C end:0x8010224C
 
 main/dll/dll_C0.c:
@@ -643,10 +643,10 @@ main/dll/baddie/MMP_cratercritter.c:
 main/dll/baddie/MMP_critterspit.c:
 	.text       start:0x8013DB3C end:0x8013DC88
 
-main/dll/dll_E2.c:
+main/dll/staff.c:
 	.text       start:0x8013DC88 end:0x8013DC88
 
-main/dll/dll_D1.c:
+main/dll/tumbleweedbush.c:
 	.text       start:0x8013DC88 end:0x8013E0D0
 
 main/dll/animobjD2.c:
@@ -1020,10 +1020,10 @@ main/dll/DIM/DIMbossspit.c:
 main/dll/dll_224.c:
 	.text       start:0x801BE44C end:0x801BE44C
 
-main/dll/dll_226.c:
+main/dll/vfp_lavapool.c:
 	.text       start:0x801BE44C end:0x801BE8F8
 
-main/dll/dll_227.c:
+main/dll/vfp_lavastar.c:
 	.text       start:0x801BE8F8 end:0x801BEC70
 
 main/dll/riverFlowRelated018D.c:
@@ -1182,13 +1182,13 @@ main/dll/NW/NWtricky.c:
 main/dll/dll_1DF.c:
 	.text       start:0x801D1E24 end:0x801D1E24
 
-main/dll/dll_1E0.c:
+main/dll/dim_boss.c:
 	.text       start:0x801D1E24 end:0x801D1E24
 
-main/dll/dll_1E1.c:
+main/dll/dim_bossgut.c:
 	.text       start:0x801D1E24 end:0x801D2C54
 
-main/dll/dll_1E2.c:
+main/dll/dim_bosstonsil.c:
 	.text       start:0x801D2C54 end:0x801D2C54
 
 main/dll/SH/SHmushroom.c:
@@ -1494,7 +1494,7 @@ main/dll/baddie/chukachuck.c:
 main/dll/tesla.c:
 	.text       start:0x80206968 end:0x80206F30
 
-main/dll/dll_EC.c:
+main/dll/infopoint.c:
 	.text       start:0x80206F30 end:0x8020718C
 
 main/dll/TrickyCurve.c:

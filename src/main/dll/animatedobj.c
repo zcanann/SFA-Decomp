@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_C6.h"
+#include "main/dll/animatedobj.h"
 
 extern undefined4 camcontrol_updateTargetReticle();
 extern int FUN_80133a28();

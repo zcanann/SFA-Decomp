@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_EC.h"
+#include "main/dll/infopoint.h"
 
 extern void *Obj_GetPlayerObject(void);
 extern int randomGetRange(int min,int max);

@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_D1.h"
+#include "main/dll/tumbleweedbush.h"
 
 #pragma peephole off
 #pragma scheduling off

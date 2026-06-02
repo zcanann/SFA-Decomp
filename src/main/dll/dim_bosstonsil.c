@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_1E2.h"
+#include "main/dll/dim_bosstonsil.h"
 
 extern undefined4 ObjGroup_AddObject();
 extern void enemymushroom_resetToSpawn(s16 *obj,float *state,int enableTimer);
