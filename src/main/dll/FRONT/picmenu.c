@@ -490,31 +490,31 @@ void AttractMovieVideo_Decode(void* param)
 #pragma peephole off
 void AttractMovieVideo_DecoderForOnMemory(void* param)
 {
-    char* pb = (char*)&lbl_803A5D60;   /* r31 */
-    u32 frameSize = *(u32*)(pb + 0xB4); /* r30 */
+    AttractMoviePlayer* player = &lbl_803A5D60; /* r31 */
+    u32 frameSize = player->frameStride;        /* r30 */
     void* cur = param;                  /* at stack[8], address taken by &cur */
     int i = 0;                          /* r29 */
 
     while (1) {
-        if (*(u8*)(pb + 0x9F) != 0) {
-            while (*(s32*)(pb + 0xD0) < 0) {
+        if (player->audioExists != 0) {
+            while (player->videoDecodeCount < 0) {
                 {
                     u32 intr = OSDisableInterrupts();
-                    *(s32*)(pb + 0xD0) += 1;
+                    player->videoDecodeCount += 1;
                     OSRestoreInterrupts(intr);
                 }
                 {
-                    u32 cols = *(u32*)(pb + 0x50);
-                    u32 bOff = *(u32*)(pb + 0xB8);
+                    u32 cols = player->header.mNumFrames;
+                    u32 bOff = player->initReadFrame;
                     u32 sum  = (u32)i + bOff;
                     u32 pos  = sum % cols;
                     if (pos == cols - 1) {
-                        if (!(*(u8*)(pb + 0x9E) & 1)) {
+                        if (!(player->playFlags & 1)) {
                             break; /* pos==cols-1, not looping: go to decode */
                         }
                         /* looping: update cur and frameSize */
                         frameSize = *(u32*)cur;
-                        cur = (void*)*(u32*)(pb + 0xAC);
+                        cur = player->loopFrame;
                     } else {
                         u32 nextSize = *(u32*)cur;
                         cur = (char*)cur + frameSize;
@@ -530,14 +530,14 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
         AttractMovieVideo_Decode(&cur);
 
         {
-            u32 cols = *(u32*)(pb + 0x50);
-            u32 bOff = *(u32*)(pb + 0xB8);
+            u32 cols = player->header.mNumFrames;
+            u32 bOff = player->initReadFrame;
             u32 sum  = (u32)i + bOff;
             u32 pos  = sum % cols;
             if (pos == cols - 1) {
-                if (*(u8*)(pb + 0x9E) & 1) {
+                if (player->playFlags & 1) {
                     frameSize = *(u32*)cur;
-                    cur = (void*)*(u32*)(pb + 0xAC);
+                    cur = player->loopFrame;
                 } else {
                     OSSuspendThread(&lbl_803A8348);
                 }
@@ -560,30 +560,30 @@ void AttractMovieVideo_DecoderForOnMemory(void* param)
 #pragma peephole off
 void AttractMovieVideo_Decoder(void)
 {
-    char* pb = (char*)&lbl_803A5D60;  /* r31 */
+    AttractMoviePlayer* player = &lbl_803A5D60; /* r31 */
     void* msg;                         /* r30 */
 
     while (1) {
-        if (*(u8*)(pb + 0x9F) != 0) {
-            while (*(s32*)(pb + 0xD0) < 0) {
+        if (player->audioExists != 0) {
+            while (player->videoDecodeCount < 0) {
                 msg = PopReadedBuffer2();
                 {
-                    u32 cols = *(u32*)(pb + 0x50);
-                    u32 bOff = *(u32*)(pb + 0xB8);
+                    u32 cols = player->header.mNumFrames;
+                    u32 bOff = player->initReadFrame;
                     u32 pos  = (*(u32*)((char*)msg + 4) + bOff) % cols;
-                    if (pos == cols - 1 && !(*(u8*)(pb + 0x9E) & 1)) {
+                    if (pos == cols - 1 && !(player->playFlags & 1)) {
                         AttractMovieVideo_Decode(msg);
                     }
                 }
                 PushFreeReadBuffer((OSMessage)msg);
                 {
                     u32 intr = OSDisableInterrupts();
-                    *(s32*)(pb + 0xD0) += 1;
+                    player->videoDecodeCount += 1;
                     OSRestoreInterrupts(intr);
                 }
             }
         }
-        if (*(u8*)(pb + 0x9F) != 0) {
+        if (player->audioExists != 0) {
             msg = PopReadedBuffer2();
         } else {
             msg = (void*)PopReadedBuffer();
