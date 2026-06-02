@@ -83,6 +83,11 @@ extern f32 lbl_803E5EA8;
 #define NW_MAMMOTH_STATE_FLAGS(table) ((u8 *)((table) + 0xf4))
 #define NW_MAMMOTH_MOVE_IDS(table) ((s16 *)((table) + 0x68))
 #define NW_MAMMOTH_MOVE_STEP_SCALES(table) ((f32 *)((table) + 0x98))
+#define NW_MAMMOTH_HIT_REACT_ENTRIES(table) ((ObjHitReactEntry *)(table))
+#define NW_MAMMOTH_HEAVY_HIT_REACT_ENTRIES(table) \
+  ((ObjHitReactEntry *)((table) + sizeof(ObjHitReactEntry)))
+#define NW_MAMMOTH_HIT_REACT_STEP_SCALE(state) ((f32 *)((state) + 0x50))
+#define NW_MAMMOTH_HIT_REACT_STATE(state) ((state)[0x3d4])
 
 enum NwMammothStateFlag {
   NW_MAMMOTH_STATE_FLAG_PATH_CONTROL = 0x01,
@@ -152,12 +157,14 @@ void nw_mammoth_update(int obj,int param_2)
   stateFlags = NW_MAMMOTH_STATE_FLAGS(table)[state[0x408]];
   if ((stateFlags & NW_MAMMOTH_STATE_FLAG_SKIP_HIT_REACT) == 0) {
     if ((stateFlags & NW_MAMMOTH_STATE_FLAG_HEAVY_HIT_REACT) != 0) {
-      hitReactEntries = (ObjHitReactEntry *)(table + 0x14);
+      hitReactEntries = NW_MAMMOTH_HEAVY_HIT_REACT_ENTRIES(table);
     } else {
-      hitReactEntries = (ObjHitReactEntry *)table;
+      hitReactEntries = NW_MAMMOTH_HIT_REACT_ENTRIES(table);
     }
-    state[0x3d4] = objHitReact_update(obj, hitReactEntries, 1, state[0x3d4], (float *)(state + 0x50));
-    if (state[0x3d4] != 0) {
+    NW_MAMMOTH_HIT_REACT_STATE(state) =
+        objHitReact_update(obj,hitReactEntries,1,NW_MAMMOTH_HIT_REACT_STATE(state),
+                           NW_MAMMOTH_HIT_REACT_STEP_SCALE(state));
+    if (NW_MAMMOTH_HIT_REACT_STATE(state) != 0) {
       fn_8003A168(obj, state + 0x40c);
       characterDoEyeAnims(obj, state + 0x40c);
       return;
