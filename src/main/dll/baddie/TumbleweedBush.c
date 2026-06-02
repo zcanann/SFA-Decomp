@@ -858,6 +858,7 @@ s16 TitleMenuItem_getVal(TitleMenuItem* item)
 extern s16 lbl_803DD918;
 extern f32 lbl_803DD91C;
 extern s8 lbl_803DD920;
+extern u8 lbl_803A9DB8[0x18];
 extern f32 lbl_803E21F0;
 extern f32 lbl_803E21F4;
 extern f32 lbl_803E21F8;
@@ -867,6 +868,11 @@ extern void Sfx_PlayFromObject(u32 obj, u32 sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u32 obj, u32 sfxId);
 extern void Sfx_SetObjectSfxVolume(f32 volumeScale, u32 obj, u32 sfxId, u8 volume);
 extern void Music_PlayTrackByIndex(int index);
+extern void drawTexture(void* texture, u8 alpha, f32 x, f32 y, u16 scale);
+extern void* gameTextGetPhrase(int textId, int variant);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextSetWindowStrPos(int windowId, int x, int y);
+extern void gameTextAppendStr(void* str, int windowId);
 
 /* EN v1.0 0x80131598  size: 116b  Toggle enabled bit on item->flags. */
 #pragma scheduling off
@@ -890,6 +896,67 @@ void TitleMenuItem_setEnabled(TitleMenuItem* item, int flag)
 int TitleMenuItem_isEnabled(TitleMenuItem* item)
 {
     return item->flags & TITLE_MENU_FLAG_ENABLED;
+}
+
+/* EN v1.0 0x80131618  size: 808b  Render title menu item. */
+void TitleMenuItem_render(TitleMenuItem* item, int unused, int alpha)
+{
+    void** textures;
+    void* texture;
+    void* phrase;
+    int textureIndex;
+    int drawAlpha;
+    f32 markerX;
+
+    textures = (void**)lbl_803A9DB8;
+
+    if (item->kind == 0) {
+        drawTexture(textures[1], (u8)((((u8)alpha) * 0xb4) >> 8),
+                    (f32)item->x, (f32)item->y, 0x100);
+
+        texture = textures[0];
+        markerX = (f32)item->extra.textId *
+                  ((f32)(item->value - item->minValue) /
+                   (f32)(item->maxValue - item->minValue)) +
+                  (f32)item->x - (f32)(*(u16*)((u8*)texture + 0xa) >> 1);
+        drawTexture(texture, (u8)((((u8)alpha) * 0xff) >> 8),
+                    markerX, (f32)(item->y - 4), 0x100);
+    } else if (item->kind == 1) {
+        if ((item->flags & TITLE_MENU_FLAG_ENABLED) != 0) {
+            if (item->value != 0) {
+                textureIndex = 2;
+            } else {
+                textureIndex = 4;
+            }
+        } else if (item->value != 0) {
+            textureIndex = 3;
+        } else {
+            textureIndex = 5;
+        }
+
+        drawAlpha = (u8)alpha;
+        if ((item->flags & TITLE_MENU_FLAG_A_TOGGLE) != 0) {
+            drawAlpha >>= 1;
+        }
+        drawTexture(textures[textureIndex], (u8)drawAlpha, (f32)item->x, (f32)item->y, 0x100);
+    } else if (item->kind < 3) {
+        if ((item->flags & TITLE_MENU_FLAG_MUSIC_PREVIEW) != 0) {
+            phrase = gameTextGetPhrase(item->extra.window.phraseId, 0);
+        } else {
+            phrase = gameTextGetPhrase(item->extra.window.phraseId, item->value);
+        }
+        gameTextSetColor(0, 0, 0, (u8)((((u8)alpha) * 0x96) >> 8));
+        gameTextSetWindowStrPos(item->extra.window.windowId, 2, 2);
+        gameTextAppendStr(phrase, item->extra.window.windowId);
+        gameTextSetColor(0xff, 0xff, 0xff, (u8)alpha);
+        gameTextSetWindowStrPos(item->extra.window.windowId, 0, 0);
+        gameTextAppendStr(phrase, item->extra.window.windowId);
+    }
+
+    item->frameDelay--;
+    if (item->frameDelay < 0) {
+        item->frameDelay = 0;
+    }
 }
 
 /* EN v1.0 0x80131940  size: 948b  Update title menu item input state. */
