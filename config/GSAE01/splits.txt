@@ -1793,16 +1793,16 @@ main/dll/softbody.c:
 main/dll/waterflowwe.c:
 	.text       start:0x8023503C end:0x802356CC
 
-main/dll/dll_02AF_tree.c:
+main/dll/tree.c:
 	.text       start:0x802356CC end:0x80236154
 
-main/dll/dll_02B0_brokenpipe.c:
+main/dll/brokenpipe.c:
 	.text       start:0x80236154 end:0x80236298
 
-main/dll/dll_02B1_cmbsrc.c:
+main/dll/cmbsrc.c:
 	.text       start:0x80236298 end:0x80237574
 
-main/dll/dll_02B2_dustmotesou.c:
+main/dll/dustmotesou.c:
 	.text       start:0x80237574 end:0x80237808
 
 main/dll/vortex.c:
@@ -1817,31 +1817,31 @@ main/dll/timer.c:
 main/dll/cnthitobjec.c:
 	.text       start:0x80238AB0 end:0x80238FA4
 
-main/dll/dll_02B7_mcupgrade.c:
+main/dll/mcupgrade.c:
 	.text       start:0x80238FA4 end:0x80239114
 
-main/dll/dll_02B8_mcupgradema.c:
+main/dll/mcupgradema.c:
 	.text       start:0x80239114 end:0x802392B8
 
-main/dll/dll_02B9_mcstaffeffe.c:
+main/dll/mcstaffeffe.c:
 	.text       start:0x802392B8 end:0x8023938C
 
-main/dll/dll_02BA_mclightning.c:
+main/dll/mclightning.c:
 	.text       start:0x8023938C end:0x80239858
 
-main/dll/dll_02BB_gf_levelcon.c:
+main/dll/gf_levelcon.c:
 	.text       start:0x80239858 end:0x8023A688
 
-main/dll/dll_02BC_andross.c:
+main/dll/andross.c:
 	.text       start:0x8023A688 end:0x8023F05C
 
-main/dll/dll_02BD_androsshand.c:
+main/dll/androsshand.c:
 	.text       start:0x8023F05C end:0x8023FC8C
 
-main/dll/dll_02BE_androssbrain.c:
+main/dll/androssbrain.c:
 	.text       start:0x8023FC8C end:0x80240010
 
-main/dll/dll_02BF_androssligh.c:
+main/dll/androssligh.c:
 	.text       start:0x80240010 end:0x8024034C
 
 dolphin/base/PPCArch.c:
