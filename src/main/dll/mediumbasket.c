@@ -2002,7 +2002,7 @@ extern f32 fn_80293E80(f32 angle);
 extern f32 sin(f32 angle);
 extern void Matrix_TransformPoint(void *mtx, f32 *x, f32 *y, f32 *z);
 extern void voxmaps_updateRoutePath(void *from, void *to);
-void fn_8015CB0C(int *obj, int *state);
+void mediumbasket_spawnContactObject(int *obj, int *state);
 
 #pragma scheduling off
 #pragma peephole off
@@ -2643,7 +2643,7 @@ void fn_8015CE68(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8015CBD0(int obj, int state)
+void mediumbasket_updateControlEffects(int obj, int state)
 {
     int control = *(int *)(state + 0x40c);
     int paletteIndex;
@@ -2669,7 +2669,7 @@ void fn_8015CBD0(int obj, int state)
     }
     particleArgs = &lbl_8031FE38[paletteIndex * 3];
     if ((*(u8 *)(control + 0x44) & 1) != 0) {
-        fn_8015CB0C((int *)obj, (int *)control);
+        mediumbasket_spawnContactObject((int *)obj, (int *)control);
         *(u8 *)(control + 0x44) &= ~1;
     }
     if ((*(u8 *)(control + 0x44) & 4) != 0 && (*(u8 *)(state + 0x404) & 0x40) == 0) {
@@ -2880,7 +2880,7 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void* Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void* setup, int a, int b, int c, void* d);
 
-void fn_8015CB0C(int* obj, int* state) {
+void mediumbasket_spawnContactObject(int* obj, int* state) {
     void* alloc;
     int* new_obj;
     if ((u8)Obj_IsLoadingLocked() != 0) {
