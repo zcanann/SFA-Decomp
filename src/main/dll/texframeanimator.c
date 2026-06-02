@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_13F.h"
+#include "main/dll/texframeanimator.h"
 
 extern uint GameBit_Get(int eventId);
 extern int FUN_80017a98();

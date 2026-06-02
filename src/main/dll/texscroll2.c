@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_134.h"
+#include "main/dll/texscroll2.h"
 
 #define SFXdoor_unlocked 0x232
 #define SFXdoor_creak 0x233

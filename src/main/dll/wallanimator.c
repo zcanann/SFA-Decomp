@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_13B.h"
+#include "main/dll/wallanimator.h"
 #include "main/objanim.h"
 
 #define SFXsc_attack03 633

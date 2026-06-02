@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_10A.h"
+#include "main/dll/fall_ladders.h"
 
 #define SFXdoor_unlocked 0x232
 #define SFXdoor_creak 0x233

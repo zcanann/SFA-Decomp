@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_131.h"
+#include "main/dll/cf_doorlight.h"
 
 #define SFXdoor_unlocked 562
 #define SFXdoor_creak 563

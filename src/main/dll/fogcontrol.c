@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_140.h"
+#include "main/dll/fogcontrol.h"
 
 
 #pragma peephole off

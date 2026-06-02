@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_141.h"
+#include "main/dll/lightning.h"
 
 #define SFXen_statue_wave 0x56
 #define SFXen_waterblock_wave 0x57

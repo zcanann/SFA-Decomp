@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_13C.h"
+#include "main/dll/xyzanimator.h"
 
 #define SFXsc_objselectyeah22 0xb6
 #define SFXsc_projhitneg22 0xb7

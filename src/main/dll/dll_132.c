@@ -5,7 +5,7 @@
  *
  * Corridor evidence:
  * - exact debug-side neighborhood in the camcontrol -> DIMBoss interval:
- *   dll_13B.c -> dll_13C.c -> dll_132.c -> fire.c -> genprops.c
+ *   wallanimator.c -> xyzanimator.c -> dll_132.c -> fire.c -> genprops.c
  * - debug-side path: dll/dll_132.c
  *
  * Why this stub exists:
@@ -14,4 +14,3 @@
  * - Materializing it keeps that local ownership clue visible until a safe
  *   split claim or better interval projection is justified.
  */
-
