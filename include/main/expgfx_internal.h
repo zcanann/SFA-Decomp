@@ -244,6 +244,8 @@ typedef struct ExpgfxResourceHandle {
   u16 linkGroup;
 } ExpgfxResourceHandle;
 
+#define EXPGFX_RESOURCE_HANDLE_REFCOUNT_OFFSET offsetof(ExpgfxResourceHandle, refCount)
+
 typedef struct ExpgfxQuadTemplateVertex {
   s16 x;
   s16 y;

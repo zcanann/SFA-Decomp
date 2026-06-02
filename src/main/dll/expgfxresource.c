@@ -47,7 +47,7 @@ int expgfx_acquireResourceEntry(int resourceId) {
     for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
         if (*(void **)entryWords != NULL && resourceId == entryWords[2]) {
             texture = *(void **)&gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT];
-            if (texture != NULL && *(u16 *)((char *)texture + 0xe) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
+            if (texture != NULL && *(u16 *)((char *)texture + EXPGFX_RESOURCE_HANDLE_REFCOUNT_OFFSET) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
                 return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
             }
             gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT + 1] = EXPGFX_RESOURCE_EVICTION_RESET;
@@ -60,7 +60,7 @@ int expgfx_acquireResourceEntry(int resourceId) {
         if (*(void **)entryWords == NULL) {
             gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT] = textureLoadAsset(resourceId);
             texture = *(void **)&gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT];
-            if (texture != NULL && *(u16 *)((char *)texture + 0xe) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
+            if (texture != NULL && *(u16 *)((char *)texture + EXPGFX_RESOURCE_HANDLE_REFCOUNT_OFFSET) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
                 gExpgfxTextureFreeInProgress = 1;
                 if (texture != NULL) {
                     textureFree((int)texture);
