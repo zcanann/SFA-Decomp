@@ -12,6 +12,7 @@ extern undefined8 FUN_80017698();
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
+extern int Obj_GetPlayerObject(void);
 extern undefined4 ObjMsg_SendToObject();
 extern void TrickyCurve_updateCooldownTrigger(int obj);
 extern uint FUN_80286838();
@@ -43,8 +44,11 @@ extern int Obj_AllocObjectSetup(int extraSize, int objType);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void Obj_FreeObject(int obj);
 extern void gameTimerStop(void);
+extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void mathFn_80021ac8(s16 *rotation, f32 *outVec);
+extern int *gPartfxInterface;
+extern int *gExpgfxInterface;
 
 extern MapEventInterface **gMapEventInterface;
 extern u32 lbl_803E6450;
@@ -74,6 +78,17 @@ extern f32 lbl_803E6478;
 #define SFXPLAYER_RING_SETUP_MODE 5
 #define SFXPLAYER_EFFECT_RING_ROT_STEP 0x3FFF
 
+typedef struct TrickyCurveBurstFxParams {
+  s16 rotX;
+  s16 rotY;
+  s16 rotZ;
+  s16 pad;
+  f32 scale;
+  f32 xOffset;
+  f32 yOffset;
+  f32 zOffset;
+} TrickyCurveBurstFxParams;
+
 /*
  * --INFO--
  *
@@ -89,135 +104,110 @@ extern f32 lbl_803E6478;
  */
 #pragma scheduling off
 #pragma peephole off
-void TrickyCurve_updateBurstTrigger(void)
+void TrickyCurve_updateBurstTrigger(int obj)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  uint uVar4;
-  int iVar5;
-  int iVar6;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  char cVar7;
-  char cVar8;
-  char cVar9;
-  short *psVar10;
-  undefined8 uVar11;
-  double dVar12;
-  double dVar13;
-  double dVar14;
-  undefined8 in_f5;
-  undefined8 in_f6;
-  undefined8 in_f7;
-  undefined8 in_f8;
-  undefined2 local_38;
-  undefined2 local_36;
-  undefined2 local_34;
-  float local_30;
-  float local_2c;
-  float local_28;
-  float local_24;
-  undefined4 local_20;
-  uint uStack_1c;
-  
-  uVar4 = FUN_8028683c();
-  psVar10 = *(short **)(uVar4 + 0xb8);
-  iVar5 = FUN_80017a98();
-  iVar6 = 0;
-  cVar9 = '\0';
-  cVar8 = '\0';
-  cVar7 = '\0';
-  fVar1 = *(float *)(iVar5 + 0xc) - *(float *)(uVar4 + 0xc);
-  dVar12 = (double)fVar1;
-  fVar2 = *(float *)(iVar5 + 0x10) - *(float *)(uVar4 + 0x10);
-  dVar14 = (double)fVar2;
-  fVar3 = *(float *)(iVar5 + 0x14) - *(float *)(uVar4 + 0x14);
-  dVar13 = (double)fVar3;
-  gTrickyCurveBurstCounter = gTrickyCurveBurstCounter + 1;
-  if (dVar12 <= (double)lbl_803E70D0) {
-    uStack_1c = (int)*psVar10 ^ 0x80000000;
-    local_20 = 0x43300000;
-    if (-(double)(f32)(s32)uStack_1c < dVar12) {
-      iVar6 = 1;
-      cVar9 = '\x01';
+  u8 *state;
+  int player;
+  f32 dx;
+  f32 dz;
+  f32 dy;
+  u8 insideCount;
+  u8 xSide;
+  u8 ySide;
+  u8 zSide;
+  TrickyCurveBurstFxParams fxParams;
+  int burstParticles;
+
+  state = *(u8 **)(obj + 0xb8);
+  player = Obj_GetPlayerObject();
+  insideCount = 0;
+  xSide = 0;
+  ySide = 0;
+  zSide = 0;
+  dx = *(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc);
+  dy = *(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10);
+  dz = *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14);
+
+  if ((*(s16 *)(state + 8) != -1) && (GameBit_Get(*(s16 *)(state + 8)) != 0)) {
+    return;
+  }
+
+  if (GameBit_Get(*(s16 *)(state + 0xa)) != 0) {
+    GameBit_Set(*(s16 *)(state + 0xa), 0);
+  }
+
+  if (dx <= lbl_803E70D0) {
+    if (dx > -(f32)*(s16 *)state) {
+      insideCount = 1;
+      xSide = 1;
     }
   }
-  if ((double)lbl_803E70D0 < dVar12) {
-    uStack_1c = (int)*psVar10 ^ 0x80000000;
-    local_20 = 0x43300000;
-    if (dVar12 < (double)(f32)(s32)uStack_1c) {
-      iVar6 = iVar6 + 1;
-      cVar9 = cVar9 + -1;
+  if (dx > lbl_803E70D0) {
+    if (dx < (f32)*(s16 *)state) {
+      insideCount++;
+      xSide--;
     }
   }
-  if (dVar13 <= (double)lbl_803E70D0) {
-    uStack_1c = (int)psVar10[1] ^ 0x80000000;
-    local_20 = 0x43300000;
-    if (-(double)(f32)(s32)uStack_1c < dVar13) {
-      iVar6 = iVar6 + 1;
-      cVar7 = '\x01';
+  if (dz <= lbl_803E70D0) {
+    if (dz > -(f32)*(s16 *)(state + 2)) {
+      insideCount++;
+      zSide = 1;
     }
   }
-  if ((double)lbl_803E70D0 < dVar13) {
-    uStack_1c = (int)psVar10[1] ^ 0x80000000;
-    local_20 = 0x43300000;
-    if (dVar13 < (double)(f32)(s32)uStack_1c) {
-      iVar6 = iVar6 + 1;
-      cVar7 = cVar7 + -1;
+  if (dz > lbl_803E70D0) {
+    if (dz < (f32)*(s16 *)(state + 2)) {
+      insideCount++;
+      zSide--;
     }
   }
-  if (dVar14 <= (double)lbl_803E70D0) {
-    uStack_1c = (int)psVar10[2] ^ 0x80000000;
-    local_20 = 0x43300000;
-    if (-(double)(f32)(s32)uStack_1c < dVar14) {
-      iVar6 = iVar6 + 1;
-      cVar8 = '\x01';
+  if (dy <= lbl_803E70D0) {
+    if (dy > -(f32)*(s16 *)(state + 4)) {
+      insideCount++;
+      ySide = 1;
     }
   }
-  if ((double)lbl_803E70D0 < dVar14) {
-    uStack_1c = (int)psVar10[2] ^ 0x80000000;
-    local_20 = 0x43300000;
-    if (dVar14 < (double)(f32)(s32)uStack_1c) {
-      iVar6 = iVar6 + 1;
-      cVar8 = cVar8 + -1;
+  if (dy > lbl_803E70D0) {
+    if (dy < (f32)*(s16 *)(state + 4)) {
+      insideCount++;
+      ySide--;
     }
   }
-  if (iVar6 == 3) {
-    local_30 = lbl_803E70E0;
-    local_34 = 0;
-    local_36 = 0;
-    local_38 = 0;
-    if (cVar9 != *(char *)(psVar10 + 8)) {
-      local_38 = 0x3fff;
+
+  if (insideCount == 3) {
+    fxParams.xOffset = dx;
+    fxParams.yOffset = dy;
+    fxParams.zOffset = dz;
+    fxParams.scale = lbl_803E70E0;
+    fxParams.rotZ = 0;
+    fxParams.rotY = 0;
+    fxParams.rotX = 0;
+    if (xSide != state[0x10]) {
+      fxParams.rotX = 0x3fff;
     }
-    local_2c = fVar1;
-    local_28 = fVar2;
-    local_24 = fVar3;
-    iVar6 = FUN_80294d6c(iVar5);
-    if (iVar6 == 0x1d7) {
-      if (0x14 < gTrickyCurveBurstCounter) {
-        gTrickyCurveBurstCounter = 0;
-        FUN_80017698(0x468,1);
-        FUN_80006824(uVar4,SFXfoot_water_walk_3);
-      }
-      (**(code **)(*DAT_803dd708 + 8))(iVar5,0x397,0,2,0xffffffff,0);
+
+    if (GameBit_Get(0x1d9) != 0) {
+      GameBit_Set(0x468, 1);
+      ObjMsg_SendToObject(player, 0x60004, obj, 0);
+      (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(obj, 0x5ed, &fxParams, 2, -1, 0);
+      burstParticles = 9;
+      do {
+        (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(obj, 0x5fd, &fxParams, 2, -1, 0);
+      } while (burstParticles-- != 0);
+    } else {
+      ObjMsg_SendToObject(player, 0x60004, obj, 1);
+      (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(obj, 0x5ed, &fxParams, 2, -1, 0);
+      burstParticles = 9;
+      do {
+        (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 8))(obj, 0x5fd, &fxParams, 2, -1, 0);
+      } while (burstParticles-- != 0);
     }
-    else {
-      uVar11 = FUN_80017698(0x468,1);
-      ObjMsg_SendToObject(uVar11,dVar12,dVar13,dVar14,in_f5,in_f6,in_f7,in_f8,iVar5,0x60004,uVar4,2,in_r7,
-                   in_r8,in_r9,in_r10);
-      (**(code **)(*DAT_803dd708 + 8))(uVar4,0x399,&local_38,2,0xffffffff,0);
-      FUN_80006824(uVar4,SFXfoot_water_walk_3);
-    }
+    GameBit_Set(*(s16 *)(state + 0xa), 1);
+    Sfx_PlayFromObject(obj, SFXfoot_water_walk_3);
   }
-  *(char *)(psVar10 + 8) = cVar9;
-  *(char *)((int)psVar10 + 0x11) = cVar8;
-  *(char *)(psVar10 + 9) = cVar7;
-  FUN_80286888();
-  return;
+
+  state[0x10] = xSide;
+  state[0x11] = ySide;
+  state[0x12] = zSide;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -510,7 +500,7 @@ void TrickyCurve_updateState(undefined8 param_1,undefined8 param_2,undefined8 pa
     TrickyCurve_updateBoundsTrigger(param_9);
   }
   else if (cVar1 == '\x02') {
-    TrickyCurve_updateBurstTrigger();
+    TrickyCurve_updateBurstTrigger(param_9);
   }
   else if (cVar1 == '\x03') {
     TrickyCurve_updateCooldownTrigger(param_9);
@@ -828,7 +818,7 @@ void TrickyCurve_update(int *obj) {
     u8 *inner = *(u8 **)((char *)obj + 0xb8);
     u32 state = inner[0xe];
     if (state == 0) {
-        TrickyCurve_updateBurstTrigger();
+        TrickyCurve_updateBurstTrigger((int)obj);
     } else if (state == 1) {
         TrickyCurve_updateCooldownTrigger((int)obj);
     } else if (state == 2) {
@@ -838,7 +828,6 @@ void TrickyCurve_update(int *obj) {
     }
 }
 
-extern int *gExpgfxInterface;
 void TrickyCurve_free(int obj) {
     ((void (*)(int))((void**)*gExpgfxInterface)[6])(obj);
 }
