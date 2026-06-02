@@ -23,6 +23,9 @@ extern f32 lbl_803E3C8C;
 extern f32 lbl_803E3CE0;
 extern f32 lbl_803E3CF8;
 
+extern void** gPlayerInterface;
+extern void GameBit_Set(int bit, int value);
+
 /*
  * --INFO--
  *
@@ -89,6 +92,33 @@ void FUN_80167764(undefined8 param_1,double param_2,double param_3,undefined8 pa
   *(float *)(iVar7 + 0x40) = fVar1;
   return;
 }
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801678E4(int obj, u8 *state)
+{
+    if ((s8)state[0x27b] != 0) {
+        ((void (*)(int, u8 *, int))((void **)*gPlayerInterface)[5])(obj, state, 1);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8016792C(int obj, u8 *state)
+{
+    if ((s8)state[0x27b] != 0) {
+        u8 *extra = *(u8 **)(obj + 0xb8);
+        extra[0x405] = 0;
+        GameBit_Set(*(s16 *)(extra + 0x3f4), 0);
+        GameBit_Set(*(s16 *)(extra + 0x3f2), 1);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -279,7 +309,6 @@ void fn_80167B60(int obj, int p)
 extern f32 lbl_803E3060;
 extern f32 lbl_803E3080;
 extern f32 timeDelta;
-extern void** gPlayerInterface;
 
 #pragma scheduling off
 #pragma peephole off
