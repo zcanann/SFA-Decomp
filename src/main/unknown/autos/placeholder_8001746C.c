@@ -11150,9 +11150,9 @@ void ObjModel_InitRenderBuffers(void) {
         void *cache = getCache();
         DCInvalidateRange(cache, 0x4000);
         LCEnable();
-        ObjModel_InitScratchBuffers();
-        setGQR6_2(7, 4, 7, 4);
     }
+    ObjModel_InitScratchBuffers();
+    setGQR6_2(7, 4, 7, 4);
 }
 
 typedef struct {
