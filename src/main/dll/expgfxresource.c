@@ -2,7 +2,15 @@
 #include "main/dll/fx_800944A0_shared.h"
 #include "main/expgfx_internal.h"
 
+/*
+ * expgfx_acquireResourceEntry is still written through word indexing because
+ * that shape is much closer to the target codegen. These indices mirror
+ * ExpgfxResourceEntry and keep the resource-table roles explicit.
+ */
 #define EXPGFX_RESOURCE_ENTRY_WORD_COUNT (sizeof(ExpgfxResourceEntry) / sizeof(int))
+#define EXPGFX_RESOURCE_ENTRY_RESOURCE_WORD 0
+#define EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD 1
+#define EXPGFX_RESOURCE_ENTRY_RESOURCE_ID_WORD 2
 
 #pragma scheduling off
 #pragma peephole off
@@ -45,12 +53,15 @@ int expgfx_acquireResourceEntry(int resourceId) {
     resourceTableWords = gExpgfxRuntimeData;
     entryWords = resourceTableWords;
     for (; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        if (*(void **)entryWords != NULL && resourceId == entryWords[2]) {
+        if (*(void **)entryWords != NULL &&
+            resourceId == entryWords[EXPGFX_RESOURCE_ENTRY_RESOURCE_ID_WORD]) {
             texture = *(void **)&gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT];
             if (texture != NULL && *(u16 *)((char *)texture + EXPGFX_RESOURCE_HANDLE_REFCOUNT_OFFSET) >= EXPGFX_RESOURCE_TEXTURE_REFCOUNT_LIMIT) {
                 return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
             }
-            gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT + 1] = EXPGFX_RESOURCE_EVICTION_RESET;
+            gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT +
+                               EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD] =
+                EXPGFX_RESOURCE_EVICTION_RESET;
             return (s16)i;
         }
         entryWords += EXPGFX_RESOURCE_ENTRY_WORD_COUNT;
@@ -70,8 +81,11 @@ int expgfx_acquireResourceEntry(int resourceId) {
                 return EXPGFX_RESOURCE_ACQUIRE_TEXTURE_BUSY;
             }
             if (texture != NULL) {
-                gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT + 1] = EXPGFX_RESOURCE_EVICTION_RESET;
-                gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT + 2] = resourceId;
+                gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT +
+                                   EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD] =
+                    EXPGFX_RESOURCE_EVICTION_RESET;
+                gExpgfxRuntimeData[i * EXPGFX_RESOURCE_ENTRY_WORD_COUNT +
+                                   EXPGFX_RESOURCE_ENTRY_RESOURCE_ID_WORD] = resourceId;
                 return (s16)i;
             }
             return EXPGFX_RESOURCE_ACQUIRE_LOAD_FAILED;
@@ -85,8 +99,8 @@ int expgfx_acquireResourceEntry(int resourceId) {
     minIndex = 0;
     entryWords = resourceTableWords;
     for (i = 0; i < EXPGFX_RESOURCE_TABLE_COUNT; i++) {
-        if (entryWords[1] < minEvictionScore) {
-            minEvictionScore = entryWords[1];
+        if (entryWords[EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD] < minEvictionScore) {
+            minEvictionScore = entryWords[EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD];
             minIndex = i;
         }
         entryWords += EXPGFX_RESOURCE_ENTRY_WORD_COUNT;
@@ -100,8 +114,11 @@ int expgfx_acquireResourceEntry(int resourceId) {
     gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT] = 0;
     gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT] = textureLoadAsset(resourceId);
     if (*(void **)&gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT] != NULL) {
-        gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT + 1] = EXPGFX_RESOURCE_EVICTION_RESET;
-        gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT + 2] = resourceId;
+        gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT +
+                           EXPGFX_RESOURCE_ENTRY_EVICTION_SCORE_WORD] =
+            EXPGFX_RESOURCE_EVICTION_RESET;
+        gExpgfxRuntimeData[minIndex * EXPGFX_RESOURCE_ENTRY_WORD_COUNT +
+                           EXPGFX_RESOURCE_ENTRY_RESOURCE_ID_WORD] = resourceId;
         return (s16)minIndex;
     }
     return EXPGFX_RESOURCE_ACQUIRE_RELOAD_FAILED;
