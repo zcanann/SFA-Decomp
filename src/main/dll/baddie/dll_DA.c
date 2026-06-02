@@ -55,6 +55,13 @@ extern s8 lbl_803DD911;
 extern s8 linkSelected;
 extern f64 lbl_803E21E0;
 
+#define LINK_FLAG_DRAW_SLOTS       0x0004
+#define LINK_FLAG_DRAW_BLACK_SHADOW 0x0100
+#define LINK_FLAG_DIM_OPACITY      0x0800
+#define LINK_FLAG_FADE_TIMER_ONLY  0x1040
+#define LINK_FLAG_HIDDEN           0x4000
+#define LINK_FLAG_SELECTED_COLOR   0x0080
+
 /*
  * --INFO--
  *
@@ -80,20 +87,20 @@ void Link_render(void)
     int red;
     int green;
     int blue;
-    int textId;
+    u16 textId;
     int x;
     int y;
-    u16 flags;
+    s8 timer;
 
     item = lbl_803A9458;
     for (i = 0; i < lbl_803DD911; i++) {
         drawItem = item;
-        flags = item->flags;
 
-        if ((flags & 0x4000) == 0) {
-            if ((flags & 0x1040) != 0) {
-                item->timer--;
-                if (item->timer < 0) {
+        if ((item->flags & LINK_FLAG_HIDDEN) == 0) {
+            if ((item->flags & LINK_FLAG_FADE_TIMER_ONLY) != 0) {
+                timer = item->timer - 1;
+                item->timer = timer;
+                if (timer < 0) {
                     item->timer = 0;
                 }
             } else {
@@ -101,8 +108,7 @@ void Link_render(void)
                     drawItem = &lbl_803A9458[item->state];
                 }
 
-                flags = drawItem->flags;
-                if ((flags & 4) != 0) {
+                if ((drawItem->flags & LINK_FLAG_DRAW_SLOTS) != 0) {
                     slotIndex = 0;
                     x = drawItem->x;
                     y = drawItem->y;
@@ -114,7 +120,7 @@ void Link_render(void)
                     }
                 }
 
-                if ((flags & 0x800) != 0) {
+                if ((drawItem->flags & LINK_FLAG_DIM_OPACITY) != 0) {
                     opacity = linkItemOpacity * 200 >> 8;
                 } else {
                     opacity = linkItemOpacity;
@@ -124,21 +130,21 @@ void Link_render(void)
                 if (linkSelected == i) {
                     alpha = opacity;
                 } else {
-                    alpha = (((u32)opacity >> 31) + opacity) >> 1;
+                    alpha = (((int)((u32)opacity >> 31)) + opacity) >> 1;
                 }
                 *(u8 *)((char *)gameTextGetBox(drawItem->boxId) + 0x1e) = (u8)alpha;
 
-                if ((flags & 0x100) != 0) {
+                if ((drawItem->flags & LINK_FLAG_DRAW_BLACK_SHADOW) != 0) {
                     gameTextSetColor(0, 0, 0, (u8)(((linkCount_803dd90e + 1) * linkItemOpacity) >> 8));
                     gameTextFn_80016810(drawItem->textId, 2, 2);
                 }
 
-                if ((flags & 0x80) != 0) {
+                if ((drawItem->flags & LINK_FLAG_SELECTED_COLOR) != 0) {
                     if (linkSelected == i) {
                         red = lbl_803DD904 + ((linkCount_803dd90e * (lbl_803DD8FE - lbl_803DD904)) >> 8);
                         green = lbl_803DD902 + ((linkCount_803dd90e * (lbl_803DD8FC - lbl_803DD902)) >> 8);
                         blue = lbl_803DD900 + ((linkCount_803dd90e * (lbl_803DD8FA - lbl_803DD900)) >> 8);
-                        if ((flags & 0x800) != 0) {
+                        if ((drawItem->flags & LINK_FLAG_DIM_OPACITY) != 0) {
                             alpha = linkItemOpacity * 200 >> 8;
                         } else {
                             alpha = linkItemOpacity;
@@ -146,7 +152,7 @@ void Link_render(void)
                         gameTextSetColor((u8)red, (u8)green, (u8)blue, (u8)alpha);
                     } else {
                         gameTextSetColor((u8)lbl_803DD904, (u8)lbl_803DD902, (u8)lbl_803DD900,
-                                         (u8)((((u32)opacity >> 31) + opacity) >> 1));
+                                         (u8)((((int)((u32)opacity >> 31)) + opacity) >> 1));
                     }
                 } else {
                     gameTextSetColor(0xff, 0xff, 0xff, (u8)opacity);
@@ -160,22 +166,26 @@ void Link_render(void)
                 }
 
                 if (drawItem->texture != NULL) {
-                    if ((flags & 4) != 0) {
-                        x = drawItem->x + 11;
+                    if ((drawItem->flags & LINK_FLAG_DRAW_SLOTS) != 0) {
+                        if ((drawItem->flags & LINK_FLAG_DIM_OPACITY) != 0) {
+                            alpha = linkItemOpacity * 200 >> 8;
+                        } else {
+                            alpha = linkItemOpacity;
+                        }
+                        drawTexture(drawItem->texture, (u8)alpha, (f32)(drawItem->x + 11), (f32)drawItem->y, 0x100);
                     } else {
-                        x = drawItem->x;
+                        if ((drawItem->flags & LINK_FLAG_DIM_OPACITY) != 0) {
+                            alpha = linkItemOpacity * 200 >> 8;
+                        } else {
+                            alpha = linkItemOpacity;
+                        }
+                        drawTexture(drawItem->texture, (u8)alpha, (f32)drawItem->x, (f32)drawItem->y, 0x100);
                     }
-                    y = drawItem->y;
-                    if ((flags & 0x800) != 0) {
-                        alpha = linkItemOpacity * 200 >> 8;
-                    } else {
-                        alpha = linkItemOpacity;
-                    }
-                    drawTexture(drawItem->texture, (u8)alpha, (f32)x, (f32)y, 0x100);
                 }
 
-                drawItem->timer--;
-                if (drawItem->timer < 0) {
+                timer = drawItem->timer - 1;
+                drawItem->timer = timer;
+                if (timer < 0) {
                     drawItem->timer = 0;
                 }
             }
