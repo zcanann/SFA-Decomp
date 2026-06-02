@@ -9,7 +9,7 @@ void dll_115_init(short *obj,int mapData);
 void dll_115_release_nop(void);
 void dll_115_initialise_nop(void);
 int wm_column_getExtraSize(void);
-int wm_column_func08(void);
+int wm_column_getObjectTypeId(void);
 void wm_column_free(int obj);
 void wm_column_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void wm_column_hitDetect(void);

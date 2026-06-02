@@ -10,7 +10,7 @@ void gpsh_shrine_release(void);
 void gpsh_shrine_initialise(void);
 
 int gpsh_objcreator_getExtraSize(void);
-int gpsh_objcreator_func08(void);
+int gpsh_objcreator_getObjectTypeId(void);
 void gpsh_objcreator_free(void);
 void gpsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void gpsh_objcreator_hitDetect(void);

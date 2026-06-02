@@ -19,7 +19,7 @@ void FUN_801caeb0(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void dll_197_release(void);
 void dll_197_initialise(void);
 int dll_199_getExtraSize(void);
-int dll_199_func08(void);
+int dll_199_getObjectTypeId(void);
 void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_199_hitDetect(void);
 

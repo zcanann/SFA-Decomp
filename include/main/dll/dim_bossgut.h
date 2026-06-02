@@ -9,7 +9,7 @@ void enemymushroom_update
 void enemymushroom_release(void);
 void enemymushroom_initialise(void);
 int bombplant_getExtraSize(void);
-int bombplant_func08(void);
+int bombplant_getObjectTypeId(void);
 void bombplant_free(void);
 void bombplant_hitDetect(void);
 

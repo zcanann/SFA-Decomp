@@ -59,7 +59,7 @@ int firepipe_setLinkedUpdateFlag(FirePipeObject *obj);
 void firepipe_updateState(FirePipeObject *obj);
 int firepipe_getExtraSize(void);
 undefined4 firepipe_stateCallback(FirePipeObject *obj);
-int firepipe_func08(void);
+int firepipe_getObjectTypeId(void);
 void firepipe_free(FirePipeObject *obj);
 void firepipe_render(FirePipeObject *obj, int param_2, int param_3, int param_4, int param_5, char param_6);
 void firepipe_update(FirePipeObject *obj);

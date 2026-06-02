@@ -14,7 +14,7 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  uint param_9,undefined4 param_10,int *param_11,undefined4 param_12,
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 int MagicPlant_getExtraSize(void);
-u32 MagicPlant_func08(int *obj);
+u32 MagicPlant_getObjectTypeId(int *obj);
 void MagicPlant_free(int obj, int param_2);
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void MagicPlant_update(int obj);

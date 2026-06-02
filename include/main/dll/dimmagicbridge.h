@@ -8,7 +8,7 @@ void dll_199_update(undefined8 param_1,double param_2,undefined8 param_3,undefin
 void dll_199_release(void);
 void dll_199_initialise(void);
 int dll_19A_getExtraSize(void);
-int dll_19A_func08(void);
+int dll_19A_getObjectTypeId(void);
 void dll_19A_free(void);
 void dll_19A_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_19A_hitDetect(void);
