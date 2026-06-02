@@ -10,7 +10,7 @@ void FUN_8018e0a8(void);
 void cfccrate_release(void);
 void cfccrate_initialise(void);
 int fxemit_getExtraSize(void);
-int fxemit_func08(void);
+int fxemit_getObjectTypeId(void);
 void fxemit_free(int obj);
 void fxemit_hitDetect(void);
 

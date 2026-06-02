@@ -59,7 +59,7 @@ void FUN_801f2ac8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 void FUN_801f2b94(short *param_1);
 
 int pressureswitch_getExtraSize(void);
-int pressureswitch_func08(void);
+int pressureswitch_getObjectTypeId(void);
 void pressureswitch_free(void);
 void pressureswitch_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void pressureswitch_hitDetect(void);
@@ -69,7 +69,7 @@ void pressureswitch_release(void);
 void pressureswitch_initialise(void);
 
 int wmlasertarget_getExtraSize(void);
-int wmlasertarget_func08(void);
+int wmlasertarget_getObjectTypeId(void);
 void wmlasertarget_free(void);
 void wmlasertarget_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void wmlasertarget_hitDetect(void);

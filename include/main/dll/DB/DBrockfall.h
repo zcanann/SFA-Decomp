@@ -32,7 +32,7 @@ void FEseqobject_hitDetect(void);
 void FEseqobject_release(void);
 void FEseqobject_initialise(void);
 int FElevControl_getExtraSize(void);
-int FElevControl_func08(void);
+int FElevControl_getObjectTypeId(void);
 void FElevControl_free(void);
 void FElevControl_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void FElevControl_hitDetect(void);

@@ -22,7 +22,7 @@ void LanternFireFly_func0B(undefined2 *param_1,int param_2);
 u8 LanternFireFly_modelMtxFn(int *obj);
 
 int FireFlyLantern_getExtraSize(void);
-int FireFlyLantern_func08(void);
+int FireFlyLantern_getObjectTypeId(void);
 void FireFlyLantern_free(int obj);
 void FireFlyLantern_render(void);
 void FireFlyLantern_update(int obj);
@@ -30,7 +30,7 @@ void FireFlyLantern_init(int param_1,int param_2);
 int fn_8018728C(int obj, int unused, int events);
 
 int flammablevine_getExtraSize(void);
-int flammablevine_func08(void);
+int flammablevine_getObjectTypeId(void);
 void flammablevine_free(int obj);
 void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void flammablevine_hitDetect(void);

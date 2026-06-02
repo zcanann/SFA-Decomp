@@ -62,7 +62,7 @@ void FUN_80189a90(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_80189e94(int param_1,int param_2);
 
 int flammablevine_getExtraSize(void);
-int flammablevine_func08(void);
+int flammablevine_getObjectTypeId(void);
 void flammablevine_free(int obj);
 void flammablevine_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void flammablevine_hitDetect(int obj);

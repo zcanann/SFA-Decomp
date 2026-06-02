@@ -28,7 +28,7 @@ void Dummy108_release(void);
 void Dummy108_initialise(void);
 
 int portalspelldoor_getExtraSize(void);
-int portalspelldoor_func08(void);
+int portalspelldoor_getObjectTypeId(void);
 void portalspelldoor_free(void);
 void portalspelldoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void portalspelldoor_hitDetect(void);
