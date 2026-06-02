@@ -13,6 +13,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
 int blasted_getExtraSize(void);
 int blasted_getObjectTypeId(void);
 void blasted_free(void);
+void blasted_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 void blasted_hitDetect(void);
 
 #endif /* MAIN_DLL_DR_CANNONTARGETCONTROL_H_ */

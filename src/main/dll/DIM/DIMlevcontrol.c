@@ -476,6 +476,7 @@ void dimcannon_initialise(void) {}
 
 extern void objRenderFn_8003b8f4(f32 x);
 extern f32 lbl_803E48E8;
+extern f32 lbl_803E48F8;
 
 #pragma scheduling off
 #pragma peephole off
@@ -500,6 +501,18 @@ void dimcannon_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma scheduling reset
 void dimlavasmash_free(void) {}
 void dimlavasmash_hitDetect(void) {}
+
+#pragma scheduling off
+#pragma peephole off
+void dimlavasmash_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    if (state[2] == 2 && visible != 0) {
+        objRenderFn_8003b8f4(lbl_803E48F8);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off

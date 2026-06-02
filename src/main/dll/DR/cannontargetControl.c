@@ -95,6 +95,8 @@ extern void Vec3_ReflectAgainstNormal(void *normal, void *velocity, void *out);
 extern f32 PSVECMag(f32 *v);
 extern int gunpowderbarrel_setPlayerHeldState(int p1, int p2);
 extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void objRenderFn_8003b8f4(f32 alpha);
+extern f32 lbl_803E4348;
 
 /*
  * --INFO--
@@ -360,6 +362,18 @@ void blasted_free(void)
 void blasted_hitDetect(void)
 {
 }
+
+#pragma scheduling off
+#pragma peephole off
+void blasted_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+  int *state = *(int **)((char *)obj + 0xb8);
+  if (visible != 0 && state[3] == 0) {
+    objRenderFn_8003b8f4(lbl_803E4348);
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
