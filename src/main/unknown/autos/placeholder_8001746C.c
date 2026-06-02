@@ -10313,8 +10313,8 @@ void ObjModel_RelocateAnimData(u8 *m, u8 *dst) {
 #pragma dont_inline reset
 
 void ObjModel_LoadRenderOpTextures(u8 *model, int arg) {
-    u8 *hdr = *(u8 **)model;
     int i;
+    u8 *hdr = *(u8 **)model;
     if (*(u16 *)(model + 0x18) & 0x40) {
         return;
     }
