@@ -6,7 +6,7 @@
 typedef struct SCTotemPuzzleObject SCTotemPuzzleObject;
 typedef struct SCTotemPuzzleState SCTotemPuzzleState;
 
-int fn_801DD1A8(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state);
+int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state);
 int sc_totempuzzle_getExtraSize(void);
 int sc_totempuzzle_getObjectTypeId(void);
 void sc_totempuzzle_free(void);

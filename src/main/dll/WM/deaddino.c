@@ -53,7 +53,7 @@ extern f32 lbl_803E5608;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801DD1A8(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state)
+int sc_totempuzzle_checkSolvedSequence(SCTotemPuzzleObject *obj, SCTotemPuzzleState *state)
 {
     SCTotemPuzzleParticleBox particleBox;
     int objectIndex;

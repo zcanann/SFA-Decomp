@@ -67,7 +67,7 @@ extern u8 *Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(u8 *setup, int mode, int mapLayer, int objIndex, int parent);
 extern void ObjHits_DisableObject(ScTotemBondObject *obj);
 extern void ObjHits_EnableObject(ScTotemBondObject *obj);
-extern u8 fn_801DD1A8(ScTotemPuzzleObject *obj, ScTotemPuzzleState *state);
+extern u8 sc_totempuzzle_checkSolvedSequence(ScTotemPuzzleObject *obj, ScTotemPuzzleState *state);
 extern uint GameBit_Get(int eventId);
 extern int GameBit_Set(int eventId, int value);
 extern f32 fn_80293E80(f32 angle);
@@ -161,7 +161,7 @@ void sc_totempuzzle_update(ScTotemPuzzleObject *obj)
     state->flags ^= SC_TOTEMPUZZLE_STATE_READY_FLAG;
     if ((state->flags & SC_TOTEMPUZZLE_STATE_READY_FLAG) != 0) {
       if (state->pulseTimer != lbl_803E55F4) {
-        GameBit_Set(0x639, fn_801DD1A8(obj, state));
+        GameBit_Set(0x639, sc_totempuzzle_checkSolvedSequence(obj, state));
       }
       objects = ObjList_GetObjects(&startIndex, &objectCount);
       while (startIndex < objectCount) {
