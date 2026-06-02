@@ -3,6 +3,7 @@
 
 #include "global.h"
 #include "ghidra_import.h"
+#include "main/objanim.h"
 
 typedef struct ObjHitReactState ObjHitReactState;
 typedef struct ObjHitReactMoveEntry ObjHitReactMoveEntry;

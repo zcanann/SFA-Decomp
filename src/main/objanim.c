@@ -555,7 +555,7 @@ void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordI
     return;
   }
   stateWord = value;
-  if (stateIndex != 0) {
+  if (stateIndex != OBJANIM_STATE_INDEX_CURRENT) {
     state = bank->activeState;
   }
   else {

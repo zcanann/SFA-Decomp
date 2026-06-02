@@ -10,6 +10,12 @@ typedef struct ObjAnimEventList ObjAnimEventList;
 
 extern char gObjAnimSetBlendMoveMissingAnimWarning[];
 
+#define OBJANIM_STATE_INDEX_CURRENT 0
+#define OBJANIM_STATE_INDEX_ACTIVE 1
+#define OBJANIM_STATE_WORD_EVENT_COUNTDOWN 0
+#define OBJANIM_STATE_WORD_EVENT_STATE 1
+#define OBJANIM_STATE_WORD_PREV_EVENT_STATE 2
+
 void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimState *state,
                           uint moveId,s16 eventState);
 void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState);
