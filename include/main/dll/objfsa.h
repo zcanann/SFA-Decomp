@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_800d8f90(ushort *param_1,int param_2,uint param_3);
+void player_setScale(ushort *param_1,int param_2,uint param_3);
 void FUN_800d9090(double param_1,double param_2,short *param_3,int param_4);
 void FUN_800d90f8(double param_1,double param_2,double param_3,short *param_4,int param_5);
 void FUN_800d91b0(double param_1,short *param_2,uint *param_3,uint param_4);

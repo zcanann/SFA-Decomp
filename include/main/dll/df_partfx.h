@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void FUN_800d6660(int param_1);
+void Checkpoint_func07(int param_1);
 void FUN_800d66e4(void);
 void FUN_800d6b38(undefined4 param_1,undefined4 param_2,int param_3);
 void FUN_800d7304(void);

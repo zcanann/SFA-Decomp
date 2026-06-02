@@ -3,9 +3,8 @@
 
 #include "ghidra_import.h"
 
-undefined4
-FUN_800c8008(int param_1,undefined4 param_2,undefined2 *param_3,uint param_4,undefined param_5,
-            int param_6);
+int Effect16_func04(void *param_1, int param_2, s16 *param_3, u32 param_4, u8 param_5,
+                    int param_6);
 void FUN_800c8010(void);
 void FUN_800c8104(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint param_4,
                  undefined param_5,float *param_6);
