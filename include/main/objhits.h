@@ -1,6 +1,7 @@
 #ifndef MAIN_OBJHITS_H_
 #define MAIN_OBJHITS_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 
 #define OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT 5
@@ -15,6 +16,9 @@
 #define OBJHITS_SHAPE_SPHERE 0x01
 #define OBJHITS_SHAPE_CAPSULE 0x02
 #define OBJHITS_SHAPE_SKELETON 0x20
+#define OBJHITS_SHAPE_RESET_MODE_MASK 0x30
+#define OBJHITS_ACTIVE_HITBOX_MODE 1
+#define OBJHITS_RESET_HITBOX_MODE 2
 #define OBJHITS_PRIORITY_WORK_SLOT_COUNT 0x32
 #define OBJHITS_PRIORITY_WORK_SLOT_SIZE 0x3c
 #define OBJHITS_PRIORITY_WORK_SLOT_ACTIVE_OFFSET 0x00
@@ -179,7 +183,8 @@ typedef struct ObjHitsPriorityState {
   f32 hitPosZ[OBJHITS_PRIORITY_HIT_COUNT];
   u8 contactHitVolume;
   u8 contactFlags;
-  u8 padAE[0xB0 - 0xAE];
+  u8 activeHitboxMode;
+  u8 resetHitboxMode;
   u8 stateIndex;
   u8 padB1[0xB4 - 0xB1];
   u8 sourceMask;
@@ -206,6 +211,10 @@ typedef struct ObjHitsSkeletonHit {
   s32 pointIndexA;
   s32 pointIndexB;
 } ObjHitsSkeletonHit;
+
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, activeHitboxMode) == 0xAE);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, resetHitboxMode) == 0xAF);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, stateIndex) == 0xB0);
 
 void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double param_3,
                                    undefined4 param_4,undefined4 param_5,int *param_6,

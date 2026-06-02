@@ -977,9 +977,9 @@ int ObjHits_AllocObjectState(int param_1,uint param_2)
   *(uint *)(param_1 + 0x54) = uVar1;
   hitState = *(ObjHitsPriorityState **)(param_1 + 0x54);
   ObjHits_RefreshObjectState(param_1);
-  *(undefined *)((int)hitState + 0xae) = 1;
-  if ((hitState->shapeFlags & 0x30) != 0) {
-    *(undefined *)((int)hitState + 0xaf) = 2;
+  hitState->activeHitboxMode = OBJHITS_ACTIVE_HITBOX_MODE;
+  if ((hitState->shapeFlags & OBJHITS_SHAPE_RESET_MODE_MASK) != 0) {
+    hitState->resetHitboxMode = OBJHITS_RESET_HITBOX_MODE;
   }
   return uVar1 + 0xb8;
 }
