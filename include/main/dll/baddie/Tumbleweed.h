@@ -4,10 +4,10 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
-void FUN_80132024(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,short *param_11,int param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
+void Minimap_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
+                    undefined4 param_9,undefined4 param_10,short *param_11,int param_12,
+                    undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 uint FUN_80132028(void);
 void FUN_80132034(void);
 void FUN_80132068(void);
@@ -40,7 +40,7 @@ void FUN_801333a8(undefined4 param_1,undefined4 param_2,short *param_3,int param
 void FUN_801334d0(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9);
-void FUN_801334d4(void);
+u16 getMinimapY(void);
 void FUN_801334f8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
@@ -73,7 +73,7 @@ void FUN_80134998(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 void FUN_80134b94(char param_1);
 void FUN_80134bb0(undefined param_1);
-void FUN_80134bc4(void);
+void creditsStart(void);
 void FUN_80134bd0(void);
 void FUN_80134c44(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
