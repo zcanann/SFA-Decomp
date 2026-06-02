@@ -13759,6 +13759,73 @@ int hintTextMapFn_800ea264(void) {
     gameTextLoadDir(lbl_803A4218[lbl_803119E0[t[5]]]);
     return r;
 }
+
+void gameBitFn_800ea2e0(u8 id) {
+    u8 *texts;
+    u8 wasNew;
+    s16 cachedBank;
+    u32 cachedBits;
+    u32 mask;
+    u32 bits;
+    s16 bank;
+    s16 historyIdx;
+    u32 i;
+    s16 *taskMap;
+
+    texts = (u8 *)getLastSavedGameTexts();
+    cachedBank = -1;
+
+    if (texts[6] == 0) {
+        taskMap = &lbl_803119E0[1];
+        for (i = 1; (s16)i < 0xce; i++) {
+            if ((*taskMap == 0xffff) || (*taskMap == -1)) {
+                mask = 1 << ((u8)i % 32);
+                bank = (s16)(((u32)(u8)i >> 5) + 0x12f);
+                bits = GameBit_Get(bank);
+                if ((bits & mask) == 0) {
+                    bits |= mask;
+                    GameBit_Set(bank, bits);
+                }
+            }
+            taskMap++;
+        }
+    }
+
+    mask = 1 << (id % 32);
+    bank = (s16)(((u32)id >> 5) + 0x12f);
+    bits = GameBit_Get(bank);
+    if ((bits & mask) == 0) {
+        bits |= mask;
+        GameBit_Set(bank, bits);
+        wasNew = 1;
+    } else {
+        wasNew = 0;
+    }
+
+    if (wasNew) {
+
+        if (texts[6] != 5) {
+            texts[6]++;
+        }
+
+        for (historyIdx = 4; historyIdx != 0; historyIdx--) {
+            texts[historyIdx] = texts[historyIdx - 1];
+        }
+        texts[0] = id;
+
+        if (texts[5] == id) {
+            do {
+                texts[5]++;
+                bank = (s16)(((u32)texts[5] >> 5) + 0x12f);
+                if (bank != cachedBank) {
+                    cachedBank = bank;
+                    cachedBits = GameBit_Get(bank);
+                }
+                mask = 1 << (texts[5] % 32);
+            } while ((cachedBits & mask) != 0);
+        }
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
