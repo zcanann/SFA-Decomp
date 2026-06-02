@@ -627,11 +627,11 @@ uint AttractMovie_DrawTextureCallback(undefined4 param_1, undefined4 *modelPtr, 
   AttractMovieTextureSet *textureSet;
   u8 *renderOp;
 
-  if (modelPtr == NULL) {
-    renderOp = NULL;
+  if (modelPtr != NULL) {
+    renderOp = ObjModel_GetRenderOp(*modelPtr, renderOpIdx);
   }
   else {
-    renderOp = ObjModel_GetRenderOp(*modelPtr, renderOpIdx);
+    renderOp = NULL;
   }
 
   if (((renderOp == NULL) || (renderOp[0x29] == 1)) && (lbl_803DD610 == 2)) {
