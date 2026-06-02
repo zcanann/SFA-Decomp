@@ -2085,12 +2085,12 @@ void FUN_8015a6c0(uint param_1,int param_2)
 
 
 /* Trivial 4b 0-arg blr leaves. */
-void fn_8015AD5C(void) {}
+void smallbasket_nop(void) {}
 
 /* call(x, N) wrappers. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801598B8(int x) { Sfx_StopFromObject(x, 0x3e8); }
+void smallbasket_stopLoopSfx(int x) { Sfx_StopFromObject(x, 0x3e8); }
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2392,10 +2392,10 @@ extern f32 fn_802943F4(f32 a);
 extern void PSMTXRotRad(f32 *mtx, int axis, f32 angle);
 extern void PSMTXMultVecSR(f32 *mtx, f32 *in, f32 *out);
 
-/* fn_8015983C: 124b - rotate vector around Y axis by integer-degrees value. */
+/* Rotates a vector around the Y axis by an integer-degree value. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8015983C(int p1, int p2, f32 *vec, f32 f1, int p5, u32 int_deg) {
+void smallbasket_rotateVectorYaw(int p1, int p2, f32 *vec, f32 f1, int p5, u32 int_deg) {
     f32 mtx[12];
     f32 a;
     a = lbl_803E2C20 * f1 - lbl_803E2C24 * (f32)(s32)int_deg;
@@ -2407,10 +2407,10 @@ void fn_8015983C(int p1, int p2, f32 *vec, f32 f1, int p5, u32 int_deg) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801598DC: 124b - handle hit-state event (cmd 0x10 or 0x11). */
+/* Handles hit-state events and restarts the impact SFX. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801598DC(int obj, int *st, int p3, int cmd) {
+void smallbasket_handleHitStateEvent(int obj, int *st, int p3, int cmd) {
     if (cmd == 0x11) {
         /* fall through */
     } else if (cmd == 0x10) {
@@ -2425,10 +2425,10 @@ void fn_801598DC(int obj, int *st, int p3, int cmd) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_8015ACC0: 156b - init basket state struct. */
+/* Initializes the state used by the alternate smallbasket variant. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8015ACC0(int *obj, int *st) {
+void smallbasket_initVariantState(int *obj, int *st) {
     *(f32*)((char*)st + 0x2ac) = lbl_803E2CC0;
     *((u8*)st + 0x33b) = *(f32*)((char*)st + 0x2a8);
     *(f32*)((char*)st + 0x2a8) = lbl_803E2CC4;
