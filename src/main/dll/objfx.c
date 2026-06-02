@@ -1003,6 +1003,113 @@ void objParticleFn_80099d84(void *obj, u8 type, void *light, f32 scale, f32 fext
 #pragma peephole reset
 #pragma scheduling reset
 
+extern u8 lbl_8030FA30[];
+extern f32 lbl_803DF39C;
+
+#pragma scheduling off
+#pragma peephole off
+void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *light)
+{
+    u8 args[40];
+    int i;
+    int pairCount;
+    int glowCount;
+    int variant;
+    u8 *colors;
+
+    if (type != 0 && type <= 9) {
+        switch (type) {
+            case 1:
+                variant = 1;
+                pairCount = 10;
+                glowCount = 4;
+                args[0] = variant;
+                for (i = pairCount; (u8)i != 0; i--) {
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x325, origin, 0x200001, -1, args);
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x323, origin, 0x200001, -1, args);
+                }
+                for (i = glowCount; (u8)i != 0; i--) {
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x326, origin, 0x200001, -1, args);
+                }
+                break;
+            case 2:
+                variant = 2;
+                pairCount = 13;
+                glowCount = 6;
+                args[0] = variant;
+                for (i = pairCount; (u8)i != 0; i--) {
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x325, origin, 0x200001, -1, args);
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x323, origin, 0x200001, -1, args);
+                }
+                for (i = glowCount; (u8)i != 0; i--) {
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x326, origin, 0x200001, -1, args);
+                }
+                break;
+            case 3:
+                variant = 3;
+                pairCount = 30;
+                glowCount = 8;
+                args[0] = variant;
+                for (i = pairCount; (u8)i != 0; i--) {
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x325, origin, 0x200001, -1, args);
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x323, origin, 0x200001, -1, args);
+                }
+                for (i = glowCount; (u8)i != 0; i--) {
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x326, origin, 0x200001, -1, args);
+                }
+                break;
+            case 4:
+                for (i = 7; (u8)i != 0; i--) {
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x328, origin, 0x200001, -1, NULL);
+                }
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                args[0] = type - 1;
+                for (i = 10; (u8)i != 0; i--) {
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x323, origin, 0x200001, -1, args);
+                }
+                for (i = 4; (u8)i != 0; i--) {
+                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                        obj, 0x326, origin, 0x200001, -1, args);
+                }
+                break;
+        }
+    }
+
+    if (light != NULL) {
+        colors = &lbl_8030FA30[type * 3];
+        modelLightStruct_setField50(light, 2);
+        lightVecFn_8001dd88(light, *(f32 *)((char *)origin + 0xc),
+                            lbl_803DF384 + *(f32 *)((char *)origin + 0x10),
+                            *(f32 *)((char *)origin + 0x14));
+        modelLightStruct_setColorsA8AC(light, colors[0], colors[1], colors[2], 0xff);
+        modelLightStruct_setColors100104(light, colors[0], colors[1], colors[2], 0xff);
+        lightDistAttenFn_8001dc38(light, lbl_803DF394, lbl_803DF39C);
+        lightSetField4D(light, 0);
+        lightFn_8001db6c(light, lbl_803DF35C, 1);
+        lightFn_8001db6c(light, lbl_803DF358, 0);
+        lightFn_8001d620(light, 0, 0);
+        lightSetField2FB(light, 1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_8009A8C8(u8 *obj, f32 thresh) {
