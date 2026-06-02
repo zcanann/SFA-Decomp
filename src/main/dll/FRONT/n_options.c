@@ -10,12 +10,12 @@
 
 #pragma peephole off
 #pragma scheduling off
-extern undefined4 FUN_800033a8();
-extern undefined4 FUN_80003494();
+extern void *memset(void *dst, int value, uint size);
+extern void *memcpy(void *dst, const void *src, uint size);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
-extern undefined4 CreateAudioDecodeThread();
-extern undefined4 FUN_801175ac();
+extern undefined4 PopDecodedAudioBuffer(int flags);
+extern void PushFreeAudioBuffer(undefined4 message);
 extern undefined4 FUN_801175b4();
 extern undefined4 FUN_801175b8();
 extern undefined4 FUN_80119928();
@@ -312,15 +312,15 @@ void AttractMovieAudio_Mix(undefined2 *param_1,short *param_2,uint param_3)
   
   if (param_2 == (short *)0x0) {
     if (((DAT_803a6a58 == 0) || (DAT_803a6a5d != '\x02')) || (DAT_803a6a5f == '\0')) {
-      FUN_800033a8((int)param_1,0,param_3 << 2);
+      memset(param_1,0,param_3 << 2);
     }
     else {
       do {
         do {
           if (DAT_803a6ab0 == 0) {
-            DAT_803a6ab0 = CreateAudioDecodeThread(0);
+            DAT_803a6ab0 = PopDecodedAudioBuffer(0);
             if (DAT_803a6ab0 == 0) {
-              FUN_800033a8((int)param_1,0,param_3 << 2);
+              memset(param_1,0,param_3 << 2);
               return;
             }
             DAT_803a6aa8 = *(undefined4 *)(DAT_803a6ab0 + 0xc);
@@ -362,22 +362,22 @@ void AttractMovieAudio_Mix(undefined2 *param_1,short *param_2,uint param_3)
         *(uint *)(DAT_803a6ab0 + 8) = *(int *)(DAT_803a6ab0 + 8) - uVar3;
         *(short **)(DAT_803a6ab0 + 4) = psVar5;
         if (*(int *)(DAT_803a6ab0 + 8) == 0) {
-          FUN_801175ac(DAT_803a6ab0);
+          PushFreeAudioBuffer(DAT_803a6ab0);
           DAT_803a6ab0 = 0;
         }
       } while (param_3 != 0);
     }
   }
   else if (((DAT_803a6a58 == 0) || (DAT_803a6a5d != '\x02')) || (DAT_803a6a5f == '\0')) {
-    FUN_80003494((uint)param_1,(uint)param_2,param_3 << 2);
+    memcpy(param_1,param_2,param_3 << 2);
   }
   else {
     do {
       do {
         if (DAT_803a6ab0 == 0) {
-          DAT_803a6ab0 = CreateAudioDecodeThread(0);
+          DAT_803a6ab0 = PopDecodedAudioBuffer(0);
           if (DAT_803a6ab0 == 0) {
-            FUN_80003494((uint)param_1,(uint)param_2,param_3 << 2);
+            memcpy(param_1,param_2,param_3 << 2);
             return;
           }
           DAT_803a6aa8 = *(undefined4 *)(DAT_803a6ab0 + 0xc);
@@ -420,7 +420,7 @@ void AttractMovieAudio_Mix(undefined2 *param_1,short *param_2,uint param_3)
       *(uint *)(DAT_803a6ab0 + 8) = *(int *)(DAT_803a6ab0 + 8) - uVar3;
       *(short **)(DAT_803a6ab0 + 4) = psVar5;
       if (*(int *)(DAT_803a6ab0 + 8) == 0) {
-        FUN_801175ac(DAT_803a6ab0);
+        PushFreeAudioBuffer(DAT_803a6ab0);
         DAT_803a6ab0 = 0;
       }
     } while (param_3 != 0);
@@ -497,7 +497,7 @@ bool FUN_80118164(uint param_1)
   
   bVar1 = DAT_803a6a58 != 0;
   if (bVar1) {
-    FUN_80003494(param_1,0x803a6a40,8);
+    memcpy((void *)param_1,(void *)0x803a6a40,8);
   }
   return bVar1;
 }
@@ -591,7 +591,7 @@ void THPPlayerPostDrawDone(void)
 BOOL THPPlayerGetVideoInfo(void *dst)
 {
   if (lbl_803A5D60.isOpen != 0) {
-    FUN_80003494((uint)dst, (uint)&lbl_803A5D60.videoInfo, sizeof(lbl_803A5D60.videoInfo));
+    memcpy(dst, &lbl_803A5D60.videoInfo, sizeof(lbl_803A5D60.videoInfo));
     return TRUE;
   }
   return FALSE;
