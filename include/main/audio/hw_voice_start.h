@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void hwStart(int slot);
+void hwStart(int slot, u8 studioIndex);
 
 #endif /* MAIN_AUDIO_HW_VOICE_START_H_ */

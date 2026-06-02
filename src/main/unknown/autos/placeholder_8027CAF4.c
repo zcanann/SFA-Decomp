@@ -103,12 +103,23 @@ void FUN_8027c49c(int param_1,byte param_2)
 {
 }
 
-extern int (*salMessageCallback)(int msg, int arg);
-extern void salDeactivateVoice(int voice);
 extern u8 lbl_803CC1E0[];
 extern u8 salAuxFrame;
 extern u8 salMaxStudioNum;
 extern void DCFlushRangeNoSync(void *addr, int len);
+
+typedef struct SalVoice {
+    u8 pad0[0xc];
+    struct SalVoice *next;
+    struct SalVoice *prev;
+    u8 pad14[0x10];
+    u32 flags;
+    u8 pad28[0xc4];
+    u8 active;
+    u8 pendingDeactivate;
+    u8 needsUpdate;
+    u8 studioIndex;
+} SalVoice;
 
 typedef struct SalStudioInputSource {
     u8 volume;
@@ -127,11 +138,18 @@ typedef struct SalStudioInput {
 } SalStudioInput;
 
 typedef struct SalStudio {
-    u8 pad0[0x52];
+    u8 pad0[0x48];
+    SalVoice *voiceList;
+    SalVoice *deferredVoiceList;
+    u8 pad50[2];
     u8 inputCount;
     u8 pad53[5];
     SalStudioInput inputs[7];
+    u8 padAC[0x10];
 } SalStudio;
+
+extern int (*salMessageCallback)(int msg, int arg);
+extern void salDeactivateVoice(SalVoice *voice);
 
 int salSynthSendMessage(int synth, int msg) {
     if (salMessageCallback == NULL) {
@@ -140,44 +158,44 @@ int salSynthSendMessage(int synth, int msg) {
     return salMessageCallback(msg, *(int *)(synth + 0x18));
 }
 
-void salActivateVoice(int voice, int idx) {
-    int *slot;
+void salActivateVoice(SalVoice *voice, u8 idx) {
+    SalVoice **slot;
 
-    if (*(u8 *)(voice + 0xec) != 0) {
+    if (voice->active != 0) {
         salDeactivateVoice(voice);
-        *(int *)(voice + 0x24) |= 0x20;
+        voice->flags |= 0x20;
     }
-    *(u8 *)(voice + 0xed) = 0;
-    slot = (int *)((char *)&lbl_803CC1E0[(u8)idx * 0xbc] + 0x48);
-    *(int *)(voice + 0xc) = *slot;
-    if (*(int *)(voice + 0xc) != 0) {
-        *(int *)(*(int *)(voice + 0xc) + 0x10) = voice;
+    voice->pendingDeactivate = 0;
+    slot = &((SalStudio *)lbl_803CC1E0)[idx].voiceList;
+    voice->next = *slot;
+    if (voice->next != NULL) {
+        voice->next->prev = voice;
     }
-    *(int *)(voice + 0x10) = 0;
+    voice->prev = NULL;
     *slot = voice;
-    *(u8 *)(voice + 0xee) = 0;
-    *(u8 *)(voice + 0xec) = 1;
-    *(u8 *)(voice + 0xef) = idx;
+    voice->needsUpdate = 0;
+    voice->active = 1;
+    voice->studioIndex = idx;
 }
 
-void salDeactivateVoice(int voice) {
-    int prev;
-    int next;
+void salDeactivateVoice(SalVoice *voice) {
+    SalVoice *prev;
+    SalVoice *next;
 
-    if (*(u8 *)(voice + 0xec) == 0) {
+    if (voice->active == 0) {
         return;
     }
-    prev = *(int *)(voice + 0x10);
-    if (prev != 0) {
-        *(int *)(prev + 0xc) = *(int *)(voice + 0xc);
+    prev = voice->prev;
+    if (prev != NULL) {
+        prev->next = voice->next;
     } else {
-        *(int *)((char *)&lbl_803CC1E0[*(u8 *)(voice + 0xef) * 0xbc] + 0x48) = *(int *)(voice + 0xc);
+        ((SalStudio *)lbl_803CC1E0)[voice->studioIndex].voiceList = voice->next;
     }
-    next = *(int *)(voice + 0xc);
-    if (next != 0) {
-        *(int *)(next + 0x10) = *(int *)(voice + 0x10);
+    next = voice->next;
+    if (next != NULL) {
+        next->prev = voice->prev;
     }
-    *(u8 *)(voice + 0xec) = 0;
+    voice->active = 0;
 }
 
 int salAddStudioInput(SalStudio *studio, SalStudioInputSource *input) {
@@ -194,27 +212,24 @@ int salAddStudioInput(SalStudio *studio, SalStudioInputSource *input) {
     return 0;
 }
 
-int salRemoveStudioInput(int studio, SalStudioInputSource *input) {
+int salRemoveStudioInput(SalStudio *studio, SalStudioInputSource *input) {
     int i;
     int count;
-    char *e;
+    SalStudioInput *entry;
 
-    count = *(u8 *)(studio + 0x52);
-    e = (char *)studio;
+    count = studio->inputCount;
+    entry = studio->inputs;
     for (i = 0; i < count; i++) {
-        if (*(SalStudioInputSource **)(e + 0x60) == input) {
-            e = (char *)studio + i * 0xc;
-            for (; i <= *(u8 *)(studio + 0x52) - 2; i++) {
-                *(SalStudioInputSource **)(e + 0x58) =
-                    *(SalStudioInputSource **)(e + 0x64);
-                *(int *)(e + 0x5c) = *(int *)(e + 0x68);
-                *(int *)(e + 0x60) = *(int *)(e + 0x6c);
-                e += 0xc;
+        if (entry->source == input) {
+            entry = &studio->inputs[i];
+            for (; i <= studio->inputCount - 2; i++) {
+                entry[0] = entry[1];
+                entry++;
             }
-            *(u8 *)(studio + 0x52) = *(u8 *)(studio + 0x52) - 1;
+            studio->inputCount--;
             return 1;
         }
-        e += 0xc;
+        entry++;
     }
     return 0;
 }

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/hw_voice_start.h"
 
-extern void salActivateVoice(void *entry);
+extern void salActivateVoice(void *entry, u8 studioIndex);
 extern u8 *dspVoice;
 extern u8 salTimeOffset;
 
@@ -18,7 +18,7 @@ extern u8 salTimeOffset;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void hwStart(int slot)
+void hwStart(int slot, u8 studioIndex)
 {
   int offset;
   u8 startTime;
@@ -26,5 +26,5 @@ void hwStart(int slot)
   offset = slot * 0xf4;
   startTime = salTimeOffset;
   dspVoice[offset + 0xd4] = startTime;
-  salActivateVoice(dspVoice + offset);
+  salActivateVoice(dspVoice + offset, studioIndex);
 }

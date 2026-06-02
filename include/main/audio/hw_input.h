@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void hwAddInput(u8 index);
+void hwAddInput(u8 index, void *input);
 
 #endif /* MAIN_AUDIO_HW_INPUT_H_ */

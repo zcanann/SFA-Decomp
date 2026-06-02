@@ -11,7 +11,7 @@ extern int synthFXStart(u32 fxId, u8 volume, u8 pan, u8 studio, u8 studioAux);
 extern void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle);
 extern int vidGetInternalId(u32 id);
 extern void synthRefreshJobVolumes(void);
-extern void hwAddInput(u8 idx);
+extern void hwAddInput(u8 idx, void *input);
 extern void hwRemoveInput(u8 idx);
 extern void hwActivateStudio(u8 slot, int a, int b);
 extern void hwDeactivateStudio(u8 slot);
@@ -315,9 +315,9 @@ void synthDeactivateStudio(u8 slot)
  *
  * EN v1.1 Address: 0x80272E64, size 32b
  */
-void synthAddStudioInput(u8 idx)
+void synthAddStudioInput(u8 idx, void *input)
 {
-    hwAddInput(idx);
+    hwAddInput(idx, input);
 }
 
 /*

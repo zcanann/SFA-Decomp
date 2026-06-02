@@ -2,7 +2,7 @@
 #include "main/audio/hw_input.h"
 
 extern u8 lbl_803CC1E0[];
-extern void salAddStudioInput(void *entry);
+extern void salAddStudioInput(void *entry, void *input);
 
 /*
  * --INFO--
@@ -17,7 +17,7 @@ extern void salAddStudioInput(void *entry);
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void hwAddInput(u8 index)
+void hwAddInput(u8 index, void *input)
 {
-  salAddStudioInput(lbl_803CC1E0 + index * 0xbc);
+  salAddStudioInput(lbl_803CC1E0 + index * 0xbc, input);
 }
