@@ -1343,7 +1343,7 @@ config.libs = [
             Object(NonMatching, "main/dll/WC/dll_0291_wctile.c"),
             Object(NonMatching, "main/dll/WC/dll_028F_wcpressures.c"),
             Object(NonMatching, "main/dll/WC/dll_0292_wctrexstatu.c"),
-            Object(NonMatching, "main/dll/dll_0293_suntemple.c"),
+            Object(NonMatching, "main/dll/suntemple.c"),
             Object(NonMatching, "main/dll/WC/dll_0294_wctemple.c"),
             Object(NonMatching, "main/dll/dll_0299.c"),
             Object(NonMatching, "main/dll/WC/dll_0295_wcapertures.c"),

@@ -1709,7 +1709,7 @@ main/dll/WC/dll_028F_wcpressures.c:
 main/dll/WC/dll_0292_wctrexstatu.c:
 	.text       start:0x802281CC end:0x80228478
 
-main/dll/dll_0293_suntemple.c:
+main/dll/suntemple.c:
 	.text       start:0x80228478 end:0x80228B38
 
 main/dll/WC/dll_0294_wctemple.c:
