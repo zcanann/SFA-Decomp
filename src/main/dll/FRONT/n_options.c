@@ -15,7 +15,7 @@ extern void *memcpy(void *dst, const void *src, uint size);
 extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 extern undefined4 PopDecodedAudioBuffer(int flags);
-extern void PushFreeAudioBuffer(undefined4 message);
+extern void PushFreeAudioBuffer(void *message);
 extern undefined4 FUN_801175b4();
 extern undefined4 FUN_801175b8();
 extern undefined4 FUN_80119928();
@@ -59,7 +59,7 @@ extern void fn_8004C7AC(void *yTexture, void *uTexture, void *vTexture, int widt
 extern u8 *ObjModel_GetRenderOp(undefined4 model, undefined4 idx);
 extern void PushFreeTextureSet(OSMessage msg);
 
-extern undefined4 DAT_8031b000;
+extern u16 lbl_8031A3B0[];
 extern undefined4 DAT_803a50a8;
 extern undefined4 DAT_803a50b4;
 extern undefined4 DAT_803a50c0;
@@ -302,7 +302,7 @@ BOOL Movie_SetVolumeFade(int volume,int fadeFrames)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void AttractMovieAudio_Mix(undefined2 *param_1,short *param_2,uint param_3)
+void AttractMovieAudio_Mix(s16 *param_1, s16 *param_2, uint param_3)
 {
   ushort uVar1;
   float fVar2;
@@ -311,36 +311,36 @@ void AttractMovieAudio_Mix(undefined2 *param_1,short *param_2,uint param_3)
   short *psVar5;
   uint uVar6;
   
-  if (param_2 == (short *)0x0) {
-    if (((DAT_803a6a58 == 0) || (DAT_803a6a5d != '\x02')) || (DAT_803a6a5f == '\0')) {
-      memset(param_1,0,param_3 << 2);
+  if (param_2 != (short *)0x0) {
+    if (((lbl_803A5D60.isOpen == 0) || (lbl_803A5D60.internalState != 2)) || (lbl_803A5D60.audioExists == 0)) {
+      memcpy(param_1,param_2,param_3 << 2);
     }
     else {
       do {
         do {
-          if (DAT_803a6ab0 == 0) {
-            DAT_803a6ab0 = PopDecodedAudioBuffer(0);
-            if (DAT_803a6ab0 == 0) {
-              memset(param_1,0,param_3 << 2);
+          if (lbl_803A5D60.curAudioBuffer == NULL) {
+            lbl_803A5D60.curAudioBuffer = (AttractMovieAudioBuffer *)PopDecodedAudioBuffer(0);
+            if (lbl_803A5D60.curAudioBuffer == NULL) {
+              memcpy(param_1,param_2,param_3 << 2);
               return;
             }
-            DAT_803a6aa8 = *(undefined4 *)(DAT_803a6ab0 + 0xc);
+            lbl_803A5D60.curAudioFrameNumber = lbl_803A5D60.curAudioBuffer->frameNumber;
           }
-          uVar3 = *(uint *)(DAT_803a6ab0 + 8);
+          uVar3 = lbl_803A5D60.curAudioBuffer->validSample;
         } while (uVar3 == 0);
         if (param_3 <= uVar3) {
           uVar3 = param_3;
         }
-        psVar5 = *(short **)(DAT_803a6ab0 + 4);
+        psVar5 = lbl_803A5D60.curAudioBuffer->curPtr;
         for (uVar6 = uVar3; uVar6 != 0; uVar6 = uVar6 - 1) {
-          fVar2 = DAT_803a6a98;
-          if (DAT_803a6aa0 != 0) {
-            DAT_803a6aa0 = DAT_803a6aa0 + -1;
-            fVar2 = DAT_803a6a94 + DAT_803a6a9c;
+          fVar2 = lbl_803A5D60.targetVolume;
+          if (lbl_803A5D60.rampCount != 0) {
+            lbl_803A5D60.rampCount = lbl_803A5D60.rampCount + -1;
+            fVar2 = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
           }
-          DAT_803a6a94 = fVar2;
-          uVar1 = *(ushort *)(&DAT_8031b000 + (int)DAT_803a6a94 * 2);
-          iVar4 = (int)((uint)uVar1 * (int)*psVar5) >> 0xf;
+          lbl_803A5D60.curVolume = fVar2;
+          uVar1 = lbl_8031A3B0[(int)lbl_803A5D60.curVolume];
+          iVar4 = (int)*param_2 + ((int)((uint)uVar1 * (int)*psVar5) >> 0xf);
           if (iVar4 < -0x8000) {
             iVar4 = -0x8000;
           }
@@ -348,7 +348,7 @@ void AttractMovieAudio_Mix(undefined2 *param_1,short *param_2,uint param_3)
             iVar4 = 0x7fff;
           }
           *param_1 = (short)iVar4;
-          iVar4 = (int)((uint)uVar1 * (int)psVar5[1]) >> 0xf;
+          iVar4 = (int)param_2[1] + ((int)((uint)uVar1 * (int)psVar5[1]) >> 0xf);
           if (iVar4 < -0x8000) {
             iVar4 = -0x8000;
           }
@@ -357,47 +357,48 @@ void AttractMovieAudio_Mix(undefined2 *param_1,short *param_2,uint param_3)
           }
           param_1[1] = (short)iVar4;
           param_1 = param_1 + 2;
+          param_2 = param_2 + 2;
           psVar5 = psVar5 + 2;
         }
         param_3 = param_3 - uVar3;
-        *(uint *)(DAT_803a6ab0 + 8) = *(int *)(DAT_803a6ab0 + 8) - uVar3;
-        *(short **)(DAT_803a6ab0 + 4) = psVar5;
-        if (*(int *)(DAT_803a6ab0 + 8) == 0) {
-          PushFreeAudioBuffer(DAT_803a6ab0);
-          DAT_803a6ab0 = 0;
+        lbl_803A5D60.curAudioBuffer->validSample = lbl_803A5D60.curAudioBuffer->validSample - uVar3;
+        lbl_803A5D60.curAudioBuffer->curPtr = psVar5;
+        if (lbl_803A5D60.curAudioBuffer->validSample == 0) {
+          PushFreeAudioBuffer(lbl_803A5D60.curAudioBuffer);
+          lbl_803A5D60.curAudioBuffer = NULL;
         }
       } while (param_3 != 0);
     }
   }
-  else if (((DAT_803a6a58 == 0) || (DAT_803a6a5d != '\x02')) || (DAT_803a6a5f == '\0')) {
-    memcpy(param_1,param_2,param_3 << 2);
+  else if (((lbl_803A5D60.isOpen == 0) || (lbl_803A5D60.internalState != 2)) || (lbl_803A5D60.audioExists == 0)) {
+    memset(param_1,0,param_3 << 2);
   }
   else {
     do {
       do {
-        if (DAT_803a6ab0 == 0) {
-          DAT_803a6ab0 = PopDecodedAudioBuffer(0);
-          if (DAT_803a6ab0 == 0) {
-            memcpy(param_1,param_2,param_3 << 2);
+        if (lbl_803A5D60.curAudioBuffer == NULL) {
+          lbl_803A5D60.curAudioBuffer = (AttractMovieAudioBuffer *)PopDecodedAudioBuffer(0);
+          if (lbl_803A5D60.curAudioBuffer == NULL) {
+            memset(param_1,0,param_3 << 2);
             return;
           }
-          DAT_803a6aa8 = *(undefined4 *)(DAT_803a6ab0 + 0xc);
+          lbl_803A5D60.curAudioFrameNumber = lbl_803A5D60.curAudioBuffer->frameNumber;
         }
-        uVar3 = *(uint *)(DAT_803a6ab0 + 8);
+        uVar3 = lbl_803A5D60.curAudioBuffer->validSample;
       } while (uVar3 == 0);
       if (param_3 <= uVar3) {
         uVar3 = param_3;
       }
-      psVar5 = *(short **)(DAT_803a6ab0 + 4);
+      psVar5 = lbl_803A5D60.curAudioBuffer->curPtr;
       for (uVar6 = uVar3; uVar6 != 0; uVar6 = uVar6 - 1) {
-        fVar2 = DAT_803a6a98;
-        if (DAT_803a6aa0 != 0) {
-          DAT_803a6aa0 = DAT_803a6aa0 + -1;
-          fVar2 = DAT_803a6a94 + DAT_803a6a9c;
+        fVar2 = lbl_803A5D60.targetVolume;
+        if (lbl_803A5D60.rampCount != 0) {
+          lbl_803A5D60.rampCount = lbl_803A5D60.rampCount + -1;
+          fVar2 = lbl_803A5D60.curVolume + lbl_803A5D60.deltaVolume;
         }
-        DAT_803a6a94 = fVar2;
-        uVar1 = *(ushort *)(&DAT_8031b000 + (int)DAT_803a6a94 * 2);
-        iVar4 = (int)*param_2 + ((int)((uint)uVar1 * (int)*psVar5) >> 0xf);
+        lbl_803A5D60.curVolume = fVar2;
+        uVar1 = lbl_8031A3B0[(int)lbl_803A5D60.curVolume];
+        iVar4 = (int)((uint)uVar1 * (int)*psVar5) >> 0xf;
         if (iVar4 < -0x8000) {
           iVar4 = -0x8000;
         }
@@ -405,7 +406,7 @@ void AttractMovieAudio_Mix(undefined2 *param_1,short *param_2,uint param_3)
           iVar4 = 0x7fff;
         }
         *param_1 = (short)iVar4;
-        iVar4 = (int)param_2[1] + ((int)((uint)uVar1 * (int)psVar5[1]) >> 0xf);
+        iVar4 = (int)((uint)uVar1 * (int)psVar5[1]) >> 0xf;
         if (iVar4 < -0x8000) {
           iVar4 = -0x8000;
         }
@@ -414,15 +415,14 @@ void AttractMovieAudio_Mix(undefined2 *param_1,short *param_2,uint param_3)
         }
         param_1[1] = (short)iVar4;
         param_1 = param_1 + 2;
-        param_2 = param_2 + 2;
         psVar5 = psVar5 + 2;
       }
       param_3 = param_3 - uVar3;
-      *(uint *)(DAT_803a6ab0 + 8) = *(int *)(DAT_803a6ab0 + 8) - uVar3;
-      *(short **)(DAT_803a6ab0 + 4) = psVar5;
-      if (*(int *)(DAT_803a6ab0 + 8) == 0) {
-        PushFreeAudioBuffer(DAT_803a6ab0);
-        DAT_803a6ab0 = 0;
+      lbl_803A5D60.curAudioBuffer->validSample = lbl_803A5D60.curAudioBuffer->validSample - uVar3;
+      lbl_803A5D60.curAudioBuffer->curPtr = psVar5;
+      if (lbl_803A5D60.curAudioBuffer->validSample == 0) {
+        PushFreeAudioBuffer(lbl_803A5D60.curAudioBuffer);
+        lbl_803A5D60.curAudioBuffer = NULL;
       }
     } while (param_3 != 0);
   }
@@ -518,7 +518,7 @@ void AttractMovieAudio_DmaCallback(void)
     lbl_803DD678 ^= 1;
     AIInitDMA((u32)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), 0x280);
     interrupts = OSEnableInterrupts();
-    AttractMovieAudio_Mix((undefined2 *)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), NULL, 0xa0);
+    AttractMovieAudio_Mix((s16 *)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), NULL, 0xa0);
     DCFlushRange(lbl_803A57C0 + (lbl_803DD678 * 0x280), 0x280);
     OSRestoreInterrupts(interrupts);
   }
@@ -541,7 +541,7 @@ void AttractMovieAudio_DmaCallback(void)
     if (lbl_803DD670 != 0) {
       DCInvalidateRange((void *)lbl_803DD670, 0x280);
     }
-    AttractMovieAudio_Mix((undefined2 *)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), (short *)lbl_803DD670, 0xa0);
+    AttractMovieAudio_Mix((s16 *)(lbl_803A57C0 + (lbl_803DD678 * 0x280)), (s16 *)lbl_803DD670, 0xa0);
     DCFlushRange(lbl_803A57C0 + (lbl_803DD678 * 0x280), 0x280);
     OSRestoreInterrupts(interrupts);
   }

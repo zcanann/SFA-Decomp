@@ -6,7 +6,7 @@
 undefined4 FUN_80117668(int param_1,int param_2);
 void THPPlayerDrawCurrentFrame(void *yTexture,void *uTexture,void *vTexture,uint width,uint height);
 BOOL Movie_SetVolumeFade(int volume,int fadeFrames);
-void AttractMovieAudio_Mix(undefined2 *dst,short *src,uint sampleCount);
+void AttractMovieAudio_Mix(s16 *dst,s16 *src,uint sampleCount);
 void AttractMovieAudio_DmaCallback(void);
 void FUN_80118108(void);
 void FUN_8011810c(void);
