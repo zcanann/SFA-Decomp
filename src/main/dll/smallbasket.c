@@ -2453,9 +2453,9 @@ void smallbasket_initVariantState(int *obj, int *st) {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80157CDC(int obj, int p2)
+void fn_80157CDC(int obj, int p2)
 {
-  extern void CameraShake_ApplyRadial(int, f32, f32, f32, f32);
+  extern void CameraShake_ApplyRadial(int, f32, f32, f32, f32, f32);
   extern void *Obj_GetPlayerObject(void);
   extern f32 Vec_distance(int, int);
   extern void doRumble(f32);
@@ -2469,27 +2469,30 @@ int fn_80157CDC(int obj, int p2)
   extern f32 lbl_803E2B80;
   extern f32 lbl_803E2BA0;
   extern f32 lbl_803E2BA4;
-  char *entry = (char *)*(int *)(lbl_8031FAE8 + (u32)*(u8 *)(p2 + 0x33b) * 32 + 28);
+  typedef struct { u8 pad[0x1c]; char *p; } BasketDescE;
+  char *sub;
+  BasketDescE *d = (BasketDescE *)lbl_8031FAE8;
+  char *entry = d[*(u8 *)(p2 + 0x33b)].p;
   u8 i;
 
   lbl_803DDA70 = lbl_803DDA70 - timeDelta;
 
-  i = 0;
-  do {
-    if ((*(u16 *)(p2 + 0x2f8) & (1U << i)) != 0) {
-      char *sub = entry + (u32)i * 12;
-      if (*(u16 *)(sub + 4) != 0) {
-        Sfx_PlayFromObject(obj, *(u16 *)(sub + 4));
+  for (i = 0; (u32)i <= 12; i++) {
+    if ((*(u16 *)(p2 + 0x2f8) & (1 << i)) != 0) {
+      sub = entry + (u32)i * 12;
+      if (*(u32 *)(sub + 4) != 0) {
+        Sfx_PlayFromObject(obj, (u16)*(u32 *)(sub + 4));
       }
       if (*(u8 *)(sub + 9) != 0) {
-        CameraShake_ApplyRadial(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), (f32)(u32)*(u8 *)(sub + 9) * lbl_803E2BA0);
+        CameraShake_ApplyRadial(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), lbl_803E2BA0, (f32)(u32)*(u8 *)(sub + 9));
       }
       if (*(u8 *)(sub + 10) != 0) {
         void *player = Obj_GetPlayerObject();
         if ((*(u16 *)((char *)player + 0xb0) & 0x1000) == 0) {
           f32 dist = Vec_distance(obj + 0x18, (int)player + 0x18);
-          if (dist < lbl_803E2B80) {
-            doRumble((lbl_803E2BA4 - dist / lbl_803E2BA4) * (f32)(u32)*(u8 *)(sub + 10));
+          if (dist <= lbl_803E2B80) {
+            f32 amt = lbl_803E2BA4 - dist / lbl_803E2B80;
+            doRumble(amt * (f32)(u32)*(u8 *)(sub + 10));
           }
         }
       }
@@ -2497,12 +2500,12 @@ int fn_80157CDC(int obj, int p2)
         if ((*(u8 *)(sub + 11) & 1) != 0) {
           *(u8 *)(p2 + 0x33d) = (u8)(*(u8 *)(p2 + 0x33d) ^ 0x40);
           if ((*(u8 *)(p2 + 0x33d) & 0x40) != 0) {
-            if (*(int *)(obj + 0xc8) == 0) {
+            if (*(void **)(obj + 0xc8) == NULL) {
               smallbasket_spawnLinkedFirepipe(obj, p2);
             } else {
               firepipe_setLinkedUpdateFlag(*(int *)(obj + 0xc8));
             }
-          } else if (*(int *)(obj + 0xc8) != 0) {
+          } else if (*(void **)(obj + 0xc8) != NULL) {
             firepipe_clearLinkedUpdateFlag(*(int *)(obj + 0xc8));
           }
         }
@@ -2511,9 +2514,7 @@ int fn_80157CDC(int obj, int p2)
         }
       }
     }
-    i++;
-  } while ((u32)i <= 12);
-  return 0;
+  }
 }
 #pragma peephole reset
 #pragma scheduling reset
