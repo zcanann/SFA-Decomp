@@ -17,7 +17,7 @@ extern int randomGetRange(int lo, int hi);
 extern int getAngle(float x, float z);
 extern void objAudioFn_800393f8(void *obj, void *p2, int p3, int p4, int p5, int p6);
 extern void objAnimFn_8013a3f0(void *obj, int p2, float p3, int p4);
-extern void fn_80139930(void *obj, s16 angle);
+extern void trickyTurnTowardYaw(void *obj, s16 angle);
 extern void objSetAnimSpeedTo1(void *obj);
 
 extern char lbl_8031D2E8[];
@@ -67,7 +67,7 @@ void trickyGrowl(void *param_1, void *param_2)
             *(u8 *)((char *)param_2 + 0xa) = 2;
         } else {
             void *target = *(void **)((char *)*(void **)((char *)param_1 + 0xb8) + 0x28);
-            fn_80139930(param_1, (s16)getAngle(
+            trickyTurnTowardYaw(param_1, (s16)getAngle(
                 -(*(f32 *)target - *(f32 *)((char *)param_1 + 0x18)),
                 -(*(f32 *)((char *)target + 0x8) - *(f32 *)((char *)param_1 + 0x20))));
             if (randomGetRange(0, 10) == 0) {
@@ -139,7 +139,7 @@ void trickyGrowl(void *param_1, void *param_2)
             *(s8 *)((char *)param_2 + 0xd) = -1;
         } else {
             void *target = *(void **)((char *)*(void **)((char *)param_1 + 0xb8) + 0x28);
-            fn_80139930(param_1, (s16)getAngle(
+            trickyTurnTowardYaw(param_1, (s16)getAngle(
                 -(*(f32 *)target - *(f32 *)((char *)param_1 + 0x18)),
                 -(*(f32 *)((char *)target + 0x8) - *(f32 *)((char *)param_1 + 0x20))));
         }

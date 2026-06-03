@@ -230,10 +230,10 @@ int fn_80139834(f32 param_1, int param_2, int param_3)
 #pragma scheduling reset
 #pragma peephole reset
 
-/* fn_80139930  addr=0x80139930  size=0x15C  linkage=global */
+/* trickyTurnTowardYaw  addr=0x80139930  size=0x15C  linkage=global */
 #pragma peephole off
 #pragma scheduling off
-int fn_80139930(u8 *obj, u16 targetYaw)
+int trickyTurnTowardYaw(u8 *obj, u16 targetYaw)
 {
     u8 *state;
     int currentYaw;
@@ -365,7 +365,7 @@ static void skeetla_updateFacingFromMoveVector(u8 *obj, u8 *state, int *turnDelt
     dz = *(f32 *)(state + 0x30);
     if (((dx * dx) + (dz * dz)) > lbl_803E23EC) {
         yaw = getAngle(-dx, -dz);
-        *turnDeltaOut = fn_80139930(obj, yaw);
+        *turnDeltaOut = trickyTurnTowardYaw(obj, yaw);
         angle = (lbl_803E2454 * (f32)*(s16 *)obj) / lbl_803E2458;
         *(f32 *)(state + 0x2c) = -fn_80293E80(angle);
         *(f32 *)(state + 0x30) = -sin(angle);

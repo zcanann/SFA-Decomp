@@ -113,7 +113,7 @@ extern int trickyDebugPrint(const char *fmt, ...);
 extern int Objfsa_FindNearestCurveType24(float *pos, int p2, int p3);
 extern int fn_8013D5A4(int p1, int p2, void *target, int p4, f32 f);
 extern int trickyMove(int p1, void *p2);
-extern void fn_80139930(int p1, s16 angle);
+extern void trickyTurnTowardYaw(int p1, s16 angle);
 extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
 extern void *Obj_AllocObjectSetup(int p1, int p2);
 extern int Obj_SetupObject(void *setup, int p2, int p3, int p4, void *p5);
@@ -244,7 +244,7 @@ void trickyFlame(int p1, int p2) {
                     srcAng = srcAng + 0x8000;
                 }
             }
-            fn_80139930(p1, srcAng);
+            trickyTurnTowardYaw(p1, srcAng);
         }
         if ((double)*(f32 *)(p1 + 0x98) <= (double)lbl_803E24AC) {
             dieFlag = 1;
@@ -587,7 +587,7 @@ void trickyGuard(int p1, int p2) {
             }
             if (found != 0) {
                 int targ = *(int *)(*(int *)(p1 + 0xb8) + 0x28);
-                fn_80139930(p1, (s16)getAngle(
+                trickyTurnTowardYaw(p1, (s16)getAngle(
                     -(*(f32 *)targ - *(f32 *)(p1 + 0x18)),
                     -(*(f32 *)(targ + 0x8) - *(f32 *)(p1 + 0x20))));
             }
@@ -630,7 +630,7 @@ void trickyGuard(int p1, int p2) {
             }
             {
                 int targ = *(int *)(*(int *)(p1 + 0xb8) + 0x28);
-                fn_80139930(p1, (s16)getAngle(
+                trickyTurnTowardYaw(p1, (s16)getAngle(
                     -(*(f32 *)targ - *(f32 *)(p1 + 0x18)),
                     -(*(f32 *)(targ + 0x8) - *(f32 *)(p1 + 0x20))));
             }
