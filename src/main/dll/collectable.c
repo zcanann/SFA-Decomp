@@ -2726,10 +2726,10 @@ u8 Tricky_render2(int *obj) { return *((u8*)((int**)obj)[0xb8/4][0x0/4] + 0x0); 
 #pragma peephole reset
 #pragma scheduling reset
 
-/* Tricky_func18: 24b - signed-byte load and store, return 1. */
+/* Tricky_getCurrentCommandType: 24b - write state command byte 0xd to the outparam. */
 #pragma peephole off
 #pragma scheduling off
-int Tricky_func18(int *obj, int *out) {
+int Tricky_getCurrentCommandType(int *obj, int *out) {
     *out = *((s8*)obj[0xb8/4] + 0xd);
     return 1;
 }
