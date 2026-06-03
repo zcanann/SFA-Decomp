@@ -42,250 +42,6 @@ extern f32 lbl_803E6808;
 extern f32 lbl_803E6838;
 extern f32 lbl_803E68B0;
 
-/*
- * --INFO--
- *
- * Function: SnowBike_update
- * EN v1.0 Address: 0x801ED428
- * EN v1.0 Size: 1732b
- * EN v1.1 Address: 0x801EDA60
- * EN v1.1 Size: 1700b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void SnowBike_update(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 short *param_9)
-{
-  float fVar1;
-  float fVar2;
-  uint uVar3;
-  int iVar4;
-  char cVar5;
-  int iVar6;
-  double dVar7;
-  float fStack_108;
-  float fStack_104;
-  float local_100;
-  float local_fc;
-  float fStack_f8;
-  float local_f4;
-  float local_f0;
-  float fStack_ec;
-  short local_e8;
-  short local_e6;
-  short local_e4;
-  float local_e0;
-  float local_dc;
-  float local_d8;
-  float local_d4;
-  short local_d0;
-  short local_ce;
-  short local_cc;
-  float local_c8;
-  float local_c4;
-  float local_c0;
-  float local_bc;
-  float afStack_b8 [16];
-  float afStack_78 [16];
-  undefined4 local_38;
-  uint uStack_34;
-  undefined4 local_30;
-  uint uStack_2c;
-  longlong local_28;
-  undefined4 local_20;
-  uint uStack_1c;
-  undefined4 local_18;
-  uint uStack_14;
-  longlong local_10;
-  
-  iVar6 = *(int *)(param_9 + 0x5c);
-  if (*(char *)(param_9 + 0x56) == -1) {
-    uVar3 = GameBit_Get(0x1fa);
-    if (uVar3 != 0) {
-      *(undefined *)(iVar6 + 0x420) = 0;
-    }
-    uVar3 = GameBit_Get(0x1fb);
-    if (uVar3 != 0) {
-      param_1 = FUN_80017a10((int)param_9,0x13);
-    }
-  }
-  *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) | 8;
-  param_9[1] = *(short *)(iVar6 + 0x41c);
-  param_9[2] = *(short *)(iVar6 + 0x41e);
-  if (((*(byte *)(iVar6 + 0x428) >> 2 & 1) == 0) &&
-     (uVar3 = GameBit_Get((int)*(short *)(iVar6 + 0x44a)), uVar3 == 0)) {
-    cVar5 = *(char *)(iVar6 + 0x421);
-    if (cVar5 != '\x01') {
-      if (cVar5 < '\x01') {
-        if (-1 < cVar5) {
-          *(byte *)((int)param_9 + 0xaf) = *(byte *)((int)param_9 + 0xaf) & 0xf7;
-          if ((*(byte *)((int)param_9 + 0xaf) & 4) == 0) {
-            *(undefined *)(iVar6 + 0x420) = 0;
-          }
-          else {
-            *(undefined *)(iVar6 + 0x420) = 1;
-          }
-          FUN_8000680c((int)param_9,0x57);
-        }
-      }
-      else if (cVar5 < '\x03') {
-        fn_801EAE4C(param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,param_9,iVar6);
-        if ((*(byte *)(iVar6 + 0x428) >> 1 & 1) == 0) {
-          FUN_8011e868(0x10);
-          FUN_8011e844(0x11);
-          cVar5 = FUN_80006bd0(0);
-          uStack_34 = (int)cVar5 ^ 0x80000000;
-          local_38 = 0x43300000;
-          *(float *)(iVar6 + 0x45c) =
-               (float)((double)CONCAT44(0x43300000,uStack_34) - DOUBLE_803e6798);
-          cVar5 = FUN_80006bc8(0);
-          uStack_2c = (int)cVar5 ^ 0x80000000;
-          local_30 = 0x43300000;
-          iVar4 = (int)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e6798);
-          local_28 = (longlong)iVar4;
-          *(char *)(iVar6 + 0x460) = (char)iVar4;
-          uVar3 = FUN_80006c10(0);
-          *(uint *)(iVar6 + 0x458) = uVar3;
-          uVar3 = FUN_80006c00(0);
-          *(uint *)(iVar6 + 0x450) = uVar3;
-          uVar3 = FUN_80006bf8(0);
-          *(uint *)(iVar6 + 0x454) = uVar3;
-          uStack_1c = -(int)*(char *)(iVar6 + 0x460) ^ 0x80000000;
-          local_20 = 0x43300000;
-          uStack_14 = FUN_80017730();
-          uStack_14 = uStack_14 & 0xffff;
-          local_18 = 0x43300000;
-          iVar4 = (int)((float)((double)CONCAT44(0x43300000,uStack_14) - DOUBLE_803e68b8) /
-                       lbl_803E68B0);
-          local_10 = (longlong)iVar4;
-          *(short *)(iVar6 + 0x44c) = (short)iVar4;
-          *(float *)(iVar6 + 0x45c) = *(float *)(iVar6 + 0x45c) / lbl_803E6804;
-          fVar1 = *(float *)(iVar6 + 0x45c);
-          fVar2 = lbl_803E6808;
-          if ((lbl_803E6808 <= fVar1) && (fVar2 = fVar1, lbl_803E6784 < fVar1)) {
-            fVar2 = lbl_803E6784;
-          }
-          *(float *)(iVar6 + 0x45c) = fVar2;
-          fn_801EC1AC((int)param_9,iVar6);
-          FUN_801ecd30(param_9,iVar6);
-          if (*(float *)(iVar6 + 0x3e4) == lbl_803E6780) {
-            *(undefined4 *)(iVar6 + 0x47c) = *(undefined4 *)(iVar6 + 0x464);
-            *(undefined4 *)(iVar6 + 0x480) = *(undefined4 *)(iVar6 + 0x468);
-            *(undefined4 *)(iVar6 + 0x484) = *(undefined4 *)(iVar6 + 0x46c);
-          }
-          else {
-            FUN_80247edc((double)*(float *)(iVar6 + 0x3e0),(float *)(iVar6 + 0x464),
-                         (float *)(iVar6 + 0x47c));
-            FUN_80247edc((double)*(float *)(iVar6 + 0x3e0),(float *)(iVar6 + 0x494),
-                         (float *)(iVar6 + 0x494));
-            *(float *)(iVar6 + 0x3e4) = *(float *)(iVar6 + 0x3e4) - lbl_803DC074;
-            if (*(float *)(iVar6 + 0x3e4) <= lbl_803E6780) {
-              iVar4 = FUN_80053c14();
-              if (iVar4 != 0) {
-                FUN_80053c20((double)lbl_803E6780,0);
-              }
-              *(float *)(iVar6 + 0x3e4) = lbl_803E6780;
-            }
-          }
-          local_dc = lbl_803E6780;
-          local_d8 = lbl_803E6780;
-          local_d4 = lbl_803E6780;
-          local_e0 = lbl_803E6784;
-          local_e8 = -*(short *)(iVar6 + 0x40e);
-          local_e6 = -param_9[1];
-          local_e4 = -param_9[2];
-          FUN_8001774c(afStack_b8,(int)&local_e8);
-          FUN_80017778((double)lbl_803E6780,
-                       (double)(*(float *)(iVar6 + 0x4b0) * *(float *)(iVar6 + 0x544)),
-                       (double)lbl_803E6780,afStack_b8,&local_100,&fStack_108,&fStack_f8);
-          local_100 = local_100 * *(float *)(iVar6 + 0x540);
-          local_fc = lbl_803E6780;
-          FUN_80247edc((double)lbl_803DC074,&local_100,&local_100);
-          FUN_80247e94((float *)(iVar6 + 0x494),&local_100,(float *)(iVar6 + 0x494));
-          *(float *)(iVar6 + 0x498) =
-               *(float *)(iVar6 + 0x4b0) * lbl_803DC074 + *(float *)(iVar6 + 0x498);
-          dVar7 = (double)FUN_80293130((double)*(float *)(iVar6 + 0x548),(double)lbl_803DC074);
-          *(float *)(iVar6 + 0x494) = (float)((double)*(float *)(iVar6 + 0x494) * dVar7);
-          dVar7 = (double)FUN_80293130((double)*(float *)(iVar6 + 0x54c),(double)lbl_803DC074);
-          *(float *)(iVar6 + 0x49c) = (float)((double)*(float *)(iVar6 + 0x49c) * dVar7);
-          FUN_801ec7a0((uint)param_9,iVar6);
-          FUN_80017778((double)*(float *)(iVar6 + 0x494),(double)*(float *)(iVar6 + 0x498),
-                       (double)*(float *)(iVar6 + 0x49c),(float *)(iVar6 + 0xec),
-                       (float *)(param_9 + 0x12),(float *)(param_9 + 0x14),(float *)(param_9 + 0x16)
-                      );
-          FUN_80017a80((int)param_9);
-        }
-        else {
-          uVar3 = FUN_801eb0c0(param_9,iVar6);
-          if (uVar3 != 0) {
-            fn_801EC1AC((int)param_9,iVar6);
-            FUN_801ecd30(param_9,iVar6);
-            if (*(float *)(iVar6 + 0x3e4) == lbl_803E6780) {
-              *(undefined4 *)(iVar6 + 0x47c) = *(undefined4 *)(iVar6 + 0x464);
-              *(undefined4 *)(iVar6 + 0x480) = *(undefined4 *)(iVar6 + 0x468);
-              *(undefined4 *)(iVar6 + 0x484) = *(undefined4 *)(iVar6 + 0x46c);
-            }
-            else {
-              FUN_80247edc((double)*(float *)(iVar6 + 0x3e0),(float *)(iVar6 + 0x464),
-                           (float *)(iVar6 + 0x47c));
-              FUN_80247edc((double)*(float *)(iVar6 + 0x3e0),(float *)(iVar6 + 0x494),
-                           (float *)(iVar6 + 0x494));
-              *(float *)(iVar6 + 0x3e4) = *(float *)(iVar6 + 0x3e4) - lbl_803DC074;
-              if (*(float *)(iVar6 + 0x3e4) <= lbl_803E6780) {
-                iVar4 = FUN_80053c14();
-                if (iVar4 != 0) {
-                  FUN_80053c20((double)lbl_803E6780,0);
-                }
-                *(float *)(iVar6 + 0x3e4) = lbl_803E6780;
-              }
-            }
-            local_c4 = lbl_803E6780;
-            local_c0 = lbl_803E6780;
-            local_bc = lbl_803E6780;
-            local_c8 = lbl_803E6784;
-            local_d0 = -*(short *)(iVar6 + 0x40e);
-            local_ce = -param_9[1];
-            local_cc = -param_9[2];
-            FUN_8001774c(afStack_78,(int)&local_d0);
-            FUN_80017778((double)lbl_803E6780,
-                         (double)(*(float *)(iVar6 + 0x4b0) * *(float *)(iVar6 + 0x544)),
-                         (double)lbl_803E6780,afStack_78,&local_f4,&fStack_104,&fStack_ec);
-            local_f4 = local_f4 * *(float *)(iVar6 + 0x540);
-            local_f0 = lbl_803E6780;
-            FUN_80247edc((double)lbl_803DC074,&local_f4,&local_f4);
-            FUN_80247e94((float *)(iVar6 + 0x494),&local_f4,(float *)(iVar6 + 0x494));
-            *(float *)(iVar6 + 0x498) =
-                 *(float *)(iVar6 + 0x4b0) * lbl_803DC074 + *(float *)(iVar6 + 0x498);
-            dVar7 = (double)FUN_80293130((double)*(float *)(iVar6 + 0x548),(double)lbl_803DC074);
-            *(float *)(iVar6 + 0x494) = (float)((double)*(float *)(iVar6 + 0x494) * dVar7);
-            dVar7 = (double)FUN_80293130((double)*(float *)(iVar6 + 0x54c),(double)lbl_803DC074);
-            *(float *)(iVar6 + 0x49c) = (float)((double)*(float *)(iVar6 + 0x49c) * dVar7);
-            FUN_801ec7a0((uint)param_9,iVar6);
-            FUN_80017778((double)*(float *)(iVar6 + 0x494),(double)*(float *)(iVar6 + 0x498),
-                         (double)*(float *)(iVar6 + 0x49c),(float *)(iVar6 + 0xec),
-                         (float *)(param_9 + 0x12),(float *)(param_9 + 0x14),
-                         (float *)(param_9 + 0x16));
-            FUN_80017a80((int)param_9);
-          }
-        }
-        fn_801EB0D4((uint)param_9,iVar6);
-        uVar3 = (uint)(lbl_803E6838 * -*(float *)(iVar6 + 0x430));
-        local_10 = (longlong)(int)uVar3;
-        FUN_801ea854((double)*(float *)(iVar6 + 0x49c),(uint)param_9,iVar6,uVar3,iVar6 + 0x461,7);
-        fn_801EB634((int)param_9,iVar6);
-        *param_9 = *(short *)(iVar6 + 0x40e);
-      }
-    }
-  }
-  else {
-    *(byte *)(iVar6 + 0x428) = *(byte *)(iVar6 + 0x428) & 0xfb | 4;
-  }
-  return;
-}
-
 extern void textureFree(u32);
 extern u32 textureLoadAsset(int);
 extern u32 lbl_803DDC60;
@@ -519,4 +275,190 @@ void SnowBike_init(int obj, u8 *params, int flag)
     }
     path[0x264] = lbl_803E5C68 + lbl_803DC0B8;
     (**(void (**)(int, u8 *))(*gPathControlInterface + 0x20))(obj, path);
+}
+
+
+extern void Obj_SetModelSlotIndex(int obj, int slot);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern int drshackle_updateAttachedPosition(int obj, u8 *state);
+extern void fn_801EBD60(int obj, u8 *state);
+extern void fn_801EC7A0(int obj, u8 *state);
+extern void fn_801EA240(int obj, u8 *state, int val, u8 *p, int n, f32 speed);
+extern void fn_8002B8F0(int obj);
+extern int Rcp_GetMotionBlurEnabled(void);
+extern void setMotionBlur(int a, f32 b);
+extern void PSVECScale(f32 *src, f32 *dst, f32 scale);
+extern void PSVECAdd(f32 *a, f32 *b, f32 *dst);
+extern void mtxRotateByVec3s(f32 *mtx, s16 *rot);
+extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern f32 powfBitEstimate(f32 x, f32 y);
+extern void setAButtonIcon(int icon);
+extern void setBButtonIcon(int icon);
+extern char padGetStickX(int pad);
+extern char padGetStickY(int pad);
+extern u32 getButtonsHeld(int pad);
+extern u32 getButtonsJustPressed(int pad);
+extern u32 getButtonsJustPressedIfNotBusy(int pad);
+extern int getAngle(f32 dx, f32 dz);
+extern f32 timeDelta;
+extern f32 lbl_803E5B6C;
+extern f32 lbl_803E5B70;
+extern f32 lbl_803E5BA0;
+extern f32 lbl_803E5C18;
+
+void SnowBike_update(int obj)
+{
+    u8 *state = *(u8 **)(obj + 0xb8);
+    f32 mtx1[16];
+    f32 mtx2[16];
+    f32 quad1[4];
+    s16 rot1[3];
+    f32 quad2[4];
+    s16 rot2[3];
+    f32 vec1[3];
+    f32 vec2[3];
+    f32 dummy1;
+    f32 dummy2;
+    s8 mode;
+    f32 fz;
+    f32 p;
+    f32 v;
+    f32 c;
+
+    if (*(s8 *)(obj + 0xac) == -1) {
+        if (GameBit_Get(0x1fa) != 0) {
+            state[0x420] = 0;
+        }
+        if (GameBit_Get(0x1fb) != 0) {
+            Obj_SetModelSlotIndex(obj, 0x13);
+        }
+    }
+    *(u8 *)(obj + 0xaf) |= 8;
+    *(s16 *)(obj + 2) = *(s16 *)(state + 0x41c);
+    *(s16 *)(obj + 4) = *(s16 *)(state + 0x41e);
+    if (((SnowBikeFlags *)(state + 0x428))->b04 || GameBit_Get(*(s16 *)(state + 0x44a)) != 0) {
+        ((SnowBikeFlags *)(state + 0x428))->b04 = 1;
+        return;
+    }
+    mode = *(s8 *)(state + 0x421);
+    if (mode != 1) {
+        if (mode < 1) {
+            if (mode >= 0) {
+                *(u8 *)(obj + 0xaf) &= ~8;
+                if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+                    state[0x420] = 1;
+                } else {
+                    state[0x420] = 0;
+                }
+                Sfx_StopObjectChannel(obj, 0x57);
+            }
+        } else if (mode < 3) {
+            fn_801EAE4C(obj, state);
+            if (((SnowBikeFlags *)(state + 0x428))->b02) {
+                if (drshackle_updateAttachedPosition(obj, state) != 0) {
+                    fn_801EBD60(obj, state);
+                    fn_801EC7A0(obj, state);
+                    if (*(f32 *)(state + 0x3e4) != lbl_803E5AE8) {
+                        PSVECScale((f32 *)(state + 0x464), (f32 *)(state + 0x47c), *(f32 *)(state + 0x3e0));
+                        PSVECScale((f32 *)(state + 0x494), (f32 *)(state + 0x494), *(f32 *)(state + 0x3e0));
+                        *(f32 *)(state + 0x3e4) -= timeDelta;
+                        if (*(f32 *)(state + 0x3e4) <= lbl_803E5AE8) {
+                            if (Rcp_GetMotionBlurEnabled() != 0) {
+                                setMotionBlur(0, lbl_803E5AE8);
+                            }
+                            *(f32 *)(state + 0x3e4) = lbl_803E5AE8;
+                        }
+                    } else {
+                        *(f32 *)(state + 0x47c) = *(f32 *)(state + 0x464);
+                        *(f32 *)(state + 0x480) = *(f32 *)(state + 0x468);
+                        *(f32 *)(state + 0x484) = *(f32 *)(state + 0x46c);
+                    }
+                    fz = lbl_803E5AE8;
+                    quad1[1] = fz;
+                    quad1[2] = fz;
+                    quad1[3] = fz;
+                    quad1[0] = lbl_803E5AEC;
+                    rot1[0] = -*(s16 *)(state + 0x40e);
+                    rot1[1] = -*(s16 *)(obj + 2);
+                    rot1[2] = -*(s16 *)(obj + 4);
+                    mtxRotateByVec3s(mtx1, rot1);
+                    Matrix_TransformPoint(mtx1, lbl_803E5AE8, *(f32 *)(state + 0x4b0) * *(f32 *)(state + 0x544), lbl_803E5AE8, &vec1[0], &dummy1, &vec1[2]);
+                    vec1[0] = vec1[0] * *(f32 *)(state + 0x540);
+                    vec1[1] = lbl_803E5AE8;
+                    PSVECScale(vec1, vec1, timeDelta);
+                    PSVECAdd((f32 *)(state + 0x494), vec1, (f32 *)(state + 0x494));
+                    *(f32 *)(state + 0x498) = *(f32 *)(state + 0x4b0) * timeDelta + *(f32 *)(state + 0x498);
+                    p = powfBitEstimate(*(f32 *)(state + 0x548), timeDelta);
+                    *(f32 *)(state + 0x494) *= p;
+                    p = powfBitEstimate(*(f32 *)(state + 0x54c), timeDelta);
+                    *(f32 *)(state + 0x49c) *= p;
+                    fn_801EC1AC(obj, (int)state);
+                    Matrix_TransformPoint((f32 *)(state + 0xec), *(f32 *)(state + 0x494), *(f32 *)(state + 0x498), *(f32 *)(state + 0x49c), (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
+                    fn_8002B8F0(obj);
+                }
+            } else {
+                setAButtonIcon(0x10);
+                setBButtonIcon(0x11);
+                *(f32 *)(state + 0x45c) = (f32)padGetStickX(0);
+                *(s8 *)(state + 0x460) = (int)(f32)padGetStickY(0);
+                *(u32 *)(state + 0x458) = getButtonsHeld(0);
+                *(u32 *)(state + 0x450) = getButtonsJustPressed(0);
+                *(u32 *)(state + 0x454) = getButtonsJustPressedIfNotBusy(0);
+                *(s16 *)(state + 0x44c) = (int)((f32)(u16)getAngle(*(f32 *)(state + 0x45c), (f32)-(int)*(s8 *)(state + 0x460)) / lbl_803E5C18);
+                *(f32 *)(state + 0x45c) = *(f32 *)(state + 0x45c) / lbl_803E5B6C;
+                v = *(f32 *)(state + 0x45c);
+                c = lbl_803E5B70;
+                if (v >= lbl_803E5B70) {
+                    c = lbl_803E5AEC;
+                    if (v <= lbl_803E5AEC) {
+                        c = v;
+                    }
+                }
+                *(f32 *)(state + 0x45c) = c;
+                fn_801EBD60(obj, state);
+                fn_801EC7A0(obj, state);
+                if (*(f32 *)(state + 0x3e4) != lbl_803E5AE8) {
+                    PSVECScale((f32 *)(state + 0x464), (f32 *)(state + 0x47c), *(f32 *)(state + 0x3e0));
+                    PSVECScale((f32 *)(state + 0x494), (f32 *)(state + 0x494), *(f32 *)(state + 0x3e0));
+                    *(f32 *)(state + 0x3e4) -= timeDelta;
+                    if (*(f32 *)(state + 0x3e4) <= lbl_803E5AE8) {
+                        if (Rcp_GetMotionBlurEnabled() != 0) {
+                            setMotionBlur(0, lbl_803E5AE8);
+                        }
+                        *(f32 *)(state + 0x3e4) = lbl_803E5AE8;
+                    }
+                } else {
+                    *(f32 *)(state + 0x47c) = *(f32 *)(state + 0x464);
+                    *(f32 *)(state + 0x480) = *(f32 *)(state + 0x468);
+                    *(f32 *)(state + 0x484) = *(f32 *)(state + 0x46c);
+                }
+                fz = lbl_803E5AE8;
+                quad2[1] = fz;
+                quad2[2] = fz;
+                quad2[3] = fz;
+                quad2[0] = lbl_803E5AEC;
+                rot2[0] = -*(s16 *)(state + 0x40e);
+                rot2[1] = -*(s16 *)(obj + 2);
+                rot2[2] = -*(s16 *)(obj + 4);
+                mtxRotateByVec3s(mtx2, rot2);
+                Matrix_TransformPoint(mtx2, lbl_803E5AE8, *(f32 *)(state + 0x4b0) * *(f32 *)(state + 0x544), lbl_803E5AE8, &vec2[0], &dummy2, &vec2[2]);
+                vec2[0] = vec2[0] * *(f32 *)(state + 0x540);
+                vec2[1] = lbl_803E5AE8;
+                PSVECScale(vec2, vec2, timeDelta);
+                PSVECAdd((f32 *)(state + 0x494), vec2, (f32 *)(state + 0x494));
+                *(f32 *)(state + 0x498) = *(f32 *)(state + 0x4b0) * timeDelta + *(f32 *)(state + 0x498);
+                p = powfBitEstimate(*(f32 *)(state + 0x548), timeDelta);
+                *(f32 *)(state + 0x494) *= p;
+                p = powfBitEstimate(*(f32 *)(state + 0x54c), timeDelta);
+                *(f32 *)(state + 0x49c) *= p;
+                fn_801EC1AC(obj, (int)state);
+                Matrix_TransformPoint((f32 *)(state + 0xec), *(f32 *)(state + 0x494), *(f32 *)(state + 0x498), *(f32 *)(state + 0x49c), (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
+                fn_8002B8F0(obj);
+            }
+            fn_801EB0D4(obj, state);
+            fn_801EA240(obj, state, (int)(lbl_803E5BA0 * -*(f32 *)(state + 0x430)), state + 0x461, 7, *(f32 *)(state + 0x49c));
+            fn_801EB634(obj, state);
+            *(s16 *)obj = *(s16 *)(state + 0x40e);
+        }
+    }
 }
