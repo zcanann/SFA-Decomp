@@ -1476,3 +1476,61 @@ void cameraFocusNpc(int param1, u8 *obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+typedef struct {
+    int key;
+    int val;
+} SeqSortPair;
+
+/* EN v1.0 0x8007FEAC  size: 332b  Shell sort over (key, val) pairs,
+ * ascending by key. */
+#pragma dont_inline on
+#pragma peephole off
+#pragma scheduling off
+void objSeqInitFn_8007feac(SeqSortPair *arr, int n)
+{
+    int h;
+    int i;
+    int j;
+
+    h = 1;
+    while (h <= (n - 1) / 9) {
+        h = h * 3 + 1;
+    }
+    for (; h > 0; h /= 3) {
+        for (i = h + 1; i < n; i++) {
+            SeqSortPair tmp = arr[i];
+            j = i;
+            while (j > h && arr[j - h].key > tmp.key) {
+                arr[j] = arr[j - h];
+                j -= h;
+            }
+            arr[j] = tmp;
+        }
+    }
+    for (i = 1; i < n; i++) {
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+#pragma dont_inline reset
+
+/* EN v1.0 0x80080078  size: 136b  Spin-delay then sort when the pair list
+ * is large enough. */
+#pragma peephole off
+#pragma scheduling off
+void objSeqInitFn_80080078(SeqSortPair *arr, int n)
+{
+    int i;
+    int j;
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+        }
+    }
+    if (n > 0x10) {
+        objSeqInitFn_8007feac(arr, n);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
