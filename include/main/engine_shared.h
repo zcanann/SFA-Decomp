@@ -1474,8 +1474,8 @@ extern void sndVolume(int a, int b, int c);
 extern int sndPushGroup(void *project, u16 group, void *sampleBuffer, void *sampleDir, void *pool);
 
 int getLActions(int a, int b, u16 idx);
-void fn_8000881C(u64 *dst, u32 packed);
-void fn_800089AC(u64 *dst, u32 packed);
+void render_copyPackedU64Tail(u64 *dst, u32 packed);
+void render_copyPackedU64Head(u64 *dst, u32 packed);
 int getEnvfxActImmediately(int a, int b, u16 idx, int d);
 int getEnvfxAct(int a, int b, u16 idx, int d);
 u8 *modelRenderFn_80006744(u8 *p, int count, ModelRenderInstrsState *state, int stride, u8 bitWidth);

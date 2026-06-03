@@ -15,8 +15,10 @@ int getLActions(int a, int b, u16 idx)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8000881C(u64 *dst, u32 packed)
+void render_copyPackedU64Tail(u64 *dst, u32 packed)
 {
+    /* Preserve bytes before the unaligned source offset; fill the tail from
+       the aligned 64-bit word. */
     u64 src = *(u64 *)(packed & ~7);
 
     switch (packed & 7) {
@@ -35,8 +37,10 @@ void fn_8000881C(u64 *dst, u32 packed)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_800089AC(u64 *dst, u32 packed)
+void render_copyPackedU64Head(u64 *dst, u32 packed)
 {
+    /* Fill the head from the aligned 64-bit word; preserve bytes after the
+       unaligned source offset. */
     u64 src = *(u64 *)(packed & ~7);
 
     switch (packed & 7) {
