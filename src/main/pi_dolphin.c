@@ -8809,6 +8809,154 @@ void fn_8004E0FC(void) {
     lbl_803DCD69 += 4;
     lbl_803DCD68 += 2;
 }
+extern IndTexMtx23 lbl_802C1D68;
+extern f32 lbl_803DEAC4;
+extern void fn_8006C528(void *out);
+extern f32 ResetCoverCallback_803DEB2C;
+void renderHeavyFog(int *param_1) {
+    f32 mcc[3][4];
+    f32 m9c[3][4];
+    f32 m6c[3][4];
+    f32 mrot[3][4];
+    IndTexMtx23 im;
+    u8 *tex20;
+    u8 *tex1c;
+    f32 a;
+    f32 b;
+    int kc;
+    f32 (*iv)[4];
+    f32 k;
+    im = lbl_802C1D68;
+    iv = Camera_GetInverseViewMatrix();
+    mcc[0][0] = lbl_803DEACC;
+    mcc[0][1] = lbl_803DEACC;
+    mcc[0][2] = lbl_803DEAC4 / lbl_803DCD3C;
+    mcc[0][3] = lbl_803DCD38;
+    k = lbl_803DEAC4 / (lbl_803DCD44 - lbl_803DCD40);
+    mcc[1][0] = k * iv[1][0];
+    mcc[1][1] = k * iv[1][1];
+    mcc[1][2] = k * iv[1][2];
+    mcc[1][3] = k * iv[1][3] + -lbl_803DCD44 * k;
+    mcc[2][0] = lbl_803DEACC;
+    mcc[2][1] = lbl_803DEACC;
+    mcc[2][2] = lbl_803DEACC;
+    mcc[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(mcc, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+    kc = *param_1;
+    GXSetTevKColor(lbl_803DCD74, &kc);
+    fn_8006C528(&tex20);
+    {
+        int id = lbl_803DCD8C;
+        if (tex20 != 0) {
+            void *obj = tex20 + 0x20;
+            if (*(u8 *)(tex20 + 0x48) != 0) {
+                GXLoadTexObjPreLoaded(obj, *(void **)(tex20 + 0x40), id);
+            } else {
+                GXLoadTexObj(obj, id);
+            }
+        }
+    }
+    if (lbl_803DCD31 != 0) {
+        newshadows_getReflectionScrollOffsets(&a, &b);
+        b = b * lbl_803DEAE0;
+        a = a * lbl_803DEB08;
+        GXSetIndTexMtx(2, im.v, -2);
+        GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + 1, lbl_803DCD8C + 1);
+        m9c[0][0] = lbl_803DCD34;
+        m9c[0][1] = lbl_803DEACC;
+        m9c[0][2] = lbl_803DEACC;
+        m9c[0][3] = playerMapOffsetX * lbl_803DCD34 + a;
+        m9c[1][0] = lbl_803DEACC;
+        m9c[1][1] = lbl_803DCD34;
+        m9c[1][2] = lbl_803DEACC;
+        m9c[1][3] = lbl_803DEACC;
+        m9c[2][0] = lbl_803DEACC;
+        m9c[2][1] = lbl_803DEACC;
+        m9c[2][2] = lbl_803DEACC;
+        m9c[2][3] = lbl_803DEAC8;
+        PSMTXRotRad(mrot, 0x7a, lbl_803DEB28);
+        PSMTXConcat(mrot, m9c, m9c);
+        PSMTXConcat(m9c, iv, m9c);
+        GXLoadTexMtxImm(m9c, lbl_803DCD80 + 3, 0);
+        GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
+        GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 2, 2, 6, 6, 0, 0, 0);
+        GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
+        GXSetIndTexOrder(lbl_803DCD7C + 1, lbl_803DCD88 + 2, lbl_803DCD8C + 1);
+        m6c[0][0] = lbl_803DEACC;
+        m6c[0][1] = lbl_803DEACC;
+        m6c[0][2] = lbl_803DCD34;
+        m6c[0][3] = playerMapOffsetZ * lbl_803DCD34 + b;
+        m6c[1][0] = lbl_803DEACC;
+        m6c[1][1] = lbl_803DCD34;
+        m6c[1][2] = lbl_803DEACC;
+        m6c[1][3] = lbl_803DEACC;
+        m6c[2][0] = lbl_803DEACC;
+        m6c[2][1] = lbl_803DEACC;
+        m6c[2][2] = lbl_803DEACC;
+        m6c[2][3] = lbl_803DEAC8;
+        PSMTXRotRad(mrot, 0x78, ResetCoverCallback_803DEB2C);
+        PSMTXConcat(mrot, m6c, m6c);
+        PSMTXConcat(m6c, iv, m6c);
+        GXLoadTexMtxImm(m6c, lbl_803DCD80 + 6, 0);
+        GXSetTexCoordGen2(lbl_803DCD88 + 2, 0, 0, 0, 0, lbl_803DCD80 + 6);
+        GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C + 1, 0, 2, 2, 0, 0, 1, 0, 0);
+        GXSetIndTexCoordScale(lbl_803DCD7C + 1, 0, 0);
+        GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+        GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+        GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+        lbl_803DCD30 = 1;
+        GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88, lbl_803DCD8C, 0xff);
+        GXSetTevColorIn(lbl_803DCD90 + 1, 0, 0xe, 9, 0xf);
+        GXSetTevAlphaIn(lbl_803DCD90 + 1, 7, 7, 7, 0);
+        GXSetTevSwapMode(lbl_803DCD90 + 1, 0, 0);
+        GXSetTevColorOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
+        getTextureFn_8006c5e4(&tex1c);
+        {
+            int id2 = lbl_803DCD8C + 1;
+            if (tex1c != 0) {
+                void *obj = tex1c + 0x20;
+                if (*(u8 *)(tex1c + 0x48) != 0) {
+                    GXLoadTexObjPreLoaded(obj, *(void **)(tex1c + 0x40), id2);
+                } else {
+                    GXLoadTexObj(obj, id2);
+                }
+            }
+        }
+        GXSetTevKColorSel(lbl_803DCD90 + 1, lbl_803DCD70);
+        lbl_803DCD88 = lbl_803DCD88 + 3;
+        lbl_803DCD90 = lbl_803DCD90 + 2;
+        lbl_803DCD8C = lbl_803DCD8C + 2;
+        lbl_803DCD80 = lbl_803DCD80 + 9;
+        lbl_803DCD7C = lbl_803DCD7C + 2;
+        lbl_803DCD6A += 2;
+        lbl_803DCD69 += 3;
+        lbl_803DCD68 += 2;
+    } else {
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+        GXSetTevColorIn(lbl_803DCD90, 0, 0xe, 9, 0xf);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+        GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+        GXSetTevDirect(lbl_803DCD90);
+        GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+        lbl_803DCD30 = 1;
+        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
+        lbl_803DCD88 = lbl_803DCD88 + 1;
+        lbl_803DCD90 = lbl_803DCD90 + 1;
+        lbl_803DCD8C = lbl_803DCD8C + 1;
+        lbl_803DCD80 = lbl_803DCD80 + 3;
+        lbl_803DCD6A += 1;
+        lbl_803DCD69 += 1;
+    }
+    lbl_803DCD74 = lbl_803DCD74 + 1;
+    lbl_803DCD70 = lbl_803DCD70 + 1;
+    lbl_803DCD6C = lbl_803DCD6C + 1;
+}
 void textureFn_8004ff20(void *p1) {
     if (p1 != 0) {
         GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, 0x7d);
