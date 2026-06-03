@@ -851,6 +851,7 @@ extern u8 *fn_8006070C(void *block, int idx);
  * block under the object that carries the given event id: sets bits 0..1
  * on matching block entries and bit 1 on matching group records. Returns 0
  * when the block is missing or not trigger-enabled. */
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 int fn_801A27B8(int obj, int id)
@@ -886,6 +887,88 @@ int fn_801A27B8(int obj, int id)
         }
     }
     return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma dont_inline reset
+
+extern int  GameBit_Get(int bit);
+extern void GameBit_Set(int bit, int val);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern int  lbl_803DDB18;
+
+/* EN v1.0 0x801A2928  size: 464b  Blasted-target update: once the target's
+ * GameBit is latched, fires the map trigger; otherwise scans the model's
+ * hit nodes for newly-destroyed (state 5) pieces, records each unique piece,
+ * advances the damage model index, and on the final piece latches the
+ * GameBit, fires the trigger, and swaps to the destroyed model. */
+#pragma scheduling off
+#pragma peephole off
+void blasted_update(int obj)
+{
+    int def = *(int *)(obj + 0x4c);
+    int st = *(int *)(obj + 0xb8);
+    s16 total = *(s16 *)(def + 0x1a);
+
+    if (*(int *)(st + 0xc) != 0) {
+        return;
+    }
+    if ((u32)GameBit_Get(*(s16 *)(def + 0x1e)) != 0) {
+        *(int *)(st + 0xc) = fn_801A27B8(obj, *(s16 *)(def + 0x1c));
+        return;
+    }
+    {
+        int i;
+        for (i = 0; i < (s8)*(u8 *)(*(int *)(obj + 0x54) + 0x71); i++) {
+            u32 v;
+            s8 m;
+            int found;
+            m = *(u8 *)(*(int *)(obj + 0x54) + i + 0x75);
+            v = *(u32 *)(*(int *)(obj + 0x54) + i * 4 + 0x7c);
+            found = 0;
+            if (m != 5) {
+                continue;
+            }
+            if (total == 0) {
+                GameBit_Set(*(s16 *)(def + 0x1e), 1);
+                return;
+            }
+            if (m == 5) {
+                int k = 0;
+                int cnt = *(u8 *)(st + 0x11);
+                while (k != cnt) {
+                    if (v == *(u32 *)(st + k++ * 4)) {
+                        k = cnt;
+                        found = 1;
+                    }
+                }
+            }
+            if (found == 0) {
+                *(u32 *)(st + *(u8 *)(st + 0x11) * 4) = v;
+                GameBit_Set(*(u8 *)(st + 0x11) + 0x2de, 0);
+                GameBit_Set(*(u8 *)(st + 0x11) + 0x2df, 1);
+                if (*(s16 *)(def + 0x20) != -1) {
+                    GameBit_Set(*(s16 *)(def + 0x20), *(u8 *)(st + 0x11) + 1);
+                }
+                lbl_803DDB18 = 0x12c;
+                if (*(u8 *)(st + 0x11) + 1 > total) {
+                    int n;
+                    int lim;
+                    lim = total + 1;
+                    for (n = 0; n < lim; n++) {
+                        GameBit_Set(n + 0x2de, 0);
+                    }
+                    GameBit_Set(*(s16 *)(def + 0x1e), 1);
+                    fn_801A27B8(obj, *(s16 *)(def + 0x1c));
+                    Obj_SetActiveModelIndex(obj, 2);
+                    *(int *)(st + 0xc) = 1;
+                } else {
+                    *(u8 *)(st + 0x11) = *(u8 *)(st + 0x11) + 1;
+                    Obj_SetActiveModelIndex(obj, *(u8 *)(st + 0x11));
+                }
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
