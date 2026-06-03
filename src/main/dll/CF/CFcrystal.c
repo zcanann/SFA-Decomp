@@ -258,7 +258,7 @@ extern f32 lbl_803E3AE8;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801871C8(int *obj) {
+int FireFlyLantern_spawnFireFly(int *obj) {
     u8 *q;
     if (Obj_IsLoadingLocked() == 0) return 0;
     q = (u8 *)Obj_AllocObjectSetup(36, 1084);
@@ -282,7 +282,7 @@ int fn_801871C8(int *obj) {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8018728C(int obj, int unused, int events)
+int FireFlyLantern_SeqFn(int obj, int unused, int events)
 {
     u8 *state;
     u8 *slot;

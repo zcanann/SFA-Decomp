@@ -73,8 +73,8 @@ extern undefined4 FUN_8028688c();
 extern uint FUN_80294c04();
 extern int FUN_80294dbc();
 extern void *Obj_GetPlayerObject(void);
-extern int fn_801871C8(int *obj);
-extern int fn_8018728C(int obj, int unused, int events);
+extern int FireFlyLantern_spawnFireFly(int *obj);
+extern int FireFlyLantern_SeqFn(int obj, int unused, int events);
 
 extern undefined4 DAT_803225e0;
 extern undefined4 DAT_803225f0;
@@ -156,7 +156,7 @@ void FireFlyLantern_init(int obj, int def)
   u32 childCount;
 
   state = *(u8 **)(obj + 0xb8);
-  *(int *)(obj + 0xbc) = (int)fn_8018728C;
+  *(int *)(obj + 0xbc) = (int)FireFlyLantern_SeqFn;
   player = Obj_GetPlayerObject();
   if (*(s16 *)((u8 *)player + 0x46) != 0) {
     *(s16 *)(state + 0x20) = 0x13d;
@@ -171,7 +171,7 @@ void FireFlyLantern_init(int obj, int def)
   if (*(s8 *)(def + 0x19) == 1) {
     if (*(u8 *)(state + 0x1d) != 0) {
       *(u8 *)(state + 0x1c) = 1;
-      *(int *)state = fn_801871C8((int *)obj);
+      *(int *)state = FireFlyLantern_spawnFireFly((int *)obj);
     }
     *(s16 *)(obj + 6) = *(s16 *)(obj + 6) | 0x4000;
   }
@@ -185,7 +185,7 @@ void FireFlyLantern_init(int obj, int def)
     i = 0;
     childSlot = state;
     while (i < *(u8 *)(state + 0x1c)) {
-      *(int *)childSlot = fn_801871C8((int *)obj);
+      *(int *)childSlot = FireFlyLantern_spawnFireFly((int *)obj);
       childSlot += 4;
       i++;
     }

@@ -27,7 +27,8 @@ void FireFlyLantern_free(int obj);
 void FireFlyLantern_render(void);
 void FireFlyLantern_update(int obj);
 void FireFlyLantern_init(int param_1,int param_2);
-int fn_8018728C(int obj, int unused, int events);
+int FireFlyLantern_spawnFireFly(int *obj);
+int FireFlyLantern_SeqFn(int obj, int unused, int events);
 
 int flammablevine_getExtraSize(void);
 int flammablevine_getObjectTypeId(void);
