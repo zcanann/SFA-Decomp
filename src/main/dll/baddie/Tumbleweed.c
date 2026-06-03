@@ -6871,26 +6871,28 @@ void debugPrintDraw(int ctx)
     u8 *p;
     int pass;
     u32 res;
-    int x1;
+    u32 x1;
     u32 xs, ys;
-    int y2;
+    u32 yv;
+    u32 y2;
+    int ta, tb;
     u32 xa, xb, ya, yb;
     f32 scale;
-    u32 colb;
     u32 colw;
+    u32 colb;
 
     res = getScreenResolution();
     lbl_803DD9F4 = (u16)(res >> 0x10);
     lbl_803DD9F6 = (u16)res;
     GXSetScissor(0, 0, lbl_803DD9F6, lbl_803DD9F4);
-    if (lbl_803DD9F6 < 0x141) {
+    if (lbl_803DD9F6 <= 0x140) {
         lbl_803DDA08 = 0x10;
         lbl_803DDA04 = lbl_803DD9F6 - 0x10;
     } else {
         lbl_803DDA08 = 0x20;
         lbl_803DDA04 = lbl_803DD9F6 - 0x20;
     }
-    if (lbl_803DD9F4 < 0xf1) {
+    if (lbl_803DD9F4 <= 0xf0) {
         lbl_803DDA00 = 0x10;
         lbl_803DD9FC = lbl_803DD9F4 - 0x10;
     } else {
@@ -6911,13 +6913,16 @@ void debugPrintDraw(int ctx)
         p += fn_80136E00(ctx, p);
     }
     x1 = debugPrintXpos + 0xa;
+    yv = debugPrintYpos;
     xs = lbl_803DDA14;
     ys = lbl_803DDA16;
-    if ((!(debugPrintYpos - ys) | !(x1 - xs)) == 0) {
+    ta = !(yv - ys);
+    tb = !(x1 - xs);
+    if ((ta | tb) == 0) {
         if (ys >= 2) {
             ys -= 2;
         }
-        y2 = debugPrintYpos + 2;
+        y2 = yv + 2;
         scale = lbl_803DD9D8 + (f32)lbl_803DD9E0;
         xa = (u32)((f32)ys * scale);
         xb = (u32)((f32)y2 * scale);
