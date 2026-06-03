@@ -554,11 +554,9 @@ int Minimap_update(void)
     u16 hw;
     int cs;
     u32 texW, texH;
-    int mx;
     int bw, bh;
     f32 fx, fz;
     f32 ox, oy;
-    f32 tw, th;
     f32 xrel, yrel;
     f32 panx, pany;
     f32 t, e, a, b;
@@ -690,7 +688,7 @@ int Minimap_update(void)
             if (sv < 0) {
                 sv = 0;
             } else {
-                sv = (sv <= lbl_803DD930) ? sv : lbl_803DD930;
+                sv = (s16)((sv <= lbl_803DD930) ? sv : lbl_803DD930);
             }
             lbl_803DD932 = sv;
         } else {
@@ -716,13 +714,11 @@ int Minimap_update(void)
                 w = 0x78;
             }
             if (lbl_803DBBC0 < w) {
-                n = lbl_803DBBC0 + framesThisStep * 8;
-                lbl_803DBBC0 = n;
-                lbl_803DBBC0 = (n < w) ? n : w;
+                lbl_803DBBC0 += framesThisStep * 8;
+                lbl_803DBBC0 = (lbl_803DBBC0 < w) ? lbl_803DBBC0 : w;
             } else {
-                n = lbl_803DBBC0 - framesThisStep * 8;
-                lbl_803DBBC0 = n;
-                lbl_803DBBC0 = (n > w) ? n : w;
+                lbl_803DBBC0 -= framesThisStep * 8;
+                lbl_803DBBC0 = (lbl_803DBBC0 > w) ? lbl_803DBBC0 : w;
             }
             box[4] = (u16)(lbl_803DBBC0 - 8);
             lbl_803DD938 = 0x1b8 - lbl_803DBBC4;
@@ -735,8 +731,7 @@ int Minimap_update(void)
                 if (minimapTexture != NULL) {
                     texW = *(u16 *)((u8 *)minimapTexture + 0xa);
                     texH = *(u16 *)((u8 *)minimapTexture + 0xc);
-                    mx = lbl_803DD948;
-                    lbl_803DBBEC = (f32)texW / (f32)(mx - lbl_803DBBD0);
+                    lbl_803DBBEC = (f32)texW / (f32)(lbl_803DD948 - lbl_803DBBD0);
                     bw = lbl_803DBBC0;
                     a = (f32)bw / (f32)texW;
                     bh = lbl_803DBBC4;
@@ -745,19 +740,17 @@ int Minimap_update(void)
                     a = (a < lbl_803DBBBC) ? a : lbl_803DBBBC;
                     lbl_803DBBB8 = a;
                     if (lbl_803DD95C != 0) {
-                        xrel = -*(f32 *)(player + 0x20) + (f32)mx;
+                        xrel = -*(f32 *)(player + 0x20) + (f32)lbl_803DD948;
                         yrel = *(f32 *)(player + 0x18) - (f32)lbl_803DBBD2;
                     } else {
-                        xrel = -*(f32 *)(player + 0x18) + (f32)mx;
+                        xrel = -*(f32 *)(player + 0x18) + (f32)lbl_803DD948;
                         yrel = -*(f32 *)(player + 0x20) + (f32)lbl_803DD94A;
                     }
-                    tw = (f32)texW * lbl_803DBBB4;
-                    e = ((f32)bw - tw) * lbl_803E220C;
+                    e = ((f32)bw - (f32)texW * lbl_803DBBB4) * lbl_803E220C;
                     t = lbl_803E2208;
                     t = (t > e) ? t : e;
                     panx = -t;
-                    th = (f32)texH * lbl_803DBBB4;
-                    e = ((f32)bh - th) * lbl_803E220C;
+                    e = ((f32)bh - (f32)texH * lbl_803DBBB4) * lbl_803E220C;
                     t = lbl_803E2208;
                     t = (t > e) ? t : e;
                     pany = -t;
@@ -765,7 +758,7 @@ int Minimap_update(void)
                     if (t == panx) {
                         a = lbl_803DBBB4 * (xrel * lbl_803DBBEC) - (f32)(bw / 2);
                         t = (t > a) ? t : a;
-                        b = tw - (f32)bw;
+                        b = (f32)texW * lbl_803DBBB4 - (f32)bw;
                         t = (t < b) ? t : b;
                         ox = t;
                     }
@@ -773,7 +766,7 @@ int Minimap_update(void)
                     if (t == pany) {
                         a = lbl_803DBBB4 * (yrel * lbl_803DBBEC) - (f32)(bh / 2);
                         t = (t > a) ? t : a;
-                        b = th - (f32)bh;
+                        b = (f32)texH * lbl_803DBBB4 - (f32)bh;
                         t = (t < b) ? t : b;
                         oy = t;
                     }
@@ -854,7 +847,7 @@ int Minimap_update(void)
                 break;
             case 1:
                 fn_80133718();
-                if (lbl_803DD934 == 0) {
+                if ((u32)lbl_803DD934 == 0) {
                     fn_8013351C();
                     gameTextFn_8001984c(box[1], box[5], 1);
                     gameTextFn_80019804(1);
