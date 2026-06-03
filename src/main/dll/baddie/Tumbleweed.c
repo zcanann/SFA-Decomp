@@ -587,7 +587,7 @@ int Minimap_update(void)
     col = lbl_803E2204;
     player = Obj_GetPlayerObject();
     if (player != NULL) {
-        if (*(int *)(player + 0x30) != 0) {
+        if (*(void **)(player + 0x30) != NULL) {
             cell = *(u8 *)(*(int *)(player + 0x30) + 0xac);
         } else {
             cell = (u8)coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
@@ -631,17 +631,13 @@ int Minimap_update(void)
                             r2 = &rows[j];
                             if (marker == r2->mapId) {
                                 m = r2->x0;
-                                if (!(m < lbl_803DBBD0)) m = lbl_803DBBD0;
-                                lbl_803DBBD0 = m;
+                                lbl_803DBBD0 = (m < lbl_803DBBD0) ? m : lbl_803DBBD0;
                                 m = r2->x1;
-                                if (!(m > lbl_803DD948)) m = lbl_803DD948;
-                                lbl_803DD948 = m;
+                                lbl_803DD948 = (m > lbl_803DD948) ? m : lbl_803DD948;
                                 m = r2->z0;
-                                if (!(m < lbl_803DBBD2)) m = lbl_803DBBD2;
-                                lbl_803DBBD2 = m;
+                                lbl_803DBBD2 = (m < lbl_803DBBD2) ? m : lbl_803DBBD2;
                                 m = r2->z1;
-                                if (!(m > lbl_803DD94A)) m = lbl_803DD94A;
-                                lbl_803DD94A = m;
+                                lbl_803DD94A = (m > lbl_803DD94A) ? m : lbl_803DD94A;
                             }
                         }
                         lbl_803DD946 = rows[k].texU;
@@ -694,9 +690,7 @@ int Minimap_update(void)
             if (sv < 0) {
                 sv = 0;
             } else {
-                sw = lbl_803DD930;
-                if (!(sv > sw)) sw = sv;
-                sv = sw;
+                sv = (sv <= lbl_803DD930) ? sv : lbl_803DD930;
             }
             lbl_803DD932 = sv;
         } else {
@@ -724,13 +718,11 @@ int Minimap_update(void)
             if (lbl_803DBBC0 < w) {
                 n = lbl_803DBBC0 + framesThisStep * 8;
                 lbl_803DBBC0 = n;
-                if (!(n < w)) n = w;
-                lbl_803DBBC0 = n;
+                lbl_803DBBC0 = (n < w) ? n : w;
             } else {
                 n = lbl_803DBBC0 - framesThisStep * 8;
                 lbl_803DBBC0 = n;
-                if (!(n > w)) n = w;
-                lbl_803DBBC0 = n;
+                lbl_803DBBC0 = (n > w) ? n : w;
             }
             box[4] = (u16)(lbl_803DBBC0 - 8);
             lbl_803DD938 = 0x1b8 - lbl_803DBBC4;
@@ -845,14 +837,11 @@ int Minimap_update(void)
                     gameTextFn_8001984c(box[1], box[5], 1);
                     gameTextFn_80019804(1);
                     n = lbl_803DBBC0;
-                    if (!(n > 2)) n = 2;
-                    box[4] = (u16)n;
+                    box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
-                    if (!(hw < box[0])) hw = box[0];
-                    box[4] = hw;
+                    box[4] = (hw < box[0]) ? hw : box[0];
                     n = lbl_803DBBC4;
-                    if (!(n > 2)) n = 2;
-                    box[5] = (u16)n;
+                    box[5] = (u16)((n > 2) ? n : 2);
                     gameTextFn_8001984c(box[0], box[5], 2);
                     gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
                     cs = gameTextFn_80019b14();
@@ -869,14 +858,11 @@ int Minimap_update(void)
                     gameTextFn_8001984c(box[1], box[5], 1);
                     gameTextFn_80019804(1);
                     n = lbl_803DBBC0;
-                    if (!(n > 2)) n = 2;
-                    box[4] = (u16)n;
+                    box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
-                    if (!(hw < box[0])) hw = box[0];
-                    box[4] = hw;
+                    box[4] = (hw < box[0]) ? hw : box[0];
                     n = lbl_803DBBC4;
-                    if (!(n > 2)) n = 2;
-                    box[5] = (u16)n;
+                    box[5] = (u16)((n > 2) ? n : 2);
                     gameTextFn_8001984c(box[0], box[5], 2);
                     gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
                     cs = gameTextFn_80019b14();
@@ -903,14 +889,11 @@ int Minimap_update(void)
                     gameTextFn_8001984c(box[1], box[5], 1);
                     gameTextFn_80019804(1);
                     n = lbl_803DBBC0;
-                    if (!(n > 2)) n = 2;
-                    box[4] = (u16)n;
+                    box[4] = (u16)((n > 2) ? n : 2);
                     hw = box[4];
-                    if (!(hw < box[0])) hw = box[0];
-                    box[4] = hw;
+                    box[4] = (hw < box[0]) ? hw : box[0];
                     n = lbl_803DBBC4;
-                    if (!(n > 2)) n = 2;
-                    box[5] = (u16)n;
+                    box[5] = (u16)((n > 2) ? n : 2);
                     gameTextFn_8001984c(box[0], box[5], 2);
                     gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
                     cs = gameTextFn_80019b14();
