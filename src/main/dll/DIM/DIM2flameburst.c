@@ -1640,7 +1640,7 @@ void dimmagicbridge_release(void) {}
 void dimmagicbridge_initialise(void) {}
 
 extern f32 lbl_803E4A10;
-extern int fn_801B602C(int* obj, int p2, u8* p3);
+extern int dimmagicbridge_flameSeqFn(int* obj, int p2, u8* p3);
 extern int Obj_GetActiveModel(int obj);
 extern int ObjModel_GetCurrentVertexCoords(int model, int idx);
 extern void fn_80065574(int a, int b, int c);
@@ -1661,7 +1661,7 @@ void dimmagicbridge_init(u8* obj, u8* params) {
     s16 hh;
 
     *(s16*)obj = (s16)(((s16)(s8)params[0x18]) << 8);
-    *(void**)(obj + 0xbc) = (void*)&fn_801B602C;
+    *(void**)(obj + 0xbc) = (void*)&dimmagicbridge_flameSeqFn;
     sub = *(u8**)(obj + 0xb8);
     minY = 0;
     model = Obj_GetActiveModel((int)obj);
@@ -1754,15 +1754,15 @@ void dll_1CE_free(void) {
 extern f32 lbl_803E49D4;
 extern f32 lbl_803E49F0;
 extern void* Obj_GetPlayerObject(void);
-extern void fn_801B5F1C(int obj, u8* sub);
-extern void fn_801B5D48(int obj, u8* sub);
+extern void dimmagicbridge_scrollTextureChannels(int obj, u8* sub);
+extern void dimmagicbridge_updateVertexWave(int obj, u8* sub);
 extern int EmissionController_IsLingering(void* player);
 extern void fn_80065574(int a, int b, int c);
 
-/* dimmagicbridge_update: scroll the two UV channels (via fn_801B5F1C and
- * fn_801B5D48), then either fire the death VFX (fn_80065574(0x11, 0, 0))
- * when sub->_5f is set or, when GameBit 0x1ef is on and the player's
- * emission controller is lingering, latch GameBit 0x1e8. */
+/* dimmagicbridge_update: advance texture phase and bridge vertex wave, then
+ * either fire the death VFX (fn_80065574(0x11, 0, 0)) when sub->_5f is set or,
+ * when GameBit 0x1ef is on and the player's emission controller is lingering,
+ * latch GameBit 0x1e8. */
 #pragma scheduling off
 void dimmagicbridge_update(int obj)
 {
@@ -1770,8 +1770,8 @@ void dimmagicbridge_update(int obj)
     void* player;
     player = Obj_GetPlayerObject();
     sub = *(u8**)((u8*)obj + 0xb8);
-    fn_801B5F1C(obj, sub);
-    fn_801B5D48(obj, sub);
+    dimmagicbridge_scrollTextureChannels(obj, sub);
+    dimmagicbridge_updateVertexWave(obj, sub);
     if (sub[0x5f] == 0) {
         if (GameBit_Get(0x1ef) != 0) {
             if (EmissionController_IsLingering(player) != 0) {
@@ -1861,13 +1861,13 @@ void dim_levelcontrol_free(int p1)
 }
 #pragma scheduling reset
 
-/* fn_801B5F1C: dimmagicbridge UV scroll. Twin of FUN_801b5d00 but routes
- * through objFindTexture + framesThisStep instead of FUN_80039520/DAT_803dc070. */
+/* dimmagicbridge_scrollTextureChannels: scroll two material channels and keep
+ * the bridge wave phases in sub[0x60]/sub[0x62] moving with framesThisStep. */
 extern void *objFindTexture(int obj, int a, int b);
 extern u8 framesThisStep;
 #pragma scheduling off
 #pragma dont_inline on
-void fn_801B5F1C(int param_1, u8* obj)
+void dimmagicbridge_scrollTextureChannels(int param_1, u8* obj)
 {
     u8* tex;
     s32 v;
@@ -1896,19 +1896,19 @@ void fn_801B5F1C(int param_1, u8* obj)
 #pragma dont_inline reset
 #pragma scheduling reset
 
-/* EN v1.0 0x801B602C  size: 312b  fn_801B602C: flameburst per-frame logic —
- * tick the spawn timer, allocate a free flame slot every 16 frames, and ramp
- * each active slot's alpha toward full; then run the UV scroll. */
+/* dimmagicbridge_flameSeqFn: tick the spawn timer, allocate a free flame slot
+ * every 16 frames, and ramp each active slot's alpha toward full; then update
+ * the animated bridge mesh. */
 #pragma scheduling off
 #pragma peephole off
-int fn_801B602C(int* obj, int p2, u8* p3)
+int dimmagicbridge_flameSeqFn(int* obj, int p2, u8* p3)
 {
     u8* sub = *(u8**)((char*)obj + 0xb8);
     int j;
     int i;
     p3[0x56] = 0;
     *(s16*)(p3 + 0x6e) = (s16)(*(s16*)(p3 + 0x6e) & ~0x40);
-    fn_801B5F1C((int)obj, sub);
+    dimmagicbridge_scrollTextureChannels((int)obj, sub);
     if (p3[0x80] == 1) {
         p3[0x80] = 0;
         sub[0x5f] = 1;
@@ -1929,7 +1929,7 @@ int fn_801B602C(int* obj, int p2, u8* p3)
             }
         }
     }
-    fn_801B5D48((int)obj, sub);
+    dimmagicbridge_updateVertexWave((int)obj, sub);
     return 0;
 }
 #pragma peephole reset
@@ -2000,7 +2000,7 @@ extern f32 lbl_803E49F4;
 extern f32 lbl_803E49F8;
 extern f32 lbl_803E49FC;
 
-/* EN v1.0 0x801B5AA0  size: 496b  dll_1CE_update: hatch-door logic — coast
+/* EN v1.0 0x801B5AA0  size: 496b  dll_1CE_update: hatch-door logic - coast
  * the lid open with clamped velocity while idle, and once a key object is
  * nearby, count down then ring the gamebit and (if the load isn't locked)
  * spawn the contents object seeded from the door's transform. */
