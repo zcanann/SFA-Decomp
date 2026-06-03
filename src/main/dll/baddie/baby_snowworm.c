@@ -484,7 +484,7 @@ void FUN_801287ac();
 void FUN_80128db8();
 void FUN_801291ac();
 void FUN_801294d8();
-undefined4 pauseMenuDoSave();
+void pauseMenuDoSave(void);
 void FUN_80129a98(void);
 void FUN_80129d10();
 void fn_80129FB0(void);
@@ -574,11 +574,6 @@ void FUN_801291ac()
 
 void FUN_801294d8()
 {
-}
-
-undefined4 pauseMenuDoSave()
-{
-    return 0;
 }
 
 void FUN_80129a98(void)
@@ -3845,6 +3840,90 @@ void pauseMenuFn_80129ee0(void)
                 pauseMenuFrameCounter = 0x3c;
             }
             break;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void objRender(int a, int b, int c, int d, void *obj, int e);
+extern int *Obj_GetActiveModel(void *obj);
+extern void objShadowFn_8006c5f0(void *obj, u32 *outTexture, f32 *outScale, int *outX, int *outY);
+extern void hudDrawColored(u32 texture, int x, int y, u32 *color, int scale, int flags);
+extern void *lbl_803DD868[2];
+extern u32 lbl_803E1E00;  /* default HUD colour */
+extern f32 lbl_803E20B8;  /* 0.25f */
+
+/* EN v1.0 0x801299D4  size: 672b  Pause-menu save-screen render pass.
+ * Saves the live FOV, swaps to view 1 at the origin facing 0x8000,
+ * sets the viewport from the global render obj, then renders slots
+ * 1..5 of lbl_803A9410 (clearing the model dirty bit and forcing the
+ * alpha byte), drawing the selected slot's shadow blob via
+ * hudDrawColored when lbl_803DD78C is past its threshold. A second
+ * pass renders both lbl_803DD868 slots the same way. Tail restores
+ * the camera state and pops the save-confirm text when flagged. */
+#pragma scheduling off
+#pragma peephole off
+void pauseMenuDoSave(void)
+{
+    u32 color[2];
+    int y;
+    int x;
+    f32 scale;
+    u32 texture;
+    u8 i;
+    u8 j;
+
+    color[1] = lbl_803E1E00;
+    lbl_803DBAA4 = Camera_GetFovY();
+    Camera_SetFovY(lbl_803E2044);
+    Camera_SetCurrentViewIndex(1);
+    lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
+    Camera_DisableViewYOffset();
+    Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
+    Camera_SetCurrentViewRotation(0x8000, 0, 0);
+    Camera_UpdateViewMatrices();
+    Camera_RebuildProjectionMatrix();
+    {
+        u16 *obj = (u16 *)lbl_803DCCF0;
+        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32)obj[2], (f32)obj[4],
+                      lbl_803E1E3C, lbl_803E1E68);
+    }
+    for (i = 1; i < 6; i++) {
+        if (lbl_803A9410[i] == NULL) {
+            continue;
+        }
+        if (*(u32 *)((u8 *)lbl_803A9410[i] + 0x4c) > 0x90000000U) {
+            *(u32 *)((u8 *)lbl_803A9410[i] + 0x4c) = 0;
+        }
+        objRender(0, 0, 0, 0, lbl_803A9410[i], 1);
+        *(u16 *)((u8 *)Obj_GetActiveModel(lbl_803A9410[i]) + 0x18) &= ~0x8;
+        *((u8 *)lbl_803A9410[i] + 0x37) = 0xff;
+        if (i == lbl_803DBA64) {
+            if (lbl_803DD78C > 0x1f4) {
+                objShadowFn_8006c5f0(lbl_803A9410[i], &texture, &scale, &x, &y);
+                color[0] = color[1];
+                hudDrawColored(texture, x, y, color, (s32)(lbl_803E20B8 * scale), 1);
+            }
+        }
+    }
+    for (j = 0; j < 2; j++) {
+        objRender(0, 0, 0, 0, lbl_803DD868[j], 1);
+        *(u16 *)((u8 *)Obj_GetActiveModel(lbl_803DD868[j]) + 0x18) &= ~0x8;
+        *((u8 *)lbl_803DD868[j] + 0x37) = 0xff;
+    }
+    Camera_SetCurrentViewIndex(0);
+    if (lbl_803DD7E0 != 0) {
+        Camera_EnableViewYOffset();
+    }
+    Camera_UpdateViewMatrices();
+    Camera_SetFovY(lbl_803DBAA4);
+    Camera_RebuildProjectionMatrix();
+    Camera_ApplyFullViewport();
+    if (lbl_803DD778 & 0x10) {
+        if (lbl_803DB424 != 0) {
+            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+            gameTextShow(0x46e);
         }
     }
 }
