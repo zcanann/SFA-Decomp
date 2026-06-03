@@ -5704,3 +5704,157 @@ int fn_80136E00(int p1, u8 *p)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void drawScaledTexture(char *tex, f32 x, f32 y, int alpha, int s, int w, int h, int mode);
+extern s16 fn_80130124(void);
+extern u32 __cvt_fp2unsigned(f32 x);
+extern u8 lbl_803DD9C0;
+extern f32 lbl_803E22F0;
+extern f32 lbl_803E22F4;
+extern f32 lbl_803E22F8;
+extern f32 lbl_803E22FC;
+extern f32 lbl_803E2300;
+extern f32 lbl_803E2304;
+extern f64 lbl_803E2308;
+extern f64 lbl_803E2310;
+extern f32 lbl_803E2328;
+extern f32 lbl_803E232C;
+extern f32 lbl_803E2330;
+extern f32 lbl_803E2334;
+extern f32 lbl_803E2338;
+extern f32 lbl_803E233C;
+extern f32 lbl_803E2340;
+
+#pragma scheduling off
+#pragma peephole off
+void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
+{
+    int xb;
+    int yb;
+    int i;
+    int r;
+    u8 a;
+    s16 v;
+    char *t;
+    int box;
+    f32 m;
+    f32 sc3;
+
+    lbl_803DD9C4 = lbl_803DD9C4 + timeDelta;
+    if (lbl_803DD9C4 > lbl_803E22F0) {
+        lbl_803DD9C4 = lbl_803DD9C4 - lbl_803E22F0;
+    }
+    lbl_803DD9C0 = (int)(lbl_803E232C *
+                             sin(lbl_803E2330 * (lbl_803E2334 * lbl_803DD9C4) / lbl_803E22F0) +
+                         lbl_803E2328);
+    if (lbl_803DD9C8 > lbl_803E22F8) {
+        xb = *(s16 *)((char *)lbl_803A9F98 + 0x58);
+        yb = *(s16 *)((char *)lbl_803A9F98 + 0x68);
+        t = (char *)lbl_803A9F98[4];
+        drawScaledTexture(t,
+                          (f32)(int)(xb - 0x32 + *(u16 *)((char *)lbl_803A9F98[6] + 10) + 0x5a),
+                          (f32)(int)(yb - 0x10), p1, 0x100, *(u16 *)(t + 10),
+                          (u32)(lbl_803E2300 * lbl_803DD9C8) + 0x10, 0);
+        t = (char *)lbl_803A9F98[6];
+        drawScaledTexture(t, (f32)(int)(xb + 0x28), (f32)(int)(yb - 0x10), 0xff, 0x100,
+                          *(u16 *)(t + 10), (u32)(lbl_803E2300 * lbl_803DD9C8) + 0x10, 0);
+        t = (char *)lbl_803A9F98[6];
+        drawScaledTexture(t,
+                          (f32)(int)(xb - 0x32 + *(u16 *)((char *)lbl_803A9F98[4] + 10) +
+                                     *(u16 *)(t + 10) + 0x57),
+                          (f32)(int)(yb - 0x10), 0xff, 0x100, *(u16 *)(t + 10),
+                          (u32)(lbl_803E2300 * lbl_803DD9C8) + 0x10, 1);
+        t = (char *)lbl_803A9F98[0];
+        drawScaledTexture(t, (f32)(int)(xb - 0xf), (f32)(int)(yb - 0x10), 0xff, 0x100,
+                          *(u16 *)(t + 10), (u32)(lbl_803E2300 * lbl_803DD9C8) + 0x10, 0);
+    }
+    xb = *(s16 *)((char *)lbl_803A9F98 + 0x58);
+    yb = *(s16 *)((char *)lbl_803A9F98 + 0x68);
+    a = lbl_803DD9C0;
+    if (lbl_803DD9C8 > lbl_803E22F8) {
+        a = 0xff;
+    }
+    drawTexture(lbl_803A9F98[1], (f32)(int)(xb - 0x18),
+                (f32)(int)(yb - *(u16 *)((char *)lbl_803A9F98[1] + 0xc) + 3), 0xff, 0xff);
+    drawTexture(lbl_803A9F98[7], (f32)(int)(xb + 0xa1), (f32)(int)(yb - 0x2e), a, 0xff);
+    xb = *(s16 *)((char *)lbl_803A9F98 + 0x58);
+    yb = *(s16 *)((char *)lbl_803A9F98 + 0x68);
+    a = lbl_803DD9C0;
+    if (lbl_803DD9C8 > lbl_803E22F8) {
+        a = 0xff;
+    }
+    drawTexture(lbl_803A9F98[2], (f32)(int)(xb - 0x18),
+                lbl_803E22FC + lbl_803E2300 * lbl_803DD9C8 + (f32)(int)yb, 0xff, 0xff);
+    drawTexture(lbl_803A9F98[7], (f32)(int)(xb + 0xa1),
+                lbl_803E2304 + lbl_803E2300 * lbl_803DD9C8 + (f32)(int)yb, a, 0xff);
+    gameTextSetColor(0xff, 0xff, 0xff,
+                     (int)(((f64)lbl_803DD9C0 - lbl_803E2310) * (lbl_803E2308 - (f64)lbl_803DD9C8)));
+    gameTextShow(0x3da);
+    drawTexture(lbl_803A9F98[3], (f32)(int)(*(s16 *)((char *)lbl_803A9F98 + 0x58) - 0x32),
+                (f32)(int)(0xfe - (*(u16 *)((char *)lbl_803A9F98[3] + 10) >> 1)), 0xff, 0xff);
+    if (lbl_803DD9C8 >= lbl_803E2338 && (p2 & 0xff) == 0) {
+        xb = *(s16 *)((char *)lbl_803A9F98 + 0x58);
+        yb = *(s16 *)((char *)lbl_803A9F98 + 0x68);
+        i = 0;
+        sc3 = lbl_803E2300;
+        do {
+            t = (char *)lbl_803A9F98[4];
+            r = (u32)(sc3 * lbl_803DD9C8);
+            drawScaledTexture(t,
+                              (f32)(int)(xb + *(u16 *)((char *)lbl_803A9F98[6] + 10) + 0x28 +
+                                         (i + 1) * -4),
+                              (f32)(int)(yb - 0x10 + (i + 1) * -3),
+                              (int)(u32)lbl_803DD9C0 >> ((i + 3) & 0x3f) & 0xff, 0x100,
+                              *(u16 *)(t + 10) + (i + 1) * 8, r + (i + 1) * 6 + 0x10, 4);
+            i++;
+        } while (i < 4);
+    }
+    if (lbl_803DD9C8 > lbl_803E22F8 && (v = fn_80130124()) != -1) {
+        box = (int)gameTextGetBox(v);
+        if ((p2 & 0xff) == 0) {
+            drawTexture(lbl_803A9F98[5],
+                        (f32)(int)(*(s16 *)((char *)lbl_803A9F98 + 0x58) + 0x2f),
+                        (f32)(int)(*(s16 *)(box + 0x16) + *(s16 *)((char *)lbl_803A9F98 + 0x68) - 1), p2, 0xff);
+        }
+    }
+    drawScaledTexture((char *)lbl_803A9F98[18],
+                      (f32)(int)((int)(lbl_803E22F0 * lbl_803DD9B0) - 0x50),
+                      (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
+                      *(u16 *)((char *)lbl_803A9F98[18] + 10),
+                      *(u16 *)((char *)lbl_803A9F98[18] + 0xc), 1);
+    t = (char *)lbl_803A9F98[8 + ((int)((u32)lbl_803DD9C0 << 3) >> 8)];
+    drawScaledTexture(t,
+                      (f32)(int)((int)(lbl_803E22F0 * lbl_803DD9B0) +
+                                 *(u16 *)((char *)lbl_803A9F98[18] + 10) - 0x4a),
+                      (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
+                      *(u16 *)(t + 10), *(u16 *)(t + 0xc), 0);
+    drawScaledTexture((char *)lbl_803A9F98[18],
+                      (f32)(int)(0x280 - ((int)(lbl_803E22F0 * lbl_803DD9B0) - 0x50) -
+                                 *(u16 *)((char *)lbl_803A9F98[18] + 10)),
+                      (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
+                      *(u16 *)((char *)lbl_803A9F98[18] + 10),
+                      *(u16 *)((char *)lbl_803A9F98[18] + 0xc), 0);
+    t = (char *)lbl_803A9F98[8 + ((int)((u32)lbl_803DD9C0 << 3) >> 8)];
+    drawScaledTexture(t,
+                      (f32)(int)(0x27a - ((int)(lbl_803E22F0 * lbl_803DD9B0) - 0x50) -
+                                 *(u16 *)((char *)lbl_803A9F98[18] + 10) - *(u16 *)(t + 10)),
+                      (f32)(int)((int)(lbl_803E22F4 * lbl_803DD9B4) + 0x1e0), 0xff, 0x100,
+                      *(u16 *)(t + 10), *(u16 *)(t + 0xc), 1);
+    m = lbl_803DD9B4;
+    if (lbl_803DD9B4 > lbl_803DD9B0) {
+        m = lbl_803DD9B0;
+    }
+    drawTexture(lbl_803DD9D4,
+                (f32)(int)((0x280 - ((int)((u32)*(u16 *)((char *)lbl_803DD9D4 + 10) * 0xbe) >> 8)) / 2),
+                (f32)(int)(int)(lbl_803E2340 * m + lbl_803E233C), 0xff, 0xbe);
+    if ((p3 & 0xff) != 0) {
+        xb = *(s16 *)((char *)lbl_803A9F98 + 0x58);
+        yb = *(s16 *)((char *)lbl_803A9F98 + 0x68);
+        drawTexture(lbl_803A9F98[17], (f32)(int)(xb + 0x2f), (f32)(int)(yb + 0x14),
+                    0xff, 0xff);
+        drawTexture(lbl_803A9F98[16], (f32)(int)(xb + 0x2f), (f32)(int)(yb + 0x4b),
+                    0xff, 0xff);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
