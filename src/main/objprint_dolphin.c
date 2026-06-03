@@ -5780,6 +5780,161 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
     }
 }
 
+extern u8 *Shader_getLayer(u8 *shader, int idx);
+extern void gxTextureFn_80050e28(int flag);
+extern void *textureCrazyPointerFollowFn_80054c30(void *tex, int p2);
+extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+extern void fn_80051B00(void *tex, int mtx, int fl, u8 *color);
+extern void fn_80051868(void *tex, int mtx, int fl);
+extern void fn_80051D5C(void *tex, int mtx, int fl, u8 *color);
+extern void gxColorFn_80052764(u8 *color);
+extern void gxColorFn_800523d0(void);
+extern void textureFn_800524ec(u8 *color);
+extern f32 lbl_803DEA48;
+
+u8 modelRenderFn_8003e98c(u8 *obj, u8 *shader, u32 *p3, int mask, int p5, int p6) {
+    void *tex;
+    u8 *colp;
+    u16 alpha;
+    u8 *prev;
+    u8 *layer;
+    int layerIdx;
+    u8 ok;
+    u8 color[4];
+    f32 m[12];
+
+    ok = 1;
+    if (p3[0] != 0 || p3[1] != 0) {
+        int i;
+        u8 cnt;
+        cnt = 0;
+        for (i = 0; i < shader[0x41]; i++) {
+            u8 *l = Shader_getLayer(shader, i);
+            if (l[4] & 0x80) {
+                cnt++;
+            }
+        }
+        if (cnt > 1) {
+            ok = 0;
+        }
+    }
+    layerIdx = 0;
+    colp = (u8 *)&lbl_803DCC54;
+    {
+        for (; layerIdx < shader[0x41]; layerIdx++) {
+            layer = Shader_getLayer(shader, layerIdx);
+            if ((layer[4] & 0x80) == mask) {
+                if ((*(u32 *)(shader + 0x3c) & 0x100000) && layerIdx == 1) {
+                    gxTextureFn_80050e28(p3[0] != 0 ? 1 : 0);
+                    return 1;
+                }
+                alpha = ((obj[0x37] + 1) * shader[0xc]) >> 8;
+                if (*(u32 *)layer != 0) {
+                    f32 *mtxp;
+                    int fl;
+                    tex = textureIdxToPtr(*(u32 *)layer);
+                    {
+                        u32 jid = layer[5];
+                        if (jid != 0) {
+                            int *tbl = *(int **)(obj + 0x70);
+                            u8 *m50 = *(u8 **)(obj + 0x50);
+                            u8 *q = *(u8 **)(m50 + 0xc);
+                            int n = m50[0x59];
+                            int k;
+                            for (k = 0; k < n; k++) {
+                                if ((int)jid == q[1]) {
+                                    tex = textureCrazyPointerFollowFn_80054c30(tex, *(int *)((char *)tbl + (k << 4)));
+                                    break;
+                                }
+                                q += 2;
+                            }
+                            {
+                                f32 tx;
+                                f32 ty;
+                                u32 jid2 = layer[5];
+                                int *tbl2 = *(int **)(obj + 0x70);
+                                u8 *n50 = *(u8 **)(obj + 0x50);
+                                u8 *q2 = *(u8 **)(n50 + 0xc);
+                                int n2 = n50[0x59];
+                                int k2;
+                                for (k2 = 0; k2 < n2; k2++) {
+                                    if ((int)jid2 == q2[1]) {
+                                        tx = lbl_803DEA48 * (f32)*(s16 *)((char *)tbl2 + (k2 << 4) + 8);
+                                        ty = lbl_803DEA48 * (f32)*(s16 *)((char *)tbl2 + (k2 << 4) + 10);
+                                        goto trans;
+                                    }
+                                    q2 += 2;
+                                }
+                                ty = tx = lbl_803DEA04;
+                            trans:
+                                PSMTXTrans(m, tx, ty, lbl_803DEA04);
+                                mtxp = m;
+                            }
+                        } else {
+                            mtxp = NULL;
+                        }
+                    }
+                    if (layerIdx == 0) {
+                        if ((p3[0] != 0 || p3[1] != 0 || p6 != 0) && ok) {
+                            fl = 8;
+                        } else {
+                            fl = 0;
+                        }
+                        color[3] = alpha;
+                    } else {
+                        fl = prev[4] & 0x7f;
+                        color[3] = 0xff;
+                    }
+                    color[0] = 0xff;
+                    color[1] = 0xff;
+                    color[2] = 0xff;
+                    if (p3[0] != 0 || (shader[0] == 0xff && shader[1] == 0xff && shader[2] == 0xff)) {
+                        gxFn_80051fb8(tex, (int)mtxp, (u8)fl, color, *((u8 *)p3 + 8), 1);
+                    } else if (p5 != 0) {
+                        colp[3] = color[3];
+                        if (shader[0x40] & 0x10) {
+                            fn_80051B00(tex, (int)mtxp, (u8)fl, (u8 *)&lbl_803DCC54);
+                        } else {
+                            gxFn_80051fb8(tex, (int)mtxp, (u8)fl, (u8 *)&lbl_803DCC54, *((u8 *)p3 + 8), 1);
+                        }
+                    } else {
+                        if (shader[0x40] & 0x10) {
+                            fn_80051868(tex, (int)mtxp, (u8)fl);
+                            if (color[3] < 0xff) {
+                                gxColorFn_80052764(color);
+                            }
+                        } else {
+                            fn_80051D5C(tex, (int)mtxp, (u8)fl, color);
+                        }
+                    }
+                } else {
+                    color[0] = shader[4];
+                    color[1] = shader[5];
+                    color[2] = shader[6];
+                    color[3] = alpha;
+                    if (p3[0] != 0 || (shader[0] == 0xff && shader[1] == 0xff && shader[2] == 0xff)) {
+                        gxColorFn_80052764(color);
+                    } else if (p5 != 0) {
+                        colp[3] = alpha;
+                        gxColorFn_80052764((u8 *)&lbl_803DCC54);
+                    } else {
+                        if (shader[0x40] & 0x10) {
+                            gxColorFn_800523d0();
+                            if (color[3] < 0xff) {
+                                gxColorFn_80052764(color);
+                            }
+                        } else {
+                            textureFn_800524ec(color);
+                        }
+                    }
+                }
+            }
+            prev = layer;
+        }
+    }
+    return ok;
+}
+
 extern u8 lbl_80345E10[];
 extern void mm_free(void *);
 extern void texFlagFn_80023cbc(int);
