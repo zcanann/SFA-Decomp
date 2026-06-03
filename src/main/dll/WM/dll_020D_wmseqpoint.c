@@ -43,7 +43,7 @@ void fn_801F654C(int obj)
     }
 }
 
-int fn_801F6750(int obj, int unused, int actor)
+int wmseqpoint_SeqFn(int obj, int unused, int actor)
 {
     WmSeqPointState *state;
     int player;
@@ -227,7 +227,7 @@ void wmseqpoint_init(int obj, int setup)
     WmSeqPointState *state;
 
     state = *(WmSeqPointState **)(obj + 0xb8);
-    *(void **)(obj + 0xbc) = fn_801F6750;
+    *(void **)(obj + 0xbc) = wmseqpoint_SeqFn;
     *(s16 *)(obj + 0) = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
     state->radius = (f32)*(s16 *)(setup + 0x1a);
     state->triggerId = *(s16 *)(setup + 0x1c);

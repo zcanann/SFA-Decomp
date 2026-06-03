@@ -18,7 +18,7 @@ typedef struct WmSpiritPlaceState {
 
 void fn_801F568C(void) {}
 
-int fn_801F5690(int obj, int unused, int actor)
+int wmspiritplace_SeqFn(int obj, int unused, int actor)
 {
     WmSpiritPlaceState *state;
     int i;
@@ -331,7 +331,7 @@ void wmspiritplace_init(int obj, int setup)
     WmSpiritPlaceState *state;
 
     state = *(WmSpiritPlaceState **)(obj + 0xb8);
-    *(void **)(obj + 0xbc) = fn_801F5690;
+    *(void **)(obj + 0xbc) = wmspiritplace_SeqFn;
     *(s16 *)(obj + 0) = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
     *(s16 *)(obj + 2) = (s16)(*(s16 *)(setup + 0x1a) << 8);
     state->heightOffset = ((f32)(*(s16 *)(setup + 0x1c)) / lbl_803E5EF8) / lbl_803E5EFC;
