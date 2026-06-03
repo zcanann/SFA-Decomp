@@ -383,3 +383,176 @@ void sc_totemstrength_init(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void GameBit_Set(int eventId, int value);
+extern u32  GameBit_Get(int eventId);
+extern int *gMapEventInterface;
+extern u32  getButtonsJustPressed(int pad);
+extern int  playerGetMoney(int player);
+extern void playerAddMoney(int player, int amount);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShow(int id);
+extern void objRenderFn_80041018(int obj);
+extern u8   lbl_80327AF0[];
+
+/* EN v1.0 0x801DEE90  size: 548b  sc_totemstrength_update: drive the
+ * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
+#pragma scheduling off
+#pragma peephole off
+void sc_totemstrength_update(u8 *obj)
+{
+    Platform1State *st = *(Platform1State **)(obj + 0xb8);
+    s8 t;
+    s16 step;
+    u8 b;
+    f32 fz;
+
+    Obj_GetPlayerObject();
+    GameBit_Set(0xf1d, 0);
+    t = (s8)(*(int (**)(int))((char *)(*gMapEventInterface) + 0x40))(0xe);
+    if (t == 6) {
+        if ((st->flags & PLATFORM1_FLAG_ACTIVE) == 0) {
+            if ((st->flags & PLATFORM1_TRIGGER_FLAG_02) != 0) {
+                step = st->transitionStep;
+                if (step == 0) {
+                    *(s16 *)obj = -0x2900;
+                    st->currentTrackOffset = -0x2900;
+                    st->prevTrackOffset = st->currentTrackOffset;
+                    fz = lbl_803E5678;
+                    *(f32 *)&st->motionValue0 = lbl_803E5678;
+                    st->offsetVelocity = fz;
+                    st->transitionStep = 1;
+                    st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_FLAG_01);
+                } else if (step == 1) {
+                    GameBit_Set(0xf1d, 1);
+                    hudFn_8011f38c(1);
+                    st->loopSfxHandle =
+                        (*(int (**)(int, u8 *, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
+                } else if (step == 2) {
+                    st->transitionStep = 0;
+                } else if (step == 3) {
+                    st->transitionStep = 0;
+                }
+            }
+        } else {
+            if (st->loopSfxHandle > 0) {
+                (*(void (**)(void))((char *)(*gObjectTriggerInterface) + 0x4c))();
+                fn_800882C8();
+            }
+            if (lbl_803DDC10-- == 0) {
+                st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_ACTIVE);
+                *(int *)(obj + 0xc) = st->savedPosXBits;
+                *(int *)(obj + 0x10) = st->savedPosYBits;
+                *(int *)(obj + 0x14) = st->savedPosZBits;
+                st->linkedObject = 0;
+                *(s16 *)obj = -0x2900;
+                st->currentTrackOffset = -0x2900;
+                b = st->flags;
+                if ((b & PLATFORM1_FLAG_EXIT_NEGATIVE) == 0) {
+                    if ((b & PLATFORM1_FLAG_EXIT_POSITIVE) != 0) {
+                        st->flags = (u8)(b & ~PLATFORM1_FLAG_EXIT_POSITIVE);
+                        st->loopSfxHandle = -1;
+                        GameBit_Set(0x786, 1);
+                    }
+                } else {
+                    GameBit_Set(0x784, 1);
+                    st->loopSfxHandle = -1;
+                    st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
+                    st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_EXIT_NEGATIVE);
+                }
+            }
+        }
+    }
+}
+
+/* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
+u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
+{
+    u8 *setup = *(u8 **)(obj + 0x4c);
+    u8 *st = *(u8 **)(obj + 0xb8);
+    int player;
+    u32 r;
+    int poor;
+
+    player = (int)Obj_GetPlayerObject();
+    r = getButtonsJustPressed(0);
+    if ((r & 0x100) == 0) {
+        r = 0;
+    } else {
+        st[2] = 0;
+        poor = playerGetMoney(player) < *(s16 *)(setup + 0x1a);
+        if (poor) {
+            st[2] = 2;
+        } else {
+            st[2] = 0;
+        }
+        r = !poor;
+        if (ev == 0x15) {
+            r = !r;
+        } else if (ev < 0x15 && ev > 0x13) {
+            r = !(1 - r);
+        } else {
+            r = 0;
+        }
+    }
+    return r;
+}
+
+/* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
+int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
+{
+    u8 *st = *(u8 **)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+    int player;
+    int i;
+    u8 ev;
+
+    player = (int)Obj_GetPlayerObject();
+    *(void **)(data + 0xec) = (void *)PaymentKiosk_testEvent;
+    for (i = 0; i < data[0x8b]; i++) {
+        ev = data[i + 0x81];
+        if (ev == 2) {
+            GameBit_Set(*(s16 *)(setup + 0x1e), 1);
+            playerAddMoney(player, -*(s16 *)(setup + 0x1a));
+            st[0] = 2;
+        } else if (ev < 2 && ev != 0) {
+            st[2] = 1;
+        }
+    }
+    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+    if (st[2] == 1) {
+        gameTextShow(*(int *)(lbl_80327AF0 + st[1] * 8));
+    } else if (st[2] == 2) {
+        gameTextShow(*(int *)(lbl_80327AF0 + 4 + st[1] * 8));
+    }
+    return 0;
+}
+
+/* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
+void paymentkiosk_update(int obj)
+{
+    u8 *st = *(u8 **)(obj + 0xb8);
+    u8 b = st[0];
+
+    if (b == 1) {
+        if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+            (*(int (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
+        }
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
+    } else if (b == 0) {
+        if (*(s16 *)(*(int *)(obj + 0x4c) + 0x1e) == -1 ||
+            GameBit_Get(*(s16 *)(*(int *)(obj + 0x4c) + 0x1e)) == 0) {
+            st[0] = 1;
+        } else {
+            st[0] = 2;
+        }
+    } else if (b < 3) {
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+    }
+    st[2] = 0;
+    if ((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0 && *(int *)(obj + 0x74) != 0) {
+        objRenderFn_80041018(obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
