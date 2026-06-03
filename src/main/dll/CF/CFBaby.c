@@ -2673,11 +2673,11 @@ void dll_109_init(int obj, u8 *p) {
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-void fn_80188798(f32 *p, f32 *hi, f32 *lo) {
+void decoration11a_expandBoundsWithVertex(f32 *vertex, f32 *maxOut, f32 *minOut) {
     f32 v;
-    v = p[0]; if (v > hi[0]) hi[0] = v; else if (v < lo[0]) lo[0] = v;
-    v = p[1]; if (v > hi[1]) hi[1] = v; else if (v < lo[1]) lo[1] = v;
-    v = p[2]; if (v > hi[2]) hi[2] = v; else if (v < lo[2]) lo[2] = v;
+    v = vertex[0]; if (v > maxOut[0]) maxOut[0] = v; else if (v < minOut[0]) minOut[0] = v;
+    v = vertex[1]; if (v > maxOut[1]) maxOut[1] = v; else if (v < minOut[1]) minOut[1] = v;
+    v = vertex[2]; if (v > maxOut[2]) maxOut[2] = v; else if (v < minOut[2]) minOut[2] = v;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2834,7 +2834,7 @@ extern f64 lbl_803E3B90;
 extern f32 Vec_distance(f32 *a, f32 *b);
 extern void fn_8002B2AC(f32 *out, int obj, f32 *pos);
 extern void Model_GetVertexPosition(int *model, int idx, f32 *out);
-extern void fn_80188798(f32 *v, f32 *minOut, f32 *maxOut);
+extern void decoration11a_expandBoundsWithVertex(f32 *vertex, f32 *maxOut, f32 *minOut);
 extern void PSVECScale(f32 *dst, f32 *src, f32 s);
 extern f32 PSVECMag(f32 *v);
 
@@ -2958,7 +2958,7 @@ calc_decor_bounds:
             Model_GetVertexPosition(m, 0, state + 3);
             for (i = 1; i < *(u16 *)((char *)m + 0xe4); i++) {
                 Model_GetVertexPosition(m, i, tmp);
-                fn_80188798(tmp, state, state + 3);
+                decoration11a_expandBoundsWithVertex(tmp, state, state + 3);
             }
             PSVECScale(state, state, *(f32 *)((char *)obj + 8));
             PSVECScale(state + 3, state + 3, *(f32 *)((char *)obj + 8));
