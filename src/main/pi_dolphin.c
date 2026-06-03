@@ -10948,47 +10948,35 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
                 distTblP = lbl_8036F880;
                 val = 0;
                 p8 = lbl_803DCD20;
-                i = 8;
-                do {
+                for (i = 8; i != 0; i--) {
                     *p8 = val;
                     p8++;
-                    i--;
-                } while (i != 0);
+                }
                 p8 = lbl_80377880;
-                i = 0x13;
-                do {
+                for (i = 0x13; i != 0; i--) {
                     *p8 = val;
                     p8++;
-                    i--;
-                } while (i != 0);
+                }
                 p16 = lbl_80377894;
-                i = 0x10;
-                do {
+                for (i = 0x10; i != 0; i--) {
                     *p16 = val;
                     p16++;
-                    i--;
-                } while (i != 0);
+                }
                 p8 = lenBitsP;
-                i = 0x120;
-                do {
+                for (i = 0x120; i != 0; i--) {
                     *p8 = val;
                     p8++;
-                    i--;
-                } while (i != 0);
+                }
                 p16 = lbl_803778B4;
-                i = 0x10;
-                do {
+                for (i = 0x10; i != 0; i--) {
                     *p16 = val;
                     p16++;
-                    i--;
-                } while (i != 0);
+                }
                 p8 = distBitsP;
-                i = 0x20;
-                do {
+                for (i = 0x20; i != 0; i--) {
                     *p8 = val;
                     p8++;
-                    i--;
-                } while (i != 0);
+                }
                 hlit = (ZGB8() & 0x1f) + 0x101;
                 ZADV(5);
                 hdist = (ZGB8() & 0x1f) + 1;
