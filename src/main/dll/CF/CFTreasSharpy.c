@@ -377,7 +377,7 @@ typedef struct CFTreasSharpyFxSpawnArgs {
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8018E6C4(int obj)
+void fxemit_emitEffect(int obj)
 {
     u8 *state;
     u8 *def;
@@ -485,7 +485,7 @@ void fn_8018E6C4(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8018EAA4(int obj, int unused, int events)
+int fxemit_SeqFn(int obj, int unused, int events)
 {
     u8 *state;
     u8 *def;
@@ -498,7 +498,7 @@ int fn_8018EAA4(int obj, int unused, int events)
     for (i = 0; i < *(u8 *)(events + 0x8b); i++) {
         event = *(u8 *)(events + i + 0x81);
         if (event == 1) {
-            fn_8018E6C4(obj);
+            fxemit_emitEffect(obj);
         }
         if (*(u8 *)(events + i + 0x81) == 2) {
             state[0x1c] = (u8)(1 - state[0x1c]);
@@ -527,7 +527,7 @@ int fn_8018EAA4(int obj, int unused, int events)
         } else {
             *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + delta * framesThisStep * 100;
         }
-        fn_8018E6C4(obj);
+        fxemit_emitEffect(obj);
     }
 
     return 0;

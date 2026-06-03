@@ -32,7 +32,7 @@ extern undefined4 FUN_800810f8();
 extern undefined4 FUN_8011e868();
 extern int Obj_GetPlayerObject(void);
 extern int curveFn_80010320(int curve, f32 progress);
-extern int fn_8018EAA4(int obj, int unused, int events);
+extern int fxemit_SeqFn(int obj, int unused, int events);
 extern undefined4 FUN_8018e0a8();
 extern void getTabEntry(void* dst, int fileId, int offset, int size);
 extern void* mmAlloc(int size, int heap, int flags);
@@ -138,7 +138,7 @@ void fxemit_init(int obj, int setup)
   s16 emitCount;
 
   *(s16 *)(obj + 0) = 0;
-  *(int (**)(int, int, int))(obj + 0xbc) = fn_8018EAA4;
+  *(int (**)(int, int, int))(obj + 0xbc) = fxemit_SeqFn;
   state = *(int *)(obj + 0xb8);
 
   *(f32 *)(state + 0) = (f32)((s32)*(s8 *)(setup + 0x18) << 2);

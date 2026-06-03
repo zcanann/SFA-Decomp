@@ -4,8 +4,8 @@
 #include "ghidra_import.h"
 
 void cfccrate_init(int obj, int aux);
-void fn_8018E6C4(int obj);
-int fn_8018EAA4(int obj, int unused, int events);
+void fxemit_emitEffect(int obj);
+int fxemit_SeqFn(int obj, int unused, int events);
 void FUN_8018e0a8(void);
 void cfccrate_release(void);
 void cfccrate_initialise(void);
