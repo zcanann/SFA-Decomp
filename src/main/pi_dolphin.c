@@ -7612,6 +7612,32 @@ void gxTransformFn_8004a83c(void) {
     gxPerfFn_8004a77c(0);
 }
 
+typedef union { u8 u8; u16 u16; u32 u32; s16 s16; s32 s32; f32 f32; } PiWGPipe;
+extern volatile PiWGPipe GXWGFifo : (0xCC008000);
+extern void GXSetGPMetric(int perf0, int perf1);
+void gxPerfFn_8004a77c(int param_1) {
+    if ((u8)param_1 != 0) {
+        GXSetGPMetric(0x23, 0x16);
+        GXWGFifo.u8 = 0x61;
+        GXWGFifo.u32 = 0x2402c004;
+        GXWGFifo.u8 = 0x61;
+        GXWGFifo.u32 = 0x23000020;
+        GXWGFifo.u8 = 0x10;
+        GXWGFifo.u16 = 0;
+        GXWGFifo.u16 = 0x1006;
+        GXWGFifo.u32 = 0x84400;
+    } else {
+        GXWGFifo.u8 = 0x61;
+        GXWGFifo.u32 = 0x24000000;
+        GXWGFifo.u8 = 0x61;
+        GXWGFifo.u32 = 0x23000000;
+        GXWGFifo.u8 = 0x10;
+        GXWGFifo.u16 = 0;
+        GXWGFifo.u16 = 0x1006;
+        GXWGFifo.u32 = 0;
+    }
+}
+
 extern void *mmAlloc(int size, int align, int zone);
 extern void *lbl_803DCD10;
 void allocSomething32bytes(void) {
