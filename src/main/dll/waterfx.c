@@ -46,12 +46,13 @@ void waterfx_setupSplashDropPointRender(void) {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_800956F4(int vec, f32 dist) {
-    if (lbl_803DD1F8 != 0 && PSVECSquareDistance((f32 *)vec, lbl_8039AB48) < dist * dist) {
-        lbl_803DD1F8 = 0;
+int waterfx_consumePendingImpactNearPoint(f32 *vec, f32 dist) {
+    if (gWaterfxPendingImpactPositionValid != 0 &&
+        PSVECSquareDistance(vec, gWaterfxPendingImpactPosition) < dist * dist) {
+        gWaterfxPendingImpactPositionValid = 0;
         return 1;
     }
-    lbl_803DD1F8 = 0;
+    gWaterfxPendingImpactPositionValid = 0;
     return 0;
 }
 #pragma peephole reset
@@ -431,10 +432,10 @@ void waterfx_func04(u8 *p3, u16 mask, f32 *vecs, u8 *p6, f32 fval) {
             }
             lbl_803DD20C = lbl_803DF318;
             waterfx_spawnRipple(*(s16 *)p3, 4, vx, *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4), vz, lbl_803DF300);
-            lbl_8039AB48[0] = vx;
-            lbl_8039AB48[1] = *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4);
-            lbl_8039AB48[2] = vz;
-            lbl_803DD1F8 = 1;
+            gWaterfxPendingImpactPosition[0] = vx;
+            gWaterfxPendingImpactPosition[1] = *(f32 *)(p3 + 0x10) + *(f32 *)(q + 0x1b4);
+            gWaterfxPendingImpactPosition[2] = vz;
+            gWaterfxPendingImpactPositionValid = 1;
         }
         mask >>= 1;
         v += 3;

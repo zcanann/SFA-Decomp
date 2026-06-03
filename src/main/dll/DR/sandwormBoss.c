@@ -3540,7 +3540,7 @@ void cfprisonguard_init(int* obj, u8* params) {
 
 extern f32 lbl_803E4268;
 extern f32 Vec_distance(void *a, void *b);
-extern int fn_800956F4(void *vec, f32 r);
+extern int waterfx_consumePendingImpactNearPoint(f32 *vec, f32 r);
 extern int objGetAnimState80A(void *obj);
 extern int *gObjectTriggerInterface;
 extern void *Obj_GetPlayerObject(void);
@@ -3570,14 +3570,14 @@ void cfprisonguard_update(int *obj) {
     bit44 = GameBit_Get(0x44);
     dist = Vec_distance((char*)obj + 0x18, (char*)player + 0x18);
     if (sub[0x38] == 1) {
-        fn_800956F4((char*)obj + 0xc, lbl_803E4268);
+        waterfx_consumePendingImpactNearPoint((f32 *)((char*)obj + 0xc), lbl_803E4268);
         ((void(*)(int, int*, int))((void**)*gObjectTriggerInterface)[18])(0, obj, -1);
         sub[0x38] = 2;
     }
     if (bit44 == 0) {
         if ((s8)sub[0x37] != 4) {
             if (dist >= (f32)(s32)*(s16*)(def + 0x1a)) {
-                if (fn_800956F4((char*)obj + 0xc, lbl_803E4268) == 0) return;
+                if (waterfx_consumePendingImpactNearPoint((f32 *)((char*)obj + 0xc), lbl_803E4268) == 0) return;
             }
         }
         if (objGetAnimState80A(player) != 0x40) {
