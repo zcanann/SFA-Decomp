@@ -230,6 +230,16 @@ typedef struct ExpgfxSpawnConfig {
   u8 linkGroup;
 } ExpgfxSpawnConfig;
 
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, attachedSource) == 0x00);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, quadVertex3Pad06) == 0x04);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, sourcePosWBits) == 0x20);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, velocityX) == 0x24);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, startPosXBits) == 0x30);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, scale) == 0x3C);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, behaviorFlags) == 0x44);
+STATIC_ASSERT(offsetof(ExpgfxSpawnConfig, colorByte0Hi) == 0x58);
+STATIC_ASSERT(sizeof(ExpgfxSpawnConfig) == 0x64);
+
 typedef struct ExpgfxResourceEntry {
   void *resource;
   s32 evictionScore;
