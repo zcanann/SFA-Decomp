@@ -52,23 +52,23 @@ extern f64 lbl_803E3BE8;
 extern s16 lbl_803DBDE0[];
 extern int *gMapEventInterface;
 
-#define PRISON_GUARD_ACTIVE 0x80
-#define PRISON_GUARD_LOCKED 0x40
+#define STAFFACTIVATED_ACTIVE 0x80
+#define STAFFACTIVATED_LOCKED 0x40
 
 /*
  * --INFO--
  *
- * Function: fn_801899B4
+ * Function: staffactivated_updateLiftHeight
  * EN v1.0 Address: 0x801899B4
  * EN v1.0 Size: 560b
  */
-void fn_801899B4(int obj, int state)
+void staffactivated_updateLiftHeight(int obj, int state)
 {
   s32 currentHeight;
   s32 rumbleStrength;
 
-  if ((*(u8 *)(state + 0x1d) & PRISON_GUARD_ACTIVE) != 0 &&
-      ((*(u8 *)(state + 0x1d) & PRISON_GUARD_LOCKED) == 0)) {
+  if ((*(u8 *)(state + 0x1d) & STAFFACTIVATED_ACTIVE) != 0 &&
+      ((*(u8 *)(state + 0x1d) & STAFFACTIVATED_LOCKED) == 0)) {
     if (*(u8 *)(state + 0x1c) == 0) {
       *(s32 *)(state + 0xc) = (s32)((f32)*(s32 *)(state + 0xc) - (lbl_803E3BC8 * timeDelta));
       *(s32 *)(state + 0x14) =

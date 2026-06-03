@@ -467,7 +467,7 @@ extern int *gPartfxInterface;
 extern f32 lbl_803E3BDC;
 extern f32 lbl_803E3C00;
 extern f32 lbl_803E3C04;
-extern void fn_801899B4(int obj, int state);
+extern void staffactivated_updateLiftHeight(int obj, int state);
 extern void landed_arwing_updateHitReaction(int obj, int state);
 extern void landed_arwing_updateDamageTexture(int obj, int state);
 
@@ -506,7 +506,7 @@ after_bit4:
 
     mode = *(u8 *)(param + 0x1c);
     if (mode == 2) {
-        fn_801899B4(obj, state);
+        staffactivated_updateLiftHeight(obj, state);
     } else if (mode > 2) {
         if (mode >= 6) {
             goto default_case;
