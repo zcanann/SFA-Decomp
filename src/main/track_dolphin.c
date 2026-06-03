@@ -5292,7 +5292,7 @@ void fn_8006135C(s16 *out, void *obj)
   *(u8 *)((char *)out + 0x18) = 1;
 }
 
-void fn_8006961C(int *boundsOut, f32 *startPoints, f32 *endPoints, f32 *radii, int pointCount)
+void hitDetect_calcSweptSphereBounds(int *boundsOut, f32 *startPoints, f32 *endPoints, f32 *radii, int pointCount)
 {
   int i;
 

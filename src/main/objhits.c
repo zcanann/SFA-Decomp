@@ -20,7 +20,7 @@ extern void ObjContact_DispatchCallbacks(int objA,int objB);
 extern byte hitDetectFn_80067958(int obj,float *startPoints,float *endPoints,int pointCount,
                                  void *outHits,int flags);
 extern void hitDetectFn_800691c0(int obj,void *bounds,uint mask,int flags);
-extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,float *radii,
+extern void hitDetect_calcSweptSphereBounds(uint *boundsOut,float *startPoints,float *endPoints,float *radii,
                         int pointCount);
 extern void debugPrintf(char *message,...);
 extern undefined8 FUN_8028680c();
@@ -2915,7 +2915,7 @@ void ObjHits_CheckTrackContact(void)
       }
     }
     if (iVar23 != 0) {
-      fn_8006961C(auStack_148,local_130,local_e8,local_60,iVar23);
+      hitDetect_calcSweptSphereBounds(auStack_148,local_130,local_e8,local_60,iVar23);
       hitDetectFn_800691c0(iVar5,auStack_148,(uint)*(ushort *)(iVar6 + 0xb2),1);
       bVar4 = hitDetectFn_80067958(iVar5,local_130,local_e8,iVar23,auStack_a0,0);
       if (bVar4 != 0) {

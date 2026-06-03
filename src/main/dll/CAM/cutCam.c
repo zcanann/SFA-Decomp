@@ -18,7 +18,7 @@ extern uint FUN_80017730();
 extern int objBboxFn_800640cc(float *p1, float *p2, float *p3, int *p4, int *p5, int p6, int p7, int p8, int p9);
 extern void hitDetectFn_80067958(int a, float *b, float *c, int d, int e, int f);
 extern void hitDetectFn_800691c0(int a, void *b, int c, int d);
-extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,
+extern void hitDetect_calcSweptSphereBounds(uint *boundsOut,float *startPoints,float *endPoints,
                         float *radii,int pointCount);
 extern int FUN_8007f7c0();
 extern int getCurSeqNo();
@@ -126,7 +126,7 @@ camcontrol_traceMove(float param_1,float *param_2,float *param_3,float *param_4,
   }
   lbl_803DD528 = cVar2;
   if (param_7 != '\0') {
-    fn_8006961C(auStack_34,param_2,param_4,(float *)(param_5 + 0x40),1);
+    hitDetect_calcSweptSphereBounds(auStack_34,param_2,param_4,(float *)(param_5 + 0x40),1);
     hitDetectFn_800691c0(0,auStack_34,0x240,'\x01');
   }
   hitDetectFn_80067958(0, param_2, param_4, 1, param_5, 0);

@@ -8,7 +8,7 @@ extern uint GameBit_Get(int eventId);
 extern void *Resource_Acquire(int resourceId, int mode);
 extern void ObjHits_DisableObject(u32 obj);
 extern u32 randomGetRange(int min, int max);
-extern void fn_8006961C(u32 *boundsOut, f32 *startPoints, f32 *endPoints, f32 *radii,
+extern void hitDetect_calcSweptSphereBounds(u32 *boundsOut, f32 *startPoints, f32 *endPoints, f32 *radii,
                         int pointCount);
 extern void hitDetectFn_800691c0(int obj, void *bounds, uint mask, int flags);
 extern u8 hitDetectFn_80067958(int obj, f32 *startPoints, f32 *endPoints, int pointCount,
@@ -171,7 +171,7 @@ int objHitboxFn_801843c0(int obj)
   hitAxisTable[0] = 0xff;
   hitAxisTable[4] = 0x3;
 
-  fn_8006961C(sweptBounds, startPoints, endPoints, radii, 1);
+  hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, radii, 1);
   hitDetectFn_800691c0(obj, sweptBounds, *(ushort *)(state + 0xb2), 1);
   hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &hitResults, 0);
   if (hit == 0) {

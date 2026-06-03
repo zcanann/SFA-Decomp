@@ -171,7 +171,7 @@ extern int objHitboxFn_801843c0(int obj);
 extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
 extern int ViewFrustum_IsSphereVisible(f32 *pos, f32 radius);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void *out, int p5, int p6);
-extern int fn_8006961C(void *p1, void *p2, void *p3, void *p4, void *p5, int p6);
+extern int hitDetect_calcSweptSphereBounds(void *p1, void *p2, void *p3, void *p4, void *p5, int p6);
 extern int hitDetectFn_800691c0(int obj, void *p2, int p3, int p4);
 extern int hitDetectFn_80067958(int obj, void *p2, void *p3, int p4, void *p5, int p6);
 extern int fn_801845FC(int obj, int p2, int p3, void *p4);
@@ -320,7 +320,7 @@ void scarab_update(int param_1)
             *((u8 *)&collision_buf[35] + 0x10) = 0xff;
             *((u8 *)&collision_buf[35] + 0x14) = 0;
 
-            hit_index = fn_8006961C(&collision_buf[6], sp40, sp34, 0,
+            hit_index = hitDetect_calcSweptSphereBounds(&collision_buf[6], sp40, sp34, 0,
                                     &collision_buf[35], 1);
             (void)hit_index;
             hitDetectFn_800691c0(param_1, &collision_buf[6], 0, 1);

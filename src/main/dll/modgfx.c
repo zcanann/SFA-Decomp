@@ -4437,7 +4437,7 @@ extern f32 lbl_803DF498;
 extern f32 lbl_803DF49C;
 extern f32 lbl_803DF4A0;
 extern f32 lbl_803DF4A4;
-extern void fn_8006961C(void *out, void *top, void *bottom, void *params, int count);
+extern void hitDetect_calcSweptSphereBounds(void *out, void *top, void *bottom, void *params, int count);
 extern void hitDetectFn_800691c0(void *obj, void *hitData, int flags, int arg3);
 extern void fn_80069968(int *outA, int *outB);
 extern void fn_80069958(int **out);
@@ -4569,7 +4569,7 @@ void playerShadow_renderObject(void *obj)
     verts[7][1] = bottomY;
     verts[7][2] = minZ;
 
-    fn_8006961C(hitData, &verts[0], &verts[4], params, 4);
+    hitDetect_calcSweptSphereBounds(hitData, &verts[0], &verts[4], params, 4);
     hitDetectFn_800691c0(obj, hitData, 0x84, 0);
     fn_80069968(&hitCount, &hitTable);
     hitTableValue = hitTable;

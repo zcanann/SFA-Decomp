@@ -30,7 +30,7 @@ extern int hitDetectFn_80067958(int obj,f32 *startPoints,f32 *endPoints,int poin
 extern void hitDetectFn_800691c0(int obj,void *bounds,uint mask,int flags);
 extern int FUN_80063a68();
 extern undefined4 FUN_80063a74();
-extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,float *radii,
+extern void hitDetect_calcSweptSphereBounds(uint *boundsOut,float *startPoints,float *endPoints,float *radii,
                         int pointCount);
 extern void trackDolphin_buildSweptBounds(uint *boundsOut,float *startPoints,float *endPoints,
                                           float *radii,int pointCount);
@@ -1162,7 +1162,7 @@ void fn_80165B3C(int obj,int state)
   end[2] = start[2] + *(f32 *)(obj + 0x2c);
   hitScratch.hitRadius = lbl_803E2FDC;
   hitScratch.hitType = 3;
-  fn_8006961C(bounds,start,end,&radius,1);
+  hitDetect_calcSweptSphereBounds(bounds,start,end,&radius,1);
   hitDetectFn_800691c0(obj,bounds,0,1);
   hitFound = hitDetectFn_80067958(obj,start,end,1,hitScratch.hit,0x20);
   if (hitFound != 0) {
@@ -1355,7 +1355,7 @@ void fn_80166444(int obj,int state)
   end[1] = start[1] + *(f32 *)(obj + 0x28);
   end[2] = start[2] + *(f32 *)(obj + 0x2c);
   radius = lbl_803E3020;
-  fn_8006961C(bounds,start,end,&radius,1);
+  hitDetect_calcSweptSphereBounds(bounds,start,end,&radius,1);
   hitDetectFn_800691c0(obj,bounds,0,1);
   while ((traveled < distanceRemaining) && (++stepCount < 10)) {
     start[0] = *(f32 *)(obj + 0xc);

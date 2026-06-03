@@ -10,7 +10,7 @@ extern int hitDetectFn_80065e50(f32 x,f32 y,f32 z,int obj,int *hitsOut,int point
 extern void hitDetectFn_80067958(int obj,float *startPoints,float *endPoints,int pointCount,
                                  int outPos,int mode);
 extern void hitDetectFn_800691c0(int obj,uint *bounds,int mask,int flags);
-extern void fn_8006961C(uint *boundsOut,float *startPoints,float *endPoints,float *radii,
+extern void hitDetect_calcSweptSphereBounds(uint *boundsOut,float *startPoints,float *endPoints,float *radii,
                         int pointCount);
 extern f32 *cameraMtxVar57;
 extern f32 lbl_803E1688;
@@ -66,7 +66,7 @@ void camcontrol_updateVerticalBounds(int camera,int flags,s8 param_3,float *uppe
     local_3c = *(float *)(iVar7 + 0x18);
     local_38 = *(undefined4 *)(iVar7 + 0x1c);
     local_34 = *(undefined4 *)(iVar7 + 0x20);
-    fn_8006961C(auStack_30,(float *)(iVar7 + 0xb8),&local_3c,(float *)(iVar7 + 0x74),1);
+    hitDetect_calcSweptSphereBounds(auStack_30,(float *)(iVar7 + 0xb8),&local_3c,(float *)(iVar7 + 0x74),1);
     hitDetectFn_800691c0(iVar11,auStack_30,0x240,1);
     hitDetectFn_80067958(iVar11,(float *)(iVar7 + 0xb8),&local_3c,1,iVar7 + 0x34,0);
     *(float *)(iVar7 + 0x18) = local_3c;
