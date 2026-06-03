@@ -2831,7 +2831,7 @@ int Tricky_func12(int *obj) {
 #pragma scheduling reset
 #pragma peephole reset
 
-/* Tricky_func10: 148b - enter or queue Tricky's target-driven state 10 command. */
+/* Tricky_func10: enter state 10 against targetObj, or queue it while Tricky is busy. */
 #pragma peephole off
 #pragma scheduling off
 int Tricky_func10(int *obj,int targetObj) {
@@ -2842,14 +2842,9 @@ int Tricky_func10(int *obj,int targetObj) {
         return 0;
     }
     if (((u32)state[0x54/4] & 0x10) == 0) {
-        void *currentTarget;
-        void *nextTarget;
-
         state[0x24/4] = targetObj;
-        currentTarget = (void *)state[0x28/4];
-        nextTarget = (void *)(targetObj + 0x18);
-        if (currentTarget != nextTarget) {
-            state[0x28/4] = (int)nextTarget;
+        if ((void*)state[0x28/4] != (void*)(targetObj + 0x18)) {
+            state[0x28/4] = targetObj + 0x18;
             state[0x54/4] = state[0x54/4] & ~0x400;
             *(s16*)((u8*)state + 0xd2) = 0;
         }
@@ -2867,7 +2862,7 @@ int Tricky_func10(int *obj,int targetObj) {
 #pragma scheduling reset
 #pragma peephole reset
 
-/* Tricky_func0F: 260b - start or refresh Tricky's targeted command state. */
+/* Tricky_func0F: start or refresh state 5 against a nearby curve target. */
 #pragma peephole off
 #pragma scheduling off
 void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
@@ -2881,7 +2876,6 @@ void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
         } else {
             u32 busy = state[0x54/4] & 0x10;
             void *nextTarget;
-
             if (busy != 0) {
                 return;
             }

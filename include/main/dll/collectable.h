@@ -75,6 +75,7 @@ void FUN_80147d2c(int param_1,int param_2);
 int Tricky_getExtraSize(void);
 u8 Tricky_func0E(int *obj);
 u8 Tricky_render2(int *obj);
+int Tricky_getCurrentCommandType(int *obj,int *out);
 void Tricky_func11(int *obj);
 int Tricky_func13(int *obj);
 int Tricky_func12(int *obj);
