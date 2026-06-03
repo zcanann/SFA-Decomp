@@ -719,7 +719,7 @@ LAB_801ffe48:
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801FF884(int obj, int unused, int p3)
+int GCRobotBlast_SeqFn(int obj, int unused, int p3)
 {
   extern void objfx_spawnDirectionalBurst(int, int, int, int, int, int, int, f32, f32);
   extern f32 lbl_803E6270;
@@ -4582,7 +4582,7 @@ void dbholecontrol1_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int fn_80203DA0(int obj, int unused, int p3);
+extern int dbholecontrol1_SeqFn(int obj, int unused, int p3);
 extern void Stack_Free(int *stack);
 extern void Obj_FreeObject(int obj);
 extern void **gBaddieControlInterface;
@@ -4654,7 +4654,7 @@ void dbholecontrol1_init(int *obj, u8 *params) {
     int *sub = *(int**)((char*)obj + 0xb8);
     ObjGroup_AddObject(obj, 0x1e);
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)&fn_80203DA0;
+    *(void**)((char*)obj + 0xbc) = (void*)&dbholecontrol1_SeqFn;
     sub[0] = *(s16*)(params + 0x1a);
     sub[1] = *(s16*)(params + 0x1c);
 }
@@ -4678,14 +4678,14 @@ void dfpseqpoint_hitDetect(void) {}
 void dfpseqpoint_release(void) {}
 void dfpseqpoint_initialise(void) {}
 
-extern int fn_80205168(int p1, int p2, void *p3);
+extern int dfpseqpoint_SeqFn(int p1, int p2, void *p3);
 
 #pragma scheduling off
 #pragma peephole off
 void dfpseqpoint_init(int *obj, u8 *init) {
     u8 *sub;
     sub = *(u8**)((char*)obj + 0xb8);
-    *(void**)((char*)obj + 0xbc) = (void*)&fn_80205168;
+    *(void**)((char*)obj + 0xbc) = (void*)&dfpseqpoint_SeqFn;
     *(s16*)obj = (s16)((s8)init[0x18] << 8);
     *(f32*)sub = (f32)(s32)*(s16*)(init + 0x1a);
     *(s16*)(sub + 8) = *(s16*)(init + 0x1c);
@@ -4759,7 +4759,7 @@ void drakorenergy_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 extern int *gExpgfxInterface;
 extern int *gPlayerInterface;
 extern int lbl_803AD0F4[];
-extern int fn_801FF884(int, int, int);
+extern int GCRobotBlast_SeqFn(int, int, int);
 #pragma scheduling off
 #pragma peephole off
 void chuka_free(int obj) {
@@ -4781,7 +4781,7 @@ void GCRobotBlast_init(int obj, s8 *p) {
     char *inner = *(char **)(obj + 0xb8);
     *(int *)inner = (s8)p[0x19];
     inner[4] &= ~0x80;
-    *(void (**)(void))((char *)obj + 0xbc) = (void (*)(void))fn_801FF884;
+    *(void (**)(void))((char *)obj + 0xbc) = (void (*)(void))GCRobotBlast_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4885,7 +4885,7 @@ extern void fn_802960E8(void *playerObj, int p2);
 extern f32 timeDelta;
 #pragma peephole off
 #pragma scheduling off
-int fn_802044EC(int p1)
+int dfplevelcontrol_SeqFn(int p1)
 {
   int p_b8 = *(int *)(p1 + 0xb8);
   void *player = Obj_GetPlayerObject();
@@ -5016,7 +5016,7 @@ int fn_802028C0(int obj, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80203DA0(int obj, int unused, int p3)
+int dbholecontrol1_SeqFn(int obj, int unused, int p3)
 {
   extern u8 Obj_IsLoadingLocked(void);
   extern void *mapRomListFindItem(int, int, int, int, int);
@@ -5191,7 +5191,7 @@ void dfplevelcontrol_init(int obj, int param2)
     ((DfpFlags7 *)(state + 7))->b80 = GameBit_Get(0xd5d);
     ((DfpFlags7 *)(state + 7))->b40 = GameBit_Get(0xd59);
     ((DfpFlags7 *)(state + 7))->b20 = GameBit_Get(0xd5a);
-    *(void **)(obj + 0xbc) = fn_802044EC;
+    *(void **)(obj + 0xbc) = dfplevelcontrol_SeqFn;
     *(s16 *)(state + 2) = 1;
     v = *(s16 *)(param2 + 0x1a);
     if (v != 0 && v <= 2) {
