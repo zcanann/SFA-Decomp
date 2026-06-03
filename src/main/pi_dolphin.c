@@ -8468,6 +8468,168 @@ void fn_8004C7AC(void *p1, void *p2, void *p3, int w, int h) {
         lbl_803DCD69 += 2;
     }
 }
+extern IndTexMtx23 lbl_802C1DC8;
+extern IndTexMtx23 lbl_802C1DE0;
+extern f32 sin(f32 x);
+extern void fn_80293C64(f32 angle, f32 *s, f32 *c);
+extern void fn_8006C504(void *out);
+extern void getTextureFn_8006c5e4(void *out);
+extern void mapTextureScrollGetOffset(u8 idx, f32 *x, f32 *y);
+extern void PSMTXIdentity(f32 m[3][4]);
+extern void PSMTXRotRad(f32 m[3][4], int axis, f32 rad);
+extern void GXSetIndTexCoordScale(int ind_stage, int scale_s, int scale_t);
+extern f32 lbl_803DB5F0;
+extern f32 SaveEnd_803DEAD4;
+extern f32 lbl_803DEAC8;
+extern f32 lbl_803DEB04;
+extern f32 lbl_803DEB08;
+extern f32 lbl_803DEB0C;
+extern f32 lbl_803DEB10;
+extern f32 lbl_803DEB14;
+extern f32 lbl_803DEB18;
+extern int lbl_803DCD80;
+void fn_8004DA54(char *p1) {
+    f32 mtxf4[3][4];
+    f32 mtxc4[3][4];
+    f32 mtx94[3][4];
+    f32 mtx64[3][4];
+    IndTexMtx23 m1;
+    IndTexMtx23 m2;
+    u8 *tex30;
+    u8 *tex2c;
+    f32 rx;
+    f32 ry;
+    f32 cv;
+    f32 sv;
+    f32 tsx;
+    f32 tsy;
+    int kc;
+    f32 f31v;
+    f32 s;
+    f32 k;
+    f32 t;
+    u8 *tex24;
+    m1 = lbl_802C1DC8;
+    m2 = lbl_802C1DE0;
+    tex24 = *(u8 **)(p1 + 0x24);
+    if (tex24 != 0) {
+        void *obj = tex24 + 0x20;
+        if (*(u8 *)(tex24 + 0x48) != 0) {
+            GXLoadTexObjPreLoaded(obj, *(void **)(tex24 + 0x40), 2);
+        } else {
+            GXLoadTexObj(obj, 2);
+        }
+    }
+    GXSetTexCoordGen2(3, 1, 4, 0x3c, 0, 0x7d);
+    newshadows_getReflectionScrollOffsets(&rx, &ry);
+    fn_80293C64(Prepared_803DEAD8 * rx, &sv, &cv);
+    s = sin(Prepared_803DEAD8 * ry);
+    k = (lbl_803DEB08 * s + lbl_803DEB04) * lbl_803DB5F0;
+    cv = cv * k;
+    sv = sv * k;
+    m1.v[0][0] = cv;
+    m1.v[0][1] = sv;
+    m1.v[1][0] = -sv;
+    m1.v[1][1] = cv;
+    fn_80293C64(Prepared_803DEAD8 * -ry, &sv, &cv);
+    s = sin(Prepared_803DEAD8 * rx);
+    f31v = lbl_803DEADC * s + lbl_803DEADC;
+    k = (lbl_803DEB08 * s + lbl_803DEB04) * lbl_803DB5F0;
+    cv = cv * k;
+    sv = sv * k;
+    m2.v[0][0] = cv;
+    m2.v[0][1] = sv;
+    m2.v[1][0] = -sv;
+    m2.v[1][1] = cv;
+    fn_8006C504(&tex2c);
+    if (tex2c != 0) {
+        void *obj = tex2c + 0x20;
+        if (*(u8 *)(tex2c + 0x48) != 0) {
+            GXLoadTexObjPreLoaded(obj, *(void **)(tex2c + 0x40), 0);
+        } else {
+            GXLoadTexObj(obj, 0);
+        }
+    }
+    {
+        u8 b = *(u8 *)(p1 + 0x2a);
+        if (b != 0xff) {
+            mapTextureScrollGetOffset(b, &tsx, &tsy);
+            PSMTXTrans(mtx64, tsx, tsy, lbl_803DEACC);
+        } else {
+            PSMTXIdentity(mtx64);
+        }
+    }
+    GXLoadTexMtxImm(mtx64, 0x46, 0);
+    GXSetTexCoordGen2(0, 0, 4, 0x3c, 0, 0x46);
+    getTextureFn_8006c5e4(&tex30);
+    if (tex30 != 0) {
+        void *obj = tex30 + 0x20;
+        if (*(u8 *)(tex30 + 0x48) != 0) {
+            GXLoadTexObjPreLoaded(obj, *(void **)(tex30 + 0x40), 1);
+        } else {
+            GXLoadTexObj(obj, 1);
+        }
+    }
+    PSMTXScale(mtxf4, SaveEnd_803DEAD4, SaveEnd_803DEAD4, lbl_803DEAC8);
+    mtxf4[1][3] = lbl_803DEB08 * ry;
+    GXLoadTexMtxImm(mtxf4, 0x40, 0);
+    GXSetTexCoordGen2(1, 0, 4, 0x3c, 0, 0x40);
+    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, m1.v, -2);
+    GXSetIndTexMtx(2, m2.v, -2);
+    GXSetTevIndirect(1, 0, 0, 7, 1, 6, 6, 0, 0, 0);
+    PSMTXScale(mtxc4, lbl_803DEB0C, lbl_803DEB0C, lbl_803DEAC8);
+    PSMTXRotRad(mtx94, 0x7a, lbl_803DEB10);
+    PSMTXConcat(mtx94, mtxc4, mtxc4);
+    t = lbl_803DEB14 * rx;
+    mtxc4[0][3] = t;
+    mtxc4[1][3] = t;
+    GXLoadTexMtxImm(mtxc4, 0x43, 0);
+    GXSetTexCoordGen2(2, 0, 4, 0x3c, 0, 0x43);
+    GXSetIndTexOrder(1, 2, 1);
+    GXSetIndTexCoordScale(1, 0, 0);
+    GXSetTevIndirect(2, 1, 0, 7, 2, 0, 0, 1, 0, 0);
+    ((u8 *)&lbl_803DB5EC)[0] = (int)(lbl_803DEB18 * f31v);
+    ((u8 *)&lbl_803DB5EC)[1] = 0;
+    ((u8 *)&lbl_803DB5EC)[2] = 0;
+    kc = lbl_803DB5EC;
+    GXSetTevKColor(lbl_803DCD74, &kc);
+    GXSetTevKAlphaSel(0, lbl_803DCD6C);
+    GXSetTevKColorSel(1, lbl_803DCD70);
+    GXSetTevDirect(0);
+    GXSetTevSwapModeTable(3, 0, 1, 2, 0);
+    GXSetTevOrder(0, 0, 2, 4);
+    GXSetTevColorIn(0, 0xf, 8, 0xa, 0xf);
+    GXSetTevAlphaIn(0, 6, 7, 7, 4);
+    GXSetTevSwapMode(0, 0, 3);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 1, 0, 2, 1, 0);
+    lbl_803DCD30 = 1;
+    GXSetTevOrder(1, 0xff, 0xff, 0xff);
+    GXSetTevColorIn(1, 0xe, 0xf, 0xf, 0);
+    GXSetTevAlphaIn(1, 7, 7, 7, 0);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    GXSetTevOrder(2, 3, 0, 0xff);
+    GXSetTevColorIn(2, 0, 8, 1, 0xf);
+    GXSetTevAlphaIn(2, 7, 7, 7, 7);
+    GXSetTevSwapMode(2, 0, 0);
+    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
+    lbl_803DCD88 = 4;
+    lbl_803DCD90 = 3;
+    lbl_803DCD8C = 3;
+    lbl_803DCD80 = 0x49;
+    lbl_803DCD7C = 2;
+    lbl_803DCD6A = 3;
+    lbl_803DCD69 = 4;
+    lbl_803DCD68 = 2;
+    lbl_803DCD74 = 1;
+    lbl_803DCD70 = 0xd;
+    lbl_803DCD6C = 0x1d;
+}
 void textureFn_8004ff20(void *p1) {
     if (p1 != 0) {
         GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, 0x7d);
