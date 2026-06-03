@@ -1718,6 +1718,8 @@ extern int lbl_803DCC74;
 extern void romListReadCb();
 extern void zlbDecompress(void *dst, int size, int out, void *src);
 extern void DCStoreRange(void *p, u32 n);
+#pragma scheduling off
+#pragma peephole off
 void piRomLoadSection(int param_1,int param_2,int param_3)
 {
   char buf[1048];
@@ -1754,6 +1756,8 @@ void piRomLoadSection(int param_1,int param_2,int param_3)
     }
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 /*
  * --INFO--
  *
