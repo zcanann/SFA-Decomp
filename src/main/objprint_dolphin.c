@@ -112,8 +112,8 @@ extern uint FUN_8005375c();
 extern void newshadows_getShadowTextureTable4x8();
 extern undefined4 FUN_8006b03c();
 extern int FUN_8006f690();
-extern void gxSetPeControl_ZCompLoc_();
-extern void gxSetZMode_();
+extern void gxSetPeControl_ZCompLoc_(u8 zcomploc);
+extern void gxSetZMode_(u8 enable, int func, u8 update);
 extern void trackIntersect_drawColorBand(void);
 extern void trackIntersect_getColorRgb();
 extern undefined4 FUN_8006fb14();
@@ -4475,10 +4475,10 @@ extern u8 lbl_803DCC2A;
 extern u32 lbl_803DCC2C;
 extern u32 lbl_803DCC30;
 extern u8 lbl_803DCC34;
-extern s32 lbl_803DB474;
+extern u32 lbl_803DB474;
 extern u8 lbl_803DB478;
 extern u8 lbl_803DB479;
-extern s32 lbl_803DB47C;
+extern u32 lbl_803DB47C;
 extern u8 lbl_803DB480;
 extern u8 lbl_803DB481;
 extern u8 lbl_803DB482;
@@ -4958,7 +4958,7 @@ extern s32 lbl_803DCC48;
 extern char *getCache(void);
 extern void cacheFn_800229c4(int);
 extern void GXLoadPosMtxImm(f32 *m, int id);
-extern u8 lbl_802CAED0;
+extern u8 lbl_802CAED0[];
 
 typedef struct {
     u8 *data;
@@ -4990,10 +4990,10 @@ void modelLoadMtxsToGx(int obj, int *model, MtxBitStream *bs, f32 *mtx) {
         int count;
         f32 tmp[12];
         {
+            u32 w;
             int pos = bs->pos;
             int off = pos >> 3;
             u8 *p;
-            u32 w;
             w = bs->data[off];
             p = (u8 *)(off + (char *)bs->data);
             w |= p[1] << 8;
@@ -5002,14 +5002,14 @@ void modelLoadMtxsToGx(int obj, int *model, MtxBitStream *bs, f32 *mtx) {
             count = (w >> (pos & 7)) & 0xf;
         }
         i = 0;
-        tbl = &lbl_802CAED0;
+        tbl = lbl_802CAED0;
         for (; i < count; i++) {
             int idx;
             {
+                u32 w;
                 int pos = bs->pos;
                 int off = pos >> 3;
                 u8 *p = (u8 *)(off + (char *)bs->data);
-                u32 w;
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
@@ -5023,6 +5023,143 @@ void modelLoadMtxsToGx(int obj, int *model, MtxBitStream *bs, f32 *mtx) {
                 GXLoadPosMtxImm(tmp, *tbl);
             }
             tbl++;
+        }
+    }
+}
+
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern void GXSetCurrentMtx(int id);
+extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
+extern void GXSetCullMode(int mode);
+
+void ModelHeader_setupPosTexFmt(u8 *hdr, int *model, MtxBitStream *bs) {
+    u32 flags = 0;
+    if (hdr[0xf3] > 1) {
+        flags |= 1;
+    }
+    {
+        u32 w;
+        int pos = bs->pos;
+        int off = pos >> 3;
+        u8 *p;
+        w = bs->data[off];
+        p = (u8 *)(off + (char *)bs->data);
+        w |= p[1] << 8;
+        w |= p[2] << 16;
+        bs->pos = pos + 1;
+        flags |= ((int)(w >> (pos & 7)) & 1) ? 2 : 0;
+    }
+    {
+        u32 w;
+        int pos = bs->pos;
+        int off = pos >> 3;
+        u8 *p;
+        w = bs->data[off];
+        p = (u8 *)(off + (char *)bs->data);
+        w |= p[1] << 8;
+        w |= p[2] << 16;
+        bs->pos = pos + 1;
+        flags |= ((int)(w >> (pos & 7)) & 1) ? 4 : 0;
+    }
+    if (lbl_803DB474 != flags) {
+        GXClearVtxDesc();
+        if (flags & 1) {
+            GXSetVtxDesc(0, 1);
+        } else {
+            GXSetCurrentMtx(lbl_802CAED0[0]);
+        }
+        GXSetVtxDesc(9, (flags & 2) ? 3 : 2);
+        GXSetVtxDesc(13, (flags & 4) ? 3 : 2);
+        lbl_803DB474 = flags;
+    }
+}
+
+void shaderSetGxFlags(u8 *obj, u8 *m, u8 *shader) {
+    u8 blend;
+    u8 zwrite;
+    u8 zcmp;
+    u8 zcomploc;
+    u32 alpha;
+    u8 cull;
+    u32 sf;
+    if (obj[0x37] < 0xff || ((sf = *(u32 *)(shader + 0x3c)) & 0x40000000)) {
+        blend = 1;
+        if (*(u16 *)(m + 2) & 0x400) {
+            zwrite = 0;
+            zcmp = 0;
+            zcomploc = 1;
+            alpha = 0;
+        } else if (*(u16 *)(m + 2) & 0x2000) {
+            zwrite = 1;
+            zcmp = 1;
+            zcomploc = 0;
+            alpha = 0xdf;
+        } else {
+            zwrite = 1;
+            zcmp = 0;
+            zcomploc = 1;
+            alpha = 0;
+        }
+    } else if (sf & 0x400) {
+        blend = 0;
+        if (*(u16 *)(m + 2) & 0x400) {
+            zwrite = 0;
+            zcmp = 0;
+        } else {
+            zwrite = 1;
+            zcmp = 1;
+        }
+        zcomploc = 0;
+        alpha = 0x40;
+    } else {
+        blend = 0;
+        if (*(u16 *)(m + 2) & 0x400) {
+            zwrite = 0;
+            zcmp = 0;
+        } else {
+            zwrite = 1;
+            zcmp = 1;
+        }
+        zcomploc = 1;
+        alpha = 0;
+    }
+    if (*(u32 *)(shader + 0x3c) & 8) {
+        cull = 1;
+    } else {
+        cull = 0;
+    }
+    if (lbl_803DB478 != blend) {
+        if (blend != 0) {
+            GXSetBlendMode(1, 4, 5, 5);
+        } else {
+            GXSetBlendMode(0, 1, 0, 5);
+        }
+        lbl_803DB478 = blend;
+    }
+    if (lbl_803DB480 != zwrite || lbl_803DB481 != zcmp) {
+        gxSetZMode_(zwrite, 3, zcmp);
+        lbl_803DB480 = zwrite;
+        lbl_803DB481 = zcmp;
+    }
+    if (lbl_803DB479 != zcomploc) {
+        gxSetPeControl_ZCompLoc_(zcomploc);
+        lbl_803DB479 = zcomploc;
+    }
+    if (lbl_803DB47C != alpha) {
+        lbl_803DB47C = alpha;
+        if (alpha != 0) {
+            GXSetAlphaCompare(4, (u8)alpha, 0, 4, (u8)alpha);
+        } else {
+            GXSetAlphaCompare(7, 0, 0, 7, 0);
+        }
+    }
+    if (cull != lbl_803DB482) {
+        lbl_803DB482 = cull;
+        if (cull != 0) {
+            GXSetCullMode(2);
+        } else {
+            GXSetCullMode(0);
         }
     }
 }
