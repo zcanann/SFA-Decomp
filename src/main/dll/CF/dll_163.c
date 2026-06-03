@@ -379,7 +379,7 @@ int staffactivated_getObjectTypeId(void)
 }
 
 /* Pattern wrappers. */
-u32 fn_8018A200(int *obj) { return *(u32*)((char*)((int**)obj)[0xb8/4] + 0x14); }
+u32 cfPrisonGuard_getLiftHeight(int *obj) { return *(u32*)((char*)((int**)obj)[0xb8/4] + 0x14); }
 u8 objGetByteParam1C(int *obj) { return *(u8*)((char*)((int**)obj)[0x4c/4] + 0x1c); }
 
 /* render-with-fn(lbl) (no visibility check). */
@@ -400,7 +400,7 @@ void staffactivated_free(int x) { ObjGroup_RemoveObject(x, 0x41); }
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8018A20C(int *obj, int v) {
+void cfPrisonGuard_setLiftHeight(int *obj, int v) {
     int *state = *(int **)((char *)obj + 0xb8);
     *(int *)((char *)state + 0x14) = v;
     *(u8 *)((char *)state + 0x1c) = 1;

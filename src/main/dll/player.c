@@ -4945,7 +4945,7 @@ int fn_80298CCC(int obj, int state)
 
     if (*(s16 *)((char *)obj + 0xa0) == 0xdd) {
         if (*(f32 *)((char *)obj + 0x98) > lbl_803E7F44) {
-            fn_8018A20C(lbl_803DE434, 0);
+            cfPrisonGuard_setLiftHeight(lbl_803DE434, 0);
         }
         if (*(f32 *)((char *)obj + 0x98) > lbl_803E7F48 &&
             (*(u8 *)((char *)state + 0x356) & 1) == 0) {
@@ -8952,7 +8952,7 @@ int fn_80298E54(int obj, int state, f32 fv)
     case 0xb1: {
         int flags;
         setAButtonIcon(2);
-        fn_8018A20C(lbl_803DE434, 0);
+        cfPrisonGuard_setLiftHeight(lbl_803DE434, 0);
         flags = *(u16 *)((char *)inner + 0x6e2);
         if ((flags & 0x100) != 0) {
             buttonDisable(0, 0x100);
@@ -8986,7 +8986,7 @@ int fn_80298E54(int obj, int state, f32 fv)
                 Sfx_PlayFromObject(obj, (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x2d3 : 0x2b));
                 lbl_803DE460 = (f32)(int)randomGetRange(0xa, 0x12);
             }
-            switch (fn_80189F44(lbl_803DE434)) {
+            switch (cfPrisonGuard_getPullRateMode(lbl_803DE434)) {
             case 2:
                 lbl_803DE488 = lbl_803DE488 + lbl_803E7F50;
                 break;
@@ -9003,7 +9003,7 @@ int fn_80298E54(int obj, int state, f32 fv)
         } else if (lbl_803DE488 < lbl_803E7F60) {
             lbl_803DE488 = lbl_803E7F60;
         }
-        count = (int)((f32)(int)fn_8018A200(lbl_803DE434) + lbl_803DE488);
+        count = (int)((f32)(int)cfPrisonGuard_getLiftHeight(lbl_803DE434) + lbl_803DE488);
         if (count <= 0) {
             lbl_803DE488 = lbl_803E7EA4;
             count = 0;
@@ -9022,11 +9022,11 @@ int fn_80298E54(int obj, int state, f32 fv)
             ObjAnim_SetMoveProgress(prog + (f32)(int)randomGetRange(-0x64, 0x64) / lbl_803E7F70,
                                     (ObjAnimComponent *)obj);
         }
-        fn_8018A20C(lbl_803DE434, count);
+        cfPrisonGuard_setLiftHeight(lbl_803DE434, count);
         break;
     }
     case 0xd0:
-        fn_8018A20C(lbl_803DE434, 0x800);
+        cfPrisonGuard_setLiftHeight(lbl_803DE434, 0x800);
         if (*(s8 *)((char *)state + 0x346) != 0) {
             Sfx_PlayFromObject(obj, SFXsp_lf_mutter4);
             ObjAnim_SetCurrentMove(obj, 0xb2, lbl_803E7EA4, 0);
@@ -9034,7 +9034,7 @@ int fn_80298E54(int obj, int state, f32 fv)
         }
         break;
     case 0xb2:
-        fn_8018A20C(lbl_803DE434, 0x800);
+        cfPrisonGuard_setLiftHeight(lbl_803DE434, 0x800);
         if ((*(u16 *)((char *)inner + 0x6e2) & 0x200) != 0) {
             buttonDisable(0, 0x200);
             Sfx_PlayFromObject(obj, SFXmammoth_breath1);
@@ -9557,7 +9557,7 @@ int fn_80298944(int obj, int state)
             *(u8 *)((char *)state + 0x356) |= 1;
             doRumble(lbl_803E7F10);
             Sfx_PlayFromObject(obj, 0x377);
-            fn_80189BE4(lbl_803DE434, 0);
+            cfPrisonGuard_setGameBitMirror(lbl_803DE434, 0);
         }
         if (*(s8 *)((char *)state + 0x346) != 0) {
             ObjAnim_SetCurrentMove(obj, 0xe4, lbl_803E7EA4, 0);
@@ -9583,7 +9583,7 @@ int fn_80298944(int obj, int state)
             *(u8 *)((char *)state + 0x356) |= 1;
             doRumble(lbl_803E7F10);
             Sfx_PlayFromObject(obj, 0x377);
-            fn_80189BE4(lbl_803DE434, 1);
+            cfPrisonGuard_setGameBitMirror(lbl_803DE434, 1);
         }
         if (*(s8 *)((char *)state + 0x346) != 0) {
             ObjAnim_SetCurrentMove(obj, 0xe5, lbl_803E7EA4, 0);
@@ -9600,7 +9600,7 @@ int fn_80298944(int obj, int state)
         }
         break;
     default:
-        if (fn_80189C58(lbl_803DE434) != 0) {
+        if (cfPrisonGuard_isGameBitMirrorSet(lbl_803DE434) != 0) {
             ObjAnim_SetCurrentMove(obj, 0xe1, lbl_803E7EA4, 0);
         } else {
             ObjAnim_SetCurrentMove(obj, 0xe0, lbl_803E7EA4, 0);

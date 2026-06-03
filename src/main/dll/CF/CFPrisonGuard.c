@@ -478,25 +478,25 @@ byte FUN_8018a0d0(int param_1)
 }
 
 /* chained byte bit-extract. */
-u32 fn_80189C58(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x1d) >> 5) & 1; }
+u32 cfPrisonGuard_isGameBitMirrorSet(int *obj) { return (*((u8*)((int**)obj)[0xb8/4] + 0x1d) >> 5) & 1; }
 
 /*
  * --INFO--
  *
- * Function: fn_80189F44
+ * Function: cfPrisonGuard_getPullRateMode
  * EN v1.0 Address: 0x80189F44
  * EN v1.0 Size: 24b
  */
 /*
  * --INFO--
  *
- * Function: fn_80189BE4
+ * Function: cfPrisonGuard_setGameBitMirror
  * EN v1.0 Address: 0x80189BE4
  * EN v1.0 Size: 116b
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80189BE4(int obj, u8 flag)
+void cfPrisonGuard_setGameBitMirror(int obj, u8 flag)
 {
     register int s = *(int *)(obj + 0x4c);
     register int t = *(int *)(obj + 0xb8);
@@ -511,7 +511,7 @@ void fn_80189BE4(int obj, u8 flag)
 #pragma scheduling reset
 #pragma peephole reset
 
-u32 fn_80189F44(int obj) {
+u32 cfPrisonGuard_getPullRateMode(int obj) {
     u32 v;
     v = *(u8 *)(*(int *)(obj + 0x4c) + 0x1d);
     if (v > 2) v = 2;
