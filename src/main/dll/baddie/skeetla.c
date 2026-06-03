@@ -313,7 +313,7 @@ extern s16 getAngle(f32 x, f32 z);
 extern int Sfx_IsPlayingFromObjectChannel(u8 *obj, int channel);
 extern void objAudioFn_800393f8(u8 *obj, void *audio, int sfxId, int volume, int param5, int param6);
 extern int objAnimFn_8013a3f0(f32 speed, int obj, int newState, u32 flags);
-extern void fn_8013B1E0(f32 *start, f32 *end, f32 *guardPoint);
+extern void trickyApplyObjectAvoidanceToStep(f32 *start, f32 *end, f32 *guardPoint);
 extern u32 GameBit_Get(int bit);
 extern u32 randomGetRange(int min, int max);
 
@@ -464,7 +464,7 @@ int trickyMove(u8 *obj, f32 *targetPos) {
   adjustedPos[0] = prospectivePos[0];
   adjustedPos[1] = prospectivePos[1];
   adjustedPos[2] = prospectivePos[2];
-  fn_8013B1E0((f32 *)(obj + 0x18), adjustedPos, targetPos);
+  trickyApplyObjectAvoidanceToStep((f32 *)(obj + 0x18), adjustedPos, targetPos);
   if (vec3f_distanceSquared(prospectivePos, adjustedPos) > lbl_803E2468) {
     *(f32 *)(state + 0x2c) = adjustedPos[0] - *(f32 *)(obj + 0x18);
     *(f32 *)(state + 0x30) = adjustedPos[2] - *(f32 *)(obj + 0x20);
@@ -1008,8 +1008,8 @@ void skeetla_spawnLinkedSparks(u8 *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_8013AFE0  addr=0x8013AFE0  size=0x200  linkage=global */
-void fn_8013AFE0(f32 *start, f32 *end, f32 *guardPoint, f32 *center, f32 minDistance, f32 moveDistance)
+/* trickyAdjustStepAroundPoint  addr=0x8013AFE0  size=0x200  linkage=global */
+void trickyAdjustStepAroundPoint(f32 *start, f32 *end, f32 *guardPoint, f32 *center, f32 minDistance, f32 moveDistance)
 {
     f32 projection[3];
     f32 centerToStart;
@@ -1085,11 +1085,11 @@ void fn_8013AFE0(f32 *start, f32 *end, f32 *guardPoint, f32 *center, f32 minDist
     end[2] = center[2] + (dz * adjustedDistance);
 }
 
-/* fn_8013B1E0  addr=0x8013B1E0  size=0x188  linkage=global */
+/* trickyApplyObjectAvoidanceToStep  addr=0x8013B1E0  size=0x188  linkage=global */
 extern void **ObjGroup_GetObjects(int group, int *countOut);
 extern void **ObjList_GetObjects(int *startIndex, int *objectCount);
 
-void fn_8013B1E0(f32 *start, f32 *end, f32 *guardPoint)
+void trickyApplyObjectAvoidanceToStep(f32 *start, f32 *end, f32 *guardPoint)
 {
     int count;
     int startIndex;
@@ -1105,7 +1105,7 @@ void fn_8013B1E0(f32 *start, f32 *end, f32 *guardPoint)
     for (i = 0; i < count; i++) {
         obj = objects[i];
         def = *(u8 **)(obj + 0x4c);
-        fn_8013AFE0(start, end, guardPoint, (f32 *)(obj + 0x18),
+        trickyAdjustStepAroundPoint(start, end, guardPoint, (f32 *)(obj + 0x18),
                     lbl_803E2484 * (f32)*(u16 *)(def + 0x18),
                     lbl_803E2484 * (f32)*(u16 *)(def + 0x1a));
     }
@@ -1118,7 +1118,7 @@ void fn_8013B1E0(f32 *start, f32 *end, f32 *guardPoint)
         if (minRadius != 0) {
             runtime = *(u8 **)(obj + 0x54);
             if ((runtime != NULL) && ((*(u16 *)(runtime + 0x60) & 1) != 0)) {
-                fn_8013AFE0(start, end, guardPoint, (f32 *)(obj + 0x18),
+                trickyAdjustStepAroundPoint(start, end, guardPoint, (f32 *)(obj + 0x18),
                             lbl_803E2484 * (f32)minRadius,
                             lbl_803E2484 * (f32)*(u16 *)(def + 0x86));
             }
