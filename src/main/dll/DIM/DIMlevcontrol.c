@@ -649,3 +649,88 @@ void dimcannon_free(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void ObjMsg_AllocQueue(int *obj, int n);
+extern int *Resource_Acquire(int a, int b);
+extern void fn_801B2550(void);
+extern f32 lbl_803E48B8;
+
+/* EN v1.0 0x801B30C8  size: 628b  Dimcannon constructor: handles the 0x1d6
+ * sub-variant, else seeds the 10-slot trail particle array, installs the
+ * sequence fn, acquires its model resource and applies map flags. */
+#pragma scheduling off
+#pragma peephole off
+void dimcannon_init(int *obj, int *arg)
+{
+    ObjMsg_AllocQueue(obj, 4);
+
+    if (*(s16 *)((char *)obj + 0x46) == 0x1d6) {
+        void *state;
+        int *p;
+        *(int *)((char *)obj + 0xf4) = 0;
+        p = *(int **)((char *)obj + 0x64);
+        if (p != 0) {
+            *(int *)((char *)p + 0x30) |= 0xc10;
+            p = *(int **)((char *)obj + 0x64);
+            *(int *)((char *)p + 0x30) |= 0x8000;
+        }
+        state = *(void **)((char *)obj + 0xb8);
+        *(s8 *)((char *)state + 0x9) = (s8)randomGetRange(-0x64, 0x64);
+        *(s8 *)((char *)state + 0xa) = (s8)randomGetRange(-0x64, 0x64);
+        *(s8 *)((char *)state + 0xb) = (s8)randomGetRange(-0x64, 0x64);
+        *(u8 *)((char *)state + 0x7) = 1;
+        p = *(int **)((char *)obj + 0x54);
+        if (p != 0) {
+            *(s16 *)((char *)p + 0xb2) = 1;
+        }
+        *(u16 *)((char *)obj + 0xb0) |= 0x4000;
+    } else {
+        void *state = *(void **)((char *)obj + 0xb8);
+        u8 i;
+
+        if (*(s8 *)((char *)obj + 0xac) == 0x13) {
+            u8 v = 0;
+            if (GameBit_Get(0xc17) && GameBit_Get(0xa21)) {
+                v = 1;
+            }
+            *(u8 *)((char *)state + 0xb2) = v;
+        }
+
+        for (i = 0; i < 0xa; i += 5) {
+            char *e = (char *)state + i * 4;
+            *(f32 *)(e + 0x14) = *(f32 *)((char *)obj + 0xc);
+            *(f32 *)(e + 0x3c) = *(f32 *)((char *)obj + 0x10);
+            *(f32 *)(e + 0x64) = *(f32 *)((char *)obj + 0x14);
+            *(f32 *)(e + 0x18) = *(f32 *)((char *)obj + 0xc);
+            *(f32 *)(e + 0x40) = *(f32 *)((char *)obj + 0x10);
+            *(f32 *)(e + 0x68) = *(f32 *)((char *)obj + 0x14);
+            *(f32 *)(e + 0x1c) = *(f32 *)((char *)obj + 0xc);
+            *(f32 *)(e + 0x44) = *(f32 *)((char *)obj + 0x10);
+            *(f32 *)(e + 0x6c) = *(f32 *)((char *)obj + 0x14);
+            *(f32 *)(e + 0x20) = *(f32 *)((char *)obj + 0xc);
+            *(f32 *)(e + 0x48) = *(f32 *)((char *)obj + 0x10);
+            *(f32 *)(e + 0x70) = *(f32 *)((char *)obj + 0x14);
+            *(f32 *)(e + 0x24) = *(f32 *)((char *)obj + 0xc);
+            *(f32 *)(e + 0x4c) = *(f32 *)((char *)obj + 0x10);
+            *(f32 *)(e + 0x74) = *(f32 *)((char *)obj + 0x14);
+        }
+
+        *(u8 *)((char *)state + 0xaf) = 0x80;
+        *(f32 *)((char *)state + 0x98) = lbl_803E48B8;
+        *(u8 *)((char *)obj + 0xaf) |= 0x8;
+        *(int *)((char *)obj + 0xbc) = (int)fn_801B2550;
+        *(s16 *)((char *)obj + 0x0) = (s16)((s8)*(s8 *)((char *)arg + 0x28) << 8);
+        lbl_803DDB50 = Resource_Acquire(0x79, 1);
+        if (GameBit_Get(*(s16 *)((char *)arg + 0x1a))) {
+            *(u8 *)((char *)state + 0xb0) = 0x3c;
+            *(u8 *)((char *)state + 0xac) = 5;
+        }
+        *(f32 *)((char *)state + 0x8c) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)state + 0x90) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)state + 0x94) = *(f32 *)((char *)obj + 0x14);
+    }
+
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
