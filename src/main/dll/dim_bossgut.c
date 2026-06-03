@@ -516,3 +516,55 @@ void enemymushroom_init(int *obj, int *arg, int flag)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int *Obj_AllocObjectSetup(int a, int b);
+extern void setMatrixFromObjectPos(void *mtx, void *build);
+extern void Matrix_TransformPoint(void *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern void Obj_SetupObject(int *obj, int a, int b, int c, int d);
+extern f32 lbl_803E536C;
+extern f32 lbl_803E5374;
+
+typedef struct { s16 pos[3]; f32 w; f32 v[3]; } MushSpawnBuild;
+
+/* EN v1.0 0x801D29E4  size: 336b  Spawns a spore object: builds a matrix from
+ * the parent's grid pos, transforms a unit offset, and seeds the new object. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801D29E4(int *obj, int *p2)
+{
+    int *spore;
+    int *base = *(int **)((char *)obj + 0x4c);
+
+    if (Obj_IsLoadingLocked()) {
+        MushSpawnBuild bd;
+        f32 mtx[4][4];
+        f32 tz, ty, tx;
+        f32 sx;
+
+        spore = Obj_AllocObjectSetup(0x24, 0x198);
+        bd.pos[0] = *(s16 *)((char *)obj + 0x0);
+        bd.pos[1] = *(s16 *)((char *)obj + 0x2);
+        bd.pos[2] = *(s16 *)((char *)obj + 0x4);
+        bd.v[0] = lbl_803E536C;
+        bd.v[1] = lbl_803E536C;
+        bd.v[2] = lbl_803E536C;
+        bd.w = lbl_803E5370;
+        setMatrixFromObjectPos(mtx, &bd);
+        Matrix_TransformPoint(mtx, lbl_803E536C, lbl_803E5370, lbl_803E536C, &tx, &ty, &tz);
+        sx = lbl_803E5374 * tx;
+        bd.v[0] = sx;
+        bd.v[1] = lbl_803E5374 * ty;
+        bd.v[2] = lbl_803E5374 * tz;
+        *(f32 *)((char *)spore + 0x8)  = *(f32 *)((char *)obj + 0xc) + sx;
+        *(f32 *)((char *)spore + 0xc)  = *(f32 *)((char *)obj + 0x10) + bd.v[1];
+        *(f32 *)((char *)spore + 0x10) = *(f32 *)((char *)obj + 0x14) + bd.v[2];
+        *(u8 *)((char *)spore + 0x5) = 1;
+        *(u8 *)((char *)spore + 0x4) = 2;
+        *(s16 *)((char *)spore + 0x1a) = (s16)((s8)*(s8 *)((char *)base + 0x1e) << 8);
+        *(s16 *)((char *)spore + 0x1c) = *(s16 *)((char *)obj + 0x0);
+        Obj_SetupObject(spore, 5, -1, -1, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
