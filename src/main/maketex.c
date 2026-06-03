@@ -1619,6 +1619,123 @@ int saveGame_doWrite(int slot)
 #pragma scheduling reset
 #pragma peephole reset
 
+typedef struct {
+    u8 pad[0x3c];
+} DVDFileInfoStub;
+extern int DVDOpen(char *fileName, DVDFileInfoStub *fi);
+extern int DVDClose(DVDFileInfoStub *fi);
+extern s32 DVDRead(DVDFileInfoStub *fi, void *addr, s32 length, s32 offset);
+extern int sprintf(char *s, ...);
+extern u8 lbl_803DC968;
+extern int lbl_803DD05C;
+extern char sMemoryCardFileNameString[];
+
+/* EN v1.0 0x8007F358  size: 1372b  Builds the memory card comment strings
+ * (Shift-JIS title on JP cards), loads the banner/icon images from disc, and
+ * checksums both halves of the card image buffer. */
+#pragma peephole off
+#pragma scheduling off
+void loadMemCardImages(void)
+{
+    char *names = sMemoryCardFileNameString;
+    DVDFileInfoStub fi;
+    u64 x;
+    u16 i;
+    u64 *p;
+    u64 *q;
+    u64 a;
+    u64 chk;
+
+    if (lbl_803DC968 != 0) {
+        *(u8 *)(lbl_803DD05C + 0x00) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x01) = 0x58;
+        *(u8 *)(lbl_803DD05C + 0x02) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x03) = 0x5e;
+        *(u8 *)(lbl_803DD05C + 0x04) = 0x81;
+        *(u8 *)(lbl_803DD05C + 0x05) = 0x5b;
+        *(u8 *)(lbl_803DD05C + 0x06) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x07) = 0x74;
+        *(u8 *)(lbl_803DD05C + 0x08) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x09) = 0x48;
+        *(u8 *)(lbl_803DD05C + 0x0a) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x0b) = 0x62;
+        *(u8 *)(lbl_803DD05C + 0x0c) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x0d) = 0x4e;
+        *(u8 *)(lbl_803DD05C + 0x0e) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x0f) = 0x58;
+        *(u8 *)(lbl_803DD05C + 0x10) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x11) = 0x41;
+        *(u8 *)(lbl_803DD05C + 0x12) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x13) = 0x68;
+        *(u8 *)(lbl_803DD05C + 0x14) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x15) = 0x78;
+        *(u8 *)(lbl_803DD05C + 0x16) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x17) = 0x93;
+        *(u8 *)(lbl_803DD05C + 0x18) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x19) = 0x60;
+        *(u8 *)(lbl_803DD05C + 0x1a) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x1b) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x1c) = 0x81;
+        *(u8 *)(lbl_803DD05C + 0x1d) = 0x5b;
+        *(u8 *)(lbl_803DD05C + 0x1e) = 0x00;
+        *(u8 *)(lbl_803DD05C + 0x1f) = 0x00;
+        sprintf((char *)(lbl_803DD05C + 0x20), names + 0xa0);
+    } else {
+        sprintf((char *)lbl_803DD05C, names);
+        sprintf((char *)(lbl_803DD05C + 0x20), names + 0xb4);
+    }
+    if (DVDOpen(names + 0xc4, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x40), 0x1800, 0x20);
+        DVDClose(&fi);
+    }
+    if (DVDOpen(names + 0xd0, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x1840), 0x400, 0);
+        DVDClose(&fi);
+    }
+    if (DVDOpen(names + 0xe8, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x1c40), 0x400, 0);
+        DVDClose(&fi);
+    }
+    if (DVDOpen(names + 0x100, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x2040), 0x400, 0);
+        DVDClose(&fi);
+    }
+    if (DVDOpen(names + 0x118, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x2440), 0x400, 0);
+        DVDClose(&fi);
+    }
+    if (DVDOpen(names + 0x130, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x2840), 0x200, 0);
+        DVDClose(&fi);
+    }
+    p = (u64 *)lbl_803DD05C;
+    x = 0;
+    a = 1;
+    for (i = 0; (int)i < 0x400; i++) {
+        u64 v = p[i];
+        x ^= v;
+        a += v;
+    }
+    chk = x ^ (a + 13);
+    ((u32 *)p)[0xa91] = (u32)chk;
+    ((u32 *)p)[0xa90] = (u32)(chk >> 32);
+    q = (u64 *)lbl_803DD05C;
+    p = q + 0x400;
+    x = 0;
+    a = 1;
+    for (i = 0; (int)i < 0x3ff; i++) {
+        u64 v = p[i];
+        x ^= v;
+        a += v;
+    }
+    chk = x ^ (a + 13);
+    ((u32 *)q)[0xfff] = (u32)chk;
+    ((u32 *)q)[0xffe] = (u32)(chk >> 32);
+    DCFlushRange((void *)lbl_803DD05C, 0x4000);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern void AudioStream_StartPrepared(void);
 extern int lbl_803DD094;
 extern int lbl_803DB728;
