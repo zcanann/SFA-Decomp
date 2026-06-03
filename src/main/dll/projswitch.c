@@ -823,6 +823,7 @@ extern f32 lbl_803E25B0;
 void enemy_init(int obj, u8 *setup, int flag)
 {
     u8 *state = *(u8 **)(obj + 0xb8);
+    f32 fz;
 
     *(int *)(obj + 0xf4) = 0;
     if (flag == 0) {
@@ -858,7 +859,7 @@ void enemy_init(int obj, u8 *setup, int flag)
         *(u8 *)(obj + 0x36) = 255;
     }
     *(f32 *)(state + 0x2fc) = (f32)setup[0x2f] / lbl_803E257C;
-    *(f32 *)(state + 0x2a8) = (f32)(setup[0x29] << 3);
+    *(f32 *)(state + 0x2a8) = (f32)(u32)(setup[0x29] << 3);
     *(int *)(state + 0x2dc) = 0;
     *(int *)(state + 0x2e0) = *(int *)(state + 0x2dc);
     *(s16 *)obj = *(s8 *)(setup + 0x2a) << 8;
@@ -873,23 +874,24 @@ void enemy_init(int obj, u8 *setup, int flag)
         state[0x2f2] = 0;
         *(s16 *)(state + 0x2ec) = 0;
         state[0x2f5] = 0;
-        *(f32 *)(state + 0x300) = lbl_803E2574;
-        *(f32 *)(state + 0x304) = lbl_803E2574;
-        *(f32 *)(state + 0x308) = lbl_803E2574;
-        *(f32 *)(state + 0x30c) = lbl_803E2574;
+        fz = lbl_803E2574;
+        *(f32 *)(state + 0x300) = fz;
+        *(f32 *)(state + 0x304) = fz;
+        *(f32 *)(state + 0x308) = fz;
+        *(f32 *)(state + 0x30c) = fz;
         state[0x323] = 0;
-        *(f32 *)(state + 0x310) = lbl_803E2574;
+        *(f32 *)(state + 0x310) = fz;
         *(s16 *)(state + 0x2f8) = 0;
         state[0x33a] = 0;
         state[0x33b] = 0;
         *(s16 *)(state + 0x338) = 0;
         state[0x33c] = 0;
         state[0x33d] = 0;
-        *(f32 *)(state + 0x324) = lbl_803E2574;
-        *(f32 *)(state + 0x328) = lbl_803E2574;
-        *(f32 *)(state + 0x32c) = lbl_803E2574;
-        *(f32 *)(state + 0x330) = lbl_803E2574;
-        *(f32 *)(state + 0x334) = lbl_803E2574;
+        *(f32 *)(state + 0x324) = fz;
+        *(f32 *)(state + 0x328) = fz;
+        *(f32 *)(state + 0x32c) = fz;
+        *(f32 *)(state + 0x330) = fz;
+        *(f32 *)(state + 0x334) = fz;
         *(s16 *)(state + 0x2b4) = -1;
         *(s16 *)(state + 0x2b6) = *(s16 *)(state + 0x2b4);
         *(u16 *)(obj + 0xb0) |= *(s8 *)(setup + 0x28) & 7;
@@ -966,7 +968,7 @@ void enemy_init(int obj, u8 *setup, int flag)
             fn_8014FF58(obj, state);
             break;
         }
-        *(s16 *)(state + 0x2b2) = *(u16 *)(state + 0x2b0);
+        *(u16 *)(state + 0x2b2) = *(u16 *)(state + 0x2b0);
         if (*(u16 *)(setup + 0x34) != 0) {
             *(int *)(state + 0x2e4) = *(int *)(state + 0x2e4) & -39;
         }
@@ -1011,10 +1013,10 @@ void enemy_init(int obj, u8 *setup, int flag)
         }
     }
     *(f32 *)(state + 0x2d8) = lbl_803E2574;
-    if (*(f32 *)(state + 0x2a8) > lbl_803E25B0) {
+    if (lbl_803E25B0 < *(f32 *)(state + 0x2a8)) {
         *(f32 *)(state + 0x2a8) = lbl_803E25B0;
     }
-    if (*(f32 *)(state + 0x2ac) > lbl_803E25B0) {
+    if (lbl_803E25B0 < *(f32 *)(state + 0x2ac)) {
         *(f32 *)(state + 0x2ac) = lbl_803E25B0;
     }
 }
