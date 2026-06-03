@@ -818,9 +818,57 @@ void sc_levelcontrol_free(int obj) {
 #pragma scheduling reset
 
 extern void GameBit_Set(int bit, int val);
+extern int GameBit_Get(int bit);
 extern void gameTimerInit(int a, int b);
 extern void timerSetToCountUp(void);
+extern int isGameTimerDisabled(void);
+extern void Obj_GetPlayerObject(void);
+extern void Sfx_PlayFromObject(int a, int b);
 extern f32 lbl_803E5550;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801DB098(int obj, int p2, int p3)
+{
+    int state = *(int *)(obj + 0xb8);
+    int i;
+
+    *(u8 *)(p3 + 0x56) = 0;
+    for (i = 0; i < (int)(u32)*(u8 *)(p3 + 0x8b); i++) {
+        int b = *(u8 *)(p3 + i + 0x81);
+        switch (b) {
+        case 1:
+            sc_levelcontrol_setScale(obj, 7);
+            break;
+        case 2:
+            sc_levelcontrol_setScale(obj, 5);
+            break;
+        case 3:
+            *(u8 *)(state + 0x1f) |= 2;
+            break;
+        }
+    }
+    *(u8 *)(state + 0x1f) |= 1;
+    GameBit_Set(0x60f, 0);
+    state = *(int *)(obj + 0xb8);
+    Obj_GetPlayerObject();
+    if (*(u8 *)(state + 0x1d) == 5) {
+        GameBit_Set(0x60f, 1);
+        if (isGameTimerDisabled()) {
+            if ((u32)GameBit_Get(0x7a) != 0) {
+                GameBit_Set(0x85, 1);
+            }
+            *(f32 *)(state + 0x10) = lbl_803E5550;
+            *(u8 *)(state + 0x1d) = 0;
+            Sfx_PlayFromObject(0, 0x10a);
+            Music_Trigger(0xef, 0);
+        }
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 #pragma peephole on
 #pragma scheduling off
 void sc_levelcontrol_setScale(int obj, u8 scale)
