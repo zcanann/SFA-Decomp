@@ -3712,6 +3712,64 @@ void Tricky_emitQueuedPathParticles(u8* a, u8* b)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
+int trickySelectQueuedCommandTarget(u8* state, int commandType)
+{
+    extern f32 getXZDistance(f32* a, f32* b);
+    extern f32 lbl_803E2418;
+    f32 bestPriorityDist;
+    f32 bestFallbackDist;
+    u8* bestPriorityTarget;
+    u8* bestFallbackTarget;
+    u8* entry;
+    int i;
+
+    bestPriorityDist = lbl_803E2418;
+    bestFallbackDist = bestPriorityDist;
+    bestPriorityTarget = NULL;
+    bestFallbackTarget = NULL;
+    entry = state;
+
+    for (i = 0; i < state[0x798]; i++) {
+        if (*(s8*)(entry + 0x74d) == commandType) {
+            u8* target = *(u8**)(entry + 0x748);
+            f32 dist = getXZDistance((f32*)(*(u8**)(state + 4) + 0x18), (f32*)(target + 0x18));
+
+            if (*(s8*)(entry + 0x74c) == 1) {
+                if (dist < bestPriorityDist) {
+                    bestPriorityDist = dist;
+                    bestPriorityTarget = target;
+                }
+            } else if (dist < bestFallbackDist) {
+                bestFallbackDist = dist;
+                bestFallbackTarget = target;
+            }
+        }
+        entry += 8;
+    }
+
+    if (bestPriorityTarget != NULL) {
+        *(u8**)(state + 0x24) = bestPriorityTarget;
+    } else {
+        if (bestFallbackTarget == NULL) {
+            return 0;
+        }
+        *(u8**)(state + 0x24) = bestFallbackTarget;
+    }
+
+    if (*(u8**)(state + 0x28) != *(u8**)(state + 0x24) + 0x18) {
+        *(u8**)(state + 0x28) = *(u8**)(state + 0x24) + 0x18;
+        *(u32*)(state + 0x54) = *(u32*)(state + 0x54) & ~0x400;
+        *(u16*)(state + 0xd2) = 0;
+    }
+
+    state[0xa] = 0;
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* EN v1.0 0x80134388  size: 68b  Acquire two buffers and prime the
  * float at lbl_803DD968. */
 #pragma scheduling off
