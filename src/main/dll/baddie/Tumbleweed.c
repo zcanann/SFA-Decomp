@@ -3720,30 +3720,28 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
     extern f32 lbl_803E2418;
     f32 bestPriorityDist;
     f32 bestFallbackDist;
-    u8* bestPriorityTarget;
-    u8* bestFallbackTarget;
     u8* entry;
     int i;
+    u8* bestPriorityTarget;
+    u8* bestFallbackTarget;
 
     bestPriorityDist = lbl_803E2418;
-    bestFallbackDist = bestPriorityDist;
     bestPriorityTarget = NULL;
+    bestFallbackDist = bestPriorityDist;
     bestFallbackTarget = NULL;
-    entry = state;
 
-    for (i = 0; i < state[0x798]; i++) {
+    for (i = 0, entry = state; i < state[0x798]; i++) {
         if (*(s8*)(entry + 0x74d) == commandType) {
-            u8* target = *(u8**)(entry + 0x748);
-            f32 dist = getXZDistance((f32*)(*(u8**)(state + 4) + 0x18), (f32*)(target + 0x18));
+            f32 dist = getXZDistance((f32*)(*(u8**)(state + 4) + 0x18), (f32*)(*(u8**)(entry + 0x748) + 0x18));
 
             if (*(s8*)(entry + 0x74c) == 1) {
                 if (dist < bestPriorityDist) {
                     bestPriorityDist = dist;
-                    bestPriorityTarget = target;
+                    bestPriorityTarget = *(u8**)(entry + 0x748);
                 }
             } else if (dist < bestFallbackDist) {
                 bestFallbackDist = dist;
-                bestFallbackTarget = target;
+                bestFallbackTarget = *(u8**)(entry + 0x748);
             }
         }
         entry += 8;
@@ -3758,10 +3756,14 @@ int trickySelectQueuedCommandTarget(u8* state, int commandType)
         *(u8**)(state + 0x24) = bestFallbackTarget;
     }
 
-    if (*(u8**)(state + 0x28) != *(u8**)(state + 0x24) + 0x18) {
-        *(u8**)(state + 0x28) = *(u8**)(state + 0x24) + 0x18;
-        *(u32*)(state + 0x54) = *(u32*)(state + 0x54) & ~0x400;
-        *(u16*)(state + 0xd2) = 0;
+    {
+        u8* targetPos = *(u8**)(state + 0x24) + 0x18;
+        u32 pathMask = 0xfffffbff;
+        if (*(u8**)(state + 0x28) != targetPos) {
+            *(u8**)(state + 0x28) = targetPos;
+            *(u32*)(state + 0x54) = *(u32*)(state + 0x54) & pathMask;
+            *(u16*)(state + 0xd2) = 0;
+        }
     }
 
     state[0xa] = 0;
