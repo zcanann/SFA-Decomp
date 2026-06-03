@@ -300,17 +300,17 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int
                                  ObjHitReactState *hitState,int moveId,int async)
 {
   ObjHitReactMoveEntry *moveEntry;
-  int entryShortOffset;
+  int moveEntryShortOffset;
   s16 firstEntryByteOffset;
   ObjHitReactMoveEntry *moveEntryTable;
 
   moveEntryTable = objAnim->modelInstance->hitReactMoveTable;
   hitState->activeEntryBytes = 0;
   if (moveEntryTable != (ObjHitReactMoveEntry *)0x0) {
-    entryShortOffset = 0;
+    moveEntryShortOffset = 0;
     for (moveEntry = moveEntryTable; moveEntry->moveId != -1;) {
       if (moveId == moveEntry->moveId) {
-        moveEntry = (ObjHitReactMoveEntry *)((s16 *)moveEntryTable + entryShortOffset);
+        moveEntry = (ObjHitReactMoveEntry *)((s16 *)moveEntryTable + moveEntryShortOffset);
         firstEntryByteOffset = moveEntry->firstEntryOffset;
         hitState->activeEntryBytes = moveEntry->entryBytes;
         if (hitState->activeEntryBytes > hitState->entryByteCapacity) {
@@ -326,7 +326,7 @@ void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int
         return;
       }
       moveEntry++;
-      entryShortOffset += sizeof(ObjHitReactMoveEntry) / sizeof(s16);
+      moveEntryShortOffset += OBJHITREACT_MOVE_ENTRY_SHORT_STRIDE;
     }
   }
   return;
