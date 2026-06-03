@@ -4532,7 +4532,8 @@ extern f32 lbl_803DEA04;
 extern int *Obj_GetActiveModel(int *obj);
 extern void objRenderShadow2(int *obj, int *obj2, int model, int p4);
 extern void modelDoRenderInstrs(int *obj, int *obj2, int model, int p4);
-extern void objRenderChild(int *child, int *parent, int p3);
+extern void objRenderChild(int *child, int *parent, u8 p3);
+#pragma dont_inline on
 void objRenderShadow(int *obj) {
     if (lbl_803DEA04 == *(f32 *)((char *)obj + 8)) {
         curObjMtx = 0;
@@ -4556,6 +4557,399 @@ void objRenderShadow(int *obj) {
                 objRenderChild(child, obj, 1);
             }
             iter += 4;
+        }
+    }
+}
+#pragma dont_inline reset
+
+extern s32 lbl_803DCC40;
+extern s32 lbl_803DCC44;
+extern u8 lbl_803DCC3D;
+extern f32 lbl_803DCC38;
+extern f32 timeDelta;
+extern f32 lbl_803DEA60;
+extern f32 lbl_803DEA5C;
+extern f32 lbl_803DEA64;
+extern f32 lbl_803DEA68;
+extern f32 lbl_803DEA58;
+extern f32 lbl_803DEA1C;
+extern f32 lbl_803DEA6C;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern u8 lbl_803DB488[4];
+extern u8 lbl_803DCC29;
+extern void ObjModel_SetRenderCallback(int *model, void *cb);
+extern int *ObjModel_GetJointMatrix(int *model, int joint);
+extern void modelRenderCb_8003c268();
+extern void shaderFuzzFn_8003cc1c();
+extern void modelDoAltRenderInstrs(int *obj, int *obj2, int model, int p4);
+extern int *Camera_GetCurrentViewSlot(void);
+extern f32 sqrtf(f32);
+extern int getAngle(f32 a, f32 b);
+extern void PSMTXMultVec(f32 *m, f32 *src, f32 *dst);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
+extern void setMatrixFromObjectPos(f32 *m, void *blk);
+extern void setMatrixFromObjectTransposed(void *blk, f32 *m);
+extern void Matrix_TransformPoint(f32 *m, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern void Obj_BuildWorldTransformMatrix(int *obj, f32 *m, int p3);
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, void *space);
+extern void objRotateFn_8003bce8(f32 *m, s16 *a, s16 *b, s16 *c);
+extern void Camera_ProjectWorldPointWithOffset(f32 x, f32 y, f32 z, f32 w, f32 *a, f32 *b, f32 *c);
+extern void Camera_NdcToScreen(f32 a, f32 b, f32 c, int *x, int *y, int *z);
+extern int maybeReadDepthBuffer(int x, int y, int *obj);
+extern void objShadowFn_8006c5f0(int *obj, int *a, f32 *b, int *c, int *d);
+extern void hudDrawColored(int a, int b, int c, u32 *col, int d, int e);
+void objMtxFn_80041104(f32 *mtx, f32 *out, s16 *in, int flag, int *obj, int e);
+void objRenderModel(int *obj);
+
+void objRenderFn_800413d4(int *obj) {
+    int *model;
+    u32 savedMtx;
+    lbl_803DCC40 = 4;
+    model = Obj_GetActiveModel(obj);
+    savedMtx = curObjMtx;
+    lbl_803DCC3D = lbl_803DCC38;
+    for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += lbl_803DCC40) {
+        modelDoRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, *model, 2);
+        curObjMtx = savedMtx;
+    }
+    curObjMtx = 0;
+    lbl_803DCC38 += timeDelta;
+    if (lbl_803DCC38 > lbl_803DEA60) {
+        lbl_803DCC38 -= lbl_803DEA5C;
+    }
+}
+
+void fuzzRenderFn_800412dc(int *obj) {
+    int *model;
+    u32 savedMtx;
+    lbl_803DCC40 = 1;
+    model = Obj_GetActiveModel(obj);
+    savedMtx = curObjMtx;
+    lbl_803DCC3D = lbl_803DCC38;
+    ObjModel_SetRenderCallback(model, modelRenderCb_8003c268);
+    for (lbl_803DCC44 = 0; lbl_803DCC44 < 16; lbl_803DCC44 += lbl_803DCC40) {
+        modelDoRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, *model, 8);
+        curObjMtx = savedMtx;
+    }
+    curObjMtx = 0;
+    ObjModel_SetRenderCallback(model, NULL);
+    lbl_803DCC38 += timeDelta;
+    if (lbl_803DCC38 > lbl_803DEA60) {
+        lbl_803DCC38 -= lbl_803DEA5C;
+    }
+}
+
+void objRenderFuzz(int *obj) {
+    int n;
+    u8 maxN;
+    u8 strong;
+    int cnt;
+    f32 dx, dy, dz, dist;
+    int *cam = Camera_GetCurrentViewSlot();
+    if ((*(u16 *)((char *)obj + 0xb0) & 0x1000) || *(s8 *)((char *)obj + 0xac) == 0x3f
+        || *(s16 *)((char *)obj + 0x46) == 0x882 || *(s16 *)((char *)obj + 0x46) == 0x887) {
+        strong = 1;
+        if (*(s16 *)((char *)obj + 0x44) == 1 || *(s16 *)((char *)obj + 0x46) == 0x77d
+            || *(s16 *)((char *)obj + 0x46) == 0x882 || *(s16 *)((char *)obj + 0x46) == 0x887) {
+            maxN = 0xf;
+        } else {
+            maxN = 7;
+        }
+    } else {
+        strong = 0;
+        maxN = 3;
+    }
+    {
+        u32 m = curObjMtx;
+        if (m != 0) {
+            dx = *(f32 *)(m + 0xc) - (*(f32 *)((char *)cam + 0xc) - playerMapOffsetX);
+            dy = *(f32 *)(m + 0x1c) - *(f32 *)((char *)cam + 0x10);
+            dz = *(f32 *)(m + 0x2c) - (*(f32 *)((char *)cam + 0x14) - playerMapOffsetZ);
+        } else {
+            dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)cam + 0xc);
+            dy = *(f32 *)((char *)obj + 0x1c) - *(f32 *)((char *)cam + 0x10);
+            dz = *(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)cam + 0x14);
+        }
+    }
+    dist = sqrtf(dx * dx + dy * dy + dz * dz);
+    if (strong == 0) {
+        cnt = (s32)((lbl_803DEA64 * (lbl_803DEA68 * dist)) / (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8)));
+        lbl_803DCC40 = 2;
+    } else {
+        cnt = (s32)((lbl_803DEA68 * dist) / (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8)));
+        lbl_803DCC40 = 1;
+    }
+    n = 16 - cnt;
+    if (n > 0) {
+        int *model;
+        u32 savedMtx;
+        if (n > maxN) {
+            n = maxN;
+        }
+        model = Obj_GetActiveModel(obj);
+        savedMtx = curObjMtx;
+        ObjModel_SetRenderCallback(model, shaderFuzzFn_8003cc1c);
+        for (lbl_803DCC44 = 0; lbl_803DCC44 < n; lbl_803DCC44++) {
+            modelDoRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, *model, 4);
+            curObjMtx = savedMtx;
+        }
+        curObjMtx = 0;
+        ObjModel_SetRenderCallback(model, NULL);
+    }
+}
+
+void objRenderFn_80041018(int *obj) {
+    u8 *p;
+    u8 *q;
+    int *model;
+    u8 *base;
+    int i;
+    base = *(u8 **)(*(int *)((char *)obj + 0x50) + 0x40);
+    q = *(u8 **)((char *)obj + 0x74);
+    if (!(*(u8 *)((char *)obj + 0xaf) & 0x28)) {
+        model = Obj_GetActiveModel(obj);
+        i = 0;
+        p = base;
+        for (; i < *(u8 *)(*(int *)((char *)obj + 0x50) + 0x72); i++) {
+            int j = *(s8 *)(p + *(s8 *)((char *)obj + 0xad) + 0x12);
+            int *mtx;
+            if (j >= 0) {
+                mtx = ObjModel_GetJointMatrix(model, j);
+            } else {
+                mtx = NULL;
+            }
+            objMtxFn_80041104(NULL, (f32 *)(q + 0xc), (s16 *)(p + 6), *(u8 *)(base + 0x10) & 0x10, obj, 0);
+            objMtxFn_80041104((f32 *)mtx, (f32 *)q, (s16 *)p, *(u8 *)(base + 0x10) & 0x10, obj, 1);
+            p += 0x18;
+            q += 0x18;
+        }
+    }
+}
+
+void objMtxFn_80041104(f32 *mtx, f32 *out, s16 *in, int flag, int *obj, int e) {
+    f32 m[16];
+    struct {
+        s16 rot[3];
+        f32 scale;
+        f32 pos[3];
+    } blk;
+    f32 v[3];
+    f32 res[3];
+    v[0] = in[0];
+    v[1] = in[1];
+    v[2] = in[2];
+    if (e != 0) {
+        v[0] *= lbl_803DEA58;
+        v[1] *= lbl_803DEA58;
+        v[2] *= lbl_803DEA58;
+    }
+    if (mtx != NULL) {
+        if (flag != 0) {
+            out[0] = mtx[3] + v[0];
+            out[1] = mtx[7] + v[1];
+            out[2] = mtx[11] + v[2];
+        } else {
+            PSMTXMultVec(mtx, v, res);
+            out[0] = res[0];
+            out[1] = res[1];
+            out[2] = res[2];
+        }
+        out[0] += playerMapOffsetX;
+        out[2] += playerMapOffsetZ;
+    } else {
+        blk.pos[0] = *(f32 *)((char *)obj + 0x18);
+        blk.pos[1] = *(f32 *)((char *)obj + 0x1c);
+        blk.pos[2] = *(f32 *)((char *)obj + 0x20);
+        if (flag != 0) {
+            blk.rot[0] = 0;
+            blk.rot[1] = 0;
+            blk.rot[2] = 0;
+        } else {
+            blk.rot[0] = ((s16 *)obj)[0];
+            blk.rot[1] = ((s16 *)obj)[1];
+            blk.rot[2] = ((s16 *)obj)[2];
+        }
+        blk.scale = lbl_803DEA1C;
+        setMatrixFromObjectPos(m, &blk);
+        Matrix_TransformPoint(m, v[0], v[1], v[2], &out[0], &out[1], &out[2]);
+    }
+}
+
+void objRenderModel(int *obj) {
+    int d1;
+    f32 d2;
+    int d3;
+    int d4;
+    f32 px;
+    f32 py;
+    f32 pz;
+    int sx;
+    int sy;
+    int sz;
+    u32 col;
+    int *model = Obj_GetActiveModel(obj);
+    if (lbl_803DEA04 == *(f32 *)((char *)obj + 8)) {
+        curObjMtx = 0;
+        return;
+    }
+    {
+        int m0 = *model;
+        if (*(u16 *)(m0 + 2) & 0x8000) {
+            modelDoAltRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, m0, 0);
+        } else {
+            modelDoRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, m0, 0);
+        }
+    }
+    {
+        u8 *iter;
+        int i = 0;
+        iter = (u8 *)obj;
+        for (; i < *(u8 *)((char *)obj + 0xeb); i++) {
+            int *child = *(int **)(iter + 0xc8);
+            if (child != NULL) {
+                objRenderChild(child, obj, 0);
+            }
+            iter += 4;
+        }
+    }
+    if (*(s16 *)(*(int *)((char *)obj + 0x50) + 0x48) != 4) {
+        return;
+    }
+    if (lbl_803DCC29 != 0) {
+        return;
+    }
+    {
+        s16 t = *(s16 *)((char *)obj + 0x46);
+        if (t == 0x6a8) return;
+        if (t == 0x6a9) return;
+        if (t == 0x6aa) return;
+        if (t == 0x6ab) return;
+        if (t == 0x6ac) return;
+        if (t == 0x752) return;
+    }
+    Camera_ProjectWorldPointWithOffset(
+        *(f32 *)((char *)obj + 0xc) - playerMapOffsetX,
+        *(f32 *)((char *)obj + 0x10),
+        *(f32 *)((char *)obj + 0x14) - playerMapOffsetZ,
+        *(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8),
+        &px, &py, &pz);
+    Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
+    if (sz <= maybeReadDepthBuffer(sx, sy, obj)) {
+        *(s16 *)(*(int *)((char *)obj + 0x64) + 0x36) = 0x20;
+    } else {
+        *(s16 *)(*(int *)((char *)obj + 0x64) + 0x36) = -0x20;
+    }
+    {
+        int a;
+        char *hud = *(char **)((char *)obj + 0x64);
+        a = *(u8 *)(hud + 0x40) + *(s16 *)(hud + 0x36);
+        if (a > 0xff) {
+            *(u8 *)(hud + 0x40) = 0xff;
+        } else if (a < 0) {
+            *(u8 *)(hud + 0x40) = 0;
+        } else {
+            *(u8 *)(hud + 0x40) = a;
+        }
+    }
+    lbl_803DB488[3] = *(u8 *)(*(int *)((char *)obj + 0x64) + 0x40);
+    objShadowFn_8006c5f0(obj, &d1, &d2, &d3, &d4);
+    col = *(u32 *)lbl_803DB488;
+    hudDrawColored(d1, d3, d4, &col, (s32)(lbl_803DEA6C * d2), 1);
+}
+
+typedef struct {
+    f32 pos[3];
+    s16 rot[3];
+    s8 joints[6];
+} ChildEnt;
+
+void objRenderChild(int *child, int *parent, u8 p3) {
+    f32 res[3];
+    struct {
+        s16 rot[3];
+        f32 scale;
+        f32 pos[3];
+    } blk;
+    f32 wm[16];
+    f32 m2[16];
+    f32 dx, dz;
+    int off;
+    f32 *mtx;
+    if (lbl_803DEA04 == *(f32 *)((char *)child + 8)) {
+        curObjMtx = 0;
+        return;
+    }
+    Obj_GetActiveModel(child);
+    {
+        int *pmodel = Obj_GetActiveModel(parent);
+        ChildEnt *ent;
+        int j;
+        u8 *tbl = *(u8 **)(*(int *)((char *)parent + 0x50) + 0x2c);
+        off = (*(u16 *)((char *)child + 0xb0) & 7) * 0x18;
+        ent = (ChildEnt *)(tbl + off);
+        j = ent->joints[*(s8 *)((char *)parent + 0xad)];
+        blk.pos[0] = *(f32 *)(off + (char *)tbl);
+        blk.pos[1] = ent->pos[1];
+        blk.pos[2] = ent->pos[2];
+        if (j == -1) {
+            Obj_BuildWorldTransformMatrix(parent, wm, 0);
+            mtx = wm;
+        } else {
+            mtx = (f32 *)ObjModel_GetJointMatrix(pmodel, j);
+        }
+    }
+    if (*(u8 *)(*(int *)((char *)child + 0x50) + 0x5f) & 8) {
+        int *cam = Camera_GetCurrentViewSlot();
+        blk.scale = *(f32 *)((char *)child + 8);
+        dx = *(f32 *)((char *)child + 0xc) - *(f32 *)((char *)cam + 0xc);
+        dz = *(f32 *)((char *)child + 0x14) - *(f32 *)((char *)cam + 0x14);
+        blk.rot[0] = getAngle(dx, dz) + 0x8000;
+        blk.rot[1] = getAngle(*(f32 *)((char *)child + 0x10) - *(f32 *)((char *)cam + 0x10), sqrtf(dx * dx + dz * dz));
+        blk.rot[2] = ((s16 *)cam)[2];
+        setMatrixFromObjectTransposed(&blk, m2);
+        res[0] = m2[3];
+        res[1] = m2[7];
+        res[2] = m2[11];
+        PSMTXMultVec(mtx, res, res);
+        m2[3] = res[0];
+        m2[7] = res[1];
+        m2[11] = res[2];
+    } else {
+        ChildEnt *pr;
+        blk.scale = lbl_803DEA1C;
+        pr = (ChildEnt *)(*(u8 **)(*(int *)((char *)parent + 0x50) + 0x2c) + off);
+        blk.rot[0] = pr->rot[0];
+        blk.rot[1] = pr->rot[1];
+        blk.rot[2] = pr->rot[2];
+        setMatrixFromObjectTransposed(&blk, m2);
+        PSMTXConcat(mtx, m2, m2);
+    }
+    if (p3 == 0) {
+        void *space;
+        *(f32 *)((char *)child + 0x18) = m2[3] + playerMapOffsetX;
+        *(f32 *)((char *)child + 0x1c) = m2[7];
+        *(f32 *)((char *)child + 0x20) = m2[11] + playerMapOffsetZ;
+        space = *(void **)((char *)child + 0x30);
+        if (space != NULL) {
+            Obj_TransformWorldPointToLocal(*(f32 *)((char *)child + 0x18), *(f32 *)((char *)child + 0x1c), *(f32 *)((char *)child + 0x20),
+                (f32 *)((char *)child + 0xc), (f32 *)((char *)child + 0x10), (f32 *)((char *)child + 0x14), space);
+        } else {
+            *(f32 *)((char *)child + 0xc) = *(f32 *)((char *)child + 0x18);
+            *(f32 *)((char *)child + 0x10) = *(f32 *)((char *)child + 0x1c);
+            *(f32 *)((char *)child + 0x14) = *(f32 *)((char *)child + 0x20);
+        }
+        objRotateFn_8003bce8(m2, (s16 *)child, (s16 *)child + 1, (s16 *)child + 2);
+    }
+    *(u8 *)((char *)child + 0x37) = ((*(u8 *)((char *)child + 0x36) + 1) * *(u8 *)((char *)parent + 0x37)) >> 8;
+    *(u8 *)((char *)child + 0xf1) = *(u8 *)((char *)parent + 0xf1);
+    if (!(*(s16 *)((char *)child + 6) & 0x4000)) {
+        curObjMtx = (u32)m2;
+        if (p3 == 0) {
+            *(u16 *)((char *)child + 0xb0) |= 0x800;
+            objRenderModel(child);
+        } else {
+            objRenderShadow(child);
         }
     }
 }
