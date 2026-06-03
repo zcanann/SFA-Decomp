@@ -283,7 +283,12 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int drshackle_updateAttachedPosition(int obj, u8 *state);
 extern void fn_801EBD60(int obj, u8 *state);
 extern void fn_801EC7A0(int obj, u8 *state);
-extern void fn_801EA240(int obj, u8 *state, int val, u8 *p, int n, f32 speed);
+extern void fn_801EA240(int obj, u8 *state, f32 speed, int val, u8 *p, int n);
+
+typedef struct {
+    s16 rot[3];
+    f32 quad[4];
+} SBRotQuad;
 extern void fn_8002B8F0(int obj);
 extern int Rcp_GetMotionBlurEnabled(void);
 extern void setMotionBlur(int a, f32 b);
@@ -311,10 +316,8 @@ void SnowBike_update(int obj)
     u8 *state = *(u8 **)(obj + 0xb8);
     f32 mtx1[16];
     f32 mtx2[16];
-    f32 quad1[4];
-    s16 rot1[3];
-    f32 quad2[4];
-    s16 rot2[3];
+    SBRotQuad rq1;
+    SBRotQuad rq2;
     f32 vec1[3];
     f32 vec2[3];
     f32 dummy1;
@@ -374,14 +377,14 @@ void SnowBike_update(int obj)
                         *(f32 *)(state + 0x484) = *(f32 *)(state + 0x46c);
                     }
                     fz = lbl_803E5AE8;
-                    quad1[1] = fz;
-                    quad1[2] = fz;
-                    quad1[3] = fz;
-                    quad1[0] = lbl_803E5AEC;
-                    rot1[0] = -*(s16 *)(state + 0x40e);
-                    rot1[1] = -*(s16 *)(obj + 2);
-                    rot1[2] = -*(s16 *)(obj + 4);
-                    mtxRotateByVec3s(mtx1, rot1);
+                    rq1.quad[1] = fz;
+                    rq1.quad[2] = fz;
+                    rq1.quad[3] = fz;
+                    rq1.quad[0] = lbl_803E5AEC;
+                    rq1.rot[0] = -*(s16 *)(state + 0x40e);
+                    rq1.rot[1] = -*(s16 *)(obj + 2);
+                    rq1.rot[2] = -*(s16 *)(obj + 4);
+                    mtxRotateByVec3s(mtx1, rq1.rot);
                     Matrix_TransformPoint(mtx1, lbl_803E5AE8, *(f32 *)(state + 0x4b0) * *(f32 *)(state + 0x544), lbl_803E5AE8, &vec1[0], &dummy1, &vec1[2]);
                     vec1[0] = vec1[0] * *(f32 *)(state + 0x540);
                     vec1[1] = lbl_803E5AE8;
@@ -400,18 +403,18 @@ void SnowBike_update(int obj)
                 setAButtonIcon(0x10);
                 setBButtonIcon(0x11);
                 *(f32 *)(state + 0x45c) = (f32)padGetStickX(0);
-                *(s8 *)(state + 0x460) = (int)(f32)padGetStickY(0);
+                state[0x460] = (int)(f32)padGetStickY(0);
                 *(u32 *)(state + 0x458) = getButtonsHeld(0);
                 *(u32 *)(state + 0x450) = getButtonsJustPressed(0);
                 *(u32 *)(state + 0x454) = getButtonsJustPressedIfNotBusy(0);
-                *(s16 *)(state + 0x44c) = (int)((f32)(u16)getAngle(*(f32 *)(state + 0x45c), (f32)-(int)*(s8 *)(state + 0x460)) / lbl_803E5C18);
+                *(s16 *)(state + 0x44c) = (f32)(u16)getAngle(*(f32 *)(state + 0x45c), (f32)-(int)*(s8 *)(state + 0x460)) / lbl_803E5C18;
                 *(f32 *)(state + 0x45c) = *(f32 *)(state + 0x45c) / lbl_803E5B6C;
                 v = *(f32 *)(state + 0x45c);
                 c = lbl_803E5B70;
-                if (v >= lbl_803E5B70) {
-                    c = lbl_803E5AEC;
-                    if (v <= lbl_803E5AEC) {
-                        c = v;
+                if (lbl_803E5B70 <= v) {
+                    c = v;
+                    if (lbl_803E5AEC < v) {
+                        c = lbl_803E5AEC;
                     }
                 }
                 *(f32 *)(state + 0x45c) = c;
@@ -433,14 +436,14 @@ void SnowBike_update(int obj)
                     *(f32 *)(state + 0x484) = *(f32 *)(state + 0x46c);
                 }
                 fz = lbl_803E5AE8;
-                quad2[1] = fz;
-                quad2[2] = fz;
-                quad2[3] = fz;
-                quad2[0] = lbl_803E5AEC;
-                rot2[0] = -*(s16 *)(state + 0x40e);
-                rot2[1] = -*(s16 *)(obj + 2);
-                rot2[2] = -*(s16 *)(obj + 4);
-                mtxRotateByVec3s(mtx2, rot2);
+                rq2.quad[1] = fz;
+                rq2.quad[2] = fz;
+                rq2.quad[3] = fz;
+                rq2.quad[0] = lbl_803E5AEC;
+                rq2.rot[0] = -*(s16 *)(state + 0x40e);
+                rq2.rot[1] = -*(s16 *)(obj + 2);
+                rq2.rot[2] = -*(s16 *)(obj + 4);
+                mtxRotateByVec3s(mtx2, rq2.rot);
                 Matrix_TransformPoint(mtx2, lbl_803E5AE8, *(f32 *)(state + 0x4b0) * *(f32 *)(state + 0x544), lbl_803E5AE8, &vec2[0], &dummy2, &vec2[2]);
                 vec2[0] = vec2[0] * *(f32 *)(state + 0x540);
                 vec2[1] = lbl_803E5AE8;
@@ -456,7 +459,7 @@ void SnowBike_update(int obj)
                 fn_8002B8F0(obj);
             }
             fn_801EB0D4(obj, state);
-            fn_801EA240(obj, state, (int)(lbl_803E5BA0 * -*(f32 *)(state + 0x430)), state + 0x461, 7, *(f32 *)(state + 0x49c));
+            fn_801EA240(obj, state, *(f32 *)(state + 0x49c), (int)(lbl_803E5BA0 * -*(f32 *)(state + 0x430)), state + 0x461, 7);
             fn_801EB634(obj, state);
             *(s16 *)obj = *(s16 *)(state + 0x40e);
         }
