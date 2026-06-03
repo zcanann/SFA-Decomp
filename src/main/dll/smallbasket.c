@@ -2991,3 +2991,138 @@ void fn_80159284(int* obj, u8* state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int objCreateLight(int a, int b);
+extern void modelLightStruct_setField50();
+extern void lightVecFn_8001dd88();
+extern void modelLightStruct_setColorsA8AC();
+extern void modelLightStruct_setColors100104();
+extern void lightDistAttenFn_8001dc38();
+extern void lightSetField4D();
+extern void lightFn_8001db6c();
+extern void lightFn_8001d620();
+extern void lightSetField2FB();
+extern void sidekickToy_accelerateTowardTarget3D(s16* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c, f32 spd);
+extern f32 powfBitEstimate(f32 base, f32 exp);
+extern f32 sqrtf(f32 x);
+extern void Sfx_SetObjectSfxVolume(f32 ratio, s16* obj, int sfx, int vol);
+extern f32 lbl_803E2C74;
+extern f32 lbl_803E2C30;
+extern f32 lbl_803E2C34;
+extern f32 lbl_803E2C24;
+extern f32 lbl_803E2C10;
+extern f32 lbl_803E2C14;
+extern f32 lbl_803E2C18;
+extern f32 lbl_803E2C48;
+extern f32 lbl_803E2C78;
+extern f32 lbl_803E2C50;
+extern f32 lbl_803E2C70;
+extern f32 lbl_803E2C54;
+extern f32 lbl_803E2C38;
+extern f32 lbl_803E2C40;
+extern f32 lbl_803E2C6C;
+
+typedef struct {
+    u8 pad[6];
+    u16 sfxId;  // 0x6
+    f32 vol;    // 0x8
+    f32 x;      // 0xc
+    f32 y;      // 0x10
+    f32 z;      // 0x14
+} BasketSfxParams;
+
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} BasketVec3;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80159FCC(s16* obj, u8* state)
+{
+    int base = *(int*)state;
+    BasketVec3 d;
+    BasketSfxParams sp;
+    int i;
+    f32 pw;
+
+    if (*(void**)(state + 0x340) != NULL && *(void**)(state + 0x340) == *(void**)(state + 0x29c)) {
+        *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) | 0x10000;
+        *(f32*)(state + 0x330) = lbl_803E2C74;
+    }
+    *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x100;
+    sp.x = lbl_803E2C30;
+    sp.y = lbl_803E2C34;
+    sp.z = lbl_803E2C30;
+    sp.vol = lbl_803E2C24;
+    sp.sfxId = 0x605;
+    if ((*(u16*)((char*)obj + 0xb0) & 0x800) != 0) {
+        ((void(*)(s16*,int,void*,int,int,int))((void**)*gPartfxInterface)[2])(obj, 1999, &sp, 2, -1, 0);
+        if (*(void**)(state + 0x368) == NULL) {
+            if (*(void**)(state + 0x368) == NULL) {
+                *(int*)(state + 0x368) = objCreateLight(0, 1);
+            }
+            if (*(void**)(state + 0x368) != NULL) {
+                modelLightStruct_setField50(*(int*)(state + 0x368), 2);
+                lightVecFn_8001dd88(*(int*)(state + 0x368), *(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
+                modelLightStruct_setColorsA8AC(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
+                modelLightStruct_setColors100104(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
+                lightDistAttenFn_8001dc38(*(int*)(state + 0x368), lbl_803E2C10, lbl_803E2C14);
+                lightSetField4D(*(int*)(state + 0x368), 1);
+                lightFn_8001db6c(*(int*)(state + 0x368), 1, lbl_803E2C18);
+                lightFn_8001d620(*(int*)(state + 0x368), 0, 0);
+                lightSetField2FB(*(int*)(state + 0x368), 0);
+            }
+        } else {
+            lightVecFn_8001dd88(*(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
+        }
+    }
+    if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
+        *(u8*)(state + 0x33a) = 3;
+        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x40000000;
+    }
+    sidekickToy_accelerateTowardTarget3D(obj, *(f32*)(*(int*)(state + 0x29c) + 0x18),
+        lbl_803E2C48 + *(f32*)(*(int*)(state + 0x29c) + 0x1c),
+        *(f32*)(*(int*)(state + 0x29c) + 0x20),
+        lbl_803E2C48, lbl_803E2C78, lbl_803E2C50, *(f32*)(state + 0x304));
+    if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
+        i = *(u8*)(state + 0x33a) * 0xc;
+        fn_8014D08C((int*)obj, (int*)state, *(u8*)(lbl_8031FB70 + i + 8), *(f32*)((int)lbl_8031FB70 + i), 0, 0);
+        *(u8*)(state + 0x33a) = *(u8*)(lbl_8031FB70 + *(u8*)(state + 0x33a) * 0xc + 9);
+    }
+    pw = powfBitEstimate(*(f32*)(state + 0x304), timeDelta);
+    *(s16*)((char*)obj + 2) = (f32)*(s16*)((char*)obj + 2) * pw;
+    pw = powfBitEstimate(*(f32*)(state + 0x304), timeDelta);
+    *(s16*)((char*)obj + 4) = (f32)*(s16*)((char*)obj + 4) * pw;
+    if (*(f32*)(state + 0x324) < lbl_803E2C70) {
+        *(f32*)(state + 0x324) = lbl_803E2C54 * timeDelta + *(f32*)(state + 0x324);
+    } else {
+        *(f32*)(state + 0x324) = lbl_803E2C70;
+    }
+    *(s16*)obj = *(f32*)(state + 0x324) * timeDelta + (f32)(int)*(s16*)obj;
+    *(f32*)(state + 0x328) = lbl_803E2C38;
+    if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
+        d.x = *(f32*)(base + 0x68) - *(f32*)((char*)obj + 0xc);
+        d.y = *(f32*)(base + 0x6c) - *(f32*)((char*)obj + 0x10);
+        d.z = *(f32*)(base + 0x70) - *(f32*)((char*)obj + 0x14);
+        *(f32*)(state + 0x32c) = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
+        if (*(f32*)(state + 0x32c) > lbl_803E2C40) {
+            *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) | 0x10000;
+            *(f32*)(state + 0x330) = lbl_803E2C30;
+        }
+    }
+    if (*(f32*)(state + 0x324) <= lbl_803E2C30) {
+        Sfx_StopFromObject((int)obj, 0x3e8);
+    } else {
+        Sfx_PlayFromObject((int)obj, 0x3e8);
+        i = (int)((lbl_803E2C6C * *(f32*)(state + 0x324)) / lbl_803E2C70);
+        Sfx_SetObjectSfxVolume(*(f32*)(state + 0x324) / lbl_803E2C70, obj, 0x3e8, i);
+    }
+    if (*(void**)(state + 0x340) != NULL
+        && (*(s16*)(*(int*)(state + 0x340) + 0x46) == 0x1f || *(s16*)(*(int*)(state + 0x340) + 0x46) == 0)) {
+        Sfx_PlayFromObject((int)obj, 0x23d);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
