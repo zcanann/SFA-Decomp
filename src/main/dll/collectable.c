@@ -887,13 +887,14 @@ void sideCommandEnable(int obj,int targetObj,int commandKind,int commandType)
     trickyReportError(sSidekickCommandDebugTextBlock);
     return;
   }
-  *(byte *)(state + 0xb) = *(byte *)(state + 0xb) | (byte)(1 << commandType);
+  *(byte *)(state + 0xb) = (byte)(*(byte *)(state + 0xb) | (1 << commandType));
   commandIndex = 0;
   commandEntry = state;
   for (commandCount = (uint)*(byte *)(state + 0x798); 0 < commandCount;
        commandCount = commandCount - 1) {
     if (*(uint *)(commandEntry + 0x748) == (uint)targetObj) {
-      *(undefined *)(state + commandIndex * 8 + 0x74e) = 3;
+      commandEntry = state + commandIndex * 8;
+      *(undefined *)(commandEntry + 0x74e) = 3;
       return;
     }
     commandEntry = commandEntry + 8;
@@ -901,8 +902,10 @@ void sideCommandEnable(int obj,int targetObj,int commandKind,int commandType)
   }
   commandEntry = state + (uint)*(byte *)(state + 0x798) * 8;
   *(int *)(commandEntry + 0x748) = targetObj;
+  commandKind = (s8)commandKind;
   commandEntry = state + (uint)*(byte *)(state + 0x798) * 8;
   *(char *)(commandEntry + 0x74c) = (char)commandKind;
+  commandType = (s8)commandType;
   commandEntry = state + (uint)*(byte *)(state + 0x798) * 8;
   *(char *)(commandEntry + 0x74d) = (char)commandType;
   commandEntry = state + (uint)*(byte *)(state + 0x798) * 8;
