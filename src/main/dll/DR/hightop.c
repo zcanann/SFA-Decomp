@@ -1274,3 +1274,48 @@ int cfguardian_setScale(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+#pragma scheduling off
+#pragma peephole off
+void fn_8019AE3C(int p1, int p2, s16 *p3)
+{
+    u8 v;
+    int i;
+
+    v = 0;
+    for (i = 0; i < *(s8 *)(p2 + 0x1b); i++) {
+        switch (*(s8 *)(p2 + i + 0x13)) {
+        case 0:
+            if (p3 != NULL) {
+                Sfx_PlayFromObject(p1, (u16)p3[0]);
+            }
+            break;
+        case 7:
+            if (p3 != NULL) {
+                Sfx_PlayFromObject(p1, (u16)p3[1]);
+            }
+            break;
+        case 1:
+            v = 1;
+            break;
+        case 2:
+            v = 2;
+            break;
+        case 3:
+            v = 3;
+            break;
+        case 4:
+            v = 4;
+            break;
+        case 9:
+            Sfx_PlayFromObject(p1, 0xe1);
+            break;
+        }
+    }
+    if (v != 0 && p3 != NULL) {
+        Sfx_PlayFromObject(p1, (u16)p3[2]);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
