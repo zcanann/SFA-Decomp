@@ -1952,6 +1952,167 @@ int saveGame(int writeImages)
 #pragma scheduling reset
 #pragma peephole reset
 
+/* EN v1.0 0x8007EB04  size: 1948b  Saves the game: verifies the existing save
+ * slots' checksums, rewrites stale slots and card images, then runs the
+ * caller's callback and maps the result to a status code. */
+#pragma peephole off
+#pragma scheduling off
+int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD,
+                             int (*cb)(int, int, int, int))
+{
+    u64 x;
+    u16 i;
+    u64 *p;
+    u64 acc;
+    u64 chk;
+    u64 chk2;
+    u64 c;
+    u64 t;
+    int result;
+    void *m;
+
+    m = mmAlloc(0x2000, -1, 0);
+    lbl_803DD044 = (int)m;
+    if (m == NULL) {
+        lbl_803DB700 = 8;
+        return 0;
+    }
+    if (saveGame(writeImages) == 0) {
+        mm_free((void *)lbl_803DD044);
+        lbl_803DD044 = 0;
+        return 0;
+    }
+    DCInvalidateRange((void *)lbl_803DD044, 0x2000);
+    result = CARDRead(lbl_80396900, (void *)lbl_803DD044, 0x2000, 0x2000);
+    if (result == 0) {
+        p = (u64 *)lbl_803DD044;
+        x = 0;
+        acc = 1;
+        for (i = 0; (int)i < 0x3ff; i++) {
+            u64 v = p[i];
+            x ^= v;
+            acc += v;
+        }
+        c = x ^ (acc + 13);
+        chk = c;
+        if (c != *(u64 *)(lbl_803DD044 + 0x1ff8)) {
+            DCInvalidateRange((void *)lbl_803DD044, 0x2000);
+            result = CARDRead(lbl_80396900, (void *)lbl_803DD044, 0x2000, 0x4000);
+            if (result == 0) {
+                p = (u64 *)lbl_803DD044;
+                x = 0;
+                acc = 1;
+                for (i = 0; (int)i < 0x3ff; i++) {
+                    u64 v = p[i];
+                    x ^= v;
+                    acc += v;
+                }
+                c = x ^ (acc + 13);
+                chk = c;
+                if (c == *(u64 *)(lbl_803DD044 + 0x1ff8)) {
+                    result = saveGame_doWrite(1);
+                } else {
+                    result = -0x55;
+                    lbl_803DB700 = 10;
+                }
+            }
+        }
+    }
+    if (result == 0) {
+        if (lbl_803DD059 != 0) {
+            if (lbl_803DD050 != 0) {
+                if (chk != lbl_803DD050) {
+                    result = -0x55;
+                    lbl_803DB700 = 0xb;
+                }
+            } else {
+                lbl_803DD050 = chk;
+            }
+        } else {
+            lbl_803DD050 = chk;
+        }
+    }
+    if (result == 0) {
+        lbl_803DD05C = (int)(m = mmAlloc(0x4000, -1, 0));
+        if (m == NULL) {
+            if (lbl_803DD05A != 0) {
+                lbl_803DD05A = 0;
+                CARDClose(lbl_80396900);
+            }
+            CARDUnmount(0);
+            mm_free(lbl_803DD040);
+            lbl_803DD040 = NULL;
+            mm_free((void *)lbl_803DD044);
+            lbl_803DD044 = 0;
+            lbl_803DB700 = 8;
+            return 0;
+        }
+        result = CARDRead(lbl_80396900, m, 0x2000, 0);
+        if (result == 0) {
+            p = (u64 *)lbl_803DD05C;
+            x = 0;
+            acc = 1;
+            for (i = 0; (int)i < 0x400; i++) {
+                u64 v = p[i];
+                x ^= v;
+                acc += v;
+            }
+            chk2 = x ^ (acc + 13);
+            if (chk2 != *(u64 *)(lbl_803DD044 + 0xa40)) {
+                if ((u8)writeImages != 0) {
+                    result = -4;
+                    lbl_803DB700 = 0xc;
+                } else {
+                    memset((void *)lbl_803DD05C, 0, 0x4000);
+                    loadMemCardImages();
+                    result = CARDWrite(lbl_80396900, (void *)lbl_803DD05C, 0x2000, 0);
+                    if (result == -5) {
+                        CARDDelete(0, sMemoryCardFileName);
+                    }
+                    if (result == 0) {
+                        t = *(u64 *)(lbl_803DD05C + 0x2a40);
+                        if (t != *(u64 *)(lbl_803DD044 + 0xa40)) {
+                            int e;
+                            *(u64 *)(lbl_803DD044 + 0xa40) = t;
+                            e = saveGame_doWrite(2);
+                            if (e == 0) {
+                                e = saveGame_doWrite(1);
+                            }
+                            result = e;
+                        }
+                    }
+                }
+            }
+        }
+        mm_free((void *)lbl_803DD05C);
+    }
+    if (result == 0 && cb != NULL) {
+        result = cb(cbA, cbB, cbC, cbD);
+    }
+    if (lbl_803DD05A != 0) {
+        lbl_803DD05A = 0;
+        CARDClose(lbl_80396900);
+    }
+    CARDUnmount(0);
+    mm_free(lbl_803DD040);
+    lbl_803DD040 = NULL;
+    mm_free((void *)lbl_803DD044);
+    lbl_803DD044 = 0;
+    switch (result) {
+    case -5:
+        lbl_803DB700 = 4;
+        break;
+    case 0:
+        lbl_803DB700 = 0xd;
+        return 1;
+    case -4:
+        break;
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern void AudioStream_StartPrepared(void);
 extern int lbl_803DD094;
 extern int lbl_803DB728;
