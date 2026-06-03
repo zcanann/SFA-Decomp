@@ -9428,3 +9428,81 @@ void logGpuHang(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void debugPrintfxy(int x, int y, const char *fmt, ...);
+extern int OSGetResetButtonState(void);
+extern void setShouldResetNextFrame(int v);
+extern u8 lbl_803DCCA5;
+extern u8 lbl_803DCCA6;
+extern s8 lbl_803DCCA4;
+extern u8 lbl_803DDA28;
+extern char lbl_803DB5DC;
+#pragma scheduling off
+#pragma peephole off
+void gpuErrorHandler(void)
+{
+    char *strs = (char *)lbl_802CC6A0;
+    int r;
+    int rdIdle;
+    int cmdIdle;
+    u32 xfStuck;
+    u32 cmdStuck;
+    int topPerf0, topPerf1, topClks, topClks2;
+    int botPerf0, botPerf1, botClks, botClks2;
+    u8 fifoErr;
+    char readIdle;
+    char cmdRdy[2];
+    int tok[11];
+
+    if (lbl_803DCCA8 != 0 && lbl_803DCCA9 != 0) {
+        Queue_Pop(lbl_8035F730, tok);
+        lbl_803DCCAC = 0;
+        OSWakeupThread(lbl_803DCCC4);
+        r = Queue_IsEmpty(lbl_8035F730);
+        if (r == 0) {
+            Queue_Peek(lbl_8035F730, tok);
+            GXEnableBreakPt((void *)tok[0]);
+        } else {
+            GXDisableBreakPt();
+        }
+        lbl_803DCCA8 = 0;
+        lbl_803DCCA9 = 0;
+        lbl_803DCCA7 = r == 0;
+    }
+    lbl_803DCCA5 = 1;
+    lbl_803DCCA6 = 1;
+    if (lbl_803DCCA4 == 1) {
+        if (OSGetResetButtonState() == 0) {
+            lbl_803DCCA4 = lbl_803DCCA4 + 1;
+            setShouldResetNextFrame(1);
+        }
+    } else if (lbl_803DCCA4 == 0 && OSGetResetButtonState() != 0) {
+        lbl_803DCCA4 = lbl_803DCCA4 + 1;
+    }
+    if (lbl_803DDA28 != 0 && lbl_803DCCDC != 0 && lbl_803DCCAC > 600) {
+        debugPrintfxy(0x32, 100, strs + 0x40000);
+        GXReadXfRasMetric(&botPerf0, &botClks, &botPerf1, &botClks2);
+        GXReadXfRasMetric(&topPerf0, &topClks, &topPerf1, &topClks2);
+        xfStuck = (topClks - botClks) == 0;
+        cmdStuck = (topPerf0 - botPerf0) == 0;
+        rdIdle = (topClks2 - botClks2) != 0;
+        cmdIdle = (topPerf1 - botPerf1) != 0;
+        GXGetGPStatus(&fifoErr, &fifoErr, (u8 *)cmdRdy, (u8 *)&readIdle, &fifoErr);
+        debugPrintfxy(0x32, 0x78, strs + 0x4002c, cmdRdy[0], readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
+        if (cmdStuck == 0 && rdIdle != 0) {
+            debugPrintfxy(0x32, 0x8c, strs + 0x40048);
+        } else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0) {
+            debugPrintfxy(0x32, 0x8c, strs + 0x40068);
+        } else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0) {
+            debugPrintfxy(0x32, 0x8c, strs + 0x40090);
+        } else if (cmdRdy[0] == 0 || readIdle == 0 || xfStuck == 0 || cmdStuck == 0 ||
+                   rdIdle == 0 || cmdIdle == 0) {
+            debugPrintfxy(0x32, 0x8c, strs + 0x400e4);
+        } else {
+            debugPrintfxy(0x32, 0x8c, strs + 0x400b4);
+        }
+        debugPrintfxy(0x32, 0xa0, &lbl_803DB5DC, *(int *)(lbl_803DCCDC + 0x198));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
