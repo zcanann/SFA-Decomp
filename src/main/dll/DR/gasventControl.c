@@ -729,8 +729,8 @@ extern f32 lbl_803E4354;
 extern f32 lbl_803E4358;
 extern f32 lbl_803E435C;
 #pragma scheduling off
-#pragma peephole on
-int fn_801A2BDC(int p1, int p2, int p3, u8 p4)
+#pragma peephole off
+int fn_801A2BDC(int p1, int p2, int p3, int p4)
 {
     int s;
     f32 f1;
@@ -748,23 +748,23 @@ int fn_801A2BDC(int p1, int p2, int p3, u8 p4)
     *(f32 *)(s + 0xc) = *(f32 *)(p1 + 0x10);
     *(f32 *)(s + 0x10) = *(f32 *)(p1 + 0x14);
     f1 = lbl_803E4350;
-    *(s16 *)(s + 0x20) = (s16)(int)(lbl_803E4350 * *(f32 *)(p3 + 0x40));
-    *(s16 *)(s + 0x22) = (s16)(int)(f1 * *(f32 *)(p3 + 0x44));
-    *(s16 *)(s + 0x24) = (s16)(int)(f1 * *(f32 *)(p3 + 0x48));
+    *(u16 *)(s + 0x20) = lbl_803E4350 * *(f32 *)(p3 + 0x40);
+    *(u16 *)(s + 0x22) = f1 * *(f32 *)(p3 + 0x44);
+    *(u16 *)(s + 0x24) = f1 * *(f32 *)(p3 + 0x48);
     *(s16 *)(s + 0x1a) = *(s16 *)(p3 + 0x68);
     *(s16 *)(s + 0x1c) = *(s16 *)(p3 + 0x66);
     *(s16 *)(s + 0x1e) = *(s16 *)(p3 + 0x64);
-    *(s16 *)(s + 0x2c) = (s16)(int)(*(f32 *)(p3 + 0x1c) * (f32)(u32)*(u8 *)(p3 + 0x6d));
-    *(s16 *)(s + 0x2e) = (s16)(int)(*(f32 *)(p3 + 0x20) * (f32)(u32)*(u8 *)(p3 + 0x6d));
-    *(s16 *)(s + 0x30) = (s16)(int)(*(f32 *)(p3 + 0x24) * (f32)(u32)*(u8 *)(p3 + 0x6d));
+    *(u16 *)(s + 0x2c) = *(f32 *)(p3 + 0x1c) * (f32)(u32)*(u8 *)(p3 + 0x6d);
+    *(u16 *)(s + 0x2e) = *(f32 *)(p3 + 0x20) * (f32)(u32)*(u8 *)(p3 + 0x6d);
+    *(u16 *)(s + 0x30) = *(f32 *)(p3 + 0x24) * (f32)(u32)*(u8 *)(p3 + 0x6d);
     f1 = lbl_803E4354;
-    *(s16 *)(s + 0x32) = (s16)(int)(lbl_803E4354 * *(f32 *)(p3 + 0x28));
-    *(s16 *)(s + 0x36) = (s16)(int)(f1 * *(f32 *)(p3 + 0x30));
-    *(s16 *)(s + 0x34) = (s16)(int)(f1 * *(f32 *)(p3 + 0x2c));
+    *(u16 *)(s + 0x32) = lbl_803E4354 * *(f32 *)(p3 + 0x28);
+    *(u16 *)(s + 0x36) = f1 * *(f32 *)(p3 + 0x30);
+    *(u16 *)(s + 0x34) = f1 * *(f32 *)(p3 + 0x2c);
     f1 = lbl_803E4358;
-    *(s16 *)(s + 0x26) = (s16)(int)(lbl_803E4358 * *(f32 *)(p3 + 0x34));
-    *(s16 *)(s + 0x28) = (s16)(int)(f1 * *(f32 *)(p3 + 0x38));
-    *(s16 *)(s + 0x2a) = (s16)(int)(f1 * *(f32 *)(p3 + 0x3c));
+    *(u16 *)(s + 0x26) = lbl_803E4358 * *(f32 *)(p3 + 0x34);
+    *(u16 *)(s + 0x28) = f1 * *(f32 *)(p3 + 0x38);
+    *(u16 *)(s + 0x2a) = f1 * *(f32 *)(p3 + 0x3c);
     *(u8 *)(s + 0x18) = p4;
     *(s8 *)(s + 0x3d) = (s8)(int)(lbl_803E435C * (*(f32 *)(p1 + 8) / *(f32 *)(*(int *)(p1 + 0x50) + 4)));
     *(u16 *)(s + 0x38) = *(int *)(p3 + 0x5c);
@@ -778,27 +778,45 @@ extern void fn_801A30C0(int obj, int slot, int def);
 extern void Model_GetVertexPosition(int model, int i, f32 *out);
 extern f32 lbl_803E4368;
 extern f32 lbl_803E436C;
+
+typedef struct {
+    int key;
+    int objType;
+    int sfx;
+    u8 mode;
+    u8 flags;
+    u8 pad[2];
+} GasVentTableEntry;
+
 #pragma scheduling off
 #pragma peephole off
 void fn_801A2E80(int obj, int def, int p3, int state)
 {
-    int tbl = (int)((char *)lbl_80322DA0 + (u32)*(u8 *)(state + 0x6e5) * 0x10);
-    int iVar12 = *(int *)(tbl + 4);
+    int i15;
+    int i14;
+    int i8;
+    int i13;
+    int iVar12;
     u8 uVar1;
-    int i13, i14, i8, i15;
-    int model;
     int j;
+    int model;
+    GasVentTableEntry *e;
     f32 z;
-    f32 acc[3];
-    f32 v[3];
+    struct {
+        f32 v[3];
+        f32 acc[3];
+    } s;
 
-    *(int *)(state + 0x6d0) = *(int *)(tbl + 8);
-    uVar1 = *(u8 *)((char *)lbl_80322DA0 + (u32)*(u8 *)(state + 0x6e5) * 0x10 + 0xc);
+    e = (GasVentTableEntry *)lbl_80322DA0;
+    iVar12 = e[*(u8 *)(state + 0x6e5)].objType;
+    *(int *)(state + 0x6d0) = e[*(u8 *)(state + 0x6e5)].sfx;
+    uVar1 = e[*(u8 *)(state + 0x6e5)].mode;
     if (iVar12 != -1) {
+        i13 = 0;
+        i15 = state;
         i14 = 0;
         i8 = state;
-        i15 = state;
-        for (i13 = 0; i13 < *(u8 *)(state + 0x6d4); i13++) {
+        for (; i13 < *(u8 *)(state + 0x6d4); i13++) {
             *(u8 *)(state + i13 + 0x6d5) = 1;
             *(u8 *)(i15 + 0x6d) = uVar1;
             if (p3 == 0) {
@@ -807,18 +825,18 @@ void fn_801A2E80(int obj, int def, int p3, int state)
                 *(f32 *)(i15 + 8) = z;
                 *(f32 *)(i15 + 0xc) = z;
                 model = *(int *)(*(int *)(*(int *)(obj + 0x7c) + i14));
-                acc[0] = z;
-                acc[1] = z;
-                acc[2] = z;
+                s.acc[0] = z;
+                s.acc[1] = z;
+                s.acc[2] = z;
                 for (j = 0; j < *(u16 *)(model + 0xe4); j++) {
-                    Model_GetVertexPosition(model, j, v);
-                    acc[0] = v[0] + acc[0];
-                    acc[1] = v[1] + acc[1];
-                    acc[2] = v[2] + acc[2];
+                    Model_GetVertexPosition(model, j, s.v);
+                    s.acc[0] = s.v[0] + s.acc[0];
+                    s.acc[1] = s.v[1] + s.acc[1];
+                    s.acc[2] = s.v[2] + s.acc[2];
                 }
-                *(f32 *)(i15 + 4) = acc[0] * (lbl_803E436C / (f32)(u32)*(u16 *)(model + 0xe4));
-                *(f32 *)(i15 + 8) = acc[1] * (lbl_803E436C / (f32)(u32)*(u16 *)(model + 0xe4));
-                *(f32 *)(i15 + 0xc) = acc[2] * (lbl_803E436C / (f32)(u32)*(u16 *)(model + 0xe4));
+                *(f32 *)(i15 + 4) = s.acc[0] * ((z = lbl_803E436C) / (f32)(u32)*(u16 *)(model + 0xe4));
+                *(f32 *)(i15 + 8) = s.acc[1] * (z / (f32)(u32)*(u16 *)(model + 0xe4));
+                *(f32 *)(i15 + 0xc) = s.acc[2] * (z / (f32)(u32)*(u16 *)(model + 0xe4));
             }
             *(f32 *)(i15 + 0x10) = *(f32 *)(i15 + 4);
             *(f32 *)(i15 + 0x14) = *(f32 *)(i15 + 8);
