@@ -639,6 +639,7 @@ struct MldfTables {
 #define MLDF_SP_SIZE(p) (t->sizes[slot])
 #define MLDF_SP_PTR(p) (t->ptrs[slot])
 
+#pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
 undefined4 mapLoadDataFile(int param_1,int param_2)
@@ -976,10 +977,10 @@ undefined4 mapLoadDataFile(int param_1,int param_2)
         mm_free((void *)MLDF_SP_PTR(x));
         MLDF_SP_PTR(x) = 0;
       }
-      if (param_1 < 5) {
-        sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(param_1), param_1);
-      } else {
+      if (param_1 > 4) {
         sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(param_1), param_1 + 1);
+      } else {
+        sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(param_1), param_1);
       }
       fi = AtomicSList_Pop(lbl_803DCC8C);
       ok = DVDOpen(buf, (void *)fi);
@@ -1049,26 +1050,27 @@ undefined4 mapLoadDataFile(int param_1,int param_2)
         mm_free((void *)MLDF_SP_PTR(x));
         MLDF_SP_PTR(x) = 0;
       }
-      tmp = 0;
+      idx = 0;
       grp = MLDF_REMAP;
-      n = 0xf;
-      do {
-        idx = tmp;
-        if ((((param_1 == grp[0]) || (idx = tmp + 1, param_1 == grp[1])) ||
-             (idx = tmp + 2, param_1 == grp[2])) ||
-            ((idx = tmp + 3, param_1 == grp[3] || (idx = tmp + 4, param_1 == grp[4])))) {
-          break;
-        }
+      for (n = 0xf; n != 0; n--) {
+        if (param_1 == grp[0]) goto remap_found;
+        idx = idx + 1;
+        if (param_1 == grp[1]) goto remap_found;
+        idx = idx + 1;
+        if (param_1 == grp[2]) goto remap_found;
+        idx = idx + 1;
+        if (param_1 == grp[3]) goto remap_found;
+        idx = idx + 1;
+        if (param_1 == grp[4]) goto remap_found;
         grp = grp + 5;
-        tmp = tmp + 5;
-        n = n - 1;
-        idx = tmp;
-      } while (n != 0);
+        idx = idx + 1;
+      }
+    remap_found:
       piRomLoadSection(0, idx, 0);
-      if (param_1 < 5) {
-        sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(param_1), param_1);
-      } else {
+      if (param_1 > 4) {
         sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(param_1), param_1 + 1);
+      } else {
+        sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(param_1), param_1);
       }
       fi = AtomicSList_Pop(lbl_803DCC8C);
       ok = DVDOpen(buf, (void *)fi);
@@ -1616,6 +1618,7 @@ undefined4 mapLoadDataFile(int param_1,int param_2)
 }
 #pragma dont_inline reset
 #pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
