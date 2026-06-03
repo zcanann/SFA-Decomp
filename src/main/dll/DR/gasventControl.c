@@ -720,3 +720,56 @@ void explodable_init(int obj, int setup)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern f32 lbl_803E4350;
+extern f32 lbl_803E4354;
+extern f32 lbl_803E4358;
+extern f32 lbl_803E435C;
+#pragma scheduling off
+#pragma peephole on
+int fn_801A2BDC(int p1, int p2, int p3, u8 p4)
+{
+    int s;
+    f32 f1;
+
+    if (Obj_IsLoadingLocked() == 0) {
+        return 0;
+    }
+    s = Obj_AllocObjectSetup(0x44, p2);
+    *(s16 *)(s + 0) = (s16)p2;
+    *(u8 *)(s + 4) = 2;
+    *(u8 *)(s + 6) = 0xff;
+    *(u8 *)(s + 5) = 1;
+    *(u8 *)(s + 7) = 0xff;
+    *(f32 *)(s + 8) = *(f32 *)(p1 + 0xc);
+    *(f32 *)(s + 0xc) = *(f32 *)(p1 + 0x10);
+    *(f32 *)(s + 0x10) = *(f32 *)(p1 + 0x14);
+    f1 = lbl_803E4350;
+    *(s16 *)(s + 0x20) = (s16)(int)(lbl_803E4350 * *(f32 *)(p3 + 0x40));
+    *(s16 *)(s + 0x22) = (s16)(int)(f1 * *(f32 *)(p3 + 0x44));
+    *(s16 *)(s + 0x24) = (s16)(int)(f1 * *(f32 *)(p3 + 0x48));
+    *(s16 *)(s + 0x1a) = *(s16 *)(p3 + 0x68);
+    *(s16 *)(s + 0x1c) = *(s16 *)(p3 + 0x66);
+    *(s16 *)(s + 0x1e) = *(s16 *)(p3 + 0x64);
+    *(s16 *)(s + 0x2c) = (s16)(int)(*(f32 *)(p3 + 0x1c) * (f32)(u32)*(u8 *)(p3 + 0x6d));
+    *(s16 *)(s + 0x2e) = (s16)(int)(*(f32 *)(p3 + 0x20) * (f32)(u32)*(u8 *)(p3 + 0x6d));
+    *(s16 *)(s + 0x30) = (s16)(int)(*(f32 *)(p3 + 0x24) * (f32)(u32)*(u8 *)(p3 + 0x6d));
+    f1 = lbl_803E4354;
+    *(s16 *)(s + 0x32) = (s16)(int)(lbl_803E4354 * *(f32 *)(p3 + 0x28));
+    *(s16 *)(s + 0x36) = (s16)(int)(f1 * *(f32 *)(p3 + 0x30));
+    *(s16 *)(s + 0x34) = (s16)(int)(f1 * *(f32 *)(p3 + 0x2c));
+    f1 = lbl_803E4358;
+    *(s16 *)(s + 0x26) = (s16)(int)(lbl_803E4358 * *(f32 *)(p3 + 0x34));
+    *(s16 *)(s + 0x28) = (s16)(int)(f1 * *(f32 *)(p3 + 0x38));
+    *(s16 *)(s + 0x2a) = (s16)(int)(f1 * *(f32 *)(p3 + 0x3c));
+    *(u8 *)(s + 0x18) = p4;
+    *(s8 *)(s + 0x3d) = (s8)(int)(lbl_803E435C * (*(f32 *)(p1 + 8) / *(f32 *)(*(int *)(p1 + 0x50) + 4)));
+    *(u16 *)(s + 0x38) = *(int *)(p3 + 0x5c);
+    *(u16 *)(s + 0x3a) = (int)*(f32 *)(p3 + 0x58);
+    return Obj_SetupObject(s, 5, (int)*(s8 *)(p1 + 0xac), -1, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
