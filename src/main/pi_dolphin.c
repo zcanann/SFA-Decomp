@@ -1638,7 +1638,7 @@ extern char sDirBlockTag;
 extern int strncmp(const char *a, const char *b, u32 n);
 extern void *memcpy(void *dst, const void *src, u32 n);
 extern char *sResourceFileNameTable[];
-extern void zlbDecompress(void *dst, int size, int out, void *src);
+extern int zlbDecompress(void *dst, int size, int out, void *src);
 extern void DCStoreRange(void *p, u32 n);
 extern u32 ObjModel_GetUnpackedResourceSize(int p, u32 size);
 extern void ObjModel_UnpackResourcePayload(int p, u32 size, int dst, u32 unpacked);
@@ -2642,7 +2642,7 @@ extern char *sMapFileNameTable[];
 extern char sRomlistZlbPathFormat[];
 extern int lbl_803DCC74;
 extern void romListReadCb();
-extern void zlbDecompress(void *dst, int size, int out, void *src);
+extern int zlbDecompress(void *dst, int size, int out, void *src);
 extern void DCStoreRange(void *p, u32 n);
 #pragma scheduling off
 #pragma peephole off
@@ -8065,7 +8065,7 @@ int GXFlush_(u8 visible, int unused) {
     }
     return 0;
 }
-#pragma scheduling reset
+#pragma peephole reset
 
 extern u8 GXNtsc480Prog[];
 extern u8 lbl_803DB5D4;
@@ -10382,7 +10382,6 @@ int initLoadFiles(void) {
     return 0;
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -10850,3 +10849,304 @@ void videoInit(void) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma peephole off
+extern int __rlwnm(int, int, int, int);
+extern u8 lbl_8030C880[];
+extern u16 lbl_8030C9A0[];
+extern u8 lbl_8030CDA0[];
+extern u8 lbl_8030CDC0[];
+extern u8 lbl_8030CDE0[];
+extern u8 lbl_802C1C50[];
+extern u16 lbl_802C1C64[];
+extern u16 lbl_802C1CD8[];
+extern u8 lbl_803DCD20[];
+extern u8 lbl_803DCD18[];
+extern u8 lbl_80377880[];
+extern u16 lbl_80377894[];
+extern u16 lbl_80377954[];
+extern u16 lbl_803778B4[];
+extern u16 lbl_80377974[];
+extern u8 lbl_803778D4[];
+extern u8 lbl_8035F740[];
+extern u16 lbl_8035F860[];
+extern u8 lbl_8036F860[];
+extern u8 lbl_8036F880[];
+
+#define ZROT1(b) ((u32)__rlwnm((b), sh, 31, 31))
+#define ZROT8(b) ((u32)__rlwnm((b), sh, 24, 31))
+#define ZGB8() (ZROT8(src[0]) | (u32)src[1] << (8 - pos))
+#define ZGB16() (ZROT8(src[0]) | (u32)src[1] << (8 - pos) | (u32)src[2] << (0x10 - pos))
+#define ZADV(n) (pos += (n), src += (int)pos >> 3, pos &= 7, sh = 0x20 - pos)
+
+int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
+    u8 *src;
+    u8 *dst;
+    int pos;
+    int sh;
+    u8 *lenBitsP;
+    u16 *lenTblP;
+    int lenMax;
+    u8 *distBitsP;
+    u8 *distTblP;
+    int distMax;
+    int hlit;
+    int hdist;
+    int hclen;
+    u32 final;
+    u32 type;
+    u32 sym;
+    u32 code;
+    u32 val;
+    int i;
+    int j;
+    int k;
+    int n;
+    u8 *p8;
+    u16 *p16;
+    u8 *curLens;
+    u16 *curCnt;
+    dst = (u8 *)dstv - 1;
+    pos = 0;
+    sh = 0x20;
+    src = (u8 *)srcv + 2;
+    do {
+        final = ZROT1(src[0]);
+        ZADV(1);
+        type = ZGB8() & 3;
+        ZADV(2);
+        if (type == 0) {
+            u32 len;
+            if (pos != 0) {
+                src += 1;
+                pos = 0;
+            }
+            len = *(u16 *)src;
+            src += 1;
+            len |= (u32)*(u16 *)src << 8;
+            src += 3;
+            do {
+                u8 v = *src;
+                src += 1;
+                *++dst = v;
+            } while (len-- != 0);
+        } else {
+            if (type == 1) {
+                lenBitsP = lbl_8030C880;
+                lenTblP = lbl_8030C9A0;
+                lenMax = 9;
+                distBitsP = lbl_8030CDA0;
+                distTblP = lbl_8030CDC0;
+                distMax = 5;
+            } else {
+                lenBitsP = lbl_8035F740;
+                lenTblP = lbl_8035F860;
+                distBitsP = lbl_8036F860;
+                distTblP = lbl_8036F880;
+                val = 0;
+                p8 = lbl_803DCD20;
+                i = 8;
+                do {
+                    *p8 = val;
+                    p8++;
+                    i--;
+                } while (i != 0);
+                p8 = lbl_80377880;
+                i = 0x13;
+                do {
+                    *p8 = val;
+                    p8++;
+                    i--;
+                } while (i != 0);
+                p16 = lbl_80377894;
+                i = 0x10;
+                do {
+                    *p16 = val;
+                    p16++;
+                    i--;
+                } while (i != 0);
+                p8 = lenBitsP;
+                i = 0x120;
+                do {
+                    *p8 = val;
+                    p8++;
+                    i--;
+                } while (i != 0);
+                p16 = lbl_803778B4;
+                i = 0x10;
+                do {
+                    *p16 = val;
+                    p16++;
+                    i--;
+                } while (i != 0);
+                p8 = distBitsP;
+                i = 0x20;
+                do {
+                    *p8 = val;
+                    p8++;
+                    i--;
+                } while (i != 0);
+                hlit = (ZGB8() & 0x1f) + 0x101;
+                ZADV(5);
+                hdist = (ZGB8() & 0x1f) + 1;
+                ZADV(5);
+                hclen = (ZGB8() & 0xf) + 4;
+                ZADV(4);
+                for (i = 0; i != hclen; i++) {
+                    u32 v = ZGB8() & 7;
+                    lbl_80377880[lbl_802C1C50[i]] = v;
+                    lbl_803DCD20[v] += 1;
+                    ZADV(3);
+                }
+                lenMax = 7;
+                while (lbl_803DCD20[lenMax] == 0) {
+                    lenMax--;
+                }
+                code = 0;
+                for (j = 1; j <= lenMax; j++) {
+                    if (lbl_803DCD20[j] != 0) {
+                        lbl_803DCD18[j] = code;
+                        code += lbl_803DCD20[j] << (lenMax - j);
+                    }
+                }
+                for (i = 0; i < 0x13; i++) {
+                    u32 len = lbl_80377880[i];
+                    if (len != 0) {
+                        for (k = 0; k < 1 << (lenMax - len); k++) {
+                            u8 c = lbl_803DCD18[len] + 1;
+                            lbl_803DCD18[len] = c;
+                            (lbl_803778D4 - 1)[c] = i;
+                        }
+                    }
+                }
+                curLens = lenBitsP;
+                curCnt = lbl_80377894;
+                n = 0;
+                do {
+                    u32 extra;
+                    u32 v;
+                    u32 rep;
+                    extra = 0;
+                    if (pos > 8 - lenMax) {
+                        extra = (u32)src[1] << (8 - pos);
+                    }
+                    v = (ZROT8(src[0]) | extra) & ((1 << lenMax) - 1);
+                    sym = lbl_803778D4[(u32)__rlwnm(lbl_8030CDE0[v], lenMax + 0x18, 24, 31)];
+                    ZADV(lbl_80377880[sym]);
+                    if (sym == 0x10) {
+                        rep = (ZGB8() & 3) + 3;
+                        ZADV(2);
+                    } else if (sym == 0x11) {
+                        val = 0;
+                        rep = (ZGB8() & 7) + 3;
+                        ZADV(3);
+                    } else if (sym == 0x12) {
+                        val = 0;
+                        rep = (ZGB8() & 0x7f) + 0xb;
+                        ZADV(7);
+                    } else {
+                        val = sym;
+                        rep = 1;
+                    }
+                    do {
+                        curLens[n] = val;
+                        n += 1;
+                        curCnt[val] += 1;
+                        if (curLens == lbl_8035F740 && n == hlit) {
+                            curCnt = lbl_803778B4;
+                            n = 0;
+                            curLens = distBitsP;
+                        }
+                    } while (rep-- != 1);
+                } while (curLens == lbl_8035F740 || n < hdist);
+                lenMax = 0xf;
+                while (lbl_80377894[lenMax] == 0) {
+                    lenMax--;
+                }
+                code = 0;
+                for (j = 1; j <= lenMax; j++) {
+                    if (lbl_80377894[j] != 0) {
+                        lbl_80377954[j] = code;
+                        code += lbl_80377894[j] << (lenMax - j);
+                    }
+                }
+                for (i = 0; i < hlit; i++) {
+                    u32 len = lenBitsP[i];
+                    if (len != 0) {
+                        for (k = 0; k < 1 << (lenMax - len); k++) {
+                            u16 c = lbl_80377954[len] + 1;
+                            lbl_80377954[len] = c;
+                            lenTblP[c - 1] = i;
+                        }
+                    }
+                }
+                distMax = 0xf;
+                while (lbl_803778B4[distMax] == 0) {
+                    distMax--;
+                }
+                code = 0;
+                for (j = 1; j <= distMax; j++) {
+                    if (lbl_803778B4[j] != 0) {
+                        lbl_80377974[j] = code;
+                        code += lbl_803778B4[j] << (distMax - j);
+                    }
+                }
+                for (i = 0; i < hdist; i++) {
+                    u32 len = distBitsP[i];
+                    if (len != 0) {
+                        for (k = 0; k < 1 << (distMax - len); k++) {
+                            u16 c = lbl_80377974[len] + 1;
+                            lbl_80377974[len] = c;
+                            distTblP[c - 1] = i;
+                        }
+                    }
+                }
+            }
+            do {
+                u32 t;
+                u32 code2;
+                t = ZGB16() & ((1 << lenMax) - 1);
+                code2 = (u32)__rlwnm(lbl_8030CDE0[t & 0xff], lenMax - 8, 16, 31) |
+                        (u32)__rlwnm(lbl_8030CDE0[t >> 8], lenMax + 0x10, 24, 31);
+                sym = lenTblP[code2];
+                ZADV(lenBitsP[sym]);
+                if ((int)sym < 0x100) {
+                    *++dst = sym;
+                } else if (sym != 0x100) {
+                    u32 len2;
+                    u32 eb;
+                    u32 dt;
+                    u32 dcode;
+                    u32 dsym;
+                    u32 dist;
+                    int io = (sym - 0x101) * 4;
+                    len2 = *(u16 *)((char *)lbl_802C1C64 + io);
+                    eb = *(u16 *)((char *)lbl_802C1C64 + 2 + io);
+                    if (eb != 0) {
+                        len2 += ZGB8() & ((1 << eb) - 1);
+                        ZADV(eb);
+                    }
+                    dt = ZGB16() & ((1 << distMax) - 1);
+                    dcode = (u32)__rlwnm(lbl_8030CDE0[dt & 0xff], distMax - 8, 16, 31) |
+                            (u32)__rlwnm(lbl_8030CDE0[dt >> 8], distMax + 0x10, 24, 31);
+                    dsym = distTblP[dcode];
+                    ZADV(distBitsP[dsym]);
+                    dist = *(u16 *)((char *)lbl_802C1CD8 + dsym * 4);
+                    eb = *(u16 *)((char *)lbl_802C1CD8 + 2 + dsym * 4);
+                    if (eb != 0) {
+                        dist += ZGB16() & ((1 << eb) - 1);
+                        ZADV(eb);
+                    }
+                    {
+                        u8 *from = dst - dist;
+                        do {
+                            *++dst = *++from;
+                        } while (--len2 != 0);
+                    }
+                }
+            } while (sym != 0x100);
+        }
+    } while (final == 0);
+    return 0;
+}
+#pragma peephole reset
