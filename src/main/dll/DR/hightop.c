@@ -1558,6 +1558,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
     u32 bit;
     u32 v;
     u32 op;
+    u32 sel;
     s16 d;
     int ang;
     int first;
@@ -1698,7 +1699,8 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 5:
-                    if (*(f32 *)(state + 4) == lbl_803E40D8) {
+                    if (*(f32 *)(state + 4) != lbl_803E40D8) {
+                        break;
                     }
                     break;
                 case 10:
@@ -1756,11 +1758,12 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     op = (p[2] << 8) | p[3];
                     bit = op & 0x3fff;
                     v = GameBit_Get(bit);
-                    if ((op >> 14 & 3) == 0) {
+                    sel = op >> 14 & 3;
+                    if (sel == 0) {
                         v = 0;
-                    } else if ((op >> 14 & 3) == 1) {
+                    } else if (sel == 1) {
                         v = 0xffffffff;
-                    } else if ((op >> 14 & 3) == 2) {
+                    } else if (sel == 2) {
                         v = ~v;
                     }
                     GameBit_Set(bit, v);
