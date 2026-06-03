@@ -10408,3 +10408,188 @@ void gpuErrorHandler(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+extern void *OSGetArenaLo(void);
+extern void *OSGetArenaHi(void);
+extern void OSSetArenaLo(void *lo);
+extern void *OSInitAlloc(void *lo, void *hi, int numHeaps);
+extern int OSCreateHeap(void *start, void *end);
+extern void OSSetCurrentHeap(int heap);
+extern void GXInitFifoLimits(void *fifo, u32 hi, u32 lo);
+extern void Queue_Init(void *q, void *buf, int n, int stride);
+extern void OSInitThreadQueue(char *q);
+extern void VISetPreRetraceCallback(void (*cb)());
+extern void VISetPostRetraceCallback(void (*cb)());
+extern void GXSetBreakPtCallback(void (*cb)());
+extern void GXSetViewport(f32 left, f32 top, f32 wd, f32 ht, f32 nearz, f32 farz);
+extern void GXSetFieldMode(int field_mode, int half_aspect_ratio);
+extern void GXSetScissor(int x, int y, int w, int h);
+extern void GXSetDispCopySrc(int left, int top, int wd, int ht);
+extern u32 GXSetDispCopyYScale(f32 vscale);
+extern void GXSetDispCopyDst(int wd, int ht);
+extern void GXSetPixelFmt(int pix_fmt, int z_fmt);
+extern void GXSetDither(int dither);
+extern void GXSetDispCopyGamma(int gamma);
+extern int VIWaitForRetrace();
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern void GXSetVtxAttrFmt(int fmt, int attr, int cnt, int type, int frac);
+extern void GXSetCullMode(int mode);
+extern void GXSetCopyClear(void *clear_clr, u32 clear_z);
+extern void GXSetNumChans(int nChans);
+extern void GXSetChanCtrl(int chan, int enable, int amb_src, int mat_src, int light_mask, int diff_fn, int attn_fn);
+extern void GXEnableTexOffsets(int coord, int line_enable, int point_enable);
+extern void GXLoadPosMtxImm(void *mtx, int id);
+extern void GXSetCurrentMtx(int id);
+extern void GXSetMisc(int token, u32 val);
+extern char lbl_8035F6B8[];
+extern char *lbl_803DCCE0;
+extern int lbl_803DCCB8;
+extern int lbl_803DCCF4;
+extern u8 lbl_803DCD00;
+extern int lbl_803DCCFC;
+extern u8 lbl_803DCCF8;
+extern f32 lbl_803DEA94;
+extern f32 lbl_803DEA98;
+void videoInit(void) {
+    u8 fifo[0x80];
+    f32 mtx[3][4];
+    int cc;
+    u32 lo;
+    u32 hi;
+    u32 next;
+    int fbSize;
+    u32 x;
+    lo = (u32)OSGetArenaLo();
+    hi = (u32)OSGetArenaHi();
+    memcpy((void *)(hi - 0x40000), (char *)lbl_802CC6A0, 0x40000);
+    DCStoreRange((void *)(hi - 0x40000), 0x40000);
+    lbl_803DCCE4 = (void *)0x40000;
+    lbl_803DCCD8 = (void *)lbl_802CC6A0;
+    DCInvalidateRange((char *)lbl_802CC6A0, 0x40000);
+    lbl_803DCCD4 = (void *)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
+    lbl_803DCCE0 = lbl_803DCCD8;
+    GXSetDispCopySrc(0, 0, *(u16 *)(lbl_803DCCF0 + 4), *(u16 *)(lbl_803DCCF0 + 6));
+    lbl_803DCCB8 = GXSetDispCopyYScale((f32)*(u16 *)(lbl_803DCCF0 + 8) / (f32)*(u16 *)(lbl_803DCCF0 + 6));
+    fbSize = (u16)((*(u16 *)(lbl_803DCCF0 + 4) + 0xf) & ~0xf) * lbl_803DCCB8 * 2 + 0x1f;
+    lbl_803DCCEC = (void *)((lo + 0x1f) & ~0x1f);
+    lbl_803DCCE8 = (void *)(((u32)lbl_803DCCEC + fbSize) & ~0x1f);
+    next = ((u32)lbl_803DCCE8 + fbSize) & ~0x1f;
+    OSSetArenaLo((void *)next);
+    OSSetArenaLo((void *)(x = (u32)OSInitAlloc((void *)next, (void *)hi, 1)));
+    OSSetCurrentHeap(OSCreateHeap((void *)((x + 0x1f) & ~0x1f), (void *)(hi & ~0x1f)));
+    VIConfigure(lbl_803DCCF0);
+    GXInitFifoBase(fifo, lbl_803DCCEC, 0x10000);
+    GXSetCPUFifo(fifo);
+    GXSetGPFifo(fifo);
+    GXInitFifoLimits(lbl_803DCCD4, (u32)lbl_803DCCE4 - 0x4000, (u32)((u32)lbl_803DCCE4 * 3) >> 2);
+    GXSetCPUFifo(lbl_803DCCD4);
+    GXSetGPFifo(lbl_803DCCD4);
+    Queue_Init(lbl_8035F730, lbl_8035F6B8, 10, 0xc);
+    OSInitThreadQueue(lbl_803DCCC4);
+    VISetPreRetraceCallback(videoSwapFrameBuffers);
+    VISetPostRetraceCallback(gpuErrorHandler);
+    GXSetBreakPtCallback(videoFn_800499e8);
+    GXSetViewport(lbl_803DEA70, lbl_803DEA70, (f32)*(u16 *)(lbl_803DCCF0 + 4), (f32)*(u16 *)(lbl_803DCCF0 + 8), lbl_803DEA70, lbl_803DEA78);
+    GXSetFieldMode(*(u8 *)(lbl_803DCCF0 + 0x18), (u32)(*(u16 *)(lbl_803DCCF0 + 8) - *(u16 *)(lbl_803DCCF0 + 0x10)) >> 31);
+    GXSetScissor(0, 0, *(u16 *)(lbl_803DCCF0 + 4), *(u16 *)(lbl_803DCCF0 + 6));
+    GXSetDispCopyDst(*(u16 *)(lbl_803DCCF0 + 4), (u16)lbl_803DCCB8);
+    if (*(u8 *)(lbl_803DCCF0 + 0x19) != 0) {
+        GXSetPixelFmt(2, 0);
+        GXSetDither(1);
+    } else {
+        GXSetPixelFmt(0, 0);
+        GXSetDither(0);
+    }
+    lbl_803DCCCC = lbl_803DCCEC;
+    lbl_803DCCD0 = lbl_803DCCE8;
+    VISetNextFrameBuffer(lbl_803DCCCC);
+    GXSetDispCopyGamma(0);
+    VISetBlack(1);
+    VIFlush();
+    VIWaitForRetrace();
+    VIWaitForRetrace();
+    GXClearVtxDesc();
+    GXSetVtxDesc(0, 1);
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xb, 1);
+    GXSetVtxDesc(0xd, 1);
+    GXSetVtxAttrFmt(0, 9, 1, 3, 0);
+    GXSetVtxAttrFmt(0, 0xb, 1, 5, 0);
+    GXSetVtxAttrFmt(0, 0xd, 1, 3, 7);
+    GXSetVtxAttrFmt(1, 9, 1, 3, 2);
+    GXSetVtxAttrFmt(1, 0xb, 1, 5, 0);
+    GXSetVtxAttrFmt(1, 0xd, 1, 4, 0);
+    GXSetVtxAttrFmt(2, 9, 1, 4, 0);
+    GXSetVtxAttrFmt(2, 10, 0, 4, 0);
+    GXSetVtxAttrFmt(2, 0xb, 1, 5, 0);
+    GXSetVtxAttrFmt(2, 0xd, 1, 4, 0);
+    GXSetVtxAttrFmt(2, 0xe, 1, 4, 0);
+    GXSetVtxAttrFmt(3, 9, 1, 3, 8);
+    GXSetVtxAttrFmt(3, 0x19, 1, 1, 0);
+    GXSetVtxAttrFmt(3, 0xb, 1, 3, 0);
+    GXSetVtxAttrFmt(3, 0xd, 1, 3, 10);
+    GXSetVtxAttrFmt(3, 0xe, 1, 3, 10);
+    GXSetVtxAttrFmt(3, 0xf, 1, 3, 10);
+    GXSetVtxAttrFmt(3, 0x10, 1, 3, 10);
+    GXSetVtxAttrFmt(4, 9, 1, 4, 0);
+    GXSetVtxAttrFmt(4, 0xb, 1, 5, 0);
+    GXSetVtxAttrFmt(4, 0xd, 1, 3, 7);
+    GXSetVtxAttrFmt(4, 10, 0, 4, 0);
+    GXSetVtxAttrFmt(5, 9, 1, 3, 3);
+    GXSetVtxAttrFmt(5, 10, 0, 1, 0);
+    GXSetVtxAttrFmt(5, 0xb, 1, 3, 0);
+    GXSetVtxAttrFmt(5, 0xd, 1, 3, 8);
+    GXSetVtxAttrFmt(5, 0xe, 1, 3, 8);
+    GXSetVtxAttrFmt(5, 0xf, 1, 3, 8);
+    GXSetVtxAttrFmt(5, 0x10, 1, 3, 8);
+    GXSetVtxAttrFmt(6, 9, 1, 3, 8);
+    GXSetVtxAttrFmt(6, 10, 0, 1, 0);
+    GXSetVtxAttrFmt(6, 0xb, 1, 3, 0);
+    GXSetVtxAttrFmt(6, 0xd, 1, 3, 10);
+    GXSetVtxAttrFmt(6, 0xe, 1, 3, 10);
+    GXSetVtxAttrFmt(6, 0xf, 1, 3, 10);
+    GXSetVtxAttrFmt(6, 0x10, 1, 3, 10);
+    GXSetVtxAttrFmt(7, 9, 1, 3, 0);
+    GXSetVtxAttrFmt(7, 10, 0, 1, 0);
+    GXSetVtxAttrFmt(7, 0xb, 1, 3, 0);
+    GXSetVtxAttrFmt(7, 0xd, 1, 3, 10);
+    GXSetVtxAttrFmt(7, 0xe, 1, 3, 10);
+    GXSetVtxAttrFmt(7, 0xf, 1, 3, 10);
+    GXSetVtxAttrFmt(7, 0x10, 1, 3, 10);
+    lbl_803DCCF4 = 0;
+    GXSetCullMode(0);
+    cc = *(int *)&lbl_803DB5D0;
+    GXSetCopyClear(&cc, 0xffffff);
+    GXSetBlendMode(0, 1, 0, 5);
+    GXSetNumChans(1);
+    GXSetChanCtrl(0, 0, 0, 1, 0, 0, 2);
+    lbl_803DCD00 = 1;
+    lbl_803DCCFC = 3;
+    lbl_803DCCF8 = 1;
+    gxSetZMode_(1, 3, 1);
+    gxSetPeControl_ZCompLoc_(1);
+    GXEnableTexOffsets(0, 1, 1);
+    PSMTXIdentity(mtx);
+    GXLoadPosMtxImm(mtx, 0);
+    GXLoadTexMtxImm(mtx, 0x1e, 0);
+    GXLoadTexMtxImm(mtx, 0x21, 0);
+    GXSetCurrentMtx(0);
+    C_MTXOrtho(hudMatrix, lbl_803DEA94, lbl_803DEA98, lbl_803DEA70, lbl_803DEA8C, lbl_803DEA78, lbl_803DEA90);
+    GXSetMisc(1, 8);
+    {
+        register u32 v;
+        asm {
+            mfmsr v
+            ori v, v, 0x4
+            mtmsr v
+            mfspr v, 1008
+            ori v, v, 0x200
+            mtspr 1008, v
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
