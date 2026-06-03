@@ -86,26 +86,120 @@ extern f32 lbl_803E294C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_19_func0F(double param_1,int param_2,uint *param_3,char param_4)
+#pragma scheduling off
+#pragma peephole off
+int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
 {
-  float fVar1;
-  
-  *param_3 = *param_3 | 0x8000;
-  *(undefined2 *)(param_3 + 0xcc) = 0;
-  if (*(int *)(param_2 + 0x54) != 0) {
-    ObjHits_SetHitVolumeSlot(param_2,0,0,-1);
-  }
-  if (param_4 != -1) {
-    *(char *)((int)param_3 + 0x25f) = param_4;
-  }
-  param_3[0xa9] = (uint)(float)param_1;
-  fVar1 = lbl_803E28AC;
-  param_3[0xa4] = (uint)lbl_803E28AC;
-  param_3[0xa3] = (uint)fVar1;
-  param_3[199] = 0;
-  param_3[0xc6] = 0;
-  return;
+    extern int *gPlayerInterface;
+    extern f32 lbl_803DD5D8;
+    extern s8 lbl_803DD5DC;
+    extern f32 lbl_803E1C2C;
+    extern f32 lbl_803E1C70;
+    extern f32 lbl_803E1C74;
+    extern f32 lbl_803E1C6C;
+    extern f32 lbl_803E1C5C;
+    extern f32 timeDelta;
+    extern f32 sqrtf(f32 x);
+    extern u8 framesThisStep;
+    f32 dist;
+    f32 nx;
+    f32 nz;
+    char *t;
+
+    *(int *)(st + 0x318) = 0;
+    *(int *)(st + 0x31c) = 0;
+    *(s16 *)(st + 0x330) = 0;
+    {
+        f32 rest = lbl_803E1C2C;
+        *(f32 *)(st + 0x290) = rest;
+        *(f32 *)(st + 0x28c) = rest;
+    }
+    if ((s8)*(u8 *)(state + 0x56) != 1) {
+        *(f32 *)(state + 0x40) = *(f32 *)(obj + 0xc);
+        *(f32 *)(state + 0x44) = *(f32 *)(obj + 0x10);
+        *(f32 *)(state + 0x48) = *(f32 *)(obj + 0x14);
+        lbl_803DD5D8 = lbl_803E1C70;
+        lbl_803DD5DC = 0;
+    }
+    *(s16 *)(state + 0x6e) = 0;
+    *(u8 *)(state + 0x56) = 1;
+    {
+        f32 ex = *(f32 *)(state + 0x40) - *(f32 *)(obj + 0xc);
+        f32 ez = *(f32 *)(state + 0x48) - *(f32 *)(obj + 0x14);
+        dist = sqrtf(ex * ex + ez * ez);
+    }
+    t = *(char **)(st + 0x2d0);
+    if (t == NULL) {
+        return 0;
+    }
+    nx = *(f32 *)(t + 0xc) - *(f32 *)(state + 0x40);
+    nz = *(f32 *)(t + 0x14) - *(f32 *)(state + 0x48);
+    {
+        f32 total = sqrtf(nx * nx + nz * nz);
+        f32 step = timeDelta * (total - dist) * lbl_803E1C74;
+        f32 td;
+        if (step > lbl_803E1C6C) {
+            step = lbl_803E1C6C;
+        } else if (step < lbl_803E1C5C) {
+            step = lbl_803E1C5C;
+        }
+        if (dist <= lbl_803DD5D8) {
+            lbl_803DD5DC = lbl_803DD5DC + 1;
+        }
+        if (dist >= total || (s8)lbl_803DD5DC > 9) {
+            char *t2 = *(char **)(st + 0x2d0);
+            int delta = *(s16 *)(obj + 0x0) - (u16)*(s16 *)t2;
+            if (delta > 0x8000) {
+                delta -= 0xffff;
+            }
+            if (delta < -0x8000) {
+                delta += 0xffff;
+            }
+            if (delta > 0x2000) {
+                delta = 0x2000;
+            }
+            if (delta < -0x2000) {
+                delta = -0x2000;
+            }
+            *(s16 *)(obj + 0x0) -= (s16)((delta * framesThisStep) >> 3);
+            if ((s8)lbl_803DD5DC > 10) {
+                delta = 0;
+            }
+            if (delta < 0x100 && delta > -0x100) {
+                *(u8 *)(state + 0x56) = 0;
+                *(s16 *)(state + 0x5a) = (s16)(*(s16 *)(state + 0x58) - 1);
+            } else {
+                td = timeDelta;
+                (*(void (**)(int, char *, f32, f32, int, int))(*gPlayerInterface + 0x8))(
+                    obj, st, td, td, p4, p5);
+            }
+        } else {
+            nx = nx / total;
+            nz = nz / total;
+            *(f32 *)(st + 0x290) = -nx * step;
+            *(f32 *)(st + 0x28c) = nz * step;
+            *(f32 *)(obj + 0xc) = dist * nx + *(f32 *)(state + 0x40);
+            *(f32 *)(obj + 0x14) = dist * nz + *(f32 *)(state + 0x48);
+            td = timeDelta;
+            (*(void (**)(int, char *, f32, f32, int, int))(*gPlayerInterface + 0x8))(
+                obj, st, td, td, p4, p5);
+        }
+    }
+    lbl_803DD5D8 = dist;
+    if ((s8)*(u8 *)(state + 0x56) == 0) {
+        *(u8 *)(st + 0x405) = 0;
+        *(s16 *)(st + 0x274) = p6;
+        *(int *)(st + 0x2d0) = 0;
+        *(s16 *)(state + 0x6e) = -1;
+        *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~0x60;
+        *(u8 *)(st + 0x25f) = 0;
+        GameBit_Set(*(s16 *)(st + 0x3f4), 0);
+    }
+    return 1;
 }
+
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
