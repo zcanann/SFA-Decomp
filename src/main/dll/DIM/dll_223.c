@@ -99,12 +99,6 @@ extern f32 playerMapOffsetZ;
 #pragma peephole off
 #pragma scheduling off
 
-#define DIMBOSSTONSIL_ACTIVE_OFFSET 0x27a
-#define DIMBOSSTONSIL_STUN_READY_OFFSET 0x27b
-#define DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET 0x2a0
-#define DIMBOSSTONSIL_HIT_RESULT_OFFSET 0x346
-#define DIMBOSSTONSIL_HIT_DAMAGE_COUNT_OFFSET 0x34f
-#define DIMBOSSTONSIL_HIT_POINTS_LEFT_OFFSET 0x354
 #define DIMBOSSTONSIL_HIT_EFFECT_ID 0x4b2
 #define DIMBOSSTONSIL_HIT_EFFECT_ALT_ID 0x4b3
 #define DIMBOSSTONSIL_PRIMARY_HIT_SFX 0x18a
@@ -126,12 +120,12 @@ extern f32 playerMapOffsetZ;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int DIMbosstonsil_updateHitReaction(void *obj,u8 *state,int param_3)
+int DIMbosstonsil_updateHitReaction(void *obj,DIMbosstonsilState *state,int param_3)
 {
-  if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
-    (*(void (***)(void *,u8 *,int))gPlayerInterface)[5](obj,state,1);
+  if (state->active != 0) {
+    (*(void (***)(void *,DIMbosstonsilState *,int))gPlayerInterface)[5](obj,state,1);
   }
-  if ((s8)state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] != 0) {
+  if (state->hitResult != 0) {
     return 1;
   }
   return 0;
@@ -150,11 +144,11 @@ int DIMbosstonsil_updateHitReaction(void *obj,u8 *state,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int DIMbosstonsil_enableHitReaction(void *obj,u8 *state)
+int DIMbosstonsil_enableHitReaction(void *obj,DIMbosstonsilState *state)
 {
-  if ((s8)state[DIMBOSSTONSIL_STUN_READY_OFFSET] != 0) {
-    state[DIMBOSSTONSIL_ACTIVE_OFFSET] = 1;
-    (*(void (***)(void *,u8 *,int))gPlayerInterface)[5](obj,state,0);
+  if (state->stunReady != 0) {
+    state->active = 1;
+    (*(void (***)(void *,DIMbosstonsilState *,int))gPlayerInterface)[5](obj,state,0);
   }
   return 0;
 }
@@ -172,43 +166,43 @@ int DIMbosstonsil_enableHitReaction(void *obj,u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int DIMbosstonsil_chooseHitReaction(void *obj,u8 *state)
+int DIMbosstonsil_chooseHitReaction(void *obj,DIMbosstonsilState *state)
 {
   u16 moveId;
   s16 unused1;
   s16 unused2;
 
-  if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
+  if (state->active != 0) {
     lbl_803DDB9C = lbl_803DDBA0;
     (*(void (***)(void *,void *,int,u16 *,s16 *,s16 *))gBaddieControlInterface)[5]
         (obj,Obj_GetPlayerObject(),4,&moveId,&unused1,&unused2);
     switch (moveId) {
     case 0:
-      if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
+      if (state->active != 0) {
         ObjAnim_SetCurrentMove((int)obj,1,lbl_803E4C90,0);
-        state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
+        state->hitResult = 0;
       }
       break;
     case 1:
-      if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
+      if (state->active != 0) {
         ObjAnim_SetCurrentMove((int)obj,3,lbl_803E4C90,0);
-        state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
+        state->hitResult = 0;
       }
       break;
     case 2:
-      if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
+      if (state->active != 0) {
         ObjAnim_SetCurrentMove((int)obj,2,lbl_803E4C90,0);
-        state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
+        state->hitResult = 0;
       }
       break;
     default:
-      if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
+      if (state->active != 0) {
         ObjAnim_SetCurrentMove((int)obj,4,lbl_803E4C90,0);
-        state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
+        state->hitResult = 0;
       }
       break;
     }
-    *(f32 *)(state + DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET) = lbl_803E4C94;
+    state->recoveryTimer = lbl_803E4C94;
   }
   return 0;
 }
@@ -226,13 +220,13 @@ int DIMbosstonsil_chooseHitReaction(void *obj,u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int DIMbosstonsil_startIdleHitReaction(void *obj,u8 *state)
+int DIMbosstonsil_startIdleHitReaction(void *obj,DIMbosstonsilState *state)
 {
-  if ((s8)state[DIMBOSSTONSIL_ACTIVE_OFFSET] != 0) {
+  if (state->active != 0) {
     ObjAnim_SetCurrentMove((int)obj,0,lbl_803E4C90,0);
-    state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
+    state->hitResult = 0;
   }
-  *(f32 *)(state + DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET) = lbl_803E4C98;
+  state->recoveryTimer = lbl_803E4C98;
   return 0;
 }
 
@@ -249,7 +243,7 @@ int DIMbosstonsil_startIdleHitReaction(void *obj,u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMbosstonsil_checkHit(void *obj,u8 *state)
+void DIMbosstonsil_checkHit(void *obj,DIMbosstonsilState *state)
 {
   void *hitObj;
   int modelPart;
@@ -275,7 +269,7 @@ void DIMbosstonsil_checkHit(void *obj,u8 *state)
     objLightFn_8009a1dc(obj,lbl_803E4CA4,effect,3,0);
     Sfx_PlayFromObject(obj,DIMBOSSTONSIL_PRIMARY_HIT_SFX);
     doRumble(lbl_803E4CA8);
-    if ((s8)state[DIMBOSSTONSIL_HIT_POINTS_LEFT_OFFSET] != 0) {
+    if (state->hitPointsLeft != 0) {
       Sfx_PlayFromObject(obj,DIMBOSSTONSIL_ALT_HIT_SFX);
     }
     else {
@@ -283,10 +277,10 @@ void DIMbosstonsil_checkHit(void *obj,u8 *state)
     }
     CameraShake_SetAllMagnitudes(lbl_803E4CAC);
     if (lbl_803E4C90 == lbl_803DDB98) {
-      state[DIMBOSSTONSIL_ACTIVE_OFFSET] = 1;
-      state[DIMBOSSTONSIL_HIT_RESULT_OFFSET] = 0;
-      *(s8 *)(state + DIMBOSSTONSIL_HIT_DAMAGE_COUNT_OFFSET) = hit;
-      state[DIMBOSSTONSIL_HIT_POINTS_LEFT_OFFSET]--;
+      state->active = 1;
+      state->hitResult = 0;
+      state->hitDamageCount = hit;
+      state->hitPointsLeft--;
       gDIMbosstonsilRoutePhase++;
       GameBit_Set(DIMBOSSTONSIL_HIT_GAMEBIT,(s8)gDIMbosstonsilRoutePhase);
       if (gDIMbosstonsilRoutePhase == 3 || gDIMbosstonsilRoutePhase == 7) {
@@ -295,8 +289,8 @@ void DIMbosstonsil_checkHit(void *obj,u8 *state)
       else {
         lbl_803DDB98 = lbl_803E4C90;
       }
-      (*(void (***)(void *,u8 *,int))gPlayerInterface)[5](obj,state,1);
-      *(s16 *)(state + 0x270) = 1;
+      (*(void (***)(void *,DIMbosstonsilState *,int))gPlayerInterface)[5](obj,state,1);
+      state->field270 = 1;
       ObjMsg_SendToObject(hitObj,DIMBOSSTONSIL_ADVANCE_MSG,obj,0);
     }
   }

@@ -18,7 +18,8 @@ extern void Sfx_PlayFromObject(void *obj,int sfxId);
 extern void doRumble(f32 strength);
 extern void lightFn_8001db6c(void *light,int enabled,f32 value);
 extern int dimBossTonsil_newState_hitFightMain(void *obj,ObjAnimUpdateState *animUpdate,
-                                                u8 *state,u8 *updateState);
+                                                DIMbosstonsilState *state,
+                                                DIMbosstonsilState *updateState);
 extern void ObjGroup_RemoveObject(void *obj,int group);
 extern void ModelLightStruct_free(void *light);
 
@@ -52,8 +53,8 @@ extern f32 lbl_803E4CC4;
  */
 int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *animUpdate)
 {
-  u8 *state;
-  u8 *config;
+  DIMbosstonsilState *state;
+  DIMbosstonsilConfig *config;
   u8 red;
   u8 green;
   u8 blue;
@@ -64,8 +65,8 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
   int hitReactMode;
   int animOk;
 
-  state = *(u8 **)((u8 *)obj + 0xb8);
-  config = *(u8 **)((u8 *)obj + 0x4c);
+  state = *(DIMbosstonsilState **)((u8 *)obj + 0xb8);
+  config = *(DIMbosstonsilConfig **)((u8 *)obj + 0x4c);
 
   if (gDIMbosstonsilLight != NULL) {
     fn_8001D9F4(gDIMbosstonsilLight,&red,&green,&blue,&alpha);
@@ -127,19 +128,19 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
   lbl_803DDBA0 += timeDelta;
 
   if (*(s16 *)((u8 *)obj + 0xb4) != -1) {
-    animOk = (*(int (**)(void *,u8 *,int))(*(int *)gBaddieControlInterface + 0x30))
+    animOk = (*(int (**)(void *,DIMbosstonsilState *,int))(*(int *)gBaddieControlInterface + 0x30))
         (obj,state,1);
     if (animOk == 0) {
       return 1;
     }
-    if ((*(s16 *)(state + DIMBOSSTONSIL_EVENT_GAMEBIT_OFFSET) != -1) &&
-        (GameBit_Get(*(s16 *)(state + DIMBOSSTONSIL_EVENT_GAMEBIT_OFFSET)) != 0)) {
+    if ((state->eventGameBit != -1) &&
+        (GameBit_Get(state->eventGameBit) != 0)) {
       (*(void (**)(ObjAnimUpdateState *,int))(*(int *)gObjectTriggerInterface + 0x58))
-          (animUpdate,(int)*(s16 *)(config + 0x2c));
-      *(s16 *)(state + DIMBOSSTONSIL_EVENT_GAMEBIT_OFFSET) = -1;
+          (animUpdate,(int)config->eventId);
+      state->eventGameBit = -1;
     }
 
-    hitReactMode = *(u8 *)(state + DIMBOSSTONSIL_HIT_REACT_MODE_OFFSET);
+    hitReactMode = state->hitReactMode;
     if (hitReactMode == 1) {
       goto updateHitReaction;
     }
@@ -148,20 +149,20 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
     }
     animUpdate->hitVolumePair = 0;
     dimBossTonsil_newState_hitFightMain(obj,animUpdate,state,state);
-    if (*(u8 *)(state + DIMBOSSTONSIL_HIT_REACT_MODE_OFFSET) == 1) {
-      *(s16 *)(state + DIMBOSSTONSIL_FIELD270_OFFSET) = 0;
-      (*(void (**)(void *,u8 *,f32,f32,u8 *,u8 *))(*(int *)gPlayerInterface + 0x8))
+    if (state->hitReactMode == 1) {
+      state->field270 = 0;
+      (*(void (**)(void *,DIMbosstonsilState *,f32,f32,u8 *,u8 *))(*(int *)gPlayerInterface + 0x8))
           (obj,state,lbl_803E4CB8,lbl_803E4CB8,&lbl_803DDBB0,&lbl_803DDBA8);
       animUpdate->sequenceEventActive = 0;
     }
     goto updateDone;
 
 updateHitReaction:
-      animOk = (*(int (**)(void *,ObjAnimUpdateState *,u8 *,u8 *,u8 *,int))
+      animOk = (*(int (**)(void *,ObjAnimUpdateState *,DIMbosstonsilState *,u8 *,u8 *,int))
                 (*(int *)gBaddieControlInterface + 0x34))
           (obj,animUpdate,state,&lbl_803DDBB0,&lbl_803DDBA8,0);
       if (animOk != 0) {
-        (*(void (**)(void *,u8 *,f32,int))(*(int *)gBaddieControlInterface + 0x2c))
+        (*(void (**)(void *,DIMbosstonsilState *,f32,int))(*(int *)gBaddieControlInterface + 0x2c))
             (obj,state,lbl_803E4C90,1);
       }
     goto updateDone;
@@ -174,7 +175,7 @@ updateDone:;
   }
 
   if (*(s16 *)((u8 *)obj + 0xb4) == -1) {
-    *(u16 *)(state + DIMBOSSTONSIL_STATE_FLAGS_OFFSET) |= DIMBOSSTONSIL_STATE_FLAG_START_MOVE;
+    state->stateFlags |= DIMBOSSTONSIL_STATE_FLAG_START_MOVE;
     return 0;
   }
 
@@ -213,7 +214,7 @@ void DIMbosstonsil_func0B(void)
  */
 int DIMbosstonsil_setScale(int obj)
 {
-  return *(short *)(*(int *)(obj + 0xb8) + DIMBOSSTONSIL_SCALE_OFFSET);
+  return (*(DIMbosstonsilState **)(obj + 0xb8))->scale;
 }
 
 /*
@@ -267,11 +268,11 @@ int DIMbosstonsil_getObjectTypeId(void)
  */
 void DIMbosstonsil_free(void *obj)
 {
-  u8 *state;
+  DIMbosstonsilState *state;
 
-  state = *(u8 **)((u8 *)obj + 0xb8);
+  state = *(DIMbosstonsilState **)((u8 *)obj + 0xb8);
   ObjGroup_RemoveObject(obj,3);
-  (*(void (**)(void *,u8 *,int))(*(int *)gBaddieControlInterface + 0x40))(obj,state,1);
+  (*(void (**)(void *,DIMbosstonsilState *,int))(*(int *)gBaddieControlInterface + 0x40))(obj,state,1);
   if (gDIMbosstonsilLight != NULL) {
     ModelLightStruct_free(gDIMbosstonsilLight);
   }

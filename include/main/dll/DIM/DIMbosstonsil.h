@@ -8,7 +8,13 @@
 #define DIMBOSSTONSIL_OBJECT_TYPE 0x4b
 #define DIMBOSSTONSIL_STATE_SIZE 0x410
 #define DIMBOSSTONSIL_SCALE_OFFSET 0x274
+#define DIMBOSSTONSIL_ACTIVE_OFFSET 0x27a
+#define DIMBOSSTONSIL_STUN_READY_OFFSET 0x27b
+#define DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET 0x2a0
+#define DIMBOSSTONSIL_HIT_RESULT_OFFSET 0x346
+#define DIMBOSSTONSIL_HIT_DAMAGE_COUNT_OFFSET 0x34f
 #define DIMBOSSTONSIL_HEALTH_PHASE_OFFSET 0x354
+#define DIMBOSSTONSIL_HIT_POINTS_LEFT_OFFSET 0x354
 #define DIMBOSSTONSIL_FIELD270_OFFSET 0x270
 #define DIMBOSSTONSIL_EVENT_GAMEBIT_OFFSET 0x3f6
 #define DIMBOSSTONSIL_STATE_FLAGS_OFFSET 0x400
@@ -36,10 +42,60 @@ typedef struct DIMbosstonsilLight {
   s8 glowIntensityStep;
 } DIMbosstonsilLight;
 
+typedef struct DIMbosstonsilConfig {
+  u8 pad00[0x2C];
+  s16 eventId;
+} DIMbosstonsilConfig;
+
+typedef struct DIMbosstonsilState {
+  u8 pad000[DIMBOSSTONSIL_FIELD270_OFFSET];
+  s16 field270;
+  u8 pad272[DIMBOSSTONSIL_SCALE_OFFSET - 0x272];
+  s16 scale;
+  u8 pad276[DIMBOSSTONSIL_ACTIVE_OFFSET - 0x276];
+  s8 active;
+  s8 stunReady;
+  u8 pad27C[DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET - 0x27C];
+  f32 recoveryTimer;
+  u8 pad2A4[DIMBOSSTONSIL_HIT_RESULT_OFFSET - 0x2A4];
+  s8 hitResult;
+  u8 pad347[DIMBOSSTONSIL_HIT_DAMAGE_COUNT_OFFSET - 0x347];
+  s8 hitDamageCount;
+  u8 pad350[DIMBOSSTONSIL_HIT_POINTS_LEFT_OFFSET - 0x350];
+  s8 hitPointsLeft;
+  u8 pad355[DIMBOSSTONSIL_EVENT_GAMEBIT_OFFSET - 0x355];
+  s16 eventGameBit;
+  u8 pad3F8[DIMBOSSTONSIL_STATE_FLAGS_OFFSET - 0x3F8];
+  u16 stateFlags;
+  u8 pad402[DIMBOSSTONSIL_HIT_REACT_MODE_OFFSET - 0x402];
+  u8 hitReactMode;
+  u8 pad406[DIMBOSSTONSIL_STATE_SIZE - 0x406];
+} DIMbosstonsilState;
+
 STATIC_ASSERT(offsetof(DIMbosstonsilLight, visible) == 0x4C);
 STATIC_ASSERT(offsetof(DIMbosstonsilLight, active) == 0x2F8);
 STATIC_ASSERT(offsetof(DIMbosstonsilLight, glowIntensity) == 0x2F9);
 STATIC_ASSERT(offsetof(DIMbosstonsilLight, glowIntensityStep) == 0x2FA);
+
+STATIC_ASSERT(offsetof(DIMbosstonsilConfig, eventId) == 0x2C);
+
+STATIC_ASSERT(sizeof(DIMbosstonsilState) == DIMBOSSTONSIL_STATE_SIZE);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, field270) == DIMBOSSTONSIL_FIELD270_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, scale) == DIMBOSSTONSIL_SCALE_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, active) == DIMBOSSTONSIL_ACTIVE_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, stunReady) == DIMBOSSTONSIL_STUN_READY_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, recoveryTimer) ==
+              DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, hitResult) == DIMBOSSTONSIL_HIT_RESULT_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, hitDamageCount) ==
+              DIMBOSSTONSIL_HIT_DAMAGE_COUNT_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, hitPointsLeft) ==
+              DIMBOSSTONSIL_HIT_POINTS_LEFT_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, eventGameBit) ==
+              DIMBOSSTONSIL_EVENT_GAMEBIT_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, stateFlags) == DIMBOSSTONSIL_STATE_FLAGS_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, hitReactMode) ==
+              DIMBOSSTONSIL_HIT_REACT_MODE_OFFSET);
 
 extern DIMbosstonsilLight *gDIMbosstonsilLight;
 extern s8 gDIMbosstonsilRoutePhase;
