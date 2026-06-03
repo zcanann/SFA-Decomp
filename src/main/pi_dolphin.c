@@ -555,18 +555,1067 @@ extern undefined uRam803dc24f;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+extern char sResourceFileNameAudioTab[];
+extern u8 lbl_80345E10[];
+extern char sArchivePathFormat;
+extern s16 lbl_803DCC92;
+extern int lbl_803DCC70;
+extern int lbl_803DCC7C;
+extern int lbl_803DCC80;
+extern int lbl_803DCC8C;
+extern int sprintf(char *buf, const char *fmt, ...);
+extern int AtomicSList_Pop(int list);
+extern void AtomicSList_Push(int list, int e);
+extern int DVDOpen(char *fileName, void *fileInfo);
+extern int DVDRead(void *fileInfo, void *addr, int length, int offset);
+extern int DVDClose(void *fileInfo);
+extern void *mmAlloc(int size, int align, int zone);
+extern void mm_free(void *p);
+extern void DCInvalidateRange(void *p, u32 n);
+extern int DVDReadAsyncPrio(void *fi, void *addr, int len, int off, void (*cb)(), int prio);
+extern void mergeTableFiles(void *buf, int a, int b, int n);
+extern void texRestructRefs(int a);
+extern void piRomLoadSection(int a, int idx, int b);
+extern void animCurvReadCb();
+extern void animCurvTabReadCb();
+extern void voxMapReadCb();
+extern void voxMapTabReadCb();
+extern void blocksReadCb();
+extern void blocksTabReadCb();
+extern void tex1ReadCb();
+extern void tex1tab1readCb();
+extern void tex1tab2readCb();
+extern void tex0readCb();
+extern void tex0tab1readCb();
+extern void tex0tab2readCb();
+extern void animReadCb();
+extern void animTabReadCb();
+extern void modelsReadCb();
+extern void modelsTabReadCb();
+
+struct MldfNames {
+    u8 pad0[0x3ac];
+    char *fileNames[0x22e];
+    char *mapNames[0x49];
+    int remapGroups[0x4b];
+    s16 adjacency[0x2be];
+    char fmtAnimCurvBin[0x10];
+    char fmtAnimCurvTab[0x10];
+    char fmtVoxmapBin[0x10];
+    char fmtWarlockVoxmap[0x14];
+    char fmtVoxmapTab[0x10];
+    char fmtModBin[0x14];
+    char fmtModTab[0x10];
+};
+
+struct MldfTables {
+    u8 pad0[0x160];
+    int fileInfo[0x58];
+    u8 mergeAnimCurv[0x7f40];
+    u8 mergeVoxMap[0x2000];
+    u8 mergeBlocks[0x2000];
+    u8 mergeTex1[0x4000];
+    u8 mergeTex0[0x4000];
+    u8 mergeAnim[0x2ee0];
+    u8 mergeModels[0x2058];
+    int ids[0x58];
+    int sizes[0x58];
+    int romList[0x78];
+    u32 ptrs[0x58];
+    s16 owners[0x60];
+};
+
+#define MLDF_MAP_NAME(i) (nm->mapNames[i])
+#define MLDF_FILE_NAME(i) (nm->fileNames[i])
+#define MLDF_ADJ(i) (nm->adjacency[i])
+#define MLDF_REMAP (nm->remapGroups)
+#define MLDF_FINFO(s) (t->fileInfo[s])
+#define MLDF_ID(s) (t->ids[s])
+#define MLDF_SIZE(s) (t->sizes[s])
+#define MLDF_PTR(s) (t->ptrs[s])
+#define MLDF_OWNER(s) (t->owners[s])
+#define MLDF_FINFO4(s4) (t->fileInfo[slot])
+#define MLDF_SP_ID(p) (t->ids[slot])
+#define MLDF_SP_SIZE(p) (t->sizes[slot])
+#define MLDF_SP_PTR(p) (t->ptrs[slot])
+
+#pragma peephole off
 #pragma dont_inline on
 undefined4 mapLoadDataFile(int param_1,int param_2)
 {
-  if (DAT_803601f2 == param_1) {
-    return 0;
+  struct MldfNames *nm = (struct MldfNames *)sResourceFileNameAudioTab;
+  struct MldfTables *t = (struct MldfTables *)lbl_80345E10;
+  int sync = 0;
+  u32 result;
+  int adj;
+  int slot;
+  int fi;
+  int ok;
+  u32 tmp;
+  char buf[104];
+
+  if (lbl_803DCC92 != 0) {
+    lbl_803DCC92 = 0;
+    sync = 1;
   }
-  if (DAT_80360236 == param_1) {
-    return 1;
+  adj = MLDF_ADJ(param_1);
+  if (adj != -1) {
+    int c = 0;
+    s16 o25 = MLDF_OWNER(0x25);
+    s16 o47;
+    if (o25 != -1) {
+      c = 1;
+    }
+    o47 = MLDF_OWNER(0x47);
+    if (o47 != -1) {
+      c = c + 1;
+    }
+    if (c == 0) {
+      tmp = 1;
+      lbl_803DCC92 = 1;
+      if (o25 == adj) {
+        tmp = 0;
+      } else if (o47 != adj) {
+        tmp = -1;
+      }
+      if (tmp == -1) {
+        mapLoadDataFile(adj, param_2);
+      }
+      sync = 1;
+    }
   }
-  return 0xffffffff;
+  sync = sync | lbl_803DCC70;
+  switch (param_2) {
+  case 0xd:
+  case 0x55:
+    result = MLDF_PTR(0xd);
+    if ((result != 0) && (MLDF_OWNER(0xd) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x55);
+    if ((result != 0) && (MLDF_OWNER(0x55) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_ID(0xd) == param_1) {
+        slot = 0xd;
+        MLDF_ID(0xd) = -1;
+      } else if (MLDF_ID(0x55) == param_1) {
+        slot = 0x55;
+        MLDF_ID(0x55) = -1;
+      } else if (MLDF_OWNER(0xd) == -1) {
+        slot = 0xd;
+      } else {
+        if (MLDF_OWNER(0x55) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x55;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, nm->fmtAnimCurvBin, MLDF_MAP_NAME(param_1));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        if (MLDF_SP_SIZE(x) == 0) {
+          result = 0;
+        } else {
+          MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+          DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+          tmp = MLDF_SP_PTR(x);
+          if (tmp == 0) {
+            if (MLDF_ID(param_2) == -1) {
+              texRestructRefs(1);
+            }
+            DVDClose((void *)fi);
+            AtomicSList_Push(lbl_803DCC8C, fi);
+            MLDF_SP_SIZE(x) = 0;
+            MLDF_SP_ID(x) = param_1;
+            result = 0;
+          } else {
+            if (sync != 0) {
+              DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
+              DVDClose((void *)fi);
+              AtomicSList_Push(lbl_803DCC8C, fi);
+              if (((lbl_803DCC80 & 0x20000000) == 0) && ((lbl_803DCC80 & 0x80000000) == 0)) {
+                mergeTableFiles(t->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
+              }
+            } else {
+              if (slot == 0xd) {
+                lbl_803DCC80 = lbl_803DCC80 | 0x10000000;
+              } else {
+                lbl_803DCC80 = lbl_803DCC80 | 0x40000000;
+              }
+              DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, animCurvReadCb, 2);
+              MLDF_FINFO4(x) = fi;
+            }
+            MLDF_OWNER(slot) = param_1;
+            result = MLDF_SP_PTR(x);
+          }
+        }
+      }
+    }
+    break;
+  case 0xe:
+  case 0x56:
+    result = MLDF_PTR(0xe);
+    if ((result != 0) && (MLDF_OWNER(0xe) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x56);
+    if ((result != 0) && (MLDF_OWNER(0x56) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_OWNER(0xe) == -1) {
+        slot = 0xe;
+      } else {
+        if (MLDF_OWNER(0x56) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x56;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, nm->fmtAnimCurvTab, MLDF_MAP_NAME(param_1));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        if (MLDF_SP_SIZE(x) == 0) {
+          result = 0;
+        } else {
+          MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+          DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+          if (sync != 0) {
+            DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+            DVDClose((void *)fi);
+            AtomicSList_Push(lbl_803DCC8C, fi);
+            if (((lbl_803DCC80 & 0x20000000) == 0) && ((lbl_803DCC80 & 0x80000000) == 0)) {
+              mergeTableFiles(t->mergeAnimCurv, 0xe, 0x56, 0x1fd0);
+            }
+          } else {
+            if (slot == 0xe) {
+              lbl_803DCC80 = lbl_803DCC80 | 0x20000000;
+            } else {
+              lbl_803DCC80 = lbl_803DCC80 | 0x80000000;
+            }
+            DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animCurvTabReadCb, 2);
+            MLDF_FINFO4(x) = fi;
+          }
+          MLDF_OWNER(slot) = param_1;
+          result = MLDF_SP_PTR(x);
+        }
+      }
+    }
+    break;
+  case 0x1b:
+  case 0x54:
+    result = MLDF_PTR(0x1b);
+    if ((result != 0) && (MLDF_OWNER(0x1b) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x54);
+    if ((result != 0) && (MLDF_OWNER(0x54) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_OWNER(0x1b) == -1) {
+        slot = 0x1b;
+      } else {
+        if (MLDF_OWNER(0x54) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x54;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, nm->fmtVoxmapBin, MLDF_MAP_NAME(param_1));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        sprintf(buf, nm->fmtWarlockVoxmap);
+        ok = DVDOpen(buf, (void *)fi);
+        if (ok == 0) {
+          result = 0;
+          break;
+        }
+      }
+      MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+      if (MLDF_SP_SIZE(x) == 0) {
+        sprintf(buf, nm->fmtWarlockVoxmap);
+        ok = DVDOpen(buf, (void *)fi);
+        if (ok == 0) {
+          result = 0;
+          break;
+        }
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+      }
+      MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+      DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+      if (sync != 0) {
+        DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+        DVDClose((void *)fi);
+        AtomicSList_Push(lbl_803DCC8C, fi);
+        if (((lbl_803DCC80 & 0x2000000) == 0) && ((lbl_803DCC80 & 0x8000000) == 0)) {
+          mergeTableFiles(t->mergeVoxMap, 0x1a, 0x53, 0x800);
+        }
+      } else {
+        if (slot == 0x1b) {
+          lbl_803DCC80 = lbl_803DCC80 | 0x1000000;
+        } else {
+          lbl_803DCC80 = lbl_803DCC80 | 0x4000000;
+        }
+        MLDF_FINFO4(x) = fi;
+        DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapReadCb, 2);
+      }
+      MLDF_OWNER(slot) = param_1;
+      result = MLDF_SP_PTR(x);
+    }
+    break;
+  case 0x1a:
+  case 0x53:
+    result = MLDF_PTR(0x1a);
+    if ((result != 0) && (MLDF_OWNER(0x1a) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x53);
+    if ((result != 0) && (MLDF_OWNER(0x53) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_OWNER(0x1a) == -1) {
+        slot = 0x1a;
+      } else {
+        if (MLDF_OWNER(0x53) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x53;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, nm->fmtVoxmapTab, MLDF_MAP_NAME(param_1));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        if (MLDF_SP_SIZE(x) == 0) {
+          AtomicSList_Push(lbl_803DCC8C, fi);
+          result = 0;
+        } else {
+          MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+          DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+          if (sync != 0) {
+            DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+            DVDClose((void *)fi);
+            AtomicSList_Push(lbl_803DCC8C, fi);
+            if (((lbl_803DCC80 & 0x2000000) == 0) && ((lbl_803DCC80 & 0x8000000) == 0)) {
+              mergeTableFiles(t->mergeVoxMap, 0x1a, 0x53, 0x800);
+            }
+          } else {
+            if (slot == 0x1a) {
+              lbl_803DCC80 = lbl_803DCC80 | 0x2000000;
+            } else {
+              lbl_803DCC80 = lbl_803DCC80 | 0x8000000;
+            }
+            MLDF_FINFO4(x) = fi;
+            DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, voxMapTabReadCb, 2);
+          }
+          MLDF_OWNER(slot) = param_1;
+          result = MLDF_SP_PTR(x);
+        }
+      }
+    }
+    break;
+  case 0x25:
+  case 0x47:
+    result = MLDF_PTR(0x25);
+    if ((result != 0) && (MLDF_OWNER(0x25) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x47);
+    if ((result != 0) && (MLDF_OWNER(0x47) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_ID(0x25) == param_1) {
+        slot = 0x25;
+        MLDF_ID(0x25) = -1;
+      } else if (MLDF_ID(0x47) == param_1) {
+        slot = 0x47;
+        MLDF_ID(0x47) = -1;
+      } else if (MLDF_OWNER(0x25) == -1) {
+        slot = 0x25;
+      } else {
+        if (MLDF_OWNER(0x47) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x47;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      if (param_1 < 5) {
+        sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(param_1), param_1);
+      } else {
+        sprintf(buf, nm->fmtModBin, MLDF_MAP_NAME(param_1), param_1 + 1);
+      }
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+        tmp = MLDF_SP_PTR(x);
+        if (tmp == 0) {
+          if (MLDF_ID(param_2) == -1) {
+            texRestructRefs(1);
+          }
+          DVDClose((void *)fi);
+          AtomicSList_Push(lbl_803DCC8C, fi);
+          MLDF_SP_SIZE(x) = 0;
+          MLDF_SP_ID(x) = param_1;
+          result = 0;
+        } else {
+          if (sync != 0) {
+            DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
+            DVDClose((void *)fi);
+            AtomicSList_Push(lbl_803DCC8C, fi);
+            if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0)) {
+              mergeTableFiles(t->mergeBlocks, 0x26, 0x48, 0x800);
+            }
+          } else {
+            if (slot == 0x25) {
+              lbl_803DCC80 = lbl_803DCC80 | 0x10000;
+            } else {
+              lbl_803DCC80 = lbl_803DCC80 | 0x40000;
+            }
+            MLDF_FINFO4(x) = fi;
+            DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, blocksReadCb, 2);
+          }
+          MLDF_OWNER(slot) = param_1;
+          result = MLDF_SP_PTR(x);
+        }
+      }
+    }
+    break;
+  case 0x26:
+  case 0x48: {
+    int idx;
+    int *grp;
+    int n;
+    result = MLDF_PTR(0x26);
+    if ((result != 0) && (MLDF_OWNER(0x26) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x48);
+    if ((result != 0) && (MLDF_OWNER(0x48) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_OWNER(0x26) == -1) {
+        slot = 0x26;
+      } else {
+        if (MLDF_OWNER(0x48) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x48;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      tmp = 0;
+      grp = MLDF_REMAP;
+      n = 0xf;
+      do {
+        idx = tmp;
+        if ((((param_1 == grp[0]) || (idx = tmp + 1, param_1 == grp[1])) ||
+             (idx = tmp + 2, param_1 == grp[2])) ||
+            ((idx = tmp + 3, param_1 == grp[3] || (idx = tmp + 4, param_1 == grp[4])))) {
+          break;
+        }
+        grp = grp + 5;
+        tmp = tmp + 5;
+        n = n - 1;
+        idx = tmp;
+      } while (n != 0);
+      piRomLoadSection(0, idx, 0);
+      if (param_1 < 5) {
+        sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(param_1), param_1);
+      } else {
+        sprintf(buf, nm->fmtModTab, MLDF_MAP_NAME(param_1), param_1 + 1);
+      }
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+        if (sync != 0) {
+          DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+          DVDClose((void *)fi);
+          AtomicSList_Push(lbl_803DCC8C, fi);
+          if (((lbl_803DCC80 & 0x20000) == 0) && ((lbl_803DCC80 & 0x80000) == 0)) {
+            mergeTableFiles(t->mergeBlocks, 0x26, 0x48, 0x800);
+          }
+        } else {
+          if (slot == 0x26) {
+            lbl_803DCC80 = lbl_803DCC80 | 0x20000;
+          } else {
+            lbl_803DCC80 = lbl_803DCC80 | 0x80000;
+          }
+          MLDF_FINFO4(x) = fi;
+          DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, blocksTabReadCb, 2);
+        }
+        MLDF_OWNER(slot) = param_1;
+        result = MLDF_SP_PTR(x);
+      }
+    }
+    break;
+  }
+  case 0x2b:
+  case 0x46:
+    result = MLDF_PTR(0x2b);
+    if ((result != 0) && (MLDF_OWNER(0x2b) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x46);
+    if ((result != 0) && (MLDF_OWNER(0x46) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_ID(0x2b) == param_1) {
+        slot = 0x2b;
+        MLDF_ID(0x2b) = -1;
+      } else if (MLDF_ID(0x46) == param_1) {
+        slot = 0x46;
+        MLDF_ID(0x46) = -1;
+      } else if (MLDF_OWNER(0x2b) == -1) {
+        slot = 0x2b;
+      } else {
+        if (MLDF_OWNER(0x46) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x46;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+        tmp = MLDF_SP_PTR(x);
+        if (tmp == 0) {
+          if (MLDF_ID(param_2) == -1) {
+            texRestructRefs(1);
+          }
+          DVDClose((void *)fi);
+          AtomicSList_Push(lbl_803DCC8C, fi);
+          MLDF_SP_SIZE(x) = 0;
+          MLDF_SP_ID(x) = param_1;
+          result = 0;
+        } else {
+          if (sync != 0) {
+            DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
+            DVDClose((void *)fi);
+            AtomicSList_Push(lbl_803DCC8C, fi);
+            if (((lbl_803DCC80 & 4) == 0) && ((lbl_803DCC80 & 8) == 0)) {
+              mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
+            }
+            lbl_803DCC7C = lbl_803DCC7C + 1;
+          } else {
+            lbl_803DCC7C = lbl_803DCC7C + 1;
+            if (slot == 0x2b) {
+              lbl_803DCC80 = lbl_803DCC80 | 1;
+            } else {
+              lbl_803DCC80 = lbl_803DCC80 | 2;
+            }
+            MLDF_FINFO4(x) = fi;
+            DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, modelsReadCb, 2);
+          }
+          MLDF_OWNER(slot) = param_1;
+          result = MLDF_SP_PTR(x);
+        }
+      }
+    }
+    break;
+  case 0x2a:
+  case 0x45:
+    result = MLDF_PTR(0x2a);
+    if ((result != 0) && (MLDF_OWNER(0x2a) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x45);
+    if ((result != 0) && (MLDF_OWNER(0x45) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_OWNER(0x2a) == -1) {
+        slot = 0x2a;
+      } else {
+        if (MLDF_OWNER(0x45) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x45;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+        if (sync != 0) {
+          DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+          DVDClose((void *)fi);
+          AtomicSList_Push(lbl_803DCC8C, fi);
+          if (((lbl_803DCC80 & 4) == 0) && ((lbl_803DCC80 & 8) == 0)) {
+            mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
+          }
+        } else {
+          if (slot == 0x2a) {
+            lbl_803DCC80 = lbl_803DCC80 | 4;
+          } else {
+            lbl_803DCC80 = lbl_803DCC80 | 8;
+          }
+          MLDF_FINFO4(x) = fi;
+          DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, modelsTabReadCb, 2);
+        }
+        MLDF_OWNER(slot) = param_1;
+        result = MLDF_SP_PTR(x);
+      }
+    }
+    break;
+  case 0x30:
+  case 0x4a:
+    result = MLDF_PTR(0x30);
+    if ((result != 0) && (MLDF_OWNER(0x30) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x4a);
+    if ((result != 0) && (MLDF_OWNER(0x4a) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_ID(0x30) == param_1) {
+        slot = 0x30;
+        MLDF_ID(0x30) = -1;
+      } else if (MLDF_ID(0x4a) == param_1) {
+        slot = 0x4a;
+        MLDF_ID(0x4a) = -1;
+      } else if (MLDF_OWNER(0x30) == -1) {
+        slot = 0x30;
+      } else {
+        if (MLDF_OWNER(0x4a) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x4a;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+        tmp = MLDF_SP_PTR(x);
+        if (tmp == 0) {
+          if (MLDF_ID(param_2) == -1) {
+            texRestructRefs(1);
+          }
+          DVDClose((void *)fi);
+          AtomicSList_Push(lbl_803DCC8C, fi);
+          MLDF_SP_SIZE(x) = 0;
+          MLDF_SP_ID(x) = param_1;
+          result = 0;
+        } else {
+          if (sync != 0) {
+            DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
+            DVDClose((void *)fi);
+            AtomicSList_Push(lbl_803DCC8C, fi);
+            if (((lbl_803DCC80 & 0x40) == 0) && ((lbl_803DCC80 & 0x80) == 0)) {
+              mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
+            }
+          } else {
+            if (slot == 0x30) {
+              lbl_803DCC80 = lbl_803DCC80 | 0x10;
+            } else {
+              lbl_803DCC80 = lbl_803DCC80 | 0x20;
+            }
+            MLDF_FINFO4(x) = fi;
+            DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, animReadCb, 2);
+          }
+          MLDF_OWNER(slot) = param_1;
+          result = MLDF_SP_PTR(x);
+        }
+      }
+    }
+    break;
+  case 0x2f:
+  case 0x49:
+    result = MLDF_PTR(0x2f);
+    if ((result != 0) && (MLDF_OWNER(0x2f) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x49);
+    if ((result != 0) && (MLDF_OWNER(0x49) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_OWNER(0x2f) == -1) {
+        slot = 0x2f;
+      } else {
+        if (MLDF_OWNER(0x49) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x49;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+        if (sync != 0) {
+          DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+          DVDClose((void *)fi);
+          AtomicSList_Push(lbl_803DCC8C, fi);
+          if (((lbl_803DCC80 & 0x40) == 0) && ((lbl_803DCC80 & 0x80) == 0)) {
+            mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
+          }
+        } else {
+          if (slot == 0x2f) {
+            lbl_803DCC80 = lbl_803DCC80 | 0x40;
+          } else {
+            lbl_803DCC80 = lbl_803DCC80 | 0x80;
+          }
+          MLDF_FINFO4(x) = fi;
+          DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, animTabReadCb, 2);
+        }
+        MLDF_OWNER(slot) = param_1;
+        result = MLDF_SP_PTR(x);
+      }
+    }
+    break;
+  case 0x23:
+  case 0x4d:
+    result = MLDF_PTR(0x23);
+    if ((result != 0) && (MLDF_OWNER(0x23) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x4d);
+    if ((result != 0) && (MLDF_OWNER(0x4d) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_ID(0x23) == param_1) {
+        slot = 0x23;
+        MLDF_ID(0x23) = -1;
+      } else if (MLDF_ID(0x4d) == param_1) {
+        slot = 0x4d;
+        MLDF_ID(0x4d) = -1;
+      } else if (MLDF_OWNER(0x23) == -1) {
+        slot = 0x23;
+      } else {
+        if (MLDF_OWNER(0x4d) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x4d;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
+        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+        tmp = MLDF_SP_PTR(x);
+        if (tmp == 0) {
+          if (MLDF_ID(param_2) == -1) {
+            texRestructRefs(1);
+          }
+          DVDClose((void *)fi);
+          AtomicSList_Push(lbl_803DCC8C, fi);
+          MLDF_SP_SIZE(x) = 0;
+          MLDF_SP_ID(x) = param_1;
+          result = 0;
+        } else {
+          if (sync != 0) {
+            DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
+            DVDClose((void *)fi);
+            AtomicSList_Push(lbl_803DCC8C, fi);
+            if (((lbl_803DCC80 & 0x400) == 0) && ((lbl_803DCC80 & 0x800) == 0)) {
+              mergeTableFiles(t->mergeTex0, 0x24, 0x4e, 0x1000);
+            }
+          } else {
+            if (slot == 0x23) {
+              lbl_803DCC80 = lbl_803DCC80 | 0x100;
+            } else {
+              lbl_803DCC80 = lbl_803DCC80 | 0x200;
+            }
+            MLDF_FINFO4(x) = fi;
+            DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, tex0readCb, 2);
+          }
+          MLDF_OWNER(slot) = param_1;
+          result = MLDF_SP_PTR(x);
+        }
+      }
+    }
+    break;
+  case 0x24:
+  case 0x4e:
+    result = MLDF_PTR(0x24);
+    if ((result != 0) && (MLDF_OWNER(0x24) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x4e);
+    if ((result != 0) && (MLDF_OWNER(0x4e) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_OWNER(0x24) == -1) {
+        slot = 0x24;
+      } else {
+        if (MLDF_OWNER(0x4e) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x4e;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
+        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+        if (sync != 0) {
+          DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+          DVDClose((void *)fi);
+          AtomicSList_Push(lbl_803DCC8C, fi);
+          if (((lbl_803DCC80 & 0x400) == 0) && ((lbl_803DCC80 & 0x800) == 0)) {
+            mergeTableFiles(t->mergeTex0, 0x24, 0x4e, 0x1000);
+          }
+        } else {
+          MLDF_FINFO4(x) = fi;
+          if (slot == 0x24) {
+            lbl_803DCC80 = lbl_803DCC80 | 0x400;
+            DVDReadAsyncPrio((void *)fi, (void *)MLDF_PTR(0x24), MLDF_SIZE(0x24), 0, tex0tab1readCb, 2);
+          } else {
+            lbl_803DCC80 = lbl_803DCC80 | 0x800;
+            DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex0tab2readCb, 2);
+          }
+        }
+        MLDF_OWNER(slot) = param_1;
+        result = MLDF_SP_PTR(x);
+      }
+    }
+    break;
+  case 0x20:
+  case 0x4b:
+    result = MLDF_PTR(0x20);
+    if ((result != 0) && (MLDF_OWNER(0x20) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x4b);
+    if ((result != 0) && (MLDF_OWNER(0x4b) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_ID(0x20) == param_1) {
+        slot = 0x20;
+        MLDF_ID(0x20) = -1;
+      } else if (MLDF_ID(0x4b) == param_1) {
+        slot = 0x4b;
+        MLDF_ID(0x4b) = -1;
+      } else if (MLDF_OWNER(0x20) == -1) {
+        slot = 0x20;
+      } else {
+        if (MLDF_OWNER(0x4b) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x4b;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x) + 0x20, 0x7d7d7d7d, 0);
+        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+        tmp = MLDF_SP_PTR(x);
+        if (tmp == 0) {
+          if (MLDF_ID(param_2) == -1) {
+            texRestructRefs(1);
+          }
+          DVDClose((void *)fi);
+          AtomicSList_Push(lbl_803DCC8C, fi);
+          MLDF_SP_SIZE(x) = 0;
+          MLDF_SP_ID(x) = param_1;
+          result = 0;
+        } else {
+          if (sync != 0) {
+            DVDRead((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0);
+            DVDClose((void *)fi);
+            AtomicSList_Push(lbl_803DCC8C, fi);
+            if (((lbl_803DCC80 & 0x4000) == 0) && ((lbl_803DCC80 & 0x8000) == 0)) {
+              mergeTableFiles(t->mergeTex1, 0x21, 0x4c, 0x1000);
+            }
+          } else {
+            if (slot == 0x20) {
+              lbl_803DCC80 = lbl_803DCC80 | 0x1000;
+            } else {
+              lbl_803DCC80 = lbl_803DCC80 | 0x2000;
+            }
+            MLDF_FINFO4(x) = fi;
+            DVDReadAsyncPrio((void *)fi, (void *)tmp, MLDF_SP_SIZE(x), 0, tex1ReadCb, 2);
+          }
+          MLDF_OWNER(slot) = param_1;
+          result = MLDF_SP_PTR(x);
+        }
+      }
+    }
+    break;
+  case 0x21:
+  case 0x4c:
+    result = MLDF_PTR(0x21);
+    if ((result != 0) && (MLDF_OWNER(0x21) == param_1)) {
+      break;
+    }
+    result = MLDF_PTR(0x4c);
+    if ((result != 0) && (MLDF_OWNER(0x4c) == param_1)) {
+      break;
+    }
+    {
+      if (MLDF_OWNER(0x21) == -1) {
+        slot = 0x21;
+      } else {
+        if (MLDF_OWNER(0x4c) != -1) {
+          result = 0;
+          break;
+        }
+        slot = 0x4c;
+      }
+      if (MLDF_SP_PTR(x) != 0) {
+        mm_free((void *)MLDF_SP_PTR(x));
+        MLDF_SP_PTR(x) = 0;
+      }
+      sprintf(buf, &sArchivePathFormat, MLDF_MAP_NAME(param_1), MLDF_FILE_NAME(param_2));
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        result = 0;
+      } else {
+        MLDF_SP_SIZE(x) = *(int *)(fi + 0x34);
+        MLDF_SP_PTR(x) = (int)mmAlloc(MLDF_SP_SIZE(x), 0x7d7d7d7d, 0);
+        DCInvalidateRange((void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x));
+        if (sync != 0) {
+          DVDRead((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0);
+          DVDClose((void *)fi);
+          AtomicSList_Push(lbl_803DCC8C, fi);
+          if (((lbl_803DCC80 & 0x4000) == 0) && ((lbl_803DCC80 & 0x8000) == 0)) {
+            mergeTableFiles(t->mergeTex1, 0x21, 0x4c, 0x1000);
+          }
+        } else {
+          MLDF_FINFO4(x) = fi;
+          if (slot == 0x21) {
+            lbl_803DCC80 = lbl_803DCC80 | 0x4000;
+            DVDReadAsyncPrio((void *)fi, (void *)MLDF_PTR(0x21), MLDF_SIZE(0x21), 0, tex1tab1readCb, 2);
+          } else {
+            lbl_803DCC80 = lbl_803DCC80 | 0x8000;
+            DVDReadAsyncPrio((void *)fi, (void *)MLDF_SP_PTR(x), MLDF_SP_SIZE(x), 0, tex1tab2readCb, 2);
+          }
+        }
+        MLDF_OWNER(slot) = param_1;
+        result = MLDF_SP_PTR(x);
+      }
+    }
+    break;
+  default:
+    result = 0;
+    break;
+  }
+  return result;
 }
 #pragma dont_inline reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -658,66 +1707,50 @@ void FUN_80044424(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void piRomLoadSection(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,uint param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+extern int lbl_8035F208[];
+extern u32 lbl_8035F3E8[];
+extern char *sMapFileNameTable[];
+extern char sRomlistZlbPathFormat[];
+extern int lbl_803DCC74;
+extern void romListReadCb();
+extern void zlbDecompress(void *dst, int size, int out, void *src);
+extern void DCStoreRange(void *p, u32 n);
+void piRomLoadSection(int param_1,int param_2,int param_3)
 {
-  undefined4 *puVar1;
-  int iVar2;
-  int *piVar3;
-  int iVar4;
-  undefined8 extraout_f1;
-  undefined8 uVar5;
-  undefined8 uVar6;
-  char acStack_418 [1048];
-  
-  uVar6 = FUN_80286840();
-  iVar4 = (int)uVar6;
-  if ((param_11 == 0) && ((&DAT_8035fe68)[iVar4] == 0)) {
-    uVar6 = FUN_8028fde8(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                         (int)acStack_418,sRomlistZlbPathFormat,
-                         (&PTR_s_frontend_802cc518)[iVar4],param_12,param_13,param_14,param_15,
-                         param_16);
-    puVar1 = FUN_80017844(DAT_803dd90c);
-    iVar2 = FUN_80249300(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,acStack_418,
-                         (int)puVar1);
-    if (iVar2 != 0) {
-      iVar2 = FUN_80017830(puVar1[0xd],0x7d7d7d7d);
-      (&DAT_8035fe68)[iVar4] = iVar2;
-      DAT_803dd8f4 = 1;
-      FUN_80249610(uVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar1,
-                   (&DAT_8035fe68)[iVar4],puVar1[0xd],0,FUN_800414b8,2,param_15,param_16);
-    }
-  }
-  else {
-    if ((&DAT_8035fe68)[iVar4] == 0) {
-      uVar5 = FUN_8028fde8(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                           (int)acStack_418,sRomlistZlbPathFormat,
-                           (&PTR_s_frontend_802cc518)[iVar4],param_12,param_13,param_14,param_15,
-                           param_16);
-      piVar3 = FUN_80017844(DAT_803dd90c);
-      iVar2 = FUN_80249300(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,acStack_418
-                           ,(int)piVar3);
-      if (iVar2 == 0) goto LAB_80048640;
-      iVar2 = FUN_80017830(piVar3[0xd],0x7d7d7d7d);
-      (&DAT_8035fe68)[iVar4] = iVar2;
-      FUN_80006c30(uVar5,param_2,param_3,param_4,param_5,param_6,param_7,param_8,piVar3,
-                   (&DAT_8035fe68)[iVar4],piVar3[0xd],0,param_13,param_14,param_15,param_16);
-      FUN_802493c8(piVar3);
-      FUN_8001784c(DAT_803dd90c,piVar3);
-    }
-    piVar3 = (int *)(DAT_803600bc + (int)((ulonglong)uVar6 >> 0x20));
-    if (*piVar3 == -0x5310113) {
-      FUN_80047000((&DAT_8035fe68)[iVar4] + 0x10,piVar3[3],param_11);
-      FUN_80242114(param_11,piVar3[1]);
-    }
-  }
-LAB_80048640:
-  FUN_8028688c();
-  return;
-}
+  char buf[1048];
+  int fi;
+  int ok;
+  int *p;
 
+  if ((param_3 == 0) && (lbl_8035F208[param_2] == 0)) {
+    sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[param_2]);
+    fi = AtomicSList_Pop(lbl_803DCC8C);
+    ok = DVDOpen(buf, (void *)fi);
+    if (ok != 0) {
+      lbl_8035F208[param_2] = (int)mmAlloc(*(int *)(fi + 0x34), 0x7d7d7d7d, 0);
+      lbl_803DCC74 = 1;
+      DVDReadAsyncPrio((void *)fi, (void *)lbl_8035F208[param_2], *(int *)(fi + 0x34), 0, romListReadCb, 2);
+    }
+  } else {
+    if (lbl_8035F208[param_2] == 0) {
+      sprintf(buf, sRomlistZlbPathFormat, sMapFileNameTable[param_2]);
+      fi = AtomicSList_Pop(lbl_803DCC8C);
+      ok = DVDOpen(buf, (void *)fi);
+      if (ok == 0) {
+        return;
+      }
+      lbl_8035F208[param_2] = (int)mmAlloc(*(int *)(fi + 0x34), 0x7d7d7d7d, 0);
+      DVDRead((void *)fi, (void *)lbl_8035F208[param_2], *(int *)(fi + 0x34), 0);
+      DVDClose((void *)fi);
+      AtomicSList_Push(lbl_803DCC8C, fi);
+    }
+    p = (int *)(lbl_8035F3E8[0x1d] + param_1);
+    if (*p == 0xfacefeed) {
+      zlbDecompress((void *)(lbl_8035F208[param_2] + 0x10), p[3], param_3, p + 1);
+      DCStoreRange((void *)param_3, p[1]);
+    }
+  }
+}
 /*
  * --INFO--
  *
