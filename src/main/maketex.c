@@ -2113,6 +2113,154 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
 #pragma scheduling reset
 #pragma peephole reset
 
+extern int Obj_GetPlayerObject(void);
+extern s16 getAngle(f32 x, f32 z);
+extern f32 sqrtf(f32 x);
+extern int ObjAnim_SetCurrentMove(int objAnim, int moveId, f32 moveProgress, int flags);
+extern int ObjAnim_SampleRootCurvePhase(f32 distance, int objAnim, f32 *phaseOut);
+extern int ObjAnim_AdvanceCurrentMove(int objAnim, f32 moveStepScale, f32 deltaTime, int flags);
+extern u8 framesThisStep;
+void objModelResetVecFn_80080548(int obj);
+
+/* EN v1.0 0x800805A4  size: 1564b  Object-sequence turn-to-face-player step:
+ * starts (mode 4) or advances (mode 5) a smooth turn of the object toward the
+ * player, blending the model vector and animation as it goes. */
+#pragma peephole off
+#pragma scheduling off
+int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
+{
+    int player;
+    s16 *v;
+    s16 yawd;
+    s16 turn;
+    int mode;
+    f32 out;
+    f32 d[3];
+    f32 dist;
+    f32 rate;
+    f32 g;
+
+    player = Obj_GetPlayerObject();
+    p4 = (s16)(182.04445f * p4);
+    p5 = (s16)(182.04445f * p5);
+    p3 = (s16)(182.04445f * p3);
+    mode = (s8)*(u8 *)(state + 0x56);
+    if (mode == 4) {
+        *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~2;
+        v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
+        if (v != NULL) {
+            *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~8;
+        }
+        *(void (**)(int))(state + 0xe8) = objModelResetVecFn_80080548;
+        *(f32 *)(state + 0x40) = 0.0f;
+        *(f32 *)(state + 0x44) = 0.0f;
+        *(f32 *)(state + 0x48) = 0.0f;
+        yawd = Obj_GetYawDeltaToObject(obj, player, 0);
+        if ((yawd >= 0 ? yawd : -yawd) < p4) {
+            turn = 0;
+        } else {
+            turn = (s16)(yawd > 0 ? yawd - p4 : yawd + p4);
+        }
+        *(s16 *)(state + 0x50) = turn;
+        {
+            f32 *dp = d;
+            f32 *ovr = *(f32 **)(obj + 0x74);
+            if (ovr == NULL) {
+                dp[0] = *(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc);
+                dp[1] = *(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10);
+                dp[2] = *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14);
+            } else {
+                dp[0] = *(f32 *)(player + 0xc) - ovr[0];
+                dp[1] = *(f32 *)(player + 0x10) - ovr[1];
+                dp[2] = *(f32 *)(player + 0x14) - ovr[2];
+            }
+            dp[1] += 30.0f;
+            dist = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
+            *(s16 *)(state + 0x52) = (s16)getAngle(dp[1], dist);
+        }
+        *(s16 *)(state + 0x54) = 0;
+        *(u8 *)(state + 0x56) = 5;
+        *(f32 *)(state + 0x4c) = 0.0f;
+        if (turn != 0) {
+            rate = (f32)p3 / (f32)turn;
+            *(f32 *)(state + 0x24) = rate >= 0.0f ? rate : -rate;
+        } else {
+            *(f32 *)(state + 0x24) = 1.0f;
+        }
+        {
+            f32 c = *(f32 *)(state + 0x24);
+            *(f32 *)(state + 0x24) = c < 0.0f ? 0.0f : (c > 0.25f ? 0.25f : c);
+        }
+        if (p6 != -1) {
+            if (p7 != -1) {
+                *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~4;
+                if (*(s16 *)(state + 0x50) < 0) {
+                    if (p7 != -1) {
+                        ObjAnim_SetCurrentMove(obj, p7, 0.0f, 0);
+                    }
+                } else {
+                    if (p6 != -1) {
+                        ObjAnim_SetCurrentMove(obj, p6, 0.0f, 0);
+                    }
+                }
+            }
+        }
+        *(void (**)(int))(state + 0xe8) = objModelResetVecFn_80080548;
+        return 1;
+    } else if (mode == 5) {
+        *(f32 *)(state + 0x4c) = *(f32 *)(state + 0x4c) + *(f32 *)(state + 0x24);
+        if (*(f32 *)(state + 0x4c) > 1.0f) {
+            *(f32 *)(state + 0x4c) = 1.0001f;
+        }
+        *(s16 *)(obj + 0x0) += (s16)(*(f32 *)(state + 0x24) * (f32)*(s16 *)(state + 0x50));
+        v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
+        if (v != NULL) {
+            *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~8;
+            yawd = Obj_GetYawDeltaToObject(obj, player, 0);
+            {
+                f32 yf = (f32)yawd;
+                f32 blend = *(f32 *)(state + 0x4c);
+                f32 cur = (f32)v[1];
+                g = cur * (1.0f - blend) + yf * blend;
+            }
+            if (g < (f32)-p5) {
+                g = (f32)-p5;
+            } else if (g > (f32)p5) {
+                g = (f32)p5;
+            }
+            v[1] = g;
+            v[0] = (f32)*(s16 *)(state + 0x52) * *(f32 *)(state + 0x4c);
+        }
+        if (p6 != -1) {
+            if (p7 != -1) {
+                s16 t50 = *(s16 *)(state + 0x50);
+                ObjAnim_SampleRootCurvePhase((f32)(t50 >= 0 ? t50 : -t50) * 3.142f / 325767.0f,
+                                             obj, &out);
+                ObjAnim_AdvanceCurrentMove(obj, out, (f32)framesThisStep, 0);
+            }
+        }
+        if (*(f32 *)(state + 0x4c) > 1.0f) {
+            *(u8 *)(state + 0x56) = 0;
+            *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 8;
+            v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
+            if (v != NULL) {
+                *(s16 *)(state + 0x114) = v[1];
+                *(s16 *)(state + 0x116) = v[0];
+            } else {
+                *(s16 *)(state + 0x114) = 0;
+                *(s16 *)(state + 0x116) = 0;
+            }
+            if (*(f32 *)(state + 0x4c) > 1.0f) {
+                *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 4;
+            }
+        }
+        return 1;
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern void AudioStream_StartPrepared(void);
 extern int lbl_803DD094;
 extern int lbl_803DB728;
