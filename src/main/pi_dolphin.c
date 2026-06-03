@@ -6851,6 +6851,100 @@ void fn_8004D230(void) {
     lbl_803DCD6A += 2;
     lbl_803DCD69 += 2;
 }
+extern void newshadows_getReflectionScrollOffsets(f32 *x, f32 *y);
+extern int lbl_803DCD84;
+extern f32 lbl_803DEAE0;
+extern f32 bootThisDol;
+extern f32 lbl_803DEAEC;
+extern f32 lbl_803DEAF0;
+void fn_8004CE0C(void *param_1) {
+    f32 mtx40[3][4];
+    f32 mtx70[3][4];
+    f32 sx;
+    f32 sy;
+    u8 *obj7c;
+    u8 *obj80;
+
+    GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 0, 0, 4);
+    GXSetTevColorIn(0, 0xf, 8, 10, 0xf);
+    GXSetTevAlphaIn(0, 4, 7, 5, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    mtx40[0][0] = lbl_803DEAE4;
+    mtx40[0][1] = lbl_803DEACC;
+    mtx40[0][2] = lbl_803DEACC;
+    mtx40[0][3] = lbl_803DEACC;
+    mtx40[1][0] = lbl_803DEACC;
+    mtx40[1][1] = lbl_803DEACC;
+    mtx40[1][2] = lbl_803DEAE4;
+    mtx40[1][3] = lbl_803DEACC;
+    GXLoadTexMtxImm(mtx40, 0x1e, 1);
+    GXSetTexCoordGen2(1, 1, 0, 0x1e, 0, 0x7d);
+    getTextureFn_8006c5e4(&obj7c);
+    if (obj7c != NULL) {
+        void *obj = obj7c + 0x20;
+        if (obj7c[0x48] != 0) {
+            GXLoadTexObjPreLoaded(obj, *(void **)(obj7c + 0x40), 2);
+        } else {
+            GXLoadTexObj(obj, 2);
+        }
+    }
+    newshadows_getReflectionScrollOffsets(&sx, &sy);
+    PSMTXTrans(mtx70, lbl_803DEAE0 * sx, lbl_803DEAE0 * sy, lbl_803DEACC);
+    mtx70[0][0] = bootThisDol;
+    mtx70[1][1] = bootThisDol;
+    GXLoadTexMtxImm(mtx70, 0x21, 1);
+    GXSetTexCoordGen2(2, 1, 0, 0x21, 0, 0x7d);
+    GXSetIndTexOrder(0, 2, 2);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetTevIndirect(1, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    GXSetTevKColorSel(1, 4);
+    GXSetTevOrder(1, 1, 1, 0xff);
+    GXSetTevColorIn(1, 8, 0xe, 0, 0);
+    GXSetTevAlphaIn(1, 7, 4, 0, 7);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 1, 1, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    fn_8006C5B8(&obj80);
+    if (obj80 != NULL) {
+        void *obj = obj80 + 0x20;
+        if (obj80[0x48] != 0) {
+            GXLoadTexObjPreLoaded(obj, *(void **)(obj80 + 0x40), 3);
+        } else {
+            GXLoadTexObj(obj, 3);
+        }
+    }
+    mtx40[0][0] = lbl_803DEACC;
+    mtx40[0][1] = lbl_803DEACC;
+    mtx40[0][2] = lbl_803DEAEC;
+    mtx40[0][3] = lbl_803DEAF0;
+    mtx40[1][0] = lbl_803DEACC;
+    mtx40[1][1] = lbl_803DEACC;
+    mtx40[1][2] = lbl_803DEACC;
+    mtx40[1][3] = lbl_803DEACC;
+    PSMTXConcat(mtx40, param_1, mtx40);
+    GXLoadTexMtxImm(mtx40, 0x24, 1);
+    GXSetTexCoordGen2(3, 1, 0, 0x24, 0, 0x7d);
+    GXSetTevDirect(2);
+    GXSetTevOrder(2, 3, 3, 0xff);
+    GXSetTevColorIn(2, 0xf, 0xf, 0xf, 0);
+    GXSetTevAlphaIn(2, 7, 4, 0, 7);
+    GXSetTevSwapMode(2, 0, 0);
+    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
+    lbl_803DCD90 = 3;
+    lbl_803DCD88 = 4;
+    lbl_803DCD8C = 4;
+    lbl_803DCD7C = 1;
+    lbl_803DCD84 = 0x27;
+    lbl_803DCD6A = 3;
+    lbl_803DCD69 = 4;
+    lbl_803DCD68 = 1;
+}
 #pragma peephole reset
 #pragma scheduling reset
 extern void VIConfigure(void *mode);
