@@ -4530,7 +4530,7 @@ int fn_80041D98(void *block) {
 
 extern f32 lbl_803DEA04;
 extern int *Obj_GetActiveModel(int *obj);
-extern void objRenderShadow2(int *obj, int *obj2, int model, int p4);
+extern void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4);
 extern void modelDoRenderInstrs(int *obj, int *obj2, int model, int p4);
 extern void objRenderChild(int *child, int *parent, u8 p3);
 #pragma dont_inline on
@@ -4542,7 +4542,7 @@ void objRenderShadow(int *obj) {
     {
         int *m = (int *)*Obj_GetActiveModel(obj);
         if (*(u8 *)((char *)m + 246) != 0) {
-            objRenderShadow2(obj, obj, (int)m, 1);
+            objRenderShadow2(obj, obj, (u8 *)m, 1);
         } else {
             modelDoRenderInstrs(obj, obj, (int)m, 1);
         }
@@ -5780,6 +5780,232 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
     }
 }
 
+extern void ObjModel_ToggleVertexBuffer(int *am);
+extern void PSMTXIdentity(f32 *m);
+extern void modelInitBoneMtxs2(int *am, f32 *wm, f32 *out);
+extern f32 lbl_80342E10[];
+extern void ObjModel_ApplyBlendChannels(int *am);
+extern void ObjModel_BlendPrimaryVertexStream(f32 *mtxs, u8 *p2, int p3, int p4, int p5);
+extern void ObjModel_BlendSecondaryVertexStream(f32 *mtxs, u8 *p2, int p3, int p4, int p5);
+extern void objUpdateHitSpheres(int *am, u8 *m, int *obj, int p4, int *p5);
+extern void GXSetNumTexGens(int n);
+extern void GXSetNumTevStages(int n);
+extern void GXSetNumIndStages(int n);
+extern void GXSetTevOrder(int stage, int coord, int map, int color);
+extern void GXSetTevDirect(int stage);
+extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevSwapMode(int stage, int ras, int tex);
+extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, int out);
+extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int out);
+extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjGXColor color);
+typedef void (*ObjShadowCb)(int *obj, int *am, f32 *wm);
+extern int *ObjModel_GetRenderOp(int am0, int idx);
+extern void GXSetTevColor(int id, u32 *color);
+
+void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
+    f32 cm[12];
+    f32 wm[16];
+    f32 im[16];
+    MtxBitStream bs;
+    u8 color[4];
+    u32 tev1;
+    u32 tev2;
+    int *am;
+    f32 *vm;
+    u8 did;
+    int *op;
+    int done;
+    u32 sh;
+
+    am = Obj_GetActiveModel(obj);
+    vm = Camera_GetViewMatrix();
+    if (curObjMtx != 0) {
+        PSMTXCopy((f32 *)curObjMtx, wm);
+        curObjMtx = 0;
+    } else {
+        Obj_BuildWorldTransformMatrix(obj, wm, 0);
+    }
+    if (!(*(u16 *)((char *)am + 0x18) & 8)) {
+        did = 0;
+        *(u8 *)((char *)am + 0x60) = 0;
+        ObjModel_ToggleVertexBuffer(am);
+        if (*(u16 *)(m + 0xec) != 0 && !(*(u16 *)(m + 2) & 2) && m[0xf3] != 0) {
+            if (*(u32 *)(m + 0xa4) != 0) {
+                PSMTXIdentity(im);
+                ObjModel_UpdateAnimMatrices(am, m, obj, im);
+                modelInitBoneMtxs2(am, wm, lbl_80342E10);
+                did = 1;
+            } else {
+                ObjModel_UpdateAnimMatrices(am, m, obj, wm);
+            }
+            {
+                ObjShadowCb cb = *(ObjShadowCb *)((char *)obj + 0x108);
+                if (cb != NULL && obj2 == obj) {
+                    cb(obj, am, wm);
+                }
+            }
+        } else {
+            ObjModel_ToggleMatrixBuffer(am);
+            PSMTXCopy(wm, (f32 *)ObjModel_GetJointMatrix(am, 0));
+        }
+        if (m[0xf9] != 0) {
+            ObjModel_ApplyBlendChannels(am);
+        }
+        if (did != 0) {
+            int vtx;
+            if (*(u8 *)((char *)am + 0x60) != 0) {
+                vtx = ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1];
+            } else {
+                vtx = *(int *)(m + 0x28);
+            }
+            ObjModel_BlendPrimaryVertexStream(lbl_80342E10, m + 0x88, vtx, *(int *)((char *)am + 0x40), ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1]);
+            ObjModel_BlendSecondaryVertexStream(lbl_80342E10, m + 0xac, *(int *)(m + 0x2c), *(int *)((char *)am + 0x44), m[0x24] & 8);
+        }
+        if (m[0xf7] != 0) {
+            objUpdateHitSpheres(am, m, obj, 0, obj2);
+        } else {
+            u8 *att = *(u8 **)((char *)obj + 0x54);
+            if (att != NULL) {
+                att[0xaf] = att[0xaf] - 1;
+                if (*(s8 *)(*(char **)((char *)obj + 0x54) + 0xaf) < 0) {
+                    *(u8 *)(*(char **)((char *)obj + 0x54) + 0xaf) = 0;
+                }
+            }
+        }
+        *(u16 *)((char *)am + 0x18) |= 8;
+    }
+    modelInitMtxs(m, am);
+    modelRenderInstrsState_init(&bs, *(u8 **)(m + 0xd4), *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
+    if (*(u32 *)(m + 0xa4) != 0) {
+        PSMTXConcat(vm, wm, cm);
+        GXLoadPosMtxImm(cm, lbl_802CAED0[9]);
+    }
+    {
+        u8 *o;
+        u8 *nxt;
+        o = (u8 *)obj;
+        while ((nxt = *(u8 **)(o + 0xc4)) != NULL) {
+            o = nxt;
+        }
+        sh = (*(u8 **)(*(u8 **)(o + 0x64) + 0xc))[0x65];
+        if (sh == 0xff) {
+            tev1 = lbl_803DB468;
+            GXSetTevColor(3, &tev1);
+            GXSetBlendMode(0, 1, 0, 5);
+        } else {
+            if (sh < 8) {
+                color[0] = 1 << sh;
+                color[1] = 0;
+                color[2] = 0;
+            } else {
+                color[0] = 0;
+                color[1] = 1 << (sh - 8);
+                color[2] = 0;
+            }
+            color[3] = 0xff;
+            tev2 = *(u32 *)color;
+            GXSetTevColor(3, &tev2);
+            GXSetBlendMode(2, 1, 0, 7);
+        }
+    }
+    GXSetNumTexGens(0);
+    GXSetNumTevStages(1);
+    GXSetNumIndStages(0);
+    GXSetTevOrder(0, 0xff, 0xff, 4);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 6);
+    GXSetTevAlphaIn(0, 7, 7, 7, 3);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetFog(0, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, lbl_803DEA04, *(ObjGXColor *)&lbl_803DB468);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(1);
+    if ((*(u8 **)((char *)obj + 0x50))[0x5f] & 4) {
+        gxSetZMode_(1, 3, 1);
+        GXSetCullMode(1);
+    } else {
+        gxSetZMode_(0, 3, 0);
+        GXSetCullMode(0);
+    }
+    GXSetArray(9, ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1], 6);
+    done = 0;
+    while (!done) {
+        u32 op4;
+        {
+            u32 w;
+            int pos = bs.pos;
+            u8 *p = bs.data + (pos >> 3);
+            w = p[0];
+            w |= p[1] << 8;
+            w |= p[2] << 16;
+            bs.pos = pos + 4;
+            op4 = (w >> (pos & 7)) & 0xf;
+        }
+        switch (op4) {
+        case 3:
+            GXClearVtxDesc();
+            if (m[0xf3] > 1) {
+                GXSetVtxDesc(0, 1);
+            }
+            {
+                u32 w;
+                int pos = bs.pos;
+                u8 *p = (u8 *)((pos >> 3) + (char *)bs.data);
+                w = p[0];
+                w |= p[1] << 8;
+                w |= p[2] << 16;
+                bs.pos = pos + 1;
+                GXSetVtxDesc(9, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
+            }
+            if (((u8 *)op)[0x40] & 1) {
+                bs.pos += 1;
+            }
+            if (((u8 *)op)[0x40] & 2) {
+                bs.pos += 1;
+            }
+            GXSetVtxDesc(0xb, 1);
+            bs.pos += 1;
+            break;
+        case 1:
+            {
+                u32 w;
+                int pos = bs.pos;
+                u8 *p = bs.data + (pos >> 3);
+                w = p[0];
+                w |= p[1] << 8;
+                w |= p[2] << 16;
+                bs.pos = pos + 6;
+                op = ObjModel_GetRenderOp((int)m, (w >> (pos & 7)) & 0x3f);
+            }
+            break;
+        case 2:
+            {
+                u8 *dl;
+                u32 w;
+                int pos = bs.pos;
+                u8 *p = bs.data + (pos >> 3);
+                w = p[0];
+                w |= p[1] << 8;
+                w |= p[2] << 16;
+                bs.pos = pos + 8;
+                dl = modelFileGetDisplayList(m, m[0xf5] + ((w >> (pos & 7)) & 0xff));
+                GXCallDisplayList(*(void **)dl, *(u16 *)(dl + 4));
+            }
+            break;
+        case 4:
+            modelLoadMtxsToGx((int)m, am, &bs, vm);
+            break;
+        case 5:
+            done = 1;
+            break;
+        }
+    }
+}
+
 extern u8 *Shader_getLayer(u8 *shader, int idx);
 extern void gxTextureFn_80050e28(int flag);
 extern void *textureCrazyPointerFollowFn_80054c30(void *tex, int p2);
@@ -5935,12 +6161,10 @@ u8 modelRenderFn_8003e98c(u8 *obj, u8 *shader, u32 *p3, int mask, int p5, int p6
     return ok;
 }
 
-extern int *ObjModel_GetRenderOp(int am0, int idx);
 extern u32 *ObjModel_GetRenderOpTextureRefs(int *am, int idx);
 extern ObjModelRenderCb ObjModel_GetPostRenderCallback(int *am);
 extern u8 textureFn_80050ad8(void *tex, int n, int p3, u32 p4);
 extern void textureFn_80051348(u32 ref, int p2);
-extern void GXSetTevColor(int id, u32 *color);
 extern void fn_800510F0(u32 ref, int p2, int p3);
 extern void fn_80050FF4(int p1);
 extern void fn_8004D230(void);
