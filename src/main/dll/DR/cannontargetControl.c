@@ -972,3 +972,255 @@ void blasted_update(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int  timerCountDown(void *p);
+extern void s16toFloat(void *p, int v);
+extern void memset(void *p, int c, int n);
+extern int  playerIsDisguised(u8 *player);
+extern int  timer_isEffectMode(int obj);
+extern void timer_clearManualFlags(int obj);
+extern void timer_forceStart(int obj);
+extern int  timer_hasExpired(int obj);
+extern int  barrelgener_getLinkId(int gen);
+extern void barrelgener_queueObjectRelease(int gen, int obj, int code);
+extern void objRemoveFromListFn_8002ce88(int obj);
+extern u32  playerGetStateFlag310(u8 *player);
+extern void setAButtonIcon(int kind);
+extern void saveGame_saveObjectPos(int obj);
+extern int  fn_802966B4(u8 *player);
+extern int  fn_8029669C(u8 *player);
+extern f32  fn_80296214(u8 *player);
+extern f32  fn_80293E80(f32 x);
+extern f32  sin(f32 x);
+extern void gunpowderbarrel_updatePhysics(int obj);
+extern void fn_801A1230(int obj);
+extern u8  *Obj_GetPlayerObject(void);
+extern u8   framesThisStep;
+extern f32  timeDelta;
+extern f32  lbl_803E4338;
+extern f32  lbl_803E42DC;
+extern f32  lbl_803E433C;
+extern f32  lbl_803E4340;
+extern f32  lbl_803DBE80;
+
+/* EN v1.0 0x801A1D48  size: 2208b  Gunpowder-barrel per-frame driver: runs
+ * the fuse/respawn timers, manages the cannon attach link, drains the
+ * held/released message queue, grows the hitbox while the fuse burns and
+ * hands the barrel back to its generator, and handles the pickup/steal/toss
+ * transitions against the player's carry state. */
+#pragma scheduling off
+#pragma peephole off
+void gunpowderbarrel_update(int obj)
+{
+    int st = *(int *)(obj + 0xb8);
+    u8 *player = Obj_GetPlayerObject();
+    int def = *(int *)(obj + 0x4c);
+
+    if (*(f32 *)(st + 0x54) <= lbl_803E4334) {
+        *(f32 *)(st + 0x54) += timeDelta;
+    }
+    if (fn_80080150((void *)(st + 0x18)) != 0) {
+        *(u8 *)(obj + 0xaf) |= 8;
+        if (timerCountDown((void *)(st + 0x18)) != 0) {
+            *(u8 *)(st + 0x17) = 0;
+            *(u8 *)(st + 0x16) = 0;
+            *(u8 *)(st + 0x49) |= 1;
+            *(s16 *)(obj + 6) &= ~0x4000;
+            ObjHits_ClearHitVolumes(obj);
+            ObjHitbox_SetCapsuleBounds(obj, 8, -2, 0x19);
+            ObjHits_EnableObject(obj);
+            ObjHits_SyncObjectPositionIfDirty(obj);
+            gunpowderbarrel_updatePhysics(obj);
+            gunpowderbarrel_setPlayerHeldState(obj, 0);
+        }
+        return;
+    }
+    if (fn_80080150((void *)(st + 0x1c)) != 0) {
+        *(u8 *)(obj + 0xaf) |= 8;
+        timerCountDown((void *)(st + 0x1c));
+        memset((void *)(st + 0x20), 0, 0xc);
+        memset((void *)(obj + 0x24), 0, 0xc);
+        return;
+    }
+    if (((BarrelBits *)(st + 0x4a))->b5 == 0) {
+        if (((BarrelBits *)(st + 0x4a))->b1 != 0 && playerIsDisguised(player) == 0) {
+            *(u8 *)(obj + 0xaf) |= 0x10;
+        } else {
+            *(u8 *)(obj + 0xaf) &= ~0x10;
+        }
+    }
+    if (*(void **)(obj + 0xc8) == NULL) {
+        f32 range = lbl_803E4338;
+        if ((u32)(*(int *)(st + 0x10) = ObjGroup_FindNearestObject(0x4c, obj, &range)) != 0 &&
+            timer_isEffectMode(*(int *)(st + 0x10)) != 0 &&
+            *(void **)(*(int *)(st + 0x10) + 0xc4) == NULL) {
+            ObjLink_AttachChild(obj, *(int *)(st + 0x10), 0);
+        }
+    } else {
+        if (Obj_IsObjectAlive(*(int *)(st + 0x10)) == 0 && *(void **)(st + 0x10) != NULL) {
+            ObjLink_DetachChild(obj, *(int *)(st + 0x10));
+            *(int *)(st + 0x10) = 0;
+        }
+    }
+    {
+        u32 arg;
+        int msg;
+        msg = 0;
+        arg = 0;
+        while (ObjMsg_Pop(obj, &msg, 0, &arg) != 0) {
+            switch (msg) {
+            case 0xf:
+                gunpowderbarrel_setPlayerHeldState(obj, 1);
+                break;
+            case 0x10:
+                gunpowderbarrel_setPlayerHeldState(obj, 0);
+                if (arg != 0) {
+                    ObjGroup_AddObject(obj, 0x16);
+                }
+                break;
+            }
+        }
+    }
+    if (((BarrelBits *)(st + 0x4a))->b5 != 0) {
+        *(u8 *)(obj + 0xaf) |= 8;
+    } else {
+        *(u8 *)(obj + 0xaf) &= ~8;
+    }
+    if (*(u8 *)(st + 0x17) != 0) {
+        *(u8 *)(st + 0x17) += framesThisStep;
+        *(f32 *)(st + 0x2c) =
+            *(f32 *)(st + 0x34) * (f32)(u32)*(u8 *)(st + 0x17) + lbl_803E42DC;
+        ObjHitbox_SetCapsuleBounds(obj, (s32)*(f32 *)(st + 0x2c),
+                                   (s32)(-*(f32 *)(st + 0x2c) * lbl_803E4328),
+                                   (s32)(*(f32 *)(st + 0x2c) * lbl_803E4328));
+        if (*(void **)(st + 0x10) != NULL) {
+            timer_clearManualFlags(*(int *)(st + 0x10));
+        }
+        if (*(u8 *)(st + 0x17) > 0x14) {
+            int i;
+            u32 gen;
+            if (((BarrelBits *)(st + 0x4a))->b7 != 0) {
+                gunpowderbarrel_setPlayerHeldState(obj, 0);
+            }
+            gen = 0;
+            if (*(s16 *)(def + 0x1a) != 0) {
+                int cnt;
+                int *objs = ObjGroup_GetObjects(0x3a, &cnt);
+                int *p;
+                i = 0;
+                p = objs;
+                for (; i < cnt; i++) {
+                    if (*(s16 *)(def + 0x1a) == barrelgener_getLinkId(*p)) {
+                        gen = objs[i];
+                        break;
+                    }
+                    p++;
+                }
+            } else {
+                gen = ObjGroup_FindNearestObject(0x3a, obj, 0);
+            }
+            if (gen == 0) {
+                objRemoveFromListFn_8002ce88(obj);
+                ObjHits_DisableObject(obj);
+                *(s16 *)(obj + 6) |= 0x4000;
+                s16toFloat((void *)(st + 0x18), 0x3c);
+                return;
+            }
+            memset((void *)(st + 0x20), 0, 0xc);
+            memset((void *)(obj + 0x24), 0, 0xc);
+            *(u8 *)(st + 0x49) &= ~2;
+            ObjHits_RefreshObjectState(obj);
+            if (((BarrelBits *)(st + 0x48))->b7 != 0) {
+                s16toFloat((void *)(st + 0x18), 0x3c);
+                storeZeroToFloatParam((void *)(st + 0x1c));
+                s16toFloat((void *)(st + 0x1c), 0x5a);
+                barrelgener_queueObjectRelease(gen, obj, 0x46);
+                ObjHits_ClearHitVolumes(obj);
+                ObjHits_DisableObject(obj);
+                *(s16 *)(obj + 6) |= 0x4000;
+                return;
+            }
+            objRemoveFromListFn_8002ce88(obj);
+            ObjHits_DisableObject(obj);
+            *(s16 *)(obj + 6) |= 0x4000;
+            return;
+        }
+        return;
+    }
+    if (*(u8 *)(st + 0x15) != 0) {
+        if ((playerGetStateFlag310(player) & 0x4000) != 0) {
+            setAButtonIcon(5);
+        } else {
+            setAButtonIcon(4);
+        }
+    } else {
+        if (((BarrelBits *)(st + 0x48))->b6 != 0 && ((BarrelBits *)(st + 0x4a))->b4 != 0 &&
+            (*(u8 *)(st + 0x49) & 2) == 0) {
+            saveGame_saveObjectPos(obj);
+        }
+    }
+    if ((*(u8 *)(st + 0x49) & 2) != 0 || ((BarrelBits *)(st + 0x4a))->b5 != 0 ||
+        (*(int (**)(int, int))((char *)*lbl_803DCAC0 + 0x8))(obj, st) == 0 ||
+        (((BarrelBits *)(st + 0x4a))->b1 != 0 && playerIsDisguised(player) == 0)) {
+        ObjHits_EnableObject(obj);
+        fn_801A1230(obj);
+        *(u8 *)(obj + 0x36) = 0xff;
+        if (*(u8 *)(st + 0x15) != 0) {
+            *(u8 *)(st + 0x15) = 0;
+            if (fn_802966B4(player) != 0) {
+                ObjHits_SyncObjectPositionIfDirty(obj);
+            } else if (fn_8029669C(player) != 0) {
+                ObjHits_MarkObjectPositionDirty(obj);
+                gunpowderbarrel_launchAtTarget(obj, 1);
+            } else if (lbl_803E42C0 == fn_80296214(player)) {
+                ObjHits_SyncObjectPositionIfDirty(obj);
+                gunpowderbarrel_launchAtTarget(obj, 0);
+            } else if (*(u8 *)(st + 0x17) == 0) {
+                *(f32 *)(obj + 0x24) = *(f32 *)(st + 0x20) =
+                    fn_80293E80(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340);
+                *(f32 *)(obj + 0x28) = *(f32 *)(st + 0x24) = lbl_803E42C0;
+                *(f32 *)(obj + 0x2c) = *(f32 *)(st + 0x28) =
+                    sin(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340);
+                *(f32 *)(obj + 0xc) =
+                    lbl_803DBE80 * -fn_80293E80(lbl_803E433C * (f32)*(s16 *)player /
+                                                lbl_803E4340) +
+                    *(f32 *)(obj + 0xc);
+                *(f32 *)(obj + 0x14) =
+                    lbl_803DBE80 * -sin(lbl_803E433C * (f32)*(s16 *)player / lbl_803E4340) +
+                    *(f32 *)(obj + 0x14);
+                ObjGroup_AddObject(obj, 0x16);
+            }
+            ObjGroup_AddObject(obj, 0x16);
+        }
+        gunpowderbarrel_updatePhysics(obj);
+    } else {
+        *(u8 *)(st + 0x49) |= 1;
+        if (*(u8 *)(st + 0x15) == 0) {
+            if (*(void **)(st + 0x10) != NULL) {
+                timer_forceStart(*(int *)(st + 0x10));
+            }
+            ObjGroup_RemoveObject(obj, 0x16);
+        }
+        *(u8 *)(st + 0x15) = 1;
+        ((BarrelBits *)(st + 0x4a))->b6 = 1;
+        *(s16 *)(st + 0x50) = *(s16 *)player;
+        fn_801A1230(obj);
+    }
+    if (((BarrelBits *)(st + 0x4a))->b5 != 0) {
+        *(u8 *)(obj + 0xaf) |= 8;
+        if (((BarrelBits *)(st + 0x4a))->b6 != 0 && ((BarrelBits *)(st + 0x4a))->b7 != 0) {
+            *(f32 *)(st + 0x20) = *(f32 *)(obj + 0x24);
+            *(f32 *)(st + 0x24) = *(f32 *)(obj + 0x28);
+            *(f32 *)(st + 0x28) = *(f32 *)(obj + 0x2c);
+            *(f32 *)(st + 0x24) = lbl_803E42C0;
+            ((BarrelBits *)(st + 0x4a))->b6 = 0;
+        }
+    }
+    if (*(void **)(st + 0x10) != NULL) {
+        if (timer_hasExpired(*(int *)(st + 0x10)) != 0) {
+            *(u8 *)(st + 0x16) = 0xa;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
