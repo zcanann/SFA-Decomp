@@ -594,7 +594,7 @@ void fn_801B3344(int arg1, int arg2, int arg3)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801B3458(int obj, int p2, int *r5_arg)
+int dimlavasmash_SeqFn(int obj, int p2, int *r5_arg)
 {
     int *def;
     int hit;

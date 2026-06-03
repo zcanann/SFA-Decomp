@@ -60,7 +60,7 @@ void dimbarrier_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int dimsnowball1c2_getObjectTypeId(void) { return 0x0; }
-int fn_801B15D8(void) { return 0x0; }
+int dimgate_SeqFn(void) { return 0x0; }
 int dimgate_getExtraSize(void) { return 0x1; }
 int dimgate_getObjectTypeId(void) { return 0x0; }
 int dimicewall_getExtraSize(void) { return 0x2; }
@@ -109,7 +109,7 @@ void dimgate_init(int obj, s8 *p_unused_passthrough) {
     } else {
         inner[0] = 0;
     }
-    *(void **)(obj + 0xbc) = (void *)fn_801B15D8;
+    *(void **)(obj + 0xbc) = (void *)dimgate_SeqFn;
     *(s16 *)obj = (s16)((s32)param[0x18] << 8);
     *(u16 *)(obj + 0xb0) |= 0x6000;
 }

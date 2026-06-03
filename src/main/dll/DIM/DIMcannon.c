@@ -2369,7 +2369,7 @@ extern int Sfx_PlayFromObject(int *obj, int sfxId);
 extern void Sfx_StopObjectChannel(int *obj, int channel);
 #pragma scheduling off
 #pragma peephole off
-int fn_801B0670(int *obj, int unused, int *p3) {
+int dimlogfire_SeqFn(int *obj, int unused, int *p3) {
     int *state = *(int **)((char *)obj + 0xb8);
     if (*(u8 *)((char *)state + 0x1a) == 1) {
         Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);

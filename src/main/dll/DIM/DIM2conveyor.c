@@ -19,7 +19,7 @@ extern undefined4 ObjGroup_AddObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int fn_801B3458(int obj, int p2, char *r5);
+extern int dimlavasmash_SeqFn(int obj, int p2, char *r5);
 extern void fn_801B3344(int *block, int mode, int v);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int *mapGetBlock(int idx);
@@ -29,7 +29,7 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
     int *block;
     char *inner;
     obj[0] = (s16)((s32)def[0x18] << 8);
-    *(int *)((char *)obj + 0xbc) = (int)&fn_801B3458;
+    *(int *)((char *)obj + 0xbc) = (int)&dimlavasmash_SeqFn;
     inner = *(char **)((char *)obj + 0xb8);
     *(u8 *)(inner + 1) = (u8)*(s16 *)(def + 0x1a);
     *(s8 *)(inner + 0) = (s8)*(s16 *)(def + 0x1c);
@@ -141,13 +141,13 @@ void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
 void dimbridgecogmai_release(void) {}
 int dimdismountpoint_getObjectTypeId(void) { return 0; }
 
-extern int fn_801B3768(int obj, int p2, char *r5);
+extern int dimbridgecogmai_SeqFn(int obj, int p2, char *r5);
 #pragma scheduling off
 #pragma peephole off
 void dimbridgecogmai_init(int *obj, int *def) {
     *(u8 *)*(int **)((char *)obj + 0xb8) = 100;
     *(s16 *)obj = (s16)((u32)*(u8 *)((char *)def + 0x1c) << 8);
-    *(void **)((char *)obj + 0xbc) = (void *)fn_801B3768;
+    *(void **)((char *)obj + 0xbc) = (void *)dimbridgecogmai_SeqFn;
     ObjGroup_AddObject(obj, 15);
     if ((u8)GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
         *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x8000);
@@ -175,7 +175,7 @@ void dimdismountpoint_render(int obj, int p1, int p2, int p3, int p4, s8 visible
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801B3768(int obj, int p2, char *r5) {
+int dimbridgecogmai_SeqFn(int obj, int p2, char *r5) {
     char *param = *(char **)(obj + 0x4c);
     r5[0x56] = 0;
     if ((*(u8 *)(param + 0x1d) & 0x2) != 0 && *(u8 *)(r5 + 0x80) == 1) {

@@ -48,7 +48,7 @@ extern undefined4 FUN_8005fe14();
 extern undefined4 FUN_80081110();
 extern int FUN_8028683c();
 extern undefined4 FUN_80286888();
-extern void fn_801B0670(void);
+extern void dimlogfire_SeqFn(void);
 
 extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
@@ -296,7 +296,7 @@ void dimlogfire_init(int obj,int def)
   u32 radius;
   int *state;
   
-  *(void **)(obj + 0xbc) = (void *)fn_801B0670;
+  *(void **)(obj + 0xbc) = (void *)dimlogfire_SeqFn;
   ObjGroup_AddObject(obj,0x31);
   state = *(int **)(obj + 0xb8);
   *(undefined *)(state + 8) = 0;
