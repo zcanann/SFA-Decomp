@@ -905,3 +905,54 @@ void sc_levelcontrol_setScale(int obj, u8 scale)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, int f);
+extern int mapGetDirIdx(int idx);
+extern void unlockLevel(int a, int b, int c);
+extern int getSaveGameLoadStatus(void);
+extern f32 lbl_803E5580;
+extern f32 lbl_803E5564;
+extern f32 lbl_803E5568;
+extern f32 lbl_803E5570;
+extern f32 lbl_803E5574;
+extern f32 lbl_803E5578;
+extern f32 lbl_803E557C;
+typedef struct { u8 bit7 : 1; u8 lo : 7; } SnowFlags22;
+#pragma peephole on
+#pragma scheduling off
+void sc_levelcontrol_init(int obj)
+{
+    f32 *st = *(f32 **)(obj + 0xb8);
+    int state = (int)st;
+    f32 v;
+
+    ((SnowFlags22 *)(state + 0x22))->bit7 = 0;
+    *(u8 *)(state + 0x1e) = 0xff;
+    *(u8 *)(state + 0x1d) = 0;
+    *(void **)(obj + 0xbc) = (void *)fn_801DB098;
+    GameBit_Set(0x60f, 1);
+    GameBit_Set(0x2b8, 0);
+    GameBit_Set(0x4bd, 1);
+    GameBit_Set(0x81, 0);
+    GameBit_Set(0x82, 0);
+    GameBit_Set(0x83, 0);
+    GameBit_Set(0x84, 0);
+    st[3] = lbl_803E5580;
+    v = lbl_803E5564;
+    st[0] = lbl_803E5564;
+    st[1] = v;
+    st[2] = lbl_803E5568;
+    enableHeavyFog(lbl_803E5570 + st[0], st[0], lbl_803E5574, lbl_803E5578, lbl_803E557C, 0);
+    if ((u32)GameBit_Get(0x7a) != 0) {
+        GameBit_Set(0x85, 1);
+    }
+    unlockLevel(mapGetDirIdx(0xe), 0, 0);
+    if (getSaveGameLoadStatus() != 0) {
+        *(int *)(obj + 0xf4) = 2;
+    } else {
+        *(int *)(obj + 0xf4) = 1;
+    }
+    *(int *)(obj + 0xf8) = 1;
+}
+#pragma scheduling reset
+#pragma peephole reset

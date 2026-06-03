@@ -31,7 +31,7 @@ void sc_levelcontrol_free(int obj);
 void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void sc_levelcontrol_hitDetect(void);
 void sc_levelcontrol_update(void);
-void sc_levelcontrol_init(void);
+void sc_levelcontrol_init(int obj);
 void sc_levelcontrol_release(void);
 void sc_levelcontrol_initialise(void);
 
