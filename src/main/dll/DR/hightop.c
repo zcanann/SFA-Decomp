@@ -1257,7 +1257,7 @@ int cloudprisoncontrol_getExtraSize(void) { return 0x0; }
 int cloudprisoncontrol_getObjectTypeId(void) { return 0x0; }
 
 /* Pattern wrappers. */
-extern u8 lbl_803DBE08;
+extern s8 lbl_803DBE08;
 void cloudprisoncontrol_initialise(void) { lbl_803DBE08 = 0x1; }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
@@ -1318,6 +1318,93 @@ void fn_8019AE3C(int p1, int p2, s16 *p3)
     }
     if (v != 0 && p3 != NULL) {
         Sfx_PlayFromObject(p1, (u16)p3[2]);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *gRomCurveInterface;
+extern s8 lbl_803DDB08;
+extern s8 lbl_803DDB09;
+extern int lbl_803DDB0C;
+extern int lbl_803AC7D8[];
+extern int lbl_803AC878[];
+#pragma scheduling off
+#pragma peephole off
+void cloudprisoncontrol_update(int obj)
+{
+    int target;
+    int data;
+    int msg[2];
+    int found;
+    int i;
+    int n;
+    int idx;
+    int dval;
+    int *p;
+    u32 cnt;
+
+    data = 0;
+    if (lbl_803DBE08 != 0) {
+        lbl_803DDB0C = (*(code *)(*gRomCurveInterface + 0x40))(8);
+        lbl_803DBE08 = 0;
+    }
+    lbl_803DDB08 = 0;
+    while (ObjMsg_Pop(obj, msg, &target, &data) != 0) {
+        switch (msg[0]) {
+        case 0xf0004:
+            if (*(s8 *)(target + 0xac) == *(s8 *)(obj + 0xac)) {
+                found = 0;
+                p = lbl_803AC7D8;
+                dval = data;
+                n = lbl_803DDB09;
+                for (i = 0; i < n; i++) {
+                    if (*(u32 *)p == (u32)target) {
+                        *(s16 *)((char *)p + 4) = dval;
+                        found = 1;
+                    }
+                    p += 2;
+                }
+                if (!found) {
+                    i = lbl_803DDB09;
+                    lbl_803AC7D8[i * 2] = target;
+                    *(u8 *)((char *)lbl_803AC7D8 + i * 8 + 6) = 0;
+                    lbl_803DDB09++;
+                    *(s16 *)((char *)lbl_803AC7D8 + i * 8 + 4) = data;
+                }
+                ObjMsg_SendToObject(target, 0xf0003, obj, 0);
+            }
+            break;
+        case 0xf0005:
+        case 0xf0006:
+        case 0xf0007:
+            break;
+        case 0xf0008:
+            i = 0;
+            for (p = lbl_803AC7D8; i < lbl_803DDB09 && *p != target; p += 2) {
+                i++;
+            }
+            lbl_803DDB09--;
+            n = lbl_803DDB09;
+            p = lbl_803AC7D8 + n * 2;
+            cnt = n - i;
+            if (n > i) {
+                for (i = 0; i < (int)cnt; i++) {
+                    p[-2] = p[0];
+                    *(s16 *)((char *)p - 4) = *(s16 *)((char *)p + 4);
+                    *(u8 *)((char *)p - 2) = *(u8 *)((char *)p + 6);
+                    p -= 2;
+                }
+            }
+            break;
+        default:
+            idx = lbl_803DDB08 * 0xc;
+            *(int *)((char *)lbl_803AC878 + idx + 4) = target;
+            *(int *)((char *)lbl_803AC878 + idx) = msg[0];
+            *(int *)((char *)lbl_803AC878 + idx + 8) = data;
+            lbl_803DDB08++;
+            break;
+        }
     }
 }
 #pragma peephole reset
