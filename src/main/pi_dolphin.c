@@ -7492,6 +7492,86 @@ void tex0GetFrame(int param_1, int param_2, int *param_3, int *param_4, int para
     }
 }
 
+extern char *sResourceFileNameTable[];
+extern void *mmAlloc(int size, int align, int zone);
+extern void mm_free(void *p);
+extern int DVDOpen(char *fileName, void *fileInfo);
+extern int DVDRead(void *fileInfo, void *addr, int length, int offset);
+extern int DVDClose(void *fileInfo);
+extern void DCStoreRange(void *p, u32 n);
+void tex1GetFrame(u32 param_1, int param_2, int *param_3, int *param_4, int param_5, u8 *param_6, int param_7) {
+    int idx = -1;
+    if (lbl_8035F3E8[0x20] != 0 || lbl_8035F3E8[0x4b] != 0) {
+        int s = OSDisableInterrupts();
+        int flags = lbl_803DCC80;
+        u32 f46c;
+        u32 f518;
+        OSRestoreInterrupts(s);
+        f46c = lbl_8035F3E8[0x21];
+        f518 = lbl_8035F3E8[0x4c];
+        if ((param_1 & 0x80000000) != 0 && (flags & 0x2000) == 0) {
+            idx = 0x4b;
+        } else if ((param_1 & 0x40000000) != 0 && (flags & 0x1000) == 0) {
+            idx = 0x20;
+        } else if (f46c != 0 && (flags & 0x1000) == 0 && lbl_8035F3E8[0x20] != 0) {
+            idx = 0x20;
+        } else if (f518 != 0 && (flags & 0x2000) == 0 && lbl_8035F3E8[0x4b] != 0) {
+            idx = 0x4b;
+        }
+        {
+            u32 base = lbl_8035F3E8[idx];
+            if (base != 0) {
+                if (param_7 == 1 && param_6 != 0) {
+                    int e = (param_1 & 0xffffff) * 2 + *(int *)(param_6 + param_5 * 4) + 4;
+                    int v;
+                    e = base + e;
+                    v = *(int *)(e + 4);
+                    *param_4 = *(int *)(e + 8);
+                    *param_3 = v;
+                } else if (param_7 == 2 && param_6 != 0) {
+                    memcpy(param_6, (void *)(base + (param_1 & 0xffffff) * 2), (param_5 + 1) * 4);
+                } else {
+                    int e = base + (param_1 & 0xffffff) * 2;
+                    int v = *(int *)(e + 0xc);
+                    *param_3 = *(int *)(e + 8);
+                    if (strncmp(&sDirBlockTag, (char *)e, 3) == 0) {
+                        *param_4 = 0xffffffff;
+                    } else {
+                        *param_4 = v;
+                    }
+                }
+            } else {
+                char fileInfo[0x3c];
+                char *buf;
+                DVDOpen(sResourceFileNameTable[idx], fileInfo);
+                buf = mmAlloc(0x400, 0x7f7f7fff, 0);
+                DVDRead(fileInfo, buf, 0x400, (param_1 & 0xffffff) * 2);
+                DVDClose(fileInfo);
+                DCStoreRange(buf, 0x400);
+                if (param_7 == 1 && param_6 != 0) {
+                    int e = *(int *)(param_6 + param_5 * 4) + 4;
+                    int v;
+                    e = (int)buf + e;
+                    v = *(int *)(e + 4);
+                    *param_4 = *(int *)(e + 8);
+                    *param_3 = v;
+                } else if (param_7 == 2 && param_6 != 0) {
+                    memcpy(param_6, buf, (param_5 + 1) * 4);
+                } else {
+                    int v = *(int *)(buf + 0xc);
+                    *param_3 = *(int *)(buf + 8);
+                    if (strncmp(&sDirBlockTag, (char *)buf, 3) == 0) {
+                        *param_4 = 0xffffffff;
+                    } else {
+                        *param_4 = v;
+                    }
+                }
+                mm_free(buf);
+            }
+        }
+    }
+}
+
 extern u32 sMapFileNameIndexRemapTable[];
 extern u8 lbl_803DB5D0;
 extern u8 lbl_803DCD28;
