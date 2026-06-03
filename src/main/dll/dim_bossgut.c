@@ -480,3 +480,39 @@ void fn_801D2B70(int *obj, int unused, int *p3) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void ObjGroup_AddObject(int *obj, int group);
+extern f32 lbl_803E52FC;
+extern f32 lbl_803E5350;
+
+/* EN v1.0 0x801D27B8  size: 172b  Mushroom enemy constructor: seeds the state
+ * block, clamps the spin period, offsets the spawn height, flags the model,
+ * optionally resets to spawn, and registers in object group 3. */
+#pragma scheduling off
+#pragma peephole off
+void enemymushroom_init(int *obj, int *arg, int flag)
+{
+    float *state = *(float **)((char *)obj + 0xb8);
+    f32 z = lbl_803E52FC;
+
+    *(f32 *)((char *)state + 0x0)  = z;
+    *(f32 *)((char *)state + 0x2c) = z;
+    *(f32 *)((char *)state + 0xc)  = *(f32 *)((char *)obj + 0x8);
+    *(s16 *)((char *)state + 0x34) = (s16)*(u16 *)((char *)arg + 0x1a);
+    if (*(s16 *)((char *)state + 0x34) < 0x708) {
+        *(s16 *)((char *)state + 0x34) = 0x708;
+    }
+    *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)arg + 0xc) - lbl_803E5350;
+    {
+        int *p = *(int **)((char *)obj + 0x64);
+        if (p != 0) {
+            *(int *)((char *)p + 0x30) |= 0x810;
+        }
+    }
+    if (flag == 0) {
+        enemymushroom_resetToSpawn((s16 *)obj, state, 0);
+    }
+    ObjGroup_AddObject(obj, 3);
+}
+#pragma peephole reset
+#pragma scheduling reset
