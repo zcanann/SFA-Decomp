@@ -8065,6 +8065,7 @@ int GXFlush_(u8 visible, int unused) {
     }
     return 0;
 }
+#pragma optimize_for_size reset
 #pragma peephole reset
 
 extern u8 GXNtsc480Prog[];
@@ -10381,6 +10382,7 @@ int initLoadFiles(void) {
     }
     return 0;
 }
+#pragma optimize_for_size reset
 #pragma peephole reset
 
 #pragma scheduling off
@@ -10851,6 +10853,7 @@ void videoInit(void) {
 #pragma scheduling reset
 
 #pragma peephole off
+#pragma optimize_for_size on
 extern int __rlwnm(int, int, int, int);
 extern u8 lbl_8030C880[];
 extern u16 lbl_8030C9A0[];
@@ -11149,4 +11152,5 @@ int zlbDecompress(void *srcv, int size, int dstv, void *outp) {
     } while (final == 0);
     return 0;
 }
+#pragma optimize_for_size reset
 #pragma peephole reset
