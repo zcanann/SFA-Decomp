@@ -5499,3 +5499,208 @@ void fn_8013396C(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32 *color);
+extern void GXSetTevColor(int id, int *color);
+extern void setTextColor(int p);
+extern u32 lbl_803DDA08;
+extern u16 lbl_803DDA14;
+extern u16 lbl_803DDA16;
+extern u16 lbl_803DBC10;
+extern u8 lbl_803DD9F0;
+extern u8 lbl_803DD9F1;
+extern u8 lbl_803DD9F2;
+extern u8 lbl_803DD9F3;
+extern u16 lbl_803DD9F6;
+extern int lbl_803DDA10;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80136E00(int p1, u8 *p)
+{
+    u8 c;
+    int w;
+    u16 x2;
+    u16 y;
+    u16 y0;
+    u16 y1;
+    u16 x0;
+    u32 ca;
+    u32 cb;
+    u32 cc;
+    f32 sc;
+    int rm;
+    u8 c0;
+    u8 c1;
+    u8 c2;
+    u8 c3;
+    u8 colb1[4];
+    u32 colw1;
+    u8 colb2[4];
+    u32 colw2;
+    u8 colb3[4];
+    u32 colw3;
+    u8 *start = p;
+
+    while ((c = *p++) != 0) {
+        w = 0;
+        switch (c) {
+        case 0x83:
+            lbl_803DDA10 = 0;
+            break;
+        case 0x84:
+            lbl_803DDA10 = 1;
+            break;
+        case 0x81:
+            c0 = p[0];
+            c1 = p[1];
+            c2 = p[2];
+            c3 = p[3];
+            p += 4;
+            if (lbl_803DDA0C != 0) {
+                colb1[0] = c0;
+                colb1[1] = c1;
+                colb1[2] = c2;
+                colb1[3] = c3;
+                colw1 = *(u32 *)colb1;
+                GXSetTevColor(1, (int *)&colw1);
+            }
+            break;
+        case 0x87:
+            lbl_803DD9E0 = p[0];
+            lbl_803DD9E1 = p[1];
+            p += 2;
+            break;
+        case 0x85:
+            c0 = p[0];
+            c1 = p[1];
+            c2 = p[2];
+            c3 = p[3];
+            p += 4;
+            if (lbl_803DDA0C == 0) {
+                lbl_803DD9F3 = c0;
+                lbl_803DD9F2 = c1;
+                lbl_803DD9F1 = c2;
+                lbl_803DD9F0 = c3;
+                setTextColor(p1);
+            }
+            break;
+        case 0x82:
+            if (lbl_803DDA0C == 0) {
+                x2 = debugPrintXpos + 0xa;
+                y = debugPrintYpos;
+                x0 = lbl_803DDA14;
+                y0 = lbl_803DDA16;
+                if ((((int)(u16)(y - y0) == 0) | ((int)(u16)(x2 - x0) == 0)) == 0) {
+                    if (y0 >= 2) {
+                        y0 -= 2;
+                    }
+                    y1 = y + 2;
+                    sc = lbl_803DD9D8 + (f32)lbl_803DD9E0;
+                    ca = (u32)((f32)y0 * sc);
+                    cb = (u32)((f32)y1 * sc);
+                    sc = lbl_803DD9DC + (f32)lbl_803DD9E1;
+                    cc = (u32)((f32)x0 * sc);
+                    colb1[0] = lbl_803DD9F3;
+                    colb1[1] = lbl_803DD9F2;
+                    colb1[2] = lbl_803DD9F1;
+                    colb1[3] = lbl_803DD9F0;
+                    colw1 = *(u32 *)colb1;
+                    hudDrawRect(ca, cc, cb, (u32)((f32)x2 * sc), &colw1);
+                }
+            }
+            debugPrintYpos = p[0];
+            debugPrintYpos |= p[1] << 8;
+            debugPrintXpos = p[2];
+            debugPrintXpos |= p[3] << 8;
+            p += 4;
+            lbl_803DDA16 = debugPrintYpos;
+            lbl_803DDA14 = debugPrintXpos;
+            break;
+        case 0x86:
+            lbl_803DBC10 = p[0];
+            lbl_803DBC10 |= p[1] << 8;
+            p += 2;
+            break;
+        case 0x20:
+            w = 6;
+            break;
+        case 0xa:
+            if (lbl_803DDA0C == 0) {
+                x2 = debugPrintXpos + 0xa;
+                y = debugPrintYpos;
+                x0 = lbl_803DDA14;
+                y0 = lbl_803DDA16;
+                if ((((int)(u16)(y - y0) == 0) | ((int)(u16)(x2 - x0) == 0)) == 0) {
+                    if (y0 >= 2) {
+                        y0 -= 2;
+                    }
+                    y1 = y + 2;
+                    sc = lbl_803DD9D8 + (f32)lbl_803DD9E0;
+                    ca = (u32)((f32)y0 * sc);
+                    cb = (u32)((f32)y1 * sc);
+                    sc = lbl_803DD9DC + (f32)lbl_803DD9E1;
+                    cc = (u32)((f32)x0 * sc);
+                    colb2[0] = lbl_803DD9F3;
+                    colb2[1] = lbl_803DD9F2;
+                    colb2[2] = lbl_803DD9F1;
+                    colb2[3] = lbl_803DD9F0;
+                    colw2 = *(u32 *)colb2;
+                    hudDrawRect(ca, cc, cb, (u32)((f32)x2 * sc), &colw2);
+                }
+            }
+            debugPrintYpos = (u16)lbl_803DDA08;
+            debugPrintXpos += 0xb;
+            lbl_803DDA16 = debugPrintYpos;
+            lbl_803DDA14 = debugPrintXpos;
+            break;
+        case 9:
+            rm = debugPrintYpos % lbl_803DBC10;
+            if (rm == 0) {
+                w = lbl_803DBC10;
+            } else {
+                w = lbl_803DBC10 - rm;
+            }
+            break;
+        default:
+            w = fn_80136A40(p1, c);
+            break;
+        }
+        if (lbl_803DDA10 != 0 && c >= 0x20 && c <= 0x7f) {
+            w = 7;
+        }
+        debugPrintYpos += w;
+        if ((f32)debugPrintYpos * (sc = lbl_803DD9D8 + (f32)lbl_803DD9E0) >
+            (f32)(int)(lbl_803DD9F6 - 0x10)) {
+            if (lbl_803DDA0C == 0) {
+                x2 = debugPrintXpos + 0xa;
+                y = debugPrintYpos;
+                x0 = lbl_803DDA14;
+                y0 = lbl_803DDA16;
+                if ((((int)(u16)(y - y0) == 0) | ((int)(u16)(x2 - x0) == 0)) == 0) {
+                    if (y0 >= 2) {
+                        y0 -= 2;
+                    }
+                    y1 = y + 2;
+                    ca = (u32)((f32)y0 * sc);
+                    cb = (u32)((f32)y1 * sc);
+                    sc = lbl_803DD9DC + (f32)lbl_803DD9E1;
+                    cc = (u32)((f32)x0 * sc);
+                    colb3[0] = lbl_803DD9F3;
+                    colb3[1] = lbl_803DD9F2;
+                    colb3[2] = lbl_803DD9F1;
+                    colb3[3] = lbl_803DD9F0;
+                    colw3 = *(u32 *)colb3;
+                    hudDrawRect(ca, cc, cb, (u32)((f32)x2 * sc), &colw3);
+                }
+            }
+            debugPrintYpos = (u16)lbl_803DDA08;
+            debugPrintXpos += 0xb;
+            lbl_803DDA16 = debugPrintYpos;
+            lbl_803DDA14 = debugPrintXpos;
+        }
+    }
+    return p - start;
+}
+#pragma peephole reset
+#pragma scheduling reset
