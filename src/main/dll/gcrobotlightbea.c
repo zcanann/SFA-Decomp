@@ -382,6 +382,126 @@ LAB_8018272c:
   return;
 }
 
+extern int objBboxFn_800640cc(void *from, void *to, f32 radius, int mode, void *hit, void *obj,
+                              int p7, int p8, int p9, int p10);
+extern void hitDetect_calcSweptSphereBounds(u32 *boundsOut, f32 *startPoints, f32 *endPoints,
+                                            f32 *radii, int pointCount);
+extern void hitDetectFn_800691c0(u8 *obj, void *bounds, uint mask, int flags);
+extern u8 hitDetectFn_80067958(u8 *obj, f32 *startPoints, f32 *endPoints, int pointCount,
+                               void *outHits, int flags);
+extern f32 lbl_803AC790[];
+extern f32 lbl_803E3938;
+extern f32 lbl_803E3970;
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801821FC
+ * EN v1.0 Address: 0x801821FC
+ * EN v1.0 Size: 776b
+ */
+int fn_801821FC(u8 *obj) {
+    typedef struct {
+        f32 hitInfo[4][4];
+        f32 radii[4];
+        s8 axes[12];
+        u32 solidFlags[4];
+    } HitDetectResults;
+
+    u8 *st;
+    s8 *axes;
+    f32 *endY;
+    f32 *endZ;
+    int idx;
+    u8 hit;
+    f32 fz;
+    HitDetectResults hitResults;
+    f32 endPoints[12];
+    f32 startPoints[12];
+    u32 sweptBounds[6];
+
+    st = *(u8 **)(obj + 0x54);
+    if (objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3970, 1, 0, obj, 1, -1, 0xff, 0) != 0) {
+        *(s8 *)(st + 0xad) |= 1;
+        *(f32 *)(st + 0x10) = *(f32 *)(obj + 0x80);
+        *(f32 *)(st + 0x14) = *(f32 *)(obj + 0x84);
+        *(f32 *)(st + 0x18) = *(f32 *)(obj + 0x88);
+        fz = lbl_803E3938;
+        *(f32 *)(obj + 0x24) = fz;
+        *(f32 *)(obj + 0x28) = fz;
+        *(f32 *)(obj + 0x2c) = fz;
+        return 1;
+    }
+
+    if ((int)(*(u32 *)(st + 0x48) >> 4) != 0 && (s8)st[0x70] == 0) {
+        endPoints[0] = *(f32 *)(obj + 0xc);
+        endY = &endPoints[1];
+        endPoints[1] = *(f32 *)(obj + 0x10);
+        endZ = &endPoints[2];
+        endPoints[2] = *(f32 *)(obj + 0x14);
+        startPoints[0] = *(f32 *)(obj + 0x80);
+        startPoints[1] = *(f32 *)(obj + 0x84);
+        startPoints[2] = *(f32 *)(obj + 0x88);
+        hitResults.radii[0] = (f32)*(s16 *)(st + 0x5a);
+        axes = hitResults.axes;
+        hitResults.axes[0] = -1;
+        hitResults.axes[4] = 3;
+    } else {
+        return 0;
+    }
+
+    hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, hitResults.radii, 1);
+    hitDetectFn_800691c0(obj, sweptBounds, *(u16 *)(st + 0xb2), 1);
+    hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &hitResults, 0);
+    if (hit != 0) {
+        if (hit & 1) {
+            idx = 0;
+        } else if (hit & 2) {
+            idx = 1;
+        } else if (hit & 4) {
+            idx = 2;
+        } else {
+            idx = 3;
+        }
+        st[0xac] = axes[idx];
+        *(f32 *)(st + 0x3c) = endPoints[idx * 3];
+        *(f32 *)(st + 0x40) = endY[idx * 3];
+        *(f32 *)(st + 0x44) = endZ[idx * 3];
+        lbl_803AC790[0] = hitResults.hitInfo[idx][0];
+        lbl_803AC790[1] = hitResults.hitInfo[idx][1];
+        lbl_803AC790[2] = hitResults.hitInfo[idx][2];
+        lbl_803AC790[3] = hitResults.hitInfo[idx][3];
+        if (hitResults.solidFlags[idx] != 0) {
+            *(s8 *)(st + 0xad) |= 2;
+            *(f32 *)(obj + 0xc) = *(f32 *)(st + 0x3c);
+            *(f32 *)(obj + 0x10) = *(f32 *)(st + 0x40);
+            *(f32 *)(obj + 0x14) = *(f32 *)(st + 0x44);
+            *(f32 *)(st + 0x10) = *(f32 *)(obj + 0x80);
+            *(f32 *)(st + 0x14) = *(f32 *)(obj + 0x84);
+            *(f32 *)(st + 0x18) = *(f32 *)(obj + 0x88);
+            fz = lbl_803E3938;
+            *(f32 *)(obj + 0x24) = fz;
+            *(f32 *)(obj + 0x28) = fz;
+            *(f32 *)(obj + 0x2c) = fz;
+            return 1;
+        } else {
+            *(s8 *)(st + 0xad) |= 1;
+            *(f32 *)(obj + 0xc) = *(f32 *)(st + 0x3c);
+            *(f32 *)(obj + 0x10) = *(f32 *)(st + 0x40);
+            *(f32 *)(obj + 0x14) = *(f32 *)(st + 0x44);
+            *(f32 *)(st + 0x10) = *(f32 *)(obj + 0x80);
+            *(f32 *)(st + 0x14) = *(f32 *)(obj + 0x84);
+            *(f32 *)(st + 0x18) = *(f32 *)(obj + 0x88);
+            fz = lbl_803E3938;
+            *(f32 *)(obj + 0x24) = fz;
+            *(f32 *)(obj + 0x28) = fz;
+            *(f32 *)(obj + 0x2c) = fz;
+            return 1;
+        }
+    }
+    return 0;
+}
+
 /*
  * --INFO--
  *
