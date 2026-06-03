@@ -1745,14 +1745,10 @@ void fn_80196520(u8 *obj, u8 *state, u8 *setup)
     *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x26c) * *(f32 *)(obj + 8) + *(f32 *)(setup + 8);
     *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x270) * *(f32 *)(obj + 8) + *(f32 *)(setup + 0xc);
     *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x274) * *(f32 *)(obj + 8) + *(f32 *)(setup + 0x10);
-    *(u16 *)(obj + 0) = *(u16 *)(setup + 0x1a);
-    *(u16 *)(obj + 2) = *(u16 *)(setup + 0x1c);
-    *(u16 *)(obj + 4) = *(u16 *)(setup + 0x1e);
-    if ((*(u8 *)(setup + 0x3c) & 1) == 0) {
-        *(f32 *)(obj + 0x24) = (f32)*(s16 *)(setup + 0x20) / lbl_803E4030;
-        *(f32 *)(obj + 0x28) = (f32)*(s16 *)(setup + 0x22) / lbl_803E4030;
-        *(f32 *)(obj + 0x2c) = (f32)*(s16 *)(setup + 0x24) / lbl_803E4030;
-    } else {
+    *(s16 *)(obj + 0) = *(s16 *)(setup + 0x1a);
+    *(s16 *)(obj + 2) = *(s16 *)(setup + 0x1c);
+    *(s16 *)(obj + 4) = *(s16 *)(setup + 0x1e);
+    if ((*(u8 *)(setup + 0x3c) & 1) != 0) {
         spd = (f32)*(s16 *)(setup + 0x20) / lbl_803E4030;
         vx = *(f32 *)(obj + 0xc) - (f32)*(s16 *)(setup + 0x42);
         vy = *(f32 *)(obj + 0x10) - (f32)*(s16 *)(setup + 0x44);
@@ -1766,23 +1762,27 @@ void fn_80196520(u8 *obj, u8 *state, u8 *setup)
         *(f32 *)(obj + 0x24) = spd * vx;
         *(f32 *)(obj + 0x28) = spd * vy;
         *(f32 *)(obj + 0x2c) = spd * vz;
+    } else {
+        *(f32 *)(obj + 0x24) = (f32)*(s16 *)(setup + 0x20) / lbl_803E4030;
+        *(f32 *)(obj + 0x28) = (f32)*(s16 *)(setup + 0x22) / lbl_803E4030;
+        *(f32 *)(obj + 0x2c) = (f32)*(s16 *)(setup + 0x24) / lbl_803E4030;
     }
     *(f32 *)(state + 0x278) = (f32)*(s16 *)(setup + 0x2c);
     *(f32 *)(state + 0x27c) = (f32)*(s16 *)(setup + 0x2e);
     *(f32 *)(state + 0x280) = (f32)*(s16 *)(setup + 0x30);
-    if (lbl_803E4034 < *(f32 *)(obj + 0x24)) {
+    if (*(f32 *)(obj + 0x24) > lbl_803E4034) {
         state[0x29f] = state[0x29f] | 1;
     }
-    if (lbl_803E4034 < *(f32 *)(obj + 0x2c)) {
+    if (*(f32 *)(obj + 0x2c) > lbl_803E4034) {
         state[0x29f] = state[0x29f] | 2;
     }
-    if (lbl_803E4034 < *(f32 *)(state + 0x278)) {
+    if (*(f32 *)(state + 0x278) > lbl_803E4034) {
         state[0x29f] = state[0x29f] | 4;
     }
-    if (lbl_803E4034 < *(f32 *)(state + 0x27c)) {
+    if (*(f32 *)(state + 0x27c) > lbl_803E4034) {
         state[0x29f] = state[0x29f] | 8;
     }
-    if (lbl_803E4034 < *(f32 *)(state + 0x280)) {
+    if (*(f32 *)(state + 0x280) > lbl_803E4034) {
         state[0x29f] = state[0x29f] | 0x10;
     }
     *(f32 *)(state + 0x284) = (f32)*(s16 *)(setup + 0x32) / lbl_803E4038;
@@ -1830,48 +1830,55 @@ extern f32 lbl_803E4078;
 
 /* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
  * toward the gamebit-selected target and feed the heavy fog params. */
+typedef struct FogControlState {
+    f32 blend;
+    u8 on : 1;
+    u8 full : 1;
+    u8 rest : 6;
+} FogControlState;
+
 void fogcontrol_update(int obj)
 {
     u8 *setup = *(u8 **)(obj + 0x4c);
-    u8 *state = *(u8 **)(obj + 0xb8);
-    s8 cv;
-    int on;
+    FogControlState *st = *(FogControlState **)(obj + 0xb8);
+    u8 cv;
+    u8 run;
     f32 t;
 
     if (*(s16 *)(setup + 0x18) == -1) {
         cv = 1;
     } else {
-        cv = (s8)GameBit_Get(*(s16 *)(setup + 0x18));
+        cv = (u8)GameBit_Get(*(s16 *)(setup + 0x18));
     }
-    if ((cv == 0 || ((state[4] >> 6) & 1) != 0) && (cv != 0 || (s8)state[4] > -1)) {
-        on = 0;
+    if ((cv != 0 && st->full == 0) || (cv == 0 && st->on != 0)) {
+        run = 1;
     } else {
-        on = 1;
+        run = 0;
     }
-    if (on) {
+    if (run != 0) {
         if (cv == 0) {
-            if ((*(u8 *)(setup + 0x1a) & 4) == 0) {
-                *(f32 *)state = -(lbl_803E406C * timeDelta - *(f32 *)state);
+            if ((*(u8 *)(setup + 0x1a) & 4) != 0) {
+                st->blend = -(lbl_803E4068 * timeDelta - st->blend);
             } else {
-                *(f32 *)state = -(lbl_803E4068 * timeDelta - *(f32 *)state);
+                st->blend = -(lbl_803E406C * timeDelta - st->blend);
             }
-            state[4] = (u8)(state[4] & ~0x40);
+            st->full = 0;
         } else {
-            if ((*(u8 *)(setup + 0x1a) & 2) == 0) {
-                *(f32 *)state = lbl_803E406C * timeDelta + *(f32 *)state;
+            if ((*(u8 *)(setup + 0x1a) & 2) != 0) {
+                st->blend = lbl_803E4068 * timeDelta + st->blend;
             } else {
-                *(f32 *)state = lbl_803E4068 * timeDelta + *(f32 *)state;
+                st->blend = lbl_803E406C * timeDelta + st->blend;
             }
-            state[4] = (u8)(state[4] & ~0x80 | 0x80);
+            st->on = 1;
         }
-        if (lbl_803E4070 < *(f32 *)state) {
-            state[4] = (u8)(state[4] & ~0x80 | 0x80);
-            if (lbl_803E4074 < *(f32 *)state) {
-                *(f32 *)state = lbl_803E4074;
-                state[4] = (u8)(state[4] & ~0x40 | 0x40);
+        if (st->blend > lbl_803E4070) {
+            st->on = 1;
+            if (st->blend > lbl_803E4074) {
+                st->blend = lbl_803E4074;
+                st->full = 1;
             }
             t = *(f32 *)(obj + 0x10) +
-                *(f32 *)state * ((f32)*(s16 *)(setup + 0x1c) - (f32)*(s16 *)(setup + 0x20)) +
+                st->blend * ((f32)*(s16 *)(setup + 0x1c) - (f32)*(s16 *)(setup + 0x20)) +
                 (f32)*(s16 *)(setup + 0x20);
             enableHeavyFog(*(u8 *)(setup + 0x1a) & 1, t,
                            ((f32)*(s16 *)(setup + 0x1e) + t) - (f32)*(s16 *)(setup + 0x1c),
@@ -1879,8 +1886,8 @@ void fogcontrol_update(int obj)
                            (f32)*(s16 *)(setup + 0x22) / lbl_803E4078,
                            lbl_803E407C);
         } else {
-            *(f32 *)state = lbl_803E4070;
-            state[4] = (u8)(state[4] & ~0x80);
+            st->blend = lbl_803E4070;
+            st->on = 0;
             disableHeavyFog();
         }
     }
