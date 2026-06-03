@@ -5352,6 +5352,134 @@ void objRenderFn_8003d980(u8 *obj, int *p2) {
     }
 }
 
+extern s32 lbl_803DCC5C;
+extern int lbl_803DCC64;
+extern void fn_8001D7F8(int p1, int *a, int *b);
+
+void modelRenderFn_setVtxDescr(u8 *hdr, u8 *m, u32 *p3, MtxBitStream *bs, u8 p5, u8 *out1, u8 *out2) {
+    GXClearVtxDesc();
+    if (hdr[0xf3] > 1) {
+        int next;
+        int back;
+        GXSetVtxDesc(0, 1);
+        next = 1;
+        back = 8;
+        if (p3[0] != 0 || p3[1] != 0) {
+            if (*(u32 *)(m + 0x34) != 0) {
+                GXSetVtxDesc(1, 1);
+                GXSetVtxDesc(2, 1);
+                next = 3;
+            }
+            GXSetVtxDesc(next++, 1);
+        }
+        {
+            int i = 0;
+            u32 t = p5;
+            for (; i < hdr[0xfa]; i++) {
+                u8 use;
+                if (t == 4 && i == 0) {
+                    if (lbl_803DCC5C != 0) {
+                        int a;
+                        int b;
+                        fn_8001D7F8(lbl_803DCC64, &a, &b);
+                        if (a == 0) {
+                            use = 1;
+                        } else {
+                            use = 0;
+                        }
+                    } else {
+                        use = 0;
+                    }
+                } else if (i < lbl_803DCC5C && p5 == 0) {
+                    use = 1;
+                } else {
+                    use = 0;
+                }
+                if (use) {
+                    GXSetVtxDesc(next++, 1);
+                } else {
+                    GXSetVtxDesc(back--, 1);
+                }
+            }
+        }
+        if (next > 1) {
+            *out2 = 1;
+        } else {
+            *out2 = 0;
+        }
+    } else {
+        GXSetCurrentMtx(0);
+        *out2 = 1;
+    }
+    {
+        u32 w;
+        int pos = bs->pos;
+        int off = pos >> 3;
+        u8 *p;
+        w = bs->data[off];
+        p = (u8 *)(off + (char *)bs->data);
+        w |= p[1] << 8;
+        w |= p[2] << 16;
+        bs->pos = pos + 1;
+        GXSetVtxDesc(9, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
+    }
+    if (m[0x40] & 1) {
+        int b;
+        {
+            u32 w;
+            int pos = bs->pos;
+            int off = pos >> 3;
+            u8 *p;
+            w = bs->data[off];
+            p = (u8 *)(off + (char *)bs->data);
+            w |= p[1] << 8;
+            w |= p[2] << 16;
+            bs->pos = pos + 1;
+            b = (w >> (pos & 7)) & 1;
+        }
+        if (hdr[0x24] & 8) {
+            GXSetVtxDesc(0x19, b ? 3 : 2);
+        } else {
+            GXSetVtxDesc(0xa, b ? 3 : 2);
+        }
+        *out1 = 1;
+    } else {
+        *out1 = 0;
+    }
+    if (m[0x40] & 2) {
+        u32 w;
+        int pos = bs->pos;
+        int off = pos >> 3;
+        u8 *p;
+        w = bs->data[off];
+        p = (u8 *)(off + (char *)bs->data);
+        w |= p[1] << 8;
+        w |= p[2] << 16;
+        bs->pos = pos + 1;
+        GXSetVtxDesc(0xb, (((int)(w >> (pos & 7)) & 1) ? 3 : 2));
+    }
+    {
+        int b;
+        int i;
+        {
+            u32 w;
+            int pos = bs->pos;
+            int off = pos >> 3;
+            u8 *p;
+            w = bs->data[off];
+            p = (u8 *)(off + (char *)bs->data);
+            w |= p[1] << 8;
+            w |= p[2] << 16;
+            bs->pos = pos + 1;
+            b = (w >> (pos & 7)) & 1;
+        }
+        i = 0;
+        for (; i < m[0x41]; i++) {
+            GXSetVtxDesc(i + 0xd, b ? 3 : 2);
+        }
+    }
+}
+
 extern u8 lbl_80345E10[];
 extern void mm_free(void *);
 extern void texFlagFn_80023cbc(int);
