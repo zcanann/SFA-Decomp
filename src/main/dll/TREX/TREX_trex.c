@@ -1754,8 +1754,8 @@ extern int* lbl_803DCAB4;
 #define gBoneParticleEffectInterface lbl_803DCAB4
 extern int Stack_IsEmpty(int stack);
 extern int Stack_Pop(int stack, int *out);
-int fn_801E5060(int p1, int p2, int p3);
-void fn_801E5A2C(void);
+int SB_SeqDoor_SeqFn(int p1, int p2, int p3);
+int Lamp_SeqFn(int obj, int unused, int state);
 #pragma peephole off
 void SB_CloudBall_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E58E8); }
 void SB_SeqDoor_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E5920); }
@@ -1961,7 +1961,7 @@ void Lamp_init(int* obj, int* def)
     *(s16*)((char*)obj + 4) = 0;
     *(int*)((char*)obj + 248) = 0;
     *(s8*)state = 1;
-    *(void**)((char*)obj + 0xbc) = (void*)fn_801E5A2C;
+    *(void**)((char*)obj + 0xbc) = (void*)Lamp_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2481,7 +2481,7 @@ void SB_MiniFire_update(int obj)
 #pragma peephole off
 void SB_SeqDoor_init(int* obj, int* def)
 {
-    *(void**)((char*)obj + 0xbc) = (void*)fn_801E5060;
+    *(void**)((char*)obj + 0xbc) = (void*)SB_SeqDoor_SeqFn;
     *(s16*)obj = (s16)((s32)*(s8*)((char*)def + 24) << 8);
     {
         s8 b = *(s8*)((char*)def + 25);

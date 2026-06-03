@@ -5343,7 +5343,7 @@ typedef struct DofState {
     u8 field2;
 } DofState;
 
-extern int fn_8016CD48();
+extern int depthoffieldpoint_SeqFn();
 extern void Rcp_DisableBlurFilter(void);
 extern void turnOnBlurFilter(f32 a, f32 b, f32 c, int field1, int field2);
 extern int textureFree(int tex);
@@ -5356,7 +5356,7 @@ void depthoffieldpoint_init(int *obj)
 {
     DofState *s = *(DofState **)((char *)obj + 0xb8);
     s->enabled = 0;
-    *(void **)((char *)obj + 0xbc) = (void *)fn_8016CD48;
+    *(void **)((char *)obj + 0xbc) = (void *)depthoffieldpoint_SeqFn;
     s->field1 = 0;
     *(u16 *)((char *)obj + 0xb0) |= 0x4000;
 }
@@ -5556,7 +5556,7 @@ void dll_F7_init(int *obj, int *params)
     }
 }
 
-int fn_8016CD48(int *obj, int msg, u8 *cmds)
+int depthoffieldpoint_SeqFn(int *obj, int msg, u8 *cmds)
 {
     DofState *s = *(DofState **)((char *)obj + 0xb8);
     int i;

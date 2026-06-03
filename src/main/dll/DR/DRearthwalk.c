@@ -724,7 +724,7 @@ void sh_staffhaze_update(int obj)
 /* 120b: tick a float timer; on wrap optionally trigger an effect. */
 #pragma scheduling off
 #pragma peephole off
-int fn_801DA954(int obj)
+int sh_beacon_SeqFn(int obj)
 {
   int extra = *(int*)(obj + 0xb8);
   *(float*)(extra + 4) = *(float*)(extra + 4) + timeDelta;
@@ -787,7 +787,7 @@ extern f32 lbl_803E54E0;
 extern f32 lbl_803E5508;
 #pragma scheduling off
 #pragma peephole off
-int fn_801DA284(int obj, int unused, u8 *buf)
+int sh_staff_SeqFn(int obj, int unused, u8 *buf)
 {
     int state = *(int *)(obj + 0xb8);
     int *p;
@@ -971,7 +971,7 @@ void sh_staff_update(int obj)
             ObjAnim_SetMoveProgress(obj, lbl_803E54D0);
             *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
             *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
-            *(int (**)(int, int, u8 *))(obj + 0xbc) = fn_801DA284;
+            *(int (**)(int, int, u8 *))(obj + 0xbc) = sh_staff_SeqFn;
             *(u8 *)state = 1;
             if (Obj_IsLoadingLocked() == 0) {
                 loadResult = 0;
@@ -1054,7 +1054,7 @@ void sh_beacon_init(int obj, int defData)
         *(int *)state = loadObjectAtObject(obj, setup);
     }
 
-    *(void **)(obj + 0xbc) = fn_801DA954;
+    *(void **)(obj + 0xbc) = sh_beacon_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset

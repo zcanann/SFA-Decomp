@@ -33,7 +33,7 @@ extern undefined4 FUN_80081120();
 extern undefined4 FUN_8008112c();
 extern undefined4 FUN_8013651c();
 extern u32 GameBit_Get(int eventId);
-extern void fn_801D286C(void);
+extern void bombplant_SeqFn(void);
 extern void fn_801D2B70(void *obj, void *stateEntry, void *state);
 extern void *Obj_GetPlayerObject(void);
 extern f32 vec3f_distanceSquared(f32 *p1, f32 *p2);
@@ -280,7 +280,7 @@ void bombplant_init(void *obj, void *param, int flag)
   state = *(void **)((u8 *)obj + 0xb8);
   *(s16 *)obj = (s16)((s32)(s8) * ((u8 *)param + 0x1f) << 8);
   *(u16 *)((u8 *)obj + 0xb0) |= 0x2000;
-  *(void **)((u8 *)obj + 0xbc) = (void *)fn_801D286C;
+  *(void **)((u8 *)obj + 0xbc) = (void *)bombplant_SeqFn;
   *(f32 *)((u8 *)state + 0xc) = *(f32 *)((u8 *)obj + 0x8);
 
   if (flag != 0) {
