@@ -651,3 +651,68 @@ void explodable_update(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int lbl_80322DA0[];
+extern f32 lbl_803E435C;
+#pragma scheduling off
+#pragma peephole off
+void explodable_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    int *tbl;
+    s8 base;
+    int cnt;
+    s16 key;
+    u8 c1;
+
+    ObjGroup_AddObject(obj, 0x21);
+    state = *(int *)(obj + 0xb8);
+    c1 = *(u8 *)(setup + 0x18);
+    if (c1 == 0) {
+        c1 = 1;
+    }
+    *(u8 *)(state + 0x6d4) = c1;
+    *(int *)(state + 0x6cc) = 0;
+    *(int *)(state + 0x690) = 0;
+    *(int *)(state + 0x694) = 0;
+    *(int *)(state + 0x698) = 0;
+    *(int *)(state + 0x69c) = 0;
+    *(int *)(state + 0x6a0) = 0;
+    *(int *)(state + 0x6a4) = 0;
+    *(int *)(state + 0x6a8) = 0;
+    *(int *)(state + 0x6ac) = 0;
+    *(int *)(state + 0x6b0) = 0;
+    *(int *)(state + 0x6b4) = 0;
+    *(int *)(state + 0x6b8) = 0;
+    *(int *)(state + 0x6bc) = 0;
+    *(int *)(state + 0x6c0) = 0;
+    *(int *)(state + 0x6c4) = 0;
+    *(int *)(state + 0x6c8) = 0;
+    *(s16 *)(obj + 0) = *(s16 *)(setup + 0x1a);
+    *(s16 *)(obj + 2) = *(s16 *)(setup + 0x1c);
+    *(s16 *)(obj + 4) = *(s16 *)(setup + 0x1e);
+    if ((u32)GameBit_Get(*(s16 *)(setup + 0x3e)) != 0) {
+        *(u8 *)(state + 0x6e4) = 2;
+    }
+    key = *(s16 *)(obj + 0x46);
+    base = 0;
+    tbl = lbl_80322DA0;
+    for (cnt = 0; cnt < 16; cnt++) {
+        if (key == *tbl) {
+            *(u8 *)(state + 0x6e5) = base;
+            break;
+        }
+        tbl += 4;
+        base++;
+    }
+    if (*(s8 *)(setup + 0x3d) == 0) {
+        *(u8 *)(setup + 0x3d) = 0x14;
+    }
+    *(f32 *)(obj + 8) =
+        *(f32 *)(*(int *)(obj + 0x50) + 4) * (f32)(int)*(s8 *)(setup + 0x3d) / lbl_803E435C;
+    if ((*(u8 *)((char *)lbl_80322DA0 + 0xd + (u32)*(u8 *)(state + 0x6e5) * 0x10) & 1) != 0) {
+        *(u16 *)(obj + 0xb0) |= 0x4000;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
