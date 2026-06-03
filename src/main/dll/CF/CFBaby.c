@@ -1726,12 +1726,12 @@ typedef struct FallLaddersState {
     s16 delay;
 } FallLaddersState;
 
-typedef struct Dll109State {
+typedef struct CarryableBreakRespawnState {
     u8 pad0[0xa];
     u8 state;
     u8 padB;
     f32 timer;
-} Dll109State;
+} CarryableBreakRespawnState;
 
 extern int *lbl_803DCAC0;
 extern int *gPartfxInterface;
@@ -1747,22 +1747,22 @@ extern int ViewFrustum_IsSphereVisible(f32 *pos, f32 radius);
 typedef void (*ObjectTriggerUpdateFn)(int, int, int);
 typedef void (*PartfxSpawnFn)(int, int, int, int, int, int);
 
-/* dll_109_update: carryable impact state machine that spawns break particles. */
+/* Carryable impact state machine that spawns break particles, hides, then respawns. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80187C70(int obj) {
-    Dll109State *state;
+void carryable_break_respawn_update(int obj) {
+    CarryableBreakRespawnState *state;
     int def;
     int setup;
     u32 hitVolume;
 
-    state = *(Dll109State **)(obj + 0xb8);
+    state = *(CarryableBreakRespawnState **)(obj + 0xb8);
     def = *(int *)(obj + 0x4c);
     switch (state->state) {
         case 0:
-            (*(void (*)(int, Dll109State *))(*(int *)(*lbl_803DCAC0 + 8)))(obj, state);
+            (*(void (*)(int, CarryableBreakRespawnState *))(*(int *)(*lbl_803DCAC0 + 8)))(obj, state);
             if (ObjHits_GetPriorityHit(obj, 0, 0, &hitVolume) != 0) {
-                (*(void (*)(int, Dll109State *))(*(int *)(*lbl_803DCAC0 + 0x30)))(obj, state);
+                (*(void (*)(int, CarryableBreakRespawnState *))(*(int *)(*lbl_803DCAC0 + 0x30)))(obj, state);
                 Sfx_PlayFromObject(obj, SFXen_rfall5_c);
                 ObjHitbox_SetSphereRadius(obj, 0x28);
                 ObjHits_SetHitVolumeSlot(obj, 5, 4, 0);
