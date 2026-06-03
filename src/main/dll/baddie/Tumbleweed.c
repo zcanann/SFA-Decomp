@@ -3997,10 +3997,12 @@ extern f32 lbl_803E2280;
 #pragma peephole off
 void fn_80133718(void)
 {
+    u8 count;
+    u8 i;
     int b;
-    int count;
     int *model;
 
+    count = 2;
     viewFn_80129cbc(lbl_803E227C, lbl_803E2278, lbl_803E2280);
     b = (lbl_803DD92A >> 3) & 1;
     if (b != 0) {
@@ -4009,15 +4011,14 @@ void fn_80133718(void)
         }
     }
     *(s8 *)((char *)lbl_803DBBC8[1] + 173) = (s8)b;
-    count = 2;
-    if (lbl_803DD934 == 0) {
+    if ((u32)lbl_803DD934 == 0) {
         count = 1;
     }
-    for (b = 0; (u8)b < count; b++) {
-        objRender(0, 0, 0, 0, lbl_803DBBC8[b], 1);
-        model = Obj_GetActiveModel(lbl_803DBBC8[b]);
+    for (i = 0; i < count; i++) {
+        objRender(0, 0, 0, 0, lbl_803DBBC8[i], 1);
+        model = Obj_GetActiveModel(lbl_803DBBC8[i]);
         *(u16 *)((char *)model + 24) = (u16)(*(u16 *)((char *)model + 24) & ~0x8);
-        *(u8 *)((char *)lbl_803DBBC8[b] + 55) = 255;
+        *(u8 *)((char *)lbl_803DBBC8[i] + 55) = 255;
     }
     viewFn_80129c74();
 }
