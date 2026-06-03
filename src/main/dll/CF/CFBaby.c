@@ -2100,14 +2100,14 @@ void landed_arwing_free(int obj) {
 
 /* landed_arwing_render: visible-guarded render with extra call. */
 extern f32 lbl_803E3BA4;
-extern void fn_801889C8(int obj);
+extern void landed_arwing_renderPathEffects(int obj);
 #pragma peephole off
 #pragma scheduling off
 void landed_arwing_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     s32 v = visible;
     if (v != 0) {
         objRenderFn_8003b8f4(lbl_803E3BA4);
-        fn_801889C8(obj);
+        landed_arwing_renderPathEffects(obj);
     }
 }
 #pragma scheduling reset
@@ -2164,7 +2164,7 @@ extern void objfx_spawnLightPulse(int obj, int arg4, int arg5, int arg6, void *p
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801889C8(int obj) {
+void landed_arwing_renderPathEffects(int obj) {
     LandedArwingState *state;
     u8 i;
     LandedArwingFxPoint *entry;
