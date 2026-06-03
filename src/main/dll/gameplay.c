@@ -994,7 +994,6 @@ extern f32 lbl_803E06CC;
 extern u16 lbl_80311720[];
 extern u16 lbl_80311810[];
 extern MapEventInterface **gMapEventInterface;
-extern s8 gTransientMapBits[];
 extern u32 gMapObjGroupStatuses[];
 extern u8 gExtendedMapActLookup[];
 extern int lbl_803DD48C;
@@ -1071,6 +1070,8 @@ typedef struct MapBitTransient {
     u8 shift;
     s8 timer;
 } MapBitTransient;
+
+extern MapBitTransient gTransientMapBits[];
 
 extern SaveGameDefaultPosition lbl_802C2170;
 
@@ -1290,7 +1291,6 @@ int gplayNewGame(char *name, int slot)
 
 void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
 {
-    s8 *mapBitBase;
     int createTransient;
     u32 oldStatus;
     u32 newStatus;
@@ -1300,10 +1300,9 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     u32 *groupStatuses;
     u16 *eventIds;
 
-    mapBitBase = gTransientMapBits;
     createTransient = 0;
     if (idx >= 0x50) {
-        idx = (u8)mapBitBase[idx + 0x1cc];
+        idx = gExtendedMapActLookup[idx - 0x50];
     }
     eventIds = lbl_80311810;
     if (idx < 0x78 && eventIds[idx] != 0) {
@@ -1330,7 +1329,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
         lbl_803DD48C = idx;
         (&lbl_803DD48C)[1] = newStatus;
 
-        groupStatuses = (u32 *)(mapBitBase + 0x3c);
+        groupStatuses = gMapObjGroupStatuses;
         if (value != 0) {
             if ((oldStatus & bit) == 0) {
                 for (i = 0; i < 0x78; i++) {
@@ -1348,14 +1347,14 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
             }
 
             if (!createTransient) {
-                transient = (MapBitTransient *)mapBitBase;
+                transient = gTransientMapBits;
                 for (i = 0; i < 20; i++, transient++) {
                     if (transient->mapId == idx && transient->shift == shift) {
                         return;
                     }
                 }
 
-                transient = (MapBitTransient *)mapBitBase;
+                transient = gTransientMapBits;
                 for (i = 0; i < 20; i++, transient++) {
                     if (transient->mapId == -1) {
                         transient->mapId = (s8)idx;
@@ -13298,12 +13297,12 @@ enum {
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
-extern s8 gTransientMapBits[];
+extern MapBitTransient gTransientMapBits[];
 extern s8 lbl_803DD494;
 extern int lbl_803DD48C;
 extern u8 *lbl_803DD498;
 void SaveGame_initialise(void) {
-    s8 *base = gTransientMapBits;
+    s8 *base = (s8 *)gTransientMapBits;
     int i;
     memset(base + 0x328, 0, 0xf70);
     if (!(lbl_803DD498[0x21] & 0x80)) {
@@ -13639,7 +13638,7 @@ void SaveGame_gplaySetAct(int idx, int act) {
 s8 SaveGame_findTransientMapBit(int a, int b) {
     int i;
     MapBitTransient *p;
-    for (i = 0, p = (MapBitTransient *)gTransientMapBits; i < 20; i++) {
+    for (i = 0, p = gTransientMapBits; i < 20; i++) {
         if (a == p->mapId && b == p->shift) {
             return (s8)i;
         }
@@ -13728,7 +13727,7 @@ void loadTaskTexts(void) {
 void SaveGame_updateTransientMapBits(void) {
     MapBitTransient *p;
     int i;
-    for (i = 0, p = (MapBitTransient *)gTransientMapBits; i < 20; i++) {
+    for (i = 0, p = gTransientMapBits; i < 20; i++) {
         if (p->mapId != -1) {
             p->timer--;
             if (p->timer <= 0) {
