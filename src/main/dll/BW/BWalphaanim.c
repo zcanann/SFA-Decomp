@@ -319,3 +319,204 @@ void SB_CloudRunner_onSeqFree(int *obj) {
     *(s16*)((char*)p + 0x2e) = *(s16*)((char*)obj + 4);
 }
 #pragma peephole reset
+
+extern u8 lbl_803284E0[];
+extern u32 lbl_803E5AE0;
+extern u8 *mmAlloc(int size, int tag, int a);
+extern void *memcpy(void *dst, const void *src, int n);
+extern void Obj_ClearModelSlotIndex(int obj);
+extern void fn_801EC928(int obj, u8 *state);
+extern void fn_801EB420();
+extern void ObjGroup_AddObject(int obj, int group);
+extern void curves_setLocalPointCollisionEx(u8 *path, int a, u8 *b, f32 *c, int d, int e);
+extern int *gGameUIInterface;
+extern int *gPathControlInterface;
+extern f32 lbl_803DC0B8;
+extern f32 lbl_803DC0C0;
+extern f32 lbl_803DC0C4;
+extern f32 lbl_803E5AE8;
+extern f32 lbl_803E5AEC;
+extern f32 lbl_803E5AF0;
+extern f32 lbl_803E5B14;
+extern f32 lbl_803E5B1C;
+extern f32 lbl_803E5B48;
+extern f32 lbl_803E5B74;
+extern f32 lbl_803E5B90;
+extern f32 lbl_803E5B94;
+extern f32 lbl_803E5B98;
+extern f32 lbl_803E5BC4;
+extern f32 lbl_803E5C48;
+extern f32 lbl_803E5C50;
+extern f32 lbl_803E5C54;
+extern f32 lbl_803E5C58;
+extern f32 lbl_803E5C5C;
+extern f32 lbl_803E5C60;
+extern f32 lbl_803E5C64;
+extern f32 lbl_803E5C68;
+
+typedef struct {
+    u8 pad0 : 2;
+    u8 b20 : 1;
+    u8 pad1 : 2;
+    u8 b04 : 1;
+    u8 b02 : 1;
+    u8 b01 : 1;
+} SnowBikeFlags;
+
+void SnowBike_init(int obj, u8 *params, int flag)
+{
+    char *base = (char *)lbl_803284E0;
+    u32 pathParam = lbl_803E5AE0;
+    u8 *state = *(u8 **)(obj + 0xb8);
+    u8 *alloc;
+    u8 *path;
+    int i;
+    s16 rot;
+    f32 fz;
+    f32 fv;
+
+    if (*(s8 *)(obj + 0xac) == 0x13) {
+        alloc = mmAlloc(36, 5, 0);
+        memcpy(alloc, params, 36);
+        *(u8 **)(obj + 0x4c) = alloc;
+        *(s16 *)(obj + 6) |= 0x2000;
+        Obj_ClearModelSlotIndex(obj);
+    }
+    rot = params[0x18] << 8;
+    *(s16 *)(state + 0x40c) = rot;
+    *(s16 *)(state + 0x40e) = rot;
+    *(s16 *)obj = rot;
+    fn_801EC928(obj, state);
+    if (flag == 0) {
+        if (((SnowBikeFlags *)(state + 0x428))->b20) {
+            *(f32 *)(state + 0x4b8) = lbl_803E5B90;
+            *(f32 *)(state + 0x4c0) = lbl_803E5AEC;
+            *(f32 *)(state + 0x4bc) = lbl_803E5B94;
+            if (*(s8 *)(state + 0x421) == 2) {
+                (**(void (**)(int, int))(*gGameUIInterface + 0x58))((int)*(f32 *)(state + 0x4b8), 1485);
+                (**(void (**)(f32))(*gGameUIInterface + 0x68))(lbl_803E5B98);
+            }
+        }
+    }
+    if (params[0x19] != 0) {
+        ((SnowBikeFlags *)(state + 0x428))->b02 = 1;
+    }
+    *(int *)(state + 0x38) = -1;
+    *(int *)(state + 0x3c) = -1;
+    *(int *)(state + 0x40) = -1;
+    state[0x5c] = params[0x1c];
+    state[0x5d] = params[0x1d];
+    *(f32 *)(state + 0xc) = *(f32 *)(obj + 0xc);
+    *(f32 *)(state + 0x10) = *(f32 *)(obj + 0x10);
+    *(f32 *)(state + 0x14) = *(f32 *)(obj + 0x14);
+    *(int *)(obj + 0xbc) = (int)fn_801EB420;
+    ObjGroup_AddObject(obj, 10);
+    if (flag == 0) {
+        path = state;
+        for (i = 0; i < 9; i++) {
+            *(u8 **)(path + 0x4c8) = mmAlloc(1600, 26, 0);
+            path += 8;
+        }
+    }
+    *(f32 *)(state + 0x51c) = *(f32 *)(obj + 0x18);
+    *(f32 *)(state + 0x520) = *(f32 *)(obj + 0x1c);
+    *(f32 *)(state + 0x524) = *(f32 *)(obj + 0x20);
+    *(f32 *)(state + 0x68) = lbl_803E5AE8;
+    *(s16 *)(state + 0x448) = *(s16 *)(params + 0x1a);
+    *(s16 *)(state + 0x44a) = *(s16 *)(params + 0x1e);
+    if (GameBit_Get(*(s16 *)(state + 0x44a)) != 0) {
+        ((SnowBikeFlags *)(state + 0x428))->b04 = 1;
+    }
+    *(f32 *)(state + 0x438) = lbl_803E5B1C;
+    fz = lbl_803E5AE8;
+    *(f32 *)(state + 0x3f4) = fz;
+    *(f32 *)(state + 0x3f8) = fz;
+    *(f32 *)(state + 0x18) = lbl_803E5C48;
+    *(f32 *)(state + 0x1c) = fz;
+    *(f32 *)(state + 0x20) = lbl_803E5BC4;
+    *(f32 *)(state + 0x24) = lbl_803E5C50;
+    *(s8 *)(state + 0x65) = -1;
+    fv = lbl_803E5B98;
+    *(f32 *)(state + 0x464) = fv;
+    *(f32 *)(state + 0x468) = fv;
+    *(s16 *)(state + 0x440) = 0x436;
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x72:
+    default:
+        state[0x434] = 1;
+        *(f32 *)(state + 0x46c) = lbl_803E5C50;
+        *(s16 *)(state + 0x440) = 282;
+        break;
+    case 0x16c:
+        state[0x434] = 1;
+        state[0x435] = 0;
+        *(f32 *)(state + 0x1c) = lbl_803E5B14;
+        *(f32 *)(state + 0x18) = lbl_803E5C54;
+        *(s8 *)(state + 0x65) = 1;
+        *(f32 *)(state + 0x46c) = lbl_803E5AF0;
+        break;
+    case 0x16f:
+        state[0x434] = 1;
+        state[0x58] = 1;
+        state[0x435] = 1;
+        *(s8 *)(state + 0x65) = 2;
+        *(f32 *)(state + 0x46c) = lbl_803E5AF0;
+        break;
+    case 0x38c:
+        state[0x434] = 0;
+        *(f32 *)(state + 0x46c) = lbl_803DC0C4;
+        *(s16 *)(state + 0x440) = 282;
+        break;
+    case 0x38d:
+        state[0x434] = 0;
+        state[0x435] = 0;
+        *(f32 *)(state + 0x1c) = lbl_803E5B14;
+        *(f32 *)(state + 0x18) = lbl_803E5C54;
+        *(f32 *)(state + 0x46c) = lbl_803E5C58 * lbl_803DC0C0;
+        break;
+    case 0x38e:
+        state[0x434] = 0;
+        state[0x435] = 1;
+        *(f32 *)(state + 0x1c) = lbl_803E5B48;
+        *(f32 *)(state + 0x18) = lbl_803E5C5C;
+        *(f32 *)(state + 0x46c) = lbl_803E5C60 * lbl_803DC0C0;
+        break;
+    case 0x4d4:
+        state[0x434] = 0;
+        state[0x435] = 2;
+        *(f32 *)(state + 0x1c) = lbl_803E5B48;
+        *(f32 *)(state + 0x18) = lbl_803E5C5C;
+        *(f32 *)(state + 0x46c) = lbl_803DC0C0;
+        break;
+    }
+    fv = *(f32 *)(state + 0x464);
+    *(f32 *)(state + 0x47c) = fv;
+    *(f32 *)(state + 0x470) = fv;
+    fv = *(f32 *)(state + 0x468);
+    *(f32 *)(state + 0x480) = fv;
+    *(f32 *)(state + 0x474) = fv;
+    fv = *(f32 *)(state + 0x46c);
+    *(f32 *)(state + 0x484) = fv;
+    *(f32 *)(state + 0x478) = fv;
+    *(char **)(state + 0x60) = base + state[0x434] * 6 + 0xa4;
+    if (state[0x434] == 0) {
+        if (!((SnowBikeFlags *)(state + 0x428))->b02) {
+            ((SnowBikeFlags *)(state + 0x428))->b20 = 1;
+            *(f32 *)(state + 0x4c4) = lbl_803E5AE8;
+        }
+        *(f32 *)(state + 0x538) = lbl_803E5C64;
+    } else {
+        *(f32 *)(state + 0x538) = lbl_803E5B74;
+    }
+    path = state + 0x178;
+    path[0x25b] = 1;
+    (**(void (**)(u8 *, int, int, int))(*gPathControlInterface + 0x4))(path, 0, 0x48607, 1);
+    (**(void (**)(u8 *, int, char *, char *, u32 *))(*gPathControlInterface + 0xc))(path, 4, base, base + 0x30, &pathParam);
+    if (((SnowBikeFlags *)(state + 0x428))->b02 && *(s8 *)(state + 0x65) != -1) {
+        curves_setLocalPointCollisionEx(path, 1, (u8 *)(base + 0x40), &lbl_803DC0B8, 8, *(s8 *)(state + 0x65));
+    } else {
+        (**(void (**)(u8 *, int, char *, f32 *, int))(*gPathControlInterface + 0x8))(path, 1, base + 0x40, &lbl_803DC0B8, 8);
+    }
+    path[0x264] = lbl_803E5C68 + lbl_803DC0B8;
+    (**(void (**)(int, u8 *))(*gPathControlInterface + 0x20))(obj, path);
+}
