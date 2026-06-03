@@ -26,8 +26,7 @@ void FUN_80145ee8(int param_1,int param_2,int param_3);
 int Tricky_func10(int *obj,int targetObj);
 void Tricky_func0F(int *obj,int commandEnabled,int targetObj);
 void sideCommandEnable(int obj,int targetObj,int commandKind,int commandType);
-void Tricky_updateSideCommandPrompts(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+int Tricky_updateSideCommandPrompts(int obj);
 uint FUN_80146874(void);
 void Tricky_destroy(int obj,int shouldKeepFlameChildren);
 void Tricky_init(int obj);

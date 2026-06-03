@@ -55,7 +55,6 @@ extern undefined4 FUN_80017a30();
 extern undefined4 FUN_80017a3c();
 extern int FUN_80017a54();
 extern int FUN_80017a90();
-extern int FUN_80017a98();
 extern void* FUN_80017aa4();
 extern undefined8 FUN_80017ac8();
 extern int FUN_80017ae4();
@@ -137,7 +136,7 @@ extern void objAnimFn_8013a3f0(int obj,int animId,f32 blend,int flags);
 extern undefined4 FUN_80135f38();
 extern undefined4 FUN_80136310();
 extern undefined4 FUN_8013651c();
-extern int FUN_801365c4();
+extern int trickyFindNearestUsableBaddie(int obj,int param_2,f32 maxRadius);
 extern undefined4 FUN_801367b4();
 extern int FUN_80136870();
 extern undefined4 FUN_8013939c();
@@ -185,8 +184,8 @@ extern double FUN_80293900();
 extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern undefined4 FUN_80294c68();
-extern int FUN_80294c80();
-extern undefined4 FUN_80294ca8();
+extern int fn_80296240(int obj);
+extern int fn_80296448(int obj);
 extern undefined4 FUN_80294dc4();
 extern void trickyReportError(const char *fmt, ...);
 extern void objParticleFn_80099d84(f32 param_1,f32 param_2,int obj,int param_4,int param_5);
@@ -263,6 +262,7 @@ extern f32 lbl_803E2454;
 extern f32 lbl_803E2458;
 extern f64 lbl_803E2460;
 extern f32 lbl_803E247C;
+extern f32 lbl_803E2524;
 extern f32 lbl_803E253C;
 extern f32 lbl_803E2540;
 extern u32 lbl_803E2558;
@@ -927,8 +927,7 @@ void sideCommandEnable(int obj,int targetObj,int commandKind,int commandType)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Tricky_updateSideCommandPrompts(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+int Tricky_updateSideCommandPrompts(int obj)
 {
   char cVar1;
   ushort uVar2;
@@ -937,43 +936,37 @@ void Tricky_updateSideCommandPrompts(undefined8 param_1,double param_2,double pa
   bool bVar5;
   int iVar6;
   uint uVar7;
+  uint commandMask;
   int iVar8;
   bool bVar11;
   undefined2 *puVar9;
   undefined4 uVar10;
   byte bVar12;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
   int iVar13;
-  double extraout_f1;
-  double extraout_f1_00;
-  double dVar14;
   char local_38 [4];
   char local_34 [4];
   undefined4 local_30 [12];
   
-  iVar6 = FUN_80286834();
+  iVar6 = obj;
   iVar13 = *(int *)(iVar6 + 0xb8);
   bVar11 = false;
   bVar3 = false;
   bVar4 = false;
   bVar5 = false;
   local_30[0] = DAT_803e3058;
-  dVar14 = extraout_f1;
-  uVar7 = FUN_80017690(0x4e4);
+  uVar7 = GameBit_Get(0x4e4);
   if (uVar7 != 0) {
+    commandMask = *(byte *)(iVar13 + 0xb) | 9;
     if ((*(uint *)(iVar13 + 0x54) & 0x10) != 0) {
       *(undefined *)(iVar13 + 0xb) = 0;
     }
-    cVar1 = *(char *)(iVar13 + 8);
-    if (((cVar1 == '\b') || (cVar1 == '\r')) ||
-       ((cVar1 == '\x0e' && (*(char *)(iVar13 + 10) == '\x01')))) {
+    if (((*(byte *)(iVar13 + 8) == 8) || (*(byte *)(iVar13 + 8) == 0xd)) ||
+       ((*(byte *)(iVar13 + 8) == 0xe && (*(byte *)(iVar13 + 10) == 1)))) {
       bVar3 = true;
+      commandMask |= 0x10;
     }
     else {
-      iVar8 = FUN_801365c4();
-      dVar14 = extraout_f1_00;
+      iVar8 = trickyFindNearestUsableBaddie(*(int *)(iVar13 + 4),1,lbl_803E2524);
       if (iVar8 != 0) {
         bVar3 = true;
         bVar5 = true;
@@ -994,30 +987,37 @@ void Tricky_updateSideCommandPrompts(undefined8 param_1,double param_2,double pa
         }
       }
     }
-    if (((*(uint *)(iVar13 + 0x54) & 0x10) == 0) && (uVar7 = FUN_80017690(0x3f8), uVar7 != 0)) {
-      iVar8 = FUN_80017a98();
-      iVar8 = FUN_80294c80(iVar8);
-      if ((iVar8 != 0) && (uVar7 = FUN_80017690(0xd00), uVar7 == 0)) {
-        FUN_80294ca8(*(int *)(iVar13 + 4));
+    if (((*(uint *)(iVar13 + 0x54) & 0x10) == 0) && (uVar7 = GameBit_Get(0x3f8), uVar7 != 0)) {
+      iVar8 = Obj_GetPlayerObject();
+      iVar8 = fn_80296240(iVar8);
+      if ((iVar8 != 0) && (uVar7 = GameBit_Get(0xd00), uVar7 == 0)) {
+        if (fn_80296448(*(int *)(iVar13 + 4)) == 0) {
+          commandMask |= 0x20;
+        }
       }
     }
-    FUN_80017690(0xdd);
-    FUN_80017690(0x9e);
-    FUN_80017690(0x245);
+    if (GameBit_Get(0xdd) == 0) {
+      commandMask &= ~1;
+    }
+    if (GameBit_Get(0x9e) == 0) {
+      commandMask &= ~2;
+    }
+    if (GameBit_Get(0x245) == 0) {
+      commandMask &= ~0x10;
+    }
     *(undefined *)(iVar13 + 0xb) = 0;
     if ((bVar11) && ((*(uint *)(iVar13 + 0x54) & 0x200) == 0)) {
       *(float *)(iVar13 + 0x7b4) = lbl_803E3188;
-      if ((*(int *)(iVar13 + 0x7b0) == 0) && (uVar7 = FUN_80017ae8(), (uVar7 & 0xff) != 0)) {
+      if ((*(int *)(iVar13 + 0x7b0) == 0) && (Obj_IsLoadingLocked() != 0)) {
         uVar7 = randomGetRange(0,1);
         uVar2 = *(ushort *)((int)local_30 + uVar7 * 2);
         iVar8 = *(int *)(iVar6 + 0xb8);
         if (((*(byte *)(iVar8 + 0x58) >> 6 & 1) == 0) &&
            (((0x2f < *(short *)(iVar6 + 0xa0) || (*(short *)(iVar6 + 0xa0) < 0x29)) &&
             (bVar11 = FUN_800067f0(iVar6,0x10), !bVar11)))) {
-          in_r8 = 0;
-          dVar14 = (double)FUN_80039468(iVar6,iVar8 + 0x3a8,uVar2,0x500,0xffffffff,0);
+          objAudioFn_800393f8(iVar6,(void *)(iVar8 + 0x3a8),uVar2,0x500,0xffffffff,0);
         }
-        puVar9 = FUN_80017aa4(0x20,0x17c);
+        puVar9 = (undefined2 *)Obj_AllocObjectSetup(0x20,0x17c);
         local_34[0] = -1;
         local_34[1] = -1;
         local_34[2] = -1;
@@ -1047,24 +1047,20 @@ void Tricky_updateSideCommandPrompts(undefined8 param_1,double param_2,double pa
         }
         *(byte *)(iVar13 + 0x7bc) =
              (byte)((uVar7 & 0xff) << 4) & 0x30 | *(byte *)(iVar13 + 0x7bc) & 0xcf;
-        uVar10 = FUN_80017ae4(dVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar9,
-                              4,0xff,0xffffffff,*(uint **)(iVar6 + 0x30),in_r8,in_r9,in_r10);
+        uVar10 = Obj_SetupObject((int)puVar9,4,0xff,0xffffffff,*(int *)(iVar6 + 0x30));
         *(undefined4 *)(iVar13 + 0x7b0) = uVar10;
-        dVar14 = (double)ObjLink_AttachChild(iVar6,*(int *)(iVar13 + 0x7b0),
-                                      *(byte *)(iVar13 + 0x7bc) >> 4 & 3);
+        ObjLink_AttachChild(iVar6,*(int *)(iVar13 + 0x7b0),*(byte *)(iVar13 + 0x7bc) >> 4 & 3);
       }
     }
     else if (*(int *)(iVar13 + 0x7b0) != 0) {
       *(float *)(iVar13 + 0x7b4) = *(float *)(iVar13 + 0x7b4) - lbl_803DC074;
-      dVar14 = (double)*(float *)(iVar13 + 0x7b4);
-      if (dVar14 <= (double)lbl_803E306C) {
-        dVar14 = (double)FUN_80135d54(dVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8
-                                      ,iVar6,iVar13,(int *)(iVar13 + 0x7b0));
+      if ((double)*(float *)(iVar13 + 0x7b4) <= (double)lbl_803E306C) {
+        objAnimFreeChildren(iVar6,iVar13,(int *)(iVar13 + 0x7b0));
       }
     }
     if ((bVar3) && ((*(uint *)(iVar13 + 0x54) & 0x200) == 0)) {
       *(float *)(iVar13 + 0x7ac) = lbl_803E3188;
-      if ((*(int *)(iVar13 + 0x7a8) == 0) && (uVar7 = FUN_80017ae8(), (uVar7 & 0xff) != 0)) {
+      if ((*(int *)(iVar13 + 0x7a8) == 0) && (Obj_IsLoadingLocked() != 0)) {
         uVar7 = randomGetRange(0,3);
         if (uVar7 == 0) {
           if (bVar4) {
@@ -1072,19 +1068,17 @@ void Tricky_updateSideCommandPrompts(undefined8 param_1,double param_2,double pa
             if (((*(byte *)(iVar8 + 0x58) >> 6 & 1) == 0) &&
                (((0x2f < *(short *)(iVar6 + 0xa0) || (*(short *)(iVar6 + 0xa0) < 0x29)) &&
                 (bVar11 = FUN_800067f0(iVar6,0x10), !bVar11)))) {
-              in_r8 = 0;
-              dVar14 = (double)FUN_80039468(iVar6,iVar8 + 0x3a8,0x359,0x500,0xffffffff,0);
+              objAudioFn_800393f8(iVar6,(void *)(iVar8 + 0x3a8),0x359,0x500,0xffffffff,0);
             }
           }
           else if ((((bVar5) &&
                     (iVar8 = *(int *)(iVar6 + 0xb8), (*(byte *)(iVar8 + 0x58) >> 6 & 1) == 0)) &&
                    ((0x2f < *(short *)(iVar6 + 0xa0) || (*(short *)(iVar6 + 0xa0) < 0x29)))) &&
                   (bVar11 = FUN_800067f0(iVar6,0x10), !bVar11)) {
-            in_r8 = 0;
-            dVar14 = (double)FUN_80039468(iVar6,iVar8 + 0x3a8,0x358,0x500,0xffffffff,0);
+            objAudioFn_800393f8(iVar6,(void *)(iVar8 + 0x3a8),0x358,0x500,0xffffffff,0);
           }
         }
-        puVar9 = FUN_80017aa4(0x20,0x175);
+        puVar9 = (undefined2 *)Obj_AllocObjectSetup(0x20,0x175);
         local_38[0] = -1;
         local_38[1] = -1;
         local_38[2] = -1;
@@ -1113,8 +1107,7 @@ void Tricky_updateSideCommandPrompts(undefined8 param_1,double param_2,double pa
           uVar7 = 0xffffffff;
         }
         *(byte *)(iVar13 + 0x7bc) = (byte)((uVar7 & 0xff) << 6) | *(byte *)(iVar13 + 0x7bc) & 0x3f;
-        uVar10 = FUN_80017ae4(dVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar9,
-                              4,0xff,0xffffffff,*(uint **)(iVar6 + 0x30),in_r8,in_r9,in_r10);
+        uVar10 = Obj_SetupObject((int)puVar9,4,0xff,0xffffffff,*(int *)(iVar6 + 0x30));
         *(undefined4 *)(iVar13 + 0x7a8) = uVar10;
         ObjLink_AttachChild(iVar6,*(int *)(iVar13 + 0x7a8),(ushort)(*(byte *)(iVar13 + 0x7bc) >> 6));
       }
@@ -1122,13 +1115,12 @@ void Tricky_updateSideCommandPrompts(undefined8 param_1,double param_2,double pa
     else if (*(int *)(iVar13 + 0x7a8) != 0) {
       *(float *)(iVar13 + 0x7ac) = *(float *)(iVar13 + 0x7ac) - lbl_803DC074;
       if ((double)*(float *)(iVar13 + 0x7ac) <= (double)lbl_803E306C) {
-        FUN_80135d54((double)*(float *)(iVar13 + 0x7ac),param_2,param_3,param_4,param_5,param_6,
-                     param_7,param_8,iVar6,iVar13,(int *)(iVar13 + 0x7a8));
+        objAnimFreeChildren(iVar6,iVar13,(int *)(iVar13 + 0x7a8));
       }
     }
+    return commandMask;
   }
-  FUN_80286880();
-  return;
+  return -1;
 }
 
 /*
