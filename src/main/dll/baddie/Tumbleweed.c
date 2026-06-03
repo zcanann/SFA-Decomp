@@ -4691,3 +4691,50 @@ void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
+{
+    u8* lastDst;
+    int n;
+    int k;
+    u8* idp;
+    int yoff;
+
+    lastDst = NULL;
+    n = 0;
+    k = 0;
+    idp = ids;
+    for (k = 0; k < count; k++) {
+        if ((u32)GameBit_Get(*(s16*)idp) != 0) {
+            n++;
+        }
+        idp += 4;
+    }
+    k = 0;
+    idp = ids;
+    yoff = (count - n) * 0x2a / 2 + 0x52;
+    for (n = 0; n < count; n++) {
+        if ((u32)GameBit_Get(*(s16*)idp) != 0) {
+            memcpy(dst, src, 0x3c);
+            lastDst = dst;
+            *(s16*)(dst + 6) = (s16)yoff;
+            *(s8*)(dst + 0x1a) = (s8)(k - 1);
+            *(s8*)(dst + 0x1b) = (s8)(k + 1);
+            *out = n;
+            out++;
+            dst += 0x3c;
+            yoff += 0x2a;
+            k++;
+        }
+        idp += 4;
+        src += 0x3c;
+    }
+    if (lastDst != NULL) {
+        *(s8*)(lastDst + 0x1b) = -1;
+    }
+    return k;
+}
+#pragma peephole reset
+#pragma scheduling reset
