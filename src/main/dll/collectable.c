@@ -875,7 +875,7 @@ void FUN_80145ee8(int param_1,int param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sideCommandEnable(int obj,int targetObj,int commandKind,int commandBit)
+void sideCommandEnable(int obj,int targetObj,int commandKind,int commandType)
 {
   int commandCount;
   int commandEntry;
@@ -887,7 +887,7 @@ void sideCommandEnable(int obj,int targetObj,int commandKind,int commandBit)
     trickyReportError(sSidekickCommandDebugTextBlock);
     return;
   }
-  *(byte *)(state + 0xb) = *(byte *)(state + 0xb) | (byte)(1 << commandBit);
+  *(byte *)(state + 0xb) = *(byte *)(state + 0xb) | (byte)(1 << commandType);
   commandIndex = 0;
   commandEntry = state;
   for (commandCount = (uint)*(byte *)(state + 0x798); 0 < commandCount;
@@ -904,7 +904,7 @@ void sideCommandEnable(int obj,int targetObj,int commandKind,int commandBit)
   commandEntry = state + (uint)*(byte *)(state + 0x798) * 8;
   *(char *)(commandEntry + 0x74c) = (char)commandKind;
   commandEntry = state + (uint)*(byte *)(state + 0x798) * 8;
-  *(char *)(commandEntry + 0x74d) = (char)commandBit;
+  *(char *)(commandEntry + 0x74d) = (char)commandType;
   commandEntry = state + (uint)*(byte *)(state + 0x798) * 8;
   *(undefined *)(commandEntry + 0x74e) = 3;
   *(char *)(state + 0x798) = *(char *)(state + 0x798) + '\x01';
@@ -914,9 +914,9 @@ void sideCommandEnable(int obj,int targetObj,int commandKind,int commandBit)
 /*
  * --INFO--
  *
- * Function: FUN_801460b8
- * EN v1.0 Address: 0x801460B8
- * EN v1.0 Size: 1980b
+ * Function: Tricky_updateSideCommandPrompts
+ * EN v1.0 Address: 0x80145AE8
+ * EN v1.0 Size: 1648b
  * EN v1.1 Address: 0x80145F10
  * EN v1.1 Size: 1648b
  * JP Address: TODO
@@ -924,7 +924,7 @@ void sideCommandEnable(int obj,int targetObj,int commandKind,int commandBit)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801460b8(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+void Tricky_updateSideCommandPrompts(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
 {
   char cVar1;

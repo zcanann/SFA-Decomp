@@ -48,7 +48,7 @@
  * - slot 07: 0x801461DC Tricky_destroy ref=free
  * - slot 09: 0x801461D4 Tricky_getExtraSize stub=const 2108 ref=getExtraSize (stub)
  * - slot 10: 0x80146158 Tricky_getAvailableCommands ref=getAvailableSkills
- * - slot 11: 0x80145AE8 Tricky_func0B
+ * - slot 11: 0x80145AE8 Tricky_updateSideCommandPrompts
  */
 
 #if 0

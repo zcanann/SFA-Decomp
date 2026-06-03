@@ -15,7 +15,7 @@
 // - 7: Tricky_destroy (0x801461DC)
 // - 9: Tricky_getExtraSize (0x801461D4)
 // - 10: Tricky_getAvailableCommands (0x80146158)
-// - 11: Tricky_func0B (0x80145AE8)
+// - 11: Tricky_updateSideCommandPrompts (0x80145AE8)
 // - 12: sideCommandEnable (0x801459E0)
 // - 13: Tricky_render2 (0x801459D0)
 // - 14: Tricky_func0E (0x801459C0)
