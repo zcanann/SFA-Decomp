@@ -29,7 +29,7 @@ extern OptionsMenuPanels lbl_8031ACB8;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8011C7B4(void)
+void optionsMenu_openAudioPanel(void)
 {
   OptionsMenuPanels *panels;
   int item;
@@ -87,7 +87,7 @@ void fn_8011C7B4(void)
   lbl_803DD706 = 2;
 }
 
-void fn_8011CA74(void)
+void optionsMenu_openGeneralPanel(void)
 {
   OptionsMenuPanels *panels;
   int lastUnlocked;

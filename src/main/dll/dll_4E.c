@@ -104,8 +104,8 @@ void optionsMenu_applyAudioSetting(int p1,int p2)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int fn_8011C7B4(void);
-extern int fn_8011CA74(void);
+extern int optionsMenu_openAudioPanel(void);
+extern int optionsMenu_openGeneralPanel(void);
 extern int languageMenuInit(void);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern int* gScreenTransitionInterface;
@@ -187,10 +187,10 @@ int optionsMenu_openSelectedSubmenu(int p1, int p2)
     if (p1 == 1) {
         switch (p2) {
         case 0:
-            fn_8011CA74();
+            optionsMenu_openGeneralPanel();
             return 1;
         case 2:
-            fn_8011C7B4();
+            optionsMenu_openAudioPanel();
             return 1;
         case 3:
             languageMenuInit();
