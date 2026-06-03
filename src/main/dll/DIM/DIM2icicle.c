@@ -116,7 +116,7 @@ extern f32 lbl_803E590C;
 extern undefined4 gDIMbossAnimTable[];
 extern undefined4 gDIMbossHitDetectAnimTable[];
 extern void fn_801BB328(int* obj, f32* p2);
-extern void fn_801BB3E8(int obj, u8 flag);
+extern void DIM2icicle_createStateLight(int obj, u8 isGreen);
 
 /*
  * --INFO--
@@ -742,7 +742,7 @@ void fn_801BC7E4(undefined4 param_1,undefined4 param_2,int param_3,int param_4)
       if (*(short *)(param_3 + 0x402) == 1) {
         *(ushort *)(param_3 + 0x400) = *(ushort *)(param_3 + 0x400) | 4;
         *(float *)(iVar5 + 0xa8) = lbl_803E58DC;
-        fn_801BB3E8(iVar3,0);
+        DIM2icicle_createStateLight(iVar3,0);
       }
     }
     else {
@@ -756,7 +756,7 @@ void fn_801BC7E4(undefined4 param_1,undefined4 param_2,int param_3,int param_4)
     }
   }
   if (*(short *)(param_3 + 0x402) == 2) {
-    fn_801BB3E8(iVar3,1);
+    DIM2icicle_createStateLight(iVar3,1);
   }
   if ((DAT_803de800 & 0x20000) != 0) {
     DAT_803de800 = DAT_803de800 & 0xfffdffff;
