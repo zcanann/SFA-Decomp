@@ -984,6 +984,7 @@ extern u8 lbl_803A8C78[];
 extern int lbl_803A9038[];
 extern u8 lbl_8031B5D8[];
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_8012F9B4(int idx, s16 target, s8 flag)
@@ -1035,6 +1036,7 @@ void fn_8012FA70(int idx, s8 flag)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 extern void textureFree(void *tex);
 extern void gameUiResetMenuState(void);
@@ -1370,10 +1372,14 @@ void GameUI_update(void)
         }
 
         if (f25 != 0) {
-            int cxa = (s8)padGetCX(0) < 0 ? -(s8)padGetCX(0) : (s8)padGetCX(0);
-            int doTarget = cxa > 5;
+            int cxa, cya;
+            int doTarget;
+            if ((s8)padGetCX(0) < 0) cxa = -(s8)padGetCX(0);
+            else cxa = (s8)padGetCX(0);
+            doTarget = cxa > 5;
             if (!doTarget) {
-                int cya = (s8)padGetCY(0) < 0 ? -(s8)padGetCY(0) : (s8)padGetCY(0);
+                if ((s8)padGetCY(0) < 0) cya = -(s8)padGetCY(0);
+                else cya = (s8)padGetCY(0);
                 doTarget = cya > 5;
             }
             if (doTarget) {
