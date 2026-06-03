@@ -558,7 +558,7 @@ int Minimap_update(void)
     int bw, bh;
     f32 fx, fz;
     f32 ox, oy;
-    f32 zoom;
+    f32 tw, th;
     f32 xrel, yrel;
     f32 panx, pany;
     f32 t, e, a, b;
@@ -741,8 +741,8 @@ int Minimap_update(void)
                     a = (f32)bw / (f32)texW;
                     bh = lbl_803DBBC4;
                     b = (f32)bh / (f32)texH;
-                    if (!(a < b)) a = b;
-                    if (!(a < lbl_803DBBBC)) a = lbl_803DBBBC;
+                    a = (a < b) ? a : b;
+                    a = (a < lbl_803DBBBC) ? a : lbl_803DBBBC;
                     lbl_803DBBB8 = a;
                     if (lbl_803DD95C != 0) {
                         xrel = -*(f32 *)(player + 0x20) + (f32)mx;
@@ -751,35 +751,36 @@ int Minimap_update(void)
                         xrel = -*(f32 *)(player + 0x18) + (f32)mx;
                         yrel = -*(f32 *)(player + 0x20) + (f32)lbl_803DD94A;
                     }
-                    zoom = lbl_803DBBB4;
-                    e = ((f32)bw - (f32)texW * zoom) * lbl_803E220C;
+                    tw = (f32)texW * lbl_803DBBB4;
+                    e = ((f32)bw - tw) * lbl_803E220C;
                     t = lbl_803E2208;
-                    if (!(t > e)) t = e;
+                    t = (t > e) ? t : e;
                     panx = -t;
-                    e = ((f32)bh - (f32)texH * zoom) * lbl_803E220C;
+                    th = (f32)texH * lbl_803DBBB4;
+                    e = ((f32)bh - th) * lbl_803E220C;
                     t = lbl_803E2208;
-                    if (!(t > e)) t = e;
+                    t = (t > e) ? t : e;
                     pany = -t;
                     t = lbl_803E2208;
                     if (t == panx) {
-                        a = zoom * (xrel * lbl_803DBBEC) - (f32)(bw / 2);
-                        if (!(t > a)) t = a;
-                        b = (f32)texW * zoom - (f32)bw;
-                        if (!(t < b)) t = b;
+                        a = lbl_803DBBB4 * (xrel * lbl_803DBBEC) - (f32)(bw / 2);
+                        t = (t > a) ? t : a;
+                        b = tw - (f32)bw;
+                        t = (t < b) ? t : b;
                         ox = t;
                     }
                     t = lbl_803E2208;
                     if (t == pany) {
-                        a = zoom * (yrel * lbl_803DBBEC) - (f32)(bh / 2);
-                        if (!(t > a)) t = a;
-                        b = (f32)texH * zoom - (f32)bh;
-                        if (!(t < b)) t = b;
+                        a = lbl_803DBBB4 * (yrel * lbl_803DBBEC) - (f32)(bh / 2);
+                        t = (t > a) ? t : a;
+                        b = th - (f32)bh;
+                        t = (t < b) ? t : b;
                         oy = t;
                     }
-                    uq = ox / zoom;
+                    uq = ox / lbl_803DBBB4;
                     u = (u32)uq;
-                    frac = zoom * (uq - (f32)u);
-                    vq = oy / zoom;
+                    frac = lbl_803DBBB4 * (uq - (f32)u);
+                    vq = oy / lbl_803DBBB4;
                     vv = (u32)vq;
                     ((u8 *)&col)[3] = (u8)lbl_803DD932;
                     ((u8 *)&col)[0] = 0x20;
@@ -789,7 +790,7 @@ int Minimap_update(void)
                     hudDrawRect(0x32, lbl_803DD938, bw + 0x32, lbl_803DD938 + bh, &cwRect);
                     drawPartialTexture(minimapTexture,
                                        (lbl_803E2210 - panx) - frac,
-                                       ((f32)(int)lbl_803DD938 - pany) - zoom * (vq - (f32)vv),
+                                       ((f32)(int)lbl_803DD938 - pany) - lbl_803DBBB4 * (vq - (f32)vv),
                                        (u8)lbl_803DD932,
                                        (int)(lbl_803E2214 * lbl_803DBBB4),
                                        texW - u, texH - vv, u, vv);
