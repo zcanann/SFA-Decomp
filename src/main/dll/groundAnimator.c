@@ -740,7 +740,7 @@ void FUN_8017de58(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
-/* fn_8017DAF0: ground-animator collectable hit handler. When player is in
+/* appleontree_handleCollectableHit: ground-animator collectable hit handler. When player is in
  * range, either send a trigger event (first contact) or apply healing +
  * particle FX + sfx + free-or-disable. */
 extern f32 Vec_xzDistance(float *a, float *b);
@@ -753,7 +753,7 @@ extern f32 lbl_803E37EC;
 extern f32 lbl_803E37F0;
 #pragma scheduling off
 #pragma peephole off
-void fn_8017DAF0(int obj)
+void appleontree_handleCollectableHit(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     int player = Obj_GetPlayerObject();
