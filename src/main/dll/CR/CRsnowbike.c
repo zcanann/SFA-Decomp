@@ -956,3 +956,41 @@ void sc_levelcontrol_init(int obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int randomGetRange(int lo, int hi);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+#pragma peephole off
+#pragma scheduling off
+void fn_801DBFA0(int obj, int p2, int p3, s8 idx)
+{
+    int def = *(int *)(obj + 0x4c);
+    int setup;
+    int row;
+
+    if (Obj_IsLoadingLocked() != 0) {
+        setup = Obj_AllocObjectSetup(0x28, 0x210);
+        *(u8 *)(setup + 4) = *(u8 *)(def + 4);
+        *(u8 *)(setup + 6) = *(u8 *)(def + 6);
+        *(u8 *)(setup + 5) = *(u8 *)(def + 5);
+        *(u8 *)(setup + 7) = *(u8 *)(def + 7) - 10;
+        row = p2 + idx * 0xc;
+        *(f32 *)(setup + 8) = *(f32 *)(row + 0xc);
+        *(f32 *)(setup + 0xc) = *(f32 *)(row + 0x10);
+        *(f32 *)(setup + 0x10) = *(f32 *)(row + 0x14);
+        *(u16 *)(setup + 0x1c) = randomGetRange(0x708, 0x1770);
+        *(u16 *)(setup + 0x1e) = 1;
+        *(u8 *)(setup + 0x20) = 10;
+        *(u8 *)(setup + 0x21) = 40;
+        *(u8 *)(setup + 0x22) = 50;
+        *(u8 *)(setup + 0x23) = 10;
+        *(u8 *)(setup + 0x24) = 50;
+        *(u8 *)(setup + 0x25) = -50;
+        *(s16 *)(setup + 0x26) = -1;
+        *(int *)(setup + 0x18) = 0;
+        *(int *)(p2 + idx * 4) = Obj_SetupObject(setup, 5, -1, -1, *(int *)(obj + 0x30));
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
