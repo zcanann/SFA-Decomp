@@ -3126,3 +3126,159 @@ void fn_80159FCC(s16* obj, u8* state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_80292E20(u32 angle, f32* s, f32* c);
+extern int objBboxFn_800640cc(f32* from, f32* to, f32 h, int n, void* buf, s16* obj, u8 p7, int p8, int p9, int p10);
+extern int fn_80295C88(void* player);
+extern void* Obj_GetPlayerObject(void);
+extern f32 lbl_803E2B3C;
+extern f32 lbl_803E2B48;
+extern f32 lbl_803E2B50;
+extern f32 lbl_803DBCE8;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80157004(s16* obj, u8* state)
+{
+    f32 scale;
+    int moved;
+    u8 noHit;
+    int turnRaw;
+    u32 mag;
+    u8 bufA[88];
+    u8 bufB[84];
+    f32 tgtA[3];
+    f32 posA[3];
+    f32 tgtB[3];
+    f32 posB[3];
+    f32 range;
+    f32 cosA;
+    f32 sinA;
+    f32 cosB;
+    f32 sinB;
+
+    {
+        u8 n = *(u8*)(*(int*)((char*)obj + 0x4c) + 0x2f);
+        scale = (f32)n;
+        if (lbl_803E2B18 == (f32)n) {
+            scale = lbl_803E2B38;
+        }
+        scale = scale / lbl_803E2B38;
+    }
+
+    *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
+    if (*(f32*)(state + 0x324) <= lbl_803E2B18) {
+        *(f32*)(state + 0x324) = (f32)(int)randomGetRange(0x3c, 0x78);
+    }
+
+    if (lbl_803E2B18 != *(f32*)(state + 0x328)) {
+        ObjHits_DisableObject(obj);
+        if (*(s16*)((char*)obj + 0xa0) != 5) {
+            fn_8014D08C((int*)obj, (int*)state, 5, lbl_803DBCEC, 0, 0);
+        } else if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
+            ObjHits_EnableObject(obj);
+            *(f32*)(state + 0x328) = lbl_803E2B18;
+        }
+        *(u8*)((char*)obj + 0x36) = 0xff;
+        moved = 1;
+    } else {
+        moved = 0;
+    }
+
+    if (moved == 0) {
+        u32 ang;
+        f32 diff;
+        void* other;
+
+        *(s16*)obj = *(s16*)obj + *(u16*)(state + 0x338);
+        posA[0] = *(f32*)((char*)obj + 0xc);
+        posA[1] = *(f32*)((char*)obj + 0x10);
+        posA[2] = *(f32*)((char*)obj + 0x14);
+        fn_80292E20((u16)*(s16*)obj, &sinA, &cosA);
+        tgtA[0] = -(lbl_803E2B38 * sinA - *(f32*)((char*)obj + 0xc));
+        tgtA[1] = lbl_803E2B3C + *(f32*)((char*)obj + 0x10);
+        tgtA[2] = -(lbl_803E2B38 * cosA - *(f32*)((char*)obj + 0x14));
+        noHit = !(u8)objBboxFn_800640cc(posA, tgtA, lbl_803E2B18, 3, bufA, obj, *(u8*)(state + 0x261), -1, 0xff, 0);
+        ang = getAngle(*(f32*)((char*)obj + 0xc) - *(f32*)(*(int*)(state + 0x29c) + 0xc),
+                       *(f32*)((char*)obj + 0x14) - *(f32*)(*(int*)(state + 0x29c) + 0x14)) & 0xffff;
+        diff = (f32)(int)(ang - ((int)*(s16*)obj & 0xffffu));
+        if (diff > lbl_803E2B2C) {
+            diff = lbl_803E2B28 + diff;
+        }
+        if (diff < lbl_803E2B34) {
+            diff = lbl_803E2B30 + diff;
+        }
+        turnRaw = (int)diff;
+        {
+            int t = (s16)turnRaw;
+            mag = (u16)(t >= 0 ? t : -t);
+        }
+        if (fn_80295C88(Obj_GetPlayerObject()) != 0) {
+            range = lbl_803E2B48;
+            other = (void*)ObjGroup_FindNearestObject(0x30, obj, &range);
+            if (other != NULL) {
+                s16 yaw = Obj_GetYawDeltaToObject(obj, other, &range);
+                int t;
+                if (yaw < -300) {
+                    yaw = -300;
+                } else if (yaw > 300) {
+                    yaw = 300;
+                }
+                t = yaw;
+                *(u16*)(state + 0x338) = t;
+                if (t >= 0) {
+                } else {
+                    t = -t;
+                }
+                if (t < 0x4000) {
+                    *(s16*)obj = -*(s16*)obj;
+                    posB[0] = *(f32*)((char*)obj + 0xc);
+                    posB[1] = *(f32*)((char*)obj + 0x10);
+                    posB[2] = *(f32*)((char*)obj + 0x14);
+                    fn_80292E20((u16)*(s16*)obj, &sinB, &cosB);
+                    tgtB[0] = -(lbl_803E2B38 * sinB - *(f32*)((char*)obj + 0xc));
+                    tgtB[1] = lbl_803E2B3C + *(f32*)((char*)obj + 0x10);
+                    tgtB[2] = -(lbl_803E2B38 * cosB - *(f32*)((char*)obj + 0x14));
+                    if ((u8)objBboxFn_800640cc(posB, tgtB, lbl_803E2B18, 3, bufB, obj, *(u8*)(state + 0x261), -1, 0xff, 0) == 0) {
+                        if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
+                            fn_8014D08C((int*)obj, (int*)state, 7, lbl_803E2B40 / (lbl_803E2B4C * scale), 0, 1);
+                        }
+                        *(s16*)((char*)obj + 2) = *(s16*)(state + 0x19c);
+                        *(s16*)((char*)obj + 4) = *(s16*)(state + 0x19e);
+                    }
+                    *(s16*)obj = -*(s16*)obj;
+                }
+                return;
+            }
+        }
+        if (*(void**)(state + 0x29c) != NULL && *(f32*)(*(int*)(state + 0x29c) + 0xa8) > lbl_803E2B50) {
+            *(f32*)(state + 0x2ac) = lbl_803DBCE8;
+        }
+        if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0 || noHit == 0
+            || (mag < 3000 && noHit != 0 && *(s16*)((char*)obj + 0xa0) != 0)) {
+            if (noHit != 0 && mag < 3000) {
+                *(u16*)(state + 0x338) = 0;
+                fn_8014D08C((int*)obj, (int*)state, 0, lbl_803E2B40 / scale, 0, 1);
+            } else {
+                fn_8014D08C((int*)obj, (int*)state, 1, lbl_803E2B44 / scale, 0, 0);
+                {
+                    f32 z = lbl_803E2B18;
+                    *(f32*)((char*)obj + 0x24) = z;
+                    *(f32*)((char*)obj + 0x28) = z;
+                    *(f32*)((char*)obj + 0x2c) = z;
+                }
+                if (mag < 3000) {
+                    *(u16*)(state + 0x338) = (randomGetRange(0, 1) - 1) * 300;
+                } else if ((s16)turnRaw < 0) {
+                    *(u16*)(state + 0x338) = 0xfed4;
+                } else {
+                    *(u16*)(state + 0x338) = 300;
+                }
+            }
+        }
+        *(s16*)((char*)obj + 2) = *(s16*)(state + 0x19c);
+        *(s16*)((char*)obj + 4) = *(s16*)(state + 0x19e);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
