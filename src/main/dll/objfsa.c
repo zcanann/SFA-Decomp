@@ -5962,7 +5962,7 @@ extern f32 lbl_803E05F8;
 
 #pragma scheduling off
 #pragma peephole off
-void *fn_800DAFDC(int pos, int p4_filter, int p5_filter) {
+void *Objfsa_FindNearestCurveType24(int pos, int p4_filter, int p5_filter) {
     int count;
     int *hit;
     int *bestHit;
@@ -5997,7 +5997,7 @@ void *fn_800DAFDC(int pos, int p4_filter, int p5_filter) {
 
 #pragma scheduling off
 #pragma peephole off
-void *fn_800DB0E0(int pos, int p4_filter, int p5_filter) {
+void *Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter) {
     int count;
     int **list;
     int i;

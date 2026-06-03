@@ -110,7 +110,7 @@ int trickyGuardFindBaddieTarget(int p) {
 #pragma scheduling on
 
 extern int trickyDebugPrint(const char *fmt, ...);
-extern int fn_800DAFDC(float *pos, int p2, int p3);
+extern int Objfsa_FindNearestCurveType24(float *pos, int p2, int p3);
 extern int fn_8013D5A4(int p1, int p2, void *target, int p4, f32 f);
 extern int trickyMove(int p1, void *p2);
 extern void fn_80139930(int p1, s16 angle);
@@ -178,7 +178,7 @@ void trickyFlame(int p1, int p2) {
     switch (*(u8 *)(p2 + 0xa)) {
     case 0:
         trickyDebugPrint(strBase + 0x700);
-        *(int *)(p2 + 0x71c) = fn_800DAFDC((float *)(*(int *)(p2 + 0x24) + 0x18), -1, 4);
+        *(int *)(p2 + 0x71c) = Objfsa_FindNearestCurveType24((float *)(*(int *)(p2 + 0x24) + 0x18), -1, 4);
         if (*(u8 *)(*(int *)(p2 + 0x71c) + 0x3) != 0) {
             if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x71c) + 0x8)) {
                 *(int *)(p2 + 0x28) = *(int *)(p2 + 0x71c) + 0x8;

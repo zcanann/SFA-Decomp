@@ -2739,7 +2739,7 @@ extern int Objfsa_GetPatchGroupIdAtPoint(void *pos);
 extern void walkPath_writeU16LE(int pathId,u8 *out);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject(int setup,int param_2,int param_3,int param_4,int param_5);
-extern int fn_800DB0E0(void *pos,int param_2,int param_3);
+extern int Objfsa_FindNearestEnabledCurveType24(void *pos,int param_2,int param_3);
 extern f32 lbl_803E23DC;
 
 /* trickyFn_801451d8: 300b - seed Tricky's path state and ensure the helper object exists. */
@@ -2882,7 +2882,7 @@ void Tricky_func0F(int *obj,int commandEnabled,int targetObj) {
             if (busy != 0) {
                 return;
             }
-            state[0x700/4] = fn_800DB0E0((void *)(targetObj + 0x18), -1, 3);
+            state[0x700/4] = Objfsa_FindNearestEnabledCurveType24((void *)(targetObj + 0x18), -1, 3);
             *(f32*)((u8*)state + 0x710) = (f32)(int)randomGetRange(0x168, 0x28);
             *((u8*)state + 8) = 5;
             state[0x24/4] = targetObj;
