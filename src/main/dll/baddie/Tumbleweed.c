@@ -4782,3 +4782,52 @@ void fn_80134870(int obj, u8* arr)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct { u8 s0:2; u8 s1:2; u8 s2:2; u8 s3:2; } AnimSlots;
+
+#pragma scheduling off
+#pragma peephole off
+void objAnimFreeChildren(int a, int b, void** c)
+{
+    char buf[4];
+    void *v0, *v1, *v2;
+
+    if (*c == NULL) {
+        return;
+    }
+    ObjLink_DetachChild(a, (int)*c);
+    Obj_FreeObject(*c);
+    *c = NULL;
+    buf[0] = -1;
+    buf[1] = -1;
+    buf[2] = -1;
+    v0 = *(void**)(b + 0x7a8);
+    if (v0 != NULL) {
+        buf[*(u8*)(b + 0x7bc) >> 6 & 3] = 1;
+    }
+    v1 = *(void**)(b + 0x7b0);
+    if (v1 != NULL) {
+        buf[*(u8*)(b + 0x7bc) >> 4 & 3] = 1;
+    }
+    v2 = *(void**)(b + 0x7b8);
+    if (v2 != NULL) {
+        buf[*(u8*)(b + 0x7bc) >> 2 & 3] = 1;
+    }
+    if (buf[0] == -1) {
+        if (v0 != NULL) {
+            ObjLink_DetachChild(a, (int)v0);
+            ObjLink_AttachChild(a, *(int*)(b + 0x7a8), 0);
+            ((AnimSlots*)(b + 0x7bc))->s0 = 0;
+        } else if (v1 != NULL) {
+            ObjLink_DetachChild(a, (int)v1);
+            ObjLink_AttachChild(a, *(int*)(b + 0x7b0), 0);
+            ((AnimSlots*)(b + 0x7bc))->s1 = 0;
+        } else if (v2 != NULL) {
+            ObjLink_DetachChild(a, (int)v2);
+            ObjLink_AttachChild(a, *(int*)(b + 0x7b8), 0);
+            ((AnimSlots*)(b + 0x7bc))->s2 = 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
