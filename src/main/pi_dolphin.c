@@ -5373,6 +5373,91 @@ int fn_8004B148(int *p) {
     return count;
 }
 
+extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
+int fn_8004B31C(int *param_1, int param_2, int param_3, int param_4, u8 param_5) {
+    int i = 0;
+    int o4;
+    int o8;
+    int n;
+    int *node;
+    u32 *heap;
+    short s;
+    u32 pri;
+    u16 idx;
+    int parent;
+
+    *(s16 *)((char *)param_1 + 0x22) = 0;
+    *(s16 *)((char *)param_1 + 0x20) = 0;
+    o4 = 0;
+    o8 = 0;
+    for (i = 0; i < 0xf8; i += 8) {
+        *(int *)(param_1[1] + o4) = 0;
+        *(u8 *)(*param_1 + o8 + 0xe) = 0;
+        *(int *)(param_1[1] + o4 + 8) = 0;
+        *(u8 *)(*param_1 + o8 + 0x1e) = 0;
+        *(int *)(param_1[1] + o4 + 0x10) = 0;
+        *(u8 *)(*param_1 + o8 + 0x2e) = 0;
+        *(int *)(param_1[1] + o4 + 0x18) = 0;
+        *(u8 *)(*param_1 + o8 + 0x3e) = 0;
+        *(int *)(param_1[1] + o4 + 0x20) = 0;
+        *(u8 *)(*param_1 + o8 + 0x4e) = 0;
+        *(int *)(param_1[1] + o4 + 0x28) = 0;
+        *(u8 *)(*param_1 + o8 + 0x5e) = 0;
+        *(int *)(param_1[1] + o4 + 0x30) = 0;
+        *(u8 *)(*param_1 + o8 + 0x6e) = 0;
+        *(int *)(param_1[1] + o4 + 0x38) = 0;
+        *(u8 *)(*param_1 + o8 + 0x7e) = 0;
+        o4 += 0x40;
+        o8 += 0x80;
+    }
+    o4 = i * 8;
+    o8 = i * 0x10;
+    n = 0xfe - i;
+    if (i < 0xfe) {
+        do {
+            *(int *)(param_1[1] + o4) = 0;
+            *(u8 *)(*param_1 + o8 + 0xe) = 0;
+            o4 += 8;
+            o8 += 0x10;
+            n += -1;
+        } while (n != 0);
+    }
+    param_1[6] = param_2;
+    param_1[3] = param_3;
+    param_1[4] = param_4;
+    *(u8 *)((char *)param_1 + 0x28) = param_5 & 1;
+    param_1[9] = 10000;
+    s = *(s16 *)((char *)param_1 + 0x20);
+    if (s == 0xfe) {
+        node = NULL;
+    } else {
+        *(s16 *)((char *)param_1 + 0x20) = s + 1;
+        node = (int *)(*param_1 + s * 0x10);
+        *node = param_2;
+        node[2] = 0;
+        *(u8 *)(node + 3) = 0xff;
+        node[1] = (u32)vec3f_distanceSquared((f32 *)(*node + 8), (f32 *)param_1[3]);
+    }
+    i = node[1] + node[2];
+    heap = (u32 *)param_1[1];
+    s = *(s16 *)((char *)param_1 + 0x22) + 1;
+    *(s16 *)((char *)param_1 + 0x22) = s;
+    *(u16 *)(heap + s * 2 + 1) = *(s16 *)((char *)param_1 + 0x20) - 1;
+    heap[*(s16 *)((char *)param_1 + 0x22) * 2] = -1 - i;
+    i = *(s16 *)((char *)param_1 + 0x22);
+    pri = heap[i * 2];
+    idx = *(u16 *)(heap + i * 2 + 1);
+    *heap = 0xffffffff;
+    while (parent = i >> 1, heap[parent * 2] < pri) {
+        *(u16 *)(heap + i * 2 + 1) = *(u16 *)(heap + parent * 2 + 1);
+        heap[i * 2] = heap[parent * 2];
+        i = parent;
+    }
+    heap[i * 2] = pri;
+    *(u16 *)(heap + i * 2 + 1) = idx;
+    return 0;
+}
+
 extern char sDirBlockTag;
 extern u32 lbl_8035F3E8[];
 extern void *memcpy(void *dst, const void *src, u32 n);
