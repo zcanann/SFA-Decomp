@@ -2607,9 +2607,10 @@ extern f32 lbl_803E2B80;
  * any entry's modelType is 0x6a3 with state[0x2dc] bit 0x20000000 set
  * AND bits 0x1800 clear, latches "found" and exits. If nothing matched,
  * fires gCameraInterface vtable[0x24/4] with (0, 0, 0). */
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-void smallbasket_checkNearbyActiveBasket(int obj) {
+void smallbasket_checkNearbyActiveBasket(int obj, u8* state) {
     u8 count = (u8)fn_8014C11C(obj, lbl_803E2B80, 0, 0x28, lbl_803AC4A8);
     u8 noMatch = 1;
     if (count >= 1) {
@@ -2632,6 +2633,7 @@ void smallbasket_checkNearbyActiveBasket(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
@@ -3279,6 +3281,194 @@ void fn_80157004(s16* obj, u8* state)
         *(s16*)((char*)obj + 2) = *(s16*)(state + 0x19c);
         *(s16*)((char*)obj + 4) = *(s16*)(state + 0x19e);
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803DDA70;
+extern f32 lbl_803E2BA8;
+extern f32 lbl_803E2BAC;
+extern f32 lbl_803E2BB0;
+extern f32 lbl_803E2BB4;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80157EBC(int obj, u8* state, u8* attacker, int cmd, int p5, int damage)
+{
+    extern char lbl_8031FAE8[];
+    extern void firepipe_clearLinkedUpdateFlag(int);
+    typedef struct {
+        u8 pad[0x14];
+        BasketSeq16* seq;  // 0x14
+        u8 pad2[8];
+    } BasketDesc;
+    u8 idx;
+    BasketDesc* d = (BasketDesc*)lbl_8031FAE8;
+    BasketSeq16* tbl = d[(idx = *(u8*)(state + 0x33b))].seq;
+
+    if (cmd == 0xe) {
+        damage = damage << 3;
+    }
+    if (idx == 0 && cmd == 5) {
+        damage = damage << 2;
+    }
+    if (idx == 1
+        && (*(s16*)(attacker + 0x46) == 0x1b5 || *(s16*)(attacker + 0x44) == 0x1c || cmd == 0x1f)) {
+        return;
+    }
+    if ((*(u8*)(state + 0x33c) & 4) != 0 || (idx == 0 && (*(u8*)(state + 0x2f1) & 0x40) != 0)) {
+        if (cmd == 0x11) {
+            return;
+        }
+        if (*(s16*)(obj + 0x46) == 0x6a2) {
+            if (lbl_803DDA70 <= lbl_803E2BA8 && attacker != NULL) {
+                switch (*(s16*)(attacker + 0x46)) {
+                case 0x416:
+                    Sfx_PlayFromObject(obj, 0x36e);
+                    break;
+                case 0:
+                case 0x69:
+                    Sfx_PlayFromObject(obj, 0x22);
+                    break;
+                }
+                lbl_803DDA70 = lbl_803E2BAC;
+            }
+        } else {
+            Sfx_PlayFromObject(obj, 0x23e);
+        }
+        *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x10;
+        return;
+    }
+
+    if (idx == 1 && *(void**)(obj + 0xc8) != NULL) {
+        firepipe_clearLinkedUpdateFlag(*(int*)(obj + 0xc8));
+    }
+    *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) & ~0x40;
+    *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) & ~0x40;
+    if (cmd == 0x10 && *(u8*)(state + 0x33b) != 0) {
+        *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x20;
+        return;
+    }
+
+    if (*(u8*)(state + 0x33f) != 0) {
+        u8 step;
+        int i;
+        BasketSeq16* e;
+        if (*(u8*)(state + 0x33b) == 0) {
+            step = 4;
+        } else {
+            step = 3;
+        }
+        i = step * 0x10;
+        fn_8014D08C((int*)obj, (int*)state, *(u8*)((char*)tbl + i + 8), *(f32*)((int)tbl + i), 0,
+                    *(int*)((char*)tbl + i + 4) & 0xff);
+        e = (BasketSeq16*)((char*)tbl + i);
+        *(u8*)(state + 0x33c) = e->flagC;
+        *(u8*)(obj + 0xe4) = *(u8*)(state + 0x33c) & 1;
+        *(u8*)(state + 0x33f) = e->next9;
+        *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 8;
+        if (*(s16*)(obj + 0x46) == 0x6a2) {
+            if (lbl_803DDA70 <= lbl_803E2BA8 && attacker != NULL) {
+                switch (*(s16*)(attacker + 0x46)) {
+                case 0x416:
+                    Sfx_PlayFromObject(obj, 0x36e);
+                    break;
+                case 0:
+                case 0x69:
+                    Sfx_PlayFromObject(obj, 0x22);
+                    break;
+                }
+                Sfx_PlayFromObject(obj, 0x4aa);
+                lbl_803DDA70 = lbl_803E2BAC;
+            }
+        } else {
+            Sfx_PlayFromObject(obj, 0x23f);
+        }
+        if (damage > *(u16*)(state + 0x2b0)) {
+            *(u16*)(state + 0x2b0) = 0;
+        } else {
+            *(u16*)(state + 0x2b0) = *(u16*)(state + 0x2b0) - damage;
+        }
+        if (*(u16*)(state + 0x2b0) == 0 && *(u8*)(state + 0x33b) == 0) {
+            smallbasket_checkNearbyActiveBasket(obj, state);
+        }
+        return;
+    }
+
+    if ((*(u8*)(state + 0x33b) == 0 && cmd == 0x11 && GameBit_Get(0xc55) != 0)
+        || *(u8*)(state + 0x33b) == 1) {
+        u8 v;
+        fn_8014D08C((int*)obj, (int*)state, tbl[1].moveId, tbl[1].spd, 0, tbl[1].mask & 0xff);
+        *(u8*)(state + 0x33c) = tbl[1].flagC;
+        *(u8*)(obj + 0xe4) = *(u8*)(state + 0x33c) & 1;
+        *(u8*)(state + 0x33f) = tbl[1].next9;
+        v = *(u8*)(state + 0x33b);
+        if (v == 0) {
+            *(f32*)(state + 0x328) = lbl_803E2BB0 * (f32)*(u16*)(state + 0x2ec);
+            *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 8;
+            if (*(s16*)(obj + 0x46) == 0x6a2) {
+                if (lbl_803DDA70 <= lbl_803E2BA8 && attacker != NULL) {
+                    switch (*(s16*)(attacker + 0x46)) {
+                    case 0x416:
+                        Sfx_PlayFromObject(obj, 0x36e);
+                        break;
+                    case 0:
+                    case 0x69:
+                        Sfx_PlayFromObject(obj, 0x22);
+                        break;
+                    }
+                    Sfx_PlayFromObject(obj, 0x4aa);
+                    lbl_803DDA70 = lbl_803E2BAC;
+                }
+            } else {
+                Sfx_PlayFromObject(obj, 0x23f);
+            }
+            return;
+        }
+        if (v == 1) {
+            *(f32*)(state + 0x328) = lbl_803E2BB4 * (f32)*(u16*)(state + 0x2ec);
+            if (*(s16*)(obj + 0x46) == 0x6a2) {
+                if (lbl_803DDA70 <= lbl_803E2BA8 && attacker != NULL) {
+                    switch (*(s16*)(attacker + 0x46)) {
+                    case 0x416:
+                        Sfx_PlayFromObject(obj, 0x36e);
+                        break;
+                    case 0:
+                    case 0x69:
+                        Sfx_PlayFromObject(obj, 0x22);
+                        break;
+                    }
+                    Sfx_PlayFromObject(obj, 0x4aa);
+                    lbl_803DDA70 = lbl_803E2BAC;
+                }
+            } else {
+                Sfx_PlayFromObject(obj, 0x23e);
+            }
+            *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x10;
+        }
+        return;
+    }
+
+    if (cmd != 0x11) {
+        if (*(s16*)(obj + 0x46) == 0x6a2) {
+            if (lbl_803DDA70 <= lbl_803E2BA8 && attacker != NULL) {
+                switch (*(s16*)(attacker + 0x46)) {
+                case 0x416:
+                    Sfx_PlayFromObject(obj, 0x36e);
+                    break;
+                case 0:
+                case 0x69:
+                    Sfx_PlayFromObject(obj, 0x22);
+                    break;
+                }
+                Sfx_PlayFromObject(obj, 0x4aa);
+                lbl_803DDA70 = lbl_803E2BAC;
+            }
+        } else {
+            Sfx_PlayFromObject(obj, 0x23e);
+        }
+    }
+    *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x10;
 }
 #pragma peephole reset
 #pragma scheduling reset
