@@ -3793,20 +3793,19 @@ void Credits_initialise(void)
 /* EN v1.0 0x80138F14  size: 100b  GameBit-gated bit toggle on
  * obj->_b8->_54: requires GameBit_Get(0x4E4); sets bit 0x10000 then
  * checks bit 0x10. Returns 1 only when the post-OR check passes. */
+#pragma peephole off
 int trickyFn_80138f14(u8* obj)
 {
     u8* b = *(u8**)(obj + 0xb8);
-    u32 v;
-    u32 mask = 0x10000;
-    if ((u32)GameBit_Get(0x4E4) == 0u) return 0;
-    v = *(u32*)(b + 0x54);
-    v = v | mask;
-    *(u32*)(b + 0x54) = v;
-    if ((*(u32*)(b + 0x54) & 0x10) != 0u) {
-        return 1;
+    if ((u32)GameBit_Get(0x4E4) != 0u) {
+        *(u32*)(b + 0x54) |= 0x10000;
+        if ((*(u32*)(b + 0x54) & 0x10) != 0u) {
+            return 1;
+        }
     }
     return 0;
 }
+#pragma peephole reset
 
 extern u8    lbl_803A9FE4[0x34];
 extern f32   lbl_803E22F8;
