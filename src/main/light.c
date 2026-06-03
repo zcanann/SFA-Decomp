@@ -1202,7 +1202,7 @@ void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
 #pragma scheduling reset
 
 extern void Obj_SetActiveModelIndex(int obj, int idx);
-extern void fn_801FC378(int obj);
+extern void vfpdoorswitch_updateExplodingVariant(int obj);
 extern int ObjAnim_SetMoveProgress(f32 progress, ObjAnimComponent *anim);
 typedef int (*ObjAnimSetProgressObjectFirstFn)(int objAnimArg, f32 progress);
 typedef int (*ObjAnimAdvanceObjectFirstFn)(int objAnimArg, f32 moveStepScale, f32 deltaTime,
@@ -1211,7 +1211,7 @@ typedef int (*ObjAnimAdvanceObjectFirstFn)(int objAnimArg, f32 moveStepScale, f3
 typedef struct {
     s16 gameBitId;
     u8 activated:1;
-    u8 unkflag2:1;
+    u8 exploded:1;
     u8 _state2_lo:6;
 } VfpDoorSwitchState;
 
@@ -1221,7 +1221,7 @@ void vfpdoorswitch_update(int obj)
 {
     VfpDoorSwitchState *state;
     if (*(s16 *)(obj + 0x46) != 0x3e7) {
-        fn_801FC378(obj);
+        vfpdoorswitch_updateExplodingVariant(obj);
         return;
     }
     state = *(VfpDoorSwitchState **)(obj + 0xB8);
@@ -1243,7 +1243,7 @@ void vfpdoorswitch_init(int obj, int data) {
     if (GameBit_Get(state->gameBitId) != 0) {
         ((ObjAnimSetProgressObjectFirstFn)ObjAnim_SetMoveProgress)(obj, lbl_803E611C);
         state->activated = 1;
-        state->unkflag2 = 1;
+        state->exploded = 1;
         *(s16 *)(obj + 6) |= 0x4000;
     }
     if (*(s16 *)(obj + 0x46) == 0x3e7 && state->activated != 0) {
@@ -1263,7 +1263,7 @@ extern f32 lbl_803E6120;
 extern f32 lbl_803E6124;
 extern f32 timeDelta;
 
-void fn_801FC378(int obj)
+void vfpdoorswitch_updateExplodingVariant(int obj)
 {
     VfpDoorSwitchState *state = *(VfpDoorSwitchState **)(obj + 0xB8);
     int camView = Camera_GetCurrentViewSlot();
@@ -1278,7 +1278,7 @@ void fn_801FC378(int obj)
     }
     if (state->activated != 0) {
         ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6118, timeDelta, NULL);
-        if (state->unkflag2 == 0) {
+        if (state->exploded == 0) {
             if (*(f32 *)(obj + 0x98) >= lbl_803E611C) {
                 f32 vec[3];
                 PSVECSubtract((void *)(camView + 0xC), (void *)(obj + 0xC), vec);
@@ -1289,7 +1289,7 @@ void fn_801FC378(int obj)
                 *(f32 *)(obj + 0x1C) = *(f32 *)(obj + 0x10);
                 *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
                 spawnExplosion(obj, lbl_803E6124, 1, 1, 0, 0, 0, 0, 0);
-                state->unkflag2 = 1;
+                state->exploded = 1;
                 *(s16 *)(obj + 6) |= 0x4000;
             }
         }
