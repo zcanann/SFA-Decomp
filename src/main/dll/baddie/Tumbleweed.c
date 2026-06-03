@@ -3919,19 +3919,20 @@ extern f32 lbl_803E2290;
 #pragma peephole off
 void fn_80133818(void)
 {
-    f32 a;
-    f32 b;
-    f32 c;
-    f32 d;
     f32 e;
+    f32 d;
+    f32 c;
+    f32 b;
+    f32 a;
     u8 i;
 
+    i = 0;
     a = lbl_803E2284;
     b = lbl_803E2288;
     c = lbl_803E2208;
     d = lbl_803E228C;
     e = lbl_803E2290;
-    for (i = 0; i < 2; i++) {
+    for (; i < 2; i++) {
         lbl_803DBBC8[i] = (void *)Obj_SetupObject(Obj_AllocObjectSetup(32, 2010 + i), 4, -1, -1, 0);
         *(f32 *)((char *)lbl_803DBBC8[i] + 0xc) = a;
         *(f32 *)((char *)lbl_803DBBC8[i] + 0x10) = b;
