@@ -928,7 +928,7 @@ extern f32 lbl_803E3654;
 extern f32 lbl_803E3684;
 extern f32 lbl_803E364C;
 extern f32 lbl_803E3650;
-extern void fn_80178338(void);
+extern void doorf4_SeqFn(void);
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
 
@@ -939,7 +939,7 @@ void doorf4_init(int *obj, int *params)
 
     ObjMsg_AllocQueue(obj, 4);
     *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
-    *(void **)((char *)obj + 0xbc) = (void *)fn_80178338;
+    *(void **)((char *)obj + 0xbc) = (void *)doorf4_SeqFn;
     *(u8 *)((char *)obj + 0xaf) |= 8;
     *(u16 *)((char *)obj + 0xb0) |= 0x6000;
     state[4] = *(s16 *)((char *)params + 0x1e);

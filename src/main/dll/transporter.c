@@ -1721,7 +1721,7 @@ extern void warpToMap(int mapId, int flag);
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80176FC4(int *obj, int unused, int *arg2) {
+int WarpPoint_SeqFn(int *obj, int unused, int *arg2) {
     int *p = *(int **)((char *)obj + 0x4c);
     if (*(s8 *)((char *)p + 0x1d) != 2) {
         if (*(u8 *)((char *)arg2 + 0x80) == 1) {
@@ -1784,7 +1784,7 @@ void flameblast_init(int *obj, u8 *def) {
 
 void WarpPoint_init(int *obj, u8 *def) {
     s16 *state = *(s16 **)((char *)obj + 0xb8);
-    *(void **)((char *)obj + 0xbc) = (void *)fn_80176FC4;
+    *(void **)((char *)obj + 0xbc) = (void *)WarpPoint_SeqFn;
     *(s16 *)obj = (s16)((u32)def[0x18] << 8);
     state[0] = 0x1e;
     *(f32 *)((char *)state + 8) = (f32)((s32)*(s8 *)((char *)def + 0x1e) << 2);
