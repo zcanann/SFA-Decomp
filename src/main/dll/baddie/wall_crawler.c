@@ -1105,3 +1105,122 @@ void GameUI_release(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *Obj_GetPlayerObject(void);
+extern void *getArwing(void);
+extern int getScreenBlankFrameCount(void);
+extern void drawArwingHud(int a, int b, int c);
+extern void pauseMenuDrawText(int a, int b, int c);
+extern void *gameTextGetBox(int id);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern int gameTextGetPhrase(int text, int arg);
+extern void gameTextAppendStr(int phrase, int box);
+extern void gameTextFn_80016c18(int text, int *arg);
+extern void mapScreenDrawHud(int a, int b, int c);
+extern int objIsCurModelNotZero(void *obj);
+extern void GXSetScissor(int x, int y, int w, int h);
+extern int fn_8029605C(void *obj, f32 *outX, f32 *outY);
+extern void textureAnimFn_80053f2c(void *tex, int *a, int *b);
+extern void drawTexture(void *tex, int a, int b, f32 x, f32 y);
+extern void hudDrawFn_80121440(int a, int b, int c);
+extern void hudDrawButtons(int a, int b, int c);
+extern void drawTrickyHudOverlay(int a, int b, int c);
+extern void timeListDraw(int a, int b, int c);
+extern void Camera_ApplyCurrentViewport(int a);
+extern void hudDrawAirMeter(void);
+extern void fearTestMeterDraw(void);
+extern void highScoreScreenDraw(int a, int b, int c);
+
+extern u16 curGameText;
+extern s16 lbl_803DD8CA;
+extern s16 lbl_803DD8D0;
+extern int lbl_803A9440[];
+extern u8 pauseMenuState;
+extern int lbl_803DD828;
+extern int lbl_803DD82C;
+extern f32 lbl_803E1E70;
+extern u8 lbl_803DD75B;
+extern s8 lbl_803DBA90;
+extern s16 aButtonIcon;
+extern u8 bButtonIcon;
+
+/* EN v1.0 0x8012EC14  size: 796b  Top-level per-frame HUD draw dispatcher. */
+#pragma scheduling off
+#pragma peephole off
+void GameUI_hudDraw(int a, int b, int c)
+{
+    void *player = Obj_GetPlayerObject();
+    void *arwing = getArwing();
+    u8 *box;
+
+    if (getScreenBlankFrameCount() != 0) {
+        return;
+    }
+
+    if (arwing != 0) {
+        drawArwingHud(a, b, c);
+        pauseMenuDraw(a, b, c);
+        box = gameTextGetBox(0x7c);
+        if (curGameText != 0xffff && lbl_803DD8D0 != 0) {
+            gameTextSetColor(0xff, 0xff, 0xff, (u8)lbl_803DD8D0);
+            box[0x1e] = (u8)lbl_803DD8D0;
+            if (lbl_803DD8CA != -1) {
+                gameTextAppendStr(gameTextGetPhrase(curGameText, lbl_803A9440[1]), 0x7c);
+            } else {
+                gameTextFn_80016c18(curGameText, lbl_803A9440);
+            }
+        }
+        pauseMenuDrawText(a, b, c);
+    } else {
+        pauseMenuDraw(a, b, c);
+        pauseMenuDrawText(a, b, c);
+        if (mapScreenVisible != 0) {
+            mapScreenDrawHud(a, b, c);
+        }
+        objIsCurModelNotZero(player);
+        GXSetScissor(0, 0, 0x280, 0x1e0);
+        if (player != 0 && pauseMenuState == 0) {
+            f32 sx, sy;
+            if (fn_8029605C(player, &sx, &sy) != 0) {
+                void *tex;
+                f32 f3, x, y;
+                textureAnimFn_80053f2c(lbl_803DD8C4, &lbl_803DD82C, &lbl_803DD828);
+                tex = lbl_803DD8C4;
+                f3 = lbl_803E1E70;
+                x = sx - f3 * (f32)(u32)*(u16 *)((char *)tex + 0xa);
+                y = sy - f3 * (f32)(u32)*(u16 *)((char *)tex + 0xc);
+                drawTexture(tex, 0x96, 0x100, x, y);
+            }
+            hudDrawFn_80121440(a, b, c);
+        }
+        GXSetScissor(0, 0, 0x280, 0x1e0);
+        if (player != 0) {
+            hudDrawButtons(a, b, c);
+            box = gameTextGetBox(0x7c);
+            if (curGameText != 0xffff && lbl_803DD8D0 != 0) {
+                gameTextSetColor(0xff, 0xff, 0xff, (u8)lbl_803DD8D0);
+                box[0x1e] = (u8)lbl_803DD8D0;
+                if (lbl_803DD8CA != -1) {
+                    gameTextAppendStr(gameTextGetPhrase(curGameText, lbl_803A9440[1]), 0x7c);
+                } else {
+                    gameTextFn_80016c18(curGameText, lbl_803A9440);
+                }
+            }
+            drawTrickyHudOverlay(a, b, c);
+        }
+        if (lbl_803DD75B != 0) {
+            timeListDraw(a, b, c);
+        }
+        Camera_ApplyCurrentViewport(a);
+    }
+
+    hudDrawAirMeter();
+    fearTestMeterDraw();
+    if (lbl_803DBA90 >= 0) {
+        highScoreScreenDraw(a, b, c);
+    }
+    aButtonIcon = 0;
+    bButtonIcon = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
