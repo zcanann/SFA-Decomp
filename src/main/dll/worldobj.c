@@ -665,3 +665,210 @@ void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E5228;
+extern f32 lbl_803E522C;
+extern f32 lbl_803E5230;
+extern f32 lbl_803E5234;
+extern f32 lbl_803E5238;
+extern int lbl_803DBFA8;
+extern int lbl_803DBFAC;
+extern int lbl_803DBFB0;
+extern int lbl_803268CC[];
+extern int lbl_803268DC[];
+extern int *ObjList_FindObjectById(int id);
+extern int *fn_80296118(int p);
+extern void fn_8014C66C(int *o, int *target);
+extern int *tumbleweedbush_findNearestActive(void *pos);
+extern f32 vec3f_distanceSquared(void *a, void *b);
+extern int *getTrickyObject(void);
+extern f32 getXZDistance(void *a, void *b);
+extern int Sfx_IsPlayingFromObjectChannel(int *obj, int ch);
+extern void fn_80163980(int o);
+extern void Obj_FreeObject(int o);
+extern int *gObjectTriggerInterface;
+extern int *gGameUIInterface;
+extern int *gScreenTransitionInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801CE2BC(int *obj, u8 *st, short *p3) {
+    int near_ = ObjGroup_FindNearestObject(0xf, obj, 0);
+    switch (st[0x408]) {
+    case 9:
+        *(f32 *)(st + 0) += timeDelta;
+        if (*(f32 *)(st + 0) > lbl_803E5228) {
+            Sfx_PlayFromObject(obj, 0x150);
+            *(f32 *)(st + 0) -= lbl_803E5228;
+        }
+        if (*(f32 *)(st + 0x18) < (f32)(s32)(p3[0xc] * p3[0xc])) {
+            st[0x408] = 0xa;
+        }
+        break;
+    case 0xa:
+        if (st[0x43c] & 2) {
+            st[0x408] = 0xb;
+        }
+        break;
+    case 0xb:
+        *(f32 *)(st + 0) += timeDelta;
+        if (*(f32 *)(st + 0) > lbl_803E5228) {
+            Sfx_PlayFromObject(obj, 0x150);
+            *(f32 *)(st + 0) -= lbl_803E5228;
+        }
+        if (ObjTrigger_IsSet(obj) != 0) {
+            (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(3, near_, -1);
+            st[0x43c] = (u8)(st[0x43c] | 0x10);
+            st[0x408] = 0xd;
+            GameBit_Set(0xce1, 1);
+            GameBit_Set(0xd32, 1);
+        }
+        break;
+    case 0xc:
+        (**(void (**)(int, int))((char *)(*gObjectTriggerInterface) + 0x54))(near_, 0x5aa);
+        (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(3, near_, 0x30);
+        st[0x408] = 0xd;
+        break;
+    case 0xd:
+    {
+        int n = 4;
+        if (GameBit_Get(0x120) == 0) {
+            n = 3;
+        }
+        if (GameBit_Get(0x121) == 0) {
+            n -= 1;
+        }
+        {
+            int i = 0;
+            int *gb = lbl_803268DC;
+            int *ids = lbl_803268CC;
+            for (; i < n; i++) {
+                if (GameBit_Get(*gb) != 0) {
+                    GameBit_Set(*gb, 0);
+                }
+                {
+                    int *o2 = ObjList_FindObjectById(*ids);
+                    if (fn_80296118(*(int *)(st + 0x28)) == o2) {
+                        fn_8014C66C(o2, *(int **)(st + 0x28));
+                    } else {
+                        int *tw = tumbleweedbush_findNearestActive((char *)o2 + 0x18);
+                        if (tw == NULL || vec3f_distanceSquared((char *)tw + 0x18, (char *)o2 + 0x18) < lbl_803E522C) {
+                            if (vec3f_distanceSquared(*(char **)(st + 0x28) + 0x18, (char *)o2 + 0x18) < lbl_803E522C) {
+                                fn_8014C66C(o2, obj);
+                            } else {
+                                fn_8014C66C(o2, *(int **)(st + 0x28));
+                            }
+                        } else {
+                            fn_8014C66C(o2, tw);
+                        }
+                    }
+                }
+                gb++;
+                ids++;
+            }
+        }
+        {
+            int *tw2 = tumbleweedbush_findNearestActive(st + 0xc);
+            if (tw2 != NULL) {
+                int *tk = getTrickyObject();
+                (**(void (**)(int *, int *, int, int))((char *)(*(int **)((char *)tk + 0x68)) + 0x28))(tk, obj, 1, 1);
+            }
+            *(int *)(st + 0x48) = (int)&lbl_803DBFA8;
+            if (*(int *)(st + 0x24) == 0) {
+                short *cfg = *(short **)((char *)obj + 0x4c);
+                if (tw2 != NULL && *(s16 *)((char *)tw2 + 0x46) == 0x3fb) {
+                    if (getXZDistance((char *)obj + 0x18, (char *)tw2 + 0x18) < (f32)(s32)(cfg[0xc] * cfg[0xc])) {
+                        if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
+                            Sfx_PlayFromObject(obj, 0x38a);
+                        }
+                        if ((**(int (**)(int *))((char *)(*(int **)((char *)tw2 + 0x68)) + 0x30))(tw2) == 0) {
+                            (**(void (**)(int *, u8 *))((char *)(*(int **)((char *)tw2 + 0x68)) + 0x2c))(tw2, st + 0xc);
+                            *(int **)(st + 0x24) = tw2;
+                            st[0x408] = 0xe;
+                        }
+                    }
+                }
+            }
+        }
+        if (!(st[0x43c] & 0x40)) {
+            (**(void (**)(int, int))((char *)(*gGameUIInterface) + 0x58))(0xc8, 0x5d0);
+            st[0x43c] = (u8)(st[0x43c] | 0x40);
+        }
+        break;
+    }
+    case 0xe:
+        if (getXZDistance(st + 0xc, *(char **)(st + 0x24) + 0x18) < lbl_803E5230) {
+            Sfx_PlayFromObject(obj, 0x38b);
+            fn_80163980(*(int *)(st + 0x24));
+            st[0x408] = 0xf;
+        }
+        break;
+    case 0xf:
+        if (st[0x43c] & 2) {
+            Obj_FreeObject(*(int *)(st + 0x24));
+            *(int *)(st + 0x24) = 0;
+            st[0x43f] = st[0x43f] + 1;
+            if (*(s8 *)(st + 0x43f) > 3) {
+                st[0x43f] = 3;
+            }
+            GameBit_Set(0x48b, *(s8 *)(st + 0x43f));
+            if (*(s8 *)(st + 0x43f) >= 3) {
+                st[0x408] = 0x11;
+            } else {
+                if (*(s8 *)(st + 0x43f) % 2 == 0) {
+                    Sfx_PlayFromObject(obj, 0x14f);
+                }
+                st[0x408] = 0xd;
+            }
+        }
+        break;
+    case 0x10:
+        (**(void (**)(int, int))((char *)(*gObjectTriggerInterface) + 0x54))(near_, 0x157c);
+        (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(1, near_, 2);
+        st[0x408] = 0x13;
+        break;
+    case 0x11:
+        if (!(*(u16 *)(*(char **)(st + 0x28) + 0xb0) & 0x1000) && *(f32 *)(st + 8) >= lbl_803E5234) {
+            Sfx_PlayFromObject(obj, 0x109);
+            (**(void (**)(int, int))((char *)(*gScreenTransitionInterface) + 0x8))(0x14, 1);
+            st[0x408] = 0x12;
+            GameBit_Set(0xd32, 0);
+            st[0x43c] = (u8)(st[0x43c] & ~0x40);
+            (**(void (**)(void))((char *)(*gGameUIInterface) + 0x64))();
+        }
+        break;
+    case 0x12:
+        if (!(*(u16 *)(*(char **)(st + 0x28) + 0xb0) & 0x1000)) {
+            if ((**(int (**)(void))((char *)(*gScreenTransitionInterface) + 0x14))() != 0) {
+                GameBit_Set(0x102, 1);
+                (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(1, near_, -1);
+                st[0x408] = 0x13;
+            }
+        }
+        break;
+    default:
+        if (GameBit_Get(0x224) != 0) {
+            *(int *)(st + 0x48) = (int)&lbl_803DBFB0;
+        } else {
+            if (GameBit_Get(0xea7) == 0) {
+                GameBit_Set(0xea7, 1);
+                GameBit_Set(0x9d5, 1);
+            }
+            *(int *)(st + 0x48) = (int)&lbl_803DBFAC;
+        }
+        fn_801CE078(obj, st);
+        break;
+    }
+    if (st[0x43c] & 0x40) {
+        if (*(f32 *)(st + 8) < lbl_803E5238 * (f32)*(s8 *)(st + 0x43f)) {
+            *(f32 *)(st + 8) += timeDelta;
+        }
+        if (*(f32 *)(st + 8) >= lbl_803E5234) {
+            (**(void (**)(int))((char *)(*gGameUIInterface) + 0x5c))(0xc8);
+        } else {
+            (**(void (**)(int))((char *)(*gGameUIInterface) + 0x5c))((int)*(f32 *)(st + 8));
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
