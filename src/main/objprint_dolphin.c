@@ -4,6 +4,7 @@
 
 #pragma peephole off
 #pragma scheduling off
+undefined4 FUN_80043E64(uint *param_1,int param_2,int param_3);
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800068f4();
 extern undefined4 FUN_80006938();
@@ -3848,46 +3849,46 @@ uint FUN_8004286c(void)
   uVar1 = DAT_803dd900;
   FUN_80243e9c();
   if ((((DAT_803dd914 & 4) != 0) && ((uVar1 & 4) == 0)) && (DAT_8035fc54 == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_8035db50,0x2a,0x45);
+    FUN_80043E64((uint *)&DAT_8035db50,0x2a,0x45);
   }
   if ((((DAT_803dd914 & 8) != 0) && ((uVar1 & 8) == 0)) && (DAT_8035fcc0 == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_8035db50,0x2a,0x45);
+    FUN_80043E64((uint *)&DAT_8035db50,0x2a,0x45);
   }
   if ((((DAT_803dd914 & 0x40) != 0) && ((uVar1 & 0x40) == 0)) && (DAT_8035fc68 == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_8035ac70,0x2f,0x49);
+    FUN_80043E64((uint *)&DAT_8035ac70,0x2f,0x49);
   }
   if ((((DAT_803dd914 & 0x80) != 0) && ((uVar1 & 0x80) == 0)) && (DAT_8035fcd0 == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_8035ac70,0x2f,0x49);
+    FUN_80043E64((uint *)&DAT_8035ac70,0x2f,0x49);
   }
   if ((((DAT_803dd914 & 0x400) != 0) && ((uVar1 & 0x400) == 0)) && (DAT_8035fc34 == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_80356c70,0x24,0x4e);
+    FUN_80043E64((uint *)&DAT_80356c70,0x24,0x4e);
   }
   if ((((DAT_803dd914 & 0x800) != 0) && ((uVar1 & 0x800) == 0)) && (DAT_8035fcdc == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_80356c70,0x24,0x4e);
+    FUN_80043E64((uint *)&DAT_80356c70,0x24,0x4e);
   }
   if ((((DAT_803dd914 & 0x4000) != 0) && ((uVar1 & 0x4000) == 0)) && (DAT_8035fc28 == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_80352c70,0x21,0x4c);
+    FUN_80043E64((uint *)&DAT_80352c70,0x21,0x4c);
   }
   if ((((DAT_803dd914 & 0x8000) != 0) && ((uVar1 & 0x8000) == 0)) && (DAT_8035fcd4 == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_80352c70,0x21,0x4c);
+    FUN_80043E64((uint *)&DAT_80352c70,0x21,0x4c);
   }
   if ((((DAT_803dd914 & 0x20000) != 0) && ((uVar1 & 0x20000) == 0)) && (DAT_8035fc3c == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_80350c70,0x26,0x48);
+    FUN_80043E64((uint *)&DAT_80350c70,0x26,0x48);
   }
   if ((((DAT_803dd914 & 0x80000) != 0) && ((uVar1 & 0x80000) == 0)) && (DAT_8035fcc4 == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_80350c70,0x26,0x48);
+    FUN_80043E64((uint *)&DAT_80350c70,0x26,0x48);
   }
   if ((((DAT_803dd914 & 0x2000000) != 0) && ((uVar1 & 0x2000000) == 0)) && (DAT_8035fc14 == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_8034ec70,0x1a,0x53);
+    FUN_80043E64((uint *)&DAT_8034ec70,0x1a,0x53);
   }
   if ((((DAT_803dd914 & 0x8000000) != 0) && ((uVar1 & 0x8000000) == 0)) && (DAT_8035fcf8 == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_8034ec70,0x1a,0x53);
+    FUN_80043E64((uint *)&DAT_8034ec70,0x1a,0x53);
   }
   if ((((DAT_803dd914 & 0x20000000) != 0) && ((uVar1 & 0x20000000) == 0)) && (DAT_8035fbdc == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_80346d30,0xe,0x56);
+    FUN_80043E64((uint *)&DAT_80346d30,0xe,0x56);
   }
   if ((((DAT_803dd914 & 0x80000000) != 0) && ((uVar1 & 0x80000000) == 0)) && (DAT_8035fcfc == -1)) {
-    clearLoadedFileFlags_blocks1((uint *)&DAT_80346d30,0xe,0x56);
+    FUN_80043E64((uint *)&DAT_80346d30,0xe,0x56);
   }
   DAT_803dd914 = uVar1;
   DAT_803dd900 = DAT_803dd900 ^ DAT_803dd904;
@@ -4143,7 +4144,7 @@ void FUN_80043030(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 clearLoadedFileFlags_blocks1(uint *param_1,int param_2,int param_3)
+undefined4 FUN_80043E64(uint *param_1,int param_2,int param_3)
 {
   bool bVar1;
   bool bVar2;
@@ -4439,7 +4440,7 @@ int lockLevel(s32 val, int idx) {
     return cur;
 }
 
-extern int lbl_803DCC80;
+extern volatile int lbl_803DCC80;
 extern int OSDisableInterrupts(void);
 extern void OSRestoreInterrupts(int);
 void setLoadedFileFlags_blocks1(void) {
@@ -4453,6 +4454,13 @@ u32 getLoadedFileFlags(void) {
     OSRestoreInterrupts(s);
     return v;
 }
+void clearLoadedFileFlags_blocks1(void) {
+    int s = OSDisableInterrupts();
+    if (lbl_803DCC80 & 0x100000) {
+        lbl_803DCC80 ^= 0x100000;
+    }
+    OSRestoreInterrupts(s);
+}
 
 extern s16 lbl_8035F548[];
 s32 mapCheckCurBlocks(int v) {
@@ -4462,6 +4470,63 @@ s32 mapCheckCurBlocks(int v) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u8 lbl_803DCC2A;
+extern u32 lbl_803DCC2C;
+extern u32 lbl_803DCC30;
+extern u8 lbl_803DCC34;
+extern s32 lbl_803DB474;
+extern u8 lbl_803DB478;
+extern u8 lbl_803DB479;
+extern s32 lbl_803DB47C;
+extern u8 lbl_803DB480;
+extern u8 lbl_803DB481;
+extern u8 lbl_803DB482;
+extern u8 lbl_803DB484[4];
+#pragma scheduling off
+void renderResetFn_8003fc60(void) {
+    lbl_803DCC2A = 0;
+    lbl_803DCC2C = 0;
+    lbl_803DCC30 = 0;
+    lbl_803DCC34 = 0;
+    lbl_803DB474 = -1;
+    lbl_803DB478 = 0xff;
+    lbl_803DB479 = 0xff;
+    lbl_803DB47C = -1;
+    lbl_803DB480 = 0xff;
+    lbl_803DB481 = 0xff;
+    lbl_803DB482 = 0xff;
+    lbl_803DB484[3] = 0;
+    lbl_803DB484[2] = 0;
+    lbl_803DB484[1] = 0;
+    lbl_803DB484[0] = 0;
+}
+#pragma scheduling reset
+
+extern s32 DVDGetCommandBlockStatus(void *block);
+int fn_80041D98(void *block) {
+    s32 status;
+    if (block == NULL) {
+        return -1;
+    }
+    status = DVDGetCommandBlockStatus(block);
+    switch (status) {
+    case -1: return status;
+    case 0: return status;
+    case 1: return status;
+    case 2: return status;
+    case 3: return status;
+    case 4: return status;
+    case 5: return status;
+    case 6: return status;
+    case 7: return status;
+    case 8: return status;
+    case 9: return status;
+    case 10: return status;
+    case 11: return status;
+    }
+    return 0;
+}
 
 extern f32 lbl_803DEA04;
 extern int *Obj_GetActiveModel(int *obj);
