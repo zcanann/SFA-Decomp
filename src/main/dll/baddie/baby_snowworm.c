@@ -1759,7 +1759,8 @@ typedef struct {
     s16 id;         /* 0x00 */
     u8  _2[0xa];    /* 0x02 */
     u8  nav[4];     /* 0x0c */
-    u8  _10[0x8];   /* 0x10 */
+    f32 f10;        /* 0x10 */
+    s32 f14;        /* 0x14 */
     s32 f18;        /* 0x18 */
     u8  f1c;        /* 0x1c */
     u8  _1d[3];
@@ -2811,6 +2812,120 @@ void cMenuRun(void)
         }
     }
     *cursor = lbl_803DD8B4;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void gameTextSetDrawFunc(void *fn);
+extern void pauseMenuTextDrawFn(void);
+extern void gameTextFn_8001628c(int phrase, int a, int b, int *o1, int *o2, int *o3, int *o4);
+extern f32  fn_80293E80(f32 x);
+extern GridEntry lbl_8031B818[];
+extern s16  lbl_803DBA8A;
+extern f32  lbl_803DBA8C;
+extern f32  lbl_803DBAC0;
+extern f32  lbl_803DD748;
+extern f64  lbl_803E2088;
+extern f32  lbl_803E20A0;
+extern f32  lbl_803E2104;
+extern f32  lbl_803E1EC8;
+extern f64  lbl_803E2108;
+extern f32  lbl_803E2110;
+extern f32  lbl_803E2114;
+
+/* EN v1.0 0x80128470  size: 1548b  Pause-menu grid renderer: draws all cells
+ * (selection last), the breathing selected cell, header/footer text, and the
+ * flashing corner cursor. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80128470(int p1)
+{
+    gameTextSetDrawFunc(pauseMenuTextDrawFn);
+    lbl_803DBA8C = lbl_803E20A0;
+
+    if (lbl_803DD7BC <= 0.0f) {
+        int off = 0;
+        s8 i = 0;
+        while (*(int *)((char *)lbl_803DD824 + off + 0x18) > -1) {
+            if (i != lbl_803DD7D8) {
+                fn_80128A7C((u8)i, p1, 0);
+            }
+            off += 0x20;
+            i++;
+        }
+    } else {
+        s8 j = 0;
+        GridEntry *e = lbl_803DD824;
+        while (e->f18 > -1) {
+            e++;
+            j++;
+        }
+        j--;
+        for (; j >= 0; j--) {
+            if (j != lbl_803DD7D8) {
+                fn_80128A7C((u8)j, p1, 0);
+            }
+        }
+    }
+    fn_80128A7C((u8)lbl_803DD7D8, p1, 0);
+    {
+        f32 base = lbl_803DBAC0;
+        f32 s = fn_80293E80(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94);
+        fn_80128A7C((u8)lbl_803DD7D8, (int)((base * s + base) * (f32)(s16)p1), 4);
+    }
+    gameTextSetColor(0xff, 0xff, 0xff,
+                     (int)((double)((s16)p1 * (0x200 - lbl_803DD75C)) * lbl_803E2088));
+    lbl_803DBA8A = (s16)(0x100 - lbl_803DD75C);
+    if (pauseMenuState < 0xb && pauseMenuState >= 8) {
+        gameTextFn_80016810(0x3e8, 0xc8, 0x154);
+    } else {
+        gameTextFn_80016810(0x3dd, 0xc8, 0x154);
+    }
+    if (lbl_803DD75C != 0) {
+        s16 tx;
+        gameTextSetColor(0xff, 0xff, 0xff,
+                         (int)((double)((s16)p1 * lbl_803DD75C) * lbl_803E2088));
+        lbl_803DBA8A = (s16)(lbl_803DD75C - 0xff);
+        if (lbl_803DD824 == lbl_8031B818) {
+            int o1, o2, o3, o4;
+            gameTextFn_8001628c(lbl_803DD824[lbl_803DD7D8].f14, 0, 0, &o1, &o2, &o3, &o4);
+            tx = (s16)(0xdc - (o4 - o3) / 2);
+        } else {
+            tx = 0xdc;
+        }
+        gameTextFn_80016810(lbl_803DD824[lbl_803DD7D8].f14, 0xc8, tx);
+        gameTextFn_80016810(0x3de, 0xc8, 0x154);
+    }
+    if (lbl_803DD75C == 0) {
+        GridEntry *e = &lbl_803DD824[lbl_803DD7D8];
+        f32 scale = (f32)(lbl_803E2108 * e->f10);
+        int w = (int)lbl_803E1F34;
+        int cw = (int)(scale * (f32)*(u8 *)((char *)e + 0x8));
+        int ch = (int)(scale * (f32)*(u8 *)((char *)e + 0x9));
+        int vx = *(u16 *)((char *)e + 0x2) + *(s8 *)((char *)e + 0xb);
+        int x1 = (int)((f32)vx - lbl_803E2110 - (f32)(u8)cw);
+        s16 x2 = (s16)((u8)cw + vx);
+        int vy = *(u16 *)((char *)e + 0x4);
+        int y1 = (int)((f32)(u32)vy - lbl_803E2114 - (f32)(u8)ch);
+        s16 y2 = (s16)((u8)ch + vy);
+        s16 ph = (s16)((int)lbl_803DD748 & 0x3f);
+        s16 alpha;
+        u16 w16;
+        if (ph & 0x20) {
+            ph = (s16)(ph ^ 0x3f);
+        }
+        alpha = (s16)(ph * ((s16)p1 * 0xc0 / 0x100 + 0x40) / 31);
+        w16 = (u16)w;
+        pauseMenuDrawElement(*(int *)(hudTextures + 0x80), (f32)(s16)x1, (f32)(s16)y1,
+                             0x100, (u8)alpha, w16, 0);
+        drawFn_8011eb3c(*(int *)(hudTextures + 0x80), (f32)x2, (f32)(s16)y1,
+                        0x100, (u8)alpha, w16, 0x12, 0xa, 1);
+        drawFn_8011eb3c(*(int *)(hudTextures + 0x80), (f32)(s16)x1, (f32)y2,
+                        0x100, (u8)alpha, w16, 0x12, 0xa, 2);
+        drawFn_8011eb3c(*(int *)(hudTextures + 0x80), (f32)x2, (f32)y2,
+                        0x100, (u8)alpha, w16, 0x12, 0xa, 3);
+    }
+    gameTextSetDrawFunc(0);
 }
 #pragma peephole reset
 #pragma scheduling reset
