@@ -765,3 +765,78 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
   FUN_80286884();
   return;
 }
+
+extern int *lbl_803DCAC0; /* carryable-object interface singleton */
+extern void ObjMsg_AllocQueue(int obj, int capacity);
+extern void storeZeroToFloatParam(void *p);
+
+typedef struct {
+    u8 b7 : 1;
+    u8 b6 : 1;
+    u8 b5 : 1;
+    u8 b4 : 1;
+    u8 b3 : 1;
+    u8 b2 : 1;
+    u8 b1 : 1;
+    u8 b0 : 1;
+} BarrelBits;
+
+/* EN v1.0 0x801A25E8  size: 464b  Gunpowder-barrel setup: registers with the
+ * carryable interface and obj groups, zeroes the roll/contact state, seeds
+ * the hit radius from the model's bound halfword, and latches the
+ * indestructible bit for the cannon-range variant (type 0x754). */
+#pragma scheduling off
+#pragma peephole off
+void gunpowderbarrel_init(int obj, u8 *def)
+{
+    int st = *(int *)(obj + 0xb8);
+
+    *(u8 *)(st + 0x7) |= 2;
+    (*(void (**)(int, int, int))((char *)*lbl_803DCAC0 + 0x4))(obj, st, 5);
+    ObjGroup_AddObject(obj, 0x19);
+    ObjGroup_AddObject(obj, 0x16);
+    ObjMsg_AllocQueue(obj, 8);
+    *(int *)(obj + 0xf8) = 0;
+    *(s16 *)(st + 0x44) = 0;
+    *(s16 *)(st + 0x46) = 0;
+    *(u8 *)(st + 0x15) = 0;
+    *(s16 *)(st + 0x3c) = 0;
+    *(u8 *)(st + 0x16) = 0;
+    *(u8 *)(st + 0x17) = 0;
+    *(u8 *)(st + 0x3e) = 0;
+    *(int *)(st + 0x40) = 0;
+    *(f32 *)(st + 0x30) = lbl_803E42C0;
+    *(u8 *)(st + 0x49) = 0;
+    storeZeroToFloatParam((void *)(st + 0x18));
+    storeZeroToFloatParam((void *)(st + 0x1c));
+    *(u8 *)(st + 0x49) |= 1;
+    {
+        u8 v;
+        if ((s8)def[0x19] >= 1) {
+            v = 0;
+        } else {
+            v = 1;
+        }
+        ((BarrelBits *)(st + 0x48))->b7 = v;
+        if (*(s16 *)(def + 0x1c) == 0) {
+            v = 0;
+        } else {
+            v = 1;
+        }
+        ((BarrelBits *)(st + 0x48))->b6 = v;
+    }
+    ObjHits_EnableObject(obj);
+    *(f32 *)(st + 0x2c) = (f32)*(s16 *)(*(int *)(obj + 0x54) + 0x5a);
+    ((BarrelBits *)(st + 0x4a))->b5 = 0;
+    *(f32 *)(st + 0x38) = lbl_803E42C0;
+    *(int *)(st + 0x10) = 0;
+    (*(void (**)(int, int))((char *)*lbl_803DCAC0 + 0x2c))(st, 1);
+    if (*(void **)(obj + 0x54) != NULL) {
+        *(s16 *)(*(int *)(obj + 0x54) + 0xb2) = 1;
+    }
+    if (*(s16 *)(obj + 0x46) == 0x754) {
+        ((BarrelBits *)(st + 0x4a))->b1 = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
