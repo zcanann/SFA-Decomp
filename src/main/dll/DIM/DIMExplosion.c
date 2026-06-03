@@ -292,11 +292,11 @@ extern f32 lbl_803E48A4;
 extern f32 lbl_803E48A8;
 extern f32 lbl_803DBEF0;
 
-/* fn_801B1D84: integrate the falling debris under gravity, spin it, and on
+/* DIMwooddoor_updateFallingDebris: integrate the falling debris under gravity, spin it, and on
  * contact (or scripted trigger) fire the explosion and start the despawn timer. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801B1D84(int *obj)
+void DIMwooddoor_updateFallingDebris(int *obj)
 {
     int *extra = *(int **)((char *)obj + 0xb8);
     switch (*(u8 *)((char *)extra + 8)) {

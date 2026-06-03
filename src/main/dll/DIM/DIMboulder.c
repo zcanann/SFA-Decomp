@@ -1299,8 +1299,8 @@ void crrockfall_release(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, call fn_801AD7E4 with 9 args. */
-extern void fn_801AD7E4(void *a, void *b, int c, int d, int e, int f, int g, int h, int i);
+/* dll_16C_hitDetect: if extra->p && vtable(p,0x38)()==2, sync its transform into obj. */
+extern void dll_16C_syncSubObjectTransform(void *a, void *b, int c, int d, int e, int f, int g, int h, int i);
 #pragma scheduling off
 #pragma peephole off
 void dll_16C_hitDetect(void *obj) {
@@ -1308,7 +1308,7 @@ void dll_16C_hitDetect(void *obj) {
     void *p = *extra;
     if (p != NULL) {
         if ((*(int (**)(void *))(**(int **)((char *)p + 0x68) + 0x38))(p) == 2) {
-            fn_801AD7E4(obj, *extra, 0, 0, 0, 0, 0, 0, 0);
+            dll_16C_syncSubObjectTransform(obj, *extra, 0, 0, 0, 0, 0, 0, 0);
         }
     }
 }
@@ -1340,7 +1340,7 @@ void dll_16C_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
         if (hit != 0) {
             *(s16 *)((char *)obj + 6) |= 8;
             visible = (s8)objUpdateOpacity(p);
-            fn_801AD7E4(obj, p, p1, p2, p3, p4, visible, *(u8 *)((char *)extra + 0x20), 1);
+            dll_16C_syncSubObjectTransform(obj, p, p1, p2, p3, p4, visible, *(u8 *)((char *)extra + 0x20), 1);
         } else {
             *(s16 *)((char *)obj + 6) &= ~8;
         }
@@ -1605,11 +1605,11 @@ int dll_16C_SeqFn(int *obj, int arg2, u8 *arg3)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801AD7E4: snapshot the map-event sub-object's transform into the boulder
+/* dll_16C_syncSubObjectTransform: snapshot the map-event sub-object's transform into the boulder
  * extra block, optionally re-issuing a move on the sub-object first. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801AD7E4(void *a, void *b, int c, int d, int e, int f, int g, int h, int i)
+void dll_16C_syncSubObjectTransform(void *a, void *b, int c, int d, int e, int f, int g, int h, int i)
 {
     if (i != 0 && (s8)g != 0 && h > 0) {
         u8 saved = *(u8 *)((char *)b + 0x37);
