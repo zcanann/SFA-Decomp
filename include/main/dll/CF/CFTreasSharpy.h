@@ -6,7 +6,6 @@
 void cfccrate_init(int obj, int aux);
 void fxemit_emitEffect(int obj);
 int fxemit_SeqFn(int obj, int unused, int events);
-void FUN_8018e0a8(void);
 void cfccrate_release(void);
 void cfccrate_initialise(void);
 int fxemit_getExtraSize(void);

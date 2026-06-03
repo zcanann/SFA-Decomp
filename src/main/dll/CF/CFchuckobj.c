@@ -33,7 +33,7 @@ extern undefined4 FUN_8011e868();
 extern int Obj_GetPlayerObject(void);
 extern int curveFn_80010320(int curve, f32 progress);
 extern int fxemit_SeqFn(int obj, int unused, int events);
-extern undefined4 FUN_8018e0a8();
+extern void fxemit_emitEffect(int obj);
 extern void getTabEntry(void* dst, int fileId, int offset, int size);
 extern void* mmAlloc(int size, int heap, int flags);
 extern undefined4 FUN_80286838();
@@ -326,7 +326,7 @@ void FUN_8018f1b4(short *param_1)
           }
           dVar9 = FUN_80293900((double)(fVar4 * fVar4 + fVar2 * fVar2 + fVar3 * fVar3));
           if ((dVar9 <= (double)*pfVar8) || ((double)FLOAT_803e4ae4 == (double)*pfVar8)) {
-            FUN_8018e0a8();
+            fxemit_emitEffect((int)param_1);
           }
           *(int *)(param_1 + 0x7a) = -(int)*(short *)((int)pfVar8 + 0xe);
         }
