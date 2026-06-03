@@ -5369,7 +5369,7 @@ void defragMemory(int mode) {
     int done = 0;
     int pass = 0;
     texFlagFn_80023cbc(2);
-    if (getLoadedFileFlags() != 0) {
+    if ((int)getLoadedFileFlags() != 0) {
         return;
     }
     if (mode == 0 && lbl_803DCC78 == 0) {
