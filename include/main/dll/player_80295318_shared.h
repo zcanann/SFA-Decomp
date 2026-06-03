@@ -1148,7 +1148,7 @@ extern f32 lbl_803E7EF8;
 extern int lbl_803DE434;
 extern s16 lbl_803DE4B2;
 extern void fn_8018A20C(int a, int b);
-extern void fn_80189F5C(int a, void *b, void *c);
+extern void staffactivated_calcInteractionTargetXZ(int a, void *b, void *c);
 extern f32 lbl_803E812C;
 extern f32 lbl_803E7F28;
 extern f32 lbl_803E7F2C;

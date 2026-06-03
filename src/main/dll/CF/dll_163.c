@@ -418,7 +418,7 @@ extern f32 lbl_803E3BFC;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80189F5C(int obj, f32 *outX, f32 *outZ) {
+void staffactivated_calcInteractionTargetXZ(int obj, f32 *outX, f32 *outZ) {
     int bMode;
     float *pfVar1;
 

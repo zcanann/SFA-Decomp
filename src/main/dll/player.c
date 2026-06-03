@@ -4959,7 +4959,7 @@ int fn_80298CCC(int obj, int state)
         }
     } else {
         ObjAnim_SetCurrentMove(obj, 0xdd, k, 0);
-        fn_80189F5C(lbl_803DE434, (char *)obj + 0xc, (char *)obj + 0x14);
+        staffactivated_calcInteractionTargetXZ(lbl_803DE434, (char *)obj + 0xc, (char *)obj + 0x14);
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
         *(u8 *)((char *)state + 0x356) = 0;
         *(s16 *)((char *)inner + 0x478) = *(s16 *)((char *)lbl_803DE434);
@@ -9052,7 +9052,7 @@ int fn_80298E54(int obj, int state, f32 fv)
     default:
         ObjAnim_SetCurrentMove(obj, 0xab, lbl_803E7EA4, 0);
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7F40;
-        fn_80189F5C(lbl_803DE434, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x14));
+        staffactivated_calcInteractionTargetXZ(lbl_803DE434, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x14));
         *(s16 *)((char *)inner + 0x478) = *(s16 *)lbl_803DE434 + 0x8000;
         *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
         if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
@@ -9217,7 +9217,7 @@ int fn_802994D0(int obj, int state, f32 fv)
         lbl_803DE494 = *(f32 *)((char *)obj + 0x10);
         *(s16 *)((char *)inner + 0x478) = *(s16 *)lbl_803DE434;
         *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
-        fn_80189F5C(lbl_803DE434, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x14));
+        staffactivated_calcInteractionTargetXZ(lbl_803DE434, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x14));
         fn_802AB5A4(obj, inner, 7);
         *(int *)((char *)state + 0x4) |= 0x8000000;
         fromVec[0] = *(f32 *)((char *)obj + 0xc);
@@ -9605,7 +9605,7 @@ int fn_80298944(int obj, int state)
         } else {
             ObjAnim_SetCurrentMove(obj, 0xe0, lbl_803E7EA4, 0);
         }
-        fn_80189F5C(lbl_803DE434, (char *)obj + 0xc, (char *)obj + 0x14);
+        staffactivated_calcInteractionTargetXZ(lbl_803DE434, (char *)obj + 0xc, (char *)obj + 0x14);
         *(f32 *)((char *)state + 0x2a0) = lbl_803E7F40;
         *(u8 *)((char *)state + 0x356) = 0;
         *(s16 *)((char *)inner + 0x478) = *(s16 *)lbl_803DE434;
