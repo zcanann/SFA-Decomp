@@ -1720,3 +1720,80 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32 *d, int *fla
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int Obj_GetPlayerObject(void);
+extern s16 *objModelGetVecFn_800395d8(int obj, int idx);
+extern int ObjAnim_AdvanceCurrentMove(int objAnim, f32 moveStepScale, f32 deltaTime, int flags);
+extern u8 framesThisStep;
+extern f32 lbl_803E1CC4;
+
+/* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
+ * arms the move, phase 5 walks the setup/playback sub-phases. */
+#pragma scheduling off
+#pragma peephole off
+int dll_2E_func07(int obj, char *state, char *st, s16 a, s16 b)
+{
+    s16 pair[2];
+    int mode;
+    int player;
+
+    player = Obj_GetPlayerObject();
+    pair[0] = a;
+    pair[1] = b;
+    {
+        char *p = *(char **)(obj + 0x54);
+        *(s16 *)(p + 0x60) = *(s16 *)(p + 0x60) | 1;
+    }
+    mode = (s8)*(u8 *)(state + 0x56);
+    if (mode == 4) {
+        *(int *)(st + 0x5f8) = 0x50;
+        *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~8;
+        *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~2;
+        *(u8 *)(st + 0x600) = 3;
+        *(u8 *)(state + 0x56) = 5;
+        if ((*(u8 *)(st + 0x611) & 2) == 0) {
+            *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~4;
+        }
+        *(void (**)(int *))(state + 0xe8) = fn_80114B1C;
+        return 0;
+    } else if (mode == 5) {
+        if (*(u8 *)(st + 0x600) >= 2 && *(u8 *)(st + 0x600) <= 7) {
+            void *types = seqFn_800394a0();
+            switch (*(u8 *)(st + 0x600)) {
+            case 3:
+                objFn_8003acfc((int *)obj, (int *)types, *(u8 *)(st + 0x610), st + 0x1c);
+                *(int *)(st + 0x5f8) = 0;
+                *(u8 *)(st + 0x600) = 2;
+            case 2:
+                if (objAnimFn_80115650(obj, player, st + 0x5fc, st, st, pair, st + 0x10) == 0) {
+                    *(u8 *)(st + 0x600) = 6;
+                }
+                break;
+            case 6:
+                *(u8 *)(st + 0x600) = 7;
+            case 7:
+                *(f32 *)(st + 0x0) = lbl_803E1CC4;
+                break;
+            }
+            *(int *)(st + 0x604) = player;
+            ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(st + 0x0), (f32)framesThisStep, 0);
+            if (*(u8 *)(st + 0x600) == 7) {
+                s16 *v;
+                *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 8;
+                v = objModelGetVecFn_800395d8(obj, 0);
+                if (v != NULL) {
+                    *(s16 *)(state + 0x114) = v[1];
+                    *(s16 *)(state + 0x116) = v[0];
+                }
+                *(u8 *)(st + 0x600) = 0;
+                *(u8 *)(state + 0x56) = 0;
+                *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 4;
+                return 0;
+            }
+            return 0;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
