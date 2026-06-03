@@ -8630,6 +8630,185 @@ void fn_8004DA54(char *p1) {
     lbl_803DCD70 = 0xd;
     lbl_803DCD6C = 0x1d;
 }
+typedef struct { f32 x, y, z; } PiVec3;
+struct piIndMtx;
+extern struct piIndMtx lbl_802C1D50;
+extern void *Camera_GetInverseViewMatrix(void);
+extern void PSMTXRotAxisRad(f32 m[3][4], PiVec3 *axis, f32 rad);
+extern void fn_8006C510(void *out);
+extern f32 lbl_803DEB1C;
+extern f32 lbl_803DEB20;
+extern f32 LastLength_803DEB24;
+extern f32 lbl_803DEB28;
+extern f32 SaveStart_803DEAD0;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+void fn_8004E0FC(void) {
+    f32 m1e8[3][4];
+    f32 m1b8[3][4];
+    f32 m188[3][4];
+    f32 m158[3][4];
+    f32 m128[3][4];
+    f32 mf8[3][4];
+    f32 mc8[3][4];
+    f32 m98[3][4];
+    f32 m68[3][4];
+    IndTexMtx23 im;
+    PiVec3 va;
+    PiVec3 vb;
+    PiVec3 vc;
+    PiVec3 vd;
+    u8 *tex1c;
+    u8 *tex18;
+    f32 rx;
+    f32 ry;
+    void *invView;
+    va = ((PiVec3 *)&lbl_802C1D50)[4];
+    vb = ((PiVec3 *)&lbl_802C1D50)[5];
+    vc = ((PiVec3 *)&lbl_802C1D50)[6];
+    vd = ((PiVec3 *)&lbl_802C1D50)[7];
+    im = *(IndTexMtx23 *)((PiVec3 *)&lbl_802C1D50 + 8);
+    invView = Camera_GetInverseViewMatrix();
+    PSMTXRotAxisRad(mf8, &va, lbl_803DEAC8);
+    PSMTXRotAxisRad(mc8, &vb, lbl_803DEAC8);
+    PSMTXRotAxisRad(m98, &vc, lbl_803DEAC8);
+    PSMTXRotAxisRad(m68, &vd, lbl_803DEAC8);
+    m1e8[0][0] = lbl_803DEB1C;
+    m1e8[0][1] = lbl_803DEACC;
+    m1e8[0][2] = lbl_803DEACC;
+    m1e8[0][3] = SaveStart_803DEAD0 * (lbl_803DEB20 * playerMapOffsetX);
+    m1e8[1][0] = lbl_803DEACC;
+    m1e8[1][1] = lbl_803DEB1C;
+    m1e8[1][2] = lbl_803DEACC;
+    m1e8[1][3] = lbl_803DEACC;
+    m1e8[2][0] = lbl_803DEACC;
+    m1e8[2][1] = lbl_803DEACC;
+    m1e8[2][2] = lbl_803DEB1C;
+    m1e8[2][3] = SaveStart_803DEAD0 * (lbl_803DEB20 * playerMapOffsetZ);
+    m1b8[0][0] = LastLength_803DEB24;
+    m1b8[0][1] = lbl_803DEACC;
+    m1b8[0][2] = lbl_803DEACC;
+    m1b8[0][3] = lbl_803DEADC * (lbl_803DEB20 * playerMapOffsetX);
+    m1b8[1][0] = lbl_803DEACC;
+    m1b8[1][1] = LastLength_803DEB24;
+    m1b8[1][2] = lbl_803DEACC;
+    m1b8[1][3] = lbl_803DEACC;
+    m1b8[2][0] = lbl_803DEACC;
+    m1b8[2][1] = lbl_803DEACC;
+    m1b8[2][2] = LastLength_803DEB24;
+    m1b8[2][3] = lbl_803DEADC * (lbl_803DEB20 * playerMapOffsetZ);
+    PSMTXConcat(m1e8, invView, m1e8);
+    PSMTXConcat(mf8, m1e8, m1e8);
+    m1e8[2][0] = lbl_803DEACC;
+    m1e8[2][1] = lbl_803DEACC;
+    m1e8[2][2] = lbl_803DEACC;
+    m1e8[2][3] = lbl_803DEAC8;
+    PSMTXConcat(m1b8, invView, m1b8);
+    PSMTXConcat(mc8, m1b8, m1b8);
+    m1b8[2][0] = lbl_803DEACC;
+    m1b8[2][1] = lbl_803DEACC;
+    m1b8[2][2] = lbl_803DEACC;
+    m1b8[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(m1e8, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+    GXLoadTexMtxImm(m1b8, lbl_803DCD80 + 3, 0);
+    GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0, 0, lbl_803DCD80 + 3);
+    fn_8006C510(&tex1c);
+    {
+        int id = lbl_803DCD8C;
+        if (tex1c != 0) {
+            void *obj = tex1c + 0x20;
+            if (*(u8 *)(tex1c + 0x48) != 0) {
+                GXLoadTexObjPreLoaded(obj, *(void **)(tex1c + 0x40), id);
+            } else {
+                GXLoadTexObj(obj, id);
+            }
+        }
+    }
+    newshadows_getReflectionScrollOffsets(&rx, &ry);
+    GXSetIndTexMtx(2, im.v, -1);
+    GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 + 2, lbl_803DCD8C + 1);
+    m188[0][0] = lbl_803DEB20;
+    m188[0][1] = lbl_803DEACC;
+    m188[0][2] = lbl_803DEACC;
+    m188[0][3] = lbl_803DEB20 * playerMapOffsetX + rx;
+    m188[1][0] = lbl_803DEACC;
+    m188[1][1] = lbl_803DEB20;
+    m188[1][2] = lbl_803DEACC;
+    m188[1][3] = lbl_803DEACC;
+    m188[2][0] = lbl_803DEACC;
+    m188[2][1] = lbl_803DEACC;
+    m188[2][2] = lbl_803DEB20;
+    m188[2][3] = lbl_803DEB20 * playerMapOffsetZ;
+    PSMTXRotRad(m128, 0x79, lbl_803DEB28);
+    PSMTXConcat(m128, m188, m188);
+    PSMTXConcat(m188, invView, m188);
+    PSMTXConcat(m98, m188, m188);
+    m188[2][0] = lbl_803DEACC;
+    m188[2][1] = lbl_803DEACC;
+    m188[2][2] = lbl_803DEACC;
+    m188[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(m188, lbl_803DCD80 + 6, 0);
+    GXSetTexCoordGen2(lbl_803DCD88 + 2, 0, 0, 0, 0, lbl_803DCD80 + 6);
+    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 2, 2, 0, 0, 0, 0, 0);
+    GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
+    GXSetIndTexOrder(lbl_803DCD7C + 1, lbl_803DCD88 + 3, lbl_803DCD8C + 1);
+    m158[0][0] = lbl_803DEB20;
+    m158[0][1] = lbl_803DEACC;
+    m158[0][2] = lbl_803DEACC;
+    m158[0][3] = lbl_803DEB20 * playerMapOffsetX;
+    m158[1][0] = lbl_803DEACC;
+    m158[1][1] = lbl_803DEB20;
+    m158[1][2] = lbl_803DEACC;
+    m158[1][3] = lbl_803DEACC;
+    m158[2][0] = lbl_803DEACC;
+    m158[2][1] = lbl_803DEACC;
+    m158[2][2] = lbl_803DEB20;
+    m158[2][3] = lbl_803DEB20 * playerMapOffsetZ + ry;
+    PSMTXConcat(m158, invView, m158);
+    PSMTXConcat(m68, m158, m158);
+    m158[2][0] = lbl_803DEACC;
+    m158[2][1] = lbl_803DEACC;
+    m158[2][2] = lbl_803DEACC;
+    m158[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(m158, lbl_803DCD80 + 9, 0);
+    GXSetTexCoordGen2(lbl_803DCD88 + 3, 0, 0, 0, 0, lbl_803DCD80 + 9);
+    GXSetTevIndirect(lbl_803DCD90 + 1, lbl_803DCD7C + 1, 0, 2, 2, 0, 0, 1, 0, 0);
+    GXSetIndTexCoordScale(lbl_803DCD7C + 1, 0, 0);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 4);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 0xb, 9, 0);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C, 4);
+    GXSetTevColorIn(lbl_803DCD90 + 1, 0xf, 0xb, 9, 0);
+    GXSetTevAlphaIn(lbl_803DCD90 + 1, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90 + 1, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
+    getTextureFn_8006c5e4(&tex18);
+    {
+        int id2 = lbl_803DCD8C + 1;
+        if (tex18 != 0) {
+            void *obj = tex18 + 0x20;
+            if (*(u8 *)(tex18 + 0x48) != 0) {
+                GXLoadTexObjPreLoaded(obj, *(void **)(tex18 + 0x40), id2);
+            } else {
+                GXLoadTexObj(obj, id2);
+            }
+        }
+    }
+    lbl_803DCD88 = lbl_803DCD88 + 4;
+    lbl_803DCD90 = lbl_803DCD90 + 2;
+    lbl_803DCD8C = lbl_803DCD8C + 2;
+    lbl_803DCD80 = lbl_803DCD80 + 0xc;
+    lbl_803DCD7C = lbl_803DCD7C + 2;
+    lbl_803DCD6A += 2;
+    lbl_803DCD69 += 4;
+    lbl_803DCD68 += 2;
+}
 void textureFn_8004ff20(void *p1) {
     if (p1 != 0) {
         GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, 0x7d);
