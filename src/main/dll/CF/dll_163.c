@@ -468,8 +468,8 @@ extern f32 lbl_803E3BDC;
 extern f32 lbl_803E3C00;
 extern f32 lbl_803E3C04;
 extern void fn_801899B4(int obj, int state);
-extern void fn_80189610(int obj, int state);
-extern void fn_80189858(int obj, int state);
+extern void landed_arwing_updateHitReaction(int obj, int state);
+extern void landed_arwing_updateDamageTexture(int obj, int state);
 
 void staffactivated_update(int obj) {
     struct PartfxParams {
@@ -511,9 +511,9 @@ after_bit4:
         if (mode >= 6) {
             goto default_case;
         } else if (mode >= 4) {
-            fn_80189858(obj, state);
+            landed_arwing_updateDamageTexture(obj, state);
         } else {
-            fn_80189610(obj, state);
+            landed_arwing_updateHitReaction(obj, state);
         }
     } else if (mode == 0) {
         if (*(u8 *)(obj + 0xaf) & 0x4) {

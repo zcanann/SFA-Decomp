@@ -2540,7 +2540,7 @@ extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 /* landed arwing hit/animation step: handles impact reactions and spawned debris. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80189610(int obj, LandedArwingState *state) {
+void landed_arwing_updateHitReaction(int obj, LandedArwingState *state) {
     int def;
     int i;
     int setup;
@@ -2612,7 +2612,7 @@ void fn_80189610(int obj, LandedArwingState *state) {
 /* landed arwing material flags: mirrors game bits into the damaged texture state. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80189858(int obj, LandedArwingState *state) {
+void landed_arwing_updateDamageTexture(int obj, LandedArwingState *state) {
     int def;
     int *texture;
     u32 bit;
