@@ -726,7 +726,7 @@ extern int GameBit_Get(int bit);
 extern void gameTimerInit(int a, int b);
 extern void timerSetToCountUp(void);
 extern int isGameTimerDisabled(void);
-extern void Obj_GetPlayerObject(void);
+extern u8 *Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int a, int b);
 extern f32 lbl_803E5550;
 
@@ -939,3 +939,289 @@ void fn_801DC0BC(int p1, int p2)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern void skyFn_80088c94(int a, int b);
+extern void envFxActFn_800887f8(int arg);
+extern void getEnvfxActImmediately(void *obj, void *target, int animId, int flags);
+extern void getEnvfxAct(void *obj, void *source, int effectId, int arg);
+extern int  coordsToMapCell(f32 x, f32 z);
+extern void gameTextShow(int id);
+extern void skyFn_80088e54(int mode, f32 brightness);
+extern void warpToMap(int mapId, int flag);
+extern void timeListFn_8012df14(void);
+extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
+extern int *gScreenTransitionInterface;
+extern int *gSHthorntailAnimationInterface;
+extern int *gMapEventInterface;
+extern u16  lbl_803DC060[4];
+extern f32  timeDelta;
+extern f32  lbl_803E5558;
+extern f32  lbl_803E555C;
+extern f32  lbl_803E5560;
+extern f32  lbl_803E556C;
+
+/* EN v1.0 0x801DB3A8  size: 2732b  SnowBike Race level controller per-frame
+ * driver: replays the env-fx set on map (re)entry, latches the race
+ * GameBits, runs the two race countdown timers, eases the heavy fog level,
+ * tracks the totem combo code (bits 0x7d..0x7f), and keeps the area music
+ * in sync with the Thorntail animation state. */
+#pragma scheduling off
+#pragma peephole off
+void sc_levelcontrol_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    u8 *player = Obj_GetPlayerObject();
+
+    if (*(int *)(obj + 0xf4) != 0) {
+        skyFn_80088c94(7, 0);
+        envFxActFn_800887f8(0);
+        if (*(int *)(obj + 0xf4) == 2) {
+            getEnvfxActImmediately(0, 0, 0x4f, 0);
+            getEnvfxActImmediately(0, 0, 0x50, 0);
+            getEnvfxActImmediately(0, 0, 0x245, 0);
+            if ((*(u8 (**)(int, int))((char *)*gMapEventInterface + 0x4c))(0xe, 5) != 0) {
+                getEnvfxActImmediately(0, 0, 0x246, 0);
+            } else {
+                getEnvfxActImmediately(0, 0, 0x51, 0);
+            }
+        } else {
+            getEnvfxAct(0, 0, 0x4f, 0);
+            getEnvfxAct(0, 0, 0x50, 0);
+            getEnvfxAct(0, 0, 0x245, 0);
+            if ((*(u8 (**)(int, int))((char *)*gMapEventInterface + 0x4c))(0xe, 5) != 0) {
+                getEnvfxAct(0, 0, 0x246, 0);
+            } else {
+                getEnvfxAct(0, 0, 0x51, 0);
+            }
+        }
+        *(int *)(obj + 0xf4) = 0;
+    }
+    if (((SnowFlags22 *)(state + 0x22))->bit7 == 0 && (u32)GameBit_Get(0xc53) != 0) {
+        (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(0xe, 0xa, 1);
+        ((SnowFlags22 *)(state + 0x22))->bit7 = 1;
+    }
+    if (*(u8 *)(state + 0x1e) != 0xe) {
+        if (coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14)) == 0xe) {
+            u8 c = (*(int (**)(int))((char *)*gMapEventInterface + 0x40))(0xe);
+            Obj_GetPlayerObject();
+            switch (c) {
+            case 1:
+                if ((u32)GameBit_Get(0x5f3) != 0) {
+                    (*(void (**)(int, int))((char *)*gMapEventInterface + 0x44))(0xe, 2);
+                }
+                break;
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+                if ((u32)GameBit_Get(0x2d0) != 0) {
+                    (*(void (**)(int, int))((char *)*gMapEventInterface + 0x44))(0xe, 6);
+                }
+                break;
+            }
+        } else {
+            return;
+        }
+    }
+    if (*(f32 *)(state + 0x14) != lbl_803E5558) {
+        if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+            if (lbl_803E5550 == *(f32 *)(state + 0x14)) {
+                (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0x8))(0x73, 1);
+            }
+            *(f32 *)(state + 0x14) -= timeDelta;
+            if (*(f32 *)(state + 0x14) <= lbl_803E5558) {
+                *(f32 *)(state + 0x14) = lbl_803E5558;
+                *(f32 *)(state + 0x10) = lbl_803E5558;
+                GameBit_Set(0x2b8, 0);
+                GameBit_Set(0x4bd, 1);
+                GameBit_Set(0x81, 0);
+                GameBit_Set(0x82, 0);
+                GameBit_Set(0x83, 0);
+                GameBit_Set(0x84, 0);
+                GameBit_Set(0x63e, 1);
+                GameBit_Set(0x7cf, 1);
+            }
+        }
+    } else if (*(f32 *)(state + 0x10) != lbl_803E5558) {
+        if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+            if (lbl_803E5550 == *(f32 *)(state + 0x10)) {
+                (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0x8))(0x73, 1);
+            }
+            *(f32 *)(state + 0x10) -= timeDelta;
+            if (*(f32 *)(state + 0x10) <= lbl_803E5558) {
+                GameBit_Set(0x640, 1);
+                *(f32 *)(state + 0x10) = lbl_803E5558;
+                GameBit_Set(0x2b8, 0);
+                GameBit_Set(0x4bd, 1);
+                GameBit_Set(0x81, 0);
+                GameBit_Set(0x82, 0);
+                GameBit_Set(0x83, 0);
+                GameBit_Set(0x84, 0);
+            }
+        }
+    }
+    *(u8 *)(state + 0x1e) = coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
+    if ((u32)GameBit_Get(0xcdc) != 0) {
+        if (*(f32 *)(state + 0xc) > lbl_803E5558) {
+            gameTextShow(0x429);
+            *(f32 *)(state + 0xc) -= timeDelta;
+            if (*(f32 *)(state + 0xc) < lbl_803E5558) {
+                *(f32 *)(state + 0xc) = lbl_803E5558;
+            }
+        }
+        if ((*(u8 (**)(int, int))((char *)*gMapEventInterface + 0x4c))(0xe, 1) != 0) {
+            *(f32 *)(state + 0x4) = lbl_803E555C;
+            *(f32 *)(state + 0x8) = lbl_803E5560;
+        } else if ((*(u8 (**)(int, int))((char *)*gMapEventInterface + 0x4c))(0xe, 5) != 0) {
+            *(f32 *)(state + 0x4) = lbl_803E5564;
+            *(f32 *)(state + 0x8) = lbl_803E5568;
+            if (*(int *)(obj + 0xf8) != 0) {
+                skyFn_80088e54(1, lbl_803E5554);
+                *(int *)(obj + 0xf8) = 0;
+            }
+        } else {
+            *(f32 *)(state + 0x4) = lbl_803E555C;
+            *(f32 *)(state + 0x8) = lbl_803E5560;
+        }
+    } else {
+        *(f32 *)(state + 0x4) = lbl_803E556C;
+        *(f32 *)(state + 0x8) = lbl_803E5568;
+    }
+    if (*(f32 *)(state + 0x4) != *(f32 *)state) {
+        *(f32 *)state = *(f32 *)(state + 0x8) * timeDelta + *(f32 *)state;
+        if (*(f32 *)(state + 0x8) < lbl_803E5558) {
+            if (*(f32 *)state < *(f32 *)(state + 0x4)) {
+                *(f32 *)state = *(f32 *)(state + 0x4);
+            }
+        } else {
+            if (*(f32 *)state > *(f32 *)(state + 0x4)) {
+                *(f32 *)state = *(f32 *)(state + 0x4);
+            }
+        }
+        enableHeavyFog(lbl_803E5570 + *(f32 *)state, *(f32 *)state, lbl_803E5574, lbl_803E5578,
+                       lbl_803E557C, 0);
+    }
+    if ((u32)GameBit_Get(0x7d) != 0) {
+        GameBit_Set(0x7d, 0);
+        if (lbl_803DC060[*(u8 *)(state + 0x1c)] == 0x7d) {
+            *(u8 *)(state + 0x1c) += 1;
+        } else {
+            *(u8 *)(state + 0x1c) = 0;
+        }
+    } else if ((u32)GameBit_Get(0x7e) != 0) {
+        GameBit_Set(0x7e, 0);
+        if (lbl_803DC060[*(u8 *)(state + 0x1c)] == 0x7e) {
+            *(u8 *)(state + 0x1c) += 1;
+        } else {
+            *(u8 *)(state + 0x1c) = 0;
+        }
+    } else if ((u32)GameBit_Get(0x7f) != 0) {
+        GameBit_Set(0x7f, 0);
+        if (lbl_803DC060[*(u8 *)(state + 0x1c)] == 0x7f) {
+            *(u8 *)(state + 0x1c) += 1;
+        } else {
+            *(u8 *)(state + 0x1c) = 0;
+        }
+    }
+    if (*(u8 *)(state + 0x1c) >= 3) {
+        GameBit_Set(0x80, 1);
+        *(u8 *)(state + 0x1c) = 0;
+    }
+    if ((*(u8 *)(state + 0x1f) & 1) != 0) {
+        *(u8 *)(state + 0x1f) &= ~1;
+        GameBit_Set(0x60f, 1);
+        if ((u32)GameBit_Get(0x7a) == 0) {
+            if ((u32)GameBit_Get(0x627) != 0 && (u32)GameBit_Get(0x63e) != 0) {
+                GameBit_Set(0x61c, 1);
+            }
+        } else {
+            if ((u32)GameBit_Get(0x61c) != 0) {
+                GameBit_Set(0x85, 1);
+            }
+        }
+    }
+    if (*(u8 *)(state + 0x1d) == 0) {
+        if ((u32)GameBit_Get(0x60e) != 0) {
+            GameBit_Set(0x60e, 0);
+            timeListFn_8012df14();
+        }
+    } else if (*(u8 *)(state + 0x1d) == 5) {
+        if ((u32)GameBit_Get(0x60e) != 0) {
+            GameBit_Set(0x60e, 0);
+            gameTimerStop();
+            if ((u32)GameBit_Get(0x7a) != 0) {
+                GameBit_Set(0x85, 1);
+            }
+            *(f32 *)(state + 0x10) = lbl_803E5550;
+            (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0x8))(0x73, 1);
+            *(u8 *)(state + 0x1d) = 0;
+            Sfx_PlayFromObject(0, 0x10a);
+        }
+    }
+    if ((u32)GameBit_Get(0x647) != 0) {
+        GameBit_Set(0x612, 1);
+        GameBit_Set(0x90b, 1);
+        GameBit_Set(0x87, 1);
+    }
+    if ((u32)GameBit_Get(0xbde) != 0) {
+        GameBit_Set(0x2c6, 1);
+        GameBit_Set(0x2ce, 1);
+        GameBit_Set(0xbdc, 1);
+    }
+    if ((u32)GameBit_Get(0xbe5) != 0) {
+        GameBit_Set(0xbdf, 1);
+        GameBit_Set(0xbe1, 1);
+        GameBit_Set(0xbe3, 1);
+    }
+    {
+        int state2 = *(int *)(obj + 0xb8);
+        Obj_GetPlayerObject();
+        if (*(u8 *)(state2 + 0x1d) == 5) {
+            GameBit_Set(0x60f, 1);
+            if (isGameTimerDisabled()) {
+                if ((u32)GameBit_Get(0x7a) != 0) {
+                    GameBit_Set(0x85, 1);
+                }
+                *(f32 *)(state2 + 0x10) = lbl_803E5550;
+                *(u8 *)(state2 + 0x1d) = 0;
+                Sfx_PlayFromObject(0, 0x10a);
+                Music_Trigger(0xef, 0);
+            }
+        }
+    }
+    if ((u32)GameBit_Get(0x4d0) == 0) {
+        if ((u32)GameBit_Get(0x2b5) != 0) {
+            GameBit_Set(0x4d0, 1);
+            (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(0xe, 2, 1);
+            warpToMap(0x50, 0);
+            (*(void (**)(int, int, int))((char *)*gMapEventInterface + 0x50))(0xe, 1, 0);
+        }
+    }
+    if ((*(int (**)(int))((char *)*gSHthorntailAnimationInterface + 0x24))(0) != 0) {
+        if (*(u8 *)(state + 0x20) != 0x2d) {
+            *(u8 *)(state + 0x20) = 0x2d;
+            Music_Trigger(0x2d, 1);
+        }
+        if (*(s8 *)(state + 0x21) != -1) {
+            *(s8 *)(state + 0x21) = -1;
+            Music_Trigger(0x22, 0);
+        }
+    } else {
+        if (*(u8 *)(state + 0x20) != 0x33) {
+            *(u8 *)(state + 0x20) = 0x33;
+            Music_Trigger(0x33, 1);
+        }
+        if (*(s8 *)(state + 0x21) != 0x22) {
+            *(s8 *)(state + 0x21) = 0x22;
+            Music_Trigger(0x22, 1);
+        }
+    }
+    SCGameBitLatch_Update(state + 0x18, 1, -1, -1, 0xe1e, 0x36);
+    SCGameBitLatch_Update(state + 0x18, 2, -1, -1, 0xcbb, 0xc4);
+    if ((*(u8 *)(state + 0x1f) & 2) != 0) {
+        GameBit_Set(0x60e, 1);
+        *(u8 *)(state + 0x1f) &= ~2;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
