@@ -836,3 +836,88 @@ void fn_801A2E80(int obj, int def, int p3, int state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void mathFn_80021ac8(s16 *rot, f32 *vec);
+extern f32 sqrtf(f32 x);
+extern void normalize(f32 *x, f32 *y, f32 *z);
+extern f32 lbl_803E4368;
+extern f32 lbl_803E4370;
+extern f32 lbl_803E4374;
+extern f32 lbl_803E4378;
+extern f32 lbl_803E437C;
+extern f32 lbl_803E4380;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A30C0(int obj, int slot, int def)
+{
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 mag;
+    f32 scale;
+    int max2;
+    int max;
+
+    mathFn_80021ac8((s16 *)(def + 0x1a), (f32 *)(slot + 0x10));
+    *(f32 *)(slot + 0x4c) = *(f32 *)(slot + 0x10) * *(f32 *)(obj + 8) + *(f32 *)(def + 8);
+    *(f32 *)(slot + 0x50) = *(f32 *)(slot + 0x14) * *(f32 *)(obj + 8) + *(f32 *)(def + 0xc);
+    *(f32 *)(slot + 0x54) = *(f32 *)(slot + 0x18) * *(f32 *)(obj + 8) + *(f32 *)(def + 0x10);
+    *(s16 *)(slot + 0x68) = *(s16 *)(def + 0x1a);
+    *(s16 *)(slot + 0x66) = *(s16 *)(def + 0x1c);
+    *(s16 *)(slot + 0x64) = *(s16 *)(def + 0x1e);
+    dx = *(f32 *)(slot + 0x10) - (f32)*(s16 *)(def + 0x20);
+    dy = *(f32 *)(slot + 0x14) - (f32)*(s16 *)(def + 0x22);
+    dz = *(f32 *)(slot + 0x18) - (f32)*(s16 *)(def + 0x24);
+    mag = sqrtf(dz * dz + (dx * dx + dy * dy));
+    if (mag != lbl_803E4368) {
+        scale = (f32)*(s16 *)(def + 0x2c) / (lbl_803E4370 * mag);
+        if (dx != lbl_803E4368 || dy != lbl_803E4368 || dz != lbl_803E4368) {
+            normalize(&dx, &dy, &dz);
+        }
+        *(f32 *)(slot + 0x40) = dx * scale;
+        *(f32 *)(slot + 0x44) = dy * scale;
+        *(f32 *)(slot + 0x48) = dz * scale;
+        max = (int)(lbl_803E4374 * (lbl_803E4378 + scale));
+        *(f32 *)(slot + 0x1c) = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
+        *(f32 *)(slot + 0x20) = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
+        *(f32 *)(slot + 0x24) = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
+        scale = (f32)*(s16 *)(def + 0x30) / lbl_803E4358;
+        if (*(f32 *)(obj + 0x24) > lbl_803E4368) {
+            *(u8 *)(slot + 0x6c) |= 1;
+        }
+        if (*(f32 *)(obj + 0x2c) > lbl_803E4368) {
+            *(u8 *)(slot + 0x6c) |= 2;
+        }
+        if (*(f32 *)(slot + 0x1c) > lbl_803E4368) {
+            *(u8 *)(slot + 0x6c) |= 4;
+        }
+        if (*(f32 *)(slot + 0x20) > lbl_803E4368) {
+            *(u8 *)(slot + 0x6c) |= 8;
+        }
+        if (*(f32 *)(slot + 0x24) > lbl_803E4368) {
+            *(u8 *)(slot + 0x6c) |= 0x10;
+        }
+        max2 = (int)(lbl_803E4374 * (lbl_803E4378 + scale));
+        *(f32 *)(slot + 0x28) = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        *(f32 *)(slot + 0x2c) = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        *(f32 *)(slot + 0x30) = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        *(f32 *)(slot + 0x34) = dx * scale;
+        *(f32 *)(slot + 0x38) = dy * scale - lbl_803E4380;
+        *(f32 *)(slot + 0x3c) = dz * scale;
+        {
+            int height = *(s16 *)(def + 0x2e);
+            if (height != 0) {
+                *(f32 *)(slot + 0x58) = (f32)height;
+            }
+        }
+        *(u32 *)(slot + 0x5c) = *(u16 *)(def + 0x38);
+        if (*(u16 *)(def + 0x38) != 0) {
+            *(int *)(slot + 0x60) = (int)(*(u16 *)(def + 0x38) * (randomGetRange(0, 100) + 100)) / 200;
+        } else {
+            *(int *)(slot + 0x60) = -1;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
