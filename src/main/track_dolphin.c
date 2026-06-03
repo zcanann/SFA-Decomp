@@ -6422,8 +6422,8 @@ void fn_80061954(int *obj, void *buf48, void *bufA8)
 }
 
 extern void *Obj_GetPlayerObject(void);
-extern void fn_80077604(int hdr, void *col, void *mtx);
-extern void fn_8007788C(int hdr, void *col, void *mtx);
+extern void objectShadow_setupSwappedProjectedTexture(int hdr, void *col, void *mtx);
+extern void objectShadow_setupProjectedTexture(int hdr, void *col, void *mtx);
 extern void fn_80077AD8(int hdr, void *col, void *mtx, f32 f);
 extern void fn_80077EF8(int hdr, void *col, void *mtx, f32 f);
 extern void memcpy(void *dst, void *src, int n);
@@ -6474,7 +6474,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
     GXLoadPosMtxImm(outMtx, 0);
     if (*(u8 *)(*(int *)((char *)obj + 0x50) + 0x5f) & 0x4) {
         int c = *(int *)col;
-        fn_80077604(*(int *)((char *)blockData + 0xc), &c, mtx);
+        objectShadow_setupSwappedProjectedTexture(*(int *)((char *)blockData + 0xc), &c, mtx);
     } else {
         if (obj == Obj_GetPlayerObject())
             f30 = lbl_803DEC78[1];
@@ -6497,7 +6497,7 @@ void objDrawFn_80061f0c(void *cache, void *blockData, int *obj, int slot, void *
         }
         {
             int c = *(int *)col;
-            fn_8007788C(*(int *)((char *)blockData + 0xc), &c, mtx);
+            objectShadow_setupProjectedTexture(*(int *)((char *)blockData + 0xc), &c, mtx);
         }
     afterDraw:;
     }

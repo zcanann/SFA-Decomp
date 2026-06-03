@@ -3937,7 +3937,7 @@ void drawTexture(s16* obj, u8 alpha_mod, f32 sx, f32 sy, u16 scale)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80077604(f32* obj, u32* colorPtr, Mtx mtx)
+void objectShadow_setupSwappedProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 {
     extern void fn_8004C460(int, int);
     extern GXColor lbl_803DC308;
@@ -4002,7 +4002,7 @@ void fn_80077604(f32* obj, u32* colorPtr, Mtx mtx)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_8007788C(f32* obj, u32* colorPtr, Mtx mtx)
+void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
 {
     extern void fn_8004C460(int, int);
     extern void GXSetZMode();
