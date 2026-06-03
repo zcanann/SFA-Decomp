@@ -1549,3 +1549,181 @@ void xyzanimator_init(int obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int *gPathControlInterface;
+extern f32  sqrtf(f32);
+extern void Obj_FreeObject(u8 *obj);
+extern u8   lbl_803DDB00;
+extern f32  lbl_803E4034;
+extern f32  lbl_803E404C;
+extern f32  lbl_803E4050;
+extern f32  lbl_803E4054;
+extern f32  lbl_803E4058;
+extern f32  lbl_803E405C;
+
+/* EN v1.0 0x80196990  size: 1752b  dimbossicesmash_update: gate on the
+ * trigger gamebit, integrate velocity/rotation with per-axis gravity
+ * clamps, run the path-control hooks with surface bounce, fade alpha over
+ * the lifetime window, and emit the two trail particles. */
+#pragma scheduling off
+#pragma peephole off
+void dimbossicesmash_update(u8 *obj)
+{
+    u8 *state = *(u8 **)(obj + 0xb8);
+    u8 flags = state[0x29e];
+    u8 *setup;
+    int t;
+    int a;
+    s16 cnt;
+    u32 t0, t1;
+    f32 nx, ny, nz;
+    f32 len, inv, dot;
+    f32 fy, fz, ff;
+    f32 dx, dy, dz, k;
+    int i;
+    f32 stk[3];
+
+    if ((flags & 2) == 0) {
+        setup = *(u8 **)(obj + 0x4c);
+        if ((flags & 1) == 0) {
+            if (*(s8 *)(obj + 0xad) == 0) {
+                t = GameBit_Get(*(s16 *)(setup + 0x40));
+                if (t != 0 || *(s16 *)(setup + 0x40) == -1) {
+                    state[0x29e] = state[0x29e] | 1;
+                    GameBit_Set(*(s16 *)(setup + 0x3e), 1);
+                    lbl_803DDB00 = 1;
+                }
+            } else if (lbl_803DDB00 != 0) {
+                state[0x29e] = flags | 1;
+            }
+            *(u8 *)(obj + 0x36) = 0;
+        } else {
+            *(u8 *)(obj + 0x36) = 0xff;
+            cnt = *(s16 *)(state + 0x29c) + framesThisStep;
+            *(s16 *)(state + 0x29c) = cnt;
+            if (cnt >= *(u16 *)(setup + 0x38)) {
+                state[0x29e] = state[0x29e] | 2;
+            }
+            t0 = *(u16 *)(setup + 0x3a);
+            if ((int)t0 < *(s16 *)(state + 0x29c) &&
+                (t1 = *(u16 *)(setup + 0x38) - t0) != 0) {
+                a = (int)(lbl_803E404C *
+                          (lbl_803E4048 -
+                           (f32)(int)(*(s16 *)(state + 0x29c) - t0) / (f32)(int)t1));
+                if (a < 0x100) {
+                    if (a < 0) {
+                        a = 0;
+                    }
+                } else {
+                    a = 0xff;
+                }
+                *(s8 *)(obj + 0x36) = (s8)a;
+            }
+            *(f32 *)(obj + 0x24) = timeDelta * *(f32 *)(state + 0x290) + *(f32 *)(obj + 0x24);
+            *(f32 *)(obj + 0x28) = timeDelta * *(f32 *)(state + 0x294) + *(f32 *)(obj + 0x28);
+            *(f32 *)(obj + 0x2c) = timeDelta * *(f32 *)(state + 0x298) + *(f32 *)(obj + 0x2c);
+            *(f32 *)(state + 0x278) =
+                timeDelta * *(f32 *)(state + 0x284) + *(f32 *)(state + 0x278);
+            *(f32 *)(state + 0x27c) =
+                timeDelta * *(f32 *)(state + 0x288) + *(f32 *)(state + 0x27c);
+            *(f32 *)(state + 0x280) =
+                timeDelta * *(f32 *)(state + 0x28c) + *(f32 *)(state + 0x280);
+            if ((state[0x29f] & 1) == 0) {
+                if (lbl_803E4034 < *(f32 *)(obj + 0x24)) {
+                    *(f32 *)(obj + 0x24) = lbl_803E4034;
+                }
+            } else if (*(f32 *)(obj + 0x24) < lbl_803E4034) {
+                *(f32 *)(obj + 0x24) = lbl_803E4034;
+            }
+            if ((state[0x29f] & 2) == 0) {
+                if (lbl_803E4034 < *(f32 *)(obj + 0x2c)) {
+                    *(f32 *)(obj + 0x2c) = lbl_803E4034;
+                }
+            } else if (*(f32 *)(obj + 0x2c) < lbl_803E4034) {
+                *(f32 *)(obj + 0x2c) = lbl_803E4034;
+            }
+            if ((state[0x29f] & 4) == 0) {
+                if (lbl_803E4034 < *(f32 *)(state + 0x278)) {
+                    *(f32 *)(state + 0x278) = lbl_803E4034;
+                }
+            } else if (*(f32 *)(state + 0x278) < lbl_803E4034) {
+                *(f32 *)(state + 0x278) = lbl_803E4034;
+            }
+            if ((state[0x29f] & 8) == 0) {
+                if (lbl_803E4034 < *(f32 *)(state + 0x27c)) {
+                    *(f32 *)(state + 0x27c) = lbl_803E4034;
+                }
+            } else if (*(f32 *)(state + 0x27c) < lbl_803E4034) {
+                *(f32 *)(state + 0x27c) = lbl_803E4034;
+            }
+            if ((state[0x29f] & 0x10) == 0) {
+                if (lbl_803E4034 < *(f32 *)(state + 0x280)) {
+                    *(f32 *)(state + 0x280) = lbl_803E4034;
+                }
+            } else if (*(f32 *)(state + 0x280) < lbl_803E4034) {
+                *(f32 *)(state + 0x280) = lbl_803E4034;
+            }
+            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
+            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
+            *(s16 *)(obj + 0) = *(f32 *)(state + 0x278) * timeDelta + (f32)*(s16 *)(obj + 0);
+            *(s16 *)(obj + 2) = *(f32 *)(state + 0x27c) * timeDelta + (f32)*(s16 *)(obj + 2);
+            *(s16 *)(obj + 4) = *(f32 *)(state + 0x280) * timeDelta + (f32)*(s16 *)(obj + 4);
+            if ((*(u8 *)(setup + 0x3c) & 2) != 0) {
+                (*(void (**)(f32, u8 *, u8 *))((char *)(*gPathControlInterface) + 0x10))(timeDelta, obj, state);
+                (*(void (**)(u8 *, u8 *))((char *)(*gPathControlInterface) + 0x14))(obj, state);
+                (*(void (**)(f32, u8 *, u8 *))((char *)(*gPathControlInterface) + 0x18))(timeDelta, obj, state);
+                if (*(s8 *)(state + 0x261) != 0) {
+                    nx = -*(f32 *)(obj + 0x24);
+                    ny = -*(f32 *)(obj + 0x28);
+                    nz = -*(f32 *)(obj + 0x2c);
+                    len = sqrtf(nz * nz + (nx * nx + ny * ny));
+                    if (lbl_803E4034 != len) {
+                        inv = lbl_803E4048 / len;
+                        nx = nx * inv;
+                        ny = ny * inv;
+                        nz = nz * inv;
+                    }
+                    fy = *(f32 *)(state + 0x6c);
+                    fz = *(f32 *)(state + 0x70);
+                    dot = lbl_803E4050 *
+                          (nz * fz + (nx * *(f32 *)(state + 0x68) + ny * fy));
+                    *(f32 *)(obj + 0x24) = *(f32 *)(state + 0x68) * dot;
+                    *(f32 *)(obj + 0x28) = fy * dot;
+                    *(f32 *)(obj + 0x2c) = fz * dot;
+                    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) - nx;
+                    *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) - ny;
+                    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) - nz;
+                    *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) * len;
+                    *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) * lbl_803E4054;
+                    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * len;
+                    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * len;
+                    ff = lbl_803E4058;
+                    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * ff;
+                    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * ff;
+                }
+            }
+            if ((*(u8 *)(setup + 0x3c) & 4) != 0 && *(s8 *)(obj + 0x36) == -1) {
+                dx = *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80);
+                dy = *(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84);
+                dz = *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88);
+                i = 0;
+                do {
+                    k = (f32)i * lbl_803E405C;
+                    stk[0] = dx * k + *(f32 *)(obj + 0x80);
+                    stk[1] = dy * k + *(f32 *)(obj + 0x84);
+                    stk[2] = dz * k + *(f32 *)(obj + 0x88);
+                    (*(void (**)(u8 *, int, f32 *, int, int, int))((char *)(*gPartfxInterface) + 8))(obj, 1000, stk, 0x200001, -1, 0);
+                    i++;
+                } while (i < 2);
+            }
+        }
+    } else {
+        if ((*(u16 *)(obj + 6) & 0x2000) != 0) {
+            Obj_FreeObject(obj);
+        }
+        *(u8 *)(obj + 0x36) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
