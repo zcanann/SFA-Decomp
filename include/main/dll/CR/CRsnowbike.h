@@ -24,7 +24,7 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
                  undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9);
 
 u8 sc_levelcontrol_func11(int *obj);
-void sc_levelcontrol_setScale(void);
+void sc_levelcontrol_setScale(int obj, u8 scale);
 int sc_levelcontrol_getExtraSize(void);
 int sc_levelcontrol_getObjectTypeId(void);
 void sc_levelcontrol_free(int obj);

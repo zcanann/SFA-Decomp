@@ -816,3 +816,44 @@ void sc_levelcontrol_free(int obj) {
     Music_Trigger(199, 0);
 }
 #pragma scheduling reset
+
+extern void GameBit_Set(int bit, int val);
+extern void gameTimerInit(int a, int b);
+extern void timerSetToCountUp(void);
+extern f32 lbl_803E5550;
+#pragma peephole on
+#pragma scheduling off
+void sc_levelcontrol_setScale(int obj, u8 scale)
+{
+    int state = *(int *)(obj + 0xb8);
+    u8 v;
+
+    *(u8 *)(state + 0x1d) = scale;
+    v = *(u8 *)(state + 0x1d);
+    if (v == 2) {
+        *(u8 *)(state + 0x1d) = 0;
+    } else if (v == 5) {
+        GameBit_Set(0x2b8, 1);
+        GameBit_Set(0x4bd, 0);
+        GameBit_Set(0x85, 0);
+        gameTimerInit(0x1d, 0x96);
+        Music_Trigger(0xef, 1);
+        timerSetToCountUp();
+    } else if (v == 3) {
+        gameTimerInit(0x1d, 0x3c);
+        *(u8 *)(state + 0x1d) = 0;
+        Music_Trigger(199, 1);
+        timerSetToCountUp();
+    } else if (v == 6) {
+        Music_Trigger(0xef, 0);
+        *(u8 *)(state + 0x1d) = 0;
+        *(f32 *)(state + 0x14) = lbl_803E5550;
+        gameTimerStop();
+    } else if (v == 4) {
+        *(u8 *)(state + 0x1d) = 0;
+        Music_Trigger(199, 0);
+        gameTimerStop();
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
