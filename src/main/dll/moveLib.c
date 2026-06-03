@@ -1457,3 +1457,83 @@ void dll_19_func06(s16 *yaw, char *st, f32 cap, f32 speed)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_8003AC14(int obj, void *types, int count);
+extern f32 lbl_803E1C90;
+
+/* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
+ * primes the animation channel tables. */
+#pragma scheduling off
+#pragma peephole off
+void dll_2E_func05(int obj, char *st, s16 a, s16 b, int count)
+{
+    f32 z;
+
+    *(s16 *)(st + 0x60c) = a;
+    *(s16 *)(st + 0x60e) = b;
+    *(u8 *)(st + 0x610) = (u8)count;
+    *(int *)(st + 0x5fc) = 0;
+    z = lbl_803E1C90;
+    *(f32 *)(st + 0x0) = z;
+    *(int *)(st + 0x5f8) = 0;
+    *(int *)(st + 0x604) = 0;
+    *(int *)(st + 0x608) = 0;
+    *(f32 *)(st + 0x614) = lbl_803E1C8C;
+    *(u8 *)(st + 0x600) = 0;
+    *(u8 *)(st + 0x601) = 1;
+    *(f32 *)(st + 0x4) = z;
+    *(f32 *)(st + 0x8) = z;
+    *(f32 *)(st + 0xc) = z;
+    *(int *)(st + 0x618) = -1;
+    fn_8003AC14(obj, seqFn_800394a0(), count);
+    objFn_8003acfc((int *)obj, (int *)seqFn_800394a0(), count, st + 0x1c);
+    fn_8003A9C0(st + 0x1c, *(u8 *)(st + 0x610), 0, 0);
+    dll_2E_func09((int)st, lbl_8031A0E0, lbl_8031A0E0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void mathFn_80021ac8(s16 *angles, f32 *vec);
+extern f32 lbl_803E1CC8;
+extern f32 lbl_803E1CCC;
+
+/* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
+ * first use and refreshes the current path point position. */
+#pragma scheduling off
+#pragma peephole off
+void dll_2E_func06(int obj, char *st, int point)
+{
+    f32 z1;
+    f32 y1;
+    f32 x1;
+    f32 z0;
+    f32 y0;
+    f32 x0;
+    s16 ang[3];
+
+    if (*(u8 *)(st + 0x601) != 0) {
+        f32 cA;
+        f32 cB;
+        fn_8003AC14(obj, seqFn_800394a0(), *(u8 *)(st + 0x610));
+        ObjPath_GetPointWorldPosition(obj, point, &x0, &y0, &z0, 0);
+        ObjPath_GetPointWorldPosition(obj, point + 1, &x1, &y1, &z1, 0);
+        cA = lbl_803E1CC8;
+        *(f32 *)(st + 0x4) = (cA * x0 + x1) * (cB = lbl_803E1CCC);
+        *(f32 *)(st + 0x8) = y0;
+        *(f32 *)(st + 0xc) = (cA * z0 + z1) * cB;
+        *(f32 *)(st + 0x4) -= *(f32 *)(obj + 0xc);
+        *(f32 *)(st + 0x8) -= *(f32 *)(obj + 0x10);
+        *(f32 *)(st + 0xc) -= *(f32 *)(obj + 0x14);
+        ang[0] = (s16)-*(s16 *)(obj + 0x4);
+        ang[1] = (s16)-*(s16 *)(obj + 0x2);
+        ang[2] = (s16)-*(s16 *)(obj + 0x0);
+        mathFn_80021ac8(ang, (f32 *)(st + 0x4));
+        *(u8 *)(st + 0x601) = 0;
+    }
+    ObjPath_GetPointWorldPosition(obj, point, &x0, &y0, &z0, 0);
+    *(f32 *)(st + 0x10) = x0;
+    *(f32 *)(st + 0x14) = y0;
+    *(f32 *)(st + 0x18) = z0;
+}
+#pragma peephole reset
+#pragma scheduling reset
