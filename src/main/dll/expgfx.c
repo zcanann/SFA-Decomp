@@ -652,7 +652,7 @@ void expgfx_initSlotQuad(void *slotPtr)
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 resourceId)
+int expgfx_addToTable(uint resourceHandle,uint sourceId,uint attachedTableKey,s16 resourceId)
 {
   ExpgfxTableEntry *entry;
   ExpgfxTableEntry *freeScan;
@@ -664,8 +664,8 @@ int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 resource
   entry = gExpgfxTableEntries;
   freeScan = entry;
   for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++) {
-    if ((entry->refCount != 0) && (entry->resource == resource) &&
-        (entry->sourceId == sourceId) && (entry->attachedKey1 == attachedKey1)) {
+    if ((entry->refCount != 0) && (entry->resource == resourceHandle) &&
+        (entry->sourceId == sourceId) && (entry->attachedKey1 == attachedTableKey)) {
       refCount = &gExpgfxTableEntries[tableIndex].refCount;
       if (*refCount >= EXPGFX_REFCOUNT_OVERFLOW) {
         debugPrintf(sExpgfxAddToTableUsageOverflow);
@@ -679,9 +679,9 @@ int expgfx_addToTable(uint resource,uint sourceId,uint attachedKey1,s16 resource
   for (freeIndex = 0; freeIndex < EXPGFX_EXPTAB_ENTRY_COUNT; freeScan++, freeIndex++) {
     if (freeScan->refCount == 0) {
       gExpgfxTableEntries[freeIndex].refCount = 1;
-      gExpgfxTableEntries[freeIndex].resource = resource;
+      gExpgfxTableEntries[freeIndex].resource = resourceHandle;
       gExpgfxTableEntries[freeIndex].sourceId = sourceId;
-      gExpgfxTableEntries[freeIndex].attachedKey1 = attachedKey1;
+      gExpgfxTableEntries[freeIndex].attachedKey1 = attachedTableKey;
       gExpgfxTableEntries[freeIndex].resourceId = resourceId;
       return (s16)freeIndex;
     }
@@ -1382,6 +1382,7 @@ void expgfx_free(u32 sourceId)
   u8 *expgfxBase;
   ExpgfxRuntimeDataLayout *runtime;
   ExpgfxSlot *slot;
+  ExpgfxTableEntry *tableEntry;
   u32 *slotPoolBases;
   u32 *poolSourceIds;
   s8 *poolActiveCounts;
@@ -1410,7 +1411,8 @@ void expgfx_free(u32 sourceId)
       for (slotIndex = 0; slotIndex < EXPGFX_SLOTS_PER_POOL; slotIndex++) {
         if (slot != NULL) {
           tableOffset = Expgfx_GetSlotTableIndex(slot) << EXPGFX_TABLE_ENTRY_SHIFT;
-          if (*(u32 *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset) == sourceId) {
+          tableEntry = (ExpgfxTableEntry *)(expgfxBase + EXPGFX_EXPTAB_OFFSET + tableOffset);
+          if (tableEntry->sourceId == sourceId) {
             expgfxRemove(*slotPoolBases, poolIndex, slotIndex, 0, 1);
           }
         }
@@ -1637,9 +1639,9 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   void *playerObj;
   u8 *expgfxBase;
   uint behaviorFlags;
-  int tableIndex;
-  int subTableIndex;
-  int attachedKey1;
+  int resourceTableIndex;
+  int expTabIndex;
+  int attachedTableKey;
   uint trackedMaskPair;
   uint bit;
   uint maskHighWord;
@@ -1708,13 +1710,13 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   slot->renderFlags = config->renderFlags;
   slot->stateBits.value = slot->stateBits.value & ~EXPGFX_SLOT_STATE_INIT_PHASE_MASK;
 
-  tableIndex = (int)(short)expgfx_acquireResourceEntry(config->textureId);
-  if (tableIndex < 0) {
+  resourceTableIndex = (int)(short)expgfx_acquireResourceEntry(config->textureId);
+  if (resourceTableIndex < 0) {
     expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
   resourceHandle =
-      (ExpgfxResourceHandle *)*(u32 *)(expgfxBase + (tableIndex << EXPGFX_TABLE_ENTRY_SHIFT));
+      (ExpgfxResourceHandle *)*(u32 *)(expgfxBase + (resourceTableIndex << EXPGFX_TABLE_ENTRY_SHIFT));
   if (resourceHandle == NULL) {
     expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
@@ -1737,7 +1739,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
   }
 
   attachedSource = (ExpgfxAttachedSourceState *)config->attachedSource;
-  attachedKey1 = 0;
+  attachedTableKey = 0;
   if (attachedSource == NULL) {
     *(f32 *)&slot->sourcePosY = *(f32 *)&config->sourcePosYBits;
     *(f32 *)&slot->sourcePosZ = *(f32 *)&config->sourcePosZBits;
@@ -1760,18 +1762,18 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
       config->velocityY = config->velocityY + attachedSource->velocityY;
       config->velocityZ = config->velocityZ + attachedSource->velocityZ;
     }
-    attachedKey1 = attachedSource->tableKey1;
+    attachedTableKey = attachedSource->tableKey1;
     attachedSource = NULL;
   }
 
-  subTableIndex = expgfx_addToTable((uint)resourceHandle, (uint)attachedSource, attachedKey1,
+  expTabIndex = expgfx_addToTable((uint)resourceHandle, (uint)attachedSource, attachedTableKey,
                                      config->textureId);
-  if ((short)subTableIndex == EXPGFX_INVALID_TABLE_INDEX) {
+  if ((short)expTabIndex == EXPGFX_INVALID_TABLE_INDEX) {
     debugPrintf(sExpgfxInvalidTabIndex);
     expgfxRemove(slotPoolBases[(int)poolIndex], (int)poolIndex, (int)slotIndex, 1, 1);
     return EXPGFX_INVALID_POOL_INDEX;
   }
-  Expgfx_SetSlotTableIndex(slot, (u8)subTableIndex);
+  Expgfx_SetSlotTableIndex(slot, (u8)expTabIndex);
 
   *(f32 *)&slot->posX = *(f32 *)&config->startPosXBits;
   *(f32 *)&slot->startPosX = *(f32 *)&config->startPosXBits;
