@@ -47,8 +47,13 @@ typedef struct DIMbosstonsilLight {
 } DIMbosstonsilLight;
 
 typedef struct DIMbosstonsilConfig {
-  u8 pad00[0x2C];
+  u8 pad00[0x08];
+  f32 spawnX;
+  f32 spawnY;
+  f32 spawnZ;
+  u8 pad14[0x2C - 0x14];
   s16 eventId;
+  s8 animObjId;
 } DIMbosstonsilConfig;
 
 typedef struct DIMbosstonsilState {
@@ -63,7 +68,9 @@ typedef struct DIMbosstonsilState {
   s8 stunReady;
   u8 pad27C[DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET - 0x27C];
   f32 recoveryTimer;
-  u8 pad2A4[DIMBOSSTONSIL_HIT_RESULT_OFFSET - 0x2A4];
+  u8 pad2A4[0x2D0 - 0x2A4];
+  void *targetObject;
+  u8 pad2D4[DIMBOSSTONSIL_HIT_RESULT_OFFSET - 0x2D4];
   s8 hitResult;
   u8 pad347[DIMBOSSTONSIL_ANIM_FINISHED_OFFSET - 0x347];
   s8 animFinished;
@@ -89,7 +96,11 @@ STATIC_ASSERT(offsetof(DIMbosstonsilLight, active) == 0x2F8);
 STATIC_ASSERT(offsetof(DIMbosstonsilLight, glowIntensity) == 0x2F9);
 STATIC_ASSERT(offsetof(DIMbosstonsilLight, glowIntensityStep) == 0x2FA);
 
+STATIC_ASSERT(offsetof(DIMbosstonsilConfig, spawnX) == 0x08);
+STATIC_ASSERT(offsetof(DIMbosstonsilConfig, spawnY) == 0x0C);
+STATIC_ASSERT(offsetof(DIMbosstonsilConfig, spawnZ) == 0x10);
 STATIC_ASSERT(offsetof(DIMbosstonsilConfig, eventId) == 0x2C);
+STATIC_ASSERT(offsetof(DIMbosstonsilConfig, animObjId) == 0x2E);
 
 STATIC_ASSERT(sizeof(DIMbosstonsilState) == DIMBOSSTONSIL_STATE_SIZE);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, effectActive) == 0x25F);
@@ -99,6 +110,7 @@ STATIC_ASSERT(offsetof(DIMbosstonsilState, active) == DIMBOSSTONSIL_ACTIVE_OFFSE
 STATIC_ASSERT(offsetof(DIMbosstonsilState, stunReady) == DIMBOSSTONSIL_STUN_READY_OFFSET);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, recoveryTimer) ==
               DIMBOSSTONSIL_RECOVERY_TIMER_OFFSET);
+STATIC_ASSERT(offsetof(DIMbosstonsilState, targetObject) == 0x2D0);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, hitResult) == DIMBOSSTONSIL_HIT_RESULT_OFFSET);
 STATIC_ASSERT(offsetof(DIMbosstonsilState, animFinished) ==
               DIMBOSSTONSIL_ANIM_FINISHED_OFFSET);
