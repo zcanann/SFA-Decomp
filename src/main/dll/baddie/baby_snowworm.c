@@ -2233,3 +2233,79 @@ void timeListDraw(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern char *fn_800E888C(int track, int row);
+extern void gameTextShowStr(char *str, int box, int x, int y);
+extern u8   lbl_8031AF00[];
+extern u8   lbl_803DBA91;
+extern s16  lbl_803DBAA8;
+extern f32  lbl_803DBAAC;
+extern f32  lbl_803DBAB0;
+extern char lbl_803DBBA0;
+extern char lbl_803DBBA8;
+extern s16  lbl_803DD7E4;
+
+/* EN v1.0 0x8012919C  size: 1276b  High-score screen: draws the 9-patch box
+ * around the text area, the track title, and five score rows with the
+ * selection pulse highlight. */
+#pragma scheduling off
+#pragma peephole off
+void highScoreScreenDraw(int p1, int p2, int p3)
+{
+    s16 x, y, w, h;
+    u8 *box = gameTextGetBox(0x36);
+    int pulse;
+    s16 ang = (s16)(lbl_803DD7E4 + lbl_803DBAA8);
+    char buf[0x20];
+
+    lbl_803DD7E4 = ang;
+    pulse = (int)(lbl_803DBAAC * fsin16Precise((u16)ang) + lbl_803DBAB0);
+    h = (s16)*(u16 *)(box + 0xa);
+    w = (s16)*(u16 *)(box + 0x8);
+    y = *(s16 *)(box + 0x16);
+    x = *(s16 *)(box + 0x14);
+
+    drawTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y - 5), 0xff, 0x100);
+    drawScaledTexture(*(void **)(hudTextures + 0x34), (f32)x, (f32)(y - 5), 0xff, 0x100, w, 5, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x2c), (f32)(x - 5), (f32)y, 0xff, 0x100, 5, h, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x30), (f32)x, (f32)y, 0xff, 0x100, w, h, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x34), (f32)x, (f32)(y + h), 0xff, 0x100, w, 5, 2);
+    drawScaledTexture(*(void **)(hudTextures + 0x2c), (f32)(x + w), (f32)y, 0xff, 0x100, 5, h, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y + h), 0xff, 0x100, 5, 5, 3);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y - 5), 0xff, 0x100, 5, 5, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + h), 0xff, 0x100, 5, 5, 2);
+
+    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+    gameTextFn_80016810(0x345, 0, 0xa);
+    gameTextFn_80016810(*(u16 *)(lbl_8031AF00 + (s8)lbl_803DBA90 * 4 + 2), 0, 0x28);
+
+    {
+        u8 k;
+        for (k = 0; k < 5; k++) {
+            char *e = fn_800E888C(lbl_803DBA90, k);
+            char *name = e + 4;
+            u8 starred = *(u8 *)(e + 3) & 1;
+            int rowMul, rowY;
+            sprintf(buf, &lbl_803DBBA0, *(u32 *)e >> 1);
+            if (k == lbl_803DBA91) {
+                gameTextSetColor(pulse, pulse, pulse, 0xff);
+            } else if (k == lbl_803DBA91 + 1) {
+                gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+            }
+            rowMul = k * 0x1e;
+            rowY = rowMul + 0x5a;
+            gameTextShowStr(name, 0x86, 0, rowY);
+            gameTextShowStr(buf, 0x87, 0, rowY);
+            if (starred != 0) {
+                u8 *box2 = gameTextGetBox(0x87);
+                drawTexture(*(void **)(hudTextures + 0xf8),
+                            (f32)(*(s16 *)(box2 + 0x14) + 0x64),
+                            (f32)(*(s16 *)(box2 + 0x16) + rowMul + 0x57), 0xff, 0x100);
+                gameTextShowStr(&lbl_803DBBA8, 0x87, 0x82, rowY);
+            }
+        }
+    }
+    gameTextFn_80016810(0x346, 0, 0x104);
+}
+#pragma peephole reset
+#pragma scheduling reset
