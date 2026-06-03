@@ -1797,3 +1797,59 @@ int dll_2E_func07(int obj, char *state, char *st, s16 a, s16 b)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
+                                           u32 obj);
+extern f32 lbl_803E1C40;
+extern f32 lbl_803E1C2C;
+
+/* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
+ * object's facing plane and returns the lateral offset of the result. */
+#pragma scheduling off
+#pragma peephole off
+f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char *st)
+{
+    f32 dist;
+    f32 fx;
+    f32 fz;
+    f32 c;
+    f32 s;
+    f32 dx;
+    f32 dz;
+
+    dx = *(f32 *)(st + 0x18) - px;
+    dz = *(f32 *)(st + 0x20) - pz;
+    dist = sqrtf(dx * dx + dz * dz);
+    if (dist < range) {
+        f32 base;
+        f32 d1;
+        f32 d2;
+        c = fn_80293E80(lbl_803E1C80 * (f32)*(s16 *)(obj + 0x0) / lbl_803E1C84);
+        s = sin(lbl_803E1C80 * (f32)*(s16 *)(obj + 0x0) / lbl_803E1C84);
+        base = -(c * (px - c) + s * (pz - s));
+        d1 = base + (c * *(f32 *)(st + 0x18) + s * *(f32 *)(st + 0x20));
+        d2 = base + (c * *(f32 *)(st + 0x8c) + s * *(f32 *)(st + 0x94));
+        if (d1 > lbl_803E1C2C && d2 <= lbl_803E1C48) {
+            *(f32 *)(st + 0x18) = *(f32 *)(st + 0x18) - c * d1;
+            *(f32 *)(st + 0x20) = *(f32 *)(st + 0x20) - s * d1;
+            Obj_TransformWorldPointToLocal(*(f32 *)(st + 0x18), *(f32 *)(st + 0x1c),
+                                           *(f32 *)(st + 0x20), (f32 *)(st + 0xc),
+                                           (f32 *)(st + 0x10), (f32 *)(st + 0x14),
+                                           *(u32 *)(st + 0x30));
+        } else if (d2 > lbl_803E1C48) {
+            dist = lbl_803E1C40 * range;
+        }
+    }
+    if (dist < range) {
+        fx = *(f32 *)(st + 0x18);
+        fz = *(f32 *)(st + 0x20);
+    } else {
+        fx = px;
+        fz = pz;
+    }
+    c = fn_80293E80(lbl_803E1C80 * (f32)(*(s16 *)(obj + 0x0) + 0x4000) / lbl_803E1C84);
+    s = sin(lbl_803E1C80 * (f32)(*(s16 *)(obj + 0x0) + 0x4000) / lbl_803E1C84);
+    return -(-(*(f32 *)(obj + 0xc) * c + *(f32 *)(obj + 0x14) * s) + (c * fx + s * fz));
+}
+#pragma peephole reset
+#pragma scheduling reset
