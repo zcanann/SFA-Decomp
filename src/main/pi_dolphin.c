@@ -10284,8 +10284,8 @@ extern int lbl_803DB5C8;
 extern int lbl_803DD610;
 extern s16 lbl_803966D0[];
 extern s16 lbl_803965E0[];
-extern u8 lbl_803DD000;
-extern u8 lbl_803DD002;
+extern u16 lbl_803DD000;
+extern u16 lbl_803DD002;
 extern u8 lbl_803DCCA8;
 
 #pragma scheduling off
@@ -10496,11 +10496,11 @@ void videoSwapFrameBuffers(void)
 #pragma peephole off
 void videoFn_800499e8(void)
 {
+    char peek[8];
+    int tok[3];
     int i;
     u16 *src;
     u16 *dst;
-    int tok[3];
-    char peek[8];
 
     if (lbl_803DD610 == 2 || lbl_803DD610 == 3) {
         THPPlayerPostDrawDone();
@@ -10519,20 +10519,20 @@ void videoFn_800499e8(void)
     }
     lbl_803DD002 = lbl_803DD000;
     lbl_803DD000 = 0;
-    if (*(int *)(peek + 4) == (int)lbl_803DCCCC) {
+    if (*(void **)(peek + 4) == lbl_803DCCCC) {
         lbl_803DCCA8 = 1;
         lbl_803DCCA9 = 0;
     } else {
         Queue_Pop(lbl_8035F730, tok);
         lbl_803DCCAC = 0;
         OSWakeupThread(&lbl_803DCCC4);
-        if (Queue_IsEmpty(lbl_8035F730) == 0) {
+        if (Queue_IsEmpty(lbl_8035F730) != 0) {
+            GXDisableBreakPt();
+            lbl_803DCCA7 = 0;
+        } else {
             Queue_Peek(lbl_8035F730, tok);
             GXEnableBreakPt((void *)tok[0]);
             lbl_803DCCA7 = 1;
-        } else {
-            GXDisableBreakPt();
-            lbl_803DCCA7 = 0;
         }
     }
 }
