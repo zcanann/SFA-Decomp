@@ -3650,6 +3650,8 @@ extern void  AttractMovie_DrawTextureCallback(void);
  * state from its descriptor id (obj->_46), pick the anim move and blend
  * float per id range, and for the attract id install the movie draw
  * callback. */
+#pragma scheduling off
+#pragma peephole off
 void titlescreen_init(u8* obj, u8* p)
 {
     u8* a = *(u8**)(obj + 0xb8);
@@ -3674,6 +3676,8 @@ void titlescreen_init(u8* obj, u8* p)
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern int  *gPartfxInterface;
 extern f32   lbl_803E23E8;
