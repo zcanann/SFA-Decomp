@@ -6619,3 +6619,239 @@ void gameTextBoxFn_80134d40(int p1, int p2, u32 p3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u16 *lbl_803DCCE8;
+extern u16 *debugFrameBuffer;
+extern u16  lbl_803DDA40_u;
+extern char lbl_803DBC18;
+extern char lbl_803DBC1C;
+extern char lbl_803DBC20;
+extern char lbl_803DBC28;
+extern char lbl_803DBC30;
+extern char lbl_803DBC34;
+extern int  OSDisableInterrupts(void);
+extern void OSRestoreInterrupts(int level);
+extern void VISetPreRetraceCallback(void *cb);
+extern void VISetPostRetraceCallback(void *cb);
+extern void GXSetBreakPtCallback(void *cb);
+extern void __GXAbortWaitPECopyDone(void);
+extern void VISetNextFrameBuffer(void *fb);
+extern void VIFlush(void);
+extern void VIWaitForRetrace(void);
+
+/* EN v1.0 0x80137DF8  size: 2776b  fn_80137DF8: error display thread.
+ * Clears the debug framebuffer, prints the exception type, DSISR/SRR0,
+ * stack trace and GPR dump via debugPrintfxy, draws the underline and
+ * box pixels directly into the framebuffer, and flips buffers forever. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80137DF8(void)
+{
+    char *strs = (char *)lbl_8031D060;
+    u32 *sp;
+    int depth;
+    int hold;
+    int x, col;
+    int row;
+    int h, h2;
+    int b;
+    int y;
+    int n;
+    u32 cnt;
+    u32 *p;
+    u8 lvl;
+    u32 r, rr;
+    int rp;
+    int rows;
+
+    sp = NULL;
+    depth = 0;
+    hold = 0xb4;
+    if (enableDebugText != 0) {
+        lbl_803DDA30 = lbl_803DCCEC;
+        debugFrameBuffer = lbl_803DCCE8;
+        lvl = (u8)OSDisableInterrupts();
+        VISetPreRetraceCallback(NULL);
+        VISetPostRetraceCallback(NULL);
+        GXSetBreakPtCallback(NULL);
+        __GXAbortWaitPECopyDone();
+        OSRestoreInterrupts(lvl);
+        while (1) {
+            if (enableDebugText != 0) {
+                x = 0;
+                col = x;
+                for (; x < 0x280; x++) {
+                    for (row = 0; row < 0x96000; row += 0x500) {
+                        *(u16 *)(col + (char *)lbl_803DDA30 + row) = 0x1080;
+                    }
+                    col += 2;
+                }
+            }
+            debugPrintfxy(0x10, 0x15, strs + 0x140, fn_80137DF8);
+            debugPrintfxy(0x10, 0x2a, strs + 0x154);
+            switch ((u16)lbl_803DDA40) {
+            case 0:
+                debugPrintfxy(0xa0, 0x2a, strs + 0x160);
+                break;
+            case 1:
+                debugPrintfxy(0xa0, 0x2a, strs + 0x170);
+                break;
+            case 2:
+                debugPrintfxy(0xa0, 0x2a, &lbl_803DBC18);
+                break;
+            case 3:
+                debugPrintfxy(0xa0, 0x2a, &lbl_803DBC1C);
+                break;
+            case 5:
+                debugPrintfxy(0xa0, 0x2a, strs + 0x180);
+                break;
+            case 0xb:
+                debugPrintfxy(0x9b, 0x2a, strs + 0x18c);
+                break;
+            case 0xd:
+                debugPrintfxy(0xa0, 0x2a, strs + 0x1a0);
+                break;
+            case 0xf:
+                debugPrintfxy(0xa0, 0x2a, strs + 0x1bc);
+                break;
+            default:
+                debugPrintfxy(0x9b, 0x2a, strs + 0x1d4);
+                break;
+            }
+            if (enableDebugText != 0) {
+                h = 0x9100;
+                h2 = 0x8e80;
+                for (n = 0x280; n != 0; n--) {
+                    lbl_803DDA30[h] = 0xc080;
+                    lbl_803DDA30[h2] = 0xc080;
+                    h++;
+                    h2++;
+                }
+            }
+            debugPrintfxy(0x10, 0x3f, &lbl_803DBC20, *(u32 *)(lbl_803DDA3C + 0x198));
+            debugPrintfxy(0x10, 0x4b, &lbl_803DBC28, *(u32 *)(lbl_803DDA3C + 4));
+            if (enableDebugText != 0) {
+                h = 0xe380;
+                h2 = 0xe100;
+                for (n = 0xf0; n != 0; n--) {
+                    lbl_803DDA30[h] = 0xc080;
+                    lbl_803DDA30[h2] = 0xc080;
+                    h++;
+                    h2++;
+                }
+            }
+            debugPrintfxy(0x10, 0x60, strs + 0x1e4);
+            y = 0x6c;
+            p = (u32 *)**(u32 **)(lbl_803DDA3C + 4);
+            n = 0;
+            while (p != (u32 *)0xffffffff && n++ != 8) {
+                debugPrintfxy(0x10, y, &lbl_803DBC30, p[1]);
+                y += 0xc;
+                p = (u32 *)*p;
+            }
+            y += (8 - n) * 0xc;
+            if (enableDebugText != 0) {
+                rows = y + 0x4c;
+                h = rows * 0x280;
+                h2 = (y + 0x4b) * 0x280;
+                if (rows > 0) {
+                    for (n = 0x280; n != 0; n--) {
+                        lbl_803DDA30[h] = 0xc080;
+                        lbl_803DDA30[h2] = 0xc080;
+                        h++;
+                        h2++;
+                    }
+                } else {
+                    for (n = 0x280; n != 0; n--) {
+                        lbl_803DDA30[h] = 0xc080;
+                        h++;
+                    }
+                }
+            }
+            if (enableDebugText != 0) {
+                b = 0x12700;
+                rows = y + 0x4c;
+                cnt = rows - 0x3b;
+                if (rows > 0x3b) {
+                    do {
+                        *(u16 *)((char *)lbl_803DDA30 + b + 0x1e0) = 0xc080;
+                        b += 0x500;
+                    } while (--cnt != 0);
+                }
+            }
+            y += 0x51;
+            if (sp == NULL) {
+                sp = *(u32 **)(lbl_803DDA3C + 4);
+                depth = 0;
+            } else if (hold-- == 0) {
+                hold = 0xb4;
+                sp = (u32 *)*sp;
+                depth++;
+                if (sp == (u32 *)0xffffffff) {
+                    sp = *(u32 **)(lbl_803DDA3C + 4);
+                    depth = 0;
+                }
+            }
+            debugPrintfxy(0x100, 0x3f, strs + 0x1f0, sp, depth);
+            debugPrintfxy(0x100, 0x4b, strs + 0x204, sp[-1], sp[-2]);
+            debugPrintfxy(0x100, 0x57, strs + 0x204, sp[-3], sp[-4]);
+            debugPrintfxy(0x100, 0x63, strs + 0x204, sp[-5], sp[-6]);
+            debugPrintfxy(0x100, 0x6f, strs + 0x204, sp[-7], sp[-8]);
+            debugPrintfxy(0x100, 0x7b, strs + 0x204, sp[-9], sp[-10]);
+            debugPrintfxy(0x100, 0x87, strs + 0x204, sp[-0xb], sp[-0xc]);
+            debugPrintfxy(0x100, 0x93, strs + 0x204, sp[-0xd], sp[-0xe]);
+            debugPrintfxy(0x100, 0x9f, strs + 0x204, sp[-0xf], sp[-0x10]);
+            debugPrintfxy(0x100, 0xab, strs + 0x204, sp[-0x11], sp[-0x12]);
+            debugPrintfxy(0x100, 0xb7, strs + 0x204, sp[-0x13], sp[-0x14]);
+            debugPrintfxy(0x100, 0xc3, strs + 0x204, sp[-0x15], sp[-0x16]);
+            debugPrintfxy(0x100, 0xcf, strs + 0x204, sp[-0x17], sp[-0x18]);
+            debugPrintfxy(0x100, 0xdb, strs + 0x204, sp[-0x19], sp[-0x1a]);
+            debugPrintfxy(0x100, 0xe7, strs + 0x204, sp[-0x1b], sp[-0x1c]);
+            debugPrintfxy(0x100, 0xf3, strs + 0x204, sp[-0x1d], sp[-0x1e]);
+            debugPrintfxy(0x100, 0xff, strs + 0x204, sp[-0x1f], sp[-0x20]);
+            debugPrintfxy(0x10, y, strs + 0x210);
+            for (r = 0; (r & 0xff) < 0x20; r += 8) {
+                rr = r & 0xff;
+                debugPrintfxy(0xc, y + 0xc, &lbl_803DBC34, rr, rr + 7);
+                rp = lbl_803DDA3C + rr * 4;
+                debugPrintfxy(0x10, y + 0x18, strs + 0x22c,
+                              *(u32 *)(lbl_803DDA3C + (r & 0xff) * 4), *(u32 *)(rp + 4),
+                              *(u32 *)(rp + 8), *(u32 *)(rp + 0xc));
+                y += 0x24;
+                rp = lbl_803DDA3C + rr * 4;
+                debugPrintfxy(0x10, y, strs + 0x22c, *(u32 *)(rp + 0x10),
+                              *(u32 *)(rp + 0x14), *(u32 *)(rp + 0x18), *(u32 *)(rp + 0x1c));
+            }
+            if (enableDebugText != 0) {
+                DCStoreRange(lbl_803DDA30, 0x96000);
+                lbl_803DDA30 = (lbl_803DDA30 == lbl_803DCCEC) ? lbl_803DCCE8 : lbl_803DCCEC;
+                debugFrameBuffer = (debugFrameBuffer == lbl_803DCCEC) ? lbl_803DCCE8 : lbl_803DCCEC;
+                VISetNextFrameBuffer(debugFrameBuffer);
+                VIFlush();
+                VIWaitForRetrace();
+            }
+        }
+    }
+    while (1) {
+        if (enableDebugText != 0) {
+            x = 0;
+            col = x;
+            for (; x < 0x280; x++) {
+                for (row = 0; row < 0x96000; row += 0x500) {
+                    *(u16 *)(col + (char *)lbl_803DDA30 + row) = 0x1080;
+                }
+                col += 2;
+            }
+        }
+        if (enableDebugText != 0) {
+            DCStoreRange(lbl_803DDA30, 0x96000);
+            lbl_803DDA30 = (lbl_803DDA30 == lbl_803DCCEC) ? lbl_803DCCE8 : lbl_803DCCEC;
+            debugFrameBuffer = (debugFrameBuffer == lbl_803DCCEC) ? lbl_803DCCE8 : lbl_803DCCEC;
+            VISetNextFrameBuffer(debugFrameBuffer);
+            VIFlush();
+            VIWaitForRetrace();
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
