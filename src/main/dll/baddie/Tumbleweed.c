@@ -4168,9 +4168,9 @@ extern f32   lbl_803DD97C;
 extern f32   lbl_803E22E0;
 extern u8    lbl_803DD993;
 extern u8    lbl_803DD9AA;
-extern s16   lbl_803DD994;
-extern s16   lbl_803DD996;
-extern s16   lbl_803DD998;
+extern u16   lbl_803DD994;
+extern u16   lbl_803DD996;
+extern u16   lbl_803DD998;
 extern s16   lbl_803DD9A8;
 extern int   getCurUiDll(void);
 
@@ -4831,3 +4831,59 @@ void objAnimFreeChildren(int a, int b, void** c)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern u16 lbl_803DBC0A;
+extern u8 lbl_803DB411;
+extern int loadUiDll(int dllId);
+extern void TitleMenu_setSelection(int sel);
+extern void streamFn_8000a380(int a, int b, int c);
+extern void gameTextFn_80016810(int textId, int a, int b);
+extern int* gCameraInterface;
+typedef struct { u16 a; u16 b; } CreditEntry;
+extern CreditEntry lbl_8031CE90[];
+
+#pragma scheduling off
+#pragma peephole off
+void creditsStart_(void)
+{
+    u8 alpha;
+    if (lbl_803DD998 >= lbl_803DBC0A) {
+        if ((**(int (**)(void))(*(int*)gCameraInterface + 0x10))() == 0x57) {
+            lbl_803DD993 = 0;
+            loadUiDll(4);
+            TitleMenu_setSelection(4);
+        }
+        return;
+    }
+    if (lbl_803DD9A8 > 0) {
+        lbl_803DD9A8 = lbl_803DD9A8 - lbl_803DB411;
+        if (lbl_803DD9A8 < 0) {
+            lbl_803DD9A8 = 0;
+        }
+        return;
+    }
+    if (lbl_803DD996 < 0x14) {
+        alpha = (u8)(lbl_803DD996 * 0xff / 0x14);
+    } else if (lbl_803DD996 >= lbl_8031CE90[lbl_803DD998].b - 0x14) {
+        if (lbl_803DD998 == lbl_803DBC0A - 1 && lbl_803DD9A4 == 0) {
+            streamFn_8000a380(3, 2, 0xfa0);
+            lbl_803DD9A4 = 1;
+        }
+        alpha = (u8)(0xff - (lbl_803DD996 - lbl_8031CE90[lbl_803DD998].b) * 0xff / 0x14);
+    } else {
+        alpha = 0xff;
+    }
+    gameTextSetColor(0xff, 0xff, 0xff, alpha);
+    gameTextFn_80016810(lbl_8031CE90[lbl_803DD998].a, 0, 0);
+    lbl_803DD994 = lbl_803DD994 + lbl_803DB411;
+    lbl_803DD996 = lbl_803DD996 + lbl_803DB411;
+    if (lbl_803DD996 < lbl_8031CE90[lbl_803DD998].b) {
+        return;
+    }
+    lbl_803DD998 = lbl_803DD998 + 1;
+    lbl_803DD9A8 = 0x3c;
+    if (lbl_803DD998 < lbl_803DBC0A) {
+        lbl_803DD996 = 0;
+    }
+}
+#pragma peephole reset
