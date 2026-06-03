@@ -323,6 +323,7 @@ void SnowBike_update(int obj)
     f32 dummy1;
     f32 dummy2;
     s8 mode;
+    int t;
     f32 fz;
     f32 p;
     f32 v;
@@ -403,19 +404,20 @@ void SnowBike_update(int obj)
                 setAButtonIcon(0x10);
                 setBButtonIcon(0x11);
                 *(f32 *)(state + 0x45c) = (f32)padGetStickX(0);
-                state[0x460] = (int)(f32)padGetStickY(0);
+                t = (int)(f32)padGetStickY(0);
+                state[0x460] = t;
                 *(u32 *)(state + 0x458) = getButtonsHeld(0);
                 *(u32 *)(state + 0x450) = getButtonsJustPressed(0);
                 *(u32 *)(state + 0x454) = getButtonsJustPressedIfNotBusy(0);
                 *(s16 *)(state + 0x44c) = (f32)(u16)getAngle(*(f32 *)(state + 0x45c), (f32)-(int)*(s8 *)(state + 0x460)) / lbl_803E5C18;
                 *(f32 *)(state + 0x45c) = *(f32 *)(state + 0x45c) / lbl_803E5B6C;
                 v = *(f32 *)(state + 0x45c);
-                c = lbl_803E5B70;
-                if (lbl_803E5B70 <= v) {
+                if (v < lbl_803E5B70) {
+                    c = lbl_803E5B70;
+                } else if (v > lbl_803E5AEC) {
+                    c = lbl_803E5AEC;
+                } else {
                     c = v;
-                    if (lbl_803E5AEC < v) {
-                        c = lbl_803E5AEC;
-                    }
                 }
                 *(f32 *)(state + 0x45c) = c;
                 fn_801EBD60(obj, state);
