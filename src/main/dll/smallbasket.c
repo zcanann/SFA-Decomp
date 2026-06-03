@@ -2632,3 +2632,135 @@ void smallbasket_checkNearbyActiveBasket(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern f32 lbl_803E2C98;
+extern f32 lbl_803E2C9C;
+extern f32 lbl_803E2CA0;
+extern f32 lbl_803E2CA4;
+extern f32 lbl_803E2CA8;
+
+#pragma dont_inline on
+#pragma scheduling off
+#pragma peephole off
+void fn_8015A52C(s16* obj)
+{
+    u8 locked = Obj_IsLoadingLocked();
+    if (locked != 0) {
+        int* setup = Obj_AllocObjectSetup(0x24, 0x51b);
+        *(f32*)((char*)setup + 8) = *(f32*)((char*)obj + 0xc);
+        *(f32*)((char*)setup + 0xc) = lbl_803E2C98 + *(f32*)((char*)obj + 0x10);
+        *(f32*)((char*)setup + 0x10) = *(f32*)((char*)obj + 0x14);
+        *(u8*)((char*)setup + 4) = 1;
+        *(u8*)((char*)setup + 5) = 4;
+        *(u8*)((char*)setup + 7) = 0xff;
+        setup = Obj_SetupObject(setup, 5, -1, -1, 0);
+        if (setup != NULL) {
+            *(f32*)((char*)setup + 0x24) = lbl_803E2C9C * -fn_80293E80((lbl_803E2CA0 * (f32)*(s16*)obj) / lbl_803E2CA4);
+            *(f32*)((char*)setup + 0x28) = lbl_803E2CA8;
+            *(f32*)((char*)setup + 0x2c) = lbl_803E2C9C * -sin((lbl_803E2CA0 * (f32)*(s16*)obj) / lbl_803E2CA4);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma dont_inline reset
+
+extern f32 lbl_803E2B84;
+extern f32 lbl_803E2B88;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80157B58(int* obj, u8* state)
+{
+    u8 locked = Obj_IsLoadingLocked();
+    if (locked != 0) {
+        int child;
+        int setup = (int)Obj_AllocObjectSetup(0x24, 0x869);
+        ObjPath_GetPointWorldPosition(obj, 0, setup + 8, setup + 0xc, setup + 0x10, 0);
+        *(u8*)(setup + 4) = 1;
+        *(u8*)(setup + 5) = 4;
+        *(u8*)(setup + 6) = 0xff;
+        *(u8*)(setup + 7) = 0xff;
+        child = (int)Obj_SetupObject((int*)setup, 5, -1, -1, 0);
+        if (child != 0) {
+            f32 dur = lbl_803E2B84 * ((f32)*(u16*)(state + 0x2a4) / *(f32*)(state + 0x2a8));
+            *(f32*)(child + 0x24) =
+                (*(f32*)(*(int*)(state + 0x29c) + 0xc) - *(f32*)(setup + 8)) / dur;
+            *(f32*)(child + 0x28) =
+                ((lbl_803E2B88 + *(f32*)(*(int*)(state + 0x29c) + 0x10) + (f32)(int)randomGetRange(-10, 10))
+                 - *(f32*)(setup + 0xc)) / dur;
+            *(f32*)(child + 0x2c) =
+                (*(f32*)(*(int*)(state + 0x29c) + 0x14) - *(f32*)(setup + 0x10)) / dur;
+        }
+        Sfx_PlayFromObject((int)obj, 0x4ae);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_8014CF7C(int* obj, u8* state, f32 x, f32 z, int p5, int p6);
+extern u8 lbl_803DBD28[4];
+extern u8 lbl_803DBD2C[4];
+extern u8 lbl_803DBD30[4];
+extern f32 lbl_803E2CA0;
+extern f32 lbl_803E2CA4;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015A924(int* obj, u8* state)
+{
+    u8* tbl = *(u8**)((char*)lbl_8031FD48 + *(u16*)(state + 0x338) * 8);
+    int i;
+
+    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6e) = 10;
+    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6f) = 1;
+    if (*(s16*)((char*)obj + 0xa0) == 0) {
+        *(u8*)((char*)obj + 0xaf) = *(u8*)((char*)obj + 0xaf) | 8;
+        ObjHits_DisableObject(obj);
+    } else {
+        *(u8*)((char*)obj + 0xaf) = *(u8*)((char*)obj + 0xaf) & ~8;
+        ObjHits_EnableObject(obj);
+    }
+
+    if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0 && *(u8*)(state + 0x33a) <= 1) {
+        if (*(u16*)(state + 0x338) != 0 || (int)randomGetRange(0, 0x14) < 10) {
+            *(u8*)(state + 0x33a) = 1;
+        } else {
+            *(u8*)(state + 0x33a) = 7;
+        }
+        *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x40000000;
+    }
+
+    if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
+        *(char*)(state + 0x33a) += 1;
+        if (*(u8*)(state + 0x33a) > lbl_803DBD2C[*(u16*)(state + 0x338)]) {
+            *(u8*)(state + 0x33a) = lbl_803DBD28[*(u16*)(state + 0x338)];
+        }
+        if (*(u16*)(state + 0x2a0) < 4) {
+            i = *(u8*)(state + 0x33a) * 0xc;
+            fn_8014D08C(obj, (int*)state, *(u8*)(tbl + i + 8), *(f32*)((int)tbl + i), 0, 0);
+        } else {
+            i = *(u8*)(state + 0x33a) * 0xc;
+            fn_8014D08C(obj, (int*)state, *(u8*)(tbl + i + 9), *(f32*)((int)tbl + i), 0, 0);
+        }
+        if (*(s16*)((char*)obj + 0xa0) == 9) {
+            fn_8015A52C((s16*)obj);
+        } else if (*(s16*)((char*)obj + 0xa0) == 1) {
+            int r = randomGetRange(0, *(u8*)(state + 0x33b));
+            s16 a = randomGetRange(-0x8000, 0x7fff);
+            f32 angle = (lbl_803E2CA0 * (f32)a) / lbl_803E2CA4;
+            *(f32*)((char*)obj + 0xc) = (f32)r * fn_80293E80(angle) + *(f32*)(*(int*)((char*)obj + 0x4c) + 8);
+            *(f32*)((char*)obj + 0x14) = (f32)r * sin(angle) + *(f32*)(*(int*)((char*)obj + 0x4c) + 0x10);
+            fn_8014CF7C(obj, state, *(f32*)(*(int*)(state + 0x29c) + 0xc),
+                        *(f32*)(*(int*)(state + 0x29c) + 0x14), 1, 0);
+        }
+    }
+
+    fn_8014CF7C(obj, state, *(f32*)(*(int*)(state + 0x29c) + 0xc),
+                *(f32*)(*(int*)(state + 0x29c) + 0x14), lbl_803DBD30[*(u16*)(state + 0x338)], 0);
+    smallbasket_playReactionEffects(obj, (int*)state);
+}
+#pragma peephole reset
+#pragma scheduling reset
