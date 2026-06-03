@@ -4947,12 +4947,12 @@ void fn_800A081C(int p1, int p2, int mode)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* EN v1.0 0x800A09C4  size: 240b  fn_800A09C4: integer-vector lerp setup.
+/* EN v1.0 0x800A09C4  size: 240b  modgfx_stepS16VectorLerp: integer-vector lerp setup.
  * On mode 1, snap or step-interpolate the s16 triple at obj->_106/_108/_10a
  * toward the rounded params, then advance it by the per-step delta. */
 #pragma scheduling off
 #pragma peephole off
-void fn_800A09C4(int* obj, f32* params, int mode)
+void modgfx_stepS16VectorLerp(int* obj, f32* params, int mode)
 {
     if (mode == 1) {
         int tx = (int)params[1];
@@ -11590,11 +11590,11 @@ void dll_0B_func05(void)
                     *(s16 *)((char *)eff + 0x10a) = *(s16 *)((char *)eff + 0x10a) + (int)(*(f32 *)(E9 + emOff + 0xc) * lbl_803DD284);
                 }
                 if (*(int *)(E9 + emOff) & 0x80) {
-                    ((ExpFn4)fn_800A09C4)(eff, E9 + emOff, active, 0);
+                    ((ExpFn4)modgfx_stepS16VectorLerp)(eff, E9 + emOff, active, 0);
                 }
                 if (*(int *)(E9 + emOff) & 0x8000000) {
                     *(f32 *)(E9 + emOff + 0xc) = (f32)randomGetRange(0, 0xffff);
-                    ((ExpFn4)fn_800A09C4)(eff, E9 + emOff, active, 0);
+                    ((ExpFn4)modgfx_stepS16VectorLerp)(eff, E9 + emOff, active, 0);
                 }
                 if (*(int *)(E9 + emOff) & 0x4000) {
                     ((ExpFn4)fn_800A02DC)(eff, E9 + emOff, active, 0);
