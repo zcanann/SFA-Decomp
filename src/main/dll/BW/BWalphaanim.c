@@ -320,7 +320,7 @@ void SB_CloudRunner_onSeqFree(int *obj) {
 }
 #pragma peephole reset
 
-extern u8 lbl_803284E0[];
+extern char lbl_803284E0[];
 extern u32 lbl_803E5AE0;
 extern u8 *mmAlloc(int size, int tag, int a);
 extern void *memcpy(void *dst, const void *src, int n);
@@ -365,7 +365,7 @@ typedef struct {
 
 void SnowBike_init(int obj, u8 *params, int flag)
 {
-    char *base = (char *)lbl_803284E0;
+    char *base = lbl_803284E0;
     u32 pathParam = lbl_803E5AE0;
     u8 *state = *(u8 **)(obj + 0xb8);
     u8 *alloc;
@@ -412,8 +412,8 @@ void SnowBike_init(int obj, u8 *params, int flag)
     *(int *)(obj + 0xbc) = (int)fn_801EB420;
     ObjGroup_AddObject(obj, 10);
     if (flag == 0) {
-        path = state;
-        for (i = 0; i < 9; i++) {
+        i = 0;
+        for (path = state; i < 9; i++) {
             *(u8 **)(path + 0x4c8) = mmAlloc(1600, 26, 0);
             path += 8;
         }
