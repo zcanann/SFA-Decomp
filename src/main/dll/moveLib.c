@@ -1589,3 +1589,70 @@ void dll_19_func07(int obj, int target, int div, u16 *outYaw, u16 *outDelta, u16
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void voxmaps_worldToGrid(f32 *world, int *grid);
+extern u8 voxmaps_traceLine(int *from, int *to, int a, u8 *outFlag, int b);
+extern int objBboxFn_800640cc(void *pos, f32 *world, f32 rad, int a, void *out, int obj, int b,
+                              int c, int d, int e);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern const f32 lbl_803E1C68;
+extern const f32 lbl_803E1C80;
+extern const f32 lbl_803E1C84;
+extern f32 lbl_803E1C48;
+
+/* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
+ * the object for walkable space, returning a bitmask of clear directions. */
+#pragma scheduling off
+#pragma peephole off
+u8 dll_19_func08(int obj, char *st, f32 dist)
+{
+    u16 i;
+    u8 mask;
+    u8 hitFlag;
+    int grid1[2];
+    int grid0[2];
+    f32 world[3];
+    u8 bboxOut[0x80];
+    int cur;
+    s16 *ovr;
+    u8 ok;
+    f32 a;
+
+    mask = 0;
+    world[0] = *(f32 *)(obj + 0xc);
+    world[1] = lbl_803E1C68 + *(f32 *)(obj + 0x10);
+    world[2] = *(f32 *)(obj + 0x14);
+    voxmaps_worldToGrid(world, grid0);
+    ovr = *(s16 **)(obj + 0x30);
+    if (ovr != NULL) {
+        cur = (s16)(*(s16 *)(obj + 0x0) + *ovr);
+    } else {
+        cur = *(s16 *)(obj + 0x0);
+    }
+    for (i = 0; i < 4; i++) {
+        a = lbl_803E1C80 * (f32)((s16)cur + (i << 14)) / lbl_803E1C84;
+        world[0] = *(f32 *)(obj + 0xc) - dist * fn_80293E80(a);
+        world[1] = lbl_803E1C68 + *(f32 *)(obj + 0x10);
+        world[2] = *(f32 *)(obj + 0x14) - dist * sin(a);
+        voxmaps_worldToGrid(world, grid1);
+        if (*(void **)(obj + 0x30) != NULL) {
+            ok = 1;
+        } else {
+            ok = (u8)voxmaps_traceLine(grid1, grid0, 0, &hitFlag, 0);
+            if (hitFlag == 1) {
+                ok = 1;
+            }
+        }
+        if (ok != 0) {
+            if (objBboxFn_800640cc((char *)(obj + 0xc), world, lbl_803E1C48, 0, bboxOut, obj,
+                                   *(u8 *)(st + 0x261), -1, 0, 0) != 0) {
+                ok = 0;
+            }
+        }
+        mask |= ok << i;
+    }
+    return mask;
+}
+#pragma peephole reset
+#pragma scheduling reset
