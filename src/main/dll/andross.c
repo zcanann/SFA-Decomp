@@ -58,16 +58,16 @@ int andross_updateModelAlpha(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     f32 v;
+    f32 alpha;
     int model;
     int i;
-    int alpha;
 
     *(f32 *)(state + 0x68) = lbl_803E74D4;
     v = *(f32 *)(state + 0x68);
     model = *(int *)Obj_GetActiveModel(obj);
-    alpha = (int)(lbl_803E74B4 * v);
+    alpha = lbl_803E74B4 * v;
     for (i = 0; i < *(u8 *)(model + 0xf8); i++) {
-        *(u8 *)(ObjModel_GetRenderOp(model, i) + 0x43) = alpha;
+        *(u8 *)(ObjModel_GetRenderOp(model, i) + 0x43) = (int)alpha;
     }
     return 0;
 }
