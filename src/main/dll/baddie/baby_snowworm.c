@@ -1819,3 +1819,70 @@ int pauseMenuGridFn_8012b4c4(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803DD760;
+extern f32 lbl_803DD764;
+extern f64 lbl_803E2160;
+extern f64 lbl_803E1F60;
+extern f32 lbl_803E2168;
+extern int lbl_803DD81C;
+extern u8  lbl_803DD781;
+extern s16 lbl_803DD784;
+extern GridEntry lbl_8031BD30[];
+extern int  randomGetRange(s32 lo, s32 hi);
+extern void AudioStream_Play(s32 id, void *cb);
+extern void AudioStream_StartPrepared(void);
+extern void ObjAnim_SetCurrentMove(void *anim, int active, f32 t, int mode);
+extern void fn_8012C000(void);
+
+/* EN v1.0 0x8012B77C  size: 508b  Pause-menu open/close animator. Advances
+ * the open tween, clamps it, then on the close button fires the per-state
+ * close SFX and kicks the menu-item exit animations. */
+#pragma scheduling off
+#pragma peephole off
+void pauseMenuFn_8012b77c(void)
+{
+    u32 btn = (u16)getButtonsJustPressed(0);
+    double v = lbl_803DD764 * timeDelta + lbl_803DD760;
+
+    lbl_803DD760 = v;
+    if (v <= lbl_803E2160) v = lbl_803E2160;
+    lbl_803DD760 = v;
+    if (v >= lbl_803E1F60) v = lbl_803E1F60;
+    lbl_803DD760 = v;
+
+    if ((pauseMenuState >= 0xc || pauseMenuState < 8) &&
+        (btn & 0x200) && lbl_803DD764 > lbl_803E2160) {
+        u8 i;
+        buttonDisable(0, 0x200);
+        lbl_803DD764 = lbl_803E2168;
+        if (lbl_803DD824 == lbl_8031BD30) {
+            lbl_803DD7D8 = 1;
+        }
+        lbl_803DD81C = 0;
+        switch (pauseMenuState) {
+        case 3:
+            AudioStream_Play(randomGetRange(0, 1) + 0x271b, AudioStream_StartPrepared);
+            lbl_803DD781 = 2;
+            break;
+        case 4:
+            AudioStream_Play(randomGetRange(0, 1) + 0x2727, AudioStream_StartPrepared);
+            lbl_803DD781 = 3;
+            break;
+        case 5:
+            AudioStream_Play(randomGetRange(0, 1) + 0x2739, AudioStream_StartPrepared);
+            lbl_803DD781 = 1;
+            break;
+        }
+        for (i = 1; i < 4; i++) {
+            ObjAnim_SetCurrentMove(lbl_803A9410[i], i == (s8)lbl_803DD781, 0.0f, 0);
+        }
+    }
+
+    lbl_803DD784 -= framesThisStep * 0x50;
+    if (lbl_803DD784 < 0) lbl_803DD784 = 0;
+    fn_8012C000();
+}
+#pragma peephole reset
+#pragma scheduling reset
+
