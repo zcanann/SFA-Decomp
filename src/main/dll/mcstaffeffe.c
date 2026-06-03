@@ -19,7 +19,7 @@ void mcstaffeffe_update(void) {}
 #pragma scheduling off
 void mcstaffeffe_init(int obj, int setup)
 {
-    *(int *)(obj + 0xbc) = (int)fn_802391C4;
+    *(int *)(obj + 0xbc) = (int)mcstaffeffe_SeqFn;
     switch (*(u8 *)(setup + 0x1b)) {
     case 0:
         *(int *)(obj + 0xf4) = 4;

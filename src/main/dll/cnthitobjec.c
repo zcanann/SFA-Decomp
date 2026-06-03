@@ -169,7 +169,7 @@ void cnthitobjec_update(int obj)
 
 #pragma peephole on
 #pragma scheduling off
-int fn_80238F50(int obj, int p2, int setup)
+int mcupgrade_SeqFn(int obj, int p2, int setup)
 {
     if (*(u8 *)(setup + 0x8b) != 0) {
         (*(void (**)(int, int, int, int))(*gGameUIInterface + 0x38))(

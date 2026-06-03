@@ -2,7 +2,7 @@
 
 #pragma peephole on
 #pragma scheduling off
-int fn_80239054(int p1, int p2, int setup)
+int mcupgradema_SeqFn(int p1, int p2, int setup)
 {
     int i;
     for (i = 0; i < *(u8 *)(setup + 0x8b); i++) {
@@ -43,6 +43,6 @@ void mcupgrade_update(int obj)
 
 #pragma peephole on
 #pragma scheduling off
-void mcupgrade_init(int obj) { *(int *)(obj + 0xbc) = (int)fn_80238F50; }
+void mcupgrade_init(int obj) { *(int *)(obj + 0xbc) = (int)mcupgrade_SeqFn; }
 #pragma scheduling reset
 #pragma peephole reset
