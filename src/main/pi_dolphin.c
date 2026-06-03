@@ -6324,6 +6324,16 @@ void fn_8004FDA0(u8 *param_1, void *param_2) {
     lbl_803DCD6A++;
     lbl_803DCD69++;
 }
+void fn_80050A28(int param_1) {
+    f32 m[3][4];
+    PSMTXScale(m, (f32)param_1, (f32)param_1, lbl_803DEACC);
+    m[2][3] = lbl_803DEAC8;
+    GXLoadTexMtxImm(m, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, 1, 4, 0x3c, 0, lbl_803DCD80);
+    lbl_803DCD80 += 3;
+    lbl_803DCD88++;
+    lbl_803DCD69++;
+}
 void fn_8004F2B0(void) {
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
