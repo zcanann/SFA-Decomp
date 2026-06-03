@@ -1558,8 +1558,7 @@ extern void DCFlushRange(void *addr, u32 nBytes);
 extern void DCInvalidateRange(void *addr, u32 nBytes);
 extern int lbl_80396900[];
 extern char *sMemoryCardFileName;
-extern u32 lbl_803DD054;
-extern u32 lbl_803DD050;
+extern u64 lbl_803DD050;
 
 /* EN v1.0 0x8007E7C0  size: 900b  Checksums the save buffer, writes it to the
  * memory card, then reads it back and verifies the checksum. */
@@ -1609,8 +1608,7 @@ int saveGame_doWrite(int slot)
                 result = -0x55;
                 lbl_803DB700 = 10;
             } else {
-                lbl_803DD054 = (u32)chk2;
-                lbl_803DD050 = (u32)(chk2 >> 32);
+                lbl_803DD050 = chk2;
             }
         }
     }
@@ -1732,6 +1730,224 @@ void loadMemCardImages(void)
     ((u32 *)q)[0xfff] = (u32)chk;
     ((u32 *)q)[0xffe] = (u32)(chk >> 32);
     DCFlushRange((void *)lbl_803DD05C, 0x4000);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+typedef struct {
+    char fileName[32];
+    u32 length;
+    u32 time;
+    u8 gameName[4];
+    u8 company[2];
+    u8 bannerFormat;
+    u8 pad;
+    u32 iconAddr;
+    u16 iconFormat;
+    u16 iconSpeed;
+    u32 commentAddr;
+    u8 pad2[0x30];
+} CARDStatStub;
+extern int cardProbe(int chan);
+extern void *mmAlloc(u32 size, int tag, int unk);
+extern void mm_free(void *ptr);
+extern void *memset(void *dst, int c, u32 n);
+extern s32 CARDMount(s32 chan, void *workArea, void (*detachCb)(void));
+extern s32 CARDCheck(s32 chan);
+extern s32 CARDGetSerialNo(s32 chan, u64 *serialNo);
+extern s32 CARDOpen(s32 chan, char *fileName, int *fileInfo);
+extern s32 CARDClose(int *fileInfo);
+extern s32 CARDUnmount(s32 chan);
+extern s32 CARDCreate(s32 chan, char *fileName, u32 size, int *fileInfo);
+extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub *stat);
+extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub *stat);
+extern void *lbl_803DD040;
+extern u64 lbl_803DD048;
+extern u8 lbl_803DD059;
+extern u8 lbl_803DD05A;
+
+/* EN v1.0 0x8007F818  size: 1468b  Mounts the memory card, validates its
+ * serial number, opens or creates the save file (writing the card image
+ * buffer for a fresh file), and maps any CARD error to a status code. */
+#pragma peephole off
+#pragma scheduling off
+int saveGame(int writeImages)
+{
+    u8 created;
+    u8 fresh;
+    int result;
+    int ok;
+    int ret;
+    u64 serial;
+    CARDStatStub stat;
+    void *m;
+
+    created = 0;
+    fresh = 0;
+    if (cardProbe(0) == 0) {
+        ok = 0;
+    } else {
+        if ((lbl_803DD040 = mmAlloc(0xa000, -1, 0)) == NULL) {
+            lbl_803DB700 = 8;
+            ok = 0;
+        } else {
+            ok = 1;
+        }
+    }
+    if (ok == 0) {
+        return 0;
+    }
+    lbl_803DB700 = 0;
+    result = CARDMount(0, lbl_803DD040, cardSetStatusNoCard2);
+    if (result == -6) {
+        result = CARDCheck(0);
+    }
+    if (result == 0 || result == -13) {
+        int err;
+        result = CARDCheck(0);
+        err = CARDGetSerialNo(0, &serial);
+        if (err == 0) {
+            if (lbl_803DD059 != 0) {
+                if (lbl_803DD048 != 0) {
+                    if (serial != lbl_803DD048) {
+                        result = -0x55;
+                        lbl_803DB700 = 0xb;
+                    }
+                } else {
+                    lbl_803DD048 = serial;
+                }
+            } else {
+                lbl_803DD048 = serial;
+            }
+        } else {
+            result = err;
+        }
+    }
+    if (result == 0) {
+        result = CARDOpen(0, sMemoryCardFileName, lbl_80396900);
+        if (result == -4 && (u8)writeImages == 0) {
+            created = 1;
+            fresh = 1;
+        }
+        if (result == 0) {
+            lbl_803DD05A = 1;
+        }
+    }
+    if (result == 0) {
+        result = CARDGetStatus(0, lbl_80396900[1], &stat);
+        if (result == 0) {
+            if (stat.iconAddr == 0xffffffff || stat.commentAddr == 0xffffffff) {
+                if ((u8)writeImages != 0) {
+                    result = -4;
+                } else {
+                    fresh = 1;
+                }
+            }
+        }
+    }
+    if (fresh != 0) {
+        m = mmAlloc(0x4000, -1, 0);
+        lbl_803DD05C = (int)m;
+        if (m != NULL) {
+            memset(m, 0, 0x4000);
+            loadMemCardImages();
+        } else {
+            lbl_803DB700 = 8;
+            CARDUnmount(0);
+            mm_free(lbl_803DD040);
+            lbl_803DD040 = NULL;
+            return 0;
+        }
+    }
+    if (created != 0) {
+        result = CARDCreate(0, sMemoryCardFileName, 0x6000, lbl_80396900);
+    }
+    if (fresh != 0) {
+        if (result == 0) {
+            result = CARDWrite(lbl_80396900, (void *)lbl_803DD05C, 0x4000, 0);
+            if (result == 0) {
+                result = CARDWrite(lbl_80396900, (void *)(lbl_803DD05C + 0x2000), 0x2000, 0x4000);
+            }
+            if (result == -5) {
+                CARDDelete(0, sMemoryCardFileName);
+            }
+            if (created != 0 && result == 0) {
+                result = CARDGetStatus(0, lbl_80396900[1], &stat);
+            }
+            if (result == 0) {
+                stat.commentAddr = 0;
+                stat.bannerFormat = (stat.bannerFormat & ~0x3) | 2;
+                stat.iconAddr = 0x40;
+                stat.bannerFormat = (stat.bannerFormat & ~0x4) | 4;
+                stat.iconFormat = (stat.iconFormat & ~0x3) | 1;
+                stat.iconSpeed = (stat.iconSpeed & ~0x3) | 3;
+                stat.iconFormat = (stat.iconFormat & ~0xc) | 4;
+                stat.iconSpeed = (stat.iconSpeed & ~0xc) | 0xc;
+                stat.iconFormat = (stat.iconFormat & ~0x30) | 0x10;
+                stat.iconSpeed = (stat.iconSpeed & ~0x30) | 0x30;
+                stat.iconFormat = (stat.iconFormat & ~0xc0) | 0x40;
+                stat.iconSpeed = (stat.iconSpeed & ~0xc0) | 0xc0;
+                stat.iconSpeed = stat.iconSpeed & ~0x300;
+                result = CARDSetStatus(0, lbl_80396900[1], &stat);
+                if (result == 0) {
+                    lbl_803DD050 = *(u64 *)(lbl_803DD05C + 0x3ff8);
+                }
+            }
+        }
+        mm_free((void *)lbl_803DD05C);
+    }
+    switch (result) {
+    case 0:
+        if (fresh != 0) {
+            return 1;
+        }
+        return 2;
+    case 1:
+        lbl_803DB700 = 1;
+        ret = 0;
+        break;
+    case -3:
+        if ((int)lbl_803DB700 != 3) {
+            lbl_803DB700 = 2;
+        }
+        ret = 0;
+        break;
+    case -4:
+        lbl_803DB700 = 0xc;
+        ret = 0;
+        break;
+    case -5:
+        lbl_803DB700 = 4;
+        ret = 0;
+        break;
+    case -6:
+        lbl_803DB700 = 5;
+        ret = 0;
+        break;
+    case -13:
+        lbl_803DB700 = 6;
+        ret = 0;
+        break;
+    case -8:
+    case -9:
+        lbl_803DB700 = 9;
+        ret = 0;
+        break;
+    case -0x55:
+        ret = 0;
+        break;
+    default:
+        ret = 0;
+        break;
+    }
+    if (lbl_803DD05A != 0) {
+        lbl_803DD05A = 0;
+        CARDClose(lbl_80396900);
+    }
+    CARDUnmount(0);
+    mm_free(lbl_803DD040);
+    lbl_803DD040 = NULL;
+    return ret;
 }
 #pragma scheduling reset
 #pragma peephole reset
