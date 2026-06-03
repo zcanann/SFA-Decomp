@@ -1756,9 +1756,12 @@ extern f32 lbl_803E2170;
 extern f32 lbl_803E1E94;
 
 typedef struct {
-    u8  _0[0x18];
-    s32 f18;
-    u8  f1c;
+    s16 id;         /* 0x00 */
+    u8  _2[0xa];    /* 0x02 */
+    u8  nav[4];     /* 0x0c */
+    u8  _10[0x8];   /* 0x10 */
+    s32 f18;        /* 0x18 */
+    u8  f1c;        /* 0x1c */
     u8  _1d[3];
 } GridEntry;                       /* sizeof = 0x20 */
 extern GridEntry *lbl_803DD824;
@@ -2306,6 +2309,152 @@ void highScoreScreenDraw(int p1, int p2, int p3)
         }
     }
     gameTextFn_80016810(0x346, 0, 0x104);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s8  lbl_803DD75E;
+extern f32 lbl_803DD768;
+extern f32 lbl_803E2068;
+extern f32 lbl_803E2174;
+extern u8  lbl_803DD7D6;
+extern int lbl_803DD8E0;
+extern s16 lbl_803A8B48[];
+extern GridEntry lbl_8031BD90[];
+
+/* EN v1.0 0x8012B978  size: 1292b  Pause-menu submenu driver: input nav,
+ * voiceover scheduling, selection SFX, and title refresh. */
+#pragma scheduling off
+#pragma peephole off
+void pauseMenuRunSubmenu(u8 p1)
+{
+    s8 sel = -1;
+    u8 valid = 0;
+    u32 btn = getButtonsJustPressed(0);
+
+    lbl_803DD8A4 = btn;
+    if (lbl_803DD75C != 0) {
+        s16 v;
+        if (btn & 0x300) {
+            Sfx_PlayFromObject(0, 0x41c);
+            buttonDisable(0, 0x300);
+            lbl_803DD75E = -0x28;
+        }
+        v = (s16)(lbl_803DD75C + lbl_803DD75E);
+        lbl_803DD75C = v;
+        if (v > 0x200) {
+            v = 0x200;
+        }
+        lbl_803DD75C = v;
+        if (v < 0) {
+            v = 0;
+        }
+        lbl_803DD75C = v;
+    } else {
+        f32 old = lbl_803DD768;
+        f32 now = old + timeDelta;
+        GridEntry *tbl;
+        lbl_803DD768 = now;
+        switch (pauseMenuState) {
+        case 3:
+            if (now >= lbl_803E2068 && old < lbl_803E2068) {
+                if (lbl_803DD7D6 == lbl_803DD8E0) {
+                    AudioStream_Play(0x271a, AudioStream_StartPrepared);
+                } else {
+                    AudioStream_Play(0x2715, AudioStream_StartPrepared);
+                }
+            }
+            if (lbl_803DD768 > lbl_803E2174) {
+                AudioStream_Play(randomGetRange(0, 3) + 0x2716, AudioStream_StartPrepared);
+                lbl_803DD768 = 0.0f;
+            }
+            break;
+        case 5:
+            if (now >= lbl_803E2068 && old < lbl_803E2068) {
+                int id = randomGetRange(0, 3) + 0x2730;
+                int skip = 0x2731;
+                if (lbl_803DD824 == lbl_8031BD90) {
+                    skip = 0x2732;
+                }
+                if (id >= skip) {
+                    id++;
+                }
+                AudioStream_Play(id, AudioStream_StartPrepared);
+                lbl_803DD768 = 0.0f;
+            }
+            break;
+        }
+        if (lbl_803DD764 > 0.0f) {
+            u8 a1;
+            u8 a2;
+            padGetAnalogInput(0, &a1, &a2);
+            if ((s8)a2 == 1) {
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[0];
+            }
+            if ((s8)a2 == -1) {
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[1];
+            }
+            if ((s8)a1 == -1 && sel == -1) {
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[2];
+            }
+            if ((s8)a1 == 1 && sel == -1) {
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[3];
+            }
+        }
+        if (sel >= 0) {
+            s16 id;
+            Sfx_PlayFromObject(0, 0x405);
+            lbl_803DD7D8 = sel;
+            id = lbl_803DD824[sel].id;
+            if (id < 0x4d && id >= 0x4b) {
+                AudioStream_Play(0x2714, AudioStream_StartPrepared);
+            }
+        }
+        tbl = lbl_803DD824;
+        if (tbl == lbl_8031BD90) {
+            if (lbl_803A8B48[tbl[lbl_803DD7D8].id] != 0xbf0) {
+                valid = 1;
+            }
+        } else {
+            s16 id2 = tbl[lbl_803DD7D8].id;
+            if (id2 >= 0 && id2 != 0x25 && id2 != 0x24 && id2 != 0x49) {
+                valid = 1;
+            }
+        }
+        if ((lbl_803DD8A4 & 0x100) && tbl != lbl_8031BD30 && 0.0f == lbl_803DD7C0) {
+            if (valid != 0) {
+                Sfx_PlayFromObject(0, 0x41b);
+                switch (pauseMenuState) {
+                case 3:
+                    AudioStream_Play(randomGetRange(0, 1) + 0x2712, AudioStream_StartPrepared);
+                    lbl_803DD768 = 0.0f;
+                    break;
+                case 5:
+                    AudioStream_Play(randomGetRange(0, 1) + 0x2735, AudioStream_StartPrepared);
+                    lbl_803DD768 = 0.0f;
+                    break;
+                }
+                buttonDisable(0, 0x100);
+                lbl_803DD75C = 1;
+                lbl_803DD75E = 0x1e;
+                return;
+            }
+            if (pauseMenuState == 5) {
+                AudioStream_Play(randomGetRange(0, 1) + 0x2737, AudioStream_StartPrepared);
+                lbl_803DD768 = 0.0f;
+            }
+        }
+        if (valid == 0) {
+            pauseMenuSetupTitle(lbl_803DD824[lbl_803DD7D8].f18, lbl_803DD824[lbl_803DD7D8].f1c, 2, 0);
+            return;
+        }
+        if (sel >= 0 || p1 != 0 ||
+            (lbl_803DD760 == lbl_803E2160 && lbl_803DD764 > lbl_803E2160)) {
+            if (lbl_803DD824[lbl_803DD7D8].f18 != 0) {
+                pauseMenuSetupTitle(lbl_803DD824[lbl_803DD7D8].f18, lbl_803DD824[lbl_803DD7D8].f1c, 1, 0);
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
