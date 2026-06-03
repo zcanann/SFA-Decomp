@@ -4374,10 +4374,10 @@ int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
   extern int ObjGroup_ContainsObject(int, int);
   extern f32 vec3f_distanceSquared(int, int);
   extern f32 lbl_803E23DC;
+  int *objs;
   int closest = 0;
   f32 bestDistSq;
   int count;
-  int *objs;
   int i;
 
   bestDistSq = maxRadius;
@@ -4385,19 +4385,18 @@ int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
   bestDistSq = bestDistSq * bestDistSq;
 
   for (i = 0; i < count; i++) {
-    int obj = *objs;
     int *data;
     f32 obj_extra;
     int v1, v2;
     s32 g1, g2;
 
-    if (dll_19_func1B(obj) != 0) {
-      obj_extra = (**(f32 (**)(int))((char *)(*gBaddieControlInterface) + 0x60))(obj);
+    if (dll_19_func1B(*objs) != 0) {
+      obj_extra = (**(f32 (**)(int))((char *)(*gBaddieControlInterface) + 0x60))(*objs);
     } else {
-      obj_extra = fn_8014C5D0(obj);
+      obj_extra = fn_8014C5D0(*objs);
     }
 
-    data = (int *)*(int *)(obj + 0x4c);
+    data = (int *)*(int *)(*objs + 0x4c);
     g1 = *(s16 *)((char *)data + 0x18);
     if (g1 == -1) {
       v1 = 0;
@@ -4411,19 +4410,18 @@ int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
       v2 = GameBit_Get(g2);
     }
 
-    if (ObjGroup_ContainsObject(obj, 49) == 0 &&
+    if (ObjGroup_ContainsObject(*objs, 49) == 0 &&
         obj_extra > lbl_803E23DC &&
         v1 == 0 &&
         v2 != 0) {
-      if (*(s16 *)(obj + 0x46) != 2129) {
+      if (*(s16 *)(*objs + 0x46) != 2129) {
         if ((**(int (**)(int))((char *)(*gMapEventInterface) + 0x68))(*(int *)((char *)data + 0x14)) != 0) {
-          int skip = 0;
           if (p2 == 0) {
-            s16 m = *(s16 *)(obj + 0x46);
-            if (m == 1022 || m == 1239 || m == 636 || m == 593) skip = 1;
+            s16 m = *(s16 *)(*objs + 0x46);
+            if (m == 1022 || m == 1239 || m == 636 || m == 593) goto next;
           }
-          if (!skip) {
-            f32 dist = vec3f_distanceSquared(p1 + 0x18, obj + 0x18);
+          {
+            f32 dist = vec3f_distanceSquared(p1 + 0x18, *objs + 0x18);
             if (dist < bestDistSq) {
               bestDistSq = dist;
               closest = *objs;
@@ -4432,6 +4430,7 @@ int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
         }
       }
     }
+  next:
     objs++;
   }
   return closest;
