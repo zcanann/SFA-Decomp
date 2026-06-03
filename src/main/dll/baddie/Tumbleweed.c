@@ -5043,3 +5043,108 @@ int Credits_frameStart(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 fn_80293E80(f32);
+extern f32 sin(f32);
+extern void hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32 *color);
+extern u32 lbl_803E2200;
+extern s16 lbl_803DD930;
+extern f32 lbl_803DD94C;
+extern f32 lbl_803E2220;
+extern f32 lbl_803E2224;
+extern f32 lbl_803E2260;
+extern f32 lbl_803E2264;
+extern f32 lbl_803E2268;
+extern f32 lbl_803E226C;
+extern f32 lbl_803E2270;
+extern f32 lbl_803E2274;
+extern f32 lbl_803E2278;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8013351C(void)
+{
+    u32 col;
+    u32 c2;
+    f32 c0;
+    f32 s0;
+    f32 c1;
+    f32 s1;
+    f32 cc2;
+    f32 s2;
+    int y;
+
+    col = lbl_803E2200;
+    ((u8 *)&col)[3] = (u8)lbl_803DD930;
+    lbl_803DD94C = -(lbl_803E2260 * timeDelta - lbl_803DD94C);
+    if (lbl_803DD94C > lbl_803E2224) {
+        lbl_803DD94C = lbl_803DD94C - lbl_803E2264;
+    }
+    c0 = lbl_803E2268 * fn_80293E80((lbl_803E2220 * lbl_803DD94C) / lbl_803E2224);
+    s0 = lbl_803E2268 * sin((lbl_803E2220 * lbl_803DD94C) / lbl_803E2224);
+    c1 = lbl_803E226C * fn_80293E80((lbl_803E2220 * (lbl_803DD94C + lbl_803E2270)) / lbl_803E2224);
+    s1 = lbl_803E226C * sin((lbl_803E2220 * (lbl_803DD94C + lbl_803E2270)) / lbl_803E2224);
+    cc2 = lbl_803E226C * fn_80293E80((lbl_803E2220 * (lbl_803DD94C + lbl_803E2274)) / lbl_803E2224);
+    s2 = lbl_803E226C * sin((lbl_803E2220 * (lbl_803DD94C + lbl_803E2274)) / lbl_803E2224);
+    y = (int)lbl_803DD938 + 0x32;
+    c2 = col;
+    hudDrawTriangle(lbl_803E2278 - c0, (f32)y - s0,
+                    lbl_803E2278 - c1, (f32)y - s1,
+                    lbl_803E2278 - cc2, (f32)y - s2, &c2);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 enableDebugText;
+extern u16 *lbl_803DDA30;
+extern void DCStoreRange(void *p, u32 nBytes);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80137A00(int p1, int p2, u8 *grid)
+{
+    int i;
+    int bit;
+    int c0;
+    int c1;
+    int row0;
+    int row1;
+    int a0;
+    int a1;
+    int a2;
+    int a3;
+
+    if (enableDebugText != 0) {
+        i = 0;
+        row1 = (p2 + 1) * 0x280;
+        row0 = p2 * 0x280;
+        for (; i < 5; i++) {
+            bit = 0;
+            c0 = p1 + row0;
+            a0 = c0;
+            a1 = c0 + 1;
+            c1 = p1 + row1;
+            a2 = c1;
+            a3 = c1 + 1;
+            for (; bit < 8; bit++) {
+                if (((1 << bit) & *grid) != 0) {
+                    *(u16 *)((char *)lbl_803DDA30 + a0 * 2) = 0xC080;
+                    *(u16 *)((char *)lbl_803DDA30 + a1 * 2) = 0xC080;
+                    *(u16 *)((char *)lbl_803DDA30 + a2 * 2) = 0xC080;
+                    *(u16 *)((char *)lbl_803DDA30 + a3 * 2) = 0xC080;
+                }
+                a0++;
+                a1++;
+                a2++;
+                a3++;
+            }
+            DCStoreRange((char *)lbl_803DDA30 + c0 * 2, 0x10);
+            DCStoreRange((char *)lbl_803DDA30 + c1 * 2, 0x10);
+            row0 += 0x500;
+            row1 += 0x500;
+            grid++;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
