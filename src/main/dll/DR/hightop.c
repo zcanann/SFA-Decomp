@@ -100,7 +100,7 @@ extern f32 lbl_803E4D9C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 objInterpretSeq(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
+undefined4 objInterpretSeq_v11_unused(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined4 param_9,undefined4 param_10,undefined4 param_11,int param_12,
                  int param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
@@ -335,7 +335,7 @@ LAB_80199dec:
             if (sVar6 == 0x54) {
 LAB_80199ed4:
               if ((int)psVar12[0x1c] == (uint)uVar3) {
-                dVar22 = (double)objInterpretSeq(dVar22,param_2,param_3,param_4,param_5,param_6,param_7
+                dVar22 = (double)objInterpretSeq_v11_unused(dVar22,param_2,param_3,param_4,param_5,param_6,param_7
                                               ,param_8,iVar13,iVar17,param_11,param_12,param_13,
                                               param_14,param_15,param_16);
               }
@@ -816,7 +816,7 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
         sVar1 = *psVar10;
         if (sVar1 == 0x50) {
-          uVar12 = objInterpretSeq(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4
+          uVar12 = objInterpretSeq_v11_unused(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4
                                 ,iVar5,1,0,param_13,param_14,param_15,param_16);
           iVar5 = FUN_8001769c();
           if (iVar5 != 0) {
@@ -831,20 +831,20 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
               iVar9 = objFn_80198fa4(iVar4,(float *)(iVar9 + 0x1c));
               if (iVar5 == 0) {
                 if (iVar9 == 0) {
-                  objInterpretSeq(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,
+                  objInterpretSeq_v11_unused(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,
                                iVar6,0xfffffffe,0,param_13,param_14,param_15,param_16);
                 }
                 else {
-                  objInterpretSeq(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,
+                  objInterpretSeq_v11_unused(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,
                                iVar6,0xffffffff,0,param_13,param_14,param_15,param_16);
                 }
               }
               else if (iVar9 == 0) {
-                objInterpretSeq(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,
+                objInterpretSeq_v11_unused(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,
                              iVar6,1,0,param_13,param_14,param_15,param_16);
               }
               else {
-                objInterpretSeq(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,
+                objInterpretSeq_v11_unused(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,
                              iVar6,2,0,param_13,param_14,param_15,param_16);
               }
             }
@@ -869,7 +869,7 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
           else if ((sVar1 < 0x4f) &&
                   (*(uint *)(pbVar11 + 8) = *(int *)(pbVar11 + 8) + (uint)DAT_803dc070,
                   (uint)(ushort)psVar10[0x23] <= *(uint *)(pbVar11 + 8))) {
-            objInterpretSeq(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,0,1,0,
+            objInterpretSeq_v11_unused(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,0,1,0,
                          param_13,param_14,param_15,param_16);
           }
         }
@@ -893,7 +893,7 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
             }
             if ((bVar3) && (-1 < (char)pbVar11[0x8a])) {
               pbVar11[0x8a] = pbVar11[0x8a] & 0x7f | 0x80;
-              objInterpretSeq(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,
+              objInterpretSeq_v11_unused(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,
                            iVar5,1,0,param_13,param_14,param_15,param_16);
             }
             if (!bVar3) {
@@ -906,7 +906,7 @@ void FUN_8019ae30(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
       }
       else {
-        objInterpretSeq(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,iVar5,1,0,
+        objInterpretSeq_v11_unused(uVar12,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4,iVar5,1,0,
                      param_13,param_14,param_15,param_16);
         *pbVar11 = *pbVar11 & 0xfb;
         *pbVar11 = *pbVar11 | 1;
@@ -1491,6 +1491,483 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
         ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
     }
     return ret;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int gTriggerObjDescriptor[];
+extern int *gCameraInterface;
+extern int *gObjectTriggerInterface;
+extern int *gCloudActionInterface;
+extern int *gGameUIInterface;
+extern int *gPlayerShadowInterface;
+extern int *gMapEventInterface;
+extern void OSReport(const char *fmt, ...);
+extern int Obj_GetPlayerObject(void);
+extern void fn_80295918(f32 a, int obj, int b);
+extern void setDrawCloudsAndLights(int v);
+extern void gameFlagFn_8005ce6c(int v);
+extern void setDrawLights(int v);
+extern void fn_8006FC00(int v);
+extern void skyFn_80088c94(int a, int b);
+extern void gameFlagFn_8005cd24(int v);
+extern void timeOfDayFn_80055000(void);
+extern void timeOfDayFn_80055038(void);
+extern int getSkyStructField24C(void);
+extern void skyFn_80088e54(f32 a, int b);
+extern void getEnvfxAct(int obj, int target, int effectId, int flags);
+extern int ObjGroup_FindNearestObject(int group, int obj, int p3);
+extern int ObjList_GetObjects(int *first, int *count);
+extern int getTablesBinEntry(int idx);
+extern int getLoadedTexture(int idx);
+extern void crash(int a, int b, int c, int d, int e, int f, int g, int h);
+extern void textureFree(int tex);
+extern void Obj_SetActiveModelIndex(int obj, int idx);
+extern void GameBit_Set(int bit, int val);
+extern int getCurMapLayer(void);
+extern int getTrickyObject(void);
+extern void mapLoadDataFiles(int map);
+extern void loadModelAndAnimTabs(void);
+extern void mapUnload(int map, int flags);
+extern void lockLevel(int a, int b);
+extern void unlockLevel(int a, int b, int c);
+extern void gameTextFn_80125ba4(int id);
+extern int getArwing(void);
+extern void defragMemory(int v);
+extern void timer_addDuration(int timer, int dur);
+extern void envFxFn_800887cc(void);
+extern void goToNextMapLayer(void);
+extern void goToPrevMapLayer(void);
+extern f32 lbl_803E40D8;
+extern f32 lbl_803E40FC;
+extern f32 lbl_803E4100;
+#pragma scheduling off
+#pragma peephole off
+void objInterpretSeq(int obj, int p2, int p3, int p4)
+{
+    char *desc = (char *)gTriggerObjDescriptor;
+    u8 *state = *(u8 **)(obj + 0xb8);
+    u8 *p = (u8 *)(*(int *)(obj + 0x4c) + 0x18);
+    u8 i = 0;
+    u8 b;
+    u8 sflags;
+    u8 c;
+    int t;
+    int t2;
+    int *tbl;
+    u32 bit;
+    u32 v;
+    u32 op;
+    s16 d;
+    int ang;
+    int first;
+    int count;
+    u16 id;
+
+    while (i < 8) {
+        if (p[1] != 0 && ((sflags = *state, (sflags & 4) == 0) || (*p & 0x20) != 0)) {
+            b = *p;
+            if ((b & 0x10) == 0) {
+                if ((s8)p3 == 1) {
+                    if ((b & 1) != 0) {
+                        if ((sflags & 1) != 0) {
+                            if ((b & 4) == 0) {
+                                goto next;
+                            }
+                        }
+                        goto run;
+                    }
+                } else if ((s8)p3 == -1 && (b & 2) != 0) {
+                    if ((sflags & 2) != 0) {
+                        if ((b & 8) == 0) {
+                            goto next;
+                        }
+                    }
+                    goto run;
+                }
+            } else if ((b & 1) != 0) {
+                if ((s8)p3 < 0) {
+                    goto next;
+                }
+                goto run;
+            } else if ((b & 2) == 0 || (s8)p3 < 1) {
+            run:
+                switch (p[1]) {
+                case 1:
+                    c = p[2];
+                    if (c == 9) {
+                        t = Obj_GetPlayerObject();
+                        if (t != 0) {
+                            fn_80295918(lbl_803E40D8, t, 10);
+                        }
+                    } else if (c < 9) {
+                        if (c > 7 && (t = Obj_GetPlayerObject()) != 0) {
+                            fn_80295918(lbl_803E40D8, t, 1);
+                        }
+                    } else if (c == 0xb) {
+                        t = Obj_GetPlayerObject();
+                        if (t != 0) {
+                            fn_80295918(lbl_803E40FC, t, 1);
+                        }
+                    } else if (c < 0xb && (t = Obj_GetPlayerObject()) != 0) {
+                        fn_80295918(lbl_803E40D8, t, 0xb);
+                    }
+                    break;
+                case 4:
+                    if ((s8)p3 < 0) {
+                        Sfx_StopFromObject((void *)obj, *(u16 *)(p + 2));
+                    } else {
+                        Sfx_PlayFromObject(obj, *(u16 *)(p + 2));
+                    }
+                    break;
+                case 6:
+                    (*(code *)(*gCameraInterface + 0x24))(p[2], p[3], 0);
+                    break;
+                case 8:
+                    switch (p[2]) {
+                    case 0:
+                        if (p[3] > 1) {
+                            p[3] = 1;
+                        }
+                        setDrawCloudsAndLights(p[3]);
+                        break;
+                    case 1:
+                        if (p[3] > 1) {
+                            p[3] = 1;
+                        }
+                        gameFlagFn_8005ce6c(p[3]);
+                        break;
+                    case 2:
+                        if (p[3] > 1) {
+                            p[3] = 1;
+                        }
+                        setDrawLights(p[3]);
+                        break;
+                    case 3:
+                        if (p[3] > 1) {
+                            p[3] = 1;
+                        }
+                        (*(code *)(*gCloudActionInterface + 0x1c))(p[3]);
+                        break;
+                    case 4:
+                        (*(code *)(*gPlayerShadowInterface + 0xc))(p[3]);
+                        break;
+                    case 5:
+                        fn_8006FC00(p[3]);
+                        break;
+                    case 6:
+                        if (p[3] == 0) {
+                            skyFn_80088c94(7, 0);
+                        } else {
+                            skyFn_80088c94(7, 1);
+                        }
+                        break;
+                    case 7:
+                        if (p[3] == 0) {
+                            gameFlagFn_8005cd24(0);
+                        } else {
+                            gameFlagFn_8005cd24(1);
+                        }
+                        break;
+                    case 8:
+                        if (p[3] == 0) {
+                            timeOfDayFn_80055000();
+                        } else {
+                            timeOfDayFn_80055038();
+                        }
+                        break;
+                    case 9:
+                        skyFn_80088e54((f32)(u32)p[3], getSkyStructField24C() ^ 1);
+                        break;
+                    case 10:
+                        skyFn_80088e54((f32)(u32)p[3], 0);
+                        break;
+                    case 0xb:
+                        skyFn_80088e54((f32)(u32)p[3], 1);
+                        break;
+                    }
+                    break;
+                case 5:
+                    break;
+                case 10:
+                    getEnvfxAct(obj, p2, *(s16 *)(p + 2), p4);
+                    OSReport(desc + 0x68, (int)*(s16 *)(obj + 0x44), *(s16 *)(p + 2), p4);
+                    break;
+                case 0xd:
+                    getLActions(obj, p2, *(s16 *)(p + 2), p3, p4, 0);
+                    break;
+                case 0xb:
+                    c = p[2];
+                    if (c == 2) {
+                        (*(code *)(*gObjectTriggerInterface + 0xc))(p[3], 0);
+                    } else if (c < 2) {
+                        if (c == 0) {
+                        objtrig:
+                            t = ObjGroup_FindNearestObject(0xf, obj, 0);
+                            if (t != 0) {
+                                (*(code *)(*gObjectTriggerInterface + 0x48))(p[3], t, -1);
+                            }
+                        } else {
+                            (*(code *)(*gObjectTriggerInterface + 0xc))(p[3], 1);
+                        }
+                    } else if (c < 4) {
+                        goto objtrig;
+                    }
+                    break;
+                case 0xc:
+                    id = *(u16 *)(p + 2);
+                    t = ObjList_GetObjects(&first, &count);
+                    for (; first < count; first++) {
+                        t2 = *(int *)(t + first * 4);
+                        tbl = *(int **)(t2 + 0x4c);
+                        if (tbl == NULL) {
+                            continue;
+                        }
+                        d = *(s16 *)tbl;
+                        if (d == 0x54) {
+                        match:
+                            if (*(s16 *)((char *)tbl + 0x38) == id) {
+                                objInterpretSeq(t2, p2, p3, p4);
+                            }
+                        } else if (d < 0x54) {
+                            if (d < 0x51 && d > 0x4a) {
+                                goto match;
+                            }
+                        } else if (d == 0x230) {
+                            goto match;
+                        }
+                    }
+                    break;
+                case 0x10:
+                    Obj_SetActiveModelIndex(Obj_GetPlayerObject(), p[2]);
+                    break;
+                case 0x12:
+                    bit = ((u32)p[2] << 8 & 0x3f00) | p[3];
+                    v = GameBit_Get(bit);
+                    op = ((u32)p[2] << 8) >> 14;
+                    if (op == 0) {
+                        v = 0;
+                    } else if (op == 1) {
+                        v = 0xffffffff;
+                    } else if (op == 2) {
+                        v = ~v;
+                    }
+                    GameBit_Set(bit, v);
+                    break;
+                case 0x21:
+                    bit = ((u32)p[2] << 8 & 0x1f00) | p[3];
+                    GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (((u32)p[2] << 8) >> 13)));
+                    break;
+                case 0x13:
+                    (*(code *)(*gMapEventInterface + 0x50))((int)*(s8 *)(obj + 0xac), *(u16 *)(p + 2), 1);
+                    break;
+                case 0x27:
+                    id = *(u16 *)(p + 2);
+                    mapLoadDataFiles(id);
+                    loadModelAndAnimTabs();
+                    OSReport(desc + 0xa8, id);
+                    break;
+                case 0x28:
+                    id = *(u16 *)(p + 2);
+                    mapUnload(id, 0x20000000);
+                    OSReport(desc + 0xc4, id);
+                    break;
+                case 0x2e:
+                    defragMemory(0);
+                    break;
+                case 0x2a:
+                    lockLevel(p[2], p[3]);
+                    OSReport(desc + 0xe0, p[2], p[3]);
+                    break;
+                case 0x2b:
+                    unlockLevel(p[2], p[3], 0);
+                    OSReport(desc + 0x114, p[2], p[3]);
+                    break;
+                case 0x2f:
+                    t = ObjGroup_FindNearestObject(0x4c, obj, 0);
+                    if (t != 0) {
+                        timer_addDuration(t, (u32)p[3] * 0x3c);
+                    }
+                    break;
+                case 0x14:
+                    (*(code *)(*gMapEventInterface + 0x50))((int)*(s8 *)(obj + 0xac), *(u16 *)(p + 2), 0);
+                    break;
+                case 0x22:
+                    id = *(u16 *)(p + 2);
+                    c = (*(code *)(*gMapEventInterface + 0x4c))((int)*(s8 *)(obj + 0xac), id);
+                    (*(code *)(*gMapEventInterface + 0x50))((int)*(s8 *)(obj + 0xac), id, c ^ 1);
+                    break;
+                case 0x15:
+                    tbl = (int *)getTablesBinEntry(*(u16 *)(p + 2) + 2);
+                    if (tbl != NULL) {
+                        for (; *tbl != -1; tbl++) {
+                            if (getLoadedTexture(*tbl) == 0) {
+                                crash(0x32, 3, 0, *tbl, 0, 0, 0, 0);
+                            }
+                        }
+                    }
+                    break;
+                case 0x16:
+                    tbl = (int *)getTablesBinEntry(*(u16 *)(p + 2) + 2);
+                    if (tbl != NULL) {
+                        for (; *tbl != -1; tbl++) {
+                            if (getLoadedTexture(*tbl) != 0) {
+                                textureFree(*tbl);
+                            }
+                        }
+                    }
+                    break;
+                case 0x18:
+                    (*(code *)(*gMapEventInterface + 0x44))((int)*(s8 *)(obj + 0xac), *(u16 *)(p + 2));
+                    break;
+                case 0x1a:
+                    (*(code *)(*gMapEventInterface + 0x50))(p[3], p[2], 1);
+                    break;
+                case 0x1b:
+                    (*(code *)(*gMapEventInterface + 0x50))(p[3], p[2], 0);
+                    break;
+                case 0x1e:
+                    (*(code *)(*gMapEventInterface + 0x44))(p[3], p[2]);
+                    break;
+                case 0x11:
+                    GameBit_Set(0x4e3, *(s16 *)(p + 2));
+                    break;
+                case 0x1f:
+                    t = Obj_GetPlayerObject();
+                    d = *(s16 *)obj - *(s16 *)t;
+                    if (d > 0x8000) {
+                        d += 1;
+                    }
+                    if (d < -0x8000) {
+                        d -= 1;
+                    }
+                    ang = d;
+                    if (ang < 0) {
+                        ang = -ang;
+                    }
+                    if (ang < 0x4001) {
+                        (*(code *)(*gMapEventInterface + 0x1c))(obj + 0xc, (int)*(s16 *)obj, p[3], getCurMapLayer());
+                    } else {
+                        (*(code *)(*gMapEventInterface + 0x1c))(obj + 0xc, (int)(s16)(*(s16 *)obj - 0x8000), p[3], getCurMapLayer());
+                    }
+                    break;
+                case 0x20:
+                    if (p[2] == 0) {
+                        goToNextMapLayer();
+                    } else {
+                        goToPrevMapLayer();
+                    }
+                    break;
+                case 0x23:
+                    c = p[2];
+                    if (c == 2) {
+                        (*(code *)(*gMapEventInterface + 0x28))();
+                    } else if (c < 2) {
+                        if (c == 0) {
+                            (*(code *)(*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16 *)obj, getCurMapLayer(), 0);
+                        } else {
+                            (*(code *)(*gMapEventInterface + 0x2c))();
+                        }
+                    } else if (c < 4) {
+                        (*(code *)(*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16 *)obj, getCurMapLayer(), 1);
+                    }
+                    break;
+                case 0x26:
+                    t = getTrickyObject();
+                    if (t != 0) {
+                        c = p[2];
+                        if (c == 2) {
+                            t2 = ObjGroup_FindNearestObject(0x32, t, 0);
+                            if (t2 == 0) {
+                                t2 = ObjGroup_FindNearestObject(0x31, t, 0);
+                            }
+                            if (t2 != 0) {
+                                (*(code *)(**(int **)(t + 0x68) + 0x38))(t);
+                            }
+                        } else if (c < 2) {
+                            if (c == 0) {
+                                (*(code *)(**(int **)(t + 0x68) + 0x3c))();
+                            } else {
+                                getTrickyObject();
+                                Obj_FreeObject(t);
+                            }
+                        } else if (c == 4) {
+                            GameBit_Set(0xd00, 1);
+                        } else if (c < 4) {
+                            GameBit_Set(0xd00, 0);
+                        }
+                    }
+                    break;
+                case 0x1c:
+                    c = p[2];
+                    if (c == 2) {
+                        GameBit_Set(0x3af, p[3] == 0);
+                    } else if (c < 2) {
+                        if (c == 0) {
+                            GameBit_Set(0x3ab, p[3] == 0);
+                        } else {
+                            GameBit_Set(0x3ac, p[3] == 0);
+                        }
+                    } else if (c < 4) {
+                        c = p[3];
+                        if (c == 1) {
+                            GameBit_Set(0x3b0, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
+                            envFxFn_800887cc();
+                        } else if (c == 0) {
+                            GameBit_Set(0x3b0, 1);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
+                        } else if (c < 3) {
+                            GameBit_Set(0x3b0, 1);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x136, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x137, 0);
+                            getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x143, 0);
+                        }
+                    }
+                    break;
+                case 0x1d:
+                    if (p[2] == 0) {
+                        GameBit_Set(0x966, 1);
+                        GameBit_Set(0x967, 1);
+                        GameBit_Set(0x968, 1);
+                    } else {
+                        GameBit_Set(0x966, 0);
+                        GameBit_Set(0x967, 0);
+                        GameBit_Set(0x968, 0);
+                    }
+                    break;
+                case 0x2c:
+                    **(f32 **)(p2 + 0xb8) = lbl_803E4100 * (f32)(int)*(u16 *)(p + 2);
+                    break;
+                case 0x2d:
+                    t = Obj_GetPlayerObject();
+                    if (t == 0) {
+                        if (getArwing() != 0) {
+                            gameTextFn_80125ba4(*(u16 *)(p + 2));
+                        }
+                    } else {
+                        (*(code *)(*gGameUIInterface + 0x38))(*(u16 *)(p + 2), 0x14, 0x8c, 1);
+                    }
+                    break;
+                }
+            }
+        }
+    next:
+        i++;
+        p += 4;
+    }
+    if ((s8)p3 < 1) {
+        if ((s8)p3 < 0) {
+            *state |= 2;
+        }
+    } else {
+        *state |= 1;
+        GameBit_Set(*(s16 *)(state + 0x80), 1);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
