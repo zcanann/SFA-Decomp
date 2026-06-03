@@ -1287,9 +1287,9 @@ void Tricky_init(int obj)
 }
 #pragma scheduling reset
 
-/* fn_80148C18: 372b - resume Tricky visibility, collision, and fade after command finish. */
+/* Tricky_resumeAfterCommand: resume Tricky visibility, collision, and fade after command finish. */
 #pragma scheduling off
-void fn_80148C18(int obj,int state)
+void Tricky_resumeAfterCommand(int obj,int state)
 {
   u8 moveId;
 
@@ -1716,10 +1716,12 @@ void baddieFn_8014a304(f32 radius,int obj,int state)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_8014A5FC: 624b - apply Tricky floor response and movement-control callbacks. */
+void Tricky_findNearbyFloorHeights(int obj,int state,f32 *nearestFloorY,f32 *nearestSpecialY);
+
+/* Tricky_applyFloorResponse: apply Tricky floor response and movement-control callbacks. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8014A5FC(int obj,int state)
+void Tricky_applyFloorResponse(int obj,int state)
 {
   f32 nearestFloorY;
   f32 nearestSpecialY;
@@ -1730,7 +1732,7 @@ void fn_8014A5FC(int obj,int state)
   *(u32 *)(state + 0x2dc) &= 0xf7efffff;
   flags = *(u32 *)(state + 0x2e4);
   if ((flags & TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK) != 0) {
-    fn_8014A86C(obj,state,&nearestFloorY,&nearestSpecialY);
+    Tricky_findNearbyFloorHeights(obj,state,&nearestFloorY,&nearestSpecialY);
     flags = *(u32 *)(state + 0x2e4);
     if ((flags & TRICKY_CONTROL_FLAG_USE_SPECIAL_FLOOR_Y) != 0) {
       *(f32 *)(obj + 0x28) = (nearestSpecialY - *(f32 *)(obj + 0x10)) * oneOverTimeDelta;
@@ -1783,10 +1785,10 @@ void fn_8014A5FC(int obj,int state)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_8014A86C: 388b - find nearby floor heights and special surface deltas for Tricky. */
+/* Tricky_findNearbyFloorHeights: find nearby floor heights and special surface deltas for Tricky. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8014A86C(int obj,int state,f32 *nearestFloorY,f32 *nearestSpecialY)
+void Tricky_findNearbyFloorHeights(int obj,int state,f32 *nearestFloorY,f32 *nearestSpecialY)
 {
   int hitList[2];
   u16 hitCount;
@@ -2929,9 +2931,9 @@ extern f32 lbl_803E2418;
 extern f32 lbl_803E23DC;
 
 extern f32 getXZDistance(f32 *a, f32 *b);
-/* fn_80144E40: 272b - find nearest object within distance threshold. */
+/* Tricky_findNearestGroup4BObject: find nearest object within distance threshold. */
 #pragma scheduling off
-int fn_80144E40(int *obj, int *p) {
+int Tricky_findNearestGroup4BObject(int *obj, int *p) {
     int *objs;
     int count[1];
     int result;
