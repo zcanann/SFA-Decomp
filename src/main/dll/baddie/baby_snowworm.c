@@ -2149,3 +2149,87 @@ void drawWorldMapHud(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void MWTRACE(int boxId);
+extern int  sprintf(char *buf, const char *fmt, ...);
+extern f32  fsin16Precise(u16 angle);
+extern void gameTextShow(int id);
+extern void gameTextShowTimeStr(char *str);
+extern char sBabySnowwormTimerFormat[];
+extern s16  lbl_803DD7E6;
+extern s16  lbl_803DBAB4;
+extern f32  lbl_803DBAB8;
+extern f32  lbl_803DBABC;
+extern f32  lbl_803E1E40;
+extern f32  lbl_803E2090;
+extern f32  lbl_803E20BC;
+extern f32  lbl_803E2130;
+extern f32  lbl_803E2134;
+extern f32  lbl_803E2138;
+
+/* EN v1.0 0x80128E70  size: 812b  Draws the race-times list panel and the six
+ * best-time entries with a pulsing header. */
+#pragma scheduling off
+#pragma peephole off
+void timeListDraw(void)
+{
+    u16 bits[6] = { 0x2b7, 0x2cb, 0x2cc, 0x2b6, 0x2d7, 0x2d8 };
+    char buf[0x24];
+
+    if (pauseMenuState != 0) {
+        return;
+    }
+    drawTexture(*(void **)(hudTextures + 0x28), lbl_803E2130, lbl_803E1E40, 0xff, 0x100);
+    drawScaledTexture(*(void **)(hudTextures + 0x34), lbl_803E20BC, lbl_803E1E40, 0xff, 0x100, 0x258, 5, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x2c), lbl_803E2130, lbl_803E2090, 0xff, 0x100, 5, 0x190, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x30), lbl_803E20BC, lbl_803E2090, 0xff, 0x100, 0x258, 0x190, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x34), lbl_803E20BC, lbl_803E2134, 0xff, 0x100, 0x258, 5, 2);
+    drawScaledTexture(*(void **)(hudTextures + 0x2c), lbl_803E2138, lbl_803E2090, 0xff, 0x100, 5, 0x190, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E2138, lbl_803E2134, 0xff, 0x100, 5, 5, 3);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E2138, lbl_803E1E40, 0xff, 0x100, 5, 5, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E2130, lbl_803E2134, 0xff, 0x100, 5, 5, 2);
+
+    {
+        s16 ang = (s16)(lbl_803DD7E6 + lbl_803DBAB4);
+        int pulse;
+        int a, b;
+        lbl_803DD7E6 = ang;
+        pulse = (int)(lbl_803DBAB8 * fsin16Precise((u16)ang) + lbl_803DBABC);
+        if (lbl_803DD75B == 1) {
+            a = pulse;
+            b = 0xff;
+        } else {
+            a = 0xff;
+            b = pulse;
+        }
+        gameTextFn_80016810(0x2f7, 0, 5);
+        gameTextSetColor(a, a, a, 0xff);
+        gameTextShow(0x2f8);
+        gameTextSetColor(b, b, b, 0xff);
+        gameTextShow(0x2fb);
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+    }
+    {
+        u16 *p;
+        int k = 0;
+        p = bits;
+        for (; k < 6; k++) {
+            int v = GameBit_Get(*p);
+            int mins;
+            if (k == 0) {
+                MWTRACE(6);
+                gameTextShow(0x2fa);
+            } else if (k == 3) {
+                MWTRACE(7);
+                gameTextShow(0x2fa);
+            }
+            mins = v / 6000;
+            sprintf(buf, sBabySnowwormTimerFormat, mins, v / 100 - mins * 60, v - (v / 100) * 100);
+            gameTextShowTimeStr(buf);
+            p++;
+        }
+    }
+    MWTRACE(0xff);
+}
+#pragma peephole reset
+#pragma scheduling reset
