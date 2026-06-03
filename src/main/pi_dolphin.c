@@ -5373,6 +5373,33 @@ int fn_8004B148(int *p) {
     return count;
 }
 
+extern char sDirBlockTag;
+extern u32 lbl_8035F3E8[];
+extern void *memcpy(void *dst, const void *src, u32 n);
+extern int strncmp(const char *a, const char *b, u32 n);
+void texPreGetMipmap(u32 param_1, int param_2, int *param_3, int *param_4, int param_5, u8 *param_6, int param_7) {
+    u32 base = lbl_8035F3E8[0x4f];
+    if (base != 0) {
+        if (param_7 == 1 && param_6 != 0) {
+            int e = base + (param_1 & 0xffffff) * 2 + *(int *)(param_6 + param_5 * 4) + 4;
+            int v = *(int *)(e + 8);
+            *param_3 = *(int *)(e + 4);
+            *param_4 = v;
+        } else if (param_7 == 2 && param_6 != 0) {
+            memcpy(param_6, (void *)(base + (param_1 & 0xffffff) * 2), (param_5 + 1) * 4);
+        } else {
+            int e = base + (param_1 & 0xffffff) * 2;
+            int v = *(int *)(e + 0xc);
+            *param_3 = *(int *)(e + 8);
+            if (strncmp(&sDirBlockTag, (char *)e, 3) == 0) {
+                *param_4 = 0xffffffff;
+            } else {
+                *param_4 = v;
+            }
+        }
+    }
+}
+
 extern u32 sMapFileNameIndexRemapTable[];
 extern u8 lbl_803DB5D0;
 extern u8 lbl_803DCD28;
