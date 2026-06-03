@@ -1656,3 +1656,67 @@ u8 dll_19_func08(int obj, char *st, f32 dist)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int curveFn_80010320(int curve);
+extern int ObjAnim_SampleRootCurvePhase(int objAnim, f32 distance, f32 *phaseOut);
+extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32 *out, int flag);
+extern f32 lbl_803E1CB0;
+
+/* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
+ * curve, snapping to ground and easing the yaw toward the path direction. */
+#pragma scheduling off
+#pragma peephole off
+int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32 *d, int *flags)
+{
+    int moved;
+    int hit;
+    f32 ground;
+    int fl;
+    int args[2];
+
+    moved = 1;
+    hit = 0;
+    ground = lbl_803E1C90;
+    fl = *flags;
+    if (fl & 0x10) {
+        return 1;
+    }
+    if (fl & 0x4) {
+        if (fn_80114408(obj, 0, p4, p4 + 0x30, phase) != 0) {
+            args[0] = 0x19;
+            args[1] = 0x15;
+            (*(int (*)(int, int, f32, int *, u8))(*(int *)(*gRomCurveInterface + 0x8c)))(
+                curve, obj, lbl_803E1CB0, args, (u8)c);
+            *flags |= 8;
+            moved = 1;
+        }
+    } else {
+        hit = 0;
+        if (curveFn_80010320(curve) != 0 || *(int *)(curve + 0x10) != 0) {
+            hit = (*(u8 (*)(int))(*(int *)(*gRomCurveInterface + 0x90)))(curve);
+        }
+        *(f32 *)(obj + 0xc) = *(f32 *)(curve + 0x68);
+        *(f32 *)(obj + 0x10) = *(f32 *)(curve + 0x6c);
+        *(f32 *)(obj + 0x14) = *(f32 *)(curve + 0x70);
+        if (hit != 0) {
+            *flags |= 0x10;
+        }
+    }
+    ObjAnim_SampleRootCurvePhase(obj, phase, d);
+    if (*flags & 1) {
+        if (hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                                 *(f32 *)(obj + 0x14), &ground, 0) == 0) {
+            *(f32 *)(obj + 0x10) -= ground;
+        }
+    }
+    if (moved != 0 && (*flags & 0x2) != 0) {
+        int t = (s16)(getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
+                               *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88)) +
+                      0x8000);
+        *(s16 *)(obj + 0x0) =
+            (s16)(*(s16 *)(obj + 0x0) + ((t - *(s16 *)(obj + 0x0)) >> 3));
+    }
+    return hit;
+}
+#pragma peephole reset
+#pragma scheduling reset
