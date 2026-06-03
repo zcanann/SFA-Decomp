@@ -2094,75 +2094,79 @@ void Trigger_hitDetect(int obj)
                         *(f32 *)(state + 0x30) = *(f32 *)(target + 0x14);
                     }
                 }
-                ty = *(s16 *)def;
-                if (ty == 0x50) {
+                switch (*(s16 *)def) {
+                case 0x4b:
+                    if (ok) {
+                        objSeqFn_801992ec(obj, target);
+                    }
+                    break;
+                case 0x230:
+                    if (ok) {
+                        objSeqMoveFn_80199188(obj, target);
+                    }
+                    break;
+                case 0x4c:
+                    ok2 = 1;
+                    if (*(s16 *)(state + 0x82) != -1 && GameBit_Get(*(s16 *)(state + 0x82)) == 0) {
+                        ok2 = 0;
+                    }
+                    if (ok2 && ok) {
+                        fn_80198DE8(obj, target);
+                    }
+                    break;
+                case 0x4e:
+                    *(u32 *)(state + 8) = *(int *)(state + 8) + framesThisStep;
+                    if ((u32)*(u16 *)(def + 0x46) <= *(u32 *)(state + 8)) {
+                        objInterpretSeq(obj, 0, 1, 0);
+                    }
+                    break;
+                case 0x4d:
+                    if (ok) {
+                        r1 = fn_80198B68(obj, *(int *)(obj + 0xb8) + 0x28);
+                        r2 = fn_80198B68(obj, *(int *)(obj + 0xb8) + 0x1c);
+                        if (r1 == 0) {
+                            if (r2 == 0) {
+                                objInterpretSeq(obj, target, -2, 0);
+                            } else {
+                                objInterpretSeq(obj, target, -1, 0);
+                            }
+                        } else if (r2 == 0) {
+                            objInterpretSeq(obj, target, 1, 0);
+                        } else {
+                            objInterpretSeq(obj, target, 2, 0);
+                        }
+                    }
+                    break;
+                case 0x50:
                     objInterpretSeq(obj, t, 1, 0);
                     if (return1_800202BC() != 0) {
                         Obj_FreeObject(obj);
                     }
-                } else if (ty < 0x50) {
-                    if (ty == 0x4d) {
-                        if (ok) {
-                            r1 = fn_80198B68(obj, *(int *)(obj + 0xb8) + 0x28);
-                            r2 = fn_80198B68(obj, *(int *)(obj + 0xb8) + 0x1c);
-                            if (r1 == 0) {
-                                if (r2 == 0) {
-                                    objInterpretSeq(obj, target, -2, 0);
-                                } else {
-                                    objInterpretSeq(obj, target, -1, 0);
-                                }
-                            } else if (r2 == 0) {
-                                objInterpretSeq(obj, target, 1, 0);
-                            } else {
-                                objInterpretSeq(obj, target, 2, 0);
-                            }
+                    break;
+                case 0x54:
+                    ok = 1;
+                    i = 0;
+                    p8 = state;
+                    while (i < 4 && ok) {
+                        if (*(s16 *)(p8 + 0x82) != -1 && GameBit_Get(*(s16 *)(p8 + 0x82)) == 0) {
+                            ok = 0;
                         }
-                    } else if (ty < 0x4d) {
-                        if (ty == 0x4b) {
-                            if (ok) {
-                                objSeqFn_801992ec(obj, target);
-                            }
-                        } else if (ty > 0x4a) {
-                            ok2 = 1;
-                            if (*(s16 *)(state + 0x82) != -1 && GameBit_Get(*(s16 *)(state + 0x82)) == 0) {
-                                ok2 = 0;
-                            }
-                            if (ok2 && ok) {
-                                fn_80198DE8(obj, target);
-                            }
-                        }
-                    } else if (ty < 0x4f) {
-                        *(u32 *)(state + 8) = *(int *)(state + 8) + framesThisStep;
-                        if ((u32)*(u16 *)(def + 0x46) <= *(u32 *)(state + 8)) {
-                            objInterpretSeq(obj, 0, 1, 0);
-                        }
+                        p8 += 2;
+                        i++;
                     }
-                } else if (ty == 0xf4) {
+                    if (ok && (s8)state[0x8a] >= 0) {
+                        ((TriggerFlags8A *)(state + 0x8a))->bit7 = 1;
+                        objInterpretSeq(obj, t, 1, 0);
+                    }
+                    if (!ok) {
+                        ((TriggerFlags8A *)(state + 0x8a))->bit7 = 0;
+                    }
+                    break;
+                case 0xf4:
                     if (ok) {
                         fn_80198A00(obj, target);
                     }
-                } else if (ty < 0xf4) {
-                    if (ty == 0x54) {
-                        ok = 1;
-                        i = 0;
-                        p8 = state;
-                        while (i < 4 && ok) {
-                            if (*(s16 *)(p8 + 0x82) != -1 && GameBit_Get(*(s16 *)(p8 + 0x82)) == 0) {
-                                ok = 0;
-                            }
-                            p8 += 2;
-                            i++;
-                        }
-                        if (ok && (s8)state[0x8a] >= 0) {
-                            ((TriggerFlags8A *)(state + 0x8a))->bit7 = 1;
-                            objInterpretSeq(obj, t, 1, 0);
-                        }
-                        if (!ok) {
-                            ((TriggerFlags8A *)(state + 0x8a))->bit7 = 0;
-                        }
-                    }
-                } else if (ty == 0x230 && ok) {
-                    objSeqMoveFn_80199188(obj, target);
+                    break;
                 }
             }
         }
