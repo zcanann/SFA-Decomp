@@ -73,3 +73,40 @@ void fn_801F8008(int a, f32* b)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern void objRemoveFromListFn_8002ce88(int obj);
+extern f32 lbl_803E5FB8;
+typedef struct { u8 hit:1; u8 _r299:7; } WcHitBits;
+
+#pragma peephole off
+#pragma scheduling off
+void wmwallcrawler_hitDetect(int obj)
+{
+    int inner = *(int*)(obj + 0xb8);
+    f32 stk = lbl_803E5FB8;
+    if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
+        if ((*(u16*)(inner + 0x294) & 0x100) != 0) {
+            *(u8*)(inner + 0x296) = 6;
+        } else if (*(void**)(*(int*)(obj + 0x4c) + 0x14) == NULL) {
+            ObjHits_DisableObject(obj);
+            Obj_FreeObject(obj);
+        } else {
+            objRemoveFromListFn_8002ce88(obj);
+            ObjHits_DisableObject(obj);
+            ObjGroup_RemoveObject(obj, 3);
+            *(s16*)(obj + 6) = *(s16*)(obj + 6) | 0x4000;
+        }
+    } else if (((WcHitBits*)(inner + 0x299))->hit != 0) {
+        int target;
+        if ((*(u16*)(inner + 0x294) & 0x10) == 0) {
+            target = (int)Obj_GetPlayerObject();
+        } else {
+            target = ObjGroup_FindNearestObject(0xa, obj, &stk);
+        }
+        ObjHits_RecordObjectHit(target, obj, 0xb, 1, 0);
+        *(u8*)(inner + 0x296) = 6;
+        ((WcHitBits*)(inner + 0x299))->hit = 0;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
