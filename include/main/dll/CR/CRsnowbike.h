@@ -8,9 +8,7 @@
 extern ObjectDescriptor12 gSC_levelcontrolObjDescriptor;
 extern ObjectDescriptor gSC_MusicTreeObjDescriptor;
 
-void sh_emptytumblew_init(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9);
+void sh_emptytumblew_init(s16 *p1, int p2);
 void FUN_801db57c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10);
