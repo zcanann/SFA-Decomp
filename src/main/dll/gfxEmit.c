@@ -621,3 +621,256 @@ int collectible_SeqFn(int obj, int unused, u8* data)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_80171E5C(int obj);
+extern void fn_80172144(int obj);
+extern int  ObjMsg_Pop(int obj, int *msg, void *buf, int mode);
+extern void ObjHits_DisableObject(int obj);
+extern void Obj_FreeObject(int obj);
+extern u8  *Obj_GetPlayerObject(void);
+extern void GameBit_Set(int eventId, int value);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void itemPickupDoParticleFx(int obj, int a, int b, f32 scale);
+extern int  fn_802972A8(void);
+extern int  fn_8029622C(int player);
+extern f32  Vec_xzDistance(void *a, void *b);
+extern void fn_8003B608(int r, int g, int b);
+extern void objRenderFn_8003b8f4(f32 e, int obj, int p2, int p3, int p4, int p5);
+extern int *gPartfxInterface;
+extern f32  timeDelta;
+extern u8   framesThisStep;
+extern f32  lbl_803E3450;
+extern f32  lbl_803E3478;
+extern f32  lbl_803E347C;
+extern f32  lbl_803E3480;
+extern f32  lbl_803E348C;
+extern f32  lbl_803E3490;
+void fn_801723DC(int obj);
+void fn_80172824(int obj, u8 *st);
+
+/* EN v1.0 0x80172C24  size: 752b  collectible_update. */
+#pragma scheduling off
+#pragma peephole off
+void collectible_update(int obj)
+{
+    u8 *st = *(u8 **)(obj + 0xb8);
+    int msg;
+    u8 buf[8];
+    int o;
+
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+    if (*(f32 *)(st + 8) == lbl_803E345C) {
+        if (*(s16 *)(st + 0x14) != -1) {
+            st[0x1e] = (u8)(GameBit_Get(*(s16 *)(st + 0x14)) == 0);
+        }
+        if (st[0x1e] == 0 && st[0xf] == 0) {
+            if (*(s16 *)(obj + 0x46) == 0x6a6) {
+                objfx_spawnDirectionalBurst(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
+            }
+            if (*(f32 *)(st + 0x44) == lbl_803E345C ||
+                (*(f32 *)(st + 0x44) = *(f32 *)(st + 0x44) - timeDelta,
+                 *(f32 *)(st + 0x44) > lbl_803E345C)) {
+                while (ObjMsg_Pop(obj, &msg, buf, 0) != 0) {
+                    if (msg == 0x7000b) {
+                        fn_80171E5C(obj);
+                    }
+                }
+                if (*(s16 *)(obj + 0x46) == 0x319 && *(s16 *)(st + 0x3c) != 0 &&
+                    (*(u16 *)(st + 0x3c) = *(s16 *)(st + 0x3c) - framesThisStep,
+                     *(s16 *)(st + 0x3c) < 1)) {
+                    *(u16 *)(st + 0x3c) = 0;
+                    st[0x37] = (u8)(st[0x37] & ~1);
+                    *(u8 *)(obj + 0x36) = 0xff;
+                    *(int *)(obj + 0xf4) = 0;
+                }
+                if (*(int *)(obj + 0xf4) == 0) {
+                    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
+                    fn_801723DC(obj);
+                    if (*(s8 *)(st + 0x1d) != 0) {
+                        fn_80172144(obj);
+                    }
+                    if (*(s8 *)(st + 0x3e) == 0) {
+                        fn_80172824(obj, st);
+                    } else {
+                        *(s8 *)(st + 0x3e) = *(s8 *)(st + 0x3e) - 1;
+                        if (*(s8 *)(st + 0x3e) == 0) {
+                            *(u16 *)(st + 0x48) = 0xffff;
+                            ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x7000a, obj, st + 0x48);
+                        }
+                    }
+                } else {
+                    o = *(int *)(obj + 0x54);
+                    if (o != 0) {
+                        *(u16 *)(o + 0x60) = (u16)(*(u16 *)(o + 0x60) | 0x100);
+                    }
+                    ObjHits_DisableObject(obj);
+                    if (*(s16 *)(st + 0x10) != -1 && GameBit_Get(*(s16 *)(st + 0x10)) == 0) {
+                        *(int *)(obj + 0xf4) = 0;
+                    }
+                }
+            } else {
+                if ((*(u16 *)(obj + 6) & 0x2000) != 0) {
+                    *(f32 *)(st + 8) = lbl_803E3450;
+                    if (*(int *)(obj + 0x64) != 0) {
+                        *(int *)(*(int *)(obj + 0x64) + 0x30) = 0x1000;
+                    }
+                    itemPickupDoParticleFx(obj, 0xff, 0x28, lbl_803E3454);
+                }
+                *(f32 *)(st + 0x44) = lbl_803E345C;
+            }
+        }
+    } else {
+        *(f32 *)(st + 8) = *(f32 *)(st + 8) - timeDelta;
+        if (*(f32 *)(st + 8) <= lbl_803E345C) {
+            *(f32 *)(st + 8) = lbl_803E345C;
+            ObjHits_DisableObject(obj);
+            if ((*(u16 *)(obj + 6) & 0x2000) != 0) {
+                Obj_FreeObject(obj);
+            }
+        }
+    }
+}
+
+/* EN v1.0 0x801723DC  size: 676b  fn_801723DC: per-type idle motion. */
+void fn_801723DC(int obj)
+{
+    u8 *st = *(u8 **)(obj + 0xb8);
+    s16 v;
+
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x22:
+        *(s16 *)obj = (s16)(int)(lbl_803E347C * timeDelta + (f32)*(s16 *)obj);
+        itemPickupDoParticleFx(obj, 10, 1, lbl_803E3454);
+        break;
+    case 0xb:
+        v = *(s16 *)(st + 0x34);
+        *(u16 *)(st + 0x34) = v - framesThisStep;
+        if ((s16)(v - framesThisStep) < 1) {
+            *(f32 *)(st + 0x30) = (f32)(int)randomGetRange(600, 800);
+            *(u16 *)(st + 0x34) = (u16)randomGetRange(0xb4, 0xf0);
+            Sfx_PlayFromObject(obj, 0x169);
+        }
+        *(s16 *)(obj + 2) = (s16)(int)*(f32 *)(st + 0x30);
+        *(f32 *)(st + 0x30) = *(f32 *)(st + 0x30) * lbl_803E3478;
+        if (*(s16 *)(obj + 2) > 9) {
+            break;
+        }
+        if (*(s16 *)(obj + 2) < -9) {
+            break;
+        }
+        *(s16 *)(obj + 2) = 0;
+        break;
+    case 0x27f:
+        if (*(f32 *)st < lbl_803E347C) {
+            if (randomGetRange(0, 10) == 0) {
+                (*(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 8))(obj, 0x423, 0, 2, -1, 0);
+            }
+            *(s16 *)obj = *(s16 *)obj + (s16)(int)(lbl_803E3480 * timeDelta);
+        }
+        break;
+    case 0x5e8:
+        *(s16 *)obj = (s16)(int)(lbl_803E347C * timeDelta + (f32)*(s16 *)obj);
+        itemPickupDoParticleFx(obj, 9, 1, lbl_803E3454);
+        break;
+    case 0x137:
+    case 0x12d:
+    case 0x135:
+    case 0x156:
+    case 0x246:
+        *(s16 *)obj = (s16)(int)(lbl_803E347C * timeDelta + (f32)*(s16 *)obj);
+        break;
+    }
+}
+
+/* EN v1.0 0x80172824  size: 672b  fn_80172824: pickup-range test and
+ * per-type collect handling. */
+void fn_80172824(int obj, u8 *st)
+{
+    int setup = *(int *)(obj + 0x4c);
+    int player;
+    int tgt;
+    f32 dist, dy;
+
+    player = (int)Obj_GetPlayerObject();
+    if (player == 0 || (st[0x37] & 1) != 0) {
+        return;
+    }
+    tgt = fn_802972A8();
+    if (tgt == 0) {
+        tgt = player;
+    }
+    dist = Vec_xzDistance((void *)(obj + 0x18), (void *)(tgt + 0x18));
+    dy = *(f32 *)(tgt + 0x1c) - *(f32 *)(obj + 0x1c);
+    if (dy < lbl_803E345C) {
+        dy = -dy;
+    }
+    if (dy < lbl_803E3490 && dist < *(f32 *)(st + 4) && fn_8029622C(player) != 0) {
+        *(u16 *)(st + 0x48) = 0xffff;
+        switch (*(s16 *)(obj + 0x46)) {
+        case 0x319:
+            fn_80171E5C(obj);
+            st[0x37] = (u8)(st[0x37] | 1);
+            break;
+        case 0x49:
+        case 0x2da:
+        case 0x3cd:
+            if (GameBit_Get(0x90f) == 0) {
+                ObjMsg_SendToObject(player, 0x7000a, obj, st + 0x48);
+                GameBit_Set(0x90f, 1);
+            } else {
+                fn_80171E5C(obj);
+            }
+            st[0x37] = (u8)(st[0x37] | 1);
+            break;
+        case 0xb:
+            if (GameBit_Get(0x90e) == 0) {
+                ObjMsg_SendToObject(player, 0x7000a, obj, st + 0x48);
+                GameBit_Set(0x90e, 1);
+            } else {
+                fn_80171E5C(obj);
+            }
+            st[0x37] = (u8)(st[0x37] | 1);
+            break;
+        case 0x6a6:
+            if (GameBit_Get(0x9a8) == 0) {
+                ObjMsg_SendToObject(player, 0x7000a, obj, st + 0x48);
+                GameBit_Set(0x9a8, 1);
+            } else {
+                fn_80171E5C(obj);
+            }
+            st[0x37] = (u8)(st[0x37] | 1);
+            break;
+        default:
+            if (ObjTrigger_IsSet(obj) != 0) {
+                GameBit_Set(0xa7b, 1);
+                *(u16 *)(st + 0x48) = *(u16 *)(setup + 0x1e);
+                ObjMsg_SendToObject(player, 0x7000a, obj, st + 0x48);
+                st[0x37] = (u8)(st[0x37] | 1);
+                if (*(int *)(obj + 0x64) != 0) {
+                    *(int *)(*(int *)(obj + 0x64) + 0x30) = 0x1000;
+                }
+            }
+            break;
+        }
+    }
+    *(f32 *)st = dist;
+}
+
+/* EN v1.0 0x80172B1C  size: 260b  collectible_render. */
+void collectible_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    u8 *st = *(u8 **)(obj + 0xb8);
+
+    if (visible != 0 && *(f32 *)(st + 8) == lbl_803E345C && *(int *)(obj + 0xf4) == 0 &&
+        (*(s16 *)(obj + 0x46) == 0x156 || *(s8 *)(st + 0x1e) == 0)) {
+        if ((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 0x10000) != 0 && *(s8 *)(st + 0x36) != 0) {
+            fn_8003B608(st[0x38], st[0x39], st[0x3a]);
+        }
+        objRenderFn_8003b8f4(lbl_803E3454, obj, p2, p3, p4, p5);
+        if (*(s16 *)(obj + 0x46) == 0xa8) {
+            objfx_spawnDirectionalBurst(obj, 7, lbl_803E3454, 5, 1, 10, lbl_803E348C, 0, 0x20000000);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
