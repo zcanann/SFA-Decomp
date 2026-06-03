@@ -1947,3 +1947,67 @@ void boxDrawFn_8012975c(void)
         alpha -= 0x55;
     }
 }
+
+extern int pauseMenuDrawElement(int handle, f32 x, f32 y, int n, int p2, int w, int flag);
+extern int drawFn_8011eb3c(int handle, f32 x, f32 y, int n, int p2, int w, int a, int b, int c);
+extern int getNextTaskHintText(void);
+extern u8  lbl_803DBA9C[6];
+extern f32 lbl_803E1FA8;
+extern f32 lbl_803E1FD0;
+extern f32 lbl_803E20D4;
+extern f32 lbl_803E20D8;
+extern f32 lbl_803E20DC;
+extern f32 lbl_803E20E0;
+extern f32 lbl_803E20E4;
+extern f32 lbl_803E20E8;
+extern f32 lbl_803E20EC;
+extern f32 lbl_803E20F0;
+extern f32 lbl_803E20F4;
+extern f32 lbl_803E20F8;
+extern f32 lbl_803E20FC;
+extern f32 lbl_803E2100;
+
+typedef struct { s16 f0; u8 _2[0x1e]; } HintCell;   /* 0x20 */
+extern HintCell lbl_8031BB90[13];
+
+/* EN v1.0 0x80128120  size: 848b  Draws the pause-menu task panel layout and
+ * lights the task-progress pips according to the current hint text level. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80128120(int unused, int p2)
+{
+    s16 n = 0xc8 - lbl_803DD75C;
+    int v;
+    int level;
+    s8 i;
+
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x38), lbl_803E20D4, lbl_803E20D8, n, p2, (int)lbl_803E1F34, 0);
+    drawFn_8011eb3c(*(int *)(hudTextures + 0x38), lbl_803E1FA8, lbl_803E20D8, n, p2, (int)lbl_803E1F34, 0x1c, 0x1e, 1);
+    drawFn_8011eb3c(*(int *)(hudTextures + 0x38), lbl_803E20D4, lbl_803E20DC, n, p2, (int)lbl_803E1F34, 0x1c, 0x1e, 2);
+    drawFn_8011eb3c(*(int *)(hudTextures + 0x38), lbl_803E1FA8, lbl_803E20DC, n, p2, (int)lbl_803E1F34, 0x1c, 0x1e, 3);
+    drawFn_8011eb3c(*(int *)(hudTextures + 0x3c), lbl_803E20E0, lbl_803E20E4, n, p2, (int)lbl_803E1F34, 0x8, 0x20, 0);
+    drawFn_8011eb3c(*(int *)(hudTextures + 0x3c), lbl_803E20E0, lbl_803E20E8, n, p2, (int)lbl_803E1F34, 0x8, 0x20, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20EC, lbl_803E1FD0, n, p2, (int)lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20F0, lbl_803E20F4, n, p2, (int)lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20F8, lbl_803E20F4, n, p2, (int)lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20F0, lbl_803E20FC, n, p2, (int)lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20F8, lbl_803E20FC, n, p2, (int)lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20EC, lbl_803E2100, n, p2, (int)lbl_803E1F34, 0);
+
+    v = (u16)getNextTaskHintText();
+    if (v > 0xb3) level = 6;
+    else if (v > 0xb0) level = 5;
+    else if (v > 0x8a) level = 4;
+    else if (v > 0x71) level = 3;
+    else if (v > 0x48) level = 2;
+    else if (v > 0x8) level = 1;
+    else level = 0;
+
+    for (i = 0; i < 6; i++) {
+        s16 t = 0x11;
+        if (i >= level) t = -1;
+        lbl_8031BB90[lbl_803DBA9C[i]].f0 = t;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
