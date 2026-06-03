@@ -5333,6 +5333,46 @@ void *fn_8004B118(int *p) {
     return NULL;
 }
 
+int fn_8004B148(int *p) {
+    int node;
+    u32 cur;
+    u32 prev;
+    int i;
+    int count;
+    int *entry;
+
+    prev = p[7];
+    node = *p + prev * 0x10;
+    *(u8 *)(node + 0xd) = 0xff;
+    while ((cur = *(u8 *)(node + 0xc)) != 0xff) {
+        node = *p + cur * 0x10;
+        *(u8 *)(node + 0xd) = (u8)prev;
+        prev = cur;
+    }
+    if (*(u8 *)(node + 0xd) == 0xff) {
+        entry = NULL;
+    } else {
+        entry = (int *)(*p + (u32)*(u8 *)(node + 0xd) * 0x10);
+    }
+    count = 0;
+    i = 0;
+    while (entry != NULL) {
+        *(int *)(p[2] + i) = *entry;
+        i += 4;
+        count++;
+        if (count >= 100) {
+            entry = NULL;
+        } else if (*(u8 *)((int)entry + 0xd) == 0xff) {
+            entry = NULL;
+        } else {
+            entry = (int *)(*p + (u32)*(u8 *)((int)entry + 0xd) * 0x10);
+        }
+    }
+    *(s16 *)((int)p + 0x2a) = (s16)count;
+    *(u16 *)(p + 0xb) = 0;
+    return count;
+}
+
 extern u32 sMapFileNameIndexRemapTable[];
 extern u8 lbl_803DB5D0;
 extern u8 lbl_803DCD28;
