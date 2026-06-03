@@ -2594,7 +2594,7 @@ void babycloudrunner_init_OLD_v1_1(int param_1)
   return;
 }
 
-extern void fn_8019E81C(int *obj);
+extern void babycloudrunner_SeqFn(int *obj);
 extern f32 lbl_803E422C;
 extern f32 lbl_803E4244;
 extern f32 lbl_803E4258;
@@ -2616,7 +2616,7 @@ void babycloudrunner_init(int *obj, u8 *def) {
 
     ObjHits_EnableObject(obj);
     ObjMsg_AllocQueue(obj, 4);
-    *(void**)((char*)obj + 0xbc) = (void*)&fn_8019E81C;
+    *(void**)((char*)obj + 0xbc) = (void*)&babycloudrunner_SeqFn;
     *(s16*)obj = (s16)(def[0x1d] << 8);
     ObjGroup_AddObject(obj, 3);
     sub = *(u8**)((char*)obj + 0xb8);
@@ -3196,7 +3196,7 @@ extern GuardianVec lbl_802C22C0;
 extern GuardianVec lbl_802C22CC;
 extern u8 lbl_8032284C[];
 extern f32 lbl_803E4110;
-extern int fn_8019C3A0(int *obj, int p2, int *p3);
+extern int cfguardian_SeqFn(int *obj, int p2, int *p3);
 extern void dll_2E_func0A(int a, int *obj);
 extern void dll_2E_func05(int *obj, u8 *sub, int c, int d, int e);
 extern void dll_2E_func08(u8 *sub, int b, int c);
@@ -3217,7 +3217,7 @@ void cfguardian_init(int *obj, u8 *params) {
     ObjMsg_AllocQueue(obj, 4);
     sub[0xa80] = (u8)GameBit_Get(0x4b);
     *(int*)((char*)obj + 0xf4) = 1;
-    *(void**)((char*)obj + 0xbc) = (void*)&fn_8019C3A0;
+    *(void**)((char*)obj + 0xbc) = (void*)&cfguardian_SeqFn;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
     *(int*)(sub + 0xa94) = 0;
     *(f32*)(sub + 0x7fc) = lbl_803E4110;
@@ -3255,13 +3255,13 @@ extern void saveGame_saveObjectPos(int obj);
 extern void* Obj_GetPlayerObject(void);
 extern void playerAddRemoveMagic(void* player, int n);
 
-/* EN v1.0 0x8019C3A0  size: 252b  fn_8019C3A0: guardian message handler.
+/* EN v1.0 0x8019C3A0  size: 252b  cfguardian_SeqFn: guardian message handler.
  * Persists position on a negative cue, otherwise picks the active/idle
  * heading pair and routes a move request; on the magic-grant message it
  * tops the player back up. Returns 1 if the move was consumed. */
 #pragma scheduling off
 #pragma peephole off
-int fn_8019C3A0(int* obj, int p2, int* p3)
+int cfguardian_SeqFn(int* obj, int p2, int* p3)
 {
     int* sel;
     GuardianMsg stk;
@@ -3335,12 +3335,12 @@ void fn_8019E568(int* a, int* b, u8* c, int d)
 extern int *gGameUIInterface;
 extern int *gObjectTriggerInterface;
 
-/* EN v1.0 0x801A0614  size: 368b  fn_801A0614: drain the object's message
+/* EN v1.0 0x801A0614  size: 368b  cfprisoncage_SeqFn: drain the object's message
  * queue (re-arming its gamebit on the keyed message), then sync the
  * lit/active state from gamebit 0x44 and notify on completion. */
 #pragma scheduling off
 #pragma peephole off
-int fn_801A0614(int* obj, int p2, u8* p3)
+int cfprisoncage_SeqFn(int* obj, int p2, u8* p3)
 {
     int msg;
     int v;
@@ -3428,7 +3428,7 @@ void cfpowerbase_hitDetect(void) {}
 void cfpowerbase_release(void) {}
 void cfpowerbase_initialise(void) {}
 
-extern int fn_8019D578(int p1, int unused, int p3);
+extern int cfpowerbase_SeqFn(int p1, int unused, int p3);
 
 /* EN v1.0 0x8019D8B4  size: 308b  cfpowerbase_init: seed header and the
  * sub's type from spawn params, map the type id (0x54..0x56) to a model
@@ -3457,7 +3457,7 @@ void cfpowerbase_init(int* obj, u8* params) {
         Obj_SetActiveModelIndex(obj, 1);
         break;
     }
-    *(void**)((char*)obj + 0xbc) = (void*)&fn_8019D578;
+    *(void**)((char*)obj + 0xbc) = (void*)&cfpowerbase_SeqFn;
     ObjMsg_AllocQueue(obj, 2);
     if (GameBit_Get(*(s16*)(sub + 2)) != 0) {
         *(u8*)((char*)obj + 0xaf) = (u8)(*(u8*)((char*)obj + 0xaf) & ~0x10);
@@ -3513,12 +3513,12 @@ void cfprisonguard_free(void) {}
 void cfprisonguard_release(void) {}
 void cfprisonguard_initialise(void) {}
 
-extern void fn_8019F540(int* obj);
+extern void cfprisonguard_SeqFn(int* obj);
 
 typedef struct { u8 top : 1; u8 rest : 7; } Bit80;
 
 /* EN v1.0 0x8019FBD0  size: 172b  cfprisonguard_init: set up the guard's
- * substate (update fn fn_8019F540, message queue), seed its header from
+ * substate (update fn cfprisonguard_SeqFn, message queue), seed its header from
  * the spawn params, and apply the alarm-active gating bits. */
 #pragma scheduling off
 #pragma peephole off
@@ -3526,7 +3526,7 @@ void cfprisonguard_init(int* obj, u8* params) {
     u8* sub = *(u8**)((char*)obj + 0xb8);
     sub[0x38] = 1;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)&fn_8019F540;
+    *(void**)((char*)obj + 0xbc) = (void*)&cfprisonguard_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     sub[0x36] = 1;
     if (GameBit_Get(0x4d) != 0) {
@@ -4087,7 +4087,7 @@ void cfprisoncage_hitDetect(int* obj)
     }
 }
 
-extern int fn_801A0614(int* obj, int p2, u8* p3);
+extern int cfprisoncage_SeqFn(int* obj, int p2, u8* p3);
 extern int *gObjectTriggerInterface;
 extern f32 lbl_803E42B4;
 #pragma scheduling off
@@ -4096,7 +4096,7 @@ void cfprisoncage_init(int *obj, u8 *def) {
     ObjMsg_AllocQueue(obj, 1);
     *(s16 *)obj = (s16)((s32)def[0x1a] << 8);
     *(int *)((char *)obj + 0xf4) = 1;
-    *(int *)((char *)obj + 0xbc) = (int)fn_801A0614;
+    *(int *)((char *)obj + 0xbc) = (int)cfprisoncage_SeqFn;
     if (*(s16 *)((char *)obj + 0x46) == 296) {
         if (GameBit_Get(*(s16 *)((char *)def + 0x18)) != 0) {
             ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E42B4, 0);
@@ -4251,7 +4251,7 @@ void cfmaincrystal_update(int *obj) {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8019D578(int p1, int unused, int p3)
+int cfpowerbase_SeqFn(int p1, int unused, int p3)
 {
   extern int ObjMsg_Pop(int, int *, int *, int *);
   int sub = *(int *)(p1 + 0xb8);

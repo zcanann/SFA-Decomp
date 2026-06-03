@@ -5857,7 +5857,7 @@ int Lightfoot_SeqFn(int p1, int p2, int p3)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_802B2DA4(void) {}
+void player_SeqFn(void) {}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -5878,7 +5878,7 @@ void objLoadPlayerFromSave(int obj)
     ObjGroup_AddObject(obj, 0x25);
     objSetSlot(obj, 0x3c);
     ObjMsg_AllocQueue(obj, 0x14);
-    *(int *)((char *)obj + 0xbc) = (int)fn_802B2DA4;
+    *(int *)((char *)obj + 0xbc) = (int)player_SeqFn;
     *(int *)((char *)obj + 0x4c) = 0;
     *(int *)((char *)inner + 0x7f8) = 0;
     *(int *)((char *)inner + 0x35c) =

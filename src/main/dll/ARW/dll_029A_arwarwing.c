@@ -1079,7 +1079,7 @@ void fn_8022C0D0(int obj, int state)
 
 #pragma peephole off
 #pragma scheduling off
-int fn_8022C7B4(int obj, int p2, int script)
+int arwarwing_SeqFn(int obj, int p2, int script)
 {
     int state = *(int *)(obj + 0xb8);
     int i;
@@ -1239,7 +1239,7 @@ void arwarwing_init(int obj)
     cfg.c = lbl_802C25E8.c;
     state = *(int *)(obj + 0xb8);
     sub = state + 0xc0;
-    *(int *)(obj + 0xbc) = (int)fn_8022C7B4;
+    *(int *)(obj + 0xbc) = (int)arwarwing_SeqFn;
     (*(void (**)(int, int, int, int))(*gPathControlInterface + 4))(sub, 4, 0x1040006, 1);
     (*(void (**)(int, int, void *, void *, void *))(*gPathControlInterface + 0xc))(sub, 3, lbl_8032B408, lbl_8032B480, &cfg);
     (*(void (**)(int, int))(*gPathControlInterface + 0x20))(obj, sub);
