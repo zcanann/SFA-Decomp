@@ -1853,3 +1853,84 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char *st)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void normalize(f32 *x, f32 *y, f32 *z);
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int ObjAnim_SetCurrentMove(int objAnim, int moveId, f32 moveProgress, int flags);
+extern f32 lbl_803E1CB4;
+extern f32 lbl_803E1CB8;
+extern f32 lbl_803E1CBC;
+extern f32 lbl_803E1CC0;
+
+/* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
+ * given speed, snapping when close, easing yaw and pacing the walk anim. */
+#pragma scheduling off
+#pragma peephole off
+int dll_2E_func0D(int obj, int target, f32 speed, int move, f32 *out, u8 *flags)
+{
+    f32 ground;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 dist;
+    s16 delta;
+
+    if ((void *)target == NULL) {
+        return 0;
+    }
+    dx = *(f32 *)(target + 0xc) - *(f32 *)(obj + 0xc);
+    dy = *(f32 *)(target + 0x10) - *(f32 *)(obj + 0x10);
+    dz = *(f32 *)(target + 0x14) - *(f32 *)(obj + 0x14);
+    dist = sqrtf(dz * dz + (dx * dx + dy * dy));
+    if (dist < lbl_803E1CB4 * speed) {
+        *(f32 *)(obj + 0xc) = *(f32 *)(target + 0xc);
+        *(f32 *)(obj + 0x10) = *(f32 *)(target + 0x10);
+        *(f32 *)(obj + 0x14) = *(f32 *)(target + 0x14);
+        if (*flags & 1) {
+            if (hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                                     *(f32 *)(obj + 0x14), &ground, 0) == 0) {
+                *(f32 *)(obj + 0x10) -= ground;
+            }
+        }
+        return 1;
+    }
+    normalize(&dx, &dy, &dz);
+    *(f32 *)(obj + 0x24) = dx * (speed * timeDelta);
+    *(f32 *)(obj + 0x28) = dy * (speed * timeDelta);
+    *(f32 *)(obj + 0x2c) = dz * (speed * timeDelta);
+    if (*flags & 1) {
+        if (hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                                 *(f32 *)(obj + 0x14), &ground, 0) == 0) {
+            *(f32 *)(obj + 0x10) -= ground;
+        }
+    }
+    if (*flags & 2) {
+        delta = *(s16 *)(target + 0x0) - (u16)*(s16 *)(obj + 0x0);
+        if (delta > 0x8000) {
+            delta = delta - 0xffff;
+        }
+        if (delta < -0x8000) {
+            delta = delta + 0xffff;
+        }
+        *(s16 *)(obj + 0x0) = (f32)*(s16 *)(obj + 0x0) +
+                              (lbl_803E1CB8 + (f32)delta) * (speed * timeDelta) / dist;
+    }
+    objMove(obj, *(f32 *)(obj + 0x24), *(f32 *)(obj + 0x28), *(f32 *)(obj + 0x2c));
+    if (move != -1) {
+        if (*(s16 *)(obj + 0xa0) != move) {
+            ObjAnim_SetCurrentMove(obj, move, lbl_803E1C90, 0);
+        }
+        delta = *(s16 *)(obj + 0x0) - (u16)(s16)getAngle(dx, dz);
+        if (delta > 0x8000) {
+            delta = delta - 0xffff;
+        }
+        if (delta < -0x8000) {
+            delta = delta + 0xffff;
+        }
+        speed = speed * -sin(lbl_803E1CBC * (f32)delta / lbl_803E1CC0);
+        ObjAnim_SampleRootCurvePhase(obj, speed, out);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
