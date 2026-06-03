@@ -4329,7 +4329,7 @@ extern void* lbl_803DDA20;
 extern void* lbl_803DDA24;
 extern void* debugLogEnd;
 extern u8    debugLogBuffer[0x1100];
-extern void  getScreenResolution(void);
+extern u32   getScreenResolution(void);
 extern int   vsprintf(char *s, const char *format, va_list arg);
 
 /* EN v1.0 0x80137998  size: 104b  Title-screen system init. Calls
@@ -6852,6 +6852,97 @@ void fn_80137DF8(void)
             VIWaitForRetrace();
         }
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u16 lbl_803DD9F4;
+extern u32 lbl_803DDA04;
+extern u32 lbl_803DD9FC;
+extern f64 lbl_803E23A8;
+
+/* EN v1.0 0x801375C8  size: 736b  debugPrintDraw: lay out the debug log
+ * twice (measure pass then draw pass), drawing the backing rect between
+ * the passes when the log produced any extent. */
+#pragma scheduling off
+#pragma peephole off
+void debugPrintDraw(int ctx)
+{
+    u8 *p;
+    int pass;
+    u32 res;
+    int x1;
+    u32 xs, ys;
+    int y2;
+    u32 xa, xb, ya, yb;
+    f32 scale;
+    u32 colb;
+    u32 colw;
+
+    res = getScreenResolution();
+    lbl_803DD9F4 = (u16)(res >> 0x10);
+    lbl_803DD9F6 = (u16)res;
+    GXSetScissor(0, 0, lbl_803DD9F6, lbl_803DD9F4);
+    if (lbl_803DD9F6 < 0x141) {
+        lbl_803DDA08 = 0x10;
+        lbl_803DDA04 = lbl_803DD9F6 - 0x10;
+    } else {
+        lbl_803DDA08 = 0x20;
+        lbl_803DDA04 = lbl_803DD9F6 - 0x20;
+    }
+    if (lbl_803DD9F4 < 0xf1) {
+        lbl_803DDA00 = 0x10;
+        lbl_803DD9FC = lbl_803DD9F4 - 0x10;
+    } else {
+        lbl_803DDA00 = 0x20;
+        lbl_803DD9FC = lbl_803DD9F4 - 0x20;
+    }
+    gxDebugTextureFn_80078c1c();
+    p = debugLogBuffer;
+    debugPrintYpos = (u16)lbl_803DDA08;
+    debugPrintXpos = (u16)lbl_803DDA00;
+    lbl_803DD9F8 = 0xffffffff;
+    pass = 0;
+    lbl_803DDA10 = pass;
+    lbl_803DDA16 = debugPrintYpos;
+    lbl_803DDA14 = debugPrintXpos;
+    for (; p != debugLogEnd; ) {
+        lbl_803DDA0C = pass;
+        p += fn_80136E00(ctx, p);
+    }
+    x1 = debugPrintXpos + 0xa;
+    xs = lbl_803DDA14;
+    ys = lbl_803DDA16;
+    if ((!(debugPrintYpos - ys) | !(x1 - xs)) == 0) {
+        if (ys >= 2) {
+            ys -= 2;
+        }
+        y2 = debugPrintYpos + 2;
+        scale = lbl_803DD9D8 + (f32)lbl_803DD9E0;
+        xa = (u32)((f32)ys * scale);
+        xb = (u32)((f32)y2 * scale);
+        scale = lbl_803DD9DC + (f32)lbl_803DD9E1;
+        ya = (u32)((f32)xs * scale);
+        yb = (u32)((f32)x1 * scale);
+        ((u8 *)&colb)[0] = lbl_803DD9F3;
+        ((u8 *)&colb)[1] = lbl_803DD9F2;
+        ((u8 *)&colb)[2] = lbl_803DD9F1;
+        ((u8 *)&colb)[3] = lbl_803DD9F0;
+        colw = colb;
+        hudDrawRect(xa, ya, xb, yb, &colw);
+    }
+    p = debugLogBuffer;
+    debugPrintYpos = (u16)lbl_803DDA08;
+    debugPrintXpos = (u16)lbl_803DDA00;
+    lbl_803DD9F8 = 0xffffffff;
+    lbl_803DDA10 = 0;
+    pass = 1;
+    for (; p != debugLogEnd; ) {
+        lbl_803DDA0C = pass;
+        p += fn_80136E00(ctx, p);
+    }
+    debugLogEnd = debugLogBuffer;
+    lbl_803DD9E4 = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
