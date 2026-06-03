@@ -1028,7 +1028,7 @@ FUN_8015c654(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015C7C8(int obj, int p)
+int mediumbasket_updateOpenState(int obj, int p)
 {
   extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern int *gPlayerInterface;
@@ -1079,7 +1079,7 @@ int fn_8015C7C8(int obj, int p)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015C95C(int obj, int p)
+int mediumbasket_updateOpenHitState(int obj, int p)
 {
   extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern int *gPlayerInterface;
@@ -2183,7 +2183,7 @@ int fn_8015BC18(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015BD2C(int obj, int state)
+int mediumbasket_updateDropState(int obj, int state)
 {
     int control = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
     int player;
@@ -2360,7 +2360,7 @@ int fn_8015C2AC(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015C4AC(int obj, int state)
+int mediumbasket_updateSpinState(int obj, int state)
 {
     int sub = *(int *)(obj + 0xb8);
     int control;
