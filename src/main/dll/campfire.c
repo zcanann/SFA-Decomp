@@ -252,7 +252,7 @@ void kaldaChomFn_80168374(int param_1,int param_2,char param_3)
 /*
  * --INFO--
  *
- * Function: fn_8016855C
+ * Function: kaldachom_handleAnimEvents
  * EN v1.0 Address: 0x80168C8C
  * EN v1.0 Size: 4b
  * EN v1.1 Address: 0x80168A08
@@ -264,7 +264,7 @@ void kaldaChomFn_80168374(int param_1,int param_2,char param_3)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8016855C(int obj, int p2, int p3)
+void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 {
   extern int kaldaChomFn_80168374(int, int, int);
   int sub_40c = *(int *)(p2 + 0x40c);
@@ -315,7 +315,7 @@ void fn_8016855C(int obj, int p2, int p3)
 /*
  * --INFO--
  *
- * Function: fn_8016874C
+ * Function: kaldachom_updateCombat
  * EN v1.0 Address: 0x80168C90
  * EN v1.0 Size: 1624b
  * EN v1.1 Address: 0x80168BF8
@@ -325,7 +325,7 @@ void fn_8016855C(int obj, int p2, int p3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3)
+void kaldachom_updateCombat(undefined4 param_1,undefined4 param_2,int param_3)
 {
   uint uVar1;
   float fVar1;
@@ -557,7 +557,7 @@ void kaldachom_update(int param_1)
       *(undefined2 *)(iVar9 + 0x402) = 0;
     }
     else {
-      fn_8016874C(param_1,iVar9,iVar9);
+      kaldachom_updateCombat(param_1,iVar9,iVar9);
       if (*(short *)(iVar9 + 0x402) == 0) {
         iVar8 = *(int *)(iVar9 + 0x40c);
         *(float *)(iVar8 + 0x34) = *(float *)(iVar8 + 0x34) - timeDelta;
@@ -587,7 +587,7 @@ void kaldachom_update(int param_1)
         *piVar3 = (int)(lbl_803E30B0 * (lbl_803E3078 + dVar10));
         uVar3 = Obj_GetPlayerObject();
         *(undefined4 *)(iVar9 + 0x2d0) = uVar3;
-        fn_8016855C(param_1,iVar9,iVar9);
+        kaldachom_handleAnimEvents(param_1,iVar9,iVar9);
         (**(code **)(*gBaddieControlInterface + 0x2c))((double)lbl_803E3060,param_1,iVar9,0xffffffff);
         if (*(short *)(iVar9 + 0x274) != 6) {
           (**(code **)(*gPlayerInterface + 0x30))((double)timeDelta,param_1,iVar9,5);
