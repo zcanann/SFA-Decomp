@@ -554,14 +554,18 @@ extern void Obj_FreeObject(int obj);
 #pragma scheduling off
 #pragma peephole off
 void explodable_free(int obj, int flag) {
-    int *state = *(int **)((char *)obj + 0xB8);
-    int *p;
+    int state = *(int *)(obj + 0xb8);
     int i;
-    ObjGroup_RemoveObject(obj, 33);
-    if (flag != 0) return;
-    for (i = 0, p = state; i < 15; i++, p++) {
-        if (*(int *)((char *)p + 0x690) != 0) {
-            Obj_FreeObject(*(int *)((char *)p + 0x690));
+    int p;
+    void *o;
+
+    ObjGroup_RemoveObject(obj, 0x21);
+    if (flag == 0) {
+        for (i = 0, p = state; i < 15; i++, p += 4) {
+            o = *(void **)(p + 0x690);
+            if (o != NULL) {
+                Obj_FreeObject((int)o);
+            }
         }
     }
 }
