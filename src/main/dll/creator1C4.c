@@ -36,7 +36,7 @@ extern f64 DOUBLE_803e5cc8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5CD4;
 extern f32 lbl_803E5CD8;
-extern void fn_801C7444(void);
+extern void gpsh_shrine_SeqFn(void);
 extern void *objCreateLight(int obj, int kind);
 
 /*
@@ -299,7 +299,7 @@ void gpsh_shrine_init(int *obj, int *def) {
 
     state = *(u8 **)((char *)obj + 0xb8);
     *(s16 *)obj = 0;
-    *(void **)((char *)obj + 0xbc) = (void *)fn_801C7444;
+    *(void **)((char *)obj + 0xbc) = (void *)gpsh_shrine_SeqFn;
     *(f32 *)((char *)obj + 0x18) = *(f32 *)((char *)obj + 0xc);
     *(f32 *)((char *)obj + 0x1c) = *(f32 *)((char *)obj + 0x10);
     *(f32 *)((char *)obj + 0x20) = *(f32 *)((char *)obj + 0x14);

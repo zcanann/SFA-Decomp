@@ -11,7 +11,7 @@ extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 extern u8 *Obj_GetPlayerObject(void);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 
-extern void fn_80206474(void);
+extern void dfpfloorbar_SeqFn(void);
 
 u8 gDfpfloorbarModeTable[12] = {
     0, 0, 0, 0,
@@ -189,7 +189,7 @@ void dfpfloorbar_init(int obj, int params)
     DfpFloorbarState *state = *(DfpFloorbarState **)(obj + 0xb8);
 
     *(s16 *)(obj + 0x0) = (s16)((s8)*(u8 *)(params + 0x18) << 8);
-    *(int *)(obj + 0xbc) = (int)&fn_80206474;
+    *(int *)(obj + 0xbc) = (int)&dfpfloorbar_SeqFn;
     state->modeIndex = *(u8 *)(params + 0x19);
     state->triggerGameBit = *(s16 *)(params + 0x1e);
     state->completionGameBit = *(s16 *)(params + 0x20);

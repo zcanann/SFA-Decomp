@@ -372,13 +372,13 @@ int nw_tricky_getExtraSize(void)
 /*
  * --INFO--
  *
- * Function: fn_801CF78C
+ * Function: nw_tricky_SeqFn
  * EN v1.0 Address: 0x801CF78C
  * EN v1.0 Size: 44b
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_801CF78C(void)
+int nw_tricky_SeqFn(void)
 {
     Sfx_StopObjectChannel(getTrickyObject(), 16);
     return 0;

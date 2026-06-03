@@ -97,7 +97,7 @@ void nw_animice_initialise(void) {}
 void nw_ice_render(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int fn_801CFB24(void) { return 0x0; }
+int nw_animice_SeqFn(void) { return 0x0; }
 int nw_animice_getExtraSize(void) { return 0x0; }
 int nw_animice_getObjectTypeId(void) { return 0x0; }
 int nw_ice_getExtraSize(void) { return 0x4; }
@@ -168,15 +168,15 @@ void nw_ice_init(int x) { ObjGroup_AddObject(x, 0x3c); }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_801CF78C(void);
+extern void nw_tricky_SeqFn(void);
 #pragma scheduling off
 #pragma peephole off
 void nw_tricky_init(int *obj) {
-    *(void **)((char *)obj + 0xbc) = (void *)fn_801CF78C;
+    *(void **)((char *)obj + 0xbc) = (void *)nw_tricky_SeqFn;
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
 }
 void nw_animice_init(int *obj) {
-    *(void **)((char *)obj + 0xbc) = (void *)fn_801CFB24;
+    *(void **)((char *)obj + 0xbc) = (void *)nw_animice_SeqFn;
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x6000);
     ObjGroup_AddObject(obj, 0x3d);
 }
