@@ -10285,6 +10285,103 @@ extern s16 lbl_803965E0[];
 extern u8 lbl_803DD000;
 extern u8 lbl_803DD002;
 extern u8 lbl_803DCCA8;
+
+#pragma scheduling off
+#pragma peephole off
+extern int stackCreate(int n, int stride);
+extern int testAndSet_onlyUseHeap3(int v);
+extern void dvdReadCb_80041d30();
+extern u8 lbl_803DCC90;
+extern int lbl_803DCC88;
+extern int lbl_803DCC98;
+extern int lbl_803DCC84;
+int initLoadFiles(void) {
+    struct MldfTables *t = (struct MldfTables *)lbl_80345E10;
+    int i;
+    int *rom;
+    u32 *ptrs;
+    s16 *owners;
+    int *ids;
+    char **names;
+    int *sizes;
+    u8 *flags;
+    if (lbl_803DCC90 == 0) {
+        lbl_803DCC90 = 1;
+        lbl_803DCC88 = 0;
+        lbl_803DCC8C = stackCreate(0x5e, 0x40);
+        rom = t->romList;
+        for (i = 0; i < 0x75; i++) {
+            *rom = 0;
+            if (i >= 0x50 || i == 0x49 || ((i == 0x43) | (i == 5))) {
+                piRomLoadSection(0, i, 0);
+            }
+            rom++;
+        }
+        lbl_803DCC98 = 0;
+        ptrs = t->ptrs;
+        owners = t->owners;
+        ids = t->ids;
+        names = sResourceFileNameTable;
+        sizes = t->sizes;
+        flags = t->mergeModels + 0x2000;
+        for (i = 0; i <= 0x57; i++) {
+            switch (i) {
+            case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+            case 8: case 9: case 10: case 13: case 14: case 17: case 18:
+            case 24: case 26: case 27: case 32: case 33: case 35: case 36:
+            case 37: case 38: case 42: case 43: case 47: case 48: case 54:
+            case 66: case 67: case 68: case 69: case 70: case 71: case 72:
+            case 73: case 74: case 75: case 76: case 77: case 78: case 83:
+            case 84: case 85: case 86:
+                *ptrs = 0;
+                *owners = -1;
+                *ids = -1;
+                break;
+            default:
+                if (*ptrs == 0) {
+                    int fi = AtomicSList_Pop(lbl_803DCC8C);
+                    DVDOpen(*names, (void *)fi);
+                    *sizes = *(int *)(fi + 0x34);
+                    *ptrs = (u32)mmAlloc(*sizes + 0x20, 0x7d7d7d7d, 0);
+                    lbl_803DCC88 = lbl_803DCC88 + 1;
+                    DVDReadAsyncPrio((void *)fi, (void *)*ptrs, *sizes, 0, dvdReadCb_80041d30, 2);
+                }
+                *owners = -1;
+                *ids = -1;
+                break;
+            }
+            *flags = 0;
+            ptrs++;
+            owners++;
+            ids++;
+            names++;
+            sizes++;
+            flags++;
+        }
+    }
+    if (lbl_803DCC88 == 0) {
+        if (((lbl_803DCC80 & 0x100) == 0 || (lbl_803DCC80 & 0x400) == 0) &&
+            ((lbl_803DCC84 & 0x100) == 0 || (lbl_803DCC84 & 0x400) == 0)) {
+            int saved = testAndSet_onlyUseHeap3(0);
+            mapLoadDataFile(5, 0x23);
+            mapLoadDataFile(5, 0x24);
+            testAndSet_onlyUseHeap3(saved);
+        } else if ((lbl_803DCC84 & 0x100) != 0 && (lbl_803DCC84 & 0x400) != 0) {
+            mergeTableFiles(t->mergeModels, 0x2a, 0x45, 0x800);
+            mergeTableFiles(t->mergeAnim, 0x2f, 0x49, 3000);
+            mergeTableFiles(t->mergeTex0, 0x24, 0x4e, 0x1000);
+            mergeTableFiles(t->mergeTex1, 0x21, 0x4c, 0x1000);
+            mergeTableFiles(t->mergeBlocks, 0x26, 0x48, 0x800);
+            lbl_803DCC84 = 0;
+            lbl_803DCC80 = 0;
+            return 1;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void waitNextFrame(void)
