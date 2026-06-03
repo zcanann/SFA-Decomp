@@ -3295,12 +3295,12 @@ extern f32  lbl_803E423C;
 extern f32  lbl_803E4240;
 extern f32  timeDelta;
 
-/* EN v1.0 0x8019E568  size: 352b  fn_8019E568: turn toward the target by
+/* EN v1.0 0x8019E568  size: 352b  sandworm_turnTowardTargetAnim: turn toward the target by
  * a fraction of the yaw delta; when roughly aligned play/advance the idle
  * move, otherwise start or speed-scale the turn move by the delta. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8019E568(int* a, int* b, u8* c, int d)
+void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
 {
     int shifted;
     fn_8003ADC4(a, b, (char*)c + 0x3c, 0x28, 0, 3);
@@ -4340,7 +4340,7 @@ extern f32 lbl_803E42D4;
 extern f32 lbl_803E42D8;
 extern f32 lbl_803E42DC;
 
-/* fn_801A0C14: gunpowder-barrel "throw at target" launch. Seeds state's
+/* gunpowderbarrel_launchAtTarget: gunpowder-barrel "throw at target" launch. Seeds state's
  * launch velocity (state+0x20..28) from a per-axis pair scaled by the
  * player's strength (player_state[0x298]), or a fixed pair when the flag
  * is clear. Builds a rotation-vec from state[0x50], runs the 3-vec rotor
@@ -4351,7 +4351,7 @@ extern f32 lbl_803E42DC;
  * restores. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801A0C14(int obj, u8 flag) {
+void gunpowderbarrel_launchAtTarget(int obj, u8 flag) {
     u8* state = *(u8**)(obj + 0xb8);
     u8* playerState;
     s16 stk[8];
