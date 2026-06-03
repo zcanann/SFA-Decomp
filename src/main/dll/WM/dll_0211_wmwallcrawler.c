@@ -110,3 +110,65 @@ void wmwallcrawler_hitDetect(int obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int* gPathControlInterface;
+extern u16 lbl_80328DD0[];
+extern u8 lbl_80328DE0[];
+extern u8 lbl_803DC134;
+extern f32 lbl_803E6030;
+extern f32 lbl_803E6034;
+
+#pragma peephole off
+#pragma scheduling off
+void wmwallcrawler_init(int obj, int spawn)
+{
+    int inner = *(int*)(obj + 0xb8);
+    u16 flags;
+    ObjGroup_AddObject(obj, 3);
+    *(s16*)obj = (s16)((s8)*(u8*)(spawn + 0x18) << 8);
+    ObjMsg_AllocQueue(obj, 2);
+    *(f32*)(inner + 0x270) = *(f32*)(spawn + 8);
+    *(f32*)(inner + 0x274) = *(f32*)(spawn + 0xc);
+    *(f32*)(inner + 0x278) = *(f32*)(spawn + 0x10);
+    *(f32*)(inner + 0x268) = (f32)(int)*(s16*)(spawn + 0x1a);
+    *(u8*)(inner + 0x298) = *(u8*)(spawn + 0x19);
+    *(u16*)(inner + 0x294) = lbl_80328DD0[*(u8*)(inner + 0x298)];
+    storeZeroToFloatParam((void*)(inner + 0x28a));
+    storeZeroToFloatParam((void*)(inner + 0x28c));
+    storeZeroToFloatParam((void*)(inner + 0x288));
+    flags = *(u16*)(inner + 0x294);
+    if ((flags & 1) != 0) {
+        *(s16*)(obj + 4) = 0;
+        *(u8*)(inner + 0x296) = 1;
+    } else if ((flags & 8) != 0) {
+        s16toFloat((void*)(inner + 0x28a), 0x4b0);
+        *(f32*)(inner + 0x268) = lbl_803E6030;
+        *(s16*)(obj + 4) = 0;
+        *(u8*)(inner + 0x296) = 1;
+    } else {
+        s16toFloat((void*)(inner + 0x288), 0x190);
+        *(s16*)(obj + 4) = -0x7fff;
+        *(u8*)(inner + 0x296) = 0;
+    }
+    if ((*(u16*)(inner + 0x294) & 0x40) != 0) {
+        *(u8*)(obj + 0x36) = 0;
+    }
+    *(f32*)(inner + 0x284) = lbl_803E5FB0;
+    *(s16*)(inner + 0x28e) = *(s16*)(spawn + 0x1c);
+    *(f32*)(obj + 0x10) = *(f32*)(spawn + 0xc) + (f32)(int)*(s16*)(inner + 0x28e);
+    *(s16*)(inner + 0x290) = (s16)(randomGetRange(0, 0x50) + 0x190);
+    *(f32*)(inner + 0x26c) = lbl_803E6034;
+    *(s16*)(inner + 0x292) = *(s16*)(spawn + 0x1e);
+    if ((*(u16*)(inner + 0x294) & 2) != 0) {
+        *(u8*)(inner + 0x25b) = 1;
+        (*(void (**)(int, int, int, int))(*(int*)gPathControlInterface + 4))(inner, 0, 0, 1);
+        (*(void (**)(int, int, u8*, u8*, int))(*(int*)gPathControlInterface + 8))(inner, 1, lbl_80328DE0, &lbl_803DC134, 4);
+        (*(void (**)(int, int))(*(int*)gPathControlInterface + 0x20))(obj, inner);
+        *(u32*)inner |= 0x40008;
+    }
+    *(int*)(obj + 0xbc) = (int)fn_801F7FF4;
+    ObjHits_EnableObject(obj);
+    ObjHits_SyncObjectPositionIfDirty(obj);
+}
+#pragma scheduling reset
+#pragma peephole reset
