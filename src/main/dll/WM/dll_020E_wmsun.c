@@ -298,3 +298,152 @@ void wmsun_update(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct { f32 x, y, z; } WmSunVec3;
+typedef struct {
+    s16 ang[3];
+    f32 intensity;
+    f32 vx;
+    f32 vy;
+    f32 vz;
+} WmSunGlare;
+extern WmSunVec3 lbl_802C24E8;
+extern WmSunVec3 lbl_802C24F4;
+extern f32 lbl_803DDCA0;
+extern f32 lbl_803DDCA4;
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803E5F28;
+extern f32 lbl_803E5F2C;
+extern f32 lbl_803E5F30;
+extern f32 lbl_803E5F34;
+extern f32 lbl_803E5F38;
+extern f32 lbl_803E5F3C;
+extern f32 lbl_803E5F40;
+extern f32 lbl_803E5F44;
+extern f32 lbl_803E5F48;
+extern f32 lbl_803E5F4C;
+extern f32 lbl_803E5F54;
+extern f32 lbl_803E5F58;
+extern f32 lbl_803E5F60;
+extern f32 lbl_803E5F64;
+extern f32 lbl_803E5F68;
+extern f32 sqrtf(f32 x);
+extern f32 fn_80293E80(f32 x);
+extern int Camera_GetCurrentViewSlot(void);
+extern void mathFn_80021ac8(s16 *ang, WmSunVec3 *vec);
+#pragma scheduling off
+#pragma peephole off
+void fn_801F6EA4(int obj)
+{
+    WmSunVec3 dir;
+    WmSunVec3 sun;
+    WmSunGlare g;
+    int cam;
+    f32 dx, dy, dz, len;
+    f32 dot, prod, denom, cosang, zero;
+    f32 hx, hy, hz, hlen;
+    f32 f;
+    f32 cz;
+
+    dir = lbl_802C24E8;
+    sun = lbl_802C24F4;
+    *(s16 *)obj += 400;
+    g.vx = lbl_803E5F20;
+    g.vy = lbl_803E5F20;
+    g.vz = lbl_803E5F20;
+    g.intensity = lbl_803E5F24;
+    g.ang[2] = 0;
+    g.ang[1] = 0;
+    g.ang[0] = *(s16 *)obj;
+    cam = Camera_GetCurrentViewSlot();
+    if ((void *)cam != NULL) {
+        g.ang[0] = 0x8000 - *(s16 *)cam;
+        mathFn_80021ac8(g.ang, &sun);
+        dx = *(f32 *)(obj + 0xc) - *(f32 *)(cam + 0xc);
+        dy = *(f32 *)(obj + 0x10) - *(f32 *)(cam + 0x10);
+        dz = *(f32 *)(obj + 0x14) - *(f32 *)(cam + 0x14);
+        len = sqrtf(dz * dz + (dx * dx + dy * dy));
+        if (lbl_803E5F20 != len) {
+            dx = dx / len;
+            dy = dy / len;
+            dz = dz / len;
+        }
+        dot = dz * sun.z + (dx * sun.x + dy * sun.y);
+        prod = (dz * dz + (dx * dx + dy * dy)) * (denom = sun.z * sun.z + (sun.x * sun.x + sun.y * sun.y));
+        if (prod != lbl_803E5F20) {
+            denom = sqrtf(prod);
+        }
+        cz = lbl_803E5F20;
+        if (denom != cz) {
+            cosang = dot / denom;
+        } else {
+            cosang = cz;
+        }
+        zero = lbl_803E5F20;
+        if (cosang > zero) {
+            hx = *(f32 *)(obj + 0xc) - *(f32 *)(cam + 0xc);
+            hy = zero;
+            hz = *(f32 *)(obj + 0x14) - *(f32 *)(cam + 0x14);
+            hlen = sqrtf(hz * hz + (hx * hx + hy));
+            if (lbl_803E5F20 != hlen) {
+                hx = hx / hlen;
+                hy = hy / hlen;
+                hz = hz / hlen;
+            }
+            prod = dir.z * dir.z + (dir.x * dir.x + dir.y * dir.y);
+            prod = prod * (hz * hz + (hx * hx + hy * hy));
+            if (prod != lbl_803E5F20) {
+                sqrtf(prod);
+            }
+            if (cosang > lbl_803E5F28) {
+                g.vx = lbl_803E5F2C * hx;
+                g.vy = lbl_803E5F20;
+                g.vz = lbl_803E5F2C * hz;
+                f = fn_80293E80((lbl_803E5F30 * lbl_803E5F34 * (cosang - lbl_803E5F28)) / lbl_803E5F38) - lbl_803DDCA0;
+                if (f > lbl_803E5F3C || f < lbl_803E5F40) {
+                    lbl_803DDCA0 = lbl_803DDCA0 + f / timeDelta;
+                }
+                g.intensity = lbl_803DDCA0;
+                if (lbl_803DDCA0 > lbl_803E5F44) {
+                    if (lbl_803DDCA4 < lbl_803E5F4C) {
+                        lbl_803DDCA4 = lbl_803DDCA4 + (lbl_803DDCA0 - lbl_803E5F44) / lbl_803E5F48;
+                    }
+                    g.intensity = g.intensity - lbl_803DDCA4;
+                    if (g.intensity < lbl_803E5F44) {
+                        g.intensity = lbl_803E5F44;
+                    }
+                } else {
+                    lbl_803DDCA4 = lbl_803DDCA4 - (lbl_803DDCA0 - lbl_803E5F44) / lbl_803E5F2C;
+                }
+                randomGetRange(0, 0x1e);
+                if (lbl_803E5F58 < lbl_803DDCA0) {
+                    lbl_803DDCA0 = lbl_803DDCA0 - lbl_803E5F54;
+                }
+            } else {
+                f = lbl_803E5F20 - lbl_803DDCA0;
+                if (f <= lbl_803E5F60) {
+                    if (f < lbl_803E5F64) {
+                        lbl_803DDCA0 = oneOverTimeDelta * f + lbl_803DDCA0;
+                    }
+                } else {
+                    lbl_803DDCA0 = oneOverTimeDelta * f + lbl_803DDCA0;
+                }
+                if (lbl_803E5F20 < lbl_803DDCA4) {
+                    lbl_803DDCA4 = -(lbl_803E5F68 * timeDelta - lbl_803DDCA4);
+                    if (lbl_803DDCA4 < lbl_803E5F20) {
+                        lbl_803DDCA4 = lbl_803E5F20;
+                    }
+                }
+            }
+        } else {
+            if (zero < lbl_803DDCA4) {
+                lbl_803DDCA4 = -(lbl_803E5F68 * timeDelta - lbl_803DDCA4);
+                if (lbl_803DDCA4 < zero) {
+                    lbl_803DDCA4 = lbl_803E5F20;
+                }
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
