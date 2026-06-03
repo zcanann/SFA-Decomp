@@ -508,3 +508,64 @@ void fn_801511E8(int obj, u8 *state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int fn_8014C11C(int obj, int a, int b, u8 *tbl, f32 f);
+extern int getAngle(f32 dx, f32 dz);
+extern u8 lbl_803AC428[];
+extern u8 lbl_803DBC88[8];
+extern f32 lbl_803E27AC;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801513AC(int obj, u8 *state)
+{
+    u8 *entry;
+    u32 idx;
+    s16 d;
+
+    entry = *(u8 **)(state[0x33b] * 40 + lbl_8031F16C + 12);
+    if (fn_8014C11C(obj, 1, 16, lbl_803AC428, lbl_803E27AC) >= 1) {
+        if (*(u16 *)(lbl_803AC428 + 4) <= 40
+            && *(u16 *)(state + 0x2a0) != 3
+            && *(u16 *)(state + 0x2a0) != 4) {
+            d = getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(*(int *)lbl_803AC428 + 0xc),
+                         *(f32 *)(obj + 0x14) - *(f32 *)(*(int *)lbl_803AC428 + 0x14))
+                - (u16)*(s16 *)obj;
+            if (d > 0x8000) {
+                d -= 0xFFFF;
+            }
+            if (d < -0x8000) {
+                d += 0xFFFF;
+            }
+            state[0x33a] = (u8)(entry[8] + lbl_803DBC88[(s16)((u32)(u16)d >> 13)]);
+        } else if (*(u16 *)(lbl_803AC428 + 4) <= 70) {
+            while ((*(u8 *)(entry + state[0x33a] * 16 + 10) & 1) != 0) {
+                (*(u8 *)(state + 0x33a))++;
+                if (state[0x33a] > entry[8]) {
+                    state[0x33a] = 1;
+                }
+            }
+        }
+    }
+    if ((f32)*(u16 *)(state + 0x2a4) < lbl_803E27A8 * *(f32 *)(state + 0x2ac)) {
+        state[0x33a] = (u8)(entry[8] + 1);
+    }
+    while (*(u32 *)(entry + (idx = state[0x33a]) * 16 + 4) != 0
+           && (*(u32 *)(state + 0x2dc) & *(u32 *)(entry + idx * 16 + 4)) == 0) {
+        (*(u8 *)(state + 0x33a))++;
+        if (state[0x33a] > entry[8]) {
+            state[0x33a] = 1;
+        }
+    }
+    *(u8 *)(state + 0x2f2) = ((SeqEntry *)(entry + state[0x33a] * 16))->r;
+    *(u8 *)(state + 0x2f3) = ((SeqEntry *)(entry + state[0x33a] * 16))->g;
+    *(u8 *)(state + 0x2f4) = ((SeqEntry *)(entry + state[0x33a] * 16))->b;
+    fn_8014D08C(obj, state, ((SeqEntry *)(entry + state[0x33a] * 16))->anim, 0, 3, *(f32 *)(entry + state[0x33a] * 16));
+    ObjAnim_SetMoveProgress(obj, *(f32 *)(lbl_8031DD30 + ((SeqEntry *)(entry + state[0x33a] * 16))->anim * 4));
+    (*(u8 *)(state + 0x33a))++;
+    if (state[0x33a] > entry[8]) {
+        state[0x33a] = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
