@@ -1035,3 +1035,73 @@ void fn_8012FA70(int idx, s8 flag)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void textureFree(void *tex);
+extern void gameUiResetMenuState(void);
+extern u8 lbl_803A87F0[];
+extern void *lbl_803DD7C8;
+extern void *gTrickyHudCachedIconTexture;
+extern s16 gTrickyHudCachedIconIndex;
+extern void *lbl_803DD8C4;
+
+typedef struct {
+    u8 _pad000[0x1c0];
+    void *hudTextures[102];           /* 0x1c0 */
+    u8 _pad358[0x448 - 0x358];
+    u8 itemFlags[64];                 /* 0x448 */
+    u8 _pad488[0x948 - 0x488];
+    s16 itemSlots[64];                /* 0x948 */
+    void *itemTextures[64];           /* 0x9c8 */
+} GameUiHud;
+
+/* EN v1.0 0x8012FB9C  size: 336b  Frees all cached HUD/item textures and
+ * resets the item slot tables. */
+#pragma scheduling off
+#pragma peephole off
+void GameUI_release(void)
+{
+    GameUiHud *g = (GameUiHud *)lbl_803A87F0;
+    void **p;
+    int i;
+    u8 j;
+
+    p = g->hudTextures;
+    for (i = 0; i < 102; i++) {
+        if (*p != 0) textureFree(*p);
+        p++;
+    }
+
+    gameUiResetMenuState();
+
+    for (j = 0; j < 64; j++) {
+        if (g->itemTextures[j] != 0) {
+            textureFree(g->itemTextures[j]);
+            g->itemTextures[j] = 0;
+        }
+        g->itemSlots[j] = -1;
+        g->itemFlags[j] = 1;
+    }
+
+    if (lbl_803DD7C8 != 0) {
+        textureFree(lbl_803DD7C8);
+        lbl_803DD7C8 = 0;
+    }
+    if (gTrickyHudCachedIconTexture != 0) {
+        textureFree(gTrickyHudCachedIconTexture);
+    }
+    gTrickyHudCachedIconIndex = -1;
+    gTrickyHudCachedIconTexture = 0;
+
+    for (j = 0; j < 64; j++) {
+        if (g->itemTextures[j] != 0) {
+            textureFree(g->itemTextures[j]);
+            g->itemTextures[j] = 0;
+        }
+        g->itemSlots[j] = -1;
+        g->itemFlags[j] = 1;
+    }
+
+    textureFree(lbl_803DD8C4);
+}
+#pragma peephole reset
+#pragma scheduling reset
