@@ -162,7 +162,7 @@ int fn_8023A6A4(int p1, f32 a, f32 b, f32 c)
         val = -a;
     else if (val > a)
         val = a;
-    ang = lbl_803E74A0 * (f32)(u32)yaw / lbl_803E74A4;
+    ang = lbl_803E74A0 * (f32)yaw / lbl_803E74A4;
     *(f32 *)(p1 + 0xd8) = val * fn_80293E80(ang);
     *(f32 *)(p1 + 0xdc) = val * sin(ang);
     fn_8022D48C((int)vel, *(int *)p1);
