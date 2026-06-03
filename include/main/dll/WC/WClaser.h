@@ -8,7 +8,7 @@ void WM_Galleon_init(int *obj, u8 *init);
 void WM_Galleon_release(void);
 void WM_Galleon_initialise(void);
 
-int fn_801F06D8(int p1, int p2, u8 *arg3);
+int WM_seqobject_SeqFn(int p1, int p2, u8 *arg3);
 
 int WM_seqobject_getExtraSize(void);
 int WM_seqobject_getObjectTypeId(void);
