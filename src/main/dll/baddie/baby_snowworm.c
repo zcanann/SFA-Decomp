@@ -1107,9 +1107,15 @@ extern void  gameTextFn_80019804(s32);
 extern void  gameTextAppendStr(void*, s32);
 
 typedef struct BabySnowwormBitTableEntry {
-    u8  _0[0x16];   /* 0x00 */
+    u8  _0[0x8];    /* 0x00 */
+    s32 hint8;      /* 0x08 */
+    s32 hintC;      /* 0x0c */
+    s32 hint10;     /* 0x10 */
+    u8  _14[0x2];   /* 0x14 */
     u16 bit_id;     /* 0x16 */
-    u8  _18[0x4];   /* 0x18 */
+    u8  thresh;     /* 0x18 */
+    u8  _19;        /* 0x19 */
+    u16 bit1a;      /* 0x1a */
 } BabySnowwormBitTableEntry;       /* sizeof = 0x1c */
 extern BabySnowwormBitTableEntry lbl_8031B074[5];
 extern u32 GameBit_Get(u32);
@@ -2029,6 +2035,117 @@ void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
     drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
     drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
     drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+
+extern u8  lbl_803DD77A;
+extern u8  lbl_803DBA94[8];
+extern int *gMapEventInterface;
+
+/* EN v1.0 0x8012D96C  size: 936b  World-map HUD voiceover scheduler: rate
+ * limits, picks the quest-progress hint stream and starts it. */
+#pragma scheduling off
+#pragma peephole off
+void drawWorldMapHud(void)
+{
+    u16 raw = lbl_803DD776;
+    s16 sv = (s16)raw;
+
+    if (raw == 0) {
+        return;
+    }
+    if (raw >= 0x78 && raw <= 0x82) {
+        return;
+    }
+    lbl_803DD776 = 0x78;
+    if (sv < 0x1e) {
+        s8 fi;
+        s8 li_;
+        u8 lv;
+        int n, t;
+        int hint;
+
+        {
+            u8 *p;
+            u8 *base = lbl_803DBA94;
+            int i;
+            p = base;
+            for (i = 0; i < 5; i++) {
+                if (GameBit_Get(lbl_8031B074[*p].bit_id)) {
+                    fi = (s8)lbl_803DBA94[i];
+                    goto haveIdx;
+                }
+                p++;
+            }
+            fi = -1;
+        haveIdx:
+        n = GameBit_Get(0x63c);
+        t = GameBit_Get(0x4e9);
+        n += GameBit_Get(0x5f3);
+        n += GameBit_Get(0x5f4);
+        n = t + n;
+        if (GameBit_Get(0x123)) {
+            n++;
+        }
+        if (GameBit_Get(0x2e8)) {
+            n++;
+        }
+        if (GameBit_Get(0x83b)) {
+            n++;
+        }
+        if (GameBit_Get(0x83c)) {
+            n++;
+        }
+
+        if (n >= lbl_8031B074[base[0]].thresh) li_ = (s8)lbl_803DBA94[0];
+        else if (n >= lbl_8031B074[base[1]].thresh) li_ = (s8)lbl_803DBA94[1];
+        else if (n >= lbl_8031B074[base[2]].thresh) li_ = (s8)lbl_803DBA94[2];
+        else if (n >= lbl_8031B074[base[3]].thresh) li_ = (s8)lbl_803DBA94[3];
+        else if (n >= lbl_8031B074[base[4]].thresh) li_ = (s8)lbl_803DBA94[4];
+        else li_ = -1;
+        }
+
+        lv = 0;
+        if ((u16)getNextTaskHintText() > 0xad) {
+            lv = 1;
+        }
+        {
+            u8 cur = lbl_803DD77A;
+            if (cur == 2 && lv != 0) {
+                hint = 0x51e4;
+            } else if (fi == cur && li_ != cur) {
+                hint = lbl_8031B074[cur].hint8;
+            } else if (cur == 2) {
+                if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(0xd) == 2 && lv == 0) {
+                    hint = 0x51e5;
+                } else if (fi == li_) {
+                    if (GameBit_Get(lbl_8031B074[li_].bit1a)) {
+                        hint = 0x51e6;
+                    } else {
+                        hint = lbl_8031B074[li_].hint10;
+                    }
+                } else {
+                    hint = lbl_8031B074[lbl_803DD77A].hintC;
+                }
+            } else if (cur == 0) {
+                if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(0xd) == 2 && lv == 0) {
+                    hint = 0x51e2;
+                } else {
+                    hint = lbl_8031B074[lbl_803DD77A].hintC;
+                }
+            } else {
+                hint = lbl_8031B074[lbl_803DD77A].hintC;
+            }
+        }
+        if (hint != 0) {
+            AudioStream_Play(hint, AudioStream_StartPrepared);
+        }
+    }
+    if ((u16)lbl_803DD776 > 0xff) {
+        lbl_803DD776 = 0;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
