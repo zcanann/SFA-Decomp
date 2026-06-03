@@ -105,7 +105,7 @@ extern f32 lbl_803E3298;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void enemy_free(double param_1,double param_2,ushort *param_3,int param_4,uint param_5,
+void FUN_8014d164(double param_1,double param_2,ushort *param_3,int param_4,uint param_5,
                  char param_6)
 {
   uint uVar1;
@@ -548,6 +548,60 @@ void enemy_hitDetect(int obj)
     if (*(void **)(state + 0x36c) != NULL) {
         fn_80026C54(*(int *)(state + 0x36c));
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_80026C88(int p);
+extern int *gExpgfxInterface;
+extern void mm_free(int p);
+extern void smallbasket_stopLoopSfx(int obj, u8 *state);
+extern void Obj_FreeObject(int obj);
+
+#pragma scheduling off
+#pragma peephole off
+void enemy_free(int obj, int flag)
+{
+    u8 *child;
+    int i;
+    u8 *state;
+    u8 n;
+
+    state = *(u8 **)(obj + 0xb8);
+
+    if (*(void **)(state + 0x36c) != NULL) {
+        fn_80026C88(*(int *)(state + 0x36c));
+    }
+    if (*(void **)(state + 0x368) != NULL) {
+        ModelLightStruct_free(*(int *)(state + 0x368));
+        *(int *)(state + 0x368) = 0;
+    }
+    if (*(void **)state != NULL) {
+        mm_free(*(int *)state);
+        *(int *)state = 0;
+    }
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x7c8:
+        smallbasket_stopLoopSfx(obj, state);
+        break;
+    case 0x851:
+        if ((int)ObjGroup_ContainsObject(obj, 0x50) != 0) {
+            ObjGroup_RemoveObject(obj, 0x50);
+        }
+        break;
+    }
+    n = *(u8 *)(obj + 0xeb);
+    for (i = 0; i < n; i++) {
+        child = *(u8 **)(obj + 0xc8);
+        if (child != NULL) {
+            ObjLink_DetachChild(obj, child);
+            if (flag == 0 || (*(u16 *)(child + 0xb0) & 0x10) == 0) {
+                Obj_FreeObject((int)child);
+            }
+        }
+    }
+    (**(void (**)(int))(*gExpgfxInterface + 0x14))(obj);
+    ObjGroup_RemoveObject(obj, 3);
 }
 #pragma peephole reset
 #pragma scheduling reset
