@@ -4738,3 +4738,47 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80134870(int obj, u8* arr)
+{
+    int i;
+    for (i = 0; i < (s8)arr[0x1b]; i++) {
+        s8 t;
+        switch (*(s16*)(obj + 0x46)) {
+        case 0x77d:
+            t = (s8)arr[i + 0x13];
+            if (t == 0) {
+                Sfx_PlayFromObject(obj, 0x368);
+            }
+            break;
+        case 0x77e:
+            t = (s8)arr[i + 0x13];
+            if (t == 0) {
+                Sfx_PlayFromObject(obj, 0x370);
+            } else if (t == 7) {
+                Sfx_PlayFromObject(obj, 0x36c);
+            }
+            break;
+        case 0x77f:
+            t = (s8)arr[i + 0x13];
+            if (t == 0) {
+                Sfx_PlayFromObject(obj, 0x36b);
+            } else if (t == 7) {
+                Sfx_PlayFromObject(obj, 0x421);
+            }
+            break;
+        case 0x780:
+            t = (s8)arr[i + 0x13];
+            if (t == 0) {
+                Sfx_PlayFromObject(obj, 0x36a);
+            } else if (t == 7) {
+                Sfx_PlayFromObject(obj, 0x369);
+            }
+            break;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
