@@ -173,11 +173,8 @@ void fxemit_init(int obj, int setup)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void fn_8018F148(int obj, int count)
+void areafxemit_emitBurst(int obj, int count)
 {
-  extern void mathFn_80021ac8(s16 *in, f32 *out);
-  extern int *gPartfxInterface;
-  extern u32 randomGetRange(int min, int max);
   int sub;
   s16 i;
   struct {
@@ -1297,7 +1294,7 @@ void areafxemit_update(int* obj)
             if (distance <= radius || radius == lbl_803E3E6C) {
                 if ((3 < *(u8*)(state + 8)) &&
                     ((*(f32*)(state + 4) > radius && (radius != lbl_803E3E6C)))) {
-                    fn_8018F148((int)obj, 0x23);
+                    areafxemit_emitBurst((int)obj, 0x23);
                 }
                 areafxemit_emitEffect(obj);
             }
