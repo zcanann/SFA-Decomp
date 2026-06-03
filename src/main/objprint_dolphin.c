@@ -5353,6 +5353,174 @@ void objRenderFn_8003d980(u8 *obj, int *p2) {
 }
 
 extern u8 lbl_80345E10[];
+extern void mm_free(void *);
+extern void texFlagFn_80023cbc(int);
+extern void texRestructRefs(int);
+extern s16 lbl_803DCC78;
+extern void testAndSet_onlyUseHeaps1and2(int);
+extern int mmGetRegionForPtr(void *);
+extern void *mmAlloc(int size, int tag, int p3);
+extern void *memcpy(void *, void *, int);
+extern int mmSetFreeDelay(int);
+extern int getHeapItemSize(void *);
+
+void defragMemory(int mode) {
+    u8 *base = lbl_80345E10;
+    int done = 0;
+    int pass = 0;
+    texFlagFn_80023cbc(2);
+    if (getLoadedFileFlags() != 0) {
+        return;
+    }
+    if (mode == 0 && lbl_803DCC78 == 0) {
+        texRestructRefs(0);
+        lbl_803DCC78 = 6;
+        return;
+    }
+    if (mode != 0) {
+        char *p1;
+        char *p2;
+        char *p3;
+        char *p4;
+        int i;
+        testAndSet_onlyUseHeaps1and2(1);
+        i = 0;
+        {
+            char *hi = (char *)base + 0x20000;
+            p1 = hi - 0x6a28;
+            p2 = hi - 0x68c8;
+            p3 = hi - 0x6d68;
+            p4 = hi - 0x6f20;
+        }
+        for (; i <= 0x57; i++) {
+            switch (i) {
+            case 0xd: case 0x1b: case 0x23: case 0x25: case 0x2b: case 0x30:
+            case 0x46: case 0x47: case 0x4a: case 0x4d: case 0x54: case 0x55: {
+                void *n;
+                if (*(void **)p1 == NULL) {
+                    break;
+                }
+                if (*(s16 *)p2 == -1) {
+                    break;
+                }
+                if (mmGetRegionForPtr(*(void **)p1) != 0) {
+                    break;
+                }
+                if (mode == 2) {
+                    if (i == 0x20) break;
+                    if (i == 0x4b) break;
+                    if (i == 0x23) break;
+                    if (i == 0x4d) break;
+                }
+                n = mmAlloc(*(int *)p3 + 0x20, 0x7d7d7d7d, 0);
+                if (n == NULL) {
+                    break;
+                }
+                memcpy(n, *(void **)p1, *(int *)p3);
+                {
+                    int d = mmSetFreeDelay(0);
+                    mm_free(*(void **)p1);
+                    *(int *)p1 = 0;
+                    *(void **)p1 = n;
+                    mmSetFreeDelay(d);
+                }
+                break;
+            }
+            }
+            *(u8 *)p4 = 0;
+            p1 += 4;
+            p2 += 2;
+            p3 += 4;
+            p4 += 1;
+        }
+        testAndSet_onlyUseHeaps1and2(-1);
+    }
+    base += 0x20000;
+    while (done == 0 && pass < 10) {
+        char *q1;
+        char *q2;
+        char *q3;
+        char *q4;
+        int i;
+        done = 1;
+        i = 0;
+        q1 = (char *)base - 0x6a28;
+        q2 = (char *)base - 0x68c8;
+        q3 = (char *)base - 0x6d68;
+        q4 = (char *)base - 0x6f20;
+        for (; i <= 0x57; i++) {
+            switch (i) {
+            case 0xd: case 0x1b: case 0x23: case 0x25: case 0x2b: case 0x30:
+            case 0x46: case 0x47: case 0x4a: case 0x4d: case 0x54: case 0x55: {
+                void *n;
+                if (*(void **)q1 != NULL && *(s16 *)q2 != -1 && mmGetRegionForPtr(*(void **)q1) == 0) {
+                    n = mmAlloc(*(int *)q3 + 0x20, 0x7d7d7d7d, 0);
+                    if (n == NULL) {
+                        break;
+                    }
+                    if (*(int *)q3 >= 0x33450 && *(u32 *)q1 < (u32)n) {
+                        int d = mmSetFreeDelay(0);
+                        mm_free(n);
+                        mmSetFreeDelay(d);
+                    } else if (*(int *)q3 < 0x33450 && *(u32 *)q1 > (u32)n) {
+                        int d = mmSetFreeDelay(0);
+                        mm_free(n);
+                        mmSetFreeDelay(d);
+                    } else {
+                        int d;
+                        memcpy(n, *(void **)q1, *(int *)q3);
+                        d = mmSetFreeDelay(0);
+                        mm_free(*(void **)q1);
+                        *(int *)q1 = 0;
+                        *(void **)q1 = n;
+                        mmSetFreeDelay(d);
+                        done = 0;
+                    }
+                } else {
+                    if (mode == 2) break;
+                    if (pass == 0) break;
+                    if (*(void **)q1 == NULL) break;
+                    if (*(s16 *)q2 == -1) break;
+                    if (mmGetRegionForPtr(*(void **)q1) != 1 && mmGetRegionForPtr(*(void **)q1) != 2) {
+                        break;
+                    }
+                    if (getHeapItemSize(*(void **)q1) < 0x3000) {
+                        break;
+                    }
+                    n = mmAlloc(*(int *)q3 + 0x20, 0x7d7d7d7d, 0);
+                    if (n == NULL) {
+                        break;
+                    }
+                    if (mmGetRegionForPtr(n) != 0) {
+                        int d = mmSetFreeDelay(0);
+                        mm_free(n);
+                        mmSetFreeDelay(d);
+                    } else {
+                        int d;
+                        memcpy(n, *(void **)q1, *(int *)q3);
+                        d = mmSetFreeDelay(0);
+                        mm_free(*(void **)q1);
+                        *(int *)q1 = 0;
+                        *(void **)q1 = n;
+                        mmSetFreeDelay(d);
+                        done = 0;
+                    }
+                }
+                break;
+            }
+            }
+            *(u8 *)q4 = 0;
+            q1 += 4;
+            q2 += 2;
+            q3 += 4;
+            q4 += 1;
+        }
+        pass++;
+    }
+    texFlagFn_80023cbc(0);
+}
+
+extern u8 lbl_80345E10[];
 void *getCurrentDataFile(int id) {
     u8 *base = lbl_80345E10;
     switch (id) {
