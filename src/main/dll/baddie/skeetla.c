@@ -35,8 +35,8 @@ extern int trickyDebugPrint(const char *fmt, ...);
 
 #pragma peephole off
 #pragma scheduling off
-/* fn_8013939C  addr=0x8013939C  size=0x498  linkage=global */
-void fn_8013939C(u8 *obj)
+/* trickyUpdateCollisionAndPathState  addr=0x8013939C  size=0x498  linkage=global */
+void trickyUpdateCollisionAndPathState(u8 *obj)
 {
     u8 *state;
     f32 hitOffsetY;
