@@ -1759,7 +1759,13 @@ extern f32 lbl_803E1E94;
 
 typedef struct {
     s16 id;         /* 0x00 */
-    u8  _2[0xa];    /* 0x02 */
+    u16 x;          /* 0x02 */
+    u16 y;          /* 0x04 */
+    s16 ofs6;       /* 0x06 */
+    u8  trailX;     /* 0x08 */
+    u8  trailY;     /* 0x09 */
+    u8  count;      /* 0x0a */
+    u8  _b;         /* 0x0b */
     u8  nav[4];     /* 0x0c */
     f32 f10;        /* 0x10 */
     s32 f14;        /* 0x14 */
@@ -2505,7 +2511,7 @@ extern f32  lbl_803DBA84;
 typedef struct {
     u8  _pad0[0x190];
     int times190[12];      /* 0x190 */
-    u8  _pad1c0[0x198];    /* 0x1c0 */
+    int textures1C0[0x66]; /* 0x1c0 */
     s16 texIds358[0x28];   /* 0x358 */
     int textures3A8[0x28]; /* 0x3a8 */
     u8  _pad448[0x40];     /* 0x448 */
@@ -2841,6 +2847,8 @@ extern f32  lbl_803E1EC8;
 extern f64  lbl_803E2108;
 extern f32  lbl_803E2110;
 extern f32  lbl_803E2114;
+
+void fn_80128A7C(u8 i, s16 p2, int p3);
 
 /* EN v1.0 0x80128470  size: 1548b  Pause-menu grid renderer: draws all cells
  * (selection last), the breathing selected cell, header/footer text, and the
@@ -3924,6 +3932,121 @@ void pauseMenuDoSave(void)
         if (lbl_803DB424 != 0) {
             gameTextSetColor(0xff, 0xff, 0xff, 0xff);
             gameTextShow(0x46e);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f64 lbl_803E2080;
+extern f64 lbl_803E2118;
+extern f32 lbl_803E2120;
+extern f64 lbl_803E2128;
+
+typedef struct {
+    u8  _0[0x358];
+    s16 texId;          /* hud+0x358, indexed by id*2 */
+} CMenuHudIdx2;
+typedef struct {
+    u8  _0[0x1c0];
+    int texSecondary;   /* hud+0x1c0, indexed by id*4 */
+    u8  _1c4[0x1e4];
+    int texPrimary;     /* hud+0x3a8, indexed by id*4 */
+} CMenuHudIdx4;
+
+/* EN v1.0 0x80128A7C  size: 1012b  Draws one pause-menu grid cell with its
+ * motion trail: each trail step (count, stepping by 4) redraws the cell's
+ * texture offset along the entry's trail vector, fading via the scaled
+ * alpha. The selected cell on the main grid breathes (sin pulse) and slides
+ * toward the panel edge while lbl_803DD75C runs. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80128A7C(u8 i, s16 p2, int p3)
+{
+    CMenuHud *hud = (CMenuHud *)lbl_803A87F0;
+    int div15;
+    s8 cnt;
+    s16 v;
+    int scaled;
+    s16 ofs;
+    f32 quarter;
+    f32 spd;
+    f32 x;
+    f32 y;
+    f64 k2128;
+    f64 k2108;
+    f64 t;
+
+    t = (f64)p2 * (lbl_803E2080 - (f64)lbl_803DD75C);
+    scaled = (s32)(t * lbl_803E2088);
+    if (lbl_803DD824[i].id < 0) {
+        return;
+    }
+    cnt = (s8)lbl_803DD824[i].count;
+    div15 = (s16)scaled / 15;
+    quarter = lbl_803E20B8;
+    k2108 = lbl_803E2108;
+    k2128 = lbl_803E2128;
+    for (; cnt >= 0; cnt -= 4) {
+        spd = quarter * lbl_803DD824[i].f10;
+        x = (f32)lbl_803DD824[i].x;
+        y = (f32)lbl_803DD824[i].y;
+        ofs = lbl_803DD824[i].ofs6 - cnt;
+        if (i != lbl_803DD7D8 || lbl_803DD824 == lbl_8031B818) {
+            s16 idv = lbl_803DD824[i].id;
+            if (idv == 0x4a || idv == 0x4c) {
+                v = (s32)lbl_803DD748 & 0x1f;
+                if (v & 0x10) {
+                    v ^= 0x1f;
+                }
+                v *= div15;
+            } else {
+                v = scaled;
+            }
+            ofs -= lbl_803DD75C;
+        } else {
+            f32 dx;
+            f32 dy;
+            f32 pr;
+            v = p2;
+            spd = (f32)(spd * (lbl_803E1F60 + (f64)lbl_803DD75C / lbl_803E2118));
+            spd += lbl_803E20BC * fn_80293E80(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) /
+                                              lbl_803E1E94) +
+                   lbl_803E2090;
+            dx = lbl_803E1F34 - x;
+            pr = dx * (f32)lbl_803DD75C;
+            x = (f32)(pr * lbl_803E2088 + x);
+            dy = lbl_803E2120 - y;
+            pr = dy * (f32)lbl_803DD75C;
+            y = (f32)(pr * lbl_803E2088 + y);
+        }
+        {
+            f32 prod = spd * (f32)lbl_803DD824[i].trailX;
+            x -= k2108 * (prod * k2128);
+            prod = spd * (f32)lbl_803DD824[i].trailY;
+            y -= k2108 * (prod * k2128);
+        }
+        if (lbl_803DD824 == lbl_8031BD90) {
+            int idv = lbl_803DD824[i].id;
+            u32 tex;
+            if (((CMenuHudIdx2 *)((u8 *)hud + idv * 2))->texId == 0xbf0) {
+                ofs -= 0x14;
+            }
+            tex = ((CMenuHudIdx4 *)((u8 *)hud + idv * 4))->texPrimary;
+            if (tex == 0) {
+                continue;
+            }
+            pauseMenuDrawElement(tex, x, y, ofs, (u8)v, (s32)spd, p3);
+        } else {
+            int idv = lbl_803DD824[i].id;
+            if (idv == 0) {
+                continue;
+            }
+            if (idv == 0x25) {
+                ofs -= 0x14;
+            }
+            pauseMenuDrawElement(((CMenuHudIdx4 *)((u8 *)hud + idv * 4))->texSecondary, x, y, ofs,
+                                 (u8)v, (s32)spd, p3);
         }
     }
 }
