@@ -1966,14 +1966,14 @@ void imanimspacecraft_free(int *obj) {
     (*(void (***)(int*))gExpgfxInterface)[6](obj);
 }
 
-extern void fn_801AE184(void);
+extern void imanimspacecraft_SeqFn(void);
 extern f32 lbl_803E4784;
 extern char lbl_803AC948[];
 #pragma scheduling off
 #pragma peephole off
 void imanimspacecraft_init(int *obj) {
     f32 v;
-    *(int *)((char *)obj + 0xbc) = (int)&fn_801AE184;
+    *(int *)((char *)obj + 0xbc) = (int)&imanimspacecraft_SeqFn;
     v = lbl_803E4784;
     *(f32 *)(lbl_803AC948 + 0xc) = v;
     *(f32 *)(lbl_803AC948 + 0x10) = v;

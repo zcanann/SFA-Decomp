@@ -1223,7 +1223,7 @@ void cclightfoot_init(int* obj, int* def)
     *(void**)((char*)obj + 188) = (void*)fn_801AA734;
 }
 
-int fn_801ABA84(int p1, int p2, u8* state)
+int cclevcontrol_SeqFn(int p1, int p2, u8* state)
 {
     if (state[139] != 0) {
         spawnExplosion(p1, lbl_803E46C8, 1, 1, 0, 1, 1, 1, 0);
@@ -1284,7 +1284,7 @@ void cclevcontrol_init(int *obj) {
     int *state;
     envfxTable = lbl_80323548;
     state = *(int **)((char *)obj + 0xb8);
-    *(void **)((char *)obj + 0xbc) = (void *)fn_801ABA84;
+    *(void **)((char *)obj + 0xbc) = (void *)cclevcontrol_SeqFn;
     fn_80088870((char *)envfxTable + 0x38, envfxTable, (char *)envfxTable + 0x70, (char *)envfxTable + 0xa8);
     if (getSaveGameLoadStatus() != 0) {
         envFxActFn_800887f8(0x3f);

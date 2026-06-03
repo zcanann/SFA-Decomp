@@ -1114,7 +1114,7 @@ void magiclight_hitDetect(void) {}
 void magiclight_release(void) {}
 void magiclight_initialise(void) {}
 
-extern int fn_801AD440(int* obj);
+extern int magiclight_SeqFn(int* obj);
 extern u32 randomGetRange(int min, int max);
 extern f32 lbl_803E4740;
 extern f32 lbl_803E4744;
@@ -1129,7 +1129,7 @@ void magiclight_init(int* obj, u8* params)
     u8* sub;
     *(int*)((char*)obj + 0xf4) = 0;
     *(s16*)obj = (s16)((s8)params[0x18] << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)&fn_801AD440;
+    *(void**)((char*)obj + 0xbc) = (void*)&magiclight_SeqFn;
     if (*(s16*)((char*)obj + 0x46) == 0x172) {
         return;
     }
@@ -1401,7 +1401,7 @@ extern float Vec_distance(float *a, float *b);
 extern f32 lbl_803E4738;
 #pragma scheduling off
 #pragma peephole off
-int fn_801AD440(int *obj) {
+int magiclight_SeqFn(int *obj) {
     int *state;
     int *player;
     f32 dist;
