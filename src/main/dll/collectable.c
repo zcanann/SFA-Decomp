@@ -144,7 +144,7 @@ extern undefined4 FUN_8013939c();
 extern undefined4 FUN_80139a4c();
 extern undefined4 FUN_8013a408();
 extern void fn_8013ADFC(int obj);
-extern void fn_80139164(int obj,int state);
+extern void Tricky_emitQueuedPathParticles(int obj,int state);
 extern int trickyFn_8013b368();
 extern int trickyGrowl();
 extern int FUN_801451dc();
@@ -1899,7 +1899,7 @@ void Tricky_render(int obj,int param_2,int param_3,int param_4,int param_5,char 
         objRenderFn_8003b8f4(lbl_803E23E8,*(int *)(state + 0x700),param_2,param_3,param_4,param_5);
       }
     }
-    fn_80139164(obj,state);
+    Tricky_emitQueuedPathParticles(obj,state);
     ObjPath_GetPointWorldPositionArray(obj,4,4,(float *)(state + 0x7d8));
     *(f32 *)(state + 0x838) = *(f32 *)(state + 0x838) - timeDelta;
     if (lbl_803E23DC < *(f32 *)(state + 0x838)) {

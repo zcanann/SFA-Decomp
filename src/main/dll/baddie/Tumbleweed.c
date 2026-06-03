@@ -3678,13 +3678,13 @@ void titlescreen_init(u8* obj, u8* p)
 extern int  *gPartfxInterface;
 extern f32   lbl_803E23E8;
 
-/* EN v1.0 0x80139164  size: 252b  fn_80139164: when b->_54 carries the
+/* EN v1.0 0x80139164  size: 252b  Tricky_emitQueuedPathParticles: when b->_54 carries the
  * spawn flag, build a particle descriptor on the stack from a's heading
  * and the delta to b's position, then emit it 20 times via the partfx
  * interface and clear the flag. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80139164(u8* a, u8* b)
+void Tricky_emitQueuedPathParticles(u8* a, u8* b)
 {
     struct {
         s16 hx, hy, hz;
@@ -4438,7 +4438,7 @@ extern f64 lbl_803E2400;
 #define TUMBLEWEED_BLEND_FLAG_PENDING 0x80
 #define TUMBLEWEED_BLEND_FLAG_ACTIVE 0x40
 
-/* fn_80138B60: weighted blend-channel animator. On state[0x82e] bit 0x80,
+/* Tricky_updateBlendChannelWeight: weighted blend-channel animator. On state[0x82e] bit 0x80,
  * primes channel 1 (weight 0, target weight ratio at +0x830) and latches
  * the active flag. While bit 0x40 is set, ramps state[0x830] toward
  * (s8)data[0] / (s8)data[1] with acceleration lbl_803E23E4 and damping
@@ -4446,7 +4446,7 @@ extern f64 lbl_803E2400;
  * model's blend channel 1 as `lbl_803E23F8 * weight - lbl_803E23E8`. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80138B60(int obj, u8* state) {
+void Tricky_updateBlendChannelWeight(int obj, u8* state) {
     extern void* Obj_GetActiveModel(int obj);
     int model;
     f32 target;
