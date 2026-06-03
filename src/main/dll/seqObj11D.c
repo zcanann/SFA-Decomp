@@ -655,3 +655,120 @@ void fn_8015165C(int obj, u8 *state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int allocModelStruct2(f32 *p, int n);
+extern void tailFn_80026c38(int p, f32 a, f32 b, f32 c);
+extern void fn_80026C30(int p, int n);
+extern void baddieAfterUpdateBonesCb();
+extern f32 lbl_803DBC98;
+extern f32 lbl_803E2748;
+extern f32 lbl_803E2754;
+extern f32 lbl_803E27B0;
+extern f32 lbl_803E27B4;
+extern f32 lbl_803E27B8;
+extern f32 lbl_803E27BC;
+extern f32 lbl_803E27C0;
+extern f32 lbl_803E27C4;
+extern f32 lbl_803E27C8;
+extern f32 lbl_803E27CC;
+extern f32 lbl_803E27D0;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80151954(int obj, u8 *state)
+{
+    u8 *setup = *(u8 **)(obj + 0x4c);
+    f32 fz;
+    int z;
+
+    *(int *)(state + 0x2e4) = 11;
+    *(u32 *)(state + 0x2e4) |= 0x402B0;
+    *(u32 *)(state + 0x2e4) |= 0x3040;
+    *(u32 *)(state + 0x2e4) |= 0x40300000;
+    *(u32 *)(state + 0x2e4) |= 0xC00;
+    *(f32 *)(state + 0x308) = lbl_803E2754;
+    *(f32 *)(state + 0x300) = lbl_803E27B0;
+    *(f32 *)(state + 0x304) = lbl_803E27B4;
+    state[0x320] = 35;
+    fz = lbl_803E2748;
+    *(f32 *)(state + 0x314) = fz;
+    state[0x321] = 34;
+    *(f32 *)(state + 0x318) = lbl_803E27B8;
+    state[0x322] = 6;
+    *(f32 *)(state + 0x31c) = fz;
+    *(f32 *)(state + 0x2fc) *= lbl_803E27BC;
+    switch (*(s16 *)(obj + 0x46)) {
+    case 314:
+        if (*(s8 *)(setup + 0x27) != 0) {
+            *(s16 *)(state + 0x2b6) = 51;
+        }
+        *(f32 *)(state + 0x2ac) = lbl_803E27C0;
+        *(s16 *)(state + 0x2b0) = 40;
+        state[0x33b] = 0;
+        break;
+    case 17:
+        if (*(s8 *)(setup + 0x27) != 0) {
+            *(s16 *)(state + 0x2b6) = 51;
+        }
+        *(f32 *)(state + 0x2ac) = lbl_803E27C0;
+        *(s16 *)(state + 0x2b0) = 40;
+        state[0x33b] = 1;
+        break;
+    case 1505:
+        if (*(s8 *)(setup + 0x27) != 0) {
+            *(s16 *)(state + 0x2b6) = 1529;
+        }
+        *(f32 *)(state + 0x2ac) = lbl_803E27C0;
+        *(s16 *)(state + 0x2b0) = 50;
+        state[0x33b] = 2;
+        break;
+    case 1463:
+        if (*(s8 *)(setup + 0x27) != 0) {
+            *(s16 *)(state + 0x2b6) = 1530;
+        }
+        *(f32 *)(state + 0x2ac) = lbl_803E27C4;
+        *(s16 *)(state + 0x2b0) = 50;
+        state[0x33b] = 3;
+        break;
+    case 1464:
+        if (*(s8 *)(setup + 0x27) != 0) {
+            *(s16 *)(state + 0x2b6) = 1534;
+        }
+        *(f32 *)(state + 0x2ac) = lbl_803E27C0;
+        *(s16 *)(state + 0x2b0) = 60;
+        state[0x33b] = 4;
+        break;
+    case 1465:
+        if (*(s8 *)(setup + 0x27) != 0) {
+            *(s16 *)(state + 0x2b6) = 51;
+        }
+        *(f32 *)(state + 0x2ac) = lbl_803E27C0;
+        *(s16 *)(state + 0x2b0) = 1;
+        state[0x33b] = 1;
+        break;
+    case 1958:
+        if (*(s8 *)(setup + 0x27) != 0) {
+            *(s16 *)(state + 0x2b6) = 1957;
+        }
+        *(f32 *)(state + 0x2ac) = lbl_803E27C0;
+        *(s16 *)(state + 0x2b0) = 160;
+        state[0x33b] = 5;
+        z = 0;
+        state[0x320] = z;
+        *(f32 *)(state + 0x314) = fz;
+        state[0x321] = 21;
+        *(f32 *)(state + 0x318) = lbl_803E27B8;
+        state[0x322] = z;
+        *(f32 *)(state + 0x31c) = fz;
+        *(int *)(state + 0x36c) = allocModelStruct2(&lbl_803DBC98, 1);
+        tailFn_80026c38(*(int *)(state + 0x36c), lbl_803E27C8, lbl_803E27CC, lbl_803E27D0);
+        *(int *)(obj + 0x108) = (int)baddieAfterUpdateBonesCb;
+        fn_80026C30(*(int *)(state + 0x36c), 1);
+        break;
+    }
+    if (*(s8 *)(setup + 0x2e) != -1) {
+        *(u32 *)(state + 0x2dc) |= 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
