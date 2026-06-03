@@ -574,7 +574,7 @@ extern f32 lbl_803E348C;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80172680(int obj, int unused, u8* data)
+int collectible_SeqFn(int obj, int unused, u8* data)
 {
     int* state = *(int**)(obj + 0xb8);
     f32 buf[6];

@@ -19,7 +19,7 @@ extern undefined8 FUN_801726ac();
 extern undefined4 FUN_80172974();
 extern undefined4 FUN_80172b40();
 extern uint countLeadingZeros();
-extern void fn_80172680(void);
+extern void collectible_SeqFn(void);
 
 extern undefined4 DAT_803218a8;
 extern undefined4 DAT_803dc070;
@@ -81,7 +81,7 @@ void collectible_init(int obj,int setup)
   *(s16 *)(obj + 4) = (s16)((u8)*(u8 *)(setup + 0x23) << 8);
   setupObj = *(int *)(obj + 0x50);
   *(f32 *)(obj + 8) = *(f32 *)(setupObj + 4);
-  *(void (**)(void))(obj + 0xbc) = fn_80172680;
+  *(void (**)(void))(obj + 0xbc) = collectible_SeqFn;
   setupModelIndex = *(s8 *)(setup + 0x26);
   *(s8 *)(obj + 0xad) = (s8)setupModelIndex;
   if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {

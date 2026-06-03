@@ -13,7 +13,7 @@ extern void *gPathControlInterface;
 extern u8 lbl_80320F30[];
 extern f32 lbl_803E369C;
 
-int fn_8017A048(int obj, int unused, u8 *setupData);
+int levelname_SeqFn(int obj, int unused, u8 *setupData);
 
 /*
  * --INFO--
@@ -144,7 +144,7 @@ void levelname_init(int obj, int objDef)
     int *text;
 
     state = *(int **)(obj + 0xb8);
-    *(void **)(obj + 0xbc) = fn_8017A048;
+    *(void **)(obj + 0xbc) = levelname_SeqFn;
     text = gameTextGet(*(int *)(objDef + 0x1c));
     state[1] = **(int **)(text + 2);
     state[2] = 0x64;
@@ -186,7 +186,7 @@ int ProjectileSwitch_getObjectTypeId(int *obj) {
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8017A048(int obj, int unused, u8 *setupData) {
+int levelname_SeqFn(int obj, int unused, u8 *setupData) {
     int *state = *(int **)((char *)obj + 0xB8);
     int i;
     for (i = 0; i < setupData[0x8B]; i++) {

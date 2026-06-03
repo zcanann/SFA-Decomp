@@ -13,7 +13,7 @@ extern undefined4 FUN_80039468();
 extern undefined4 FUN_8003b818();
 extern uint FUN_8007f66c();
 extern undefined4 FUN_80081120();
-extern int fn_801D70D8(int obj, undefined4 p2, int animObj);
+extern int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj);
 extern undefined8 FUN_80286838();
 extern undefined4 FUN_80286884();
 extern undefined4 FUN_80294be0();
@@ -238,7 +238,7 @@ void warpstone_init(int obj, u8 *setup)
   state = *(int *)(obj + 0xb8);
   setupYaw = (s16)(setup[0x1a] << 8);
   *(s16 *)obj = setupYaw;
-  *(void **)(obj + 0xbc) = fn_801D70D8;
+  *(void **)(obj + 0xbc) = warpstone_updateMenuAnimObj;
   *(s16 *)(state + 0xe) = 0x15a;
   *(s16 *)(state + 0x10) = 0x886;
   ObjHits_EnableObject(obj);
