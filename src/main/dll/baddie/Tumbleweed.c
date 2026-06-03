@@ -5101,7 +5101,7 @@ extern void DCStoreRange(void *p, u32 nBytes);
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80137A00(int p1, int p2, u8 *grid)
+void fn_80137A00(int p1, int p2, u8 *grid, int p4)
 {
     int i;
     int bit;
@@ -5144,6 +5144,63 @@ void fn_80137A00(int p1, int p2, u8 *grid)
             row1 += 0x500;
             grid++;
         }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u16 *lbl_803DCCE8;
+extern u16 *lbl_803DCCEC;
+extern u8 lbl_8031D060[];
+
+#pragma scheduling off
+#pragma peephole on
+void debugPrintfxy(int x, int y, char *fmt, ...)
+{
+    int xx;
+    int yy;
+    u16 *saved;
+    int x0 = x;
+    u8 *p1;
+    u8 *p2;
+    va_list args;
+    char buf[272];
+
+    if (enableDebugText != 0) {
+        xx = x0;
+        yy = y;
+        va_start(args, fmt);
+        vsprintf(buf, fmt, args);
+        saved = lbl_803DDA30;
+        p1 = (u8 *)buf - 1;
+        p2 = (u8 *)buf - 1;
+        while (p1++, *++p2 != 0) {
+            switch (*p1) {
+            case 0xa:
+                yy += 0xc;
+                xx = x0;
+                break;
+            case 9:
+                xx += 0x40 - (xx & 0x3f);
+                break;
+            case 0x20:
+                xx += 8;
+                break;
+            default:
+                if (*p1 >= 0x61 && *p1 <= 0x7a) {
+                    *p1 = *p1 - 0x20;
+                }
+                if (*p1 >= 0x21 && *p1 <= 0x5a) {
+                    lbl_803DDA30 = lbl_803DCCEC;
+                    fn_80137A00(xx, yy, lbl_8031D060 + (*p1 - 0x21) * 5, -1);
+                    lbl_803DDA30 = lbl_803DCCE8;
+                    fn_80137A00(xx, yy, lbl_8031D060 + (*p1 - 0x21) * 5, -1);
+                    xx += 0xf;
+                }
+                break;
+            }
+        }
+        lbl_803DDA30 = saved;
     }
 }
 #pragma peephole reset
