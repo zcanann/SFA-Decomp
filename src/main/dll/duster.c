@@ -37,7 +37,7 @@ extern void ObjHits_DisableObject(int);
 extern void ObjHits_EnableObject(int);
 extern void fn_80292E20(uint, float *, float *);
 extern u8 objBboxFn_800640cc();
-extern double fn_8014CB54(double, double, double, double, double, double, double, int);
+extern double sidekickToy_accelerateTowardTargetXZ(double, double, double, double, double, double, double, int);
 extern void fn_8014CD1C(double, double, void *, int, int, char);
 extern void fn_8014D08C(int, int, int, float, int, int);
 extern void fn_80154D0C(int, int, ushort *, float *);
@@ -840,7 +840,7 @@ void fn_8015625C(ushort *param_9,int param_10)
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x8000000) == 0) {
     iVar3 = *(int *)(param_10 + 0x29c);
-    dVar5 = fn_8014CB54((double)*(float *)(iVar3 + 0x18),
+    dVar5 = sidekickToy_accelerateTowardTargetXZ((double)*(float *)(iVar3 + 0x18),
                          (double)(lbl_803E2AB8 + *(float *)(iVar3 + 0x1c)),
                          (double)*(float *)(iVar3 + 0x20),(double)lbl_803E2ABC,
                          (double)lbl_803E2AC0,(double)lbl_803E2AC4,
@@ -932,7 +932,7 @@ void fn_8015652C(ushort *param_9,int param_10)
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x2000) == 0) {
     if ((*(uint *)(param_10 + 0x2dc) & 0x8000000) == 0) {
-      dVar7 = fn_8014CB54((double)*(float *)(iVar5 + 8),(double)*(float *)(iVar5 + 0xc),
+      dVar7 = sidekickToy_accelerateTowardTargetXZ((double)*(float *)(iVar5 + 8),(double)*(float *)(iVar5 + 0xc),
                            (double)*(float *)(iVar5 + 0x10),(double)lbl_803E2ABC,
                            (double)lbl_803E2AC0,(double)lbl_803E2AC4,
                            (double)*(float *)(param_10 + 0x304),(int)param_9);
@@ -951,7 +951,7 @@ void fn_8015652C(ushort *param_9,int param_10)
       *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) & 0xffffdfff;
     }
     if ((*(uint *)(param_10 + 0x2dc) & 0x8000000) == 0) {
-      dVar7 = fn_8014CB54((double)pfVar6[0x1a],(double)pfVar6[0x1b],(double)pfVar6[0x1c],
+      dVar7 = sidekickToy_accelerateTowardTargetXZ((double)pfVar6[0x1a],(double)pfVar6[0x1b],(double)pfVar6[0x1c],
                            (double)lbl_803E2ABC,(double)lbl_803E2AC0,(double)lbl_803E2AC4,
                            (double)*(float *)(param_10 + 0x304),(int)param_9);
     }

@@ -1754,13 +1754,13 @@ extern f32 timeDelta;
 extern f32 sqrtf(f32);
 extern f32 powfBitEstimate(f32 base, f32 exp);
 
-/* fn_8014CB54: xz-plane physics step toward a target. Computes the planar
+/* sidekickToy_accelerateTowardTargetXZ: xz-plane physics step toward a target. Computes the planar
  * distance to (tx,ty,tz), then nudges the obj's xz velocity (offsets 0x24,
  * 0x2c) by timeDelta * speedScale * unitDir, clamped at +/-maxVel, with an
  * optional drag pass. Returns the y-delta. */
 #pragma scheduling off
 #pragma peephole off
-f32 fn_8014CB54(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel, f32 drag) {
+f32 sidekickToy_accelerateTowardTargetXZ(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel, f32 drag) {
     f32 dx = tx - *(f32*)(obj + 0x18);
     f32 dy = ty - *(f32*)(obj + 0x1c);
     f32 dz = tz - *(f32*)(obj + 0x20);
@@ -1791,12 +1791,12 @@ f32 fn_8014CB54(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_8014C920: 3D physics step toward a target. Variant of fn_8014CB54 that
+/* sidekickToy_accelerateTowardTarget3D: 3D physics step toward a target. Variant of sidekickToy_accelerateTowardTargetXZ that
  * uses the full 3D distance (xyz) instead of planar (xz), and also nudges
  * the y-axis velocity at obj+0x28. Returns the y-delta. */
 #pragma scheduling off
 #pragma peephole off
-f32 fn_8014C920(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel, f32 drag) {
+f32 sidekickToy_accelerateTowardTarget3D(int obj, f32 tx, f32 ty, f32 tz, f32 accel, f32 speedScale, f32 maxVel, f32 drag) {
     f32 dx = tx - *(f32*)(obj + 0x18);
     f32 dy = ty - *(f32*)(obj + 0x1c);
     f32 dz = tz - *(f32*)(obj + 0x20);
