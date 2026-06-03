@@ -7805,6 +7805,57 @@ int fn_8004B218(int *q, int n) {
     }
     return result;
 }
+extern int *gRomCurveInterface;
+extern u32 GameBit_Get(int eventId);
+extern char *lbl_803DCD08;
+extern void fn_8004AB5C(int *q, int *elem, int idx, u32 d, char *obj);
+void fn_8004AFA0(int *q, int *elem, int idx) {
+    u8 mask;
+    char *p;
+    char *node;
+    char *obj;
+    int bit;
+    int t;
+    node = (char *)elem[0];
+    if (*(u8 *)((char *)q + 0x28) != 0) {
+        t = *(s8 *)(node + 0x1b);
+    } else {
+        t = ~*(s8 *)(node + 0x1b);
+    }
+    bit = 0;
+    p = node;
+    mask = t;
+    for (; bit < 4; bit++) {
+        int nodeId = *(int *)(p + 0x1c);
+        if (nodeId > -1 && (mask & (1 << bit)) != 0) {
+            obj = (char *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(nodeId);
+            if (obj != 0) {
+                switch (*(s8 *)(obj + 0x19)) {
+                case 0x24: {
+                    s16 ev1;
+                    s16 ev2;
+                    GameBit_Get(0x4e2);
+                    ev1 = *(s16 *)(obj + 0x30);
+                    if (ev1 == -1 || GameBit_Get(ev1) != 0) {
+                        ev2 = *(s16 *)(obj + 0x32);
+                        if (ev2 == -1 || GameBit_Get(ev2) == 0) {
+                            if (!(*(s8 *)(obj + 0x1a) == 8 && *(s8 *)(node + 0x1a) == 9)) {
+                                f32 d = vec3f_distanceSquared((f32 *)(node + 8), (f32 *)(obj + 8));
+                                fn_8004AB5C(q, elem, idx, (u32)((f32)(u32)elem[2] + d), obj);
+                            }
+                        }
+                    }
+                    break;
+                }
+                default:
+                    lbl_803DCD08 = obj;
+                    break;
+                }
+            }
+        }
+        p += 4;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
