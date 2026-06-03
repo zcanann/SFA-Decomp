@@ -652,7 +652,7 @@ void dimcannon_free(int *obj) {
 
 extern void ObjMsg_AllocQueue(int *obj, int n);
 extern int *Resource_Acquire(int a, int b);
-extern void fn_801B2550(void);
+extern int fn_801B2550(int *obj, int p2, char *p3);
 extern f32 lbl_803E48B8;
 
 /* EN v1.0 0x801B30C8  size: 628b  Dimcannon constructor: handles the 0x1d6
@@ -882,6 +882,181 @@ void dimcannon_update(int *obj)
 
     lbl_803DBEF4 = lbl_803E48F0;
     ObjAnim_AdvanceCurrentMove(obj, lbl_803E48F0, timeDelta, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void setAButtonIcon(int icon);
+extern void setBButtonIcon(int icon);
+extern void hudFn_8011f38c(int v);
+extern s16 *objModelGetVecFn_800395d8(int *obj, int p2);
+extern s8   padGetStickX(int chan);
+extern int  fn_80296A14(void *player);
+extern void playerAddRemoveMagic(void *player, int amount);
+extern u32  getButtonsJustPressed(int chan);
+extern u32  getButtonsHeld(int chan);
+extern u32  getButtonsJustPressedIfNotBusy(int chan);
+extern int  Sfx_IsPlayingFromObjectChannel(int *obj, int channel);
+extern void Sfx_StopObjectChannel(int *obj, int channel);
+extern void Sfx_KeepAliveLoopedObjectSound(int *obj, int id);
+
+extern int *gGameUIInterface;
+extern u8  lbl_803DBF00;
+extern s16 lbl_803DBF02;
+extern s16 lbl_803DBF04;
+extern f32 lbl_803DBF08;
+extern f32 lbl_803DBEF8;
+extern f32 lbl_803DBEFC;
+
+/* EN v1.0 0x801B2550  size: 1504b  Dimcannon manned-control sequence: aims the
+ * turret with the stick, charges with A, fires on release/full charge, and
+ * exits on B or after the post-completion delay. */
+#pragma scheduling off
+#pragma peephole off
+int fn_801B2550(int *obj, int p2, char *p3)
+{
+    int *src = *(int **)((char *)obj + 0x4c);
+    char *state;
+    int camMode;
+    u8 done = 0;
+    void *player;
+
+    *(u8 *)(p3 + 0x56) = 0;
+    *(s16 *)(p3 + 0x6e) = (s16)(*(s16 *)(p3 + 0x6e) & ~0x608);
+    state = *(char **)((char *)obj + 0xb8);
+
+    if (*(u8 *)(state + 0xac) == 0x3) {
+        s16 *vec;
+        s8 timer;
+        int delta;
+
+        player = Obj_GetPlayerObject();
+        setAButtonIcon(0x16);
+        setBButtonIcon(0x17);
+        hudFn_8011f38c(1);
+        camMode = (*(int (**)(void))(*(int *)gCameraInterface + 0x10))();
+        if (camMode != 0x51 && camMode != 0x4c) {
+            int *focusObj = obj;
+            (*(void (**)(int, int, int, int, int **, int, int))(*(int *)gCameraInterface + 0x1c))(
+                0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
+        }
+        if (camMode != 0x51) {
+            return 0;
+        }
+        vec = objModelGetVecFn_800395d8(obj, 0);
+        timer = *(s8 *)(state + 0xb0);
+        if (timer > 0) {
+            *(s8 *)(state + 0xb0) = (s8)(timer - framesThisStep);
+            if (*(s8 *)(state + 0xb0) <= 0) {
+                (*(void (**)(int, int))(*(int *)gGameUIInterface + 0x58))(lbl_803DBF00, 0x5d5);
+            }
+        } else {
+            if (!GameBit_Get(0xdb)) {
+                (*(void (**)(int, int, int, int))(*(int *)gGameUIInterface + 0x38))(0x4b9, 0x14, 0x8c, 1);
+                GameBit_Set(0xdb, 1);
+            }
+            delta = (int)(-lbl_803DBF08 * (f32)padGetStickX(0));
+            if (delta != 0) {
+                s16 cur = *(s16 *)((char *)vec + 0x2);
+                s16 mag = cur < 0 ? -cur : cur;
+                if (mag > lbl_803DBF02 - lbl_803DBF04) {
+                    int sd, sc;
+                    if (delta < 0) sd = -1;
+                    else if (delta > 0) sd = 1;
+                    else sd = 0;
+                    if (cur < 0) sc = -1;
+                    else if (cur > 0) sc = 1;
+                    else sc = 0;
+                    if (sc == sd) {
+                        delta = delta * (lbl_803DBF02 - mag) / lbl_803DBF04;
+                    }
+                }
+                *(s16 *)((char *)vec + 0x2) = (s16)(*(s16 *)((char *)vec + 0x2) + delta);
+                Sfx_KeepAliveLoopedObjectSound(obj, 0x1ff);
+            } else {
+                if (*(int *)(state + 0xa8) != 0) {
+                    Sfx_PlayFromObject((int)obj, 0x1fe);
+                }
+            }
+            *(int *)(state + 0xa8) = delta;
+            if (*(s16 *)(state + 0xa4) > 0) {
+                *(s16 *)(state + 0xa4) = (s16)(*(s16 *)(state + 0xa4) - framesThisStep);
+            }
+            if (*(s16 *)(state + 0xa6) > 0) {
+                *(s16 *)(state + 0xa6) = (s16)(*(s16 *)(state + 0xa6) - framesThisStep);
+            }
+            if ((getButtonsHeld(0) & 0x100) && *(s16 *)(state + 0xa4) <= 0) {
+                buttonDisable(0, 0x100);
+                if (fn_80296A14(player) >= 1) {
+                    *(u8 *)(state + 0xae) += framesThisStep;
+                    Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
+                    if (Sfx_IsPlayingFromObjectChannel(obj, 2) == 0) {
+                        Sfx_PlayFromObject((int)obj, 0x201);
+                        Sfx_PlayFromObject((int)obj, 0x202);
+                    }
+                } else {
+                    Sfx_PlayFromObject((int)obj, 0x40c);
+                }
+            } else {
+                Sfx_StopObjectChannel(obj, 2);
+            }
+            if (*(u8 *)(state + 0xae) > lbl_803DBF00) {
+                *(u8 *)(state + 0xae) = lbl_803DBF00;
+            }
+            (*(void (**)(int))(*(int *)gGameUIInterface + 0x5c))(*(u8 *)(state + 0xae));
+            *(f32 *)(state + 0x98) = (f32)*(u8 *)(state + 0xae) * lbl_803DBEFC + lbl_803DBEF8;
+            if ((getButtonsJustPressedIfNotBusy(0) & 0x100) ||
+                *(u8 *)(state + 0xae) == lbl_803DBF00) {
+                if (*(s16 *)(state + 0xa4) <= 0 && fn_80296A14(player) >= 1) {
+                    buttonDisable(0, 0x100);
+                    playerAddRemoveMagic(player, -1);
+                    *(u8 *)(state + 0xad) = 1;
+                    *(u8 *)(state + 0xae) = 0;
+                }
+            }
+            DIMwooddoor_spawnShard(obj, 1);
+            if (*(s8 *)((char *)obj + 0xac) == 0x13 && *(u8 *)(state + 0xb2) == 0 &&
+                GameBit_Get(0xc17) && GameBit_Get(0xa21)) {
+                *(u8 *)(state + 0xb2) = 1;
+                *(u8 *)(state + 0xb1) = 1;
+            }
+            {
+                u8 b1 = *(u8 *)(state + 0xb1);
+                if (b1 != 0) {
+                    *(u8 *)(state + 0xb1) = (u8)(b1 + framesThisStep);
+                    if (*(u8 *)(state + 0xb1) > 0x3c) {
+                        done = 1;
+                    }
+                }
+            }
+            if (done != 0 || (getButtonsJustPressed(0) & 0x200)) {
+                buttonDisable(0, 0x200);
+                hudFn_8011f38c(0);
+                (*(void (**)(void))(*(int *)gGameUIInterface + 0x60))();
+                (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(
+                    0x42, 0, 1, 0, 0, 0, 0xff);
+                *(u8 *)(state + 0xac) = 5;
+                *(u8 *)(state + 0xb0) = 0x3c;
+                *(u8 *)(p3 + 0x90) |= 0x4;
+                *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+                if (Sfx_IsPlayingFromObjectChannel(obj, 8) != 0) {
+                    Sfx_IsPlayingFromObjectChannel(obj, 0);
+                }
+                Sfx_StopObjectChannel(obj, 2);
+            }
+            ObjAnim_AdvanceCurrentMove(obj, lbl_803DBEF4, timeDelta, 0);
+        }
+    } else {
+        s16 *vec2;
+        *(s16 *)((char *)obj + 0x6) = (s16)(*(s16 *)((char *)obj + 0x6) & ~0x4000);
+        vec2 = objModelGetVecFn_800395d8(obj, 0);
+        *(s16 *)((char *)vec2 + 0x2) =
+            (s16)(*(s16 *)((char *)obj + 0x0) - ((s8)*(s8 *)((char *)src + 0x28) << 8));
+        *(s16 *)((char *)obj + 0x0) = (s16)((s8)*(s8 *)((char *)src + 0x28) << 8);
+        *(u8 *)(state + 0xac) = 4;
+    }
+
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
