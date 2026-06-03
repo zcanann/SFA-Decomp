@@ -1534,3 +1534,86 @@ void objSeqInitFn_80080078(SeqSortPair *arr, int n)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int *ObjList_GetObjects(int *idx, int *count);
+extern void debugPrintf(char *fmt, ...);
+extern char sEndObjSequenceMaxFreesError[];
+extern void Pause_ResetMenuFrameCounter(void);
+extern void AudioStream_CancelPrepared(void);
+extern void Obj_FreeObject(int obj);
+extern void *lbl_803DD0B8;
+extern int  lbl_803DB720;
+extern int  lbl_803DD064;
+
+/* EN v1.0 0x80080C18  size: 464b  Tears down an object sequence: unbinds
+ * every object still tagged with the sequence id, runs each freed object's
+ * completion callback, frees the collected objects, and resets the global
+ * sequence/camera state when this was the active sequence. */
+#pragma peephole off
+#pragma scheduling off
+void endObjSequence(int seq)
+{
+    int objIdx;
+    int objCount;
+    int frees[32];
+    int nFree;
+    int i;
+    int *objs;
+
+    objs = ObjList_GetObjects(&objIdx, &objCount);
+    nFree = 0;
+    for (i = 0; i < objCount; i++) {
+        int obj = *objs;
+        if (*(s16 *)(obj + 0xb4) == seq) {
+            *(s16 *)(obj + 0xb4) = -1;
+        }
+        if (*(s16 *)(obj + 0x44) == 0x10) {
+            int st = *(int *)(obj + 0xb8);
+            if ((s8)*(u8 *)(st + 0x57) == seq) {
+                if ((void *)obj == lbl_803DD0B8) {
+                    lbl_803DD0B8 = 0;
+                }
+                frees[nFree++] = obj;
+                if (*(void **)(st + 0xe8) != NULL) {
+                    (*(void (**)(int, int, int))(st + 0xe8))(*(int *)(st + 0x110), obj, st);
+                    *(int *)(st + 0xe8) = 0;
+                }
+                if (nFree == 0x10) {
+                    debugPrintf(sEndObjSequenceMaxFreesError);
+                }
+            }
+        }
+        objs++;
+    }
+    if (curSeqNo == seq) {
+        curSeqNo = 0;
+        Pause_ResetMenuFrameCounter();
+    }
+    if (seq == lbl_803DB720) {
+        AudioStream_CancelPrepared();
+        lbl_803DB720 = -1;
+    }
+    {
+        int j;
+        int *p;
+        j = 0;
+        p = frees;
+        for (; j < nFree; j++) {
+            Obj_FreeObject(*p);
+            p++;
+        }
+    }
+    if (seq == lbl_803DD064) {
+        if ((*(int (**)(void))((char *)*gCameraInterface + 0x10))() == 0x4d) {
+            (*(void (**)(int, int, int, int, int, int, int))((char *)*gCameraInterface +
+                                                             0x1c))(0x42, 0, 3, 0, 0, 0, 0);
+            lbl_803DD064 = 0;
+            curSeqNo = 0;
+            Pause_ResetMenuFrameCounter();
+        }
+    }
+    lbl_803DD07C = 0;
+    lbl_8039A3B0[seq] = 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
