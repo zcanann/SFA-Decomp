@@ -9,7 +9,7 @@ extern void objAnimFn_8013a3f0(double blend, int obj, int animId, int flags);
 extern int trickyFn_8013b368(double speed, int obj, int state);
 extern int trickyFoodFn_8014460c(int obj, int state);
 extern void trickyDebugPrint(const char *fmt, ...);
-extern int fn_801638BC(void);
+extern int tumbleweedbush_findNearestActive(void);
 extern int fn_801CDE70(int);
 extern double sqrtf(double);
 extern int fn_80179650(int slot);
@@ -378,7 +378,7 @@ void fn_8013FBE4(int obj, char **state)
         **state = **state - 2;
     }
     targetPos = (float *)fn_801CDE70((int)state[9]);
-    trackedObj = (char *)fn_801638BC();
+    trackedObj = (char *)tumbleweedbush_findNearestActive();
     if ((trackedObj == (char *)0) || (**state == 0)) {
         *(undefined *)(state + 2) = 1;
         *(undefined *)((int)state + 10) = 0;

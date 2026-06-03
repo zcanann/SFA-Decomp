@@ -696,14 +696,14 @@ void tumbleweedbush_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
 void cannonclaw_init(s16 *dst, void* src) { s8 v = *((s8*)src + 0x28); s16 t = v << 8; *dst = t; }
 #pragma peephole reset
 
-/* fn_801638BC: scan all type-0x31 objects, pick the closest one whose
+/* tumbleweedbush_findNearestActive: scan all type-0x31 objects, pick the closest one whose
  * obj->_46 == 0x3fb and obj->_b8->_278 > 1 (by vec3f_distanceSquared from
  * the supplied position vector). Returns NULL if no match. */
 extern void* ObjGroup_GetObjects(int type, int* outCount);
 extern f32 vec3f_distanceSquared(f32* p1, f32* p2);
 extern f32 lbl_803E2F58;
 #pragma scheduling off
-void* fn_801638BC(f32* p_pos)
+void* tumbleweedbush_findNearestActive(f32* p_pos)
 {
     int count;
     void** list;

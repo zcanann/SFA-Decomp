@@ -689,7 +689,7 @@ extern void fn_801616AC(void);
 extern void fn_801615C8(void);
 extern void fn_801614D4(void);
 extern void fn_80161468(void);
-extern void fn_80161264(void);
+extern void scarab_updateProximityGate(void);
 extern void fn_80161244(void);
 extern void fn_8016118C(void);
 extern void fn_80161130(void);
@@ -711,7 +711,7 @@ void fn_80162FC0(void) {
     lbl_803AC610[9] = (void *)fn_801615C8;
     lbl_803AC5F8[0] = (void *)fn_801614D4;
     lbl_803AC5F8[1] = (void *)fn_80161468;
-    lbl_803AC5F8[2] = (void *)fn_80161264;
+    lbl_803AC5F8[2] = (void *)scarab_updateProximityGate;
     lbl_803AC5F8[3] = (void *)fn_80161244;
     lbl_803AC5F8[4] = (void *)fn_8016118C;
     lbl_803AC5F8[5] = (void *)fn_80161130;

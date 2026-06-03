@@ -2533,13 +2533,13 @@ extern f32 lbl_803E2C04;
 extern f32 lbl_803E2C08;
 extern f32 lbl_803E2C0C;
 
-/* fn_80159654: smallbasket variant init. Dispatches on obj->modelType
+/* smallbasket_initModelVariantState: smallbasket variant init. Dispatches on obj->modelType
  * (offset 0x46): values 0x6a2/0x6a3/0x6a4 each pick a different float +
  * byte tuple to seed state[0x2a8..0x322]. The trailing block sets
  * shared state floats and computes obj[0x8] from (s8)params[0x28]. */
 #pragma scheduling off
 #pragma peephole off
-void fn_80159654(s16* obj, u8* state) {
+void smallbasket_initModelVariantState(s16* obj, u8* state) {
     u8* params = *(u8**)((u8*)obj + 0x4c);
     *(u32*)(state + 0x2e4) = 0xb;
     *(u32*)(state + 0x2e4) |= 0x400b0;

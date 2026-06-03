@@ -1840,14 +1840,14 @@ extern void* gRomCurveInterface;
 extern u8 lbl_803DBC58;
 extern f32 lbl_803E25DC;
 
-/* fn_8014C064: pre-curve probe + state-bit gate. If state's 0x2000 bit is
+/* sidekickToy_updateCurveTargetLatch: pre-curve probe + state-bit gate. If state's 0x2000 bit is
  * set, ask baddieTargetFn_8014a150 whether the target is locked on; on hit,
  * leave state[0x2dc] alone. Otherwise dispatch gRomCurveInterface's vtable
  * entry 0x8c with (data, obj, lbl_803E25DC, &lbl_803DBC58, -1) and toggle
  * the 0x2000 bit based on the u8 result. */
 #pragma scheduling off
 #pragma peephole off
-void fn_8014C064(int obj) {
+void sidekickToy_updateCurveTargetLatch(int obj) {
     u8* state = *(u8**)(obj + 0xb8);
     u8* data = *(u8**)state;
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {

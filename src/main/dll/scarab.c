@@ -3848,7 +3848,7 @@ extern f32 lbl_803E2EC4;
 extern f32 lbl_803E2EC8;
 extern f32 lbl_803E2ECC;
 
-/* fn_80161264: scarab AI proximity gate. If no current target, dispatches
+/* scarab_updateProximityGate: scarab AI proximity gate. If no current target, dispatches
  * vtable[5](obj, state, 0) and returns 1. Else (unless state mode 6 means
  * already engaged) reads the angle from the obj to the target; when within
  * a +/-90° wedge the planar distance term is the constant lbl_803E2EB0,
@@ -3860,7 +3860,7 @@ extern f32 lbl_803E2ECC;
  * lbl_803E2ECC) for state[0x2a0]. Returns 0. */
 #pragma scheduling off
 #pragma peephole off
-int fn_80161264(int* obj, u8* state) {
+int scarab_updateProximityGate(int* obj, u8* state) {
     int* target;
     f32 dx;
     f32 dz;
