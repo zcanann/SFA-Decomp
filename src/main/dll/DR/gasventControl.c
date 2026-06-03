@@ -600,3 +600,54 @@ void blasted_init(int param_1, int param_2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_801A2E80(int obj, int def, int p3, int state);
+#pragma scheduling off
+#pragma peephole off
+void explodable_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    int def = *(int *)(obj + 0x4c);
+    int i;
+    int p;
+    int r;
+
+    if (*(u8 *)(state + 0x6e4) != 2) {
+        if (*(u8 *)(state + 0x6e4) == 0) {
+            if ((u32)GameBit_Get(*(s16 *)(def + 0x40)) != 0) {
+                fn_801A2E80(obj, def, 0, state);
+                if (*(int *)(state + 0x6d0) != 0) {
+                    Sfx_PlayFromObject(obj, *(int *)(state + 0x6d0) & 0xffff);
+                }
+                *(u8 *)(state + 0x6e4) = 1;
+                *(u8 *)(obj + 0x36) = 0;
+            }
+        } else {
+            i = 0;
+            p = state;
+            do {
+                if (*(void **)(p + 0x690) != NULL) {
+                    r = (*(code *)(**(int **)(*(int *)(p + 0x690) + 0x68) + 0x20))();
+                    if (r != 1) {
+                        if (r > 1) {
+                            if (r < 3) {
+                                GameBit_Set(*(s16 *)(def + 0x3e), 1);
+                                Obj_FreeObject(*(int *)(p + 0x690));
+                                *(int *)(p + 0x690) = 0;
+                            }
+                        } else if (r >= 0) {
+                            GameBit_Set(*(s16 *)(def + 0x3e), 1);
+                            if ((*(u32 *)(state + 0x6cc) & (1 << i)) == 0) {
+                                *(u32 *)(state + 0x6cc) |= 1 << i;
+                            }
+                        }
+                    }
+                }
+                p += 4;
+                i++;
+            } while (i < 0xf);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
