@@ -554,14 +554,16 @@ extern void Obj_FreeObject(int obj);
 #pragma scheduling off
 #pragma peephole off
 void explodable_free(int obj, int flag) {
-    int state = *(int *)(obj + 0xb8);
-    int i;
+    int state;
+    int i = -1;
     int p;
     void *o;
 
+    state = *(int *)(obj + 0xb8);
     ObjGroup_RemoveObject(obj, 0x21);
     if (flag == 0) {
-        for (i = 0, p = state; i < 15; i++, p += 4) {
+        p = state - 4;
+        while (p += 4, ++i < 15) {
             o = *(void **)(p + 0x690);
             if (o != NULL) {
                 Obj_FreeObject((int)o);
@@ -583,6 +585,7 @@ void blasted_init(int param_1, int param_2)
     int* state = *(int**)(param_1 + 0xb8);
     int* targ;
     s16 gbid;
+    u8 v;
 
     state[0xc / 4] = 0;
     objSetSlot((int*)param_1, 0x51);
@@ -591,8 +594,9 @@ void blasted_init(int param_1, int param_2)
     *(u8*)((char*)state + 0x10) = (u8)*(s16*)(param_2 + 0x1a);
     gbid = *(s16*)(param_2 + 0x20);
     if (gbid != -1) {
-        *(u8*)((char*)state + 0x11) = (u8)GameBit_Get(gbid);
-        if (*(u8*)((char*)state + 0x11) != 0) {
+        v = (u8)GameBit_Get(gbid);
+        *(u8*)((char*)state + 0x11) = v;
+        if (v != 0) {
             Obj_SetActiveModelIndex((int*)param_1, (int)*(u8*)((char*)state + 0x11));
         }
     }
@@ -610,12 +614,15 @@ extern void fn_801A2E80(int obj, int def, int p3, int state);
 #pragma peephole off
 void explodable_update(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
-    int def = *(int *)(obj + 0x4c);
-    int i;
     int p;
+    int def;
+    int i;
+    int state;
     int r;
+    int o;
 
+    state = *(int *)(obj + 0xb8);
+    def = *(int *)(obj + 0x4c);
     if (*(u8 *)(state + 0x6e4) != 2) {
         if (*(u8 *)(state + 0x6e4) == 0) {
             if ((u32)GameBit_Get(*(s16 *)(def + 0x40)) != 0) {
@@ -625,26 +632,28 @@ void explodable_update(int obj)
                 }
                 *(u8 *)(state + 0x6e4) = 1;
                 *(u8 *)(obj + 0x36) = 0;
+            } else {
+                return;
             }
         } else {
             i = 0;
             p = state;
             do {
-                if (*(void **)(p + 0x690) != NULL) {
-                    r = (*(code *)(**(int **)(*(int *)(p + 0x690) + 0x68) + 0x20))();
-                    if (r != 1) {
-                        if (r > 1) {
-                            if (r < 3) {
-                                GameBit_Set(*(s16 *)(def + 0x3e), 1);
-                                Obj_FreeObject(*(int *)(p + 0x690));
-                                *(int *)(p + 0x690) = 0;
-                            }
-                        } else if (r >= 0) {
-                            GameBit_Set(*(s16 *)(def + 0x3e), 1);
-                            if ((*(u32 *)(state + 0x6cc) & (1 << i)) == 0) {
-                                *(u32 *)(state + 0x6cc) |= 1 << i;
-                            }
+                o = *(int *)(p + 0x690);
+                if ((void *)o != NULL) {
+                    r = (*(code *)(*(int *)*(int *)(o + 0x68) + 0x20))(o);
+                    switch (r) {
+                    case 2:
+                        GameBit_Set(*(s16 *)(def + 0x3e), 1);
+                        Obj_FreeObject(*(int *)(p + 0x690));
+                        *(int *)(p + 0x690) = 0;
+                        break;
+                    case 0:
+                        GameBit_Set(*(s16 *)(def + 0x3e), 1);
+                        if ((*(u32 *)(state + 0x6cc) & (1 << i)) == 0) {
+                            *(u32 *)(state + 0x6cc) |= 1 << i;
                         }
+                        break;
                     }
                 }
                 p += 4;
@@ -658,16 +667,25 @@ void explodable_update(int obj)
 
 extern int lbl_80322DA0[];
 extern f32 lbl_803E435C;
+
+typedef struct {
+    int key;
+    int objType;
+    int sfx;
+    u8 mode;
+    u8 flags;
+    u8 pad[2];
+} GasVentTableEntry;
+
 #pragma scheduling off
 #pragma peephole off
 void explodable_init(int obj, int setup)
 {
     int state = *(int *)(obj + 0xb8);
     int *tbl;
-    s8 base;
-    int cnt;
-    s16 key;
-    u8 c1;
+    int base;
+    GasVentTableEntry *e;
+    u32 c1;
 
     ObjGroup_AddObject(obj, 0x21);
     state = *(int *)(obj + 0xb8);
@@ -698,23 +716,21 @@ void explodable_init(int obj, int setup)
     if ((u32)GameBit_Get(*(s16 *)(setup + 0x3e)) != 0) {
         *(u8 *)(state + 0x6e4) = 2;
     }
-    key = *(s16 *)(obj + 0x46);
     base = 0;
-    tbl = lbl_80322DA0;
-    for (cnt = 0; cnt < 16; cnt++) {
-        if (key == *tbl) {
+    for (tbl = lbl_80322DA0; base < 16; base++) {
+        if (*(s16 *)(obj + 0x46) == *tbl) {
             *(u8 *)(state + 0x6e5) = base;
             break;
         }
         tbl += 4;
-        base++;
     }
     if (*(s8 *)(setup + 0x3d) == 0) {
         *(u8 *)(setup + 0x3d) = 0x14;
     }
     *(f32 *)(obj + 8) =
         *(f32 *)(*(int *)(obj + 0x50) + 4) * (f32)(int)*(s8 *)(setup + 0x3d) / lbl_803E435C;
-    if ((*(u8 *)((char *)lbl_80322DA0 + 0xd + (u32)*(u8 *)(state + 0x6e5) * 0x10) & 1) != 0) {
+    e = (GasVentTableEntry *)lbl_80322DA0;
+    if ((e[*(u8 *)(state + 0x6e5)].flags & 1) != 0) {
         *(u16 *)(obj + 0xb0) |= 0x4000;
     }
 }
@@ -778,15 +794,6 @@ extern void fn_801A30C0(int obj, int slot, int def);
 extern void Model_GetVertexPosition(int model, int i, f32 *out);
 extern f32 lbl_803E4368;
 extern f32 lbl_803E436C;
-
-typedef struct {
-    int key;
-    int objType;
-    int sfx;
-    u8 mode;
-    u8 flags;
-    u8 pad[2];
-} GasVentTableEntry;
 
 #pragma scheduling off
 #pragma peephole off
