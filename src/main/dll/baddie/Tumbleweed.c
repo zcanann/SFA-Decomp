@@ -4887,3 +4887,159 @@ void creditsStart_(void)
     }
 }
 #pragma peephole reset
+
+extern void CMenu_SetFadeCounter(int v);
+extern void drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
+extern int lbl_803DD978;
+extern int lbl_803DBBF8;
+extern int lbl_803DBBFC;
+extern int lbl_803DBC00;
+extern int lbl_803DBC04;
+typedef struct {
+    s16 bit;
+    u8 b2;
+    u8 b3;
+} WarpstoneEntry;
+
+extern u8 lbl_8031CC50[];
+extern u8 lbl_803A9DD0[];
+extern WarpstoneEntry lbl_8031CC38[];
+extern int lbl_803A9F38[];
+extern int *gTitleMenuLinkInterface;
+extern int *gMapEventInterface;
+
+#pragma scheduling off
+void WarpstoneUI_showUI(int param_1)
+{
+    int sel;
+    int idx;
+    int n;
+
+    CMenu_SetFadeCounter(0);
+    switch (lbl_803DD988) {
+    case 2:
+    case 3:
+    case 5:
+        gameTextSetColor(0xff, 0xff, 0xff, (int)lbl_803DD97C);
+        gameTextFn_80016810(0x3dd, 200, lbl_803DBBF8);
+        break;
+    case 1:
+        drawTexture(lbl_803DD980, (f32)(int)(lbl_803DBBFC - 0x1d), (f32)(int)(lbl_803DBC00 + 0xd),
+                    (int)lbl_803DD97C, 0xff);
+        gameTextSetColor(0xff, 0xff, 0xff, (int)lbl_803DD97C);
+        gameTextShow(0x37c);
+        gameTextShow(0x37d);
+        gameTextShow(0x37e);
+        break;
+    case 4:
+        gameTextSetColor(0xff, 0xff, 0xff, (int)lbl_803DD97C);
+        gameTextFn_80016810(0x3dd, 200, lbl_803DBC04);
+        if (lbl_803DD978 == 0) {
+            n = fn_801343CC(lbl_8031CC50, lbl_803A9DD0, (u8 *)lbl_8031CC38, 6, lbl_803A9F38);
+            (**(void (**)(u8*, int, int, int, int, int, int, int, int, int, int, int))
+                ((char *)(*gTitleMenuLinkInterface) + 4))
+                (lbl_803A9DD0, n, 0, 0, 0, 0, 0x14, 200, 0xff, 0xff, 0xff, 0xff);
+            lbl_803DD978 = 1;
+        }
+        sel = (**(int (**)(void))((char *)(*gTitleMenuLinkInterface) + 0xc))();
+        idx = (**(int (**)(void))((char *)(*gTitleMenuLinkInterface) + 0x14))();
+        if (sel > 0) {
+            (**(void (**)(int, u8))((char *)(*gMapEventInterface) + 0x44))
+                (0x42, lbl_8031CC38[lbl_803A9F38[idx]].b2);
+        }
+        (**(void (**)(int))((char *)(*gTitleMenuLinkInterface) + 0x10))(param_1);
+        break;
+    }
+    if (lbl_803DD978 != 0 && lbl_803DD988 != 4) {
+        (**(void (**)(void))((char *)(*gTitleMenuLinkInterface) + 8))();
+        lbl_803DD978 = 0;
+    }
+}
+#pragma scheduling reset
+
+typedef struct {
+    u16 t0;
+    u16 t1;
+    u16 t2;
+    u16 t3;
+    u8 pad8[3];
+    u8 alpha;
+    f32 y;
+} CreditsLine;
+
+typedef struct {
+    CreditsLine lines[9];
+    u16 f90;
+    u16 f92;
+    u8 count;
+    u8 pad95[3];
+} CreditsPage;
+
+extern CreditsPage lbl_8031C620[];
+extern f32 lbl_803E22A8;
+extern f32 lbl_803E22AC;
+extern f32 lbl_803E22B0;
+extern f32 lbl_803E22B4;
+extern f32 lbl_803E22B8;
+
+#pragma scheduling off
+#pragma peephole off
+int Credits_frameStart(void)
+{
+    u8 idx;
+    int i;
+    f32 cur;
+    f32 t;
+    f32 frac;
+    CreditsPage *page;
+    u8 a;
+
+    idx = lbl_803DD970;
+    if (idx < 10) {
+        t = lbl_803DD968;
+        lbl_803DD968 = t + timeDelta;
+        if (lbl_803DD968 >= (f32)lbl_8031C620[idx].f92) {
+            lbl_803DD970 = idx + 1;
+        }
+        if (lbl_803DD970 < 10) {
+            i = 0;
+            cur = lbl_803DD968;
+            page = &lbl_8031C620[lbl_803DD970];
+            for (; i < page->count; i++) {
+                if (cur < (f32)page->lines[i].t0) {
+                    a = 0;
+                } else if (cur < (f32)page->lines[i].t1) {
+                    frac = (cur - (f32)page->lines[i].t0) /
+                           (f32)(page->lines[i].t1 - page->lines[i].t0);
+                    if (frac < lbl_803E22A8) {
+                        frac = lbl_803E22A8;
+                    } else if (frac > lbl_803E22AC) {
+                        frac = lbl_803E22AC;
+                    }
+                    a = lbl_803E22B0 * frac;
+                } else if (cur < (f32)page->lines[i].t2) {
+                    a = 0xff;
+                } else if (cur < (f32)page->lines[i].t3) {
+                    frac = (cur - (f32)page->lines[i].t2) /
+                           (f32)(page->lines[i].t3 - page->lines[i].t2);
+                    if (frac < lbl_803E22A8) {
+                        frac = lbl_803E22A8;
+                    } else if (frac > lbl_803E22AC) {
+                        frac = lbl_803E22AC;
+                    }
+                    a = 0xff - (int)(lbl_803E22B0 * frac);
+                } else {
+                    a = 0;
+                }
+                page->lines[i].alpha = a;
+                if (cur >= (f32)page->lines[i].t0 && cur <= (f32)page->lines[i].t3 &&
+                    cur >= (f32)lbl_8031C620[lbl_803DD970].f90) {
+                    page->lines[i].y = lbl_803E22B4 * (timeDelta / lbl_803E22B8) + page->lines[i].y;
+                }
+            }
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
