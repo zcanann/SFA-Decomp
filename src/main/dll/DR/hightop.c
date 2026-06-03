@@ -2007,6 +2007,7 @@ void Trigger_hitDetect(int obj)
     u8 *state = *(u8 **)(obj + 0xb8);
     u8 *def = *(u8 **)(obj + 0x4c);
     int t;
+    int tk;
     int target;
     int ok;
     int ok2;
@@ -2019,21 +2020,21 @@ void Trigger_hitDetect(int obj)
     f32 dist[1];
 
     dist[0] = lbl_803E4104;
-    if (*(s16 *)(def + 0x38) < 1 || *(s16 *)def == 0xf4) {
+    if (*(s16 *)(def + 0x38) <= 0 || *(s16 *)def == 0xf4) {
         t = Obj_GetPlayerObject();
-        if ((void *)t == NULL) {
-            t = getArwing();
-        } else {
+        if ((void *)t != NULL) {
             r1 = fn_802972A8();
             if ((void *)r1 != NULL) {
                 t = r1;
             }
+        } else {
+            t = getArwing();
         }
-        target = getTrickyObject();
-        if ((void *)t != NULL || (void *)target != NULL) {
+        tk = getTrickyObject();
+        if ((void *)t != NULL || (void *)tk != NULL) {
             if ((*state & 4) != 0) {
                 objInterpretSeq(obj, t, 1, 0);
-                *state &= 0xfb;
+                *state &= ~4;
                 *state |= 1;
             } else {
                 ok = 1;
@@ -2044,10 +2045,7 @@ void Trigger_hitDetect(int obj)
                         ok = 0;
                     }
                 } else {
-                    switch ((s8)c) {
-                    case 2:
-                        target = (*(code *)(*gCameraInterface + 0xc))();
-                        break;
+                    switch (c) {
                     case 0:
                         target = t;
                         if ((void *)t == NULL) {
@@ -2055,41 +2053,45 @@ void Trigger_hitDetect(int obj)
                         }
                         break;
                     case 1:
-                        if ((void *)target == NULL) {
+                        target = tk;
+                        if ((void *)tk == NULL) {
                             ok = 0;
                         }
+                        break;
+                    case 2:
+                        target = (*(code *)(*gCameraInterface + 0xc))();
                         break;
                     }
                 }
                 if (ok) {
-                    if ((*state & 0x40) == 0) {
-                        *(int *)(state + 0x1c) = *(int *)(state + 0x28);
-                        *(int *)(state + 0x20) = *(int *)(state + 0x2c);
-                        *(int *)(state + 0x24) = *(int *)(state + 0x30);
-                    } else {
-                        if (def[0x43] == 2) {
-                            *(int *)(state + 0x1c) = *(int *)(target + 0x18);
-                            *(int *)(state + 0x20) = *(int *)(target + 0x1c);
-                            *(int *)(state + 0x24) = *(int *)(target + 0x20);
-                        } else if (def[0x43] < 2) {
-                            *(int *)(state + 0x1c) = *(int *)(target + 0x8c);
-                            *(int *)(state + 0x20) = *(int *)(target + 0x90);
-                            *(int *)(state + 0x24) = *(int *)(target + 0x94);
+                    if ((*state & 0x40) != 0) {
+                        if ((s8)def[0x43] == 2) {
+                            *(f32 *)(state + 0x1c) = *(f32 *)(target + 0x18);
+                            *(f32 *)(state + 0x20) = *(f32 *)(target + 0x1c);
+                            *(f32 *)(state + 0x24) = *(f32 *)(target + 0x20);
+                        } else if ((s8)def[0x43] < 2) {
+                            *(f32 *)(state + 0x1c) = *(f32 *)(target + 0x8c);
+                            *(f32 *)(state + 0x20) = *(f32 *)(target + 0x90);
+                            *(f32 *)(state + 0x24) = *(f32 *)(target + 0x94);
                         } else {
-                            *(int *)(state + 0x1c) = *(int *)(target + 0x80);
-                            *(int *)(state + 0x20) = *(int *)(target + 0x84);
-                            *(int *)(state + 0x24) = *(int *)(target + 0x88);
+                            *(f32 *)(state + 0x1c) = *(f32 *)(target + 0x80);
+                            *(f32 *)(state + 0x20) = *(f32 *)(target + 0x84);
+                            *(f32 *)(state + 0x24) = *(f32 *)(target + 0x88);
                         }
-                        *state &= 0xbf;
-                    }
-                    if (def[0x43] < 3) {
-                        *(int *)(state + 0x28) = *(int *)(target + 0x18);
-                        *(int *)(state + 0x2c) = *(int *)(target + 0x1c);
-                        *(int *)(state + 0x30) = *(int *)(target + 0x20);
+                        *state &= ~0x40;
                     } else {
-                        *(int *)(state + 0x28) = *(int *)(target + 0xc);
-                        *(int *)(state + 0x2c) = *(int *)(target + 0x10);
-                        *(int *)(state + 0x30) = *(int *)(target + 0x14);
+                        *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x28);
+                        *(f32 *)(state + 0x20) = *(f32 *)(state + 0x2c);
+                        *(f32 *)(state + 0x24) = *(f32 *)(state + 0x30);
+                    }
+                    if ((s8)def[0x43] < 3) {
+                        *(f32 *)(state + 0x28) = *(f32 *)(target + 0x18);
+                        *(f32 *)(state + 0x2c) = *(f32 *)(target + 0x1c);
+                        *(f32 *)(state + 0x30) = *(f32 *)(target + 0x20);
+                    } else {
+                        *(f32 *)(state + 0x28) = *(f32 *)(target + 0xc);
+                        *(f32 *)(state + 0x2c) = *(f32 *)(target + 0x10);
+                        *(f32 *)(state + 0x30) = *(f32 *)(target + 0x14);
                     }
                 }
                 ty = *(s16 *)def;
