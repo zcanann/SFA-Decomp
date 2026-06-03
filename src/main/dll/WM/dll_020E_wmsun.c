@@ -123,3 +123,178 @@ void wmsun_init(int obj, int params)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern int objFindTexture(int obj, int idx, int p3);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern void fn_801F6EA4(int obj);
+extern f32 lbl_803E5F20;
+extern f32 lbl_803E5F78;
+extern f32 lbl_803E5F7C;
+extern f32 lbl_803E5F80;
+extern f32 lbl_803E5F84;
+extern f32 lbl_803E5F88;
+#pragma scheduling off
+#pragma peephole off
+void wmsun_update(int obj)
+{
+    int state = *(int *)(obj + 0xb8);
+    s16 thresh;
+    s16 mult;
+    f32 spd;
+    int t;
+    s8 c;
+    u8 b;
+    int v;
+
+    thresh = 0;
+    mult = 1;
+    spd = lbl_803E5F20;
+    if (*(s16 *)(obj + 0x46) == 0x262) {
+        if (GameBit_Get(0x38f) != 0) {
+            Obj_FreeObject(obj);
+        } else {
+            t = objFindTexture(obj, 1, 0);
+            if ((u32)t != 0) {
+                *(s16 *)(t + 10) -= 0x10;
+                if (*(s16 *)(t + 10) < -0x3e0) {
+                    *(s16 *)(t + 10) = 0;
+                }
+            }
+            if (GameBit_Get(0x21b) != 0) {
+                thresh = 100;
+            }
+            if (GameBit_Get(0x21c) != 0) {
+                thresh = 200;
+            }
+            if (GameBit_Get(0x21d) != 0) {
+                thresh = 400;
+            }
+            if (GameBit_Get(0x21f) != 0) {
+                thresh = 800;
+            }
+            if (GameBit_Get(0x221) != 0) {
+                thresh = 0x640;
+            }
+            if (GameBit_Get(0x222) != 0) {
+                thresh = 0x1900;
+                mult = 3;
+                spd = lbl_803E5F78;
+            }
+            if (*(s16 *)(state + 2) < thresh) {
+                *(s16 *)(state + 2) = *(s16 *)(state + 2) + framesThisStep * mult;
+                *(f32 *)(obj + 8) = -(spd * timeDelta - *(f32 *)(obj + 8));
+                *(f32 *)(obj + 0x10) = lbl_803E5F7C * (spd * timeDelta) + *(f32 *)(obj + 0x10);
+            } else if (GameBit_Get(0x222) != 0 && GameBit_Get(0x38d) == 0) {
+                GameBit_Set(0x38d, 1);
+                GameBit_Set(0x370, 0);
+                *(u8 *)(state + 0xd) = 0;
+            }
+            if (GameBit_Get(0x38d) == 0 && *(s16 *)(state + 2) > 0x960 && (int)randomGetRange(0, 100) == 0) {
+                CameraShake_SetAllMagnitudes(lbl_803E5F80 * ((f32)(*(s16 *)(state + 2) - 0x960) / lbl_803E5F84));
+                GameBit_Set(0x370, 1);
+            }
+            *(s16 *)obj += *(s16 *)(state + 2);
+            if (*(u8 *)(state + 0xd) == 0) {
+                Obj_FreeObject(obj);
+            }
+        }
+        return;
+    }
+    if (*(s16 *)(obj + 0x46) == 0x2c2) {
+        if (GameBit_Get(0x38f) != 0) {
+            b = *(u8 *)(obj + 0x36);
+            if (b < 0xfa) {
+                v = (s16)(b + framesThisStep);
+            }
+            if (v > 0xfa) {
+                v = 0xfa;
+            }
+            *(u8 *)(obj + 0x36) = v;
+            t = objFindTexture(obj, 0, 0);
+            if ((u32)t != 0) {
+                *(s16 *)(t + 8) = *(s16 *)(t + 8) - framesThisStep * 8;
+                if (*(s16 *)(t + 8) < -0x3e0) {
+                    *(s16 *)(t + 8) = 0;
+                }
+            }
+        }
+        return;
+    }
+    if (GameBit_Get(0x38f) != 0) {
+        c = *(s8 *)(obj + 0xad);
+        if (c == 0 && (b = *(u8 *)(obj + 0x36)) != 0xff) {
+            if (b < 0xff) {
+                v = (s16)(b + framesThisStep);
+            }
+            if (v > 0xff) {
+                v = 0xff;
+            }
+            *(u8 *)(obj + 0x36) = v;
+        } else if (c == 1 && (b = *(u8 *)(obj + 0x36)) != 0x55) {
+            if (b < 0x55) {
+                v = (s16)(b + framesThisStep);
+            }
+            if (v > 0x55) {
+                v = 0x55;
+            }
+            *(u8 *)(obj + 0x36) = v;
+        } else if (c == 2 && (b = *(u8 *)(obj + 0x36)) != 0x19) {
+            if (b < 0x19) {
+                v = (s16)(b + framesThisStep);
+            }
+            if (v > 0x19) {
+                v = 0x19;
+            }
+            *(u8 *)(obj + 0x36) = v;
+        }
+        if (*(s8 *)(obj + 0xad) == 0) {
+            if ((int)randomGetRange(0, 0x96) == 0) {
+                randomGetRange(0, 0xffff);
+                randomGetRange(0, 0xffff);
+                randomGetRange(0, 0xffff);
+                Sfx_PlayFromObject(obj, 0x81);
+            }
+            fn_801F6EA4(obj);
+        }
+    } else {
+        *(s16 *)(obj + 4) += *(s16 *)(state + 4);
+        *(s16 *)obj += *(s16 *)(state + 2);
+        if (GameBit_Get(0x38d) != 0 && *(s8 *)(obj + 0xad) == 0) {
+            if (lbl_803DDCAA == 0) {
+                if (lbl_803DDCA8 > 600 && (int)randomGetRange(0, 10) == 0) {
+                    CameraShake_SetAllMagnitudes(lbl_803E5F88);
+                }
+                if (lbl_803DDCA8 > 0) {
+                    lbl_803DDCA8 = lbl_803DDCA8 - framesThisStep;
+                    if (lbl_803DDCA8 < 1) {
+                        lbl_803DDCA8 = 0;
+                        GameBit_Set(0x38d, 0);
+                        GameBit_Set(0x38f, 1);
+                    }
+                }
+            }
+            if (lbl_803DDCB0 == 0) {
+                if (lbl_803DDCAE > 0) {
+                    lbl_803DDCAE = lbl_803DDCAE - framesThisStep;
+                    if (lbl_803DDCAE < 0) {
+                        lbl_803DDCAE = 0;
+                    }
+                }
+            } else {
+                if (lbl_803DDCB0 > 0) {
+                    lbl_803DDCB0 = lbl_803DDCB0 - framesThisStep;
+                    if (lbl_803DDCB0 < 1) {
+                        lbl_803DDCB0 = 0;
+                        getEnvfxAct(obj, obj, 0x30, 0);
+                        getEnvfxAct(obj, obj, 0x34, 0);
+                    }
+                }
+                if ((int)randomGetRange(0, 8) == 0) {
+                    CameraShake_SetAllMagnitudes(lbl_803E5F88);
+                }
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
