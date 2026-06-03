@@ -658,14 +658,16 @@ void collectible_update(int obj)
     int msgId;
     u8 buf[8];
     int o;
+    f32 fz;
 
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+    fz = lbl_803E345C;
     if (*(f32 *)(st + 8) != lbl_803E345C) {
         *(f32 *)(st + 8) = *(f32 *)(st + 8) - timeDelta;
-        if (*(f32 *)(st + 8) <= lbl_803E345C) {
-            *(f32 *)(st + 8) = lbl_803E345C;
+        if (*(f32 *)(st + 8) <= fz) {
+            *(f32 *)(st + 8) = fz;
             ObjHits_DisableObject(obj);
-            if ((*(s16 *)(obj + 6) & 0x2000U) != 0) {
+            if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
                 Obj_FreeObject(obj);
             }
         }
@@ -677,9 +679,10 @@ void collectible_update(int obj)
             if (*(s16 *)(obj + 0x46) == 0x6a6) {
                 objfx_spawnDirectionalBurst(obj, 5, lbl_803E3454, 6, 1, 0x14, lbl_803E3458, 0, 0);
             }
-            if (*(f32 *)(st + 0x44) == lbl_803E345C ||
+            fz = lbl_803E345C;
+            if (*(f32 *)(st + 0x44) == fz ||
                 (*(f32 *)(st + 0x44) = *(f32 *)(st + 0x44) - timeDelta,
-                 !(*(f32 *)(st + 0x44) <= lbl_803E345C))) {
+                 fz < *(f32 *)(st + 0x44))) {
                 msgId = 0x7000b;
                 while (ObjMsg_Pop(obj, &msg, buf, 0) != 0) {
                     if (msg == msgId) {
@@ -697,22 +700,22 @@ void collectible_update(int obj)
                 if (*(int *)(obj + 0xf4) == 0) {
                     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
                     fn_801723DC(obj);
-                    if (*(s8 *)(st + 0x1d) != 0) {
+                    if (st[0x1d] != 0) {
                         fn_80172144(obj);
                     }
-                    if (*(s8 *)(st + 0x3e) == 0) {
-                        fn_80172824(obj, st);
-                    } else {
-                        *(s8 *)(st + 0x3e) = *(s8 *)(st + 0x3e) - 1;
-                        if (*(s8 *)(st + 0x3e) == 0) {
+                    if (st[0x3e] != 0) {
+                        st[0x3e] = (u8)(st[0x3e] - 1);
+                        if (st[0x3e] == 0) {
                             *(u16 *)(st + 0x48) = 0xffff;
                             ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x7000a, obj, st + 0x48);
                         }
+                    } else {
+                        fn_80172824(obj, st);
                     }
                 } else {
                     o = *(int *)(obj + 0x54);
-                    if (o != 0) {
-                        *(u16 *)(o + 0x60) = (u16)(*(u16 *)(o + 0x60) | 0x100);
+                    if ((u32)o != 0) {
+                        *(s16 *)(o + 0x60) = (s16)(*(s16 *)(o + 0x60) | 0x100);
                     }
                     ObjHits_DisableObject(obj);
                     if (*(s16 *)(st + 0x10) != -1 && GameBit_Get(*(s16 *)(st + 0x10)) == 0) {
@@ -720,9 +723,9 @@ void collectible_update(int obj)
                     }
                 }
             } else {
-                if ((*(s16 *)(obj + 6) & 0x2000U) != 0) {
+                if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
                     *(f32 *)(st + 8) = lbl_803E3450;
-                    if (*(int *)(obj + 0x64) != 0) {
+                    if (*(void **)(obj + 0x64) != NULL) {
                         *(int *)(*(int *)(obj + 0x64) + 0x30) = 0x1000;
                     }
                     itemPickupDoParticleFx(obj, 0xff, 0x28, lbl_803E3454);
