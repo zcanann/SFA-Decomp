@@ -38,7 +38,7 @@ extern u8 *lbl_803DD708;
 /*
  * --INFO--
  *
- * Function: fn_8011BFC8
+ * Function: optionsMenu_applyAudioSetting
  * EN v1.0 Address: 0x8011BFC8
  * EN v1.0 Size: 872b
  * EN v1.1 Address: 0x8011C2AC
@@ -50,7 +50,7 @@ extern u8 *lbl_803DD708;
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8011BFC8(int p1,int p2)
+void optionsMenu_applyAudioSetting(int p1,int p2)
 {
     int value;
 
@@ -125,7 +125,7 @@ extern void Rcp_SetColorFilterEnabled(int enabled);
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8011C318(int p1, int p2)
+void optionsMenu_applyGameplaySetting(int p1, int p2)
 {
     int i;
     int **ptr;
@@ -182,7 +182,7 @@ void fn_8011C318(int p1, int p2)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8011C51C(int p1, int p2)
+int optionsMenu_openSelectedSubmenu(int p1, int p2)
 {
     if (p1 == 1) {
         switch (p2) {
