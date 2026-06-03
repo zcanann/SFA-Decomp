@@ -14,8 +14,7 @@ void FUN_8014d600(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
 void FUN_8014d7b8(uint param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_8014d924(int param_1);
-void enemy_init(undefined8 param_1,undefined8 param_2,double param_3,double param_4,double param_5
-                ,double param_6,double param_7,undefined8 param_8);
+void enemy_init(int obj, u8 *setup, int flag);
 void FUN_8014d9e8(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10,int param_11);
