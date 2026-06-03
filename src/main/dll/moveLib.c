@@ -820,7 +820,7 @@ undefined4 FUN_80114340(int param_1,undefined2 *param_2)
   return uVar1;
 }
 
-extern f32 curveFn_80010dc0(f32* points, int unused, f32 t);
+extern f32 curveFn_80010dc0(f32 *points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
 extern f64 lbl_803E1C98;
 
@@ -842,29 +842,28 @@ f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
     prev_z = *(f32*)(p1 + 8);
     total = lbl_803E1C90;
 
-    for (i = 1; i <= n; i++) {
-        t = (f32)((f64)CONCAT44(0x43300000, i ^ 0x80000000) - lbl_803E1C98) /
-            (f32)((f64)CONCAT44(0x43300000, n ^ 0x80000000) - lbl_803E1C98);
+    for (i = 1; i < n + 1; i++) {
+        t = (f32)i / (f32)n;
 
         buf[0] = *(f32*)(p1 + 0);
         buf[1] = *(f32*)(p3 + 0);
         buf[2] = *(f32*)(p2 + 0);
         buf[3] = *(f32*)(p4 + 0);
-        cur_x = curveFn_80010dc0(buf, 0, t);
+        cur_x = curveFn_80010dc0(buf, t, 0);
         dx = cur_x - prev_x;
 
         buf[0] = *(f32*)(p1 + 4);
         buf[1] = *(f32*)(p3 + 4);
         buf[2] = *(f32*)(p2 + 4);
         buf[3] = *(f32*)(p4 + 4);
-        cur_y = curveFn_80010dc0(buf, 0, t);
+        cur_y = curveFn_80010dc0(buf, t, 0);
         dy = cur_y - prev_y;
 
         buf[0] = *(f32*)(p1 + 8);
         buf[1] = *(f32*)(p3 + 8);
         buf[2] = *(f32*)(p2 + 8);
         buf[3] = *(f32*)(p4 + 8);
-        cur_z = curveFn_80010dc0(buf, 0, t);
+        cur_z = curveFn_80010dc0(buf, t, 0);
         dz = cur_z - prev_z;
 
         total += sqrtf(dx * dx + dy * dy + dz * dz);
@@ -884,7 +883,6 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
 {
   extern void fn_800218AC(int, int);
   extern f32 fn_80114224(int, int, int, int, int);
-  extern f32 curveFn_80010dc0(int, int, f32);
   extern u8 framesThisStep;
   extern f32 lbl_803E1C90;
   extern f32 lbl_803E1CA0;
@@ -893,12 +891,12 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
 
   if ((void *)p2 != NULL) {
     s16 tmp[3];
-    f32 va = lbl_803E1CA0;
-    f32 vb = lbl_803E1C90;
-    *(f32 *)(p3 + 0x18) = va;
+    f32 vb;
+    *(f32 *)(p3 + 0x18) = lbl_803E1CA0;
+    vb = lbl_803E1C90;
     *(f32 *)(p3 + 0x1c) = vb;
     *(f32 *)(p3 + 0x20) = vb;
-    *(f32 *)(p3 + 0x24) = va;
+    *(f32 *)(p3 + 0x24) = vb;
     *(f32 *)(p3 + 0x28) = vb;
     *(f32 *)(p3 + 0x2c) = vb;
     fn_800218AC(p1, p3 + 0x18);
@@ -910,7 +908,7 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     *(f32 *)(p3 + 0x34) = fn_80114224(p3, p3 + 0x18, p3 + 0xc, p3 + 0x24, 10);
   } else {
     *(f32 *)p4 = *(f32 *)p4 + p5 * (f32)(u32)framesThisStep / *(f32 *)(p3 + 0x34);
-    if (*(f32 *)p4 > lbl_803E1CA4) {
+    if (*(f32 *)p4 >= lbl_803E1CA4) {
       ret = 1;
       *(f32 *)p4 = lbl_803E1CA4;
     }
@@ -922,17 +920,17 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     buf[1] = *(f32 *)(p3 + 0x0c);
     buf[2] = *(f32 *)(p3 + 0x18);
     buf[3] = *(f32 *)(p3 + 0x24);
-    *(f32 *)(p1 + 0x0c) = curveFn_80010dc0((int)buf, 0, *(f32 *)p4);
+    *(f32 *)(p1 + 0x0c) = curveFn_80010dc0(buf, *(f32 *)p4, 0);
     buf[0] = *(f32 *)(p3 + 0x04);
     buf[1] = *(f32 *)(p3 + 0x10);
     buf[2] = *(f32 *)(p3 + 0x1c);
     buf[3] = *(f32 *)(p3 + 0x28);
-    *(f32 *)(p1 + 0x10) = curveFn_80010dc0((int)buf, 0, *(f32 *)p4);
+    *(f32 *)(p1 + 0x10) = curveFn_80010dc0(buf, *(f32 *)p4, 0);
     buf[0] = *(f32 *)(p3 + 0x08);
     buf[1] = *(f32 *)(p3 + 0x14);
     buf[2] = *(f32 *)(p3 + 0x20);
     buf[3] = *(f32 *)(p3 + 0x2c);
-    *(f32 *)(p1 + 0x14) = curveFn_80010dc0((int)buf, 0, *(f32 *)p4);
+    *(f32 *)(p1 + 0x14) = curveFn_80010dc0(buf, *(f32 *)p4, 0);
   }
   return ret;
 }
@@ -1441,18 +1439,18 @@ extern void fn_8003A9C0(char *p, int count, s16 a, s16 b);
 #pragma scheduling off
 #pragma peephole off
 void fn_80114B1C(int *obj) {
-    int *state;
+    char *state;
     int *types;
 
     types = (int *)seqFn_800394a0();
-    state = *(int **)((char *)obj + 0xb8);
+    state = *(char **)((char *)obj + 0xb8);
 
     (*((void (***)(int))gCameraInterface))[18](0);
 
-    *(u8 *)((char *)state + 0x600) = 0;
-    objFn_8003acfc(obj, types, *(u8 *)((char *)state + 0x610), (char *)state + 0x1c);
-    *(int *)((char *)state + 0x5f8) = 0x50;
-    fn_8003A9C0((char *)state + 0x1c, *(u8 *)((char *)state + 0x610), 0, 0);
+    *(u8 *)(state + 0x600) = 0;
+    objFn_8003acfc(obj, types, *(u8 *)(state + 0x610), state + 0x1c);
+    *(int *)(state + 0x5f8) = 0x50;
+    fn_8003A9C0(state + 0x1c, *(u8 *)(state + 0x610), 0, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
