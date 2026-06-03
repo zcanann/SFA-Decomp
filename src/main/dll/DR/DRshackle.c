@@ -47,13 +47,13 @@ extern f32 lbl_803E5B78; /* 2.0f */
 /*
  * --INFO--
  *
- * Function: fn_801EA854
+ * Function: drshackle_updateSwingBlend
  * EN v1.0 Address: 0x801EA854
  * EN v1.0 Size: 620b
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_801EA854(int obj, int state)
+int drshackle_updateSwingBlend(int obj, int state)
 {
     f32 fVar1;
     f32 fVar2;
@@ -148,13 +148,13 @@ int fn_801EA854(int obj, int state)
 /*
  * --INFO--
  *
- * Function: fn_801EAAC0
+ * Function: drshackle_updateAttachedPosition
  * EN v1.0 Address: 0x801EAAC0
  * EN v1.0 Size: 908b
  */
 #pragma peephole off
 #pragma scheduling off
-int fn_801EAAC0(int obj, int state)
+int drshackle_updateAttachedPosition(int obj, int state)
 {
     ShackleFlags *flags;
     int iVar3;
@@ -163,12 +163,12 @@ int fn_801EAAC0(int obj, int state)
     f32 local_8;
 
     flags = (ShackleFlags *)(state + DRSHACKLE_FLAGS_OFFSET);
-    if (flags->b3 == 0) {
+    if (flags->active == 0) {
         return 0;
     }
     iVar3 = objPosToMapBlockIdx(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
     if (iVar3 > -1) {
-        if (flags->b0 == 0) {
+        if (flags->positionAnchored == 0) {
         {
             f32 zero = lbl_803E5AE8;
             *(f32 *)(state + 0x494) = zero;
@@ -210,10 +210,10 @@ int fn_801EAAC0(int obj, int state)
             *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - local_8;
             *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + lbl_803E5B78;
         }
-        flags->b0 = 1;
+        flags->positionAnchored = 1;
         return 0;
         }
-        return fn_801EA854(obj, state) != 0;
+        return drshackle_updateSwingBlend(obj, state) != 0;
     }
 
     /* iVar3 <= -1 path */
@@ -239,7 +239,7 @@ int fn_801EAAC0(int obj, int state)
     *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x1c) = *(f32 *)(obj + 0x18);
     *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x20) = *(f32 *)(obj + 0x1c);
     *(f32 *)(*(int *)(obj + DRSHACKLE_MODEL_OFFSET) + 0x24) = *(f32 *)(obj + 0x20);
-    flags->b0 = 0;
+    flags->positionAnchored = 0;
     return 0;
 }
 #pragma scheduling reset
