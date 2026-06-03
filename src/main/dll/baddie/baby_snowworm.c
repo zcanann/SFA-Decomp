@@ -4052,3 +4052,136 @@ void fn_80128A7C(u8 i, s16 p2, int p3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int  ObjAnim_AdvanceCurrentMove(f32 scale, f32 dt, void *obj, void *events);
+extern int  fn_802972A8(void *player);
+extern f32  lbl_8031BFA8[30];
+extern s16  lbl_803DD782;
+extern s16  lbl_803DD78A;
+extern f32  lbl_803E1E58;
+extern f32  lbl_803E1E64;
+extern f32  lbl_803E1FC0;
+extern f32  lbl_803E2178;
+extern f32  lbl_803E217C;
+extern f64  lbl_803E2180;
+extern f32  lbl_803E2188;
+extern f32  lbl_803E218C;
+extern f32  lbl_803E2190;
+extern f32  lbl_803E2194;
+extern f32  sin(f32 x);
+
+/* EN v1.0 0x8012C000  size: 1368b  Pause-menu character carousel driver:
+ * eases the swivel angle lbl_803DD782 toward the selected slot, spins the
+ * podium objects (lbl_803DD868), then bobs/sways each character model in
+ * lbl_803A9410 with phase-shifted sine waves around the podium centre. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8012C000(void)
+{
+    u8 *player;
+    s16 step;
+    u8 k;
+    u8 last;
+    u8 flag;
+    int kk;
+    s16 delta;
+    u32 watermark;
+    f32 c2010;
+    f32 c2050;
+    f32 c1E64;
+    f32 c1E94;
+    f32 c1EC8;
+    f32 c2190;
+    f32 base;
+    u8 animOut[0x20];
+
+    player = Obj_GetPlayerObject();
+    step = 5;
+    objIsCurModelNotZero();
+    last = 5;
+    k = 1;
+    if ((u8)pauseMenuIsFox() == 0) {
+        k = 4;
+        step = 2;
+    }
+    if (player != NULL) {
+        int t = 0;
+        if (coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14)) != 0 ||
+            fn_802972A8(player) == 0) {
+            t = 1;
+        }
+        flag = t;
+    } else {
+        flag = 1;
+    }
+    if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 || flag == 0) {
+        step -= 1;
+        last = 4;
+    }
+    {
+        u16 cur = (u16)lbl_803DD782;
+        int neg = -lbl_803DBA64;
+        step = 0x10000 / (u8)step;
+        delta = neg * step - cur;
+    }
+    if (delta > 0x8000) {
+        delta -= 0xffff;
+    }
+    if (delta < -0x8000) {
+        delta += 0xffff;
+    }
+    lbl_803DD782 += delta / 7;
+    lbl_803DD78A += framesThisStep;
+    *(s16 *)lbl_803DD868[0] = (s16)(lbl_803DD78A << 9);
+    *(s16 *)((u8 *)lbl_803DD868[0] + 0x4) =
+        (s32)(lbl_803E2178 *
+              fn_80293E80(lbl_803E1EC8 * (f32)(lbl_803DD78A * 1000) / lbl_803E1E94));
+    *(f32 *)((u8 *)lbl_803DD868[0] + 0x10) =
+        (f32)(lbl_803E2180 * fn_80293E80(lbl_803E1EC8 * (f32)(lbl_803DD78A * 400) / lbl_803E1E94) +
+              lbl_803E217C);
+    {
+        int d = 0x400 - lbl_803DD78C;
+        *(f32 *)((u8 *)lbl_803DD868[0] + 0x10) =
+            *(f32 *)((u8 *)lbl_803DD868[0] + 0x10) - (f32)(d * d) / lbl_803E2188;
+    }
+    *(f32 *)((u8 *)lbl_803DD868[1] + 0x10) = *(f32 *)((u8 *)lbl_803DD868[0] + 0x10);
+    *(f32 *)((u8 *)lbl_803DD868[1] + 0x8) = lbl_803E218C * (f32)lbl_803DD78C * lbl_803E2190;
+    ObjAnim_AdvanceCurrentMove(lbl_803E1E58, timeDelta, lbl_803DD868[1], animOut);
+    watermark = 0x90000000;
+    c2190 = lbl_803E2190;
+    c1EC8 = lbl_803E1EC8;
+    c1E94 = lbl_803E1E94;
+    c1E64 = lbl_803E1E64;
+    c2050 = lbl_803E2050;
+    c2010 = lbl_803E2010;
+    for (; k <= last; k++) {
+        f32 sel;
+        if (*(u32 *)((u8 *)lbl_803A9410[k] + 0x4c) > watermark) {
+            *(u32 *)((u8 *)lbl_803A9410[k] + 0x4c) = 0;
+        }
+        kk = k;
+        if (kk == lbl_803DBA64) {
+            sel = lbl_803E1FC0;
+        } else {
+            sel = lbl_803E2194;
+        }
+        *(f32 *)((u8 *)lbl_803A9410[k] + 0x8) = (f32)lbl_803DD784 * sel * c2190;
+        *((u8 *)lbl_803A9410[k] + 0x37) = 0xff;
+        ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[k], timeDelta, lbl_803A9410[k], animOut);
+        kk *= step;
+        *(f32 *)((u8 *)lbl_803A9410[k] + 0xc) =
+            (f32)lbl_803DD784 * (c1E64 * fn_80293E80(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94)) *
+                c2190 +
+            *(f32 *)((u8 *)lbl_803DD868[0] + 0xc);
+        base = c2050 * fn_80293E80(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94) +
+               (*(f32 *)((u8 *)lbl_803DD868[0] + 0x10) + c2010);
+        *(f32 *)((u8 *)lbl_803A9410[k] + 0x10) =
+            (f32)lbl_803DD784 * (c1E64 - sin(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94)) * c2190 +
+            base;
+        *(f32 *)((u8 *)lbl_803A9410[k] + 0x14) =
+            (f32)lbl_803DD784 * (c1E64 * sin(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94)) * c2190 +
+            *(f32 *)((u8 *)lbl_803DD868[0] + 0x14);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
