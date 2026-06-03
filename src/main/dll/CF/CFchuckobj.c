@@ -1163,7 +1163,7 @@ typedef struct CFEmitterFxArgs {
         (args)->pos[2] += *(f32*)((obj) + 0x14);                  \
     } while (0)
 
-void fn_8018F2D8(int* obj)
+void areafxemit_emitEffect(int* obj)
 {
     int object;
     int state;
@@ -1252,13 +1252,13 @@ void fn_8018F2D8(int* obj)
     }
 }
 
-int fn_8018FB84(int* obj, int p2, u8* state)
+int areafxemit_SeqFn(int* obj, int p2, u8* state)
 {
     u8 i;
     for (i = 0; i < state[139]; i++) {
         switch ((s32)state[i + 129]) {
         case 1:
-            fn_8018F2D8(obj);
+            areafxemit_emitEffect(obj);
             break;
         }
     }
@@ -1299,7 +1299,7 @@ void areafxemit_update(int* obj)
                     ((*(f32*)(state + 4) > radius && (radius != lbl_803E3E6C)))) {
                     fn_8018F148((int)obj, 0x23);
                 }
-                fn_8018F2D8(obj);
+                areafxemit_emitEffect(obj);
             }
             *(s32*)((u8*)obj + 0xf4) = -period;
             *(f32*)(state + 4) = distance;
@@ -1315,7 +1315,7 @@ void areafxemit_init(int obj, int setup)
     s16 period;
     s16 angle;
 
-    *(int (**)(int*, int, u8*))(obj + 0xbc) = fn_8018FB84;
+    *(int (**)(int*, int, u8*))(obj + 0xbc) = areafxemit_SeqFn;
     state = *(int*)(obj + 0xb8);
 
     *(f32*)(state + 0) = (f32)((s32)*(s8*)(setup + 0x18) << 2);
