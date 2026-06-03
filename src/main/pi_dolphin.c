@@ -555,7 +555,8 @@ extern undefined uRam803dc24f;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 mapLoadDataFile(int param_1)
+#pragma dont_inline on
+undefined4 mapLoadDataFile(int param_1,int param_2)
 {
   if (DAT_803601f2 == param_1) {
     return 0;
@@ -565,6 +566,7 @@ undefined4 mapLoadDataFile(int param_1)
   }
   return 0xffffffff;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -6944,6 +6946,55 @@ void fn_8004CE0C(void *param_1) {
     lbl_803DCD6A = 3;
     lbl_803DCD69 = 4;
     lbl_803DCD68 = 1;
+}
+extern u32 getButtonsJustPressed(int set);
+extern void printHeapStats(int a);
+extern void defragMemory(int a);
+extern void debugPrintSetColor(int r, int g, int b, int a);
+extern void fn_80137948(char *fmt, ...);
+extern char sAssetHaltFormat[];
+extern int lbl_8035EF48[];
+extern s16 lbl_803DCC78;
+extern int lbl_803DCC70;
+extern void loadTableFiles(void);
+void loadDataFiles(void) {
+    int *ids;
+    char **names;
+    int i;
+    if (getButtonsJustPressed(2) & 0x100) {
+        for (i = 0x50; i < 0x57; i++) {
+        }
+        printHeapStats(1);
+    }
+    if (getButtonsJustPressed(2) & 0x200) {
+        defragMemory(0);
+    }
+    if (lbl_803DCC78 != 0) {
+        if (lbl_803DCC78 == 1) {
+            defragMemory(0);
+        }
+        lbl_803DCC78--;
+    }
+    i = 0;
+    ids = lbl_8035EF48;
+    names = sResourceFileNameTable;
+    do {
+        if (*ids != -1) {
+            debugPrintSetColor(0, 0xff, 0, 0xff);
+            fn_80137948(sAssetHaltFormat, *names);
+            debugPrintSetColor(0xff, 0xff, 0xff, 0xff);
+            lbl_803DCC70 = 1;
+            if (mapLoadDataFile(*ids, i) != 0) {
+                *ids = -1;
+                printHeapStats(1);
+            }
+            lbl_803DCC70 = 0;
+        }
+        ids++;
+        names++;
+        i++;
+    } while (i <= 0x57);
+    loadTableFiles();
 }
 #pragma peephole reset
 #pragma scheduling reset
