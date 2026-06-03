@@ -594,7 +594,7 @@ void blasted_init(int param_1, int param_2)
     }
     GameBit_Set(0x2de, 1);
     *(s16*)param_1 = (s16)((s32)*(s8*)(param_2 + 0x18) << 8);
-    if (GameBit_Get(*(s16*)(param_2 + 0x1e)) != 0) {
+    if ((u32)GameBit_Get(*(s16*)(param_2 + 0x1e)) != 0) {
         state[0xc / 4] = fn_801A27B8((int*)param_1, (int)*(s16*)(param_2 + 0x1c));
     }
 }
