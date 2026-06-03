@@ -21,17 +21,10 @@ extern f32 lbl_803E4CC0;
 extern void GameBit_Set(int bit, int value);
 extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
 extern void doRumble(f32 val);
-extern void DIMbosstonsil_checkHit(u8 *arg1, u8 *arg4);
+extern void DIMbosstonsil_checkHit(void *obj,DIMbosstonsilState *state);
 
 #define DIMBOSSSPIT_MODEL_ACTIVE_FLAG 0x1
 #define DIMBOSSSPIT_OBJECT_DISABLED_FLAG 0x8
-
-#define DIMBOSSSPIT_EFFECT_ACTIVE_OFFSET 0x25f
-#define DIMBOSSSPIT_ANIM_FINISHED_OFFSET 0x349
-#define DIMBOSSSPIT_ANIM_POINTS_OFFSET 0x35c
-#define DIMBOSSSPIT_ANIM_FRAME_OFFSET 0x3f4
-#define DIMBOSSSPIT_ANIM_FLAGS_OFFSET 0x405
-#define DIMBOSSSPIT_SAVED_OBJ_FIELD_C0_OFFSET 0x3e0
 
 #define DIMBOSSSPIT_GAMEBIT_ACTIVE 0x20e
 #define DIMBOSSSPIT_GAMEBIT_ROUTE_LOW 0x268
@@ -51,7 +44,9 @@ extern void DIMbosstonsil_checkHit(u8 *arg1, u8 *arg4);
  * EN v1.0 Address: 0x801BE19C
  * EN v1.0 Size: 688b
  */
-void dimBossTonsil_newState_hitFightMain(u8 *obj, u8 *unused2, u8 *state, u8 *updateState)
+void dimBossTonsil_newState_hitFightMain(u8 *obj,ObjAnimUpdateState *animUpdate,
+                                         DIMbosstonsilState *state,
+                                         DIMbosstonsilState *updateState)
 {
   f32 timer;
   u8 *vt;
@@ -61,23 +56,22 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj, u8 *unused2, u8 *state, u8 *up
   *(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) =
       (s16)(*(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) | DIMBOSSSPIT_MODEL_ACTIVE_FLAG);
 
-  updateState[DIMBOSSSPIT_EFFECT_ACTIVE_OFFSET] = 1;
+  updateState->effectActive = 1;
 
-  (*(void (**)(u8 *, u8 *, double, int))(*(int *)gBaddieControlInterface + 0x2C))(
+  (*(void (**)(u8 *,DIMbosstonsilState *,double,int))(*(int *)gBaddieControlInterface + 0x2C))(
       obj, updateState, (double)timer, 1);
 
   vt = (u8 *)*(int *)gBaddieControlInterface;
-  ((void (*)(u8 *, u8 *, u8 *, s16, u8 *, int, int, int))*(void **)(vt + 0x54))(
-      obj, updateState, state + DIMBOSSSPIT_ANIM_POINTS_OFFSET,
-      *(s16 *)(state + DIMBOSSSPIT_ANIM_FRAME_OFFSET),
-      state + DIMBOSSSPIT_ANIM_FLAGS_OFFSET, 0, 0, 0);
+  ((void (*)(u8 *,DIMbosstonsilState *,u8 *,s16,u8 *,int,int,int))*(void **)(vt + 0x54))(
+      obj, updateState, state->animPoints, state->animFrame,
+      &state->hitReactMode, 0, 0, 0);
 
   if (lbl_803E4C90 != lbl_803DDBA4) {
     lbl_803DDBA4 = lbl_803DDBA4 - timeDelta;
     timer = lbl_803DDBA4 * lbl_803E4CB4;
     if (lbl_803DDBA4 <= lbl_803E4CB8) {
       lbl_803DDBA4 = lbl_803E4C90;
-      updateState[DIMBOSSSPIT_ANIM_FINISHED_OFFSET] = 0;
+      updateState->animFinished = 0;
       *(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) =
           (s16)(*(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) & ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG);
       obj[0xAF] = (u8)(obj[0xAF] | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
@@ -107,7 +101,7 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj, u8 *unused2, u8 *state, u8 *up
     lbl_803DDB98 = lbl_803DDB98 - timeDelta;
     if (lbl_803DDB98 <= lbl_803E4C90) {
       lbl_803DDB98 = lbl_803E4C90;
-      updateState[DIMBOSSSPIT_ANIM_FINISHED_OFFSET] = 0;
+      updateState->animFinished = 0;
       *(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) =
           (s16)(*(s16 *)((u8 *)*(int *)(obj + 0x54) + 0x60) & ~DIMBOSSSPIT_MODEL_ACTIVE_FLAG);
       obj[0xAF] = (u8)(obj[0xAF] | DIMBOSSSPIT_OBJECT_DISABLED_FLAG);
@@ -120,13 +114,13 @@ void dimBossTonsil_newState_hitFightMain(u8 *obj, u8 *unused2, u8 *state, u8 *up
     }
   }
 
-  *(u32 *)(state + DIMBOSSSPIT_SAVED_OBJ_FIELD_C0_OFFSET) = *(u32 *)(obj + 0xC0);
+  state->savedObjFieldC0 = *(u32 *)(obj + 0xC0);
   *(u32 *)(obj + 0xC0) = 0;
 
-  (*(void (**)(u8 *, u8 *, double, double, u8 *, u8 *))(*(int *)gPlayerInterface + 0x8))(
+  (*(void (**)(u8 *,DIMbosstonsilState *,double,double,u8 *,u8 *))(*(int *)gPlayerInterface + 0x8))(
       obj, updateState, (double)timeDelta, (double)timeDelta, lbl_803DDBB0, lbl_803DDBA8);
 
-  *(u32 *)(obj + 0xC0) = *(u32 *)(state + DIMBOSSSPIT_SAVED_OBJ_FIELD_C0_OFFSET);
+  *(u32 *)(obj + 0xC0) = state->savedObjFieldC0;
 }
 
 #pragma peephole reset
