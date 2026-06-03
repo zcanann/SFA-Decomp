@@ -1627,6 +1627,9 @@ extern void dvdCheckError(void);
 extern void mmFreeTick(int a);
 extern void gameTextRun(void);
 extern u8 lbl_803DC950;
+extern f32 timeDelta;
+extern f32 oneOverTimeDelta;
+extern u8 framesThisStep;
 extern char sZlbBlockTag[];
 extern int return0_8002A5B8(int p);
 extern int OSDisableInterrupts(void);
@@ -9169,4 +9172,261 @@ void fn_8004EF9C(int *param) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A = lbl_803DCD6A + 1;
 }
+#pragma scheduling reset
+
+extern u8 lbl_802CC6A0[];
+extern char lbl_8035F680[];
+extern void OSStopStopwatch(void *sw);
+extern u64 OSCheckStopwatch(void *sw);
+extern void OSResetStopwatch(void *sw);
+extern void OSStartStopwatch(void *sw);
+extern int OSGetCurrentThread(void);
+extern int Queue_GetCount(void *q);
+extern void OSSleepThread(void *q);
+extern void OSRestoreInterrupts(int lvl);
+extern void Camera_ApplyFullViewport(void);
+extern void GXInvalidateVtxCache(void);
+extern void GXInvalidateTexAll(void);
+extern void OSReport(const char *fmt, ...);
+extern int GXReadDrawSync(void);
+extern void VISetNextFrameBuffer(void *fb);
+extern void GXReadXfRasMetric(int *a, int *b, int *c, int *d);
+extern void GXGetGPStatus(u8 *a, u8 *b, u8 *c, u8 *d, u8 *e);
+extern void gxErrorFn_80060b40(void);
+extern void modelFn_800292e0(void);
+extern void __GXAbortWaitPECopyDone(void);
+extern void GXInitFifoBase(void *fifo, void *base, u32 size);
+extern void GXSetCPUFifo(void *fifo);
+extern void GXSetGPFifo(void *fifo);
+extern int GXInit(void *base, u32 size);
+extern void Queue_Push(void *q, void *e);
+extern void OSWakeupThread(void *q);
+extern int Queue_Peek(void *q, void *out);
+extern void Queue_Pop(void *q, void *out);
+extern void GXDisableBreakPt(void);
+extern void gxPerfFn_8004a77c(int v);
+extern void THPPlayerPostDrawDone(void);
+extern void GXPeekZ(int x, int y, void *out);
+extern f32 lbl_803DCCC0;
+extern f64 lbl_803DEA80;
+extern u8 lbl_803DC950;
+extern f32 timeDelta;
+extern f32 oneOverTimeDelta;
+extern u8 framesThisStep;
+extern f32 lbl_803DEA9C;
+extern f32 lbl_803DEAA0;
+extern f32 lbl_803DEA70;
+extern f32 lbl_803DEA74;
+extern f32 lbl_803DEA78;
+extern f32 lbl_803DEA7C;
+extern f32 lbl_803DCCB4;
+extern u8 lbl_803DB411;
+extern int lbl_803DCCDC;
+extern char lbl_8035F730[];
+extern int lbl_803DCCAC;
+extern char lbl_803DCCC4[];
+extern int lbl_803DCCA0;
+extern s16 lbl_803DCCAA;
+extern u8 lbl_803DCCA9;
+extern int lbl_803DB5C8;
+extern int lbl_803DD610;
+extern s16 lbl_803966D0[];
+extern s16 lbl_803965E0[];
+extern u8 lbl_803DD000;
+extern u8 lbl_803DD002;
+extern u8 lbl_803DCCA8;
+#pragma scheduling off
+#pragma peephole off
+void waitNextFrame(void)
+{
+    int lvl;
+    u32 frames;
+
+    OSStopStopwatch(lbl_8035F680);
+    lbl_803DCCC0 = (f32)OSCheckStopwatch(lbl_8035F680) /
+                   (f32)(u32)((*(u32 *)0x800000f8 >> 2) / 1000);
+    OSResetStopwatch(lbl_8035F680);
+    OSStartStopwatch(lbl_8035F680);
+    timeDelta = lbl_803DEA9C * lbl_803DEAA0 * lbl_803DCCC0;
+    if (lbl_803DC950 != 0) {
+        timeDelta = lbl_803DEA70;
+    }
+    if (lbl_803DEA74 < timeDelta) {
+        timeDelta = lbl_803DEA74;
+    }
+    oneOverTimeDelta = lbl_803DEA78;
+    if (lbl_803DEA7C < timeDelta) {
+        oneOverTimeDelta = lbl_803DEA78 / timeDelta;
+    }
+    frames = (int)(timeDelta + lbl_803DCCB4) & 0xff;
+    lbl_803DB411 = frames;
+    lbl_803DCCB4 = (timeDelta + lbl_803DCCB4) - (f32)(u32)frames;
+    framesThisStep = lbl_803DB411;
+    if (frames == 0) {
+        framesThisStep = 1;
+    }
+    lvl = OSDisableInterrupts();
+    lbl_803DCCDC = OSGetCurrentThread();
+    if (*(s16 *)(lbl_803DCCDC + 0x2c8) != 2) {
+        OSReport((char *)lbl_802CC6A0 + 0x401b8, *(s16 *)(lbl_803DCCDC + 0x2c8),
+                 *(u16 *)(lbl_803DCCDC + 0x2ca), *(int *)(lbl_803DCCDC + 0x2cc));
+    }
+    if (Queue_GetCount(lbl_8035F730) > 1) {
+        lbl_803DCCAC = 0;
+        OSSleepThread(lbl_803DCCC4);
+    }
+    OSRestoreInterrupts(lvl);
+    Camera_ApplyFullViewport();
+    GXInvalidateVtxCache();
+    GXInvalidateTexAll();
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+void logGpuHang(void);
+extern u8 lbl_803DCCB0;
+extern void *lbl_803DCCD0;
+extern void *lbl_803DCCD4;
+extern void *lbl_803DCCD8;
+extern void *lbl_803DCCE4;
+extern u8 lbl_803DCCA7;
+extern void *lbl_803DCCCC;
+extern void *lbl_803DCCEC;
+extern void *lbl_803DCCE8;
+#pragma scheduling off
+#pragma peephole off
+void videoSwapFrameBuffers(void)
+{
+    int swapped;
+    s16 sync;
+    int tok[3];
+    char fifo[140];
+
+    lbl_803DCCA0 = lbl_803DCCA0 + 1;
+    sync = GXReadDrawSync();
+    if (sync == (s16)(lbl_803DCCAA + 1)) {
+        swapped = lbl_803DCCCC == lbl_803DCCEC;
+        lbl_803DCCCC = lbl_803DCCEC;
+        if (swapped) {
+            lbl_803DCCCC = lbl_803DCCE8;
+        }
+        lbl_803DCCAA = sync;
+        VISetNextFrameBuffer(lbl_803DCCCC);
+        VIFlush();
+        lbl_803DCCA9 = 1;
+        lbl_803DB5C8 = lbl_803DCCA0;
+        lbl_803DCCA0 = 0;
+    }
+    lbl_803DCCAC = lbl_803DCCAC + 1;
+    if (lbl_803DCCB0 != 0 && lbl_803DCCAC > 18000) {
+        logGpuHang();
+        gxErrorFn_80060b40();
+        modelFn_800292e0();
+        __GXAbortWaitPECopyDone();
+        GXInitFifoBase(fifo, lbl_803DCCD0, 0x10000);
+        GXSetCPUFifo(fifo);
+        GXSetGPFifo(fifo);
+        lbl_803DCCD4 = (void *)GXInit(lbl_803DCCD8, (u32)lbl_803DCCE4);
+        if (Queue_IsEmpty(lbl_8035F730) == 0) {
+            Queue_Pop(lbl_8035F730, tok);
+        }
+        OSWakeupThread(lbl_803DCCC4);
+        if (Queue_IsEmpty(lbl_8035F730) == 0) {
+            Queue_Peek(lbl_8035F730, tok);
+            GXEnableBreakPt((void *)tok[0]);
+        } else {
+            GXDisableBreakPt();
+            lbl_803DCCA7 = 0;
+        }
+        gxPerfFn_8004a77c(1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void videoFn_800499e8(void)
+{
+    int i;
+    s16 *src;
+    s16 *dst;
+    int tok[3];
+    char peek[8];
+    int cur;
+
+    if (lbl_803DD610 == 2 || lbl_803DD610 == 3) {
+        THPPlayerPostDrawDone();
+    }
+    Queue_Peek(lbl_8035F730, &peek);
+    cur = *(int *)(peek + 4);
+    src = lbl_803966D0;
+    dst = lbl_803965E0;
+    for (i = 0; i < (int)(u32)lbl_803DD000; i++) {
+        dst[0] = src[0];
+        dst[1] = src[1];
+        *(int *)(dst + 4) = *(int *)(src + 4);
+        GXPeekZ(dst[0], dst[1], dst + 2);
+        src += 6;
+        dst += 6;
+    }
+    lbl_803DD002 = lbl_803DD000;
+    lbl_803DD000 = 0;
+    if (cur == (int)lbl_803DCCCC) {
+        lbl_803DCCA8 = 1;
+        lbl_803DCCA9 = 0;
+    } else {
+        Queue_Pop(lbl_8035F730, tok);
+        lbl_803DCCAC = 0;
+        OSWakeupThread(lbl_803DCCC4);
+        if (Queue_IsEmpty(lbl_8035F730) == 0) {
+            Queue_Peek(lbl_8035F730, tok);
+            GXEnableBreakPt((void *)tok[0]);
+            lbl_803DCCA7 = 1;
+        } else {
+            GXDisableBreakPt();
+            lbl_803DCCA7 = 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void logGpuHang(void)
+{
+    char *strs = (char *)lbl_802CC6A0;
+    int topPerf0, topPerf1, topClks, topClks2;
+    int botPerf0, botPerf1, botClks, botClks2;
+    u32 xfStuck;
+    u32 cmdStuck;
+    int rdIdle;
+    int cmdIdle;
+    u8 fifoErr;
+    char readIdle;
+    char cmdRdy[2];
+
+    GXReadXfRasMetric(&botPerf0, &botClks, &botPerf1, &botClks2);
+    GXReadXfRasMetric(&topPerf0, &topClks, &topPerf1, &topClks2);
+    xfStuck = (topClks - botClks) == 0;
+    cmdStuck = (topPerf0 - botPerf0) == 0;
+    rdIdle = (topClks2 - botClks2) != 0;
+    cmdIdle = (topPerf1 - botPerf1) != 0;
+    GXGetGPStatus(&fifoErr, &fifoErr, (u8 *)cmdRdy, (u8 *)&readIdle, &fifoErr);
+    OSReport(strs + 0x4002c, cmdRdy[0], readIdle, xfStuck, cmdStuck, rdIdle, cmdIdle);
+    if (cmdStuck == 0 && rdIdle != 0) {
+        OSReport(strs + 0x400fc);
+    } else if (xfStuck == 0 && cmdStuck != 0 && rdIdle != 0) {
+        OSReport(strs + 0x4011c);
+    } else if (readIdle == 0 && xfStuck != 0 && cmdStuck != 0 && rdIdle != 0) {
+        OSReport(strs + 0x40144);
+    } else if (cmdRdy[0] == 0 || readIdle == 0 || xfStuck == 0 || cmdStuck == 0 || rdIdle == 0 ||
+               cmdIdle == 0) {
+        OSReport(strs + 0x4019c);
+    } else {
+        OSReport(strs + 0x4016c);
+    }
+}
+#pragma peephole reset
 #pragma scheduling reset
