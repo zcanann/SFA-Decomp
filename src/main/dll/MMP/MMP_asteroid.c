@@ -1572,10 +1572,10 @@ void dimbossicesmash_update(u8 *obj)
     u8 *state = *(u8 **)(obj + 0xb8);
     u8 flags = state[0x29e];
     u8 *setup;
-    int t;
+    u32 t;
     int a;
     s16 cnt;
-    u32 t0, t1;
+    int t1;
     f32 nx, ny, nz;
     f32 len, inv, dot;
     f32 fy, fz, ff;
@@ -1583,7 +1583,12 @@ void dimbossicesmash_update(u8 *obj)
     int i;
     f32 stk[3];
 
-    if ((flags & 2) == 0) {
+    if ((flags & 2) != 0) {
+        if ((*(s16 *)(obj + 6) & 0x2000U) != 0) {
+            Obj_FreeObject(obj);
+        }
+        *(u8 *)(obj + 0x36) = 0;
+    } else {
         setup = *(u8 **)(obj + 0x4c);
         if ((flags & 1) == 0) {
             if (*(s8 *)(obj + 0xad) == 0) {
@@ -1599,25 +1604,22 @@ void dimbossicesmash_update(u8 *obj)
             *(u8 *)(obj + 0x36) = 0;
         } else {
             *(u8 *)(obj + 0x36) = 0xff;
-            cnt = *(s16 *)(state + 0x29c) + framesThisStep;
-            *(s16 *)(state + 0x29c) = cnt;
-            if (cnt >= *(u16 *)(setup + 0x38)) {
+            *(s16 *)(state + 0x29c) += framesThisStep;
+            cnt = *(s16 *)(state + 0x29c);
+            if (*(u16 *)(setup + 0x38) <= cnt) {
                 state[0x29e] = state[0x29e] | 2;
             }
-            t0 = *(u16 *)(setup + 0x3a);
-            if ((int)t0 < *(s16 *)(state + 0x29c) &&
-                (t1 = *(u16 *)(setup + 0x38) - t0) != 0) {
+            if (*(s16 *)(state + 0x29c) > *(u16 *)(setup + 0x3a) &&
+                (t1 = *(u16 *)(setup + 0x38) - *(u16 *)(setup + 0x3a)) != 0) {
                 a = (int)(lbl_803E404C *
                           (lbl_803E4048 -
-                           (f32)(int)(*(s16 *)(state + 0x29c) - t0) / (f32)(int)t1));
-                if (a < 0x100) {
-                    if (a < 0) {
-                        a = 0;
-                    }
-                } else {
+                           (f32)(*(s16 *)(state + 0x29c) - *(u16 *)(setup + 0x3a)) / (f32)t1));
+                if (a > 0xff) {
                     a = 0xff;
+                } else if (a < 0) {
+                    a = 0;
                 }
-                *(s8 *)(obj + 0x36) = (s8)a;
+                *(u8 *)(obj + 0x36) = (u8)a;
             }
             *(f32 *)(obj + 0x24) = timeDelta * *(f32 *)(state + 0x290) + *(f32 *)(obj + 0x24);
             *(f32 *)(obj + 0x28) = timeDelta * *(f32 *)(state + 0x294) + *(f32 *)(obj + 0x28);
@@ -1628,39 +1630,39 @@ void dimbossicesmash_update(u8 *obj)
                 timeDelta * *(f32 *)(state + 0x288) + *(f32 *)(state + 0x27c);
             *(f32 *)(state + 0x280) =
                 timeDelta * *(f32 *)(state + 0x28c) + *(f32 *)(state + 0x280);
-            if ((state[0x29f] & 1) == 0) {
-                if (lbl_803E4034 < *(f32 *)(obj + 0x24)) {
+            if ((state[0x29f] & 1) != 0) {
+                if (*(f32 *)(obj + 0x24) < lbl_803E4034) {
                     *(f32 *)(obj + 0x24) = lbl_803E4034;
                 }
-            } else if (*(f32 *)(obj + 0x24) < lbl_803E4034) {
+            } else if (*(f32 *)(obj + 0x24) > lbl_803E4034) {
                 *(f32 *)(obj + 0x24) = lbl_803E4034;
             }
-            if ((state[0x29f] & 2) == 0) {
-                if (lbl_803E4034 < *(f32 *)(obj + 0x2c)) {
+            if ((state[0x29f] & 2) != 0) {
+                if (*(f32 *)(obj + 0x2c) < lbl_803E4034) {
                     *(f32 *)(obj + 0x2c) = lbl_803E4034;
                 }
-            } else if (*(f32 *)(obj + 0x2c) < lbl_803E4034) {
+            } else if (*(f32 *)(obj + 0x2c) > lbl_803E4034) {
                 *(f32 *)(obj + 0x2c) = lbl_803E4034;
             }
-            if ((state[0x29f] & 4) == 0) {
-                if (lbl_803E4034 < *(f32 *)(state + 0x278)) {
+            if ((state[0x29f] & 4) != 0) {
+                if (*(f32 *)(state + 0x278) < lbl_803E4034) {
                     *(f32 *)(state + 0x278) = lbl_803E4034;
                 }
-            } else if (*(f32 *)(state + 0x278) < lbl_803E4034) {
+            } else if (*(f32 *)(state + 0x278) > lbl_803E4034) {
                 *(f32 *)(state + 0x278) = lbl_803E4034;
             }
-            if ((state[0x29f] & 8) == 0) {
-                if (lbl_803E4034 < *(f32 *)(state + 0x27c)) {
+            if ((state[0x29f] & 8) != 0) {
+                if (*(f32 *)(state + 0x27c) < lbl_803E4034) {
                     *(f32 *)(state + 0x27c) = lbl_803E4034;
                 }
-            } else if (*(f32 *)(state + 0x27c) < lbl_803E4034) {
+            } else if (*(f32 *)(state + 0x27c) > lbl_803E4034) {
                 *(f32 *)(state + 0x27c) = lbl_803E4034;
             }
-            if ((state[0x29f] & 0x10) == 0) {
-                if (lbl_803E4034 < *(f32 *)(state + 0x280)) {
+            if ((state[0x29f] & 0x10) != 0) {
+                if (*(f32 *)(state + 0x280) < lbl_803E4034) {
                     *(f32 *)(state + 0x280) = lbl_803E4034;
                 }
-            } else if (*(f32 *)(state + 0x280) < lbl_803E4034) {
+            } else if (*(f32 *)(state + 0x280) > lbl_803E4034) {
                 *(f32 *)(state + 0x280) = lbl_803E4034;
             }
             *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
@@ -1718,11 +1720,6 @@ void dimbossicesmash_update(u8 *obj)
                 } while (i < 2);
             }
         }
-    } else {
-        if ((*(u16 *)(obj + 6) & 0x2000) != 0) {
-            Obj_FreeObject(obj);
-        }
-        *(u8 *)(obj + 0x36) = 0;
     }
 }
 #pragma peephole reset
