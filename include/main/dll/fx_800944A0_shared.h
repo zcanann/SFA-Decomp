@@ -320,7 +320,7 @@ void cloudaction_onMapSetup(void);
 void cloudaction_update(int p1, int p2, u8 *state, int p4, int val);
 void cloudaction_release(void);
 void cloudaction_initialise(void);
-void fn_80094F7C(void);
+void waterfx_setupSplashDropPointRender(void);
 int fn_800956F4(int vec, f32 dist);
 void waterfx_spawnRipple(s16 p1, int p2, f32 a, f32 b, f32 c, f32 d);
 void waterfx_setRippleScale(int flag, f32 val);

@@ -5,7 +5,7 @@ volatile PPCWGPipe GXWGFifo : (0xCC008000);
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80094F7C(void) {
+void waterfx_setupSplashDropPointRender(void) {
     u8 col[4];
     u8 kcol[4];
     f32 dummy;
@@ -320,7 +320,7 @@ void waterfx_func05(int p1, int p2) {
             }
         }
         if ((int)lbl_803DD224 != 0) {
-            fn_80094F7C();
+            waterfx_setupSplashDropPointRender();
         }
         for (i = 0; i < 30; i++) {
             WaterDrop *d = &((WaterDrop *)lbl_803DD220)[i];
