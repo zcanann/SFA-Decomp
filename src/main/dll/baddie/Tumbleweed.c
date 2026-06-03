@@ -4616,3 +4616,48 @@ void titleScreenShowCopyright(u8 arg)
 
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void GXLoadPosMtxImm(f32* matrix, s32 slot);
+extern void GXSetCurrentMtx(int id);
+extern void GXSetProjection(f32* matrix, s32 mode);
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern void GXSetCullMode(int mode);
+extern void GXBegin(int type, int fmt, int n);
+extern void Camera_RebuildProjectionMatrix(void);
+extern f32 hudMatrix[];
+
+typedef union {
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+} PPCWGPipe;
+volatile PPCWGPipe GXWGFifo : (0xCC008000);
+
+#pragma scheduling off
+#pragma peephole off
+void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
+{
+    GXLoadPosMtxImm((f32*)lbl_803A9FE4, 0);
+    GXSetCurrentMtx(0);
+    GXSetProjection(hudMatrix, 1);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xd, 1);
+    GXSetCullMode(0);
+    GXBegin(0x80, 1, 4);
+    GXWGFifo.s16 = (s16)x0; GXWGFifo.s16 = (s16)y0; GXWGFifo.s16 = -0x20;
+    GXWGFifo.f32 = u0; GXWGFifo.f32 = v0;
+    GXWGFifo.s16 = (s16)x1; GXWGFifo.s16 = (s16)y0; GXWGFifo.s16 = -0x20;
+    GXWGFifo.f32 = u1; GXWGFifo.f32 = v0;
+    GXWGFifo.s16 = (s16)x1; GXWGFifo.s16 = (s16)y1; GXWGFifo.s16 = -0x20;
+    GXWGFifo.f32 = u1; GXWGFifo.f32 = v1;
+    GXWGFifo.s16 = (s16)x0; GXWGFifo.s16 = (s16)y1; GXWGFifo.s16 = -0x20;
+    GXWGFifo.f32 = u0; GXWGFifo.f32 = v1;
+    Camera_RebuildProjectionMatrix();
+}
+#pragma peephole reset
+#pragma scheduling reset
