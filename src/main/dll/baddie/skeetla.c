@@ -635,10 +635,10 @@ static void *skeetla_validateRouteEntry(void *entry)
     return entry;
 }
 
-/* fn_8013A4EC  addr=0x8013A4EC  size=0x1D0  linkage=global */
+/* trickyFindNearestLinkedRouteEntry  addr=0x8013A4EC  size=0x1D0  linkage=global */
 #pragma peephole off
 #pragma scheduling off
-void *fn_8013A4EC(u8 *context, u8 *routeDef, u16 linkSelector, u32 routeFlagValue)
+void *trickyFindNearestLinkedRouteEntry(u8 *context, u8 *routeDef, u16 linkSelector, u32 routeFlagValue)
 {
     void *candidates[4];
     void *entry;
@@ -696,8 +696,8 @@ extern void fn_8004B31C(void *search, u32 route, int objId, int pathId, int rout
 
 #pragma dont_inline on
 #pragma peephole off
-/* fn_8013A6BC  addr=0x8013A6BC  size=0x138  linkage=global */
-void *fn_8013A6BC(u8 *state, u32 route, int pathId)
+/* trickyFindPathRouteEntry  addr=0x8013A6BC  size=0x138  linkage=global */
+void *trickyFindPathRouteEntry(u8 *state, u32 route, int pathId)
 {
     void *entry;
 
@@ -738,9 +738,9 @@ void *fn_8013A6BC(u8 *state, u32 route, int pathId)
 #pragma peephole reset
 #pragma dont_inline reset
 
-/* fn_8013A7F4  addr=0x8013A7F4  size=0x1D4  linkage=global */
+/* trickyFindReachableRouteIndex  addr=0x8013A7F4  size=0x1D4  linkage=global */
 #pragma peephole off
-int fn_8013A7F4(u8 *state, u32 *routes, u8 *routeFlags, int pathId)
+int trickyFindReachableRouteIndex(u8 *state, u32 *routes, u8 *routeFlags, int pathId)
 {
     s8 status[8];
     s8 i;
@@ -799,8 +799,8 @@ int fn_8013A7F4(u8 *state, u32 *routes, u8 *routeFlags, int pathId)
 }
 #pragma peephole reset
 
-/* fn_8013A9C8  addr=0x8013A9C8  size=0x184  linkage=global */
-void *fn_8013A9C8(u8 *state, u8 *routeDef, u32 routeFlagValue)
+/* trickySelectRouteEntry  addr=0x8013A9C8  size=0x184  linkage=global */
+void *trickySelectRouteEntry(u8 *state, u8 *routeDef, u32 routeFlagValue)
 {
     void *entry;
 
@@ -813,16 +813,16 @@ void *fn_8013A9C8(u8 *state, u8 *routeDef, u32 routeFlagValue)
     }
 
     if (entry == NULL) {
-        entry = fn_8013A4EC(state, routeDef, *(u16 *)(state + 0x532), routeFlagValue & 0xff);
+        entry = trickyFindNearestLinkedRouteEntry(state, routeDef, *(u16 *)(state + 0x532), routeFlagValue & 0xff);
         if (entry == NULL) {
-            entry = fn_8013A6BC(state, (u32)routeDef, *(u16 *)(state + 0x532));
+            entry = trickyFindPathRouteEntry(state, (u32)routeDef, *(u16 *)(state + 0x532));
         }
 
         if (entry == NULL) {
             if (*(u16 *)(state + 0x534) != 0) {
-                entry = fn_8013A4EC(state, routeDef, *(u16 *)(state + 0x534), routeFlagValue & 0xff);
+                entry = trickyFindNearestLinkedRouteEntry(state, routeDef, *(u16 *)(state + 0x534), routeFlagValue & 0xff);
                 if (entry == NULL) {
-                    entry = fn_8013A6BC(state, (u32)routeDef, *(u16 *)(state + 0x534));
+                    entry = trickyFindPathRouteEntry(state, (u32)routeDef, *(u16 *)(state + 0x534));
                 }
                 if (entry != NULL) {
                     *(u16 *)(state + 0x532) = *(u16 *)(state + 0x534);
@@ -831,7 +831,7 @@ void *fn_8013A9C8(u8 *state, u8 *routeDef, u32 routeFlagValue)
         }
 
         if (entry == NULL) {
-            entry = fn_8013A4EC(state, routeDef, 0, routeFlagValue & 0xff);
+            entry = trickyFindNearestLinkedRouteEntry(state, routeDef, 0, routeFlagValue & 0xff);
             *(u16 *)(state + 0x532) = 0;
         }
     }
@@ -843,9 +843,9 @@ void *fn_8013A9C8(u8 *state, u8 *routeDef, u32 routeFlagValue)
     return entry;
 }
 
-/* fn_8013AB4C  addr=0x8013AB4C  size=0x2B0  linkage=global */
+/* trickyRankLinkedRouteCandidates  addr=0x8013AB4C  size=0x2B0  linkage=global */
 #pragma peephole off
-void fn_8013AB4C(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
+void trickyRankLinkedRouteCandidates(u8 *obj, u8 *outRouteFlags, s16 linkSelector, void **outRoutes)
 {
     f32 bestDistances[8];
     void **curves;
