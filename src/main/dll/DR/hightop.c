@@ -1989,3 +1989,182 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int fn_802972A8(void);
+extern int getArwing(void);
+extern int return1_800202BC(void);
+extern int fn_80198B68(int obj, int p2);
+extern void objSeqFn_801992ec(int obj, int target);
+extern void fn_80198DE8(int obj, int target);
+extern void fn_80198A00(int obj, int target);
+extern void objSeqMoveFn_80199188(int obj, int target);
+extern f32 lbl_803E4104;
+extern u8 framesThisStep;
+#pragma scheduling off
+#pragma peephole off
+void Trigger_hitDetect(int obj)
+{
+    u8 *state = *(u8 **)(obj + 0xb8);
+    u8 *def = *(u8 **)(obj + 0x4c);
+    int t;
+    int target;
+    int ok;
+    int ok2;
+    int r1;
+    int r2;
+    int i;
+    u8 *p8;
+    u8 c;
+    s16 ty;
+    f32 dist[1];
+
+    dist[0] = lbl_803E4104;
+    if (*(s16 *)(def + 0x38) < 1 || *(s16 *)def == 0xf4) {
+        t = Obj_GetPlayerObject();
+        if ((void *)t == NULL) {
+            t = getArwing();
+        } else {
+            r1 = fn_802972A8();
+            if ((void *)r1 != NULL) {
+                t = r1;
+            }
+        }
+        target = getTrickyObject();
+        if ((void *)t != NULL || (void *)target != NULL) {
+            if ((*state & 4) != 0) {
+                objInterpretSeq(obj, t, 1, 0);
+                *state &= 0xfb;
+                *state |= 1;
+            } else {
+                ok = 1;
+                c = def[0x43];
+                if (c > 2) {
+                    target = ObjGroup_FindNearestObject(c - 1, obj, (int)dist);
+                    if ((void *)target == NULL) {
+                        ok = 0;
+                    }
+                } else {
+                    switch ((s8)c) {
+                    case 2:
+                        target = (*(code *)(*gCameraInterface + 0xc))();
+                        break;
+                    case 0:
+                        target = t;
+                        if ((void *)t == NULL) {
+                            ok = 0;
+                        }
+                        break;
+                    case 1:
+                        if ((void *)target == NULL) {
+                            ok = 0;
+                        }
+                        break;
+                    }
+                }
+                if (ok) {
+                    if ((*state & 0x40) == 0) {
+                        *(int *)(state + 0x1c) = *(int *)(state + 0x28);
+                        *(int *)(state + 0x20) = *(int *)(state + 0x2c);
+                        *(int *)(state + 0x24) = *(int *)(state + 0x30);
+                    } else {
+                        if (def[0x43] == 2) {
+                            *(int *)(state + 0x1c) = *(int *)(target + 0x18);
+                            *(int *)(state + 0x20) = *(int *)(target + 0x1c);
+                            *(int *)(state + 0x24) = *(int *)(target + 0x20);
+                        } else if (def[0x43] < 2) {
+                            *(int *)(state + 0x1c) = *(int *)(target + 0x8c);
+                            *(int *)(state + 0x20) = *(int *)(target + 0x90);
+                            *(int *)(state + 0x24) = *(int *)(target + 0x94);
+                        } else {
+                            *(int *)(state + 0x1c) = *(int *)(target + 0x80);
+                            *(int *)(state + 0x20) = *(int *)(target + 0x84);
+                            *(int *)(state + 0x24) = *(int *)(target + 0x88);
+                        }
+                        *state &= 0xbf;
+                    }
+                    if (def[0x43] < 3) {
+                        *(int *)(state + 0x28) = *(int *)(target + 0x18);
+                        *(int *)(state + 0x2c) = *(int *)(target + 0x1c);
+                        *(int *)(state + 0x30) = *(int *)(target + 0x20);
+                    } else {
+                        *(int *)(state + 0x28) = *(int *)(target + 0xc);
+                        *(int *)(state + 0x2c) = *(int *)(target + 0x10);
+                        *(int *)(state + 0x30) = *(int *)(target + 0x14);
+                    }
+                }
+                ty = *(s16 *)def;
+                if (ty == 0x50) {
+                    objInterpretSeq(obj, t, 1, 0);
+                    if (return1_800202BC() != 0) {
+                        Obj_FreeObject(obj);
+                    }
+                } else if (ty < 0x50) {
+                    if (ty == 0x4d) {
+                        if (ok) {
+                            r1 = fn_80198B68(obj, *(int *)(obj + 0xb8) + 0x28);
+                            r2 = fn_80198B68(obj, *(int *)(obj + 0xb8) + 0x1c);
+                            if (r1 == 0) {
+                                if (r2 == 0) {
+                                    objInterpretSeq(obj, target, -2, 0);
+                                } else {
+                                    objInterpretSeq(obj, target, -1, 0);
+                                }
+                            } else if (r2 == 0) {
+                                objInterpretSeq(obj, target, 1, 0);
+                            } else {
+                                objInterpretSeq(obj, target, 2, 0);
+                            }
+                        }
+                    } else if (ty < 0x4d) {
+                        if (ty == 0x4b) {
+                            if (ok) {
+                                objSeqFn_801992ec(obj, target);
+                            }
+                        } else if (ty > 0x4a) {
+                            ok2 = 1;
+                            if (*(s16 *)(state + 0x82) != -1 && GameBit_Get(*(s16 *)(state + 0x82)) == 0) {
+                                ok2 = 0;
+                            }
+                            if (ok2 && ok) {
+                                fn_80198DE8(obj, target);
+                            }
+                        }
+                    } else if (ty < 0x4f) {
+                        *(u32 *)(state + 8) = *(int *)(state + 8) + framesThisStep;
+                        if ((u32)*(u16 *)(def + 0x46) <= *(u32 *)(state + 8)) {
+                            objInterpretSeq(obj, 0, 1, 0);
+                        }
+                    }
+                } else if (ty == 0xf4) {
+                    if (ok) {
+                        fn_80198A00(obj, target);
+                    }
+                } else if (ty < 0xf4) {
+                    if (ty == 0x54) {
+                        ok = 1;
+                        i = 0;
+                        p8 = state;
+                        while (i < 4 && ok) {
+                            if (*(s16 *)(p8 + 0x82) != -1 && GameBit_Get(*(s16 *)(p8 + 0x82)) == 0) {
+                                ok = 0;
+                            }
+                            p8 += 2;
+                            i++;
+                        }
+                        if (ok && (s8)state[0x8a] >= 0) {
+                            ((TriggerFlags8A *)(state + 0x8a))->bit7 = 1;
+                            objInterpretSeq(obj, t, 1, 0);
+                        }
+                        if (!ok) {
+                            ((TriggerFlags8A *)(state + 0x8a))->bit7 = 0;
+                        }
+                    }
+                } else if (ty == 0x230 && ok) {
+                    objSeqMoveFn_80199188(obj, target);
+                }
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
