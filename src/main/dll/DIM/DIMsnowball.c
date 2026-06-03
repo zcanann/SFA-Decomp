@@ -1198,7 +1198,7 @@ void cclevcontrol_render(void) { objRenderFn_8003b8f4(lbl_803E46CC); }
 extern void envFxActFn_800887f8(int a);
 extern void Music_Trigger(int a, int b);
 extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern int fn_801AA734(int obj, int unused, u8* data);
+extern int ccqueen_SeqFn(int obj, int unused, u8* data);
 extern f32 lbl_803E46C8;
 
 #pragma scheduling off
@@ -1220,7 +1220,7 @@ void cclightfoot_init(int* obj, int* def)
 {
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 26) << 8);
     *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
-    *(void**)((char*)obj + 188) = (void*)fn_801AA734;
+    *(void**)((char*)obj + 188) = (void*)ccqueen_SeqFn;
 }
 
 int cclevcontrol_SeqFn(int p1, int p2, u8* state)
@@ -1254,8 +1254,8 @@ extern void getEnvfxAct(int obj, int target, int id, int p);
 extern int *gMapEventInterface;
 extern int lbl_80323548[];
 extern f32 lbl_803E46D4;
-extern void fn_801AB700(int obj, u8* state2);
-extern void fn_801AB800(int obj, u8* state2);
+extern void ccpedstal_updateGameBitGate(int obj, u8* state2);
+extern void ccpedstal_updateAltVariant(int obj, u8* state2);
 extern void fn_8002B6D8(void *obj, int p2, int p3, int p4, int p5, int p6);
 
 void ccpedstal_init(int *obj, u8 *params) {
@@ -1264,16 +1264,16 @@ void ccpedstal_init(int *obj, u8 *params) {
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x4000);
     switch (*(int *)(params + 0x14)) {
     case 0x45f1a:
-        *(void **)state = (void *)fn_801AB800;
+        *(void **)state = (void *)ccpedstal_updateAltVariant;
         *(s16 *)(state + 4) = 0xaa;
         fn_8002B6D8(obj, 0, 0, 0, 0, 3);
         break;
     case 0x45f1b:
-        *(void **)state = (void *)fn_801AB700;
+        *(void **)state = (void *)ccpedstal_updateGameBitGate;
         *(s16 *)(state + 4) = 0xf1;
         break;
     case 0x45f1c:
-        *(void **)state = (void *)fn_801AB700;
+        *(void **)state = (void *)ccpedstal_updateGameBitGate;
         *(s16 *)(state + 4) = 0xfe;
         break;
     }
@@ -1339,7 +1339,7 @@ extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void gameBitDecrement(int id);
 extern int** gObjectTriggerInterface;
 
-/* fn_801AB700: state2-driven model + trigger gate. If state2's gamebit at
+/* ccpedstal_updateGameBitGate: state2-driven model + trigger gate. If state2's gamebit at
  * +0x4 is set, latches obj[0xaf] bit 8 and selects model index 1.
  * Otherwise selects model 0, then consults gbit 0xa9: if set, clears the
  * 0x10 flag and (if the obj's trigger 0xa9 is set) fires vtable[0x12],
@@ -1347,7 +1347,7 @@ extern int** gObjectTriggerInterface;
  * clear, sets the obj[0xaf] 0x10 flag instead. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801AB700(int obj, u8* state2) {
+void ccpedstal_updateGameBitGate(int obj, u8* state2) {
     if (GameBit_Get(*(s16*)(state2 + 0x4)) != 0) {
         *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 8);
         Obj_SetActiveModelIndex(obj, 1);
@@ -1378,7 +1378,7 @@ void fn_801AB700(int obj, u8* state2) {
 extern int ObjTrigger_IsSet(int obj);
 extern void gameBitIncrement(int id);
 
-/* fn_801AB800: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
+/* ccpedstal_updateAltVariant: ccpedstal alt-variant think-routine. Toggles obj[0xaf]
  * bit 8 from gbit 0xdc5, then reads state2's gamebit at +0x4: if set,
  * sets bit 8 again and selects model 0; if clear, selects model 1 and
  * (when the obj's pending trigger is asserted) fires vtable[0x12] with
@@ -1387,7 +1387,7 @@ extern void gameBitIncrement(int id);
  * match target's layout. */
 #pragma scheduling off
 #pragma peephole off
-void fn_801AB800(int obj, u8* state2) {
+void ccpedstal_updateAltVariant(int obj, u8* state2) {
     if (GameBit_Get(0xdc5) != 0) {
         *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) | 8);
     } else {
@@ -1480,13 +1480,13 @@ void ccqueen_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_801AA734: ccqueen seqFn dispatcher. Walks the (u8)data[0x8b] command
+/* ccqueen_SeqFn: ccqueen seqFn dispatcher. Walks the (u8)data[0x8b] command
  * bytes at data[0x81..]: cmd=1 detaches obj's child via ObjLink_DetachChild
  * (only when obj->_c8 != 0); cmd=2 dispatches gWaterfxInterface vtable[4]
  * with the obj's xyz position and lbl_803E4670 as a 5-arg call. Returns 0. */
 #pragma scheduling off
 #pragma peephole off
-int fn_801AA734(int obj, int unused, u8* data) {
+int ccqueen_SeqFn(int obj, int unused, u8* data) {
     int* state = *(int**)(obj + 0xb8);
     if (data[0x8b] != 0) {
         int i;
