@@ -121,11 +121,11 @@ typedef struct PrisonGuardRotationWork {
 /*
  * --INFO--
  *
- * Function: fn_80189C68
+ * Function: staffactivated_spawnMapEventDebris
  * EN v1.0 Address: 0x80189C68
  * EN v1.0 Size: 732b
  */
-void fn_80189C68(int obj)
+void staffactivated_spawnMapEventDebris(int obj)
 {
   int setup;
   int player;
