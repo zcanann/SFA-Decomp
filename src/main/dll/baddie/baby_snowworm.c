@@ -2458,3 +2458,359 @@ void pauseMenuRunSubmenu(u8 p1)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void cMenuRotateFn_80124d80(void);
+extern void cMenuPlaySelectedItemSfx(u8 *player);
+extern int  cMenuSetItems(int handle, int flag);
+extern s8   padGetCY(int chan);
+extern u8   lbl_803A87F0[];
+extern u8   cMenuOpen;
+extern u8   cMenuEnabled;
+extern s8   shouldCloseCMenu;
+extern u8   lbl_803DD8AC;
+extern int  lbl_803DD8A0;
+extern s8   lbl_803DD8B6;
+extern s16  lbl_803DD8C0;
+extern s16  lbl_803DD8B4;
+extern int  lbl_803DD8B0;
+extern s16  lbl_803DD8BC;
+extern s16  lbl_803DD8BE;
+extern s16  lbl_803DD8D6;
+extern s16  lbl_803DBA66;
+extern s16  aButtonIcon;
+extern u8   bButtonIcon;
+extern s16  lbl_803DD89C;
+extern s16  lbl_803DD790;
+extern s16  lbl_803DD796;
+extern u8   lbl_803DD7B8;
+extern s16  lbl_803DD79A;
+extern s8   lbl_803DBA65;
+extern s16  lbl_803DD7B6;
+extern s16  lbl_803DD894;
+extern int  lbl_803DD8A8;
+extern u16  yButtonState;
+extern u16  yButtonItem;
+extern s16  yButtonItemTextureId;
+extern int  yButtonItemFlags;
+extern int  gTrickyHudItemMask;
+extern u8   lbl_803DD87C;
+extern s16  lbl_803DD886;
+extern s16  lbl_803DD888;
+extern f32  lbl_803DD878;
+extern f32  lbl_803DBA84;
+
+typedef struct {
+    u8  _pad0[0x488];
+    u8  enabled[0x40];     /* 0x488 */
+    u8  closeMode[0x40];   /* 0x4c8 */
+    u8  _pad508[0x40];     /* 0x508 */
+    s16 icons[0x40];       /* 0x548 */
+    u8  _pad5c8[0x80];     /* 0x5c8 */
+    int ids648[0x40];      /* 0x648 */
+    int ids748[0x40];      /* 0x748 */
+    int ids848[0x40];      /* 0x848 */
+    s16 texIds[0x40];      /* 0x948 */
+} CMenuHud;
+
+/* EN v1.0 0x8012DF68  size: 2328b  C-menu per-frame driver: input gating,
+ * item set selection, Y-button assignment, scroll, select/close handling. */
+#pragma scheduling off
+#pragma peephole off
+void cMenuRun(void)
+{
+    CMenuHud *hud = (CMenuHud *)lbl_803A87F0;
+    u8 *player;
+    s8 isTricky = 0;
+    u16 btn16;
+    u32 btn;
+    s16 *cursor;
+    int flags;
+
+    player = Obj_GetPlayerObject();
+    lbl_803DD8C0 = -1;
+    if (player == 0) {
+        return;
+    }
+
+    if ((*(int (**)(void))(*(int *)gCameraInterface + 0x10))() == 0x44 ||
+        (*(u16 *)(player + 0xb0) & 0x1000) != 0 || pauseMenuState != 0) {
+        buttonDisable(0, 0xe0800);
+    } else {
+        if ((s8)shouldCloseCMenu != 0) {
+            buttonDisable(0, (s8)shouldCloseCMenu);
+        }
+    }
+
+    btn = getButtonsJustPressed(0);
+    lbl_803DD8A4 = btn;
+    btn16 = (u16)btn;
+
+    if ((*(int (**)(void))(*(int *)gCameraInterface + 0x10))() == 0x44 ||
+        (*(u16 *)(player + 0xb0) & 0x1000) != 0 || pauseMenuState != 0 ||
+        (s8)shouldCloseCMenu != 0 || lbl_803DD75B != 0) {
+        lbl_803DD8A4 |= 0x200;
+    } else {
+        if ((s8)lbl_803DD8AC != 0) {
+            lbl_803DD8A4 = lbl_803DD8A0;
+            btn16 = (u16)lbl_803DD8A0;
+        }
+    }
+
+    switch ((s8)lbl_803DD8B8) {
+    case 0:
+        break;
+    case 1:
+        Sfx_PlayFromObject(0, 0xfd);
+        break;
+    case 2:
+        Sfx_PlayFromObject(0, 0xfb);
+        break;
+    }
+    lbl_803DD8C2 = -1;
+    lbl_803DD8B8 = 0;
+
+    {
+        s8 mi = (s8)lbl_803DD8B6;
+        char *set = (char *)lbl_8031B5D8 + mi * 16;
+        int handle = *(int *)set;
+        cursor = (s16 *)(set + 4);
+        flags = *(int *)(set + 8);
+        if (mi == 2) {
+            isTricky = 1;
+        }
+        lbl_803DD8B4 = *cursor;
+        lbl_803DD8B0 = cMenuSetItems(handle, isTricky);
+    }
+
+    switch (yButtonState) {
+    case 2:
+        if (!GameBit_Get(0x4e4)) {
+            yButtonState = 0;
+            yButtonItemTextureId = -1;
+        }
+        if (gTrickyHudItemMask & (1 << yButtonItem)) {
+            lbl_803DD87C = 0;
+        } else {
+            lbl_803DD87C = 1;
+        }
+        break;
+    case 1:
+    case 3:
+        if (GameBit_Get(yButtonItem) == 0 ||
+            (lbl_803DD886 > -1 && GameBit_Get(lbl_803DD886) != 0)) {
+            yButtonState = 0;
+            yButtonItemTextureId = -1;
+        } else if (lbl_803DD888 > -1 && GameBit_Get(lbl_803DD888) != 0) {
+            lbl_803DD87C = 1;
+        } else {
+            lbl_803DD87C = 0;
+        }
+        break;
+    }
+
+    if (lbl_803DD8B4 >= lbl_803DD8B0) {
+        lbl_803DD8B4 = 0;
+    }
+
+    {
+        int open;
+        if ((s8)cMenuOpen == 0) open = 0;
+        else if (lbl_803DD8D6 == lbl_803DBA66) open = 1;
+        else open = 0;
+        if (open) {
+            s16 cur = lbl_803DD8B4;
+            s16 cy;
+            lbl_803DD8C0 = (s16)hud->ids848[cur];
+            lbl_803DD8BC = (s16)hud->ids648[cur];
+            lbl_803DD8BE = (s16)hud->ids748[cur];
+            {
+                s16 icon = hud->icons[cur];
+                if (aButtonIcon == 0) {
+                    aButtonIcon = icon;
+                }
+            }
+            if (bButtonIcon == 0) {
+                bButtonIcon = 0xa;
+            }
+            if ((s8)lbl_803DD8AC != 0) {
+                cy = lbl_803DD89C;
+            } else {
+                cy = padGetCY(0);
+            }
+            if ((cy <= -0xa && lbl_803DD790 > -0xa) || cy < -0x3c) {
+                s16 m = lbl_803DD796;
+                if (m < 0) m = -m;
+                if (m < 8 && lbl_803DD7B8 == 0 && lbl_803DD79A == 0) {
+                    if ((s8)lbl_803DBA65 == 0) {
+                        Sfx_PlayFromObject(0, 0xfc);
+                    }
+                    lbl_803DD7B6 = 1;
+                    goto scrolled;
+                }
+            }
+            if ((cy >= 0xa && lbl_803DD790 < 0xa) || cy > 0x3c) {
+                s16 m = lbl_803DD796;
+                if (m < 0) m = -m;
+                if (m < 8 && lbl_803DD7B8 == 0 && lbl_803DD79A == 0) {
+                    if ((s8)lbl_803DBA65 == 0) {
+                        Sfx_PlayFromObject(0, 0xfc);
+                    }
+                    lbl_803DD7B6 = -1;
+                }
+            }
+        scrolled:
+            lbl_803DD790 = cy;
+            if (lbl_803DD7B6 > 0xff) {
+                lbl_803DD7B6 = 0xff;
+            }
+            if (lbl_803DD7B6 < -0xff) {
+                lbl_803DD7B6 = -0xff;
+            }
+            if (lbl_803DD894 != -1) {
+                lbl_803DD8B4 = lbl_803DD894;
+            }
+            {
+                s16 vel = lbl_803DD7B6;
+                if (vel != 0 && lbl_803DD796 == 0) {
+                    if (vel > 0) {
+                        int count;
+                        lbl_803DD7B6 = (s16)(vel - 1);
+                        count = lbl_803DD8B0;
+                        if (count > 1) {
+                            if (count == 2 && lbl_803DD8B4 == 1) {
+                                lbl_803DD796 = 0x64;
+                            } else {
+                                lbl_803DD796 = 0x32;
+                            }
+                            lbl_803DBA65 = 3;
+                            lbl_803DD7B8 = 0;
+                            lbl_803DD8B4 = (s16)(lbl_803DD8B4 + 1);
+                            if (lbl_803DD8B4 >= count) {
+                                lbl_803DD8B4 = 0;
+                            }
+                        }
+                    } else {
+                        int count;
+                        lbl_803DD7B6 = (s16)(vel + 1);
+                        count = lbl_803DD8B0;
+                        if (count > 1) {
+                            if (count == 2 && lbl_803DD8B4 == 0) {
+                                lbl_803DD796 = -0x64;
+                            } else {
+                                lbl_803DD796 = -0x32;
+                            }
+                            lbl_803DBA65 = -3;
+                            lbl_803DD7B8 = 0;
+                            lbl_803DD8B4 = (s16)(lbl_803DD8B4 - 1);
+                            if (lbl_803DD8B4 < 0) {
+                                lbl_803DD8B4 = (s16)(count - 1);
+                            }
+                        }
+                    }
+                } else if (lbl_803DD8A4 & 0x200) {
+                    Sfx_PlayFromObject(0, 0x37c);
+                    cMenuOpen = 0;
+                } else {
+                    u16 b2 = btn16;
+                    if (b2 & 0x900) {
+                        int open2;
+                        if ((s8)cMenuOpen == 0) open2 = 0;
+                        else if (lbl_803DD8D6 == lbl_803DBA66) open2 = 1;
+                        else open2 = 0;
+                        if (open2) {
+                            u8 matched = 0;
+                            if (b2 & 0x800) {
+                                if (yButtonState != 0 && yButtonItem == lbl_803DD8C0) {
+                                    matched = 1;
+                                } else {
+                                    Sfx_PlayFromObject(0, 0x408);
+                                    yButtonItemTextureId = hud->texIds[lbl_803DD8B4];
+                                    yButtonItem = (u16)lbl_803DD8C0;
+                                    lbl_803DD888 = lbl_803DD8BE;
+                                    lbl_803DD886 = lbl_803DD8BC;
+                                    lbl_803DD878 = lbl_803DBA84;
+                                    if (isTricky == 0) {
+                                        if ((s8)cMenuState == 4) {
+                                            yButtonState = 1;
+                                        } else {
+                                            yButtonState = 3;
+                                        }
+                                        yButtonItemFlags = flags;
+                                    } else {
+                                        yButtonState = 2;
+                                    }
+                                }
+                            }
+                            buttonDisable(0, 0x900);
+                            if (isTricky == 0) {
+                                if (hud->enabled[lbl_803DD8B4] != 0) {
+                                    if ((b2 & 0x100) || matched != 0) {
+                                        ObjMsg_SendToObject(player, flags, 0, lbl_803DD8C0);
+                                        lbl_803DD8C2 = lbl_803DD8C0;
+                                        lbl_803DD8B8 = (s8)hud->closeMode[lbl_803DD8B4];
+                                        cMenuOpen = 0;
+                                    }
+                                    Sfx_PlayFromObject(0, 0xf7);
+                                } else {
+                                    lbl_803DD8C2 = -1;
+                                    lbl_803DD8B8 = 0;
+                                    Sfx_PlayFromObject(0, 0xfd);
+                                }
+                            } else {
+                                if (hud->enabled[lbl_803DD8B4] != 0) {
+                                    if ((b2 & 0x100) || matched != 0) {
+                                        cMenuOpen = 0;
+                                        lbl_803DD8C2 = lbl_803DD8C0;
+                                        cMenuPlaySelectedItemSfx(player);
+                                        lbl_803DD8B8 = 0;
+                                    }
+                                } else {
+                                    lbl_803DD8C2 = -1;
+                                    lbl_803DD8B8 = 0;
+                                    Sfx_PlayFromObject(0, 0xfd);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            if (btn16 & 0x800) {
+                u16 ys = yButtonState;
+                if (ys == 3 && lbl_803DD87C == 0) {
+                    ObjMsg_SendToObject(player, yButtonItemFlags, 0, yButtonItem);
+                    lbl_803DD8C2 = (s16)yButtonItem;
+                    buttonDisable(0, 0x900);
+                } else if (ys == 2) {
+                    if (gTrickyHudItemMask & (1 << yButtonItem)) {
+                        lbl_803DD8C2 = (s16)yButtonItem;
+                        cMenuPlaySelectedItemSfx(player);
+                        buttonDisable(0, 0x900);
+                    }
+                }
+            }
+        }
+    }
+
+    if (cMenuEnabled != 0) {
+        cMenuRotateFn_80124d80();
+    }
+    {
+        u8 isOpen = cMenuOpen;
+        int notOpen;
+        if ((s8)isOpen != 0) notOpen = 0;
+        else if (lbl_803DD8D6 != 0) notOpen = 0;
+        else notOpen = 1;
+        if (notOpen) {
+            cMenuState = 0;
+            lbl_803DD8A8 = 0;
+            lbl_803DD7B6 = 0;
+        }
+        if ((s8)isOpen != 0) {
+            buttonDisable(0, 0x300);
+        }
+    }
+    *cursor = lbl_803DD8B4;
+}
+#pragma peephole reset
+#pragma scheduling reset
