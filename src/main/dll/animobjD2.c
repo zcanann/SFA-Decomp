@@ -96,7 +96,7 @@ void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
 }
 
 extern void trickyDebugPrint(char *fmt, ...);
-extern int trickyFindNearestUsableBaddie(void *p, f32 r, int p3);
+extern void *trickyFindNearestUsableBaddie(void *p, f32 r, int p3);
 extern void objAnimFn_8013a3f0(int *obj, int anim, f32 p3, int p4);
 extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int id);
@@ -137,28 +137,37 @@ typedef struct {
 } TrickyCfgBits;
 
 #define TRICKY_RETARGET(st, X) \
-    if (*(u32 *)((st) + 0x28) != (u32)((char *)(X) + 0x18)) { \
-        *(u32 *)((st) + 0x28) = (u32)((char *)(X) + 0x18); \
-        *(u32 *)((st) + 0x54) &= ~0x400; \
-        *(u16 *)((st) + 0xd2) = 0; \
+    { \
+        u32 px = (u32)((char *)(X) + 0x18); \
+        if (*(u32 *)((st) + 0x28) != px) { \
+            *(u32 *)((st) + 0x28) = px; \
+            *(u32 *)((st) + 0x54) = *(u32 *)((st) + 0x54) & 0xfffffbffU; \
+            *(u16 *)((st) + 0xd2) = 0; \
+        } \
     }
 
+#define TRICKY_RESET_TAIL(st) \
+    { \
+        f32 z = lbl_803E23DC; \
+        *(f32 *)((st) + 0x71c) = z; \
+        *(f32 *)((st) + 0x720) = z; \
+        *(u32 *)((st) + 0x54) = *(u32 *)((st) + 0x54) & 0xffffffefU; \
+        *(u32 *)((st) + 0x54) = *(u32 *)((st) + 0x54) & 0xfffeffffU; \
+        *(u32 *)((st) + 0x54) = *(u32 *)((st) + 0x54) & 0xfffdffffU; \
+        *(u32 *)((st) + 0x54) = *(u32 *)((st) + 0x54) & 0xfffbffffU; \
+        *(s8 *)((st) + 0xd) = -1; \
+    }
 #define TRICKY_RESET(st) \
     *(u8 *)((st) + 8) = 1; \
     *(u8 *)((st) + 0xa) = 0; \
-    *(f32 *)((st) + 0x71c) = lbl_803E23DC; \
-    *(f32 *)((st) + 0x720) = lbl_803E23DC; \
-    *(u32 *)((st) + 0x54) &= ~0x10; \
-    *(u32 *)((st) + 0x54) &= ~0x10000; \
-    *(u32 *)((st) + 0x54) &= ~0x20000; \
-    *(u32 *)((st) + 0x54) &= ~0x40000; \
-    *(s8 *)((st) + 0xd) = -1;
+    TRICKY_RESET_TAIL(st)
 
 #define TRICKY_BARK(obj, snd, p4) \
     { \
         u8 *cfg = *(u8 **)((char *)(obj) + 0xb8); \
         if (!((TrickyCfgBits *)(cfg + 0x58))->b) { \
-            if (*(s16 *)((char *)(obj) + 0xa0) >= 0x30 || *(s16 *)((char *)(obj) + 0xa0) < 0x29) { \
+            s16 a0 = *(s16 *)((char *)(obj) + 0xa0); \
+            if (a0 >= 0x30 || a0 < 0x29) { \
                 if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) { \
                     objAudioFn_800393f8(obj, cfg + 0x3a8, snd, p4, -1, 0); \
                 } \
@@ -178,21 +187,15 @@ void fn_8013E0D0(int *obj, u8 *st) {
         int go;
         trickyDebugPrint(str + 0x5a0);
         ok = trickyFn_8013b368(obj, lbl_803E24D4, st);
-        *(int *)(st + 0x24) = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
-        if (*(int *)(st + 0x24) != 0) {
+        *(void **)(st + 0x24) = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
+        if (*(void **)(st + 0x24) != NULL) {
             TRICKY_RETARGET(st, *(int *)(st + 0x24));
             go = 1;
         } else {
             *(u8 *)(st + 8) = 1;
             go = 0;
             st[0xa] = 0;
-            *(f32 *)(st + 0x71c) = lbl_803E23DC;
-            *(f32 *)(st + 0x720) = lbl_803E23DC;
-            *(u32 *)(st + 0x54) &= ~0x10;
-            *(u32 *)(st + 0x54) &= ~0x10000;
-            *(u32 *)(st + 0x54) &= ~0x20000;
-            *(u32 *)(st + 0x54) &= ~0x40000;
-            *(s8 *)(st + 0xd) = -1;
+            TRICKY_RESET_TAIL(st)
         }
         if (go != 0) {
             if (*(int *)(st + 0x728) == 0) {
@@ -234,21 +237,15 @@ void fn_8013E0D0(int *obj, u8 *st) {
         int go;
         trickyDebugPrint(str + 0x5b4, **(u8 **)(st + 0), *(int *)(st + 0x728));
         ok = trickyFn_8013b368(obj, lbl_803E24D4, st);
-        *(int *)(st + 0x24) = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
-        if (*(int *)(st + 0x24) != 0) {
+        *(void **)(st + 0x24) = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
+        if (*(void **)(st + 0x24) != NULL) {
             TRICKY_RETARGET(st, *(int *)(st + 0x24));
             go = 1;
         } else {
             *(u8 *)(st + 8) = 1;
             go = 0;
             st[0xa] = 0;
-            *(f32 *)(st + 0x71c) = lbl_803E23DC;
-            *(f32 *)(st + 0x720) = lbl_803E23DC;
-            *(u32 *)(st + 0x54) &= ~0x10;
-            *(u32 *)(st + 0x54) &= ~0x10000;
-            *(u32 *)(st + 0x54) &= ~0x20000;
-            *(u32 *)(st + 0x54) &= ~0x40000;
-            *(s8 *)(st + 0xd) = -1;
+            TRICKY_RESET_TAIL(st)
         }
         if (go != 0) {
             if (*(int *)(st + 0x728) == 0) {
@@ -331,21 +328,15 @@ void fn_8013E0D0(int *obj, u8 *st) {
         int go;
         trickyDebugPrint(str + 0x5cc);
         ok = trickyFn_8013b368(obj, lbl_803E24E4, st);
-        *(int *)(st + 0x24) = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
-        if (*(int *)(st + 0x24) != 0) {
+        *(void **)(st + 0x24) = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
+        if (*(void **)(st + 0x24) != NULL) {
             TRICKY_RETARGET(st, *(int *)(st + 0x24));
             go = 1;
         } else {
             *(u8 *)(st + 8) = 1;
             go = 0;
             st[0xa] = 0;
-            *(f32 *)(st + 0x71c) = lbl_803E23DC;
-            *(f32 *)(st + 0x720) = lbl_803E23DC;
-            *(u32 *)(st + 0x54) &= ~0x10;
-            *(u32 *)(st + 0x54) &= ~0x10000;
-            *(u32 *)(st + 0x54) &= ~0x20000;
-            *(u32 *)(st + 0x54) &= ~0x40000;
-            *(s8 *)(st + 0xd) = -1;
+            TRICKY_RESET_TAIL(st)
         }
         if (go != 0 && ok != 1) {
             objAnimFn_8013a3f0(obj, 0x34, lbl_803E2444, 0x4000000);
@@ -407,8 +398,8 @@ void fn_8013E0D0(int *obj, u8 *st) {
     case 5:
     {
         int *t;
-        int found = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
-        if (found != 0 && *(s16 *)(found + 0x46) == 0x6a3) {
+        void *found = trickyFindNearestUsableBaddie(*(void **)(st + 4), lbl_803E24D8, 0);
+        if (found != NULL && *(s16 *)((char *)found + 0x46) == 0x6a3) {
             t = (int *)found;
         } else {
             t = (int *)fn_80296118(*(void **)(st + 4));
