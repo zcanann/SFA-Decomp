@@ -1620,6 +1620,1001 @@ undefined4 mapLoadDataFile(int param_1,int param_2)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void padUpdate(void);
+extern void checkReset(void);
+extern void waitNextFrame(void);
+extern void dvdCheckError(void);
+extern void mmFreeTick(int a);
+extern void gameTextRun(void);
+extern u8 lbl_803DC950;
+extern char sZlbBlockTag[];
+extern int return0_8002A5B8(int p);
+extern int OSDisableInterrupts(void);
+extern void OSRestoreInterrupts(int s);
+extern char sDirBlockTag;
+extern int strncmp(const char *a, const char *b, u32 n);
+extern void *memcpy(void *dst, const void *src, u32 n);
+extern char *sResourceFileNameTable[];
+extern void zlbDecompress(void *dst, int size, int out, void *src);
+extern void DCStoreRange(void *p, u32 n);
+extern u32 ObjModel_GetUnpackedResourceSize(int p, u32 size);
+extern void ObjModel_UnpackResourcePayload(int p, u32 size, int dst, u32 unpacked);
+void loadDataFiles(void);
+int GXFlush_(u8 visible, int unused);
+
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u32 *param_5,int param_6,u32 param_7)
+{
+  struct MldfTables *t = (struct MldfTables *)lbl_80345E10;
+  u8 frame = 0;
+  u32 a = 0;
+  u32 b = 0;
+  u32 flags;
+  u32 hi;
+  u32 off;
+  u32 moff;
+  int s;
+  int i;
+  int j;
+  int k;
+  int r;
+  int ok;
+  u32 asize;
+  int tmp;
+  u32 local_78;
+  char buf[0x3c];
+
+  switch (param_1) {
+  case 0xd:
+    s = OSDisableInterrupts();
+    flags = lbl_803DCC80;
+    OSRestoreInterrupts(s);
+    if ((flags & 0x20000000) == 0 && (flags & 0x10000000) == 0) {
+      b = MLDF_PTR(0xe);
+    }
+    if ((flags & 0x80000000) == 0 && (flags & 0x40000000) == 0) {
+      a = MLDF_PTR(0x56);
+    }
+    hi = param_3 & 0x80000000;
+    if (hi != 0 && b == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 0x20000000) == 0 && (flags & 0x10000000) == 0) {
+          b = *(u32 *)((char *)t + 0x800195d8);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    else if ((param_3 & 0x20000000) != 0 && a == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 0x80000000) == 0 && (flags & 0x40000000) == 0) {
+          a = MLDF_PTR(0);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    if ((param_3 & 0x20000000) != 0 && a != 0) {
+      param_1 = 0x55;
+    } else if (hi != 0 && b != 0) {
+      param_1 = 0xd;
+    } else if (b != 0) {
+      param_1 = 0xd;
+    } else if (a != 0) {
+      param_1 = 0x55;
+    }
+    param_3 = param_3 & 0xfffffff;
+    break;
+  case 0x1b:
+    s = OSDisableInterrupts();
+    flags = lbl_803DCC80;
+    OSRestoreInterrupts(s);
+    if ((flags & 0x2000000) == 0 && (flags & 0x1000000) == 0) {
+      b = MLDF_PTR(0x1a);
+    }
+    if ((flags & 0x8000000) == 0 && (flags & 0x4000000) == 0) {
+      a = MLDF_PTR(0x53);
+    }
+    hi = param_3 & 0x80000000;
+    if (hi != 0 && b == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 0x2000000) == 0 && (flags & 0x1000000) == 0) {
+          b = MLDF_PTR(0x1a);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    else if ((param_3 & 0x20000000) != 0 && a == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 0x8000000) == 0 && (flags & 0x4000000) == 0) {
+          a = MLDF_PTR(0x53);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    if ((param_3 & 0x20000000) != 0 && a != 0) {
+      param_1 = 0x54;
+    } else if (hi != 0 && b != 0) {
+      param_1 = 0x1b;
+    } else if (b != 0) {
+      param_1 = 0x1b;
+    } else if (a != 0) {
+      param_1 = 0x54;
+    }
+    param_3 = param_3 & 0xfffffff;
+    break;
+  case 0x25:
+    s = OSDisableInterrupts();
+    flags = lbl_803DCC80;
+    OSRestoreInterrupts(s);
+    if ((flags & 0x20000) == 0 && (flags & 0x10000) == 0) {
+      b = MLDF_PTR(0x26);
+    }
+    if ((flags & 0x80000) == 0 && (flags & 0x40000) == 0) {
+      a = MLDF_PTR(0x48);
+    }
+    if ((param_3 & 0x20000000) != 0 && a != 0) {
+      param_1 = 0x47;
+    } else if ((param_3 & 0x10000000) != 0 && b != 0) {
+      param_1 = 0x25;
+    } else if (b != 0) {
+      param_1 = 0x25;
+    } else if (a != 0) {
+      param_1 = 0x47;
+    }
+    param_3 = param_3 & 0xfffffff;
+    break;
+  case 0x2b:
+    s = OSDisableInterrupts();
+    flags = lbl_803DCC80;
+    OSRestoreInterrupts(s);
+    if ((flags & 4) == 0 && (flags & 1) == 0) {
+      b = MLDF_PTR(0x2a);
+    }
+    if ((flags & 8) == 0 && (flags & 2) == 0) {
+      a = MLDF_PTR(0x45);
+    }
+    if ((param_3 & 0x10000000) != 0 && b == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 4) == 0 && (flags & 1) == 0) {
+          b = MLDF_PTR(0x2a);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    else if ((param_3 & 0x20000000) != 0 && a == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 8) == 0 && (flags & 2) == 0) {
+          a = MLDF_PTR(0x45);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    if (a != 0 && (param_3 & 0x20000000) != 0) {
+      param_1 = 0x46;
+      if (param_5 != NULL) {
+        moff = *(u32 *)(a + param_6 * 4) & 0xffffff;
+        i = 0;
+        if (moff == 0) {
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
+        } else if (moff < (*(u32 *)(a + param_6 * 4 - 4) & 0xffffff)) {
+          do {
+            k = i * 4;
+            j = i + 1;
+            i = i + 1;
+          } while (moff != (*(u32 *)(a + k) & 0xffffff));
+          do {
+            i = j + 1;
+            k = j * 4;
+            j = i;
+          } while ((*(u32 *)(a + k) & 0xffffff) <= moff);
+          *param_5 = (*(u32 *)(a + i * 4 - 4) & 0xffffff) - moff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) <= moff);
+          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - moff;
+        }
+      }
+    } else if (b != 0 && (param_3 & 0x10000000) != 0) {
+      param_1 = 0x2b;
+      if (param_5 != NULL) {
+        moff = *(u32 *)(b + param_6 * 4) & 0xffffff;
+        i = 0;
+        if (moff == 0) {
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
+        } else if (moff < (*(u32 *)(b + param_6 * 4 - 4) & 0xffffff)) {
+          do {
+            k = i * 4;
+            j = i + 1;
+            i = i + 1;
+          } while (moff != (*(u32 *)(b + k) & 0xffffff));
+          do {
+            i = j + 1;
+            k = j * 4;
+            j = i;
+          } while ((*(u32 *)(b + k) & 0xffffff) <= moff);
+          *param_5 = (*(u32 *)(b + i * 4 - 4) & 0xffffff) - moff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) <= moff);
+          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - moff;
+        }
+      }
+    } else if (b != 0) {
+      param_1 = 0x2b;
+      if (param_5 != NULL) {
+        moff = *(u32 *)(b + param_6 * 4) & 0xffffff;
+        i = 0;
+        if (moff == 0) {
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
+        } else if (moff < (*(u32 *)(b + param_6 * 4 - 4) & 0xffffff)) {
+          do {
+            k = i * 4;
+            j = i + 1;
+            i = i + 1;
+          } while (moff != (*(u32 *)(b + k) & 0xffffff));
+          do {
+            i = j + 1;
+            k = j * 4;
+            j = i;
+          } while ((*(u32 *)(b + k) & 0xffffff) <= moff);
+          *param_5 = (*(u32 *)(b + i * 4 - 4) & 0xffffff) - moff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) <= moff);
+          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - moff;
+        }
+      }
+    } else if (a != 0) {
+      param_1 = 0x46;
+      if (param_5 != NULL) {
+        moff = *(u32 *)(a + param_6 * 4) & 0xffffff;
+        i = 0;
+        if (moff == 0) {
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
+        } else if (moff < (*(u32 *)(a + param_6 * 4 - 4) & 0xffffff)) {
+          do {
+            k = i * 4;
+            j = i + 1;
+            i = i + 1;
+          } while (moff != (*(u32 *)(a + k) & 0xffffff));
+          do {
+            i = j + 1;
+            k = j * 4;
+            j = i;
+          } while ((*(u32 *)(a + k) & 0xffffff) <= moff);
+          *param_5 = (*(u32 *)(a + i * 4 - 4) & 0xffffff) - moff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) <= moff);
+          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - moff;
+        }
+      }
+    }
+    param_3 = param_3 & 0xfffffff;
+    break;
+  case 0x30:
+    s = OSDisableInterrupts();
+    flags = lbl_803DCC80;
+    OSRestoreInterrupts(s);
+    if ((flags & 0x40) == 0 && (flags & 0x10) == 0) {
+      b = MLDF_PTR(0x2f);
+    }
+    if ((flags & 0x80) == 0 && (flags & 0x20) == 0) {
+      a = MLDF_PTR(0x49);
+    }
+    if ((param_3 & 0x10000000) != 0 && b == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 0x40) == 0 && (flags & 0x10) == 0) {
+          b = MLDF_PTR(0x2f);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    else if ((param_3 & 0x20000000) != 0 && a == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 0x80) == 0 && (flags & 0x20) == 0) {
+          a = MLDF_PTR(0x49);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    if ((param_3 & 0x20000000) != 0) {
+      param_1 = 0x4a;
+      if (param_5 != NULL) {
+        *param_5 = (*(u32 *)(a + param_6 * 4 + 4) & 0xfffffff) - (*(u32 *)(a + param_6 * 4) & 0xfffffff);
+      }
+    } else if ((param_3 & 0x10000000) != 0) {
+      param_1 = 0x30;
+      if (param_5 != NULL) {
+        *param_5 = (*(u32 *)(b + param_6 * 4 + 4) & 0xfffffff) - (*(u32 *)(b + param_6 * 4) & 0xfffffff);
+      }
+    } else if (b != 0) {
+      param_1 = 0x30;
+      if (param_5 != NULL) {
+        *param_5 = (*(u32 *)(b + param_6 * 4 + 4) & 0xfffffff) - (*(u32 *)(b + param_6 * 4) & 0xfffffff);
+      }
+    } else if (a != 0) {
+      param_1 = 0x4a;
+      if (param_5 != NULL) {
+        *param_5 = (*(u32 *)(a + param_6 * 4 + 4) & 0xfffffff) - (*(u32 *)(a + param_6 * 4) & 0xfffffff);
+      }
+    }
+    param_3 = param_3 & 0xfffffff;
+    if ((param_7 & 1) != 0) {
+      r = MLDF_PTR(param_1);
+      tmp = return0_8002A5B8(r + param_3);
+      if (tmp != 0) {
+        *param_5 = ObjModel_GetUnpackedResourceSize(r + param_3, *param_5);
+      }
+    }
+    break;
+  case 0x51:
+    if (MLDF_PTR(0x52) != 0) {
+      param_1 = 0x51;
+      if (param_5 != NULL) {
+        *param_5 = (*(u32 *)(MLDF_PTR(0x52) + param_6 * 4 + 4) & 0xfffffff) - (*(u32 *)(MLDF_PTR(0x52) + param_6 * 4) & 0xfffffff);
+      }
+    }
+    param_3 = param_3 & 0xfffffff;
+    if ((param_7 & 1) != 0) {
+      r = MLDF_PTR(param_1);
+      tmp = return0_8002A5B8(r + param_3);
+      if (tmp != 0) {
+        *param_5 = ObjModel_GetUnpackedResourceSize(r + param_3, *param_5);
+      }
+    }
+    break;
+  case 0x23:
+    s = OSDisableInterrupts();
+    flags = lbl_803DCC80;
+    OSRestoreInterrupts(s);
+    if ((flags & 0x400) == 0 && (flags & 0x100) == 0) {
+      b = MLDF_PTR(0x24);
+    }
+    if ((flags & 0x800) == 0 && (flags & 0x200) == 0) {
+      a = MLDF_PTR(0x4e);
+    }
+    if ((param_3 & 0x40000000) != 0 && b == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 0x400) == 0 && (flags & 0x100) == 0) {
+          b = MLDF_PTR(0x24);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    else if ((param_3 & 0x80000000) != 0 && a == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 0x800) == 0 && (flags & 0x200) == 0) {
+          a = MLDF_PTR(0x4e);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    if (a != 0 && (((u32 *)t->mergeTex0)[param_6] & 0x80000000) != 0) {
+      param_1 = 0x4d;
+      if (param_5 != NULL) {
+        off = *(u32 *)(a + param_6 * 4) & 0xffffff;
+        if (off == 0) {
+          i = 0;
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) <= off);
+          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - off;
+        }
+      }
+    } else if (b != 0 && (((u32 *)t->mergeTex0)[param_6] & 0x40000000) != 0) {
+      param_1 = 0x23;
+      if (param_5 != NULL) {
+        off = *(u32 *)(b + param_6 * 4) & 0xffffff;
+        if (off == 0) {
+          i = 0;
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) <= off);
+          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - off;
+        }
+      }
+    } else if (b != 0) {
+      param_1 = 0x23;
+      if (param_5 != NULL) {
+        off = *(u32 *)(b + param_6 * 4) & 0xffffff;
+        if (off == 0) {
+          i = 0;
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) <= off);
+          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - off;
+        }
+      }
+    } else if (a != 0) {
+      param_1 = 0x4d;
+      if (param_5 != NULL) {
+        off = *(u32 *)(a + param_6 * 4) & 0xffffff;
+        if (off == 0) {
+          i = 0;
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) <= off);
+          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - off;
+        }
+      }
+    }
+    param_3 = param_3 & 0xfffffff;
+    break;
+  case 0x20:
+    s = OSDisableInterrupts();
+    flags = lbl_803DCC80;
+    OSRestoreInterrupts(s);
+    if ((flags & 0x4000) == 0 && (flags & 0x1000) == 0) {
+      b = MLDF_PTR(0x21);
+    }
+    if ((flags & 0x8000) == 0 && (flags & 0x2000) == 0) {
+      a = MLDF_PTR(0x4c);
+    }
+    if ((param_3 & 0x40000000) != 0 && b == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 0x4000) == 0 && (flags & 0x1000) == 0) {
+          b = MLDF_PTR(0x21);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    else if ((param_3 & 0x80000000) != 0 && a == 0) {
+      while (1) {
+        s = OSDisableInterrupts();
+        flags = lbl_803DCC80;
+        OSRestoreInterrupts(s);
+        if (flags == 0) {
+          break;
+        }
+        if ((flags & 0x8000) == 0 && (flags & 0x2000) == 0) {
+          a = MLDF_PTR(0x4c);
+          break;
+        }
+      padUpdate();
+      checkReset();
+      if (frame != 0) {
+        waitNextFrame();
+      }
+      loadDataFiles();
+      dvdCheckError();
+      if (frame != 0) {
+        mmFreeTick(0);
+        gameTextRun();
+        GXFlush_(1, 0);
+      }
+      if (lbl_803DC950 != 0) {
+        frame = 1;
+      }
+      }
+    }
+    if (a != 0 && (((u32 *)t->mergeTex1)[param_6] & 0x80000000) != 0) {
+      param_1 = 0x4b;
+      if (param_5 != NULL) {
+        off = *(u32 *)(a + param_6 * 4) & 0xffffff;
+        if (off == 0) {
+          i = 0;
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) <= off);
+          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - off;
+        }
+      }
+    } else if (b != 0 && (((u32 *)t->mergeTex1)[param_6] & 0x40000000) != 0) {
+      param_1 = 0x20;
+      if (param_5 != NULL) {
+        off = *(u32 *)(b + param_6 * 4) & 0xffffff;
+        if (off == 0) {
+          i = 0;
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) <= off);
+          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - off;
+        }
+      }
+    } else if (b != 0) {
+      param_1 = 0x20;
+      if (param_5 != NULL) {
+        off = *(u32 *)(b + param_6 * 4) & 0xffffff;
+        if (off == 0) {
+          i = 0;
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(b + j * 4 - 4) & 0xffffff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(b + k) & 0xffffff) <= off);
+          *param_5 = (*(u32 *)(b + j * 4 - 4) & 0xffffff) - off;
+        }
+      }
+    } else if (a != 0) {
+      param_1 = 0x4b;
+      if (param_5 != NULL) {
+        off = *(u32 *)(a + param_6 * 4) & 0xffffff;
+        if (off == 0) {
+          i = 0;
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(a + j * 4 - 4) & 0xffffff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(a + k) & 0xffffff) <= off);
+          *param_5 = (*(u32 *)(a + j * 4 - 4) & 0xffffff) - off;
+        }
+      }
+    }
+    param_3 = param_3 & 0xfffffff;
+    break;
+  case 0x4f:
+    if (MLDF_PTR(0x50) != 0) {
+      param_1 = 0x4f;
+      if (param_5 != NULL) {
+        off = *(u32 *)(MLDF_PTR(0x50) + param_6 * 4) & 0xffffff;
+        if (off == 0) {
+          i = 0;
+          do {
+            j = i + 1;
+            k = i * 4;
+            i = j;
+          } while ((*(u32 *)(MLDF_PTR(0x50) + k) & 0xffffff) == 0);
+          *param_5 = *(u32 *)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff;
+        } else {
+          do {
+            j = param_6 + 1;
+            k = param_6 * 4;
+            param_6 = j;
+          } while ((*(u32 *)(MLDF_PTR(0x50) + k) & 0xffffff) <= off);
+          *param_5 = (*(u32 *)(MLDF_PTR(0x50) + j * 4 - 4) & 0xffffff) - off;
+        }
+      }
+    }
+    param_3 = param_3 & 0xfffffff;
+    break;
+  }
+  if ((param_7 & 1) != 0) {
+    return;
+  }
+  r = MLDF_PTR(param_1);
+  if (r == 0) {
+    if (param_1 == 0x20 || param_1 == 0x4b) {
+      DVDOpen(sResourceFileNameTable[param_1], buf);
+      asize = (param_4 + 0x1f) & 0xffffffe0;
+      r = (int)mmAlloc(asize, 0x7f7f7fff, 0);
+      DVDRead(buf, (void *)r, asize, param_3 & 0xffffff);
+      DVDClose(buf);
+      DCStoreRange((void *)r, param_4);
+      if (strncmp(&sDirBlockTag, (char *)r, 3) == 0) {
+        for (;;) {
+        }
+      }
+      if (strncmp((char *)r, sZlbBlockTag, 3) == 0) {
+        local_78 = *(u32 *)(r + 8);
+        zlbDecompress((void *)(r + 0x10), *(int *)(r + 0xc), param_2, &local_78);
+      }
+      mm_free((void *)r);
+    } else {
+      DVDOpen(sResourceFileNameTable[param_1], buf);
+      if (((u32)param_2 & 0x1f) == 0 && (param_4 & 0x1f) == 0) {
+        DVDRead(buf, (void *)param_2, param_4, param_3);
+      } else {
+        asize = (param_4 + 0x1f) & 0xffffffe0;
+        tmp = (int)mmAlloc(asize, 0x7f7f7fff, 0);
+        DVDRead(buf, (void *)tmp, asize, param_3);
+        memcpy((void *)param_2, (void *)tmp, param_4);
+        mm_free((void *)tmp);
+      }
+      DCStoreRange((void *)param_2, param_4);
+      DVDClose(buf);
+    }
+  } else if (param_1 == 0xd || param_1 == 0x55) {
+    if (r == 0) {
+      return;
+    }
+    memcpy((void *)param_2, (void *)(r + param_3), param_4);
+  } else if (param_1 == 0x1b || param_1 == 0x54) {
+    if (r == 0) {
+      return;
+    }
+    r = r + param_3;
+    if (strncmp((char *)r, sZlbBlockTag, 3) != 0) {
+      return;
+    }
+    local_78 = *(u32 *)(r + 8);
+    zlbDecompress((void *)(MLDF_PTR(param_1) + param_3 + 0x10), *(int *)(r + 0xc), param_2, &local_78);
+    DCStoreRange((void *)param_2, local_78);
+  } else if (param_1 == 0x25 || param_1 == 0x47) {
+    if (r == 0) {
+      return;
+    }
+    r = r + param_3;
+    if (strncmp((char *)r, sZlbBlockTag, 3) != 0) {
+      return;
+    }
+    local_78 = *(u32 *)(r + 8);
+    zlbDecompress((void *)(MLDF_PTR(param_1) + param_3 + 0x10), *(int *)(r + 0xc), param_2, &local_78);
+    DCStoreRange((void *)param_2, local_78);
+  } else if (param_1 == 0x2b || param_1 == 0x46) {
+    int *p = (int *)(r + param_3);
+    if (*p == 0xe0e0e0e0) {
+      memcpy((void *)param_2, (void *)((int)p + p[2] + 0x18), p[1]);
+    } else if (*p == 0xfacefeed) {
+      zlbDecompress((void *)((int)p + p[2] + 0x28), p[3] - 0x10, param_2, p + 1);
+      DCStoreRange((void *)param_2, p[1]);
+    }
+  } else if (param_1 == 0x23 || param_1 == 0x4d) {
+    r = r + (param_3 & 0xffffff);
+    local_78 = *(u32 *)(r + 8);
+    zlbDecompress((void *)(r + 0x10), *(int *)(r + 0xc), param_2, &local_78);
+    DCStoreRange((void *)param_2, local_78);
+  } else if (param_1 == 0x20 || param_1 == 0x4b) {
+    param_3 = param_3 & 0xffffff;
+    r = r + param_3;
+    if (strncmp(&sDirBlockTag, (char *)r, 3) == 0) {
+      return;
+    }
+    if (strncmp((char *)r, sZlbBlockTag, 3) == 0) {
+      local_78 = *(u32 *)(r + 8);
+      zlbDecompress((void *)(MLDF_PTR(param_1) + param_3 + 0x10), *(int *)(r + 0xc), param_2, &local_78);
+      DCStoreRange((void *)param_2, local_78);
+    }
+  } else if (param_1 == 0x4f) {
+    param_3 = param_3 & 0xffffff;
+    r = r + param_3;
+    if (strncmp(&sDirBlockTag, (char *)r, 3) == 0) {
+      return;
+    }
+    if (strncmp((char *)r, sZlbBlockTag, 3) == 0) {
+      local_78 = *(u32 *)(r + 8);
+      zlbDecompress((void *)(MLDF_PTR(0x4f) + param_3 + 0x10), *(int *)(r + 0xc), param_2, &local_78);
+      DCStoreRange((void *)param_2, local_78);
+    }
+  } else if (param_1 == 0x30 || param_1 == 0x51 || param_1 == 0x4a) {
+    r = r + param_3;
+    tmp = return0_8002A5B8(r);
+    if (tmp == 0) {
+      memcpy((void *)param_2, (void *)(MLDF_PTR(param_1) + param_3), param_4);
+    } else {
+      asize = ObjModel_GetUnpackedResourceSize(r, *param_5);
+      ObjModel_UnpackResourcePayload(r, *param_5, param_2, asize);
+    }
+  } else {
+    memcpy((void *)param_2, (void *)(r + param_3), param_4);
+  }
+}
+#pragma dont_inline reset
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
@@ -6796,7 +7791,7 @@ extern u16 lbl_803DB5CE;
 extern u8 lbl_803DB5CC;
 extern char lbl_8035F730[];
 #pragma scheduling off
-int GXFlush_(u8 visible) {
+int GXFlush_(u8 visible, int unused) {
     void *fifo_get;
     void *fifo_put;
     void *item[3];
