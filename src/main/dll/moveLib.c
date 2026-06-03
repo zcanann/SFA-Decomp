@@ -1537,3 +1537,55 @@ void dll_2E_func06(int obj, char *st, int point)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern s16 getAngle(f32 x, f32 z);
+extern f32 sqrtf(f32 x);
+
+/* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
+ * distance from an object to its target, updating the wide-turn flag. */
+#pragma scheduling off
+#pragma peephole off
+void dll_19_func07(int obj, int target, int div, u16 *outYaw, u16 *outDelta, u16 *outDist)
+{
+    char *st = *(char **)(obj + 0xb8);
+    f32 d[3];
+    f32 *dp = d;
+    s16 *ovr;
+    u16 ang;
+    int cur;
+    int delta;
+
+    if ((void *)obj == NULL || (void *)target == NULL) {
+        *outYaw = 0;
+        *outDelta = 0;
+        *outDist = 0;
+    } else {
+        dp[0] = *(f32 *)(target + 0x18) - *(f32 *)(obj + 0x18);
+        dp[1] = *(f32 *)(target + 0x1c) - *(f32 *)(obj + 0x1c);
+        dp[2] = *(f32 *)(target + 0x20) - *(f32 *)(obj + 0x20);
+        ang = getAngle(-dp[0], -dp[2]);
+        ovr = *(s16 **)(obj + 0x30);
+        if (ovr != NULL) {
+            cur = (s16)(*(s16 *)(obj + 0x0) + *ovr);
+        } else {
+            cur = *(s16 *)(obj + 0x0);
+        }
+        delta = ang - (u16)(s16)cur;
+        if (delta > 0x8000) {
+            delta -= 0xffff;
+        }
+        if (delta < -0x8000) {
+            delta += 0xffff;
+        }
+        *outDelta = (u16)delta;
+        if ((u16)delta < 0x31c4 || (u16)delta > 0xce3b) {
+            *(u16 *)(st + 0x400) &= ~0x10;
+        } else {
+            *(u16 *)(st + 0x400) |= 0x10;
+        }
+        *outYaw = (u16)delta / (0x10000 / (u8)div);
+        *outDist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
