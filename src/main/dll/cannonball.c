@@ -27,7 +27,7 @@ extern void objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, i
 extern void curveFn_800da23c(void *route, int node);
 extern void RomCurve_stepClamped(float *route, float speed);
 extern void fn_800DA980(void *route, int curve, int fromNode, int toNode);
-extern int fn_800DBCFC(float *pos, void *flag);
+extern int Objfsa_GetWalkGroupIndexAtPoint(float *pos, void *flag);
 extern void fn_80139834(int obj, void *route, float speed);
 extern void trickyMove(int obj, void *moveState);
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
@@ -181,7 +181,7 @@ void trickyFn_80141290(int obj, int ball)
         fn_80139834(obj, (void *)(ball + CANNONBALL_ROUTE), *(float *)(ball + CANNONBALL_SPEED));
         trickyMove(obj, (void *)(ball + CANNONBALL_MOVE_STATE));
 
-        if (fn_800DBCFC((float *)(obj + 0x18), (void *)0) == 0) {
+        if (Objfsa_GetWalkGroupIndexAtPoint((float *)(obj + 0x18), (void *)0) == 0) {
             *(u32 *)(ball + CANNONBALL_FLAGS) |= CANNONBALL_HIDE_FLAG;
         } else {
             *(u32 *)(ball + CANNONBALL_FLAGS) &= ~CANNONBALL_HIDE_FLAG;
@@ -202,9 +202,9 @@ void trickyFn_80141290(int obj, int ball)
         }
     } else {
         trickyFn_8013b368(obj, ball, lbl_803E2488);
-        nodeCount = fn_800DBCFC((float *)(*(int *)(ball + CANNONBALL_CURVE) + 8), (void *)0);
+        nodeCount = Objfsa_GetWalkGroupIndexAtPoint((float *)(*(int *)(ball + CANNONBALL_CURVE) + 8), (void *)0);
 
-        if (fn_800DBCFC((float *)(obj + 0x18), (void *)0) == nodeCount) {
+        if (Objfsa_GetWalkGroupIndexAtPoint((float *)(obj + 0x18), (void *)0) == nodeCount) {
             curve = *(int *)(ball + CANNONBALL_CURVE);
 
             (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(curve, 0);

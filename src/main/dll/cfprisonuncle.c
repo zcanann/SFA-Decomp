@@ -76,7 +76,7 @@ extern int FUN_800d9de0();
 extern bool FUN_800da5e8();
 extern undefined4 FUN_800db110();
 extern uint FUN_800db47c();
-extern int fn_800DBCFC(f32 *pos,int param_2);
+extern int Objfsa_GetWalkGroupIndexAtPoint(f32 *pos,int param_2);
 extern int getPatchGroup(f32 *pos,int patchGroup);
 extern int cMenuGetSelectedItem(void);
 extern int FUN_8012efc4();
@@ -1887,7 +1887,7 @@ int fn_8017FFD0(int obj, TrickyWarpState *state) {
     return 0;
   }
   if (state->patchGroup == 0) {
-    state->patchGroup = (u8)fn_800DBCFC((f32 *)(obj + 0xc),0);
+    state->patchGroup = (u8)Objfsa_GetWalkGroupIndexAtPoint((f32 *)(obj + 0xc),0);
     if (state->patchGroup != 0) {
       curveEntries = (*(TrickyWarpCurveEntry **(**)(int *))(*(int *)gRomCurveInterface + 0x10))(&curveCount);
       outNodeId = state->curveNodeIds;
@@ -1911,7 +1911,7 @@ int fn_8017FFD0(int obj, TrickyWarpState *state) {
     return 0;
   }
   playerObj = (int)Obj_GetPlayerObject();
-  playerPatchGroup = fn_800DBCFC((f32 *)(playerObj + 0xc),0);
+  playerPatchGroup = Objfsa_GetWalkGroupIndexAtPoint((f32 *)(playerObj + 0xc),0);
   if (playerPatchGroup != 0) {
     if (playerPatchGroup == state->patchGroup) {
       return 1;

@@ -4502,7 +4502,7 @@ uint isInWalkGroupOrPatch(float *point)
 /*
  * --INFO--
  *
- * Function: fn_800DBCFC
+ * Function: Objfsa_GetWalkGroupIndexAtPoint
  * EN v1.0 Address: 0x800DBCFC
  * EN v1.0 Size: 464b
  * EN v1.1 Address: TODO
@@ -4512,7 +4512,7 @@ uint isInWalkGroupOrPatch(float *point)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_800DBCFC(float *point,ObjfsaWalkGroupPatchInfo *patchInfo)
+int Objfsa_GetWalkGroupIndexAtPoint(float *point,ObjfsaWalkGroupPatchInfo *patchInfo)
 {
   u8 walkGroupIndex;
   u8 patchListIndex;
@@ -4558,7 +4558,7 @@ int fn_800DBCFC(float *point,ObjfsaWalkGroupPatchInfo *patchInfo)
 /*
  * --INFO--
  *
- * Function: fn_800DBECC
+ * Function: Objfsa_GetPatchGroupIdAtPoint
  * EN v1.0 Address: 0x800DBECC
  * EN v1.0 Size: 292b
  * EN v1.1 Address: TODO
@@ -4568,7 +4568,7 @@ int fn_800DBCFC(float *point,ObjfsaWalkGroupPatchInfo *patchInfo)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-u16 fn_800DBECC(float *point)
+u16 Objfsa_GetPatchGroupIdAtPoint(float *point)
 {
   int patchCount;
   ObjfsaPatch *patch;

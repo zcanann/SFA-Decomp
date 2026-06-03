@@ -2734,8 +2734,8 @@ int Tricky_func18(int *obj, int *out) {
 #pragma peephole reset
 
 extern u32 GameBit_Get(int bit);
-extern u8 fn_800DBCFC(void *pos,int param_2);
-extern int fn_800DBECC(void *pos);
+extern u8 Objfsa_GetWalkGroupIndexAtPoint(void *pos,int param_2);
+extern int Objfsa_GetPatchGroupIdAtPoint(void *pos);
 extern void walkPath_writeU16LE(int pathId,u8 *out);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject(int setup,int param_2,int param_3,int param_4,int param_5);
@@ -2747,12 +2747,12 @@ extern f32 lbl_803E23DC;
 #pragma scheduling off
 int trickyFn_801451d8(int obj,int state) {
     u8 pathBytes[16];
-    u32 pathByte = fn_800DBCFC((void *)(obj + 0x18), 0);
+    u32 pathByte = Objfsa_GetWalkGroupIndexAtPoint((void *)(obj + 0x18), 0);
 
     pathByte = (u8)pathByte;
     pathBytes[0] = pathByte;
     if (pathByte == 0) {
-        int pathId = fn_800DBECC((void *)(obj + 0x18));
+        int pathId = Objfsa_GetPatchGroupIdAtPoint((void *)(obj + 0x18));
         if (pathId != 0) {
             walkPath_writeU16LE(pathId & 0xffff, pathBytes);
         }

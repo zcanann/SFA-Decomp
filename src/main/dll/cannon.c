@@ -16,7 +16,7 @@ extern void* ObjGroup_GetObjects();
 extern undefined4 FUN_80039468();
 extern int FUN_800da5f0();
 extern int FUN_800db47c();
-extern int fn_800DBCFC(float *pos, void *flag);
+extern int Objfsa_GetWalkGroupIndexAtPoint(float *pos, void *flag);
 extern f32 getXZDistance(float *a, float *b);
 extern undefined4 FUN_80139910();
 extern int FUN_80139a48();
@@ -83,12 +83,12 @@ int trickyGuardFindBaddieTarget(int p) {
     for (i = 0; (s16)i < count; i++) {
         d = (f32)getXZDistance((float *)(*list + 0x18), (float *)(p + 0x71c));
         if (best == 0) {
-            if (*(int *)(p + 0x730) == fn_800DBCFC((float *)(*list + 0x18), (void *)0x0)) {
+            if (*(int *)(p + 0x730) == Objfsa_GetWalkGroupIndexAtPoint((float *)(*list + 0x18), (void *)0x0)) {
                 bestDist = d;
                 best = *list;
             }
         } else if (d < bestDist) {
-            if (*(int *)(p + 0x730) == fn_800DBCFC((float *)(*list + 0x18), (void *)0x0)) {
+            if (*(int *)(p + 0x730) == Objfsa_GetWalkGroupIndexAtPoint((float *)(*list + 0x18), (void *)0x0)) {
                 bestDist = d;
                 best = *list;
             }
@@ -200,7 +200,7 @@ void trickyFlame(int p1, int p2) {
     case 3:
         trickyDebugPrint(strBase + 0x70c);
         trickyFn_8013b368(p1, p2, lbl_803E2488);
-        if ((u8)*(u8 *)(*(int *)(p2 + 0x720) + 0x3) == fn_800DBCFC((float *)(p1 + 0x18), (void *)0x0)) {
+        if ((u8)*(u8 *)(*(int *)(p2 + 0x720) + 0x3) == Objfsa_GetWalkGroupIndexAtPoint((float *)(p1 + 0x18), (void *)0x0)) {
             *(u8 *)(p2 + 0x9) = 1;
             *(u8 *)(p2 + 0xa) = 4;
         }
@@ -210,7 +210,7 @@ void trickyFlame(int p1, int p2) {
         target = (void *)(*(int *)(p2 + 0x71c) + 0x8);
         fn_8013D5A4(p1, p2, target, 1, lbl_803E2488);
         trickyMove(p1, target);
-        if (fn_800DBCFC((float *)(p1 + 0x18), (void *)0x0) == 0) {
+        if (Objfsa_GetWalkGroupIndexAtPoint((float *)(p1 + 0x18), (void *)0x0) == 0) {
             *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x10;
             *(u8 *)(p2 + 0xa) = 5;
         }
@@ -396,7 +396,7 @@ void trickyFlame(int p1, int p2) {
             target = (void *)(*(int *)(p2 + 0x720) + 0x8);
             fn_8013D5A4(p1, p2, target, 1, lbl_803E2488);
             trickyMove(p1, target);
-            if (fn_800DBCFC((float *)(p1 + 0x18), (void *)0x0) != 0) {
+            if (Objfsa_GetWalkGroupIndexAtPoint((float *)(p1 + 0x18), (void *)0x0) != 0) {
                 *(u8 *)(p2 + 0x8) = 1;
                 *(u8 *)(p2 + 0xa) = 0;
                 *(f32 *)(p2 + 0x71c) = lbl_803E23DC;
@@ -435,7 +435,7 @@ void trickyGuard(int p1, int p2) {
     switch (*(u8 *)(p2 + 0xa)) {
     case 0:
         trickyDebugPrint(strBase + 0x648);
-        *(int *)(p2 + 0x730) = fn_800DBCFC((float *)(*(int *)(p2 + 0x28)), (void *)0x0);
+        *(int *)(p2 + 0x730) = Objfsa_GetWalkGroupIndexAtPoint((float *)(*(int *)(p2 + 0x28)), (void *)0x0);
         *(f32 *)(p2 + 0x71c) = (f32)(*(f32 *)(*(int *)(p2 + 0x24) + 0x18) - lbl_803E247C *
             fn_80293E80(((int)*(s16 *)*(int *)(p2 + 0x24) * lbl_803E2454) / lbl_803E2458));
         *(f32 *)(p2 + 0x720) = *(f32 *)(*(int *)(p2 + 0x24) + 0x1c);
@@ -447,7 +447,7 @@ void trickyGuard(int p1, int p2) {
     case 1:
         trickyDebugPrint(strBase + 0x654);
         trickyFn_8013b368(p1, p2, lbl_803E2488);
-        if (*(int *)(p2 + 0x730) == fn_800DBCFC((float *)(p1 + 0x18), (void *)0x0)) {
+        if (*(int *)(p2 + 0x730) == Objfsa_GetWalkGroupIndexAtPoint((float *)(p1 + 0x18), (void *)0x0)) {
             *(u8 *)(p2 + 0xa) = 2;
         }
         break;
@@ -515,7 +515,7 @@ void trickyGuard(int p1, int p2) {
                 *(u8 *)(p2 + 0xa) = 6;
             }
         } else {
-            if (*(int *)(p2 + 0x730) != fn_800DBCFC((float *)(*(int *)(p2 + 0x28)), (void *)0x0)) {
+            if (*(int *)(p2 + 0x730) != Objfsa_GetWalkGroupIndexAtPoint((float *)(*(int *)(p2 + 0x28)), (void *)0x0)) {
                 if (*(uint *)(p2 + 0x28) != (uint)(*(int *)(p2 + 0x24) + 0x18)) {
                     *(int *)(p2 + 0x28) = *(int *)(p2 + 0x24) + 0x18;
                     *(u32 *)(p2 + 0x54) &= ~0x400;
