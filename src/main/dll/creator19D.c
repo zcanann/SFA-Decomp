@@ -22,7 +22,7 @@ extern void Sfx_SetObjectChannelVolume(void *obj,int channel,int volume,f32 pitc
 extern s16 getAngle(f32 deltaX,f32 deltaZ);
 extern f32 Vec_xzDistance(f32 *a,f32 *b);
 extern void fn_8011F6D4(int enable);
-extern void fn_8011F6E0(u8 channel,u8 param,s16 value);
+extern void fearTestMeterSetRange(u8 channel,u8 param,s16 value);
 extern int padGetStickX(int controller);
 extern u32 randomGetRange(int min,int max);
 extern void *Resource_Acquire(int id,int count);
@@ -556,7 +556,7 @@ int fn_801C49B8(void *objArg)
 
   runtime->swayPhase += timeDelta * (runtime->swayVelocity + runtime->swayAccel);
   swayValue = (int)(lbl_803E4F4C * runtime->swayPhase);
-  fn_8011F6E0(0x60,0x39,(s16)swayValue);
+  fearTestMeterSetRange(0x60,0x39,(s16)swayValue);
   if ((swayValue > 0x39) || (swayValue < -0x39)) {
     return 1;
   }

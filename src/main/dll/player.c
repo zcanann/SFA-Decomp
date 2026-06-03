@@ -8035,7 +8035,7 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
             }
         }
         setAButtonIcon(6);
-        fn_8011F6E0(0x60, (u8)w, v);
+        fearTestMeterSetRange(0x60, (u8)w, v);
         if ((((u32 (*)(int))getButtonsJustPressed)(0) & 0x100) && *(int *)((char *)obj + 0xf8) == 0) {
             int a = v < 0 ? -v : v;
             if (a <= w) {
@@ -8063,7 +8063,7 @@ int Lightfoot_UpdateButtonTimingChallenge(int obj, int state, f32 fv)
             *(u16 *)((char *)data + 0x18) = (u16)randomGetRange(0, 0xffff);
             *(u16 *)((char *)data + 0x1c) = *(u16 *)((char *)data + 0x18);
             *(u16 *)((char *)data + 0x1a) = *(u16 *)((char *)data + 0x1c);
-            fn_8011F6E0(0x60,
+            fearTestMeterSetRange(0x60,
                         (u8)(int)(lbl_803E81BC * t->scales[*(u8 *)((char *)data + 0x2d)]),
                         (int)(lbl_803E81B0 *
                               fn_80293E80(lbl_803E81B4 * (f32)*(u16 *)((char *)data + 0x18) /
