@@ -1362,3 +1362,98 @@ void fn_80114B1C(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
+ * angle into the caller's record. */
+#pragma scheduling off
+#pragma peephole off
+int dll_2E_func0A(int idx, char *out)
+{
+    int r;
+
+    if (idx >= 0x1c) {
+        return 0;
+    }
+    r = (*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x40)))(idx);
+    if (r > -1) {
+        char *p = (char *)(*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x1c)))(r);
+        *(f32 *)(out + 0xc) = *(f32 *)(p + 0x8);
+        *(f32 *)(out + 0x10) = *(f32 *)(p + 0xc);
+        *(f32 *)(out + 0x14) = *(f32 *)(p + 0x10);
+        *(s16 *)(out + 0x0) = (s16)(*(s8 *)(p + 0x2c) << 8);
+        return 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s16 atan2i(int x, int z);
+extern f32 lbl_803E1C8C;
+
+/* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
+ * caller's record and aims its angle at the nearest group-8 object (falling
+ * back to the point's packed angle). */
+#pragma scheduling off
+#pragma peephole off
+int dll_2E_func0C(int idx, char *out)
+{
+    f32 range;
+    int r;
+
+    range = lbl_803E1C8C;
+    r = (*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x40)))(idx);
+    if (r > -1) {
+        char *p = (char *)(*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x1c)))(r);
+        char *q;
+        *(f32 *)(out + 0xc) = *(f32 *)(p + 0x8);
+        *(f32 *)(out + 0x10) = *(f32 *)(p + 0xc);
+        *(f32 *)(out + 0x14) = *(f32 *)(p + 0x10);
+        q = (char *)ObjGroup_FindNearestObjectToPoint(8, out + 0xc, &range);
+        if (q != NULL) {
+            *(s16 *)(out + 0x0) = (s16)atan2i((int)(*(f32 *)(q + 0xc) - *(f32 *)(out + 0xc)),
+                                         (int)(*(f32 *)(q + 0x14) - *(f32 *)(out + 0x14)));
+        } else {
+            *(s16 *)(out + 0x0) = (s16)(*(s8 *)(p + 0x2c) << 8);
+        }
+        return 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 timeDelta;
+extern f32 lbl_803E1C78;
+extern f32 lbl_803E1C2C;
+extern f32 lbl_803E1C7C;
+
+/* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
+ * current target and turns the yaw by the buffered turn rate. */
+#pragma scheduling off
+#pragma peephole off
+void dll_19_func06(s16 *yaw, char *st, f32 cap, f32 speed)
+{
+    if (*(f32 *)(st + 0x298) < lbl_803E1C78) {
+        f32 rest;
+        *(s16 *)(st + 0x334) = 0;
+        *(s16 *)(st + 0x336) = 0;
+        rest = lbl_803E1C2C;
+        *(f32 *)(st + 0x298) = rest;
+        *(f32 *)(st + 0x280) = rest;
+    }
+    *(f32 *)(st + 0x284) = lbl_803E1C2C;
+    *yaw = lbl_803E1C7C * ((f32)*(s16 *)(st + 0x336) * timeDelta / speed) + (f32)*yaw;
+    *(f32 *)(st + 0x294) +=
+        timeDelta * ((*(f32 *)(st + 0x298) - *(f32 *)(st + 0x294)) / *(f32 *)(st + 0x2b8));
+    *(f32 *)(st + 0x280) +=
+        timeDelta * ((*(f32 *)(st + 0x298) - *(f32 *)(st + 0x280)) / *(f32 *)(st + 0x2b8));
+    if (*(f32 *)(st + 0x294) > cap) {
+        *(f32 *)(st + 0x294) = cap;
+    }
+    if (*(f32 *)(st + 0x280) > cap) {
+        *(f32 *)(st + 0x280) = cap;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
