@@ -80,7 +80,7 @@ extern void hudFn_8011f38c(int n);
 extern int *gCameraInterface;
 extern int *gObjectTriggerInterface;
 extern int *gScreenTransitionInterface;
-extern u8   lbl_803DDC10;
+extern int  lbl_803DDC10;
 extern int  lbl_803DC070;
 extern u8   framesThisStep;
 extern f32  timeDelta;
@@ -123,6 +123,7 @@ int platform1_control(int obj, int p2, u8 *data)
     f32 t;
     u32 vol;
     int ret;
+    f32 c566C, c5674, c5670, c5678, c5684, c5680, c567C, c568C, c5690, c569C;
     int idx1, cnt1, idx2, cnt2, idx3, cnt3, idx4, cnt4, idx5, cnt5;
     struct {
         int mode;
@@ -137,8 +138,7 @@ int platform1_control(int obj, int p2, u8 *data)
     st->linkedObject = 0;
     list = (int *)ObjList_GetObjects(&idx1, &cnt1);
     while (idx1 < cnt1) {
-        st->linkedObject = list[idx1];
-        idx1++;
+        st->linkedObject = list[idx1++];
         if (*(s16 *)(st->linkedObject + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_ANCHOR_OBJECT_TYPE) {
             idx1 = cnt1;
         }
@@ -146,18 +146,6 @@ int platform1_control(int obj, int p2, u8 *data)
     for (i = 0; i < data[0x8b]; i++) {
         ev = data[i + 0x81];
         switch (ev) {
-        case 3:
-            list = (int *)ObjList_GetObjects(&idx2, &cnt2);
-            p = &list[idx2];
-            for (; idx2 < cnt2; idx2++) {
-                if (*p != obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
-                    o = list[idx2];
-                    ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 2);
-                    break;
-                }
-                p++;
-            }
-            break;
         case 1:
             st->flags = (u8)(st->flags | PLATFORM1_TRIGGER_FLAG_01);
             break;
@@ -166,8 +154,32 @@ int platform1_control(int obj, int p2, u8 *data)
             st->transitionStep = 0;
             ((void (*)(int, int, int, int))*(void **)((char *)(*gObjectTriggerInterface) + 0x50))(0x48, 3, 0, 0);
             break;
+        case 3:
+            list = (int *)ObjList_GetObjects(&idx2, &cnt2);
+            p = &list[idx2];
+            for (; idx2 < cnt2; idx2++) {
+                if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                    o = list[idx2];
+                    ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 2);
+                    break;
+                }
+                p++;
+            }
+            break;
+        case 4:
+            list = (int *)ObjList_GetObjects(&idx3, &cnt3);
+            p = &list[idx3];
+            for (; idx3 < cnt3; idx3++) {
+                if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                    o = list[idx3];
+                    ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 3);
+                    break;
+                }
+                p++;
+            }
+            break;
         case 5:
-            if (st->linkedObject != 0) {
+            if ((u32)st->linkedObject != 0) {
                 *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E5668;
                 *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E5668;
                 ObjAnim_SetCurrentMove(player, PLATFORM1_ACTIVE_MODEL_ID,
@@ -175,18 +187,6 @@ int platform1_control(int obj, int p2, u8 *data)
                 ObjAnim_SetCurrentMove(st->linkedObject, PLATFORM1_IDLE_MODEL_ID,
                                        *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET), 0);
                 st->prevTrackOffset = st->currentTrackOffset;
-            }
-            break;
-        case 4:
-            list = (int *)ObjList_GetObjects(&idx3, &cnt3);
-            p = &list[idx3];
-            for (; idx3 < cnt3; idx3++) {
-                if (*p != obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
-                    o = list[idx3];
-                    ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 3);
-                    break;
-                }
-                p++;
             }
             break;
         }
@@ -213,28 +213,38 @@ int platform1_control(int obj, int p2, u8 *data)
         *(u16 *)(data + 0x6e) = 0xffff;
         data[0x56] = 0;
         Sfx_KeepAliveLoopedObjectSound(obj, PLATFORM1_LOOP_SFX_ID);
+        c566C = lbl_803E566C;
+        c5674 = lbl_803E5674;
+        c5670 = lbl_803E5670;
+        c5678 = lbl_803E5678;
+        c5684 = lbl_803E5684;
+        c5680 = lbl_803E5680;
+        c567C = lbl_803E567C;
+        c568C = lbl_803E568C;
+        c5690 = lbl_803E5690;
+        c569C = lbl_803E569C;
         for (i = 0; i < framesThisStep; i++) {
-            if (st->linkedObject == 0) {
+            if ((u32)st->linkedObject == 0) {
                 ret = 0;
                 goto done;
             }
-            wob1 = (f32)(st->currentTrackOffset + 0xb24) / lbl_803E566C;
-            wob2 = lbl_803E5674 * wob1 + lbl_803E5670;
-            if (wob2 < lbl_803E5678) {
+            wob1 = (f32)(st->currentTrackOffset + 0xb24) / c566C;
+            wob2 = c5674 * wob1 + c5670;
+            if (wob2 < c5678) {
                 wob2 = -wob2;
             }
-            push = (lbl_803E5684 * wob1 + lbl_803E5680) * wob2 + lbl_803E567C;
+            push = (c5684 * wob1 + c5680) * wob2 + c567C;
             buttons = getButtonsJustPressedIfNotBusy(0);
             if ((buttons & 0x100) != 0 && isGameTimerDisabled() == 0) {
                 st->offsetVelocity = st->offsetVelocity - lbl_803E5688;
             }
-            if (st->offsetVelocity < lbl_803E568C) {
-                st->offsetVelocity = lbl_803E568C;
+            if (st->offsetVelocity < c568C) {
+                st->offsetVelocity = c568C;
             }
             if (st->currentTrackOffset > -0x46de && st->currentTrackOffset < -0xb23) {
                 st->currentTrackOffset = (int)((f32)st->currentTrackOffset + st->offsetVelocity);
             }
-            diff = ((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / lbl_803E5690;
+            diff = ((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / c5690;
             if (st->currentTrackOffset < -0x46dc) {
                 st->transitionStep = 0;
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
@@ -242,7 +252,7 @@ int platform1_control(int obj, int p2, u8 *data)
                 list = (int *)ObjList_GetObjects(&idx4, &cnt4);
                 p = &list[idx4];
                 for (; idx4 < cnt4; idx4++) {
-                    if (*p != obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                    if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
                         o = list[idx4];
                         ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 4);
                         break;
@@ -266,7 +276,7 @@ int platform1_control(int obj, int p2, u8 *data)
                 list = (int *)ObjList_GetObjects(&idx5, &cnt5);
                 p = &list[idx5];
                 for (; idx5 < cnt5; idx5++) {
-                    if (*p != obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                    if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
                         o = list[idx5];
                         ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 4);
                         break;
@@ -285,20 +295,20 @@ int platform1_control(int obj, int p2, u8 *data)
             if (st->loopSfxHandle > 0) {
                 ((void (*)(void))*(void **)((char *)(*gObjectTriggerInterface) + 0x74))();
             }
-            if (st->offsetVelocity < lbl_803E5690) {
+            if (st->offsetVelocity < c5690) {
                 st->offsetVelocity = lbl_803E5698 * push + st->offsetVelocity;
             }
-            if (ObjAnim_AdvanceCurrentMove(((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / lbl_803E569C,
+            if (ObjAnim_AdvanceCurrentMove(((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / c569C,
                                            timeDelta, player, 0) != 0 &&
-                *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET) < lbl_803E5678) {
+                *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET) < c5678) {
                 *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET) =
-                    lbl_803E567C + *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET);
+                    c567C + *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET);
             }
-            if (ObjAnim_AdvanceCurrentMove(((f32)st->currentTrackOffset - (f32)st->prevTrackOffset) / lbl_803E569C,
+            if (ObjAnim_AdvanceCurrentMove(((f32)st->currentTrackOffset - (f32)st->prevTrackOffset) / c569C,
                                            timeDelta, st->linkedObject, 0) != 0) {
                 t = *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET);
-                if (t < lbl_803E5678) {
-                    *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E567C + t;
+                if (t < c5678) {
+                    *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = c567C + t;
                 }
             }
             st->prevTrackOffset = st->currentTrackOffset;
