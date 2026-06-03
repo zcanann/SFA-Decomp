@@ -2894,11 +2894,12 @@ void fn_80159284(int* obj, u8* state)
 {
     extern void firepipe_clearLinkedUpdateFlag(int);
     extern char lbl_8031FAE8[];
-    char* base = (char*)((int)lbl_8031FAE8 + *(u8*)(state + 0x33b) * 32);
-    u8* t9 = *(u8**)(base + 0x10);
-    u8* t8 = *(u8**)(base + 0x18);
-    u8* t7 = *(u8**)(base + 0xc);
-    BasketSeq16* t6 = *(BasketSeq16**)(base + 0x14);
+    typedef struct { u8 pad[0xc]; u8* tC; u8* t10; BasketSeq16* t14; u8* t18; u8 pad2[4]; } BasketDescL;
+    BasketDescL* d = (BasketDescL*)lbl_8031FAE8;
+    u8* t9 = d[*(u8*)(state + 0x33b)].t10;
+    u8* t8 = d[*(u8*)(state + 0x33b)].t18;
+    u8* t7 = d[*(u8*)(state + 0x33b)].tC;
+    BasketSeq16* t6 = d[*(u8*)(state + 0x33b)].t14;
     f32 cap;
     int i;
     u8* p;
@@ -3045,7 +3046,7 @@ typedef struct {
 void fn_80159FCC(s16* obj, u8* state)
 {
     int base = *(int*)state;
-    BasketVec3 d;
+    f32 d[3];
     BasketSfxParams sp;
     int i;
     f32 pw;
@@ -3092,7 +3093,10 @@ void fn_80159FCC(s16* obj, u8* state)
     if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
         i = *(u8*)(state + 0x33a) * 0xc;
         fn_8014D08C((int*)obj, (int*)state, *(u8*)(lbl_8031FB70 + i + 8), *(f32*)((int)lbl_8031FB70 + i), 0, 0);
-        *(u8*)(state + 0x33a) = *(u8*)(lbl_8031FB70 + *(u8*)(state + 0x33a) * 0xc + 9);
+        {
+            BasketSeq12* sq = (BasketSeq12*)lbl_8031FB70;
+            *(u8*)(state + 0x33a) = sq[*(u8*)(state + 0x33a)].next;
+        }
     }
     pw = powfBitEstimate(*(f32*)(state + 0x304), timeDelta);
     *(s16*)((char*)obj + 2) = (f32)*(s16*)((char*)obj + 2) * pw;
@@ -3106,10 +3110,11 @@ void fn_80159FCC(s16* obj, u8* state)
     *(s16*)obj = *(f32*)(state + 0x324) * timeDelta + (f32)(int)*(s16*)obj;
     *(f32*)(state + 0x328) = lbl_803E2C38;
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
-        d.x = *(f32*)(base + 0x68) - *(f32*)((char*)obj + 0xc);
-        d.y = *(f32*)(base + 0x6c) - *(f32*)((char*)obj + 0x10);
-        d.z = *(f32*)(base + 0x70) - *(f32*)((char*)obj + 0x14);
-        *(f32*)(state + 0x32c) = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
+        f32* dp = d;
+        dp[0] = *(f32*)(base + 0x68) - *(f32*)((char*)obj + 0xc);
+        dp[1] = *(f32*)(base + 0x6c) - *(f32*)((char*)obj + 0x10);
+        dp[2] = *(f32*)(base + 0x70) - *(f32*)((char*)obj + 0x14);
+        *(f32*)(state + 0x32c) = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
         if (*(f32*)(state + 0x32c) > lbl_803E2C40) {
             *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) | 0x10000;
             *(f32*)(state + 0x330) = lbl_803E2C30;
