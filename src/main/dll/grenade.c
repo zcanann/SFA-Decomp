@@ -668,7 +668,7 @@ void trickyFn_80142524(undefined8 param_1,undefined8 param_2,double param_3,unde
  */
 extern void objPosFn_80039510(int obj, int flags, float *out);
 extern float getXZDistance(float *a, float *b);
-extern void fn_801444A4(int obj, int state);
+extern void tricky_startRandomIdleMove(int obj, int state);
 extern f32 lbl_803E2424;
 extern f32 lbl_803E24C8;
 
@@ -691,7 +691,7 @@ int trickyFn_80142a14(int obj, int state)
     if (Sfx_IsPlayingFromObjectChannel(obj, 16) != 0) {
       return 0;
     }
-    fn_801444A4(obj, state);
+    tricky_startRandomIdleMove(obj, state);
     return 1;
   }
   if ((u8)trickyFn_8013b368(lbl_803E24C8, obj, state) == 1) {
@@ -974,7 +974,7 @@ trickyFn_801430e0(undefined8 param_1,undefined8 param_2,double param_3,undefined
     if (param_10[0x1ec] == 0) {
       uVar2 = randomGetRange(0,6);
       if (((int)uVar2 < 5) && (-1 < (int)uVar2)) {
-        fn_801444A4(param_9,(int)param_10);
+        tricky_startRandomIdleMove(param_9,(int)param_10);
       }
       else {
         objAnimFn_801441c0(param_9,(int)param_10);
@@ -1573,7 +1573,7 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
     if (param_2[0x1ec] == 0) {
       uVar3 = randomGetRange(0,6);
       if (((int)uVar3 < 5) && (-1 < (int)uVar3)) {
-        fn_801444A4(param_1,(int)param_2);
+        tricky_startRandomIdleMove(param_1,(int)param_2);
       }
       else {
         objAnimFn_801441c0(param_1,(int)param_2);
@@ -1591,7 +1591,7 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
     }
   }
   else {
-    fn_801444A4(param_1,(int)param_2);
+    tricky_startRandomIdleMove(param_1,(int)param_2);
   }
   return 1;
 }
@@ -1699,7 +1699,7 @@ void objAnimFn_801441c0(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: fn_801444A4
+ * Function: tricky_startRandomIdleMove
  * EN v1.0 Address: 0x80145074
  * EN v1.0 Size: 360b
  * EN v1.1 Address: 0x8014482C
@@ -1711,7 +1711,7 @@ void objAnimFn_801441c0(int param_1,int param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801444A4(int param_1,int param_2)
+void tricky_startRandomIdleMove(int param_1,int param_2)
 {
   int iVar1;
   int iVar3;
