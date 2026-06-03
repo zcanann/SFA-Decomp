@@ -4582,7 +4582,7 @@ extern void ObjModel_SetRenderCallback(int *model, void *cb);
 extern int *ObjModel_GetJointMatrix(int *model, int joint);
 extern void modelRenderCb_8003c268();
 extern void shaderFuzzFn_8003cc1c();
-extern void modelDoAltRenderInstrs(int *obj, int *obj2, int model, int p4);
+extern void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *model, int p4);
 extern int *Camera_GetCurrentViewSlot(void);
 extern f32 sqrtf(f32);
 extern int getAngle(f32 a, f32 b);
@@ -4796,7 +4796,7 @@ void objRenderModel(int *obj) {
     {
         int m0 = *model;
         if (*(u16 *)(m0 + 2) & 0x8000) {
-            modelDoAltRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, m0, 0);
+            modelDoAltRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, (u8 *)m0, 0);
         } else {
             modelDoRenderInstrs(obj, *(int **)((char *)obj + 0xc4) ? *(int **)((char *)obj + 0xc4) : obj, m0, 0);
         }
@@ -5033,7 +5033,8 @@ extern void GXSetCurrentMtx(int id);
 extern void GXSetAlphaCompare(int comp0, int ref0, int op, int comp1, int ref1);
 extern void GXSetCullMode(int mode);
 
-void ModelHeader_setupPosTexFmt(u8 *hdr, int *model, MtxBitStream *bs) {
+#pragma dont_inline on
+void ModelHeader_setupPosTexFmt(u8 *hdr, int *model, MtxBitStream *bs, int p4) {
     u32 flags = 0;
     if (hdr[0xf3] > 1) {
         flags |= 1;
@@ -5074,6 +5075,7 @@ void ModelHeader_setupPosTexFmt(u8 *hdr, int *model, MtxBitStream *bs) {
         lbl_803DB474 = flags;
     }
 }
+#pragma dont_inline reset
 
 void shaderSetGxFlags(u8 *obj, u8 *m, u8 *shader) {
     u8 blend;
@@ -5477,6 +5479,149 @@ void modelRenderFn_setVtxDescr(u8 *hdr, u8 *m, u32 *p3, MtxBitStream *bs, u8 p5,
         for (; i < m[0x41]; i++) {
             GXSetVtxDesc(i + 0xd, b ? 3 : 2);
         }
+    }
+}
+
+extern void PSMTXCopy(f32 *src, f32 *dst);
+extern f32 lbl_802CAEE8[];
+extern void ObjModel_UpdateAnimMatrices(int *am, u8 *m, int *obj, f32 *mtx);
+extern void modelInitMtxs(u8 *m, int *am);
+extern void ObjModel_ToggleMatrixBuffer(int *am);
+extern void modelRenderInstrsState_init(MtxBitStream *bs, u8 *data, int len, int len2);
+extern void objGetColor(int idx, u8 *r, u8 *g, u8 *b);
+typedef u8 (*ObjModelRenderCb)(int *obj, int *am, int p3);
+extern ObjModelRenderCb ObjModel_GetRenderCallback(int *am);
+extern void Camera_RebuildProjectionMatrix(void);
+extern void _gxSetFogParams(void);
+extern void resetLotsOfRenderVars(void);
+extern void *textureIdxToPtr(int idx);
+extern void gxFn_80051fb8(void *tex, int p2, int p3, u8 *color, int p5, int p6);
+extern u8 isHeavyFogEnabled(void);
+extern void getColor803dd01c(f32 *c);
+extern void renderHeavyFog(f32 *c);
+extern void textureFn_800528bc(void);
+extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
+extern void GXSetNumChans(int n);
+extern void selectTexture(void *tex, int p2);
+extern void GXSetTevKColor(int id, u32 *color);
+extern void GXSetArray(int attr, int ptr, int stride);
+extern u8 *modelFileGetDisplayList(u8 *m, int idx);
+extern void GXCallDisplayList(void *list, int size);
+
+void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
+    f32 wm[16];
+    f32 cm[12];
+    MtxBitStream bs;
+    u8 color[4];
+    ObjModelRenderCb cb;
+    int *am = Obj_GetActiveModel(obj);
+    if (curObjMtx != 0) {
+        PSMTXCopy((f32 *)curObjMtx, wm);
+        curObjMtx = 0;
+    } else {
+        Obj_BuildWorldTransformMatrix(obj, wm, 0);
+    }
+    PSMTXConcat(Camera_GetViewMatrix(), wm, cm);
+    if (!(*(u16 *)((char *)am + 0x18) & 8)) {
+        *(u8 *)((char *)am + 0x60) = 0;
+        if (*(u16 *)(m + 0xec) != 0 && !(*(u16 *)(m + 2) & 2) && m[0xf3] != 0) {
+            if (lbl_803DCC30 != (u32)m) {
+                ObjModel_UpdateAnimMatrices(am, m, obj, lbl_802CAEE8);
+                modelInitMtxs(m, am);
+            } else {
+                lbl_803DCC48 = 1;
+            }
+        } else {
+            ObjModel_ToggleMatrixBuffer(am);
+            PSMTXCopy(lbl_802CAEE8, (f32 *)ObjModel_GetJointMatrix(am, 0));
+            lbl_803DCC48 = 3;
+        }
+        {
+            u8 *att = *(u8 **)((char *)obj + 0x54);
+            if (att != NULL) {
+                att[0xaf] = att[0xaf] - 1;
+                if (*(s8 *)(*(char **)((char *)obj + 0x54) + 0xaf) < 0) {
+                    *(u8 *)(*(char **)((char *)obj + 0x54) + 0xaf) = 0;
+                }
+            }
+        }
+        *(u16 *)((char *)am + 0x18) |= 8;
+    }
+    modelRenderInstrsState_init(&bs, *(u8 **)(m + 0xd4), *(u16 *)(m + 0xd8) << 3, *(u16 *)(m + 0xd8) << 3);
+    if (*(u16 *)(m + 0xe2) & 2) {
+        if (lbl_803DCC28 != 0) {
+            color[0] = lbl_803DCC58;
+            color[1] = (&lbl_803DCC58)[1];
+            color[2] = (&lbl_803DCC58)[2];
+            lbl_803DCC28 = 0;
+        } else {
+            objGetColor(*(u8 *)((char *)obj + 0xf2), &color[0], &color[1], &color[2]);
+        }
+    } else {
+        color[2] = 0xff;
+        color[1] = 0xff;
+        color[0] = 0xff;
+    }
+    color[3] = *(u8 *)((char *)obj + 0x37);
+    cb = ObjModel_GetRenderCallback(am);
+    if (lbl_803DCC2A == 0 || cb != NULL) {
+        Camera_RebuildProjectionMatrix();
+        if (cb == NULL || cb(obj, am, 0) == 0) {
+            _gxSetFogParams();
+            resetLotsOfRenderVars();
+            gxFn_80051fb8(textureIdxToPtr(*(int *)(*(int *)(m + 0x38) + 0x24)), 0, 0, color, 0, 0);
+            if (isHeavyFogEnabled() != 0) {
+                f32 c;
+                getColor803dd01c(&c);
+                renderHeavyFog(&c);
+            }
+            textureFn_800528bc();
+            GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+            GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+            GXSetNumChans(0);
+            lbl_803DCC2A = 1;
+            *(u32 *)lbl_803DB484 = *(u32 *)color;
+        }
+    } else {
+        void *tex = textureIdxToPtr(*(int *)(*(int *)(m + 0x38) + 0x24));
+        if (lbl_803DCC2C != (u32)tex) {
+            lbl_803DCC2C = (u32)tex;
+            selectTexture(tex, 0);
+        }
+        if (lbl_803DB484[0] != color[0] || lbl_803DB484[1] != color[1]
+            || lbl_803DB484[2] != color[2] || lbl_803DB484[3] != color[3]) {
+            u32 kcol = *(u32 *)color;
+            GXSetTevKColor(0, &kcol);
+            *(u32 *)lbl_803DB484 = *(u32 *)color;
+        }
+    }
+    if (lbl_803DCC30 != (u32)m) {
+        GXSetArray(9, ((int *)((char *)am + 0x1c))[(*(u16 *)((char *)am + 0x18) >> 1) & 1], 6);
+        GXSetArray(13, *(int *)(m + 0x34), 4);
+        lbl_803DCC30 = (u32)m;
+    }
+    shaderSetGxFlags((u8 *)obj, m, *(u8 **)(m + 0x38));
+    bs.pos += 4;
+    ModelHeader_setupPosTexFmt(m, *(int **)(m + 0x38), &bs, p4);
+    bs.pos += 4;
+    modelLoadMtxsToGx((int)m, am, &bs, cm);
+    {
+        u8 *dl;
+        int idx;
+        {
+            u32 w;
+            int pos = (bs.pos += 4);
+            int off = pos >> 3;
+            u8 *p;
+            w = bs.data[off];
+            p = (u8 *)(off + (char *)bs.data);
+            w |= p[1] << 8;
+            w |= p[2] << 16;
+            bs.pos = pos + 8;
+            idx = (w >> (pos & 7)) & 0xff;
+        }
+        dl = modelFileGetDisplayList(m, idx);
+        GXCallDisplayList(*(void **)dl, *(u16 *)(dl + 4));
     }
 }
 
