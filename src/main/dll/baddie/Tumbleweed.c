@@ -3499,7 +3499,7 @@ int titlescreen_getObjectTypeId(u8* obj)
 
 extern void titlescreen_free(u8* obj);
 extern void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-extern void titlescreen_update(void);
+extern void titlescreen_update(u8 *obj);
 extern void titlescreen_init(u8* obj, u8* p);
 extern void titlescreen_release(void);
 extern void titlescreen_initialise(void);
@@ -3641,8 +3641,11 @@ void titlescreen_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern u8    lbl_8031CE10[];
-extern void  ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+typedef struct TitleAnimMoves {
+    f32 moves[8];
+} TitleAnimMoves;
+extern TitleAnimMoves lbl_8031CE10[];
+extern void  ObjAnim_SetCurrentMove(void *obj, int n, f32 v, int m);
 extern void  ObjModel_SetRenderCallback(int* model, void* cb);
 extern void  AttractMovie_DrawTextureCallback(void);
 
@@ -3661,16 +3664,16 @@ void titlescreen_init(u8* obj, u8* p)
     v = *(s16*)(obj + 0x46);
     if (v >= 0x77d && v < 0x781) {
         *(s8*)(a + 0x31) = (s8)(v - 0x77d);
-        *(f32*)(a + 0x34) = *(f32*)((u8*)lbl_8031CE10 - 0xEFA0 + (*(s16*)(obj + 0x46) << 5));
-        ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E22F8, 0);
+        *(f32*)(a + 0x34) = lbl_8031CE10[*(s16*)(obj + 0x46) - 0x77d].moves[0];
+        ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
     } else {
         *(f32*)(a + 0x34) = lbl_803E22F8;
         *(s8*)(a + 0x31) = -2;
         v = *(s16*)(obj + 0x46);
         if (v == 0x78a) {
-            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E22F8, 0);
+            ObjAnim_SetCurrentMove(obj, 1, lbl_803E22F8, 0);
         } else if (v == 0x781) {
-            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2318, 0);
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E2318, 0);
             ObjModel_SetRenderCallback(*(int**)(*(int**)(obj + 0x7c)),
                                        (void*)AttractMovie_DrawTextureCallback);
         }
@@ -4737,6 +4740,273 @@ int fn_801343CC(u8* src, u8* dst, u8* ids, int count, int* out)
         *(s8*)(lastDst + 0x1b) = -1;
     }
     return k;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E2354;
+extern f32 lbl_803E2358;
+extern f32 lbl_803E235C;
+extern f32 lbl_803E2360;
+extern f32 lbl_803E2364;
+extern f32 lbl_803E2368;
+extern f32 lbl_803E236C;
+extern f32 lbl_803E2370;
+extern f32 lbl_803E2374;
+extern f32 lbl_803E2378;
+extern f32 lbl_803E237C;
+extern f32 lbl_803E2380;
+extern f32 lbl_803E2384;
+extern f32 lbl_803E2388;
+extern f32 lbl_803DBC0C;
+extern u8  lbl_803A9F50[0x48];
+extern int *gCameraInterface;
+extern void Sfx_StopFromObject(int obj, int id);
+void fn_80134870(int obj, u8 *arr);
+
+/* EN v1.0 0x80135CC8  size: 2784b  titlescreen_update: drive the title
+ * screen actor anim state machine, the per-actor footstep/voice sfx flag
+ * grid at lbl_803A9F50, the random blink blend, and the one-shot envfx/sky
+ * setup. */
+#pragma scheduling off
+#pragma peephole off
+void titlescreen_update(u8 *obj)
+{
+    extern int  randomGetRange(int min, int max);
+    extern int  ObjAnim_AdvanceCurrentMove(void *obj, f32 scale, f32 dt, void *events);
+    extern void characterDoEyeAnims(int obj, void *state);
+    extern void fn_8003B228(int obj, void *p);
+    extern int  ObjModel_HasActiveBlendChannels(int *model);
+    extern void ObjModel_SetBlendChannelTargets(int model, int channel, int p3, int p4, f32 weight, int p6);
+    extern void getEnvfxAct(int a, int b, int c, int d);
+    extern void skyFn_80089710(int flags, int enabled, int startComplete);
+    extern void skyFn_800895e0(int id, int red, int green, int blue, int m1, int m2);
+    extern void skyFn_800894a8(int flags, f32 x, f32 y, f32 z);
+    extern void fn_80131F0C(void);
+    extern f32  timeDelta;
+
+    u8 *state = *(u8 **)(obj + 0xb8);
+    s16 t;
+    u8 c;
+    int evt;
+    f32 f;
+    int *model;
+    int tmp;
+    int n;
+    int s;
+    u8 *row;
+    int col;
+    u8 *p;
+    u8 buf[0x1c];
+
+    if (lbl_803DD9AB != 0) {
+        if ((s8)state[0x31] != (s8)lbl_803DD990 && (s8)lbl_803DD991 == 0 &&
+            (c = state[0x30]) != 0 && c != 4 && c != 3) {
+            if (*(s16 *)(obj + 0x46) == 0x77d || *(s16 *)(obj + 0x46) == 0x780) {
+                state[0x30] = 3;
+                ObjAnim_SetCurrentMove(obj, 1, lbl_803E2318, 0);
+                *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[3];
+            } else {
+                state[0x30] = 0;
+                ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
+                *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
+            }
+        }
+        if ((s8)state[0x31] == (s8)lbl_803DD990 && (s8)lbl_803DD991 != 0 &&
+            (c = state[0x30]) != 1 && c != 2 && c != 5) {
+            state[0x30] = 1;
+            ObjAnim_SetCurrentMove(obj, 1, lbl_803E22F8, 0);
+            *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1];
+            if (*(s16 *)(obj + 0x46) == 0x77e) {
+                Sfx_StopFromObject((int)obj, 0x370);
+                Sfx_StopFromObject((int)obj, 0x36c);
+                Sfx_PlayFromObject((int)obj, 0x36d);
+            }
+        }
+        t = *(s16 *)(obj + 0x46);
+        if (t == 0x7a7) {
+            *(s16 *)obj = lbl_803E2354 * timeDelta + (f32)*(s16 *)obj;
+        } else if (t != 0x78a) {
+            buf[0x1b] = 0;
+            if (t == 0x77d && state[0x30] == 2) {
+                if (*(f32 *)(obj + 0x98) < lbl_803E2358) {
+                    lbl_803DBC0C = f = lbl_803E235C * (f32)(int)randomGetRange(0x32, 0x96);
+                } else {
+                    f = lbl_803DBC0C;
+                }
+            } else {
+                f = *(f32 *)(state + 0x34);
+            }
+            evt = ObjAnim_AdvanceCurrentMove(obj, f, timeDelta, buf);
+            if (evt != 0) {
+                if ((s8)state[0x31] == (s8)lbl_803DD990 && state[0x30] == 1) {
+                    state[0x30] = 2;
+                    ObjAnim_SetCurrentMove(obj, 2, lbl_803E22F8, 0);
+                    *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[2];
+                } else if (state[0x30] == 3) {
+                    state[0x30] = 0;
+                    ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
+                    *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
+                } else if (*(s16 *)(obj + 0x46) >= 0x77d && *(s16 *)(obj + 0x46) < 0x781) {
+                    if (randomGetRange(0, 4) == 0) {
+                        if ((c = state[0x30]) == 0 || c == 4) {
+                            state[0x30] = 4;
+                            ObjAnim_SetCurrentMove(obj, randomGetRange(3, 4), lbl_803E22F8, 0);
+                            *(f32 *)(state + 0x34) =
+                                lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1 + *(s16 *)(obj + 0xa0)];
+                        } else {
+                            state[0x30] = 5;
+                            ObjAnim_SetCurrentMove(obj, randomGetRange(5, 6), lbl_803E22F8, 0);
+                            *(f32 *)(state + 0x34) =
+                                lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[1 + *(s16 *)(obj + 0xa0)];
+                        }
+                    } else {
+                        c = state[0x30];
+                        if (c == 4) {
+                            state[0x30] = 0;
+                            ObjAnim_SetCurrentMove(obj, 0, lbl_803E22F8, 0);
+                            *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[0];
+                        } else if (c == 5) {
+                            state[0x30] = 2;
+                            ObjAnim_SetCurrentMove(obj, 2, lbl_803E22F8, 0);
+                            *(f32 *)(state + 0x34) = lbl_8031CE10[*(s16 *)(obj + 0x46) - 0x77d].moves[2];
+                        }
+                    }
+                }
+            }
+            fn_80134870((int)obj, buf);
+        }
+        t = *(s16 *)(obj + 0x46);
+        if (t == 0x77e && ((c = state[0x30]) == 0 || c == 4)) {
+            fn_8003B228((int)obj, state);
+        } else if (t >= 0x77d && t < 0x781) {
+            characterDoEyeAnims((int)obj, state);
+        }
+        model = Obj_GetActiveModel(obj);
+        if (*(u8 *)(*model + 0xf9) != 0 && ObjModel_HasActiveBlendChannels(model) == 0 &&
+            randomGetRange(0xf0, 0x168) == 0xf0) {
+            tmp = *(int *)((u8 *)model + 0x28);
+            n = randomGetRange(0, *(u8 *)(*model + 0xf9));
+            ObjModel_SetBlendChannelTargets((int)model, 0, *(s8 *)(tmp + 0xd), n - 1, lbl_803E2360, 0);
+        }
+        lbl_803DBC08 = -1;
+        lbl_803DBC09 = -1;
+        s = state[0x30];
+        t = *(s16 *)(obj + 0x46);
+        switch (t) {
+        case 0x77d:
+            break;
+        case 0x77e:
+            switch (s) {
+            case 5:
+                row = lbl_803A9F50 + (t - 0x77d) * 0x12;
+                col = s * 3;
+                if (row[col] != 0) {
+                    if (*(f32 *)(obj + 0x98) < lbl_803E2364) row[col] = 0;
+                } else if (*(f32 *)(obj + 0x98) > lbl_803E2364) {
+                    Sfx_PlayFromObject((int)obj, 0x41d);
+                    row[col] = 1;
+                }
+                break;
+            }
+            break;
+        case 0x77f:
+            switch (s) {
+            case 4:
+            case 5:
+                if (*(s16 *)(obj + 0xa0) == 3 || *(s16 *)(obj + 0xa0) == 5) {
+                    row = lbl_803A9F50 + (t - 0x77d) * 0x12;
+                    col = s * 3;
+                    if (row[col] != 0) {
+                        if (*(f32 *)(obj + 0x98) < lbl_803E2368) row[col] = 0;
+                    } else if (*(f32 *)(obj + 0x98) > lbl_803E2368) {
+                        Sfx_PlayFromObject((int)obj, 0x421);
+                        row[col] = 1;
+                    }
+                    p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + col + 1;
+                    if (*p != 0) {
+                        if (*(f32 *)(obj + 0x98) < lbl_803E236C) *p = 0;
+                    } else if (*(f32 *)(obj + 0x98) > lbl_803E236C) {
+                        Sfx_PlayFromObject((int)obj, 0x421);
+                        *p = 1;
+                    }
+                }
+                break;
+            }
+            break;
+        case 0x780:
+            switch (s) {
+            case 4:
+                row = lbl_803A9F50 + (t - 0x77d) * 0x12;
+                col = s * 3;
+                if (row[col] != 0) {
+                    if (*(f32 *)(obj + 0x98) < lbl_803E2370) row[col] = 0;
+                } else if (*(f32 *)(obj + 0x98) > lbl_803E2370) {
+                    Sfx_PlayFromObject((int)obj, 0x414);
+                    row[col] = 1;
+                }
+                break;
+            case 5:
+                row = lbl_803A9F50 + (t - 0x77d) * 0x12;
+                col = s * 3;
+                if (row[col] != 0) {
+                    if (*(f32 *)(obj + 0x98) < lbl_803E2374) row[col] = 0;
+                } else if (*(f32 *)(obj + 0x98) > lbl_803E2374) {
+                    Sfx_PlayFromObject((int)obj, 0x412);
+                    row[col] = 1;
+                }
+                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + col + 1;
+                if (*p != 0) {
+                    if (*(f32 *)(obj + 0x98) < lbl_803E2378) *p = 0;
+                } else if (*(f32 *)(obj + 0x98) > lbl_803E2378) {
+                    Sfx_PlayFromObject((int)obj, 0x426);
+                    *p = 1;
+                }
+                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + col + 2;
+                if (*p != 0) {
+                    if (*(f32 *)(obj + 0x98) < lbl_803E237C) *p = 0;
+                } else if (*(f32 *)(obj + 0x98) > lbl_803E237C) {
+                    Sfx_PlayFromObject((int)obj, 0x413);
+                    *p = 1;
+                }
+                break;
+            case 2:
+                row = lbl_803A9F50 + (t - 0x77d) * 0x12;
+                col = s * 3;
+                if (row[col] != 0) {
+                    if (*(f32 *)(obj + 0x98) < lbl_803E2368) row[col] = 0;
+                } else if (*(f32 *)(obj + 0x98) > lbl_803E2368) {
+                    Sfx_PlayFromObject((int)obj, 0x426);
+                    row[col] = 1;
+                }
+                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + col + 1;
+                if (*p != 0) {
+                    if (*(f32 *)(obj + 0x98) < lbl_803E2380) *p = 0;
+                } else if (*(f32 *)(obj + 0x98) > lbl_803E2380) {
+                    Sfx_PlayFromObject((int)obj, 0x426);
+                    *p = 1;
+                }
+                p = lbl_803A9F50 + (*(s16 *)(obj + 0x46) - 0x77d) * 0x12 + col + 2;
+                if (*p != 0) {
+                    if (*(f32 *)(obj + 0x98) < lbl_803E2384) *p = 0;
+                } else if (*(f32 *)(obj + 0x98) > lbl_803E2384) {
+                    Sfx_PlayFromObject((int)obj, 0x426);
+                    *p = 1;
+                }
+                break;
+            }
+            break;
+        }
+        if (lbl_803DD992 == 0) {
+            getEnvfxAct(0, 0, 0x21f, 0);
+            skyFn_80089710(7, 1, 0);
+            skyFn_800895e0(7, 0x4b, 0x64, 0x78, 0, 0);
+            skyFn_800894a8(7, lbl_803E2318, lbl_803E2388, lbl_803E2388);
+            (*(void (**)(u8 *, int))((char *)(*gCameraInterface) + 0x28))(obj, 0);
+            lbl_803DD992 = 1;
+            fn_80131F0C();
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
