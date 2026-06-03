@@ -4958,14 +4958,14 @@ extern u8 lbl_80345E10[];
 void *getCurrentDataFile(int id) {
     u8 *base = lbl_80345E10;
     switch (id) {
-        case 14: return &base[0x2c0];
-        case 26: return &base[0x8200];
-        case 33: return &base[0xc200];
-        case 36: return &base[0x10200];
-        case 38: return &base[0xa200];
         case 42: return &base[0x170e0];
         case 47: return &base[0x14200];
+        case 36: return &base[0x10200];
+        case 33: return &base[0xc200];
         case 80: return *(void **)&base[0x19718];
+        case 38: return &base[0xa200];
+        case 26: return &base[0x8200];
+        case 14: return &base[0x2c0];
     }
     return NULL;
 }
@@ -5350,7 +5350,7 @@ extern s16 sMapFileNameAdjacencyTable[];
 int loadMapAndParent(int mapId)
 {
     int idx;
-    s16 parent;
+    int parent;
     if (mapId >= 0x4b) {
         idx = 5;
     } else {
@@ -5397,26 +5397,6 @@ int getTableFileEntry(int fileId, int index, int *out)
     int count = 0;
     void *table = NULL;
     switch (fileId) {
-    case 0xe:
-        count = 0x1fd0;
-        table = &base[0x2c0];
-        break;
-    case 0x1a:
-        count = 0x800;
-        table = &base[0x8200];
-        break;
-    case 0x21:
-        count = 0x1000;
-        table = &base[0xc200];
-        break;
-    case 0x24:
-        count = 0x1000;
-        table = &base[0x10200];
-        break;
-    case 0x26:
-        count = 0x800;
-        table = &base[0xa200];
-        break;
     case 0x2a:
         count = 0x800;
         table = &base[0x170e0];
@@ -5425,8 +5405,28 @@ int getTableFileEntry(int fileId, int index, int *out)
         count = 0xbb8;
         table = &base[0x14200];
         break;
+    case 0x24:
+        count = 0x1000;
+        table = &base[0x10200];
+        break;
+    case 0x21:
+        count = 0x1000;
+        table = &base[0xc200];
+        break;
     case 0x50:
         table = *(void **)&base[0x19718];
+        break;
+    case 0x26:
+        count = 0x800;
+        table = &base[0xa200];
+        break;
+    case 0x1a:
+        count = 0x800;
+        table = &base[0x8200];
+        break;
+    case 0xe:
+        count = 0x1fd0;
+        table = &base[0x2c0];
         break;
     }
     if (index < 0 || index >= count) {
