@@ -4926,10 +4926,10 @@ void dfpobjcreator_free(int obj, int flag) {
     }
 }
 
-extern void fn_801FE31C(int obj, int *state);
+extern void dbegg_setupFromDef(int obj, int *state);
 void dbegg_init(int obj) {
     int *q;
-    fn_801FE31C(obj, *(int **)((char *)obj + 0xB8));
+    dbegg_setupFromDef(obj, *(int **)((char *)obj + 0xB8));
     ObjMsg_AllocQueue(obj, 8);
     q = *(int **)((char *)obj + 0x64);
     if (q != NULL) {

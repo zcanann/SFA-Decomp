@@ -656,7 +656,7 @@ void FUN_801fe084(int param_1,int param_2)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801FE16C(int obj)
+void dbegg_processMessages(int obj)
 {
   extern void ObjGroup_RemoveObject(int, int);
   extern void ObjGroup_AddObject(int, int);
@@ -1381,7 +1381,7 @@ int dbegg_setScale(int obj) {
     return inner[0x118] != 3 ? 1 : 0;
 }
 
-/* fn_801FE31C: dbegg_init — set up dbegg from def fields, dispatch on def->_26 mode byte. */
+/* dbegg_setupFromDef: set up dbegg from def fields, dispatch on def->_26 mode byte. */
 extern f32 lbl_803E61C8;
 extern f32 lbl_803E61D0;
 extern f64 lbl_803E61D8;
@@ -1389,7 +1389,7 @@ extern int fn_801FE560(int obj, int *outIdx, f32 a, f32 b, int p3);
 extern int Obj_SetActiveModelIndex(int obj, int idx);
 #pragma scheduling off
 #pragma peephole off
-void fn_801FE31C(int obj, u8 *state) {
+void dbegg_setupFromDef(int obj, u8 *state) {
     u8 *def;
     int local_unused;
 
