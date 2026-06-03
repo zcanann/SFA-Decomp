@@ -1886,3 +1886,64 @@ void pauseMenuFn_8012b77c(void)
 #pragma peephole reset
 #pragma scheduling reset
 
+
+extern s16 lbl_803DD770;
+extern void drawTexture(void *tex, f32 x, f32 y, int alpha, int u);
+extern void drawScaledTexture(void *tex, f32 x, f32 y, int alpha, int u, int w, int h, int q);
+extern f32 lbl_803E213C;
+extern f32 lbl_803E2140;
+extern f64 lbl_803E2148;
+extern f64 lbl_803E2150;
+extern f64 lbl_803E2158;
+
+/* EN v1.0 0x8012975C  size: 632b  Draws the help-text frame: a base panel
+ * then a row of edge/corner segments tweened in from both directions. */
+void boxDrawFn_8012975c(void)
+{
+    s16 f = lbl_803DD770;
+    s8 idx;
+    int j;
+    int alpha;
+    f64 c0, c1, c2, scaled;
+    f64 d0, d1, d2, sc2;
+
+    if (f == 0) return;
+    idx = f & 0x1f;
+
+    drawTexture(*(void **)(hudTextures + 0x110), lbl_803E213C, lbl_803E2140, 0xff, 0x100);
+
+    alpha = 0xaa;
+    c0 = lbl_803E2148;
+    c1 = lbl_803E2150;
+    c2 = lbl_803E2158;
+    for (j = 2; j >= 0; j--) {
+        int i = idx;
+        int t = 0x5f - i / 4;
+        int u = i * 2 + 0xbb;
+        void *tex = *(void **)(hudTextures + 0x114);
+        scaled = c1 * (double)i;
+        drawTexture(tex, c0 + scaled, (f32)t, 0xff - alpha, (u16)u);
+        tex = *(void **)(hudTextures + 0x114);
+        drawScaledTexture(tex, c2 - scaled, (f32)t, 0xff - alpha, (u16)u, 0x18, 0x34, 1);
+        idx = (i + 3) & 0x1f;
+        alpha -= 0x55;
+    }
+
+    idx = (lbl_803DD770 & 0x1f) ^ 0x10;
+    alpha = 0xaa;
+    d0 = lbl_803E2148;
+    d1 = lbl_803E2150;
+    d2 = lbl_803E2158;
+    for (j = 2; j >= 0; j--) {
+        int i = idx;
+        int t = 0x5f - i / 4;
+        int u = i * 2 + 0xbb;
+        void *tex = *(void **)(hudTextures + 0x114);
+        sc2 = d1 * (double)i;
+        drawTexture(tex, d0 + sc2, (f32)t, 0xff - alpha, (u16)u);
+        tex = *(void **)(hudTextures + 0x114);
+        drawScaledTexture(tex, d2 - sc2, (f32)t, 0xff - alpha, (u16)u, 0x18, 0x34, 1);
+        idx = (i + 3) & 0x1f;
+        alpha -= 0x55;
+    }
+}
