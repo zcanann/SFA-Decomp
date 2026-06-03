@@ -5257,6 +5257,101 @@ void renderOpMatrix(u8 *hdr, int *model, MtxBitStream *bs, f32 *m1, f32 *mtx, u8
     }
 }
 
+typedef union { u8 u8; u16 u16; u32 u32; s16 s16; s32 s32; f32 f32; } ObjWGPipe;
+extern volatile ObjWGPipe GXWGFifo : (0xCC008000);
+extern f32 *Camera_GetViewMatrix(void);
+extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
+extern void gxTextureFn_80072dfc(u8 *obj, int *p2, int p3);
+extern void GXBegin(int prim, int fmt, u16 count);
+extern u32 randomGetRange(int min, int max);
+extern int *gPartfxInterface;
+typedef void (*ObjPartfxFn)(u8 *obj, int id, void *blk, int flags, int p5, int p6);
+
+void objRenderFn_8003d980(u8 *obj, int *p2) {
+    f32 wm[16];
+    f32 cm[16];
+    f32 sm[12];
+    struct {
+        s16 rot[3];
+        f32 scale;
+        f32 pos[3];
+    } blk;
+    f32 *vm;
+    s16 *uvs;
+    s16 *verts;
+    u8 *data = *(u8 **)((char *)p2 + 0x58);
+    vm = Camera_GetViewMatrix();
+    Obj_BuildWorldTransformMatrix((int *)obj, wm, 0);
+    PSMTXConcat(vm, wm, cm);
+    GXLoadPosMtxImm(cm, lbl_802CAED0[0]);
+    GXSetCurrentMtx(lbl_802CAED0[0]);
+    PSMTXScale(sm, lbl_803DEA1C / *(f32 *)(obj + 8), lbl_803DEA1C / *(f32 *)(obj + 8), lbl_803DEA1C);
+    cm[3] = lbl_803DEA04;
+    cm[7] = lbl_803DEA04;
+    cm[11] = lbl_803DEA04;
+    PSMTXConcat(cm, sm, cm);
+    GXLoadTexMtxImm(cm, 0x1e, 0);
+    gxTextureFn_80072dfc(obj, p2, 0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(10, 1);
+    GXSetVtxDesc(13, 1);
+    verts = *(s16 **)(data + 4);
+    uvs = *(s16 **)(data + 8);
+    GXBegin(0x90, 7, *(u16 *)(data + 0xc) * 3);
+    {
+        int i = 0;
+        int off = 0;
+        for (; i < *(u16 *)(data + 0xc); i++) {
+            u8 *tri = *(u8 **)data + off;
+            u16 *idx = (u16 *)tri;
+            int k;
+            for (k = 0; k < 3; k++) {
+                s16 *v = verts + *idx * 3;
+                s16 c = v[2];
+                s16 b = v[1];
+                s16 a = v[0];
+                GXWGFifo.s16 = a;
+                GXWGFifo.s16 = b;
+                GXWGFifo.s16 = c;
+                {
+                    u8 c2 = tri[8];
+                    u8 b2 = tri[7];
+                    u8 a2 = tri[6];
+                    GXWGFifo.u8 = a2;
+                    GXWGFifo.u8 = b2;
+                    GXWGFifo.u8 = c2;
+                }
+                {
+                    s16 *uv = uvs + *idx * 2;
+                    s16 u1 = uv[1];
+                    s16 u0 = uv[0];
+                    GXWGFifo.s16 = u0;
+                    GXWGFifo.s16 = u1;
+                }
+                idx++;
+            }
+            off += 0xa;
+        }
+    }
+    GXSetCurrentMtx(0);
+    if (randomGetRange(0, 5) == 0) {
+        int r = randomGetRange(0, *(s16 *)(data + 0xe) - 1);
+        f32 fs = *(f32 *)(obj + 8);
+        int j = (r * 3) << 1;
+        s16 *pv;
+        blk.pos[0] = fs * (f32)(*(s16 *)((char *)verts + j) >> 8) + *(f32 *)(obj + 0xc);
+        pv = (s16 *)((char *)verts + j);
+        blk.pos[1] = fs * (f32)(pv[1] >> 8) + *(f32 *)(obj + 0x10);
+        blk.pos[2] = fs * (f32)(pv[2] >> 8) + *(f32 *)(obj + 0x14);
+        blk.scale = lbl_803DEA1C;
+        blk.rot[0] = 0;
+        blk.rot[2] = 0;
+        blk.rot[1] = 0;
+        (*(ObjPartfxFn *)(*(char **)gPartfxInterface + 8))(obj, 0x7fd, &blk, 0x200001, -1, 0);
+    }
+}
+
 extern u8 lbl_80345E10[];
 void *getCurrentDataFile(int id) {
     u8 *base = lbl_80345E10;
