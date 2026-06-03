@@ -66,7 +66,7 @@ void textRenderSetup(void);
 void fn_800790AC(void);
 void fn_80079180(void);
 void gxTexColorFn_80079254(void);
-void fn_80079328(void);
+void gxTevAddTextureFrameBlendStages(void);
 void gxTextureFn_800794e0(void);
 void textRenderSetupFn_800795e8(void);
 void geomDrawFn_800796f0(void);

@@ -10961,7 +10961,7 @@ extern void setMatrixFromObjectPos(f32 *mtx, s16 *src);
 extern void mtx44Transpose(f32 *src, f32 *dst);
 extern void textureSetupFn_800799c0(void);
 extern void textRenderSetupFn_80079804(void);
-extern void fn_80079328(void);
+extern void gxTevAddTextureFrameBlendStages(void);
 extern void fn_80078DFC(void);
 extern void fn_80078ED0(void);
 extern void geomDrawFn_800796f0(void);
@@ -11166,7 +11166,7 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
                 _textSetColor(a0, 0xff, 0xff, 0xff,
                               (u8)(0xff - *(u8 *)((char *)*p + 0x133) * *(u8 *)((char *)*p + 0x134)));
                 textureSetupFn_800799c0();
-                fn_80079328();
+                gxTevAddTextureFrameBlendStages();
                 fn_80078DFC();
                 textRenderSetupFn_80079804();
                 selectTexture(tex, 1);

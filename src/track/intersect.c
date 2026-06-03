@@ -4776,7 +4776,7 @@ void gxTexColorFn_80079254(void)
  * PAL Size: TODO
  */
 #pragma scheduling off
-void fn_80079328(void)
+void gxTevAddTextureFrameBlendStages(void)
 {
     GXSetTevOrder(lbl_803DD030, lbl_803DD02C, lbl_803DD028, 0xFF);
     GXSetTevDirect(lbl_803DD030);
