@@ -3855,3 +3855,155 @@ void fn_80158C2C(s16* obj, u8* state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E2C44;
+extern f32 lbl_803E2C4C;
+extern f32 lbl_803E2C5C;
+extern f32 lbl_803E2C60;
+extern f32 lbl_803E2C64;
+extern f32 lbl_803E2C68;
+extern char lbl_803DBCF8;
+extern void fn_8014CD1C(s16* obj, u8* state, int p3, f32 a, f32 b, int p6);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80159958(s16* obj, u8* state)
+{
+    int base = *(int*)state;
+    f32 spd;
+    f32 cap;
+    BasketSfxParams sp;
+    f32 dv[3];
+    int i;
+
+    if (*(f32*)(state + 0x330) != (cap = lbl_803E2C30)) {
+        *(f32*)(state + 0x330) = *(f32*)(state + 0x330) - timeDelta;
+        if (*(f32*)(state + 0x330) <= cap) {
+            *(f32*)(state + 0x330) = cap;
+        }
+    }
+    *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x100;
+    sp.x = lbl_803E2C30;
+    sp.y = lbl_803E2C34;
+    sp.z = lbl_803E2C30;
+    sp.vol = lbl_803E2C24;
+    sp.sfxId = 0x605;
+    if ((*(u16*)((char*)obj + 0xb0) & 0x800) != 0) {
+        ((void(*)(s16*,int,void*,int,int,int))((void**)*gPartfxInterface)[2])(obj, 1999, &sp, 2, -1, 0);
+        if (*(void**)(state + 0x368) == NULL) {
+            if (*(void**)(state + 0x368) == NULL) {
+                *(int*)(state + 0x368) = objCreateLight(0, 1);
+            }
+            if (*(void**)(state + 0x368) != NULL) {
+                modelLightStruct_setField50(*(int*)(state + 0x368), 2);
+                lightVecFn_8001dd88(*(int*)(state + 0x368), *(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
+                modelLightStruct_setColorsA8AC(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
+                modelLightStruct_setColors100104(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
+                lightDistAttenFn_8001dc38(*(int*)(state + 0x368), lbl_803E2C10, lbl_803E2C14);
+                lightSetField4D(*(int*)(state + 0x368), 1);
+                lightFn_8001db6c(*(int*)(state + 0x368), 1, lbl_803E2C18);
+                lightFn_8001d620(*(int*)(state + 0x368), 0, 0);
+                lightSetField2FB(*(int*)(state + 0x368), 0);
+            }
+        } else {
+            lightVecFn_8001dd88(*(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
+        }
+    }
+
+    if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
+        BasketSeq12* sq = (BasketSeq12*)lbl_8031FB70;
+        *(u8*)(state + 0x33a) = sq[*(u8*)(state + 0x33a)].mode;
+        *(f32*)(state + 0x328) = lbl_803E2C38;
+        Sfx_StopFromObject((int)obj, 1000);
+    }
+
+    if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
+        f32* dp = dv;
+        f32 t;
+        dp[0] = *(f32*)(base + 0x68) - *(f32*)((char*)obj + 0x18);
+        dp[1] = *(f32*)(base + 0x6c) - *(f32*)((char*)obj + 0x1c);
+        dp[2] = *(f32*)(base + 0x70) - *(f32*)((char*)obj + 0x20);
+        *(f32*)(state + 0x32c) = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
+        if (*(f32*)(state + 0x32c) < lbl_803E2C10 && *(f32*)(state + 0x330) == lbl_803E2C30) {
+            *(u32*)(state + 0x2e4) = *(u32*)(state + 0x2e4) & ~0x10000;
+        }
+        t = lbl_803E2C3C - *(f32*)(state + 0x32c) / lbl_803E2C40;
+        if (t < lbl_803E2C30) {
+            t = lbl_803E2C30;
+        } else if (t > lbl_803E2C3C) {
+            t = lbl_803E2C3C;
+        }
+        if ((curveFn_80010320(base, *(f32*)(state + 0x2fc) * t) != 0 || *(int*)(base + 0x10) != 0)
+            && ((u8(*)(int))((int*)*gRomCurveInterface)[0x90/4])(base) != 0
+            && ((u8(*)(int, s16*, f32, void*, int))((int*)*gRomCurveInterface)[0x8c/4])(
+                   *(int*)state, obj, lbl_803E2C44, &lbl_803DBCF8, -1) != 0) {
+            *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) & ~0x2000;
+        }
+        sidekickToy_accelerateTowardTarget3D(obj, *(f32*)(base + 0x68), *(f32*)(base + 0x6c),
+            *(f32*)(base + 0x70), lbl_803E2C48, lbl_803E2C4C, lbl_803E2C50, *(f32*)(state + 0x304));
+    }
+
+    if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
+        BasketSeq12* sq = (BasketSeq12*)lbl_8031FB70;
+        i = *(u8*)(state + 0x33a) * 0xc;
+        fn_8014D08C((int*)obj, (int*)state, *(u8*)(lbl_8031FB70 + i + 8), *(f32*)((int)lbl_8031FB70 + i), 0, 0);
+        *(u8*)(state + 0x33a) = sq[*(u8*)(state + 0x33a)].next;
+    }
+
+    if (*(f32*)(state + 0x324) > lbl_803E2C30) {
+        *(f32*)(state + 0x324) = -(lbl_803E2C54 * timeDelta - *(f32*)(state + 0x324));
+        *(s16*)obj = *(f32*)(state + 0x324) * timeDelta + (f32)(int)*(s16*)obj;
+    } else {
+        f32 ratio;
+        *(f32*)(state + 0x324) = lbl_803E2C30;
+        spd = lbl_803E2C3C - (*(f32*)(state + 0x328) - lbl_803E2C58) / lbl_803E2C5C;
+        if (spd < lbl_803E2C60) {
+            spd = lbl_803E2C60;
+        } else if (spd > lbl_803E2C3C) {
+            spd = lbl_803E2C3C;
+        }
+        if (*(f32*)(state + 0x328) > lbl_803E2C58) {
+            *(f32*)(state + 0x328) = *(f32*)(state + 0x328) - timeDelta;
+        } else {
+            *(f32*)(state + 0x328) = lbl_803E2C58;
+        }
+        ratio = sqrtf(*(f32*)((char*)obj + 0x24) * *(f32*)((char*)obj + 0x24)
+                      + *(f32*)((char*)obj + 0x2c) * *(f32*)((char*)obj + 0x2c)) / lbl_803E2C48;
+        if (ratio < lbl_803E2C30) {
+            ratio = lbl_803E2C30;
+        } else if (ratio > lbl_803E2C3C) {
+            ratio = lbl_803E2C3C;
+        }
+        *(s16*)((char*)obj + 2) = (f32)(int)*(s16*)((char*)obj + 2) - ((lbl_803E2C64 * spd) * timeDelta) * ratio;
+        fn_8014CD1C(obj, state, (int)*(f32*)(state + 0x328), lbl_803E2C68 * spd, lbl_803E2C30, 1);
+    }
+
+    {
+        f32 pw = powfBitEstimate(*(f32*)(state + 0x304), timeDelta);
+        *(s16*)((char*)obj + 2) = (f32)*(s16*)((char*)obj + 2) * pw;
+        pw = powfBitEstimate(*(f32*)(state + 0x304), timeDelta);
+        *(s16*)((char*)obj + 4) = (f32)*(s16*)((char*)obj + 4) * pw;
+    }
+
+    if (randomGetRange(0, 0x2ee) == 0) {
+        Sfx_PlayFromObject((int)obj, 0x3e9);
+    }
+
+    if (*(f32*)(state + 0x324) > lbl_803E2C30) {
+        Sfx_PlayFromObject((int)obj, 0x3e8);
+        i = (int)((lbl_803E2C6C * *(f32*)(state + 0x324)) / lbl_803E2C70);
+        Sfx_SetObjectSfxVolume(*(f32*)(state + 0x324) / lbl_803E2C70, obj, 0x3e8, i);
+    } else {
+        Sfx_StopFromObject((int)obj, 0x3e8);
+    }
+
+    {
+        s16 t;
+        if (*(void**)(state + 0x340) != NULL
+            && ((t = *(s16*)(*(int*)(state + 0x340) + 0x46)) == 0x1f || t == 0)) {
+            Sfx_PlayFromObject((int)obj, 0x23d);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
