@@ -1475,38 +1475,42 @@ extern f32 lbl_803E4078;
 extern f32 lbl_803E407C;
 extern void enableHeavyFog(u8 mode, f32 a, f32 b, f32 c, f32 d, f32 e);
 
-void fogcontrol_init(u8* obj, u8* params) {
-    u8* sub;
-    int v;
-    f32 c, d, e1;
-    f32 lerp_val;
-    f32 fa, fb, fc, fd, fe;
+typedef struct FogControlState {
+    f32 blend;
+    u8 on : 1;
+    u8 full : 1;
+    u8 rest : 6;
+} FogControlState;
 
-    sub = *(u8**)(obj + 0xb8);
+
+void fogcontrol_init(u8* obj, u8* params) {
+    FogControlState *st;
+    u8 cv;
+    f32 t;
+
+    st = *(FogControlState **)(obj + 0xb8);
     *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x4000);
-    sub[4] = (u8)(sub[4] & ~0x80);
-    sub[4] = (u8)(sub[4] & ~0x40);
-    *(f32*)sub = lbl_803E4070;
+    st->on = 0;
+    st->full = 0;
+    st->blend = lbl_803E4070;
     if ((params[0x1a] & 0x08) != 0) {
         if (*(s16*)(params + 0x18) == -1) {
-            v = 1;
+            cv = 1;
         } else {
-            v = (u8)GameBit_Get(*(s16*)(params + 0x18));
+            cv = (u8)GameBit_Get(*(s16*)(params + 0x18));
         }
-        if ((u8)v != 0) {
-            sub[4] = (u8)(sub[4] | 0x40);
-            sub[4] = (u8)(sub[4] | 0x80);
-            *(f32*)sub = lbl_803E4074;
-            c = (f32)(s32)*(s16*)(params + 0x1c);
-            d = (f32)(s32)*(s16*)(params + 0x20);
-            lerp_val = *(f32*)sub * (c - d) + d;
-            fa = *(f32*)(obj + 0x10) + lerp_val;
-            e1 = (f32)(s32)*(s16*)(params + 0x1e);
-            fb = e1 + fa - c;
-            fc = (f32)(s32)*(s16*)(params + 0x24);
-            fd = (f32)(s32)*(s16*)(params + 0x22) / lbl_803E4078;
-            fe = lbl_803E407C;
-            enableHeavyFog((u8)(params[0x1a] & 1), fa, fb, fc, fd, fe);
+        if (cv != 0) {
+            st->full = 1;
+            st->on = 1;
+            st->blend = lbl_803E4074;
+            t = *(f32 *)(obj + 0x10) +
+                (st->blend * ((f32)*(s16 *)(params + 0x1c) - (f32)*(s16 *)(params + 0x20)) +
+                 (f32)*(s16 *)(params + 0x20));
+            enableHeavyFog(params[0x1a] & 1, t,
+                           ((f32)*(s16 *)(params + 0x1e) + t) - (f32)*(s16 *)(params + 0x1c),
+                           (f32)*(s16 *)(params + 0x24),
+                           (f32)*(s16 *)(params + 0x22) / lbl_803E4078,
+                           lbl_803E407C);
         }
     }
 }
@@ -1830,13 +1834,6 @@ extern f32 lbl_803E4078;
 
 /* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
  * toward the gamebit-selected target and feed the heavy fog params. */
-typedef struct FogControlState {
-    f32 blend;
-    u8 on : 1;
-    u8 full : 1;
-    u8 rest : 6;
-} FogControlState;
-
 void fogcontrol_update(int obj)
 {
     u8 *setup = *(u8 **)(obj + 0x4c);
@@ -1856,39 +1853,39 @@ void fogcontrol_update(int obj)
         run = 0;
     }
     if (run != 0) {
-        if (cv == 0) {
-            if ((*(u8 *)(setup + 0x1a) & 4) != 0) {
-                st->blend = -(lbl_803E4068 * timeDelta - st->blend);
-            } else {
-                st->blend = -(lbl_803E406C * timeDelta - st->blend);
-            }
-            st->full = 0;
-        } else {
+        if (cv != 0) {
             if ((*(u8 *)(setup + 0x1a) & 2) != 0) {
                 st->blend = lbl_803E4068 * timeDelta + st->blend;
             } else {
                 st->blend = lbl_803E406C * timeDelta + st->blend;
             }
             st->on = 1;
+        } else {
+            if ((*(u8 *)(setup + 0x1a) & 4) != 0) {
+                st->blend = -(lbl_803E4068 * timeDelta - st->blend);
+            } else {
+                st->blend = -(lbl_803E406C * timeDelta - st->blend);
+            }
+            st->full = 0;
         }
-        if (st->blend > lbl_803E4070) {
+        if (st->blend <= lbl_803E4070) {
+            st->blend = lbl_803E4070;
+            st->on = 0;
+            disableHeavyFog();
+        } else {
             st->on = 1;
             if (st->blend > lbl_803E4074) {
                 st->blend = lbl_803E4074;
                 st->full = 1;
             }
             t = *(f32 *)(obj + 0x10) +
-                st->blend * ((f32)*(s16 *)(setup + 0x1c) - (f32)*(s16 *)(setup + 0x20)) +
-                (f32)*(s16 *)(setup + 0x20);
+                (st->blend * ((f32)*(s16 *)(setup + 0x1c) - (f32)*(s16 *)(setup + 0x20)) +
+                 (f32)*(s16 *)(setup + 0x20));
             enableHeavyFog(*(u8 *)(setup + 0x1a) & 1, t,
                            ((f32)*(s16 *)(setup + 0x1e) + t) - (f32)*(s16 *)(setup + 0x1c),
                            (f32)*(s16 *)(setup + 0x24),
                            (f32)*(s16 *)(setup + 0x22) / lbl_803E4078,
                            lbl_803E407C);
-        } else {
-            st->blend = lbl_803E4070;
-            st->on = 0;
-            disableHeavyFog();
         }
     }
 }
