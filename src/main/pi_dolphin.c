@@ -6302,6 +6302,57 @@ int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
     lbl_803DCD69 = lbl_803DCD69 + 2;
     return result;
 }
+extern f32 fn_8006C670(void);
+extern f32 lbl_803DEADC;
+extern struct piIndMtx lbl_802C1E10;
+extern f32 lbl_80396820[3][4];
+extern void getTextureFn_8006c5e4(void *out);
+extern void selectReflectionTexture(int id);
+void fn_8004D6D8(void) {
+    struct piIndMtx indmtx;
+    void *tex;
+    int id;
+    f32 v;
+    indmtx = lbl_802C1E10;
+    v = Prepared_803DEAD8[1] * fn_8006C670();
+    indmtx.m[0][0] = v;
+    indmtx.m[1][2] = v;
+    if (lbl_803DCD88 > 0) {
+        GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88 - 1, lbl_803DCD8C + 1);
+    } else {
+        GXSetIndTexOrder(lbl_803DCD7C, lbl_803DCD88, lbl_803DCD8C + 1);
+    }
+    GXSetIndTexCoordScale(lbl_803DCD7C, 0, 0);
+    GXSetIndTexMtx(2, indmtx.m, -3);
+    GXSetTevIndirect(lbl_803DCD90, lbl_803DCD7C, 0, 3, 2, 0, 0, 0, 0, 0);
+    getTextureFn_8006c5e4(&tex);
+    id = lbl_803DCD8C + 1;
+    if (tex != NULL) {
+        void *obj = (char *)tex + 0x20;
+        if (*(u8 *)((char *)tex + 0x48) != 0) {
+            GXLoadTexObjPreLoaded(obj, *(void **)((char *)tex + 0x40), id);
+        } else {
+            GXLoadTexObj(obj, id);
+        }
+    }
+    GXLoadTexMtxImm(lbl_80396820, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 8);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 1);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    selectReflectionTexture(lbl_803DCD8C);
+    lbl_803DCD7C = lbl_803DCD7C + 1;
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 2;
+    lbl_803DCD6A++;
+    lbl_803DCD69++;
+    lbl_803DCD68++;
+}
 #pragma peephole reset
 #pragma scheduling reset
 extern void VIConfigure(void *mode);
