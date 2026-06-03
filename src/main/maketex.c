@@ -1551,6 +1551,74 @@ extern int  lbl_803DD064;
  * sequence/camera state when this was the active sequence. */
 #pragma peephole off
 #pragma scheduling off
+extern s32 CARDWrite(int *fileInfo, void *buf, s32 length, s32 offset);
+extern s32 CARDRead(int *fileInfo, void *buf, s32 length, s32 offset);
+extern s32 CARDDelete(s32 chan, char *fileName);
+extern void DCFlushRange(void *addr, u32 nBytes);
+extern void DCInvalidateRange(void *addr, u32 nBytes);
+extern int lbl_80396900[];
+extern char *sMemoryCardFileName;
+extern u32 lbl_803DD054;
+extern u32 lbl_803DD050;
+
+/* EN v1.0 0x8007E7C0  size: 900b  Checksums the save buffer, writes it to the
+ * memory card, then reads it back and verifies the checksum. */
+#pragma peephole off
+#pragma scheduling off
+int saveGame_doWrite(int slot)
+{
+    u64 x;
+    u16 i;
+    u64 *p;
+    u64 a;
+    u64 chk;
+    u64 chk2;
+    int result;
+    int offset;
+
+    p = (u64 *)lbl_803DD044;
+    x = 0;
+    a = 1;
+    for (i = 0; (int)i < 0x3ff; i++) {
+        u64 v = p[i];
+        x ^= v;
+        a += v;
+    }
+    chk = x ^ (a + 13);
+    ((u32 *)p)[0x7ff] = (u32)chk;
+    ((u32 *)p)[0x7fe] = (u32)(chk >> 32);
+    DCFlushRange((void *)lbl_803DD044, 0x2000);
+    result = CARDWrite(lbl_80396900, (void *)lbl_803DD044, 0x2000, offset = (u8)slot << 13);
+    if (result == -5) {
+        CARDDelete(0, sMemoryCardFileName);
+    }
+    if (result == 0) {
+        DCInvalidateRange((void *)lbl_803DD044, 0x2000);
+        result = CARDRead(lbl_80396900, (void *)lbl_803DD044, 0x2000, offset);
+        if (result == 0) {
+            p = (u64 *)lbl_803DD044;
+            x = 0;
+            a = 1;
+            for (i = 0; (int)i < 0x3ff; i++) {
+                u64 v = p[i];
+                x ^= v;
+                a += v;
+            }
+            chk2 = x ^ (a + 13);
+            if (chk != chk2) {
+                result = -0x55;
+                lbl_803DB700 = 10;
+            } else {
+                lbl_803DD054 = (u32)chk2;
+                lbl_803DD050 = (u32)(chk2 >> 32);
+            }
+        }
+    }
+    return result;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 extern void AudioStream_StartPrepared(void);
 extern int lbl_803DD094;
 extern int lbl_803DB728;
