@@ -1435,7 +1435,7 @@ void ObjHitReact_UpdateResetObjects(void)
   for (; objectIndex < gObjHitReactResetObjectCount; objectIndex = objectIndex + 1) {
     obj = gObjHitReactResetObjects[objectIndex];
     if (((obj->modelInstance->flags & OBJMODEL_FLAG_SKIP_RESET_UPDATE) == 0) &&
-       (obj->activeHitboxMode != 'd')) {
+       (obj->activeHitboxMode != OBJHITREACT_DISABLED_HITBOX_MODE)) {
       Obj_UpdateObject(obj,obj->modelInstance);
     }
     objectOffset = objectOffset + 4;

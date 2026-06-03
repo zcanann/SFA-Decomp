@@ -65,6 +65,8 @@ typedef struct ObjHitReactMoveEntry {
 #define OBJHITREACT_ACTIVE_HITBOX_MODE 1
 #define OBJHITREACT_RESET_MODE_MASK 0x30
 #define OBJHITREACT_RESET_HITBOX_MODE 2
+#define OBJHITREACT_DISABLED_HITBOX_MODE 0x64
+#define OBJHITREACT_MOVE_ENTRY_SHORT_STRIDE (sizeof(ObjHitReactMoveEntry) / sizeof(s16))
 
 typedef struct ObjHitReactState {
   int activeHit;
