@@ -393,7 +393,11 @@ extern void playerAddMoney(int player, int amount);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShow(int id);
 extern void objRenderFn_80041018(int obj);
-extern u8   lbl_80327AF0[];
+typedef struct KioskTextPair {
+    int approachText;
+    int poorText;
+} KioskTextPair;
+extern KioskTextPair lbl_80327AF0[];
 
 /* EN v1.0 0x801DEE90  size: 548b  sc_totemstrength_update: drive the
  * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
@@ -510,19 +514,22 @@ int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
     *(void **)(data + 0xec) = (void *)PaymentKiosk_testEvent;
     for (i = 0; i < data[0x8b]; i++) {
         ev = data[i + 0x81];
-        if (ev == 2) {
+        switch (ev) {
+        case 2:
             GameBit_Set(*(s16 *)(setup + 0x1e), 1);
             playerAddMoney(player, -*(s16 *)(setup + 0x1a));
             st[0] = 2;
-        } else if (ev < 2 && ev != 0) {
+            break;
+        case 1:
             st[2] = 1;
+            break;
         }
     }
     gameTextSetColor(0xff, 0xff, 0xff, 0xff);
     if (st[2] == 1) {
-        gameTextShow(*(int *)(lbl_80327AF0 + st[1] * 8));
+        gameTextShow(lbl_80327AF0[st[1]].approachText);
     } else if (st[2] == 2) {
-        gameTextShow(*(int *)(lbl_80327AF0 + 4 + st[1] * 8));
+        gameTextShow(lbl_80327AF0[st[1]].poorText);
     }
     return 0;
 }
@@ -535,18 +542,18 @@ void paymentkiosk_update(int obj)
     u8 b = st[0];
 
     switch (b) {
-    case 1:
-        if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
-            (*(int (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
-        }
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
-        break;
     case 0:
         if (*(s16 *)(setup + 0x1e) != -1 && GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
             st[0] = 2;
         } else {
             st[0] = 1;
         }
+        break;
+    case 1:
+        if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+            (*(int (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
+        }
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
         break;
     case 2:
         *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
