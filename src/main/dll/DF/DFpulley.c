@@ -7,13 +7,13 @@ extern f32 lbl_803E4DFC;
 /*
  * --INFO--
  *
- * Function: fn_801C0E60
+ * Function: DFPulley_integrateLinks
  * EN v1.0 Address: 0x801C0E60
  * EN v1.0 Size: 376b
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_801C0E60(u8 *self)
+void DFPulley_integrateLinks(u8 *self)
 {
   u8 *linkPtr;
   u8 *part;

@@ -5,7 +5,7 @@
 extern f32 lbl_803E4DF8;
 extern f32 lbl_803E4DFC;
 
-extern void fn_801C0E60(u8 *self);
+extern void DFPulley_integrateLinks(u8 *self);
 
 #define DFBARREL_ROPE_PART_SIZE 0x34
 #define DFBARREL_ROPE_LINK_SIZE 0x24
@@ -86,7 +86,7 @@ void DFRope_UpdateSimulation(u8 *self)
                    -*(f32 *)(link + 0x10) * (*(f32 *)(link + 0x0) - *(f32 *)(link + 0xC)));
       }
     }
-    fn_801C0E60(self);
+    DFPulley_integrateLinks(self);
   }
 
   i = 0;
