@@ -52,286 +52,6 @@ extern f32 lbl_803E5FD4;
 extern f32 lbl_803E5FD8;
 
 /*
- * --INFO--
- *
- * Function: enemymushroom_update
- * EN v1.0 Address: 0x801D1E24
- * EN v1.0 Size: 2644b
- * EN v1.1 Address: 0x801D2414
- * EN v1.1 Size: 2452b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void enemymushroom_update
-          (undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-           undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
-{
-  float fVar1;
-  float fVar2;
-  ushort *puVar3;
-  int iVar4;
-  byte bVar7;
-  int iVar5;
-  uint uVar6;
-  uint *puVar8;
-  float *pfVar9;
-  float *pfVar10;
-  float *pfVar11;
-  undefined4 in_r10;
-  char cVar12;
-  int iVar13;
-  float *pfVar14;
-  double dVar15;
-  uint uStack_58;
-  int iStack_54;
-  undefined4 uStack_50;
-  undefined auStack_4c [12];
-  float local_40;
-  float local_3c;
-  float local_38 [2];
-  undefined8 local_30;
-  undefined4 local_28;
-  uint uStack_24;
-  undefined8 local_20;
-  
-  puVar3 = (ushort *)FUN_80286840();
-  pfVar14 = *(float **)(puVar3 + 0x5c);
-  iVar4 = FUN_80017a98();
-  iVar13 = *(int *)(puVar3 + 0x26);
-  ObjHits_ClearHitVolumes((int)puVar3);
-  *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) | 8;
-  *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) | 4;
-  bVar7 = FUN_80017a34((int)puVar3);
-  if (bVar7 == 0) {
-    if ((*(ushort *)(iVar4 + 0xb0) & 0x1000) == 0) {
-      switch(*(undefined *)((int)pfVar14 + 0x36)) {
-      default:
-        *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) & 0xf7;
-        fVar1 = *(float *)(iVar4 + 0xc) - *(float *)(puVar3 + 6);
-        param_3 = (double)(*(float *)(iVar4 + 0x10) - *(float *)(puVar3 + 8));
-        fVar2 = *(float *)(iVar4 + 0x14) - *(float *)(puVar3 + 10);
-        dVar15 = FUN_80293900((double)(fVar2 * fVar2 + fVar1 * fVar1 + (float)(param_3 * param_3)));
-        local_30 = (double)(longlong)(int)dVar15;
-        param_2 = (double)lbl_803E5FD0;
-        uStack_24 = (uint)*(byte *)(iVar13 + 0x1e);
-        local_28 = 0x43300000;
-        uVar6 = (uint)(param_2 *
-                      (double)(float)((double)CONCAT44(0x43300000,uStack_24) - DOUBLE_803e5fe0));
-        local_20 = (double)(longlong)(int)uVar6;
-        if ((((int)dVar15 & 0xffffU) < (uVar6 & 0xffff)) &&
-           (dVar15 = FUN_80294c4c(iVar4), (double)lbl_803E5FD4 <= dVar15)) {
-          *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) & 0xfe;
-          *(undefined *)((int)pfVar14 + 0x36) = 3;
-          *pfVar14 = lbl_803E5F94;
-          FUN_80006824((uint)puVar3,0x48e);
-        }
-        break;
-      case 1:
-        *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) & 0xfb;
-        if (pfVar14[1] < *(float *)(puVar3 + 4)) {
-          pfVar14[4] = pfVar14[4] / lbl_803E5FC0;
-        }
-        if (pfVar14[4] < lbl_803E5F90) {
-          pfVar14[4] = lbl_803E5F94;
-        }
-        *pfVar14 = *pfVar14 + lbl_803DC074;
-        param_2 = (double)pfVar14[4];
-        *(float *)(puVar3 + 4) =
-             (float)(param_2 * (double)lbl_803DC074 + (double)*(float *)(puVar3 + 4));
-        if (pfVar14[2] < *pfVar14) {
-          *(undefined *)((int)pfVar14 + 0x36) = 0;
-        }
-        break;
-      case 2:
-        *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) & 0xfb;
-        if ((*(byte *)((int)pfVar14 + 0x37) & 2) != 0) {
-          iVar4 = (uint)*(byte *)(puVar3 + 0x1b) + (uint)DAT_803dc070 * -4;
-          if (iVar4 < 0) {
-            iVar4 = 0;
-          }
-          *(char *)(puVar3 + 0x1b) = (char)iVar4;
-          *pfVar14 = *pfVar14 + lbl_803DC074;
-          param_2 = (double)*pfVar14;
-          local_30 = (double)CONCAT44(0x43300000,(int)*(short *)(pfVar14 + 0xd) ^ 0x80000000);
-          if ((double)(float)(local_30 - DOUBLE_803e5fa0) < param_2) {
-            enemymushroom_resetToSpawn((s16 *)puVar3,pfVar14,1);
-            *(undefined *)((int)pfVar14 + 0x36) = 1;
-          }
-        }
-        break;
-      case 3:
-        *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) & 0xf7;
-        FUN_800068c4((uint)puVar3,0x9c);
-        if ((*(byte *)((int)pfVar14 + 0x37) & 2) != 0) {
-          *(undefined *)((int)pfVar14 + 0x36) = 4;
-        }
-        break;
-      case 4:
-        *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) & 0xf7;
-        param_2 = (double)lbl_803E5FB8;
-        pfVar14[0xb] = (float)(param_2 * (double)lbl_803DC074 + (double)pfVar14[0xb]);
-        FUN_800068c4((uint)puVar3,0x9a);
-        if (((((*(byte *)((int)pfVar14 + 0x37) & 1) == 0) &&
-             (dVar15 = (double)FUN_8001771c((float *)(puVar3 + 0xc),(float *)(iVar4 + 0x18)),
-             dVar15 <= (double)pfVar14[0xb])) && (iVar5 = FUN_80294cb0(iVar4), iVar5 == 0)) &&
-           ((bVar7 = FUN_80294ca8(iVar4), bVar7 == 0 && ((*(ushort *)(iVar4 + 0xb0) & 0x1000) == 0))
-           )) {
-          ObjHits_RecordObjectHit(iVar4,(int)puVar3,'\x16',1,0);
-          *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) | 1;
-        }
-        if (lbl_803E5FB4 < pfVar14[0xb]) {
-          pfVar14[0xb] = lbl_803E5FB4;
-        }
-        *pfVar14 = *pfVar14 + lbl_803DC074;
-        if (lbl_803E5FBC < *pfVar14) {
-          *pfVar14 = lbl_803E5F94;
-          *(undefined *)((int)pfVar14 + 0x36) = 5;
-        }
-        local_40 = pfVar14[8];
-        local_3c = pfVar14[9];
-        local_38[0] = pfVar14[10];
-        for (cVar12 = '\x01'; cVar12 != '\0'; cVar12 = cVar12 + -1) {
-          (**(code **)(*DAT_803dd708 + 8))(puVar3,0x3eb,auStack_4c,0x200001,0xffffffff,0);
-        }
-        break;
-      case 5:
-        *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) & 0xf7;
-        *pfVar14 = *pfVar14 + lbl_803DC074;
-        param_2 = (double)*pfVar14;
-        local_30 = (double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar13 + 0x18));
-        if (((double)(float)(local_30 - DOUBLE_803e5fe0) < param_2) &&
-           ((*(byte *)((int)pfVar14 + 0x37) & 2) != 0)) {
-          *(undefined *)((int)pfVar14 + 0x36) = 0;
-          pfVar14[0xb] = lbl_803E5F94;
-          *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) & 0xfe;
-        }
-        break;
-      case 6:
-        FUN_800068c4((uint)puVar3,0x9a);
-        *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) & 0xfb;
-        param_2 = (double)lbl_803E5FB0;
-        pfVar14[0xb] = (float)(param_2 * (double)lbl_803DC074 + (double)pfVar14[0xb]);
-        if (lbl_803E5FB4 < pfVar14[0xb]) {
-          pfVar14[0xb] = lbl_803E5FB4;
-        }
-        if (((((*(byte *)((int)pfVar14 + 0x37) & 1) == 0) &&
-             (dVar15 = (double)FUN_8001771c((float *)(puVar3 + 0xc),(float *)(iVar4 + 0x18)),
-             dVar15 <= (double)pfVar14[0xb])) && (iVar5 = FUN_80294cb0(iVar4), iVar5 == 0)) &&
-           ((bVar7 = FUN_80294ca8(iVar4), bVar7 == 0 && ((*(ushort *)(iVar4 + 0xb0) & 0x1000) == 0))
-           )) {
-          ObjHits_RecordObjectHit(iVar4,(int)puVar3,'\x16',1,0);
-          *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) | 1;
-        }
-        if ((*(byte *)((int)pfVar14 + 0x37) & 2) != 0) {
-          *pfVar14 = lbl_803E5F94;
-          *(undefined *)((int)pfVar14 + 0x36) = 2;
-        }
-        local_40 = pfVar14[8];
-        local_3c = pfVar14[9];
-        local_38[0] = pfVar14[10];
-        for (cVar12 = '\x01'; cVar12 != '\0'; cVar12 = cVar12 + -1) {
-          (**(code **)(*DAT_803dd708 + 8))(puVar3,0x3eb,auStack_4c,0x200001,0xffffffff,0);
-        }
-        break;
-      case 9:
-        if (*pfVar14 <= lbl_803E5F94) {
-          uVar6 = randomGetRange(0xf0,300);
-          local_30 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-          *pfVar14 = (float)(local_30 - DOUBLE_803e5fa0);
-        }
-        if ((*(byte *)((int)pfVar14 + 0x37) & 2) != 0) {
-          *pfVar14 = lbl_803E5F94;
-        }
-        FUN_800068c4((uint)puVar3,0x9b);
-        fVar1 = *pfVar14 - lbl_803DC074;
-        *pfVar14 = fVar1;
-        param_2 = (double)lbl_803E5F94;
-        if (param_2 < (double)fVar1) {
-          fVar1 = pfVar14[0xc] - lbl_803DC074;
-          pfVar14[0xc] = fVar1;
-          if ((double)fVar1 <= param_2) {
-            local_40 = lbl_803E5FC4;
-            local_3c = lbl_803E5FC8;
-            (**(code **)(*DAT_803dd708 + 8))(puVar3,0x51d,auStack_4c,2,0xffffffff,0);
-            pfVar14[0xc] = lbl_803E5FCC;
-          }
-          *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) & 0xf7;
-        }
-        else {
-          (**(code **)(*DAT_803dd6f8 + 0x14))(puVar3);
-          *(undefined *)((int)pfVar14 + 0x36) = 0;
-          FUN_80017a68((int)puVar3);
-        }
-        break;
-      case 10:
-        ObjHits_DisableObject((int)puVar3);
-        *pfVar14 = *pfVar14 + lbl_803DC074;
-        param_2 = (double)*pfVar14;
-        local_30 = (double)CONCAT44(0x43300000,(int)*(short *)(pfVar14 + 0xd) ^ 0x80000000);
-        if ((double)(float)(local_30 - DOUBLE_803e5fa0) < param_2) {
-          enemymushroom_resetToSpawn((s16 *)puVar3,pfVar14,1);
-          *(undefined *)((int)pfVar14 + 0x36) = 1;
-          FUN_80017a68((int)puVar3);
-        }
-      }
-      puVar8 = &uStack_58;
-      pfVar9 = &local_40;
-      pfVar10 = &local_3c;
-      pfVar11 = local_38;
-      iVar4 = ObjHits_GetPriorityHitWithPosition((int)puVar3,&uStack_50,&iStack_54,puVar8,pfVar9,pfVar10,pfVar11);
-      local_40 = local_40 + lbl_803DDA58;
-      local_38[0] = local_38[0] + lbl_803DDA5C;
-      if ((iVar4 != 0) && ((*(byte *)((int)pfVar14 + 0x37) & 4) != 0)) {
-        if (iVar4 == 0x10) {
-          FUN_80017a3c(puVar3,300);
-        }
-        else {
-          if (*(char *)((int)pfVar14 + 0x36) != '\t') {
-            FUN_80006824((uint)puVar3,SFXmv_curtainloop16);
-          }
-          *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) & 0xfe;
-          if ((int)*(short *)(iVar13 + 0x1c) != 0xffffffff) {
-            GameBit_Set((int)*(short *)(iVar13 + 0x1c),1);
-          }
-          *(undefined *)((int)pfVar14 + 0x36) = 9;
-          *pfVar14 = lbl_803E5F94;
-          uVar6 = randomGetRange(0,0x28);
-          local_20 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-          *(float *)(puVar3 + 0x4c) = (float)(local_20 - DOUBLE_803e5fa0) / lbl_803E5FD8;
-        }
-        puVar8 = (uint *)0x0;
-        FUN_80081120(puVar3,auStack_4c,1,(int *)0x0);
-      }
-      iVar4 = (int)*(short *)((uint)*(byte *)((int)pfVar14 + 0x36) * 2 + -0x7fcd8748);
-      if ((short)puVar3[0x50] != iVar4) {
-        FUN_800305f8((double)lbl_803E5F94,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     puVar3,iVar4,0,puVar8,pfVar9,pfVar10,pfVar11,in_r10);
-      }
-      iVar4 = FUN_8002fc3c((double)*(float *)((uint)*(byte *)((int)pfVar14 + 0x36) * 4 + -0x7fcd8730
-                                             ),(double)lbl_803DC074);
-      if (iVar4 == 0) {
-        *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) & 0xfd;
-      }
-      else {
-        *(byte *)((int)pfVar14 + 0x37) = *(byte *)((int)pfVar14 + 0x37) | 2;
-      }
-    }
-  }
-  else {
-    iVar4 = ObjHits_GetPriorityHitWithPosition((int)puVar3,&uStack_50,&iStack_54,&uStack_58,&local_40,&local_3c,local_38);
-    if ((iVar4 != 0) && (iVar4 != 0x10)) {
-      local_40 = local_40 + lbl_803DDA58;
-      local_38[0] = local_38[0] + lbl_803DDA5C;
-      FUN_80081120(puVar3,auStack_4c,1,(int *)0x0);
-      FUN_80006824((uint)puVar3,0x47b);
-      FUN_80017a30((int)puVar3);
-    }
-  }
-  FUN_8028688c();
-  return;
-}
 
 /*
  * --INFO--
@@ -619,6 +339,282 @@ int bombplant_SeqFn(int *obj)
         }
     }
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int  objIsFrozen(int *obj);
+extern f32  Vec_distance(f32 *a, f32 *b);
+extern int  EmissionController_IsLingering(u8 *player);
+extern int  fn_80296448(u8 *player);
+extern f32  fn_8029610C(u8 *player);
+extern void objFn_8002b67c(int *obj);
+extern void Obj_StartModelFadeIn(int *obj, int frames);
+extern void Obj_ResetModelColorState(int *obj);
+extern void objLightFn_8009a1dc(int *obj, f32 a, void *vec, int b, int c);
+extern void ObjAnim_SetCurrentMove(int *obj, int move, f32 t, int mode);
+extern int  ObjAnim_AdvanceCurrentMove(int *obj, f32 speed, f32 dt, int mode);
+extern int  Sfx_PlayFromObject(int *obj, int id);
+extern f32  sqrtf(f32 x);
+extern int *gExpgfxInterface;
+extern u8   framesThisStep;
+extern f32  timeDelta;
+extern f32  playerMapOffsetX;
+extern f32  playerMapOffsetZ;
+extern s16  lbl_80326C78[];
+extern f32  lbl_80326C90[];
+extern f32  lbl_803E52F8;
+extern f32  lbl_803E5314;
+extern f32  lbl_803E5318;
+extern f32  lbl_803E531C;
+extern f32  lbl_803E5320;
+extern f32  lbl_803E5324;
+extern f32  lbl_803E5328;
+extern f32  lbl_803E532C;
+extern f32  lbl_803E5330;
+extern f32  lbl_803E5334;
+extern f32  lbl_803E5338;
+extern f32  lbl_803E533C;
+extern f32  lbl_803E5340;
+
+typedef struct { f32 unk[3]; f32 x, y, z; } MushHitInfo;
+
+/* EN v1.0 0x801D1E24  size: 2452b  Mushroom enemy state machine: dormant ->
+ * inflate -> chase -> deflate cycle, hit reaction, pop and respawn. */
+#pragma scheduling off
+#pragma peephole off
+void enemymushroom_update(int *obj)
+{
+    char *state = *(char **)((char *)obj + 0xb8);
+    u8 *player;
+    int *src;
+    MushHitInfo hv;
+    f32 o1, o2, o3;
+    int hitType;
+
+    player = (u8 *)Obj_GetPlayerObject();
+    src = *(int **)((char *)obj + 0x4c);
+    ObjHits_ClearHitVolumes(obj);
+    *(u8 *)((char *)obj + 0xaf) |= 0x8;
+    *(u8 *)(state + 0x37) |= 0x4;
+
+    if (objIsFrozen(obj)) {
+        hitType = ObjHits_GetPriorityHitWithPosition(obj, &o1, &o2, &o3, &hv.x, &hv.y, &hv.z);
+        if (hitType != 0 && hitType != 0x10) {
+            hv.x += playerMapOffsetX;
+            hv.z += playerMapOffsetZ;
+            objLightFn_8009a1dc(obj, lbl_803E5314, &hv, 1, 0);
+            Sfx_PlayFromObject(obj, 0x47b);
+            Obj_ResetModelColorState(obj);
+        }
+        return;
+    }
+
+    if (*(u16 *)(player + 0xb0) & 0x1000) {
+        return;
+    }
+
+    switch (*(u8 *)(state + 0x36)) {
+    case 6:
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
+        *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x6);
+        *(f32 *)(state + 0x2c) = lbl_803E5318 * timeDelta + *(f32 *)(state + 0x2c);
+        if (*(f32 *)(state + 0x2c) > lbl_803E531C) {
+            *(f32 *)(state + 0x2c) = lbl_803E531C;
+        }
+        if (!(*(u8 *)(state + 0x37) & 0x1)) {
+            if (Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)(player + 0x18)) <= *(f32 *)(state + 0x2c) &&
+                !EmissionController_IsLingering(player) && !fn_80296448(player) &&
+                !(*(u16 *)(player + 0xb0) & 0x1000)) {
+                ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);
+                *(u8 *)(state + 0x37) |= 0x1;
+            }
+        }
+        if (*(u8 *)(state + 0x37) & 0x2) {
+            *(f32 *)(state + 0x0) = lbl_803E52FC;
+            *(u8 *)(state + 0x36) = 2;
+        }
+        hv.x = *(f32 *)(state + 0x20);
+        hv.y = *(f32 *)(state + 0x24);
+        hv.z = *(f32 *)(state + 0x28);
+        {
+            u8 k = 1;
+            int base = 0x200000;
+            while (k != 0) {
+                (*(void (**)(int *, int, MushHitInfo *, int, int, int))(*(int *)gPartfxInterface + 0x8))(
+                    obj, 0x3eb, &hv, base + 1, -1, 0);
+                k--;
+            }
+        }
+        break;
+    case 2:
+        *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x6);
+        if (*(u8 *)(state + 0x37) & 0x2) {
+            int t = *(u8 *)((char *)obj + 0x36) - framesThisStep * 4;
+            if (t < 0) {
+                t = 0;
+            }
+            *(u8 *)((char *)obj + 0x36) = (u8)t;
+            *(f32 *)(state + 0x0) = *(f32 *)(state + 0x0) + timeDelta;
+            if (*(f32 *)(state + 0x0) > (f32)*(s16 *)(state + 0x34)) {
+                enemymushroom_resetToSpawn((s16 *)obj, (float *)state, 1);
+                *(u8 *)(state + 0x36) = 1;
+            }
+        }
+        break;
+    case 3:
+        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x9c);
+        if (*(u8 *)(state + 0x37) & 0x2) {
+            *(u8 *)(state + 0x36) = 4;
+        }
+        break;
+    case 4:
+        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+        *(f32 *)(state + 0x2c) = lbl_803E5320 * timeDelta + *(f32 *)(state + 0x2c);
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x9a);
+        if (!(*(u8 *)(state + 0x37) & 0x1)) {
+            if (Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)(player + 0x18)) <= *(f32 *)(state + 0x2c) &&
+                !EmissionController_IsLingering(player) && !fn_80296448(player) &&
+                !(*(u16 *)(player + 0xb0) & 0x1000)) {
+                ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);
+                *(u8 *)(state + 0x37) |= 0x1;
+            }
+        }
+        if (*(f32 *)(state + 0x2c) > lbl_803E531C) {
+            *(f32 *)(state + 0x2c) = lbl_803E531C;
+        }
+        *(f32 *)(state + 0x0) = *(f32 *)(state + 0x0) + timeDelta;
+        if (*(f32 *)(state + 0x0) > lbl_803E5324) {
+            *(f32 *)(state + 0x0) = lbl_803E52FC;
+            *(u8 *)(state + 0x36) = 5;
+        }
+        hv.x = *(f32 *)(state + 0x20);
+        hv.y = *(f32 *)(state + 0x24);
+        hv.z = *(f32 *)(state + 0x28);
+        {
+            u8 k = 1;
+            int base = 0x200000;
+            while (k != 0) {
+                (*(void (**)(int *, int, MushHitInfo *, int, int, int))(*(int *)gPartfxInterface + 0x8))(
+                    obj, 0x3eb, &hv, base + 1, -1, 0);
+                k--;
+            }
+        }
+        break;
+    case 5:
+        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+        *(f32 *)(state + 0x0) = *(f32 *)(state + 0x0) + timeDelta;
+        if (*(f32 *)(state + 0x0) > (f32)*(u16 *)((char *)src + 0x18)) {
+            if (*(u8 *)(state + 0x37) & 0x2) {
+                *(u8 *)(state + 0x36) = 0;
+                *(f32 *)(state + 0x2c) = lbl_803E52FC;
+                *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x1);
+            }
+        }
+        break;
+    case 1:
+        *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x6);
+        if (*(f32 *)((char *)obj + 0x8) > *(f32 *)(state + 0x4)) {
+            *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) / lbl_803E5328;
+        }
+        if (*(f32 *)(state + 0x10) < lbl_803E52F8) {
+            *(f32 *)(state + 0x10) = lbl_803E52FC;
+        }
+        *(f32 *)(state + 0x0) = *(f32 *)(state + 0x0) + timeDelta;
+        *(f32 *)((char *)obj + 0x8) = *(f32 *)(state + 0x10) * timeDelta + *(f32 *)((char *)obj + 0x8);
+        if (*(f32 *)(state + 0x0) > *(f32 *)(state + 0x8)) {
+            *(u8 *)(state + 0x36) = 0;
+        }
+        break;
+    case 9:
+        if (*(f32 *)(state + 0x0) <= lbl_803E52FC) {
+            *(f32 *)(state + 0x0) = (f32)(int)randomGetRange(0xf0, 0x12c);
+        }
+        if (*(u8 *)(state + 0x37) & 0x2) {
+            *(f32 *)(state + 0x0) = lbl_803E52FC;
+        }
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x9b);
+        {
+            f32 nv = *(f32 *)(state + 0x0) - timeDelta;
+            *(f32 *)(state + 0x0) = nv;
+            if (nv <= lbl_803E52FC) {
+                (*(void (**)(int *))(*(int *)gExpgfxInterface + 0x14))(obj);
+                *(u8 *)(state + 0x36) = 0;
+                objFn_8002b67c(obj);
+            } else {
+                f32 nw = *(f32 *)(state + 0x30) - timeDelta;
+                *(f32 *)(state + 0x30) = nw;
+                if (nw <= lbl_803E52FC) {
+                    hv.x = lbl_803E532C;
+                    hv.y = lbl_803E5330;
+                    (*(void (**)(int *, int, MushHitInfo *, int, int, int))(*(int *)gPartfxInterface + 0x8))(
+                        obj, 0x51d, &hv, 2, -1, 0);
+                    *(f32 *)(state + 0x30) = lbl_803E5334;
+                }
+                *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+            }
+        }
+        break;
+    case 0xa:
+        ObjHits_DisableObject(obj);
+        *(f32 *)(state + 0x0) = *(f32 *)(state + 0x0) + timeDelta;
+        if (*(f32 *)(state + 0x0) > (f32)*(s16 *)(state + 0x34)) {
+            enemymushroom_resetToSpawn((s16 *)obj, (float *)state, 1);
+            *(u8 *)(state + 0x36) = 1;
+            objFn_8002b67c(obj);
+        }
+        break;
+    default:
+        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+        {
+            f32 dx = *(f32 *)(player + 0xc) - *(f32 *)((char *)obj + 0xc);
+            f32 dy = *(f32 *)(player + 0x10) - *(f32 *)((char *)obj + 0x10);
+            f32 dz = *(f32 *)(player + 0x14) - *(f32 *)((char *)obj + 0x14);
+            if ((u16)(int)sqrtf(dx * dx + dy * dy + dz * dz) <
+                (u16)(int)(lbl_803E5338 * (f32)*(u8 *)((char *)src + 0x1e))) {
+                if (fn_8029610C(player) >= lbl_803E533C) {
+                    *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x1);
+                    *(u8 *)(state + 0x36) = 3;
+                    *(f32 *)(state + 0x0) = lbl_803E52FC;
+                    Sfx_PlayFromObject(obj, 0x48e);
+                }
+            }
+        }
+        break;
+    }
+
+    hitType = ObjHits_GetPriorityHitWithPosition(obj, &o1, &o2, &o3, &hv.x, &hv.y, &hv.z);
+    hv.x += playerMapOffsetX;
+    hv.z += playerMapOffsetZ;
+    if (hitType != 0) {
+        if (*(u8 *)(state + 0x37) & 0x4) {
+            if (hitType == 0x10) {
+                Obj_StartModelFadeIn(obj, 0x12c);
+            } else {
+                if (*(u8 *)(state + 0x36) != 9) {
+                    Sfx_PlayFromObject(obj, 0x9d);
+                }
+                *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x1);
+                if (*(s16 *)((char *)src + 0x1c) != -1) {
+                    GameBit_Set(*(s16 *)((char *)src + 0x1c), 1);
+                }
+                *(u8 *)(state + 0x36) = 9;
+                *(f32 *)(state + 0x0) = lbl_803E52FC;
+                *(f32 *)((char *)obj + 0x98) = (f32)(int)randomGetRange(0, 0x28) / lbl_803E5340;
+            }
+            objLightFn_8009a1dc(obj, lbl_803E5314, &hv, 1, 0);
+        }
+    }
+
+    if (*(s16 *)((char *)obj + 0xa0) != lbl_80326C78[*(u8 *)(state + 0x36)]) {
+        ObjAnim_SetCurrentMove(obj, lbl_80326C78[*(u8 *)(state + 0x36)], lbl_803E52FC, 0);
+    }
+    if (ObjAnim_AdvanceCurrentMove(obj, lbl_80326C90[*(u8 *)(state + 0x36)], timeDelta, 0) != 0) {
+        *(u8 *)(state + 0x37) |= 0x2;
+    } else {
+        *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x2);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
