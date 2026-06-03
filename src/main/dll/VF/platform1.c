@@ -402,39 +402,16 @@ extern u8   lbl_80327AF0[];
 void sc_totemstrength_update(u8 *obj)
 {
     Platform1State *st = *(Platform1State **)(obj + 0xb8);
-    s8 t;
+    u8 t;
     s16 step;
     u8 b;
     f32 fz;
 
     Obj_GetPlayerObject();
     GameBit_Set(0xf1d, 0);
-    t = (s8)(*(int (**)(int))((char *)(*gMapEventInterface) + 0x40))(0xe);
+    t = (u8)(*(int (**)(int))((char *)(*gMapEventInterface) + 0x40))(0xe);
     if (t == 6) {
-        if ((st->flags & PLATFORM1_FLAG_ACTIVE) == 0) {
-            if ((st->flags & PLATFORM1_TRIGGER_FLAG_02) != 0) {
-                step = st->transitionStep;
-                if (step == 0) {
-                    *(s16 *)obj = -0x2900;
-                    st->currentTrackOffset = -0x2900;
-                    st->prevTrackOffset = st->currentTrackOffset;
-                    fz = lbl_803E5678;
-                    *(f32 *)&st->motionValue0 = lbl_803E5678;
-                    st->offsetVelocity = fz;
-                    st->transitionStep = 1;
-                    st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_FLAG_01);
-                } else if (step == 1) {
-                    GameBit_Set(0xf1d, 1);
-                    hudFn_8011f38c(1);
-                    st->loopSfxHandle =
-                        (*(int (**)(int, u8 *, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
-                } else if (step == 2) {
-                    st->transitionStep = 0;
-                } else if (step == 3) {
-                    st->transitionStep = 0;
-                }
-            }
-        } else {
+        if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0) {
             if (st->loopSfxHandle > 0) {
                 (*(void (**)(void))((char *)(*gObjectTriggerInterface) + 0x4c))();
                 fn_800882C8();
@@ -448,18 +425,37 @@ void sc_totemstrength_update(u8 *obj)
                 *(s16 *)obj = -0x2900;
                 st->currentTrackOffset = -0x2900;
                 b = st->flags;
-                if ((b & PLATFORM1_FLAG_EXIT_NEGATIVE) == 0) {
-                    if ((b & PLATFORM1_FLAG_EXIT_POSITIVE) != 0) {
-                        st->flags = (u8)(b & ~PLATFORM1_FLAG_EXIT_POSITIVE);
-                        st->loopSfxHandle = -1;
-                        GameBit_Set(0x786, 1);
-                    }
-                } else {
+                if ((b & PLATFORM1_FLAG_EXIT_NEGATIVE) != 0) {
                     GameBit_Set(0x784, 1);
                     st->loopSfxHandle = -1;
                     st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
                     st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_EXIT_NEGATIVE);
+                } else if ((b & PLATFORM1_FLAG_EXIT_POSITIVE) != 0) {
+                    st->flags = (u8)(b & ~PLATFORM1_FLAG_EXIT_POSITIVE);
+                    st->loopSfxHandle = -1;
+                    GameBit_Set(0x786, 1);
                 }
+            }
+        } else if ((st->flags & PLATFORM1_TRIGGER_FLAG_02) != 0) {
+            step = st->transitionStep;
+            if (step == 0) {
+                *(s16 *)obj = -0x2900;
+                st->currentTrackOffset = -0x2900;
+                st->prevTrackOffset = st->currentTrackOffset;
+                fz = lbl_803E5678;
+                *(f32 *)&st->motionValue0 = lbl_803E5678;
+                st->offsetVelocity = fz;
+                st->transitionStep = 1;
+                st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_FLAG_01);
+            } else if (step == 1) {
+                GameBit_Set(0xf1d, 1);
+                hudFn_8011f38c(1);
+                st->loopSfxHandle =
+                    (*(int (**)(int, u8 *, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
+            } else if (step == 2) {
+                st->transitionStep = 0;
+            } else if (step == 3) {
+                st->transitionStep = 0;
             }
         }
     }
@@ -472,7 +468,6 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
     u8 *st = *(u8 **)(obj + 0xb8);
     int player;
     u32 r;
-    int poor;
 
     player = (int)Obj_GetPlayerObject();
     r = getButtonsJustPressed(0);
@@ -480,19 +475,23 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
         r = 0;
     } else {
         st[2] = 0;
-        poor = playerGetMoney(player) < *(s16 *)(setup + 0x1a);
-        if (poor) {
-            st[2] = 2;
-        } else {
+        if (playerGetMoney(player) >= *(s16 *)(setup + 0x1a)) {
+            r = 1;
             st[2] = 0;
-        }
-        r = !poor;
-        if (ev == 0x15) {
-            r = !r;
-        } else if (ev < 0x15 && ev > 0x13) {
-            r = !(1 - r);
         } else {
             r = 0;
+            st[2] = 2;
+        }
+        switch (ev) {
+        case 0x15:
+            r = !r;
+            break;
+        case 0x14:
+            r = !(1 - r);
+            break;
+        default:
+            r = 0;
+            break;
         }
     }
     return r;
@@ -532,25 +531,29 @@ int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
 void paymentkiosk_update(int obj)
 {
     u8 *st = *(u8 **)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
     u8 b = st[0];
 
-    if (b == 1) {
+    switch (b) {
+    case 1:
         if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
             (*(int (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
         }
         *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
-    } else if (b == 0) {
-        if (*(s16 *)(*(int *)(obj + 0x4c) + 0x1e) == -1 ||
-            GameBit_Get(*(s16 *)(*(int *)(obj + 0x4c) + 0x1e)) == 0) {
-            st[0] = 1;
-        } else {
+        break;
+    case 0:
+        if (*(s16 *)(setup + 0x1e) != -1 && GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
             st[0] = 2;
+        } else {
+            st[0] = 1;
         }
-    } else if (b < 3) {
+        break;
+    case 2:
         *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+        break;
     }
     st[2] = 0;
-    if ((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0 && *(int *)(obj + 0x74) != 0) {
+    if ((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0 && *(void **)(obj + 0x74) != NULL) {
         objRenderFn_80041018(obj);
     }
 }

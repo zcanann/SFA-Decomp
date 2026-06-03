@@ -17,7 +17,7 @@ typedef struct Platform1State {
   int loopSfxHandle;
   int prevTrackOffset;
   u8 pad2C[0x2E - 0x2C];
-  u16 transitionStep;
+  s16 transitionStep;
   u8 flags;
 } Platform1State;
 
