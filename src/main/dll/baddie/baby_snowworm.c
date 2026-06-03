@@ -1738,3 +1738,84 @@ void pauseMenuDrawText(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern s8  padGetCX(s32 chan);
+extern s16 lbl_803DD75C;
+extern f32 lbl_803DD7BC;
+extern f32 lbl_803DD7C0;
+extern u8  lbl_803DD7C4;
+extern int lbl_803DD7D8;
+extern f32 lbl_803E216C;
+extern f32 lbl_803E2170;
+extern f32 lbl_803E1E94;
+
+typedef struct {
+    u8  _0[0x18];
+    s32 f18;
+    u8  f1c;
+    u8  _1d[3];
+} GridEntry;                       /* sizeof = 0x20 */
+extern GridEntry *lbl_803DD824;
+
+/* EN v1.0 0x8012B4C4  size: 504b  Pause-menu grid cursor stepper. Reads the
+ * C-stick X axis, derives a one-step direction, and tweens the grid cursor
+ * offsets toward the next cell, clamping when the tween crosses zero. */
+#pragma scheduling off
+#pragma peephole off
+int pauseMenuGridFn_8012b4c4(void)
+{
+    int ret = 0;
+    s8 cx = padGetCX(0);
+    s8 dir;
+    int mag = cx;
+
+    if (mag < 0) mag = -mag;
+    if (mag >= 0xf) {
+        if (cx < 0) dir = -1;
+        else if (cx > 0) dir = 1;
+        else dir = 0;
+    } else {
+        dir = 0;
+    }
+
+    if (lbl_803DD75C == 0 && dir != 0 && lbl_803DD7BC == 0.0f) {
+        int idx = lbl_803DD7D8;
+        pauseMenuSetupTitle(lbl_803DD824[idx].f18, lbl_803DD824[idx].f1c, 2, 0);
+        lbl_803DD7BC = (f32)dir;
+        lbl_803DD7C0 = (f32)(dir * 0x320);
+        lbl_803DD7D8 = 0;
+        Sfx_PlayFromObject(0, 0x100);
+    }
+
+    if (lbl_803DD7C0 > 0.0f) {
+        f32 prev = lbl_803DD7BC;
+        lbl_803DD7BC = prev + lbl_803DD7C0;
+        if (lbl_803DD7BC >= lbl_803E216C) {
+            lbl_803DD7C4 ^= 1;
+            lbl_803DD7BC -= lbl_803E1E94;
+        }
+        if (lbl_803DD7BC > 0.0f && prev < 0.0f) {
+            lbl_803DD7BC = 0.0f;
+            lbl_803DD7C0 = 0.0f;
+            ret = 1;
+        }
+    }
+
+    if (lbl_803DD7C0 < 0.0f) {
+        f32 prev = lbl_803DD7BC;
+        lbl_803DD7BC = prev + lbl_803DD7C0;
+        if (lbl_803DD7BC < lbl_803E2170) {
+            lbl_803DD7C4 ^= 1;
+            lbl_803DD7BC += lbl_803E1E94;
+        }
+        if (lbl_803DD7BC < 0.0f && prev > 0.0f) {
+            lbl_803DD7BC = 0.0f;
+            lbl_803DD7C0 = 0.0f;
+            ret = 1;
+        }
+    }
+
+    return ret;
+}
+#pragma peephole reset
+#pragma scheduling reset
