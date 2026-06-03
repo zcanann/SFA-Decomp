@@ -132,7 +132,7 @@ void fn_8023A87C(int p1, int p2)
         if (*(f32 *)(p2 + 0x6c) < lbl_803E74D4)
             fn_80239DD8(p1, p2);
     } else if ((u32)GameBit_Get(0x12) != 0) {
-        *(f32 *)(p2 + 0x6c) = (f32)(u32)randomGetRange(1, 0x14);
+        *(f32 *)(p2 + 0x6c) = (f32)(int)randomGetRange(1, 0x14);
         GameBit_Set(0x12, 0);
     }
 }
