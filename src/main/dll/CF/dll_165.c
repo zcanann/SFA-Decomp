@@ -130,13 +130,13 @@ void staffactivated_init(int obj, int setup)
 /*
  * --INFO--
  *
- * Function: fn_8018A8BC
+ * Function: treasurechest_SeqFn
  * EN v1.0 Address: 0x8018A8BC
  * EN v1.0 Size: 248b
  */
 #pragma scheduling off
 #pragma peephole off
-int fn_8018A8BC(int obj, int unused, u8 *events)
+int treasurechest_SeqFn(int obj, int unused, u8 *events)
 {
   int i;
   int setup;

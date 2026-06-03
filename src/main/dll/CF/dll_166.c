@@ -173,7 +173,7 @@ void magiccavebottom_free(int obj) {
 }
 #pragma scheduling reset
 
-extern int fn_8018A8BC(int obj, int unused, u8 *events);
+extern int treasurechest_SeqFn(int obj, int unused, u8 *events);
 #pragma scheduling off
 #pragma peephole off
 void treasurechest_init(int *obj) {
@@ -181,7 +181,7 @@ void treasurechest_init(int *obj) {
     register int *cfg = *(int **)((char *)obj + 0x4c);
     register u32 b;
 
-    *(int (**)(int, int, u8 *))((char *)obj + 0xbc) = fn_8018A8BC;
+    *(int (**)(int, int, u8 *))((char *)obj + 0xbc) = treasurechest_SeqFn;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)cfg + 0x18) << 8);
 
     if (*(s16 *)((char *)cfg + 0x1e) != -1) {
