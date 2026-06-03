@@ -655,11 +655,21 @@ void collectible_update(int obj)
 {
     u8 *st = *(u8 **)(obj + 0xb8);
     int msg;
+    int msgId;
     u8 buf[8];
     int o;
 
     *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
-    if (*(f32 *)(st + 8) == lbl_803E345C) {
+    if (*(f32 *)(st + 8) != lbl_803E345C) {
+        *(f32 *)(st + 8) = *(f32 *)(st + 8) - timeDelta;
+        if (*(f32 *)(st + 8) <= lbl_803E345C) {
+            *(f32 *)(st + 8) = lbl_803E345C;
+            ObjHits_DisableObject(obj);
+            if ((*(s16 *)(obj + 6) & 0x2000U) != 0) {
+                Obj_FreeObject(obj);
+            }
+        }
+    } else {
         if (*(s16 *)(st + 0x14) != -1) {
             st[0x1e] = (u8)(GameBit_Get(*(s16 *)(st + 0x14)) == 0);
         }
@@ -669,9 +679,10 @@ void collectible_update(int obj)
             }
             if (*(f32 *)(st + 0x44) == lbl_803E345C ||
                 (*(f32 *)(st + 0x44) = *(f32 *)(st + 0x44) - timeDelta,
-                 *(f32 *)(st + 0x44) > lbl_803E345C)) {
+                 !(*(f32 *)(st + 0x44) <= lbl_803E345C))) {
+                msgId = 0x7000b;
                 while (ObjMsg_Pop(obj, &msg, buf, 0) != 0) {
-                    if (msg == 0x7000b) {
+                    if (msg == msgId) {
                         fn_80171E5C(obj);
                     }
                 }
@@ -709,7 +720,7 @@ void collectible_update(int obj)
                     }
                 }
             } else {
-                if ((*(u16 *)(obj + 6) & 0x2000) != 0) {
+                if ((*(s16 *)(obj + 6) & 0x2000U) != 0) {
                     *(f32 *)(st + 8) = lbl_803E3450;
                     if (*(int *)(obj + 0x64) != 0) {
                         *(int *)(*(int *)(obj + 0x64) + 0x30) = 0x1000;
@@ -717,15 +728,6 @@ void collectible_update(int obj)
                     itemPickupDoParticleFx(obj, 0xff, 0x28, lbl_803E3454);
                 }
                 *(f32 *)(st + 0x44) = lbl_803E345C;
-            }
-        }
-    } else {
-        *(f32 *)(st + 8) = *(f32 *)(st + 8) - timeDelta;
-        if (*(f32 *)(st + 8) <= lbl_803E345C) {
-            *(f32 *)(st + 8) = lbl_803E345C;
-            ObjHits_DisableObject(obj);
-            if ((*(u16 *)(obj + 6) & 0x2000) != 0) {
-                Obj_FreeObject(obj);
             }
         }
     }
@@ -738,19 +740,15 @@ void fn_801723DC(int obj)
     s16 v;
 
     switch (*(s16 *)(obj + 0x46)) {
-    case 0x22:
-        *(s16 *)obj = (s16)(int)(lbl_803E347C * timeDelta + (f32)*(s16 *)obj);
-        itemPickupDoParticleFx(obj, 10, 1, lbl_803E3454);
-        break;
     case 0xb:
-        v = *(s16 *)(st + 0x34);
-        *(u16 *)(st + 0x34) = v - framesThisStep;
-        if ((s16)(v - framesThisStep) < 1) {
+        v = *(s16 *)(st + 0x34) - framesThisStep;
+        *(u16 *)(st + 0x34) = v;
+        if (v < 1) {
             *(f32 *)(st + 0x30) = (f32)(int)randomGetRange(600, 800);
             *(u16 *)(st + 0x34) = (u16)randomGetRange(0xb4, 0xf0);
             Sfx_PlayFromObject(obj, 0x169);
         }
-        *(s16 *)(obj + 2) = (s16)(int)*(f32 *)(st + 0x30);
+        *(s16 *)(obj + 2) = (int)*(f32 *)(st + 0x30);
         *(f32 *)(st + 0x30) = *(f32 *)(st + 0x30) * lbl_803E3478;
         if (*(s16 *)(obj + 2) > 9) {
             break;
@@ -759,6 +757,10 @@ void fn_801723DC(int obj)
             break;
         }
         *(s16 *)(obj + 2) = 0;
+        break;
+    case 0x22:
+        *(s16 *)obj = lbl_803E347C * timeDelta + (f32)*(s16 *)obj;
+        itemPickupDoParticleFx(obj, 10, 1, lbl_803E3454);
         break;
     case 0x27f:
         if (*(f32 *)st < lbl_803E347C) {
@@ -769,7 +771,7 @@ void fn_801723DC(int obj)
         }
         break;
     case 0x5e8:
-        *(s16 *)obj = (s16)(int)(lbl_803E347C * timeDelta + (f32)*(s16 *)obj);
+        *(s16 *)obj = lbl_803E347C * timeDelta + (f32)*(s16 *)obj;
         itemPickupDoParticleFx(obj, 9, 1, lbl_803E3454);
         break;
     case 0x137:
@@ -777,7 +779,7 @@ void fn_801723DC(int obj)
     case 0x135:
     case 0x156:
     case 0x246:
-        *(s16 *)obj = (s16)(int)(lbl_803E347C * timeDelta + (f32)*(s16 *)obj);
+        *(s16 *)obj = lbl_803E347C * timeDelta + (f32)*(s16 *)obj;
         break;
     }
 }
