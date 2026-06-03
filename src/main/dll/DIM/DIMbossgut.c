@@ -5,8 +5,6 @@
 extern void objSetSlot(void *obj, int resourceId);
 extern void objRenderFn_8003b8f4(int obj, undefined4 param_2, undefined4 param_3,
                                  undefined4 param_4, undefined4 param_5, double scale);
-typedef undefined4 (*ObjAnimAdvanceObjectFirstFn)(int objAnimArg, double moveStepScale,
-                                                  double deltaTime, void *eventList);
 
 extern f32 timeDelta;
 extern f32 lbl_803E4C80;

@@ -8,6 +8,14 @@ typedef struct ObjAnimState ObjAnimState;
 typedef struct ObjAnimComponent ObjAnimComponent;
 typedef struct ObjAnimEventList ObjAnimEventList;
 
+typedef int (*ObjAnimSetProgressObjectFirstFn)(int objAnimArg,f32 progress);
+typedef int (*ObjAnimSetCurrentMoveObjectFirstFn)(int objAnimArg,int moveId,f32 moveProgress,
+                                                  int flags);
+typedef int (*ObjAnimAdvanceObjectFirstFn)(int objAnimArg,double moveStepScale,double deltaTime,
+                                           ObjAnimEventList *events);
+typedef int (*ObjAnimAdvanceObjectFirstF32Fn)(int objAnimArg,f32 moveStepScale,f32 deltaTime,
+                                              ObjAnimEventList *events);
+
 extern char gObjAnimSetBlendMoveMissingAnimWarning[];
 
 #define OBJANIM_STATE_INDEX_CURRENT 0

@@ -1204,9 +1204,6 @@ void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void vfpdoorswitch_updateExplodingVariant(int obj);
 extern int ObjAnim_SetMoveProgress(f32 progress, ObjAnimComponent *anim);
-typedef int (*ObjAnimSetProgressObjectFirstFn)(int objAnimArg, f32 progress);
-typedef int (*ObjAnimAdvanceObjectFirstFn)(int objAnimArg, f32 moveStepScale, f32 deltaTime,
-                                           ObjAnimEventList *events);
 
 typedef struct {
     s16 gameBitId;
@@ -1277,7 +1274,7 @@ void vfpdoorswitch_updateExplodingVariant(int obj)
         }
     }
     if (state->activated != 0) {
-        ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6118, timeDelta, NULL);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(obj, lbl_803E6118, timeDelta, NULL);
         if (state->exploded == 0) {
             if (*(f32 *)(obj + 0x98) >= lbl_803E611C) {
                 f32 vec[3];

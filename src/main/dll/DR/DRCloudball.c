@@ -17,7 +17,6 @@ extern void Vec3_ReflectAgainstNormal(int normal, int velocity, int out);
 extern f32 getXZDistance(int *p1, int *p2);
 extern void itemPickupDoParticleFx(int obj, f32 a, int b, int c);
 extern void objfx_spawnDirectionalBurst(int obj, int p2, f32 f1, int p4, int p5, int p6, f32 f2, int p7, int p8);
-typedef void (*ObjAnimAdvanceObjectFirstFn)(int obj, f32 phase, f32 dt, int flags);
 
 extern f32 timeDelta;
 extern u16 lbl_803E5A70;
@@ -74,7 +73,7 @@ void spscarab_update(int param_1)
                      *(f32 *)(param_1 + 0x2c) * *(f32 *)(param_1 + 0x2c));
 
     ObjAnim_SampleRootCurvePhase(distance, (ObjAnimComponent *)param_1, &phase);
-    ((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)(param_1, phase, timeDelta, 0);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)(param_1, phase, timeDelta, 0);
 
     if (*(f32 *)(param_1 + 0x10) < *(f32 *)(p_b8 + 0)) {
         *(f32 *)(param_1 + 0x10) = *(f32 *)(p_b8 + 0);

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/WC/WCpushblock.h"
+#include "main/objanim.h"
 
 #define WCPUSHBLOCK_SPAWN_OBJECT_ID 0x119
 #define WCPUSHBLOCK_SPAWN_SETUP_SIZE 0x18
@@ -86,8 +87,6 @@ extern WCPushBlockObject *Obj_SetupObject(WCPushBlockObjectSetup *setup, int mod
                                           int linkId, void *parent);
 extern void ObjPath_GetPointWorldPosition(s16 *path, int pointIndex, f32 *outX, f32 *outY,
                                           f32 *outZ, int useInputPosition);
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 moveProgress, int flags);
-extern int ObjAnim_AdvanceCurrentMove();
 extern f32 sin(f32 x);
 extern f32 fn_80293E80(f32 x);
 
@@ -107,8 +106,6 @@ extern f32 lbl_803E5C94;
 extern f32 lbl_803E5C98;
 extern f32 lbl_803E5CA8;
 extern f32 lbl_803E5CAC;
-
-typedef int (*ObjAnimAdvanceObjectFirstFn)(int obj, f32 moveStepScale, f32 deltaTime, void *events);
 
 #pragma scheduling off
 #pragma peephole off
@@ -283,7 +280,7 @@ void WCPushBlock_UpdateRideTilt(WCPushBlockObject *obj, WCPushBlockState *state)
         ObjAnim_SetCurrentMove((int)obj, WCPUSHBLOCK_RIDE_MOVE_ID, lbl_803E5C70, 0);
     }
 
-    if (((ObjAnimAdvanceObjectFirstFn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5CAC,
+    if (((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E5CAC,
                                                                   timeDelta, NULL) != 0) {
         state->rideState = 0;
     }

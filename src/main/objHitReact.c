@@ -10,9 +10,6 @@ extern void Sfx_PlayFromObject(int obj,u16 sfxId);
 extern void Resource_Release(void *handle);
 extern int *ObjList_GetObjects(int *startIndex,int *objectCount);
 extern void objLightFn_8009a1dc(int obj,double scale,undefined2 *pos,u32 count,int *param_5);
-typedef int (*ObjAnimAdvanceObjectFirstFn)(int obj,double moveStepScale,double deltaTime,
-                                           ObjAnimEventList *events);
-typedef void (*ObjAnimSetMoveObjectFirstFn)(int obj,int moveId,f32 moveProgress,int flags);
 
 extern ObjHitReactEffectColorArgs gObjHitReactEffectColorArgs;
 extern char sObjHitReactHitstateFrameString[];
@@ -107,7 +104,7 @@ int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEnt
     }
     if (((reactionState & OBJHITREACT_REACTION_STATE_MASK) == OBJHITREACT_REACTION_STATE_INACTIVE) &&
         (reactionEntries->reactionAnim > OBJHITREACT_NO_REACTION_ANIM)) {
-      ((ObjAnimSetMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+      ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
           (obj,(int)reactionEntries->reactionAnim,gObjHitsScalarZero,0);
       *reactionStepScale = reactionEntries->cooldown;
       reactionState = OBJHITREACT_REACTION_STATE_ACTIVE;
