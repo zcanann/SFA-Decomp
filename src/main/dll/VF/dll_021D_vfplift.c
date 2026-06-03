@@ -10,7 +10,7 @@ void vfplift_initialise(void) {}
 
 #pragma peephole off
 #pragma scheduling off
-int fn_801FB220(int obj) {
+int vfplift_SeqFn(int obj) {
     *(u8 *)(*(int *)(obj + 0xb8) + 0x1c) |= 0x40;
     return 0;
 }
@@ -59,7 +59,7 @@ void vfplift_hitDetect(int obj) {
 #pragma scheduling off
 void vfplift_init(int *obj, u8 *init) {
     int *inner = *(int **)((char *)obj + 0xb8);
-    *(void **)((char *)obj + 0xbc) = (void *)fn_801FB220;
+    *(void **)((char *)obj + 0xbc) = (void *)vfplift_SeqFn;
     *(s16 *)obj = (s16)((s8)init[0x18] << 8);
     *(s16 *)((char *)inner + 0xa) = 0;
     *(s16 *)((char *)inner + 0xc) = *(s16 *)((char *)init + 0x20);

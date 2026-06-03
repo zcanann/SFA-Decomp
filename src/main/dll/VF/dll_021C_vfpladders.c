@@ -5,7 +5,7 @@
 extern f32 lbl_803E60D8;
 extern f32 lbl_803E60DC;
 
-int fn_801FAFEC(void) { return 0x0; }
+int vfpladders_SeqFn(void) { return 0x0; }
 
 int vfpladders_getExtraSize(void) { return 0x8; }
 
@@ -74,7 +74,7 @@ void vfpladders_init(int *obj, u8 *init) {
     *(s16 *)((char *)inner + 2) = *(s16 *)((char *)init + 0x20);
     *(s16 *)inner = *(s16 *)((char *)init + 0x1e);
     *(u16 *)((char *)obj + 0xb0) |= 0x6000;
-    *(void **)((char *)obj + 0xbc) = (void *)fn_801FAFEC;
+    *(void **)((char *)obj + 0xbc) = (void *)vfpladders_SeqFn;
 }
 #pragma scheduling reset
 #pragma peephole reset
