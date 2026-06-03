@@ -404,8 +404,7 @@ void SnowBike_update(int obj)
                 setAButtonIcon(0x10);
                 setBButtonIcon(0x11);
                 *(f32 *)(state + 0x45c) = (f32)padGetStickX(0);
-                t = (int)(f32)padGetStickY(0);
-                state[0x460] = t;
+                *(s8 *)(state + 0x460) = (f32)padGetStickY(0);
                 *(u32 *)(state + 0x458) = getButtonsHeld(0);
                 *(u32 *)(state + 0x450) = getButtonsJustPressed(0);
                 *(u32 *)(state + 0x454) = getButtonsJustPressedIfNotBusy(0);
