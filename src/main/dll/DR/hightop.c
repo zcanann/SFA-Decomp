@@ -1594,30 +1594,40 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
             run:
                 switch (p[1]) {
                 case 1:
-                    c = p[2];
-                    if (c == 9) {
+                    switch (*(s8 *)(p + 2)) {
+                    case 0:
+                        break;
+                    case 8:
                         t = Obj_GetPlayerObject();
-                        if (t != 0) {
-                            fn_80295918(lbl_803E40D8, t, 10);
-                        }
-                    } else if (c < 9) {
-                        if (c > 7 && (t = Obj_GetPlayerObject()) != 0) {
+                        if ((void *)t != NULL) {
                             fn_80295918(lbl_803E40D8, t, 1);
                         }
-                    } else if (c == 0xb) {
+                        break;
+                    case 9:
                         t = Obj_GetPlayerObject();
-                        if (t != 0) {
+                        if ((void *)t != NULL) {
+                            fn_80295918(lbl_803E40D8, t, 10);
+                        }
+                        break;
+                    case 10:
+                        t = Obj_GetPlayerObject();
+                        if ((void *)t != NULL) {
+                            fn_80295918(lbl_803E40D8, t, 0xb);
+                        }
+                        break;
+                    case 0xb:
+                        t = Obj_GetPlayerObject();
+                        if ((void *)t != NULL) {
                             fn_80295918(lbl_803E40FC, t, 1);
                         }
-                    } else if (c < 0xb && (t = Obj_GetPlayerObject()) != 0) {
-                        fn_80295918(lbl_803E40D8, t, 0xb);
+                        break;
                     }
                     break;
                 case 4:
                     if ((s8)p3 < 0) {
-                        Sfx_StopFromObject((void *)obj, *(u16 *)(p + 2));
+                        Sfx_StopFromObject((void *)obj, (u16)((p[2] << 8) | p[3]));
                     } else {
-                        Sfx_PlayFromObject(obj, *(u16 *)(p + 2));
+                        Sfx_PlayFromObject(obj, (u16)((p[2] << 8) | p[3]));
                     }
                     break;
                 case 6:
@@ -1656,24 +1666,24 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                         fn_8006FC00(p[3]);
                         break;
                     case 6:
-                        if (p[3] == 0) {
-                            skyFn_80088c94(7, 0);
-                        } else {
+                        if (p[3] != 0) {
                             skyFn_80088c94(7, 1);
+                        } else {
+                            skyFn_80088c94(7, 0);
                         }
                         break;
                     case 7:
-                        if (p[3] == 0) {
-                            gameFlagFn_8005cd24(0);
-                        } else {
+                        if (p[3] != 0) {
                             gameFlagFn_8005cd24(1);
+                        } else {
+                            gameFlagFn_8005cd24(0);
                         }
                         break;
                     case 8:
-                        if (p[3] == 0) {
-                            timeOfDayFn_80055000();
-                        } else {
+                        if (p[3] != 0) {
                             timeOfDayFn_80055038();
+                        } else {
+                            timeOfDayFn_80055000();
                         }
                         break;
                     case 9:
@@ -1688,34 +1698,35 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 5:
+                    if (*(f32 *)(state + 4) == lbl_803E40D8) {
+                    }
                     break;
                 case 10:
-                    getEnvfxAct(obj, p2, *(s16 *)(p + 2), p4);
-                    OSReport(desc + 0x68, (int)*(s16 *)(obj + 0x44), *(s16 *)(p + 2), p4);
+                    getEnvfxAct(obj, p2, (s16)((p[2] << 8) | p[3]), p4);
+                    OSReport(desc + 0x68, (int)*(s16 *)(obj + 0x44), (s16)((p[2] << 8) | p[3]), p4);
                     break;
                 case 0xd:
-                    getLActions(obj, p2, *(s16 *)(p + 2), p3, p4, 0);
+                    getLActions(obj, p2, (s16)((p[2] << 8) | p[3]), p3, p4, 0);
                     break;
                 case 0xb:
-                    c = p[2];
-                    if (c == 2) {
-                        (*(code *)(*gObjectTriggerInterface + 0xc))(p[3], 0);
-                    } else if (c < 2) {
-                        if (c == 0) {
-                        objtrig:
-                            t = ObjGroup_FindNearestObject(0xf, obj, 0);
-                            if (t != 0) {
-                                (*(code *)(*gObjectTriggerInterface + 0x48))(p[3], t, -1);
-                            }
-                        } else {
-                            (*(code *)(*gObjectTriggerInterface + 0xc))(p[3], 1);
+                    switch (*(s8 *)(p + 2)) {
+                    case 0:
+                    case 3:
+                        t = ObjGroup_FindNearestObject(0xf, obj, 0);
+                        if (t != 0) {
+                            (*(code *)(*gObjectTriggerInterface + 0x48))(p[3], t, -1);
                         }
-                    } else if (c < 4) {
-                        goto objtrig;
+                        break;
+                    case 1:
+                        (*(code *)(*gObjectTriggerInterface + 0xc))(p[3], 1);
+                        break;
+                    case 2:
+                        (*(code *)(*gObjectTriggerInterface + 0xc))(p[3], 0);
+                        break;
                     }
                     break;
                 case 0xc:
-                    id = *(u16 *)(p + 2);
+                    id = (u16)((p[2] << 8) | p[3]);
                     t = ObjList_GetObjects(&first, &count);
                     for (; first < count; first++) {
                         t2 = *(int *)(t + first * 4);
@@ -1730,7 +1741,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                                 objInterpretSeq(t2, p2, p3, p4);
                             }
                         } else if (d < 0x54) {
-                            if (d < 0x51 && d > 0x4a) {
+                            if (d < 0x51 && d >= 0x4b) {
                                 goto match;
                             }
                         } else if (d == 0x230) {
@@ -1742,14 +1753,14 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     Obj_SetActiveModelIndex(Obj_GetPlayerObject(), p[2]);
                     break;
                 case 0x12:
-                    bit = ((u32)p[2] << 8 & 0x3f00) | p[3];
+                    op = (p[2] << 8) | p[3];
+                    bit = op & 0x3fff;
                     v = GameBit_Get(bit);
-                    op = ((u32)p[2] << 8) >> 14;
-                    if (op == 0) {
+                    if ((op >> 14 & 3) == 0) {
                         v = 0;
-                    } else if (op == 1) {
+                    } else if ((op >> 14 & 3) == 1) {
                         v = 0xffffffff;
-                    } else if (op == 2) {
+                    } else if ((op >> 14 & 3) == 2) {
                         v = ~v;
                     }
                     GameBit_Set(bit, v);
@@ -1759,16 +1770,16 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     GameBit_Set(bit, GameBit_Get(bit) ^ (1 << (((u32)p[2] << 8) >> 13)));
                     break;
                 case 0x13:
-                    (*(code *)(*gMapEventInterface + 0x50))((int)*(s8 *)(obj + 0xac), *(u16 *)(p + 2), 1);
+                    (*(code *)(*gMapEventInterface + 0x50))((int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]), 1);
                     break;
                 case 0x27:
-                    id = *(u16 *)(p + 2);
+                    id = (u16)((p[2] << 8) | p[3]);
                     mapLoadDataFiles(id);
                     loadModelAndAnimTabs();
                     OSReport(desc + 0xa8, id);
                     break;
                 case 0x28:
-                    id = *(u16 *)(p + 2);
+                    id = (u16)((p[2] << 8) | p[3]);
                     mapUnload(id, 0x20000000);
                     OSReport(desc + 0xc4, id);
                     break;
@@ -1790,15 +1801,15 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x14:
-                    (*(code *)(*gMapEventInterface + 0x50))((int)*(s8 *)(obj + 0xac), *(u16 *)(p + 2), 0);
+                    (*(code *)(*gMapEventInterface + 0x50))((int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]), 0);
                     break;
                 case 0x22:
-                    id = *(u16 *)(p + 2);
+                    id = (u16)((p[2] << 8) | p[3]);
                     c = (*(code *)(*gMapEventInterface + 0x4c))((int)*(s8 *)(obj + 0xac), id);
                     (*(code *)(*gMapEventInterface + 0x50))((int)*(s8 *)(obj + 0xac), id, c ^ 1);
                     break;
                 case 0x15:
-                    tbl = (int *)getTablesBinEntry(*(u16 *)(p + 2) + 2);
+                    tbl = (int *)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
                     if (tbl != NULL) {
                         for (; *tbl != -1; tbl++) {
                             if (getLoadedTexture(*tbl) == 0) {
@@ -1808,7 +1819,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x16:
-                    tbl = (int *)getTablesBinEntry(*(u16 *)(p + 2) + 2);
+                    tbl = (int *)getTablesBinEntry((u16)((p[2] << 8) | p[3]) + 2);
                     if (tbl != NULL) {
                         for (; *tbl != -1; tbl++) {
                             if (getLoadedTexture(*tbl) != 0) {
@@ -1818,7 +1829,7 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x18:
-                    (*(code *)(*gMapEventInterface + 0x44))((int)*(s8 *)(obj + 0xac), *(u16 *)(p + 2));
+                    (*(code *)(*gMapEventInterface + 0x44))((int)*(s8 *)(obj + 0xac), (u16)((p[2] << 8) | p[3]));
                     break;
                 case 0x1a:
                     (*(code *)(*gMapEventInterface + 0x50))(p[3], p[2], 1);
@@ -1830,25 +1841,25 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     (*(code *)(*gMapEventInterface + 0x44))(p[3], p[2]);
                     break;
                 case 0x11:
-                    GameBit_Set(0x4e3, *(s16 *)(p + 2));
+                    GameBit_Set(0x4e3, (p[2] << 8) | p[3]);
                     break;
                 case 0x1f:
                     t = Obj_GetPlayerObject();
-                    d = *(s16 *)obj - *(s16 *)t;
+                    d = *(s16 *)obj - (u16)*(s16 *)t;
                     if (d > 0x8000) {
-                        d += 1;
+                        d -= 0xffff;
                     }
                     if (d < -0x8000) {
-                        d -= 1;
+                        d += 0xffff;
                     }
                     ang = d;
                     if (ang < 0) {
                         ang = -ang;
                     }
-                    if (ang < 0x4001) {
-                        (*(code *)(*gMapEventInterface + 0x1c))(obj + 0xc, (int)*(s16 *)obj, p[3], getCurMapLayer());
+                    if (ang > 0x4000) {
+                        (*(code *)(*gMapEventInterface + 0x1c))(obj + 0xc, (int)(s16)(*(s16 *)obj + 0x8000), p[3], getCurMapLayer());
                     } else {
-                        (*(code *)(*gMapEventInterface + 0x1c))(obj + 0xc, (int)(s16)(*(s16 *)obj - 0x8000), p[3], getCurMapLayer());
+                        (*(code *)(*gMapEventInterface + 0x1c))(obj + 0xc, (int)*(s16 *)obj, p[3], getCurMapLayer());
                     }
                     break;
                 case 0x20:
@@ -1859,24 +1870,32 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x23:
-                    c = p[2];
-                    if (c == 2) {
+                    switch (*(s8 *)(p + 2)) {
+                    case 0:
+                        (*(code *)(*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16 *)obj, getCurMapLayer(), 0);
+                        break;
+                    case 1:
+                        (*(code *)(*gMapEventInterface + 0x2c))();
+                        break;
+                    case 2:
                         (*(code *)(*gMapEventInterface + 0x28))();
-                    } else if (c < 2) {
-                        if (c == 0) {
-                            (*(code *)(*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16 *)obj, getCurMapLayer(), 0);
-                        } else {
-                            (*(code *)(*gMapEventInterface + 0x2c))();
-                        }
-                    } else if (c < 4) {
+                        break;
+                    case 3:
                         (*(code *)(*gMapEventInterface + 0x24))(obj + 0xc, (int)*(s16 *)obj, getCurMapLayer(), 1);
+                        break;
                     }
                     break;
                 case 0x26:
                     t = getTrickyObject();
-                    if (t != 0) {
-                        c = p[2];
-                        if (c == 2) {
+                    if ((void *)t != NULL) {
+                        switch (*(s8 *)(p + 2)) {
+                        case 0:
+                            (*(code *)(**(int **)(t + 0x68) + 0x3c))();
+                            break;
+                        case 1:
+                            Obj_FreeObject(getTrickyObject());
+                            break;
+                        case 2:
                             t2 = ObjGroup_FindNearestObject(0x32, t, 0);
                             if (t2 == 0) {
                                 t2 = ObjGroup_FindNearestObject(0x31, t, 0);
@@ -1884,17 +1903,13 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                             if (t2 != 0) {
                                 (*(code *)(**(int **)(t + 0x68) + 0x38))(t);
                             }
-                        } else if (c < 2) {
-                            if (c == 0) {
-                                (*(code *)(**(int **)(t + 0x68) + 0x3c))();
-                            } else {
-                                getTrickyObject();
-                                Obj_FreeObject(t);
-                            }
-                        } else if (c == 4) {
-                            GameBit_Set(0xd00, 1);
-                        } else if (c < 4) {
+                            break;
+                        case 3:
                             GameBit_Set(0xd00, 0);
+                            break;
+                        case 4:
+                            GameBit_Set(0xd00, 1);
+                            break;
                         }
                     }
                     break;
@@ -1941,16 +1956,16 @@ void objInterpretSeq(int obj, int p2, int p3, int p4)
                     }
                     break;
                 case 0x2c:
-                    **(f32 **)(p2 + 0xb8) = lbl_803E4100 * (f32)(int)*(u16 *)(p + 2);
+                    **(f32 **)(p2 + 0xb8) = lbl_803E4100 * (f32)(int)(u16)((p[2] << 8) | p[3]);
                     break;
                 case 0x2d:
                     t = Obj_GetPlayerObject();
                     if (t == 0) {
                         if (getArwing() != 0) {
-                            gameTextFn_80125ba4(*(u16 *)(p + 2));
+                            gameTextFn_80125ba4((u16)((p[2] << 8) | p[3]));
                         }
                     } else {
-                        (*(code *)(*gGameUIInterface + 0x38))(*(u16 *)(p + 2), 0x14, 0x8c, 1);
+                        (*(code *)(*gGameUIInterface + 0x38))((u16)((p[2] << 8) | p[3]), 0x14, 0x8c, 1);
                     }
                     break;
                 }
