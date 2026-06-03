@@ -1,16 +1,43 @@
 #include "ghidra_import.h"
 
-extern int fn_8027A8FC(int state, int divisor);
+extern int fn_8027A8FC(int state, u32 divisor);
 extern int fn_8027A660(int state);
 
-/*
- * fn_8027A8FC — pitch envelope setup with FP math (~340 instructions).
- * Stubbed.
- */
+extern u8 voiceAdsrDecayTable[];
+extern f32 lbl_803E7848;
+
 #pragma dont_inline on
-int fn_8027A8FC(int state, int divisor)
+int fn_8027A8FC(int state, u32 divisor)
 {
-    (void)state; (void)divisor;
+    int m = *(u8 *)state;
+    if (m != 1) {
+        if (m < 1) {
+            if (m >= 0) {
+                *(u8 *)(state + 1) = 4;
+                *(u32 *)(state + 4) = divisor;
+                if (divisor == 0) {
+                    *(u32 *)(state + 4) = 1;
+                    *(u32 *)(state + 0x10) = 0;
+                    return 1;
+                }
+                *(u32 *)(state + 0x10) = -(*(u32 *)(state + 8) / divisor);
+            }
+        }
+    } else {
+        if (*(u8 *)(state + 0x26) == 0 && *(u8 *)(state + 1) == 1) {
+            *(u32 *)(state + 0xc) = (u32)(193 - voiceAdsrDecayTable[*(int *)(state + 8) >> 21]) << 16;
+        }
+        *(u32 *)(state + 4) = (u32)(lbl_803E7848 * (f32)*(int *)(state + 0xc) * (f32)divisor) >> 12;
+        *(u8 *)(state + 1) = 4;
+        if (*(u32 *)(state + 4) == 0) {
+            *(u32 *)(state + 4) = 1;
+            *(u32 *)(state + 8) = 0;
+            *(u32 *)(state + 0xc) = 0;
+            *(u32 *)(state + 0x10) = 0;
+            return 1;
+        }
+        *(u32 *)(state + 0x10) = -(*(u32 *)(state + 0xc) / *(u32 *)(state + 4));
+    }
     return 0;
 }
 #pragma dont_inline reset
