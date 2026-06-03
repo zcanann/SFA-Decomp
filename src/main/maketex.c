@@ -1233,15 +1233,22 @@ void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
 /* fn_8007FE04 (112b): array remove-and-swap by value */
 int fn_8007FE04(int *arr, int *count_ptr, int target)
 {
-    int n = *count_ptr;
-    int *p = arr;
-    int i = 0;
+    int i;
+    int *p;
+    int n;
+    int v;
     int j;
+    n = *count_ptr;
+    p = arr;
+    i = 0;
     for (j = 0; j < n; j++) {
-        int v = *p;
+        v = *p;
         p++;
-        if (v == target) goto found;
-        i++;
+        if (v == target) {
+            goto found;
+        } else {
+            i++;
+        }
     }
     i = -1;
 found:
@@ -1378,15 +1385,18 @@ void s16toFloat(f32 *p, s16 val)
     *p = (f32)val;
 }
 
-extern u8 lbl_803DD0B4;
+typedef struct {
+    u8 active : 1;
+} SeqB4Flags;
+extern SeqB4Flags lbl_803DD0B4;
 int ObjSeq_func23(int unused, int x)
 {
     switch (x) {
     case 0:
-        lbl_803DD0B4 |= 0x80;
+        lbl_803DD0B4.active = 1;
         break;
     case 1:
-        lbl_803DD0B4 &= 0x7f;
+        lbl_803DD0B4.active = 0;
         break;
     }
     return 0;
@@ -1394,27 +1404,26 @@ int ObjSeq_func23(int unused, int x)
 
 int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
 {
-    int lo, hi, mid, v;
+    int lo, mid;
     int i;
     if (count <= 16) {
-        for (i = 0; i < count; i++) {
+        for (i = 0; i != count; i++) {
             if ((*arr)[0] == key) return (*arr)[1];
             arr++;
         }
         return 0;
     }
     lo = 0;
-    hi = count;
     do {
-        mid = (lo + hi) >> 1;
-        v = arr[mid][0];
-        if (key <= v) {
-            if (key == v) return arr[mid][1];
-            hi = mid;
-        } else {
+        mid = (count + lo) >> 1;
+        if (key > arr[mid][0]) {
             lo = mid;
+        } else if (key == arr[mid][0]) {
+            return arr[mid][1];
+        } else {
+            count = mid;
         }
-    } while (hi > lo);
+    } while (count <= lo);
     return 0;
 }
 #pragma scheduling reset
@@ -1489,9 +1498,11 @@ typedef struct {
 #pragma scheduling off
 void objSeqInitFn_8007feac(SeqSortPair *arr, int n)
 {
-    int h;
-    int i;
     int j;
+    int i;
+    int val;
+    int key;
+    int h;
 
     h = 1;
     while (h <= (n - 1) / 9) {
@@ -1499,13 +1510,16 @@ void objSeqInitFn_8007feac(SeqSortPair *arr, int n)
     }
     for (; h > 0; h /= 3) {
         for (i = h + 1; i < n; i++) {
-            SeqSortPair tmp = arr[i];
+            key = arr[i].key;
+            val = arr[i].val;
             j = i;
-            while (j > h && arr[j - h].key > tmp.key) {
-                arr[j] = arr[j - h];
+            while (j > h && arr[j - h].key > key) {
+                arr[j].key = arr[j - h].key;
+                arr[j].val = arr[j - h].val;
                 j -= h;
             }
-            arr[j] = tmp;
+            arr[j].key = key;
+            arr[j].val = val;
         }
     }
     for (i = 1; i < n; i++) {
