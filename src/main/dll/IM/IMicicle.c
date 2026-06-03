@@ -1718,7 +1718,7 @@ void exploded_update(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int fn_801A3E9C(u8* obj, int unused, u8* data);
+extern int slidingdoor_SeqFn(u8* obj, int unused, u8* data);
 extern f32 lbl_803E43B8;
 extern f32 lbl_803E43C0;
 extern f32 lbl_803E4428;
@@ -1730,12 +1730,12 @@ extern void fn_801A4DB8(int obj, int data, int extra, int sub);
 extern void GameBit_Set(int eventId, int value);
 extern uint GameBit_Get(int eventId);
 
-/* fn_801A3E9C: slidingdoor "think" routine. Tracks whether the player or
+/* slidingdoor_SeqFn: slidingdoor "think" routine. Tracks whether the player or
  * tricky is within lbl_803E43B8 xz-distance and steps a 3-bit state field
  * (state[0] bits 5..7) through the door's open/close machine. Returns 1
  * while in the static states (0/1) and 0 while in transition (2/3). */
 #pragma scheduling off
-int fn_801A3E9C(u8* obj, int unused, u8* data) {
+int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
     register int playerNear;
     register int trickyNear;
     register u8* state;
@@ -1893,7 +1893,7 @@ void attractor_func0B(u8* obj, void** out) {
 #pragma scheduling reset
 
 /* slidingdoor_init: clear obj+0xf4, copy data[0x1f]<<8 into obj+0; install
- * fn_801A3E9C as obj->thinkRoutine; convert data[0x21] to f32, scale by
+ * slidingdoor_SeqFn as obj->thinkRoutine; convert data[0x21] to f32, scale by
  * lbl_803E43C0 and obj->_50->[4], stash at obj+0x8; then clear bits 5..7 of
  * obj->_b8->_0. */
 #pragma scheduling off
@@ -1908,7 +1908,7 @@ void slidingdoor_init(u8* obj, u8* data) {
     u32 doorState = 0;
     *(u32*)(obj + 0xf4) = doorState;
     *(s16*)obj = (s16)(data[0x1f] << 8);
-    *(int(**)(u8*, int, u8*))(obj + 0xbc) = fn_801A3E9C;
+    *(int(**)(u8*, int, u8*))(obj + 0xbc) = slidingdoor_SeqFn;
     v = (f32)(u32)data[0x21] * lbl_803E43C0;
     *(f32*)(obj + 0x8) = v;
     *(f32*)(obj + 0x8) = *(f32*)(obj + 0x8) * *(f32*)((char*)(*(u8**)(obj + 0x50)) + 4);

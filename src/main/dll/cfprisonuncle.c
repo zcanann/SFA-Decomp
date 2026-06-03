@@ -1771,10 +1771,10 @@ int trickywarp_getExtraSize(void) { return 0x64; }
 int duster_getExtraSize(void) { return 0x20; }
 int curvefish_getExtraSize(void) { return 0x120; }
 
-/* fn_801804C8: clear bit 0x80 of obj->_b8->_1e, return 0. */
+/* duster_SeqFn: clear bit 0x80 of obj->_b8->_1e, return 0. */
 #pragma scheduling off
 #pragma peephole off
-int fn_801804C8(u8* obj) {
+int duster_SeqFn(u8* obj) {
     u8* sub = *(u8**)(obj + 0xb8);
     sub[0x1e] = (u8)(sub[0x1e] & ~0x80);
     return 0;
@@ -1785,9 +1785,9 @@ int fn_801804C8(u8* obj) {
 /* gCameraInterface: vtable pointer used for state-machine dispatches. */
 extern void *gCameraInterface;
 
-/* fn_8017F8C8: vtable[0x13]() with obj passed through implicitly, return 0. */
+/* MagicPlant_SeqFn: vtable[0x13]() with obj passed through implicitly, return 0. */
 #pragma scheduling off
-int fn_8017F8C8(u8* obj) {
+int MagicPlant_SeqFn(u8* obj) {
     (*(void (***)(u8*))gCameraInterface)[0x13](obj);
     return 0;
 }
@@ -2067,7 +2067,7 @@ void duster_init(int obj, u8 *params) {
     ObjHits_DisableObject(obj);
   }
   ObjMsg_AllocQueue((void *)obj,1);
-  *(void **)(obj + 0xbc) = fn_801804C8;
+  *(void **)(obj + 0xbc) = duster_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2304,7 +2304,7 @@ void MagicPlant_init(int obj, u8 *params) {
     if (*(int *)(obj + 0x64) != 0) {
         *(u32 *)(*(int *)(obj + 0x64) + 48) |= 0x810;
     }
-    *(void **)(obj + 0xbc) = (void *)fn_8017F8C8;
+    *(void **)(obj + 0xbc) = (void *)MagicPlant_SeqFn;
 }
 #pragma peephole reset
 #pragma scheduling reset

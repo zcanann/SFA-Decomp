@@ -700,7 +700,7 @@ void dfsh_shrine_hitDetect(void) {}
 void dfsh_shrine_release(void) {}
 void dfsh_shrine_initialise(void) {}
 
-extern void fn_801C2C68(int p1, int p2, void *p3);
+extern void dfsh_shrine_SeqFn(int p1, int p2, void *p3);
 extern int mapGetDirIdx(int id);
 extern void unlockLevel(int idx, int a, int b);
 extern void *objCreateLight(int *obj, int v);
@@ -733,7 +733,7 @@ void dfsh_shrine_init(int *obj, u8 *init) {
     sub[0x1a] = 4;
     flags->openedBySequence = 0;
     *(s16*)(sub + 0x12) = 0;
-    *(void**)((char*)obj + 0xbc) = (void*)&fn_801C2C68;
+    *(void**)((char*)obj + 0xbc) = (void*)&dfsh_shrine_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     sub[0x1b] = 0;

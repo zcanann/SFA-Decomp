@@ -310,7 +310,7 @@ void DR_CloudRunner_func17(int obj, int param)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_802C0BFC(int obj, int p2, int p3)
+int DR_CloudRunner_SeqFn(int obj, int p2, int p3)
 {
     int inner = *(int *)((char *)obj + 0xb8);
     int local = 1;
@@ -365,7 +365,7 @@ void DR_CloudRunner_init(int obj, int p2)
     int inner;
     int r;
     *(s16 *)((char *)obj + 0) = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
-    *(int *)((char *)obj + 0xbc) = (int)fn_802C0BFC;
+    *(int *)((char *)obj + 0xbc) = (int)DR_CloudRunner_SeqFn;
     ObjGroup_AddObject(obj, 0xa);
     inner = *(int *)((char *)obj + 0xb8);
     *(u8 *)((char *)inner + 0xbb4) = *(u8 *)((char *)p2 + 0x19);

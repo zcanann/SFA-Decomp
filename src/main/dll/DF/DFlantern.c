@@ -640,7 +640,7 @@ void dfsh_shrine_free(int obj)
 /*
  * --INFO--
  *
- * Function: fn_801C2C68
+ * Function: dfsh_shrine_SeqFn
  * EN v1.0 Address: 0x801C2C68
  * EN v1.0 Size: 348b
  * EN v1.1 Address: TODO
@@ -650,7 +650,7 @@ void dfsh_shrine_free(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int fn_801C2C68(int obj,int unused,void *seq)
+int dfsh_shrine_SeqFn(int obj,int unused,void *seq)
 {
   int objLocal;
   u8 *seqBytes;
