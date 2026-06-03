@@ -5358,6 +5358,161 @@ extern s32 lbl_803DCC5C;
 extern int lbl_803DCC64;
 extern void fn_8001D7F8(int p1, int *a, int *b);
 
+typedef struct { u8 r, g, b, a; } ObjGXColor;
+extern void fn_8001E8F4(int);
+extern void fn_8001E608(u8 chan, int p2, int p3);
+extern void modelTextureFn_80089970(int idx);
+extern void textureColorFn_8008991c(int idx, u8 *r, u8 *g, u8 *b);
+extern void lightGetColor(int light, u8 *r, u8 *g, u8 *b);
+extern void modelLightFn_8001ec94(u8 *model, int *arr, u32 n, s32 *cnt, int mode);
+extern void modelStruct2_setLights(u8 chan, int light, u8 *model);
+extern int fn_8001DB1C(int light);
+extern void gxColorFn_8001e634(void);
+extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
+extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
+extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
+extern void GXSetNumChans(int n);
+extern u32 lbl_803DB468;
+extern u32 lbl_803DB46C;
+extern u32 lbl_803DB470;
+extern u32 lbl_803DCC54;
+extern u8 lbl_803DCC4C;
+extern u8 lbl_803DCC60;
+
+void objFn_8003dc50(u8 *obj, u8 *model) {
+    int t2;
+    int t10;
+    int en2;
+    int chan;
+    u8 ch;
+    u16 f;
+    u8 b;
+    int larr[10];
+    s32 count;
+    ObjGXColor c;
+
+    count = 0;
+    lbl_803DCC5C = 0;
+    b = obj[0x24];
+    t2 = b & 2;
+    if (t2) {
+        en2 = 1;
+    } else {
+        en2 = 0;
+    }
+    t10 = b & 0x10;
+    chan = t10 ? 4 : 0;
+    if (*(u16 *)(obj + 0xe2) & 2) {
+        if (t2 || t10) {
+            ((u8 *)&lbl_803DCC54)[3] = 0;
+            GXSetChanAmbColor(chan, *(ObjGXColor *)&lbl_803DCC54);
+            GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+            GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+            GXSetNumChans(1);
+        } else {
+            GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+            GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+            GXSetNumChans(0);
+        }
+    } else {
+        fn_8001E8F4(0);
+        ch = chan;
+        fn_8001E608(ch, 0, en2);
+        f = *(u16 *)(obj + 0xe2);
+        if (!(f & 9)) {
+            int mode;
+            if (f & 0xc) {
+                mode = 2;
+                GXSetChanAmbColor(ch, *(ObjGXColor *)&lbl_803DB46C);
+            } else {
+                int l;
+                mode = 6;
+                l = (*(u8 **)(model + 0x50))[0x8d];
+                if (l == 0) {
+                    modelTextureFn_80089970(model[0xf2]);
+                    textureColorFn_8008991c(model[0xf2], &c.r, &c.g, &c.b);
+                } else {
+                    lightGetColor(l, &c.r, &c.g, &c.b);
+                }
+                c.a = 0;
+                GXSetChanAmbColor(ch, c);
+            }
+            {
+                u32 nl = (*(u8 **)(model + 0x50))[0x8c];
+                if (nl != 0) {
+                    modelLightFn_8001ec94(model, larr, nl, &count, mode);
+                }
+            }
+            if (count == 0) {
+                GXSetChanMatColor(ch, *(ObjGXColor *)&lbl_803DB46C);
+            } else {
+                GXSetChanMatColor(ch, *(ObjGXColor *)&lbl_803DB468);
+            }
+            {
+                int *p;
+                int i;
+                i = 0;
+                p = larr;
+                for (; i < count; i++) {
+                    modelStruct2_setLights(ch, *p, model);
+                    p++;
+                }
+            }
+        } else {
+            if (f & 1) {
+                GXSetChanMatColor(ch, *(ObjGXColor *)&lbl_803DB468);
+            } else {
+                GXSetChanMatColor(ch, *(ObjGXColor *)&lbl_803DB46C);
+            }
+        }
+        {
+            u32 nf = obj[0xfa];
+            if (nf != 0) {
+                modelLightFn_8001ec94(model, &lbl_803DCC64, nf, &lbl_803DCC5C, 8);
+                if (((*(u8 **)(model + 0x50))[0x5f] & 4) || lbl_803DCC4C) {
+                    lbl_803DCC5C = 0;
+                }
+                {
+                    u8 got;
+                    int *lp;
+                    u8 *sp;
+                    int k;
+                    got = 0;
+                    k = 0;
+                    lp = &lbl_803DCC64;
+                    sp = &lbl_803DCC60;
+                    for (; k < lbl_803DCC5C; k++) {
+                        int t = fn_8001DB1C(*lp);
+                        if (!got && t == 1) {
+                            *sp = 1;
+                            got = 1;
+                        } else if (k == 0) {
+                            *sp = 2;
+                        } else {
+                            *sp = 3;
+                        }
+                        fn_8001E608(*sp, 2, 0);
+                        modelStruct2_setLights(*sp, *lp, model);
+                        GXSetChanAmbColor(*sp, *(ObjGXColor *)&lbl_803DB470);
+                        GXSetChanMatColor(*sp, *(ObjGXColor *)&lbl_803DB468);
+                        lp++;
+                        sp++;
+                    }
+                }
+            }
+        }
+        gxColorFn_8001e634();
+        {
+            u8 b5f = (*(u8 **)(model + 0x50))[0x5f];
+            if ((b5f & 4) || lbl_803DCC4C) {
+                lbl_803DCC5C = 2;
+            } else if (b5f & 0x11) {
+                lbl_803DCC5C = 1;
+            }
+        }
+    }
+}
+
 void modelRenderFn_setVtxDescr(u8 *hdr, u8 *m, u32 *p3, MtxBitStream *bs, u8 p5, u8 *out1, u8 *out2) {
     GXClearVtxDesc();
     if (hdr[0xf3] > 1) {
