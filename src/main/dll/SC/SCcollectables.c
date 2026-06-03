@@ -92,7 +92,7 @@ int warpstone_getObjectTypeId(void)
 extern void loadUiDll(s32);
 #pragma scheduling off
 #pragma peephole off
-void fn_801D70B4(void) { loadUiDll(0x1); }
+void warpstone_loadBaseUi(void) { loadUiDll(0x1); }
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -192,7 +192,7 @@ extern MapEventInterface **gMapEventInterface;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801D6D98(undefined4 p1, undefined4 p2, int option)
+int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option)
 {
     s8 horizontal;
     s8 vertical;
@@ -292,7 +292,7 @@ extern f32 timeDelta;
 
 #pragma scheduling off
 #pragma peephole off
-int fn_801D70D8(int obj, undefined4 p2, int animObj)
+int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
 {
     int commandOffset;
     int i;
@@ -312,8 +312,8 @@ int fn_801D70D8(int obj, undefined4 p2, int animObj)
         ObjAnim_AdvanceCurrentMove(child, *(f32 *)(obj + 0x98) - *(f32 *)(child + 0x98), timeDelta, NULL);
     }
 
-    *(void **)(animObj + 0xec) = fn_801D6D98;
-    *(void **)(animObj + 0xe8) = fn_801D70B4;
+    *(void **)(animObj + 0xec) = warpstone_handleMenuOptionInput;
+    *(void **)(animObj + 0xe8) = warpstone_loadBaseUi;
 
     if (*(s8 *)(animObj + 0x56) != 0) {
         *(u8 *)(state + 0xa) = *(u8 *)(state + 0xa) & ~3;

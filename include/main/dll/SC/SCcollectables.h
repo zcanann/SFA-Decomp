@@ -3,8 +3,9 @@
 
 #include "ghidra_import.h"
 
-int fn_801D6D98(undefined4 p1, undefined4 p2, int option);
-int fn_801D70D8(int obj, undefined4 p2, int animObj);
+int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option);
+void warpstone_loadBaseUi(void);
+int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj);
 int warpstone_getExtraSize(void);
 int warpstone_getObjectTypeId(void);
 
