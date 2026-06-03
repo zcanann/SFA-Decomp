@@ -4954,6 +4954,79 @@ void objRenderChild(int *child, int *parent, u8 p3) {
     }
 }
 
+extern s32 lbl_803DCC48;
+extern char *getCache(void);
+extern void cacheFn_800229c4(int);
+extern void GXLoadPosMtxImm(f32 *m, int id);
+extern u8 lbl_802CAED0;
+
+typedef struct {
+    u8 *data;
+    int pad[3];
+    int pos;
+} MtxBitStream;
+
+void modelLoadMtxsToGx(int obj, int *model, MtxBitStream *bs, f32 *mtx) {
+    char *cache = getCache();
+    if (lbl_803DCC48 == 1) {
+        char *c2 = getCache();
+        char *src;
+        char *dst;
+        int i;
+        obj = *(u8 *)(obj + 0xf3) + *(u8 *)(obj + 0xf4);
+        src = c2 + 0x2700;
+        dst = c2;
+        cacheFn_800229c4(0);
+        for (i = 0; i < obj; i++) {
+            PSMTXConcat(mtx, (f32 *)src, (f32 *)dst);
+            src += 0x40;
+            dst += 0x30;
+        }
+        lbl_803DCC48 = 2;
+    }
+    {
+        u8 *tbl;
+        int i;
+        int count;
+        f32 tmp[12];
+        {
+            int pos = bs->pos;
+            int off = pos >> 3;
+            u8 *p;
+            u32 w;
+            w = bs->data[off];
+            p = (u8 *)(off + (char *)bs->data);
+            w |= p[1] << 8;
+            w |= p[2] << 16;
+            bs->pos = pos + 4;
+            count = (w >> (pos & 7)) & 0xf;
+        }
+        i = 0;
+        tbl = &lbl_802CAED0;
+        for (; i < count; i++) {
+            int idx;
+            {
+                int pos = bs->pos;
+                int off = pos >> 3;
+                u8 *p = (u8 *)(off + (char *)bs->data);
+                u32 w;
+                w = p[0];
+                w |= p[1] << 8;
+                w |= p[2] << 16;
+                bs->pos = pos + 8;
+                idx = (w >> (pos & 7)) & 0xff;
+            }
+            if (lbl_803DCC48 == 2) {
+                GXLoadPosMtxImm((f32 *)(cache + idx * 0x30), *tbl);
+            } else {
+                PSMTXConcat(mtx, (f32 *)ObjModel_GetJointMatrix(model, idx), tmp);
+                GXLoadPosMtxImm(tmp, *tbl);
+            }
+            tbl++;
+        }
+    }
+}
+
 extern u8 lbl_80345E10[];
 void *getCurrentDataFile(int id) {
     u8 *base = lbl_80345E10;
