@@ -1367,6 +1367,7 @@ void timeListFn_8012be84(void)
  * 0 if any of the table entries match the slot's lookup byte. */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 int pauseMenuIsFox(void)
 {
     void* s;
@@ -1394,6 +1395,7 @@ int pauseMenuIsFox(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /* EN v1.0 0x80129698  size: 196b  Pickup-pickup state hook: latches the
  * resulting object id from saveScoreFn_800e88b4 into lbl_803DBA91, and on the
@@ -1476,6 +1478,7 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
  */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void pauseMenuInit(void)
 {
     void* obj = Obj_GetPlayerObject();
@@ -1512,6 +1515,7 @@ void pauseMenuInit(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /* EN v1.0 0x8012E880  size: 452b  Per-frame death-FX state machine.
  *
