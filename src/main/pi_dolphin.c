@@ -6000,7 +6000,7 @@ extern int lbl_803DCD80;
 extern u8 lbl_803DCD69;
 extern f32 lbl_803DEACC;
 extern f32 Breaking_803DEB40;
-extern f32 Prepared_803DEAD8[2];
+extern f32 lbl_803DEADC;
 void fn_800510F0(void *p1, u8 flag2, u8 flag3) {
     f32 mtxB[3][4];
     f32 mtxA[3][4];
@@ -6012,7 +6012,7 @@ void fn_800510F0(void *p1, u8 flag2, u8 flag3) {
         GXSetTevOrder(lbl_803DCD90, lbl_803DCD88 - 1, lbl_803DCD8C, 0xff);
     } else {
         PSMTXScale(mtxA, Breaking_803DEB40, Breaking_803DEB40, lbl_803DEACC);
-        PSMTXTrans(mtxB, Prepared_803DEAD8[1], Prepared_803DEAD8[1], lbl_803DEAC8);
+        PSMTXTrans(mtxB, lbl_803DEADC, lbl_803DEADC, lbl_803DEAC8);
         PSMTXConcat(mtxB, mtxA, mtxA);
         GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
         GXSetTexCoordGen2(lbl_803DCD88, 1, 1, 0x1e, 0, lbl_803DCD80);
@@ -6055,7 +6055,7 @@ void textureFn_80051348(void *p1, u8 p2) {
     int out_c;
     int out_8;
     PSMTXScale(mtxA, Breaking_803DEB40, Breaking_803DEB40, lbl_803DEACC);
-    PSMTXTrans(mtxB, Prepared_803DEAD8[1], Prepared_803DEAD8[1], lbl_803DEAC8);
+    PSMTXTrans(mtxB, lbl_803DEADC, lbl_803DEADC, lbl_803DEAC8);
     PSMTXConcat(mtxB, mtxA, mtxA);
     GXLoadTexMtxImm(mtxA, lbl_803DCD80, 0);
     buf[0] = p2;
@@ -6272,7 +6272,7 @@ int textureFn_80050ad8(void *p1, int p2, u8 p3, u32 p4) {
     v = v / lbl_803DEB3C;
     v = v - lbl_803DEAC8;
     v = lbl_803DEB38 * v;
-    v = Prepared_803DEAD8[1] * v;
+    v = lbl_803DEADC * v;
     PSMTXScale(mtx, v, v, lbl_803DEACC);
     mtx[2][3] = lbl_803DEAC8;
     GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
@@ -6314,7 +6314,7 @@ void fn_8004D6D8(void) {
     int id;
     f32 v;
     indmtx = lbl_802C1E10;
-    v = Prepared_803DEAD8[1] * fn_8006C670();
+    v = lbl_803DEADC * fn_8006C670();
     indmtx.m[0][0] = v;
     indmtx.m[1][2] = v;
     if (lbl_803DCD88 > 0) {
@@ -6363,7 +6363,7 @@ void fn_8004F380(f32 param_1, int *param_2, f32 *param_3) {
     int id;
     f32 c8, cc, d1, f;
     if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7) {
-        d1 = Prepared_803DEAD8[1];
+        d1 = lbl_803DEADC;
         f = d1 / param_1;
         cc = lbl_803DEACC;
         c8 = lbl_803DEAC8;
@@ -6441,7 +6441,7 @@ void fn_8004F6D8(f32 param_1, int *param_2, f32 *param_3) {
     int id;
     f32 c8, cc, d1, f;
     if (lbl_803DCD74 <= 3 && lbl_803DCD6A < 0xc && lbl_803DCD69 < 7) {
-        d1 = Prepared_803DEAD8[1];
+        d1 = lbl_803DEADC;
         f = d1 / param_1;
         cc = lbl_803DEACC;
         c8 = lbl_803DEAC8;
@@ -6523,7 +6523,7 @@ void fn_8004FA30(f32 param_1, int *param_2, f32 *param_3) {
         if (param_1 < lbl_803DEAE4) {
             param_1 = lbl_803DEAE4;
         }
-        d1 = Prepared_803DEAD8[1];
+        d1 = lbl_803DEADC;
         f = d1 / param_1;
         cc = lbl_803DEACC;
         c8 = lbl_803DEAC8;
@@ -6749,6 +6749,107 @@ void fn_80050558(u8 *param_1, void *param_2, int param_3, int param_4, int param
     lbl_803DCD8C = lbl_803DCD8C + 1;
     lbl_803DCD6A++;
     lbl_803DCD69++;
+}
+extern void C_MTXLightOrtho(f32 m[3][4], f32 t, f32 b, f32 l, f32 r, f32 sS, f32 sT, f32 tS, f32 tT);
+extern int fn_8006C754(void);
+extern int fn_8006C74C(void);
+extern u8 *Obj_GetPlayerObject(void);
+extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
+extern void GXSetTevKAlphaSel(int tev, int sel);
+extern f32 lbl_803DEAF4;
+extern f32 lbl_803DEAF8;
+extern f32 lbl_803DEAFC;
+extern f32 lbl_803DEB00;
+void fn_8004D230(void) {
+    f32 mtx1[4][4];
+    f32 mtx2[3][4];
+    u8 *obj1;
+    u8 *player;
+    u8 *obj2;
+    int id;
+    f32 dist;
+    f32 tmp;
+    f32 t;
+
+    obj1 = (u8 *)fn_8006C754();
+    C_MTXLightOrtho(mtx1, lbl_803DEAF4, lbl_803DEAF8, lbl_803DEAF8, lbl_803DEAF4,
+                    lbl_803DEADC, lbl_803DEADC, lbl_803DEADC, lbl_803DEADC);
+    GXLoadTexMtxImm(mtx1, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+    GXSetTevSwapModeTable(1, 0, 0, 0, 1);
+    GXSetTevSwapMode(lbl_803DCD90, 1, 1);
+    if (lbl_803DCD90 == 0) {
+        GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
+    } else {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0);
+    }
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 4);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 2);
+    lbl_803DCD30 = 1;
+    id = lbl_803DCD8C;
+    if (obj1 != NULL) {
+        void *obj = obj1 + 0x20;
+        if (obj1[0x48] != 0) {
+            GXLoadTexObjPreLoaded(obj, *(void **)(obj1 + 0x40), id);
+        } else {
+            GXLoadTexObj(obj, id);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    player = Obj_GetPlayerObject();
+    if (player != NULL) {
+        dist = Camera_DistanceToCurrentViewPosition(*(f32 *)(player + 0x18), *(f32 *)(player + 0x1c), *(f32 *)(player + 0x20));
+    } else {
+        dist = lbl_803DEAFC;
+    }
+    tmp = dist - lbl_803DEB00;
+    t = -(lbl_803DEAC8 / (dist - tmp));
+    mtx2[0][0] = lbl_803DEACC;
+    mtx2[0][1] = lbl_803DEACC;
+    mtx2[0][2] = t;
+    mtx2[0][3] = t * tmp;
+    mtx2[1][0] = lbl_803DEACC;
+    mtx2[1][1] = lbl_803DEACC;
+    mtx2[1][2] = lbl_803DEACC;
+    mtx2[1][3] = lbl_803DEACC;
+    mtx2[2][0] = lbl_803DEACC;
+    mtx2[2][1] = lbl_803DEACC;
+    mtx2[2][2] = lbl_803DEACC;
+    mtx2[2][3] = lbl_803DEACC;
+    GXLoadTexMtxImm(mtx2, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0, 0, lbl_803DCD80);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+    GXSetTevSwapMode(lbl_803DCD90, 1, 1);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0);
+    GXSetTevKAlphaSel(lbl_803DCD90, 0);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 2, 4, 6);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 1, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    obj2 = (u8 *)fn_8006C74C();
+    id = lbl_803DCD8C;
+    if (obj2 != NULL) {
+        void *obj = obj2 + 0x20;
+        if (obj2[0x48] != 0) {
+            GXLoadTexObjPreLoaded(obj, *(void **)(obj2 + 0x40), id);
+        } else {
+            GXLoadTexObj(obj, id);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 3;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6B = 1;
+    lbl_803DCD6A += 2;
+    lbl_803DCD69 += 2;
 }
 #pragma peephole reset
 #pragma scheduling reset
