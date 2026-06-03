@@ -2116,7 +2116,7 @@ playLandingExtras:
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015BB00(int obj, int state)
+int mediumbasket_updateContactHitState(int obj, int state)
 {
     int sub = *(int *)(obj + 0xb8);
     int control;
@@ -2214,7 +2214,7 @@ playDropExtras:
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015BE08(int obj, int state)
+int mediumbasket_updateCommDownState(int obj, int state)
 {
     int sub = *(int *)(obj + 0xb8);
     int control = *(int *)(sub + 0x40c);
@@ -2240,7 +2240,7 @@ int fn_8015BE08(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015BFA0(int obj, int state)
+int mediumbasket_updateHeightBlendState(int obj, int state)
 {
     int control = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
     f32 height;
@@ -2387,7 +2387,7 @@ int mediumbasket_updateSpinState(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015C5C4(int obj, int state)
+int mediumbasket_updateImpactHitState(int obj, int state)
 {
     int sub = *(int *)(obj + 0xb8);
     int control = *(int *)(sub + 0x40c);
@@ -2416,7 +2416,7 @@ int fn_8015C5C4(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_8015C6B4(int obj, int state)
+int mediumbasket_updateHideResetState(int obj, int state)
 {
     int sub = *(int *)(obj + 0xb8);
     int hitState;
@@ -2904,7 +2904,7 @@ void mediumbasket_spawnContactObject(int* obj, int* state) {
     }
 }
 
-int fn_8015BEF4(int* obj, u8* state) {
+int mediumbasket_updateControlMove5State(int* obj, u8* state) {
     u8* t = *(u8**)((char*)(*(int**)((char*)obj + 0xb8)) + 0x40c);
     t[0x44] |= 4;
     *(f32*)((char*)state + 0x2a0) = lbl_803E2D38;
