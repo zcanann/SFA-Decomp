@@ -734,3 +734,154 @@ void dimcannon_init(int *obj, int *arg)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void DIMwooddoor_updateFallingDebris(int *obj);
+extern void DIMwooddoor_updateShardAim(int *obj, f32 a, f32 b, f32 c, f32 d);
+extern void DIMwooddoor_spawnShard(int *obj, int p2);
+extern f32  getXZDistance(f32 *a, f32 *b);
+extern void ObjAnim_AdvanceCurrentMove(int *obj, f32 a, f32 b, int c);
+extern void *Obj_GetPlayerObject(void);
+extern void *fn_802972A8(void *player);
+extern void buttonDisable(int chan, int mask);
+extern u8  framesThisStep;
+extern f32 timeDelta;
+extern int *gCameraInterface;
+extern int *gObjectTriggerInterface;
+extern int lbl_803DBF10;
+extern int lbl_803DBF0C;
+extern f32 lbl_803E48EC;
+extern f32 lbl_803E48F0;
+extern f32 lbl_803DBEF4;
+
+/* EN v1.0 0x801B2C68  size: 1120b  Dimcannon per-frame state machine: idle ->
+ * tracking -> firing -> spent, plus the 0x1d6 falling-debris sub-variant. */
+#pragma scheduling off
+#pragma peephole off
+void dimcannon_update(int *obj)
+{
+    char *state;
+    void *player;
+    int *src = *(int **)((char *)obj + 0x4c);
+
+    if (*(s16 *)((char *)obj + 0x46) == 0x1d6) {
+        DIMwooddoor_updateFallingDebris(obj);
+        return;
+    }
+
+    if ((*(u8 *)((char *)obj + 0xaf) & 0x8) && GameBit_Get(*(s16 *)((char *)src + 0x1a))) {
+        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~0x8);
+    }
+
+    state = *(char **)((char *)obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    if (fn_802972A8(player) != 0) {
+        *(int *)(state + 0x0) = 0;
+    } else {
+        *(void **)(state + 0x0) = player;
+    }
+
+    *(s16 *)((char *)obj + 0x6) = (s16)(*(s16 *)((char *)obj + 0x6) & ~0x4000);
+
+    switch (*(u8 *)(state + 0xac)) {
+    case 0:
+        if (GameBit_Get(*(s16 *)((char *)src + 0x1c))) {
+            *(u8 *)(state + 0xac) = 4;
+        }
+        break;
+    case 5: {
+        s8 t = *(s8 *)(state + 0xb0);
+        if (t > 0) {
+            *(s8 *)(state + 0xb0) = (s8)(t - framesThisStep);
+        } else if (*(u8 *)((char *)obj + 0xaf) & 0x1) {
+            int *focusObj;
+            *(u8 *)(state + 0xae) = 0;
+            *(u8 *)(state + 0xb1) = 0;
+            focusObj = obj;
+            (*(void (**)(int, int, int, int, int **, int, int))(*(int *)gCameraInterface + 0x1c))(
+                0x51, 1, 0, 4, &focusObj, 0x32, 0xff);
+            buttonDisable(0, 0x100);
+            *(u8 *)(state + 0xac) = 3;
+            (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+            *(u8 *)(state + 0xb0) = 0x3c;
+            *(u8 *)((char *)obj + 0xaf) |= 0x8;
+        }
+        *(u8 *)(state + 0xad) = 0;
+        *(s16 *)(state + 0xa4) = 0;
+        *(s16 *)(state + 0xa6) = 0;
+        break;
+    }
+    case 4:
+        DIMwooddoor_updateShardAim(obj, *(f32 *)(state + 0x4), *(f32 *)(state + 0x8),
+                                   *(f32 *)(state + 0xc), *(f32 *)(state + 0x10));
+        if (GameBit_Get(*(s16 *)((char *)src + 0x1a))) {
+            *(u8 *)(state + 0xac) = 5;
+        } else if (*(void **)(state + 0x0) != 0 && !GameBit_Get(*(s16 *)((char *)src + 0x1e))) {
+            f32 d = getXZDistance((f32 *)((char *)obj + 0x18),
+                                  (f32 *)(*(char **)(state + 0x0) + 0x18));
+            int v = *(s16 *)((char *)src + 0x26) * lbl_803DBF10;
+            if (d < (f32)v / lbl_803E48EC) {
+                *(u8 *)(state + 0xac) = 1;
+            }
+        }
+        *(u8 *)(state + 0xad) = 0;
+        *(s16 *)(state + 0xa4) = 0;
+        *(s16 *)(state + 0xa6) = 0;
+        break;
+    case 1:
+        if (GameBit_Get(*(s16 *)((char *)src + 0x1a))) {
+            *(u8 *)(state + 0xac) = 5;
+            break;
+        }
+        if (GameBit_Get(*(s16 *)((char *)src + 0x1e))) {
+            *(u8 *)(state + 0xac) = 4;
+            break;
+        }
+        if (*(void **)(state + 0x0) != 0) {
+        *(u8 *)(state + 0xaf) += framesThisStep;
+        if (*(u8 *)(state + 0xaf) > 0xa) {
+            u8 j;
+            *(u8 *)(state + 0xaf) = 0;
+            for (j = 0; j < 9; j++) {
+                char *e = state + j * 4;
+                *(f32 *)(e + 0x14) = *(f32 *)(e + 0x18);
+                *(f32 *)(e + 0x3c) = *(f32 *)(e + 0x40);
+                *(f32 *)(e + 0x64) = *(f32 *)(e + 0x68);
+                if (j == 0 || *(f32 *)(e + 0x3c) > *(f32 *)(state + 0x8)) {
+                    *(f32 *)(state + 0x8) = *(f32 *)(e + 0x3c);
+                }
+            }
+            *(f32 *)(state + 0x38) = *(f32 *)(*(char **)(state + 0x0) + 0xc);
+            *(f32 *)(state + 0x60) = *(f32 *)(*(char **)(state + 0x0) + 0x10);
+            *(f32 *)(state + 0x88) = *(f32 *)(*(char **)(state + 0x0) + 0x14);
+            *(f32 *)(state + 0x4) = *(f32 *)(state + 0x14);
+            *(f32 *)(state + 0xc) = *(f32 *)(state + 0x64);
+        }
+        if (*(s16 *)(state + 0xa4) > 0) {
+            *(s16 *)(state + 0xa4) = (s16)(*(s16 *)(state + 0xa4) - framesThisStep);
+        }
+        if (*(s16 *)(state + 0xa6) > 0) {
+            *(s16 *)(state + 0xa6) = (s16)(*(s16 *)(state + 0xa6) - framesThisStep);
+        }
+        *(f32 *)(state + 0x10) = getXZDistance((f32 *)((char *)obj + 0x18),
+                                               (f32 *)(*(char **)(state + 0x0) + 0x18));
+        DIMwooddoor_updateShardAim(obj, *(f32 *)(state + 0x4), *(f32 *)(state + 0x8),
+                                   *(f32 *)(state + 0xc), *(f32 *)(state + 0x10));
+        DIMwooddoor_spawnShard(obj, 0);
+        {
+            f32 d2 = *(f32 *)(state + 0x10);
+            int v = *(s16 *)((char *)src + 0x26) * lbl_803DBF0C;
+            if (d2 > (f32)v / lbl_803E48EC) {
+                *(u8 *)(state + 0xac) = 4;
+            }
+        }
+        } else {
+            *(u8 *)(state + 0xac) = 4;
+        }
+        break;
+    }
+
+    lbl_803DBEF4 = lbl_803E48F0;
+    ObjAnim_AdvanceCurrentMove(obj, lbl_803E48F0, timeDelta, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
