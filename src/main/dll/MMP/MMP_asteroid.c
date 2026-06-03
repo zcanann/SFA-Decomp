@@ -1198,3 +1198,26 @@ void explodeanimator_init(int* obj, int* def)
 
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void xyzanimator_init(int obj)
+{
+    int inner = *(int *)(obj + 0xb8);
+    int id;
+    ObjGroup_AddObject(obj, 0x51);
+    id = *(int *)(*(int *)(obj + 0x4c) + 0x14);
+    switch (id) {
+    case 0x46406:
+    case 0x4BAB1:
+        *(s16 *)(inner + 0x4e) = 0x7d;
+        break;
+    case 0x49275:
+    case 0x49CB7:
+    case 0x4C797:
+        *(s16 *)(inner + 0x4e) = 0x4b7;
+        break;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
