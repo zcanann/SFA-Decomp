@@ -15,6 +15,8 @@
 #define TRICKY_CONTROL_FLAG_FLOOR_RESPONSE_MASK 0x28000002
 #define TRICKY_SURFACE_FLAG_HAS_NEARBY_FLOOR 0x10
 #define TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID 0x46406
+#define TRICKY_HEIGHT_TRACK_GROUP 0x51
+#define TRICKY_HEIGHT_TRACK_MODEL_SLOT 3
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
 #define SFXdoor_creak 563
 
@@ -28,6 +30,17 @@ typedef struct TrickyInitFlags {
   u8 bit1 : 1;
   u8 bit0 : 1;
 } TrickyInitFlags;
+
+typedef struct TrickyStatusFlags58 {
+  u8 bit7 : 1;
+  u8 bit6 : 1;
+  u8 heightTracking : 1;
+  u8 bit4 : 1;
+  u8 bit3 : 1;
+  u8 bit2 : 1;
+  u8 bit1 : 1;
+  u8 bit0 : 1;
+} TrickyStatusFlags58;
 
 extern undefined4 FUN_800067e8();
 extern bool FUN_800067f0();
@@ -62,7 +75,7 @@ extern uint FUN_80017ae8();
 extern int FUN_80017af8();
 extern int voxmaps_traceLine(void *from,void *to,int param_3,u8 *hit,int param_5);
 extern void voxmaps_worldToGrid(Vec *world,void *grid);
-extern int ObjList_FindObjectById(int objId);
+extern void* ObjList_FindObjectById(int objId);
 extern undefined4 FUN_8002f6ac();
 extern int FUN_8002fc3c();
 extern int getTrickyObject(void);
@@ -1921,40 +1934,41 @@ void Tricky_render(int obj,int param_2,int param_3,int param_4,int param_5,char 
 #pragma scheduling off
 void Tricky_hitDetect(int obj)
 {
+  f32 y;
   f32 dy;
-  int i;
   int *objects;
+  int i;
+  void *firepipeObj;
   int state;
   f32 height;
-  u8 heightTrackBit;
   int count[2];
 
   state = *(int *)(obj + 0xb8);
-  dy = *(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84);
+  y = *(f32 *)(obj + 0x10);
+  dy = y - *(f32 *)(obj + 0x84);
   if (dy < lbl_803E23DC) {
     dy = -dy;
   }
   if (lbl_803E23E8 == dy) {
-    if (*(f32 *)(obj + 0x10) == *(f32 *)(obj + 0x1c)) {
-      heightTrackBit = 1;
-      *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | (heightTrackBit << 5);
+    if (y == *(f32 *)(obj + 0x1c)) {
+      ((TrickyStatusFlags58 *)(state + 0x58))->heightTracking = 1;
       *(s32 *)(state + 0x5c) = -1;
       *(f32 *)(state + 0x60) = lbl_803E23DC;
     }
   }
   else {
-    i = ObjList_FindObjectById(TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID);
-    if ((i != 0) && (getXZDistance((f32 *)(obj + 0x18),(f32 *)(i + 0x18)) < lbl_803E2540)) {
-      heightTrackBit = 1;
-      *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | (heightTrackBit << 5);
+    firepipeObj = ObjList_FindObjectById(TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID);
+    if ((firepipeObj != (void *)0) &&
+        (getXZDistance((f32 *)(obj + 0x18),(f32 *)((int)firepipeObj + 0x18)) < lbl_803E2540)) {
+      ((TrickyStatusFlags58 *)(state + 0x58))->heightTracking = 1;
       *(u32 *)(state + 0x5c) = TRICKY_HEIGHT_TRACK_FIREPIPE_OBJECT_ID;
       *(f32 *)(state + 0x60) = lbl_803E23DC;
     }
   }
   if ((*(u8 *)(state + 0x58) >> 5 & 1) != 0) {
-    objects = ObjGroup_GetObjects(0x51,count);
+    objects = ObjGroup_GetObjects(TRICKY_HEIGHT_TRACK_GROUP,count);
     for (i = 0; i < count[0]; i++) {
-      height = objFn_801948c0(*objects,3);
+      height = objFn_801948c0(*objects,TRICKY_HEIGHT_TRACK_MODEL_SLOT);
       if (*(s32 *)(state + 0x5c) == -1) {
         dy = height - *(f32 *)(obj + 0x10);
         if (dy < lbl_803E23DC) {
@@ -1971,16 +1985,14 @@ void Tricky_hitDetect(int obj)
           *(f32 *)(state + 0x60) = height;
         }
         else {
-          heightTrackBit = 0;
-          *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | (heightTrackBit << 5);
+          ((TrickyStatusFlags58 *)(state + 0x58))->heightTracking = 0;
         }
         break;
       }
       objects = objects + 1;
     }
     if (i == count[0]) {
-      heightTrackBit = 0;
-      *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0xdf) | (heightTrackBit << 5);
+      ((TrickyStatusFlags58 *)(state + 0x58))->heightTracking = 0;
     }
   }
   return;
