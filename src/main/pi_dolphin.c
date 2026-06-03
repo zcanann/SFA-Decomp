@@ -1648,11 +1648,11 @@ int GXFlush_(u8 visible, int unused);
 void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u32 *param_5,int param_6,u32 param_7)
 {
   struct MldfTables *t = (struct MldfTables *)lbl_80345E10;
-  u8 frame = 0;
-  u32 a = 0;
   u32 b = 0;
-  u32 flags;
+  u32 a = 0;
+  u8 frame = 0;
   u32 hi;
+  int flags;
   u32 off;
   u32 moff;
   int s;
@@ -1679,13 +1679,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
     }
     hi = param_3 & 0x80000000;
     if (hi != 0 && b == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 0x20000000) == 0 && (flags & 0x10000000) == 0) {
           b = *(u32 *)((char *)t + 0x800195d8);
           break;
@@ -1708,13 +1702,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       }
     }
     else if ((param_3 & 0x20000000) != 0 && a == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 0x80000000) == 0 && (flags & 0x40000000) == 0) {
           a = MLDF_PTR(0);
           break;
@@ -1759,13 +1747,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
     }
     hi = param_3 & 0x80000000;
     if (hi != 0 && b == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 0x2000000) == 0 && (flags & 0x1000000) == 0) {
           b = MLDF_PTR(0x1a);
           break;
@@ -1788,13 +1770,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       }
     }
     else if ((param_3 & 0x20000000) != 0 && a == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 0x8000000) == 0 && (flags & 0x4000000) == 0) {
           a = MLDF_PTR(0x53);
           break;
@@ -1859,13 +1835,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       a = MLDF_PTR(0x45);
     }
     if ((param_3 & 0x10000000) != 0 && b == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 4) == 0 && (flags & 1) == 0) {
           b = MLDF_PTR(0x2a);
           break;
@@ -1888,13 +1858,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       }
     }
     else if ((param_3 & 0x20000000) != 0 && a == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 8) == 0 && (flags & 2) == 0) {
           a = MLDF_PTR(0x45);
           break;
@@ -2062,13 +2026,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       a = MLDF_PTR(0x49);
     }
     if ((param_3 & 0x10000000) != 0 && b == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 0x40) == 0 && (flags & 0x10) == 0) {
           b = MLDF_PTR(0x2f);
           break;
@@ -2091,13 +2049,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       }
     }
     else if ((param_3 & 0x20000000) != 0 && a == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 0x80) == 0 && (flags & 0x20) == 0) {
           a = MLDF_PTR(0x49);
           break;
@@ -2176,13 +2128,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       a = MLDF_PTR(0x4e);
     }
     if ((param_3 & 0x40000000) != 0 && b == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 0x400) == 0 && (flags & 0x100) == 0) {
           b = MLDF_PTR(0x24);
           break;
@@ -2205,13 +2151,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       }
     }
     else if ((param_3 & 0x80000000) != 0 && a == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 0x800) == 0 && (flags & 0x200) == 0) {
           a = MLDF_PTR(0x4e);
           break;
@@ -2331,13 +2271,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       a = MLDF_PTR(0x4c);
     }
     if ((param_3 & 0x40000000) != 0 && b == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 0x4000) == 0 && (flags & 0x1000) == 0) {
           b = MLDF_PTR(0x21);
           break;
@@ -2360,13 +2294,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
       }
     }
     else if ((param_3 & 0x80000000) != 0 && a == 0) {
-      while (1) {
-        s = OSDisableInterrupts();
-        flags = lbl_803DCC80;
-        OSRestoreInterrupts(s);
-        if (flags == 0) {
-          break;
-        }
+      while (s = OSDisableInterrupts(), flags = lbl_803DCC80, OSRestoreInterrupts(s), flags != 0) {
         if ((flags & 0x8000) == 0 && (flags & 0x2000) == 0) {
           a = MLDF_PTR(0x4c);
           break;
