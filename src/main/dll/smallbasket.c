@@ -2862,3 +2862,132 @@ void fn_80157558(s16* obj, u8* state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void fn_8001FE90(void);
+extern f32 lbl_803E2BA8;
+
+typedef struct {
+    f32 spd;    // 0x0
+    u32 mask;   // 0x4
+    u8 moveId;  // 0x8
+    u8 next;    // 0x9
+    u8 mode;    // 0xa
+    u8 pad;
+} BasketSeq12;
+
+typedef struct {
+    f32 spd;    // 0x0
+    u32 mask;   // 0x4
+    u8 moveId;  // 0x8
+    u8 next9;   // 0x9
+    u8 nextA;   // 0xa
+    u8 pad;
+    int flagC;  // 0xc
+} BasketSeq16;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80159284(int* obj, u8* state)
+{
+    extern void firepipe_clearLinkedUpdateFlag(int);
+    extern char lbl_8031FAE8[];
+    char* base = (char*)((int)lbl_8031FAE8 + *(u8*)(state + 0x33b) * 32);
+    u8* t9 = *(u8**)(base + 0x10);
+    u8* t8 = *(u8**)(base + 0x18);
+    u8* t7 = *(u8**)(base + 0xc);
+    BasketSeq16* t6 = *(BasketSeq16**)(base + 0x14);
+    f32 cap;
+    int i;
+    u8* p;
+    int j;
+    int n;
+
+    if (*(void**)(state + 0x29c) != NULL && *(s16*)(*(int*)(state + 0x29c) + 0x44) == 1) {
+        fn_8001FE90();
+    }
+
+    if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
+        if (*(u8*)(state + 0x33b) == 0) {
+            ((void(*)(int,int,int))((int*)*(int*)gCameraInterface)[0x24/4])(0, 0x6c, 0);
+        }
+        if (*(s16*)((char*)obj + 0x46) == 0x6a2 && *(void**)((char*)obj + 0xc8) != NULL) {
+            firepipe_clearLinkedUpdateFlag(*(int*)((char*)obj + 0xc8));
+        }
+        *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) | 0x10;
+    }
+
+    if (*(f32*)(state + 0x328) != lbl_803E2BA8 && *(u8*)(state + 0x33f) != 0) {
+        cap = lbl_803E2BA8;
+        *(f32*)(state + 0x328) -= timeDelta;
+        if (*(f32*)(state + 0x328) <= cap) {
+            *(f32*)(state + 0x328) = cap;
+            *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x40000000;
+            *(u8*)(state + 0x33c) = t6[*(u8*)(state + 0x33f)].flagC;
+            *(u8*)((char*)obj + 0xe4) = *(u8*)(state + 0x33c) & 1;
+            *(u8*)(state + 0x33f) = t6[*(u8*)(state + 0x33f)].nextA;
+        }
+    }
+
+    if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
+        *(u8*)(state + 0x33d) = *(u8*)(state + 0x33d) & ~0x30;
+        if (*(s16*)((char*)obj + 0x46) == 0x6a2 && *(void**)((char*)obj + 0xc8) != NULL) {
+            firepipe_clearLinkedUpdateFlag(*(int*)((char*)obj + 0xc8));
+        }
+        if (*(u8*)(state + 0x33f) != 0) {
+            i = *(u8*)(state + 0x33f) * 0x10;
+            fn_8014D08C(obj, (int*)state, *(u8*)((char*)t6 + i + 8), *(f32*)((int)t6 + i), 0,
+                        *(int*)((char*)t6 + i + 4) & 0xff);
+            *(u8*)(state + 0x33c) = t6[*(u8*)(state + 0x33f)].flagC;
+            *(u8*)((char*)obj + 0xe4) = *(u8*)(state + 0x33c) & 1;
+            *(u8*)(state + 0x33f) = t6[*(u8*)(state + 0x33f)].next9;
+        } else {
+            i = *(u16*)(state + 0x2a0) * 0xc;
+            if (*(u8*)(t7 + i + 8) == 0) {
+                if (*(u16*)(state + 0x2a4) >= 0x50) {
+                    *(u8*)(state + 0x33a) = 0;
+                }
+                fn_8014C11C((int)obj, lbl_803E2BB8, 6, 0x28, lbl_803AC4A8);
+                i = *(u8*)(state + 0x33a) * 0xc;
+                if ((*(u32*)(state + 0x2dc) & *(u32*)(t9 + i + 4)) == 0
+                    && *(u8*)(t9 + i + 9) != 0) {
+                    *(u8*)(state + 0x33a) = *(u8*)(t9 + i + 9);
+                }
+                i = *(u8*)(state + 0x33a) * 0xc;
+                fn_8014D08C(obj, (int*)state, *(u8*)(t9 + i + 8), *(f32*)((int)t9 + i), 0,
+                            *(u8*)(t9 + i + 0xa));
+                i = *(u8*)(state + 0x33a) * 0xc;
+                *(u8*)(state + 0x33a) = *(u8*)(t9 + i + 9);
+            } else {
+                fn_8014D08C(obj, (int*)state, *(u8*)(t7 + i + 8), *(f32*)((int)t7 + i), 0,
+                            *(u8*)(t7 + i + 0xa));
+            }
+        }
+    }
+
+    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6e) = 0;
+    *(u8*)(*(int*)((char*)obj + 0x54) + 0x6f) = 0;
+    j = 1;
+    p = t8 + 0xc;
+    n = *(u8*)(t8 + 8);
+    for (; j <= n; j++) {
+        if (*(s16*)((char*)obj + 0xa0) == *(u8*)(p + 8)) {
+            *(s8*)(*(int*)((char*)obj + 0x54) + 0x6e) = (s8)*(int*)(t8 + j * 0xc + 4);
+            *(s8*)(*(int*)((char*)obj + 0x54) + 0x6f) = (s8)*(u8*)(t8 + j * 0xc + 9);
+            if (*(s8*)(*(int*)((char*)obj + 0x54) + 0x6e) == 0x1f) {
+                *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x40;
+            } else {
+                *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) & -65;
+            }
+            break;
+        }
+        p += 0xc;
+    }
+
+    if ((*(u8*)(state + 0x323) & 8) == 0 && (*(u8*)(state + 0x33d) & 0x10) == 0) {
+        fn_8014CF7C(obj, state, *(f32*)(*(int*)(state + 0x29c) + 0xc),
+                    *(f32*)(*(int*)(state + 0x29c) + 0x14), 0x1e, 0);
+    }
+    fn_80157CDC((int)obj, (int)state);
+}
+#pragma peephole reset
+#pragma scheduling reset
