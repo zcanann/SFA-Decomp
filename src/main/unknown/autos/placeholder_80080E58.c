@@ -6710,3 +6710,231 @@ void skyFn_80088c94(int flags, int mode) {
     }
 }
 #pragma pop
+
+extern char sSnowFreeSnowCloudInvalidCloudId[];
+extern void mm_free(void *p);
+
+/*
+ * --INFO--
+ *
+ * Function: snowFreeSnowCloud
+ * EN v1.0 Address: 0x80090098
+ * EN v1.0 Size: 504b
+ */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void snowFreeSnowCloud(int cloudId) {
+    u8 *env;
+    u8 *p;
+    int i;
+
+    env = saveGameGetEnvState();
+    if (cloudId >= 0 && cloudId <= 2 && getSaveGameLoadStatus() == 0) {
+        *(s16 *)(env + cloudId * 2 + 0xe) = -1;
+        env[cloudId + 0x41] = -1;
+    }
+    for (i = 0; i < 8; i++) {
+        p = lbl_8039A828[i];
+        if (p != NULL && cloudId == *(int *)(p + 0x13f0)) {
+            break;
+        }
+    }
+    p = lbl_8039A828[i];
+    if (p == NULL) {
+        return;
+    }
+    if (i == 8) {
+        return;
+    }
+    if (cloudId != *(int *)(p + 0x13f0)) {
+        debugPrintf(sSnowFreeSnowCloudInvalidCloudId, cloudId);
+        return;
+    }
+    if (*(u8 **)(p + 4) != NULL) {
+        mm_free(*(u8 **)(p + 4));
+        *(u8 **)((u8 *)lbl_8039A828[i] + 4) = NULL;
+    }
+    if (lbl_8039A828[i] != NULL) {
+        mm_free(lbl_8039A828[i]);
+        lbl_8039A828[i] = NULL;
+    }
+}
+#pragma pop
+
+extern inline float sqrtf__inline(float x) {
+    static const double _half = .5;
+    static const double _three = 3.0;
+    volatile float y;
+    if (x > 0.0f) {
+        double guess = __frsqrte((double)x);
+        guess = _half * guess * (_three - guess * guess * x);
+        guess = _half * guess * (_three - guess * guess * x);
+        guess = _half * guess * (_three - guess * guess * x);
+        y = (float)(x * guess);
+        return y;
+    }
+    return x;
+}
+
+typedef struct WindSource {
+    s32 x;
+    s32 z;
+    f32 vx;
+    f32 pad0c;
+    f32 vz;
+    f32 pad14;
+    f32 pad18;
+} WindSource;
+
+extern WindSource lbl_8039A848[];
+extern s16 renderModeSetOrGet(int mode);
+extern void normalize(f32 *x, f32 *y, f32 *z);
+extern f32 lbl_803DF1A4;
+extern f32 lbl_803DF1DC;
+
+/*
+ * --INFO--
+ *
+ * Function: fn_800916C0
+ * EN v1.0 Address: 0x800916C0
+ * EN v1.0 Size: 776b
+ */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_800916C0(f32 *out, f32 *pos, f32 scale) {
+    f32 accX;
+    f32 accZ;
+    f32 dx;
+    f32 dz;
+    f32 dSq;
+    f32 dists[6];
+    int i;
+
+    if (renderModeSetOrGet(-1) == 1) {
+        return;
+    }
+    accX = 0.0f;
+    accZ = 0.0f;
+    for (i = 0; i < 6; i++) {
+        dx = (f32)lbl_8039A848[i].x - pos[0];
+        dSq = dx * dx;
+        dz = (f32)lbl_8039A848[i].z - pos[2];
+        dSq += dz * dz;
+        if (dSq == 0.0f) {
+            dists[i] = 0.0f;
+        } else {
+            dists[i] = sqrtf__inline(dSq);
+        }
+        if (dists[i] < lbl_803DF1DC) {
+            dists[i] = lbl_803DF1DC;
+        }
+    }
+    for (i = 0; i < 6; i++) {
+        dists[i] = lbl_803DF1A4 / sqrtf__inline(dists[i]);
+    }
+    for (i = 0; i < 6; i++) {
+        accX += lbl_8039A848[i].vx * dists[i];
+        accZ += lbl_8039A848[i].vz * dists[i];
+    }
+    out[0] = -accX;
+    out[2] = -accZ;
+    out[1] = 0.0f;
+    normalize(out, out + 1, out + 2);
+    out[0] = out[0] * scale;
+    out[1] = 0.0f;
+    out[2] = out[2] * scale;
+}
+#pragma pop
+
+extern void GXSetCullMode(int mode);
+extern void Camera_RebuildProjectionMatrix(void);
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern void textureSetupFn_800799c0(void);
+extern void gxTextureFn_800794e0(void);
+extern void textRenderSetupFn_80079804(void);
+extern void fn_800788DC(void);
+extern void fn_8006C51C(void *out);
+extern void selectTexture(char *tex, int slot);
+extern void Camera_UpdateViewMatrices(void);
+extern f32 *Camera_GetViewMatrix(void);
+extern void GXLoadPosMtxImm(f32 *matrix, s32 slot);
+extern void GXSetCurrentMtx(int slot);
+extern int rand(void);
+extern void srand(int seed);
+extern void PSVECSubtract(f32 *a, f32 *b, f32 *ab);
+extern f32 PSVECMag(f32 *v);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern int lbl_803DF19C;
+extern f32 lbl_803DF1D4;
+
+void fn_8008F2C8(f32 *start, f32 *end, int width, f32 c, f32 d, int *seed, int e, int f);
+
+/*
+ * --INFO--
+ *
+ * Function: renderFn_8008f904
+ * EN v1.0 Address: 0x8008F904
+ * EN v1.0 Size: 496b
+ */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void renderFn_8008f904(void *state) {
+    u8 *p = state;
+    f32 start[3];
+    f32 end[3];
+    f32 diff[3];
+    char *tex;
+    int savedSeed;
+    FogColor color;
+    int a;
+    int b;
+    int half;
+
+    color = *(FogColor *)&lbl_803DF19C;
+    start[0] = *(f32 *)(p + 0) - playerMapOffsetX;
+    start[1] = *(f32 *)(p + 4);
+    start[2] = *(f32 *)(p + 8) - playerMapOffsetZ;
+    end[0] = *(f32 *)(p + 0xc) - playerMapOffsetX;
+    end[1] = *(f32 *)(p + 0x10);
+    end[2] = *(f32 *)(p + 0x14) - playerMapOffsetZ;
+    a = *(u16 *)(p + 0x20);
+    b = *(u16 *)(p + 0x22);
+    half = b >> 1;
+    if (a <= half) {
+        _gxSetTevColor2(0x80, 0x80, 0xff, 0xff);
+    } else {
+        _gxSetTevColor2(0x80, 0x80, 0xff,
+                        (int)((lbl_803DF1D4 * (f32)(b - a)) / (f32)half));
+    }
+    GXSetCullMode(0);
+    Camera_RebuildProjectionMatrix();
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xd, 1);
+    textureSetupFn_800799c0();
+    gxTextureFn_800794e0();
+    textRenderSetupFn_80079804();
+    fn_800788DC();
+    fn_8006C51C(&tex);
+    selectTexture(tex, 0);
+    GXSetFog(0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0, lbl_803DF1A0, color);
+    Camera_UpdateViewMatrices();
+    GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
+    GXSetCurrentMtx(0);
+    savedSeed = rand();
+    if (*(u16 *)(p + 0x24) == 0xffff) {
+        *(u16 *)(p + 0x24) = (u16)savedSeed;
+    }
+    srand(*(u16 *)(p + 0x24));
+    PSVECSubtract(end, start, diff);
+    PSVECMag(diff);
+    fn_8008F2C8(start, end, p[0x26], *(f32 *)(p + 0x18), *(f32 *)(p + 0x1c), &savedSeed, 0,
+                p[0x27]);
+    srand(savedSeed);
+}
+#pragma pop
