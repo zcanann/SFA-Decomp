@@ -6,7 +6,7 @@ extern undefined4* gExpgfxInterface;
 extern u8 gChukaModeTable[9];
 extern f32 lbl_803E63F8;
 extern f32 lbl_803E63FC;
-extern int return0_80205F40(void);
+extern int chuka_SeqFn(void);
 
 /*
  * --INFO--
@@ -29,7 +29,7 @@ void chuka_init(int obj, int params)
     u8 *modeTable;
 
     *(s16 *)(obj + 0x0) = (s16)((s8)*(u8 *)(params + 0x18) << 8);
-    *(int *)(obj + 0xbc) = (int)&return0_80205F40;
+    *(int *)(obj + 0xbc) = (int)&chuka_SeqFn;
     state->startY = *(f32 *)(obj + 0x10);
     state->modeIndex = *(u8 *)(params + 0x19);
 

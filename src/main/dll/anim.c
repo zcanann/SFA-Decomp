@@ -4392,14 +4392,14 @@ void FUN_80204f7c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80205024(int obj, char *p)
+void dll_22C_init(int obj, char *p)
 {
-  extern int return0_80204B54(void);
+  extern int dll_22C_SeqFn(void);
   extern f32 lbl_803E63A8;
   int b8;
 
   b8 = *(int *)(obj + 0xb8);
-  *(int *)(obj + 0xbc) = (int)return0_80204B54;
+  *(int *)(obj + 0xbc) = (int)dll_22C_SeqFn;
   *(s16 *)(obj + 0) = (s16)(*(char *)(p + 0x18) << 8);
   *(s16 *)(b8 + 4) = 0;
   *(s16 *)(b8 + 6) = *(s16 *)(p + 0x20);
@@ -4715,7 +4715,7 @@ int dfplevelcontrol_getExtraSize(void) { return 0xc; }
 int dfplevelcontrol_getObjectTypeId(void) { return 0x0; }
 int dfpobjcreator_getExtraSize(void) { return 0x1c; }
 int dfpobjcreator_getObjectTypeId(void) { return 0x0; }
-int return0_80204B54(void) { return 0x0; }
+int dll_22C_SeqFn(void) { return 0x0; }
 int dll_22C_getExtraSize_ret_16(void) { return 0x10; }
 int dll_22C_getObjectTypeId(void) { return 0x0; }
 int doorswitch_getExtraSize(void) { return 0x0; }
@@ -4724,7 +4724,7 @@ int dfpseqpoint_getExtraSize(void) { return 0x10; }
 int dfpseqpoint_getObjectTypeId(void) { return 0x0; }
 int DFP_Torch_getExtraSize(void) { return 0x10; }
 int DFP_Torch_getObjectTypeId(void) { return 0x1; }
-int return0_80205F40(void) { return 0x0; }
+int chuka_SeqFn(void) { return 0x0; }
 int chuka_getExtraSize(void) { return 0xc; }
 int chuka_getObjectTypeId(void) { return 0x0; }
 

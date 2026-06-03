@@ -1708,7 +1708,7 @@ int flammablevine_getExtraSize(void) { return 0x14; }
 int flammablevine_getObjectTypeId(void) { return 0x0; }
 int dll_109_getExtraSize_ret_16(void) { return 0x10; }
 int dll_109_getObjectTypeId(void) { return 0x0; }
-int return0_80187F30(void) { return 0x0; }
+int Fall_Ladders_SeqFn(void) { return 0x0; }
 int Fall_Ladders_getExtraSize(void) { return 0xc; }
 int Fall_Ladders_getObjectTypeId(void) { return 0x0; }
 int coldwatercontrol_getExtraSize(void) { return 0x8; }
@@ -2788,7 +2788,7 @@ void Fall_Ladders_init(int *obj, s8 *def) {
     state[2] = *(s16 *)((char *)def + 0x1e);
     *(f32 *)state = (f32)(s32)*(s16 *)((char *)def + 0x1a);
     *(u16 *)((char *)obj + 0xb0) |= 0x6000;
-    *(int *)((char *)obj + 0xbc) = (int)return0_80187F30;
+    *(int *)((char *)obj + 0xbc) = (int)Fall_Ladders_SeqFn;
     *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)def + 0xc) + *(f32 *)state;
     Obj_SetActiveModelIndex(obj, (s32)*(s8 *)((char *)def + 0x19));
     *(u8 *)((char *)state + 8) = 0;
