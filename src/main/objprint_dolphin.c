@@ -5164,6 +5164,99 @@ void shaderSetGxFlags(u8 *obj, u8 *m, u8 *shader) {
     }
 }
 
+extern void modelMtxFn_8003be38(u8 *hdr, int *model, f32 *mtx, f32 *m1);
+extern void GXLoadTexMtxImm(f32 *m, int id, int type);
+extern void GXLoadNrmMtxImm(f32 *m, int id);
+extern void OSReport(char *fmt, ...);
+
+void renderOpMatrix(u8 *hdr, int *model, MtxBitStream *bs, f32 *m1, f32 *mtx, u8 nrm, u8 tex, u8 skip) {
+    u8 *tbl = lbl_802CAED0;
+    char *cache = getCache();
+    if (lbl_803DCC48 == 1) {
+        if (skip == 0) {
+            modelMtxFn_8003be38(hdr, model, mtx, m1);
+        } else {
+            char *c2 = getCache();
+            char *dst;
+            int i;
+            int total = hdr[0xf3] + hdr[0xf4];
+            hdr = (u8 *)(c2 + 0x2700);
+            dst = c2;
+            cacheFn_800229c4(0);
+            for (i = 0; i < total; i++) {
+                PSMTXConcat(mtx, (f32 *)hdr, (f32 *)dst);
+                hdr += 0x40;
+                dst += 0x30;
+            }
+            lbl_803DCC48 = 2;
+        }
+    }
+    {
+        u8 *tbl2;
+        int i;
+        int count;
+        f32 tmp[12];
+        {
+            u32 w;
+            int pos = bs->pos;
+            int off = pos >> 3;
+            u8 *p;
+            w = bs->data[off];
+            p = (u8 *)(off + (char *)bs->data);
+            w |= p[1] << 8;
+            w |= p[2] << 16;
+            bs->pos = pos + 4;
+            count = (w >> (pos & 7)) & 0xf;
+        }
+        if (count < 0 || count > 20) {
+            OSReport((char *)&tbl[0x48], count);
+        }
+        i = 0;
+        tbl2 = tbl + 0xc;
+        for (; i < count; i++) {
+            int idx;
+            {
+                u32 w;
+                int pos = bs->pos;
+                int off = pos >> 3;
+                u8 *p = (u8 *)(off + (char *)bs->data);
+                w = p[0];
+                w |= p[1] << 8;
+                w |= p[2] << 16;
+                bs->pos = pos + 8;
+                idx = (w >> (pos & 7)) & 0xff;
+            }
+            if (lbl_803DCC48 == 2) {
+                hdr = (u8 *)(cache + idx * 0x30 + 0x12c0);
+                GXLoadPosMtxImm((f32 *)hdr, *tbl);
+                if (skip == 0 && tex != 0) {
+                    GXLoadTexMtxImm((f32 *)hdr, *tbl2, 0);
+                }
+                if (skip == 0 && nrm != 0) {
+                    GXLoadNrmMtxImm((f32 *)hdr, *tbl);
+                }
+            } else {
+                PSMTXConcat(mtx, (f32 *)ObjModel_GetJointMatrix(model, idx), tmp);
+                GXLoadPosMtxImm(tmp, *tbl);
+                if (skip == 0 && (nrm != 0 || tex != 0)) {
+                    tmp[3] = lbl_803DEA04;
+                    tmp[7] = lbl_803DEA04;
+                    tmp[11] = lbl_803DEA04;
+                    PSMTXConcat(tmp, m1, tmp);
+                    if (tex != 0) {
+                        GXLoadTexMtxImm(tmp, *tbl2, 0);
+                    }
+                    if (nrm != 0) {
+                        GXLoadNrmMtxImm(tmp, *tbl);
+                    }
+                }
+            }
+            tbl++;
+            tbl2++;
+        }
+    }
+}
+
 extern u8 lbl_80345E10[];
 void *getCurrentDataFile(int id) {
     u8 *base = lbl_80345E10;
