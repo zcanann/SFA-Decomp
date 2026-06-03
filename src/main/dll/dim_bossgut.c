@@ -568,3 +568,57 @@ void fn_801D29E4(int *obj, int *p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void Sfx_KeepAliveLoopedObjectSound(int *obj, int id);
+extern void ObjHits_RefreshObjectState(int *obj);
+extern int *gPartfxInterface;
+extern f32 lbl_803E5358;
+extern f32 lbl_803E535C;
+
+/* EN v1.0 0x801D286C  size: 376b  Bombplant per-tick sequencer: on the armed
+ * frame snaps the model to the spawn pose and refreshes hits; otherwise keeps
+ * the loop sfx alive, jitters the fuse, and fires the spark particle. */
+#pragma scheduling off
+#pragma peephole off
+int bombplant_SeqFn(int *obj)
+{
+    float *state = *(float **)((char *)obj + 0xb8);
+
+    if (*(u8 *)((char *)state + 0x14) != 0) {
+        int *src;
+        *(s16 *)((char *)obj + 0x6) = (s16)(*(s16 *)((char *)obj + 0x6) & ~0x4000);
+        src = *(int **)((char *)obj + 0x4c);
+        *(u8 *)((char *)obj + 0x36) = 0xff;
+        *(s16 *)((char *)obj + 0x6) = (s16)(*(s16 *)((char *)obj + 0x6) & ~0x4000);
+        *(f32 *)((char *)obj + 0xc)  = *(f32 *)((char *)src + 0x8);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)src + 0xc);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)src + 0x10);
+        *(f32 *)((char *)obj + 0x8) = lbl_803E5358;
+        *(f32 *)((char *)state + 0x8) = lbl_803E535C;
+        *(f32 *)((char *)state + 0x4) = *(f32 *)((char *)state + 0xc);
+        *(f32 *)((char *)state + 0x10) = *(f32 *)((char *)state + 0x4) / *(f32 *)((char *)state + 0x8);
+        *(f32 *)((char *)state + 0x0) = *(f32 *)((char *)state + 0x8);
+        ObjHits_RefreshObjectState(obj);
+        *(u8 *)((char *)state + 0x14) = 0;
+        *(u8 *)((char *)state + 0x15) = (u8)(*(u8 *)((char *)state + 0x15) | 2);
+    } else {
+        int *base;
+        u8 flags;
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x3fd);
+        base = *(int **)((char *)obj + 0x4c);
+        flags = *(u8 *)((char *)state + 0x15);
+        if (flags & 0x2) {
+            int v;
+            *(u8 *)((char *)state + 0x15) = (u8)(flags & ~0x2);
+            v = *(s16 *)((char *)base + 0x1a) + randomGetRange(-0x32, 0x32);
+            *(f32 *)((char *)state + 0x0) = (f32)v;
+        }
+        if (*(u16 *)((char *)obj + 0xb0) & 0x800) {
+            (*(void (**)(int *, int, int, int, int, int))(*(int *)gPartfxInterface + 0x8))(
+                obj, 0x7f1, 0, 2, -1, 0);
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
