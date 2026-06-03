@@ -4078,11 +4078,11 @@ extern f32  sin(f32 x);
 #pragma peephole off
 void fn_8012C000(void)
 {
-    u8 *player;
-    s16 step;
+    u8 flag;
     u8 k;
     u8 last;
-    u8 flag;
+    u8 *player;
+    s16 step;
     int kk;
     s16 delta;
     u32 watermark;
@@ -4119,8 +4119,10 @@ void fn_8012C000(void)
         last = 4;
     }
     {
-        u16 cur = (u16)lbl_803DD782;
-        int neg = -lbl_803DBA64;
+        u16 cur;
+        int neg;
+        cur = (u16)lbl_803DD782;
+        neg = -lbl_803DBA64;
         step = 0x10000 / (u8)step;
         delta = neg * step - cur;
     }
@@ -4134,8 +4136,7 @@ void fn_8012C000(void)
     lbl_803DD78A += framesThisStep;
     *(s16 *)lbl_803DD868[0] = (s16)(lbl_803DD78A << 9);
     *(s16 *)((u8 *)lbl_803DD868[0] + 0x4) =
-        (s32)(lbl_803E2178 *
-              fn_80293E80(lbl_803E1EC8 * (f32)(lbl_803DD78A * 1000) / lbl_803E1E94));
+        lbl_803E2178 * fn_80293E80(lbl_803E1EC8 * (f32)(lbl_803DD78A * 1000) / lbl_803E1E94);
     *(f32 *)((u8 *)lbl_803DD868[0] + 0x10) =
         (f32)(lbl_803E2180 * fn_80293E80(lbl_803E1EC8 * (f32)(lbl_803DD78A * 400) / lbl_803E1E94) +
               lbl_803E217C);
@@ -4145,17 +4146,21 @@ void fn_8012C000(void)
             *(f32 *)((u8 *)lbl_803DD868[0] + 0x10) - (f32)(d * d) / lbl_803E2188;
     }
     *(f32 *)((u8 *)lbl_803DD868[1] + 0x10) = *(f32 *)((u8 *)lbl_803DD868[0] + 0x10);
-    *(f32 *)((u8 *)lbl_803DD868[1] + 0x8) = lbl_803E218C * (f32)lbl_803DD78C * lbl_803E2190;
+    {
+        f32 spin = lbl_803E218C * (f32)lbl_803DD78C;
+        *(f32 *)((u8 *)lbl_803DD868[1] + 0x8) = spin * lbl_803E2190;
+    }
     ObjAnim_AdvanceCurrentMove(lbl_803E1E58, timeDelta, lbl_803DD868[1], animOut);
     watermark = 0x90000000;
-    c2190 = lbl_803E2190;
-    c1EC8 = lbl_803E1EC8;
-    c1E94 = lbl_803E1E94;
-    c1E64 = lbl_803E1E64;
-    c2050 = lbl_803E2050;
     c2010 = lbl_803E2010;
+    c2050 = lbl_803E2050;
+    c1E64 = lbl_803E1E64;
+    c1E94 = lbl_803E1E94;
+    c1EC8 = lbl_803E1EC8;
+    c2190 = lbl_803E2190;
     for (; k <= last; k++) {
         f32 sel;
+        f32 a;
         if (*(u32 *)((u8 *)lbl_803A9410[k] + 0x4c) > watermark) {
             *(u32 *)((u8 *)lbl_803A9410[k] + 0x4c) = 0;
         }
@@ -4165,22 +4170,24 @@ void fn_8012C000(void)
         } else {
             sel = lbl_803E2194;
         }
-        *(f32 *)((u8 *)lbl_803A9410[k] + 0x8) = (f32)lbl_803DD784 * sel * c2190;
+        sel = (f32)lbl_803DD784 * sel;
+        *(f32 *)((u8 *)lbl_803A9410[k] + 0x8) = sel * c2190;
         *((u8 *)lbl_803A9410[k] + 0x37) = 0xff;
         ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[k], timeDelta, lbl_803A9410[k], animOut);
         kk *= step;
+        a = c1E64 * fn_80293E80(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
+        a = (f32)lbl_803DD784 * a;
         *(f32 *)((u8 *)lbl_803A9410[k] + 0xc) =
-            (f32)lbl_803DD784 * (c1E64 * fn_80293E80(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94)) *
-                c2190 +
-            *(f32 *)((u8 *)lbl_803DD868[0] + 0xc);
+            a * c2190 + *(f32 *)((u8 *)lbl_803DD868[0] + 0xc);
         base = c2050 * fn_80293E80(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94) +
                (*(f32 *)((u8 *)lbl_803DD868[0] + 0x10) + c2010);
-        *(f32 *)((u8 *)lbl_803A9410[k] + 0x10) =
-            (f32)lbl_803DD784 * (c1E64 - sin(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94)) * c2190 +
-            base;
+        a = c1E64 - sin(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
+        a = (f32)lbl_803DD784 * a;
+        *(f32 *)((u8 *)lbl_803A9410[k] + 0x10) = a * c2190 + base;
+        a = c1E64 * sin(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
+        a = (f32)lbl_803DD784 * a;
         *(f32 *)((u8 *)lbl_803A9410[k] + 0x14) =
-            (f32)lbl_803DD784 * (c1E64 * sin(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94)) * c2190 +
-            *(f32 *)((u8 *)lbl_803DD868[0] + 0x14);
+            a * c2190 + *(f32 *)((u8 *)lbl_803DD868[0] + 0x14);
     }
 }
 #pragma peephole reset
