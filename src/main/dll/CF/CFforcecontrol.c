@@ -107,32 +107,35 @@ extern f32 FLOAT_803e49a8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void deathseq_init(short *param_1,int param_2)
+extern s16* Camera_GetCurrentViewSlot(void);
+extern int* gScreenTransitionInterface;
+extern int ObjAnim_SetCurrentMove(int* obj, int moveId, f32 moveProgress, int flags);
+extern void setScreenTransitionPause(int v);
+extern void fn_8001FE74(int* obj);
+extern f32 lbl_803E3D1C;
+extern f32 lbl_803E3D58;
+extern f32 lbl_803E3D2C;
+
+void deathseq_init(int* obj)
 {
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  
-  iVar3 = *(int *)(param_1 + 0x5c);
-  param_1[0x58] = param_1[0x58] | 0x6000;
-  uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x1c));
-  if (uVar1 != 0) {
-    *(float *)(iVar3 + 4) = FLOAT_803e48e4;
-  }
-  *param_1 = (ushort)*(byte *)(param_2 + 0x23) << 8;
-  iVar2 = FUN_80017a54((int)param_1);
-  iVar2 = FUN_80017978(iVar2,0);
-  if (0 < *(short *)(param_2 + 0x24)) {
-    uVar1 = GameBit_Get((int)*(short *)(param_2 + 0x24));
-    if (uVar1 == 0) {
-      *(undefined *)(iVar2 + 8) = 0x16;
-    }
-    else {
-      *(byte *)(iVar3 + 1) = *(byte *)(iVar3 + 1) | 0xc;
-      *(undefined *)(iVar2 + 8) = 0x17;
-    }
-  }
-  return;
+  f32* state = *(f32**)((char*)obj + 0xb8);
+  s16* cam = Camera_GetCurrentViewSlot();
+  f32 f;
+
+  setScreenTransitionPause(1);
+  ((void(*)(int,int))((void**)*gScreenTransitionInterface)[2])(1, 1);
+  ObjAnim_SetCurrentMove(obj, 0x8e, lbl_803E3D1C, 0);
+  state[0] = lbl_803E3D58;
+  state[1] = *(f32*)((char*)cam + 0xc);
+  state[2] = *(f32*)((char*)cam + 0x10);
+  state[3] = *(f32*)((char*)cam + 0x14);
+  *(int*)(state + 6) = cam[0];
+  *(int*)(state + 7) = cam[1];
+  f = lbl_803E3D2C;
+  state[4] = f;
+  state[5] = f;
+  fn_8001FE74(obj);
+  *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x400);
 }
 
 /*
@@ -842,6 +845,41 @@ extern void ObjModel_SetPostRenderCallback(void* model, void* cb);
 extern f32 lbl_803E3CC0;
 extern void mm_free_(void *ptr);
 
+typedef struct {
+    f32 timer;       // 0x0
+    f32 hitTimer;    // 0x4
+    f32 radius;      // 0x8
+    u8 fogOn : 1;    // 0xc bit 7
+    u8 draining : 1; // bit 6
+    u8 noFog : 1;    // bit 5
+} DeathGasState;
+
+typedef struct {
+    u8 pad[0x18];
+    u8 drainRate;  // 0x18
+    u8 fillRate;   // 0x19
+    s16 activeBit; // 0x1a
+} DeathGasSetup;
+
+typedef struct {
+    u16 msg;          // 0x0
+    u8 pad[0x5a];
+    u8 lit : 1;       // 0x5c bit 7
+    u8 grabbed : 1;   // bit 6
+    u8 unkBit5 : 1;   // bit 5
+    u8 resetPos : 1;  // bit 4
+} FuelcellState;
+
+typedef struct {
+    u8 pad[8];
+    f32 homeX;   // 0x8
+    f32 homeY;   // 0xc
+    f32 homeZ;   // 0x10
+    u8 pad2[0xa];
+    s16 offBit;  // 0x1e
+    s16 onBit;   // 0x20
+} FuelcellSetup;
+
 #pragma scheduling off
 #pragma peephole off
 
@@ -856,21 +894,21 @@ void deathseq_free(int* obj)
 #pragma peephole off
 void deathgas_init(int* obj)
 {
-    register int* state = *(int**)((char*)obj + 0xb8);
+    register DeathGasState* state = *(DeathGasState**)((char*)obj + 0xb8);
     *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x4000);
-    *(f32*)((char*)state + 8) = lbl_803E3CC0;
+    state->radius = lbl_803E3CC0;
     if (*(s16*)((char*)obj + 0x46) != 2103) return;
-    ((u8*)state)[12] |= 0x20;
-    *(f32*)((char*)state + 8) = *(f32*)((char*)obj + 64);
+    state->noFog = 1;
+    state->radius = *(f32*)((char*)obj + 64);
 }
 #pragma peephole reset
 #pragma scheduling reset
 
 int fuelcell_func0B(int* obj)
 {
-    u8* state = *(u8**)((char*)obj + 0xb8);
-    state[0x5c] |= 0x20;
-    state[0x5c] |= 0x10;
+    FuelcellState* state = *(FuelcellState**)((char*)obj + 0xb8);
+    state->unkBit5 = 1;
+    state->resetPos = 1;
     return 0;
 }
 
@@ -924,6 +962,155 @@ void deathgas_free(int* obj)
     }
     if (((u32)state[12] >> 6) & 1u) {
         ((void(*)(void))((void**)*gGameUIInterface)[24])();
+    }
+}
+
+extern int* Obj_GetPlayerObject(void);
+extern int playerIsDisguised(void);
+extern f32 Vec_distance(void* a, void* b);
+extern void enableHeavyFog(f32 top, f32 bottom, f32 r, f32 g, f32 b, int p6);
+extern f32 timeDelta;
+extern f32 lbl_803E3C90;
+extern f32 lbl_803E3C94;
+extern f32 lbl_803E3C98;
+extern f32 lbl_803E3C9C;
+extern f32 lbl_803E3CA0;
+extern f32 lbl_803E3CA4;
+extern f32 lbl_803E3CA8;
+extern f32 lbl_803E3CAC;
+extern f32 lbl_803E3CB0;
+extern f32 lbl_803E3CB4;
+
+void deathgas_update(int* obj)
+{
+    DeathGasSetup* setup = *(DeathGasSetup**)((char*)obj + 0x4c);
+    DeathGasState* state = *(DeathGasState**)((char*)obj + 0xb8);
+    int* player;
+    u8 active;
+    int bit;
+
+    bit = setup->activeBit;
+    if (bit == -1) {
+        active = 1;
+    } else {
+        active = GameBit_Get(bit);
+    }
+
+    if (active == 0) {
+        if (state->fogOn) {
+            if (!state->noFog) {
+                disableHeavyFog();
+            }
+            state->fogOn = 0;
+        }
+        if (state->draining) {
+            ((void(*)(void))((void**)*gGameUIInterface)[24])();
+            state->draining = 0;
+        }
+        return;
+    }
+
+    if (!state->fogOn) {
+        if (!state->noFog) {
+            enableHeavyFog(lbl_803E3C90 + *(f32*)((char*)obj + 0x1c),
+                           *(f32*)((char*)obj + 0x1c) - lbl_803E3C94,
+                           lbl_803E3C98, lbl_803E3C9C, lbl_803E3CA0, 0);
+        }
+        state->fogOn = 1;
+    }
+
+    player = Obj_GetPlayerObject();
+    if (!playerIsDisguised()
+        && *(f32*)((char*)player + 0x1c) <= lbl_803E3CA4 + *(f32*)((char*)obj + 0x1c)
+        && Vec_distance((char*)player + 0x18, (char*)obj + 0x18) <= state->radius) {
+        if (!state->draining) {
+            ((void(*)(int,int))((void**)*gGameUIInterface)[22])(6000, 0x603);
+            state->timer = lbl_803E3CA8;
+            state->draining = 1;
+        }
+        state->timer -= (timeDelta * (f32)setup->drainRate) / lbl_803E3CAC;
+        if (state->timer <= lbl_803E3CB0) {
+            f32 floor = lbl_803E3CB0;
+            state->timer = lbl_803E3CB0;
+            state->hitTimer -= timeDelta;
+            if (state->hitTimer < floor) {
+                state->hitTimer += lbl_803E3CB4;
+                ObjHits_RecordObjectHit(player, obj, 0x16, 1, 0);
+            }
+        }
+    } else if (state->draining) {
+        state->timer += (timeDelta * (f32)setup->fillRate) / lbl_803E3CAC;
+        if (state->timer > lbl_803E3CA8) {
+            ((void(*)(void))((void**)*gGameUIInterface)[25])();
+            state->draining = 0;
+        }
+    }
+
+    if (state->draining) {
+        ((void(*)(int))((void**)*gGameUIInterface)[23])((int)state->timer);
+    }
+}
+
+extern void gameBitIncrement(int eventId);
+extern void Sfx_AddLoopedObjectSound(int* obj, int soundId);
+extern void Sfx_RemoveLoopedObjectSound(int* obj, int soundId);
+extern void Sfx_PlayFromObject(int* obj, int soundId);
+extern f32 getXZDistance(void* a, void* b);
+extern f32 lbl_803E3D08;
+extern f32 lbl_803E3D0C;
+extern f32 lbl_803E3D10;
+
+void fuelcell_update(int* obj)
+{
+    FuelcellSetup* setup = *(FuelcellSetup**)((char*)obj + 0x4c);
+    FuelcellState* state = *(FuelcellState**)((char*)obj + 0xb8);
+    int* player;
+    int msgId;
+    int msgParam;
+
+    player = Obj_GetPlayerObject();
+    if (state->grabbed) {
+        while (ObjMsg_Pop(obj, &msgId, &msgParam, 0) != 0) {
+            if (msgId == 0x7000b) {
+                state->grabbed = 0;
+                GameBit_Set(setup->offBit, 1);
+                gameBitIncrement(0x3f5);
+                GameBit_Set(0xe97, 0);
+            }
+        }
+    } else {
+        int bit = setup->offBit;
+        if (bit != -1 && GameBit_Get(bit) == 0) {
+            bit = setup->onBit;
+            if (bit == -1 || GameBit_Get(bit) != 0) {
+                f32 dy;
+                if (!state->lit) {
+                    Sfx_AddLoopedObjectSound(obj, 0x403);
+                    state->lit = 1;
+                    ObjGroup_AddObject(obj, 0x4f);
+                } else if (state->resetPos) {
+                    *(f32*)((char*)obj + 0xc) = setup->homeX;
+                    *(f32*)((char*)obj + 0x10) = setup->homeY;
+                    *(f32*)((char*)obj + 0x14) = setup->homeZ;
+                    *(u8*)((char*)obj + 0x36) = 0xff;
+                    state->resetPos = 0;
+                }
+                dy = *(f32*)((char*)obj + 0x10) - *(f32*)((char*)player + 0x10);
+                if (dy > lbl_803E3D08 && dy < lbl_803E3D0C
+                    && GameBit_Get(0xe97) == 0
+                    && getXZDistance((char*)obj + 0x18, (char*)player + 0x18) < lbl_803E3D10) {
+                    state->msg = 0xcbe;
+                    ObjMsg_SendToObject(player, 0x7000a, obj, state);
+                    state->grabbed = 1;
+                    GameBit_Set(0xe97, 1);
+                    Sfx_PlayFromObject(obj, 0x49);
+                }
+            }
+        } else if (state->lit) {
+            state->lit = 0;
+            Sfx_RemoveLoopedObjectSound(obj, 0x403);
+            ObjGroup_RemoveObject(obj, 0x4f);
+        }
     }
 }
 
