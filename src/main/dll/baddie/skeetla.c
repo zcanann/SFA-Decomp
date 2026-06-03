@@ -195,10 +195,10 @@ extern f32 timeDelta;
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern void RomCurve_stepClamped(int state, f32 dt);
 
-/* fn_80139834  addr=0x80139834  size=0xFC  linkage=global */
+/* trickyAdvanceRouteTargetAhead  addr=0x80139834  size=0xFC  linkage=global */
 #pragma peephole off
 #pragma scheduling off
-int fn_80139834(f32 param_1, int param_2, int param_3)
+int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
 {
     f32 maxSq, dist, f29_val;
     f32 limit;

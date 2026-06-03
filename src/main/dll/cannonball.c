@@ -28,7 +28,7 @@ extern void curveFn_800da23c(void *route, int node);
 extern void RomCurve_stepClamped(float *route, float speed);
 extern void fn_800DA980(void *route, int curve, int fromNode, int toNode);
 extern int Objfsa_GetWalkGroupIndexAtPoint(float *pos, void *flag);
-extern void fn_80139834(int obj, void *route, float speed);
+extern void trickyAdvanceRouteTargetAhead(int obj, void *route, float speed);
 extern void trickyMove(int obj, void *moveState);
 extern void trickyFn_8013b368(int obj1, int obj2, float arg);
 
@@ -178,7 +178,7 @@ void trickyFn_80141290(int obj, int ball)
         }
 
         *(float *)(ball + CANNONBALL_SPEED) = speed;
-        fn_80139834(obj, (void *)(ball + CANNONBALL_ROUTE), *(float *)(ball + CANNONBALL_SPEED));
+        trickyAdvanceRouteTargetAhead(obj, (void *)(ball + CANNONBALL_ROUTE), *(float *)(ball + CANNONBALL_SPEED));
         trickyMove(obj, (void *)(ball + CANNONBALL_MOVE_STATE));
 
         if (Objfsa_GetWalkGroupIndexAtPoint((float *)(obj + 0x18), (void *)0) == 0) {
