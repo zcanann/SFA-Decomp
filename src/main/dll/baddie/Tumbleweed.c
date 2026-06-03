@@ -3915,6 +3915,7 @@ extern f32 lbl_803E2288;
 extern f32 lbl_803E228C;
 extern f32 lbl_803E2290;
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_80133818(void)
@@ -3946,6 +3947,7 @@ void fn_80133818(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 extern u8 gameTimerIsRunning(void);
 extern void gameTimerRun(void *obj);
@@ -5201,6 +5203,298 @@ void debugPrintfxy(int x, int y, char *fmt, ...)
             }
         }
         lbl_803DDA30 = saved;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void selectTexture(char *tex, int slot);
+extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1);
+extern void gxDebugTextureFn_80078c1c(void);
+extern u32 lbl_803DD9F8;
+extern int lbl_803DDA0C;
+extern f32 lbl_803DD9E8;
+extern f32 lbl_803DD9EC;
+extern u8 lbl_8031CFA0[];
+extern f32 lbl_803E2390;
+extern f32 lbl_803E2394;
+extern f32 lbl_803E2398;
+extern f32 lbl_803E239C;
+extern f32 lbl_803E23A0;
+extern f32 lbl_803E23A4;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80136A40(int p1, int c)
+{
+    u8 *tbl;
+    u8 first;
+    int px;
+    int py;
+    f32 sc;
+
+    if (c <= 0x3f) {
+        if (lbl_803DD9F8 != 0) {
+            if (lbl_803DDA0C != 0) {
+                selectTexture((char *)lbl_803DDA24, 0);
+                lbl_803DD9EC = lbl_803E2390 / (lbl_803E2394 * (f32)*(u16 *)((char *)lbl_803DDA24 + 10));
+                lbl_803DD9E8 = lbl_803E2390 / (lbl_803E2394 * (f32)*(u16 *)((char *)lbl_803DDA24 + 0xc));
+            }
+            lbl_803DD9F8 = 0;
+        }
+        c -= 0x21;
+    } else if (c <= 0x5f) {
+        if (lbl_803DD9F8 != 1) {
+            if (lbl_803DDA0C != 0) {
+                selectTexture((char *)lbl_803DDA20, 0);
+                lbl_803DD9EC = lbl_803E2390 / (lbl_803E2394 * (f32)*(u16 *)((char *)lbl_803DDA20 + 10));
+                lbl_803DD9E8 = lbl_803E2390 / (lbl_803E2394 * (f32)*(u16 *)((char *)lbl_803DDA20 + 0xc));
+            }
+            lbl_803DD9F8 = 1;
+        }
+        c -= 0x40;
+    } else if (c <= 0x7f) {
+        if (lbl_803DD9F8 != 2) {
+            if (lbl_803DDA0C != 0) {
+                selectTexture((char *)lbl_803DDA1C, 0);
+                lbl_803DD9EC = lbl_803E2390 / (lbl_803E2394 * (f32)*(u16 *)((char *)lbl_803DDA1C + 10));
+                lbl_803DD9E8 = lbl_803E2390 / (lbl_803E2394 * (f32)*(u16 *)((char *)lbl_803DDA1C + 0xc));
+            }
+            lbl_803DD9F8 = 2;
+        }
+        c -= 0x60;
+    }
+    tbl = lbl_8031CFA0 + lbl_803DD9F8 * 0x40;
+    first = tbl[c * 2];
+    c = tbl[c * 2 + 1] - first + 1;
+    if (lbl_803DDA0C != 0) {
+        px = (int)((f32)debugPrintYpos * (lbl_803DD9D8 + (f32)lbl_803DD9E0));
+        py = (int)((f32)debugPrintXpos * (lbl_803DD9DC + (f32)lbl_803DD9E1));
+        gxDebugTextureFn_80078c1c();
+        sc = lbl_803DD9EC;
+        textRenderChar(px << 2, py << 2,
+                       (int)(lbl_803E2398 * ((f32)c * (lbl_803DD9D8 + (f32)lbl_803DD9E0) + (f32)px)),
+                       (int)(lbl_803E2398 * (lbl_803E239C * (lbl_803DD9DC + (f32)lbl_803DD9E1) + (f32)py)),
+                       (f32)(first << 5) * sc,
+                       lbl_803E23A0,
+                       sc * (f32)((first + c) << 5),
+                       lbl_803E23A4 * lbl_803DD9E8);
+    }
+    return c;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int Obj_GetPlayerObject(void);
+extern int Camera_GetViewportYOffset(void);
+extern int objIsCurModelNotZero(int obj);
+extern void Sfx_StopFromObject(int obj, int id);
+extern int getButtonsHeld(int p);
+extern int getButtonsJustPressed(int p);
+extern f32 powfCoreFast(f32 base, f32 exp);
+extern int ObjGroup_FindNearestObject(int type, int obj, f32 *distOut);
+extern s16 *Camera_GetCurrentViewSlot(void);
+extern int getAngle(f32 dx, f32 dz);
+extern int *gCameraInterface;
+extern int *gGameUIInterface;
+extern u8 pauseMenuState;
+extern u8 lbl_803DD945;
+extern u8 lbl_803DD928;
+extern u8 lbl_803DD929;
+extern u8 lbl_803DD92A;
+extern u8 lbl_803DBBB0;
+extern s8 lbl_803DBBB1;
+extern u8 lbl_803DD7BA;
+extern s8 lbl_803DD944;
+extern int lbl_803DD934;
+extern s16 lbl_803DBA6E;
+extern int lbl_803DBBE8;
+extern f32 lbl_803DBBB4;
+extern f32 lbl_803DBBB8;
+extern f32 lbl_803DBBBC;
+extern f32 lbl_803DBBD4;
+extern f32 lbl_803DBBD8;
+extern f32 lbl_803DBBDC;
+extern f32 lbl_803DBBE0;
+extern f32 lbl_803DBBE4;
+extern f32 lbl_803E2294;
+extern f32 lbl_803E2298;
+extern f32 lbl_803E229C;
+extern void fn_80133818(void);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8013396C(void)
+{
+    int player;
+    int sfx;
+    int held;
+    int pressed;
+    s16 *slot;
+    int a;
+    s16 d;
+    s16 v2;
+    f32 t;
+    f32 old;
+    f32 pw;
+    f32 dist = lbl_803E2294;
+
+    sfx = 0;
+    player = Obj_GetPlayerObject();
+    if ((void *)player == NULL ||
+        (**(int (**)(void))((char *)(*gCameraInterface) + 0x10))() == 0x44 ||
+        (s16)Camera_GetViewportYOffset() != 0 ||
+        (*(u16 *)(player + 0xb0) & 0x1000) != 0 ||
+        objIsCurModelNotZero(player) == 0 ||
+        pauseMenuState != 0) {
+        if (lbl_803DD945 != 0) {
+            Sfx_StopFromObject(0, 0x3f0);
+            lbl_803DD945 = 0;
+        }
+    } else {
+        if (lbl_803DD928 != 0) {
+            lbl_803DD928 = lbl_803DD928 - 1;
+        }
+        if ((**(int (**)(int))((char *)(*gGameUIInterface) + 0x20))(0xc8d) != 0) {
+            lbl_803DBBB0 = 1 - lbl_803DBBB0;
+            switch (lbl_803DBBB0) {
+            case 0:
+                sfx = 0x3ec;
+                break;
+            case 1:
+                sfx = 0x3eb;
+                break;
+            }
+            Sfx_PlayFromObject(0, sfx);
+            sfx = 0;
+        }
+        if (lbl_803DBBB0 == 0 && lbl_803DD7BA == 0) {
+            if (lbl_803DD945 != 0) {
+                Sfx_StopFromObject(0, 0x3f0);
+                lbl_803DD945 = 0;
+            }
+        } else {
+            if (lbl_803DD929 == 0) {
+                lbl_803DD929 = 1;
+                fn_80133818();
+            }
+            held = (u16)getButtonsHeld(0);
+            pressed = (u16)getButtonsJustPressed(0);
+            if ((held & 0xc) == 0) {
+                if ((pressed & 1) != 0) {
+                    lbl_803DD944 -= 1;
+                    sfx = 0x3ed;
+                    if (lbl_803DD944 < 0) {
+                        lbl_803DD944 = 2;
+                    }
+                } else if ((pressed & 2) != 0) {
+                    lbl_803DD944 += 1;
+                    sfx = 0x3ed;
+                    if (lbl_803DD944 > 2) {
+                        lbl_803DD944 = 0;
+                    }
+                }
+            }
+            if (lbl_803DD7BA != 0) {
+                if (lbl_803DBBB1 == -1) {
+                    lbl_803DBBB1 = lbl_803DD944;
+                }
+                lbl_803DD944 = 2;
+            } else {
+                if (lbl_803DBBB1 != -1) {
+                    lbl_803DD944 = lbl_803DBBB1;
+                    lbl_803DBBB1 = -1;
+                }
+            }
+            switch (lbl_803DD944) {
+            case 0:
+                if ((held & 4) != 0) {
+                    pw = powfCoreFast(lbl_803DBBD4, timeDelta);
+                    lbl_803DBBE4 = lbl_803DBBE4 * pw;
+                } else if ((held & 8) != 0) {
+                    pw = powfCoreFast(lbl_803DBBD8, timeDelta);
+                    lbl_803DBBE4 = lbl_803DBBE4 * pw;
+                } else {
+                    lbl_803DBBE4 = lbl_803E2298;
+                }
+                t = lbl_803DBBDC;
+                if (!(lbl_803DBBE4 < lbl_803DBBDC)) {
+                    t = lbl_803DBBE0;
+                    if (!(lbl_803DBBE4 > lbl_803DBBE0)) {
+                        t = lbl_803DBBE4;
+                    }
+                }
+                lbl_803DBBE4 = t;
+                old = lbl_803DBBB4;
+                lbl_803DBBB4 = old * t;
+                t = lbl_803DBBB8;
+                if (!(lbl_803DBBB4 < lbl_803DBBB8)) {
+                    t = lbl_803DBBBC;
+                    if (!(lbl_803DBBB4 > lbl_803DBBBC)) {
+                        t = lbl_803DBBB4;
+                    }
+                }
+                lbl_803DBBB4 = t;
+                if (t != old) {
+                    if (lbl_803DD945 == 0) {
+                        Sfx_PlayFromObject(0, 0x3f0);
+                        lbl_803DD945 = 1;
+                    }
+                } else {
+                    if (lbl_803DD945 != 0) {
+                        Sfx_StopFromObject(0, 0x3f0);
+                        lbl_803DD945 = 0;
+                    }
+                }
+                break;
+            case 1:
+                if (lbl_803DD945 != 0) {
+                    Sfx_StopFromObject(0, 0x3f0);
+                    lbl_803DD945 = 0;
+                }
+                lbl_803DD934 = ObjGroup_FindNearestObject(0x4f, player, &dist);
+                if (lbl_803DD934 != 0) {
+                    if (dist < lbl_803E2260) {
+                        lbl_803DD92A += 1;
+                        if (dist < lbl_803E229C) {
+                            lbl_803DD92A += 1;
+                        }
+                    } else {
+                        lbl_803DD92A = 0;
+                    }
+                    slot = Camera_GetCurrentViewSlot();
+                    a = getAngle(*(f32 *)(lbl_803DD934 + 0xc) - *(f32 *)(player + 0xc),
+                                 *(f32 *)(lbl_803DD934 + 0x14) - *(f32 *)(player + 0x14));
+                    d = *slot + a - (u16)*(s16 *)((char *)lbl_803DBBC8[1] + 4);
+                    if (d > 0x8000) {
+                        d -= 0xffff;
+                    }
+                    if (d < -0x8000) {
+                        d += 0xffff;
+                    }
+                    *(s16 *)((char *)lbl_803DBBC8[1] + 4) = *(s16 *)((char *)lbl_803DBBC8[1] + 4) + d / 5;
+                }
+                break;
+            case 2:
+                if (lbl_803DD945 != 0) {
+                    Sfx_StopFromObject(0, 0x3f0);
+                    lbl_803DD945 = 0;
+                }
+                v2 = lbl_803DBA6E;
+                if (v2 != lbl_803DBBE8) {
+                    if (v2 == -1) {
+                        sfx = 0x3ef;
+                    } else {
+                        sfx = 0x3ee;
+                    }
+                }
+                lbl_803DBBE8 = v2;
+                break;
+            }
+            if ((u16)sfx != 0) {
+                Sfx_PlayFromObject(0, sfx);
+            }
+        }
     }
 }
 #pragma peephole reset
