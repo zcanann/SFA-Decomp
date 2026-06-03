@@ -4661,3 +4661,33 @@ void titleScreenTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void GXSetScissor(int x, int y, int w, int h);
+
+#pragma scheduling off
+#pragma peephole off
+void nameEntryTextDrawFunc(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1)
+{
+    GXLoadPosMtxImm((f32*)lbl_803A9FE4, 0);
+    GXSetCurrentMtx(0);
+    GXSetProjection(hudMatrix, 1);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xd, 1);
+    GXSetCullMode(0);
+    GXSetScissor((int)((u32)*(f32*)(lbl_803A9FE4 + 0xc) + 0x39),
+                 (int)((u32)*(f32*)(lbl_803A9FE4 + 0x1c) + 0x4e), 0x104, 0x16);
+    GXBegin(0x80, 1, 4);
+    GXWGFifo.s16 = (s16)(x0 - lbl_803DD9BC * 4 + 0x208); GXWGFifo.s16 = (s16)y0; GXWGFifo.s16 = -0x20;
+    GXWGFifo.f32 = u0; GXWGFifo.f32 = v0;
+    GXWGFifo.s16 = (s16)(x1 - lbl_803DD9BC * 4 + 0x208); GXWGFifo.s16 = (s16)y0; GXWGFifo.s16 = -0x20;
+    GXWGFifo.f32 = u1; GXWGFifo.f32 = v0;
+    GXWGFifo.s16 = (s16)(x1 - lbl_803DD9BC * 4 + 0x208); GXWGFifo.s16 = (s16)y1; GXWGFifo.s16 = -0x20;
+    GXWGFifo.f32 = u1; GXWGFifo.f32 = v1;
+    GXWGFifo.s16 = (s16)(x0 - lbl_803DD9BC * 4 + 0x208); GXWGFifo.s16 = (s16)y1; GXWGFifo.s16 = -0x20;
+    GXWGFifo.f32 = u0; GXWGFifo.f32 = v1;
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    Camera_RebuildProjectionMatrix();
+}
+#pragma peephole reset
+#pragma scheduling reset
