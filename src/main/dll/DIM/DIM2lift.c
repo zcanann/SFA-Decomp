@@ -1024,25 +1024,25 @@ int fn_801BB1EC(int* obj, u8* state, f32 weight) {
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801BB328(int* obj, f32* p2) {
-    int* o;
-    void* alloc;
+void DIM2icicle_spawnBlueWhiteEffect(int* sourceObj, f32* velocity) {
+    int* spawnedObj;
+    void* setup;
     if ((u8)Obj_IsLoadingLocked() != 0) {
-        alloc = Obj_AllocObjectSetup(36, 656);
-        *(f32*)((char*)alloc + 8) = *(f32*)((char*)obj + 0xc);
-        *(f32*)((char*)alloc + 0xc) = *(f32*)((char*)obj + 0x10);
-        *(f32*)((char*)alloc + 0x10) = *(f32*)((char*)obj + 0x14);
-        *(u8*)((char*)alloc + 4) = 1;
-        *(u8*)((char*)alloc + 5) = 1;
-        *(u8*)((char*)alloc + 6) = 255;
-        *(u8*)((char*)alloc + 7) = 255;
-        *(s16*)((char*)alloc + 0x1e) = -1;
-        *(s16*)((char*)alloc + 0x20) = -1;
-        o = Obj_SetupObject(alloc, 5, -1, -1, (void*)0);
-        if (o != NULL) {
-            *(f32*)((char*)o + 0x24) = p2[0];
-            *(f32*)((char*)o + 0x28) = p2[1];
-            *(f32*)((char*)o + 0x2c) = p2[2];
+        setup = Obj_AllocObjectSetup(36, 656);
+        *(f32*)((char*)setup + 8) = *(f32*)((char*)sourceObj + 0xc);
+        *(f32*)((char*)setup + 0xc) = *(f32*)((char*)sourceObj + 0x10);
+        *(f32*)((char*)setup + 0x10) = *(f32*)((char*)sourceObj + 0x14);
+        *(u8*)((char*)setup + 4) = 1;
+        *(u8*)((char*)setup + 5) = 1;
+        *(u8*)((char*)setup + 6) = 255;
+        *(u8*)((char*)setup + 7) = 255;
+        *(s16*)((char*)setup + 0x1e) = -1;
+        *(s16*)((char*)setup + 0x20) = -1;
+        spawnedObj = Obj_SetupObject(setup, 5, -1, -1, (void*)0);
+        if (spawnedObj != NULL) {
+            *(f32*)((char*)spawnedObj + 0x24) = velocity[0];
+            *(f32*)((char*)spawnedObj + 0x28) = velocity[1];
+            *(f32*)((char*)spawnedObj + 0x2c) = velocity[2];
         }
     }
 }

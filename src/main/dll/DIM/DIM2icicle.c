@@ -115,7 +115,7 @@ extern f32 lbl_803E5908;
 extern f32 lbl_803E590C;
 extern undefined4 gDIMbossAnimTable[];
 extern undefined4 gDIMbossHitDetectAnimTable[];
-extern void fn_801BB328(int* obj, f32* p2);
+extern void DIM2icicle_spawnBlueWhiteEffect(int* sourceObj, f32* velocity);
 extern void DIM2icicle_createStateLight(int obj, u8 isGreen);
 
 /*
@@ -760,7 +760,7 @@ void fn_801BC7E4(undefined4 param_1,undefined4 param_2,int param_3,int param_4)
   }
   if ((DAT_803de800 & 0x20000) != 0) {
     DAT_803de800 = DAT_803de800 & 0xfffdffff;
-    fn_801BB328((int *)(*(int *)(param_3 + 0x40c) + 4),(f32 *)(*(int *)(param_3 + 0x40c) + 0x94));
+    DIM2icicle_spawnBlueWhiteEffect((int *)(*(int *)(param_3 + 0x40c) + 4),(f32 *)(*(int *)(param_3 + 0x40c) + 0x94));
   }
   if ((*(ushort *)(param_3 + 0x400) & 4) != 0) {
     DAT_803de800 = DAT_803de800 | 8;
