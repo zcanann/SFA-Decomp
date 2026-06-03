@@ -6228,6 +6228,169 @@ void mapLoadDataFiles(int mapIdx)
     mapLoadDataFile(mapIdx, 0xd);
 }
 
+extern void padUpdate(void);
+extern void checkReset(void);
+extern void waitNextFrame(void);
+extern void loadDataFiles(int);
+extern void dvdCheckError(void);
+extern void mmFreeTick(int);
+extern void gameTextRun(void);
+extern void GXFlush_(int, int);
+extern u8 lbl_803DC950;
+int mergeTableFiles(u32 *tbl, int id, int idx, int count_);
+
+int mapUnload(int mapId, int flags)
+{
+    u8 *base;
+    char *hi;
+    int *e;
+    int f20;
+    int f10;
+    u32 f80;
+    int n;
+    s32 *lockp;
+    u8 needWait;
+    int i;
+    int s;
+    int j;
+    int *st;
+
+    base = lbl_80345E10;
+    i = 0;
+    needWait = 0;
+    st = ((int *(*)(void *))((void **)*(void **)gMapEventInterface)[0x90 / 4])(*(void **)gMapEventInterface);
+    {
+        int pairs[56] = {
+            0x2b, 0x1,    0x2a, 0x2,    0x2f, 0x8,    0x30, 0x4,
+            0x46, 0x1,    0x45, 0x2,    0x49, 0x8,    0x4a, 0x4,
+            0x24, 0x20,   0x23, 0x10,   0x4e, 0x20,   0x4d, 0x10,
+            0x21, 0x80,   0x20, 0x40,   0x4c, 0x80,   0x4b, 0x40,
+            0x25, 0x100,  0x26, 0x200,  0x47, 0x100,  0x48, 0x200,
+            0x1b, 0x1000, 0x1a, 0x2000, 0x54, 0x1000, 0x53, 0x2000,
+            0xd,  0x400,  0xe,  0x800,  0x55, 0x400,  0x56, 0x800,
+        };
+
+        while (s = OSDisableInterrupts(), n = lbl_803DCC80, OSRestoreInterrupts(s), n != 0) {
+            if (n == 0x100000) {
+                break;
+            }
+            padUpdate();
+            checkReset();
+            if (needWait) {
+                waitNextFrame();
+            }
+            loadDataFiles(0);
+            dvdCheckError();
+            if (needWait) {
+                mmFreeTick(0);
+                gameTextRun();
+                GXFlush_(1, 0);
+            }
+            if (lbl_803DC950) {
+                needWait = 1;
+            }
+        }
+
+        st = ((int *(*)(void *))((void **)*(void **)gMapEventInterface)[0x90 / 4])(*(void **)gMapEventInterface);
+        {
+            int v = *(s8 *)((char *)st + 0xe);
+            if (v != lbl_803DB5B0 && v != (&lbl_803DB5B0)[1]) {
+                if ((flags & 0x10000000) && mapId != v) {
+                    *((s8 *)st + 0xe) = -1;
+                }
+                if ((flags & 0x20000000) && mapId == *((s8 *)st + 0xe)) {
+                    *((s8 *)st + 0xe) = -1;
+                }
+                if (flags & 0x80000000) {
+                    *((s8 *)st + 0xe) = -1;
+                }
+            }
+        }
+
+        e = pairs;
+        f20 = flags & 0x20000000;
+        f10 = flags & 0x10000000;
+        f80 = flags & 0x80000000;
+        lockp = &lbl_803DB5B0;
+        hi = (char *)base + 0x20000;
+        for (; i < 0x38; i += 2) {
+            if ((f20 && mapId == ((int *)((char *)base + 0x20000))[e[0] - 0x1bb2])
+             || (f10 && mapId != ((int *)((char *)base + 0x20000))[e[0] - 0x1bb2])
+             || ((flags & e[1]) && mapId == ((int *)((char *)base + 0x20000))[e[0] - 0x1bb2])) {
+                ((int *)((char *)base + 0x20000))[e[0] - 0x1bb2] = -1;
+            }
+            {
+                int idx = e[0];
+                if (((int **)hi)[idx - 0x1a8a] != NULL) {
+                    s16 v;
+                    if (f80
+                     || ((flags & e[1]) && mapId == ((s16 *)hi)[idx - 0x3464])
+                     || (f10 && mapId != ((s16 *)((char *)base + 0x20000))[idx - 0x3464])
+                     || (f20 && mapId == ((s16 *)((char *)base + 0x20000))[idx - 0x3464])) {
+                        if (lbl_803DB5B0 != (v = ((s16 *)((char *)base + 0x20000))[idx - 0x3464])
+                         && lockp[1] != v) {
+                            switch (idx) {
+                            case 0xe: case 0x1a: case 0x21: case 0x24:
+                            case 0x2a: case 0x2b: case 0x2f: case 0x30:
+                            case 0x45: case 0x46: case 0x49: case 0x4a:
+                            case 0x4c: case 0x4e: case 0x53: case 0x56:
+                                mmSetFreeDelay(0);
+                                break;
+                            case 0x20: case 0x23: case 0x4b: case 0x4d:
+                                mmSetFreeDelay(0);
+                                break;
+                            case 0x26: case 0x48:
+                                mmSetFreeDelay(0);
+                                for (j = 0; j < 75; j++) {
+                                    if (sMapFileNameIndexRemapTable[j] == ((s16 *)((char *)base + 0x20000))[e[0] - 0x3464]) {
+                                        break;
+                                    }
+                                }
+                                if (j <= 0x50 && j != 0x49 && j != 0x43 && j != 5) {
+                                    int *slot = &((int *)((char *)base + 0x20000))[j - 0x1b02];
+                                    mm_free((void *)*slot);
+                                    *slot = 0;
+                                }
+                                break;
+                            }
+                            mm_free((void *)((int *)((char *)base + 0x20000))[e[0] - 0x1a8a]);
+                            mmSetFreeDelay(2);
+                            ((int *)((char *)base + 0x20000))[e[0] - 0x1a8a] = 0;
+                            ((s16 *)((char *)base + 0x20000))[e[0] - 0x3464] = -1;
+                            ((int *)((char *)base + 0x20000))[e[0] - 0x1b5a] = 0;
+                            switch (e[0]) {
+                            case 0x2a: case 0x45:
+                                mergeTableFiles((u32 *)(base + 0x170e0), 0x2a, 0x45, 0x800);
+                                break;
+                            case 0x2f: case 0x49:
+                                mergeTableFiles((u32 *)(base + 0x14200), 0x2f, 0x49, 0xbb8);
+                                break;
+                            case 0x24: case 0x4e:
+                                mergeTableFiles((u32 *)(base + 0x10200), 0x24, 0x4e, 0x1000);
+                                break;
+                            case 0x21: case 0x4c:
+                                mergeTableFiles((u32 *)(base + 0xc200), 0x21, 0x4c, 0x1000);
+                                break;
+                            case 0x26: case 0x48:
+                                mergeTableFiles((u32 *)(base + 0xa200), 0x26, 0x48, 0x800);
+                                break;
+                            case 0x1a: case 0x53:
+                                mergeTableFiles((u32 *)(base + 0x8200), 0x1a, 0x53, 0x800);
+                                break;
+                            case 0xe: case 0x56:
+                                mergeTableFiles((u32 *)(base + 0x2c0), 0xe, 0x56, 0x1fd0);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            e += 2;
+        }
+    }
+    return 1;
+}
+
 extern void debugPrintfxy(int x, int y, char *fmt, ...);
 extern char sAssetIndexOverflowError[];
 
@@ -6244,16 +6407,16 @@ int mergeTableFiles(u32 *tbl, int id, int idx, int count_) {
     int *dst;
     char *hi = (char *)base + 0x20000;
     int *src1 = *(int **)(hi + id * 4 - 0x6a28);
-    if (src1 == NULL || *(int **)(hi + idx * 4 - 0x6a28) == NULL) {
+    if (src1 == NULL || ((int **)hi)[idx - 0x1a8a] == NULL) {
         if (src1 == NULL) {
             e1 = 1;
         }
-        if (*(int **)(hi + idx * 4 - 0x6a28) == NULL) {
+        if (((int **)hi)[idx - 0x1a8a] == NULL) {
             e2 = 1;
         }
     }
     p1 = src1;
-    p2 = *(int **)(hi + idx * 4 - 0x6a28);
+    p2 = ((int **)hi)[idx - 0x1a8a];
     if (tbl == (u32 *)(base + 0x170e0)) {
         count = 0x800;
     } else if (tbl == (u32 *)(base + 0x14200)) {
