@@ -2315,12 +2315,12 @@ int seqStreamFn_8008023c(int x)
 
 void endObjSequence(int seq)
 {
-    int objIdx;
     int objCount;
+    int objIdx;
     int frees[32];
-    int nFree;
-    int i;
     int *objs;
+    int i;
+    int nFree;
 
     objs = ObjList_GetObjects(&objIdx, &objCount);
     nFree = 0;
