@@ -5789,6 +5789,247 @@ void mapLoadDataFiles(int mapIdx)
 
 extern void debugPrintfxy(int x, int y, char *fmt, ...);
 extern char sAssetIndexOverflowError[];
+
+
+int mergeTableFiles(u32 *tbl, int id, int idx, int count_) {
+    u8 *base = lbl_80345E10;
+    int i = 0;
+    int e1 = 0;
+    int e2 = 0;
+    int count = 0;
+    int v;
+    int *p1;
+    int *p2;
+    int *dst;
+    char *hi = (char *)base + 0x20000;
+    int *src1 = *(int **)(hi + id * 4 - 0x6a28);
+    if (src1 == NULL || *(int **)(hi + idx * 4 - 0x6a28) == NULL) {
+        if (src1 == NULL) {
+            e1 = 1;
+        }
+        if (*(int **)(hi + idx * 4 - 0x6a28) == NULL) {
+            e2 = 1;
+        }
+    }
+    p1 = src1;
+    p2 = *(int **)(hi + idx * 4 - 0x6a28);
+    if (tbl == (u32 *)(base + 0x170e0)) {
+        count = 0x800;
+    } else if (tbl == (u32 *)(base + 0x14200)) {
+        count = 0xbb8;
+    } else if (tbl == (u32 *)(base + 0x10200)) {
+        count = 0x1000;
+    } else if (tbl == (u32 *)(base + 0xc200)) {
+        count = 0x1000;
+    } else if (tbl == (u32 *)(base + 0xa200)) {
+        count = 0x800;
+    } else if (tbl == (u32 *)(base + 0x8200)) {
+        count = 0x800;
+    } else if (tbl == (u32 *)(base + 0x2c0)) {
+        count = 0x1fd0;
+    }
+    if (tbl == (u32 *)(base + 0x10200) || tbl == (u32 *)(base + 0xc200)) {
+        int *w1 = p1;
+        dst = (int *)tbl;
+        for (; count > 0; count--) {
+            if (!e1 && *w1 == -1) {
+                e1 = 1;
+            }
+            if (!e2 && *p2 == -1) {
+                e2 = 1;
+            }
+            if (!e1 && (v = *w1, v != -1) && (v & 0x80000000)) {
+                *dst = v & 0x7fffffff;
+                *dst = *dst | 0x40000000;
+            } else if (!e2 && (v = *p2, v != -1) && (v & 0x80000000)) {
+                *dst = v;
+            } else if (!e1 && *w1 != 0) {
+                *dst = *w1;
+            } else if (!e2 && *p2 != 0) {
+                *dst = *p2;
+            } else {
+                *dst = 0;
+            }
+            w1++;
+            p2++;
+            dst++;
+            i++;
+        }
+    } else if (tbl == (u32 *)(base + 0xa200)) {
+        int *w1 = p1;
+        int *w2 = p2;
+        dst = (int *)tbl;
+        for (; count > 0; count--) {
+            if (!e1 && (v = *w1, v != -1) && (v & 0x10000000)) {
+                *dst = v;
+                if (p2 != NULL && *w2 == -1) {
+                    e2 = 1;
+                }
+            } else if (!e2 && (v = *w2, v != -1) && (v & 0x10000000)) {
+                *dst = (v & 0xffffff) | 0x20000000;
+                if (p1 != NULL && *w1 == -1) {
+                    e1 = 1;
+                }
+            } else if (!e1 && *w1 == -1) {
+                *dst = 0;
+                e1 = 1;
+            } else if (!e2 && *w2 == -1) {
+                *dst = 0;
+                e2 = 1;
+            } else if (!e1 && *w1 != 0) {
+                *dst = *w1;
+            } else if (!e2 && *w2 != 0) {
+                *dst = *w2;
+            } else {
+                *dst = 0;
+            }
+            w1++;
+            dst++;
+            w2++;
+            i++;
+        }
+    } else if (tbl == (u32 *)(base + 0x8200)) {
+        int *w1 = p1;
+        int *w2 = p2;
+        dst = (int *)tbl;
+        for (; count > 0; count--) {
+            if (!e1 && *w1 == -1) {
+                *dst = 0;
+                e1 = 1;
+            } else if (!e2 && *w2 == -1) {
+                *dst = 0;
+                e2 = 1;
+            } else if (!e1 && (v = *w1, v != -1) && (v & 0x80000000)) {
+                *dst = v;
+            } else if (!e2 && (v = *w2, v != -1) && (v & 0x80000000)) {
+                *dst = (v & 0x7fffffff) | 0x20000000;
+            } else if (!e1 && *w1 != 0) {
+                *dst = *w1;
+            } else if (!e2 && *w2 != 0) {
+                *dst = *w2;
+            } else {
+                *dst = 0;
+            }
+            w1++;
+            dst++;
+            w2++;
+            i++;
+        }
+    } else if (tbl == (u32 *)(base + 0x2c0)) {
+        int *w1 = p1;
+        int *w2 = p2;
+        dst = (int *)tbl;
+        for (; count > 0; count--) {
+            if (!e1 && *w1 == -1) {
+                *dst = 0;
+                e1 = 1;
+            } else if (!e2 && *w2 == -1) {
+                *dst = 0;
+                e2 = 1;
+            } else if (!e1 && (v = *w1, v != -1) && (v & 0x80000000)) {
+                *dst = v;
+            } else if (!e2 && (v = *w2, v != -1) && (v & 0x80000000)) {
+                *dst = (v & 0x7fffffff) | 0x20000000;
+            } else if (!e1 && *w1 != 0) {
+                *dst = *w1;
+            } else if (!e2 && *w2 != 0) {
+                *dst = *w2;
+            } else {
+                *dst = 0;
+            }
+            w1++;
+            dst++;
+            w2++;
+            i++;
+        }
+    } else {
+        int *w1 = p1;
+        int *w2 = p2;
+        dst = (int *)tbl;
+        for (; count > 0; count--) {
+            if (!e1 && *w1 == -1) {
+                e1 = 1;
+            }
+            if (!e2 && *w2 == -1) {
+                e2 = 1;
+            }
+            if (!e1 && (v = *w1, v != -1) && (v & 0x10000000)) {
+                *dst = v;
+            } else if (!e2 && (v = *w2, v != -1) && (v & 0x10000000)) {
+                *dst = (v & 0xffffff) | 0x20000000;
+            } else if (!e1 && p1 != NULL) {
+                *dst = *w1;
+            } else if (!e2 && p2 != NULL) {
+                *dst = *w2;
+            } else {
+                *dst = 0;
+            }
+            i++;
+            w1++;
+            w2++;
+            dst++;
+        }
+    }
+    tbl[i - 1] = 0xffffffff;
+    return 1;
+}
+
+extern s32 lbl_803DCC94;
+
+u32 loadTableFiles(void) {
+    u8 *base = lbl_80345E10;
+    int s = OSDisableInterrupts();
+    int flags = getLoadedFileFlags();
+    lbl_803DCC80;
+    if ((lbl_803DCC94 & 0x4) && !(flags & 0x4) && *(s32 *)(base + 0x191e4) == -1) {
+        mergeTableFiles((u32 *)(base + 0x170e0), 0x2a, 0x45, 0x800);
+    }
+    if ((lbl_803DCC94 & 0x8) && !(flags & 0x8) && *(s32 *)(base + 0x19250) == -1) {
+        mergeTableFiles((u32 *)(base + 0x170e0), 0x2a, 0x45, 0x800);
+    }
+    if ((lbl_803DCC94 & 0x40) && !(flags & 0x40) && *(s32 *)(base + 0x191f8) == -1) {
+        mergeTableFiles((u32 *)(base + 0x14200), 0x2f, 0x49, 0xbb8);
+    }
+    if ((lbl_803DCC94 & 0x80) && !(flags & 0x80) && *(s32 *)(base + 0x19260) == -1) {
+        mergeTableFiles((u32 *)(base + 0x14200), 0x2f, 0x49, 0xbb8);
+    }
+    if ((lbl_803DCC94 & 0x400) && !(flags & 0x400) && *(s32 *)(base + 0x191c4) == -1) {
+        mergeTableFiles((u32 *)(base + 0x10200), 0x24, 0x4e, 0x1000);
+    }
+    if ((lbl_803DCC94 & 0x800) && !(flags & 0x800) && *(s32 *)(base + 0x1926c) == -1) {
+        mergeTableFiles((u32 *)(base + 0x10200), 0x24, 0x4e, 0x1000);
+    }
+    if ((lbl_803DCC94 & 0x4000) && !(flags & 0x4000) && *(s32 *)(base + 0x191b8) == -1) {
+        mergeTableFiles((u32 *)(base + 0xc200), 0x21, 0x4c, 0x1000);
+    }
+    if ((lbl_803DCC94 & 0x8000) && !(flags & 0x8000) && *(s32 *)(base + 0x19264) == -1) {
+        mergeTableFiles((u32 *)(base + 0xc200), 0x21, 0x4c, 0x1000);
+    }
+    if ((lbl_803DCC94 & 0x20000) && !(flags & 0x20000) && *(s32 *)(base + 0x191cc) == -1) {
+        mergeTableFiles((u32 *)(base + 0xa200), 0x26, 0x48, 0x800);
+    }
+    if ((lbl_803DCC94 & 0x80000) && !(flags & 0x80000) && *(s32 *)(base + 0x19254) == -1) {
+        mergeTableFiles((u32 *)(base + 0xa200), 0x26, 0x48, 0x800);
+    }
+    if ((lbl_803DCC94 & 0x2000000) && !(flags & 0x2000000) && *(s32 *)(base + 0x191a4) == -1) {
+        mergeTableFiles((u32 *)(base + 0x8200), 0x1a, 0x53, 0x800);
+    }
+    if ((lbl_803DCC94 & 0x8000000) && !(flags & 0x8000000) && *(s32 *)(base + 0x19288) == -1) {
+        mergeTableFiles((u32 *)(base + 0x8200), 0x1a, 0x53, 0x800);
+    }
+    if ((lbl_803DCC94 & 0x20000000) && !(flags & 0x20000000) && *(s32 *)(base + 0x1916c) == -1) {
+        mergeTableFiles((u32 *)(base + 0x2c0), 0xe, 0x56, 0x1fd0);
+    }
+    if ((lbl_803DCC94 & 0x80000000) && !(flags & 0x80000000) && *(s32 *)(base + 0x1928c) == -1) {
+        mergeTableFiles((u32 *)(base + 0x2c0), 0xe, 0x56, 0x1fd0);
+    }
+    lbl_803DCC94 = flags;
+    lbl_803DCC80 = lbl_803DCC80 ^ lbl_803DCC84;
+    lbl_803DCC84 = 0;
+    OSRestoreInterrupts(s);
+    return lbl_803DCC80;
+}
+
 int getTableFileEntry(int fileId, int index, int *out)
 {
     u8 *base = lbl_80345E10;
