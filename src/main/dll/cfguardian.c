@@ -708,7 +708,7 @@ render_basic:
 }
 #pragma peephole reset
 
-extern int fn_8017B5C8;
+extern int Door_SeqFn;
 extern f32 lbl_803E3780;
 extern f32 lbl_803E3784;
 extern f32 lbl_803E3788;
@@ -719,7 +719,7 @@ void Door_init(int *obj, u8 *def) {
     u8 *state = *(u8 **)((char *)obj + 0xb8);
     state[5] = 1;
     *(s16 *)obj = (s16)(def[0x1f] << 8);
-    *(int *)((char *)obj + 0xbc) = (int)&fn_8017B5C8;
+    *(int *)((char *)obj + 0xbc) = (int)&Door_SeqFn;
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
     *(f32 *)((char *)obj + 8) = ((f32)(u32)*(u8 *)((char *)def + 0x21) - lbl_803E3790) * lbl_803E3784;
     if (*(f32 *)((char *)obj + 8) == lbl_803E3788) {

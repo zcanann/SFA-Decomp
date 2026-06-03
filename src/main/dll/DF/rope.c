@@ -676,7 +676,7 @@ extern f32 lbl_803E4D98;
 extern undefined4 *gPartfxInterface;
 #pragma scheduling off
 #pragma peephole off
-int fn_801C02B8(int *obj) {
+int dimbosscrackpar_SeqFn(int *obj) {
     int *side = *(int **)((char *)obj + 0x4c);
     if ((u32)GameBit_Get(*(s16 *)((char *)side + 0x1e)) == 0u) {
         return 0;
@@ -694,7 +694,7 @@ void dimbosscrackpar_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 void dimbosscrackpar_init(s16 *obj, s8 *def) {
     obj[0] = 0;
     *(f32 *)((char *)obj + 8) = lbl_803E4D98;
-    *(int *)((char *)obj + 0xbc) = (int)&fn_801C02B8;
+    *(int *)((char *)obj + 0xbc) = (int)&dimbosscrackpar_SeqFn;
     obj[0] = (s16)((s32)def[0x24] << 8);
     obj[1] = (s16)((s32)def[0x23] << 8);
     obj[2] = (s16)((s32)def[0x22] << 8);

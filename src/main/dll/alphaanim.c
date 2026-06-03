@@ -591,8 +591,8 @@ void immultiseq_hitDetect(void) {}
 void immultiseq_release(void) {}
 void immultiseq_initialise(void) {}
 
-extern int fn_8017CBDC(int* obj, int* anim, u8* buf);
-extern int fn_8017C2D4(int* obj, int* anim, u8* buf);
+extern int immultiseq_SeqFn(int* obj, int* anim, u8* buf);
+extern int seqobject_SeqFn(int* obj, int* anim, u8* buf);
 extern uint GameBit_Get(int eventId);
 
 #pragma scheduling off
@@ -602,7 +602,7 @@ void seqobject_init(int *obj, u8 *params) {
 
     sub = *(u8**)((char*)obj + 0xb8);
     *(s16*)obj = (s16)(params[0x1c] << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)&fn_8017C2D4;
+    *(void**)((char*)obj + 0xbc) = (void*)&seqobject_SeqFn;
     *(u8*)((char*)obj + 0xad) = params[0x1f];
     if ((s8)*(u8*)((char*)obj + 0xad) >= *(s8*)(*(int*)((char*)obj + 0x50) + 0x55)) {
         *(u8*)((char*)obj + 0xad) = 0;
@@ -630,7 +630,7 @@ void immultiseq_init(int *obj, u8 *params) {
 
     sub = *(u8**)((char*)obj + 0xb8);
     *(s16*)obj = (s16)(params[0x28] << 8);
-    *(void**)((char*)obj + 0xbc) = (void*)&fn_8017CBDC;
+    *(void**)((char*)obj + 0xbc) = (void*)&immultiseq_SeqFn;
     *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
     *(s8*)((char*)obj + 0xad) = (s8)params[0x2a];
     if (*(s8*)((char*)obj + 0xad) >= *(s8*)(*(int*)((char*)obj + 0x50) + 0x55)) {
@@ -694,16 +694,16 @@ extern const char lbl_80321208[];
 extern int GameBit_Set(int eventId, int value);
 extern int warpToMap(int id, int flags);
 extern int **gObjectTriggerInterface;
-extern int fn_8017C2D4(int* obj, int* anim, u8* buf);
-extern int fn_8017C7A4(int* obj, int* anim, u8* buf);
-extern int fn_8017CBDC(int* obj, int* anim, u8* buf);
+extern int seqobject_SeqFn(int* obj, int* anim, u8* buf);
+extern int seqobj2_SeqFn(int* obj, int* anim, u8* buf);
+extern int immultiseq_SeqFn(int* obj, int* anim, u8* buf);
 
-/* fn_8017CBDC: seqobj2 advance-state predicate. If obj has a trigger id
+/* immultiseq_SeqFn: seqobj2 advance-state predicate. If obj has a trigger id
  * (-1 sentinel skips), peek at the next state slot in def[0x20+n*2], read
  * its GameBit, compare against the def[0x30] mask bit for that slot, and
  * if the polarity flips (GameBit != mask bit) dispatch vtable[0x13] to
  * advance. Always latches state[1] bit 0 before returning 0. */
-int fn_8017CBDC(int* obj, int* anim, u8* buf) {
+int immultiseq_SeqFn(int* obj, int* anim, u8* buf) {
     u8* state = *(u8**)((char*)obj + 0xb8);
     u8* def = *(u8**)((char*)obj + 0x4c);
     *(s16*)((char*)buf + 0x6e) = *(s16*)((char*)buf + 0x70);
@@ -742,7 +742,7 @@ void seqobj2_init(int* obj, int* def)
     int* state = *(int**)((char*)obj + 0xb8);
     OSReport(sSeqObjNeedBitUsedBitFormat, *(int*)((char*)def + 20), *(s16*)((char*)def + 26), *(s16*)((char*)def + 24));
     *(s16*)obj = (s16)((u32)*(u8*)((char*)def + 28) << 8);
-    *(void**)((char*)obj + 188) = (void*)fn_8017C7A4;
+    *(void**)((char*)obj + 188) = (void*)seqobj2_SeqFn;
     if (*(s16*)((char*)def + 32) > -1) {
         s16 slot = *(s16*)((char*)def + 24);
         if (slot != -1 && (u32)GameBit_Get(slot) != 0u) {
@@ -753,7 +753,7 @@ void seqobj2_init(int* obj, int* def)
     *(u16*)((char*)obj + 176) = (u16)(*(u16*)((char*)obj + 176) | 0x6000);
 }
 
-int fn_8017C7A4(int* obj, int* anim, u8* buf)
+int seqobj2_SeqFn(int* obj, int* anim, u8* buf)
 {
     int* state = *(int**)((char*)obj + 0x4c);
     int* flagPtr = *(int**)((char*)obj + 0xb8);
@@ -775,7 +775,7 @@ int fn_8017C7A4(int* obj, int* anim, u8* buf)
     return 0;
 }
 
-int fn_8017C2D4(int* obj, int* anim, u8* buf)
+int seqobject_SeqFn(int* obj, int* anim, u8* buf)
 {
     int* state;
     int* flagPtr;
