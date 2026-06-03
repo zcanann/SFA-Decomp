@@ -7615,6 +7615,7 @@ void gxTransformFn_8004a83c(void) {
 typedef union { u8 u8; u16 u16; u32 u32; s16 s16; s32 s32; f32 f32; } PiWGPipe;
 extern volatile PiWGPipe GXWGFifo : (0xCC008000);
 extern void GXSetGPMetric(int perf0, int perf1);
+#pragma dont_inline on
 void gxPerfFn_8004a77c(int param_1) {
     if ((u8)param_1 != 0) {
         GXSetGPMetric(0x23, 0x16);
@@ -7637,6 +7638,7 @@ void gxPerfFn_8004a77c(int param_1) {
         GXWGFifo.u32 = 0;
     }
 }
+#pragma dont_inline reset
 
 extern void *mmAlloc(int size, int align, int zone);
 extern void *lbl_803DCD10;
@@ -10274,7 +10276,7 @@ extern u8 lbl_803DB411;
 extern int lbl_803DCCDC;
 extern char lbl_8035F730[];
 extern int lbl_803DCCAC;
-extern char lbl_803DCCC4[];
+extern char lbl_803DCCC4;
 extern int lbl_803DCCA0;
 extern u16 lbl_803DCCAA;
 extern u8 lbl_803DCCA9;
@@ -10420,7 +10422,7 @@ void waitNextFrame(void)
     }
     if (Queue_GetCount(lbl_8035F730) > 1) {
         lbl_803DCCAC = 0;
-        OSSleepThread(lbl_803DCCC4);
+        OSSleepThread(&lbl_803DCCC4);
     }
     OSRestoreInterrupts(lvl);
     Camera_ApplyFullViewport();
@@ -10451,12 +10453,12 @@ void videoSwapFrameBuffers(void)
     lbl_803DCCA0 = lbl_803DCCA0 + 1;
     sync = GXReadDrawSync();
     if (sync == (u16)(lbl_803DCCAA + 1)) {
+        lbl_803DCCAA = sync;
         if (lbl_803DCCCC == lbl_803DCCEC) {
             lbl_803DCCCC = lbl_803DCCE8;
         } else {
             lbl_803DCCCC = lbl_803DCCEC;
         }
-        lbl_803DCCAA = sync;
         VISetNextFrameBuffer(lbl_803DCCCC);
         VIFlush();
         lbl_803DCCA9 = 1;
@@ -10464,7 +10466,7 @@ void videoSwapFrameBuffers(void)
         lbl_803DCCA0 = 0;
     }
     lbl_803DCCAC = lbl_803DCCAC + 1;
-    if (lbl_803DCCB0 != 0 && lbl_803DCCAC > 18000) {
+    if (lbl_803DCCB0 != 0 && (u32)lbl_803DCCAC > 18000) {
         logGpuHang();
         gxErrorFn_80060b40();
         modelFn_800292e0();
@@ -10476,13 +10478,13 @@ void videoSwapFrameBuffers(void)
         if (Queue_IsEmpty(lbl_8035F730) == 0) {
             Queue_Pop(lbl_8035F730, tok);
         }
-        OSWakeupThread(lbl_803DCCC4);
-        if (Queue_IsEmpty(lbl_8035F730) == 0) {
-            Queue_Peek(lbl_8035F730, tok);
-            GXEnableBreakPt((void *)tok[0]);
-        } else {
+        OSWakeupThread(&lbl_803DCCC4);
+        if (Queue_IsEmpty(lbl_8035F730) != 0) {
             GXDisableBreakPt();
             lbl_803DCCA7 = 0;
+        } else {
+            Queue_Peek(lbl_8035F730, tok);
+            GXEnableBreakPt((void *)tok[0]);
         }
         gxPerfFn_8004a77c(1);
     }
@@ -10523,7 +10525,7 @@ void videoFn_800499e8(void)
     } else {
         Queue_Pop(lbl_8035F730, tok);
         lbl_803DCCAC = 0;
-        OSWakeupThread(lbl_803DCCC4);
+        OSWakeupThread(&lbl_803DCCC4);
         if (Queue_IsEmpty(lbl_8035F730) == 0) {
             Queue_Peek(lbl_8035F730, tok);
             GXEnableBreakPt((void *)tok[0]);
@@ -10604,7 +10606,7 @@ void gpuErrorHandler(void)
     if (lbl_803DCCA8 != 0 && lbl_803DCCA9 != 0) {
         Queue_Pop(lbl_8035F730, tok);
         lbl_803DCCAC = 0;
-        OSWakeupThread(lbl_803DCCC4);
+        OSWakeupThread(&lbl_803DCCC4);
         r = Queue_IsEmpty(lbl_8035F730);
         if (r == 0) {
             Queue_Peek(lbl_8035F730, tok);
@@ -10733,7 +10735,7 @@ void videoInit(void) {
     GXSetCPUFifo(lbl_803DCCD4);
     GXSetGPFifo(lbl_803DCCD4);
     Queue_Init(lbl_8035F730, lbl_8035F6B8, 10, 0xc);
-    OSInitThreadQueue(lbl_803DCCC4);
+    OSInitThreadQueue(&lbl_803DCCC4);
     VISetPreRetraceCallback(videoSwapFrameBuffers);
     VISetPostRetraceCallback(gpuErrorHandler);
     GXSetBreakPtCallback(videoFn_800499e8);
