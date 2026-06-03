@@ -994,9 +994,9 @@ extern f32 lbl_803E06CC;
 extern u16 lbl_80311720[];
 extern u16 lbl_80311810[];
 extern MapEventInterface **gMapEventInterface;
-extern s8 lbl_803A2F80[];
-extern u32 lbl_803A2FBC[];
-extern u8 lbl_803A319C[];
+extern s8 gTransientMapBits[];
+extern u32 gMapObjGroupStatuses[];
+extern u8 gExtendedMapActLookup[];
 extern int lbl_803DD48C;
 
 #define SAVEGAME_OBJECT_POSITION_COUNT 0x3f
@@ -1300,7 +1300,7 @@ void SaveGame_gplaySetObjGroupStatus(int idx, int shift, int value)
     u32 *groupStatuses;
     u16 *eventIds;
 
-    mapBitBase = lbl_803A2F80;
+    mapBitBase = gTransientMapBits;
     createTransient = 0;
     if (idx >= 0x50) {
         idx = (u8)mapBitBase[idx + 0x1cc];
@@ -13298,12 +13298,12 @@ enum {
     SAVEGAME_DEFAULT_VOLUME = 0x7f,
 };
 
-extern s8 lbl_803A2F80[];
+extern s8 gTransientMapBits[];
 extern s8 lbl_803DD494;
 extern int lbl_803DD48C;
 extern u8 *lbl_803DD498;
 void SaveGame_initialise(void) {
-    s8 *base = lbl_803A2F80;
+    s8 *base = gTransientMapBits;
     int i;
     memset(base + 0x328, 0, 0xf70);
     if (!(lbl_803DD498[0x21] & 0x80)) {
@@ -13556,8 +13556,8 @@ void *SaveGame_getCurCharacterState(void) {
 s32 SaveGame_gplayGetRestartGameNotCleared(void) { return pRestartPoint != 0; }
 extern u16 lbl_80311810[];
 u16 SaveGame_getMapObjGroupBit(int idx) { return lbl_80311810[idx]; }
-extern u8 lbl_803A319C[];
-void SaveGame_setMapActLut(int val, int idx) { *(u8 *)((char *)lbl_803A319C + idx - 0x50) = (u8)val; }
+extern u8 gExtendedMapActLookup[];
+void SaveGame_setMapActLut(int val, int idx) { *(u8 *)((char *)gExtendedMapActLookup + idx - 0x50) = (u8)val; }
 extern u32 lbl_803DD4A0;
 extern u32 lbl_803DD4A4;
 extern u32 lbl_803DD4A8;
@@ -13578,31 +13578,31 @@ extern void *getLastSavedGameTexts(void);
 void *saveGameGetCurHint(void) {
     return gameTextGet((s32)*(u8*)((char*)getLastSavedGameTexts() + 0x5) + 0xf4);
 }
-extern u32 lbl_803A2FBC[];
+extern u32 gMapObjGroupStatuses[];
 u32 SaveGame_mapGetObjGroups(int idx) {
-    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
-    return lbl_803A2FBC[idx];
+    if (idx >= 0x50) idx = *(u8*)((char*)gExtendedMapActLookup + idx - 0x50);
+    return gMapObjGroupStatuses[idx];
 }
 void mapClearBit(int idx, int bit) {
-    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
-    lbl_803A2FBC[idx] &= ~(1 << bit);
+    if (idx >= 0x50) idx = *(u8*)((char*)gExtendedMapActLookup + idx - 0x50);
+    gMapObjGroupStatuses[idx] &= ~(1 << bit);
 }
 void SaveGame_resetObjGroups(int idx) {
-    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
-    lbl_803A2FBC[idx] = 0;
+    if (idx >= 0x50) idx = *(u8*)((char*)gExtendedMapActLookup + idx - 0x50);
+    gMapObjGroupStatuses[idx] = 0;
 }
 extern u32 GameBit_Get(int eventId);
 void SaveGame_mapUpdateObjGroups(int idx) {
     u16 bit;
-    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    if (idx >= 0x50) idx = *(u8*)((char*)gExtendedMapActLookup + idx - 0x50);
     bit = lbl_80311810[idx];
     if (bit != 0) {
-        lbl_803A2FBC[idx] = GameBit_Get(bit);
+        gMapObjGroupStatuses[idx] = GameBit_Get(bit);
     }
 }
 extern u16 lbl_80311720[];
 u8 SaveGame_getMapAct(int idx) {
-    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    if (idx >= 0x50) idx = *(u8*)((char*)gExtendedMapActLookup + idx - 0x50);
     if (idx != lbl_803DD494) {
         lbl_803DD494 = (s8)idx;
         if (idx < 0 || idx >= 0x78 || lbl_80311720[idx] == 0) {
@@ -13614,7 +13614,7 @@ u8 SaveGame_getMapAct(int idx) {
     return *((u8*)&lbl_803DD494 + 1);
 }
 int SaveGame_gplayGetObjGroupStatus(int idx, int shift) {
-    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    if (idx >= 0x50) idx = *(u8*)((char*)gExtendedMapActLookup + idx - 0x50);
     if (idx != lbl_803DD48C) {
         lbl_803DD48C = idx;
         (&lbl_803DD48C)[1] = GameBit_Get(lbl_80311810[idx]);
@@ -13625,21 +13625,21 @@ extern void GameBit_Set(int eventId, int value);
 void SaveGame_gplaySetAct(int idx, int act) {
     int j;
     u16 bit;
-    if (idx >= 0x50) idx = *(u8*)((char*)lbl_803A319C + idx - 0x50);
+    if (idx >= 0x50) idx = *(u8*)((char*)gExtendedMapActLookup + idx - 0x50);
     GameBit_Set(lbl_80311720[idx], act);
     lbl_803DD494 = (s8)idx;
     *((s8*)&lbl_803DD494 + 1) = (s8)act;
     j = idx;
-    if (j >= 0x50) j = *(u8*)((char*)lbl_803A319C + j - 0x50);
+    if (j >= 0x50) j = *(u8*)((char*)gExtendedMapActLookup + j - 0x50);
     bit = lbl_80311810[j];
     if (bit != 0) {
-        lbl_803A2FBC[j] = GameBit_Get(bit);
+        gMapObjGroupStatuses[j] = GameBit_Get(bit);
     }
 }
-s8 mapBitFindFn(int a, int b) {
+s8 SaveGame_findTransientMapBit(int a, int b) {
     int i;
     MapBitTransient *p;
-    for (i = 0, p = (MapBitTransient *)lbl_803A2F80; i < 20; i++) {
+    for (i = 0, p = (MapBitTransient *)gTransientMapBits; i < 20; i++) {
         if (a == p->mapId && b == p->shift) {
             return (s8)i;
         }
@@ -13725,10 +13725,10 @@ void loadTaskTexts(void) {
         }
     }
 }
-void mapBitsFn_800e9418(void) {
+void SaveGame_updateTransientMapBits(void) {
     MapBitTransient *p;
     int i;
-    for (i = 0, p = (MapBitTransient *)lbl_803A2F80; i < 20; i++) {
+    for (i = 0, p = (MapBitTransient *)gTransientMapBits; i < 20; i++) {
         if (p->mapId != -1) {
             p->timer--;
             if (p->timer <= 0) {

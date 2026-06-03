@@ -10552,7 +10552,7 @@ typedef struct {
     MmRegion regions[8];
 } MmGlobal;
 
-extern void mapBitsFn_800e9418(void);
+extern void SaveGame_updateTransientMapBits(void);
 extern int lbl_803DCB30;
 extern int lbl_803DCB1C;
 extern char sMemStatsFormat[];
@@ -10594,7 +10594,7 @@ void mmFreeTick(void) {
             s->bufCur = s->buf;
         }
     }
-    mapBitsFn_800e9418();
+    SaveGame_updateTransientMapBits();
 
     lbl_803DCB20 = 0;
     lbl_803DCB28 = 0;
