@@ -6441,10 +6441,10 @@ end:
 #pragma scheduling on
 #pragma peephole on
 
-/* fn_800DB224: u16 split-into-2-bytes (LE) ? 95% match, reg alloc diff */
+/* walkPath_writeU16LE: split a path id into two little-endian bytes. */
 #pragma peephole off
 #pragma scheduling off
-void fn_800DB224(u32 v, u8 *dst) {
+void walkPath_writeU16LE(u32 v, u8 *dst) {
     v = v & 0xffff;
     dst[0] = (u8)v;
     dst[1] = (u8)((s32)v >> 8);

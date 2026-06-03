@@ -2736,7 +2736,7 @@ int Tricky_func18(int *obj, int *out) {
 extern u32 GameBit_Get(int bit);
 extern u8 fn_800DBCFC(void *pos,int param_2);
 extern int fn_800DBECC(void *pos);
-extern void fn_800DB224(int pathId,u8 *out);
+extern void walkPath_writeU16LE(int pathId,u8 *out);
 extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject(int setup,int param_2,int param_3,int param_4,int param_5);
 extern int fn_800DB0E0(void *pos,int param_2,int param_3);
@@ -2754,7 +2754,7 @@ int trickyFn_801451d8(int obj,int state) {
     if (pathByte == 0) {
         int pathId = fn_800DBECC((void *)(obj + 0x18));
         if (pathId != 0) {
-            fn_800DB224(pathId & 0xffff, pathBytes);
+            walkPath_writeU16LE(pathId & 0xffff, pathBytes);
         }
     }
     if (pathBytes[0] != 0) {
