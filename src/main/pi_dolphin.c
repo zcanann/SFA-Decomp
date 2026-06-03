@@ -9226,7 +9226,7 @@ extern char lbl_8035F730[];
 extern int lbl_803DCCAC;
 extern char lbl_803DCCC4[];
 extern int lbl_803DCCA0;
-extern s16 lbl_803DCCAA;
+extern u16 lbl_803DCCAA;
 extern u8 lbl_803DCCA9;
 extern int lbl_803DB5C8;
 extern int lbl_803DD610;
@@ -9297,18 +9297,17 @@ extern void *lbl_803DCCE8;
 #pragma peephole off
 void videoSwapFrameBuffers(void)
 {
-    int swapped;
-    s16 sync;
+    u16 sync;
     int tok[3];
     char fifo[140];
 
     lbl_803DCCA0 = lbl_803DCCA0 + 1;
     sync = GXReadDrawSync();
-    if (sync == (s16)(lbl_803DCCAA + 1)) {
-        swapped = lbl_803DCCCC == lbl_803DCCEC;
-        lbl_803DCCCC = lbl_803DCCEC;
-        if (swapped) {
+    if (sync == (u16)(lbl_803DCCAA + 1)) {
+        if (lbl_803DCCCC == lbl_803DCCEC) {
             lbl_803DCCCC = lbl_803DCCE8;
+        } else {
+            lbl_803DCCCC = lbl_803DCCEC;
         }
         lbl_803DCCAA = sync;
         VISetNextFrameBuffer(lbl_803DCCCC);
@@ -9349,20 +9348,19 @@ void videoSwapFrameBuffers(void)
 void videoFn_800499e8(void)
 {
     int i;
-    s16 *src;
-    s16 *dst;
+    u16 *src;
+    u16 *dst;
     int tok[3];
     char peek[8];
-    int cur;
 
     if (lbl_803DD610 == 2 || lbl_803DD610 == 3) {
         THPPlayerPostDrawDone();
     }
     Queue_Peek(lbl_8035F730, &peek);
-    cur = *(int *)(peek + 4);
-    src = lbl_803966D0;
-    dst = lbl_803965E0;
-    for (i = 0; i < (int)(u32)lbl_803DD000; i++) {
+    i = 0;
+    src = (u16 *)lbl_803966D0;
+    dst = (u16 *)lbl_803965E0;
+    for (; i < (int)(u32)lbl_803DD000; i++) {
         dst[0] = src[0];
         dst[1] = src[1];
         *(int *)(dst + 4) = *(int *)(src + 4);
@@ -9372,7 +9370,7 @@ void videoFn_800499e8(void)
     }
     lbl_803DD002 = lbl_803DD000;
     lbl_803DD000 = 0;
-    if (cur == (int)lbl_803DCCCC) {
+    if (*(int *)(peek + 4) == (int)lbl_803DCCCC) {
         lbl_803DCCA8 = 1;
         lbl_803DCCA9 = 0;
     } else {
