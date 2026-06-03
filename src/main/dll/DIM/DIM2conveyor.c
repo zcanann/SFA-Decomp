@@ -20,7 +20,7 @@ extern undefined4 ObjGroup_AddObject();
  * PAL Size: TODO
  */
 extern int dimlavasmash_SeqFn(int obj, int p2, char *r5);
-extern void fn_801B3344(int *block, int mode, int v);
+extern void dimlavasmash_setBlockSurfaceFlags(int *block, int mode, int v);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int *mapGetBlock(int idx);
 #pragma scheduling off
@@ -37,8 +37,8 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
     if (*(u8 *)(inner + 2) == 1) {
         block = mapGetBlock(objPosToMapBlockIdx(*(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14)));
         if (block != NULL) {
-            fn_801B3344(block, 1, *(u8 *)(inner + 1));
-            fn_801B3344(block, 0, *(u8 *)(inner + 1) + 1);
+            dimlavasmash_setBlockSurfaceFlags(block, 1, *(u8 *)(inner + 1));
+            dimlavasmash_setBlockSurfaceFlags(block, 0, *(u8 *)(inner + 1) + 1);
         }
     }
     *(s8 *)((char *)obj + 0xad) = def[0x19];

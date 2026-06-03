@@ -559,7 +559,8 @@ extern int Shader_getLayer(int layer, int idx);
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801B3344(int arg1, int arg2, int arg3)
+/* Toggle collision/render surface flags for matching block polys and layers. */
+void dimlavasmash_setBlockSurfaceFlags(int arg1, int arg2, int arg3)
 {
     int i;
     int *block;
@@ -615,8 +616,8 @@ int dimlavasmash_SeqFn(int obj, int p2, int *r5_arg)
                                         *(f32 *)((char *)obj + 0x14));
                     block = mapGetBlock();
                     if ((void *)block != NULL) {
-                        fn_801B3344(block, 1, *(u8 *)((char *)state + 1));
-                        fn_801B3344(block, 0, *(u8 *)((char *)state + 1) + 1);
+                        dimlavasmash_setBlockSurfaceFlags(block, 1, *(u8 *)((char *)state + 1));
+                        dimlavasmash_setBlockSurfaceFlags(block, 0, *(u8 *)((char *)state + 1) + 1);
                     }
                 }
             }
