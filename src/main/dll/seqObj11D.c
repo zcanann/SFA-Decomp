@@ -810,3 +810,62 @@ void fn_80151C68(int obj, u8 *state)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 sin(f32 x);
+extern f32 fn_80293E80(f32 x);
+extern f32 sqrtf(f32 x);
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int mtx);
+extern f32 lbl_803E27D8;
+extern f32 lbl_803E27DC;
+extern f32 lbl_803E27E0;
+extern f32 lbl_803E27E4;
+extern f32 lbl_803E27E8;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80151DB8(int obj, u8 *state)
+{
+    u8 *player;
+    u8 *setup;
+    f32 dy;
+    f32 px0;
+    f32 pz0;
+    f32 cosA;
+    f32 sinA;
+    f32 base;
+    f32 f5;
+    f32 f2v;
+
+    player = Obj_GetPlayerObject();
+    setup = *(u8 **)(obj + 0x4c);
+    dy = *(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10);
+    if (dy >= lbl_803E27D8) {
+        dy = -dy;
+    }
+    if (dy > lbl_803E27DC) {
+        return;
+    }
+    px0 = *(f32 *)(setup + 8) - lbl_803E27DC * fn_80293E80(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
+    pz0 = *(f32 *)(setup + 0x10) - lbl_803E27DC * sin(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
+    if (sqrtf((*(f32 *)(player + 0x18) - px0) * (*(f32 *)(player + 0x18) - px0)
+              + (*(f32 *)(player + 0x20) - pz0) * (*(f32 *)(player + 0x20) - pz0))
+        < *(f32 *)(state + 0x2ac)) {
+        cosA = fn_80293E80(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
+        sinA = sin(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
+        base = -(cosA * (px0 - cosA) + sinA * (pz0 - sinA));
+        f5 = base + (cosA * *(f32 *)(player + 0x8c) + sinA * *(f32 *)(player + 0x94));
+        f2v = base + (cosA * *(f32 *)(player + 0x18) + sinA * *(f32 *)(player + 0x20));
+        if (f2v > lbl_803E27D8) {
+            if (f5 >= lbl_803E27E8) {
+                return;
+            }
+            *(f32 *)(player + 0x18) = *(f32 *)(player + 0x18) - cosA * f5;
+            *(f32 *)(player + 0x20) = *(f32 *)(player + 0x20) - sinA * f5;
+            Obj_TransformWorldPointToLocal(*(f32 *)(player + 0x18), *(f32 *)(player + 0x1c), *(f32 *)(player + 0x20),
+                                           (f32 *)(player + 0xc), (f32 *)(player + 0x10), (f32 *)(player + 0x14),
+                                           *(int *)(player + 0x30));
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
