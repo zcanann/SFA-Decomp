@@ -5935,6 +5935,262 @@ u8 modelRenderFn_8003e98c(u8 *obj, u8 *shader, u32 *p3, int mask, int p5, int p6
     return ok;
 }
 
+extern int *ObjModel_GetRenderOp(int am0, int idx);
+extern u32 *ObjModel_GetRenderOpTextureRefs(int *am, int idx);
+extern ObjModelRenderCb ObjModel_GetPostRenderCallback(int *am);
+extern u8 textureFn_80050ad8(void *tex, int n, int p3, u32 p4);
+extern void textureFn_80051348(u32 ref, int p2);
+extern void GXSetTevColor(int id, u32 *color);
+extern void fn_800510F0(u32 ref, int p2, int p3);
+extern void fn_80050FF4(int p1);
+extern void fn_8004D230(void);
+extern void fn_8005011C(f32 *m);
+extern void fn_8004D6D8(void);
+extern u32 fn_8001D984(int light);
+extern void fn_80050558(u32 t, int p2, int p3, int p4, int p5);
+extern void fn_80050A28(int t);
+extern void fn_80050F2C(void);
+extern void textureFn_8004c330(void *tex, f32 *m);
+extern void gxTextureFn_8004d5b4(int *op);
+extern void gxTextureFn_80052638(u8 *color);
+extern void fn_80118240(void);
+extern void fn_8004D928(void);
+extern f32 lbl_803967F0[];
+extern u8 lbl_803DCC3C;
+
+u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
+    int *op;
+    u32 *refs;
+    u32 idx;
+    u8 shad;
+    int nlay;
+    int envtex;
+    ObjModelRenderCb cb;
+    f32 m2[12];
+    f32 t2[12];
+    f32 wm[12];
+    f32 t1[12];
+    int a;
+    int b;
+    u8 color[4];
+    f32 fogc;
+    u32 tmp1;
+    u32 tmp2;
+
+    shad = 0;
+    {
+        u32 w;
+        int pos = bs->pos;
+        int off = pos >> 3;
+        u8 *p;
+        w = bs->data[off];
+        p = (u8 *)(off + (char *)bs->data);
+        w |= p[1] << 8;
+        w |= p[2] << 16;
+        bs->pos = pos + 6;
+        idx = (w >> (pos & 7)) & 0x3f;
+    }
+    cb = ObjModel_GetRenderCallback(am);
+    if (cb != NULL && cb((int *)obj, am, idx) != 0) {
+        return idx;
+    }
+    op = ObjModel_GetRenderOp(*am, idx);
+    refs = ObjModel_GetRenderOpTextureRefs(am, idx);
+    resetLotsOfRenderVars();
+    envtex = 0;
+    if ((refs[0] != 0 || refs[1] != 0) && *(u32 *)((char *)op + 0x34) != 0) {
+        void *t = textureIdxToPtr(*(u32 *)((char *)op + 0x34));
+        int nl = lbl_803DCC5C + 1;
+        if (refs[0] != 0) {
+            nl += 1;
+        }
+        if (refs[1] != 0) {
+            nl += 1;
+        }
+        envtex = textureFn_80050ad8(t, nl, ((u8 *)op)[0x42], *(u32 *)((char *)op + 0x24));
+    }
+    if (refs[0] != 0) {
+        textureFn_80051348(refs[0], obj[0xf1]);
+    }
+    if (refs[1] != 0) {
+        if (*(u32 *)((char *)op + 0x1c) != 0) {
+            color[0] = 0xff;
+            color[1] = 0xff;
+            color[2] = 0xff;
+            color[3] = ((u8 *)op)[0x22];
+        } else {
+            color[3] = 0;
+        }
+        tmp1 = *(u32 *)color;
+        GXSetTevColor(3, &tmp1);
+        fn_800510F0(refs[1], refs[0] != 0 ? 1 : 0, ((u8 *)op)[0x20]);
+        if (color[3] != 0) {
+            fn_80050FF4(refs[0] != 0 ? 1 : 0);
+        }
+    } else {
+        tmp2 = lbl_803DB46C;
+        GXSetTevColor(3, &tmp2);
+    }
+    nlay = lbl_803DCC5C;
+    if (lbl_803DCC4C != 0) {
+        fn_8004D230();
+        shad = 1;
+        nlay = 0;
+    } else {
+        int b4;
+        f32 *mx;
+        u8 b5f = (*(u8 **)(obj + 0x50))[0x5f];
+        b4 = b5f & 4;
+        if (b4 && (mx = *(f32 **)(*(u8 **)(obj + 0x64) + 0xc)) != NULL) {
+            fn_8005011C(mx);
+            nlay = 0;
+        } else if (b5f & 0x10) {
+            fn_8004D6D8();
+            nlay = 0;
+        } else if (b4 == 0) {
+            int i;
+            int *lp;
+            u8 *sp;
+            i = 0;
+            lp = &lbl_803DCC64;
+            sp = &lbl_803DCC60;
+            for (; i < lbl_803DCC5C; i++) {
+                u32 t = fn_8001D984(*lp);
+                if (t != 0) {
+                    fn_8001D7F8(*lp, &a, &b);
+                    if (a == 2) {
+                        shad = 1;
+                    }
+                    fn_80050558(t, fn_8001D818(*lp), a, b, *sp);
+                }
+                lp++;
+                sp++;
+            }
+        }
+    }
+    if (envtex != 0) {
+        fn_80050A28(envtex);
+    }
+    {
+        u32 t18;
+        if ((t18 = *(u32 *)((char *)op + 0x18)) != 0 && *(u32 *)((char *)op + 0x1c) == 0 && refs[1] != 0) {
+            textureIdxToPtr(t18);
+            fn_80050F2C();
+        }
+    }
+    {
+        u8 hl;
+        if (modelRenderFn_8003e98c(obj, (u8 *)op, refs, 0x80, hl = ((*(u16 *)(p2 + 0xe2) & 2) && !(p2[0x24] & 2)), nlay) == 0) {
+            gxTextureFn_80050e28(refs[0] != 0 ? 1 : 0);
+        }
+        if (*(u32 *)((char *)op + 0x3c) & 0x100000) {
+            u8 *l1 = Shader_getLayer((u8 *)op, 1);
+            {
+                f32 tx;
+                f32 ty;
+                u32 jid = l1[5];
+                int *tbl = *(int **)(obj + 0x70);
+                u8 *m50 = *(u8 **)(obj + 0x50);
+                u8 *q = *(u8 **)(m50 + 0xc);
+                int n = m50[0x59];
+                int k;
+                for (k = 0; k < n; k++) {
+                    if ((int)jid == q[1]) {
+                        tx = lbl_803DEA48 * (f32)*(s16 *)((char *)tbl + (k << 4) + 8);
+                        ty = lbl_803DEA48 * (f32)*(s16 *)((char *)tbl + (k << 4) + 10);
+                        goto trans2;
+                    }
+                    q += 2;
+                }
+                ty = tx = lbl_803DEA04;
+            trans2:
+                PSMTXTrans(m2, tx, ty, lbl_803DEA04);
+            }
+            textureFn_8004c330(textureIdxToPtr(*(u32 *)l1), m2);
+        }
+        modelRenderFn_8003e98c(obj, (u8 *)op, refs, 0, hl, nlay);
+    }
+    if (isHeavyFogEnabled() && !(*(u16 *)(p2 + 2) & 0x100)) {
+        getColor803dd01c(&fogc);
+        renderHeavyFog(&fogc);
+    }
+    if (*(u32 *)((char *)op + 0x3c) & 0x100) {
+        f32 *vm = Camera_GetViewMatrix();
+        Obj_BuildWorldTransformMatrix((int *)obj, wm, 0);
+        PSMTXConcat(vm, wm, t1);
+        PSMTXConcat(lbl_803967F0, t1, t2);
+        GXLoadTexMtxImm(t2, 0x24, 0);
+        fn_8004D928();
+    }
+    if ((*(u8 **)(obj + 0x50))[0x5f] & 0x10) {
+        gxTextureFn_8004d5b4(op);
+    }
+    {
+        u8 e5 = obj[0xe5];
+        if ((e5 & 2) || (e5 & 0x10)) {
+            color[0] = obj[0xec];
+            color[1] = obj[0xed];
+            color[2] = obj[0xee];
+            color[3] = obj[0xef];
+            gxTextureFn_80052638(color);
+        }
+    }
+    if (*(u32 *)((char *)op + 0x3c) & 0x20000) {
+        fn_80118240();
+    }
+    textureFn_800528bc();
+    {
+        ObjModelRenderCb pcb = ObjModel_GetPostRenderCallback(am);
+        if (pcb != NULL) {
+            pcb((int *)obj, am, idx);
+        } else {
+            u8 zon = 1;
+            if (obj[0x37] < 0xff || (*(u32 *)((char *)op + 0x3c) & 0x40000000) || shad) {
+                u16 f2;
+                GXSetBlendMode(1, 4, 5, 5);
+                f2 = *(u16 *)(p2 + 2);
+                if (f2 & 0x400) {
+                    gxSetZMode_(0, 3, 0);
+                    GXSetAlphaCompare(7, 0, 0, 7, 0);
+                } else if (f2 & 0x2000) {
+                    zon = 0;
+                    gxSetZMode_(1, 3, 1);
+                    GXSetAlphaCompare(4, lbl_803DCC3C, 0, 4, lbl_803DCC3C);
+                } else {
+                    gxSetZMode_(1, 3, 0);
+                    GXSetAlphaCompare(7, 0, 0, 7, 0);
+                }
+            } else if (*(u32 *)((char *)op + 0x3c) & 0x400) {
+                GXSetBlendMode(0, 1, 0, 5);
+                if (*(u16 *)(p2 + 2) & 0x400) {
+                    gxSetZMode_(0, 3, 0);
+                } else {
+                    gxSetZMode_(1, 3, 1);
+                }
+                GXSetAlphaCompare(4, 0x40, 0, 4, 0x40);
+            } else {
+                GXSetBlendMode(0, 1, 0, 5);
+                if (*(u16 *)(p2 + 2) & 0x400) {
+                    gxSetZMode_(0, 3, 0);
+                } else {
+                    gxSetZMode_(1, 3, 1);
+                }
+                GXSetAlphaCompare(7, 0, 0, 7, 0);
+            }
+            if (*(u32 *)((char *)op + 0x3c) & 0x400) {
+                zon = 0;
+            }
+            gxSetPeControl_ZCompLoc_(zon);
+        }
+    }
+    if (*(u32 *)((char *)op + 0x3c) & 8) {
+        GXSetCullMode(2);
+    } else {
+        GXSetCullMode(0);
+    }
+    return idx;
+}
+
 extern u8 lbl_80345E10[];
 extern void mm_free(void *);
 extern void texFlagFn_80023cbc(int);
