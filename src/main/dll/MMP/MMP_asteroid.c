@@ -1724,3 +1724,166 @@ void dimbossicesmash_update(u8 *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E4030;
+extern f32 lbl_803E4038;
+extern f32 lbl_803E403C;
+extern u8  lbl_80322368[0xC];
+extern u8  lbl_803DBDF8[8];
+
+/* EN v1.0 0x80196520  size: 1008b  fn_80196520: seed the icesmash launch
+ * state from the setup record: spawn position/rotation, launch velocity
+ * (optionally homing on the target point), rotation velocities and the
+ * gravity/clamp direction flags. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80196520(u8 *obj, u8 *state, u8 *setup)
+{
+    f32 vx, vy, vz;
+    f32 spd, len;
+
+    *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x26c) * *(f32 *)(obj + 8) + *(f32 *)(setup + 8);
+    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x270) * *(f32 *)(obj + 8) + *(f32 *)(setup + 0xc);
+    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x274) * *(f32 *)(obj + 8) + *(f32 *)(setup + 0x10);
+    *(u16 *)(obj + 0) = *(u16 *)(setup + 0x1a);
+    *(u16 *)(obj + 2) = *(u16 *)(setup + 0x1c);
+    *(u16 *)(obj + 4) = *(u16 *)(setup + 0x1e);
+    if ((*(u8 *)(setup + 0x3c) & 1) == 0) {
+        *(f32 *)(obj + 0x24) = (f32)*(s16 *)(setup + 0x20) / lbl_803E4030;
+        *(f32 *)(obj + 0x28) = (f32)*(s16 *)(setup + 0x22) / lbl_803E4030;
+        *(f32 *)(obj + 0x2c) = (f32)*(s16 *)(setup + 0x24) / lbl_803E4030;
+    } else {
+        spd = (f32)*(s16 *)(setup + 0x20) / lbl_803E4030;
+        vx = *(f32 *)(obj + 0xc) - (f32)*(s16 *)(setup + 0x42);
+        vy = *(f32 *)(obj + 0x10) - (f32)*(s16 *)(setup + 0x44);
+        vz = *(f32 *)(obj + 0x14) - (f32)*(s16 *)(setup + 0x46);
+        len = sqrtf(vz * vz + (vx * vx + vy * vy));
+        if (lbl_803E4034 != len) {
+            vx = vx / len;
+            vy = vy / len;
+            vz = vz / len;
+        }
+        *(f32 *)(obj + 0x24) = spd * vx;
+        *(f32 *)(obj + 0x28) = spd * vy;
+        *(f32 *)(obj + 0x2c) = spd * vz;
+    }
+    *(f32 *)(state + 0x278) = (f32)*(s16 *)(setup + 0x2c);
+    *(f32 *)(state + 0x27c) = (f32)*(s16 *)(setup + 0x2e);
+    *(f32 *)(state + 0x280) = (f32)*(s16 *)(setup + 0x30);
+    if (lbl_803E4034 < *(f32 *)(obj + 0x24)) {
+        state[0x29f] = state[0x29f] | 1;
+    }
+    if (lbl_803E4034 < *(f32 *)(obj + 0x2c)) {
+        state[0x29f] = state[0x29f] | 2;
+    }
+    if (lbl_803E4034 < *(f32 *)(state + 0x278)) {
+        state[0x29f] = state[0x29f] | 4;
+    }
+    if (lbl_803E4034 < *(f32 *)(state + 0x27c)) {
+        state[0x29f] = state[0x29f] | 8;
+    }
+    if (lbl_803E4034 < *(f32 *)(state + 0x280)) {
+        state[0x29f] = state[0x29f] | 0x10;
+    }
+    *(f32 *)(state + 0x284) = (f32)*(s16 *)(setup + 0x32) / lbl_803E4038;
+    *(f32 *)(state + 0x288) = (f32)*(s16 *)(setup + 0x34) / lbl_803E4038;
+    *(f32 *)(state + 0x28c) = (f32)*(s16 *)(setup + 0x36) / lbl_803E4038;
+    *(f32 *)(state + 0x290) = (f32)*(s16 *)(setup + 0x26) / lbl_803E403C;
+    *(f32 *)(state + 0x294) = (f32)*(s16 *)(setup + 0x28) / lbl_803E403C;
+    *(f32 *)(state + 0x298) = (f32)*(s16 *)(setup + 0x2a) / lbl_803E403C;
+    *(s16 *)(state + 0x29c) = 0;
+}
+
+/* EN v1.0 0x80197068  size: 284b  dimbossicesmash_init. */
+void dimbossicesmash_init(u8 *obj, u8 *params)
+{
+    u8 *state;
+    f32 fz;
+    u8 t;
+    u8 buf[12];
+
+    buf[0] = 5;
+    *(u8 *)(obj + 0xad) = params[0x18];
+    fz = lbl_803E4034;
+    state = *(u8 **)(obj + 0xb8);
+    *(f32 *)(state + 0x26c) = lbl_803E4034;
+    *(f32 *)(state + 0x270) = fz;
+    *(f32 *)(state + 0x274) = fz;
+    fn_80196520(obj, state, params);
+    if (GameBit_Get(*(s16 *)(params + 0x3e)) == 0) {
+        t = 0;
+    } else {
+        t = 2;
+    }
+    state[0x29e] = t;
+    lbl_803DDB00 = 0;
+    if ((*(u8 *)(params + 0x3c) & 2) != 0) {
+        (*(void (**)(u8 *, int, int, int))((char *)(*gPathControlInterface) + 4))(state, 0, 0x40002, 1);
+        (*(void (**)(u8 *, int, u8 *, u8 *, u8 *))((char *)(*gPathControlInterface) + 0xc))(state, 1, lbl_80322368, lbl_803DBDF8, buf);
+        (*(void (**)(u8 *, u8 *))((char *)(*gPathControlInterface) + 0x20))(obj, state);
+    }
+}
+
+extern f32 lbl_803E4068;
+extern f32 lbl_803E406C;
+extern f32 lbl_803E4078;
+
+/* EN v1.0 0x80197474  size: 648b  fogcontrol_update: ramp the fog blend
+ * toward the gamebit-selected target and feed the heavy fog params. */
+void fogcontrol_update(int obj)
+{
+    u8 *setup = *(u8 **)(obj + 0x4c);
+    u8 *state = *(u8 **)(obj + 0xb8);
+    s8 cv;
+    int on;
+    f32 t;
+
+    if (*(s16 *)(setup + 0x18) == -1) {
+        cv = 1;
+    } else {
+        cv = (s8)GameBit_Get(*(s16 *)(setup + 0x18));
+    }
+    if ((cv == 0 || ((state[4] >> 6) & 1) != 0) && (cv != 0 || (s8)state[4] > -1)) {
+        on = 0;
+    } else {
+        on = 1;
+    }
+    if (on) {
+        if (cv == 0) {
+            if ((*(u8 *)(setup + 0x1a) & 4) == 0) {
+                *(f32 *)state = -(lbl_803E406C * timeDelta - *(f32 *)state);
+            } else {
+                *(f32 *)state = -(lbl_803E4068 * timeDelta - *(f32 *)state);
+            }
+            state[4] = (u8)(state[4] & ~0x40);
+        } else {
+            if ((*(u8 *)(setup + 0x1a) & 2) == 0) {
+                *(f32 *)state = lbl_803E406C * timeDelta + *(f32 *)state;
+            } else {
+                *(f32 *)state = lbl_803E4068 * timeDelta + *(f32 *)state;
+            }
+            state[4] = (u8)(state[4] & ~0x80 | 0x80);
+        }
+        if (lbl_803E4070 < *(f32 *)state) {
+            state[4] = (u8)(state[4] & ~0x80 | 0x80);
+            if (lbl_803E4074 < *(f32 *)state) {
+                *(f32 *)state = lbl_803E4074;
+                state[4] = (u8)(state[4] & ~0x40 | 0x40);
+            }
+            t = *(f32 *)(obj + 0x10) +
+                *(f32 *)state * ((f32)*(s16 *)(setup + 0x1c) - (f32)*(s16 *)(setup + 0x20)) +
+                (f32)*(s16 *)(setup + 0x20);
+            enableHeavyFog(*(u8 *)(setup + 0x1a) & 1, t,
+                           ((f32)*(s16 *)(setup + 0x1e) + t) - (f32)*(s16 *)(setup + 0x1c),
+                           (f32)*(s16 *)(setup + 0x24),
+                           (f32)*(s16 *)(setup + 0x22) / lbl_803E4078,
+                           lbl_803E407C);
+        } else {
+            *(f32 *)state = lbl_803E4070;
+            state[4] = (u8)(state[4] & ~0x80);
+            disableHeavyFog();
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
