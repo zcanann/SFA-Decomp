@@ -792,10 +792,231 @@ void enemy_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void fn_80151954(int obj, u8 *state);
+extern void fn_801522E0(int obj, u8 *state);
+extern void fn_80152A94(int obj, u8 *state);
+extern void fn_80152EC0(int obj, u8 *state);
+extern void fn_801534D8(int obj, u8 *state);
+extern void fn_80153C90(int obj, u8 *state);
+extern void fn_801542AC(int obj, u8 *state);
+extern void mutatedEbaInit(int obj, u8 *state);
+extern void mediumbasket_initWhirlpoolState(int obj, u8 *state);
+extern void smallbasket_initVariantState(int obj, u8 *state);
+extern void smallbasket_initScaledVariantState(int obj, u8 *state);
+extern void fn_8014FF58(int obj, u8 *state);
+extern void smallbasket_initModelVariantState(int obj, u8 *state);
+extern void smallbasket_initTailModelState(int obj, u8 *state);
+extern void fn_8014BE1C();
+extern void *memset(void *p, int c, int n);
+extern int *gRomCurveInterface;
+extern f32 lbl_803DBC58;
+extern f32 lbl_803DBC60;
+extern f32 lbl_803DBC64;
+extern f32 lbl_803DBC68;
+extern u8 lbl_8031DBD8[];
+extern u8 lbl_8031DBE4[];
+extern f32 lbl_803E257C;
+extern f32 lbl_803E25B0;
+
 #pragma scheduling off
 #pragma peephole off
 void enemy_init(int obj, u8 *setup, int flag)
 {
+    u8 *state = *(u8 **)(obj + 0xb8);
+
+    *(int *)(obj + 0xf4) = 0;
+    if (flag == 0) {
+        if (*(s16 *)(setup + 0x1a) != -1) {
+            if (*(s16 *)(setup + 0x18) != -1) {
+                if (GameBit_Get(*(s16 *)(setup + 0x18)) == 0) {
+                    *(int *)(obj + 0xf4) = GameBit_Get(*(s16 *)(setup + 0x1a)) == 0;
+                }
+            } else {
+                *(int *)(obj + 0xf4) = GameBit_Get(*(s16 *)(setup + 0x1a)) == 0;
+            }
+        }
+        if (*(u32 *)(setup + 0x14) != 0xFFFFFFFF) {
+            if (*(int *)(obj + 0xf4) == 0) {
+                if (*(s16 *)(setup + 0x18) != -1) {
+                    *(int *)(obj + 0xf4) = GameBit_Get(*(s16 *)(setup + 0x18));
+                }
+                if (*(int *)(obj + 0xf4) == 0) {
+                    if (*(s16 *)(setup + 0x2c) != 0) {
+                        if ((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(setup + 0x14)) == 0) {
+                            *(int *)(obj + 0xf4) = 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (*(int *)(obj + 0xf4) != 0) {
+        *(s16 *)(obj + 6) |= 0x4000;
+        *(u8 *)(obj + 0x36) = 0;
+    } else {
+        *(s16 *)(obj + 6) &= ~0x4000;
+        *(u8 *)(obj + 0x36) = 255;
+    }
+    *(f32 *)(state + 0x2fc) = (f32)setup[0x2f] / lbl_803E257C;
+    *(f32 *)(state + 0x2a8) = (f32)(setup[0x29] << 3);
+    *(int *)(state + 0x2dc) = 0;
+    *(int *)(state + 0x2e0) = *(int *)(state + 0x2dc);
+    *(s16 *)obj = *(s8 *)(setup + 0x2a) << 8;
+    *(f32 *)(obj + 0xc) = *(f32 *)(setup + 8);
+    *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc);
+    *(f32 *)(obj + 0x14) = *(f32 *)(setup + 0x10);
+    *(u8 *)(obj + 0xaf) &= ~8;
+    if (flag == 0) {
+        *(int *)(state + 0x2e4) = 0;
+        *(int *)(state + 0x2e8) = 0;
+        state[0x2f1] = 0;
+        state[0x2f2] = 0;
+        *(s16 *)(state + 0x2ec) = 0;
+        state[0x2f5] = 0;
+        *(f32 *)(state + 0x300) = lbl_803E2574;
+        *(f32 *)(state + 0x304) = lbl_803E2574;
+        *(f32 *)(state + 0x308) = lbl_803E2574;
+        *(f32 *)(state + 0x30c) = lbl_803E2574;
+        state[0x323] = 0;
+        *(f32 *)(state + 0x310) = lbl_803E2574;
+        *(s16 *)(state + 0x2f8) = 0;
+        state[0x33a] = 0;
+        state[0x33b] = 0;
+        *(s16 *)(state + 0x338) = 0;
+        state[0x33c] = 0;
+        state[0x33d] = 0;
+        *(f32 *)(state + 0x324) = lbl_803E2574;
+        *(f32 *)(state + 0x328) = lbl_803E2574;
+        *(f32 *)(state + 0x32c) = lbl_803E2574;
+        *(f32 *)(state + 0x330) = lbl_803E2574;
+        *(f32 *)(state + 0x334) = lbl_803E2574;
+        *(s16 *)(state + 0x2b4) = -1;
+        *(s16 *)(state + 0x2b6) = *(s16 *)(state + 0x2b4);
+        *(u16 *)(obj + 0xb0) |= *(s8 *)(setup + 0x28) & 7;
+        *(s16 *)(state + 0x2b0) = setup[0x32];
+        *(int *)(obj + 0xbc) = (int)fn_8014BE1C;
+        switch (*(s16 *)(obj + 0x46)) {
+        case 17:
+        case 314:
+        case 1463:
+        case 1464:
+        case 1465:
+        case 1505:
+        case 1958:
+            fn_80151954(obj, state);
+            break;
+        case 216:
+        case 641:
+            fn_801522E0(obj, state);
+            break;
+        case 1555:
+            fn_80152A94(obj, state);
+            break;
+        case 1602:
+            fn_80152EC0(obj, state);
+            break;
+        case 1022:
+        case 1990:
+            fn_801534D8(obj, state);
+            break;
+        case 1419:
+            fn_80153C90(obj, state);
+            break;
+        case 873:
+            fn_801542AC(obj, state);
+            break;
+        case 593:
+            fn_80154C24(obj, state);
+            break;
+        case 605:
+            rachnopInit(obj, (int)state);
+            break;
+        case 1111:
+            baddieInit_80156188(obj, (int)state);
+            break;
+        case 1239:
+            wbInit(obj, (int)state);
+            break;
+        case 1112:
+            mutatedEbaInit(obj, state);
+            break;
+        case 2129:
+            mediumbasket_initWhirlpoolState(obj, state);
+            break;
+        case 2114:
+        case 2123:
+            smallbasket_initVariantState(obj, state);
+            break;
+        case 1196:
+            smallbasket_initScaledVariantState(obj, state);
+            break;
+        case 1063:
+            fn_8014FF58(obj, state);
+            break;
+        case 1698:
+        case 1699:
+        case 1700:
+        case 1701:
+            smallbasket_initModelVariantState(obj, state);
+            break;
+        case 1992:
+            smallbasket_initTailModelState(obj, state);
+            break;
+        default:
+            fn_8014FF58(obj, state);
+            break;
+        }
+        *(s16 *)(state + 0x2b2) = *(u16 *)(state + 0x2b0);
+        if (*(u16 *)(setup + 0x34) != 0) {
+            *(int *)(state + 0x2e4) = *(int *)(state + 0x2e4) & -39;
+        }
+        ObjGroup_AddObject(obj, 3);
+        state[0x2f0] = 7;
+        state[0x2ef] = 2;
+        if (*(void **)state == NULL) {
+            *(int *)state = (int)mmAlloc(264, 26, 0);
+        }
+        if (*(void **)state != NULL) {
+            memset(*(void **)state, 0, 264);
+        }
+        if ((u8)(**(int (**)(int, int, f32, f32 *, int))(*gRomCurveInterface + 0x8c))(*(int *)state, obj, *(f32 *)(state + 0x2ac), &lbl_803DBC58, -1) == 0) {
+            *(u32 *)(state + 0x2dc) |= 0x2000;
+        }
+        (**(void (**)(u8 *, int, int, int))(*gPathControlInterface + 0x4))(state + 4, 0, 422, 1);
+        if ((*(u32 *)(state + 0x2e4) & 8) != 0) {
+            (**(void (**)(u8 *, int, u8 *, f32 *, int))(*gPathControlInterface + 0x8))(state + 4, 1, lbl_8031DBE4, &lbl_803DBC64, 4);
+        }
+        if ((*(u32 *)(state + 0x2e4) & 4) != 0) {
+            (**(void (**)(u8 *, int, u8 *, f32 *, f32 *))(*gPathControlInterface + 0xc))(state + 4, 1, lbl_8031DBD8, &lbl_803DBC60, &lbl_803DBC68);
+        }
+        (**(void (**)(int, u8 *))(*gPathControlInterface + 0x20))(obj, state + 4);
+        if ((*(u32 *)(state + 0x2e4) & 0xc) != 0) {
+            state[0x25f] = 1;
+        }
+        if ((*(u32 *)(state + 0x2e4) & 0x8000022) != 0 || *(u16 *)(setup + 0x34) != 0
+            || *(s16 *)(obj + 0x46) == 1022 || *(s16 *)(obj + 0x46) == 1990) {
+            *(u32 *)(state + 4) |= 0x40000;
+        } else {
+            *(u32 *)(state + 4) &= ~0x40000;
+        }
+        if ((*(u32 *)(state + 0x2e4) & 4) == 0 && (*(u32 *)(state + 0x2e4) & 8) != 0) {
+            *(u32 *)(state + 4) &= ~0x3800;
+        }
+        if (*(int *)(obj + 0xf4) != 0) {
+            *(u32 *)(state + 0x2dc) |= 0x1000;
+            *(int *)(state + 0x2e0) = *(int *)(state + 0x2e0) & -4097;
+            ObjHits_DisableObject(obj);
+        } else if ((*(u32 *)(state + 0x2e4) & 1) != 0) {
+            ObjHits_EnableObject(obj);
+        }
+    }
+    *(f32 *)(state + 0x2d8) = lbl_803E2574;
+    if (*(f32 *)(state + 0x2a8) > lbl_803E25B0) {
+        *(f32 *)(state + 0x2a8) = lbl_803E25B0;
+    }
+    if (*(f32 *)(state + 0x2ac) > lbl_803E25B0) {
+        *(f32 *)(state + 0x2ac) = lbl_803E25B0;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
