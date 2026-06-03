@@ -4573,3 +4573,46 @@ void Tricky_updateBlendChannelWeight(int obj, u8* state) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void* gameTextGetBox(int boxId);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShow(int id);
+extern f32 lbl_803DD99C;
+extern u8  lbl_803DD9A0;
+extern f32 lbl_803E231C;
+extern f32 lbl_803E2320;
+extern f32 lbl_803E2324;
+
+#pragma scheduling off
+#pragma peephole off
+void titleScreenShowCopyright(u8 arg)
+{
+    void* tb;
+    void* box;
+
+    if (arg != 0) {
+        lbl_803DD99C = lbl_803E2318;
+        lbl_803DD9A0 = 0;
+    } else if (lbl_803DD9A0 != 0) {
+        lbl_803DD99C = lbl_803DD9B4;
+    } else {
+        lbl_803DD99C = lbl_803E2318;
+        if (lbl_803DD9B4 > lbl_803E231C) {
+            lbl_803DD9A0 = 1;
+        }
+    }
+    tb = gameTextGet(0x3d9);
+    if (*(u16*)tb != 0xffff) {
+        box = gameTextGetBox(*(u8*)((char*)tb + 4));
+        if (lbl_803DD9AC == 0) {
+            lbl_803DD9AC = *(s16*)((char*)box + 0x16);
+        }
+        *(s16*)((char*)box + 0x16) =
+            (s16)(lbl_803E2320 * (lbl_803E2318 - lbl_803DD99C) + (f32)lbl_803DD9AC);
+        gameTextSetColor(0xff, 0xff, 0xff, (s32)(lbl_803E2324 * lbl_803DD9B0));
+        gameTextShow(0x3d9);
+    }
+}
+
+#pragma peephole reset
+#pragma scheduling reset
