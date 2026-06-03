@@ -4182,17 +4182,34 @@ void mikabombshadow_update(int *obj) {
 extern f32 lbl_803E33F4;
 extern f32 lbl_803E33F8;
 
+typedef struct CurvePlacementParams {
+    u8 pad00[0x18];
+    u8 action;
+    s8 type;
+    u8 byte1A;
+    u8 flags;
+    u32 idPrev;
+    u32 idNext;
+    u32 idA;
+    u32 idB;
+    s8 rotZ;
+    s8 rotY;
+    s8 rotX;
+    u8 pad2F[0x38 - 0x2F];
+    s16 specialAngle;
+} CurvePlacementParams;
+
 #pragma scheduling off
 #pragma peephole off
-void curve_init(int *obj, u8 *params) {
-    *(s16*)obj = (s16)((s8)params[0x2c] << 8);
-    *(s16*)((char*)obj + 2) = (s16)((s8)params[0x2d] << 8);
-    if ((s8)params[0x19] == 8 || (s8)params[0x19] == 0x1a) {
-        *(s16*)((char*)obj + 4) = *(s16*)(params + 0x38);
+void curve_init(int *obj, CurvePlacementParams *params) {
+    *(s16*)obj = (s16)(params->rotZ << 8);
+    *(s16*)((char*)obj + 2) = (s16)(params->rotY << 8);
+    if (params->type == 8 || params->type == 0x1a) {
+        *(s16*)((char*)obj + 4) = params->specialAngle;
     }
-    if ((s8)params[0x19] == 0x15) {
+    if (params->type == 0x15) {
         *(f32*)((char*)obj + 8) = lbl_803E33F4;
-    } else if ((s8)params[0x19] == 0x16) {
+    } else if (params->type == 0x16) {
         *(f32*)((char*)obj + 8) = lbl_803E33F8;
     } else {
         *(f32*)((char*)obj + 8) = *(f32*)(*(int*)((char*)obj + 0x50) + 4);
