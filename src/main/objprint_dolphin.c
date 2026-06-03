@@ -5938,7 +5938,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         {
             u32 w;
             int pos = bs.pos;
-            u8 *p = bs.data + (pos >> 3);
+            u8 *p = (u8 *)((pos >> 3) + (char *)bs.data);
             w = p[0];
             w |= p[1] << 8;
             w |= p[2] << 16;
@@ -5987,7 +5987,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
                 u8 *dl;
                 u32 w;
                 int pos = bs.pos;
-                u8 *p = bs.data + (pos >> 3);
+                u8 *p = (u8 *)((pos >> 3) + (char *)bs.data);
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
@@ -6010,7 +6010,7 @@ extern int *Obj_GetPlayerObject(void);
 extern void *gCameraInterface;
 extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 lbl_803DEA38;
-extern u16 lbl_803DEA4A;
+extern u16 lbl_803DEA4A[3];
 extern f32 lbl_803DEA50;
 extern f32 lbl_803DEA54;
 extern f32 lbl_803DCC50;
@@ -6044,7 +6044,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
     int mode8;
     int m4;
     int m2;
-    u8 m1;
+    int m1;
     u8 did;
     int *op;
     u32 *refs;
@@ -6098,7 +6098,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
     mode8 = mode;
     m4 = mode8 & 4;
     if (m4 || (mode8 & 8)) {
-        fade = *(f32 *)((u8 *)&lbl_803DEA4A + 2);
+        fade = *(f32 *)&lbl_803DEA4A[1];
     } else if (mode8 & 2) {
         fade = lbl_803DEA50;
     }
@@ -6161,10 +6161,11 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
     if (m2 || m4 || (mode8 & 8)) {
         int j;
         int joff;
+        f32 a1c = lbl_803DEA1C;
         j = 0;
         joff = 0;
         for (; j < m[0xf3]; j++) {
-            f32 sc = (f32)lbl_803DCC40 * (fade / *(f32 *)(*(char **)(m + 0x40) + joff + 0xc)) + lbl_803DEA1C;
+            f32 sc = (f32)lbl_803DCC40 * (fade / *(f32 *)(*(char **)(m + 0x40) + joff + 0xc)) + a1c;
             f32 *jm = (f32 *)ObjModel_GetJointMatrix(am, j);
             PSMTXScale(sm, sc, sc, sc);
             if (lbl_803DCC35 == 0) {
@@ -6297,7 +6298,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
         {
             u32 w;
             int pos = bs.pos;
-            u8 *p = bs.data + (pos >> 3);
+            u8 *p = (u8 *)((pos >> 3) + (char *)bs.data);
             w = p[0];
             w |= p[1] << 8;
             w |= p[2] << 16;
@@ -6317,7 +6318,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
                     u32 idx;
                     u32 w;
                     int pos = bs.pos;
-                    u8 *p = bs.data + (pos >> 3);
+                    u8 *p = (u8 *)((pos >> 3) + (char *)bs.data);
                     w = p[0];
                     w |= p[1] << 8;
                     w |= p[2] << 16;
@@ -6333,7 +6334,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
                 u8 *dl;
                 u32 w;
                 int pos = bs.pos;
-                u8 *p = bs.data + (pos >> 3);
+                u8 *p = (u8 *)((pos >> 3) + (char *)bs.data);
                 w = p[0];
                 w |= p[1] << 8;
                 w |= p[2] << 16;
