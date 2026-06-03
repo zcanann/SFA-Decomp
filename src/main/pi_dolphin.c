@@ -6272,6 +6272,28 @@ void fn_8004F080(void) {
     lbl_803DCD90 = lbl_803DCD90 + 3;
     lbl_803DCD6A = lbl_803DCD6A + 3;
 }
+extern void textureFn_8006c75c(int a);
+extern void GXSetTevKColorSel(int tev, int sel);
+extern int lbl_803DCD84;
+void fn_8004D928(void) {
+    textureFn_8006c75c(lbl_803DCD8C);
+    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0x24, 0, 0x7d);
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevKColorSel(lbl_803DCD90, 6);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 8, 0xe, 0);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    lbl_803DCD88++;
+    lbl_803DCD90++;
+    lbl_803DCD8C++;
+    lbl_803DCD84 = 0x27;
+    lbl_803DCD6A++;
+    lbl_803DCD69++;
+}
 void fn_8004F2B0(void) {
     GXSetTevDirect(lbl_803DCD90);
     GXSetTevOrder(lbl_803DCD90, 0xff, 0xff, 0xff);
