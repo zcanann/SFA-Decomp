@@ -3731,10 +3731,10 @@ void fn_802AB5A4(int obj, int p2, int flags)
     u8 f = (u8)flags;
     char *q = (char *)p2 + 4;
     if (f & 1) {
-        objFn_800e67ac(obj, q);
+        curves_updateLocalPointTransforms(obj, (u32 *)q);
     }
     if (f & 2) {
-        objFn_800e64f4(obj, q);
+        curves_preparePointCollisionFrame(obj, (u32 *)q);
         *(f32 *)(q + 0x20) = *(f32 *)((char *)obj + 0x18);
         *(f32 *)(q + 0x24) = lbl_803E80EC + *(f32 *)((char *)obj + 0x1c);
         *(f32 *)(q + 0x28) = *(f32 *)((char *)obj + 0x20);

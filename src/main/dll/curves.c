@@ -3067,7 +3067,7 @@ void FUN_800e4db8(int param_1,int param_2)
 /*
  * --INFO--
  *
- * Function: fn_800E618C
+ * Function: curves_updateLocalPointCollision
  * EN v1.0 Address: 0x800E4DBC
  * EN v1.0 Size: 912b
  * EN v1.1 Address: 0x800E6410
@@ -3077,7 +3077,7 @@ void FUN_800e4db8(int param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_800E618C(int obj,f32 *state)
+void curves_updateLocalPointCollision(int obj,f32 *state)
 {
   u8 pointCount;
   u8 *stateBytes;
@@ -3208,7 +3208,7 @@ buildTransform:
 /*
  * --INFO--
  *
- * Function: objFn_800e64f4
+ * Function: curves_preparePointCollisionFrame
  * EN v1.0 Address: 0x800E514C
  * EN v1.0 Size: 732b
  * EN v1.1 Address: 0x800E6778
@@ -3218,7 +3218,7 @@ buildTransform:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objFn_800e64f4(int obj,u32 *state)
+void curves_preparePointCollisionFrame(int obj,u32 *state)
 {
   u8 *stateBytes;
   u32 flags;
@@ -3331,7 +3331,7 @@ void objFn_800e64f4(int obj,u32 *state)
 /*
  * --INFO--
  *
- * Function: objFn_800e67ac
+ * Function: curves_updateLocalPointTransforms
  * EN v1.0 Address: 0x800E5428
  * EN v1.0 Size: 328b
  * EN v1.1 Address: 0x800E6A30
@@ -3341,7 +3341,7 @@ void objFn_800e64f4(int obj,u32 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objFn_800e67ac(int obj,u32 *state)
+void curves_updateLocalPointTransforms(int obj,u32 *state)
 {
   u8 *stateBytes;
   u32 flags;
@@ -3421,7 +3421,7 @@ void dll_15_func0A(int obj,u32 *state)
   f32 matrix[16];
 
   stateBytes = (u8 *)state;
-  objFn_800e64f4(obj,state);
+  curves_preparePointCollisionFrame(obj,state);
   flags = *state;
   if (((s32)(flags & 0x4000000) != 0) && ((s32)(flags & 8) != 0)) {
     transform.angles[0] = *(s16 *)obj;
@@ -3710,7 +3710,7 @@ void dll_15_func08(ushort *curveObj,uint *state,uint updateValue,f32 step)
         iVar11 = iVar11 + 0xc;
         iVar13 = iVar13 + 3;
       }
-      fn_800E618C((int)puVar4,(f32 *)puVar8);
+      curves_updateLocalPointCollision((int)puVar4,(f32 *)puVar8);
       iVar11 = *(int *)(puVar4 + 0x18);
       if (iVar11 == 0) {
         *(undefined4 *)(puVar4 + 0xc) = *(undefined4 *)(puVar4 + 6);
@@ -3838,7 +3838,7 @@ LAB_800e7350:
     }
   }
   else if (*(char *)((int)puVar8 + 0x25b) == '\x02') {
-    objFn_800e64f4((int)puVar4,puVar8);
+    curves_preparePointCollisionFrame((int)puVar4,puVar8);
     uVar5 = *puVar8;
     if (((uVar5 & 0x4000000) != 0) && ((uVar5 & 8) != 0)) {
       local_1d0 = *puVar4;
@@ -3915,7 +3915,7 @@ LAB_800e7350:
     }
   }
   else {
-    objFn_800e64f4((int)puVar4,puVar8);
+    curves_preparePointCollisionFrame((int)puVar4,puVar8);
     uVar5 = *puVar8;
     if (((uVar5 & 0x4000000) != 0) && ((uVar5 & 8) != 0)) {
       local_1e8 = *puVar4;
@@ -4276,11 +4276,11 @@ void dll_15_func07(void* arg1, u8* obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* fn_800E7C84: extended dll_15_func04 — same fields plus a second signed
+/* curves_setLocalPointCollisionEx: extended dll_15_func04 - same fields plus a second signed
  * byte at obj[0x263] and OR-in 0x02000008 on the flags word at obj[0]. */
 #pragma scheduling off
 #pragma peephole off
-void fn_800E7C84(u8* obj, int a, u32 b, u32 c, int d, int e)
+void curves_setLocalPointCollisionEx(u8* obj, int a, u32 b, u32 c, int d, int e)
 {
     obj[0x25c] &= 0xf0;
     obj[0x25c] = (u8)(obj[0x25c] | (a & 0xf));
