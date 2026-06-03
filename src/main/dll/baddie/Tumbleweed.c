@@ -3479,8 +3479,8 @@ f32 fn_80138F78(u8* obj) { return *(f32*)(*(u8**)(obj + 0xb8) + 0x14); }
 u32 fn_80138F84(u8* obj) { return *(u32*)(*(u8**)(obj + 0xb8) + 0x24); }
 /* EN v1.0 0x80138F90  size: 12b  obj->_b8->_414 (s16). */
 s16 fn_80138F90(u8* obj) { return *(s16*)(*(u8**)(obj + 0xb8) + 0x414); }
-/* EN v1.0 0x80138F9C  size: 12b  Returns obj->_b8 + 0x408. */
-void* fn_80138F9C(u8* obj) { return (void*)(*(u8**)(obj + 0xb8) + 0x408); }
+/* EN v1.0 0x80138F9C  size: 12b  Returns Tricky's queued path particle position. */
+void* trickyGetQueuedPathParticlePos(u8* obj) { return (void*)(*(u8**)(obj + 0xb8) + 0x408); }
 
 /* EN v1.0 0x80135BC4  size: 8b   titlescreen_getExtraSize -> 56. */
 int titlescreen_getExtraSize(void) { return 56; }
@@ -4299,7 +4299,7 @@ void fn_80137D28(void)
 
 #pragma scheduling off
 #pragma peephole off
-int fn_80138FA8(int p1, int p2, f32 maxRadius)
+int trickyFindNearestUsableBaddie(int p1, int p2, f32 maxRadius)
 {
   extern int dll_19_func1B(int);
   extern int *gBaddieControlInterface;
