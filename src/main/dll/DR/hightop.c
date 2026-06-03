@@ -1409,3 +1409,88 @@ void cloudprisoncontrol_update(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int findRomCurvePointNearObject(int obj, int sel, int p3, int p4);
+extern int fn_8019B1D8(int obj, void *buf, f32 t, int p4);
+extern int curveFn_80010320(int p1);
+extern int hitDetectFn_800658a4(f32 x, f32 y, f32 z, int obj, f32 *out, int p6);
+extern void ObjAnim_SampleRootCurvePhase(int obj, f32 t, int p3);
+extern s16 getAngle(f32 a, f32 b);
+extern void ObjAnim_SetCurrentMove(int obj, int move, f32 t, int p4);
+extern f32 lbl_803E4110;
+extern f32 lbl_803E4120;
+typedef struct {
+    s16 angle;
+    s16 pad[5];
+    f32 x;
+    f32 y;
+    f32 z;
+} RomCurveTarget;
+#pragma scheduling off
+#pragma peephole off
+int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
+{
+    int ret;
+    int moved;
+    u8 sel;
+    int pt;
+    s16 v;
+    int cmd[2];
+    RomCurveTarget tgt;
+    f32 ground;
+
+    moved = 1;
+    ret = 0;
+    ground = lbl_803E4110;
+    if (*(int *)(obj + 0xf4) == -1) {
+        return 1;
+    }
+    if (*(int *)(obj + 0xf4) == 0) {
+        sel = p3;
+        pt = findRomCurvePointNearObject(obj, sel, 0, 2);
+        tgt.x = *(f32 *)(pt + 8);
+        tgt.y = *(f32 *)(pt + 0xc);
+        tgt.z = *(f32 *)(pt + 0x10);
+        tgt.angle = *(s8 *)(pt + 0x2c) << 8;
+        if (fn_8019B1D8(obj, &tgt.angle, t, p4) != 0) {
+            cmd[0] = 0x19;
+            cmd[1] = 0x15;
+            (*(code *)(*gRomCurveInterface + 0x8c))(p2, obj, lbl_803E4120, cmd, sel);
+            *(int *)(obj + 0xf4) = 1;
+            moved = 1;
+        }
+    } else {
+        ret = 0;
+        if (curveFn_80010320(p2) != 0 || *(int *)(p2 + 0x10) != 0) {
+            ret = (u8)(*(code *)(*gRomCurveInterface + 0x90))(p2);
+        }
+        *(f32 *)(obj + 0xc) = *(f32 *)(p2 + 0x68);
+        *(f32 *)(obj + 0x10) = *(f32 *)(p2 + 0x6c);
+        *(f32 *)(obj + 0x14) = *(f32 *)(p2 + 0x70);
+        if (ret != 0) {
+            *(int *)(obj + 0xf4) = -1;
+        }
+        if (hitDetectFn_800658a4(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), obj, &ground, 0) == 0) {
+            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - ground;
+        }
+    }
+    ObjAnim_SampleRootCurvePhase(obj, t, p4);
+    if (moved != 0) {
+        v = (s16)(getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
+                           *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88)) + 0x8000);
+        v = v - (u16)*(s16 *)obj;
+        if (v > 0x8000) {
+            v -= 0xffff;
+        }
+        if (v < -0x8000) {
+            v += 0xffff;
+        }
+        *(s16 *)obj = *(s16 *)obj + (v >> 3);
+    }
+    if (*(s16 *)(obj + 0xa0) != 0x1a) {
+        ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E4110, 0);
+    }
+    return ret;
+}
+#pragma peephole reset
+#pragma scheduling reset
