@@ -6594,6 +6594,75 @@ void fn_8004FA30(f32 param_1, int *param_2, f32 *param_3) {
         lbl_803DCD6A = lbl_803DCD6A + 2;
     }
 }
+extern void *Camera_GetInverseViewMatrix(void);
+extern void fn_8006C5B8(void *out);
+void fn_8005011C(int param_1) {
+    u8 *local_48;
+    f32 mtx[3][4];
+    u8 *obj2;
+    int id;
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevDirect(lbl_803DCD90 + 1);
+    GXSetTevDirect(lbl_803DCD90 + 2);
+    GXSetTevDirect(lbl_803DCD90 + 3);
+    PSMTXConcat((f32 (*)[4])(param_1 + 0x30), Camera_GetInverseViewMatrix(), mtx);
+    GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
+    GXSetTexCoordGen2(lbl_803DCD88, 0, 0, 0x3c, 0, lbl_803DCD80);
+    PSMTXConcat((f32 (*)[4])param_1, Camera_GetInverseViewMatrix(), mtx);
+    GXLoadTexMtxImm(mtx, lbl_803DCD80 + 3, 0);
+    GXSetTexCoordGen2(lbl_803DCD88 + 1, 0, 0, 0x3c, 0, lbl_803DCD80 + 3);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+    GXSetTevOrder(lbl_803DCD90 + 1, lbl_803DCD88 + 1, lbl_803DCD8C + 1, 0xff);
+    GXSetTevOrder(lbl_803DCD90 + 2, lbl_803DCD88 + 1, lbl_803DCD8C + 1, 0xff);
+    GXSetTevOrder(lbl_803DCD90 + 3, lbl_803DCD88 + 1, lbl_803DCD8C + 1, 0xff);
+    GXSetTevKColorSel(lbl_803DCD90 + 2, 6);
+    GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 8);
+    GXSetTevAlphaIn(lbl_803DCD90, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 1);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevColorIn(lbl_803DCD90 + 1, 2, 8, 0xc, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90 + 1, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90 + 1, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90 + 1, 8, 0, 0, 1, 1);
+    GXSetTevAlphaOp(lbl_803DCD90 + 1, 0, 0, 0, 1, 0);
+    GXSetTevColorIn(lbl_803DCD90 + 2, 4, 0xe, 2, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90 + 2, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90 + 2, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90 + 2, 0, 0, 0, 1, 2);
+    GXSetTevAlphaOp(lbl_803DCD90 + 2, 0, 0, 0, 1, 0);
+    GXSetTevColorIn(lbl_803DCD90 + 3, 6, 0xf, 2, 0xf);
+    GXSetTevAlphaIn(lbl_803DCD90 + 3, 7, 7, 7, 0);
+    GXSetTevSwapMode(lbl_803DCD90 + 3, 0, 0);
+    GXSetTevColorOp(lbl_803DCD90 + 3, 0, 0, 0, 1, 3);
+    GXSetTevAlphaOp(lbl_803DCD90 + 3, 0, 0, 0, 1, 0);
+    fn_8006C5B8(&local_48);
+    id = lbl_803DCD8C;
+    if (local_48 != NULL) {
+        void *obj = local_48 + 0x20;
+        if (local_48[0x48] != 0) {
+            GXLoadTexObjPreLoaded(obj, *(void **)(local_48 + 0x40), id);
+        } else {
+            GXLoadTexObj(obj, id);
+        }
+    }
+    id = lbl_803DCD8C + 1;
+    obj2 = *(u8 **)(param_1 + 0x60);
+    if (obj2 != NULL) {
+        void *obj = obj2 + 0x20;
+        if (obj2[0x48] != 0) {
+            GXLoadTexObjPreLoaded(obj, *(void **)(obj2 + 0x40), id);
+        } else {
+            GXLoadTexObj(obj, id);
+        }
+    }
+    lbl_803DCD80 = lbl_803DCD80 + 6;
+    lbl_803DCD88 = lbl_803DCD88 + 2;
+    lbl_803DCD8C = lbl_803DCD8C + 2;
+    lbl_803DCD69 += 2;
+    lbl_803DCD6A += 4;
+    lbl_803DCD90 = lbl_803DCD90 + 4;
+}
 #pragma peephole reset
 #pragma scheduling reset
 extern void VIConfigure(void *mode);
