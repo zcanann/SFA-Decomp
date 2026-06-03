@@ -522,3 +522,32 @@ void enemy_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int fn_8001DB64(int light);
+extern void ModelLightStruct_free(int light);
+extern void fn_80026C54(int p);
+
+#pragma scheduling off
+#pragma peephole off
+void enemy_hitDetect(int obj)
+{
+    u8 *state = *(u8 **)(obj + 0xb8);
+
+    if (*(void **)(state + 0x368) != NULL && fn_8001DB64(*(int *)(state + 0x368)) == 0) {
+        ModelLightStruct_free(*(int *)(state + 0x368));
+        *(int *)(state + 0x368) = 0;
+    }
+    *(int *)(state + 0x340) = *(int *)(*(int *)(obj + 0x54) + 0x50);
+    if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL) {
+        *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 1;
+    }
+    if (*(void **)(obj + 0xc8) != NULL && *(void **)(*(int *)(obj + 0xc8) + 0x54) != NULL
+        && *(void **)(*(int *)(*(int *)(obj + 0xc8) + 0x54) + 0x50) != NULL) {
+        *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 1;
+    }
+    if (*(void **)(state + 0x36c) != NULL) {
+        fn_80026C54(*(int *)(state + 0x36c));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
