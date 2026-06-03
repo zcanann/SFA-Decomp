@@ -111,7 +111,7 @@ int trickyGuardFindBaddieTarget(int p) {
 
 extern int trickyDebugPrint(const char *fmt, ...);
 extern int Objfsa_FindNearestCurveType24(float *pos, int p2, int p3);
-extern int fn_8013D5A4(int p1, int p2, void *target, int p4, f32 f);
+extern int trickyUpdateApproachSpeed(int p1, int p2, void *target, int p4, f32 f);
 extern int trickyMove(int p1, void *p2);
 extern void trickyTurnTowardYaw(int p1, s16 angle);
 extern void objAnimFn_8013a3f0(int obj, int p2, f32 f, int p4);
@@ -208,7 +208,7 @@ void trickyFlame(int p1, int p2) {
     case 4:
         trickyDebugPrint(strBase + 0x720);
         target = (void *)(*(int *)(p2 + 0x71c) + 0x8);
-        fn_8013D5A4(p1, p2, target, 1, lbl_803E2488);
+        trickyUpdateApproachSpeed(p1, p2, target, 1, lbl_803E2488);
         trickyMove(p1, target);
         if (Objfsa_GetWalkGroupIndexAtPoint((float *)(p1 + 0x18), (void *)0x0) == 0) {
             *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x10;
@@ -218,7 +218,7 @@ void trickyFlame(int p1, int p2) {
     case 5:
         trickyDebugPrint(strBase + 0x734);
         target = (void *)(*(int *)(p2 + 0x71c) + 0x8);
-        fn_8013D5A4(p1, p2, target, 1, lbl_803E2488);
+        trickyUpdateApproachSpeed(p1, p2, target, 1, lbl_803E2488);
         if (trickyMove(p1, target) == 0) {
             objAnimFn_8013a3f0(p1, 0x1a, lbl_803E23E4, 0x4000000);
             *(u8 *)(p2 + 0xa) = 7;
@@ -321,7 +321,7 @@ void trickyFlame(int p1, int p2) {
     case 2:
         trickyDebugPrint(strBase + 0x764);
         target = (void *)(*(int *)(p2 + 0x24) + 0x18);
-        fn_8013D5A4(p1, p2, target, 1, lbl_803E2418);
+        trickyUpdateApproachSpeed(p1, p2, target, 1, lbl_803E2418);
         if (trickyMove(p1, target) == 0) {
             objAnimFn_8013a3f0(p1, 0x1a, lbl_803E23E4, 0x4000000);
             *(u8 *)(p2 + 0xa) = 6;
@@ -394,7 +394,7 @@ void trickyFlame(int p1, int p2) {
         *(f32 *)(p2 + 0x728) = *(f32 *)(p2 + 0x728) - timeDelta;
         if (*(f32 *)(p2 + 0x728) <= lbl_803E23DC) {
             target = (void *)(*(int *)(p2 + 0x720) + 0x8);
-            fn_8013D5A4(p1, p2, target, 1, lbl_803E2488);
+            trickyUpdateApproachSpeed(p1, p2, target, 1, lbl_803E2488);
             trickyMove(p1, target);
             if (Objfsa_GetWalkGroupIndexAtPoint((float *)(p1 + 0x18), (void *)0x0) != 0) {
                 *(u8 *)(p2 + 0x8) = 1;

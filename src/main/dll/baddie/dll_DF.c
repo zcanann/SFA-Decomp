@@ -106,7 +106,7 @@ void trickyFn_8013b368(undefined8 param_1,undefined8 param_2,double param_3,unde
 {
 }
 
-void fn_8013D5A4(u8 *obj, u8 *state, f32 *targetPos, u8 flag, f32 baseRadius)
+void trickyUpdateApproachSpeed(u8 *obj, u8 *state, f32 *targetPos, u8 flag, f32 baseRadius)
 {
     struct {
         s16 a;
