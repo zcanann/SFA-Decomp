@@ -994,3 +994,44 @@ void fn_801DBFA0(int obj, int p2, int p3, s8 idx)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern f32 lbl_803E5588;
+#pragma peephole on
+#pragma scheduling off
+void fn_801DC0BC(int p1, int p2)
+{
+    int id = *(int *)(*(int *)(p1 + 0x4c) + 0x14);
+
+    switch (id) {
+    case 0x30d9c:
+        Sfx_PlayFromObject(p1, 299);
+        Sfx_PlayFromObject(p1, 298);
+        GameBit_Set(0x7d, 1);
+        break;
+    case 0x30d9d:
+        Sfx_PlayFromObject(p1, 300);
+        Sfx_PlayFromObject(p1, 298);
+        GameBit_Set(0x7e, 1);
+        break;
+    case 0x30d9b:
+        Sfx_PlayFromObject(p1, 0x12d);
+        Sfx_PlayFromObject(p1, 298);
+        GameBit_Set(0x7f, 1);
+        break;
+    case 0x448c2:
+        if ((u32)GameBit_Get(0xc44) != 0)
+            GameBit_Set(0xc41, 1);
+        break;
+    case 0x45178:
+        if ((u32)GameBit_Get(0xc44) != 0)
+            GameBit_Set(0xc43, 1);
+        break;
+    case 0x4517c:
+        if ((u32)GameBit_Get(0xc44) != 0)
+            GameBit_Set(0xc45, 1);
+        break;
+    }
+    *(f32 *)(p2 + 0x34) = lbl_803E5588;
+}
+#pragma scheduling reset
+#pragma peephole reset
