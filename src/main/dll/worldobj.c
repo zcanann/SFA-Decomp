@@ -478,3 +478,190 @@ void fn_801CED2C(int p1, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 timeDelta;
+extern f32 lbl_803E520C;
+extern f32 lbl_803E5218;
+extern void Sfx_PlayFromObject(int *obj, int sfx);
+extern void *gSHthorntailAnimationInterface;
+extern void *gPartfxInterface;
+typedef struct {
+    u8 pad[0xc];
+    f32 pos[3];
+} WoPartfxBlock;
+typedef void (*WoPartfxFn)(int *obj, int id, void *blk, int flags, int p5, int p6);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801CE078(int *obj, u8 *st) {
+    u8 cv;
+    int snd;
+    u8 buf[4];
+    WoPartfxBlock blk;
+
+    cv = ((u8 (*)(u8 *))((void **)*(void **)gSHthorntailAnimationInterface)[0x24 / 4])(buf);
+    if (*(s8 *)(st + 0x45b) != 0) {
+        snd = !*(s8 *)(st + 0x453);
+    } else {
+        snd = 0;
+    }
+    if (st[0x408] < 0x14) {
+        if (cv != 0) {
+            if (*(f32 *)(st + 0x54) > lbl_803E520C) {
+                return -1;
+            }
+            st[0x409] = st[0x408];
+            st[0x408] = 0x14;
+        } else {
+            return 0;
+        }
+    }
+    switch (st[0x408]) {
+    case 0x14:
+        if (snd != 0) {
+            Sfx_PlayFromObject(obj, 0x14b);
+        }
+        if (st[0x43c] & 2) {
+            st[0x408] = 0x15;
+            *(f32 *)(st + 4) = (f32)(s32)randomGetRange(0, 300);
+        }
+        break;
+    case 0x15:
+        if (snd != 0) {
+            Sfx_PlayFromObject(obj, 0x14c);
+        }
+        *(f32 *)(st + 4) -= timeDelta;
+        if (cv == 0 && *(f32 *)(st + 4) <= lbl_803E520C) {
+            st[0x408] = 0x16;
+        }
+        {
+            f32 t = *(f32 *)(st + 0x1c) - timeDelta;
+            *(f32 *)(st + 0x1c) = t;
+            if (t <= lbl_803E520C) {
+                if (*(u16 *)((char *)obj + 0xb0) & 0x800) {
+                    blk.pos[0] = *(f32 *)(st + 0xc);
+                    blk.pos[1] = *(f32 *)(st + 0x10);
+                    blk.pos[2] = *(f32 *)(st + 0x14);
+                    (*(WoPartfxFn *)(*(char **)gPartfxInterface + 8))(obj, 0x7f0, &blk, 0x200001, -1, 0);
+                }
+                *(f32 *)(st + 0x1c) = lbl_803E5218;
+            }
+        }
+        break;
+    case 0x16:
+        if (snd != 0) {
+            Sfx_PlayFromObject(obj, 0x14d);
+        }
+        if (st[0x43c] & 2) {
+            st[0x408] = st[0x409];
+        }
+        break;
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803E523C;
+extern f32 lbl_803E5240;
+extern f32 lbl_803E5244;
+extern f32 lbl_803E5248;
+extern f32 lbl_803E524C;
+extern f32 lbl_803E5250;
+extern int lbl_803DBF80;
+extern int lbl_803DBF84;
+extern int lbl_803DBF88;
+extern int lbl_803DBF8C;
+extern int lbl_803DBF90;
+extern int lbl_803DBF94;
+extern int lbl_803DBF98;
+extern int lbl_803DBF9C;
+extern int lbl_803DBFA0;
+extern int lbl_803DBFA4;
+extern int curveFn_80010320(u8 *cv, f32 t);
+extern void *gRomCurveInterface;
+extern void ObjAnim_SampleRootCurvePhase(short *obj, u8 *p2, f32 speed);
+extern int getAngle(f32 a, f32 b);
+extern f32 sqrtf(f32 x);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
+    switch (fn_801CE078((int *)obj, st)) {
+    case -1:
+        *(f32 *)(st + 0x54) -= lbl_803E523C * timeDelta;
+        if (*(f32 *)(st + 0x54) < lbl_803E5240) {
+            *(f32 *)(st + 0x54) = lbl_803E520C;
+        }
+        break;
+    case 0:
+        if ((*((u8 *)obj + 0xaf) & 4) || *(f32 *)(st + 0x18) < lbl_803E5244) {
+            *(f32 *)(st + 0x54) -= lbl_803E5248 * timeDelta;
+            if (*(f32 *)(st + 0x54) < lbl_803E5240) {
+                *(f32 *)(st + 0x54) = lbl_803E520C;
+            }
+        } else {
+            *(f32 *)(st + 0x54) += lbl_803E523C * timeDelta;
+            if (*(f32 *)(st + 0x54) > lbl_803E524C) {
+                *(f32 *)(st + 0x54) = lbl_803E524C;
+            }
+        }
+        break;
+    case 1:
+        return;
+    }
+    switch (st[0x408]) {
+    case 8:
+    {
+        u8 *cv = st + 0x5c;
+        if (curveFn_80010320(cv, *(f32 *)(st + 0x54)) != 0 || *(int *)(cv + 0x10) != 0) {
+            ((void (*)(u8 *))((void **)*(void **)gRomCurveInterface)[0x90 / 4])(cv);
+        }
+        {
+            f32 dx = *(f32 *)(cv + 0x68) - *(f32 *)((char *)obj + 0xc);
+            f32 dz = *(f32 *)(cv + 0x70) - *(f32 *)((char *)obj + 0x14);
+            ObjAnim_SampleRootCurvePhase(obj, st + 0x4c, oneOverTimeDelta * sqrtf(dx * dx + dz * dz));
+        }
+        obj[0] = (s16)(getAngle(*(f32 *)(cv + 0x74), *(f32 *)(cv + 0x7c)) + 0x8000);
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)(cv + 0x68);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)(cv + 0x70);
+        if (*(f32 *)(st + 0x54) <= lbl_803E520C) {
+            st[0x408] = 7;
+        }
+        break;
+    }
+    case 7:
+        if (*(f32 *)(st + 0x54) > lbl_803E5250) {
+            st[0x408] = 8;
+        }
+        break;
+    }
+    if (*(s8 *)(p3 + 0x1d) == 1) {
+        if (GameBit_Get(0x19d) != 0) {
+            *(int *)(st + 0x48) = (int)&lbl_803DBF90;
+        } else if (GameBit_Get(0x1a2) != 0) {
+            *(int *)(st + 0x48) = (int)&lbl_803DBF8C;
+        } else if (GameBit_Get(0x102) != 0) {
+            *(int *)(st + 0x48) = (int)&lbl_803DBF88;
+        } else if (GameBit_Get(0x9e) != 0) {
+            *(int *)(st + 0x48) = (int)&lbl_803DBF84;
+        } else {
+            *(int *)(st + 0x48) = (int)&lbl_803DBF80;
+        }
+    } else {
+        if (GameBit_Get(0x19d) != 0) {
+            *(int *)(st + 0x48) = (int)&lbl_803DBFA4;
+        } else if (GameBit_Get(0x1a2) != 0) {
+            *(int *)(st + 0x48) = (int)&lbl_803DBFA0;
+        } else if (GameBit_Get(0x102) != 0) {
+            *(int *)(st + 0x48) = (int)&lbl_803DBF9C;
+        } else if (GameBit_Get(0x9e) != 0) {
+            *(int *)(st + 0x48) = (int)&lbl_803DBF98;
+        } else {
+            *(int *)(st + 0x48) = (int)&lbl_803DBF94;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
