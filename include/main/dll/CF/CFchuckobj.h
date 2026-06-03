@@ -25,7 +25,6 @@ void FUN_80190004(undefined8 param_1,double param_2,double param_3,undefined8 pa
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  short *param_9);
 void FUN_80190008(int param_1,int param_2);
-void FUN_801905c4(int param_1);
 
 int areafxemit_getExtraSize(void);
 int areafxemit_getObjectTypeId(void);

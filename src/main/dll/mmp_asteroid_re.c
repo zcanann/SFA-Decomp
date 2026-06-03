@@ -4,8 +4,8 @@
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern undefined4 FUN_800400b0();
-extern undefined4 FUN_80190148();
-extern undefined4 FUN_801905c4();
+extern void warpPadFn_8019042c(int obj);
+extern void warpPadPlayerStandingOn(int obj);
 extern void Transporter_SeqFn(void);
 extern void objfx_spawnArcedBurst(int obj,int enabled,f32 radius,int particleKind,
                                    int particleId,int lifetime,f32 scaleX,f32 scaleY,
@@ -148,9 +148,9 @@ void transporter_init(int obj, u8 *params)
 void FUN_801916e8(int param_1)
 {
   if (*(char *)(*(int *)(param_1 + 0x4c) + 0x1a) != -1) {
-    FUN_801905c4(param_1);
+    warpPadPlayerStandingOn(param_1);
   }
-  FUN_80190148(param_1);
+  warpPadFn_8019042c(param_1);
   return;
 }
 

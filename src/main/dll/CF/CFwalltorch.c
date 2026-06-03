@@ -15,7 +15,7 @@ extern undefined8 FUN_80053c98();
 extern undefined8 FUN_8005d17c();
 extern undefined4 FUN_80080f28();
 extern undefined8 FUN_80080f3c();
-extern undefined4 FUN_80190148();
+extern void warpPadFn_8019042c(int obj);
 extern uint FUN_80286840();
 extern undefined4 FUN_8028688c();
 
@@ -58,7 +58,7 @@ void Transporter_SeqFn(undefined8 param_1,double param_2,double param_3,undefine
   uVar8 = extraout_f1;
   do {
     if ((int)(uint)*(byte *)(param_11 + 0x8b) <= iVar7) {
-      FUN_80190148(uVar1);
+      warpPadFn_8019042c(uVar1);
       FUN_8028688c();
       return;
     }
@@ -337,7 +337,6 @@ int transporter_getExtraSize(void)
 extern void objRenderFn_80041018(int obj);
 extern uint GameBit_Get(int eventId);
 extern void warpPadPlayerStandingOn(int obj);
-extern void warpPadFn_8019042c(int obj);
 extern short lbl_803DCEB8;
 
 /*
