@@ -438,12 +438,527 @@ extern char s_errorThreadFunc__x_8031ddf0[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Minimap_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,short *param_11,int param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+typedef struct MinimapRow {
+    s16 x0, x1, z0, z1, y0, y1;
+    u16 gameBit;
+    u8  texU, texV;
+    u16 mapId;
+    u8  swap;
+    u8  pad13;
+} MinimapRow;
+
+typedef struct MinimapMapEntry {
+    MinimapRow *rows;
+    u16 gameBit;
+    u8  cellId;
+    u8  count;
+} MinimapMapEntry;
+
+extern MinimapMapEntry lbl_8031C508[];
+
+extern int   coordsToMapCell(f32 x, f32 z);
+extern void *Obj_GetPlayerObject(void);
+extern u32   GameBit_Get(int eventId);
+extern int   Camera_GetViewportYOffset(void);
+extern int   objIsCurModelNotZero(int obj);
+extern void *gameTextGetBox(int boxId);
+extern void  gameTextSetColor(int r, int g, int b, int a);
+extern void  gameTextShow(int id);
+extern void  GXSetScissor(int x, int y, int w, int h);
+extern void  drawTexture(void* tex, f32 x, f32 y, int alpha, int p5);
+extern f32   fn_80293E80(f32);
+extern f32   sin(f32);
+extern void  hudDrawTriangle(f32 x0, f32 y0, f32 x1, f32 y1, f32 x2, f32 y2, u32 *color);
+extern void  hudDrawRect(u32 x0, u32 y0, u32 x1, u32 y1, u32 *color);
+extern void  drawPartialTexture(void *tex, f32 x, f32 y, int alpha, int scale, u32 w, u32 h, u32 u, u32 v);
+extern void  drawHudBox(int id, int x, int y, int w, int alpha, int p6);
+extern void  gameTextFn_8001984c(int a, int b, int c);
+extern void  gameTextFn_80019804(int n);
+extern int   gameTextFn_80019b14(void);
+extern void  gameTextSetCharset(int a, int b);
+extern void  textureFree(void* tex);
+extern void* textureLoadAsset(s32);
+void fn_80133718(void);
+void fn_8013351C(void);
+extern int *gCameraInterface;
+
+extern u8    lbl_803DBBB0;
+extern u8    lbl_803DD7BA;
+extern s16   lbl_803DD7A2;
+extern s16   lbl_803DBA6E;
+extern u8    lbl_803DD928;
+extern int   lbl_803DD934;
+extern u8    pauseMenuState;
+extern u8    lbl_803DD75B;
+extern s16   lbl_803DD930;
+extern s16   lbl_803DD932;
+extern u32   lbl_803DD938;
+extern void* lbl_803DD92C;
+extern void* minimapTexture;
+extern void* lbl_803DD940;
+extern u8    lbl_803DD946;
+extern u8    lbl_803DD947;
+extern s16   lbl_803DD948;
+extern s16   lbl_803DD94A;
+extern s16   lbl_803DBBD0;
+extern s16   lbl_803DBBD2;
+extern s8    lbl_803DD95C;
+extern s8    lbl_803DD944;
+extern int   lbl_803DBBC0;
+extern int   lbl_803DBBC4;
+extern f32   lbl_803DBBB4;
+extern f32   lbl_803DBBB8;
+extern f32   lbl_803DBBBC;
+extern f32   lbl_803DBBEC;
+extern f32   lbl_803DD950;
+extern f32   lbl_803DD954;
+extern f32   lbl_803DD958;
+extern u8    framesThisStep;
+extern u32   lbl_803E2204;
+extern f32   lbl_803E2208;
+extern f32   lbl_803E220C;
+extern f32   lbl_803E2210;
+extern f32   lbl_803E2214;
+extern f32   lbl_803E2218;
+extern f32   lbl_803E221C;
+extern f32   lbl_803E2220;
+extern f32   lbl_803E2224;
+extern f32   lbl_803E2228;
+extern f32   lbl_803E222C;
+extern f32   lbl_803E2230;
+extern f32   lbl_803E2234;
+extern f32   lbl_803E2238;
+extern f32   lbl_803E223C;
+extern f32   lbl_803E2240;
+extern f32   lbl_803E2244;
+extern f32   lbl_803E2248;
+extern f32   lbl_803E224C;
+
+#pragma scheduling off
+#pragma peephole off
+int Minimap_update(void)
 {
+    u8 *player;
+    int marker;
+    u8 i, k, j, found, cell;
+    MinimapRow *rows;
+    MinimapRow *row;
+    MinimapRow *r2;
+    int yi;
+    int v;
+    s16 m;
+    s16 sv, sw;
+    int n;
+    int w;
+    u16 *box;
+    u16 hw;
+    int cs;
+    u32 texW, texH;
+    int mx;
+    int bw, bh;
+    f32 fx, fz;
+    f32 ox, oy;
+    f32 zoom;
+    f32 xrel, yrel;
+    f32 panx, pany;
+    f32 t, e, a, b;
+    f32 uq, vq, frac;
+    u32 u, vv;
+    f32 cx, cy;
+    f32 c1, s1, c2, s2, c3, s3;
+    f32 fv;
+    int xc, xl, xr;
+    u32 col;
+    u32 col2;
+    u32 cwRect;
+    u32 cwTri1;
+    u32 cwTri2;
+    u32 cwL;
+    u32 cwR;
+    u32 cwM;
+    u32 cwB;
+
+    marker = 0;
+    i = 0;
+    k = 0;
+    found = 0;
+    ox = lbl_803E2208;
+    oy = ox;
+    col = lbl_803E2204;
+    player = Obj_GetPlayerObject();
+    if (player != NULL) {
+        if (*(int *)(player + 0x30) != 0) {
+            cell = *(u8 *)(*(int *)(player + 0x30) + 0xac);
+        } else {
+            cell = (u8)coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
+        }
+        while (!found && i < 0x19) {
+            if (cell == lbl_8031C508[i].cellId && GameBit_Get(lbl_8031C508[i].gameBit) != 0) {
+                found = 1;
+            } else {
+                i++;
+            }
+        }
+        if (found != 0) {
+            rows = lbl_8031C508[i].rows;
+            if (rows->swap != 0) {
+                fx = *(f32 *)(player + 0x20);
+                fz = *(f32 *)(player + 0x18);
+                lbl_803DD95C = 1;
+            } else {
+                fx = *(f32 *)(player + 0x18);
+                fz = *(f32 *)(player + 0x20);
+                lbl_803DD95C = 0;
+            }
+            yi = (int)*(f32 *)(player + 0x1c);
+            for (; k < lbl_8031C508[i].count; k++) {
+                row = &rows[k];
+                if (fx >= (f32)row->x0 && fx < (f32)row->x1 &&
+                    fz >= (f32)row->z0 && fz < (f32)row->z1 &&
+                    (s16)yi >= row->y0 && (s16)yi < row->y1 &&
+                    GameBit_Get(row->gameBit) != 0) {
+                    j = 0;
+                    v = rows[k].mapId;
+                    if (v != 0) {
+                        marker = v;
+                    }
+                    if ((int)lbl_803DD92C == v) {
+                        lbl_803DD948 = -0x8000;
+                        lbl_803DD94A = -0x8000;
+                        lbl_803DBBD0 = 0x7fff;
+                        lbl_803DBBD2 = 0x7fff;
+                        for (; j < lbl_8031C508[i].count; j++) {
+                            r2 = &rows[j];
+                            if (marker == r2->mapId) {
+                                m = r2->x0;
+                                if (!(m < lbl_803DBBD0)) m = lbl_803DBBD0;
+                                lbl_803DBBD0 = m;
+                                m = r2->x1;
+                                if (!(m > lbl_803DD948)) m = lbl_803DD948;
+                                lbl_803DD948 = m;
+                                m = r2->z0;
+                                if (!(m < lbl_803DBBD2)) m = lbl_803DBBD2;
+                                lbl_803DBBD2 = m;
+                                m = r2->z1;
+                                if (!(m > lbl_803DD94A)) m = lbl_803DD94A;
+                                lbl_803DD94A = m;
+                            }
+                        }
+                        lbl_803DD946 = rows[k].texU;
+                        lbl_803DD947 = rows[k].texV;
+                    }
+                    break;
+                }
+            }
+        }
+        if ((lbl_803DBBB0 == 0 && lbl_803DD7BA == 0) || GameBit_Get(0x58d) != 0) {
+            marker = 0;
+        }
+        if ((**(int (**)(void))((char *)(*gCameraInterface) + 0x10))() == 0x44 ||
+            (lbl_803DBBB0 == 0 && lbl_803DD7BA == 0) ||
+            (s16)Camera_GetViewportYOffset() != 0 ||
+            (*(u16 *)(player + 0xb0) & 0x1000) != 0 ||
+            objIsCurModelNotZero((int)player) == 0 ||
+            pauseMenuState != 0 || lbl_803DD75B != 0) {
+            marker = 0;
+            lbl_803DD930 -= 0x20;
+            sv = lbl_803DD930;
+            if (sv < 0) sv = 0;
+            else if (sv > 0xff) sv = 0xff;
+            lbl_803DD930 = sv;
+            lbl_803DBBC0 -= 10;
+            n = lbl_803DBBC0;
+            if (n < 0) n = 0;
+            else if (n > 500) n = 500;
+            lbl_803DBBC0 = n;
+            lbl_803DBBC4 -= 10;
+            n = lbl_803DBBC4;
+            if (n < 0) n = 0;
+            else if (n > 500) n = 500;
+            lbl_803DBBC4 = n;
+        } else {
+            lbl_803DBBC4 += 10;
+            n = lbl_803DBBC4;
+            if (n < 0) n = 0;
+            else if (n > 100) n = 100;
+            lbl_803DBBC4 = n;
+            lbl_803DD930 += 0x20;
+            sv = lbl_803DD930;
+            if (sv < 0) sv = 0;
+            else if (sv > 0xff) sv = 0xff;
+            lbl_803DD930 = sv;
+        }
+        if ((int)lbl_803DD92C == marker) {
+            lbl_803DD932 += 0x20;
+            sv = lbl_803DD932;
+            if (sv < 0) {
+                sv = 0;
+            } else {
+                sw = lbl_803DD930;
+                if (!(sv > sw)) sw = sv;
+                sv = sw;
+            }
+            lbl_803DD932 = sv;
+        } else {
+            lbl_803DD932 -= 0x20;
+            if (lbl_803DD932 < 0) {
+                lbl_803DD932 = 0;
+                if (minimapTexture != NULL) {
+                    textureFree(minimapTexture);
+                    minimapTexture = NULL;
+                    lbl_803DD92C = NULL;
+                }
+                if (marker != 0) {
+                    minimapTexture = textureLoadAsset(marker);
+                    lbl_803DD92C = (void *)marker;
+                }
+            }
+        }
+        if (lbl_803DD930 != 0) {
+            box = (u16 *)gameTextGetBox(0x83);
+            if (lbl_803DD944 == 2 && lbl_803DD7A2 != 0 && lbl_803DBA6E > -1) {
+                w = 200;
+            } else {
+                w = 0x78;
+            }
+            if (lbl_803DBBC0 < w) {
+                n = lbl_803DBBC0 + framesThisStep * 8;
+                lbl_803DBBC0 = n;
+                if (!(n < w)) n = w;
+                lbl_803DBBC0 = n;
+            } else {
+                n = lbl_803DBBC0 - framesThisStep * 8;
+                lbl_803DBBC0 = n;
+                if (!(n > w)) n = w;
+                lbl_803DBBC0 = n;
+            }
+            box[4] = (u16)(lbl_803DBBC0 - 8);
+            lbl_803DD938 = 0x1b8 - lbl_803DBBC4;
+            ((s16 *)box)[0xb] = lbl_803DD938;
+            drawHudBox(0x32, (s16)lbl_803DD938, (s16)lbl_803DBBC0, (s16)lbl_803DBBC4,
+                       lbl_803DD930 & 0xff, 1);
+            GXSetScissor(0x32, lbl_803DD938, lbl_803DBBC0, lbl_803DBBC4);
+            switch (lbl_803DD944) {
+            case 0:
+                if (minimapTexture != NULL) {
+                    texW = *(u16 *)((u8 *)minimapTexture + 0xa);
+                    texH = *(u16 *)((u8 *)minimapTexture + 0xc);
+                    mx = lbl_803DD948;
+                    lbl_803DBBEC = (f32)texW / (f32)(mx - lbl_803DBBD0);
+                    bw = lbl_803DBBC0;
+                    a = (f32)bw / (f32)texW;
+                    bh = lbl_803DBBC4;
+                    b = (f32)bh / (f32)texH;
+                    if (!(a < b)) a = b;
+                    if (!(a < lbl_803DBBBC)) a = lbl_803DBBBC;
+                    lbl_803DBBB8 = a;
+                    if (lbl_803DD95C != 0) {
+                        xrel = -*(f32 *)(player + 0x20) + (f32)mx;
+                        yrel = *(f32 *)(player + 0x18) - (f32)lbl_803DBBD2;
+                    } else {
+                        xrel = -*(f32 *)(player + 0x18) + (f32)mx;
+                        yrel = -*(f32 *)(player + 0x20) + (f32)lbl_803DD94A;
+                    }
+                    zoom = lbl_803DBBB4;
+                    e = ((f32)bw - (f32)texW * zoom) * lbl_803E220C;
+                    t = lbl_803E2208;
+                    if (!(t > e)) t = e;
+                    panx = -t;
+                    e = ((f32)bh - (f32)texH * zoom) * lbl_803E220C;
+                    t = lbl_803E2208;
+                    if (!(t > e)) t = e;
+                    pany = -t;
+                    t = lbl_803E2208;
+                    if (t == panx) {
+                        a = zoom * (xrel * lbl_803DBBEC) - (f32)(bw / 2);
+                        if (!(t > a)) t = a;
+                        b = (f32)texW * zoom - (f32)bw;
+                        if (!(t < b)) t = b;
+                        ox = t;
+                    }
+                    t = lbl_803E2208;
+                    if (t == pany) {
+                        a = zoom * (yrel * lbl_803DBBEC) - (f32)(bh / 2);
+                        if (!(t > a)) t = a;
+                        b = (f32)texH * zoom - (f32)bh;
+                        if (!(t < b)) t = b;
+                        oy = t;
+                    }
+                    uq = ox / zoom;
+                    u = (u32)uq;
+                    frac = zoom * (uq - (f32)u);
+                    vq = oy / zoom;
+                    vv = (u32)vq;
+                    ((u8 *)&col)[3] = (u8)lbl_803DD932;
+                    ((u8 *)&col)[0] = 0x20;
+                    ((u8 *)&col)[1] = 0x4d;
+                    ((u8 *)&col)[2] = 0x84;
+                    cwRect = col;
+                    hudDrawRect(0x32, lbl_803DD938, bw + 0x32, lbl_803DD938 + bh, &cwRect);
+                    drawPartialTexture(minimapTexture,
+                                       (lbl_803E2210 - panx) - frac,
+                                       ((f32)(int)lbl_803DD938 - pany) - zoom * (vq - (f32)vv),
+                                       (u8)lbl_803DD932,
+                                       (int)(lbl_803E2214 * lbl_803DBBB4),
+                                       texW - u, texH - vv, u, vv);
+                    cx = lbl_803E220C +
+                         ((lbl_803DBBB4 * (xrel * lbl_803DBBEC) + lbl_803E2210) - ox - panx);
+                    cy = lbl_803E220C +
+                         ((lbl_803DBBB4 * (yrel * lbl_803DBBEC) + (f32)(int)lbl_803DD938) - oy - pany);
+                    ((u8 *)&col)[3] = (u8)lbl_803DD932;
+                    ((u8 *)&col)[0] = 0;
+                    ((u8 *)&col)[1] = 0;
+                    ((u8 *)&col)[2] = 0;
+                    lbl_803DD958 = lbl_803E2218;
+                    fv = lbl_803E221C;
+                    lbl_803DD954 = fv;
+                    lbl_803DD950 = fv;
+                    c1 = lbl_803DD958 * fn_80293E80(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
+                    s1 = lbl_803DD958 * sin(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
+                    c2 = lbl_803DD954 *
+                         fn_80293E80(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
+                    s2 = lbl_803DD954 *
+                         sin(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
+                    c3 = lbl_803DD950 *
+                         fn_80293E80(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
+                    s3 = lbl_803DD950 *
+                         sin(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
+                    cwTri1 = col;
+                    hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri1);
+                    ((u8 *)&col)[3] = (u8)lbl_803DD932;
+                    ((u8 *)&col)[0] = 0xff;
+                    ((u8 *)&col)[1] = 0xff;
+                    ((u8 *)&col)[2] = 0;
+                    c1 = lbl_803E2228 * fn_80293E80(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
+                    s1 = lbl_803E2228 * sin(lbl_803E2220 * (f32)*(s16 *)player / lbl_803E2224);
+                    c2 = lbl_803E222C *
+                         fn_80293E80(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
+                    s2 = lbl_803E222C *
+                         sin(lbl_803E2220 * (f32)(*(s16 *)player + 0x6000) / lbl_803E2224);
+                    c3 = lbl_803E222C *
+                         fn_80293E80(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
+                    s3 = lbl_803E222C *
+                         sin(lbl_803E2220 * (f32)(*(s16 *)player - 0x6000) / lbl_803E2224);
+                    cwTri2 = col;
+                    hudDrawTriangle(cx - c1, cy - s1, cx - c2, cy - s2, cx - c3, cy - s3, &cwTri2);
+                } else {
+                    gameTextFn_8001984c(box[1], box[5], 1);
+                    gameTextFn_80019804(1);
+                    n = lbl_803DBBC0;
+                    if (!(n > 2)) n = 2;
+                    box[4] = (u16)n;
+                    hw = box[4];
+                    if (!(hw < box[0])) hw = box[0];
+                    box[4] = hw;
+                    n = lbl_803DBBC4;
+                    if (!(n > 2)) n = 2;
+                    box[5] = (u16)n;
+                    gameTextFn_8001984c(box[0], box[5], 2);
+                    gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
+                    cs = gameTextFn_80019b14();
+                    gameTextSetCharset(3, 3);
+                    gameTextShow(0x458);
+                    gameTextSetCharset(cs, 3);
+                    gameTextFn_80019804(2);
+                }
+                break;
+            case 1:
+                fn_80133718();
+                if (lbl_803DD934 == 0) {
+                    fn_8013351C();
+                    gameTextFn_8001984c(box[1], box[5], 1);
+                    gameTextFn_80019804(1);
+                    n = lbl_803DBBC0;
+                    if (!(n > 2)) n = 2;
+                    box[4] = (u16)n;
+                    hw = box[4];
+                    if (!(hw < box[0])) hw = box[0];
+                    box[4] = hw;
+                    n = lbl_803DBBC4;
+                    if (!(n > 2)) n = 2;
+                    box[5] = (u16)n;
+                    gameTextFn_8001984c(box[0], box[5], 2);
+                    gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
+                    cs = gameTextFn_80019b14();
+                    gameTextSetCharset(3, 3);
+                    gameTextShow(0x459);
+                    gameTextSetCharset(cs, 3);
+                    gameTextFn_80019804(2);
+                }
+                break;
+            case 2:
+                if (lbl_803DD7A2 != 0 && lbl_803DBA6E > -1) {
+                    if (lbl_803DD928 == 0) {
+                        gameTextFn_8001984c(box[1], box[5], 1);
+                        gameTextFn_80019804(1);
+                        box[4] = (u16)lbl_803DBBC0;
+                        box[5] = (u16)lbl_803DBBC4;
+                        gameTextFn_8001984c(box[1], box[5], 2);
+                        gameTextSetColor(0, 0xff, 0, lbl_803DD7A2 & 0xff);
+                        gameTextShow(lbl_803DBA6E + 10000);
+                        gameTextFn_80019804(2);
+                    }
+                } else if (lbl_803DBBB0 != 0) {
+                    fn_8013351C();
+                    gameTextFn_8001984c(box[1], box[5], 1);
+                    gameTextFn_80019804(1);
+                    n = lbl_803DBBC0;
+                    if (!(n > 2)) n = 2;
+                    box[4] = (u16)n;
+                    hw = box[4];
+                    if (!(hw < box[0])) hw = box[0];
+                    box[4] = hw;
+                    n = lbl_803DBBC4;
+                    if (!(n > 2)) n = 2;
+                    box[5] = (u16)n;
+                    gameTextFn_8001984c(box[0], box[5], 2);
+                    gameTextSetColor(0, 0xff, 0, lbl_803DD930 & 0xff);
+                    cs = gameTextFn_80019b14();
+                    gameTextSetCharset(3, 3);
+                    gameTextShow(0x45a);
+                    gameTextSetCharset(cs, 3);
+                    gameTextFn_80019804(2);
+                }
+                break;
+            }
+            GXSetScissor(0, 0, 0x280, 0x1e0);
+            drawTexture(lbl_803DD940, lbl_803E2230, (f32)(int)(lbl_803DD938 - 0x14),
+                        lbl_803DD930 & 0xff, 0x100);
+            if (lbl_803DD930 != 0) {
+                ((u8 *)&col2)[3] = (u8)lbl_803DD932;
+                ((u8 *)&col2)[0] = 0xff;
+                ((u8 *)&col2)[1] = 0xff;
+                ((u8 *)&col2)[2] = 0;
+                xc = (s16)(lbl_803DD938 - 4);
+                if (lbl_803DD944 == 0 && minimapTexture != NULL) {
+                    if (lbl_803DBBB4 < lbl_803DBBBC) {
+                        cwL = col2;
+                        hudDrawTriangle(lbl_803E2234, (f32)(xc - 0x14),
+                                        lbl_803E2238, (f32)(xc - 0x14),
+                                        lbl_803E223C, (f32)(xc - 0x1a), &cwL);
+                    }
+                    if (lbl_803DBBB4 > lbl_803DBBB8) {
+                        cwR = col2;
+                        hudDrawTriangle(lbl_803E2234, (f32)(xc + 0x14),
+                                        lbl_803E2238, (f32)(xc + 0x14),
+                                        lbl_803E223C, (f32)(xc + 0x1a), &cwR);
+                    }
+                }
+                xl = xc - 4;
+                xr = xc + 4;
+                cwM = col2;
+                hudDrawTriangle(lbl_803E2240, (f32)xl, lbl_803E2240, (f32)xr,
+                                lbl_803E2244, (f32)xc, &cwM);
+                cwB = col2;
+                hudDrawTriangle(lbl_803E2248, (f32)xl, lbl_803E2248, (f32)xr,
+                                lbl_803E224C, (f32)xc, &cwB);
+            }
+        }
+    }
+    return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -5555,7 +6070,6 @@ int fn_80136A40(int p1, int c)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int Obj_GetPlayerObject(void);
 extern int Camera_GetViewportYOffset(void);
 extern int objIsCurModelNotZero(int obj);
 extern void Sfx_StopFromObject(int obj, int id);
@@ -5610,7 +6124,7 @@ void fn_8013396C(void)
     f32 dist = lbl_803E2294;
 
     sfx = 0;
-    player = Obj_GetPlayerObject();
+    player = (int)Obj_GetPlayerObject();
     if ((void *)player == NULL ||
         (**(int (**)(void))((char *)(*gCameraInterface) + 0x10))() == 0x44 ||
         (s16)Camera_GetViewportYOffset() != 0 ||
