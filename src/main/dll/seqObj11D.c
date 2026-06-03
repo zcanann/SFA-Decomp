@@ -476,6 +476,7 @@ typedef struct {
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void fn_801511E8(int obj, u8 *state)
 {
     u8 *entry;
@@ -506,6 +507,7 @@ void fn_801511E8(int obj, u8 *state)
         state[0x33a] = 1;
     }
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -565,6 +567,90 @@ void fn_801513AC(int obj, u8 *state)
     (*(u8 *)(state + 0x33a))++;
     if (state[0x33a] > entry[8]) {
         state[0x33a] = 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_8001FEA8(void);
+extern u8 *Obj_GetPlayerObject(void);
+extern void fn_8015039C(int obj, u8 *state);
+extern u8 fn_8014FFB4(int obj, u8 *state, int a);
+extern uint fn_80296118(u8 *player);
+extern void fn_8014CF7C(int obj, u8 *state, f32 x, f32 z, int a, int b);
+extern void fn_801513AC(int obj, u8 *state);
+extern void fn_801511E8(int obj, u8 *state);
+extern f32 lbl_803E2740;
+extern f32 timeDelta;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015165C(int obj, u8 *state)
+{
+    u8 *player;
+    u8 *p28;
+    u8 *p20;
+    u8 t;
+    f32 tv;
+    f32 fz;
+
+    t = state[0x33b];
+    p20 = *(u8 **)(lbl_8031F16C + t * 40 + 20);
+    p28 = *(u8 **)(lbl_8031F16C + t * 40 + 28);
+    if (t == 5 && (*(u32 *)(state + 0x2dc) & 0x800000) != 0) {
+        GameBit_Set(456, 1);
+    }
+    if (*(void **)(state + 0x29c) != NULL && *(s16 *)(*(int *)(state + 0x29c) + 0x44) == 1) {
+        fn_8001FEA8();
+    }
+    fn_8015039C(obj, state);
+    tv = *(f32 *)(state + 0x328);
+    fz = lbl_803E2740;
+    if (tv != fz && *(u16 *)(state + 0x338) != 0) {
+        *(f32 *)(state + 0x328) = tv - timeDelta;
+        if (*(f32 *)(state + 0x328) <= fz) {
+            *(f32 *)(state + 0x328) = fz;
+            *(u32 *)(state + 0x2dc) |= 0x40000000;
+            *(u16 *)(state + 0x338) = *(u8 *)(p28 + *(u16 *)(state + 0x338) * 16 + 10);
+        }
+    }
+    if ((u8)fn_8014FFB4(obj, state, 1) == 0) {
+        if ((*(u32 *)(state + 0x2dc) & 0x40000000) != 0) {
+            player = Obj_GetPlayerObject();
+            fn_8014C11C(obj, 3, 16, lbl_803AC428, lbl_803E27AC);
+            if (*(u16 *)(state + 0x338) != 0) {
+                *(u8 *)(state + 0x2f2) = (u8)*(u32 *)(p28 + *(u16 *)(state + 0x338) * 16 + 12);
+                fn_8014D08C(obj, state, *(u8 *)(p28 + *(u16 *)(state + 0x338) * 16 + 8), 0,
+                            (u8)*(u32 *)(p28 + *(u16 *)(state + 0x338) * 16 + 4),
+                            *(f32 *)(p28 + *(u16 *)(state + 0x338) * 16));
+                ObjAnim_SetMoveProgress(obj, *(f32 *)(lbl_8031DD30 + *(u8 *)(p28 + *(u16 *)(state + 0x338) * 16 + 8) * 4));
+                *(u16 *)(state + 0x338) = *(u8 *)(p28 + *(u16 *)(state + 0x338) * 16 + 9);
+            } else {
+                if (player != NULL && ((*(u32 *)(state + 0x2dc) & 0x800080) != 0 || fn_80296118(player) == 0)) {
+                    fn_801511E8(obj, state);
+                } else {
+                    fn_801513AC(obj, state);
+                }
+            }
+        }
+        *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 0;
+        *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 0;
+        if (*(s16 *)(obj + 0xa0) == p20[8]) {
+            *(s8 *)(*(int *)(obj + 0x54) + 0x6e) = (s8)*(int *)(p20 + 4);
+            *(s8 *)(*(int *)(obj + 0x54) + 0x6f) = (s8)p20[9];
+        }
+        if (*(s16 *)(obj + 0xa0) == p20[0x14]) {
+            *(s8 *)(*(int *)(obj + 0x54) + 0x6e) = (s8)*(int *)(p20 + 0x10);
+            *(s8 *)(*(int *)(obj + 0x54) + 0x6f) = (s8)p20[0x15];
+        }
+        if (*(s16 *)(obj + 0xa0) == p20[0x20]) {
+            *(s8 *)(*(int *)(obj + 0x54) + 0x6e) = (s8)*(int *)(p20 + 0x1c);
+            *(s8 *)(*(int *)(obj + 0x54) + 0x6f) = (s8)p20[0x21];
+        }
+        if ((state[0x323] & 8) == 0) {
+            fn_8014CF7C(obj, state, *(f32 *)(*(int *)(state + 0x29c) + 0xc),
+                        *(f32 *)(*(int *)(state + 0x29c) + 0x14), 10, 0);
+        }
     }
 }
 #pragma peephole reset
