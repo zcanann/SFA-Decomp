@@ -1551,6 +1551,44 @@ extern int  lbl_803DD064;
  * sequence/camera state when this was the active sequence. */
 #pragma peephole off
 #pragma scheduling off
+extern void AudioStream_StartPrepared(void);
+extern int lbl_803DD094;
+extern int lbl_803DB728;
+extern f32 lbl_803DEFB0;
+extern f32 lbl_803DD074;
+extern int lbl_803DB724;
+extern f32 lbl_8039A1AC[];
+
+/* EN v1.0 0x8008023C  size: 260b  Starts the prepared audio stream for a
+ * sequence slot and records its subtitle timing. */
+#pragma peephole off
+#pragma scheduling off
+int seqStreamFn_8008023c(int x)
+{
+    int seqId = lbl_8039A3B0[x] - 1;
+    f32 v;
+
+    if (lbl_803DD094 != 0 || AudioStream_IsPreparing() != 0) {
+        return 0;
+    }
+    v = lbl_8039A1AC[x] - (f32)lbl_803DB728;
+    lbl_803DD074 = v;
+    if (lbl_803DEFB0 != lbl_803DD074) {
+        lbl_803DB724 = x;
+    }
+    lbl_803DB728 = -1;
+    if (seqId == 0x54b || seqId == 0x550 || seqId == 0x551 || seqId == 0x574 || seqId == 0x579 ||
+        seqId == 0x57a) {
+        lbl_803DD074 = 0.0f;
+        lbl_803DB724 = -1;
+    }
+    lbl_803DB720 = -1;
+    AudioStream_StartPrepared();
+    return 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 void endObjSequence(int seq)
 {
     int objIdx;
