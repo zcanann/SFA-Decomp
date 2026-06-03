@@ -707,9 +707,9 @@ void DIMboss_update(DIMbossObject *obj)
  *
  * Function: DIMboss_init
  * EN v1.0 Address: 0x801BD7AC
- * EN v1.0 Size: 1240b
- * EN v1.1 Address: 0x801BDA04
- * EN v1.1 Size: 860b
+ * EN v1.0 Size: 804b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO

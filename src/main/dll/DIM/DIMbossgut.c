@@ -13,10 +13,10 @@ extern f32 lbl_803E4C88;
 
 #pragma scheduling off
 #pragma peephole off
-int DIMbossgut_updateState(int obj, int param_2, void *state)
+int DIMbossgut_updateState(int obj,int param_2,ObjAnimUpdateState *animUpdate)
 {
-  *(s16 *)((char *)state + 0x6e) = -1;
-  *(u8 *)((char *)state + 0x56) = 0;
+  animUpdate->hitVolumePair = -1;
+  animUpdate->sequenceEventActive = 0;
   return 0;
 }
 #pragma peephole reset
