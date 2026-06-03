@@ -1195,6 +1195,7 @@ void Trigger_free(void *obj)
 
 #pragma peephole off
 #pragma scheduling off
+typedef struct { u8 bit7 : 1; u8 lo : 7; } TriggerFlags8A;
 void Trigger_init(u8* obj, u8* params) {
     u8* sub;
     f32 t;
@@ -1223,14 +1224,16 @@ void Trigger_init(u8* obj, u8* params) {
         *(s16*)(obj + 2) = (s16)(params[0x3e] << 8);
         *(s16*)(obj + 4) = 0;
         break;
-    case 0xf4:
-        break;
     case 0x54:
         *(s16*)(sub + 0x82) = *(s16*)(params + 0x48);
         *(s16*)(sub + 0x84) = *(s16*)(params + 0x4a);
         *(s16*)(sub + 0x86) = *(s16*)(params + 0x4c);
         *(s16*)(sub + 0x88) = *(s16*)(params + 0x4e);
-        sub[0x8a] = (u8)(sub[0x8a] & ~0x80);
+        ((TriggerFlags8A *)(sub + 0x8a))->bit7 = 0;
+        break;
+    case 0x51:
+        break;
+    case 0xf4:
         break;
     default:
         break;
