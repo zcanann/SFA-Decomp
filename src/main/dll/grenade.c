@@ -1906,3 +1906,89 @@ int trickyFoodFn_8014460c(int param_1,int *param_2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80144B50
+ * EN v1.0 Address: 0x80144B50
+ * EN v1.0 Size: 752b
+ */
+extern int ObjHits_GetPriorityHit(int obj, int *out, int a, int b);
+extern uint GameBit_Get(int bit);
+extern f32 lbl_803E2534;
+extern f32 lbl_803E24A8;
+extern f32 lbl_803E24EC;
+
+void fn_80144B50(u8 *obj, u8 *state)
+{
+    int hit[3];
+    u8 *ptr;
+    f32 fv;
+    int inWater;
+
+    *(f32 *)(state + 0x720) -= timeDelta;
+    if (*(f32 *)(state + 0x720) < lbl_803E23DC) {
+        *(f32 *)(state + 0x720) = lbl_803E23DC;
+    }
+    if (ObjHits_GetPriorityHit((int)obj, hit, 0, 0) != 0
+        && *(u8 **)(hit[0] + 0xc4) != NULL
+        && *(s16 *)(*(u8 **)(hit[0] + 0xc4) + 0x44) == 1) {
+        fv = *(f32 *)(state + 0x720);
+        if (fv <= lbl_803E23DC) {
+            *(f32 *)(state + 0x720) = fv + lbl_803E24EC;
+            ptr = *(u8 **)(obj + 0xb8);
+            if (((u32)*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x34f, 0x500, -1, 0);
+            }
+        } else {
+            *(f32 *)(state + 0x720) = fv + lbl_803E2440;
+            if (state[0xa] != 0xb) {
+                if (*(u32 *)(state + 0x54) & 0x10) {
+                    if (*(f32 *)(state + 0x720) > lbl_803E2534) {
+                        *(f32 *)(state + 0x720) *= lbl_803E24A8;
+                        if (GameBit_Get(0x245) != 0) {
+                            if (lbl_803E23DC == *(f32 *)(state + 0x2ac)) {
+                                inWater = 0;
+                            } else if (lbl_803E2410 == *(f32 *)(state + 0x2b0)) {
+                                inWater = 1;
+                            } else if (*(f32 *)(state + 0x2b4) - *(f32 *)(state + 0x2b0) > lbl_803E2414) {
+                                inWater = 1;
+                            } else {
+                                inWater = 0;
+                            }
+                            if (inWater == 0) {
+                                state[0xa] = 0xb;
+                                return;
+                            }
+                        }
+                        ptr = *(u8 **)(obj + 0xb8);
+                        if (((u32)*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+                            && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
+                        }
+                    } else {
+                        ptr = *(u8 **)(obj + 0xb8);
+                        if (((u32)*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+                            && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
+                        }
+                    }
+                } else {
+                    ptr = *(u8 **)(obj + 0xb8);
+                    if (((u32)*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+                        && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                        && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                        objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x350, 0x500, -1, 0);
+                    }
+                    state[0xa] = 10;
+                    *(u32 *)(state + 0x54) |= 0x10;
+                }
+            }
+        }
+    }
+}
