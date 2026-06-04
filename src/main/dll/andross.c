@@ -417,23 +417,23 @@ void andross_update(int obj)
           *(undefined *)(piVar14 + 0x2c) = 10;
         }
         if (piVar14[0x21] != 0) {
-          iVar12 = piVar14[0x22];
-          if (iVar12 == 3) {
-LAB_8023ad84:
+          switch (piVar14[0x22]) {
+          default:
+          case 3:
+          case 0x17:
             piVar14[0x22] = 0;
-          }
-          else if (iVar12 < 3) {
-            if (iVar12 != 0) goto LAB_8023ad84;
+            break;
+          case 0:
             piVar14[0x22] = 1;
-          }
-          else {
-            if (((iVar12 == 0x17) || (0x16 < iVar12)) || (iVar12 < 0x16)) goto LAB_8023ad84;
-            if (*(char *)(piVar14 + 0x2e) == '\0') {
-              piVar14[0x22] = 0;
-            }
-            else {
+            break;
+          case 0x16:
+            if (*(u8 *)(piVar14 + 0x2e) != 0) {
               piVar14[0x22] = 0x17;
             }
+            else {
+              piVar14[0x22] = 0;
+            }
+            break;
           }
           piVar14[0x21] = 0;
         }
@@ -479,14 +479,15 @@ LAB_8023ad84:
         *(undefined *)((int)piVar14 + 0xb7) = 0;
       }
       if (piVar14[0x21] != 0) {
-        iVar12 = piVar14[0x22];
-        if (iVar12 == 3) {
-          piVar14[0x22] = 4;
-        }
-        else if ((iVar12 < 3) || (4 < iVar12)) {
+        switch (piVar14[0x22]) {
+        default:
+        case 0:
           piVar14[0x22] = 1;
-        }
-        else {
+          break;
+        case 3:
+          piVar14[0x22] = 4;
+          break;
+        case 4:
           *(char *)((int)piVar14 + 0xb7) = *(char *)((int)piVar14 + 0xb7) + '\x01';
           if (*(u8 *)((int)piVar14 + 0xb7) < 4) {
             piVar14[0x22] = 0;
@@ -496,6 +497,7 @@ LAB_8023ad84:
             piVar14[0x22] = 0x16;
             *(s16 *)(piVar14 + 0x28) = 0;
           }
+          break;
         }
         piVar14[0x21] = 0;
       }
