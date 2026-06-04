@@ -455,7 +455,7 @@ f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void fn_80010F6C(CurveHeapNode* heap, s32 count, s32 index)
+void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index)
 {
     u16 priority = heap[index].priority;
     u16 value = heap[index].value;

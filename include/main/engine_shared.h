@@ -1611,8 +1611,7 @@ void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients);
 f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
 void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients);
 f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent);
-void fn_80010F6C(CurveHeapNode* heap, s32 count, s32 index);
-#define CurveHeap_SiftDown fn_80010F6C
+void CurveHeap_SiftDown(CurveHeapNode* heap, s32 count, s32 index);
 s16 Queue_GetCount(RingBufferQueue* queue);
 BOOL Queue_IsEmpty(RingBufferQueue* queue);
 void Queue_Peek(RingBufferQueue* queue, void* dst);
