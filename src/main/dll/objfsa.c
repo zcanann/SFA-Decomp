@@ -174,7 +174,11 @@ typedef struct ObjfsaPatch {
   s16 maxY;
   s16 minY;
   u16 groupId;
-  u8 pad26[0x30 - 0x26];
+  s16 exit0X;
+  s16 exit0Z;
+  s16 exit1X;
+  s16 exit1Z;
+  u8 pad2E[2];
 } ObjfsaPatch;
 
 typedef struct ObjfsaWalkGroup {
@@ -6218,28 +6222,86 @@ extern f32 lbl_803E0600;
 extern f32 lbl_803E0604;
 extern f32 lbl_803E05FC;
 
-static void Objfsa_SetWalkGroupPlane(ObjfsaPatchPlane *plane, f32 *offset,
-                                     f32 x0, f32 z0, f32 x1, f32 z1)
-{
-    f32 normalX;
-    f32 normalZ;
-    f32 length;
+extern f32 lbl_803E05FC;
+extern f32 lbl_803E0608;
+extern f32 lbl_803E060C;
+extern char sObjfsaMissingPatchExitPoint0[];
+extern char sObjfsaMissingPatchExitPoint1[];
 
-    normalX = z1 - z0;
-    normalZ = x0 - x1;
-    length = sqrtf(normalX * normalX + normalZ * normalZ);
-    if (length != lbl_803E05F0) {
-        normalX /= length;
-        normalZ /= length;
+#define OBJFSA_CORNER(BASE, OFF, POSOFF)                                        \
+    (f32)((f32)*(s8 *)(OFF) * scale + *(f32 *)((BASE) + (POSOFF)))
+
+#define OBJFSA_SET_PLANE(P, K, XA, ZA)                                          \
+    len = sqrtf(dxn * dxn + dzn * dzn);                                         \
+    if (len != lbl_803E05F0) {                                                  \
+        dxn = dxn / len;                                                        \
+        dzn = dzn / len;                                                        \
+    }                                                                           \
+    (P).planes[K].normalX = (s16)((f64)lbl_803E05FC * dxn);                     \
+    (P).planes[K].normalZ = (s16)((f64)lbl_803E05FC * dzn);                     \
+    (P).planeOffsets[K] = -((f32)(P).planes[K].normalX * (XA) +                 \
+                            (f32)(P).planes[K].normalZ * (ZA))
+
+#define OBJFSA_EXIT_INSIDE(GRP, XF, ZF)                                         \
+    ez = (f32)(ZF);                                                             \
+    ex = (f32)(XF);                                                             \
+    j2 = 0;                                                                     \
+    for (e = 0; e < 4; e++) {                                                   \
+        if (lbl_803E05F0 <                                                      \
+            lbl_8039FAE8[GRP].planeOffsets[e] +                                 \
+                ex * (f32)((s16 *)&lbl_8039FAE8[GRP])[j2 & 0xff] +              \
+                ez * (f32)((s16 *)&lbl_8039FAE8[GRP])[(j2 & 0xff) + 1]) {       \
+            break;                                                              \
+        }                                                                       \
+        j2 += 2;                                                                \
     }
 
-    plane->normalX = (s16)(lbl_803E05FC * normalX);
-    plane->normalZ = (s16)(lbl_803E05FC * normalZ);
-    *offset = -((f32)plane->normalX * x0 + (f32)plane->normalZ * z0);
-}
+#define OBJFSA_NEWPATCH (patchBase[lbl_803DD468])
 
-static void Objfsa_SetWalkGroupPatch(ObjfsaWalkGroup *walkGroup, int curve, f32 scale)
+#pragma scheduling off
+#pragma peephole off
+void walkgroupFindExitPointFn_800dc398(void)
 {
+    ObjfsaPatch *patchBase = lbl_8039CAE8;
+    u8 blockFlags[0x78];
+    u8 pairs[364];
+    int flagIndex;
+    int checksum;
+    int curveCount;
+    int **curveList;
+    int listIndex;
+    int curve;
+    int linked;
+    int slot;
+    int back;
+    int myId;
+    int npi;
+    int iter;
+    int pi;
+    uint gi;
+    u8 ga;
+    u8 gb;
+    u8 e;
+    uint j2;
+    u16 pairId;
+    u8 found;
+    int searchCount;
+    ObjfsaWalkGroup *wg;
+    ObjfsaPatch *p;
+    ObjfsaPatch *sp;
+    u8 *pp;
+    char *slotPtr;
+    char *lp;
+    f64 scale;
+    f32 sf;
+    f64 fdx;
+    f64 fdz;
+    f64 div;
+    f32 dxn;
+    f32 dzn;
+    f32 len;
+    f32 ex;
+    f32 ez;
     f32 x0;
     f32 z0;
     f32 x1;
@@ -6248,74 +6310,8 @@ static void Objfsa_SetWalkGroupPatch(ObjfsaWalkGroup *walkGroup, int curve, f32 
     f32 z2;
     f32 x3;
     f32 z3;
-    f32 yMax;
-    f32 yMin;
-
-    x0 = *(f32 *)(curve + 0x8) + (f32)*(s8 *)(curve + 0x4) * scale;
-    z0 = *(f32 *)(curve + 0x10) + (f32)*(s8 *)(curve + 0x5) * scale;
-    x1 = *(f32 *)(curve + 0x8) + (f32)*(s8 *)(curve + 0x6) * scale;
-    z1 = *(f32 *)(curve + 0x10) + (f32)*(s8 *)(curve + 0x7) * scale;
-    x2 = *(f32 *)(curve + 0x8) + (f32)*(s8 *)(curve + 0x30) * scale;
-    z2 = *(f32 *)(curve + 0x10) + (f32)*(s8 *)(curve + 0x31) * scale;
-    x3 = *(f32 *)(curve + 0x8) + (f32)*(s8 *)(curve + 0x32) * scale;
-    z3 = *(f32 *)(curve + 0x10) + (f32)*(s8 *)(curve + 0x33) * scale;
-
-    Objfsa_SetWalkGroupPlane(&walkGroup->planes[0], &walkGroup->planeOffsets[0], x0, z0, x1, z1);
-    Objfsa_SetWalkGroupPlane(&walkGroup->planes[1], &walkGroup->planeOffsets[1], x1, z1, x2, z2);
-    Objfsa_SetWalkGroupPlane(&walkGroup->planes[2], &walkGroup->planeOffsets[2], x2, z2, x3, z3);
-    Objfsa_SetWalkGroupPlane(&walkGroup->planes[3], &walkGroup->planeOffsets[3], x3, z3, x0, z0);
-
-    yMax = lbl_803E05D0 * (f32)*(s8 *)(curve + 0x18) + *(f32 *)(curve + 0xc);
-    yMin = *(f32 *)(curve + 0xc) - lbl_803E05D0 * (f32)*(s8 *)(curve + 0x1a);
-    walkGroup->maxY = (s16)yMax;
-    walkGroup->minY = (s16)yMin;
-}
-
-static u16 Objfsa_MakePatchGroupId(u8 groupA, u8 groupB)
-{
-    if (groupA < groupB) {
-        return ((u16)groupB << 8) | groupA;
-    }
-    return ((u16)groupA << 8) | groupB;
-}
-
-static u8 Objfsa_FindOrCreatePatchGroup(u8 groupA, u8 groupB)
-{
-    u16 groupId;
-    int patchIndex;
-    ObjfsaPatch *patch;
-
-    groupId = Objfsa_MakePatchGroupId(groupA, groupB);
-    for (patchIndex = 1; patchIndex < lbl_803DD468; patchIndex++) {
-        if (lbl_8039CAE8[patchIndex].groupId == groupId) {
-            return (u8)patchIndex;
-        }
-    }
-
-    patchIndex = lbl_803DD468;
-    patch = &lbl_8039CAE8[patchIndex];
-    memset(patch, 0, sizeof(ObjfsaPatch));
-    patch->groupId = groupId;
-    lbl_803DD468++;
-    return (u8)patchIndex;
-}
-
-void walkgroupFindExitPointFn_800dc398(void)
-{
-    u8 blockFlags[0x80];
-    int checksum;
-    int flagIndex;
-    int curveCount;
-    int **curveList;
-    int listIndex;
-    int curve;
-    int groupIndex;
-    int linkSlot;
-    int linkedCurve;
-    int linkedGroupIndex;
-    int patchIndex;
-    ObjfsaWalkGroup *walkGroup;
-    f32 scale;
+    f32 fy0;
+    f32 fy1;
 
     mapBlockFn_80059c2c(blockFlags);
 
@@ -6326,57 +6322,199 @@ void walkgroupFindExitPointFn_800dc398(void)
         }
     }
 
-    if (checksum == lbl_803DD460) {
-        return;
-    }
-    lbl_803DD460 = checksum;
+    if (checksum != lbl_803DD460) {
+        sf = lbl_803E0600;
+        if (blockFlags[2] == 0 && blockFlags[0x34] == 0) {
+            sf = lbl_803E0604;
+        }
+        scale = sf;
+        lbl_803DD460 = checksum;
 
-    if (blockFlags[2] != 0 || blockFlags[0x34] != 0) {
-        scale = lbl_803E0600;
-    } else {
-        scale = lbl_803E0604;
-    }
-
-    curveList = (int **)(*(void *(**)(int *))((int)*gRomCurveInterface + 0x10))(&curveCount);
-    memset(lbl_803A1730, 0, OBJFSA_WALKGROUP_COUNT);
-    memset(lbl_8039CAE8, 0, sizeof(ObjfsaPatch) * 0x100);
-
-    for (groupIndex = 0; groupIndex < OBJFSA_WALKGROUP_COUNT; groupIndex++) {
-        walkGroup = Objfsa_GetWalkGroup(groupIndex);
-        walkGroup->patchIndices[0] = 0;
-        walkGroup->patchIndices[1] = 0;
-        walkGroup->patchIndices[2] = 0;
-        walkGroup->patchIndices[3] = 0;
-    }
-
-    lbl_803DD468 = 1;
-    for (listIndex = 0; listIndex < curveCount; listIndex++) {
-        curve = (int)curveList[listIndex];
-        if (*(s8 *)(curve + 0x19) != 0x26) {
-            continue;
+        curveList = (int **)(*(void *(**)(int *))((int)*gRomCurveInterface + 0x10))(&curveCount);
+        memset(lbl_803A1730, 0, OBJFSA_WALKGROUP_COUNT);
+        for (pi = 0; pi < 0x100; pi++) {
+            patchBase[pi].groupId = 0;
         }
 
-        groupIndex = *(u8 *)(curve + 0x3);
-        lbl_803A1730[groupIndex] = 1;
-        walkGroup = Objfsa_GetWalkGroup(groupIndex);
-        Objfsa_SetWalkGroupPatch(walkGroup, curve, scale);
+        lbl_803DD468 = 1;
+        for (listIndex = 0; listIndex < curveCount; listIndex++) {
+            curve = (int)*curveList;
+            if (*(s8 *)(curve + 0x19) == 0x26) {
+                gi = *(u8 *)(curve + 3);
+                wg = &lbl_8039FAE8[gi];
+                lbl_803A1730[gi] = 1;
 
-        for (linkSlot = 0; linkSlot < OBJFSA_PATCHGROUP_PATCH_COUNT; linkSlot++) {
-            if (*(s32 *)(curve + 0x1c + linkSlot * 4) <= -1) {
-                continue;
+                x0 = OBJFSA_CORNER(curve, curve + 0x4, 0x8);
+                z0 = OBJFSA_CORNER(curve, curve + 0x5, 0x10);
+                x1 = OBJFSA_CORNER(curve, curve + 0x6, 0x8);
+                z1 = OBJFSA_CORNER(curve, curve + 0x7, 0x10);
+
+                dxn = z1 - z0;
+                dzn = x0 - x1;
+                OBJFSA_SET_PLANE(*wg, 0, x0, z0);
+
+                x2 = OBJFSA_CORNER(curve, curve + 0x30, 0x8);
+                z2 = OBJFSA_CORNER(curve, curve + 0x31, 0x10);
+                dxn = z2 - z1;
+                dzn = x1 - x2;
+                OBJFSA_SET_PLANE(*wg, 1, x1, z1);
+
+                x3 = OBJFSA_CORNER(curve, curve + 0x32, 0x8);
+                z3 = OBJFSA_CORNER(curve, curve + 0x33, 0x10);
+                dxn = z3 - z2;
+                dzn = x2 - x3;
+                OBJFSA_SET_PLANE(*wg, 2, x2, z2);
+
+                dxn = OBJFSA_CORNER(curve, curve + 0x5, 0x10) - z3;
+                dzn = x3 - OBJFSA_CORNER(curve, curve + 0x4, 0x8);
+                OBJFSA_SET_PLANE(*wg, 3, x3, z3);
+
+                wg->maxY = (s16)(lbl_803E05D0 * (f32)*(s8 *)(curve + 0x18) +
+                                 *(f32 *)(curve + 0xc));
+                wg->minY = (s16)-(lbl_803E05D0 * (f32)*(s8 *)(curve + 0x1a) -
+                                  *(f32 *)(curve + 0xc));
+
+                slotPtr = (char *)curve;
+                for (slot = 0; slot < 4; slot++) {
+                    wg->patchIndices[slot] = 0;
+                    if (*(s32 *)(slotPtr + 0x1c) > -1 &&
+                        (linked = (*(int (**)(int))((int)*gRomCurveInterface + 0x1c))(
+                             *(s32 *)(slotPtr + 0x1c))) != 0) {
+                        ga = *(u8 *)(curve + 3);
+                        gb = *(u8 *)(linked + 3);
+                        if (ga < gb) {
+                            pairId = ((u16)gb << 8) | ga;
+                        } else {
+                            pairId = ((u16)ga << 8) | gb;
+                        }
+
+                        found = 1;
+                        sp = &patchBase[1];
+                        searchCount = lbl_803DD468 - 1;
+                        if (lbl_803DD468 > 1) {
+                            do {
+                                if (pairId == sp->groupId) {
+                                    wg->patchIndices[slot] = found;
+                                    break;
+                                }
+                                sp++;
+                                found++;
+                                searchCount--;
+                            } while (searchCount != 0);
+                        }
+
+                        npi = lbl_803DD468;
+                        if (wg->patchIndices[slot] == 0) {
+                            back = 0;
+                            myId = *(s32 *)(curve + 0x14);
+                            if (*(s32 *)(linked + 0x1c) != myId &&
+                                (back = 1, *(s32 *)(linked + 0x20) != myId) &&
+                                (back = 2, *(s32 *)(linked + 0x24) != myId) &&
+                                (back = 3, *(s32 *)(linked + 0x28) != myId)) {
+                                back = 4;
+                            }
+                            wg->patchIndices[slot] = (u8)lbl_803DD468;
+                            patchBase[npi].groupId = pairId;
+                            pairs[npi * 2] = *(u8 *)(curve + 3);
+                            pairs[npi * 2 + 1] = *(u8 *)(linked + 3);
+
+                            x0 = OBJFSA_CORNER(curve, slotPtr + 0x34, 0x8);
+                            z0 = OBJFSA_CORNER(curve, slotPtr + 0x35, 0x10);
+                            x1 = OBJFSA_CORNER(curve, slotPtr + 0x36, 0x8);
+                            z1 = OBJFSA_CORNER(curve, slotPtr + 0x37, 0x10);
+                            patchBase[npi].exit0X = (s16)((x0 + x1) * lbl_803E0608);
+                            patchBase[npi].exit0Z = (s16)((z0 + z1) * lbl_803E0608);
+
+                            dxn = z1 - z0;
+                            dzn = x0 - x1;
+                            OBJFSA_SET_PLANE(patchBase[npi], 0, x0, z0);
+
+                            lp = (char *)(linked + back * 4);
+                            x2 = OBJFSA_CORNER(linked, lp + 0x34, 0x8);
+                            z2 = OBJFSA_CORNER(linked, lp + 0x35, 0x10);
+                            dxn = z2 - z1;
+                            dzn = x1 - x2;
+                            OBJFSA_SET_PLANE(OBJFSA_NEWPATCH, 1, x1, z1);
+
+                            x3 = OBJFSA_CORNER(linked, lp + 0x36, 0x8);
+                            z3 = OBJFSA_CORNER(linked, lp + 0x37, 0x10);
+                            OBJFSA_NEWPATCH.exit1X = (s16)((x2 + x3) * lbl_803E0608);
+                            OBJFSA_NEWPATCH.exit1Z = (s16)((z2 + z3) * lbl_803E0608);
+
+                            dxn = z3 - z2;
+                            dzn = x2 - x3;
+                            OBJFSA_SET_PLANE(OBJFSA_NEWPATCH, 2, x2, z2);
+
+                            dxn = OBJFSA_CORNER(curve, slotPtr + 0x35, 0x10) - z3;
+                            dzn = x3 - OBJFSA_CORNER(curve, slotPtr + 0x34, 0x8);
+                            OBJFSA_SET_PLANE(OBJFSA_NEWPATCH, 3, x3, z3);
+
+                            fy0 = lbl_803E05D0 * (f32)*(s8 *)(curve + 0x18) +
+                                  *(f32 *)(curve + 0xc);
+                            fy1 = lbl_803E05D0 * (f32)*(s8 *)(linked + 0x18) +
+                                  *(f32 *)(linked + 0xc);
+                            if (fy0 <= fy1) {
+                                OBJFSA_NEWPATCH.maxY = (s16)fy1;
+                            } else {
+                                OBJFSA_NEWPATCH.maxY = (s16)fy0;
+                            }
+                            fy0 = -(lbl_803E05D0 * (f32)*(s8 *)(curve + 0x1a) -
+                                    *(f32 *)(curve + 0xc));
+                            fy1 = -(lbl_803E05D0 * (f32)*(s8 *)(linked + 0x1a) -
+                                    *(f32 *)(linked + 0xc));
+                            if (fy1 <= fy0) {
+                                OBJFSA_NEWPATCH.minY = (s16)fy1;
+                            } else {
+                                OBJFSA_NEWPATCH.minY = (s16)fy0;
+                            }
+                            lbl_803DD468++;
+                        }
+                    }
+                    slotPtr += 4;
+                }
             }
+            curveList++;
+        }
 
-            linkedCurve = Objfsa_FindRomCurveById(*(s32 *)(curve + 0x1c + linkSlot * 4));
-            if (linkedCurve == 0 || *(s8 *)(linkedCurve + 0x19) != 0x26) {
-                continue;
-            }
+        pp = pairs;
+        div = lbl_803E060C;
+        p = patchBase;
+        for (pi = 1; pp += 2, pi < lbl_803DD468; pi++) {
+            ga = pp[0];
+            gb = pp[1];
+            fdx = (f32)(p[1].exit1X - p[1].exit0X);
+            fdz = (f32)(p[1].exit1Z - p[1].exit0Z);
 
-            linkedGroupIndex = *(u8 *)(linkedCurve + 0x3);
-            patchIndex = Objfsa_FindOrCreatePatchGroup((u8)groupIndex, (u8)linkedGroupIndex);
-            walkGroup->patchIndices[linkSlot] = (u8)patchIndex;
+            iter = 0;
+            do {
+                OBJFSA_EXIT_INSIDE(ga, p[1].exit0X, p[1].exit0Z);
+                if (e == 4) goto exit0Done;
+                OBJFSA_EXIT_INSIDE(gb, p[1].exit0X, p[1].exit0Z);
+                if (e == 4) goto exit0Done;
+                p[1].exit0X = (s16)((f32)p[1].exit0X + (f32)(fdx / div));
+                p[1].exit0Z = (s16)((f32)p[1].exit0Z + (f32)(fdz / div));
+            } while (iter++ != 100);
+            OSReport(sObjfsaMissingPatchExitPoint0, p[1].groupId & 0xff,
+                     (int)(uint)p[1].groupId >> 8);
+exit0Done:
+            iter = 0;
+            do {
+                OBJFSA_EXIT_INSIDE(ga, p[1].exit1X, p[1].exit1Z);
+                if (e == 4) goto exit1Done;
+                OBJFSA_EXIT_INSIDE(gb, p[1].exit1X, p[1].exit1Z);
+                if (e == 4) goto exit1Done;
+                p[1].exit1X = (s16)((f32)p[1].exit1X - (f32)(fdx / div));
+                p[1].exit1Z = (s16)((f32)p[1].exit1Z - (f32)(fdz / div));
+            } while (iter++ != 100);
+            OSReport(sObjfsaMissingPatchExitPoint1, p[1].groupId & 0xff,
+                     (int)(uint)p[1].groupId >> 8);
+exit1Done:
+            p++;
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
