@@ -2623,6 +2623,7 @@ int fn_8016043C(int obj, u8 *p)
   return 0;
 }
 
+#pragma dont_inline on
 void fn_801606F0(int obj, void *p2, int sub, u8 *p)
 {
   extern int *gBaddieControlInterface;
@@ -2659,6 +2660,7 @@ void fn_801606F0(int obj, void *p2, int sub, u8 *p)
       obj, p, timeDelta, timeDelta, lbl_803AC5E8, lbl_803AC5D0);
   *(int *)(obj + 0xc0) = *(int *)(sub + 0x3e0);
 }
+#pragma dont_inline reset
 
 #pragma dont_inline on
 #pragma fp_contract off
@@ -2705,6 +2707,87 @@ void fn_8016083C(int *obj, u8 *sub, u8 *p)
 }
 #pragma fp_contract reset
 #pragma dont_inline reset
+
+int dll_CB_seqFn(short *obj, int p2, u8 *e)
+{
+  extern u32 GameBit_Get(int bit);
+  extern int Curve_AdvanceAlongPath(int *p, f32 t);
+  extern int getAngle(f32 a, f32 b);
+  extern int *gBaddieControlInterface;
+  extern int *gObjectTriggerInterface;
+  extern int *gPlayerInterface;
+  extern int *gRomCurveInterface;
+  extern void *lbl_803AC5D0[];
+  extern void *lbl_803AC5E8[];
+  extern f32 lbl_803E2E8C;
+  extern f32 lbl_803E2E98;
+  extern f32 lbl_803E2E9C;
+  int sub;
+  int setup;
+  int *path;
+
+  setup = *(int *)((char *)obj + 0x4c);
+  sub = *(int *)((char *)obj + 0xb8);
+  if (*(int *)((char *)obj + 0xf4) != 0) {
+    return 0;
+  }
+  if (obj[0x5a] != -1) {
+    if ((*(int (**)(short *, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, sub, 1) ==
+        0) {
+      return 1;
+    }
+    fn_8016083C((int *)obj, (u8 *)sub, (u8 *)sub);
+    if (*(s16 *)(sub + 0x3f6) != -1 && GameBit_Get(*(s16 *)(sub + 0x3f6)) != 0) {
+      (*(void (**)(u8 *, int))(*(int *)gObjectTriggerInterface + 0x58))(e,
+                                                                        *(s16 *)(setup + 0x2c));
+      *(s16 *)(sub + 0x3f6) = -1;
+    }
+    switch (*(u8 *)(sub + 0x405)) {
+    case 2:
+      *(s16 *)(e + 0x6e) = 0;
+      fn_801606F0((int)obj, e, sub, (u8 *)sub);
+      if (*(u8 *)(sub + 0x405) == 1) {
+        *(s16 *)(sub + 0x270) = 5;
+        (*(void (**)(short *, int, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(
+            obj, sub, lbl_803E2E8C, lbl_803E2E8C, lbl_803AC5E8, lbl_803AC5D0);
+        *(s8 *)(e + 0x56) = 0;
+      }
+      break;
+    case 1:
+      if ((*(int (**)(short *, u8 *, int, void *, void *, int))(*(int *)gBaddieControlInterface +
+                                                                0x34))(
+              obj, e, sub, lbl_803AC5E8, lbl_803AC5D0, 0) != 0) {
+        (*(void (**)(short *, int, f32, int))(*(int *)gBaddieControlInterface + 0x2c))(
+            obj, sub, lbl_803E2E9C, 1);
+      }
+      break;
+    case 0:
+    default:
+      *(s16 *)(e + 0x6e) = -1;
+      *(s16 *)(e + 0x6e) &= ~0x40;
+      path = *(int **)(sub + 0x3dc);
+      if ((*(u16 *)(sub + 0x400) & 8) != 0) {
+        if ((Curve_AdvanceAlongPath(path, *(f32 *)(sub + 0x280)) != 0 || path[4] != 0) &&
+            (u8)(*(int (**)(int *))(*(int *)gRomCurveInterface + 0x90))(path) != 0) {
+          *(u16 *)(sub + 0x400) &= ~8;
+        }
+        *(f32 *)(sub + 0x280) = lbl_803E2E98;
+        obj[0] = getAngle(*(f32 *)((char *)path + 0x74), *(f32 *)((char *)path + 0x7c)) + 0x8000;
+        obj[1] = getAngle(*(f32 *)((char *)path + 0x7c), *(f32 *)((char *)path + 0x78)) + 0x4000;
+        obj[2] = getAngle(*(f32 *)((char *)path + 0x78), *(f32 *)((char *)path + 0x74)) + 0x4000;
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)path + 0x68);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)path + 0x6c);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)path + 0x70);
+      }
+      break;
+    }
+  }
+  if (obj[0x5a] == -1) {
+    *(u16 *)(sub + 0x400) |= 2;
+    return 0;
+  }
+  return *(u8 *)(sub + 0x405) != 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -3975,7 +4058,7 @@ void dll_CB_func0B_nop(void) {}
 void dll_CB_release_nop(void) {}
 
 extern f32 lbl_803E2EA8;
-extern void dll_CB_seqFn(int p1, int p2, void *p3);
+extern int dll_CB_seqFn(short *obj, int p2, u8 *p3);
 
 #pragma scheduling off
 #pragma peephole off
@@ -4003,7 +4086,7 @@ void dll_CB_init(int *obj, u8 *params, int extra) {
 #pragma scheduling reset
 
 
-extern f32 Curve_AdvanceAlongPath(int *p, f32 t);
+extern int Curve_AdvanceAlongPath(int *p, f32 t);
 extern int getAngle(f32 a, f32 b);
 extern f32 lbl_803E2E98;
 
@@ -4036,7 +4119,7 @@ void dll_CB_update(int *obj) {
     fn_8016083C(obj, sub, sub);
     path = *(int**)(sub + 0x3dc);
     if ((*(u16*)(sub + 0x400) & 8) == 0) return;
-    if (Curve_AdvanceAlongPath(path, *(f32*)(sub + 0x280)) != 0.0f || path[4] != 0) {
+    if (Curve_AdvanceAlongPath(path, *(f32*)(sub + 0x280)) != 0 || path[4] != 0) {
         if ((u8)((int(*)(int*))((int**)*(int**)gRomCurveInterface)[36])(path) != 0) {
             *(u16*)(sub + 0x400) = (u16)(*(u16*)(sub + 0x400) & ~8);
         }
