@@ -885,53 +885,46 @@ LAB_80185bfc:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80185868(double param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9)
+#pragma scheduling off
+void fn_80185868(int obj, f32 arg)
 {
-  float fVar1;
-  int iVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  int iVar5;
-  undefined4 in_r10;
-  int iVar6;
-  undefined8 uVar7;
-  undefined auStack_38 [8];
-  undefined4 local_30;
-  longlong local_20;
-  
-  iVar6 = *(int *)(param_9 + 0xb8);
-  local_30 = *(undefined4 *)(iVar6 + 8);
-  (**(code **)(*DAT_803de750 + 4))(param_9,0xf,0,2,0xffffffff,0);
-  uVar3 = 0xffffffff;
-  uVar4 = 0;
-  iVar5 = *DAT_803de754;
-  (**(code **)(iVar5 + 4))(param_9,0,auStack_38,2);
-  FUN_80006824(param_9,SFXmn_eggylaugh116);
-  fVar1 = FLOAT_803e46f0;
-  *(float *)(param_9 + 0x24) = FLOAT_803e46f0;
-  *(float *)(param_9 + 0x2c) = fVar1;
-  *(undefined2 *)(iVar6 + 0x10) = 0x32;
-  *(undefined2 *)(iVar6 + 0x1a) = 800;
-  *(undefined *)(iVar6 + 0x23) = 0;
-  *(undefined *)(iVar6 + 0x21) = 0;
-  *(undefined4 *)(param_9 + 0xf8) = 0;
-  *(undefined4 *)(param_9 + 0xf4) = 2;
-  ObjHits_EnableObject(param_9);
-  uVar7 = ObjHits_MarkObjectPositionDirty(param_9);
-  *(undefined2 *)(iVar6 + 0x1e) = 0;
-  if (param_1 < (double)*(float *)(iVar6 + 8)) {
-    iVar2 = FUN_80017a98();
-    ObjMsg_SendToObject(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,0x60004,param_9
-                 ,0,uVar3,uVar4,iVar5,in_r10);
+  extern void *lbl_803DDAD0;
+  extern void *lbl_803DDAD4;
+  extern f32 lbl_803E3A58;
+  extern void Sfx_PlayFromObject(int obj, int sfx);
+  struct {
+    u8 pad[8];
+    f32 val;
+    u8 pad2[12];
+  } stk;
+  int sub;
+  f32 fz;
+
+  sub = *(int *)(obj + 0xb8);
+  stk.val = *(f32 *)(sub + 8);
+  (*(code *)(*(int *)lbl_803DDAD0 + 4))(obj, 0xf, 0, 2, -1, 0);
+  (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stk.pad, 2, -1, 0);
+  Sfx_PlayFromObject(obj, SFXmn_eggylaugh116);
+  fz = lbl_803E3A58;
+  *(f32 *)(obj + 0x24) = fz;
+  *(f32 *)(obj + 0x2c) = fz;
+  *(s16 *)(sub + 0x10) = 0x32;
+  *(s16 *)(sub + 0x1a) = 800;
+  *(u8 *)(sub + 0x23) = 0;
+  *(u8 *)(sub + 0x21) = 0;
+  *(int *)(obj + 0xf8) = 0;
+  *(int *)(obj + 0xf4) = 2;
+  ObjHits_EnableObject(obj);
+  ObjHits_MarkObjectPositionDirty(obj);
+  *(s16 *)(sub + 0x1e) = 0;
+  if (arg < *(f32 *)(sub + 8)) {
+    ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x60004, obj, 0);
   }
-  local_20 = (longlong)(int)*(float *)(iVar6 + 8);
-  ObjHitbox_SetCapsuleBounds(param_9,(short)(int)*(float *)(iVar6 + 8),-5,10);
-  ObjHits_SetHitVolumeSlot(param_9,0xe,1,0);
-  ObjHits_EnableObject(param_9);
-  return;
+  ObjHitbox_SetCapsuleBounds(obj, (int)*(f32 *)(sub + 8), -5, 10);
+  ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
+  ObjHits_EnableObject(obj);
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1062,7 +1055,7 @@ void fn_80185B74(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
       (**(code **)(in_r9 + 8))(puVar2,0x51c,0,1);
     }
     if (*(short *)((int)piVar8 + 0x1e) < 1) {
-      fn_80185868(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(uint)puVar2);
+      fn_80185868((int)puVar2,dVar10);
       goto LAB_80186804;
     }
   }
