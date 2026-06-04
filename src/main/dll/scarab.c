@@ -940,6 +940,68 @@ FUN_8015e488(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 
 #pragma scheduling off
 #pragma peephole off
+int fn_8015DC04(int obj, u8 *p)
+{
+  extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+  extern int randomGetRange(int min, int max);
+  extern int *gBaddieControlInterface;
+  extern int *gPlayerInterface;
+  extern f64 lbl_803E2DC0;
+  int count;
+  int i;
+  int sub;
+  u8 *hit;
+  int maxr;
+  int four;
+  int *objs;
+  int r;
+  int rnd;
+
+  sub = *(int *)(obj + 0xb8);
+  if (*(char *)(p + 0x346) != '\0' || *(char *)(p + 0x27b) != '\0') {
+    hit = *(u8 **)(sub + 0x40c);
+    r = (*(int (**)(int, u8 *, f32, int))(*(int *)gBaddieControlInterface + 0x44))(
+        obj, p, (f32)(u32)*(u16 *)(sub + 0x3fe), 1);
+    if (r != 0) {
+      hit[9] &= ~2;
+      return 5;
+    }
+    four = 0;
+    maxr = 0;
+    objs = ObjList_GetObjects(&i, &count);
+    for (; i < count; i++) {
+      void *o = (void *)objs[i];
+      if (o != (void *)obj && *(s16 *)((char *)o + 0x46) == 774) {
+        int v = (*(int (**)(void *, int))(**(int **)((char *)o + 0x68) + 0x20))(o, 0);
+        if (v > maxr) {
+          maxr = v;
+        }
+        if (v == 4) {
+          four++;
+        }
+      }
+    }
+    rnd = randomGetRange(0, *(u8 *)(sub + 0x406));
+    if (maxr >= 5 || (hit[9] & 1) != 0) {
+      if ((*(u8 *)(sub + 0x404) & 2) != 0) {
+        hit[9] |= 1;
+      }
+      (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 4);
+    } else if (rnd > 32) {
+      if (four > 1) {
+        (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 2);
+      } else {
+        (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 4);
+      }
+    } else if (rnd > 16) {
+      (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 2);
+    } else {
+      (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 3);
+    }
+  }
+  return 0;
+}
+
 void fn_8015DAE8(void)
 {
   extern void *lbl_803AC528[];
@@ -3963,7 +4025,7 @@ extern int fn_8015E3A0(int obj, int state);
 extern int fn_8015E210(int* obj, u8* state);
 extern int fn_8015E0C8(int obj, u8* state);
 extern int fn_8015DF20(int obj, u8* state);
-extern int fn_8015DC04(int* obj, u8* state);
+extern int fn_8015DC04(int obj, u8* state);
 
 void dll_CE_initialise(void)
 {
