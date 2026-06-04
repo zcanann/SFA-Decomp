@@ -2293,6 +2293,69 @@ void fn_8015FBEC(int obj)
   Camera_EnableViewYOffset();
   CameraShake_SetAllMagnitudes(lbl_803E2E50);
 }
+
+static inline u8 scarab_isObjectInList(void *o)
+{
+  extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+  int count;
+  int i;
+  int *objs = ObjList_GetObjects(&i, &count);
+  while (i < count) {
+    if (o == (void *)objs[i++]) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+void fn_8015FCCC(int obj)
+{
+  extern void Camera_EnableViewYOffset(void);
+  extern void CameraShake_SetAllMagnitudes(f32);
+  extern int *gPartfxInterface;
+  extern f32 lbl_803E2E50;
+  s16 type;
+  int n;
+
+  Camera_EnableViewYOffset();
+  CameraShake_SetAllMagnitudes(lbl_803E2E50);
+  Sfx_PlayFromObject(obj, SFXkr_impact3);
+  type = *(s16 *)(obj + 0x46);
+  if (type == 0x2cb) {
+    if (*(void **)(obj + 0xc4) != NULL) {
+      if (scarab_isObjectInList(*(void **)(obj + 0xc4))) {
+        (*(void (**)(void *, int))(**(int **)(*(int *)(obj + 0xc4) + 0x68) + 0x20))(
+            *(void **)(obj + 0xc4), 0x80);
+      }
+    }
+    for (n = 0; n < 25; n++) {
+      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 832, 0,
+                                                                                       1, -1, 0);
+    }
+  } else if (type == 100) {
+    if (*(void **)(obj + 0xc4) != NULL) {
+      if (scarab_isObjectInList(*(void **)(obj + 0xc4))) {
+        (*(void (**)(void *, int))(**(int **)(*(int *)(obj + 0xc4) + 0x68) + 0x24))(
+            *(void **)(obj + 0xc4), 0x80);
+      }
+    }
+    for (n = 0; n < 25; n++) {
+      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 835, 0,
+                                                                                       1, -1, 0);
+    }
+  } else if (type == 0x30a) {
+    if (*(void **)(obj + 0xc4) != NULL) {
+      if (scarab_isObjectInList(*(void **)(obj + 0xc4))) {
+        (*(void (**)(void *, int, int))(**(int **)(*(int *)(obj + 0xc4) + 0x68) + 0x24))(
+            *(void **)(obj + 0xc4), 0x80, 0);
+      }
+    }
+    for (n = 0; n < 25; n++) {
+      (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 835, 0,
+                                                                                       1, -1, 0);
+    }
+  }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
