@@ -521,3 +521,240 @@ void kaldachompspit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int ObjList_FindObjectById(int id);
+extern void lightFn_8001db6c(int light, int onoff, f32 intensity);
+extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern void Sfx_PlayFromObject(int obj, u32 sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 vol, f32 scale);
+extern int Obj_FreeObject(int obj);
+extern int objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
+extern void ObjHits_EnableObject(int obj);
+extern int getAngle(f32 a, f32 b);
+extern f32 sqrtf(f32 x);
+extern int Obj_GetPlayerObject(void);
+extern int getTrickyObject(void);
+extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
+extern int *gPartfxInterface;
+extern f32 lbl_803E30D8;
+extern f64 lbl_803E30E8;
+extern f32 lbl_803E30F0;
+extern f32 lbl_803E30F4;
+extern f32 lbl_803E30F8;
+extern f32 lbl_803E30FC;
+extern f64 lbl_803E3100;
+void fn_801696D4(int obj);
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80169360
+ * EN v1.0 Address: 0x80169360
+ * EN v1.0 Size: 556b
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_80169360(u8 *obj, u8 mode)
+{
+    f32 *state;
+    int obj2;
+
+    if (obj == NULL) {
+        return;
+    }
+    switch (*(int *)(*(int *)(obj + 0x4c) + 0x14)) {
+    case 0x43d14:
+        obj2 = ObjList_FindObjectById(0x4b3b5);
+        break;
+    case 0x41be9:
+        obj2 = ObjList_FindObjectById(0x4b3f9);
+        break;
+    case 0x41cc4:
+        obj2 = ObjList_FindObjectById(0x4b402);
+        break;
+    case 0x41cc5:
+        obj2 = ObjList_FindObjectById(0x4b403);
+        break;
+    case 0x41cc6:
+        obj2 = ObjList_FindObjectById(0x4b404);
+        break;
+    case 0x41cc7:
+        obj2 = ObjList_FindObjectById(0x4b40b);
+        break;
+    case 0x41cc8:
+        obj2 = ObjList_FindObjectById(0x4b40c);
+        break;
+    case 0x41cc9:
+        obj2 = ObjList_FindObjectById(0x4b40f);
+        break;
+    case 0x41cd2:
+        obj2 = ObjList_FindObjectById(0x4b410);
+        break;
+    case 0x41ccc:
+        obj2 = ObjList_FindObjectById(0x4b411);
+        break;
+    case 0x41cd5:
+        obj2 = ObjList_FindObjectById(0x4b414);
+        break;
+    case 0x41cd6:
+        obj2 = ObjList_FindObjectById(0x4b415);
+        break;
+    case 0x41cd9:
+        obj2 = ObjList_FindObjectById(0x4b453);
+        break;
+    default:
+        return;
+    }
+    state = *(f32 **)(obj2 + 0xb8);
+    if (state != NULL) {
+        switch (mode) {
+        case 1:
+            state[2] = lbl_803E30D0;
+            state[0] = lbl_803E30D4;
+            state[1] = lbl_803E30D8;
+            *(u8 *)(state + 3) = 0;
+            break;
+        case 2:
+            state[2] = lbl_803E30D0;
+            state[0] = lbl_803E30D4;
+            state[1] = lbl_803E30D8;
+            *(u8 *)(state + 3) = 1;
+            break;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: kaldachompspit_update
+ * EN v1.0 Address: 0x801698E8
+ * EN v1.0 Size: 988b
+ */
+#pragma scheduling off
+#pragma peephole off
+void kaldachompspit_update(int obj)
+{
+    u32 *state;
+    f32 vx;
+    f32 vy;
+    f32 vz;
+    u32 ptr;
+    s16 v;
+    int rnd;
+    f32 t;
+
+    state = *(u32 **)(obj + 0xb8);
+    *(int *)(obj + 0xf4) = (int)((f32)*(int *)(obj + 0xf4) - timeDelta);
+    if (*(int *)(obj + 0xf4) < 0) {
+        Sfx_StopObjectChannel(obj, 0x7f);
+        Obj_FreeObject(obj);
+    } else if (*(u8 *)(obj + 0x36) != 0) {
+        if (*(int *)(obj + 0xf4) < 0x11b) {
+            *(f32 *)(obj + 0x28) = -(lbl_803E30F0 * timeDelta - *(f32 *)(obj + 0x28));
+            if ((f32)(u32)*(u8 *)(obj + 0x36) - (t = lbl_803E30F4 * timeDelta) > lbl_803E30F8) {
+                *(u8 *)(obj + 0x36) = (f32)(u32)*(u8 *)(obj + 0x36) - t;
+            } else {
+                Sfx_StopObjectChannel(obj, 0x7f);
+                *(u8 *)(obj + 0x36) = 0;
+            }
+            Sfx_SetObjectChannelVolume(obj, 0x40, (u8)(*(u8 *)(obj + 0x36) >> 1), lbl_803E30FC);
+        }
+        vx = *(f32 *)(obj + 0x24) * timeDelta;
+        vy = *(f32 *)(obj + 0x28) * timeDelta;
+        vz = *(f32 *)(obj + 0x2c) * timeDelta;
+        objMove(obj, vx, vy, vz);
+        if (*(s16 *)(obj + 0x46) == 0x869) {
+            ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
+            *(s16 *)(obj + 0x0) += 0x100;
+            *(s16 *)(obj + 0x2) += 0x800;
+        } else {
+            ObjHits_SetHitVolumeSlot(obj, 0xa, 1, 0);
+            *(s16 *)(obj + 0x0) = getAngle(vx, vz) - 0x8000;
+            *(s16 *)(obj + 0x2) = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
+        }
+        ObjHits_EnableObject(obj);
+        if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL) {
+            if (*(int *)(obj + 0xf4) < 0x17c) {
+                fn_801696D4(obj);
+                return;
+            }
+            if ((*(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)Obj_GetPlayerObject()) ||
+                (*(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)getTrickyObject())) {
+                fn_801696D4(obj);
+                return;
+            }
+        }
+        if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0) {
+            fn_801696D4(obj);
+        } else {
+            if (*(s16 *)(obj + 0x46) == 0x869) {
+                fn_80098B18(obj, lbl_803E30E0, 1, 0, 0, 0);
+            } else {
+                (**(void (**)(int, int, int, int, int, void *))(*gPartfxInterface + 0x8))(
+                    obj, 0x714, 0, 2, -1, (u8 *)(obj + 0x36));
+                (**(void (**)(int, int, int, int, int, void *))(*gPartfxInterface + 0x8))(
+                    obj, 0x715, 0, 1, -1, 0);
+                (**(void (**)(int, int, int, int, int, void *))(*gPartfxInterface + 0x8))(
+                    obj, 0x715, 0, 1, -1, 0);
+            }
+            ptr = *state;
+            if ((ptr != 0) && (*(u8 *)(ptr + 0x2f8) != 0) && (*(u8 *)(ptr + 0x4c) != 0)) {
+                rnd = randomGetRange(-0x19, 0x19);
+                ptr = *state;
+                v = *(u8 *)(ptr + 0x2f9);
+                v = v + (*(s8 *)(ptr + 0x2fa) + rnd);
+                if (v < 0) {
+                    v = 0;
+                    *(u8 *)(ptr + 0x2fa) = 0;
+                } else if (v > 0xff) {
+                    v = 0xff;
+                    *(u8 *)(ptr + 0x2fa) = 0;
+                }
+                *(u8 *)(*state + 0x2f9) = v;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801696D4
+ * EN v1.0 Address: 0x801696D4
+ * EN v1.0 Size: 312b
+ */
+#pragma scheduling off
+#pragma peephole off
+void fn_801696D4(int obj)
+{
+    int i;
+    u32 *state;
+    u8 rnd;
+
+    state = *(u32 **)(obj + 0xb8);
+    *(u8 *)(obj + 0x36) = 0;
+    *(int *)(obj + 0xf4) = 0xdc;
+    *(s16 *)(*(int *)(obj + 0x54) + 0x60) &= ~1;
+    if (*state != 0) {
+        lightFn_8001db6c(*state, 0, lbl_803E30E0);
+    }
+    if (*(s16 *)(obj + 0x46) == 0x869) {
+        rnd = randomGetRange(0, 1);
+        spawnExplosion(obj, (f32)(int)randomGetRange(0x32, 0x3c), 1, 1, 0, rnd, 0, 1, 0);
+    } else {
+        for (i = 0; i < 0x19; i++) {
+            (**(void (**)(int, int, int, int, int, int *))(*gPartfxInterface + 0x8))(
+                obj, 0x715, 0, 1, -1, &i);
+        }
+        Sfx_PlayFromObject(obj, 0x279);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

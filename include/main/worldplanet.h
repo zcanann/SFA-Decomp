@@ -39,7 +39,7 @@ void worldplanet_free(void);
 void worldplanet_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                         undefined4 param_4,undefined4 param_5,char visible);
 void worldplanet_hitDetect(void);
-void worldplanet_update(void);
+void worldplanet_update(int obj);
 void worldplanet_init(int obj);
 void worldplanet_release(void);
 void worldplanet_initialise(void);
