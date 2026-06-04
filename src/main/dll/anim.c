@@ -4990,7 +4990,7 @@ extern int fn_80200E44(int obj, int p2, f32 t);
 extern int fn_80200A70(int obj, int p2, f32 t);
 extern int fn_80200850();
 extern int fn_80200750();
-extern int fn_802004B0();
+extern int fn_802004B0(int obj, int p2, f32 t);
 extern int fn_80200088();
 extern int fn_801FFE18();
 
@@ -7652,6 +7652,106 @@ void dfpseqpoint_update(int obj)
         }
         break;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802004B0(int obj, int p2, f32 t)
+{
+    extern int Stack_IsFull(int sp);
+    extern void Stack_Push(int sp, int *args);
+    extern void ObjAnim_SampleRootCurvePhase(int, f32, int);
+    extern f32 Vec_xzDistance(int, int);
+    extern int randomGetRange(int, int);
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E62C0;
+    extern f32 lbl_803E62C4;
+    extern f32 lbl_803E62C8;
+    extern f32 lbl_803E62CC;
+    extern f32 lbl_803E62D0;
+    extern f32 lbl_803E62D4;
+    extern f32 lbl_803E62D8;
+    extern int lbl_8032973C[];
+    extern f32 lbl_8032974C[];
+    int blob = *(int *)(obj + 0xb8);
+    int sub = *(int *)(blob + 0x40c);
+    int n = 0x1f40 / *(u8 *)(blob + 0x406);
+    int tmpA;
+    int tmpB;
+    int q;
+    int target;
+    f32 frac;
+    f32 d;
+    int msgA[3];
+    int msgB[3];
+    int msgC[3];
+    int msgD[3];
+
+    *(u8 *)(sub + 0x14) |= 2;
+    *(u8 *)(sub + 0x15) &= ~4;
+    if (*(u16 *)(*(int *)(p2 + 0x2d0) + 0xb0) & 0x1000) {
+        *(f32 *)(p2 + 0x280) = lbl_803E62A8;
+        *(f32 *)(p2 + 0x284) = lbl_803E62A8;
+        *(f32 *)(p2 + 0x2a0) = lbl_803E62C0;
+        return 0;
+    }
+    frac = (f32)*(u8 *)(blob + 0x406) / lbl_803E62C4;
+    fn_80202C78(obj, *(int *)(p2 + 0x2d0), lbl_803E62C8, frac, lbl_803E62CC, t);
+    if (((u32)*(u8 *)(sub + 0x44) >> 5 & 1) != 0) {
+        fn_80202A2C(obj, lbl_8032973C, lbl_8032974C, 4, frac);
+    }
+    d = Vec_xzDistance(obj + 0x18, *(int *)(p2 + 0x2d0) + 0x18);
+    *(u8 *)(p2 + 0x34d) = 1;
+    if (d < lbl_803E62D0) {
+        *(f32 *)(p2 + 0x280) *= lbl_803E62D4;
+        *(f32 *)(p2 + 0x284) *= lbl_803E62D4;
+        target = *(int *)(p2 + 0x2d0);
+        tmpA = *(int *)(sub + 0x30);
+        tmpB = *(int *)(sub + 0x2c);
+        q = *(int *)(sub + 0x24);
+        msgA[0] = *(int *)(sub + 0x28);
+        msgA[1] = tmpB;
+        msgA[2] = tmpA;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, msgA);
+        }
+        q = *(int *)(sub + 0x24);
+        msgB[0] = 2;
+        msgB[1] = 1;
+        msgB[2] = target;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, msgB);
+        }
+        *(u8 *)(sub + 0x34) = 1;
+        return 0;
+    }
+    if (d < lbl_803E62D8 && randomGetRange(0, n) == 0) {
+        *(f32 *)(p2 + 0x280) = lbl_803E62A8;
+        *(f32 *)(p2 + 0x284) = lbl_803E62A8;
+        target = *(int *)(p2 + 0x2d0);
+        tmpA = *(int *)(sub + 0x30);
+        tmpB = *(int *)(sub + 0x2c);
+        q = *(int *)(sub + 0x24);
+        msgC[0] = *(int *)(sub + 0x28);
+        msgC[1] = tmpB;
+        msgC[2] = tmpA;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, msgC);
+        }
+        q = *(int *)(sub + 0x24);
+        msgD[0] = 4;
+        msgD[1] = 1;
+        msgD[2] = target;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, msgD);
+        }
+        *(u8 *)(sub + 0x34) = 1;
+        return 0;
+    }
+    ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(p2 + 0x280), p2 + 0x2a0);
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
