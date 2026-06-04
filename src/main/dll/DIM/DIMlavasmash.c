@@ -398,103 +398,104 @@ void dimsnowball_hitDetect(int *obj) {
     state[0] = 0;
 }
 
+#pragma scheduling off
 void dimsnowball_update(int obj)
 {
-  float currentX;
-  float currentY;
-  float currentZ;
-  float nextX;
-  float nextY;
-  float nextZ;
-  s16 pathIndex;
-  s16 prevIndex;
-  s16 nextIndex;
-  s16 nextNextIndex;
-  s16 lastIndex;
-  int model;
-  int player;
-  int *state;
-  f32 velocityLen;
+    s16 idx[4];
+    f32 x[4];
+    f32 y[4];
+    f32 z[4];
+    void *ap;
+    int *state;
+    int player;
+    int count;
+    int last;
+    u8 frames;
+    u8 *model;
+    f32 dy1;
+    f32 dy2;
+    f32 v24;
 
-  state = *(int **)(obj + 0xb8);
-  player = Obj_GetPlayerObject();
-  if (*state == 0) {
-    Obj_FreeObject(obj);
-    return;
-  }
-  pathIndex = (short)state[2];
-  lastIndex = lbl_803DBEE8 - 1;
-  if (pathIndex >= lastIndex) {
-    Obj_FreeObject(obj);
-    return;
-  }
-  prevIndex = pathIndex - 1;
-  if (prevIndex < 0) {
-    prevIndex = 0;
-  }
-  nextIndex = pathIndex + 1;
-  if (nextIndex >= lbl_803DBEE8) {
-    nextIndex = lastIndex;
-  }
-  nextNextIndex = pathIndex + 2;
-  if (nextNextIndex >= lbl_803DBEE8) {
-    nextNextIndex = lastIndex;
-  }
-  currentX = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[pathIndex * 3] ^ 0x80000000) -
-                    lbl_803E4858) * lbl_803E484C;
-  currentY = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[pathIndex * 3 + 1] ^ 0x80000000) -
-                    lbl_803E4858) * lbl_803E484C;
-  currentZ = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[pathIndex * 3 + 2] ^ 0x80000000) -
-                    lbl_803E4858) * lbl_803E484C;
-  nextX = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextIndex * 3] ^ 0x80000000) -
-                 lbl_803E4858) * lbl_803E484C;
-  nextY = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextIndex * 3 + 1] ^ 0x80000000) -
-                 lbl_803E4858) * lbl_803E484C;
-  nextZ = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextIndex * 3 + 2] ^ 0x80000000) -
-                 lbl_803E4858) * lbl_803E484C;
-  if (((nextY - ((float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextNextIndex * 3 + 1] ^
-                                             0x80000000) - lbl_803E4858) * lbl_803E484C) <=
-        lbl_803E4850) &&
-      (currentY - ((float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[prevIndex * 3 + 1] ^
-                                            0x80000000) - lbl_803E4858) * lbl_803E484C) <=
-       lbl_803E4850)) && (*(char *)(state + 3) < '\x01')) {
-    velocityLen = sqrtf(*(float *)(obj + 0x2c) * *(float *)(obj + 0x2c) +
-                        *(float *)(obj + 0x24) * *(float *)(obj + 0x24) +
-                        *(float *)(obj + 0x28) * *(float *)(obj + 0x28));
-    if ((*(ushort *)(player + 0xb0) & 0x1000) == 0) {
-      Sfx_PlayFromObject(obj,SFXfoot_run_jingle2);
+    ap = idx;
+    ap = x;
+    ap = y;
+    ap = z;
+    state = *(int **)(obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    if (*(void **)state == NULL) {
+        Obj_FreeObject(obj);
+        return;
     }
-    *(undefined *)(state + 3) = 0x1e;
-  }
-  *(float *)(obj + 0xc) = lbl_803E4850 * (nextX - currentX) + currentX;
-  *(float *)(obj + 0x10) = lbl_803E4850 * (nextY - currentY) + currentY;
-  *(float *)(obj + 0x14) = lbl_803E4850 * (nextZ - currentZ) + currentZ;
-  *(float *)(obj + 0xc) = *(float *)(obj + 0xc) + *(float *)(*state + 0xc);
-  *(float *)(obj + 0x10) = *(float *)(obj + 0x10) + *(float *)(*state + 0x10);
-  *(float *)(obj + 0x14) = *(float *)(obj + 0x14) + *(float *)(*state + 0x14);
-  *(float *)(obj + 0x24) = oneOverTimeDelta * (*(float *)(obj + 0xc) - *(float *)(obj + 0x80));
-  *(float *)(obj + 0x28) = oneOverTimeDelta * (*(float *)(obj + 0x10) - *(float *)(obj + 0x84));
-  *(float *)(obj + 0x2c) = oneOverTimeDelta * (*(float *)(obj + 0x14) - *(float *)(obj + 0x88));
-  state[2] = state[2] + framesThisStep;
-  if ('\0' < *(char *)(state + 3)) {
-    *(byte *)(state + 3) = *(char *)(state + 3) - framesThisStep;
-  }
-  *(short *)(obj + 2) =
-       (short)(int)-(lbl_803E4854 * -*(float *)(obj + 0x2c) -
-                    (float)((double)CONCAT44(0x43300000,(int)*(short *)(obj + 2) ^ 0x80000000) -
-                           lbl_803E4858));
-  *(short *)(obj + 4) =
-       (short)(int)-(lbl_803E4854 * *(float *)(obj + 0x24) -
-                    (float)((double)CONCAT44(0x43300000,(int)*(short *)(obj + 4) ^ 0x80000000) -
-                           lbl_803E4858));
-  model = *(int *)(obj + 0x54);
-  if (model != 0) {
-    *(ushort *)(model + 0x60) = *(ushort *)(model + 0x60) | 1;
-    *(undefined *)(model + 0x6e) = 4;
-    *(undefined *)(model + 0x6f) = 2;
-    *(undefined4 *)(model + 0x48) = 0x10;
-    *(undefined4 *)(model + 0x4c) = 0x10;
-  }
-  return;
+    frames = framesThisStep;
+    idx[1] = (s16)state[2];
+    count = lbl_803DBEE8;
+    last = count - 1;
+    if (idx[1] >= last) {
+        Obj_FreeObject(obj);
+        return;
+    }
+    idx[0] = idx[1] - 1;
+    if (idx[0] < 0) {
+        idx[0] = 0;
+    }
+    idx[2] = idx[1] + 1;
+    if (idx[2] >= count) {
+        idx[2] = last;
+    }
+    idx[3] = idx[1] + 2;
+    if (idx[3] >= count) {
+        idx[3] = last;
+    }
+    idx[0] *= 3;
+    x[0] = (f32)lbl_80323BC0[idx[0]] * lbl_803E484C;
+    y[0] = (f32)lbl_80323BC0[idx[0] + 1] * lbl_803E484C;
+    z[0] = (f32)lbl_80323BC0[idx[0] + 2] * lbl_803E484C;
+    idx[1] *= 3;
+    x[1] = (f32)lbl_80323BC0[idx[1]] * lbl_803E484C;
+    y[1] = (f32)lbl_80323BC0[idx[1] + 1] * lbl_803E484C;
+    z[1] = (f32)lbl_80323BC0[idx[1] + 2] * lbl_803E484C;
+    idx[2] *= 3;
+    x[2] = (f32)lbl_80323BC0[idx[2]] * lbl_803E484C;
+    y[2] = (f32)lbl_80323BC0[idx[2] + 1] * lbl_803E484C;
+    z[2] = (f32)lbl_80323BC0[idx[2] + 2] * lbl_803E484C;
+    idx[3] *= 3;
+    x[3] = (f32)lbl_80323BC0[idx[3]] * lbl_803E484C;
+    y[3] = (f32)lbl_80323BC0[idx[3] + 1] * lbl_803E484C;
+    z[3] = (f32)lbl_80323BC0[idx[3] + 2] * lbl_803E484C;
+    dy1 = y[1] - y[0];
+    dy2 = y[2] - y[3];
+    if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && *(s8 *)((u8 *)state + 0xc) <= 0) {
+        sqrtf(*(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c) +
+              (*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x28) * *(f32 *)(obj + 0x28)));
+        if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+            Sfx_PlayFromObject(obj, SFXfoot_run_jingle2);
+        }
+        *(s8 *)((u8 *)state + 0xc) = 0x1e;
+    }
+    *(f32 *)(obj + 0xc) = lbl_803E4850 * (x[2] - x[1]) + x[1];
+    *(f32 *)(obj + 0x10) = lbl_803E4850 * (y[2] - y[1]) + y[1];
+    *(f32 *)(obj + 0x14) = lbl_803E4850 * (z[2] - z[1]) + z[1];
+    *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + *(f32 *)(*state + 0xc);
+    *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + *(f32 *)(*state + 0x10);
+    *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + *(f32 *)(*state + 0x14);
+    *(f32 *)(obj + 0x24) = oneOverTimeDelta * (*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80));
+    *(f32 *)(obj + 0x28) = oneOverTimeDelta * (*(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84));
+    *(f32 *)(obj + 0x2c) = oneOverTimeDelta * (*(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+    state[2] = state[2] + frames;
+    if (*(s8 *)((u8 *)state + 0xc) > 0) {
+        *(s8 *)((u8 *)state + 0xc) -= frames;
+    }
+    v24 = *(f32 *)(obj + 0x24);
+    *(s16 *)(obj + 2) = (int)-(lbl_803E4854 * -*(f32 *)(obj + 0x2c) - (f32)*(s16 *)(obj + 2));
+    *(s16 *)(obj + 4) = (int)-(lbl_803E4854 * v24 - (f32)*(s16 *)(obj + 4));
+    model = *(u8 **)(obj + 0x54);
+    if (model != NULL) {
+        *(s16 *)(model + 0x60) |= 1;
+        *(u8 *)(model + 0x6e) = 4;
+        *(u8 *)(model + 0x6f) = 2;
+        *(int *)(model + 0x48) = 0x10;
+        *(int *)(model + 0x4c) = 0x10;
+    }
 }
+#pragma scheduling reset
 #pragma peephole reset
