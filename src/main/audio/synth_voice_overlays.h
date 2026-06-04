@@ -14,10 +14,10 @@ typedef struct SynthVoiceTrackRuntime {
     SynthSequenceState sequenceStates[SYNTH_SEQUENCE_TRACK_COUNT];
 } SynthVoiceTrackRuntime;
 
-#define SYNTH_VOICE_PROGRAM_STATE(voice) ((SynthVoiceProgramState*)&(voice)->unk10)
+#define SYNTH_VOICE_PROGRAM_STATE(voice) ((SynthVoiceProgramState*)((u8*)(voice) + 0x10))
 #define SYNTH_VOICE_TRACK_RUNTIME(voice) ((SynthVoiceTrackRuntime*)&(voice)->unk124)
 #define SYNTH_CALLBACK_CONTROLLER_STATE(voice, controller) \
-    ((SynthCallbackControllerState*)&(voice)->channelData[(controller) * 0x38])
+    ((SynthCallbackControllerState*)((u8*)(voice) + 0x1518 + ((controller) * 0x38)))
 #define SYNTH_CALLBACK_CONTROLLER_THRESHOLD(controllerState, index) \
     (*(s32*)((u8*)(controllerState) - 0x0C + ((index) * 8)))
 

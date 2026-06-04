@@ -184,10 +184,24 @@ typedef struct SynthSequenceState {
     u8 pad29[3];
 } SynthSequenceState;
 
+typedef struct SynthTimeWord {
+    u32 low;
+    u32 high;
+} SynthTimeWord;
+
 typedef struct SynthSequenceQueue {
-    u8 unk00[0x1C];
+    u8* masterTrackBase;
+    u8* masterTrackCursor;
+    u32 bpm;
+    u8 unk0C[0x10];
     SynthSequenceEvent* eventList;
-    u8 unk20[0x18];
+    SynthTimeWord time[2];
+    u8 timeIndex;
+    u8 unk31;
+    u16 speed;
+    u16 loopCount;
+    u8 loopDisable;
+    u8 unk37;
 } SynthSequenceQueue;
 
 typedef struct SynthCallbackControllerState {
@@ -251,26 +265,41 @@ typedef struct SynthVoiceScratch {
     SynthVoiceControllerOverlay overlay;
 } SynthVoiceScratch;
 
+typedef struct SynthProgramState {
+    u16 macId;
+    u8 priority;
+    u8 maxVoices;
+} SynthProgramState;
+
 typedef struct SynthVoice {
     struct SynthVoice* next;
     struct SynthVoice* prev;
     u8 state;
     u8 slotIndex;
-    u8 unk0A[2];
+    u16 groupId;
     u32 handle;
-    u8 unk10[0x10C];
+    u8* normtab;
+    u8 normTrans[0x80];
+    u8* drumtab;
+    u8 drumTrans[0x80];
+    u8* arrbase;
     u32 immediateMixValue0;
     u32 immediateMixValue1;
     u8 unk124[0x200];
     u8 studioMap[0x40];
     u8 unk364[0xB00];
     SynthCallbackLink* callbackLists[3];
-    u8 unkE70[0x40];
+    SynthProgramState prgState[0x10];
     u8 currentStudio;
     u8 unkEB1[0x1B];
     SynthPendingUpdate pendingUpdate;
-    u8 unkEE0[0x638];
-    u8 channelData[0x350];
+    u8 pendingStartActive;
+    u8 defStudio;
+    u8 keyOffCheck;
+    u8 unkEE3;
+    SynthSequenceEvent channelEvents[SYNTH_SEQUENCE_TRACK_COUNT];
+    u8* keyGroupMap;
+    SynthSequenceQueue section[SYNTH_VOICE_NOTE_COUNT];
 } SynthVoice;
 
 typedef struct SynthVoiceRuntime {
@@ -279,21 +308,21 @@ typedef struct SynthVoiceRuntime {
     u16 voiceNotes[SYNTH_MAX_VOICES][SYNTH_VOICE_NOTE_COUNT];
 } SynthVoiceRuntime;
 
-#define SYNTH_VOICE_EVENT_SCRATCH(voice) ((SynthVoiceEventScratch*)&(voice)->unkEE0)
-#define SYNTH_VOICE_CONTROLLER_OVERLAY(voice) ((SynthVoiceControllerOverlay*)&(voice)->unkEE0[0x608])
+#define SYNTH_VOICE_EVENT_SCRATCH(voice) ((SynthVoiceEventScratch*)((u8*)(voice) + 0xEE0))
+#define SYNTH_VOICE_CONTROLLER_OVERLAY(voice) ((SynthVoiceControllerOverlay*)((u8*)(voice) + 0x14E8))
 #define SYNTH_CHANNEL_STATE(voice, channel) \
-    ((SynthChannelState*)&(voice)->unkEE0[0x608 + (((channel) & 0xFF) * sizeof(SynthChannelState))])
+    ((SynthChannelState*)((u8*)(voice) + 0x14E8 + (((channel) & 0xFF) * sizeof(SynthChannelState))))
 #define SYNTH_CHANNEL_THRESHOLD(state, index) (*(u32*)((u8*)(state) + 0x24 + ((index) * 8)))
 #define SYNTH_CHANNEL_EVENT(voice, channel) \
-    ((SynthSequenceEvent*)&(voice)->unkEE0[0x4 + ((channel) * 0x18)])
-#define SYNTH_KEYGROUP_MAP(voice) (*(u8**)&(voice)->unkEE0[0x604])
+    ((SynthSequenceEvent*)((u8*)(voice) + 0xEE4 + ((channel) * 0x18)))
+#define SYNTH_KEYGROUP_MAP(voice) (*(u8**)((u8*)(voice) + 0x14E4))
 #define SYNTH_SEQUENCE_QUEUE(voice, index) \
-    ((SynthSequenceQueue*)&(voice)->unkEE0[0x608 + (((index) & 0xFF) * sizeof(SynthSequenceQueue))])
+    ((SynthSequenceQueue*)((u8*)(voice) + 0x14E8 + (((index) & 0xFF) * sizeof(SynthSequenceQueue))))
 #define SYNTH_KEYGROUP_STATE(voice, index) \
-    ((SynthKeyGroupState*)&(voice)->unkEE0[0x608 + ((index) * 0x38)])
+    ((SynthKeyGroupState*)((u8*)(voice) + 0x14E8 + ((index) * 0x38)))
 #define SYNTH_SEQUENCE_STATE(voice, channel) ((SynthSequenceState*)&(voice)->unk364[(channel) * 0x2C])
 #define SYNTH_TRACK_CURSOR(voice, channel) ((SynthTrackCursor*)&(voice)->unk124[(channel) * 8])
-#define SYNTH_CHANNEL_SPEED_VALUE(voice, channel) (*(u16*)&(voice)->channelData[((channel) * 0x38) + 2])
+#define SYNTH_CHANNEL_SPEED_VALUE(voice, channel) (*(u16*)((u8*)(voice) + 0x151A + ((channel) * 0x38)))
 #define SYNTH_RUNTIME_CHANNEL_SPEED_VALUE(runtime, voiceIndex, channel) \
     (*(u16*)((u8*)(runtime) + 0x291A + ((voiceIndex) * sizeof(SynthVoice)) + ((channel) * 0x38)))
 #define SYNTH_RUNTIME_PENDING_VALUE16(runtime, voiceIndex) \
