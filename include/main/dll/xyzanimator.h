@@ -34,7 +34,7 @@ typedef struct PollenExtra {
 void kaldachompspit_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                            undefined4 param_4,undefined4 param_5,char visible);
 void kaldachompspit_hitDetect(void);
-void kaldachompspit_init(uint param_1);
+void kaldachompspit_init(int obj);
 void kaldachompspit_release(void);
 void kaldachompspit_initialise(void);
 void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,double param_4,

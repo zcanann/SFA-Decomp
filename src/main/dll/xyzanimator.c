@@ -279,62 +279,61 @@ void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void kaldachompspit_init(uint param_1)
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void *objCreateLight(int obj, int kind);
+extern void modelLightStruct_setField50(int light, int value);
+extern void lightVecFn_8001dd88(int light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setColors100104(int light, int r, int g, int b, int a);
+extern void fn_8001D730(int light, int a, int r, int g, int b, int alpha, f32 radius);
+extern void lightSetFieldB0(int light, int r, int g, int b, int a);
+extern void lightDistAttenFn_8001dc38(int light, f32 near, f32 far);
+extern void lightSetField4D(int light, int v);
+extern void lightFn_8001db6c(int light, int enabled, f32 scale);
+extern void lightFn_8001d620(int light, int a, int b);
+extern f32 lbl_803E30E0;
+extern f32 lbl_803E30F8;
+extern f32 lbl_803E3108;
+extern f32 lbl_803E310C;
+
+void kaldachompspit_init(int obj)
 {
-  uint uVar1;
-  int *piVar2;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int *piVar3;
-  double dVar4;
-  double dVar5;
-  undefined8 in_f4;
-  undefined8 in_f5;
-  undefined8 in_f6;
-  undefined8 in_f7;
-  undefined8 in_f8;
-  
-  piVar3 = *(int **)(param_1 + 0xb8);
-  *(undefined4 *)(param_1 + 0xf4) = 400;
-  ObjHits_DisableObject(param_1);
-  *(undefined *)(param_1 + 0x36) = 0xff;
-  FUN_80006824(param_1,SFXsc_attack02);
-  *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
-  if (*piVar3 == 0) {
-    piVar2 = FUN_80017624(param_1,'\x01');
-    *piVar3 = (int)piVar2;
-    if (*piVar3 != 0) {
-      FUN_800175b0(*piVar3,2);
+    int *extra;
+
+    extra = *(int **)(obj + 0xb8);
+    *(int *)(obj + 0xf4) = 400;
+    ObjHits_DisableObject(obj);
+    *(u8 *)(obj + 0x36) = 0xff;
+    Sfx_PlayFromObject(obj, 0x278);
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+    if (*(void **)extra == NULL) {
+        *extra = (int)objCreateLight(obj, 1);
+        if (*(void **)extra != NULL) {
+            modelLightStruct_setField50(*extra, 2);
+        }
     }
-  }
-  if ((int *)*piVar3 != (int *)0x0) {
-    dVar4 = (double)lbl_803E3D90;
-    dVar5 = dVar4;
-    FUN_800175ec(dVar4,dVar4,dVar4,(int *)*piVar3);
-    if (*(short *)(param_1 + 0x46) == 0x869) {
-      FUN_8001759c(*piVar3,0xff,0xc0,0,0xff);
-      FUN_80017588(*piVar3,0xff,0xc0,0,0xff);
-      FUN_8001754c((double)(float)((double)lbl_803E3DA0 *
-                                  (double)(lbl_803E3DA4 * *(float *)(param_1 + 8))),
-                   (double)lbl_803E3DA0,dVar5,in_f4,in_f5,in_f6,in_f7,in_f8,*piVar3,0,0xff,0xc0,0,
-                   0x7f,in_r9,in_r10);
-      FUN_80017594(*piVar3,0xff,0xd2,0,0xff);
+    if (*(void **)extra != NULL) {
+        f32 k = lbl_803E30F8;
+        lightVecFn_8001dd88(*extra, k, k, k);
+        if (*(s16 *)(obj + 0x46) == 0x869) {
+            modelLightStruct_setColorsA8AC(*extra, 0xff, 0xc0, 0, 0xff);
+            modelLightStruct_setColors100104(*extra, 0xff, 0xc0, 0, 0xff);
+            fn_8001D730(*extra, 0, 0xff, 0xc0, 0, 0x7f, lbl_803E3108 * (lbl_803E310C * *(f32 *)(obj + 8)));
+            lightSetFieldB0(*extra, 0xff, 0xd2, 0, 0xff);
+        } else {
+            modelLightStruct_setColorsA8AC(*extra, 0, 0xff, 0, 0xff);
+            modelLightStruct_setColors100104(*extra, 0, 0xff, 0, 0xff);
+            fn_8001D730(*extra, 0, 0, 0xff, 0, 0x28, lbl_803E310C * *(f32 *)(obj + 8));
+            lightSetFieldB0(*extra, 0, 0xff, 0, 0xff);
+        }
+        {
+            int a = (int)(lbl_803E310C * *(f32 *)(obj + 8));
+            lightDistAttenFn_8001dc38(*extra, (f32)a, (f32)(a + 0x28));
+        }
+        lightSetField4D(*extra, 1);
+        lightFn_8001db6c(*extra, 1, lbl_803E30E0);
+        lightFn_8001d620(*extra, 1, 3);
     }
-    else {
-      FUN_8001759c(*piVar3,0,0xff,0,0xff);
-      FUN_80017588(*piVar3,0,0xff,0,0xff);
-      FUN_8001754c((double)(lbl_803E3DA4 * *(float *)(param_1 + 8)),dVar4,dVar5,in_f4,in_f5,in_f6,
-                   in_f7,in_f8,*piVar3,0,0,0xff,0,0x28,in_r9,in_r10);
-      FUN_80017594(*piVar3,0,0xff,0,0xff);
-    }
-    uVar1 = (uint)(lbl_803E3DA4 * *(float *)(param_1 + 8));
-    FUN_800175d0((double)(f32)(s32)(uVar1),
-                 (double)(f32)(s32)(uVar1 + 0x28),*piVar3);
-    FUN_800175bc(*piVar3,1);
-    FUN_800175cc((double)lbl_803E3D78,*piVar3,'\x01');
-    FUN_8001753c(*piVar3,1,3);
-  }
-  return;
 }
 
 /*
@@ -1650,25 +1649,27 @@ void pollenfragment_hitDetect(int obj) {
 #pragma peephole off
 void pollenfragment_update(int obj) {
     u8 *extra;
-    int near;
+    u8 *nearObj;
     void *hit;
     int i;
-    XyzVec pos;
-    XyzVec sc;
+    f32 w;
+    f32 m;
     XyzVec dir;
+    XyzVec sc;
+    XyzVec pos;
 
     extra = *(u8 **)(obj + 0xb8);
     if (getCurSeqNo() != 0) {
         Obj_FreeObject(obj);
         return;
     }
-    if (fn_80080150((int)(extra + 0x20)) != 0) {
-        if (timerCountDown((int)(extra + 0x20)) != 0) {
+    if (fn_80080150((int)extra + 0x20) != 0) {
+        if (timerCountDown((int)extra + 0x20) != 0) {
             Obj_FreeObject(obj);
         }
         return;
     }
-    if (timerCountDown((int)(extra + 0x24)) != 0) {
+    if (timerCountDown((int)extra + 0x24) != 0) {
         s16toFloat(extra + 0x20, 0x78);
     }
     if (*(void **)(obj + 0xc4) != NULL) {
@@ -1697,15 +1698,17 @@ void pollenfragment_update(int obj) {
     if ((*(PollenFragmentDef **)(extra + 0x1c))->auraFx != -1) {
         (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, (int)(*(PollenFragmentDef **)(extra + 0x1c))->auraFx, 0, 1, -1, 0);
     }
-    near = ObjGroup_FindNearestObject((int)(*(PollenFragmentDef **)(extra + 0x1c))->targetGroup, obj, 0);
-    if (near != 0 &&
+    nearObj = (u8 *)ObjGroup_FindNearestObject((int)(*(PollenFragmentDef **)(extra + 0x1c))->targetGroup, obj, 0);
+    if (nearObj != NULL &&
         (!(*(PollenFragmentDef **)(extra + 0x1c))->timed || *(f32 *)(extra + 8) < lbl_803E3164)) {
         if ((*(PollenFragmentDef **)(extra + 0x1c))->usePath) {
-            ObjPath_GetPointWorldPosition(near, 0, &pos.x, &pos.y, &pos.z, 0);
+            ObjPath_GetPointWorldPosition(nearObj, 0, &pos.x, &pos.y, &pos.z, 0);
         } else {
-            pos.x = *(f32 *)(near + 0x18);
-            pos.y = *(f32 *)(near + 0xa8) * *(f32 *)(near + 8) * lbl_803E3168 + *(f32 *)(near + 0x1c);
-            pos.z = *(f32 *)(near + 0x20);
+            f32 prod;
+            pos.x = *(f32 *)(nearObj + 0x18);
+            prod = *(f32 *)(nearObj + 0xa8) * *(f32 *)(nearObj + 8);
+            pos.y = prod * lbl_803E3168 + *(f32 *)(nearObj + 0x1c);
+            pos.z = *(f32 *)(nearObj + 0x20);
         }
         PSVECSubtract(&pos, (void *)(obj + 0x18), &dir);
         PSVECMag(&dir);
@@ -1717,16 +1720,16 @@ void pollenfragment_update(int obj) {
         PSVECScale(&sc, &sc, lbl_803E315C);
         PSVECAdd(&dir, &sc, &dir);
         *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) +
-            ((lbl_803E315C + *(f32 *)(extra + 8)) * (dir.x * *(f32 *)(extra + 4))) / lbl_803E3164;
+            (((w = lbl_803E315C) + *(f32 *)(extra + 8)) * (dir.x * *(f32 *)(extra + 4))) / (m = lbl_803E3164);
         *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) +
-            ((lbl_803E315C + *(f32 *)(extra + 8)) * (dir.z * *(f32 *)(extra + 4))) / lbl_803E3164;
+            ((w + *(f32 *)(extra + 8)) * (dir.z * *(f32 *)(extra + 4))) / m;
         if (!(*(PollenFragmentDef **)(extra + 0x1c))->noVertical) {
             *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) +
-                ((lbl_803E315C + *(f32 *)(extra + 8)) * (lbl_803E316C * (dir.y * *(f32 *)(extra + 4)))) / lbl_803E3164;
+                ((w + *(f32 *)(extra + 8)) * (lbl_803E316C * (dir.y * *(f32 *)(extra + 4)))) / m;
         }
     }
-    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * lbl_803E3170;
-    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * lbl_803E3170;
+    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (w = lbl_803E3170);
+    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * w;
     *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) * lbl_803E3174;
     if ((*(PollenFragmentDef **)(extra + 0x1c))->noVertical) {
         *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) -
