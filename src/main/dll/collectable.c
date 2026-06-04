@@ -1194,6 +1194,677 @@ void Tricky_destroy(int obj,int shouldKeepFlameChildren)
   return;
 }
 
+/* Tricky_update: 8672b - Tricky sidekick command state machine and per-frame update. */
+typedef struct {
+  u8 slotA : 2;
+  u8 slotB : 2;
+  u8 slotC : 2;
+  u8 slotD : 2;
+} TrickySlotBits;
+
+typedef struct {
+  void *pad[9];
+  void (*handlers[1])(int obj, int state);
+} TrickyHandlerTable;
+
+typedef struct {
+  int a;
+  int b;
+  int c;
+  int d;
+  int e;
+} TrickyCmdQuery;
+
+typedef struct {
+  u16 a;
+  u16 b;
+} TrickySfxPair;
+
+extern int *gGameUIInterface;
+extern int lbl_802C21C8[];
+extern TrickySfxPair lbl_803E23C4;
+extern f32 lbl_803E2408;
+extern f32 lbl_803E23EC;
+extern f32 lbl_803E24C8;
+extern f32 lbl_803E24D8;
+extern f32 lbl_803E2538;
+extern f32 lbl_803E2544;
+extern f32 lbl_803E2548;
+extern f32 lbl_803E254C;
+extern f32 lbl_803E2550;
+extern int trickySelectQueuedCommandTarget(int state, int type);
+void trickyDebugPrint(const char *fmt, ...);
+extern int trickyFoodFn_8013db3c(int obj, int state);
+extern void trickyUpdateCollisionAndPathState(int obj);
+extern void memmove(void *dst, void *src, int n);
+extern void fn_801B17F4(void);
+extern void fn_801B6D40(void);
+extern void fn_801FD4A8(void);
+extern void fn_801B0784(void);
+extern void drchimmey_countdownCallback(void);
+extern void fn_801DA9CC(void);
+extern void wcbeacon_aButtonCallback(void);
+extern void fn_8003A168(int obj, void *p);
+extern void fn_8003B228(int obj, void *p);
+extern void fn_8003A230(int obj, void *p, f32 f);
+
+#define TRICKY_RESET_COMMAND(state) \
+  *(u8 *)((state) + 8) = 1; \
+  *(u8 *)((state) + 0xa) = 0; \
+  *(f32 *)((state) + 0x71c) = lbl_803E23DC; \
+  *(f32 *)((state) + 0x720) = lbl_803E23DC; \
+  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & 0xffffffef; \
+  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & 0xfffeffff; \
+  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & 0xfffdffff; \
+  *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & 0xfffbffff; \
+  *(s8 *)((state) + 0xd) = -1
+
+#define TRICKY_VOICE(obj, st, sfx, vol) \
+  st = *(int *)((obj) + 0xb8); \
+  if ((((TrickyByteFlags *)(st + 0x58))->bit6 == 0) && \
+     (((*(short *)((obj) + 0xa0) >= 0x30 || (*(short *)((obj) + 0xa0) < 0x29)) && \
+      (playing = Sfx_IsPlayingFromObjectChannel((obj), 0x10), !playing)))) { \
+    objAudioFn_800393f8((obj), (void *)(st + 0x3a8), (sfx), (vol), 0xffffffff, 0); \
+  }
+
+#define TRICKY_SPAWN_BUBBLE(obj, state) \
+  if (*(int *)((state) + 0x7b8) == 0) { \
+    int setup_; \
+    s8 used_[4]; \
+    u8 slot_; \
+    setup_ = Obj_AllocObjectSetup(0x20, 0x17b); \
+    used_[0] = -1; \
+    used_[1] = -1; \
+    used_[2] = -1; \
+    if (*(int *)((state) + 0x7a8) != 0) { \
+      used_[((TrickySlotBits *)((state) + 0x7bc))->slotA] = 1; \
+    } \
+    if (*(int *)((state) + 0x7b0) != 0) { \
+      used_[((TrickySlotBits *)((state) + 0x7bc))->slotB] = 1; \
+    } \
+    if (*(int *)((state) + 0x7b8) != 0) { \
+      used_[((TrickySlotBits *)((state) + 0x7bc))->slotC] = 1; \
+    } \
+    if (used_[0] == -1) { slot_ = 0; } \
+    else if (used_[1] == -1) { slot_ = 1; } \
+    else if (used_[2] == -1) { slot_ = 2; } \
+    else if (used_[3] == -1) { slot_ = 3; } \
+    else { slot_ = -1; } \
+    ((TrickySlotBits *)((state) + 0x7bc))->slotC = slot_; \
+    *(int *)((state) + 0x7b8) = Obj_SetupObject(setup_, 4, -1, -1, *(int *)((obj) + 0x30)); \
+    ObjLink_AttachChild((obj), *(int *)((state) + 0x7b8), ((TrickySlotBits *)((state) + 0x7bc))->slotC); \
+    *(f32 *)((state) + 0x7c0) = lbl_803E23DC; \
+    *(f32 *)((state) + 0x7c4) = lbl_803E23DC; \
+    *(f32 *)((state) + 0x7c8) = lbl_803E23DC; \
+  }
+
+void Tricky_update(int obj)
+{
+  char *base;
+  int state;
+  int found;
+  int cmd;
+  int st;
+  bool playing;
+  int i;
+  int setup;
+  int count;
+  u8 st8;
+  uint f;
+  int diff;
+  int step;
+  int played;
+  int talking;
+  int sfx2;
+  u16 sfxId;
+  int p;
+  u32 target;
+  s8 flagsByte;
+  u8 blockFlags[120];
+  TrickyCmdQuery cmdQuery;
+  TrickySfxPair pair;
+
+  base = (char *)lbl_8031D2E8;
+  state = *(int *)(obj + 0xb8);
+  found = 0;
+  cmdQuery = *(TrickyCmdQuery *)lbl_802C21C8;
+  pair = lbl_803E23C4;
+  walkgroupFindExitPointFn_800dc398();
+  if (GameBit_Get(0x186) != 0 && *(void **)(state + 0x7cc) == NULL && Obj_IsLoadingLocked()) {
+    mapBlockFn_80059c2c(blockFlags);
+    if (blockFlags[0xd] != 0) {
+      setup = Obj_AllocObjectSetup(0x20,0x244);
+    } else {
+      setup = Obj_AllocObjectSetup(0x20,0x254);
+    }
+    *(int *)(state + 0x7cc) = Obj_SetupObject(setup,4,-1,-1,*(int *)(obj + 0x30));
+    ObjLink_AttachChild(obj,*(int *)(state + 0x7cc),3);
+  }
+  if ((*(uint *)(state + 0x54) & 0x40000000) != 0) {
+    p = *(int *)state;
+    if (*(u8 *)p == *(u8 *)(p + 1)) {
+      TRICKY_VOICE(obj, st, 0x364, 0x500);
+    } else {
+      TRICKY_VOICE(obj, st, 0x363, 0x500);
+    }
+    *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xbfffffff;
+  }
+  flagsByte = *(s8 *)(state + 0x358);
+  trickyDebugPrint(base + 0x894,flagsByte & 1,flagsByte & 2,flagsByte & 4,flagsByte & 8,
+                   flagsByte & 0x10,flagsByte & 0x20,flagsByte & 0x40,flagsByte & 0x80);
+  trickyDebugPrint(base + 0x8b4,**(u8 **)state,*(u8 *)(*(int *)state + 1));
+  if ((*(uint *)(state + 0x54) & 0x200) != 0) {
+    ObjHits_EnableObject(obj);
+    if ((*(uint *)(state + 0x54) & 0x4000) == 0) {
+      TRICKY_RESET_COMMAND(state);
+      *(u8 *)(state + 9) = 0;
+      *(f32 *)(state + 0x10) = lbl_803E23DC;
+      *(f32 *)(state + 0x14) = lbl_803E23DC;
+      *(f32 *)(state + 0xe0) = *(f32 *)(obj + 0x18);
+      *(f32 *)(state + 0xe4) = *(f32 *)(obj + 0x1c);
+      *(f32 *)(state + 0xe8) = *(f32 *)(obj + 0x20);
+      (*(void (**)(int,int))(*(int *)gPathControlInterface + 0x20))(obj,state + 0xf8);
+      if (*(short *)(obj + 0xa0) == 8 || *(short *)(obj + 0xa0) == 7) {
+        *(f32 *)(state + 0x2ac) = lbl_803E2414;
+        *(f32 *)(state + 0x2b0) = lbl_803E2544;
+      } else {
+        *(f32 *)(state + 0x2ac) = lbl_803E23DC;
+      }
+    }
+    *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xffffbdfe;
+    if (((TrickyByteFlags *)(state + 0x82e))->bit5 != 0) {
+      ((TrickyByteFlags *)(state + 0x82e))->bit5 = 0;
+    } else {
+      ((TrickyByteFlags *)(state + 0x82e))->bit7 = 1;
+    }
+  }
+  if (*(int *)(state + 0x24) != 0 && (*(u16 *)(*(int *)(state + 0x24) + 0xb0) & 0x40) != 0) {
+    if ((*(uint *)(state + 0x54) & 0x10) != 0) {
+      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xffffffef;
+      *(u8 *)(state + 0x374) = 2;
+      (*(void (**)(int,int))(*(int *)gPathControlInterface + 0x20))(obj,state + 0xf8);
+      *(f32 *)(obj + 0xc) = *(f32 *)(state + 0xe0);
+      *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xe4);
+      *(f32 *)(obj + 0x14) = *(f32 *)(state + 0xe8);
+      *(f32 *)(obj + 0x18) = *(f32 *)(state + 0xe0);
+      *(f32 *)(obj + 0x1c) = *(f32 *)(state + 0xe4);
+      *(f32 *)(obj + 0x20) = *(f32 *)(state + 0xe8);
+      ObjHits_SyncObjectPosition(obj);
+      i = 0;
+      *(u8 *)(state + 9) = 0;
+      *(f32 *)(state + 0x10) = lbl_803E23DC;
+      *(f32 *)(state + 0x14) = lbl_803E23DC;
+      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x80000;
+      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xffffdfff;
+      if ((*(uint *)(state + 0x54) & 0x800) != 0) {
+        *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffff7ff;
+        *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x1000;
+        p = state;
+        do {
+          objSetAnimSpeedTo1(*(int *)(p + 0x700));
+          p = p + 4;
+          i = i + 1;
+        } while (i < 7);
+        Sfx_RemoveLoopedObjectSound(obj,0x3dc);
+        TRICKY_VOICE(obj, st, 0x29d, 0);
+      }
+      Sfx_RemoveLoopedObjectSound(obj,0x13d);
+    }
+    TRICKY_RESET_COMMAND(state);
+    *(int *)(state + 0x24) = 0;
+  }
+  if ((*(uint *)(state + 0x54) & 0x10) != 0 &&
+      (*(int (**)(int))(*(int *)gGameUIInterface + 0x20))(0xc1) != 0) {
+    cmd = 0;
+  } else {
+    cmd = (*(int (**)(void *,int))(*(int *)gGameUIInterface + 0x24))(&cmdQuery,5);
+  }
+  p = state;
+  count = *(u8 *)(state + 0x798);
+  for (i = 0; i < count; i++) {
+    if (*(s8 *)(p + 0x74d) == cmd) {
+      found = 1;
+      break;
+    }
+    p = p + 8;
+  }
+  st8 = *(u8 *)(state + 8);
+  if ((*(uint *)(state + 0x54) & 0x10) == 0 && trickyFoodFn_8013db3c(obj,state) == 2) {
+    *(u8 *)(state + 8) = 0x11;
+  } else if (st8 == 8 && cmd == 4) {
+    *(u8 *)(state + 0x734) = *(u8 *)(state + 0x734) ^ 1;
+  } else if (st8 == 0xd && cmd == 4 && found == 0) {
+    *(int *)(state + 0x728) = 1;
+  } else if (st8 == 0xe && cmd == 4) {
+    *(int *)(state + 0x728) = 1;
+  } else if (cmd == 0) {
+    *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x30002;
+  } else {
+    f = *(uint *)(state + 0x54);
+    if ((f & 0x10) == 0) {
+      switch (cmd) {
+      case 1:
+        *(s8 *)(state + 0xd) = 1;
+        trickySelectQueuedCommandTarget(state,1);
+        TRICKY_VOICE(obj, st, 0x13c, 0);
+        switch (*(s16 *)(*(int *)(state + 0x24) + 0x46)) {
+        case 0x1ca:
+          if (**(u8 **)state < 4) {
+            if (Obj_IsLoadingLocked()) {
+              *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 4;
+              TRICKY_RESET_COMMAND(state);
+              TRICKY_SPAWN_BUBBLE(obj, state);
+            }
+          } else {
+            *(u8 *)(state + 8) = 2;
+          }
+          break;
+        case 0x160:
+          if (**(u8 **)state < 4) {
+            if (Obj_IsLoadingLocked()) {
+              *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 4;
+              TRICKY_RESET_COMMAND(state);
+              TRICKY_SPAWN_BUBBLE(obj, state);
+            }
+          } else {
+            *(u8 *)(state + 8) = 3;
+          }
+          break;
+        case 0x6a:
+        case 0x193:
+        case 0x3fb:
+        case 0x658:
+          *(u8 *)(state + 8) = 9;
+          break;
+        case 0x195:
+          if (**(u8 **)state < 2) {
+            if (Obj_IsLoadingLocked()) {
+              *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 4;
+              TRICKY_RESET_COMMAND(state);
+              TRICKY_SPAWN_BUBBLE(obj, state);
+            }
+          } else {
+            *(u8 *)(state + 8) = 0x10;
+          }
+          break;
+        case 0x352:
+          if (**(u8 **)state < 4) {
+            if (Obj_IsLoadingLocked()) {
+              *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 4;
+              TRICKY_RESET_COMMAND(state);
+              TRICKY_SPAWN_BUBBLE(obj, state);
+            }
+          } else {
+            *(u8 *)(state + 8) = 2;
+          }
+          break;
+        case 0x358:
+          *(u8 *)(state + 8) = 0xe;
+          break;
+        default:
+          TRICKY_RESET_COMMAND(state);
+          trickyReportError(base + 0x8c4);
+          break;
+        }
+        break;
+      case 3:
+        played = 0;
+        if (*(s8 *)(state + 0xd) == 3) {
+          p = state;
+          count = *(u8 *)(state + 0x798);
+          for (i = 0; i < count; i++) {
+            if (*(s8 *)(p + 0x74d) == 3) {
+              played = 1;
+            }
+            p = p + 8;
+          }
+        } else {
+          played = 1;
+        }
+        if (played != 0) {
+          *(s8 *)(state + 0xd) = 3;
+          if (trickySelectQueuedCommandTarget(state,3) != 0) {
+            switch (*(s16 *)(*(int *)(state + 0x24) + 0x46)) {
+            case 0x36:
+            case 0x104:
+            case 0x131:
+            case 0x19f:
+            case 0x26c:
+            case 0x475:
+            case 0x546:
+            case 0x7c3:
+              *(u8 *)(state + 8) = 0xa;
+              *(f32 *)(state + 0x740) = (f32)(int)randomGetRange(0x1f4,0x2ee);
+              break;
+            case 0x6f0:
+              *(u8 *)(state + 8) = 0xe;
+              break;
+            default:
+              *(u8 *)(state + 8) = 8;
+              break;
+            }
+          } else {
+            *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x40000;
+          }
+        }
+        break;
+      case 4:
+        if (**(u8 **)state < 4) {
+          if (Obj_IsLoadingLocked()) {
+            *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 4;
+            TRICKY_RESET_COMMAND(state);
+            TRICKY_SPAWN_BUBBLE(obj, state);
+          }
+        } else {
+          *(s8 *)(state + 0xd) = 4;
+          trickySelectQueuedCommandTarget(state,4);
+          *(u8 *)(state + 8) = 7;
+          switch (*(s16 *)(*(int *)(state + 0x24) + 0x46)) {
+          case 0x1c9:
+            *(void **)(state + 0x724) = (void *)fn_801B17F4;
+            break;
+          case 0x718:
+            *(void **)(state + 0x724) = (void *)fn_801B6D40;
+            break;
+          case 0x551:
+            *(void **)(state + 0x724) = (void *)fn_801FD4A8;
+            break;
+          case 0x191:
+            *(void **)(state + 0x724) = (void *)fn_801B0784;
+            break;
+          case 0x470:
+            *(void **)(state + 0x724) = (void *)drchimmey_countdownCallback;
+            break;
+          case 0x102:
+          case 0x194:
+          case 0x542:
+          case 0x54c:
+          case 0x6f9:
+            *(void **)(state + 0x724) = 0;
+            break;
+          case 0x3c:
+            *(void **)(state + 0x724) = (void *)fn_801DA9CC;
+            break;
+          case 0x50f:
+            *(void **)(state + 0x724) = (void *)wcbeacon_aButtonCallback;
+            break;
+          default:
+            TRICKY_RESET_COMMAND(state);
+            trickyReportError(base + 0x8c4);
+            break;
+          }
+        }
+        break;
+      case 5:
+        if (Obj_IsLoadingLocked()) {
+          *(s8 *)(state + 0xd) = 5;
+          setup = Obj_AllocObjectSetup(0x18,0x112);
+          *(u8 *)(setup + 7) = 0xff;
+          *(u8 *)(setup + 4) = 2;
+          *(f32 *)(setup + 8) = *(f32 *)(obj + 0x18);
+          *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x1c);
+          *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x20);
+          *(int *)(state + 0x24) = Obj_SetupObject(setup,5,-1,-1,*(int *)(obj + 0x30));
+          target = *(int *)(state + 0x24) + 0x18;
+          if (*(u32 *)(state + 0x28) != target) {
+            *(u32 *)(state + 0x28) = target;
+            *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffffbff;
+            *(u16 *)(state + 0xd2) = 0;
+          }
+          *(u8 *)(state + 0xa) = 0;
+          *(u8 *)(state + 8) = 0xb;
+        }
+        break;
+      default:
+        if (st8 == 1 && *(s8 *)(state + 0xd) != 0 && (f & 0x20000) == 0) {
+          step = trickyFindNearestUsableBaddie(*(int *)(state + 4),0,lbl_803E24D8);
+          if (step != 0) {
+            *(int *)(state + 0x24) = step;
+            if (*(u32 *)(state + 0x28) != (u32)(step + 0x18)) {
+              *(u32 *)(state + 0x28) = step + 0x18;
+              *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffffbff;
+              *(u16 *)(state + 0xd2) = 0;
+            }
+            *(u8 *)(state + 8) = 0xd;
+            *(u8 *)(state + 0xa) = 0;
+            *(int *)(state + 0x728) = 0;
+          }
+        }
+        break;
+      }
+    } else if (cmd == 3) {
+      *(uint *)(state + 0x54) = f | 0x40000;
+    }
+  }
+  f = *(uint *)(state + 0x54);
+  if ((f & 0x10) == 0) {
+    if ((f & 0x10000) != 0) {
+      if ((f & 0x20000) != 0) {
+        TRICKY_RESET_COMMAND(state);
+        *(u8 *)(state + 0xd) = 0;
+      } else {
+        TRICKY_RESET_COMMAND(state);
+      }
+      *(f32 *)(state + 0x71c) = lbl_803E2548;
+    } else if ((f & 0x40000) != 0) {
+      *(int *)(state + 0x24) = obj;
+      *(u8 *)(state + 8) = 0xf;
+      *(f32 *)(state + 0x740) = (f32)(int)randomGetRange(0x1f4,0x2ee);
+      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffdffff;
+      *(s8 *)(state + 0xd) = 3;
+      if (*(u32 *)(state + 0x28) != (u32)(state + 0x72c)) {
+        *(u32 *)(state + 0x28) = (u32)(state + 0x72c);
+        *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffffbff;
+        *(u16 *)(state + 0xd2) = 0;
+      }
+    }
+  }
+  *(u8 *)(obj + 0xaf) = *(u8 *)(obj + 0xaf) | 8;
+  *(u8 *)(state + 0x353) = 1;
+  ((TrickyHandlerTable *)base)->handlers[*(u8 *)(state + 8)](obj,state);
+  *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffffffd;
+  *(f32 *)(state + 0x18) += timeDelta;
+  if (*(f32 *)(state + 0x18) > lbl_803E247C) {
+    if (*(s16 *)(obj + 0xa0) != *(int *)(state + 0x20)) {
+      if ((*(uint *)(state + 0x50) & 0x1000000) != 0 && (*(uint *)(state + 0x54) & 0x1000000) != 0) {
+        ObjAnim_SetCurrentMove(obj,*(int *)(state + 0x20),*(f32 *)(obj + 0x98),0);
+      } else {
+        ObjAnim_SetCurrentMove(obj,*(int *)(state + 0x20),lbl_803E23DC,0);
+      }
+      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xf9fffe1f;
+      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | *(uint *)(state + 0x50);
+      *(f32 *)(state + 0x18) = lbl_803E23DC;
+      *(f32 *)(state + 0x34) = *(f32 *)(state + 0x38);
+    }
+  }
+  if ((*(uint *)(state + 0x54) & 0x2000000) != 0) {
+    *(f32 *)(obj + 0xc) += timeDelta * (*(f32 *)(state + 0x2c) * *(f32 *)(state + 0x14));
+    *(f32 *)(obj + 0x14) += timeDelta * (*(f32 *)(state + 0x30) * *(f32 *)(state + 0x14));
+    ObjAnim_SampleRootCurvePhase(*(f32 *)(state + 0x14),(ObjAnimComponent *)obj,(float *)(state + 0x34));
+  }
+  if (*(f32 *)(state + 0x34) == lbl_803E23DC) {
+    ObjAnim_SetMoveProgress(*(f32 *)(state + 0x3c),(ObjAnimComponent *)obj);
+  }
+  if (ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 0x34),timeDelta,obj,(void *)(state + 0x80c)) != 0) {
+    *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x8000000;
+  } else {
+    *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xf7ffffff;
+  }
+  if ((*(uint *)(state + 0x54) & 0x100) != 0) {
+    diff = *(s16 *)(state + 0x5a) - (u16)*(s16 *)obj;
+    if (diff > 0x8000) {
+      diff -= 0xffff;
+    }
+    if (diff < -0x8000) {
+      diff += 0xffff;
+    }
+    step = (int)((f32)*(s16 *)(state + 0x81a) * *(f32 *)(state + 0x4c));
+    if ((diff < 0 ? -diff : diff) >= 4) {
+      if ((step > 0 && diff > 0) || (step < 0 && diff < 0)) {
+        if ((step < 0 ? -step : step) > (diff < 0 ? -diff : diff)) {
+          *(s16 *)obj = *(s16 *)obj + diff;
+        } else {
+          *(s16 *)obj = *(s16 *)obj + step;
+        }
+      } else {
+        *(s16 *)obj = *(s16 *)obj + step;
+      }
+    } else {
+      *(s16 *)obj = *(s16 *)obj + diff;
+    }
+  }
+  if ((*(uint *)(state + 0x54) & 0x40) != 0) {
+    *(f32 *)(obj + 0xc) += *(f32 *)(state + 0x44) * (*(f32 *)(state + 0x2c) * -*(f32 *)(state + 0x814));
+    *(f32 *)(obj + 0x14) += *(f32 *)(state + 0x44) * (*(f32 *)(state + 0x30) * -*(f32 *)(state + 0x814));
+  }
+  if ((*(uint *)(state + 0x54) & 0x80) != 0) {
+    *(f32 *)(obj + 0x10) += *(f32 *)(state + 0x810) * *(f32 *)(state + 0x48);
+  }
+  if ((*(uint *)(state + 0x54) & 0x20) != 0) {
+    *(f32 *)(obj + 0xc) += *(f32 *)(state + 0x40) * (*(f32 *)(state + 0x30) * *(f32 *)(state + 0x80c));
+    *(f32 *)(obj + 0x14) += *(f32 *)(state + 0x40) * (*(f32 *)(state + 0x2c) * -*(f32 *)(state + 0x80c));
+  }
+  if (*(int *)(state + 0x24) != 0) {
+    *(u8 *)(state + 0x378) = 1;
+    *(f32 *)(state + 0x37c) = *(f32 *)(*(int *)(state + 0x24) + 0x18);
+    *(f32 *)(state + 0x380) = *(f32 *)(*(int *)(state + 0x24) + 0x1c);
+    *(f32 *)(state + 0x384) = *(f32 *)(*(int *)(state + 0x24) + 0x20);
+  } else {
+    *(u8 *)(state + 0x378) = 0;
+  }
+  if (*(s16 *)(obj + 0xa0) == 0x2a) {
+    fn_8003A168(obj,(void *)(state + 0x378));
+    fn_8003B228(obj,(void *)(state + 0x378));
+  } else {
+    fn_8003A230(obj,(void *)(state + 0x378),lbl_803E23DC);
+    characterDoEyeAnims(obj,(void *)(state + 0x378));
+  }
+  objAnimFn_80038f38(obj,state + 0x3a8);
+  st = *(int *)(obj + 0xb8);
+  p = *(int *)(st + 0x28);
+  *(int *)(st + 0x6f0) = p;
+  if (*(int *)(st + 0x6f0) != 0) {
+    *(f32 *)(st + 0x6f4) = *(f32 *)p;
+    *(f32 *)(st + 0x6f8) = *(f32 *)(p + 4);
+    *(f32 *)(st + 0x6fc) = *(f32 *)(p + 8);
+  }
+  *(f32 *)(state + 0x10) = *(f32 *)(state + 0x14);
+  i = *(u8 *)(state + 0x798) - 1;
+  p = state + i * 8;
+  for (; i >= 0; i--) {
+    *(u8 *)(p + 0x74e) = *(u8 *)(p + 0x74e) - 1;
+    if (*(s8 *)(p + 0x74e) == 0) {
+      memmove((void *)(p + 0x748),(void *)(state + (i + 1) * 8 + 0x748),(*(u8 *)(state + 0x798) - i - 1) * 8);
+      *(u8 *)(state + 0x798) = *(u8 *)(state + 0x798) - 1;
+    }
+    p = p - 8;
+  }
+  if (getXZDistance((f32 *)(obj + 0x18),(f32 *)(*(int *)(state + 4) + 0x18)) >= lbl_803E2538 &&
+      GameBit_Get(0x4e4) != 0) {
+    *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x10000;
+  }
+  *(f32 *)(state + 0x79c) -= timeDelta;
+  if (*(f32 *)(state + 0x79c) < lbl_803E23DC) {
+    *(f32 *)(state + 0x79c) = lbl_803E23DC;
+  }
+  if ((*(uint *)(state + 0x54) & 4) != 0) {
+    st = *(int *)(obj + 0xb8);
+    if (((TrickyByteFlags *)(st + 0x58))->bit6 != 0) {
+      played = 0;
+    } else if (*(short *)(obj + 0xa0) < 0x30 && *(short *)(obj + 0xa0) >= 0x29) {
+      played = 0;
+    } else if (Sfx_IsPlayingFromObjectChannel(obj,0x10) != 0) {
+      played = 0;
+    } else {
+      objAudioFn_800393f8(obj,(void *)(st + 0x3a8),0x298,0x500,0xffffffff,0);
+      played = 1;
+    }
+    if (played != 0) {
+      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xfffffffb;
+    }
+  }
+  *(f32 *)(state + 0x7a0) -= timeDelta;
+  if (*(f32 *)(state + 0x7a0) < lbl_803E23DC) {
+    *(f32 *)(state + 0x7a0) = lbl_803E23DC;
+  }
+  if (*(f32 *)(state + 0x7a0) > lbl_803E23DC) {
+    TRICKY_VOICE(obj, st, 0x29c, 0x100);
+  }
+  trickyUpdateCollisionAndPathState(obj);
+  if ((*(uint *)(state + 0x54) & 0x80000000) != 0) {
+    *(f32 *)(state + 0x808) -= timeDelta;
+    if (*(f32 *)(state + 0x808) <= lbl_803E23DC) {
+      *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0x7fffffff;
+      sfxId = ((u16 *)&pair)[randomGetRange(0,1)];
+      TRICKY_VOICE(obj, st, sfxId, 0x500);
+    }
+  }
+  fn_80138D7C(obj,state);
+  Tricky_updateBlendChannelWeight(obj,state);
+  if (*(f32 *)(state + 0x14) > lbl_803E254C) {
+    objAudioFn_8006ef38(obj,state + 0x80c,1,state + 0x7d8,state + 0xf8,*(f32 *)(state + 0x14),lbl_803E23E8);
+  }
+  if (lbl_803E23DC == *(f32 *)(state + 0x2ac)) {
+    talking = 0;
+  } else if (lbl_803E2410 == *(f32 *)(state + 0x2b0)) {
+    talking = 1;
+  } else if (*(f32 *)(state + 0x2b4) - *(f32 *)(state + 0x2b0) > lbl_803E2414) {
+    talking = 1;
+  } else {
+    talking = 0;
+  }
+  if (talking != 0) {
+    p = state + 0x80c;
+    sfx2 = 0;
+    count = *(s8 *)(p + 0x1b);
+    for (i = 0; i < count; i++) {
+      if (*(s8 *)(p + i + 0x13) < 3 && *(s8 *)(p + i + 0x13) >= 0) {
+        sfx2 = 0x433;
+      }
+    }
+    if (sfx2 != 0) {
+      Sfx_PlayFromObject(obj,(u16)sfx2);
+    }
+  }
+  *(f32 *)(state + 0x8c) = *(f32 *)(obj + 0x80);
+  *(f32 *)(state + 0x90) = *(f32 *)(obj + 0x84);
+  *(f32 *)(state + 0x94) = *(f32 *)(obj + 0x88);
+  if (*(int *)(state + 0x7b8) != 0) {
+    *(f32 *)(state + 0x7c0) += timeDelta;
+    *(f32 *)(state + 0x7c4) += timeDelta;
+    *(f32 *)(state + 0x7c8) += timeDelta;
+    if (*(f32 *)(state + 0x7c8) > lbl_803E24C8) {
+      *(f32 *)(state + 0x7c8) -= lbl_803E24C8;
+    }
+    if (*(f32 *)(state + 0x7c8) >= lbl_803E2408) {
+      *(s16 *)(*(int *)(state + 0x7b8) + 6) = *(s16 *)(*(int *)(state + 0x7b8) + 6) | 0x4000;
+    } else {
+      *(s16 *)(*(int *)(state + 0x7b8) + 6) = *(s16 *)(*(int *)(state + 0x7b8) + 6) & ~0x4000;
+    }
+    if (*(f32 *)(state + 0x7c4) > lbl_803E24D8) {
+      if (*(f32 *)(state + 0x7c4) > lbl_803E2440) {
+        *(f32 *)(state + 0x7c4) -= lbl_803E2440;
+      }
+      *(s16 *)(*(int *)(state + 0x7b8) + 6) = *(s16 *)(*(int *)(state + 0x7b8) + 6) | 0x4000;
+    }
+    if (*(f32 *)(state + 0x7c0) > lbl_803E2550) {
+      if (GameBit_Get(0xc1) != 0) {
+        TRICKY_VOICE(obj, st, 0x392, 0x500);
+      } else {
+        TRICKY_VOICE(obj, st, 0x298, 0x500);
+      }
+      *(f32 *)(state + 0x7c0) -= lbl_803E2550;
+    }
+    ObjAnim_AdvanceCurrentMove(lbl_803E23EC,timeDelta,*(int *)(state + 0x7b8),0);
+  }
+  if (*(int *)(state + 0x7b0) != 0) {
+    ObjAnim_AdvanceCurrentMove(lbl_803E23EC,timeDelta,*(int *)(state + 0x7b0),0);
+  }
+  if (*(int *)(state + 0x7a8) != 0) {
+    ObjAnim_AdvanceCurrentMove(lbl_803E23EC,timeDelta,*(int *)(state + 0x7a8),0);
+  }
+}
+
 /* Tricky_init: 536b - initialize Tricky state, command callback, and path controller. */
 #pragma scheduling off
 void Tricky_init(int obj)
