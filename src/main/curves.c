@@ -3,7 +3,7 @@
 
 #pragma scheduling off
 #pragma peephole off
-void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count, void (*evalFn)(f32 *ch, f32 *buf))
+void Curve_SampleSegmentPoints(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ, int count, void (*evalFn)(f32 *ch, f32 *buf))
 {
     f32 bufX[4];
     f32 bufY[4];
@@ -95,7 +95,7 @@ void Curve_BuildSegmentLengthTable(Curve *curve, int count)
         pz = curve->pz + curve->idx;
     }
     if (curve->coeffFn != 0) {
-        curveFn_80010018(px, py, pz, outX, outY, outZ, count, curve->coeffFn);
+        Curve_SampleSegmentPoints(px, py, pz, outX, outY, outZ, count, curve->coeffFn);
     }
 
     zero = lbl_803DE658;

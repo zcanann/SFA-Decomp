@@ -5935,7 +5935,7 @@ extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
 extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 x, f32 z);
-extern void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ,
+extern void Curve_SampleSegmentPoints(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ,
                              int count, void (*evalFn)(f32 *values, f32 *coefficients));
 extern void curveFn_80010d54(f32 *values, f32 *coefficients);
 extern f32 curveFn_80010dc0(f32 t, f32 *values, f32 *outTangent);
@@ -5983,7 +5983,7 @@ void curveFn_80083e00(RomCurveInterpState *out, RomCurveNode *curve, RomCurveNod
     zPoints[2] = curveScale * sin(ROM_CURVE_NODE_ANGLE(curve->yaw));
     zPoints[3] = nextScale * sin(ROM_CURVE_NODE_ANGLE(next->yaw));
 
-    curveFn_80010018(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
+    Curve_SampleSegmentPoints(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
                      curveFn_80010d54);
 
     times = &out->fromTime;

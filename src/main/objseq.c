@@ -1438,7 +1438,7 @@ void curveFn_80083e00(RomCurveInterpState *out, RomCurveNode *curve, RomCurveNod
     zPoints[2] = curveScale * sin(ROM_CURVE_NODE_ANGLE(curve->yaw));
     zPoints[3] = nextScale * sin(ROM_CURVE_NODE_ANGLE(next->yaw));
 
-    curveFn_80010018(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
+    Curve_SampleSegmentPoints(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
                      curveFn_80010d54);
 
     times = &out->fromTime;
