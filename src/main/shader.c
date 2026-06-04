@@ -4747,3 +4747,83 @@ void mapBlockFn_80059354(int x, int z, s16* out, int layer)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int gMapBlockLayerTables[];
+extern void* lbl_803DCEA8;
+extern int lbl_803DCE74;
+extern char sTrackCellCoordFormat[];
+extern void fn_80137948(char* fmt, ...);
+extern void modelRenderInstrsState_init(int* state, int buf, int s1, int s2);
+
+#pragma scheduling off
+#pragma peephole off
+void mapDebugRender(int* state)
+{
+    int bx, bz;
+    char* blk;
+    int sx, sz;
+    int wx, wz;
+    int ci;
+    s16 y0;
+    int y0a;
+    f32 cy;
+    s16 y1;
+    int yy, dy, h;
+    int step;
+    int row, cx, cz;
+    int cell;
+    s16 v;
+    int n;
+
+    if (lbl_803DCDED != 0) {
+        bx = (int)fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0xc) - playerMapOffsetX) /
+                             gMapBlockWorldSize);
+        bz = (int)fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0x14) - playerMapOffsetZ) /
+                             gMapBlockWorldSize);
+        if (bx < 0 || bz < 0 || bx >= 16 || bz >= 16) {
+            blk = 0;
+        } else {
+            ci = *(s8*)(gMapBlockLayerTables[0] + bx + bz * 16);
+            if (ci < 0 || ci >= lbl_803DCE98) {
+                blk = 0;
+            } else {
+                blk = *(char**)((char*)lbl_803DCE9C + ci * 4);
+            }
+        }
+        sx = (int)(gMapBlockWorldSize * fastFloorf(*(f32*)((char*)lbl_803DCEA8 + 0xc) /
+                                                   gMapBlockWorldSize));
+        sz = (int)(gMapBlockWorldSize * fastFloorf(*(f32*)((char*)lbl_803DCEA8 + 0x14) /
+                                                   gMapBlockWorldSize));
+        wx = (int)(*(f32*)((char*)lbl_803DCEA8 + 0xc) - (f32)sx);
+        wz = (int)(*(f32*)((char*)lbl_803DCEA8 + 0x14) - (f32)sz);
+        if (blk != 0) {
+            y0 = *(s16*)(blk + 0x8a);
+            y0a = y0;
+            if (y0 & 1)
+                y0a = y0 - 1;
+            cy = *(f32*)((char*)lbl_803DCEA8 + 0x10);
+            y1 = *(s16*)(blk + 0x8c);
+            if (cy > (f32)y1)
+                cy = (f32)(y1 - 1);
+            yy = (int)cy;
+            dy = yy - y0a;
+            h = y1 - y0;
+            if (h / 80 < 8)
+                step = h / 8;
+            else
+                step = 80;
+            row = dy / step;
+            cx = wx / 80;
+            cz = wz / 80;
+            cell = row * 0x40 + cz * 8 + cx;
+            fn_80137948(sTrackCellCoordFormat);
+            v = lbl_803DCE70;
+            n = v >> 3;
+            if (v & 7)
+                n = n + 1;
+            modelRenderInstrsState_init(state, lbl_803DCE74 + n * cell, v, v);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
