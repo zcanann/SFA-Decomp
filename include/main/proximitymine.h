@@ -40,23 +40,32 @@ typedef struct ProximityMineCollider {
 
 typedef struct ProximityMineObject {
   s16 angle;
-  u8 unk02[6];
+  s16 angle2;
+  u8 unk04[4];
   f32 height;
   f32 posX;
   f32 posY;
   f32 posZ;
-  u8 unk18[0xc];
+  f32 prevX;
+  f32 prevY;
+  f32 prevZ;
   f32 velocityX;
   f32 velocityY;
   f32 velocityZ;
   u8 unk30[0x16];
   s16 objId;
-  u8 unk48[0xc];
+  u8 unk48[4];
+  struct ProximityMineDef *def;
+  u8 unk50[4];
   ProximityMineCollider *collider;
-  u8 unk58[0x60];
+  u8 unk58[0x50];
+  f32 unkA8;
+  u8 unkAC[0xc];
   ProximityMineState *state;
   u8 unkBC[8];
   void *pendingTarget;
+  u8 unkC8[0x2c];
+  int pathIndex;
 } ProximityMineObject;
 
 typedef struct ProximityMineDef {
