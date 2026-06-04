@@ -4574,7 +4574,8 @@ typedef struct {
     f32 fc;
     u8  b10;
     u8  b11;
-    u8  pad12[6];
+    u8  pad12[2];
+    int link14;
 } WindLiftSlot;
 
 typedef struct {
@@ -4588,7 +4589,7 @@ typedef struct {
     int pad168;
     int pad16c;
     f32 liftHeight;
-    u8  _f0 : 1;
+    u8  musicOn : 1;
     u8  active : 1;
     u8  _f2 : 6;
 } WindLiftSub;
@@ -5138,6 +5139,137 @@ void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int
             slot->b10 &= ~0xf1;
             slot->fc = lbl_803E416C;
             slot->b11 = 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Music_Trigger(int trackId, int restart);
+extern int  Obj_SetActiveModelIndex(int* obj, int idx);
+extern f32  lbl_803E41BC;
+
+/* EN v1.0 0x8019CD98  size: 1300b  windlift_update: fade the lift opacity
+ * with its gamebit, spin up over the first second, then assign every nearby
+ * group-0x16 object (and the player) to a rider slot and run the lift
+ * physics on each. */
+#pragma scheduling off
+#pragma peephole off
+void windlift_update(int* obj)
+{
+    u8* def;
+    WindLiftSub* sub = *(WindLiftSub**)((char*)obj + 0xb8);
+    int level;
+    int gb2;
+    char* player;
+    f32 pull;
+    int idx;
+    int j;
+    int found;
+    int count;
+    int** objs;
+    def = *(u8**)((char*)obj + 0x4c);
+    if (sub->active) {
+        level = (int)(lbl_803E41BC * timeDelta + (f32)(int)*(u8*)((char*)obj + 0x36));
+        if (sub->gamebit != -1 && GameBit_Get(sub->gamebit) == 0) {
+            sub->active = 0;
+        }
+    } else {
+        level = (int)-(lbl_803E41BC * timeDelta - (f32)(int)*(u8*)((char*)obj + 0x36));
+        if (sub->gamebit != -1 && GameBit_Get(sub->gamebit) != 0) {
+            sub->active = 1;
+        }
+    }
+    *(u8*)((char*)obj + 0x36) = (level < 0) ? 0 : ((level > 0xff) ? 0xff : level);
+    if ((GameBit_Get(0x57) != 0 || sub->duration > 0xa) && sub->active) {
+        int t = sub->timer;
+        sub->timer = t + 1;
+        if (t < 0x3c && GameBit_Get(sub->seqId) == 0) {
+            *(s16*)obj -= ((framesThisStep * 100) * (sub->timer * sub->timer)) / 0x3c;
+            Obj_SetActiveModelIndex(obj, 0);
+            return;
+        }
+        Obj_SetActiveModelIndex(obj, 1);
+        gb2 = GameBit_Get(sub->delay);
+        {
+            int m = (u16)framesThisStep * 0xb6;
+            *(s16*)obj -= m * ((gb2 << 2) + 0xe);
+        }
+        pull = (f32)*(s16*)(def + 0x1a);
+        player = (char*)Obj_GetPlayerObject();
+        if (GameBit_Get(sub->seqId) != 0) {
+            if (!sub->musicOn) {
+                sub->musicOn = 1;
+                Music_Trigger(0xbd, 1);
+            }
+            if (player != NULL) {
+                fn_8019C784(obj, (int*)player, &sub->slots[0], pull, gb2, 1, sub->duration, sub->liftHeight);
+            }
+        } else {
+            if (sub->musicOn) {
+                Music_Trigger(0xbd, 0);
+                sub->musicOn = 0;
+            }
+            if ((sub->slots[0].b10 & 0xe0) != 0) {
+                u8 b;
+                fn_80296220((int*)player, lbl_803E416C);
+                b = sub->slots[0].b10;
+                if ((b & 0xe) != 0) {
+                    sub->slots[0].b10 = b | 2;
+                }
+                sub->slots[0].fc = lbl_803E416C;
+                sub->slots[0].b11 = 0;
+                sub->slots[0].b10 &= ~0xf1;
+            }
+        }
+        objs = (int**)ObjGroup_GetObjects(0x16, &count);
+        count = count + 1;
+        if (count > 0xe) {
+            count = 0xe;
+        }
+        for (j = 1; j < 14; j++) {
+            sub->slots[j].link14 = -1;
+        }
+        for (idx = 1; idx < count; idx++) {
+            found = -1;
+            for (j = 1; j < 14; j++) {
+                if ((u32)sub->slots[j].i0 == (u32)*objs) {
+                    found = j;
+                }
+            }
+            if (found == -1) {
+                for (j = 1; j < 0xe; j++) {
+                    if ((u32)sub->slots[j].i0 == 0) {
+                        found = j;
+                        sub->slots[j].b10 = 0;
+                        sub->slots[j].b10 &= ~0xf1;
+                        sub->slots[j].f4 = lbl_803E4168;
+                        sub->slots[j].fc = lbl_803E416C;
+                        sub->slots[j].f8 = lbl_803E416C;
+                        sub->slots[j].i0 = 0;
+                        sub->slots[j].b11 = 0;
+                        j = 2000;
+                    }
+                }
+                if (found == -1) {
+                    return;
+                }
+                sub->slots[found].i0 = (int)*objs;
+            }
+            sub->slots[found].link14 = found;
+            {
+                int* rider = *objs;
+                if ((*(u16*)((char*)rider + 0xb0) & 0x1000) != 0) {
+                    objs++;
+                } else if (rider != NULL) {
+                    fn_8019C784(obj, *objs++, &sub->slots[found], pull, gb2, 0, sub->duration, sub->liftHeight);
+                }
+            }
+        }
+        for (j = 1; j < 14; j++) {
+            if (sub->slots[j].link14 == -1) {
+                sub->slots[j].i0 = 0;
+            }
         }
     }
 }
