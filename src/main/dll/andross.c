@@ -249,20 +249,20 @@ extern f64 lbl_803E7568;
 extern f64 lbl_803E7570;
 extern int animatedObjGetSeqId(int obj);
 extern int lbl_8032C088[];
-extern int lbl_8032C09C;
-extern int lbl_8032C0A0;
-extern int lbl_8032C0A4;
-extern int lbl_8032C0A8;
-extern int lbl_8032C0C8;
-extern int lbl_8032C0CC;
-extern int lbl_8032C0D0;
-extern int lbl_8032C0D8;
-extern int lbl_8032C0DC;
-extern int lbl_8032C0E0;
-extern int lbl_8032C0E4;
-extern int lbl_8032C0E8;
-extern int lbl_8032C0EC;
-extern int lbl_8032C0F0;
+extern f32 lbl_8032C09C[];
+extern f32 lbl_8032C0A0[];
+extern f32 lbl_8032C0A4[];
+extern f32 lbl_8032C0A8[];
+extern f32 lbl_8032C0C8[];
+extern f32 lbl_8032C0CC[];
+extern f32 lbl_8032C0D0[];
+extern f32 lbl_8032C0D8[];
+extern f32 lbl_8032C0DC[];
+extern f32 lbl_8032C0E0[];
+extern f32 lbl_8032C0E4[];
+extern f32 lbl_8032C0E8[];
+extern f32 lbl_8032C0EC[];
+extern f32 lbl_8032C0F0[];
 extern int lbl_803DC430;
 extern int lbl_803DC434;
 extern int lbl_803DC438;
@@ -288,7 +288,8 @@ extern void fn_8022D460(int obj, f32 x);
 void andross_update(int obj)
 
 {
-  int bVar1;
+  u8 moveChanged;
+  u8 stateChanged;
   float fVar2;
   short sVar3;
   int iVar5;
@@ -360,6 +361,8 @@ void andross_update(int obj)
   f32 local_50;
     piVar14 = *(int **)(obj + 0xb8);
   fstate = (f32 *)piVar14;
+  moveChanged = 0;
+  stateChanged = 0;
   iVar12 = 0;
   if (*(u8 *)((int)piVar14 + 0xb6) != 0) {
     *(u8 *)((int)piVar14 + 0xb6) -= 1;
@@ -404,8 +407,11 @@ void andross_update(int obj)
            *(float *)(obj + 0x14) + fstate[uVar6 * 3 + 0xc];
     }
   }
-  bVar1 = piVar14[0x1f] != piVar14[0x20];
-  piVar14[0x20] = piVar14[0x1f];
+  iVar5 = piVar14[0x1f];
+  if (iVar5 != piVar14[0x20]) {
+    stateChanged = 1;
+  }
+  piVar14[0x20] = iVar5;
   fVar2 = lbl_803E74D4;
   fstate[0x36] = lbl_803E74D4;
   fstate[0x37] = fVar2;
@@ -421,7 +427,7 @@ void andross_update(int obj)
   }
   switch (piVar14[0x1f]) {
   case 1:
-        if (bVar1) {
+        if (stateChanged) {
           if (*(char *)(piVar14 + 0x2f) == '\0') {
             androsshand_setState(piVar14[1],2,1);
             androsshand_setState(piVar14[2],2,1);
@@ -456,7 +462,7 @@ LAB_8023ad84:
         }
     break;
   case 2:
-      if ((bVar1) &&
+      if ((stateChanged) &&
          (*(u8 *)((int)piVar14 + 0xad) = *(u8 *)((int)piVar14 + 0xad) & 0xf9,
          piVar14[0x22] == 0x16)) {
         androsshand_setState(piVar14[1],1,1);
@@ -488,7 +494,7 @@ LAB_8023ad84:
       }
     break;
   case 3:
-      if (bVar1) {
+      if (stateChanged) {
         *(undefined *)((int)piVar14 + 0xae) = 0xf;
         *(undefined *)((int)piVar14 + 0xaf) = 0xf;
         *(undefined *)(piVar14 + 0x2c) = 0xf;
@@ -548,7 +554,7 @@ LAB_8023ad84:
     }
     break;
   case 5:
-    if (bVar1) {
+    if (stateChanged) {
       piVar14[0x22] = 0xd;
       *(undefined *)(piVar14 + 0x2b) = 0;
     }
@@ -585,20 +591,23 @@ LAB_8023ad84:
     }
     break;
   case 6:
-    if (bVar1) {
+    if (stateChanged) {
       piVar14[0x22] = 0x1c;
       *(undefined *)(piVar14 + 0x2b) = 0;
     }
     break;
   }
-  bVar1 = piVar14[0x22] != piVar14[0x23];
-  piVar14[0x23] = piVar14[0x22];
+  iVar5 = piVar14[0x22];
+  if (iVar5 != piVar14[0x23]) {
+    moveChanged = 1;
+  }
+  piVar14[0x23] = iVar5;
   switch(piVar14[0x22]) {
   case 0:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
-      *(f32 **)(iVar12 + 100) = lbl_8032C098;
+      *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
       if (piVar14[0x1f] == 1) {
         fstate[0x27] = lbl_803E74E4;
       }
@@ -640,10 +649,10 @@ LAB_8023ad84:
     }
     break;
   case 1:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0xc,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0C8;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0C8[0];
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
@@ -679,10 +688,10 @@ LAB_8023ad84:
     }
     break;
   case 2:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0xe,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0D0;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0D0[0];
       fstate[0x27] = lbl_803E74F0;
       *(s16 *)(piVar14 + 0x26) = 0xffff;
     }
@@ -727,10 +736,10 @@ LAB_8023ad84:
     }
     break;
   case 3:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0xd,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0CC;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0CC[0];
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
@@ -758,10 +767,10 @@ LAB_8023ad84:
     }
     break;
   case 4:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
-      *(f32 **)(iVar12 + 100) = lbl_8032C098;
+      *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
       GameBit_Set(0xd,1);
       fstate[0x27] = lbl_803E7504;
     }
@@ -800,10 +809,10 @@ LAB_8023ad84:
     }
     break;
   case 0x15:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
-      *(f32 **)(iVar12 + 100) = lbl_8032C098;
+      *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
       GameBit_Set(0xd,1);
       fstate[0x27] = lbl_803E7504;
     }
@@ -849,10 +858,10 @@ LAB_8023bb18:
     }
     break;
   case 6:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
-      *(f32 **)(iVar12 + 100) = lbl_8032C098;
+      *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
       androsshand_setState(piVar14[2],4,0);
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
@@ -883,7 +892,7 @@ LAB_8023bb18:
     }
     break;
   case 7:
-    if (bVar1) {
+    if (moveChanged) {
       androsshand_setState(piVar14[1],4,0);
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
@@ -914,7 +923,7 @@ LAB_8023bb18:
     }
     break;
   case 9:
-    if (bVar1) {
+    if (moveChanged) {
       androsshand_setState(piVar14[1],6,0);
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
@@ -945,7 +954,7 @@ LAB_8023bb18:
     }
     break;
   case 8:
-    if (bVar1) {
+    if (moveChanged) {
       androsshand_setState(piVar14[2],6,0);
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
@@ -1013,7 +1022,7 @@ LAB_8023bb18:
       fstate[0x34] = (lbl_803E74FC * dVar19 +
                        (float)(fstate[0x17] + dVar17));
       piVar14[0x35] = piVar14[0x18];
-      if (bVar1) {
+      if (moveChanged) {
         androsshand_setState(piVar14[1],5,0);
         androsshand_setState(piVar14[2],5,0);
       }
@@ -1026,10 +1035,10 @@ LAB_8023bb18:
     break;
   case 0xb:
   case 0xd:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,1,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C09C;
+      *(f32 *)(iVar12 + 100) = lbl_8032C09C[0];
       if (piVar14[0x1f] < 5) {
         androsshand_setState(piVar14[1],0,0);
         androsshand_setState(piVar14[2],0,0);
@@ -1118,10 +1127,10 @@ LAB_8023c584:
       lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
     }
     turnOnDistortionFilter((f32 *)(piVar14 + 0x30),dVar19,&lbl_803DC4CC,lbl_803DDDB8);
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,2,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0A0;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0A0[0];
       *(undefined *)((int)piVar14 + 0xb1) = 0;
       GameBit_Set(0x10,0);
       *(short *)(piVar14 + 0x26) = (short)lbl_803DC44C;
@@ -1190,10 +1199,10 @@ LAB_8023c584:
       lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
     }
     turnOnDistortionFilter((f32 *)(piVar14 + 0x30),dVar19,&lbl_803DC4CC,lbl_803DDDB8);
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,2,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0A0;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0A0[0];
       if (piVar14[0x1f] < 5) {
         *(undefined *)((int)piVar14 + 0xb1) = 1;
       }
@@ -1295,10 +1304,10 @@ LAB_8023cbdc:
     }
     break;
   case 0xf:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0x10,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0D8;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0D8[0];
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
@@ -1326,7 +1335,7 @@ LAB_8023cbdc:
     }
     break;
   case 0x10:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0x10,lbl_803E74D4,0);
       *(float *)(iVar12 + 100) = lbl_803E7518;
@@ -1373,11 +1382,11 @@ LAB_8023cbdc:
     }
     break;
   case 0x11:
-    if (bVar1) {
+    if (moveChanged) {
       Sfx_PlayFromObject(obj,0x468);
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0x15,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0EC;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0EC[0];
       arwarwing_addShield(*piVar14,0xfffffffc);
     }
     fVar2 = -(lbl_803E74B0 * timeDelta - fstate[0x2a]);
@@ -1413,10 +1422,10 @@ LAB_8023cbdc:
     }
     break;
   case 0x12:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0x12,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0E0;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0E0[0];
       androsshand_setState(piVar14[1],0,0);
       androsshand_setState(piVar14[2],0,0);
       if ((piVar14[0x1f] == 5) && (*(char *)(piVar14 + 0x2b) != '\0')) {
@@ -1480,10 +1489,10 @@ LAB_8023d59c:
     }
     break;
   case 0x13:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0x13,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0E4;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0E4[0];
       if (piVar14[0x1f] == 5) {
         fstate[0x27] = lbl_803E74A8;
       }
@@ -1569,10 +1578,10 @@ LAB_8023d7cc:
     }
     break;
   case 0x14:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0x14,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0E8;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0E8[0];
     }
     if ((piVar14[0x1f] == 5) && (*(char *)(piVar14 + 0x2b) == '\0')) {
       for (bVar13 = 0; bVar13 < 6; bVar13 = bVar13 + 1) {
@@ -1617,18 +1626,18 @@ LAB_8023db24:
     break;
   case 0x19:
   case 0x1a:
-    if (bVar1) {
+    if (moveChanged) {
       Sfx_PlayFromObject(obj,0x4a6);
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,4,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0A8;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0A8[0];
     }
     if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
       piVar14[0x21] = 1;
     }
     break;
   case 0x1b:
-    if (bVar1) {
+    if (moveChanged) {
       GameBit_Set(0x10,0);
       *(s16 *)(piVar14 + 0x26) = 0x1e;
       fn_8022D308(*piVar14);
@@ -1646,7 +1655,7 @@ LAB_8023db24:
     }
     break;
   case 0x1c:
-    if (bVar1) {
+    if (moveChanged) {
       androssbrain_setState(piVar14[3],1,0);
       ObjHits_DisableObject(obj);
       *(s16 *)(piVar14 + 0x26) = 0x3c;
@@ -1730,7 +1739,7 @@ LAB_8023de5c:
     }
     break;
   case 0x1d:
-    if (bVar1) {
+    if (moveChanged) {
       androssbrain_setState(piVar14[3],1,0);
       ObjHits_DisableObject(obj);
       *(short *)(piVar14 + 0x26) = (short)lbl_803DC484;
@@ -1756,7 +1765,7 @@ LAB_8023de5c:
     }
     break;
   case 0x16:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = randomGetRange(0,1);
       if (iVar12 == 0) {
         uVar9 = 0x472;
@@ -1767,7 +1776,7 @@ LAB_8023de5c:
       Sfx_PlayFromObject(obj,uVar9);
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
-      *(f32 **)(iVar12 + 100) = lbl_8032C098;
+      *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
     }
     if (*(char *)(piVar14 + 0x2e) != '\0') {
       iVar12 = *piVar14;
@@ -1807,11 +1816,11 @@ LAB_8023de5c:
   case 5:
     iVar12 = *(int *)(piVar14[1] + 0xb8);
     iVar5 = *(int *)(piVar14[2] + 0xb8);
-    if (bVar1) {
+    if (moveChanged) {
       Sfx_PlayFromObject(obj,0x470);
       iVar8 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0x16,lbl_803E74D4,0);
-      *(int *)(iVar8 + 100) = lbl_8032C0F0;
+      *(f32 *)(iVar8 + 100) = lbl_8032C0F0[0];
       *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0x7f;
       *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xbf;
     }
@@ -1865,10 +1874,10 @@ LAB_8023de5c:
     }
     break;
   case 0x17:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,3,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0A4;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0A4[0];
       fstate[0x39] = lbl_803E74D4;
       *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf;
     }
@@ -1915,10 +1924,10 @@ LAB_8023de5c:
     }
     break;
   case 0x18:
-    if (bVar1) {
+    if (moveChanged) {
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0x11,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0DC;
+      *(f32 *)(iVar12 + 100) = lbl_8032C0DC[0];
       *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf;
     }
     if (lbl_803DC4A0 < *(float *)(obj + 0x98)) {
