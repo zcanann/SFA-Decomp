@@ -1158,6 +1158,7 @@ LAB_801860b0:
  */
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void fn_80185B74(int obj)
 {
     extern void *lbl_803DDAD4;
@@ -1193,9 +1194,9 @@ void fn_80185B74(int obj)
     int state;
     int sub;
     f32 dist;
-    char ph;
+    u8 ph;
     char on;
-    char held;
+    u8 held;
 
     p4c = *(int *)(obj + 0x4c);
     spd = lbl_803E3A5C;
@@ -1252,8 +1253,9 @@ void fn_80185B74(int obj)
     }
     if (*(s8 *)(state + 0x23) == 0) {
         if (*(s8 *)(state + 0x21) == 0) {
+            int cam = (*(code *)(*(int *)gCameraInterface + 0x3c))();
             on = 0;
-            if ((void *)(*(code *)(*(int *)gCameraInterface + 0x3c))() != (void *)obj &&
+            if ((void *)cam != (void *)obj &&
                 (*(u8 *)(obj + 0xaf) & 1) != 0 && *(int *)(obj + 0xf8) == 0) {
                 buttonDisable(0, 0x100);
                 Obj_GetYawDeltaToObject(obj, player, yawBuf);
@@ -1274,7 +1276,7 @@ void fn_80185B74(int obj)
             *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x14);
             *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
         } else {
-            char st21;
+            u8 st21;
             ObjHits_DisableObject(obj);
             *(f32 *)(*(int *)(obj + 0x54) + 0x10) = *(f32 *)(obj + 0xc);
             *(f32 *)(*(int *)(obj + 0x54) + 0x14) = *(f32 *)(obj + 0x10);
@@ -1292,8 +1294,8 @@ void fn_80185B74(int obj)
             if (*(int *)(obj + 0xf8) == 1) {
                 *(u8 *)(state + 0x21) = 2;
             }
-            st21 = *(s8 *)(state + 0x21);
-            if (st21 == 2 && *(int *)(obj + 0xf8) == 0 && *(s16 *)(player + 0xa0) != 0x447) {
+            st21 = *(u8 *)(state + 0x21);
+            if ((s8)st21 == 2 && *(int *)(obj + 0xf8) == 0 && *(s16 *)(player + 0xa0) != 0x447) {
                 *(u8 *)(state + 0x21) = 0;
                 *(u8 *)(state + 0x23) = 1;
                 {
@@ -1311,7 +1313,7 @@ void fn_80185B74(int obj)
                 rot.ang = *(s16 *)player;
                 mathFn_80021ac8(&rot, (f32 *)(obj + 0x24));
                 Sfx_PlayFromObject(obj, SFXmn_dimbos46);
-            } else if (st21 == 2 && *(int *)(obj + 0xf8) == 0) {
+            } else if ((s8)st21 == 2 && *(int *)(obj + 0xf8) == 0) {
                 f32 fz;
                 *(u8 *)(state + 0x21) = 0;
                 *(u8 *)(state + 0x23) = 2;
@@ -1323,8 +1325,8 @@ void fn_80185B74(int obj)
             }
         }
     }
-    ph = *(s8 *)(state + 0x23);
-    if (ph == 0 && *(s8 *)(state + 0x21) == 0) {
+    ph = *(u8 *)(state + 0x23);
+    if ((s8)ph == 0 && *(s8 *)(state + 0x21) == 0) {
         if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
             sub = *(int *)(obj + 0xb8);
             stkA.val = *(f32 *)(sub + 8);
@@ -1332,7 +1334,7 @@ void fn_80185B74(int obj)
             *(s16 *)(sub + 0x1e) = 1;
             return;
         }
-    } else if (ph != 0) {
+    } else if ((s8)ph != 0) {
         *(s16 *)(state + 0x1a) -= framesThisStep;
         if (*(s8 *)(state + 0x23) == 1) {
             ObjHits_SetHitVolumeSlot(obj, 0xe, 3, 0);
@@ -1341,8 +1343,8 @@ void fn_80185B74(int obj)
             }
             ObjHits_EnableObject(obj);
         }
-        held = *(s8 *)(*(int *)(obj + 0x54) + 0xad);
-        if (held != 0 && *(s8 *)(state + 0x23) == 1) {
+        held = *(u8 *)(*(int *)(obj + 0x54) + 0xad);
+        if ((s8)held != 0 && *(s8 *)(state + 0x23) == 1) {
             *(f32 *)(obj + 0x28) = lbl_803E3A58;
             *(u8 *)(state + 0x23) = 0;
             sub = *(int *)(obj + 0xb8);
@@ -1351,7 +1353,7 @@ void fn_80185B74(int obj)
             *(s16 *)(sub + 0x1e) = 1;
             return;
         }
-        if (held != 0 && *(s8 *)(state + 0x23) == 2) {
+        if ((s8)held != 0 && *(s8 *)(state + 0x23) == 2) {
             *(u8 *)(state + 0x23) = 0;
             sub = *(int *)(obj + 0xb8);
             stkC.val = *(f32 *)(sub + 8);
@@ -1383,6 +1385,7 @@ void fn_80185B74(int obj)
         }
     }
 }
+#pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
 
