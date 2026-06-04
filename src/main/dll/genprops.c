@@ -6387,3 +6387,73 @@ void dim2roofrub_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int objCreateLight(int *obj, int arg);
+extern void lightSetField4D(int light, int v);
+extern void lightSetFieldBC_8001db14(int light, int v);
+extern void lightVecFn_8001dd88(int light, f32 a, f32 b, f32 c);
+extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
+extern void fn_8001D730(int light, int a, int r, int g, int b, int e, f32 f);
+extern void fn_8001D714(int light, f32 a);
+extern void modelLightStruct_setField50(int light, int v);
+extern f32 lbl_803E3378;
+extern f32 lbl_803E337C;
+extern f32 lbl_803E3380;
+
+#pragma scheduling off
+#pragma peephole off
+void fireball_init(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *params = *(int **)((char *)obj + 0x4c);
+
+    if (*(s16 *)((char *)params + 0x1c) != 0) {
+        *(u8 *)((char *)state + 0x70) |= 8;
+    } else {
+        u8 *p;
+        int i;
+        *(s16 *)((char *)state + 0x40) = (s16)randomGetRange(600, 900);
+        *(s16 *)((char *)state + 0x42) = (s16)randomGetRange(-600, 600);
+        *(u8 *)((char *)state + 0x71) = 0;
+        {
+            int *r54 = *(int **)((char *)obj + 0x54);
+            if (r54 != NULL) {
+                *(s16 *)((char *)r54 + 0xb2) = 257;
+            }
+        }
+        if (*(void **)state == NULL) {
+            *(int *)state = objCreateLight(obj, 1);
+            if (*(void **)state != NULL) {
+                int c;
+                modelLightStruct_setField50(*(int *)state, 2);
+                lightSetField4D(*(int *)state, 0);
+                lightVecFn_8001dd88(*(int *)state, lbl_803E3330, lbl_803E3330, lbl_803E3330);
+                lightSetFieldBC_8001db14(*(int *)state, 1);
+                c = *(u8 *)((char *)state + 0x71) * 3;
+                modelLightStruct_setColorsA8AC(*(int **)state, ((u8 *)lbl_80320978)[c],
+                                               ((u8 *)lbl_80320978 + 1)[c], ((u8 *)lbl_80320978 + 2)[c], 0);
+                lightDistAttenFn_8001dc38(*(int *)state, lbl_803E3358, lbl_803E3378);
+                c = *(u8 *)((char *)state + 0x71) * 3;
+                fn_8001D730(*(int *)state, 0, ((u8 *)lbl_80320978)[c], ((u8 *)lbl_80320978 + 1)[c],
+                            ((u8 *)lbl_80320978 + 2)[c], 32, lbl_803E337C);
+                fn_8001D714(*(int *)state, lbl_803E337C);
+            }
+        }
+        *(u8 *)((char *)obj + 0x36) = 200;
+        p = (u8 *)state;
+        for (i = 0; i < 5; i++) {
+            *(u16 *)(p + 0x48) = randomGetRange(-32767, 32767);
+            *(u16 *)(p + 0x52) = randomGetRange(-1024, 1024);
+            *(u16 *)(p + 0x5c) = randomGetRange(-32767, 32767);
+            *(u16 *)(p + 0x66) = randomGetRange(-1024, 1024);
+            p += 2;
+        }
+        *(int *)((char *)obj + 0xbc) = (int)Fireball_SeqFn;
+        ObjGroup_AddObject((int)obj, 2);
+        if (*(s16 *)((char *)obj + 0x46) != 2110 && *(s16 *)((char *)params + 0x1a) != 0) {
+            *(f32 *)((char *)state + 0x3c) = lbl_803E3380;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
