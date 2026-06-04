@@ -5738,3 +5738,64 @@ int fn_80200088(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80203144(int obj, int p2, int p3)
+{
+    extern int ObjGroup_FindNearestObject(int, int, f32 *);
+    extern void ObjGroup_AddObject(int, int);
+    extern void *Obj_GetPlayerObject(void);
+    extern void Sfx_PlayFromObject(int, u16);
+    extern f32 sqrtf(f32 x);
+    extern u32 randomGetRange(int min, int max);
+    extern void **gBaddieControlInterface;
+    extern int lbl_80329640[];
+    extern f32 lbl_803E62B0;
+    extern f32 lbl_803E6354;
+    extern f32 lbl_803E6384;
+    extern f32 timeDelta;
+    int sub = *(int *)(p2 + 0x40c);
+    u32 near;
+    int data;
+    char *player;
+    f32 dist;
+    struct {
+        f32 range;
+        f32 d[3];
+    } stk;
+
+    stk.range = lbl_803E62B0;
+    data = *(int *)(obj + 0x4c);
+    near = (**(u32 (**)(int, int, f32, int))((char *)*gBaddieControlInterface + 0x48))(obj, p3, (f32)*(u16 *)(p2 + 0x3fe), 0x8000);
+    if (near == 0 && (*(u8 *)(p2 + 0x404) & 0x10) != 0) {
+        near = ObjGroup_FindNearestObject(0x24, obj, &stk.range);
+    }
+    if (near == 0 && (*(u8 *)(p2 + 0x404) & 0x10) != 0 && (*(u8 *)(p2 + 0x404) & 2) == 0 && (*(u8 *)(data + 0x2b) & 2) != 0) {
+        near = ObjGroup_FindNearestObject(0x24, obj, 0);
+    }
+    if (near != 0 && (*(u8 *)(p2 + 0x404) & 2) == 0) {
+        (**(void (**)(int, int, int, int, int, int, int, int, int))((char *)*gBaddieControlInterface + 0x28))(obj, p3, p2 + 0x35c, *(s16 *)(p2 + 0x3f4), 0, 0, 0, 8, -1);
+        *(int *)(p3 + 0x2d0) = near;
+        *(u8 *)(p3 + 0x349) = 0;
+        ObjGroup_AddObject(obj, 3);
+        *(u16 *)(p2 + 0x402) = 1;
+    } else {
+        player = Obj_GetPlayerObject();
+        if (player != NULL) {
+            stk.d[0] = *(f32 *)(player + 0x18) - *(f32 *)(obj + 0x18);
+            stk.d[1] = *(f32 *)(player + 0x1c) - *(f32 *)(obj + 0x1c);
+            stk.d[2] = *(f32 *)(player + 0x20) - *(f32 *)(obj + 0x20);
+            dist = sqrtf(stk.d[2] * stk.d[2] + (stk.d[0] * stk.d[0] + stk.d[1] * stk.d[1]));
+        } else {
+            dist = lbl_803E6354;
+        }
+        if (*(f32 *)(sub + 0xc) > *(f32 *)(sub + 0x10) && dist < lbl_803E6384) {
+            Sfx_PlayFromObject(obj, (u16)lbl_80329640[1]);
+            *(f32 *)(sub + 0x10) = *(f32 *)(sub + 0x10) + (f32)(int)randomGetRange(0x32, 0xfa);
+        }
+        *(f32 *)(sub + 0xc) += timeDelta;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
