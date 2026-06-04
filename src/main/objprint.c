@@ -3941,6 +3941,7 @@ int fn_8003A8B4(int objArg, int *keyList, int countArg, char *p4Arg)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b)
 {
     extern f32 curveFn_80010dc0(int, int, f32);
@@ -3985,6 +3986,7 @@ int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b)
     }
     return 0;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -4585,6 +4587,170 @@ void modelCalcVtxGroupMtxs(int p1, int p2)
         out[11] = ma[11] * w + mb[11] * wi;
         off += 4;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct ObjPrintFlipFlag {
+    u8 flip : 1;
+    u8 rest : 7;
+} ObjPrintFlipFlag;
+
+#pragma scheduling off
+#pragma peephole off
+int objMathFn_8003a380(int obj, char *tgt, f32 *pos, int p4, s16 *spd, int unk6, int p7, f32 yOff)
+{
+    extern f32 sqrtf(f32);
+    extern f32 lbl_803DE9EC;
+    extern f32 lbl_803DE9D8;
+    extern f32 lbl_803DE9DC;
+    extern int lbl_803DB460;
+    extern ObjPrintFlipFlag lbl_803DCC00;
+    extern u8 framesThisStep;
+    s16 ang[4];
+    s16 *sp1;
+    s16 *sp2;
+    char *p;
+    int *keys;
+    int i;
+    int ret;
+    f32 dx, dy, dz, dist;
+
+    p = (char *)p4;
+    sp2 = spd + 0xf;
+    dx = pos[0] - *(f32 *)(obj + 0xc);
+    dz = pos[2] - *(f32 *)(obj + 0x14);
+    dy = (pos[1] + yOff) - *(f32 *)(obj + 0x10);
+    dist = sqrtf(dx * dx + dz * dz);
+
+    ang[2] = (s16)getAngle(dx, dz) - (u16)*(s16 *)obj;
+    if (ang[2] > 0x8000) {
+        ang[2] = (s16)(ang[2] - 0xffff);
+    }
+    if (ang[2] < -0x8000) {
+        ang[2] = (s16)(ang[2] + 0xffff);
+    }
+    ang[3] = p7 - (u16)-getAngle(dist, dy);
+    if (ang[3] > 0x8000) {
+        ang[3] = (s16)(ang[3] - 0xffff);
+    }
+    if (ang[3] < -0x8000) {
+        ang[3] = (s16)(ang[3] + 0xffff);
+    }
+
+    ret = ang[2];
+    if (lbl_803DCC00.flip) {
+        ang[2] = (s16)(ret - 0x8000);
+        ang[3] = -ang[3];
+        lbl_803DCC00.flip = 0;
+    }
+
+    i = 0;
+    keys = lbl_802CAE88;
+    sp1 = spd;
+    while (i < 10) {
+        int key;
+        s16 *found;
+        void *m;
+
+        key = *keys;
+        found = NULL;
+        m = *(void **)(obj + 0x50);
+        if (m != NULL) {
+            int entryIdx = 0, vecOffset = 0;
+            int n = *(u8 *)((char *)m + 0x5a);
+            int j;
+            for (j = 0; j < n; j++) {
+                u8 *entries = *(u8 **)((char *)m + 0x10);
+                int idx = (s8)*(s8 *)(obj + 0xad) + entryIdx + 1;
+                if ((int)entries[idx] != 0xff && key == entries[entryIdx]) {
+                    found = (s16 *)((char *)*(void **)(obj + 0x6c) + vecOffset);
+                }
+                entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+                vecOffset += 0x12;
+            }
+        }
+        if (found == NULL) {
+            int t = (s16)ret;
+            if (t >= 0) {
+            } else {
+                t = -t;
+            }
+            return (s16)(t < 0x100);
+        }
+
+        {
+            s16 *src = &ang[2];
+            s16 *dst = &ang[0];
+            int n2;
+            for (n2 = 0; n2 < 2; n2++) {
+                int lim;
+                s16 v;
+                if (n2 % 2 != 0) {
+                    lim = (s32)(lbl_803DE9EC * (f32)*sp2);
+                } else {
+                    lim = (s32)(lbl_803DE9EC * (f32)*sp1);
+                }
+                v = *src;
+                *dst = v;
+                if (v > (s16)lim) {
+                    *dst = lim;
+                    *src = v - lim;
+                } else if (v < -(s16)lim) {
+                    *dst = (s16)-(s16)lim;
+                    *src = v + lim;
+                } else {
+                    *src = 0;
+                }
+                src++;
+                dst++;
+            }
+        }
+
+        if (p != NULL) {
+            *(s16 *)(p + 0x14) = ang[0];
+            fn_800399C0((s16 *)p, found);
+            *(s16 *)(p + 0x44) = ang[1];
+            fn_80039834((s16 *)(p + 0x30), found, lbl_803DE9D8, lbl_803DE9DC);
+            p += 0x60;
+        } else {
+            int d1 = (s16)((s16)((found[1] + ang[0]) >> 1) - found[1]);
+            int lim;
+            int d2;
+            int t2;
+            int div2;
+            int lim3;
+
+            lim = framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)-*sp1) / lbl_803DB460);
+            if (d1 >= lim) {
+                lim = framesThisStep * ((s16)(s32)(lbl_803DE9EC * (f32)*sp1) / lbl_803DB460);
+                if (d1 <= lim) {
+                    lim = d1;
+                }
+            }
+            d2 = (s16)((s16)((found[0] + ang[1]) >> 1) - found[0]);
+            t2 = (s16)(s32)(lbl_803DE9EC * (f32)*sp2);
+            div2 = lbl_803DB460 << 1;
+            lim3 = framesThisStep * (-t2 / div2);
+            if (d2 >= lim3) {
+                lim3 = framesThisStep * (t2 / div2);
+                if (d2 <= lim3) {
+                    lim3 = d2;
+                }
+            }
+            found[0] += (s16)lim3;
+            found[1] += (s16)lim;
+        }
+
+        if (i == 0) {
+            ret = (s16)(ret - found[1]);
+        }
+        keys++;
+        sp2++;
+        sp1++;
+        i++;
+    }
+    return ang[2];
 }
 #pragma peephole reset
 #pragma scheduling reset
