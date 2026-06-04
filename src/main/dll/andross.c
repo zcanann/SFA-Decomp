@@ -289,10 +289,10 @@ void andross_update(int obj)
 
 {
   int *piVar14;
-  u8 moveChanged;
   u8 stateChanged;
-  int iVar8;
+  u8 moveChanged;
   int iVar12;
+  int iVar8;
   u32 uVar6;
   float fVar2;
   short sVar3;
