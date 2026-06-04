@@ -1002,8 +1002,10 @@ extern int *gExpgfxInterface;
 #pragma peephole off
 void shopitem_free(int obj) {
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
-    if (*(s16 *)(obj + 0x46) == 0x468) {
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x468:
         ObjGroup_RemoveObject(obj, 0x4F);
+        break;
     }
 }
 #pragma peephole reset
@@ -1106,8 +1108,8 @@ void shopkeeper_update(int obj) {
         *(int *)(state + 0x9B4) = ObjGroup_FindNearestObject(9, obj, &dist);
     }
     *(s16 *)(state + 0x9C8) = (s16)playerGetMoney(player);
-    ((void (*)(int, int, void *, void *, f32, f32))(*(int *)((int)*gPlayerInterface + 8)))
-        (obj, state, lbl_803AD068, &lbl_803DDC58, timeDelta, timeDelta);
+    ((void (*)(int, int, f32, f32, void *, void *))(*(int *)((int)*gPlayerInterface + 8)))
+        (obj, state, timeDelta, timeDelta, lbl_803AD068, &lbl_803DDC58);
     dll_2E_func03(obj, state + 0x35C);
     characterDoEyeAnims(obj, state + 0x980);
     *(u8 *)(obj + 0x36) = *(u8 *)(state + 0x9D6);
