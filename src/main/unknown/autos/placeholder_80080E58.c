@@ -4667,7 +4667,7 @@ void ObjSeq_seqState_init(u8 *seq)
     }
 }
 
-void *objFindForSeqFn_80081bf0(u8 *obj)
+void *ObjSeq_FindTargetObject(u8 *obj)
 {
     void *unused;
     int objectCount;

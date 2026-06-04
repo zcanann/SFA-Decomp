@@ -362,7 +362,7 @@ void *ObjSeq_ToggleCommand3Target(u8 *obj, u8 *seq, u8 *src)
     result = obj;
     *(s8 *)(seq + 0x79) = (s8)(seq[0x79] ^ 1);
     if ((s8)seq[0x79] != 0) {
-        fn_8008196C(obj);
+        ObjSeq_ResolveAndAssignTargetObject(obj);
         seqObj = *(u8 **)seq;
         if (seqObj != NULL) {
             result = seqObj;
@@ -508,7 +508,7 @@ void ObjSeq_run(void)
                 seqp = *(u8 **)(candidate + 0xb8);
                 if (model != NULL && (s8)model[0x1f] == index) {
                     if (*(s16 *)(model + 0x1c) >= 4 &&
-                        objFindForSeqFn_80081bf0(candidate) == NULL) {
+                        ObjSeq_FindTargetObject(candidate) == NULL) {
                         ok = 0;
                         fn_80137948(sObjSequenceMissingObjectFormat,
                                     *(s16 *)(model + 0x1c) - 4);
@@ -3676,7 +3676,7 @@ gotFlags:
 
 #pragma peephole off
 #pragma scheduling off
-int fn_8008196C(u8 *obj)
+int ObjSeq_ResolveAndAssignTargetObject(u8 *obj)
 {
     int objectCount;
     void *unused;
@@ -3784,7 +3784,7 @@ int fn_8008196C(u8 *obj)
 
 #pragma peephole off
 #pragma scheduling off
-void *objFindForSeqFn_80081bf0(u8 *obj)
+void *ObjSeq_FindTargetObject(u8 *obj)
 {
     void *unused;
     int objectCount;
