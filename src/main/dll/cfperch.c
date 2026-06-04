@@ -7,6 +7,15 @@
 #define SFXsp_skeep_mumb1 0x10a
 #define SFXfend_rob_wave 0x313
 
+#define SMALLBASKET_LINKED_ID_BASE 0x40000
+#define SMALLBASKET_ROB_WAVE_DIRECT_ID 0x66
+#define SMALLBASKET_ROB_WAVE_ID_65D0 0x65d0
+#define SMALLBASKET_ROB_WAVE_ID_65D2 0x65d2
+#define SMALLBASKET_ROB_WAVE_ID_65D5 0x65d5
+#define SMALLBASKET_ROB_WAVE_ID_65D6 0x65d6
+#define SMALLBASKET_ROB_WAVE_ID_65D7 0x65d7
+#define GAMEBIT_SFX_MUTE 0xa71
+
 extern undefined8 FUN_80006824();
 extern uint FUN_80006ba0();
 extern undefined4 FUN_80006ba8();
@@ -155,11 +164,14 @@ void fn_80183250(int obj, int def)
         if ((oldVel <= (limit = lbl_803E39B8) && *(f32 *)(obj + 0x24) >= limit) ||
             (oldVel >= lbl_803E39B8 && *(f32 *)(obj + 0x24) <= lbl_803E39B8)) {
             v = *(u32 *)(state31 + 0x14);
-            adj = v - 0x40000;
-            if ((adj == 0x65d7) || ((adj - 0x65d5) <= 1) || (v == 0x66) || (adj == 0x65d0) ||
-                (adj == 0x65d2)) {
+            adj = v - SMALLBASKET_LINKED_ID_BASE;
+            if ((adj == SMALLBASKET_ROB_WAVE_ID_65D7) ||
+                ((adj - SMALLBASKET_ROB_WAVE_ID_65D5) <=
+                 (SMALLBASKET_ROB_WAVE_ID_65D6 - SMALLBASKET_ROB_WAVE_ID_65D5)) ||
+                (v == SMALLBASKET_ROB_WAVE_DIRECT_ID) || (adj == SMALLBASKET_ROB_WAVE_ID_65D0) ||
+                (adj == SMALLBASKET_ROB_WAVE_ID_65D2)) {
                 if (Vec_distance((f32 *)(player + 0x18), (f32 *)(obj + 0x18)) < lbl_803E39BC) {
-                    if ((u32)GameBit_Get(0xa71) == 0) {
+                    if ((u32)GameBit_Get(GAMEBIT_SFX_MUTE) == 0) {
                         Sfx_PlayFromObject(obj, SFXfend_rob_wave);
                     }
                 }
