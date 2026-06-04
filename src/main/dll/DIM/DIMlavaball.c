@@ -155,6 +155,8 @@ extern void SCGameBitLatch_Update(void *latch, int mask, int clearIfSetBit, int 
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void MMP_levelcontrol_update(int obj)
 {
   int playerForMap;
@@ -165,7 +167,7 @@ void MMP_levelcontrol_update(int obj)
 
   if (lbl_803DDB28 > lbl_803E44C0) {
     gameTextShow(0x34f);
-    lbl_803DDB28 -= timeDelta;
+    lbl_803DDB28 = lbl_803DDB28 - timeDelta;
     if (lbl_803DDB28 < lbl_803E44C0) {
       lbl_803DDB28 = lbl_803E44C0;
     }
@@ -214,15 +216,13 @@ void MMP_levelcontrol_update(int obj)
     *(int *)(obj + 0xf4) = 0;
   }
 
-  if (*(int *)(obj + 0xf8) != 0) {
-    if (GameBit_Get(0xf33) == 0) {
-      skyFn_80088c94(7, 0);
-      getEnvfxAct(obj, playerForFx, 0x13a, 0);
-      getEnvfxAct(obj, playerForFx, 0x138, 0);
-      getEnvfxAct(obj, playerForFx, 0x139, 0);
-      *(int *)(obj + 0xf8) = 0;
-    }
-  } else if (GameBit_Get(0xf33) != 0) {
+  if (*(int *)(obj + 0xf8) != 0 && GameBit_Get(0xf33) == 0) {
+    skyFn_80088c94(7, 0);
+    getEnvfxAct(obj, playerForFx, 0x13a, 0);
+    getEnvfxAct(obj, playerForFx, 0x138, 0);
+    getEnvfxAct(obj, playerForFx, 0x139, 0);
+    *(int *)(obj + 0xf8) = 0;
+  } else if (*(int *)(obj + 0xf8) == 0 && GameBit_Get(0xf33) != 0) {
     skyFn_80088c94(7, 1);
     getEnvfxAct(obj, playerForFx, 0x13a, 0);
     getEnvfxAct(obj, playerForFx, 0x10c, 0);
@@ -233,6 +233,8 @@ void MMP_levelcontrol_update(int obj)
   SCGameBitLatch_Update(&lbl_803DDB2C, 1, -1, -1, 0x389, 0xd5);
   SCGameBitLatch_Update(&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
