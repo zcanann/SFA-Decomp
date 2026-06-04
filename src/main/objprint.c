@@ -3532,7 +3532,7 @@ void modelInitMtxs(int p1, int p2)
     }
 }
 
-extern void fn_80039DF8(int obj, int p4, f32 x);
+extern void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 x);
 extern f32 lbl_803DE9A4;
 
 void objAudioFn_800393f8(int p1, int p2, int p3, int p4, int p5, u8 p6)
@@ -3576,7 +3576,7 @@ void fn_8003B500(int obj, int p4)
         if (found[0] != 0) {
             found[0] = (s16)(found[0] * 3 / 4);
         }
-        fn_80039DF8(obj, p4, lbl_803DE9A4);
+        fn_80039DF8(obj, (s16*)p4, found, lbl_803DE9A4);
         *(s16*)(p4 + 0x1a) = (s16)(u8)*(s16*)(p4 + 0x1a);
     }
 }
@@ -3787,7 +3787,7 @@ void objModelAndSoundFn_80039118(int obj, int p2)
     }
 }
 
-extern void fn_80039B54(int obj, int p2, f32 val);
+extern void fn_80039B54(int obj, s16 *curve, s16 *state, f32 val);
 extern f32 lbl_803DE9E4;
 
 void fn_8003A230(int obj, int p2, f32 val)
@@ -3824,9 +3824,9 @@ void fn_8003A230(int obj, int p2, f32 val)
             val = -val;
         }
         if (val <= lbl_803DE9E4) {
-            fn_80039DF8(obj, p2, val);
+            fn_80039DF8(obj, (s16*)p2, found, val);
         } else {
-            fn_80039B54(obj, p2, val);
+            fn_80039B54(obj, (s16*)p2, found, val);
         }
         *(s16*)((char*)p2 + 0x1a) = (s16)(u8)*(s16*)((char*)p2 + 0x1a);
         if (val > lbl_803DE9E4) {
@@ -4080,6 +4080,85 @@ int fn_8003BB84(f32 *m, f32 *out)
     out[10] = v3[2];
     out[11] = zero;
     return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80039B54(int obj, s16 *curve, s16 *state, f32 val)
+{
+    extern f32 lbl_803DE9E4;
+    extern u8 framesThisStep;
+    int masked;
+    int flag;
+
+    masked = (curve[13] >> 8) & 0xff;
+    if (val > lbl_803DE9E4) {
+        flag = 1;
+    } else {
+        flag = 0;
+    }
+    if (masked != flag) {
+        curve[13] = (s16)(flag << 8 | 4);
+        curve[11] = state[1];
+        curve[10] = 0;
+        curve[14] = 0;
+    }
+
+    switch ((u8)curve[13]) {
+    case 0:
+        curve[13] = (s16)(flag << 8);
+        curve[14] = (s16)randomGetRange(0x32, 0xc8);
+        break;
+    case 1:
+        curve[14] -= framesThisStep;
+        if (curve[14] < 0) {
+            if ((int)randomGetRange(0, 100) > 90) {
+                curve[13] = (s16)(flag << 8 | 5);
+                if (*(s8 *)curve != 0) {
+                    if ((int)randomGetRange(0, 100) > 0) {
+                        curve[10] = 0x1fff;
+                        if ((int)randomGetRange(0, 1) == 0) {
+                            curve[10] = -curve[10];
+                        }
+                    }
+                } else {
+                    curve[10] = 0x1fff;
+                    if ((int)randomGetRange(0, 1) == 0) {
+                        curve[10] = -curve[10];
+                    }
+                }
+            }
+        }
+        break;
+    case 5:
+        if (curve[14] > 0) {
+            curve[14] -= framesThisStep;
+        } else if (fn_800399C0(curve, state)) {
+            curve[13] = (s16)(flag << 8 | 6);
+            curve[10] = -curve[10];
+            curve[14] = (s16)randomGetRange(0x14, 0x64);
+        }
+        break;
+    case 6:
+        if (curve[14] > 0) {
+            curve[14] -= framesThisStep;
+        } else if (fn_800399C0(curve, state)) {
+            curve[13] = (s16)(flag << 8 | 4);
+            curve[10] = 0;
+            curve[14] = (s16)randomGetRange(0x14, 0x64);
+        }
+        break;
+    case 4:
+        if (curve[14] > 0) {
+            curve[14] -= framesThisStep;
+        } else if (fn_800399C0(curve, state)) {
+            curve[13] = (s16)(flag << 8);
+            state[1] = 0;
+        }
+        break;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
