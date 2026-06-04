@@ -3120,9 +3120,9 @@ void setDrawCloudsAndLights(int v) {
 
 extern void modelRenderInstrsState_init(int* state, void* buf, int s1, int s2);
 extern void modelRenderInstrsState_setBit(int* state, int bit);
-extern void renderFn_8005e730(int* p1, int* obj, float* p3);
-extern int shaderFn_8005e560(int* obj, int* state);
-extern void shaderFn_8005e348(int* obj, int v, int* state, float* p3);
+extern void mapBlockRender_drawDimmedAabbLights(int* p1, int* obj, float* p3);
+extern int mapBlockRender_setLightmapShader(int* obj, int* state);
+extern void mapBlockRender_drawLightmapIndirectPasses(int* obj, int v, int* state, float* p3);
 
 #pragma scheduling off
 #pragma dont_inline on
@@ -3142,8 +3142,8 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x78), countShifted, countShifted);
     modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
     state[4] += 4;
-    renderFn_8005e730(p1, obj, p3);
-    newR = shaderFn_8005e560(obj, state);
+    mapBlockRender_drawDimmedAabbLights(p1, obj, p3);
+    newR = mapBlockRender_setLightmapShader(obj, state);
     state[4] += 4;
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
     state[4] += 4;
@@ -3159,7 +3159,7 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
         *(volatile int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
-    shaderFn_8005e348(obj, newR, state, p3);
+    mapBlockRender_drawLightmapIndirectPasses(obj, newR, state, p3);
 }
 #pragma dont_inline reset
 #pragma scheduling reset

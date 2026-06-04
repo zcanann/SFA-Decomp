@@ -170,7 +170,7 @@ u8 mapBlockBounds_HasCornerPastDepthThreshold(int param_1,float *param_2)
 /*
  * --INFO--
  *
- * Function: shaderFn_8005e348
+ * Function: mapBlockRender_drawLightmapIndirectPasses
  * EN v1.0 Address: 0x8005E348
  * EN v1.0 Size: 536b
  * EN v1.1 Address: 0x8005E4C4
@@ -182,7 +182,7 @@ typedef struct IndMtxCopy {
     int w[6];
 } IndMtxCopy;
 
-void shaderFn_8005e348(int param_1,u8 *param_2,int *param_3,Mtx param_4)
+void mapBlockRender_drawLightmapIndirectPasses(int param_1,u8 *param_2,int *param_3,Mtx param_4)
 {
   Mtx m2;
   float m[2][3];
@@ -244,7 +244,7 @@ void shaderFn_8005e348(int param_1,u8 *param_2,int *param_3,Mtx param_4)
 /*
  * --INFO--
  *
- * Function: shaderFn_8005e560
+ * Function: mapBlockRender_setLightmapShader
  * EN v1.0 Address: 0x8005E560
  * EN v1.0 Size: 464b
  * EN v1.1 Address: 0x8005E6DC
@@ -252,7 +252,7 @@ void shaderFn_8005e348(int param_1,u8 *param_2,int *param_3,Mtx param_4)
  */
 #pragma scheduling off
 #pragma peephole off
-int shaderFn_8005e560(int param_1,int *param_3,int *param_2)
+int mapBlockRender_setLightmapShader(int param_1,int *param_3,int *param_2)
 {
   int iVar1;
   uint uVar2;
@@ -317,7 +317,7 @@ LAB_8005E718:
 /*
  * --INFO--
  *
- * Function: renderFn_8005e730
+ * Function: mapBlockRender_drawDimmedAabbLights
  * EN v1.0 Address: 0x8005E730
  * EN v1.0 Size: 588b
  * EN v1.1 Address: 0x8005E8AC
@@ -325,7 +325,7 @@ LAB_8005E718:
  */
 #pragma scheduling off
 #pragma peephole off
-void renderFn_8005e730(undefined4 param_1,undefined4 param_2,int param_3)
+void mapBlockRender_drawDimmedAabbLights(undefined4 param_1,undefined4 param_2,int param_3)
 {
   int *piVar3;
   SfaIntDouble iD1;
