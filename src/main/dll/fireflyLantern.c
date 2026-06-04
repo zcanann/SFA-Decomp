@@ -5,24 +5,24 @@
 #define SFXfox_fightbreath2 0x24c
 
 extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern int Curve_AdvanceAlongPath(double t, int curve);
+extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern uint randomGetRange(int min, int max);
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern int Obj_GetPlayerObject(void);
 extern char fn_80296448(int playerObj);
-extern void fn_8014C678(double, double, double, int, int *, float *, int);
-extern void fn_8014CD1C(double, double, int, int *, int, int);
-extern void fn_8014CF7C(double, double, int, int *, int, int);
-extern void FUN_80154af4(ushort *obj, int state);
-extern void fn_8015536C(double, double, float *, float *);
+extern void fn_8014C678(int obj, int *state, f32 *vec, f32 a, f32 b, f32 c, int d);
+extern void fn_8014CD1C(int obj, int *state, int a, f32 x, f32 y, int b);
+extern void fn_8014CF7C(int obj, int *state, f32 x, f32 z, int a, int b);
+extern void fn_80154328(int obj, int *state);
+extern void fn_8015536C(f32 a, f32 b, f32 *out, f32 *axis);
 extern void PSVECSubtract(float *, float *, float *);
-extern double PSVECDotProduct(float *, float *);
+extern f32 PSVECDotProduct(float *, float *);
 extern void PSVECCrossProduct(float *, float *, float *);
 extern void PSVECNormalize(float *, float *);
-extern uint getAngle();
-extern void objMove(double, double, double, int);
-extern double sqrtf();
-extern double fn_80293DA4(double);
+extern uint getAngle(f32, f32);
+extern void objMove(short *obj, f32 x, f32 y, f32 z);
+extern f32 sqrtf(f32);
+extern f32 fn_80293DA4(f32);
 
 extern undefined4 lbl_803DBCD0;
 extern undefined4* gRomCurveInterface;
@@ -58,91 +58,78 @@ extern f64 lbl_803E2A18;
 #pragma scheduling off
 void fn_80154870(int obj, int *state)
 {
-    float fVar1;
-    int iVar2;
-    u8 cVar3;
-    int iVar4;
-    double dVar5;
-    float local_38;
-    float local_34;
-    float local_30;
-    double local_28;
-    undefined4 local_20;
-    uint uStack_1c;
-    double local_18;
+    int curve;
+    u8 flag;
+    f32 dvec[3];
+    f32 fVar1;
 
-    iVar4 = *state;
-    if ((state[0xb7] & 0x80000000U) != 0) {
+    curve = *state;
+    if (state[0xb7] & 0x80000000U) {
         Sfx_PlayFromObject(obj, 0x4c0);
     }
-    if ((((state[0xb7] & 0x2000U) != 0) &&
-         (((iVar2 = Curve_AdvanceAlongPath((double)lbl_803E2990, iVar4), iVar2 != 0 ||
-            (*(int *)(iVar4 + 0x10) != 0)) &&
-           (cVar3 = (*(code *)(*gRomCurveInterface + 0x90))(iVar4), cVar3 != '\0')))) &&
-        (cVar3 = (*(code *)(*gRomCurveInterface + 0x8c))
-                           ((double)lbl_803E29B0, *state, obj, &lbl_803DBCD0, 0xffffffff),
-         cVar3 != '\0')) {
-        state[0xb7] = state[0xb7] & 0xffffdfff;
+    if (((state[0xb7] & 0x2000U) != 0) &&
+        ((Curve_AdvanceAlongPath(curve, lbl_803E2990) != 0 || *(int *)(curve + 0x10) != 0) &&
+         ((*(u8 (**)(int))(*gRomCurveInterface + 0x90))(curve) != 0)) &&
+        ((*(u8 (**)(int, int, f32, void *, int))(*gRomCurveInterface + 0x8c))(
+             *state, obj, lbl_803E29B0, &lbl_803DBCD0, -1) != 0)) {
+        state[0xb7] = state[0xb7] & ~0x2000;
     }
     ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
-    cVar3 = fn_80296448(Obj_GetPlayerObject());
-    local_38 = *(float *)(state[0xa7] + 0xc) - *(float *)(obj + 0xc);
-    local_34 = lbl_803E2990;
-    local_30 = *(float *)(state[0xa7] + 0x14) - *(float *)(obj + 0x14);
-    if ((state[0xd0] != 0) && (iVar4 = Obj_GetPlayerObject(), state[0xd0] == iVar4)) {
+    flag = fn_80296448(Obj_GetPlayerObject());
+    dvec[0] = *(f32 *)(state[0xa7] + 0xc) - *(f32 *)(obj + 0xc);
+    dvec[1] = lbl_803E2990;
+    dvec[2] = *(f32 *)(state[0xa7] + 0x14) - *(f32 *)(obj + 0x14);
+    if ((state[0xd0] != 0) && ((u32)state[0xd0] == (u32)Obj_GetPlayerObject())) {
         state[0xb9] = state[0xb9] | 0x10000;
-        state[0xc9] = (int)lbl_803E2990;
+        *(f32 *)(state + 0xc9) = lbl_803E2990;
     }
-    dVar5 = (double)fn_80293DA4((double)(lbl_803E29C0 * (f32)(u32)*(byte *)((int)state + 0x33a)));
-    iVar4 = (int)-(float)((double)lbl_803E29BC * dVar5 - (double)(float)*(short *)(obj + 2));
-    *(short *)(obj + 2) = (short)iVar4;
-    fVar1 = lbl_803E2990;
-    if (cVar3 == '\0') {
-        *(float *)(obj + 0x24) = lbl_803E2990;
-        *(float *)(obj + 0x2c) = fVar1;
-        fn_8014CF7C((double)*(float *)(state[0xa7] + 0xc),
-                    (double)*(float *)(state[0xa7] + 0x14), obj, state, 10, 0);
+    *(s16 *)(obj + 2) =
+        -(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)((u8 *)state + 0x33a)) -
+          (f32)*(s16 *)(obj + 2));
+    if (flag == 0) {
+        *(f32 *)(obj + 0x24) = lbl_803E2990;
+        *(f32 *)(obj + 0x2c) = lbl_803E2990;
+        fn_8014CF7C(obj, state, *(f32 *)(state[0xa7] + 0xc), *(f32 *)(state[0xa7] + 0x14), 10, 0);
     } else {
-        fn_8014C678((double)lbl_803E29A0, (double)lbl_803E29B4,
-                    (double)lbl_803E29B4, obj, state, &local_38, 1);
-        fn_8014CD1C((double)lbl_803E29C4, (double)lbl_803E2994, obj, state, 0xf, 0);
+        fn_8014C678(obj, state, dvec, lbl_803E29A0, lbl_803E29B4, lbl_803E29B4, 1);
+        fn_8014CD1C(obj, state, 0xf, lbl_803E29C4, lbl_803E2994, 0);
     }
-    fVar1 = lbl_803E2990;
-    if ((state[0xb7] & 0x40000000U) != 0) {
-        if (lbl_803E2990 == (float)state[0xca]) {
-            if (cVar3 == '\0') {
-                if (*(float *)(obj + 0x98) <= lbl_803E29A4) {
-                    state[0xca] = (int)lbl_803E29E4;
+    if (state[0xb7] & 0x40000000U) {
+        fVar1 = lbl_803E2990;
+        if (fVar1 == *(f32 *)(state + 0xca)) {
+            if (flag == 0) {
+                if (*(f32 *)(obj + 0x98) > lbl_803E29A4) {
+                    *(f32 *)(state + 0xca) = lbl_803E29E0;
+                    *(u8 *)((u8 *)state + 0x33b) += 1;
                 } else {
-                    state[0xca] = (int)lbl_803E29E0;
-                    *(char *)((int)state + 0x33b) = *(char *)((int)state + 0x33b) + 1;
+                    *(f32 *)(state + 0xca) = lbl_803E29E4;
                 }
-            } else if ((double)*(float *)(obj + 0x98) <= lbl_803E29C8) {
-                Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
-                state[0xc2] = (int)lbl_803E29D4;
-            } else {
+            } else if (*(f32 *)(obj + 0x98) > lbl_803E29C8) {
                 Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
-                state[0xc2] = (int)lbl_803E29D0;
+                *(f32 *)(state + 0xc2) = lbl_803E29D0;
+            } else {
+                Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
+                *(f32 *)(state + 0xc2) = lbl_803E29D4;
             }
         } else {
-            state[0xca] = (int)((float)state[0xca] - timeDelta);
-            if ((float)state[0xca] <= fVar1) {
-                state[0xca] = (int)fVar1;
-                if ((double)*(float *)(obj + 0x98) <= lbl_803E29C8) {
-                    Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
-                    state[0xc2] = (int)lbl_803E29B4;
-                } else {
+            *(f32 *)(state + 0xca) = *(f32 *)(state + 0xca) - timeDelta;
+            if (*(f32 *)(state + 0xca) <= fVar1) {
+                *(f32 *)(state + 0xca) = fVar1;
+                if (*(f32 *)(obj + 0x98) > lbl_803E29C8) {
                     Sfx_PlayFromObject(obj, SFXfox_fightbreath1);
-                    state[0xc2] = (int)lbl_803E29D0;
+                    *(f32 *)(state + 0xc2) = lbl_803E29D0;
+                } else {
+                    Sfx_PlayFromObject(obj, SFXfox_fightbreath2);
+                    *(f32 *)(state + 0xc2) = lbl_803E29B4;
                 }
             }
         }
     }
-    *(char *)((int)state + 0x33a) = *(char *)((int)state + 0x33a) + 1;
-    dVar5 = (double)fn_80293DA4((double)(lbl_803E29C0 * (f32)(u32)*(byte *)((int)state + 0x33a)));
-    iVar4 = (int)((double)lbl_803E29BC * dVar5 + (double)(float)*(short *)(obj + 2));
-    *(short *)(obj + 2) = (short)iVar4;
-    FUN_80154af4((ushort *)obj, (int)state);
+    *(u8 *)((u8 *)state + 0x33a) += 1;
+    *(s16 *)(obj + 2) =
+        (lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)((u8 *)state + 0x33a)) +
+         (f32)*(s16 *)(obj + 2));
+    fn_80154328(obj, state);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -180,217 +167,190 @@ void fn_80154C24(int obj, int state)
 #pragma peephole reset
 #pragma scheduling reset
 
-void fn_80154D0C(int obj, int state, undefined2 *outAngle, float *outDistance)
+#pragma peephole off
+#pragma scheduling off
+void fn_80154D0C(int obj, int state, u16 *outAngle, float *outDistance)
 {
+    f32 targetPos[3];
+    f32 tmpA[3];
+    f32 vecA[3];
+    f32 crossA[3];
+    f32 tmpB[3];
+    f32 vecB[3];
+    f32 crossB[3];
+    f32 axisA[3];
+    f32 axisB[3];
+    f32 objY;
+    f32 dx;
+    f32 targetY;
+    f32 d;
     int targetObj;
+    int delta;
     uint angle;
-    double objPlane;
-    double objY;
-    double targetPlane;
-    double targetY;
-    float local_b8;
-    float local_b4;
-    float local_b0;
-    float local_ac;
-    float local_a8;
-    float local_a4;
-    float local_a0[2];
-    float local_98;
-    float local_94;
-    float local_90;
-    float local_8c;
-    float targetToPlane[3];
-    float local_7c[2];
-    float local_74;
-    float local_70;
-    float local_6c;
-    float local_68;
-    float objToPlane[3];
-    float targetPos[3];
 
-    local_70 = *(float *)(state + 0x360);
-    local_6c = *(float *)(state + 0x358);
-    local_68 = *(float *)(state + 0x364);
-    PSVECSubtract(&local_70, (float *)(obj + 0xc), objToPlane);
-    objPlane = (double)PSVECDotProduct(objToPlane, (float *)(state + 0x344));
-    local_70 = (float)((double)*(float *)(state + 0x344) * objPlane + (double)*(float *)(obj + 0xc));
-    objY = (double)*(float *)(obj + 0x10);
-    local_6c = (float)((double)*(float *)(state + 0x348) * objPlane + objY);
-    local_68 = (float)((double)*(float *)(state + 0x34c) * objPlane + (double)*(float *)(obj + 0x14));
-    local_ac = lbl_803E2A00;
-    local_a8 = lbl_803E2A04;
-    local_a4 = lbl_803E2A00;
-    PSVECCrossProduct(&local_ac, (float *)(state + 0x344), local_7c);
-    PSVECNormalize(local_7c, local_7c);
-    if (lbl_803E2A00 == local_7c[0]) {
-        local_7c[0] = (*(float *)(obj + 0x14) - *(float *)(state + 0x364)) / local_74;
+    vecA[0] = *(f32 *)(state + 0x360);
+    vecA[1] = *(f32 *)(state + 0x358);
+    vecA[2] = *(f32 *)(state + 0x364);
+    PSVECSubtract(vecA, (f32 *)(obj + 0xc), tmpA);
+    d = PSVECDotProduct(tmpA, (f32 *)(state + 0x344));
+    vecA[0] = *(f32 *)(state + 0x344) * d + *(f32 *)(obj + 0xc);
+    objY = *(f32 *)(obj + 0x10);
+    vecA[1] = *(f32 *)(state + 0x348) * d + objY;
+    vecA[2] = *(f32 *)(state + 0x34c) * d + *(f32 *)(obj + 0x14);
+    axisA[0] = lbl_803E2A00;
+    axisA[1] = lbl_803E2A04;
+    axisA[2] = lbl_803E2A00;
+    PSVECCrossProduct(axisA, (f32 *)(state + 0x344), crossA);
+    PSVECNormalize(crossA, crossA);
+    if (lbl_803E2A00 != crossA[0]) {
+        dx = (*(f32 *)(obj + 0xc) - *(f32 *)(state + 0x360)) / crossA[0];
     } else {
-        local_7c[0] = (*(float *)(obj + 0xc) - *(float *)(state + 0x360)) / local_7c[0];
+        dx = (*(f32 *)(obj + 0x14) - *(f32 *)(state + 0x364)) / crossA[2];
     }
-    targetPlane = (double)local_7c[0];
     targetObj = *(int *)(state + 0x29c);
-    targetPos[0] = *(float *)(targetObj + 0xc);
-    targetPos[1] = lbl_803E2A08 + *(float *)(targetObj + 0x10);
-    targetPos[2] = *(float *)(targetObj + 0x14);
-    local_94 = *(float *)(state + 0x360);
-    local_90 = *(float *)(state + 0x358);
-    local_8c = *(float *)(state + 0x364);
-    PSVECSubtract(&local_94, targetPos, targetToPlane);
-    objPlane = (double)PSVECDotProduct(targetToPlane, (float *)(state + 0x344));
-    local_94 = (float)((double)*(float *)(state + 0x344) * objPlane + (double)targetPos[0]);
-    targetY = (double)targetPos[1];
-    local_90 = (float)((double)*(float *)(state + 0x348) * objPlane + targetY);
-    local_8c = (float)((double)*(float *)(state + 0x34c) * objPlane + (double)targetPos[2]);
-    local_b8 = lbl_803E2A00;
-    local_b4 = lbl_803E2A04;
-    local_b0 = lbl_803E2A00;
-    PSVECCrossProduct(&local_b8, (float *)(state + 0x344), local_a0);
-    PSVECNormalize(local_a0, local_a0);
-    if (lbl_803E2A00 == local_a0[0]) {
-        local_a0[0] = (targetPos[2] - *(float *)(state + 0x364)) / local_98;
+    targetPos[0] = *(f32 *)(targetObj + 0xc);
+    targetPos[1] = lbl_803E2A08 + *(f32 *)(targetObj + 0x10);
+    targetPos[2] = *(f32 *)(targetObj + 0x14);
+    vecB[0] = *(f32 *)(state + 0x360);
+    vecB[1] = *(f32 *)(state + 0x358);
+    vecB[2] = *(f32 *)(state + 0x364);
+    PSVECSubtract(vecB, targetPos, tmpB);
+    d = PSVECDotProduct(tmpB, (f32 *)(state + 0x344));
+    vecB[0] = *(f32 *)(state + 0x344) * d + targetPos[0];
+    targetY = targetPos[1];
+    vecB[1] = *(f32 *)(state + 0x348) * d + targetY;
+    vecB[2] = *(f32 *)(state + 0x34c) * d + targetPos[2];
+    axisB[0] = lbl_803E2A00;
+    axisB[1] = lbl_803E2A04;
+    axisB[2] = lbl_803E2A00;
+    PSVECCrossProduct(axisB, (f32 *)(state + 0x344), crossB);
+    PSVECNormalize(crossB, crossB);
+    if (lbl_803E2A00 != crossB[0]) {
+        d = (targetPos[0] - *(f32 *)(state + 0x360)) / crossB[0];
     } else {
-        local_a0[0] = (targetPos[0] - *(float *)(state + 0x360)) / local_a0[0];
+        d = (targetPos[2] - *(f32 *)(state + 0x364)) / crossB[2];
     }
-    targetPlane = (double)(float)(targetPlane - (double)local_a0[0]);
-    objPlane = (double)(float)(objY - targetY);
-    angle = getAngle(-objPlane, targetPlane);
-    targetObj = (angle & 0xffff) - ((int)*(short *)(obj + 2) & 0xffffU);
-    if (0x8000 < targetObj) {
-        targetObj = targetObj - 0xffff;
+    dx = dx - d;
+    targetY = objY - targetY;
+    angle = getAngle(-targetY, dx);
+    delta = (angle & 0xffff) - (*(s16 *)(obj + 2) & 0xffff);
+    if (delta > 0x8000) {
+        delta = delta - 0xffff;
     }
-    if (targetObj < -0x8000) {
-        targetObj = targetObj + 0xffff;
+    if (delta < -0x8000) {
+        delta = delta + 0xffff;
     }
-    if (targetObj < 0) {
-        targetObj = -targetObj;
+    if (delta < 0) {
+        delta = -delta;
     }
-    *outAngle = (short)targetObj;
-    objPlane = (double)sqrtf((double)(float)(targetPlane * targetPlane +
-                                            (double)(float)(objPlane * objPlane)));
-    *outDistance = (float)objPlane;
+    *outAngle = delta & 0xffff;
+    *outDistance = sqrtf(dx * dx + targetY * targetY);
 }
 
-uint fn_80154FB4(double maxDistance, short *obj, int state, uint turnTime)
+uint fn_80154FB4(f32 maxDistance, short *obj, int state, uint turnTime)
 {
-    float fVar1;
+    f32 moveTarget[3];
+    f32 moveDelta[3];
+    f32 targetPos[3];
+    f32 tmpA[3];
+    f32 vecA[3];
+    f32 crossA[3];
+    f32 tmpB[3];
+    f32 vecB[3];
+    f32 crossB[3];
+    f32 axisA[3];
+    f32 axisB[3];
+    f32 objY;
+    f32 targetY;
+    f32 dxA;
+    f32 dxDiff;
+    f32 d;
+    f32 fVar1;
+    s16 rot;
     int iVar2;
-    uint angleStep;
-    short sVar4;
-    double objPlane;
-    double objY;
-    double targetPlane;
-    double targetY;
-    double distance;
-    float local_108;
-    float local_104;
-    float local_100;
-    float local_fc;
-    float local_f8;
-    float local_f4;
-    float local_f0[2];
-    float local_e8;
-    float local_e4;
-    float local_e0;
-    float local_dc;
-    float targetToPlane[3];
-    float local_cc[2];
-    float local_c4;
-    float local_c0;
-    float local_bc;
-    float local_b8;
-    float objToPlane[3];
-    float targetPos[3];
-    float moveTarget[3];
-    undefined4 local_80;
-    uint uStack_7c;
-    undefined4 local_78;
-    uint uStack_74;
-    longlong local_70;
+    int delta;
+    int angleStep;
+    uint angle;
 
-    local_c0 = *(float *)(state + 0x360);
-    local_bc = *(float *)(state + 0x358);
-    local_b8 = *(float *)(state + 0x364);
-    PSVECSubtract(&local_c0, (float *)(obj + 6), objToPlane);
-    objPlane = (double)PSVECDotProduct(objToPlane, (float *)(state + 0x344));
-    local_c0 = (float)((double)*(float *)(state + 0x344) * objPlane + (double)*(float *)(obj + 6));
-    objY = (double)*(float *)(obj + 8);
-    local_bc = (float)((double)*(float *)(state + 0x348) * objPlane + objY);
-    local_b8 = (float)((double)*(float *)(state + 0x34c) * objPlane + (double)*(float *)(obj + 10));
-    local_fc = lbl_803E2A00;
-    local_f8 = lbl_803E2A04;
-    local_f4 = lbl_803E2A00;
-    PSVECCrossProduct(&local_fc, (float *)(state + 0x344), local_cc);
-    PSVECNormalize(local_cc, local_cc);
-    if (lbl_803E2A00 == local_cc[0]) {
-        local_cc[0] = (*(float *)(obj + 10) - *(float *)(state + 0x364)) / local_c4;
+    vecA[0] = *(f32 *)(state + 0x360);
+    vecA[1] = *(f32 *)(state + 0x358);
+    vecA[2] = *(f32 *)(state + 0x364);
+    PSVECSubtract(vecA, (f32 *)(obj + 6), tmpA);
+    d = PSVECDotProduct(tmpA, (f32 *)(state + 0x344));
+    vecA[0] = *(f32 *)(state + 0x344) * d + *(f32 *)(obj + 6);
+    objY = *(f32 *)(obj + 8);
+    vecA[1] = *(f32 *)(state + 0x348) * d + objY;
+    vecA[2] = *(f32 *)(state + 0x34c) * d + *(f32 *)(obj + 10);
+    axisA[0] = lbl_803E2A00;
+    axisA[1] = lbl_803E2A04;
+    axisA[2] = lbl_803E2A00;
+    PSVECCrossProduct(axisA, (f32 *)(state + 0x344), crossA);
+    PSVECNormalize(crossA, crossA);
+    if (lbl_803E2A00 != crossA[0]) {
+        dxA = (*(f32 *)(obj + 6) - *(f32 *)(state + 0x360)) / crossA[0];
     } else {
-        local_cc[0] = (*(float *)(obj + 6) - *(float *)(state + 0x360)) / local_cc[0];
+        dxA = (*(f32 *)(obj + 10) - *(f32 *)(state + 0x364)) / crossA[2];
     }
-    targetPlane = (double)local_cc[0];
     iVar2 = *(int *)(state + 0x29c);
-    targetPos[0] = *(float *)(iVar2 + 0xc);
-    targetPos[1] = lbl_803E2A08 + *(float *)(iVar2 + 0x10);
-    targetPos[2] = *(float *)(iVar2 + 0x14);
-    local_e4 = *(float *)(state + 0x360);
-    local_e0 = *(float *)(state + 0x358);
-    local_dc = *(float *)(state + 0x364);
-    PSVECSubtract(&local_e4, targetPos, targetToPlane);
-    objPlane = (double)PSVECDotProduct(targetToPlane, (float *)(state + 0x344));
-    local_e4 = (float)((double)*(float *)(state + 0x344) * objPlane + (double)targetPos[0]);
-    targetY = (double)targetPos[1];
-    local_e0 = (float)((double)*(float *)(state + 0x348) * objPlane + targetY);
-    local_dc = (float)((double)*(float *)(state + 0x34c) * objPlane + (double)targetPos[2]);
-    local_108 = lbl_803E2A00;
-    local_104 = lbl_803E2A04;
-    local_100 = lbl_803E2A00;
-    PSVECCrossProduct(&local_108, (float *)(state + 0x344), local_f0);
-    PSVECNormalize(local_f0, local_f0);
-    if (lbl_803E2A00 == local_f0[0]) {
-        local_f0[0] = (targetPos[2] - *(float *)(state + 0x364)) / local_e8;
+    targetPos[0] = *(f32 *)(iVar2 + 0xc);
+    targetPos[1] = lbl_803E2A08 + *(f32 *)(iVar2 + 0x10);
+    targetPos[2] = *(f32 *)(iVar2 + 0x14);
+    vecB[0] = *(f32 *)(state + 0x360);
+    vecB[1] = *(f32 *)(state + 0x358);
+    vecB[2] = *(f32 *)(state + 0x364);
+    PSVECSubtract(vecB, targetPos, tmpB);
+    d = PSVECDotProduct(tmpB, (f32 *)(state + 0x344));
+    vecB[0] = *(f32 *)(state + 0x344) * d + targetPos[0];
+    targetY = targetPos[1];
+    vecB[1] = *(f32 *)(state + 0x348) * d + targetY;
+    vecB[2] = *(f32 *)(state + 0x34c) * d + targetPos[2];
+    axisB[0] = lbl_803E2A00;
+    axisB[1] = lbl_803E2A04;
+    axisB[2] = lbl_803E2A00;
+    PSVECCrossProduct(axisB, (f32 *)(state + 0x344), crossB);
+    PSVECNormalize(crossB, crossB);
+    if (lbl_803E2A00 != crossB[0]) {
+        d = (targetPos[0] - *(f32 *)(state + 0x360)) / crossB[0];
     } else {
-        local_f0[0] = (targetPos[0] - *(float *)(state + 0x360)) / local_f0[0];
+        d = (targetPos[2] - *(f32 *)(state + 0x364)) / crossB[2];
     }
-    objPlane = (double)(float)(targetPlane - (double)local_f0[0]);
-    targetY = (double)(float)(objY - targetY);
-    angleStep = getAngle(-targetY, objPlane);
-    uStack_74 = (angleStep & 0xffff) - ((int)obj[1] & 0xffffU);
-    if (0x8000 < (int)uStack_74) {
-        uStack_74 = uStack_74 - 0xffff;
+    dxDiff = dxA - d;
+    targetY = objY - targetY;
+    angle = getAngle(-targetY, dxDiff);
+    rot = obj[1];
+    delta = (angle & 0xffff) - (rot & 0xffff);
+    if (delta > 0x8000) {
+        delta = delta - 0xffff;
     }
-    if ((int)uStack_74 < -0x8000) {
-        uStack_74 = uStack_74 + 0xffff;
+    if (delta < -0x8000) {
+        delta = delta + 0xffff;
     }
     fVar1 = timeDelta / (f32)(turnTime & 0xffff);
-    if (lbl_803E2A04 < fVar1) {
+    if (fVar1 > lbl_803E2A04) {
         fVar1 = lbl_803E2A04;
     }
-    angleStep = (uint)((f32)(s32)uStack_74 * fVar1);
-    local_70 = (longlong)(int)angleStep;
-    *obj = obj[1] + (short)angleStep;
+    angleStep = (int)((f32)delta * fVar1);
+    *obj = (s16)(rot + angleStep);
     obj[2] = 0x4000;
     obj[1] = *obj;
-    sVar4 = getAngle((double)*(float *)(state + 0x34c), -(double)*(float *)(state + 0x344));
-    *obj = sVar4;
-    distance = (double)sqrtf((double)(float)(objPlane * objPlane +
-                                            (double)(float)(targetY * targetY)));
-    if (maxDistance < distance) {
-        objPlane = (double)(float)(maxDistance *
-                                   (double)(float)(objPlane *
-                                                   (double)(float)((double)lbl_803E2A04 / distance)));
-        targetY = (double)(float)(maxDistance *
-                                  (double)(float)(targetY *
-                                                  (double)(float)((double)lbl_803E2A04 / distance)));
+    *obj = (s16)getAngle(*(f32 *)(state + 0x34c), -*(f32 *)(state + 0x344));
+    fVar1 = sqrtf(dxDiff * dxDiff + targetY * targetY);
+    if (fVar1 > maxDistance) {
+        f32 ratio = lbl_803E2A04 / fVar1;
+        dxDiff = maxDistance * (dxDiff * ratio);
+        targetY = maxDistance * (targetY * ratio);
     }
-    fn_8015536C((double)(float)(targetPlane - objPlane), (double)(float)(objY - targetY),
-                moveTarget, (float *)(state + 0x344));
-    PSVECSubtract(moveTarget, (float *)(obj + 6), targetPos);
-    objMove((double)targetPos[0], (double)targetPos[1], (double)targetPos[2], (int)obj);
-    fVar1 = lbl_803E2A00;
-    *(float *)(obj + 0x12) = lbl_803E2A00;
-    *(float *)(obj + 0x14) = fVar1;
-    *(float *)(obj + 0x16) = fVar1;
-    if ((int)angleStep < 0) {
+    fn_8015536C(dxA - dxDiff, objY - targetY, moveTarget, (f32 *)(state + 0x344));
+    PSVECSubtract(moveTarget, (f32 *)(obj + 6), moveDelta);
+    objMove(obj, moveDelta[0], moveDelta[1], moveDelta[2]);
+    *(f32 *)(obj + 0x12) = lbl_803E2A00;
+    *(f32 *)(obj + 0x14) = lbl_803E2A00;
+    *(f32 *)(obj + 0x16) = lbl_803E2A00;
+    if (angleStep < 0) {
         angleStep = -angleStep;
     }
     return angleStep & 0xffff;
 }
+
+#pragma scheduling reset
+#pragma peephole reset
