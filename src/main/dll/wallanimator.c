@@ -545,7 +545,7 @@ extern f32 lbl_803E30F4;
 extern f32 lbl_803E30F8;
 extern f32 lbl_803E30FC;
 extern f64 lbl_803E3100;
-void fn_801696D4(int obj);
+void kaldachompspit_burst(int obj);
 
 /*
  * --INFO--
@@ -682,17 +682,17 @@ void kaldachompspit_update(int obj)
         ObjHits_EnableObject(obj);
         if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL) {
             if (*(int *)(obj + 0xf4) < 0x17c) {
-                fn_801696D4(obj);
+                kaldachompspit_burst(obj);
                 return;
             }
             if ((*(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)Obj_GetPlayerObject()) ||
                 (*(void **)(*(int *)(obj + 0x54) + 0x50) == (void *)getTrickyObject())) {
-                fn_801696D4(obj);
+                kaldachompspit_burst(obj);
                 return;
             }
         }
         if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0) {
-            fn_801696D4(obj);
+            kaldachompspit_burst(obj);
         } else {
             if (*(s16 *)(obj + 0x46) == 0x869) {
                 fn_80098B18(obj, lbl_803E30E0, 1, 0, 0, 0);
@@ -729,13 +729,13 @@ void kaldachompspit_update(int obj)
 /*
  * --INFO--
  *
- * Function: fn_801696D4
+ * Function: kaldachompspit_burst
  * EN v1.0 Address: 0x801696D4
  * EN v1.0 Size: 312b
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801696D4(int obj)
+void kaldachompspit_burst(int obj)
 {
     int i;
     u32 *state;
