@@ -920,8 +920,6 @@ extern f32 lbl_803E2010;
 extern f32 lbl_803E2014;
 extern f32 lbl_803E2018;
 
-extern void *memset(void *dst, int val, u32 n);
-#pragma intrinsic(memset)
 void hudDrawButtons(int param1, int param2, int param3)
 {
   u8 *base;
@@ -960,14 +958,17 @@ void hudDrawButtons(int param1, int param2, int param3)
 
   base = (u8 *)lbl_803A87F0;
   player = Obj_GetPlayerObject();
-  fade = cMenuFadeCounter;
   label = lbl_803E1E18;
   icon = 0;
   if ((cMenuFadeCounter != 0) && (cMenuEnabled != 0)) {
     slotCount = 3;
     sel = 1;
-    memset(slots, 0, lbl_803DD8B0);
-    memset(slots + lbl_803DD8B0, 1, 3 - lbl_803DD8B0);
+    for (i = 0; i < lbl_803DD8B0; i++) {
+      slots[i] = 0;
+    }
+    for (i = lbl_803DD8B0; i < 3; i++) {
+      slots[i] = 1;
+    }
     if (lbl_803DD8B0 < 3) {
       lbl_803DD8B0 = 3;
     }
@@ -988,7 +989,7 @@ void hudDrawButtons(int param1, int param2, int param3)
     if (lbl_803DD8B0 <= k) {
       k = k - lbl_803DD8B0;
     }
-    yOff = fade;
+    fade = cMenuFadeCounter;
     for (i = 0; i < 7; i++) {
       ((int *)(base + 0xBD4))[i] = 0;
       lbl_803DD848[i] = 0;
