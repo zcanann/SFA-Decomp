@@ -64,6 +64,15 @@ extern int lbl_803DCE30;
 extern int *lbl_803DCE34;
 extern int lbl_803DCE68;
 extern int lbl_803DCE6C;
+
+typedef struct TexOverride {
+    int id;
+    int ptr;
+    int unk8;
+    s16 count;
+    u8 layerByte;
+    u8 padF;
+} TexOverride;
 extern int lbl_802C1E40;
 extern u8 lbl_8037E0C0[];
 extern byte lbl_803DB638;
@@ -330,24 +339,12 @@ void renderFn_8005e730(undefined4 param_1,undefined4 param_2,int param_3)
   byte local_8;
 
   fn_8001E928((undefined*)&lbl_803DCE20,2,&local_C,
-              (iD1.words.lo = (int)*(short *)((int)param_1 + 6) >> 3 ^ 0x80000000,
-               iD1.words.hi = 0x43300000,
-               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX),
-              (iD1.words.lo = (int)*(short *)((int)param_1 + 8) >> 3 ^ 0x80000000,
-               iD1.words.hi = 0x43300000,
-               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28)),
-              (iD1.words.lo = (int)*(short *)((int)param_1 + 10) >> 3 ^ 0x80000000,
-               iD1.words.hi = 0x43300000,
-               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ),
-              (iD1.words.lo = (int)*(short *)((int)param_1 + 0xc) >> 3 ^ 0x80000000,
-               iD1.words.hi = 0x43300000,
-               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX),
-              (iD1.words.lo = (int)*(short *)((int)param_1 + 0xe) >> 3 ^ 0x80000000,
-               iD1.words.hi = 0x43300000,
-               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x28)),
-              (iD1.words.lo = (int)*(short *)((int)param_1 + 0x10) >> 3 ^ 0x80000000,
-               iD1.words.hi = 0x43300000,
-               (float)(iD1.d - lbl_803DEBC0) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ));
+              (f32)(*(short *)((int)param_1 + 6) >> 3) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX,
+              (f32)(*(short *)((int)param_1 + 8) >> 3) + *(float *)((int)param_2 + 0x28),
+              (f32)(*(short *)((int)param_1 + 10) >> 3) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ,
+              (f32)(*(short *)((int)param_1 + 0xc) >> 3) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX,
+              (f32)(*(short *)((int)param_1 + 0xe) >> 3) + *(float *)((int)param_2 + 0x28),
+              (f32)(*(short *)((int)param_1 + 0x10) >> 3) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ);
   resetLotsOfRenderVars();
   fn_8004CE0C(param_3);
   param_3 = 0;
@@ -460,68 +457,46 @@ fn_8005EAA4(int param_1,int param_2,float *param_3,int param_4,float *param_5,fl
   float fVar5;
   float fVar6;
   float fVar7;
-  SfaIntDouble iD6;
-  SfaIntDouble iD5;
-  SfaIntDouble iD4;
-  SfaIntDouble iD3;
-  SfaIntDouble iD2;
-  SfaIntDouble iD1;
-  double bias;
+  int i;
 
-  bias = lbl_803DEBC0;
-  iD1.words.lo = (int)*(short *)(param_1 + 0xc) >> 3 ^ 0x80000000;
-  iD1.words.hi = 0x43300000;
-  *param_8 = (float)(iD1.d - bias) + *(float *)(param_2 + 0x18);
-  iD2.words.lo = (int)*(short *)(param_1 + 6) >> 3 ^ 0x80000000;
-  iD2.words.hi = 0x43300000;
-  *param_5 = (float)(iD2.d - bias) + *(float *)(param_2 + 0x18);
-  iD3.words.lo = (int)*(short *)(param_1 + 0xe) >> 3 ^ 0x80000000;
-  iD3.words.hi = 0x43300000;
-  *param_9 = (float)(iD3.d - bias) + *(float *)(param_2 + 0x28);
-  iD4.words.lo = (int)*(short *)(param_1 + 8) >> 3 ^ 0x80000000;
-  iD4.words.hi = 0x43300000;
-  *param_6 = (float)(iD4.d - bias) + *(float *)(param_2 + 0x28);
-  iD5.words.lo = (int)*(short *)(param_1 + 0x10) >> 3 ^ 0x80000000;
-  iD5.words.hi = 0x43300000;
-  *param_10 = (float)(iD5.d - bias) + *(float *)(param_2 + 0x38);
-  iD6.words.lo = (int)*(short *)(param_1 + 10) >> 3 ^ 0x80000000;
-  iD6.words.hi = 0x43300000;
-  *param_7 = (float)(iD6.d - bias) + *(float *)(param_2 + 0x38);
-  if (0 < param_4) {
-    do {
-      bVar1 = *(byte *)(param_3 + 4);
-      if ((bVar1 & 1) == 0) {
-        fVar2 = *param_5;
-        fVar3 = *param_8;
-      }
-      else {
-        fVar2 = *param_8;
-        fVar3 = *param_5;
-      }
-      if ((bVar1 & 2) == 0) {
-        fVar4 = *param_6;
-        fVar5 = *param_9;
-      }
-      else {
-        fVar4 = *param_9;
-        fVar5 = *param_6;
-      }
-      if ((bVar1 & 4) == 0) {
-        fVar6 = *param_7;
-        fVar7 = *param_10;
-      }
-      else {
-        fVar6 = *param_10;
-        fVar7 = *param_7;
-      }
-      if ((fVar4 * param_3[1] + fVar2 * *param_3 + fVar6 * param_3[2] + param_3[3] < lbl_803DEBCC)
-         && (fVar5 * param_3[1] + fVar3 * *param_3 + fVar7 * param_3[2] + param_3[3] <
-             lbl_803DEBCC)) {
-        return 0;
-      }
-      param_3 = param_3 + 5;
-      param_4 = param_4 + -1;
-    } while (param_4 != 0);
+  *param_8 = (f32)(*(short *)(param_1 + 0xc) >> 3) + *(float *)(param_2 + 0x18);
+  *param_5 = (f32)(*(short *)(param_1 + 6) >> 3) + *(float *)(param_2 + 0x18);
+  *param_9 = (f32)(*(short *)(param_1 + 0xe) >> 3) + *(float *)(param_2 + 0x28);
+  *param_6 = (f32)(*(short *)(param_1 + 8) >> 3) + *(float *)(param_2 + 0x28);
+  *param_10 = (f32)(*(short *)(param_1 + 0x10) >> 3) + *(float *)(param_2 + 0x38);
+  *param_7 = (f32)(*(short *)(param_1 + 10) >> 3) + *(float *)(param_2 + 0x38);
+  for (i = 0; i < param_4; i = i + 1) {
+    bVar1 = *(byte *)(param_3 + 4);
+    if ((bVar1 & 1) != 0) {
+      fVar2 = *param_8;
+      fVar3 = *param_5;
+    }
+    else {
+      fVar2 = *param_5;
+      fVar3 = *param_8;
+    }
+    if ((bVar1 & 2) != 0) {
+      fVar4 = *param_9;
+      fVar5 = *param_6;
+    }
+    else {
+      fVar4 = *param_6;
+      fVar5 = *param_9;
+    }
+    if ((bVar1 & 4) != 0) {
+      fVar6 = *param_10;
+      fVar7 = *param_7;
+    }
+    else {
+      fVar6 = *param_7;
+      fVar7 = *param_10;
+    }
+    if ((param_3[3] + (fVar4 * param_3[1] + fVar2 * *param_3 + fVar6 * param_3[2]) < lbl_803DEBCC)
+       && (param_3[3] + (fVar5 * param_3[1] + fVar3 * *param_3 + fVar7 * param_3[2]) <
+           lbl_803DEBCC)) {
+      return 0;
+    }
+    param_3 = param_3 + 5;
   }
   return 1;
 }
@@ -726,12 +701,13 @@ void fn_8005F1E0(int param_1, int param_2)
   int iVar6;
   int iVar7;
   byte bVar1;
+  TexOverride *pE;
   undefined4 local_48;
   Mtx afStack_44;
 
   local_48 = lbl_803DEBB0;
   if ((*(byte *)(param_1 + 0x41) == 2) &&
-     (iVar1 = Shader_getLayer(param_1,1), (*(byte *)(iVar1 + 4) & 0x7f) == 9)) {
+     (iVar1 = Shader_getLayer(param_1,1), (int)(*(byte *)(iVar1 + 4) & 0x7f) == 9)) {
     piVar2 = (int *)Shader_getLayer(param_1,0);
     bVar1 = *(byte *)((int)piVar2 + 5);
     if (bVar1 == '\0') {
@@ -740,14 +716,14 @@ void fn_8005F1E0(int param_1, int param_2)
     else {
       iVar1 = *piVar2;
       iVar6 = 0;
-      piVar5 = (int *)lbl_803DCE6C;
+      pE = (TexOverride *)lbl_803DCE6C;
       for (iVar7 = 0x50; iVar7 != 0; iVar7--) {
-        if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
-           (bVar1 == *(byte *)((int)piVar5 + 0xe))) {
-          iVar1 = textureCrazyPointerFollowFn_80054c30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
+        if (((0 < pE->count) && (pE->id == iVar1)) &&
+           ((int)bVar1 == pE->layerByte)) {
+          iVar1 = textureCrazyPointerFollowFn_80054c30(iVar1,((TexOverride *)lbl_803DCE6C)[iVar6].ptr);
           break;
         }
-        piVar5 = piVar5 + 4;
+        pE = pE + 1;
         iVar6 = iVar6 + 1;
       }
     }
@@ -774,14 +750,14 @@ void fn_8005F1E0(int param_1, int param_2)
     else {
       iVar1 = *piVar2;
       iVar6 = 0;
-      piVar5 = (int *)lbl_803DCE6C;
+      pE = (TexOverride *)lbl_803DCE6C;
       for (iVar7 = 0x50; iVar7 != 0; iVar7--) {
-        if (((0 < *(short *)(piVar5 + 3)) && (*piVar5 == iVar1)) &&
-           (bVar1 == *(byte *)((int)piVar5 + 0xe))) {
-          iVar1 = textureCrazyPointerFollowFn_80054c30(iVar1,((int *)lbl_803DCE6C)[iVar6 * 4 + 1]);
+        if (((0 < pE->count) && (pE->id == iVar1)) &&
+           ((int)bVar1 == pE->layerByte)) {
+          iVar1 = textureCrazyPointerFollowFn_80054c30(iVar1,((TexOverride *)lbl_803DCE6C)[iVar6].ptr);
           break;
         }
-        piVar5 = piVar5 + 4;
+        pE = pE + 1;
         iVar6 = iVar6 + 1;
       }
     }
