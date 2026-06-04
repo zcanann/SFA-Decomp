@@ -9178,7 +9178,7 @@ extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
 extern void *Resource_Acquire(u32 id, u32 arg);
 extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
 extern int textureLoad(int id, int flag);
-extern void *loadAnimation(int id, s16 a, s16 b, int flags);
+extern void *loadAnimation(int hdr, int id, int b, u8 *bufout);
 
 void *loadAsset(void *reqVoid) {
     u8 tmp[0x14];
@@ -9213,7 +9213,7 @@ void *loadAsset(void *reqVoid) {
         case 7:
             *(void **)req->f8 =
                 loadAnimation(*(int *)((u8 *)req + 0x24), (s16)req->f4, (s16)req->fc,
-                              *(int *)((u8 *)req + 0x20));
+                              *(u8 **)((u8 *)req + 0x20));
             break;
     }
 }
@@ -12539,7 +12539,7 @@ extern void ObjModel_ResolveRenderOpTextures(u8 *model);
 extern int modelLoadAnimations(void *model, int id, void *animBase);
 extern int modelLoad_calcSizes(void *model, int arg, int *out, int flag);
 extern int ModelList_getHeader(void *list, int index, void *out);
-extern void modelInitModelList(void *list, s16 index, void *out);
+extern void modelInitModelList(void *list, int index, void *out);
 extern int textureLoad(int id, int flag);
 extern s16 *lbl_803DCB64;
 
@@ -17092,5 +17092,39 @@ void *animLoadFromTable(u8 *hdr, int id, int idx, u8 *out)
     return buf;
 }
 #pragma opt_common_subs reset
+#pragma dont_inline reset
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void *loadAnimation(int hdr, int id, int b, u8 *bufout)
+{
+    int tmp;
+    int size;
+    u8 *ptr;
+    u32 v;
+    int i;
+
+    if ((getLoadedFileFlags(0) & 0x100000) != 0 && *(u16 *)(hdr + 4) != 1 && *(u16 *)(hdr + 4) != 3) {
+        return 0;
+    }
+    if (bufout == 0) {
+        i = (s16)id;
+        if (ModelList_getHeader(lbl_803DCB50, i, &ptr) == 0) {
+            v = ((u32 *)lbl_803DCB4C)[i];
+            loadAndDecompressDataFile(0x30, 0, v, 0, (int)&size, i, 1);
+            ptr = mmAlloc(size, 10, 0);
+            loadAndDecompressDataFile(0x30, ptr, v, size, (int)&tmp, i, 0);
+            *ptr = 1;
+            modelInitModelList(lbl_803DCB50, id, &ptr);
+        } else {
+            *ptr += 1;
+        }
+        return ptr;
+    }
+    return animLoadFromTable((u8 *)hdr, (s16)id, (s16)b, bufout);
+}
 #pragma dont_inline reset
 #pragma pop
