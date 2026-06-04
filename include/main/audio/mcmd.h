@@ -140,7 +140,7 @@ typedef struct McmdVoiceState {
     struct McmdVoiceState *activePrev;
     struct McmdVoiceState *timeNext;
     struct McmdVoiceState *timePrev;
-    u32 queueMode;
+    s32 queueMode;
     union {
         struct {
             u8 *keyoffMacroBase;

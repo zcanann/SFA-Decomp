@@ -15,18 +15,17 @@ void mcmdVarCalculation(McmdVoiceState *state, McmdCommandArgs *args, u8 op);
 void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args);
 void mcmdSetKeyGroup(McmdVoiceState *state, McmdCommandArgs *args);
 void macHandleActive(McmdVoiceState *sv);
-void macHandle(u32 delta);
-void macSampleEndNotify(int state);
-u32 macSetExternalKeyoff(int state);
-void macSetPedalState(int state, u32 defer);
+void macHandle(u32 deltaTime);
+void macSampleEndNotify(McmdVoiceState *sv);
+void macSetExternalKeyoff(McmdVoiceState *sv);
+void macSetPedalState(McmdVoiceState *sv, u32 state);
 void TimeQueueAdd(McmdVoiceState *state);
-void fn_802788B4(McmdVoiceState *state, u32 skipFadeReset);
+void fn_802788B4(McmdVoiceState *sv, u32 disableUpdate);
 void audioFn_80278990(McmdVoiceState *state);
-void fn_80278A98(McmdVoiceState *state, int mode);
-int audioFn_80278b94(u16 instrumentKey, u32 priority, u32 maxInstances, u32 baseSample,
-                     u8 keyFlags, u8 volume, u8 pan, u32 midiSlot, u8 midiEvent,
-                     u8 midiLayer, u16 sampleOffsetIndex, u8 studio, u8 returnNewId,
-                     u8 auxA, u8 auxB, int startImmediately);
+void fn_80278A98(McmdVoiceState *sv, int newState);
+u32 audioFn_80278b94(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
+                     u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                     u8 new_vid, u8 vGroup, u8 studio, u32 itd);
 void fn_80278EA4(void);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802765AC_H_ */
