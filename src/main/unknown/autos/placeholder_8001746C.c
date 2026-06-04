@@ -17983,3 +17983,39 @@ void modelApplyBoneTransforms(int a, int b, u16 c, void *d, void *e, int f) {
     cacheFn_800229c4(0);
 }
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma fp_contract off
+int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, f32 *timer) {
+    extern f32 oneOverTimeDelta;
+    extern f32 lbl_803DE7F4;
+    int trig;
+    int range;
+    int val;
+    u32 rv;
+    f32 freq;
+
+    *timer += timeDelta / (freq = lbl_803DE7F4);
+    if (*timer > lo) {
+        if (*timer > hi) {
+            trig = 1;
+        } else {
+            range = (int)(oneOverTimeDelta * (freq * (hi - lo)));
+            if (range == 0) {
+                val = 0;
+            } else {
+                rv = rand();
+                val = (int)((f32)rv / lbl_803DE7F8 *
+                            ((lbl_803DE7C4 + (f32)range) - lbl_803DE7C0) + lbl_803DE7C0);
+            }
+            trig = !val;
+        }
+        if (trig != 0) {
+            *timer = lbl_803DE7C0;
+        }
+        return trig;
+    }
+    return 0;
+}
+#pragma pop
