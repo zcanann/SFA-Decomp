@@ -2,123 +2,130 @@
 #include "main/audio/hw_sample.h"
 #include "main/audio/synth_virtual_sample.h"
 
+typedef struct VsInfo {
+    u16 smpID;
+    u16 instID;
+    u32 start;
+    u32 size;
+    u32 wrapA;
+    u32 wrapB;
+} VsInfo;
+
+typedef struct VsBuffer {
+    u8 state;
+    u8 pad01;
+    u8 smpType;
+    u8 voice;
+    u32 last;
+    u8 pad08[0x10 - 0x8];
+    VsInfo info;
+} VsBuffer;
+
+typedef struct VS {
+    u8 numBuffers;
+    u8 pad01[3];
+    u32 bufferLength;
+    VsBuffer streamBuffer[SYNTH_VIRTUAL_SAMPLE_MAX_VOICES];
+    u8 voices[SYNTH_VIRTUAL_SAMPLE_MAX_VOICES];
+    u16 nextInstID;
+    u8 pad94a[2];
+    int (*callback)(int kind, void *data);
+} VS;
+
 extern u8 synthVirtualSampleState[];
 extern u32 aramGetStreamBufferAddress(u8 slot, u32 *outPos);
 
+
 /*
- * Reset a 64-byte handle table at synthVirtualSampleState+0x908 to all-0xff,
- * along with surrounding metadata.
+ * vsInit - reset the virtual sample stream buffer table.
  *
  * EN v1.1 Address: 0x8027ACB8, size 288b
  */
 void synthInitVirtualSampleTable(void)
 {
     int i;
-    SynthVirtualSampleState *state = (SynthVirtualSampleState *)synthVirtualSampleState;
+    VS *v = (VS *)synthVirtualSampleState;
 
-    state->entryCount = 0;
+    v->numBuffers = 0;
     for (i = 0; i < SYNTH_VIRTUAL_SAMPLE_MAX_VOICES; i++) {
-        state->voiceMap[i] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
+        v->voices[i] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
     }
-    state->nextId = 0;
-    state->callback = 0;
+    v->nextInstID = 0;
+    v->callback = 0;
+}
+
+static void vsFreeBuffer(VS *v, u8 bufferIndex)
+{
+    v->streamBuffer[bufferIndex].state = 0;
+    v->voices[v->streamBuffer[bufferIndex].voice] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
+}
+
+static u8 vsAllocateBuffer(VS *v)
+{
+    u8 i;
+
+    for (i = 0; i < v->numBuffers; ++i) {
+        if (v->streamBuffer[i].state != 0) {
+            continue;
+        }
+        v->streamBuffer[i].state = 1;
+        v->streamBuffer[i].last = 0;
+        return i;
+    }
+
+    return SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
+}
+
+static u16 vsNewInstanceID(VS *v)
+{
+    u8 i;
+    u16 instID;
+
+    do {
+        instID = v->nextInstID++;
+        for (i = 0; i < v->numBuffers; ++i) {
+            if (v->streamBuffer[i].state != 0 && v->streamBuffer[i].info.instID == instID) {
+                break;
+            }
+        }
+    } while (i != v->numBuffers);
+
+    return instID;
 }
 
 /*
- * synthClaimVirtualSampleSlot - voice-allocate-and-set-loop helper
- * (~488 instructions).
+ * vsSampleStartNotify - allocate a stream buffer for the voice and set up
+ * its virtual sample loop buffer.
  */
-u32 synthClaimVirtualSampleSlot(u8 voice)
+u32 synthClaimVirtualSampleSlot(u8 voiceID)
 {
-    u8 entryIndex;
-    u8 *entry;
-    u8 *scanEntry;
-    u8 *state;
-    u16 generation;
-    u32 sampleId;
-    u32 entryOffset;
+    VS *v = (VS *)synthVirtualSampleState;
+    u8 sb;
+    u8 i;
+    u32 addr;
 
-    state = synthVirtualSampleState;
-    entry = state;
-    for (entryIndex = 0; entryIndex < state[SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET];
-         entryIndex++) {
-        if (entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_MODE_OFFSET] !=
-                SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE &&
-            entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_VOICE_OFFSET] ==
-                voice) {
-            entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_MODE_OFFSET] = 0;
-            state[SYNTH_VIRTUAL_SAMPLE_VOICE_MAP_OFFSET +
-                  entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
-                        VIRTUAL_SAMPLE_VOICE_OFFSET]] = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
+    for (i = 0; i < v->numBuffers; ++i) {
+        if (v->streamBuffer[i].state != 0 && v->streamBuffer[i].voice == voiceID) {
+            vsFreeBuffer(v, i);
         }
-        entry += SYNTH_VIRTUAL_SAMPLE_ENTRY_SIZE;
     }
 
-    entryIndex = 0;
-    entry = state;
-    while (entryIndex < state[SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET]) {
-        if (entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_MODE_OFFSET] ==
-            SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE) {
-            entryOffset = entryIndex * SYNTH_VIRTUAL_SAMPLE_ENTRY_SIZE;
-            entry = state + entryOffset;
-            entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_MODE_OFFSET] =
-                SYNTH_VIRTUAL_SAMPLE_MODE_ACTIVE;
-            *(u32 *)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
-                     VIRTUAL_SAMPLE_POSITION_OFFSET) = 0;
-            goto claim_slot;
+    sb = v->voices[voiceID] = vsAllocateBuffer(v);
+    if (sb != SYNTH_VIRTUAL_SAMPLE_FREE_SLOT) {
+        addr = aramGetStreamBufferAddress(v->voices[voiceID], 0);
+        hwSetVirtualSampleLoopBuffer(voiceID, addr, v->bufferLength);
+        v->streamBuffer[sb].info.smpID = hwGetSampleID(voiceID);
+        v->streamBuffer[sb].info.instID = vsNewInstanceID(v);
+        v->streamBuffer[sb].smpType = hwGetSampleType(voiceID);
+        v->streamBuffer[sb].voice = voiceID;
+        if (v->callback != 0) {
+            v->callback(SYNTH_VIRTUAL_SAMPLE_CLAIM_CALLBACK_KIND, &v->streamBuffer[sb].info);
+            return (v->streamBuffer[sb].info.instID << 8) | voiceID;
         }
-        entry += SYNTH_VIRTUAL_SAMPLE_ENTRY_SIZE;
-        entryIndex++;
-    }
-
-    entryIndex = SYNTH_VIRTUAL_SAMPLE_FREE_SLOT;
-claim_slot:
-    state[SYNTH_VIRTUAL_SAMPLE_VOICE_MAP_OFFSET + voice] = entryIndex;
-    if (entryIndex == SYNTH_VIRTUAL_SAMPLE_FREE_SLOT) {
-        hwSetVirtualSampleLoopBuffer(voice, 0, 0);
+        hwSetVirtualSampleLoopBuffer(voiceID, 0, 0);
     } else {
-        entryIndex = state[SYNTH_VIRTUAL_SAMPLE_VOICE_MAP_OFFSET + voice];
-        hwSetVirtualSampleLoopBuffer(
-            voice, aramGetStreamBufferAddress(entryIndex, 0),
-            *(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_LOOP_SIZE_OFFSET));
-        sampleId = hwGetSampleID(voice);
-        entryOffset = entryIndex * SYNTH_VIRTUAL_SAMPLE_ENTRY_SIZE;
-        entry = state + entryOffset;
-        *(u16 *)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
-                 VIRTUAL_SAMPLE_CALLBACK_SAMPLE_ID_OFFSET) = sampleId;
-
-        do {
-            generation = *(u16 *)(state + SYNTH_VIRTUAL_SAMPLE_NEXT_ID_OFFSET);
-            *(u16 *)(state + SYNTH_VIRTUAL_SAMPLE_NEXT_ID_OFFSET) = generation + 1;
-            entryIndex = 0;
-            scanEntry = state;
-            for (; entryIndex < state[SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET] &&
-                   (scanEntry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
-                              VIRTUAL_SAMPLE_MODE_OFFSET] ==
-                        SYNTH_VIRTUAL_SAMPLE_MODE_INACTIVE ||
-                    *(u16 *)(scanEntry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
-                              VIRTUAL_SAMPLE_GENERATION_OFFSET) != generation);
-                 entryIndex++) {
-                scanEntry += SYNTH_VIRTUAL_SAMPLE_ENTRY_SIZE;
-            }
-        } while (entryIndex != state[SYNTH_VIRTUAL_SAMPLE_ENTRY_COUNT_OFFSET]);
-
-        *(u16 *)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
-                 VIRTUAL_SAMPLE_GENERATION_OFFSET) = generation;
-        entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_TYPE_OFFSET] =
-            hwGetSampleType(voice);
-        entry[SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET + VIRTUAL_SAMPLE_VOICE_OFFSET] = voice;
-
-        if (*(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET) != 0) {
-            ((int (*)(int, void *))(*(u32 *)(state + SYNTH_VIRTUAL_SAMPLE_CALLBACK_OFFSET)))(
-                SYNTH_VIRTUAL_SAMPLE_CLAIM_CALLBACK_KIND,
-                entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
-                    VIRTUAL_SAMPLE_CALLBACK_DATA_OFFSET);
-            return CONCAT21(*(u16 *)(entry + SYNTH_VIRTUAL_SAMPLE_ENTRIES_OFFSET +
-                                     VIRTUAL_SAMPLE_GENERATION_OFFSET),
-                            voice);
-        }
-        hwSetVirtualSampleLoopBuffer(voice, 0, 0);
+        hwSetVirtualSampleLoopBuffer(voiceID, 0, 0);
     }
+
     return SYNTH_VIRTUAL_SAMPLE_INVALID_ID;
 }
