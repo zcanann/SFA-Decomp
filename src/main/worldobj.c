@@ -590,15 +590,8 @@ void worldobj_spawnGreatFoxEffects(int obj) {
 #pragma scheduling off
 #pragma peephole off
 void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax, int count, int dispatchId) {
-    struct {
-        s16 f8;
-        s16 fa;
-        s16 fc;
-        s16 pad_e;
-        f32 f10;
-        f32 f14;
-        f32 f18;
-    } dir;
+    s16 rot[3];
+    f32 vec[3];
     struct {
         u8 pad0[6];
         s16 f6;
@@ -608,19 +601,19 @@ void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax
         f32 f14;
     } params;
     int i;
-    f32 base = lbl_803E665C;
+    f32 base;
 
-    for (i = 0; i < count; i++) {
-        dir.f10 = base;
-        dir.f14 = (f32)(int)randomGetRange(xMin, xMax);
-        dir.f18 = (f32)(int)randomGetRange(yMin, yMax);
-        dir.f8 = 0;
-        dir.fa = 0;
-        dir.fc = (s16)randomGetRange(-0x7fff, 0x7fff);
-        mathFn_80021ac8(&dir.f8, &dir.f10);
-        params.fc = dir.f10;
-        params.f10 = dir.f14;
-        params.f14 = dir.f18;
+    for (i = 0, base = lbl_803E665C; i < count; i++) {
+        vec[0] = base;
+        vec[1] = (f32)(int)randomGetRange(xMin, xMax);
+        vec[2] = (f32)(int)randomGetRange(yMin, yMax);
+        rot[0] = 0;
+        rot[1] = 0;
+        rot[2] = (s16)randomGetRange(-0x7fff, 0x7fff);
+        mathFn_80021ac8(rot, vec);
+        params.fc = vec[0];
+        params.f10 = vec[1];
+        params.f14 = vec[2];
         params.f6 = 0x64;
         (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, dispatchId, &params, 2, -1, 0);
     }
