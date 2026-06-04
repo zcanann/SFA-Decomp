@@ -5085,10 +5085,10 @@ void flamethrowerspe_func0B(int *obj) { s32 v = 0x1; *(s32*)((char*)((int**)obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void quakeSpellFn_8016cee8(int *obj, int x);
+extern void quakeSpellFn_8016cee8(int *obj, int *x);
 #pragma scheduling off
 #pragma peephole off
-void playerRenderQuakeSpell(int *obj) { quakeSpellFn_8016cee8(obj, *(int*)((char*)obj + 0xc4)); }
+void playerRenderQuakeSpell(int *obj) { quakeSpellFn_8016cee8(obj, *(int**)((char*)obj + 0xc4)); }
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -7396,7 +7396,7 @@ void staff_update(int *obj)
         swp += 0x18;
     }
 
-    quakeSpellFn_8016cee8(obj, *(int *)((char *)obj + 0xc4));
+    quakeSpellFn_8016cee8(obj, *(int **)((char *)obj + 0xc4));
     objGetAnimState80A(*(int *)((char *)obj + 0xc4));
     state[0xb9] = 0;
     {
@@ -8076,6 +8076,214 @@ void staffFn_80170380(int *obj, int cmd)
         }
         break;
     }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int objFn_80296700(int *obj);
+extern void objfx_spawnArcedBurst(int *obj, f32 a, f32 b, f32 c, f32 d, int type, int ba, int one, int n, int x, int y);
+extern void fn_802961A4(int *obj, int *type, f32 *power);
+extern void fn_802960F4(int objc4, u8 **out);
+extern f32 lbl_803E328C;
+extern f32 lbl_803E3298;
+extern f32 lbl_803E329C;
+extern f32 lbl_803E32A0;
+extern f32 lbl_803E32AC;
+extern f32 lbl_803E32B0;
+extern f32 lbl_803E32B8;
+extern f32 lbl_803E32BC;
+extern f32 lbl_803E32C0;
+extern f32 lbl_803E32C4;
+extern f32 lbl_803E32C8;
+extern f32 lbl_803E32CC;
+extern f32 lbl_803E32D4;
+extern f32 lbl_803E32D8;
+extern f32 lbl_803E32DC;
+
+typedef struct QuakeFxParams {
+    u16 id;
+    u16 a;
+    u16 b;
+    s16 count;
+    f32 f0;
+    f32 f1;
+    f32 f2;
+    f32 f3;
+} QuakeFxParams;
+
+#pragma scheduling off
+#pragma peephole off
+void quakeSpellFn_8016cee8(int *obj, int *obj2)
+{
+    QuakeFxParams fxB;
+    QuakeFxParams fxA;
+    int type;
+    f32 power;
+    u8 *pos2;
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    if (obj != NULL && obj2 != NULL) {
+        if (state[0xba] != 0) {
+            f32 v;
+            if (objFn_80296700(obj2) != 0) {
+                power = lbl_803E3288;
+                v = lbl_803E3288;
+            } else {
+                power = lbl_803E328C;
+                v = lbl_803E3290;
+            }
+            if (state[0xbb] == 7) {
+                objfx_spawnArcedBurst(obj, lbl_803E3294, lbl_803E3294, lbl_803E3294, lbl_803E329C * power,
+                                      state[0xbb], state[0xba], 1, (int)(lbl_803E3298 * v), 0, 0);
+            } else {
+                objfx_spawnArcedBurst(obj, lbl_803E3288, lbl_803E3288, lbl_803E3288, lbl_803E329C * power,
+                                      state[0xbb], state[0xba], 1, (int)(lbl_803E3298 * v), 0, 0);
+            }
+        }
+        fn_802961A4(obj2, &type, &power);
+        fxB.id = 0;
+        fxB.a = 0;
+        fxB.b = 0;
+        fxB.f0 = lbl_803E3288;
+        switch (type) {
+        case 135:
+            fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E3298));
+            fxB.f1 = lbl_803E32A4 * (power / lbl_803E32A8 - lbl_803E3294);
+            fxB.id = 0xc94;
+            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+            fxB.count = 9;
+            fxB.f0 = lbl_803E32B0 * (power / lbl_803E32A8) + lbl_803E32AC;
+            fxB.f2 = lbl_803E32B4;
+            fxB.id = 0xc0e;
+            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            break;
+        case 67:
+            if (power > lbl_803E32B4) {
+                fxB.count = (int)(lbl_803E32A0 * (power / lbl_803E3298)) + 6;
+                fxB.f1 = lbl_803E32A4 * (power / lbl_803E32A8 - lbl_803E3294);
+                fxB.id = 0xc94;
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b4, &fxB, 2, -1, 0);
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b4, &fxB, 2, -1, 0);
+                fxB.count = 9;
+                fxB.f0 = lbl_803E32B0 * (power / lbl_803E32A8) + lbl_803E32AC;
+                fxB.f2 = lbl_803E32B4;
+                fxB.id = 0xc0e;
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            }
+            break;
+        case 136:
+            fxB.f0 = lbl_803E3288;
+            fxB.count = 35;
+            fxB.f2 = lbl_803E32B4;
+            fxB.f1 = lbl_803E32B8;
+            fxB.id = 0xc0e;
+            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            fxB.count = 18;
+            fxB.f2 = lbl_803E32BC;
+            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            break;
+        case 127:
+            fxB.f0 = lbl_803E32C0;
+            fxB.count = 10;
+            fxB.f2 = lbl_803E32BC;
+            fxB.f1 = lbl_803E32B8;
+            fxB.id = 0xc0e;
+            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            break;
+        case 133:
+            if (power > lbl_803E32B4) {
+                if (GameBit_Get(0xc55) != 0) {
+                    fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32B8));
+                    fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - power / lbl_803E32B8);
+                    fxB.id = 0xc75;
+                } else {
+                    fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32A8));
+                    fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - power / lbl_803E32A8);
+                    fxB.id = 0xc0e;
+                }
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+                fxB.count = 9;
+                if (GameBit_Get(0xc55) != 0) {
+                    fxB.f0 = lbl_803E32B0 * (power / lbl_803E32B8) + lbl_803E32AC;
+                    fxB.id = 0xc75;
+                } else {
+                    fxB.f0 = lbl_803E32B0 * (power / lbl_803E32A8) + lbl_803E32AC;
+                    fxB.id = 0xc0e;
+                }
+                fxB.f2 = lbl_803E32B4;
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            }
+            break;
+        case 1135:
+            if (power > lbl_803E32B4) {
+                fxB.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32C8));
+                fxB.f1 = lbl_803E32C4 * (lbl_803E3290 - power / lbl_803E32C8);
+                fxB.id = 0xc94;
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b2, &fxB, 2, -1, 0);
+                fxB.count = 9;
+                fxB.f0 = lbl_803E32B0 * (power / lbl_803E32C8) + lbl_803E32AC;
+                fxB.f2 = lbl_803E32B4;
+                fxB.id = 0xc0e;
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            }
+            break;
+        case 1128:
+            if (power > lbl_803E32B4) {
+                fxA.count = 21 - (int)(lbl_803E32A0 * (power / lbl_803E32C8));
+                fxA.id = 0xc95;
+                fn_802960F4(*(int *)((char *)obj + 0xc4), &pos2);
+                fxB.f1 = *(f32 *)(pos2 + 0xc);
+                fxB.f2 = *(f32 *)(pos2 + 0x10);
+                fxB.f3 = *(f32 *)(pos2 + 0x14);
+                ((void (*)(int, int, void *, int, int, void *))((int *)*gPartfxInterface)[2])(*(int *)((char *)obj + 0xc4), 0x7b9, &fxB, 0x200001, -1, &fxA);
+                ((void (*)(int, int, void *, int, int, void *))((int *)*gPartfxInterface)[2])(*(int *)((char *)obj + 0xc4), 0x7b9, &fxB, 0x200001, -1, &fxA);
+                ((void (*)(int, int, void *, int, int, void *))((int *)*gPartfxInterface)[2])(*(int *)((char *)obj + 0xc4), 0x7b9, &fxB, 0x200001, -1, &fxA);
+                ((void (*)(int, int, void *, int, int, void *))((int *)*gPartfxInterface)[2])(*(int *)((char *)obj + 0xc4), 0x7b9, &fxB, 0x200001, -1, &fxA);
+                fxA.count = 9;
+                fxA.id = 0xc95;
+                fxA.f0 = lbl_803E32CC * (power / lbl_803E32C8) + lbl_803E32AC;
+                fxB.f1 = *(f32 *)(pos2 + 0xc);
+                fxB.f2 = *(f32 *)(pos2 + 0x10);
+                fxB.f3 = *(f32 *)(pos2 + 0x14);
+                ((void (*)(int, int, void *, int, int, void *))((int *)*gPartfxInterface)[2])(*(int *)((char *)obj + 0xc4), 0x7ba, &fxB, 0x200001, -1, &fxA);
+            }
+            break;
+        case 134:
+        {
+            f32 h;
+            u16 idv;
+            if (GameBit_Get(0xc55) != 0) {
+                idv = 0xc75;
+            } else {
+                idv = 0xc0e;
+            }
+            fxB.id = idv;
+            h = *(f32 *)((char *)obj2 + 0x98);
+            if (h < lbl_803E32D0) {
+                fxB.f1 = lbl_803E32D4;
+                fxB.count = 9;
+                fxB.f0 = lbl_803E3288;
+                fxB.f2 = lbl_803E32B4;
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            } else if (h < lbl_803E32D8) {
+                fxB.f1 = lbl_803E32C4 * (lbl_803E32DC * (h - lbl_803E32D0) - lbl_803E3294);
+                fxB.count = 9;
+                fxB.f0 = lbl_803E3288;
+                fxB.f2 = lbl_803E32B4;
+                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[2])(obj, 0x7b3, &fxB, 2, -1, 0);
+            }
+            break;
+        }
+        }
     }
 }
 #pragma peephole reset
