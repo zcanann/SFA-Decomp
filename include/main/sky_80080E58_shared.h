@@ -4451,6 +4451,7 @@ extern const f32 lbl_803DF188;
 extern const f32 lbl_803DF18C;
 extern u8 lbl_803DB758;
 extern u16 lbl_803E8460;
+extern u8 lbl_803E8462;
 extern f32 lbl_8039A7B8[];
 extern f32 lbl_802C1F98[];
 

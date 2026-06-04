@@ -1193,17 +1193,16 @@ void sky2_run(void)
     u8 green;
     u8 blue;
     s16 *cam;
-    int i;
     u8 **pp;
+    int i;
     u8 *p;
     f32 *dst;
-    f32 *dirp;
-    int k;
     int a1;
-    int d;
-    int phase;
+    int k;
+    f32 *dirp;
     int off1;
     int off2;
+    int d;
     int amp;
     int ri;
     int gi;
@@ -1214,9 +1213,9 @@ void sky2_run(void)
     f32 b;
     f32 sa;
     f32 sb;
+    f32 step;
     f32 t;
     f32 u;
-    f32 step;
     f32 att;
     f32 c158;
     f32 c154;
@@ -1238,7 +1237,8 @@ void sky2_run(void)
     sa = r;
     sb = r;
     height = r;
-    idx = *(SkyBestIdx *)&lbl_803E8460;
+    *(u16 *)&idx = lbl_803E8460;
+    idx.pad = lbl_803E8462;
     getAmbientColor(0, &red, &green, &blue);
     if (lbl_803DB758 != 0) {
         z = lbl_803DF108;
@@ -1282,7 +1282,7 @@ void sky2_run(void)
     q.y = zv;
     q.z = zv;
     q.w = lbl_803DF114;
-    q.rx = (s16)-cam[0];
+    *(s16 *)&q.rx = -cam[0];
     q.rz = 0;
     q.ry = 0;
     mathFn_80021ac8(&q, vec);
@@ -1333,34 +1333,32 @@ void sky2_run(void)
                 step = lbl_803DF160;
                 if (t <= step) {
                     u = t / step;
-                    phase = 0;
+                    k = 0;
                 } else if (t <= lbl_803DF144) {
                     u = (t - step) / step;
-                    phase = 1;
+                    k = 1;
                 } else if (t <= lbl_803DF164) {
                     u = (t - lbl_803DF144) / step;
-                    phase = 2;
+                    k = 2;
                 } else if (t <= lbl_803DF168) {
                     u = (t - lbl_803DF164) / step;
-                    phase = 3;
+                    k = 3;
                 } else if (t <= lbl_803DF16C) {
                     u = (t - lbl_803DF168) / step;
-                    phase = 4;
+                    k = 4;
                 } else if (t <= lbl_803DF170) {
                     u = (t - lbl_803DF16C) / step;
-                    phase = 5;
+                    k = 5;
                 } else if (t <= lbl_803DF174) {
                     u = (t - lbl_803DF170) / step;
-                    phase = 6;
+                    k = 6;
                 } else {
                     u = (t - lbl_803DF174) / step;
-                    phase = 7;
+                    k = 7;
                 }
-                off1 = phase * 4;
-                r = mathFn_80010c64(*pp + off1 + 0x70, u, 0);
-                off2 = (phase + 0xb) * 4;
-                g = mathFn_80010c64(*pp + off2 + 0x70, u, 0);
-                b = mathFn_80010c64(*pp + (phase + 0x16) * 4 + 0x70, u, 0);
+                r = mathFn_80010c64(*pp + (off1 = k * 4) + 0x70, u, 0);
+                g = mathFn_80010c64(*pp + (off2 = (k + 0xb) * 4) + 0x70, u, 0);
+                b = mathFn_80010c64(*pp + (k + 0x16) * 4 + 0x70, u, 0);
                 sa = mathFn_80010c64(*pp + off1 + 0x1fc, u, 0);
                 sb = mathFn_80010c64(*pp + off2 + 0x1fc, u, 0);
             } else {
@@ -1370,7 +1368,7 @@ void sky2_run(void)
                     a1 = (u16)getAngle(dirp[0], dirp[2]);
                     d = a1 - (u16)getAngle(vec[0], vec[2]);
                     if (d < 0) {
-                        d = d * -1;
+                        d *= -1;
                     }
                     if (d > 0x7fff) {
                         d = 0xffff - d;
