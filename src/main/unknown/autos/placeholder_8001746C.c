@@ -16706,3 +16706,104 @@ int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern f32 lbl_803DE850;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void fn_80026928(int *obj, int b, int *p3)
+{
+    int off4;
+    int off54;
+    int i;
+
+    i = 0;
+    off4 = 0;
+    off54 = off4;
+    for (; i < p3[2]; i++) {
+        int e = *(int *)(*(int *)p3[1] + off4);
+        int dst = *p3 + off54;
+        int idx;
+        u8 *hdr;
+        u32 n;
+        int lim;
+
+        *(f32 *)(dst + 0x18) = *(f32 *)(*(int *)(b + 0x3c) + e * 0x1c + 4);
+        *(f32 *)(dst + 0x1c) = *(f32 *)(*(int *)(b + 0x3c) + e * 0x1c + 8);
+        *(f32 *)(dst + 0x20) = *(f32 *)(*(int *)(b + 0x3c) + e * 0x1c + 0xc);
+
+        idx = e;
+        hdr = *(u8 **)obj;
+        n = *(u8 *)(hdr + 0xf3);
+        if (n != 0) {
+            lim = n + *(u8 *)(hdr + 0xf4);
+        } else {
+            lim = 1;
+        }
+        if (e >= lim) {
+            idx = 0;
+        }
+        *(f32 *)(dst + 0) = *(f32 *)(*(int *)((int)obj + ((*(u16 *)((u8 *)obj + 0x18) & 1) << 2) + 0xc) + idx * 0x40 + 0xc);
+
+        idx = e;
+        hdr = *(u8 **)obj;
+        n = *(u8 *)(hdr + 0xf3);
+        if (n != 0) {
+            lim = n + *(u8 *)(hdr + 0xf4);
+        } else {
+            lim = 1;
+        }
+        if (e >= lim) {
+            idx = 0;
+        }
+        *(f32 *)(dst + 4) = *(f32 *)(*(int *)((int)obj + ((*(u16 *)((u8 *)obj + 0x18) & 1) << 2) + 0xc) + idx * 0x40 + 0x1c);
+
+        idx = e;
+        hdr = *(u8 **)obj;
+        n = *(u8 *)(hdr + 0xf3);
+        if (n != 0) {
+            lim = n + *(u8 *)(hdr + 0xf4);
+        } else {
+            lim = 1;
+        }
+        if (e >= lim) {
+            idx = 0;
+        }
+        *(f32 *)(dst + 8) = *(f32 *)(*(int *)((int)obj + ((*(u16 *)((u8 *)obj + 0x18) & 1) << 2) + 0xc) + idx * 0x40 + 0x2c);
+
+        off4 += 4;
+        off54 += 0x54;
+    }
+    {
+        int out = *p3 + i * 0x54;
+        f32 z = lbl_803DE828;
+        int e2;
+        u8 *hdr2;
+        u32 n2;
+        int lim2;
+
+        *(f32 *)(out + 0x18) = z;
+        *(f32 *)(out + 0x1c) = z;
+        *(f32 *)(out + 0x20) = lbl_803DE850;
+        {
+            int *arr = (int *)*(int *)p3[1];
+            int *top = &arr[p3[2]];
+            e2 = top[-1];
+        }
+        hdr2 = *(u8 **)obj;
+        n2 = *(u8 *)(hdr2 + 0xf3);
+        if (n2 != 0) {
+            lim2 = n2 + *(u8 *)(hdr2 + 0xf4);
+        } else {
+            lim2 = 1;
+        }
+        if (e2 >= lim2) {
+            e2 = 0;
+        }
+        PSMTXMultVec((f32 *)(obj[(*(u16 *)((u8 *)obj + 0x18) & 1) + 3] + e2 * 0x40), (f32 *)(out + 0x18), (f32 *)out);
+    }
+}
+#pragma dont_inline reset
+#pragma pop
