@@ -23,6 +23,42 @@ extern int lbl_8030EDC0[];
 extern f32 lbl_803DF018;
 extern s8 lbl_8039A60C[];
 int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag);
+extern void fn_80295E90(void *obj, int idx);
+extern void fn_802967E0(void *obj, int idx);
+extern void fn_8029672C(void *obj, int idx);
+extern void Obj_SetActiveModelIndex(void *obj, int idx);
+extern void playerLock(void *player, int mode);
+extern void setMotionBlur(int enabled, f32 amount);
+extern void Rcp_SetMonochromeFilterEnabled(int enabled);
+extern void gameTimerInit(int type, int value);
+extern void timerSetToCountUp(void);
+extern void gameTimerStop(void);
+extern void Sfx_StopObjectChannel(void *obj, int channel);
+extern void Camera_EnableViewYOffset(void);
+extern f32 Vec_xzDistance(f32 *a, f32 *b);
+extern void CameraShake_Start(f32 a, f32 b, f32 c);
+extern int seqStreamFn_8008023c(int slot);
+extern int *seqStreamLookupFn_8007fff8(void *table, int count, int key);
+extern int AudioStream_Play(int stream, void *cb);
+extern void streamCb_80080384(void);
+extern u8 lbl_8030ECD0[];
+extern int lbl_803DB718;
+extern int lbl_803DB728;
+extern f32 lbl_803DB730;
+extern u32 lbl_803DD068;
+extern s16 lbl_803DD070;
+extern f32 lbl_803DF004;
+extern f32 lbl_803DF008;
+extern f32 lbl_803DF00C;
+extern f32 lbl_803DF010;
+extern f32 lbl_803DF014;
+
+typedef struct SeqByte136 {
+    u8 modelSlot : 4;
+    u8 pad3 : 1;
+    u8 mapEvent : 1;
+    u8 rest : 2;
+} SeqByte136;
 void ObjSeq_update(u8 *obj, f32 t);
 
 void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
@@ -691,6 +727,301 @@ int seqDoSubCmd0B(u8 *obj, u8 *sourceObj, u8 *seq, u8 *cmdsArg, s16 xrot, int co
         cmds += 4;
     }
     return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
+{
+    u8 *base = lbl_80396918;
+    u32 cmdByte = cmd & 0xff;
+    int cmdArg = (cmd >> 8) & 0xff;
+    u8 *slotPtr;
+    int pair[2];
+    u8 *player;
+    u8 *slotFlags;
+    u8 v;
+    int slot;
+    int trackId;
+    int *streams;
+    f32 dist;
+    f32 strength;
+
+    switch (cmdByte) {
+    case 2:
+        if (flag != 0) {
+            break;
+        }
+        pair[0] = 0x19;
+        pair[1] = 0x15;
+        if (*(int *)(seq + 0x28) < 0) {
+            *(int *)(seq + 0x28) =
+                (*(int (*)(int *, int, int, f32, f32, f32))(*(int *)((char *)*gRomCurveInterface + 0x14)))(
+                    pair, 2, cmdArg, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                    *(f32 *)(obj + 0x14));
+            if (*(int *)(seq + 0x28) > -1) {
+                if (*(void **)(seq + 0x2c) != NULL) {
+                    mm_free(*(void **)(seq + 0x2c));
+                    *(void **)(seq + 0x2c) = NULL;
+                }
+                *(void **)(seq + 0x2c) = mmAlloc(0x2c, 0x11, 0);
+                if (*(void **)(seq + 0x2c) != NULL) {
+                    curveFindFn_800843c4(*(RomCurveInterpState **)(seq + 0x2c),
+                                         *(int *)(seq + 0x28));
+                } else {
+                    *(int *)(seq + 0x28) = -1;
+                }
+            }
+        }
+        break;
+    case 9:
+        if (flag != 0) {
+            break;
+        }
+        seq[0x7f] |= 1;
+        break;
+    case 18:
+        if (flag != 0) {
+            break;
+        }
+        slotFlags = base + (s8)seq[0x57];
+        slotFlags = slotFlags + 0x3538;
+        v = *slotFlags;
+        if ((v & 0x10) != 0) {
+            *slotFlags = v & ~0x10;
+        } else {
+            *slotFlags = v | 0x10;
+        }
+        break;
+    case 14:
+        if (flag != 0) {
+            break;
+        }
+        if ((s8)base[(s8)seq[0x57] + 0x3a40] == 0) {
+            (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0x8)))(cmdArg, 1);
+        }
+        break;
+    case 15:
+        if (flag != 0) {
+            break;
+        }
+        if ((s8)base[(s8)seq[0x57] + 0x3a40] == 0) {
+            (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(cmdArg, 1);
+        }
+        break;
+    case 20:
+        lbl_803DD10C = 0x47;
+        lbl_803DD108 = cmdArg & 0x7f;
+        lbl_803DD104 = 1;
+        lbl_803DD100 = 0x78;
+        break;
+    case 23:
+        if (flag != 0) {
+            break;
+        }
+        if (cmdArg >= (s8)(*(u8 **)(sourceObj + 0x50))[0x55]) {
+            break;
+        }
+        if (*(s16 *)(sourceObj + 0x44) == 1) {
+            slotPtr = base + (s8)seq[0x57] * 2;
+            if (*(s16 *)(slotPtr + 0x3a98) - 1 != 0x45) {
+                break;
+            }
+            if (cmdArg == 1) {
+                cmdArg = 0;
+            }
+            fn_80295E90(sourceObj, cmdArg);
+        } else {
+            Obj_SetActiveModelIndex(sourceObj, cmdArg);
+        }
+        break;
+    case 24:
+        if (*(s16 *)(sourceObj + 0x44) == 1) {
+            fn_802967E0(sourceObj, cmdArg);
+        }
+        break;
+    case 25:
+        if (*(s16 *)(sourceObj + 0x44) == 1) {
+            fn_8029672C(sourceObj, cmdArg);
+        }
+        break;
+    case 26:
+        lbl_803DD10C = 0x42;
+        lbl_803DD108 = 4;
+        lbl_803DD104 = 0;
+        lbl_803DD100 = 0;
+        break;
+    case 33:
+        *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) | 0x400;
+        ((SeqByte136 *)(seq + 0x136))->modelSlot = cmdArg;
+        break;
+    case 34:
+        *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) & ~0x400;
+        ((SeqByte136 *)(seq + 0x136))->modelSlot = 0;
+        break;
+    case 35:
+        ((SeqByte136 *)(seq + 0x136))->mapEvent = 1;
+        break;
+    case 36:
+        (*(void (*)(int, int, int, int))(*(int *)(*gMapEventInterface + 0x1c)))(
+            0, 0, 1, getCurMapLayer());
+        break;
+    case 38:
+        playerLock(Obj_GetPlayerObject(), cmdArg);
+        break;
+    case 44:
+        setMotionBlur(1, (f32)cmdArg / lbl_803DF004);
+        break;
+    case 45:
+        setMotionBlur(0, lbl_803DEFB0);
+        break;
+    case 46:
+        Rcp_SetMonochromeFilterEnabled(1);
+        break;
+    case 47:
+        Rcp_SetMonochromeFilterEnabled(0);
+        break;
+    case 48:
+        GameBit_Set(0x3b0, 1);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
+        break;
+    case 49:
+        GameBit_Set(0x3b0, 1);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x136, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x137, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x143, 0);
+        break;
+    case 50:
+        GameBit_Set(0x3b0, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x134, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x135, 0);
+        getEnvfxAct(Obj_GetPlayerObject(), Obj_GetPlayerObject(), 0x142, 0);
+        envFxFn_800887cc();
+        break;
+    }
+
+    switch (cmdByte) {
+    case 0:
+        lbl_803DD0DA = 1;
+        return 0;
+    case 7:
+        if (flag != 0) {
+            break;
+        }
+        Camera_EnableViewYOffset();
+        player = Obj_GetPlayerObject();
+        if (player == NULL) {
+            break;
+        }
+        dist = Vec_xzDistance((f32 *)(player + 0x18), (f32 *)(obj + 0x18));
+        strength = lbl_803DF008 * (f32)(cmdArg - 7) + lbl_803DEFC8;
+        if (dist < lbl_803DF00C) {
+            if (dist > lbl_803DF010) {
+                strength *= lbl_803DEFC8 - (dist - lbl_803DF010) / lbl_803DF014;
+            }
+            CameraShake_Start(lbl_803DB730 * strength, lbl_803DB730 * strength, lbl_803DB730);
+        }
+        break;
+    case 10:
+        gameTimerInit(0x12, cmdArg);
+        break;
+    case 11:
+        gameTimerInit(0x11, cmdArg);
+        break;
+    case 12:
+        timerSetToCountUp();
+        break;
+    case 37:
+        gameTimerStop();
+        break;
+    case 13:
+        Sfx_StopObjectChannel(sourceObj, 0x7f);
+        break;
+    case 16:
+        *(s8 *)(seq + 0x7d) = (s8)cmdArg;
+        break;
+    case 21:
+        lbl_803DD10C = 0x48;
+        lbl_803DD108 = cmdArg & 0x7f;
+        lbl_803DD104 = 1;
+        lbl_803DD100 = 0x78;
+        break;
+    case 51:
+        lbl_803DD100 = cmdArg;
+        break;
+    case 23:
+        if (flag != 0) {
+            break;
+        }
+        if (*(s16 *)(sourceObj + 0x44) == 1) {
+            break;
+        }
+        if (cmdArg >= (s8)(*(u8 **)(sourceObj + 0x50))[0x55]) {
+            break;
+        }
+        Obj_SetActiveModelIndex(sourceObj, cmdArg);
+        break;
+    case 27:
+        (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(
+            *(s8 *)(sourceObj + 0xac), cmdArg, 1);
+        break;
+    case 28:
+        (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(
+            *(s8 *)(sourceObj + 0xac), cmdArg, 0);
+        break;
+    case 29:
+        (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x44)))(
+            *(s8 *)(sourceObj + 0xac), cmdArg);
+        break;
+    case 19:
+        if (flag != 0) {
+            break;
+        }
+        base[(s8)seq[0x57] + 0x3538] &= ~0x10;
+        break;
+    case 30:
+        if (flag != 0) {
+            break;
+        }
+        base[(s8)seq[0x57] + 0x3538] |= 0x10;
+        break;
+    case 31:
+        (*(void (*)(void))(*(int *)(*gMapEventInterface + 0x2c)))();
+        break;
+    case 32:
+        (*(void (*)(void))(*(int *)(*gMapEventInterface + 0x28)))();
+        break;
+    case 39:
+        if (lbl_803DB720 == (s8)seq[0x57]) {
+            slotPtr = base + (s8)seq[0x57] * 4;
+            lbl_803DB728 = (int)*(f32 *)(slotPtr + 0x3894);
+            lbl_803DD070 = seqStreamFn_8008023c((s8)seq[0x57]) == 0;
+        }
+        break;
+    case 40:
+        slot = (s8)seq[0x57];
+        if (base[slot + 0x3334] == 0) {
+            slotPtr = base + slot * 2;
+            trackId = (u32)(*(s16 *)(slotPtr + 0x3a98) - 1) & 0x3fff;
+            lbl_803DD068 = trackId;
+            streams = seqStreamLookupFn_8007fff8(lbl_8030ECA8, 5, trackId);
+            if (streams != NULL) {
+                if (AudioStream_Play(streams[cmdArg], streamCb_80080384) != 0) {
+                    lbl_803DB720 = slot;
+                }
+            }
+            streams = seqStreamLookupFn_8007fff8(lbl_8030ECD0, 5, trackId);
+            if (streams != NULL) {
+                lbl_803DB718 = streams[cmdArg];
+            }
+        }
+        break;
+    }
+    return 1;
 }
 #pragma scheduling reset
 #pragma peephole reset
