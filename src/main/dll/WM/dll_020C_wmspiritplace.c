@@ -12,12 +12,16 @@ typedef struct WmSpiritPlaceState {
     u8 flags12;
     u8 mapEventState;
     u8 transitionDelay;
-    u8 flags15;
+    u8 f80 : 1;
+    u8 f40 : 1;
+    u8 flags15rest : 6;
     u8 pad16[2];
 } WmSpiritPlaceState;
 
 void fn_801F568C(void) {}
 
+#pragma peephole off
+#pragma scheduling off
 int wmspiritplace_SeqFn(int obj, int unused, int actor)
 {
     WmSpiritPlaceState *state;
@@ -44,15 +48,28 @@ int wmspiritplace_SeqFn(int obj, int unused, int actor)
                 break;
             case 3:
                 mapId = *(int *)(*(int *)(obj + 0x4c) + 0x14);
-                if (mapId == 0x47295 || mapId == 0x49781 || mapId == 0x4a1c0) {
-                    warpToMap(0x7e, 0);
+                switch (mapId) {
+                    case 0x47295:
+                        warpToMap(0x7e, 0);
+                        break;
+                    case 0x49781:
+                        warpToMap(0x7e, 0);
+                        break;
+                    case 0x4a1c0:
+                        warpToMap(0x7e, 0);
+                        break;
                 }
                 break;
             case 4:
                 mapId = *(int *)(*(int *)(obj + 0x4c) + 0x14);
-                if (mapId == 0x47295 || mapId == 0x49781 || mapId == 0x4a1c0 ||
-                    mapId == 0x4a250 || mapId == 0x4a5e6) {
-                    state->transitionDelay = 1;
+                switch (mapId) {
+                    case 0x47295:
+                    case 0x49781:
+                    case 0x4a1c0:
+                    case 0x4a250:
+                    case 0x4a5e6:
+                        state->transitionDelay = 1;
+                        break;
                 }
                 break;
             case 5:
@@ -77,28 +94,33 @@ int wmspiritplace_SeqFn(int obj, int unused, int actor)
                 break;
             case 2:
                 mapId = *(int *)(*(int *)(obj + 0x4c) + 0x14);
-                if (mapId == 0x2183) {
-                    lockLevel(mapGetDirIdx(0x41), 0);
-                    lockLevel(mapGetDirIdx(0xb), 1);
-                    (*(void (**)(int))(*gMapEventInterface + 0x78))(1);
-                } else if (mapId == 0x47295) {
-                    loadMapAndParent(0x42);
-                    lockLevel(mapGetDirIdx(0x42), 0);
-                    lockLevel(mapGetDirIdx(0xb), 1);
-                    ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
-                    ((MapEventInterface *)*gMapEventInterface)->setMode(7, 4);
-                } else if (mapId == 0x49781) {
-                    loadMapAndParent(0x42);
-                    lockLevel(mapGetDirIdx(0x42), 0);
-                    lockLevel(mapGetDirIdx(0xb), 1);
-                    ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
-                    ((MapEventInterface *)*gMapEventInterface)->setMode(7, 5);
-                } else if (mapId == 0x4a1c0) {
-                    loadMapAndParent(0x42);
-                    lockLevel(mapGetDirIdx(0x42), 0);
-                    lockLevel(mapGetDirIdx(0xb), 1);
-                    ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
-                    ((MapEventInterface *)*gMapEventInterface)->setMode(7, 7);
+                switch (mapId) {
+                    case 0x2183:
+                        lockLevel(mapGetDirIdx(0x41), 0);
+                        lockLevel(mapGetDirIdx(0xb), 1);
+                        (*(void (**)(int))(*gMapEventInterface + 0x78))(1);
+                        break;
+                    case 0x47295:
+                        loadMapAndParent(0x42);
+                        lockLevel(mapGetDirIdx(0x42), 0);
+                        lockLevel(mapGetDirIdx(0xb), 1);
+                        ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
+                        ((MapEventInterface *)*gMapEventInterface)->setMode(7, 4);
+                        break;
+                    case 0x49781:
+                        loadMapAndParent(0x42);
+                        lockLevel(mapGetDirIdx(0x42), 0);
+                        lockLevel(mapGetDirIdx(0xb), 1);
+                        ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
+                        ((MapEventInterface *)*gMapEventInterface)->setMode(7, 5);
+                        break;
+                    case 0x4a1c0:
+                        loadMapAndParent(0x42);
+                        lockLevel(mapGetDirIdx(0x42), 0);
+                        lockLevel(mapGetDirIdx(0xb), 1);
+                        ((MapEventInterface *)*gMapEventInterface)->setMode(0x42, 3);
+                        ((MapEventInterface *)*gMapEventInterface)->setMode(7, 7);
+                        break;
                 }
                 break;
         }
@@ -106,6 +128,8 @@ int wmspiritplace_SeqFn(int obj, int unused, int actor)
 
     return 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 int wmspiritplace_getExtraSize(void) { return 0x18; }
 
@@ -117,7 +141,8 @@ void wmspiritplace_free(void) {}
 #pragma scheduling off
 void wmspiritplace_render(undefined4 p1, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, s8 visible)
 {
-    if (visible != 0) {
+    if (visible == 0) {
+        return;
     }
 }
 #pragma scheduling reset
@@ -130,10 +155,12 @@ void wmspiritplace_hitDetect(int obj)
     }
 }
 
+#pragma peephole off
+#pragma scheduling off
 void wmspiritplace_update(int obj)
 {
     WmSpiritPlaceState *state;
-    int mapId;
+    uint mapId;
 
     state = *(WmSpiritPlaceState **)(obj + 0xb8);
     if (state->transitionDelay != 0) {
@@ -142,128 +169,138 @@ void wmspiritplace_update(int obj)
             GameBit_Set(state->secondaryGameBit, 1);
         }
     } else {
-        state->flags12 = (u8)(state->flags12 & ~1);
-        mapId = *(int *)(*(int *)(obj + 0x4c) + 0x14);
+        state->flags12 &= ~1;
+        mapId = *(uint *)(*(int *)(obj + 0x4c) + 0x14);
         if (mapId == 0x47295) {
             if (state->mapEventState == 2) {
                 if (GameBit_Get(state->primaryGameBit) == 0) {
-                    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
+                    *(u8 *)(obj + 0xaf) |= 0x10;
                 }
-                if (GameBit_Get(state->primaryGameBit) == 0) {
-                    if (GameBit_Get(state->secondaryGameBit) == 0 || GameBit_Get(0x29b) == 0) {
-                        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xf7);
-                    } else {
-                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
-                        GameBit_Set(state->primaryGameBit, 0);
-                        GameBit_Set(state->secondaryGameBit, 0);
-                        GameBit_Set(0xbfd, 0);
-                    }
-                } else {
-                    if ((*(u8 *)(obj + 0xaf) & 0x10) != 0) {
-                        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xef);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
-                        setAButtonIcon(0x18);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+            if (GameBit_Get(state->primaryGameBit) != 0) {
+                u8 b = *(u8 *)(obj + 0xaf);
+                if ((b & 0x10) != 0) {
+                    *(u8 *)(obj + 0xaf) = (u8)(b & ~0x10);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+                    setAButtonIcon(0x18);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
                         (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
                         GameBit_Set(state->primaryGameBit, 0);
-                        state->flags15 = (u8)((state->flags15 & 0x7f) | 0x80);
-                    }
+                        state->f80 = 1;
+                }
+            } else if (GameBit_Get(state->secondaryGameBit) != 0 && GameBit_Get(0x29b) != 0) {
+                    (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                    GameBit_Set(state->primaryGameBit, 0);
+                    GameBit_Set(state->secondaryGameBit, 0);
+                    GameBit_Set(0xbfd, 0);
+                } else {
+                    *(u8 *)(obj + 0xaf) &= ~8;
                 }
             } else {
-                *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+                *(u8 *)(obj + 0xaf) |= 8;
             }
         } else if (mapId == 0x2183) {
             if (state->mapEventState == 1) {
                 if (GameBit_Get(state->primaryGameBit) == 0) {
-                    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
+                    *(u8 *)(obj + 0xaf) |= 0x10;
                 }
-                if (GameBit_Get(state->primaryGameBit) == 0) {
-                    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xf7);
-                } else {
-                    if ((*(u8 *)(obj + 0xaf) & 0x10) != 0) {
-                        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xef);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
-                        setAButtonIcon(0x18);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+            if (GameBit_Get(state->primaryGameBit) != 0) {
+                u8 b = *(u8 *)(obj + 0xaf);
+                if ((b & 0x10) != 0) {
+                    *(u8 *)(obj + 0xaf) = (u8)(b & ~0x10);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+                    setAButtonIcon(0x18);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
                         GameBit_Set(state->secondaryGameBit, 1);
                         GameBit_Set(state->primaryGameBit, 0);
-                    }
                 }
             } else {
-                *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+                    *(u8 *)(obj + 0xaf) &= ~8;
+                }
+            } else {
+                *(u8 *)(obj + 0xaf) |= 8;
             }
         } else if (mapId == 0x49781) {
             if (state->mapEventState == 3) {
                 if (GameBit_Get(state->primaryGameBit) == 0) {
-                    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
+                    *(u8 *)(obj + 0xaf) |= 0x10;
                 }
-                if (GameBit_Get(state->primaryGameBit) == 0) {
-                    if (GameBit_Get(state->secondaryGameBit) == 0 || GameBit_Get(0x8a2) == 0) {
-                        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xf7);
-                    } else {
-                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
-                        GameBit_Set(state->primaryGameBit, 0);
-                        GameBit_Set(state->secondaryGameBit, 0);
-                    }
-                } else {
-                    if ((*(u8 *)(obj + 0xaf) & 0x10) != 0) {
-                        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xef);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
-                        setAButtonIcon(0x18);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+            if (GameBit_Get(state->primaryGameBit) != 0) {
+                u8 b = *(u8 *)(obj + 0xaf);
+                if ((b & 0x10) != 0) {
+                    *(u8 *)(obj + 0xaf) = (u8)(b & ~0x10);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+                    setAButtonIcon(0x18);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
                         (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
                         GameBit_Set(state->primaryGameBit, 0);
-                        state->flags15 = (u8)((state->flags15 & 0x7f) | 0x80);
-                    }
+                        state->f80 = 1;
+                }
+            } else if (GameBit_Get(state->secondaryGameBit) != 0 && GameBit_Get(0x8a2) != 0) {
+                    (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                    GameBit_Set(state->primaryGameBit, 0);
+                    GameBit_Set(state->secondaryGameBit, 0);
+                } else {
+                    *(u8 *)(obj + 0xaf) &= ~8;
                 }
             } else {
-                *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+                *(u8 *)(obj + 0xaf) |= 8;
             }
         } else if (mapId == 0x4a1c0) {
             if (state->mapEventState == 4) {
                 if (GameBit_Get(state->primaryGameBit) == 0) {
-                    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
+                    *(u8 *)(obj + 0xaf) |= 0x10;
                 }
-                if (GameBit_Get(state->primaryGameBit) == 0) {
-                    if (GameBit_Get(state->secondaryGameBit) == 0 || GameBit_Get(0xc71) == 0) {
-                        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xf7);
-                    } else {
-                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
-                        GameBit_Set(state->primaryGameBit, 0);
-                        GameBit_Set(state->secondaryGameBit, 0);
-                    }
-                } else {
-                    if ((*(u8 *)(obj + 0xaf) & 0x10) != 0) {
-                        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xef);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
-                        setAButtonIcon(0x18);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+            if (GameBit_Get(state->primaryGameBit) != 0) {
+                u8 b = *(u8 *)(obj + 0xaf);
+                if ((b & 0x10) != 0) {
+                    *(u8 *)(obj + 0xaf) = (u8)(b & ~0x10);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+                    setAButtonIcon(0x18);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
                         (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
                         GameBit_Set(state->primaryGameBit, 0);
-                        state->flags15 = (u8)((state->flags15 & 0x7f) | 0x80);
-                    }
+                        state->f80 = 1;
+                }
+            } else if (GameBit_Get(state->secondaryGameBit) != 0 && GameBit_Get(0xc71) != 0) {
+                    (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+                    GameBit_Set(state->primaryGameBit, 0);
+                    GameBit_Set(state->secondaryGameBit, 0);
+                } else {
+                    *(u8 *)(obj + 0xaf) &= ~8;
                 }
             } else {
-                *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+                *(u8 *)(obj + 0xaf) |= 8;
             }
         } else if (mapId == 0x4a250) {
             if (state->mapEventState == 5) {
                 if (GameBit_Get(state->primaryGameBit) == 0) {
-                    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
+                    *(u8 *)(obj + 0xaf) |= 0x10;
                 }
-                if (GameBit_Get(state->primaryGameBit) == 0) {
-                    if (GameBit_Get(state->secondaryGameBit) == 0 || GameBit_Get(0xcb6) == 0) {
-                        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xf7);
-                    } else if (((state->flags15 >> 6) & 1) != 0) {
-                        state->flags15 = (u8)(state->flags15 & 0xbf);
+            if (GameBit_Get(state->primaryGameBit) != 0) {
+                u8 b = *(u8 *)(obj + 0xaf);
+                if ((b & 0x10) != 0) {
+                    *(u8 *)(obj + 0xaf) = (u8)(b & ~0x10);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+                    setAButtonIcon(0x18);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+                        GameBit_Set(state->primaryGameBit, 0);
+                        state->f80 = 1;
+                        state->f40 = 1;
+                }
+            } else if (GameBit_Get(state->secondaryGameBit) != 0 && GameBit_Get(0xcb6) != 0) {
+                    if (state->f40) {
+                        state->f40 = 0;
                         GameBit_Set(state->primaryGameBit, 0);
                         GameBit_Set(0xd1f, 1);
                         getEnvfxActImmediately(0, 0, 0x217, 0);
@@ -275,57 +312,44 @@ void wmspiritplace_update(int obj)
                         ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
                     }
                 } else {
-                    if ((*(u8 *)(obj + 0xaf) & 0x10) != 0) {
-                        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xef);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
-                        setAButtonIcon(0x18);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
-                        (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
-                        GameBit_Set(state->primaryGameBit, 0);
-                        state->flags15 = (u8)((state->flags15 & 0x7f) | 0x80);
-                        state->flags15 = (u8)((state->flags15 & 0xbf) | 0x40);
-                    }
+                    *(u8 *)(obj + 0xaf) &= ~8;
                 }
             } else {
-                *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+                *(u8 *)(obj + 0xaf) |= 8;
             }
         } else if (mapId == 0x4a5e6) {
             if (state->mapEventState == 6) {
                 if (GameBit_Get(state->primaryGameBit) == 0) {
-                    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
+                    *(u8 *)(obj + 0xaf) |= 0x10;
                 }
-                if (GameBit_Get(state->primaryGameBit) == 0) {
-                    if (GameBit_Get(state->secondaryGameBit) == 0 || GameBit_Get(0xcb8) == 0) {
-                        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xf7);
-                    } else {
-                        GameBit_Set(state->primaryGameBit, 0);
-                        GameBit_Set(state->secondaryGameBit, 1);
-                    }
-                } else {
-                    if ((*(u8 *)(obj + 0xaf) & 0x10) != 0) {
-                        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xef);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
-                        setAButtonIcon(0x18);
-                    }
-                    if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
-                        state->flags15 = (u8)((state->flags15 & 0x7f) | 0x80);
+            if (GameBit_Get(state->primaryGameBit) != 0) {
+                u8 b = *(u8 *)(obj + 0xaf);
+                if ((b & 0x10) != 0) {
+                    *(u8 *)(obj + 0xaf) = (u8)(b & ~0x10);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+                    setAButtonIcon(0x18);
+                }
+                if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+                        state->f80 = 1;
                         (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
                         GameBit_Set(state->primaryGameBit, 0);
-                    }
+                }
+            } else if (GameBit_Get(state->secondaryGameBit) != 0 && GameBit_Get(0xcb8) != 0) {
+                    GameBit_Set(state->primaryGameBit, 0);
+                    GameBit_Set(state->secondaryGameBit, 1);
+                } else {
+                    *(u8 *)(obj + 0xaf) &= ~8;
                 }
             } else {
-                *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+                *(u8 *)(obj + 0xaf) |= 8;
             }
         }
-        if ((s8)state->flags15 < 0) {
-            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+        if (state->f80) {
+            *(u8 *)(obj + 0xaf) |= 8;
         }
     }
 }
-
 void wmspiritplace_init(int obj, int setup)
 {
     WmSpiritPlaceState *state;
@@ -341,7 +365,7 @@ void wmspiritplace_init(int obj, int setup)
     state->secondaryGameBit = *(s16 *)(setup + 0x1e);
     state->primaryGameBit = *(s16 *)(setup + 0x20);
     state->setupParam = (s16)*(s8 *)(setup + 0x19);
-    state->flags15 = (u8)(state->flags15 & 0x7f);
+    state->f80 = 0;
     *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x6000);
     state->mapEventState = ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
 
@@ -353,6 +377,8 @@ void wmspiritplace_init(int obj, int setup)
         *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + lbl_803E5F00;
     }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 void wmspiritplace_release(void) {}
 
