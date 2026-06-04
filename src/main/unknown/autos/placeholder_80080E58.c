@@ -28,7 +28,7 @@ extern void getEnvfxAct(void *obj, void *source, int actId, int flags);
 extern void objSeq_onMapSetup(void);
 extern void objSeqInitFn_80080078(void *entries, int count);
 extern int ObjSeq_func20(void *obj, u8 *seq, int cmd, int maxCount, int paramOffset, int arg5, int arg6);
-extern int seqEvalCondition(int condition, u8 *seq, int obj);
+extern int ObjSeq_EvaluateCondition(int condition, u8 *seq, int obj);
 extern int isGameTimerDisabled(void);
 extern void playerEnvFxFn_80088ad4(int envFxValue);
 extern void renderSunAndMoon(void);
@@ -4123,7 +4123,7 @@ int objSeqFindConditional(u8 *seq, u8 *seqState)
             if (repeatCount > 0) {
                 packed = *(u32 *)(command + 4);
                 if ((int)(packed & 0x3f) == 4 &&
-                    seqEvalCondition((packed >> 6) & 0x3ff, seq, *(int *)(seqState + 0x4c)) != 0) {
+                    ObjSeq_EvaluateCondition((packed >> 6) & 0x3ff, seq, *(int *)(seqState + 0x4c)) != 0) {
                     currentLabel -= 10;
                     if (currentLabel < 0) {
                         currentLabel = 0;
@@ -4446,7 +4446,7 @@ void ObjSeq_ApplyLinkedObjectTransform(u8 *obj, u8 *seqObj, u8 *seq)
                          (f32 *)(seqObj + 0x20));
 }
 
-int seqEvalCondition(int condition, u8 *seq, int obj)
+int ObjSeq_EvaluateCondition(int condition, u8 *seq, int obj)
 {
     int tailState;
     int result;

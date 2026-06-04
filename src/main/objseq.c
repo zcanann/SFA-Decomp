@@ -245,7 +245,7 @@ int objSeqFindConditional(u8 *seq, u8 *seqState)
             if (repeatCount > 0) {
                 packed = *(u32 *)(command + 4);
                 if ((int)(packed & 0x3f) == 4 &&
-                    seqEvalCondition((packed >> 6) & 0x3ff, seq, *(int *)(seqState + 0x4c)) != 0) {
+                    ObjSeq_EvaluateCondition((packed >> 6) & 0x3ff, seq, *(int *)(seqState + 0x4c)) != 0) {
                     currentLabel -= 10;
                     if (currentLabel < 0) {
                         currentLabel = 0;
@@ -750,7 +750,7 @@ int seqDoSubCmd0B(u8 *obj, u8 *sourceObj, u8 *seq, u8 *cmdsArg, s16 xrot, int co
         case 9:
             break;
         default:
-            result = seqEvalCondition(arg10, seq, *(int *)(obj + 0x4c));
+            result = ObjSeq_EvaluateCondition(arg10, seq, *(int *)(obj + 0x4c));
             break;
         }
 
@@ -2471,7 +2471,7 @@ int ObjSeq_update(u8 *obj, f32 t)
         }
 
         if ((s8)seq[0x7c] != 0) {
-            if (seqEvalCondition((s8)seq[0x7c] - 1, seq, (int)model) == 0) {
+            if (ObjSeq_EvaluateCondition((s8)seq[0x7c] - 1, seq, (int)model) == 0) {
                 seq[0x7c] = 0;
             } else {
                 *(f32 *)(base + (s8)seq[0x57] * 4 + 0x3740) = (f32)*(s16 *)(seq + 0x58);
@@ -2939,7 +2939,7 @@ void ObjSeq_ApplyLinkedObjectTransform(u8 *obj, u8 *seqObj, u8 *seq)
 
 #pragma peephole off
 #pragma scheduling off
-int seqEvalCondition(int condition, u8 *seq, int obj)
+int ObjSeq_EvaluateCondition(int condition, u8 *seq, int obj)
 {
     int tailState;
     int result;
