@@ -66,7 +66,7 @@ void earthwalker_update(int obj)
     int prevAnim;
     int hitOut;
 
-    hitOut = objHitReact_update(obj, gEarthWalkerHitReactEntries, 1, *(u8 *)(state + 0x65a), (f32 *)(state + 0x654));
+    hitOut = ObjHitReact_Update(obj, gEarthWalkerHitReactEntries, 1, *(u8 *)(state + 0x65a), (f32 *)(state + 0x654));
     *(u8 *)(state + 0x65a) = hitOut;
     if ((u8)hitOut != 0) {
         return;

@@ -1832,7 +1832,7 @@ void dim2prisonmammoth_update(int obj)
     int p;
     *(u8 *)((char *)obj + 0xaf) &= ~8;
     if (((&lbl_803DC750)[*(s16 *)((char *)inner + 0x274)] & 8) == 0) {
-        *(u8 *)((char *)inner + 0x5fc) = objHitReact_update(obj, lbl_803351A8, 1, *(u8 *)((char *)inner + 0x5fc), (void *)(inner + 0x390));
+        *(u8 *)((char *)inner + 0x5fc) = ObjHitReact_Update(obj, lbl_803351A8, 1, *(u8 *)((char *)inner + 0x5fc), (void *)(inner + 0x390));
         if (*(u8 *)((char *)inner + 0x5fc) != 0) {
             fn_8003A168(obj, inner + 0x35c);
             characterDoEyeAnims(obj, inner + 0x35c);

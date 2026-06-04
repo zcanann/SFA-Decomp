@@ -29,13 +29,13 @@ extern ObjHitReactEffectHandle *Resource_Acquire(u32 effectId,u32 count);
 /*
  * --INFO--
  *
- * Function: objHitReact_update
+ * Function: ObjHitReact_Update
  * EN v1.0 Address: 0x800353A4
  * EN v1.0 Size: 652b
  */
 #pragma scheduling off
 #pragma peephole off
-int objHitReact_update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEntryCount,
+int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEntryCount,
                        u32 reactionState,float *reactionStepScale)
 {
   ObjAnimDef *animDef;

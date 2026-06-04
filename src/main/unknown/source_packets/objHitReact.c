@@ -13,7 +13,7 @@
  * Retail EN evidence:
  * - main.dol string @ 0x802CADFC
  * - retail message: sphere overflow! %d
- * - EN xref: 0x800354E4 objHitReact_update + 0x140
+ * - EN xref: 0x800354E4 ObjHitReact_Update + 0x140
  *
  * Current EN source-window evidence:
  * - seed: 0x800353A4-0x80035630, current first objHitReact source island
@@ -21,7 +21,7 @@
  * - previous resolved gap: 0x80030688-0x800353A4 is main/objhits.c
  *
  * Live EN anchors:
- * - objHitReact_update @ 0x800353A4 checks the retail "sphere overflow" path
+ * - ObjHitReact_Update @ 0x800353A4 checks the retail "sphere overflow" path
  *   and is byte-matched in src/main/objHitReact.c.
  * - ObjHitReact_ResetActiveObjects @ 0x80035630 is the adjacent reset helper
  *   and is also byte-matched in src/main/objHitReact.c.

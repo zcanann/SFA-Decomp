@@ -162,7 +162,7 @@ void SHthorntail_update(SHthorntailObject *obj)
   iVar6 = 0x19;
   uVar7 = (uint)runtime->hitReactState;
   pfVar8 = (float *)runtime->hitReactScratch;
-  cVar3 = objHitReact_update((int)obj,hitReactEntries,0x19,uVar7,pfVar8);
+  cVar3 = ObjHitReact_Update((int)obj,hitReactEntries,0x19,uVar7,pfVar8);
   runtime->hitReactState = cVar3;
   if (cVar3 == '\0') {
     uVar4 = (*(code *)(*DAT_803dd72c + 0x40))((int)obj->animObjId);

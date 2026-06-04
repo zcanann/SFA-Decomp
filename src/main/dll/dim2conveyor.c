@@ -162,7 +162,7 @@ void nw_mammoth_update(int obj,int param_2)
       hitReactEntries = NW_MAMMOTH_HIT_REACT_ENTRIES(table);
     }
     NW_MAMMOTH_HIT_REACT_STATE(state) =
-        objHitReact_update(obj,hitReactEntries,1,NW_MAMMOTH_HIT_REACT_STATE(state),
+        ObjHitReact_Update(obj,hitReactEntries,1,NW_MAMMOTH_HIT_REACT_STATE(state),
                            NW_MAMMOTH_HIT_REACT_STEP_SCALE(state));
     if (NW_MAMMOTH_HIT_REACT_STATE(state) != 0) {
       fn_8003A168(obj, state + 0x40c);
@@ -476,7 +476,7 @@ void FUN_801cf1a0(undefined8 param_1,double param_2,double param_3,undefined8 pa
       hitReactEntries = &gNwMammothHeavyHitReactEntry;
     }
     in_r7 = (float *)(iVar6 + 0x50);
-    uVar3 = objHitReact_update((int)param_9,hitReactEntries,1,(uint)*(byte *)(iVar6 + 0x3d4),
+    uVar3 = ObjHitReact_Update((int)param_9,hitReactEntries,1,(uint)*(byte *)(iVar6 + 0x3d4),
                                in_r7);
     *(undefined *)(iVar6 + 0x3d4) = uVar3;
     if (*(char *)(iVar6 + 0x3d4) != '\0') {
