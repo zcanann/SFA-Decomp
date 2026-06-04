@@ -8027,3 +8027,190 @@ void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
     }
 }
 #pragma pop
+
+extern int lbl_8030F5A0[];
+extern f32 lbl_803DF27C;
+
+/*
+ * --INFO--
+ *
+ * Function: newclouds_update
+ * EN v1.0 Address: 0x80093124
+ * EN v1.0 Size: 2324b
+ */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void newclouds_update(u8 *objA, u8 *objB, u8 *params) {
+    u8 *env;
+    u8 *p;
+    int id;
+    u8 fl;
+    f32 vec[3];
+    struct {
+        s16 f8;
+        s16 fa;
+        s16 fc;
+        s16 pad_e;
+        f32 f10;
+        f32 f14;
+        f32 f18;
+        f32 f1c;
+    } args;
+    f32 posA[3] = {0.0f, 0.0f, 0.0f};
+    f32 posB[3] = {0.0f, 0.0f, 0.0f};
+
+    env = saveGameGetEnvState();
+    if (params == NULL) {
+        return;
+    }
+    if (objA != NULL) {
+        posA[0] = *(f32 *)(objA + 0x18);
+        posA[1] = *(f32 *)(objA + 0x1c);
+        posA[2] = *(f32 *)(objA + 0x20);
+    }
+    if (objB != NULL) {
+        posB[0] = *(f32 *)(objB + 0x18);
+        posB[1] = *(f32 *)(objB + 0x1c);
+        posB[2] = *(f32 *)(objB + 0x20);
+    }
+    id = *(u16 *)(params + 0x26);
+    if ((u32)id > 8) {
+        return;
+    }
+    p = lbl_8039A828[id];
+    if (p == NULL) {
+        fl = params[0x58];
+        if (!(fl & 4) && !(fl & 8) && !(fl & 0x20)) {
+            if ((fl & 2) && (fl & 0x10) && params[0x5d] != 0) {
+                newClouds(params, objB, posA[0], posA[1], posA[2]);
+            } else if ((fl & 2) && (fl & 0x10)) {
+                newClouds(params, objB, posB[0], posB[1], posB[2]);
+            } else if (fl & 2) {
+                newClouds(params, objB, posA[0], posA[1], posA[2]);
+            }
+        }
+        if (params[0x58] & 2) {
+            if (params[0x5c] == 0 || params[0x5c] == 4) {
+                switch (*(u16 *)(params + 0x26)) {
+                case 0:
+                    *(s16 *)(env + 0xe) = (s16)*(u16 *)(params + 0x24) - 1;
+                    *(int *)(env + 0x14) = posA[0];
+                    *(int *)(env + 0x18) = posA[1];
+                    *(int *)(env + 0x1c) = posA[2];
+                    if ((s8)env[*(u16 *)(params + 0x26) + 0x41] == -1) {
+                        return;
+                    }
+                    NC_CLOUD[0x144d] = 1 - env[*(u16 *)(params + 0x26) + 0x41];
+                    if ((s8)env[*(u16 *)(params + 0x26) + 0x41] != 0) {
+                        return;
+                    }
+                    *(f32 *)(NC_CLOUD + 0x140c) =
+                        (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x14);
+                    *(f32 *)(NC_CLOUD + 0x1410) =
+                        (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x18);
+                    *(f32 *)(NC_CLOUD + 0x1414) =
+                        (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x1c);
+                    break;
+                case 1:
+                    *(s16 *)(env + 0x10) = (s16)*(u16 *)(params + 0x24) - 1;
+                    *(int *)(env + 0x20) = posA[0];
+                    *(int *)(env + 0x24) = posA[1];
+                    *(int *)(env + 0x28) = posA[2];
+                    if ((s8)env[*(u16 *)(params + 0x26) + 0x41] == -1) {
+                        return;
+                    }
+                    NC_CLOUD[0x144d] = 1 - env[*(u16 *)(params + 0x26) + 0x41];
+                    if ((s8)env[*(u16 *)(params + 0x26) + 0x41] != 0) {
+                        return;
+                    }
+                    *(f32 *)(NC_CLOUD + 0x140c) =
+                        (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x14);
+                    *(f32 *)(NC_CLOUD + 0x1410) =
+                        (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x18);
+                    *(f32 *)(NC_CLOUD + 0x1414) =
+                        (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x1c);
+                    break;
+                case 2:
+                    *(s16 *)(env + 0x12) = (s16)*(u16 *)(params + 0x24) - 1;
+                    *(int *)(env + 0x2c) = posA[0];
+                    *(int *)(env + 0x30) = posA[1];
+                    *(int *)(env + 0x34) = posA[2];
+                    if ((s8)env[*(u16 *)(params + 0x26) + 0x41] == -1) {
+                        return;
+                    }
+                    NC_CLOUD[0x144d] = 1 - env[*(u16 *)(params + 0x26) + 0x41];
+                    if ((s8)env[*(u16 *)(params + 0x26) + 0x41] != 0) {
+                        return;
+                    }
+                    *(f32 *)(NC_CLOUD + 0x140c) =
+                        (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x14);
+                    *(f32 *)(NC_CLOUD + 0x1410) =
+                        (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x18);
+                    *(f32 *)(NC_CLOUD + 0x1414) =
+                        (f32)*(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x1c);
+                    break;
+                }
+            }
+        }
+    }
+    if (p == NULL) {
+        return;
+    }
+    fl = params[0x58];
+    if (fl & 2) {
+        return;
+    }
+    if ((fl & 8) && p[0x144e] != 0) {
+        env[id + 0x41] = (s8)p[0x144d];
+        NC_CLOUD[0x144d] = 1 - NC_CLOUD[0x144d];
+        if (NC_CLOUD[0x144d] == 1) {
+            vec[0] = lbl_803DF1A0;
+            vec[1] = lbl_803DF1A0;
+            vec[2] = lbl_803DF1A0;
+            args.f14 = lbl_803DF1A0;
+            args.f18 = lbl_803DF1A0;
+            args.f1c = lbl_803DF1A0;
+            args.f10 = lbl_803DF1A4;
+            args.fc = 0;
+            args.fa = 0;
+            args.f8 = *(s16 *)objA;
+            mathFn_80021ac8(&args.f8, vec);
+            *(f32 *)(NC_CLOUD + 0x140c) = vec[0] + *(f32 *)(objA + 0x18);
+            *(f32 *)(NC_CLOUD + 0x1410) = vec[1] + *(f32 *)(objA + 0x1c);
+            *(f32 *)(NC_CLOUD + 0x1414) = vec[2] + *(f32 *)(objA + 0x20);
+            if (*(f32 *)(NC_CLOUD + 0x1438) > lbl_803DF27C) {
+                Music_Trigger(lbl_8030F5A0[*(int *)(NC_CLOUD + 0x13f4)], 0);
+            }
+        } else {
+            if (*(f32 *)(NC_CLOUD + 0x1438) > lbl_803DF27C) {
+                Music_Trigger(lbl_8030F5A0[*(int *)(NC_CLOUD + 0x13f4)], 1);
+            }
+        }
+        if ((s8)env[*(u16 *)(params + 0x26) + 0x41] == 0) {
+            *(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x14) = posA[0];
+            *(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x18) = posA[1];
+            *(int *)(env + *(u16 *)(params + 0x26) * 0xc + 0x1c) = posA[2];
+        }
+    } else if (fl & 0x20) {
+        newclouds_snowKillSnowCloud(id, 0);
+    } else if (fl & 4) {
+        if (p[0x144f] != 0) {
+            p[0x144f] = 0;
+        }
+        *(int *)(NC_CLOUD + 0x13f8) = 1 - *(int *)(NC_CLOUD + 0x13f8);
+        if (*(u16 *)(params + 0x2a) != 0) {
+            *(f32 *)(NC_CLOUD + 0x142c) =
+                (f32)*(int *)(NC_CLOUD + 0x13fc) / (f32)*(u16 *)(params + 0x2a);
+        } else {
+            *(f32 *)(NC_CLOUD + 0x142c) = (f32)(*(int *)(NC_CLOUD + 0x13fc) - 1);
+        }
+        if (*(u16 *)(params + 0x2c) != 0) {
+            *(f32 *)(NC_CLOUD + 0x1430) =
+                -((f32)*(int *)(NC_CLOUD + 0x13fc) / (f32)*(u16 *)(params + 0x2c));
+        } else {
+            *(f32 *)(NC_CLOUD + 0x1430) = (f32)(-(*(int *)(NC_CLOUD + 0x13fc) - 1));
+        }
+    }
+}
+#pragma pop
