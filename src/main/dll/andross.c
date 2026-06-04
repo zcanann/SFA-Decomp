@@ -2010,67 +2010,67 @@ LAB_8023de5c:
   if (piVar14[0x1f] < 6) {
     local_138 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x7e5,&local_138);
-    if (iVar12 != 0) {
-      if (*(int *)(iVar12 + 0xc0) != 0) {
+    if ((u32)iVar12 != 0) {
+      if (*(void **)(iVar12 + 0xc0) != NULL) {
         iVar12 = *(int *)(iVar12 + 0xc0);
       }
       if ((*(short *)(iVar12 + 0x44) != 0x10) ||
          (iVar5 = animatedObjGetSeqId(*(int *)(iVar12 + 0xb8)), iVar5 != 0x598)) {
-        *(int *)(*(int *)(iVar12 + 0x4c) + 8) = *(int *)(obj + 0xc);
-        *(int *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(int *)(obj + 0x10);
-        *(int *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(int *)(obj + 0x14);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = *(f32 *)(obj + 0xc);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(f32 *)(obj + 0x10);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(f32 *)(obj + 0x14);
       }
     }
     local_13c = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x1e,&local_13c);
-    if (iVar12 != 0) {
-      if (*(int *)(iVar12 + 0xc0) != 0) {
+    if ((u32)iVar12 != 0) {
+      if (*(void **)(iVar12 + 0xc0) != NULL) {
         iVar12 = *(int *)(iVar12 + 0xc0);
       }
       if ((*(short *)(iVar12 + 0x44) != 0x10) ||
          (iVar5 = animatedObjGetSeqId(*(int *)(iVar12 + 0xb8)), iVar5 != 0x598)) {
-        *(int *)(*(int *)(iVar12 + 0x4c) + 8) = *(int *)(obj + 0xc);
-        *(int *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(int *)(obj + 0x10);
-        *(int *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(int *)(obj + 0x14);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = *(f32 *)(obj + 0xc);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(f32 *)(obj + 0x10);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(f32 *)(obj + 0x14);
       }
     }
     local_140 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x76f,&local_140);
-    if (iVar12 != 0) {
-      if (*(int *)(iVar12 + 0xc0) != 0) {
+    if ((u32)iVar12 != 0) {
+      if (*(void **)(iVar12 + 0xc0) != NULL) {
         iVar12 = *(int *)(iVar12 + 0xc0);
       }
       if ((*(short *)(iVar12 + 0x44) != 0x10) ||
          (iVar5 = animatedObjGetSeqId(*(int *)(iVar12 + 0xb8)), iVar5 != 0x598)) {
-        *(int *)(*(int *)(iVar12 + 0x4c) + 8) = *(int *)(obj + 0xc);
-        *(int *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(int *)(obj + 0x10);
-        *(int *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(int *)(obj + 0x14);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = *(f32 *)(obj + 0xc);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(f32 *)(obj + 0x10);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(f32 *)(obj + 0x14);
       }
     }
     local_144 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x814,&local_144);
-    if (iVar12 != 0) {
-      if (*(int *)(iVar12 + 0xc0) != 0) {
+    if ((u32)iVar12 != 0) {
+      if (*(void **)(iVar12 + 0xc0) != NULL) {
         iVar12 = *(int *)(iVar12 + 0xc0);
       }
       if ((*(short *)(iVar12 + 0x44) != 0x10) ||
          (iVar5 = animatedObjGetSeqId(*(int *)(iVar12 + 0xb8)), iVar5 != 0x598)) {
-        *(int *)(*(int *)(iVar12 + 0x4c) + 8) = *(int *)(obj + 0xc);
-        *(int *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(int *)(obj + 0x10);
-        *(int *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(int *)(obj + 0x14);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = *(f32 *)(obj + 0xc);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(f32 *)(obj + 0x10);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(f32 *)(obj + 0x14);
       }
     }
     local_148 = lbl_803E7490;
     iVar12 = ObjList_FindNearestObjectByDefNo(obj,0x6cf,&local_148);
-    if (iVar12 != 0) {
-      if (*(int *)(iVar12 + 0xc0) != 0) {
+    if ((u32)iVar12 != 0) {
+      if (*(void **)(iVar12 + 0xc0) != NULL) {
         iVar12 = *(int *)(iVar12 + 0xc0);
       }
       if ((*(short *)(iVar12 + 0x44) != 0x10) ||
          (iVar5 = animatedObjGetSeqId(*(int *)(iVar12 + 0xb8)), iVar5 != 0x598)) {
-        *(int *)(*(int *)(iVar12 + 0x4c) + 8) = *(int *)(obj + 0xc);
-        *(int *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(int *)(obj + 0x10);
-        *(int *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(int *)(obj + 0x14);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 8) = *(f32 *)(obj + 0xc);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0xc) = *(f32 *)(obj + 0x10);
+        *(f32 *)(*(int *)(iVar12 + 0x4c) + 0x10) = *(f32 *)(obj + 0x14);
       }
     }
   }
