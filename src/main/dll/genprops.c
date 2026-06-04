@@ -7070,3 +7070,49 @@ void shield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void quakeSpellTextureFn_8007366c(int param);
+extern f32 *Camera_GetViewMatrix(void);
+extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
+extern void GXLoadPosMtxImm(f32 *m, int id);
+extern void GXLoadTexMtxImm(f32 *m, int id, int type);
+extern void GXDrawTorus(f32 rc, u8 numc, u8 numt);
+extern void *memcpy(void *dst, const void *src, unsigned int n);
+extern f32 lbl_803E3300;
+
+#pragma scheduling off
+#pragma peephole off
+void quakeSpellTextureFn_8016dbf4(void)
+{
+    f32 mResult[12];
+    f32 mScale[12];
+    f32 mRot[12];
+    f32 mTrans[12];
+    f32 mView[12];
+
+    if (lbl_803AC6B8[0x20] != 0) {
+        f32 s;
+        f32 z;
+        quakeSpellTextureFn_8007366c((int)*(f32 *)(lbl_803AC6B8 + 0x18));
+        memcpy(mView, Camera_GetViewMatrix(), 0x30);
+        PSMTXRotRad(mRot, 'x', lbl_803E3300);
+        s = *(f32 *)(lbl_803AC6B8 + 0xc);
+        PSMTXScale(mScale, s, s * *(f32 *)(lbl_803AC6B8 + 0x14), s);
+        PSMTXConcat(mScale, mRot, mScale);
+        PSMTXTrans(mTrans, *(f32 *)(lbl_803AC6B8 + 0) - playerMapOffsetX,
+                   *(f32 *)(lbl_803AC6B8 + 4),
+                   *(f32 *)(lbl_803AC6B8 + 8) - playerMapOffsetZ);
+        PSMTXConcat(mView, mTrans, mView);
+        PSMTXConcat(mView, mScale, mResult);
+        GXLoadPosMtxImm(mResult, 0);
+        PSMTXConcat(mView, mRot, mResult);
+        z = lbl_803E32B4;
+        mResult[3] = z;
+        mResult[7] = z;
+        mResult[11] = z;
+        GXLoadTexMtxImm(mResult, 30, 0);
+        GXDrawTorus(*(f32 *)(lbl_803AC6B8 + 0x10), 10, 20);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
