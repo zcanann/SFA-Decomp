@@ -15099,13 +15099,12 @@ void dll_69_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int para
   (*(code *)(*gModgfxInterface + 8))(&buf, 0, 8, base, 4, &base[0x50], param_2 == 2 ? 0xc11 : 0x5e0, 0);
 }
 
-void dll_6A_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_6A_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
 {
-  struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
+  struct { GfxCmd *cmds; u8 *ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
   GfxCmd *e = buf.entries;
-  int ctx;
   e[0].layer = 0; e[0].flags = 0x12; e[0].tex = &lbl_803138A0[296]; e[0].mode = 4;
   e[0].x = lbl_803E0A28; e[0].y = lbl_803E0A28; e[0].z = lbl_803E0A28;
   e[1].layer = 0; e[1].flags = 0x12; e[1].tex = &lbl_803138A0[296]; e[1].mode = 2;
@@ -15127,10 +15126,9 @@ void dll_6A_func03(int param_1, int param_2, int param_3, uint param_4)
   e[9].layer = 5; e[9].flags = 0x7a; e[9].tex = (void *)0; e[9].mode = 0x10000;
   e[9].x = lbl_803E0A28; e[9].y = lbl_803E0A28; e[9].z = lbl_803E0A28;
   buf.v58 = 0;
-  ctx = param_1;
-  buf.ctx = ctx;
-  buf.v44 = 0x10000;
-  buf.pos[0] = lbl_803E0A4C; buf.pos[1] = lbl_803E0A4C; buf.pos[2] = lbl_803E0A4C;
+  buf.ctx = param_1;
+  buf.v44 = param_2;
+  buf.pos[0] = lbl_803E0A28; buf.pos[1] = lbl_803E0A28; buf.pos[2] = lbl_803E0A28;
   buf.col[0] = lbl_803E0A28; buf.col[1] = lbl_803E0A28; buf.col[2] = lbl_803E0A28;
   buf.scale = lbl_803E0A4C;
   buf.v40 = 1;
@@ -15138,20 +15136,21 @@ void dll_6A_func03(int param_1, int param_2, int param_3, uint param_4)
   buf.v59 = 0x12;
   buf.v5a = 0;
   buf.v5b = 0x10;
-  buf.count = 10;
+  buf.count = (e + 10) - buf.entries;
   buf.hw[0] = *(s16 *)&lbl_803138A0[352]; buf.hw[1] = *(s16 *)&lbl_803138A0[354]; buf.hw[2] = *(s16 *)&lbl_803138A0[356]; buf.hw[3] = *(s16 *)&lbl_803138A0[358];
   buf.hw[4] = *(s16 *)&lbl_803138A0[360]; buf.hw[5] = *(s16 *)&lbl_803138A0[362]; buf.hw[6] = *(s16 *)&lbl_803138A0[364];
   buf.cmds = buf.entries;
-  buf.flags = 0x5000004 | 0;
-  if ((param_4 & 1) != 0) {
-    if (ctx == 0) {
-      buf.pos[0] = lbl_803E0A4C + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0A4C + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0A4C + *(f32 *)(param_3 + 0x14);
+  buf.flags = 0x5000004;
+  buf.flags |= param_4;
+  if ((buf.flags & 1) != 0) {
+    if (param_1 != 0) {
+      buf.pos[0] = lbl_803E0A28 + *(f32 *)(param_1 + 0x18);
+      buf.pos[1] = lbl_803E0A28 + *(f32 *)(param_1 + 0x1c);
+      buf.pos[2] = lbl_803E0A28 + *(f32 *)(param_1 + 0x20);
     } else {
-      buf.pos[0] = lbl_803E0A4C + *(f32 *)(ctx + 0x18);
-      buf.pos[1] = lbl_803E0A4C + *(f32 *)(ctx + 0x1c);
-      buf.pos[2] = lbl_803E0A4C + *(f32 *)(ctx + 0x20);
+      buf.pos[0] = lbl_803E0A28 + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E0A28 + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E0A28 + *(f32 *)(param_3 + 0x14);
     }
   }
   (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x12, &lbl_803138A0[0], 0x10, &lbl_803138A0[180], 0x3e, 0);
