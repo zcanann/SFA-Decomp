@@ -461,6 +461,7 @@ void renderSky(void)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma dont_inline on
 void getAmbientColor(int slot, u8 *red, u8 *green, u8 *blue)
 {
     u8 *sky;
@@ -479,6 +480,7 @@ void getAmbientColor(int slot, u8 *red, u8 *green, u8 *blue)
     *green = lbl_803DD12C[offset + 0x79];
     *blue = lbl_803DD12C[offset + 0x7a];
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -1174,6 +1176,351 @@ void dll_06_func09(s32 *x, s32 *y, s32 *z) {
     *x = (s32)((f32)(targetX - oldX) * blend + (f32)oldX);
     *y = (s32)((f32)(targetY - oldY) * blend + (f32)oldY);
     *z = (s32)((f32)(targetZ - oldZ) * blend + (f32)oldZ);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void sky2_run(void)
+{
+    SkyRotQ q;
+    f32 vec[3];
+    SkyVec3 best;
+    f32 height;
+    SkyBestIdx idx;
+    u8 red;
+    u8 green;
+    u8 blue;
+    s16 *cam;
+    int i;
+    u8 **pp;
+    u8 *p;
+    f32 *dst;
+    f32 *dirp;
+    int k;
+    int a1;
+    int d;
+    int phase;
+    int off1;
+    int off2;
+    int amp;
+    int ri;
+    int gi;
+    int bi;
+    u16 flags;
+    f32 r;
+    f32 g;
+    f32 b;
+    f32 sa;
+    f32 sb;
+    f32 t;
+    f32 u;
+    f32 step;
+    f32 att;
+    f32 c158;
+    f32 c154;
+    f32 c150;
+    f32 one;
+    f32 z;
+    f32 zv;
+    f32 spd;
+    f32 frzero;
+    f32 z2;
+    f32 hv;
+    f32 diff;
+    f32 scale;
+
+    best = *(SkyVec3 *)lbl_802C1F98;
+    r = lbl_803DF108;
+    g = r;
+    b = r;
+    sa = r;
+    sb = r;
+    height = r;
+    idx = *(SkyBestIdx *)&lbl_803E8460;
+    getAmbientColor(0, &red, &green, &blue);
+    if (lbl_803DB758 != 0) {
+        z = lbl_803DF108;
+        dst = lbl_8039A7B8;
+        dst[0] = z;
+        dst[1] = z;
+        one = lbl_803DF114;
+        dst[2] = one;
+        c150 = lbl_803DF150;
+        dst[3] = c150;
+        dst[4] = z;
+        c154 = lbl_803DF154;
+        dst[5] = c154;
+        c158 = lbl_803DF158;
+        dst[6] = c158;
+        dst[7] = z;
+        dst[8] = z;
+        dst[9] = c150;
+        dst[10] = z;
+        dst[11] = c150;
+        dst[12] = z;
+        dst[13] = z;
+        dst[14] = c158;
+        dst[15] = c154;
+        dst[16] = z;
+        dst[17] = c150;
+        dst[18] = one;
+        dst[19] = z;
+        dst[20] = z;
+        dst[21] = c154;
+        dst[22] = z;
+        dst[23] = c154;
+        lbl_803DB758 = 0;
+    }
+    cam = Camera_GetCurrentViewSlot();
+    zv = lbl_803DF108;
+    vec[0] = zv;
+    vec[1] = zv;
+    vec[2] = lbl_803DF158;
+    q.x = zv;
+    q.y = zv;
+    q.z = zv;
+    q.w = lbl_803DF114;
+    q.rx = (s16)-cam[0];
+    q.rz = 0;
+    q.ry = 0;
+    mathFn_80021ac8(&q, vec);
+    i = 0;
+    pp = &lbl_803DD184;
+    do {
+        if (*pp != NULL && *(s8 *)(*pp + 0x317) != 0) {
+            lbl_803DB750 = 0;
+            p = *pp;
+            if (*(int *)(p + 0x48) != 0) {
+                if ((*(u16 *)(p + 4) & 1) == 0) {
+                    spd = lbl_803DF118;
+                    *(f32 *)(p + 0x310) = spd * *(f32 *)(p + 0x30c);
+                    if (*(f32 *)(*pp + 0x310) > spd) {
+                        *(f32 *)(*pp + 0x310) = spd;
+                    }
+                }
+            } else if (*(int *)(p + 0x44) != 0) {
+                *(f32 *)(p + 0x30c) = *(f32 *)(p + 0x310) / lbl_803DF118;
+                p = *pp;
+                if ((*(u16 *)(p + 4) & 1) == 0) {
+                    *(f32 *)(p + 0x310) =
+                        -(timeDelta * *(f32 *)(p + 0x58) - *(f32 *)(p + 0x310));
+                    if (*(f32 *)(*pp + 0x310) < (frzero = lbl_803DF108)) {
+                        *(f32 *)(*pp + 0x310) = frzero;
+                    }
+                }
+            }
+            if ((*(u16 *)(*pp + 4) & 0x100) != 0) {
+                fn_8008D088(i);
+            }
+            p = *pp;
+            if ((*(u16 *)(p + 4) & 0x10) != 0) {
+                r = *(f32 *)(p + 0x70);
+                g = *(f32 *)(p + 0x9c);
+                b = *(f32 *)(p + 0xc8);
+                sa = *(f32 *)(p + 0x1fc);
+                sb = *(f32 *)(p + 0x228);
+            } else if ((*(u16 *)(p + 6) & 0x20) != 0) {
+                (*(void (**)(f32 *))((char *)*gSHthorntailAnimationInterface + 0x14))(&height);
+                t = height / lbl_803DF15C;
+                if (t < lbl_803DF108) {
+                    t = lbl_803DF108;
+                }
+                if (t > lbl_803DF114) {
+                    t = lbl_803DF114;
+                }
+                step = lbl_803DF160;
+                if (t <= step) {
+                    u = t / step;
+                    phase = 0;
+                } else if (t <= lbl_803DF144) {
+                    u = (t - step) / step;
+                    phase = 1;
+                } else if (t <= lbl_803DF164) {
+                    u = (t - lbl_803DF144) / step;
+                    phase = 2;
+                } else if (t <= lbl_803DF168) {
+                    u = (t - lbl_803DF164) / step;
+                    phase = 3;
+                } else if (t <= lbl_803DF16C) {
+                    u = (t - lbl_803DF168) / step;
+                    phase = 4;
+                } else if (t <= lbl_803DF170) {
+                    u = (t - lbl_803DF16C) / step;
+                    phase = 5;
+                } else if (t <= lbl_803DF174) {
+                    u = (t - lbl_803DF170) / step;
+                    phase = 6;
+                } else {
+                    u = (t - lbl_803DF174) / step;
+                    phase = 7;
+                }
+                off1 = phase * 4;
+                r = mathFn_80010c64(*pp + off1 + 0x70, u, 0);
+                off2 = (phase + 0xb) * 4;
+                g = mathFn_80010c64(*pp + off2 + 0x70, u, 0);
+                b = mathFn_80010c64(*pp + (phase + 0x16) * 4 + 0x70, u, 0);
+                sa = mathFn_80010c64(*pp + off1 + 0x1fc, u, 0);
+                sb = mathFn_80010c64(*pp + off2 + 0x1fc, u, 0);
+            } else {
+                k = 0;
+                dirp = lbl_8039A7B8;
+                do {
+                    a1 = (u16)getAngle(dirp[0], dirp[2]);
+                    d = a1 - (u16)getAngle(vec[0], vec[2]);
+                    if (d < 0) {
+                        d = d * -1;
+                    }
+                    if (d > 0x7fff) {
+                        d = 0xffff - d;
+                    }
+                    att = ((lbl_803DF178 - (f32)d) / lbl_803DF178 - lbl_803DF170) /
+                          lbl_803DF144;
+                    if (att > best.x) {
+                        if (best.x > best.y) {
+                            best.y = best.x;
+                            idx.second = idx.best;
+                        }
+                        best.x = att;
+                        idx.best = k;
+                    } else if (att > best.y) {
+                        best.y = att;
+                        idx.second = k;
+                    }
+                    dirp += 3;
+                    k++;
+                } while (k < 8);
+                z2 = lbl_803DF108;
+                if (best.x > z2) {
+                    p = *pp + idx.best * 4;
+                    r = *(f32 *)(p + 0x70) * best.x + r;
+                    g = *(f32 *)(p + 0x9c) * best.x + g;
+                    b = *(f32 *)(p + 0xc8) * best.x + b;
+                    sa = *(f32 *)(*pp + idx.best * 4 + 0x1fc) * best.x + sa;
+                    sb = *(f32 *)(p + 0x228) * best.x + sb;
+                }
+                if (best.y > z2) {
+                    p = *pp + idx.second * 4;
+                    r = *(f32 *)(p + 0x70) * best.y + r;
+                    g = *(f32 *)(p + 0x9c) * best.y + g;
+                    b = *(f32 *)(p + 0xc8) * best.y + b;
+                    sa = *(f32 *)(*pp + idx.second * 4 + 0x1fc) * best.y + sa;
+                    sb = *(f32 *)(p + 0x228) * best.y + sb;
+                }
+            }
+            if (r > lbl_803DF118) {
+                r = lbl_803DF118;
+            } else if (r < lbl_803DF108) {
+                r = lbl_803DF108;
+            }
+            if (g > lbl_803DF118) {
+                g = lbl_803DF118;
+            } else if (g < lbl_803DF108) {
+                g = lbl_803DF108;
+            }
+            if (b > lbl_803DF118) {
+                b = lbl_803DF118;
+            } else if (b < lbl_803DF108) {
+                b = lbl_803DF108;
+            }
+            p = *pp;
+            if ((*(u16 *)(p + 6) & 0x40) != 0) {
+                if (*(s8 *)(p + 0x314) == -1) {
+                    *(u8 *)(p + 0x314) = 1;
+                    frzero = lbl_803DF108;
+                    *(f32 *)(*pp + 0x6c) = frzero;
+                    diff = sb - sa;
+                    *(f32 *)(*pp + 0x68) = (f32)randomGetRange(
+                        (int)(-diff * lbl_803DF168), (int)(diff * lbl_803DF168));
+                    *(f32 *)(*pp + 0x64) = lbl_803DF17C * (f32)randomGetRange(1, 10);
+                } else if (*(s8 *)(p + 0x314) == 1) {
+                    hv = *(f32 *)(p + 0x6c);
+                    sa = sa + hv;
+                    *(f32 *)(p + 0x6c) = hv + *(f32 *)(p + 0x64);
+                    p = *pp;
+                    if (*(f32 *)(p + 0x6c) > *(f32 *)(p + 0x68)) {
+                        *(s8 *)(p + 0x314) = (s8)(1 - *(s8 *)(p + 0x314));
+                    }
+                } else {
+                    hv = *(f32 *)(p + 0x6c);
+                    sa = sa + hv;
+                    *(f32 *)(p + 0x6c) = hv - *(f32 *)(p + 0x64);
+                    p = *pp;
+                    if (*(f32 *)(p + 0x6c) < (frzero = lbl_803DF108)) {
+                        *(s8 *)(p + 0x314) = (s8)(1 - *(s8 *)(p + 0x314));
+                        *(f32 *)(*pp + 0x6c) = frzero;
+                        amp = (s16)(int)(sb - sa);
+                        *(f32 *)(*pp + 0x68) = (f32)randomGetRange(-amp / 2, amp / 2);
+                        *(f32 *)(*pp + 0x64) =
+                            lbl_803DF17C * (f32)randomGetRange(1, 10);
+                    }
+                }
+            }
+            if (sb > lbl_803DF180) {
+                sb = lbl_803DF180;
+            }
+            if (sa > sb) {
+                sa = sb - lbl_803DF114;
+            }
+            if (sa <= lbl_803DF108) {
+                fn_8005CECC(1);
+            } else {
+                fn_8005CECC(0);
+            }
+            p = *pp;
+            flags = *(u16 *)(p + 4);
+            if ((flags & 8) == 0) {
+                scale = (f32)(blue + green + red) / lbl_803DF184;
+                r *= scale;
+                g *= scale;
+                b *= scale;
+            }
+            if ((flags & 1) != 0) {
+                *(int *)(p + 0x24) = (int)r;
+                *(int *)(*pp + 0x28) = (int)g;
+                *(int *)(*pp + 0x2c) = (int)b;
+                *(f32 *)(*pp + 0x14) = sa;
+                *(f32 *)(*pp + 0x18) = sb;
+                if ((*(u16 *)(*pp + 4) & 0x80) == 0) {
+                    *(int *)(*pp + 0x30) = 0xff;
+                    *(int *)(*pp + 0x34) = 0xff;
+                    *(int *)(*pp + 0x38) = 0xff;
+                    *(f32 *)(*pp + 0x1c) = lbl_803DF188;
+                    *(f32 *)(*pp + 0x20) = lbl_803DF18C;
+                }
+            } else if ((flags & 4) != 0) {
+                *(int *)(p + 0x30) = (int)r;
+                *(int *)(*pp + 0x34) = (int)g;
+                *(int *)(*pp + 0x38) = (int)b;
+                *(f32 *)(*pp + 0x1c) = sa;
+                *(f32 *)(*pp + 0x20) = sb;
+                if ((*(u16 *)(*pp + 4) & 0x80) == 0) {
+                    *(int *)(*pp + 0x24) = 0xff;
+                    *(int *)(*pp + 0x28) = 0xff;
+                    *(int *)(*pp + 0x2c) = 0xff;
+                    *(f32 *)(*pp + 0x14) = lbl_803DF188;
+                    *(f32 *)(*pp + 0x18) = lbl_803DF18C;
+                }
+            } else {
+                ri = (int)r;
+                *(int *)(p + 0x24) = ri;
+                gi = (int)g;
+                *(int *)(*pp + 0x28) = gi;
+                bi = (int)b;
+                *(int *)(*pp + 0x2c) = bi;
+                *(f32 *)(*pp + 0x14) = sa;
+                *(f32 *)(*pp + 0x18) = sb;
+                *(int *)(*pp + 0x30) = ri;
+                *(int *)(*pp + 0x34) = gi;
+                *(int *)(*pp + 0x38) = bi;
+                *(f32 *)(*pp + 0x1c) = sa;
+                *(f32 *)(*pp + 0x20) = sb;
+            }
+        }
+        pp++;
+        i++;
+    } while (i < 2);
 }
 #pragma scheduling reset
 #pragma peephole reset

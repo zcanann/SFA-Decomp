@@ -211,7 +211,7 @@ extern f32 lbl_803DF120;
 extern f32 lbl_803DF138;
 extern f32 lbl_803DF13C;
 extern f32 lbl_803DF140;
-extern f32 lbl_803DF144;
+extern const f32 lbl_803DF144;
 extern f32 lbl_803DF1A0;
 extern f32 lbl_803DF1D8;
 extern f32 lbl_803DF1DC;
@@ -4237,6 +4237,8 @@ extern f32 lbl_803DD1E0;
 extern void padUpdate(void);
 extern void checkReset(void);
 void skyFn_80088c94(int flags, int mode);
+void fn_8008D088(int slot);
+void sky2_run(void);
 extern void waitNextFrame(void);
 extern void loadDataFiles(void);
 extern void dvdCheckError(void);
@@ -4423,6 +4425,34 @@ extern void GXSetNumTevStages(int n);
 extern void selectTexture(void *tex, int slot);
 extern void fn_8007880C(void);
 extern void fn_80069B1C(void *a, void *b, f32 t, void *c);
+
+typedef struct SkyBestIdx {
+    u8 best;
+    u8 second;
+    u8 pad;
+} SkyBestIdx;
+
+extern void fn_8005CECC(int mode);
+extern const f32 lbl_803DF150;
+extern const f32 lbl_803DF154;
+extern const f32 lbl_803DF158;
+extern const f32 lbl_803DF15C;
+extern const f32 lbl_803DF160;
+extern const f32 lbl_803DF164;
+extern const f32 lbl_803DF168;
+extern const f32 lbl_803DF16C;
+extern const f32 lbl_803DF170;
+extern const f32 lbl_803DF174;
+extern const f32 lbl_803DF178;
+extern const f32 lbl_803DF17C;
+extern const f32 lbl_803DF180;
+extern const f32 lbl_803DF184;
+extern const f32 lbl_803DF188;
+extern const f32 lbl_803DF18C;
+extern u8 lbl_803DB758;
+extern u16 lbl_803E8460;
+extern f32 lbl_8039A7B8[];
+extern f32 lbl_802C1F98[];
 
 typedef struct SkySlotAnim {
     u8 pad00[4];        /* 0x00 */
@@ -4625,5 +4655,7 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag);
 void *skyTextureFn_80094390(f32 *out1, f32 *out2);
 void sky2_onMapSetup(void);
 void skyFn_80088c94(int flags, int mode);
+void fn_8008D088(int slot);
+void sky2_run(void);
 
 #endif
