@@ -733,7 +733,12 @@ typedef struct SynthJobTab {
     SynthDelayedNode* zeroOffset;
 } SynthJobTab;
 
-#define SYNTH_JOB_TABLE ((SynthJobTab*)(lbl_803BCD90 + 0x240))
+typedef struct SynthJobTabBlock {
+    u8 unk000[0x240];
+    SynthJobTab table[0x20];
+} SynthJobTabBlock;
+
+#define SYNTH_JOB_TABLE (((SynthJobTabBlock*)lbl_803BCD90)->table)
 
 void synthQueueDelayedUpdate(SynthDelayedNode *fade, int mode, u32 delay)
 {
@@ -902,8 +907,7 @@ void synthDispatchFadeAction(SynthFade *fade)
 void audioFn_80271498(u32 delta)
 {
     u8 *stateBase;
-    SynthDelayStorageLocal *storage;
-    u32 bucket;
+    SynthJobTab *jobTab;
     u32 fadeIndex;
     u32 mask;
     f32 *fade;
@@ -916,12 +920,11 @@ void audioFn_80271498(u32 delta)
 
     stateBase = lbl_803BCD90;
     if (*(u32 *)(stateBase + 0x3c4) != 0) {
-        storage = (SynthDelayStorageLocal *)stateBase;
         macHandle(delta);
-        bucket = gSynthDelayBucketCursor;
-        synthDrainDelayedBucket(&storage->bucketHeads[bucket][0], audioFn_80270184);
-        synthDrainDelayedBucket(&storage->bucketHeads[bucket][1], fn_80270FE8);
-        synthDrainDelayedBucket(&storage->bucketHeads[bucket][2], fn_80270938);
+        jobTab = &SYNTH_JOB_TABLE[gSynthDelayBucketCursor];
+        synthDrainDelayedBucket(&jobTab->lowPrecision, audioFn_80270184);
+        synthDrainDelayedBucket(&jobTab->event, fn_80270FE8);
+        synthDrainDelayedBucket(&jobTab->zeroOffset, fn_80270938);
         gSynthDelayBucketCursor = (gSynthDelayBucketCursor + 1) & 0x1f;
         if (hwGetTimeOffset() == 0) {
             if ((synthMasterFaderActiveFlags | synthMasterFaderPauseActiveFlags) != 0) {
