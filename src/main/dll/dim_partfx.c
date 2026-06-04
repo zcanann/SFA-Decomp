@@ -6621,6 +6621,126 @@ void Effect20_initialise(void) {}
 /* 8b "li r3, N; blr" returners. */
 int Checkpoint_func09_ret_1(void) { return 0x1; }
 
+extern f32 lbl_803E0504;
+extern f32 lbl_803E0508;
+extern f32 curveFn_80010dc0(f32 *values, f32 t, f32 *outTangent);
+extern u16 getAngle(f32 a, f32 b);
+
+/* Advance along the checkpoint curve by dist; write position/angles to out. */
+#pragma push
+#pragma scheduling off
+s32 Checkpoint_func08(u8 *out, u8 *o, f32 dist, s32 p3, u8 flag)
+{
+    f32 v1[4];
+    f32 v2[4];
+    f32 v3[4];
+    f32 outX;
+    f32 outY;
+    f32 outZ;
+    s32 local_idx;
+    s32 mode;
+    s32 alt;
+    u8 *n;
+    s32 i;
+    s8 clamp;
+    s32 ang1;
+    s32 ang2;
+    f32 kMax;
+    f32 kMin;
+    f32 t;
+    f32 seg;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 len;
+
+    i = 0;
+    mode = p3 + 2;
+    kMin = lbl_803E04E8;
+    kMax = lbl_803E0504;
+    do {
+        if (*(s32 *)(o + 0x10) < 0) {
+            return 1;
+        }
+        n = (u8 *)Checkpoint_find(*(s32 *)(o + 0x10), &local_idx);
+        if (n == NULL) {
+            return 1;
+        }
+        if (*(s32 *)(n + 0x20) < 0) {
+            *(s32 *)(o + 0x10) = -1;
+            return 1;
+        }
+        alt = 0;
+        if (*(s32 *)(n + 0x24) > -1 && *(u8 *)(o + 0x30) != 0) {
+            alt = 1;
+        }
+        if (fn_800D55BC(n, alt, v1, v2, v3, mode, lbl_803E04E8, lbl_803E04E8) == 0) {
+            return 1;
+        }
+        len = sqrtf((v3[0] - v3[1]) * (v3[0] - v3[1]) +
+                    ((v1[0] - v1[1]) * (v1[0] - v1[1]) + (v2[0] - v2[1]) * (v2[0] - v2[1])));
+        t = *(f32 *)(o + 8) + dist / len;
+        clamp = 0;
+        if (t < kMin) {
+            t = kMin;
+            clamp = -1;
+        }
+        if (t > kMax) {
+            t = kMax;
+            clamp = 1;
+        }
+        x = curveFn_80010dc0(v1, t, &outX);
+        y = curveFn_80010dc0(v2, t, &outY);
+        z = curveFn_80010dc0(v3, t, &outZ);
+        ang1 = getAngle(outX, outZ) + 0x8000;
+        if (flag != 0) {
+            f32 xd;
+            f32 zd;
+            ang2 = getAngle(sqrtf(outX * outX + outZ * outZ), outY) - 0x4000;
+            xd = x - *(f32 *)(out + 0xc);
+            zd = z - *(f32 *)(out + 0x14);
+            seg = sqrtf(xd * xd + zd * zd);
+        } else {
+            f32 xd;
+            f32 zd;
+            xd = x - *(f32 *)(out + 0xc);
+            zd = z - *(f32 *)(out + 0x14);
+            seg = sqrtf(xd * xd + zd * zd);
+        }
+        if (dist < kMin) {
+            seg = -seg;
+        }
+        if (clamp == -1 && seg < dist) {
+            *(s32 *)(o + 0x10) = *(s32 *)(n + alt * 4 + 0x18);
+            *(f32 *)(o + 8) = lbl_803E0508;
+            if (alt != 0 && *(s32 *)(o + 0x10) < 0) {
+                *(s32 *)(o + 0x10) = *(s32 *)(n + 0x18);
+            }
+        } else if (clamp == 1 && seg < dist) {
+            *(s32 *)(o + 0x10) = *(s32 *)(n + alt * 4 + 0x20);
+            *(f32 *)(o + 8) = lbl_803E04E8;
+            if (alt != 0 && *(s32 *)(o + 0x10) < 0) {
+                *(s32 *)(o + 0x10) = *(s32 *)(n + 0x20);
+            }
+        } else {
+            *(f32 *)(o + 8) = t;
+        }
+        dist -= seg;
+        *(f32 *)(out + 0xc) = x;
+        if (flag != 0) {
+            *(f32 *)(out + 0x10) = y;
+        }
+        *(f32 *)(out + 0x14) = z;
+        i += 1;
+    } while (i < 3);
+    *(s16 *)(out + 0) = (s16)ang1;
+    if (flag != 0) {
+        *(s16 *)(out + 2) = (s16)ang2;
+    }
+    return 0;
+}
+#pragma pop
+
 #pragma peephole off
 #pragma scheduling off
 void Checkpoint_onGameLoop(void)
