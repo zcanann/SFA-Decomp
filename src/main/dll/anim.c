@@ -7289,3 +7289,125 @@ int fn_80200A70(int obj, int p2, f32 t)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void chuka_update(int obj)
+{
+    extern int *ObjList_GetObjects(int *, int *);
+    extern uint GameBit_Get(int);
+    extern void Obj_SetActiveModelIndex(int, int);
+    extern u8 gChukaModeTable[];
+    extern f32 lbl_803E63F8;
+    extern f32 lbl_803E63FC;
+    int data = *(int *)(obj + 0x4c);
+    int blob = *(int *)(obj + 0xb8);
+    int ch;
+    int *base;
+    int i;
+    int o;
+    int h;
+    int idx;
+    int cnt;
+
+    ch = *(int *)(blob + 4);
+    if ((u32)ch != 0) {
+        if (*(s16 *)(ch + 6) & 0x40) {
+            *(int *)(blob + 4) = 0;
+            return;
+        }
+    }
+    if (*(void **)(blob + 4) == NULL) {
+        base = ObjList_GetObjects(&idx, &cnt);
+        for (i = idx; i < cnt; i++) {
+            o = base[i];
+            if (*(s16 *)(o + 0x46) == 0x431) {
+                *(int *)(blob + 4) = o;
+                i = cnt;
+            }
+        }
+        if (*(void **)(blob + 4) == NULL) {
+            return;
+        }
+    }
+    ch = *(int *)(blob + 4);
+    (**(void (**)(int, u8 *))(*(int *)(*(int *)(ch + 0x68)) + 0x20))(ch, gChukaModeTable);
+    if (GameBit_Get(0x5e4) == 0) {
+        *(u8 *)(blob + 9) = 0;
+    } else {
+        *(u8 *)(blob + 9) = gChukaModeTable[*(u8 *)(blob + 8)];
+    }
+    switch (*(u8 *)(blob + 9)) {
+    case 0:
+        if (*(s8 *)(obj + 0xad) != 0) {
+            Obj_SetActiveModelIndex(obj, 0);
+        }
+        h = *(s16 *)(data + 0x1c);
+        if (h != 0) {
+            *(f32 *)(obj + 8) = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+        }
+        break;
+    case 1:
+        if (*(s8 *)(obj + 0xad) != 1) {
+            Obj_SetActiveModelIndex(obj, 1);
+        }
+        h = *(s16 *)(data + 0x1c);
+        if (h != 0) {
+            *(f32 *)(obj + 8) = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+        }
+        if (*(s16 *)(obj + 4) != 0) {
+            *(s16 *)(obj + 4) = 0;
+        }
+        break;
+    case 2:
+        if (*(s8 *)(obj + 0xad) != 2) {
+            Obj_SetActiveModelIndex(obj, 2);
+        }
+        h = *(s16 *)(data + 0x1c);
+        if (h != 0) {
+            *(f32 *)(obj + 8) = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+        }
+        if (*(s16 *)(obj + 4) != 0) {
+            *(s16 *)(obj + 4) = 0;
+        }
+        break;
+    case 3:
+        if (*(s8 *)(obj + 0xad) != 2) {
+            Obj_SetActiveModelIndex(obj, 2);
+        }
+        h = *(s16 *)(data + 0x1c);
+        if (h != 0) {
+            *(f32 *)(obj + 8) = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+        }
+        if (*(s16 *)(obj + 4) != 0x3fff) {
+            *(s16 *)(obj + 4) = 0x7fff;
+        }
+        break;
+    case 4:
+        if (*(s8 *)(obj + 0xad) != 1) {
+            Obj_SetActiveModelIndex(obj, 1);
+        }
+        h = *(s16 *)(data + 0x1c);
+        if (h != 0) {
+            *(f32 *)(obj + 8) = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+        }
+        if (*(s16 *)(obj + 4) != 0x3fff) {
+            *(s16 *)(obj + 4) = 0x7fff;
+        }
+        break;
+    default:
+        if (*(s8 *)(obj + 0xad) != 0) {
+            Obj_SetActiveModelIndex(obj, 0);
+        }
+        h = *(s16 *)(data + 0x1c);
+        if (h != 0) {
+            *(f32 *)(obj + 8) = lbl_803E63F8 / ((f32)h / lbl_803E63FC);
+        }
+        if (*(s16 *)(obj + 4) != 0) {
+            *(s16 *)(obj + 4) = 0;
+        }
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
