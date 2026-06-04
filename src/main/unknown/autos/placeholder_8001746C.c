@@ -15720,3 +15720,202 @@ void mapSetupPlayer(void)
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern u16 OSGetFontEncode(void);
+extern void OSLoadFont(void *buf, void *tmp);
+extern void OSGetFontWidth(u8 *s, int *width);
+extern void OSGetFontTexel(u8 *s, void *img, int pos, int stride, int *width);
+extern u8 lbl_803DC968;
+extern u16 lbl_802C8D40[];
+extern int lbl_803DB3C4;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void gameTextLoadGraphicsFn_8001a918(void)
+{
+    u8 *fontData;
+    u8 *base30;
+    u8 *base31;
+    u8 *buf;
+    int sizeA;
+    int sizeB;
+    u8 *bufA;
+    u8 *bufB;
+    int savedHeap;
+    int count;
+    u8 *glyph;
+    int x;
+    int y;
+    int wbytes;
+    u8 s[3];
+    int width;
+
+    fontData = (u8 *)lbl_802C8F40;
+    base30 = (u8 *)lbl_802C8680;
+    base31 = (u8 *)lbl_8033AF40;
+    savedHeap = testAndSet_onlyUseHeap3(0);
+    buf = mmAlloc(0x120, 0x1a, 0);
+    switch (OSGetFontEncode()) {
+    case 0:
+        sizeA = 0x3000;
+        sizeB = 0x10120;
+        curLanguage = 0;
+        lbl_803DC968 = 0;
+        break;
+    case 1:
+        sizeA = 0x4d000;
+        sizeB = 0x90ee4;
+        curLanguage = 4;
+        lbl_803DC968 = 1;
+        break;
+    }
+    bufA = mmAlloc(sizeA, 0x1a, 0);
+    bufB = mmAlloc(sizeB, 0x1a, 0);
+    OSLoadFont(bufB, bufA);
+    if (*(int *)(base31 + 0x58) == 0) {
+        if (lbl_803DC968) {
+            *(u8 **)(base31 + 0x50) = fontData;
+            *(int *)(base31 + 0x58) = 0x55;
+            *(u8 **)(base31 + 0x54) = fontData + 0x8ec;
+            *(int *)(base31 + 0x5c) = 7;
+        } else {
+            *(u8 **)(base31 + 0x50) = fontData + 0x940;
+            *(int *)(base31 + 0x58) = 0x2b;
+            *(u8 **)(base31 + 0x54) = fontData + 0xe24;
+            *(int *)(base31 + 0x5c) = 7;
+        }
+    }
+    *(u8 **)(base31 + 0x60) = textureAlloc(0x200, 0x60, 0, 0, 0, 0, 0, 1, 1);
+    *(u16 *)(base30 + 0x60) = *(int *)(base31 + 0x58);
+    *(u8 *)(base30 + 0x64) = 0x30;
+    *(u8 *)(base30 + 0x65) = 0x20;
+    *(u16 *)(base30 + 0x68) = 0;
+    *(u16 *)(base30 + 0x6a) = 0x18;
+    count = *(int *)(base31 + 0x58);
+    glyph = *(u8 **)(base31 + 0x50);
+    x = 0;
+    y = 0;
+    while (count--) {
+        if (lbl_803DC968) {
+            int c = *(int *)glyph;
+            u16 *p = lbl_802C8D40;
+            int i;
+            u32 val;
+            int hi;
+            u8 lo;
+            for (i = 0xfd; i > 0; i -= 2) {
+                if (p[0] == c) {
+                    val = p[1];
+                    goto found;
+                }
+                p++;
+                if (p[0] == c) {
+                    val = p[1];
+                    goto found;
+                }
+                p++;
+            }
+            val = 0;
+        found:
+            hi = (val >> 8) & 0xff;
+            lo = val;
+            if (hi == 0) {
+                s[0] = lo;
+                s[1] = 0;
+            } else {
+                s[0] = hi;
+                s[1] = lo;
+                s[2] = 0;
+            }
+        } else {
+            s[0] = *(int *)glyph;
+            s[1] = 0;
+        }
+        OSGetFontWidth(s, &width);
+        if (width > *(u16 *)(base30 + 0x68)) {
+            *(u16 *)(base30 + 0x68) = width;
+        }
+        wbytes = width >> 3;
+        if ((width & 7) != 0) {
+            wbytes++;
+        }
+        {
+            u32 *q = (u32 *)buf;
+            int j = 0x47;
+            do {
+                q[0] = 0;
+                q[1] = 0;
+                q[2] = 0;
+                q[3] = 0;
+                q[4] = 0;
+                q[5] = 0;
+                q[6] = 0;
+                q[7] = 0;
+                q[8] = 0;
+                q += 9;
+                j -= 9;
+            } while (j > 0);
+        }
+        OSGetFontTexel(s, buf, 0, 6, &width);
+        if (x + 0x18 > 0x200) {
+            x = 0;
+            y += 0x18;
+        }
+        *(u16 *)(glyph + 4) = x;
+        *(u16 *)(glyph + 6) = y;
+        *(u8 *)(glyph + 8) = 0;
+        *(u8 *)(glyph + 9) = 0;
+        *(u8 *)(glyph + 0xa) = 0;
+        *(u8 *)(glyph + 0xb) = 0;
+        *(u8 *)(glyph + 0xc) = width;
+        *(u8 *)(glyph + 0xd) = 0x18;
+        *(u8 *)(glyph + 0xe) = 6;
+        *(u8 *)(glyph + 0xf) = 0;
+        {
+            u32 *src = (u32 *)buf;
+            int tx = *(u16 *)(glyph + 4) >> 3;
+            int ty = *(u16 *)(glyph + 6) >> 3;
+            int txEnd = tx + 3;
+            int tyEnd = ty + 3;
+            int cnt = txEnd - tx;
+            int row;
+            for (row = ty; row < tyEnd; row++) {
+                int off = tx << 5;
+                int j2 = tx;
+                int n;
+                if (j2 < txEnd) {
+                    n = cnt;
+                    do {
+                        u8 *dst = *(u8 **)(base31 + 0x60) + off;
+                        u32 tmp;
+                        dst += row * lbl_803DB3C4;
+                        *(u32 *)(dst + 0x60) = src[0];
+                        *(u32 *)(dst + 0x64) = src[1];
+                        *(u32 *)(dst + 0x68) = src[2];
+                        *(u32 *)(dst + 0x6c) = src[3];
+                        *(u32 *)(dst + 0x70) = src[4];
+                        *(u32 *)(dst + 0x74) = src[5];
+                        *(u32 *)(dst + 0x78) = src[6];
+                        tmp = src[7];
+                        src += 8;
+                        *(u32 *)(dst + 0x7c) = tmp;
+                        off += 0x20;
+                        j2++;
+                    } while (--n != 0);
+                }
+            }
+        }
+        x += wbytes << 3;
+        glyph += 0x10;
+    }
+    DCFlushRange(*(u8 **)(base31 + 0x60) + 0x60, 0x20000);
+    mm_free(bufA);
+    mm_free(bufB);
+    mm_free(buf);
+    testAndSet_onlyUseHeap3(savedHeap);
+    *(int *)(base31 + 0x6c) = 2;
+}
+#pragma dont_inline reset
+#pragma pop
