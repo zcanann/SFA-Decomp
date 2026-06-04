@@ -5473,3 +5473,244 @@ void babycloudrunner_update(int* obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern int  Sfx_IsPlayingFromObjectChannel(int obj, int ch);
+extern void Sfx_SetObjectChannelVolume(int obj, int ch, int max, f32 vol);
+extern void PSVECNormalize(f32* out, f32* in);
+extern void** gPartfxInterface;
+extern f32 lbl_803E41D8;
+extern f32 lbl_803E41DC;
+extern f32 lbl_803E41E0;
+extern f32 lbl_803E41E4;
+extern f32 lbl_803E41E8;
+extern f32 lbl_803E41EC;
+extern f32 lbl_803E41F0;
+extern f32 lbl_803E41F4;
+extern f32 lbl_803E41F8;
+extern f32 lbl_803E41FC;
+extern f32 lbl_803E4200;
+extern f32 lbl_803E4204;
+
+extern void Camera_EnableViewYOffset(void);
+typedef struct { f32 f0, f4, f8, fc, f10, f14; u8 b18, b19, b1a, b1b; } CrystalBeam;
+typedef struct { s16 a, b, c, d; u8 pad[4]; f32 x, y, z; } PartPayload;
+
+/* EN v1.0 0x8019D9F0  size: 2112b  fn_8019D9F0: main crystal beam update -
+ * collect the three pylon positions from messages, re-request missing ones,
+ * emit the beam particles toward the crystal (and down from each pylon),
+ * ramp the convergence charge, hum volume and per-beam chime timers. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8019D9F0(int* obj)
+{
+    char* p16;
+    char* p32;
+    int i;
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    int idx;
+    int count;
+    PartPayload pay;
+    f32 dir[3];
+    int msgSrc;
+    int msgType;
+    int payload = 0;
+    Obj_GetPlayerObject();
+    Camera_EnableViewYOffset();
+    while (ObjMsg_Pop(obj, &msgType, &msgSrc, &payload) != 0) {
+        switch (msgType) {
+        case 0x110001:
+            *(f32*)(sub + 0) = *(f32*)((char*)msgSrc + 0xc);
+            *(f32*)(sub + 0x10) = lbl_803E41D8;
+            *(f32*)(sub + 0x20) = *(f32*)((char*)msgSrc + 0x14);
+            *(s16*)(sub + 0x30) = 1;
+            break;
+        case 0x110002:
+            *(f32*)(sub + 4) = *(f32*)((char*)msgSrc + 0xc);
+            *(f32*)(sub + 0x14) = lbl_803E41D8;
+            *(f32*)(sub + 0x24) = *(f32*)((char*)msgSrc + 0x14);
+            *(s16*)(sub + 0x32) = 1;
+            break;
+        case 0x110003:
+            *(f32*)(sub + 8) = *(f32*)((char*)msgSrc + 0xc);
+            *(f32*)(sub + 0x18) = lbl_803E41D8;
+            *(f32*)(sub + 0x28) = *(f32*)((char*)msgSrc + 0x14);
+            *(s16*)(sub + 0x34) = 1;
+            break;
+        case 0x110004:
+            *(f32*)(sub + 0xc) = *(f32*)((char*)msgSrc + 0xc);
+            *(f32*)(sub + 0x1c) = *(f32*)((char*)msgSrc + 0x10);
+            *(f32*)(sub + 0x2c) = *(f32*)((char*)msgSrc + 0x14);
+            *(s16*)(sub + 0x36) = 1;
+            break;
+        }
+    }
+    if (*(s16*)(sub + 0x36) == 0) {
+        ObjMsg_SendToObjects(0xdc, 5, obj, 0x110004, 0);
+    }
+    if (GameBit_Get(0x54) != 0 && *(s16*)(sub + 0x30) == 0) {
+        ObjMsg_SendToObjects(0xda, 4, obj, 0x110001, 0);
+    }
+    if (GameBit_Get(0x55) != 0 && *(s16*)(sub + 0x32) == 0) {
+        ObjMsg_SendToObjects(0xda, 4, obj, 0x110002, 0);
+    }
+    if (GameBit_Get(0x56) != 0 && *(s16*)(sub + 0x34) == 0) {
+        ObjMsg_SendToObjects(0xda, 4, obj, 0x110003, 0);
+    }
+    *(u8*)(sub + 0x53) = 0;
+    *(u8*)(sub + 0x6f) = 0;
+    *(u8*)(sub + 0x8b) = 0;
+    *(u8*)(sub + 0xa7) = 0;
+    *(u8*)(sub + 0xc3) = 0;
+    *(u8*)(sub + 0xdf) = 0;
+    *(u8*)(sub + 0xfb) = 0;
+    *(u8*)(sub + 0x117) = 0;
+    *(u8*)(sub + 0x133) = 0;
+    *(u8*)(sub + 0x14f) = 0;
+    count = 0;
+    idx = 0;
+    if (*(s16*)(sub + 0x36) != 0) {
+        if (GameBit_Get(0x57) != 0) {
+            if (*(s16*)(sub + 0x30) != 0) {
+                *(s16*)(sub + 0x30) = 0x78;
+            }
+            if (*(s16*)(sub + 0x32) != 0) {
+                *(s16*)(sub + 0x32) = 0x78;
+            }
+            if (*(s16*)(sub + 0x34) != 0) {
+                *(s16*)(sub + 0x34) = 0x78;
+            }
+            *(s16*)(sub + 0x150) = 0x5a;
+        }
+        i = 0;
+        p16 = (char*)sub;
+        p32 = (char*)sub;
+        do {
+            if (i < 3 && *(s16*)(p16 + 0x30) != 0) {
+                CrystalBeam* sl = (CrystalBeam*)(sub + idx++ * 0x1c + 0x38);
+                sl->b1b = 1;
+                sl->b18 = 0x7f;
+                sl->b19 = 0x7f;
+                sl->b1a = 0xff;
+                sl->f0 = *(f32*)(sub + 0xc);
+                sl->f8 = lbl_803E41DC + *(f32*)(sub + 0x1c);
+                sl->f10 = *(f32*)(sub + 0x2c);
+                dir[0] = *(f32*)p32 - sl->f0;
+                dir[1] = (lbl_803E41E0 + *(f32*)(p32 + 0x10)) - sl->f8;
+                dir[2] = *(f32*)(p32 + 0x20) - sl->f10;
+                PSVECNormalize(dir, dir);
+                pay.x = *(f32*)p32 - *(f32*)(sub + 0xc);
+                pay.y = (lbl_803E41E0 + *(f32*)(p32 + 0x10)) - *(f32*)(sub + 0x1c);
+                pay.z = *(f32*)(p32 + 0x20) - *(f32*)(sub + 0x2c);
+                dir[0] = -dir[0];
+                dir[1] = -dir[1];
+                dir[2] = -dir[2];
+                pay.d = i;
+                ((void (*)(void*, int, void*, int, int, void*))((int*)*gPartfxInterface)[8 / 4])(obj, 0x7f4, &pay, 2, -1, dir);
+                dir[0] = *(f32*)p32 - *(f32*)((char*)lbl_803DDB10 + 0xc);
+                dir[1] = lbl_803E41E4;
+                dir[2] = *(f32*)(p32 + 0x20) - *(f32*)((char*)lbl_803DDB10 + 0x14);
+                PSVECNormalize(dir, dir);
+                pay.x = lbl_803E41E8;
+                pay.y = lbl_803E41DC;
+                pay.z = lbl_803E41E8;
+                pay.d = i + 3;
+                ((void (*)(void*, int, void*, int, int, void*))((int*)*gPartfxInterface)[8 / 4])(lbl_803DDB10, 0x7f4, &pay, 2, -1, dir);
+                pay.x = *(f32*)p32;
+                pay.y = *(f32*)(p32 + 0x10);
+                pay.z = *(f32*)(p32 + 0x20);
+                if (*(u8*)(sub + 0x15f) > 0x14) {
+                    pay.x = *(f32*)p32;
+                    pay.y = *(f32*)(p32 + 0x10);
+                    pay.z = *(f32*)(p32 + 0x20);
+                    pay.c = i;
+                }
+                pay.x = *(f32*)p32;
+                pay.y = *(f32*)(p32 + 0x10);
+                pay.z = *(f32*)(p32 + 0x20);
+                pay.c = i;
+                ((CrystalBeam*)(sub + idx++ * 0x1c + 0x38))->b1b = 1;
+                count++;
+            }
+            p16 += 2;
+            p32 += 4;
+            i++;
+        } while (i < 3);
+        if (*(s16*)(sub + 0x30) + (*(s16*)(sub + 0x32) + *(s16*)(sub + 0x34)) < 0x12c
+            && (int)randomGetRange(0, 3) == 0) {
+            ((void (*)(void*, int, void*, int, int, void*))((int*)*gPartfxInterface)[8 / 4])(obj, 0x81, 0, 0, -1, 0);
+        }
+        if (*(s16*)(sub + 0x30) != 0 || *(s16*)(sub + 0x32) != 0 || *(s16*)(sub + 0x34) != 0) {
+            if (*(u8*)(sub + 0x15c) > 0x64) {
+                *(u8*)(sub + 0x15c) = 0;
+            }
+            if (*(u8*)(sub + 0x15d) > 0x64) {
+                *(u8*)(sub + 0x15d) = 0;
+            }
+            if (*(u8*)(sub + 0x15e) > 0x64) {
+                *(u8*)(sub + 0x15e) = 0;
+            }
+            if (*(u8*)(sub + 0x15f) > 0x14) {
+                *(u8*)(sub + 0x15f) = 0;
+            }
+            *(u8*)(sub + 0x15c) += framesThisStep;
+            *(u8*)(sub + 0x15d) += framesThisStep;
+            *(u8*)(sub + 0x15e) += framesThisStep;
+            *(u8*)(sub + 0x15f) += framesThisStep;
+        }
+        if (count == 3) {
+            if (*(s16*)(sub + 0x150) == 0) {
+                Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+                getEnvfxAct(0, 0, 0x7f, 0);
+            }
+            *(s16*)(sub + 0x150) += framesThisStep;
+        }
+        if (*(s16*)(sub + 0x150) >= 0x3c) {
+            f32 fr = (f32)(*(s16*)(sub + 0x150) - 0x3c) / lbl_803E41EC;
+            CrystalBeam* sl = (CrystalBeam*)(sub + idx * 0x1c + 0x38);
+            sl->b1b = 1;
+            sl->b18 = 0;
+            sl->b19 = 0;
+            sl->b1a = 0;
+            sl->f0 = *(f32*)((char*)obj + 0xc);
+            sl->f8 = lbl_803E41F0 + *(f32*)((char*)obj + 0x10);
+            sl->f10 = *(f32*)((char*)obj + 0x14);
+            sl->f4 = sl->f0;
+            sl->fc = -(lbl_803E41F4 * fr - sl->f8);
+            sl->f14 = sl->f10;
+        }
+        *(s16*)obj += framesThisStep * (count * 0x7e);
+    }
+    if (count != 0) {
+        if (Sfx_IsPlayingFromObjectChannel((int)obj, 0x40) == 0) {
+            Sfx_PlayFromObject((int)obj, SFXsk_planteater11);
+            *(f32*)(sub + 0x154) = lbl_803E41F8;
+        } else {
+            f32 vol = lbl_803E41FC + (f32)count / lbl_803E4200;
+            *(f32*)(sub + 0x154) = (vol - *(f32*)(sub + 0x154)) * lbl_803E4204 + *(f32*)(sub + 0x154);
+            if (*(s16*)(sub + 0x150) >= 0x3c) {
+                *(f32*)(sub + 0x154) = vol;
+            }
+            Sfx_SetObjectChannelVolume((int)obj, 0x40, 0x64, *(f32*)(sub + 0x154));
+        }
+    }
+    i = 0;
+    p16 = (char*)sub;
+    do {
+        s16 v = *(s16*)(p16 + 0x30);
+        if (v != 0 && v < 0x80) {
+            *(s16*)(p16 + 0x30) = v + framesThisStep;
+            if (v == 1 && *(s16*)(p16 + 0x30) > 1) {
+                Sfx_PlayFromObject((int)obj, SFXsk_toysq2_c);
+            }
+            if (v < 0x1e && *(s16*)(p16 + 0x30) >= 0x1e) {
+                Sfx_PlayFromObject((int)obj, SFXsk_trbark1);
+            }
+        }
+        p16 += 2;
+        i++;
+    } while (i < 3);
+    *(s16*)obj += framesThisStep * 0x2a;
+}
+#pragma peephole reset
+#pragma scheduling reset
