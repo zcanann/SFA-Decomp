@@ -3097,7 +3097,7 @@ void CameraModeArwing_free(void) {}
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void *memset(void *dst, int val, u32 n);
-extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
+extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
 extern f32 lbl_803E1A88;
 extern u32 lbl_803DD590;
 extern u32 lbl_803DD598;
@@ -5017,6 +5017,121 @@ void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
     fn_8010DB7C(*(int *)(obj + 0xa4), &va, &vb, &vc);
     camcontrol_traceMove((f32 *)(obj + 0x18), &va, (void *)(lbl_803DD584 + 0x24), &vd, 3, 1, 1,
                          lbl_803E1A20);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct {
+    f32 x, y, z;
+    u16 yaw, pitch, roll;
+} TitleCamPos;
+
+extern TitleCamPos lbl_803A4420;
+extern u8 lbl_803DD5D0;
+extern u8 lbl_803DD5D1;
+extern u8 lbl_803DD5D2;
+extern f32 lbl_803E1BE0;
+extern f32 lbl_803E1BE8;
+extern f32 lbl_803E1BEC;
+extern f32 lbl_803E1BF0;
+extern f32 lbl_803E1BF4;
+extern f32 lbl_803E1BF8;
+extern f32 lbl_803E1BFC;
+extern f32 lbl_803E1C00;
+
+/* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeTitle_update(u8 *obj) {
+    if (lbl_803DD5D0 != 0) {
+        lbl_803A4420.x = *(f32 *)(obj + 0xc);
+        lbl_803A4420.y = *(f32 *)(obj + 0x10);
+        lbl_803A4420.z = *(f32 *)(obj + 0x14);
+        lbl_803A4420.yaw = *(s16 *)obj;
+        lbl_803A4420.pitch = *(s16 *)(obj + 2);
+        lbl_803A4420.roll = *(s16 *)(obj + 4);
+        lbl_803DD5D0 = 0;
+    }
+    if (lbl_803DD5D2 != lbl_803DD5D1) {
+        u8 *save = getSaveFileStruct();
+        f32 v;
+
+        lbl_803DB9D8 = lbl_803DB9D8 + lbl_803E1BE8;
+        if (lbl_803DB9D8 >= lbl_803E1BE0) {
+            if (lbl_803DD5D2 == 4) {
+                Movie_SetVolumeFade(100, 1);
+                audioSetVolumes(0, 10, 1, 0, 0);
+                Music_Trigger(0xbe, 0);
+                Music_Trigger(0xc1, 0);
+            } else if (lbl_803DD5D1 == 4) {
+                Movie_SetVolumeFade(0, 1);
+                audioSetVolumes(*(u8 *)(save + 10), 10, 1, 0, 0);
+            }
+            lbl_803DB9D8 = lbl_803E1BE0;
+            lbl_803DD5D1 = lbl_803DD5D2;
+        } else {
+            if (lbl_803DD5D2 == 4) {
+                Movie_SetVolumeFade((s32)(lbl_803E1BEC * lbl_803DB9D8), 1);
+                audioSetVolumes(
+                    (s32)((f32)(u32)*(u8 *)(save + 10) * (lbl_803E1BE0 - lbl_803DB9D8)), 10, 1, 0,
+                    0);
+            } else if (lbl_803DD5D1 == 4) {
+                Movie_SetVolumeFade((s32)(lbl_803E1BEC * (lbl_803E1BE0 - lbl_803DB9D8)), 1);
+                audioSetVolumes((s32)((f32)(u32)*(u8 *)(save + 10) * lbl_803DB9D8), 10, 1, 0, 0);
+            }
+        }
+
+        if (lbl_803DB9D8 < lbl_803E1BF0) {
+            v = lbl_803E1BF0 *
+                ((lbl_803E1BF4 * lbl_803DB9D8) * (lbl_803E1BF4 * lbl_803DB9D8));
+        } else {
+            f32 w = -(lbl_803E1BF4 * (lbl_803DB9D8 - lbl_803E1BF0) - lbl_803E1BE0);
+            w = w * w;
+            v = lbl_803E1BF0 * (lbl_803E1BE0 - w) + lbl_803E1BF0;
+        }
+        v = v * ((lbl_803E1BFC * v) * v) + (lbl_803E1BF0 * v + (lbl_803E1BF8 * v) * v);
+
+        *(f32 *)(obj + 0xc) =
+            v * (((TitleCamPos *)lbl_80319FB8)[lbl_803DD5D2].x - lbl_803A4420.x) + lbl_803A4420.x;
+        *(f32 *)(obj + 0x10) =
+            v * (((TitleCamPos *)lbl_80319FB8)[lbl_803DD5D2].y - lbl_803A4420.y) + lbl_803A4420.y;
+        *(f32 *)(obj + 0x14) =
+            v * (((TitleCamPos *)lbl_80319FB8)[lbl_803DD5D2].z - lbl_803A4420.z) + lbl_803A4420.z;
+
+        {
+            u16 sy = lbl_803A4420.yaw;
+            u16 ty = *(u16 *)((u32)(lbl_80319FB8 + 0xc) + (u32)lbl_803DD5D2 * 0x14);
+            int d = ty - sy;
+            if (__fabs((f32)d) > lbl_803E1C00) {
+                int d2 = (s16)ty - (s16)sy;
+                *(s16 *)obj = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+            } else {
+                *(u16 *)obj = v * (f32)d + (f32)sy;
+            }
+        }
+        {
+            u16 sy = lbl_803A4420.pitch;
+            u16 ty = *(u16 *)((u32)(lbl_80319FB8 + 0xe) + (u32)lbl_803DD5D2 * 0x14);
+            int d = ty - sy;
+            if (__fabs((f32)d) > lbl_803E1C00) {
+                int d2 = (s16)ty - (s16)sy;
+                *(s16 *)(obj + 2) = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+            } else {
+                *(u16 *)(obj + 2) = v * (f32)d + (f32)sy;
+            }
+        }
+        {
+            u16 sy = lbl_803A4420.roll;
+            u16 ty = *(u16 *)((u32)(lbl_80319FB8 + 0x10) + (u32)lbl_803DD5D2 * 0x14);
+            int d = ty - sy;
+            if (__fabs((f32)d) > lbl_803E1C00) {
+                int d2 = (s16)ty - (s16)sy;
+                *(s16 *)(obj + 4) = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+            } else {
+                *(u16 *)(obj + 4) = v * (f32)d + (f32)sy;
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
