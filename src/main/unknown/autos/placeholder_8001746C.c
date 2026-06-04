@@ -12939,6 +12939,7 @@ extern void mtxRotateByVec3s(f32 *mtx, void *transform);
 #pragma optimize_for_size on
 void gameTextInitFn_8001a234(void) {
     u8 *gameTextBase;
+    u8 *p;
     u8 *textWindow;
     u8 *glyphPage;
     u8 **glyphPagePtr;
@@ -12953,28 +12954,17 @@ void gameTextInitFn_8001a234(void) {
 
     i = 0x94;
     textWindow = lbl_802C7400 + 0x1280;
-    while (1) {
-        textWindow -= 0x20;
-        if (i == 0) {
-            break;
-        }
-        i--;
-        *(u16 *)(textWindow + 8) = *(u16 *)(textWindow + 2);
-        *(u16 *)(textWindow + 0xa) = *(u16 *)(textWindow + 6);
+    p = textWindow;
+    while (p -= 0x20, i-- != 0) {
+        *(u16 *)(p + 8) = *(u16 *)(p + 2);
+        *(u16 *)(p + 0xa) = *(u16 *)(p + 6);
     }
 
     i = 8;
     glyphPage = gameTextBase + 0x2c0;
     glyphPagePtr = (u8 **)(gameTextBase + 0xc0);
     fontState = gameTextBase + 0xa0;
-    while (1) {
-        glyphPage -= 0x40;
-        glyphPagePtr--;
-        fontState -= 0xc;
-        if (i == 0) {
-            break;
-        }
-        i--;
+    while (glyphPage -= 0x40, glyphPagePtr--, fontState -= 0xc, i-- != 0) {
         *glyphPagePtr = glyphPage;
         *(u16 *)fontState = 0xffff;
         *(u16 *)(fontState + 2) = 1;
@@ -12986,25 +12976,14 @@ void gameTextInitFn_8001a234(void) {
     }
 
     i = 0x94;
-    textWindow = lbl_802C7400 + 0x1280;
-    while (1) {
-        textWindow -= 0x20;
-        if (i == 0) {
-            break;
-        }
-        i--;
+    while (textWindow -= 0x20, i-- != 0) {
         textWindow[0x1e] = 0xff;
     }
 
     i = 4;
-    zero = lbl_803DE704;
     request = gameTextBase + 0x1660;
-    while (1) {
-        request -= 0x28;
-        if (i == 0) {
-            break;
-        }
-        i--;
+    zero = lbl_803DE704;
+    while (request -= 0x28, i-- != 0) {
         *(int *)(request + 8) = 0;
         *(int *)(request + 0xc) = 0;
         *(int *)(request + 0) = 0;
@@ -13016,12 +12995,7 @@ void gameTextInitFn_8001a234(void) {
 
         j = 3;
         clearPtr = request + 0xc;
-        while (1) {
-            clearPtr -= 4;
-            if (j == 0) {
-                break;
-            }
-            j--;
+        while (clearPtr -= 4, j-- != 0) {
             *(int *)(clearPtr + 0x10) = 0;
         }
     }
