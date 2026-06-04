@@ -359,6 +359,6 @@ void DIMexplosionFn_8009a96c(u8 *src, f32 vx, f32 vy, f32 vz, f32 fval, u8 a, u8
 void spawnExplosion(u8 *src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 doShake,
                     u8 flag20, u8 f1cinit);
 void expgfx_updateResourceEntries(int unused);
-int expgfx_acquireResourceEntry(int arg);
+int expgfx_acquireResourceEntry(int resourceId);
 
 #endif

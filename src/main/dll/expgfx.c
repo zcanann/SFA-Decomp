@@ -1616,7 +1616,7 @@ void expgfx_updateFrameState(int sourceMode,int sourceId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int expgfx_acquireResourceEntry(short resourceId);
+extern int expgfx_acquireResourceEntry(int resourceId);
 extern void *Obj_GetPlayerObject(void);
 extern f32 lbl_803DF350;
 extern f32 lbl_803DF41C;
