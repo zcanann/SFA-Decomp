@@ -1602,3 +1602,165 @@ void fn_801AC108(int obj, int param2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E46A8;
+extern f32 lbl_803E46AC;
+extern f32 lbl_803E46B0;
+extern f32 lbl_803E46B4;
+extern f32 lbl_803E46B8;
+extern f32 lbl_803E46BC;
+extern f32 lbl_803E46C0;
+extern f32 lbl_803E46C4;
+extern u8 fn_801334E0(void);
+extern void showHelpText(int textId);
+extern int playerIsDisguised(int obj);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particleKind,
+                                  int particleId, int lifetime, f32 scaleX, f32 scaleY,
+                                  f32 scaleZ, void *args, int arg9);
+
+typedef struct SharpClawPadParticleArgs {
+    u8 pad00[0xc];
+    f32 offset[3];
+} SharpClawPadParticleArgs;
+
+#pragma peephole off
+#pragma scheduling off
+void ccsharpclawpad_update(int obj)
+{
+    SharpClawPadParticleArgs particleArgs;
+    f32 *state;
+    int *player;
+
+    if (GameBit_Get(*(s16 *)(*(int *)(obj + 0x4c) + 0x1a)) != 0) {
+        *(u8 *)(obj + 0xaf) |= 8;
+        particleArgs.offset[0] = lbl_803E46A8;
+        particleArgs.offset[1] = lbl_803E46AC;
+        particleArgs.offset[2] = lbl_803E46B0;
+        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 2, 2, 0x19, lbl_803E46B8,
+                              lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
+        particleArgs.offset[0] = lbl_803E46AC;
+        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 2, 2, 0x19, lbl_803E46B8,
+                              lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
+    } else {
+        *(u8 *)(obj + 0xaf) &= ~8;
+        if (GameBit_Get(0x40) == 0) {
+            *(u8 *)(obj + 0xaf) |= 0x10;
+        } else {
+            *(u8 *)(obj + 0xaf) &= ~0x10;
+        }
+        state = *(f32 **)(obj + 0xb8);
+        if (ObjTrigger_IsSet(obj) != 0 && fn_801334E0() == 0) {
+            *state = lbl_803E46C0;
+        }
+        if (*state > lbl_803E46B0) {
+            if ((*(u8 *)(obj + 0xaf) & 4) == 0) {
+                *state = lbl_803E46B0;
+            } else {
+                *state -= timeDelta;
+                showHelpText(*(s16 *)(*(int *)(obj + 0x50) + 0x7c));
+            }
+        }
+        player = (int *)Obj_GetPlayerObject();
+        if (vec3f_distanceSquared((f32 *)(obj + 0x18), (f32 *)((char *)player + 0x18)) < lbl_803E46C4
+            && playerIsDisguised((int)player) != 0) {
+            Sfx_PlayFromObject(obj, 0x109);
+            GameBit_Set(*(s16 *)(*(int *)(obj + 0x4c) + 0x1a), 1);
+            *(u8 *)(obj + 0xaf) |= 8;
+        }
+        particleArgs.offset[0] = lbl_803E46A8;
+        particleArgs.offset[1] = lbl_803E46AC;
+        particleArgs.offset[2] = lbl_803E46B0;
+        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 5, 2, 0x19, lbl_803E46B8,
+                              lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
+        particleArgs.offset[0] = lbl_803E46AC;
+        objfx_spawnArcedBurst(obj, 5, lbl_803E46B4, 5, 2, 0x19, lbl_803E46B8,
+                              lbl_803E46B8, lbl_803E46BC, &particleArgs, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#include "main/dll/SC/SCtotemlogpuz.h"
+extern f32 lbl_803E46D0;
+extern void gameTextShow(int textId);
+extern void Music_Trigger(int musicId, int value);
+extern void *getTrickyObject(void);
+extern int *gSHthorntailAnimationInterface;
+extern int *gCameraInterface;
+
+#pragma peephole off
+#pragma scheduling off
+void cclevcontrol_update(int obj)
+{
+    int *state = *(int **)(obj + 0xb8);
+    int *tricky;
+    int a;
+    int b;
+
+    if (*(f32 *)state > lbl_803E46D0) {
+        gameTextShow(0x34c);
+        *(f32 *)state -= timeDelta;
+        if (*(f32 *)state < lbl_803E46D0) {
+            *(f32 *)state = lbl_803E46D0;
+        }
+    }
+    if ((*(int (**)(int))(*(int *)gSHthorntailAnimationInterface + 0x24))(0) != 0) {
+        if (state[2] != -1) {
+            state[2] = -1;
+            if (state[1] & 0x20) {
+                Music_Trigger(0xc8, 0);
+            }
+        }
+    } else {
+        if (state[2] != 0xc8) {
+            state[2] = 0xc8;
+            if (state[1] & 0x20) {
+                Music_Trigger(0xc8, 1);
+            }
+        }
+    }
+    SCGameBitLatch_Update((SCGameBitLatchState *)(state + 1), 2, -1, -1, 0xb72, 0x95);
+    SCGameBitLatch_Update((SCGameBitLatchState *)(state + 1), 0x20, -1, -1, 0xc47, state[2]);
+    SCGameBitLatch_Update((SCGameBitLatchState *)(state + 1), 4, -1, -1, 0xb45, 0x37);
+    SCGameBitLatch_Update((SCGameBitLatchState *)(state + 1), 8, -1, -1, 0xb73, 0xbf);
+    SCGameBitLatch_Update((SCGameBitLatchState *)(state + 1), 0x10, -1, -1, 0xb24, 0xc0);
+    SCGameBitLatch_Update((SCGameBitLatchState *)(state + 1), 0x40, -1, -1, 0x19e, 0xcd);
+    if (state[3] == 2) {
+        SCGameBitLatch_UpdateInverted((SCGameBitLatchState *)(state + 1), 0x80, -1, -1, 0x24, 0xea);
+    }
+    if (GameBit_Get(0x3d6) != 0
+        && ((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0x1f) != 0) {
+        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0x1f, 0);
+    }
+    if (GameBit_Get(0x161) != 0
+        && ((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0x1e) == 0) {
+        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0x1e, 1);
+    }
+    if (GameBit_Get(0x3d7) != 0
+        && ((MapEventInterface *)*(int *)gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0x1d) == 0) {
+        ((MapEventInterface *)*(int *)gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0x1d, 1);
+    }
+    tricky = (int *)getTrickyObject();
+    if (state[1] & 1) {
+        if (GameBit_Get(0x22d) != 0 || GameBit_Get(0x22e) == 0
+            || (*(u16 *)((char *)tricky + 0xb0) & 0x1000) != 0) {
+            state[1] &= ~1;
+            (*(void (**)(int, int, int))(*(int *)gCameraInterface + 0x24))(0, 1, 0);
+        }
+    } else {
+        if (GameBit_Get(0x22d) == 0 && GameBit_Get(0x22a) != 0 && GameBit_Get(0x22e) != 0
+            && GameBit_Get(0x160) == 0) {
+            state[1] |= 1;
+            (*(void (**)(int, int, int))(*(int *)gCameraInterface + 0x24))(1, 1, 0);
+        }
+    }
+    a = GameBit_Get(0x3f0);
+    b = GameBit_Get(0xaf7);
+    if (b + a == 4 && GameBit_Get(0xf26) == 0) {
+        Sfx_PlayFromObject(obj, 0x7e);
+        GameBit_Set(0xf26, 1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

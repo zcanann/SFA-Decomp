@@ -41,7 +41,7 @@ void FUN_801ac060(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
                  uint param_9);
 
 int ccsharpclawpad_getExtraSize(void);
-void ccsharpclawpad_update(void);
+void ccsharpclawpad_update(int obj);
 void ccsharpclawpad_init(int* obj, int* def);
 void cclightfoot_init(int* obj, int* def);
 int cclevcontrol_SeqFn(int p1, int p2, unsigned char* state);
@@ -53,7 +53,7 @@ void ccpedstal_init(int *obj, u8 *params);
 int cclevcontrol_getExtraSize(void);
 void cclevcontrol_free(void);
 void cclevcontrol_render(void);
-void cclevcontrol_update(void);
+void cclevcontrol_update(int obj);
 void cclevcontrol_init(int *obj);
 
 #endif /* MAIN_DLL_DIM_DIMSNOWBALL_H_ */
