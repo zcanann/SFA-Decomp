@@ -18616,3 +18616,73 @@ SubtitleCmd *textFn_80018bc4(int str, int *count) {
     }
 }
 #pragma pop
+
+extern f32 lbl_803DE880;
+extern void fn_80007F78(u8 *ch, s16 *outRot, s16 *outRot2);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void ObjModel_SampleJointTransform(u8 *model, int b, int idx, f32 t, f32 s, f32 *outPos, s16 *outRot) {
+    u8 *ch;
+    int saved;
+    s16 srot[3];
+    u8 *anim;
+
+    if (*(u16 *)(*(u8 **)model + 0xec) == 0) {
+        f32 z = lbl_803DE828;
+        outPos[0] = z;
+        outPos[1] = z;
+        outPos[2] = z;
+        outRot[0] = 0;
+        outRot[1] = 0;
+        outRot[2] = 0;
+    }
+    if (b != 0) {
+        ch = *(u8 **)(model + 0x30);
+    } else {
+        ch = *(u8 **)(model + 0x2c);
+    }
+    saved = *(int *)(ch + 0x34);
+    *(int *)(ch + 0x34) = ((int *)(ch + idx * 4))[0xd];
+    if (*(u16 *)(*(u8 **)model + 2) & 0x40) {
+        if (idx > 1) {
+            anim = ((u8 **)(ch + ((u16 *)(ch + idx * 2))[0x22] * 4))[9] + 0x80;
+        } else {
+            anim = ((u8 **)(ch + ((u16 *)(ch + idx * 2))[0x22] * 4))[7] + 0x80;
+        }
+    } else {
+        anim = ((u8 **)*(int *)(*(u8 **)model + 0x64))[((u16 *)(ch + idx * 2))[0x22]];
+    }
+    *(f32 *)(ch + 4) = t * *(f32 *)(ch + 0x14);
+    {
+        int bv = (*(u8 **)(ch + 0x34))[2];
+        f32 fr = *(f32 *)(ch + 4);
+        int n = (int)fr;
+        f32 fcv = (f32)n;
+        if (fcv != fr) {
+            *(s16 *)(ch + 0x4c) = (s16)bv;
+        } else {
+            *(s16 *)(ch + 0x4c) = 0;
+        }
+        if (*(s8 *)(ch + 0x60) != 0 && fcv == *(f32 *)(ch + 0x14) - lbl_803DE818) {
+            *(s16 *)(ch + 0x4c) = (s16)(-bv * n);
+        }
+        *(u8 **)(ch + 0x2c) = anim + (*(s16 *)(anim + 2) + bv * n);
+    }
+    fn_80007F78(ch, srot, outRot);
+    *(int *)(ch + 0x34) = saved;
+    {
+        f32 k = lbl_803DE880;
+        outPos[0] = k * (f32)srot[0];
+        outPos[1] = k * (f32)srot[1];
+        outPos[2] = k * (f32)srot[2];
+    }
+    outPos[0] = outPos[0] + *(f32 *)(*(u8 **)(*(u8 **)model + 0x3c) + 4);
+    outPos[1] = outPos[1] + *(f32 *)(*(u8 **)(*(u8 **)model + 0x3c) + 8);
+    outPos[2] = outPos[2] + *(f32 *)(*(u8 **)(*(u8 **)model + 0x3c) + 0xc);
+    outPos[0] *= s;
+    outPos[1] *= s;
+    outPos[2] *= s;
+}
+#pragma pop
