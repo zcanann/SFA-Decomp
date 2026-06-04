@@ -1537,7 +1537,7 @@ extern f32 lbl_803E44E8;
 
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int fn_801A78C8(int obj, f32 *out1, void *out2, f32 x, f32 y, f32 z, f32 y2);
+extern int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32 *out1, int *out2);
 extern f32 lbl_803E4554;
 extern f32 lbl_803E455C;
 extern f32 lbl_803E4560;
@@ -1585,7 +1585,7 @@ void fn_801A7B10(int obj) {
     }
     objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
     *(u16 *)(state + 0x24) &= ~0x80;
-    ret = fn_801A78C8(obj, &local_18, auStack_14, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), lbl_803E4568 + *(f32 *)(obj + 0x10));
+    ret = fn_801A78C8(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), lbl_803E4568 + *(f32 *)(obj + 0x10), obj, &local_18, auStack_14);
     if (ret == 0) return;
     if (ret == 2) {
         f32 c = lbl_803E4554;
@@ -1880,7 +1880,34 @@ void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { i
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_801A7D74(int obj, int a, int b);
+extern void fn_801A7D74(int obj, u8 a, u8 b);
+
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, f32 ***out, int a, int b);
+extern f32 lbl_803E4548;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32 *out1, int *out2) {
+    f32 **results;
+    f32 *e;
+    int i;
+    int count;
+
+    count = hitDetectFn_80065e50(obj, x, y, z, &results, 0, 1);
+    *out1 = y;
+    *out2 = 0;
+    for (i = 0; i < count; i++) {
+        e = results[i];
+        if (*(s8 *)((u8 *)e + 0x14) != 0xE && y < e[0] && (y2 > e[0] || i == count - 1)) {
+            *out2 = *(int *)((u8 *)results[i] + 0x10);
+            *out1 = results[i][0];
+            return (results[i][2] < lbl_803E4548) + 1;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -1913,6 +1940,124 @@ void mmp_moonrock_init(int obj, int param2)
     *(f32 *)(state + 0x20) = *(f32 *)(obj + 0x14);
     ObjHits_DisableObject(obj);
     fn_801A7D74(obj, 1, 2);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *ObjList_GetObjects(int *idx, int *count);
+extern f32 Vec_distance(void *a, void *b);
+extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+extern void setAButtonIcon(int icon);
+extern f32 lbl_803E4580;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A7D74(int obj, u8 a, u8 b) {
+    int i;
+    int count;
+    int *list;
+    int state;
+    int odef;
+    int mydef;
+    s8 g1;
+    s8 g2;
+
+    state = *(int *)(obj + 0xB8);
+    list = ObjList_GetObjects(&i, &count);
+    for (; i < count; i++) {
+        u32 o = (u32)list[i];
+        if (o != (u32)obj && *(s16 *)(o + 0x46) == 0x518 &&
+            Vec_distance((void *)(obj + 0x18), (void *)(o + 0x18)) < lbl_803E4580) {
+            u32 c;
+            odef = *(int *)(list[i] + 0x4C);
+            mydef = *(int *)(obj + 0x4C);
+            g1 = GameBit_Get(0x88C);
+            g2 = GameBit_Get(0x894);
+            if (a == 0) {
+                (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))(state, 1);
+                if (*(s16 *)(odef + 0x1E) != -1) {
+                    GameBit_Set(*(s16 *)(odef + 0x1E), 0);
+                }
+                c = *(u8 *)(state + 0x2E);
+                if (c == 3) goto dec;
+                if (c == 4) goto dec;
+                if (c == 6) {
+                dec:
+                    g1 -= 1;
+                } else {
+                    g2 -= 1;
+                }
+                if (*(s16 *)(mydef + 0x1A) != -1) {
+                    GameBit_Set(*(s16 *)(mydef + 0x1A), 0);
+                    *(u8 *)(state + 0x2E) = 0;
+                }
+                {
+                    f32 y = *(f32 *)(obj + 0x10);
+                    *(f32 *)(state + 0xC) = y;
+                    *(f32 *)(state + 0x10) = y;
+                }
+                *(u16 *)(state + 0x24) &= ~0x400;
+                *(f32 *)(obj + 0xC) = *(f32 *)(state + 0x18);
+                *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x1C);
+                *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x20);
+                saveGame_saveObjectPos(obj);
+            } else {
+                (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))(state, 0);
+                if (*(s16 *)(odef + 0x1E) != -1) {
+                    GameBit_Set(*(s16 *)(odef + 0x1E), 1);
+                }
+                if (b == 0) {
+                    *(f32 *)(obj + 0xC) = *(f32 *)(list[i] + 0xC);
+                    *(f32 *)(obj + 0x10) = *(f32 *)(list[i] + 0x10);
+                    *(f32 *)(obj + 0x14) = *(f32 *)(list[i] + 0x14);
+                    saveGame_saveObjectPos(obj);
+                }
+                {
+                    f32 y = *(f32 *)(obj + 0x10);
+                    *(f32 *)(state + 0xC) = y;
+                    *(f32 *)(state + 0x10) = y;
+                }
+                if (*(s16 *)(mydef + 0x1A) != -1) {
+                    GameBit_Set(*(s16 *)(mydef + 0x1A), *(s16 *)(odef + 0x1A));
+                    *(u8 *)(state + 0x2E) = *(s16 *)(odef + 0x1A);
+                }
+                c = *(u8 *)(state + 0x2E);
+                if (c == 3) goto held;
+                if (c == 4) goto held;
+                if (c == 6) {
+                held:
+                    if (b != 2) {
+                        g1 = g1 + 1;
+                    }
+                    if (b == 0) {
+                        Sfx_PlayFromObject(0, g1 < 3 ? 0x109 : 0x7E);
+                        GameBit_Set(0x9AE, 1);
+                    }
+                    *(u16 *)(state + 0x24) |= 0x400;
+                    setAButtonIcon(0);
+                } else if (b != 2) {
+                    g2 += 1;
+                }
+            }
+            if (g1 >= 3) {
+                GameBit_Set(0x89B, 1);
+            } else {
+                GameBit_Set(0x89B, 0);
+            }
+            if (g1 > 3) {
+                g1 = 3;
+            } else if (g1 < 0) {
+                g1 = 0;
+            }
+            if (g2 > 3) {
+                g2 = 3;
+            } else if (g2 < 0) {
+                g2 = 0;
+            }
+            GameBit_Set(0x88C, g1);
+            GameBit_Set(0x894, g2);
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
