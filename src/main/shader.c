@@ -3102,45 +3102,57 @@ extern char sTrackGlobalTexanimOverflowError[];
 
 #pragma scheduling off
 #pragma peephole off
+typedef struct TexOverrideEntry {
+    u32 key;
+    int data0;
+    int data1;
+    s16 refs;
+    u8 type;
+    u8 pad;
+} TexOverrideEntry;
+
 int mapTextureOverrideAcquire(int key, int value, int type)
 {
-    char *base = (char *)lbl_803DCE6C;
-    char *e;
-    int idx, found, off;
+    TexOverrideEntry *e;
+    int idx;
+    int found;
+    TexOverrideEntry *e2;
+    int idx2;
 
     found = -1;
-    e = base;
-    for (idx = 0; idx < 80; idx++) {
-        if (*(s16 *)(e + 0xc) != 0 && *(u32 *)e == key && type == *(u8 *)(e + 0xe)) {
+    idx = 0;
+    e = (TexOverrideEntry *)lbl_803DCE6C;
+    for (; idx < 80; idx++) {
+        if (e->refs != 0 && e->key == key && type == e->type) {
             found = idx;
             break;
         }
-        e += 0x10;
+        e++;
     }
     if (found != -1) {
-        *(s16 *)(base + found * 0x10 + 0xc) += 1;
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].refs += 1;
         return found;
     }
     found = -1;
-    e = base;
-    for (idx = 0; idx < 80; idx++) {
-        if (*(s16 *)(e + 0xc) == 0) {
-            found = idx;
+    idx2 = 0;
+    e2 = (TexOverrideEntry *)lbl_803DCE6C;
+    for (; idx2 < 80; idx2++) {
+        if (e2->refs == 0) {
+            found = idx2;
             break;
         }
-        e += 0x10;
+        e2++;
     }
-    if (found == -1) {
-        OSReport(sTrackGlobalTexanimOverflowError);
-        return 0;
+    if (found != -1) {
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].refs = 1;
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].data0 = 0;
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].data1 = value;
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].key = key;
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].type = type;
+        return found;
     }
-    off = found * 0x10;
-    *(s16 *)(base + off + 0xc) = 1;
-    *(int *)(lbl_803DCE6C + off + 4) = 0;
-    *(int *)(lbl_803DCE6C + off + 8) = value;
-    *(int *)(lbl_803DCE6C + off) = key;
-    *(u8 *)(lbl_803DCE6C + off + 0xe) = type;
-    return found;
+    OSReport(sTrackGlobalTexanimOverflowError);
+    return 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
