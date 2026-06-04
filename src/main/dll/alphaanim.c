@@ -968,10 +968,10 @@ void immultiseq_update(int *obj)
         bitId = *(s16 *)(def + 0x18 + step * 2);
         GameBit_Set(bitId, (u32)!((def[0x30] >> (step + 4)) & 1));
         state[1] = (u8)(state[1] & ~IMMULTISEQ_LATCH_ADVANCE_BIT);
-        state[0] = (u8)(state[0] + 1);
+        state[0]++;
     }
 
-    if ((s8)state[0] != 4) {
+    if (state[0] != 4) {
         bitId = *(s16 *)(def + 0x20 + state[0] * 2);
         if (bitId == -1) {
             state[0] = 4;
@@ -985,7 +985,7 @@ void immultiseq_update(int *obj)
         }
     }
 
-    prevStep = (s32)(s8)state[0] - 1;
+    prevStep = state[0] - 1;
     while (prevStep >= 0) {
         bitId = *(s16 *)(def + 0x18 + prevStep * 2);
         if (bitId == -1) {
@@ -994,7 +994,7 @@ void immultiseq_update(int *obj)
         if (((def[0x30] >> (prevStep + 4)) & 1) != GameBit_Get(bitId)) {
             break;
         }
-        state[0] = (u8)(state[0] - 1);
+        state[0]--;
         prevStep--;
     }
 }
