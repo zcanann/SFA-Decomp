@@ -470,253 +470,196 @@ int curves_distanceToNearestOfType16(f32 x,f32 y,f32 z,int param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void RomCurve_func13(uint curveId,int typeFilter,uint param_3,int *param_4)
-{
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  bool bVar4;
-  int iVar5;
-  int iVar6;
-  float *pfVar7;
-  uint uVar8;
-  char *pcVar9;
-  undefined *puVar10;
-  undefined4 *puVar11;
-  int iVar12;
-  undefined4 *puVar13;
-  float *pfVar14;
-  int iVar15;
-  int iVar16;
-  int iVar17;
-  undefined4 *puVar18;
-  float *pfVar19;
-  int iVar20;
-  int iVar21;
-  undefined4 *puVar22;
-  float *pfVar23;
-  int iVar24;
-  int iVar25;
-  uint uVar26;
-  double dVar27;
-  char local_6e4 [4];
-  int local_6e0;
-  int local_6dc;
-  float local_6d8 [4];
-  undefined4 local_6c8 [4];
-  float local_6b8 [ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
-  int local_618 [ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
-  char local_578 [48];
-  undefined local_548 [1344];
+#define SQ(v) ((v) * (v))
 
-  iVar5 = (int)RomCurve_findByIdWithIndex(curveId,&local_6e0);
-  if (iVar5 != 0) {
-    iVar16 = 0;
-    iVar17 = 0;
-    pfVar14 = local_6d8;
-    puVar18 = local_6c8;
-    pfVar19 = pfVar14;
-    iVar20 = iVar5;
-    do {
-      if (-1 < *(int *)(iVar20 + 0x1c)) {
-        pcVar9 = local_578;
-        iVar25 = 0x1b;
-        iVar12 = 0;
+int RomCurve_func13(uint curveId,int typeFilter,uint param_3,int *param_4)
+{
+  int done;
+  int found;
+  int li;
+  RomCurveDef *start;
+  RomCurveDef *node;
+  RomCurveDef *cand;
+  f32 newDist;
+  f32 *probe;
+  int count;
+  int pos;
+  int k;
+  int m;
+  int j;
+  int best;
+  f32 *distRead;
+  f32 *distWrite;
+  u32 *idRead;
+  u32 *idWrite;
+  char *pc;
+  char *pu;
+  int rem;
+  int off;
+  char zval;
+  f64 curDist;
+  char visited[ROMCURVE_MAX_CURVES];
+  int queueIds[ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
+  f32 queueDist[ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
+  u32 resultIds[4];
+  f32 bestDists[4];
+  int idx;
+  int startIdx;
+  char resultLinks[4];
+
+  start = RomCurve_findByIdWithIndex(curveId, &startIdx);
+  if (start == NULL) {
+    return -1;
+  }
+  found = 0;
+  distRead = bestDists;
+  idRead = resultIds;
+  distWrite = distRead;
+  for (li = 0; li < 4; li++) {
+    if (-1 < (int)start->linkIds[li]) {
+      pc = visited;
+      zval = 0;
+      off = 0;
+      for (rem = 0x1b; rem != 0; rem--) {
+          pc[0] = zval;
+          pc[1] = zval;
+          pc[2] = zval;
+          pc[3] = zval;
+          pc[4] = zval;
+          pc[5] = zval;
+          pc[6] = zval;
+          pc[7] = zval;
+          pc[8] = zval;
+          pc[9] = zval;
+          pc[10] = zval;
+          pc[11] = zval;
+          pc[12] = zval;
+          pc[13] = zval;
+          pc[14] = zval;
+          pc[15] = zval;
+          pc[16] = zval;
+          pc[17] = zval;
+          pc[18] = zval;
+          pc[19] = zval;
+          pc[20] = zval;
+          pc[21] = zval;
+          pc[22] = zval;
+          pc[23] = zval;
+          pc[24] = zval;
+          pc[25] = zval;
+          pc[26] = zval;
+          pc[27] = zval;
+          pc[28] = zval;
+          pc[29] = zval;
+          pc[30] = zval;
+          pc[31] = zval;
+          pc[32] = zval;
+          pc[33] = zval;
+          pc[34] = zval;
+          pc[35] = zval;
+          pc[36] = zval;
+          pc[37] = zval;
+          pc[38] = zval;
+          pc[39] = zval;
+          pc[40] = zval;
+          pc[41] = zval;
+          pc[42] = zval;
+          pc[43] = zval;
+          pc[44] = zval;
+          pc[45] = zval;
+          pc[46] = zval;
+          pc[47] = zval;
+          pc = pc + 0x30;
+          off = off + 0x30;
+      }
+      pu = visited + off;
+      rem = 0x514 - off;
+      if (off < 0x514) {
         do {
-          iVar24 = iVar12;
-          *pcVar9 = '\0';
-          pcVar9[1] = '\0';
-          pcVar9[2] = '\0';
-          pcVar9[3] = '\0';
-          pcVar9[4] = '\0';
-          pcVar9[5] = '\0';
-          pcVar9[6] = '\0';
-          pcVar9[7] = '\0';
-          pcVar9[8] = '\0';
-          pcVar9[9] = '\0';
-          pcVar9[10] = '\0';
-          pcVar9[0xb] = '\0';
-          pcVar9[0xc] = '\0';
-          pcVar9[0xd] = '\0';
-          pcVar9[0xe] = '\0';
-          pcVar9[0xf] = '\0';
-          pcVar9[0x10] = '\0';
-          pcVar9[0x11] = '\0';
-          pcVar9[0x12] = '\0';
-          pcVar9[0x13] = '\0';
-          pcVar9[0x14] = '\0';
-          pcVar9[0x15] = '\0';
-          pcVar9[0x16] = '\0';
-          pcVar9[0x17] = '\0';
-          pcVar9[0x18] = '\0';
-          pcVar9[0x19] = '\0';
-          pcVar9[0x1a] = '\0';
-          pcVar9[0x1b] = '\0';
-          pcVar9[0x1c] = '\0';
-          pcVar9[0x1d] = '\0';
-          pcVar9[0x1e] = '\0';
-          pcVar9[0x1f] = '\0';
-          pcVar9[0x20] = '\0';
-          pcVar9[0x21] = '\0';
-          pcVar9[0x22] = '\0';
-          pcVar9[0x23] = '\0';
-          pcVar9[0x24] = '\0';
-          pcVar9[0x25] = '\0';
-          pcVar9[0x26] = '\0';
-          pcVar9[0x27] = '\0';
-          pcVar9[0x28] = '\0';
-          pcVar9[0x29] = '\0';
-          pcVar9[0x2a] = '\0';
-          pcVar9[0x2b] = '\0';
-          pcVar9[0x2c] = '\0';
-          pcVar9[0x2d] = '\0';
-          pcVar9[0x2e] = '\0';
-          pcVar9[0x2f] = '\0';
-          pcVar9 = pcVar9 + 0x30;
-          iVar12 = iVar24 + 0x30;
-          iVar25 = iVar25 + -1;
-        } while (iVar25 != 0);
-        puVar10 = local_548 + iVar24;
-        iVar25 = 0x514 - iVar12;
-        if (iVar12 < 0x514) {
-          do {
-            *puVar10 = 0;
-            puVar10 = puVar10 + 1;
-            iVar25 = iVar25 + -1;
-          } while (iVar25 != 0);
-        }
-        local_578[local_6e0] = '\x01';
-        iVar12 = (int)RomCurve_findByIdWithIndex(*(uint *)(iVar20 + 0x1c),&local_6dc);
-        if (iVar12 != 0) {
-          fVar1 = *(float *)(iVar12 + 0x10) - *(float *)(iVar5 + 0x10);
-          fVar2 = *(float *)(iVar12 + 8) - *(float *)(iVar5 + 8);
-          fVar3 = *(float *)(iVar12 + 0xc) - *(float *)(iVar5 + 0xc);
-          local_6b8[0] = fVar1 * fVar1 + fVar2 * fVar2 + fVar3 * fVar3;
-          iVar12 = 1;
-          local_618[0] = local_6dc;
-          local_578[local_6dc] = '\x01';
-          bVar4 = false;
-          puVar22 = puVar18;
-          pfVar23 = pfVar19;
-          do {
-            if (iVar12 < 1) {
-              bVar4 = true;
+          *pu = 0;
+          pu++;
+          off++;
+          rem--;
+        } while (rem != 0);
+      }
+      visited[startIdx] = 1;
+      node = RomCurve_findByIdWithIndex(start->linkIds[li], &idx);
+      if (node != NULL) {
+        queueDist[0] = SQ(node->z - start->z) + (SQ(node->x - start->x) + SQ(node->y - start->y));
+        pos = 0;
+        count = 1;
+        queueIds[pos] = idx;
+        visited[idx] = 1;
+        done = 0;
+        idWrite = idRead;
+        do {
+          if (count > 0) {
+            count--;
+            idx = queueIds[count];
+            node = romCurves[queueIds[count]];
+            curDist = queueDist[count];
+            if ((((int)node->type == typeFilter) || (typeFilter == -1)) &&
+                ((*(u8 *)((u8 *)node + 0x31) == param_3 ||
+                  ((*(u8 *)((u8 *)node + 0x32) == param_3 || (*(u8 *)((u8 *)node + 0x33) == param_3)))))) {
+              done = 1;
+              *distWrite = queueDist[count];
+              if (found < 4) {
+                *idWrite = node->id;
+                distWrite++;
+                idWrite++;
+                resultLinks[found] = (char)li;
+                found++;
+              }
             }
             else {
-              iVar12 = iVar12 + -1;
-              local_6dc = local_618[iVar12];
-              iVar25 = (int)romCurves[local_618[iVar12]];
-              dVar27 = (double)local_6b8[iVar12];
-              if ((((int)*(char *)(iVar25 + 0x19) == typeFilter) || (typeFilter == -1)) &&
-                 ((*(byte *)(iVar25 + 0x31) == param_3 ||
-                  ((*(byte *)(iVar25 + 0x32) == param_3 || (*(byte *)(iVar25 + 0x33) == param_3)))))
-                 ) {
-                bVar4 = true;
-                *pfVar23 = local_6b8[iVar12];
-                if (iVar16 < ROMCURVE_LINK_SEARCH_RESULT_COUNT) {
-                  *puVar22 = *(undefined4 *)(iVar25 + 0x14);
-                  pfVar19 = pfVar19 + 1;
-                  puVar18 = puVar18 + 1;
-                  pfVar23 = pfVar23 + 1;
-                  puVar22 = puVar22 + 1;
-                  local_6e4[iVar16] = (char)iVar17;
-                  iVar16 = iVar16 + 1;
+              for (k = 0; k < 4; k++) {
+                if (((-1 < (int)node->linkIds[k]) &&
+                     ((cand = RomCurve_findByIdWithIndex(node->linkIds[k], &idx)) != NULL)) &&
+                    (visited[idx] == 0) && (count < ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY)) {
+                  newDist = SQ(node->z - cand->z) + (f32)(curDist + (f64)SQ(node->x - cand->x)) +
+                            SQ(node->y - cand->y);
+                  pos = 0;
+                  for (probe = queueDist; (pos < count) && (newDist < *probe); probe++) {
+                    pos++;
+                  }
+                  for (m = count; m > pos; m--) {
+                    queueIds[m] = queueIds[m - 1];
+                    queueDist[m] = queueDist[m - 1];
+                  }
+                  count++;
+                  queueDist[pos] = newDist;
+                  queueIds[pos] = idx;
+                  visited[idx] = 1;
                 }
               }
-              else {
-                iVar15 = 0;
-                iVar24 = iVar12 * 4;
-                iVar21 = iVar25;
-                do {
-                  if ((((-1 < (int)*(uint *)(iVar21 + 0x1c)) &&
-                       (iVar6 = (int)RomCurve_findByIdWithIndex(*(uint *)(iVar21 + 0x1c),&local_6dc), iVar6 != 0)) &&
-                      (local_578[local_6dc] == '\0')) &&
-                     (iVar12 < ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY)) {
-                    fVar1 = *(float *)(iVar25 + 0x10) - *(float *)(iVar6 + 0x10);
-                    fVar2 = *(float *)(iVar25 + 8) - *(float *)(iVar6 + 8);
-                    fVar3 = *(float *)(iVar25 + 0xc) - *(float *)(iVar6 + 0xc);
-                    fVar1 = fVar1 * fVar1 +
-                            (float)(dVar27 + (double)(fVar2 * fVar2)) + fVar3 * fVar3;
-                    iVar6 = 0;
-                    for (pfVar7 = local_6b8; (iVar6 < iVar12 && (fVar1 < *pfVar7));
-                        pfVar7 = pfVar7 + 1) {
-                      iVar6 = iVar6 + 1;
-                    }
-                    puVar11 = (undefined4 *)((int)local_618 + iVar24);
-                    puVar13 = (undefined4 *)((int)local_6b8 + iVar24);
-                    uVar8 = iVar12 - iVar6;
-                    if (iVar6 < iVar12) {
-                      uVar26 = uVar8 >> 3;
-                      if (uVar26 != 0) {
-                        do {
-                          *puVar11 = puVar11[-1];
-                          *puVar13 = puVar13[-1];
-                          puVar11[-1] = puVar11[-2];
-                          puVar13[-1] = puVar13[-2];
-                          puVar11[-2] = puVar11[-3];
-                          puVar13[-2] = puVar13[-3];
-                          puVar11[-3] = puVar11[-4];
-                          puVar13[-3] = puVar13[-4];
-                          puVar11[-4] = puVar11[-5];
-                          puVar13[-4] = puVar13[-5];
-                          puVar11[-5] = puVar11[-6];
-                          puVar13[-5] = puVar13[-6];
-                          puVar11[-6] = puVar11[-7];
-                          puVar13[-6] = puVar13[-7];
-                          puVar11[-7] = puVar11[-8];
-                          puVar13[-7] = puVar13[-8];
-                          puVar11 = puVar11 + -8;
-                          puVar13 = puVar13 + -8;
-                          uVar26 = uVar26 - 1;
-                        } while (uVar26 != 0);
-                        uVar8 = uVar8 & 7;
-                        if (uVar8 == 0) goto LAB_800e2a50;
-                      }
-                      do {
-                        *puVar11 = puVar11[-1];
-                        *puVar13 = puVar13[-1];
-                        puVar11 = puVar11 + -1;
-                        puVar13 = puVar13 + -1;
-                        uVar8 = uVar8 - 1;
-                      } while (uVar8 != 0);
-                    }
-LAB_800e2a50:
-                    iVar12 = iVar12 + 1;
-                    iVar24 = iVar24 + 4;
-                    local_6b8[iVar6] = fVar1;
-                    local_618[iVar6] = local_6dc;
-                    local_578[local_6dc] = '\x01';
-                  }
-                  iVar21 = iVar21 + 4;
-                  iVar15 = iVar15 + 1;
-                } while (iVar15 < 4);
-              }
             }
-          } while (!bVar4);
-        }
-      }
-      iVar20 = iVar20 + 4;
-      iVar17 = iVar17 + 1;
-    } while (iVar17 < ROMCURVE_LINK_SEARCH_RESULT_COUNT);
-    if (0 < iVar16) {
-      iVar5 = 0;
-      iVar20 = 0;
-      if (0 < iVar16) {
-        do {
-          if (*pfVar14 < local_6d8[iVar5]) {
-            iVar5 = iVar20;
           }
-          pfVar14 = pfVar14 + 1;
-          iVar20 = iVar20 + 1;
-          iVar16 = iVar16 + -1;
-        } while (iVar16 != 0);
-      }
-      if (param_4 != (int *)0x0) {
-        *param_4 = (int)local_6e4[iVar5];
+          else {
+            done = 1;
+          }
+        } while (!done);
       }
     }
   }
-  return;
+  if (found < 1) {
+    return -1;
+  }
+  best = 0;
+  j = 0;
+  if (found >= 1) {
+    do {
+      if (*distRead < bestDists[best]) {
+        best = j;
+      }
+      distRead++;
+      j++;
+      found--;
+    } while (found != 0);
+  }
+  if (param_4 != NULL) {
+    *param_4 = resultLinks[best];
+  }
+  return resultIds[best];
 }
 
 /*
@@ -733,7 +676,6 @@ LAB_800e2a50:
  * PAL Size: TODO
  */
 #pragma fp_contract off
-#define SQ(v) ((v) * (v))
 int RomCurve_func11(RomCurveDef *curve,int typeFilter,int actionFilter,int *outCurveId)
 {
   f32 zd;
