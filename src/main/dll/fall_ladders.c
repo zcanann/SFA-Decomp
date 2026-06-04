@@ -239,52 +239,191 @@ void FUN_80154290(undefined8 param_1,undefined8 param_2,double param_3,undefined
   return;
 }
 
+
+extern f32 lbl_803E294C;
+extern f32 lbl_803E2958;
+extern int curveFn_80010320(int curve, f32 t);
+extern int fn_8014D08C(int obj, int p, int c, f32 f, int d, int e);
+extern void fn_8014CF7C(int obj, int p, f32 a, f32 b, int c, int d);
+extern void fn_8014C678(int obj, int p, f32 *vec, f32 a, f32 b, f32 c, int d);
+extern void fn_8014CD1C(int obj, int p, int c, f32 a, f32 b, int d);
+extern f32 fn_80293DA4(f32 x);
+extern void fn_80154328(int obj, int p);
+extern int *gRomCurveInterface;
+extern f64 lbl_803DBCD0;
+extern f32 timeDelta;
+extern f32 lbl_803E2940;
+extern f32 lbl_803E2944;
+extern f32 lbl_803E2948;
+extern f32 lbl_803E2968;
+extern f32 lbl_803E296C;
+extern f32 lbl_803E2970;
+extern f32 lbl_803E2974;
+extern f32 lbl_803E2990;
+extern f32 lbl_803E2994;
+extern f32 lbl_803E2998;
+extern f32 lbl_803E299C;
+extern f32 lbl_803E29A0;
+extern f32 lbl_803E29A4;
+extern f64 lbl_803E29A8;
+extern f32 lbl_803E29B0;
+extern f32 lbl_803E29B4;
+extern f32 lbl_803E29B8;
+extern f32 lbl_803E29BC;
+extern f32 lbl_803E29C0;
+extern f32 lbl_803E29C4;
+extern f64 lbl_803E29C8;
+extern f32 lbl_803E29D0;
+extern f32 lbl_803E29D4;
+extern f64 lbl_803E29D8;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801540A0(int obj, int p)
+{
+    u8 done;
+
+    *(f32 *)(p + 0x32c) = lbl_803E294C;
+    done = 0;
+    ObjHits_SetHitVolumeSlot(obj, 0x18, 1, -1);
+    if (*(void **)(p + 0x340) != 0) {
+        done = 1;
+        *(f32 *)(p + 0x324) = lbl_803E2968;
+        *(f32 *)(p + 0x32c) = lbl_803E294C;
+        if (*(s16 *)(obj + 0xa0) != 0) {
+            fn_8014D08C(obj, p, 2, lbl_803E2958, 0, 3);
+        }
+    }
+    if (*(s16 *)(obj + 0xa0) != 3) {
+        fn_8014CF7C(obj, p, *(f32 *)(*(int *)(p + 0x29c) + 0xc), *(f32 *)(*(int *)(p + 0x29c) + 0x14), 0x3c, 0);
+    } else {
+        *(f32 *)(p + 0x328) -= timeDelta;
+        if (*(f32 *)(p + 0x328) <= lbl_803E294C) {
+            done = 1;
+            *(f32 *)(p + 0x32c) = lbl_803E2940;
+            *(f32 *)(p + 0x324) = lbl_803E2944;
+            fn_8014D08C(obj, p, 4, lbl_803E2948, 0, 3);
+        }
+    }
+    if (done != 0) {
+        *(u32 *)(p + 0x2e4) |= 0x10000;
+    } else if (*(u8 *)(p + 0x33a) == 0) {
+        *(u8 *)(p + 0x33a) = 1;
+        fn_8014D08C(obj, p, 1, lbl_803E296C, 0, 3);
+    } else if ((*(u32 *)(p + 0x2dc) & 0x40000000) != 0 &&
+               (fn_8014D08C(obj, p, 3, lbl_803E2970, 0, 3), lbl_803E294C == *(f32 *)(p + 0x328))) {
+        *(f32 *)(p + 0x328) = lbl_803E2974;
+        fn_8014CF7C(obj, p, *(f32 *)(*(int *)(p + 0x29c) + 0xc), *(f32 *)(*(int *)(p + 0x29c) + 0x14), 1, 0);
+        Sfx_PlayFromObject(obj, SFXfox_healthgasp2);
+    }
+    *(s16 *)(obj + 2) = *(s16 *)(p + 0x19c);
+    *(s16 *)(obj + 4) = *(s16 *)(p + 0x19e);
+    if (*(u8 *)(p + 0x33b) != 0) {
+        *(u8 *)(p + 0x33b) -= 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80154584(int obj, int p)
+{
+    int curve;
+    u8 rnd;
+    f32 vec[3];
+
+    curve = *(int *)p;
+    *(u8 *)(p + 0x33b) = 0;
+    *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
+    if ((*(u32 *)(p + 0x2dc) & 0x2000) != 0) {
+        if ((curveFn_80010320(curve, *(f32 *)(p + 0x2fc)) != 0 || *(int *)(curve + 0x10) != 0) &&
+            (**(u8 (**)(int))(*gRomCurveInterface + 0x90))(curve) != 0 &&
+            (**(u8 (**)(int, int, f32, f64 *, int))(*gRomCurveInterface + 0x8c))(*(int *)p, obj, lbl_803E29B0, &lbl_803DBCD0, -1) != 0) {
+            *(u32 *)(p + 0x2dc) &= ~0x2000;
+        }
+        vec[0] = *(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc);
+        vec[1] = lbl_803E2990;
+        vec[2] = *(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14);
+        fn_8014C678(obj, p, vec, lbl_803E29A0, lbl_803E29B4, lbl_803E29B4, 1);
+        *(f32 *)(p + 0x324) += timeDelta;
+        if (*(f32 *)(p + 0x324) > lbl_803E29B8) {
+            *(u32 *)(p + 0x2e4) &= ~0x10000;
+            *(f32 *)(p + 0x324) = lbl_803E2990;
+        }
+    }
+    {
+        int a = (int)-(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)(p + 0x33a)) - (f32)*(s16 *)(obj + 2));
+        *(s16 *)(obj + 2) = a;
+    }
+    fn_8014CD1C(obj, p, 0xf, lbl_803E29C4, lbl_803E2994, 0);
+    if ((*(u32 *)(p + 0x2dc) & 0x40000000) != 0) {
+        if (*(f32 *)(obj + 0x98) < lbl_803E29C8) {
+            rnd = randomGetRange(0, 200);
+        } else {
+            rnd = randomGetRange(0, 0x3c);
+        }
+        if (rnd == 0) {
+            if (*(f32 *)(obj + 0x98) > lbl_803E29C8) {
+                Sfx_PlayFromObject(obj, 0x24b);
+                *(f32 *)(p + 0x308) = lbl_803E29D0;
+            } else {
+                Sfx_PlayFromObject(obj, 0x24c);
+                *(f32 *)(p + 0x308) = lbl_803E29D4;
+            }
+        }
+    }
+    *(u8 *)(p + 0x33a) += 1;
+    {
+        int a = (int)(lbl_803E29BC * fn_80293DA4(lbl_803E29C0 * (f32)(u32)*(u8 *)(p + 0x33a)) + (f32)*(s16 *)(obj + 2));
+        *(s16 *)(obj + 2) = a;
+    }
+    fn_80154328(obj, p);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_80154328(int obj, int p)
 {
-  extern u32 randomGetRange(int min, int max);
-  extern void setMatrixFromObjectPos(void *mtx, s16 *args);
-  extern void Matrix_TransformPoint(void *mtx, f32 *in, f32 *out_x, f32 *out_z);
-  extern void Sfx_PlayAtPositionFromObject(int obj, int sfx, f32 x, f32 y, f32 z);
-  extern int *gWaterfxInterface;
-  extern f32 timeDelta;
-  extern f32 lbl_803E2990;
-  extern f32 lbl_803E2994;
-  extern f32 lbl_803E2998;
-  extern f32 lbl_803E299C;
-  extern f32 lbl_803E29A0;
-  extern f32 lbl_803E29A4;
-  s16 stk_in[7];
-  f32 stk_pos[3];
-  f32 stk_tx;
-  f32 stk_tz;
-  char stk_mtx[80];
+    extern u32 randomGetRange(int min, int max);
+    extern void setMatrixFromObjectPos(void *mtx, s16 *args);
+    extern void Matrix_TransformPoint(f32 x, f32 y, f32 z, void *mtx, f32 *px, f32 *py, f32 *pz);
+    extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfx);
+    extern f32 sqrtf(f32 x);
+    extern int *gWaterfxInterface;
+    f32 mtx[17];
+    struct {
+        s16 in[6];
+        f32 pos[3];
+    } stk;
+    f32 tx;
+    f32 ox;
+    f32 tz;
 
-  *(f32 *)(p + 0x330) -= timeDelta;
-  if (*(f32 *)(p + 0x330) <= lbl_803E2990) {
-    *(f32 *)(p + 0x330) = (f32)(s32)randomGetRange(30, 60);
-    stk_pos[0] = *(f32 *)(obj + 0xc);
-    stk_pos[1] = lbl_803E2990;
-    stk_pos[2] = *(f32 *)(obj + 0x14);
-    stk_in[0] = *(s16 *)(obj + 0);
-    stk_in[1] = 0;
-    stk_in[2] = 0;
-    *(f32 *)(stk_in + 4) = lbl_803E2994;
-    setMatrixFromObjectPos(stk_mtx, stk_in);
-    stk_tx = (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C + lbl_803E2998;
-    stk_tz = (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C + lbl_803E29A0;
-    {
-      f32 ox, oz;
-      Matrix_TransformPoint(stk_mtx, &stk_tx, &ox, &oz);
-      (**(void (**)(int, int, f32, f32, f32, f32))(*(int *)(*gWaterfxInterface) + 0x14))(
-          0, 3, stk_tx, *(f32 *)(p + 0x32c), stk_tz, lbl_803E2990);
+    *(f32 *)(p + 0x330) -= timeDelta;
+    if (*(f32 *)(p + 0x330) <= lbl_803E2990) {
+        *(f32 *)(p + 0x330) = (f32)(s32)randomGetRange(30, 60);
+        stk.pos[0] = *(f32 *)(obj + 0xc);
+        stk.pos[1] = lbl_803E2990;
+        stk.pos[2] = *(f32 *)(obj + 0x14);
+        stk.in[0] = *(s16 *)obj;
+        stk.in[1] = 0;
+        stk.in[2] = 0;
+        *(f32 *)(stk.in + 4) = lbl_803E2994;
+        setMatrixFromObjectPos(mtx, stk.in);
+        tx = lbl_803E2998 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
+        tz = lbl_803E29A0 + (f32)(s32)randomGetRange(-20, 20) / lbl_803E299C;
+        Matrix_TransformPoint(tx, lbl_803E2990, tz, mtx, &tx, &ox, &tz);
+        (**(void (**)(f32, f32, f32, f32, int, int))(*gWaterfxInterface + 0x14))(
+            tx, *(f32 *)(p + 0x32c), tz, lbl_803E2990, 0, 3);
+        if (sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c)) > lbl_803E29A4) {
+            Sfx_PlayAtPositionFromObject(obj, stk.pos[0], stk.pos[1], stk.pos[2], SFXstaff_proj_putaway);
+        }
     }
-    if ((f32)sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c)) > lbl_803E29A4) {
-      Sfx_PlayAtPositionFromObject(obj, SFXstaff_proj_putaway, stk_pos[0], stk_pos[1], stk_pos[2]);
-    }
-  }
 }
+
 #pragma peephole reset
 #pragma scheduling reset
 

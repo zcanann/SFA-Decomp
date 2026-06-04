@@ -1388,6 +1388,104 @@ void timeOfDayFn_8008b964(void)
 
 #pragma peephole off
 #pragma scheduling off
+void fn_8008923C(u8 *obj, f32 *x, f32 *y, f32 *z)
+{
+    u8 *lights[4];
+    f32 dir[3];
+    int count;
+    f32 lx;
+    f32 ly;
+    f32 lz;
+    u8 **p;
+    int i;
+    int slot;
+    u8 flag;
+    f32 mag;
+    u8 *sk;
+    u8 *found;
+    u8 *cur;
+
+    found = NULL;
+    cur = NULL;
+    if (gSkyOverrideLightDirectionEnabled != 0) {
+        *x = gSkyOverrideLightDirection[0];
+        *y = gSkyOverrideLightDirection[1];
+        *z = gSkyOverrideLightDirection[2];
+    } else {
+        slot = obj[0xf2];
+        if (lbl_803DD12C != NULL) {
+            flag = ((SkyBlendStateFlags *)(lbl_803DD12C + slot * 0xa4 + 0xc1))->unused80;
+        } else {
+            flag = 0;
+        }
+        if (flag != 0) {
+            modelLightFn_8001ec94(obj, lights, 4, &count, 2);
+            if (count > 0) {
+                if (*(u8 **)(obj + 0x64) != NULL) {
+                    found = *(u8 **)(*(u8 **)(obj + 0x64) + 0x3c);
+                }
+                cur = lights[0];
+                if (found != lights[0] && found != NULL) {
+                    p = &lights[1];
+                    for (i = count; i > 1; i--) {
+                        if (*p == found) {
+                            if (-*(f32 *)(cur + 0x130) <
+                                lbl_803DF064 * -*(f32 *)(found + 0x130)) {
+                                cur = found;
+                            }
+                            break;
+                        }
+                        p++;
+                    }
+                }
+                fn_8001DD6C(cur, &lx, &ly, &lz);
+                dir[0] = *(f32 *)(obj + 0x18) - lx;
+                dir[1] = *(f32 *)(obj + 0x1c) - ly;
+                dir[2] = *(f32 *)(obj + 0x20) - lz;
+                mag = PSVECMag(dir);
+                if (mag > pEXIInputFlag) {
+                    PSVECScale(EXIInputFlag / mag, dir, dir);
+                    *x = dir[0];
+                    *y = dir[1];
+                    *z = dir[2];
+                }
+            } else {
+                cur = NULL;
+                dir[0] = lbl_803DF068;
+                dir[1] = lbl_803DF06C;
+                dir[2] = lbl_803DF068;
+                PSVECNormalize(dir, dir);
+                *x = dir[0];
+                *y = dir[1];
+                *z = dir[2];
+            }
+        } else {
+            if (lbl_803DD12C == NULL) {
+                *x = pEXIInputFlag;
+                *y = lbl_803DF06C;
+                *z = pEXIInputFlag;
+            } else {
+                slot *= 0xa4;
+                sk = lbl_803DD12C + slot;
+                *x = *(f32 *)(sk + 0x90);
+                sk = lbl_803DD12C;
+                sk += slot;
+                *y = *(f32 *)(sk + 0x94);
+                sk = lbl_803DD12C;
+                sk += slot;
+                *z = *(f32 *)(sk + 0x98);
+            }
+        }
+    }
+    if (*(u8 **)(obj + 0x64) != NULL) {
+        *(u8 **)(*(u8 **)(obj + 0x64) + 0x3c) = cur;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
 void skyFn_8008a500(void)
 {
     f32 dot;
