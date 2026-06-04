@@ -295,7 +295,7 @@ void fn_8023A168(int p1, int p2)
 
 #pragma peephole off
 #pragma scheduling off
-void fn_8023A268(int p1, int p2)
+void fn_8023A268(int p1, int p2, int p3)
 {
     f32 dx, dz, dist;
     int yaw;

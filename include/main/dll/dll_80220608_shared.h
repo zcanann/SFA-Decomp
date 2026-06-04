@@ -2280,7 +2280,7 @@ void fn_80239DD8(int p1, int p2);
 void fn_80239EAC(int p1, int p2);
 void fn_8023A168(int p1, int p2);
 void fn_8023A87C(int p1, int p2);
-void fn_8023A268(int p1, int p2);
+void fn_8023A268(int p1, int p2, int p3);
 void fn_80239FCC(int p1, int p2);
 int fn_8023A6A4(int p1, f32 a, f32 b, f32 c);
 void fn_8023A3E4(int p1, int p2);
