@@ -214,6 +214,298 @@ void fn_80152440(int obj, int p, int p3, int msg)
 #pragma peephole reset
 #pragma scheduling reset
 
+/* EN v1.0 0x80152514  size: 1408b  main update: child-zap timer, curve
+ * follow, heading steps, landing sfx, light-pulse fx, child spark spawn. */
+
+extern int fn_80152370(int obj, int p2);
+extern void Obj_FreeObject(int *obj);
+extern void Sfx_StopObjectChannel(int *obj, int channel);
+extern int curveFn_80010320(u8 *curve, f32 t);
+extern int *gRomCurveInterface;
+extern u8 lbl_803DBCA8;
+extern int Sfx_IsPlayingFromObject(int *obj, int sfxId);
+extern int fn_801A0174(int *obj);
+extern int *Obj_GetPlayerObject(void);
+extern int *objFindTexture(int *obj, int a, int b);
+extern void fn_8014CF7C(void *p1, void *p2, f32 f1, f32 f2, int p5, int p6);
+extern void fn_8014D08C(void *p1, void *p2, int p3, f32 f1, int p5, int p6);
+extern void Sfx_PlayFromObject(int *obj, int sfxId);
+extern void objfx_spawnLightPulse(int *obj, f32 scale, int a, int b, int c, f32 v, void *params);
+extern void objfx_spawnMaskedHitEffect(int *obj, f32 scale, int a, int b, int c, void *params);
+extern f32 timeDelta;
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803DBCB0;
+extern f32 lbl_803DBCB4;
+extern f32 lbl_803E2814;
+extern f32 lbl_803E2820;
+extern f32 lbl_803E2824;
+extern f32 lbl_803E2828;
+extern f32 lbl_803E282C;
+extern f32 lbl_803E2830;
+extern f32 lbl_803E2834;
+extern f32 lbl_803E2838;
+extern f32 lbl_803E283C;
+extern f32 lbl_803E2840;
+extern f32 lbl_803E2844;
+extern f32 lbl_803E2848;
+extern f32 lbl_803E284C;
+
+typedef struct {
+    u8 pad[8];
+    f32 a;
+    f32 b;
+    f32 c;
+    f32 d;
+} SeqFxParams;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80152514(int *obj, u8 *state)
+{
+    int *def;
+    u8 *path;
+    int attached;
+    s16 spd;
+    SeqFxParams fx;
+
+    def = *(int **)((char *)obj + 0x4c);
+    path = *(u8 **)state;
+    if (*(f32 *)(state + 0x32c) > lbl_803E2814) {
+        int *child = *(int **)((char *)obj + 0xc8);
+        if (child != 0) {
+            Obj_FreeObject(child);
+            ObjLink_DetachChild(obj, *(int **)((char *)obj + 0xc8));
+            *(int *)((char *)obj + 0xc8) = 0;
+        }
+        *(f32 *)(state + 0x32c) = *(f32 *)(state + 0x32c) - timeDelta;
+        if (*(f32 *)(state + 0x32c) <= lbl_803E2814) {
+            *(f32 *)(state + 0x32c) = lbl_803E2814;
+            *(u32 *)(state + 0x2e4) |= 0x20;
+            Sfx_StopObjectChannel(obj, 4);
+            fn_8014D08C(obj, state, 0, lbl_803E2820, 0, 0);
+        } else if (!(*(u32 *)(state + 0x2e4) & 0x20)) {
+            return;
+        }
+    }
+    if (*(u32 *)(state + 0x2dc) & 0x2000) {
+        int step;
+
+        if (curveFn_80010320(path, *(f32 *)(state + 0x2fc)) != 0 || *(int *)(path + 0x10) != 0) {
+            if ((*(u8 (**)(u8 *))(*(int *)gRomCurveInterface + 0x90))(path) != 0) {
+                if ((*(u8 (**)(u8 *, int *, f32, u8 *, int))(*(int *)gRomCurveInterface + 0x8c))(
+                        *(u8 **)state, obj, lbl_803E2824, &lbl_803DBCA8, -1) != 0) {
+                    *(u32 *)(state + 0x2dc) &= ~0x2000;
+                }
+            }
+        }
+        *(f32 *)((char *)obj + 0x24) =
+            (*(f32 *)(path + 0x68) - *(f32 *)((char *)obj + 0xc)) / timeDelta;
+        *(f32 *)((char *)obj + 0x2c) =
+            (*(f32 *)(path + 0x70) - *(f32 *)((char *)obj + 0x14)) / timeDelta;
+        step = (s8)*((u8 *)def + 0x2a);
+        if (step == 0) {
+            fn_8014CF7C(obj, state, *(f32 *)(path + 0x68), *(f32 *)(path + 0x70), 0xf, 0);
+        } else if (*(u32 *)(state + 0x2dc) & 0x2000) {
+            spd = step << 8;
+            if ((int)(lbl_803E2828 * *(f32 *)(path + 0x78)) >= 0) {
+                step = spd;
+            } else {
+                step = -spd;
+            }
+            *(s16 *)obj = *(s16 *)obj - step;
+            fn_8014CF7C(obj, state, *(f32 *)(path + 0x68), *(f32 *)(path + 0x70), 0xf, 0);
+            if ((int)(lbl_803E2828 * *(f32 *)(path + 0x78)) >= 0) {
+                step = spd;
+            } else {
+                step = -spd;
+            }
+            *(s16 *)obj += step;
+        } else {
+            step = ((int)(lbl_803E2828 * *(f32 *)(path + 0x78)) >= 0) ? step : -step;
+            *(s16 *)obj += step;
+        }
+        if (*(f32 *)((char *)obj + 0x10) - *(f32 *)(path + 0x6c) < lbl_803E282C) {
+            if (Sfx_IsPlayingFromObject(obj, SFXar_laser216) == 0) {
+                Sfx_PlayFromObject(obj, SFXar_laser216);
+            }
+            state[0x33a] = 1;
+        } else {
+            state[0x33a] = 0;
+        }
+    } else {
+        if (*(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)def + 0xc) < lbl_803E2830) {
+            if (Sfx_IsPlayingFromObject(obj, SFXar_laser216) == 0) {
+                Sfx_PlayFromObject(obj, SFXar_laser216);
+            }
+            state[0x33a] = 1;
+        } else {
+            state[0x33a] = 0;
+        }
+        *(s16 *)obj += *(s8 *)((char *)def + 0x2a);
+    }
+    if (state[0x33a] != 0) {
+        *(f32 *)((char *)obj + 0x28) += lbl_803DBCB0 * timeDelta;
+    }
+    if (*(u16 *)((char *)obj + 0xb0) & 0x800) {
+        f32 z = lbl_803E2814;
+        fx.b = z;
+        fx.c = z;
+        fx.d = z;
+        fx.a = lbl_803E2820;
+        objfx_spawnLightPulse(obj, lbl_803E2834, 2, 0, 6, lbl_803E2838, &fx);
+        fx.c = lbl_803E283C;
+        objfx_spawnMaskedHitEffect(obj, lbl_803E2840, 1, 6, 0x20, &fx);
+        fx.b = lbl_803E2814;
+        z = lbl_803E2844;
+        fx.c = z;
+        fx.d = z;
+    }
+    if (*(f32 *)((char *)obj + 0x28) < lbl_803E2848) {
+        *(f32 *)((char *)obj + 0x28) = lbl_803E2848;
+    } else if (*(f32 *)((char *)obj + 0x28) > lbl_803E2834) {
+        *(f32 *)((char *)obj + 0x28) = lbl_803E2834;
+    }
+    if (lbl_803E2814 == *(f32 *)(state + 0x32c)) {
+        int *child2;
+
+        if (*(s8 *)((char *)def + 0x2e) != -1 &&
+            (child2 = *(int **)((char *)obj + 0xc8)) != 0 && fn_801A0174(child2) != 0) {
+            ObjHits_RecordObjectHit(Obj_GetPlayerObject(), obj, 0x16, 2, 0);
+            fn_80152370((int)obj, 0x3b2);
+            Sfx_PlayFromObject(obj, SFXsp_literun116);
+            *(f32 *)(state + 0x32c) = lbl_803DBCB4;
+        }
+        if ((int)randomGetRange(0, (int)(lbl_803E284C * oneOverTimeDelta)) == 0) {
+            Sfx_PlayFromObject(obj, SFXsp_literun114);
+        }
+        child2 = *(int **)((char *)obj + 0xc8);
+        if (child2 != 0) {
+            int *tex = objFindTexture(child2, 0, 0);
+            int v;
+            if (tex != 0) {
+                v = *(s16 *)((char *)tex + 8) - 0x3c;
+                if (v < 0) {
+                    v += 0x2710;
+                }
+                *(s16 *)((char *)tex + 8) = v;
+            }
+        } else {
+            int *newObj;
+            int flag;
+
+            if (*(s8 *)((char *)def + 0x2a) != 0) {
+                attached = 1;
+            } else {
+                attached = 0;
+            }
+            newObj = (int *)fn_80152370((int)obj, 0x639);
+            flag = 0;
+            if (*(s8 *)((char *)def + 0x2a) != 0 && !(*(u32 *)(state + 0x2dc) & 0x2000)) {
+                flag = 1;
+            }
+            *(int *)((char *)newObj + 0xf4) = flag;
+            ObjLink_AttachChild(obj, newObj, attached);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x80152B90  size: 816b  firefly hover update: circle drift, bob
+ * between heights, periodically drop a spawned object, ambient sfx timers. */
+
+extern void fn_80293018(int idx, f32 *outA, f32 *outB);
+extern u8 Obj_IsLoadingLocked(void);
+extern u8 *Obj_AllocObjectSetup(int size, int type);
+extern int *loadObjectAtObject(int *obj, u8 *setup);
+extern void fn_8014CD1C(int *obj, u8 *state, int p3, f32 a, f32 b, int p6);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E2868;
+extern f32 lbl_803E286C;
+extern f32 lbl_803E2878;
+extern f32 lbl_803E287C;
+extern f32 lbl_803E2880;
+extern f32 lbl_803E2884;
+extern f32 lbl_803E2888;
+extern f32 lbl_803E288C;
+extern f32 lbl_803E2890;
+extern f32 lbl_803E2894;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80152B90(int *obj, u8 *state)
+{
+    f32 y;
+    f32 sinOut;
+    f32 cosOut;
+
+    *(u16 *)(state + 0x338) = lbl_803E287C * timeDelta + (f32)(u32)*(u16 *)(state + 0x338);
+    fn_80293018(*(u16 *)(state + 0x338), &sinOut, &cosOut);
+    sinOut = sinOut * *(f32 *)(state + 0x2a8) + *(f32 *)(state + 0x324);
+    cosOut = cosOut * *(f32 *)(state + 0x2a8) + *(f32 *)(state + 0x32c);
+    if (state[0x33a] == 0) {
+        f32 dx;
+        f32 dz;
+
+        y = *(f32 *)((char *)obj + 0x10);
+        dx = *(f32 *)(state + 0x324) - *(f32 *)(*(int *)(state + 0x29c) + 0xc);
+        dz = *(f32 *)(state + 0x32c) - *(f32 *)(*(int *)(state + 0x29c) + 0x14);
+        if (sqrtf(dx * dx + dz * dz) <= lbl_803E2880 * *(f32 *)(state + 0x2a8)) {
+            state[0x33a] = 1;
+            state[0x33b] = 0;
+        }
+    } else if (state[0x33a] == 1) {
+        y = *(f32 *)((char *)obj + 0x10) - lbl_803E2884 * timeDelta;
+        if (y <= *(f32 *)(state + 0x328) - lbl_803E2888) {
+            state[0x33a] = 2;
+        } else {
+            state[0x33b] = (f32)(u32)state[0x33b] + timeDelta;
+            if (state[0x33b] > 0x64) {
+                state[0x33b] = 0;
+                if (Obj_IsLoadingLocked() != 0) {
+                    u8 *setup;
+                    int *spawned;
+
+                    setup = Obj_AllocObjectSetup(0x24, 0x6b5);
+                    *(f32 *)(setup + 8) = *(f32 *)((char *)obj + 0xc);
+                    *(f32 *)(setup + 0xc) = lbl_803E2878 + *(f32 *)((char *)obj + 0x10);
+                    *(f32 *)(setup + 0x10) = *(f32 *)((char *)obj + 0x14);
+                    *(u8 *)(setup + 4) = 1;
+                    *(u8 *)(setup + 5) = 1;
+                    *(u8 *)(setup + 6) = 0xff;
+                    *(u8 *)(setup + 7) = 0xff;
+                    spawned = loadObjectAtObject(obj, setup);
+                    if (spawned != 0) {
+                        *(int **)((char *)spawned + 0xc4) = obj;
+                        Sfx_PlayFromObject(obj, 0x249);
+                    }
+                }
+            }
+        }
+    } else {
+        y = lbl_803E288C * timeDelta + *(f32 *)((char *)obj + 0x10);
+        if (y >= *(f32 *)(state + 0x328)) {
+            state[0x33a] = 0;
+        }
+    }
+    *(f32 *)((char *)obj + 0x24) = oneOverTimeDelta * (sinOut - *(f32 *)((char *)obj + 0xc));
+    *(f32 *)((char *)obj + 0x28) = oneOverTimeDelta * (y - *(f32 *)((char *)obj + 0x10));
+    *(f32 *)((char *)obj + 0x2c) = oneOverTimeDelta * (cosOut - *(f32 *)((char *)obj + 0x14));
+    fn_8014CD1C(obj, state, 0xf, lbl_803E2890, lbl_803E2894, 0);
+    *(f32 *)(state + 0x334) = *(f32 *)(state + 0x334) - timeDelta;
+    if (*(f32 *)(state + 0x334) <= lbl_803E2868) {
+        *(f32 *)(state + 0x334) = (f32)(int)randomGetRange(0x3c, 0x78);
+        Sfx_PlayFromObject(obj, 0x31);
+    }
+    *(f32 *)(state + 0x330) = *(f32 *)(state + 0x330) - timeDelta;
+    if (*(f32 *)(state + 0x330) <= lbl_803E2868) {
+        *(f32 *)(state + 0x330) = lbl_803E286C;
+        Sfx_PlayFromObject(obj, 0x24a);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 int fn_80152370(int obj, int p2)
@@ -769,3 +1061,88 @@ void fn_801522E0(int* obj, u8* state) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+/* EN v1.0 0x80152040  size: 672b  state-table driver: walks the 12-byte
+ * lbl_8031F290 state rows, advancing on GameBit + sequence flags and kicking
+ * the matching anim. */
+
+typedef struct {
+    f32 animSpeed; /* 0x0 */
+    u32 unk4;      /* 0x4 */
+    u8 anim;       /* 0x8 */
+    u8 next;       /* 0x9 */
+    u8 alt;        /* 0xa */
+    u8 flagB;      /* 0xb */
+} Seq11ERow;
+
+extern Seq11ERow lbl_8031F290[];
+extern void fn_80151C68(int *obj, u8 *state);
+extern void fn_80151DB8(int *obj, u8 *state);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80152040(int *obj, u8 *state)
+{
+    int *def = *(int **)((char *)obj + 0x4c);
+    u32 flags;
+
+    if (state[0x33a] == 2 && GameBit_Get(*(s16 *)((char *)def + 0x1c)) == 0) {
+        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) & ~8);
+        if (*(u8 *)((char *)obj + 0xaf) & 1) {
+            fn_80151C68(obj, state);
+        }
+    } else {
+        *(u8 *)((char *)obj + 0xaf) = (u8)(*(u8 *)((char *)obj + 0xaf) | 8);
+    }
+    flags = *(u32 *)(state + 0x2dc);
+    if (flags & 0x80000000) {
+        if (lbl_8031F290[state[0x33a]].unk4 != 0) {
+            u32 triggered = 0x40000000;
+            *(u32 *)(state + 0x2dc) = flags | triggered;
+        }
+    }
+    flags = *(u32 *)(state + 0x2dc);
+    if (flags & 0x40000000) {
+        int anim;
+        u8 *animTbl;
+
+        if (state[0x33a] == 0) {
+            if (flags & 0x20000000) {
+                if (GameBit_Get(*(s16 *)((char *)def + 0x1c)) != 0) {
+                    state[0x33a] = lbl_8031F290[state[0x33a]].alt;
+                } else {
+                    state[0x33a] = lbl_8031F290[state[0x33a]].next;
+                }
+            }
+        } else if (state[0x33a] == 2) {
+            if (GameBit_Get(*(s16 *)((char *)def + 0x1c)) != 0 ||
+                !(*(u32 *)(state + 0x2dc) & 0x20000000)) {
+                state[0x33a] = lbl_8031F290[state[0x33a]].next;
+            }
+        } else if (state[0x33a] == 3) {
+            if (GameBit_Get(*(s16 *)((char *)def + 0x1c)) != 0) {
+                state[0x33a] = lbl_8031F290[state[0x33a]].alt;
+            } else {
+                state[0x33a] = lbl_8031F290[state[0x33a]].next;
+            }
+        } else {
+            state[0x33a] = lbl_8031F290[state[0x33a]].next;
+        }
+        anim = *(s16 *)((char *)obj + 0xa0);
+        animTbl = (u8 *)lbl_8031F290 + 8;
+        if (anim != animTbl[state[0x33a] * 12]) {
+            if (animTbl[state[0x33a] * 12] != 0 && animTbl[state[0x33a] * 12] != 4) {
+                Sfx_PlayFromObject(obj, 0x4a8);
+            }
+            fn_8014D08C(obj, state, animTbl[state[0x33a] * 12],
+                        *(f32 *)((u8 *)lbl_8031F290 + state[0x33a] * 12), 0, 0xf);
+        }
+    }
+    if (lbl_8031F290[state[0x33a]].flagB != 0) {
+        fn_80151DB8(obj, state);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+
