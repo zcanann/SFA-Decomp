@@ -11575,7 +11575,7 @@ void mtx44Transpose(f32 *src, f32 *dst) {
 }
 #pragma dont_inline reset
 
-extern void setMatrixFromObjectPos(f32 *mtx, void *obj);
+extern void setMatrixFromObjectPos(f32 *mtx, u8 *obj);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 
 void model_multMtxs(u8 *model, f32 *out) {
@@ -11603,7 +11603,7 @@ void model_multMtxs(u8 *model, f32 *out) {
 #pragma dont_inline on
 void setMatrixFromObjectTransposed(void *obj, f32 *out) {
     f32 m[16];
-    setMatrixFromObjectPos(m, obj);
+    setMatrixFromObjectPos(m, (u8 *)obj);
     out[0] = m[0];
     out[1] = m[4];
     out[2] = m[8];
@@ -17337,5 +17337,44 @@ void cardShowMessage(void)
             cardSetStatusNeedInit();
         }
     }
+}
+#pragma pop
+
+extern void angleToVec2(int angle, f32 *cosOut, f32 *sinOut);
+
+#pragma push
+#pragma scheduling off
+void setMatrixFromObjectPos(f32 *m, u8 *p)
+{
+    f32 scale;
+    f32 zero;
+    f32 s0;
+    f32 c0;
+    f32 s1;
+    f32 c1;
+    f32 s2;
+    f32 c2;
+
+    angleToVec2((u16)*(s16 *)(p + 0x0), &s0, &c0);
+    angleToVec2((u16)*(s16 *)(p + 0x2), &s1, &c1);
+    angleToVec2((u16)*(s16 *)(p + 0x4), &s2, &c2);
+    scale = *(f32 *)(p + 0x8);
+    m[0] = scale * (s2 * (s1 * s0) + c2 * c0);
+    m[1] = scale * (s2 * c1);
+    m[2] = scale * (s2 * (s1 * c0) - c2 * s0);
+    zero = lbl_803DE7C0;
+    m[3] = zero;
+    m[4] = scale * (c2 * (s1 * s0) - s2 * c0);
+    m[5] = scale * (c2 * c1);
+    m[6] = scale * (c2 * (s1 * c0) + s2 * s0);
+    m[7] = zero;
+    m[8] = scale * (c1 * s0);
+    m[9] = -s1 * scale;
+    m[10] = scale * (c1 * c0);
+    m[11] = zero;
+    m[12] = *(f32 *)(p + 0xc);
+    m[13] = *(f32 *)(p + 0x10);
+    m[14] = *(f32 *)(p + 0x14);
+    m[15] = lbl_803DE7C4;
 }
 #pragma pop
