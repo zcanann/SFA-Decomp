@@ -940,6 +940,91 @@ FUN_8015e488(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 
 #pragma scheduling off
 #pragma peephole off
+void fn_8015DAE8(void)
+{
+  extern void *lbl_803AC528[];
+  extern void *lbl_803AC548[];
+  extern int mediumbasket_updateOpenHitState();
+  extern int mediumbasket_updateOpenState();
+  extern int mediumbasket_updateHideResetState();
+  extern int mediumbasket_updateImpactHitState();
+  extern int mediumbasket_updateSpinState();
+  extern int fn_8015C2AC();
+  extern int fn_8015C0B4();
+  extern int mediumbasket_updateHeightBlendState();
+  extern int mediumbasket_updateControlMove5State();
+  extern int mediumbasket_updateCommDownState();
+  extern int mediumbasket_updateDropState();
+  extern int fn_8015BC18();
+  extern int mediumbasket_updateContactHitState();
+  extern int mediumbasket_updateLandingState();
+  extern int mediumbasket_checkTargetState();
+  extern int fn_8015B748();
+  extern int fn_8015B670();
+  extern int fn_8015B614();
+  extern int fn_8015B5CC();
+  extern int fn_8015B524();
+  extern int fn_8015B2A0();
+  extern int fn_8015AF10();
+
+  lbl_803AC548[0] = (void *)mediumbasket_updateOpenHitState;
+  lbl_803AC548[1] = (void *)mediumbasket_updateOpenState;
+  lbl_803AC548[2] = (void *)mediumbasket_updateHideResetState;
+  lbl_803AC548[3] = (void *)mediumbasket_updateImpactHitState;
+  lbl_803AC548[4] = (void *)mediumbasket_updateSpinState;
+  lbl_803AC548[5] = (void *)fn_8015C2AC;
+  lbl_803AC548[6] = (void *)fn_8015C0B4;
+  lbl_803AC548[7] = (void *)mediumbasket_updateHeightBlendState;
+  lbl_803AC548[8] = (void *)mediumbasket_updateControlMove5State;
+  lbl_803AC548[9] = (void *)mediumbasket_updateCommDownState;
+  lbl_803AC548[10] = (void *)mediumbasket_updateDropState;
+  lbl_803AC548[11] = (void *)fn_8015BC18;
+  lbl_803AC548[12] = (void *)mediumbasket_updateContactHitState;
+  lbl_803AC548[13] = (void *)mediumbasket_updateLandingState;
+  lbl_803AC528[0] = (void *)mediumbasket_checkTargetState;
+  lbl_803AC528[1] = (void *)fn_8015B748;
+  lbl_803AC528[2] = (void *)fn_8015B670;
+  lbl_803AC528[3] = (void *)fn_8015B614;
+  lbl_803AC528[4] = (void *)fn_8015B5CC;
+  lbl_803AC528[5] = (void *)fn_8015B524;
+  lbl_803AC528[6] = (void *)fn_8015B2A0;
+  lbl_803AC528[7] = (void *)fn_8015AF10;
+}
+
+void dll_CA_init(int obj, u8 *p, int flags)
+{
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern int *gBaddieControlInterface;
+  extern int *gPlayerInterface;
+  extern f64 lbl_803E2D08;
+  extern f32 lbl_803E2D14;
+  extern f32 lbl_803E2D24;
+  extern f32 lbl_803E2D54;
+  extern f32 lbl_803E2DB8;
+  int sub;
+  u8 mode;
+
+  sub = *(int *)(obj + 0xb8);
+  mode = 6;
+  if (flags != 0) {
+    mode |= 1;
+  }
+  if ((*(u8 *)(p + 0x2b) & 0x20) == 0) {
+    mode |= 8;
+  }
+  (*(void (**)(int, u8 *, int, int, int, int, u8, f32))(*(int *)gBaddieControlInterface + 0x58))(
+      obj, p, sub, 14, 8, 0x102, mode, lbl_803E2DB8);
+  *(int *)(obj + 0xbc) = 0;
+  if (lbl_803E2D24 * (f32)(u32)*(u16 *)(sub + 0x3fe) < lbl_803E2D54) {
+    *(s16 *)(sub + 0x3fe) = 0x6e;
+  }
+  ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0);
+  *(u8 *)(obj + 0xaf) |= 8;
+  (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, sub, 0);
+  *(s16 *)(sub + 0x270) = 0;
+  *(s8 *)(sub + 0x25f) = 0;
+}
+
 int fn_8015E5DC(short *obj, u8 *p)
 {
   extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
