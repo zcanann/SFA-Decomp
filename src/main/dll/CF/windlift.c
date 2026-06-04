@@ -174,7 +174,7 @@ extern int gameBitIncrement(int eventId);
 extern f32 Vec_distance(void *a, void *b);
 extern void playerAddMoney(int player, u8 b);
 extern int objHitboxFn_801843c0(int obj);
-extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, int p5, int obj, int p7, int p8, int p9, int p10);
+extern int objBboxFn_800640cc(int p1, int p2, f32 r, int p4, void *p5, int obj, int p7, int p8, int p9, int p10);
 extern int ViewFrustum_IsSphereVisible(f32 *pos, f32 radius);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void *out, int p5, int p6);
 extern int hitDetect_calcSweptSphereBounds(void *bounds, void *start, void *end, void *sphere, int n);
@@ -208,10 +208,10 @@ void scarab_update(int obj)
     extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b);
     typedef struct { f32 x, y, z; } ScarabVec3;
     typedef struct { s16 ang; s16 b; s16 c; f32 scale; f32 x; f32 y; f32 z; } ScarabRot;
-    typedef struct { f32 vals[4]; u8 a; u8 pad[3]; u8 b; u8 pad2[27]; } ScarabSphere;
+    typedef struct { f32 vals[4]; s8 a; u8 pad[3]; u8 b; u8 pad2[27]; } ScarabSphere;
 
-    u8 hitBuf[64];
     u8 hitResults[84];
+    u8 hitBuf[64];
     ScarabSphere sph;
     ScarabRot rot;
     u8 bounds[24];
@@ -288,7 +288,7 @@ void scarab_update(int obj)
                 flag = 1;
             }
             if (flag == 0) {
-                flag = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3A00, 0, (int)hitResults, obj, 8, -1, 0, 0);
+                flag = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3A00, 0, hitResults, obj, 8, -1, 0, 0);
             }
             if (flag != 0) {
                 *(s16 *)(obj + 4) = 0;
@@ -334,7 +334,7 @@ void scarab_update(int obj)
                 start.y = *(f32 *)(obj + 0x10);
                 start.z = *(f32 *)(obj + 0x14);
                 sph.vals[0] = lbl_803E39F8;
-                sph.a = 0xff;
+                sph.a = -1;
                 sph.b = 0;
                 hitDetect_calcSweptSphereBounds(bounds, &start, &end, &sph, 1);
                 hitDetectFn_800691c0(obj, bounds, 0, 1);
@@ -356,11 +356,8 @@ void scarab_update(int obj)
                 if (sumsq != lbl_803E39F8) {
                     sumsq = sqrtf(sumsq);
                 }
-                {
-                    f32 d = lbl_803E39FC * sumsq;
-                    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) / d;
-                    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) / d;
-                }
+                *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) / (dy = lbl_803E39FC * sumsq);
+                *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) / dy;
                 *(s16 *)(obj + 2) = 0;
                 *(f32 *)(obj + 0x28) = lbl_803E3A24;
                 rot.x = lbl_803E39F8;
@@ -396,23 +393,20 @@ void scarab_update(int obj)
                 count = hitDetectFn_80065e50(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), &list, 1, 0);
                 i = 0;
                 p = list;
-                if (count > 0) {
-                    do {
-                        dy = **p - *(f32 *)(obj + 0x10);
-                        if (dy <= lbl_803DBDC8) {
-                            if (dy >= lbl_803E39F8) {
-                            } else {
-                                dy = -dy;
-                            }
-                            if (dy < bestDist) {
-                                best = i;
-                                bestDist = dy;
-                            }
+                for (; i < count; i++) {
+                    dy = **p - *(f32 *)(obj + 0x10);
+                    if (dy > lbl_803DBDC8) {
+                    } else {
+                        if (dy >= lbl_803E39F8) {
+                        } else {
+                            dy = -dy;
                         }
-                        p++;
-                        i++;
-                        count--;
-                    } while (count != 0);
+                        if (dy < bestDist) {
+                            best = i;
+                            bestDist = dy;
+                        }
+                    }
+                    p++;
                 }
                 if (list == NULL) {
                     *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xc);
@@ -456,7 +450,7 @@ void scarab_update(int obj)
                 }
                 if (flag != 0) {
                     ang = (u16)getAngle(list[best][1], list[best][3]);
-                    *(s16 *)obj = (s16)(int)(lbl_803DBDCC * (f32)ang + lbl_803E3A2C);
+                    *(s16 *)obj = (int)(lbl_803DBDCC * (f32)ang + lbl_803E3A2C);
                     {
                         f32 k = lbl_803E39F4;
                         *(f32 *)(obj + 0xc) = timeDelta * (k * list[best][1]) + *(f32 *)(obj + 0xc);
@@ -471,9 +465,9 @@ void scarab_update(int obj)
                     ObjAnim_SampleRootCurvePhase(obj, &phase);
                     ObjAnim_AdvanceCurrentMove(obj, phase, timeDelta, 0);
                 }
-                flag = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3A00, 0, (int)hitResults, obj, 8, -1, 0, 0);
+                flag = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3A00, 0, hitResults, obj, 8, -1, 0, 0);
                 sph.vals[0] = lbl_803E3A00;
-                sph.a = 0xff;
+                sph.a = -1;
                 sph.b = 10;
                 hitDetect_calcSweptSphereBounds(bounds, (void *)(obj + 0x80), (void *)(obj + 0xc), &sph, 1);
                 hitDetectFn_800691c0(obj, bounds, 0, 1);
@@ -483,28 +477,23 @@ void scarab_update(int obj)
                     ((hits & 1) != 0 && (hits & 0x10) == 0)) {
                     PSVECSubtract((void *)(*(int *)(obj + 0x4c) + 8), (void *)(obj + 0xc), vsub);
                     ang = (u16)getAngle(vsub[0], vsub[2]);
-                    *(s16 *)obj = (s16)(int)(lbl_803DBDD0 * (f32)ang + lbl_803E3A2C);
+                    *(s16 *)obj = (int)(lbl_803DBDD0 * (f32)ang + lbl_803E3A2C);
                 }
             } else {
                 bestDist = lbl_803E3A28;
                 count = hitDetectFn_80065e50(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), &list, 1, 0);
                 i = 0;
                 p = list;
-                if (count > 0) {
-                    do {
-                        dy = **p - *(f32 *)(obj + 0x10);
-                        if (dy >= lbl_803E39F8) {
-                        } else {
-                            dy = dy * lbl_803E3A34;
-                        }
-                        if (dy < bestDist) {
-                            best = i;
-                            bestDist = dy;
-                        }
-                        p++;
-                        i++;
-                        count--;
-                    } while (count != 0);
+                for (; i < count; i++) {
+                    dy = **p - *(f32 *)(obj + 0x10);
+                    if (dy < lbl_803E39F8) {
+                        dy = dy * lbl_803E3A34;
+                    }
+                    if (dy < bestDist) {
+                        best = i;
+                        bestDist = dy;
+                    }
+                    p++;
                 }
                 if (list == NULL) {
                     *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xc);
