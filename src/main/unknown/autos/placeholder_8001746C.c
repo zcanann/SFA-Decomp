@@ -18284,3 +18284,50 @@ void ObjModel_UnpackResourcePayload(u8 *src, int srcSize, u8 *dst, int dstSize) 
     }
 }
 #pragma pop
+
+extern s16 lbl_803DC7A4;
+extern s16 lbl_803DC7A6;
+extern s16 lbl_803DC7A8;
+extern void ObjModel_SampleJointTransform(u8 *model, int a, int b, f32 t, f32 s, f32 *outPos, s16 *outRot);
+extern void modelAnimFn_800246a0(u8 *dst, u8 *model, u8 *ch, f32 t, int max, int b, int c, int d, int e, int f);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void ObjModel_UpdateAnimMatrices(u8 *model, u8 *blend, u8 *obj, u8 *dst) {
+    u8 *ch;
+    u8 *ch2;
+    f32 pos[3];
+    s16 rot[3];
+
+    ObjModel_BuildAnimBlendTable(obj, *(u8 **)(model + 0x2c), blend);
+    *(u16 *)(model + 0x18) ^= 1;
+    ch = *(u8 **)(model + 0x2c);
+    if ((s8)ch[0x63] & 4) {
+        ObjModel_SampleJointTransform(model, 0, 0, *(f32 *)(obj + 0x98), *(f32 *)(obj + 8), pos, rot);
+        lbl_803DC7A4 = rot[0];
+        lbl_803DC7A6 = rot[1];
+        lbl_803DC7A8 = rot[2];
+    }
+    if (*(u16 *)(*(u8 **)model + 2) & 8) {
+        modelWalkAnimFn_800248b8(dst, model, *(u8 **)(model + 0x2c), 0x7f, *(f32 *)(obj + 0x98));
+    } else if ((s8)(*(u8 **)(model + 0x2c))[0x63] & 8) {
+        ch2 = *(u8 **)(model + 0x30);
+        modelAnimFn_800246a0(dst, model, ch, *(f32 *)(obj + 0x98), 0x7f, 0, 0, 2, 0x14,
+                             (s16)*(u16 *)(ch + 0x5a));
+        modelAnimFn_800246a0(dst, model, ch2, *(f32 *)(obj + 0x9c), 0x7f, 0, 0, 2, 0x18,
+                             (s16)*(u16 *)(ch2 + 0x5a));
+        modelAnimFn_800246a0(dst, model, ch, *(f32 *)(obj + 0x98), 0x7f, 0, 0, 0, 7,
+                             (s16)*(u16 *)(ch2 + 0x58));
+        modelAnimFn_800246a0(dst, model, ch, *(f32 *)(obj + 0x98), 0x7f, 0, 1, 1, 1,
+                             (s16)*(u16 *)(ch + 0x58));
+    } else {
+        modelWalkAnimFn_800248b8(dst, model, *(u8 **)(model + 0x2c), 0x7f, *(f32 *)(obj + 0x98));
+        ch2 = *(u8 **)(model + 0x30);
+        if (ch2 != NULL && *(s16 *)(obj + 0xa2) > -1) {
+            ObjModel_BuildAnimBlendTable(obj, *(u8 **)(model + 0x30), blend);
+            modelWalkAnimFn_800248b8(dst, model, *(u8 **)(model + 0x30), -1, *(f32 *)(obj + 0x9c));
+        }
+    }
+}
+#pragma pop
