@@ -989,119 +989,182 @@ void hudDrawCMenu(int p1, int p2, int p3) {
     Camera_ApplyFullViewport();
 }
 
+#pragma peephole off
+#pragma scheduling off
 void cMenuRotateFn_80124d80(void) {
+    u16 uend;
+    s16 end;
+    s16 diff;
     s16 step;
-    int astep;
-    int adiff;
-    int diff;
-    s16 cur;
-    int d1;
-    int d2;
-    int d3;
-    int a1;
-    int a2;
-    int a3;
+    int cur;
+    s16 diff2;
+    s16 curd;
+    s16 d1;
+    s16 d2;
+    s16 d3;
     s16 r;
+    int t1;
+    int t5;
+    int tmp;
+    s16 best;
 
-    step = lbl_803DD79A * (u16)framesThisStep * 1000;
-    astep = step;
-    if (astep != 0) {
-        diff = (s16)(lbl_803DD79C - lbl_803DD79E);
+    step = (s16)(lbl_803DD79A * (framesThisStep * 1000));
+    if (step != 0) {
+        end = lbl_803DD79E;
+        uend = end;
+        diff = (s16)(lbl_803DD79C - uend);
         if (diff > 0x8000) {
-            diff = (s16)(diff + 1);
+            diff = (s16)(diff - 0xFFFF);
         }
         if (diff < -0x8000) {
-            diff = (s16)(diff + -1);
+            diff = (s16)(diff + 0xFFFF);
         }
-        if (astep < 0) {
-            astep = -astep;
+        t5 = (step < 0) ? -step : step;
+        t1 = diff;
+        if (t1 < 0) {
+            t1 = -t1;
         }
-        adiff = diff;
-        if (adiff < 0) {
-            adiff = -adiff;
-        }
-        if (astep < adiff) {
-            lbl_803DD79C = lbl_803DD79C + step;
-        } else {
-            lbl_803DD79C = lbl_803DD79E;
+        if (t1 <= t5) {
+            lbl_803DD79C = end;
             lbl_803DD79A = 0;
+        } else {
+            lbl_803DD79C += step;
         }
         cur = lbl_803DD79C;
-        diff = (s16)(lbl_803DD79C - lbl_803DD79E);
-        if (diff > 0x8000) {
-            diff = (s16)(diff + 1);
+        diff2 = (s16)(cur - uend);
+        if (diff2 > 0x8000) {
+            diff2 = (s16)(diff2 - 0xFFFF);
         }
-        if (diff < -0x8000) {
-            diff = (s16)(diff + -1);
+        if (diff2 < -0x8000) {
+            diff2 = (s16)(diff2 + 0xFFFF);
         }
-        adiff = diff;
-        if (adiff < 0) {
-            adiff = -adiff;
+        t1 = diff2;
+        if (t1 < 0) {
+            t1 = -t1;
         }
-        if (adiff < 0x2aab) {
+        if (t1 <= 0x2aaa) {
             lbl_803DD8B6 = lbl_803DD8B7;
         }
-        *(s16 *)lbl_803A93EC[0] = lbl_803DD79C;
+        *(s16 *)lbl_803A93EC[0] = cur;
         *(s16 *)lbl_803A93E0[0] = cur;
-        *(s16 *)lbl_803A93EC[1] = cur + 0x5555;
-        *(s16 *)lbl_803A93E0[1] = cur + 0x5555;
-        *(s16 *)lbl_803A93EC[2] = cur + -0x5556;
-        *(s16 *)lbl_803A93E0[2] = cur + -0x5556;
+        t1 = cur + 0x5555;
+        *(s16 *)lbl_803A93EC[1] = t1;
+        *(s16 *)lbl_803A93E0[1] = t1;
+        t1 = cur + 0xAAAA;
+        *(s16 *)lbl_803A93EC[2] = t1;
+        *(s16 *)lbl_803A93E0[2] = t1;
+        curd = lbl_803DD79C;
+        d1 = curd;
+        if (curd > 0x8000) {
+            d1 = (s16)(curd - 0xFFFF);
+        }
+        if (d1 < -0x8000) {
+            d1 = (s16)(d1 + 0xFFFF);
+        }
+        d2 = (s16)(curd - 0x5555);
+        if (d2 > 0x8000) {
+            d2 = (s16)(d2 - 0xFFFF);
+        }
+        if (d2 < -0x8000) {
+            d2 = (s16)(d2 + 0xFFFF);
+        }
+        d3 = (s16)(curd - 0xAAAA);
+        if (d3 > 0x8000) {
+            d3 = (s16)(d3 - 0xFFFF);
+        }
+        if (d3 < -0x8000) {
+            d3 = (s16)(d3 + 0xFFFF);
+        }
+        t5 = d2;
+        if (t5 < 0) {
+            t5 = -t5;
+        }
+        t1 = d1;
+        if (t1 < 0) {
+            t1 = -t1;
+        }
+        if (t1 < t5) {
+            tmp = d1;
+            if (d1 < 0) {
+                tmp = -d1;
+            }
+        } else {
+            tmp = d2;
+            if (d2 < 0) {
+                tmp = -d2;
+            }
+        }
+        best = tmp;
+        t1 = d3;
+        if (t1 < 0) {
+            t1 = -t1;
+        }
+        if (best >= t1 && (best = d3, d3 < 0)) {
+            best = -d3;
+        }
+        r = (s16)(int)-(lbl_803E2030 * (f64)best - lbl_803E2028);
+        lbl_803DD8D4 = (r > 0) ? r : 0;
     }
     cur = lbl_803DD79C;
-    *(s16 *)lbl_803A93EC[0] = lbl_803DD79C;
+    *(s16 *)lbl_803A93EC[0] = cur;
     *(s16 *)lbl_803A93E0[0] = cur;
-    *(s16 *)lbl_803A93EC[1] = cur + 0x5555;
-    *(s16 *)lbl_803A93E0[1] = cur + 0x5555;
-    *(s16 *)lbl_803A93EC[2] = cur + -0x5556;
-    *(s16 *)lbl_803A93E0[2] = cur + -0x5556;
-    d1 = lbl_803DD79C;
-    if (d1 > 0x8000) {
-        d1 = (s16)(lbl_803DD79C + 1);
+    t1 = cur + 0x5555;
+    *(s16 *)lbl_803A93EC[1] = t1;
+    *(s16 *)lbl_803A93E0[1] = t1;
+    t1 = cur + 0xAAAA;
+    *(s16 *)lbl_803A93EC[2] = t1;
+    *(s16 *)lbl_803A93E0[2] = t1;
+    curd = lbl_803DD79C;
+    d1 = curd;
+    if (curd > 0x8000) {
+        d1 = (s16)(curd - 0xFFFF);
     }
     if (d1 < -0x8000) {
-        d1 = (s16)(d1 + -1);
+        d1 = (s16)(d1 + 0xFFFF);
     }
-    d2 = (s16)(lbl_803DD79C + -0x5555);
+    d2 = (s16)(curd - 0x5555);
     if (d2 > 0x8000) {
-        d2 = (s16)(lbl_803DD79C + -0x5554);
+        d2 = (s16)(d2 - 0xFFFF);
     }
     if (d2 < -0x8000) {
-        d2 = (s16)(d2 + -1);
+        d2 = (s16)(d2 + 0xFFFF);
     }
-    d3 = (s16)(lbl_803DD79C + 0x5556);
+    d3 = (s16)(curd - 0xAAAA);
     if (d3 > 0x8000) {
-        d3 = (s16)(lbl_803DD79C + 0x5557);
+        d3 = (s16)(d3 - 0xFFFF);
     }
     if (d3 < -0x8000) {
-        d3 = (s16)(d3 + -1);
+        d3 = (s16)(d3 + 0xFFFF);
     }
-    a2 = d2;
-    if (a2 < 0) {
-        a2 = -a2;
+    t5 = d2;
+    if (t5 < 0) {
+        t5 = -t5;
     }
-    a1 = d1;
-    if (a1 < 0) {
-        a1 = -a1;
+    t1 = d1;
+    if (t1 < 0) {
+        t1 = -t1;
     }
-    if (a1 < a2) {
-        d2 = d1;
+    if (t1 < t5) {
+        tmp = d1;
         if (d1 < 0) {
-            d2 = -d1;
+            tmp = -d1;
         }
-    } else if (d2 < 0) {
-        d2 = -d2;
+    } else {
+        tmp = d2;
+        if (d2 < 0) {
+            tmp = -d2;
+        }
     }
-    a3 = d3;
-    if (a3 < 0) {
-        a3 = -a3;
+    best = tmp;
+    t1 = d3;
+    if (t1 < 0) {
+        t1 = -t1;
     }
-    if (a3 <= d2 && (d2 = d3, d3 < 0)) {
-        d2 = -d3;
+    if (best >= t1 && (best = d3, d3 < 0)) {
+        best = -d3;
     }
-    r = (s16)(int)-(lbl_803E2030 * (f64)(f32)d2 - lbl_803E2028);
-    if (r < 1) {
-        r = 0;
-    }
-    lbl_803DD8D4 = (s8)r;
+    r = (s16)(int)-(lbl_803E2030 * (f64)best - lbl_803E2028);
+    lbl_803DD8D4 = (r > 0) ? r : 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
