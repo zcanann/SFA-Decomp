@@ -13388,6 +13388,123 @@ extern void *Obj_GetPlayerObject(void);
 extern int fn_802966D4(int obj, int *out);
 extern void playerSetHeldObject(void *player, int held);
 extern f32 lbl_803E06D8;
+extern uint buttonGetDisabled(int idx);
+extern void buttonDisable(int index, uint flags);
+extern uint getButtonsJustPressed(int idx);
+extern int fn_80295BF0(void *player);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int hitDetectFn_80065e50(u8 *obj, f32 x, f32 y, f32 z, f32 ***list, int a, int b);
+extern f32 timeDelta;
+extern f32 lbl_803E06D8;
+void saveGame_saveObjectPos(int *obj);
+extern const f32 lbl_803E06DC, lbl_803E06E0, lbl_803E06E4, lbl_803E06E8;
+
+int Carryable_updateHeld(u8 *obj)
+{
+  f32 **list;
+  u8 *held;
+  void *player;
+  held = *(u8 **)(obj + 0xb8);
+  *(u8 *)(held + 8) = 0;
+  *(u8 *)(held + 7) &= ~1;
+  player = Obj_GetPlayerObject();
+  if (*(s8 *)(held + 5) == 0) {
+    struct { u8 a, b, c, d, e; } *t;
+    int v = 0;
+    t = (void *)(*(u8 **)(obj + 0x78) + *(u8 *)(obj + 0xe4) * 5);
+    if ((t->e & 0xf) == 6
+        && (buttonGetDisabled(0) & 0x100) == 0
+        && (*(u8 *)(obj + 0xaf) & 1) != 0
+        && *(int *)(obj + 0xf8) == 0) {
+      *(s16 *)held = 0;
+      buttonDisable(0, 0x100);
+      v = 1;
+    }
+    *(s8 *)(held + 5) = v;
+    if (*(s8 *)(held + 5) != 0) {
+      *(u8 *)(held + 7) |= 1;
+      *(u8 *)(held + 6) = 1;
+    }
+    if (*(int *)(obj + 0xf8) == 0) {
+      int cnt, i, j;
+      f32 **p;
+      u8 *hit;
+      ObjHits_SyncObjectPositionIfDirty(obj);
+      *(u8 *)(obj + 0xaf) &= ~8;
+      if ((*(u8 *)(held + 7) & 2) == 0) {
+        *(f32 *)(obj + 0x28) = -(lbl_803E06DC * timeDelta - *(f32 *)(obj + 0x28));
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+      }
+      cnt = hitDetectFn_80065e50(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), &list, 0, 1);
+      hit = (u8 *)0;
+      i = 0;
+      p = list;
+      for (j = cnt; j > 0; j--) {
+        if (*(s8 *)((u8 *)*p + 0x14) != 0xe) {
+          if (*(f32 *)(obj + 0x10) < **p && *(f32 *)(obj + 0x10) > **p - lbl_803E06E0) {
+            hit = *(u8 **)(list[i] + 4);
+            *(f32 *)(obj + 0x10) = *list[i];
+            *(f32 *)(obj + 0x28) = lbl_803E06E4;
+            break;
+          }
+        }
+        p++;
+        i++;
+      }
+      i = 0;
+      for (; cnt > 0; cnt--) {
+        f32 d = *(f32 *)(obj + 0x10) - *list[i];
+        if (d < lbl_803E06E4) {
+          d = -d;
+        }
+        if (d < lbl_803E06E8) {
+          s8 t2 = *(s8 *)((u8 *)list[i] + 0x14);
+          if (t2 > *(u8 *)(held + 8)) {
+            *(s8 *)(held + 8) = t2;
+          }
+        }
+        i++;
+      }
+      if (hit != 0) {
+        u8 *q = *(u8 **)(hit + 0x58);
+        u8 *q2;
+        u8 c = *(u8 *)(q + 0x10f);
+        *(u8 *)(q + 0x10f) = c + 1;
+        q2 = q + (s8)c * 4;
+        *(u8 **)(q2 + 0x100) = obj;
+      }
+    }
+  } else {
+    ObjHits_MarkObjectPositionDirty(obj);
+    *(u8 *)(obj + 0xaf) |= 8;
+    if ((getButtonsJustPressed(0) & 0x100) != 0) {
+      if ((*(u8 *)(held + 7) & 4) != 0 || fn_80295BF0(player) == 0) {
+        Sfx_PlayFromObject(0, 0x10a);
+      } else {
+        buttonDisable(0, 0x100);
+        *(u8 *)(held + 6) = 0;
+      }
+    }
+    if (*(int *)(obj + 0xf8) == 1) {
+      *(s8 *)(held + 5) = 2;
+    }
+    if (*(s8 *)(held + 5) == 2 && *(int *)(obj + 0xf8) == 0) {
+      u8 *h2 = *(u8 **)(obj + 0xb8);
+      *(u8 *)(h2 + 5) = 0;
+      *(u8 *)(h2 + 6) = 0;
+      if ((*(u8 *)(h2 + 7) & 8) == 0) {
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + lbl_803E06D8;
+        saveGame_saveObjectPos((int *)obj);
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E06D8;
+      }
+    }
+    if (*(s8 *)(held + 6) != 0) {
+      ObjMsg_SendToObject(player, 0x100008, obj, (*(s16 *)(held + 2) << 16) | (u16)*(s16 *)held);
+    }
+  }
+  return *(s8 *)(held + 5);
+}
+
 void saveGame_saveObjectPos(int *obj) {
     register u8 *slot;
     register int v;
@@ -16853,3 +16970,4 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
   return ret;
 }
 #pragma peephole reset
+
