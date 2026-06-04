@@ -10562,7 +10562,7 @@ extern int lbl_803DCB28;
 extern int lbl_803DCB2C;
 
 #pragma peephole on
-void mmFreeTick(void) {
+void mmFreeTick(int arg) {
     MmGlobal *g = (MmGlobal *)gMmStoreArray;
     int i;
     DeferredFree *d;
@@ -14105,6 +14105,281 @@ void gameTextDrawBox(u16 *strPtr, int boxId, u8 *box) {
     }
     *(s16 *)(box + 0x18) = savedX;
     *(s16 *)(box + 0x1a) = savedY;
+}
+#pragma dont_inline reset
+#pragma pop
+
+extern void OSInit(void);
+extern void DVDInit(void);
+extern void VIInit(void);
+extern void PADInit(void);
+extern u8 OSGetProgressiveMode(void);
+extern int OSGetResetCode(void);
+extern void OSSetProgressiveMode(int mode);
+extern void videoInit(void *rmode, int arg);
+extern void setDisplayCopyFilter(void);
+extern void initLoadingScreenTextures(void);
+extern void mmInit(void);
+extern void gxTransformFn_8004a83c(void);
+extern void Camera_InitState(void);
+extern void initControllers(void);
+extern int mmSetFreeDelay(int delay);
+extern void padUpdate(void);
+extern u8 audioInit(void);
+extern void allocSomething32bytes(void);
+extern u8 initLoadFiles(void);
+extern void initFn_8006d020(void);
+extern void dvdCheckError(void);
+extern void gameTextRun(void);
+extern int VIGetDTVStatus(void);
+extern u32 getButtonsHeld(int pad);
+extern void viFn_8004a56c(int arg);
+extern void fn_80137D28(void);
+extern void loadTextureFiles(void);
+extern void initMapBlocks(void);
+extern void ObjModel_InitResourceCaches(void);
+extern void Resource_ResetRefCounts(void);
+extern void gameTextInit(void);
+extern void Obj_InitObjectSystem(void);
+extern void fn_80137998(void);
+extern void mapInitFn_80069990(void);
+extern void initTextures(void);
+extern void mapInitFn_8006fccc(void);
+extern void initGameTimer(void);
+extern void ObjModel_InitRenderBuffers(void);
+extern void _initCardAndDsp(void);
+extern void fn_802B6F48(void);
+extern void loadTaskTexts(void);
+extern void gameTextInitFn_8001bd14(void);
+extern void initMaps(void);
+extern void initFn_800534f8(void);
+extern void titleScreenDrawFn_80093db4(void);
+extern int getDataFileSize(int id);
+extern void loadUiDll(int arg);
+extern void doNothing_beforeTitleScreen(void);
+extern void setDrawCloudsAndLights(int arg);
+extern void OSSetSaveRegion(void *start, void *end);
+extern void VISetBlack(int black);
+extern void VIFlush(void);
+extern void VIWaitForRetrace(void);
+extern void askProgressiveScanMode(void);
+extern void initViewport(void);
+extern void tvInit(void);
+extern u8 GXNtsc480IntDf[];
+extern u8 GXNtsc480Prog[];
+extern void *lbl_803DCCF0;
+extern u8 lbl_803DCAE4;
+extern u8 lbl_8033C3B8[];
+extern u8 lbl_8033C378[];
+extern char sMainFinishedInitMessage[];
+extern void *gGameUIInterface;
+extern void *gCameraInterface;
+extern void *lbl_803DCA94;
+extern void *gPlayerInterface;
+extern void *gObjectTriggerInterface;
+extern void *gScreenTransitionInterface;
+extern void *gSHthorntailAnimationInterface;
+extern void *gSky2Interface;
+extern void *gNewCloudsInterface;
+extern void *gCloudActionInterface;
+extern void *gCheckpointInterface;
+extern void *gTitleMenuControlInterface;
+extern void *gTitleMenuControlInterfaceCopy;
+extern void *gExpgfxInterface;
+extern void *gModgfxInterface;
+extern void *gProjgfxInterface;
+extern void *gPlayerShadowInterface;
+extern void *gPartfxInterface;
+extern void *gScreensInterface;
+extern void *gWaterfxInterface;
+extern void *gRomCurveInterface;
+extern void *gTitleMenuLinkInterface;
+extern void *gPathControlInterface;
+extern int *gMapEventInterface;
+extern void *gBaddieControlInterface;
+extern void *gMinimapInterface;
+extern void *lbl_803DCAC0;
+extern void *gTitleMenuItemInterface;
+extern u8 lbl_803DCA3F;
+
+#pragma push
+#pragma scheduling off
+#pragma dont_inline on
+void init(void) {
+    u8 audioDone;
+    u8 filesDone;
+    u8 once;
+    int delay;
+    u8 dtv;
+
+    audioDone = 0;
+    filesDone = 0;
+    once = 0;
+    OSInit();
+    DVDInit();
+    VIInit();
+    PADInit();
+    LCEnable();
+    {
+        register u32 v;
+        asm {
+            li v, 0x4
+            oris v, v, 0x4
+            mtspr 914, v
+            li v, 0x5
+            oris v, v, 0x5
+            mtspr 915, v
+            li v, 0x6
+            oris v, v, 0x6
+            mtspr 916, v
+            li v, 0x7
+            oris v, v, 0x7
+            mtspr 917, v
+        }
+    }
+    lbl_803DCCF0 = GXNtsc480IntDf;
+    lbl_803DCAE4 = OSGetProgressiveMode();
+    if (OSGetResetCode() != 0 && lbl_803DCAE4 == 1) {
+        lbl_803DCCF0 = GXNtsc480Prog;
+        OSSetProgressiveMode(1);
+    } else {
+        OSSetProgressiveMode(0);
+    }
+    videoInit(lbl_8033C3B8, 0);
+    setDisplayCopyFilter();
+    initLoadingScreenTextures();
+    mmInit();
+    testAndSet_onlyUseHeap3(1);
+    gxTransformFn_8004a83c();
+    testAndSet_onlyUseHeap3(0);
+    Camera_InitState();
+    testAndSet_onlyUseHeap3(1);
+    gameTextInitFn_8001a234();
+    testAndSet_onlyUseHeap3(0);
+    gameTextLoadDir(3);
+    testAndSet_onlyUseHeap3(1);
+    initControllers();
+    delay = mmSetFreeDelay(0);
+    do {
+        mmFreeTick(0);
+        padUpdate();
+        checkReset();
+        waitNextFrame();
+        if (audioDone == 0) {
+            audioDone = audioInit();
+        }
+        if (once == 0) {
+            testAndSet_onlyUseHeap3(1);
+            allocSomething32bytes();
+        }
+        if (audioDone != 0 && filesDone == 0) {
+            testAndSet_onlyUseHeap3(1);
+            filesDone = initLoadFiles();
+        }
+        if (once == 0) {
+            testAndSet_onlyUseHeap3(1);
+            initFn_8006d020();
+        }
+        once = 1;
+        runLoadingScreens();
+        dvdCheckError();
+        gameTextRun();
+        if (*(u8 *)lbl_803DCAFC == 0) {
+            dtv = 0;
+            if (VIGetDTVStatus() != 0) {
+                if (OSGetResetCode() != 0 && lbl_803DCAE4 != 1 && (getButtonsHeld(0) & 0x200) != 0) {
+                    dtv = 1;
+                }
+                if (OSGetResetCode() == 0 && (lbl_803DCAE4 == 1 || (getButtonsHeld(0) & 0x200) != 0)) {
+                    dtv = 1;
+                }
+            }
+            *(u8 *)lbl_803DCAFC = dtv;
+        }
+        GXFlush_(1, 0);
+    } while ((filesDone == 0 || audioDone == 0) && lbl_803DCA3D == 0);
+    while (lbl_803DCA3D != 0) {
+        mmFreeTick(0);
+        padUpdate();
+        checkReset();
+        waitNextFrame();
+        GXFlush_(1, 0);
+    }
+    mmSetFreeDelay(delay);
+    testAndSet_onlyUseHeap3(1);
+    viFn_8004a56c(5);
+    fn_80137D28();
+    loadTextureFiles();
+    initMapBlocks();
+    ObjModel_InitResourceCaches();
+    Resource_ResetRefCounts();
+    gameTextInit();
+    gameTextLoadDir(0x15);
+    Obj_InitObjectSystem();
+    fn_80137998();
+    mapInitFn_80069990();
+    initTextures();
+    mapInitFn_8006fccc();
+    initGameTimer();
+    ObjModel_InitRenderBuffers();
+    _initCardAndDsp();
+    fn_802B6F48();
+    loadTaskTexts();
+    gameTextInitFn_8001bd14();
+    initMaps();
+    gGameUIInterface = Resource_Acquire(0, 0xf);
+    gCameraInterface = Resource_Acquire(1, 0x17);
+    lbl_803DCA94 = Resource_Acquire(0x12, 8);
+    gPlayerInterface = Resource_Acquire(0xf, 0x16);
+    gObjectTriggerInterface = Resource_Acquire(2, 0x1d);
+    gScreenTransitionInterface = Resource_Acquire(0x16, 4);
+    gSHthorntailAnimationInterface = Resource_Acquire(5, 0xf);
+    gSky2Interface = Resource_Acquire(6, 0xc);
+    gNewCloudsInterface = Resource_Acquire(7, 8);
+    gCloudActionInterface = Resource_Acquire(9, 0xa);
+    gCheckpointInterface = Resource_Acquire(3, 0xd);
+    gTitleMenuControlInterface = Resource_Acquire(4, 0x24);
+    gTitleMenuControlInterfaceCopy = gTitleMenuControlInterface;
+    gExpgfxInterface = Resource_Acquire(0xa, 0xa);
+    gModgfxInterface = Resource_Acquire(0xb, 0xc);
+    gProjgfxInterface = Resource_Acquire(0xc, 8);
+    gPlayerShadowInterface = Resource_Acquire(0xd, 3);
+    gPartfxInterface = Resource_Acquire(0xe, 2);
+    gScreensInterface = Resource_Acquire(0x11, 3);
+    gWaterfxInterface = Resource_Acquire(0x13, 7);
+    gRomCurveInterface = Resource_Acquire(0x14, 0x26);
+    gTitleMenuLinkInterface = Resource_Acquire(0x3c, 7);
+    gPathControlInterface = Resource_Acquire(0x15, 9);
+    gMapEventInterface = Resource_Acquire(0x17, 0x24);
+    lbl_803DCAB4 = (int *)Resource_Acquire(0x18, 6);
+    gBaddieControlInterface = Resource_Acquire(0x19, 0x16);
+    gMinimapInterface = Resource_Acquire(0x31, 2);
+    lbl_803DCAC0 = Resource_Acquire(0x2f, 0xc);
+    gTitleMenuItemInterface = Resource_Acquire(0x3d, 0xa);
+    initFn_800534f8();
+    titleScreenDrawFn_80093db4();
+    testAndSet_onlyUseHeap3(0);
+    loadAssetFileById((int)&lbl_803DCADC, 0x33);
+    lbl_803DCAD8 = (s16)(getDataFileSize(0x33) >> 1);
+    lbl_803DCAE0 = (*(u8 *(**)(void))(*(int *)gMapEventInterface + 0x88))();
+    lbl_803DCA3F = 1;
+    loadUiDll(2);
+    doNothing_beforeTitleScreen();
+    doQueuedLoads();
+    setDrawCloudsAndLights(0);
+    if (*(u8 *)lbl_803DCAFC != 0) {
+        OSSetSaveRegion(lbl_803DCAFC, (u8 *)lbl_803DCAFC + 1);
+        VISetBlack(0);
+        VIFlush();
+        VIWaitForRetrace();
+        askProgressiveScanMode();
+    }
+    OSSetSaveRegion(NULL, NULL);
+    memcpy(lbl_8033C378, lbl_803DCCF0, 0x3c);
+    lbl_803DCCF0 = lbl_8033C378;
+    initViewport();
+    tvInit();
+    OSReport(sMainFinishedInitMessage);
 }
 #pragma dont_inline reset
 #pragma pop
