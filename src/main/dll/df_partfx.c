@@ -1788,7 +1788,7 @@ extern f32 lbl_803DD424;
 extern f32 lbl_803DD428;
 extern u8 lbl_803DD42C;
 extern u8 lbl_803DD42E;
-extern void player_followCurve(int* obj, int* state, int p5, f32 a, f32 b, f32 t);
+extern void player_followCurve(int* obj, int* state, f32 a, f32 b, f32 t, int p5);
 extern f32 lbl_803E05B4;
 extern f32 lbl_803E05B8;
 extern int* Resource_Acquire(int id, int kind);
@@ -1926,7 +1926,7 @@ void player_updateCurve(int* obj, int* state, f32 t)
         if (curve == NULL) {
             *(f32*)((char*)state + 700) = lbl_803E0570;
         } else {
-            player_followCurve(obj, state, 1, *(f32*)((char*)curve + 8), *(f32*)((char*)curve + 16), t);
+            player_followCurve(obj, state, *(f32*)((char*)curve + 8), *(f32*)((char*)curve + 16), t, 1);
         }
     }
 }
@@ -1943,7 +1943,7 @@ extern f32 lbl_803E0584;
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-void player_followCurve(int* obj, int* state, int p5, f32 cx, f32 cz, f32 t)
+void player_followCurve(int* obj, int* state, f32 cx, f32 cz, f32 t, int p5)
 {
     f32 dx, dz, dist, max;
 
