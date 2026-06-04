@@ -66,163 +66,14 @@ extern f32 lbl_803E77D0;
 typedef void (*SynthAuxCallback)(int active, u16 *samples, u32 user);
 
 extern u8 *dataGetKeymap(u32 sampleId);
-extern int audioFn_8026f630(u32 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlags);
-extern int audioLayerFn_8026f8b8(u32 sampleId, int key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
-                       u32 pan, u32 param_8, u32 param_9, u32 param_10, u32 param_11,
-                       u32 param_12, u32 param_13, u32 param_14, u32 param_15, u32 param_16);
-extern int audioFn_80278b94(u32 sampleId, int key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
-                       u32 pan, u32 param_8, u32 param_9, u32 param_10, u32 param_11,
-                       u32 param_12, u32 param_13, u32 param_14, u32 param_15, u32 param_16);
+extern int audioFn_8026f630(u32 key, u32 midi, u32 midiSet, u32 vidFlag, u32 *rejected);
+extern int audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
+                                 u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                                 u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
+extern int audioFn_80278b94(u16 id, u8 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
+                            u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                            u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 extern u32 vidGetInternalId(u32 handle);
-
-/*
- * Resolve an indirection-table sample entry, then dispatch the resolved
- * sample or nested sample group.
- */
-int audioKeymapFn_8026fc8c(u32 sampleId, s16 key, u32 velocity, u32 baseSample, u32 flags, u32 volume,
-                u32 pan, u32 param_8, u32 param_9, u32 param_10, u32 param_11, u32 param_12,
-                u32 param_13, u32 param_14, u32 param_15, u32 param_16)
-{
-    u8 *table;
-    u8 *entry;
-    u16 resolvedSample;
-    u32 adjustedPan;
-    s32 adjustedKey;
-    u32 allow;
-    int handle;
-    u32 outFlags;
-
-    table = dataGetKeymap(sampleId);
-    if (table != 0) {
-        entry = table + ((flags & 0x7f) * 8);
-        if (*(s16 *)entry != -1) {
-            resolvedSample = *(u16 *)entry;
-            if ((resolvedSample & 0xc000) != 0x4000) {
-                if ((entry[3] & 0x80) == 0) {
-                    adjustedPan = (entry[3] - 0x40) + (pan & 0xff);
-                    if ((s32)adjustedPan < 0) {
-                        adjustedPan = 0;
-                    } else if ((s32)adjustedPan < 0x80) {
-                        adjustedPan &= 0xff;
-                    } else {
-                        adjustedPan = 0x7f;
-                    }
-                } else {
-                    adjustedPan = 0x80;
-                }
-                adjustedKey = (flags & 0x7f) + *(s8 *)(entry + 2);
-                if (adjustedKey >= 0x80) {
-                    adjustedKey = 0x7f;
-                } else if (adjustedKey < 0) {
-                    adjustedKey = 0;
-                }
-                key = key + *(s16 *)(entry + 4);
-                if (key >= 0x100) {
-                    key = 0xff;
-                } else if (key < 0) {
-                    key = 0;
-                }
-                if ((resolvedSample & 0xc000) == 0) {
-                    if ((u16)inpGetMidiCtrl(0x41, param_8, param_9) < 0x1f81) {
-                        handle = -1;
-                        allow = 1;
-                    } else {
-                        handle = audioFn_8026f630(adjustedKey & 0x7f, param_8, param_9, param_13,
-                                             &outFlags);
-                        allow = __cntlzw(outFlags) >> 5;
-                    }
-                    if (allow == 0) {
-                        return -1;
-                    }
-                    if (handle != -1) {
-                        return handle;
-                    }
-                    return audioFn_80278b94(resolvedSample, key & 0xff, velocity, baseSample,
-                                       adjustedKey | (flags & 0x80), volume, adjustedPan, param_8,
-                                       param_9, param_10, param_11, param_12, param_13 & 0xff,
-                                       param_14, param_15, param_16);
-                }
-                return audioLayerFn_8026f8b8(resolvedSample, key, velocity, baseSample,
-                                   adjustedKey | (flags & 0x80), volume, adjustedPan, param_8,
-                                   param_9, param_10, param_11, param_12, param_13 & 0xff,
-                                   param_14, param_15, param_16);
-            }
-        }
-    }
-    return -1;
-}
-
-/*
- * Start a sample/FX id, handling direct samples, table-expanded sample
- * groups, and already-linked voice chains.
- */
-int audioFn_8026feec(u32 sampleId, char key, u32 velocity, u32 flags, u32 volume, u32 pan, u32 param_7,
-                u32 param_8, u8 param_9, u16 param_10, u16 param_11, u8 auxIndex, s16 keyOffset,
-                u8 studio, u32 studioAux)
-{
-    u32 sampleClass;
-    int handle;
-    u32 voice;
-    u8 *slot;
-    u32 outFlags;
-    u32 adjustedKey;
-
-    adjustedKey = key + keyOffset;
-    if ((u8)adjustedKey > 0xff) {
-        adjustedKey = 0xff;
-    }
-    adjustedKey &= 0xff;
-    sampleClass = sampleId & 0xc000;
-    if (sampleClass == 0x4000) {
-        handle = audioKeymapFn_8026fc8c(sampleId, adjustedKey, velocity, sampleId, flags, volume, pan, param_7,
-                             param_8, param_9, param_10, param_11, 1, auxIndex, studio,
-                             studioAux);
-        if (handle != -1) {
-            voice = vidGetInternalId(handle);
-            while (voice != 0xffffffff) {
-                slot = synthVoice + ((voice & 0xff) * 0x404);
-                slot[0x11c] = 0;
-                voice = *(u32 *)(slot + 0xec);
-            }
-        }
-    } else {
-        if (sampleClass == 0) {
-            if ((u16)inpGetMidiCtrl(0x41, param_7, param_8) < 0x1f81) {
-                handle = -1;
-                sampleClass = 1;
-            } else {
-                handle = audioFn_8026f630(flags & 0x7f, param_7, param_8, 1, &outFlags);
-                sampleClass = __cntlzw(outFlags) >> 5;
-            }
-            if (sampleClass == 0) {
-                return -1;
-            }
-            if (handle != -1) {
-                return handle;
-            }
-            return audioFn_80278b94(sampleId, adjustedKey, velocity, sampleId, flags, volume, pan, param_7,
-                               param_8, param_9, param_10, param_11, 1, auxIndex, studio,
-                               studioAux);
-        }
-        if (sampleClass == 0x8000) {
-            handle = audioLayerFn_8026f8b8(sampleId, adjustedKey, velocity, sampleId, flags, volume, pan, param_7,
-                                 param_8, param_9, param_10, param_11, 1, auxIndex, studio,
-                                 studioAux);
-            if (handle == -1) {
-                return -1;
-            }
-            voice = vidGetInternalId(handle);
-            while (voice != 0xffffffff) {
-                slot = synthVoice + ((voice & 0xff) * 0x404);
-                slot[0x11c] = 0;
-                voice = *(u32 *)(slot + 0xec);
-            }
-            return handle;
-        }
-        handle = -1;
-    }
-    return handle;
-}
 
 typedef struct SynthVoiceLfo {
     s32 time;
@@ -247,7 +98,9 @@ typedef struct SynthHwVoice {
     u8* addr;                /* 0x034 */
     u8 unk038[0xA8 - 0x38];
     u8 timeUsedByInput;      /* 0x0A8 */
-    u8 unk0A9[0x10C - 0xA9];
+    u8 unk0A9[0xEC - 0xA9];
+    u32 child;               /* 0x0EC */
+    u8 unk0F0[0x10C - 0xF0];
     u8 prio;                 /* 0x10C */
     u8 unk10D;
     u16 ageSpeed;            /* 0x10E */
@@ -354,6 +207,142 @@ extern const f32 lbl_803E77AC;
 extern const f32 lbl_803E77B0;
 extern const f32 lbl_803E77B4;
 extern const f32 lbl_803E77B8;
+
+/*
+ * Resolve an indirection-table sample entry, then dispatch the resolved
+ * sample or nested sample group.
+ */
+int audioKeymapFn_8026fc8c(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan,
+                           u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag,
+                           u8 vGroup, u8 studio, u32 itd)
+{
+    u8 *keymap;
+    u8 *entry;
+    s32 p;
+    s32 k;
+    u32 handle;
+    u32 ok;
+    u32 rejected;
+
+    if ((keymap = dataGetKeymap(id)) != 0) {
+        entry = keymap + (key & 0x7F) * 8;
+        if (*(u16 *)entry != 0xFFFF && (*(u16 *)entry & 0xC000) != 0x4000) {
+            if ((entry[3] & 0x80) == 0) {
+                p = (keymap[key * 8 + 3] - 0x40) + pan;
+                if (p < 0) {
+                    pan = 0;
+                } else if (p > 0x7F) {
+                    pan = 0x7F;
+                } else {
+                    pan = p;
+                }
+            } else {
+                pan = 0x80;
+            }
+
+            k = (key & 0x7F) + *(s8 *)(entry + 2);
+            if (k > 0x7F) {
+                k = 0x7F;
+            } else if (k < 0) {
+                k = 0;
+            }
+
+            prio += *(s16 *)(entry + 4);
+            if (prio > 0xFF) {
+                prio = 0xFF;
+            } else if (prio < 0) {
+                prio = 0;
+            }
+
+            if ((*(u16 *)entry & 0xC000) == 0) {
+                if (inpGetMidiCtrl(0x41, midi, midiSet) > 0x1F80) {
+                    handle = audioFn_8026f630(k & 0x7F, midi, midiSet, vidFlag, &rejected);
+                    ok = !rejected;
+                } else {
+                    handle = -1;
+                    ok = 1;
+                }
+                if (ok == 0) {
+                    return -1;
+                }
+                if (handle != 0xFFFFFFFF) {
+                    return handle;
+                }
+                return audioFn_80278b94(*(u16 *)entry, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                                        pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
+                                        studio, itd);
+            }
+            return audioLayerFn_8026f8b8(*(u16 *)entry, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                                         pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
+                                         studio, itd);
+        }
+    }
+    return -1;
+}
+
+/*
+ * Start a sample/FX id, handling direct samples, table-expanded sample
+ * groups, and already-linked voice chains.
+ */
+int audioFn_8026feec(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
+                     u8 section, u16 step, u16 trackid, u8 vGroup, s16 prioOffset, u8 studio, u32 itd)
+{
+    u32 handle;
+    u32 ok;
+    u32 rejected;
+    u32 vid;
+    u32 vi;
+    s32 p;
+
+    p = prio + prioOffset;
+    if ((u8)p > 0xFF) {
+        p = 0xFF;
+    }
+    prio = p;
+
+    switch (id & 0xC000) {
+    case 0:
+        if (inpGetMidiCtrl(0x41, midi, midiSet) > 0x1F80) {
+            handle = audioFn_8026f630(key & 0x7F, midi, midiSet, 1, &rejected);
+            ok = !rejected;
+        } else {
+            handle = -1;
+            ok = 1;
+        }
+        if (ok == 0) {
+            return -1;
+        }
+        if (handle != 0xFFFFFFFF) {
+            return handle;
+        }
+        return audioFn_80278b94(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,
+                                step, trackid, 1, vGroup, studio, itd);
+    case 0x4000:
+        vid = audioKeymapFn_8026fc8c(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,
+                                     step, trackid, 1, vGroup, studio, itd);
+        if (vid != 0xFFFFFFFF) {
+            vi = vidGetInternalId(vid);
+            while (vi != 0xFFFFFFFF) {
+                HWVOICE(vi & 0xFF)->callbackActive = 0;
+                vi = HWVOICE(vi & 0xFF)->child;
+            }
+        }
+        return vid;
+    case 0x8000:
+        vid = audioLayerFn_8026f8b8(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,
+                                    step, trackid, 1, vGroup, studio, itd);
+        if (vid != 0xFFFFFFFF) {
+            vi = vidGetInternalId(vid);
+            while (vi != 0xFFFFFFFF) {
+                HWVOICE(vi & 0xFF)->callbackActive = 0;
+                vi = HWVOICE(vi & 0xFF)->child;
+            }
+        }
+        return vid;
+    }
+    return -1;
+}
+
 
 /*
  * Low-precision per-voice update: LFOs, vibrato, pitch sweeps, pan ramps,
@@ -738,68 +727,76 @@ end:
  *
  * EN v1.1 Address: 0x80271178, size 336b
  */
+typedef struct SynthJobTab {
+    SynthDelayedNode* lowPrecision;
+    SynthDelayedNode* event;
+    SynthDelayedNode* zeroOffset;
+} SynthJobTab;
+
+#define SYNTH_JOB_TABLE ((SynthJobTab*)(lbl_803BCD90 + 0x240))
+
 void synthQueueDelayedUpdate(SynthDelayedNode *fade, int mode, u32 delay)
 {
-    u32 bucket;
-    SynthDelayStorageLocal *storage;
-    SynthDelayedNode *node;
-    SynthDelayedNode **head;
+    SynthDelayedNode* newJq;
+    SynthDelayedNode** root;
+    u8 jobTabIndex;
+    SynthJobTab* jobTab;
 
-    bucket = gSynthDelayBucketCursor + (delay >> 8);
-    bucket &= 0x1f;
-    storage = &gSynthDelayStorage;
-    head = &storage->bucketHeads[bucket][0];
+    jobTabIndex = ((delay / 256) + gSynthDelayBucketCursor) & 0x1F;
+    jobTab = &SYNTH_JOB_TABLE[jobTabIndex];
+
     switch (mode) {
     case 0:
-        node = fade;
-        if (node->bucketIndex != 0xff) {
-            if (node->bucketIndex == bucket) {
+        newJq = fade;
+        if (newJq->bucketIndex != 0xFF) {
+            if (newJq->bucketIndex == jobTabIndex) {
                 return;
             }
-            if (node->next != 0) {
-                node->next->prev = node->prev;
+            if (newJq->next != 0) {
+                newJq->next->prev = newJq->prev;
             }
-            if (node->prev == 0) {
-                storage->bucketHeads[node->bucketIndex][0] = node->next;
+            if (newJq->prev != 0) {
+                newJq->prev->next = newJq->next;
             } else {
-                node->prev->next = node->next;
+                SYNTH_JOB_TABLE[newJq->bucketIndex].lowPrecision = newJq->next;
             }
         }
+        root = &jobTab->lowPrecision;
         break;
     case 1:
-        node = fade + 1;
-        if (node->bucketIndex != 0xff) {
-            if (node->bucketIndex == bucket) {
+        newJq = fade + 1;
+        if (newJq->bucketIndex != 0xFF) {
+            if (newJq->bucketIndex == jobTabIndex) {
                 return;
             }
-            if (node->next != 0) {
-                node->next->prev = node->prev;
+            if (newJq->next != 0) {
+                newJq->next->prev = newJq->prev;
             }
-            if (node->prev == 0) {
-                storage->bucketHeads[node->bucketIndex][2] = node->next;
+            if (newJq->prev != 0) {
+                newJq->prev->next = newJq->next;
             } else {
-                node->prev->next = node->next;
+                SYNTH_JOB_TABLE[newJq->bucketIndex].zeroOffset = newJq->next;
             }
         }
-        head = &storage->bucketHeads[bucket][2];
+        root = &jobTab->zeroOffset;
         break;
     case 2:
-        node = fade + 2;
-        if (node->bucketIndex != 0xff) {
+        newJq = fade + 2;
+        if (newJq->bucketIndex != 0xFF) {
             return;
         }
-        head = &storage->bucketHeads[bucket][1];
+        root = &jobTab->event;
         break;
     default:
-        return;
+        break;
     }
-    node->bucketIndex = bucket;
-    node->next = *head;
-    if (*head != 0) {
-        (*head)->prev = node;
+
+    newJq->bucketIndex = jobTabIndex;
+    if ((newJq->next = *root) != 0) {
+        (*root)->prev = newJq;
     }
-    node->prev = 0;
-    *head = node;
+    newJq->prev = 0;
+    *root = newJq;
 }
 
 /*
