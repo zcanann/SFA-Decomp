@@ -1995,7 +1995,7 @@ void dll_200_render(int* obj, int p1, int p2, int p3, int p4, s8 visible)
  * (dll_200_SeqFn) into obj->_bc and prime obj->_b8 (the body block) with
  * fixed bytes, the three float position-quaternion from arg+8/c/10,
  * GameBit_Get(0xd0) latched into b->_24, plus several literal latches. */
-extern void dll_200_SeqFn(void);
+int dll_200_SeqFn(int p1, int p2, int p3, int p4);
 extern f32 lbl_803E5D98;
 #pragma scheduling off
 #pragma peephole off
@@ -2027,9 +2027,58 @@ extern void playerAddRemoveMagic(int player, int amount);
 extern void fn_80296474(int player, int a, int b);
 extern void GameBit_Set(int slot, int val);
 
+int fn_801F2974(int* arg0, int arg1, int* arg2, int arg3);
+
 #pragma scheduling off
 #pragma peephole off
-int fn_801F2974(int* arg0, int arg1, int* arg2)
+#pragma opt_strength_reduction off
+int dll_200_SeqFn(int p1, int p2, int p3, int p4)
+{
+    u8 ev;
+    int i;
+    int state;
+
+    ev = (*gMapEventInterface)->getMode((int)*(s8 *)((char *)p1 + 0xac));
+    switch (ev) {
+    case 1:
+        fn_801F2974((int *)p1, p2, (int *)p3, p4);
+        break;
+    case 4:
+        *(u8 *)((char *)p1 + 0xaf) = (u8)(*(u8 *)((char *)p1 + 0xaf) | 8);
+        break;
+    case 6:
+        state = *(int *)((char *)p1 + 0xb8);
+        *(u8 *)((char *)p1 + 0xaf) = (u8)(*(u8 *)((char *)p1 + 0xaf) | 8);
+        for (i = 0; i < (int)*(u8 *)((char *)p3 + 0x8b); i++) {
+            switch (*((u8 *)p3 + (i + 0x81))) {
+            case 0:
+                break;
+            case 1:
+                if (*(u8 *)((char *)state + 0x27) >= 2) {
+                    GameBit_Set(0x314, 1);
+                }
+                break;
+            }
+        }
+        break;
+    case 0:
+        return 0;
+    case 2:
+        return 0;
+    case 3:
+        return 0;
+    case 5:
+        return 0;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_strength_reduction off
+int fn_801F2974(int* arg0, int arg1, int* arg2, int arg3)
 {
     int state;
     int player;
@@ -2042,11 +2091,11 @@ int fn_801F2974(int* arg0, int arg1, int* arg2)
     for (i = 0; i < (int)*(u8*)((char*)arg2 + 0x8b); i++) {
         u8 mode = *(u8*)((char*)state + 0x25);
         if (mode == 1) {
-            if (*((u8*)arg2 + i + 0x81) == 4) {
+            if (*((u8*)arg2 + (i + 0x81)) == 4) {
                 playerAddRemoveMagic(player, 5);
             }
         } else if (mode != 2) {
-            u8 v = *((u8*)arg2 + i + 0x81);
+            u8 v = *((u8*)arg2 + (i + 0x81));
             if (v == 1) {
                 GameBit_Set(208, 1);
                 *(u8*)((char*)state + 0x24) = 1;
