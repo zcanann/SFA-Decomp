@@ -380,7 +380,7 @@ void renderFn_8005e730(undefined4 param_1,undefined4 param_2,int param_3)
 /*
  * --INFO--
  *
- * Function: fn_8005E97C
+ * Function: frustumTestAabbWithPlaneOffsets
  * EN v1.0 Address: 0x8005E97C
  * EN v1.0 Size: 296b
  * EN v1.1 Address: 0x8005EAF8
@@ -389,7 +389,7 @@ void renderFn_8005e730(undefined4 param_1,undefined4 param_2,int param_3)
 #pragma scheduling off
 #pragma peephole off
 undefined4
-fn_8005E97C(float param_1,float param_2,float param_3,float param_4,float param_5,
+frustumTestAabbWithPlaneOffsets(float param_1,float param_2,float param_3,float param_4,float param_5,
             float param_6,float *param_7)
 {
   byte bVar1;
@@ -438,7 +438,7 @@ fn_8005E97C(float param_1,float param_2,float param_3,float param_4,float param_
 /*
  * --INFO--
  *
- * Function: fn_8005EAA4
+ * Function: mapBlockBounds_ComputeAndTestPlanes
  * EN v1.0 Address: 0x8005EAA4
  * EN v1.0 Size: 476b
  * EN v1.1 Address: 0x8005EC20
@@ -447,7 +447,7 @@ fn_8005E97C(float param_1,float param_2,float param_3,float param_4,float param_
 #pragma scheduling off
 #pragma peephole off
 u8
-fn_8005EAA4(int param_1,int param_2,float *param_3,int param_4,float *param_5,float *param_6,
+mapBlockBounds_ComputeAndTestPlanes(int param_1,int param_2,float *param_3,int param_4,float *param_5,float *param_6,
             float *param_7,float *param_8,float *param_9,float *param_10)
 {
   byte bVar1;
@@ -565,7 +565,7 @@ void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float
   if ((obj != NULL) && ((*(uint *)(obj + 0x3c) & 2) != 0)) {
     goto end;
   }
-  if (fn_8005EAA4(ptr,block,(float *)(base + 0x987c),5,&x1,&y1,&z1,&x2,&y2,&z2) == 0) {
+  if (mapBlockBounds_ComputeAndTestPlanes(ptr,block,(float *)(base + 0x987c),5,&x1,&y1,&z1,&x2,&y2,&z2) == 0) {
     goto end;
   }
   if ((u8)hi == 0) {
@@ -643,7 +643,7 @@ void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float
             vis = lo;
           }
           else {
-            u8 res2 = fn_8005EAA4(ptr,block,(float *)(base + 0x9818),5,&x1,&y1,&z1,&x2,&y2,&z2);
+            u8 res2 = mapBlockBounds_ComputeAndTestPlanes(ptr,block,(float *)(base + 0x9818),5,&x1,&y1,&z1,&x2,&y2,&z2);
             if (((res2 == 0) || ((u8)lo == 0)) && ((res2 != 0) || ((u8)lo != 0))) {
               vis = 0;
             }
