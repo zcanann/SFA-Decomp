@@ -368,23 +368,6 @@ extern void* PTR_DAT_803211ec;
 /*
  * --INFO--
  *
- * Function: mikabomb_update
- * EN v1.0 Address: 0x8016B2E0
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x8016B550
- * EN v1.1 Size: 412b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void mikabomb_update(uint param_1,int param_2)
-{
-}
-
-/*
- * --INFO--
- *
  * Function: FUN_8016b2e4
  * EN v1.0 Address: 0x8016B2E4
  * EN v1.0 Size: 184b
@@ -4566,7 +4549,7 @@ int siderepel_getExtraSize(void) { return 0x1; }
 extern void mikabomb_free();
 extern void mikabomb_render();
 extern void mikabomb_hitDetect();
-extern void mikabomb_update(uint param_1,int param_2);
+extern void mikabomb_update(int *obj);
 extern void mikabomb_init();
 extern int mikabomb_getObjectTypeId();
 extern int mikabomb_getExtraSize();
@@ -5802,3 +5785,127 @@ void flamethrowerspe_update(int *obj)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern u32 lbl_803E31A0;
+extern f32 lbl_803E31A4;
+extern f32 lbl_803E31A8;
+extern f32 lbl_803E31AC;
+extern f32 lbl_803E31B0;
+extern f32 lbl_803E31C4;
+extern f32 lbl_803E31C8;
+extern f32 lbl_803E31CC;
+extern f32 lbl_803E31D0;
+extern f32 lbl_803E31D4;
+extern void CameraShake_Start(f32 a, f32 b, f32 c);
+extern int loadObjectAtObject(int *obj, void *params);
+
+#pragma scheduling off
+#pragma peephole off
+void mikabomb_update(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    uint timer = *(u8 *)((char *)obj + 0x36);
+
+    if (timer < 0xff) {
+        f32 t = (f32)timer;
+        f32 dec;
+        dec = lbl_803E31C4 * timeDelta;
+        if (t - dec > lbl_803E31C8) {
+            *(u8 *)((char *)obj + 0x36) = (f32)timer - dec;
+        } else {
+            Sfx_StopObjectChannel(obj, 0x7f);
+            *(u8 *)((char *)obj + 0x36) = 0;
+            Obj_FreeObject(obj);
+            return;
+        }
+    } else {
+        *(f32 *)((char *)obj + 0x28) -= lbl_803E31CC * timeDelta;
+        if (*(f32 *)((char *)obj + 0x28) < lbl_803E31D0) {
+            *(f32 *)((char *)obj + 0x28) = lbl_803E31D0;
+        }
+        objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
+                *(f32 *)((char *)obj + 0x28) * timeDelta,
+                *(f32 *)((char *)obj + 0x2c) * timeDelta);
+    }
+
+    if (*(u8 *)((char *)obj + 0x36) == 0xff || *(u8 *)((char *)state + 0xc) != 0) {
+        u32 localB;
+        u32 localA;
+        ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
+        ObjHits_EnableObject(obj);
+        if (*(void **)((char *)*(int **)((char *)obj + 0x54) + 0x50) != NULL &&
+            *(void **)((char *)*(int **)((char *)obj + 0x54) + 0x50) == Obj_GetPlayerObject()) {
+            if (*(u8 *)((char *)obj + 0x36) == 0xff) {
+                int *st = *(int **)((char *)obj + 0xb8);
+                u32 rnd;
+                localB = lbl_803E31A0;
+                Sfx_PlayFromObject(obj, SFXen_weetinklp22);
+                rnd = randomGetRange(0, 2);
+                ((void (*)(int *, u32, int, int, int, u32 *))((int *)*(int **)st[2])[1])(obj, rnd, 0, 2, -1, &localB);
+                ObjHitbox_SetSphereRadius(obj,
+                    (s32)(lbl_803E31A4 * (f32)(u32)*(u8 *)((char *)*(int **)((char *)obj + 0x50) + 0x62)));
+                CameraShake_Start(lbl_803E31A8, lbl_803E31AC, lbl_803E31B0);
+                *(u8 *)((char *)obj + 0x36) = 0xfe;
+                Obj_FreeObject((int *)*st);
+                *st = 0;
+            }
+            ObjHits_DisableObject(obj);
+        } else {
+            if (*(f32 *)((char *)obj + 0x10) <= *(f32 *)((char *)state + 4) &&
+                *(u8 *)((char *)obj + 0x36) == 0xff) {
+                int *st = *(int **)((char *)obj + 0xb8);
+                u32 rnd;
+                localA = lbl_803E31A0;
+                Sfx_PlayFromObject(obj, SFXen_weetinklp22);
+                rnd = randomGetRange(0, 2);
+                ((void (*)(int *, u32, int, int, int, u32 *))((int *)*(int **)st[2])[1])(obj, rnd, 0, 2, -1, &localA);
+                ObjHitbox_SetSphereRadius(obj,
+                    (s32)(lbl_803E31A4 * (f32)(u32)*(u8 *)((char *)*(int **)((char *)obj + 0x50) + 0x62)));
+                CameraShake_Start(lbl_803E31A8, lbl_803E31AC, lbl_803E31B0);
+                *(u8 *)((char *)obj + 0x36) = 0xfe;
+                Obj_FreeObject((int *)*st);
+                *st = 0;
+                *(u8 *)((char *)state + 0xc) = 1;
+            }
+        }
+    }
+}
+
+void mikabomb_init(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    f32 out;
+    void *alloc;
+    f32 fz;
+
+    ObjHits_DisableObject(obj);
+    *(u8 *)((char *)obj + 0x36) = 0xff;
+    fz = lbl_803E31C8;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = lbl_803E31D4;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(s16 *)((char *)obj + 2) = -0x4000;
+    *(s16 *)obj = 0;
+    *(s16 *)((char *)obj + 4) = 0;
+    fn_80065684((int)obj, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+                *(f32 *)((char *)obj + 0x14), &out, 0);
+    *(f32 *)((char *)state + 4) = *(f32 *)((char *)obj + 0x10) - out;
+    if ((u8)Obj_IsLoadingLocked() != 0) {
+        alloc = Obj_AllocObjectSetup(0x20, 0xc);
+        *(f32 *)((char *)alloc + 8) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)alloc + 0xc) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)alloc + 0x10) = *(f32 *)((char *)obj + 0x14);
+        *(u8 *)((char *)alloc + 4) = 1;
+        *(u8 *)((char *)alloc + 5) = 1;
+        *(u8 *)((char *)alloc + 6) = 0xff;
+        *(u8 *)((char *)alloc + 7) = 0xff;
+        *state = loadObjectAtObject(obj, alloc);
+        *(int **)((char *)*(int **)state + 0xc4) = obj;
+    } else {
+        *state = 0;
+    }
+    *(int *)((char *)state + 8) = Resource_Acquire(0x5b, 1);
+    *(u8 *)((char *)state + 0xc) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset

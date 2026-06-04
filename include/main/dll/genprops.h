@@ -9,7 +9,7 @@ int mikabomb_getObjectTypeId();
 void mikabomb_free();
 void mikabomb_render();
 void mikabomb_hitDetect();
-void mikabomb_update(uint param_1,int param_2);
+void mikabomb_update(int *obj);
 void mikabomb_init();
 void mikabomb_release(void);
 void mikabomb_initialise(void);
