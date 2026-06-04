@@ -17391,6 +17391,7 @@ extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
 {
     extern f32 __kernel_sin(f32);
@@ -17492,6 +17493,59 @@ void modelAnimFn_80026790(u8 *model, int idx, u8 *m, u8 *anim)
         *(f32 *)(p + 0x14) = *(f32 *)(p + 0x14) * *(f32 *)(m + 0xc) + lbl_802CABB8[2] * amp;
         off += 0x54;
         i++;
+    }
+}
+#pragma pop
+
+extern void PSMTXRotAxisRad(f32 *m, f32 *axis, f32 angle);
+
+#pragma push
+#pragma scheduling off
+void fn_8002A5DC(u8 *obj)
+{
+    extern f32 lbl_803DCECC;
+    extern f32 lbl_803DCED0;
+    extern f32 lbl_803DE888;
+    extern f32 lbl_803DE894;
+    extern f32 lbl_803DE898;
+    f32 m2[16];
+    f32 rot[12];
+    f32 vecA[3];
+    f32 vecB[3];
+    f32 cross[3];
+    f32 len;
+    f32 dz;
+    f32 dx;
+    f32 denom;
+    f32 sum;
+
+    denom = lbl_803DE888 * *(f32 *)(obj + 0xa8);
+    denom *= *(f32 *)(obj + 8);
+    dx = ((*(f32 *)(obj + 0x88) - lbl_803DCECC) - (*(f32 *)(obj + 0x14) - playerMapOffsetZ)) / denom;
+    dz = ((*(f32 *)(obj + 0xc) - lbl_803DCED0) - (*(f32 *)(obj + 0x80) - playerMapOffsetX)) / denom;
+    sum = dz * dz + dx * dx;
+    if (sum > lbl_803DE88C) {
+        len = sqrtf(sum);
+        vecA[0] = dz / len;
+        vecA[1] = lbl_803DE88C;
+        vecA[2] = -dx / len;
+        vecB[0] = lbl_803DE88C;
+        vecB[1] = lbl_803DE890;
+        vecB[2] = lbl_803DE88C;
+        PSVECCrossProduct(vecA, vecB, cross);
+        PSMTXRotAxisRad(rot, cross, lbl_803DE894 * (lbl_803DE898 * -len));
+        setMatrixFromObjectTransposed(obj, m2);
+        m2[3] = lbl_803DE88C;
+        m2[7] = lbl_803DE88C;
+        m2[11] = lbl_803DE88C;
+        PSMTXConcat(rot, m2, rot);
+        vecA[0] = rot[8];
+        vecA[1] = rot[9];
+        vecA[2] = rot[10];
+        vecB[0] = rot[4];
+        vecB[1] = rot[5];
+        vecB[2] = rot[6];
+        fn_800213D0(vecA, vecB, (s16 *)(obj + 4), (s16 *)(obj + 2), (s16 *)obj);
     }
 }
 #pragma pop
