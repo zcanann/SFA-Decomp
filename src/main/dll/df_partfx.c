@@ -93,26 +93,111 @@ extern f32 lbl_803E1230;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Checkpoint_func07(int param_1)
+extern int* Checkpoint_find(int id, int* slot);
+extern int getAngle(f32 dx, f32 dz);
+extern f32 sin(f32 x);
+extern f32 fn_80293E80(f32 x);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E04D8;
+extern f32 lbl_803E04DC;
+extern f32 lbl_803E04E8;
+extern f32 lbl_803E0504;
+extern f32 lbl_803E050C;
+extern f32 lbl_803E0510;
+extern f32 lbl_803E0514;
+extern f32 lbl_803E0518;
+
+#pragma scheduling off
+#pragma peephole off
+int Checkpoint_func07(int* obj, int* state)
 {
-  int iVar1;
-  int aiStack_18 [5];
-  
-  iVar1 = FUN_800c9030(*(uint *)(param_1 + 0x10),aiStack_18);
-  if (iVar1 == 0) {
-    *(undefined4 *)(param_1 + 0x18) = 0;
-    *(float *)(param_1 + 0xc) = lbl_803E1168;
-  }
-  else {
-    while (-1 < (int)*(uint *)(iVar1 + 0x18)) {
-      iVar1 = FUN_800c9030(*(uint *)(iVar1 + 0x18),aiStack_18);
-      *(int *)(param_1 + 0x1c) = *(int *)(param_1 + 0x1c) + 1;
+    int slotC;
+    int slot8;
+    char* cp;
+    char* cp2;
+    short ang;
+    f32 cosv, sinv, cos2, sin2;
+    f32 dist, dist2, nx, nz, offs, dz;
+    f32 offs2, distA, distB, dx, dy, len, q, proj, proj2, t0, sum, frac, zero;
+
+    if (*(int*)((char*)state + 0x18) < 0) {
+        *(int*)((char*)state + 0x1c) = 0;
+        *(f32*)((char*)state + 0xc) = lbl_803E04E8;
+        if (*(int*)((char*)state + 0x10) < 0) {
+            return 0;
+        }
+        *(int*)((char*)state + 0x18) = *(int*)((char*)state + 0x10);
     }
-    *(undefined4 *)(param_1 + 0x18) = *(undefined4 *)(param_1 + 0x10);
-    *(float *)(param_1 + 0xc) = lbl_803E1168;
-  }
-  return;
+    cp = (char*)Checkpoint_find(*(int*)((char*)state + 0x18), &slot8);
+    if (cp == NULL) {
+        *(int*)((char*)state + 0x18) = -1;
+        return 0;
+    }
+    cosv = fn_80293E80((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+    sinv = sin((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+    offs = -(*(f32*)(cp + 8) * cosv + *(f32*)(cp + 0x10) * sinv);
+    dist = offs + (cosv * *(f32*)((char*)obj + 0xc) + sinv * *(f32*)((char*)obj + 0x14));
+    if (*(int*)(cp + 0x18) > -1 && dist >= lbl_803E04E8) {
+        *(int*)((char*)state + 0x18) = *(int*)(cp + 0x18);
+        *(f32*)((char*)state + 0xc) = lbl_803E050C;
+        *(int*)((char*)state + 0x1c) = *(int*)((char*)state + 0x1c) - 1;
+        return *(u8*)(cp + 0x29);
+    }
+    if (*(int*)(cp + 0x20) < 0) {
+        return *(u8*)(cp + 0x29);
+    }
+    cp2 = (char*)Checkpoint_find(*(int*)(cp + 0x20), &slotC);
+    ang = getAngle(*(f32*)(cp2 + 8) - *(f32*)(cp + 8), *(f32*)(cp2 + 0x10) - *(f32*)(cp + 0x10));
+    cos2 = fn_80293E80((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
+    sin2 = sin((lbl_803E04D8 * (f32)(*(u8*)(cp2 + 0x29) << 8)) / lbl_803E04DC);
+    offs2 = -(*(f32*)(cp2 + 8) * cos2 + *(f32*)(cp2 + 0x10) * sin2);
+    dist2 = offs2 + (cos2 * *(f32*)((char*)obj + 0xc) + sin2 * *(f32*)((char*)obj + 0x14));
+    zero = lbl_803E04E8;
+    if (dist2 < zero) {
+        *(int*)((char*)state + 0x18) = *(int*)(cp + 0x20);
+        *(f32*)((char*)state + 0xc) = zero;
+        *(int*)((char*)state + 0x1c) = *(int*)((char*)state + 0x1c) + 1;
+        return ang;
+    }
+    distA = offs + (cosv * *(f32*)(cp2 + 8) + sinv * *(f32*)(cp2 + 0x10));
+    distB = offs2 + (cos2 * *(f32*)(cp + 8) + sin2 * *(f32*)(cp + 0x10));
+    if (((distA < zero && dist < zero) || (distA >= lbl_803E04E8 && dist >= lbl_803E04E8)) &&
+        ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 > lbl_803E04E8))) {
+        dx = *(f32*)(cp + 8) - *(f32*)(cp2 + 8);
+        dy = *(f32*)(cp + 0xc) - *(f32*)(cp2 + 0xc);
+        dz = *(f32*)(cp + 0x10) - *(f32*)(cp2 + 0x10);
+        len = sqrtf(dz * dz + (dx * dx + dy * dy));
+        if (len > lbl_803E04E8) {
+            q = lbl_803E0504 / len;
+            nx = dx * q;
+            nz = dz * q;
+        }
+        proj = cosv * nx + sinv * nz;
+        if (proj > lbl_803E0510 && proj < lbl_803E0514) {
+            return ang;
+        }
+        t0 = -dist / proj;
+        proj2 = cos2 * nx + sin2 * nz;
+        if (proj2 > lbl_803E0510 && proj2 < lbl_803E0514) {
+            return ang;
+        }
+        sum = t0 + dist2 / proj2;
+        frac = lbl_803E04E8;
+        if (lbl_803E04E8 != sum) {
+            frac = t0 / sum;
+        }
+        *(f32*)((char*)state + 0xc) = frac;
+        if (*(f32*)((char*)state + 0xc) < lbl_803E04E8) {
+            *(f32*)((char*)state + 0xc) = lbl_803E04E8;
+        }
+        if (*(f32*)((char*)state + 0xc) >= lbl_803E0518) {
+            *(f32*)((char*)state + 0xc) = lbl_803E0518;
+        }
+    }
+    return ang;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
