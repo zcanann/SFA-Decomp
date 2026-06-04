@@ -2397,11 +2397,13 @@ extern u8 lbl_803DCD6A;
 extern void GXSetNumTexGens(u8 n);
 extern void GXSetNumTevStages(u8 n);
 extern void GXSetNumIndStages(u8 n);
+#pragma dont_inline on
 void textureFn_800528bc(void) {
     GXSetNumTexGens(lbl_803DCD69);
     GXSetNumTevStages(lbl_803DCD6A);
     GXSetNumIndStages(lbl_803DCD68);
 }
+#pragma dont_inline reset
 
 extern u8 *saveGameGetEnvState(void);
 extern s32 lbl_803DCE00;
@@ -2557,6 +2559,7 @@ extern u8 lbl_803DCD4A;
 extern u8 lbl_803DCD49;
 extern u8 lbl_803DCD48;
 extern u8 lbl_803DCD30;
+#pragma dont_inline on
 void resetLotsOfRenderVars(void) {
     lbl_803DCD58 = 30;
     lbl_803DCD84 = 30;
@@ -2585,6 +2588,7 @@ void resetLotsOfRenderVars(void) {
     lbl_803DCD48 = 0;
     lbl_803DCD30 = 0;
 }
+#pragma dont_inline reset
 
 extern void GXSetScissor(u32 left, u32 top, u32 wd, u32 ht);
 void gxSetScissorRect(int p1, int p2, int x, int y, int x2, int y2) {
@@ -2633,6 +2637,7 @@ typedef struct F32Pair {
 } F32Pair;
 extern F32Pair LastReadIssued_803DEB58;
 extern f32 lbl_803DEB7C;
+#pragma dont_inline on
 void gxFn_80052dc0(void) {
     f32 omtx[4][4];
     f32 pmtx[3][4];
@@ -2660,6 +2665,7 @@ void gxFn_80052dc0(void) {
     GXLoadNrmMtxImm(pmtx, 0);
     GXSetCurrentMtx(0);
 }
+#pragma dont_inline reset
 void gxTextureFn_80052638(int *param) {
     int sel;
     int v1;
@@ -2683,6 +2689,7 @@ void gxTextureFn_80052638(int *param) {
 }
 
 extern void GXSetTevKAlphaSel(int tev, int sel);
+#pragma dont_inline on
 void textureFn_800524ec(int *param) {
     int sel_color;
     int sel_alpha;
@@ -2704,6 +2711,7 @@ void textureFn_800524ec(int *param) {
     lbl_803DCD90 = lbl_803DCD90 + 1;
     lbl_803DCD6A++;
 }
+#pragma dont_inline reset
 
 void gxColorFn_80052764(int *param) {
     int sel_color;
@@ -3414,7 +3422,7 @@ extern F32Pair LastReadFinished_803DEB50;
 extern f32 lbl_803DEB64;
 
 #pragma opt_loop_invariants off
-void lightFn_80052974(void)
+void lightFn_80052974(f32 a, f32 b)
 {
     f32 z;
     f32 scale;
@@ -3494,6 +3502,7 @@ extern void gxColorFn_8001e634(void);
 extern f32 lbl_803DEB70;
 extern f32 lbl_803DEB74;
 
+#pragma dont_inline on
 int textureFn_80052bb4(int model, f32 *params)
 {
     void *la;
@@ -3529,6 +3538,7 @@ int textureFn_80052bb4(int model, f32 *params)
     fn_8001DA3C(lb, LastReadIssued_803DEB58.hi, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
     return 0;
 }
+#pragma dont_inline reset
 
 extern f32 powfCoreHighPrecision(f32 base, f32 exp);
 extern f32 lbl_803DEB48;
@@ -3823,6 +3833,129 @@ int objShouldUnload(u8 *obj)
         return 0;
     }
     return 1;
+}
+
+typedef struct GXColor8 {
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
+} GXColor8;
+extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
+extern void GXSetChanAmbColor(int chan, GXColor8 c);
+extern void GXSetChanMatColor(int chan, GXColor8 c);
+extern void GXSetTexCopyDst(int w, int h, int fmt, int mip);
+extern void modelTextureFn_80089970(int n);
+extern void textureFn_8004ff20(void *asset, f32 *mtx, void *out, int p4);
+extern void GXCopyTex(void *dst, int clear);
+extern void GXPreLoadEntireTexture(void *obj, u32 *region);
+extern void modelLightFn_8001ec94(int model, int *lights, int max, int *count, int p5);
+extern void lightGetColor(int idx, u8 *r, u8 *g, u8 *b);
+extern void Camera_ApplyFullViewport(void);
+extern u32 lbl_803DB600;
+extern int lbl_803DB604;
+extern u8 lbl_803DCDA4;
+extern f32 lbl_803DEB80;
+extern f32 lbl_803DEB84;
+extern f32 lbl_803DEB88;
+int textureFn_80052bb4(int model, f32 *params);
+
+void gxTextureFn_80052efc(void)
+{
+    f32 mtx[12];
+    int lights[8];
+    GXColor8 c;
+    GXColor8 c2;
+    int count;
+    int i;
+    int sel;
+    int k;
+    int n;
+    int model;
+    u8 *e;
+    u8 *tex;
+    int *lp;
+
+    gxFn_80052dc0();
+    PSMTXScale(mtx, lbl_803DEB74, lbl_803DEB80, lbl_803DEB74);
+    mtx[3] = lbl_803DEB74;
+    mtx[7] = lbl_803DEB74;
+    GXLoadTexMtxImm(mtx, 0x1e, 1);
+    GXSetChanAmbColor(4, *(GXColor8 *)&lbl_803DB600);
+    GXSetChanAmbColor(5, *(GXColor8 *)&lbl_803DB600);
+    GXSetTexCopyDst(0x20, 0x20, 6, 0);
+    modelTextureFn_80089970(2);
+    i = 0;
+    e = lbl_8037E000;
+    for (; i < 6; i++) {
+        tex = *(u8 **)e;
+        if (*(u16 *)(tex + 0xe) != 0 && e[0x1b] == 1 && lbl_803DCDA4 == e[0x1a]) {
+            c.r = (e[0xc] * e[0x18]) >> 8;
+            c.g = 0;
+            c.b = (e[0xe] * e[0x19]) >> 8;
+            c.a = 0xff;
+            GXSetChanMatColor(4, c);
+            GXSetChanMatColor(5, c);
+            textureFn_80052bb4(*(int *)(e + 4), (f32 *)(e + 0x10));
+            resetLotsOfRenderVars();
+            textureFn_8004ff20(lbl_803DCDA0, mtx, &c2, 0);
+            textureFn_800528bc();
+            lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
+            GXCopyTex(*(u8 **)e + 0x60, 0);
+            tex = *(u8 **)e;
+            if (tex[0x48] != 0) {
+                GXPreLoadEntireTexture(tex + 0x20, *(u32 **)(tex + 0x40));
+            }
+        }
+        e += 0x1c;
+    }
+    resetLotsOfRenderVars();
+    textureFn_800524ec(&lbl_803DB604);
+    textureFn_800528bc();
+    GXSetChanMatColor(0, *(GXColor8 *)&lbl_803DB604);
+    sel = 5;
+    e = lbl_8037E000 + 0x8c;
+    for (k = 5; k >= 0; k--) {
+        if (*(u16 *)(*(u8 **)e + 0xe) != 0 && e[0x1b] == 0 && lbl_803DCDA4 == e[0x1a]) {
+            sel = k;
+            break;
+        }
+        e -= 0x1c;
+    }
+    i = 0;
+    e = lbl_8037E000;
+    for (; i < 6; i++) {
+        if (*(u16 *)(*(u8 **)e + 0xe) != 0 && e[0x1b] == 0 && lbl_803DCDA4 == e[0x1a]) {
+            model = *(int *)(e + 4);
+            modelTextureFn_80089970(2 - (i - 3));
+            modelLightFn_8001ec94(model, lights, 8, &count, 4);
+            fn_8001E8F4(1);
+            fn_8001E608(0, 0, 0);
+            lp = lights;
+            for (n = 0; n < count; n++) {
+                modelStruct2_setLights(0, (void *)*lp, model);
+                lp++;
+            }
+            gxColorFn_8001e634();
+            lightGetColor(0, &c2.r, &c2.g, &c2.b);
+            GXSetChanAmbColor(0, c2);
+            lightFn_80052974((f32)(i * 0x20), LastCommandWasRead_803DEB60);
+            GXCopyTex(*(u8 **)e + 0x60, (i == sel) ? 1 : 0);
+            tex = *(u8 **)e;
+            if (tex[0x48] != 0) {
+                GXPreLoadEntireTexture(tex + 0x20, *(u32 **)(tex + 0x40));
+            }
+        }
+        e += 0x1c;
+    }
+    GXSetViewport(LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60, lbl_803DEB84,
+                  lbl_803DEB88, LastCommandWasRead_803DEB60, LastReadIssued_803DEB58.hi);
+    GXSetScissor(0, 0, 0x280, 0x1e0);
+    GXSetDispCopySrc(0, 0, 0x280, 0x1e0);
+    GXSetDispCopyDst(0x280, 0x1e0);
+    GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
+    Camera_ApplyFullViewport();
+    lbl_803DCDA4 = 0;
 }
 
 #pragma scheduling reset
