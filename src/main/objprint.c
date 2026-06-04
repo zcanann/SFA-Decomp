@@ -3988,3 +3988,98 @@ int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+int fn_8003BB84(f32 *m, f32 *out);
+
+#pragma scheduling off
+#pragma peephole off
+int objRotateFn_8003bce8(f32 *m, s16 *outA, s16 *outB, s16 *outC)
+{
+    extern f32 __kernel_sin(f32);
+    extern f32 __kernel_cos(f32, f32);
+    extern f32 lbl_803DEA04;
+    extern f32 lbl_803DEA08;
+    extern f32 lbl_803DEA0C;
+    extern f32 lbl_803DEA10;
+    extern f32 lbl_803DEA14;
+    f32 buf[12];
+    f32 x;
+    f32 y;
+    f32 z;
+
+    if (fn_8003BB84(m, buf) == 0) {
+        return 0;
+    }
+    x = __kernel_sin(-buf[6]);
+    if (x < lbl_803DEA08) {
+        if (x > lbl_803DEA0C) {
+            y = __kernel_cos(buf[2], buf[10]);
+            z = __kernel_cos(buf[4], buf[5]);
+        } else {
+            y = lbl_803DEA04 - __kernel_cos(buf[1], buf[0]);
+            z = lbl_803DEA04;
+        }
+    } else {
+        y = __kernel_cos(buf[1], buf[0]) - lbl_803DEA04;
+        z = lbl_803DEA04;
+    }
+    {
+        f32 s = lbl_803DEA10;
+        f32 d = lbl_803DEA14;
+        *outC = (s16)(s32)(s * z / d);
+        *outB = (s16)(s32)(s * x / d);
+        *outA = (s16)(s32)(s * y / d);
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8003BB84(f32 *m, f32 *out)
+{
+    extern void PSVECNormalize(f32 *src, f32 *dst);
+    extern f32 lbl_803DEA04;
+    f32 v3[3];
+    f32 v1[3];
+    f32 v2[3];
+    f32 zero;
+
+    v1[0] = m[0];
+    v1[1] = m[1];
+    v1[2] = m[2];
+    v2[0] = m[4];
+    v2[1] = m[5];
+    v2[2] = m[6];
+    v3[0] = m[8];
+    v3[1] = m[9];
+    v3[2] = m[10];
+
+    if ((v1[0] == lbl_803DEA04 && v1[1] == lbl_803DEA04 && v1[2] == lbl_803DEA04)
+     || (v2[0] == lbl_803DEA04 && v2[1] == lbl_803DEA04 && v2[2] == lbl_803DEA04)
+     || (v3[0] == lbl_803DEA04 && v3[1] == lbl_803DEA04 && v3[2] == lbl_803DEA04)) {
+        return 0;
+    }
+
+    PSVECNormalize(v1, v1);
+    PSVECNormalize(v2, v2);
+    PSVECNormalize(v3, v3);
+
+    out[0] = v1[0];
+    out[1] = v1[1];
+    out[2] = v1[2];
+    zero = lbl_803DEA04;
+    out[3] = zero;
+    out[4] = v2[0];
+    out[5] = v2[1];
+    out[6] = v2[2];
+    out[7] = zero;
+    out[8] = v3[0];
+    out[9] = v3[1];
+    out[10] = v3[2];
+    out[11] = zero;
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset

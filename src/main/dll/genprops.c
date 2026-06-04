@@ -4586,7 +4586,7 @@ void staff_func14(int *obj, f32 *outA, f32 *outB);
 void staff_func15(int *obj, s16 idx, f32 f1, f32 f2);
 extern s32 staff_func16(int *obj);
 extern void fireball_free();
-extern void fireball_render();
+extern void fireball_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void fireball_hitDetect();
 extern void fireball_update();
 extern void fireball_init();
@@ -6588,6 +6588,229 @@ void fireball_update(int *obj)
         }
         if ((*(int *)((char *)obj + 0xf4) -= framesThisStep) < 0) {
             Obj_FreeObject(obj);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 lbl_803DBD58[8];
+extern void queueGlowRender(int light);
+extern f32 lbl_803E3350;
+
+#pragma scheduling off
+#pragma peephole off
+void fireball_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int *model;
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u16 savedRot4;
+    u16 savedRot2;
+    u8 i;
+    f32 savedF8;
+    s32 v = visible;
+    if (v == 0) {
+        return;
+    }
+    if ((*(u8 *)(state + 0x70) & 8) != 0) {
+        return;
+    }
+    if (*(f32 *)(state + 0x3c) == lbl_803E3330) {
+        *(u8 *)((char *)obj + 0xad) = 1;
+        model = Obj_GetActiveModel((int)obj);
+        *(u8 *)((char *)*(int **)((char *)model + 0x34) + 8) = lbl_803DBD58[*(u8 *)(state + 0x71)];
+        savedRot4 = *(s16 *)((char *)obj + 4);
+        savedRot2 = *(s16 *)((char *)obj + 2);
+        savedF8 = *(f32 *)((char *)obj + 8);
+        *(f32 *)((char *)obj + 8) = lbl_803E3350;
+        for (i = 0; i < 5; i++) {
+            u8 *p = state + i * 2;
+            *(u16 *)(p + 0x48) += *(u16 *)(p + 0x52);
+            *(u16 *)(p + 0x5c) += *(u16 *)(p + 0x66);
+            *(s16 *)((char *)obj + 4) = (s16)*(u16 *)(p + 0x48);
+            *(s16 *)((char *)obj + 2) = (s16)*(u16 *)(p + 0x5c);
+            *(u16 *)((char *)model + 0x18) &= ~0x8;
+            ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
+        }
+        *(s16 *)((char *)obj + 4) = (s16)savedRot4;
+        *(s16 *)((char *)obj + 2) = (s16)savedRot2;
+        *(f32 *)((char *)obj + 8) = savedF8;
+        *(u8 *)((char *)obj + 0xad) = 0;
+        *(u8 *)((char *)*(int **)((char *)Obj_GetActiveModel((int)obj) + 0x34) + 8) =
+            lbl_803DBD58[*(u8 *)(state + 0x71)];
+        ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
+        if (*(int **)state != NULL) {
+            if (*(u8 *)((char *)*(int **)state + 0x2f8) != 0 && *(u8 *)((char *)*(int **)state + 0x4c) != 0) {
+                u16 sum = *(u8 *)((char *)*(int **)state + 0x2f9) + *(s8 *)((char *)*(int **)state + 0x2fa);
+                if (sum > 12) {
+                    sum += randomGetRange(-12, 12);
+                    if (sum > 255) {
+                        sum = 255;
+                        *(u8 *)((char *)*(int **)state + 0x2fa) = 0;
+                    }
+                }
+                *(u8 *)((char *)*(int **)state + 0x2f9) = sum;
+            }
+            if (*(u8 *)((char *)*(int **)state + 0x2f8) != 0 && *(u8 *)((char *)*(int **)state + 0x4c) != 0) {
+                queueGlowRender(*(int *)state);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int getAngle(f32 a, f32 b);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E3340;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8016F260(int *obj, int *state, int *other)
+{
+    f32 *pt = (f32 *)(*(int *)((char *)other + 0x74) + *(u8 *)((char *)other + 0xe4) * 24);
+    if (pt != NULL) {
+        f32 dx = pt[0] - *(f32 *)((char *)state + 0x24);
+        f32 dy = pt[1] - lbl_803E3334 - *(f32 *)((char *)state + 0x28);
+        f32 dz = pt[2] - *(f32 *)((char *)state + 0x2c);
+        s16 angY;
+        s16 angP;
+        s16 difY;
+        s16 difP;
+        s16 targY;
+        s16 targP;
+        f32 t1;
+        f32 t2;
+        f32 f;
+        f32 c;
+
+        angY = getAngle(*(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x2c));
+        t1 = *(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24);
+        t2 = *(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c);
+        angP = getAngle(*(f32 *)((char *)obj + 0x28), sqrtf(t1 + t2));
+        targY = getAngle(dx, dz);
+        targP = getAngle(dy, sqrtf(dx * dx + dz * dz));
+
+        difY = targY - (u16)angY;
+        if (difY > 0x8000) {
+            difY -= 0xffff;
+        }
+        if (difY < -0x8000) {
+            difY += 0xffff;
+        }
+        difP = targP - (u16)angP;
+        if (difP > 0x8000) {
+            difP -= 0xffff;
+        }
+        if (difP < -0x8000) {
+            difP += 0xffff;
+        }
+        difY >>= 5;
+        if (difY > 364) {
+            difY = 364;
+        }
+        if (difY < -364) {
+            difY = -364;
+        }
+        difP >>= 4;
+        if (difP > 728) {
+            difP = 728;
+        }
+        if (difP < -728) {
+            difP = -728;
+        }
+        angY += framesThisStep * difY;
+        angP += framesThisStep * difP;
+
+        f = lbl_803E3338 * (f32)angY / lbl_803E333C;
+        *(f32 *)((char *)obj + 0x24) = fn_80293E80(f);
+        *(f32 *)((char *)obj + 0x2c) = sin(f);
+        f = lbl_803E3338 * (f32)angP / lbl_803E333C;
+        c = fn_80293E80(f);
+        if (lbl_803E3330 != sin(f)) {
+            c = c / sin(f);
+        }
+        *(f32 *)((char *)obj + 0x28) = c;
+
+        c = lbl_803E3340 / sqrtf(*(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c) +
+                                 (*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
+                                  *(f32 *)((char *)obj + 0x28) * *(f32 *)((char *)obj + 0x28)));
+        *(f32 *)((char *)obj + 0x24) *= c;
+        *(f32 *)((char *)obj + 0x28) *= c;
+        *(f32 *)((char *)obj + 0x2c) *= c;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 fcos16(u16 angle);
+extern void Sfx_SetObjectSfxVolume(f32 ratio, s16 *obj, int sfx, int vol);
+extern f32 lbl_803E33A8;
+extern f32 lbl_803E33AC;
+extern f32 lbl_803E33C4;
+extern f32 lbl_803E33E8;
+extern f32 lbl_803E33EC;
+
+#pragma scheduling off
+#pragma peephole off
+void shield_update(int *obj)
+{
+    f32 *tbl = lbl_80320A28;
+    f32 *state = *(f32 **)((char *)obj + 0xb8);
+    int i;
+
+    if (state[1] != state[2]) {
+        state[1] = state[3] * timeDelta + state[1];
+        if (state[3] > lbl_803E33AC) {
+            if (state[1] >= state[2]) {
+                state[1] = state[2];
+            }
+            *(u8 *)((char *)state + 0x5c) &= ~1;
+            *(u8 *)((char *)state + 0x5d) &= ~1;
+            *(u8 *)((char *)state + 0x5e) &= ~1;
+            *(u8 *)((char *)state + 0x5f) &= ~1;
+        } else {
+            if (state[1] <= state[2]) {
+                state[1] = state[2];
+                *(u8 *)((char *)state + 0x5c) |= 1;
+                *(u8 *)((char *)state + 0x5d) |= 1;
+                *(u8 *)((char *)state + 0x5e) |= 1;
+                *(u8 *)((char *)state + 0x5f) |= 1;
+            }
+        }
+    }
+    if (*(s16 *)((char *)obj + 0x46) == 2102) {
+        *(u8 *)((char *)obj + 0x36) = (s32)(state[1] / state[4] * (f32)(s32)randomGetRange(96, 127));
+    } else {
+        *(u8 *)((char *)obj + 0x36) = (s32)(state[1] / state[4] * (f32)(s32)randomGetRange(192, 255));
+    }
+    Sfx_SetObjectSfxVolume(lbl_803E33A8, (s16 *)obj, 1069, (s32)(lbl_803E33E8 * (state[1] / state[4])));
+    if (*(u8 *)((char *)obj + 0x36) != 0) {
+        *(s16 *)((char *)obj + 6) &= ~0x4000;
+    } else {
+        *(s16 *)((char *)obj + 6) |= 0x4000;
+    }
+    {
+        s16 *ps = (s16 *)state;
+        f32 *t8 = tbl + 8;
+        f32 *pf = state;
+        f32 *t12 = tbl + 12;
+        f32 *t4 = tbl + 4;
+        for (i = 0; i < 4; i++) {
+            ps[26] = (s32)((f32)ps[30] * timeDelta + (f32)ps[26]);
+            if (*(s16 *)((char *)obj + 0x46) == 2102) {
+                pf[9] = *t8 * (fcos16(ps[26]) * lbl_803E33EC + lbl_803E33C4);
+                pf[5] = *t12;
+            } else {
+                pf[9] = *tbl * ((lbl_803E33C4 + fcos16(ps[26])) * lbl_803E33A8);
+                pf[5] = *t4;
+            }
+            ps++;
+            t8++;
+            pf++;
+            t12++;
+            tbl++;
+            t4++;
         }
     }
 }
