@@ -2063,21 +2063,22 @@ void trickyFn_80148d8c(int obj,int state)
 
 /* collectibleFn_80149cec: 876b - spawn or reposition Tricky reward objects from packed command bits. */
 #pragma scheduling off
-int collectibleFn_80149cec(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mode)
+int collectibleFn_80149cec(int obj,int state,int spawnBits,u32 useAltMode,u32 mode)
 {
+  u32 commandSpawnIds[2];
   struct TrickyRewardSpawnTail {
     u32 pair;
     u16 single;
   } rewardTail;
-  u32 commandSpawnIds[2];
-  u32 rewardSpawnIds0;
   f32 nearestDistance;
+  u32 rewardSpawnIds0;
   int parentSetup;
   int setup;
   int index;
   f32 savedX;
   f32 savedY;
   f32 savedZ;
+  f32 v;
 
   (void)state;
   parentSetup = *(int *)(obj + 0x4c);
@@ -2086,7 +2087,6 @@ int collectibleFn_80149cec(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mo
   rewardSpawnIds0 = lbl_803E2560;
   rewardTail.pair = lbl_803E2564;
   rewardTail.single = lbl_803E2568;
-  setup = 0;
   if (spawnBits == 0) {
     return 0;
   }
@@ -2095,69 +2095,68 @@ int collectibleFn_80149cec(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mo
   }
   mode = (u8)mode;
   if (mode == 1) {
-    index = ((int)(spawnBits & 0xf00) >> 8) - 1;
+    index = ((spawnBits & 0xf00) >> 8) - 1;
     if (index > 3) {
       index = 3;
     }
     setup = Obj_AllocObjectSetup(0x30,*(u16 *)((int)commandSpawnIds + index * 2));
   }
   else if (mode == 2) {
-    index = ((int)(spawnBits & 0xf000) >> 0xc) - 1;
+    index = ((spawnBits & 0xf000) >> 0xc) - 1;
     if (index > 1) {
       index = 1;
     }
     setup = Obj_AllocObjectSetup(0x30,*(u16 *)((int)&rewardSpawnIds0 + index * 2));
   }
   else if (mode == 3) {
-    if (spawnBits == 3) {
+    switch (spawnBits) {
+    case 3:
       setup = Obj_AllocObjectSetup(0x30,0xb);
-    }
-    else if ((int)spawnBits < 3) {
-      if (spawnBits != 1) {
-        return 0;
-      }
+      break;
+    case 1:
+    case 4:
       setup = Obj_AllocObjectSetup(0x30,0x2cd);
-    }
-    else {
-      if (spawnBits == 5) {
-        savedX = *(f32 *)(obj + 0x18);
-        savedY = *(f32 *)(obj + 0x1c);
-        savedZ = *(f32 *)(obj + 0x20);
-        parentSetup = *(int *)(obj + 0x4c);
-        if (parentSetup != 0) {
-          *(f32 *)(obj + 0x18) = *(f32 *)(parentSetup + 8);
-          *(f32 *)(obj + 0x1c) = *(f32 *)(parentSetup + 0xc);
-          *(f32 *)(obj + 0x20) = *(f32 *)(parentSetup + 0x10);
-        }
-        nearestDistance = lbl_803E25A8;
-        lbl_803DDA54 = ObjGroup_FindNearestObject(4,obj,&nearestDistance);
-        *(f32 *)(obj + 0x18) = savedX;
-        *(f32 *)(obj + 0x1c) = savedY;
-        *(f32 *)(obj + 0x20) = savedZ;
-        if (lbl_803DDA54 != 0) {
-          *(f32 *)(lbl_803DDA54 + 0x18) = *(f32 *)(obj + 0xc);
-          *(f32 *)(lbl_803DDA54 + 0xc) = *(f32 *)(obj + 0xc);
-          *(f32 *)(lbl_803DDA54 + 0x1c) = lbl_803E25AC + *(f32 *)(obj + 0x10);
-          *(f32 *)(lbl_803DDA54 + 0x10) = lbl_803E25AC + *(f32 *)(obj + 0x10);
-          *(f32 *)(lbl_803DDA54 + 0x20) = *(f32 *)(obj + 0x14);
-          *(f32 *)(lbl_803DDA54 + 0x14) = *(f32 *)(obj + 0x14);
-        }
-        return lbl_803DDA54;
+      break;
+    case 5:
+      savedX = *(f32 *)(obj + 0x18);
+      savedY = *(f32 *)(obj + 0x1c);
+      savedZ = *(f32 *)(obj + 0x20);
+      parentSetup = *(int *)(obj + 0x4c);
+      if ((void *)parentSetup != NULL) {
+        *(f32 *)(obj + 0x18) = *(f32 *)(parentSetup + 8);
+        *(f32 *)(obj + 0x1c) = *(f32 *)(parentSetup + 0xc);
+        *(f32 *)(obj + 0x20) = *(f32 *)(parentSetup + 0x10);
       }
-      if ((int)spawnBits > 4) {
-        return 0;
+      nearestDistance = lbl_803E25A8;
+      lbl_803DDA54 = ObjGroup_FindNearestObject(4,obj,&nearestDistance);
+      *(f32 *)(obj + 0x18) = savedX;
+      *(f32 *)(obj + 0x1c) = savedY;
+      *(f32 *)(obj + 0x20) = savedZ;
+      if ((void *)lbl_803DDA54 != NULL) {
+        v = *(f32 *)(obj + 0xc);
+        *(f32 *)(lbl_803DDA54 + 0x18) = v;
+        *(f32 *)(lbl_803DDA54 + 0xc) = v;
+        v = lbl_803E25AC + *(f32 *)(obj + 0x10);
+        *(f32 *)(lbl_803DDA54 + 0x1c) = v;
+        *(f32 *)(lbl_803DDA54 + 0x10) = v;
+        v = *(f32 *)(obj + 0x14);
+        *(f32 *)(lbl_803DDA54 + 0x20) = v;
+        *(f32 *)(lbl_803DDA54 + 0x14) = v;
       }
-      setup = Obj_AllocObjectSetup(0x30,0x2cd);
+      return lbl_803DDA54;
+    default:
+      return 0;
     }
   }
   else if (mode == 4) {
-    if ((int)spawnBits > 3) {
-      spawnBits = 3;
+    index = spawnBits;
+    if (index > 3) {
+      index = 3;
     }
-    if ((int)spawnBits < 1) {
+    if (index <= 0) {
       return 0;
     }
-    setup = Obj_AllocObjectSetup(0x30,*(u16 *)((int)&rewardTail.pair + (spawnBits - 1) * 2));
+    setup = Obj_AllocObjectSetup(0x30,((u16 *)&rewardTail.pair)[index - 1]);
   }
   *(u8 *)(setup + 0x1a) = 0x14;
   *(s16 *)(setup + 0x2c) = -1;
@@ -3706,7 +3705,7 @@ int trickyFn_801451d8(int obj,int state) {
     }
     {
         int ret = 1;
-        *(u8 *)(state + 0x58) = (*(u8 *)(state + 0x58) & 0x7f) | (ret << 7);
+        ((TrickyByteFlags *)(state + 0x58))->bit7 = ret;
         return ret;
     }
 }
