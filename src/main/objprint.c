@@ -4358,3 +4358,81 @@ void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
+{
+    extern f32 playerMapOffsetX;
+    extern f32 playerMapOffsetZ;
+    extern f32 sqrtf(f32);
+    f32 va[3];
+    f32 vb[3];
+
+    if (*(u8 *)(*(char **)(staff + 0x50) + 0x58) >= 2 && *(s16 *)(staff + 0x44) == 0x2d) {
+        char *base = *(char **)(staff + 0xb8);
+        int i = 0;
+        int k = 1;
+        int off = 0x18;
+        char *q = base;
+        f32 *vp = va;
+
+        while (i < *(s16 *)(base + 0xb0)) {
+            if (k < *(u8 *)(*(char **)(staff + 0x50) + 0x58)) {
+                void *jm;
+                char *t;
+                jm = ObjModel_GetJointMatrix((int *)model,
+                    (s8)(*(u8 **)(*(char **)(staff + 0x50) + 0x2c))[off + (s8)*(s8 *)(staff + 0xad) + 0x2a]);
+                t = *(char **)(*(char **)(staff + 0x50) + 0x2c);
+                vp[0] = *(f32 *)(t + (off + 0x18));
+                va[1] = *(f32 *)(t + (off + 0x1c));
+                va[2] = *(f32 *)(t + (off + 0x20));
+                PSMTXMultVec(jm, vp, vp);
+                vp[0] = vp[0] + playerMapOffsetX;
+                va[2] = va[2] + playerMapOffsetZ;
+                *(f32 *)(q + 0x6c) = vp[0];
+                *(f32 *)(q + 0x74) = va[1];
+                *(f32 *)(q + 0x7c) = va[2];
+            }
+            if (k < *(u8 *)(*(char **)(staff + 0x50) + 0x58)) {
+                char *t = *(char **)(*(char **)(staff + 0x50) + 0x2c);
+                char *row = t + off;
+                int idx2 = (s8)*(s8 *)(row + (s8)*(s8 *)(staff + 0xad) + 0x12);
+                char *mtx2 = *(char **)(model + ((*(u16 *)(model + 0x18) & 1) * 4) + 0xc) + idx2 * 0x40;
+                vb[0] = *(f32 *)row;
+                vb[1] = *(f32 *)(t + (off + 4));
+                vb[2] = *(f32 *)(t + (off + 8));
+                PSMTXMultVec(mtx2, vb, vb);
+                vb[0] = vb[0] + playerMapOffsetX;
+                vb[2] = vb[2] + playerMapOffsetZ;
+                *(f32 *)(q + 0x54) = vb[0];
+                *(f32 *)(q + 0x5c) = vb[1];
+                *(f32 *)(q + 0x64) = vb[2];
+            }
+            k += 2;
+            off += 0x30;
+            q += 4;
+            i++;
+        }
+
+        if (*(s16 *)(base + 0xb0) != 0) {
+            char *r = base + *(s16 *)(base + 0xb2) * 4;
+            va[0] = *(f32 *)(r + 0x6c);
+            va[1] = *(f32 *)(r + 0x74);
+            va[2] = *(f32 *)(r + 0x7c);
+            {
+                int *v = *(int **)(staff + 0x68);
+                void (*fn)(int, int, f32 *) = (void (*)(int, int, f32 *))*(int *)(*v + 0x28);
+                fn(staff, obj, vb);
+            }
+            va[0] = va[0] - vb[0];
+            va[1] = va[1] - vb[1];
+            va[2] = va[2] - vb[2];
+            *(s16 *)staff = (s16)getAngle(va[0], va[2]);
+            *(s16 *)(staff + 2) = (s16)(-getAngle(va[1], sqrtf(va[0] * va[0] + va[2] * va[2])) + 0x4000);
+            *(s16 *)(staff + 4) = 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
