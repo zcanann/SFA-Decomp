@@ -72,6 +72,16 @@ extern u8 lbl_803DD088;
 extern u8 curSeqNo;
 extern void Obj_TransformWorldPointToLocal(f32 *x, f32 *y, f32 *z, void *m, f32 wx, f32 wy, f32 wz);
 
+extern u8 lbl_8039944C[];
+extern int lbl_803DD0C0;
+extern s16 lbl_803DD08A;
+extern f32 lbl_803DF030;
+extern f32 lbl_803DF034;
+extern int ObjAnim_SampleRootCurvePhase(void *obj, f32 *out, f32 dist);
+extern void ObjAnim_AdvanceCurrentMove(void *obj, void *state, f32 speed, f32 t);
+int objSeqInterpFn_80085358(u8 *obj, u8 *action, u8 **cmd, int flags, void *out);
+void *objSeqCmd3(u8 *obj, u8 *seq, u8 *src);
+
 typedef struct CamRequest {
     s16 rot[3];
     u8 pad6[6];
@@ -1243,6 +1253,279 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
         break;
     }
     return 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void objSeqUpdateCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode)
+{
+    struct {
+        f32 x;
+        f32 y;
+        f32 z;
+    } pos;
+    int out;
+    u8 *cmd;
+    f32 speed;
+    u8 *model;
+    u8 *activeObj;
+    u8 *action;
+    s8 flags;
+    int found;
+    int targetFrame;
+    int i;
+    int stop;
+    int frame;
+    f32 val;
+    f32 rate;
+    f32 prevX;
+    f32 prevZ;
+    int opcode;
+    u8 *entry;
+
+    (void)seqObj;
+
+    if (*(void **)(seq + 0x94) == NULL) {
+        return;
+    }
+
+    flags = 1;
+    if (mode != 0) {
+        flags |= 2;
+    }
+
+    model = *(u8 **)(obj + 0x4c);
+    targetFrame = *(s16 *)(seq + 0x58);
+    lbl_803DD08A = targetFrame;
+    *(s16 *)(seq + 0x66) = 0;
+    *(s16 *)(seq + 0x68) = -0x32;
+    seq[0x78] = 0;
+    seq[0x7a] = 0;
+    seq[0x79] = 0;
+    *(void **)seq = NULL;
+    seq[0x7b] = 0;
+    *(f32 *)(seq + 0x20) = lbl_803DEFB0;
+    *(s16 *)(seq + 0x58) = -1;
+
+    found = -1;
+    activeObj = obj;
+    i = 0;
+    while (i < *(s16 *)(seq + 0x62) && *(s16 *)(seq + 0x58) <= targetFrame) {
+        cmd = *(u8 **)(seq + 0x94) + i * 4;
+        opcode = (s8)cmd[0];
+        switch (opcode) {
+        case 3:
+            flags = (s8)(flags | 4);
+            activeObj = objSeqCmd3(obj, seq, model);
+            *(s16 *)(activeObj + 0xa2) = -1;
+            break;
+        case 0:
+            *(s16 *)(seq + 0x58) = *(s16 *)(cmd + 2);
+            break;
+        case 9:
+            found = *(s16 *)(seq + 0x58);
+            break;
+        case 11:
+            if (*(s16 *)(cmd + 2) > 0) {
+                i += *(s16 *)(cmd + 2);
+            }
+            break;
+        default:
+            if (opcode != 0xf) {
+                *(s16 *)(seq + 0x58) = *(s16 *)(seq + 0x58) + cmd[1];
+            }
+            break;
+        }
+        i++;
+    }
+
+    *(s16 *)(seq + 0x58) = (s16)found;
+    action = *(u8 **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+    if (action != NULL) {
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xdc) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb6) * 8),
+                    *(s16 *)(seq + 0xdc) & 0xfff, -1);
+            }
+        }
+        prevX = *(f32 *)(model + 0x8) + val;
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xd8) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb2) * 8),
+                    *(s16 *)(seq + 0xd8) & 0xfff, -1);
+            }
+        }
+        prevZ = *(f32 *)(model + 0x10) + val;
+    }
+
+    entry = lbl_8039944C;
+    while (*(s16 *)(seq + 0x58) < targetFrame) {
+        *(s16 *)(seq + 0x58) += 1;
+        frame = *(s16 *)(seq + 0x58);
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xdc) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb6) * 8),
+                    *(s16 *)(seq + 0xdc) & 0xfff, frame);
+            }
+        }
+        pos.x = *(f32 *)(model + 0x8) + val;
+        frame = *(s16 *)(seq + 0x58);
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xda) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb4) * 8),
+                    *(s16 *)(seq + 0xda) & 0xfff, frame);
+            }
+        }
+        pos.y = *(f32 *)(model + 0xc) + val;
+        frame = *(s16 *)(seq + 0x58);
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xd8) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb2) * 8),
+                    *(s16 *)(seq + 0xd8) & 0xfff, frame);
+            }
+        }
+        pos.z = *(f32 *)(model + 0x10) + val;
+
+        if (*(s16 *)(seq + 0x58) > 0 && mode != 0) {
+            if ((s8)seq[0x78] == 1 && (s8)seq[0x7b] == 0 && action != NULL) {
+                if (ObjAnim_SampleRootCurvePhase(
+                        activeObj, &speed,
+                        sqrtf((pos.x - prevX) * (pos.x - prevX) +
+                              (pos.z - prevZ) * (pos.z - prevZ))) == 0) {
+                    frame = *(s16 *)(seq + 0x58) - 1;
+                    if (*(void **)(seq + 0x98) == NULL) {
+                        val = lbl_803DEFB0;
+                    } else {
+                        val = lbl_803DEFB0;
+                        if (*(s16 *)(seq + 0xd4) != 0) {
+                            val = objCurveInterpolate(
+                                (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xae) * 8),
+                                *(s16 *)(seq + 0xd4) & 0xfff, frame);
+                        }
+                    }
+                    speed = lbl_803DF030 * val;
+                }
+            } else {
+                frame = *(s16 *)(seq + 0x58) - 1;
+                if (*(void **)(seq + 0x98) == NULL) {
+                    val = lbl_803DEFB0;
+                } else {
+                    val = lbl_803DEFB0;
+                    if (*(s16 *)(seq + 0xd4) != 0) {
+                        val = objCurveInterpolate(
+                            (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xae) * 8),
+                            *(s16 *)(seq + 0xd4) & 0xfff, frame);
+                    }
+                }
+                speed = lbl_803DF030 * val;
+            }
+
+            if (action != NULL) {
+                ObjAnim_AdvanceCurrentMove(activeObj, seq + 0xf0, speed, lbl_803DEFC8);
+                if (mode != 0) {
+                    if (*(f32 *)(seq + 0x20) > lbl_803DEFB0) {
+                        if (*(s16 *)(seq + 0xd6) != 0) {
+                            frame = *(s16 *)(seq + 0x58) - 1;
+                            if (*(void **)(seq + 0x98) != NULL && *(s16 *)(seq + 0xd6) != 0) {
+                                rate = objCurveInterpolate(
+                                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) +
+                                                    *(s16 *)(seq + 0xb0) * 8),
+                                    *(s16 *)(seq + 0xd6) & 0xfff, frame);
+                            }
+                        } else {
+                            rate = lbl_803DF034;
+                        }
+                        if (rate < lbl_803DEFC8) {
+                            rate = lbl_803DEFC8;
+                        }
+                        *(f32 *)(seq + 0x20) = *(f32 *)(seq + 0x20) - lbl_803DEFC8 / rate;
+                        if (*(f32 *)(seq + 0x20) < lbl_803DEFB0) {
+                            *(f32 *)(seq + 0x20) = lbl_803DEFB0;
+                        }
+                    }
+                }
+            } else {
+                *(f32 *)(activeObj + 0x98) = *(f32 *)(activeObj + 0x98) + speed;
+                while (*(f32 *)(activeObj + 0x98) > lbl_803DEFC8) {
+                    *(f32 *)(activeObj + 0x98) = *(f32 *)(activeObj + 0x98) - lbl_803DEFC8;
+                }
+                while (*(f32 *)(activeObj + 0x98) < lbl_803DEFB0) {
+                    *(f32 *)(activeObj + 0x98) = *(f32 *)(activeObj + 0x98) + lbl_803DEFC8;
+                }
+            }
+        }
+
+        prevX = pos.x;
+        prevZ = pos.z;
+
+        stop = 0;
+        lbl_803DD0C0 = 0;
+        while (stop == 0 && *(s16 *)(seq + 0x66) < *(s16 *)(seq + 0x62)) {
+            cmd = *(u8 **)(seq + 0x94) + *(s16 *)(seq + 0x66) * 4;
+            opcode = (s8)cmd[0];
+            if (opcode == 0) {
+                if (*(s16 *)(seq + 0x58) >= *(s16 *)(cmd + 2)) {
+                    *(s16 *)(seq + 0x68) = *(s16 *)(cmd + 2);
+                    *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + 1;
+                } else {
+                    stop = 1;
+                }
+            } else {
+                if (*(s16 *)(seq + 0x58) >= *(s16 *)(seq + 0x68)) {
+                    if (opcode != 0xf) {
+                        *(s16 *)(seq + 0x68) = *(s16 *)(seq + 0x68) + cmd[1];
+                    }
+                    *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + 1;
+                    if (objSeqInterpFn_80085358(obj, action, &cmd, flags, &out) != 0) {
+                        return;
+                    }
+                    activeObj = *(u8 **)*(u8 **)(obj + 0xb8);
+                    if (activeObj == NULL) {
+                        activeObj = obj;
+                    }
+                    action = *(u8 **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+                } else {
+                    stop = 1;
+                }
+            }
+        }
+
+        for (i = 0; i < lbl_803DD0C0; i++) {
+            if (seqDoSubCmd0B(obj, activeObj, seq, *(u8 **)(entry + i * 8),
+                              *(s16 *)(entry + i * 8 + 6), *(s16 *)(entry + i * 8 + 4), 1,
+                              0) != 0) {
+                i = lbl_803DD0C0;
+            }
+            activeObj = *(u8 **)*(u8 **)(obj + 0xb8);
+            if (activeObj == NULL) {
+                activeObj = obj;
+            }
+            action = *(u8 **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+        }
+        lbl_803DD0C0 = 0;
+    }
 }
 #pragma scheduling reset
 #pragma peephole reset
