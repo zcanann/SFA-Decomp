@@ -17546,3 +17546,111 @@ void fn_8002A5DC(u8 *obj)
     }
 }
 #pragma pop
+
+extern s16 lbl_803DB3E8;
+extern u16 lbl_802C9F00[];
+extern u16 lbl_802CA100[];
+
+#pragma push
+#pragma scheduling off
+#pragma opt_strength_reduction off
+void gameTextInitFn_8001c794(void) {
+    s16 *p;
+    void **q;
+    int i;
+    int j;
+    int x;
+    int xb;
+    int y;
+    u16 *dst;
+    u16 *src;
+
+    i = 1;
+    p = &lbl_803DB3E8 + 1;
+    q = (void **)&lbl_803DCA28 + 1;
+    while (p--, q--, i-- != 0) {
+        *q = textureLoadAsset(*p);
+    }
+
+    lbl_803DCA24 = textureAlloc(0x10, 0x10, 5, 0, 0, 0, 0, 1, 1);
+    dst = (u16 *)((u8 *)lbl_803DCA24 + 0x60);
+    y = 0;
+    src = lbl_802C9F00;
+    for (i = 0; i < 4; i++) {
+        x = 0;
+        xb = 0;
+        for (j = 0; j < 2; j++) {
+            dst[0] = *(u16 *)((u8 *)src + y * 32 + xb);
+            dst[1] = src[y * 16 + x + 1];
+            dst[2] = src[y * 16 + x + 2];
+            dst[3] = src[y * 16 + x + 3];
+            dst[4] = *(u16 *)((u8 *)src + y * 32 + 32 + xb);
+            dst[5] = src[y * 16 + x + 17];
+            dst[6] = src[y * 16 + x + 18];
+            dst[7] = src[y * 16 + x + 19];
+            dst[8] = *(u16 *)((u8 *)src + y * 32 + 64 + xb);
+            dst[9] = src[y * 16 + x + 33];
+            dst[10] = src[y * 16 + x + 34];
+            dst[11] = src[y * 16 + x + 35];
+            dst[12] = *(u16 *)((u8 *)src + y * 32 + 96 + xb);
+            dst[13] = src[y * 16 + x + 49];
+            dst[14] = src[y * 16 + x + 50];
+            dst[15] = src[y * 16 + x + 51];
+            xb += 8;
+            dst[16] = *(u16 *)((u8 *)src + y * 32 + xb);
+            dst[17] = src[y * 16 + x + 5];
+            dst[18] = src[y * 16 + x + 6];
+            dst[19] = src[y * 16 + x + 7];
+            dst[20] = *(u16 *)((u8 *)src + y * 32 + 32 + xb);
+            dst[21] = src[y * 16 + x + 21];
+            dst[22] = src[y * 16 + x + 22];
+            dst[23] = src[y * 16 + x + 23];
+            dst[24] = *(u16 *)((u8 *)src + y * 32 + 64 + xb);
+            dst[25] = src[y * 16 + x + 37];
+            dst[26] = src[y * 16 + x + 38];
+            dst[27] = src[y * 16 + x + 39];
+            dst[28] = *(u16 *)((u8 *)src + y * 32 + 96 + xb);
+            dst[29] = src[y * 16 + x + 53];
+            dst[30] = src[y * 16 + x + 54];
+            dst[31] = src[y * 16 + x + 55];
+            dst += 32;
+            x += 8;
+            xb += 8;
+        }
+        y += 4;
+    }
+    DCFlushRange((u8 *)lbl_803DCA24 + 0x60, 0x200);
+
+    lbl_803DCA20 = textureAlloc(0x14, 0x14, 5, 0, 0, 0, 0, 1, 1);
+    dst = (u16 *)((u8 *)lbl_803DCA20 + 0x60);
+    y = 0;
+    src = lbl_802CA100;
+    for (i = 0; i < 5; i++) {
+        x = 0;
+        xb = 0;
+        for (j = 0; j < 5; j++) {
+            dst[0] = *(u16 *)((u8 *)src + y * 40 + xb);
+            dst[1] = src[y * 20 + x + 1];
+            dst[2] = src[y * 20 + x + 2];
+            dst[3] = src[y * 20 + x + 3];
+            dst[4] = *(u16 *)((u8 *)src + y * 40 + 40 + xb);
+            dst[5] = src[y * 20 + x + 21];
+            dst[6] = src[y * 20 + x + 22];
+            dst[7] = src[y * 20 + x + 23];
+            dst[8] = *(u16 *)((u8 *)src + y * 40 + 80 + xb);
+            dst[9] = src[y * 20 + x + 41];
+            dst[10] = src[y * 20 + x + 42];
+            dst[11] = src[y * 20 + x + 43];
+            dst[12] = *(u16 *)((u8 *)src + y * 40 + 120 + xb);
+            dst[13] = src[y * 20 + x + 61];
+            dst[14] = src[y * 20 + x + 62];
+            dst[15] = src[y * 20 + x + 63];
+            dst += 16;
+            x += 4;
+            xb += 8;
+        }
+        y += 4;
+    }
+    DCFlushRange((u8 *)lbl_803DCA20 + 0x60, 800);
+}
+#pragma pop
