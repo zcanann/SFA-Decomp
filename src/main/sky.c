@@ -562,6 +562,7 @@ void *fn_80089A58(void)
 #pragma peephole off
 #pragma scheduling off
 #pragma opt_common_subs off
+#pragma dont_inline on
 int getSunPos(f32 *outTime)
 {
     f32 time;
@@ -590,6 +591,7 @@ int getSunPos(f32 *outTime)
     }
     return 0;
 }
+#pragma dont_inline reset
 #pragma opt_common_subs reset
 #pragma scheduling reset
 #pragma peephole reset
@@ -1306,6 +1308,78 @@ void skyFn_80088e54(int mode, f32 brightness)
             env[0x40] |= 0x10;
         } else {
             env[0x40] &= ~0x10;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void timeOfDayFn_8008b964(void)
+{
+    u8 *env;
+    f32 time;
+    int timer;
+    int i;
+    int count;
+    f32 val;
+    u8 *p;
+    int idx;
+
+    time = pEXIInputFlag;
+    env = saveGameGetEnvState();
+    if (lbl_803DD12C == NULL) {
+        return;
+    }
+    if (lbl_803DD154 == 0) {
+        return;
+    } else {
+        {
+            *(f32 *)(lbl_803DD12C + 0x20c) += *(f32 *)(lbl_803DD12C + 0x214) * timeDelta;
+            if (*(f32 *)(lbl_803DD12C + 0x20c) >= lbl_803DF078) {
+                *(f32 *)(lbl_803DD12C + 0x20c) = *(f32 *)(lbl_803DD12C + 0x20c) - lbl_803DF078;
+            } else if (*(f32 *)(lbl_803DD12C + 0x20c) < pEXIInputFlag) {
+                *(f32 *)(lbl_803DD12C + 0x20c) = *(f32 *)(lbl_803DD12C + 0x20c) + lbl_803DF078;
+            }
+            if (getSunPos(&time) != 0) {
+                if (lbl_803DD12C[0x24e] == 0) {
+                    lbl_803DD12C[0x24e] = 1;
+                }
+            } else {
+                if (lbl_803DD12C[0x24e] != 0) {
+                    timer = *(int *)(lbl_803DD12C + 0x218) + 1;
+                    *(int *)(lbl_803DD12C + 0x218) = timer;
+                    if (timer > 0x1e) {
+                        *(int *)(lbl_803DD12C + 0x218) = 0;
+                    }
+                    lbl_803DD12C[0x24e] = 0;
+                }
+            }
+            if (Obj_GetPlayerObject() != NULL) {
+                *(f32 *)env = *(f32 *)(lbl_803DD12C + 0x20c);
+            }
+            i = 0;
+            for (count = 2; count != 0; count--) {
+                p = lbl_803DD12C + i;
+                *(f32 *)(p + 0xb8) -= *(f32 *)(p + 0xb4) * timeDelta;
+                val = *(f32 *)(lbl_803DD12C + (idx = i + 0xb8));
+                *(f32 *)(lbl_803DD12C + idx) =
+                    (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
+                *(f32 *)(lbl_803DD12C + (idx = i + 0xbc)) -= lbl_803DF0F0 * timeDelta;
+                val = *(f32 *)(lbl_803DD12C + idx);
+                *(f32 *)(lbl_803DD12C + idx) =
+                    (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
+                i += 0xa4;
+            }
+            *(f32 *)(lbl_803DD12C + 0x23c) -= *(f32 *)(lbl_803DD12C + 0x240) * timeDelta;
+            val = *(f32 *)(lbl_803DD12C + 0x23c);
+            *(f32 *)(lbl_803DD12C + 0x23c) =
+                (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
+            *(f32 *)(lbl_803DD12C + 0x244) += *(f32 *)(lbl_803DD12C + 0x248) * timeDelta;
+            val = *(f32 *)(lbl_803DD12C + 0x244);
+            *(f32 *)(lbl_803DD12C + 0x244) =
+                (val < pEXIInputFlag) ? pEXIInputFlag : ((val > EXIInputFlag) ? EXIInputFlag : val);
         }
     }
 }
