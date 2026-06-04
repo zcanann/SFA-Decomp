@@ -100,7 +100,7 @@ extern void inpSetExCtrl(McmdVoiceState *state, u32 ctrl, s16 value);
 extern void voiceKill(u32 voice);
 extern u32 lbl_803BDA34[];
 extern void fn_8026F5B8(int state);
-extern int voiceIsRegistered(int state);
+extern u32 voiceIsRegistered(int state);
 extern int mcmdWait(McmdVoiceState *state, McmdCommandArgs *args);
 extern int vidGetInternalId(u32 id);
 extern void (*synthMessageCallback)(u32 id);
@@ -214,59 +214,6 @@ void SelectSource(McmdVoiceState *svoice, McmdInputSlot *dest, McmdCommandArgs *
     }
 }
 
-/*
- * Read a 32-bit synth register, either from the voice or EX controller bank.
- */
-#pragma dont_inline on
-u32 varGet32(McmdVoiceState *state, u32 useExCtrl, u32 index)
-{
-    if (useExCtrl != 0) {
-        return (u16)inpGetExCtrl(state, index);
-    }
-    index &= 0x1f;
-    if (index < 0x10) {
-        return state->localRegs[index];
-    }
-    return SYNTH_GLOBAL_REG(index);
-}
-
-/*
- * Read a signed 16-bit synth register.
- */
-int varGet(McmdVoiceState *state, u32 useExCtrl, u32 index)
-{
-    u32 value;
-
-    if (useExCtrl != 0) {
-        value = (u16)inpGetExCtrl(state, index);
-    } else {
-        index &= 0x1f;
-        if (index < 0x10) {
-            value = state->localRegs[index];
-        } else {
-            value = SYNTH_GLOBAL_REG(index);
-        }
-    }
-    return (s16)value;
-}
-
-/*
- * Write a synth register, routing high registers to the EX controller bank.
- */
-void varSet32(McmdVoiceState *state, u32 useExCtrl, u32 index, u32 value)
-{
-    if (useExCtrl != 0) {
-        inpSetExCtrl(state, index, (s16)value);
-        return;
-    }
-    index &= 0x1f;
-    if (index < 0x10) {
-        state->localRegs[index] = value;
-        return;
-    }
-    SYNTH_GLOBAL_REG(index) = value;
-}
-#pragma dont_inline reset
 
 /*
  * Configure the portamento controller ramp trigger for the current voice.
@@ -348,6 +295,60 @@ void mcmdVarCalculation(McmdVoiceState *state, McmdCommandArgs *args, u8 op)
 }
 
 /*
+ * Read a 32-bit synth register, either from the voice or EX controller bank.
+ */
+u32 varGet32(McmdVoiceState *state, u32 useExCtrl, u32 index)
+{
+    if (useExCtrl != 0) {
+        return (u16)inpGetExCtrl(state, index);
+    }
+    index &= 0x1f;
+    if (index < 0x10) {
+        return state->localRegs[index];
+    }
+    return SYNTH_GLOBAL_REG(index);
+}
+
+/*
+ * Read a signed 16-bit synth register.
+ */
+int varGet(McmdVoiceState *state, u32 useExCtrl, u32 index)
+{
+    u32 value;
+
+    if (useExCtrl != 0) {
+        value = (u16)inpGetExCtrl(state, index);
+    } else {
+        index &= 0x1f;
+        if (index < 0x10) {
+            value = state->localRegs[index];
+        } else {
+            value = SYNTH_GLOBAL_REG(index);
+        }
+    }
+    return (s16)value;
+}
+
+/*
+ * Write a synth register, routing high registers to the EX controller bank.
+ */
+#pragma dont_inline on
+void varSet32(McmdVoiceState *state, u32 useExCtrl, u32 index, u32 value)
+{
+    if (useExCtrl != 0) {
+        inpSetExCtrl(state, index, (s16)value);
+        return;
+    }
+    index &= 0x1f;
+    if (index < 0x10) {
+        state->localRegs[index] = value;
+        return;
+    }
+    SYNTH_GLOBAL_REG(index) = value;
+}
+#pragma dont_inline reset
+
+/*
  * Queue register-derived messages onto voices found through vid handles.
  */
 void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
@@ -361,12 +362,7 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
     u8 i;
     u32 targetVoice;
 
-    index = (args->value >> 8) & 0x1f;
-    if (index < 0x10) {
-        value = state->localRegs[index];
-    } else {
-        value = SYNTH_GLOBAL_REG(index);
-    }
+    value = varGet32(state, 0, (args->value >> 8) & 0xff);
 
     if (((args->flags >> 8) & 0xff) == 0) {
         targetInstrument = args->flags >> 0x10;
@@ -403,13 +399,7 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
             }
         }
     } else {
-        index = args->value & 0x1f;
-        if (index < 0x10) {
-            targetInstrument = state->localRegs[index];
-        } else {
-            targetInstrument = SYNTH_GLOBAL_REG(index);
-        }
-        targetVoice = vidGetInternalId(targetInstrument);
+        targetVoice = vidGetInternalId(varGet32(state, 0, (u8)args->value));
         if (targetVoice != 0xffffffff) {
             voice = (int)(synthVoice + (targetVoice & 0xff) * SYNTH_VOICE_STRIDE);
             voiceState = (McmdVoiceState *)voice;
@@ -470,6 +460,8 @@ void macHandleActive(McmdVoiceState *sv)
     u32 *para1;
     int lastNote;
     u8 *channelDefaults;
+    f32 dlsScaleMax;
+    f32 one;
 
     if (MAC_CFLAGS(sv) & 3) {
         if (MAC_CFLAGS(sv) & 1) {
@@ -537,14 +529,14 @@ void macHandleActive(McmdVoiceState *sv)
         MAC_CFLAGS(sv) &= MAC_FLAG64(0, 8);
         MAC_CFLAGS(sv) |= MAC_FLAG64(0x3000, 0);
         memset(sv->localRegs, 0, sizeof(sv->localRegs));
-        sv->activeTimeHi = macRealTimeHi;
-        sv->activeTimeLo = macRealTimeLo;
-        sv->startTimeHi = macRealTimeHi;
-        sv->startTimeLo = macRealTimeLo;
+        *(u64 *)&sv->activeTimeHi = *(u64 *)&macRealTimeHi;
+        *(u64 *)&sv->startTimeHi = *(u64 *)&macRealTimeHi;
         fn_802712C8(sv);
     }
 
     lbl_803DE2D0 = 0;
+    dlsScaleMax = lbl_803E7810;
+    one = lbl_803E7814;
     para1 = &lbl_803DE2E8.value;
 
     do {
@@ -570,7 +562,7 @@ void macHandleActive(McmdVoiceState *sv)
             ex = 1;
             break;
         case 0x2: /* if key */
-            if (sv->key >= ((cmd >> 8) & 0xff)) {
+            if (sv->key >= (s32)((cmd >> 8) & 0xff)) {
                 u8 *macro = dataGetMacro(cmd >> 0x10);
                 if (macro != 0) {
                     sv->macroBase = macro;
@@ -621,7 +613,8 @@ void macHandleActive(McmdVoiceState *sv)
             u32 voiceid;
             u32 i;
             int off;
-            voiceid = ((sv->keyBase + ((cmd >> 8) & 0xff)) << 8) | ((cmd >> 0x10) << 0x10);
+            voiceid = (sv->keyBase + ((cmd >> 8) & 0xff)) << 8;
+            voiceid |= (cmd >> 0x10) << 0x10;
             i = 0;
             off = 0;
             for (; i < lbl_803BD150[0x210]; off += SYNTH_VOICE_STRIDE, i++) {
@@ -653,7 +646,7 @@ void macHandleActive(McmdVoiceState *sv)
         {
             s32 delta;
             s32 scale;
-            delta = (sv->key << 0x10) - (((cmd >> 0x10) & 0xff) << 0x10);
+            delta = (sv->key - (s32)((cmd >> 0x10) & 0xff)) << 0x10;
             scale = (s8)(cmd >> 8);
             delta = (delta * scale) >> 7;
             delta += ((u8)(cmd >> 0x18)) << 0x10;
@@ -668,7 +661,7 @@ void macHandleActive(McmdVoiceState *sv)
         case 0xd: /* scale volume */
         {
             u16 scale = (u8)(cmd >> 8);
-            u32 curve;
+            u16 curve;
             if (((*para1 >> 8) & 0xff) == 0) {
                 sv->volume = (sv->volume * scale) / 0x7f;
             } else {
@@ -718,17 +711,17 @@ void macHandleActive(McmdVoiceState *sv)
         {
             f32 sScale;
             McmdDlsAdsrInfo adsr;
-            sScale = voiceAdsrSustainTable[inpGetMidiCtrl(cmd >> 0x18, sv->midiSlot, sv->midiEvent) >> 7];
+            sScale = voiceAdsrSustainTable[(u16)inpGetMidiCtrl(cmd >> 0x18, sv->midiSlot, sv->midiEvent) >> 7];
             adsr.atime = ((MacDataTables *)lbl_8032EDD0)
-                             ->midi2TimeTab[inpGetMidiCtrl((lbl_803DE2E8.flags >> 8) & 0xff,
-                                                           sv->midiSlot, sv->midiEvent) >> 7];
+                             ->midi2TimeTab[(u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 8) & 0xff,
+                                                                sv->midiSlot, sv->midiEvent) >> 7];
             adsr.dtime = ((MacDataTables *)lbl_8032EDD0)
-                             ->midi2TimeTab[inpGetMidiCtrl((lbl_803DE2E8.flags >> 0x10) & 0xff,
-                                                           sv->midiSlot, sv->midiEvent) >> 7];
-            adsr.slevel = 0xc1 - voiceAdsrDecayTable[(u32)(lbl_803E7810 * sScale)];
+                             ->midi2TimeTab[(u16)inpGetMidiCtrl((lbl_803DE2E8.flags >> 0x10) & 0xff,
+                                                                sv->midiSlot, sv->midiEvent) >> 7];
+            adsr.slevel = 0xc1 - voiceAdsrDecayTable[(u32)(dlsScaleMax * sScale)];
             adsr.rtime = ((MacDataTables *)lbl_8032EDD0)
-                             ->midi2TimeTab[inpGetMidiCtrl((u8)*para1, sv->midiSlot,
-                                                           sv->midiEvent) >> 7];
+                             ->midi2TimeTab[(u16)inpGetMidiCtrl((u8)*para1, sv->midiSlot,
+                                                                sv->midiEvent) >> 7];
             adsr.ascale = 0x80000000;
             adsr.dscale = 0x80000000;
             hwSetADSR(sv->voiceHandle & 0xff, (u32 *)&adsr, 2);
@@ -846,7 +839,7 @@ void macHandleActive(McmdVoiceState *sv)
         case 0x23: /* setup tremolo */
             sv->tremoloScale = (cmd >> 8) & 0xffff;
             sv->tremoloModAddScale = *para1;
-            sv->tremoloCurScale = lbl_803E7814;
+            sv->tremoloCurScale = one;
             break;
         case 0x24: /* return */
             if (sv->macroStackDepth != 0) {
@@ -894,16 +887,14 @@ void macHandleActive(McmdVoiceState *sv)
         }
         case 0x29: /* untrap event */
         {
-            u32 i;
+            u8 i;
             sv->trapMacroBase[(cmd >> 8) & 0xff] = 0;
             for (i = 0; i < 3; i++) {
                 if (sv->trapMacroBase[i] != 0) {
-                    break;
+                    goto next_command;
                 }
             }
-            if (i >= 3) {
-                sv->hasTriggerMacros = 0;
-            }
+            sv->hasTriggerMacros = 0;
             break;
         }
         case 0x2a: /* send message */
@@ -979,7 +970,7 @@ void macHandleActive(McmdVoiceState *sv)
             break;
         case 0x39: /* set age counter by volume */
         {
-            u32 age = ((((sv->volume >> 0x10) & 0xff) * (*para1 & 0xffff)) >> 7) + (cmd >> 0x10);
+            u32 age = ((s32)((*para1 & 0xffff) * ((sv->volume >> 0x10) & 0xff)) >> 7) + (cmd >> 0x10);
             sv->priorityValue = age > 60000 ? 0x75300000 : age << 0xf;
             hwSetPriority(sv->voiceHandle & 0xff,
                           ((u32)sv->priorityGroup << 0x18) | (sv->priorityValue >> 0xf));
@@ -1026,7 +1017,7 @@ void macHandleActive(McmdVoiceState *sv)
             break;
         case 0x4d: /* aux A FX select */
         {
-            u32 i = *para1 >> 0x18;
+            u8 i = *para1 >> 0x18;
             SelectSource(sv,
                          (McmdInputSlot *)(lbl_803BDEF4 + sv->auxB * 0x90 + i * 0x24),
                          &lbl_803DE2E8, ((MacDataTables *)lbl_8032EDD0)->auxAMask[i],
@@ -1035,7 +1026,7 @@ void macHandleActive(McmdVoiceState *sv)
         }
         case 0x4e: /* aux B FX select */
         {
-            u32 i = *para1 >> 0x18;
+            u8 i = *para1 >> 0x18;
             SelectSource(sv,
                          (McmdInputSlot *)(lbl_803BDA74 + sv->auxB * 0x90 + i * 0x24),
                          &lbl_803DE2E8, ((MacDataTables *)lbl_8032EDD0)->auxBMask[i],
@@ -1093,28 +1084,8 @@ void macHandleActive(McmdVoiceState *sv)
             s32 a;
             s32 b;
             u8 result;
-            u32 idx = (cmd >> 0x10) & 0xff;
-            if (((cmd >> 8) & 0xff) != 0) {
-                a = (u16)inpGetExCtrl(sv, idx);
-            } else {
-                idx &= 0x1f;
-                if (idx < 0x10) {
-                    a = sv->localRegs[idx];
-                } else {
-                    a = SYNTH_GLOBAL_REG(idx);
-                }
-            }
-            idx = (u8)*para1;
-            if ((lbl_803DE2E8.flags >> 0x18) != 0) {
-                b = (u16)inpGetExCtrl(sv, idx);
-            } else {
-                idx &= 0x1f;
-                if (idx < 0x10) {
-                    b = sv->localRegs[idx];
-                } else {
-                    b = SYNTH_GLOBAL_REG(idx);
-                }
-            }
+            a = varGet32(sv, (cmd >> 8) & 0xff, (cmd >> 0x10) & 0xff);
+            b = varGet32(sv, lbl_803DE2E8.flags >> 0x18, (u8)*para1);
             result = !(b - a);
             if (((*para1 >> 8) & 0xff) != 0) {
                 result = !result;
@@ -1129,28 +1100,8 @@ void macHandleActive(McmdVoiceState *sv)
             s32 a;
             s32 b;
             u8 result;
-            u32 idx = (cmd >> 0x10) & 0xff;
-            if (((cmd >> 8) & 0xff) != 0) {
-                a = (u16)inpGetExCtrl(sv, idx);
-            } else {
-                idx &= 0x1f;
-                if (idx < 0x10) {
-                    a = sv->localRegs[idx];
-                } else {
-                    a = SYNTH_GLOBAL_REG(idx);
-                }
-            }
-            idx = (u8)*para1;
-            if ((lbl_803DE2E8.flags >> 0x18) != 0) {
-                b = (u16)inpGetExCtrl(sv, idx);
-            } else {
-                idx &= 0x1f;
-                if (idx < 0x10) {
-                    b = sv->localRegs[idx];
-                } else {
-                    b = SYNTH_GLOBAL_REG(idx);
-                }
-            }
+            a = varGet32(sv, (cmd >> 8) & 0xff, (cmd >> 0x10) & 0xff);
+            b = varGet32(sv, lbl_803DE2E8.flags >> 0x18, (u8)*para1);
             result = a < b;
             if (((*para1 >> 8) & 0xff) != 0) {
                 result = !result;
@@ -1161,6 +1112,7 @@ void macHandleActive(McmdVoiceState *sv)
             break;
         }
         }
+    next_command:;
     } while (ex == 0);
 }
 /*
