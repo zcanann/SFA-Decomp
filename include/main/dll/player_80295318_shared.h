@@ -1325,7 +1325,7 @@ extern int fn_802A1CA8();
 extern int fn_802A2EE0(int obj, int state, f32 fv);
 extern int fn_802A418C(int obj, int state, f32 fv);
 extern int fn_802A5384();
-extern int fn_802A6694();
+extern int fn_802A6694(int obj, int state, f32 fv);
 extern f32 lbl_803E8010;
 extern f32 lbl_803E7FEC;
 extern f32 lbl_803E8014;
