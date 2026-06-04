@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_A6.h"
+#include "main/dll/CAM/camcontrol.h"
 
-extern u8 *pCamera;
 extern u8 *gCamcontrolTargetReticle;
 extern s8 gCamcontrolTargetState;
 extern s16 lbl_803DB990;
@@ -41,8 +41,8 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
 
   reticle = gCamcontrolTargetReticle;
   target = fallbackTarget;
-  if (*(u32 *)(pCamera + 0x120) != 0) {
-    target = (u8 *)*(u32 *)(pCamera + 0x120);
+  if (CAMCONTROL_CAMERA->targetReticleOverride != 0) {
+    target = (u8 *)CAMCONTROL_CAMERA->targetReticleOverride;
     savedReticleState = gCamcontrolTargetState;
     gCamcontrolTargetState = 3;
     savedReticleByte = reticle[0x36];
@@ -106,7 +106,7 @@ void camcontrol_updateTargetReticle(u8 *fallbackTarget, int unused2,
   flagsObj = *(u16 **)((u8 *)*(u32 *)(reticle + 0x7C) + (s8)reticle[0xAD] * 4);
   *(u16 *)((u8 *)flagsObj + 0x18) = (u16)(*(u16 *)((u8 *)flagsObj + 0x18) & ~8);
 
-  if (*(u32 *)(pCamera + 0x120) != 0) {
+  if (CAMCONTROL_CAMERA->targetReticleOverride != 0) {
     gCamcontrolTargetState = (s8)savedReticleState;
     reticle[0x36] = savedReticleByte;
   }

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_BC.h"
+#include "main/dll/CAM/camcontrol.h"
 
-extern u8 *pCamera;
 extern s16 lbl_803DB990;
 extern int lbl_803DD518;
 
@@ -22,9 +22,9 @@ void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
 {
   if (gameTextFn_80134be8() == 0) {
     lbl_803DB990 = -1;
-    camcontrol_updateTargetReticle(*(int *)(pCamera + 0x128), lbl_803DD518 == 0x49,
+    camcontrol_updateTargetReticle(CAMCONTROL_CAMERA->targetReticleFocus, lbl_803DD518 == 0x49,
                                    arg1, arg2, arg3, arg4);
-    *(int *)(pCamera + 0x120) = 0;
+    CAMCONTROL_CAMERA->targetReticleOverride = 0;
   }
 }
 
@@ -37,7 +37,7 @@ void Camera_minimapShowHelpTextForTarget(int arg1, int arg2, int arg3, int arg4)
  */
 void camcontrol_playTargetTypeSfx(void)
 {
-  u8 *p = (u8 *)*(int *)(pCamera + 0x124);
+  u8 *p = (u8 *)CAMCONTROL_CAMERA->currentTarget;
   int kind;
 
   if (gameTextFn_80134be8() != 0) return;

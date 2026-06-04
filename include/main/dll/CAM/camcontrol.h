@@ -59,7 +59,7 @@ typedef struct CamcontrolCameraState {
   f32 zoomDistance;
   u8 padF8[0x11C - 0xF8];
   int overrideTarget;
-  int func15Value;
+  int targetReticleOverride;
   int currentTarget;
   int targetReticleFocus;
   u8 pad12C[0x134 - 0x12C];
@@ -146,7 +146,7 @@ void camcontrol_getRelativePosition(f32 heightOffset,int targetObj,float *outX,f
                                     float *outZ,float *outDistanceXZ,int useWorldPosition);
 void camcontrol_initialise(float *dst,f32 numerator,f32 denominator,f32 minValue,f32 y,f32 z);
 int Camera_isZooming(void);
-void Camera_func15(int x);
+void Camera_setTargetReticleOverride(int target);
 void Camera_setTarget(int target);
 int Camera_getTarget(void);
 int Camera_getOverrideTarget(void);

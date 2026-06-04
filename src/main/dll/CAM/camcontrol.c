@@ -321,9 +321,9 @@ int Camera_isZooming(void)
 }
 #pragma scheduling reset
 
-void Camera_func15(int x)
+void Camera_setTargetReticleOverride(int target)
 {
-  CAMCONTROL_CAMERA->func15Value = x;
+  CAMCONTROL_CAMERA->targetReticleOverride = target;
 }
 
 void Camera_setTarget(int x)
