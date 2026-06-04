@@ -3366,3 +3366,60 @@ void initMapBlocks(void)
     memset(mb + 0x8818, 0, 0xfa0);
     *(u32 *)(mb + 0x8818) = -1;
 }
+
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern void GXBegin(int prim, int fmt, u16 nverts);
+
+typedef union {
+    u8 u8;
+    s16 s16;
+    u16 u16;
+    u32 u32;
+    f32 f32;
+} WGPipe;
+volatile WGPipe wgfifo : (0xCC008000);
+
+static inline void GXPosition3s16(const s16 x, const s16 y, const s16 z) {
+    wgfifo.s16 = x;
+    wgfifo.s16 = y;
+    wgfifo.s16 = z;
+}
+static inline void GXColor4u8(const u8 r, const u8 g, const u8 b, const u8 a) {
+    wgfifo.u8 = r;
+    wgfifo.u8 = g;
+    wgfifo.u8 = b;
+    wgfifo.u8 = a;
+}
+static inline void GXTexCoord2s16(const s16 s, const s16 t) {
+    wgfifo.s16 = s;
+    wgfifo.s16 = t;
+}
+static inline void GXPosition1x8(const u8 x) { wgfifo.u8 = x; }
+
+#pragma peephole on
+void drawFn_8005cf8c(int verts, u8 *indices, int count) {
+    s16 *p;
+    int q, r;
+    int i, j;
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(0, 1);
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xb, 1);
+    GXSetVtxDesc(0xd, 1);
+    GXBegin(0x90, 0, count * 3 & 0xffff);
+    for (i = 0; i < count; i++) {
+        for (j = 0; j < 3; j++) {
+            GXPosition1x8(0);
+            p = (s16 *)(verts + indices[j + 1] * 0x10);
+            GXPosition3s16(p[0], p[1], p[2]);
+            q = verts + indices[j + 1] * 0x10;
+            GXColor4u8(*(u8 *)(q + 0xc), *(u8 *)(q + 0xd), *(u8 *)(q + 0xe), *(u8 *)(q + 0xf));
+            r = verts + indices[j + 1] * 0x10;
+            GXTexCoord2s16(*(s16 *)(r + 8), *(s16 *)(r + 10));
+        }
+        indices = indices + 0x10;
+    }
+}
+#pragma peephole reset
