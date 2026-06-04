@@ -1829,6 +1829,7 @@ int bossdrakor_getExtraSize(void)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void bossdrakor_update(int obj)
 {
     int state;
@@ -1839,12 +1840,14 @@ void bossdrakor_update(int obj)
     int i;
     int moveId;
     s8 *p;
+    u16 *uvec;
     int *tbl;
     int v27;
     int v28;
-    f32 v180;
     f32 v178;
+    f32 v180;
     f32 v;
+    f32 t;
     s16 d;
     int step;
     s16 *vec;
@@ -1912,7 +1915,7 @@ void bossdrakor_update(int obj)
     if (moveResult != 0) {
         bossdrakor_handleActionEvent(obj, state, moveResult);
     }
-    adv = ((int (*)(f32, int, f32, void *))ObjAnim_AdvanceCurrentMove)(PSVECMag((f32 *)((char *)obj + 0x24)) / *(f32 *)((char *)state + 0x164) + lbl_803E6570, obj, timeDelta, buf);
+    adv = ((int (*)(f32, int, f32, void *))ObjAnim_AdvanceCurrentMove)(lbl_803E6570 + PSVECMag((f32 *)((char *)obj + 0x24)) / *(f32 *)((char *)state + 0x164), obj, timeDelta, buf);
     if (adv != 0) {
         if (*(int *)((char *)state + 0x168) == 0) {
             ObjHits_ClearHitVolumes(obj);
@@ -1986,11 +1989,13 @@ void bossdrakor_update(int obj)
     if (((DrakorFlags *)((char *)state + 0x198))->b20) {
         (*(void (**)(int))(*gGameUIInterface + 0x5c))(*(int *)((char *)state + 0x170));
     }
-    if (lbl_803E6510 != *(f32 *)((char *)state + 0x178)) {
+    t = lbl_803E6510;
+    if (t != *(f32 *)((char *)state + 0x178)) {
         *(f32 *)((char *)state + 0x17c) = -(lbl_803E6578 * timeDelta - *(f32 *)((char *)state + 0x17c));
         *(f32 *)((char *)state + 0x178) = *(f32 *)((char *)state + 0x178) + *(f32 *)((char *)state + 0x17c);
         v = *(f32 *)((char *)state + 0x178);
-        *(f32 *)((char *)state + 0x178) = (v < lbl_803E6510) ? lbl_803E6510 : ((v > lbl_803E6550) ? lbl_803E6550 : v);
+        t = (v < t) ? t : ((v > lbl_803E6550) ? lbl_803E6550 : v);
+        *(f32 *)((char *)state + 0x178) = t;
         v180 = *(f32 *)((char *)state + 0x180);
         v178 = *(f32 *)((char *)state + 0x178);
         tbl = seqFn_800394a0();
@@ -1998,11 +2003,11 @@ void bossdrakor_update(int obj)
         v28 = (int)(lbl_803E6530 * (v178 * v180));
         i = 0;
         do {
-            vec = objModelGetVecFn_800395d8(obj, tbl[0]);
-            if (vec != NULL) {
-                vec[1] = v28;
-                vec[0] = v27;
-                vec[2] = 0;
+            uvec = (u16 *)objModelGetVecFn_800395d8(obj, tbl[0]);
+            if (uvec != NULL) {
+                uvec[1] = v28;
+                uvec[0] = v27;
+                uvec[2] = 0;
             }
             tbl++;
             i++;
@@ -2140,10 +2145,10 @@ void bossdrakor_spawnAttackObjects(int obj, int state, int action)
     f32 prod;
     f32 *mstate;
     u8 *setup;
-    f32 vecC[3];
-    f32 vecB[3];
-    f32 vecA[3];
     f32 target[3];
+    f32 vecA[3];
+    f32 vecB[3];
+    f32 vecC[3];
 
     if (action < 0) {
         return;
@@ -2673,5 +2678,6 @@ void drakord_thornbush_init(int obj, u8 *init)
         break;
     }
 }
+#pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
