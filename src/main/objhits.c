@@ -7,7 +7,7 @@
 extern undefined8 memcpy();
 extern undefined4 Obj_TransformWorldVectorToLocal();
 extern undefined4 Obj_TransformWorldPointToLocal();
-extern undefined4 Obj_TransformLocalPointToWorld();
+extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int obj);
 extern uint getAngle();
 extern undefined4 mtxRotateByVec3s();
 extern undefined4 setMatrixFromObjectPos();
@@ -48,6 +48,8 @@ extern f64 DOUBLE_803df5a8;
 extern f64 DOUBLE_803df5c0;
 extern f64 DOUBLE_803df5d0;
 extern f32 timeDelta;
+extern f32 oneOverTimeDelta;
+extern f32 lbl_803DE960;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DC0B0;
@@ -1237,6 +1239,7 @@ uint ObjHits_TestTaperedCapsule3D(float pointRadius, float baseRadius, float tip
  */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount)
 {
   int gap;
@@ -1261,7 +1264,7 @@ void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount)
         insertSlot = sweepPtrs + index;
         insertIndex = index;
         while ((gap < insertIndex) &&
-               (prevEntry = sweepPtrs[insertIndex - gap], prevEntry->maxX > entry->maxX)) {
+               (prevEntry = sweepPtrs[insertIndex - gap], prevEntry->minX > entry->minX)) {
           *insertSlot = prevEntry;
           insertSlot -= gap;
           insertIndex -= gap;
@@ -1274,6 +1277,7 @@ void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount)
   }
   return;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2968,219 +2972,210 @@ void ObjHits_CheckTrackContact(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void ObjHits_Update(int objectCount)
 {
-  int attachedObj;
-  ObjHitsSweepEntry *candidateEntry;
+  u8 skeletonScratchB[1052];
+  u8 skeletonScratchC[1040];
+  u8 skeletonHits[1512];
+  u8 skeletonScratchD[100];
+  u8 skeletonScratchE[100];
+  int listCount;
+  int startIndex;
+  int *objectList;
+  ObjHitsSweepEntry *sweepEntries;
+  ObjHitsSweepEntry *nextEntry;
+  ObjHitsSweepEntry **entrySlotBase;
   ObjHitsSweepEntry **entrySlot;
-  int candidateObj;
+  ObjHitsSweepEntry *entry;
+  ObjHitsSweepEntry *candidateEntry;
   int obj;
-  int currentIndex;
-  int candidateIndex;
+  int candObj;
+  uint attachedObj;
+  uint candAttachedObj;
   ObjHitsPriorityState *objState;
+  ObjHitsPriorityState *candState;
   int slotCount;
   int slotIndex;
-  ObjHitsPriorityState *attachedState;
-  int objectCount;
-  int candidateAttachedObj;
-  int *objectList;
-  bool broadphaseActive;
-  bool canHit;
-  bool canOverlap;
-  bool hasPrimaryMask;
-  bool hasSecondaryMask;
-  bool shouldProcess;
-  double dVar17;
-  float fVar11;
-  ObjHitsSweepEntry *nextEntry;
-  ObjHitsSweepEntry *sweepEntries;
-  ObjHitsSweepEntry **sweepPtrs;
-  int uStack_f28;
-  int auStack_f24[51];
-  int aiStack_e58[918];
-  
-  objectCount = _savegpr_19();
-  objectList = (int *)ObjList_GetObjects(&uStack_f28, auStack_f24);
-  sweepPtrs = gObjHitsSweepEntryPtrs;
+  int currentIndex;
+  int candidateIndex;
+  f32 axisDiff;
+  f32 diff;
+
+  objectList = ObjList_GetObjects(&startIndex, &listCount);
   sweepEntries = gObjHitsSweepEntries;
-  nextEntry = &gObjHitsSweepEntries[1];
-  sweepEntries->maxX = lbl_803DF5E0;
-  sweepEntries->minX = lbl_803DF5E0;
-  sweepPtrs[0] = sweepEntries;
+  sweepEntries->minX = lbl_803DE960;
+  sweepEntries->maxX = lbl_803DE960;
+  gObjHitsSweepEntryPtrs[0] = sweepEntries;
   slotCount = 1;
-  entrySlot = &gObjHitsSweepEntryPtrs[1];
-  if (0 < objectCount) {
-    do {
+  nextEntry = &sweepEntries[1];
+  entrySlotBase = &gObjHitsSweepEntryPtrs[1];
+  entrySlot = entrySlotBase;
+  for (; objectCount > 0; objectCount--) {
+    {
       obj = *objectList;
       objState = *(ObjHitsPriorityState **)(obj + 0x54);
-      if (objState != 0) {
-        if ((((objState->flags & 3) != 0) && (objState->shapeFlags != '\b')) &&
-            (slotCount < 400)) {
+      if (objState != NULL) {
+        if (((objState->flags & 3) != 0) && (objState->shapeFlags != 8) && (slotCount < 400)) {
           *entrySlot = nextEntry;
           (*entrySlot)->obj = obj;
-          (*entrySlot)->minX = *(float *)(obj + 0x18) - *(float *)((int)objState + 0x38);
+          (*entrySlot)->minX = *(f32 *)(obj + 0x18) - objState->sweepRadiusX;
           nextEntry++;
           entrySlot++;
-          sweepPtrs[slotCount]->maxX = *(float *)(obj + 0x18) + *(float *)((int)objState + 0x38);
-          slotCount++;
+          gObjHitsSweepEntryPtrs[slotCount++]->maxX = *(f32 *)(obj + 0x18) + objState->sweepRadiusX;
         }
         objState->flags = objState->flags & ~0x8;
         objState->contactFlags = 0;
-        objState->contactHitVolume = 0xff;
-        *(undefined4 *)objState = 0;
-        attachedObj = *(int *)(obj + 0xc8);
-        if ((attachedObj != 0) && (*(short *)(attachedObj + 0x44) == 0x2d)) {
-          attachedState = *(ObjHitsPriorityState **)(attachedObj + 0x54);
-          attachedState->flags = attachedState->flags & ~0x8;
-          attachedState->contactFlags = 0;
-          attachedState->contactHitVolume = 0xff;
-          *(undefined4 *)attachedState = 0;
+        *(s8 *)&objState->contactHitVolume = -1;
+        *(int *)objState = 0;
+        attachedObj = *(uint *)(obj + 0xc8);
+        if ((attachedObj != 0) && (*(s16 *)(attachedObj + 0x44) == 0x2d)) {
+          objState = *(ObjHitsPriorityState **)(attachedObj + 0x54);
+          objState->flags = objState->flags & ~0x8;
+          objState->contactFlags = 0;
+          *(s8 *)&objState->contactHitVolume = -1;
+          *(int *)objState = 0;
         }
       }
       objectList++;
-      objectCount--;
-    } while (objectCount != 0);
+    }
   }
   ObjHits_SortSweepEntries(gObjHitsSweepEntryPtrs, slotCount);
   currentIndex = 1;
   slotIndex = 1;
-  entrySlot = &gObjHitsSweepEntryPtrs[1];
-  do {
-    if (slotCount <= slotIndex) {
-      entrySlot = &gObjHitsSweepEntryPtrs[1];
-      for (currentIndex = 1; currentIndex < slotCount; currentIndex++) {
-        obj = (*entrySlot)->obj;
-        if ((((*(ObjHitsPriorityState **)(obj + 0x54))->flags & 0x200) != 0) &&
-            (ObjHits_CheckTrackContact(), *(int *)(obj + 0xc8) != 0)) {
-          ObjHits_CheckTrackContact();
-        }
-        entrySlot++;
-      }
-      entrySlot = &gObjHitsSweepEntryPtrs[1];
-      for (currentIndex = 1; currentIndex < slotCount; currentIndex++) {
-        obj = (*entrySlot)->obj;
-        objState = *(ObjHitsPriorityState **)(obj + 0x54);
-        *(undefined4 *)((int)objState + 0x10) = *(undefined4 *)(obj + 0xc);
-        *(undefined4 *)((int)objState + 0x14) = *(undefined4 *)(obj + 0x10);
-        *(undefined4 *)((int)objState + 0x18) = *(undefined4 *)(obj + 0x14);
-        if (*(int *)(obj + 0x30) == 0) {
-          *(undefined4 *)((int)objState + 0x1c) = *(undefined4 *)(obj + 0xc);
-          *(undefined4 *)((int)objState + 0x20) = *(undefined4 *)(obj + 0x10);
-          *(undefined4 *)((int)objState + 0x24) = *(undefined4 *)(obj + 0x14);
-        } else {
-          Obj_TransformLocalPointToWorld((double)*(float *)((int)objState + 0x10),
-                       (double)*(float *)((int)objState + 0x14),
-                       (double)*(float *)((int)objState + 0x18), (float *)((int)objState + 0x1c),
-                       (float *)((int)objState + 0x20), (float *)((int)objState + 0x24),
-                       *(int *)(obj + 0x30));
-        }
-        *(undefined *)((int)objState + 0xae) = 0;
-        objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
-        if ((((*(char *)((int)objState + 0x71) != '\0') || ((objState->flags & 8) != 0)) &&
-            ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0)) &&
-            ((objState->flags & 0x4000) == 0)) {
-          *(float *)(obj + 0x24) = lbl_803DC078 * (*(float *)(obj + 0xc) - *(float *)(obj + 0x80));
-          *(float *)(obj + 0x2c) = lbl_803DC078 * (*(float *)(obj + 0x14) - *(float *)(obj + 0x88));
-        }
-        entrySlot++;
-      }
-      gObjHitsActiveHitVolumeObjects[0] = 0;
-      gObjHitsActiveHitVolumeObjects[1] = 0;
-      gObjHitsActiveHitVolumeObjects[2] = 0;
-      gObjHitsActiveHitVolumeObjects[3] = 0;
-      gObjHitsActiveHitVolumeObjects[4] = 0;
-      _restgpr_19();
-      return;
-    }
-    obj = (*entrySlot)->obj;
+  entrySlot = entrySlotBase;
+  for (; slotIndex < slotCount; slotIndex++, entrySlot++) {
+    entry = *entrySlot;
+    obj = entry->obj;
     objState = *(ObjHitsPriorityState **)(obj + 0x54);
-    attachedObj = *(int *)(obj + 0xc8);
+    attachedObj = *(uint *)(obj + 0xc8);
     if ((attachedObj != 0) &&
-        ((*(int *)(attachedObj + 0x54) == 0) ||
-         (((*(ObjHitsPriorityState **)(attachedObj + 0x54))->flags & OBJHITS_PRIORITY_STATE_ENABLED) == 0)))
-    {
+        ((*(void **)(attachedObj + 0x54) == NULL) ||
+         (((*(ObjHitsPriorityState **)(attachedObj + 0x54))->flags & 1) == 0))) {
       attachedObj = 0;
     }
     if ((objState->flags & 4) != 0) {
+      ObjHitsSweepEntry **skipSlot;
+      ObjHitsSweepEntry **ptrSlot;
+      int scaled;
       candidateIndex = currentIndex;
-      while ((candidateIndex < slotCount) && (sweepPtrs[candidateIndex]->maxX < (*entrySlot)->minX)) {
-        candidateIndex++;
+      skipSlot = &gObjHitsSweepEntryPtrs[currentIndex];
+      for (; (entry->minX > (*skipSlot)->maxX) && (candidateIndex < slotCount); candidateIndex++) {
+        skipSlot++;
       }
       currentIndex = candidateIndex;
-      while (candidateIndex < slotCount) {
-        candidateEntry = sweepPtrs[candidateIndex];
-        if ((*entrySlot)->maxX <= candidateEntry->minX) {
-          break;
+      ptrSlot = gObjHitsSweepEntryPtrs;
+      scaled = candidateIndex << 2;
+      for (; (candidateIndex < slotCount) &&
+             ((*entrySlot)->maxX > (*(ObjHitsSweepEntry **)((int)ptrSlot + scaled))->minX);
+           candidateIndex++, scaled += 4) {
+        candidateEntry = *(ObjHitsSweepEntry **)((int)ptrSlot + scaled);
+        if ((*entrySlot)->minX > candidateEntry->maxX) {
+          continue;
         }
-        candidateObj = candidateEntry->obj;
-        attachedState = *(ObjHitsPriorityState **)(candidateObj + 0x54);
-        if ((slotIndex != candidateIndex) && (*(int *)(obj + 0x30) != candidateObj)) {
-          dVar17 = (double)(*(float *)(obj + 0x20) - *(float *)(candidateObj + 0x20));
-          if (dVar17 <= (double)lbl_803DF590) {
-            dVar17 = -dVar17;
-          }
-          if (dVar17 < (double)(*(float *)((int)objState + 0x2c) + *(float *)((int)attachedState + 0x2c))) {
-            dVar17 = (double)(*(float *)(obj + 0x1c) - *(float *)(candidateObj + 0x1c));
-            if (dVar17 <= (double)lbl_803DF590) {
-              dVar17 = -dVar17;
+        {
+          candObj = candidateEntry->obj;
+          candState = *(ObjHitsPriorityState **)(candObj + 0x54);
+          if ((slotIndex != candidateIndex) && (*(uint *)(obj + 0x30) != (uint)candObj)) {
+            axisDiff = *(f32 *)(obj + 0x20) - *(f32 *)(candObj + 0x20);
+            if (axisDiff > gObjHitsScalarZero) {
+              diff = axisDiff;
+            } else {
+              diff = -axisDiff;
             }
-            canOverlap = dVar17 < (double)(*(float *)((int)objState + 0x28) + *(float *)((int)attachedState + 0x28));
-            broadphaseActive = ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
-                               ((attachedState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0);
-            shouldProcess = ((attachedState->flags & 4) == 0) || (candidateIndex <= slotIndex);
-            hasPrimaryMask = (*(byte *)(*(int *)(obj + 0x50) + 0x71) & attachedState->targetMask) != 0;
-            hasSecondaryMask = (*(byte *)(*(int *)(candidateObj + 0x50) + 0x71) & objState->targetMask) != 0;
-            if (canOverlap && broadphaseActive && shouldProcess && hasPrimaryMask && hasSecondaryMask) {
-              if ((attachedState->shapeFlags & OBJHITS_SHAPE_SKELETON) == 0) {
-                if ((objState->shapeFlags & OBJHITS_SHAPE_SKELETON) == 0) {
-                  if ((objState->shapeFlags == 0x10) || (attachedState->shapeFlags == 0x10)) {
-                    if ((*(char *)((int)objState + 0x6a) != '\0') || (*(char *)((int)attachedState + 0x6a) != '\0')) {
-                      ObjHits_CheckHitVolumes((double)*(float *)((int)objState + 0x28), param_2, param_3,
-                                              param_4, param_5, param_6, param_7, param_8, obj,
-                                              candidateObj, obj, 0, 1, 0xffffffff, 0, 0);
-                    }
-                  } else if ((*(char *)((int)objState + 0x6a) != '\0') ||
-                             (*(char *)((int)attachedState + 0x6a) != '\0')) {
-                    ObjHits_DetectObjectPair();
-                  }
-                } else {
-                  ObjHits_CheckSkeletonPair(obj, candidateObj, aiStack_e58);
-                }
+            if (diff < objState->primaryRadiusXZ + candState->primaryRadiusXZ) {
+              diff = *(f32 *)(obj + 0x1c) - *(f32 *)(candObj + 0x1c);
+              if (diff > gObjHitsScalarZero) {
               } else {
-                ObjHits_CheckSkeletonPair(candidateObj, obj, aiStack_e58);
+                diff = -diff;
+              }
+              if ((diff < objState->primaryRadiusY + candState->primaryRadiusY) &&
+                  ((objState->flags & 0x40) == 0) && ((candState->flags & 0x40) == 0) &&
+                  (((candState->flags & 4) == 0) || (slotIndex >= candidateIndex)) &&
+                  ((*(u8 *)(*(int *)(obj + 0x50) + 0x71) & candState->targetMask) != 0) &&
+                  ((*(u8 *)(*(int *)(candObj + 0x50) + 0x71) & objState->targetMask) != 0)) {
+                if ((candState->shapeFlags & 0x20) != 0) {
+                  ((void (*)(int, int, void *, void *, void *, void *, void *, int))
+                       ObjHits_CheckSkeletonPair)(candObj, obj, skeletonHits, skeletonScratchB,
+                                                  skeletonScratchC, skeletonScratchD,
+                                                  skeletonScratchE, 0);
+                } else if ((objState->shapeFlags & 0x20) != 0) {
+                  ((void (*)(int, int, void *, void *, void *, void *, void *, int))
+                       ObjHits_CheckSkeletonPair)(obj, candObj, skeletonHits, skeletonScratchB,
+                                                  skeletonScratchC, skeletonScratchD,
+                                                  skeletonScratchE, 0);
+                } else if ((objState->shapeFlags == 0x10) || (candState->shapeFlags == 0x10)) {
+                  if ((*(u8 *)((int)objState + 0x6a) != 0) ||
+                      (*(u8 *)((int)candState + 0x6a) != 0)) {
+                    ((u8 (*)(int, int, int, int, int, uint, uint))ObjHits_CheckHitVolumes)(
+                        obj, candObj, obj, 0, 1, 0xffffffff, 0);
+                  }
+                } else if ((*(u8 *)((int)objState + 0x6a) != 0) ||
+                           (*(u8 *)((int)candState + 0x6a) != 0)) {
+                  ((void (*)(int, int))ObjHits_DetectObjectPair)(obj, candObj);
+                }
               }
             }
-            if (dVar17 < (double)(*(float *)((int)objState + 0x34) + *(float *)((int)attachedState + 0x34))) {
-              param_2 = (double)(*(float *)(obj + 0x1c) - *(float *)(candidateObj + 0x1c));
-              if (param_2 <= (double)lbl_803DF590) {
-                param_2 = -param_2;
+            if (diff < objState->secondaryRadiusXZ + candState->secondaryRadiusXZ) {
+              axisDiff = *(f32 *)(obj + 0x1c) - *(f32 *)(candObj + 0x1c);
+              if (axisDiff > gObjHitsScalarZero) {
+              } else {
+                axisDiff = -axisDiff;
               }
-              canHit = param_2 < (double)(*(float *)((int)objState + 0x30) + *(float *)((int)attachedState + 0x30));
-              broadphaseActive = ((objState->flags & 0x100) == 0) &&
-                                 ((attachedState->flags & 0x100) == 0);
-              hasPrimaryMask = (objState->sourceMask & attachedState->targetMask) != 0;
-              hasSecondaryMask = ((attachedState->sourceMask & 0x80) != 0) ||
-                                 ((attachedState->sourceMask & objState->targetMask) != 0);
-              if (canHit && broadphaseActive && hasPrimaryMask && hasSecondaryMask) {
-                candidateAttachedObj = *(int *)(candidateObj + 0xc8);
-                if ((candidateAttachedObj != 0) &&
-                    ((*(int *)(candidateAttachedObj + 0x54) == 0) ||
-                     (((*(ObjHitsPriorityState **)(candidateAttachedObj + 0x54))->flags &
-                       OBJHITS_PRIORITY_STATE_ENABLED) == 0))) {
-                  candidateAttachedObj = 0;
+              if ((axisDiff < objState->secondaryRadiusY + candState->secondaryRadiusY) &&
+                  ((objState->flags & 0x100) == 0) && ((candState->flags & 0x100) == 0) &&
+                  ((objState->sourceMask & candState->targetMask) != 0) &&
+                  (((candState->sourceMask & 0x80) != 0) ||
+                   ((candState->sourceMask & objState->targetMask) != 0))) {
+                candAttachedObj = *(uint *)(candObj + 0xc8);
+                if ((candAttachedObj != 0) &&
+                    ((*(void **)(candAttachedObj + 0x54) == NULL) ||
+                     (((*(ObjHitsPriorityState **)(candAttachedObj + 0x54))->flags & 1) == 0))) {
+                  candAttachedObj = 0;
                 }
-                ObjHits_CheckObjectHitVolumes((double)lbl_803DC074, param_2, param_3, param_4,
-                                              param_5, param_6, param_7, param_8, obj, candidateObj,
-                                              attachedObj, candidateAttachedObj);
+                ((void (*)(int, int, int, int, f32))ObjHits_CheckObjectHitVolumes)(
+                    obj, candObj, attachedObj, candAttachedObj, timeDelta);
               }
             }
           }
         }
-        candidateIndex++;
       }
     }
-    entrySlot++;
-    slotIndex++;
-  } while (true);
+  }
+  entrySlot = entrySlotBase;
+  for (slotIndex = 1; slotIndex < slotCount; slotIndex++, entrySlot++) {
+    obj = (*entrySlot)->obj;
+    if (((*(ObjHitsPriorityState **)(obj + 0x54))->flags & 0x200) != 0) {
+      ((void (*)(int, int))ObjHits_CheckTrackContact)(obj, obj);
+      attachedObj = *(uint *)(obj + 0xc8);
+      if (attachedObj != 0) {
+        ((void (*)(int, int))ObjHits_CheckTrackContact)(obj, attachedObj);
+      }
+    }
+  }
+  for (slotIndex = 1; slotIndex < slotCount; slotIndex++, entrySlotBase++) {
+    obj = (*entrySlotBase)->obj;
+    objState = *(ObjHitsPriorityState **)(obj + 0x54);
+    objState->localPosX = *(f32 *)(obj + 0xc);
+    objState->localPosY = *(f32 *)(obj + 0x10);
+    objState->localPosZ = *(f32 *)(obj + 0x14);
+    if (*(int *)(obj + 0x30) != 0) {
+      Obj_TransformLocalPointToWorld(objState->localPosX, objState->localPosY, objState->localPosZ,
+                                     &objState->worldPosX, &objState->worldPosY,
+                                     &objState->worldPosZ, *(int *)(obj + 0x30));
+    } else {
+      objState->worldPosX = *(f32 *)(obj + 0xc);
+      objState->worldPosY = *(f32 *)(obj + 0x10);
+      objState->worldPosZ = *(f32 *)(obj + 0x14);
+    }
+    objState->activeHitboxMode = 0;
+    objState->flags = objState->flags & ~0x2000;
+    if (((objState->priorityHitCount != 0) || ((objState->flags & 8) != 0)) &&
+        ((objState->flags & 0x40) == 0) && ((objState->flags & 0x4000) == 0)) {
+      *(f32 *)(obj + 0x24) = oneOverTimeDelta * (*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80));
+      *(f32 *)(obj + 0x2c) = oneOverTimeDelta * (*(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+    }
+  }
+  for (slotIndex = 0; slotIndex < 5; slotIndex++) {
+    gObjHitsActiveHitVolumeObjects[slotIndex] = 0;
+  }
 }

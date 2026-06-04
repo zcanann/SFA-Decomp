@@ -123,8 +123,8 @@ typedef struct ObjHitbox {
 } ObjHitbox;
 
 typedef struct ObjHitsSweepEntry {
-  float minX;
   float maxX;
+  float minX;
   int obj;
 } ObjHitsSweepEntry;
 
@@ -269,8 +269,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
 void ObjHits_DetectObjectPair(void);
 void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_3);
 void ObjHits_CheckTrackContact(void);
-void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                    undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void ObjHits_Update(int objectCount);
 int ObjHits_GetPriorityHitWithPosition(int obj,int *outHitObject,int *outSphereIndex,
                 uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ);
 int ObjHits_GetPriorityHit(int obj,int *outHitObject,int *outSphereIndex,uint *outHitVolume);
