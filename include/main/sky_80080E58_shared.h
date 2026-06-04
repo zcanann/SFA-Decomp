@@ -4566,7 +4566,7 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot);
 void ObjSeq_seqState_free(u8 *seq);
 void ObjSeq_seqState_init(u8 *seq);
 void *objFindForSeqFn_80081bf0(u8 *obj);
-void seq_findAction(void *obj, void *seqFile, u8 *seq);
+void ObjSeq_RefreshActionCursor(void *obj, void *seqFile, u8 *seq);
 void ObjSeq_release(void);
 void ObjSeq_initialise(void);
 int fn_800882C8(int index);

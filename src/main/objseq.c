@@ -1891,7 +1891,7 @@ void *objFindForSeqFn_80081bf0(u8 *obj)
 
 #pragma peephole off
 #pragma scheduling off
-void seq_findAction(void *obj, void *seqFile, u8 *seq)
+void ObjSeq_RefreshActionCursor(void *obj, void *seqFile, u8 *seq)
 {
     int stop;
     int actionIndex;

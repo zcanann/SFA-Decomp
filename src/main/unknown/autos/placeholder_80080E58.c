@@ -4715,7 +4715,7 @@ void *objFindForSeqFn_80081bf0(u8 *obj)
     return bestObj;
 }
 
-void seq_findAction(void *obj, void *seqFile, u8 *seq)
+void ObjSeq_RefreshActionCursor(void *obj, void *seqFile, u8 *seq)
 {
     int stop;
     int actionIndex;
