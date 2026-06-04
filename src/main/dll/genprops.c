@@ -5909,3 +5909,124 @@ void mikabomb_init(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
+extern void GameBit_Set(int eventId, int value);
+extern int *gSHthorntailAnimationInterface;
+extern void fn_801504BC(int *obj, int kind);
+extern f32 lbl_803E3224;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_loop_invariants off
+void baddieinterestp_update(int *obj)
+{
+    int *params = *(int **)((char *)obj + 0x4c);
+
+    if (((int)*(s16 *)((char *)params + 0x20) == -1 ||
+         GameBit_Get((int)*(s16 *)((char *)params + 0x20)) != 0) &&
+        ((int)*(s16 *)((char *)params + 0x1e) == -1 ||
+         GameBit_Get((int)*(s16 *)((char *)params + 0x1e)) == 0)) {
+        int count;
+        int *objs = (int *)ObjGroup_GetObjects(3, &count);
+        if (count > 0) {
+            u32 id = (u32)(u16)*(s16 *)((char *)params + 0x1c) << 16;
+            u32 i;
+            u8 found;
+            id |= (u16)*(s16 *)((char *)params + 0x1a);
+            for (i = 0; (int)(i & 0xffff) < count; i++) {
+                int *other = (int *)objs[i & 0xffff];
+                int *otherParams = *(int **)((char *)other + 0x4c);
+                if (otherParams != NULL) {
+                    found = 0;
+                    if (id == *(u32 *)((char *)otherParams + 0x14) || id == 0) {
+                        found = 1;
+                    }
+                } else {
+                    found = 1;
+                }
+                if (found != 0) {
+                    found = 0;
+                    if (vec3f_distanceSquared((f32 *)((char *)obj + 0x18),
+                                              (f32 *)((char *)other + 0x18)) < lbl_803E3224) {
+                        if (*(int *)((char *)obj + 0xf4) == 0) {
+                            if ((int)randomGetRange(1, 100) <= *(s8 *)((char *)params + 0x19)) {
+                                u8 local;
+                                s8 b = *(s8 *)((char *)params + 0x18);
+                                switch ((b & 0x30) >> 4) {
+                                case 0: {
+                                    int kind = b & 0xf;
+                                    int *target = (int *)objs[i & 0xffff];
+                                    if ((int)*(s16 *)((char *)params + 0x1e) != -1) {
+                                        GameBit_Set((int)*(s16 *)((char *)params + 0x1e), 1);
+                                    }
+                                    switch (*(s16 *)((char *)target + 0x46)) {
+                                    case 17:
+                                    case 314:
+                                    case 1463:
+                                    case 1464:
+                                    case 1465:
+                                    case 1505:
+                                        fn_801504BC(target, kind);
+                                        break;
+                                    }
+                                    break;
+                                }
+                                case 1:
+                                    if (((int (*)(u8 *))((int *)*gSHthorntailAnimationInterface)[9])(&local) == 0) {
+                                        u8 b2 = *(u8 *)((char *)params + 0x18);
+                                        int kind = b2 & 0xf;
+                                        int *target = (int *)objs[i & 0xffff];
+                                        if ((int)*(s16 *)((char *)params + 0x1e) != -1) {
+                                            GameBit_Set((int)*(s16 *)((char *)params + 0x1e), 1);
+                                        }
+                                        switch (*(s16 *)((char *)target + 0x46)) {
+                                        case 17:
+                                        case 314:
+                                        case 1463:
+                                        case 1464:
+                                        case 1465:
+                                        case 1505:
+                                            fn_801504BC(target, kind);
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case 2:
+                                    if (((int (*)(u8 *))((int *)*gSHthorntailAnimationInterface)[9])(&local) != 0) {
+                                        u8 b2 = *(u8 *)((char *)params + 0x18);
+                                        int kind = b2 & 0xf;
+                                        int *target = (int *)objs[i & 0xffff];
+                                        if ((int)*(s16 *)((char *)params + 0x1e) != -1) {
+                                            GameBit_Set((int)*(s16 *)((char *)params + 0x1e), 1);
+                                        }
+                                        switch (*(s16 *)((char *)target + 0x46)) {
+                                        case 17:
+                                        case 314:
+                                        case 1463:
+                                        case 1464:
+                                        case 1465:
+                                        case 1505:
+                                            fn_801504BC(target, kind);
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                            *(int *)((char *)obj + 0xf4) = 1;
+                        }
+                        found = 1;
+                    }
+                    i = count & 0xffff;
+                }
+            }
+            if (found == 0) {
+                *(int *)((char *)obj + 0xf4) = 0;
+            }
+        }
+    }
+}
+#pragma opt_loop_invariants reset
+#pragma peephole reset
+#pragma scheduling reset
