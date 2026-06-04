@@ -3,10 +3,7 @@
 
 #include "ghidra_import.h"
 
-void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                     undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                     ushort *param_9,undefined4 *param_10,int param_11,undefined4 param_12,
-                     byte param_13,uint param_14,undefined4 param_15,undefined4 param_16);
+void trickyDigTunnel(u8 *obj, u8 *state);
 void trickyFn_80141fec(u8 *obj, u8 *state);
 void trickyFn_80142524(u8 *obj, u8 *state);
 int trickyFn_80142a14(int obj, int state);

@@ -116,212 +116,200 @@ extern void* PTR_FUN_8031dfa4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                     undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                     ushort *param_9,undefined4 *param_10,int param_11,undefined4 param_12,
-                     byte param_13,uint param_14,undefined4 param_15,undefined4 param_16)
+extern void trickyDebugPrint(const char *fmt, ...);
+extern u8 lbl_8031D2E8[];
+extern f32 lbl_803E2488;
+extern f32 lbl_803E2510;
+extern f32 lbl_803E2424;
+extern f32 lbl_803E2410;
+extern f32 lbl_803E2414;
+extern f32 lbl_803E243C;
+extern void Sfx_AddLoopedObjectSound(u8 *obj, int soundId);
+extern void Sfx_RemoveLoopedObjectSound(u8 *obj, int soundId);
+extern void *Objfsa_FindNearestCurveType24(void *pos, int a, int b);
+extern int *gRomCurveInterface;
+extern int Objfsa_GetWalkGroupIndexAtPoint(void *pos, int a);
+extern void trickyUpdateApproachSpeed(u8 *obj, f32 vel, u8 *state, u8 *pos, int flag);
+extern int trickyMove(u8 *obj, u8 *pos);
+extern int getAngle(f32 x, f32 z);
+extern void trickyTurnTowardYaw(u8 *obj, int yaw);
+extern f32 Vec_xzDistance(void *a, void *b);
+extern u32 lbl_803E23D0;
+
+void trickyDigTunnel(u8 *obj, u8 *state)
 {
-  float fVar1;
-  float fVar2;
-  ushort uVar3;
-  bool bVar8;
-  char cVar9;
-  uint uVar4;
-  undefined4 uVar5;
-  int iVar6;
-  int iVar7;
-  int iVar10;
-  int iVar11;
-  double dVar12;
-  undefined4 local_28 [2];
-  undefined4 local_20;
-  uint uStack_1c;
-  
-  local_28[0] = DAT_803e3060;
-  switch(*(undefined *)((int)param_10 + 10)) {
-  case 0:
-    param_11 = 2;
-    iVar6 = FUN_800da5f0((float *)param_10[10],0xffffffff,2);
-    uVar5 = (**(code **)(*DAT_803dd71c + 0x1c))(*(undefined4 *)(iVar6 + 0x1c));
-    param_10[0x1c2] = uVar5;
-    param_10[0x1c0] = iVar6;
-    uVar5 = (**(code **)(*DAT_803dd71c + 0x1c))(*(undefined4 *)(iVar6 + 0x20));
-    param_10[0x1c1] = uVar5;
-    if (*(char *)(param_10[0x1c1] + 3) != '\0') {
-      param_10[0x1c1] = param_10[0x1c1] ^ param_10[0x1c2];
-      param_10[0x1c2] = param_10[0x1c2] ^ param_10[0x1c1];
-      param_10[0x1c1] = param_10[0x1c1] ^ param_10[0x1c2];
-    }
-    if (param_10[10] != param_10[0x1c2] + 8) {
-      param_10[10] = param_10[0x1c2] + 8;
-      param_10[0x15] = param_10[0x15] & 0xfffffbff;
-      *(undefined2 *)((int)param_10 + 0xd2) = 0;
-    }
-    *(undefined *)((int)param_10 + 10) = 1;
-  case 1:
-    FUN_80146fa0();
-    trickyFn_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 param_9,param_10,param_11,param_12,param_13,param_14,param_15,param_16);
-    uVar4 = FUN_800db47c((float *)(param_9 + 0xc),(undefined *)0x0);
-    if (*(byte *)(param_10[0x1c2] + 3) == uVar4) {
-      *(undefined *)((int)param_10 + 9) = 1;
-      *(undefined *)((int)param_10 + 10) = 2;
-    }
-    break;
-  case 2:
-    FUN_80146fa0();
-    trickyFn_8013d8f0((u8 *)param_9, (u8 *)param_10);
-    iVar6 = FUN_80139a48();
-    if (iVar6 == 0) {
-      param_10[0x15] = param_10[0x15] | 0x2010;
-      *(undefined *)((int)param_10 + 10) = 3;
-    }
-    else {
-      iVar6 = FUN_800db47c((float *)(param_9 + 0xc),(undefined *)0x0);
-      if (iVar6 == 0) {
-        param_10[0x15] = param_10[0x15] | 0x2010;
-      }
-    }
-    break;
-  case 3:
-    objAnimFn_8013a3f0((int)param_9,0xe,lbl_803E31A0,0x4000000);
-    param_10[0xb] = *(float *)(param_10[0x1c1] + 8) - *(float *)(param_10[0x1c0] + 8);
-    param_10[0xc] = *(float *)(param_10[0x1c1] + 0x10) - *(float *)(param_10[0x1c0] + 0x10);
-    FUN_800068d0((uint)param_9,0x13d);
-    uStack_1c = randomGetRange(0x14,0xb4);
-    param_10[0x1c3] = (f32)(s32)uStack_1c;
-    *(undefined *)((int)param_10 + 10) = 4;
-  case 4:
-    FUN_80146fa0();
-    param_10[0x1c3] = (float)param_10[0x1c3] - lbl_803DC074;
-    if ((float)param_10[0x1c3] <= lbl_803E306C) {
-      uStack_1c = randomGetRange(0x14,0xb4);
-      param_10[0x1c3] = (f32)(s32)uStack_1c;
-      param_10[0x1c3] = (float)param_10[0x1c3] * lbl_803E30B4;
-      iVar6 = *(int *)(param_9 + 0x5c);
-      if (((*(byte *)(iVar6 + 0x58) >> 6 & 1) == 0) &&
-         (((0x2f < (short)param_9[0x50] || ((short)param_9[0x50] < 0x29)) &&
-          (bVar8 = Sfx_IsPlayingFromObjectChannel((int)param_9,0x10), !bVar8)))) {
-        objAudioFn_800393f8((int)param_9,(void *)(iVar6 + 0x3a8),0x360,0x500,0xffffffff,0);
-      }
-    }
-    dVar12 = (double)(**(code **)(**(int **)(param_10[9] + 0x68) + 0x20))(param_10[9],param_9);
-    *(float *)(param_9 + 6) =
-         (float)((double)(float)param_10[0xb] * dVar12 + (double)*(float *)(param_10[0x1c0] + 8));
-    *(float *)(param_9 + 10) =
-         (float)((double)(float)param_10[0xc] * dVar12 + (double)*(float *)(param_10[0x1c0] + 0x10))
-    ;
-    fVar1 = *(float *)(*(int *)(param_9 + 0x5c) + 0x2c);
-    fVar2 = *(float *)(*(int *)(param_9 + 0x5c) + 0x30);
-    if (lbl_803E307C < fVar1 * fVar1 + fVar2 * fVar2) {
-      iVar6 = FUN_80017730();
-      FUN_80139910(param_9,(ushort)iVar6);
-    }
-    cVar9 = (**(code **)(**(int **)(param_10[9] + 0x68) + 0x24))();
-    if (cVar9 != '\0') {
-      iVar7 = 0;
-      iVar6 = 0;
-      iVar11 = 4;
-      do {
-        iVar10 = *(int *)(param_10[0x1c1] + iVar6 + 0x1c);
-        if ((-1 < iVar10) && (iVar10 != *(int *)(param_10[0x1c0] + 0x14))) {
-          param_10[0x1c0] = param_10[0x1c1];
-          uVar5 = (**(code **)(*DAT_803dd71c + 0x1c))
-                            (*(undefined4 *)(param_10[0x1c1] + iVar7 * 4 + 0x1c));
-          param_10[0x1c1] = uVar5;
-          break;
+    u32 sfxTable;
+    u8 *base;
+    u8 *pc;
+    u8 *pos;
+    u8 *ptr;
+    int gidx;
+    int k;
+    int idx;
+    int off;
+    int v;
+    int inWater;
+    u16 id;
+    f32 vx, vz, spd, z;
+
+    base = lbl_8031D2E8;
+    sfxTable = lbl_803E23D0;
+    switch (state[0xa]) {
+    case 0:
+        pc = Objfsa_FindNearestCurveType24(*(void **)(state + 0x28), -1, 2);
+        *(u8 **)(state + 0x708) = ((u8 *(**)(int))*gRomCurveInterface)[7](*(int *)(pc + 0x1c));
+        *(u8 **)(state + 0x700) = pc;
+        *(u8 **)(state + 0x704) = ((u8 *(**)(int))*gRomCurveInterface)[7](*(int *)(pc + 0x20));
+        if (*(u8 *)(*(u8 **)(state + 0x704) + 3) != 0) {
+            *(u32 *)(state + 0x704) = *(u32 *)(state + 0x704) ^ *(u32 *)(state + 0x708);
+            *(u32 *)(state + 0x708) = *(u32 *)(state + 0x708) ^ *(u32 *)(state + 0x704);
+            *(u32 *)(state + 0x704) = *(u32 *)(state + 0x704) ^ *(u32 *)(state + 0x708);
         }
-        iVar6 = iVar6 + 4;
-        iVar7 = iVar7 + 1;
-        iVar11 = iVar11 + -1;
-      } while (iVar11 != 0);
-      *(char *)*param_10 = *(char *)*param_10 + -4;
-      FUN_800068cc();
-      *(undefined *)((int)param_10 + 10) = 5;
-      uVar4 = randomGetRange(0,1);
-      uVar3 = *(ushort *)((int)local_28 + uVar4 * 2);
-      iVar6 = *(int *)(param_9 + 0x5c);
-      if ((((*(byte *)(iVar6 + 0x58) >> 6 & 1) == 0) &&
-          ((0x2f < (short)param_9[0x50] || ((short)param_9[0x50] < 0x29)))) &&
-         (bVar8 = Sfx_IsPlayingFromObjectChannel((int)param_9,0x10), !bVar8)) {
-        objAudioFn_800393f8((int)param_9,(void *)(iVar6 + 0x3a8),uVar3,0x500,0xffffffff,0);
-      }
-    }
-    break;
-  case 5:
-    FUN_80017710((float *)(param_9 + 0xc),(float *)(param_10[0x1c1] + 8));
-    FUN_80146fa0();
-    trickyFn_8013d8f0((u8 *)param_9, (u8 *)param_10);
-    iVar6 = FUN_80139a48();
-    if (iVar6 == 0) {
-      iVar7 = 0;
-      iVar6 = 0;
-      iVar11 = 4;
-      do {
-        iVar10 = *(int *)(param_10[0x1c1] + iVar6 + 0x1c);
-        if ((-1 < iVar10) && (iVar10 != *(int *)(param_10[0x1c0] + 0x14))) {
-          param_10[0x1c0] = param_10[0x1c1];
-          uVar5 = (**(code **)(*DAT_803dd71c + 0x1c))
-                            (*(undefined4 *)(param_10[0x1c1] + iVar7 * 4 + 0x1c));
-          param_10[0x1c1] = uVar5;
-          break;
+        if (*(u8 **)(state + 0x28) != *(u8 **)(state + 0x708) + 8) {
+            *(u8 **)(state + 0x28) = *(u8 **)(state + 0x708) + 8;
+            *(u32 *)(state + 0x54) &= ~0x400;
+            *(u16 *)(state + 0xd2) = 0;
         }
-        iVar6 = iVar6 + 4;
-        iVar7 = iVar7 + 1;
-        iVar11 = iVar11 + -1;
-      } while (iVar11 != 0);
-      *(undefined *)((int)param_10 + 10) = 6;
+        state[0xa] = 1;
+    case 1:
+        trickyDebugPrint((char *)(base + 0x7b8));
+        trickyFn_8013b368((int)obj, lbl_803E2488, (int)state);
+        gidx = Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0);
+        if (*(u8 *)(*(u8 **)(state + 0x708) + 3) == gidx) {
+            state[0x9] = 1;
+            state[0xa] = 2;
+        }
+        break;
+    case 2:
+        trickyDebugPrint((char *)(base + 0x7cc));
+        pos = *(u8 **)(state + 0x700) + 8;
+        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
+        if (trickyMove(obj, pos) == 0) {
+            *(u32 *)(state + 0x54) |= 0x2010;
+            state[0xa] = 3;
+        } else {
+            if (Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0) == 0) {
+                *(u32 *)(state + 0x54) |= 0x2010;
+            }
+        }
+        break;
+    case 3:
+        objAnimFn_8013a3f0((int)obj, 0xe, lbl_803E2510, 0x4000000);
+        *(f32 *)(state + 0x2c) = *(f32 *)(*(u8 **)(state + 0x704) + 8) - *(f32 *)(*(u8 **)(state + 0x700) + 8);
+        *(f32 *)(state + 0x30) = *(f32 *)(*(u8 **)(state + 0x704) + 0x10) - *(f32 *)(*(u8 **)(state + 0x700) + 0x10);
+        Sfx_AddLoopedObjectSound(obj, 0x13d);
+        *(f32 *)(state + 0x70c) = (f32)(int)randomGetRange(0x14, 0xb4);
+        state[0xa] = 4;
+    case 4:
+        trickyDebugPrint((char *)(base + 0x7e4));
+        *(f32 *)(state + 0x70c) -= timeDelta;
+        if (*(f32 *)(state + 0x70c) <= lbl_803E23DC) {
+            *(f32 *)(state + 0x70c) = (f32)(int)randomGetRange(0x14, 0xb4);
+            *(f32 *)(state + 0x70c) *= lbl_803E2424;
+            ptr = *(u8 **)(obj + 0xb8);
+            if (((u32)*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
+            }
+        }
+        spd = ((f32 (**)(u8 *, u8 *))(**(u8 ***)(*(u8 **)(state + 0x24) + 0x68)))[8](*(u8 **)(state + 0x24), obj);
+        *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x2c) * spd + *(f32 *)(*(u8 **)(state + 0x700) + 8);
+        *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x30) * spd + *(f32 *)(*(u8 **)(state + 0x700) + 0x10);
+        vx = *(f32 *)(*(u8 **)(obj + 0xb8) + 0x2c);
+        vz = *(f32 *)(*(u8 **)(obj + 0xb8) + 0x30);
+        if (vx * vx + vz * vz > lbl_803E23EC) {
+            trickyTurnTowardYaw(obj, (s16)getAngle(-vx, -vz));
+        }
+        if (((u8 (**)(u8 *))(**(u8 ***)(*(u8 **)(state + 0x24) + 0x68)))[9](*(u8 **)(state + 0x24)) != 0) {
+            idx = 0;
+            off = 0;
+            for (k = 4; k != 0; k--) {
+                v = *(int *)(*(u8 **)(state + 0x704) + off + 0x1c);
+                if (v > -1 && (u32)v != *(u32 *)(*(u8 **)(state + 0x700) + 0x14)) {
+                    *(u8 **)(state + 0x700) = *(u8 **)(state + 0x704);
+                    *(u8 **)(state + 0x704) = ((u8 *(**)(int))*gRomCurveInterface)[7](*(int *)(*(u8 **)(state + 0x704) + idx * 4 + 0x1c));
+                    break;
+                }
+                off += 4;
+                idx++;
+            }
+            **(u8 **)state -= 4;
+            Sfx_RemoveLoopedObjectSound(obj, 0x13d);
+            state[0xa] = 5;
+            id = *(u16 *)((char *)&sfxTable + randomGetRange(0, 1) * 2);
+            ptr = *(u8 **)(obj + 0xb8);
+            if (((u32)*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                objAudioFn_800393f8((int)obj, ptr + 0x3a8, id, 0x500, -1, 0);
+            }
+        }
+        break;
+    case 5:
+        trickyDebugPrint((char *)(base + 0x7f8), (f64)Vec_xzDistance(obj + 0x18, *(u8 **)(state + 0x704) + 8));
+        pos = *(u8 **)(state + 0x704) + 8;
+        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
+        if (trickyMove(obj, pos) == 0) {
+            idx = 0;
+            off = idx;
+            for (k = 4; k != 0; k--) {
+                v = *(int *)(*(u8 **)(state + 0x704) + off + 0x1c);
+                if (v > -1 && (u32)v != *(u32 *)(*(u8 **)(state + 0x700) + 0x14)) {
+                    *(u8 **)(state + 0x700) = *(u8 **)(state + 0x704);
+                    *(u8 **)(state + 0x704) = ((u8 *(**)(int))*gRomCurveInterface)[7](*(int *)(*(u8 **)(state + 0x704) + idx * 4 + 0x1c));
+                    break;
+                }
+                off += 4;
+                idx++;
+            }
+            state[0xa] = 6;
+        }
+        break;
+    case 6:
+        trickyDebugPrint((char *)(base + 0x810));
+        pos = *(u8 **)(state + 0x704) + 8;
+        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, pos, 1);
+        if (trickyMove(obj, pos) == 0) {
+            if (lbl_803E23DC == *(f32 *)(state + 0x2ac)) {
+                inWater = 0;
+            } else if (lbl_803E2410 == *(f32 *)(state + 0x2b0)) {
+                inWater = 1;
+            } else if (*(f32 *)(state + 0x2b4) - *(f32 *)(state + 0x2b0) > lbl_803E2414) {
+                inWater = 1;
+            } else {
+                inWater = 0;
+            }
+            if (inWater != 0) {
+                objAnimFn_8013a3f0((int)obj, 8, lbl_803E243C, 0);
+                *(f32 *)(state + 0x79c) = lbl_803E2440;
+                *(f32 *)(state + 0x838) = lbl_803E23DC;
+                trickyDebugPrint((char *)(base + 0x184));
+            } else {
+                objAnimFn_8013a3f0((int)obj, 0, lbl_803E2444, 0);
+                trickyDebugPrint((char *)(base + 0x190));
+            }
+            *(u32 *)(state + 0x54) &= ~0x2010;
+            state[0xa] = 7;
+        }
+        break;
+    case 7:
+        trickyDebugPrint((char *)(base + 0x824));
+        gidx = Objfsa_GetWalkGroupIndexAtPoint(*(u8 **)(state + 4) + 0x18, 0);
+        if (Objfsa_GetWalkGroupIndexAtPoint(obj + 0x18, 0) == gidx) {
+            state[0x8] = 1;
+            state[0xa] = 0;
+            z = lbl_803E23DC;
+            *(f32 *)(state + 0x71c) = z;
+            *(f32 *)(state + 0x720) = z;
+            *(u32 *)(state + 0x54) &= ~0x10;
+            *(u32 *)(state + 0x54) &= ~0x10000;
+            *(u32 *)(state + 0x54) &= ~0x20000;
+            *(u32 *)(state + 0x54) &= ~0x40000;
+            *(s8 *)(state + 0xd) = -1;
+        }
+        break;
     }
-    break;
-  case 6:
-    FUN_80146fa0();
-    trickyFn_8013d8f0((u8 *)param_9, (u8 *)param_10);
-    iVar6 = FUN_80139a48();
-    if (iVar6 == 0) {
-      if (lbl_803E306C == (float)param_10[0xab]) {
-        bVar8 = false;
-      }
-      else if (lbl_803E30A0 == (float)param_10[0xac]) {
-        bVar8 = true;
-      }
-      else if ((float)param_10[0xad] - (float)param_10[0xac] <= lbl_803E30A4) {
-        bVar8 = false;
-      }
-      else {
-        bVar8 = true;
-      }
-      if (bVar8) {
-        objAnimFn_8013a3f0((int)param_9,8,lbl_803E30CC,0);
-        param_10[0x1e7] = lbl_803E30D0;
-        param_10[0x20e] = lbl_803E306C;
-        FUN_80146fa0();
-      }
-      else {
-        objAnimFn_8013a3f0((int)param_9,0,lbl_803E30D4,0);
-        FUN_80146fa0();
-      }
-      param_10[0x15] = param_10[0x15] & 0xffffdfef;
-      *(undefined *)((int)param_10 + 10) = 7;
-    }
-    break;
-  case 7:
-    FUN_80146fa0();
-    iVar6 = FUN_800db47c((float *)(param_10[1] + 0x18),(undefined *)0x0);
-    iVar7 = FUN_800db47c((float *)(param_9 + 0xc),(undefined *)0x0);
-    if (iVar7 == iVar6) {
-      *(undefined *)(param_10 + 2) = 1;
-      *(undefined *)((int)param_10 + 10) = 0;
-      fVar1 = lbl_803E306C;
-      param_10[0x1c7] = lbl_803E306C;
-      param_10[0x1c8] = fVar1;
-      param_10[0x15] = param_10[0x15] & 0xffffffef;
-      param_10[0x15] = param_10[0x15] & 0xfffeffff;
-      param_10[0x15] = param_10[0x15] & 0xfffdffff;
-      param_10[0x15] = param_10[0x15] & 0xfffbffff;
-      *(undefined *)((int)param_10 + 0xd) = 0xff;
-    }
-  }
-  return;
 }
 
 /*
@@ -339,16 +327,10 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
  */
 extern void *Objfsa_FindNearestEnabledCurveType24(void *pos, int a, int b);
 extern float getXZDistance(float *a, float *b);
-extern void Sfx_AddLoopedObjectSound(u8 *obj, int soundId);
-extern void Sfx_RemoveLoopedObjectSound(u8 *obj, int soundId);
 extern float sqrtf(float x);
 extern u32 lbl_803E23CC;
 extern f32 lbl_803E2418;
-extern f32 lbl_803E23DC;
-extern f32 lbl_803E2488;
-extern f32 lbl_803E2510;
 extern f32 lbl_803E2514;
-extern f32 lbl_803E2424;
 extern f32 lbl_803E24F8;
 
 void trickyFn_80141fec(u8 *obj, u8 *state)
@@ -484,19 +466,11 @@ void trickyFn_80141fec(u8 *obj, u8 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void trickyDebugPrint(const char *fmt, ...);
 extern void *Tricky_findNearestGroup4BObject(void);
 extern void fn_80144B50(u8 *obj, u8 *state);
-extern u8 lbl_8031D2E8[];
 typedef struct GrenadeIfc { void *vtable; } GrenadeIfc;
 typedef struct TrickyFnRow { u8 pad[0x6c]; int (*fn)(u8 *, u8 *); } TrickyFnRow;
 extern GrenadeIfc *gPathControlInterface;
-extern f32 lbl_803E2410;
-extern f32 lbl_803E2414;
-extern f32 lbl_803E243C;
-extern f32 lbl_803E2440;
-extern f32 lbl_803E2444;
-extern f32 lbl_803E2518;
 
 void trickyFn_80142524(u8 *obj, u8 *state)
 {
@@ -649,9 +623,7 @@ void trickyFn_80142524(u8 *obj, u8 *state)
  * PAL Size: TODO
  */
 extern void objPosFn_80039510(int obj, int flags, float *out);
-extern float getXZDistance(float *a, float *b);
 extern void tricky_startRandomIdleMove(int obj, int state);
-extern f32 lbl_803E2424;
 extern f32 lbl_803E24C8;
 
 #pragma scheduling off
@@ -842,10 +814,7 @@ skip:
  * PAL Size: TODO
  */
 extern f32 lbl_803E23F0;
-extern f32 lbl_803E243C;
 extern f32 lbl_803E249C;
-extern f32 lbl_803E2410;
-extern f32 lbl_803E2414;
 extern int *gPartfxInterface;
 extern char sInWaterMessage[];
 extern char lbl_8031D478[];
@@ -920,7 +889,6 @@ int trickyFn_80142eb0(int obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803E251C;
 
 int trickyFn_801430e0(u8 *obj, u8 *state)
 {
@@ -1099,9 +1067,7 @@ undefined4 trickyFn_80143388(int param_1,int *param_2)
  * PAL Size: TODO
  */
 extern f32 lbl_803E2520;
-extern f32 lbl_803E251C;
 extern f32 lbl_803E23F8;
-extern f32 lbl_803E24C8;
 extern int *gSHthorntailAnimationInterface;
 
 #pragma scheduling off
@@ -1208,7 +1174,6 @@ typedef struct TrickyPackedSlots {
 
 extern int cMenuGetSelectedItem(void);
 extern uint GameBit_Get(int bit);
-extern f32 lbl_803E2444;
 
 int trickyFoodFn_801437d4(u8 *obj, u8 *state)
 {
@@ -1368,8 +1333,6 @@ undefined4 trickyFn_80143b78(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern f32 lbl_803E2410;
-extern f32 lbl_803E2414;
 #pragma scheduling off
 #pragma peephole off
 int trickyFn_80143c04(int obj, int state)
@@ -1880,7 +1843,6 @@ int trickyFoodFn_8014460c(int param_1,int *param_2)
  * EN v1.0 Size: 752b
  */
 extern int ObjHits_GetPriorityHit(int obj, int *out, int a, int b);
-extern uint GameBit_Get(int bit);
 extern f32 lbl_803E2534;
 extern f32 lbl_803E24A8;
 extern f32 lbl_803E24EC;
