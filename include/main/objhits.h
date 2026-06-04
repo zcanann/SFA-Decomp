@@ -264,8 +264,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
                                    undefined8 param_7,undefined8 param_8,undefined4 param_9,
                                    undefined4 param_10,int param_11,int param_12);
 void ObjHits_RegisterActiveHitVolumeObject(int obj);
-void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                               undefined4 param_5,int param_6);
+void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag);
 void ObjHits_DetectObjectPair(void);
 void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void *scratchC,
                                void *scratchD,void *scratchE,int depth);

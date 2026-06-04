@@ -5,10 +5,10 @@
 #pragma peephole off
 #pragma scheduling off
 extern undefined8 memcpy();
-extern undefined4 Obj_TransformWorldVectorToLocal();
+extern void Obj_TransformWorldVectorToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int obj);
 extern undefined4 Obj_TransformWorldPointToLocal();
 extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ, int obj);
-extern uint getAngle();
+extern uint getAngle(f32 a, f32 b);
 extern undefined4 mtxRotateByVec3s();
 extern undefined4 setMatrixFromObjectPos();
 extern int ObjModel_GetJointMatrix(int *model,int jointIndex);
@@ -38,7 +38,7 @@ extern undefined4 _restgpr_23();
 extern undefined4 _restgpr_24();
 extern undefined4 _restgpr_27();
 extern double sqrtf();
-extern undefined4 sin();
+extern f32 sin(f32 v);
 
 extern ObjHitsSweepEntry *gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
 extern ObjHitsSweepEntry gObjHitsSweepEntries[OBJHITS_SWEEP_ENTRY_CAPACITY];
@@ -53,6 +53,9 @@ extern f32 lbl_803DE960;
 extern f32 lbl_803DE91C;
 extern f32 lbl_803DE958;
 extern f32 lbl_803DE95C;
+extern f32 lbl_803DE948;
+extern f32 lbl_803DE94C;
+extern f32 lbl_803DB450;
 
 typedef struct ObjHitsVec3 {
   f32 x;
@@ -2241,219 +2244,161 @@ void ObjHits_RegisterActiveHitVolumeObject(int obj)
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
-                               undefined4 param_5,int param_6)
+void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
 {
-  float fVar1;
-  short *psVar2;
-  uint uVar3;
-  short *psVar4;
-  undefined4 *puVar5;
-  undefined4 *puVar6;
-  double dVar7;
-  double extraout_f1;
-  double dVar8;
-  double in_f29;
-  double in_f30;
-  double in_f31;
-  double dVar9;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar10;
-  float local_98;
-  float local_94;
-  float local_90;
-  float local_8c;
-  float local_88;
-  float local_84;
-  undefined4 local_80;
-  uint uStack_7c;
-  undefined4 local_78;
-  uint uStack_74;
-  undefined4 local_70;
-  uint uStack_6c;
-  undefined4 local_68;
-  uint uStack_64;
-  undefined4 local_60;
-  uint uStack_5c;
-  undefined4 local_58;
-  uint uStack_54;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
+  ObjHitsPriorityState *stateA;
+  ObjHitsPriorityState *stateB;
+  f32 localAx;
+  f32 localAy;
+  f32 localAz;
+  f32 localBx;
+  f32 localBy;
+  f32 localBz;
+  uint angle;
+  int angleA;
+  int angleB;
+  f32 sinVal;
+  f32 sinSq;
+  f32 weightA;
+  f32 weightB;
+  f32 sum;
+  f32 blend;
+  f32 invBlend;
 
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  uVar10 = _savegpr_27();
-  psVar2 = (short *)((ulonglong)uVar10 >> 0x20);
-  psVar4 = (short *)uVar10;
-  dVar8 = extraout_f1;
-  ObjContact_DispatchCallbacks((int)psVar2,(int)psVar4);
-  puVar6 = *(undefined4 **)(psVar2 + 0x2a);
-  puVar5 = *(undefined4 **)(psVar4 + 0x2a);
-  *(ushort *)(puVar6 + 0x18) = *(ushort *)(puVar6 + 0x18) | 8;
-  *(ushort *)(puVar5 + 0x18) = *(ushort *)(puVar5 + 0x18) | 8;
-  *puVar6 = (undefined4)psVar4;
-  *puVar5 = (undefined4)psVar2;
-  if (*(int *)(psVar2 + 0x18) == 0) {
-    local_84 = (float)dVar8;
-    local_88 = (float)param_2;
-    local_8c = (float)param_3;
+  ObjContact_DispatchCallbacks(objA, objB);
+  stateA = *(ObjHitsPriorityState **)(objA + 0x54);
+  stateB = *(ObjHitsPriorityState **)(objB + 0x54);
+  stateA->flags = stateA->flags | 8;
+  stateB->flags = stateB->flags | 8;
+  *(int *)stateA = objB;
+  *(int *)stateB = objA;
+  if (*(int *)(objA + 0x30) != 0) {
+    Obj_TransformWorldVectorToLocal(x, y, z, &localAx, &localAy, &localAz, *(int *)(objA + 0x30));
+  } else {
+    localAx = x;
+    localAy = y;
+    localAz = z;
   }
-  else {
-    Obj_TransformWorldVectorToLocal(dVar8,param_2,param_3,&local_84,&local_88,&local_8c,
-                                    *(int *)(psVar2 + 0x18));
+  if (*(int *)(objB + 0x30) != 0) {
+    Obj_TransformWorldVectorToLocal(x, y, z, &localBx, &localBy, &localBz, *(int *)(objB + 0x30));
+  } else {
+    localBx = x;
+    localBy = y;
+    localBz = z;
   }
-  if (*(int *)(psVar4 + 0x18) == 0) {
-    local_90 = (float)dVar8;
-    local_94 = (float)param_2;
-    local_98 = (float)param_3;
-  }
-  else {
-    Obj_TransformWorldVectorToLocal(dVar8,param_2,param_3,&local_90,&local_94,&local_98,
-                                    *(int *)(psVar4 + 0x18));
-  }
-  if (((psVar2[0x22] == 1) && (*(char *)((int)puVar6 + 0x6a) != '\0')) &&
-     ((*(ushort *)(puVar5 + 0x18) & 0x400) == 0)) {
-    *(float *)(psVar2 + 6) = *(float *)(psVar2 + 6) - local_84;
-    *(float *)(psVar2 + 8) = *(float *)(psVar2 + 8) - local_88;
-    *(float *)(psVar2 + 10) = *(float *)(psVar2 + 10) - local_8c;
-    if (param_6 == 0) {
-      Obj_TransformLocalPointToWorld((double)*(float *)(psVar2 + 6),(double)*(float *)(psVar2 + 8),
-                   (double)*(float *)(psVar2 + 10),(float *)(psVar2 + 0xc),(float *)(psVar2 + 0xe),
-                   (float *)(psVar2 + 0x10),*(int *)(psVar2 + 0x18));
+  if ((*(s16 *)(objA + 0x44) == 1) && (*(u8 *)((int)stateA + 0x6a) != 0) &&
+      ((stateB->flags & 0x400) == 0)) {
+    *(f32 *)(objA + 0xc) = *(f32 *)(objA + 0xc) - localAx;
+    *(f32 *)(objA + 0x10) = *(f32 *)(objA + 0x10) - localAy;
+    *(f32 *)(objA + 0x14) = *(f32 *)(objA + 0x14) - localAz;
+    if (flag != 0) {
+      *(f32 *)(objA + 0x18) = *(f32 *)(objA + 0x18) - x;
+      *(f32 *)(objA + 0x1c) = *(f32 *)(objA + 0x1c) - y;
+      *(f32 *)(objA + 0x20) = *(f32 *)(objA + 0x20) - z;
+    } else {
+      Obj_TransformLocalPointToWorld(*(f32 *)(objA + 0xc), *(f32 *)(objA + 0x10),
+                                     *(f32 *)(objA + 0x14), (f32 *)(objA + 0x18),
+                                     (f32 *)(objA + 0x1c), (f32 *)(objA + 0x20),
+                                     *(int *)(objA + 0x30));
     }
-    else {
-      *(float *)(psVar2 + 0xc) = (float)((double)*(float *)(psVar2 + 0xc) - dVar8);
-      *(float *)(psVar2 + 0xe) = (float)((double)*(float *)(psVar2 + 0xe) - param_2);
-      *(float *)(psVar2 + 0x10) = (float)((double)*(float *)(psVar2 + 0x10) - param_3);
+  } else if ((*(s16 *)(objB + 0x44) == 1) && (*(u8 *)((int)stateB + 0x6a) != 0) &&
+             ((stateA->flags & 0x400) == 0)) {
+    *(f32 *)(objB + 0xc) = *(f32 *)(objB + 0xc) + localBx;
+    *(f32 *)(objB + 0x10) = *(f32 *)(objB + 0x10) + localBy;
+    *(f32 *)(objB + 0x14) = *(f32 *)(objB + 0x14) + localBz;
+    if (flag != 0) {
+      *(f32 *)(objB + 0x18) = *(f32 *)(objB + 0x18) + x;
+      *(f32 *)(objB + 0x1c) = *(f32 *)(objB + 0x1c) + y;
+      *(f32 *)(objB + 0x20) = *(f32 *)(objB + 0x20) + z;
+    } else {
+      Obj_TransformLocalPointToWorld(*(f32 *)(objB + 0xc), *(f32 *)(objB + 0x10),
+                                     *(f32 *)(objB + 0x14), (f32 *)(objB + 0x18),
+                                     (f32 *)(objB + 0x1c), (f32 *)(objB + 0x20),
+                                     *(int *)(objB + 0x30));
     }
-  }
-  else if (((psVar4[0x22] == 1) && (*(char *)((int)puVar5 + 0x6a) != '\0')) &&
-          ((*(ushort *)(puVar6 + 0x18) & 0x400) == 0)) {
-    *(float *)(psVar4 + 6) = *(float *)(psVar4 + 6) + local_90;
-    *(float *)(psVar4 + 8) = *(float *)(psVar4 + 8) + local_94;
-    *(float *)(psVar4 + 10) = *(float *)(psVar4 + 10) + local_98;
-    if (param_6 == 0) {
-      Obj_TransformLocalPointToWorld((double)*(float *)(psVar4 + 6),(double)*(float *)(psVar4 + 8),
-                   (double)*(float *)(psVar4 + 10),(float *)(psVar4 + 0xc),(float *)(psVar4 + 0xe),
-                   (float *)(psVar4 + 0x10),*(int *)(psVar4 + 0x18));
-    }
-    else {
-      *(float *)(psVar4 + 0xc) = (float)((double)*(float *)(psVar4 + 0xc) + dVar8);
-      *(float *)(psVar4 + 0xe) = (float)((double)*(float *)(psVar4 + 0xe) + param_2);
-      *(float *)(psVar4 + 0x10) = (float)((double)*(float *)(psVar4 + 0x10) + param_3);
-    }
-  }
-  else if (*(char *)((int)puVar5 + 0x6a) == '\0') {
-    if (*(char *)((int)puVar6 + 0x6a) != '\0') {
-      *(float *)(psVar2 + 6) = *(float *)(psVar2 + 6) - local_84;
-      *(float *)(psVar2 + 8) = *(float *)(psVar2 + 8) - local_88;
-      *(float *)(psVar2 + 10) = *(float *)(psVar2 + 10) - local_8c;
-      if (param_6 == 0) {
-        Obj_TransformLocalPointToWorld((double)*(float *)(psVar2 + 6),(double)*(float *)(psVar2 + 8),
-                     (double)*(float *)(psVar2 + 10),(float *)(psVar2 + 0xc),(float *)(psVar2 + 0xe),
-                     (float *)(psVar2 + 0x10),*(int *)(psVar2 + 0x18));
-      }
-      else {
-        *(float *)(psVar2 + 0xc) = (float)((double)*(float *)(psVar2 + 0xc) - dVar8);
-        *(float *)(psVar2 + 0xe) = (float)((double)*(float *)(psVar2 + 0xe) - param_2);
-        *(float *)(psVar2 + 0x10) = (float)((double)*(float *)(psVar2 + 0x10) - param_3);
+  } else if (*(u8 *)((int)stateB + 0x6a) == 0) {
+    if (*(u8 *)((int)stateA + 0x6a) != 0) {
+      *(f32 *)(objA + 0xc) = *(f32 *)(objA + 0xc) - localAx;
+      *(f32 *)(objA + 0x10) = *(f32 *)(objA + 0x10) - localAy;
+      *(f32 *)(objA + 0x14) = *(f32 *)(objA + 0x14) - localAz;
+      if (flag != 0) {
+        *(f32 *)(objA + 0x18) = *(f32 *)(objA + 0x18) - x;
+        *(f32 *)(objA + 0x1c) = *(f32 *)(objA + 0x1c) - y;
+        *(f32 *)(objA + 0x20) = *(f32 *)(objA + 0x20) - z;
+      } else {
+        Obj_TransformLocalPointToWorld(*(f32 *)(objA + 0xc), *(f32 *)(objA + 0x10),
+                                       *(f32 *)(objA + 0x14), (f32 *)(objA + 0x18),
+                                       (f32 *)(objA + 0x1c), (f32 *)(objA + 0x20),
+                                       *(int *)(objA + 0x30));
       }
     }
-  }
-  else if (*(char *)((int)puVar6 + 0x6a) == '\0') {
-    if (*(char *)((int)puVar5 + 0x6a) != '\0') {
-      *(float *)(psVar4 + 6) = *(float *)(psVar4 + 6) + local_90;
-      *(float *)(psVar4 + 8) = *(float *)(psVar4 + 8) + local_94;
-      *(float *)(psVar4 + 10) = *(float *)(psVar4 + 10) + local_98;
-      if (param_6 == 0) {
-        Obj_TransformLocalPointToWorld((double)*(float *)(psVar4 + 6),(double)*(float *)(psVar4 + 8),
-                     (double)*(float *)(psVar4 + 10),(float *)(psVar4 + 0xc),(float *)(psVar4 + 0xe),
-                     (float *)(psVar4 + 0x10),*(int *)(psVar4 + 0x18));
-      }
-      else {
-        *(float *)(psVar4 + 0xc) = (float)((double)*(float *)(psVar4 + 0xc) + dVar8);
-        *(float *)(psVar4 + 0xe) = (float)((double)*(float *)(psVar4 + 0xe) + param_2);
-        *(float *)(psVar4 + 0x10) = (float)((double)*(float *)(psVar4 + 0x10) + param_3);
-      }
-    }
-  }
-  else {
-    uVar3 = getAngle();
-    uStack_7c = (int)*psVar2 - (uVar3 & 0xffff);
-    if (0x8000 < (int)uStack_7c) {
-      uStack_7c = uStack_7c - 0xffff;
-    }
-    if ((int)uStack_7c < -0x8000) {
-      uStack_7c = uStack_7c + 0xffff;
-    }
-    uVar3 = (int)*psVar4 - ((uVar3 & 0xffff) + 0x8000 & 0xffff);
-    if (0x8000 < (int)uVar3) {
-      uVar3 = uVar3 - 0xffff;
-    }
-    if ((int)uVar3 < -0x8000) {
-      uVar3 = uVar3 + 0xffff;
-    }
-    uStack_7c = uStack_7c ^ 0x80000000;
-    local_80 = 0x43300000;
-    dVar8 = (double)sin();
-    uStack_74 = (uint)*(byte *)((int)puVar6 + 0x6a);
-    local_78 = 0x43300000;
-    uStack_6c = (uint)*(byte *)((int)puVar6 + 0x6b);
-    local_70 = 0x43300000;
-    dVar9 = (double)((float)((double)CONCAT44(0x43300000,uStack_74) - DOUBLE_803df5d0) *
-                     (float)(dVar8 * dVar8) +
-                    (float)((double)CONCAT44(0x43300000,uStack_6c) - DOUBLE_803df5d0) *
-                    (lbl_803DF598 - (float)(dVar8 * dVar8)));
-    uStack_64 = uVar3 ^ 0x80000000;
-    local_68 = 0x43300000;
-    dVar8 = (double)sin();
-    uStack_5c = (uint)*(byte *)((int)puVar5 + 0x6a);
-    local_60 = 0x43300000;
-    uStack_54 = (uint)*(byte *)((int)puVar5 + 0x6b);
-    local_58 = 0x43300000;
-    dVar8 = (double)((float)((double)CONCAT44(0x43300000,uStack_5c) - DOUBLE_803df5d0) *
-                     (float)(dVar8 * dVar8) +
-                    (float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803df5d0) *
-                    (lbl_803DF598 - (float)(dVar8 * dVar8)));
-    if ((double)(float)(dVar8 * (double)lbl_803DC0B0) <= dVar9) {
-      if (dVar8 < (double)(float)(dVar9 * (double)lbl_803DC0B0)) {
-        dVar8 = (double)lbl_803DF590;
+  } else if (*(u8 *)((int)stateA + 0x6a) == 0) {
+    if (*(u8 *)((int)stateB + 0x6a) != 0) {
+      *(f32 *)(objB + 0xc) = *(f32 *)(objB + 0xc) + localBx;
+      *(f32 *)(objB + 0x10) = *(f32 *)(objB + 0x10) + localBy;
+      *(f32 *)(objB + 0x14) = *(f32 *)(objB + 0x14) + localBz;
+      if (flag != 0) {
+        *(f32 *)(objB + 0x18) = *(f32 *)(objB + 0x18) + x;
+        *(f32 *)(objB + 0x1c) = *(f32 *)(objB + 0x1c) + y;
+        *(f32 *)(objB + 0x20) = *(f32 *)(objB + 0x20) + z;
+      } else {
+        Obj_TransformLocalPointToWorld(*(f32 *)(objB + 0xc), *(f32 *)(objB + 0x10),
+                                       *(f32 *)(objB + 0x14), (f32 *)(objB + 0x18),
+                                       (f32 *)(objB + 0x1c), (f32 *)(objB + 0x20),
+                                       *(int *)(objB + 0x30));
       }
     }
-    else {
-      dVar9 = (double)lbl_803DF590;
+  } else {
+    angle = getAngle(-x, -z);
+    angleA = *(s16 *)objA - (int)(angle & 0xffff);
+    if (angleA > 0x8000) {
+      angleA -= 0xffff;
     }
-    dVar7 = (double)lbl_803DF590;
-    if (dVar7 < (double)(float)(dVar9 + dVar8)) {
-      dVar7 = (double)(float)(dVar8 / (double)(float)(dVar9 + dVar8));
+    if (angleA < -0x8000) {
+      angleA += 0xffff;
     }
-    *(float *)(psVar2 + 6) = -(float)((double)local_84 * dVar7 - (double)*(float *)(psVar2 + 6));
-    *(float *)(psVar2 + 8) = -(float)((double)local_88 * dVar7 - (double)*(float *)(psVar2 + 8));
-    *(float *)(psVar2 + 10) = -(float)((double)local_8c * dVar7 - (double)*(float *)(psVar2 + 10));
-    Obj_TransformLocalPointToWorld((double)*(float *)(psVar2 + 6),(double)*(float *)(psVar2 + 8),
-                 (double)*(float *)(psVar2 + 10),(float *)(psVar2 + 0xc),(float *)(psVar2 + 0xe),
-                 (float *)(psVar2 + 0x10),*(int *)(psVar2 + 0x18));
-    fVar1 = (float)((double)lbl_803DF598 - dVar7);
-    *(float *)(psVar4 + 6) = local_90 * fVar1 + *(float *)(psVar4 + 6);
-    *(float *)(psVar4 + 8) = local_94 * fVar1 + *(float *)(psVar4 + 8);
-    *(float *)(psVar4 + 10) = local_98 * fVar1 + *(float *)(psVar4 + 10);
-    Obj_TransformLocalPointToWorld((double)*(float *)(psVar4 + 6),(double)*(float *)(psVar4 + 8),
-                 (double)*(float *)(psVar4 + 10),(float *)(psVar4 + 0xc),(float *)(psVar4 + 0xe),
-                 (float *)(psVar4 + 0x10),*(int *)(psVar4 + 0x18));
+    angleB = *(s16 *)objB - (int)(((angle & 0xffff) + 0x8000) & 0xffff);
+    if (angleB > 0x8000) {
+      angleB -= 0xffff;
+    }
+    if (angleB < -0x8000) {
+      angleB += 0xffff;
+    }
+    sinVal = sin((lbl_803DE948 * (f32)angleA) / lbl_803DE94C);
+    sinSq = sinVal * sinVal;
+    weightA = (f32)*(u8 *)((int)stateA + 0x6a) * sinSq +
+              (f32)*(u8 *)((int)stateA + 0x6b) * (gObjHitsScalarOne - sinSq);
+    sinVal = sin((lbl_803DE948 * (f32)angleB) / lbl_803DE94C);
+    sinSq = sinVal * sinVal;
+    weightB = (f32)*(u8 *)((int)stateB + 0x6a) * sinSq +
+              (f32)*(u8 *)((int)stateB + 0x6b) * (gObjHitsScalarOne - sinSq);
+    if (weightA >= weightB * lbl_803DB450) {
+      if (weightB < weightA * lbl_803DB450) {
+        weightB = gObjHitsScalarZero;
+      }
+    } else {
+      weightA = gObjHitsScalarZero;
+    }
+    sum = weightA + weightB;
+    blend = (sum > gObjHitsScalarZero) ? weightB / sum : gObjHitsScalarZero;
+    *(f32 *)(objA + 0xc) = *(f32 *)(objA + 0xc) - localAx * blend;
+    *(f32 *)(objA + 0x10) = *(f32 *)(objA + 0x10) - localAy * blend;
+    *(f32 *)(objA + 0x14) = *(f32 *)(objA + 0x14) - localAz * blend;
+    Obj_TransformLocalPointToWorld(*(f32 *)(objA + 0xc), *(f32 *)(objA + 0x10),
+                                   *(f32 *)(objA + 0x14), (f32 *)(objA + 0x18),
+                                   (f32 *)(objA + 0x1c), (f32 *)(objA + 0x20),
+                                   *(int *)(objA + 0x30));
+    invBlend = gObjHitsScalarOne - blend;
+    *(f32 *)(objB + 0xc) = localBx * invBlend + *(f32 *)(objB + 0xc);
+    *(f32 *)(objB + 0x10) = localBy * invBlend + *(f32 *)(objB + 0x10);
+    *(f32 *)(objB + 0x14) = localBz * invBlend + *(f32 *)(objB + 0x14);
+    Obj_TransformLocalPointToWorld(*(f32 *)(objB + 0xc), *(f32 *)(objB + 0x10),
+                                   *(f32 *)(objB + 0x14), (f32 *)(objB + 0x18),
+                                   (f32 *)(objB + 0x1c), (f32 *)(objB + 0x20),
+                                   *(int *)(objB + 0x30));
   }
-  _restgpr_27();
-  return;
 }
+
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2732,8 +2677,7 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
           }
         }
         response[2] = fVar4;
-        ((void (*)(int, int, f32, f32, f32, int))ObjHits_ApplyPairResponse)(
-            objA, objB, response[0], response[1], fVar4, 0);
+        ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], fVar4, 0);
       }
     } else if ((shapeFlags & 2) != 0) {
       point.x = *(f32 *)(objB + 0x18) - playerMapOffsetX;
@@ -2792,8 +2736,7 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
           }
         }
         response[2] = fVar4;
-        ((void (*)(int, int, f32, f32, f32, int))ObjHits_ApplyPairResponse)(
-            objA, objB, response[0], response[1], fVar4, 0);
+        ObjHits_ApplyPairResponse(objA, objB, response[0], response[1], fVar4, 0);
       }
     } else if (((shapeFlags & 0x20) != 0) && (depth < 1)) {
       ObjHits_CheckSkeletonPair(objB, objA, hits, scratchB, scratchC, scratchD, scratchE,
