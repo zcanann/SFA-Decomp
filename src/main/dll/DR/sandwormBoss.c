@@ -3298,6 +3298,7 @@ extern f32  timeDelta;
 /* EN v1.0 0x8019E568  size: 352b  sandworm_turnTowardTargetAnim: turn toward the target by
  * a fraction of the yaw delta; when roughly aligned play/advance the idle
  * move, otherwise start or speed-scale the turn move by the delta. */
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
@@ -3331,6 +3332,7 @@ void sandworm_turnTowardTargetAnim(int* a, int* b, u8* c, int d)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 extern int *gGameUIInterface;
 extern int *gObjectTriggerInterface;
@@ -4424,6 +4426,7 @@ typedef struct { u8 _p0 : 1; u8 spitLatch : 1; u8 _p1 : 6; } WormSpitByte;
 /* EN v1.0 0x8019E3F4  size: 372b  fn_8019E3F4: pick the burrow/surface move
  * from the vertical speed, clamp the playback rate, latch the spit SFX
  * while surfacing fast, and advance the current move. */
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
@@ -4464,6 +4467,7 @@ int fn_8019E3F4(int* obj)
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 extern int objUpdateOpacity(int sub);
 extern f32 lbl_803E4288;
@@ -5269,6 +5273,200 @@ void windlift_update(int* obj)
         for (j = 1; j < 14; j++) {
             if (sub->slots[j].link14 == -1) {
                 sub->slots[j].i0 = 0;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int  fn_80080150(void* p);
+extern int  timerCountDown(void* p);
+extern int  randFn_80080100(int n);
+extern void Obj_UpdateRomCurveFollowVelocity(int* obj, void* p, f32 a, f32 b, f32 c, int d);
+extern void Obj_SmoothTurnAnglesTowardVelocity(int* obj, void* p, int n, f32 a, f32 b);
+extern void fn_8014C66C(int* a, void* b);
+extern int  dll_2E_func0D(int* obj, void* p, f32 f, int c, f32* a, f32* b);
+extern int  lbl_80322B28[];
+extern f32  lbl_803DBE38;
+extern f32  lbl_803DBE3C;
+extern f32  lbl_803DBE40;
+extern f32  lbl_803DBE44;
+extern f32  lbl_803DBE48;
+extern f32  lbl_803E4238;
+extern f32  lbl_803E424C;
+extern f32  lbl_803E4250;
+extern f32  lbl_803E4254;
+
+typedef struct { s16 a, b, c; u8 pad[6]; f32 x, y, z; } RunnerTarget;
+
+/* EN v1.0 0x8019EC34  size: 1908b  babycloudrunner_update: full runner brain -
+ * despawn on its gamebit, run the captured/timer flow, follow its rom curve
+ * while fleeing, hand off to the nearest sandworm, and once freed steer home
+ * to the roost point. */
+#pragma scheduling off
+#pragma peephole off
+void babycloudrunner_update(int* obj)
+{
+    char* player;
+    u8* sub;
+    u8* def = *(u8**)((char*)obj + 0x4c);
+    int inRange;
+    int* near;
+    RunnerTarget tgt;
+    int mode;
+    f32 radius;
+    sub = *(u8**)((char*)obj + 0xb8);
+    player = (char*)Obj_GetPlayerObject();
+    getTrickyObject();
+    if (GameBit_Get(*(s16*)(def + 0x22)) != 0) {
+        *(s16*)((char*)obj + 6) |= 0x4000;
+        *(u8*)(sub + 0x22c) &= ~1;
+        objRemoveFromListFn_8002ce88(obj);
+        ObjGroup_RemoveObject(obj, 0x20);
+        ObjGroup_RemoveObject(obj, 3);
+    }
+    if (*(int*)(sub + 0x230) == 2 && GameBit_Get(0x66) != 0) {
+        ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(6, obj, -1);
+        ((void (*)(void))((int*)*gGameUIInterface)[0x60 / 4])();
+    } else if (fn_80080150(sub) != 0) {
+        *(u8*)(sub + 0x22c) |= 1;
+        *(int*)(sub + 0xc4) = 0;
+        if (*(int*)((char*)obj + 0xf4) < 0) {
+            if (*(s16*)(def + 0x22) != -1) {
+                GameBit_Set(*(s16*)(def + 0x22), 1);
+            }
+            ObjHits_DisableObject(obj);
+            *(s16*)((char*)obj + 6) |= 0x4000;
+            *(u8*)(sub + 0x22c) &= ~1;
+            objRemoveFromListFn_8002ce88(obj);
+            ObjGroup_RemoveObject(obj, 0x20);
+            ObjGroup_RemoveObject(obj, 3);
+            *(s16*)((char*)obj + 6) |= 0x4000;
+        } else {
+            *(int*)((char*)obj + 0xf4) = *(int*)((char*)obj + 0xf4) - 1;
+        }
+    } else {
+        *(u8*)((char*)obj + 0xaf) |= 8;
+        if (*(int*)(sub + 0x230) == 0) {
+            mode = 0x19;
+            if (((u8 (*)(void*, int*, f32, int*, int))((int*)*gRomCurveInterface)[0x8c / 4])((char*)sub + 0x124, obj, lbl_803E424C, &mode, 0) == 0) {
+                *(int*)(sub + 0x230) = 1;
+                storeZeroToFloatParam((char*)sub + 0x238);
+            }
+        } else {
+            if (randFn_80080100(500) != 0) {
+                int r = randomGetRange(0, 3);
+                objAudioFn_80039270((int)obj, (char*)sub + 0x6c, (u16)((s16*)*(void**)(sub + 0x240))[r]);
+            }
+            objAnimFn_80038f38((int)obj, (char*)sub + 0x6c);
+            if (*(int*)(sub + 0x230) == 1 || *(int*)(sub + 0x230) == 2) {
+                f32 speed = *(f32*)(sub + 0x23c);
+                Obj_UpdateRomCurveFollowVelocity(obj, (char*)sub + 0x124, speed, lbl_803E4238 * speed, lbl_803E4250 * speed, 1);
+                Obj_SmoothTurnAnglesTowardVelocity(obj, (char*)obj + 0x24, 0x1e, lbl_803E4238, lbl_803E4254);
+                objMove((int)obj, *(f32*)((char*)obj + 0x24), *(f32*)((char*)obj + 0x28), *(f32*)((char*)obj + 0x2c));
+                if (*(int*)(sub + 0x230) == 1) {
+                    if (*(int*)(sub + 0x234) != -1 && GameBit_Get(*(int*)(sub + 0x234) + 0xb2a) != 0) {
+                        *(int*)(sub + 0x230) = 2;
+                        GameBit_Set(0x66, 0);
+                        ((void (*)(int, int))((int*)*gGameUIInterface)[0x58 / 4])(lbl_80322B28[*(int*)(sub + 0x234)], 0x5d1);
+                        s16toFloat((int)(sub + 0x238), (s16)lbl_80322B28[*(int*)(sub + 0x234)]);
+                    }
+                    fn_8019E3F4(obj);
+                    return;
+                }
+                if (*(int*)(sub + 0x230) == 2) {
+                    near = (int*)ObjGroup_FindNearestObject(3, obj, 0);
+                    if (near == NULL || Vec_distance((char*)near + 0x18, (char*)sub + 0x18) >= lbl_803DBE38) {
+                        if (near != NULL) {
+                            fn_8014C66C(near, Obj_GetPlayerObject());
+                        }
+                    } else {
+                        sandworm_turnTowardTargetAnim(obj, near, sub, 0);
+                        if (Vec_distance((char*)Obj_GetPlayerObject() + 0x18, (char*)near + 0x18) <= lbl_803DBE3C) {
+                            fn_8014C66C(near, Obj_GetPlayerObject());
+                        } else {
+                            fn_8014C66C(near, obj);
+                            if (*(s16*)((char*)obj + 0xa0) != 0xd) {
+                                ObjAnim_SetCurrentMove((int)obj, 0xd, *(f32*)((char*)obj + 0x98), 0);
+                            }
+                            ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803E422C, timeDelta, 0);
+                        }
+                    }
+                    fn_8019E3F4(obj);
+                }
+            }
+            inRange = Vec_distance((char*)obj + 0x18, player + 0x18) < (f32)(*(s16*)(def + 0x1a) / 2);
+            if (*(int*)(sub + 0x230) == 2) {
+                radius = (f32)*(s16*)(def + 0x18);
+                if (fn_80080150((char*)sub + 0x238) != 0) {
+                    if ((*(u16*)((char*)Obj_GetPlayerObject() + 0xb0) & 0x1000) == 0 && timerCountDown((char*)sub + 0x238) != 0) {
+                        ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(6, obj, -1);
+                        ((void (*)(void))((int*)*gGameUIInterface)[0x60 / 4])();
+                        return;
+                    }
+                    ((void (*)(int))((int*)*gGameUIInterface)[0x5c / 4])((int)*(f32*)(sub + 0x238));
+                }
+                if (inRange == 0 && (void*)ObjGroup_FindNearestObject(3, obj, &radius) != NULL) {
+                    inRange = 1;
+                }
+                if (GameBit_Get(*(int*)(sub + 0x234) + 0xb2e) != 0) {
+                    *(int*)(sub + 0x230) = 3;
+                    ((void (*)(void))((int*)*gGameUIInterface)[0x60 / 4])();
+                    Sfx_PlayFromObject((int)obj, SFXsp_lf_mutter4);
+                    storeZeroToFloatParam((char*)sub + 0x238);
+                }
+            } else {
+                u8* sub2;
+                u8* def2;
+                int found;
+                *(u8*)((char*)obj + 0xaf) &= ~0x8;
+                sub2 = *(u8**)((char*)obj + 0xb8);
+                {
+                    char* pp = (char*)Obj_GetPlayerObject();
+                    def2 = *(u8**)((char*)obj + 0x4c);
+                    found = 0;
+                    if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32)*(s16*)(def2 + 0x1a)
+                        && *(int*)(sub2 + 0x230) == 3
+                        && (*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
+                        found = 1;
+                    }
+                }
+                if (found != 0) {
+                    *(u8*)((char*)obj + 0xaf) &= ~0x10;
+                } else {
+                    *(u8*)((char*)obj + 0xaf) |= 0x10;
+                }
+            }
+            if (*(int*)(sub + 0x230) == 3) {
+                if (!((WormSpitByte*)(sub + 0x244))->_p0) {
+                    tgt.x = *(f32*)(def + 8);
+                    tgt.y = *(f32*)(def + 0xc);
+                    tgt.z = *(f32*)(def + 0x10);
+                    tgt.a = *(s16*)(sub + 0xd0);
+                    tgt.b = 0;
+                    tgt.c = 0;
+                    *(s16*)((char*)obj + 2) = 0;
+                    *(s16*)((char*)obj + 4) = 0;
+                    if (dll_2E_func0D(obj, &tgt, lbl_803DBE40, -1, &lbl_803DBE44, &lbl_803DBE48) != 0) {
+                        ((WormSpitByte*)(sub + 0x244))->_p0 = 1;
+                        GameBit_Set(0x66, 0);
+                    }
+                    ((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, lbl_803DBE44, timeDelta, 0);
+                } else {
+                    if (inRange != 0) {
+                        ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(1, obj, -1);
+                        *(int*)(sub + 0xb0) = 1;
+                    }
+                    sandworm_turnTowardTargetAnim(obj, (int*)Obj_GetPlayerObject(), sub, 1);
+                    if (((int (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, *(f32*)(sub + 0xa8), timeDelta, 0) != 0) {
+                        if (randFn_80080100(2) != 0) {
+                            ObjAnim_SetCurrentMove((int)obj, 2, lbl_803E4218, 0);
+                        } else {
+                            ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E4218, 0);
+                        }
+                    }
+                }
             }
         }
     }
