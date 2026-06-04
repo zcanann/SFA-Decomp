@@ -3355,7 +3355,7 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
 
 extern u8 framesThisStep;
 
-void characterDoEyeMovements(int obj, int p4)
+void characterDoEyeMovements(int obj, int p4, f32 unused)
 {
     int* foundA;
     int* foundB;
@@ -4432,6 +4432,104 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
             *(s16 *)(staff + 2) = (s16)(-getAngle(va[1], sqrtf(va[0] * va[0] + va[2] * va[2])) + 0x4000);
             *(s16 *)(staff + 4) = 0;
         }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void characterDoEyeAnims(int obj, int p2)
+{
+    extern f32 lbl_803DE9A4;
+    extern u8 framesThisStep;
+    int *a;
+    int *b;
+    void *m;
+
+    a = NULL;
+    m = *(void **)(obj + 0x50);
+    if (m != NULL) {
+        u8 *p = *(u8 **)((char *)m + 0xc);
+        if (p == NULL) {
+        } else {
+            int n = *(u8 *)((char *)m + 0x59);
+            int off = 0;
+            int j;
+            for (j = 0; j < n; j++) {
+                if (*p == 5) {
+                    a = (int *)(*(int *)(obj + 0x70) + off);
+                }
+                p += 2;
+                off += 0x10;
+            }
+        }
+    }
+
+    b = NULL;
+    if (m != NULL) {
+        u8 *p = *(u8 **)((char *)m + 0xc);
+        if (p == NULL) {
+        } else {
+            int n = *(u8 *)((char *)m + 0x59);
+            int off = 0;
+            int j;
+            for (j = 0; j < n; j++) {
+                if (*p == 4) {
+                    b = (int *)(*(int *)(obj + 0x70) + off);
+                }
+                p += 2;
+                off += 0x10;
+            }
+        }
+    }
+
+    if (a == NULL) {
+        return;
+    }
+    if (b == NULL) {
+    } else {
+        int v = *b;
+        int st = (s8)*(s8 *)(p2 + 0x1e);
+
+        switch (st & 0xf) {
+        case 0:
+            {
+                s8 t = *(s8 *)(p2 + 0x1f);
+                if (t > 0) {
+                    *(s8 *)(p2 + 0x1f) = t - framesThisStep;
+                } else if ((int)randomGetRange(0, 1000) > 0x3de) {
+                    *(u8 *)(p2 + 0x1e) = 1;
+                    *(u8 *)(p2 + 0x1f) = 0;
+                }
+            }
+            break;
+        case 1:
+            if ((st & 0x80) != 0) {
+                v = v - framesThisStep * 0x60;
+                if (v < 0) {
+                    v = 0;
+                    *(u8 *)(p2 + 0x1e) = 0;
+                    *(u8 *)(p2 + 0x1f) = 0;
+                }
+            } else {
+                v = v + framesThisStep * 0x60;
+                if (v > 0x200) {
+                    if (v - 0x200 < 0) {
+                        v = 0;
+                        *(u8 *)(p2 + 0x1e) = 0;
+                    } else {
+                        v = 0x2ff;
+                        *(u8 *)(p2 + 0x1e) = 0x81;
+                    }
+                    *(u8 *)(p2 + 0x1f) = 0x28;
+                }
+            }
+            *a = v;
+            *b = v;
+            break;
+        }
+        characterDoEyeMovements(obj, p2, lbl_803DE9A4);
     }
 }
 #pragma peephole reset
