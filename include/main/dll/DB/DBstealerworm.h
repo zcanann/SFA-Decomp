@@ -31,8 +31,7 @@ void SB_Galleon_initialise(void);
 int SB_Propeller_getExtraSize(void);
 void SB_Propeller_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void SB_Propeller_hitDetect(int obj);
-void SB_Propeller_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void SB_Propeller_update(int obj);
 void SB_Propeller_init(int param_1,int param_2);
 
 int SB_ShipHead_getExtraSize(void);

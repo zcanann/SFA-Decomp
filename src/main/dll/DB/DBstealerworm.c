@@ -42,7 +42,6 @@ extern int ObjHits_GetPriorityHit();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int ObjMsg_Pop();
-extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_80042bec();
 extern undefined4 FUN_80044404();
@@ -497,131 +496,114 @@ undefined4 FUN_801e2184(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SB_Propeller_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
-{
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  uint uVar5;
-  float *pfVar6;
-  double in_f31;
-  double dVar7;
-  double in_ps31_1;
-  int local_68;
-  undefined auStack_64 [6];
-  undefined2 local_5e;
-  float local_5c;
-  float local_58;
-  float local_54;
-  float local_50 [2];
-  undefined4 local_48;
-  float fStack_44;
-  undefined4 local_40;
-  uint uStack_3c;
-  longlong local_38;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  uVar1 = FUN_8028683c();
-  pfVar6 = *(float **)(uVar1 + 0xb8);
-  iVar2 = (**(code **)(**(int **)(*(int *)(uVar1 + 0x30) + 0x68) + 0x24))();
-  iVar3 = (**(code **)(**(int **)(*(int *)(uVar1 + 0x30) + 0x68) + 0x28))();
-  if (((*(char *)(pfVar6 + 3) != '\0') && (iVar3 < 6)) && (*(short *)(uVar1 + 0x46) != 0x69c)) {
-    FUN_800068c4(uVar1,0x2c6);
-  }
-  iVar4 = DBbonedust_getState(*(int *)(uVar1 + 0x30));
-  if ((iVar4 < 2) && (*(char *)(pfVar6 + 3) < '\x01')) {
-    *pfVar6 = *pfVar6 - lbl_803DC074;
-    if (*pfVar6 <= lbl_803E64AC) {
-      uVar5 = randomGetRange(10,0x19);
-      dVar7 = (double)lbl_803E64A8;
-      for (; uVar5 != 0; uVar5 = uVar5 - 1) {
-        local_58 = *(float *)(uVar1 + 0x18);
-        local_54 = *(float *)(uVar1 + 0x1c);
-        local_50[0] = *(float *)(uVar1 + 0x20);
-        local_5c = (float)dVar7;
-        (**(code **)(*DAT_803dd708 + 8))(uVar1,0x9f,auStack_64,0x200001,0xffffffff,0);
-      }
-      fStack_44 = (float)randomGetRange(0x5a,0xf0);
-      fStack_44 = -fStack_44;
-      local_48 = 0x43300000;
-      *pfVar6 = (float)((double)CONCAT44(0x43300000,fStack_44) - DOUBLE_803e64c0);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern int DBprotection_getCameraState(u32 g);
+extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
+extern int Obj_GetPlayerObject(void);
+extern undefined4 *gPartfxInterface;
+extern u8 framesThisStep;
+extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p);
+extern void spawnExplosion(f32 s, int obj, int a, int b, int c, int d, int e, int f, int g);
+extern f32 lbl_803E5810;
+extern f32 lbl_803E5814;
+extern f32 lbl_803E5818;
+extern f32 lbl_803E581C;
+extern f32 lbl_803E5820;
+extern f32 lbl_803E5824;
+void SB_Propeller_update(int obj) {
+    int camA;
+    int camB;
+    int camC;
+    int i;
+    int hit;
+    f32 *pf;
+    struct {
+        u8 pad[6];
+        u16 mode;
+        f32 a;
+        f32 b;
+        f32 c;
+        f32 d;
+    } stk;
+
+    pf = *(f32 **)(obj + 0xb8);
+    camA = (**(int (**)(int))(**(int **)(*(int *)(obj + 0x30) + 0x68) + 0x24))(*(int *)(obj + 0x30));
+    camB = (**(int (**)(int))(**(int **)(*(int *)(obj + 0x30) + 0x68) + 0x28))(*(int *)(obj + 0x30));
+    if (((*(s8 *)((u8 *)pf + 0xc) != 0) && (camB < 6)) && (*(s16 *)(obj + 0x46) != 0x69c)) {
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x2c6);
     }
-    if ((2 < iVar2) && (*(char *)(uVar1 + 0xad) == '\x01')) {
-      local_5c = lbl_803E64B0;
-      local_5e = 0xc0a;
-      ObjPath_GetPointWorldPosition(uVar1,0,&local_58,&local_54,local_50,0);
-      local_58 = local_58 - *(float *)(uVar1 + 0x18);
-      local_54 = local_54 - *(float *)(uVar1 + 0x1c);
-      local_50[0] = local_50[0] - *(float *)(uVar1 + 0x20);
-      for (iVar4 = 0; iVar4 < (int)(uint)DAT_803dc070; iVar4 = iVar4 + 1) {
-        (**(code **)(*DAT_803dd708 + 8))(uVar1,0x7aa,auStack_64,2,0xffffffff,0);
-      }
+    camC = DBprotection_getCameraState(*(int *)(obj + 0x30));
+    if ((camC < 2) && (*(s8 *)((u8 *)pf + 0xc) < 1)) {
+        *pf = *pf - timeDelta;
+        if (*pf <= lbl_803E5814) {
+            f32 spd = lbl_803E5810;
+            for (i = randomGetRange(10, 0x19); i != 0; i--) {
+                stk.b = *(f32 *)(obj + 0x18);
+                stk.c = *(f32 *)(obj + 0x1c);
+                stk.d = *(f32 *)(obj + 0x20);
+                stk.a = spd;
+                (**(void (**)(int, int, u8 *, int, int, int))(*(int *)gPartfxInterface + 8))(
+                    obj, 0x9f, stk.pad, 0x200001, -1, 0);
+            }
+            *pf = (f32)(int)randomGetRange(0x5a, 0xf0);
+        }
+        if ((2 < camA) && (*(s8 *)(obj + 0xad) == 1)) {
+            stk.a = lbl_803E5818;
+            stk.mode = 0xc0a;
+            ObjPath_GetPointWorldPosition(obj, 0, &stk.b, &stk.c, &stk.d, 0);
+            stk.b = stk.b - *(f32 *)(obj + 0x18);
+            stk.c = stk.c - *(f32 *)(obj + 0x1c);
+            stk.d = stk.d - *(f32 *)(obj + 0x20);
+            for (i = 0; i < framesThisStep; i++) {
+                (**(void (**)(int, int, u8 *, int, int, int))(*(int *)gPartfxInterface + 8))(
+                    obj, 0x7aa, stk.pad, 2, -1, 0);
+            }
+        }
     }
-  }
-  if (*(int *)(uVar1 + 0x30) != 0) {
-    if ((*(short *)(uVar1 + 0x46) != 0x69c) && (*(int *)(*(int *)(uVar1 + 0x30) + 0xf4) < 4)) {
-      fStack_44 = -pfVar6[2];
-      local_48 = 0x43300000;
-      pfVar6[1] = (float)((double)CONCAT44(0x43300000,fStack_44) - DOUBLE_803e64c0) / lbl_803E64B4
-      ;
-      if (pfVar6[1] < lbl_803E64AC) {
-        pfVar6[1] = -pfVar6[1];
-      }
-      if (pfVar6[1] < lbl_803E64B8) {
-        pfVar6[1] = lbl_803E64B8;
-      }
+    if (*(int *)(obj + 0x30) != 0) {
+        if ((*(s16 *)(obj + 0x46) != 0x69c) && (*(int *)(*(int *)(obj + 0x30) + 0xf4) < 4)) {
+            pf[1] = (f32)*(int *)(pf + 2) / lbl_803E581C;
+            if (pf[1] < lbl_803E5814) {
+                pf[1] = -pf[1];
+            }
+            if (pf[1] < lbl_803E5820) {
+                pf[1] = lbl_803E5820;
+            }
+        }
+        *(int *)(obj + 0xf4) = *(int *)(obj + 0xf4) - framesThisStep;
+        if (*(int *)(obj + 0xf4) < 0) {
+            *(int *)(obj + 0xf4) = 0;
+        }
+        if (((((((camB == 1) && (ObjHits_GetPriorityHit(obj, &hit, 0, 0) != 0))
+               && (*(int *)(obj + 0xf4) == 0))
+              && ((hit != 0 && (hit != Obj_GetPlayerObject()))))
+             && ((*(s16 *)(hit + 0x46) != 0x69c
+                  && ((*(s16 *)(hit + 0x46) != 0x9a
+                       && ((*(int *)(obj + 0xf4) = 0x14, *(int *)(obj + 0x30) != 0)))))))
+            && ((camA == 2 || (camA == 5)))) && (*(s16 *)(obj + 0x46) == 0x69c)) {
+            Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
+            Sfx_PlayFromObject(obj, 0x2c7);
+            *(s8 *)((u8 *)pf + 0xc) -= 1;
+            if (*(s8 *)((u8 *)pf + 0xc) <= 0) {
+                *(u8 *)((u8 *)pf + 0xc) = 0;
+                (**(void (**)(int))(**(int **)(*(int *)(obj + 0x30) + 0x68) + 0x20))(*(int *)(obj + 0x30));
+                ObjHits_DisableObject(obj);
+                *(u16 *)(obj + 6) = *(u16 *)(obj + 6) | 0x4000;
+                spawnExplosion(lbl_803E5824, obj, 1, 1, 1, 0, 1, 1, 0);
+                Sfx_PlayFromObject(obj, 0x2c8);
+            }
+        }
+        if (*(int *)(obj + 0xf4) == 0) {
+            *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 6;
+            *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
+            *(int *)(*(int *)(obj + 0x54) + 0x48) = 0x10;
+            *(int *)(*(int *)(obj + 0x54) + 0x4c) = 0x10;
+        }
+        else {
+            *(u8 *)(*(int *)(obj + 0x54) + 0x6c) = 0;
+        }
+        *(s16 *)(obj + 4) = (int)-((f32)*(int *)(pf + 2) * timeDelta - (f32)*(s16 *)(obj + 4));
     }
-    *(uint *)(uVar1 + 0xf4) = *(int *)(uVar1 + 0xf4) - (uint)DAT_803dc070;
-    if (*(int *)(uVar1 + 0xf4) < 0) {
-      *(undefined4 *)(uVar1 + 0xf4) = 0;
-    }
-    if (((((((iVar3 == 1) &&
-            (iVar3 = ObjHits_GetPriorityHit(uVar1,&local_68,(int *)0x0,(uint *)0x0), iVar3 != 0)) &&
-           (*(int *)(uVar1 + 0xf4) == 0)) &&
-          ((local_68 != 0 && (iVar3 = FUN_80017a98(), local_68 != iVar3)))) &&
-         ((*(short *)(local_68 + 0x46) != 0x69c &&
-          ((*(short *)(local_68 + 0x46) != 0x9a &&
-           (*(undefined4 *)(uVar1 + 0xf4) = 0x14, *(int *)(uVar1 + 0x30) != 0)))))) &&
-        ((iVar2 == 2 || (iVar2 == 5)))) && (*(short *)(uVar1 + 0x46) == 0x69c)) {
-      FUN_80017a28(uVar1,0xf,200,0,0,1);
-      FUN_80006824(uVar1,SFXbaddie_eggsnatch_carry3);
-      *(char *)(pfVar6 + 3) = *(char *)(pfVar6 + 3) + -1;
-      if (*(char *)(pfVar6 + 3) < '\x01') {
-        *(undefined *)(pfVar6 + 3) = 0;
-        (**(code **)(**(int **)(*(int *)(uVar1 + 0x30) + 0x68) + 0x20))();
-        ObjHits_DisableObject(uVar1);
-        *(ushort *)(uVar1 + 6) = *(ushort *)(uVar1 + 6) | 0x4000;
-        FUN_8008112c((double)lbl_803E64BC,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     uVar1,1,1,1,0,1,1,0);
-        FUN_80006824(uVar1,SFXbaddie_eggsnatch_carry4);
-      }
-    }
-    if (*(int *)(uVar1 + 0xf4) == 0) {
-      *(undefined *)(*(int *)(uVar1 + 0x54) + 0x6e) = 6;
-      *(undefined *)(*(int *)(uVar1 + 0x54) + 0x6f) = 1;
-      *(undefined4 *)(*(int *)(uVar1 + 0x54) + 0x48) = 0x10;
-      *(undefined4 *)(*(int *)(uVar1 + 0x54) + 0x4c) = 0x10;
-    }
-    else {
-      *(undefined *)(*(int *)(uVar1 + 0x54) + 0x6c) = 0;
-    }
-    fStack_44 = -pfVar6[2];
-    local_48 = 0x43300000;
-    uStack_3c = (int)*(short *)(uVar1 + 4) ^ 0x80000000;
-    local_40 = 0x43300000;
-    iVar2 = (int)-((float)((double)CONCAT44(0x43300000,fStack_44) - DOUBLE_803e64c0) *
-                   lbl_803DC074 -
-                  (f32)(s32)uStack_3c);
-    local_38 = (longlong)iVar2;
-    *(short *)(uVar1 + 4) = (short)iVar2;
-  }
-  FUN_80286888();
-  return;
 }
 
 /*
@@ -723,15 +705,12 @@ void SB_ShipHead_render(int param_1,int param_2,int param_3,int param_4,int para
  */
 extern u32 getSbGalleon(void);
 extern u8 framesThisStep;
-extern int DBprotection_getCameraState(u32 g);
 extern f32 Vec_distance(void *a, void *b);
 extern void Sfx_StopObjectChannel(int obj, int ch);
-extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
 extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32 *x, f32 *y, f32 *z);
 extern u8 *Obj_AllocObjectSetup(int size, int objId);
 extern int Obj_SetupObject(u8 *setup, int a, int b, int c, int d);
-extern int Obj_GetPlayerObject(void);
 extern void ObjAnim_SetCurrentMove(int *obj, int a, f32 b, int c);
 extern int ObjAnim_AdvanceCurrentMove(int *obj, f32 b, f32 c, int a);
 extern u8 lbl_803DC090;
