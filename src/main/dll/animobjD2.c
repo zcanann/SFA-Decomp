@@ -20,6 +20,7 @@ extern f32 lbl_803E2488;
 extern const char sTrickyShouldNeverStopCirclingError[];
 
 #pragma dont_inline on
+#pragma opt_common_subs off
 void *trickyFindCirclingTarget(void *obj, void *arg2) {
     void *target;
     void **list;
@@ -50,6 +51,7 @@ void *trickyFindCirclingTarget(void *obj, void *arg2) {
 fail:
     return NULL;
 }
+#pragma opt_common_subs reset
 #pragma dont_inline reset
 
 void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
