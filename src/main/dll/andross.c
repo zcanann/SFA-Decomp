@@ -1418,13 +1418,10 @@ LAB_8023cbdc:
     }
     *(f32 *)(piVar14 + 0x1a) = fVar2;
     dVar19 = *(f32 *)(piVar14 + 0x1a);
-    piVar7 = (int *)Obj_GetActiveModel(obj);
-    iVar5 = *piVar7;
-    dVar19 = (longlong)(int)(lbl_803E74B4 * dVar19);
-    for (iVar12 = 0; iVar12 < (int)(u32)*(u8 *)(iVar5 + 0xf8); iVar12 = iVar12 + 1) {
-      iVar8 = ObjModel_GetRenderOp(iVar5,iVar12);
-      *(char *)(iVar8 + 0x43) = (s8)(int)dVar19;
-      local_88 = dVar19;
+    iVar8 = *(int *)Obj_GetActiveModel(obj);
+    fVar2 = lbl_803E74B4 * dVar19;
+    for (iVar12 = 0; iVar12 < (int)(u32)*(u8 *)(iVar8 + 0xf8); iVar12 = iVar12 + 1) {
+      *(s8 *)(ObjModel_GetRenderOp(iVar8,iVar12) + 0x43) = (int)fVar2;
     }
     if ((piVar14[0x1f] == 5) && (*(char *)(piVar14 + 0x2b) == '\0')) {
       for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
@@ -1704,13 +1701,10 @@ LAB_8023de5c:
       Music_Trigger(0xf3,0);
     }
     dVar19 = *(f32 *)(piVar14 + 0x1a);
-    piVar7 = (int *)Obj_GetActiveModel(obj);
-    iVar5 = *piVar7;
-    dVar19 = (longlong)(int)(lbl_803E74B4 * dVar19);
-    for (iVar12 = 0; iVar12 < (int)(u32)*(u8 *)(iVar5 + 0xf8); iVar12 = iVar12 + 1) {
-      iVar8 = ObjModel_GetRenderOp(iVar5,iVar12);
-      *(char *)(iVar8 + 0x43) = (s8)(int)dVar19;
-      local_50 = dVar19;
+    iVar8 = *(int *)Obj_GetActiveModel(obj);
+    fVar2 = lbl_803E74B4 * dVar19;
+    for (iVar12 = 0; iVar12 < (int)(u32)*(u8 *)(iVar8 + 0xf8); iVar12 = iVar12 + 1) {
+      *(s8 *)(ObjModel_GetRenderOp(iVar8,iVar12) + 0x43) = (int)fVar2;
     }
     break;
   case 0x1d:
