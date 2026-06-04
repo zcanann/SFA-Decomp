@@ -50,6 +50,7 @@ extern f64 DOUBLE_803df5d0;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803DE960;
+extern f32 lbl_803DE91C;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DC0B0;
@@ -2786,32 +2787,30 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjHits_CheckTrackContact(void)
+void ObjHits_CheckTrackContact(int objA,int objB)
 {
   uint uVar1;
-  uint uVar2;
+  int mask2;
   int iVar3;
   byte bVar4;
-  int iVar5;
   int iVar6;
   uint uVar7;
-  undefined4 *puVar8;
+  float *puVar8;
   int *piVar9;
   int iVar10;
   int iVar11;
   int iVar12;
-  undefined4 *puVar13;
+  float *puVar13;
   int iVar14;
   int iVar15;
   int iVar16;
-  undefined4 *puVar17;
+  float *puVar17;
   int iVar18;
   undefined *puVar19;
   undefined *puVar20;
   float *pfVar21;
   float *pfVar22;
   int iVar23;
-  undefined8 uVar24;
   uint auStack_148 [6];
   float local_130 [18];
   float local_e8 [18];
@@ -2819,43 +2818,22 @@ void ObjHits_CheckTrackContact(void)
   float local_60 [4];
   undefined local_50 [12];
   int local_44 [5];
-  undefined4 local_30;
-  uint uStack_2c;
-  
-  uVar24 = _savegpr_23();
-  iVar23 = (int)((ulonglong)uVar24 >> 0x20);
-  iVar5 = (int)uVar24;
-  iVar6 = *(int *)(iVar23 + 0x54);
-  if (iVar5 == iVar23) {
-    uVar2 = *(uint *)(iVar6 + 0x48) >> 4;
+  f32 fConv;
+
+  iVar6 = *(int *)(objA + 0x54);
+  if ((uint)objB == (uint)objA) {
+    mask2 = *(uint *)(iVar6 + 0x48) >> 4;
   }
   else {
-    uVar2 = *(uint *)(iVar6 + 0x48) & 0xf;
+    mask2 = *(uint *)(iVar6 + 0x48) & 0xf;
   }
-  if ((uVar2 != 0) && (*(char *)(iVar6 + 0x70) == '\0')) {
-    iVar6 = *(int *)(iVar5 + 0x54);
-    if ((*(byte *)(iVar6 + 0xb6) & 0x10) == 0) {
-      local_e8[0] = *(float *)(iVar23 + 0x18);
-      local_e8[1] = *(float *)(iVar23 + 0x1c);
-      local_e8[2] = *(float *)(iVar23 + 0x20);
-      local_130[0] = *(float *)(iVar23 + 0x8c);
-      local_130[1] = *(float *)(iVar23 + 0x90);
-      local_130[2] = *(float *)(iVar23 + 0x94);
-      uStack_2c = (uint)*(byte *)(*(int *)(iVar23 + 0x50) + 0x8f);
-      local_30 = 0x43300000;
-      local_60[0] = (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803df5d0);
-      if (local_60[0] < lbl_803DF59C) {
-        local_60[0] = lbl_803DF59C;
-      }
-      local_50[0] = 0xff;
-      local_50[4] = 7;
-      iVar23 = 1;
-    }
-    else {
-      piVar9 = *(int **)(*(int *)(iVar5 + 0x7c) + *(char *)(iVar5 + 0xad) * 4);
+  if ((mask2 != 0) && (*(char *)(iVar6 + 0x70) == '\0')) {
+    iVar6 = *(int *)(objB + 0x54);
+    if ((*(byte *)(iVar6 + 0xb6) & 0x10) != 0) {
+      piVar9 = *(int **)(*(int *)(objB + 0x7c) + *(char *)(objB + 0xad) * 4);
       iVar12 = *piVar9;
       uVar7 = *(ushort *)(piVar9 + 6) >> 2 & 1;
-      puVar13 = (undefined4 *)piVar9[uVar7 + 0x12];
+      puVar13 = (float *)piVar9[uVar7 + 0x12];
       iVar14 = piVar9[(uVar7 ^ 1) + 0x12];
       iVar23 = 0;
       iVar15 = 0;
@@ -2866,25 +2844,9 @@ void ObjHits_CheckTrackContact(void)
       for (iVar11 = 0; iVar11 < (int)(uint)*(byte *)(iVar12 + 0xf7); iVar11 = iVar11 + 1) {
         iVar18 = *(int *)(iVar12 + 0x58) + iVar3;
         if ((iVar11 == *(char *)(iVar18 + 0x16)) &&
-           ((uVar2 & 1 << (int)*(char *)(iVar18 + 0x17)) != 0)) {
+           ((mask2 & 1 << (int)*(char *)(iVar18 + 0x17)) != 0)) {
           uVar7 = (uint)*(ushort *)(iVar18 + 0x14);
-          if (uVar7 == 0) {
-            if (iVar23 < 4) {
-              *(float *)((int)local_e8 + iVar16) = playerMapOffsetX + (float)puVar8[1];
-              *(undefined4 *)((int)local_e8 + iVar16 + 4) = puVar8[2];
-              *(float *)((int)local_e8 + iVar16 + 8) = playerMapOffsetZ + (float)puVar8[3];
-              *(float *)((int)local_130 + iVar16) = playerMapOffsetX + *(float *)(iVar10 + 4);
-              *(undefined4 *)((int)local_130 + iVar16 + 4) = *(undefined4 *)(iVar10 + 8);
-              *(float *)((int)local_130 + iVar16 + 8) = playerMapOffsetZ + *(float *)(iVar10 + 0xc);
-              *(undefined4 *)((int)local_60 + iVar15) = *puVar8;
-              local_50[iVar23] = 0xff;
-              local_50[iVar23 + 4] = 7;
-              iVar23 = iVar23 + 1;
-              iVar15 = iVar15 + 4;
-              iVar16 = iVar16 + 0xc;
-            }
-          }
-          else {
+          if (uVar7 != 0) {
             pfVar22 = (float *)((int)local_e8 + iVar16);
             pfVar21 = (float *)((int)local_130 + iVar16);
             puVar20 = auStack_a0 + iVar15;
@@ -2893,15 +2855,15 @@ void ObjHits_CheckTrackContact(void)
               uVar1 = ((int)(uVar7 & 0xf000) >> 0xc) + iVar11 & 0xffff;
               if (iVar23 < 4) {
                 puVar17 = puVar13 + uVar1 * 4;
-                *pfVar22 = playerMapOffsetX + (float)puVar17[1];
-                pfVar22[1] = (float)puVar17[2];
-                pfVar22[2] = playerMapOffsetZ + (float)puVar17[3];
+                *pfVar22 = playerMapOffsetX + puVar17[1];
+                pfVar22[1] = puVar17[2];
+                pfVar22[2] = playerMapOffsetZ + puVar17[3];
                 iVar18 = iVar14 + uVar1 * 0x10;
                 *pfVar21 = playerMapOffsetX + *(float *)(iVar18 + 4);
                 pfVar21[1] = *(float *)(iVar18 + 8);
                 pfVar21[2] = playerMapOffsetZ + *(float *)(iVar18 + 0xc);
-                *(undefined4 *)(puVar20 + 0x40) = *puVar17;
-                puVar19[0x50] = 0xff;
+                *(float *)(puVar20 + 0x40) = *puVar17;
+                *(s8 *)&puVar19[0x50] = -1;
                 puVar19[0x54] = 7;
                 pfVar22 = pfVar22 + 3;
                 pfVar21 = pfVar21 + 3;
@@ -2913,16 +2875,48 @@ void ObjHits_CheckTrackContact(void)
               }
             }
           }
+          else {
+            if (iVar23 < 4) {
+              *(float *)((int)local_e8 + iVar16) = playerMapOffsetX + puVar8[1];
+              *(float *)((int)local_e8 + iVar16 + 4) = puVar8[2];
+              *(float *)((int)local_e8 + iVar16 + 8) = playerMapOffsetZ + puVar8[3];
+              *(float *)((int)local_130 + iVar16) = playerMapOffsetX + *(float *)(iVar10 + 4);
+              *(undefined4 *)((int)local_130 + iVar16 + 4) = *(undefined4 *)(iVar10 + 8);
+              *(float *)((int)local_130 + iVar16 + 8) = playerMapOffsetZ + *(float *)(iVar10 + 0xc);
+              *(float *)(auStack_a0 + iVar15 + 0x40) = *puVar8;
+              *(s8 *)&local_50[iVar23] = -1;
+              local_50[iVar23 + 4] = 7;
+              iVar23 = iVar23 + 1;
+              iVar15 = iVar15 + 4;
+              iVar16 = iVar16 + 0xc;
+            }
+          }
         }
         iVar3 = iVar3 + 0x18;
         puVar8 = puVar8 + 4;
         iVar10 = iVar10 + 0x10;
       }
     }
+    else {
+      local_e8[0] = *(float *)(objA + 0x18);
+      local_e8[1] = *(float *)(objA + 0x1c);
+      local_e8[2] = *(float *)(objA + 0x20);
+      local_130[0] = *(float *)(objA + 0x8c);
+      local_130[1] = *(float *)(objA + 0x90);
+      local_130[2] = *(float *)(objA + 0x94);
+      fConv = (f32)(u32)*(u8 *)(*(int *)(objA + 0x50) + 0x8f);
+      if (fConv < lbl_803DE91C) {
+        fConv = lbl_803DE91C;
+      }
+      local_60[0] = fConv;
+      *(s8 *)&local_50[0] = -1;
+      local_50[4] = 7;
+      iVar23 = 1;
+    }
     if (iVar23 != 0) {
       hitDetect_calcSweptSphereBounds(auStack_148,local_130,local_e8,local_60,iVar23);
-      hitDetectFn_800691c0(iVar5,auStack_148,(uint)*(ushort *)(iVar6 + 0xb2),1);
-      bVar4 = hitDetectFn_80067958(iVar5,local_130,local_e8,iVar23,auStack_a0,0);
+      hitDetectFn_800691c0(objB,auStack_148,(uint)*(ushort *)(iVar6 + 0xb2),1);
+      bVar4 = hitDetectFn_80067958(objB,local_130,local_e8,iVar23,auStack_a0,0);
       if (bVar4 != 0) {
         if ((bVar4 & 1) == 0) {
           if ((bVar4 & 2) == 0) {
@@ -3145,10 +3139,10 @@ void ObjHits_Update(int objectCount)
   for (slotIndex = 1; slotIndex < slotCount; slotIndex++, entrySlot++) {
     obj = (*entrySlot)->obj;
     if (((*(ObjHitsPriorityState **)(obj + 0x54))->flags & 0x200) != 0) {
-      ((void (*)(int, int))ObjHits_CheckTrackContact)(obj, obj);
+      ObjHits_CheckTrackContact(obj, obj);
       attachedObj = *(uint *)(obj + 0xc8);
       if (attachedObj != 0) {
-        ((void (*)(int, int))ObjHits_CheckTrackContact)(obj, attachedObj);
+        ObjHits_CheckTrackContact(obj, attachedObj);
       }
     }
   }
