@@ -2213,3 +2213,188 @@ void WarpPoint_update(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void objSetSlot(s16 *obj, int slot);
+extern int modelFileHeaderGetCullDistance(int hdr);
+extern void ObjAnim_SetCurrentMove(s16 *obj, int moveId, int flags);
+extern void Model_GetVertexPosition(int *model, int idx, f32 *out);
+extern void debugPrintf(char *fmt, ...);
+extern char sPushPullObjectHitpointOverflow[];
+extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ);
+extern int arrayIndexOf(int *array, int count, int value);
+extern void fn_8007FE04(int *array, int *count, int value);
+extern f32 lbl_803E358C;
+extern f32 lbl_803E35CC;
+extern f32 lbl_803E3558;
+extern f32 lbl_803E3540;
+extern f32 lbl_803E3588;
+
+#pragma scheduling off
+#pragma peephole off
+void pushable_init(s16 *obj, char *def) {
+    u8 *state;
+    int *model;
+    int *entry;
+    f32 *mtx;
+    int i;
+    char *e;
+    f32 vtx[3];
+
+    if (*(int *)(def + 0x14) == 0x30398) {
+        *(u8 *)(def + 0x23) = 1;
+    } else {
+        *(s8 *)(def + 0x23) = -1;
+    }
+    *obj = *(u8 *)(def + 0x22) << 8;
+    *(f32 *)((char *)obj + 0x10) = lbl_803E358C + *(f32 *)(def + 0xc);
+    ObjGroup_AddObject(obj, 5);
+    objSetSlot(obj, 0x5a);
+    *(void **)((char *)obj + 0xbc) = (void *)fn_8017510C;
+    state = *(u8 **)((char *)obj + 0xb8);
+    state[0xb4] = 0;
+    entry = *(int **)(*(int *)((char *)obj + 0x7c) + *(s8 *)((char *)obj + 0xad) * 4);
+    model = (int *)*entry;
+    *(int *)(state + 0xb0) = *(int *)(def + 0x1c);
+    *(f32 *)(state + 0x10) = (f32)*(u16 *)(def + 0x20) / lbl_803E35CC;
+    *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
+    *(f32 *)(state + 0xc) = *(f32 *)(state + 0x10) * (f32)(u16)modelFileHeaderGetCullDistance(*entry) + lbl_803E3558;
+    *(f32 *)(state + 0x14) = lbl_803E3528;
+    *(s16 *)(state + 0xac) = *(s16 *)(def + 0x18);
+    ObjAnim_SetCurrentMove(obj, 0, 0);
+    ObjMsg_AllocQueue(obj, 4);
+    ObjHits_EnableObject(obj);
+    {
+        f32 minY = lbl_803E3540;
+        for (i = 0; i < *(u16 *)((char *)model + 0xe4); i++) {
+            Model_GetVertexPosition(model, i, vtx);
+            if (vtx[1] < minY) {
+                minY = vtx[1];
+            }
+        }
+        for (i = 0; i < *(u16 *)((char *)model + 0xe4); i++) {
+            Model_GetVertexPosition(model, i, vtx);
+            if (vtx[1] == minY) {
+                int found = 0;
+                int j = 0;
+                u8 cnt = state[0xb4];
+
+                for (; j < (s8)cnt; j++) {
+                    char *p = (char *)state + j * 0xc;
+                    if (vtx[0] == *(f32 *)(p + 0x48) && vtx[2] == *(f32 *)(p + 0x50)) {
+                        found = 1;
+                        j = (s8)cnt;
+                    }
+                }
+                if (found == 0) {
+                    *(f32 *)(state + (s8)cnt * 0xc + 0x48) = vtx[0];
+                    *(f32 *)(state + *(s8 *)(state + 0xb4) * 0xc + 0x4c) = vtx[1];
+                    *(f32 *)(state + *(s8 *)(state + 0xb4) * 0xc + 0x50) = vtx[2];
+                    state[0xb4] += 1;
+                }
+            }
+        }
+    }
+    if (*(s8 *)(state + 0xb4) > 4) {
+        state[0xb4] = 4;
+        debugPrintf(sPushPullObjectHitpointOverflow);
+    }
+    {
+        char *mi = *(char **)((char *)obj + 0x58);
+        mtx = (f32 *)(mi + ((*(u8 *)(mi + 0x10c) + 2) << 4) * 4);
+    }
+    i = 0;
+    e = (char *)state;
+    {
+        f32 zero = lbl_803E3528;
+        for (; i < *(s8 *)(state + 0xb4); i++) {
+            f32 v;
+            *(f32 *)(e + 0x18) = *(f32 *)(e + 0x48);
+            *(f32 *)(e + 0x1c) = *(f32 *)(e + 0x4c);
+            *(f32 *)(e + 0x20) = *(f32 *)(e + 0x50);
+            v = *(f32 *)(e + 0x18);
+            if (v < zero) {
+                *(f32 *)(e + 0x18) = v + lbl_803E358C;
+            } else {
+                *(f32 *)(e + 0x18) = v - lbl_803E358C;
+            }
+            v = *(f32 *)(e + 0x20);
+            if (v < zero) {
+                *(f32 *)(e + 0x20) = v + lbl_803E358C;
+            } else {
+                *(f32 *)(e + 0x20) = v - lbl_803E358C;
+            }
+            v = *(f32 *)(e + 0x48);
+            if (v < zero) {
+                *(f32 *)(e + 0x48) = v + lbl_803E3588;
+            } else {
+                *(f32 *)(e + 0x48) = v - lbl_803E3588;
+                state[0x104] = i;
+            }
+            v = *(f32 *)(e + 0x50);
+            if (v < zero) {
+                *(f32 *)(e + 0x50) = v + lbl_803E3588;
+            } else {
+                *(f32 *)(e + 0x50) = v - lbl_803E3588;
+                state[0x102] = i;
+            }
+            Matrix_TransformPoint(mtx, *(f32 *)(e + 0x18), *(f32 *)(e + 0x1c), *(f32 *)(e + 0x20),
+                                  (f32 *)(e + 0x78), (f32 *)(e + 0x7c), (f32 *)(e + 0x80));
+            e += 0xc;
+        }
+    }
+    i = 0;
+    e = (char *)state;
+    for (; i < *(s8 *)(state + 0xb4); i++) {
+        if (i != state[0x104] && *(f32 *)(e + 0x48) < lbl_803E3528) {
+            if ((int)*(f32 *)(e + 0x50) == (int)*(f32 *)(state + state[0x104] * 0xc + 0x50)) {
+                state[0x105] = i;
+            }
+        }
+        if (i != state[0x102] && *(f32 *)(e + 0x50) < lbl_803E3528) {
+            if ((int)*(f32 *)(e + 0x48) == (int)*(f32 *)(state + state[0x102] * 0xc + 0x48)) {
+                state[0x103] = i;
+            }
+        }
+        e += 0xc;
+    }
+    state[0x146] = 1;
+    switch (*(s16 *)((char *)obj + 0x46)) {
+    case 0x21e:
+        fn_80174A80(obj, state);
+        break;
+    case 0x411:
+        fn_80174A80(obj, state);
+        break;
+    case 0x7df:
+        fn_80174588(obj, state);
+        break;
+    case 0x1cb:
+        if (*(s16 *)(def + 0x18) > -1 && GameBit_Get(*(s16 *)(def + 0x18)) != 0) {
+            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x81;
+            *(u8 *)((char *)obj + 0xaf) = *(u8 *)((char *)obj + 0xaf) | 8;
+            pushable_savePos((int *)obj);
+        }
+        state[0x146] = 0;
+        break;
+    default:
+        if (*(s16 *)(def + 0x18) > -1 && GameBit_Get(*(s16 *)(def + 0x18)) != 0) {
+            *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 1;
+        }
+        break;
+    }
+    {
+        char *r = *(char **)((char *)obj + 0x64);
+        if (r != NULL) {
+            *(u32 *)(r + 0x30) = *(u32 *)(r + 0x30) | 0xa10;
+            (*(char **)((char *)obj + 0x64))[0x3a] = 0x60;
+            (*(char **)((char *)obj + 0x64))[0x3b] = 0x40;
+        }
+    }
+    *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 0x40;
+    if (arrayIndexOf(lbl_803AC6E0, lbl_803DDAB8, *(int *)(def + 0x14)) != -1) {
+        *(u16 *)(state + 0x100) = *(u16 *)(state + 0x100) | 1;
+        fn_8007FE04(lbl_803AC6E0, &lbl_803DDAB8, *(int *)(def + 0x14));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
