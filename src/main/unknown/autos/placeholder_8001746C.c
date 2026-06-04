@@ -18230,3 +18230,57 @@ int fn_80018ED4(u8 *str, u32 target, int *out) {
     return 0;
 }
 #pragma pop
+
+typedef struct {
+    int f0, f4, f8, fc, f10;
+} MRIState;
+extern void modelRenderInstrsState_init(MRIState *state, u8 *data, int bits, int bits2);
+extern u8 *modelRenderFn_80006744(u8 *p, int count, MRIState *state, int stride);
+extern u8 *fn_80006B1C(MRIState *src, MRIState *dst, int count, int gap);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void ObjModel_UnpackResourcePayload(u8 *src, int srcSize, u8 *dst, int dstSize) {
+    MRIState dstState;
+    MRIState srcState;
+    u8 *dstBits;
+    u8 *srcBits;
+    int vertBits;
+    u8 *p;
+    u8 *end;
+    int v;
+    int t;
+
+    memcpy(dst, src, *(u16 *)(src + 2));
+    srcBits = src + *(u16 *)(dst + 2);
+    dstBits = dst + *(u16 *)(dst + 2);
+    vertBits = dst[8] << 3;
+    modelRenderInstrsState_init(&dstState, dstBits, (dstSize - *(u16 *)(dst + 2)) << 3,
+                                (dstSize - *(u16 *)(dst + 2)) << 3);
+    modelRenderInstrsState_init(&srcState, srcBits, (srcSize - *(u16 *)(dst + 2)) << 3,
+                                (srcSize - *(u16 *)(dst + 2)) << 3);
+    memset(dstBits, 0, dstSize - *(u16 *)(dst + 2));
+    p = dst + 0xa;
+    end = dst + *(u16 *)(dst + 2);
+    while (p < end) {
+        v = *(s16 *)p;
+        p += 2;
+        t = v & 0xF;
+        if (t != 0) {
+            if (t < 0) {
+                srcBits = fn_80006B1C(&srcState, &dstState, dst[7], vertBits);
+            } else {
+                srcBits = modelRenderFn_80006744(srcBits, dst[7], &dstState, vertBits);
+            }
+        }
+    }
+    *(u16 *)dst &= ~0x20;
+    if (*(u16 *)(dst + 4) != 0) {
+        u32 oldOff = *(u16 *)(dst + 4);
+        *(u16 *)(dst + 4) = *(u16 *)(dst + 2) + (vertBits >> 3) * (dst[7] + 2);
+        *(u16 *)(dst + 4) = (*(u16 *)(dst + 4) + 7) & ~7;
+        memcpy(dst + *(u16 *)(dst + 4), src + *(u16 *)(src + 4), srcSize - oldOff);
+    }
+}
+#pragma pop
