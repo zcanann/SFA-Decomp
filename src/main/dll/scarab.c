@@ -988,6 +988,78 @@ int fn_8015E5DC(short *obj, u8 *p)
   return 0;
 }
 
+int fn_8015DF20(int obj, u8 *p)
+{
+  extern int *gPlayerInterface;
+  extern void Obj_FreeObject(int *obj);
+  extern f32 lbl_803E2DC8;
+  int sub = *(int *)(obj + 0xb8);
+  f32 *v;
+  f32 z;
+
+  if (*(char *)(p + 0x27b) != '\0') {
+    v = *(f32 **)(sub + 0x40c);
+    z = lbl_803E2DC8;
+    v[0] = z;
+    v[1] = z;
+    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 6);
+    *(int *)(p + 0x2d0) = 0;
+    *(s8 *)(p + 0x25f) = 0;
+    *(s8 *)(p + 0x349) = 0;
+    ObjHits_DisableObject(obj);
+    *(u8 *)(obj + 0xaf) |= 8;
+  } else if (*(char *)(p + 0x346) != '\0') {
+    ObjMsg_SendToObjects(0, 3, obj, 0xe0000, obj);
+    if (*(void **)(obj + 0x4c) == NULL) {
+      Obj_FreeObject((int *)obj);
+      return 0;
+    }
+    return 4;
+  }
+  return 0;
+}
+
+int fn_8015E0C8(int obj, u8 *p)
+{
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern int Obj_GetPlayerObject(void);
+  extern void Sfx_PlayFromObject(int obj, int sfx);
+  extern int *gBaddieControlInterface;
+  extern f32 lbl_803E2DC8;
+  extern f32 lbl_803E2DCC;
+  extern f32 lbl_803E2DD0;
+  int sub;
+  f32 spd;
+
+  sub = *(int *)(obj + 0xb8);
+  *(s8 *)(p + 0x34d) = 3;
+  *(f32 *)(p + 0x2a0) = lbl_803E2DCC;
+  spd = lbl_803E2DC8;
+  *(f32 *)(p + 0x280) = spd;
+  *(f32 *)(p + 0x284) = spd;
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjAnim_SetCurrentMove(obj, 1, spd, 0);
+    *(s8 *)(p + 0x346) = 0;
+  }
+  if ((*(u8 *)(p + 0x356) & 1) == 0) {
+    if (*(s16 *)(Obj_GetPlayerObject() + 0x46) != 0) {
+      Sfx_PlayFromObject(obj, SFXfoot_metal_run_2);
+    } else {
+      Sfx_PlayFromObject(obj, SFXfox_treadwater322);
+    }
+    Sfx_PlayFromObject(obj, SFXdoor_unlocked);
+    Sfx_PlayFromObject(obj, SFXfoxcom_find);
+    *(u8 *)(p + 0x356) |= 1;
+  }
+  if ((*(u8 *)(p + 0x356) & 2) == 0 && *(f32 *)(obj + 0x98) > lbl_803E2DD0) {
+    Sfx_PlayFromObject(obj, SFXdoor_creak);
+    *(u8 *)(p + 0x356) |= 2;
+    (*(void (**)(int, int, int, int))(*(int *)gBaddieControlInterface + 0x4c))(
+        obj, *(s16 *)(sub + 0x3f0), -1, 0);
+  }
+  return 0;
+}
+
 int fn_8015E798(int obj, u8 *p)
 {
   extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
@@ -1003,7 +1075,7 @@ int fn_8015E798(int obj, u8 *p)
     ObjAnim_SetCurrentMove(obj, 14, lbl_803E2DC8, 0);
     *(s8 *)(p + 0x346) = 0;
   }
-  if (lbl_803E2DE4 < *(f32 *)(obj + 0x98)) {
+  if (*(f32 *)(obj + 0x98) > lbl_803E2DE4) {
     hit = *(u8 **)(sub + 0x40c);
     hit[8] |= 2;
   }
@@ -3804,8 +3876,8 @@ extern int fn_8015E5DC(short* out, u8* obj);
 extern int fn_8015E520(int* obj, u8* state);
 extern int fn_8015E3A0(int obj, int state);
 extern int fn_8015E210(int* obj, u8* state);
-extern int fn_8015E0C8(int* obj, u8* state);
-extern int fn_8015DF20(int* obj, u8* state);
+extern int fn_8015E0C8(int obj, u8* state);
+extern int fn_8015DF20(int obj, u8* state);
 extern int fn_8015DC04(int* obj, u8* state);
 
 void dll_CE_initialise(void)
