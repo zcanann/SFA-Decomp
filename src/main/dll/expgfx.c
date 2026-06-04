@@ -750,9 +750,7 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
   int ambRPlus1;
   int ambGPlus1;
   int ambBPlus1;
-  u8 ambScaledR;
-  u8 ambScaledG;
-  u8 ambScaledB;
+  u8 ambScaled[3];
   ExpgfxRotateParams rot;
   f32 vecBuf[3];
   f32 camDir[3];
@@ -791,9 +789,9 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
     camScale = lbl_803DF3D0;
   }
   getAmbientColor(sky, &ambR8, &ambG8, &ambB8);
-  ambScaledR = (int)((f32)ambR8 * camScale);
-  ambScaledG = (int)((f32)ambG8 * camScale);
-  ambScaledB = (int)((f32)ambB8 * camScale);
+  ambScaled[2] = (int)((f32)ambR8 * camScale);
+  ambScaled[1] = (int)((f32)ambG8 * camScale);
+  ambScaled[0] = (int)((f32)ambB8 * camScale);
 
   next = 0;
   scan = (s8 *)(runtimeBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
@@ -836,9 +834,9 @@ foundFirst:
       playerRange = fn_8029610C(player);
     }
     prefetched = 0;
-    ambRPlus1 = ambScaledR + 1;
-    ambGPlus1 = ambScaledG + 1;
-    ambBPlus1 = ambScaledB + 1;
+    ambRPlus1 = ambScaled[2] + 1;
+    ambGPlus1 = ambScaled[1] + 1;
+    ambBPlus1 = ambScaled[0] + 1;
     boundsMin = lbl_803DF3D4;
     boundsMax = lbl_803DF3D8;
     while (pool > -1) {
@@ -1260,9 +1258,9 @@ foundFirst:
             quad[0].colorG = ambG8;
             quad[0].colorB = ambB8;
           } else if ((slot->renderFlags & 0x800000) != 0) {
-            quad[0].colorR = ambScaledR;
-            quad[0].colorG = ambScaledG;
-            quad[0].colorB = ambScaledB;
+            quad[0].colorR = ambScaled[2];
+            quad[0].colorG = ambScaled[1];
+            quad[0].colorB = ambScaled[0];
           }
           if ((slot->renderFlags & 0x200000) != 0) {
             f32 sx;
