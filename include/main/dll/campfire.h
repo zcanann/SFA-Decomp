@@ -16,7 +16,7 @@ void kaldachom_free(int param_1);
 void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void kaldachom_hitDetect(void);
 void kaldachom_update(int param_1);
-void kaldachom_init(undefined4 param_1,undefined4 param_2,int param_3);
+void kaldachom_init(int obj, int data, int skip_alloc);
 void kaldachom_release(void);
 void kaldachom_initialise(void);
 

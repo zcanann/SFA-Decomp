@@ -608,49 +608,42 @@ void kaldachom_update(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void kaldachom_init(undefined4 param_1,undefined4 param_2,int param_3)
+void kaldachom_init(int obj, int data, int skip_alloc)
 {
-  double dVar1;
-  int iVar2;
-  uint uVar3;
-  undefined4 uVar4;
-  undefined4 *puVar5;
-  int iVar6;
-  undefined8 uVar7;
+  int initMode;
+  f32 *pathData;
+  int state;
+  int player;
 
-  uVar7 = _savegpr_27();
-  iVar2 = (int)((ulonglong)uVar7 >> 0x20);
-  iVar6 = *(int *)(iVar2 + 0xb8);
-  uVar4 = 6;
-  if (param_3 != 0) {
-    uVar4 = 7;
+  state = *(int *)(obj + 0xb8);
+  initMode = 6;
+  if (skip_alloc != 0) {
+    initMode = 7;
   }
-  (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,iVar2,(int)uVar7,iVar6,8,6,0,uVar4);
-  *(undefined4 *)(iVar2 + 0xbc) = 0;
-  puVar5 = *(undefined4 **)(iVar6 + 0x40c);
-  ObjAnim_SetCurrentMove(iVar2,4,lbl_803E3060,0x10);
-  *(float *)(iVar2 + 0x98) = lbl_803E307C;
-  *(byte *)(iVar2 + 0xaf) = *(byte *)(iVar2 + 0xaf) | 8;
-  (**(code **)(*gPlayerInterface + 0x14))(iVar2,iVar6,0);
-  *(undefined2 *)(iVar6 + 0x270) = 0;
-  *(float *)(iVar6 + 0x2a0) = lbl_803E307C;
-  *(float *)(iVar6 + 0x280) = lbl_803E3060;
-  uVar4 = Obj_GetPlayerObject();
-  *(undefined4 *)(iVar6 + 0x2d0) = uVar4;
-  *(undefined *)(iVar6 + 0x25f) = 0;
-  ObjHits_DisableObject(iVar2);
-  puVar5[0xd] = (f32)(int)randomGetRange(300,600);
-  dVar1 = DOUBLE_803E3070;
-  puVar5[0xe] = (f32)(int)randomGetRange(0,499);
-  puVar5[0xf] = lbl_803E3060;
-  *puVar5 = 0;
-  *(ushort *)(iVar2 + 0xb0) = *(ushort *)(iVar2 + 0xb0) | 0x2000;
-  *(f32 *)(iVar2 + 8) = lbl_803E30A0 + (f32)(s32)*(s8 *)((int)uVar7 + 0x28) / lbl_803E30A4;
-  ObjHitbox_SetSphereRadius(iVar2,(int)(lbl_803E30CC * *(float *)(iVar2 + 8)));
-  if (param_3 == 0) {
+  (**(code **)(*gBaddieControlInterface + 0x58))((double)lbl_803E30C8,obj,data,state,8,6,0,initMode);
+  *(undefined4 *)(obj + 0xbc) = 0;
+  pathData = *(f32 **)(state + 0x40c);
+  ObjAnim_SetCurrentMove(obj,4,lbl_803E3060,0x10);
+  *(float *)(obj + 0x98) = lbl_803E307C;
+  *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
+  (**(code **)(*gPlayerInterface + 0x14))(obj,state,0);
+  *(undefined2 *)(state + 0x270) = 0;
+  *(float *)(state + 0x2a0) = lbl_803E307C;
+  *(float *)(state + 0x280) = lbl_803E3060;
+  player = Obj_GetPlayerObject();
+  *(int *)(state + 0x2d0) = player;
+  *(undefined *)(state + 0x25f) = 0;
+  ObjHits_DisableObject(obj);
+  pathData[0xd] = (f32)(int)randomGetRange(300,600);
+  pathData[0xe] = (f32)(int)randomGetRange(0,499);
+  pathData[0xf] = lbl_803E3060;
+  *(int *)pathData = 0;
+  *(ushort *)(obj + 0xb0) = *(ushort *)(obj + 0xb0) | 0x2000;
+  *(f32 *)(obj + 8) = lbl_803E30A0 + (f32)(s32)*(s8 *)(data + 0x28) / lbl_803E30A4;
+  ObjHitbox_SetSphereRadius(obj,(int)(lbl_803E30CC * *(float *)(obj + 8)));
+  if (skip_alloc == 0) {
     lbl_803DDA90 = (undefined4 *)Resource_Acquire(0x5a,1);
   }
-  _restgpr_27();
   return;
 }
 
