@@ -707,6 +707,25 @@ typedef union PressureSwitchIntToDouble {
     f64 value;
 } PressureSwitchIntToDouble;
 
+#define SWARMBADDIE_FLAG_PATH_NEEDS_LINK 0x01
+#define SWARMBADDIE_FLAG_CHASE_PLAYER 0x02
+#define SWARMBADDIE_FLAG_RETURN_TO_PATH 0x04
+
+typedef struct SwarmBaddieState {
+    int curve;
+    int player;
+    f32 curveStep;
+    f32 playerDistance;
+    f32 pathDistance;
+    f32 chaseRadius;
+    f32 hitVolumeEnvelope;
+    u8 flags;
+    u8 pad1d;
+    s16 yawWavePhase;
+    s16 rollWavePhase;
+    u8 pad22[2];
+} SwarmBaddieState;
+
 #pragma scheduling off
 #pragma peephole off
 void fn_8014E1DC(int obj, int *state) {
@@ -929,7 +948,7 @@ void wispbaddie_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if 
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8014EE8C(int obj, int *state)
+void fn_8014EE8C(int obj, SwarmBaddieState *state)
 {
     int curve;
     int done;
@@ -938,17 +957,17 @@ void fn_8014EE8C(int obj, int *state)
     f32 wave;
     PressureSwitchIntToDouble angleAsDouble;
 
-    curve = state[0];
-    done = curveFn_80010320(curve, *(f32 *)(state + 2));
+    curve = state->curve;
+    done = curveFn_80010320(curve, state->curveStep);
     if (((done != 0) || (*(int *)(curve + 0x10) != lbl_803DDA60)) &&
         ((*(u8(**)(int))(*gRomCurveInterface + 0x90))(curve) != 0) &&
         ((*(u8(**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
-             state[0], obj, lbl_803E2678, &lbl_803DBC78, -1) != 0)) {
-        *(u8 *)(state + 7) &= 0xfe;
+             state->curve, obj, lbl_803E2678, &lbl_803DBC78, -1) != 0)) {
+        state->flags &= ~SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
     }
     lbl_803DDA60 = *(int *)(curve + 0x10);
     step = lbl_803E267C;
-    if ((*(u8 *)(state + 7) & 2) == 0) {
+    if ((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) == 0) {
         *(f32 *)(obj + 0x24) = step * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc)) +
                                *(f32 *)(obj + 0x24);
         *(f32 *)(obj + 0x28) = step * (*(f32 *)(curve + 0x6c) - *(f32 *)(obj + 0x10)) +
@@ -956,7 +975,7 @@ void fn_8014EE8C(int obj, int *state)
         *(f32 *)(obj + 0x2c) = step * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14)) +
                                *(f32 *)(obj + 0x2c);
     } else {
-        player = state[1];
+        player = state->player;
         *(f32 *)(obj + 0x24) = step * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc)) +
                                *(f32 *)(obj + 0x24);
         *(f32 *)(obj + 0x28) =
@@ -993,17 +1012,16 @@ void fn_8014EE8C(int obj, int *state)
     objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
             *(f32 *)(obj + 0x2c) * timeDelta);
 
-    *(s16 *)((u8 *)state + 0x1e) =
-        *(s16 *)((u8 *)state + 0x1e) + (s16)(int)(lbl_803E2690 * timeDelta);
-    *(s16 *)(state + 8) = *(s16 *)(state + 8) + (s16)(int)(lbl_803E2694 * timeDelta);
+    state->yawWavePhase = state->yawWavePhase + (s16)(int)(lbl_803E2690 * timeDelta);
+    state->rollWavePhase = state->rollWavePhase + (s16)(int)(lbl_803E2694 * timeDelta);
 
     angleAsDouble.bits =
-        CONCAT44(0x43300000, (s32)*(s16 *)((u8 *)state + 0x1e) ^ 0x80000000);
+        CONCAT44(0x43300000, (s32)state->yawWavePhase ^ 0x80000000);
     wave = fn_80293E80((lbl_803E26A0 * (f32)(angleAsDouble.value - lbl_803E26A8)) /
                        lbl_803E26A4);
     *(s16 *)obj = *(s16 *)obj + (s16)(int)(lbl_803E2698 * (lbl_803E269C * wave));
 
-    angleAsDouble.bits = CONCAT44(0x43300000, (s32)*(s16 *)(state + 8) ^ 0x80000000);
+    angleAsDouble.bits = CONCAT44(0x43300000, (s32)state->rollWavePhase ^ 0x80000000);
     wave = fn_80293E80((lbl_803E26A0 * (f32)(angleAsDouble.value - lbl_803E26A8)) /
                        lbl_803E26A4);
     *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + (s16)(int)(lbl_803E2698 * (lbl_803E269C * wave));
@@ -1170,7 +1188,7 @@ void swarmbaddie_update(int obj)
         (*(f32 *)(state + 3) < *(f32 *)(state + 5))) {
         *(u8 *)(state + 7) |= 2;
     }
-    fn_8014EE8C(obj, state);
+    fn_8014EE8C(obj, (SwarmBaddieState *)state);
 }
 
 #pragma scheduling off
