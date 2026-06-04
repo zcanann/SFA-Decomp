@@ -860,467 +860,366 @@ void minimapFn_8012310c(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void hudDrawButtons(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+extern void GXSetScissor(int x, int y, int w, int h);
+extern void hudDrawCMenu(int a, int b, int c);
+extern int gameTextGet(int textId);
+extern void gameTextMeasureFn_800163c4(char *str, int n, int a, int b, int *x0, int *x1, int *y0, int *y1);
+extern void drawScaledTexture(f32 x, f32 y, int texture, u8 alpha, int arg, int w, int h, int mode);
+extern void textureFree(int texture);
+extern int textureLoadAsset(int id);
+extern void fn_8005D118(int a, int b, int c, int d, int e);
+extern s16 cMenuFadeCounter;
+extern int lbl_803DD8B0;
+extern int lbl_803DD8B4;
+extern s8 lbl_803DD8B6;
+extern s16 lbl_803DD796;
+extern u8 lbl_803DD848[7];
+extern u8 lbl_803DD8D4;
+extern int hudYButtonItemIconTexture;
+extern s16 yButtonItemTextureId;
+extern s16 lbl_803DD876;
+extern u16 aButtonIcon;
+extern u16 prevAButtonIcon;
+extern u8 bButtonIcon;
+extern u8 lbl_803DD7B0;
+extern u8 lbl_803DD7B1;
+extern u8 lbl_803DD7B2;
+extern u8 lbl_803DD87C;
+extern f32 lbl_803DD878;
+extern f32 lbl_803DD7E8;
+extern f32 lbl_803DBA74;
+extern f32 lbl_803DBA78;
+extern f32 lbl_803DBA7C;
+extern f32 lbl_803DBA80;
+extern f32 lbl_803DBA84;
+extern s16 lbl_803DBACC;
+extern s16 lbl_803DBACE;
+extern u8 lbl_8031B6F0[];
+extern char lbl_803DBB5C;
+extern u32 lbl_803E1E18;
+extern f64 lbl_803E1EA8;
+extern f32 lbl_803E1FB4;
+extern f32 lbl_803E1FCC;
+extern f32 lbl_803E1FD0;
+extern f32 lbl_803E1FD4;
+extern f32 lbl_803E1FD8;
+extern f32 lbl_803E1FDC;
+extern f32 lbl_803E1FE0;
+extern f32 lbl_803E1FE4;
+extern f32 lbl_803E1FE8;
+extern f32 lbl_803E1FEC;
+extern f32 lbl_803E1FF0;
+extern f32 lbl_803E1FF4;
+extern f32 lbl_803E1FF8;
+extern f32 lbl_803E1FFC;
+extern f32 lbl_803E2000;
+extern f32 lbl_803E2004;
+extern f32 lbl_803E200C;
+extern f32 lbl_803E2008;
+extern f32 lbl_803E2010;
+extern f32 lbl_803E2014;
+extern f32 lbl_803E2018;
+
+extern void *memset(void *dst, int val, u32 n);
+#pragma intrinsic(memset)
+void hudDrawButtons(int param1, int param2, int param3)
 {
-  float fVar1;
-  short sVar2;
-  int iVar3;
-  short sVar4;
-  int iVar5;
-  ushort *puVar6;
-  int extraout_r4;
-  int extraout_r4_00;
-  int extraout_r4_01;
-  char *pcVar7;
-  int iVar8;
-  int iVar9;
-  undefined4 uVar10;
-  byte bVar11;
-  int iVar12;
-  int iVar13;
-  int iVar14;
-  byte *pbVar15;
-  uint uVar16;
-  uint uVar17;
-  uint uVar18;
-  double dVar19;
-  undefined8 extraout_f1;
-  undefined8 uVar20;
-  double dVar21;
-  double dVar22;
-  undefined8 uVar23;
-  int iStack_d8;
-  int iStack_d4;
-  int iStack_d0;
-  int iStack_cc;
-  int iStack_c8;
-  int iStack_c4;
-  int iStack_c0;
-  int iStack_bc;
-  int iStack_b8;
-  int iStack_b4;
-  int local_b0;
-  int local_ac;
-  undefined4 local_a8;
-  char local_a4 [68];
-  undefined8 local_60;
-  undefined8 local_58;
-  undefined8 local_50;
-  undefined8 local_48;
-  
-  uVar23 = FUN_80286820();
-  iVar9 = (int)uVar23;
-  uVar10 = param_11;
-  uVar20 = extraout_f1;
-  iVar5 = FUN_80017a98();
-  sVar2 = DAT_803de418;
-  local_a8 = DAT_803e2a98;
-  uVar16 = 0;
-  if ((DAT_803de418 != 0) && (DAT_803de413 != '\0')) {
-    iVar13 = 3;
-    iVar12 = 1;
-    iVar9 = 0;
-    if (0 < DAT_803de530) {
-      if (8 < DAT_803de530) {
-        pcVar7 = local_a4;
-        uVar17 = DAT_803de530 - 1U >> 3;
-        if (0 < DAT_803de530 + -8) {
-          do {
-            *pcVar7 = '\0';
-            pcVar7[1] = '\0';
-            pcVar7[2] = '\0';
-            pcVar7[3] = '\0';
-            pcVar7[4] = '\0';
-            pcVar7[5] = '\0';
-            pcVar7[6] = '\0';
-            pcVar7[7] = '\0';
-            pcVar7 = pcVar7 + 8;
-            iVar9 = iVar9 + 8;
-            uVar17 = uVar17 - 1;
-          } while (uVar17 != 0);
+  u8 *base;
+  void *player;
+  s16 fade;
+  int slotCount;
+  int sel;
+  int k;
+  int i;
+  int yOff;
+  u8 *iconPtr;
+  s16 rowFade;
+  s16 alpha;
+  u16 a16;
+  int prevCharset;
+  int prevCharset2;
+  int textObj;
+  int textPtr;
+  u32 glyph;
+  int wid;
+  u8 bi;
+  u32 icon;
+  f32 scaleT;
+  f32 cur;
+  f32 next;
+  int mx0[1];
+  int mx1[1];
+  int my0[1];
+  int my1[1];
+  int bx0[1];
+  int bx1[1];
+  int by0[1];
+  int by1[1];
+  u32 label;
+  char slots[68];
+
+  base = (u8 *)lbl_803A87F0;
+  player = Obj_GetPlayerObject();
+  fade = cMenuFadeCounter;
+  label = lbl_803E1E18;
+  icon = 0;
+  if ((cMenuFadeCounter != 0) && (cMenuEnabled != 0)) {
+    slotCount = 3;
+    sel = 1;
+    memset(slots, 0, lbl_803DD8B0);
+    memset(slots + lbl_803DD8B0, 1, 3 - lbl_803DD8B0);
+    if (lbl_803DD8B0 < 3) {
+      lbl_803DD8B0 = 3;
+    }
+    if (lbl_803DD796 > 0) {
+      sel = 2;
+      slotCount = 4;
+      if (lbl_803DD796 > 0x32) {
+        sel = 3;
+      }
+    }
+    else if ((lbl_803DD796 < 0) && (slotCount = 4, lbl_803DD796 < -0x32)) {
+      sel = 0;
+    }
+    k = lbl_803DD8B4 - sel;
+    if (k < 0) {
+      k = k + lbl_803DD8B0;
+    }
+    if (lbl_803DD8B0 <= k) {
+      k = k - lbl_803DD8B0;
+    }
+    yOff = fade;
+    for (i = 0; i < 7; i++) {
+      ((int *)(base + 0xBD4))[i] = 0;
+      lbl_803DD848[i] = 0;
+      ((int *)(base + 0xBB8))[i] = 0;
+    }
+    for (i = 0; i < slotCount; i++) {
+      if (slots[k] == 0) {
+        GXSetScissor(0, 0, 0x280, 0x1E0);
+        ((int *)(base + 0xBD4))[(i + 3) - sel] = ((int *)(base + 0x9C8))[k];
+        ((int *)(base + 0xBB8))[(i + 3) - sel] = ((u8 *)(base + 0x488))[k];
+        if (((u8 *)(base + 0x448))[k] > 1) {
+          lbl_803DD848[(i + 3) - sel] = ((u8 *)(base + 0x448))[k];
         }
       }
-      pcVar7 = local_a4 + iVar9;
-      iVar3 = DAT_803de530 - iVar9;
-      if (iVar9 < DAT_803de530) {
-        do {
-          *pcVar7 = '\0';
-          pcVar7 = pcVar7 + 1;
-          iVar3 = iVar3 + -1;
-        } while (iVar3 != 0);
+      k = k + 1;
+      if (lbl_803DD8B0 <= k) {
+        k = k - lbl_803DD8B0;
       }
     }
-    pcVar7 = local_a4 + DAT_803de530;
-    uVar17 = 3 - DAT_803de530;
-    if (DAT_803de530 < 3) {
-      uVar18 = uVar17 >> 3;
-      if (uVar18 != 0) {
-        do {
-          builtin_strncpy(pcVar7,"\x01\x01\x01\x01\x01\x01\x01\x01",8);
-          pcVar7 = pcVar7 + 8;
-          uVar18 = uVar18 - 1;
-        } while (uVar18 != 0);
-        uVar17 = uVar17 & 7;
-        if (uVar17 == 0) goto LAB_80123640;
+    GXSetScissor(0, 0, 0x280, 0x1E0);
+    hudDrawCMenu(param1, param2, param3);
+    iconPtr = lbl_803DD848;
+    for (i = 0; i < 7; i++) {
+      if (*iconPtr > 1) {
+        rowFade = lbl_803DD796 + (s16)(i * 0x32);
+        alpha = fade;
+        if (rowFade < lbl_803DBACC) {
+          alpha = fade + (rowFade - lbl_803DBACC) * 8;
+        }
+        if (lbl_803DBACE < rowFade) {
+          alpha = alpha + (rowFade - lbl_803DBACE) * -8;
+        }
+        if (alpha < 0) {
+          alpha = 0;
+        }
+        if (alpha > 0xFF) {
+          alpha = 0xFF;
+        }
+        a16 = alpha * lbl_803DD8D4 / 0xFF;
+        GXSetScissor(0, 0, 0x280, 0x1E0);
+        sprintf((char *)&label, &lbl_803DBB58, *iconPtr);
+        gameTextSetColor(0, 0, 0, a16 & 0xFF);
+        gameTextShowStr((char *)&label, 0x93, 0x247, lbl_803DD796 + i * 0x32 + 0x2B);
+        gameTextSetColor(0xFF, 0xFF, 0xFF, a16 & 0xFF);
+        gameTextShowStr((char *)&label, 0x93, 0x246, lbl_803DD796 + i * 0x32 + 0x2A);
       }
-      do {
-        *pcVar7 = '\x01';
-        pcVar7 = pcVar7 + 1;
-        uVar17 = uVar17 - 1;
-      } while (uVar17 != 0);
+      iconPtr = iconPtr + 1;
     }
-LAB_80123640:
-    if (DAT_803de530 < 3) {
-      DAT_803de530 = 3;
-    }
-    if (DAT_803de416 < 1) {
-      if ((DAT_803de416 < 0) && (iVar13 = 4, DAT_803de416 < -0x32)) {
-        iVar12 = 0;
+    drawTexture(lbl_803E1FCC, lbl_803E1FD0, *(int *)(base + 0x244), fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100);
+    drawScaledTexture(lbl_803E1FD4, lbl_803E1FD0, *(int *)(base + 0x244), fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100, 0x12, 10, 1);
+    drawScaledTexture(lbl_803E1FCC, lbl_803E1FD8, *(int *)(base + 0x244), fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100, 0x12, 10, 2);
+    drawScaledTexture(lbl_803E1FD4, lbl_803E1FD8, *(int *)(base + 0x244), fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100, 0x12, 10, 3);
+    if ((player != NULL) && (objIsCurModelNotZero(player) != 0)) {
+      if (lbl_803DD8B6 == 1) {
+        icon = 0x5A;
       }
+      else if (lbl_803DD8B6 < 1) {
+        if (lbl_803DD8B6 > -1) {
+          icon = 0x59;
+        }
+      }
+      else if (lbl_803DD8B6 < 3) {
+        icon = 0x58;
+      }
+      drawTexture(lbl_803E1FDC, lbl_803E1FB4, ((int *)(base + 0x1C0))[icon], fade * lbl_803DD8D4 / 0xFF & 0xFF, 0x100);
+    }
+  }
+  if ((hudYButtonItemIconTexture != 0) && (lbl_803DD876 != yButtonItemTextureId)) {
+    textureFree(hudYButtonItemIconTexture);
+    lbl_803DD876 = -1;
+    hudYButtonItemIconTexture = 0;
+  }
+  if ((hudYButtonItemIconTexture == 0) && (yButtonItemTextureId > 0)) {
+    lbl_803DD876 = yButtonItemTextureId;
+    hudYButtonItemIconTexture = textureLoadAsset(yButtonItemTextureId);
+  }
+  if (lbl_803DD83C != lbl_803E1E3C) {
+    drawTexture(lbl_803E1FE0, lbl_803E1F9C, ((int *)(base + 0x1C0))[0], (int)lbl_803DD83C, 0x100);
+    drawTexture(lbl_803E1FE4, lbl_803E1FE8, ((int *)(base + 0x1C0))[1], (int)lbl_803DD83C, 0x100);
+    drawTexture(lbl_803E1FEC, lbl_803E1FF0, ((int *)(base + 0x1C0))[2], (int)lbl_803DD83C, 0x100);
+    if ((lbl_803DD7B1 & 8) == 0) {
+      drawTexture(lbl_803E1FF4, lbl_803E1FF8, ((int *)(base + 0x1C0))[9], (int)lbl_803DD83C, 0x100);
+    }
+    if ((aButtonIcon == 0) || (aButtonIcon == 0x1C)) {
+      drawTexture(lbl_803E1FCC, lbl_803E1FFC, ((int *)(base + 0x1C0))[3], (int)lbl_803DD83C, 0x100);
+      prevAButtonIcon = 0;
+      lbl_803DD7B1 = 0;
     }
     else {
-      iVar12 = 2;
-      iVar13 = 4;
-      if (0x32 < DAT_803de416) {
-        iVar12 = 3;
+      if (aButtonIcon != prevAButtonIcon) {
+        lbl_803DD7B1 = 0x3F;
       }
-    }
-    iVar9 = DAT_803de534 - iVar12;
-    if (iVar9 < 0) {
-      iVar9 = iVar9 + DAT_803de530;
-    }
-    if (DAT_803de530 <= iVar9) {
-      iVar9 = iVar9 - DAT_803de530;
-    }
-    iVar3 = (int)DAT_803de418;
-    DAT_803aa024 = 0;
-    pbVar15 = &DAT_803de4c8;
-    DAT_803de4c8 = 0;
-    DAT_803aa008 = 0;
-    DAT_803aa028 = 0;
-    uRam803de4c9 = 0;
-    DAT_803aa00c = 0;
-    DAT_803aa02c = 0;
-    uRam803de4ca = 0;
-    DAT_803aa010 = 0;
-    DAT_803aa030 = 0;
-    uRam803de4cb = 0;
-    DAT_803aa014 = 0;
-    DAT_803aa034 = 0;
-    uRam803de4cc = 0;
-    DAT_803aa018 = 0;
-    DAT_803aa038 = 0;
-    uRam803de4cd = 0;
-    DAT_803aa01c = 0;
-    DAT_803aa03c = 0;
-    uRam803de4ce = 0;
-    DAT_803aa020 = 0;
-    for (iVar14 = 0; iVar14 < iVar13; iVar14 = iVar14 + 1) {
-      if (local_a4[iVar9] == '\0') {
-        FUN_8025da88(0,0,0x280,0x1e0);
-        iVar8 = (iVar14 + 3) - iVar12;
-        (&DAT_803aa024)[iVar8] = (&DAT_803a9e18)[iVar9];
-        (&DAT_803aa008)[iVar8] = (uint)(byte)(&DAT_803a98d8)[iVar9];
-        if (1 < (byte)(&DAT_803a9898)[iVar9]) {
-          (&DAT_803de4c8)[iVar8] = (&DAT_803a9898)[iVar9];
+      if (lbl_803DD7B1 != 0) {
+        lbl_803DD7B1 = lbl_803DD7B1 - 1;
+      }
+      if ((lbl_803DD7B1 & 8) == 0) {
+        gameTextSetColor(200, 0xE6, 0xFF, (int)lbl_803DD83C);
+      }
+      else {
+        gameTextSetColor(0x32, 0x32, 0xFF, (int)lbl_803DD83C);
+      }
+      prevCharset = gameTextFn_80019b14();
+      gameTextSetCharset(3, 3);
+      if ((s16)aButtonIcon < 0x3E9) {
+        for (bi = 0; bi < 0x1D; bi++) {
+          if (aButtonIcon == lbl_8031B6F0[bi * 2]) {
+            icon = bi;
+          }
         }
+        textObj = gameTextGet(0x2AD);
       }
-      iVar9 = iVar9 + 1;
-      if (DAT_803de530 <= iVar9) {
-        iVar9 = iVar9 - DAT_803de530;
+      else {
+        textObj = gameTextGet(0x2AD);
+        icon = 1;
       }
+      if ((icon == 0) || (textObj == 0)) {
+      useDefaultA:
+        drawTexture(lbl_803E2000, lbl_803E1FFC, ((int *)(base + 0x1C0))[7], (int)lbl_803DD83C, 0x100);
+      }
+      else {
+        glyph = lbl_8031B6F0[icon * 2 + 1];
+        if (*(u16 *)(textObj + 2) <= glyph) goto useDefaultA;
+        textPtr = *(int *)(*(int *)(textObj + 8) + glyph * 4);
+        prevCharset2 = gameTextFn_80019b14();
+        gameTextSetCharset(3, 3);
+        gameTextMeasureFn_800163c4((char *)textPtr, 8, 0, 0, mx0, mx1, my0, my1);
+        gameTextShowStr((char *)textPtr, 8, 0, 0);
+        gameTextSetCharset(prevCharset2, 3);
+        gameTextMeasureFn_800163c4(*(char **)(*(int *)(textObj + 8) + lbl_8031B6F0[icon * 2 + 1] * 4), 8, 0, 0, bx0, bx1, by0, by1);
+        wid = (bx1[0] - bx0[0]) + -0x19;
+        if (wid < 1) {
+          wid = 1;
+        }
+        drawScaledTexture((f32)(0x219 - wid), lbl_803E1FFC, ((int *)(base + 0x1C0))[8], (int)lbl_803DD83C, 0x100, wid, 0x16, 0);
+        drawTexture((f32)(0x20D - wid), lbl_803E1FFC, ((int *)(base + 0x1C0))[7], (int)lbl_803DD83C, 0x100);
+      }
+      prevAButtonIcon = aButtonIcon;
+      drawTexture(lbl_803E1FCC, lbl_803E1FFC, ((int *)(base + 0x1C0))[5], (int)lbl_803DD83C, 0x100);
+      gameTextSetCharset(prevCharset, 3);
     }
-    FUN_8025da88(0,0,0x280,0x1e0);
-    FUN_801246cc((int)((ulonglong)uVar23 >> 0x20),(int)uVar23,param_11);
-    iVar9 = 0;
-    iVar12 = 0;
-    do {
-      if (1 < *pbVar15) {
-        iVar13 = (int)(short)(DAT_803de416 + (short)iVar12);
-        sVar4 = sVar2;
-        if (iVar13 < DAT_803dc734) {
-          sVar4 = sVar2 + (short)(iVar13 - DAT_803dc734) * 8;
-        }
-        if (DAT_803dc736 < iVar13) {
-          sVar4 = sVar4 + (short)(iVar13 - DAT_803dc736) * -8;
-        }
-        if (sVar4 < 0) {
-          sVar4 = 0;
-        }
-        if (0xff < sVar4) {
-          sVar4 = 0xff;
-        }
-        iVar13 = (int)((int)sVar4 * (uint)DAT_803de554) / 0xff +
-                 ((int)((int)sVar4 * (uint)DAT_803de554) >> 0x1f);
-        bVar11 = (char)iVar13 - (char)(iVar13 >> 0x1f);
-        uVar10 = 0x1e0;
-        uVar20 = FUN_8025da88(0,0,0x280,0x1e0);
-        FUN_8028fde8(uVar20,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)&local_a8,
-                     &DAT_803dc7c0,(uint)*pbVar15,uVar10,param_13,param_14,param_15,param_16);
-        FUN_80017484(0,0,0,bVar11);
-        FUN_80006c64(&local_a8,0x93,0x247,(int)DAT_803de416 + iVar12 + 0x2b);
-        FUN_80017484(0xff,0xff,0xff,bVar11);
-        FUN_80006c64(&local_a8,0x93,0x246,(int)DAT_803de416 + iVar12 + 0x2a);
-      }
-      pbVar15 = pbVar15 + 1;
-      iVar12 = iVar12 + 0x32;
-      iVar9 = iVar9 + 1;
-    } while (iVar9 < 7);
-    iVar9 = (int)(iVar3 * (uint)DAT_803de554) / 0xff + ((int)(iVar3 * (uint)DAT_803de554) >> 0x1f);
-    FUN_800709e8((double)lbl_803E2C4C,(double)lbl_803E2C50,DAT_803a9694,
-                 iVar9 - (iVar9 >> 0x1f) & 0xff,0x100);
-    iVar9 = (int)(iVar3 * (uint)DAT_803de554) / 0xff + ((int)(iVar3 * (uint)DAT_803de554) >> 0x1f);
-    FUN_800709e0((double)lbl_803E2C54,(double)lbl_803E2C50,DAT_803a9694,
-                 iVar9 - (iVar9 >> 0x1f) & 0xff,0x100,0x12,10,1);
-    iVar9 = (int)(iVar3 * (uint)DAT_803de554) / 0xff + ((int)(iVar3 * (uint)DAT_803de554) >> 0x1f);
-    FUN_800709e0((double)lbl_803E2C4C,(double)lbl_803E2C58,DAT_803a9694,
-                 iVar9 - (iVar9 >> 0x1f) & 0xff,0x100,0x12,10,2);
-    param_2 = (double)lbl_803E2C58;
-    iVar9 = (int)(iVar3 * (uint)DAT_803de554) / 0xff + ((int)(iVar3 * (uint)DAT_803de554) >> 0x1f);
-    uVar10 = 0x100;
-    param_12 = 0x12;
-    param_13 = 10;
-    param_14 = 3;
-    uVar20 = FUN_800709e0((double)lbl_803E2C54,param_2,DAT_803a9694,iVar9 - (iVar9 >> 0x1f) & 0xff
-                          ,0x100,0x12,10,3);
-    iVar9 = extraout_r4;
-    if ((iVar5 != 0) && (uVar17 = FUN_80294be4(iVar5), uVar17 != 0)) {
-      if (DAT_803de536 == '\x01') {
-        uVar16 = 0x5a;
-      }
-      else if (DAT_803de536 < '\x01') {
-        if (-1 < DAT_803de536) {
-          uVar16 = 0x59;
-        }
-      }
-      else if (DAT_803de536 < '\x03') {
-        uVar16 = 0x58;
-      }
-      param_2 = (double)lbl_803E2C34;
-      iVar9 = (int)(iVar3 * (uint)DAT_803de554) / 0xff + ((int)(iVar3 * (uint)DAT_803de554) >> 0x1f)
-      ;
-      uVar10 = 0x100;
-      uVar20 = FUN_800709e8((double)lbl_803E2C5C,param_2,(&DAT_803a9610)[uVar16],
-                            iVar9 - (iVar9 >> 0x1f) & 0xff,0x100);
-      iVar9 = extraout_r4_00;
-    }
-  }
-  if ((DAT_803de4f0 != 0) && (iVar9 = (int)DAT_803de4f6, iVar9 != DAT_803de4f4)) {
-    uVar20 = FUN_80053754();
-    DAT_803de4f6 = -1;
-    DAT_803de4f0 = 0;
-    iVar9 = extraout_r4_01;
-  }
-  if ((DAT_803de4f0 == 0) && (0 < DAT_803de4f4)) {
-    DAT_803de4f6 = DAT_803de4f4;
-    DAT_803de4f0 = FUN_8005398c(uVar20,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                (int)DAT_803de4f4,iVar9,uVar10,param_12,param_13,param_14,param_15,
-                                param_16);
-  }
-  dVar22 = (double)lbl_803DE4BC;
-  if (dVar22 == (double)lbl_803E2ABC) goto LAB_8012431c;
-  local_60 = (double)(longlong)(int)lbl_803DE4BC;
-  FUN_800709e8((double)lbl_803E2C60,(double)lbl_803E2C1C,DAT_803a9610,(int)lbl_803DE4BC,0x100)
-  ;
-  local_58 = (double)(longlong)(int)lbl_803DE4BC;
-  FUN_800709e8((double)lbl_803E2C64,(double)lbl_803E2C68,DAT_803a9614,(int)lbl_803DE4BC,0x100)
-  ;
-  dVar21 = (double)lbl_803E2C70;
-  local_50 = (double)(longlong)(int)lbl_803DE4BC;
-  FUN_800709e8((double)lbl_803E2C6C,dVar21,DAT_803a9618,(int)lbl_803DE4BC,0x100);
-  if ((DAT_803de431 & 8) == 0) {
-    dVar21 = (double)lbl_803E2C78;
-    local_50 = (double)(longlong)(int)lbl_803DE4BC;
-    FUN_800709e8((double)lbl_803E2C74,dVar21,DAT_803a9634,(int)lbl_803DE4BC,0x100);
-  }
-  if ((DAT_803de42a == 0) || (DAT_803de42a == 0x1c)) {
-    dVar21 = (double)lbl_803E2C7C;
-    local_48 = (double)(longlong)(int)lbl_803DE4BC;
-    FUN_800709e8((double)lbl_803E2C4C,dVar21,DAT_803a961c,(int)lbl_803DE4BC,0x100);
-    DAT_803de42e = 0;
-    DAT_803de431 = 0;
-  }
-  else {
-    if (DAT_803de42a != DAT_803de42e) {
-      DAT_803de431 = 0x3f;
-    }
-    if (DAT_803de431 != 0) {
-      DAT_803de431 = DAT_803de431 - 1;
-    }
-    if ((DAT_803de431 & 8) == 0) {
-      local_50 = (double)(longlong)(int)lbl_803DE4BC;
-      FUN_80017484(200,0xe6,0xff,(byte)(int)lbl_803DE4BC);
+    if (bButtonIcon == 0) {
+      drawTexture(lbl_803E1FCC, lbl_803E200C, ((int *)(base + 0x1C0))[4], (int)lbl_803DD83C, 0x100);
+      lbl_803DD7B0 = 0;
     }
     else {
-      local_50 = (double)(longlong)(int)lbl_803DE4BC;
-      FUN_80017484(0x32,0x32,0xff,(byte)(int)lbl_803DE4BC);
-    }
-    iVar9 = FUN_8001748c();
-    uVar20 = FUN_80017494(3,3);
-    uVar17 = (uint)DAT_803de42a;
-    if ((int)uVar17 < 0x3e9) {
-      for (bVar11 = 0; bVar11 < 0x1d; bVar11 = bVar11 + 1) {
-        if (uVar17 == (byte)(&DAT_8031c340)[(uint)bVar11 * 2]) {
-          uVar16 = (uint)bVar11;
+      if (bButtonIcon != lbl_803DD7B0) {
+        lbl_803DD7B2 = 0x3F;
+      }
+      if (lbl_803DD7B2 != 0) {
+        lbl_803DD7B2 = lbl_803DD7B2 - 1;
+      }
+      if ((lbl_803DD7B2 & 8) == 0) {
+        gameTextSetColor(200, 0xE6, 0xFF, (int)lbl_803DD83C);
+      }
+      else {
+        gameTextSetColor(0x32, 0x32, 0xFF, (int)lbl_803DD83C);
+      }
+      icon = 0;
+      for (bi = 0; bi < 0x1D; bi++) {
+        if (bButtonIcon == lbl_8031B6F0[bi * 2]) {
+          icon = bi;
         }
       }
-      puVar6 = FUN_80017470(uVar20,dVar21,dVar22,param_4,param_5,param_6,param_7,param_8,0x2ad);
+      prevCharset = gameTextFn_80019b14();
+      gameTextSetCharset(3, 3);
+      textObj = gameTextGet(0x2AD);
+      if ((icon == 0) || (textObj == 0)) {
+      useDefaultB:
+        drawTexture(lbl_803E2008, lbl_803E2004, ((int *)(base + 0x1C0))[7], (int)lbl_803DD83C, 0x100);
+      }
+      else {
+        glyph = lbl_8031B6F0[icon * 2 + 1];
+        if (*(u16 *)(textObj + 2) <= glyph) goto useDefaultB;
+        textPtr = *(int *)(*(int *)(textObj + 8) + glyph * 4);
+        prevCharset2 = gameTextFn_80019b14();
+        gameTextSetCharset(3, 3);
+        gameTextMeasureFn_800163c4((char *)textPtr, 9, 0, 0, mx0, mx1, my0, my1);
+        gameTextShowStr((char *)textPtr, 9, 0, 0);
+        gameTextSetCharset(prevCharset2, 3);
+        gameTextMeasureFn_800163c4(*(char **)(*(int *)(textObj + 8) + lbl_8031B6F0[icon * 2 + 1] * 4), 9, 0, 0, bx0, bx1, by0, by1);
+        wid = (bx1[0] - bx0[0]) + -7;
+        if (wid < 1) {
+          wid = 1;
+        }
+        drawScaledTexture((f32)(0x219 - wid), lbl_803E2004, ((int *)(base + 0x1C0))[8], (int)lbl_803DD83C, 0x100, wid, 0x16, 0);
+        drawTexture((f32)(0x20D - wid), lbl_803E2004, ((int *)(base + 0x1C0))[7], (int)lbl_803DD83C, 0x100);
+      }
+      lbl_803DD7B0 = bButtonIcon;
+      drawTexture(lbl_803E1FCC, lbl_803E200C, ((int *)(base + 0x1C0))[6], (int)lbl_803DD83C, 0x100);
+      gameTextSetCharset(prevCharset, 3);
+    }
+    if (hudYButtonItemIconTexture == 0) {
+      gameTextSetColor(0xFF, 0xFF, 0xFF, (int)lbl_803DD83C);
+      prevCharset = gameTextFn_80019b14();
+      gameTextSetCharset(3, 3);
+      gameTextShowStr(&lbl_803DBB5C, 0x93, 0x216, 0x22);
+      gameTextSetCharset(prevCharset, 3);
     }
     else {
-      puVar6 = FUN_80017470(uVar20,dVar21,dVar22,param_4,param_5,param_6,param_7,param_8,uVar17);
-      uVar16 = 1;
-    }
-    if ((uVar16 == 0) || (puVar6 == (ushort *)0x0)) {
-LAB_80123e30:
-      local_48 = (double)(longlong)(int)lbl_803DE4BC;
-      FUN_800709e8((double)lbl_803E2C80,(double)lbl_803E2C7C,DAT_803a962c,(int)lbl_803DE4BC,
-                   0x100);
-    }
-    else {
-      uVar17 = (uint)(byte)(&DAT_8031c341)[uVar16 * 2];
-      if (puVar6[1] <= uVar17) goto LAB_80123e30;
-      uVar10 = *(undefined4 *)(*(int *)(puVar6 + 4) + uVar17 * 4);
-      iVar5 = FUN_8001748c();
-      FUN_80017494(3,3);
-      FUN_80006c78(uVar10,8,0,0,&iStack_c8,&iStack_c4,&iStack_c0,&iStack_bc);
-      FUN_80006c64(uVar10,8,0,0);
-      FUN_80017494(iVar5,3);
-      FUN_80006c78(*(undefined4 *)
-                    (*(int *)(puVar6 + 4) + (uint)(byte)(&DAT_8031c341)[uVar16 * 2] * 4),8,0,0,
-                   &local_ac,&local_b0,&iStack_b4,&iStack_b8);
-      iVar5 = (local_b0 - local_ac) + -0x19;
-      if (iVar5 < 1) {
-        iVar5 = 1;
+      scaleT = lbl_803E1E68;
+      if (lbl_803DD87C != 0) {
+        scaleT = lbl_803E2010;
       }
-      local_58 = (double)(longlong)(int)lbl_803DE4BC;
-      FUN_800709e0((double)(f32)(s32)(0x219U - iVar5),(double)lbl_803E2C7C,DAT_803a9630,
-                   (int)lbl_803DE4BC,0x100,iVar5,0x16,0);
-      local_48 = (double)(longlong)(int)lbl_803DE4BC;
-      FUN_800709e8((double)(f32)(s32)(0x20dU - iVar5),(double)lbl_803E2C7C,DAT_803a962c,
-                   (int)lbl_803DE4BC,0x100);
-    }
-    DAT_803de42e = DAT_803de42a;
-    dVar21 = (double)lbl_803E2C7C;
-    local_48 = (double)(longlong)(int)lbl_803DE4BC;
-    FUN_800709e8((double)lbl_803E2C4C,dVar21,DAT_803a9624,(int)lbl_803DE4BC,0x100);
-    FUN_80017494(iVar9,3);
-  }
-  if (DAT_803de42c == '\0') {
-    local_48 = (double)(longlong)(int)lbl_803DE4BC;
-    FUN_800709e8((double)lbl_803E2C4C,(double)lbl_803E2C8C,DAT_803a9620,(int)lbl_803DE4BC,
-                 0x100);
-    DAT_803de430 = '\0';
-  }
-  else {
-    if (DAT_803de42c != DAT_803de430) {
-      DAT_803de432 = 0x3f;
-    }
-    if (DAT_803de432 != 0) {
-      DAT_803de432 = DAT_803de432 - 1;
-    }
-    if ((DAT_803de432 & 8) == 0) {
-      local_48 = (double)(longlong)(int)lbl_803DE4BC;
-      FUN_80017484(200,0xe6,0xff,(byte)(int)lbl_803DE4BC);
-    }
-    else {
-      local_48 = (double)(longlong)(int)lbl_803DE4BC;
-      FUN_80017484(0x32,0x32,0xff,(byte)(int)lbl_803DE4BC);
-    }
-    uVar16 = 0;
-    for (bVar11 = 0; bVar11 < 0x1d; bVar11 = bVar11 + 1) {
-      if (DAT_803de42c == (&DAT_8031c340)[(uint)bVar11 * 2]) {
-        uVar16 = (uint)bVar11;
+      next = scaleT;
+      cur = lbl_803DD7E8;
+      if (cur <= next) {
+        if (next >= (f32)(lbl_803E1EA8 + cur)) {
+          next = lbl_803E1EA8 + cur;
+        }
       }
-    }
-    iVar9 = FUN_8001748c();
-    uVar20 = FUN_80017494(3,3);
-    puVar6 = FUN_80017470(uVar20,dVar21,dVar22,param_4,param_5,param_6,param_7,param_8,0x2ad);
-    if ((uVar16 == 0) || (puVar6 == (ushort *)0x0)) {
-LAB_80124120:
-      local_48 = (double)(longlong)(int)lbl_803DE4BC;
-      FUN_800709e8((double)lbl_803E2C88,(double)lbl_803E2C84,DAT_803a962c,(int)lbl_803DE4BC,
-                   0x100);
-    }
-    else {
-      uVar17 = (uint)(byte)(&DAT_8031c341)[uVar16 * 2];
-      if (puVar6[1] <= uVar17) goto LAB_80124120;
-      uVar10 = *(undefined4 *)(*(int *)(puVar6 + 4) + uVar17 * 4);
-      iVar5 = FUN_8001748c();
-      FUN_80017494(3,3);
-      FUN_80006c78(uVar10,9,0,0,&iStack_d8,&iStack_d4,&iStack_d0,&iStack_cc);
-      FUN_80006c64(uVar10,9,0,0);
-      FUN_80017494(iVar5,3);
-      FUN_80006c78(*(undefined4 *)
-                    (*(int *)(puVar6 + 4) + (uint)(byte)(&DAT_8031c341)[uVar16 * 2] * 4),9,0,0,
-                   &local_ac,&local_b0,&iStack_b4,&iStack_b8);
-      iVar5 = (local_b0 - local_ac) + -7;
-      if (iVar5 < 1) {
-        iVar5 = 1;
+      else {
+        if (next <= (f32)(cur - lbl_803E1EA8)) {
+          next = cur - lbl_803E1EA8;
+        }
       }
-      local_50 = (double)(longlong)(int)lbl_803DE4BC;
-      FUN_800709e0((double)(f32)(s32)(0x219U - iVar5),(double)lbl_803E2C84,DAT_803a9630,
-                   (int)lbl_803DE4BC,0x100,iVar5,0x16,0);
-      local_60 = (double)(longlong)(int)lbl_803DE4BC;
-      FUN_800709e8((double)(f32)(s32)(0x20dU - iVar5),(double)lbl_803E2C84,DAT_803a962c,
-                   (int)lbl_803DE4BC,0x100);
-    }
-    DAT_803de430 = DAT_803de42c;
-    local_48 = (double)(longlong)(int)lbl_803DE4BC;
-    FUN_800709e8((double)lbl_803E2C4C,(double)lbl_803E2C8C,DAT_803a9628,(int)lbl_803DE4BC,
-                 0x100);
-    FUN_80017494(iVar9,3);
-  }
-  if (DAT_803de4f0 == 0) {
-    local_48 = (double)(longlong)(int)lbl_803DE4BC;
-    FUN_80017484(0xff,0xff,0xff,(byte)(int)lbl_803DE4BC);
-    iVar9 = FUN_8001748c();
-    FUN_80017494(3,3);
-    FUN_80006c64(&DAT_803dc7c4,0x93,0x216,0x22);
-    FUN_80017494(iVar9,3);
-  }
-  else {
-    fVar1 = lbl_803E2AE8;
-    if (DAT_803de4fc != '\0') {
-      fVar1 = lbl_803E2C90;
-    }
-    dVar21 = (double)fVar1;
-    dVar22 = (double)lbl_803DE468;
-    if (dVar22 <= dVar21) {
-      dVar19 = DOUBLE_803e2b28 + dVar22;
-      if (dVar21 < DOUBLE_803e2b28 + dVar22) {
-        dVar19 = dVar21;
+      lbl_803DD7E8 = next;
+      lbl_803DD878 = lbl_803DD878 -
+                     (lbl_803DBA74 + (timeDelta * (lbl_803DD878 - lbl_803DBA74)) / lbl_803DBA84);
+      scaleT = lbl_803E1E68;
+      if (lbl_803DD878 <= lbl_803E1E3C) {
+        lbl_803DD878 = lbl_803E1E3C;
+        scaleT = lbl_803DD7E8;
       }
+      lbl_803DD7E8 = scaleT;
+      drawTexture(lbl_803DBA78 * lbl_803DD878 + lbl_803E2014,
+                  lbl_803DBA7C * lbl_803DD878 + lbl_803E1F9C, hudYButtonItemIconTexture,
+                  (int)(lbl_803DD7E8 * lbl_803DD83C),
+                  (int)(lbl_803DBA80 * lbl_803DD878 + lbl_803E2018));
     }
-    else {
-      dVar19 = dVar22 - DOUBLE_803e2b28;
-      if (dVar22 - DOUBLE_803e2b28 < dVar21) {
-        dVar19 = dVar21;
-      }
-    }
-    lbl_803DE468 = (float)dVar19;
-    lbl_803DE4F8 =
-         lbl_803DE4F8 -
-         (lbl_803DC6DC + (lbl_803DC074 * (lbl_803DE4F8 - lbl_803DC6DC)) / lbl_803DC6EC);
-    fVar1 = lbl_803E2AE8;
-    if (lbl_803DE4F8 <= lbl_803E2ABC) {
-      lbl_803DE4F8 = lbl_803E2ABC;
-      fVar1 = lbl_803DE468;
-    }
-    lbl_803DE468 = fVar1;
-    local_48 = (double)(longlong)(int)(lbl_803DE468 * lbl_803DE4BC);
-    uVar16 = (uint)(lbl_803DC6E8 * lbl_803DE4F8 + lbl_803E2C98);
-    local_50 = (double)(longlong)(int)uVar16;
-    FUN_800709e8((double)(lbl_803DC6E0 * lbl_803DE4F8 + lbl_803E2C94),
-                 (double)(lbl_803DC6E4 * lbl_803DE4F8 + lbl_803E2C1C),DAT_803de4f0,
-                 (int)(lbl_803DE468 * lbl_803DE4BC),uVar16);
   }
-LAB_8012431c:
-  FUN_8005d370(0,0xff,0xff,0xff,0xff);
-  FUN_8028686c();
-  return;
+  fn_8005D118(0, 0xFF, 0xFF, 0xFF, 0xFF);
 }
 
 /*
