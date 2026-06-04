@@ -31,7 +31,7 @@ extern void *gPartfxInterface;
 extern u8 framesThisStep;
 extern f32 lbl_803E3E48;
 extern char sCFTreasSharpyDebugFormat[];
-extern void fn_80137948(char *fmt, int obj, f32 x, f32 z);
+extern void fn_80137948(char *fmt, ...);
 extern void *Resource_Acquire(int id, int flags);
 extern void Resource_Release(void *resource);
 
@@ -235,10 +235,6 @@ void fxemit_emitEffect(int obj)
     u8 *state;
     u8 *def;
     int spawnFlags;
-    s16 mode;
-    s16 count;
-    s16 i;
-    void *resource;
 
     state = *(u8 **)(obj + 0xb8);
     def = *(u8 **)(obj + 0x4c);
@@ -247,26 +243,46 @@ void fxemit_emitEffect(int obj)
         fn_80137948(sCFTreasSharpyDebugFormat, obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x14));
     }
 
-    mode = *(s16 *)(state + 8);
     switch (def[0x28]) {
-    case 0:
-        if (mode == 0 || mode == 1 || mode == 2) {
+    case 0: {
+        s16 mode = *(s16 *)(state + 8);
+        if (mode == 0) {
+            spawnFlags = 2;
+        }
+        if (mode == 1) {
+            spawnFlags = 2;
+        }
+        if (mode == 2) {
             spawnFlags = 2;
         }
         break;
-    case 1:
-        if (mode == 0 || mode == 1 || mode == 2) {
+    }
+    case 1: {
+        s16 mode = *(s16 *)(state + 8);
+        if (mode == 0) {
+            spawnFlags = 4;
+        }
+        if (mode == 1) {
+            spawnFlags = 4;
+        }
+        if (mode == 2) {
             spawnFlags = 4;
         }
         break;
-    case 2:
+    }
+    case 2: {
+        s16 mode = *(s16 *)(state + 8);
         if (mode == 0) {
             spawnFlags = 0x200001;
         }
-        if (mode == 1 || mode == 2) {
+        if (mode == 1) {
+            spawnFlags = 1;
+        }
+        if (mode == 2) {
             spawnFlags = 1;
         }
         break;
+    }
     case 3:
         spawnFlags = 0;
         break;
@@ -275,59 +291,59 @@ void fxemit_emitEffect(int obj)
         break;
     }
 
-    count = *(s16 *)(state + 0xe);
     if ((spawnFlags & 1) != 0) {
         CFTreasSharpyFxSpawnArgs args;
+        s16 i;
 
         args.x = *(f32 *)(obj + 0xc);
         args.y = *(f32 *)(obj + 0x10);
         args.z = *(f32 *)(obj + 0x14);
-        args.yaw = *(s16 *)obj;
-        args.pitch = *(s16 *)(obj + 2);
+        args.yaw = *(s16 *)(obj + 0);
         args.roll = *(s16 *)(obj + 4);
+        args.pitch = *(s16 *)(obj + 2);
         args.scale = lbl_803E3E48;
-        if (count < 1) {
-            CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xc), &args, spawnFlags, -1, 0);
-        } else {
-            for (i = 0; i < count; i++) {
+        if (*(s16 *)(state + 0xe) > 0) {
+            for (i = 0; i < *(s16 *)(state + 0xe); i++) {
                 CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xa), &args, spawnFlags, -1, 0);
             }
+        } else {
+            CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xc), &args, spawnFlags, -1, 0);
         }
     } else {
-        switch (mode) {
-        case 0:
-            if (count < 1) {
-                CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xa), NULL, spawnFlags, -1, 0);
-            } else {
-                for (i = 0; i < count; i++) {
+        s16 i;
+        void *resource;
+        s16 mode = *(s16 *)(state + 8);
+
+        if (mode == 0) {
+            if (*(s16 *)(state + 0xe) > 0) {
+                for (i = 0; i < *(s16 *)(state + 0xe); i++) {
                     CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xa), NULL, spawnFlags, -1, 0);
                 }
-            }
-            break;
-        case 1:
-            resource = Resource_Acquire((u16)(*(s16 *)(state + 0xa) + 0x58), 1);
-            if (count < 1) {
-                ((void (*)(int, int, int, int, int, int))((void **)*(int *)resource)[1])(obj, 0, 0, spawnFlags, -1, 0);
             } else {
-                for (i = 0; i < count; i++) {
+                CFTREAS_PARTFX_SPAWN(obj, *(s16 *)(state + 0xa), NULL, spawnFlags, -1, 0);
+            }
+        } else if (mode == 1) {
+            resource = Resource_Acquire((u16)(*(s16 *)(state + 0xa) + 0x58), 1);
+            if (*(s16 *)(state + 0xe) > 0) {
+                for (i = 0; i < *(s16 *)(state + 0xe); i++) {
                     ((void (*)(int, int, int, int, int, int))((void **)*(int *)resource)[1])(obj, 0, 0, spawnFlags, -1, 0);
                 }
-            }
-            Resource_Release(resource);
-            break;
-        case 2:
-            resource = Resource_Acquire((u16)(*(s16 *)(state + 0xa) + 0xab), 1);
-            if (count < 1) {
-                ((void (*)(int, int, int, int, int, int, int))((void **)*(int *)resource)[1])
-                    (obj, 0, 0, spawnFlags, -1, *(u16 *)(state + 0xa) & 0xff, 0);
             } else {
-                for (i = 0; i < count; i++) {
-                    ((void (*)(int, int, int, int, int, int, int))((void **)*(int *)resource)[1])
-                        (obj, 0, 0, spawnFlags, -1, *(u16 *)(state + 0xa) & 0xff, 0);
-                }
+                ((void (*)(int, int, int, int, int, int))((void **)*(int *)resource)[1])(obj, 0, 0, spawnFlags, -1, 0);
             }
             Resource_Release(resource);
-            break;
+        } else if (mode == 2) {
+            resource = Resource_Acquire((u16)(*(s16 *)(state + 0xa) + 0xab), 1);
+            if (*(s16 *)(state + 0xe) > 0) {
+                for (i = 0; i < *(s16 *)(state + 0xe); i++) {
+                    ((void (*)(int, int, int, int, int, int, int))((void **)*(int *)resource)[1])
+                        (obj, 0, 0, spawnFlags, -1, *(s16 *)(state + 0xa) & 0xff, 0);
+                }
+            } else {
+                ((void (*)(int, int, int, int, int, int, int))((void **)*(int *)resource)[1])
+                    (obj, 0, 0, spawnFlags, -1, *(s16 *)(state + 0xa) & 0xff, 0);
+            }
+            Resource_Release(resource);
         }
     }
 }
@@ -488,3 +504,111 @@ void fxemit_hitDetect(void)
 #pragma peephole off
 void fxemit_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { if (visible == 0) return; }
 #pragma peephole reset
+
+extern f32 timeDelta;
+extern f32 sqrtf(f32);
+extern u8 *Obj_GetPlayerObject(void);
+extern int Sfx_PlayFromObject(int obj, int sfx);
+extern f32 lbl_803E3E4C;
+
+#pragma scheduling off
+#pragma peephole off
+void fxemit_update(int obj)
+{
+    u8 *state;
+    u8 *def;
+    u8 *player;
+    s16 e;
+    s8 delta;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 dist;
+
+    state = *(u8 **)(obj + 0xb8);
+    def = *(u8 **)(obj + 0x4c);
+    if (*(s16 *)(state + 0x12) != 0) {
+        *(s16 *)(state + 0x12) -= (int)timeDelta;
+        if (*(s16 *)(state + 0x12) < 0) {
+            *(s16 *)(state + 0x12) = 0;
+        }
+    } else {
+        *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+        *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
+        *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
+        *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
+        *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+        player = Obj_GetPlayerObject();
+        if (player != NULL) {
+            if (def == NULL) {
+            } else {
+            if (def[0x29] != 0 && def[0x29] != 0xff) {
+                if (*(s16 *)(state + 0x1a) <= 0) {
+                    int sfx;
+                    *(s16 *)(state + 0x18) = 0;
+                    *(s16 *)(state + 0x1a) = def[0x29] * 100;
+                    sfx = *(s16 *)(def + 0x2a);
+                    if (sfx != 0) {
+                        Sfx_PlayFromObject(obj, (u16)sfx);
+                    }
+                } else {
+                    *(s16 *)(state + 0x18) = 1;
+                }
+                *(s16 *)(state + 0x1a) -= framesThisStep;
+            }
+
+            delta = (s8)def[0x27];
+            if (delta == 0x7f) {
+                *(s16 *)(obj + 0) = *(s16 *)(obj + 0) + framesThisStep * 10;
+            } else {
+                *(s16 *)(obj + 0) = *(s16 *)(obj + 0) + delta * framesThisStep * 100;
+            }
+
+            delta = (s8)def[0x26];
+            if (delta == 0x7f) {
+                *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + framesThisStep * 10;
+            } else {
+                *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + delta * framesThisStep * 100;
+            }
+
+            delta = (s8)def[0x25];
+            if (delta == 0x7f) {
+                *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + framesThisStep * 10;
+            } else {
+                *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + delta * framesThisStep * 100;
+            }
+
+            if (*(s16 *)(state + 0x14) == -1 || GameBit_Get(*(s16 *)(state + 0x14)) != 0) {
+                if (*(s16 *)(state + 0x18) != 0) {
+                } else {
+                if (*(s16 *)(state + 0x16) != -1 && GameBit_Get(*(s16 *)(state + 0x16)) != 0) {
+                    *(s16 *)(state + 0x18) = 1;
+                }
+                if (def[0x29] == 0xff) {
+                    *(s16 *)(state + 0x18) = 1;
+                }
+                e = *(s16 *)(state + 0xe);
+                if (e >= 0 || (e < 0 && *(int *)(obj + 0xf4) <= 0)) {
+                    dx = *(f32 *)(obj + 0x18) - *(f32 *)(player + 0x18);
+                    dy = *(f32 *)(obj + 0x1c) - *(f32 *)(player + 0x1c);
+                    dz = *(f32 *)(obj + 0x20) - *(f32 *)(player + 0x20);
+                    if (e == 0) {
+                        *(s16 *)(state + 0x18) = 1;
+                    }
+                    dist = sqrtf(dx * dx + dy * dy + dz * dz);
+                    if (dist <= *(f32 *)state || lbl_803E3E4C == *(f32 *)state) {
+                        fxemit_emitEffect(obj);
+                    }
+                    *(int *)(obj + 0xf4) = -(int)*(s16 *)(state + 0xe);
+                } else if (e < 0 && *(int *)(obj + 0xf4) > 0) {
+                    *(int *)(obj + 0xf4) -= framesThisStep;
+                }
+                }
+            }
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
