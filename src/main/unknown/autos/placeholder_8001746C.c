@@ -16469,3 +16469,60 @@ void *stackCreate(int count, int size)
 }
 #pragma dont_inline reset
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void *mmAlloc(int size, int type, int flag)
+{
+    void *result;
+    u8 ok;
+    u8 i;
+
+    if (size == 0) {
+        return 0;
+    }
+    ok = 1;
+    for (i = 0; ok && i < 100; i++) {
+        if (lbl_803DB434 == 1) {
+            result = (void *)mmAllocFromRegion(1, size, type, flag);
+            if (result == 0) {
+                result = (void *)mmAllocFromRegion(2, size, type, flag);
+            }
+            if (result == 0) {
+                return result;
+            }
+        } else if (lbl_803DCB08 != 0) {
+            result = (void *)mmAllocFromRegion(3, size, type, flag);
+            if (result == 0) {
+                return result;
+            }
+        } else if (size >= 0x3000) {
+            result = (void *)mmAllocFromRegion(0, size, type, flag);
+            if (result == 0) {
+                result = (void *)mmAllocFromRegion(1, size, type, flag);
+            }
+        } else if (size >= 0x400) {
+            result = (void *)mmAllocFromRegion(1, size, type, flag);
+            if (result == 0) {
+                result = (void *)mmAllocFromRegion(2, size, type, flag);
+            }
+            if (result == 0) {
+                result = (void *)mmAllocFromRegion(0, size, type, flag);
+            }
+        } else {
+            result = (void *)mmAllocFromRegion(2, size, type, flag);
+            if (result == 0) {
+                result = (void *)mmAllocFromRegion(1, size, type, flag);
+            }
+            if (result == 0) {
+                result = (void *)mmAllocFromRegion(0, size, type, flag);
+            }
+        }
+        ok = 0;
+    }
+    return result;
+}
+#pragma dont_inline reset
+#pragma pop
