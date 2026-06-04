@@ -5148,6 +5148,7 @@ extern int *gPartfxInterface;
 
 #pragma peephole off
 #pragma scheduling off
+#pragma dont_inline on
 void fn_80203000(int obj, int param2)
 {
     int i;
@@ -5167,6 +5168,7 @@ void fn_80203000(int obj, int param2)
     }
     *(u8 *)(state + 0x14) = 0;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -5661,6 +5663,8 @@ int fn_80200850(int obj, int p2)
 typedef struct {
     u8 flag80 : 1;
     u8 flag40 : 1;
+    u8 flag20 : 1;
+    u8 flag10 : 1;
 } AnimFlags44;
 
 #pragma scheduling off
@@ -6695,5 +6699,129 @@ int fn_80201BD8(int obj, int p2, f32 t)
     ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(p2 + 0x280), p2 + 0x2a0);
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_loop_invariants off
+void dbstealerworm_update(u8 *objp)
+{
+    extern void Stack_Push(int sp, int *args);
+    extern int allocModelStruct_800139e8(int, int);
+    extern uint GameBit_Get(int);
+    extern void ObjGroup_AddObject(int, int);
+    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+    extern int ObjMsg_Pop(int, u32 *, int *, int *);
+    extern void ObjMsg_SendToObject(int, int, int, int);
+    extern void objLightFn_8009a1dc(int, f32, int, int, int);
+    extern f32 sqrtf(f32);
+    extern int *gMapEventInterface;
+    extern void **gBaddieControlInterface;
+    extern int *gObjectTriggerInterface;
+    extern int *gPlayerInterface;
+    extern f32 timeDelta;
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E62FC;
+    extern f32 lbl_803E6388;
+    extern f32 lbl_803E638C;
+    extern u8 lbl_803AD0C0[];
+    extern u8 lbl_803293B8[];
+    char *st = (char *)lbl_803AD0C0;
+    char *tbl = (char *)lbl_803293B8;
+    int blob = *(int *)(objp + 0xb8);
+    int data = *(int *)(objp + 0x4c);
+    int sub = *(int *)(blob + 0x40c);
+    int obj = (int)objp;
+    int off;
+    char *entry;
+    int n;
+    int sub2;
+    int sub3;
+    int t;
+    struct {
+        u32 msg;
+        int argA;
+        int argB;
+        f32 v[3];
+    } stk;
+
+    *(u8 *)(obj + 0xaf) |= 8;
+    if ((u32)*(u8 *)(sub + 0x44) >> 4 & 1) {
+        entry = (char *)((int)(tbl + *(s16 *)(data + 0x24) * 8) + 0x15c);
+        *(int *)(sub + 0x24) = allocModelStruct_800139e8(0x14, 0xc);
+        n = *(s16 *)(entry + 4);
+        off = n * 0xc;
+        for (; n != 0; n--) {
+            Stack_Push(*(int *)(sub + 0x24), (int *)(*(int *)entry + (off -= 12)));
+        }
+        *(u8 *)(sub + 0x34) = 1;
+        ((AnimFlags44 *)(sub + 0x44))->flag10 = 0;
+    }
+    if (GameBit_Get(*(s16 *)(blob + 0x3f6)) != 0) {
+        if (*(int *)(obj + 0xf4) != 0) {
+            if ((*(u8 *)(blob + 0x404) & 4) == 0 &&
+                ((int (*)(int))((void **)*(int *)gMapEventInterface)[26])(*(int *)(data + 0x14)) != 0) {
+                ((void (*)(int, int, int, int, int, int, int, f32))((void **)*gBaddieControlInterface)[22])(obj, data, blob, 0x10, 7, 0x10a, 0x26, lbl_803E62FC);
+                ObjGroup_AddObject(obj, 3);
+                *(s16 *)(blob + 0x402) = 0;
+                ObjAnim_SetCurrentMove(obj, 8, lbl_803E62A8, 0x10);
+                *(u8 *)(blob + 0x346) = 0;
+                *(u8 *)(obj + 0x36) = 0xff;
+                *(u8 *)(obj + 0xaf) |= 8;
+            }
+        } else if (*(int *)(obj + 0xf8) == 0) {
+            *(f32 *)(obj + 0xc) = *(f32 *)(data + 8);
+            *(f32 *)(obj + 0x10) = *(f32 *)(data + 0xc);
+            *(f32 *)(obj + 0x14) = *(f32 *)(data + 0x10);
+            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s8 *)(data + 0x2e), obj, -1);
+            *(int *)(obj + 0xf8) = 1;
+        } else {
+            if (((int (*)(int, int, int))((void **)*gBaddieControlInterface)[12])(obj, blob, 0) == 0) {
+                *(s16 *)(blob + 0x402) = 0;
+            } else {
+                t = *(int *)(blob + 0x2d0);
+                if (*(void **)(blob + 0x2d0) != NULL) {
+                    stk.v[0] = *(f32 *)(t + 0x18) - *(f32 *)(obj + 0x18);
+                    stk.v[1] = *(f32 *)(t + 0x1c) - *(f32 *)(obj + 0x1c);
+                    stk.v[2] = *(f32 *)(t + 0x20) - *(f32 *)(obj + 0x20);
+                    *(f32 *)(blob + 0x2c0) = sqrtf(stk.v[2] * stk.v[2] + (stk.v[0] * stk.v[0] + stk.v[1] * stk.v[1]));
+                }
+                stk.msg = 0;
+                stk.argA = 0;
+                sub2 = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+                while (ObjMsg_Pop(obj, &stk.msg, &stk.argB, &stk.argA) != 0) {
+                    if (stk.msg == 0x11 && *(s16 *)(sub2 + 0x1c) != -1) {
+                        ObjMsg_SendToObject(*(int *)(sub2 + 0x18), 0x11, obj, 0x14);
+                        *(int *)(sub2 + 0x18) = 0;
+                        *(s16 *)(sub2 + 0x1c) = -1;
+                        ObjAnim_SetCurrentMove(obj, 0xf, lbl_803E62A8, 0);
+                    }
+                }
+                if (((int (*)(int, int, int, int, char *, char *, int, char *))((void **)*gBaddieControlInterface)[20])(obj, blob, blob + 0x35c, *(s16 *)(blob + 0x3f4), tbl + 0x2ac, tbl + 0x324, 1, st) != 0) {
+                    *(f32 *)(st + 0xc) = *(f32 *)(obj + 0xc);
+                    *(f32 *)(st + 0x10) = *(f32 *)(obj + 0x10);
+                    *(f32 *)(st + 0x14) = *(f32 *)(obj + 0x14);
+                    objLightFn_8009a1dc(obj, lbl_803E638C, (int)st, 1, 0);
+                }
+                if (*(s16 *)(blob + 0x402) == 0) {
+                    fn_80203144(obj, blob, blob);
+                } else {
+                    sub3 = *(int *)(blob + 0x40c);
+                    fn_80203000(obj, blob);
+                    ((void (*)(int, int, f32, int))((void **)*gBaddieControlInterface)[11])(obj, blob, lbl_803E6388, -1);
+                    if ((*(u8 *)(sub3 + 0x15) & 4) == 0) {
+                        ((void (*)(int, int, f32, int))((void **)*(int *)gPlayerInterface)[12])(obj, blob, timeDelta, 4);
+                    }
+                    *(int *)(blob + 0x3e0) = *(int *)(obj + 0xc0);
+                    *(int *)(obj + 0xc0) = 0;
+                    ((void (*)(int, int, f32, f32, int, int))((void **)*(int *)gPlayerInterface)[2])(obj, blob, timeDelta, timeDelta, (int)(st + 0x34), (int)(st + 0x18));
+                    *(int *)(obj + 0xc0) = *(int *)(blob + 0x3e0);
+                }
+            }
+        }
+    }
+}
+#pragma opt_loop_invariants reset
 #pragma peephole reset
 #pragma scheduling reset
