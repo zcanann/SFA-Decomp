@@ -308,6 +308,7 @@ void andross_update(int obj)
   int *piVar7;
   int uVar9;
   u8 bVar13;
+  u8 bVar15;
   f32 dVar16;
   f32 dVar17;
   f32 dVar18;
@@ -616,7 +617,7 @@ void andross_update(int obj)
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - timeDelta;
     if (*(f32 *)(piVar14 + 0x27) < lbl_803E74D4) {
       piVar14[0x21] = 1;
@@ -655,7 +656,7 @@ void andross_update(int obj)
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x22] = 2;
       piVar14[0x21] = 0;
@@ -696,7 +697,7 @@ void andross_update(int obj)
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     Sfx_KeepAliveLoopedObjectSound(obj,0x467);
     *(u16 *)(piVar14 + 0x26) = *(short *)(piVar14 + 0x26) - (u16)framesThisStep;
     if (*(short *)(piVar14 + 0x26) < 0) {
@@ -742,7 +743,7 @@ void andross_update(int obj)
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
@@ -775,7 +776,7 @@ void andross_update(int obj)
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - timeDelta;
     if (*(f32 *)(piVar14 + 0x27) < lbl_803E74D4) {
       piVar14[0x21] = 1;
@@ -830,7 +831,7 @@ LAB_8023bb18:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - timeDelta;
     if (*(f32 *)(piVar14 + 0x27) < lbl_803E74D4) {
       piVar14[0x21] = 1;
@@ -864,10 +865,15 @@ LAB_8023bb18:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
-    bVar13 = *(u8 *)(*(int *)(obj + 0xb8) + 0xad);
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
+    bVar15 = 0;
+    iVar5 = *(int *)(obj + 0xb8);
+    bVar13 = *(u8 *)(iVar5 + 0xad);
     if ((bVar13 & 1) != 0) {
-      *(u8 *)(*(int *)(obj + 0xb8) + 0xad) = bVar13 & 0xfe;
+      *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
+      bVar15 = 1;
+    }
+    if (bVar15 != 0) {
       piVar14[0x21] = 1;
     }
     break;
@@ -895,10 +901,15 @@ LAB_8023bb18:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
-    bVar13 = *(u8 *)(*(int *)(obj + 0xb8) + 0xad);
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
+    bVar15 = 0;
+    iVar5 = *(int *)(obj + 0xb8);
+    bVar13 = *(u8 *)(iVar5 + 0xad);
     if ((bVar13 & 1) != 0) {
-      *(u8 *)(*(int *)(obj + 0xb8) + 0xad) = bVar13 & 0xfe;
+      *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
+      bVar15 = 1;
+    }
+    if (bVar15 != 0) {
       piVar14[0x21] = 1;
     }
     break;
@@ -926,10 +937,15 @@ LAB_8023bb18:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
-    bVar13 = *(u8 *)(*(int *)(obj + 0xb8) + 0xad);
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
+    bVar15 = 0;
+    iVar5 = *(int *)(obj + 0xb8);
+    bVar13 = *(u8 *)(iVar5 + 0xad);
     if ((bVar13 & 1) != 0) {
-      *(u8 *)(*(int *)(obj + 0xb8) + 0xad) = bVar13 & 0xfe;
+      *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
+      bVar15 = 1;
+    }
+    if (bVar15 != 0) {
       piVar14[0x21] = 1;
     }
     break;
@@ -957,10 +973,15 @@ LAB_8023bb18:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
-    bVar13 = *(u8 *)(*(int *)(obj + 0xb8) + 0xad);
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
+    bVar15 = 0;
+    iVar5 = *(int *)(obj + 0xb8);
+    bVar13 = *(u8 *)(iVar5 + 0xad);
     if ((bVar13 & 1) != 0) {
-      *(u8 *)(*(int *)(obj + 0xb8) + 0xad) = bVar13 & 0xfe;
+      *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
+      bVar15 = 1;
+    }
+    if (bVar15 != 0) {
       piVar14[0x21] = 1;
     }
     break;
@@ -1001,7 +1022,7 @@ LAB_8023bb18:
                                             / lbl_803E74A4));
       *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                        (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-      piVar14[0x35] = piVar14[0x18];
+      *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
       if (moveChanged) {
         androsshand_setState(piVar14[1],5,0);
         androsshand_setState(piVar14[2],5,0);
@@ -1064,7 +1085,7 @@ LAB_8023c584:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E7514 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       iVar12 = piVar14[0x22];
       if (((iVar12 == 0xc) || (iVar12 < 0xc)) || (0xd < iVar12)) {
@@ -1135,7 +1156,7 @@ LAB_8023c584:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E7514 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     fn_8023A6A4((int)piVar14,lbl_803DC440,lbl_803DC444,lbl_803DC448);
     Sfx_KeepAliveLoopedObjectSound(obj,0x466);
     if ((*(short *)(piVar14 + 0x26) != 0) &&
@@ -1225,7 +1246,7 @@ LAB_8023cbdc:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E7514 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     cVar11 = fn_8023A6A4((int)piVar14,lbl_803DC454,lbl_803DC458,lbl_803DC45C);
     if (cVar11 != '\0') {
       piVar14[0x22] = 0xf;
@@ -1312,7 +1333,7 @@ LAB_8023cbdc:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
@@ -1345,7 +1366,7 @@ LAB_8023cbdc:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74D4 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     iVar12 = *piVar14;
     local_e4.x = (*(f32 *)(piVar14 + 0x30) - *(float *)(iVar12 + 0xc)) * lbl_803DC468;
     local_e4.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC468;
@@ -1397,7 +1418,7 @@ LAB_8023cbdc:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74D4 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
@@ -1460,7 +1481,7 @@ LAB_8023d59c:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x22] = 0x13;
     }
@@ -1514,7 +1535,7 @@ LAB_8023d7cc:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     *(u16 *)(piVar14 + 0x26) = *(short *)(piVar14 + 0x26) - (u16)framesThisStep;
     iVar12 = (int)*(f32 *)(piVar14 + 0x27);
     *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - (f32)framesThisStep;
@@ -1594,7 +1615,7 @@ LAB_8023db24:
                                           lbl_803E74A4));
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
@@ -1621,7 +1642,7 @@ LAB_8023db24:
     }
     piVar14[0x33] = piVar14[0x16];
     piVar14[0x34] = piVar14[0x17];
-    piVar14[0x35] = piVar14[0x18];
+    *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     iVar12 = GameBit_Get(0x10);
     if ((iVar12 != 0) &&
        (sVar3 = *(short *)(piVar14 + 0x26), *(short *)(piVar14 + 0x26) = sVar3 + -1, sVar3 == 0)) {
@@ -1637,7 +1658,7 @@ LAB_8023db24:
       *(f32 *)(piVar14 + 0x27) = lbl_803E74D8;
       piVar14[0x33] = piVar14[0x16];
       piVar14[0x34] = piVar14[0x17];
-      piVar14[0x35] = piVar14[0x18];
+      *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
       fVar2 = lbl_803E74D4;
       *(float *)(obj + 0x24) = lbl_803E74D4;
       *(float *)(obj + 0x28) = fVar2;
@@ -1810,7 +1831,7 @@ LAB_8023de5c:
             *(f32 *)(piVar14 + 0x35) = ((f32)(lbl_803DC48C) * dVar19 +
                        *(f32 *)(piVar14 + 0x18));
     }
-    if ((lbl_803E7568 < *(float *)(obj + 0x98)) &&
+    if ((*(float *)(obj + 0x98) > lbl_803E7568) &&
        ((*(u8 *)(piVar14 + 0x3a) >> 6 & 1) == 0)) {
       iVar8 = randomGetRange(0,1);
       if (iVar8 == 0) {
@@ -1822,7 +1843,7 @@ LAB_8023de5c:
       Sfx_PlayFromObject(obj,uVar9);
       ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f40 = 1;
     }
-    if ((lbl_803E7570 < *(float *)(obj + 0x98)) && (-1 < *(char *)(piVar14 + 0x3a))) {
+    if ((*(float *)(obj + 0x98) > lbl_803E7570) && (((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f80 == 0)) {
       Sfx_PlayFromObject(obj,0x46d);
       ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f80 = 1;
     }
