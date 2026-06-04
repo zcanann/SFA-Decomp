@@ -6184,3 +6184,102 @@ int fn_801FFE18(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80201358(int obj, int p2)
+{
+    extern int Stack_IsFull(int sp);
+    extern void Stack_Push(int sp, int *args);
+    extern void ObjMsg_SendToObject(int, int, int, int);
+    extern int Obj_GetYawDeltaToObject(int, int, f32 *);
+    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+    extern f32 sqrtf(f32 x);
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E6310;
+    extern f32 lbl_803E6314;
+    extern f32 lbl_803E6318;
+    extern f32 lbl_803E631C;
+    extern f32 lbl_803E6320;
+    int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+    int c30 = *(int *)(sub + 0x30);
+    int c2c = *(int *)(sub + 0x2c);
+    int tmpB;
+    int tmpA;
+    int t;
+    int q;
+    f32 z;
+    f32 dist;
+    struct {
+        f32 v[3];
+        f32 out[3];
+    } stk;
+    int msgA[3];
+    int msgB[3];
+    int msgC[3];
+
+    z = lbl_803E62A8;
+    *(f32 *)(p2 + 0x280) = lbl_803E62A8;
+    *(f32 *)(p2 + 0x284) = z;
+    *(u8 *)(sub + 0x14) |= 2;
+    if (*(void **)(sub + 0x18) == NULL && *(s16 *)(sub + 0x1c) != -1) {
+        tmpA = *(int *)(sub + 0x30);
+        tmpB = *(int *)(sub + 0x2c);
+        q = *(int *)(sub + 0x24);
+        msgA[0] = *(int *)(sub + 0x28);
+        msgA[1] = tmpB;
+        msgA[2] = tmpA;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, msgA);
+        }
+        q = *(int *)(sub + 0x24);
+        msgB[0] = 8;
+        msgB[1] = c2c;
+        msgB[2] = c30;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, msgB);
+        }
+        *(u8 *)(sub + 0x34) = 1;
+        tmpA = *(s16 *)(sub + 0x1c);
+        q = *(int *)(sub + 0x24);
+        msgC[0] = 9;
+        msgC[1] = 0;
+        msgC[2] = tmpA;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, msgC);
+        }
+        *(u8 *)(sub + 0x34) = 1;
+        return 0;
+    } else {
+        *(u8 *)(sub + 0x15) |= 4;
+        if (*(int *)(sub + 0x18) != 0 && (*(u32 *)(p2 + 0x314) & 0x200) != 0) {
+            t = *(int *)(p2 + 0x2d0);
+            stk.v[0] = *(f32 *)(t + 0xc) - *(f32 *)(obj + 0xc);
+            stk.v[1] = *(f32 *)(t + 0x10) - *(f32 *)(obj + 0x10);
+            stk.v[2] = *(f32 *)(t + 0x14) - *(f32 *)(obj + 0x14);
+            dist = sqrtf(stk.v[0] * stk.v[0] + stk.v[2] * stk.v[2]);
+            stk.v[1] = stk.v[1] * lbl_803E6310;
+            dist = dist / lbl_803E6314;
+            stk.out[1] = -(dist * (lbl_803E6318 * dist) - stk.v[1]) / dist;
+            stk.out[1] = stk.out[1] * lbl_803E631C;
+            stk.out[0] = lbl_803E62A8;
+            stk.out[2] = lbl_803E6320;
+            ObjMsg_SendToObject(*(int *)(sub + 0x18), 0x11, obj, 0x11);
+            (**(void (**)(int, f32 *))(*(int *)(*(int *)(*(int *)(sub + 0x18) + 0x68)) + 0x24))(*(int *)(sub + 0x18), stk.out);
+            *(int *)(sub + 0x18) = 0;
+            *(s16 *)(sub + 0x1c) = -1;
+        }
+        *(s16 *)(obj + 0) += Obj_GetYawDeltaToObject(obj, *(int *)(p2 + 0x2d0), 0);
+        *(u8 *)(p2 + 0x34d) = 0x11;
+        if (*(s8 *)(p2 + 0x27a) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0x12, lbl_803E62A8, 0);
+            *(u8 *)(p2 + 0x346) = 0;
+        }
+        if (*(s8 *)(p2 + 0x346) != 0) {
+            *(u8 *)(sub + 0x34) = 1;
+        }
+        return 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
