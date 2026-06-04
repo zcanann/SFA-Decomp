@@ -30,7 +30,7 @@ extern undefined4 FUN_80053754();
 extern undefined4 FUN_8005398c();
 extern undefined4 FUN_80061a80();
 extern undefined4 FUN_8011e868();
-extern void WCPushBlock_SpawnFromPath(s16 *path);
+extern void WCPushBlock_SpawnFromPath(s16 *path, u8 *state);
 extern undefined4 FUN_80247bf8();
 extern undefined4 FUN_8028683c();
 extern undefined4 FUN_80286888();
@@ -338,7 +338,7 @@ void FUN_801eeafc(ushort *param_1,int param_2,undefined4 param_3,undefined4 para
     }
   }
   if (bVar1) {
-    WCPushBlock_SpawnFromPath((s16 *)param_1);
+    WCPushBlock_SpawnFromPath((s16 *)param_1, (u8 *)param_2);
   }
   return;
 }
@@ -784,133 +784,128 @@ void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
     *z = p[2];
 }
 
-/* Target 0x801EE668: Ghidra split this body as FUN_801eeafc. */
-void fn_801EE668(ushort *param_1,int param_2,undefined4 param_3,undefined4 param_4,
-                 undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
-{
-  bool bVar1;
-  int iVar2;
-  int iVar3;
-  ushort uVar4;
-  short sVar5;
-  uint uVar6;
-  double dVar7;
-  undefined8 uVar8;
-  double dVar9;
-  double dVar10;
-  undefined8 in_f4;
-  undefined8 in_f5;
-  undefined8 in_f6;
-  undefined8 in_f7;
-  undefined8 in_f8;
-  double dVar11;
+/* Path-follow steering update for the cloudrunner block (target 0x801EE668;
+ * Ghidra split this body as FUN_801eeafc). */
+extern u32 getButtonsHeld(int pad);
+extern void ObjAnim_SetCurrentMove(s16 *obj, int move, f32 t, int p4);
+extern void ObjAnim_AdvanceCurrentMove(s16 *obj, f32 moveStepScale, f32 deltaTime, void *events);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern f32 lbl_803E5C98;
+extern f32 lbl_803E5CA8;
+extern f32 lbl_803E5CAC;
+extern f32 lbl_803E5CB0;
+extern f32 lbl_803E5CB4;
 
-  iVar2 = *(int *)(param_2 + 0x74) * -6000;
-  iVar2 = iVar2 / 0x46 + (iVar2 >> 0x1f);
-  iVar2 = iVar2 - (iVar2 >> 0x1f);
-  iVar3 = *(int *)(param_2 + 0x70) * -12000;
-  iVar3 = iVar3 / 0x46 + (iVar3 >> 0x1f);
-  *(short *)(param_2 + 0x2c) =
-       (short)(int)-(((float)((double)CONCAT44(0x43300000,*(int *)(param_2 + 0x70) << 3 ^ 0x80000000
-                                              ) - DOUBLE_803e6938) / lbl_803E6930) *
-                     lbl_803DC074 -
-                    (float)((double)CONCAT44(0x43300000,(int)*(short *)(param_2 + 0x2c) ^ 0x80000000
-                                            ) - DOUBLE_803e6938));
-  *(short *)(param_2 + 0x2c) =
-       *(short *)(param_2 + 0x2c) -
-       (short)((int)((int)*(short *)(param_2 + 0x2c) * (uint)DAT_803dc070) >> 5);
-  uVar6 = iVar2 - (uint)param_1[1];
-  if (0x8000 < (int)uVar6) {
-    uVar6 = uVar6 - 0xffff;
-  }
-  if ((int)uVar6 < -0x8000) {
-    uVar6 = uVar6 + 0xffff;
-  }
-  param_1[1] = (ushort)(int)(lbl_803E6940 *
-                             (f32)(s32)(uVar6) * lbl_803DC074 +
-                            (float)((double)CONCAT44(0x43300000,(int)(short)param_1[1] ^ 0x80000000)
-                                   - DOUBLE_803e6938));
-  uVar6 = (iVar3 - (iVar3 >> 0x1f)) - (uint)*(ushort *)(param_2 + 0x2e);
-  if (0x8000 < (int)uVar6) {
-    uVar6 = uVar6 - 0xffff;
-  }
-  if ((int)uVar6 < -0x8000) {
-    uVar6 = uVar6 + 0xffff;
-  }
-  dVar10 = (double)lbl_803E6940;
-  *(short *)(param_2 + 0x2e) =
-       (short)(int)(dVar10 * (double)((f32)(s32)(uVar6) * lbl_803DC074) +
-                   (double)(float)((double)CONCAT44(0x43300000,
-                                                    (int)*(short *)(param_2 + 0x2e) ^ 0x80000000) -
-                                  DOUBLE_803e6938));
-  uVar4 = param_1[1];
-  if ((short)uVar4 < -8000) {
-    uVar4 = 0xe0c0;
-  }
-  else if (8000 < (short)uVar4) {
-    uVar4 = 8000;
-  }
-  param_1[1] = uVar4;
-  sVar5 = *(short *)(param_2 + 0x2e);
-  if (sVar5 < -13000) {
-    sVar5 = -13000;
-  }
-  else if (13000 < sVar5) {
-    sVar5 = 13000;
-  }
-  *(short *)(param_2 + 0x2e) = sVar5;
-  *param_1 = *(short *)(param_2 + 0x2c) + 0x4000;
-  param_1[2] = *(ushort *)(param_2 + 0x2e);
-  dVar9 = (double)lbl_803E6948;
-  dVar7 = (double)lbl_803E6944;
-  dVar11 = (double)(float)(dVar9 * (double)(float)((double)CONCAT44(0x43300000,
-                                                                    (int)(short)param_1[1] ^
-                                                                    0x80000000) - DOUBLE_803e6938) +
-                          dVar7);
-  if (dVar11 <= (double)lbl_803E694C) {
-    if (param_1[0x50] != 0x100) {
-      FUN_800305f8((double)lbl_803E6908,dVar9,dVar10,in_f4,in_f5,in_f6,in_f7,in_f8,param_1,0x100,0,
-                   iVar2,param_5,param_6,param_7,param_8);
+typedef struct {
+    u8 held : 1;
+} WCButtonFlag;
+
+typedef struct {
+    u8 pad[0x1b];
+    s8 sfxFlag;
+} WCAnimEvents;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801EE668(s16 *obj, u8 *state) {
+    WCAnimEvents events;
+    int doSpawn;
+    int yaw;
+    int pitch;
+    int d;
+    int v;
+    f32 spd;
+
+    yaw = (-*(int *)(state + 0x74) * 6000) / 70;
+    pitch = (-*(int *)(state + 0x70) * 12000) / 70;
+
+    *(s16 *)(state + 0x2c) = -(((f32)(*(int *)(state + 0x70) << 3) / lbl_803E5C98) * timeDelta - (f32)*(s16 *)(state + 0x2c));
+    *(s16 *)(state + 0x2c) -= (*(s16 *)(state + 0x2c) * framesThisStep) >> 5;
+
+    d = yaw - (u16)obj[1];
+    if (d > 0x8000) {
+        d -= 0xFFFF;
     }
-  }
-  else {
-    dVar7 = dVar11;
-    if (param_1[0x50] != 5) {
-      FUN_800305f8((double)lbl_803E6908,dVar9,dVar10,in_f4,in_f5,in_f6,in_f7,in_f8,param_1,5,0,
-                   iVar2,param_5,param_6,param_7,param_8);
-      dVar7 = dVar11;
+    if (d < -0x8000) {
+        d += 0xFFFF;
     }
-  }
-  dVar9 = (double)lbl_803DC074;
-  uVar8 = FUN_8002fc3c(dVar7,dVar9);
-  *(undefined4 *)(param_1 + 6) = *(undefined4 *)(param_2 + 0x4c);
-  *(undefined4 *)(param_1 + 8) = *(undefined4 *)(param_2 + 0x50);
-  *(undefined4 *)(param_1 + 10) = *(undefined4 *)(param_2 + 0x54);
-  bVar1 = false;
-  if (*(char *)(param_2 + 0x80) < '\0') {
-    uVar6 = FUN_80006c10(0);
-    if ((uVar6 & 0x100) == 0) {
-      *(byte *)(param_2 + 0x80) = *(byte *)(param_2 + 0x80) & 0x7f;
+    obj[1] = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32)obj[1];
+
+    d = pitch - (u16)*(s16 *)(state + 0x2e);
+    if (d > 0x8000) {
+        d -= 0xFFFF;
     }
-    else if (*(char *)(param_2 + 100) == '\0') {
-      bVar1 = true;
-      *(undefined *)(param_2 + 100) = 0x28;
+    if (d < -0x8000) {
+        d += 0xFFFF;
     }
-  }
-  else {
-    uVar6 = FUN_80006c10(0);
-    if (((uVar6 & 0x100) != 0) &&
-       (*(byte *)(param_2 + 0x80) = *(byte *)(param_2 + 0x80) & 0x7f | 0x80,
-       *(char *)(param_2 + 100) < '\x14')) {
-      bVar1 = true;
-      *(undefined *)(param_2 + 100) = 0x28;
+    *(s16 *)(state + 0x2e) = lbl_803E5CA8 * ((f32)d * timeDelta) + (f32)*(s16 *)(state + 0x2e);
+
+    v = obj[1];
+    if (v < -8000) {
+        v = -8000;
+    } else if (v > 8000) {
+        v = 8000;
     }
-  }
-  if (bVar1) {
-    WCPushBlock_SpawnFromPath((s16 *)param_1);
-  }
-  return;
+    obj[1] = v;
+
+    v = *(s16 *)(state + 0x2e);
+    if (v < -13000) {
+        v = -13000;
+    } else if (v > 13000) {
+        v = 13000;
+    }
+    *(s16 *)(state + 0x2e) = v;
+
+    obj[0] = *(s16 *)(state + 0x2c) + 0x4000;
+    obj[2] = *(s16 *)(state + 0x2e);
+
+    events.sfxFlag = 0;
+    spd = lbl_803E5CB0 * (f32)obj[1] + lbl_803E5CAC;
+    if (spd > lbl_803E5CB4) {
+        if (obj[0x50] != 5) {
+            ObjAnim_SetCurrentMove(obj, 5, lbl_803E5C70, 0);
+        }
+    } else {
+        spd = lbl_803E5CAC;
+        if (obj[0x50] != 256) {
+            ObjAnim_SetCurrentMove(obj, 256, lbl_803E5C70, 0);
+        }
+    }
+    ObjAnim_AdvanceCurrentMove(obj, spd, timeDelta, &events);
+
+    *(f32 *)(obj + 6) = *(f32 *)(state + 0x4c);
+    *(f32 *)(obj + 8) = *(f32 *)(state + 0x50);
+    *(f32 *)(obj + 10) = *(f32 *)(state + 0x54);
+
+    if (events.sfxFlag) {
+        Sfx_PlayFromObject(0, 294);
+    }
+
+    doSpawn = 0;
+    if (((WCButtonFlag *)(state + 0x80))->held) {
+        if ((getButtonsHeld(0) & 0x100) == 0) {
+            ((WCButtonFlag *)(state + 0x80))->held = 0;
+        } else if (*(s8 *)(state + 0x64) == 0) {
+            doSpawn = 1;
+            *(s8 *)(state + 0x64) = 40;
+        }
+    } else {
+        if ((getButtonsHeld(0) & 0x100) != 0) {
+            ((WCButtonFlag *)(state + 0x80))->held = 1;
+            if (*(s8 *)(state + 0x64) < 20) {
+                doSpawn = 1;
+                *(s8 *)(state + 0x64) = 40;
+            }
+        }
+    }
+    if (doSpawn) {
+        WCPushBlock_SpawnFromPath(obj, state);
+    }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* SB_CloudRunner_HandlePriorityHit: when the laser hits an object whose
  * type isn't 281 and isn't currently in fade state, fade it red, rumble,
