@@ -54,224 +54,202 @@ extern f32 lbl_803E6544;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+extern u8 *Obj_GetPlayerObject(void);
+extern int ObjList_GetObjects(int *outIndex,int *outCount);
+extern void spawnExplosion(double scale,int obj,int p3,int p4,int p5,int p6,int p7,int p8,int p9);
+extern void Obj_SetModelColorFadeRecursive(int obj,int p2,int p3,int p4,int p5,int p6);
+extern int Sfx_PlayFromObject();
+extern void Sfx_StopObjectChannel();
+extern s16 getAngle(f32 dx,f32 dz);
+extern f32 sqrtf(f32);
+extern char Obj_IsLoadingLocked(void);
+extern void Obj_GetWorldPosition(int obj,float *x,float *y,float *z);
+extern void mathFn_80021ac8(void *a,void *b);
+extern void *Obj_AllocObjectSetup(int size,int objType);
+extern u16 *Obj_SetupObject(void *setup,int p2,int p3,int p4,int p5);
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern f32 Vec_distance(float *a,float *b);
+extern u8 framesThisStep;
+extern undefined4 *gPartfxInterface;
+extern f32 lbl_803E5888;
+extern f32 lbl_803E588C;
+extern f32 lbl_803E5890;
+extern f32 lbl_803E5894;
+extern f32 lbl_803E5898;
+extern f32 lbl_803E589C;
+extern f32 lbl_803E58A0;
+extern f32 lbl_803E58A4;
+extern f32 lbl_803E58A8;
+extern f32 lbl_803E58AC;
+
+void SB_ShipGun_update(int obj)
 {
   char cVar1;
   float fVar2;
-  uint uVar3;
-  int iVar4;
+  u8 *player;
   int iVar5;
+  int *piVar10;
   int iVar6;
   int iVar7;
   uint uVar8;
-  undefined2 *puVar9;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int *piVar10;
+  u16 *puVar9;
   int iVar11;
-  undefined8 uVar12;
-  double dVar13;
-  double in_f29;
-  double in_f30;
-  double dVar14;
-  double in_f31;
-  double dVar15;
-  double dVar16;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  int local_88;
-  int local_84;
-  float local_80;
-  float local_7c;
-  float local_78;
-  float local_74;
-  float local_70;
-  float local_6c;
-  ushort local_68 [4];
-  float local_60;
-  float local_5c;
+  float local_54 [3];
   float local_58;
-  float local_54 [11];
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  uVar3 = FUN_8028683c();
-  iVar4 = FUN_80017a98();
-  piVar10 = *(int **)(uVar3 + 0xb8);
-  iVar11 = *(int *)(uVar3 + 0x4c);
-  if (*(short *)(*(int *)(uVar3 + 0x30) + 0x46) == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE) {
-    *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) = *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & 0xfffe
-    ;
+  float local_5c;
+  float local_60;
+  ushort local_68 [4];
+  float local_6c;
+  float local_70;
+  float local_74;
+  float local_78;
+  float local_7c;
+  float local_80;
+  int local_84;
+  int local_88;
+  f32 fdx;
+  f32 fdy;
+  f32 fdz;
+  f32 dist;
+  int i;
+
+  player = Obj_GetPlayerObject();
+  piVar10 = *(int **)(obj + 0xb8);
+  iVar11 = *(int *)(obj + 0x4c);
+  if (*(short *)(*(int *)(obj + 0x30) + 0x46) == SB_SHIPGUN_WM_GALLEON_ALIAS_OBJECT_TYPE) {
+    *(short *)(*(int *)(obj + 0x54) + 0x60) = *(short *)(*(int *)(obj + 0x54) + 0x60) & ~1;
     *(undefined *)((int)piVar10 + 0xd) = 0;
   }
   else {
-    if (*piVar10 == 0) {
-      iVar5 = FUN_80017b00(&local_84,&local_88);
-      for (; local_84 < local_88; local_84 = local_84 + 1) {
-        iVar6 = *(int *)(iVar5 + local_84 * 4);
+    if (*(uint *)piVar10 == 0) {
+      iVar5 = ObjList_GetObjects(&local_84,&local_88);
+      for (i = local_84; i < local_88; i = i + 1) {
+        iVar6 = *(int *)(iVar5 + i * 4);
         if (*(short *)(iVar6 + 0x46) == SB_SHIPGUN_CLOUDRUNNER_ALIAS_OBJECT_TYPE) {
           *piVar10 = iVar6;
-          local_84 = local_88;
+          i = local_88;
         }
       }
     }
-    iVar5 = *(int *)(uVar3 + 0x30);
-    if ((iVar5 == 0) || (*(short *)(iVar5 + 0x46) != SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE)) {
+    iVar5 = *(int *)(obj + 0x30);
+    if (((void *)iVar5 != NULL) &&
+        (*(short *)(iVar5 + 0x46) == SB_SHIPGUN_GALLEON_ALIAS_OBJECT_TYPE)) {
+      iVar6 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x24))(iVar5);
+    }
+    else {
       iVar6 = 0;
       *(undefined *)((int)piVar10 + 10) = 4;
     }
-    else {
-      iVar6 = (**(code **)(**(int **)(iVar5 + 0x68) + 0x24))(iVar5);
-    }
     *(undefined *)((int)piVar10 + 0xd) = 1;
     cVar1 = *(char *)((int)piVar10 + 10);
-    if (cVar1 == '\x03') {
-      *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) =
-           *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & ~1;
-      if (*(char *)(piVar10 + 3) == '\0') {
-        FUN_8008112c((double)lbl_803E6528,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                     uVar3,1,1,1,0,1,1,0);
-        *(undefined *)((int)piVar10 + 10) = 4;
-      }
-      else {
-        *(undefined *)((int)piVar10 + 10) = 5;
-      }
-    }
-    else if (cVar1 < '\x03') {
-      if (cVar1 != '\x01') {
-        if (cVar1 < '\x01') {
-          if (-1 < cVar1) {
-            if ((iVar5 != 0) &&
-               (iVar5 = (**(code **)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5), iVar5 == 0)) {
-              if (*(char *)(iVar11 + 0x19) == '\0') {
-                *(undefined *)((int)piVar10 + 10) = 2;
-                *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_WAKE_DELAY;
-              }
-              else {
-                *(undefined *)((int)piVar10 + 10) = 2;
-                *(undefined2 *)(piVar10 + 2) = 0;
-              }
-            }
-            *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) =
-                 *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & ~1;
-          }
+    switch (cVar1) {
+    case 0:
+      if (((void *)iVar5 != NULL) &&
+         (iVar5 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5), iVar5 == 0)) {
+        if (*(char *)(iVar11 + 0x19) == '\0') {
+          *(undefined *)((int)piVar10 + 10) = 2;
+          *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_WAKE_DELAY;
         }
         else {
-          *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) =
-               *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) | 1;
-          iVar11 = (**(code **)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5);
+          *(undefined *)((int)piVar10 + 10) = 2;
+          *(undefined2 *)(piVar10 + 2) = 0;
+        }
+      }
+      *(short *)(*(int *)(obj + 0x54) + 0x60) = *(short *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+      break;
+    case 2:
+      {
+          *(short *)(*(int *)(obj + 0x54) + 0x60) = *(short *)(*(int *)(obj + 0x54) + 0x60) | 1;
+          iVar11 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5);
           if ((iVar11 == 0) &&
-             (iVar7 = ObjHits_GetPriorityHit(uVar3,(undefined4 *)0x0,(int *)0x0,(uint *)0x0), iVar7 != 0)) {
-            in_r8 = 1;
-            FUN_80017a28(uVar3, SB_SHIPGUN_HIT_REACT_TYPE, SB_SHIPGUN_HIT_REACT_POWER, 0, 0, 1);
-            FUN_80006824(uVar3, SB_SHIPGUN_HIT_ANIM_A);
-            *(char *)((int)piVar10 + 0xb) = *(char *)((int)piVar10 + 0xb) + '\x01';
+             (iVar7 = ObjHits_GetPriorityHit(obj,0,0,0), iVar7 != 0)) {
+            Obj_SetModelColorFadeRecursive(obj,SB_SHIPGUN_HIT_REACT_TYPE,SB_SHIPGUN_HIT_REACT_POWER,0,0,1);
+            Sfx_PlayFromObject(obj,SB_SHIPGUN_HIT_ANIM_A);
+            *(s8 *)((int)piVar10 + 0xb) += 1;
             if (*(char *)((int)piVar10 + 0xb) == SB_SHIPGUN_FIRST_DAMAGE_HIT_COUNT) {
-              *(char *)(piVar10 + 3) = *(char *)(piVar10 + 3) + -1;
+              *(s8 *)(piVar10 + 3) -= 1;
               *(undefined *)((int)piVar10 + 10) = 3;
-              if (iVar5 != 0) {
-                (**(code **)(**(int **)(iVar5 + 0x68) + 0x20))(iVar5);
+              if ((void *)iVar5 != NULL) {
+                (*(code *)(**(int **)(iVar5 + 0x68) + 0x20))(iVar5);
               }
             }
             else if (*(char *)((int)piVar10 + 0xb) == SB_SHIPGUN_SECOND_DAMAGE_HIT_COUNT) {
-              FUN_80006824(uVar3, SB_SHIPGUN_HIT_ANIM_B);
-              *(char *)(piVar10 + 3) = *(char *)(piVar10 + 3) + -1;
+              Sfx_PlayFromObject(obj,SB_SHIPGUN_HIT_ANIM_B);
+              *(s8 *)(piVar10 + 3) -= 1;
               *(undefined *)((int)piVar10 + 10) = 3;
-              if (iVar5 != 0) {
-                (**(code **)(**(int **)(iVar5 + 0x68) + 0x20))(iVar5);
+              if ((void *)iVar5 != NULL) {
+                (*(code *)(**(int **)(iVar5 + 0x68) + 0x20))(iVar5);
               }
             }
           }
-          if ((iVar5 != 0) && (iVar11 != 0)) {
+          if (((void *)iVar5 != NULL) && (iVar11 != 0)) {
             *(undefined *)((int)piVar10 + 10) = 3;
           }
-          dVar13 = (double)(*(float *)(iVar4 + 0x18) - *(float *)(uVar3 + 0x18));
-          dVar15 = (double)(*(float *)(iVar4 + 0x20) - *(float *)(uVar3 + 0x20));
-          uVar8 = FUN_80017730();
-          *(short *)(piVar10 + 1) = (short)((uVar8 & 0xffff) << 1);
-          dVar13 = FUN_80293900((double)(float)(dVar13 * dVar13 + (double)(float)(dVar15 * dVar15)))
-          ;
-          iVar11 = FUN_80017730();
-          *(short *)((int)piVar10 + 6) = (short)iVar11;
-          if (*(short *)((int)piVar10 + 6) < 0x1f41) {
+          fdx = *(float *)(player + 0x18) - *(float *)(obj + 0x18);
+          fdz = *(float *)(player + 0x20) - *(float *)(obj + 0x20);
+          *(short *)(piVar10 + 1) = (short)(((uint)(u16)getAngle(-fdz,fdx) & 0xffff) << 1);
+          fdy = *(float *)(player + 0x1c) - *(float *)(obj + 0x1c);
+          dist = sqrtf(fdx * fdx + fdz * fdz);
+          *(short *)((int)piVar10 + 6) = getAngle(-fdy,dist);
+          if (*(short *)((int)piVar10 + 6) <= 8000) {
             if (*(short *)((int)piVar10 + 6) < -8000) {
-              *(undefined2 *)((int)piVar10 + 6) = 0xe0c0;
+              *(short *)((int)piVar10 + 6) = -8000;
             }
           }
           else {
-            *(undefined2 *)((int)piVar10 + 6) = 8000;
+            *(short *)((int)piVar10 + 6) = 8000;
           }
-          *(ushort *)(piVar10 + 2) = *(short *)(piVar10 + 2) - (ushort)DAT_803dc070;
-          if ((*(short *)(piVar10 + 2) < 0) && (uVar8 = FUN_80017ae8(), (uVar8 & 0xff) != 0)) {
-            FUN_800068fc(uVar3,&local_78,&local_7c,&local_80);
-            local_5c = lbl_803E6524;
-            local_58 = lbl_803E6524;
-            local_54[0] = lbl_803E6524;
-            local_60 = lbl_803E6520;
+          *(ushort *)(piVar10 + 2) = *(short *)(piVar10 + 2) - (ushort)framesThisStep;
+          if ((*(short *)(piVar10 + 2) < 0) && (Obj_IsLoadingLocked() != '\0')) {
+            Obj_GetWorldPosition(obj,&local_78,&local_7c,&local_80);
+            local_5c = lbl_803E588C;
+            local_58 = lbl_803E588C;
+            local_54[0] = lbl_803E588C;
+            local_60 = lbl_803E5888;
             local_68[0] = *(ushort *)(piVar10 + 1);
             local_68[1] = 0;
             local_68[2] = 0;
-            local_74 = lbl_803E6528;
-            local_70 = lbl_803E652C;
-            local_6c = lbl_803E6524;
-            uVar12 = FUN_80017748(local_68,&local_74);
-            puVar9 = FUN_80017aa4(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE, SB_CANNONBALL_ALIAS_OBJECT_TYPE);
-            *(float *)(puVar9 + 4) = local_78;
-            *(float *)(puVar9 + 6) = local_7c;
-            *(float *)(puVar9 + 8) = local_80;
-            *(undefined *)(puVar9 + 2) = SB_SHIPGUN_CANNONBALL_MODEL_FIELD;
-            *(undefined *)((int)puVar9 + 5) = SB_SHIPGUN_CANNONBALL_FLAGS_FIELD;
-            *(undefined *)(puVar9 + 3) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
-            *(undefined *)((int)puVar9 + 7) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
-            puVar9 = (undefined2 *)
-                     FUN_80017ae4(uVar12,dVar13,param_3,param_4,param_5,param_6,param_7,param_8,
-                                  puVar9, SB_CANNONBALL_SETUP_PARAM, SB_SHIPGUN_CANNONBALL_BYTE_FF,
-                                  0xffffffff, (uint *)0x0, in_r8, in_r9, in_r10);
+            local_74 = lbl_803E5890;
+            local_70 = lbl_803E5894;
+            local_6c = lbl_803E588C;
+            mathFn_80021ac8(local_68,&local_74);
+            iVar11 = (int)Obj_AllocObjectSetup(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE,SB_CANNONBALL_ALIAS_OBJECT_TYPE);
+            *(float *)(iVar11 + 8) = local_78;
+            *(float *)(iVar11 + 0xc) = local_7c;
+            *(float *)(iVar11 + 0x10) = local_80;
+            *(undefined *)(iVar11 + 4) = SB_SHIPGUN_CANNONBALL_MODEL_FIELD;
+            *(undefined *)(iVar11 + 5) = SB_SHIPGUN_CANNONBALL_FLAGS_FIELD;
+            *(undefined *)(iVar11 + 6) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
+            *(undefined *)(iVar11 + 7) = SB_SHIPGUN_CANNONBALL_BYTE_FF;
+            puVar9 = Obj_SetupObject((void *)iVar11,5,0xffffffff,0xffffffff,0);
             iVar11 = *piVar10;
-            dVar16 = (double)(*(float *)(iVar11 + 0x18) - *(float *)(uVar3 + 0x18));
-            dVar15 = (double)(*(float *)(iVar11 + 0x1c) -
-                             (*(float *)(uVar3 + 0x1c) - lbl_803E6530));
-            dVar14 = (double)(*(float *)(iVar11 + 0x20) - *(float *)(uVar3 + 0x20));
-            dVar13 = FUN_80293900((double)(float)(dVar14 * dVar14 +
-                                                 (double)(float)(dVar16 * dVar16 +
-                                                                (double)(float)(dVar15 * dVar15))));
-            local_78 = lbl_803E6534 / (float)dVar13;
-            *(float *)(puVar9 + 0x12) = (float)(dVar16 * (double)local_78);
-            *(float *)(puVar9 + 0x14) = (float)(dVar15 * (double)local_78);
-            *(float *)(puVar9 + 0x16) = (float)(dVar14 * (double)local_78);
-            fVar2 = lbl_803E6538;
-            *(float *)(puVar9 + 6) =
-                 lbl_803E6538 * *(float *)(puVar9 + 0x12) + *(float *)(puVar9 + 6);
+            fdx = *(float *)(iVar11 + 0x18) - *(float *)(obj + 0x18);
+            fdy = *(float *)(iVar11 + 0x1c) - (*(float *)(obj + 0x1c) - lbl_803E5898);
+            fdz = *(float *)(iVar11 + 0x20) - *(float *)(obj + 0x20);
+            dist = sqrtf(fdz * fdz + (fdx * fdx + fdy * fdy));
+            local_78 = lbl_803E589C / dist;
+            *(float *)(puVar9 + 0x12) = fdx * local_78;
+            *(float *)(puVar9 + 0x14) = fdy * local_78;
+            *(float *)(puVar9 + 0x16) = fdz * local_78;
+            fVar2 = lbl_803E58A0;
+            *(float *)(puVar9 + 6) = fVar2 * *(float *)(puVar9 + 0x12) + *(float *)(puVar9 + 6);
             *(float *)(puVar9 + 8) = fVar2 * *(float *)(puVar9 + 0x14) + *(float *)(puVar9 + 8);
             *(float *)(puVar9 + 10) = fVar2 * *(float *)(puVar9 + 0x16) + *(float *)(puVar9 + 10);
-            iVar11 = FUN_80017730();
-            *puVar9 = (short)iVar11;
+            *puVar9 = getAngle(*(float *)(puVar9 + 0x12),*(float *)(puVar9 + 0x16));
             *(undefined4 *)(puVar9 + 0x7a) = SB_SHIPGUN_CANNONBALL_LIFETIME;
             *(int *)(puVar9 + 0x7c) = *piVar10;
-            FUN_800069bc();
-            FUN_80006920((double)lbl_803E653C);
-            FUN_80006824(uVar3, SB_SHIPGUN_FIRE_ANIM);
-            *(char *)((int)piVar10 + 0xe) = *(char *)((int)piVar10 + 0xe) + '\x01';
+            Camera_EnableViewYOffset();
+            CameraShake_SetAllMagnitudes(lbl_803E58A4);
+            Sfx_PlayFromObject(obj,SB_SHIPGUN_FIRE_ANIM);
+            *(s8 *)((int)piVar10 + 0xe) += 1;
             if (*(char *)((int)piVar10 + 0xe) == SB_SHIPGUN_VOLLEY_SIZE) {
               if (iVar6 < SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE) {
-                uVar8 = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
+                uVar8 = randomGetRange(0,SB_SHIPGUN_FIRE_DELAY_VARIANCE);
                 *(short *)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_SLOW_FIRE_DELAY;
               }
               else {
-                uVar8 = randomGetRange(0, SB_SHIPGUN_FIRE_DELAY_VARIANCE);
+                uVar8 = randomGetRange(0,SB_SHIPGUN_FIRE_DELAY_VARIANCE);
                 *(short *)(piVar10 + 2) = (short)uVar8 + SB_SHIPGUN_FAST_FIRE_DELAY;
               }
               *(undefined *)((int)piVar10 + 0xe) = 0;
@@ -283,14 +261,36 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
               *(undefined2 *)(piVar10 + 2) = SB_SHIPGUN_FAST_FIRE_DELAY;
             }
           }
-        }
       }
-    }
-    else if (cVar1 == '\x05') {
-      *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) =
-           *(ushort *)(*(int *)(uVar3 + 0x54) + 0x60) & ~1;
-      if ((iVar5 != 0) &&
-         (iVar5 = (**(code **)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5), iVar5 == 0)) {
+      break;
+    case 3:
+      *(short *)(*(int *)(obj + 0x54) + 0x60) = *(short *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+      if (*(char *)(piVar10 + 3) == '\0') {
+        spawnExplosion((double)lbl_803E5890,obj,1,1,1,0,1,1,0);
+        *(undefined *)((int)piVar10 + 10) = 4;
+      }
+      else {
+        *(undefined *)((int)piVar10 + 10) = 5;
+      }
+      break;
+    case 4:
+      {
+      local_60 = lbl_803E58A8;
+      local_68[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
+      ObjPath_GetPointWorldPosition(obj,0,&local_5c,&local_58,local_54,0);
+      local_5c = local_5c - *(float *)(obj + 0x18);
+      local_58 = local_58 - *(float *)(obj + 0x1c);
+      local_54[0] = local_54[0] - *(float *)(obj + 0x20);
+      for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1) {
+        (*(code *)(*gPartfxInterface + 8))(obj,SB_SHIPGUN_SMOKE_PARTICLE_ID,local_68,
+                                           SB_SHIPGUN_SMOKE_PARTICLE_PARAM,0xffffffff,0);
+      }
+      }
+      break;
+    case 5:
+      *(short *)(*(int *)(obj + 0x54) + 0x60) = *(short *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+      if (((void *)iVar5 != NULL) &&
+         (iVar5 = (*(code *)(**(int **)(iVar5 + 0x68) + 0x28))(iVar5), iVar5 == 0)) {
         if (*(char *)(iVar11 + 0x19) == '\0') {
           if (SB_SHIPGUN_FAST_FIRE_GALLEON_PHASE <= iVar6) {
             *(undefined *)((int)piVar10 + 10) = 2;
@@ -302,40 +302,28 @@ void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefine
           *(undefined2 *)(piVar10 + 2) = 0;
         }
       }
-      local_60 = lbl_803E6540;
+      local_60 = lbl_803E58A8;
       local_68[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
-      ObjPath_GetPointWorldPosition(uVar3,0,&local_5c,&local_58,local_54,0);
-      local_5c = local_5c - *(float *)(uVar3 + 0x18);
-      local_58 = local_58 - *(float *)(uVar3 + 0x1c);
-      local_54[0] = local_54[0] - *(float *)(uVar3 + 0x20);
-      for (iVar11 = 0; iVar11 < (int)(uint)DAT_803dc070; iVar11 = iVar11 + 1) {
-        (**(code **)(*DAT_803dd708 + 8))(uVar3, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
-                                           SB_SHIPGUN_SMOKE_PARTICLE_PARAM, 0xffffffff, 0);
+      ObjPath_GetPointWorldPosition(obj,0,&local_5c,&local_58,local_54,0);
+      local_5c = local_5c - *(float *)(obj + 0x18);
+      local_58 = local_58 - *(float *)(obj + 0x1c);
+      local_54[0] = local_54[0] - *(float *)(obj + 0x20);
+      for (iVar11 = 0; iVar11 < (int)(uint)framesThisStep; iVar11 = iVar11 + 1) {
+        (*(code *)(*gPartfxInterface + 8))(obj,SB_SHIPGUN_SMOKE_PARTICLE_ID,local_68,
+                                           SB_SHIPGUN_SMOKE_PARTICLE_PARAM,0xffffffff,0);
       }
-    }
-    else if (cVar1 < '\x05') {
-      local_60 = lbl_803E6540;
-      local_68[3] = SB_SHIPGUN_SMOKE_PARTICLE_FLAGS;
-      ObjPath_GetPointWorldPosition(uVar3,0,&local_5c,&local_58,local_54,0);
-      local_5c = local_5c - *(float *)(uVar3 + 0x18);
-      local_58 = local_58 - *(float *)(uVar3 + 0x1c);
-      local_54[0] = local_54[0] - *(float *)(uVar3 + 0x20);
-      for (iVar11 = 0; iVar11 < (int)(uint)DAT_803dc070; iVar11 = iVar11 + 1) {
-        (**(code **)(*DAT_803dd708 + 8))(uVar3, SB_SHIPGUN_SMOKE_PARTICLE_ID, local_68,
-                                           SB_SHIPGUN_SMOKE_PARTICLE_PARAM, 0xffffffff, 0);
-      }
+      break;
     }
     if (*(char *)(piVar10 + 3) == '\0') {
-      dVar13 = (double)FUN_8001771c((float *)(iVar4 + 0x18),(float *)(uVar3 + 0x18));
-      if ((double)lbl_803E6544 <= dVar13) {
-        FUN_8000680c(uVar3, SB_SHIPGUN_RANGE_FAR_ANIM);
+      dist = Vec_distance((float *)(player + 0x18),(float *)(obj + 0x18));
+      if (lbl_803E58AC <= dist) {
+        Sfx_StopObjectChannel(obj,SB_SHIPGUN_RANGE_FAR_ANIM);
       }
       else {
-        FUN_80006824(uVar3, SB_SHIPGUN_RANGE_NEAR_ANIM);
+        Sfx_PlayFromObject(obj,SB_SHIPGUN_RANGE_NEAR_ANIM);
       }
     }
   }
-  FUN_80286888();
   return;
 }
 
@@ -416,7 +404,7 @@ void SB_CannonBall_update(int *obj) {
         objfx_spawnFlaggedTrailBurst(obj, lbl_803E58BC, SB_CANNONBALL_SETUP_SIZE, SB_CANNONBALL_SETUP_MODEL_ID, SB_CANNONBALL_SETUP_PARAM, 0);
     }
     (*((void (***)(int *, int, int, int, int, int))gPartfxInterface))[2](obj, SB_CANNONBALL_TRAIL_PARTICLE_ID, 0, 1, -1, 0);
-    *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) + SB_CANNONBALL_ROTATION_STEP;
+    *(s16 *)((char *)obj + 2) += SB_CANNONBALL_ROTATION_STEP;
     if ((*(s8 *)((char *)state + 0x1a) & SB_CANNONBALL_TRAJECTORY_INITIALIZED_FLAG) == 0) {
         *(f32 *)state = *(f32 *)((char *)obj + 0x24);
         *(f32 *)((char *)state + 4) = *(f32 *)((char *)obj + 0x28);
@@ -440,17 +428,17 @@ void SB_CannonBall_update(int *obj) {
         Obj_FreeObject(obj);
     }
     if (*(s16 *)((char *)state + 0x18) > SB_CANNONBALL_HITBOX_ENABLE_DELAY) {
-        int *p = *(int **)((char *)obj + 0x54);
-        *(u8 *)((char *)p + 0x6e) = SB_CANNONBALL_HITBOX_TYPE;
-        *(u8 *)((char *)p + 0x6f) = SB_CANNONBALL_HITBOX_PRIORITY;
-        *(int *)((char *)p + 0x48) = SB_CANNONBALL_HITBOX_SIZE;
-        *(int *)((char *)p + 0x4c) = SB_CANNONBALL_HITBOX_SIZE;
-        *(s16 *)((char *)p + 0x60) = *(s16 *)((char *)p + 0x60) | SB_CANNONBALL_SOLID_HITBOX_FLAG;
+        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6e) = SB_CANNONBALL_HITBOX_TYPE;
+        *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6f) = SB_CANNONBALL_HITBOX_PRIORITY;
+        *(int *)(*(int *)((char *)obj + 0x54) + 0x48) = SB_CANNONBALL_HITBOX_SIZE;
+        *(int *)(*(int *)((char *)obj + 0x54) + 0x4c) = SB_CANNONBALL_HITBOX_SIZE;
+        *(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) =
+            *(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) | SB_CANNONBALL_SOLID_HITBOX_FLAG;
     } else {
-        int *p = *(int **)((char *)obj + 0x54);
-        *(s16 *)((char *)p + 0x60) = *(s16 *)((char *)p + 0x60) & ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
+        *(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) =
+            *(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) & ~SB_CANNONBALL_SOLID_HITBOX_FLAG;
     }
-    *(s16 *)((char *)state + 0x18) = *(s16 *)((char *)state + 0x18) + framesThisStep;
+    *(s16 *)((char *)state + 0x18) += framesThisStep;
 }
 #pragma peephole reset
 #pragma scheduling reset
