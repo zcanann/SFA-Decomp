@@ -636,6 +636,995 @@ void expgfx_initSlotQuad(void *slotPtr)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void *Obj_GetPlayerObject(void);
+extern void *getTrickyObject(void);
+extern int getSkyStructField24C(void);
+extern void fn_800897D4(int skyStruct, f32 *x, f32 *y, f32 *z);
+extern f32 *Camera_GetViewRotationMatrix(void);
+extern void getAmbientColor(int skyStruct, u8 *r, u8 *g, u8 *b);
+extern f32 fn_80138F78(void *tricky);
+extern f32 fn_8029610C(void *player);
+extern void *getCache(void);
+extern void copyToCache(void *dst, void *src, int blockCount);
+extern void memcpyToCache(void *dst, void *src, int blockCount);
+extern void cacheFn_800229c4(int wait);
+extern void *Camera_GetCurrentViewSlot(void);
+extern u32 randomGetRange(int min, int max);
+extern void mathFn_80021ac8(void *params, void *vec);
+extern int coordsToMapCell(f32 x, f32 z);
+extern void Obj_RotateLocalOffsetByYaw(void *offset, f32 *out, u8 yaw);
+extern void Sfx_PlayFromObject(void *obj, int sfxId);
+extern f32 sqrtf(f32 x);
+extern u8 framesThisStep;
+extern undefined4 *gWaterfxInterface;
+extern u16 gExpgfxPhaseAngleA;
+extern u16 gExpgfxPhaseAngleB;
+extern f32 lbl_803DF38C;
+extern f32 lbl_803DF390;
+extern f32 lbl_803DF3B0;
+extern f32 lbl_803DF3C8;
+extern f32 lbl_803DF3CC;
+extern f32 lbl_803DF3D0;
+extern f32 lbl_803DF3D4;
+extern f32 lbl_803DF3D8;
+extern f32 lbl_803DF3DC;
+extern f32 lbl_803DF3E0;
+extern f32 lbl_803DF3E4;
+extern f32 lbl_803DF3E8;
+extern f32 lbl_803DF3EC;
+extern f32 lbl_803DF3F0;
+extern f32 lbl_803DF3F4;
+extern f32 lbl_803DF3F8;
+extern f32 lbl_803DF3FC;
+extern f32 lbl_803DF400;
+extern f32 lbl_803DF404;
+extern f32 lbl_803DF408;
+extern f32 lbl_803DF40C;
+extern f32 lbl_803DF410;
+
+typedef void (*ExpgfxSfxMoveFn)(void *obj, int soundHandle, void *params, int flags, int a,
+                                int b);
+typedef void (*ExpgfxWaterRippleFnA)(f32 x, f32 y, f32 z, f32 w, int a, int b);
+typedef void (*ExpgfxWaterRippleFnB)(f32 x, f32 y, f32 z, f32 radius, int a);
+
+typedef struct ExpgfxRotateParams {
+  s16 angleX;
+  s16 angleY;
+  s16 angleZ;
+  f32 scale;
+  f32 x;
+  f32 y;
+  f32 z;
+} ExpgfxRotateParams;
+
+/*
+ * --INFO--
+ *
+ * Function: expgfx_updateActivePools
+ * EN v1.0 Address: 0x8009B9C8
+ * EN v1.0 Size: 9252b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameState)
+{
+  u8 *staticBase;
+  u8 *runtimeBase;
+  int next;
+  ExpgfxBounds *bounds;
+  f32 *maxYPtr;
+  f32 *minZPtr;
+  f32 *maxZPtr;
+  s16 slotIdx;
+  ExpgfxSlot *slot;
+  ExpgfxQuadTemplateVertex *template;
+  s16 texT1;
+  s16 texT0;
+  s16 texS1;
+  u8 *nextBuf;
+  void *player;
+  void *tricky;
+  int pool;
+  int sky;
+  f32 *minYPtr;
+  u8 *srcObj;
+  u32 resource;
+  s16 texS0;
+  s8 *scan;
+  int batch;
+  int curPool;
+  u32 *maskPtr;
+  void *cache;
+  u8 *curCache;
+  u8 *curPoolBuf;
+  f32 *maxXPtr;
+  int pool4;
+  u8 parity;
+  u8 prefetched;
+  int ambRPlus1;
+  int ambGPlus1;
+  int ambBPlus1;
+  u8 ambScaledR;
+  u8 ambScaledG;
+  u8 ambScaledB;
+  ExpgfxRotateParams rot;
+  f32 vecBuf[3];
+  f32 camDir[3];
+  f32 rotPos[3];
+  f32 srcVel[3];
+  u8 ambB8;
+  u8 ambG8;
+  u8 ambR8;
+  f32 trickyRange;
+  f32 playerRange;
+  f32 boundsMax;
+  f32 boundsMin;
+  f32 prevX;
+  f32 prevY;
+  f32 prevZ;
+  f32 workA;
+  f32 workB;
+  f32 attractRatio;
+  f32 camScale;
+
+  staticBase = gExpgfxStaticData;
+  runtimeBase = gExpgfxRuntimeData;
+  attractRatio = lbl_803DF354;
+  trickyRange = lbl_803DF35C;
+  playerRange = trickyRange;
+  player = Obj_GetPlayerObject();
+  tricky = getTrickyObject();
+  cache = getCache();
+  gExpgfxPhaseAngleA += (int)(lbl_803DF3C8 * timeDelta);
+  gExpgfxPhaseAngleB += (int)(lbl_803DF3CC * timeDelta);
+  sky = getSkyStructField24C();
+  fn_800897D4(sky, &camDir[0], &camDir[1], &camDir[2]);
+  PSMTXMultVec((void *)Camera_GetViewRotationMatrix(), (void *)camDir, (void *)camDir);
+  camScale = -camDir[2];
+  if (camScale < lbl_803DF3D0) {
+    camScale = lbl_803DF3D0;
+  }
+  getAmbientColor(sky, &ambR8, &ambG8, &ambB8);
+  ambScaledR = (int)((f32)ambR8 * camScale);
+  ambScaledG = (int)((f32)ambG8 * camScale);
+  ambScaledB = (int)((f32)ambB8 * camScale);
+
+  pool = 0;
+  scan = (s8 *)(runtimeBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
+  for (batch = 8; batch != 0; batch--) {
+    switch (scan[0]) { case 0: break; default: goto foundFirst; }
+    pool++;
+    switch (scan[1]) { case 0: break; default: goto foundFirst; }
+    pool++;
+    switch (scan[2]) { case 0: break; default: goto foundFirst; }
+    pool++;
+    switch (scan[3]) { case 0: break; default: goto foundFirst; }
+    pool++;
+    switch (scan[4]) { case 0: break; default: goto foundFirst; }
+    pool++;
+    switch (scan[5]) { case 0: break; default: goto foundFirst; }
+    pool++;
+    switch (scan[6]) { case 0: break; default: goto foundFirst; }
+    pool++;
+    switch (scan[7]) { case 0: break; default: goto foundFirst; }
+    pool++;
+    switch (scan[8]) { case 0: break; default: goto foundFirst; }
+    pool++;
+    switch (scan[9]) { case 0: break; default: goto foundFirst; }
+    scan += 10;
+    pool++;
+  }
+  pool = -1;
+foundFirst:
+  if (pool != -1) {
+    copyToCache(cache,
+                (void *)*(u32 *)((runtimeBase + (pool << 2)) + EXPGFX_SLOT_POOL_BASES_OFFSET),
+                0x7e);
+    parity = 1;
+    curCache = cache;
+    Camera_GetCurrentViewSlot();
+    if (tricky != NULL) {
+      trickyRange = fn_80138F78(tricky);
+    }
+    if (player != NULL) {
+      playerRange = fn_8029610C(player);
+    }
+    prefetched = 0;
+    ambRPlus1 = ambScaledR + 1;
+    ambGPlus1 = ambScaledG + 1;
+    ambBPlus1 = ambScaledB + 1;
+    boundsMin = lbl_803DF3D4;
+    boundsMax = lbl_803DF3D8;
+    while (pool > -1) {
+      bounds = (ExpgfxBounds *)(runtimeBase + pool * 0x18 + EXPGFX_POOL_BOUNDS_OFFSET);
+      bounds->minX = boundsMin;
+      maxXPtr = &bounds->maxX;
+      *maxXPtr = boundsMax;
+      minYPtr = &bounds->minY;
+      *minYPtr = boundsMin;
+      maxYPtr = &bounds->maxY;
+      *maxYPtr = boundsMax;
+      minZPtr = &bounds->minZ;
+      *minZPtr = boundsMin;
+      maxZPtr = &bounds->maxZ;
+      *maxZPtr = boundsMax;
+      curPool = pool;
+      next = pool + 1;
+      scan = (s8 *)(runtimeBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET + next);
+      if (next < EXPGFX_POOL_COUNT) {
+        do {
+          switch (*scan) { case 0: break; default: goto foundNext; }
+          scan++;
+          next++;
+        } while (next < EXPGFX_POOL_COUNT);
+      }
+      next = -1;
+    foundNext:
+      slot = (ExpgfxSlot *)curCache;
+      if (next > -1) {
+        nextBuf = (u8 *)cache + (u32)parity * 0x1000;
+        copyToCache(nextBuf,
+                    (void *)*(u32 *)((runtimeBase + (next << 2)) + EXPGFX_SLOT_POOL_BASES_OFFSET),
+                    0x7e);
+        curCache = nextBuf;
+        prefetched = 1;
+      }
+      parity ^= 1;
+      cacheFn_800229c4(prefetched);
+      slot--;
+      pool4 = pool << 2;
+      maskPtr = (u32 *)(runtimeBase + pool4);
+      maskPtr = (u32 *)((u8 *)maskPtr + EXPGFX_POOL_ACTIVE_MASKS_OFFSET);
+      curPoolBuf = (u8 *)cache + (u32)parity * 0x1000;
+      for (slotIdx = 0; slotIdx < EXPGFX_SLOTS_PER_POOL; slotIdx++) {
+        ExpgfxQuadVertex *quad;
+        ExpgfxTableEntry *entry;
+        u32 phase;
+
+        slot++;
+        if ((1 << slotIdx & *maskPtr) == 0) {
+          continue;
+        }
+        if (slot->sequenceId == -1) {
+          continue;
+        }
+        entry = (ExpgfxTableEntry *)(runtimeBase + EXPGFX_EXPTAB_OFFSET +
+                                     (((u32)slot->encodedTableIndex >> 1) &
+                                      EXPGFX_SLOT_TABLE_INDEX_MASK) *
+                                         EXPGFX_TABLE_ENTRY_SIZE);
+        srcObj = (u8 *)entry->sourceId;
+        resource = entry->resource;
+        slot->stateBits.bits.frameParity = 0;
+        slot->stateBits.bits.quadReady = 1;
+        if ((slot->behaviorFlags & 0x800) == 0) {
+          slot->lifetimeFrame -= framesThisStep;
+        }
+        phase = slot->stateBits.bits.initPhase;
+        if (phase == 2) {
+          slot->stateBits.bits.initPhase = 1;
+          continue;
+        }
+        if (phase == 1) {
+          expgfxRemove((uint)curPoolBuf, curPool, slotIdx, 0, 0);
+          continue;
+        }
+        if (slot->lifetimeFrame <= 0 || slot->lifetimeFrame > slot->lifetimeFrameLimit) {
+          slot->stateBits.bits.initPhase = 2;
+          continue;
+        }
+        if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_USE_QUAD_TEMPLATE_A) != 0) {
+          template =
+              (ExpgfxQuadTemplateVertex *)(staticBase + EXPGFX_STATIC_QUAD_TEMPLATE_A_OFFSET);
+        } else {
+          template =
+              (ExpgfxQuadTemplateVertex *)(staticBase + EXPGFX_STATIC_QUAD_TEMPLATE_B_OFFSET);
+        }
+        if ((slot->behaviorFlags & 0x20000) != 0 &&
+            (slot->renderFlags & 0x30000000) == 0) {
+          rot.x = lbl_803DF35C;
+          rot.y = lbl_803DF35C;
+          rot.z = lbl_803DF35C;
+          rot.scale = lbl_803DF354;
+          rot.angleZ = (s16)(int)((f32)slot->sourceVecZ * timeDelta);
+          rot.angleY = (s16)(int)((f32)slot->sourceVecY * timeDelta);
+          rot.angleX = (s16)(int)((f32)slot->sourceVecX * timeDelta);
+          mathFn_80021ac8(&rot, (f32 *)&slot->posX);
+        }
+        if ((slot->renderFlags & 0x30000000) != 0) {
+          workB = lbl_803DF3DC;
+          workA = workB;
+          if ((slot->renderFlags & 0x10000000) != 0 && player != NULL && srcObj != NULL &&
+              playerRange > lbl_803DF3E0) {
+            vecBuf[0] = *(f32 *)((u8 *)player + 0x18) -
+                        (*(f32 *)&slot->startPosX + *(f32 *)(srcObj + 0xc));
+            vecBuf[2] = *(f32 *)((u8 *)player + 0x20) -
+                        (*(f32 *)&slot->startPosZ + *(f32 *)(srcObj + 0x14));
+            workB = vecBuf[0] * vecBuf[0] + vecBuf[2] * vecBuf[2];
+            attractRatio = playerRange / workB;
+          }
+          if (workB > lbl_803DF3B0 && (slot->renderFlags & 0x20000000) != 0 &&
+              tricky != NULL && srcObj != NULL && trickyRange > lbl_803DF3E0) {
+            vecBuf[0] = *(f32 *)((u8 *)tricky + 0x18) -
+                        (*(f32 *)&slot->startPosX + *(f32 *)(srcObj + 0xc));
+            vecBuf[2] = *(f32 *)((u8 *)tricky + 0x20) -
+                        (*(f32 *)&slot->startPosZ + *(f32 *)(srcObj + 0x14));
+            workA = vecBuf[0] * vecBuf[0] + vecBuf[2] * vecBuf[2];
+            attractRatio = trickyRange / workB;
+          }
+          if (workA < workB) {
+            workB = workA;
+          }
+          if (workB < lbl_803DF3B0) {
+            if ((slot->renderFlags & 0x10000000) != 0) {
+              slot->renderFlags ^= 0x10000000;
+            }
+            if ((slot->renderFlags & 0x20000000) != 0) {
+              slot->renderFlags ^= 0x20000000;
+            }
+            if ((slot->behaviorFlags & 0x8000000) != 0) {
+              slot->behaviorFlags ^= 0x8000000;
+            }
+            slot->lifetimeFrame = (s16)randomGetRange(0, 0x28) + 0xdc;
+            slot->lifetimeFrameLimit = (s16)randomGetRange(0, 0x28) + 0xdc;
+            slot->behaviorFlags |= 0x1000;
+            slot->renderFlags |= 0x40000000;
+            slot->velocityX = -(vecBuf[0] * attractRatio);
+            slot->velocityZ = -(vecBuf[2] * attractRatio);
+          }
+        } else {
+          if ((slot->renderFlags & 0x10000) != 0) {
+            slot->velocityX = lbl_803DF3E4 * slot->velocityX + slot->velocityX;
+            slot->velocityY = lbl_803DF3E4 * slot->velocityY + slot->velocityY;
+            slot->velocityZ = lbl_803DF3E4 * slot->velocityZ + slot->velocityZ;
+          } else if ((slot->renderFlags & 0x20000) != 0) {
+            slot->velocityX = lbl_803DF3E8 * slot->velocityX + slot->velocityX;
+            slot->velocityY = lbl_803DF3E8 * slot->velocityY + slot->velocityY;
+            slot->velocityZ = lbl_803DF3E8 * slot->velocityZ + slot->velocityZ;
+          } else if ((slot->renderFlags & 0x40000) != 0) {
+            slot->velocityX = lbl_803DF3EC * slot->velocityX + slot->velocityX;
+            slot->velocityY = lbl_803DF3EC * slot->velocityY + slot->velocityY;
+            slot->velocityZ = lbl_803DF3EC * slot->velocityZ + slot->velocityZ;
+          } else if ((slot->renderFlags & 0x80000) != 0) {
+            slot->velocityX = lbl_803DF3F0 * slot->velocityX;
+            slot->velocityY = lbl_803DF3F0 * slot->velocityY;
+            slot->velocityZ = lbl_803DF3F0 * slot->velocityZ;
+          }
+          if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0 &&
+              slot->velocityY < gExpgfxYVelocityPositiveLimit) {
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
+                slot->velocityY < gExpgfxYVelocityPositiveLimit) {
+              slot->velocityY -= gExpgfxYVelocityFastStep * timeDelta;
+            } else {
+              slot->velocityY -= gExpgfxYVelocitySlowStep * timeDelta;
+            }
+          } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FAST_Y_RESPONSE) != 0 &&
+                     slot->velocityY > gExpgfxYVelocityNegativeLimit) {
+            slot->velocityY += gExpgfxYVelocityFastStep * timeDelta;
+          } else if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_ADD_HIGH_Y_VELOCITY) != 0 &&
+                     slot->velocityY > gExpgfxYVelocityNegativeLimit) {
+            slot->velocityY += gExpgfxYVelocitySlowStep * timeDelta;
+          }
+          if ((slot->renderFlags & EXPGFX_BEHAVIOR_BOUNCE_LOW_Y_VELOCITY) != 0) {
+            f32 zero = lbl_803DF35C;
+            if (slot->velocityY * timeDelta + *(f32 *)&slot->posY < zero) {
+              slot->velocityX = zero;
+              slot->velocityY = zero;
+              slot->velocityZ = zero;
+              slot->sourceVecX = 0;
+              slot->sourceVecY = 0;
+              slot->sourceVecZ = 0;
+              if ((slot->behaviorFlags & 0x4000000) != 0) {
+                slot->behaviorFlags ^= 0x4000000;
+              }
+              if ((slot->behaviorFlags & 0x20000) != 0) {
+                slot->behaviorFlags ^= 0x20000;
+              }
+              slot->behaviorFlags |= 0x8000000;
+              if ((slot->behaviorFlags & 0x1000000) != 0) {
+                slot->behaviorFlags ^= 0x1000000;
+              }
+              if ((slot->behaviorFlags & 8) != 0) {
+                slot->behaviorFlags ^= 8;
+              }
+              if ((slot->behaviorFlags & 0x80000000) != 0) {
+                slot->behaviorFlags ^= 0x80000000;
+              }
+              slot->renderFlags ^= 0x40000000;
+            }
+          }
+          if ((slot->behaviorFlags & 0xf020) != 0 &&
+              slot->velocityY * timeDelta + *(f32 *)&slot->posY < lbl_803DF35C) {
+            u32 rnd;
+            f32 fade;
+
+            rnd = randomGetRange(0, 5);
+            slot->velocityY =
+                slot->velocityY * -(lbl_803DF3E4 * (f32)(int)rnd + lbl_803DF38C);
+            if (slot->velocityY > lbl_803DF390) {
+              slot->velocityY = lbl_803DF390;
+            }
+            rot.scale = lbl_803DF354;
+            rot.angleZ = 0;
+            rot.angleY = 0;
+            rot.angleX = 0;
+            if (srcObj != NULL) {
+              rot.x = *(f32 *)&slot->posX + *(f32 *)(srcObj + 0xc);
+              rot.y = *(f32 *)&slot->posY + *(f32 *)(srcObj + 0x10);
+              rot.z = *(f32 *)&slot->posZ + *(f32 *)(srcObj + 0x14);
+            } else {
+              rot.x = *(f32 *)&slot->posX + *(f32 *)&slot->sourcePosY;
+              rot.y = *(f32 *)&slot->posY + *(f32 *)&slot->sourcePosZ;
+              rot.z = *(f32 *)&slot->posZ + *(f32 *)&slot->sourcePosW;
+            }
+            gExpgfxFrameParityBit = 1;
+            if ((slot->behaviorFlags & 0x20) != 0 &&
+                (slot->renderFlags & 0x40000000) == 0) {
+              slot->velocityX *= gExpgfxSlotMotionStep;
+              slot->velocityZ *= gExpgfxSlotMotionStep;
+              slot->behaviorFlags ^= 0x20;
+              if (slot->soundHandle != -1) {
+                (*(ExpgfxSfxMoveFn *)(*gPartfxInterface + 8))(srcObj, slot->soundHandle, &rot,
+                                                              0x200001, -1, 0);
+                slot->soundHandle = -1;
+              }
+            } else if ((slot->behaviorFlags & 0x1000) != 0) {
+              slot->velocityX *= lbl_803DF358;
+              slot->velocityZ *= lbl_803DF358;
+              slot->scaleCounter =
+                  (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
+              slot->behaviorFlags ^= 0x1000;
+            } else if ((slot->behaviorFlags & 0x2000) != 0) {
+              slot->velocityX *= lbl_803DF358;
+              slot->velocityZ *= lbl_803DF358;
+              slot->scaleCounter =
+                  (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
+              slot->behaviorFlags ^= 0x2000;
+              slot->behaviorFlags |= 0x1000;
+            } else if ((slot->behaviorFlags & 0x4000) != 0) {
+              slot->velocityX *= lbl_803DF358;
+              slot->velocityZ *= lbl_803DF358;
+              slot->scaleCounter =
+                  (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
+              slot->behaviorFlags ^= 0x4000;
+              slot->behaviorFlags |= 0x2000;
+              if (slot->soundHandle != -1) {
+                (*(ExpgfxSfxMoveFn *)(*gPartfxInterface + 8))(srcObj, slot->soundHandle, &rot,
+                                                              0x200001, -1, 0);
+              }
+              slot->soundHandle = -1;
+            } else if ((slot->behaviorFlags & 0x8000) != 0) {
+              slot->velocityX = slot->velocityX * (gExpgfxSlotMotionStep - slot->velocityX);
+              slot->velocityZ = slot->velocityZ * (gExpgfxSlotMotionStep - slot->velocityZ);
+              slot->scaleCounter =
+                  (int)((f32)(u16)slot->scaleCounter * lbl_803DF3F4);
+              slot->behaviorFlags ^= 0x8000;
+              slot->behaviorFlags |= 0x4000;
+              if (slot->soundHandle != -1) {
+                (*(ExpgfxSfxMoveFn *)(*gPartfxInterface + 8))(srcObj, slot->soundHandle, &rot,
+                                                              0x200001, -1, 0);
+              }
+            }
+            gExpgfxFrameParityBit = 0;
+          } else if ((slot->behaviorFlags & 0x10000000) != 0 &&
+                     slot->velocityY * timeDelta + *(f32 *)&slot->posY < lbl_803DF35C) {
+            if (slot->soundHandle != -1) {
+              rot.scale = lbl_803DF354;
+              rot.angleZ = 0;
+              rot.angleY = 0;
+              rot.angleX = 0;
+              if ((slot->behaviorFlags & 1) == 0 && srcObj != NULL) {
+                rot.x = *(f32 *)&slot->posX + *(f32 *)(srcObj + 0x18);
+                rot.y = *(f32 *)(srcObj + 0x1c);
+                rot.z = *(f32 *)&slot->posZ + *(f32 *)(srcObj + 0x20);
+              } else {
+                rot.x = *(f32 *)&slot->posX;
+                rot.y = lbl_803DF35C;
+                rot.z = *(f32 *)&slot->posZ;
+              }
+              gExpgfxFrameParityBit = 1;
+              (*(ExpgfxWaterRippleFnA *)(*gWaterfxInterface + 0x14))(rot.x, rot.y, rot.z,
+                                                                     lbl_803DF35C, 0, 4);
+              (*(ExpgfxWaterRippleFnB *)(*gWaterfxInterface + 0x10))(rot.x, rot.y, rot.z,
+                                                                     gExpgfxSlotMotionStep, 0);
+              if (srcObj != NULL &&
+                  coordsToMapCell(*(f32 *)(srcObj + 0xc), *(f32 *)(srcObj + 0x14)) == 0x10) {
+                Sfx_PlayFromObject(srcObj, 0x285);
+              }
+              slot->soundHandle = -1;
+              slot->behaviorFlags |= 0x10000000;
+              slot->lifetimeFrame = 0;
+              gExpgfxFrameParityBit = 0;
+            }
+          } else if ((slot->behaviorFlags & 0xf020) == 0 &&
+                     (slot->behaviorFlags & 0x10000000) == 0 && slot->soundHandle != -1) {
+            rot.scale = lbl_803DF354;
+            rot.angleZ = 0;
+            rot.angleY = 0;
+            rot.angleX = 0;
+            if ((slot->behaviorFlags & 1) == 0 && srcObj != NULL) {
+              rot.x = *(f32 *)&slot->posX + *(f32 *)(srcObj + 0xc);
+              rot.y = *(f32 *)&slot->posY + *(f32 *)(srcObj + 0x10);
+              rot.z = *(f32 *)&slot->posZ + *(f32 *)(srcObj + 0x14);
+            } else {
+              rot.x = *(f32 *)&slot->posX;
+              rot.y = *(f32 *)&slot->posY;
+              rot.z = *(f32 *)&slot->posZ;
+            }
+            gExpgfxFrameParityBit = 1;
+            (*(ExpgfxSfxMoveFn *)(*gPartfxInterface + 8))(srcObj, slot->soundHandle, &rot,
+                                                          0x200001, -1, 0);
+            gExpgfxFrameParityBit = 0;
+          }
+          if ((slot->behaviorFlags & 0x80000000) != 0 && randomGetRange(0, 4) == 1) {
+            slot->velocityX +=
+                lbl_803DF3F8 - (f32)(int)randomGetRange(0, 9) / lbl_803DF3FC;
+            slot->velocityZ +=
+                lbl_803DF3F8 - (f32)(int)randomGetRange(0, 9) / lbl_803DF3FC;
+          }
+          if ((slot->renderFlags & 0x100000) != 0 && randomGetRange(0, 10) == 1) {
+            if ((f32)slot->lifetimeFrame < (f32)slot->lifetimeFrameLimit) {
+              slot->velocityX +=
+                  lbl_803DF400 * (f32)(int)randomGetRange(-800, 800) + lbl_803DF3E8;
+              slot->velocityY +=
+                  lbl_803DF400 * (f32)(int)randomGetRange(-800, 800) + lbl_803DF3E8;
+              slot->velocityZ +=
+                  lbl_803DF400 * (f32)(int)randomGetRange(-800, 800) + lbl_803DF3E8;
+            }
+          }
+          if ((slot->behaviorFlags & 0x400) != 0) {
+            if ((f32)slot->lifetimeFrame < lbl_803DF38C * (f32)slot->lifetimeFrameLimit) {
+              f32 boost = lbl_803DF404;
+              slot->behaviorFlags ^= 0x400;
+              slot->velocityX *= boost;
+              slot->velocityY *= boost;
+              slot->velocityZ *= boost;
+            }
+          }
+          if ((slot->renderFlags & 0x200000) != 0) {
+            prevX = *(f32 *)&slot->posX;
+            prevY = *(f32 *)&slot->posY;
+            prevZ = *(f32 *)&slot->posZ;
+          }
+          *(f32 *)&slot->posX += slot->velocityX * timeDelta;
+          *(f32 *)&slot->posY += slot->velocityY * timeDelta;
+          *(f32 *)&slot->posZ += slot->velocityZ * timeDelta;
+          if ((slot->behaviorFlags & 0x100000) != 0) {
+            slot->scaleCounter = (int)((f32)(u16)slot->scaleFrames * timeDelta +
+                                       (f32)(u16)slot->scaleCounter);
+          } else if ((slot->renderFlags & 0x2000) != 0) {
+            slot->scaleCounter = slot->scaleCounter - slot->scaleFrames * framesThisStep;
+          }
+        }
+        quad = (ExpgfxQuadVertex *)slot;
+        if (resource != 0) {
+          u8 *attached;
+
+          texT0 = 0;
+          texT1 = 0;
+          texS0 = 0;
+          texS1 = 0;
+          if (resource != 0) {
+            texS0 = 0x80;
+            texT0 = 0x80;
+            texS1 = 0;
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX1_T) != 0) {
+              texS1 = 0x80;
+              texS0 = 0;
+            }
+            if ((slot->behaviorFlags & EXPGFX_BEHAVIOR_FLIP_TEX0_T) != 0) {
+              texT1 = 0x80;
+              texT0 = 0;
+            }
+          }
+          if ((slot->renderFlags & 0x20) != 0) {
+            int colR;
+            int colG;
+            int colB;
+            f32 ratio;
+
+            ratio = (f32)slot->lifetimeFrame / (f32)slot->lifetimeFrameLimit;
+            colR = (int)(ratio * (f32)(quad[1].alpha - slot->colorByte0) +
+                         (f32)slot->colorByte0);
+            colG = (int)(ratio * (f32)(quad[2].alpha - slot->colorByte1) +
+                         (f32)slot->colorByte1);
+            colB = (int)(ratio * (f32)(quad[3].alpha - slot->colorByte2) +
+                         (f32)slot->colorByte2);
+            if ((slot->renderFlags & 0x1000000) != 0) {
+              quad[0].colorR = (s16)colR * (ambR8 + 1) >> 8;
+              quad[0].colorG = (s16)colG * (ambG8 + 1) >> 8;
+              quad[0].colorB = (s16)colB * (ambB8 + 1) >> 8;
+            } else if ((slot->renderFlags & 0x800000) != 0) {
+              quad[0].colorR = (u32)((s16)colR * ambRPlus1) >> 8;
+              quad[0].colorG = (u32)((s16)colG * ambGPlus1) >> 8;
+              quad[0].colorB = (u32)((s16)colB * ambBPlus1) >> 8;
+            } else {
+              quad[0].colorR = colR;
+              quad[0].colorG = colG;
+              quad[0].colorB = colB;
+            }
+          } else if ((slot->renderFlags & 0x1000000) != 0) {
+            quad[0].colorR = ambR8;
+            quad[0].colorG = ambG8;
+            quad[0].colorB = ambB8;
+          } else if ((slot->renderFlags & 0x800000) != 0) {
+            quad[0].colorR = ambScaledR;
+            quad[0].colorG = ambScaledG;
+            quad[0].colorB = ambScaledB;
+          }
+          if ((slot->renderFlags & 0x200000) != 0) {
+            f32 sx;
+            f32 sy;
+            f32 sz;
+            f32 dirX;
+            f32 dirY;
+            f32 dirZ;
+            f32 prevDX;
+            f32 prevDY;
+            f32 prevDZ;
+            f32 normSq;
+            f32 norm;
+            f32 axisX;
+            f32 axisY;
+            f32 axisZ;
+            s16 baseX;
+            s16 baseY;
+            s16 baseZ;
+
+            sx = lbl_803DF35C;
+            sy = sx;
+            sz = sx;
+            if ((slot->behaviorFlags & 1) == 0) {
+              if (srcObj != NULL) {
+                sx = *(f32 *)(srcObj + 0x18);
+                sy = *(f32 *)(srcObj + 0x1c);
+                sz = *(f32 *)(srcObj + 0x20);
+              } else {
+                sx = *(f32 *)&slot->sourcePosY;
+                sy = *(f32 *)&slot->sourcePosZ;
+                sz = *(f32 *)&slot->sourcePosW;
+              }
+            }
+            dirX = sx - *(f32 *)&slot->posX;
+            dirY = sy - *(f32 *)&slot->posY;
+            dirZ = sz - *(f32 *)&slot->posZ;
+            prevDX = prevX - *(f32 *)&slot->posX;
+            prevDY = prevY - *(f32 *)&slot->posY;
+            prevDZ = prevZ - *(f32 *)&slot->posZ;
+            workA = prevDY * dirZ - prevDZ * dirY;
+            workB = -(prevDX * dirZ - prevDZ * dirX);
+            attractRatio = prevDX * dirY - prevDY * dirX;
+            normSq = attractRatio * attractRatio + (workA * workA + workB * workB);
+            if (lbl_803DF35C != normSq) {
+              norm = sqrtf(normSq);
+            } else {
+              norm = lbl_803DF354;
+            }
+            axisX = lbl_803DF408 * (workA / norm);
+            axisY = lbl_803DF408 * (workB / norm);
+            axisZ = lbl_803DF408 * (attractRatio / norm);
+            attractRatio = lbl_803DF40C / (lbl_803DF410 * (f32)(u16)slot->scaleTarget);
+            baseX = (s16)(int)axisX;
+            quad[0].x = baseX;
+            baseY = (s16)(int)axisY;
+            quad[0].y = baseY;
+            baseZ = (s16)(int)axisZ;
+            quad[0].z = baseZ;
+            quad[0].texS = texS0;
+            quad[0].texT = texT0;
+            quad[1].x = (s16)(int)(attractRatio * (*(f32 *)&slot->posX - prevX) + axisX);
+            quad[1].y = (s16)(int)(attractRatio * (*(f32 *)&slot->posY - prevY) + axisY);
+            quad[1].z = (s16)(int)(attractRatio * (*(f32 *)&slot->posZ - prevZ) + axisZ);
+            quad[1].texS = texS1;
+            quad[1].texT = texT0;
+            quad[2].x = (s16)(int)(attractRatio * (*(f32 *)&slot->posX - prevX) - axisX);
+            quad[2].y = (s16)(int)(attractRatio * (*(f32 *)&slot->posY - prevY) - axisY);
+            quad[2].z = (s16)(int)(attractRatio * (*(f32 *)&slot->posZ - prevZ) - axisZ);
+            quad[2].texS = texS1;
+            quad[2].texT = texT1;
+            quad[3].x = -baseX;
+            quad[3].y = -baseY;
+            quad[3].z = -baseZ;
+            quad[3].texS = texS0;
+            quad[3].texT = texT1;
+          } else if ((slot->behaviorFlags & 0x4000000) != 0 &&
+                     (slot->renderFlags & 0x30000000) == 0) {
+            rot.x = lbl_803DF35C;
+            rot.y = lbl_803DF35C;
+            rot.z = lbl_803DF35C;
+            slot->sourceVecX = slot->sourceVecX + framesThisStep * (int)*(f32 *)&slot->sourcePosY;
+            slot->sourceVecY = slot->sourceVecY + framesThisStep * (int)*(f32 *)&slot->sourcePosZ;
+            slot->sourceVecZ = slot->sourceVecZ + framesThisStep * (int)*(f32 *)&slot->sourcePosW;
+            rot.scale = lbl_803DF354;
+            vecBuf[0] = (f32)template[0].x;
+            vecBuf[1] = (f32)template[0].y;
+            vecBuf[2] = (f32)template[0].z;
+            rot.angleZ = 0;
+            rot.angleY = 0;
+            rot.angleX = slot->sourceVecX;
+            mathFn_80021ac8(&rot, vecBuf);
+            rot.angleZ = slot->sourceVecY;
+            rot.angleY = slot->sourceVecZ;
+            rot.angleX = 0;
+            mathFn_80021ac8(&rot, vecBuf);
+            quad[0].x = (s16)(int)vecBuf[0];
+            quad[0].y = (s16)(int)vecBuf[1];
+            quad[0].z = (s16)(int)vecBuf[2];
+            quad[0].texS = texS0;
+            quad[0].texT = texT0;
+            vecBuf[0] = (f32)template[1].x;
+            vecBuf[1] = (f32)template[1].y;
+            vecBuf[2] = (f32)template[1].z;
+            rot.angleZ = 0;
+            rot.angleY = 0;
+            rot.angleX = slot->sourceVecX;
+            mathFn_80021ac8(&rot, vecBuf);
+            rot.angleZ = slot->sourceVecY;
+            rot.angleY = slot->sourceVecZ;
+            rot.angleX = 0;
+            mathFn_80021ac8(&rot, vecBuf);
+            quad[1].x = (s16)(int)vecBuf[0];
+            quad[1].y = (s16)(int)vecBuf[1];
+            quad[1].z = (s16)(int)vecBuf[2];
+            quad[1].texS = texS1;
+            quad[1].texT = texT0;
+            vecBuf[0] = (f32)template[2].x;
+            vecBuf[1] = (f32)template[2].y;
+            vecBuf[2] = (f32)template[2].z;
+            rot.angleZ = 0;
+            rot.angleY = 0;
+            rot.angleX = slot->sourceVecX;
+            mathFn_80021ac8(&rot, vecBuf);
+            rot.angleZ = slot->sourceVecY;
+            rot.angleY = slot->sourceVecZ;
+            rot.angleX = 0;
+            mathFn_80021ac8(&rot, vecBuf);
+            quad[2].x = (s16)(int)vecBuf[0];
+            quad[2].y = (s16)(int)vecBuf[1];
+            quad[2].z = (s16)(int)vecBuf[2];
+            quad[2].texS = texS1;
+            quad[2].texT = texT1;
+            vecBuf[0] = (f32)template[3].x;
+            vecBuf[1] = (f32)template[3].y;
+            vecBuf[2] = (f32)template[3].z;
+            rot.angleZ = 0;
+            rot.angleY = 0;
+            rot.angleX = slot->sourceVecX;
+            mathFn_80021ac8(&rot, vecBuf);
+            rot.angleZ = slot->sourceVecY;
+            rot.angleY = slot->sourceVecZ;
+            rot.angleX = 0;
+            mathFn_80021ac8(&rot, vecBuf);
+            quad[3].x = (s16)(int)vecBuf[0];
+            quad[3].y = (s16)(int)vecBuf[1];
+            quad[3].z = (s16)(int)vecBuf[2];
+            quad[3].texS = texS0;
+            quad[3].texT = texT1;
+          } else if ((slot->renderFlags & 0x20) != 0) {
+            quad[0].x = template[0].x;
+            quad[0].y = template[0].y;
+            quad[0].z = template[0].z;
+            quad[0].texS = texS0;
+            quad[0].texT = texT0;
+            quad[1].x = template[1].x;
+            quad[1].y = template[1].y;
+            quad[1].z = template[1].z;
+            quad[1].texS = texS1;
+            quad[1].texT = texT0;
+            quad[2].x = template[2].x;
+            quad[2].y = template[2].y;
+            quad[2].z = template[2].z;
+            quad[2].texS = texS1;
+            quad[2].texT = texT1;
+            quad[3].x = template[3].x;
+            quad[3].y = template[3].y;
+            quad[3].z = template[3].z;
+            quad[3].texS = texS0;
+            quad[3].texT = texT1;
+          } else if ((slot->renderFlags & 0x100) != 0) {
+            quad[0].x = template[0].x;
+            quad[0].y = template[0].y;
+            quad[0].y = quad[0].y << 3;
+            quad[0].z = template[0].z;
+            quad[0].texS = texS0;
+            quad[0].texT = texT0;
+            quad[1].x = template[1].x;
+            quad[1].y = template[1].y;
+            quad[1].y = quad[1].y << 3;
+            quad[1].z = template[1].z;
+            quad[1].texS = texS1;
+            quad[1].texT = texT0;
+            quad[2].x = template[2].x;
+            quad[2].y = template[2].y;
+            quad[2].y = quad[2].y << 3;
+            quad[2].z = template[2].z;
+            quad[2].texS = texS1;
+            quad[2].texT = texT1;
+            quad[3].x = template[3].x;
+            quad[3].y = template[3].y;
+            quad[3].y = quad[3].y << 3;
+            quad[3].z = template[3].z;
+            quad[3].texS = texS0;
+            quad[3].texT = texT1;
+          } else if ((slot->renderFlags & 0x400) != 0) {
+            quad[0].z = template[0].x;
+            quad[0].z = quad[0].z << 5;
+            quad[0].y = template[0].y;
+            quad[0].x = template[0].z;
+            quad[0].texS = texS0;
+            quad[0].texT = texT0;
+            quad[1].z = template[1].x;
+            quad[1].z = quad[1].z << 5;
+            quad[1].y = template[1].y;
+            quad[1].x = template[1].z;
+            quad[1].texS = texS1;
+            quad[1].texT = texT0;
+            quad[2].z = template[2].x;
+            quad[2].z = quad[2].z << 5;
+            quad[2].y = template[2].y;
+            quad[2].x = template[2].z;
+            quad[2].texS = texS1;
+            quad[2].texT = texT1;
+            quad[3].z = template[3].x;
+            quad[3].z = quad[3].z << 5;
+            quad[3].y = template[3].y;
+            quad[3].x = template[3].z;
+            quad[3].texS = texS0;
+            quad[3].texT = texT1;
+          } else if ((slot->renderFlags & 0x200) != 0) {
+            quad[0].x = template[0].x;
+            quad[0].x = quad[0].x << 5;
+            quad[0].y = template[0].y;
+            quad[0].z = template[0].z;
+            quad[0].texS = texS0;
+            quad[0].texT = texT0;
+            quad[1].x = template[1].x;
+            quad[1].x = quad[1].x << 5;
+            quad[1].y = template[1].y;
+            quad[1].z = template[1].z;
+            quad[1].texS = texS1;
+            quad[1].texT = texT0;
+            quad[2].x = template[2].x;
+            quad[2].x = quad[2].x << 5;
+            quad[2].y = template[2].y;
+            quad[2].z = template[2].z;
+            quad[2].texS = texS1;
+            quad[2].texT = texT1;
+            quad[3].x = template[3].x;
+            quad[3].x = quad[3].x << 5;
+            quad[3].y = template[3].y;
+            quad[3].z = template[3].z;
+            quad[3].texS = texS0;
+            quad[3].texT = texT1;
+          } else {
+            quad[0].x = template[0].x;
+            quad[0].y = template[0].y;
+            quad[0].z = template[0].z;
+            quad[0].texS = texS0;
+            quad[0].texT = texT0;
+            quad[1].x = template[1].x;
+            quad[1].y = template[1].y;
+            quad[1].z = template[1].z;
+            quad[1].texS = texS1;
+            quad[1].texT = texT0;
+            quad[2].x = template[2].x;
+            quad[2].y = template[2].y;
+            quad[2].z = template[2].z;
+            quad[2].texS = texS1;
+            quad[2].texT = texT1;
+            quad[3].x = template[3].x;
+            quad[3].y = template[3].y;
+            quad[3].z = template[3].z;
+            quad[3].texS = texS0;
+            quad[3].texT = texT1;
+          }
+          attached = (u8 *)((ExpgfxTableEntry *)(runtimeBase + EXPGFX_EXPTAB_OFFSET +
+                                                 (((u32)slot->encodedTableIndex >> 1) &
+                                                  EXPGFX_SLOT_TABLE_INDEX_MASK) *
+                                                     EXPGFX_TABLE_ENTRY_SIZE))
+                         ->attachedKey1;
+          rot.x = lbl_803DF35C;
+          rot.y = lbl_803DF35C;
+          rot.z = lbl_803DF35C;
+          rot.scale = lbl_803DF354;
+          if ((slot->behaviorFlags & 0x20000) != 0 &&
+              (slot->renderFlags & 0x30000000) == 0) {
+            rot.x = *(f32 *)&slot->posX;
+            rot.y = *(f32 *)&slot->posY;
+            rot.z = *(f32 *)&slot->posZ;
+          }
+          rot.angleZ = 0;
+          rot.angleY = 0;
+          rot.angleX = 0;
+          if ((slot->behaviorFlags & 0x4000000) == 0 && (slot->behaviorFlags & 4) != 0) {
+            if (srcObj != NULL) {
+              rot.angleX = *(s16 *)srcObj;
+              rot.angleY = *(s16 *)(srcObj + 2);
+              rot.angleZ = *(s16 *)(srcObj + 4);
+            } else {
+              rot.angleX = slot->sourceVecX;
+              rot.angleY = slot->sourceVecY;
+              rot.angleZ = slot->sourceVecZ;
+            }
+          }
+          rotPos[0] = *(f32 *)&slot->posX;
+          rotPos[1] = *(f32 *)&slot->posY;
+          rotPos[2] = *(f32 *)&slot->posZ;
+          if ((u16)(rot.angleZ | rot.angleX | rot.angleY) != 0) {
+            mathFn_80021ac8(&rot, rotPos);
+          }
+          if ((slot->behaviorFlags & 1) == 0) {
+            if (srcObj == NULL) {
+              srcVel[0] = *(f32 *)&slot->sourcePosY;
+              srcVel[1] = *(f32 *)&slot->sourcePosZ;
+              srcVel[2] = *(f32 *)&slot->sourcePosW;
+              if (attached != NULL) {
+                Obj_RotateLocalOffsetByYaw(&slot->sourcePosY, srcVel, *(attached + 0x35));
+              }
+            } else {
+              srcVel[0] = *(f32 *)(srcObj + 0x18);
+              srcVel[1] = *(f32 *)(srcObj + 0x1c);
+              srcVel[2] = *(f32 *)(srcObj + 0x20);
+            }
+          } else {
+            srcVel[0] = lbl_803DF35C;
+            srcVel[1] = lbl_803DF35C;
+            srcVel[2] = lbl_803DF35C;
+          }
+          rot.angleZ = 0;
+          rot.angleY = 0;
+          rot.angleX = 0;
+          rot.x = srcVel[0] + rotPos[0];
+          rot.y = srcVel[1] + rotPos[1];
+          rot.z = srcVel[2] + rotPos[2];
+          if ((slot->behaviorFlags & 0x20000) != 0 &&
+              (slot->behaviorFlags & 0x4000000) == 0 &&
+              (slot->renderFlags & 0x30000000) == 0) {
+            rot.x = rot.x + *(f32 *)&slot->sourcePosY;
+            rot.y = rot.y + *(f32 *)&slot->sourcePosZ;
+            rot.z = rot.z + *(f32 *)&slot->sourcePosW;
+          }
+          slot->renderX = rot.x;
+          slot->renderY = rot.y;
+          slot->renderZ = rot.z;
+          if (rot.x < bounds->minX) {
+            bounds->minX = rot.x;
+          }
+          if (rot.x > *maxXPtr) {
+            *maxXPtr = rot.x;
+          }
+          if (rot.y < *minYPtr) {
+            *minYPtr = rot.y;
+          }
+          if (rot.y > *maxYPtr) {
+            *maxYPtr = rot.y;
+          }
+          if (rot.z < *minZPtr) {
+            *minZPtr = rot.z;
+          }
+          if (rot.z > *maxZPtr) {
+            *maxZPtr = rot.z;
+          }
+        } else {
+          debugPrintf((char *)(staticBase + EXPGFX_STATIC_NO_TEXTURE_STRING_OFFSET));
+        }
+      }
+      memcpyToCache((void *)*(u32 *)((runtimeBase + pool4) + EXPGFX_SLOT_POOL_BASES_OFFSET),
+                    curPoolBuf, 0x7e);
+      prefetched = 1;
+      pool = next;
+    }
+    cacheFn_800229c4(0);
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
