@@ -1199,102 +1199,91 @@ int trickyFn_801434b0(int param_1, int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-trickyFoodFn_801437d4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int *param_10)
+typedef struct TrickyPackedSlots {
+    u8 a : 2;
+    u8 b : 2;
+    u8 c : 2;
+    u8 d : 2;
+} TrickyPackedSlots;
+
+extern int cMenuGetSelectedItem(void);
+extern uint GameBit_Get(int bit);
+extern f32 lbl_803E2444;
+
+int trickyFoodFn_801437d4(u8 *obj, u8 *state)
 {
-  float fVar1;
-  int iVar2;
-  bool bVar5;
-  uint uVar3;
-  undefined2 *puVar4;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  double dVar6;
-  char local_28 [28];
-  
-  iVar2 = trickyFoodFn_8014460c(param_9,param_10);
-  if (iVar2 == 0) {
-    iVar2 = FUN_8012efc4();
-    if (iVar2 == 0xc1) {
-      *(undefined *)((int)param_10 + 10) = 0;
+    s8 slots[4];
+    u8 *ptr;
+    u8 *e;
+    int idx;
+    f32 z;
+
+    if (trickyFoodFn_8014460c((int)obj, (int *)state) != 0) {
+        state[0xa] = 0;
+        return 1;
     }
-    else {
-      param_10[0x1ce] = (int)((float)param_10[0x1ce] - lbl_803DC074);
-      dVar6 = (double)(float)param_10[0x1ce];
-      if (dVar6 < (double)lbl_803E306C) {
-        iVar2 = *(int *)(param_9 + 0xb8);
-        if (((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
-           (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-            (bVar5 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar5)))) {
-          in_r8 = 0;
-          dVar6 = (double)objAudioFn_800393f8(param_9,(void *)(iVar2 + 0x3a8),0x29a,0x100,0xffffffff,0);
-        }
-        param_10[0x1ce] = (int)lbl_803E30D0;
-      }
-      if ((param_10[0x1ee] == 0) && (uVar3 = FUN_80017ae8(), (uVar3 & 0xff) != 0)) {
-        puVar4 = FUN_80017aa4(0x20,0x17b);
-        local_28[0] = -1;
-        local_28[1] = -1;
-        local_28[2] = -1;
-        if (param_10[0x1ea] != 0) {
-          local_28[*(byte *)(param_10 + 0x1ef) >> 6] = '\x01';
-        }
-        if (param_10[0x1ec] != 0) {
-          local_28[*(byte *)(param_10 + 0x1ef) >> 4 & 3] = '\x01';
-        }
-        if (param_10[0x1ee] != 0) {
-          local_28[*(byte *)(param_10 + 0x1ef) >> 2 & 3] = '\x01';
-        }
-        if (local_28[0] == -1) {
-          uVar3 = 0;
-        }
-        else if (local_28[1] == -1) {
-          uVar3 = 1;
-        }
-        else if (local_28[2] == -1) {
-          uVar3 = 2;
-        }
-        else if (local_28[3] == -1) {
-          uVar3 = 3;
-        }
-        else {
-          uVar3 = 0xffffffff;
-        }
-        *(byte *)(param_10 + 0x1ef) =
-             (byte)((uVar3 & 0xff) << 2) & 0xc | *(byte *)(param_10 + 0x1ef) & 0xf3;
-        iVar2 = FUN_80017ae4(dVar6,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar4,4,
-                             0xff,0xffffffff,*(uint **)(param_9 + 0x30),in_r8,in_r9,in_r10);
-        param_10[0x1ee] = iVar2;
-        ObjLink_AttachChild(param_9,param_10[0x1ee],*(byte *)(param_10 + 0x1ef) >> 2 & 3);
-        fVar1 = lbl_803E306C;
-        param_10[0x1f0] = (int)lbl_803E306C;
-        param_10[0x1f1] = (int)fVar1;
-        param_10[0x1f2] = (int)fVar1;
-      }
-      iVar2 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
-      if (((iVar2 != 0) && ((float)param_10[0x1c7] <= lbl_803E306C)) &&
-         (uVar3 = FUN_80017690(0xdd), uVar3 != 0)) {
-        objAnimFn_8013a3f0(param_9,0x29,lbl_803E30D4,0);
-        iVar2 = *(int *)(param_9 + 0xb8);
-        if (((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
-           (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-            (bVar5 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar5)))) {
-          objAudioFn_800393f8(param_9,(void *)(iVar2 + 0x3a8),0x354,0x1000,0xffffffff,0);
-        }
-        param_10[0x15] = param_10[0x15] | 0x10;
-        *(undefined *)((int)param_10 + 10) = 4;
-        uVar3 = randomGetRange(0x78,0xf0);
-        param_10[0x1cf] =
-             (int)(f32)(s32)(uVar3);
-      }
+    if (cMenuGetSelectedItem() == 0xc1) {
+        state[0xa] = 0;
+        return 1;
     }
-  }
-  else {
-    *(undefined *)((int)param_10 + 10) = 0;
-  }
-  return 1;
+    *(f32 *)(state + 0x738) -= timeDelta;
+    if (*(f32 *)(state + 0x738) < lbl_803E23DC) {
+        ptr = *(u8 **)(obj + 0xb8);
+        if (((u32)*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+            && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x29a, 0x100, -1, 0);
+        }
+        *(f32 *)(state + 0x738) = lbl_803E2440;
+    }
+    if (*(u8 **)(state + 0x7b8) == NULL && Obj_IsLoadingLocked() != 0) {
+        e = Obj_AllocObjectSetup(0x20, 0x17b);
+        slots[0] = -1;
+        slots[1] = -1;
+        slots[2] = -1;
+        if (*(u8 **)(state + 0x7a8) != NULL) {
+            slots[((TrickyPackedSlots *)(state + 0x7bc))->a] = 1;
+        }
+        if (*(u8 **)(state + 0x7b0) != NULL) {
+            slots[((TrickyPackedSlots *)(state + 0x7bc))->b] = 1;
+        }
+        if (*(u8 **)(state + 0x7b8) != NULL) {
+            slots[((TrickyPackedSlots *)(state + 0x7bc))->c] = 1;
+        }
+        if (slots[0] == -1) {
+            idx = 0;
+        } else if (slots[1] == -1) {
+            idx = 1;
+        } else if (slots[2] == -1) {
+            idx = 2;
+        } else if (slots[3] == -1) {
+            idx = 3;
+        } else {
+            idx = -1;
+        }
+        ((TrickyPackedSlots *)(state + 0x7bc))->c = idx;
+        *(u8 **)(state + 0x7b8) = Obj_SetupObject(e, 4, -1, -1, *(void **)(obj + 0x30));
+        ObjLink_AttachChild(obj, *(u8 **)(state + 0x7b8), ((TrickyPackedSlots *)(state + 0x7bc))->c);
+        z = lbl_803E23DC;
+        *(f32 *)(state + 0x7c0) = z;
+        *(f32 *)(state + 0x7c4) = z;
+        *(f32 *)(state + 0x7c8) = z;
+    }
+    if (((int (**)(int))*gSHthorntailAnimationInterface)[9](0) != 0
+        && *(f32 *)(state + 0x71c) <= lbl_803E23DC
+        && GameBit_Get(0xdd) != 0) {
+        objAnimFn_8013a3f0((int)obj, 0x29, lbl_803E2444, 0);
+        ptr = *(u8 **)(obj + 0xb8);
+        if (((u32)*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+            && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x354, 0x1000, -1, 0);
+        }
+        *(u32 *)(state + 0x54) |= 0x10;
+        state[0xa] = 4;
+        *(f32 *)(state + 0x73c) = (f32)(int)randomGetRange(0x78, 0xf0);
+    }
+    return 1;
 }
 
 /*
