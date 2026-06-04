@@ -243,9 +243,9 @@ void FUN_801df45c(undefined2 *param_1)
       DAT_803de890 = iVar5;
       if (bVar1) {
         state->flags = state->flags & ~PLATFORM1_FLAG_ACTIVE;
-        *(undefined4 *)(param_1 + 6) = state->savedPosXBits;
-        *(undefined4 *)(param_1 + 8) = state->savedPosYBits;
-        *(undefined4 *)(param_1 + 10) = state->savedPosZBits;
+        *(f32 *)(param_1 + 6) = state->savedPosX;
+        *(f32 *)(param_1 + 8) = state->savedPosY;
+        *(f32 *)(param_1 + 10) = state->savedPosZ;
         state->linkedObject = 0;
         *param_1 = 0xd700;
         state->currentTrackOffset = 0xffffd700;

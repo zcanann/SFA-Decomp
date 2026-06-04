@@ -6,11 +6,11 @@
 
 typedef struct Platform1State {
   int linkedObject;
-  int motionValue0;
+  f32 motionValue0;
   f32 offsetVelocity;
-  int savedPosXBits;
-  int savedPosYBits;
-  int savedPosZBits;
+  f32 savedPosX;
+  f32 savedPosY;
+  f32 savedPosZ;
   f32 playerSfxTimer;
   f32 platformSfxTimer;
   int currentTrackOffset;

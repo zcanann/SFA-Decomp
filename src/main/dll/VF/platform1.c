@@ -75,7 +75,7 @@ extern u32  getButtonsJustPressedIfNotBusy(int pad);
 extern int  isGameTimerDisabled(void);
 extern f64  fn_8001461C(void);
 extern void fn_801DE320(void *dst, int val);
-extern void fn_800882C8(void);
+extern int fn_800882C8(int index);
 extern void hudFn_8011f38c(int n);
 extern int *gCameraInterface;
 extern int *gObjectTriggerInterface;
@@ -262,7 +262,7 @@ int platform1_control(int obj, int p2, u8 *data)
                 fn_801DE320(&lbl_803DC070, (int)(fn_8001461C() / lbl_803E5694));
                 hudFn_8011f38c(0);
                 if (st->loopSfxHandle > 0) {
-                    fn_800882C8();
+                    fn_800882C8(st->loopSfxHandle);
                 }
                 (*(void (**)(int, int))((char *)(*gScreenTransitionInterface) + 0xc))(0x14, 1);
                 lbl_803DDC10 = 2;
@@ -285,7 +285,7 @@ int platform1_control(int obj, int p2, u8 *data)
                 }
                 hudFn_8011f38c(0);
                 if (st->loopSfxHandle > 0) {
-                    fn_800882C8();
+                    fn_800882C8(st->loopSfxHandle);
                 }
                 (*(void (**)(int, int))((char *)(*gScreenTransitionInterface) + 0xc))(0x14, 1);
                 lbl_803DDC10 = 2;
@@ -418,13 +418,13 @@ void sc_totemstrength_update(u8 *obj)
         if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0) {
             if (st->loopSfxHandle > 0) {
                 (*(void (**)(void))((char *)(*gObjectTriggerInterface) + 0x4c))();
-                fn_800882C8();
+                fn_800882C8(st->loopSfxHandle);
             }
             if (lbl_803DDC10-- == 0) {
                 st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_ACTIVE);
-                *(int *)(obj + 0xc) = st->savedPosXBits;
-                *(int *)(obj + 0x10) = st->savedPosYBits;
-                *(int *)(obj + 0x14) = st->savedPosZBits;
+                *(f32 *)(obj + 0xc) = st->savedPosX;
+                *(f32 *)(obj + 0x10) = st->savedPosY;
+                *(f32 *)(obj + 0x14) = st->savedPosZ;
                 st->linkedObject = 0;
                 *(s16 *)obj = -0x2900;
                 st->currentTrackOffset = -0x2900;
@@ -447,7 +447,7 @@ void sc_totemstrength_update(u8 *obj)
                 st->currentTrackOffset = -0x2900;
                 st->prevTrackOffset = st->currentTrackOffset;
                 fz = lbl_803E5678;
-                *(f32 *)&st->motionValue0 = lbl_803E5678;
+                st->motionValue0 = lbl_803E5678;
                 st->offsetVelocity = fz;
                 st->transitionStep = 1;
                 st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_FLAG_01);
@@ -487,11 +487,11 @@ u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
             st[2] = 2;
         }
         switch (ev) {
-        case 0x15:
-            r = !r;
-            break;
         case 0x14:
             r = !(1 - r);
+            break;
+        case 0x15:
+            r = !r;
             break;
         default:
             r = 0;
