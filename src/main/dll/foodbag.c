@@ -438,6 +438,10 @@ extern f32 lbl_803E0F60;
 extern f32 lbl_803E0F64;
 extern f32 lbl_803E0F68;
 extern f32 lbl_803E0F6C;
+extern u8 lbl_80316650[];
+extern f32 lbl_803E1050;
+extern f32 lbl_803E1054;
+extern f32 lbl_803E1058;
 extern u8 lbl_80315468[];
 extern u8 lbl_80316240[];
 extern f32 lbl_803E1010;
@@ -2345,91 +2349,45 @@ void dll_89_func03(int param_1,int param_2,int param_3,uint param_4)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_8A_func03(int param_1,undefined2 param_2,int param_3,uint param_4)
+void dll_8A_func03(int param_1,int param_2,int param_3,uint param_4)
 {
-  int iVar1;
-  undefined4 *local_368;
-  int local_364;
-  float local_348;
-  float local_344;
-  float local_340;
-  float local_33c;
-  float local_338;
-  float local_334;
-  float local_330;
-  undefined4 local_32c;
-  undefined4 local_328;
-  undefined2 local_324;
-  undefined2 local_322;
-  undefined2 local_320;
-  undefined2 local_31e;
-  undefined2 local_31c;
-  undefined2 local_31a;
-  undefined2 local_318;
-  undefined2 local_316;
-  uint local_314;
-  undefined local_310;
-  undefined local_30f;
-  undefined local_30e;
-  undefined local_30d;
-  char local_30b;
-  undefined4 local_308;
-  float local_304;
-  float local_300;
-  float local_2fc;
-  undefined *local_2f8;
-  undefined2 local_2f4;
-  undefined local_2f2;
-  undefined auStack_2f0 [752];
-  
-  local_368 = &local_308;
-  local_2f2 = 0;
-  local_2f4 = 8;
-  local_2f8 = &DAT_80317338;
-  local_308 = 2;
-  local_304 = lbl_803E1050;
-  local_300 = lbl_803E1050;
-  local_2fc = lbl_803E1050;
-  local_310 = 0;
-  local_33c = lbl_803E1054;
-  local_338 = lbl_803E1054;
-  local_334 = lbl_803E1054;
-  local_348 = lbl_803E1054;
-  local_344 = lbl_803E1054;
-  local_340 = lbl_803E1054;
-  local_330 = lbl_803E1058;
-  local_328 = 1;
-  local_32c = 0;
-  local_30f = 8;
-  local_30e = 0;
-  local_30d = 0x10;
-  iVar1 = (int)(auStack_2f0 + -(int)local_368) / 0x18 +
-          ((int)(auStack_2f0 + -(int)local_368) >> 0x1f);
-  local_30b = (char)iVar1 - (char)(iVar1 >> 0x1f);
-  local_322 = DAT_80317348;
-  local_320 = DAT_8031734a;
-  local_31e = DAT_8031734c;
-  local_31c = DAT_8031734e;
-  local_31a = DAT_80317350;
-  local_318 = DAT_80317352;
-  local_316 = DAT_80317354;
-  local_314 = param_4 | 0x2000492;
-  if ((param_4 & 1) != 0) {
-    if (param_1 == 0) {
-      local_33c = lbl_803E1054 + *(float *)(param_3 + 0xc);
-      local_338 = lbl_803E1054 + *(float *)(param_3 + 0x10);
-      local_334 = lbl_803E1054 + *(float *)(param_3 + 0x14);
-    }
-    else {
-      local_33c = lbl_803E1054 + *(float *)(param_1 + 0x18);
-      local_338 = lbl_803E1054 + *(float *)(param_1 + 0x1c);
-      local_334 = lbl_803E1054 + *(float *)(param_1 + 0x20);
+  FbBuf buf;
+  u8 *base = lbl_80316650;
+  FbCmd *e = buf.entries;
+
+  e[0].layer = 0; e[0].flags = 8; e[0].tex = base + 0x98; e[0].mode = 2;
+  e[0].x = lbl_803E1050; e[0].y = lbl_803E1050; e[0].z = lbl_803E1050;
+  buf.v58 = 0;
+  buf.ctx = param_1;
+  buf.v44 = (s16)param_2;
+  buf.pos[0] = lbl_803E1054; buf.pos[1] = lbl_803E1054; buf.pos[2] = lbl_803E1054;
+  buf.col[0] = lbl_803E1054; buf.col[1] = lbl_803E1054; buf.col[2] = lbl_803E1054;
+  buf.scale = lbl_803E1058;
+  buf.v40 = 1;
+  buf.v3c = 0;
+  buf.v59 = 8;
+  buf.v5a = 0;
+  buf.v5b = 0x10;
+  buf.flags = 0x2000492;
+  buf.count = (FbCmd *)((u8 *)e + 0x18) - e;
+  buf.hw[0] = *(s16 *)(base + 0xa8); buf.hw[1] = *(s16 *)(base + 0xaa);
+  buf.hw[2] = *(s16 *)(base + 0xac); buf.hw[3] = *(s16 *)(base + 0xae);
+  buf.hw[4] = *(s16 *)(base + 0xb0); buf.hw[5] = *(s16 *)(base + 0xb2);
+  buf.hw[6] = *(s16 *)(base + 0xb4);
+  buf.cmds = e;
+  buf.flags |= param_4;
+  if ((buf.flags & 1) != 0) {
+    if ((uint)param_1 != 0) {
+      buf.pos[0] = lbl_803E1054 + *(f32 *)(param_1 + 0x18);
+      buf.pos[1] = lbl_803E1054 + *(f32 *)(param_1 + 0x1c);
+      buf.pos[2] = lbl_803E1054 + *(f32 *)(param_1 + 0x20);
+    } else {
+      buf.pos[0] = lbl_803E1054 + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E1054 + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E1054 + *(f32 *)(param_3 + 0x14);
     }
   }
-  local_364 = param_1;
-  local_324 = param_2;
-  (**(code **)(*gModgfxInterface + 8))(&local_368,0,8,&DAT_803172a0,0xc,&DAT_803172f0,0x1fd,0);
-  return;
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,8,base,0xc,base + 0x50,0x1fd,0);
 }
 
 /*
