@@ -2594,7 +2594,7 @@ void babycloudrunner_init_OLD_v1_1(int param_1)
   return;
 }
 
-extern void babycloudrunner_SeqFn(int *obj);
+extern int babycloudrunner_SeqFn(int *obj, int p2, u8 *p3);
 extern f32 lbl_803E422C;
 extern f32 lbl_803E4244;
 extern f32 lbl_803E4258;
@@ -4731,6 +4731,106 @@ void fn_801A0F58(int* obj, s16 a, s16 b)
         }
         *(s16*)((char*)obj + 4) = (f32)*(s16*)((char*)obj + 4) + t;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void* getTrickyObject(void);
+extern f32 lbl_803E4248;
+
+/* EN v1.0 0x8019E81C  size: 920b  babycloudrunner_SeqFn: range-check the
+ * runner against the player and its trigger radii, chirp for queued cues,
+ * then steer toward the player (or Tricky) per the current behaviour state. */
+#pragma scheduling off
+#pragma peephole off
+int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
+{
+    s8 inRange;
+    s8 i;
+    int yaw;
+    char* player;
+    f32 dx;
+    f32 dz;
+    f32 distSq;
+    u8* def = *(u8**)((char*)obj + 0x4c);
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    if (*(s16*)((char*)obj + 0xb4) == 4) {
+        return 0;
+    }
+    p3[0x56] = 0;
+    player = (char*)Obj_GetPlayerObject();
+    dx = *(f32*)(player + 0xc) - *(f32*)(def + 8);
+    dz = *(f32*)(player + 0x14) - *(f32*)(def + 0x10);
+    distSq = dx * dx + dz * dz;
+    if (distSq < (f32)((*(s16*)(def + 0x1a) / 2) * (*(s16*)(def + 0x1a) / 2))) {
+        inRange = 1;
+    } else {
+        inRange = 0;
+    }
+    *(u8*)((char*)obj + 0xaf) &= ~0x8;
+    {
+        u8* sub2 = *(u8**)((char*)obj + 0xb8);
+        char* pp = (char*)Obj_GetPlayerObject();
+        u8* def2 = *(u8**)((char*)obj + 0x4c);
+        int found = 0;
+        if (Vec_distance(pp + 0x18, (char*)obj + 0x18) < (f32)*(s16*)(def2 + 0x1a)
+            && *(int*)(sub2 + 0x230) == 3
+            && (*(u16*)((char*)obj + 0xb0) & 0x1000) == 0) {
+            found = 1;
+        }
+        if (found != 0) {
+            *(u8*)((char*)obj + 0xaf) &= ~0x10;
+        } else {
+            *(u8*)((char*)obj + 0xaf) |= 0x10;
+        }
+    }
+    if (inRange == 0 && *(int*)(sub + 0x230) == 2) {
+        f32 radius = (f32)*(s16*)(def + 0x18);
+        if ((void*)ObjGroup_FindNearestObject(3, obj, &radius) != NULL) {
+            inRange = 1;
+        }
+    }
+    for (i = 0; i < *(u8*)(p3 + 0x8b); i++) {
+        int idx = i + 0x81;
+        if (p3[idx] == 1) {
+            Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+        }
+    }
+    *(int*)(sub + 0xc4) = 0;
+    switch (*(int*)(sub + 0xc4)) {
+    case 10:
+    case 11:
+        if (*(void**)(sub + 0x114) != NULL) {
+            *(f32*)(sub + 0xac) *= lbl_803E4248;
+            *(f32*)(*(char**)(sub + 0x114) + 8) = *(f32*)(sub + 0xac);
+        }
+        *(int*)(sub + 0xc4) = 0xb;
+        if (Vec_distance((char*)obj + 0x18, player + 0x18) < (f32)*(s16*)(def + 0x1a)
+            && (*(u8*)((char*)obj + 0xaf) & 1) != 0) {
+            *(int*)(sub + 0xc4) = 7;
+            return 4;
+        }
+        break;
+    case 0:
+    case 8:
+        *(s16*)(p3 + 0x6e) &= ~0x2;
+        yaw = Obj_GetYawDeltaToObject((int)obj, (int)player, 0);
+        fn_8003ADC4(obj, (int*)player, (char*)sub + 0x3c, 0x28, 0, 3);
+        *(s16*)obj += (s16)yaw / 8;
+        if (inRange != 0) {
+            *(u8*)(p3 + 0x90) |= 4;
+        } else {
+            *(u8*)(p3 + 0x90) = 8;
+        }
+        break;
+    case 5:
+        *(s16*)(p3 + 0x6e) &= ~0x2;
+        yaw = Obj_GetYawDeltaToObject((int)obj, (int)getTrickyObject(), 0);
+        fn_8003ADC4(obj, (int*)getTrickyObject(), (char*)sub + 0x3c, 0x28, 0, 3);
+        *(s16*)obj += (s16)yaw / 8;
+        break;
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
