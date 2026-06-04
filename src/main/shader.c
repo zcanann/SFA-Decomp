@@ -3326,3 +3326,59 @@ int mapCoordsToId(int x, int z, int layerIdx)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_8030E5D4[];
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8005A8A4(f32* planes, int count)
+{
+    int k;
+    int j;
+    int bi;
+    f32 best;
+    f32 v;
+
+    for (k = 0; k < count; k++) {
+        best = lbl_803DEBCC;
+        j = 0;
+        while (j < 24) {
+            v = planes[0] * lbl_8030E5D4[j++];
+            v += planes[1] * lbl_8030E5D4[j++];
+            v += planes[2] * lbl_8030E5D4[j++];
+            if (best < v) {
+                best = v;
+                bi = j - 3;
+            }
+        }
+        switch (bi) {
+        case 0:
+            ((u8*)planes)[16] = 0;
+            break;
+        case 3:
+            ((u8*)planes)[16] = 2;
+            break;
+        case 6:
+            ((u8*)planes)[16] = 5;
+            break;
+        case 9:
+            ((u8*)planes)[16] = 7;
+            break;
+        case 0xc:
+            ((u8*)planes)[16] = 1;
+            break;
+        case 0xf:
+            ((u8*)planes)[16] = 3;
+            break;
+        case 0x12:
+            ((u8*)planes)[16] = 4;
+            break;
+        case 0x15:
+            ((u8*)planes)[16] = 6;
+            break;
+        }
+        planes += 5;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
