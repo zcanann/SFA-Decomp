@@ -5875,6 +5875,7 @@ void fn_8008DAE8(int obj) {
 
 #pragma push
 #pragma scheduling off
+#pragma dont_inline on
 void *fn_8008FB20(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
     u8 *p = mmAlloc(40, 23, 0);
 
@@ -5896,6 +5897,7 @@ void *fn_8008FB20(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
     *(u8 *)(p + 0x27) = g;
     return p;
 }
+#pragma dont_inline reset
 #pragma pop
 
 typedef struct RomCurveNode {
@@ -7659,7 +7661,6 @@ void snowReposSnowCloud(int cloudId) {
     int dz;
     int distSq;
     u8 fl;
-    f32 dist;
     struct {
         s16 f8;
         s16 fa;
@@ -7702,7 +7703,7 @@ void snowReposSnowCloud(int cloudId) {
     dy = cam[0x48 / 4] - *(f32 *)((u8 *)lbl_8039A828[i] + 0x1410);
     dz = cam[0x4c / 4] - *(f32 *)((u8 *)lbl_8039A828[i] + 0x1414);
     distSq = dx * dx + (dy * dy + dz * dz);
-    dist = sqrtf__inline((f32)distSq);
+    sqrtf__inline((f32)distSq);
     *(s16 *)((u8 *)lbl_8039A828[i] + 0x1448) =
         (f32)*(s16 *)((u8 *)lbl_8039A828[i] + 0x1448) - timeDelta;
     q = lbl_8039A828[cloudId];
