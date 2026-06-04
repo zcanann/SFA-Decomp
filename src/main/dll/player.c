@@ -4166,6 +4166,473 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern f32 lbl_803E8090;
+extern f32 lbl_803E8094;
+extern f32 lbl_803E8098;
+extern f32 lbl_803E809C;
+extern f32 lbl_803E80A0;
+extern char sNotOnGroundFailureMessage[];
+extern void fn_80137948(const char *fmt, ...);
+int fn_802A87CC(int obj, char *cam, f32 *out, f32 *vec, f32 fa, f32 fb);
+
+#pragma scheduling off
+#pragma peephole off
+s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
+{
+    typedef struct {
+        int hitObj;
+        f32 minX;
+        f32 maxX;
+        f32 minY;
+        f32 maxY;
+        f32 minZ;
+        f32 maxZ;
+        f32 nx;
+        f32 ny;
+        f32 nz;
+        f32 nw;
+        u8 padA[0xc];
+        f32 g38;
+        f32 g3c;
+        f32 g40;
+        f32 dist;
+        u8 padB[9];
+        s8 kind;
+        u8 padC[2];
+    } SweepHit;
+    f32 nearDist;
+    int objCount;
+    s8 dirs[13] = { 0xb, 4, 6, 0xa, 0xa, 3, 3, 2, 0xe, 0x10, 0x12, 0x13, 5 };
+    f32 sc0[3];
+    f32 sc1[3];
+    f32 end[3];
+    f32 start[3];
+    f32 vec[3];
+    f32 rot[3];
+    struct {
+        u8 pad[2];
+        u16 mode;
+        u8 pad2[4];
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } pfx;
+    u16 dirMasks[13] = { 1, 2, 4, 8, 8, 0x10, 0x10, 0x40, 0x80, 0x100, 1, 0x20, 0xffff };
+    SweepHit buf;
+    f32 ang;
+    f32 hd;
+    f32 dp;
+    int i;
+    s8 ok;
+    s8 flagA;
+    s8 flagB;
+    u8 useAlt;
+    u8 hit;
+    f32 *dir;
+
+    ang = (lbl_803E7F94 *
+           (f32)((u16)getAngle(*(f32 *)(p3 + 0x290), -*(f32 *)(p3 + 0x28c)) -
+                 *(s16 *)(p3 + 0x330))) /
+          lbl_803E7F98;
+    rot[0] = -fn_80293E80(ang);
+    rot[1] = lbl_803E7EA4;
+    rot[2] = -sin(ang);
+    fn_802A81B8(obj, p2, vec);
+    sc1[0] = lbl_803E808C * rot[0];
+    sc1[1] = lbl_803E808C * rot[1];
+    sc1[2] = lbl_803E808C * rot[2];
+    sc0[0] = lbl_803E808C * vec[0];
+    sc0[1] = lbl_803E808C * vec[1];
+    sc0[2] = lbl_803E808C * vec[2];
+    {
+        register u32 m;
+        register u32 v;
+        register int base = p2;
+        asm {
+            lwz v, 0x360(base)
+            li m, -0x101
+            and m, v, m
+            stw m, 0x360(base)
+        }
+    }
+    for (i = 0; i < 13; i++) {
+        if ((mask & dirMasks[i]) == 0) {
+            continue;
+        }
+        ok = 0;
+        useAlt = 0;
+        flagB = 1;
+        flagA = 0;
+        switch (i) {
+        case 1:
+        case 7:
+        case 12: {
+            u8 b;
+            s16 v = *(s16 *)(p2 + 0x274);
+            if (v == 0xc) {
+                continue;
+            }
+            if ((u16)(v - 9) <= 2) {
+                continue;
+            }
+            b = *(u8 *)(p2 + 0x3f0);
+            if ((u32)b >> 3 & 1) {
+                continue;
+            }
+            if ((u32)b >> 2 & 1) {
+                continue;
+            }
+            flagB = 0;
+            flagA = 1;
+            ok = 1;
+            break;
+        }
+        case 0:
+        case 10:
+            if (((u32)*(u8 *)(p2 + 0x3f1) & 1) == 0) {
+                fn_80137948(sNotOnGroundFailureMessage);
+                continue;
+            }
+            ok = 1;
+            break;
+        case 3:
+        case 5: {
+            u8 b = *(u8 *)(p2 + 0x3f0);
+            if ((u32)b >> 3 & 1 || (u32)b >> 2 & 1) {
+                ok = 1;
+            }
+            useAlt = 1;
+            break;
+        }
+        case 2: {
+            u8 b2;
+            if (((u32)*(u8 *)(p2 + 0x3f1) & 1) == 0) {
+                u8 b = *(u8 *)(p2 + 0x3f0);
+                if (((u32)b >> 3 & 1) == 0 && ((u32)b >> 2 & 1) == 0) {
+                    continue;
+                }
+            }
+            b2 = *(u8 *)(p2 + 0x3f0);
+            if ((u32)b2 >> 3 & 1 || (u32)b2 >> 2 & 1) {
+                ok = 1;
+            }
+            break;
+        }
+        case 4:
+        case 6: {
+            u8 b2;
+            if (((u32)*(u8 *)(p2 + 0x3f1) & 1) == 0) {
+                u8 b = *(u8 *)(p2 + 0x3f0);
+                if (((u32)b >> 3 & 1) == 0 && ((u32)b >> 2 & 1) == 0) {
+                    continue;
+                }
+            }
+            b2 = *(u8 *)(p2 + 0x3f0);
+            if ((u32)b2 >> 3 & 1 || (u32)b2 >> 2 & 1) {
+                ok = 1;
+            }
+            break;
+        }
+        case 11:
+            flagB = 0;
+            ok = 1;
+            break;
+        }
+        if (ok == 0) {
+            if (*(f32 *)(p3 + 0x298) < lbl_803E7EFC) {
+                continue;
+            }
+        }
+        if (useAlt == 0) {
+            if (ok == 0) {
+                end[0] = *(f32 *)(obj + 0xc) + sc1[0];
+                end[1] = *(f32 *)(obj + 0x10) + sc1[1];
+                end[2] = *(f32 *)(obj + 0x14) + sc1[2];
+                dir = rot;
+            } else {
+                end[0] = *(f32 *)(obj + 0xc) + sc0[0];
+                end[1] = *(f32 *)(obj + 0x10) + sc0[1];
+                end[2] = *(f32 *)(obj + 0x14) + sc0[2];
+                dir = vec;
+            }
+            start[0] = *(f32 *)(obj + 0xc);
+            start[1] = *(f32 *)(obj + 0x10);
+            start[2] = *(f32 *)(obj + 0x14);
+        } else {
+            if (ok == 0) {
+                start[0] = *(f32 *)(obj + 0xc) + sc1[0];
+                start[1] = *(f32 *)(obj + 0x10) + sc1[1];
+                start[2] = *(f32 *)(obj + 0x14) + sc1[2];
+                dir = rot;
+            } else {
+                start[0] = *(f32 *)(obj + 0xc) + sc0[0];
+                start[1] = *(f32 *)(obj + 0x10) + sc0[1];
+                start[2] = *(f32 *)(obj + 0x14) + sc0[2];
+                dir = vec;
+            }
+            end[0] = *(f32 *)(obj + 0xc);
+            end[1] = *(f32 *)(obj + 0x10);
+            end[2] = *(f32 *)(obj + 0x14);
+        }
+        hit = objBboxFn_800640cc(lbl_803E7EA4, start, end, 3, &buf, obj, 1, dirs[i], 0xff, 10);
+        if (flagA != 0 && hit != 0) {
+            *(f32 *)(p2 + 0x778) = buf.dist;
+        }
+        if (flagB != 0 && hit != 0) {
+            dp = buf.nx * dir[0] + buf.ny * dir[1] + buf.nz * dir[2];
+            switch (i) {
+            case 3:
+            case 5:
+                if (*(f32 *)(obj + 0x10) < lbl_803E7F10 + buf.minY &&
+                    *(f32 *)(obj + 0x10) < lbl_803E7F10 + buf.maxY) {
+                    hit = 0;
+                }
+                break;
+            case 2:
+            case 4:
+            case 6:
+                if (((u32)*(u8 *)(p2 + 0x3f1) & 1) != 0) {
+                    if (dp > lbl_803E8090 ||
+                        (*(f32 *)(obj + 0x10) > buf.g3c - lbl_803E7ED8 &&
+                         *(f32 *)(obj + 0x10) > buf.g40 - lbl_803E7ED8)) {
+                        hit = 0;
+                    }
+                } else {
+                    if (dp > lbl_803E8094) {
+                        hit = 0;
+                    }
+                }
+                break;
+            case 0:
+            case 10:
+                break;
+            default:
+                if (dp > lbl_803E8090) {
+                    hit = 0;
+                }
+            }
+        }
+        if (flagB != 0 && hit != 0) {
+            if (useAlt == 0) {
+                start[0] = *(f32 *)(obj + 0xc);
+                start[1] = *(f32 *)(obj + 0x10);
+                start[2] = *(f32 *)(obj + 0x14);
+                end[0] = -(lbl_803E808C * buf.nx - *(f32 *)(obj + 0xc));
+                end[1] = *(f32 *)(obj + 0x10);
+                end[2] = -(lbl_803E808C * buf.nz - *(f32 *)(obj + 0x14));
+            } else {
+                start[0] = lbl_803E808C * buf.nx + *(f32 *)(obj + 0xc);
+                start[1] = *(f32 *)(obj + 0x10);
+                start[2] = lbl_803E808C * buf.nz + *(f32 *)(obj + 0x14);
+                end[0] = *(f32 *)(obj + 0xc);
+                end[1] = *(f32 *)(obj + 0x10);
+                end[2] = *(f32 *)(obj + 0x14);
+            }
+            hit = objBboxFn_800640cc(lbl_803E7EA4, start, end, 3, &buf, obj, 1, dirs[i], 0xff,
+                                     10);
+        }
+        if (hit == 0) {
+            continue;
+        }
+        hd = buf.dist;
+        if (useAlt != 0) {
+            hd = lbl_803E808C - hd;
+        }
+        switch (i) {
+        case 0: {
+            int t = buf.hitObj;
+            if ((u32)t == 0) {
+                continue;
+            }
+            if ((*(int (*)(int))*(int *)((char *)*(int *)(t + 0x68) + 0x2c))(t) != 0 &&
+                *(f32 *)(p3 + 0x298) > lbl_803E7EFC &&
+                hd <= lbl_803E7ED4 + lbl_803DC6C0) {
+                switch (((int (*)(int, int, void *, int, f32 *, f32))fn_802A8EE4)(
+                    obj, p2, &buf, p2 + 0x5a8, end, hd)) {
+                case 2:
+                    return 4;
+                case 3:
+                    return 5;
+                }
+            }
+            if (hd >= lbl_803E7FA4) {
+                continue;
+            }
+            if (*(u8 *)(t + 0xaf) & 8) {
+                continue;
+            }
+            *(u32 *)(p2 + 0x360) |= 0x100;
+            if ((*(int *)(p3 + 0x31c) & 0x100) == 0) {
+                continue;
+            }
+            *(f32 *)(p2 + 0x654) = buf.nx;
+            *(f32 *)(p2 + 0x658) = buf.ny;
+            *(f32 *)(p2 + 0x65c) = buf.nz;
+            *(f32 *)(p2 + 0x660) = buf.g38;
+            *(u8 *)(p2 + 0x681) = 0;
+            if ((u32)buf.hitObj != 0) {
+                Obj_TransformWorldPointToLocal((f32 *)(p2 + 0x664), (f32 *)(p2 + 0x668),
+                                               (f32 *)(p2 + 0x66c), buf.hitObj, end[0], end[1],
+                                               end[2]);
+                *(int *)(p2 + 0x67c) = buf.hitObj;
+            } else {
+                *(f32 *)(p2 + 0x664) = end[0];
+                *(f32 *)(p2 + 0x668) = end[1];
+                *(f32 *)(p2 + 0x66c) = end[2];
+                *(int *)(p2 + 0x67c) = 0;
+            }
+            return 6;
+        }
+        case 10:
+            if (hd >= lbl_803E8098) {
+                continue;
+            }
+            if ((*(int *)(p3 + 0x31c) & 0x100) == 0) {
+                continue;
+            }
+            *(f32 *)(p2 + 0x654) = buf.nx;
+            *(f32 *)(p2 + 0x658) = buf.ny;
+            *(f32 *)(p2 + 0x65c) = buf.nz;
+            *(f32 *)(p2 + 0x660) = buf.g38;
+            *(u8 *)(p2 + 0x681) = 0;
+            if ((u32)buf.hitObj != 0) {
+                Obj_TransformWorldPointToLocal((f32 *)(p2 + 0x664), (f32 *)(p2 + 0x668),
+                                               (f32 *)(p2 + 0x66c), buf.hitObj, end[0], end[1],
+                                               end[2]);
+                *(int *)(p2 + 0x67c) = buf.hitObj;
+            } else {
+                *(f32 *)(p2 + 0x664) = end[0];
+                *(f32 *)(p2 + 0x668) = end[1];
+                *(f32 *)(p2 + 0x66c) = end[2];
+                *(int *)(p2 + 0x67c) = 0;
+            }
+            return 0xd;
+        case 3:
+        case 4:
+            if (hd > lbl_803E7F58) {
+                continue;
+            }
+            if (fn_802A8350(obj, p2, (int)&buf, p2 + 0x4e4, i == 3) == 0) {
+                continue;
+            }
+            return 0;
+        case 5:
+        case 6:
+            if (hd > lbl_803E7EE0 + lbl_803DC6C0) {
+                continue;
+            }
+            if (fn_802A8680(obj, p2, (int)&buf, (int)end, p2 + 0x548, i == 5) == 0) {
+                continue;
+            }
+            return 9;
+        case 1:
+        case 7:
+        case 12:
+            if (hd >= lbl_803E7F58) {
+                continue;
+            }
+            switch (fn_802A87CC(obj, (char *)&buf, (f32 *)(p2 + 0x5a8), end, hd, fv)) {
+            case 4:
+                return 8;
+            case 5:
+                return 7;
+            }
+            break;
+        case 2:
+        case 9:
+            if (hd > lbl_803E7EE0 + lbl_803DC6C0) {
+                continue;
+            }
+            switch (((int (*)(int, int, void *, int, f32 *, f32))fn_802A8EE4)(obj, p2, &buf,
+                                                                              p2 + 0x5a8, end,
+                                                                              hd)) {
+            case 2:
+                return 4;
+            case 3:
+                return 5;
+            case 6:
+                return 0xc;
+            }
+            break;
+        case 8: {
+            s8 ok2;
+            int t8;
+            if (hd > lbl_803E7EE0 + lbl_803DC6C0) {
+                continue;
+            }
+            nearDist = lbl_803E808C;
+            t8 = ObjGroup_FindNearestObject(0x23, obj, &nearDist);
+            ok2 = 1;
+            if ((u32)t8 != 0) {
+                if ((*(u8 (*)(int))*(int *)((char *)*(int *)(t8 + 0x68) + 0x24))(t8) == 0) {
+                    ok2 = 0;
+                }
+            }
+            if (ok2 == 0) {
+                continue;
+            }
+            *(f32 *)(p2 + 0x60c) = buf.nx;
+            *(f32 *)(p2 + 0x610) = buf.ny;
+            *(f32 *)(p2 + 0x614) = buf.nz;
+            *(f32 *)(p2 + 0x618) = buf.nw;
+            return 0xb;
+        }
+        case 11:
+            if (hd >= lbl_803E809C) {
+                continue;
+            }
+            if (buf.kind == 0xd) {
+                int k;
+                if (*(f32 *)(p3 + 0x280) <= lbl_803E80A0) {
+                    continue;
+                }
+                if (*(f32 *)(p2 + 0x878) <= lbl_803E7EA4) {
+                    for (k = 0; k < 0x4b; k++) {
+                        f32 lo;
+                        lo = buf.minX;
+                        pfx.x = lo + (buf.maxX - lo) * (f32)randomGetRange(0, 100) /
+                                         lbl_803E7F5C;
+                        lo = buf.minY;
+                        pfx.y = lo + (buf.g3c - lo) * (f32)randomGetRange(0, 100) /
+                                         lbl_803E7F5C;
+                        lo = buf.minZ;
+                        pfx.z = lo + (buf.maxZ - lo) * (f32)randomGetRange(0, 100) /
+                                         lbl_803E7F5C;
+                        pfx.scale = lbl_803E7EE0;
+                        pfx.mode = 0x3c;
+                        (**(void (**)(int, int, void *, int, int, int))(
+                            (char *)(*gPartfxInterface) + 0x8))(obj, 0x804, &pfx, 0x200001, -1,
+                                                                0);
+                    }
+                    *(f32 *)(p2 + 0x878) = lbl_803E7F30;
+                }
+            } else {
+                ObjPath_GetPointWorldPosition(obj, 0xb, &pfx.x, &pfx.y, &pfx.z, 0);
+                ((void (*)(int, int, int, int, int, f32, f32, f32))ObjHits_RecordPositionHit)(
+                    obj, 0, 8, 1, -1, pfx.x, pfx.y, pfx.z);
+            }
+            break;
+        }
+    }
+    if ((*(int *)(p3 + 0x31c) & 0x100) != 0 && (mask & 0x200) != 0) {
+        int *objs = (int *)ObjGroup_GetObjects(10, &objCount);
+        int k2;
+        for (k2 = 0; k2 < objCount; k2++) {
+            int cur = *objs;
+            if ((*(int (*)(int, int))*(int *)((char *)*(int *)(cur + 0x68) + 0x20))(cur, obj) !=
+                0) {
+                *(int *)(p2 + 0x7f0) = cur;
+                return 0xa;
+            }
+            objs++;
+        }
+    }
+    return -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 int fn_802ABAE8(int obj, int state, int inner, f32 fv)
