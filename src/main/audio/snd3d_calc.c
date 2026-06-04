@@ -466,7 +466,7 @@ void s3dStartQueuedEmitters(void)
 start_voice:
                 emitter = node->emitter;
                 entry = emitter->entry;
-                if ((entry == (SndSpatialEntry *)0x0) || (entry->assignedVoice != -1)) {
+                if ((entry == (SndSpatialEntry *)0x0) || (entry->assignedVoice != 0xff)) {
                     if (entry == (SndSpatialEntry *)0x0) {
                         studio = emitter->studio;
                     } else {

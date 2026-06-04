@@ -113,7 +113,7 @@ void s3dHandle(void)
                 }
             } else {
                 entry = emitter->entry;
-                if ((entry == (SndSpatialEntry *)0x0) || (entry->assignedVoice != -1)) {
+                if ((entry == (SndSpatialEntry *)0x0) || (entry->assignedVoice != 0xff)) {
                     u8 studio;
 
                     if (entry == (SndSpatialEntry *)0x0) {
@@ -160,7 +160,7 @@ update_voice:
             }
         } else {
             entry = emitter->entry;
-            if (((entry == (SndSpatialEntry *)0x0) || (entry->assignedVoice != -1)) &&
+            if (((entry == (SndSpatialEntry *)0x0) || (entry->assignedVoice != 0xff)) &&
                 (distance != lbl_803E7880)) {
                 emitter->flags &= ~S3D_EMITTER_FLAG_WAITING_FOR_ROOM;
                 emitter->flags |= S3D_EMITTER_FLAG_PLAYING;

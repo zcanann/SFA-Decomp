@@ -32,7 +32,7 @@ typedef struct SndSpatialEntry {
     f32 posY;
     f32 posZ;
     f32 averageDistanceSq;
-    s8 assignedVoice;
+    u8 assignedVoice;
     u8 pad1d[3];
     void (*activateCallback)(u8 voice, u32 user);
     void (*evictCallback)(u8 voice);
