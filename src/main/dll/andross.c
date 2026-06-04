@@ -281,6 +281,7 @@ extern s16 lbl_803DDDC8;
 extern s16 lbl_803DDDCA;
 extern f32 lbl_803DC4CC;
 extern void turnOnDistortionFilter(f32 *pos, f32 a, f32 *b, f32 c);
+extern void fn_8022D460(int obj, f32 x);
 
 #pragma peephole off
 #pragma scheduling off
@@ -360,8 +361,8 @@ void andross_update(int obj)
     piVar14 = *(int **)(obj + 0xb8);
   fstate = (f32 *)piVar14;
   iVar12 = 0;
-  if (*(char *)((int)piVar14 + 0xb6) != '\0') {
-    *(char *)((int)piVar14 + 0xb6) = *(char *)((int)piVar14 + 0xb6) + -1;
+  if (*(u8 *)((int)piVar14 + 0xb6) != 0) {
+    *(u8 *)((int)piVar14 + 0xb6) = *(u8 *)((int)piVar14 + 0xb6) - 1;
     goto LAB_8023ef14;
   }
   if (piVar14[1] == 0) {
@@ -381,7 +382,7 @@ void andross_update(int obj)
     *piVar14 = iVar5;
     if (*piVar14 == 0) goto LAB_8023ef14;
     fstate[0x1c] = *(f32 *)(*piVar14 + 0x14);
-        fn_8022D460((f32)(lbl_803DC438),*piVar14);
+        fn_8022D460(*piVar14,(f32)lbl_803DC438);
   }
   for (bVar13 = 0; bVar13 < 4; bVar13 = bVar13 + 1) {
     uVar6 = (u32)bVar13;
@@ -475,13 +476,13 @@ LAB_8023ad84:
         case 10:
           piVar14[0x22] = 0x12;
           break;
+        case 0x14:
+          piVar14[0x22] = 0xb;
+          break;
         case 0x11:
           piVar14[0x22] = 0x16;
           *(s16 *)(piVar14 + 0x28) = 0x8000;
           piVar14[0x1f] = piVar14[0x1f] + -1;
-          break;
-        case 0x14:
-          piVar14[0x22] = 0xb;
         }
         piVar14[0x21] = 0;
       }
@@ -528,20 +529,20 @@ LAB_8023ad84:
       case 7:
         piVar14[0x22] = 10;
         break;
-      case 9:
-        piVar14[0x22] = 8;
-        break;
       case 10:
         piVar14[0x22] = 0x12;
+        break;
+      case 0x14:
+        piVar14[0x22] = 0xb;
         break;
       case 0xf:
         piVar14[0x22] = 9;
         break;
+      case 9:
+        piVar14[0x22] = 8;
+        break;
       case 0x11:
         piVar14[0x22] = 0x18;
-        break;
-      case 0x14:
-        piVar14[0x22] = 0xb;
       }
       piVar14[0x21] = 0;
     }
@@ -559,9 +560,6 @@ LAB_8023ad84:
         piVar14[0x22] = 0x12;
         *(undefined *)(piVar14 + 0x2b) = 0;
         break;
-      case 0x11:
-        piVar14[0x22] = 0x18;
-        break;
       case 0x14:
         if (*(char *)(piVar14 + 0x2b) == '\x01') {
           piVar14[0x22] = 0xb;
@@ -573,6 +571,9 @@ LAB_8023ad84:
         break;
       case 0x15:
         piVar14[0x22] = 0x12;
+        break;
+      case 0x11:
+        piVar14[0x22] = 0x18;
         break;
       case 0x19:
         piVar14[0x1f] = 6;
