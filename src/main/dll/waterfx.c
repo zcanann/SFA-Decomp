@@ -601,3 +601,158 @@ void waterfx_initialise(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
+
+extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
+extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+extern void PSMTXConcat(void *a, void *b, void *ab);
+extern void DCStoreRange(void *p, int n);
+extern void GXCallDisplayList(void *list, int n);
+extern u16 lbl_803DD204;
+extern f32 lbl_803DF2E0;
+extern f32 lbl_803DF2E4;
+extern f32 lbl_803DF2F0;
+extern f32 lbl_803DF2F4;
+extern f32 lbl_803DF2F8;
+extern f32 lbl_803DF304;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80095164(WaterParticle *s) {
+    f32 mtxD[12];
+    f32 scale[12];
+    f32 mtxB[12];
+    f32 mtxC[12];
+    int i;
+    int mtxIdx;
+    f32 c2FC;
+    f32 c2F4;
+    f32 c2EC;
+    f32 c2F0;
+    f32 c2E8;
+    f32 c2F8;
+    f32 c2E4;
+    f32 c2E0;
+    f32 fade;
+    f32 t;
+    f32 c304;
+
+    PSMTXScale(scale, s->f0c, s->f0c, s->f0c);
+    mtxIdx = 0;
+    c2E0 = lbl_803DF2E0;
+    c2E4 = lbl_803DF2E4;
+    c2F8 = lbl_803DF2F8;
+    c2E8 = lbl_803DF2E8;
+    c2F0 = lbl_803DF2F0;
+    c2EC = lbl_803DF2EC;
+    c2F4 = lbl_803DF2F4;
+    c2FC = lbl_803DF2FC;
+    c304 = lbl_803DF304;
+    for (i = 0; i < 8; i++) {
+        f32 h = s->f10;
+        f32 a = c2E4 * ((f32)i / c2F8);
+        f32 ph = (c2E0 + a) * h;
+        f32 dd = ph - c2E8;
+        f32 lim;
+        f32 sc;
+        fade = -(c2F0 * (dd * dd) - c2EC);
+        lim = c2F4 + a;
+        if (h < lim) {
+            t = c2EC;
+        } else {
+            t = (c2EC - h) / (c2EC - lim);
+        }
+        sc = c2FC * ph + c2EC;
+        PSMTXScale(mtxB, sc, c2EC, sc);
+        PSMTXTrans(mtxC, lbl_803DF300, c2FC * fade, lbl_803DF300);
+        PSMTXConcat(mtxC, mtxB, mtxD);
+        PSMTXConcat(scale, mtxD, mtxD);
+        PSMTXTrans(mtxC, s->x - playerMapOffsetX, s->y, s->z - playerMapOffsetZ);
+        PSMTXConcat(mtxC, mtxD, mtxD);
+        PSMTXConcat(Camera_GetViewMatrix(), mtxD, mtxD);
+        GXLoadPosMtxImm(mtxD, mtxIdx);
+        *(u32 *)((u8 *)s + i * 4 + 0x18) = (u8)(int)(c304 * t);
+        mtxIdx += 3;
+    }
+    DCStoreRange(s->pad18, 32);
+    GXSetArray(11, s->pad18, 4);
+    GXSetCullMode(1);
+    GXCallDisplayList(lbl_803DD208, lbl_803DD204);
+    GXSetCullMode(2);
+    GXCallDisplayList(lbl_803DD208, lbl_803DD204);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void GXSetMisc(int token, int val);
+extern void DCInvalidateRange(void *p, int n);
+extern void GXBeginDisplayList(void *p, int n);
+extern int GXEndDisplayList(void);
+extern void GXResetWriteGatherPipe(void);
+extern f32 fn_802942EC(f32);
+extern f32 fn_80293F7C(f32);
+extern f32 lbl_803DF310;
+extern f32 lbl_803DF314;
+
+#pragma scheduling off
+#pragma peephole off
+void waterfx_drawFn_800953fc(void) {
+    int k;
+    int i;
+    int j;
+    int m;
+    f32 idiv;
+    f32 jdiv;
+    void *dl;
+
+    GXSetMisc(1, 0);
+    lbl_803DD200 = mmAlloc(192, 0, 0);
+    lbl_803DD1FC = mmAlloc(1024, 0, 0);
+    jdiv = lbl_803DF314;
+    idiv = lbl_803DF2F8;
+    for (i = 0; i < 8; i++) {
+        for (j = 0; j < 16; j++) {
+            if (i == 0) {
+                f32 *pos = (f32 *)((u8 *)lbl_803DD200 + j * 12);
+                f32 ang = lbl_803DF310 * (f32)(j * 2) / lbl_803DF314;
+                f32 sv = fn_802942EC(ang);
+                f32 cv = fn_80293F7C(ang);
+                pos[0] = sv;
+                pos[1] = lbl_803DF300;
+                pos[2] = cv;
+            }
+            {
+                int idx = i * 16 + j;
+                f32 *tex = (f32 *)((u8 *)lbl_803DD1FC + idx * 8);
+                tex[0] = (f32)j / jdiv;
+                tex[1] = (f32)i / idiv;
+            }
+        }
+    }
+    DCStoreRange(lbl_803DD200, 192);
+    DCStoreRange(lbl_803DD1FC, 1024);
+    dl = mmAlloc(2880, 0x7F7F7FFF, 0);
+    lbl_803DD208 = dl;
+    DCInvalidateRange(dl, 2880);
+    GXBeginDisplayList(lbl_803DD208, 2880);
+    GXResetWriteGatherPipe();
+    for (k = 0; k < 15; k++) {
+        GXBegin(152, 2, 16);
+        for (m = 7; m >= 0; m--) {
+            u8 a = m * 3;
+            GXWGFifo.u8 = a;
+            GXWGFifo.u8 = a;
+            GXWGFifo.u16 = k;
+            GXWGFifo.u16 = m;
+            GXWGFifo.u16 = m * 16 + k;
+            GXWGFifo.u8 = a;
+            GXWGFifo.u8 = a;
+            GXWGFifo.u16 = (k + 1) % 16;
+            GXWGFifo.u16 = m;
+            GXWGFifo.u16 = m * 16 + (k + 1) % 16;
+        }
+    }
+    lbl_803DD204 = GXEndDisplayList();
+    GXSetMisc(1, 8);
+}
+#pragma peephole reset
+#pragma scheduling reset
