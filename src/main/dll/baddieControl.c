@@ -1,6 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/baddieControl.h"
 
+typedef struct {
+    u8 b7 : 1;
+    u8 rest : 7;
+} WmFlags;
+
+
 extern undefined4 ABS();
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_8000676c();
@@ -4428,16 +4434,14 @@ extern f32 lbl_803E1ADC;
 #pragma scheduling off
 void CameraModeCrawl_update(u8 *obj) {
     u8 *state = *(u8 **)(obj + 164);
-    int newangle;
     int delta;
-    f32 work[2];
     f32 v20, v16, v12, v8;
     int other;
 
     if (state == NULL) {
         return;
     }
-    if ((((u8 *)lbl_803DD598)[8] >> 7) & 1) {
+    if (((WmFlags *)(lbl_803DD598 + 8))->b7 == 0) {
         *(f32 *)(obj + 24) =
             lbl_803E1AD0 * fn_80293E80(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
             *(f32 *)(state + 24);
@@ -4445,26 +4449,24 @@ void CameraModeCrawl_update(u8 *obj) {
             lbl_803E1AD0 * sin(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
             *(f32 *)(state + 32);
         *(f32 *)(obj + 28) = lbl_803E1AD4 + *(f32 *)(state + 28);
-        work[0] = *(f32 *)(obj + 12) - *(f32 *)(state + 24);
-        work[1] = *(f32 *)(obj + 20) - *(f32 *)(state + 32);
-        newangle = (u16)getAngle(work[0], work[1]);
-        delta = (0x8000 - newangle) - (u16)*(s16 *)obj;
+        v20 = *(f32 *)(obj + 12) - *(f32 *)(state + 24);
+        v12 = *(f32 *)(obj + 20) - *(f32 *)(state + 32);
+        delta = (0x8000 - (u16)getAngle(v20, v12)) - (u16)*(s16 *)obj;
         if (delta > 0x8000) {
             delta -= 0xffff;
         }
         if (delta < -0x8000) {
             delta += 0xffff;
         }
-        *(s16 *)obj = (s16)(s32)((f32)(s32)*(s16 *)obj +
-                                 interpolate((f32)(s32)delta, lbl_803E1AD8, timeDelta));
-        *(s16 *)obj = (s16)(0x8000 - (u16)getAngle(work[0], work[1]));
+        *(s16 *)obj = (s32)((f32)(s32)*(s16 *)obj +
+                            interpolate((f32)(s32)delta, lbl_803E1AD8, timeDelta));
+        *(s16 *)obj = (s16)(0x8000 - getAngle(v20, v12));
         *(s16 *)(obj + 2) = 2048;
     } else {
         other = (*(int (**)(void))(*(int *)gCameraInterface + 24))();
         (*(void (**)(u8 *, f32 *, f32 *, f32 *, f32 *, f32, int))(*(int *)gCameraInterface + 56))(
             obj, &v20, &v16, &v12, &v8, lbl_803E1ADC, 0);
-        newangle = (u16)getAngle(v20, v12);
-        delta = (0x8000 - newangle) - (u16)*(s16 *)obj;
+        delta = (0x8000 - (u16)getAngle(v20, v12)) - (u16)*(s16 *)obj;
         if (delta > 0x8000) {
             delta -= 0xffff;
         }
@@ -5202,11 +5204,6 @@ extern f32 lbl_803E1A60;
 extern f32 lbl_803E1A64;
 extern f32 lbl_803E1A68;
 extern f32 lbl_803E1A6C;
-
-typedef struct {
-    u8 b7 : 1;
-    u8 rest : 7;
-} WmFlags;
 
 /* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
 #pragma peephole off
