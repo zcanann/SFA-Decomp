@@ -159,20 +159,19 @@ int salSynthSendMessage(int synth, int msg) {
 }
 
 void salActivateVoice(SalVoice *voice, u8 idx) {
-    SalVoice **slot;
+    u8 *st;
 
     if (voice->active != 0) {
         salDeactivateVoice(voice);
         voice->flags |= 0x20;
     }
     voice->pendingDeactivate = 0;
-    slot = &((SalStudio *)lbl_803CC1E0)[idx].voiceList;
-    voice->next = *slot;
-    if (voice->next != NULL) {
+    st = lbl_803CC1E0 + idx * 0xbc;
+    if ((voice->next = *(SalVoice **)(st + 0x48)) != NULL) {
         voice->next->prev = voice;
     }
     voice->prev = NULL;
-    *slot = voice;
+    *(SalVoice **)(st + 0x48) = voice;
     voice->needsUpdate = 0;
     voice->active = 1;
     voice->studioIndex = idx;
@@ -189,7 +188,7 @@ void salDeactivateVoice(SalVoice *voice) {
     if (prev != NULL) {
         prev->next = voice->next;
     } else {
-        ((SalStudio *)lbl_803CC1E0)[voice->studioIndex].voiceList = voice->next;
+        *(SalVoice **)(lbl_803CC1E0 + voice->studioIndex * 0xbc + 0x48) = voice->next;
     }
     next = voice->next;
     if (next != NULL) {
@@ -213,23 +212,22 @@ int salAddStudioInput(SalStudio *studio, SalStudioInputSource *input) {
 }
 
 int salRemoveStudioInput(SalStudio *studio, SalStudioInputSource *input) {
-    int i;
-    int count;
-    SalStudioInput *entry;
+    int n;
+    int idx = 0;
+    u8 *p = (u8 *)studio;
 
-    count = studio->inputCount;
-    entry = studio->inputs;
-    for (i = 0; i < count; i++) {
-        if (entry->source == input) {
-            entry = &studio->inputs[i];
-            for (; i <= studio->inputCount - 2; i++) {
-                entry[0] = entry[1];
-                entry++;
+    for (n = studio->inputCount; n > 0; n--) {
+        if (*(SalStudioInputSource **)(p + 0x60) == input) {
+            p = (u8 *)studio + idx * 0xc;
+            for (; idx <= studio->inputCount - 2; idx++) {
+                *(SalStudioInput *)(p + 0x58) = *(SalStudioInput *)(p + 0x64);
+                p += 0xc;
             }
             studio->inputCount--;
             return 1;
         }
-        entry++;
+        p += 0xc;
+        idx++;
     }
     return 0;
 }
@@ -241,7 +239,7 @@ void salHandleAuxProcessing(void) {
     void *bufs[3];
 
     studio = (char *)lbl_803CC1E0;
-    for (i = 0; (u8)i < salMaxStudioNum; i++) {
+    for (i = 0; (u8)i < salMaxStudioNum; i++, studio += 0xbc) {
         if (*(u8 *)(studio + 0x50) == 1) {
             if (*(void **)(studio + 0xac) != NULL) {
                 buf = *(int *)(studio + ((salAuxFrame + 2) % 3) * 4 + 0x30);
@@ -260,6 +258,5 @@ void salHandleAuxProcessing(void) {
                 DCFlushRangeNoSync((void *)buf, 0x780);
             }
         }
-        studio += 0xbc;
     }
 }
