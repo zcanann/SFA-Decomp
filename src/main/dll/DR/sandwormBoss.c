@@ -5311,8 +5311,11 @@ void babycloudrunner_update(int* obj)
     char* player;
     u8* sub;
     u8* def = *(u8**)((char*)obj + 0x4c);
-    int inRange;
+    int found;
+    u8* def2;
     int* near;
+    u8* sub2;
+    int inRange;
     RunnerTarget tgt;
     int mode;
     f32 radius;
@@ -5417,9 +5420,6 @@ void babycloudrunner_update(int* obj)
                     storeZeroToFloatParam((char*)sub + 0x238);
                 }
             } else {
-                u8* sub2;
-                u8* def2;
-                int found;
                 *(u8*)((char*)obj + 0xaf) &= ~0x8;
                 sub2 = *(u8**)((char*)obj + 0xb8);
                 {
