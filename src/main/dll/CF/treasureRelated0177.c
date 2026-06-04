@@ -191,20 +191,13 @@ void FUN_8018cf58(int param_1, int param_2, int param_3, int param_4, int param_
 void dll_127_init(short *param_1,int param_2)
 {
   float fVar1;
-  double dVar2;
   uint uVar2;
-  uint local_18[2];
-  uint local_10[2];
-  
+  u8 b;
+
   param_1[3] = param_1[3] | 2;
-  uVar2 = *(byte *)(param_2 + 0x19) ^ 0x80000000;
-  dVar2 = lbl_803E3D70;
-  local_18[1] = uVar2;
-  local_18[0] = 0x43300000;
-  fVar1 = (float)(*(double *)local_18 - dVar2);
-  local_10[1] = uVar2;
-  local_10[0] = 0x43300000;
-  if ((float)(*(double *)local_10 - dVar2) < lbl_803E3D64) {
+  b = *(u8 *)(param_2 + 0x19);
+  fVar1 = (f32)(int)b;
+  if ((f32)(int)b < lbl_803E3D64) {
     fVar1 = lbl_803E3D64;
   }
   fVar1 = fVar1 * lbl_803E3D68;
@@ -212,7 +205,7 @@ void dll_127_init(short *param_1,int param_2)
   if (*(float **)(param_1 + 0x32) != (float *)0x0) {
     **(float **)(param_1 + 0x32) = **(float **)(param_1 + 0x28) * fVar1;
   }
-  *(char *)((int)param_1 + 0xad) = *(char *)(param_2 + 0x18);
+  *(s8 *)((int)param_1 + 0xad) = (s8)*(u8 *)(param_2 + 0x18);
   uVar2 = *(byte *)(param_2 + 0x1a) & 0x3f;
   *param_1 = (short)(uVar2 << 10);
   if (*(char *)((int)param_1 + 0xad) >= *(char *)(*(int *)(param_1 + 0x28) + 0x55)) {
@@ -380,7 +373,7 @@ void dll_127_initialise_nop(void) {}
 
 extern int Obj_GetPlayerObject(void);
 extern int *gSHthorntailAnimationInterface;
-extern void lightFn_8001db6c(f32 f1, int light, int arg);
+extern void lightFn_8001db6c(int light, int arg, f32 f);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32 *vec);
@@ -410,7 +403,7 @@ void campfire_update(int obj)
     Obj_GetPlayerObject();
     if ((*(ThorntailQueryFn *)(*gSHthorntailAnimationInterface + 0x24))(buf) != 0) {
         if (*(void **)state != NULL) {
-            lightFn_8001db6c(lbl_803E3D78, *state, 1);
+            lightFn_8001db6c(*state, 1, lbl_803E3D78);
         }
         ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
         *(f32 *)((char *)state + 8) -= timeDelta;
@@ -428,7 +421,7 @@ void campfire_update(int obj)
         }
     } else {
         if (*(void **)state != NULL) {
-            lightFn_8001db6c(lbl_803E3D78, *state, 0);
+            lightFn_8001db6c(*state, 0, lbl_803E3D78);
         }
         ObjHits_ClearHitVolumes(obj);
         *(f32 *)((char *)state + 4) -= timeDelta;
@@ -457,7 +450,7 @@ void campfire_update(int obj)
             s16 v;
             rnd = randomGetRange(-0x19, 0x19);
             l2 = *(u8 **)state;
-            v = l2[0x2f9] + (*(s8 *)(l2 + 0x2fa) + rnd);
+            v = l2[0x2f9] + *(s8 *)(l2 + 0x2fa) + rnd;
             if (v < 0) {
                 v = 0;
                 l2[0x2fa] = 0;
@@ -475,8 +468,8 @@ extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setField50(int h, int v);
 extern void modelLightStruct_setColorsA8AC(int h, int r, int g, int b, int a);
 extern void modelLightStruct_setColors100104(int h, int r, int g, int b, int a);
-extern void lightDistAttenFn_8001dc38(f32 min, f32 max, int light);
-extern void lightVecFn_8001dd88(f32 x, f32 y, f32 z, int light);
+extern void lightDistAttenFn_8001dc38(int light, f32 min, f32 max);
+extern void lightVecFn_8001dd88(int light, f32 x, f32 y, f32 z);
 extern void lightFn_8001d620(int light, int a, int b);
 extern void lightSetFieldB0(int light, int r, int g, int b, int a);
 extern void fn_8001D730(int light, int a, int r, int g, int b, int c, f32 scale);
@@ -534,13 +527,13 @@ void campfire_init(int obj, int p2)
         modelLightStruct_setColorsA8AC(*state, 0xff, 0x7f, 0, 0xff);
         modelLightStruct_setColors100104(*state, 0xff, 0x7f, 0, 0xff);
         atten = (int)(lbl_803E3D8C * *(f32 *)(obj + 8));
-        lightDistAttenFn_8001dc38((f32)atten, lbl_803E3D90 + (f32)atten, *state);
+        lightDistAttenFn_8001dc38(*state, (f32)atten, lbl_803E3D90 + (f32)atten);
         if ((*(ThorntailQueryFn *)(*gSHthorntailAnimationInterface + 0x24))(buf) != 0) {
-            lightFn_8001db6c(lbl_803E3D7C, *state, 1);
+            lightFn_8001db6c(*state, 1, lbl_803E3D7C);
         } else {
-            lightFn_8001db6c(lbl_803E3D7C, *state, 0);
+            lightFn_8001db6c(*state, 0, lbl_803E3D7C);
         }
-        lightVecFn_8001dd88(lbl_803E3D7C, lbl_803E3D94, lbl_803E3D7C, *state);
+        lightVecFn_8001dd88(*state, lbl_803E3D7C, lbl_803E3D94, lbl_803E3D7C);
         lightFn_8001d620(*state, 1, 3);
         lightSetFieldB0(*state, 0xff, 0x5c, 0, 0xff);
         fn_8001D730(*state, 0, 0xff, 0x7f, 0, 0x87, lbl_803E3D98 * *(f32 *)(obj + 8));
@@ -577,7 +570,7 @@ void kt_torch_init(int obj, int p2)
     if (*(void **)(obj + 0x64) != NULL) {
         **(f32 **)(obj + 0x64) = **(f32 **)(obj + 0x50) * scale;
     }
-    *(s8 *)(obj + 0xad) = *(s8 *)(p2 + 0x18);
+    *(s8 *)(obj + 0xad) = (s8)*(u8 *)(p2 + 0x18);
     if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
         *(u8 *)(obj + 0xad) = 0;
     }
@@ -641,12 +634,9 @@ void kt_torch_update(int obj)
 {
   int mapData;
   int bit;
-  uint local_18[2];
 
   mapData = *(int *)(obj + 0x4c);
-  local_18[1] = *(u8 *)(mapData + 0x1b);
-  local_18[0] = 0x43300000;
-  ObjAnim_AdvanceCurrentMove((float)(*(double *)local_18 - lbl_803E3DB8) / lbl_803E3DB4,
+  ObjAnim_AdvanceCurrentMove((f32)*(u8 *)(mapData + 0x1b) / lbl_803E3DB4,
                              timeDelta,obj,(ObjAnimEventList *)0);
   bit = *(short *)(mapData + 0x20);
   if (bit != -1) {
