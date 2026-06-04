@@ -1106,42 +1106,53 @@ void fn_80185868(int obj, f32 arg)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80185A24(int param_1,int param_2,int param_3,int param_4,int param_5,s8 renderState)
+#pragma scheduling off
+#pragma peephole off
+void fn_80185A24(int obj, int p2, int p3, int p4, int p5, s8 renderState)
 {
-  short sVar1;
-  int iVar2;
-  int *piVar3;
-  
-  iVar2 = FUN_80286840();
-  piVar3 = *(int **)(iVar2 + 0xb8);
-  if (((*(short *)(piVar3 + 4) == 0) || (0x32 < *(short *)(piVar3 + 4))) && (*piVar3 == 0)) {
-    if (*(int *)(iVar2 + 0xf8) == 0) {
-      if (renderState == 0) goto LAB_801860b0;
+    extern void fn_8003B5E0(int a, int b, int c, int d);
+    extern void objRenderFn_8003b8f4(int p1, int p2, int p3, int p4, int p5, f32 scale);
+    extern f32 lbl_803E3A5C;
+    int state;
+    s16 t;
+
+    state = *(int *)(obj + 0xb8);
+    if ((*(s16 *)(state + 0x10) == 0 || *(s16 *)(state + 0x10) > 50) && *(int *)state == 0) {
+        goto ok;
     }
-    else if (renderState != -1) goto LAB_801860b0;
-    sVar1 = *(short *)((int)piVar3 + 0x1e);
-    if (sVar1 != 0) {
-      if (sVar1 < 0x3c) {
-        *(char *)((int)piVar3 + 0x26) = *(char *)((int)piVar3 + 0x26) + DAT_803dc070 * '\n';
-        if (0x80 < *(byte *)((int)piVar3 + 0x26)) {
-          *(undefined *)((int)piVar3 + 0x26) = 0;
+    goto end;
+ok:
+    if (*(int *)(obj + 0xf8) != 0) {
+        if (renderState == -1) {
+        } else {
+            goto end;
         }
-        FUN_8003b540(200,0x1e,0x1e,*(undefined *)((int)piVar3 + 0x26));
-      }
-      else if (sVar1 < 0xf0) {
-        *(char *)((int)piVar3 + 0x26) = *(char *)((int)piVar3 + 0x26) + DAT_803dc070 * '\x05';
-        if (0x80 < *(byte *)((int)piVar3 + 0x26)) {
-          *(undefined *)((int)piVar3 + 0x26) = 0;
+    } else {
+        if (renderState == 0) {
+            goto end;
         }
-        FUN_8003b540(200,0x1e,0x1e,*(undefined *)((int)piVar3 + 0x26));
-      }
     }
-    FUN_8003b818(iVar2);
-  }
-LAB_801860b0:
-  FUN_8028688c();
-  return;
+    t = *(s16 *)(state + 0x1e);
+    if (t != 0) {
+        if (t < 60) {
+            *(u8 *)(state + 0x26) = *(u8 *)(state + 0x26) + framesThisStep * 10;
+            if (*(u8 *)(state + 0x26) > 0x80) {
+                *(u8 *)(state + 0x26) = 0;
+            }
+            fn_8003B5E0(200, 30, 30, *(u8 *)(state + 0x26));
+        } else if (t < 240) {
+            *(u8 *)(state + 0x26) = *(u8 *)(state + 0x26) + framesThisStep * 5;
+            if (*(u8 *)(state + 0x26) > 0x80) {
+                *(u8 *)(state + 0x26) = 0;
+            }
+            fn_8003B5E0(200, 30, 30, *(u8 *)(state + 0x26));
+        }
+    }
+    objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3A5C);
+end:;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
