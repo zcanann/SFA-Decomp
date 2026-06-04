@@ -4560,7 +4560,7 @@ void dfpseqpoint_hitDetect(void) {}
 void dfpseqpoint_release(void) {}
 void dfpseqpoint_initialise(void) {}
 
-extern int dfpseqpoint_SeqFn(int p1, int p2, void *p3);
+extern int dfpseqpoint_SeqFn(int obj, int p2, int p3);
 
 #pragma scheduling off
 #pragma peephole off
@@ -7510,6 +7510,148 @@ void drakorenergy_update(int obj)
     }
     *(s16 *)obj += lbl_803DC178;
     *(int *)(blob + 4) += framesThisStep * 0x500;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int dfpseqpoint_SeqFn(int obj, int p2, int p3)
+{
+    extern void unlockLevel(int a, int b, int c);
+    extern int mapGetDirIdx(int);
+    extern void lockLevel(int, int);
+    extern void warpToMap(int, int);
+    extern int *gMapEventInterface;
+    int blob = *(int *)(obj + 0xb8);
+    int data = *(int *)(obj + 0x4c);
+    int i;
+
+    *(s16 *)(p3 + 0x70) = -1;
+    *(u8 *)(p3 + 0x56) = 0;
+    for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
+        switch (*(s16 *)(blob + 8)) {
+        case 1:
+            if (*(u8 *)(p3 + i + 0x81) == 1) {
+                if ((u8)(**(int (**)(int))((char *)*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 1) {
+                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 5, 0);
+                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 6, 0);
+                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 7, 0);
+                } else if ((u8)(**(int (**)(int))((char *)*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 5, 0);
+                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 6, 0);
+                    (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 7, 0);
+                }
+            }
+            break;
+        case 0xa:
+            if (*(u8 *)(p3 + i + 0x81) == 0x14) {
+                if (*(u32 *)(data + 0x14) == 0x49de8) {
+                    ((DfpFlags7 *)(blob + 0xf))->b80 = 1;
+                } else {
+                    if ((u8)(**(int (**)(int))((char *)*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 1 ||
+                        (u8)(**(int (**)(int))((char *)*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac)) == 2) {
+                        unlockLevel(0, 0, 1);
+                        lockLevel(mapGetDirIdx(0x32), 0);
+                        (**(void (**)(int, int))((char *)*(int *)gMapEventInterface + 0x44))(0x32, 2);
+                        warpToMap(0x73, 0);
+                    }
+                }
+            }
+            break;
+        }
+        *(u8 *)(p3 + i + 0x81) = 0;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dfpseqpoint_update(int obj)
+{
+    extern int Obj_GetPlayerObject(void);
+    extern uint GameBit_Get(int);
+    extern void GameBit_Set(int, int);
+    extern f32 Vec_distance(int, int);
+    extern int *gObjectTriggerInterface;
+    int player;
+    int blob;
+    int h;
+
+    player = Obj_GetPlayerObject();
+    blob = *(int *)(obj + 0xb8);
+    if (((u32)*(u8 *)(blob + 0xf) >> 7 & 1) != 0) {
+        GameBit_Set(0xef7, 1);
+        ((DfpFlags7 *)(blob + 0xf))->b80 = 0;
+    }
+    h = *(s16 *)(blob + 6);
+    if (h != -1) {
+        if (*(u8 *)(blob + 0xd) != 0) {
+            if (GameBit_Get(h) != 0) {
+                return;
+            }
+            GameBit_Set(*(s16 *)(blob + 6), 1);
+            *(u8 *)(blob + 0xd) = 1;
+            return;
+        }
+        if (GameBit_Get(h) != 0) {
+            *(u8 *)(blob + 0xd) = 1;
+            return;
+        }
+    }
+    if (*(u8 *)(blob + 0xd) != 0) {
+        return;
+    }
+    switch (*(u8 *)(blob + 0xe)) {
+    case 0:
+        if (Vec_distance(obj + 0x18, player + 0x18) < *(f32 *)blob) {
+            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
+            *(u8 *)(blob + 0xd) = 1;
+        }
+        break;
+    case 1:
+        h = *(s16 *)(blob + 4);
+        if (h != -1 && GameBit_Get(h) != 0) {
+            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
+            *(u8 *)(blob + 0xd) = 1;
+        }
+        break;
+    case 2:
+        if (Vec_distance(obj + 0x18, player + 0x18) < *(f32 *)blob) {
+            h = *(s16 *)(blob + 4);
+            if (h != -1 && GameBit_Get(h) != 0) {
+                ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
+                *(u8 *)(blob + 0xd) = 1;
+            }
+        }
+        break;
+    case 3:
+        if (Vec_distance(obj + 0x18, player + 0x18) < *(f32 *)blob) {
+            h = *(s16 *)(blob + 4);
+            if (h != -1 && GameBit_Get(h) == 0) {
+                ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
+                GameBit_Set(*(s16 *)(blob + 4), 1);
+                *(u8 *)(blob + 0xd) = 1;
+            }
+        }
+        break;
+    case 4:
+        h = *(s16 *)(blob + 4);
+        if (h != -1 && GameBit_Get(h) == 0) {
+            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
+            GameBit_Set(*(s16 *)(blob + 4), 1);
+            *(u8 *)(blob + 0xd) = 1;
+        }
+        break;
+    case 5:
+        h = *(s16 *)(blob + 4);
+        if (h != -1 && GameBit_Get(h) != 0) {
+            ((void (*)(int, int, int))((void **)*(int *)gObjectTriggerInterface)[18])(*(s16 *)(blob + 8), obj, -1);
+        }
+        break;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
