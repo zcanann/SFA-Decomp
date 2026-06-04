@@ -2586,3 +2586,89 @@ void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void spawnExplosion(s16 *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
+extern void lightFn_8001d6b0(int p);
+extern void Sfx_PlayFromObject2(int *obj, int sfxId);
+extern f32 lbl_803E47D0, lbl_803E47F4, lbl_803E47F8, lbl_803E47FC;
+
+#pragma scheduling off
+#pragma peephole off
+void lavaball1be_update(s16 *obj) {
+    u8 *state;
+    int *sub;
+
+    if (obj[0x23] == 0x1fa) {
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)obj + 0x24) * timeDelta + *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x28) * timeDelta + *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)obj + 0x2c) * timeDelta + *(f32 *)((char *)obj + 0x14);
+        (*((void (***)(s16 *, int, int, int, int, int))gPartfxInterface))[2](obj, 0x1f5, 0, 1, -1, 0);
+        obj[0] = obj[0] + framesThisStep * 0x374;
+        obj[1] = obj[1] + framesThisStep * 0x12c;
+        *(f32 *)((char *)obj + 0x28) = -(lbl_803E47D0 * timeDelta - *(f32 *)((char *)obj + 0x28));
+        *(int *)((char *)obj + 0xf4) = *(int *)((char *)obj + 0xf4) - framesThisStep;
+        if (*(int *)((char *)obj + 0xf4) < 0) {
+            Obj_FreeObject(obj);
+        }
+    } else {
+        state = *(u8 **)((char *)obj + 0xb8);
+        if (state[0x10] & 0x10) {
+            ObjHits_DisableObject(obj);
+        } else {
+            f32 dt = timeDelta;
+            u8 steps = framesThisStep;
+            if (state[0x11] != 0) {
+                state[0x11]--;
+            }
+            obj[0] = obj[0] + (steps << 6);
+            obj[1] = obj[1] - (steps << 9);
+            *(f32 *)((char *)obj + 0x28) = lbl_803E47F4 * dt + *(f32 *)((char *)obj + 0x28);
+            objMove((int)obj,
+                *(f32 *)((char *)obj + 0x24) * dt,
+                *(f32 *)((char *)obj + 0x28) * dt,
+                *(f32 *)((char *)obj + 0x2c) * dt);
+            if (*(f32 *)((char *)obj + 0x28) < lbl_803E47F8) {
+                if (!(state[0x10] & 0x20)) {
+                    Sfx_PlayFromObject((int *)obj, 0x3dd);
+                    state[0x10] |= 0x20;
+                }
+            } else {
+                state[0x10] &= ~0x20;
+            }
+            sub = *(int **)((char *)obj + 0x54);
+            if (sub != NULL) {
+                *((u8 *)sub + 0x6e) = 0xb;
+                *((u8 *)sub + 0x6f) = 1;
+                sub[0x48 / 4] = 0x10;
+                sub[0x4c / 4] = 0x10;
+                if (*(void **)((char *)sub + 0x50) != NULL) {
+                    if (state[0x11] != 0) {
+                        spawnExplosion(obj, lbl_803E47FC, 0, 1, 0, 0, 0, 0, 0);
+                    } else {
+                        state[0x11] = 0xa;
+                        spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
+                    }
+                    state[0x10] |= 0x10;
+                    obj[3] |= 0x4000;
+                }
+                if (*(s8 *)((char *)sub + 0xad) & 1) {
+                    spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
+                    state[0x10] |= 0x10;
+                    obj[3] |= 0x4000;
+                    return;
+                }
+            }
+            if (*(f32 *)((char *)obj + 0x10) < *(f32 *)(state + 8)) {
+                state[0x10] |= 0x10;
+            }
+            if (!(state[0x10] & 8)) {
+                state[0x10] |= 8;
+            }
+            if (*(void **)(state + 4) != NULL && fn_8001DB64((int *)*(int *)(state + 4)) != 0) {
+                lightFn_8001d6b0(*(int *)(state + 4));
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
