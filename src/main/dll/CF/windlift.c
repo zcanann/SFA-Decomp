@@ -1664,6 +1664,7 @@ void fn_801868D0(int obj)
 
 void fn_801869DC(int obj)
 {
+    typedef struct { u8 mode : 2; } LFF2;
     u8 *state;
 
     state = *(u8 **)(obj + 0xb8);
@@ -1676,7 +1677,7 @@ void fn_801869DC(int obj)
     *(f32 *)(state + 0x0c) = *(f32 *)(state + 0x10);
     *(f32 *)(state + 0x1c) = *(f32 *)(state + 0x20);
     *(f32 *)(state + 0x2c) = *(f32 *)(state + 0x30);
-    if ((state[0x70] >> 6) == 1) {
+    if (((LFF2 *)(state + 0x70))->mode == 1) {
         int player = Obj_GetPlayerObject();
         *(f32 *)(state + 0x44) =
             lbl_803E3AC4 * Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) + lbl_803E3AC0;
