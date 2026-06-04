@@ -4,11 +4,7 @@
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
 
-undefined4
-fn_80161F0C(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
-            undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
-            undefined4 param_15,undefined4 param_16);
+int fn_80161F0C(int obj, char *state, f32 arg);
 undefined4
 FUN_801620c0(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
             undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
@@ -44,10 +40,10 @@ extern ObjectDescriptor gCannonClawObjDescriptor;
 int grimble_getExtraSize(void);
 int grimble_getObjectTypeId(void);
 void grimble_free(int obj);
-void grimble_render(void);
+void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void grimble_hitDetect(int obj);
-void grimble_update(void);
-void grimble_init(void);
+void grimble_update(int obj);
+void grimble_init(int obj, int p2, int p3);
 void grimble_release(void);
 void grimble_initialise(void);
 
