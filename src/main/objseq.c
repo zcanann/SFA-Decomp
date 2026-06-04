@@ -2734,7 +2734,7 @@ int ObjSeq_update(u8 *obj, f32 t)
                 ((*(f32 *)(obj + 0x10) - scratch[0]) - *(f32 *)(model + 0xc));
         }
         *(u16 *)obj = *(s16 *)obj + *(s16 *)(seq + 0x1a);
-        objAnimFn_8008718c(obj, activeObj, seq);
+        ObjSeq_ApplyLinkedObjectTransform(obj, activeObj, seq);
         objSeqDoBgCmds0D(seq, activeObj, 0);
 
         for (k = 0; k < lbl_803DD0C0; k++) {
@@ -2843,7 +2843,7 @@ void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceO
         objCallSeqFn(*seqObj, obj, seq, *(u8 *)(historyBase + (s8)seq[0x57] + 0x3c4c));
     }
 
-    objAnimFn_8008718c(obj, *seqObj, seq);
+    ObjSeq_ApplyLinkedObjectTransform(obj, *seqObj, seq);
     seq[0x8d] = 0;
     seq[0x8e] = 0;
     seq[0x7e] = 1;
@@ -2876,7 +2876,7 @@ void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceO
 
 #pragma peephole off
 #pragma scheduling off
-void objAnimFn_8008718c(u8 *obj, u8 *seqObj, u8 *seq)
+void ObjSeq_ApplyLinkedObjectTransform(u8 *obj, u8 *seqObj, u8 *seq)
 {
     s16 basePitch;
     s16 baseYaw;

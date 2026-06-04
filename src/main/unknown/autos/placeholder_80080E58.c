@@ -56,7 +56,7 @@ extern void ObjSeq_ApplyFrameCurves(u8 *obj, u8 *seqObj, u8 *seq, int frame);
 extern void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode);
 extern void ObjSeq_UpdateCurvePosition(u8 *obj, u8 *seq);
 extern int hitDetectFn_800658a4(void *obj, f32 x, f32 y, f32 z, f32 *out, int flags);
-extern void objAnimFn_8008718c(u8 *obj, u8 *seqObj, u8 *seq);
+extern void ObjSeq_ApplyLinkedObjectTransform(u8 *obj, u8 *seqObj, u8 *seq);
 extern void animatedObjFreeAndSavePlayerPos(u8 *obj, u8 *seqObj, u8 *seq);
 extern void objModelClearVecFn_8003aa40(void *obj);
 extern s16 *objModelGetVecFn_800395d8(void *obj, int index);
@@ -4358,7 +4358,7 @@ void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceO
         objCallSeqFn(*seqObj, obj, seq, *(u8 *)(historyBase + (s8)seq[0x57] + 0x3c4c));
     }
 
-    objAnimFn_8008718c(obj, *seqObj, seq);
+    ObjSeq_ApplyLinkedObjectTransform(obj, *seqObj, seq);
     seq[0x8d] = 0;
     seq[0x8e] = 0;
     seq[0x7e] = 1;
@@ -4387,7 +4387,7 @@ void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceO
     }
 }
 
-void objAnimFn_8008718c(u8 *obj, u8 *seqObj, u8 *seq)
+void ObjSeq_ApplyLinkedObjectTransform(u8 *obj, u8 *seqObj, u8 *seq)
 {
     s16 basePitch;
     s16 baseYaw;
