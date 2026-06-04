@@ -18560,3 +18560,59 @@ void ObjModel_BlendSecondaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, u8 **outs,
     }
 }
 #pragma pop
+
+extern u32 lbl_80339C40[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+SubtitleCmd *textFn_80018bc4(int str, int *count) {
+    int off;
+    int n;
+    u8 *tbl;
+    int len;
+    u32 ch;
+
+    off = 0;
+    n = 0;
+    tbl = (u8 *)lbl_80339C40;
+    if ((u8 *)str == NULL) {
+        return NULL;
+    }
+    while ((ch = utf8GetNextChar((u8 *)(str + off), &len)) != 0) {
+        off += len;
+        if (ch >= 0xE000 && ch <= 0xF8FF) {
+            int i;
+            int n2;
+            u8 *q;
+
+            n++;
+            if (n > 0x10) {
+                break;
+            }
+            *(u32 *)tbl = ch;
+            q = tbl + 4;
+            n2 = getControlCharLen(ch);
+            if (n2 > 4) {
+                n2 = 4;
+            }
+            for (i = 0; i < n2; i++) {
+                u32 hi = ((u8 *)str)[off++];
+                u32 lo = ((u8 *)str)[off++];
+                *(u16 *)q = (hi << 8) | lo;
+                q += 2;
+            }
+        }
+    }
+    if (n == 0) {
+        return NULL;
+    }
+    {
+        int size = n * 0xc;
+        u8 *buf = mmAlloc(size, 0x1a, 0);
+        memcpy(buf, lbl_80339C40, size);
+        *count = n;
+        return (SubtitleCmd *)buf;
+    }
+}
+#pragma pop
