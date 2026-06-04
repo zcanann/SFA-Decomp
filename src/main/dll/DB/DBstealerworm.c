@@ -53,11 +53,8 @@ extern undefined4 FUN_80080f5c();
 extern undefined4 FUN_80080f60();
 extern undefined4 FUN_80080f64();
 extern undefined4 FUN_80080f68();
-extern undefined4 skyFn_800894a8();
 extern undefined4 FUN_80080f74();
 extern undefined4 FUN_80080f78();
-extern undefined4 skyFn_800895e0();
-extern undefined4 skyFn_80089710();
 extern double FUN_80081014();
 extern undefined4 FUN_8008112c();
 extern undefined4 SH_LevelControl_runBloopEvent();
@@ -328,124 +325,127 @@ int fn_801E1AAC(int obj, int p2, int msgSrc) {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801E1588(int param_1,int param_2)
+typedef struct {
+    f32 x, y, z;
+} SkyVec3;
+
+extern void setDrawLights(int mode);
+extern void skySetOverrideLightColorEnabled(int on);
+extern void skySetOverrideLightColor(int r, int g, int b);
+extern void skyFn_80089710(int a, int b, int c);
+extern f32 fn_8008ED88(void);
+extern void skyFn_800895e0(int idx, int r, int g, int b, int a, int b2);
+extern void fn_80089510(int idx, int r, int g, int b);
+extern void fn_80089578(int idx, int r, int g, int b);
+extern void skySetOverrideLightDirectionEnabled(int on);
+extern void skySetOverrideLightDirection(f32 x, f32 y, f32 z, f32 w);
+extern void skyFn_800894a8(int idx, f32 x, f32 y, f32 z);
+extern int *Obj_GetActiveModel(int obj);
+extern int ObjModel_GetRenderOp(int model, int idx);
+extern f32 lbl_802C23F8[12];
+extern u8 lbl_803DC078[4];
+extern u8 lbl_803DC07C[4];
+extern u8 lbl_803DC080[4];
+extern u8 lbl_803DC084[4];
+extern u8 lbl_803DC088[4];
+extern u8 lbl_803DC08C[4];
+extern f32 lbl_803DDC24;
+extern f32 lbl_803DDC28;
+extern u8 lbl_803DDC2D;
+extern u8 lbl_803DDC30[3];
+extern u8 lbl_803DDC34[3];
+extern u8 lbl_803DDC38[3];
+extern f32 lbl_803E57A4;
+extern f32 lbl_803E57B4;
+extern f32 lbl_803E57E0;
+extern f32 lbl_803E57F0;
+extern f32 lbl_803E5724;
+void fn_801E1588(int obj, int state)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  float fVar10;
-  float fVar11;
-  float fVar12;
-  int *piVar13;
-  int iVar14;
-  int iVar15;
-  double dVar16;
-  
-  fVar12 = DAT_802c2ba4;
-  fVar11 = DAT_802c2ba0;
-  fVar10 = DAT_802c2b9c;
-  fVar9 = DAT_802c2b98;
-  fVar8 = DAT_802c2b94;
-  fVar7 = DAT_802c2b90;
-  fVar6 = DAT_802c2b8c;
-  fVar5 = DAT_802c2b88;
-  fVar4 = DAT_802c2b84;
-  fVar3 = DAT_802c2b80;
-  fVar2 = DAT_802c2b7c;
-  fVar1 = DAT_802c2b78;
-  FUN_8005d0ac(0);
-  FUN_80080f60(1);
-  FUN_80080f5c(0x29,0x4b,0xa9);
-  skyFn_80089710(7,1,0);
-  dVar16 = FUN_80081014();
-  if ((double)lbl_803E6364 < dVar16) {
-    lbl_803DE8A4 = lbl_803E643C;
-    lbl_803DE8A8 = lbl_803E643C;
+  int *model;
+  int i;
+  int rop;
+  SkyVec3 a;
+  SkyVec3 b;
+  SkyVec3 c;
+  SkyVec3 d;
+  a = ((SkyVec3 *)lbl_802C23F8)[0];
+  b = ((SkyVec3 *)lbl_802C23F8)[1];
+  c = ((SkyVec3 *)lbl_802C23F8)[2];
+  d = ((SkyVec3 *)lbl_802C23F8)[3];
+  setDrawLights(0);
+  skySetOverrideLightColorEnabled(1);
+  skySetOverrideLightColor(0x29, 0x4b, 0xa9);
+  skyFn_80089710(7, 1, 0);
+  if (fn_8008ED88() > lbl_803E56CC) {
+    lbl_803DDC24 = lbl_803E57A4;
+    lbl_803DDC28 = lbl_803E57A4;
   }
-  lbl_803DE8A8 = -(lbl_803E644C * lbl_803DC074 - lbl_803DE8A8);
-  if (lbl_803DE8A8 < lbl_803E6364) {
-    lbl_803DE8A8 = lbl_803E6364;
+  lbl_803DDC28 = -(lbl_803E57B4 * timeDelta - lbl_803DDC28);
+  if (lbl_803DDC28 < lbl_803E56CC) {
+    lbl_803DDC28 = lbl_803E56CC;
   }
-  DAT_803de8b8 = (byte)(int)(lbl_803DE8A8 *
-                             (float)((double)CONCAT44(0x43300000,
-                                                      (uint)DAT_803dccec - (uint)DAT_803dcce8 ^
-                                                      0x80000000) - DOUBLE_803e6458) +
-                            (f32)(s32)(DAT_803dcce8));
-  bRam803de8b9 = (byte)(int)(lbl_803DE8A8 *
-                             (float)((double)CONCAT44(0x43300000,
-                                                      (uint)bRam803dcced - (uint)bRam803dcce9 ^
-                                                      0x80000000) - DOUBLE_803e6458) +
-                            (f32)(s32)(bRam803dcce9));
-  bRam803de8ba = (byte)(int)(lbl_803DE8A8 *
-                             (float)((double)CONCAT44(0x43300000,
-                                                      (uint)bRam803dccee - (uint)bRam803dccea ^
-                                                      0x80000000) - DOUBLE_803e6458) +
-                            (f32)(s32)(bRam803dccea));
-  skyFn_800895e0(7,DAT_803de8b8,bRam803de8b9,bRam803de8ba,0x40,0x40);
-  DAT_803de8b4 = (undefined)
-                 (int)(lbl_803DE8A8 *
-                       (float)((double)CONCAT44(0x43300000,
-                                                (uint)DAT_803dcce4 - (uint)DAT_803dcce0 ^ 0x80000000
-                                               ) - DOUBLE_803e6458) +
-                      (f32)(s32)(DAT_803dcce0));
-  uRam803de8b5 = (undefined)
-                 (int)(lbl_803DE8A8 *
-                       (float)((double)CONCAT44(0x43300000,
-                                                (uint)bRam803dcce5 - (uint)bRam803dcce1 ^ 0x80000000
-                                               ) - DOUBLE_803e6458) +
-                      (f32)(s32)(bRam803dcce1));
-  uRam803de8b6 = (undefined)
-                 (int)(lbl_803DE8A8 *
-                       (float)((double)CONCAT44(0x43300000,
-                                                (uint)bRam803dcce6 - (uint)bRam803dcce2 ^ 0x80000000
-                                               ) - DOUBLE_803e6458) +
-                      (f32)(s32)(bRam803dcce2));
-  FUN_80080f74(7,DAT_803de8b4,uRam803de8b5,uRam803de8b6);
-  DAT_803de8b0 = (undefined)
-                 (int)(lbl_803DE8A8 *
-                       (float)((double)CONCAT44(0x43300000,
-                                                (uint)DAT_803dccf4 - (uint)DAT_803dccf0 ^ 0x80000000
-                                               ) - DOUBLE_803e6458) +
-                      (f32)(s32)(DAT_803dccf0));
-  uRam803de8b1 = (undefined)
-                 (int)(lbl_803DE8A8 *
-                       (float)((double)CONCAT44(0x43300000,
-                                                (uint)bRam803dccf5 - (uint)bRam803dccf1 ^ 0x80000000
-                                               ) - DOUBLE_803e6458) +
-                      (f32)(s32)(bRam803dccf1));
-  uRam803de8b2 = (undefined)
-                 (int)(lbl_803DE8A8 *
-                       (float)((double)CONCAT44(0x43300000,
-                                                (uint)bRam803dccf6 - (uint)bRam803dccf2 ^ 0x80000000
-                                               ) - DOUBLE_803e6458) +
-                      (f32)(s32)(bRam803dccf2));
-  FUN_80080f78(7,DAT_803de8b0,uRam803de8b1,uRam803de8b2);
-  DAT_803de8ad = (undefined)(int)(lbl_803DE8A8 * lbl_803E6478 + lbl_803E6488);
-  FUN_80080f68(1);
-  FUN_80080f64((double)(lbl_803DE8A8 * (fVar10 - fVar7) + fVar7),
-               (double)(lbl_803DE8A8 * (fVar11 - fVar8) + fVar8),
-               (double)(lbl_803DE8A8 * (fVar12 - fVar9) + fVar9),(double)lbl_803E63BC);
-  if (*(char *)(param_2 + 0xab) == '\0') {
-    skyFn_800894a8((double)fVar1,(double)fVar2,(double)fVar3,7);
+  {
+    int v0 = lbl_803DC080[0];
+    lbl_803DDC38[0] = (f32)v0 + lbl_803DDC28 * (f32)(lbl_803DC084[0] - v0);
+  }
+  {
+    int v1 = lbl_803DC080[1];
+    lbl_803DDC38[1] = (f32)v1 + lbl_803DDC28 * (f32)(lbl_803DC084[1] - v1);
+  }
+  {
+    int v2 = lbl_803DC080[2];
+    lbl_803DDC38[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC084[2] - v2);
+  }
+  skyFn_800895e0(7, lbl_803DDC38[0], lbl_803DDC38[1], lbl_803DDC38[2], 0x40, 0x40);
+  {
+    int v0 = lbl_803DC078[0];
+    lbl_803DDC34[0] = (f32)v0 + lbl_803DDC28 * (f32)(lbl_803DC07C[0] - v0);
+  }
+  {
+    int v1 = lbl_803DC078[1];
+    lbl_803DDC34[1] = (f32)v1 + lbl_803DDC28 * (f32)(lbl_803DC07C[1] - v1);
+  }
+  {
+    int v2 = lbl_803DC078[2];
+    lbl_803DDC34[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC07C[2] - v2);
+  }
+  fn_80089510(7, lbl_803DDC34[0], lbl_803DDC34[1], lbl_803DDC34[2]);
+  {
+    int v0 = lbl_803DC088[0];
+    lbl_803DDC30[0] = (f32)v0 + lbl_803DDC28 * (f32)(lbl_803DC08C[0] - v0);
+  }
+  {
+    int v1 = lbl_803DC088[1];
+    lbl_803DDC30[1] = (f32)v1 + lbl_803DDC28 * (f32)(lbl_803DC08C[1] - v1);
+  }
+  {
+    int v2 = lbl_803DC088[2];
+    lbl_803DDC30[2] = (f32)v2 + lbl_803DDC28 * (f32)(lbl_803DC08C[2] - v2);
+  }
+  fn_80089578(7, lbl_803DDC30[0], lbl_803DDC30[1], lbl_803DDC30[2]);
+  lbl_803DDC2D = lbl_803DDC28 * lbl_803E57E0 + lbl_803E57F0;
+  skySetOverrideLightDirectionEnabled(1);
+  skySetOverrideLightDirection(lbl_803DDC28 * (d.x - c.x) + c.x,
+                               lbl_803DDC28 * (d.y - c.y) + c.y,
+                               lbl_803DDC28 * (d.z - c.z) + c.z, lbl_803E5724);
+  if (*(u8 *)(state + 0xab) == 0) {
+    skyFn_800894a8(7, a.x, a.y, a.z);
   }
   else {
-    skyFn_800894a8((double)fVar4,(double)fVar5,(double)fVar6,7);
+    skyFn_800894a8(7, b.x, b.y, b.z);
   }
-  piVar13 = (int *)FUN_80017a54(param_1);
-  dVar16 = (double)lbl_803E648C;
-  for (iVar15 = 0; iVar15 < (int)(uint)*(byte *)(*piVar13 + 0xf8); iVar15 = iVar15 + 1) {
-    iVar14 = FUN_8001792c(*piVar13,iVar15);
-    if (*(char *)(iVar14 + 0x29) == '\x01') {
-      *(char *)(iVar14 + 0xc) = (char)(int)(dVar16 * (double)lbl_803DE8A8);
+  model = Obj_GetActiveModel(obj);
+  i = 0;
+  {
+    f32 scale = lbl_803E57F4;
+    for (; i < *(u8 *)(*model + 0xf8); i++) {
+      rop = ObjModel_GetRenderOp(*model, i);
+      if (*(u8 *)(rop + 0x29) == 1) {
+        *(u8 *)(rop + 0xc) = scale * lbl_803DDC28;
+      }
     }
   }
-  return;
 }
 
 /*
