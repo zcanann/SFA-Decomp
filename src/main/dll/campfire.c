@@ -479,29 +479,25 @@ void kaldachom_free(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void kaldachom_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                      undefined4 param_5,char param_6)
+void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-  int iVar1;
-  int iVar2;
-  undefined8 uVar3;
+  int state;
+  int pathData;
   
-  uVar3 = _savegpr_26();
-  iVar1 = (int)((ulonglong)uVar3 >> 0x20);
-  iVar2 = *(int *)(iVar1 + 0xb8);
-  if ((param_6 != '\0') && (*(int *)(iVar1 + 0xf4) == 0)) {
-    if (*(float *)(iVar2 + 1000) != lbl_803E3060) {
-      fn_8003B5E0(200,0,0,(int)*(float *)(iVar2 + 1000));
+  state = *(int *)(obj + 0xb8);
+  if ((visible != 0) && (*(int *)(obj + 0xf4) == 0)) {
+    if (*(float *)(state + 1000) != lbl_803E3060) {
+      fn_8003B5E0(200,0,0,(int)*(float *)(state + 1000));
     }
-    objRenderFn_8003b8f4((double)lbl_803E3078,iVar1,(int)uVar3,param_3,param_4,param_5);
-    if ((*(ushort *)(iVar2 + 0x400) & 0x60) != 0) {
-      objParticleFn_80099d84((double)lbl_803E3078,(double)*(float *)(iVar2 + 1000),iVar1,3,0);
+    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)
+        (obj,p2,p3,p4,p5,lbl_803E3078);
+    if ((*(ushort *)(state + 0x400) & 0x60) != 0) {
+      objParticleFn_80099d84(obj,lbl_803E3078,3,*(float *)(state + 1000),0);
     }
-    iVar2 = *(int *)(iVar2 + 0x40c);
-    ObjPath_GetPointWorldPosition(iVar1,2,iVar2 + 0x10,iVar2 + 0x14,iVar2 + 0x18,0);
-    ObjPath_GetPointWorldPosition(iVar1,1,iVar2 + 0x28,iVar2 + 0x2c,iVar2 + 0x30,0);
+    pathData = *(int *)(state + 0x40c);
+    ObjPath_GetPointWorldPosition(obj,2,pathData + 0x10,pathData + 0x14,pathData + 0x18,0);
+    ObjPath_GetPointWorldPosition(obj,1,pathData + 0x28,pathData + 0x2c,pathData + 0x30,0);
   }
-  _restgpr_26();
   return;
 }
 

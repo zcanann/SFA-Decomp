@@ -13,8 +13,7 @@ s16 kaldachom_setScale(int *obj);
 int kaldachom_getExtraSize(void);
 int kaldachom_getObjectTypeId(void);
 void kaldachom_free(int param_1);
-void kaldachom_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                      undefined4 param_5,char param_6);
+void kaldachom_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void kaldachom_hitDetect(void);
 void kaldachom_update(int param_1);
 void kaldachom_init(undefined4 param_1,undefined4 param_2,int param_3);
