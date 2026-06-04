@@ -3600,9 +3600,9 @@ extern int *getCurrentDataFile(int id);
 extern void loadAssetFileById(void *out, int id);
 extern int *lbl_8037E0B4[3];
 extern int lbl_8037E0A8[3];
-extern u32 lbl_803DCDC0;
+extern u16 *lbl_803DCDC0;
 extern void *lbl_803DCDB8;
-void textureLoad(int a, int b);
+void *textureLoad(int texId, u8 flag);
 
 void loadTextureFiles(void)
 {
@@ -4091,6 +4091,274 @@ void texRestructRefs(int mode)
     }
     OSReport(strs + 0x1420, pass);
     texFlagFn_80023cbc(0);
+}
+
+extern char sDebugIntLineFormat;
+extern u8 lbl_803DCDAC;
+extern u32 lbl_803DB608;
+extern int OSDisableInterrupts(void);
+extern void OSRestoreInterrupts(int level);
+extern void tex0GetFrame(int word, int id, int *sizeOut, int *frameOut, int mip, void *hdr, int mode);
+extern void tex1GetFrame(int word, int id, int *sizeOut, int *frameOut, int mip, void *hdr, int mode);
+extern void texPreGetMipmap(int word, int id, int *sizeOut, int *frameOut, int mip, void *hdr, int mode);
+
+void *textureLoad(int texId, u8 flag)
+{
+    int orig;
+    int *p;
+    u8 *walk;
+    u8 *tex;
+    u8 *first;
+    u8 *prev;
+    u8 *buf;
+    int restore;
+    int disabled;
+    int n;
+    int m;
+    int bank;
+    int file;
+    int id16;
+    int word;
+    int mips;
+    int k;
+    int sz2;
+    u32 size;
+    int packed;
+    int base19;
+    int slot;
+    int e18;
+    int sizeOut;
+    int frameOut;
+
+    restore = 1;
+    disabled = 0;
+    if (texId < 0) {
+        n = -texId;
+        if ((n & 0x8000) && (n & 0x7fff) == 0x82e) {
+            OSReport(&sDebugIntLineFormat);
+        }
+    }
+    n = 0;
+    walk = (u8 *)lbl_803DCDC4;
+    for (; n < lbl_803DCDBC; n++) {
+        if (*(int *)walk == texId) {
+            tex = *(u8 **)((u8 *)lbl_803DCDC4 + (n << 4) + 4);
+            *(u16 *)(tex + 0xe) += 1;
+            if (flag != 0 && *(u8 *)((u8 *)lbl_803DCDC4 + (n << 4) + 8) != 0) {
+                return (void *)(n + 1);
+            }
+            return tex;
+        }
+        walk += 0x10;
+    }
+    if (getLoadedFileFlags(0) != 0) {
+        restore = OSDisableInterrupts();
+        disabled = 1;
+    }
+    orig = texId;
+    if (texId < 0) {
+        texId = -texId;
+    } else {
+        if (texId >= 0xbb8) {
+            m = lbl_803DCDC0[texId];
+            if (m != 0) {
+                texId = m + 1;
+                goto resolved;
+            }
+        }
+        texId = lbl_803DCDC0[texId];
+    }
+resolved:
+    id16 = texId & 0xffff;
+    if (texId & 0x8000) {
+        bank = 1;
+        file = 0x20;
+        id16 = id16 & 0x7fff;
+    } else if (orig >= 0xbb8) {
+        bank = 2;
+        file = 0x4f;
+    } else {
+        bank = 0;
+        file = 0x23;
+    }
+    if (id16 >= lbl_8037E0A8[bank] || id16 < 0) {
+        id16 = 0;
+    }
+    n = 0;
+    p = getCurrentDataFile(0x24);
+    lbl_8037E0B4[0] = p;
+    if (lbl_8037E0B4 != NULL) {
+        while (*p != -1) {
+            p++;
+            n++;
+        }
+        lbl_8037E0A8[0] = n - 1;
+    }
+    n = 0;
+    p = getCurrentDataFile(0x21);
+    lbl_8037E0B4[1] = p;
+    if (lbl_8037E0B4 != NULL) {
+        while (*p != -1) {
+            p++;
+            n++;
+        }
+        lbl_8037E0A8[1] = n - 1;
+    }
+    word = lbl_8037E0B4[bank][id16];
+    mips = (word >> 24) & 0x3f;
+    if (mips == 1) {
+        if (bank == 0) {
+            tex0GetFrame(word, id16, &sizeOut, &frameOut, mips, 0, 0);
+        } else if (bank == 2) {
+            texPreGetMipmap(word, id16, &sizeOut, &frameOut, mips, 0, 0);
+        } else {
+            tex1GetFrame(word, id16, &sizeOut, &frameOut, mips, 0, 0);
+        }
+        *(int *)lbl_803DCDB8 = 0;
+        *((int *)lbl_803DCDB8 + 1) = sizeOut;
+        if (frameOut == -1) {
+            *((int *)lbl_803DCDB8 + 2) = sizeOut;
+        } else {
+            *((int *)lbl_803DCDB8 + 2) = frameOut;
+        }
+    } else if (bank == 0) {
+        tex0GetFrame(word, id16, &sizeOut, &frameOut, mips, lbl_803DCDB8, 2);
+    } else if (bank == 2) {
+        texPreGetMipmap(word, id16, &sizeOut, &frameOut, mips, lbl_803DCDB8, 2);
+    } else {
+        tex1GetFrame(word, id16, &sizeOut, &frameOut, mips, lbl_803DCDB8, 2);
+    }
+    first = NULL;
+    prev = NULL;
+    k = 0;
+    packed = mips << 8;
+    base19 = (word & 0xffffff) << 1;
+    for (; k < mips; k++) {
+        if (mips > 1) {
+            if (bank == 0) {
+                tex0GetFrame(word, id16, &sizeOut, &frameOut, k, lbl_803DCDB8, 1);
+            } else if (bank == 2) {
+                texPreGetMipmap(word, id16, &sizeOut, &frameOut, k, lbl_803DCDB8, 1);
+            } else {
+                tex1GetFrame(word, id16, &sizeOut, &frameOut, k, lbl_803DCDB8, 1);
+            }
+        }
+        size = sizeOut;
+        if (frameOut == -1) {
+            sz2 = sizeOut;
+        } else {
+            sz2 = frameOut;
+            texFlagFn_80023cbc(1);
+            buf = (u8 *)mmAlloc(size, lbl_803DB608, 0);
+            texFlagFn_80023cbc(0);
+            if (buf == NULL) {
+                lbl_803DCDAC = 1;
+                if (getLoadedFileFlags(0) != 0) {
+                    if (disabled == 1) {
+                        OSRestoreInterrupts(restore);
+                    }
+                } else if (disabled == 1) {
+                    OSRestoreInterrupts(restore);
+                }
+                if (flag != 0) {
+                    return (void *)1;
+                }
+                return *(void **)((u8 *)lbl_803DCDC4 + 4);
+            }
+        }
+        if (frameOut != -1 && buf == NULL) {
+            if (k != 0) {
+                *(u16 *)(first + 0x10) = packed;
+                k = mips;
+                continue;
+            }
+            lbl_803DCDAC = 1;
+            if (getLoadedFileFlags(0) != 0) {
+                if (disabled == 1) {
+                    OSRestoreInterrupts(restore);
+                }
+            } else if (disabled == 1) {
+                OSRestoreInterrupts(restore);
+            }
+            if (flag != 0) {
+                return (void *)1;
+            }
+            return *(void **)((u8 *)lbl_803DCDC4 + 4);
+        }
+        if (frameOut == -1) {
+            buf = (u8 *)loadAndDecompressDataFile(file, 0, base19 + ((int *)lbl_803DCDB8)[k], sz2, 0,
+                                                  id16, 0);
+            buf[0x49] = 1;
+            if (flag != 0) {
+                flag = 0;
+            }
+            *(u16 *)(buf + 0xe) = 1;
+        } else {
+            loadAndDecompressDataFile(file, (int)buf, base19 + ((int *)lbl_803DCDB8)[k], sz2, 0, id16,
+                                      0);
+        }
+        if (frameOut != -1) {
+            DCStoreRange(buf, size);
+        }
+        *(void **)buf = NULL;
+        if (prev != NULL) {
+            *(u8 **)prev = buf;
+        }
+        prev = buf;
+        if (k == 0) {
+            first = buf;
+            *(u16 *)(buf + 0x10) = packed;
+        } else {
+            *(u16 *)(buf + 0x10) = 1;
+        }
+    }
+    walk = first;
+    *(u32 *)(first + 0x4c) = size;
+    slot = 0;
+    p = (int *)lbl_803DCDC4;
+    for (; slot < lbl_803DCDBC; slot++) {
+        if (*p == -1) {
+            break;
+        }
+        p += 4;
+    }
+    if (slot == lbl_803DCDBC) {
+        lbl_803DCDBC += 1;
+    }
+    e18 = slot << 4;
+    *(int *)((u8 *)lbl_803DCDC4 + e18) = orig;
+    *(u8 **)((u8 *)lbl_803DCDC4 + e18 + 4) = first;
+    *(u8 *)((u8 *)lbl_803DCDC4 + e18 + 8) = flag;
+    *(u32 *)((u8 *)lbl_803DCDC4 + e18 + 0xc) =
+        getHeapItemSize(*(void **)((u8 *)lbl_803DCDC4 + e18 + 4));
+    if (lbl_803DCDBC > 0x2bc) {
+        if (getLoadedFileFlags(0) != 0) {
+            if (disabled == 1) {
+                OSRestoreInterrupts(restore);
+            }
+        } else if (disabled == 1) {
+            OSRestoreInterrupts(restore);
+        }
+        if (flag != 0) {
+            return (void *)1;
+        }
+        return *(void **)((u8 *)lbl_803DCDC4 + 4);
+    }
+    while (walk != NULL) {
+        textureFn_80053d58(walk);
+        walk = *(u8 **)walk;
+    }
+    if (getLoadedFileFlags(0) != 0) {
+        if (disabled == 1) {
+            OSRestoreInterrupts(restore);
+        }
+    } else if (disabled == 1) {
+        OSRestoreInterrupts(restore);
+    }
+    if (flag != 0) {
+        return (void *)(slot + 1);
+    }
+    return first;
 }
 
 #pragma scheduling reset
