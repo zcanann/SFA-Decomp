@@ -6091,3 +6091,96 @@ void fn_80204098(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801FFE18(int obj, int p2)
+{
+    extern int Stack_IsEmpty(int);
+    extern void Stack_Pop(int, int *);
+    extern void Stack_Push(int, int *);
+    extern void Obj_FreeObject(int);
+    extern int ObjGroup_FindNearestObjectForObject(int, int, f32 *);
+    extern int ObjGroup_ContainsObject(int, int);
+    extern int *gPlayerInterface;
+    extern u8 lbl_80329514[];
+    extern f32 lbl_803E62AC;
+    extern f32 lbl_803E62A8;
+    int tmp = *(int *)(obj + 0xb8);
+    int sub;
+    int data = *(int *)(obj + 0x4c);
+    int off;
+    int n;
+    char *entry;
+    char *ptr;
+    f32 range;
+
+    range = lbl_803E62AC;
+    sub = *(int *)(tmp + 0x40c);
+    if (*(s8 *)(p2 + 0x27b) != 0 || *(u8 *)(sub + 0x34) != 0) {
+        *(u8 *)(sub + 0x15) &= ~4;
+        *(u8 *)(sub + 0x34) = 0;
+        if (Stack_IsEmpty(*(int *)(sub + 0x24)) == 0) {
+            Stack_Pop(*(int *)(sub + 0x24), (int *)(sub + 0x28));
+        } else {
+            if (*(u32 *)(data + 0x14) == 0xFFFFFFFF) {
+                Obj_FreeObject(obj);
+                return 0;
+            }
+            entry = (char *)&lbl_80329514[*(s16 *)(data + 0x24) * 8];
+            n = *(s16 *)(entry + 4);
+            off = n * 12;
+            for (; n != 0; n--) {
+                Stack_Push(*(int *)(sub + 0x24), (int *)(*(int *)entry + (off -= 12)));
+            }
+            *(u8 *)(sub + 0x34) = 1;
+            *(f32 *)(obj + 0xc) = *(f32 *)(data + 0x8);
+            *(f32 *)(obj + 0x10) = *(f32 *)(data + 0xc);
+            *(f32 *)(obj + 0x14) = *(f32 *)(data + 0x10);
+        }
+        switch (*(int *)(sub + 0x2c)) {
+        case 0:
+            if (*(int *)(sub + 0x30) != 0) {
+                *(int *)(p2 + 0x2d0) = ObjGroup_FindNearestObjectForObject(*(int *)(sub + 0x30), obj, &range);
+            }
+            break;
+        case 1:
+            *(int *)(p2 + 0x2d0) = *(int *)(sub + 0x30);
+            break;
+        }
+        if (*(void **)(p2 + 0x2d0) != NULL) {
+            (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, p2, *(int *)(sub + 0x28));
+        }
+        return 0;
+    } else {
+        switch (*(int *)(sub + 0x2c)) {
+        case 0:
+            if (*(void **)(p2 + 0x2d0) == NULL) {
+                *(u8 *)(sub + 0x34) = 1;
+            } else if (*(int *)(sub + 0x30) != 0) {
+                if (ObjGroup_ContainsObject(*(int *)(p2 + 0x2d0), *(int *)(sub + 0x30)) == 0) {
+                    *(int *)(p2 + 0x2d0) = ObjGroup_FindNearestObjectForObject(*(int *)(sub + 0x30), obj, 0);
+                    if (*(void **)(p2 + 0x2d0) == NULL) {
+                        *(u8 *)(sub + 0x34) = 1;
+                    }
+                    *(f32 *)(p2 + 0x280) = lbl_803E62A8;
+                }
+            }
+            break;
+        case 1:
+            if (*(void **)(p2 + 0x2d0) == NULL) {
+                *(u8 *)(sub + 0x34) = 1;
+            }
+            break;
+        }
+        if (*(s16 *)(sub + 0x1c) == -1 && (ptr = *(char **)(sub + 0x3c)) != NULL) {
+            if ((**(int (**)(char *))(*(int *)(*(int *)(ptr + 0x68))  + 0x20))(ptr) == 0) {
+                *(int *)(sub + 0x3c) = 0;
+                *(u8 *)(sub + 0x34) = 1;
+            }
+        }
+        return 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
