@@ -17654,3 +17654,110 @@ void gameTextInitFn_8001c794(void) {
     DCFlushRange((u8 *)lbl_803DCA20 + 0x60, 800);
 }
 #pragma pop
+
+typedef struct ObjHitBufs {
+    u8 pad00[0x48];
+    u8 *bufs[2];
+    u8 *cur;
+} ObjHitBufs;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void objUpdateHitSpheres(u8 *a, u8 *b, u8 *c, u8 *d, u8 *e) {
+    extern f32 lbl_803DE828;
+    extern f32 lbl_803DCED0;
+    extern f32 lbl_803DCECC;
+    u8 *mtx;
+    int srcOff;
+    int dstOff;
+    u8 *prev;
+    int i;
+    void *result;
+    u8 *state;
+    u8 *arr;
+    u8 *src;
+    f32 vec[3];
+    f32 zero;
+    u32 sel;
+    int idx;
+    int count;
+    u32 cnt;
+    int lim;
+    ObjHitBufs *st;
+
+    result = NULL;
+    state = *(u8 **)(e + 0x54);
+    if (state != NULL) {
+        if (*(u8 *)(*(u8 **)(e + 0x50) + 0x66) != 0) {
+            count = (int)*(s16 *)(state + 4) >> 2;
+            if (count > 0) {
+                arr = *(u8 **)(state + 8);
+                idx = (int)(*(f32 *)(e + 0x98) * (f32)count);
+                if (idx >= count) {
+                    idx = count - 1;
+                }
+                result = *(void **)(arr + idx * 4);
+            }
+        } else {
+            result = *(void **)(state + 0x48);
+        }
+    }
+
+    if (*(u8 **)(c + 0x54) != NULL) {
+        *(u8 *)(*(u8 **)(c + 0x54) + 0xaf) -= 1;
+        if (*(s8 *)(*(u8 **)(c + 0x54) + 0xaf) < 0) {
+            *(u8 *)(*(u8 **)(c + 0x54) + 0xaf) = 0;
+        }
+        *(u32 *)(*(u8 **)(c + 0x54) + 0x4c) = *(u32 *)(*(u8 **)(c + 0x54) + 0x48);
+        *(void **)(*(u8 **)(c + 0x54) + 0x48) = result;
+    }
+
+    st = (ObjHitBufs *)a;
+    *(u16 *)(a + 0x18) ^= 4;
+    sel = (*(u16 *)(a + 0x18) >> 2) & 1;
+    st->cur = st->bufs[sel];
+    mtx = d;
+    i = 0;
+    srcOff = 0;
+    dstOff = srcOff;
+    prev = st->bufs[sel ^ 1];
+    for (; i < *(u8 *)(b + 0xf7); i++) {
+        if (d == NULL) {
+            idx = *(s16 *)(*(u8 **)(b + 0x58) + srcOff);
+            cnt = *(u8 *)(*(u8 **)a + 0xf3);
+            if (cnt != 0) {
+                lim = cnt + *(u8 *)(*(u8 **)a + 0xf4);
+            } else {
+                lim = 1;
+            }
+            if (idx >= lim) {
+                idx = 0;
+            }
+            mtx = (u8 *)((int *)a)[(*(u16 *)(a + 0x18) & 1) + 3] + idx * 0x40;
+        }
+        if (i == 0 && e != c) {
+            zero = lbl_803DE828;
+            vec[0] = zero;
+            vec[1] = zero;
+            vec[2] = zero;
+            PSMTXMultVec((f32 *)mtx, vec, vec);
+            *(f32 *)(c + 0xc) = vec[0] + playerMapOffsetX;
+            *(f32 *)(c + 0x10) = vec[1];
+            *(f32 *)(c + 0x14) = vec[2] + playerMapOffsetZ;
+            Obj_GetWorldPosition(c, c + 0x18, c + 0x1c, c + 0x20);
+        }
+        src = *(u8 **)(b + 0x58);
+        vec[0] = *(f32 *)(src + (srcOff + 8));
+        vec[1] = *(f32 *)(src + (srcOff + 0xc));
+        vec[2] = *(f32 *)(src + (srcOff + 0x10));
+        *(f32 *)(st->cur + dstOff) = *(f32 *)(src + (srcOff + 4)) * *(f32 *)(e + 8);
+        PSMTXMultVec((f32 *)mtx, vec, (f32 *)(st->cur + (dstOff + 4)));
+        *(f32 *)(prev + 4) = (lbl_803DCED0 + *(f32 *)(prev + 4)) - playerMapOffsetX;
+        *(f32 *)(prev + 0xc) = (lbl_803DCECC + *(f32 *)(prev + 0xc)) - playerMapOffsetZ;
+        srcOff += 0x18;
+        dstOff += 0x10;
+        prev += 0x10;
+    }
+}
+#pragma pop
