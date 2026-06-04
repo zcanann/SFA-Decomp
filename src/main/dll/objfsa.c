@@ -4497,29 +4497,40 @@ u16 getPatchGroup(float *point,int patchGroupIndex,undefined4 param_3,undefined4
 #pragma scheduling off
 uint isInWalkGroupOrPatch(float *point)
 {
-  s16 patchIndex;
-  s16 edgeIndex;
+  s16 idx;
+  s16 i;
   ObjfsaPatch *patch;
+  s16 *nz;
+  s16 *nx;
+  char *offs;
+  int count;
+  f32 y;
 
   if (mathFn_800dbff0(point) != 0) {
     return 1;
   }
 
-  patch = Objfsa_GetPatch(1);
-  for (patchIndex = 1; patchIndex < (s16)lbl_803DD468; patchIndex++) {
-    if (point[1] < (f32)patch->maxY && (f32)patch->minY < point[1]) {
-      edgeIndex = 0;
-      while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
-             patch->planeOffsets[edgeIndex] +
-                 point[0] * (f32)patch->planes[edgeIndex].normalX +
-                 point[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
-        edgeIndex++;
+  idx = 1;
+  patch = &lbl_8039CAE8[1];
+  count = lbl_803DD468;
+  for (; idx < count; idx++, patch++) {
+    y = point[1];
+    if (y < (f32)patch->maxY && y > (f32)patch->minY) {
+      i = 0;
+      nz = (s16 *)patch;
+      nx = (s16 *)patch;
+      offs = (char *)patch;
+      for (; i < 4; i++, offs += 4, nz += 2, nx += 2) {
+        if (*(f32 *)(offs + 0x10) +
+                (point[0] * (f32)nx[0] + point[2] * (f32)nz[1]) >
+            0.0f) {
+          break;
+        }
       }
-      if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
+      if (i == 4) {
         return 1;
       }
     }
-    patch++;
   }
   return 0;
 }
@@ -4542,45 +4553,50 @@ uint isInWalkGroupOrPatch(float *point)
 #pragma peephole off
 int Objfsa_GetWalkGroupIndexAtPoint(float *point,ObjfsaWalkGroupPatchInfo *patchInfo)
 {
-  u8 walkGroupIndex;
-  u8 patchListIndex;
-  u8 patchMask;
-  u8 patchIndex;
-  u8 edgeIndex;
-  ObjfsaWalkGroup *walkGroup;
+  uint wgi;
+  u8 k;
+  u8 mask;
+  uint pidx;
+  u8 i;
+  u8 j;
+  ObjfsaWalkGroup *wg;
   ObjfsaPatch *patch;
+  f32 y;
 
-  walkGroupIndex = (u8)mathFn_800dbff0(point);
-  if (patchInfo != NULL && walkGroupIndex != 0) {
-    patchInfo->walkGroupIndex = walkGroupIndex;
+  wgi = (u8)mathFn_800dbff0(point);
+  if (patchInfo != NULL && wgi != 0) {
+    patchInfo->walkGroupIndex = wgi;
     patchInfo->patchMask = 0;
-    patchMask = 1;
-    walkGroup = Objfsa_GetWalkGroup(walkGroupIndex);
-    for (patchListIndex = 0; patchListIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; patchListIndex++) {
-      patchIndex = walkGroup->patchIndices[patchListIndex];
-      if (patchIndex == 0) {
-        patchInfo->patchGroupIds[patchListIndex] = 0;
-      }
-      else {
-        patch = Objfsa_GetPatch(patchIndex);
-        patchInfo->patchGroupIds[patchListIndex] = patch->groupId;
-        if (point[1] < (f32)patch->maxY && (f32)patch->minY < point[1]) {
-          edgeIndex = 0;
-          while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
-                 patch->planeOffsets[edgeIndex] +
-                     point[0] * (f32)patch->planes[edgeIndex].normalX +
-                     point[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
-            edgeIndex++;
-          }
-          if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
-            patchInfo->patchMask |= patchMask;
+    k = 0;
+    mask = 1;
+    wg = &lbl_8039FAE8[wgi];
+    for (; k < 4; k++, mask <<= 1) {
+      pidx = wg->patchIndices[k];
+      if (pidx != 0) {
+        patch = &lbl_8039CAE8[pidx];
+        patchInfo->patchGroupIds[k] = patch->groupId;
+        y = point[1];
+        if (y < (f32)patch->maxY && y > (f32)patch->minY) {
+          i = 0;
+          j = 0;
+          for (; i < 4; i++, j += 2) {
+            if (patch->planeOffsets[i] +
+                    (point[0] * (f32)((s16 *)patch)[j] +
+                     point[2] * (f32)((s16 *)patch)[j + 1]) >
+                0.0f) {
+              break;
+            }
           }
         }
+        if (i == 4) {
+          patchInfo->patchMask |= mask;
+        }
+      } else {
+        patchInfo->patchGroupIds[k] = 0;
       }
-      patchMask <<= 1;
     }
   }
-  return walkGroupIndex;
+  return wgi;
 }
 #pragma peephole reset
 #pragma scheduling reset
