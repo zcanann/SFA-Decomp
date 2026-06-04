@@ -3,111 +3,122 @@
 #define SYNTH_TRACK_COMMAND_END 0xFFFF
 #define SYNTH_TRACK_COMMAND_JUMP 0xFFFE
 
+#define TRACK_CMD(cursor) ((SynthTrackCommand*)(cursor)->current)
+
+typedef struct SynthVoiceKeyGroups {
+    u8 pad[0x14E8];
+    SynthKeyGroupState keyGroupStates[SYNTH_VOICE_NOTE_COUNT];
+} SynthVoiceKeyGroups;
+
+#define KEYGROUP_STATE(voice, index) \
+    (((SynthVoiceKeyGroups*)(voice))->keyGroupStates[index])
+
+#pragma scheduling off
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
-    SynthSequenceEvent* event;
-    SynthKeyGroupState* keyGroupState;
-    SynthSequenceState* state;
-    SynthTrackCommand* command;
-    SynthTrackCursor* cursor;
+    SynthTrackCursor* track;
+    SynthSequenceEvent* ev;
+    u32 trackId;
     SynthVoice* voice;
-    u8* keyGroupMap;
-    u8* stream;
-    u32 primaryLimit;
-    u32 secondaryLimit;
-    u32 channelIndex;
-    u32 value;
+    SynthSequenceState* pattern;
+    u32 patternTime;
+    u32 pitchTime;
+    u32 modTime;
 
-    channelIndex = channel;
+    trackId = channel;
     voice = gSynthCurrentVoice;
-    cursor = SYNTH_TRACK_CURSOR(voice, channelIndex);
-    state = SYNTH_SEQUENCE_STATE(voice, channelIndex);
-    if (cursor->current != 0) {
-        event = SYNTH_CHANNEL_EVENT(voice, channelIndex);
-        event->channel = channel;
-        event->state = state;
+    track = SYNTH_TRACK_CURSOR(voice, trackId);
+    pattern = SYNTH_SEQUENCE_STATE(voice, trackId);
 
-        if (state->stream != 0) {
-            goto handle_stream;
-        }
+    if (track->current != 0) {
+        ev = SYNTH_CHANNEL_EVENT(voice, trackId);
+        ev->channel = channel;
+        ev->state = pattern;
 
-handle_command:
-        command = cursor->current;
-        if (command->command == SYNTH_TRACK_COMMAND_END) {
-            cursor->current = 0;
-            return 0;
-        }
-
-        if (command->command == SYNTH_TRACK_COMMAND_JUMP) {
-            keyGroupMap = SYNTH_KEYGROUP_MAP(voice);
-            if (keyGroupMap == 0) {
-                keyGroupState = SYNTH_KEYGROUP_STATE(voice, 0);
-                if (keyGroupState->active != 0) {
-                    cursor->current = 0;
-                    return 0;
-                }
-            } else {
-                keyGroupState = SYNTH_KEYGROUP_STATE(voice, keyGroupMap[channelIndex]);
-                if (keyGroupState->active != 0) {
-                    cursor->current = 0;
-                    return 0;
-                }
+        if (pattern->stream == 0) {
+        null_pattern_addr:
+            if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_END) {
+                track->current = 0;
+                return 0;
             }
 
-            event->type = 3;
-            event->value = command->value0;
-            cursor->current = cursor->base + (command->arg * sizeof(SynthTrackCommand));
-            return event;
-        }
-
-        event->type = 4;
-        event->value = command->value0;
-        event->eventData = command;
-        cursor->current = command + 1;
-        return event;
-
-handle_stream:
-        primaryLimit = state->primaryLimit;
-        secondaryLimit = state->secondaryLimit;
-        while (1) {
-            stream = state->stream;
-            value = *(u16*)stream + state->currentValue;
-            if (value >= primaryLimit) {
-                if (primaryLimit < secondaryLimit) {
-                    event->value = primaryLimit + state->valueOffset;
-                    event->type = 2;
-                    return event;
-                }
-            } else if (value < secondaryLimit) {
-                if (stream[2] == 0xFF && stream[3] == 0xFF) {
-                    state->stream = 0;
-                    goto handle_command;
+            if (TRACK_CMD(track)->command == SYNTH_TRACK_COMMAND_JUMP) {
+                if (SYNTH_KEYGROUP_MAP(gSynthCurrentVoice) == 0) {
+                    if (KEYGROUP_STATE(gSynthCurrentVoice, 0).active) {
+                        track->current = 0;
+                        return 0;
+                    }
+                } else if (KEYGROUP_STATE(gSynthCurrentVoice,
+                               SYNTH_KEYGROUP_MAP(gSynthCurrentVoice)[trackId]).active) {
+                    track->current = 0;
+                    return 0;
                 }
 
-                event->eventData = stream;
-                state->currentValue = value;
-                stream = state->stream;
-                if ((stream[2] & 0x80) != 0) {
-                    state->stream = stream + 4;
-                } else if ((stream[2] | stream[3]) != 0) {
-                    state->stream = stream + 6;
-                } else {
-                    state->stream = stream + 4;
-                    continue;
-                }
-
-                event->type = 0;
-                event->value = value + state->valueOffset;
-                return event;
+                ev->type = 3;
+                ev->value = TRACK_CMD(track)->value0;
+                track->current = track->base + TRACK_CMD(track)->arg * sizeof(SynthTrackCommand);
+                return ev;
             }
 
-            event->value = secondaryLimit + state->valueOffset;
-            event->type = 1;
-            return event;
+            ev->type = 4;
+            ev->value = TRACK_CMD(track)->value0;
+            ev->eventData = track->current;
+            track->current = TRACK_CMD(track) + 1;
+            return ev;
         }
+
+        pitchTime = pattern->primaryLimit;
+        modTime = pattern->secondaryLimit;
+
+    loop:
+        patternTime = *(u16*)pattern->stream + pattern->currentValue;
+        if (patternTime >= pitchTime) {
+            goto use_pitch_time;
+        }
+        if (patternTime >= modTime) {
+            goto use_mod_time;
+        }
+        if (pattern->stream[2] == 0xFF && pattern->stream[3] == 0xFF) {
+            pattern->stream = 0;
+            goto null_pattern_addr;
+        }
+
+        ev->eventData = pattern->stream;
+        pattern->currentValue = patternTime;
+
+        if ((pattern->stream[2] & 0x80) != 0) {
+            pattern->stream += 4;
+            goto use_pattern_time;
+        }
+        if ((pattern->stream[2] | pattern->stream[3]) == 0) {
+            pattern->stream += 4;
+            goto loop;
+        }
+        pattern->stream += 6;
+
+    use_pattern_time:
+        ev->type = 0;
+        ev->value = patternTime + pattern->valueOffset;
+        goto end;
+
+    use_pitch_time:
+        if (pitchTime < modTime) {
+            ev->value = pitchTime + pattern->valueOffset;
+            ev->type = 2;
+            goto end;
+        }
+
+    use_mod_time:
+        ev->value = modTime + pattern->valueOffset;
+        ev->type = 1;
+
+    end:
+        return ev;
     }
 
     return 0;
 }
+
+#pragma scheduling reset
 
 /*
  * Sorted-by-time insert into a channel event queue.
