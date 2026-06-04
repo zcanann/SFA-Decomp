@@ -945,14 +945,22 @@ void hudDrawButtons(int param1, int param2, int param3)
   f32 scaleT;
   f32 cur;
   f32 next;
-  int mx0[1];
-  int mx1[1];
-  int my0[1];
-  int my1[1];
-  int bx0[1];
-  int bx1[1];
-  int by0[1];
-  int by1[1];
+  int ax0;
+  int ax1;
+  int ay0;
+  int ay1;
+  int bx0;
+  int bx1;
+  int by0;
+  int by1;
+  int am3;
+  int am2;
+  int am1;
+  int am0;
+  int bm3;
+  int bm2;
+  int bm1;
+  int bm0;
   u32 label;
   char slots[68];
 
@@ -1115,11 +1123,11 @@ void hudDrawButtons(int param1, int param2, int param3)
         textPtr = *(int *)(*(int *)(textObj + 8) + glyph * 4);
         prevCharset2 = gameTextFn_80019b14();
         gameTextSetCharset(3, 3);
-        gameTextMeasureFn_800163c4((char *)textPtr, 8, 0, 0, mx0, mx1, my0, my1);
+        gameTextMeasureFn_800163c4((char *)textPtr, 8, 0, 0, &am0, &am1, &am2, &am3);
         gameTextShowStr((char *)textPtr, 8, 0, 0);
         gameTextSetCharset(prevCharset2, 3);
-        gameTextMeasureFn_800163c4(*(char **)(*(int *)(textObj + 8) + lbl_8031B6F0[icon * 2 + 1] * 4), 8, 0, 0, bx0, bx1, by0, by1);
-        wid = (bx1[0] - bx0[0]) + -0x19;
+        gameTextMeasureFn_800163c4(*(char **)(*(int *)(textObj + 8) + lbl_8031B6F0[icon * 2 + 1] * 4), 8, 0, 0, &ax0, &ax1, &ay0, &ay1);
+        wid = (ax1 - ax0) + -0x19;
         if (wid < 1) {
           wid = 1;
         }
@@ -1167,11 +1175,11 @@ void hudDrawButtons(int param1, int param2, int param3)
         textPtr = *(int *)(*(int *)(textObj + 8) + glyph * 4);
         prevCharset2 = gameTextFn_80019b14();
         gameTextSetCharset(3, 3);
-        gameTextMeasureFn_800163c4((char *)textPtr, 9, 0, 0, mx0, mx1, my0, my1);
+        gameTextMeasureFn_800163c4((char *)textPtr, 9, 0, 0, &bm0, &bm1, &bm2, &bm3);
         gameTextShowStr((char *)textPtr, 9, 0, 0);
         gameTextSetCharset(prevCharset2, 3);
-        gameTextMeasureFn_800163c4(*(char **)(*(int *)(textObj + 8) + lbl_8031B6F0[icon * 2 + 1] * 4), 9, 0, 0, bx0, bx1, by0, by1);
-        wid = (bx1[0] - bx0[0]) + -7;
+        gameTextMeasureFn_800163c4(*(char **)(*(int *)(textObj + 8) + lbl_8031B6F0[icon * 2 + 1] * 4), 9, 0, 0, &bx0, &bx1, &by0, &by1);
+        wid = (bx1 - bx0) + -7;
         if (wid < 1) {
           wid = 1;
         }
