@@ -8220,7 +8220,7 @@ extern int lbl_803DC9E8;
 extern void *gameTextDrawFunc;
 extern u8 *gameTextFonts;
 extern u8 lbl_803DCB10;
-extern int lbl_803DCAE8;
+extern int lbl_803DCAE8[2];
 extern u8 lbl_803DCA48;
 
 void fn_8001D714(u8 *p, f32 v) {
@@ -8591,7 +8591,7 @@ f32 gameTextFn_80019c00(void) {
 }
 
 u8 fn_8001FD88(void **p) {
-    *p = &lbl_803DCAE8;
+    *p = lbl_803DCAE8;
     return lbl_803DCA48;
 }
 
@@ -8708,7 +8708,7 @@ void fn_8001DD6C(u8 *p, f32 *a, f32 *b, f32 *c) {
 void fn_8001FE74(void *v) {
     int i = lbl_803DCA48;
     lbl_803DCA48 = i + 1;
-    (&lbl_803DCAE8)[i] = (int)v;
+    lbl_803DCAE8[i] = (int)v;
 }
 #pragma peephole reset
 
@@ -18142,5 +18142,58 @@ int fn_8001860C(u8 *str) {
         }
     }
     return count;
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+int loadModLines(int idx, s16 *outCount) {
+    int result;
+    int *hdr;
+    int size;
+    int start;
+
+    result = 0;
+    if (idx > (getDataFileSize(0x38) - 4) >> 2) {
+        return 0;
+    }
+    hdr = mmAlloc(0x10, 0x1a, 0);
+    fileLoadToBufferOffset(0x38, hdr, idx << 2, 8);
+    start = hdr[0];
+    size = hdr[1] - hdr[0];
+    if (size > 0) {
+        result = (int)mmAlloc(size, 5, 0);
+        fileLoadToBufferOffset(0x37, (void *)result, start, size);
+    }
+    mm_free(hdr);
+    *outCount = (u32)size / 20;
+    return result;
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+void deathRenderFn_8001fd98(u32 h) {
+    int *p;
+    int n;
+    int i;
+    int idx;
+
+    idx = -1;
+    i = 0;
+    p = lbl_803DCAE8;
+    n = lbl_803DCA48;
+    for (; i < n; i++) {
+        if (*p == h) {
+            idx = i;
+            break;
+        }
+        p++;
+    }
+    for (i = idx; i < n - 1; i++) {
+        lbl_803DCAE8[i] = lbl_803DCAE8[i + 1];
+    }
+    lbl_803DCA48--;
 }
 #pragma pop
