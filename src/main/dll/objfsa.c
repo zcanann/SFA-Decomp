@@ -3287,6 +3287,7 @@ FUN_800de998(double param_1,undefined8 param_2,double param_3,undefined8 param_4
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 int curves_findNearObj(int obj,int *curveTypes,int typeCount,int action,char bboxMode)
 {
   ObjfsaRomCurveDef *curve;
@@ -3365,6 +3366,7 @@ int curves_findNearObj(int obj,int *curveTypes,int typeCount,int action,char bbo
   }
   return -1;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3890,6 +3892,7 @@ LAB_800e1030:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void curves_lengthFn24(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
 {
   float fVar1;
@@ -4157,6 +4160,7 @@ LAB_800e1778:
   FUN_80286888();
   return;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4375,6 +4379,8 @@ int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroup
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,uint groupId)
 {
   u8 patchListIndex;
@@ -4410,6 +4416,8 @@ uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,uint groupId)
     patchListIndex++;
   } while (true);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4424,6 +4432,8 @@ uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,uint groupId)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 u16 getPatchGroup(float *point,int patchGroupIndex,undefined4 param_3,undefined4 param_4,
                   u8 startPatchIndex)
 {
@@ -4461,6 +4471,8 @@ u16 getPatchGroup(float *point,int patchGroupIndex,undefined4 param_3,undefined4
     patchListIndex++;
   } while (true);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4475,6 +4487,7 @@ u16 getPatchGroup(float *point,int patchGroupIndex,undefined4 param_3,undefined4
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 uint isInWalkGroupOrPatch(float *point)
 {
   s16 patchIndex;
@@ -4503,6 +4516,7 @@ uint isInWalkGroupOrPatch(float *point)
   }
   return 0;
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4517,6 +4531,8 @@ uint isInWalkGroupOrPatch(float *point)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int Objfsa_GetWalkGroupIndexAtPoint(float *point,ObjfsaWalkGroupPatchInfo *patchInfo)
 {
   u8 walkGroupIndex;
@@ -4559,6 +4575,8 @@ int Objfsa_GetWalkGroupIndexAtPoint(float *point,ObjfsaWalkGroupPatchInfo *patch
   }
   return walkGroupIndex;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4677,6 +4695,7 @@ int mathFn_800dbff0(float *point)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outPhase)
 {
   bool noOpenLinks;
@@ -4775,6 +4794,7 @@ LAB_800e1c9c:
     curve = 0;
   } while( true );
 }
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
@@ -6319,6 +6339,8 @@ void walkgroupFindExitPointFn_800dc398(void)
     }
 }
 
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighborId) {
     float bestDistances[2];
     int bestNeighborIds[2];
@@ -6372,7 +6394,11 @@ int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighb
     }
     return -1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_func16(double x, double y, double z) {
     u32 candidateIds[20];
     int candidateCount;
@@ -6418,6 +6444,8 @@ int RomCurve_func16(double x, double y, double z) {
 
     return -1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* UIController dispatch through the shared GameUI interface. */
 extern int *gGameUIInterface;
