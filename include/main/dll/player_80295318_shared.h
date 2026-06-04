@@ -1172,7 +1172,7 @@ extern void playerShadowFn_80062a30(int obj);
 extern int lbl_803DAFC8[];
 extern int lbl_803DE4B8;
 extern void fn_802B0EA4(int obj, int state, int sub);
-extern s8 fn_802A74A4(int obj, int state, int sub, void *out, f32 fv, int n);
+extern s8 fn_802A74A4(int obj, int state, int sub, void *out, f32 fv, u32 n);
 extern f32 sqrtf(f32 x);
 extern f32 lbl_803E80E8;
 extern f32 lbl_803E7EFC;
