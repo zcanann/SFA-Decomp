@@ -3862,8 +3862,166 @@ extern void Camera_DisableViewYOffset(void);
 void dll_CA_initialise(void) { fn_8015DAE8(); }
 void iceball_free(void) { Camera_DisableViewYOffset(); }
 
-extern void chukchuk_update(void);
 extern void iceball_update(undefined2 *param_1,int param_2);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8015F5B0(short *obj)
+{
+  extern u8 Obj_IsLoadingLocked(void);
+  extern int Obj_AllocObjectSetup(int size, int id);
+  extern u8 *Obj_SetupObject(int setup, int a, int b, int c, int d);
+  extern int Obj_GetPlayerObject(void);
+  extern f64 lbl_803E2E28;
+  extern f32 lbl_803E2E20;
+  extern f32 lbl_803E2E24;
+  int sub;
+  int setup;
+  u8 *o;
+  int pl;
+  f32 sc;
+
+  sub = *(int *)((char *)obj + 0xb8);
+  if (Obj_IsLoadingLocked() != 0) {
+    setup = Obj_AllocObjectSetup(36, 1307);
+    *(f32 *)(setup + 8) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)(setup + 0xc) = lbl_803E2E20 + *(f32 *)((char *)obj + 0x10);
+    *(f32 *)(setup + 0x10) = *(f32 *)((char *)obj + 0x14);
+    *(s8 *)(setup + 4) = 1;
+    *(s8 *)(setup + 5) = 4;
+    *(u8 *)(setup + 7) = 0xff;
+    o = Obj_SetupObject(setup, 5, -1, -1, 0);
+    if (o != NULL) {
+      pl = Obj_GetPlayerObject();
+      sc = lbl_803E2E24;
+      *(f32 *)(o + 0x24) = (*(f32 *)(pl + 0xc) - *(f32 *)((char *)obj + 0xc)) / sc;
+      *(f32 *)(o + 0x28) =
+          ((*(f32 *)(pl + 0x10) + (f32)(u32)*(u8 *)(sub + 0x15)) - *(f32 *)((char *)obj + 0x10)) /
+          sc;
+      *(f32 *)(o + 0x2c) = (*(f32 *)(pl + 0x14) - *(f32 *)((char *)obj + 0x14)) / sc;
+    }
+  }
+}
+
+void chukchuk_update(short *obj)
+{
+  extern void objParticleFn_80099d84(f32, short *, int, f32, int);
+  extern int *objFindTexture(short *obj, int a, int b);
+  extern int Obj_GetPlayerObject(void);
+  extern int getAngle(f32 deltaX, f32 deltaZ);
+  extern f32 sqrtf(f32);
+  extern void GameBit_Set(int bit, int val);
+  extern void fn_8015F5B0(short *obj);
+  extern u8 lbl_8031FF80[];
+  extern f32 timeDelta;
+  extern f64 lbl_803E2E48;
+  extern f32 lbl_803E2E30;
+  extern f32 lbl_803E2E34;
+  extern f32 lbl_803E2E38;
+  extern f32 lbl_803E2E3C;
+  extern f32 lbl_803E2E40;
+  f32 *v;
+  int di;
+  int pl;
+  int *tex;
+  int ang;
+  int r;
+  f32 ph;
+  f32 lim;
+  f32 nv;
+  f32 dx;
+  f32 dz;
+  struct {
+    int c;
+    int b;
+    int a;
+    f32 d[3];
+  } stk;
+
+  v = *(f32 **)((char *)obj + 0xb8);
+  if (v[1] != lbl_803E2E34) {
+    v[1] -= timeDelta;
+    objParticleFn_80099d84(lbl_803E2E30, obj, 1, v[1] / lbl_803E2E38, 0);
+    if (v[1] <= lbl_803E2E34) {
+      v[1] = lbl_803E2E34;
+    }
+  }
+  if ((*(u8 *)((char *)v + 0x12) & 2) == 0) {
+    tex = objFindTexture(obj, 0, 0);
+    ph = v[0];
+    if (ph < lbl_803E2E3C) {
+      if ((int)ph == 10) {
+        *(u8 *)((char *)v + 0x12) |= 1;
+      }
+      *tex = lbl_8031FF80[(int)v[0]] << 8;
+      lim = lbl_803E2E3C;
+      nv = v[0] + lbl_803E2E30;
+      v[0] = nv;
+      if (lim == nv) {
+        v[0] = (f32)(int)randomGetRange(16, 245);
+      }
+    } else {
+      if (lbl_803E2E40 - ph >= timeDelta) {
+        v[0] = ph + timeDelta;
+      } else {
+        v[0] = lbl_803E2E34;
+      }
+      *tex = 0;
+    }
+    pl = Obj_GetPlayerObject();
+    dx = *(f32 *)(pl + 0xc) - *(f32 *)((char *)obj + 0xc);
+    dz = *(f32 *)(pl + 0x14) - *(f32 *)((char *)obj + 0x14);
+    di = (int)sqrtf(dx * dx + dz * dz);
+    if (((u32)di & 0xffff) < *(u16 *)((char *)v + 0xc)) {
+      if (*(u16 *)((char *)v + 0x10) >= *(u16 *)((char *)v + 0xc)) {
+        *(u8 *)((char *)v + 0x12) = 5;
+        v[0] = lbl_803E2E34;
+      }
+      if ((*(u8 *)((char *)v + 0x12) & 5) != 0) {
+        stk.d[0] = *(f32 *)(pl + 0x18) - *(f32 *)((char *)obj + 0x18);
+        stk.d[1] = *(f32 *)(pl + 0x1c) - *(f32 *)((char *)obj + 0x1c);
+        stk.d[2] = *(f32 *)(pl + 0x20) - *(f32 *)((char *)obj + 0x20);
+        ang = (getAngle(stk.d[0], stk.d[2]) & 0xffff) - (*obj & 0xffff);
+        if (ang > 0x8000) {
+          ang -= 0xffff;
+        }
+        if (ang < -0x8000) {
+          ang += 0xffff;
+        }
+        if (((u32)ang & 0xffff) < *(u16 *)((char *)v + 0xe) ||
+            ((u32)ang & 0xffff) > ((0xffff - *(u16 *)((char *)v + 0xe)) & 0xffff)) {
+          r = randomGetRange(0, 99);
+          if (r < *(u8 *)((char *)v + 0x14) || (*(u8 *)((char *)v + 0x12) & 4) != 0) {
+            Sfx_PlayFromObject(obj, SFXkr_impact1);
+            fn_8015F5B0(obj);
+          } else {
+            Sfx_PlayFromObject(obj, SFXkr_impact2);
+          }
+        } else {
+          Sfx_PlayFromObject(obj, SFXkr_impact2);
+        }
+      }
+    } else if ((*(u8 *)((char *)v + 0x12) & 1) != 0) {
+      Sfx_PlayFromObject(obj, SFXkr_impact2);
+    }
+    *(s16 *)((char *)v + 0x10) = di;
+    if (ObjHits_GetPriorityHit(obj, &stk.a, &stk.b, &stk.c) == 14) {
+      *(u8 *)((char *)v + 0x13) -= 1;
+      if (*(u8 *)((char *)v + 0x13) < 1) {
+        ObjHits_DisableObject(obj);
+        obj[3] |= 0x4000;
+        *(u8 *)((char *)v + 0x12) |= 2;
+        Sfx_PlayFromObject(obj, SFXkr_impact3);
+        GameBit_Set(*(s16 *)((char *)v + 0xa), 1);
+        v[1] = lbl_803E2E38;
+        Sfx_PlayFromObject(obj, SFXfoot_ice_run_4);
+      }
+    }
+    *(u8 *)((char *)v + 0x12) &= ~5;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /* chukchuk_setScale (52B). If low-byte of arg2 (u8) == 0x80, call Sfx_PlayFromObject(obj, SFXkr_jump1). */
 #pragma peephole off
