@@ -15981,3 +15981,78 @@ void Obj_ResetObjectSystem(void)
 }
 #pragma dont_inline reset
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void Obj_UpdateModelBlendStates(void)
+{
+    int joff;
+    u8 *obj;
+    int j;
+    int i;
+    int k;
+    int ioff;
+    u8 *walker;
+    int koff;
+    u8 *child;
+    u8 *m;
+    u8 *c0;
+    u8 *bp;
+
+    i = 0;
+    ioff = 0;
+    for (; i < lbl_803DCB84; i++) {
+        obj = *(u8 **)((int)lbl_803DCB88 + ioff);
+        if (obj != 0 && *(void **)(obj + 0x50) != 0) {
+            m = *(u8 **)(obj + 0x64);
+            if (m != 0) {
+                *(int *)(m + 0xc) = 0;
+            }
+            j = 0;
+            joff = 0;
+            for (; j < *(s8 *)(*(u8 **)(obj + 0x50) + 0x55); j++) {
+                m = *(u8 **)(*(u8 **)(obj + 0x7c) + joff);
+                if (m != 0) {
+                    *(u16 *)(m + 0x18) &= ~8;
+                    if (*(u8 *)(*(u8 **)m + 0xf9) != 0) {
+                        ObjModel_AdvanceBlendChannels(m, timeDelta);
+                    }
+                }
+                joff += 4;
+            }
+            j = 0;
+            walker = obj;
+            for (; j < *(u8 *)(obj + 0xeb); j++) {
+                child = *(u8 **)(walker + 0xc8);
+                if (child != 0 && *(void **)(child + 0x50) != 0) {
+                    k = 0;
+                    koff = k;
+                    for (; k < *(s8 *)(*(u8 **)(child + 0x50) + 0x55); k++) {
+                        m = *(u8 **)(*(u8 **)(child + 0x7c) + koff);
+                        if (m != 0) {
+                            *(u16 *)(m + 0x18) &= ~8;
+                            if (*(u8 *)(*(u8 **)m + 0xf9) != 0) {
+                                c0 = *(u8 **)(child + 0xc0);
+                                if (c0 != 0) {
+                                    bp = *(u8 **)(c0 + 0xb8);
+                                } else {
+                                    bp = 0;
+                                }
+                                if (c0 == 0 || (bp != 0 && *(s8 *)(bp + 0x56) == 0)) {
+                                    ObjModel_AdvanceBlendChannels(m, timeDelta);
+                                }
+                            }
+                        }
+                        koff += 4;
+                    }
+                }
+                walker += 4;
+            }
+        }
+        ioff += 4;
+    }
+}
+#pragma dont_inline reset
+#pragma pop
