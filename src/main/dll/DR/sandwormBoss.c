@@ -5751,12 +5751,15 @@ extern f32  lbl_803E4130;
 #pragma peephole off
 int waterSpellStone1Fn_8019b4c8(int* obj)
 {
-    u8* sub;
+    u8* def;
     char* player;
+    u8* sub;
     u8 evbuf[0x1c];
+    f32 v[3];
+    f32 k;
     f32 nearDist = lbl_803E412C;
     f32 ground = lbl_803E4130;
-    u8* def = *(u8**)((char*)obj + 0x4c);
+    def = *(u8**)((char*)obj + 0x4c);
     evbuf[0x1b] = 0;
     sub = *(u8**)((char*)obj + 0xb8);
     *(u8*)(sub + 0xa9b) &= ~0x2;
@@ -5873,8 +5876,6 @@ int waterSpellStone1Fn_8019b4c8(int* obj)
                 }
             }
             if (*(int*)(sub + 0xa94) < 2) {
-                f32 v[3];
-                f32 k;
                 *(f32*)((char*)obj + 0xc) = timeDelta * *(f32*)((char*)obj + 0x24) + *(f32*)((char*)obj + 0xc);
                 *(f32*)((char*)obj + 0x14) = timeDelta * *(f32*)((char*)obj + 0x2c) + *(f32*)((char*)obj + 0x14);
                 if (*(u8*)(sub + 0xa5e) != 0) {
