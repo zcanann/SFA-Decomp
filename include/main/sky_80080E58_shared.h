@@ -20,6 +20,8 @@ typedef struct SkyBlendStateFlags {
 } SkyBlendStateFlags;
 
 extern void setDrawCloudsAndLights(int mode);
+extern void fn_8008C9F4(u8 *cfg, u8 flags);
+extern u8 lbl_8030F4A0[];
 extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
 extern int *gCloudActionInterface;
 
