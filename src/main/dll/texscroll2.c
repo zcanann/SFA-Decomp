@@ -443,3 +443,75 @@ int fn_80167F58(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80168018(int obj, int p2)
+{
+  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
+  extern void ObjHits_DisableObject(int);
+  extern void fn_80169360(int obj, int mode);
+  extern f32 lbl_803E3060;
+  extern f32 lbl_803E307C;
+  int state = *(int *)(obj + 0xb8);
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+      ObjAnim_SetCurrentMove(obj, 5, lbl_803E3060, 0);
+      *(u8 *)(p2 + 0x346) = 0;
+    }
+    ObjHits_DisableObject(obj);
+    *(f32 *)(p2 + 0x2a0) = lbl_803E307C;
+    *(f32 *)(p2 + 0x280) = lbl_803E3060;
+  }
+  else if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
+    GameBit_Set(*(s16 *)(state + 0x3f4), 0);
+    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+      ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0);
+      *(u8 *)(p2 + 0x346) = 0;
+    }
+    *(u16 *)(state + 0x402) = 0;
+  }
+  if ((s32)(*(u32 *)(p2 + 0x314) & 0x1000) != 0) {
+    *(u32 *)(p2 + 0x314) &= 0xffffefff;
+    fn_80169360(obj, 2);
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80168118(int obj, int p2)
+{
+  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
+  extern void ObjHits_EnableObject(int);
+  extern void fn_80169360(int obj, int mode);
+  extern f32 lbl_803E3060;
+  extern f32 lbl_803E3098;
+  extern f32 lbl_803E309C;
+  int state = *(int *)(obj + 0xb8);
+
+  if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+    if ((s32)(s8)*(u8 *)(p2 + 0x27a) != 0) {
+      ObjAnim_SetCurrentMove(obj, 4, lbl_803E3060, 0);
+      *(u8 *)(p2 + 0x346) = 0;
+    }
+    fn_80169360(obj, 1);
+    *(u8 *)(p2 + 0x25f) = 1;
+    GameBit_Set(*(s16 *)(state + 0x3f4), 1);
+    *(u8 *)(obj + 0xaf) &= ~8;
+    *(u8 *)(obj + 0x36) = 0xff;
+    *(u8 *)(p2 + 0x34d) = 1;
+    *(f32 *)(p2 + 0x2a0) =
+        lbl_803E3098 + ((f32)(u32)*(u8 *)(state + 0x406) / lbl_803E309C);
+    ObjHits_EnableObject(obj);
+  }
+  else if ((s32)(s8)*(u8 *)(p2 + 0x346) != 0) {
+    *(u16 *)(state + 0x402) = 1;
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
