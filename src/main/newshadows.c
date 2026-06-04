@@ -3563,13 +3563,12 @@ void allocLotsOfTextures(void) {
             f32 cx = ((f32)j - 64.0f) * 0.015625f;
             f32 d2 = sqrtf(cy * cy + cx * cx);
             u8 v;
-            if (0.5f <= d2) {
-                if (d2 <= 1.0f)
-                    v = (u8)(int)(160.0f * (1.0f - (d2 - 0.5f) / 0.5f));
-                else
-                    v = 0;
-            } else {
+            if (d2 < 0.5f) {
                 v = 0xa0;
+            } else if (d2 > 1.0f) {
+                v = 0;
+            } else {
+                v = (u8)(int)(160.0f * (1.0f - (d2 - 0.5f) / 0.5f));
             }
             *(u8 *)(lbl_803DCF90 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60) = v;
         }
@@ -3614,12 +3613,12 @@ void allocLotsOfTextures(void) {
             f32 cx = ((f32)j - 64.0f) * 0.015625f;
             f32 d2 = sqrtf(cx * cx + cy * cy);
             f32 v;
-            if (d2 < 0.25f || 0.75f < d2) {
+            if (d2 < 0.25f || d2 > 0.75f) {
                 v = 0.0f;
             } else {
                 f32 t = 2.0f * (d2 - 0.25f);
-                if (t <= 0.5f) t = 0.5f - t;
-                else t = t - 0.5f;
+                if (t > 0.5f) t = t - 0.5f;
+                else t = 0.5f - t;
                 v = -(2.0f * t - 1.0f);
                 v = sqrtf(v);
             }
