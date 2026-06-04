@@ -2670,11 +2670,81 @@ void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
 
 extern void spawnExplosion(s16 *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void lightFn_8001d6b0(int p);
-extern void Sfx_PlayFromObject2(int *obj, int sfxId);
 extern f32 lbl_803E47D0, lbl_803E47F4, lbl_803E47F8, lbl_803E47FC;
+extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
+extern f32 lbl_803E4800, lbl_803E4804, lbl_803E4808;
+extern u8 lbl_802C2318[];
+extern void mathFn_80021ac8(void *in, void *out);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern int ObjList_FindObjectById(int id);
+extern u8 *objCreateLight(s16 *obj, int b);
+extern void modelLightStruct_setField50(u8 *light, int value);
+extern void modelLightStruct_setColorsA8AC(u8 *light, int r, int g, int b, int a);
+extern void lightDistAttenFn_8001dc38(u8 *light, f32 a, f32 b);
+extern void fn_8001D730(u8 *light, int p3, int p4, int p5, int p6, int p7, f32 a);
+extern void fn_8001D714(u8 *light, f32 a);
+
+typedef struct {
+    f32 x, y, z;
+} LavaVec;
 
 #pragma scheduling off
 #pragma peephole off
+void lavaball1be_init(s16 *obj, u8 *p) {
+    u8 *state;
+    if (obj[0x23] == 0x1fa) {
+        LavaVec vec;
+        s16 rot[3];
+        vec = *(LavaVec *)lbl_802C2318;
+        rot[2] = 0;
+        rot[1] = (s16)randomGetRange(-0x2ee0, 0x2ee0);
+        rot[0] = (s16)randomGetRange(0, 0xfffe);
+        mathFn_80021ac8(rot, &vec);
+        *(int *)((char *)obj + 0xf4) = 0x4b;
+        *(f32 *)((char *)obj + 0x24) = vec.x;
+        *(f32 *)((char *)obj + 0x28) = vec.y;
+        *(f32 *)((char *)obj + 0x2c) = vec.z;
+        *(f32 *)((char *)obj + 8) = *(f32 *)((char *)obj + 8) * lbl_803E47D4;
+    } else {
+        f32 vy;
+        f32 vxz;
+        int *sub;
+        u8 *light;
+
+        obj[0] = (s16)((s32)*(s8 *)(p + 0x18) << 8);
+        state = *(u8 **)((char *)obj + 0xb8);
+        vy = lbl_803E47D8 * (f32)*(s16 *)(p + 0x1a);
+        vxz = lbl_803E47D8 * (f32)*(s16 *)(p + 0x1c);
+        *(f32 *)(state + 8) = *(f32 *)((char *)obj + 0x10);
+        *(int *)(state + 0xc) = *(int *)(p + 0x14);
+        *(int *)(p + 0x14) = -1;
+        *(f32 *)((char *)obj + 0x24) = vxz * -fn_80293E80(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
+        *(f32 *)((char *)obj + 0x28) = vy;
+        *(f32 *)((char *)obj + 0x2c) = vxz * -sin(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
+        sub = *(int **)((char *)obj + 0x54);
+        if (sub != NULL) {
+            *((u8 *)sub + 0x6a) = 0;
+        }
+        sub = *(int **)((char *)obj + 0x64);
+        if (sub != NULL) {
+            sub[0x30 / 4] |= 0x810;
+        }
+        *(int *)(state + 0) = ObjList_FindObjectById(*(int *)(state + 0xc));
+        state[0x10] |= 0x10;
+        ObjHits_DisableObject(obj);
+        *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+        *(u8 **)(state + 4) = objCreateLight(obj, 1);
+        light = *(u8 **)(state + 4);
+        if (light != NULL) {
+            modelLightStruct_setField50(light, 2);
+            modelLightStruct_setColorsA8AC(*(u8 **)(state + 4), 0xff, 0x80, 0, 0);
+            lightDistAttenFn_8001dc38(*(u8 **)(state + 4), lbl_803E4800, lbl_803E4804);
+            fn_8001D730(*(u8 **)(state + 4), 0, 0xff, 0x80, 0, 0x64, lbl_803E4808);
+            fn_8001D714(*(u8 **)(state + 4), lbl_803E4808);
+        }
+    }
+}
 void lavaball1be_update(s16 *obj) {
     u8 *state;
     int *sub;
