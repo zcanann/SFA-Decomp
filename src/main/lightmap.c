@@ -3100,6 +3100,7 @@ extern int shaderFn_8005e560(int* obj, int* state);
 extern void shaderFn_8005e348(int* obj, int v, int* state, float* p3);
 
 #pragma scheduling off
+#pragma dont_inline on
 void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
 {
     int state[5];
@@ -3135,6 +3136,7 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     state[4] += 4;
     shaderFn_8005e348(obj, newR, state, p3);
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 
 extern void fn_8000F8F8(void);
@@ -3143,6 +3145,7 @@ extern int mapBlockRender_setShader(int p1, int* obj, int* state);
 extern void mapBlockRender_callList(int p1, int p2, int* obj, int v, int* state, float* p3);
 
 #pragma scheduling off
+#pragma dont_inline on
 void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 {
     int state[5];
@@ -3180,6 +3183,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     mapBlockRender_callList(1, 1, obj, newR, state, p3);
     Camera_ApplyFullViewport();
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
@@ -3189,6 +3193,7 @@ extern f32 lbl_80396850[12];
 extern f32 lbl_80396820[12];
 
 #pragma scheduling off
+#pragma dont_inline on
 void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
 {
     int state[5];
@@ -3229,6 +3234,7 @@ void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
     state[4] += 4;
     mapBlockRender_callList(1, 1, obj, newR, state, p3);
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 
 extern void* lbl_803DCEA0;
@@ -3276,6 +3282,125 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
     return NULL;
 }
 #pragma peephole reset
+#pragma scheduling reset
+
+
+typedef struct { u8 r, g, b, a; } GXColor8;
+typedef struct { int a, b, key, d; } DrawQEntry;
+extern u8 framesThisStep;
+extern int *Obj_GetActiveModel(int *obj);
+extern void objShadowFn_80062498(int *obj, int p2, int p3, u8 frames);
+extern void objDrawFn_80061654(int *obj, int *model);
+extern void fn_8000F9B4(void);
+extern void Camera_ApplyFullViewport(void);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
+extern int Camera_GetViewMatrix(void);
+extern int *Obj_GetPlayerObject(void);
+extern int playerIsDisguised(int *obj);
+extern void fn_802B4ED8(int *obj, int a, int b);
+extern void objRenderFuzz(int *obj);
+extern void drawFn_8006f500(void);
+void objDrawFn_8005da48(int *obj);
+void lightmap_sortTransparentDrawQueue(void);
+extern void *gWaterfxInterface;
+extern void objGetColor(int slot, u8 *red, u8 *green, u8 *blue);
+extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
+extern void GXSetChanAmbColor(int chan, GXColor8 *c);
+extern void GXSetNumChans(int n);
+extern void setupToRenderMapBlock(int *block, void *posMtx);
+
+#pragma scheduling off
+void sceneDrawTransparentPolys(void)
+{
+    int *e;
+    int i;
+    int *block;
+    int *player;
+    GXColor8 c4copy, c4;
+    GXColor8 c5copy, c5;
+    GXColor8 c6copy, c6;
+    f32 m[16];
+
+    lightmap_sortTransparentDrawQueue();
+    i = 0;
+    e = (int *)&lbl_8037E0C0;
+    for (; i < lbl_803DCE30; i++) {
+        switch (e[3]) {
+        case 0:
+            expgfx_renderSourcePools(*e, 0);
+            objDrawFn_8005da48((int *)*e);
+            expgfx_renderSourcePools(*e, 1);
+            break;
+        case 1:
+            block = (int *)*e;
+            Obj_GetActiveModel(block);
+            player = Obj_GetPlayerObject();
+            if (block == player) {
+                if (playerIsDisguised(block) == 0) {
+                    fn_802B4ED8(block, 1, 1);
+                }
+            } else {
+                objRenderFuzz(block);
+            }
+            break;
+        case 2:
+            fn_8000F9B4();
+            objShadowFn_80062498((int *)*e, 0, 0, framesThisStep);
+            Camera_ApplyFullViewport();
+            break;
+        case 3:
+            fn_8000F9B4();
+            objDrawFn_80061654((int *)*e, Obj_GetActiveModel((int *)*e));
+            Camera_ApplyFullViewport();
+            break;
+        case 4:
+            block = (int *)e[1];
+            GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+            GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+            objGetColor(0, (u8 *)&c4, (u8 *)&c4 + 1, (u8 *)&c4 + 2);
+            c4copy = c4;
+            GXSetChanAmbColor(0, &c4copy);
+            GXSetNumChans(1);
+            PSMTXConcat((f32 *)Camera_GetViewMatrix(), (f32 *)(block + 3), m);
+            setupToRenderMapBlock(block, m);
+            modelRenderFn_8005d894((int *)*e, (int *)e[1], m);
+            break;
+        case 5:
+            block = (int *)e[1];
+            GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+            GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+            objGetColor(0, (u8 *)&c5, (u8 *)&c5 + 1, (u8 *)&c5 + 2);
+            c5copy = c5;
+            GXSetChanAmbColor(0, &c5copy);
+            GXSetNumChans(1);
+            PSMTXConcat((f32 *)Camera_GetViewMatrix(), (f32 *)(block + 3), m);
+            setupToRenderMapBlock(block, m);
+            modelRenderFn_8005d69c((int *)*e, (int *)e[1], m);
+            break;
+        case 6:
+            block = (int *)e[1];
+            GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+            GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+            objGetColor(0, (u8 *)&c6, (u8 *)&c6 + 1, (u8 *)&c6 + 2);
+            c6copy = c6;
+            GXSetChanAmbColor(0, &c6copy);
+            GXSetNumChans(1);
+            PSMTXConcat((f32 *)Camera_GetViewMatrix(), (f32 *)(block + 3), m);
+            setupToRenderMapBlock(block, m);
+            modelRenderFn_8005d4ec((int *)*e, (int *)e[1], m);
+            break;
+        case 7:
+            drawGlow((uint)*e, e[1]);
+            break;
+        case 8:
+            drawFn_8006f500();
+            break;
+        case 9:
+            (*(void (***)(int, int))gWaterfxInterface)[3](0, 0);
+        }
+        e = e + 4;
+    }
+}
 #pragma scheduling reset
 
 typedef struct {
