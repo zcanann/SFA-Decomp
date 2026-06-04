@@ -1900,7 +1900,8 @@ void *gameTextGetPhrase(int textId, int phraseIndex) {
     return *(void **)(*(int *)((u8 *)entry + 8) + phraseIndex * 4);
 }
 
-void *gameTextGetStr(void) {
+#pragma dont_inline on
+void *gameTextGetStr(int textId) {
     u8 *entry;
     void *t;
 
@@ -1933,6 +1934,7 @@ void *gameTextGetStr(void) {
     }
     return lbl_803DC974;
 }
+#pragma dont_inline reset
 #pragma pop
 
 #pragma push
@@ -16858,7 +16860,7 @@ void fn_80026928(int *obj, int b, int *p3)
 #pragma pop
 
 extern void uiDll_runFrameStartAndLoadNext(void);
-extern void getButtonsJustPressed(int pad);
+extern u32 getButtonsJustPressed(int pad);
 extern void updateEnvironment(int a);
 extern void timeFn_8006f400(f32 dt);
 extern void uiDll_runFrameEndAndLoadNext(void);
@@ -18801,5 +18803,118 @@ void ObjModel_SampleJointTransform(u8 *model, int b, int idx, f32 t, f32 s, f32 
     outPos[0] *= s;
     outPos[1] *= s;
     outPos[2] *= s;
+}
+#pragma pop
+
+extern u8 *gameTextGetBox(int boxId);
+extern int padGetStickX(int pad);
+extern int padGetCX(int pad);
+extern void GXSetCopyFilter(int aa, u8 *samplePattern, int vf, u8 *vfilter);
+extern void VIConfigure(void *rm);
+extern int lbl_803DB428;
+extern int lbl_803DB42C;
+extern void *gameTextGetStr(int textId);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void askProgressiveScanMode(void) {
+    u32 counter;
+    int sel;
+    u8 *box;
+    u8 savedByte;
+    int showId;
+
+    counter = 0;
+    sel = 1;
+    box = gameTextGetBox(0);
+    savedByte = box[0x10];
+    box[0x10] = 0;
+    do {
+        counter++;
+        padUpdate();
+        checkReset();
+        mmFreeTick(0);
+        waitNextFrame();
+        gameTextSetColor(0xc0, 0xc0, 0xc0, 0xff);
+        gameTextShow(0x33f);
+        if ((u8)sel == 1) {
+            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        } else {
+            gameTextSetColor(0x80, 0x80, 0x80, 0x80);
+        }
+        gameTextShowStr((int)gameTextGetStr(0x3cd), 0, lbl_803DB428, 0x64);
+        if ((u8)sel == 1) {
+            gameTextSetColor(0x80, 0x80, 0x80, 0x80);
+        } else {
+            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        }
+        gameTextShowStr((int)gameTextGetStr(0x3cc), 0, lbl_803DB42C, 0x64);
+        gameTextRun();
+        dvdCheckError();
+        doNothing_endOfFrame();
+        GXFlush_(0, 0);
+        if ((s8)padGetStickX(0) < 0 || (s8)padGetCX(0) < 0) {
+            sel = 1;
+        } else if ((s8)padGetStickX(0) > 0 || (s8)padGetCX(0) > 0) {
+            sel = 0;
+        }
+    } while ((getButtonsJustPressed(0) & 0x100) == 0 && counter < 600);
+    box[0x10] = savedByte;
+    waitNextFrame();
+    GXFlush_(0, 0);
+    waitNextFrame();
+    GXFlush_(0, 0);
+    VISetBlack(1);
+    VIFlush();
+    VIWaitForRetrace();
+    VIWaitForRetrace();
+    VIWaitForRetrace();
+    VIWaitForRetrace();
+    if ((u8)sel != 0) {
+        lbl_803DCCF0 = GXNtsc480Prog;
+        OSSetProgressiveMode(1);
+        GXSetCopyFilter(((u8 *)lbl_803DCCF0)[0x19], (u8 *)lbl_803DCCF0 + 0x1a, 0, (u8 *)lbl_803DCCF0 + 0x32);
+        VIConfigure(lbl_803DCCF0);
+        VISetBlack(1);
+        VIFlush();
+        sel = 0x340;
+    } else {
+        lbl_803DCCF0 = GXNtsc480IntDf;
+        OSSetProgressiveMode(0);
+        GXSetCopyFilter(((u8 *)lbl_803DCCF0)[0x19], (u8 *)lbl_803DCCF0 + 0x1a, 1, (u8 *)lbl_803DCCF0 + 0x32);
+        VIConfigure(lbl_803DCCF0);
+        VISetBlack(1);
+        VIFlush();
+        sel = 0x341;
+    }
+    counter = 0;
+    do {
+        VIWaitForRetrace();
+        counter++;
+    } while (counter < 100);
+    VISetBlack(0);
+    VIFlush();
+    VIWaitForRetrace();
+    VIWaitForRetrace();
+    counter = 0;
+    showId = sel;
+    do {
+        counter++;
+        padUpdate();
+        checkReset();
+        mmFreeTick(0);
+        waitNextFrame();
+        if (counter < 0xff) {
+            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        } else {
+            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        }
+        gameTextShow(showId);
+        gameTextRun();
+        dvdCheckError();
+        doNothing_endOfFrame();
+        GXFlush_(0, 0);
+    } while (counter < 0xf0);
 }
 #pragma pop
