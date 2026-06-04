@@ -1072,6 +1072,7 @@ void FUN_801f1d3c(undefined8 param_1,undefined8 param_2,double param_3,undefined
   return;
 }
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_801F20D4(int obj)
@@ -1124,6 +1125,7 @@ void fn_801F20D4(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -1270,6 +1272,7 @@ undefined4 FUN_801f26a8(int param_1,undefined4 param_2,int param_3)
   return 0;
 }
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_801F27E4(int obj)
@@ -1320,6 +1323,7 @@ void fn_801F27E4(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2107,5 +2111,98 @@ int fn_801F2974(int* arg0, int arg1, int* arg2, int arg3)
     }
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int textureLoadAsset(int id);
+extern f32 lbl_803E5D10;
+
+#pragma scheduling off
+#pragma peephole off
+void LaserBeam_free(s16 *obj, char *arg)
+{
+    char *b;
+
+    b = *(char **)((char *)obj + 0xb8);
+    ObjMsg_AllocQueue(obj, 2);
+    *obj = (s16)((s32)*(s8 *)(arg + 0x18) << 8);
+    if (*(s16 *)(arg + 0x1c) == 0) {
+        *(s16 *)(b + 0x30) = (s16)(randomGetRange(-80, 80) + 400);
+    } else {
+        *(s16 *)(b + 0x30) = *(s16 *)(arg + 0x1c);
+    }
+    *(s16 *)(b + 0x2c) = *(s16 *)(b + 0x30);
+    *(u8 *)(b + 0x4d) = 0;
+    *(f32 *)(b + 0x1c) = lbl_803E5D10;
+    *(u8 *)(b + 0x4e) = *(u8 *)(arg + 0x19);
+    *(s16 *)(b + 0x2e) = 0x118;
+    *(s16 *)(b + 0x32) = -1;
+    if (*(u8 *)(b + 0x4e) == 30) {
+        if (*(void **)b == NULL) {
+            *(int *)b = textureLoadAsset(0x3e9);
+        }
+    } else if (*(u8 *)(b + 0x4e) == 1) {
+        if (*(void **)b == NULL) {
+            *(int *)b = textureLoadAsset(0x23d);
+        }
+    } else if (*(void **)b == NULL) {
+        *(int *)b = textureLoadAsset(0xd9);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern ObjHitReactEntry lbl_80328898[];
+void fn_801F2290(int obj);
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_strength_reduction off
+void dll_200_update(int obj)
+{
+    extern void ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, int n);
+    extern u8 framesThisStep;
+    extern f32 lbl_803E5D98;
+    extern f32 lbl_803E5D9C;
+    u8 ev;
+    u8 ret;
+    char *b;
+
+    b = *(char **)(obj + 0xb8);
+    ret = ObjHitReact_Update(obj, lbl_80328898, 11,
+                             (u8)((*(u8 *)(b + 0x22) & 0x80) ? 1 : 0),
+                             (float *)(b + 0x10));
+    if (ret != 0) {
+        *(u8 *)(b + 0x22) = (u8)(*(u8 *)(b + 0x22) | 0x80);
+    } else {
+        *(u8 *)(b + 0x22) = (u8)(*(u8 *)(b + 0x22) & ~0x80);
+        ev = (*gMapEventInterface)->getMode((int)*(s8 *)(obj + 0xac));
+        switch (ev) {
+        case 1:
+            fn_801F27E4(obj);
+            break;
+        case 2:
+            fn_801F2290(obj);
+            break;
+        case 4:
+            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+            if (*(s16 *)(obj + 0xa0) != 2) {
+                ObjAnim_SetCurrentMove(obj, 2, lbl_803E5D98, 0);
+            }
+            ObjAnim_AdvanceCurrentMove(obj, lbl_803E5D9C, (f32)(u32)framesThisStep, 0);
+            break;
+        case 6:
+            fn_801F20D4(obj);
+            break;
+        case 0:
+            return;
+        case 3:
+            return;
+        case 5:
+            return;
+        }
+    }
+}
+#pragma opt_strength_reduction reset
 #pragma peephole reset
 #pragma scheduling reset
