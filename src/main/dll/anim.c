@@ -7411,3 +7411,112 @@ void chuka_update(int obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void DFP_Torch_update(int obj)
+{
+    extern void Sfx_PlayFromObject(int, int);
+    extern void Sfx_StopObjectChannel(int, int);
+    extern void objUpdateOpacity(int);
+    extern int ObjHits_GetPriorityHit(int, int, int, int);
+    extern int Resource_Acquire(int id, int flag);
+    extern void Resource_Release(int);
+    extern uint GameBit_Get(int);
+    extern void GameBit_Set(int, int);
+    extern int *gPartfxInterface;
+    extern int *gModgfxInterface;
+    extern int *gExpgfxInterface;
+    extern u8 lbl_803DDCE8;
+    extern f32 timeDelta;
+    extern f32 lbl_803E63E0;
+    extern int lbl_802C2510[];
+    typedef struct {
+        int m0;
+        int m1;
+        int m2;
+        int m3;
+    } TorchPrm;
+    int blob = *(int *)(obj + 0xb8);
+    int res;
+    int h;
+    int i;
+    f32 buf[5];
+    TorchPrm prm;
+
+    prm = *(TorchPrm *)lbl_802C2510;
+    Sfx_PlayFromObject(obj, 0x72);
+    objUpdateOpacity(obj);
+    switch (*(u8 *)(blob + 9)) {
+    case 0:
+        break;
+    case 1:
+        buf[4] = lbl_803E63E0;
+        *(u8 *)(blob + 0xc) = *(u8 *)(blob + 0xa);
+        if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
+            *(u8 *)(blob + 0xa) = 1 - *(u8 *)(blob + 0xa);
+            if (*(u8 *)(blob + 0xa) != 0) {
+                *(s16 *)(blob + 6) = 0x7d0;
+            }
+        }
+        if (*(u8 *)(blob + 0xa) != 0) {
+            h = *(s16 *)(blob + 6);
+            if (h != 0) {
+                *(s16 *)(blob + 6) = h - (int)timeDelta;
+                if (*(s16 *)(blob + 6) <= 0) {
+                    *(s16 *)(blob + 6) = 0;
+                    *(u8 *)(blob + 0xa) = 0;
+                }
+            }
+        }
+        if (*(u8 *)(blob + 0xa) != 0 && *(s16 *)(blob + 4) <= 0 && *(u8 *)(blob + 0xb) != 0) {
+            *(u8 *)(blob + 0xb) = 0;
+            Sfx_PlayFromObject(obj, 0x80);
+        }
+        if (*(u8 *)(blob + 0xa) != *(u8 *)(blob + 0xc)) {
+            if (*(u8 *)(blob + 0xa) != 0) {
+                res = Resource_Acquire(0x69, 1);
+                prm.m1 = *(u8 *)(blob + 0xd) * 2 + 0x19d;
+                prm.m2 = *(u8 *)(blob + 0xd) * 2 + 0x19e;
+                (*(void (*)(int, int, f32 *, int, int, void *))(*(int *)(*(int *)res + 4)))(obj, 1, buf, 0x10004, -1, &prm);
+                Resource_Release(res);
+                for (i = 0; i < 0x64; i++) {
+                    (**(void (**)(int, int, int, int, int, int))((char *)*gPartfxInterface + 8))(obj, 0x1a3, 0, 0, -1, 0);
+                }
+                if (*(int *)blob != -1) {
+                    if (GameBit_Get(*(int *)blob) == 0) {
+                        GameBit_Set(*(int *)blob, 1);
+                    }
+                }
+                if ((s8)lbl_803DDCE8 == 0 && *(u8 *)(blob + 0xd) == 0 && GameBit_Get(*(int *)blob) != 0) {
+                    lbl_803DDCE8 = 1;
+                }
+                if ((s8)lbl_803DDCE8 == 1 && *(u8 *)(blob + 0xd) == 1 && GameBit_Get(*(int *)blob) != 0) {
+                    GameBit_Set(0x5e2, 1);
+                    lbl_803DDCE8 = 2;
+                }
+                *(u8 *)(blob + 0xb) = 1;
+                *(s16 *)(blob + 4) = 1;
+            } else {
+                Sfx_StopObjectChannel(obj, 0x40);
+                (**(void (**)(int))((char *)*gModgfxInterface + 0x18))(obj);
+                (**(void (**)(int))((char *)*gExpgfxInterface + 0x14))(obj);
+                if (*(int *)blob != -1) {
+                    if (GameBit_Get(*(int *)blob) != 0) {
+                        GameBit_Set(*(int *)blob, 0);
+                    }
+                }
+                if ((s8)lbl_803DDCE8 == 1 && *(u8 *)(blob + 0xd) == 0) {
+                    lbl_803DDCE8 = 0;
+                }
+                if ((s8)lbl_803DDCE8 == 2 && *(u8 *)(blob + 0xd) == 1 && GameBit_Get(0x5e2) == 0) {
+                    GameBit_Set(0x5e2, 0);
+                    lbl_803DDCE8 = 0;
+                }
+            }
+        }
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
