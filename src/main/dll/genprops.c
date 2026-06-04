@@ -6790,18 +6790,27 @@ void shield_update(int *obj)
     } else {
         *(s16 *)((char *)obj + 6) |= 0x4000;
     }
-    for (i = 0; i < 4; i++) {
-        *(s16 *)((char *)state + 0x34 + i * 2) =
-            (s32)((f32)*(s16 *)((char *)state + 0x3c + i * 2) * timeDelta +
-                  (f32)*(s16 *)((char *)state + 0x34 + i * 2));
-        if (*(s16 *)((char *)obj + 0x46) == 2102) {
-            *(f32 *)((char *)state + 0x24 + i * 4) =
-                tbl[8 + i] * (fcos16(*(s16 *)((char *)state + 0x34 + i * 2)) * lbl_803E33EC + lbl_803E33C4);
-            *(f32 *)((char *)state + 0x14 + i * 4) = tbl[12 + i];
-        } else {
-            *(f32 *)((char *)state + 0x24 + i * 4) =
-                tbl[i] * ((lbl_803E33C4 + fcos16(*(s16 *)((char *)state + 0x34 + i * 2))) * lbl_803E33A8);
-            *(f32 *)((char *)state + 0x14 + i * 4) = tbl[4 + i];
+    {
+        s16 *ps = (s16 *)state;
+        f32 *t8 = tbl + 8;
+        f32 *pf = state;
+        f32 *t12 = tbl + 12;
+        f32 *t4 = tbl + 4;
+        for (i = 0; i < 4; i++) {
+            ps[26] = (s32)((f32)ps[30] * timeDelta + (f32)ps[26]);
+            if (*(s16 *)((char *)obj + 0x46) == 2102) {
+                pf[9] = *t8 * (fcos16(ps[26]) * lbl_803E33EC + lbl_803E33C4);
+                pf[5] = *t12;
+            } else {
+                pf[9] = *tbl * ((lbl_803E33C4 + fcos16(ps[26])) * lbl_803E33A8);
+                pf[5] = *t4;
+            }
+            ps++;
+            t8++;
+            pf++;
+            t12++;
+            tbl++;
+            t4++;
         }
     }
 }
