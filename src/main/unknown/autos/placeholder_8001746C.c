@@ -9107,11 +9107,13 @@ int atan2_8002178c(float y, float x) {
     return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
 }
 
-void cacheFn_800229c4(void) {
+#pragma dont_inline on
+void cacheFn_800229c4(int sync) {
     if (lbl_803DD610 == 4 || lbl_803DD610 == 0) {
         LCQueueWait();
     }
 }
+#pragma dont_inline reset
 
 void fn_80026C54(u8 *p) {
     p[0x18] = 0;
@@ -12164,6 +12166,7 @@ int gameBitIncrement(int bit) {
     return val;
 }
 
+#pragma dont_inline on
 void memcpyToCache(void *dst, void *src, u32 count) {
     if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
         int len;
@@ -12178,6 +12181,7 @@ void memcpyToCache(void *dst, void *src, u32 count) {
         LCStoreBlocks(dst, src, count);
     }
 }
+#pragma dont_inline reset
 
 void Obj_FlushDeferredFreeList(void) {
     int i;
@@ -12394,7 +12398,7 @@ void ObjModel_SetBlendChannelTargets(u8 *model, int channel, int a, int b, f32 w
 #pragma scheduling reset
 #pragma peephole reset
 
-extern void modelApplyBoneTransforms(int a, int b, int c, void *d, void *e, int f);
+extern void modelApplyBoneTransforms(int a, int b, u16 c, void *d, void *e, int f);
 extern f32 lbl_803DE818;
 extern f32 lbl_803DE868;
 extern f32 lbl_803DE86C;
@@ -17920,5 +17924,62 @@ void modelInitBoneMtxs2(u8 *m, u8 *out2, u8 *out) {
             out += 0x30;
         }
     }
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void modelApplyBoneTransforms(int a, int b, u16 c, void *d, void *e, int f) {
+    extern u16 lbl_803DB440;
+    extern void modelApplyBoneTransform(void *p, void *out, u16 n, void **pd, void **pe, int f, u16 pos);
+    u16 pos;
+    u16 chunk;
+    u16 words;
+    u16 nextChunk;
+    u16 nextWords;
+    u16 buf;
+    u8 *cache;
+    u16 t;
+    u8 *out;
+    u8 *ptr;
+    int sync;
+
+    cache = getCache();
+    pos = 0;
+    if (c > lbl_803DB440) {
+        chunk = lbl_803DB440;
+    } else {
+        chunk = c;
+    }
+    words = (u32)(chunk * 6 + 0x1f & 0xffe0) >> 5;
+    copyToCache(cache, (void *)a, words);
+    buf = 0;
+    sync = 0;
+    while (c != 0) {
+        c -= chunk;
+        if (c != 0) {
+            if (c > lbl_803DB440) {
+                nextChunk = lbl_803DB440;
+            } else {
+                nextChunk = c;
+            }
+            nextWords = (u32)(nextChunk * 6 + 0x1f & 0xffe0) >> 5;
+            copyToCache(cache + (buf ^ 1) * 0x2000, (u8 *)a + (pos + lbl_803DB440) * 6, nextWords);
+            sync = 1;
+        }
+        cacheFn_800229c4(sync);
+        t = buf;
+        ptr = cache + t * 0x2000;
+        out = ptr + 0x1000;
+        modelApplyBoneTransform(ptr, out, chunk, &d, &e, f, pos);
+        memcpyToCache((u8 *)b + pos * 6, out, words);
+        pos += chunk;
+        sync = 1;
+        buf = t ^ 1;
+        chunk = nextChunk;
+        words = nextWords;
+    }
+    cacheFn_800229c4(0);
 }
 #pragma pop
