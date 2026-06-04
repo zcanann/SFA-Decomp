@@ -1700,6 +1700,100 @@ void fn_8008C9F4(u8 *cfg, u8 flags)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma opt_common_subs on
+void fn_8008D088(int slot)
+{
+    SkySlotAnim *p;
+    f32 dur;
+    f32 zero;
+    f32 len;
+    f32 spd;
+    f32 bv;
+    int i;
+    u16 flags;
+    int flag1;
+
+    p = *(SkySlotAnim **)(&lbl_803DD184 + slot);
+    if (p->t >= (dur = lbl_803DF114)) {
+        p->flags4 &= ~0x100;
+        zero = lbl_803DF108;
+        (*(SkySlotAnim **)(&lbl_803DD184 + slot))->step = zero;
+        (*(SkySlotAnim **)(&lbl_803DD184 + slot))->t = zero;
+        (*(SkySlotAnim **)(&lbl_803DD184 + slot))->prevT = dur;
+        p = *(SkySlotAnim **)(&lbl_803DD184 + slot);
+        if (p->b316 != 0 && (p->flags6 & 0x40) == 0) {
+            p->b316 = 0;
+        }
+        for (i = 0; i < 0x21; i++) {
+            (*(SkySlotAnim **)(&lbl_803DD184 + slot))->cur[i] =
+                (*(SkySlotAnim **)(&lbl_803DD184 + slot))->target[i];
+        }
+        for (i = 0; i < 0x16; i++) {
+            (*(SkySlotAnim **)(&lbl_803DD184 + slot))->cur2[i] =
+                (*(SkySlotAnim **)(&lbl_803DD184 + slot))->target2[i];
+        }
+    } else {
+        if (p->b315 != 0) {
+            len = lbl_803DF11C * ((f32)p->frameCount / lbl_803DF120);
+            if (lbl_803DF108 == len) {
+                len = dur;
+            }
+            p->step = lbl_803DF114 / len;
+            for (i = 0; i < 0x21; i++) {
+                (*(SkySlotAnim **)(&lbl_803DD184 + slot))->vel[i] =
+                    ((*(SkySlotAnim **)(&lbl_803DD184 + slot))->target[i] -
+                     (*(SkySlotAnim **)(&lbl_803DD184 + slot))->cur[i]) /
+                    len;
+            }
+            for (i = 0; i < 0x16; i++) {
+                (*(SkySlotAnim **)(&lbl_803DD184 + slot))->vel2[i] =
+                    ((*(SkySlotAnim **)(&lbl_803DD184 + slot))->target2[i] -
+                     (*(SkySlotAnim **)(&lbl_803DD184 + slot))->cur2[i]) /
+                    len;
+            }
+            (*(SkySlotAnim **)(&lbl_803DD184 + slot))->b315 = 0;
+        }
+        for (i = 0; i < 0x21; i++) {
+            (*(SkySlotAnim **)(&lbl_803DD184 + slot))->cur[i] +=
+                timeDelta * (*(SkySlotAnim **)(&lbl_803DD184 + slot))->vel[i];
+        }
+        for (i = 0; i < 0x16; i++) {
+            (*(SkySlotAnim **)(&lbl_803DD184 + slot))->cur2[i] +=
+                timeDelta * (*(SkySlotAnim **)(&lbl_803DD184 + slot))->vel2[i];
+        }
+        (*(SkySlotAnim **)(&lbl_803DD184 + slot))->t +=
+            timeDelta * (*(SkySlotAnim **)(&lbl_803DD184 + slot))->step;
+        p = *(SkySlotAnim **)(&lbl_803DD184 + slot);
+        flags = p->flags4;
+        flag1 = flags & 1;
+        if (flag1 != 0 && (bv = p->blend) > (zero = lbl_803DF108)) {
+            p->blend = -(lbl_803DF118 * p->t - bv);
+            if ((*(SkySlotAnim **)(&lbl_803DD184 + slot))->blend < zero) {
+                (*(SkySlotAnim **)(&lbl_803DD184 + slot))->blend = zero;
+                lbl_803DB750 = 1;
+            }
+        } else if ((flags & 4) != 0 && p->blend < (spd = lbl_803DF118)) {
+            p->blend = spd * p->t;
+            if ((*(SkySlotAnim **)(&lbl_803DD184 + slot))->blend > spd) {
+                (*(SkySlotAnim **)(&lbl_803DD184 + slot))->blend = spd;
+            }
+        } else if (flag1 == 0 && p->blend < (spd = lbl_803DF118)) {
+            p->blend = spd * p->t;
+            if ((*(SkySlotAnim **)(&lbl_803DD184 + slot))->blend > spd) {
+                (*(SkySlotAnim **)(&lbl_803DD184 + slot))->blend = spd;
+            }
+        }
+        (*(SkySlotAnim **)(&lbl_803DD184 + slot))->prevT =
+            (*(SkySlotAnim **)(&lbl_803DD184 + slot))->t;
+    }
+}
+#pragma opt_common_subs reset
+#pragma scheduling reset
+#pragma peephole reset
+
+
+#pragma peephole off
+#pragma scheduling off
 void fn_8008BDA8(void)
 {
     u8 *tex0;
