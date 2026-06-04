@@ -665,9 +665,6 @@ void explodable_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int lbl_80322DA0[];
-extern f32 lbl_803E435C;
-
 typedef struct {
     int key;
     int objType;
@@ -677,12 +674,15 @@ typedef struct {
     u8 pad[2];
 } GasVentTableEntry;
 
+extern GasVentTableEntry lbl_80322DA0[];
+extern f32 lbl_803E435C;
+
 #pragma scheduling off
 #pragma peephole off
 void explodable_init(int obj, int setup)
 {
     int state = *(int *)(obj + 0xb8);
-    int *tbl;
+    GasVentTableEntry *tbl;
     int base;
     GasVentTableEntry *e;
     u32 c1;
@@ -718,18 +718,18 @@ void explodable_init(int obj, int setup)
     }
     base = 0;
     for (tbl = lbl_80322DA0; base < 16; base++) {
-        if (*(s16 *)(obj + 0x46) == *tbl) {
+        if (*(s16 *)(obj + 0x46) == tbl->key) {
             *(u8 *)(state + 0x6e5) = base;
             break;
         }
-        tbl += 4;
+        tbl++;
     }
     if (*(s8 *)(setup + 0x3d) == 0) {
         *(u8 *)(setup + 0x3d) = 0x14;
     }
     *(f32 *)(obj + 8) =
         *(f32 *)(*(int *)(obj + 0x50) + 4) * (f32)(int)*(s8 *)(setup + 0x3d) / lbl_803E435C;
-    e = (GasVentTableEntry *)lbl_80322DA0;
+    e = lbl_80322DA0;
     if ((e[*(u8 *)(state + 0x6e5)].flags & 1) != 0) {
         *(u16 *)(obj + 0xb0) |= 0x4000;
     }
