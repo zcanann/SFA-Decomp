@@ -41,7 +41,7 @@ extern undefined4 lockLevel();
 extern undefined8 mapUnload();
 extern undefined4 defragMemory();
 extern undefined8 mapLoadDataFile();
-extern undefined4 mapGetDirIdx();
+extern int mapGetDirIdx();
 extern undefined8 loadDataFiles();
 extern undefined4 GXFlush_();
 extern undefined8 waitNextFrame();
@@ -135,6 +135,7 @@ extern char sDIMBossLoadingAssetsForDIMTop[];
 #define DIMBOSS_BONE_PARTICLE_EFFECT_800 0x800
 #define DIMBOSS_BONE_PARTICLE_EFFECT_7FF 0x7FF
 #define DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES 100
+#define DIMBOSS_SPAWN_OBJECT_TIMER 0x3C
 
 typedef void (*DIMbossAnimSetupFn)(DIMbossObject *obj,undefined4 param_2,DIMbossRuntime *runtime,
                                    int param_4,int param_5,int param_6,int param_7,float scale);
@@ -213,7 +214,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
   u8 loadWaitStarted;
   int updateResult;
   int iVar4;
-  undefined4 mapDirIndex;
+  int mapDirIndex;
   uint statusFlags;
   int eventIndex;
   int baddieResult;
@@ -251,7 +252,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
           obj,DIMBOSS_BONE_PARTICLE_EFFECT_7FF,NULL,DIMBOSS_CLEAR_RENDER_PARTICLE_FRAMES,NULL);
       iVar4 = Obj_GetActiveModel((int)obj);
       ObjModel_ClearRenderAttachment(iVar4);
-      Music_Trigger(0x27,1);
+      Music_Trigger(DIMBOSS_MUSIC_LIFT_RUMBLE,1);
       break;
     case DIMBOSS_EVENT_LAUNCH_LIFT:
       runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
@@ -273,7 +274,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       break;
     case DIMBOSS_EVENT_QUEUE_STEAM_SFX:
       topState->steamFlags.bits.sfxPending = 1;
-      Music_Trigger(0xee,0);
+      Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP,0);
       break;
     case DIMBOSS_EVENT_SET_SEQUENCE_FLAG_0040:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAG_0040;
@@ -305,7 +306,8 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       Music_Trigger(DIMBOSS_MUSIC_STEAM_LOOP,0);
       break;
     case DIMBOSS_EVENT_SPAWN_DIMBOSS_OBJECT:
-      DIMboss_GetObjectTriggerInterface()->spawnObject(DIMBOSS_OBJECT_TYPE_ID,4,obj,0x3c);
+      DIMboss_GetObjectTriggerInterface()->spawnObject(DIMBOSS_OBJECT_TYPE_ID,4,obj,
+                                                       DIMBOSS_SPAWN_OBJECT_TIMER);
       break;
     case DIMBOSS_EVENT_FREE_DIMBOSS_ASSETS:
       OSReport(sDIMBossFreeingAssetsForDIMBoss);
