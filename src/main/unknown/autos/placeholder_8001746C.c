@@ -17257,3 +17257,85 @@ void boxDrawFn_8001c5ac(u16 *strPtr, int boxId, u8 *p)
     ((void (*)(void *, f32, f32, int, int, int, int, int))drawScaledTexture)(lbl_803DCA20, (f32)midX, (f32)midY, alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 3);
 }
 #pragma pop
+
+extern int saveGameGetStatus(void);
+extern void gameTextShow(int id);
+extern void gameTextFn_80016810(int id, int a, int b);
+extern void buttonDisable(int pad, int mask);
+extern void cardSetStatusNeedInit(void);
+extern void cardDeleteFn_8007d99c(void);
+extern int lbl_803DCACC;
+extern u8 lbl_803DB424;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void cardShowMessage(void)
+{
+    u32 held;
+    int st;
+    u8 ok;
+
+    st = saveGameGetStatus();
+    ok = 0;
+    if (st < 0xc) {
+        cutsceneEnterExit(1, 1);
+        lbl_803DCA3C = 0xff;
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        if (lbl_803DCACC == 0) {
+            switch (st) {
+            case 1:
+                gameTextShow(0x325);
+                break;
+            case 2:
+                gameTextShow(0x494);
+                break;
+            case 3:
+                gameTextShow(0x496);
+                break;
+            case 4:
+                gameTextShow(0x32c);
+                break;
+            case 5:
+            case 6:
+                gameTextShow(0x326);
+                ok = 1;
+                break;
+            case 9:
+                gameTextShow(0x32a);
+                break;
+            case 10:
+                gameTextShow(0x497);
+                ok = 1;
+                break;
+            case 0xb:
+                gameTextShow(0x4c7);
+                break;
+            }
+        }
+        held = getButtonsHeld(0);
+        if (ok) {
+            gameTextFn_80016810(0x495, 0, 0xc8);
+        } else {
+            gameTextFn_80016810(0x493, 0, 0xc8);
+        }
+        if (held & 0x100) {
+            buttonDisable(0, 0x100);
+            cardSetStatusNeedInit();
+            lbl_803DCA3A = 0;
+            lbl_803DCA3C = 0;
+            Sfx_SetObjectSoundsPaused(0);
+            if (st == 0xa) {
+                cardDeleteFn_8007d99c();
+            }
+        } else if (ok && (held & 0x200)) {
+            buttonDisable(0, 0x200);
+            lbl_803DB424 = 0;
+            lbl_803DCA3A = 0;
+            lbl_803DCA3C = 0;
+            Sfx_SetObjectSoundsPaused(0);
+            cardSetStatusNeedInit();
+        }
+    }
+}
+#pragma pop
