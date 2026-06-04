@@ -280,10 +280,10 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
             }
         }
     }
-    if (isInWalkGroupOrPatch((f32 *)target) == 0) {
-        trickyDebugPrint(strs + 0x2b0);
-    } else {
+    if (isInWalkGroupOrPatch((f32 *)target) != 0) {
         trickyDebugPrint(strs + 0x284);
+    } else {
+        trickyDebugPrint(strs + 0x2b0);
     }
     link = getPatchGroup((f32 *)target, *(u16 *)(state + 0xd0));
     trickyDebugPrint(strs + 0x2e4, link);
@@ -497,17 +497,17 @@ state_selected:
         trickyUpdateApproachSpeed(obj, lbl_803E23DC, state, (f32 *)(state + slot * 0xc + 0xa0), 1);
         moved = trickyMove(obj, state + slot * 0xc + 0xa0);
         break;
-    case 3:
-        trickyDebugPrint(strs + 0x45c);
-        *(f32 *)(state + 0x14) = velBefore;
-        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32 *)(state + 0xd4), 1);
-        moved = trickyMove(obj, state + 0xd4);
-        break;
     case 4:
         trickyDebugPrint(strs + 0x448);
         *(f32 *)(state + 0x14) = velBefore;
         trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32 *)(state + 0xec), 1);
         moved = trickyMove(obj, state + 0xec);
+        break;
+    case 3:
+        trickyDebugPrint(strs + 0x45c);
+        *(f32 *)(state + 0x14) = velBefore;
+        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32 *)(state + 0xd4), 1);
+        moved = trickyMove(obj, state + 0xd4);
         break;
     case 6:
         dist = getXZDistance((f32 *)(*(int *)(state + 0x418) + 8), (f32 *)(obj + 0x18));
@@ -538,7 +538,7 @@ state_selected:
                     }
                     if (diff < 0x4001) {
                         if (diff < -0x4000) {
-                            diff = diff - 0x8000;
+                            diff = diff + 0x8000;
                         }
                     } else {
                         diff = diff - 0x8000;
@@ -775,7 +775,7 @@ state_selected:
                     }
                     if (diff < 0x4001) {
                         if (diff < -0x4000) {
-                            diff = diff - 0x8000;
+                            diff = diff + 0x8000;
                         }
                     } else {
                         diff = diff - 0x8000;
@@ -831,7 +831,7 @@ state_selected:
         }
         if (diff < 0x4001) {
             if (diff < -0x4000) {
-                diff = diff - 0x8000;
+                diff = diff + 0x8000;
             }
         } else {
             diff = diff - 0x8000;
@@ -1013,7 +1013,7 @@ state_selected:
         }
         if (diff < 0x4001) {
             if (diff < -0x4000) {
-                diff = diff - 0x8000;
+                diff = diff + 0x8000;
             }
         } else {
             diff = diff - 0x8000;
@@ -1114,7 +1114,7 @@ state_selected:
         }
         if (diff < 0x4001) {
             if (diff < -0x4000) {
-                diff = diff - 0x8000;
+                diff = diff + 0x8000;
             }
         } else {
             diff = diff - 0x8000;
@@ -1184,8 +1184,8 @@ state_selected:
             ObjHits_SyncObjectPosition(obj);
         }
     }
-    type = *(u8 *)(state + 9);
-    if (((((type == 0) || (type == 2)) || (type == 4)) || (type == 3)) &&
+    step = *(u8 *)(state + 9);
+    if (((((step == 0) || (step == 2)) || (step == 4)) || (step == 3)) &&
         (lbl_803E23DC == *(f32 *)(state + 0x14))) {
         return 2;
     }
