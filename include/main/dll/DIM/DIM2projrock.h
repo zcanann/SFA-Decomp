@@ -8,8 +8,7 @@ extern ObjectDescriptor gDIM2IceFloeObjDescriptor;
 extern ObjectDescriptor gDIM2IcicleObjDescriptor;
 extern ObjectDescriptor12 gDIM2LavaControlObjDescriptor;
 
-void dll_1DA_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void dll_1DA_update(int obj);
 void FUN_801b8c60(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801b8c88(uint param_1);
 void FUN_801b8d0c(int *param_1);
@@ -40,8 +39,8 @@ int dim2icefloe_getObjectTypeId(void);
 void dim2icefloe_free(void);
 void dim2icefloe_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dim2icefloe_hitDetect(void);
-void dim2icefloe_update(void);
-void dim2icefloe_init(void);
+void dim2icefloe_update(int obj);
+void dim2icefloe_init(int obj, int p);
 void dim2icefloe_release(void);
 void dim2icefloe_initialise(void);
 
@@ -50,7 +49,7 @@ int dim2icicle_getObjectTypeId(void);
 void dim2icicle_free(void);
 void dim2icicle_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dim2icicle_hitDetect(void);
-void dim2icicle_update(void);
+void dim2icicle_update(int obj);
 void dim2icicle_init(int obj, s8 *p);
 void dim2icicle_release(void);
 void dim2icicle_initialise(void);
