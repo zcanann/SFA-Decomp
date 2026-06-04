@@ -811,7 +811,6 @@ extern f32 lbl_803E2010;
 extern f64 lbl_803E1E88;
 extern void gxColorFn_80052764(void *p);
 
-#pragma peephole off
 #pragma scheduling off
 int cMenuRenderFn_80124854(int obj, int param2, int param3)
 {
@@ -825,7 +824,8 @@ int cMenuRenderFn_80124854(int obj, int param2, int param3)
         if (lbl_803A93A8[idx] != 0) {
             cfg[3] = *(u8 *)(obj + 0x37);
         } else {
-            cfg[3] = (int)(lbl_803E2010 * (f32)(u32)*(u8 *)(obj + 0x37));
+            int v = (int)(lbl_803E2010 * (f32)(u32)*(u8 *)(obj + 0x37));
+            cfg[3] = v;
         }
         gxFn_80051fb8(tex, 0, 0, cfg, 0, 1);
     } else {
@@ -839,7 +839,6 @@ int cMenuRenderFn_80124854(int obj, int param2, int param3)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     return 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern int Camera_GetCurrentViewSlot(void);
