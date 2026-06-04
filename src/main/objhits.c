@@ -906,9 +906,9 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius, float axial, fl
                                               float tipRadius, float length, float *point,
                                               float *base, float *tip, float *out)
 {
-    float invHalfLength;
-    float dir[3];
-    float surface[3];
+    float invLength;
+    float axisDir[3];
+    float surfacePoint[3];
 
     if (axial < gObjHitsScalarZero) {
         out[0] = point[0] - base[0];
@@ -938,25 +938,25 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius, float axial, fl
         out[2] = out[2] + tip[2];
         return out;
     }
-    dir[0] = tip[0] - base[0];
-    dir[1] = tip[1] - base[1];
-    dir[2] = tip[2] - base[2];
-    invHalfLength = gObjHitsScalarOne / length;
-    dir[0] = dir[0] * invHalfLength;
-    dir[1] = dir[1] * invHalfLength;
-    dir[2] = dir[2] * invHalfLength;
-    Vec3_ScaleAdd(axial, base, dir, surface);
-    out[0] = point[0] - surface[0];
+    axisDir[0] = tip[0] - base[0];
+    axisDir[1] = tip[1] - base[1];
+    axisDir[2] = tip[2] - base[2];
+    invLength = gObjHitsScalarOne / length;
+    axisDir[0] = axisDir[0] * invLength;
+    axisDir[1] = axisDir[1] * invLength;
+    axisDir[2] = axisDir[2] * invLength;
+    Vec3_ScaleAdd(axial, base, axisDir, surfacePoint);
+    out[0] = point[0] - surfacePoint[0];
     out[1] = gObjHitsScalarZero;
-    out[2] = point[2] - surface[2];
+    out[2] = point[2] - surfacePoint[2];
     Vec3_Normalize(out);
     pointRadius = (tipRadius - baseRadius) * (axial / length) + (baseRadius + pointRadius);
     out[0] = out[0] * pointRadius;
     out[1] = out[1] * pointRadius;
     out[2] = out[2] * pointRadius;
-    out[0] = out[0] + surface[0];
-    out[1] = out[1] + surface[1];
-    out[2] = out[2] + surface[2];
+    out[0] = out[0] + surfacePoint[0];
+    out[1] = out[1] + surfacePoint[1];
+    out[2] = out[2] + surfacePoint[2];
     return out;
 }
 #pragma scheduling reset
@@ -979,9 +979,9 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float pointRadius, float axial, fl
                                               float tipRadius, float length, float *point,
                                               float *base, float *tip, float *out)
 {
-    float invHalfLength;
-    float dir[3];
-    float surface[3];
+    float invLength;
+    float axisDir[3];
+    float surfacePoint[3];
 
     if (axial < gObjHitsScalarZero) {
         out[0] = point[0] - base[0];
@@ -1011,26 +1011,26 @@ float *ObjHits_ProjectPointToTaperedCapsule3D(float pointRadius, float axial, fl
         out[2] = out[2] + tip[2];
         return out;
     }
-    dir[0] = tip[0] - base[0];
-    dir[1] = tip[1] - base[1];
-    dir[2] = tip[2] - base[2];
-    invHalfLength = gObjHitsScalarOne / length;
-    dir[0] = dir[0] * invHalfLength;
-    dir[1] = dir[1] * invHalfLength;
-    dir[2] = dir[2] * invHalfLength;
-    Vec3_ScaleAdd(axial, base, dir, surface);
-    out[0] = point[0] - surface[0];
-    out[1] = point[1] - surface[1];
-    out[2] = point[2] - surface[2];
+    axisDir[0] = tip[0] - base[0];
+    axisDir[1] = tip[1] - base[1];
+    axisDir[2] = tip[2] - base[2];
+    invLength = gObjHitsScalarOne / length;
+    axisDir[0] = axisDir[0] * invLength;
+    axisDir[1] = axisDir[1] * invLength;
+    axisDir[2] = axisDir[2] * invLength;
+    Vec3_ScaleAdd(axial, base, axisDir, surfacePoint);
+    out[0] = point[0] - surfacePoint[0];
+    out[1] = point[1] - surfacePoint[1];
+    out[2] = point[2] - surfacePoint[2];
     Vec3_Normalize(out);
-    invHalfLength = (tipRadius - baseRadius) * (axial / length);
-    pointRadius = invHalfLength + (baseRadius + pointRadius);
+    invLength = (tipRadius - baseRadius) * (axial / length);
+    pointRadius = invLength + (baseRadius + pointRadius);
     out[0] = out[0] * pointRadius;
     out[1] = out[1] * pointRadius;
     out[2] = out[2] * pointRadius;
-    out[0] = out[0] + surface[0];
-    out[1] = out[1] + surface[1];
-    out[2] = out[2] + surface[2];
+    out[0] = out[0] + surfacePoint[0];
+    out[1] = out[1] + surfacePoint[1];
+    out[2] = out[2] + surfacePoint[2];
     return out;
 }
 #pragma scheduling reset
