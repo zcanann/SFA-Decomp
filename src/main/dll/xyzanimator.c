@@ -391,6 +391,7 @@ int FUN_8016a534(double param_1,double param_2,float *param_3,float *param_4,cha
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void fn_8016A660(int obj)
 {
   extern u8 Obj_IsLoadingLocked(void);
@@ -439,6 +440,7 @@ void fn_8016A660(int obj)
     extra->fragmentSpawnTimer = POLLEN_FRAGMENT_SPAWN_TIMER_FRAMES;
   }
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1229,11 +1231,11 @@ extern void kaldachompspit_update(void);
 extern int kaldachompspit_getObjectTypeId(void);
 extern int kaldachompspit_getExtraSize(void);
 extern void pinponspike_free(int obj);
-extern void pinponspike_update(void);
+extern void pinponspike_update(int obj);
 extern void pinponspike_init(int obj);
 extern void pollen_free(int obj);
 extern void pollen_hitDetect(int obj);
-extern void pollen_update(void);
+extern void pollen_update(int obj);
 extern void pollen_init(int *obj);
 
 ObjectDescriptor gKaldaChompSpitObjDescriptor = {
@@ -1356,8 +1358,8 @@ PollenFragmentConfig *lbl_8032059C[] = {
 };
 
 extern void pollenfragment_free(int obj);
-extern void pollenfragment_hitDetect(void);
-extern void pollenfragment_update(void);
+extern void pollenfragment_hitDetect(int obj);
+extern void pollenfragment_update(int obj);
 extern int fn_80080150(int p);
 extern void objRenderFn_8003b8f4(f32 f);
 extern f32 lbl_803E3158;
@@ -1410,6 +1412,346 @@ void pollen_init(int *obj) {
         if (p != NULL) {
             *(int *)((char *)p + 0x30) = *(int *)((char *)p + 0x30) | 0x810;
         }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* ==== v1.0 recovered functions (drift additions) ==== */
+
+typedef struct {
+    s16 unk00;         /* 0x00 */
+    s16 loopSfx;       /* 0x02 */
+    s16 explodeSfx;    /* 0x04 */
+    s16 unk06;         /* 0x06 */
+    s16 burstFx;       /* 0x08 */
+    s16 auraFx;        /* 0x0A */
+    s16 unk0C;         /* 0x0C */
+    s16 unk0E;         /* 0x0E */
+    s16 targetGroup;   /* 0x10 */
+    u8 noVertical : 1; /* 0x12 bit 7 */
+    u8 timed : 1;      /* 0x12 bit 6 */
+    u8 smoothTurn : 1; /* 0x12 bit 5 */
+    u8 usePath : 1;    /* 0x12 bit 4 */
+} PollenFragmentDef;
+
+typedef struct {
+    f32 x, y, z;
+} XyzVec;
+
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 lbl_803DBD48;
+extern f32 lbl_803DBD4C;
+extern f32 lbl_803E3110;
+extern f32 lbl_803E3114;
+extern f32 lbl_803E3118;
+extern f32 lbl_803E311C;
+extern f32 lbl_803E3120;
+extern f32 lbl_803E3124;
+extern f32 lbl_803E3128;
+extern f32 lbl_803E312C;
+extern f64 lbl_803E3130;
+extern f32 lbl_803E3140;
+extern f32 lbl_803E315C;
+extern f32 lbl_803E3160;
+extern f32 lbl_803E3164;
+extern f32 lbl_803E3168;
+extern f32 lbl_803E316C;
+extern f32 lbl_803E3170;
+extern f32 lbl_803E3174;
+extern f32 lbl_803E3178;
+extern f32 lbl_803E317C;
+extern f32 lbl_803E3180;
+extern f64 lbl_803E3188;
+extern f64 lbl_803E3190;
+extern f32 sqrtf(f32 x);
+extern int getAngle(f32 a, f32 b);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern void *Obj_GetPlayerObject(void);
+extern void *getTrickyObject(void);
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern int getCurSeqNo(void);
+extern int timerCountDown(int timer);
+extern void spawnExplosion(f32 scale, int obj, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void Obj_SmoothTurnAnglesTowardVelocity(int obj, void *vel, int rate, f32 a, f32 b);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
+extern void PSVECSubtract(void *a, void *b, void *out);
+extern f32 PSVECMag(void *v);
+extern void PSVECNormalize(void *src, void *dst);
+extern void PSVECScale(void *src, void *dst, f32 scale);
+extern void PSVECAdd(void *a, void *b, void *out);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80169EF4(f32 speed, f32 grav, f32 *from, f32 *to, u8 flag) {
+    f32 dist;
+    f32 a;
+    f32 dy;
+    f32 t;
+    f32 disc;
+
+    dist = sqrtf((from[0] - to[0]) * (from[0] - to[0]) + (from[2] - to[2]) * (from[2] - to[2]));
+    dy = from[1] - to[1];
+    dist = dist * lbl_803E3110;
+    a = (lbl_803E3114 * grav) * grav;
+    speed = speed * speed;
+    grav = -(grav * dy) - speed;
+    disc = grav * grav - (lbl_803E3118 * a) * (dy * dy + dist * dist);
+    if (disc >= lbl_803E311C) {
+        if (flag) {
+            t = (lbl_803E3120 * (-grav + sqrtf(disc))) / a;
+        } else {
+            t = (lbl_803E3120 * (-grav - sqrtf(disc))) / a;
+        }
+        t = sqrtf(t);
+        a = dist / t;
+        return getAngle(sqrtf(-(a * a - speed)), a);
+    }
+    return 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void pinponspike_update(int obj) {
+    f32 vx;
+    f32 vy;
+    f32 vz;
+
+    if (*(int *)(obj + 0xf4) > 0) {
+        *(int *)(obj + 0xf4) = (int)((f32)*(int *)(obj + 0xf4) - timeDelta);
+        if (*(int *)(obj + 0xf4) < 1) {
+            Obj_FreeObject(obj);
+            return;
+        }
+    }
+    if (*(u8 *)(obj + 0x36) != 0) {
+        vx = *(f32 *)(obj + 0x24) * timeDelta;
+        vy = *(f32 *)(obj + 0x28) * timeDelta;
+        vz = *(f32 *)(obj + 0x2c) * timeDelta;
+        objMove(obj, vx, vy, vz);
+        *(f32 *)(obj + 0x28) += lbl_803E3124 * timeDelta;
+        if (*(f32 *)(obj + 0x28) < lbl_803E3128) {
+            *(f32 *)(obj + 0x28) = lbl_803E3128;
+        }
+        *(s16 *)(obj + 0) = getAngle(vx, vz) - 0x8000;
+        *(s16 *)(obj + 2) = 0x4000 - getAngle(sqrtf(vx * vx + vz * vz), vy);
+        ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
+        ObjHits_EnableObject(obj);
+        if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL &&
+            (*(void **)(*(int *)(obj + 0x54) + 0x50) == Obj_GetPlayerObject() ||
+             *(void **)(*(int *)(obj + 0x54) + 0x50) == getTrickyObject())) {
+            int i;
+            *(u8 *)(obj + 0x36) = 0;
+            *(int *)(obj + 0xf4) = 0x78;
+            *(s16 *)(*(int *)(obj + 0x54) + 0x60) = *(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+            for (i = 0; i < 0x19; i++) {
+                (*(void (*)(int, int, int, int, int, int *))*(int *)(*gPartfxInterface + 8))(obj, 0x715, 0, 1, -1, &i);
+            }
+            Sfx_PlayFromObject(obj, 0x279);
+        } else if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0) {
+            int i;
+            *(u8 *)(obj + 0x36) = 0;
+            *(int *)(obj + 0xf4) = 0x78;
+            *(s16 *)(*(int *)(obj + 0x54) + 0x60) = *(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~1;
+            for (i = 0; i < 0x19; i++) {
+                (*(void (*)(int, int, int, int, int, int *))*(int *)(*gPartfxInterface + 8))(obj, 0x715, 0, 1, -1, &i);
+            }
+            Sfx_PlayFromObject(obj, 0x279);
+        } else if (*(f32 *)(obj + 0x10) < lbl_803E312C) {
+            Obj_FreeObject(obj);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void pollen_update(int obj) {
+    s16 *extra;
+    int i;
+
+    extra = *(s16 **)(obj + 0xb8);
+    if (*(s16 *)((u8 *)extra + 0x12) != 0) {
+        *(s16 *)((u8 *)extra + 0x12) -= 1;
+    } else {
+        f32 prev = *(f32 *)(obj + 0x28);
+        *(f32 *)(obj + 0x28) = -(lbl_803E3140 * timeDelta - prev);
+        if (prev >= lbl_803E313C && *(f32 *)(obj + 0x28) <= lbl_803E313C) {
+            fn_8016A660(obj);
+            Sfx_PlayFromObject(obj, 0xb7);
+            *(u8 *)(obj + 0x36) = 0;
+        }
+        objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
+        ObjHits_SetHitVolumeSlot(obj, 0x16, 1, 0);
+        ObjHitbox_SetSphereRadius(obj, 7);
+        ObjHits_EnableObject(obj);
+        if (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL &&
+            (*(void **)(*(int *)(obj + 0x54) + 0x50) == Obj_GetPlayerObject() ||
+             *(void **)(*(int *)(obj + 0x54) + 0x50) == getTrickyObject())) {
+            Camera_EnableViewYOffset();
+            CameraShake_SetAllMagnitudes(lbl_803E3138);
+            Sfx_PlayFromObject(obj, 0xb6);
+            *(u8 *)(obj + 0x36) = 0;
+            *(s16 *)((u8 *)extra + 0x12) = 0x3c;
+            ObjHits_DisableObject(obj);
+        }
+        if (*(u8 *)(obj + 0x36) == 0xff) {
+            i = 2;
+            do {
+                (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x4ba, 0, 1, -1, 0);
+            } while (i-- != 0);
+        }
+    }
+    if (*(u8 *)(obj + 0x36) == 0 && *(s16 *)((u8 *)extra + 0x12) == 0) {
+        Obj_FreeObject(obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void pollenfragment_hitDetect(int obj) {
+    u8 *extra;
+    int hit;
+    u8 buf[16];
+
+    extra = *(u8 **)(obj + 0xb8);
+    if (fn_80080150((int)(extra + 0x20)) == 0) {
+        hit = ObjHits_GetPriorityHit(obj, buf, 0, 0);
+        if (hit == 0xe || hit == 0xf) {
+            if ((*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx != -1) {
+                spawnExplosion(lbl_803E315C, obj, 0, 1, 0, 1, 0, 1, 0);
+                Sfx_PlayFromObjectLimited(obj, (u16)(*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx, 3);
+            }
+            ObjHits_DisableObject(obj);
+            s16toFloat(extra + 0x20, 0x78);
+        }
+        if (*(s8 *)(*(int *)(obj + 0x54) + 0xad) != 0) {
+            ObjHits_DisableObject(obj);
+            *(f32 *)(extra + 8) = lbl_803E3160;
+            if ((*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx != -1) {
+                spawnExplosion(lbl_803E315C, obj, 0, 1, 0, 1, 0, 1, 0);
+                Sfx_PlayFromObjectLimited(obj, (u16)(*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx, 3);
+            }
+            s16toFloat(extra + 0x20, 0x78);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void pollenfragment_update(int obj) {
+    u8 *extra;
+    int near;
+    void *hit;
+    int i;
+    XyzVec pos;
+    XyzVec sc;
+    XyzVec dir;
+
+    extra = *(u8 **)(obj + 0xb8);
+    if (getCurSeqNo() != 0) {
+        Obj_FreeObject(obj);
+        return;
+    }
+    if (fn_80080150((int)(extra + 0x20)) != 0) {
+        if (timerCountDown((int)(extra + 0x20)) != 0) {
+            Obj_FreeObject(obj);
+        }
+        return;
+    }
+    if (timerCountDown((int)(extra + 0x24)) != 0) {
+        s16toFloat(extra + 0x20, 0x78);
+    }
+    if (*(void **)(obj + 0xc4) != NULL) {
+        *(int *)extra = *(int *)(obj + 0xc4);
+        *(int *)(obj + 0xc4) = 0;
+    }
+    if ((*(PollenFragmentDef **)(extra + 0x1c))->timed) {
+        *(f32 *)(extra + 8) -= timeDelta;
+        if (*(f32 *)(extra + 8) <= lbl_803E3160) {
+            if (*(u8 *)(obj + 0x36) == 0xff) {
+                i = 2;
+                do {
+                    (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, (int)(*(PollenFragmentDef **)(extra + 0x1c))->burstFx, 0, 1, -1, 0);
+                } while (i-- != 0);
+            }
+            *(f32 *)(extra + 8) = lbl_803E3160;
+            if (*(u8 *)(obj + 0x36) >= framesThisStep << 3) {
+                *(u8 *)(obj + 0x36) = *(u8 *)(obj + 0x36) - (framesThisStep << 3);
+            } else {
+                *(u8 *)(obj + 0x36) = 0;
+                Obj_FreeObject(obj);
+                return;
+            }
+        }
+    }
+    if ((*(PollenFragmentDef **)(extra + 0x1c))->auraFx != -1) {
+        (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, (int)(*(PollenFragmentDef **)(extra + 0x1c))->auraFx, 0, 1, -1, 0);
+    }
+    near = ObjGroup_FindNearestObject((int)(*(PollenFragmentDef **)(extra + 0x1c))->targetGroup, obj, 0);
+    if (near != 0 &&
+        (!(*(PollenFragmentDef **)(extra + 0x1c))->timed || *(f32 *)(extra + 8) < lbl_803E3164)) {
+        if ((*(PollenFragmentDef **)(extra + 0x1c))->usePath) {
+            ObjPath_GetPointWorldPosition(near, 0, &pos.x, &pos.y, &pos.z, 0);
+        } else {
+            pos.x = *(f32 *)(near + 0x18);
+            pos.y = *(f32 *)(near + 0xa8) * *(f32 *)(near + 8) * lbl_803E3168 + *(f32 *)(near + 0x1c);
+            pos.z = *(f32 *)(near + 0x20);
+        }
+        PSVECSubtract(&pos, (void *)(obj + 0x18), &dir);
+        PSVECMag(&dir);
+        PSVECNormalize(&dir, &dir);
+        PSVECSubtract(&dir, extra + 0xc, &sc);
+        *(f32 *)(extra + 0xc) = dir.x;
+        *(f32 *)(extra + 0x10) = dir.y;
+        *(f32 *)(extra + 0x14) = dir.z;
+        PSVECScale(&sc, &sc, lbl_803E315C);
+        PSVECAdd(&dir, &sc, &dir);
+        *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) +
+            ((lbl_803E315C + *(f32 *)(extra + 8)) * (dir.x * *(f32 *)(extra + 4))) / lbl_803E3164;
+        *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) +
+            ((lbl_803E315C + *(f32 *)(extra + 8)) * (dir.z * *(f32 *)(extra + 4))) / lbl_803E3164;
+        if (!(*(PollenFragmentDef **)(extra + 0x1c))->noVertical) {
+            *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) +
+                ((lbl_803E315C + *(f32 *)(extra + 8)) * (lbl_803E316C * (dir.y * *(f32 *)(extra + 4)))) / lbl_803E3164;
+        }
+    }
+    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * lbl_803E3170;
+    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) * lbl_803E3170;
+    *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) * lbl_803E3174;
+    if ((*(PollenFragmentDef **)(extra + 0x1c))->noVertical) {
+        *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) -
+            (lbl_803E3178 * timeDelta * *(f32 *)(extra + 8)) / lbl_803E317C;
+    }
+    if ((*(PollenFragmentDef **)(extra + 0x1c))->smoothTurn) {
+        Obj_SmoothTurnAnglesTowardVelocity(obj, (void *)(obj + 0x24), 10, lbl_803E3160, lbl_803E3158);
+        *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + framesThisStep * 0x500;
+    } else if (*(s16 *)(obj + 0x46) == 0x482) {
+        *(s16 *)(obj + 0) = (s16)(int)(lbl_803E3180 * lbl_803DBD48 * (f32)(u32)framesThisStep + (f32)(int)*(s16 *)(obj + 0));
+        *(s16 *)(obj + 2) = (s16)(int)(lbl_803DBD4C * (f32)(u32)framesThisStep + (f32)(int)*(s16 *)(obj + 2));
+    }
+    Sfx_KeepAliveLoopedObjectSound(obj, (u16)(*(PollenFragmentDef **)(extra + 0x1c))->loopSfx);
+    objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
+    ObjHits_SetHitVolumeSlot(obj, 0x16, 1, 0);
+    ObjHits_EnableObject(obj);
+    hit = *(void **)(*(int *)(obj + 0x54) + 0x50);
+    if (hit != NULL && *(s16 *)((u8 *)hit + 0x46) != *(s16 *)(obj + 0x46) && hit != *(void **)extra) {
+        *(f32 *)(extra + 8) = lbl_803E3160;
+        ObjHits_DisableObject(obj);
+        if ((*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx != -1) {
+            spawnExplosion(lbl_803E315C, obj, 0, 1, 0, 1, 0, 1, 0);
+            Sfx_PlayFromObjectLimited(obj, (u16)(*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx, 3);
+        }
+        s16toFloat(extra + 0x20, 0x78);
     }
 }
 #pragma peephole reset
