@@ -13952,3 +13952,159 @@ void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int 
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern void *lbl_8033BE40[];
+extern int lbl_803DB3EC;
+extern void *lbl_803DCA24;
+extern void *lbl_803DCA28;
+extern u32 lbl_803DE740;
+extern u8 *gameTextGetCurBox(void);
+extern void gameTextFn_8001628c(int id, int a, int b, int *x0, int *x1, int *y0, int *y1);
+extern void gameTextBoxFn_800164b0(int id, int idx, int *x0, int *x1, int *y0, int *y1);
+extern void drawTexture(f32 x, f32 y, void *tex, int alpha, int scale);
+extern void drawScaledTexture(f32 x, f32 y, void *tex, int alpha, int scale, int w, int h, int flag);
+extern void drawPartialTexture(f32 x, f32 y, void *tex, int alpha, int scale, int w, int h, int part, int flag);
+extern void drawHudBox(int x, int y, int w, int h, int alpha, int flag);
+extern void boxDrawFn_8001c5ac(void);
+
+#pragma push
+#pragma scheduling off
+#pragma dont_inline on
+void gameTextDrawBox(u16 *strPtr, int boxId, u8 *box) {
+    u32 colorB;
+    u32 colorA;
+    int c6y1;
+    int c6y0;
+    int c6x1;
+    int c6x0;
+    int c3y1;
+    int c3y0;
+    int c3x1;
+    int c3x0;
+    s16 savedX;
+    s16 savedY;
+    u16 f;
+    u8 *cur;
+    int hw;
+    int hh;
+    int cx;
+    int cy;
+    u16 h7;
+    u16 w7;
+    s16 y7;
+    s16 x7;
+    s16 x2;
+    int w2;
+    int xw;
+    s16 y2;
+    int half;
+    int rem;
+
+    savedX = *(s16 *)(box + 0x18);
+    savedY = *(s16 *)(box + 0x1a);
+    f = *(u16 *)(box + 0x1c);
+    if (f & 1) {
+        return;
+    }
+    *(u16 *)(box + 0x1c) = f | 1;
+    switch (*(u8 *)(box + 0x13)) {
+    case 5:
+        return;
+    case 7:
+        if ((int)getCurGameText() == 3) {
+            colorB = lbl_803DE740;
+            hudDrawRect(*(s16 *)(box + 0x14), *(s16 *)(box + 0x16),
+                        *(s16 *)(box + 0x14) + *(u16 *)(box + 8),
+                        *(s16 *)(box + 0x16) + *(u16 *)(box + 0xa), &colorB);
+        } else {
+            h7 = *(u16 *)(box + 0xa);
+            w7 = *(u16 *)(box + 8);
+            y7 = *(s16 *)(box + 0x16);
+            x7 = *(s16 *)(box + 0x14);
+            GXSetScissor(0, 0, 0x280, 0x1e0);
+            drawHudBox(x7, y7, (s16)w7, (s16)h7, 0xff, 1);
+        }
+        break;
+    case 1:
+        colorA = lbl_803DE740;
+        hudDrawRect(*(s16 *)(box + 0x14), *(s16 *)(box + 0x16),
+                    *(s16 *)(box + 0x14) + *(u16 *)(box + 8),
+                    *(s16 *)(box + 0x16) + *(u16 *)(box + 0xa), &colorA);
+        break;
+    case 6:
+        if (strPtr == NULL) {
+            return;
+        }
+        cur = gameTextGetCurBox();
+        if (strPtr != NULL) {
+            gameTextFn_8001628c(*strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
+        } else if (boxId != 0) {
+            gameTextBoxFn_800164b0(boxId, (int)(box - lbl_802C7400) / 0x20, &c6x0, &c6x1, &c6y0, &c6y1);
+        }
+        gameTextFn_80017434(cur);
+        hw = (c6x1 - c6x0) >> 1;
+        hh = (c6y1 - c6y0) >> 1;
+        cx = c6x0 + hw;
+        cy = c6y0 + hh;
+        drawScaledTexture((f32)(c6x0 - lbl_803DB3EC), (f32)(c6y0 - lbl_803DB3EC), lbl_803DCA24, 0xff, 0x100,
+                          hw + lbl_803DB3EC, hh + lbl_803DB3EC, 0);
+        drawScaledTexture((f32)cx, (f32)(c6y0 - lbl_803DB3EC), lbl_803DCA24, 0xff, 0x100,
+                          hw + lbl_803DB3EC, hh + lbl_803DB3EC, 1);
+        drawScaledTexture((f32)(c6x0 - lbl_803DB3EC), (f32)cy, lbl_803DCA24, 0xff, 0x100,
+                          hw + lbl_803DB3EC, hh + lbl_803DB3EC, 2);
+        drawScaledTexture((f32)cx, (f32)cy, lbl_803DCA24, 0xff, 0x100,
+                          hw + lbl_803DB3EC, hh + lbl_803DB3EC, 3);
+        break;
+    case 0:
+        drawScaledTexture((f32)*(s16 *)(box + 0x14), (f32)*(s16 *)(box + 0x16), lbl_803DCA28, 0xff, 0x100,
+                          *(u16 *)(box + 8), *(u16 *)(box + 0xa), 0);
+        break;
+    case 3:
+        cur = gameTextGetCurBox();
+        if (strPtr != NULL) {
+            gameTextFn_8001628c(*strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
+        } else if (boxId != 0) {
+            gameTextBoxFn_800164b0(boxId, (int)(box - lbl_802C7400) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
+        }
+        gameTextFn_80017434(cur);
+        drawTexture((f32)(c3x0 - 0x16), (f32)(c3y0 - 9), lbl_8033BE40[5], *(u8 *)(box + 0x1e), 0x100);
+        drawScaledTexture((f32)c3x0, (f32)(c3y0 - 9), lbl_8033BE40[6], *(u8 *)(box + 0x1e), 0x100,
+                          c3x1 - c3x0, 0x24, 0);
+        drawTexture((f32)c3x1, (f32)(c3y0 - 9), lbl_8033BE40[7], *(u8 *)(box + 0x1e), 0x100);
+        break;
+    case 2:
+        x2 = *(s16 *)(box + 0x14);
+        w2 = *(u16 *)(box + 8);
+        xw = x2 + w2;
+        y2 = *(s16 *)(box + 0x16);
+        half = w2 >> 1;
+        if (half > 0xc) {
+            half = 0xc;
+        }
+        rem = w2 - half * 2;
+        if (rem < 0) {
+            rem = 0;
+        }
+        GXSetScissor(0, 0, 0x280, 0x1e0);
+        drawTexture((f32)(x2 - 0x34), (f32)(y2 - 0x23), lbl_8033BE40[0], *(u8 *)(box + 0x1e), 0x100);
+        drawTexture((f32)xw, (f32)(y2 - 0x23), lbl_8033BE40[4], *(u8 *)(box + 0x1e), 0x100);
+        if (half != 0) {
+            drawScaledTexture((f32)x2, (f32)(y2 - 0x13), lbl_8033BE40[1], *(u8 *)(box + 0x1e), 0x100,
+                              half, 0x3a, 0);
+            drawPartialTexture((f32)(xw - half), (f32)(y2 - 0x13), lbl_8033BE40[3], *(u8 *)(box + 0x1e), 0x100,
+                               half, 0x3a, 0xc - half, 0);
+        }
+        if (rem != 0) {
+            drawScaledTexture((f32)(x2 + half), (f32)(y2 - 0x13), lbl_8033BE40[2], *(u8 *)(box + 0x1e), 0x100,
+                              rem, 0x3a, 0);
+        }
+        break;
+    case 4:
+        boxDrawFn_8001c5ac();
+        break;
+    }
+    *(s16 *)(box + 0x18) = savedX;
+    *(s16 *)(box + 0x1a) = savedY;
+}
+#pragma dont_inline reset
+#pragma pop
