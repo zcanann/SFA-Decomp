@@ -2580,3 +2580,172 @@ void pressureswitch_update(int obj)
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct IntVec3 {
+    int a;
+    int b;
+    int c;
+} IntVec3;
+
+typedef struct ArwAttachTarget {
+    f32 x;
+    f32 y;
+    f32 moveId;
+    f32 altMoveId;
+    f32 speed;
+} ArwAttachTarget;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801F2290(int obj)
+{
+    extern void *Obj_GetPlayerObject(void);
+    extern uint GameBit_Get(int id);
+    extern void GameBit_Set(int slot, int val);
+    extern void buttonDisable(int a, int b);
+    extern int getAngle(f32 x, f32 y);
+    extern f32 sqrtf(f32 x);
+    extern void fn_80137948(char *fmt, ...);
+    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+    extern int ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, void *events);
+    extern void ObjAnim_SampleRootCurvePhase(int obj, void *p);
+    extern int *gGameUIInterface;
+    extern int lbl_802C2470[];
+    extern ArwAttachTarget lbl_80328974[];
+    extern char sArwingAttachmentDiffFormat[];
+    extern u8 framesThisStep;
+    extern f32 timeDelta;
+    extern f32 lbl_803E5D98;
+    extern f32 lbl_803E5DA8;
+    extern f32 lbl_803E5DAC;
+    extern f32 lbl_803E5DB0;
+    extern f32 lbl_803E5DB4;
+    char *b;
+    u8 m;
+    s16 ang;
+    s16 diff;
+    f32 dx;
+    f32 dy;
+    f32 dist;
+    f32 spd;
+    IntVec3 stk;
+    u8 events[28];
+
+    b = *(char **)(obj + 0xb8);
+    Obj_GetPlayerObject();
+    stk = *(IntVec3 *)lbl_802C2470;
+    *(f32 *)(obj + 0x10) = *(f32 *)(b + 4);
+    if (GameBit_Get(0x1fc) != 0) {
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
+        if ((*(u8 *)(obj + 0xaf) & 1) != 0 &&
+            (**(int (**)(IntVec3 *, int))(*gGameUIInterface + 0x24))(&stk, 3) > -1) {
+            GameBit_Set(0x4d1, 1);
+            *(s8 *)(b + 0x27) += 1;
+            GameBit_Set(0x310, 1);
+            buttonDisable(0, 0x100);
+        }
+    } else {
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+        if (*(s16 *)(b + 0x20) <= 0) {
+            switch (randomGetRange(1, 4)) {
+            case 1:
+                b[0x23] = b[0x22];
+                *(u8 *)(b + 0x22) = 1;
+                *(s16 *)(b + 0x20) = 400;
+                break;
+            case 2:
+                b[0x23] = b[0x22];
+                *(u8 *)(b + 0x22) = 2;
+                *(s16 *)(b + 0x20) = 400;
+                break;
+            case 3:
+                b[0x23] = b[0x22];
+                *(u8 *)(b + 0x22) = 3;
+                *(s16 *)(b + 0x20) = 400;
+                break;
+            case 4:
+                b[0x23] = b[0x22];
+                *(u8 *)(b + 0x22) = 4;
+                *(s16 *)(b + 0x20) = 400;
+                break;
+            case 5:
+                b[0x23] = b[0x22];
+                *(u8 *)(b + 0x22) = 5;
+                *(s16 *)(b + 0x20) = 400;
+                break;
+            }
+        } else {
+            m = *(u8 *)(b + 0x22);
+            if (m == 12) {
+                ang = getAngle(lbl_80328974[*(u8 *)(b + 0x23)].x,
+                               lbl_80328974[*(u8 *)(b + 0x23)].y);
+                diff = (s16)(ang - *(s16 *)obj);
+                fn_80137948(sArwingAttachmentDiffFormat, diff);
+                if (diff < -1000 || diff > 1000) {
+                    if (diff > 0) {
+                        *(s16 *)obj = (s16)(*(s16 *)obj + framesThisStep * 100);
+                    } else {
+                        *(s16 *)obj = (s16)(*(s16 *)obj - framesThisStep * 100);
+                    }
+                } else {
+                    ObjAnim_SetCurrentMove(obj, (int)lbl_80328974[*(u8 *)(b + 0x23)].moveId,
+                                           lbl_803E5D98, 0);
+                    *(f32 *)(b + 0xc) = lbl_80328974[*(u8 *)(b + 0x23)].speed;
+                    *(u8 *)(b + 0x22) = 13;
+                }
+            } else if (m == 13) {
+                if (ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(b + 0xc), timeDelta, events) != 0) {
+                    if ((f32)(int)*(s16 *)(obj + 0xa0) ==
+                        lbl_80328974[*(u8 *)(b + 0x23)].moveId) {
+                        ObjAnim_SetCurrentMove(obj,
+                                               (int)lbl_80328974[*(u8 *)(b + 0x23)].altMoveId,
+                                               lbl_803E5D98, 0);
+                        *(f32 *)(b + 0xc) = lbl_80328974[*(u8 *)(b + 0x23)].speed;
+                    }
+                }
+                *(s16 *)(b + 0x20) -= framesThisStep;
+                if (*(s16 *)(b + 0x20) <= 0) {
+                    *(s16 *)(b + 0x20) = 0;
+                }
+            } else {
+                dx = lbl_80328974[m].x - (*(f32 *)(obj + 0xc) - *(f32 *)b);
+                dy = lbl_80328974[m].y - (*(f32 *)(obj + 0x14) - *(f32 *)(b + 8));
+                dist = sqrtf(dx * dx + dy * dy);
+                ang = getAngle(dx, dy);
+                diff = (s16)(ang - *(s16 *)obj);
+                if (diff >= -1000 && diff <= 1000) {
+                    if (*(s16 *)(obj + 0xa0) != 59) {
+                        ObjAnim_SetCurrentMove(obj, 59, lbl_803E5D98, 0);
+                        *(f32 *)(b + 0xc) = lbl_803E5DA8;
+                    }
+                    spd = lbl_803E5DAC;
+                    *(f32 *)(obj + 0x24) = spd * (dx / dist);
+                    *(f32 *)(obj + 0x2c) = spd * (dy / dist);
+                    ObjAnim_SampleRootCurvePhase(obj, b + 0xc);
+                } else {
+                    if (*(s16 *)(obj + 0xa0) != 12) {
+                        ObjAnim_SetCurrentMove(obj, 12, lbl_803E5D98, 0);
+                        *(f32 *)(b + 0xc) = lbl_803E5DB0;
+                    }
+                    if (diff > 0) {
+                        *(s16 *)obj = (s16)(*(s16 *)obj + framesThisStep * 300);
+                    } else {
+                        *(s16 *)obj = (s16)(*(s16 *)obj - framesThisStep * 300);
+                    }
+                }
+                if (dist < lbl_803E5DB4) {
+                    b[0x23] = b[0x22];
+                    *(u8 *)(b + 0x22) = 12;
+                    spd = lbl_803E5D98;
+                    *(f32 *)(obj + 0x24) = spd;
+                    *(f32 *)(obj + 0x2c) = spd;
+                }
+                *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
+                *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
+                ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(b + 0xc), timeDelta, events);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
