@@ -19081,6 +19081,11 @@ static int boneBlendSlotLimit(u8 *model) {
     return 1;
 }
 
+typedef struct ModelMtxBanks {
+    u8 pad[0xc];
+    f32 *banks[2];
+} ModelMtxBanks;
+
 #pragma push
 #pragma scheduling off
 #pragma peephole off
@@ -19101,20 +19106,23 @@ void fn_80025F38(int *a, int b, u8 *blend, u8 *chain) {
     int prevOff;
     f32 dot;
     f32 cap;
+    u8 *bankSel;
 
-    idx = *(s8 *)(*(u8 **)(b + 0x3c) + **(int **)(chain + 4) * 0x1c);
+    idx = *(s8 *)(*(u8 **)(b + 0x3c) + (*(int ***)(chain + 4))[0][0] * 0x1c);
     if (idx >= boneBlendSlotLimit(model)) {
         idx = 0;
     }
-    PSMTXCopy(*(f32 **)(model + ((*(u16 *)(model + 0x18) & 1) << 2) + 0xc) + idx * 0x10, tmp);
-    idx = **(int **)(chain + 4);
+    bankSel = model + ((*(u16 *)(model + 0x18) & 1) << 2);
+    PSMTXCopy(*(f32 **)(bankSel + 0xc) + idx * 0x10, tmp);
+    idx = (*(int ***)(chain + 4))[0][0];
     if (idx >= boneBlendSlotLimit(model)) {
         idx = 0;
     }
-    m = *(f32 **)(model + ((*(u16 *)(model + 0x18) & 1) << 2) + 0xc) + idx * 0x10;
+    bankSel = model + ((*(u16 *)(model + 0x18) & 1) << 2);
+    m = *(f32 **)(bankSel + 0xc) + idx * 0x10;
     cap = lbl_803DE838;
     for (i = 1; i < *(int *)(chain + 8) + 1; i++) {
-        nextIdx = (*(int **)(chain + 4))[i];
+        nextIdx = (*(int ***)(chain + 4))[0][i];
         prevOff = (i - 1) * 0x54;
         PSMTXMultVec(tmp, (f32 *)(*(u8 **)chain + prevOff + 0x18), out);
         target[0] = lbl_803DCED0 + (*(f32 *)(*(u8 **)chain + i * 0x54) + *(f32 *)(*(u8 **)chain + i * 0x54 + 0xc)) - playerMapOffsetX;
