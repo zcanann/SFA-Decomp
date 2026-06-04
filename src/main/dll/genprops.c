@@ -5171,13 +5171,13 @@ int collectible_modelMtxFn(int *obj) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void staff_setupSwipe(int *obj, int *inner, int p5, int p4);
+extern void staff_setupSwipe(int p1, int p2, int p3, int p4);
 extern int getHudHiddenFrameCount(void);
 #pragma scheduling off
 #pragma peephole off
 void staff_modelMtxFn(int *obj, int p4, int p5) {
     int *inner = (int*)*(int*)((char*)obj + 0xb8);
-    staff_setupSwipe(obj, inner, p5, p4);
+    staff_setupSwipe((int)obj, (int)inner, p5, p4);
     if (getHudHiddenFrameCount() != 0) {
         *(u8*)((char*)inner + 0xbc) = 1;
     } else {
@@ -5185,7 +5185,6 @@ void staff_modelMtxFn(int *obj, int p4, int p5) {
     }
 }
 #pragma peephole reset
-#pragma scheduling reset
 
 void flamethrowerspe_setScale(int *obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3) {
     *(f32*)((char*)obj + 0xc) = f1;
@@ -7585,6 +7584,223 @@ void fn_80172144(int *obj)
     } else {
         *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) * lbl_803E3468;
         *(f32 *)((char *)obj + 0x28) = -(lbl_803E346C * timeDelta - *(f32 *)((char *)obj + 0x28));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 fn_80293E80(f32 x);
+extern f32 fastFloorf(f32 v);
+extern f32 mathFn_80010ee0(f32 *a, f32 t, f32 *out);
+extern f32 lbl_803E3304;
+extern f32 lbl_803E3308;
+extern f32 lbl_803E32A4;
+extern f32 lbl_803E32AC;
+
+#pragma peephole off
+void staff_setupSwipe(int p1, int p2, int p3, int p4)
+{
+    u8 *model2;
+    u8 *slot;
+    u8 *obj;
+    u8 *swipe;
+    s16 *tbl;
+    int count;
+    int count2;
+    int ibase;
+    int first;
+    u8 *vp;
+    int idx[4];
+    f32 arrE[4];
+    f32 arrF[4];
+    f32 arrG[4];
+    f32 arrH[4];
+    f32 arrI[4];
+    f32 arrJ[4];
+    f32 sinv, cosv, vidx, flb, fla, frac, tmax, prog, angle, acc, step;
+    int ang;
+
+    swipe = (u8 *)p2;
+    obj = (u8 *)p4;
+    if (*(int **)(swipe + 0x48) != NULL && swipe[0xbc] == 0) {
+        ang = *(s16 *)obj;
+        if (*(s16 **)(obj + 0x30) != NULL) {
+            ang += **(s16 **)(obj + 0x30);
+        }
+        angle = (lbl_803E3304 * (f32)(int)-ang) / lbl_803E3308;
+        cosv = fn_80293E80(angle);
+        sinv = sin(angle);
+        model2 = *(u8 **)((char *)Obj_GetActiveModel((int)obj) + 0x2c);
+        if (*(int **)(obj + 0x5c) != NULL && **(int **)(obj + 0x5c) > 0) {
+            f32 sw;
+            slot = *(u8 **)(swipe + 0x48);
+            count = (int)(lbl_803E330C * *(f32 *)(model2 + 0x14));
+            prog = *(f32 *)(slot + 8) * *(f32 *)(model2 + 0x14);
+            if (slot[0x14] & 1) {
+                *(f32 *)(swipe + 0x8c) = *(f32 *)(obj + 0x18);
+                *(f32 *)(swipe + 0x90) = *(f32 *)(obj + 0x1c);
+                *(f32 *)(swipe + 0x94) = *(f32 *)(obj + 0x20);
+                *(f32 *)(swipe + 0x98) = lbl_803E32B4;
+                slot[0x14] &= ~1;
+            }
+            sw = *(f32 *)(swipe + 0x98);
+            tmax = *(f32 *)(model2 + 4);
+            if (sw > prog) {
+                *(f32 *)(swipe + 0x98) = tmax;
+                return;
+            }
+            if (tmax > prog) {
+                tmax = prog;
+            }
+            tbl = *(s16 **)(*(int *)(obj + 0x5c) + 4);
+            if (sw >= lbl_803E32B4) {
+                fla = fastFloorf(sw * lbl_803E32A4) / lbl_803E32A4;
+                fla = fla * lbl_803E330C;
+                tmax = tmax * lbl_803E32A4;
+                flb = fastFloorf(tmax) / lbl_803E32A4;
+                flb = flb * lbl_803E330C;
+                ibase = (int)fla;
+                frac = fla - (f32)ibase;
+                count2 = (int)((flb - fla) / lbl_803E32AC);
+                if (count2 == 0) {
+                    if (*(f32 *)(model2 + 4) > prog) {
+                        *(f32 *)(swipe + 0x98) = *(f32 *)(model2 + 4);
+                    }
+                    return;
+                }
+                acc = lbl_803E32B4;
+                step = lbl_803E3288 / (f32)count2;
+                first = 1;
+                while (count2 != 0) {
+                    if (*(u16 *)(slot + 0xe) == 2998) {
+                        count2 = 0;
+                    } else {
+                        frac += lbl_803E32AC;
+                        if (frac >= lbl_803E3288) {
+                            frac -= lbl_803E3288;
+                            ibase += 1;
+                            first = 1;
+                        }
+                        acc += step;
+                        if (first) {
+                            int n;
+                            int *pidx;
+                            f32 *pE, *pF, *pG, *pH, *pI, *pJ;
+                            idx[0] = ibase - 1;
+                            idx[1] = ibase;
+                            idx[2] = ibase + 1;
+                            idx[3] = ibase + 2;
+                            if (ibase - 1 < 0) {
+                                idx[0] = 0;
+                            }
+                            if (idx[1] >= count) {
+                                idx[1] = count;
+                            }
+                            if (idx[2] >= count) {
+                                idx[2] = count;
+                            }
+                            if (idx[3] >= count) {
+                                idx[3] = count;
+                            }
+                            pidx = idx;
+                            pE = arrE;
+                            pF = arrF;
+                            pG = arrG;
+                            pH = arrH;
+                            pI = arrI;
+                            pJ = arrJ;
+                            for (n = 4; n != 0; n--) {
+                                f32 a, b, t1, t2;
+                                int ip = *pidx * 12;
+                                *pE = (f32)*(s16 *)((char *)tbl + ip) / lbl_803E32F4;
+                                *pF = (f32)*(s16 *)((char *)tbl + ip + 2) / lbl_803E32F4;
+                                *pG = (f32)*(s16 *)((char *)tbl + ip + 4) / lbl_803E32F4;
+                                *pH = (f32)*(s16 *)((char *)tbl + ip + 6) / lbl_803E32F4;
+                                *pI = (f32)*(s16 *)((char *)tbl + ip + 8) / lbl_803E32F4;
+                                *pJ = (f32)*(s16 *)((char *)tbl + ip + 10) / lbl_803E32F4;
+                                a = *pE;
+                                b = *pG;
+                                t1 = sinv * a - cosv * b;
+                                t2 = cosv * a + sinv * b;
+                                *pE = t1;
+                                *pG = t2;
+                                a = *pH;
+                                b = *pJ;
+                                t2 = cosv * a + sinv * b;
+                                t1 = sinv * a - cosv * b;
+                                *pH = t1;
+                                *pJ = t2;
+                                pidx++;
+                                pE++;
+                                pF++;
+                                pG++;
+                                pH++;
+                                pI++;
+                                pJ++;
+                            }
+                            first = 0;
+                        }
+                        vp = *(u8 **)slot + *(u16 *)(slot + 0xe) * 20;
+                        *(f32 *)(vp + 0) = mathFn_80010ee0(arrH, frac, NULL);
+                        *(f32 *)(vp + 4) = mathFn_80010ee0(arrI, frac, NULL);
+                        *(f32 *)(vp + 8) = mathFn_80010ee0(arrJ, frac, NULL);
+                        *(f32 *)(vp + 0) = *(f32 *)(vp + 0) + (acc * (*(f32 *)(obj + 0x18) - *(f32 *)(swipe + 0x8c)) + *(f32 *)(swipe + 0x8c));
+                        *(f32 *)(vp + 4) = *(f32 *)(vp + 4) + (acc * (*(f32 *)(obj + 0x1c) - *(f32 *)(swipe + 0x90)) + *(f32 *)(swipe + 0x90));
+                        *(f32 *)(vp + 8) = *(f32 *)(vp + 8) + (acc * (*(f32 *)(obj + 0x20) - *(f32 *)(swipe + 0x94)) + *(f32 *)(swipe + 0x94));
+                        vidx = (f32)ibase + frac;
+                        *(f32 *)(vp + 0xc) = vidx;
+                        {
+                            f32 k = lbl_803E32F4;
+                            f32 t = flb - *(f32 *)(vp + 0xc);
+                            f32 v;
+                            t = k * (t * lbl_803E3310);
+                            if (t < lbl_803E32B4) {
+                                v = lbl_803E32B4;
+                            } else if (t > k) {
+                                v = k;
+                            } else {
+                                v = t;
+                            }
+                            *(s16 *)(vp + 0x10) = k - v;
+                        }
+                        *(f32 *)(vp + 0x14) = mathFn_80010ee0(arrE, frac, NULL);
+                        *(f32 *)(vp + 0x18) = mathFn_80010ee0(arrF, frac, NULL);
+                        *(f32 *)(vp + 0x1c) = mathFn_80010ee0(arrG, frac, NULL);
+                        *(f32 *)(vp + 0x14) = *(f32 *)(vp + 0x14) + (acc * (*(f32 *)(obj + 0x18) - *(f32 *)(swipe + 0x8c)) + *(f32 *)(swipe + 0x8c));
+                        *(f32 *)(vp + 0x18) = *(f32 *)(vp + 0x18) + (acc * (*(f32 *)(obj + 0x1c) - *(f32 *)(swipe + 0x90)) + *(f32 *)(swipe + 0x90));
+                        *(f32 *)(vp + 0x1c) = *(f32 *)(vp + 0x1c) + (acc * (*(f32 *)(obj + 0x20) - *(f32 *)(swipe + 0x94)) + *(f32 *)(swipe + 0x94));
+                        *(f32 *)(vp + 0x20) = vidx;
+                        {
+                            f32 k = lbl_803E32F4;
+                            f32 t = flb - *(f32 *)(vp + 0x20);
+                            f32 v;
+                            t = k * (t * lbl_803E3310);
+                            if (t < lbl_803E32B4) {
+                                v = lbl_803E32B4;
+                            } else if (t > k) {
+                                v = k;
+                            } else {
+                                v = t;
+                            }
+                            *(s16 *)(vp + 0x24) = k - v;
+                        }
+                        *(s16 *)(slot + 0x12) += 2;
+                        *(u16 *)(slot + 0xe) += 2;
+                        count2 -= 1;
+                    }
+                }
+            } else {
+                if (*(f32 *)(model2 + 4) > prog) {
+                    *(f32 *)(swipe + 0x98) = *(f32 *)(model2 + 4);
+                    return;
+                }
+                return;
+            }
+        }
+        *(f32 *)(swipe + 0x8c) = *(f32 *)(obj + 0x18);
+        *(f32 *)(swipe + 0x90) = *(f32 *)(obj + 0x1c);
+        *(f32 *)(swipe + 0x94) = *(f32 *)(obj + 0x20);
+        *(f32 *)(swipe + 0x98) = *(f32 *)(model2 + 4);
     }
 }
 #pragma peephole reset
