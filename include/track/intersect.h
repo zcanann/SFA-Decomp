@@ -75,7 +75,7 @@ void _gxSetTevColor2(u8 r, u8 g, u8 b, u8 a);
 void _gxSetTevColor1(u8 r, u8 g, u8 b, u8 a);
 void drawViewFinderAperture(f32 sx, f32 sy, u8 a, u8 flag);
 void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 alpha0, u8 alpha1);
-void doHeatEffect(u32 alpha_in);
+void doHeatEffect(u8 alpha);
 void renderMotionBlur(f32 alpha);
 void doBlurFilter(double wx, double wy, double wz, char param4, char param5);
 void fn_8007BD8C(int handle1, int handle2);
