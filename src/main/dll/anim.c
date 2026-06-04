@@ -5333,12 +5333,12 @@ void fn_80202EF0(int obj, int p2)
     if (Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x24, 0x30a);
         *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
-        *(f32 *)(setup + 0xc) = lbl_803E637C + *(f32 *)(obj + 0x10);
-        *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
-        setup[4] = 1;
-        setup[5] = 1;
-        setup[6] = 0xff;
-        setup[7] = 0xff;
+                *(f32 *)(setup + 0xc) = lbl_803E637C + *(f32 *)(obj + 0x10);
+                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                setup[4] = 1;
+                setup[5] = 1;
+                setup[6] = 0xff;
+                setup[7] = 0xff;
         newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, 0);
         if (newObj != NULL) {
             t = *(f32 *)(p2 + 0x2c0) / lbl_803E62B4;
@@ -5445,5 +5445,44 @@ int fn_80202DA4(u8 *obj, u8 *p6, f32 p1, f32 p2, f32 p3, f32 p4)
     *(f32 *)(state + 0x280) = k * (prod - cur) + cur;
     *(f32 *)(state + 0x284) = lbl_803E62A8;
     return 0;
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+void dfpobjcreator_update(int obj)
+{
+    extern u8 Obj_IsLoadingLocked(void);
+    extern uint GameBit_Get(int);
+    extern u8 *Obj_AllocObjectSetup(int, int);
+    extern u8 *Obj_SetupObject(u8 *, int, int, int, int);
+    extern f32 timeDelta;
+    int data = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    u8 *setup;
+    u8 *newObj;
+
+    if (Obj_IsLoadingLocked() != 0) {
+        switch (*(s16 *)(data + 0x1a)) {
+        case 7:
+            *(s16 *)(state + 0x10) -= (int)timeDelta;
+            if (*(s16 *)(state + 0x10) <= 0 && GameBit_Get(*(s16 *)(state + 0xc)) != 0) {
+                *(s16 *)(state + 0x10) = *(s16 *)(state + 0xe);
+                setup = Obj_AllocObjectSetup(0x24, 0x71b);
+                *(f32 *)(setup + 0x8) = *(f32 *)(data + 0x8);
+                *(f32 *)(setup + 0xc) = *(f32 *)(data + 0xc);
+                *(f32 *)(setup + 0x10) = *(f32 *)(data + 0x10);
+                setup[4] = *(u8 *)(data + 4);
+                setup[5] = *(u8 *)(data + 5);
+                setup[6] = *(u8 *)(data + 6);
+                setup[7] = *(u8 *)(data + 7);
+                *(s16 *)(setup + 0x1e) = -1;
+                *(s16 *)(setup + 0x20) = -1;
+                *(s16 *)(setup + 0x1a) = 0xdc;
+                newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                *(int *)(newObj + 0xf4) = *(s8 *)(data + 0x1e);
+            }
+            break;
+        }
+    }
 }
 #pragma scheduling reset
