@@ -3,8 +3,6 @@
 
 #include "ghidra_import.h"
 
-void dll153_updateExploderState
-          (undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-           undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void smallbasket_update(int obj);
 
 #endif /* MAIN_DLL_DLL_153_H_ */

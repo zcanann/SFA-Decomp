@@ -798,64 +798,53 @@ LAB_8023ad84:
       GameBit_Set(0xd,0);
     }
     break;
-  case 5:
-    iVar12 = *(int *)(piVar14[1] + 0xb8);
-    iVar5 = *(int *)(piVar14[2] + 0xb8);
+  case 0x15:
     if (bVar1) {
-      Sfx_PlayFromObject(obj,0x470);
-      iVar8 = *(int *)(obj + 0xb8);
-      ObjAnim_SetCurrentMove(obj,0x16,lbl_803E74D4,0);
-      *(int *)(iVar8 + 100) = lbl_8032C0F0;
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0x7f;
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xbf;
+      iVar12 = *(int *)(obj + 0xb8);
+      ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
+      *(f32 **)(iVar12 + 100) = lbl_8032C098;
+      GameBit_Set(0xd,1);
+      fstate[0x27] = lbl_803E7504;
     }
-    dVar19 = *(float *)(obj + 0x98);
-    if (lbl_803E7540 <= dVar19) {
-      dVar19 = fn_80293E80(((lbl_803E74A0 *
-                                             (float)(lbl_803E7548 *
-                                                    (lbl_803E7558 *
-                                                     ((dVar19 - lbl_803E7540) / lbl_803E7560)
-                                                    + lbl_803E7550))) / lbl_803E74A4));
-            fstate[0x35] = ((f32)(lbl_803DC48C) * dVar19 +
-                       fstate[0x18]);
-    }
-    else {
-      dVar19 = fn_80293E80(((lbl_803E74A0 *
-                                             (float)(lbl_803E7548 *
-                                                    lbl_803E7550 * (dVar19 / lbl_803E7540))) /
-                                            lbl_803E74A4));
-      fstate[0x35] = (lbl_803E74A8 * dVar19 + fstate[0x18]);
-    }
-    if ((lbl_803E7568 < *(float *)(obj + 0x98)) &&
-       ((*(u8 *)(piVar14 + 0x3a) >> 6 & 1) == 0)) {
-      iVar8 = randomGetRange(0,1);
-      if (iVar8 == 0) {
-        uVar9 = 0x472;
+    for (bVar13 = 0; bVar13 < 6; bVar13 = bVar13 + 1) {
+      iVar12 = GameBit_Get(bVar13 + 0x108);
+      if (iVar12 != 0) {
+        *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
+        goto LAB_8023bb18;
       }
-      else {
-        uVar9 = 0x471;
-      }
-      Sfx_PlayFromObject(obj,uVar9);
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xbf | 0x40;
     }
-    if ((lbl_803E7570 < *(float *)(obj + 0x98)) && (-1 < *(char *)(piVar14 + 0x3a))) {
-      Sfx_PlayFromObject(obj,0x46d);
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0x7f | 0x80;
+    *(u16 *)((int)piVar14 + 0xa6) = *(short *)((int)piVar14 + 0xa6) - (u16)framesThisStep;
+    if (*(short *)((int)piVar14 + 0xa6) < 1) {
+      iVar12 = randomGetRange(0,5);
+      GameBit_Set(iVar12 + 0x108,1);
+      *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
     }
-    cVar11 = *(char *)(iVar12 + 0x23);
-    if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
-        (cVar11 = *(char *)(iVar5 + 0x23), cVar11 != '\x02')) && (cVar11 != '\x01')) {
-      if (*(float *)(obj + 0x98) < lbl_803E74DC) {
-        if (lbl_803E7568 < *(float *)(obj + 0x98)) {
-          *(s16 *)(piVar14 + 0x28) = 0;
-            androsshand_setState(piVar14[1],1,(u8)((piVar14[0x1f] == 4) + 1));
-          androsshand_setState(piVar14[2],1,(u8)((piVar14[0x1f] == 4) + 1));
-          *(u8 *)((int)piVar14 + 0xad) = *(u8 *)((int)piVar14 + 0xad) & 0xf9;
-        }
-      }
-      else {
-        piVar14[0x21] = 1;
-      }
+LAB_8023bb18:
+    lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
+    lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
+    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
+    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar19 = lbl_803E74EC;
+    if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
+      dVar19 = lbl_803E74F0;
+    }
+    dVar17 = lbl_803E7500;
+    if ((dVar17 <= dVar16) && (dVar17 = dVar16, lbl_803E74CC < dVar16)) {
+      dVar17 = lbl_803E74CC;
+    }
+        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+                                          lbl_803E74A4));
+    fstate[0x33] = (lbl_803E74CC * dVar16 +
+                     (float)(fstate[0x16] + dVar19));
+        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+                                          lbl_803E74A4));
+    fstate[0x34] = (lbl_803E74FC * dVar19 +
+                     (float)(fstate[0x17] + dVar17));
+    piVar14[0x35] = piVar14[0x18];
+    fstate[0x27] = fstate[0x27] - timeDelta;
+    if (fstate[0x27] < lbl_803E74D4) {
+      piVar14[0x21] = 1;
+      GameBit_Set(0xd,0);
     }
     break;
   case 6:
@@ -923,9 +912,9 @@ LAB_8023ad84:
       piVar14[0x21] = 1;
     }
     break;
-  case 8:
+  case 9:
     if (bVar1) {
-      androsshand_setState(piVar14[2],6,0);
+      androsshand_setState(piVar14[1],6,0);
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
@@ -954,9 +943,9 @@ LAB_8023ad84:
       piVar14[0x21] = 1;
     }
     break;
-  case 9:
+  case 8:
     if (bVar1) {
-      androsshand_setState(piVar14[1],6,0);
+      androsshand_setState(piVar14[2],6,0);
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
@@ -1112,6 +1101,78 @@ LAB_8023c584:
     }
     turnOnDistortionFilter((f32 *)(piVar14 + 0x30),dVar19,&lbl_803DC4CC,lbl_803DDDB8);
     break;
+  case 0xe:
+    fVar2 = lbl_803E74B8 * *(float *)(obj + 0x98) + lbl_803E74B8;
+    if (lbl_803E74B8 <= fVar2) {
+      dVar19 = lbl_803E74CC;
+    }
+    else {
+      dVar19 = -(lbl_803E74C0 * lbl_803E74C4 * fVar2 - lbl_803E74BC);
+      if (fVar2 < lbl_803E74C8) {
+        lbl_803DDDB8 = lbl_803DC4D4;
+      }
+    }
+    lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
+    if (lbl_803E74D0 < lbl_803DDDB8) {
+      lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
+    }
+    turnOnDistortionFilter((f32 *)(piVar14 + 0x30),dVar19,&lbl_803DC4CC,lbl_803DDDB8);
+    if (bVar1) {
+      iVar12 = *(int *)(obj + 0xb8);
+      ObjAnim_SetCurrentMove(obj,2,lbl_803E74D4,0);
+      *(int *)(iVar12 + 100) = lbl_8032C0A0;
+      *(undefined *)((int)piVar14 + 0xb1) = 0;
+      GameBit_Set(0x10,0);
+      *(short *)(piVar14 + 0x26) = (short)lbl_803DC44C;
+      fstate[0x27] = lbl_803E74D4;
+    }
+    lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
+    lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
+    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
+    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar19 = lbl_803E74EC;
+    if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
+      dVar19 = lbl_803E74F0;
+    }
+    dVar17 = lbl_803E7508;
+    if ((dVar17 <= dVar16) && (dVar17 = dVar16, lbl_803E750C < dVar16)) {
+      dVar17 = lbl_803E750C;
+    }
+        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
+                                          lbl_803E74A4));
+    fstate[0x33] = (lbl_803E74FC * dVar16 +
+                     (float)(fstate[0x16] + dVar19));
+        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
+                                          lbl_803E74A4));
+    fstate[0x34] = (lbl_803E7514 * dVar19 +
+                     (float)(fstate[0x17] + dVar17));
+    piVar14[0x35] = piVar14[0x18];
+    fn_8023A6A4((int)piVar14,lbl_803DC440,lbl_803DC444,lbl_803DC448);
+    Sfx_KeepAliveLoopedObjectSound(obj,0x466);
+    if ((*(short *)(piVar14 + 0x26) != 0) &&
+       (*(u16 *)(piVar14 + 0x26) = *(short *)(piVar14 + 0x26) - (u16)framesThisStep,
+       *(short *)(piVar14 + 0x26) < 1)) {
+      *(s16 *)(piVar14 + 0x26) = 0;
+      GameBit_Set(0xf,1);
+    }
+    fstate[0x27] = fstate[0x27] - timeDelta;
+    if (fstate[0x27] < lbl_803E74D4) {
+      fn_80239FCC(obj,(int)piVar14);
+            fstate[0x27] = fstate[0x27] + (f32)(lbl_803DC450);
+    }
+    fn_80239EAC(obj,(int)piVar14);
+    iVar12 = GameBit_Get(0x10);
+    if (iVar12 != 0) {
+      GameBit_Set(0x10,0);
+      piVar14[0x22] = 0x1a;
+      lbl_803DDDB8 = lbl_803DC4D4 + lbl_803DC4D0;
+      if (lbl_803E74D0 < lbl_803DDDB8) {
+        lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
+      }
+      turnOnDistortionFilter((f32 *)(piVar14 + 0x30),lbl_803E74BC,&lbl_803DC4CC,lbl_803DDDB8);
+      Rcp_DisableDistortionFilter();
+    }
+    break;
   case 0xc:
     fVar2 = lbl_803E74B8 * *(float *)(obj + 0x98) + lbl_803E74B8;
     if (lbl_803E74B8 <= fVar2) {
@@ -1224,78 +1285,6 @@ LAB_8023cbdc:
     *(u16 *)(piVar14 + 0x26) = *(short *)(piVar14 + 0x26) - (u16)framesThisStep;
     if (*(short *)(piVar14 + 0x26) < 0) {
       piVar14[0x22] = 0xf;
-      lbl_803DDDB8 = lbl_803DC4D4 + lbl_803DC4D0;
-      if (lbl_803E74D0 < lbl_803DDDB8) {
-        lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
-      }
-      turnOnDistortionFilter((f32 *)(piVar14 + 0x30),lbl_803E74BC,&lbl_803DC4CC,lbl_803DDDB8);
-      Rcp_DisableDistortionFilter();
-    }
-    break;
-  case 0xe:
-    fVar2 = lbl_803E74B8 * *(float *)(obj + 0x98) + lbl_803E74B8;
-    if (lbl_803E74B8 <= fVar2) {
-      dVar19 = lbl_803E74CC;
-    }
-    else {
-      dVar19 = -(lbl_803E74C0 * lbl_803E74C4 * fVar2 - lbl_803E74BC);
-      if (fVar2 < lbl_803E74C8) {
-        lbl_803DDDB8 = lbl_803DC4D4;
-      }
-    }
-    lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
-    if (lbl_803E74D0 < lbl_803DDDB8) {
-      lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
-    }
-    turnOnDistortionFilter((f32 *)(piVar14 + 0x30),dVar19,&lbl_803DC4CC,lbl_803DDDB8);
-    if (bVar1) {
-      iVar12 = *(int *)(obj + 0xb8);
-      ObjAnim_SetCurrentMove(obj,2,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0A0;
-      *(undefined *)((int)piVar14 + 0xb1) = 0;
-      GameBit_Set(0x10,0);
-      *(short *)(piVar14 + 0x26) = (short)lbl_803DC44C;
-      fstate[0x27] = lbl_803E74D4;
-    }
-    lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
-    lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
-    dVar19 = lbl_803E74EC;
-    if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
-      dVar19 = lbl_803E74F0;
-    }
-    dVar17 = lbl_803E7508;
-    if ((dVar17 <= dVar16) && (dVar17 = dVar16, lbl_803E750C < dVar16)) {
-      dVar17 = lbl_803E750C;
-    }
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
-                                          lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74FC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
-                                          lbl_803E74A4));
-    fstate[0x34] = (lbl_803E7514 * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
-    piVar14[0x35] = piVar14[0x18];
-    fn_8023A6A4((int)piVar14,lbl_803DC440,lbl_803DC444,lbl_803DC448);
-    Sfx_KeepAliveLoopedObjectSound(obj,0x466);
-    if ((*(short *)(piVar14 + 0x26) != 0) &&
-       (*(u16 *)(piVar14 + 0x26) = *(short *)(piVar14 + 0x26) - (u16)framesThisStep,
-       *(short *)(piVar14 + 0x26) < 1)) {
-      *(s16 *)(piVar14 + 0x26) = 0;
-      GameBit_Set(0xf,1);
-    }
-    fstate[0x27] = fstate[0x27] - timeDelta;
-    if (fstate[0x27] < lbl_803E74D4) {
-      fn_80239FCC(obj,(int)piVar14);
-            fstate[0x27] = fstate[0x27] + (f32)(lbl_803DC450);
-    }
-    fn_80239EAC(obj,(int)piVar14);
-    iVar12 = GameBit_Get(0x10);
-    if (iVar12 != 0) {
-      GameBit_Set(0x10,0);
-      piVar14[0x22] = 0x1a;
       lbl_803DDDB8 = lbl_803DC4D4 + lbl_803DC4D0;
       if (lbl_803E74D0 < lbl_803DDDB8) {
         lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
@@ -1625,199 +1614,6 @@ LAB_8023db24:
       piVar14[0x21] = 1;
     }
     break;
-  case 0x15:
-    if (bVar1) {
-      iVar12 = *(int *)(obj + 0xb8);
-      ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
-      *(f32 **)(iVar12 + 100) = lbl_8032C098;
-      GameBit_Set(0xd,1);
-      fstate[0x27] = lbl_803E7504;
-    }
-    for (bVar13 = 0; bVar13 < 6; bVar13 = bVar13 + 1) {
-      iVar12 = GameBit_Get(bVar13 + 0x108);
-      if (iVar12 != 0) {
-        *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
-        goto LAB_8023bb18;
-      }
-    }
-    *(u16 *)((int)piVar14 + 0xa6) = *(short *)((int)piVar14 + 0xa6) - (u16)framesThisStep;
-    if (*(short *)((int)piVar14 + 0xa6) < 1) {
-      iVar12 = randomGetRange(0,5);
-      GameBit_Set(iVar12 + 0x108,1);
-      *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
-    }
-LAB_8023bb18:
-    lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
-    lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
-    dVar19 = lbl_803E74EC;
-    if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
-      dVar19 = lbl_803E74F0;
-    }
-    dVar17 = lbl_803E7500;
-    if ((dVar17 <= dVar16) && (dVar17 = dVar16, lbl_803E74CC < dVar16)) {
-      dVar17 = lbl_803E74CC;
-    }
-        dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
-                                          lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74CC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
-        dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
-                                          lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
-    piVar14[0x35] = piVar14[0x18];
-    fstate[0x27] = fstate[0x27] - timeDelta;
-    if (fstate[0x27] < lbl_803E74D4) {
-      piVar14[0x21] = 1;
-      GameBit_Set(0xd,0);
-    }
-    break;
-  case 0x16:
-    if (bVar1) {
-      iVar12 = randomGetRange(0,1);
-      if (iVar12 == 0) {
-        uVar9 = 0x472;
-      }
-      else {
-        uVar9 = 0x471;
-      }
-      Sfx_PlayFromObject(obj,uVar9);
-      iVar12 = *(int *)(obj + 0xb8);
-      ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
-      *(f32 **)(iVar12 + 100) = lbl_8032C098;
-    }
-    if (*(char *)(piVar14 + 0x2e) != '\0') {
-      iVar12 = *piVar14;
-      local_fc = (fstate[0x30] - *(float *)(iVar12 + 0xc)) * lbl_803DC488;
-      local_f8 = (fstate[0x31] - *(float *)(iVar12 + 0x10)) * lbl_803DC488;
-      local_f4 = (fstate[0x32] - *(float *)(iVar12 + 0x14)) * lbl_803DC488;
-      local_f0 = local_fc;
-      local_ec = local_f8;
-      local_e8 = local_f4;
-      fn_8022D4AC(iVar12,(int)&local_f0);
-      fVar2 = -(lbl_803E753C * timeDelta - fstate[0x2a]);
-      if (fVar2 < lbl_803E7538) {
-        fVar2 = lbl_803E7538;
-      }
-      fstate[0x2a] = fVar2;
-    }
-    sVar3 = *(short *)(piVar14 + 0x28) - *(s16 *)obj;
-    if (0x8000 < sVar3) {
-      sVar3 = sVar3 + 1;
-    }
-    if (sVar3 < -0x8000) {
-      sVar3 = sVar3 + -1;
-    }
-    iVar12 = (int)sVar3;
-    if (iVar12 < 0) {
-      iVar12 = -iVar12;
-    }
-    if (iVar12 < 2000) {
-      cVar11 = *(char *)(*(int *)(piVar14[1] + 0xb8) + 0x23);
-      if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
-          (cVar11 = *(char *)(*(int *)(piVar14[2] + 0xb8) + 0x23), cVar11 != '\x02')) &&
-         (cVar11 != '\x01')) {
-        piVar14[0x21] = 1;
-      }
-    }
-    break;
-  case 0x17:
-    if (bVar1) {
-      iVar12 = *(int *)(obj + 0xb8);
-      ObjAnim_SetCurrentMove(obj,3,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0A4;
-      fstate[0x39] = lbl_803E74D4;
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf;
-    }
-    fstate[0x39] = fstate[0x39] + timeDelta;
-    if ((lbl_803E7578 < fstate[0x39]) && ((*(u8 *)(piVar14 + 0x3a) >> 5 & 1) == 0)) {
-      Sfx_PlayFromObject(obj,0x46f);
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf | 0x20;
-    }
-    if (lbl_803DC490 < *(float *)(obj + 0x98)) {
-      dVar19 = (fstate[0x1c] - *(float *)(*piVar14 + 0x14));
-      fVar2 = lbl_803E753C * timeDelta + fstate[0x2a];
-      if (lbl_803E74D4 < fVar2) {
-        fVar2 = lbl_803E74D4;
-      }
-      fstate[0x2a] = fVar2;
-      *(undefined *)(piVar14 + 0x2e) = 0;
-      *(u16 *)(*piVar14 + 6) = *(u16 *)(*piVar14 + 6) & 0xbfff;
-      sVar3 = fn_8022D46C(*piVar14);
-            iVar12 = (int)(dVar19 * lbl_803DC49C + (f32)(sVar3));
-      fn_8022D47C(*piVar14,iVar12);
-      local_9c = lbl_803E74D4;
-      local_98 = lbl_803E74D4;
-      local_ac = (float)(dVar19 * lbl_803DC498);
-      local_b4 = lbl_803E74D4;
-      local_b0 = lbl_803E74D4;
-      local_94 = local_ac;
-      fn_8022D4AC(*piVar14,(int)&local_b4);
-    }
-    else {
-      piVar14[0x30] = *(int *)(obj + 0xc);
-      fstate[0x31] = *(float *)(obj + 0x10) - lbl_803E757C;
-      fstate[0x32] = *(float *)(obj + 0x14) - lbl_803E7580;
-      iVar12 = *piVar14;
-      local_114 = (fstate[0x30] - *(float *)(iVar12 + 0xc)) * lbl_803DC494;
-      local_110 = (fstate[0x31] - *(float *)(iVar12 + 0x10)) * lbl_803DC494;
-      local_10c = (fstate[0x32] - *(float *)(iVar12 + 0x14)) * lbl_803DC494;
-      local_108 = local_114;
-      local_104 = local_110;
-      local_100 = local_10c;
-      fn_8022D4AC(iVar12,(int)&local_108);
-    }
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
-      piVar14[0x21] = 1;
-    }
-    break;
-  case 0x18:
-    if (bVar1) {
-      iVar12 = *(int *)(obj + 0xb8);
-      ObjAnim_SetCurrentMove(obj,0x11,lbl_803E74D4,0);
-      *(int *)(iVar12 + 100) = lbl_8032C0DC;
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf;
-    }
-    if (lbl_803DC4A0 < *(float *)(obj + 0x98)) {
-      dVar19 = (fstate[0x1c] - *(float *)(*piVar14 + 0x14));
-      fVar2 = lbl_803E7514 * timeDelta + fstate[0x2a];
-      if (lbl_803E74D4 < fVar2) {
-        fVar2 = lbl_803E74D4;
-      }
-      fstate[0x2a] = fVar2;
-      *(undefined *)(piVar14 + 0x2e) = 0;
-      *(u16 *)(*piVar14 + 6) = *(u16 *)(*piVar14 + 6) & 0xbfff;
-      sVar3 = fn_8022D46C(*piVar14);
-            iVar12 = (int)(dVar19 * lbl_803DC4AC + (f32)(sVar3));
-      fn_8022D47C(*piVar14,iVar12);
-      local_a8 = lbl_803E74D4;
-      local_a4 = lbl_803E74D4;
-      local_b8 = (float)(dVar19 * lbl_803DC4A8);
-      local_c0 = lbl_803E74D4;
-      local_bc = lbl_803E74D4;
-      local_a0 = local_b8;
-      fn_8022D4AC(*piVar14,(int)&local_c0);
-      if ((*(u8 *)(piVar14 + 0x3a) >> 5 & 1) == 0) {
-        Sfx_PlayFromObject(obj,0x46f);
-        *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf | 0x20;
-      }
-    }
-    else {
-      iVar12 = *piVar14;
-      local_12c = (fstate[0x30] - *(float *)(iVar12 + 0xc)) * lbl_803DC4A4;
-      local_128 = (fstate[0x31] - *(float *)(iVar12 + 0x10)) * lbl_803DC4A4;
-      local_124 = (fstate[0x32] - *(float *)(iVar12 + 0x14)) * lbl_803DC4A4;
-      local_120 = local_12c;
-      local_11c = local_128;
-      local_118 = local_124;
-      fn_8022D4AC(iVar12,(int)&local_120);
-    }
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
-      piVar14[0x21] = 1;
-    }
-    break;
   case 0x19:
   case 0x1a:
     if (bVar1) {
@@ -1956,6 +1752,210 @@ LAB_8023de5c:
     *(u16 *)(piVar14 + 0x26) = *(short *)(piVar14 + 0x26) - (u16)framesThisStep;
     if (*(short *)(piVar14 + 0x26) < 0) {
       piVar14[0x22] = 0x1c;
+    }
+    break;
+  case 0x16:
+    if (bVar1) {
+      iVar12 = randomGetRange(0,1);
+      if (iVar12 == 0) {
+        uVar9 = 0x472;
+      }
+      else {
+        uVar9 = 0x471;
+      }
+      Sfx_PlayFromObject(obj,uVar9);
+      iVar12 = *(int *)(obj + 0xb8);
+      ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
+      *(f32 **)(iVar12 + 100) = lbl_8032C098;
+    }
+    if (*(char *)(piVar14 + 0x2e) != '\0') {
+      iVar12 = *piVar14;
+      local_fc = (fstate[0x30] - *(float *)(iVar12 + 0xc)) * lbl_803DC488;
+      local_f8 = (fstate[0x31] - *(float *)(iVar12 + 0x10)) * lbl_803DC488;
+      local_f4 = (fstate[0x32] - *(float *)(iVar12 + 0x14)) * lbl_803DC488;
+      local_f0 = local_fc;
+      local_ec = local_f8;
+      local_e8 = local_f4;
+      fn_8022D4AC(iVar12,(int)&local_f0);
+      fVar2 = -(lbl_803E753C * timeDelta - fstate[0x2a]);
+      if (fVar2 < lbl_803E7538) {
+        fVar2 = lbl_803E7538;
+      }
+      fstate[0x2a] = fVar2;
+    }
+    sVar3 = *(short *)(piVar14 + 0x28) - *(s16 *)obj;
+    if (0x8000 < sVar3) {
+      sVar3 = sVar3 + 1;
+    }
+    if (sVar3 < -0x8000) {
+      sVar3 = sVar3 + -1;
+    }
+    iVar12 = (int)sVar3;
+    if (iVar12 < 0) {
+      iVar12 = -iVar12;
+    }
+    if (iVar12 < 2000) {
+      cVar11 = *(char *)(*(int *)(piVar14[1] + 0xb8) + 0x23);
+      if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
+          (cVar11 = *(char *)(*(int *)(piVar14[2] + 0xb8) + 0x23), cVar11 != '\x02')) &&
+         (cVar11 != '\x01')) {
+        piVar14[0x21] = 1;
+      }
+    }
+    break;
+  case 5:
+    iVar12 = *(int *)(piVar14[1] + 0xb8);
+    iVar5 = *(int *)(piVar14[2] + 0xb8);
+    if (bVar1) {
+      Sfx_PlayFromObject(obj,0x470);
+      iVar8 = *(int *)(obj + 0xb8);
+      ObjAnim_SetCurrentMove(obj,0x16,lbl_803E74D4,0);
+      *(int *)(iVar8 + 100) = lbl_8032C0F0;
+      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0x7f;
+      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xbf;
+    }
+    dVar19 = *(float *)(obj + 0x98);
+    if (lbl_803E7540 <= dVar19) {
+      dVar19 = fn_80293E80(((lbl_803E74A0 *
+                                             (float)(lbl_803E7548 *
+                                                    (lbl_803E7558 *
+                                                     ((dVar19 - lbl_803E7540) / lbl_803E7560)
+                                                    + lbl_803E7550))) / lbl_803E74A4));
+            fstate[0x35] = ((f32)(lbl_803DC48C) * dVar19 +
+                       fstate[0x18]);
+    }
+    else {
+      dVar19 = fn_80293E80(((lbl_803E74A0 *
+                                             (float)(lbl_803E7548 *
+                                                    lbl_803E7550 * (dVar19 / lbl_803E7540))) /
+                                            lbl_803E74A4));
+      fstate[0x35] = (lbl_803E74A8 * dVar19 + fstate[0x18]);
+    }
+    if ((lbl_803E7568 < *(float *)(obj + 0x98)) &&
+       ((*(u8 *)(piVar14 + 0x3a) >> 6 & 1) == 0)) {
+      iVar8 = randomGetRange(0,1);
+      if (iVar8 == 0) {
+        uVar9 = 0x472;
+      }
+      else {
+        uVar9 = 0x471;
+      }
+      Sfx_PlayFromObject(obj,uVar9);
+      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xbf | 0x40;
+    }
+    if ((lbl_803E7570 < *(float *)(obj + 0x98)) && (-1 < *(char *)(piVar14 + 0x3a))) {
+      Sfx_PlayFromObject(obj,0x46d);
+      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0x7f | 0x80;
+    }
+    cVar11 = *(char *)(iVar12 + 0x23);
+    if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
+        (cVar11 = *(char *)(iVar5 + 0x23), cVar11 != '\x02')) && (cVar11 != '\x01')) {
+      if (*(float *)(obj + 0x98) < lbl_803E74DC) {
+        if (lbl_803E7568 < *(float *)(obj + 0x98)) {
+          *(s16 *)(piVar14 + 0x28) = 0;
+            androsshand_setState(piVar14[1],1,(u8)((piVar14[0x1f] == 4) + 1));
+          androsshand_setState(piVar14[2],1,(u8)((piVar14[0x1f] == 4) + 1));
+          *(u8 *)((int)piVar14 + 0xad) = *(u8 *)((int)piVar14 + 0xad) & 0xf9;
+        }
+      }
+      else {
+        piVar14[0x21] = 1;
+      }
+    }
+    break;
+  case 0x17:
+    if (bVar1) {
+      iVar12 = *(int *)(obj + 0xb8);
+      ObjAnim_SetCurrentMove(obj,3,lbl_803E74D4,0);
+      *(int *)(iVar12 + 100) = lbl_8032C0A4;
+      fstate[0x39] = lbl_803E74D4;
+      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf;
+    }
+    fstate[0x39] = fstate[0x39] + timeDelta;
+    if ((lbl_803E7578 < fstate[0x39]) && ((*(u8 *)(piVar14 + 0x3a) >> 5 & 1) == 0)) {
+      Sfx_PlayFromObject(obj,0x46f);
+      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf | 0x20;
+    }
+    if (lbl_803DC490 < *(float *)(obj + 0x98)) {
+      dVar19 = (fstate[0x1c] - *(float *)(*piVar14 + 0x14));
+      fVar2 = lbl_803E753C * timeDelta + fstate[0x2a];
+      if (lbl_803E74D4 < fVar2) {
+        fVar2 = lbl_803E74D4;
+      }
+      fstate[0x2a] = fVar2;
+      *(undefined *)(piVar14 + 0x2e) = 0;
+      *(u16 *)(*piVar14 + 6) = *(u16 *)(*piVar14 + 6) & 0xbfff;
+      sVar3 = fn_8022D46C(*piVar14);
+            iVar12 = (int)(dVar19 * lbl_803DC49C + (f32)(sVar3));
+      fn_8022D47C(*piVar14,iVar12);
+      local_9c = lbl_803E74D4;
+      local_98 = lbl_803E74D4;
+      local_ac = (float)(dVar19 * lbl_803DC498);
+      local_b4 = lbl_803E74D4;
+      local_b0 = lbl_803E74D4;
+      local_94 = local_ac;
+      fn_8022D4AC(*piVar14,(int)&local_b4);
+    }
+    else {
+      piVar14[0x30] = *(int *)(obj + 0xc);
+      fstate[0x31] = *(float *)(obj + 0x10) - lbl_803E757C;
+      fstate[0x32] = *(float *)(obj + 0x14) - lbl_803E7580;
+      iVar12 = *piVar14;
+      local_114 = (fstate[0x30] - *(float *)(iVar12 + 0xc)) * lbl_803DC494;
+      local_110 = (fstate[0x31] - *(float *)(iVar12 + 0x10)) * lbl_803DC494;
+      local_10c = (fstate[0x32] - *(float *)(iVar12 + 0x14)) * lbl_803DC494;
+      local_108 = local_114;
+      local_104 = local_110;
+      local_100 = local_10c;
+      fn_8022D4AC(iVar12,(int)&local_108);
+    }
+    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+      piVar14[0x21] = 1;
+    }
+    break;
+  case 0x18:
+    if (bVar1) {
+      iVar12 = *(int *)(obj + 0xb8);
+      ObjAnim_SetCurrentMove(obj,0x11,lbl_803E74D4,0);
+      *(int *)(iVar12 + 100) = lbl_8032C0DC;
+      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf;
+    }
+    if (lbl_803DC4A0 < *(float *)(obj + 0x98)) {
+      dVar19 = (fstate[0x1c] - *(float *)(*piVar14 + 0x14));
+      fVar2 = lbl_803E7514 * timeDelta + fstate[0x2a];
+      if (lbl_803E74D4 < fVar2) {
+        fVar2 = lbl_803E74D4;
+      }
+      fstate[0x2a] = fVar2;
+      *(undefined *)(piVar14 + 0x2e) = 0;
+      *(u16 *)(*piVar14 + 6) = *(u16 *)(*piVar14 + 6) & 0xbfff;
+      sVar3 = fn_8022D46C(*piVar14);
+            iVar12 = (int)(dVar19 * lbl_803DC4AC + (f32)(sVar3));
+      fn_8022D47C(*piVar14,iVar12);
+      local_a8 = lbl_803E74D4;
+      local_a4 = lbl_803E74D4;
+      local_b8 = (float)(dVar19 * lbl_803DC4A8);
+      local_c0 = lbl_803E74D4;
+      local_bc = lbl_803E74D4;
+      local_a0 = local_b8;
+      fn_8022D4AC(*piVar14,(int)&local_c0);
+      if ((*(u8 *)(piVar14 + 0x3a) >> 5 & 1) == 0) {
+        Sfx_PlayFromObject(obj,0x46f);
+        *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf | 0x20;
+      }
+    }
+    else {
+      iVar12 = *piVar14;
+      local_12c = (fstate[0x30] - *(float *)(iVar12 + 0xc)) * lbl_803DC4A4;
+      local_128 = (fstate[0x31] - *(float *)(iVar12 + 0x10)) * lbl_803DC4A4;
+      local_124 = (fstate[0x32] - *(float *)(iVar12 + 0x14)) * lbl_803DC4A4;
+      local_120 = local_12c;
+      local_11c = local_128;
+      local_118 = local_124;
+      fn_8022D4AC(iVar12,(int)&local_120);
+    }
+    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+      piVar14[0x21] = 1;
     }
     break;
   case 0x1e:

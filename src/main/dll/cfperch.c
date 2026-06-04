@@ -16,18 +16,12 @@ extern undefined4 FUN_8001771c();
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
 extern int FUN_80017a98();
-extern undefined4 ObjHits_ClearHitVolumes();
-extern undefined4 ObjHits_SetHitVolumeSlot();
-extern undefined4 ObjHits_SyncObjectPositionIfDirty();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
-extern undefined4 ObjMsg_SendToObject();
-extern int ObjTrigger_IsSet();
 extern undefined4 FUN_80081120();
 extern undefined4 FUN_8011e868();
 extern undefined4 FUN_80181b50();
 extern undefined4 FUN_801816f8();
-extern undefined4 smallbasket_update();
 extern uint FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern uint FUN_80294bec();
@@ -141,43 +135,43 @@ void smallbasket_init(int obj, int def)
 #pragma peephole off
 void fn_80183250(int obj, int def)
 {
-    int* state31;
+    int state31;
     int player;
     f32 oldVel;
     int sum;
-    int v;
-    int adj;
+    u32 adj;
+    u32 v;
     f32 limit;
 
-    state31 = *(int**)(obj + 0x4c);
+    state31 = *(int *)(obj + 0x4c);
     player = (int)Obj_GetPlayerObject();
-    if ((*(u16*)(*(int*)(obj + 0x30) + 0xb0) & 0x1000) != 0) {
-        *(f32*)(obj + 0xc) = *(f32*)(def + 0x24);
-        *(f32*)(obj + 0x24) = lbl_803E39B8;
+    if ((*(u16 *)(*(int *)(obj + 0x30) + 0xb0) & 0x1000) != 0) {
+        *(f32 *)(obj + 0xc) = *(f32 *)(def + 0x24);
+        *(f32 *)(obj + 0x24) = lbl_803E39B8;
     } else {
-        oldVel = *(f32*)(obj + 0x24);
-        sum = (s32)*(s16*)(*(int*)(obj + 0x30) + 0x4) + (s32)(u32)*(u16*)(def + 0x20);
-        *(f32*)(obj + 0x24) = -(f32)((f64)CONCAT44(0x43300000, sum ^ 0x80000000) - lbl_803E39C8) / *(f32*)(def + 0x1c);
-        if ((oldVel <= lbl_803E39B8 && *(f32*)(obj + 0x24) >= lbl_803E39B8) ||
-            (oldVel >= lbl_803E39B8 && *(f32*)(obj + 0x24) <= lbl_803E39B8)) {
-            v = state31[0x14 / 4];
+        oldVel = *(f32 *)(obj + 0x24);
+        sum = *(s16 *)(*(int *)(obj + 0x30) + 0x4) + *(u16 *)(def + 0x20);
+        *(f32 *)(obj + 0x24) = -(f32)sum / *(f32 *)(def + 0x1c);
+        if ((oldVel <= (limit = lbl_803E39B8) && *(f32 *)(obj + 0x24) >= limit) ||
+            (oldVel >= lbl_803E39B8 && *(f32 *)(obj + 0x24) <= lbl_803E39B8)) {
+            v = *(u32 *)(state31 + 0x14);
             adj = v - 0x40000;
-            if (adj == 0x65d7 || (u32)(adj - 0x65d5) <= 1 || v == 0x66 || adj == 0x65d0 || adj == 0x65d2) {
-                if (Vec_distance((f32*)(player + 0x18), (f32*)(obj + 0x18)) < lbl_803E39BC) {
-                    if (GameBit_Get(0xa71) == 0) {
+            if ((adj == 0x65d7) || ((adj - 0x65d5) <= 1) || (v == 0x66) || (adj == 0x65d0) ||
+                (adj == 0x65d2)) {
+                if (Vec_distance((f32 *)(player + 0x18), (f32 *)(obj + 0x18)) < lbl_803E39BC) {
+                    if ((u32)GameBit_Get(0xa71) == 0) {
                         Sfx_PlayFromObject(obj, SFXfend_rob_wave);
                     }
                 }
             }
         }
-        *(f32*)(obj + 0xc) = *(f32*)(obj + 0xc) + *(f32*)(obj + 0x24);
-        limit = lbl_803E39C0 + *(f32*)(def + 0x24);
-        if (*(f32*)(obj + 0xc) > limit) {
-            *(f32*)(obj + 0xc) = limit;
+        *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + *(f32 *)(obj + 0x24);
+        if (*(f32 *)(obj + 0xc) > (limit = lbl_803E39C0 + *(f32 *)(def + 0x24))) {
+            *(f32 *)(obj + 0xc) = limit;
         } else {
-            limit = *(f32*)(def + 0x24) - lbl_803E39C4;
-            if (*(f32*)(obj + 0xc) < limit) {
-                *(f32*)(obj + 0xc) = limit;
+            limit = *(f32 *)(def + 0x24) - lbl_803E39C4;
+            if (*(f32 *)(obj + 0xc) < limit) {
+                *(f32 *)(obj + 0xc) = limit;
             }
         }
     }
@@ -185,355 +179,325 @@ void fn_80183250(int obj, int def)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void ObjHits_ClearHitVolumes(int obj);
+extern void ObjHits_SetHitVolumeSlot(int obj, int volumeIdx, int hitType, int extra);
+extern void ObjHits_SyncObjectPositionIfDirty(int obj);
+extern u32 buttonGetDisabled(int pad);
+extern u32 getButtonsJustPressed(int pad);
+extern void buttonDisable(int pad, int mask);
+extern int ObjTrigger_IsSet(int obj);
+extern int playerIsDisguised(int player);
+extern u32 playerGetStateFlag310(int player);
+extern void setAButtonIcon(int icon);
+extern int fn_80295BF0(int player);
+extern int fn_8029669C(int player);
+extern int fn_802966B4(int player);
+extern void mathFn_80021ac8(void *p, void *v);
+extern void ObjMsg_SendToObject(int target, int msg, int obj, u32 value);
+extern void fn_801816F8(int obj, int player, int state);
+extern void fn_801814D0(int obj, int player, int state);
+extern void fn_801821FC(int obj);
+extern void objLightFn_8009a1dc(int obj, f32 scale, void *pos, int mode, int param);
+extern f32 getXZDistance(f32 *a, f32 *b);
+extern u8 framesThisStep;
+extern f32 timeDelta;
+extern int *gSHthorntailAnimationInterface;
+extern int *gMapEventInterface;
+extern f32 lbl_803E3930;
+extern f32 lbl_803E3934;
+extern f32 lbl_803E3938;
+extern f32 lbl_803E3950;
+extern f32 lbl_803E3958;
+extern f64 lbl_803E3968;
+extern f32 lbl_803E3974;
+extern f32 lbl_803E3978;
+extern f32 lbl_803E397C;
+extern f32 lbl_803E3980;
+extern f32 lbl_803E3984;
+extern f32 lbl_803E3988;
+extern f32 lbl_803E398C;
+extern f32 lbl_803E3990;
+extern f32 lbl_803E3994;
+extern f32 lbl_803E3998;
+extern f64 lbl_803E39A0;
+
+typedef struct {
+    s16 h0;
+    s16 h1;
+    s16 h2;
+    f32 fx;
+    f32 fy;
+    f32 fz;
+    f32 fw;
+} BasketMathArgs;
+
 /*
  * --INFO--
  *
- * Function: dll153_updateExploderState
+ * Function: smallbasket_update
  * EN v1.0 Address: 0x801826E8
- * EN v1.0 Size: 3072b
- * EN v1.1 Address: 0x80182C40
- * EN v1.1 Size: 2476b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 2476b
  */
-void dll153_updateExploderState
-          (undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-           undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+#pragma scheduling off
+#pragma peephole off
+void smallbasket_update(int obj)
 {
-  char cVar1;
-  bool bVar2;
-  float fVar3;
-  double dVar4;
-  int iVar5;
-  uint uVar6;
-  ushort *puVar7;
-  int iVar8;
-  uint uVar9;
-  byte bVar10;
-  undefined4 in_r6;
-  undefined4 uVar11;
-  undefined4 in_r7;
-  undefined4 uVar12;
-  undefined4 in_r8;
-  undefined4 uVar13;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  undefined uVar14;
-  undefined2 *puVar15;
-  int iVar16;
-  double extraout_f1;
-  double dVar17;
-  undefined8 uVar18;
-  float local_48;
-  ushort local_44 [4];
-  float local_3c;
-  float local_38;
-  float local_34;
-  float local_30;
-  undefined8 local_28;
-  undefined8 local_20;
-  
-  uVar6 = FUN_80286840();
-  puVar7 = (ushort *)FUN_80017a98();
-  iVar16 = *(int *)(uVar6 + 0x4c);
-  local_48 = lbl_803E45E8;
-  (**(code **)(*DAT_803dd6d8 + 0x18))(&local_48);
-  puVar15 = *(undefined2 **)(uVar6 + 0xb8);
-  iVar8 = (**(code **)(*DAT_803dd72c + 0x68))(*(undefined4 *)(iVar16 + 0x14));
-  if (iVar8 != 0) {
-    iVar8 = *(int *)(puVar7 + 0x5c);
-    dVar17 = extraout_f1;
-    if ((short)puVar15[9] < 1) {
-      puVar15[9] = 800;
-      puVar15[5] = 1;
-      *(undefined *)((int)puVar15 + 9) = 0;
-      *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) | 8;
-      dVar17 = (double)FUN_801816f8(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,
-                                    param_8,uVar6,puVar7,(int)puVar15,in_r6,in_r7,in_r8,in_r9,in_r10
-                                   );
-      fVar3 = lbl_803E45D0;
-      *(float *)(uVar6 + 0x24) = lbl_803E45D0;
-      *(float *)(uVar6 + 0x2c) = fVar3;
+    int player;
+    int def;
+    int state;
+    int playerState;
+    int flag;
+    s8 c;
+    u8 k;
+    int level;
+    f32 zf;
+    f32 animSpeed;
+    BasketMathArgs blk;
+
+    player = (int)Obj_GetPlayerObject();
+    def = *(int *)(obj + 0x4c);
+    animSpeed = lbl_803E3950;
+    (**(void (**)(f32 *))(*gSHthorntailAnimationInterface + 0x18))(&animSpeed);
+    state = *(int *)(obj + 0xb8);
+    if ((**(int (**)(int))(*gMapEventInterface + 0x68))(*(int *)(def + 0x14)) == 0) {
+        return;
     }
-    dVar4 = DOUBLE_803e4638;
-    if (*(int *)(puVar15 + 10) == 0) {
-      if (*(char *)((int)puVar15 + 5) != '\x02') {
-        param_3 = (double)lbl_803E4610;
-        param_2 = (double)lbl_803DC074;
-        local_28 = (double)CONCAT44(0x43300000,(uint)*(byte *)(uVar6 + 0x36));
-        iVar5 = (int)(param_3 * param_2 + (double)(float)(local_28 - DOUBLE_803e4638));
-        local_20 = (double)(longlong)iVar5;
-        if (0xff < iVar5) {
-          iVar5 = 0xff;
-        }
-        *(char *)(uVar6 + 0x36) = (char)iVar5;
-        dVar17 = dVar4;
-      }
-      if (puVar15[5] != 0) {
-        dVar17 = (double)ObjHits_DisableObject(uVar6);
-        puVar15[5] = puVar15[5] - (ushort)DAT_803dc070;
-        if ((short)puVar15[5] < 1) {
-          if (*(int *)(puVar15 + 0xc) == 0) {
-            *(undefined4 *)(puVar15 + 10) = 1;
-          }
-          else {
-            *(int *)(puVar15 + 10) = *(int *)(puVar15 + 0xc);
-          }
-          local_20 = (double)CONCAT44(0x43300000,*(uint *)(puVar15 + 0xc) ^ 0x80000000);
-          dVar17 = (double)(**(code **)(*DAT_803dd72c + 100))
-                                     ((double)(float)(local_20 - DOUBLE_803e4600),
-                                      *(undefined4 *)(iVar16 + 0x14));
-          *(undefined4 *)(uVar6 + 0xc) = *(undefined4 *)(iVar16 + 8);
-          *(undefined4 *)(uVar6 + 0x10) = *(undefined4 *)(iVar16 + 0xc);
-          *(undefined4 *)(uVar6 + 0x14) = *(undefined4 *)(iVar16 + 0x10);
-          *(undefined4 *)(uVar6 + 0x80) = *(undefined4 *)(iVar16 + 8);
-          *(undefined4 *)(uVar6 + 0x84) = *(undefined4 *)(iVar16 + 0xc);
-          *(undefined4 *)(uVar6 + 0x88) = *(undefined4 *)(iVar16 + 0x10);
-          fVar3 = lbl_803E45D0;
-          *(float *)(uVar6 + 0x24) = lbl_803E45D0;
-          *(float *)(uVar6 + 0x28) = fVar3;
-          *(float *)(uVar6 + 0x2c) = fVar3;
-        }
-        if ((short)puVar15[5] < 0x33) goto LAB_801835d4;
-      }
-      if (*(char *)((int)puVar15 + 9) == '\x01') {
-        puVar15[9] = puVar15[9] - (ushort)DAT_803dc070;
-        if (*(char *)((int)puVar15 + 9) == '\x01') {
-          ObjHits_SetHitVolumeSlot(uVar6,0xe,1,0);
-          if (lbl_803E462C < *(float *)(uVar6 + 0x28)) {
-            *(float *)(uVar6 + 0x28) = lbl_803E4630 * lbl_803DC074 + *(float *)(uVar6 + 0x28);
-          }
-          ObjHits_EnableObject(uVar6);
-        }
-        *(float *)(uVar6 + 0xc) =
-             *(float *)(uVar6 + 0x24) * lbl_803DC074 + *(float *)(uVar6 + 0xc);
-        *(float *)(uVar6 + 0x10) =
-             *(float *)(uVar6 + 0x28) * lbl_803DC074 + *(float *)(uVar6 + 0x10);
-        param_2 = (double)*(float *)(uVar6 + 0x2c);
-        *(float *)(uVar6 + 0x14) =
-             (float)(param_2 * (double)lbl_803DC074 + (double)*(float *)(uVar6 + 0x14));
-        dVar17 = (double)smallbasket_update();
-        fVar3 = lbl_803E45D0;
-        cVar1 = *(char *)(*(int *)(uVar6 + 0x54) + 0xad);
-        if ((cVar1 == '\0') || (*(char *)((int)puVar15 + 9) != '\x01')) {
-          if ((cVar1 != '\0') && (*(char *)((int)puVar15 + 9) == '\x02')) {
-            *(float *)(uVar6 + 0x24) = lbl_803E45D0;
-            *(float *)(uVar6 + 0x2c) = fVar3;
-            puVar15[5] = 500;
-            *(undefined *)((int)puVar15 + 9) = 0;
-            *(undefined4 *)(uVar6 + 0xf8) = 0;
-            ObjHits_EnableObject(uVar6);
-            *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
-            dVar17 = (double)ObjHits_ClearHitVolumes(uVar6);
-          }
-        }
-        else {
-          local_38 = *(float *)(uVar6 + 0xc);
-          local_34 = *(float *)(uVar6 + 0x10);
-          local_30 = *(float *)(uVar6 + 0x14);
-          FUN_80081120(uVar6,local_44,1,(int *)0x0);
-          uVar11 = 2;
-          uVar12 = 0xffffffff;
-          uVar13 = 0;
-          iVar8 = *DAT_803de740;
-          (**(code **)(iVar8 + 4))(uVar6,1,0);
-          uVar18 = FUN_80006824(uVar6,puVar15[8]);
-          puVar15[5] = 0x32;
-          *(undefined *)((int)puVar15 + 9) = 0;
-          *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) | 8;
-          FUN_801816f8(uVar18,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar6,puVar7,
-                       (int)puVar15,uVar11,uVar12,uVar13,iVar8,in_r10);
-          fVar3 = lbl_803E45D0;
-          *(float *)(uVar6 + 0x24) = lbl_803E45D0;
-          *(float *)(uVar6 + 0x2c) = fVar3;
-          dVar17 = (double)ObjHits_ClearHitVolumes(uVar6);
-        }
-      }
-      else if (*(char *)((int)puVar15 + 5) == '\0') {
-        uVar14 = 0;
-        uVar9 = FUN_80006ba0(0);
-        if ((((uVar9 & 0x100) == 0) && (*(int *)(uVar6 + 0xf8) == 0)) &&
-           (iVar8 = ObjTrigger_IsSet(uVar6), iVar8 != 0)) {
-          *puVar15 = 0x8000;
-          puVar15[1] = 0;
-          dVar17 = (double)ObjHits_DisableObject(uVar6);
-          uVar14 = 1;
-        }
-        *(undefined *)((int)puVar15 + 5) = uVar14;
-        if (*(char *)((int)puVar15 + 5) != '\0') {
-          *(undefined *)(puVar15 + 3) = 1;
-        }
-        if (*(int *)(uVar6 + 0xf8) == 0) {
-          dVar17 = (double)ObjHits_EnableObject(uVar6);
-          if ((*(char *)(puVar15 + 0x10) == '\0') ||
-             (bVar10 = FUN_80294c20((int)puVar7), bVar10 != 0)) {
-            *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xef;
-          }
-          else {
-            *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) | 0x10;
-          }
-        }
-        *(undefined4 *)(uVar6 + 0x80) = *(undefined4 *)(uVar6 + 0xc);
-        *(undefined4 *)(uVar6 + 0x84) = *(undefined4 *)(uVar6 + 0x14);
-        *(undefined4 *)(uVar6 + 0x88) = *(undefined4 *)(uVar6 + 0x14);
-      }
-      else {
-        ObjHits_DisableObject(uVar6);
-        *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) | 8;
-        uVar9 = FUN_80294db4((int)puVar7);
-        if ((uVar9 & 0x4000) == 0) {
-          dVar17 = (double)FUN_8011e868(4);
-        }
-        else {
-          dVar17 = (double)FUN_8011e868(5);
-        }
-        uVar9 = FUN_80006c00(0);
-        if ((uVar9 & 0x100) != 0) {
-          uVar9 = FUN_80294bec((int)puVar7);
-          if (uVar9 == 0) {
-            dVar17 = (double)FUN_80006824(0,SFXsp_skeep_mumb1);
-          }
-          else {
-            *(undefined *)(puVar15 + 3) = 0;
-            dVar17 = (double)FUN_80006ba8(0,0x100);
-          }
-        }
-        if (*(int *)(uVar6 + 0xf8) == 1) {
-          *(undefined *)((int)puVar15 + 5) = 2;
-        }
-        if (((*(char *)((int)puVar15 + 5) == '\x02') && (*(int *)(uVar6 + 0xf8) == 0)) ||
-           ((*(char *)(puVar15 + 0x10) != '\0' && (bVar10 = FUN_80294c20((int)puVar7), bVar10 == 0))
-           )) {
-          uVar9 = FUN_80294ce8((int)puVar7);
-          if (uVar9 == 0) {
-            uVar9 = FUN_80294cf0((int)puVar7);
-            if (uVar9 == 0) {
-              *(undefined *)((int)puVar15 + 5) = 0;
-              *(undefined *)((int)puVar15 + 9) = 1;
-              *(float *)(uVar6 + 0x28) = lbl_803E4620 * *(float *)(iVar8 + 0x298) + lbl_803E461C
-              ;
-              param_2 = (double)lbl_803E4628;
-              *(float *)(uVar6 + 0x2c) =
-                   (float)(param_2 * (double)*(float *)(iVar8 + 0x298) + (double)lbl_803E4624);
-              local_38 = lbl_803E45D0;
-              local_34 = lbl_803E45D0;
-              local_30 = lbl_803E45D0;
-              local_3c = lbl_803E45E8;
-              local_44[2] = 0;
-              local_44[1] = 0;
-              local_44[0] = *puVar7;
-              FUN_80017748(local_44,(float *)(uVar6 + 0x24));
-              dVar17 = (double)FUN_80006824(uVar6,SFXmn_dimexp01);
-              *(undefined *)(puVar15 + 3) = 0;
-              *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) | 8;
-            }
-            else {
-              *(undefined *)((int)puVar15 + 5) = 0;
-              *(undefined *)((int)puVar15 + 9) = 2;
-              fVar3 = lbl_803E45D0;
-              *(float *)(uVar6 + 0x24) = lbl_803E45D0;
-              *(float *)(uVar6 + 0x28) = fVar3;
-              *(float *)(uVar6 + 0x2c) = fVar3;
-              ObjHits_EnableObject(uVar6);
-              *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
-              dVar17 = (double)ObjHits_ClearHitVolumes(uVar6);
-            }
-          }
-          else {
-            *(undefined *)((int)puVar15 + 5) = 0;
-            *(undefined *)((int)puVar15 + 9) = 1;
-            *(float *)(uVar6 + 0x28) = lbl_803E4614 * *(float *)(iVar8 + 0x298) + lbl_803E45F0;
-            param_2 = (double)lbl_803E4618;
-            *(float *)(uVar6 + 0x2c) =
-                 (float)(param_2 * (double)*(float *)(iVar8 + 0x298) + (double)lbl_803E460C);
-            local_38 = lbl_803E45D0;
-            local_34 = lbl_803E45D0;
-            local_30 = lbl_803E45D0;
-            local_3c = lbl_803E45E8;
-            local_44[2] = 0;
-            local_44[1] = 0;
-            local_44[0] = *puVar7;
-            if (*(short **)(puVar7 + 0x18) != (short *)0x0) {
-              local_44[0] = local_44[0] + **(short **)(puVar7 + 0x18);
-            }
-            FUN_80017748(local_44,(float *)(uVar6 + 0x24));
-            dVar17 = (double)FUN_80006824(uVar6,SFXmn_dimexp01);
-          }
-        }
-        if (*(char *)(puVar15 + 3) != '\0') {
-          puVar15[5] = 0;
-          *(undefined4 *)(puVar15 + 10) = 0;
-          ObjMsg_SendToObject(dVar17,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)puVar7,
-                       0x100010,uVar6,CONCAT22(puVar15[1],*puVar15),in_r7,in_r8,in_r9,in_r10);
-        }
-      }
-      puVar15[7] = puVar15[7] - (ushort)DAT_803dc070;
-      if (*(char *)((int)puVar15 + 5) == '\0') {
-        FUN_80181b50(dVar17,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar6,puVar7,
-                     (int)puVar15);
-      }
-      else {
-        dVar17 = FUN_80017708((float *)(uVar6 + 0x18),(float *)(iVar16 + 8));
-        fVar3 = lbl_803E45D0;
-        local_20 = (double)CONCAT44(0x43300000,
-                                    (int)(short)puVar15[6] * (int)(short)puVar15[6] ^ 0x80000000);
-        if ((double)(float)(local_20 - DOUBLE_803e4600) <= dVar17) {
-          *(float *)(uVar6 + 0x24) = lbl_803E45D0;
-          *(float *)(uVar6 + 0x2c) = fVar3;
-          puVar15[5] = 500;
-          *(undefined *)((int)puVar15 + 9) = 0;
-          *(undefined4 *)(uVar6 + 0xf8) = 0;
-          ObjHits_EnableObject(uVar6);
-          *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
-          ObjHits_ClearHitVolumes(uVar6);
-        }
-      }
-      if (((short)puVar15[7] < 1) && (*(char *)((int)puVar15 + 5) != '\0')) {
-        cVar1 = *(char *)(puVar15 + 0xf);
-        if ((cVar1 == '\x05') || (cVar1 == '\x06')) {
-          FUN_80006824(uVar6,SFXmn_dimprup6);
-          uVar9 = randomGetRange(0,100);
-          puVar15[7] = (short)uVar9 + 300;
-        }
-        else if (((byte)(cVar1 - 1U) < 2) || (cVar1 == '\x03')) {
-          FUN_80006824(uVar6,SFXmn_dimraw26);
-          uVar9 = randomGetRange(0,100);
-          puVar15[7] = (short)uVar9 + 300;
-        }
-      }
-      if (*(int *)(uVar6 + 0xf8) == 0) {
-        *(ushort *)(uVar6 + 6) = *(ushort *)(uVar6 + 6) & 0xbfff;
-      }
+    playerState = *(int *)(player + 0xb8);
+    if (*(s16 *)(state + 0x12) <= 0) {
+        *(s16 *)(state + 0x12) = 800;
+        *(s16 *)(state + 0xa) = 1;
+        *(u8 *)(state + 0x9) = 0;
+        *(u8 *)(obj + 0xaf) |= 8;
+        fn_801816F8(obj, player, state);
+        zf = lbl_803E3938;
+        *(f32 *)(obj + 0x24) = zf;
+        *(f32 *)(obj + 0x2c) = zf;
     }
-    else {
-      bVar2 = false;
-      *(undefined *)(uVar6 + 0x36) = 0;
-      local_28 = (double)(longlong)(int)(lbl_803DC074 * local_48);
-      *(int *)(puVar15 + 10) = *(int *)(puVar15 + 10) - (int)(short)(int)(lbl_803DC074 * local_48)
-      ;
-      if (*(int *)(puVar15 + 10) < 1) {
-        iVar8 = FUN_80017a98();
-        dVar17 = (double)FUN_8001771c((float *)(uVar6 + 0x18),(float *)(iVar8 + 0x18));
-        if (((double)lbl_803E45C8 < dVar17) && (puVar15[0xe] == -1)) {
-          bVar2 = true;
+    if (*(int *)(state + 0x14) != 0) {
+        flag = 0;
+        *(u8 *)(obj + 0x36) = flag;
+        *(int *)(state + 0x14) -= (s16)(int)(timeDelta * animSpeed);
+        if (*(int *)(state + 0x14) <= 0) {
+            if ((Vec_distance((f32 *)(obj + 0x18), (f32 *)((int)Obj_GetPlayerObject() + 0x18)) > lbl_803E3930) &&
+                (*(s16 *)(state + 0x1c) == -1)) {
+                flag = 1;
+            }
+            if (flag == 0) {
+                *(int *)(state + 0x14) = 1;
+            } else {
+                *(int *)(state + 0x14) = 0;
+                *(s16 *)(state + 0xa) = 0;
+                ObjHits_EnableObject(obj);
+                ObjHits_SyncObjectPositionIfDirty(obj);
+                *(u8 *)(obj + 0xaf) &= ~0x8;
+                *(s16 *)(obj + 0x6) &= ~0x4000;
+            }
         }
-        if (bVar2) {
-          *(undefined4 *)(puVar15 + 10) = 0;
-          puVar15[5] = 0;
-          ObjHits_EnableObject(uVar6);
-          ObjHits_SyncObjectPositionIfDirty(uVar6);
-          *(byte *)(uVar6 + 0xaf) = *(byte *)(uVar6 + 0xaf) & 0xf7;
-          *(ushort *)(uVar6 + 6) = *(ushort *)(uVar6 + 6) & 0xbfff;
+    } else {
+        if (*(s8 *)(state + 0x5) != 2) {
+            level = (int)(lbl_803E3978 * timeDelta + (f32)(u32)*(u8 *)(obj + 0x36));
+            if (level > 0xff) {
+                level = 0xff;
+            }
+            *(u8 *)(obj + 0x36) = level;
         }
-        else {
-          *(undefined4 *)(puVar15 + 10) = 1;
+        if (*(s16 *)(state + 0xa) != 0) {
+            ObjHits_DisableObject(obj);
+            *(s16 *)(state + 0xa) -= framesThisStep;
+            if (*(s16 *)(state + 0xa) <= 0) {
+                if (*(int *)(state + 0x18) != 0) {
+                    *(int *)(state + 0x14) = *(int *)(state + 0x18);
+                } else {
+                    *(int *)(state + 0x14) = 1;
+                }
+                (**(void (**)(int, f32))(*gMapEventInterface + 0x64))(
+                    *(int *)(def + 0x14), (f32)*(int *)(state + 0x18));
+                *(f32 *)(obj + 0xc) = *(f32 *)(def + 0x8);
+                *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
+                *(f32 *)(obj + 0x14) = *(f32 *)(def + 0x10);
+                *(f32 *)(obj + 0x80) = *(f32 *)(def + 0x8);
+                *(f32 *)(obj + 0x84) = *(f32 *)(def + 0xc);
+                *(f32 *)(obj + 0x88) = *(f32 *)(def + 0x10);
+                zf = lbl_803E3938;
+                *(f32 *)(obj + 0x24) = zf;
+                *(f32 *)(obj + 0x28) = zf;
+                *(f32 *)(obj + 0x2c) = zf;
+            }
+            if (*(s16 *)(state + 0xa) <= 0x32) {
+                return;
+            }
         }
-      }
+        if (*(s8 *)(state + 0x9) != 1) {
+            if (*(s8 *)(state + 0x5) == 0) {
+                flag = 0;
+                if (((buttonGetDisabled(0) & 0x100) == 0) && (*(int *)(obj + 0xf8) == 0) &&
+                    (ObjTrigger_IsSet(obj) != 0)) {
+                    *(s16 *)(state + 0x0) = -0x8000;
+                    *(s16 *)(state + 0x2) = 0;
+                    ObjHits_DisableObject(obj);
+                    flag = 1;
+                }
+                *(s8 *)(state + 0x5) = flag;
+                if (*(s8 *)(state + 0x5) != 0) {
+                    *(u8 *)(state + 0x6) = 1;
+                }
+                if (*(int *)(obj + 0xf8) == 0) {
+                    ObjHits_EnableObject(obj);
+                    if ((*(u8 *)(state + 0x20) != 0) && (playerIsDisguised(player) == 0)) {
+                        *(u8 *)(obj + 0xaf) |= 0x10;
+                    } else {
+                        *(u8 *)(obj + 0xaf) &= ~0x10;
+                    }
+                }
+                *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
+                *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x14);
+                *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+            } else {
+                ObjHits_DisableObject(obj);
+                *(u8 *)(obj + 0xaf) |= 8;
+                if ((playerGetStateFlag310(player) & 0x4000) != 0) {
+                    setAButtonIcon(5);
+                } else {
+                    setAButtonIcon(4);
+                }
+                if ((getButtonsJustPressed(0) & 0x100) != 0) {
+                    if (fn_80295BF0(player) != 0) {
+                        *(u8 *)(state + 0x6) = 0;
+                        buttonDisable(0, 0x100);
+                    } else {
+                        Sfx_PlayFromObject(0, 0x10a);
+                    }
+                }
+                if (*(int *)(obj + 0xf8) == 1) {
+                    *(u8 *)(state + 0x5) = 2;
+                }
+                if (((*(s8 *)(state + 0x5) == 2) && (*(int *)(obj + 0xf8) == 0)) ||
+                    ((*(u8 *)(state + 0x20) != 0) && (playerIsDisguised(player) == 0))) {
+                    if (fn_8029669C(player) != 0) {
+                        *(u8 *)(state + 0x5) = 0;
+                        *(u8 *)(state + 0x9) = 1;
+                        *(f32 *)(obj + 0x28) = lbl_803E397C * *(f32 *)(playerState + 0x298) + lbl_803E3958;
+                        *(f32 *)(obj + 0x2c) = lbl_803E3980 * *(f32 *)(playerState + 0x298) + lbl_803E3974;
+                        blk.fy = lbl_803E3938;
+                        blk.fz = lbl_803E3938;
+                        blk.fw = lbl_803E3938;
+                        blk.fx = lbl_803E3950;
+                        blk.h2 = 0;
+                        blk.h1 = 0;
+                        blk.h0 = *(s16 *)player;
+                        if (*(void **)(player + 0x30) != NULL) {
+                            blk.h0 = blk.h0 + **(s16 **)(player + 0x30);
+                        }
+                        mathFn_80021ac8(&blk, (void *)(obj + 0x24));
+                        Sfx_PlayFromObject(obj, 0x6b);
+                    } else if (fn_802966B4(player) != 0) {
+                        *(u8 *)(state + 0x5) = 0;
+                        *(u8 *)(state + 0x9) = 2;
+                        zf = lbl_803E3938;
+                        *(f32 *)(obj + 0x24) = zf;
+                        *(f32 *)(obj + 0x28) = zf;
+                        *(f32 *)(obj + 0x2c) = zf;
+                        ObjHits_EnableObject(obj);
+                        *(u8 *)(obj + 0xaf) &= ~0x8;
+                        ObjHits_ClearHitVolumes(obj);
+                    } else {
+                        *(u8 *)(state + 0x5) = 0;
+                        *(u8 *)(state + 0x9) = 1;
+                        *(f32 *)(obj + 0x28) = lbl_803E3988 * *(f32 *)(playerState + 0x298) + lbl_803E3984;
+                        *(f32 *)(obj + 0x2c) = lbl_803E3990 * *(f32 *)(playerState + 0x298) + lbl_803E398C;
+                        blk.fy = lbl_803E3938;
+                        blk.fz = lbl_803E3938;
+                        blk.fw = lbl_803E3938;
+                        blk.fx = lbl_803E3950;
+                        blk.h2 = 0;
+                        blk.h1 = 0;
+                        blk.h0 = *(s16 *)player;
+                        mathFn_80021ac8(&blk, (void *)(obj + 0x24));
+                        Sfx_PlayFromObject(obj, 0x6b);
+                        *(u8 *)(state + 0x6) = 0;
+                        *(u8 *)(obj + 0xaf) |= 8;
+                    }
+                }
+                if (*(s8 *)(state + 0x6) != 0) {
+                    *(s16 *)(state + 0xa) = 0;
+                    *(int *)(state + 0x14) = 0;
+                    ObjMsg_SendToObject(player, 0x100010, obj,
+                                        (*(s16 *)(state + 0x2) << 16) | ((u16)*(s16 *)(state + 0x0)));
+                }
+            }
+        } else if (*(s8 *)(state + 0x9) != 0) {
+            *(s16 *)(state + 0x12) -= framesThisStep;
+            if (*(s8 *)(state + 0x9) == 1) {
+                ObjHits_SetHitVolumeSlot(obj, 0xe, 1, 0);
+                if (*(f32 *)(obj + 0x28) > lbl_803E3994) {
+                    *(f32 *)(obj + 0x28) = lbl_803E3998 * timeDelta + *(f32 *)(obj + 0x28);
+                }
+                ObjHits_EnableObject(obj);
+            }
+            *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
+            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+            *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
+            fn_801821FC(obj);
+            c = *(s8 *)(*(int *)(obj + 0x54) + 0xad);
+            if ((c != 0) && (*(s8 *)(state + 0x9) == 1)) {
+                blk.fy = *(f32 *)(obj + 0xc);
+                blk.fz = *(f32 *)(obj + 0x10);
+                blk.fw = *(f32 *)(obj + 0x14);
+                objLightFn_8009a1dc(obj, lbl_803E3934, &blk, 1, 0);
+                (**(void (**)(int, int, int, int, int, int))(*(int *)lbl_803DDAC0 + 0x4))(
+                    obj, 1, 0, 2, -1, 0);
+                Sfx_PlayFromObject(obj, (u16)*(s16 *)(state + 0x10));
+                *(s16 *)(state + 0xa) = 0x32;
+                *(u8 *)(state + 0x9) = 0;
+                *(u8 *)(obj + 0xaf) |= 8;
+                fn_801816F8(obj, player, state);
+                zf = lbl_803E3938;
+                *(f32 *)(obj + 0x24) = zf;
+                *(f32 *)(obj + 0x2c) = zf;
+                ObjHits_ClearHitVolumes(obj);
+            } else if ((c != 0) && (*(s8 *)(state + 0x9) == 2)) {
+                zf = lbl_803E3938;
+                *(f32 *)(obj + 0x24) = zf;
+                *(f32 *)(obj + 0x2c) = zf;
+                *(s16 *)(state + 0xa) = 500;
+                *(u8 *)(state + 0x9) = 0;
+                *(int *)(obj + 0xf8) = 0;
+                ObjHits_EnableObject(obj);
+                *(u8 *)(obj + 0xaf) &= ~0x8;
+                ObjHits_ClearHitVolumes(obj);
+            }
+        }
+        *(s16 *)(state + 0xe) -= framesThisStep;
+        if (*(s8 *)(state + 0x5) != 0) {
+            if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(def + 0x8)) >=
+                (f32)(*(s16 *)(state + 0xc) * *(s16 *)(state + 0xc))) {
+                zf = lbl_803E3938;
+                *(f32 *)(obj + 0x24) = zf;
+                *(f32 *)(obj + 0x2c) = zf;
+                *(s16 *)(state + 0xa) = 500;
+                *(u8 *)(state + 0x9) = 0;
+                *(int *)(obj + 0xf8) = 0;
+                ObjHits_EnableObject(obj);
+                *(u8 *)(obj + 0xaf) &= ~0x8;
+                ObjHits_ClearHitVolumes(obj);
+            }
+        } else {
+            fn_801814D0(obj, player, state);
+        }
+        if ((*(s16 *)(state + 0xe) <= 0) && (*(s8 *)(state + 0x5) != 0)) {
+            k = *(u8 *)(state + 0x1e);
+            if ((k == 5) || (k == 6)) {
+                Sfx_PlayFromObject(obj, 0x6c);
+                *(s16 *)(state + 0xe) = (s16)(randomGetRange(0, 100) + 0x12c);
+            } else if (((u8)(k - 1) <= 1) || (k == 3)) {
+                Sfx_PlayFromObject(obj, 0x6d);
+                *(s16 *)(state + 0xe) = (s16)(randomGetRange(0, 100) + 0x12c);
+            }
+        }
+        if (*(int *)(obj + 0xf8) == 0) {
+            *(s16 *)(obj + 0x6) &= ~0x4000;
+        }
     }
-  }
-LAB_801835d4:
-  FUN_8028688c();
-  return;
 }
+#pragma peephole reset
+#pragma scheduling reset
