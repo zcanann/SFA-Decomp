@@ -140,16 +140,19 @@ typedef struct {
     u8 c : 6;
 } TrickyCfgBits;
 
+#define TRICKY_STATE_FLAGS_OFFSET 0x54
+#define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
+#define TRICKY_STATE_RESET_FLAG_10 0x00000010
+#define TRICKY_STATE_RESET_FLAG_10000 0x00010000
+#define TRICKY_STATE_RESET_FLAG_20000 0x00020000
+#define TRICKY_STATE_RESET_FLAG_40000 0x00040000
+
 #define TRICKY_RETARGET(st, X) \
     { \
         u32 px = (u32)((char *)(X) + 0x18); \
         if (*(u32 *)((st) + 0x28) != px) { \
             *(u32 *)((st) + 0x28) = px; \
-            { \
-                register u32 m; \
-                register u32 v; \
-                asm { lwz v, 0x54(st); li m, -1025; and m, v, m; stw m, 0x54(st); } \
-            } \
+            *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_TARGET_DIRTY_FLAG; \
             *(u16 *)((st) + 0xd2) = 0; \
         } \
     }
@@ -159,15 +162,10 @@ typedef struct {
         f32 z = lbl_803E23DC; \
         *(f32 *)((st) + 0x71c) = z; \
         *(f32 *)((st) + 0x720) = z; \
-        { \
-            register u32 m; \
-            register u32 t; \
-            register u32 v; \
-            asm { lwz t, 0x54(st); li m, -17; and m, t, m; stw m, 0x54(st); \
-                  lwz v, 0x54(st); lis t, -1; addi m, t, -1; and m, v, m; stw m, 0x54(st); \
-                  lwz v, 0x54(st); lis t, -2; addi m, t, -1; and m, v, m; stw m, 0x54(st); \
-                  lwz v, 0x54(st); lis t, -4; addi m, t, -1; and m, v, m; stw m, 0x54(st); } \
-        } \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10000; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_20000; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_40000; \
         *(s8 *)((st) + 0xd) = -1; \
     }
 #define TRICKY_RESET(st) \
