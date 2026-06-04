@@ -9,6 +9,32 @@
 
 #pragma peephole off
 #pragma scheduling off
+extern int Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern void itemPickupDoParticleFx(int obj, f32 scale, int p3, int p4);
+extern void playerAddRemoveMagic(int player, int amount);
+extern void OSReport(const char *fmt, ...);
+extern f32 getXZDistance(void *a, void *b);
+extern int fn_8029622C(int player);
+extern u8 framesThisStep;
+extern char sMagicDustCollectedMessage[];
+extern int *gExpgfxInterface;
+extern int *gPartfxInterface;
+extern int *gPathControlInterface;
+extern f32 timeDelta;
+extern f32 lbl_803E34B0;
+extern f32 lbl_803E34B4;
+extern f32 lbl_803E34B8;
+extern f32 lbl_803E34BC;
+extern f32 lbl_803E34C0;
+extern f32 lbl_803E34C4;
+extern f32 lbl_803E34C8;
+extern f32 lbl_803E34CC;
+extern f32 lbl_803E34D0;
+extern f32 lbl_803E34D4;
+extern f32 lbl_803E34D8;
+extern f32 lbl_803E34DC;
+extern f32 lbl_803E34E0;
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006824();
@@ -94,12 +120,11 @@ extern f32 lbl_803E41C4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void magicdust_update(int param_1)
+void magicdust_update(int obj)
 {
   float fVar1;
   short sVar2;
   byte bVar3;
-  short *psVar4;
   int iVar5;
   int iVar6;
   uint uVar7;
@@ -107,186 +132,183 @@ void magicdust_update(int param_1)
   double dVar9;
   char local_28;
   char local_27 [3];
-  uint local_24 [9];
+  int local_24 [9];
+  register int msgId;
+  f32 dist;
   
-  psVar4 = (short *)param_1;
   iVar5 = (int)Obj_GetPlayerObject();
-  iVar8 = *(int *)(psVar4 + 0x5c);
-  while (iVar6 = ObjMsg_Pop((int)psVar4,local_24,(uint *)0x0,(uint *)0x0), iVar6 != 0) {
-    if (local_24[0] == 0x7000b) {
-      iVar6 = *(int *)(*(int *)(psVar4 + 0x28) + 0x18);
-      (*(code *)(*DAT_803dd6f8 + 0x18))(psVar4);
-      FUN_80081118((double)lbl_803E4148,psVar4,(uint)*(byte *)(iVar8 + 0x27c),0x28);
-      ObjHits_DisableObject((int)psVar4);
-      FUN_80006824((uint)psVar4,*(ushort *)(iVar8 + 0x274));
-      FUN_80006810((int)psVar4,0x56);
-      FUN_80294d40(iVar5,(int)*(char *)(iVar6 + 0xb));
+  iVar8 = *(int *)(obj + 0xb8);
+  msgId = 0x7000b;
+  while (iVar6 = ObjMsg_Pop(obj,(uint *)local_24,(uint *)0x0,(uint *)0x0), iVar6 != 0) {
+    if (local_24[0] == msgId) {
+      iVar6 = *(int *)(*(int *)(obj + 0x50) + 0x18);
+      (*(code *)(*gExpgfxInterface + 0x18))(obj);
+      itemPickupDoParticleFx(obj,lbl_803E34B0,*(u8 *)(iVar8 + 0x27c),0x28);
+      ObjHits_DisableObject(obj);
+      Sfx_PlayFromObject(obj,(u16)*(s16 *)(iVar8 + 0x274));
+      Sfx_StopFromObject(obj,0x56);
+      playerAddRemoveMagic(iVar5,(int)*(s8 *)(iVar6 + 0xb));
       *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) & 0xfa;
       *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 8;
       *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 0x40;
-      *(float *)(iVar8 + 0x26c) = lbl_803E414C;
-      FUN_800723a0();
-      *(undefined *)(psVar4 + 0x1b) = 1;
+      *(float *)(iVar8 + 0x26c) = lbl_803E34B4;
+      OSReport(sMagicDustCollectedMessage);
+      *(u8 *)(obj + 0x36) = 1;
     }
   }
   if ((*(byte *)(iVar8 + 0x27a) & 0x10) == 0) {
     if (((*(byte *)(iVar8 + 0x27a) & 0x40) == 0) &&
-       (dVar9 = FUN_80017708((float *)(psVar4 + 0xc),(float *)(iVar5 + 0x18)),
-       dVar9 < (double)lbl_803E4150)) {
+       (getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18)) < lbl_803E34B8)) {
       *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 0x10;
       local_28 = '\0';
-      (*(code *)(*DAT_803dd708 + 8))
-                (psVar4,*(undefined2 *)(iVar8 + 0x272),0,0x10002,0xffffffff,&local_28);
+      (*(code *)(*gPartfxInterface + 8))
+                (obj,*(u16 *)(iVar8 + 0x272),0,0x10002,0xffffffff,&local_28);
       local_28 = '\x01';
-      (*(code *)(*DAT_803dd708 + 8))
-                (psVar4,*(undefined2 *)(iVar8 + 0x272),0,0x10002,0xffffffff,&local_28);
+      (*(code *)(*gPartfxInterface + 8))
+                (obj,*(u16 *)(iVar8 + 0x272),0,0x10002,0xffffffff,&local_28);
       local_28 = '\x02';
-      (*(code *)(*DAT_803dd708 + 8))
-                (psVar4,*(undefined2 *)(iVar8 + 0x272),0,0x10002,0xffffffff,&local_28);
+      (*(code *)(*gPartfxInterface + 8))
+                (obj,*(u16 *)(iVar8 + 0x272),0,0x10002,0xffffffff,&local_28);
     }
   }
   else {
-    dVar9 = FUN_80017708((float *)(psVar4 + 0xc),(float *)(iVar5 + 0x18));
-    if ((double)lbl_803E4150 <= dVar9) {
+    if (getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18)) >= lbl_803E34B8) {
       *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) & 0xef;
-      (*(code *)(*DAT_803dd6f8 + 0x18))(psVar4);
+      (*(code *)(*gExpgfxInterface + 0x18))(obj);
     }
   }
-  if ((psVar4[3] & 0x2000U) != 0) {
+  if ((*(short *)(obj + 6) & 0x2000) != 0) {
     if ((*(byte *)(iVar8 + 0x27a) & 2) != 0) {
-      *psVar4 = *psVar4 + (ushort)DAT_803dc070 * 0x100;
-      sVar2 = *(short *)(iVar8 + 0x278) - (ushort)DAT_803dc070;
-      *(short *)(iVar8 + 0x278) = sVar2;
-      if (sVar2 < 0) {
-        FUN_80006824((uint)psVar4,SFXen_statue_wave);
+      *(short *)obj = *(short *)obj + (u16)framesThisStep * 0x100;
+      *(short *)(iVar8 + 0x278) -= (u16)framesThisStep;
+      if (*(short *)(iVar8 + 0x278) < 0) {
+        Sfx_PlayFromObject(obj,SFXen_statue_wave);
         uVar7 = randomGetRange(0xf0,300);
         *(short *)(iVar8 + 0x278) = (short)uVar7;
       }
     }
-    if (*(int *)(psVar4 + 0x62) != 0) {
-      iVar5 = *(int *)(psVar4 + 0x32);
-      if (iVar5 != 0) {
+    if (*(uint *)(obj + 0xc4) != 0) {
+      iVar5 = *(int *)(obj + 0x64);
+      if ((uint)iVar5 != 0) {
         *(uint *)(iVar5 + 0x30) = *(uint *)(iVar5 + 0x30) | 0x1000;
       }
-      (*(code *)(*DAT_803dd728 + 0x20))(psVar4,iVar8);
+      (*(code *)(*gPathControlInterface + 0x20))(obj,iVar8);
       goto LAB_80173f80;
     }
-    iVar6 = *(int *)(psVar4 + 0x32);
-    if (iVar6 != 0) {
+    iVar6 = *(int *)(obj + 0x64);
+    if ((uint)iVar6 != 0) {
       *(uint *)(iVar6 + 0x30) = *(uint *)(iVar6 + 0x30) & 0xffffefff;
     }
     *(undefined *)(iVar8 + 0x25b) = 1;
-    fVar1 = lbl_803E4154;
+    fVar1 = lbl_803E34BC;
     if ((*(byte *)(iVar8 + 0x27a) & 3) == 0) {
-      *(float *)(psVar4 + 0x12) = *(float *)(psVar4 + 0x12) * lbl_803E4154;
-      *(float *)(psVar4 + 0x16) = *(float *)(psVar4 + 0x16) * fVar1;
-      *(float *)(psVar4 + 0x14) =
-           -(float)((double)lbl_803E4158 * (double)lbl_803DC074 - (double)*(float *)(psVar4 + 0x14));
+      *(float *)(obj + 0x24) = *(float *)(obj + 0x24) * fVar1;
+      *(float *)(obj + 0x2c) = *(float *)(obj + 0x2c) * fVar1;
+      *(float *)(obj + 0x28) = -(lbl_803E34C0 * timeDelta - *(float *)(obj + 0x28));
     }
-    *(float *)(iVar8 + 0x26c) = *(float *)(iVar8 + 0x26c) - lbl_803DC074;
+    *(float *)(iVar8 + 0x26c) = *(float *)(iVar8 + 0x26c) - timeDelta;
     bVar3 = *(byte *)(iVar8 + 0x27a);
     if ((bVar3 & 1) == 0) {
       if ((bVar3 & 4) == 0) {
-        if (*(float *)(iVar8 + 0x26c) <= lbl_803E415C) {
-          Obj_FreeObject((int)psVar4);
+        if (*(float *)(iVar8 + 0x26c) <= lbl_803E34C4) {
+          Obj_FreeObject(obj);
         }
         goto LAB_80173f80;
       }
-      if (*(float *)(iVar8 + 0x26c) <= lbl_803E415C) {
+      if (*(float *)(iVar8 + 0x26c) <= lbl_803E34C4) {
         *(byte *)(iVar8 + 0x27a) = bVar3 & 0xfb;
         *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 8;
-        *(float *)(iVar8 + 0x26c) = lbl_803E414C;
-        (*(code *)(*DAT_803dd6f8 + 0x18))(psVar4);
-        if (*(int *)(psVar4 + 0x18) == 0) {
+        *(float *)(iVar8 + 0x26c) = lbl_803E34B4;
+        (*(code *)(*gExpgfxInterface + 0x18))(obj);
+        if (*(int *)(obj + 0x30) == 0) {
           for (local_27[0] = '\x1e'; local_27[0] != '\0'; local_27[0] = local_27[0] + -1) {
-            (*(code *)(*DAT_803dd708 + 8))(psVar4,*(undefined2 *)(iVar8 + 0x270),0,1,0xffffffff,local_27);
+            (*(code *)(*gPartfxInterface + 8))(obj,*(u16 *)(iVar8 + 0x270),0,1,0xffffffff,local_27);
           }
         }
-        *(undefined *)(psVar4 + 0x1b) = 1;
-        FUN_80006824((uint)psVar4,SFXen_waterblock_wave);
+        *(u8 *)(obj + 0x36) = 1;
+        Sfx_PlayFromObject(obj,SFXen_waterblock_wave);
       }
-      objMove((float)(*(float *)(psVar4 + 0x12) * lbl_803DC074),
-                  (float)(*(float *)(psVar4 + 0x14) * lbl_803DC074),
-                  (float)(*(float *)(psVar4 + 0x16) * lbl_803DC074), (int)psVar4);
+      objMove(*(float *)(obj + 0x24) * timeDelta, *(float *)(obj + 0x28) * timeDelta,
+          *(float *)(obj + 0x2c) * timeDelta, obj);
     }
     else {
-      if (*(float *)(iVar8 + 0x26c) <= lbl_803E415C) {
+      if (*(float *)(iVar8 + 0x26c) <= lbl_803E34C4) {
         *(byte *)(iVar8 + 0x27a) = bVar3 & 0xfe;
         *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 4;
-        *(float *)(iVar8 + 0x26c) = lbl_803E4160;
-        *(undefined *)(psVar4 + 0x1b) = 0xff;
+        *(float *)(iVar8 + 0x26c) = lbl_803E34C8;
+        *(u8 *)(obj + 0x36) = 0xff;
       }
-      if (*(int *)(psVar4 + 0x18) == 0) {
-        (*(code *)(*DAT_803dd708 + 8))(psVar4,*(undefined2 *)(iVar8 + 0x270),0,1,0xffffffff,0);
-        (*(code *)(*DAT_803dd708 + 8))(psVar4,*(undefined2 *)(iVar8 + 0x270),0,1,0xffffffff,0);
+      if (*(int *)(obj + 0x30) == 0) {
+        (*(code *)(*gPartfxInterface + 8))(obj,*(u16 *)(iVar8 + 0x270),0,1,0xffffffff,0);
+        (*(code *)(*gPartfxInterface + 8))(obj,*(u16 *)(iVar8 + 0x270),0,1,0xffffffff,0);
       }
     }
     if ((*(byte *)(iVar8 + 0x27a) & 3) == 0) {
-      (*(code *)(*DAT_803dd728 + 0x10))((double)lbl_803DC074,psVar4,iVar8);
-      (*(code *)(*DAT_803dd728 + 0x14))(psVar4,iVar8);
-      (*(code *)(*DAT_803dd728 + 0x18))((double)lbl_803DC074,psVar4,iVar8);
+      (*(code *)(*gPathControlInterface + 0x10))(timeDelta,obj,iVar8);
+      (*(code *)(*gPathControlInterface + 0x14))(obj,iVar8);
+      (*(code *)(*gPathControlInterface + 0x18))(timeDelta,obj,iVar8);
       if (*(char *)(iVar8 + 0x261) != '\0') {
-        float vx = -*(float *)(psVar4 + 0x12);
-        float vy = -*(float *)(psVar4 + 0x14);
-        float vz = -*(float *)(psVar4 + 0x16);
+        float vx = -*(float *)(obj + 0x24);
+        float vy = -*(float *)(obj + 0x28);
+        float vz = -*(float *)(obj + 0x2c);
         float mag = sqrtf(vx*vx + vy*vy + vz*vz);
-        if (lbl_803E4164 < mag) {
-          FUN_80006824((uint)psVar4,SFXwp_iceywindlp16);
+        if (lbl_803E34CC < mag) {
+          Sfx_PlayFromObject(obj,SFXwp_iceywindlp16);
         }
-        if (*(float *)(iVar8 + 0x6c) < lbl_803E4168) {
-          *(float *)(psVar4 + 0x12) = -*(float *)(psVar4 + 0x12);
-          *(float *)(psVar4 + 0x16) = -*(float *)(psVar4 + 0x16);
-          fVar1 = lbl_803E4170;
-          *(float *)(psVar4 + 0x12) = *(float *)(psVar4 + 0x12) * lbl_803E4170;
-          *(float *)(psVar4 + 0x16) = *(float *)(psVar4 + 0x16) * fVar1;
+        if (*(float *)(iVar8 + 0x6c) < lbl_803E34D0) {
+          *(float *)(obj + 0x24) = -*(float *)(obj + 0x24);
+          *(float *)(obj + 0x2c) = -*(float *)(obj + 0x2c);
+          fVar1 = lbl_803E34D8;
+          *(float *)(obj + 0x24) = *(float *)(obj + 0x24) * lbl_803E34D8;
+          *(float *)(obj + 0x2c) = *(float *)(obj + 0x2c) * fVar1;
         }
         else {
-          *(float *)(psVar4 + 0x14) = -*(float *)(psVar4 + 0x14);
-          *(float *)(psVar4 + 0x14) = *(float *)(psVar4 + 0x14) * lbl_803E416C;
+          *(float *)(obj + 0x28) = -*(float *)(obj + 0x28);
+          *(float *)(obj + 0x28) = *(float *)(obj + 0x28) * lbl_803E34D4;
         }
         bVar3 = *(char *)(iVar8 + 0x27b) + 1;
         *(byte *)(iVar8 + 0x27b) = bVar3;
         if (5 < bVar3) {
           *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 2;
-          fVar1 = lbl_803E415C;
-          *(float *)(psVar4 + 0x12) = lbl_803E415C;
-          *(float *)(psVar4 + 0x14) = fVar1;
-          *(float *)(psVar4 + 0x16) = fVar1;
+          fVar1 = lbl_803E34C4;
+          *(float *)(obj + 0x24) = lbl_803E34C4;
+          *(float *)(obj + 0x28) = fVar1;
+          *(float *)(obj + 0x2c) = fVar1;
         }
       }
     }
   }
   if (((*(byte *)(iVar8 + 0x27a) & 0x20) == 0) && ((*(byte *)(iVar8 + 0x27a) & 0x40) == 0)) {
-    fVar1 = *(float *)(psVar4 + 8) - *(float *)(iVar5 + 0x10);
-    if (fVar1 < lbl_803E415C) {
+    fVar1 = *(float *)(obj + 0x10) - *(float *)(iVar5 + 0x10);
+    if (fVar1 < lbl_803E34C4) {
       fVar1 = -fVar1;
     }
-    if (fVar1 < lbl_803E4174) {
-      dVar9 = FUN_80017708((float *)(psVar4 + 0xc),(float *)(iVar5 + 0x18));
-      fVar1 = (float)((double)lbl_803E4178 + (double)*(float *)(iVar8 + 0x268));
-      if ((dVar9 < (double)(fVar1 * fVar1)) && (uVar7 = FUN_80294c78(iVar5), uVar7 != 0)) {
+    if (fVar1 < lbl_803E34DC) {
+      dist = getXZDistance((f32 *)(obj + 0x18),(f32 *)(iVar5 + 0x18));
+      fVar1 = lbl_803E34E0 + *(float *)(iVar8 + 0x268);
+      if ((dist < fVar1 * fVar1) && (fn_8029622C(iVar5) != 0)) {
         uVar7 = GameBit_Get(0x90d);
         if (uVar7 == 0) {
           *(undefined2 *)(iVar8 + 0x280) = 0xffff;
-          ObjMsg_SendToObject(iVar5, 0x7000a, (uint)psVar4, iVar8 + 0x280);
-          ObjHits_DisableObject((int)psVar4);
+          ObjMsg_SendToObject(iVar5, 0x7000a, obj, iVar8 + 0x280);
+          ObjHits_DisableObject(obj);
           GameBit_Set(0x90d,1);
           *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 0x20;
         }
         else {
-          iVar6 = *(int *)(*(int *)(psVar4 + 0x28) + 0x18);
-          (*(code *)(*DAT_803dd6f8 + 0x18))(psVar4);
-          FUN_80081118((double)lbl_803E4148,psVar4,(uint)*(byte *)(iVar8 + 0x27c),0x28);
-          ObjHits_DisableObject((int)psVar4);
-          FUN_80006824((uint)psVar4,*(ushort *)(iVar8 + 0x274));
-          FUN_80006810((int)psVar4,0x56);
-          FUN_80294d40(iVar5,(int)*(char *)(iVar6 + 0xb));
+          iVar6 = *(int *)(*(int *)(obj + 0x50) + 0x18);
+          (*(code *)(*gExpgfxInterface + 0x18))(obj);
+          itemPickupDoParticleFx(obj,lbl_803E34B0,*(u8 *)(iVar8 + 0x27c),0x28);
+          ObjHits_DisableObject(obj);
+          Sfx_PlayFromObject(obj,(u16)*(s16 *)(iVar8 + 0x274));
+          Sfx_StopFromObject(obj,0x56);
+          playerAddRemoveMagic(iVar5,(int)*(s8 *)(iVar6 + 0xb));
           *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) & 0xfa;
           *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 8;
           *(byte *)(iVar8 + 0x27a) = *(byte *)(iVar8 + 0x27a) | 0x40;
-          *(float *)(iVar8 + 0x26c) = lbl_803E414C;
-          FUN_800723a0();
-          *(undefined *)(psVar4 + 0x1b) = 1;
+          *(float *)(iVar8 + 0x26c) = lbl_803E34B4;
+          OSReport(sMagicDustCollectedMessage);
+          *(u8 *)(obj + 0x36) = 1;
         }
       }
     }
@@ -830,7 +852,6 @@ extern f32 sin(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern void *getTrickyObject(void);
 extern void fn_80295918(f32 amount, int obj, int p3);
-extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int fn_80295A04(void *player, int p2);
 extern int ObjGroup_FindNearestObject(int group, int obj, f32 *dist);
