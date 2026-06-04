@@ -7522,3 +7522,70 @@ void fn_80171E5C(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern void *gPathControlInterface;
+extern f32 lbl_803E345C;
+extern f32 lbl_803E3460;
+extern f32 lbl_803E3464;
+extern f32 lbl_803E3468;
+extern f32 lbl_803E346C;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80172144(int *obj)
+{
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    if (*(s16 *)((char *)obj + 0x46) == 1702) {
+        objMove(obj, lbl_803E345C, *(f32 *)((char *)obj + 0x28) * (f32)(u32)framesThisStep, lbl_803E345C);
+    } else {
+        u8 n = framesThisStep;
+        objMove(obj, *(f32 *)((char *)obj + 0x24) * (f32)(u32)n,
+                *(f32 *)((char *)obj + 0x28) * (f32)(u32)n,
+                *(f32 *)((char *)obj + 0x2c) * (f32)(u32)n);
+    }
+    ((void (*)(int *, u8 *, f32))((int *)*(int **)gPathControlInterface)[4])(obj, state + 0x50, timeDelta);
+    ((void (*)(int *, u8 *))((int *)*(int **)gPathControlInterface)[5])(obj, state + 0x50);
+    ((void (*)(int *, u8 *, f32))((int *)*(int **)gPathControlInterface)[6])(obj, state + 0x50, timeDelta);
+    if (*(s8 *)(state + 0x2b1) != 0) {
+        f32 nx = -*(f32 *)((char *)obj + 0x24);
+        f32 ny = -*(f32 *)((char *)obj + 0x28);
+        f32 nz = -*(f32 *)((char *)obj + 0x2c);
+        f32 len = sqrtf(nx * nx + ny * ny + nz * nz);
+        if (lbl_803E345C != len) {
+            f32 inv = lbl_803E3454 / len;
+            nx = nx * inv;
+            ny = ny * inv;
+            nz = nz * inv;
+        }
+        {
+            f32 px = *(f32 *)(state + 0xb8);
+            f32 py = *(f32 *)(state + 0xbc);
+            f32 pz = *(f32 *)(state + 0xc0);
+            f32 d = lbl_803E3460 * (nx * px + ny * py + nz * pz);
+            *(f32 *)((char *)obj + 0x24) = px * d;
+            *(f32 *)((char *)obj + 0x28) = py * d;
+            *(f32 *)((char *)obj + 0x2c) = pz * d;
+        }
+        *(f32 *)((char *)obj + 0x24) -= nx;
+        *(f32 *)((char *)obj + 0x28) -= ny;
+        *(f32 *)((char *)obj + 0x2c) -= nz;
+        *(f32 *)((char *)obj + 0x28) *= len;
+        *(f32 *)((char *)obj + 0x28) *= lbl_803E3464;
+        *(f32 *)((char *)obj + 0x24) *= len;
+        *(f32 *)((char *)obj + 0x2c) *= len;
+        state[0x1d] -= 1;
+        if (state[0x1d] == 0) {
+            f32 z;
+            state[0x1d] = 0;
+            z = lbl_803E345C;
+            *(f32 *)((char *)obj + 0x24) = z;
+            *(f32 *)((char *)obj + 0x28) = z;
+            *(f32 *)((char *)obj + 0x2c) = z;
+        }
+    } else {
+        *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) * lbl_803E3468;
+        *(f32 *)((char *)obj + 0x28) = -(lbl_803E346C * timeDelta - *(f32 *)((char *)obj + 0x28));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
