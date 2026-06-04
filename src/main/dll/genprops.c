@@ -4608,13 +4608,12 @@ extern void dll_F7_free();
 extern void dll_F7_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void dll_F7_update();
 extern void dll_F7_init();
-extern u8 staffFn_80170380[];
+void staffFn_80170380(int *obj, int cmd);
 extern int *Obj_GetActiveModel(int obj);
 extern void fn_800284CC(void);
 extern void ObjModel_SetPostRenderCallback(int *model, void *callback);
 
 void shield_init(int *obj, void *initData) {
-    extern void staffFn_80170380(int *obj, int param);
     int *model = Obj_GetActiveModel((int)obj);
     ObjModel_SetPostRenderCallback(model, fn_800284CC);
     if (*(s16 *)((char *)obj + 0x46) == 0x836) {
@@ -4938,14 +4937,14 @@ ObjectDescriptor gShieldObjDescriptor = {
 };
 
 u32 jumptable_80320AA0[] = {
-    (u32)(staffFn_80170380 + 0x10C),
-    (u32)(staffFn_80170380 + 0x184),
-    (u32)(staffFn_80170380 + 0x35C),
-    (u32)(staffFn_80170380 + 0x3D0),
-    (u32)(staffFn_80170380 + 0x584),
-    (u32)(staffFn_80170380 + 0x550),
-    (u32)(staffFn_80170380 + 0x65C),
-    (u32)(staffFn_80170380 + 0x84),
+    (u32)((char *)staffFn_80170380 + 0x10C),
+    (u32)((char *)staffFn_80170380 + 0x184),
+    (u32)((char *)staffFn_80170380 + 0x35C),
+    (u32)((char *)staffFn_80170380 + 0x3D0),
+    (u32)((char *)staffFn_80170380 + 0x584),
+    (u32)((char *)staffFn_80170380 + 0x550),
+    (u32)((char *)staffFn_80170380 + 0x65C),
+    (u32)((char *)staffFn_80170380 + 0x84),
 };
 
 ObjectDescriptor12 gCurveObjDescriptor = {
@@ -5096,11 +5095,13 @@ void playerRenderQuakeSpell(int *obj) { quakeSpellFn_8016cee8(obj, *(int*)((char
 /* state-byte setters / leaf writers. */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void staffSetGlow(int *obj, u8 a, u8 b) {
     u8 *state = (u8*)((int**)obj)[0xb8/4];
     state[0xbb] = a;
     state[0xba] = b;
 }
+#pragma dont_inline reset
 
 void staff_func10(int *obj, s32 v) {
     ((StaffState*)((int**)obj)[0xb8/4])->fieldB2 = (s16)v;
@@ -7801,6 +7802,280 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
         *(f32 *)(swipe + 0x90) = *(f32 *)(obj + 0x1c);
         *(f32 *)(swipe + 0x94) = *(f32 *)(obj + 0x20);
         *(f32 *)(swipe + 0x98) = *(f32 *)(model2 + 4);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *fn_802966CC(int *player);
+extern void modelLightStruct_setColors100104(int light, int r, int g, int b, int a);
+extern void lightFn_8001d620(int light, int a, int b);
+extern void lightSetField2FB(int light, int v);
+extern f32 lbl_803E33B0;
+extern f32 lbl_803E33B4;
+extern f32 lbl_803E33B8;
+extern f32 lbl_803E33BC;
+extern f32 lbl_803E33C0;
+extern f32 lbl_803E33C8;
+extern f32 lbl_803E33CC;
+
+#pragma scheduling off
+#pragma peephole off
+void staffFn_80170380(int *obj, int cmd)
+{
+    f32 *tbl = lbl_80320A28;
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    int *glow = NULL;
+    int *player = (int *)Obj_GetPlayerObject();
+    if (player != NULL) {
+        glow = fn_802966CC(player);
+    }
+    switch ((u8)cmd) {
+    case 7:
+        if (glow != NULL) {
+            staffSetGlow(glow, 7, 0);
+        }
+        if (*(int **)state != NULL) {
+            lightFn_8001db6c(*(int *)state, 0, lbl_803E33A8);
+        }
+        {
+            f32 v = lbl_803E33AC;
+            *(f32 *)(state + 8) = v;
+            *(f32 *)(state + 0xc) = v;
+            *(f32 *)(state + 0x10) = v;
+            *(f32 *)(state + 4) = v;
+        }
+        state[0x5c] |= 1;
+        state[0x5d] |= 1;
+        state[0x5e] |= 1;
+        state[0x5f] |= 1;
+        break;
+    case 0:
+        if (*(int **)state != NULL) {
+            lightFn_8001db6c(*(int *)state, 0, lbl_803E33A8);
+        }
+        if (lbl_803E33AC != *(f32 *)(state + 8)) {
+            f32 v = lbl_803E33B0;
+            *(f32 *)(state + 0x10) = v;
+            *(f32 *)(state + 4) = v;
+            if (glow != NULL) {
+                staffSetGlow(glow, 7, 0);
+            }
+        }
+        *(f32 *)(state + 8) = lbl_803E33AC;
+        *(f32 *)(state + 0xc) = lbl_803E33B4;
+        Sfx_StopFromObject((int)obj, 0x42c);
+        Sfx_StopFromObject((int)obj, 0x42d);
+        break;
+    case 1:
+        if (lbl_803E33AC == *(f32 *)(state + 8)) {
+            if (glow != NULL) {
+                staffSetGlow(glow, 7, 8);
+            }
+            if (*(int **)state == NULL) {
+                *(int *)state = objCreateLight(0, 1);
+            }
+            if (*(int **)state != NULL) {
+                modelLightStruct_setField50(*(int *)state, 2);
+                lightVecFn_8001dd88(*(int *)state, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10) - lbl_803E33B8, *(f32 *)((char *)obj + 0x14));
+                modelLightStruct_setColorsA8AC(*(int **)state, 0, 255, 255, 255);
+                modelLightStruct_setColors100104(*(int *)state, 0, 255, 255, 255);
+                lightDistAttenFn_8001dc38(*(int *)state, lbl_803E33BC, lbl_803E33C0);
+                lightSetField4D(*(int *)state, 1);
+                lightFn_8001db6c(*(int *)state, 1, lbl_803E33AC);
+                lightFn_8001d620(*(int *)state, 0, 0);
+                lightSetField2FB(*(int *)state, 1);
+            }
+            {
+                f32 v1 = lbl_803E33AC;
+                if (v1 == *(f32 *)(state + 8)) {
+                    *(f32 *)(state + 0x10) = lbl_803E33B0;
+                    *(f32 *)(state + 4) = v1;
+                }
+            }
+            *(f32 *)(state + 8) = lbl_803E33B0;
+            {
+                f32 amp = lbl_803E33C4;
+                int i;
+                u8 *hw;
+                u8 *w;
+                f32 *t0;
+                f32 *t1;
+                f32 k;
+                f32 kc;
+                *(f32 *)(state + 0xc) = amp;
+                i = 0;
+                hw = state;
+                w = state;
+                t0 = tbl;
+                t1 = (f32 *)((char *)tbl + 0x10);
+                k = lbl_803E33A8;
+                kc = lbl_803E33C8;
+                for (; i < 4; i++) {
+                    f32 c;                    f32 sum;
+                    *(s16 *)(hw + 0x34) = -0x4000;
+                    c = fcos16((u16)*(s16 *)(hw + 0x34));
+                    sum = amp + c;                    c = sum * k;
+                    *(f32 *)(w + 0x24) = *t0 * c;
+                    *(f32 *)(w + 0x14) = *t1;
+                    *(s16 *)(hw + 0x3c) = kc + (f32)(int)(i * randomGetRange(0x78, 0x7f));
+                    hw += 2;
+                    t0 += 1;
+                    w += 4;
+                    t1 += 1;
+                }
+            }
+            Sfx_PlayFromObject(obj, 0x42c);
+            Sfx_PlayFromObject(obj, 0x42d);
+        }
+        break;
+    case 2:
+        if (glow != NULL) {
+            staffSetGlow(glow, 7, 0);
+        }
+        if (lbl_803E33AC != *(f32 *)(state + 8)) {
+            *(f32 *)(state + 0x10) = lbl_803E33CC;
+        }
+        *(f32 *)(state + 8) = lbl_803E33AC;
+        *(f32 *)(state + 0xc) = lbl_803E33B4;
+        if (*(int **)state != NULL) {
+            lightFn_8001db6c(*(int *)state, 0, lbl_803E33A8);
+        }
+        Sfx_StopFromObject((int)obj, 0x42c);
+        Sfx_StopFromObject((int)obj, 0x42d);
+        break;
+    case 3:
+        if (glow != NULL) {
+            staffSetGlow(glow, 7, 8);
+        }
+        if (*(int **)state == NULL) {
+            *(int *)state = objCreateLight(0, 1);
+        }
+        if (*(int **)state != NULL) {
+            modelLightStruct_setField50(*(int *)state, 2);
+            lightVecFn_8001dd88(*(int *)state, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10) - lbl_803E33B8, *(f32 *)((char *)obj + 0x14));
+            modelLightStruct_setColorsA8AC(*(int **)state, 0, 255, 255, 255);
+            modelLightStruct_setColors100104(*(int *)state, 0, 255, 255, 255);
+            lightDistAttenFn_8001dc38(*(int *)state, lbl_803E33BC, lbl_803E33C0);
+            lightSetField4D(*(int *)state, 1);
+            lightFn_8001db6c(*(int *)state, 1, lbl_803E33AC);
+            lightFn_8001d620(*(int *)state, 0, 0);
+            lightSetField2FB(*(int *)state, 1);
+        }
+        if (lbl_803E33AC == *(f32 *)(state + 8)) {
+            *(f32 *)(state + 0x10) = lbl_803E33CC;
+        }
+        *(f32 *)(state + 8) = lbl_803E33CC;
+        {
+            f32 amp = lbl_803E33C4;
+            int i;
+            u8 *hw;
+            u8 *w;
+            f32 *t0;
+            f32 *t1;
+            f32 k;
+            *(f32 *)(state + 0xc) = amp;
+            i = 0;
+            hw = state;
+            w = state;
+            t0 = tbl;
+            t1 = (f32 *)((char *)tbl + 0x10);
+            k = lbl_803E33A8;
+            for (; i < 4; i++) {
+                f32 c;                f32 sum;
+                *(s16 *)(hw + 0x34) = 0;
+                c = fcos16((u16)*(s16 *)(hw + 0x34));
+                sum = amp + c;                c = sum * k;
+                *(f32 *)(w + 0x24) = *t0 * c;
+                *(f32 *)(w + 0x14) = *t1;
+                hw += 2;
+                t0 += 1;
+                w += 4;
+                t1 += 1;
+            }
+        }
+        Sfx_PlayFromObject(obj, 0x42d);
+        Sfx_PlayFromObject(obj, 0x42c);
+        break;
+    case 5:
+        *(f32 *)(state + 8) = lbl_803E33AC;
+        *(f32 *)(state + 0xc) = lbl_803E33B4;
+        *(f32 *)(state + 0x10) = lbl_803E33CC;
+        Sfx_StopFromObject((int)obj, 0x42c);
+        Sfx_StopFromObject((int)obj, 0x42d);
+        break;
+    case 4:
+    {
+        f32 v = lbl_803E33CC;
+        f32 amp;
+        *(f32 *)(state + 8) = v;
+        amp = lbl_803E33C4;
+        *(f32 *)(state + 0xc) = amp;
+        *(f32 *)(state + 0x10) = v;
+        {
+            int i;
+            u8 *hw;
+            u8 *w;
+            f32 *t0;
+            f32 *t1;
+            f32 k;
+            f32 kc;
+            i = 0;
+            hw = state;
+            t0 = (f32 *)((char *)tbl + 0x20);
+            w = state;
+            t1 = (f32 *)((char *)tbl + 0x30);
+            k = lbl_803E33A8;
+            kc = lbl_803E33C8;
+            for (; i < 4; i++) {
+                f32 c;                f32 sum;
+                *(s16 *)(hw + 0x34) = -0x4000;
+                c = fcos16((u16)*(s16 *)(hw + 0x34));
+                sum = amp + c;                c = sum * k;
+                *(f32 *)(w + 0x24) = *t0 * c;
+                *(f32 *)(w + 0x14) = *t1;
+                *(s16 *)(hw + 0x3c) = kc + (f32)(int)(i * randomGetRange(0x78, 0x7f));
+                hw += 2;
+                t0 += 1;
+                w += 4;
+                t1 += 1;
+            }
+        }
+        Sfx_PlayFromObject(obj, 0x42d);
+        Sfx_PlayFromObject(obj, 0x42c);
+        break;
+    }
+    case 6:
+    {
+        int i;
+        u8 *hw;
+        u8 *w;
+        f32 *t0;
+        f32 *t1;
+        f32 amp;
+        f32 k;
+        i = 0;
+        hw = state;
+        t0 = (f32 *)((char *)tbl + 0x20);
+        w = state;
+        t1 = (f32 *)((char *)tbl + 0x30);
+        amp = lbl_803E33C4;
+        k = lbl_803E33A8;
+        for (; i < 4; i++) {
+            f32 c;
+            f32 sum;
+            *(s16 *)(hw + 0x34) = 0x4000;
+            c = fcos16((u16)*(s16 *)(hw + 0x34));
+            sum = amp + c;            c = sum * k;
+            *(f32 *)(w + 0x24) = *t0 * c;
+            *(f32 *)(w + 0x14) = *t1;
+            hw += 2;
+            t0 += 1;
+            w += 4;
+            t1 += 1;
+        }
+        break;
+    }
     }
 }
 #pragma peephole reset
