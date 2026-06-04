@@ -23,20 +23,20 @@ extern void hitDetectFn_800691c0(int obj,void *bounds,uint mask,int flags);
 extern void hitDetect_calcSweptSphereBounds(uint *boundsOut,float *startPoints,float *endPoints,float *radii,
                         int pointCount);
 extern void debugPrintf(char *message,...);
-extern undefined8 FUN_8028680c();
-extern undefined8 FUN_80286818();
-extern int FUN_80286820();
-extern undefined8 FUN_80286828();
-extern undefined8 FUN_80286830();
-extern undefined8 FUN_80286834();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286858();
-extern undefined4 FUN_80286864();
-extern undefined4 FUN_8028686c();
-extern undefined4 FUN_80286874();
-extern undefined4 FUN_8028687c();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_8028688c();
+extern undefined8 __save_gpr();
+extern undefined8 _savegpr_17();
+extern int _savegpr_19();
+extern undefined8 _savegpr_21();
+extern undefined8 _savegpr_23();
+extern undefined8 _savegpr_24();
+extern undefined8 _savegpr_27();
+extern undefined4 __restore_gpr();
+extern undefined4 _restgpr_17();
+extern undefined4 _restgpr_19();
+extern undefined4 _restgpr_21();
+extern undefined4 _restgpr_23();
+extern undefined4 _restgpr_24();
+extern undefined4 _restgpr_27();
 extern double sqrtf();
 extern undefined4 sin();
 
@@ -171,7 +171,7 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
   fStack_54 = (float)in_ps26_1;
   local_68 = (float)in_f25;
   fStack_64 = (float)in_ps25_1;
-  uVar24 = FUN_80286818();
+  uVar24 = _savegpr_17();
   pfVar5 = (float *)((ulonglong)uVar24 >> 0x20);
   iVar9 = (int)uVar24;
   iVar11 = 0;
@@ -291,7 +291,7 @@ void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double para
     }
     param_7[OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD] = OBJHITS_SKELETON_HIT_SENTINEL;
   }
-  FUN_80286864();
+  _restgpr_17();
   return;
 }
 #pragma peephole reset
@@ -383,7 +383,7 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
   fStack_34 = (float)in_ps28_1;
   local_48 = (float)in_f27;
   fStack_44 = (float)in_ps27_1;
-  uVar24 = FUN_80286818();
+  uVar24 = _savegpr_17();
   pfVar4 = (float *)((ulonglong)uVar24 >> 0x20);
   iVar8 = (int)uVar24;
   iVar10 = 0;
@@ -489,7 +489,7 @@ void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *pa
     }
     param_4[OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD] = OBJHITS_SKELETON_HIT_SENTINEL;
   }
-  FUN_80286864();
+  _restgpr_17();
   return;
 }
 #pragma peephole reset
@@ -575,7 +575,7 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
   fStack_34 = (float)in_ps28_1;
   local_48 = (float)in_f27;
   fStack_44 = (float)in_ps27_1;
-  uVar9 = FUN_80286834();
+  uVar9 = _savegpr_24();
   pfVar3 = (float *)((ulonglong)uVar9 >> 0x20);
   iVar5 = (int)uVar9;
   local_dc = *(float *)(iVar5 + 0x18) - *(float *)(iVar5 + 0x8c);
@@ -691,7 +691,7 @@ void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double par
   *param_10 = local_ac - *pfVar3;
   param_10[1] = lbl_803DF590;
   param_10[2] = local_a4 - pfVar3[2];
-  FUN_80286880();
+  _restgpr_24();
   return;
 }
 #pragma peephole reset
@@ -771,7 +771,7 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
   fStack_24 = (float)in_ps29_1;
   local_38 = (float)in_f28;
   fStack_34 = (float)in_ps28_1;
-  uVar9 = FUN_80286834();
+  uVar9 = _savegpr_24();
   pfVar3 = (float *)((ulonglong)uVar9 >> 0x20);
   iVar5 = (int)uVar9;
   local_cc = *(float *)(iVar5 + 0xc) - *(float *)(iVar5 + 0x80);
@@ -882,7 +882,7 @@ void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double
   *param_10 = local_9c - *pfVar3;
   param_10[1] = local_98 - pfVar3[1];
   param_10[2] = local_94 - pfVar3[2];
-  FUN_80286880();
+  _restgpr_24();
   return;
 }
 #pragma peephole reset
@@ -1625,7 +1625,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
   fStack_104 = (float)in_ps15_1;
   local_118 = (float)in_f14;
   fStack_114 = (float)in_ps14_1;
-  uVar46 = FUN_8028680c();
+  uVar46 = __save_gpr();
   iVar14 = (int)((ulonglong)uVar46 >> 0x20);
   iVar15 = (int)uVar46;
   cVar18 = (char)param_12;
@@ -2013,7 +2013,7 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
     }
   }
 LAB_80033418:
-  FUN_80286858();
+  __restore_gpr();
   return (u8)local_1a8;
 }
 #pragma peephole reset
@@ -2071,7 +2071,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
   undefined8 extraout_f1_02;
   undefined8 uVar8;
 
-  uVar8 = FUN_80286828();
+  uVar8 = _savegpr_21();
   iVar1 = (int)((ulonglong)uVar8 >> 0x20);
   iVar3 = (int)uVar8;
   objStateA = *(ObjHitsPriorityState **)(iVar1 + 0x54);
@@ -2175,7 +2175,7 @@ void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 
       doNothing_800333C8();
     }
   }
-  FUN_80286874();
+  _restgpr_21();
   return;
 }
 #pragma peephole reset
@@ -2279,7 +2279,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
   fStack_14 = (float)in_ps30_1;
   local_28 = (float)in_f29;
   fStack_24 = (float)in_ps29_1;
-  uVar10 = FUN_80286840();
+  uVar10 = _savegpr_27();
   psVar2 = (short *)((ulonglong)uVar10 >> 0x20);
   psVar4 = (short *)uVar10;
   dVar8 = extraout_f1;
@@ -2438,7 +2438,7 @@ void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,
                  (double)*(float *)(psVar4 + 10),(float *)(psVar4 + 0xc),(float *)(psVar4 + 0xe),
                  (float *)(psVar4 + 0x10),*(int *)(psVar4 + 0x18));
   }
-  FUN_8028688c();
+  _restgpr_27();
   return;
 }
 #pragma peephole reset
@@ -2488,7 +2488,7 @@ void ObjHits_DetectObjectPair(void)
   undefined8 uVar25;
   double local_b0;
   
-  uVar25 = FUN_80286840();
+  uVar25 = _savegpr_27();
   iVar10 = (int)((ulonglong)uVar25 >> 0x20);
   iVar12 = (int)uVar25;
   iVar15 = *(int *)(iVar10 + OBJHITBOX_DEF_OFFSET);
@@ -2618,7 +2618,7 @@ void ObjHits_DetectObjectPair(void)
     }
   }
 LAB_800344f4:
-  FUN_8028688c();
+  _restgpr_27();
   return;
 }
 #pragma peephole reset
@@ -2666,7 +2666,7 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
   f32 local_38;
   f32 local_34;
 
-  uVar12 = FUN_80286840();
+  uVar12 = _savegpr_27();
   iVar5 = (int)((ulonglong)uVar12 >> 0x20);
   iVar7 = (int)uVar12;
   iVar9 = *(int *)(iVar7 + OBJHITBOX_DEF_OFFSET);
@@ -2764,7 +2764,7 @@ void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_
       }
     }
   }
-  FUN_8028688c();
+  _restgpr_27();
 }
 
 /*
@@ -2818,7 +2818,7 @@ void ObjHits_CheckTrackContact(void)
   undefined4 local_30;
   uint uStack_2c;
   
-  uVar24 = FUN_80286830();
+  uVar24 = _savegpr_23();
   iVar23 = (int)((ulonglong)uVar24 >> 0x20);
   iVar5 = (int)uVar24;
   iVar6 = *(int *)(iVar23 + 0x54);
@@ -2949,7 +2949,7 @@ void ObjHits_CheckTrackContact(void)
       }
     }
   }
-  FUN_8028687c();
+  _restgpr_23();
   return;
 }
 #pragma peephole reset
@@ -3000,7 +3000,7 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
   int auStack_f24[51];
   int aiStack_e58[918];
   
-  objectCount = FUN_80286820();
+  objectCount = _savegpr_19();
   objectList = (int *)ObjList_GetObjects(&uStack_f28, auStack_f24);
   sweepPtrs = gObjHitsSweepEntryPtrs;
   sweepEntries = gObjHitsSweepEntries;
@@ -3090,7 +3090,7 @@ void ObjHits_Update(undefined8 param_1,double param_2,undefined8 param_3,undefin
       gObjHitsActiveHitVolumeObjects[2] = 0;
       gObjHitsActiveHitVolumeObjects[3] = 0;
       gObjHitsActiveHitVolumeObjects[4] = 0;
-      FUN_8028686c();
+      _restgpr_19();
       return;
     }
     obj = (*entrySlot)->obj;
