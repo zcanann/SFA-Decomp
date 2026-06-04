@@ -3285,51 +3285,61 @@ int fn_80081964(void)
 
 #pragma peephole off
 #pragma scheduling off
-int objRunSeq(int seqId, u8 *obj, u32 mask)
+int objRunSeq(int seqIdx, u8 *obj, int flags)
 {
-    u8 *base = lbl_80396918;
-    u8 *model;
+    u8 *base;
+    u8 *srcSeq;
     u8 *player;
     u8 *parent;
-    u8 *pl;
-    u8 *tmpBuf;
-    u8 *entries;
-    u8 *e;
-    u8 *p;
-    u8 *q;
+    u8 *mon;
+    u8 *walk;
+    u8 *walk2;
     u8 *setup;
-    u8 *spawned;
-    u8 *seqp;
-    u8 *e6;
-    s16 *modePtr;
-    int focusParam;
-    int doFocus;
+    u8 *newObj;
+    u8 *seq;
+    u8 *hdr;
+    u8 *buf;
+    u8 *slotPtr;
+    u8 *blk;
+    u8 *p;
+    s16 *mapTbl;
     int slot;
     int i;
     int j;
     int k;
-    int m;
-    int n;
-    int found;
-    int tabStart;
+    int idx;
     int count;
+    int first;
     int size;
-    int baseRot;
+    s16 heading;
+    int camArg;
+    int doCam;
     int objId;
-    int track;
-    int idBase;
+    int seqFlags;
+    int packed;
+    int found;
+    int cur;
+    int n;
+    int rem;
+    int bit;
+    s16 val;
+    u32 objIdU;
+    u32 mapFlags;
+    u32 trackId;
     f32 x;
     f32 y;
     f32 z;
 
-    focusParam = 0;
-    doFocus = 0;
-    model = *(u8 **)(obj + 0x4c);
+    base = lbl_80396918;
+    srcSeq = *(u8 **)(obj + 0x4c);
+    camArg = 0;
+    doCam = 0;
     player = Obj_GetPlayerObject();
-    if (seqId == -1) {
+
+    if (seqIdx == -1) {
         return -1;
     }
-    if (seqId < 0 || seqId >= (*(u8 **)(obj + 0x50))[0x5e]) {
+    if (seqIdx < 0 || seqIdx >= *(u8 *)(*(u8 **)(obj + 0x50) + 0x5e)) {
         return -1;
     }
 
@@ -3337,10 +3347,10 @@ int objRunSeq(int seqId, u8 *obj, u32 mask)
         if (*(s16 *)(base + i * 2 + 0x3a98) == 0) {
             slot = i;
             *(s16 *)(base + i * 2 + 0x3a98) = 1;
-            p = base + i * 128;
+            blk = base + i * 0x80;
             for (j = 0; j < 16; j++) {
-                *(void **)p = NULL;
-                p += 8;
+                *(u8 **)blk = NULL;
+                blk += 8;
             }
             i = 0x56;
         }
@@ -3349,265 +3359,269 @@ int objRunSeq(int seqId, u8 *obj, u32 mask)
         return -1;
     }
 
-    if (*(void **)(*(u8 **)(obj + 0x50) + 0x1c) != NULL) {
-        seqId = *(s16 *)(*(u8 **)(*(u8 **)(obj + 0x50) + 0x1c) + seqId * 2);
-    }
-    if (*(s16 *)(obj + 0xb4) != -1 && lbl_803DD07C == 0) {
-        endObjSequence(*(s16 *)(obj + 0xb4));
+    mapTbl = *(s16 **)(*(u8 **)(obj + 0x50) + 0x1c);
+    if (mapTbl != NULL) {
+        seqIdx = mapTbl[seqIdx];
     }
 
-    modePtr = (s16 *)(base + slot * 2);
-    modePtr = (s16 *)((u8 *)modePtr + 0x3a98);
-    *modePtr = (s16)(seqId + 1);
+    cur = *(s16 *)(obj + 0xb4);
+    if (cur != -1 && lbl_803DD07C == NULL) {
+        endObjSequence(cur);
+    }
+
+    val = seqIdx + 1;
+    slotPtr = base + slot * 2;
+    slotPtr += 0x3a98;
+    *(s16 *)slotPtr = val;
     lbl_803DB714 = -1;
     lbl_803DB718 = -1;
 
-    p = base + 0x3d4c;
+    mon = base + 0x3d4c;
+    walk = mon;
     n = (s8)lbl_803DD124;
-    for (k = 0; k < n; k++) {
-        if (*(u8 **)p == obj) {
+    for (i = 0; i < n; i++) {
+        if (*(u8 **)walk == obj) {
             found = 1;
-            goto searched;
+            goto checked;
         }
-        p += 8;
+        walk += 8;
     }
     found = 0;
-searched:
+checked:
     if (found == 0) {
-        lbl_803DB714 = seqId;
+        lbl_803DB714 = seqIdx;
     }
 
-    tmpBuf = mmAlloc(0x20, 0x11, 0);
-    getTabEntry(tmpBuf, 0x3c, seqId * 2, 8);
-    tabStart = *(s16 *)tmpBuf;
-    count = *(s16 *)(tmpBuf + 2) - tabStart;
-    size = count * 8;
-    entries = mmAlloc(size, 0x11, 0);
-    getTabEntry(entries, 0x3b, tabStart * 8, size);
-    mm_free(tmpBuf);
+    hdr = mmAlloc(0x20, 0x11, 0);
+    getTabEntry(hdr, 0x3c, seqIdx * 2, 8);
+    first = *(s16 *)hdr;
+    count = *(s16 *)(hdr + 2) - first;
+    size = count << 3;
+    buf = mmAlloc(size, 0x11, 0);
+    getTabEntry(buf, 0x3b, first * 8, size);
+    mm_free(hdr);
 
-    if (lbl_803DD07C != 0) {
-        obj = (u8 *)lbl_803DD07C;
+    if (lbl_803DD07C != NULL) {
+        obj = lbl_803DD07C;
     }
-    *(s16 *)(obj + 0xb4) = (s16)slot;
+    *(s16 *)(obj + 0xb4) = slot;
     parent = *(u8 **)(obj + 0x30);
     x = *(f32 *)(obj + 0xc);
     y = *(f32 *)(obj + 0x10);
     z = *(f32 *)(obj + 0x14);
-    if (((SeqByte0B4 *)&lbl_803DD0B4)->useAltPos != 0) {
+    if (lbl_803DD0B4.active) {
         parent = NULL;
         x = *(f32 *)(obj + 0x18);
         y = *(f32 *)(obj + 0x1c);
         z = *(f32 *)(obj + 0x20);
     }
-    baseRot = *(s16 *)obj;
+    heading = *(s16 *)obj;
     if (lbl_803DD078 != 0) {
-        x = x - *(f32 *)(obj + 8) *
-                    (*(f32 *)(obj + 0xa8) *
-                     fn_80293E80((lbl_803DEFE8 * (f32)baseRot) / lbl_803DEFEC));
-        z = z - *(f32 *)(obj + 8) *
-                    (*(f32 *)(obj + 0xa8) *
-                     sin((lbl_803DEFE8 * (f32)*(s16 *)obj) / lbl_803DEFEC));
+        x -= *(f32 *)(obj + 8) *
+             (*(f32 *)(obj + 0xa8) * fn_80293E80((lbl_803DEFE8 * (f32)*(s16 *)obj) / lbl_803DEFEC));
+        z -= *(f32 *)(obj + 8) *
+             (*(f32 *)(obj + 0xa8) * sin((lbl_803DEFE8 * (f32)*(s16 *)obj) / lbl_803DEFEC));
     }
 
+    i = 0;
     base[*(s16 *)(obj + 0xb4) + 0x3538] = 0;
     base[*(s16 *)(obj + 0xb4) + 0x3334] = 0;
     lbl_8030ECF8[*(s16 *)(obj + 0xb4)] = 0;
     *(int *)(base + *(s16 *)(obj + 0xb4) * 4 + 0x33e4) = *(s16 *)(obj + 0x46);
 
-    e = entries;
-    for (j = 0; j < count; j++) {
-        if ((mask & (1 << j)) != 0 && (*(u16 *)(e + 4) & 0x4000) != 0 &&
-            (*(u16 *)(e + 6) == 0x1f || *(u16 *)(e + 6) == 0)) {
-            if (fn_80296C2C(Obj_GetPlayerObject()) == 0) {
-                return -1;
+    walk = buf;
+    bit = 1;
+    for (; i < count; i++) {
+        if ((flags & (bit << i)) && (*(u16 *)(walk + 4) & 0x4000)) {
+            objIdU = *(u16 *)(walk + 6);
+            if (objIdU == 0x1f || objIdU == 0) {
+                if (fn_80296C2C(Obj_GetPlayerObject()) == 0) {
+                    return -1;
+                }
             }
         }
-        e += 8;
+        walk += 8;
     }
 
-    idBase = ((seqId & 0x7ff) << 4) | 0x8000;
-    e = entries;
-    for (j = 0; j < count; j++) {
-        if ((mask & (1 << j)) == 0) {
-            e += 8;
-            continue;
-        }
-        setup = Obj_AllocObjectSetup(0x28, 6);
-        objId = *(u16 *)(e + 6);
-        if (objId == 0x1f || objId == 0) {
-            Obj_GetPlayerObject();
-            pl = Obj_GetPlayerObject();
-            *(u16 *)(pl + 0xb0) |= 0x1000;
-        }
-        if (objId == 0xffff) {
-            *(s16 *)setup = 6;
-            *(s16 *)(setup + 0x1c) = (s16)(*(s16 *)(obj + 0x46) + 4);
-            if (*(s16 *)(obj + 0x46) == 0x443 && lbl_803DB72C != -1) {
-                *(s16 *)(setup + 0x1c) = (s16)(lbl_803DB72C + 4);
+    idx = 0;
+    walk2 = buf;
+    packed = ((seqIdx & 0x7ff) << 4) | 0x8000;
+    for (; idx < count; idx++) {
+        if (flags & (1 << idx)) {
+            setup = Obj_AllocObjectSetup(0x28, 6);
+            objId = *(u16 *)(walk2 + 6);
+            if (objId == 0x1f || objId == 0) {
+                u8 *pp = Obj_GetPlayerObject();
+                *(u16 *)(pp + 0xb0) |= 0x1000;
             }
-            *(u16 *)(e + 4) |= 0x8000;
-        } else if (objId == 0xfffe) {
-            *(s16 *)setup = 0x1e;
-            *(s16 *)(setup + 0x1c) = 3;
-            curSeqNo = (u8)slot;
-        } else if ((*(u16 *)(e + 4) & 0x4000) != 0) {
-            *(s16 *)setup = 6;
-            if (objId == 0x443) {
-                if (lbl_803DB72C != -1) {
-                    *(s16 *)(setup + 0x1c) = (s16)(lbl_803DB72C + 4);
+            if (objId == 0xffff) {
+                *(s16 *)setup = 6;
+                *(s16 *)(setup + 0x1c) = *(s16 *)(obj + 0x46) + 4;
+                if (*(s16 *)(obj + 0x46) == 0x443 && lbl_803DB72C != -1) {
+                    *(s16 *)(setup + 0x1c) = lbl_803DB72C + 4;
+                }
+                *(u16 *)(walk2 + 4) |= 0x8000;
+            } else if (objId == 0xfffe) {
+                *(s16 *)setup = 0x1e;
+                *(s16 *)(setup + 0x1c) = 3;
+                curSeqNo = slot;
+            } else {
+                if (*(u16 *)(walk2 + 4) & 0x4000) {
+                    *(s16 *)setup = 6;
+                    if (objId == 0x443) {
+                        if (lbl_803DB72C != -1) {
+                            *(s16 *)(setup + 0x1c) = lbl_803DB72C + 4;
+                        } else {
+                            *(s16 *)(setup + 0x1c) = objId + 4;
+                        }
+                    } else {
+                        *(s16 *)(setup + 0x1c) = objId + 4;
+                    }
                 } else {
-                    *(s16 *)(setup + 0x1c) = (s16)(objId + 4);
+                    *(s16 *)setup = objId;
+                    *(s16 *)(setup + 0x1c) = 0;
+                }
+            }
+            if (*(u16 *)(walk2 + 4) & 0x8000) {
+                setup[0x20] = 0;
+                setup[0x21] = 0;
+            } else {
+                setup[0x20] = 1;
+                setup[0x21] = 1;
+            }
+            if (idx == 0 && (*(u16 *)(walk2 + 4) & 0x1000) && player != NULL) {
+                fn_80297284(player);
+            }
+            *(s16 *)(setup + 0x18) = packed | (idx & 0xf);
+            *(s16 *)(setup + 0x1a) = -1;
+            if (idx != 0) {
+                if (lbl_803DD0D9 != 0 && *(s16 *)setup == 0x1e) {
+                    *(f32 *)(setup + 8) = x + *(f32 *)(base + 0x2bd4);
+                    *(f32 *)(setup + 0xc) = y + *(f32 *)(base + 0x2bd8);
+                    *(f32 *)(setup + 0x10) = z + *(f32 *)(base + 0x2bdc);
+                    lbl_803DD0D9 = 0;
+                } else {
+                    *(f32 *)(setup + 8) = x;
+                    *(f32 *)(setup + 0xc) = y;
+                    *(f32 *)(setup + 0x10) = z;
                 }
             } else {
-                *(s16 *)(setup + 0x1c) = (s16)(objId + 4);
+                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+                *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
+                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
             }
-        } else {
-            *(s16 *)setup = (s16)objId;
-            *(s16 *)(setup + 0x1c) = 0;
-        }
-
-        if ((*(u16 *)(e + 4) & 0x8000) != 0) {
-            setup[0x20] = 0;
-            setup[0x21] = 0;
-        } else {
-            setup[0x20] = 1;
-            setup[0x21] = 1;
-        }
-
-        if (j == 0 && (*(u16 *)(e + 4) & 0x1000) != 0 && player != NULL) {
-            fn_80297284(player);
-        }
-
-        *(s16 *)(setup + 0x18) = (s16)(idBase | (j & 0xf));
-        *(s16 *)(setup + 0x1a) = -1;
-        if (j != 0) {
-            if (lbl_803DD0D9 != 0 && *(s16 *)setup == 0x1e) {
-                *(f32 *)(setup + 8) = x + *(f32 *)(base + 0x2bd4);
-                *(f32 *)(setup + 0xc) = y + *(f32 *)(base + 0x2bd8);
-                *(f32 *)(setup + 0x10) = z + *(f32 *)(base + 0x2bdc);
-                lbl_803DD0D9 = 0;
+            *(s8 *)(setup + 0x1f) = (s8)slot;
+            setup[0x22] = 1;
+            setup[0x24] = (*(u16 *)(walk2 + 4) & 0xf00) >> 8;
+            setup[4] = 2;
+            setup[5] = 1;
+            if (srcSeq != NULL) {
+                setup[5] = setup[5] | (srcSeq[5] & 0x18);
+            }
+            if (*(s16 *)setup == 0x1e) {
+                setup[4] = 1;
+            }
+            if (*(s16 *)setup == 0x443 && lbl_803DB72C != -1) {
+                *(s16 *)setup = lbl_803DB72C;
+            }
+            newObj = Obj_SetupObject(setup, 5, -1, -1, parent);
+            *(s16 *)(newObj + 0xb4) = -2;
+            seq = *(u8 **)(newObj + 0xb8);
+            *(s16 *)(seq + 0x1a) = heading;
+            *(s16 *)(seq + 0x6e) = -1;
+            *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) & ~0x400;
+            seq[0x12c] = 0;
+            seq[0x12d] = 0;
+            seq[0x12e] = 0;
+            seq[0x12f] = 0;
+            if (*(u16 *)(walk2 + 4) & 1) {
+                *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) & ~1;
+            }
+            if (*(u16 *)(walk2 + 4) & 2) {
+                *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) & ~2;
+            }
+            if (*(u16 *)(walk2 + 4) & 4) {
+                *(s16 *)(seq + 0x1a) = 0;
+            }
+            if (*(u16 *)(walk2 + 4) & 8) {
+                *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) & ~0x100;
+            }
+            if (*(u16 *)(walk2 + 4) & 0x80) {
+                seq[0x7f] = seq[0x7f] | 4;
+            }
+            if (*(u16 *)(walk2 + 4) & 0x40) {
+                seq[0x7f] = seq[0x7f] | 2;
+            }
+            if (*(u16 *)(walk2 + 4) & 0x2000) {
+                if (idx == 0 && player != NULL) {
+                    fn_8029726C(player);
+                }
+                if (lbl_803DD064 == 0 || lbl_803DD064 == *(s16 *)(obj + 0xb4)) {
+                    lbl_803DD064 = *(s16 *)(obj + 0xb4);
+                    curSeqNo = slot;
+                }
+                seq[0x56] = 4;
+                if (camArg == 0) {
+                    camArg = (*(u16 *)(walk2 + 4) & 0xf00) >> 8;
+                }
+                doCam = 1;
             } else {
-                *(f32 *)(setup + 8) = x;
-                *(f32 *)(setup + 0xc) = y;
-                *(f32 *)(setup + 0x10) = z;
+                *(s8 *)(seq + 0x56) = -1;
             }
-        } else {
-            *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
-            *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
-            *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
-        }
-        *(s8 *)(setup + 0x1f) = (s8)slot;
-        setup[0x22] = 1;
-        setup[0x24] = (u8)((*(u16 *)(e + 4) & 0xf00) >> 8);
-        setup[4] = 2;
-        setup[5] = 1;
-        if (model != NULL) {
-            setup[5] = setup[5] | (model[5] & 0x18);
-        }
-        if (*(s16 *)setup == 0x1e) {
-            setup[4] = 1;
-        }
-        if (*(s16 *)setup == 0x443 && lbl_803DB72C != -1) {
-            *(s16 *)setup = (s16)lbl_803DB72C;
-        }
-
-        spawned = Obj_SetupObject(setup, 5, -1, -1, parent);
-        *(s16 *)(spawned + 0xb4) = -2;
-        seqp = *(u8 **)(spawned + 0xb8);
-        *(s16 *)(seqp + 0x1a) = baseRot;
-        *(s16 *)(seqp + 0x6e) = -1;
-        *(s16 *)(seqp + 0x6e) = *(s16 *)(seqp + 0x6e) & ~0x400;
-        seqp[0x12c] = 0;
-        seqp[0x12d] = 0;
-        seqp[0x12e] = 0;
-        seqp[0x12f] = 0;
-        if ((*(u16 *)(e + 4) & 1) != 0) {
-            *(s16 *)(seqp + 0x6e) = *(s16 *)(seqp + 0x6e) & ~1;
-        }
-        if ((*(u16 *)(e + 4) & 2) != 0) {
-            *(s16 *)(seqp + 0x6e) = *(s16 *)(seqp + 0x6e) & ~2;
-        }
-        if ((*(u16 *)(e + 4) & 4) != 0) {
-            *(s16 *)(seqp + 0x1a) = 0;
-        }
-        if ((*(u16 *)(e + 4) & 8) != 0) {
-            *(s16 *)(seqp + 0x6e) = *(s16 *)(seqp + 0x6e) & ~0x100;
-        }
-        if ((*(u16 *)(e + 4) & 0x80) != 0) {
-            seqp[0x7f] |= 4;
-        }
-        if ((*(u16 *)(e + 4) & 0x40) != 0) {
-            seqp[0x7f] |= 2;
-        }
-        if ((*(u16 *)(e + 4) & 0x2000) != 0) {
-            if (j == 0 && player != NULL) {
-                fn_8029726C(player);
+            if ((objId == 0x1f || objId == 0) && (*(s16 *)(seq + 0x6e) & 1)) {
+                fn_80297254(player);
             }
-            if (lbl_803DD064 == 0 || lbl_803DD064 == *(s16 *)(obj + 0xb4)) {
-                lbl_803DD064 = *(s16 *)(obj + 0xb4);
-                curSeqNo = (u8)slot;
-            }
-            seqp[0x56] = 4;
-            if (focusParam == 0) {
-                focusParam = (*(u16 *)(e + 4) & 0xf00) >> 8;
-            }
-            doFocus = 1;
-        } else {
-            *(s8 *)(seqp + 0x56) = -1;
-        }
-        if ((objId == 0x1f || objId == 0) && (*(s16 *)(seqp + 0x6e) & 1) != 0) {
-            fn_80297254(player);
-        }
-        *(int *)(seqp + 0x10c) = *(int *)e;
-        *(s16 *)(seqp + 0x70) = *(s16 *)(seqp + 0x6e);
-        if (j == 0) {
-            base[*(s16 *)(obj + 0xb4) + 0x3538] = (u8)*(u16 *)(e + 4);
-            *(int *)(base + *(s16 *)(obj + 0xb4) * 4 + 0x33e4) =
-                *(int *)(*(u8 **)(spawned + 0x4c) + 0x14);
-            if ((*(int *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40) != 0 &&
-                (*(int *)(*(u8 **)(obj + 0x50) + 0x44) & 0x8000) == 0) {
-                parent = obj;
-                x = lbl_803DEFB0;
-                y = x;
-                z = x;
-                baseRot = 0;
+            *(int *)(seq + 0x10c) = *(int *)walk2;
+            *(s16 *)(seq + 0x70) = *(s16 *)(seq + 0x6e);
+            if (idx == 0) {
+                base[*(s16 *)(obj + 0xb4) + 0x3538] = *(u16 *)(walk2 + 4);
+                *(int *)(base + *(s16 *)(obj + 0xb4) * 4 + 0x33e4) =
+                    *(int *)(*(u8 **)(newObj + 0x4c) + 0x14);
+                mapFlags = *(u32 *)(*(u8 **)(obj + 0x50) + 0x44);
+                if ((mapFlags & 0x40) && !(mapFlags & 0x8000)) {
+                    parent = obj;
+                    x = lbl_803DEFB0;
+                    y = x;
+                    z = y;
+                    heading = 0;
+                }
             }
         }
-        e += 8;
+        walk2 += 8;
     }
 
-    *(s16 *)(base + *(s16 *)(obj + 0xb4) * 2 + 0x35e8) = (s16)baseRot;
+    *(s16 *)(base + *(s16 *)(obj + 0xb4) * 2 + 0x35e8) = heading;
+    j = 0;
     base[*(s16 *)(obj + 0xb4) + 0x3590] = 0;
     base[*(s16 *)(obj + 0xb4) + 0x338c] = 0;
-
-    p = base + 0x3d4c;
     n = (s8)lbl_803DD124;
-    for (k = 0; k < n; k++) {
-        if (*(u8 **)p == obj) {
-            track = *(int *)(base + k * 8 + 0x3d50);
-            lbl_803DD124 = lbl_803DD124 - 1;
-            q = base + k * 8 + 0x3d4c;
-            m = (s8)(u8)(lbl_803DD124);
-            for (; k < m; k++) {
-                *(int *)q = *(int *)(q + 8);
-                *(int *)(q + 4) = *(int *)(q + 8);
-                q += 8;
+    for (; j < n; j++) {
+        if (*(u8 **)mon == obj) {
+            seqFlags = *(int *)(base + j * 8 + 0x3d50);
+            lbl_803DD124 -= 1;
+            p = base + j * 8 + 0x3d4c;
+            rem = (s8)lbl_803DD124 - j;
+            if (j < (s8)lbl_803DD124) {
+                for (k = 0; k < rem; k++) {
+                    int v = *(int *)(p + 8);
+                    *(int *)p = v;
+                    *(int *)(p + 4) = v;
+                    p += 8;
+                }
             }
-            goto removed;
+            goto gotFlags;
         }
-        p += 8;
+        mon += 8;
     }
-    track = 0;
-removed:
-
-    if (track != 0) {
+    seqFlags = 0;
+gotFlags:
+    if (seqFlags != 0) {
         base[*(s16 *)(obj + 0xb4) + 0x3538] |= 0x10;
     } else {
         lbl_803DD070 = 0;
-        track = (u32)(*modePtr - 1) & 0x3fff;
-        lbl_803DD068 = track;
-        if (AudioStream_Play(track, streamCb_80080384) == 0) {
+        trackId = (u32)(*(s16 *)slotPtr - 1) & 0x3fff;
+        lbl_803DD068 = trackId;
+        if (AudioStream_Play(trackId, streamCb_80080384) == 0) {
             if (lbl_803DB714 != -1) {
                 gameTextLoadTaskText(lbl_803DB714);
                 lbl_803DB714 = -1;
@@ -3621,24 +3635,23 @@ removed:
         }
     }
 
-    *(f32 *)(base + *(s16 *)(obj + 0xb4) * 4 + 0x3740) = (f32)track;
-    *(f32 *)(base + *(s16 *)(obj + 0xb4) * 4 + 0x3894) = (f32)track;
+    *(f32 *)(base + *(s16 *)(obj + 0xb4) * 4 + 0x3740) = (f32)seqFlags;
+    *(f32 *)(base + *(s16 *)(obj + 0xb4) * 4 + 0x3894) = (f32)seqFlags;
 
-    if (slot >= 0 && slot < 0x55 && (s8)lbl_803DD0BC < 0x1e) {
-        e6 = base + (s8)lbl_803DD0BC * 6;
-        *(s16 *)(e6 + 0x2a80) = (s16)slot;
-        *(s16 *)(e6 + 0x2a84) = (s16)count;
-        found = (s16)track;
-        lbl_803DD0BC = lbl_803DD0BC + 1;
-        *(s16 *)(e6 + 0x2a82) = found;
+    if (slot >= 0 && slot < 0x55) {
+        if (lbl_803DD0BC < 0x1e) {
+            *(s16 *)(base + lbl_803DD0BC * 6 + 0x2a80) = slot;
+            *(s16 *)(base + lbl_803DD0BC * 6 + 0x2a84) = count;
+            *(s16 *)(base + lbl_803DD0BC++ * 6 + 0x2a82) = seqFlags;
+        }
     }
 
-    if (doFocus != 0) {
-        cameraFocusNpc(focusParam, obj);
+    if (doCam != 0) {
+        cameraFocusNpc(camArg, obj);
     }
-    mm_free(entries);
+    mm_free(buf);
     lbl_803DD078 = 0;
-    ((SeqByte0B4 *)&lbl_803DD0B4)->useAltPos = 0;
+    lbl_803DD0B4.active = 0;
     return slot;
 }
 #pragma scheduling reset
