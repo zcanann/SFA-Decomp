@@ -7,7 +7,7 @@
 void kaldaChomFn_8016821c(int param_1,int *param_2);
 void kaldaChomFn_80168374(int param_1,int param_2,char param_3);
 void fn_8016855C(int param_1,int param_2,int param_3);
-void fn_8016874C(undefined4 param_1,undefined4 param_2,int param_3);
+void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state);
 void kaldachom_func0B(void);
 s16 kaldachom_setScale(int *obj);
 int kaldachom_getExtraSize(void);
