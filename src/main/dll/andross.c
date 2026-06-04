@@ -61,13 +61,15 @@ int andross_updateModelAlpha(int obj)
     f32 alpha;
     int model;
     int i;
+    int op;
 
     *(f32 *)(state + 0x68) = lbl_803E74D4;
     v = *(f32 *)(state + 0x68);
     model = *(int *)Obj_GetActiveModel(obj);
     alpha = lbl_803E74B4 * v;
     for (i = 0; i < *(u8 *)(model + 0xf8); i++) {
-        *(s8 *)(ObjModel_GetRenderOp(model, i) + 0x43) = (int)alpha;
+        op = ObjModel_GetRenderOp(model, i);
+        *(s8 *)(op + 0x43) = alpha;
     }
     return 0;
 }
@@ -1444,7 +1446,8 @@ LAB_8023cbdc:
     iVar8 = *(int *)Obj_GetActiveModel(obj);
     fVar2 = lbl_803E74B4 * dVar19;
     for (iVar12 = 0; iVar12 < (int)(u32)*(u8 *)(iVar8 + 0xf8); iVar12 = iVar12 + 1) {
-      *(s8 *)(ObjModel_GetRenderOp(iVar8,iVar12) + 0x43) = (int)fVar2;
+      iVar5 = ObjModel_GetRenderOp(iVar8,iVar12);
+      *(s8 *)(iVar5 + 0x43) = fVar2;
     }
     if ((piVar14[0x1f] == 5) && (*(u8 *)(piVar14 + 0x2b) == 0)) {
       for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
@@ -1727,7 +1730,8 @@ LAB_8023de5c:
     iVar8 = *(int *)Obj_GetActiveModel(obj);
     fVar2 = lbl_803E74B4 * dVar19;
     for (iVar12 = 0; iVar12 < (int)(u32)*(u8 *)(iVar8 + 0xf8); iVar12 = iVar12 + 1) {
-      *(s8 *)(ObjModel_GetRenderOp(iVar8,iVar12) + 0x43) = (int)fVar2;
+      iVar5 = ObjModel_GetRenderOp(iVar8,iVar12);
+      *(s8 *)(iVar5 + 0x43) = fVar2;
     }
     break;
   case 0x1d:
