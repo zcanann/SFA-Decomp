@@ -17845,3 +17845,80 @@ void modelInitBones(f32 scale, void *model) {
 }
 }
 #pragma pop
+
+extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+extern void PSMTXReorder(f32 *src, f32 *dst);
+
+static u8 *modelGetBoneMtx(u8 *m, int idx) {
+    u32 cnt;
+    int lim;
+
+    cnt = *(u8 *)(*(u8 **)m + 0xf3);
+    if (cnt != 0) {
+        lim = cnt + *(u8 *)(*(u8 **)m + 0xf4);
+    } else {
+        lim = 1;
+    }
+    if (idx >= lim) {
+        idx = 0;
+    }
+    return (u8 *)((int *)m)[(*(u16 *)(m + 0x18) & 1) + 3] + idx * 0x40;
+}
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void modelInitBoneMtxs(u8 *m, u8 *out) {
+    u8 *hdr;
+    u32 i;
+    u8 *mtx;
+    int boneOff;
+    u8 *bone;
+    f32 tmp[12];
+
+    hdr = *(u8 **)m;
+    i = 0;
+    boneOff = 0;
+    for (; i < *(u8 *)(hdr + 0xf3); i++) {
+        mtx = modelGetBoneMtx(m, i);
+        bone = *(u8 **)(hdr + 0x3c) + boneOff;
+        PSMTXTrans(tmp, -*(f32 *)(bone + 0x10), -*(f32 *)(bone + 0x14), -*(f32 *)(bone + 0x18));
+        PSMTXConcat((f32 *)mtx, tmp, tmp);
+        PSMTXReorder(tmp, (f32 *)out);
+        boneOff += 0x1c;
+        out += 0x30;
+    }
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void modelInitBoneMtxs2(u8 *m, u8 *out2, u8 *out) {
+    u8 *hdr;
+    u32 i;
+    u8 *mtx;
+    int boneOff;
+    u8 *bone;
+    f32 tmp[12];
+
+    hdr = *(u8 **)m;
+    if (*(u8 *)(hdr + 0xf3) == 0) {
+        mtx = modelGetBoneMtx(m, 0);
+        PSMTXConcat((f32 *)out2, (f32 *)mtx, (f32 *)mtx);
+    } else {
+        i = 0;
+        boneOff = 0;
+        for (; i < *(u8 *)(hdr + 0xf3); i++) {
+            mtx = modelGetBoneMtx(m, i);
+            bone = *(u8 **)(hdr + 0x3c) + boneOff;
+            PSMTXTrans(tmp, -*(f32 *)(bone + 0x10), -*(f32 *)(bone + 0x14), -*(f32 *)(bone + 0x18));
+            PSMTXConcat((f32 *)mtx, tmp, tmp);
+            PSMTXReorder(tmp, (f32 *)out);
+            PSMTXConcat((f32 *)out2, (f32 *)mtx, (f32 *)mtx);
+            boneOff += 0x1c;
+            out += 0x30;
+        }
+    }
+}
+#pragma pop
