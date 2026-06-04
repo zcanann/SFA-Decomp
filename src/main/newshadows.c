@@ -3225,8 +3225,8 @@ u16 audioPickSoundEffect_8006ed24(s8 a, u8 b) {
         case 5: base += 0x64; break;
         case 6: base += 0x50; break;
         case 8: base += 0x78; break;
-        case 9: base += 0xa0; break;
         case 0xa: base += 0x8c; break;
+        case 9: base += 0xa0; break;
         default: base += 0x28; break;
     }
     return *(u16 *)(base + v * 2);
@@ -3708,6 +3708,8 @@ void shadowCreate(int *obj) {
 }
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2) {
     s8 buf[0x1c];
     int bit;
@@ -3720,6 +3722,8 @@ void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f
     }
     objAudioFn_8006ef38(p1, buf, p5, p6, p7, f1, f2);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern int getHudHiddenFrameCount(void);
 extern f32 timeDelta;
