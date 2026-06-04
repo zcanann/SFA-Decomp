@@ -118,6 +118,34 @@ extern undefined4 gDIMbossHitDetectAnimTable[];
 extern void DIM2icicle_spawnBlueWhiteEffect(int* sourceObj, f32* velocity);
 extern void DIM2icicle_createStateLight(int obj, u8 isGreen);
 
+extern int getTrickyObject(void);
+extern undefined4* gBaddieControlInterface;
+extern int gPlayerInterface;
+extern u32 gDIMbossSequenceFlags;
+extern f32 timeDelta;
+extern f32 lbl_803E4BC8;
+extern f32 lbl_803E4BD8;
+extern f32 lbl_803E4BEC;
+extern f32 lbl_803E4C44;
+extern f32 lbl_803E4C70;
+extern f32 lbl_803E4C74;
+extern u8 lbl_803259E0[];
+
+typedef struct IcicleEntry {
+    f32 resetTime;
+    u16 bit;
+    u16 pad;
+} IcicleEntry;
+
+typedef struct IcicleState {
+    u8 pad[0xa0];
+    f32 meltTimer;
+    f32 lightTimer;
+    f32 fadeTimer;
+    u8 pad2[9];
+    u8 index;
+} IcicleState;
+
 /*
  * --INFO--
  *
@@ -697,87 +725,94 @@ void fn_801BC2D8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801BC7E4(undefined4 param_1,undefined4 param_2,int param_3,int param_4)
+void fn_801BC7E4(int obj, int param_2, int param_3, int param_4)
 {
-  float fVar1;
-  float fVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
+  IcicleState *state;
+  u8 *tricky;
+  f32 timer;
+  f32 limit;
 
-  iVar3 = FUN_80286840();
-  iVar5 = *(int *)(param_3 + 0x40c);
-  iVar4 = FUN_80017a90();
-  ObjHits_EnableObject(iVar3);
-  *(undefined *)(param_4 + 0x25f) = 1;
-  (**(code **)(*DAT_803dd738 + 0x2c))((double)lbl_803E5908,iVar3,param_4,1);
-  (**(code **)(*DAT_803dd738 + 0x54))
-            (iVar3,param_4,param_3 + 0x35c,(int)*(short *)(param_3 + 0x3f4),param_3 + 0x405,0,0,0);
-  if (*(short *)(param_4 + 0x274) == 6) {
-    *(float *)(iVar5 + 0xa0) =
-         -(lbl_803DC074 * (lbl_803E5860 * *(float *)(iVar3 + 0x98) + lbl_803E58DC) -
-          *(float *)(iVar5 + 0xa0));
+  state = *(IcicleState **)(param_3 + 0x40c);
+  tricky = (u8 *)getTrickyObject();
+  ObjHits_EnableObject(obj);
+  *(u8 *)(param_4 + 0x25f) = 1;
+  ((void (*)(int, int, f32, int))*(code **)(*gBaddieControlInterface + 0x2c))(obj, param_4, lbl_803E4C70, 1);
+  ((void (*)(int, int, int, int, int, int, int, int))*(code **)(*gBaddieControlInterface + 0x54))
+            (obj, param_4, param_3 + 0x35c, (int)*(s16 *)(param_3 + 0x3f4), param_3 + 0x405, 0, 0, 0);
+  if (*(s16 *)(param_4 + 0x274) == 6) {
+    state->meltTimer =
+         -(timeDelta * (lbl_803E4BC8 * *(f32 *)(obj + 0x98) + lbl_803E4C44) - state->meltTimer);
   }
   else {
-    *(float *)(iVar5 + 0xa0) = *(float *)(iVar5 + 0xa0) - lbl_803DC074;
+    state->meltTimer = state->meltTimer - timeDelta;
   }
-  if (*(float *)(iVar5 + 0xa0) <= lbl_803E5870) {
-    GameBit_Set(*(undefined2 *)(&DAT_80326624 + (uint)*(byte *)(iVar5 + 0xb5) * 8),1);
-    *(undefined4 *)(iVar5 + 0xa0) =
-         *(undefined4 *)(&DAT_80326620 + (uint)*(byte *)(iVar5 + 0xb5) * 8);
-    *(char *)(iVar5 + 0xb5) = *(char *)(iVar5 + 0xb5) + '\x01';
-    if (0x17 < *(byte *)(iVar5 + 0xb5)) {
-      *(undefined *)(iVar5 + 0xb5) = 0;
+  if (state->meltTimer <= lbl_803E4BD8) {
+    IcicleEntry *entry = (IcicleEntry *)lbl_803259E0;
+    GameBit_Set(entry[state->index].bit, 1);
+    state->meltTimer = *(f32 *)(lbl_803259E0 + state->index * 8);
+    state->index++;
+    if (state->index > 0x17) {
+      state->index = 0;
     }
   }
-  fVar2 = lbl_803E590C;
-  if (iVar4 != 0) {
-    fVar1 = *(float *)(iVar5 + 0xa4);
-    if (((lbl_803E5870 < fVar1) && (fVar1 <= lbl_803E590C)) &&
-       (*(float *)(iVar5 + 0xa4) = fVar1 + lbl_803DC074, fVar2 <= *(float *)(iVar5 + 0xa4))) {
-      (**(code **)(**(int **)(iVar4 + 0x68) + 0x34))(iVar4,1,iVar3);
-    }
-    fVar2 = lbl_803E5870;
-    if (*(float *)(iVar5 + 0xa8) <= lbl_803E5870) {
-      if (*(short *)(param_3 + 0x402) == 1) {
-        *(ushort *)(param_3 + 0x400) = *(ushort *)(param_3 + 0x400) | 4;
-        *(float *)(iVar5 + 0xa8) = lbl_803E58DC;
-        DIM2icicle_createStateLight(iVar3,0);
+  if (tricky != NULL) {
+    timer = state->lightTimer;
+    if (timer > lbl_803E4BD8) {
+      limit = lbl_803E4C74;
+      if (timer <= limit) {
+        state->lightTimer = timer + timeDelta;
+        if (state->lightTimer >= limit) {
+          ((void (*)(u8 *, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x34))(tricky, 1, obj);
+        }
       }
     }
-    else {
-      *(float *)(iVar5 + 0xa8) = *(float *)(iVar5 + 0xa8) + lbl_803DC074;
-      if (lbl_803E5884 <= *(float *)(iVar5 + 0xa8)) {
-        *(ushort *)(param_3 + 0x400) = *(ushort *)(param_3 + 0x400) & 0xfffb;
-        *(float *)(iVar5 + 0xa8) = fVar2;
-        (**(code **)(**(int **)(iVar4 + 0x68) + 0x34))(iVar4,0,0);
-        *(float *)(iVar5 + 0xa4) = lbl_803E58DC;
+    if (state->fadeTimer > (timer = lbl_803E4BD8)) {
+      state->fadeTimer = state->fadeTimer + timeDelta;
+      if (state->fadeTimer >= lbl_803E4BEC) {
+        *(u16 *)(param_3 + 0x400) &= ~4;
+        state->fadeTimer = timer;
+        ((void (*)(u8 *, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x34))(tricky, 0, 0);
+        state->lightTimer = lbl_803E4C44;
       }
     }
+    else if (*(s16 *)(param_3 + 0x402) == 1) {
+      *(u16 *)(param_3 + 0x400) |= 4;
+      state->fadeTimer = lbl_803E4C44;
+      DIM2icicle_createStateLight(obj, 0);
+    }
   }
-  if (*(short *)(param_3 + 0x402) == 2) {
-    DIM2icicle_createStateLight(iVar3,1);
+  if (*(s16 *)(param_3 + 0x402) == 2) {
+    DIM2icicle_createStateLight(obj, 1);
   }
-  if ((DAT_803de800 & 0x20000) != 0) {
-    DAT_803de800 = DAT_803de800 & 0xfffdffff;
-    DIM2icicle_spawnBlueWhiteEffect((int *)(*(int *)(param_3 + 0x40c) + 4),(f32 *)(*(int *)(param_3 + 0x40c) + 0x94));
+  {
+    /* MWCC quirk: target materializes ~0x20000 via lis/addi; clean C folds to rlwinm */
+    register u32 tmp;
+    register u32 hi;
+    register u32 flags;
+    flags = gDIMbossSequenceFlags;
+    if (flags & 0x20000) {
+      asm {
+        lis hi, -2
+        addi tmp, hi, -1
+        and tmp, flags, tmp
+      }
+      gDIMbossSequenceFlags = tmp;
+      DIM2icicle_spawnBlueWhiteEffect((int *)(*(int *)(param_3 + 0x40c) + 4), (f32 *)(*(int *)(param_3 + 0x40c) + 0x94));
+    }
   }
-  if ((*(ushort *)(param_3 + 0x400) & 4) != 0) {
-    DAT_803de800 = DAT_803de800 | 8;
+  if (*(u16 *)(param_3 + 0x400) & 4) {
+    gDIMbossSequenceFlags |= 8;
   }
-  if (*(short *)(param_3 + 0x402) == 1) {
-    (**(code **)(**(int **)(iVar4 + 0x68) + 0x28))(iVar4,iVar3,1,2);
-    *(undefined *)(iVar3 + 0xe4) = 1;
+  if (*(s16 *)(param_3 + 0x402) == 1) {
+    ((void (*)(u8 *, int, int, int))*(code **)(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(tricky, obj, 1, 2);
+    *(u8 *)(obj + 0xe4) = 1;
   }
   else {
-    *(undefined *)(iVar3 + 0xe4) = 2;
+    *(u8 *)(obj + 0xe4) = 2;
   }
-  *(undefined4 *)(param_3 + 0x3e0) = *(undefined4 *)(iVar3 + 0xc0);
-  *(undefined4 *)(iVar3 + 0xc0) = 0;
-  (**(code **)(*DAT_803dd70c + 8))
-            ((double)lbl_803DC074,(double)lbl_803DC074,iVar3,param_4,gDIMbossHitDetectAnimTable,
-             gDIMbossAnimTable);
-  *(undefined4 *)(iVar3 + 0xc0) = *(undefined4 *)(param_3 + 0x3e0);
-  FUN_8028688c();
-  return;
+  *(int *)(param_3 + 0x3e0) = *(int *)(obj + 0xc0);
+  *(int *)(obj + 0xc0) = 0;
+  ((void (*)(f32, int, int, f32, void *, void *))*(code **)(*(int *)gPlayerInterface + 8))
+            (timeDelta, obj, param_4, timeDelta, gDIMbossHitDetectAnimTable, gDIMbossAnimTable);
+  *(int *)(obj + 0xc0) = *(int *)(param_3 + 0x3e0);
 }
