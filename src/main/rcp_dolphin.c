@@ -2516,12 +2516,14 @@ void* getLoadedTexture(int key) {
 
 extern int getLoadedFileFlags(int);
 extern void loadTextureFile(void **out, int asset);
+#pragma dont_inline on
 void* textureLoadAsset(int asset) {
     void *out = NULL;
     if (getLoadedFileFlags(0) & 0x100000) return NULL;
     loadTextureFile(&out, asset);
     return out;
 }
+#pragma dont_inline reset
 
 extern f32 distortionFilterVector[3];
 extern f32 distortionFilterAngle1;
@@ -2730,6 +2732,7 @@ extern u32 GXGetTexBufferSize(u16 w, u16 h, u32 format, u8 mipmap, u8 max_lod);
 extern void *mmAlloc(u32 size, int type, int p3);
 extern void *memset(void *, int, u32);
 extern void textureFn_80053d58(void *obj);
+#pragma dont_inline on
 void *textureAlloc(u16 w, u16 h, int fmt, u8 mip, u8 maxLod, u8 b8, u8 b9, u8 b10, u8 b11) {
     u8 *obj;
     u32 size = GXGetTexBufferSize(w, h, fmt, mip, maxLod) + 96;
@@ -2758,6 +2761,7 @@ extern u16 GXGetTexObjWidth(void *obj);
 extern u16 GXGetTexObjHeight(void *obj);
 extern f32 lbl_803DEB98;
 extern f32 lbl_803DEB9C;
+#pragma dont_inline reset
 void textureFn_80053d58(void *vobj) {
     u8 *obj = (u8 *)vobj;
     u8 mipmap = 0;
@@ -3524,6 +3528,60 @@ int textureFn_80052bb4(int model, f32 *params)
     fn_8001DA3C(la, LastReadIssued_803DEB58.hi, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
     fn_8001DA3C(lb, LastReadIssued_803DEB58.hi, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
     return 0;
+}
+
+extern f32 powfCoreHighPrecision(f32 base, f32 exp);
+extern f32 lbl_803DEB48;
+extern f32 lbl_803DEB4C;
+extern u8 lbl_8030D028[];
+extern u8 lbl_803DCDA5;
+extern void *lbl_803DCDA0;
+
+void initFn_800534f8(void)
+{
+    int i;
+    u8 *p;
+    u8 *q;
+    int j;
+    u32 half;
+    u8 *slot;
+    f32 scaleB;
+    f32 scaleA;
+    f32 v;
+    f32 inv;
+
+    i = 0;
+    p = lbl_8037E000;
+    for (; i < 6; i++) {
+        *(void **)p = textureAlloc(0x20, 0x20, 6, 0, 0, 0, 0, 1, 1);
+        p[0x1a] = 0;
+        p += 0x1c;
+    }
+    lbl_803DCDA5 = 0;
+    q = lbl_8030D028;
+    scaleA = lbl_803DEB48;
+    scaleB = LastReadFinished_803DEB50.lo;
+    for (j = 0; j < 6; j++) {
+        v = *(f32 *)(q + 4);
+        slot = lbl_8037E000 + lbl_803DCDA5 * 0x1c;
+        slot[0xc] = 0xff;
+        slot[0xd] = 0xff;
+        slot[0xe] = 0xff;
+        inv = scaleA / powfCoreHighPrecision(*(f32 *)q, lbl_803DEB4C);
+        slot = lbl_8037E000 + lbl_803DCDA5 * 0x1c;
+        half = j & 1;
+        *(f32 *)(slot + half * 4 + 0x10) = inv;
+        *(s8 *)(slot + half + 0x18) = (int)(scaleB * v);
+        slot[0x1b] = 1;
+        if (half != 0) {
+            lbl_803DCDA5 = lbl_803DCDA5 + 1;
+        }
+        q += 8;
+    }
+    (lbl_8037E000 + 0x1b)[lbl_803DCDA5++ * 0x1c] = 0;
+    (lbl_8037E000 + 0x1b)[lbl_803DCDA5++ * 0x1c] = 0;
+    (lbl_8037E000 + 0x1b)[lbl_803DCDA5++ * 0x1c] = 0;
+    lbl_803DCDA0 = textureLoadAsset(0x5dc);
 }
 
 #pragma scheduling reset
