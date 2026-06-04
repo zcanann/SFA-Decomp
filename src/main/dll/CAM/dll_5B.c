@@ -100,6 +100,33 @@ extern f32 lbl_803E188C;
 
 int fn_8010A47C(int curve, int *count, int tag);
 
+typedef struct ViewfinderFlags {
+    u8 b7 : 1;
+    u8 b6 : 1;
+    u8 b5 : 1;
+    u8 rest : 5;
+} ViewfinderFlags;
+
+extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+extern char padGetStickX(int port);
+extern char padGetStickY(int port);
+extern f32 interpolate(f32 v, f32 a, f32 b);
+extern void fn_802961D4(short *obj, int v);
+extern f32 Camera_GetFovY(void);
+extern void viewFinderSetZoom(f32 fov);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern f32 lbl_803E17E0;
+extern f32 lbl_803E17EC;
+extern f32 lbl_803E17F0;
+extern f32 lbl_803E17F4;
+extern f32 lbl_803E17F8;
+extern f32 lbl_803E17FC;
+extern f32 lbl_803E1800;
+extern f32 lbl_803E1804;
+extern f32 lbl_803E1808;
+extern f32 lbl_803E180C;
+extern f32 lbl_803E1810;
+
 /*
  * --INFO--
  *
@@ -115,89 +142,91 @@ int fn_8010A47C(int curve, int *count, int tag);
  */
 void firstPersonDoControls(short *param_1)
 {
-  float fVar1;
   short sVar2;
   char cVar3;
   char cVar4;
   short *psVar5;
-  double dVar6;
-  double dVar7;
-  undefined8 local_38;
-  
+  int spinI;
+  f32 t;
+  f32 zoom;
+  f32 spin;
+  f32 fovTarget;
+  f32 zoom2;
+
   psVar5 = *(short **)(param_1 + 0x52);
-  cVar3 = FUN_80006bd0(0);
-  cVar4 = FUN_80006bc8(0);
-  dVar6 = (double)((lbl_803E17E0 - *(float *)(param_1 + 0x5a)) / lbl_803E17E4);
-  dVar7 = (double)lbl_803E17C4;
-  if ((dVar7 <= dVar6) && (dVar7 = dVar6, (double)lbl_803E17E8 < dVar6)) {
-    dVar7 = (double)lbl_803E17E8;
+  cVar3 = padGetStickX(0);
+  cVar4 = padGetStickY(0);
+  t = (lbl_803E17E0 - *(f32 *)(param_1 + 0x5a)) / lbl_803E17E4;
+  zoom = lbl_803E17C4;
+  if (t >= zoom) {
+    zoom = lbl_803E17E8;
+    if (t <= zoom) {
+      zoom = t;
+    }
   }
-  dVar6 = FUN_800176f4((f64)((f32)(s32)cVar3 *
-                                -(f32)((f64)lbl_803E17F0 * dVar7 - (f64)lbl_803E17EC) -
-                               *(f32 *)(lbl_803DD548 + 0x11c)),(f64)lbl_803E17F4,
-                       (f64)timeDelta);
-  *(float *)(lbl_803DD548 + 0x11c) = (float)((double)*(float *)(lbl_803DD548 + 0x11c) + dVar6);
-  if ((lbl_803E17F8 < *(float *)(lbl_803DD548 + 0x11c)) &&
-     (*(float *)(lbl_803DD548 + 0x11c) < lbl_803E17FC)) {
-    *(float *)(lbl_803DD548 + 0x11c) = lbl_803E17C4;
+  spin = (f32)cVar3 * -(lbl_803E17F0 * zoom - lbl_803E17EC);
+  spin = interpolate(spin - *(f32 *)((int)lbl_803DD548 + 0x11c), lbl_803E17F4, timeDelta);
+  *(f32 *)((int)lbl_803DD548 + 0x11c) = *(f32 *)((int)lbl_803DD548 + 0x11c) + spin;
+  if ((*(f32 *)((int)lbl_803DD548 + 0x11c) > lbl_803E17F8) &&
+     (*(f32 *)((int)lbl_803DD548 + 0x11c) < lbl_803E17FC)) {
+    *(f32 *)((int)lbl_803DD548 + 0x11c) = lbl_803E17C4;
   }
-  fVar1 = lbl_803E1800 * ((f32)(s32)cVar4 / lbl_803E1804);
-  *param_1 = (short)(int)(*(f32 *)(lbl_803DD548 + 0x11c) * timeDelta + (f32)(s32)*param_1);
-  sVar2 = (short)(int)fVar1 - param_1[1];
+  spinI = (int)(lbl_803E1800 * ((f32)cVar4 / lbl_803E1804));
+  *param_1 = *(f32 *)((int)lbl_803DD548 + 0x11c) * timeDelta + (f32)*param_1;
+  sVar2 = spinI - (param_1[1] & 0xffffU);
   if (0x8000 < sVar2) {
-    sVar2 = sVar2 + 1;
+    sVar2 = sVar2 - 0xffff;
   }
   if (sVar2 < -0x8000) {
-    sVar2 = sVar2 + -1;
+    sVar2 = sVar2 + 0xffff;
   }
-  dVar7 = FUN_800176f4((f64)(f32)(s32)sVar2,
-                       (f64)(lbl_803E17E8 /
-                               (f32)((f64)lbl_803E180C * dVar7 + (f64)lbl_803E1808)),
-                       (f64)timeDelta);
-  param_1[1] = (short)(int)((f64)(f32)(s32)param_1[1] + dVar7);
+  spin = interpolate((f32)sVar2, lbl_803E17E8 / (lbl_803E180C * zoom + lbl_803E1808), timeDelta);
+  param_1[1] = (f32)param_1[1] + spin;
   if (0x3c00 < param_1[1]) {
     param_1[1] = 0x3c00;
   }
   if (param_1[1] < -0x3c00) {
     param_1[1] = -0x3c00;
   }
-  *psVar5 = -0x8000 - *param_1;
+  *psVar5 = 0x8000 - *param_1;
   if (psVar5[0x22] == 1) {
-    FUN_80294c64(psVar5,*psVar5);
+    fn_802961D4(psVar5, *psVar5);
   }
-  if (*(float *)(lbl_803DD548 + 0x124) < *(float *)(lbl_803DD548 + 0x130)) {
-    *(float *)(lbl_803DD548 + 0x130) = *(float *)(lbl_803DD548 + 0x124);
+  if (*(f32 *)((int)lbl_803DD548 + 0x124) < *(f32 *)((int)lbl_803DD548 + 0x130)) {
+    *(f32 *)((int)lbl_803DD548 + 0x130) = *(f32 *)((int)lbl_803DD548 + 0x124);
   }
-  *(undefined4 *)(param_1 + 0xc) = *(undefined4 *)(lbl_803DD548 + 0x120);
-  *(undefined4 *)(param_1 + 0xe) = *(undefined4 *)(lbl_803DD548 + 0x130);
-  *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(lbl_803DD548 + 0x128);
-  if (*(char *)(lbl_803DD548 + 0x12d) < '\0') {
-    dVar7 = (double)*(float *)(param_1 + 0x5a);
-    cVar3 = FUN_80006bb8(0);
-    dVar6 = (f64)(f32)((f64)(lbl_803E1810 * (f32)(s32)(-(int)cVar3)) *
-                            (f64)timeDelta + dVar7);
-    dVar7 = FUN_800069f8();
-    FUN_800810d8(dVar7);
-    dVar7 = (double)lbl_803E17FC;
-    if ((dVar7 <= dVar6) && (dVar7 = dVar6, (double)lbl_803E17E0 < dVar6)) {
-      dVar7 = (double)lbl_803E17E0;
-    }
-    if ((*(byte *)(lbl_803DD548 + 0x12d) >> 6 & 1) != 0) {
-      if ((dVar7 == (double)*(float *)(param_1 + 0x5a)) &&
-         ((*(byte *)(lbl_803DD548 + 0x12d) >> 5 & 1) != 0)) {
-        FUN_80006810(0,0x3d8);
-        *(byte *)(lbl_803DD548 + 0x12d) = *(byte *)(lbl_803DD548 + 0x12d) & 0xdf;
-      }
-      if ((dVar7 != (double)*(float *)(param_1 + 0x5a)) &&
-         ((*(byte *)(lbl_803DD548 + 0x12d) >> 5 & 1) == 0)) {
-        FUN_80006824(0,0x3d8);
-        *(byte *)(lbl_803DD548 + 0x12d) = *(byte *)(lbl_803DD548 + 0x12d) & 0xdf | 0x20;
+  *(f32 *)(param_1 + 0xc) = *(f32 *)((int)lbl_803DD548 + 0x120);
+  *(f32 *)(param_1 + 0xe) = *(f32 *)((int)lbl_803DD548 + 0x130);
+  *(f32 *)(param_1 + 0x10) = *(f32 *)((int)lbl_803DD548 + 0x128);
+  if (((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7) {
+    zoom2 = *(f32 *)(param_1 + 0x5a);
+    cVar3 = padGetCY(0);
+    t = (f32)-(int)cVar3;
+    zoom2 = lbl_803E1810 * t * timeDelta + zoom2;
+    viewFinderSetZoom(Camera_GetFovY());
+    fovTarget = lbl_803E17FC;
+    if (zoom2 >= fovTarget) {
+      fovTarget = lbl_803E17E0;
+      if (zoom2 <= fovTarget) {
+        fovTarget = zoom2;
       }
     }
-    *(float *)(param_1 + 0x5a) = (float)dVar7;
+    if ((*(u8 *)((int)lbl_803DD548 + 0x12d) >> 6 & 1) != 0) {
+      if ((fovTarget == *(f32 *)(param_1 + 0x5a)) &&
+         ((*(u8 *)((int)lbl_803DD548 + 0x12d) >> 5 & 1) != 0)) {
+        Sfx_StopFromObject(0, 0x3d8);
+        ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b5 = 0;
+      }
+      if ((fovTarget != *(f32 *)(param_1 + 0x5a)) &&
+         ((*(u8 *)((int)lbl_803DD548 + 0x12d) >> 5 & 1) == 0)) {
+        Sfx_PlayFromObject(0, 0x3d8);
+        ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b5 = 1;
+      }
+    }
+    *(f32 *)(param_1 + 0x5a) = fovTarget;
   }
-  return;
 }
+
 
 /*
  * --INFO--
@@ -366,18 +395,10 @@ extern f32 lbl_803E17C4;
 extern f32 lbl_803E17E8;
 extern int Curve_AdvanceAlongPath(void *path, f32 step);
 extern void Rcp_SetViewFinderHudEnabled(int on);
-extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 extern void buttonDisable(int port, int mask);
 extern void firstPersonZoomOutOnExit(int a, int b);
 extern void fn_80137948(char *fmt, ...);
 extern char sCam5BYDebugFormat;
-
-typedef struct ViewfinderFlags {
-    u8 b7 : 1;
-    u8 b6 : 1;
-    u8 b5 : 1;
-    u8 rest : 5;
-} ViewfinderFlags;
 
 /*
  * --INFO--
