@@ -19,10 +19,9 @@ extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
-extern int ObjAnim_SetMoveProgress(f32 progress, void *objAnim);
 extern int Obj_GetPlayerObject(void);
 extern undefined8 ObjGroup_RemoveObject();
-extern void Sfx_PlayAtPositionFromObject(f32 x,f32 y,f32 z,int obj,int sfxId);
+extern void Sfx_PlayAtPositionFromObject(int obj, f32 x, f32 y, f32 z, int sfxId);
 extern void Sfx_PlayFromObject(int obj,int sfxId);
 extern f32 Vec_distance(f32 *a, f32 *b);
 extern void doRumble(f32 duration);
@@ -30,8 +29,6 @@ extern void CameraShake_ApplyRadial(f32 x, f32 y, f32 z, f32 radius, f32 magnitu
 extern undefined4 FUN_8014d3d0();
 extern undefined4 FUN_8014d4c8();
 extern undefined4 FUN_80151844();
-extern void fn_8014CF7C(int obj, int state, int moveId, int flags, f32 x, f32 z);
-extern void fn_8014D08C(int obj, int state, int moveId, int flags, f32 speed, int attr);
 extern void fn_801513AC(int obj, int state);
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
@@ -108,49 +105,42 @@ extern void wispbaddie_init(int obj,int setup,int initialised);
 extern int wispbaddie_getObjectTypeId(void);
 extern int wispbaddie_getExtraSize(void);
 
-/*
- * --INFO--
- *
- * Function: wispbaddie_update
- * EN v1.0 Address: 0x8014F9E8
- * EN v1.0 Size: 848b
- * EN v1.1 Address: 0x8014FAB4
- * EN v1.1 Size: 880b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
+#pragma peephole off
+#pragma scheduling off
 void wispbaddie_update(int obj)
 {
   WispBaddieState *state;
   int curve;
   int hit;
-  f32 hitX;
-  f32 hitY;
-  f32 hitZ;
   f32 dx;
+  f32 hitZ;
   f32 dy;
   f32 dz;
+  f32 hitX;
+  f32 hitY;
+  f32 d[3];
   int particleParam;
+  u8 f;
+  void *dAlias = (void *)d;
 
   state = *(WispBaddieState **)(obj + 0xb8);
   curve = state->curve;
   hit = ObjHits_GetPriorityHitWithPosition(obj,&dx,&hitX,&hitY,&hitZ,&dy,&dz);
   if (hit != 0) {
     state->hitRadius = lbl_803E2708;
-    if ((state->flags & 2) != 0) {
-      state->flags = (u8)(state->flags & ~2);
+    f = state->flags;
+    if ((f & 2) != 0) {
+      state->flags = (u8)(f & ~2);
       state->flags = (u8)(state->flags | 4);
     }
-    Sfx_PlayAtPositionFromObject(hitZ,dy,dz,obj,0x23c);
+    Sfx_PlayAtPositionFromObject(obj,hitZ,dy,dz,0x23c);
   }
 
   particleParam = 4;
-  (*(void (**)(int,int,int,int,int,int *))(*(int *)gPartfxInterface + 8))
+  (*(void (**)(int,int,int,int,int,int *))(*gPartfxInterface + 8))
       (obj,state->particleId,0,1,-1,&particleParam);
   particleParam = 3;
-  (*(void (**)(int,int,int,int,int,int *))(*(int *)gPartfxInterface + 8))
+  (*(void (**)(int,int,int,int,int,int *))(*gPartfxInterface + 8))
       (obj,state->particleId,0,2,-1,&particleParam);
 
   if (state->hitRadius < state->maxHitRadius) {
@@ -159,35 +149,36 @@ void wispbaddie_update(int obj)
   } else {
     state->hitRadius = state->maxHitRadius;
     particleParam = 2;
-    (*(void (**)(int,int,int,int,int,int *))(*(int *)gPartfxInterface + 8))
+    (*(void (**)(int,int,int,int,int,int *))(*gPartfxInterface + 8))
         (obj,state->particleId,0,2,-1,&particleParam);
     particleParam = 0;
-    (*(void (**)(int,int,int,int,int,int *))(*(int *)gPartfxInterface + 8))
+    (*(void (**)(int,int,int,int,int,int *))(*gPartfxInterface + 8))
         (obj,state->particleId,0,2,-1,&particleParam);
     ObjHits_SetHitVolumeSlot(obj,10,1,0);
     ObjHits_EnableObject(obj);
   }
 
   particleParam = 1;
-  (*(void (**)(int,int,int,int,int,int *))(*(int *)gPartfxInterface + 8))
+  (*(void (**)(int,int,int,int,int,int *))(*gPartfxInterface + 8))
       (obj,state->particleId,0,2,-1,&particleParam);
   state->playerObj = Obj_GetPlayerObject();
   if (state->playerObj != 0) {
-    dx = *(f32 *)(state->playerObj + 0x18) - *(f32 *)(obj + 0x18);
-    dy = *(f32 *)(state->playerObj + 0x1c) - *(f32 *)(obj + 0x1c);
-    dz = *(f32 *)(state->playerObj + 0x20) - *(f32 *)(obj + 0x20);
-    state->playerDistance = sqrtf(dz * dz + dx * dx + dy * dy);
+    d[0] = *(f32 *)(state->playerObj + 0x18) - *(f32 *)(obj + 0x18);
+    d[1] = *(f32 *)(state->playerObj + 0x1c) - *(f32 *)(obj + 0x1c);
+    d[2] = *(f32 *)(state->playerObj + 0x20) - *(f32 *)(obj + 0x20);
+    state->playerDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
   }
   if (curve != 0) {
-    dx = *(f32 *)(curve + 0x68) - *(f32 *)(obj + 0x18);
-    dy = *(f32 *)(curve + 0x6c) - *(f32 *)(obj + 0x1c);
-    dz = *(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x20);
-    state->curveDistance = sqrtf(dz * dz + dx * dx + dy * dy);
+    d[0] = *(f32 *)(curve + 0x68) - *(f32 *)(obj + 0x18);
+    d[1] = *(f32 *)(curve + 0x6c) - *(f32 *)(obj + 0x1c);
+    d[2] = *(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x20);
+    state->curveDistance = sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1]));
   }
 
-  if ((state->flags & 2) != 0) {
-    if (lbl_803E2710 < state->curveDistance) {
-      state->flags = (u8)(state->flags & ~2);
+  f = state->flags;
+  if ((f & 2) != 0) {
+    if (state->curveDistance > lbl_803E2710) {
+      state->flags = (u8)(f & ~2);
       state->flags = (u8)(state->flags | 4);
     }
     state->cryTimer -= timeDelta;
@@ -197,9 +188,10 @@ void wispbaddie_update(int obj)
     }
     state->particleId = 0x338;
   }
-  if ((state->flags & 4) != 0) {
+  f = state->flags;
+  if ((f & 4) != 0) {
     if (state->curveDistance < lbl_803E2718) {
-      state->flags = (u8)(state->flags & ~4);
+      state->flags = (u8)(f & ~4);
     }
     state->particleId = 0x337;
   }
@@ -212,7 +204,11 @@ void wispbaddie_update(int obj)
   }
   fn_8014F620(obj,state);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
+#pragma peephole off
+#pragma scheduling off
 void wispbaddie_init(int obj,int setup,int initialised)
 {
   WispBaddieState *state;
@@ -227,10 +223,10 @@ void wispbaddie_init(int obj,int setup,int initialised)
 
   if (initialised == 0) {
     state->curve = (int)mmAlloc(0x108,0x1a,0);
-    if (state->curve != 0) {
+    if ((void *)state->curve != NULL) {
       memset((void *)state->curve,0,0x108);
     }
-    if (((u8 (**)(int,int,f32,int *,int))(*gRomCurveInterface))[0x23]
+    if ((*(u8 (**)(int,int,f32,int *,int))(*gRomCurveInterface + 0x8c))
             (state->curve,obj,state->triggerDistance,&lbl_803DBC80,-1) == 0) {
       state->flags = (u8)(state->flags | 1);
     }
@@ -238,6 +234,8 @@ void wispbaddie_init(int obj,int setup,int initialised)
   }
   *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -619,12 +617,12 @@ void fn_8014FEF8(int p1, int *p2, int p3, int code) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_8014CF7C(int a, int b, int c, int d, f32 e, f32 f);
+extern void fn_8014CF7C(int a, int b, f32 e, f32 f, int c, int d);
 #pragma scheduling off
 #pragma peephole off
 void fn_8014FF24(int a, int b) {
     f32 *p = *(f32 **)((char *)b + 0x29c);
-    fn_8014CF7C(a, b, 0xf, 0, p[3], p[5]);
+    fn_8014CF7C(a, b, p[3], p[5], 0xf, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -661,108 +659,140 @@ extern u8 lbl_8031DD30[];
 
 #pragma scheduling off
 #pragma peephole off
+extern void fn_8014D08C(int obj, int state, int moveId, f32 speed, int p5, int flags);
+extern void ObjAnim_SetMoveProgress(int obj, f32 progress);
+extern void fn_801513AC(int obj, int state);
+extern f32 lbl_803E2740;
+extern f32 lbl_803E2744;
+extern f32 lbl_803E2748;
+extern f32 lbl_803E274C;
+extern f32 lbl_803E2750;
+extern f32 lbl_803E2754;
+
 u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent) {
+    u8 *base = lbl_8031DD30;
+    u8 *eventRows;
+    u8 eventIndex;
+    int ei;
+    int flag20;
+    u8 sequenceIndex;
+    u32 stateFlags;
     u8 eventFlags;
     f32 blendScale;
     f32 blendTimer;
     int eventTableIndex;
-    u32 result;
-    u32 eventIndex;
-    u8 sequenceIndex;
-    u32 stateFlags;
-    u8 *eventRows;
     u8 *row;
+    u32 sf2;
 
-    result = 0;
     sequenceIndex = *(u8 *)(state + 0x33b);
-    eventRows = *(u8 **)(lbl_8031DD30 + sequenceIndex * 0x28 + 0x1444);
+    eventRows = *(u8 **)(base + sequenceIndex * 0x28 + 0x1444);
     stateFlags = *(u32 *)(state + 0x2dc);
-    if ((stateFlags & 0x4000) == 0) {
-        if ((*(f32 *)(state + 0x328) == lbl_803E2740) || (*(u16 *)(state + 0x338) == 0)) {
-            eventFlags = *(u8 *)(state + 0x2f1);
-            eventIndex = eventFlags & 0x1f;
-            if ((eventIndex & 0x10) != 0) {
-                eventIndex = eventFlags & 0x17;
-            }
-            if (eventIndex > 0x18) {
-                eventIndex = 0;
-            }
-            blendScale = lbl_803E2748;
-            if ((eventFlags & 0x20) != 0) {
-                eventIndex = 0;
-                blendScale = lbl_803E2744;
-            }
-            if (((allowNewEvent & 0xff) != 0) &&
-                (((eventFlags != 0 || (*(f32 *)(state + 0x324) != lbl_803E2740)) &&
-                  ((*(u32 *)(state + 0x2dc) & 0x40) == 0)) &&
-                 ((eventFlags & 0x20) == 0))) {
-                if (*(f32 *)(state + 0x324) == lbl_803E2740) {
-                    eventTableIndex = sequenceIndex * 2;
-                    eventIndex = randomGetRange((u8)lbl_8031DD30[eventTableIndex + 0x152c],
-                                                (u8)lbl_8031DD30[eventTableIndex + 0x152d]);
-                    *(f32 *)(state + 0x324) = *(f32 *)(state + 0x334) + (f32)(s32)eventIndex;
-                    *(f32 *)(state + 0x334) = lbl_803E2740;
-                    return result;
-                }
+    if ((stateFlags & 0x4000) != 0) {
+        return 0;
+    }
+    if (*(f32 *)(state + 0x328) != lbl_803E2740 && *(u16 *)(state + 0x338) != 0) {
+        return 0;
+    }
+    eventFlags = *(u8 *)(state + 0x2f1);
+    ei = eventFlags & 0x1f;
+    eventIndex = ei;
+    if ((ei & 0x10) != 0) {
+        eventIndex = ei & ~0x8;
+    }
+    if (eventIndex > 0x18) {
+        eventIndex = 0;
+    }
+    flag20 = eventFlags & 0x20;
+    if (flag20 != 0) {
+        blendScale = lbl_803E2744;
+        eventIndex = 0;
+    } else {
+        blendScale = lbl_803E2748;
+    }
+    if ((u8)allowNewEvent != 0) {
+        if ((eventFlags != 0 || *(f32 *)(state + 0x324) != lbl_803E2740) &&
+            (stateFlags & 0x40) == 0 && flag20 == 0) {
+            if (*(f32 *)(state + 0x324) != lbl_803E2740) {
                 *(f32 *)(state + 0x324) = *(f32 *)(state + 0x324) - timeDelta;
-                if (lbl_803E2740 < *(f32 *)(state + 0x324)) {
-                    return result;
-                }
-                *(f32 *)(state + 0x324) = lbl_803E2740;
-            }
-            if (!((((((allowNewEvent & 0xff) == 0) || (*(u8 *)(state + 0x2f1) == 0)) ||
-                   (eventRows[eventIndex * 0xc + 8] == 0)) &&
-                  ((*(u8 *)(state + 0x2f1) & 0x20) == 0)) ||
-                 ((*(u8 *)(state + 0x33c) == eventIndex &&
-                   (lbl_803E2740 != *(f32 *)(state + 0x32c)))))) {
-                if (((*(u32 *)(state + 0x2dc) & 0x800080) == 0) &&
-                    ((*(u8 *)(state + 0x2f1) & 0x20) == 0)) {
-                    if ((*(u32 *)(state + 0x2dc) & 0x40000000) != 0) {
-                        fn_801513AC(obj, state);
-                    }
+                if (*(f32 *)(state + 0x324) <= lbl_803E2740) {
+                    *(f32 *)(state + 0x324) = lbl_803E2740;
                 } else {
-                    row = eventRows + eventIndex * 0xc;
-                    blendTimer = lbl_803E274C * blendScale * *(f32 *)row;
-                    *(f32 *)(state + 0x330) = blendTimer;
-                    *(f32 *)(state + 0x32c) = blendTimer;
-                    *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) | 0x40;
-                    *(u8 *)(state + 0x2f2) = *(u8 *)(state + 0x2f2) | 0x80;
-                    *(u8 *)(state + 0x2f3) = 0;
-                    *(u8 *)(state + 0x2f4) = 0;
-                    fn_8014D08C(obj, state, row[8], 0, blendScale * *(f32 *)row,
-                                *(u32 *)(row + 4) & 0xff);
-                    ObjAnim_SetMoveProgress(*(f32 *)(lbl_8031DD30 + row[8] * 4), (void *)obj);
-                    *(u8 *)(state + 0x33c) = (u8)eventIndex;
-                    result = 1;
+                    return 0;
                 }
             } else {
-                if (*(f32 *)(state + 0x32c) != lbl_803E2740) {
-                    int pos = *(int *)(state + 0x29c);
-                    fn_8014CF7C(obj, state, 0xf, 0, *(f32 *)(pos + 0xc), *(f32 *)(pos + 0x14));
-                    if (lbl_803E2750 < *(f32 *)(state + 0x308)) {
-                        *(f32 *)(state + 0x308) = *(f32 *)(state + 0x308) - lbl_803E2754;
-                    }
-                    if ((*(u32 *)(state + 0x2dc) & 0x40000000) != 0) {
-                        eventTableIndex = *(u8 *)(state + 0x33c) * 0xc;
-                        row = eventRows + eventTableIndex;
-                        fn_8014D08C(obj, state, row[8], 0, *(f32 *)row, *(u32 *)(row + 4) & 0xff);
-                        ObjAnim_SetMoveProgress(*(f32 *)(lbl_8031DD30 + row[8] * 4), (void *)obj);
-                    }
-                    *(f32 *)(state + 0x32c) = *(f32 *)(state + 0x32c) - timeDelta;
-                    if (lbl_803E2740 < *(f32 *)(state + 0x32c)) {
-                        result = 1;
-                    } else {
-                        *(f32 *)(state + 0x32c) = lbl_803E2740;
-                        *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) & 0xffffffbf;
-                        *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) | 0x40000000;
-                        *(u8 *)(state + 0x2f2) = *(u8 *)(state + 0x2f2) & 0x7f;
-                        *(u8 *)(state + 0x33c) = 0;
-                    }
-                }
+                eventTableIndex = sequenceIndex * 2;
+                *(f32 *)(state + 0x324) = *(f32 *)(state + 0x334) +
+                    (f32)(int)randomGetRange(base[eventTableIndex + 0x152c],
+                                             base[eventTableIndex + 0x152d]);
+                *(f32 *)(state + 0x334) = lbl_803E2740;
+                return 0;
             }
         }
     }
-    return result;
+    if ((((u8)allowNewEvent != 0 && *(u8 *)(state + 0x2f1) != 0 &&
+          eventRows[eventIndex * 0xc + 8] != 0) ||
+         (*(u8 *)(state + 0x2f1) & 0x20) != 0) &&
+        !(*(u8 *)(state + 0x33c) == eventIndex && lbl_803E2740 != *(f32 *)(state + 0x32c))) {
+        sf2 = *(u32 *)(state + 0x2dc);
+        if ((sf2 & 0x800080) != 0 || (*(u8 *)(state + 0x2f1) & 0x20) != 0) {
+            row = eventRows + eventIndex * 0xc;
+            blendTimer = lbl_803E274C * (blendScale * *(f32 *)row);
+            *(f32 *)(state + 0x330) = blendTimer;
+            *(f32 *)(state + 0x32c) = blendTimer;
+            *(u32 *)(state + 0x2dc) = *(u32 *)(state + 0x2dc) | 0x40;
+            *(u8 *)(state + 0x2f2) = *(u8 *)(state + 0x2f2) | 0x80;
+            *(u8 *)(state + 0x2f3) = 0;
+            *(u8 *)(state + 0x2f4) = 0;
+            fn_8014D08C(obj, state, row[8], blendScale * *(f32 *)row, 0, *(u32 *)(row + 4) & 0xff);
+            ObjAnim_SetMoveProgress(obj, *(f32 *)(base + row[8] * 4));
+            *(u8 *)(state + 0x33c) = eventIndex;
+            return 1;
+        }
+        if ((sf2 & 0x40000000) != 0) {
+            fn_801513AC(obj, state);
+        }
+        return 0;
+    }
+    if (*(f32 *)(state + 0x32c) != lbl_803E2740) {
+        int pos = *(int *)(state + 0x29c);
+        fn_8014CF7C(obj, state, *(f32 *)(pos + 0xc), *(f32 *)(pos + 0x14), 0xf, 0);
+        if (*(f32 *)(state + 0x308) > lbl_803E2750) {
+            *(f32 *)(state + 0x308) = *(f32 *)(state + 0x308) - lbl_803E2754;
+        }
+        if ((*(u32 *)(state + 0x2dc) & 0x40000000) != 0) {
+            eventTableIndex = *(u8 *)(state + 0x33c) * 0xc;
+            row = eventRows + eventTableIndex;
+            fn_8014D08C(obj, state, row[8], *(f32 *)(eventRows + eventTableIndex), 0,
+                        *(u32 *)(row + 4) & 0xff);
+            ObjAnim_SetMoveProgress(obj,
+                *(f32 *)(base + eventRows[*(u8 *)(state + 0x33c) * 0xc + 8] * 4));
+        }
+        *(f32 *)(state + 0x32c) = *(f32 *)(state + 0x32c) - timeDelta;
+        if (*(f32 *)(state + 0x32c) <= lbl_803E2740) {
+            *(f32 *)(state + 0x32c) = lbl_803E2740;
+            {
+                register u32 m;
+                register u32 v;
+                register int pReg = state;
+                asm {
+                    lwz v, 0x2dc(pReg)
+                    li m, -65
+                    and m, v, m
+                    stw m, 0x2dc(pReg)
+                    lwz v, 0x2dc(pReg)
+                    lis m, 16384
+                    or m, v, m
+                    stw m, 0x2dc(pReg)
+                }
+            }
+            *(u8 *)(state + 0x2f2) = *(u8 *)(state + 0x2f2) & 0x7f;
+            *(u8 *)(state + 0x33c) = 0;
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
