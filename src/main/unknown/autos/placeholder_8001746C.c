@@ -9299,9 +9299,11 @@ asm void setGQR7(register u32 v) {
     blr
 }
 
+#pragma dont_inline on
 void fn_8002A3D4(int a, int b, int c, int d) {
     setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
 }
+#pragma dont_inline reset
 
 f32 Vec3_Length(f32 *v) {
     return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
@@ -12256,6 +12258,7 @@ void fn_8001D8F0(u8 *obj, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f) {
                     lbl_803DE790, lbl_803DE790);
 }
 
+#pragma dont_inline on
 void ObjModel_InitScratchBuffers(void) {
     u8 *c = getCache();
     lbl_80340898[0] = c;
@@ -12270,6 +12273,7 @@ void ObjModel_InitScratchBuffers(void) {
     lbl_80340880[4] = c + 0x3000;
     lbl_80340880[5] = c + 0x3800;
 }
+#pragma dont_inline reset
 #pragma pop
 
 extern void GXInitLightAttn(u8 *lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, f32 k2);
@@ -18413,5 +18417,66 @@ void modelAnimFn_800246a0(u8 *a, u8 *b, u8 *c, f32 t, int d, int e, int f, int g
         }
     }
     lbl_80006C6C(&px, a, stk, *(int *)(hdr + 0x3c), *(u8 *)(hdr + 0xf3), lbl_80340740, d, (u8)fl);
+}
+#pragma pop
+
+extern void ObjModel_TransformVerticesWithTranslation(u8 *m1, u8 *m2, u8 *src, int d1, int d2, int count);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void ObjModel_BlendPrimaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, int *offs, u8 *out) {
+    u16 sizes[2];
+
+    fn_8002A3D4(hdr[6], 7, hdr[6], 7);
+    ObjModel_InitScratchBuffers();
+    if (*(u16 *)(hdr + 2) != 0) {
+        u8 *q;
+        int words;
+        u32 i;
+        u32 nb;
+        int bi;
+        u8 *dst;
+        u8 **cp;
+
+        q = *(u8 **)(hdr + 0xc);
+        words = (u32)((q[0x73] << 5) + 0x1f) >> 5;
+        copyToCache(lbl_80340898[0], data + *(int *)(q + 0x60), words);
+        sizes[0] = words;
+        q = *(u8 **)(hdr + 0xc);
+        copyToCache(lbl_80340898[1], *(u8 **)(q + 0x64), (u32)((q[0x6f] << 5) + 0x1f) >> 5);
+        cp = lbl_80340898;
+        for (i = 0; i < (u32)(*(u16 *)(hdr + 2) - 1); i++) {
+            q = *(u8 **)(hdr + 0xc) + i * 0x74;
+            words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
+            nb = (i + 1) & 1;
+            bi = nb * 2;
+            copyToCache(cp[(u8)bi], data + *(int *)(q + 0xd4), words);
+            sizes[nb] = words;
+            {
+                u8 *q2 = *(u8 **)(hdr + 0xc) + i * 0x74;
+                copyToCache(cp[(u8)((u8)bi + 1)], *(u8 **)(q2 + 0xd8),
+                            (u32)((q2[0xe3] << 5) + 0x1f) >> 5);
+            }
+            cacheFn_800229c4(2);
+            dst = out + offs[i];
+            ObjModel_TransformVerticesWithTranslation(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                                      cp[(u8)((i & 1) * 2) + 1],
+                                                      q[0x72] + (int)cp[(u8)((i & 1) * 2)],
+                                                      q[0x72] + (int)cp[(u8)((i & 1) * 2)],
+                                                      *(u16 *)(q + 0x70));
+            memcpyToCache(dst, cp[(u8)((i & 1) * 2)], sizes[i & 1]);
+        }
+        q = *(u8 **)(hdr + 0xc) + i * 0x74;
+        cacheFn_800229c4(0);
+        dst = out + offs[i];
+        ObjModel_TransformVerticesWithTranslation(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                                  lbl_80340898[(u8)((i & 1) * 2) + 1],
+                                                  q[0x72] + (int)lbl_80340898[(u8)((i & 1) * 2)],
+                                                  q[0x72] + (int)lbl_80340898[(u8)((i & 1) * 2)],
+                                                  *(u16 *)(q + 0x70));
+        memcpyToCache(dst, lbl_80340898[(u8)((i & 1) * 2)], sizes[i & 1]);
+        cacheFn_800229c4(0);
+    }
 }
 #pragma pop
