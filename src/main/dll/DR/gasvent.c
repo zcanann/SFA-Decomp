@@ -506,10 +506,10 @@ extern f32 lbl_803E431C;
 extern f32 lbl_803E4320;
 extern f32 lbl_803DBE88;
 
-/* EN v1.0 0x801A1230  size: 708b  gunpowderbarrel explosion trigger: when hit
+/* EN v1.0 0x801A1230  size: 708b  gunpowderbarrel_triggerExplosion: when hit
  * (or touched while resting on a damage source) blow the barrel up, optionally
  * re-saving its position at the owning generator first. */
-void fn_801A1230(int *obj)
+void gunpowderbarrel_triggerExplosion(int *obj)
 {
     u8 *sub;
     void *hitObj;
