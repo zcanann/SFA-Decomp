@@ -4962,3 +4962,184 @@ int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32  Vec_xzDistance(void* a, void* b);
+extern void fn_80296220(int* rider, f32 v);
+extern f32 lbl_803E4170;
+extern f32 lbl_803E4174;
+extern f32 lbl_803E4178;
+extern f32 lbl_803E417C;
+extern f32 lbl_803E4180;
+extern f32 lbl_803E4184;
+extern f32 lbl_803E4188;
+extern f32 lbl_803E418C;
+extern f32 lbl_803E4190;
+extern f32 lbl_803E4194;
+extern f32 lbl_803E4198;
+extern f32 lbl_803E419C;
+extern f32 lbl_803E41A0;
+extern f32 lbl_803E41A4;
+extern f32 lbl_803E41A8;
+extern f32 lbl_803E41AC;
+extern f32 lbl_803E41B0;
+extern f32 lbl_803E41B4;
+extern f32 lbl_803E41B8;
+
+/* EN v1.0 0x8019C784  size: 1396b  fn_8019C784: per-rider wind lift physics -
+ * track the rider while above the lift and in range, send the lift/drop
+ * messages on state edges, and integrate the rise speed with ramp-up,
+ * oscillation damping and player-mode handoff. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8019C784(int* obj, int* rider, WindLiftSlot* slot, f32 pull, int gb, int pm, uint dur, f32 height)
+{
+    char* player;
+    f32 dy;
+    f32 dist;
+    f32 factor;
+    f32 scale;
+    u8 flags;
+    u8 fl;
+    int fe;
+    player = (char*)Obj_GetPlayerObject();
+    dy = *(f32*)((char*)rider + 0x10) - *(f32*)((char*)obj + 0x10);
+    if (dy < lbl_803E416C) {
+        return;
+    }
+    dist = Vec_xzDistance((char*)rider + 0x18, (char*)obj + 0x18);
+    if (dist > lbl_803E4170 + height && (slot->b10 & 0xe0) == 0) {
+        return;
+    }
+    flags = slot->b10;
+    if ((flags & 0x80) != 0 && gb != 0) {
+        return;
+    }
+    if (dist < height) {
+        if ((flags & 0xe0) == 0 || (flags & 0x80) != 0) {
+            if (gb != 0 && (!flags & 0x80) != 0 && dy < lbl_803E4174) {
+                slot->b10 |= 0x80;
+                return;
+            }
+            if ((flags & 0x2) != 0) {
+                if (dy / pull > lbl_803E4178) {
+                    slot->b10 |= 0x4;
+                    slot->b10 &= ~0x8;
+                } else {
+                    slot->b10 |= 0x8;
+                    slot->b10 &= ~0x4;
+                }
+                slot->b10 &= ~0x2;
+            }
+            if (gb == 0) {
+                slot->b10 |= 0x40;
+                slot->b10 &= ~0x20;
+                ObjMsg_SendToObject(rider, 0xf, obj, (((slot->b10 & 0xe0) >> 4) << 8) | dur);
+                slot->b10 &= ~0x80;
+            } else {
+                if (dy > lbl_803E417C) {
+                    ObjMsg_SendToObject(rider, 0xf, obj, (((slot->b10 & 0xe0) >> 4) << 8) | dur);
+                }
+                slot->b10 |= 0x20;
+                slot->b10 &= ~0x40;
+            }
+        }
+        scale = lbl_803E4180;
+        fl = slot->b10;
+        fe = fl & 0xe;
+        if (fe != 0 && (fl & 8) != 0 && gb == 0) {
+            pull = pull * lbl_803E4184;
+        }
+        pull = pull * lbl_803E4184;
+        if (pull <= lbl_803E4170) {
+            return;
+        }
+        if (dy < lbl_803E4188) {
+            dy = lbl_803E4188;
+        }
+        if (gb == 0) {
+            f32 lim = pull - (pull / lbl_803E418C) * (slot->fc * (slot->fc * slot->fc));
+            f32 t;
+            if (dy > lim) {
+                t = lbl_803E416C;
+            } else {
+                f32 d = lim - dy;
+                if (d > lbl_803E4174) {
+                    t = lbl_803E4190;
+                } else {
+                    t = d / lbl_803E4174;
+                }
+            }
+            factor = t;
+            slot->b10 |= 1;
+            if (((slot->fc < lbl_803E4194 && slot->b11 % 2 != 0)
+                 || (slot->fc > lbl_803E4198 && slot->b11 % 2 == 0))
+                && (slot->b10 & 8) != 0) {
+                if (slot->b11++ > 2) {
+                    slot->b10 &= ~0x8;
+                    slot->b10 |= 0x4;
+                }
+            }
+        } else {
+            f32 v = slot->fc;
+            f32 thr;
+            if (fe != 0) {
+                thr = lbl_803E4168;
+            } else {
+                thr = lbl_803E419C;
+            }
+            if (v > thr) {
+                slot->b11 = 1;
+            }
+            scale = scale * lbl_803E41A0;
+            if (slot->b11 == 0) {
+                f32 c;
+                if ((slot->b10 & 0xe) != 0) {
+                    c = lbl_803E4190 - dy / (lbl_803E41A4 * pull);
+                } else {
+                    c = lbl_803E4190 - dy / (lbl_803E41A8 * pull);
+                }
+                if (c < lbl_803E416C) {
+                    c = lbl_803E416C;
+                }
+                factor = c * c;
+            } else {
+                factor = lbl_803E41AC;
+            }
+        }
+        slot->f8 = scale * factor - lbl_803E41B0;
+        slot->fc = slot->fc + slot->f8;
+        if (slot->fc > lbl_803E41B4) {
+            slot->fc = lbl_803E41B4;
+        }
+        if (lbl_803E416C == slot->fc) {
+            slot->fc = lbl_803E41B8;
+        }
+        if (dy < lbl_803E4174 && gb != 0) {
+            slot->fc = lbl_803E416C;
+            slot->b11 = 0;
+            ObjMsg_SendToObject(rider, 0x10, obj, gb);
+            slot->b10 |= 0x80;
+            if (pm != 0) {
+                *(f32*)(player + 0x28) = lbl_803E416C;
+            }
+        }
+        if (pm != 0) {
+            fn_80296220(rider, slot->fc);
+        } else {
+            *(f32*)((char*)rider + 0x10) = slot->fc * timeDelta + *(f32*)((char*)rider + 0x10);
+            *(f32*)((char*)rider + 0x28) = slot->fc * timeDelta;
+        }
+    } else {
+        if (pm != 0) {
+            fn_80296220(rider, lbl_803E416C);
+        }
+        if (pm == 0) {
+            ObjMsg_SendToObject(rider, 0x10, obj, gb);
+            slot->b10 &= ~0xf1;
+            slot->fc = lbl_803E416C;
+            slot->b11 = 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
