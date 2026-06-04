@@ -127,7 +127,7 @@ extern void Music_Trigger(int id, int mode);
 extern void warpToMap(int map, int mode);
 extern int ObjAnim_SampleRootCurvePhase(void *obj, f32 *out, f32 dist);
 extern void ObjAnim_AdvanceCurrentMove(void *obj, void *state, f32 speed, f32 t);
-int objSeqInterpFn_80085358(u8 *obj, u8 *action, u8 **cmd, int flags, void *out);
+int ObjSeq_ExecuteActionCommand(u8 *obj, u8 *action, u8 **cmd, int flags, void *out);
 void *objSeqCmd3(u8 *obj, u8 *seq, u8 *src);
 
 typedef struct CamRequest {
@@ -1565,7 +1565,7 @@ void objSeqUpdateCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode)
                         *(s16 *)(seq + 0x68) = *(s16 *)(seq + 0x68) + cmd[1];
                     }
                     *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + 1;
-                    if (objSeqInterpFn_80085358(obj, action, &cmd, flags, &out) != 0) {
+                    if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, flags, &out) != 0) {
                         return;
                     }
                     activeObj = *(u8 **)*(u8 **)(obj + 0xb8);
@@ -1982,7 +1982,7 @@ void objSeqUpdateMoreCurves(u8 *obj, u8 *seqObj, u8 *seq, int frame)
 
 #pragma peephole off
 #pragma scheduling off
-int objSeqInterpFn_80085358(u8 *obj, u8 *action, u8 **cmdPtr, int flags, void *out)
+int ObjSeq_ExecuteActionCommand(u8 *obj, u8 *action, u8 **cmdPtr, int flags, void *out)
 {
     u8 *base = lbl_80396918;
     u8 *cmd;
@@ -2637,7 +2637,7 @@ int ObjSeq_update(u8 *obj, f32 t)
                             *(s16 *)(seq + 0x68) = *(s16 *)(seq + 0x68) + cmd[1];
                         }
                         *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + 1;
-                        if (objSeqInterpFn_80085358(obj, action, &cmd, 0, 0) != 0) {
+                        if (ObjSeq_ExecuteActionCommand(obj, action, &cmd, 0, 0) != 0) {
                             targetFrame = *(s16 *)(seq + 0x58);
                         }
                         activeObj = *(u8 **)*(u8 **)(obj + 0xb8);
