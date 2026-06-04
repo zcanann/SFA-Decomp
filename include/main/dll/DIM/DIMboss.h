@@ -38,7 +38,6 @@
 
 #define DIMBOSS_STATE_FLAG_START_MOVE 0x02
 #define DIMBOSS_STATE_FLAG_TARGET_TRICKY 0x04
-#define DIMBOSS_STEAM_SFX_PENDING_FLAG 0x80
 #define DIMBOSS_DEFEAT_TIMER_START 10
 
 #define DIMBOSS_GAMEBIT_DEFEAT_STATE_A 0x123
@@ -116,6 +115,14 @@ typedef struct DIMbossEffect {
   u8 active;
 } DIMbossEffect;
 
+typedef union DIMbossSteamFlags {
+  u8 raw;
+  struct {
+    u8 sfxPending : 1;
+    u8 rest : 7;
+  } bits;
+} DIMbossSteamFlags;
+
 typedef struct DIMbossTopState {
   DIMbossEffect *effect;
   u8 pad004[0xA4 - 0x04];
@@ -125,7 +132,7 @@ typedef struct DIMbossTopState {
   s32 defeatTimer;
   u8 stompDustDelay;
   u8 pad0B5;
-  u8 steamSfxPending;
+  DIMbossSteamFlags steamFlags;
 } DIMbossTopState;
 
 typedef struct DIMbossAnimScratch {
@@ -210,7 +217,7 @@ STATIC_ASSERT(offsetof(DIMbossTopState, idleLift) == 0xA8);
 STATIC_ASSERT(offsetof(DIMbossTopState, introSinkHeight) == 0xAC);
 STATIC_ASSERT(offsetof(DIMbossTopState, defeatTimer) == 0xB0);
 STATIC_ASSERT(offsetof(DIMbossTopState, stompDustDelay) == 0xB4);
-STATIC_ASSERT(offsetof(DIMbossTopState, steamSfxPending) == 0xB6);
+STATIC_ASSERT(offsetof(DIMbossTopState, steamFlags) == 0xB6);
 
 STATIC_ASSERT(sizeof(DIMbossAnimScratch) == 0x6D8);
 STATIC_ASSERT(offsetof(DIMbossAnimScratch, animController) == DIMBOSS_ANIM_CONTROLLER_OFFSET);
