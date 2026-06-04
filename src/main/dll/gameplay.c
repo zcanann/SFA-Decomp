@@ -4,7 +4,7 @@
 
 #define SFXsp_skeep_mumb1 266
 
-typedef struct { u32 mode; f32 x, y, z; void *tex; u16 flags; u8 layer; } GfxCmd;
+typedef struct { u32 mode; f32 x, y, z; void *tex; s16 flags; u8 layer; } GfxCmd;
 extern undefined4* gModgfxInterface;
 
 
@@ -16303,7 +16303,7 @@ void dll_7B_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
 extern void mathFn_80021ac8(void *p, f32 *v);
 extern u8 lbl_80311DA8[];
 extern u8 lbl_803DB898, lbl_803DB8A0, lbl_803DB8A8;
-extern f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;
+extern const f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;
 
 void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param_5, int *param_6)
 {
@@ -16349,7 +16349,7 @@ void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, 
       }
     }
     ents[0].layer = 0;
-    ents[0].flags = (s16)(param_2 != 0 ? 4 : 3);
+    ents[0].flags = param_2 != 0 ? 4 : 3;
     ents[0].tex = param_2 != 0 ? &lbl_803DB8A8 : &lbl_803DB8A0;
     ents[0].mode = 8;
     ents[0].x = (f32)r;
@@ -16360,7 +16360,7 @@ void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, 
     ents[1].layer = 0; ents[1].flags = 0; ents[1].tex = (void *)0; ents[1].mode = 0x80;
     ents[1].x = lbl_803E0710; ents[1].y = rb; ents[1].z = ra;
     ents[2].layer = 0;
-    ents[2].flags = (s16)(param_2 != 0 ? 4 : 3);
+    ents[2].flags = param_2 != 0 ? 4 : 3;
     ents[2].tex = param_2 != 0 ? &lbl_803DB8A8 : &lbl_803DB8A0;
     ents[2].mode = 2;
     ents[2].x = lbl_803E0714; ents[2].y = lbl_803E0718; ents[2].z = lbl_803E071C;
