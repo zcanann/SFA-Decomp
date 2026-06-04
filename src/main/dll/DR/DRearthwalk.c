@@ -77,35 +77,201 @@ extern f32 lbl_803E61C0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sh_staff_render(undefined2 *param_1,int param_2)
+extern void *Obj_GetPlayerObject(void);
+extern void Obj_BuildWorldTransformMatrix(int obj, f32 *mtx, int p3);
+extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4,
+                                  undefined4 p5, double scale);
+extern void PSMTXInverse(int src, f32 *dst);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *dst);
+extern void objSetMtxFn_800412d4(f32 *mtx);
+extern void objRenderModel(int obj);
+extern f32 timeDelta;
+extern f32 lbl_803E54D0;
+extern f32 lbl_803E54D4;
+extern f32 lbl_803E54D8;
+extern f32 lbl_803E54DC;
+extern f32 lbl_803E54E0;
+extern f32 lbl_803E54E4;
+extern f32 lbl_803E54E8;
+extern f32 lbl_803E54EC;
+extern f32 lbl_803E54F0;
+extern f32 lbl_803E54F4;
+extern f32 lbl_803E54F8;
+
+void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-  byte bVar1;
-  uint uVar2;
-  int iVar3;
-  byte *pbVar4;
-  uint *puVar5;
-  
-  pbVar4 = *(byte **)(param_1 + 0x5c);
-  *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
-  *(undefined4 *)(param_1 + 0x7a) = 0;
-  iVar3 = 0;
-  puVar5 = (uint *)&DAT_803dccc0;
-  do {
-    uVar2 = GameBit_Get(*puVar5);
-    if (uVar2 != 0) {
-      *pbVar4 = (char)iVar3 + 1;
+  u8 *state;
+  int player;
+  int i;
+  int j;
+  u8 *ptr;
+  int o;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 scale;
+  f32 spd;
+  f32 t;
+  f32 bx;
+  f32 x1;
+  f32 y1;
+  f32 z1;
+  f32 x0;
+  f32 y0;
+  f32 z0;
+  f32 mtxA[12];
+  f32 mtxB[12];
+
+  state = *(u8 **)(obj + 0xb8);
+  player = (int)Obj_GetPlayerObject();
+  if (visible != 0) {
+    if (state[0] == 3) {
+      Obj_BuildWorldTransformMatrix(obj, mtxB, 0);
+      PSMTXInverse((int)ObjPath_GetPointModelMtx((void *)player, 0), mtxA);
+      PSMTXConcat(mtxA, mtxB, (f32 *)(state + 8));
+      state[0] = 5;
     }
-    puVar5 = puVar5 + 1;
-    iVar3 = iVar3 + 1;
-  } while (iVar3 < 2);
-  bVar1 = *pbVar4;
-  if (bVar1 == 1) {
-    FUN_80017a6c((int)param_1,0,0,0,'\0','\x04');
+    if (state[0] == 4) {
+      ObjPath_GetPointLocalMtx((void *)player, 0, (f32 *)(state + 8));
+      state[0] = 5;
+    }
+    if (state[0] == 5) {
+      PSMTXConcat((f32 *)ObjPath_GetPointModelMtx((void *)player, 0), (f32 *)(state + 8), mtxB);
+      objSetMtxFn_800412d4(mtxB);
+      objRenderModel(obj);
+    } else {
+      objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E54D0);
+    }
+    ObjPath_GetPointWorldPosition(obj, 0, &x0, &y0, &z0, 0);
+    ObjPath_GetPointWorldPosition(obj, 1, &x1, &y1, &z1, 0);
+    dx = x1 - x0;
+    dy = y1 - y0;
+    dz = z1 - z0;
+    if (((state[2] & 1) != 0) && ((state[2] & 2) == 0)) {
+      ptr = state + 8;
+      for (i = 2; i < 10; i += 2) {
+        if (*(int *)(ptr + 0x38) == 0) {
+          state[0x60 + i] = 1;
+          break;
+        }
+        ptr += 8;
+      }
+      if (i > 9) {
+        state[2] |= 2;
+      }
+    }
+    if (((state[2] & 4) != 0) && ((state[2] & 8) == 0)) {
+      ptr = state + 4;
+      for (i = 1; i < 10; i += 2) {
+        if (*(int *)(ptr + 0x38) == 0) {
+          state[0x60 + i] = 1;
+          break;
+        }
+        ptr += 8;
+      }
+      if (i > 9) {
+        state[2] |= 8;
+      }
+    }
+    if (state[2] != 0) {
+      if ((state[2] & 0x20) != 0) {
+        ptr = state + 0x14;
+        for (i = 5; i < 5; i++) {
+          o = *(int *)(ptr + 0x38);
+          if (o != 0) {
+            *(s16 *)(o + 6) |= 0x4000;
+            *(int *)(ptr + 0x38) = 0;
+          }
+          ptr += 4;
+        }
+        if ((state[2] & 0x10) == 0) {
+          *(f32 *)(state + 4) = *(f32 *)(state + 4) + timeDelta;
+          if (*(f32 *)(state + 4) >= lbl_803E54E0) {
+            *(f32 *)(state + 4) = lbl_803E54E0;
+          }
+          spd = lbl_803E54E4 * *(f32 *)(state + 4);
+        } else {
+          *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
+          if (*(f32 *)(state + 4) <= lbl_803E54D4) {
+            spd = lbl_803E54D8;
+          } else {
+            *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
+            spd = lbl_803E54DC * *(f32 *)(state + 4);
+          }
+        }
+        ptr = state;
+        for (j = 0; j < 5; j++) {
+          if ((*(int *)(ptr + 0x38) != 0) && (*(int *)(state + 0x48) != 0)) {
+            t = lbl_803E54E8 + (f32)j / lbl_803E54EC;
+            bx = *(f32 *)(*(int *)(state + 0x48) + 0xc);
+            *(f32 *)(*(int *)(ptr + 0x38) + 0xc) = t * (x0 - bx) + bx;
+            *(f32 *)(*(int *)(ptr + 0x38) + 0x10) =
+                t * (y0 - *(f32 *)(*(int *)(state + 0x48) + 0x10)) + *(f32 *)(*(int *)(state + 0x48) + 0x10);
+            *(f32 *)(*(int *)(ptr + 0x38) + 0x14) =
+                t * (z0 - *(f32 *)(*(int *)(state + 0x48) + 0x14)) + *(f32 *)(*(int *)(state + 0x48) + 0x14);
+            *(f32 *)(*(int *)(ptr + 0x38) + 8) = spd;
+          }
+          ptr += 4;
+        }
+        ptr = state + 0x24;
+        for (j = 9; j > 4; j--) {
+          if ((*(int *)(ptr + 0x38) != 0) && (*(int *)(state + 0x4c) != 0)) {
+            t = lbl_803E54E8 + (f32)(9 - j) / lbl_803E54EC;
+            bx = *(f32 *)(*(int *)(state + 0x4c) + 0xc);
+            *(f32 *)(*(int *)(ptr + 0x38) + 0xc) = t * (x1 - bx) + bx;
+            *(f32 *)(*(int *)(ptr + 0x38) + 0x10) =
+                t * (y1 - *(f32 *)(*(int *)(state + 0x4c) + 0x10)) + *(f32 *)(*(int *)(state + 0x4c) + 0x10);
+            *(f32 *)(*(int *)(ptr + 0x38) + 0x14) =
+                t * (z1 - *(f32 *)(*(int *)(state + 0x4c) + 0x14)) + *(f32 *)(*(int *)(state + 0x4c) + 0x14);
+            *(f32 *)(*(int *)(ptr + 0x38) + 8) = spd;
+          }
+          ptr -= 4;
+        }
+      } else {
+        spd = lbl_803E54D8;
+        if ((state[2] & 0x10) != 0) {
+          *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
+          if (*(f32 *)(state + 4) <= lbl_803E54D4) {
+            state[2] &= ~0x10;
+          } else {
+            spd = lbl_803E54E4 * *(f32 *)(state + 4);
+          }
+        }
+        for (j = 0; j < 10; j++) {
+          if (*(int *)(state + 0x38) != 0) {
+            t = lbl_803E54F0 * (f32)j;
+            t = t + (f32)(int)randomGetRange(-0x32, 0x32) / lbl_803E54F4;
+            *(f32 *)(*(int *)(state + 0x38) + 0xc) = dx * t + x0;
+            *(f32 *)(*(int *)(state + 0x38) + 0x10) = dy * t + y0;
+            *(f32 *)(*(int *)(state + 0x38) + 0x14) = dz * t + z0;
+            *(f32 *)(*(int *)(state + 0x38) + 8) = spd;
+          }
+          state += 4;
+        }
+      }
+    } else {
+      scale = lbl_803E54F8;
+      if (*(f32 *)(state + 4) != lbl_803E54D4) {
+        *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
+        if (*(f32 *)(state + 4) <= lbl_803E54D4) {
+          o = *(int *)(state + 0x38);
+          if (o != 0) {
+            *(s16 *)(o + 6) |= 0x4000;
+            *(int *)(state + 0x38) = 0;
+            *(f32 *)(state + 4) = lbl_803E54D4;
+          }
+        } else {
+          scale = lbl_803E54E4 * *(f32 *)(state + 4);
+        }
+      }
+      if (*(int *)(state + 0x38) != 0) {
+        *(f32 *)(*(int *)(state + 0x38) + 0xc) = dx * *(f32 *)(state + 0x6c) + x0;
+        *(f32 *)(*(int *)(state + 0x38) + 0x10) = dy * *(f32 *)(state + 0x6c) + y0;
+        *(f32 *)(*(int *)(state + 0x38) + 0x14) = dz * *(f32 *)(state + 0x6c) + z0;
+        *(f32 *)(*(int *)(state + 0x38) + 8) = scale;
+      }
+    }
   }
-  else if ((bVar1 == 0) || (bVar1 < 3)) {
-    FUN_80017a6c((int)param_1,0,0,0,'\0','\x03');
-  }
-  return;
 }
 
 /*
@@ -872,7 +1038,6 @@ int sh_staff_SeqFn(int obj, int unused, u8 *buf)
 #pragma scheduling reset
 extern f32 lbl_803E5508;
 
-extern void *Obj_GetPlayerObject(void);
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern void *fn_802966CC(int player);
 extern int fn_80295CF4(int player, int a);
