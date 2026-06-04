@@ -64,9 +64,107 @@ extern f32 lbl_803E6754;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void spdrape_update(short *param_1,int param_2)
+extern void *Obj_GetPlayerObject(void);
+extern f32 getXZDistance(f32 *a, f32 *b);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern u32 randomGetRange(int min, int max);
+extern void ObjAnim_SetCurrentMove(int obj, int animId, f32 speed, int flag);
+extern u8 ObjAnim_AdvanceCurrentMove(int obj, f32 cur, f32 dt, int flag);
+extern void Camera_GetCurrentViewSlot(void);
+extern f32 lbl_803DC0B0;
+extern f32 lbl_803DC0B4;
+extern byte framesThisStep;
+extern f32 timeDelta;
+extern f32 lbl_803E5AA0;
+extern f32 lbl_803E5AA4;
+extern f32 lbl_803E5AA8;
+extern f32 lbl_803E5AAC;
+extern f32 lbl_803E5AB0;
+extern f32 lbl_803E5AB4;
+extern f32 lbl_803E5AB8;
+extern f32 lbl_803E5ABC;
+
+#pragma scheduling off
+#pragma peephole off
+void spdrape_update(int obj)
 {
+    f32 *state;
+    char *player;
+
+    state = *(f32 **)(obj + 0xb8);
+    player = (char *)Obj_GetPlayerObject();
+    switch (*(s16 *)(obj + 0xa0)) {
+    case 0:
+        if ((s16)(*(s16 *)((char *)state + 0x14) -= framesThisStep) <= 0) {
+            Sfx_PlayFromObject(obj, 0x13f);
+            *(s16 *)((char *)state + 0x14) = randomGetRange(0xb4, 300);
+        }
+        if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < lbl_803E5AA4) {
+            if (player != 0) {
+                if (state[3] + (state[1] * *(f32 *)(player + 0xc) + state[2] * *(f32 *)(player + 0x14)) < lbl_803E5AA0) {
+                    *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B0;
+                }
+                else {
+                    *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B4;
+                }
+            }
+            ObjAnim_SetCurrentMove(obj, **(u8 **)((char *)state + 0x10), lbl_803E5AA0, 0);
+            *state = lbl_803E5AA8;
+            Sfx_PlayFromObject(obj, 0x140);
+            Camera_GetCurrentViewSlot();
+        }
+        break;
+    case 1:
+    case 4:
+        if (*(u8 *)((char *)state + 0x16) != 0) {
+            if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) > lbl_803E5AAC) {
+                ObjAnim_SetCurrentMove(obj, (*(u8 **)((char *)state + 0x10))[2], lbl_803E5AA0, 0);
+                Sfx_PlayFromObject(obj, 0x140);
+                *state = lbl_803E5AB0;
+            }
+            else {
+                ObjAnim_SetCurrentMove(obj, (*(u8 **)((char *)state + 0x10))[1], lbl_803E5AA0, 0);
+                *state = lbl_803E5AB4;
+            }
+        }
+        break;
+    case 2:
+    case 5:
+        Sfx_PlayFromObject(obj, 0x141);
+        if (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) > lbl_803E5AAC) {
+            ObjAnim_SetCurrentMove(obj, (*(u8 **)((char *)state + 0x10))[2], lbl_803E5AA0, 0);
+            Sfx_StopObjectChannel(obj, 0x40);
+            Sfx_PlayFromObject(obj, 0x140);
+            *state = lbl_803E5AB0;
+        }
+        break;
+    case 3:
+    case 6:
+        if ((*(f32 *)(obj + 0x98) > lbl_803E5AB8) && (getXZDistance((f32 *)(obj + 0x18), (f32 *)(player + 0x18)) < lbl_803E5AA4)) {
+            if (player != 0) {
+                if (state[3] + (state[1] * *(f32 *)(player + 0xc) + state[2] * *(f32 *)(player + 0x14)) < lbl_803E5AA0) {
+                    *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B0;
+                }
+                else {
+                    *(int *)((char *)state + 0x10) = (int)&lbl_803DC0B4;
+                }
+            }
+            ObjAnim_SetCurrentMove(obj, **(u8 **)((char *)state + 0x10), lbl_803E5AA0, 0);
+            Sfx_PlayFromObject(obj, 0x140);
+            *state = lbl_803E5AA8;
+        }
+        else if (*(u8 *)((char *)state + 0x16) != 0) {
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E5AA0, 0);
+            *state = lbl_803E5ABC;
+            Camera_GetCurrentViewSlot();
+        }
+        break;
+    }
+    *(u8 *)((char *)state + 0x16) = ObjAnim_AdvanceCurrentMove(obj, *state, timeDelta, 0);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -302,9 +400,9 @@ void spitembeam_update(int *obj) {
         }
         tex = objFindTexture(obj, 0, 0);
         if (tex != NULL) {
-            *(s16*)((char*)tex + 8) = *(s16*)((char*)tex + 8) + 8;
+            *(s16*)((char*)tex + 8) += 8;
             if (*(s16*)((char*)tex + 8) > 0x400) {
-                *(s16*)((char*)tex + 8) = *(s16*)((char*)tex + 8) - 0x400;
+                *(s16*)((char*)tex + 8) -= 0x400;
             }
         }
     }
@@ -357,3 +455,117 @@ void spdrape_init(int *obj, u8 *def) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef union {
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+} ShWGPipe;
+volatile ShWGPipe GXWGFifo : (0xCC008000);
+
+static inline void shPos3f32(const f32 x, const f32 y, const f32 z) { GXWGFifo.f32 = x; GXWGFifo.f32 = y; GXWGFifo.f32 = z; }
+static inline void shColor4u8(const u8 r, const u8 g, const u8 b, const u8 a) { GXWGFifo.u8 = r; GXWGFifo.u8 = g; GXWGFifo.u8 = b; GXWGFifo.u8 = a; }
+static inline void shTexCoord2f32(const f32 s, const f32 t) { GXWGFifo.f32 = s; GXWGFifo.f32 = t; }
+
+typedef struct {
+    u8 r, g, b, a;
+} ShColor;
+
+extern void selectTexture(int tex, int p);
+extern void textureSetupFn_800799c0(void);
+extern void geomDrawFn_800796f0(void);
+extern void textRenderSetupFn_80079804(void);
+extern void GXSetTevColor(int reg, ShColor color);
+extern void gxSetZMode_(int a, int b, int c);
+extern void GXSetBlendMode(int a, int b, int c, int d);
+extern void gxSetPeControl_ZCompLoc_(int a);
+extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
+extern void GXSetCullMode(int mode);
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern f32 *Camera_GetViewMatrix(void);
+extern void GXLoadPosMtxImm(f32 *m, int id);
+extern void GXSetCurrentMtx(int id);
+extern void getAmbientColor(int mode, u8 *r, u8 *g, u8 *b);
+extern void GXBegin(int prim, int fmt, int n);
+extern int lbl_803DDC60;
+extern ShColor lbl_803E5AE4;
+extern f32 lbl_803E5AE8;
+extern f32 lbl_803E5AEC;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+
+/*
+ * --INFO--
+ *
+ * Function: fn_801E991C
+ * EN v1.0 Address: 0x801E991C
+ * EN v1.0 Size: 740b
+ */
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+void fn_801E991C(int p1, char *table)
+{
+    u8 r;
+    u8 g;
+    u8 b;
+    ShColor color;
+    char *p;
+    int i;
+
+    color = lbl_803E5AE4;
+    selectTexture(lbl_803DDC60, 0);
+    textureSetupFn_800799c0();
+    geomDrawFn_800796f0();
+    textRenderSetupFn_80079804();
+    GXSetTevColor(2, color);
+    gxSetZMode_(1, 3, 0);
+    GXSetBlendMode(1, 4, 5, 5);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetCullMode(0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xb, 1);
+    GXSetVtxDesc(0xd, 1);
+    GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
+    GXSetCurrentMtx(0);
+    getAmbientColor(0, &r, &g, &b);
+    p = table;
+    for (i = 0; i < 9; i++) {
+        if (((*(u8 *)(p + 0x4ce) & 1) != 0) && (*(s16 *)(p + 0x4cc) >= 4)) {
+            int j;
+            f32 *verts;
+            f32 u1, u0;
+            verts = *(f32 **)(p + 0x4c8);
+            u0 = lbl_803E5AE8;
+            u1 = lbl_803E5AEC;
+            for (j = 0; j < *(s16 *)(p + 0x4cc) - 2; j += 2) {
+                GXBegin(0x80, 2, 4);
+                shPos3f32(verts[0] - playerMapOffsetX, verts[0+1], verts[0+2] - playerMapOffsetZ);
+                shColor4u8(r, g, b, (u8)*(s16 *)((char *)verts + 0xc));
+                shTexCoord2f32(u0, u0);
+                GXWGFifo.f32 = u0;
+                shPos3f32(verts[4] - playerMapOffsetX, verts[4+1], verts[4+2] - playerMapOffsetZ);
+                shColor4u8(r, g, b, (u8)*(s16 *)((char *)verts + 0x1c));
+                shTexCoord2f32(u1, u0);
+                shPos3f32(verts[0xc] - playerMapOffsetX, verts[0xc+1], verts[0xc+2] - playerMapOffsetZ);
+                shColor4u8(r, g, b, (u8)*(s16 *)((char *)verts + 0x3c));
+                shTexCoord2f32(u1, u0);
+                shPos3f32(verts[8] - playerMapOffsetX, verts[8+1], verts[8+2] - playerMapOffsetZ);
+                shColor4u8(r, g, b, (u8)*(s16 *)((char *)verts + 0x2c));
+                shTexCoord2f32(u0, u0);
+                GXWGFifo.f32 = u0;
+                verts += 8;
+            }
+        }
+        p += 8;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+#pragma opt_common_subs reset
