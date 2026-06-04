@@ -76,341 +76,242 @@ extern WCGalleonMapEventInterface **gMapEventInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void WM_ObjCreator_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                          undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
-{
-  bool bVar1;
-  undefined2 *puVar2;
-  uint uVar3;
-  int *piVar4;
-  undefined2 *puVar5;
-  int iVar6;
-  undefined4 in_r8;
-  int in_r9;
-  undefined4 in_r10;
-  short *psVar7;
-  int iVar8;
-  undefined8 extraout_f1;
-  undefined8 uVar9;
-  undefined8 extraout_f1_00;
-  double dVar10;
-  double in_f29;
-  double dVar11;
-  double in_f30;
-  double in_f31;
-  double dVar12;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  int local_88;
-  undefined2 local_84;
-  undefined2 local_82;
-  undefined2 local_80;
-  float local_7c;
-  float local_78;
-  float local_74;
-  float local_70;
-  undefined4 local_68;
-  uint uStack_64;
-  undefined4 local_60;
-  uint uStack_5c;
-  undefined4 local_58;
-  uint uStack_54;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  puVar2 = (undefined2 *)FUN_80286840();
-  iVar8 = *(int *)(puVar2 + 0x26);
-  psVar7 = *(short **)(puVar2 + 0x5c);
-  uVar9 = extraout_f1;
-  uVar3 = FUN_80017ae8();
-  if ((uVar3 & 0xff) != 0) {
-    switch(*(undefined2 *)(iVar8 + 0x1a)) {
-    case 0:
-      bVar1 = false;
-      if (*(int *)(puVar2 + 0x7c) == 0) {
-        uVar3 = GameBit_Get(0x78);
-        bVar1 = uVar3 == 0;
-        piVar4 = ObjGroup_GetObjects(3,&local_88);
-        iVar6 = 0;
-        while ((iVar6 < local_88 && (bVar1))) {
-          if (*(short *)(*piVar4 + 0x46) == 0x139) {
-            bVar1 = false;
-          }
-          piVar4 = piVar4 + 1;
-          iVar6 = iVar6 + 1;
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern int *ObjGroup_GetObjects2(int group, int *countOut);
+extern int *gPartfxInterface;
+extern s16 lbl_803DDC68;
+extern f32 lbl_803E5CC8;
+extern f32 lbl_803E5CCC;
+extern f32 lbl_803E5CD0;
+extern f32 lbl_803E5CD4;
+extern f32 lbl_803E5CD8;
+extern f32 lbl_803E5CDC;
+
+void WM_ObjCreator_update(int obj) {
+    int def;
+    s16 *state;
+    int count;
+    struct { s16 dir[3]; s16 pad; f32 pos[4]; } vec;
+
+    def = *(int *)(obj + 0x4c);
+    state = *(s16 **)(obj + 0xb8);
+    if (Obj_IsLoadingLocked() != 0) {
+        switch (*(s16 *)(def + 0x1a)) {
+        case 0: {
+            s8 ok = 0;
+            if (*(int *)(obj + 0xf8) == 0) {
+                int *objs;
+                int k;
+                ok = 1;
+                if (GameBit_Get(0x78) != 0) {
+                    ok = 0;
+                }
+                objs = ObjGroup_GetObjects2(3, &count);
+                k = 0;
+                while (k < count && ok) {
+                    if (*(s16 *)(*objs + 0x46) == 0x139) {
+                        ok = 0;
+                    }
+                    objs += 1;
+                    k += 1;
+                }
+            }
+            if (ok) {
+                int setup = Obj_AllocObjectSetup(0x24, 0x139);
+                int spawned;
+                *(f32 *)(setup + 8) = *(f32 *)(def + 8);
+                *(f32 *)(setup + 0xc) = *(f32 *)(def + 0xc);
+                *(f32 *)(setup + 0x10) = *(f32 *)(def + 0x10);
+                *(u8 *)(setup + 4) = *(u8 *)(def + 4);
+                *(u8 *)(setup + 5) = *(u8 *)(def + 5);
+                *(u8 *)(setup + 6) = *(u8 *)(def + 6);
+                *(u8 *)(setup + 7) = *(u8 *)(def + 7);
+                *(s16 *)(setup + 0x1e) = 0xffff;
+                *(s16 *)(setup + 0x1a) = 2;
+                *(u8 *)(setup + 0x18) = *(u8 *)(def + 0x1e);
+                spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                if (spawned != 0) {
+                    *(int *)(spawned + 0xf4) = 8;
+                }
+                *(int *)(obj + 0xf8) = 1;
+            }
+            break;
         }
-      }
-      if (bVar1) {
-        puVar5 = FUN_80017aa4(0x24,0x139);
-        *(undefined4 *)(puVar5 + 4) = *(undefined4 *)(iVar8 + 8);
-        *(undefined4 *)(puVar5 + 6) = *(undefined4 *)(iVar8 + 0xc);
-        *(undefined4 *)(puVar5 + 8) = *(undefined4 *)(iVar8 + 0x10);
-        *(undefined *)(puVar5 + 2) = *(undefined *)(iVar8 + 4);
-        *(undefined *)((int)puVar5 + 5) = *(undefined *)(iVar8 + 5);
-        *(undefined *)(puVar5 + 3) = *(undefined *)(iVar8 + 6);
-        *(undefined *)((int)puVar5 + 7) = *(undefined *)(iVar8 + 7);
-        puVar5[0xf] = 0xffff;
-        puVar5[0xd] = 2;
-        *(undefined *)(puVar5 + 0xc) = *(undefined *)(iVar8 + 0x1e);
-        iVar8 = FUN_80017ae4(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5,
-                             *(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),
-                             in_r8,in_r9,in_r10);
-        if (iVar8 != 0) {
-          *(undefined4 *)(iVar8 + 0xf4) = 8;
+        case 1:
+            if ((GameBit_Get(state[0]) != 0 || state[0] == -1) &&
+                (state[2] -= framesThisStep, state[2] <= 0)) {
+                int setup = Obj_AllocObjectSetup(0x28, 0x263);
+                int spawned;
+                *(u8 *)(setup + 4) = 0x20;
+                *(u8 *)(setup + 5) = 2;
+                *(u8 *)(setup + 7) = 0xff;
+                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+                *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
+                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                *(s16 *)(setup + 0x20) = 0x50;
+                *(s16 *)(setup + 0x1e) = 0x10f;
+                *(s16 *)(setup + 0x22) = 0xffff;
+                *(s16 *)(setup + 0x18) = randomGetRange(-500, 500) + 0x5dc;
+                *(s16 *)(setup + 0x1a) = 0;
+                *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
+                spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                if (spawned != 0) {
+                    *(f32 *)(spawned + 0x24) = lbl_803E5CCC + (f32)(int)randomGetRange(0, 10);
+                }
+                state[2] = state[1] + (s16)randomGetRange(0, state[3]);
+            }
+            break;
+        case 5:
+            if ((GameBit_Get(state[0]) != 0 || state[0] == -1) &&
+                (state[2] -= framesThisStep, state[2] <= 0)) {
+                int setup = Obj_AllocObjectSetup(0x24, 0x275);
+                int spawned;
+                *(u8 *)(setup + 0x18) = randomGetRange(-0x7f, 0x7e);
+                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc) + (f32)(int)randomGetRange(-100, 100);
+                *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
+                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14) + (f32)(int)randomGetRange(-100, 100);
+                *(s16 *)(setup + 0x1a) = 0x31;
+                *(s16 *)(setup + 0x1c) = 200;
+                spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                if (spawned != 0) {
+                    lbl_803DDC68 += 1;
+                }
+                state[2] = state[1] + (s16)randomGetRange(0, state[3]);
+            }
+            break;
+        case 8:
+            if ((GameBit_Get(state[0]) != 0 || state[0] == -1) &&
+                (state[2] -= framesThisStep, state[2] <= 0)) {
+                int setup = Obj_AllocObjectSetup(0x38, 0x4ac);
+                int spawned;
+                GameBit_Set(state[0], 0);
+                *(u8 *)(setup + 0x2a) = randomGetRange(-0x7f, 0x7e);
+                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+                *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
+                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                *(s16 *)(setup + 0x18) = state[0];
+                *(s16 *)(setup + 0x22) = 1;
+                spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                if (spawned != 0) {
+                    (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x1c3, 0, 2, -1, 0);
+                }
+                state[2] = state[1] + (s16)randomGetRange(0, state[3]);
+            }
+            break;
+        case 2:
+            if ((GameBit_Get(state[0]) != 0 || state[0] == -1) &&
+                (state[2] -= framesThisStep, state[2] <= 0)) {
+                int setup = Obj_AllocObjectSetup(0x28, 0x263);
+                int spawned;
+                *(u8 *)(setup + 4) = 4;
+                *(u8 *)(setup + 5) = 2;
+                *(f32 *)(setup + 8) = *(f32 *)(def + 8);
+                *(f32 *)(setup + 0xc) = *(f32 *)(def + 0xc) + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(f32 *)(setup + 0x10) = *(f32 *)(def + 0x10) + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(s16 *)(setup + 0x20) = 100;
+                *(s16 *)(setup + 0x1e) = 0x10f;
+                *(s16 *)(setup + 0x22) = 0xffff;
+                *(s16 *)(setup + 0x18) = randomGetRange(-500, 500) + 0x5dc;
+                *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
+                spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                if (spawned != 0) {
+                    *(f32 *)(spawned + 0x24) = lbl_803E5CD0 - (f32)(int)randomGetRange(0, 10);
+                }
+                state[2] = state[1] + (s16)randomGetRange(0, state[3]);
+            }
+            break;
+        case 4:
+            if (GameBit_Get(state[0]) != 0 || state[0] == -1) {
+                int n = 2;
+                do {
+                    int setup;
+                    int spawned;
+                    n -= 1;
+                    setup = Obj_AllocObjectSetup(0x28, 0x263);
+                    *(u8 *)(setup + 4) = 0x20;
+                    *(u8 *)(setup + 5) = 2;
+                    *(u8 *)(setup + 7) = 0xff;
+                    *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+                    *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
+                    *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                    *(s16 *)(setup + 0x20) = 400;
+                    *(s16 *)(setup + 0x1e) = 0xf;
+                    *(s16 *)(setup + 0x22) = 0x222;
+                    *(s16 *)(setup + 0x18) = 0;
+                    *(s16 *)(setup + 0x1a) = 0;
+                    *(s16 *)(setup + 0x1c) = 0;
+                    *(u8 *)(setup + 0x24) = 0;
+                    spawned = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                    if (spawned != 0) {
+                        *(u8 *)(*(int *)(spawned + 0xb8) + 0x120) |= 2;
+                        *(f32 *)(spawned + 0x24) = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
+                        *(f32 *)(spawned + 0x2c) = lbl_803E5CD4 * (f32)(int)randomGetRange(-0x23, 0x23);
+                        vec.pos[2] = lbl_803E5CD8;
+                        *(f32 *)(spawned + 0x28) = lbl_803E5CD8;
+                        vec.pos[0] = lbl_803E5CC8;
+                        vec.dir[0] = 0;
+                        vec.dir[1] = 0;
+                        vec.dir[2] = 0;
+                        vec.pos[1] = *(f32 *)(spawned + 0x24);
+                        vec.pos[3] = *(f32 *)(spawned + 0x2c);
+                        (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(spawned, 0x1a7, &vec, 0x10000, -1, 0);
+                    }
+                } while (n != 0);
+                GameBit_Set(state[0], 0);
+            }
+            break;
+        case 7:
+            if ((GameBit_Get(state[0]) != 0 || state[0] == -1) &&
+                (state[2] -= framesThisStep, state[2] <= 0)) {
+                int setup = Obj_AllocObjectSetup(0x28, 0x263);
+                *(u8 *)(setup + 4) = 4;
+                *(u8 *)(setup + 5) = 2;
+                *(f32 *)(setup + 8) = *(f32 *)(def + 8) + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(f32 *)(setup + 0xc) = *(f32 *)(def + 0xc) + (f32)(int)randomGetRange(0, 0x14);
+                *(f32 *)(setup + 0x10) = *(f32 *)(def + 0x10) + (f32)(int)randomGetRange(-0x28, 0x28);
+                *(s16 *)(setup + 0x20) = 0x1c2;
+                *(s16 *)(setup + 0x1e) = randomGetRange(0, 2) + 0x1cc;
+                *(s16 *)(setup + 0x22) = 0xffff;
+                *(s16 *)(setup + 0x18) = randomGetRange(-500, 500) + 0x5dc;
+                *(s16 *)(setup + 0x1c) = randomGetRange(-500, 500) + 0x5dc;
+                Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                state[2] = state[1] + (s16)randomGetRange(0, state[3]);
+            }
+            break;
+        case 6:
+            if (GameBit_Get(state[0]) != 0 || state[0] == -1) {
+                int setup = Obj_AllocObjectSetup(0x24, 700);
+                int n;
+                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc) + (f32)(int)randomGetRange(-0x104, 0x104);
+                *(f32 *)(setup + 0xc) = lbl_803E5CDC + *(f32 *)(obj + 0x10);
+                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14) + (f32)(int)randomGetRange(-0x50, 0x50);
+                *(u8 *)(setup + 4) = 0x20;
+                *(u8 *)(setup + 5) = 2;
+                *(u8 *)(setup + 7) = 0xff;
+                *(s16 *)(setup + 0x1e) = 0xffff;
+                *(s8 *)(setup + 0x18) = (u16)*(s16 *)obj >> 8;
+                Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                {
+                    f32 size = lbl_803E5CC8;
+                    f32 yoff = lbl_803E5CDC;
+                    for (n = randomGetRange(2, 5); n != 0; n -= 1) {
+                        vec.pos[0] = size;
+                        vec.dir[0] = 0;
+                        vec.dir[1] = 0;
+                        vec.dir[2] = 0;
+                        vec.pos[1] = (f32)(int)randomGetRange(-200, 200);
+                        vec.pos[3] = (f32)(int)randomGetRange(-0x14, 0x14);
+                        vec.pos[2] = yoff;
+                        (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x1a6, &vec, 0x10002, -1, 0);
+                    }
+                }
+                GameBit_Set(state[0], 0);
+            }
+            break;
         }
-        *(undefined4 *)(puVar2 + 0x7c) = 1;
-      }
-      break;
-    case 1:
-      uVar3 = GameBit_Get((int)*psVar7);
-      if (((uVar3 != 0) || (*psVar7 == -1)) &&
-         (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
-        puVar5 = FUN_80017aa4(0x28,0x263);
-        *(undefined *)(puVar5 + 2) = 0x20;
-        *(undefined *)((int)puVar5 + 5) = 2;
-        *(undefined *)((int)puVar5 + 7) = 0xff;
-        *(undefined4 *)(puVar5 + 4) = *(undefined4 *)(puVar2 + 6);
-        *(undefined4 *)(puVar5 + 6) = *(undefined4 *)(puVar2 + 8);
-        *(undefined4 *)(puVar5 + 8) = *(undefined4 *)(puVar2 + 10);
-        puVar5[0x10] = 0x50;
-        puVar5[0xf] = 0x10f;
-        puVar5[0x11] = 0xffff;
-        uVar3 = randomGetRange(0xfffffe0c,500);
-        puVar5[0xc] = (short)uVar3 + 0x5dc;
-        puVar5[0xd] = 0;
-        uVar3 = randomGetRange(0xfffffe0c,500);
-        puVar5[0xe] = (short)uVar3 + 0x5dc;
-        iVar8 = FUN_80017ae4(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5,
-                             *(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),
-                             in_r8,in_r9,in_r10);
-        if (iVar8 != 0) {
-          uStack_64 = randomGetRange(0,10);
-          *(float *)(iVar8 + 0x24) =
-               lbl_803E6964 + (f32)(s32)uStack_64;
-        }
-        uVar3 = randomGetRange(0,(int)psVar7[3]);
-        psVar7[2] = psVar7[1] + (short)uVar3;
-      }
-      break;
-    case 2:
-      uVar3 = GameBit_Get((int)*psVar7);
-      if (((uVar3 != 0) || (*psVar7 == -1)) &&
-         (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
-        puVar5 = FUN_80017aa4(0x28,0x263);
-        *(undefined *)(puVar5 + 2) = 4;
-        *(undefined *)((int)puVar5 + 5) = 2;
-        *(undefined4 *)(puVar5 + 4) = *(undefined4 *)(iVar8 + 8);
-        uStack_5c = randomGetRange(0xffffffd8,0x28);
-        *(float *)(puVar5 + 6) =
-             *(float *)(iVar8 + 0xc) +
-             (f32)(s32)uStack_5c;
-        uStack_64 = randomGetRange(0xffffffd8,0x28);
-        dVar10 = (double)(f32)(s32)uStack_64;
-        *(float *)(puVar5 + 8) = (float)((double)*(float *)(iVar8 + 0x10) + dVar10);
-        puVar5[0x10] = 100;
-        puVar5[0xf] = 0x10f;
-        puVar5[0x11] = 0xffff;
-        uVar3 = randomGetRange(0xfffffe0c,500);
-        puVar5[0xc] = (short)uVar3 + 0x5dc;
-        uVar3 = randomGetRange(0xfffffe0c,500);
-        puVar5[0xe] = (short)uVar3 + 0x5dc;
-        iVar8 = FUN_80017ae4(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5
-                             ,*(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),
-                             in_r8,in_r9,in_r10);
-        if (iVar8 != 0) {
-          uStack_5c = randomGetRange(0,10);
-          *(float *)(iVar8 + 0x24) =
-               lbl_803E6968 - (f32)(s32)uStack_5c;
-        }
-        uVar3 = randomGetRange(0,(int)psVar7[3]);
-        psVar7[2] = psVar7[1] + (short)uVar3;
-      }
-      break;
-    case 4:
-      uVar3 = GameBit_Get((int)*psVar7);
-      if ((uVar3 != 0) || (*psVar7 == -1)) {
-        iVar8 = 2;
-        do {
-          iVar8 = iVar8 + -1;
-          puVar5 = FUN_80017aa4(0x28,0x263);
-          *(undefined *)(puVar5 + 2) = 0x20;
-          *(undefined *)((int)puVar5 + 5) = 2;
-          *(undefined *)((int)puVar5 + 7) = 0xff;
-          *(undefined4 *)(puVar5 + 4) = *(undefined4 *)(puVar2 + 6);
-          *(undefined4 *)(puVar5 + 6) = *(undefined4 *)(puVar2 + 8);
-          *(undefined4 *)(puVar5 + 8) = *(undefined4 *)(puVar2 + 10);
-          puVar5[0x10] = 400;
-          puVar5[0xf] = 0xf;
-          puVar5[0x11] = 0x222;
-          puVar5[0xc] = 0;
-          puVar5[0xd] = 0;
-          puVar5[0xe] = 0;
-          *(undefined *)(puVar5 + 0x12) = 0;
-          iVar6 = FUN_80017ae4(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,
-                               5,*(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),
-                               in_r8,in_r9,in_r10);
-          uVar9 = extraout_f1_00;
-          if (iVar6 != 0) {
-            *(byte *)(*(int *)(iVar6 + 0xb8) + 0x120) =
-                 *(byte *)(*(int *)(iVar6 + 0xb8) + 0x120) | 2;
-            uStack_5c = randomGetRange(0xffffffdd,0x23);
-            *(float *)(iVar6 + 0x24) =
-                 lbl_803E696C * (f32)(s32)uStack_5c;
-            uStack_64 = randomGetRange(0xffffffdd,0x23);
-            *(float *)(iVar6 + 0x2c) =
-                 lbl_803E696C * (f32)(s32)uStack_64;
-            local_74 = lbl_803E6970;
-            *(float *)(iVar6 + 0x28) = lbl_803E6970;
-            local_7c = lbl_803E6960;
-            local_84 = 0;
-            local_82 = 0;
-            local_80 = 0;
-            local_78 = *(float *)(iVar6 + 0x24);
-            local_70 = *(float *)(iVar6 + 0x2c);
-            in_r8 = 0;
-            in_r9 = *DAT_803dd708;
-            uVar9 = (**(code **)(in_r9 + 8))(iVar6,0x1a7,&local_84,0x10000,0xffffffff);
-          }
-        } while (iVar8 != 0);
-        GameBit_Set((int)*psVar7,0);
-      }
-      break;
-    case 5:
-      uVar3 = GameBit_Get((int)*psVar7);
-      if (((uVar3 != 0) || (*psVar7 == -1)) &&
-         (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
-        puVar5 = FUN_80017aa4(0x24,0x275);
-        uVar3 = randomGetRange(0xffffff81,0x7e);
-        *(char *)(puVar5 + 0xc) = (char)uVar3;
-        uStack_64 = randomGetRange(0xffffff9c,100);
-        *(float *)(puVar5 + 4) =
-             *(float *)(puVar2 + 6) +
-             (f32)(s32)uStack_64;
-        *(undefined4 *)(puVar5 + 6) = *(undefined4 *)(puVar2 + 8);
-        uStack_5c = randomGetRange(0xffffff9c,100);
-        dVar10 = (double)(f32)(s32)uStack_5c;
-        *(float *)(puVar5 + 8) = (float)((double)*(float *)(puVar2 + 10) + dVar10);
-        puVar5[0xd] = 0x31;
-        puVar5[0xe] = 200;
-        iVar8 = FUN_80017ae4(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5
-                             ,*(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),
-                             in_r8,in_r9,in_r10);
-        if (iVar8 != 0) {
-          DAT_803de8e8 = DAT_803de8e8 + 1;
-        }
-        uVar3 = randomGetRange(0,(int)psVar7[3]);
-        psVar7[2] = psVar7[1] + (short)uVar3;
-      }
-      break;
-    case 6:
-      uVar3 = GameBit_Get((int)*psVar7);
-      if ((uVar3 != 0) || (*psVar7 == -1)) {
-        puVar5 = FUN_80017aa4(0x24,700);
-        uStack_54 = randomGetRange(0xfffffefc,0x104);
-        *(float *)(puVar5 + 4) =
-             *(float *)(puVar2 + 6) +
-             (f32)(s32)uStack_54;
-        *(float *)(puVar5 + 6) = lbl_803E6974 + *(float *)(puVar2 + 8);
-        uStack_5c = randomGetRange(0xffffffb0,0x50);
-        dVar10 = (double)(f32)(s32)uStack_5c;
-        *(float *)(puVar5 + 8) = (float)((double)*(float *)(puVar2 + 10) + dVar10);
-        *(undefined *)(puVar5 + 2) = 0x20;
-        *(undefined *)((int)puVar5 + 5) = 2;
-        *(undefined *)((int)puVar5 + 7) = 0xff;
-        puVar5[0xf] = 0xffff;
-        *(char *)(puVar5 + 0xc) = (char)((ushort)*puVar2 >> 8);
-        FUN_80017ae4(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5,
-                     *(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),in_r8,in_r9,
-                     in_r10);
-        uVar3 = randomGetRange(2,5);
-        dVar11 = (double)lbl_803E6960;
-        dVar12 = (double)lbl_803E6974;
-        dVar10 = DOUBLE_803e6978;
-        for (; uVar3 != 0; uVar3 = uVar3 - 1) {
-          local_7c = (float)dVar11;
-          local_84 = 0;
-          local_82 = 0;
-          local_80 = 0;
-          uStack_54 = randomGetRange(0xffffff38,200);
-          local_78 = (f32)(s32)uStack_54;
-          uStack_5c = randomGetRange(0xffffffec,0x14);
-          local_70 = (f32)(s32)uStack_5c;
-          local_74 = (float)dVar12;
-          (**(code **)(*DAT_803dd708 + 8))(puVar2,0x1a6,&local_84,0x10002,0xffffffff,0);
-        }
-        GameBit_Set((int)*psVar7,0);
-      }
-      break;
-    case 7:
-      uVar3 = GameBit_Get((int)*psVar7);
-      if (((uVar3 != 0) || (*psVar7 == -1)) &&
-         (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
-        puVar5 = FUN_80017aa4(0x28,0x263);
-        *(undefined *)(puVar5 + 2) = 4;
-        *(undefined *)((int)puVar5 + 5) = 2;
-        uStack_5c = randomGetRange(0xffffffd8,0x28);
-        *(float *)(puVar5 + 4) =
-             *(float *)(iVar8 + 8) +
-             (f32)(s32)uStack_5c;
-        uStack_64 = randomGetRange(0,0x14);
-        *(float *)(puVar5 + 6) =
-             *(float *)(iVar8 + 0xc) +
-             (f32)(s32)uStack_64;
-        uStack_54 = randomGetRange(0xffffffd8,0x28);
-        dVar10 = (double)(f32)(s32)uStack_54;
-        *(float *)(puVar5 + 8) = (float)((double)*(float *)(iVar8 + 0x10) + dVar10);
-        puVar5[0x10] = 0x1c2;
-        uVar3 = randomGetRange(0,2);
-        puVar5[0xf] = (short)uVar3 + 0x1cc;
-        puVar5[0x11] = 0xffff;
-        uVar3 = randomGetRange(0xfffffe0c,500);
-        puVar5[0xc] = (short)uVar3 + 0x5dc;
-        uVar3 = randomGetRange(0xfffffe0c,500);
-        puVar5[0xe] = (short)uVar3 + 0x5dc;
-        FUN_80017ae4(dVar10,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5,
-                     *(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),in_r8,in_r9,
-                     in_r10);
-        uVar3 = randomGetRange(0,(int)psVar7[3]);
-        psVar7[2] = psVar7[1] + (short)uVar3;
-      }
-      break;
-    case 8:
-      uVar3 = GameBit_Get((int)*psVar7);
-      if (((uVar3 != 0) || (*psVar7 == -1)) &&
-         (psVar7[2] = psVar7[2] - (ushort)DAT_803dc070, psVar7[2] < 1)) {
-        puVar5 = FUN_80017aa4(0x38,0x4ac);
-        uVar9 = GameBit_Set((int)*psVar7,0);
-        uVar3 = randomGetRange(0xffffff81,0x7e);
-        *(char *)(puVar5 + 0x15) = (char)uVar3;
-        *(undefined4 *)(puVar5 + 4) = *(undefined4 *)(puVar2 + 6);
-        *(undefined4 *)(puVar5 + 6) = *(undefined4 *)(puVar2 + 8);
-        *(undefined4 *)(puVar5 + 8) = *(undefined4 *)(puVar2 + 10);
-        puVar5[0xc] = *psVar7;
-        puVar5[0x11] = 1;
-        iVar8 = FUN_80017ae4(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar5,5,
-                             *(undefined *)(puVar2 + 0x56),0xffffffff,*(uint **)(puVar2 + 0x18),
-                             in_r8,in_r9,in_r10);
-        if (iVar8 != 0) {
-          (**(code **)(*DAT_803dd708 + 8))(puVar2,0x1c3,0,2,0xffffffff,0);
-        }
-        uVar3 = randomGetRange(0,(int)psVar7[3]);
-        psVar7[2] = psVar7[1] + (short)uVar3;
-      }
     }
-  }
-  FUN_8028688c();
-  return;
 }
 
 
