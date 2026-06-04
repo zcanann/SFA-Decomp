@@ -224,17 +224,14 @@ STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadiusY) == 0x30);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadiusXZ) == 0x34);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, sweepRadiusX) == 0x38);
 
-void ObjHits_CollectSkeletonHitsXZ(undefined8 param_1,double param_2,double param_3,
-                                   undefined4 param_4,undefined4 param_5,int *param_6,
-                                   int *param_7,int *param_8,float *param_9);
-void ObjHits_CollectSkeletonHits3D(undefined4 param_1,undefined4 param_2,int *param_3,
-                                   int *param_4,int *param_5,float *param_6);
-void ObjHits_CalcSkeletonResponseXZ(undefined8 param_1,double param_2,double param_3,
-                                    undefined4 param_4,undefined4 param_5,int param_6,
-                                    int param_7,undefined4 param_8,int param_9,float *param_10);
-void ObjHits_CalcSkeletonResponse3D(undefined8 param_1,undefined8 param_2,double param_3,
-                                    undefined4 param_4,undefined4 param_5,int param_6,
-                                    int param_7,undefined4 param_8,int param_9,float *param_10);
+int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model,int *hits,
+                                  int *outBest,f32 yMax,f32 yMin,f32 *outAccum);
+int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,int jointData,int *model,int *hits,
+                                  int *outBest,f32 *outAccum);
+void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,int hits,int jointPoints,
+                                    int jointModel,int bestHit,f32 t,f32 axial,f32 *out);
+void ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,int hits,int jointPoints,
+                                    int jointModel,int bestHit,f32 t,f32 axial,f32 *out);
 float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius,float axial,float baseRadius,
                                               float tipRadius,float length,float *point,
                                               float *base,float *tip,float *out);
