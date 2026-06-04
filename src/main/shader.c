@@ -2410,13 +2410,14 @@ extern char gViewFrustumPlanes[];
 
 #pragma scheduling off
 int ViewFrustum_IsSphereVisible(float* center, float radius) {
+	float* plane;
 	u8 i;
 	for (i = 0; i < 5; i++) {
-		float* plane = (float*)(gViewFrustumPlanes + i * 0x14);
-		float dot = plane[0] * (center[0] - playerMapOffsetX)
-		          + center[1] * plane[1]
-		          + plane[2] * (center[2] - playerMapOffsetZ)
-		          + plane[3];
+		float dot;
+		plane = (float*)(gViewFrustumPlanes + i * 0x14);
+		dot = plane[3]
+		          + (plane[2] * (center[2] - playerMapOffsetZ)
+		             + (center[1] * plane[1] + plane[0] * (center[0] - playerMapOffsetX)));
 		if (radius + dot < lbl_803DEBCC) return 0;
 	}
 	return 1;
