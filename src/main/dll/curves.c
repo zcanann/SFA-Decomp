@@ -1739,10 +1739,12 @@ f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment)
   endZ = segment[5];
   startZ = segment[2];
   deltaZ = endZ - startZ;
-  projection = gFloatZero;
-  if (((projection != deltaX) || (projection != deltaY)) || (projection != deltaZ)) {
+  if (((gFloatZero != deltaX) || (gFloatZero != deltaY)) || (gFloatZero != deltaZ)) {
     projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
                  (deltaY * deltaY + deltaX * deltaX + deltaZ * deltaZ);
+  }
+  else {
+    projection = gFloatZero;
   }
   if (projection < gFloatZero) {
     nearestX = startX;
