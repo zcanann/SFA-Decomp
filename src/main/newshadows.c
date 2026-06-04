@@ -3329,30 +3329,30 @@ void initFn_8006d020(void) {
     e = lbl_80391978;
     while (placed < 0x32 && attempts < 10000) {
         e[0] = (f32)(int)randomGetRange(8, 0x10);
-        e[3] = Vdchuff_803DEDC0[6] * (f32)(int)randomGetRange(5, 10);
-        e[4] = e[3] * (Vdchuff_803DEDC0[6] * (f32)(int)randomGetRange(0x14, 0x32));
+        e[3] = 0.01f * (f32)(int)randomGetRange(5, 10);
+        e[4] = e[3] * (0.01f * (f32)(int)randomGetRange(0x14, 0x32));
         attempts = 0;
         do {
             f32 *o;
-            e[1] = Vdchuff_803DEDC0[7] * (f32)(int)randomGetRange(0, 999);
-            e[2] = Vdchuff_803DEDC0[7] * (f32)(int)randomGetRange(0, 999);
+            e[1] = 0.001f * (f32)(int)randomGetRange(0, 999);
+            e[2] = 0.001f * (f32)(int)randomGetRange(0, 999);
             collide = 0;
             j = 0;
             o = lbl_80391978;
             while (j < placed && !collide) {
                 f32 mx, mz, tmp, d;
                 mx = (f32)__fabs(e[1] - o[1]);
-                tmp = (f32)__fabs((lbl_803DED2C + e[1]) - o[1]);
+                tmp = (f32)__fabs((1.0f + e[1]) - o[1]);
                 if (tmp < mx) mx = tmp;
-                tmp = (f32)__fabs((e[1] - lbl_803DED2C) - o[1]);
+                tmp = (f32)__fabs((e[1] - 1.0f) - o[1]);
                 if (tmp < mx) mx = tmp;
                 mz = (f32)__fabs(e[2] - o[2]);
-                tmp = (f32)__fabs((lbl_803DED2C + e[2]) - o[2]);
+                tmp = (f32)__fabs((1.0f + e[2]) - o[2]);
                 if (tmp < mz) mz = tmp;
-                tmp = (f32)__fabs((e[2] - lbl_803DED2C) - o[2]);
+                tmp = (f32)__fabs((e[2] - 1.0f) - o[2]);
                 if (tmp < mz) mz = tmp;
                 d = mx * mx + mz * mz;
-                if (d > lbl_803DED28) d = sqrtf(d);
+                if (d > 0.0f) d = sqrtf(d);
                 if (d < e[4] + o[3]) collide = 1;
                 o += 5;
                 j++;
@@ -3373,8 +3373,8 @@ void initFn_8006d020(void) {
                 u16 *dst = (u16 *)(*th + (row & 3) * 2 + (row >> 2) * 0x20
                                    + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
                 fn_8006CD20(lbl_80391978, placed, &o1, &o2,
-                            (f32)row * Yachuff_803DEDE0[0],
-                            (f32)col * Yachuff_803DEDE0[0],
+                            (f32)row * 0.015625f,
+                            (f32)col * 0.015625f,
                             (f32)tex);
                 hi = (int)(__PADFixBits * o2);
                 lo = (int)(__PADFixBits * o1);
@@ -3386,18 +3386,18 @@ void initFn_8006d020(void) {
 
     lbl_803DCFE0 = (u32)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
     for (row = 0; row < 0x40; row++) {
-        f32 rv = Yachuff_803DEDE0[1] * (f32)row;
+        f32 rv = 0.0981875f * (f32)row;
         for (col = 0; col < 0x40; col++) {
             f32 cv, n1, n2, prod, fa, fb;
             int hi, lo;
             u16 *dst = (u16 *)(lbl_803DCFE0 + (row & 3) * 2 + (row >> 2) * 0x20
                                + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
-            cv = Yachuff_803DEDE0[2] * (f32)col;
+            cv = 0.39275f * (f32)col;
             n1 = fn_802943F4(CPUFifo_803DED38 * floor(cv) + rv);
             n2 = fn_802943F4(cv);
             prod = n1 * n2;
-            fb = Vdchuff_803DEDC0[0] * prod + Vdchuff_803DEDC0[0];
-            fa = Vdchuff_803DEDC0[0] * n1 + Vdchuff_803DEDC0[0];
+            fb = 127.0f * prod + 127.0f;
+            fa = 127.0f * n1 + 127.0f;
             lo = (int)fa;
             hi = (int)fb;
             *dst = (u16)(lo | ((hi & 0xffff) << 8));
@@ -3405,8 +3405,8 @@ void initFn_8006d020(void) {
     }
     DCFlushRange((void *)(lbl_803DCFE0 + 0x60), *(u32 *)(lbl_803DCFE0 + 0x44));
 
-    lbl_803DCFAC = lbl_803DED28;
-    lbl_803DCFA8 = lbl_803DED28;
+    lbl_803DCFAC = 0.0f;
+    lbl_803DCFA8 = 0.0f;
     testAndSet_onlyUseHeap3(saved);
 }
 #pragma scheduling reset
@@ -3826,35 +3826,30 @@ void shadowRenderFn_8006b558(int *obj) {
 
 extern f32 Vdchuff_803DEDC0[2];
 extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
+#pragma scheduling off
+#pragma peephole off
 void fn_8006CB50(void) {
     int y, x;
     lbl_803DCFBC = (u32)textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
     for (y = 0; y < 0x100; y++) {
-        f32 fy = (f32)y - Udchuff_803DEDA0[3];
+        f32 fy = (f32)y - 127.5f;
         for (x = 0; x < 0x100; x++) {
-            char *addr = (char *)lbl_803DCFBC + (y & 3) * 2 + (y >> 2) * 0x20
-                       + (x & 3) * 8 + (x >> 2) * 0x800;
-            f32 fx = (f32)x - Udchuff_803DEDA0[3];
+            char *addr = (char *)lbl_803DCFBC + (y & 3) * 2 + (y >> 2) * 0x20 + (x & 3) * 8 + (x >> 2) * 0x800;
+            f32 fx = (f32)x - 127.5f;
             f32 dist = sqrtf(fy * fy + fx * fx);
-            f32 ny = fy / dist;
-            f32 nx = fx / dist;
-            f32 s;
-            int gv, xv;
-            if (dist <= Udchuff_803DEDA0[6]) {
-                s = (lbl_803DED34 * (Udchuff_803DEDA0[4] -
-                     GXOverflowSuspendInProgress_803DED48 * dist)) * Udchuff_803DEDA0[5];
-            } else {
-                s = lbl_803DED28;
+            f32 s = 0.0f;
+            if (dist <= 112.0f) {
+                s = 2.0f * -(0.9f * dist - 100.8f) * 0.00390625f;
             }
-            ny = ny * s;
-            nx = nx * s;
-            gv = (int)(Vdchuff_803DEDC0[0] * ny + Udchuff_803DEDA0[7]);
-            xv = (int)(Vdchuff_803DEDC0[0] * nx + Udchuff_803DEDA0[7]);
-            *(u16 *)(addr + 0x60) = (u16)(xv | ((gv & 0xffff) << 8));
+            *(u16 *)(addr + 0x60) =
+                (u16)(int)(127.0f * (fx / dist) * s + 128.0f) |
+                (u16)(((int)(127.0f * (fy / dist) * s + 128.0f) & 0xffff) << 8);
         }
     }
     DCFlushRange((char *)lbl_803DCFBC + 0x60, *(u32 *)((char *)lbl_803DCFBC + 0x44));
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern void Camera_DisableViewYOffset(void);
 extern void Camera_EnableViewYOffset(void);
