@@ -1479,6 +1479,95 @@ void dll_1DA_update(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
+/* fn_801B9ECC: DIM boss player-vs-baddie reaction dispatcher — picks a player anim
+ * from distance/anim-state via the interface vtables. */
+extern int *gBaddieControlInterface;
+extern int *gPlayerInterface;
+extern u8 lbl_803DDB84;
+extern u8 lbl_80325960[];
+extern u8 gDIMbossAnimController[];
+extern int fn_801BC2D8(int a, int obj);
+extern f32 lbl_803E4BB8;
+
+typedef void (*BaddieQueryFn)(int a, int objId, int n, u16 *anim, u16 *pad, u16 *dist);
+typedef u8 (*BaddieCheckFn)(int a, int obj, f32 d);
+typedef void (*PlayerAnimFn)(int a, int obj, int animId);
+
+typedef struct {
+    u8 pad[0x168];
+    s16 surprised[6]; /* 0x168 */
+    s16 group3[8];    /* 0x174 */
+    s16 group2[8];    /* 0x184 */
+    s16 group1[8];    /* 0x194 */
+} DimAnimTable;
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801B9ECC(int a, int obj)
+{
+    DimAnimTable *base;
+    u16 pad;
+    u16 dist;
+    u16 anim[4];
+
+    base = (DimAnimTable *)lbl_80325960;
+    if (*(s8 *)(obj + 0x346) != 0 || *(s8 *)(obj + 0x27b) != 0) {
+        (*(BaddieQueryFn)*(int *)(*gBaddieControlInterface + 0x14))(a, *(int *)(obj + 0x2d0), 0x10,
+                                                                    anim, &pad, &dist);
+        *(u8 *)(obj + 0x346) = 0;
+        if (dist < 0x5a) {
+            if (dist > 0x1e &&
+                ((u16)(anim[0] - 3) <= 1 || anim[0] == 0xb || anim[0] == 0xc)) {
+                (*(PlayerAnimFn)*(int *)(*gPlayerInterface + 0x14))(a, obj, 2);
+            } else {
+                (*(PlayerAnimFn)*(int *)(*gPlayerInterface + 0x14))(a, obj, 9);
+            }
+        } else if (anim[0] == 0 || anim[0] == 0xf) {
+            *(u8 *)(obj + 0x346) = 0;
+            if (dist > 0x1a9 &&
+                ((*(BaddieCheckFn)*(int *)(*gBaddieControlInterface + 0x18))(a, obj, lbl_803E4BB8) &
+                 1) != 0) {
+                (*(PlayerAnimFn)*(int *)(*gPlayerInterface + 0x14))(
+                    a, obj, base->surprised[randomGetRange(0, 5)]);
+            } else if (dist < 0xfa) {
+                (*(PlayerAnimFn)*(int *)(*gPlayerInterface + 0x14))(a, obj, 3);
+            } else {
+                if (lbl_803DDB84 > 6) {
+                    lbl_803DDB84 = 0;
+                }
+                switch (*(s8 *)(obj + 0x354)) {
+                case 3:
+                    (*(PlayerAnimFn)*(int *)(*gPlayerInterface + 0x14))(
+                        a, obj, base->group3[lbl_803DDB84++]);
+                    break;
+                case 2:
+                    (*(PlayerAnimFn)*(int *)(*gPlayerInterface + 0x14))(
+                        a, obj, base->group2[lbl_803DDB84++]);
+                    break;
+                case 1:
+                    (*(PlayerAnimFn)*(int *)(*gPlayerInterface + 0x14))(
+                        a, obj, base->group1[lbl_803DDB84++]);
+                    break;
+                default:
+                    (*(PlayerAnimFn)*(int *)(*gPlayerInterface + 0x14))(a, obj, 3);
+                    break;
+                }
+            }
+        } else {
+            (*(PlayerAnimFn)*(int *)(*gPlayerInterface + 0x14))(a, obj, 2);
+        }
+    }
+    if (*(s16 *)(obj + 0x274) == 3 || *(s16 *)(obj + 0x274) == 7) {
+        gDIMbossAnimController[0x611] |= 1;
+    } else {
+        gDIMbossAnimController[0x611] &= ~1;
+    }
+    fn_801BC2D8(a, obj);
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 void dll_1DF_free(void) {}
 void dll_1DF_hitDetect(void) {}
 void dll_1DF_release(void) {}
