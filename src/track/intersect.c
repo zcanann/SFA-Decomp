@@ -5799,12 +5799,18 @@ void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void* vec, u8 a
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void doHeatEffect(u32 alpha_in)
+typedef struct {
+    f32 m[6];
+} IndMtxInit;
+
+#pragma peephole off
+#pragma scheduling off
+void doHeatEffect(u8 alpha)
 {
     extern f32 lbl_803DEEDC, lbl_803DEEE4;
     extern f32 lbl_803DEF6C, lbl_803DEF70, lbl_803DEF74;
     extern f32 gSynthDelayedActionWord0;
-    extern u32 lbl_803DB6A4;
+    extern GXColor lbl_803DB6A4;
     extern u8 lbl_802C1EA8[];
     extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
     extern u8 lbl_803DD011, lbl_803DD019;
@@ -5818,36 +5824,30 @@ void doHeatEffect(u32 alpha_in)
     extern void selectTexture(int handle, int slot);
     extern void GXSetZMode();
     extern void GXSetZCompLoc(u8);
-    f32 indMtx[6];
+    extern Mtx hudMatrix;
+    extern void Camera_RebuildProjectionMatrix(void);
     Mtx mtx_44;
-    int handle1, handle2;
-    f32 fA, fB;
-    f32 mulX, mulY;
-    int alpha_clamp;
-    int alpha_final;
-    GXColor temp;
+    f32 indMtx[6];
+    int handle2;
+    int handle1;
+    f32 fA;
+    f32 fB;
+    f32 mulY;
+    f32 mulX;
+    s16 v;
+    u8 k;
+    u8 a2;
+    u8 a1;
 
-    /* Copy 24 bytes from lbl_802C1EA8 (6 floats) to local stack */
-    {
-        u32* src = (u32*)lbl_802C1EA8;
-        u32* dst = (u32*)indMtx;
-        int i;
-        for (i = 0; i < 6; i++) dst[i] = src[i];
+    *(IndMtxInit *)indMtx = *(IndMtxInit *)lbl_802C1EA8;
+    v = fn_8000FA70();
+    if (v < 0) {
+        k = (((u16)v >> 8) - 0xc0) << 2;
+    } else {
+        k = 0xff;
     }
-
-    /* Compute alpha clamp from fn_8000FA70 */
-    {
-        s16 v = fn_8000FA70();
-        if (v < 0) {
-            int x = ((u16)v >> 8) - 0xC0;
-            alpha_clamp = (x << 2) & 0xFF;
-        } else {
-            alpha_clamp = 0xFF;
-        }
-    }
-    /* alpha_in *= 0xFF/256 */
-    alpha_in = ((alpha_in & 0xFF) * 0xFF) >> 8;
-    alpha_final = (alpha_clamp * (alpha_in & 0xFF)) >> 8;
+    a1 = (alpha * 0xff) >> 8;
+    a2 = (k * alpha) >> 8;
 
     selectReflectionTexture(0);
     getReflectionTexture2(&handle1);
@@ -5866,14 +5866,12 @@ void doHeatEffect(u32 alpha_in)
 
     indMtx[0] = mulY;
     indMtx[1] = mulX;
-    indMtx[2] = lbl_803DEEDC;
     indMtx[3] = -mulX;
     indMtx[4] = mulY;
-    indMtx[5] = lbl_803DEEDC;
 
     PSMTXScale(mtx_44, lbl_803DEF74, lbl_803DEF74, lbl_803DEEE4);
     mtx_44[0][3] = fA;
-    mtx_44[2][3] = -fB;
+    mtx_44[1][3] = -fB;
     GXLoadTexMtxImm(mtx_44, 0x40, 0);
     GXSetTexCoordGen2(1, 0, 4, 0x3C, 0, 0x40);
 
@@ -5882,8 +5880,7 @@ void doHeatEffect(u32 alpha_in)
     GXSetIndTexMtx(1, (f32(*)[3])indMtx, -6);
     GXSetTevIndirect(1, 0, 0, 7, 1, 0, 0, 0, 0, 0);
 
-    *(u32*)&temp = lbl_803DB6A4;
-    GXSetTevKColor(0, temp);
+    GXSetTevKColor(0, lbl_803DB6A4);
     GXSetTevKAlphaSel(0, 0x1c);
     GXSetTevDirect(0);
     GXSetTevOrder(0, 0, 1, 0xff);
@@ -5898,21 +5895,32 @@ void doHeatEffect(u32 alpha_in)
     GXSetTevAlphaIn(1, 7, 7, 7, 0);
     GXSetTevSwapMode(1, 0, 0);
     GXSetTevColorOp(1, 0, 0, 0, 1, 0);
-    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 2, 1, 0);
 
-    GXSetNumIndStages(1);
-    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
-    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
-    GXSetNumChans(0);
+    GXSetTevDirect(2);
+    GXSetTevOrder(2, 0xff, 0xff, 4);
+    GXSetTevColorIn(2, 0xf, 0xf, 0xf, 0);
+    GXSetTevAlphaIn(2, 7, 0, 5, 7);
+    GXSetTevSwapMode(2, 0, 0);
+    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(2, 0, 0, 2, 1, 0);
+
     GXSetNumTexGens(2);
-    GXSetNumTevStages(2);
-
+    GXSetNumTevStages(3);
+    GXSetNumIndStages(1);
+    GXSetNumChans(1);
+    GXClearVtxDesc();
+    GXSetCurrentMtx(0x3c);
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xb, 1);
+    GXSetVtxDesc(0xd, 1);
+    GXSetCullMode(0);
     GXSetBlendMode(1, 4, 5, 5);
-    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 1 ||
         (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
-        GXSetZMode(1, 3, 0);
+        GXSetZMode(1, 1, 0);
         lbl_803DD018 = 1;
-        lbl_803DD014 = 3;
+        lbl_803DD014 = 1;
         lbl_803DD012 = 0;
         lbl_803DD01A = 1;
     }
@@ -5922,7 +5930,50 @@ void doHeatEffect(u32 alpha_in)
         lbl_803DD019 = 1;
     }
     GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetProjection(hudMatrix, 1);
+    GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
+    GXBegin(0x80, 0, 4);
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = a2;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0x280;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = a2;
+    GXWGFifo.s16 = 0x80;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0x280;
+    GXWGFifo.s16 = 0x1e0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = a1;
+    GXWGFifo.s16 = 0x80;
+    GXWGFifo.s16 = 0x80;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0x1e0;
+    GXWGFifo.s16 = -8;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = 0;
+    GXWGFifo.u8 = a1;
+    GXWGFifo.s16 = 0;
+    GXWGFifo.s16 = 0x80;
+    Camera_RebuildProjectionMatrix();
+    GXSetCurrentMtx(0);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
