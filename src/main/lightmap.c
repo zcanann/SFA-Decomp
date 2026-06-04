@@ -2726,6 +2726,40 @@ void renderShadowType3(u8 *obj, u32 b, s32 offset) {
 #pragma scheduling reset
 #pragma dont_inline reset
 
+extern f32 CurrTiming_803DEC20;
+extern f32 displayOffsetH_803DEBFC;
+#pragma scheduling off
+#pragma peephole off
+void fn_8005D3B4(u8 *obj, u8 *model, s32 b) {
+    f32 stk[3];
+    s32 t, v;
+    f32 timing;
+    if (lbl_803DCE30 == 1000) {
+        sceneDrawTransparentPolys();
+        lbl_803DCE30 = 0;
+    }
+    timing = CurrTiming_803DEC20;
+    stk[0] = displayOffsetH_803DEBFC *
+             (((f32)*(s16 *)(obj + 6) * timing + *(f32 *)(model + 0x18)) +
+              ((f32)*(s16 *)(obj + 12) * timing + *(f32 *)(model + 0x18)));
+    stk[1] = displayOffsetH_803DEBFC *
+             (((f32)*(s16 *)(obj + 8) * timing + *(f32 *)(model + 0x28)) +
+              ((f32)*(s16 *)(obj + 14) * timing + *(f32 *)(model + 0x28)));
+    stk[2] = displayOffsetH_803DEBFC *
+             (((f32)*(s16 *)(obj + 10) * timing + *(f32 *)(model + 0x38)) +
+              ((f32)*(s16 *)(obj + 16) * timing + *(f32 *)(model + 0x38)));
+    PSMTXMultVec(Camera_GetViewMatrix(), stk, stk);
+    t = (s32)-stk[2];
+    if (t < 0) v = 0;
+    else if (t > 0x7ffffff) v = 0x7ffffff;
+    else v = t;
+    lbl_8037E0C0[lbl_803DCE30 * 4]     = (u32)obj;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 1] = (u32)model;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | ((b & 0xff) << 27);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32 *p) {
