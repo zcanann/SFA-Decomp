@@ -213,17 +213,7 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
     wg = Objfsa_GetWalkGroupIndexAtPoint((f32 *)(obj + 0x18), 0);
     if ((wg != 0) && (*(u16 *)(state + 0xd0) != wg)) {
         *(u16 *)(state + 0xd0) = wg;
-        {
-            register u32 m;
-            register u32 v;
-            register u8 *st = state;
-            asm {
-                lwz v, 0x54(st)
-                li m, -0x401
-                and m, v, m
-                stw m, 0x54(st)
-            }
-        }
+        *(u32 *)(state + 0x54) &= ~0x400;
         *(u16 *)(state + 0x98) = 0;
         *(u16 *)(state + 0x9a) = 0;
         *(u16 *)(state + 0x9c) = 0;
@@ -307,17 +297,7 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
             *(u8 *)(state + 9) = 1;
             if (ulink != *(u16 *)(state + 0xd0)) {
                 *(s16 *)(state + 0xd0) = ulink;
-                {
-                    register u32 m;
-                    register u32 v;
-                    register u8 *st = state;
-                    asm {
-                        lwz v, 0x54(st)
-                        li m, -0x401
-                        and m, v, m
-                        stw m, 0x54(st)
-                    }
-                }
+                *(u32 *)(state + 0x54) &= ~0x400;
                 *(u16 *)(state + 0x98) = 0;
                 *(u16 *)(state + 0x9a) = 0;
                 *(u16 *)(state + 0x9c) = 0;
@@ -462,17 +442,7 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
     }
 state_selected:
     if (*(u8 *)(state + 9) < 5) {
-        {
-            register u32 m;
-            register u32 v;
-            register u8 *st = state;
-            asm {
-                lwz v, 0x54(st)
-                li m, -0x2001
-                and m, v, m
-                stw m, 0x54(st)
-            }
-        }
+        *(u32 *)(state + 0x54) &= ~0x2000;
     }
     trickyDebugPrint(strs + 0x404, *(u8 *)(state + 9));
     switch (*(u8 *)(state + 9)) {
@@ -739,14 +709,7 @@ state_selected:
                 if ((type == 7) || ((type < 7 && (type == 2)))) {
                     prod = *(u32 *)(state + 0x54);
                     if ((prod & 0x2000) != 0) {
-                        register u32 m;
-                        register u8 *st = state;
-                        register u32 pv = prod;
-                        asm {
-                            li m, -0x2001
-                            and m, pv, m
-                            stw m, 0x54(st)
-                        }
+                        *(u32 *)(state + 0x54) = prod & ~0x2000;
                     } else {
                         *(u32 *)(state + 0x54) = prod | 0x2000;
                     }
