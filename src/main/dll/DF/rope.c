@@ -396,6 +396,88 @@ void dimbossgut2_update(int obj)
 /*
  * --INFO--
  *
+ * Function: dimbossgut2_init
+ * EN v1.0 Address: 0x801BF6B4
+ * EN v1.0 Size: 540b
+ * EN v1.1 Address: 0x801BFC68
+ * EN v1.1 Size: 540b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int **out, int a, int b);
+extern void ObjAnim_SetCurrentMove(int obj, f32 t, int a, int b);
+extern void lightSetFieldBC_8001db14(int light, int v);
+extern void *objCreateLight(int obj, int n);
+extern void modelLightStruct_setField50(int light, int v);
+extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d);
+extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
+extern void fn_8001D730(int light, int a, int b, int c, int d, int e, f32 f);
+extern void fn_8001D714(int light, f32 f);
+extern f32 lbl_803E4D24;
+extern f32 lbl_803E4D28;
+extern f32 lbl_803E4D2C;
+extern f32 lbl_803E4D30;
+extern f32 lbl_803E4D04;
+
+void dimbossgut2_init(int obj, int def, int p3)
+{
+  int state;
+  int p;
+  int count;
+  int i;
+  int *list;
+  u8 flags;
+  f32 z;
+
+  state = *(int *)(obj + 0xb8);
+  flags = 0x16;
+  if (p3 != 0) {
+    flags |= 1;
+  }
+  (*(void (*)(int, int, int, int, int, int, u8, f32))(*(int *)(*gBaddieControlInterface + 0x58)))(
+      obj, def, state, 0, 0, 0x102, flags, lbl_803E4CE0);
+  *(int *)(obj + 0xbc) = 0;
+  p = *(int *)(state + 0x40c);
+  z = lbl_803E4CD8;
+  *(f32 *)(p + 0x0) = z;
+  *(f32 *)(p + 0x4) = z;
+  *(s16 *)(p + 0x14) = randomGetRange(-0x7fff, 0x7fff);
+  z = lbl_803E4CD8;
+  *(f32 *)(p + 0x8) = z;
+  *(s16 *)(p + 0x16) = 0;
+  *(f32 *)(p + 0x10) = z;
+  count = hitDetectFn_80065e50(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), &list, 0, 0);
+  *(f32 *)(p + 0xc) = lbl_803E4CD8;
+  if (count != 0) {
+    *(f32 *)(p + 0xc) = lbl_803E4D24;
+    for (i = 0; i < count; i++) {
+      f32 d = *(f32 *)list[i] - *(f32 *)(obj + 0x10);
+      if (*(s8 *)(list[i] + 0x14) == 0xe) {
+        if (d > *(f32 *)(p + 0xc)) {
+          *(f32 *)(p + 0xc) = d;
+        }
+      }
+    }
+  }
+  *(f32 *)(p + 0xc) += *(f32 *)(obj + 0x10);
+  ObjAnim_SetCurrentMove(obj, (f32)(int)randomGetRange(0, 0x63) / lbl_803E4D28, 0, 0);
+  ObjAnim_AdvanceCurrentMove(obj, lbl_803E4D20, timeDelta, 0);
+  *(int *)(p + 0x18) = (int)objCreateLight(obj, 1);
+  if (*(void **)(p + 0x18) != NULL) {
+    modelLightStruct_setField50(*(int *)(p + 0x18), 2);
+    modelLightStruct_setColorsA8AC(*(int *)(p + 0x18), 0, 255, 0, 0);
+    lightSetFieldBC_8001db14(*(int *)(p + 0x18), 1);
+    lightDistAttenFn_8001dc38(*(int *)(p + 0x18), lbl_803E4D2C, lbl_803E4CE0);
+    fn_8001D730(*(int *)(p + 0x18), 0, 0, 255, 0, 127, lbl_803E4D30);
+    fn_8001D714(*(int *)(p + 0x18), lbl_803E4D04);
+  }
+}
+
+/*
+ * --INFO--
+ *
  * Function: DIMbossspit_updateBurst
  * EN v1.0 Address: 0x801BF8D8
  * EN v1.0 Size: 648b
@@ -672,6 +754,86 @@ void dimbosscrackpar_hitDetect(void) {}
 void dimbosscrackpar_release(void) {}
 void dimbosscrackpar_initialise(void) {}
 
+/*
+ * --INFO--
+ *
+ * Function: magicmaker_update
+ * EN v1.0 Address: 0x801C0080
+ * EN v1.0 Size: 624b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+extern u8 Obj_IsLoadingLocked(void);
+extern void GameBit_Set(int eventId, int value);
+extern int *ObjGroup_GetObjects(int group, int *countOut);
+extern char *Obj_AllocObjectSetup(int size, int typeId);
+extern char *Obj_SetupObject(char *setup, int a, int b, int c, int d);
+extern void hitDetectFn_80097070(char *obj, f32 f, int a, int b, int c, int d);
+extern u16 lbl_80325CE8[];
+extern f64 lbl_803E4D90;
+extern f32 lbl_803E4D8C;
+extern f32 lbl_803E4D88;
+
+void magicmaker_update(int obj)
+{
+  int def;
+  char *newobj;
+  int n;
+  int count;
+  int *objs;
+  int i;
+  int j;
+  char *setup;
+  int o;
+
+  def = *(int *)(obj + 0x4c);
+  if (Obj_IsLoadingLocked() != 0) {
+    if ((u32)GameBit_Get(0x26b) != 0u) {
+      GameBit_Set(0x26b, 0);
+      objs = ObjGroup_GetObjects(4, &count);
+      n = 0;
+      for (i = 0; i < count; i++) {
+        o = *objs;
+        for (j = 0; j < 6; j++) {
+          if (*(s16 *)(o + 0x46) == lbl_80325CE8[j]) {
+            n++;
+          }
+        }
+        objs++;
+      }
+      if (n < 10) {
+        setup = Obj_AllocObjectSetup(0x30, lbl_80325CE8[randomGetRange(0, 5)]);
+        if (setup != NULL) {
+          *(u8 *)(setup + 0x1a) = 0x14;
+          *(s16 *)(setup + 0x2c) = -1;
+          *(s16 *)(setup + 0x1c) = -1;
+          *(f32 *)(setup + 0x8) = *(f32 *)(obj + 0xc) + (f32)(int)randomGetRange(-0x15e, 0x15e);
+          *(f32 *)(setup + 0xc) = lbl_803E4D8C + *(f32 *)(obj + 0x10);
+          *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14) + (f32)(int)randomGetRange(-0x15e, 0x15e);
+          *(s16 *)(setup + 0x24) = -1;
+          *(u8 *)(setup + 0x4) = *(u8 *)(def + 0x4);
+          *(u8 *)(setup + 0x6) = *(u8 *)(def + 0x6);
+          *(u8 *)(setup + 0x5) = *(u8 *)(def + 0x5);
+          *(u8 *)(setup + 0x7) = *(u8 *)(def + 0x7);
+          *(s16 *)(setup + 0x2e) = 3;
+          newobj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+          if (newobj != NULL) {
+            i = 3;
+            do {
+              hitDetectFn_80097070(newobj, lbl_803E4D88, 2, 2, 0x64, 0);
+              i--;
+            } while (i != 0);
+          }
+        }
+      }
+    }
+  }
+}
+
 extern f32 lbl_803E4D98;
 extern undefined4 *gPartfxInterface;
 #pragma scheduling off
@@ -686,6 +848,15 @@ int dimbosscrackpar_SeqFn(int *obj) {
     (*((int (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
         obj, 1224, 0, 2, -1, 0);
     return 0;
+}
+void dimbosscrackpar_update(int *obj) {
+    int *side = *(int **)((char *)obj + 0x4c);
+    if ((u32)GameBit_Get(*(s16 *)((char *)side + 0x1e)) != 0u) {
+        (*((int (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
+            obj, *(s16 *)((char *)side + 0x1a) + 1222, 0, 2, -1, 0);
+        (*((int (***)(int *, int, int, int, int, int))gPartfxInterface))[2](
+            obj, 1224, 0, 2, -1, 0);
+    }
 }
 void dimbosscrackpar_free(int *obj) {
     (*(void (*)(int *))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
