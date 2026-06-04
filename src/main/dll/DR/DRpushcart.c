@@ -1118,7 +1118,7 @@ extern f32 lbl_803E59F0;
 extern f32 lbl_803E5A28;
 extern void *allocModelStruct_800139e8(int, int);
 extern void dll_2E_func05(int, int, int, int, int);
-extern void fn_801E76A0(int);
+extern int fn_801E76A0(int obj, int p2, u8 *data, s8 advance);
 extern void *Obj_GetActiveModel(int);
 extern void ObjModel_SetPostRenderCallback(void *, void *);
 extern void ObjGroup_AddObject(int, int);
@@ -1159,7 +1159,7 @@ void shopitem_init(int obj, int data) {
 void shopkeeper_init(int obj) {
     int state = *(int *)(obj + 0xB8);
     *(u16 *)(obj + 0xB0) |= 0x2000;
-    *(void (**)(int))(obj + 0xBC) = fn_801E76A0;
+    *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E76A0;
     *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
     *(f32 *)(state + 0x9B8) = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
     *(void **)(state + 0x9B0) = allocModelStruct_800139e8(4, 4);
@@ -1303,6 +1303,156 @@ void shopitem_update(int obj)
             objRenderFn_80041018(obj);
         }
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E59D8;
+extern void DRlaserturret_startTimedChallenge(int);
+extern void DRlaserturret_handlePromptChoice(int);
+extern void setAButtonIcon(int icon);
+extern void setBButtonIcon(int icon);
+extern void warpToMap(int mapId, int flag);
+extern int getCurUiDll(void);
+extern int *getDLL16(void);
+extern void playerAddMoney(void *player, int amount);
+extern void *objFindTexture(int obj, int target, int p3);
+extern int *gScreenTransitionInterface;
+extern int dll_2E_func07(int obj, u8 *data, int p3, int p4, int p5);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
+{
+    int state;
+    int state2;
+    void *player;
+    int slot;
+    int i;
+    int digit;
+    int hundreds;
+    int *tex;
+    f32 range;
+    f32 speed;
+
+    state = state2 = *(int *)(obj + 0xB8);
+    player = Obj_GetPlayerObject();
+    range = lbl_803E59D8;
+    *(u8 *)(state + 0x9D4) &= ~0x20;
+    if (*(u8 *)(state + 0x9D4) & 0x10) {
+        if ((*(int (**)(void))(*(int *)gScreenTransitionInterface + 0x14))() != 0) {
+            (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 0xC))(0x1E, 1);
+            (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x4C))(*(s8 *)(data + 0x57));
+        }
+        return 0;
+    }
+    if (dll_2E_func07(obj, data, state + 0x35C, 0, 0) != 0) {
+        return 1;
+    }
+    *(void (**)(int))(data + 0xE8) = DRlaserturret_startTimedChallenge;
+    *(s16 *)(data + 0x6E) = (s16)(*(s16 *)(data + 0x6E) & ~0x20);
+    speed = lbl_803E59DC;
+    *(f32 *)(state2 + 0x280) = speed;
+    *(u8 *)(state + 0x9D4) |= 4;
+    if (advance != 0) {
+        ObjAnim_AdvanceCurrentMove(obj, speed, timeDelta, 0);
+    }
+    if (*(s16 *)(obj + 0xB4) == -1) {
+        if (*(s8 *)(data + 0x56) != 0) {
+            slot = (*(int (**)(int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x44))(*(int *)(state + 0x9B4));
+            if (slot != -1) {
+                *(s16 *)(state + 0x9CC) = (s16)(*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x38))(*(int *)(state + 0x9B4), slot);
+                *(s16 *)(state + 0x9CE) = (s16)(*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x30))(*(int *)(state + 0x9B4), slot);
+                *(s16 *)(state + 0x9D0) = *(s16 *)(state + 0x9CC);
+                *(u8 *)(state + 0x9D2) = 0;
+                digit = *(s16 *)(state + 0x9CC);
+                tex = (int *)objFindTexture(obj, 8, 0);
+                *tex = (digit % 10) * 0x100;
+                tex = (int *)objFindTexture(obj, 7, 0);
+                *tex = ((digit / 10) % 10) * 0x100;
+                hundreds = digit / 100;
+                if (hundreds > 9) {
+                    hundreds = 9;
+                }
+                tex = (int *)objFindTexture(obj, 6, 0);
+                *tex = hundreds << 8;
+            }
+            *(u8 *)(data + 0x56) = 0;
+            *(void (**)(int))(data + 0xEC) = DRlaserturret_handlePromptChoice;
+        }
+        if ((*(int (**)(int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x44))(*(int *)(state + 0x9B4)) != -1) {
+            setAButtonIcon(0x12);
+            setBButtonIcon(0xA);
+        }
+    }
+    for (i = 0; i < *(u8 *)(data + 0x8B); i++) {
+        switch (*(u8 *)(data + i + 0x81)) {
+        case 1:
+            fn_801E7DC8(obj, state, *(u8 *)(state + 0x9D5));
+            *(u8 *)(state + 0x9D4) |= 2;
+            break;
+        case 2:
+            (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state2, 3);
+            (*(void (**)(int, int, f32 *, int, int))(*(int *)lbl_803DCAB4 + 0xC))(obj, 0x7EF, &range, 0x50, 0);
+            *(u8 *)(state + 0x9D6) = 0;
+            break;
+        case 3:
+            (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state2, 2);
+            *(u8 *)(state + 0x9D4) |= 0x20;
+            *(u8 *)(state + 0x9D6) = 0xFF;
+            break;
+        case 4:
+            if (*(s16 *)((char *)player + 0x46) == 0) {
+                warpToMap(0xF, 0);
+            } else {
+                warpToMap(0xE, 0);
+            }
+            break;
+        case 5:
+            if (getCurUiDll() == 0x10) {
+                tex = getDLL16();
+                (*(void (**)(int))(*tex + 0x10))(0);
+            }
+            break;
+        case 6:
+            if (getCurUiDll() == 0x10) {
+                tex = getDLL16();
+                (*(void (**)(int))(*tex + 0x10))(2);
+            }
+            break;
+        case 7:
+            if (getCurUiDll() == 0x10) {
+                tex = getDLL16();
+                (*(void (**)(int))(*tex + 0x10))(4);
+            }
+            break;
+        case 9:
+            playerAddMoney(player, *(u8 *)(state + 0x9D5));
+            break;
+        case 10:
+            playerAddMoney(player, -(int)*(u8 *)(state + 0x9D5));
+            break;
+        case 0xB:
+            (*(void (**)(int, int, f32 *, int, int))(*(int *)lbl_803DCAB4 + 0xC))(obj, 0x7EF, &range, 0x50, 0);
+            break;
+        case 0xC:
+            *(u8 *)(state + 0x9D5) = 1;
+            digit = *(u8 *)(state + 0x9D5);
+            tex = (int *)objFindTexture(obj, 8, 0);
+            *tex = (digit % 10) * 0x100;
+            tex = (int *)objFindTexture(obj, 7, 0);
+            *tex = ((digit / 10) % 10) * 0x100;
+            digit = digit / 100;
+            if (digit > 9) {
+                digit = 9;
+            }
+            tex = (int *)objFindTexture(obj, 6, 0);
+            *tex = digit << 8;
+            break;
+        }
+    }
+    *(u8 *)(obj + 0x36) = *(u8 *)(state + 0x9D6);
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
