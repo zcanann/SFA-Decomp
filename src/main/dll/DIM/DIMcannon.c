@@ -1992,10 +1992,12 @@ void imanimspacecraft_init(int *obj) {
 #pragma peephole off
 int imanimspacecraft_setScale(int *obj, int bitIdx) {
     u8 *p = (u8*)*(int**)((char*)obj + 0xb8);
-    if ((p[2] & (1 << bitIdx)) != 0) {
-        return 1;
+    switch (p[2] & (1 << bitIdx)) {
+    default:
+        return TRUE;
+    case 0:
+        return FALSE;
     }
-    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2257,39 +2259,36 @@ typedef struct {
 } LinkbLevState;
 
 void linkb_levcontrol_init(int *obj) {
-    u8 *sub;
-    u8 *t;
-
-    t = lbl_803238D8;
-    sub = *(u8**)((char*)obj + 0xb8);
+    u8 *t = lbl_803238D8;
+    LinkbLevState *sub = *(LinkbLevState **)((char *)obj + 0xb8);
     *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x6000);
     if (GameBit_Get(0x36e) != 0) {
-        *(int*)sub = *(int*)sub & 4;
+        sub->flags &= 4;
     }
     if (GameBit_Get(0x543) != 0) {
-        sub[4] = (u8)((sub[4] & ~0x38) | 0x28);
+        sub->stage = 5;
     } else if (GameBit_Get(0x387) != 0) {
-        sub[4] = (u8)((sub[4] & ~0x38) | 0x20);
+        sub->stage = 4;
     } else if (GameBit_Get(0x386) != 0) {
-        sub[4] = (u8)((sub[4] & ~0x38) | 0x18);
+        sub->stage = 3;
     } else if (GameBit_Get(0x385) != 0) {
-        sub[4] = (u8)((sub[4] & ~0x38) | 0x10);
+        sub->stage = 2;
     } else if (GameBit_Get(0x384) != 0) {
-        sub[4] = (u8)((sub[4] & ~0x38) | 0x08);
+        sub->stage = 1;
     }
     fn_80088870(t + 0x38, t, t + 0x70, t + 0xa8);
     if (getSaveGameLoadStatus() != 0) {
-        if ((*gMapEventInterface)->getAnimEvent((s8)*(s8*)((char*)obj + 0xac), 0) == 0) {
+        if ((*gMapEventInterface)->getAnimEvent(*(s8*)((char*)obj + 0xac), 0) == 0) {
             envFxActFn_800887f8(0x3f);
         }
         getEnvfxActImmediately(0, 0, 0x23c, 0);
     } else {
-        if ((*gMapEventInterface)->getAnimEvent((s8)*(s8*)((char*)obj + 0xac), 0) == 0) {
+        if ((*gMapEventInterface)->getAnimEvent(*(s8*)((char*)obj + 0xac), 0) == 0) {
             envFxActFn_800887f8(0x1f);
         }
         getEnvfxAct(0, 0, 0x23c, 0);
     }
-    *(s16*)(sub + 0xc) = 0;
+    sub->music = 0;
 }
 void linkb_levcontrol_update(int *obj) {
     LinkbLevState *state;
