@@ -14897,3 +14897,89 @@ void modelWalkAnimFn_800248b8(u8 *a, u8 *b, u8 *c, int d, f32 e)
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern void animLoadFromTable(u8 *hdr, int idx, int a, int b);
+
+#define LOADCOLOR_BLOCK(OFF)                                                          \
+    {                                                                                 \
+        u32 v;                                                                        \
+        int idx;                                                                      \
+        int sz4;                                                                      \
+        u8 buf[4];                                                                    \
+        int sz;                                                                       \
+        u8 *hp;                                                                       \
+                                                                                      \
+        v = *(u32 *)(p2 + (OFF));                                                     \
+        idx = **(s16 **)(hdr + 0x6c);                                                 \
+        if ((getLoadedFileFlags(0) & 0x100000) == 0 || *(u16 *)(hdr + 4) == 1 ||      \
+            *(u16 *)(hdr + 4) == 3) {                                                 \
+            if (v == 0) {                                                             \
+                if (ModelList_getHeader(lbl_803DCB50, idx, &hp) == 0) {               \
+                    sz4 = *(int *)((u8 *)lbl_803DCB4C + idx * 4);                     \
+                    loadAndDecompressDataFile(0x30, 0, sz4, 0, (int)&sz, idx, 1);     \
+                    hp = (u8 *)mmAlloc(sz, 10, 0);                                    \
+                    loadAndDecompressDataFile(0x30, (void *)hp, sz4, sz, (int)buf, idx, 0); \
+                    *hp = 1;                                                          \
+                    modelInitModelList(lbl_803DCB50, idx, &hp);                       \
+                } else {                                                              \
+                    *hp += 1;                                                         \
+                }                                                                     \
+            } else {                                                                  \
+                animLoadFromTable(hdr, idx, 0, (int)v);                               \
+            }                                                                         \
+        }                                                                             \
+    }
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void modelLoadColorFn_80024ec8(void *m, void *data)
+{
+    u8 *p2 = (u8 *)data;
+    u8 *hdr;
+    u8 *mdl;
+    f32 f;
+
+    hdr = *(u8 **)m;
+    *(u16 *)(p2 + 0x44) = 0;
+    *(u16 *)(p2 + 0x5e) = 0;
+    *(u16 *)(p2 + 0x58) = 0;
+    *(u16 *)(p2 + 0x5a) = 0;
+    *(u16 *)(p2 + 0x5c) = 0;
+    f = lbl_803DE828;
+    *(f32 *)(p2 + 0xc) = f;
+    *(f32 *)(p2 + 4) = f;
+    *(f32 *)(p2 + 0x14) = f;
+    *(u8 *)(p2 + 0x60) = 0;
+    if (*(u16 *)(hdr + 0xec) != 0) {
+        if (*(u16 *)(hdr + 2) & 0x40) {
+            LOADCOLOR_BLOCK(0x1c)
+            LOADCOLOR_BLOCK(0x20)
+            LOADCOLOR_BLOCK(0x24)
+            LOADCOLOR_BLOCK(0x28)
+            *(u16 *)(p2 + 0x44) = 0;
+            mdl = *(u8 **)(p2 + *(u16 *)(p2 + 0x44) * 4 + 0x1c) + 0x80;
+        } else {
+            mdl = *(u8 **)(*(u8 **)(hdr + 0x64) + *(u16 *)(p2 + 0x44) * 4);
+        }
+        *(u8 **)(p2 + 0x34) = mdl + 6;
+        *(s8 *)(p2 + 0x60) = (s8)(*(u8 *)(mdl + 1) & 0xf0);
+        *(f32 *)(p2 + 0x14) = (f32)*(u8 *)(*(u8 **)(p2 + 0x34) + 1);
+        if (*(s8 *)(p2 + 0x60) == 0) {
+            *(f32 *)(p2 + 0x14) -= lbl_803DE818;
+        }
+        *(u8 *)(p2 + 0x61) = *(u8 *)(p2 + 0x60);
+        *(u32 *)(p2 + 0x38) = *(u32 *)(p2 + 0x34);
+        *(u16 *)(p2 + 0x46) = *(u16 *)(p2 + 0x44);
+        *(f32 *)(p2 + 8) = *(f32 *)(p2 + 4);
+        *(f32 *)(p2 + 0x18) = *(f32 *)(p2 + 0x14);
+        *(f32 *)(p2 + 0x10) = *(f32 *)(p2 + 0xc);
+        *(u32 *)(p2 + 0x3c) = *(u32 *)(p2 + 0x34);
+        *(u16 *)(p2 + 0x48) = *(u16 *)(p2 + 0x44);
+        *(u32 *)(p2 + 0x40) = *(u32 *)(p2 + 0x34);
+        *(u16 *)(p2 + 0x4a) = *(u16 *)(p2 + 0x44);
+    }
+}
+#pragma dont_inline reset
+#pragma pop
