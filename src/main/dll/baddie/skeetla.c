@@ -214,18 +214,16 @@ int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
     } else {
         f29_val = lbl_803E23F8;
     }
-    iter = 0;
     limit = lbl_803E2424;
-    while (dist <= limit || maxSq >= dist) {
+    for (iter = 0; iter < 5; iter++) {
+        if (dist > limit && maxSq < dist) {
+            return result;
+        }
         result = 1;
         RomCurve_stepClamped(param_3, f29_val);
         dist = getXZDistance((f32 *)(param_3 + 0x68), (f32 *)(param_2 + 0x18));
-        iter++;
-        if (iter > 4) {
-            return 1;
-        }
     }
-    return result;
+    return 1;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -634,7 +632,7 @@ static void *skeetla_validateRouteEntry(void *entry)
 /* trickyFindNearestLinkedRouteEntry  addr=0x8013A4EC  size=0x1D0  linkage=global */
 #pragma peephole off
 #pragma scheduling off
-void *trickyFindNearestLinkedRouteEntry(u8 *context, u8 *routeDef, u16 linkSelector, u32 routeFlagValue)
+void *trickyFindNearestLinkedRouteEntry(u8 *context, u8 *routeDef, int linkSelector, int routeFlagValue)
 {
     void *candidates[4];
     void *entry;
@@ -645,24 +643,32 @@ void *trickyFindNearestLinkedRouteEntry(u8 *context, u8 *routeDef, u16 linkSelec
     u16 mask;
     u16 bestIndex;
     int curveId;
+    s16 requiredBit;
+    s16 forbiddenBit;
 
+    i = 0;
     count = 0;
     mask = 1;
-    for (i = 0; i < 4; i++) {
+    while (i < 4) {
         curveId = *(int *)(routeDef + 0x1c + i * 4);
-        if ((curveId > -1) && (((s8)routeDef[0x1b] & mask) == routeFlagValue)) {
-            entry = (*(void *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(curveId);
-            candidates[count] = entry;
+        if ((curveId > -1) && ((((s8)routeDef[0x1b] & mask) ^ routeFlagValue) == 0)) {
+            candidates[count] = (*(void *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(curveId);
+            entry = candidates[count];
             if (entry != NULL) {
                 if ((linkSelector == 0) || (routeDef[count + 4] == linkSelector)) {
-                    if (skeetla_validateRouteEntry(entry) != NULL) {
-                        if (((s8)routeDef[0x1a] != 9) || (*(s8 *)((u8 *)entry + 0x1a) != 8)) {
-                            count++;
+                    requiredBit = *(s16 *)((u8 *)entry + 0x30);
+                    if ((requiredBit == -1) || (GameBit_Get(requiredBit) != 0)) {
+                        forbiddenBit = *(s16 *)((u8 *)entry + 0x32);
+                        if ((forbiddenBit == -1) || (GameBit_Get(forbiddenBit) == 0)) {
+                            if (((s8)routeDef[0x1a] != 9) || (*(s8 *)((u8 *)entry + 0x1a) != 8)) {
+                                count++;
+                            }
                         }
                     }
                 }
             }
         }
+        i++;
         mask <<= 1;
         routeFlagValue <<= 1;
     }
