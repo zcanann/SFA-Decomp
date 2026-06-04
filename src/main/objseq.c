@@ -184,6 +184,73 @@ void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, int action)
 
 #pragma peephole off
 #pragma scheduling off
+void *objSeqCmd3(u8 *obj, u8 *seq, u8 *src)
+{
+    void *result;
+    u8 *activeObj;
+    u8 *entry;
+    int j;
+    u8 *slotBase;
+    int slotOff;
+    u8 *seqObj;
+    f32 groundY[2];
+
+    result = obj;
+    *(s8 *)(seq + 0x79) = (s8)(seq[0x79] ^ 1);
+    if ((s8)seq[0x79] != 0) {
+        fn_8008196C(obj);
+        seqObj = *(u8 **)seq;
+        if (seqObj != NULL) {
+            result = seqObj;
+            *(void **)(seqObj + 0xc0) = obj;
+            *(u16 *)(seqObj + 0xb0) |= 0x1000;
+            *(void **)(seq + 0x110) = seqObj;
+
+            activeObj = *(u8 **)seq;
+            j = 0;
+            slotOff = (s8)seq[0x57] * 0x80;
+            slotBase = lbl_80396918 + slotOff;
+            entry = slotBase;
+            for (; j < 16; j++) {
+                if (*(u8 **)entry == NULL || *(u8 **)entry == activeObj) {
+                    break;
+                }
+                entry += 8;
+            }
+            *(u8 **)(slotBase + j * 8) = activeObj;
+            *(u8 **)(lbl_80396918 + slotOff + j * 8 + 4) = obj;
+        }
+    } else {
+        if (*(void **)seq != NULL) {
+            if ((*(s16 *)(seq + 0x6e) & 1) != 0) {
+                *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc);
+                *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10);
+                *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14);
+                objAnimCurvFn_800849e8(obj, seq);
+            }
+            if ((s8)seq[0x7a] == 1 &&
+                hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                                     *(f32 *)(obj + 0x14), groundY, 0) == 0) {
+                *(f32 *)(obj + 0x10) =
+                    *(f32 *)(obj + 0x10) +
+                    ((*(f32 *)(obj + 0x10) - groundY[0]) - *(f32 *)(src + 0xc));
+            }
+            if ((*(s16 *)(seq + 0x6e) & 2) != 0) {
+                *(u16 *)obj = *(s16 *)obj + *(s16 *)(seq + 0x1a);
+            }
+            *(void **)(obj + 0xc0) = NULL;
+            *(u16 *)(obj + 0xb0) &= ~0x1000;
+            *(void **)seq = NULL;
+            result = obj;
+        }
+    }
+    return result;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
 void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
 {
     ObjSeqBgCmd *cmd;
