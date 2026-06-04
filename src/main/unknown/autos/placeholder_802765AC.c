@@ -424,17 +424,17 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
  */
 void mcmdSetKeyGroup(McmdVoiceState *state, McmdCommandArgs *args)
 {
+    int off;
+    u32 i;
     u32 kg;
     u32 kill;
-    u32 i;
-    int off;
     McmdVoiceState *voice;
 
+    off = 0;
     state->keyGroup = 0;
     kg = (args->flags >> 8) & 0xff;
     kill = ((args->flags >> 0x10) & 0xff) != 0;
     if (kg != 0) {
-        off = 0;
         for (i = 0; i < lbl_803BD150[0x210]; off += SYNTH_VOICE_STRIDE, i++) {
             voice = (McmdVoiceState *)(synthVoice + off);
             if (voice->macroBase != 0 && (MAC_CFLAGS(voice) & MAC_FLAG64(0, 2)) == 0 &&
