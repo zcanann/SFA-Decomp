@@ -29,12 +29,35 @@ typedef struct NwIceState {
     int *linkedObj;
 } NwIceState;
 
+extern u32 GameBit_Get(int eventId);
+extern int *getTrickyObject(void);
+extern void fn_8014C66C(int *obj, int *target);
+extern f32 fn_8014C5D0(int *obj);
+extern int *ObjList_FindObjectById(int objId);
+extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
+extern void fn_80138920(int *obj, int a, int b);
+extern f32 timeDelta;
+extern const f32 lbl_803E5260;
+extern f32 lbl_803E5264;
+extern f32 lbl_803E5268;
+extern char *gMapEventInterface;
+extern int lbl_802C23E8[];
+
+typedef struct NwTrickyIds {
+    int ids[3];
+} NwTrickyIds;
+
+typedef struct NwObjPos {
+    u8 pad[0x18];
+    f32 pos[3];
+} NwObjPos;
+
 /*
  * --INFO--
  *
  * Function: nw_tricky_update
  * EN v1.0 Address: 0x801CF7E8
- * EN v1.0 Size: 4b
+ * EN v1.0 Size: 796b
  * EN v1.1 Address: 0x801CFAC0
  * EN v1.1 Size: 668b
  * JP Address: TODO
@@ -42,50 +65,104 @@ typedef struct NwIceState {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void nw_tricky_update(undefined2 *param_1,int param_2,int param_3)
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_loop_invariants off
+void nw_tricky_update(int *obj)
 {
-}
+    int count;
+    NwTrickyIds ids;
+    char *state;
+    int *tricky;
+    int *player;
+    int **objects;
+    int **scan;
+    int i;
+    int *ip;
+    int *found;
+    f32 dPlayer;
+    f32 t;
 
-/*
- * --INFO--
- *
- * Function: FUN_801cf7ec
- * EN v1.0 Address: 0x801CF7EC
- * EN v1.0 Size: 44b
- * EN v1.1 Address: 0x801CFD5C
- * EN v1.1 Size: 52b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_801cf7ec(void)
-{
-  int iVar1;
-  
-  iVar1 = FUN_80017a90();
-  FUN_8000680c(iVar1,0x10);
-  return 0;
-}
+    state = *(char **)((char *)obj + 0xb8);
+    tricky = getTrickyObject();
+    player = (int *)Obj_GetPlayerObject();
+    ids = *(NwTrickyIds *)lbl_802C23E8;
 
-/*
- * --INFO--
- *
- * Function: FUN_801cf818
- * EN v1.0 Address: 0x801CF818
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801CFD90
- * EN v1.1 Size: 40b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801cf818(void)
-{
-  GameBit_Set(0x4e4,1);
-  return;
+    if (tricky == NULL) {
+        return;
+    }
+
+    switch (*(u8 *)state) {
+    case 0:
+        if (GameBit_Get(0xd11)) {
+            objects = ObjGroup_GetObjects(3, &count);
+            for (i = 0, scan = objects; i < count; scan++, i++) {
+                if (*(s16 *)((char *)*scan + 0x46) == 0x13a) {
+                    fn_8014C66C(*scan, player);
+                }
+            }
+            GameBit_Set(0x4e4, 1);
+            *(u8 *)state = 1;
+        } else {
+            if (GameBit_Get(0x544)) {
+                if (!(*(u8 (**)(int *))(*(char **)*(char **)((char *)tricky + 0x68) + 0x40))(tricky)) {
+                    GameBit_Set(0x4e4, 0);
+                    *(f32 *)(state + 4) = lbl_803E5260;
+                }
+
+                for (i = 0, ip = ids.ids; i < 3; ip++, i++) {
+                    found = ObjList_FindObjectById(*ip);
+                    if (found != NULL && fn_8014C5D0(found) > lbl_803E5260) {
+                        (*(void (**)(int *, int, int *))(*(char **)*(char **)((char *)tricky + 0x68) + 0x34))(tricky, 1, found);
+                        break;
+                    }
+                }
+
+                *(f32 *)(state + 4) += timeDelta;
+                t = *(f32 *)(state + 4);
+                if (t >= lbl_803E5264) {
+                    *(f32 *)(state + 4) = t - lbl_803E5264;
+                    fn_80138920(tricky, 0x152, 0x1000);
+                }
+            }
+
+            objects = ObjGroup_GetObjects(3, &count);
+            for (i = 0, scan = objects; i < count; scan++, i++) {
+                if (*(s16 *)((char *)*scan + 0x46) == 0x13a) {
+                    dPlayer = vec3f_distanceSquared(((NwObjPos *)*scan)->pos, ((NwObjPos *)player)->pos);
+                    if (vec3f_distanceSquared(((NwObjPos *)*scan)->pos, ((NwObjPos *)tricky)->pos) < dPlayer) {
+                        fn_8014C66C(*scan, tricky);
+                    } else {
+                        fn_8014C66C(*scan, player);
+                    }
+                }
+            }
+        }
+        break;
+    case 1:
+        if (!(*(u16 *)((char *)tricky + 0xb0) & 0x1000)) {
+            *(f32 *)(state + 4) += timeDelta;
+        }
+        if (GameBit_Get(0x4e3) == 1) {
+            if (*(*(u8 *(**)(void))(*(char **)gMapEventInterface + 0x94))() >= 4) {
+                GameBit_Set(0x4e3, 0xff);
+            }
+        }
+        t = *(f32 *)(state + 4);
+        if (t >= lbl_803E5268) {
+            *(f32 *)(state + 4) = t - lbl_803E5268;
+            if (GameBit_Get(0x4e3) == 0xff) {
+                if (*(*(u8 *(**)(void))(*(char **)gMapEventInterface + 0x94))() < 4) {
+                    GameBit_Set(0x4e3, 1);
+                }
+            }
+        }
+        break;
+    }
 }
+#pragma opt_loop_invariants reset
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */

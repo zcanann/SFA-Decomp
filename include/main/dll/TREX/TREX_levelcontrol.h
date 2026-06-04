@@ -78,7 +78,6 @@
 #define SB_CANNONBALL_LAUNCH_SFX 53
 #define SB_CANNONBALL_LOOP_SFX 714
 
-void SB_ShipGun_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void SB_ShipGun_update(int obj);
 
 #endif /* MAIN_DLL_TREX_TREX_LEVELCONTROL_H_ */

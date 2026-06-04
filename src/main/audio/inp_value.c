@@ -12,223 +12,196 @@ extern u32 synthRealTimeLo;
  */
 u16 _GetInputValue(McmdVoiceState *statePtr, McmdInputSlot *slotPtr, u32 midiSlot, u32 midiKey)
 {
-    McmdInputEntry *entry;
-    int signedValue;
-    u32 ctrl;
-    u32 result;
+    u32 sign;
     u32 i;
-    int signedMode;
+    u32 value;
+    u8 ctrl;
+    s32 tmp;
+    s32 vtmp;
 
-    entry = slotPtr->entries;
-    result = 0;
-    i = 0;
-    goto check_entry_count;
-
-    while (1) {
-        if ((entry->combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG) != 0) {
-            if (statePtr == NULL) {
-                signedValue = 0;
-            } else {
-                signedValue = (s16)varGet((int)statePtr, 0, entry->controller);
-            }
-            goto signed_input;
+    for (value = 0, i = 0; i < slotPtr->entryCount; ++i) {
+        if (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_USE_VAR_FLAG) {
+            tmp = (statePtr != NULL ? (s16)varGet((int)statePtr, 0, slotPtr->entries[i].controller) : 0);
+            goto block_18;
         }
-
-        ctrl = entry->controller;
+        ctrl = slotPtr->entries[i].controller;
         if (ctrl == MCMD_CTRL_PITCH_BEND || ctrl == MCMD_CTRL_MODULATION ||
-            ctrl == MCMD_CTRL_PANNING || (u8)(ctrl - MCMD_CTRL_EX_A0) <= 1 ||
-            ctrl == MCMD_CTRL_SUR_PANNING) {
-            if (ctrl >= MCMD_CTRL_EX_A0 && ctrl < MCMD_CTRL_MIDI_LAYER) {
-                if (statePtr == NULL) {
-                    signedValue = 0;
-                } else {
-                    signedValue = statePtr->exCtrls[ctrl - MCMD_CTRL_EX_A0].value << 1;
+            ctrl == MCMD_CTRL_PANNING || ctrl == MCMD_CTRL_EX_A0 ||
+            ctrl == MCMD_CTRL_EX_A1 || ctrl == MCMD_CTRL_SUR_PANNING) {
+            switch (ctrl) {
+            case MCMD_CTRL_EX_A0:
+            case MCMD_CTRL_EX_A1:
+                if (statePtr != NULL) {
+                    tmp = statePtr->exCtrls[ctrl - MCMD_CTRL_EX_A0].value << 1;
                     statePtr->exCtrlDirty[ctrl - MCMD_CTRL_EX_A0] = 1;
+                } else {
+                    tmp = 0;
                 }
-            } else {
-                signedValue = (inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff) - 0x2000;
+                break;
+            default:
+                tmp = (inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff) - 0x2000;
+                break;
             }
-            goto signed_input;
-        }
-
-        goto unsigned_input;
-
-signed_input:
-        signedValue = (int)(signedValue * (entry->scale >> 1)) >> 0xf;
-        if (signedValue < -0x2000) {
-            signedValue = -0x2000;
-        } else if (signedValue > 0x1fff) {
-            signedValue = 0x1fff;
-        }
-        switch (entry->combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK) {
-        case MCMD_INPUT_COMBINE_SET:
-            result = signedValue + 0x2000;
-            signedMode = 1;
-            break;
-        case MCMD_INPUT_COMBINE_ADD:
-            if (signedMode != 0) {
-                signedValue = result + signedValue - 0x2000;
-                if (signedValue < -0x2000) {
-                    signedValue = -0x2000;
-                } else if (signedValue > 0x1fff) {
-                    signedValue = 0x1fff;
+        block_18:
+            tmp = (tmp * (slotPtr->entries[i].scale >> 1)) >> 15;
+            if (tmp < -0x2000) {
+                tmp = -0x2000;
+            } else if (tmp > 0x1FFF) {
+                tmp = 0x1FFF;
+            }
+            switch (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK) {
+            case MCMD_INPUT_COMBINE_SET:
+                value = tmp + 0x2000;
+                sign = 1;
+                break;
+            case MCMD_INPUT_COMBINE_ADD:
+                if (sign != 0) {
+                    vtmp = (value + tmp);
+                    vtmp -= 0x2000;
+                    if (vtmp < -0x2000) {
+                        vtmp = -0x2000;
+                    } else if (vtmp > 0x1FFF) {
+                        vtmp = 0x1FFF;
+                    }
+                    value = vtmp + 0x2000;
+                } else {
+                    vtmp = value + tmp;
+                    if (vtmp > 0x3FFF) {
+                        vtmp = 0x3FFF;
+                    } else if (vtmp < 0) {
+                        vtmp = 0;
+                    }
+                    value = vtmp;
                 }
-                result = signedValue + 0x2000;
-            } else {
-                result += signedValue;
-                if ((int)result >= 0x4000) {
-                    result = 0x3fff;
-                } else if ((int)result < 0) {
-                    result = 0;
+                break;
+            case MCMD_INPUT_COMBINE_MUL:
+                if (sign != 0) {
+                    vtmp = (s32)((value - 0x2000) * tmp) >> 13;
+                } else {
+                    vtmp = (tmp * value) >> 13;
+                    sign = 1;
                 }
-            }
-            break;
-        case MCMD_INPUT_COMBINE_MUL:
-            if (signedMode != 0) {
-                signedValue = (int)((result - 0x2000) * signedValue) >> 0xd;
-            } else {
-                signedValue = (signedValue * result) >> 0xd;
-                signedMode = 1;
-            }
-            if (signedValue < -0x2000) {
-                signedValue = -0x2000;
-            } else if (signedValue > 0x1fff) {
-                signedValue = 0x1fff;
-            }
-            result = signedValue + 0x2000;
-            break;
-        case MCMD_INPUT_COMBINE_SUB:
-            if (signedMode != 0) {
-                signedValue = (result - 0x2000) - signedValue;
-                if (signedValue < -0x2000) {
-                    signedValue = -0x2000;
-                } else if (signedValue > 0x1fff) {
-                    signedValue = 0x1fff;
+                if (vtmp < -0x2000) {
+                    vtmp = -0x2000;
+                } else if (vtmp > 0x1FFF) {
+                    vtmp = 0x1FFF;
                 }
-                result = signedValue + 0x2000;
-            } else {
-                result -= signedValue;
-                if ((int)result >= 0x4000) {
-                    result = 0x3fff;
-                } else if ((int)result < 0) {
-                    result = 0;
+                value = vtmp + 0x2000;
+                break;
+            case MCMD_INPUT_COMBINE_SUB:
+                if (sign != 0) {
+                    vtmp = (value - 0x2000) - tmp;
+                    if (vtmp < -0x2000) {
+                        vtmp = -0x2000;
+                    } else if (vtmp > 0x1FFF) {
+                        vtmp = 0x1FFF;
+                    }
+                    value = vtmp + 0x2000;
+                } else {
+                    vtmp = value - tmp;
+                    if (vtmp > 0x3FFF) {
+                        vtmp = 0x3FFF;
+                    } else if (vtmp < 0) {
+                        vtmp = 0;
+                    }
+                    value = vtmp;
                 }
-            }
-            break;
-        }
-
-        goto advance_entry;
-
-unsigned_input:
-        if (ctrl == MCMD_CTRL_VOICE_AGE) {
-            if (statePtr == NULL) {
-                ctrl = 0;
-            } else {
-                ctrl = statePtr->volumeBase >> 9;
-            }
-        } else if (ctrl < MCMD_CTRL_VOICE_AGE) {
-            if (ctrl < MCMD_CTRL_MIDI_LAYER) {
-                ctrl = inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff;
-            } else if (statePtr == NULL) {
-                ctrl = 0;
-            } else {
-                ctrl = (u32)statePtr->keyBase << 7;
+                break;
             }
         } else {
-            if (ctrl >= 0xa5) {
-                ctrl = inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff;
-            } else if (statePtr == NULL) {
-                ctrl = 0;
-            } else {
-                u32 realLo = synthRealTimeLo;
-                u32 realHi = synthRealTimeHi;
-                u32 startLo = statePtr->startTimeLo;
-                u32 startHi = statePtr->startTimeHi;
-                ctrl = (u32)__shr2u(realHi - startHi - (realLo < startLo),
-                                    realLo - startLo, 8);
-                if ((int)ctrl > 0x3fff) {
-                    ctrl = 0x3fff;
+            switch (ctrl) {
+            case MCMD_CTRL_MIDI_LAYER:
+                if (statePtr != NULL) {
+                    tmp = statePtr->keyBase << 7;
+                } else {
+                    tmp = 0;
                 }
-                statePtr->unkA8[0] = 1;
+                break;
+            case MCMD_CTRL_VOICE_AGE:
+                tmp = statePtr != NULL ? statePtr->volumeBase >> 9 : 0;
+                break;
+            case 0xA4:
+                if (statePtr != NULL) {
+                    tmp = ((*(u64 *)&synthRealTimeHi) - (*(u64 *)&statePtr->startTimeHi)) >> 8;
+                    if (tmp > 0x3fff) {
+                        tmp = 0x3fff;
+                    }
+                    statePtr->unkA8[0] = 1;
+                } else {
+                    tmp = 0;
+                }
+                break;
+            default:
+                tmp = inpGetMidiCtrl(ctrl, midiSlot, midiKey) & 0xffff;
+                break;
+            }
+            tmp = (tmp * (slotPtr->entries[i].scale >> 1)) >> 15;
+            if (tmp > 0x3FFF) {
+                tmp = 0x3FFF;
+            }
+            switch (slotPtr->entries[i].combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK) {
+            case MCMD_INPUT_COMBINE_SET:
+                value = tmp;
+                sign = 0;
+                break;
+            case MCMD_INPUT_COMBINE_ADD:
+                if (sign != 0) {
+                    vtmp = (value + tmp);
+                    vtmp -= 0x2000;
+                    if (vtmp < -0x2000) {
+                        vtmp = -0x2000;
+                    } else if (vtmp > 0x1FFF) {
+                        vtmp = 0x1FFF;
+                    }
+                    value = vtmp + 0x2000;
+                } else {
+                    value += tmp;
+                    if (value > 0x3FFF) {
+                        value = 0x3FFF;
+                    }
+                }
+                break;
+            case MCMD_INPUT_COMBINE_MUL:
+                if (sign != 0) {
+                    vtmp = (s32)(tmp * (value - 0x2000)) >> 14;
+                    if (vtmp < -0x2000) {
+                        vtmp = -0x2000;
+                    } else if (vtmp > 0x1FFF) {
+                        vtmp = 0x1FFF;
+                    }
+                    value = vtmp + 0x2000;
+                } else {
+                    value = ((value * tmp) >> 0xE);
+                    if (value > 0x3FFF) {
+                        value = 0x3FFF;
+                    }
+                }
+                break;
+            case MCMD_INPUT_COMBINE_SUB:
+                if (sign != 0) {
+                    vtmp = (value - 0x2000) - tmp;
+                    if (vtmp < -0x2000) {
+                        vtmp = -0x2000;
+                    } else if (vtmp > 0x1FFF) {
+                        vtmp = 0x1FFF;
+                    }
+                    value = vtmp + 0x2000;
+                } else {
+                    vtmp = value - tmp;
+                    if (vtmp > 0x3FFF) {
+                        vtmp = 0x3FFF;
+                    } else if (vtmp < 0) {
+                        vtmp = 0;
+                    }
+                    value = vtmp;
+                }
+                break;
             }
         }
-
-        ctrl = (int)(ctrl * (entry->scale >> 1)) >> 0xf;
-        if ((int)ctrl > 0x3fff) {
-            ctrl = 0x3fff;
-        }
-        switch (entry->combineModeFlags & MCMD_INPUT_ENTRY_COMBINE_MASK) {
-        case MCMD_INPUT_COMBINE_SET:
-            signedMode = 0;
-            result = ctrl;
-            break;
-        case MCMD_INPUT_COMBINE_ADD:
-            if (signedMode == 0) {
-                result += ctrl;
-                if (result > 0x3fff) {
-                    result = 0x3fff;
-                }
-            } else {
-                int v = result + ctrl - 0x2000;
-                if (v < -0x2000) {
-                    v = -0x2000;
-                } else if (v > 0x1fff) {
-                    v = 0x1fff;
-                }
-                result = v + 0x2000;
-            }
-            break;
-        case MCMD_INPUT_COMBINE_MUL:
-            if (signedMode == 0) {
-                result = (result * ctrl) >> 0xe;
-                if (result > 0x3fff) {
-                    result = 0x3fff;
-                }
-            } else {
-                int v = (int)(ctrl * (result - 0x2000)) >> 0xe;
-                if (v < -0x2000) {
-                    v = -0x2000;
-                } else if (v > 0x1fff) {
-                    v = 0x1fff;
-                }
-                result = v + 0x2000;
-            }
-            break;
-        case MCMD_INPUT_COMBINE_SUB:
-            if (signedMode == 0) {
-                result -= ctrl;
-                if ((int)result >= 0x4000) {
-                    result = 0x3fff;
-                } else if ((int)result < 0) {
-                    result = 0;
-                }
-            } else {
-                int v = (result - 0x2000) - ctrl;
-                if (v < -0x2000) {
-                    v = -0x2000;
-                } else if (v > 0x1fff) {
-                    v = 0x1fff;
-                }
-                result = v + 0x2000;
-            }
-            break;
-        }
-
-        goto advance_entry;
-
-advance_entry:
-        entry++;
-        i++;
-
-check_entry_count:
-        if (i < slotPtr->entryCount) {
-            continue;
-        }
-        break;
     }
 
-    slotPtr->cachedValue = result;
-    return result;
+    slotPtr->cachedValue = value;
+    return value;
 }
 
 /*

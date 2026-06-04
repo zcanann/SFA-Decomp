@@ -19,6 +19,9 @@ extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);
 
+extern int *gObjectTriggerInterface;
+extern int *gGameUIInterface;
+extern f32 lbl_803E3854;
 extern undefined4* DAT_803dd6d4;
 extern f32 lbl_803E44E4;
 extern f32 lbl_803E3858;
@@ -57,84 +60,92 @@ void dll_14D_update(undefined2 *param_1)
   byte bVar1;
   undefined4 uVar2;
   uint uVar3;
-  byte *pbVar4;
+  int iVar2;
   int iVar5;
+  byte *pbVar4;
   float local_18 [3];
-  
-  local_18[0] = lbl_803E44E4;
+
+  local_18[0] = lbl_803E3854;
   iVar5 = *(int *)(param_1 + 0x26);
   pbVar4 = *(byte **)(param_1 + 0x5c);
-  if (*(int *)(pbVar4 + 4) == 0) {
-    uVar2 = ObjGroup_FindNearestObject((uint)*(byte *)(iVar5 + 0x1c),param_1,local_18);
+  if (*(void **)(pbVar4 + 4) == NULL) {
+    uVar2 = ObjGroup_FindNearestObject((uint)*(byte *)(iVar5 + 0x21),param_1,local_18);
     *(undefined4 *)(pbVar4 + 4) = uVar2;
-    if (*(int *)(pbVar4 + 4) == 0) {
+    if (*(void **)(pbVar4 + 4) == NULL) {
       return;
     }
-    if ((int)*(short *)(iVar5 + 0x1a) == 0xffffffff) {
-      pbVar4[2] = 0;
+    if (*(s16 *)(iVar5 + 0x1a) == -1) {
+      pbVar4[1] = 0;
     }
     else {
-      uVar3 = GameBit_Get((int)*(short *)(iVar5 + 0x1a));
-      pbVar4[2] = (byte)uVar3;
+      uVar3 = GameBit_Get(*(s16 *)(iVar5 + 0x1a));
+      pbVar4[1] = (byte)uVar3;
     }
-    *pbVar4 = 1;
-  }
-  *(undefined4 *)(param_1 + 6) = *(undefined4 *)(*(int *)(pbVar4 + 4) + 0xc);
-  *(undefined4 *)(param_1 + 8) = *(undefined4 *)(*(int *)(pbVar4 + 4) + 0x10);
-  *(undefined4 *)(param_1 + 10) = *(undefined4 *)(*(int *)(pbVar4 + 4) + 0x14);
-  *param_1 = **(undefined2 **)(pbVar4 + 4);
-  param_1[2] = *(undefined2 *)(*(int *)(pbVar4 + 4) + 4);
-  param_1[1] = *(undefined2 *)(*(int *)(pbVar4 + 4) + 2);
-  bVar1 = *pbVar4;
-  if (bVar1 == 2) {
-    uVar3 = GameBit_Get((int)*(short *)(iVar5 + 0x18));
-    if (uVar3 != 0) {
+    if ((pbVar4[1] != 0) && (*(s16 *)(iVar5 + 0x1e) != -1)) {
       *pbVar4 = 1;
     }
-  }
-  else if ((bVar1 < 2) && (bVar1 != 0)) {
-    if ((pbVar4[2] == 0) || ((*(byte *)(iVar5 + 0x1f) & 1) != 0)) {
-      if (((int)*(short *)(iVar5 + 0x18) == 0xffffffff) ||
-         (uVar3 = GameBit_Get((int)*(short *)(iVar5 + 0x18)), uVar3 != 0)) {
-        if ((*(byte *)((int)param_1 + 0xaf) & 1) == 0) {
-          *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) = *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) | 0x20;
-          *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xf7;
-        }
-        else {
-          if ((*(byte *)(iVar5 + 0x1f) & 2) != 0) {
-            GameBit_Set((int)*(short *)(iVar5 + 0x18),0);
-          }
-          if ((int)*(short *)(iVar5 + 0x1a) != 0xffffffff) {
-            GameBit_Set((int)*(short *)(iVar5 + 0x1a),1);
-          }
-          if ((*(byte *)(iVar5 + 0x1f) & 4) == 0) {
-            pbVar4[1] = pbVar4[1] + 1;
-            if (*(byte *)(iVar5 + 0x1e) < pbVar4[1]) {
-              pbVar4[1] = *(byte *)(iVar5 + 0x1d);
-            }
-          }
-          else {
-            uVar3 = randomGetRange((uint)*(byte *)(iVar5 + 0x1d),(uint)*(byte *)(iVar5 + 0x1e));
-            pbVar4[1] = (byte)uVar3;
-          }
-          *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
-          pbVar4[2] = 1;
-          (**(code **)(*DAT_803dd6d4 + 0x48))(pbVar4[1],param_1,0xffffffff);
-        }
-      }
-      else {
-        *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) = *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) & 0xdf;
-        *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
-        *pbVar4 = 2;
-      }
-    }
     else {
-      *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) = *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) & 0xdf;
-      *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
+      *pbVar4 = 2;
+    }
+  }
+  *(f32 *)(param_1 + 6) = *(f32 *)(*(int *)(pbVar4 + 4) + 0xc);
+  *(f32 *)(param_1 + 8) = *(f32 *)(*(int *)(pbVar4 + 4) + 0x10);
+  *(f32 *)(param_1 + 10) = *(f32 *)(*(int *)(pbVar4 + 4) + 0x14);
+  *(s16 *)param_1 = **(s16 **)(pbVar4 + 4);
+  *(s16 *)(param_1 + 2) = *(s16 *)(*(int *)(pbVar4 + 4) + 4);
+  *(s16 *)(param_1 + 1) = *(s16 *)(*(int *)(pbVar4 + 4) + 2);
+  bVar1 = *pbVar4;
+  switch (bVar1) {
+  case 1:
+    *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) &= ~0x20;
+    *(byte *)((int)param_1 + 0xaf) |= 8;
+    (*(void (*)(void *, int))(*(int *)(*gObjectTriggerInterface + 0x54)))
+              (param_1, *(s16 *)(iVar5 + 0x1e));
+    (*(void (*)(int, void *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))
+              (*(byte *)(iVar5 + 0x22), param_1, *(byte *)(iVar5 + 0x20));
+    *pbVar4 = 4;
+    break;
+  case 2:
+    if ((pbVar4[1] != 0) && ((*(byte *)(iVar5 + 0x23) & 1) == 0)) {
+      *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) &= ~0x20;
+      *(byte *)((int)param_1 + 0xaf) |= 8;
+      *pbVar4 = 4;
+    }
+    else if ((*(s16 *)(iVar5 + 0x18) != -1) &&
+             (uVar3 = GameBit_Get(*(s16 *)(iVar5 + 0x18)), uVar3 == 0)) {
+      *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) &= ~0x20;
+      *(byte *)((int)param_1 + 0xaf) |= 8;
       *pbVar4 = 3;
     }
+    else if (((*(byte *)((int)param_1 + 0xaf) & 1) != 0) &&
+             ((*(s16 *)(iVar5 + 0x1c) == -1) ||
+              (iVar2 = (*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))
+                            (*(s16 *)(iVar5 + 0x1c)), iVar2 != 0))) {
+      if ((*(byte *)(iVar5 + 0x23) & 2) != 0) {
+        GameBit_Set(*(s16 *)(iVar5 + 0x18),0);
+      }
+      if (*(s16 *)(iVar5 + 0x1a) != -1) {
+        GameBit_Set(*(s16 *)(iVar5 + 0x1a),1);
+      }
+      *(byte *)((int)param_1 + 0xaf) |= 8;
+      pbVar4[1] = 1;
+      (*(void (*)(int, void *, int))(*(int *)(*gObjectTriggerInterface + 0x48)))
+                (*(byte *)(iVar5 + 0x22), param_1, 0xffffffff);
+    }
+    else {
+      *(byte *)(*(int *)(pbVar4 + 4) + 0xaf) |= 0x20;
+      *(byte *)((int)param_1 + 0xaf) &= ~8;
+    }
+    break;
+  case 3:
+    uVar3 = GameBit_Get(*(s16 *)(iVar5 + 0x18));
+    if (uVar3 != 0) {
+      *pbVar4 = 2;
+    }
+    break;
+  case 5:
+    break;
   }
-  return;
 }
 
 /*
@@ -162,29 +173,29 @@ void fn_8017F334(int obj, void *setup, void *stateArg)
 {
   MagicPlantBridgeState *state;
   int player;
-  int childObj;
+  u8 *childObj;
   f32 launchSpeed;
-  f32 launchAngle;
   s16 angle;
 
   state = (MagicPlantBridgeState *)stateArg;
   player = (int)Obj_GetPlayerObject();
   Sfx_StopObjectChannel(obj, 0x40);
 
-  childObj = state->childObj;
-  if ((childObj != 0) && (*(int *)(childObj + 0xc4) != 0) &&
+  childObj = *(u8 **)&state->childObj;
+  if ((childObj != NULL) && (*(void **)(childObj + 0xc4) != NULL) &&
       (*(f32 *)(obj + 0x98) >= lbl_803E3870)) {
     state->childObj = 0;
-    ObjLink_DetachChild(obj, childObj);
+    ObjLink_DetachChild(obj, (int)childObj);
 
-    launchSpeed = (f32)randomGetRange(0x27, 0x2c) / lbl_803E3874;
+    launchSpeed = (f32)(int)randomGetRange(0x27, 0x2c) / lbl_803E3874;
     angle = getAngle(*(f32 *)(obj + 0x0c) - *(f32 *)(player + 0x0c),
                      *(f32 *)(obj + 0x14) - *(f32 *)(player + 0x14));
     randomGetRange(((u16)angle) - 0x1000, ((u16)angle) + 0x1000);
 
-    launchAngle = (lbl_803E3878 * (f32)*(s16 *)obj) / lbl_803E387C;
-    *(f32 *)(childObj + 0x24) = launchSpeed * fn_80293E80(launchAngle);
-    *(f32 *)(childObj + 0x2c) = launchSpeed * sin(launchAngle);
+    *(f32 *)(childObj + 0x24) =
+        launchSpeed * fn_80293E80((lbl_803E3878 * (f32)*(s16 *)obj) / lbl_803E387C);
+    *(f32 *)(childObj + 0x2c) =
+        launchSpeed * sin((lbl_803E3878 * (f32)*(s16 *)obj) / lbl_803E387C);
     Sfx_PlayFromObject(obj, 0x5e);
   }
 

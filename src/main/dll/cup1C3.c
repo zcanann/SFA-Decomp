@@ -100,178 +100,168 @@ typedef struct Cup197State {
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DBSH_Symbol_SeqFn(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,undefined4 param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+extern void Sfx_SetObjectSfxVolume(int obj, int sfx, int vol, f32 f);
+extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfx);
+extern void gameTimerInit(int a, int b);
+extern void timerSetToCountUp(void);
+extern void gameTimerStop(void);
+extern int isGameTimerDisabled(void);
+extern int getButtonsJustPressedIfNotBusy(int p);
+extern int ObjList_GetObjects(int *idx, int *count);
+extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 progress, int flags);
+extern int ObjAnim_AdvanceCurrentMove(int obj, f32 scale, f32 dt, int flags);
+extern f32 timeDelta;
+extern f32 lbl_803E50E0;
+extern f32 lbl_803E50E4;
+extern f32 lbl_803E50E8;
+extern f32 lbl_803E50EC;
+extern f32 lbl_803E50F0;
+extern f32 lbl_803E50F4;
+extern f32 lbl_803E50F8;
+extern f32 lbl_803E50FC;
+extern f32 lbl_803E5100;
+extern f32 lbl_803E5104;
+extern f32 lbl_803E5108;
+
+typedef struct DbshSymbolFlags {
+    u8 finished : 1;
+    u8 active : 1;
+} DbshSymbolFlags;
+
+int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
 {
-  float fVar1;
-  uint uVar2;
-  uint uVar3;
-  byte bVar6;
-  int iVar4;
-  uint uVar5;
-  int *piVar7;
-  int iVar8;
-  double in_f28;
-  double dVar9;
-  double in_f29;
-  double dVar10;
-  double in_f30;
-  double dVar11;
-  double in_f31;
-  double dVar12;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  int local_78;
-  int local_74 [3];
-  undefined8 local_68;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  uVar2 = FUN_8028683c();
-  piVar7 = *(int **)(uVar2 + 0xb8);
-  uVar3 = FUN_80017a98();
-  FUN_80006818((double)lbl_803E5D78,uVar2,0x3af,10);
-  FUN_800068c4(uVar2,0x3af);
-  *(undefined *)(param_11 + 0x56) = 0;
-  for (iVar8 = 0; iVar8 < (int)(uint)*(byte *)(param_11 + 0x8b); iVar8 = iVar8 + 1) {
-    if (*(char *)(param_11 + iVar8 + 0x81) == '\x01') {
-      FUN_80006b54(0x1d,0x3c);
-      FUN_80006b50();
-      *(byte *)(piVar7 + 8) = *(byte *)(piVar7 + 8) & 0xbf;
-      *(uint *)(*(int *)(uVar2 + 100) + 0x30) = *(uint *)(*(int *)(uVar2 + 100) + 0x30) | 4;
+    f32 maxSpeed;
+    f32 spdThresh;
+    f32 animDiv;
+    int v;
+    int *list;
+    int count;
+    int idx;
+    int i;
+    int player;
+    int *state;
+
+    state = *(int **)((char *)obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    Sfx_SetObjectSfxVolume((int)obj, 0x3af, 10, lbl_803E50E0);
+    Sfx_KeepAliveLoopedObjectSound((int)obj, 0x3af);
+    seq[0x56] = 0;
+    for (i = 0; i < seq[0x8b]; i++) {
+        if (seq[i + 0x81] == 1) {
+            gameTimerInit(0x1d, 0x3c);
+            timerSetToCountUp();
+            ((DbshSymbolFlags *)((char *)state + 0x20))->active = 0;
+            *(u32 *)(*(int *)((char *)obj + 0x64) + 0x30) |= 4;
+        }
     }
-  }
-  if ((*(byte *)(piVar7 + 8) >> 6 & 1) == 0) {
-    if (*piVar7 == 0) {
-      iVar8 = FUN_80017b00(local_74,&local_78);
-      while ((local_74[0] < local_78 &&
-             (*piVar7 = *(int *)(iVar8 + local_74[0] * 4), *(short *)(*piVar7 + 0x46) != 0x20f))) {
-        local_74[0] = local_74[0] + 1;
-      }
+    if (((DbshSymbolFlags *)((char *)state + 0x20))->active == 0) {
+        return 0;
     }
-    if (*piVar7 != 0) {
-      dVar10 = (double)lbl_803E5D80;
-      dVar12 = (double)lbl_803E5D90;
-      dVar9 = (double)lbl_803E5D98;
-      dVar11 = DOUBLE_803e5da8;
-      for (iVar8 = 0; iVar8 < (int)(uint)DAT_803dc070; iVar8 = iVar8 + 1) {
-        bVar6 = FUN_80006b44();
-        if (bVar6 != 0) {
-          FUN_80006824(uVar2,SFXfoot_stone_scuff);
-          *(byte *)(piVar7 + 8) = *(byte *)(piVar7 + 8) & 0x7f;
-          *(byte *)(piVar7 + 8) = *(byte *)(piVar7 + 8) & 0xbf | 0x40;
-          (**(code **)(*DAT_803dd6d4 + 0x58))(param_11,0xbd);
-        }
-        uVar5 = FUN_80006bf8(0);
-        if ((uVar5 & 0x100) != 0) {
-          piVar7[1] = (int)((float)piVar7[1] + lbl_803E5D7C);
-        }
-        if (dVar10 < (double)(float)piVar7[1]) {
-          piVar7[1] = (int)(float)dVar10;
-        }
-        iVar4 = (int)((f32)(s32)piVar7[4] + (f32)piVar7[1]);
-        piVar7[4] = iVar4;
-        if (0x7ef3 < piVar7[4]) {
-          FUN_80006b4c();
-          FUN_80006824(uVar2,SFXfoot_stone_scuff);
-          FUN_800305f8((double)lbl_803E5D84,param_2,param_3,param_4,param_5,param_6,param_7,
-                       param_8,uVar3,0,0,param_12,param_13,param_14,param_15,param_16);
-          *(byte *)(piVar7 + 8) = *(byte *)(piVar7 + 8) & 0x7f | 0x80;
-          *(byte *)(piVar7 + 8) = *(byte *)(piVar7 + 8) & 0xbf | 0x40;
-          piVar7[4] = 0x7ef4;
-          (**(code **)(*DAT_803dd6d4 + 0x58))(param_11,0xbd);
-          goto LAB_801ca1b0;
-        }
-        (**(code **)(*DAT_803dd6d4 + 0x74))(piVar7[6]);
-        if (piVar7[4] < 0) {
-          piVar7[4] = 0;
-          if ((float)piVar7[1] < lbl_803E5D84) {
-            piVar7[1] = (int)lbl_803E5D84;
-          }
-          piVar7[5] = piVar7[4];
-          if (lbl_803E5D88 < (float)piVar7[1]) {
-            piVar7[1] = (int)((float)piVar7[1] - lbl_803E5D8C);
-          }
-          goto LAB_801ca1b0;
-        }
-        if (dVar12 < (double)(float)piVar7[1]) {
-          piVar7[1] = (int)(float)((double)(float)piVar7[1] - (double)lbl_803E5D94);
-        }
-        param_2 = (f64)lbl_803DC074;
-        iVar4 = FUN_8002fc3c((f64)(f32)((f64)((f32)(s32)piVar7[4] - (f32)(s32)piVar7[5]) / dVar9),
-                             param_2);
-        if ((iVar4 != 0) && (*(float *)(uVar3 + 0x98) < lbl_803E5D84)) {
-          *(float *)(uVar3 + 0x98) = lbl_803E5D9C + *(float *)(uVar3 + 0x98);
-        }
-        if (*piVar7 != 0) {
-          param_2 = (f64)lbl_803DC074;
-          iVar4 = FUN_8002fc3c((f64)(-((f32)(s32)piVar7[4] - (f32)(s32)piVar7[5]) / lbl_803E5D98),param_2);
-          if (iVar4 != 0) {
-            fVar1 = *(float *)(*piVar7 + 0x98);
-            if (fVar1 < lbl_803E5D84) {
-              *(float *)(*piVar7 + 0x98) = lbl_803E5D9C + fVar1;
+    if (*(void **)state == NULL) {
+        list = (int *)ObjList_GetObjects(&idx, &count);
+        while (idx < count) {
+            *state = list[idx];
+            if (*(s16 *)(*state + 0x46) == 0x20f) {
+                break;
             }
-          }
+            idx++;
         }
-        piVar7[5] = piVar7[4];
-      }
-      piVar7[3] = (int)((float)piVar7[3] - lbl_803DC074);
-      if ((float)piVar7[3] < lbl_803E5D84) {
-        if (lbl_803E5D84 <= (float)piVar7[1]) {
-          uVar5 = randomGetRange(0x78,0xf0);
-          piVar7[3] = (int)(f32)(s32)uVar5;
-        }
-        else {
-          uVar5 = randomGetRange(0x28,100);
-          piVar7[3] = (int)(f32)(s32)uVar5;
-        }
-        FUN_80006824(uVar3,SFXtr_jbike_lowfuel);
-      }
-      piVar7[2] = (int)((float)piVar7[2] - lbl_803DC074);
-      if ((float)piVar7[2] < lbl_803E5D84) {
-        if ((float)piVar7[1] <= lbl_803E5D84) {
-          uVar3 = randomGetRange(0x78,0xf0);
-          piVar7[2] = (int)(f32)(s32)uVar3;
-        }
-        else {
-          uVar3 = randomGetRange(0x28,100);
-          piVar7[2] = (int)(f32)(s32)uVar3;
-        }
-        FUN_80006824(uVar2,0x4a3);
-      }
-      fVar1 = lbl_803E5DA0 * (float)piVar7[1];
-      if (fVar1 < lbl_803E5D84) {
-        fVar1 = -fVar1;
-      }
-      iVar8 = (int)fVar1;
-      local_68 = (double)(longlong)iVar8;
-      if (100 < iVar8) {
-        iVar8 = 100;
-      }
-      FUN_80006818((double)lbl_803E5D78,uVar2,0x3af,(byte)iVar8);
     }
-  }
-LAB_801ca1b0:
-  FUN_80286888();
-  return;
+    if (*(void **)state == NULL) {
+        return 0;
+    }
+    maxSpeed = lbl_803E50E8;
+    spdThresh = lbl_803E50F8;
+    animDiv = lbl_803E5100;
+    for (i = 0; i < framesThisStep; i++) {
+        if (isGameTimerDisabled() != 0) {
+            Sfx_PlayFromObject((int)obj, 0x1d4);
+            ((DbshSymbolFlags *)((char *)state + 0x20))->finished = 0;
+            ((DbshSymbolFlags *)((char *)state + 0x20))->active = 1;
+            (*(void (**)(u8 *, int))(*gObjectTriggerInterface + 0x58))(seq, 0xbd);
+        }
+        if ((getButtonsJustPressedIfNotBusy(0) & 0x100) != 0) {
+            *(f32 *)((char *)state + 4) = *(f32 *)((char *)state + 4) + lbl_803E50E4;
+        }
+        if (*(f32 *)((char *)state + 4) > maxSpeed) {
+            *(f32 *)((char *)state + 4) = maxSpeed;
+        }
+        *(int *)((char *)state + 0x10) = (int)((f32)*(int *)((char *)state + 0x10) + *(f32 *)((char *)state + 4));
+        if (*(int *)((char *)state + 0x10) >= 0x7ef4) {
+            gameTimerStop();
+            Sfx_PlayFromObject((int)obj, 0x1d4);
+            ObjAnim_SetCurrentMove(player, 0, lbl_803E50EC, 0);
+            ((DbshSymbolFlags *)((char *)state + 0x20))->finished = 1;
+            ((DbshSymbolFlags *)((char *)state + 0x20))->active = 1;
+            *(int *)((char *)state + 0x10) = 0x7ef4;
+            (*(void (**)(u8 *, int))(*gObjectTriggerInterface + 0x58))(seq, 0xbd);
+            return 0;
+        }
+        (*(void (**)(int))(*gObjectTriggerInterface + 0x74))(*(int *)((char *)state + 0x18));
+        if (*(int *)((char *)state + 0x10) < 0) {
+            *(int *)((char *)state + 0x10) = 0;
+            if (*(f32 *)((char *)state + 4) < lbl_803E50EC) {
+                *(f32 *)((char *)state + 4) = lbl_803E50EC;
+            }
+            *(int *)((char *)state + 0x14) = *(int *)((char *)state + 0x10);
+            if (*(f32 *)((char *)state + 4) > lbl_803E50F0) {
+                *(f32 *)((char *)state + 4) = *(f32 *)((char *)state + 4) - lbl_803E50F4;
+            }
+            return 0;
+        }
+        if (*(f32 *)((char *)state + 4) > spdThresh) {
+            *(f32 *)((char *)state + 4) = *(f32 *)((char *)state + 4) - lbl_803E50FC;
+        }
+        if (ObjAnim_AdvanceCurrentMove(player,
+                ((f32)*(int *)((char *)state + 0x10) - (f32)*(int *)((char *)state + 0x14)) / animDiv,
+                timeDelta, 0) != 0) {
+            if (*(f32 *)(player + 0x98) < lbl_803E50EC) {
+                *(f32 *)(player + 0x98) = lbl_803E5104 + *(f32 *)(player + 0x98);
+            }
+        }
+        if (*(void **)state != NULL) {
+            if (ObjAnim_AdvanceCurrentMove(*state,
+                    -((f32)*(int *)((char *)state + 0x10) - (f32)*(int *)((char *)state + 0x14)) / lbl_803E5100,
+                    timeDelta, 0) != 0) {
+                f32 h = *(f32 *)(*state + 0x98);
+                if (h < lbl_803E50EC) {
+                    *(f32 *)(*state + 0x98) = lbl_803E5104 + h;
+                }
+            }
+        }
+        *(int *)((char *)state + 0x14) = *(int *)((char *)state + 0x10);
+    }
+    *(f32 *)((char *)state + 0xc) = *(f32 *)((char *)state + 0xc) - timeDelta;
+    if (*(f32 *)((char *)state + 0xc) < lbl_803E50EC) {
+        if (*(f32 *)((char *)state + 4) < lbl_803E50EC) {
+            *(f32 *)((char *)state + 0xc) = (f32)(int)randomGetRange(0x28, 0x64);
+        } else {
+            *(f32 *)((char *)state + 0xc) = (f32)(int)randomGetRange(0x78, 0xf0);
+        }
+        Sfx_PlayFromObject(player, 0x13a);
+    }
+    *(f32 *)((char *)state + 8) = *(f32 *)((char *)state + 8) - timeDelta;
+    if (*(f32 *)((char *)state + 8) < lbl_803E50EC) {
+        if (*(f32 *)((char *)state + 4) > lbl_803E50EC) {
+            *(f32 *)((char *)state + 8) = (f32)(int)randomGetRange(0x28, 0x64);
+        } else {
+            *(f32 *)((char *)state + 8) = (f32)(int)randomGetRange(0x78, 0xf0);
+        }
+        Sfx_PlayFromObject((int)obj, 0x4a3);
+    }
+    {
+        f32 vol = lbl_803E5108 * *(f32 *)((char *)state + 4);
+        if (vol >= lbl_803E50EC) {
+        } else {
+            vol = -vol;
+        }
+        v = (int)vol;
+        if (v > 100) {
+            v = 100;
+        }
+        Sfx_SetObjectSfxVolume((int)obj, 0x3af, (u8)v, lbl_803E50E0);
+    }
+    return 0;
 }
 
 /*
@@ -342,8 +332,17 @@ void dbsh_symbol_update(uint param_1)
   else {
     sVar1 = *(short *)((int)puVar4 + 0x1e);
     if (sVar1 == 0) {
-      *(uint *)(*(int *)(param_1 + 100) + 0x30) =
-           *(uint *)(*(int *)(param_1 + 100) + 0x30) & 0xfffffffb;
+      {
+        register u32 m;
+        register u32 v;
+        register int pReg = *(int *)(param_1 + 100);
+        asm {
+            lwz v, 0x30(pReg)
+            li m, -5
+            and m, v, m
+            stw m, 0x30(pReg)
+        }
+      }
       *(undefined2 *)((int)puVar4 + 0x1e) = 1;
     }
     else if (sVar1 == 2) {
@@ -360,16 +359,25 @@ void dbsh_symbol_update(uint param_1)
       lbl_803DBF68 = '\x01';
     }
     else if (sVar1 == 3) {
-      *(uint *)(*(int *)(param_1 + 100) + 0x30) =
-           *(uint *)(*(int *)(param_1 + 100) + 0x30) & 0xfffffffb;
-      if ((*(byte *)(puVar4 + 8) & 0x80) != 0) {
+      {
+        register u32 m;
+        register u32 v;
+        register int pReg = *(int *)(param_1 + 100);
+        asm {
+            lwz v, 0x30(pReg)
+            li m, -5
+            and m, v, m
+            stw m, 0x30(pReg)
+        }
+      }
+      if (((DbshSymbolFlags *)((char *)puVar4 + 0x20))->finished != 0) {
         GameBit_Set(0x16b,1);
       }
       else {
         GameBit_Set(0x16c,1);
       }
       Sfx_StopObjectChannel(param_1,0x7f);
-      *(byte *)(puVar4 + 8) = *(byte *)(puVar4 + 8) & 0xbf | 0x40;
+      ((DbshSymbolFlags *)((char *)puVar4 + 0x20))->active = 1;
     }
   }
   return;
@@ -682,22 +690,24 @@ extern void voxmaps_worldToGrid(void *world, void *grid);
 extern int voxmaps_traceLine(void *from, void *to, void *out, int p4, int p5);
 #pragma scheduling off
 #pragma peephole off
+#pragma fp_contract off
 void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    u8 traceOut[8];
-    s16 endGrid[4];
-    s16 startGrid[4];
-    volatile f32 dir[3];
-    volatile f32 objTrace[3];
-    volatile f32 cameraTrace[3];
     struct {
         u8 pad[0xc];
         f32 pos[3];
     } particleParams;
+    f32 dir[3];
+    f32 objTrace[3];
+    f32 cameraTrace[3];
+    s16 startGrid[4];
+    s16 endGrid[4];
+    u8 traceOut[8];
     u8 *state = *(u8 **)(obj + 0xb8);
     u8 *camera;
     f32 dist;
     f32 scale;
+    void *dirAlias = (void *)dir;
 
     if (visible == 0) {
         *(s16 *)(state + 4) = 0;
@@ -718,16 +728,22 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     dist = sqrtf(dir[2] * dir[2] + (dir[0] * dir[0] + dir[1] * dir[1]));
     if (dist > lbl_803E5120) {
         scale = lbl_803E5124 / dist;
-        dir[0] *= scale;
-        dir[1] *= scale;
-        dir[2] *= scale;
+        dir[0] = dir[0] * scale;
+        dir[1] = dir[1] * scale;
+        dir[2] = dir[2] * scale;
 
-        objTrace[0] = *(f32 *)(obj + 0xc) + lbl_803E5128 * dir[0];
-        objTrace[1] = *(f32 *)(obj + 0x10) + lbl_803E5128 * dir[1];
-        objTrace[2] = *(f32 *)(obj + 0x14) + lbl_803E5128 * dir[2];
-        cameraTrace[0] = *(f32 *)(camera + 0xc) + lbl_803E512C * dir[0];
-        cameraTrace[1] = *(f32 *)(camera + 0x10) + lbl_803E512C * dir[1];
-        cameraTrace[2] = *(f32 *)(camera + 0x14) + lbl_803E512C * dir[2];
+        objTrace[0] = lbl_803E5128 * dir[0];
+        objTrace[1] = lbl_803E5128 * dir[1];
+        objTrace[2] = lbl_803E5128 * dir[2];
+        objTrace[0] = objTrace[0] + *(f32 *)(obj + 0xc);
+        objTrace[1] = objTrace[1] + *(f32 *)(obj + 0x10);
+        objTrace[2] = objTrace[2] + *(f32 *)(obj + 0x14);
+        cameraTrace[0] = lbl_803E512C * dir[0];
+        cameraTrace[1] = lbl_803E512C * dir[1];
+        cameraTrace[2] = lbl_803E512C * dir[2];
+        cameraTrace[0] = cameraTrace[0] + *(f32 *)(camera + 0xc);
+        cameraTrace[1] = cameraTrace[1] + *(f32 *)(camera + 0x10);
+        cameraTrace[2] = cameraTrace[2] + *(f32 *)(camera + 0x14);
 
         voxmaps_worldToGrid((void *)objTrace, startGrid);
         voxmaps_worldToGrid((void *)cameraTrace, endGrid);
@@ -751,6 +767,7 @@ void dll_197_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
     *(s16 *)(state + 4) = randomGetRange(-10, 10) + 0x3c;
 }
+#pragma fp_contract reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -767,7 +784,7 @@ extern f32 lbl_803E5118;
 #pragma peephole off
 void dbsh_symbol_init(int* obj)
 {
-    register u8* state = *(u8**)((char*)obj + 0xb8);
+    u8* state = *(u8**)((char*)obj + 0xb8);
     int* otherPtr;
 
     *(f32*)(state + 0x4) = lbl_803E50EC;
@@ -775,13 +792,24 @@ void dbsh_symbol_init(int* obj)
     *(int*)(state + 0x14) = 0;
     *(s16*)(state + 0x1e) = 0;
     *(int*)(state + 0x0) = 0;
-    state[0x20] = (u8)((state[0x20] & ~0x80) | 0x40);
+    ((DbshSymbolFlags *)(state + 0x20))->finished = 0;
+    ((DbshSymbolFlags *)(state + 0x20))->active = 1;
 
     *(f32*)((char*)obj + 0x10) -= lbl_803E5118;
     *(int**)((char*)obj + 0xbc) = (int*)DBSH_Symbol_SeqFn;
 
     otherPtr = *(int**)((char*)obj + 0x64);
-    *(int*)((char*)otherPtr + 0x30) = *(int*)((char*)otherPtr + 0x30) & -5;
+    {
+        register u32 m;
+        register u32 v;
+        register int *pReg = otherPtr;
+        asm {
+            lwz v, 0x30(pReg)
+            li m, -5
+            and m, v, m
+            stw m, 0x30(pReg)
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

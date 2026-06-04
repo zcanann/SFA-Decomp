@@ -34,7 +34,7 @@ typedef struct PollenExtra {
 void kaldachompspit_render(undefined4 param_1,undefined4 param_2,undefined4 param_3,
                            undefined4 param_4,undefined4 param_5,char visible);
 void kaldachompspit_hitDetect(void);
-void kaldachompspit_init(uint param_1);
+void kaldachompspit_init(int obj);
 void kaldachompspit_release(void);
 void kaldachompspit_initialise(void);
 void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,double param_4,
@@ -54,7 +54,7 @@ int pinponspike_getObjectTypeId(void);
 void pinponspike_free(int obj);
 void pinponspike_render(void);
 void pinponspike_hitDetect(void);
-void pinponspike_update(void);
+void pinponspike_update(int obj);
 void pinponspike_init(int obj);
 void pinponspike_release(void);
 void pinponspike_initialise(void);
@@ -68,7 +68,7 @@ int pollen_getObjectTypeId(void);
 void pollen_free(int obj);
 void pollen_render(int p1,int p2,int p3,int p4,int p5,s8 visible);
 void pollen_hitDetect(int obj);
-void pollen_update(void);
+void pollen_update(int obj);
 void pollen_init(int *obj);
 void pollen_release(void);
 void pollen_initialise(void);
@@ -76,8 +76,8 @@ int pollenfragment_getExtraSize(void);
 int pollenfragment_getObjectTypeId(void);
 void pollenfragment_free(int obj);
 void pollenfragment_render(int *obj, int p2, int p3, int p4, int p5);
-void pollenfragment_hitDetect(void);
-void pollenfragment_update(void);
+void pollenfragment_hitDetect(int obj);
+void pollenfragment_update(int obj);
 void pollenfragment_init(int obj,int config);
 void pollenfragment_release(void);
 void pollenfragment_initialise(void);

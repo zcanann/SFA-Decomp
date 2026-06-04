@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void lightsource_init(undefined2 *obj,int mapData);
+void lightsource_init(s16 *obj,int mapData);
 
 #endif /* MAIN_DLL_LGT_LGTPOINTLIGHT_H_ */

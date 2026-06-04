@@ -366,7 +366,9 @@ typedef struct ExpgfxSlot {
   s16 lifetimeFrameLimit;
   u8 pad18[0x26 - 0x18];
   s16 sequenceId;
-  u8 pad28[0x40 - 0x28];
+  u8 pad28[0x36 - 0x28];
+  s16 soundHandle;
+  u8 pad38[0x40 - 0x38];
   s16 sourceVecX;
   s16 sourceVecY;
   s16 sourceVecZ;
@@ -406,6 +408,7 @@ STATIC_ASSERT(offsetof(ExpgfxSlot, lifetimeFrame) == 0x06);
 STATIC_ASSERT(offsetof(ExpgfxSlot, initialStateByte) == 0x0F);
 STATIC_ASSERT(offsetof(ExpgfxSlot, lifetimeFrameLimit) == 0x16);
 STATIC_ASSERT(offsetof(ExpgfxSlot, sequenceId) == 0x26);
+STATIC_ASSERT(offsetof(ExpgfxSlot, soundHandle) == 0x36);
 STATIC_ASSERT(offsetof(ExpgfxSlot, sourceVecX) == 0x40);
 STATIC_ASSERT(offsetof(ExpgfxSlot, sourcePosX) == 0x48);
 STATIC_ASSERT(offsetof(ExpgfxSlot, posX) == 0x58);

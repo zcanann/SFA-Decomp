@@ -5,7 +5,7 @@
 
 void fn_80154870(int obj, int *state);
 void fn_80154C24(int obj, int state);
-void fn_80154D0C(int obj, int state, undefined2 *outAngle, float *outDistance);
-uint fn_80154FB4(double maxDistance, short *obj, int state, uint turnTime);
+void fn_80154D0C(int obj, int state, u16 *outAngle, float *outDistance);
+uint fn_80154FB4(f32 maxDistance, short *obj, int state, uint turnTime);
 
 #endif /* MAIN_DLL_FIREFLYLANTERN_H_ */

@@ -1570,7 +1570,7 @@ int fn_8029A76C(int obj, int state, f32 fv)
         *(f32 *)((char *)obj + 0x28) = z;
         *(f32 *)((char *)obj + 0x2c) = z;
     }
-    r = fn_802AC7DC(obj, state, inner);
+    r = ((int (*)(int, int, int))fn_802AC7DC)(obj, state, inner);
     if (r != 0) {
         return r;
     }
@@ -1679,6 +1679,2496 @@ int fn_8029A76C(int obj, int state, f32 fv)
         }
     }
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E7ED4;
+extern f32 lbl_803E8064;
+extern f32 lbl_803E8068;
+extern f32 lbl_803E806C;
+extern f32 lbl_803E7F14;
+extern f32 lbl_803E7F2C;
+extern f32 lbl_803E7EA4;
+extern f32 lbl_803E7EE0;
+extern f32 lbl_803E7F6C;
+extern f32 lbl_803E8070;
+extern f32 lbl_803E7F98;
+extern f32 lbl_803E7EFC;
+extern f32 lbl_803E8074;
+extern f32 lbl_803E7FA4;
+extern f32 lbl_803E7EAC;
+extern f32 lbl_803E8030;
+extern f32 lbl_803E7F00;
+extern f32 lbl_803E7EA8;
+extern f32 lbl_803E7F94;
+extern f32 lbl_803E7F90;
+extern f32 lbl_803E7F20;
+extern f32 lbl_803E7E8C;
+extern f32 lbl_803E8078;
+extern f32 lbl_803E807C;
+extern f32 lbl_803E8080;
+extern f32 lbl_803E7F74;
+extern f32 lbl_803E7E98;
+extern f32 lbl_803E7EE8;
+extern f32 lbl_803E7ECC;
+extern f32 lbl_803E7FAC;
+extern f32 lbl_803E7F78;
+extern int fn_802AD2F4(int obj, int inner, int state);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802A5384(int obj, int state)
+{
+    int inner;
+    int dir;
+    f32 t;
+    f32 spd;
+    f32 ya;
+
+    inner = *(int *)((char *)obj + 0xb8);
+    ((ByteFlags *)((char *)inner + 0x3f1))->b02 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f1))->b04 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f1))->b08 = 0;
+    ((ByteFlags *)((char *)inner + 0x3f2))->b10 = 0;
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        {
+            register u32 m;
+            register u32 v;
+            register int base = inner;
+            asm {
+                lwz v, 0x360(base)
+                lis m, 0x200
+                or m, v, m
+                stw m, 0x360(base)
+            }
+        }
+        ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+        ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+        ((ByteFlags *)((char *)inner + 0x3f3))->b40 = 0;
+        *(u8 *)((char *)inner + 0x8cc) = 0;
+        *(s16 *)((char *)inner + 0x81e) = 0;
+        ((ByteFlags *)((char *)inner + 0x3f2))->b10 = 1;
+    }
+    {
+        int r = ((int (*)(int, int, int))fn_802AC7DC)(obj, state, inner);
+        if (r != 0) {
+            return r;
+        }
+    }
+    fn_802AD204(obj, inner);
+    {
+        u32 fl = *(u8 *)((char *)inner + 0x3f0);
+        if ((fl >> 5 & 1) != 0) {
+            *(u32 *)state |= 0x200000;
+            *(u32 *)((char *)inner + 0x360) |= 0x2000;
+            {
+            register u32 m;
+            register u32 v;
+            register int base = inner;
+            asm {
+                lwz v, 0x360(base)
+                lis m, 0x200
+                or m, v, m
+                stw m, 0x360(base)
+            }
+        }
+            *(s16 *)((char *)state + 0x278) = 2;
+            *(int *)((char *)inner + 0x898) = (int)fn_802A514C;
+            if (((u32)*(u8 *)((char *)inner + 0x3f1) >> 5 & 1) != 0) {
+                *(f32 *)((char *)inner + 0x404) = lbl_803E7F2C;
+            } else {
+                *(f32 *)((char *)inner + 0x404) = lbl_803E8064;
+            }
+        } else if (((u32)*(u8 *)((char *)inner + 0x3f1) >> 5 & 1) != 0) {
+            {
+            register u32 m;
+            register u32 v;
+            register int base = inner;
+            asm {
+                lwz v, 0x360(base)
+                lis m, 0x200
+                or m, v, m
+                stw m, 0x360(base)
+            }
+        }
+            *(u32 *)state |= 0x800000;
+            *(s16 *)((char *)state + 0x278) = 0;
+            *(f32 *)((char *)inner + 0x404) = lbl_803E7ED4;
+        } else if ((fl >> 3 & 1) != 0 || (fl >> 2 & 1) != 0) {
+            *(u32 *)state |= 0x200000;
+            {
+            register u32 m;
+            register u32 v;
+            register int base = inner;
+            asm {
+                lwz v, 0x360(base)
+                lis m, 0x200
+                or m, v, m
+                stw m, 0x360(base)
+            }
+        }
+            *(f32 *)((char *)inner + 0x404) = lbl_803E8068;
+        } else {
+            {
+            register u32 m;
+            register u32 v;
+            register int base = inner;
+            asm {
+                lwz v, 0x360(base)
+                lis m, 0x200
+                or m, v, m
+                stw m, 0x360(base)
+            }
+        }
+            *(u32 *)state |= 0x800000;
+            *(s16 *)((char *)state + 0x278) = 0;
+            *(f32 *)((char *)inner + 0x404) = lbl_803E806C;
+        }
+    }
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        if (((u32)*(u8 *)((char *)inner + 0x3f1) >> 5 & 1) == 0 &&
+            ((u32)*(u8 *)((char *)inner + 0x3f0) >> 2 & 1) == 0) {
+            *(s16 *)((char *)inner + 0x484) =
+                *(s16 *)((char *)inner + 0x484) + *(int *)((char *)inner + 0x48c) * 0xb6;
+        }
+        *(int *)((char *)inner + 0x488) = 0;
+        *(int *)((char *)inner + 0x48c) = 0;
+    }
+    {
+        f32 v = (*(f32 *)((char *)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C;
+        t = lbl_803E7EA4;
+        if (v < t) {
+        } else {
+            t = lbl_803E7EE0;
+            if (v > t) {
+            } else {
+                t = v;
+            }
+        }
+    }
+    *(f32 *)((char *)inner + 0x408) =
+        (*(f32 *)((char *)inner + 0x404) - lbl_803E7F6C) *
+        (t * *(f32 *)((char *)inner + 0x840));
+    {
+        u32 fl = *(u8 *)((char *)inner + 0x3f0);
+        if ((fl >> 6 & 1) != 0) {
+            {
+            register u32 m;
+            register u32 v;
+            register int base = inner;
+            asm {
+                lwz v, 0x360(base)
+                lis m, 0x100
+                or m, v, m
+                stw m, 0x360(base)
+            }
+        }
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E8070;
+            {
+                int cd = (int)(lbl_803E7F98 * *(f32 *)((char *)obj + 0x98) +
+                               (f32)*(int *)((char *)inner + 0x858));
+                *(s16 *)((char *)inner + 0x478) = cd;
+                *(int *)((char *)inner + 0x494) = (s16)cd;
+            }
+            if (*(s8 *)((char *)state + 0x346) != 0) {
+                ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+                {
+                    int a = *(s16 *)((char *)inner + 0x484);
+                    *(s16 *)((char *)inner + 0x478) = a;
+                    *(int *)((char *)inner + 0x494) = a;
+                }
+                *(u8 *)((char *)inner + 0x8cc) = 0xc;
+                ((ByteFlags *)((char *)inner + 0x3f1))->b04 = 1;
+                ((ByteFlags *)((char *)inner + 0x3f1))->b08 = 1;
+            }
+            *(f32 *)((char *)state + 0x294) =
+                *(f32 *)((char *)inner + 0x844) * timeDelta + *(f32 *)((char *)state + 0x294);
+            *(f32 *)((char *)inner + 0x408) = lbl_803E7EA4;
+            if (*(f32 *)((char *)obj + 0x98) > lbl_803E7EFC &&
+                *(f32 *)((char *)obj + 0x98) < lbl_803E8074) {
+                *(u16 *)((char *)inner + 0x8d8) |= 8;
+            }
+        } else if ((fl >> 4 & 1) != 0) {
+            fn_802AE650(obj, inner, state);
+        } else if ((fl >> 7 & 1) != 0) {
+            int r = fn_802AE480(obj, inner, state);
+            if (r != 0) {
+                *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+                return 2;
+            }
+        } else if ((fl >> 1 & 1) != 0) {
+            int leave;
+            *(u32 *)((char *)inner + 0x360) |= 0x800;
+            {
+                f32 z = lbl_803E7EA4;
+                *(f32 *)((char *)state + 0x294) = z;
+                *(f32 *)((char *)state + 0x294) = z;
+                *(f32 *)((char *)state + 0x284) = z;
+                *(f32 *)((char *)state + 0x280) = z;
+                *(f32 *)((char *)obj + 0x24) = z;
+                *(f32 *)((char *)obj + 0x28) = z;
+                *(f32 *)((char *)obj + 0x2c) = z;
+                {
+                    f32 w = lbl_803E7FA4;
+                    *(f32 *)((char *)inner + 0x428) = w;
+                    *(f32 *)((char *)inner + 0x42c) = z;
+                    *(f32 *)((char *)inner + 0x430) = w;
+                    *(f32 *)((char *)inner + 0x434) = z;
+                    *(f32 *)((char *)inner + 0x408) = z;
+                }
+            }
+            if ((getButtons_80014dd8(0) & 0x20) == 0) {
+                goto sit;
+            }
+            {
+                u32 fl2;
+                int stay;
+                if (((u32)*(u8 *)((char *)inner + 0x3f4) >> 6 & 1) != 0 &&
+                    ((fl2 = *(u8 *)((char *)inner + 0x3f0)) >> 5 & 1) == 0 &&
+                    (fl2 >> 3 & 1) == 0 && (fl2 >> 2 & 1) == 0 &&
+                    *(u8 *)((char *)inner + 0x8c8) != 0x44 &&
+                    *(void **)((char *)inner + 0x7f8) == NULL &&
+                    *(void **)((char *)inner + 0x2d0) == NULL &&
+                    ((u32)*(u8 *)((char *)inner + 0x3f6) >> 6 & 1) == 0 &&
+                    *(s16 *)((char *)inner + 0x274) != 0x26 &&
+                    (*(u16 *)((char *)obj + 0xb0) & 0x1000) == 0 &&
+                    *(f32 *)((char *)inner + 0x880) == lbl_803E7EA4) {
+                    stay = 1;
+                } else {
+                    stay = 0;
+                }
+                if (!stay) {
+                sit:
+                    if (lbl_803DE44C != 0 &&
+                        ((u32)*(u8 *)((char *)inner + 0x3f4) >> 6 & 1) != 0) {
+                        *(u8 *)((char *)inner + 0x8b4) = 1;
+                        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+                    }
+                    staffFn_80170380(lbl_803DE450, 2);
+                    ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 0;
+                    {
+                        register u32 m;
+                        register u32 v;
+                        register int base = inner;
+                        asm {
+                            lwz v, 0x360(base)
+                            lis m, 0x80
+                            or m, v, m
+                            stw m, 0x360(base)
+                        }
+                    }
+                    ObjHits_SyncObjectPositionIfDirty(obj);
+                    leave = 1;
+                } else {
+                    leave = 0;
+                }
+            }
+            if (leave) {
+                *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+                return 2;
+            }
+        } else if ((fl >> 5 & 1) != 0) {
+            fn_802ADE80(obj, inner, state);
+        } else if ((fl >> 3 & 1) != 0) {
+            fn_802ADC08(obj, inner, state);
+        } else if ((fl >> 2 & 1) != 0) {
+            int r = fn_802AD2F4(obj, inner, state);
+            if (r != 0) {
+                *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+                return 2;
+            }
+        }
+    }
+    {
+        int calm;
+        {
+            u32 fl = *(u8 *)((char *)inner + 0x3f0);
+            if ((fl >> 5 & 1) == 0 && (fl >> 6 & 1) == 0 && (fl >> 4 & 1) == 0 &&
+                (fl >> 2 & 1) == 0 && (fl >> 3 & 1) == 0 && (fl >> 1 & 1) == 0 &&
+                *(void **)((char *)inner + 0x7f8) == NULL &&
+                *(u8 *)((char *)inner + 0x8c8) != 0x44) {
+                calm = 1;
+            } else {
+                calm = 0;
+            }
+        }
+        if (calm && (*(u16 *)((char *)inner + 0x6e2) & 0x400) != 0) {
+            fn_802AED2C(obj, inner, state);
+        }
+    }
+    {
+        int ok;
+        {
+            u32 fl = *(u8 *)((char *)inner + 0x3f0);
+            if ((fl >> 5 & 1) == 0 && (fl >> 6 & 1) == 0 && (fl >> 7 & 1) == 0 &&
+                (fl >> 4 & 1) == 0 && (fl >> 2 & 1) == 0 && (fl >> 3 & 1) == 0 &&
+                ((u32)*(u8 *)((char *)inner + 0x3f1) >> 5 & 1) == 0) {
+                ok = 1;
+            } else {
+                ok = 0;
+            }
+        }
+        if (ok &&
+            *(f32 *)((char *)state + 0x294) >
+                lbl_803E7EAC + *(f32 *)(*(int *)((char *)inner + 0x400) + 0x14) &&
+            (*(f32 *)((char *)inner + 0x470) < lbl_803E8030 ||
+             *(int *)((char *)inner + 0x488) >= 0x96)) {
+            *(u16 *)((char *)inner + 0x8d8) |= 8;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 1;
+            *(u8 *)((char *)inner + 0x8a6) = *(u8 *)((char *)inner + 0x8a7);
+            {
+            register u32 m;
+            register u32 v;
+            register int base = inner;
+            asm {
+                lwz v, 0x360(base)
+                lis m, 0x100
+                or m, v, m
+                stw m, 0x360(base)
+            }
+        }
+            *(f32 *)((char *)inner + 0x844) = *(f32 *)((char *)state + 0x280);
+            ObjAnim_SetCurrentMove(obj,
+                                   *(s16 *)(*(int *)((char *)inner + 0x3f8) + 0x3c),
+                                   lbl_803E7EA4, 0);
+        }
+    }
+    {
+        u32 fl = *(u8 *)((char *)inner + 0x3f0);
+        if ((fl >> 7 & 1) == 0 && (fl >> 6 & 1) == 0 &&
+            ((u32)*(u8 *)((char *)inner + 0x3f1) >> 5 & 1) == 0) {
+            if (*(int *)((char *)inner + 0x488) < 0x96) {
+                f32 d = interpolate((f32)*(int *)((char *)inner + 0x47c),
+                                    lbl_803E7EE0 / *(f32 *)((char *)inner + 0x428),
+                                    timeDelta);
+                {
+                    f32 m = timeDelta *
+                            (*(f32 *)((char *)inner + 0x42c) * *(f32 *)((char *)inner + 0x420));
+                    if (d > m) {
+                        d = m;
+                    }
+                }
+                if (*(int *)((char *)inner + 0x480) < 0) {
+                    d = -d;
+                }
+                *(s16 *)((char *)inner + 0x478) =
+                    (s16)(lbl_803E7F00 * d + (f32)*(s16 *)((char *)inner + 0x478));
+            }
+            if (*(int *)((char *)inner + 0x488) < 0x96) {
+                f32 d = interpolate((f32)*(int *)((char *)inner + 0x488),
+                                    lbl_803E7EE0 / *(f32 *)((char *)inner + 0x430),
+                                    timeDelta);
+                {
+                    f32 m = *(f32 *)((char *)inner + 0x434) * timeDelta;
+                    if (d > m) {
+                        d = m;
+                    }
+                }
+                if (*(int *)((char *)inner + 0x48c) < 0) {
+                    d = -d;
+                }
+                *(s16 *)((char *)inner + 0x484) =
+                    (s16)(lbl_803E7F00 * d + (f32)*(s16 *)((char *)inner + 0x484));
+            } else {
+                u32 fl3 = *(u8 *)((char *)inner + 0x3f0);
+                if ((fl3 >> 3 & 1) == 0 && (fl3 >> 2 & 1) == 0 && (fl3 >> 4 & 1) == 0 &&
+                    *(f32 *)((char *)state + 0x294) <=
+                        *(f32 *)(*(int *)((char *)inner + 0x400) + 4) &&
+                    *(f32 *)((char *)state + 0x280) <=
+                        *(f32 *)(*(int *)((char *)inner + 0x400) + 0xc)) {
+                    *(s16 *)((char *)inner + 0x484) =
+                        *(s16 *)((char *)inner + 0x484) +
+                        *(int *)((char *)inner + 0x48c) * 0xb6;
+                }
+            }
+        }
+    }
+    {
+        u32 fl;
+        u32 fl1 = *(u8 *)((char *)inner + 0x3f1);
+        if ((fl1 >> 5 & 1) != 0) {
+            spd = *(f32 *)((char *)inner + 0x404) *
+                  (t * -fn_80293E80((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) /
+                                    lbl_803E7F98));
+            ya = *(f32 *)((char *)inner + 0x404) *
+                 (t * -sin((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) /
+                           lbl_803E7F98));
+            t = interpolate(spd - *(f32 *)((char *)inner + 0x4c8),
+                            *(f32 *)((char *)inner + 0x438), timeDelta);
+            {
+                f32 dy = interpolate(ya - *(f32 *)((char *)inner + 0x4cc),
+                                     *(f32 *)((char *)inner + 0x438), timeDelta);
+                *(f32 *)((char *)inner + 0x4c8) = *(f32 *)((char *)inner + 0x4c8) + t;
+                *(f32 *)((char *)inner + 0x4cc) = *(f32 *)((char *)inner + 0x4cc) + dy;
+            }
+            *(f32 *)((char *)state + 0x294) =
+                sqrtf(*(f32 *)((char *)inner + 0x4c8) * *(f32 *)((char *)inner + 0x4c8) +
+                      *(f32 *)((char *)inner + 0x4cc) * *(f32 *)((char *)inner + 0x4cc));
+            {
+                f32 v = *(f32 *)((char *)state + 0x294);
+                f32 m = **(f32 **)((char *)inner + 0x400);
+                if (v < m) {
+                } else {
+                    m = *(f32 *)((char *)inner + 0x404);
+                    if (v > m) {
+                    } else {
+                        m = v;
+                    }
+                }
+                *(f32 *)((char *)state + 0x294) = m;
+            }
+            t = fn_80293E80((lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478)) /
+                            lbl_803E7F98);
+            {
+                f32 sn = sin((lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x478)) /
+                             lbl_803E7F98);
+                f32 nx = -*(f32 *)((char *)inner + 0x4cc) * sn -
+                         *(f32 *)((char *)inner + 0x4c8) * t;
+                ya = *(f32 *)((char *)inner + 0x4c8) * sn -
+                     *(f32 *)((char *)inner + 0x4cc) * t;
+                *(f32 *)((char *)state + 0x280) =
+                    *(f32 *)((char *)state + 0x280) +
+                    interpolate(nx - *(f32 *)((char *)state + 0x280),
+                                *(f32 *)((char *)inner + 0x82c), timeDelta);
+                *(f32 *)((char *)state + 0x284) =
+                    *(f32 *)((char *)state + 0x284) +
+                    interpolate(ya - *(f32 *)((char *)state + 0x284),
+                                *(f32 *)((char *)inner + 0x82c), timeDelta);
+            }
+            spd = *(f32 *)((char *)state + 0x284);
+            if (spd < lbl_803E7EA4) {
+                spd = -spd;
+            }
+            t = *(f32 *)((char *)state + 0x280);
+            if (t < lbl_803E7EA4) {
+                t = -t;
+            }
+            {
+                int r = ObjAnim_SampleRootCurvePhase(*(f32 *)((char *)state + 0x294),
+                                                     (ObjAnimComponent *)obj,
+                                                     (f32 *)(state + 0x2a0));
+                if (r == 0) {
+                    *(f32 *)((char *)state + 0x2a0) = lbl_803E7F78;
+                }
+            }
+            if (((u32)*(u8 *)((char *)inner + 0x3f0) >> 5 & 1) != 0) {
+                *(f32 *)((char *)state + 0x2a0) =
+                    *(f32 *)((char *)state + 0x2a0) * lbl_803E7E98;
+            }
+            if (t > spd) {
+                if (*(f32 *)((char *)state + 0x280) < lbl_803E7EA4) {
+                    dir = 1;
+                } else {
+                    dir = 0;
+                }
+            } else if (*(f32 *)((char *)state + 0x284) >= lbl_803E7EA4) {
+                dir = 3;
+            } else {
+                dir = 2;
+            }
+        } else {
+            fl = *(u8 *)((char *)inner + 0x3f0);
+            if ((fl >> 6 & 1) == 0 && (fl1 >> 2 & 1) == 0 && (fl >> 4 & 1) == 0 &&
+                (fl1 >> 1 & 1) == 0 && (fl >> 3 & 1) == 0 && (fl >> 2 & 1) == 0 &&
+                (fl >> 1 & 1) == 0) {
+                f32 d = interpolate(*(f32 *)((char *)inner + 0x408) -
+                                        *(f32 *)((char *)state + 0x294),
+                                    *(f32 *)((char *)inner + 0x438), timeDelta);
+                f32 m = lbl_803E7EA8 * timeDelta;
+                if (d < m) {
+                } else {
+                    m = lbl_803E7EFC * timeDelta;
+                    if (d > m) {
+                    } else {
+                        m = d;
+                    }
+                }
+                if (*(int *)((char *)inner + 0x488) >= 0x96 && m > lbl_803E7EA4) {
+                    m = lbl_803E7ED4 * -m;
+                }
+                *(f32 *)((char *)state + 0x294) = *(f32 *)((char *)state + 0x294) + m;
+                {
+                    f32 v = *(f32 *)((char *)state + 0x294);
+                    f32 c = **(f32 **)((char *)inner + 0x400);
+                    if (v < c) {
+                    } else {
+                        c = *(f32 *)((char *)inner + 0x404);
+                        if (v > c) {
+                        } else {
+                            c = v;
+                        }
+                    }
+                    *(f32 *)((char *)state + 0x294) = c;
+                }
+                *(f32 *)((char *)state + 0x284) = lbl_803E7EA4;
+            } else if (((u32)*(u8 *)((char *)inner + 0x3f0) >> 3 & 1) != 0 ||
+                       ((u32)*(u8 *)((char *)inner + 0x3f0) >> 2 & 1) != 0) {
+                t = *(f32 *)((char *)inner + 0x408) *
+                    -fn_80293E80((lbl_803E7F94 *
+                                  (lbl_803E7F00 * (f32)*(int *)((char *)inner + 0x48c))) /
+                                 lbl_803E7F98);
+                ya = *(f32 *)((char *)inner + 0x408) *
+                     sin((lbl_803E7F94 *
+                          (lbl_803E7F00 * (f32)*(int *)((char *)inner + 0x48c))) /
+                         lbl_803E7F98);
+                if (((u32)*(u8 *)((char *)inner + 0x3f0) >> 2 & 1) != 0) {
+                    *(f32 *)((char *)state + 0x294) =
+                        *(f32 *)((char *)state + 0x294) *
+                        powfBitEstimate(lbl_803E7F90, timeDelta);
+                } else {
+                    *(f32 *)((char *)state + 0x294) =
+                        -(lbl_803E7F20 * timeDelta - *(f32 *)((char *)state + 0x294));
+                }
+                {
+                    f32 v2 = lbl_803E7E8C * ya;
+                    f32 m = lbl_803E8078;
+                    if (v2 < m) {
+                    } else {
+                        m = lbl_803E807C;
+                        if (v2 > m) {
+                        } else {
+                            m = v2;
+                        }
+                    }
+                    *(f32 *)((char *)state + 0x294) =
+                        m * timeDelta + *(f32 *)((char *)state + 0x294);
+                }
+                {
+                    f32 v = *(f32 *)((char *)state + 0x294);
+                    f32 m = lbl_803E8080;
+                    if (v < m) {
+                    } else {
+                        m = lbl_803E7EFC + *(f32 *)((char *)inner + 0x404);
+                        if (v > m) {
+                        } else {
+                            m = v;
+                        }
+                    }
+                    *(f32 *)((char *)state + 0x294) = m;
+                }
+                t = t * lbl_803E7F74;
+                *(f32 *)((char *)state + 0x284) =
+                    *(f32 *)((char *)state + 0x284) +
+                    interpolate(t - *(f32 *)((char *)state + 0x284), lbl_803E807C,
+                                timeDelta);
+            } else {
+                f32 v = *(f32 *)((char *)state + 0x294);
+                f32 lim = *(f32 *)((char *)inner + 0x404);
+                f32 m = -lim;
+                if (v < m) {
+                } else {
+                    if (v > lim) {
+                        m = lim;
+                    } else {
+                        m = v;
+                    }
+                }
+                *(f32 *)((char *)state + 0x294) = m;
+            }
+            {
+                if (((u32)*(u8 *)((char *)inner + 0x3f0) >> 4 & 1) == 0 &&
+                    ((u32)*(u8 *)((char *)inner + 0x3f1) >> 1 & 1) == 0 &&
+                    ((u32)*(u8 *)((char *)inner + 0x3f0) >> 1 & 1) == 0) {
+                    *(f32 *)((char *)state + 0x280) =
+                        *(f32 *)((char *)state + 0x280) +
+                        interpolate(*(f32 *)((char *)state + 0x294) -
+                                        *(f32 *)((char *)state + 0x280),
+                                    *(f32 *)((char *)inner + 0x82c), timeDelta);
+                }
+            }
+            dir = 0;
+        }
+    }
+    {
+        u32 fl = *(u8 *)((char *)inner + 0x3f0);
+        if ((fl >> 7 & 1) == 0 && (fl >> 6 & 1) == 0 && (fl >> 4 & 1) == 0 &&
+            (fl >> 2 & 1) == 0 && (fl >> 3 & 1) == 0 && (fl >> 1 & 1) == 0) {
+            int locked;
+            int step;
+            locked = 0;
+            if (((u32)*(u8 *)((char *)inner + 0x3f1) >> 3 & 1) != 0) {
+                locked = 1;
+                spd = lbl_803E7EA4;
+            } else {
+                spd = *(f32 *)((char *)obj + 0x98);
+            }
+            step = *(s8 *)((char *)inner + 0x8cc) / 4 * 2;
+            *(u8 *)((char *)inner + 0x8b0) = (step >> 1) + 1;
+            if (*(u8 *)((char *)inner + 0x8b0) > 4) {
+                *(u8 *)((char *)inner + 0x8b0) = 4;
+            }
+            {
+                u8 c;
+                if (*(u8 *)((char *)inner + 0x8b0) > 3) {
+                    c = *(u8 *)((char *)inner + 0x8a4);
+                } else {
+                    c = *(u8 *)((char *)inner + 0x8a3);
+                }
+                *(u8 *)((char *)inner + 0x8a6) = c;
+            }
+            {
+                f32 v = *(f32 *)((char *)state + 0x294);
+                int tb = *(int *)((char *)inner + 0x400);
+                if (v < *(f32 *)(tb + step * 4)) {
+                    if (*(s8 *)((char *)inner + 0x8cc) == 4) {
+                        if (*(f32 *)((char *)state + 0x280) < *(f32 *)(tb + 0x10) &&
+                            *(f32 *)((char *)state + 0x298) < lbl_803E7F14) {
+                            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+                            return 2;
+                        }
+                    } else {
+                        *(u8 *)((char *)inner + 0x8cc) -= 4;
+                    }
+                } else if (v >= *(f32 *)(tb + step * 4 + 4)) {
+                    int cc = *(s8 *)((char *)inner + 0x8cc);
+                    if (cc < 0x14) {
+                        if (cc == 0) {
+                            spd = lbl_803E7EA4;
+                        }
+                        if (v < *(f32 *)((char *)inner + 0x404)) {
+                            *(u8 *)((char *)inner + 0x8cc) += 4;
+                        }
+                    }
+                }
+            }
+            if (locked != 0 ||
+                *(void **)((char *)inner + 0x3fc) != *(void **)((char *)inner + 0x3f8) ||
+                *(s16 *)((char *)obj + 0xa0) !=
+                    *(s16 *)(*(int *)((char *)inner + 0x3f8) +
+                             (*(s8 *)((char *)inner + 0x8cc) + dir) * 2)) {
+                if (ObjAnim_GetCurrentEventCountdown((ObjAnimComponent *)obj) == 0 ||
+                    ((u32)*(u8 *)((char *)inner + 0x3f2) >> 4 & 1) != 0) {
+                    ObjAnim_SetCurrentMove(obj,
+                                           *(s16 *)(*(int *)((char *)inner + 0x3f8) +
+                                                    (*(s8 *)((char *)inner + 0x8cc) + dir) * 2),
+                                           spd, 0);
+                    if (((u32)*(u8 *)((char *)inner + 0x3f1) >> 5 & 1) != 0 &&
+                        *(s8 *)((char *)state + 0x27a) == 0) {
+                        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0xc);
+                    }
+                }
+            }
+        }
+    }
+    {
+        f32 v = (f32)*(s16 *)((char *)state + 0x19c) / lbl_803E7EE8;
+        t = lbl_803E7ECC;
+        if (v < t) {
+        } else {
+            t = lbl_803E7EE0;
+            if (v > t) {
+            } else {
+                t = v;
+            }
+        }
+    }
+    {
+        f32 ad = t;
+        int pos;
+        if (t > lbl_803E7EA4) {
+            pos = 1;
+        } else {
+            pos = 0;
+        }
+        if (t < lbl_803E7EA4) {
+            ad = -t;
+        }
+        if (((u32)*(u8 *)((char *)inner + 0x3f1) >> 5 & 1) == 0) {
+            u32 fl = *(u8 *)((char *)inner + 0x3f0);
+            if ((fl >> 7 & 1) == 0 && (fl >> 6 & 1) == 0 && (fl >> 4 & 1) == 0 &&
+                (fl >> 2 & 1) == 0 && (fl >> 3 & 1) == 0 && (fl >> 1 & 1) == 0) {
+                if ((fl >> 5 & 1) == 0) {
+                    Object_ObjAnimSetSecondaryBlendMove(
+                        (ObjAnimComponent *)obj,
+                        *(s16 *)(*(int *)((char *)inner + 0x3f8) +
+                                 (*(s8 *)((char *)inner + 0x8cc) + pos) * 2 + 2),
+                        (int)(lbl_803E7FAC * ad));
+                }
+                {
+                    int r = ObjAnim_SampleRootCurvePhase(*(f32 *)((char *)state + 0x294),
+                                                         (ObjAnimComponent *)obj,
+                                                         (f32 *)(state + 0x2a0));
+                    if (r == 0) {
+                        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F78;
+                    }
+                }
+            }
+        }
+    }
+    fn_802ABAE8(obj, state, inner, t);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s16 lbl_803DC6A2;
+extern f32 lbl_803E8020;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802A1CA8(int obj, int state)
+{
+    int jt;
+    int inner;
+    f32 t;
+    f32 spd;
+    f32 ph;
+    f32 buf1[3];
+    f32 buf2[3];
+    f32 tmp[2];
+    f32 outY;
+
+    inner = *(int *)((char *)obj + 0xb8);
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ObjHits_MarkObjectPositionDirty();
+        if (lbl_803DE44C != 0 &&
+            ((u32)*(u8 *)((char *)inner + 0x3f4) >> 6 & 1) != 0) {
+            *(u8 *)((char *)inner + 0x8b4) = 1;
+            ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+        }
+        if (*(s16 *)((char *)obj + 0xa0) == lbl_80332F2C[8] ||
+            *(s16 *)((char *)obj + 0xa0) == lbl_80332F2C[12]) {
+            lbl_803DC6A0 = 8;
+        } else {
+            lbl_803DC6A0 = 9;
+        }
+    }
+    if (*(s8 *)((char *)inner + 0x4e4) > 3) {
+        setAButtonIcon(0x1a);
+    } else {
+        setAButtonIcon(0x1c);
+    }
+    {
+        register u32 m;
+        register u32 v;
+        register int base = *(int *)((char *)obj + 0xb8);
+        asm {
+            lwz v, 0x360(base)
+            li m, -3
+            and m, v, m
+            stw m, 0x360(base)
+        }
+        *(u32 *)((char *)base + 0x360) |= 0x2000;
+    }
+    *(u32 *)((char *)state + 4) |= 0x100000;
+    {
+        f32 z = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x280) = z;
+        *(f32 *)((char *)state + 0x284) = z;
+        *(u32 *)state |= 0x200000;
+        *(f32 *)((char *)obj + 0x24) = z;
+        *(f32 *)((char *)obj + 0x2c) = z;
+        *(u32 *)((char *)state + 4) |= 0x8000000;
+        if (*(f32 *)((char *)inner + 0x838) > lbl_803E7FA0) {
+            fn_802AB5A4(obj, inner, 5);
+            ((void (*)(int, int, int))fn_802AE83C)(obj, inner, state);
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+        *(f32 *)((char *)obj + 0x28) = z;
+        {
+            f32 mag = *(f32 *)((char *)state + 0x28c) / lbl_803E7FA8;
+            if (mag < z) {
+                mag = -mag;
+            }
+            t = lbl_803E7EFC;
+            if (mag < t) {
+            } else {
+                t = lbl_803E7EE0;
+                if (mag > t) {
+                } else {
+                    t = mag;
+                }
+            }
+        }
+    }
+    jt = *(int *)(*(int *)((char *)obj + 0x7c) + *(s8 *)((char *)obj + 0xad) * 4);
+    spd = lbl_803E7EA4;
+    ph = *(f32 *)((char *)state + 0x2a0);
+    lbl_803DC6A2 = lbl_803DC6A0;
+    if ((*(int *)((char *)state + 0x314) & 1) != 0) {
+        switch (*(s8 *)((char *)inner + 0x546)) {
+        case 4:
+            Sfx_PlayFromObject(obj, 0x33a);
+            break;
+        default:
+            Sfx_PlayFromObject(obj, 0x11);
+            break;
+        }
+    }
+    switch ((s16)lbl_803DC6A0) {
+    case 8:
+    case 9:
+    case 12:
+    case 13:
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)inner + 0x4f4);
+        *(s16 *)((char *)obj + 0xa2) = -1;
+        *(u8 *)((char *)inner + 0x4e6) = 0;
+        *(f32 *)((char *)inner + 0x4f8) = *(f32 *)((char *)inner + 0x4f4);
+        spd = lbl_803E7EA4;
+        ph = spd;
+        if ((lbl_803DC6A0 & 1) != 0) {
+            lbl_803DC6A0 = 1;
+        } else {
+            lbl_803DC6A0 = 0;
+        }
+        goto finish;
+    case 6:
+    case 7:
+        if ((*(int *)((char *)state + 0x314) & 0x80) != 0) {
+            Sfx_PlayFromObject(obj, 0x10);
+            if (*(s16 *)((char *)inner + 0x81a) == 0) {
+                Sfx_PlayFromObject(obj, 0x398);
+            }
+        }
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)inner + 0x4e8);
+        } else {
+            ObjModel_SampleJointTransform(jt, 0, 0, lbl_803E7EA4,
+                                          *(f32 *)((char *)obj + 8), buf1, tmp);
+            ObjModel_SampleJointTransform(jt, 0, 0, lbl_803E7EE0,
+                                          *(f32 *)((char *)obj + 8), buf2, tmp);
+            *(f32 *)((char *)obj + 0x10) =
+                *(f32 *)((char *)obj + 0x98) *
+                    ((lbl_803DE43C - (buf2[1] - buf1[1])) - (lbl_803DE438 + buf1[1])) +
+                lbl_803DE438;
+        }
+        /* fall through */
+    case 10:
+    case 11:
+        if ((*(int *)((char *)state + 0x314) & 0x200) != 0) {
+            doRumble(lbl_803E7F10);
+            if (*(f32 *)((char *)inner + 0x838) > lbl_803E7EA4) {
+                (**(void (**)(int, f32, f32, f32, f32))((char *)(*gWaterfxInterface) + 0x10))(
+                    obj, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+                    *(f32 *)((char *)obj + 0x14), lbl_803E8018);
+            }
+        }
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(f32 *)((char *)obj + 0x18) = *(f32 *)((char *)inner + 0x768);
+            *(f32 *)((char *)obj + 0x20) = *(f32 *)((char *)inner + 0x770);
+            if (*(void **)((char *)obj + 0x30) != NULL) {
+                *(f32 *)((char *)obj + 0x18) =
+                    *(f32 *)((char *)obj + 0x18) + playerMapOffsetX;
+                *(f32 *)((char *)obj + 0x20) =
+                    *(f32 *)((char *)obj + 0x20) + playerMapOffsetZ;
+            }
+            ((void (*)(f32, f32, f32, f32 *, f32 *, f32 *, int))Obj_TransformWorldPointToLocal)(
+                *(f32 *)((char *)obj + 0x18), lbl_803E7EA4, *(f32 *)((char *)obj + 0x20),
+                (f32 *)((char *)obj + 0xc), &outY, (f32 *)((char *)obj + 0x14),
+                *(int *)((char *)obj + 0x30));
+            if (lbl_803DC6A0 == 6 || lbl_803DC6A0 == 7) {
+                fn_802AB5A4(obj, inner, 7);
+            } else {
+                fn_802AB5A4(obj, inner, 5);
+            }
+            ObjAnim_SetCurrentMove(obj, **(s16 **)((char *)inner + 0x3f8),
+                                   lbl_803E7EA4, 1);
+            {
+                register u32 m;
+                register u32 v;
+                register int base = inner;
+                asm {
+                    lwz v, 0x360(base)
+                    lis m, 0x80
+                    or m, v, m
+                    stw m, 0x360(base)
+                }
+            }
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+        goto finish;
+    case 4:
+    case 5:
+        if (*(f32 *)((char *)state + 0x28c) > lbl_803E7F10) {
+            ((void (*)(int, f32))ObjAnim_SetMoveProgress)(obj, lbl_803E7EA4);
+        } else if (*(f32 *)((char *)state + 0x28c) < lbl_803E801C) {
+            ((void (*)(int, f32))ObjAnim_SetMoveProgress)(obj, lbl_803E7EA4);
+        } else {
+            if ((*(int *)((char *)state + 0x31c) & 0x100) != 0 &&
+                *(s8 *)((char *)inner + 0x4e4) > 3) {
+                *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
+                return -0x10;
+            }
+            goto finish;
+        }
+        /* fall through */
+    default:
+        if ((*(int *)((char *)state + 0x314) & 0x80) != 0) {
+            Sfx_PlayFromObject(obj, 0x11);
+        }
+        if ((*(int *)((char *)state + 0x31c) & 0x100) != 0 &&
+            *(s8 *)((char *)inner + 0x4e4) > 3) {
+            *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
+            return -0x10;
+        }
+        if (lbl_803E7EE0 == *(f32 *)((char *)obj + 0x98)) {
+            if (*(f32 *)((char *)state + 0x28c) < lbl_803E801C) {
+                *(u8 *)((char *)inner + 0x4e6) = 0;
+                ph = -(lbl_803E7EF8 * t + lbl_803E7F20);
+                if ((s16)lbl_803DC6A0 <= 1) {
+                    lbl_803DC6A0 += 2;
+                    spd = lbl_803E7F68;
+                }
+            } else {
+                *(u8 *)((char *)inner + 0x4e4) += 1;
+                *(u8 *)((char *)inner + 0x4e6) = 1;
+                ph = lbl_803E7EA4;
+                if ((s16)lbl_803DC6A0 <= 1) {
+                    lbl_803DC6A0 ^= 1;
+                    spd = ph;
+                }
+                *(f32 *)((char *)inner + 0x4f8) =
+                    *(f32 *)((char *)obj + 0x10) + *(f32 *)((char *)inner + 0x500);
+                *(f32 *)((char *)inner + 0x4f4) =
+                    (f32)*(s8 *)((char *)inner + 0x4e4) * *(f32 *)((char *)inner + 0x4f0) +
+                    *(f32 *)((char *)inner + 0x4ec);
+                *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)inner + 0x4f8);
+            }
+        }
+        {
+            f32 z2 = lbl_803E7EA4;
+            if (z2 == *(f32 *)((char *)obj + 0x98)) {
+                if (*(f32 *)((char *)state + 0x28c) > lbl_803E7F10) {
+                    *(u8 *)((char *)inner + 0x4e6) = 1;
+                    if ((int)*(s8 *)((char *)inner + 0x4e4) >=
+                        *(s8 *)((char *)inner + 0x4e5) - 3) {
+                        spd = z2;
+                        ph = lbl_803E8020;
+                        {
+                            s16 ns;
+                            if ((lbl_803DC6A0 & 1) != 0) {
+                                ns = 7;
+                            } else {
+                                ns = 6;
+                            }
+                            lbl_803DC6A0 = ns;
+                        }
+                        lbl_803DE438 = *(f32 *)((char *)obj + 0x10);
+                        lbl_803DE43C = *(f32 *)((char *)inner + 0x4e8) + lbl_803DAF88[0];
+                        if (*(u8 *)((char *)inner + 0x8c8) != 0x48 &&
+                            *(u8 *)((char *)inner + 0x8c8) != 0x47) {
+                            (**(void (**)(int, int, int, int, int, int, int))((char *)(*gCameraInterface) + 0x1c))(
+                                0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                        }
+                        goto finish;
+                    }
+                    spd = z2;
+                    ph = lbl_803E7F84 * t + lbl_803E7F20;
+                    if ((s16)lbl_803DC6A0 > 1) {
+                        if ((lbl_803DC6A0 & 1) != 0) {
+                            lbl_803DC6A0 = 1;
+                        } else {
+                            lbl_803DC6A0 = 0;
+                        }
+                    }
+                } else if (*(f32 *)((char *)state + 0x28c) < lbl_803E801C) {
+                    *(u8 *)((char *)inner + 0x4e4) -= 1;
+                    *(u8 *)((char *)inner + 0x4e6) = 0;
+                    if (*(s8 *)((char *)inner + 0x4e4) < 1) {
+                        if (*(u8 *)((char *)inner + 0x8c8) != 0x48 &&
+                            *(u8 *)((char *)inner + 0x8c8) != 0x47 &&
+                            *(u8 *)((char *)inner + 0x8c8) != 0x42) {
+                            (**(void (**)(int, int, int, int, int, int, int))((char *)(*gCameraInterface) + 0x1c))(
+                                0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                            *(u8 *)((char *)inner + 0x8c8) = 0x42;
+                        }
+                        if (((u32)*(u8 *)((char *)inner + 0x547) >> 7 & 1) != 0) {
+                            spd = lbl_803E7EA4;
+                            ph = lbl_803E7FE8;
+                            {
+                                s16 ns;
+                                if ((lbl_803DC6A0 & 1) != 0) {
+                                    ns = 0xb;
+                                } else {
+                                    ns = 0xa;
+                                }
+                                lbl_803DC6A0 = ns;
+                            }
+                            *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)inner + 0x4ec);
+                            goto finish;
+                        } else {
+                            {
+                                f32 z3 = lbl_803E7EA4;
+                                *(f32 *)((char *)state + 0x294) = z3;
+                                *(f32 *)((char *)state + 0x284) = z3;
+                                *(f32 *)((char *)state + 0x280) = z3;
+                                *(f32 *)((char *)obj + 0x24) = z3;
+                                *(f32 *)((char *)obj + 0x28) = z3;
+                                *(f32 *)((char *)obj + 0x2c) = z3;
+                            }
+                            ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+                            ((ByteFlags *)((char *)inner + 0x3f0))->b10 = 0;
+                            ((ByteFlags *)((char *)inner + 0x3f0))->b08 = 0;
+                            staffFn_80170380(lbl_803DE450, 2);
+                            ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 0;
+                            {
+                                register u32 m;
+                                register u32 v;
+                                register int base = inner;
+                                asm {
+                                    lwz v, 0x360(base)
+                                    lis m, 0x80
+                                    or m, v, m
+                                    stw m, 0x360(base)
+                                }
+                            }
+                            ObjHits_SyncObjectPositionIfDirty(obj);
+                            ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+                            ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 1;
+                            ((ByteFlags *)((char *)inner + 0x3f4))->b10 = 1;
+                            *(u8 *)((char *)inner + 0x800) = 0;
+                            if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                                if (*(s16 *)(*(int *)((char *)inner + 0x7f8) + 0x46) == 0x3cf ||
+                                    *(s16 *)(*(int *)((char *)inner + 0x7f8) + 0x46) == 0x662) {
+                                    objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                                } else {
+                                    objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                                }
+                                *(s16 *)(*(int *)((char *)inner + 0x7f8) + 6) =
+                                    *(s16 *)(*(int *)((char *)inner + 0x7f8) + 6) & ~0x4000;
+                                *(int *)(*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                                *(int *)((char *)inner + 0x7f8) = 0;
+                            }
+                            fn_802AB5A4(obj, inner, 5);
+                            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+                            return 3;
+                        }
+                    } else {
+                        spd = lbl_803E7F68;
+                        ph = -(lbl_803E7EF8 * t + lbl_803E7F20);
+                        {
+                            s16 ns;
+                            if ((lbl_803DC6A0 & 1) != 0) {
+                                ns = 2;
+                            } else {
+                                ns = 3;
+                            }
+                            lbl_803DC6A0 = ns;
+                        }
+                        *(f32 *)((char *)inner + 0x4f4) =
+                            (f32)*(s8 *)((char *)inner + 0x4e4) * *(f32 *)((char *)inner + 0x4f0) +
+                            *(f32 *)((char *)inner + 0x4ec);
+                        {
+                            f32 y2 = *(f32 *)((char *)obj + 0x10) -
+                                     *(f32 *)((char *)inner + 0x500);
+                            *(f32 *)((char *)inner + 0x4f8) = y2;
+                            *(f32 *)((char *)obj + 0x10) = y2;
+                        }
+                        goto vel_join;
+                    }
+                } else {
+                    if (((int (*)(ObjAnimComponent *))ObjAnim_GetCurrentEventCountdown)((ObjAnimComponent *)obj) != 0) {
+                        goto vel_join;
+                    }
+                    spd = lbl_803E7EA4;
+                    ph = lbl_803E7EF8;
+                    if ((lbl_803DC6A0 & 1) != 0 && lbl_803DC6A0 != 5) {
+                        lbl_803DC6A0 = 5;
+                    } else if ((lbl_803DC6A0 & 1) == 0 && lbl_803DC6A0 != 4) {
+                        lbl_803DC6A0 = 4;
+                    }
+                    goto finish;
+                }
+            }
+        }
+    vel_join:
+        if (ph < lbl_803E7EA4) {
+            ph = -(lbl_803E7EF8 * t + lbl_803E7F20);
+        } else if (ph > lbl_803E7EA4) {
+            ph = lbl_803E7F84 * t + lbl_803E7F20;
+        }
+        if (*(s8 *)((char *)inner + 0x4e6) != 0) {
+            *(f32 *)((char *)obj + 0x10) =
+                *(f32 *)((char *)obj + 0x98) *
+                    (*(f32 *)((char *)inner + 0x4f4) - *(f32 *)((char *)inner + 0x4f8)) +
+                *(f32 *)((char *)inner + 0x4f8);
+        } else {
+            *(f32 *)((char *)obj + 0x10) =
+                (lbl_803E7EE0 - *(f32 *)((char *)obj + 0x98)) *
+                    (*(f32 *)((char *)inner + 0x4f4) - *(f32 *)((char *)inner + 0x4f8)) +
+                *(f32 *)((char *)inner + 0x4f8);
+        }
+        break;
+    }
+finish:
+    *(f32 *)((char *)state + 0x2a0) = ph;
+    if (lbl_803DC6A2 != lbl_803DC6A0) {
+        ObjAnim_SetCurrentMove(obj, lbl_80332F2C[lbl_803DC6A0], spd, 1);
+        if ((s16)lbl_803DC6A0 <= 1 && *(s8 *)((char *)inner + 0x4e7) == 0) {
+            ObjModel_SampleJointTransform(jt, 0, 0, lbl_803E7EA4,
+                                          *(f32 *)((char *)obj + 8), buf1, tmp);
+            ObjModel_SampleJointTransform(jt, 0, 0, lbl_803E7EE0,
+                                          *(f32 *)((char *)obj + 8), buf2, tmp);
+            *(f32 *)((char *)inner + 0x500) = buf2[1] - buf1[1];
+            *(u8 *)((char *)inner + 0x4e7) = 1;
+        }
+    }
+    {
+        f32 x = *(f32 *)((char *)obj + 0xc);
+        f32 zz = *(f32 *)((char *)obj + 0x14);
+        f32 y;
+        switch ((s16)lbl_803DC6A0) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+            y = *(f32 *)((char *)obj + 0x98) *
+                    (((f32)(*(s8 *)((char *)inner + 0x4e4) + 1) *
+                          *(f32 *)((char *)inner + 0x4f0) +
+                      *(f32 *)((char *)inner + 0x4ec)) -
+                     *(f32 *)((char *)obj + 0x10)) +
+                *(f32 *)((char *)obj + 0x10);
+            break;
+        case 10:
+        case 11:
+            x = *(f32 *)((char *)obj + 0x98) * (*(f32 *)((char *)inner + 0x768) - x) + x;
+            y = (lbl_803E7EE0 - *(f32 *)((char *)obj + 0x98)) *
+                    (*(f32 *)((char *)inner + 0x4f4) - *(f32 *)((char *)obj + 0x10)) +
+                *(f32 *)((char *)obj + 0x10);
+            zz = *(f32 *)((char *)obj + 0x98) * (*(f32 *)((char *)inner + 0x770) - zz) + zz;
+            break;
+        case 6:
+        case 7:
+            x = *(f32 *)((char *)obj + 0x98) * (*(f32 *)((char *)inner + 0x768) - x) + x;
+            y = *(f32 *)((char *)obj + 0x98) *
+                    (*(f32 *)((char *)inner + 0x4e8) - *(f32 *)((char *)obj + 0x10)) +
+                *(f32 *)((char *)obj + 0x10);
+            zz = *(f32 *)((char *)obj + 0x98) * (*(f32 *)((char *)inner + 0x770) - zz) + zz;
+            break;
+        default:
+            y = *(f32 *)((char *)obj + 0x10);
+            break;
+        }
+        (**(void (**)(f32, f32, f32))((char *)(*gCameraInterface) + 0x2c))(x, y, zz);
+    }
+    fn_802AB5A4(obj, inner, 5);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct {
+    u8 pad0[0xc];
+    f32 fz0;
+    f32 fz1;
+    u8 pad1[8];
+    f32 nx;
+    f32 ny;
+    f32 nz;
+    f32 nw;
+    u8 pad2[0x10];
+    f32 ga;
+    f32 gb;
+    u8 pad3[4];
+    f32 gt;
+    u8 pad4[6];
+    s8 flags;
+    u8 pad5;
+} WallHit;
+
+extern f32 lbl_803E7F30;
+extern f32 lbl_803E7F50;
+extern f32 lbl_803E7FF8;
+extern f32 lbl_803E7FFC;
+extern f32 lbl_803E7FCC;
+extern f32 lbl_803E8000;
+extern f32 lbl_803E8004;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802A0680(int obj, int state)
+{
+    int jt;
+    int inner;
+    int b6;
+    int b7;
+    int b8;
+    int b9;
+    int dir;
+    int mask;
+    s16 i;
+    f32 oldSpd;
+    f32 dx;
+    f32 dy;
+    f32 ph;
+    WallHit hit;
+    f32 out1[3];
+    f32 pnt[3];
+    f32 dst[3];
+    f32 tmp[2];
+
+    inner = *(int *)((char *)obj + 0xb8);
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        lbl_803DC6A0 = 0x10;
+        ObjHits_MarkObjectPositionDirty();
+    }
+    {
+        register u32 m;
+        register u32 v;
+        register int base = *(int *)((char *)obj + 0xb8);
+        asm {
+            lwz v, 0x360(base)
+            li m, -3
+            and m, v, m
+            stw m, 0x360(base)
+        }
+        *(u32 *)((char *)base + 0x360) |= 0x2000;
+    }
+    *(u32 *)((char *)state + 4) |= 0x100000;
+    {
+        f32 z = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x280) = z;
+        *(f32 *)((char *)state + 0x284) = z;
+        *(u32 *)state |= 0x200000;
+        *(f32 *)((char *)obj + 0x24) = z;
+        *(f32 *)((char *)obj + 0x2c) = z;
+        *(u32 *)((char *)state + 4) |= 0x8000000;
+        *(f32 *)((char *)obj + 0x28) = z;
+    }
+    jt = *(int *)(*(int *)((char *)obj + 0x7c) + *(s8 *)((char *)obj + 0xad) * 4);
+    ph = *(f32 *)((char *)state + 0x2a0);
+    lbl_803DC6A2 = lbl_803DC6A0;
+    switch ((s16)lbl_803DC6A0) {
+    case 0x10:
+        if (*(s16 *)((char *)obj + 0xa0) == 0x66) {
+            *(s16 *)((char *)inner + 0x5a6) = 0;
+            lbl_803DC6A0 = 0x16;
+        } else {
+            *(s16 *)((char *)inner + 0x5a6) = 1;
+            lbl_803DC6A0 = 0x15;
+        }
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)inner + 0x76c);
+        ph = lbl_803E7FF8;
+        /* fall through */
+    case 0x15:
+    case 0x16:
+        {
+            f32 z = lbl_803E7EA4;
+            *(f32 *)((char *)inner + 0x564) = z;
+            *(f32 *)((char *)inner + 0x560) = z;
+            *(f32 *)((char *)inner + 0x568) = z;
+        }
+        fn_802A13F4(obj, state);
+        if (*(f32 *)((char *)state + 0x298) <= lbl_803E7EFC) {
+            goto store_ph;
+        }
+        oldSpd = *(f32 *)((char *)obj + 0x98);
+        *(f32 *)((char *)obj + 0x98) = lbl_803E7EE0;
+        /* fall through */
+    default:
+        if (lbl_803E7EE0 == *(f32 *)((char *)obj + 0x98)) {
+        pnt[0] = -(lbl_803E7F30 * *(f32 *)((char *)inner + 0x56c) -
+                   *(f32 *)((char *)inner + 0x768));
+        pnt[1] = *(f32 *)((char *)inner + 0x76c);
+        pnt[2] = -(lbl_803E7F30 * *(f32 *)((char *)inner + 0x574) -
+                   *(f32 *)((char *)inner + 0x770));
+        {
+            int r = objBboxFn_800640cc(lbl_803E7EA4, (void *)((char *)inner + 0x768), pnt, 3,
+                                       &hit, obj, 1, 3, 0xff, 0);
+            if (r != 0) {
+                *(f32 *)((char *)obj + 0xc) = pnt[0];
+                *(f32 *)((char *)obj + 0x14) = pnt[2];
+                *(f32 *)((char *)inner + 0x54c) = hit.gt * (hit.gb - hit.ga) + hit.ga;
+                *(f32 *)((char *)inner + 0x550) = hit.gt * (hit.fz1 - hit.fz0) + hit.fz0;
+                *(f32 *)((char *)inner + 0x56c) = hit.nx;
+                *(f32 *)((char *)inner + 0x570) = hit.ny;
+                *(f32 *)((char *)inner + 0x574) = hit.nz;
+                *(f32 *)((char *)inner + 0x578) = hit.nw;
+                *(f32 *)((char *)inner + 0x57c) = -hit.nz;
+                *(f32 *)((char *)inner + 0x580) = lbl_803E7EA4;
+                *(f32 *)((char *)inner + 0x584) = hit.nx;
+                *(f32 *)((char *)inner + 0x588) =
+                    -(pnt[2] * *(f32 *)((char *)inner + 0x584) +
+                      (pnt[0] * *(f32 *)((char *)inner + 0x57c) +
+                       pnt[1] * *(f32 *)((char *)inner + 0x580)));
+                *(s16 *)((char *)inner + 0x478) =
+                    (s16)getAngle(*(f32 *)((char *)inner + 0x56c),
+                                  *(f32 *)((char *)inner + 0x574));
+                *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+                {
+                    int hf = hit.flags;
+                    if ((hf & 4) != 0) {
+                        dir = 0;
+                    } else if ((hf & 8) != 0) {
+                        dir = 1;
+                    } else if ((hf & 2) != 0) {
+                        dir = 2;
+                    } else {
+                        dir = 3;
+                    }
+                }
+            } else {
+                dir = 2;
+            }
+        }
+        if (lbl_803DC6A0 != 0x15 && lbl_803DC6A0 != 0x16) {
+            *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)inner + 0x76c);
+        }
+        if (*(f32 *)((char *)state + 0x298) > lbl_803E7EFC) {
+            lbl_803DC6A0 =
+                ((getAngle(*(f32 *)((char *)state + 0x290),
+                           -*(f32 *)((char *)state + 0x28c)) & 0xffff) + 0x1000 >> 13) & 7;
+            lbl_803DC6A2 = -1;
+            if ((s16)lbl_803DC6A0 == 4 || (s16)lbl_803DC6A0 == 0) {
+                *(s16 *)((char *)inner + 0x5a6) ^= 1;
+            }
+            b6 = 0;
+            b7 = 0;
+            b8 = 0;
+            b9 = 0;
+            switch (lbl_803DC6A0) {
+            case 4:
+                b6 = 1;
+                break;
+            case 0:
+                b7 = 1;
+                break;
+            case 6:
+                b8 = 1;
+                break;
+            case 2:
+                b9 = 1;
+                break;
+            case 3:
+                b6 = 1;
+                b9 = 1;
+                break;
+            case 5:
+                b6 = 1;
+                b8 = 1;
+                break;
+            case 1:
+                b7 = 1;
+                b9 = 1;
+                break;
+            case 7:
+                b7 = 1;
+                b8 = 1;
+                break;
+            }
+            if (*(s16 *)((char *)inner + 0x5a6) != 0) {
+                lbl_803DC6A0 += 8;
+            }
+            if (b6 != 0) {
+                f32 fv = *(f32 *)((char *)inner + 0x54c) - *(f32 *)((char *)inner + 0x76c);
+                f32 lo = lbl_803DAF88[12];
+                f32 hi;
+                if (lo < lbl_803E7EA4) {
+                    lo = -lo;
+                }
+                hi = lbl_803DAF88[13];
+                if (hi < lbl_803E7EA4) {
+                    hi = -hi;
+                }
+                if (fv < hi && (dir == 0 || dir == 3)) {
+                    f32 frac = (fv - lo) / (hi - lo);
+                    f32 m = lbl_803E7EA4;
+                    if (frac < m) {
+                    } else {
+                        m = lbl_803E7EE0;
+                        if (frac > m) {
+                        } else {
+                            m = frac;
+                        }
+                    }
+                    *(s16 *)((char *)inner + 0x5a4) = (s16)(lbl_803E7FAC * m);
+                    *(f32 *)((char *)inner + 0x560) = m;
+                    *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
+                    return 0x15;
+                }
+            } else if (b7 != 0) {
+                f32 fv = *(f32 *)((char *)inner + 0x76c) - *(f32 *)((char *)inner + 0x550);
+                f32 lo = lbl_803DAF88[14];
+                f32 hi;
+                if (lo < lbl_803E7EA4) {
+                    lo = -lo;
+                }
+                hi = lbl_803DAF88[15];
+                if (hi < lbl_803E7EA4) {
+                    hi = -hi;
+                }
+                if (fv < hi && (dir == 1 || dir == 3)) {
+                    f32 frac = (fv - lo) / (hi - lo);
+                    f32 m = lbl_803E7EA4;
+                    if (frac < m) {
+                    } else {
+                        m = lbl_803E7EE0;
+                        if (frac > m) {
+                        } else {
+                            m = frac;
+                        }
+                    }
+                    *(s16 *)((char *)inner + 0x5a4) = (s16)(lbl_803E7FAC * m);
+                    *(f32 *)((char *)inner + 0x560) = m;
+                    *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
+                    return 0x16;
+                }
+            }
+            ((int (*)(int, int, f32, int))Object_ObjAnimSetMove)(
+                obj, lbl_80332F48[lbl_803DC6A0], lbl_803E7EA4, 1);
+            ObjModel_SampleJointTransform(jt, 1, 0, lbl_803E7EE0,
+                                          *(f32 *)((char *)obj + 8), out1, tmp);
+            *(s16 *)((char *)obj + 0xa2) = -1;
+            *(f32 *)((char *)inner + 0x564) = *(f32 *)((char *)inner + 0x57c) * -out1[0];
+            *(f32 *)((char *)inner + 0x560) = out1[1];
+            *(f32 *)((char *)inner + 0x568) = *(f32 *)((char *)inner + 0x584) * -out1[0];
+            if (b6 == 0 && b7 == 0) {
+                *(f32 *)((char *)inner + 0x560) = lbl_803E7EA4;
+            }
+            if (b8 == 0 && b9 == 0) {
+                f32 z = lbl_803E7EA4;
+                *(f32 *)((char *)inner + 0x564) = z;
+                *(f32 *)((char *)inner + 0x568) = z;
+            }
+            mask = 0;
+            if (out1[0] < lbl_803E7EA4) {
+                dx = lbl_803E7FFC * *(f32 *)((char *)inner + 0x57c);
+                dy = lbl_803E7FFC * *(f32 *)((char *)inner + 0x584);
+            } else {
+                dx = lbl_803E7FFC * -*(f32 *)((char *)inner + 0x57c);
+                dy = lbl_803E7FFC * -*(f32 *)((char *)inner + 0x584);
+            }
+            if (b6 != 0 || b7 != 0) {
+                pnt[1] = *(f32 *)((char *)inner + 0x76c) + out1[1];
+                if (out1[1] < lbl_803E7EA4) {
+                    pnt[1] = pnt[1] - lbl_803E7F50;
+                } else {
+                    pnt[1] = pnt[1] + lbl_803E7F50;
+                }
+                ph = lbl_803E7F30;
+                for (i = 0; i < 2; i++) {
+                    if (i != 0) {
+                        pnt[0] = *(f32 *)((char *)inner + 0x768) + dx;
+                        pnt[2] = *(f32 *)((char *)inner + 0x770) + dy;
+                    } else {
+                        pnt[0] = *(f32 *)((char *)inner + 0x768) - dx;
+                        pnt[2] = *(f32 *)((char *)inner + 0x770) - dy;
+                    }
+                    dst[0] = -(ph * *(f32 *)((char *)inner + 0x56c) - pnt[0]);
+                    dst[1] = pnt[1];
+                    dst[2] = -(ph * *(f32 *)((char *)inner + 0x574) - pnt[2]);
+                    if (objBboxFn_800640cc(lbl_803E7EA4, pnt, dst, 3, 0, obj, 1, 3, 0xff,
+                                           0) != 0) {
+                        mask = mask | 1 << i;
+                    }
+                }
+            } else {
+                mask |= 3;
+            }
+            if (b8 != 0 || b9 != 0) {
+                pnt[0] = dx + (*(f32 *)((char *)inner + 0x768) +
+                               *(f32 *)((char *)inner + 0x564));
+                pnt[2] = dy + (*(f32 *)((char *)inner + 0x770) +
+                               *(f32 *)((char *)inner + 0x568));
+                dy = lbl_803E7F30;
+                for (i = 0; i < 2; i++) {
+                    if (i != 0) {
+                        pnt[1] = lbl_803E7F50 + *(f32 *)((char *)inner + 0x76c);
+                    } else {
+                        pnt[1] = *(f32 *)((char *)inner + 0x76c) - lbl_803E7F50;
+                    }
+                    dst[0] = -(dy * *(f32 *)((char *)inner + 0x56c) - pnt[0]);
+                    dst[1] = pnt[1];
+                    dst[2] = -(dy * *(f32 *)((char *)inner + 0x574) - pnt[2]);
+                    if (objBboxFn_800640cc(lbl_803E7EA4, pnt, dst, 3, 0, obj, 1, 3, 0xff,
+                                           0) != 0) {
+                        mask = mask | 1 << (i + 2);
+                    }
+                }
+            } else {
+                mask |= 0xc;
+            }
+            ph = lbl_803E7FCC;
+            if (mask != 0xf) {
+                {
+                    f32 z = lbl_803E7EA4;
+                    *(f32 *)((char *)inner + 0x564) = z;
+                    *(f32 *)((char *)inner + 0x560) = z;
+                    *(f32 *)((char *)inner + 0x568) = z;
+                }
+                {
+                    int st2 = (s16)lbl_803DC6A0;
+                    if (st2 == 4 || st2 == 0 || ((st2 == 0xc) | (st2 == 8)) != 0) {
+                        *(s16 *)((char *)inner + 0x5a6) ^= 1;
+                    }
+                }
+                {
+                    s16 ns;
+                    if (*(s16 *)((char *)inner + 0x5a6) != 0) {
+                        ns = 0x15;
+                    } else {
+                        ns = 0x16;
+                    }
+                    lbl_803DC6A0 = ns;
+                }
+                if (*(s16 *)((char *)obj + 0xa0) == lbl_80332F48[21] ||
+                    *(s16 *)((char *)obj + 0xa0) == lbl_80332F48[22]) {
+                    lbl_803DC6A2 = lbl_803DC6A0;
+                    *(f32 *)((char *)obj + 0x98) = oldSpd;
+                }
+                ph = lbl_803E7FF8;
+            }
+        } else {
+            *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)inner + 0x76c);
+            {
+                s16 ns;
+                if (*(s16 *)((char *)inner + 0x5a6) != 0) {
+                    ns = 0x15;
+                } else {
+                    ns = 0x16;
+                }
+                lbl_803DC6A0 = ns;
+            }
+            ph = lbl_803E7FF8;
+        }
+    }
+        if (lbl_803DC6A0 != 0x15 && lbl_803DC6A0 != 0x16) {
+            if (ph < lbl_803E7EA4) {
+                ph = -(lbl_803E8004 * *(f32 *)((char *)state + 0x298) + lbl_803E8000);
+            } else if (ph > lbl_803E7EA4) {
+                ph = lbl_803E8004 * *(f32 *)((char *)state + 0x298) + lbl_803E8000;
+            }
+        }
+        fn_802A13F4(obj, state);
+        break;
+    }
+store_ph:
+    *(f32 *)((char *)state + 0x2a0) = ph;
+    if (lbl_803DC6A2 != lbl_803DC6A0) {
+        ObjAnim_SetCurrentMove(obj, lbl_80332F48[lbl_803DC6A0], lbl_803E7EA4, 1);
+    }
+    {
+        f32 sp = *(f32 *)((char *)obj + 0x98);
+        (**(void (**)(f32, f32, f32))((char *)(*gCameraInterface) + 0x2c))(
+            *(f32 *)((char *)inner + 0x564) * sp + *(f32 *)((char *)obj + 0xc),
+            *(f32 *)((char *)inner + 0x560) * sp + *(f32 *)((char *)obj + 0x10),
+            *(f32 *)((char *)inner + 0x568) * sp + *(f32 *)((char *)obj + 0x14));
+    }
+    fn_802AB5A4(obj, inner, 5);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int player_SeqFn(int obj, int obj2, int seq, int endFlag)
+{
+    int tbl = (int)lbl_80332EC0;
+    int ctrl = *(int *)((char *)obj2 + 0x4c);
+    int inner = *(int *)((char *)obj + 0xb8);
+    int result = 0;
+    u8 found;
+    int va;
+    int vb;
+    int mapVal;
+    f32 nz;
+    f32 ny;
+    f32 nx;
+    f32 pz;
+    f32 py;
+    f32 px;
+    int objCount;
+    f32 nearArg;
+
+    va = (int)objModelGetVecFn_800395d8(obj, 0);
+    vb = (int)objModelGetVecFn_800395d8(obj, 9);
+    *(int *)((char *)seq + 0xe8) = (int)fn_802A93F4;
+    if (*(void **)&lbl_803DE450 != NULL) {
+        staffFn_80170380(lbl_803DE450, 0);
+    }
+    fn_802B07D8(obj, inner);
+    if (*(void **)&lbl_803DE448 == NULL && Obj_IsLoadingLocked() != 0) {
+        ObjLink_AttachChild(obj,
+                            lbl_803DE448 = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x66a), 4, -1,
+                                                           -1, *(int *)((char *)obj + 0x30)),
+                            3);
+    }
+    if (*(void **)&lbl_803DE448 != NULL) {
+        *(int *)(lbl_803DE448 + 0x30) = *(int *)((char *)obj + 0x30);
+        if (*(s16 *)((char *)inner + 0x81a) == 0) {
+            *(s16 *)(lbl_803DE448 + 6) |= 0x4000;
+        }
+    }
+    if (*(void **)&lbl_803DE450 == NULL && Obj_IsLoadingLocked() != 0) {
+        lbl_803DE450 = Obj_SetupObject(Obj_AllocObjectSetup(0x24, 0x773), 5, -1, -1,
+                                       *(int *)((char *)obj + 0x30));
+    }
+    if (*(void **)&lbl_803DE450 != NULL) {
+        ObjPath_GetPointWorldPosition(obj, 4, lbl_803DE450 + 0xc, lbl_803DE450 + 0x10,
+                                      lbl_803DE450 + 0x14, 0);
+    }
+    if ((((u32)*(u8 *)((char *)inner + 0x3f3) >> 3 & 1) != 0 ||
+         *(s16 *)((char *)inner + 0x80a) == 0x40) &&
+        ((u32)*(u8 *)((char *)inner + 0x3f4) >> 7 & 1) == 0) {
+        fn_80295E90(obj, 0);
+        *(s16 *)((char *)inner + 0x80a) = -1;
+    }
+    ObjHits_DisableObject(obj);
+    {
+        register u32 m;
+        register u32 v;
+        register int base = inner;
+        asm {
+            lwz v, 0x360(base)
+            li m, -3
+            and m, v, m
+            stw m, 0x360(base)
+        }
+    }
+    if (*(s8 *)((char *)seq + 0x56) != 0) {
+        s8 c;
+        {
+            register u32 m;
+            register u32 v;
+            register int base = inner;
+            asm {
+                lwz v, 0x360(base)
+                li m, -0x401
+                and m, v, m
+                stw m, 0x360(base)
+            }
+        }
+        {
+            f32 fz = lbl_803E7EA4;
+            *(f32 *)((char *)inner + 0x79c) = fz;
+            *(f32 *)((char *)inner + 0x7a0) = fz;
+        }
+        if (((u32)*(u8 *)((char *)inner + 0x3f2) >> 7 & 1) == 0) {
+            if (lbl_803DE44C != NULL && ((u32)*(u8 *)((char *)inner + 0x3f4) >> 6 & 1) != 0) {
+                *(u8 *)((char *)inner + 0x8b4) = 1;
+                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+            }
+            *(u8 *)((char *)inner + 0x800) = 0;
+            {
+                int p = *(int *)((char *)inner + 0x7f8);
+                if (p != 0) {
+                    s16 sp = *(s16 *)(p + 0x46);
+                    if (sp == 0x3cf || sp == 0x662) {
+                        objThrowFn_80182504(p);
+                    } else {
+                        objSaveFn_800ea774(p);
+                    }
+                    *(s16 *)(*(int *)((char *)inner + 0x7f8) + 6) &= ~0x4000;
+                    *(int *)(*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                    *(int *)((char *)inner + 0x7f8) = 0;
+                }
+            }
+        }
+        if (*(s8 *)(ctrl + 0x20) == 0 || (c = *(s8 *)((char *)seq + 0x56)) == 3 || c == 2) {
+            *(s16 *)((char *)seq + 0x6e) = *(s16 *)((char *)seq + 0x70);
+            if (*(s8 *)((char *)seq + 0x56) != 2) {
+                *(f32 *)((char *)seq + 0x4c) = lbl_803E7EE0;
+                *(f32 *)((char *)seq + 0x40) =
+                    *(f32 *)((char *)obj + 0xc) - *(f32 *)((char *)obj2 + 0xc);
+                *(f32 *)((char *)seq + 0x44) =
+                    *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)obj2 + 0x10);
+                *(f32 *)((char *)seq + 0x48) =
+                    *(f32 *)((char *)obj + 0x14) - *(f32 *)((char *)obj2 + 0x14);
+                *(s16 *)((char *)seq + 0x50) =
+                    *(s16 *)((char *)inner + 0x478) - (u16)*(s16 *)obj2;
+                if (*(s16 *)((char *)seq + 0x50) > 0x8000) {
+                    *(s16 *)((char *)seq + 0x50) -= 0xffff;
+                }
+                if (*(s16 *)((char *)seq + 0x50) < -0x8000) {
+                    *(s16 *)((char *)seq + 0x50) += 0xffff;
+                }
+                *(s16 *)((char *)seq + 0x52) =
+                    *(s16 *)((char *)obj + 2) - (u16)*(s16 *)((char *)obj2 + 2);
+                if (*(s16 *)((char *)seq + 0x52) > 0x8000) {
+                    *(s16 *)((char *)seq + 0x52) -= 0xffff;
+                }
+                if (*(s16 *)((char *)seq + 0x52) < -0x8000) {
+                    *(s16 *)((char *)seq + 0x52) += 0xffff;
+                }
+                *(s16 *)((char *)seq + 0x54) =
+                    (u16)*(s16 *)((char *)obj2 + 4) - (u16)*(s16 *)((char *)obj + 4);
+                if (*(s16 *)((char *)seq + 0x54) > 0x8000) {
+                    *(s16 *)((char *)seq + 0x54) -= 0xffff;
+                }
+                if (*(s16 *)((char *)seq + 0x54) < -0x8000) {
+                    *(s16 *)((char *)seq + 0x54) += 0xffff;
+                }
+                *(u8 *)((char *)seq + 0x56) = 2;
+            }
+            *(f32 *)((char *)seq + 0x4c) =
+                -(*(f32 *)((char *)seq + 0x24) * timeDelta - *(f32 *)((char *)seq + 0x4c));
+            if (*(f32 *)((char *)seq + 0x4c) <= lbl_803E7EA4) {
+                *(u8 *)((char *)seq + 0x56) = 0;
+            }
+            *(s16 *)((char *)obj + 0xa2) = -1;
+            *(s16 *)((char *)inner + 0x4d2) = 0;
+            *(s16 *)((char *)inner + 0x4d0) = 0;
+            *(s16 *)((char *)inner + 0x4d4) = 0;
+            *(s16 *)((char *)inner + 0x4d6) = 0;
+        } else if (c == 4) {
+            f32 dx;
+            f32 dy;
+            f32 dz;
+            int d;
+            *(s16 *)((char *)seq + 0x6e) &= ~0x4c;
+            *(s16 *)((char *)seq + 0x70) &= ~0x48;
+            obj2 = getFocusedNpc();
+            if (objModelGetVecFn_800395d8(obj2, 0) != 0) {
+                objPosFn_80039510(obj2, 0, &nx);
+            } else {
+                f32 *pv = *(f32 **)(obj2 + 0x74);
+                if (pv == NULL) {
+                    nx = *(f32 *)(obj2 + 0x18);
+                    ny = *(f32 *)(obj2 + 0x1c);
+                    nz = *(f32 *)(obj2 + 0x20);
+                } else {
+                    nx = pv[0];
+                    ny = pv[1];
+                    nz = pv[2];
+                }
+            }
+            ObjPath_GetPointWorldPosition(obj, 5, (int)&px, (int)&py, (int)&pz, 0);
+            dx = *(f32 *)((char *)obj + 0x18) - nx;
+            dy = (*(f32 *)((char *)inner + 0x7dc) + *(f32 *)((char *)obj + 0x1c)) - ny;
+            dz = *(f32 *)((char *)obj + 0x20) - nz;
+            {
+                s16 ang = (s16)getAngle(dx, dz);
+                lbl_803DE4B0 = ang;
+                d = ang - (u16)*(s16 *)((char *)inner + 0x478);
+            }
+            if (d > 0x8000) {
+                d -= 0xffff;
+            }
+            if (d < -0x8000) {
+                d += 0xffff;
+            }
+            *(s16 *)((char *)inner + 0x4d8) = -*(s16 *)(va + 2);
+            *(s16 *)((char *)inner + 0x4dc) = -*(s16 *)va;
+            if (d >= 0) {
+                if (d > 0x2aaa) {
+                    *(s16 *)((char *)inner + 0x4da) = -0x2aaa;
+                    *(s16 *)((char *)inner + 0x4e0) = d - 0x2aaa;
+                } else {
+                    *(s16 *)((char *)inner + 0x4da) = -d;
+                    *(s16 *)((char *)inner + 0x4e0) = 0;
+                }
+            } else if (d < -0x2aaa) {
+                *(s16 *)((char *)inner + 0x4da) = 0x2aaa;
+                *(s16 *)((char *)inner + 0x4e0) = d + 0x2aaa;
+            } else {
+                *(s16 *)((char *)inner + 0x4da) = -d;
+                *(s16 *)((char *)inner + 0x4e0) = 0;
+            }
+            *(s16 *)((char *)inner + 0x4de) = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
+            {
+                int v = *(s16 *)((char *)inner + 0x4de);
+                if (v < -0x1000) {
+                    v = -0x1000;
+                } else if (v > 0x1000) {
+                    v = 0x1000;
+                }
+                *(s16 *)((char *)inner + 0x4de) = v;
+            }
+            *(s16 *)((char *)seq + 0x54) = 0;
+            *(f32 *)((char *)seq + 0x4c) = lbl_803E7EA4;
+            *(f32 *)((char *)seq + 0x24) = lbl_803E8154;
+            *(u8 *)((char *)seq + 0x56) = 5;
+            {
+                int mv;
+                if (*(int *)((char *)inner + 0x7f8) != 0) {
+                    mv = 8;
+                } else {
+                    mv = 0;
+                }
+                if (*(s16 *)((char *)obj + 0xa0) != mv) {
+                    ObjAnim_SetCurrentMove(obj, mv, lbl_803E7EA4, 0);
+                    ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 1);
+                }
+            }
+            ObjAnim_AdvanceCurrentMove(lbl_803E7F78, timeDelta, obj, 0);
+            result = 1;
+        } else if (c == 5) {
+            *(s16 *)((char *)seq + 0x6e) &= ~0x4c;
+            *(s16 *)((char *)seq + 0x70) &= ~0x48;
+            ObjHits_EnableObject(obj);
+            if (*(f32 *)((char *)seq + 0x4c) >= lbl_803E7EE0 &&
+                (**(int (**)(void))((char *)(*gCameraInterface) + 0x50))() == 0) {
+                *(s16 *)((char *)inner + 0x4d2) = 0;
+                *(s16 *)((char *)inner + 0x4d0) = 0;
+                if ((s8)endFlag == 0) {
+                    *(u8 *)((char *)seq + 0x56) = 0;
+                } else {
+                    *(u8 *)((char *)seq + 0x56) = 6;
+                }
+                if (*(int *)((char *)inner + 0x7f0) != 0) {
+                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                                                                                       0x18);
+                    *(void (**)(int))((char *)inner + 0x304) = fn_8029F67C;
+                } else {
+                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                                                                                       1);
+                    *(void (**)(int, int))((char *)inner + 0x304) = fn_802A514C;
+                    *(s16 *)((char *)inner + 0x276) = 1;
+                }
+            } else {
+                f32 prev = *(f32 *)((char *)seq + 0x4c);
+                *(f32 *)((char *)seq + 0x4c) = *(f32 *)((char *)seq + 0x24) * timeDelta + prev;
+                if (*(f32 *)((char *)seq + 0x4c) > lbl_803E7EE0) {
+                    *(f32 *)((char *)seq + 0x4c) = lbl_803E7EE0;
+                }
+                *(s16 *)((char *)inner + 0x478) +=
+                    (int)((*(f32 *)((char *)seq + 0x4c) - prev) *
+                          *(s16 *)((char *)inner + 0x4e0));
+                *(s16 *)obj = *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+                {
+                    int base1 = *(s16 *)((char *)inner + 0x4d8);
+                    int dd = base1 - (u16)*(s16 *)((char *)inner + 0x4da);
+                    if (dd > 0x8000) {
+                        dd -= 0xffff;
+                    }
+                    if (dd < -0x8000) {
+                        dd += 0xffff;
+                    }
+                    *(s16 *)(va + 2) = (int)((f32)dd * *(f32 *)((char *)seq + 0x4c) + (f32)base1);
+                }
+                {
+                    int base2 = *(s16 *)((char *)inner + 0x4dc);
+                    int dd2 = base2 - (u16)*(s16 *)((char *)inner + 0x4de);
+                    if (dd2 > 0x8000) {
+                        dd2 -= 0xffff;
+                    }
+                    if (dd2 < -0x8000) {
+                        dd2 += 0xffff;
+                    }
+                    *(s16 *)va = (int)((f32)dd2 * *(f32 *)((char *)seq + 0x4c) + (f32)base2);
+                }
+                *(s16 *)(vb + 2) = (int)((f32)*(s16 *)((char *)inner + 0x4d2) *
+                                         (lbl_803E7EE0 - *(f32 *)((char *)seq + 0x4c)));
+                *(s16 *)(vb + 4) = (int)((f32)*(s16 *)((char *)inner + 0x4d0) *
+                                         (lbl_803E7EE0 - *(f32 *)((char *)seq + 0x4c)));
+                *(s16 *)((char *)obj + 4) = *(s16 *)(vb + 4) / 4;
+                *(s16 *)((char *)inner + 0x4d4) = *(s16 *)(va + 2);
+                *(s16 *)((char *)inner + 0x4d6) = -*(s16 *)va;
+            }
+            ObjAnim_AdvanceCurrentMove(lbl_803E7F78, timeDelta, obj, 0);
+            result = 1;
+        } else if (c == 6) {
+            *(s16 *)((char *)seq + 0x6e) &= ~0x4c;
+            *(s16 *)((char *)seq + 0x70) &= ~0x48;
+            ObjHits_EnableObject(obj);
+            if ((s8)endFlag == 0) {
+                *(u8 *)((char *)seq + 0x56) = 0;
+            }
+            ObjAnim_AdvanceCurrentMove(lbl_803E7F78, timeDelta, obj, 0);
+            result = 0;
+        } else {
+            f32 dist;
+            f32 dx2;
+            f32 dz2;
+            f32 d2;
+            if (c != 1) {
+                *(f32 *)((char *)seq + 0x40) = *(f32 *)((char *)obj + 0xc);
+                *(f32 *)((char *)seq + 0x44) = *(f32 *)((char *)obj + 0x10);
+                *(f32 *)((char *)seq + 0x48) = *(f32 *)((char *)obj + 0x14);
+                lbl_803DE468 = lbl_803E80AC;
+                lbl_803DE46C = 0;
+            }
+            result = 1;
+            *(s16 *)((char *)seq + 0x6e) = 0;
+            *(u8 *)((char *)seq + 0x56) = 1;
+            {
+                f32 ax = *(f32 *)((char *)seq + 0x40) - *(f32 *)((char *)obj + 0xc);
+                f32 az = *(f32 *)((char *)seq + 0x48) - *(f32 *)((char *)obj + 0x14);
+                dist = sqrtf(ax * ax + az * az);
+            }
+            dx2 = *(f32 *)((char *)obj2 + 0xc) - *(f32 *)((char *)seq + 0x40);
+            dz2 = *(f32 *)((char *)obj2 + 0x14) - *(f32 *)((char *)seq + 0x48);
+            d2 = sqrtf(dx2 * dx2 + dz2 * dz2);
+            if (dist <= lbl_803DE468) {
+                lbl_803DE46C += 1;
+            }
+            if (dist >= d2 || lbl_803DE46C > 5) {
+                int dd3 = *(s16 *)((char *)inner + 0x478) - (u16)*(s16 *)obj2;
+                if (dd3 > 0x8000) {
+                    dd3 -= 0xffff;
+                }
+                if (dd3 < -0x8000) {
+                    dd3 += 0xffff;
+                }
+                if (dd3 > 0x4000) {
+                    dd3 = 0x4000;
+                }
+                if (dd3 < -0x4000) {
+                    dd3 = -0x4000;
+                }
+                *(s16 *)((char *)inner + 0x478) -= (dd3 * framesThisStep) >> 3;
+                *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+                if (lbl_803DE46C > 6) {
+                    dd3 = 0;
+                }
+                if (dd3 < 0x100 && dd3 > -0x100) {
+                    *(s16 *)((char *)seq + 0x6e) = *(s16 *)((char *)seq + 0x70);
+                    *(u8 *)((char *)seq + 0x56) = 0;
+                    *(s16 *)((char *)seq + 0x5a) = *(s16 *)((char *)seq + 0x58) - 1;
+                    *(s16 *)((char *)obj + 0xa2) = -1;
+                    result = 0;
+                } else {
+                    f32 fz3 = lbl_803E7EA4;
+                    *(f32 *)((char *)inner + 0x290) = fz3;
+                    *(f32 *)((char *)inner + 0x28c) = fz3;
+                    (**(void (**)(int))((char *)(*gPlayerInterface) + 0x10))(obj2);
+                    *(int *)((char *)inner + 0x31c) = 0;
+                    *(int *)((char *)inner + 0x318) = 0;
+                    *(int *)((char *)obj + 0xf4) = 0;
+                    *(s16 *)((char *)inner + 0x330) = 0;
+                    *(u8 *)((char *)inner + 0x25f) = 1;
+                    *(u32 *)((char *)inner + 4) = *(u32 *)((char *)inner + 4) & ~0x100000;
+                    *(u8 *)((char *)inner + 0x8c5) = 0;
+                    fn_802B0EA4(obj, inner, inner);
+                    (**(void (**)(f32, f32, int, int, void *, void *))((char *)(*gPlayerInterface) +
+                                                                       8))(
+                        timeDelta, timeDelta, obj, inner, lbl_803DAFC8, &lbl_803DE4B8);
+                }
+            } else {
+                dx2 = dx2 / d2;
+                dz2 = dz2 / d2;
+                {
+                    f32 k = lbl_803E80C4;
+                    *(f32 *)((char *)inner + 0x290) = k * -dx2;
+                    *(f32 *)((char *)inner + 0x28c) = k * dz2;
+                }
+                *(f32 *)((char *)obj + 0xc) = dist * dx2 + *(f32 *)((char *)seq + 0x40);
+                *(f32 *)((char *)obj + 0x14) = dist * dz2 + *(f32 *)((char *)seq + 0x48);
+                (**(void (**)(int))((char *)(*gPlayerInterface) + 0x10))(obj2);
+                *(int *)((char *)inner + 0x31c) = 0;
+                *(int *)((char *)inner + 0x318) = 0;
+                *(int *)((char *)obj + 0xf4) = 0;
+                *(s16 *)((char *)inner + 0x330) = 0;
+                *(u8 *)((char *)inner + 0x25f) = 1;
+                *(u32 *)((char *)inner + 4) = *(u32 *)((char *)inner + 4) & ~0x100000;
+                *(u8 *)((char *)inner + 0x8c5) = 0;
+                fn_802B0EA4(obj, inner, inner);
+                (**(void (**)(f32, f32, int, int, void *, void *))((char *)(*gPlayerInterface) +
+                                                                   8))(timeDelta, timeDelta, obj,
+                                                                       inner, lbl_803DAFC8,
+                                                                       &lbl_803DE4B8);
+            }
+            lbl_803DE468 = dist;
+        }
+        if (*(s8 *)((char *)seq + 0x56) == 0) {
+            (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner, 1);
+            *(void (**)(int, int))((char *)inner + 0x304) = fn_802A514C;
+            *(s16 *)((char *)inner + 0x276) = 1;
+        }
+    } else {
+        *(s16 *)((char *)seq + 0x6e) |= *(s16 *)((char *)seq + 0x70) & ~0x400;
+        *(u8 *)((char *)inner + 0x34c) = 0;
+        {
+            f32 fz2 = lbl_803E7EA4;
+            *(f32 *)((char *)inner + 0x290) = fz2;
+            *(f32 *)((char *)inner + 0x28c) = fz2;
+        }
+        *(s16 *)((char *)inner + 0x330) = 0;
+        *(int *)((char *)inner + 0x31c) = 0;
+        *(int *)((char *)inner + 0x318) = 0;
+        if (*(s16 *)((char *)seq + 0x6e) & 1) {
+            *(u32 *)((char *)inner + 4) |= 0x100000;
+            *(u8 *)((char *)inner + 0x25f) = 0;
+        }
+        for (vb = 0; vb < *(u8 *)((char *)seq + 0x8b); vb++) {
+            switch (*(u8 *)((char *)seq + (vb + 0x81))) {
+            case 3: {
+                f32 best;
+                obj2 = (int)ObjGroup_GetObjects(10, &objCount);
+                found = 0;
+                best = lbl_803E80AC;
+                for (endFlag = 0; endFlag < objCount; endFlag++) {
+                    va = *(int *)obj2;
+                    if (va != 0 && arrayIndexOf((void *)(tbl + 0x13c), 9, *(s16 *)(va + 0x46)) != -1) {
+                        f32 dsq = vec3f_distanceSquared((void *)(va + 0x18), (void *)(obj + 0x18));
+                        if (dsq < best || found == 0) {
+                            best = dsq;
+                            *(int *)((char *)inner + 0x7f0) = va;
+                            found = 1;
+                        }
+                    }
+                    obj2 += 4;
+                }
+                if (found != 0) {
+                    *(f32 *)((char *)inner + 0x6a4) = lbl_803E7EE0;
+                    *(f32 *)((char *)inner + 0x6a8) = *(f32 *)((char *)inner + 0x768);
+                    *(f32 *)((char *)inner + 0x6ac) = *(f32 *)((char *)inner + 0x76c);
+                    *(f32 *)((char *)inner + 0x6b0) = *(f32 *)((char *)inner + 0x770);
+                    va = *(int *)((char *)inner + 0x7f0);
+                    (*(void (*)(int, int))*(int *)((char *)*(int *)(*(int *)(va + 0x68)) + 0x3c))(
+                        va, 2);
+                    *(s16 *)((char *)obj + 6) |= 8;
+                    *(u32 *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x1000;
+                    *(s16 *)(*(int *)((char *)obj + 0x64) + 0x36) = 0;
+                    *(s16 *)((char *)seq + 0x6e) &= ~4;
+                    switch (*(s16 *)(va + 0x46)) {
+                    case 0x72:
+                    case 0x38c:
+                        Music_Trigger(0x97, 1);
+                        GameBit_Set(0xc1f, 0);
+                        *(int *)((char *)inner + 0x6e8) = tbl + 0x3f0;
+                        *(u8 *)((char *)inner + 0x6ec) = 3;
+                        ObjAnim_SetCurrentMove(obj, 0x17, lbl_803E7EA4, 1);
+                        break;
+                    case 0x8c:
+                        *(int *)((char *)inner + 0x6e8) = tbl + 0x408;
+                        *(u8 *)((char *)inner + 0x6ec) = 4;
+                        ObjAnim_SetCurrentMove(obj, 0x7b, lbl_803E7EA4, 1);
+                        if (getSbGalleon() != 0) {
+                            (**(void (**)(int, int))((char *)(*gCameraInterface) + 0x28))(va, 0);
+                            (**(void (**)(int, int, int, int))((char *)(*gObjectTriggerInterface) +
+                                                               0x50))(0x4a, 1, 0, 0x78);
+                        }
+                        break;
+                    case 0x416:
+                        Music_Trigger(0xd5, 1);
+                        *(int *)((char *)inner + 0x6e8) = tbl + 0x438;
+                        *(u8 *)((char *)inner + 0x6ec) = 8;
+                        ObjAnim_SetCurrentMove(obj, *(s16 *)(tbl + 0x438), lbl_803E7EA4, 1);
+                        break;
+                    case 0x419:
+                        Music_Trigger(0xe6, 1);
+                        *(int *)((char *)inner + 0x6e8) = tbl + 0x408;
+                        *(u8 *)((char *)inner + 0x6ec) = 4;
+                        ObjAnim_SetCurrentMove(obj, 0x7b, lbl_803E7EA4, 1);
+                        break;
+                    case 0x484:
+                        Music_Trigger(0xe6, 1);
+                        *(int *)((char *)inner + 0x6e8) = tbl + 0x420;
+                        *(u8 *)((char *)inner + 0x6ec) = 4;
+                        ObjAnim_SetCurrentMove(obj, 0xf8, lbl_803E7EA4, 1);
+                        break;
+                    default:
+                        Music_Trigger(0x1f, 1);
+                    case 0x714:
+                        *(int *)((char *)inner + 0x6e8) = tbl + 0x420;
+                        *(u8 *)((char *)inner + 0x6ec) = 4;
+                        ObjAnim_SetCurrentMove(obj, 0xf8, lbl_803E7EA4, 1);
+                    }
+                    if (arrayIndexOf((void *)(tbl + 0x160), 4, *(s16 *)(va + 0x46)) != -1) {
+                        (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(
+                            obj, inner, 0x1a);
+                        *(void (**)(int))((char *)inner + 0x304) = fn_8029F67C;
+                    } else {
+                        (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(
+                            obj, inner, 0x18);
+                        *(void (**)(int))((char *)inner + 0x304) = fn_8029F67C;
+                    }
+                }
+                break;
+            }
+            case 2:
+                if (fn_802957B4(obj) != 0) {
+                    *(s16 *)((char *)seq + 0x6e) |= 4;
+                }
+                break;
+            case 4:
+                obj2 = *(int *)((char *)inner + 0x7f0);
+                (**(void (**)(int, int))((char *)(*gCameraInterface) + 0x28))(obj2, 0);
+                (**(void (**)(int, int, int, int))((char *)(*gObjectTriggerInterface) + 0x50))(
+                    0x45, 0, 0, 0);
+                *(int *)((char *)inner + 0x6e8) = 0;
+                if (obj2 != 0 && *(s16 *)(obj2 + 0x46) == 0x22) {
+                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                                                                                       0x16);
+                    *(int *)((char *)inner + 0x304) = 0;
+                } else {
+                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                                                                                       0x18);
+                    *(void (**)(int))((char *)inner + 0x304) = fn_8029F67C;
+                }
+                break;
+            case 0xb: {
+                int gb = *(int *)((char *)inner + 0x7f0);
+                if (gb != 0 && *(s16 *)(gb + 0x46) == 0x416) {
+                    (**(void (**)(int, int))((char *)(*gCameraInterface) + 0x28))(gb, 0);
+                    (**(void (**)(int, int, int))((char *)(*gCameraInterface) + 0x24))(0, 0x69, 0);
+                    (**(void (**)(int, int, int, int))((char *)(*gObjectTriggerInterface) + 0x50))(
+                        0x42, 4, 0, 0);
+                } else if (gb != 0 && arrayIndexOf((void *)(tbl + 0x160), 4, *(s16 *)(gb + 0x46)) != -1) {
+                    (**(void (**)(int, int, int, int))((char *)(*gObjectTriggerInterface) + 0x50))(
+                        0x53, 0, 0, 0);
+                } else {
+                    (**(void (**)(int, int, int))((char *)(*gCameraInterface) + 0x24))(0, 0x1d, 0);
+                    (**(void (**)(int, int, int, int))((char *)(*gObjectTriggerInterface) + 0x50))(
+                        0x42, 4, 0, 0);
+                }
+                break;
+            }
+            case 6:
+                (**(void (**)(int, int, int, int))((char *)(*gObjectTriggerInterface) + 0x50))(
+                    0x44, 0, 0, 0);
+                (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                                                                                   0x17);
+                *(int *)((char *)inner + 0x304) = 0;
+                break;
+            case 7:
+                *(s16 *)((char *)seq + 0x6e) &= ~3;
+                obj2 = *(int *)((char *)obj + 0xb8);
+                (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, obj2,
+                                                                                   0x3e);
+                *(int *)(obj2 + 0x304) = 0;
+                *(u32 *)(obj2 + 0x360) |= 1;
+                *(s16 *)((char *)obj + 6) |= 8;
+                break;
+            case 8: {
+                *(s16 *)((char *)seq + 0x6e) = *(s16 *)((char *)seq + 0x70);
+                obj2 = *(int *)((char *)obj + 0xb8);
+                (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, obj2, 1);
+                *(void (**)(int, int))(obj2 + 0x304) = fn_802A514C;
+                {
+                    register u32 m;
+                    register u32 v;
+                    register int base = obj2;
+                    asm {
+                        lwz v, 0x360(base)
+                        li m, -2
+                        and m, v, m
+                        stw m, 0x360(base)
+                    }
+                }
+                *(s16 *)((char *)obj + 6) &= ~8;
+                break;
+            }
+            case 0xa:
+                if (lbl_803DE44C != NULL &&
+                    ((u32)*(u8 *)((char *)inner + 0x3f4) >> 6 & 1) != 0) {
+                    *(u8 *)((char *)inner + 0x8b4) = 2;
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+                }
+                break;
+            case 0x18:
+                if (lbl_803DE44C != NULL &&
+                    ((u32)*(u8 *)((char *)inner + 0x3f4) >> 6 & 1) != 0) {
+                    *(u8 *)((char *)inner + 0x8b4) = 0;
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+                }
+                break;
+            case 0xd: {
+                f32 spd;
+                f32 dy2;
+                f32 sp3;
+                (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x7c))(
+                    *(s16 *)(*(int *)((char *)obj + 0xc4) + 0x46), *(int *)((char *)obj + 0xc4),
+                    0);
+                {
+                    int prt = *(int *)((char *)obj + 0xc4);
+                    obj2 = *(int *)(prt + 0xb8);
+                    if (*(int *)(prt + 0x54) != 0) {
+                        spd = (f32)*(s16 *)(*(int *)(prt + 0x54) + 0x5a);
+                    } else {
+                        spd = *(f32 *)(prt + 0xa8) * *(f32 *)(prt + 8);
+                    }
+                    dy2 = (*(f32 *)(*(int *)(prt + 0x74) + 4) - *(f32 *)(prt + 0x10)) -
+                          lbl_803E8158;
+                }
+                sp3 = spd *
+                      -sin(lbl_803E7F94 * (f32)*(s16 *)(obj2 + 0x478) / lbl_803E7F98);
+                (**(void (**)(f32, f32, f32))((char *)(*gObjectTriggerInterface) + 0x80))(
+                    spd * -fn_80293E80(lbl_803E7F94 * (f32)*(s16 *)(obj2 + 0x478) /
+                                       lbl_803E7F98),
+                    dy2, sp3);
+                (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(
+                    *(int *)((char *)obj + 0xf4), obj, -1);
+                break;
+            }
+            case 0xf:
+                objHitDetectFn_80062e84(obj, 0, 1);
+                break;
+            case 0x10: {
+                int t;
+                nearArg = lbl_803E815C;
+                t = ObjGroup_FindNearestObject(6, obj, &nearArg);
+                if (t != 0) {
+                    objHitDetectFn_80062e84(obj, t, 1);
+                }
+                break;
+            }
+            case 0x17:
+                va = *(int *)((char *)obj + 0xb8);
+                if (*(int *)(va + 0x7f8) != 0) {
+                    *(u8 *)(va + 0x800) = 0;
+                    {
+                        int p17 = *(int *)(va + 0x7f8);
+                        if (p17 != 0) {
+                            s16 sp17 = *(s16 *)(p17 + 0x46);
+                            if (sp17 == 0x3cf || sp17 == 0x662) {
+                                objThrowFn_80182504(p17);
+                            } else {
+                                objSaveFn_800ea774(p17);
+                            }
+                            *(s16 *)(*(int *)(va + 0x7f8) + 6) &= ~0x4000;
+                            *(int *)(*(int *)(va + 0x7f8) + 0xf8) = 0;
+                            *(int *)(va + 0x7f8) = 0;
+                        }
+                    }
+                    {
+                        register u32 m;
+                        register u32 v;
+                        register int base = va;
+                        asm {
+                            lwz v, 0x360(base)
+                            lis m, 0x80
+                            or m, v, m
+                            stw m, 0x360(base)
+                        }
+                    }
+                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, va,
+                                                                                       1);
+                    *(void (**)(int, int))(va + 0x304) = fn_802A514C;
+                }
+                break;
+            case 0x14: {
+                register u32 m;
+                register u32 v;
+                register int base = inner;
+                asm {
+                    lwz v, 0x360(base)
+                    lis m, 0x4
+                    or m, v, m
+                    stw m, 0x360(base)
+                }
+                break;
+            }
+            case 0x15: {
+                register u32 t15;
+                register u32 m;
+                register u32 v;
+                register int base = inner;
+                asm {
+                    lwz v, 0x360(base)
+                    lis t15, 0xfffc
+                    subi m, t15, 0x1
+                    and m, v, m
+                    stw m, 0x360(base)
+                }
+                break;
+            }
+            case 0x16: {
+                register u32 m;
+                register u32 v;
+                register int base = inner;
+                asm {
+                    lwz v, 0x360(base)
+                    lis m, 0x2
+                    or m, v, m
+                    stw m, 0x360(base)
+                }
+                break;
+            }
+            case 0x12: {
+                register u32 t12;
+                register u32 m;
+                register u32 v;
+                register int base = inner;
+                asm {
+                    lwz v, 0x360(base)
+                    lis t12, 0x1
+                    addi m, t12, -0x8000
+                    or m, v, m
+                    stw m, 0x360(base)
+                }
+                break;
+            }
+            case 0x13:
+                loadUiDll(1);
+                break;
+            case 0x19:
+                (**(void (**)(void))((char *)(*gMapEventInterface) + 0x28))();
+                break;
+            case 0x1c:
+                fn_80295CF4(obj, 0);
+                break;
+            case 0x1d:
+                (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                                                                                   0x1a);
+                *(void (**)(int))((char *)inner + 0x304) = fn_8029F67C;
+                break;
+            case 0x1e:
+                (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner, 1);
+                *(void (**)(int, int))((char *)inner + 0x304) = fn_802A514C;
+                break;
+            case 0x1f:
+                __set_debug_bba(lbl_803DE420);
+                fn_80026C30(lbl_803DE420, 1);
+                break;
+            case 0x20:
+                fn_80026C30(lbl_803DE420, 0);
+                break;
+            case 0x21:
+                lbl_803DC66C = 2;
+                break;
+            case 0x22:
+                lbl_803DC66C = 1;
+                break;
+            case 0x1a:
+                if (*(int *)((char *)inner + 0x684) != 0) {
+                    int p1a = *(int *)(*(int *)((char *)inner + 0x684) + 0x50);
+                    int snd = *(s16 *)(p1a + 0x7a);
+                    if (snd > -1) {
+                        (**(void (**)(int, int, int, int))((char *)(*gGameUIInterface) + 0x38))(
+                            snd, 0x154, 300, 0);
+                    } else {
+                        (**(void (**)(int, int, int, int))((char *)(*gGameUIInterface) + 0x38))(
+                            *(s16 *)(p1a + 0x7c), 0x154, 300, 0);
+                    }
+                }
+                break;
+            case 1:
+                if (*(int *)((char *)inner + 0x684) != 0) {
+                    ObjMsg_SendToObject(*(int *)((char *)inner + 0x684), 0x7000b, obj, 0);
+                    *(int *)((char *)inner + 0x684) = 0;
+                }
+                break;
+            case 0x25:
+                *(u16 *)((char *)inner + 0x8d8) ^= 1;
+                break;
+            case 0x26:
+                *(u16 *)((char *)inner + 0x8d8) ^= 2;
+                break;
+            case 0x27:
+                hudFn_8011f38c(1);
+                break;
+            case 0x28: {
+                int h;
+                switch (coordsToMapCell(*(f32 *)((char *)obj + 0xc),
+                                        *(f32 *)((char *)obj + 0x14))) {
+                case 0x13:
+                    mapVal = 0x10;
+                    break;
+                case 0xc:
+                    mapVal = 0x14;
+                    break;
+                case 0xd:
+                    mapVal = 0x18;
+                    break;
+                case 2:
+                    mapVal = 0x1c;
+                    break;
+                }
+                h = *(int *)((char *)obj + 0xb8);
+                if (*(s8 *)(*(int *)(h + 0x35c) + 1) <= mapVal - 4) {
+                    int vv = mapVal;
+                    if (mapVal < 0) {
+                        vv = 0;
+                    } else if (mapVal > 0x50) {
+                        vv = 0x50;
+                    }
+                    *(s8 *)(*(int *)(h + 0x35c) + 1) = vv;
+                    vv = mapVal;
+                    h = *(int *)((char *)obj + 0xb8);
+                    if (mapVal < 0) {
+                        vv = 0;
+                    } else {
+                        s8 cur2 = *(s8 *)(*(int *)(h + 0x35c) + 1);
+                        if (mapVal > cur2) {
+                            vv = cur2;
+                        }
+                    }
+                    *(s8 *)(*(int *)(h + 0x35c)) = vv;
+                }
+                break;
+            }
+            case 0x29:
+                hudFn_8011f38c(0);
+                break;
+            case 0x2a:
+                if ((*(u8 (*)(int))*(int *)((char *)(*gMapEventInterface) + 0x40))(0xb) == 7) {
+                    getEnvfxActImmediately(obj, obj, 0x1fb, 0);
+                    getEnvfxActImmediately(obj, obj, 0x1ff, 0);
+                    getEnvfxActImmediately(obj, obj, 0x249, 0);
+                    getEnvfxActImmediately(obj, obj, 0x1fd, 0);
+                } else {
+                    getEnvfxActImmediately(obj, obj, 0x217, 0);
+                    getEnvfxActImmediately(obj, obj, 0x216, 0);
+                    getEnvfxActImmediately(obj, obj, 0x22e, 0);
+                    getEnvfxActImmediately(obj, obj, 0x218, 0);
+                    getEnvfxActImmediately(obj, obj, 0x84, 0);
+                    getEnvfxActImmediately(obj, obj, 0x8a, 0);
+                }
+                skyFn_80088e54(lbl_803E7EA4, 0);
+                break;
+            case 0x2d:
+                Rcp_SetSpiritVisionEnabled(1);
+                break;
+            case 0x2e:
+                Rcp_SetSpiritVisionEnabled(0);
+                break;
+            case 0x2b: {
+                register u32 m;
+                register u32 v;
+                register int base;
+                base = *(int *)((char *)obj + 0x64);
+                asm {
+                    lwz v, 0x30(base)
+                    li m, -5
+                    and m, v, m
+                    stw m, 0x30(base)
+                }
+                break;
+            }
+            case 0x2c:
+                *(u32 *)(*(int *)((char *)obj + 0x64) + 0x30) |= 4;
+                break;
+            case 0x31:
+                viewFinderSetZoomTo50();
+                break;
+            case 0x32:
+                viewFinderSetZoom(Camera_GetFovY());
+                break;
+            }
+        }
+        if (*(int *)(*(int *)((char *)obj + 0xb8) + 0x360) & 1) {
+            *(s16 *)((char *)seq + 0x6e) &= ~3;
+        }
+    }
+    if (lbl_803DE458 != 0) {
+        *(u8 *)((char *)seq + 0x90) |= 4;
+        lbl_803DE458 = 0;
+    }
+    {
+        int g = *(int *)((char *)inner + 0x7f0);
+        if (g != 0 &&
+            (*(int (*)(int))*(int *)((char *)*(int *)(*(int *)(g + 0x68)) + 0x38))(g) == 2) {
+            *(s16 *)((char *)seq + 0x6e) &= ~3;
+        }
+    }
+    if (((u32)*(u8 *)((char *)inner + 0x3f2) >> 6 & 1) != 0) {
+        characterDoEyeAnims(obj, (int)((char *)inner + 0x364));
+    }
+    if (lbl_803DC66C == 2) {
+        lbl_803DC66C = 1;
+    }
+    if (*(s16 *)((char *)lbl_803DE44C + 0x44) == 0x2d) {
+        ((void (*)(void))objSetAnimField48to0)();
+    }
+    ((void (*)(int, int, f32))fn_802AEF34)(obj, inner, timeDelta);
+    if (lbl_803DE44C != NULL && ((u32)*(u8 *)((char *)inner + 0x3f4) >> 6 & 1) != 0) {
+        *(u16 *)((char *)lbl_803DE44C + 0xb0) &= ~7;
+        if (*(u8 *)((char *)inner + 0x8b3) == 0) {
+            *(u16 *)((char *)lbl_803DE44C + 0xb0) |= 2;
+        }
+    }
+    {
+        register u32 m;
+        register u32 v;
+        register int base = inner;
+        asm {
+            lwz v, 0x360(base)
+            lis m, 0x80
+            or m, v, m
+            stw m, 0x360(base)
+        }
+    }
+    ((void (*)(int, int, int, int, int, f32, f32))objAudioFn_8006ef38)(
+        obj, (int)((char *)seq + 0xf0), *(u8 *)((char *)inner + 0x8a6),
+        (int)((char *)inner + 0x3c4), (int)((char *)inner + 4),
+        *(f32 *)((char *)inner + 0x280), lbl_803E7EE0);
+    return result;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2088,6 +4578,594 @@ int fn_8029ABD8(int obj, int state, f32 fv)
     }
     *(s16 *)((char *)inner + 0x80a) = -1;
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8029AF9C(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int r;
+    f32 spin;
+    struct {
+        u8 pad[6];
+        u16 mode;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } pfx;
+
+    r = ((int (*)(int, int, int))fn_802AC7DC)(obj, state, inner);
+    if (r != 0) {
+        return r;
+    }
+    {
+        f32 z = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x294) = z;
+        *(f32 *)((char *)state + 0x284) = z;
+        *(f32 *)((char *)state + 0x280) = z;
+        *(f32 *)((char *)obj + 0x24) = z;
+        *(f32 *)((char *)obj + 0x28) = z;
+        *(f32 *)((char *)obj + 0x2c) = z;
+    }
+    *(int *)((char *)inner + 0x360) |= 0x2000000;
+    setAButtonIcon(6);
+    setBButtonIcon(0xa);
+    switch (*(s16 *)((char *)obj + 0xa0)) {
+    case 0x43e: {
+        f32 t;
+        f32 c;
+        f32 a;
+        t = *(f32 *)((char *)state + 0x28c) / lbl_803E7FA8;
+        c = (t < lbl_803E7ECC) ? lbl_803E7ECC : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
+        *(f32 *)((char *)inner + 0x7bc) =
+            *(f32 *)((char *)inner + 0x7bc) +
+            interpolate(c - *(f32 *)((char *)inner + 0x7bc), lbl_803E7EFC, timeDelta);
+        t = *(f32 *)((char *)state + 0x290) / lbl_803E7FA8;
+        c = (t < lbl_803E7ECC) ? lbl_803E7ECC : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
+        *(f32 *)((char *)inner + 0x7b8) =
+            *(f32 *)((char *)inner + 0x7b8) +
+            interpolate(c - *(f32 *)((char *)inner + 0x7b8), lbl_803E7EFC, timeDelta);
+        if (*(f32 *)((char *)inner + 0x7b8) > lbl_803E7EA4) {
+            spin = *(f32 *)((char *)inner + 0x7b8) - lbl_803E7EA0;
+            if (spin < lbl_803E7EA4) {
+                spin = lbl_803E7EA4;
+            }
+        } else {
+            spin = lbl_803E7EA0 + *(f32 *)((char *)inner + 0x7b8);
+            if (spin > lbl_803E7EA4) {
+                spin = lbl_803E7EA4;
+            }
+        }
+        a = *(f32 *)((char *)inner + 0x7bc);
+        if (a > lbl_803E7EA4) {
+            Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, 0x441,
+                                                (int)(lbl_803E7FAC * a));
+        } else {
+            Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, 0x440,
+                                                (int)(lbl_803E7FAC * -a));
+        }
+        *(s16 *)((char *)inner + 0x4d2) = lbl_803E7FB0 * *(f32 *)((char *)inner + 0x7b8);
+        objModelGetVecFn_800395d8(obj, 9);
+        *(int *)((char *)inner + 0x360) &= ~0x400;
+        if (lbl_803DE4B2 == 0x2d) {
+            f32 bv;
+            f32 av;
+            int res;
+            int half;
+            int low;
+            f32 k;
+            av = *(f32 *)((char *)inner + 0x7bc);
+            bv = *(f32 *)((char *)inner + 0x7b8);
+            res = getScreenResolution();
+            half = res >> 17;
+            low = (res & 0xffff) >> 1;
+            k = lbl_803E7E98;
+            *(f32 *)((char *)inner + 0x788) =
+                k * (bv * (f32)(int)low) + (f32)(int)low;
+            if (av < lbl_803E7EA4) {
+                *(f32 *)((char *)inner + 0x78c) =
+                    k * (av * (f32)(int)half) + (f32)(int)half;
+            } else {
+                *(f32 *)((char *)inner + 0x78c) =
+                    lbl_803E7F44 * (av * (f32)(int)half) + (f32)(int)half;
+            }
+            *(int *)((char *)inner + 0x360) |= 0x400;
+        }
+        if (lbl_803DE42C != 0) {
+            f32 x;
+            int hi;
+            Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
+            x = *(f32 *)((char *)inner + 0x854) - timeDelta;
+            *(f32 *)((char *)inner + 0x854) = x;
+            if (x <= lbl_803E7EA4) {
+                int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                int v = *(s16 *)((char *)sub + 0x4) - 1;
+                if (v < 0) {
+                    v = 0;
+                } else if (v > *(s16 *)((char *)sub + 0x6)) {
+                    v = *(s16 *)((char *)sub + 0x6);
+                }
+                *(s16 *)((char *)sub + 0x4) = v;
+                *(f32 *)((char *)inner + 0x854) = lbl_803E7F58;
+            }
+            ObjPath_GetPointWorldPosition(lbl_803DE44C, 5, &pfx.x, &pfx.y, &pfx.z, 0);
+            pfx.scale = lbl_803E7F9C;
+            hi = 0x200000;
+            pfx.mode = 0;
+            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+                (int)lbl_803DE44C, 0x7f5, &pfx, hi + 1, -1, 0);
+            pfx.mode = 1;
+            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+                (int)lbl_803DE44C, 0x7f5, &pfx, hi + 1, -1, 0);
+            if ((*(u16 *)((char *)inner + 0x6e0) & lbl_803DE4B4) == 0 ||
+                *(s16 *)((char *)*(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c) + 0x4) == 0 ||
+                getCurSeqNo() != 0) {
+                int i;
+                void **p;
+                lbl_803DE42C = 0;
+                i = 0;
+                p = lbl_80332ED4;
+                for (; i < 7; i++) {
+                    if (*p != NULL) {
+                        Obj_FreeObject((int)*p);
+                        *p = NULL;
+                    }
+                    p++;
+                }
+                if (lbl_803DE454 != NULL) {
+                    Resource_Release(lbl_803DE454);
+                    lbl_803DE454 = NULL;
+                }
+            }
+        } else if ((*(u16 *)((char *)inner + 0x6e2) & 0x900) != 0) {
+            int yitem;
+            u16 b28;
+            s16 item;
+            if (*(u16 *)((char *)inner + 0x6e2) & 0x800) {
+                yitem = getYButtonItem(&item);
+                b28 = 0x800;
+            } else {
+                yitem = 0;
+                item = lbl_803DE4B2;
+                b28 = 0x100;
+            }
+            if ((*(u16 *)((char *)inner + 0x6e2) & 0x100) != 0 ||
+                (yitem == 1 && (item == 0x2d || item == 0x5ce))) {
+                buttonDisable(0, 0x900);
+                *(u16 *)((char *)inner + 0x6e2) = *(u16 *)((char *)inner + 0x6e2) & ~0x900;
+                lbl_803DE4B2 = item;
+                if (item != *(s16 *)((char *)inner + 0x80a)) {
+                    fn_802AB38C(obj, inner, item);
+                }
+                switch (lbl_803DE4B2) {
+                case 0x2d: {
+                    int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                    if (*(s16 *)((char *)sub + 0x4) >= 2) {
+                        *(int *)((char *)state + 0x308) = (int)fn_8029A4A8;
+                        return 0x2f;
+                    }
+                    Sfx_PlayFromObject(0, 0x40c);
+                    break;
+                }
+                case 0x958: {
+                    int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                    if (*(s16 *)((char *)sub + 0x4) >= 0) {
+                        *(int *)((char *)state + 0x308) = (int)fn_8029A4A8;
+                        return 0x30;
+                    }
+                    Sfx_PlayFromObject(0, 0x40c);
+                    break;
+                }
+                case 0x5ce: {
+                    int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                    if (*(s16 *)((char *)sub + 0x4) >= 1) {
+                        int sub2;
+                        int v;
+                        ((void (*)(int))fn_802A96D8)(obj);
+                        lbl_803DE4B4 = b28;
+                        lbl_803DE42C = 1;
+                        lbl_803DE430 = lbl_803E7EA4;
+                        *(f32 *)((char *)inner + 0x854) = lbl_803E7F58;
+                        sub2 = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                        v = *(s16 *)((char *)sub2 + 0x4) - 1;
+                        if (v < 0) {
+                            v = 0;
+                        } else if (v > *(s16 *)((char *)sub2 + 0x6)) {
+                            v = *(s16 *)((char *)sub2 + 0x6);
+                        }
+                        *(s16 *)((char *)sub2 + 0x4) = v;
+                        break;
+                    }
+                    Sfx_PlayFromObject(0, 0x40c);
+                    break;
+                }
+                }
+            }
+        }
+        *(s16 *)((char *)inner + 0x478) =
+            lbl_803E7FB4 * spin + (f32)(int)*(s16 *)((char *)inner + 0x478);
+        {
+            s16 v = *(s16 *)((char *)inner + 0x478);
+            *(s16 *)((char *)inner + 0x484) = v;
+            *(s16 *)((char *)obj + 0x0) = v;
+        }
+        break;
+    }
+    default:
+        ObjAnim_SetCurrentMove(obj, 0x43e, lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F34;
+        lbl_803DE42C = 0;
+        lbl_803DE430 = lbl_803E7EA4;
+        break;
+    }
+    if ((*(u16 *)((char *)inner + 0x6e2) & 0x200) != 0 || *(u8 *)((char *)inner + 0x8c8) != 0x52) {
+        *(int *)((char *)inner + 0x360) &= ~0x2000000;
+        *(int *)((char *)state + 0x308) = (int)fn_8029A420;
+        return 0x2c;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+typedef struct {
+    s16 f00;
+    s16 moveIdx;
+    u8 pad04[0x10];
+    u8 f14;
+    u8 f15[7];
+    f32 f1c;
+    f32 f20;
+    f32 f24;
+    f32 f28;
+    f32 f2c;
+    f32 f30[3];
+    f32 f3c[3];
+    f32 f48;
+    f32 f4c;
+    f32 f50;
+    f32 f54;
+    u8 pad58[4];
+    u8 f5c;
+    s8 f5d[3];
+    u8 f60[8];
+    f32 f68;
+    u8 f6c;
+    u8 pad6d[0x1b];
+    u8 f88;
+    u8 pad89[3];
+    f32 f8c;
+    u8 f90;
+    u8 pad91[0xf];
+    f32 fa0;
+    f32 fa4;
+    u8 pada8[8];
+} PMSlot;
+
+extern f32 lbl_803E7FB8;
+int fn_8029BDB4(int obj, int state, f32 fv)
+{
+    int r;
+    u8 changed;
+    int path;
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 amt;
+
+    r = fn_8029B9FC(obj, state, fv);
+    if (r != 0) {
+        return r;
+    }
+    path = (int)lbl_803DE44C;
+    *(s8 *)((char *)state + 0x34d) = 1;
+    lbl_803DC66C = 5;
+    if (*(s8 *)((char *)state + 0x27a) == 0) {
+        if (lbl_803DE459 != 0) {
+            doRumble(lbl_803E7ED8);
+            *(int *)((char *)state + 0x308) = 0;
+            return 0x28;
+        }
+        changed = 0;
+        if (*(f32 *)((char *)state + 0x2a0) > lbl_803E7EA4) {
+            if ((*(int *)((char *)state + 0x314) & 0x200) != 0) {
+                doRumble(lbl_803E7F10);
+                Sfx_PlayFromObject(obj, 0x3cd);
+                *(u16 *)((char *)inner + 0x8d8) = *(u16 *)((char *)inner + 0x8d8) | 4;
+            }
+            if ((*(int *)((char *)state + 0x314) & 0x400) != 0) {
+                doRumble(lbl_803E7F10);
+                Sfx_PlayFromObject(obj, 0x3cd);
+                *(u16 *)((char *)inner + 0x8d8) = *(u16 *)((char *)inner + 0x8d8) | 4;
+            }
+            if ((*(u8 *)((char *)state + 0x356) & 1) == 0 &&
+                *(f32 *)((char *)obj + 0x98) >
+                    ((f32 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0x14]) {
+                u16 sfx;
+                if (*(s16 *)((char *)inner + 0x81a) == 0) {
+                    sfx = 0x2de;
+                } else {
+                    sfx = 0x1c;
+                }
+                Sfx_PlayFromObject(obj, sfx);
+                *(u8 *)((char *)state + 0x356) = *(u8 *)((char *)state + 0x356) | 1;
+            }
+            if ((*(u8 *)((char *)state + 0x356) & 2) == 0 &&
+                *(f32 *)((char *)obj + 0x98) >
+                    ((f32 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0x15]) {
+                Sfx_PlayFromObject(obj, 0x1a);
+                *(u8 *)((char *)state + 0x356) = *(u8 *)((char *)state + 0x356) | 2;
+            }
+        }
+        {
+            int slot = *(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0;
+            if (*(s8 *)(slot + 0x15) >= 0) {
+                if (*(f32 *)((char *)obj + 0x98) > *(f32 *)(slot + 0x28)) {
+                    *(u8 *)((char *)state + 0x34a) = *(u8 *)((char *)state + 0x34a) | 2;
+                    if (((u8 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0x6c] != 0) {
+                        *(u8 *)((char *)state + 0x34a) = *(u8 *)((char *)state + 0x34a) | 4;
+                        *(u8 *)((char *)inner + 0x8c0) = 0;
+                    }
+                }
+                if (*(f32 *)((char *)obj + 0x98) >
+                    ((f32 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0x8]) {
+                    *(u8 *)((char *)state + 0x34a) = *(u8 *)((char *)state + 0x34a) | 1;
+                }
+                if (*(f32 *)((char *)obj + 0x98) >
+                    ((f32 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0x9]) {
+                    *(u8 *)((char *)state + 0x34a) = *(u8 *)((char *)state + 0x34a) & ~1;
+                }
+                if ((*(int *)((char *)state + 0x31c) & 0x100) != 0 &&
+                    (*(u8 *)((char *)state + 0x34a) & 1) != 0) {
+                    *(u8 *)((char *)state + 0x34a) = *(u8 *)((char *)state + 0x34a) | 4;
+                    *(int *)((char *)state + 0x31c) = *(int *)((char *)state + 0x31c) & ~0x100;
+                    buttonDisable(0, 0x100);
+                    *(u8 *)((char *)inner + 0x8c0) = *(u8 *)((char *)state + 0x34b);
+                }
+                if ((*(u8 *)((char *)state + 0x34a) & 4) != 0 &&
+                    (*(u8 *)((char *)state + 0x34a) & 2) != 0) {
+                    f32 v = (f32)(u8)fn_8014C4D8(*(int *)((char *)state + 0x2d0));
+                    int slot2 = *(int *)((char *)inner + 0x3dc) +
+                                (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0;
+                    if (v >= *(f32 *)(slot2 + 0x8c)) {
+                        *(u8 *)((char *)inner + 0x8a9) =
+                            *(u8 *)(slot2 + (u32)*(u8 *)((char *)inner + 0x8c0) + 0x15);
+                    } else {
+                        *(u8 *)((char *)inner + 0x8a9) = *(u8 *)(slot2 + 0x90);
+                    }
+                    changed = 1;
+                }
+            }
+        }
+    } else {
+        lbl_803DE459 = 0;
+        changed = 1;
+        *(int *)((char *)inner + 0x360) &= ~0x40;
+        *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x70) = 0;
+        {
+            f32 z = lbl_803E7EA4;
+            *(f32 *)((char *)inner + 0x828) = z;
+            *(u8 *)((char *)inner + 0x8ab) = 0;
+            *(int *)((char *)inner + 0x4c0) = 0;
+            *(s8 *)((char *)inner + 0x8cd) = -1;
+            *(f32 *)((char *)state + 0x294) = z;
+            *(f32 *)((char *)state + 0x284) = z;
+            *(f32 *)((char *)state + 0x280) = z;
+            *(f32 *)((char *)obj + 0x24) = z;
+            *(f32 *)((char *)obj + 0x28) = z;
+            *(f32 *)((char *)obj + 0x2c) = z;
+        }
+    }
+    if (*(void **)((char *)state + 0x2d0) != NULL) {
+        if (*(u8 *)((char *)inner + 0x8a9) >= 5 && *(u8 *)((char *)inner + 0x8a9) <= 9) {
+            amt = (f32)*(int *)((char *)inner + 0x4a4);
+        } else {
+            amt = (f32)*(int *)((char *)inner + 0x4a4) / lbl_803E7FB8;
+        }
+        *(s16 *)((char *)inner + 0x478) = (f32)(int)*(s16 *)((char *)inner + 0x478) + amt;
+        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+    } else if (*(s8 *)((char *)state + 0x27a) != 0 && *(void **)((char *)inner + 0x4b8) != NULL &&
+               *(u16 *)((char *)inner + 0x4b4) == 1) {
+        if (*(int *)((char *)inner + 0x4a8) < 0x4000) {
+            amt = (f32)*(int *)((char *)inner + 0x4a4);
+        }
+        *(s16 *)((char *)inner + 0x478) = (f32)(int)*(s16 *)((char *)inner + 0x478) + amt;
+        *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+    } else if (*(s8 *)((char *)state + 0x27a) != 0) {
+        s16 v = *(int *)((char *)inner + 0x474);
+        *(s16 *)((char *)inner + 0x478) = v;
+        *(s16 *)((char *)inner + 0x484) = v;
+    }
+    if (changed != 0) {
+        *(int *)((char *)obj + 0x5c) = *(int *)((char *)inner + 0x3dc) +
+                                       ((u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0 + 0x60);
+        {
+            int slot = *(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0;
+            if (*(s16 *)((char *)obj + 0xa0) != lbl_803336BC[*(s16 *)(slot + 0x2)]) {
+                ObjAnim_SetCurrentMove(obj, lbl_803336BC[*(s16 *)(slot + 0x2)],
+                                       *(f32 *)(slot + 0x68), 0);
+                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 2);
+            }
+        }
+        *(u8 *)((char *)state + 0x34a) = *(u8 *)((char *)state + 0x34a) & ~0xef;
+        *(f32 *)((char *)state + 0x2a0) = ((f32 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0x7];
+        *(f32 *)((char *)inner + 0x824) = *(f32 *)((char *)state + 0x2a0);
+        *(u8 *)((char *)inner + 0x8cf) = 0;
+        *(f32 *)((char *)state + 0x284) = lbl_803E7EA4;
+        *(u8 *)((char *)state + 0x356) = 0;
+        if (*(void **)((char *)state + 0x2d0) != NULL) {
+            if (*(u8 *)((char *)inner + 0x8a9) >= 5 && *(u8 *)((char *)inner + 0x8a9) <= 9) {
+                (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x30)))(obj, state, fv, 1);
+            } else {
+                (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x30)))(obj, state, fv, 2);
+            }
+            {
+                s16 v = *(s16 *)((char *)obj + 0x0);
+                *(s16 *)((char *)inner + 0x484) = v;
+                *(s16 *)((char *)inner + 0x478) = v;
+            }
+        }
+        if (*(void **)((char *)obj + 0x54) != NULL) {
+            *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x70) = 0;
+        }
+        *(s8 *)((char *)inner + 0x8cd) = -1;
+        if (*(s16 *)((char *)path + 0x44) == 0x2d) {
+            objSetAnimField48to0((int *)path);
+            (*(void (*)(int, int))*(int *)(*(int *)(*(int *)((char *)path + 0x68)) + 0x38))(
+                path, ((u8 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0x5c]);
+            {
+                int slot = *(int *)((char *)inner + 0x3dc) +
+                           (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0;
+                (*(void (*)(int, f32, f32))*(int *)(*(int *)(*(int *)((char *)path + 0x68)) + 0x4c))(
+                    path, *(f32 *)(slot + 0x48), *(f32 *)(slot + 0x4c));
+            }
+        }
+        {
+            f32 z = lbl_803E7EA4;
+            *(f32 *)((char *)inner + 0x7d8) = z;
+            *(f32 *)((char *)inner + 0x828) = z;
+            *(u8 *)((char *)inner + 0x8ab) = 0;
+            *(int *)((char *)inner + 0x4c0) = 0;
+        }
+    }
+    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6e) = 0xb;
+    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x6f) =
+        ((u8 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0x14];
+    {
+        int slot = *(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0;
+        f32 t = *(f32 *)(slot + 0xa0);
+        if (t >= lbl_803E7EA4) {
+            if (t >= *(f32 *)((char *)obj + 0x98) ||
+                *(f32 *)((char *)obj + 0x98) >= *(f32 *)(slot + 0xa4)) {
+                *(f32 *)((char *)inner + 0x7d8) = lbl_803E7EA4;
+            } else {
+                if (*(f32 *)((char *)inner + 0x7d8) == lbl_803E7EA4) {
+                    Sfx_PlayFromObject(obj, 0x21b);
+                }
+                *(f32 *)((char *)inner + 0x7d8) =
+                    lbl_803E7ED4 * timeDelta + *(f32 *)((char *)inner + 0x7d8);
+                if (*(f32 *)((char *)inner + 0x7d8) > lbl_803E7FBC) {
+                    *(f32 *)((char *)inner + 0x7d8) = lbl_803E7FBC;
+                }
+            }
+        }
+    }
+    if ((((u8 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0x88] &
+         2) != 0 &&
+        *(int *)((char *)inner + 0x4c0) != 0) {
+        if (*(u8 *)((char *)inner + 0x8ab) < *(u8 *)((char *)inner + 0x8ac)) {
+            f32 t = *(f32 *)((char *)inner + 0x828) - lbl_803E7EE0;
+            *(f32 *)((char *)inner + 0x828) = t;
+            if (t <= lbl_803E7EA4) {
+                ((void (*)(int, int, int, int, int))ObjHits_RecordObjectHit)(
+                    *(int *)((char *)inner + 0x4c0), obj, 0xb, 1, 0);
+                *(s8 *)((char *)inner + 0x8ab) = *(s8 *)((char *)inner + 0x8ab) + 1;
+                *(f32 *)((char *)inner + 0x828) = (f32)(u8)*(u8 *)((char *)inner + 0x8ad);
+            }
+        } else {
+            *(int *)((char *)inner + 0x4c0) = 0;
+        }
+    }
+    {
+        int off;
+        int i;
+        int n;
+        off = 0;
+        *(int *)((char *)*(int *)((char *)obj + 0x54) + 0x48) = 0;
+        i = 0;
+        n = 3;
+        do {
+            int stride = (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0;
+            int ent = *(int *)((char *)inner + 0x3dc) + stride + off;
+            if (*(f32 *)((char *)obj + 0x98) >= *(f32 *)(ent + 0x30) &&
+                *(f32 *)((char *)obj + 0x98) <= *(f32 *)(ent + 0x3c)) {
+                if (*(s8 *)((char *)*(int *)((char *)obj + 0x54) + 0x70) == 0) {
+                    int bits;
+                    switch (*(s8 *)((char *)*(int *)((char *)inner + 0x3dc) + stride + i + 0x5d)) {
+                    case -1:
+                        bits = 0;
+                        break;
+                    case 0:
+                        bits = 0xc;
+                        break;
+                    case 1:
+                        bits = 3;
+                        break;
+                    case 4:
+                        bits = 0xf;
+                        break;
+                    case 2:
+                        bits = 0x100000;
+                        break;
+                    case 3:
+                        bits = 0x10000;
+                        break;
+                    default:
+                        bits = 0;
+                        break;
+                    }
+                    *(int *)((char *)*(int *)((char *)obj + 0x54) + 0x48) = bits;
+                }
+                if (i != *(s8 *)((char *)inner + 0x8cd)) {
+                    *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x70) = 0;
+                    *(s8 *)((char *)inner + 0x8cd) = (s8)i;
+                    *(u8 *)((char *)inner + 0x8ab) = 0;
+                    *(f32 *)((char *)inner + 0x828) = lbl_803E7EA4;
+                    *(int *)((char *)inner + 0x4c0) = 0;
+                }
+                break;
+            }
+            off += 4;
+            i++;
+            n--;
+        } while (n != 0);
+    }
+    (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, fv, 3);
+    if (*(s8 *)((char *)state + 0x346) == 0) {
+        if (*(f32 *)((char *)obj + 0x98) >=
+            ((f32 *)(*(int *)((char *)inner + 0x3dc) + (u32)*(u8 *)((char *)inner + 0x8a9) * 0xb0))[0xb]) {
+            if (*(void **)((char *)state + 0x2d0) == NULL) {
+                if ((*(int *)((char *)state + 0x31c) & 0x100) != 0 &&
+                    *(f32 *)((char *)state + 0x298) > lbl_803E7EAC) {
+                    *(s16 *)((char *)inner + 0x478) =
+                        *(s16 *)((char *)inner + 0x478) + (s16)*(int *)((char *)inner + 0x480) * 0xb6;
+                    *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
+                    *(int *)((char *)inner + 0x47c) = 0;
+                    *(int *)((char *)inner + 0x480) = 0;
+                    *(int *)((char *)inner + 0x488) = 0;
+                    *(int *)((char *)inner + 0x48c) = 0;
+                    *(int *)((char *)state + 0x308) = 0;
+                    return 0x32;
+                }
+            } else if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
+                *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x70) = 0;
+                *(s8 *)((char *)inner + 0x8cd) = -1;
+                (*(void (*)(int, int, f32, int))(*(int *)(*gPlayerInterface + 0x30)))(obj, state, fv, 2);
+                {
+                    s16 v = *(s16 *)((char *)obj + 0x0);
+                    *(s16 *)((char *)inner + 0x484) = v;
+                    *(s16 *)((char *)inner + 0x478) = v;
+                }
+                *(int *)((char *)state + 0x308) = 0;
+                return 0x31;
+            }
+        }
+        return 0;
+    } else {
+        *(u8 *)((char *)*(int *)((char *)obj + 0x54) + 0x70) = 0;
+        if (*(void **)((char *)state + 0x2d0) == NULL) {
+            *(u8 *)((char *)inner + 0x3f1) = (*(u8 *)((char *)inner + 0x3f1) & 0x7f) | 0x80;
+            *(int *)((char *)inner + 0x360) |= 0x800000;
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+        *(int *)((char *)state + 0x308) = (int)fn_8029C8C8;
+        return 0x25;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2588,6 +5666,2545 @@ void fn_8029DAE0(int obj, int *p2)
 #pragma peephole reset
 #pragma scheduling reset
 
+typedef struct {
+    u8 pad[0x1ba8];
+    int moveA[4];
+    int moveB[4];
+    int moveC[4];
+    f32 spdD[4];
+    f32 spdE[4];
+} HeadMoveTable;
+
+typedef struct {
+    int a;
+    int b;
+} ColPair;
+
+extern int lbl_803DE484;
+extern int lbl_803E7E78;
+extern int lbl_803E7E7C;
+extern f32 lbl_803E7FDC;
+extern f32 lbl_803E7FE0;
+extern f32 lbl_803E7FE4;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8029DB70(int obj, int state, f32 fv)
+{
+    int prev;
+    HeadMoveTable *tbl = (HeadMoveTable *)lbl_80332EC0;
+    int inner = *(int *)((char *)obj + 0xb8);
+    int sub;
+    int nextMove = -1;
+    int doXform = 1;
+    int camCall = 0;
+    f32 t;
+    f32 t2;
+    f32 xc;
+    f32 yc;
+    f32 yT;
+    f32 xT;
+    f32 yOut;
+    ColPair col;
+
+    col = *(ColPair *)&lbl_803E7E78;
+    setAButtonIcon(0xf);
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        ((ByteFlags *)((char *)inner + 0x3f3))->b01 = ((ByteFlags *)((char *)inner + 0x3f3))->b08;
+        *(s16 *)((char *)state + 0x278) = 0x1d;
+        *(int *)((char *)inner + 0x898) = (int)fn_8029DAE0;
+    }
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0) {
+            *(u8 *)((char *)inner + 0x8b4) = 1;
+            ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+        }
+        if (*(u8 *)((char *)inner + 0x8c8) != 0x48 && *(u8 *)((char *)inner + 0x8c8) != 0x47) {
+            cameraSetInterpMode(2);
+            (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x52, 1, 0, 8, &col, 0x1e, 0xff);
+        }
+        *(u8 *)((char *)inner + 0x86d) = 0;
+        *(u8 *)((char *)inner + 0x86e) = 0;
+        *(s16 *)((char *)inner + 0x478) =
+            getAngle(*(f32 *)((char *)inner + 0x654), *(f32 *)((char *)inner + 0x65c));
+        {
+            s16 ang = *(s16 *)((char *)inner + 0x478);
+            *(s16 *)((char *)inner + 0x484) = ang;
+            *(s16 *)obj = ang;
+        }
+        ((ByteFlags *)((char *)inner + 0x3f2))->b01 = 1;
+        ObjAnim_SetCurrentMove(obj, 0x5f, lbl_803E7EA4, 0);
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 8);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
+        {
+            f32 z = lbl_803E7EA4;
+            *(f32 *)((char *)inner + 0x444) = z;
+            *(f32 *)((char *)inner + 0x448) = z;
+        }
+        ((ByteFlags *)((char *)inner + 0x3f3))->b80 = 0;
+        ObjHits_MarkObjectPositionDirty(obj);
+    }
+    *(f32 *)((char *)inner + 0x7bc) = lbl_803E7F2C;
+    {
+        f32 z = lbl_803E7EA4;
+        *(f32 *)((char *)inner + 0x7b8) = z;
+        *(f32 *)((char *)state + 0x280) = z;
+        *(f32 *)((char *)state + 0x284) = z;
+    }
+    sub = *(int *)((char *)inner + 0x67c);
+    switch (*(s16 *)((char *)obj + 0xa0)) {
+    case 0x5f:
+        if ((*(int *)((char *)state + 0x318) & 0x100) == 0) {
+            *(u32 *)((char *)inner + 0x360) |= 0x800000;
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+        break;
+    case 0x4d:
+    case 0x4e:
+    case 0x5a:
+    case 0x65:
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(u32 *)((char *)inner + 0x360) |= 0x800000;
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+        camCall = 1;
+        doXform = 0;
+        break;
+    }
+    prev = *(u8 *)((char *)inner + 0x86d);
+    t = (f32)padGetStickX(0) / lbl_803E7FA8;
+    xc = (t < lbl_803E7ECC) ? lbl_803E7ECC : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
+    t2 = (f32)padGetStickY(0) / lbl_803E7FA8;
+    yc = (t2 < lbl_803E7ECC) ? lbl_803E7ECC : ((t2 > lbl_803E7EE0) ? lbl_803E7EE0 : t2);
+    if (((ByteFlags *)((char *)inner + 0x3f3))->b80 == 0) {
+        if (yc > lbl_803E7F14) {
+            xT = -(lbl_803E7F48 * yc - lbl_803E7FDC);
+            *(f32 *)((char *)inner + 0x448) = yT = lbl_803E7EA4;
+            *(u8 *)((char *)inner + 0x86d) = 1;
+        } else if (yc < lbl_803E7FE0) {
+            xT = -(lbl_803E7F48 * yc - lbl_803E7F6C);
+            *(f32 *)((char *)inner + 0x448) = yT = lbl_803E7EA4;
+            *(u8 *)((char *)inner + 0x86d) = 2;
+        } else if (xc > lbl_803E7F14) {
+            *(f32 *)((char *)inner + 0x444) = xT = lbl_803E7EA4;
+            yT = lbl_803E7EAC * xc + lbl_803E7F6C;
+            *(u8 *)((char *)inner + 0x86d) = 3;
+        } else if (xc < lbl_803E7FE0) {
+            *(f32 *)((char *)inner + 0x444) = xT = lbl_803E7EA4;
+            yT = lbl_803E7EAC * xc + lbl_803E7FDC;
+            *(u8 *)((char *)inner + 0x86d) = 4;
+        } else {
+            if (*(f32 *)((char *)inner + 0x444) <= lbl_803E7F6C &&
+                *(f32 *)((char *)inner + 0x444) >= lbl_803E7FDC &&
+                *(f32 *)((char *)inner + 0x448) <= lbl_803E7F6C &&
+                *(f32 *)((char *)inner + 0x448) >= lbl_803E7FDC) {
+                *(u8 *)((char *)inner + 0x86d) = 0;
+                nextMove = 0x5f;
+                *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
+            }
+            xT = lbl_803E7EA4;
+            yT = lbl_803E7EA4;
+        }
+        {
+            f32 k = lbl_803E7EFC;
+            *(f32 *)((char *)inner + 0x444) =
+                k * (xT - *(f32 *)((char *)inner + 0x444)) + *(f32 *)((char *)inner + 0x444);
+            *(f32 *)((char *)inner + 0x448) =
+                k * (yT - *(f32 *)((char *)inner + 0x448)) + *(f32 *)((char *)inner + 0x448);
+        }
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f3))->b80 == 0 &&
+        ((*(int *)((char *)state + 0x318) & 0x100) == 0 || *(s8 *)((char *)inner + 0x681) != 0 ||
+         (((ByteFlags *)((char *)inner + 0x3f1))->b01 == 0 &&
+          *(f32 *)((char *)state + 0x1b0) >= lbl_803E7F58))) {
+        if (*(s8 *)((char *)inner + 0x86d) != 0) {
+            ObjAnim_SetCurrentMove(obj, tbl->moveA[*(s8 *)((char *)inner + 0x86d)], lbl_803E7E98, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7F20;
+        } else {
+            *(u32 *)((char *)inner + 0x360) |= 0x800000;
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+        *(u8 *)((char *)inner + 0x86d) = 0;
+        ((ByteFlags *)((char *)inner + 0x3f3))->b80 = 1;
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f3))->b80 == 0) {
+        if (*(s8 *)((char *)inner + 0x86d) != 0) {
+            lbl_803DE484 = lbl_803DE484 - framesThisStep;
+            if (lbl_803DE484 <= 0) {
+                lbl_803DE484 = randomGetRange(0xb4, 0xf0);
+                Sfx_PlayFromObject(obj, 0x2b);
+            }
+            *(int *)((char *)inner + 0x360) |= 0x200;
+            if (*(s8 *)((char *)inner + 0x86d) != (u8)prev || *(s8 *)((char *)inner + 0x86e) == 0) {
+                ((ByteFlags *)((char *)inner + 0x3f2))->b01 = 1;
+                *(u8 *)((char *)inner + 0x86e) = 0;
+            } else if (*(s8 *)((char *)inner + 0x86d) == *(s8 *)((char *)inner + 0x86e)) {
+                if (((ByteFlags *)((char *)inner + 0x3f3))->b08 != 0 &&
+                    ((ByteFlags *)((char *)inner + 0x3f3))->b01 == 0) {
+                    ((ByteFlags *)((char *)inner + 0x3f2))->b01 = 1;
+                    *(u8 *)((char *)inner + 0x86e) = 0;
+                } else {
+                    ((ByteFlags *)((char *)inner + 0x3f2))->b01 = 0;
+                }
+            }
+            if (((ByteFlags *)((char *)inner + 0x3f2))->b01 != 0) {
+                *(f32 *)((char *)state + 0x2a0) =
+                    lbl_803E7EF8 * *(f32 *)((char *)state + 0x298) +
+                    tbl->spdD[*(s8 *)((char *)inner + 0x86d)];
+                nextMove = tbl->moveC[*(s8 *)((char *)inner + 0x86d)];
+            } else {
+                int *tblB = tbl->moveB;
+                if (*(s16 *)((char *)obj + 0xa0) != tblB[*(s8 *)((char *)inner + 0x86d)] ||
+                    *(f32 *)((char *)obj + 0x98) >= lbl_803E7FE4) {
+                    *(f32 *)((char *)state + 0x2a0) =
+                        lbl_803E7F78 * ((f32)randomGetRange(0, 100) / lbl_803E7F5C) +
+                        tbl->spdE[*(s8 *)((char *)inner + 0x86d)];
+                }
+                nextMove = tblB[*(s8 *)((char *)inner + 0x86d)];
+            }
+        }
+        {
+            u8 res;
+            f32 a;
+            f32 b;
+            if (*(s8 *)((char *)inner + 0x86d) == 0) {
+                a = lbl_803E7EA4;
+                b = lbl_803E7EA4;
+            } else {
+                a = *(f32 *)((char *)inner + 0x444);
+                b = *(f32 *)((char *)inner + 0x448);
+            }
+            res = (*(u8 (*)(int, int, int, f32, f32))(
+                *(int *)(*(int *)(*(int *)((char *)sub + 0x68)) + 0x20)))(
+                sub, obj, *(s8 *)((char *)inner + 0x86d), a, b);
+            if (res == 1) {
+                *(u8 *)((char *)inner + 0x86e) = 1;
+            } else if (res == 2) {
+                *(u8 *)((char *)inner + 0x86e) = 2;
+            } else if (res == 3) {
+                *(u8 *)((char *)inner + 0x86e) = 4;
+            } else if (res == 4) {
+                *(u8 *)((char *)inner + 0x86e) = 3;
+            } else if (res == 5) {
+                *(u8 *)((char *)inner + 0x681) = 1;
+            } else {
+                *(u8 *)((char *)inner + 0x86e) = 0;
+            }
+        }
+    }
+    if (nextMove != -1 && *(s16 *)((char *)obj + 0xa0) != nextMove &&
+        ObjAnim_GetCurrentEventCountdown((ObjAnimComponent *)obj) == 0) {
+        ObjAnim_SetCurrentMove(obj, nextMove, lbl_803E7EA4, 0);
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0xa);
+    }
+    if (camCall != 0) {
+        (*(void (*)(int, int, int, f32))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, 3, fv);
+    }
+    if (doXform != 0) {
+        ((void (*)(f32, f32, f32, void *, f32 *, void *, int))Obj_TransformLocalPointToWorld)(
+            *(f32 *)((char *)inner + 0x664), *(f32 *)((char *)inner + 0x668),
+            *(f32 *)((char *)inner + 0x66c), (void *)(obj + 0xc), &yOut, (void *)(obj + 0x14), sub);
+        *(f32 *)((char *)obj + 0xc) =
+            lbl_803E7FB8 * *(f32 *)((char *)inner + 0x654) + *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)obj + 0x14) =
+            lbl_803E7FB8 * *(f32 *)((char *)inner + 0x65c) + *(f32 *)((char *)obj + 0x14);
+    }
+    ((ByteFlags *)((char *)inner + 0x3f3))->b01 = ((ByteFlags *)((char *)inner + 0x3f3))->b08;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s16 lbl_803DC6A2;
+extern f32 lbl_803E8030;
+extern f32 lbl_803E8034;
+extern f32 lbl_803E803C;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802A2EE0(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 diff = *(f32 *)((char *)inner + 0x5ac) - *(f32 *)((char *)inner + 0x874);
+    f32 blend;
+    f32 z;
+    f32 t;
+
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(s16 *)((char *)state + 0x278) = 0xc;
+        *(int *)((char *)inner + 0x898) = 0;
+        *(f32 *)((char *)obj + 0x28) = lbl_803E7EA4;
+    }
+    z = lbl_803E7EA4;
+    *(f32 *)((char *)inner + 0x778) = z;
+    {
+        int in2 = *(int *)((char *)obj + 0xb8);
+        *(int *)((char *)in2 + 0x360) &= ~2;
+        *(int *)((char *)in2 + 0x360) |= 0x2000;
+    }
+    *(u32 *)((char *)state + 4) |= 0x100000;
+    *(f32 *)((char *)state + 0x280) = z;
+    *(f32 *)((char *)state + 0x284) = z;
+    *(u32 *)state |= 0x200000;
+    *(f32 *)((char *)obj + 0x24) = z;
+    *(f32 *)((char *)obj + 0x2c) = z;
+    *(u32 *)((char *)state + 4) |= 0x8000000;
+    lbl_803DC6A2 = lbl_803DC6A0;
+    switch (lbl_803DC6A0) {
+    case 0:
+        t = (*(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)inner + 0x5b8)) /
+            (diff - *(f32 *)((char *)inner + 0x5b8));
+        *(f32 *)((char *)obj + 0xc) =
+            t * (*(f32 *)((char *)inner + 0x5f8) - *(f32 *)((char *)inner + 0x5b4)) +
+            *(f32 *)((char *)inner + 0x5b4);
+        *(f32 *)((char *)obj + 0x14) =
+            t * (*(f32 *)((char *)inner + 0x600) - *(f32 *)((char *)inner + 0x5bc)) +
+            *(f32 *)((char *)inner + 0x5bc);
+        (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, 0x14);
+        *(f32 *)((char *)obj + 0x10) =
+            *(f32 *)((char *)state + 0x2b4) * timeDelta + *(f32 *)((char *)obj + 0x10);
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            f32 d2;
+            f32 v;
+            lbl_803DC6A0 = 2;
+            blend = lbl_803E7EF8;
+            d2 = (lbl_803E7F10 + diff) - *(f32 *)((char *)obj + 0x10);
+            v = lbl_803E8030 * -d2;
+            if (v >= lbl_803E7EA4) {
+                *(f32 *)((char *)obj + 0x28) = sqrtf(v);
+            } else {
+                *(f32 *)((char *)obj + 0x28) = lbl_803E7EA4;
+            }
+            Sfx_PlayFromObject(obj,
+                               (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x2d5 : 0x2d4));
+        }
+        break;
+    case 2:
+        if (*(f32 *)((char *)obj + 0x10) >= diff) {
+            lbl_803DC6A0 = 3;
+            blend = lbl_803E800C;
+            *(f32 *)((char *)obj + 0x28) = z;
+            *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)inner + 0x5f8);
+            *(f32 *)((char *)obj + 0x10) = diff;
+            *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)inner + 0x600);
+        } else {
+            *(f32 *)((char *)obj + 0x28) =
+                lbl_803E7E88 * fv + *(f32 *)((char *)obj + 0x28);
+            t = (*(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)inner + 0x5b8)) /
+                (diff - *(f32 *)((char *)inner + 0x5b8));
+            *(f32 *)((char *)obj + 0xc) =
+                t * (*(f32 *)((char *)inner + 0x5f8) - *(f32 *)((char *)inner + 0x5b4)) +
+                *(f32 *)((char *)inner + 0x5b4);
+            *(f32 *)((char *)obj + 0x14) =
+                t * (*(f32 *)((char *)inner + 0x600) - *(f32 *)((char *)inner + 0x5bc)) +
+                *(f32 *)((char *)inner + 0x5bc);
+        }
+        break;
+    case 3:
+        *(f32 *)((char *)inner + 0x5b4) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)inner + 0x5b8) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)inner + 0x5bc) = *(f32 *)((char *)obj + 0x14);
+        if (*(f32 *)((char *)obj + 0x98) > lbl_803E7F48) {
+            if (*(f32 *)((char *)state + 0x28c) > lbl_803E7F10) {
+                lbl_803DC6A0 = 5;
+                blend = lbl_803E8024;
+                Sfx_PlayFromObject(obj,
+                                   (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x398 : 0x1d));
+                if (*(u8 *)((char *)inner + 0x608) == 5) {
+                    Sfx_PlayFromObject(obj, 0x2f);
+                }
+            } else if (*(f32 *)((char *)state + 0x28c) < lbl_803E801C) {
+                *(int *)((char *)inner + 0x5c0) = *(s16 *)obj;
+                lbl_803DC6A0 = 7;
+                blend = lbl_803E8034;
+                *(f32 *)((char *)obj + 0x28) = z;
+            } else if (*(s8 *)((char *)state + 0x346) != 0) {
+                lbl_803DC6A0 = 6;
+                blend = lbl_803E8038;
+            }
+        }
+        break;
+    case 6:
+        *(f32 *)((char *)inner + 0x5b4) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)inner + 0x5b8) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)inner + 0x5bc) = *(f32 *)((char *)obj + 0x14);
+        if (*(f32 *)((char *)state + 0x28c) > lbl_803E7F10) {
+            lbl_803DC6A0 = 5;
+            blend = lbl_803E8024;
+            Sfx_PlayFromObject(obj,
+                               (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x398 : 0x1d));
+            if (*(u8 *)((char *)inner + 0x608) == 5) {
+                Sfx_PlayFromObject(obj, 0x2f);
+            }
+        } else if (*(f32 *)((char *)state + 0x28c) < lbl_803E801C) {
+            *(int *)((char *)inner + 0x5c0) = *(s16 *)obj;
+            lbl_803DC6A0 = 7;
+            blend = lbl_803E8034;
+            *(f32 *)((char *)obj + 0x28) = z;
+        }
+        break;
+    case 7: {
+        f32 c5cc = *(f32 *)((char *)inner + 0x5cc);
+        f32 k = lbl_803E7E98 + lbl_803DC6C0;
+        f32 c5dc = *(f32 *)((char *)inner + 0x5dc);
+        f32 y2 = c5cc * k + c5dc;
+        s16 ang;
+        *(f32 *)((char *)obj + 0xc) =
+            *(f32 *)((char *)obj + 0x98) *
+                ((*(f32 *)((char *)inner + 0x5c4) * k + *(f32 *)((char *)inner + 0x5d4)) -
+                 *(f32 *)((char *)inner + 0x5b4)) +
+            *(f32 *)((char *)inner + 0x5b4);
+        *(f32 *)((char *)obj + 0x14) =
+            *(f32 *)((char *)obj + 0x98) * (y2 - *(f32 *)((char *)inner + 0x5bc)) +
+            *(f32 *)((char *)inner + 0x5bc);
+        *(f32 *)((char *)obj + 0x28) =
+            -(lbl_803E7F6C * timeDelta - *(f32 *)((char *)obj + 0x28));
+        ang = -(lbl_803E7F98 * *(f32 *)((char *)obj + 0x98) -
+                (f32)*(int *)((char *)inner + 0x5c0));
+        *(s16 *)((char *)inner + 0x484) = ang;
+        *(s16 *)((char *)inner + 0x478) = ang;
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            *(f32 *)((char *)state + 0x294) = z;
+            *(f32 *)((char *)state + 0x280) = z;
+            *(f32 *)((char *)state + 0x284) = z;
+            *(f32 *)((char *)obj + 0x24) = z;
+            *(f32 *)((char *)obj + 0x2c) = z;
+            *(u32 *)((char *)state + 4) &= ~0x100000;
+            fn_802AB5A4(obj, inner, 5);
+            ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b10 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b08 = 0;
+            staffFn_80170380(lbl_803DE450, 2);
+            ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 0;
+            *(u32 *)((char *)inner + 0x360) |= 0x800000;
+            ObjHits_SyncObjectPositionIfDirty(obj);
+            ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 1;
+            ((ByteFlags *)((char *)inner + 0x3f4))->b10 = 1;
+            *(u8 *)((char *)inner + 0x800) = 0;
+            if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                s16 typ = *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x46);
+                if (typ == 0x3cf || typ == 0x662) {
+                    objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                } else {
+                    objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                }
+                *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) =
+                    *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) & ~0x4000;
+                *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                *(int *)((char *)inner + 0x7f8) = 0;
+            }
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 3;
+        }
+        break;
+    }
+    case 5:
+        t = *(f32 *)((char *)obj + 0x98) / lbl_803E7F68;
+        z = (t < z) ? z : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
+        *(f32 *)((char *)obj + 0xc) =
+            z * (*(f32 *)((char *)inner + 0x5ec) - *(f32 *)((char *)inner + 0x5b4)) +
+            *(f32 *)((char *)inner + 0x5b4);
+        *(f32 *)((char *)obj + 0x10) =
+            z * (*(f32 *)((char *)inner + 0x5f0) - *(f32 *)((char *)inner + 0x5b8)) +
+            *(f32 *)((char *)inner + 0x5b8);
+        *(f32 *)((char *)obj + 0x14) =
+            z * (*(f32 *)((char *)inner + 0x5f4) - *(f32 *)((char *)inner + 0x5bc)) +
+            *(f32 *)((char *)inner + 0x5bc);
+        if (*(f32 *)((char *)obj + 0x98) > lbl_803E7F68) {
+            *(u32 *)((char *)state + 4) &= ~0x100000;
+            fn_802AB5A4(obj, inner, 5);
+            *(u32 *)((char *)inner + 0x360) |= 0x800000;
+            *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+            return 2;
+        }
+        break;
+    default:
+        lbl_803DC6A0 = 0;
+        lbl_803DC6A2 = 0;
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E803C;
+        ObjAnim_SetCurrentMove(obj, lbl_80332EF0[lbl_803DC6A0], lbl_803E7EA4, 0);
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 10);
+        {
+            s16 ang =
+                getAngle(*(f32 *)((char *)inner + 0x5c4), *(f32 *)((char *)inner + 0x5cc));
+            *(s16 *)((char *)inner + 0x484) = ang;
+            *(s16 *)((char *)inner + 0x478) = ang;
+        }
+        *(f32 *)((char *)obj + 0x28) = lbl_803E7EA4;
+        ((void (*)(f32, f32, f32, void *, void *, void *, int))Obj_TransformWorldPointToLocal)(
+            *(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c),
+            *(f32 *)((char *)obj + 0x20), (void *)(obj + 0xc), (void *)(obj + 0x10),
+            (void *)(obj + 0x14), *(int *)((char *)obj + 0x30));
+        objHitDetectFn_80062e84(obj, *(int *)((char *)inner + 0x4c4), 1);
+        *(f32 *)((char *)inner + 0x5b4) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)inner + 0x5b8) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)inner + 0x5bc) = *(f32 *)((char *)obj + 0x14);
+        {
+        char *xf = *(char **)((char *)inner + 0x4c4);
+        if (xf != NULL) {
+            ((void (*)(f32, f32, f32, void *, void *, void *, char *))Obj_TransformWorldPointToLocal)(
+                *(f32 *)((char *)inner + 0x5d4), *(f32 *)((char *)inner + 0x5d8),
+                *(f32 *)((char *)inner + 0x5dc), (void *)(inner + 0x5d4),
+                (void *)(inner + 0x5d8), (void *)(inner + 0x5dc), xf);
+            ((void (*)(f32, f32, f32, void *, void *, void *, int))Obj_TransformWorldPointToLocal)(
+                *(f32 *)((char *)inner + 0x5ec), *(f32 *)((char *)inner + 0x5f0),
+                *(f32 *)((char *)inner + 0x5f4), (void *)(inner + 0x5ec),
+                (void *)(inner + 0x5f0), (void *)(inner + 0x5f4),
+                *(int *)((char *)inner + 0x4c4));
+            ((void (*)(f32, f32, f32, void *, void *, void *, int))Obj_TransformWorldPointToLocal)(
+                *(f32 *)((char *)inner + 0x5f8), *(f32 *)((char *)inner + 0x5fc),
+                *(f32 *)((char *)inner + 0x600), (void *)(inner + 0x5f8),
+                (void *)(inner + 0x5fc), (void *)(inner + 0x600),
+                *(int *)((char *)inner + 0x4c4));
+            *(f32 *)((char *)inner + 0x5ac) =
+                *(f32 *)((char *)inner + 0x5ac) -
+                *(f32 *)((char *)*(int *)((char *)inner + 0x4c4) + 0x10);
+            *(f32 *)((char *)inner + 0x5b0) =
+                *(f32 *)((char *)inner + 0x5b0) -
+                *(f32 *)((char *)*(int *)((char *)inner + 0x4c4) + 0x10);
+            *(u8 *)((char *)inner + 0x609) = 0;
+        }
+        }
+        break;
+    }
+    if (lbl_803DC6A2 != lbl_803DC6A0) {
+        ObjAnim_SetCurrentMove(obj, lbl_80332EF0[lbl_803DC6A0], lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = blend;
+    }
+    fn_802AB5A4(obj, inner, 5);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern f32 lbl_803E8104;
+extern f32 lbl_803E8108;
+extern f32 lbl_803E810C;
+extern f32 lbl_803E8110;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802AD2F4(int obj, int inner, int state)
+{
+    f32 hdiff;
+    int sfx;
+    f32 z;
+    f32 y;
+    f32 x;
+
+    *(f32 *)((char *)obj + 0x28) =
+        -(lbl_803E7EFC * timeDelta - *(f32 *)((char *)obj + 0x28));
+    switch (*(s16 *)((char *)obj + 0xa0)) {
+    case 0xa:
+    case 0x54:
+    case 0x90:
+        *(u8 *)((char *)inner + 0x8c5) = 2;
+        break;
+    case 0x13: {
+        f32 zz = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x284) = zz;
+        *(f32 *)((char *)obj + 0x28) = zz;
+    }
+        if (*(f32 *)((char *)obj + 0x98) >= lbl_803E7F10 * *(f32 *)((char *)state + 0x2a0)) {
+            ((ByteFlags *)((char *)inner + 0x3f2))->b08 = 0;
+        } else if (*(u8 *)((char *)inner + 0x3f7) >= 2 &&
+                   ((ByteFlags *)((char *)inner + 0x3f2))->b04 == 0) {
+            s8 hv;
+            Camera_EnableViewYOffset();
+            CameraShake_SetAllMagnitudes(lbl_803E7ED8);
+            ObjPath_GetPointWorldPosition(obj, 0xb, &x, &y, &z, 0);
+            if (*(u8 *)((char *)inner + 0x86c) == 0x1a) {
+                hv = 0x14;
+            } else {
+                hv = 2;
+            }
+            ObjHits_RecordPositionHit(obj, 0, hv, 1, 0, x, y, z);
+            ((ByteFlags *)((char *)inner + 0x3f2))->b04 = 1;
+        }
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f3))->b40 = 1;
+            *(u8 *)((char *)inner + 0x40d) = 0;
+            return 1;
+        }
+        if (*(u8 *)((char *)inner + 0x3f7) >= 2) {
+            *(u8 *)((char *)inner + 0x8c5) = 4;
+        } else {
+            *(u8 *)((char *)inner + 0x8c5) = 3;
+        }
+        break;
+    case 0xb: {
+        f32 zz = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x284) = zz;
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            if (**(s8 **)((char *)inner + 0x35c) > 0) {
+                ObjAnim_SetCurrentMove(obj, 0xc, zz, 0);
+                *(f32 *)((char *)state + 0x2a0) = lbl_803E8038;
+            } else {
+                ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 0;
+                *(u8 *)((char *)inner + 0x40d) = 0;
+                playerDie(obj);
+            }
+        }
+        (*(void (*)(int, int, int, f32))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, 2,
+                                                                              timeDelta);
+        *(u8 *)((char *)inner + 0x8c5) = 4;
+        break;
+    }
+    case 0xc:
+        if ((*(int *)((char *)state + 0x314) & 1) != 0 &&
+            *(s16 *)((char *)inner + 0x81a) != 0) {
+            Sfx_PlayFromObject(obj, 0x20e);
+            Sfx_PlayFromObject(obj, 0x20f);
+        }
+        if (*(s8 *)((char *)state + 0x346) != 0) {
+            ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f3))->b40 = 1;
+            *(u8 *)((char *)inner + 0x40d) = 0;
+            return 1;
+        }
+        (*(void (*)(int, int, int, f32))(*(int *)(*gPlayerInterface + 0x20)))(obj, state, 2,
+                                                                              timeDelta);
+        *(u8 *)((char *)inner + 0x8c5) = 4;
+        break;
+    default:
+        ObjAnim_SetCurrentMove(obj, 0x54, lbl_803E7EA4, 0);
+        ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x14);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F6C;
+        *(u8 *)((char *)inner + 0x8c5) = 2;
+        *(u8 *)((char *)inner + 0x3f7) = 0;
+        ((ByteFlags *)((char *)inner + 0x3f0))->b01 = 0;
+        ((ByteFlags *)((char *)inner + 0x3f2))->b08 = 0;
+        ((ByteFlags *)((char *)inner + 0x3f2))->b04 = 0;
+        ((ByteFlags *)((char *)inner + 0x3f2))->b02 = 0;
+        *(f32 *)((char *)inner + 0x848) = *(f32 *)((char *)obj + 0x1c);
+        break;
+    }
+    hdiff = *(f32 *)((char *)inner + 0x848) - *(f32 *)((char *)obj + 0x1c);
+    if (((ByteFlags *)((char *)inner + 0x3f1))->b01 != 0 &&
+        ((ByteFlags *)((char *)inner + 0x3f0))->b01 == 0) {
+        ((ByteFlags *)((char *)inner + 0x3f0))->b01 = 1;
+        sfx = audioPickSoundEffect_8006ed24(*(u8 *)((char *)inner + 0x86c),
+                                            *(u8 *)((char *)inner + 0x8a5));
+        if (hdiff > lbl_803E8104) {
+            s8 hv;
+            doRumble(lbl_803E7FA4);
+            Camera_EnableViewYOffset();
+            CameraShake_SetAllMagnitudes(lbl_803E7F58);
+            ObjAnim_SetCurrentMove(obj, 0xb, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7F34;
+            Sfx_PlayFromObject(obj, 0x20d);
+            Sfx_PlayFromObject(obj, 0x28);
+            ObjPath_GetPointWorldPosition(obj, 0xb, &x, &y, &z, 0);
+            if (*(u8 *)((char *)inner + 0x86c) == 0x1a) {
+                hv = 0x14;
+            } else {
+                hv = 2;
+            }
+            ObjHits_RecordPositionHit(obj, 0, hv, 2, 0, x, y, z);
+            ((ByteFlags *)((char *)inner + 0x3f2))->b08 = 0;
+            if (*(f32 *)((char *)inner + 0x838) > lbl_803E7FC4) {
+                Sfx_PlayFromObject(obj, 0x428);
+            }
+        } else if (hdiff > lbl_803E8108) {
+            doRumble(lbl_803E7ED8);
+            ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E800C;
+            Sfx_PlayFromObject(obj, sfx);
+            Sfx_StopFromObject(obj,
+                               (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x2d0 : 0x26));
+            ((ByteFlags *)((char *)inner + 0x3f2))->b08 = 1;
+            if (*(f32 *)((char *)inner + 0x838) > lbl_803E7FC4) {
+                Sfx_PlayFromObject(obj, 0x429);
+            }
+        } else if (hdiff > lbl_803E810C) {
+            doRumble(lbl_803E7ED8);
+            ObjAnim_SetCurrentMove(obj, 0x13, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E800C;
+            Sfx_PlayFromObject(obj, sfx);
+            Sfx_PlayFromObject(obj,
+                               (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x399 : 0x27));
+            ((ByteFlags *)((char *)inner + 0x3f2))->b08 = 1;
+            if (*(f32 *)((char *)inner + 0x838) > lbl_803E7FC4) {
+                Sfx_PlayFromObject(obj, 0x42a);
+            }
+        } else {
+            doRumble(lbl_803E7F10);
+            Sfx_PlayFromObject(0, sfx);
+            ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 0;
+            *(u8 *)((char *)inner + 0x40d) = 0;
+            ((ByteFlags *)((char *)inner + 0x3f1))->b08 = 1;
+            ((ByteFlags *)((char *)inner + 0x3f2))->b10 = 1;
+            ((ByteFlags *)((char *)inner + 0x3f2))->b08 = 1;
+            if (*(f32 *)((char *)inner + 0x838) > lbl_803E7FC4) {
+                Sfx_PlayFromObject(obj, 0x42b);
+            }
+        }
+        if (hdiff > lbl_803E810C) {
+            f32 z2 = lbl_803E7EA4;
+            *(f32 *)((char *)state + 0x294) = z2;
+            *(f32 *)((char *)state + 0x280) = z2;
+        }
+        *(f32 *)((char *)state + 0x284) = lbl_803E7EA4;
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b01 == 0) {
+        if (*(f32 *)((char *)state + 0x1b0) < lbl_803E80C4) {
+            ((ByteFlags *)((char *)inner + 0x3f2))->b08 = 1;
+        }
+        if (hdiff > lbl_803E8104 && *(u8 *)((char *)inner + 0x3f7) < 3) {
+            ObjAnim_SetCurrentMove(obj, 0xa, lbl_803E7EA4, 0);
+            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x19);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
+            *(u8 *)((char *)inner + 0x3f7) = 3;
+            ((ByteFlags *)((char *)inner + 0x3f2))->b08 = 0;
+        } else if (hdiff > lbl_803E8108 && *(u8 *)((char *)inner + 0x3f7) < 2) {
+            if (Sfx_IsPlayingFromObject(
+                    0, (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x2d0 : 0x26)) == 0) {
+                Sfx_PlayFromObject(obj,
+                                   (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x2d0 : 0x26));
+            }
+            *(u8 *)((char *)inner + 0x3f7) = 2;
+        } else if (hdiff > lbl_803E810C && *(u8 *)((char *)inner + 0x3f7) < 1) {
+            ObjAnim_SetCurrentMove(obj, 0x90, lbl_803E7EA4, 0);
+            ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x19);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7EFC;
+            *(u8 *)((char *)inner + 0x3f7) = 1;
+        }
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f2))->b08 != 0 &&
+        (*(u16 *)((char *)inner + 0x6e2) & 0x400) != 0) {
+        ((ByteFlags *)((char *)inner + 0x3f2))->b02 = 1;
+        *(u16 *)((char *)inner + 0x6e2) = *(u16 *)((char *)inner + 0x6e2) & ~0x400;
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b01 != 0 &&
+        ((ByteFlags *)((char *)inner + 0x3f2))->b02 != 0 &&
+        *(u8 *)((char *)inner + 0x3f7) < 3) {
+        fn_802AED2C(obj, inner, state);
+        ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 0;
+        *(u8 *)((char *)inner + 0x40d) = 0;
+    }
+    if (*(u8 *)((char *)inner + 0x3f7) == 0 &&
+        ((ByteFlags *)((char *)inner + 0x3f4))->b10 == 0) {
+        *(f32 *)((char *)inner + 0x428) = lbl_803E7FBC;
+        *(f32 *)((char *)inner + 0x42c) = lbl_803E7E98;
+        *(f32 *)((char *)inner + 0x430) = lbl_803E7FBC;
+        *(f32 *)((char *)inner + 0x434) = lbl_803E7E98;
+        *(f32 *)((char *)inner + 0x82c) = lbl_803E7F14;
+        *(f32 *)((char *)inner + 0x408) = *(f32 *)((char *)inner + 0x408) * lbl_803E7F14;
+    } else {
+        *(f32 *)((char *)inner + 0x428) = lbl_803E7FBC;
+        *(f32 *)((char *)inner + 0x42c) = lbl_803E7EA4;
+        *(f32 *)((char *)inner + 0x430) = lbl_803E7FBC;
+        *(f32 *)((char *)inner + 0x434) = lbl_803E7EA4;
+        *(f32 *)((char *)inner + 0x82c) = lbl_803E7EA4;
+        *(f32 *)((char *)inner + 0x408) = *(f32 *)((char *)inner + 0x408) * lbl_803E7EA4;
+    }
+    {
+        f32 t = *(f32 *)((char *)inner + 0x408);
+        *(f32 *)((char *)inner + 0x408) =
+            (t < lbl_803E8110)
+                ? lbl_803E8110
+                : ((t > *(f32 *)((char *)inner + 0x404)) ? *(f32 *)((char *)inner + 0x404) : t);
+    }
+    if (*(u8 *)((char *)inner + 0x8c8) == 0x4b) {
+        (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+            0x42, 0, 1, 0, 0, 0, 0xff);
+        *(u8 *)((char *)inner + 0x8c8) = 0x42;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *gScreenTransitionInterface;
+extern void Pause_ResetMenuFrameCounter(void);
+extern int getSkyColorFn_80088e30(int idx);
+extern void objAudioFn_8006edcc();
+extern int isInBounds(f32 x, f32 z);
+extern int getCurUiDll(void);
+extern void fn_802B249C(int obj, int inner, int state);
+extern void fn_802AFB0C(int obj, int inner, int state);
+extern u8 lbl_803DC6A8[8];
+extern u8 lbl_803DC6B0[2];
+extern int lbl_802C2C50[];
+extern f32 lbl_803E8164;
+
+typedef struct {
+    int a[6];
+} UiMsgBlock;
+
+typedef struct {
+    u8 pad[0x8b9];
+    u8 bits[7];
+} InnerBits;
+
+#pragma scheduling off
+#pragma peephole off
+void playerUpdate(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int cam = Camera_GetCurrentViewSlot();
+    f32 cd = *(f32 *)((char *)inner + 0x820);
+    f32 limit = lbl_803E7EF0;
+    if (cd >= limit) {
+        f32 zero = lbl_803E7EA4;
+        if (cd > zero) {
+            *(f32 *)((char *)inner + 0x820) = cd - lbl_803E7EE0;
+            if (*(f32 *)((char *)inner + 0x820) <= zero) {
+                cutsceneEnterExit(0, 0);
+                *(u8 *)((char *)inner + 0x8cf) = 1;
+            } else if (limit == *(f32 *)((char *)inner + 0x820)) {
+                cutsceneEnterExit(1, 0);
+                setTimeStop(0xfd);
+            }
+        }
+    } else if (getCurUiDll() != 4) {
+        if ((*(u32 *)((char *)inner + 0x360) & 0x200000) != 0) {
+            return;
+        }
+        if (((ByteFlags *)((char *)inner + 0x3f3))->b08 != 0) {
+            setBButtonIcon(10);
+        }
+        if (*(void **)((char *)obj + 0x30) == NULL && *(void **)((char *)inner + 0x7f0) == NULL &&
+            isInBounds(*(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x14)) == 0) {
+            *(int *)((char *)inner + 0x2d0) = 0;
+            *(int *)((char *)inner + 0x7ec) = 0;
+            (*(void (*)(int))(*(int *)(*gCameraInterface + 0x48)))(0);
+            {
+                f32 z = lbl_803E7EA4;
+                *(f32 *)((char *)inner + 0x294) = z;
+                *(f32 *)((char *)inner + 0x284) = z;
+                *(f32 *)((char *)inner + 0x280) = z;
+                *(f32 *)((char *)obj + 0x24) = z;
+                *(f32 *)((char *)obj + 0x28) = z;
+                *(f32 *)((char *)obj + 0x2c) = z;
+            }
+            fn_802AB5A4(obj, inner, 0xff);
+        } else {
+            f32 dt;
+            f32 ym;
+            int i;
+            int v;
+            u8 hov;
+            UiMsgBlock m;
+            *(u8 *)((char *)inner + 0x8c8) = (*(int (*)(void))(*(int *)(*gCameraInterface + 0x10)))();
+            if (*(u8 *)((char *)inner + 0x8c8) == 0x44 && *(s16 *)((char *)inner + 0x274) != 1) {
+                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 1);
+                {
+                    f32 z = lbl_803E7EA4;
+                    *(f32 *)((char *)inner + 0x294) = z;
+                    *(f32 *)((char *)inner + 0x284) = z;
+                    *(f32 *)((char *)inner + 0x280) = z;
+                    *(f32 *)((char *)obj + 0x24) = z;
+                    *(f32 *)((char *)obj + 0x28) = z;
+                    *(f32 *)((char *)obj + 0x2c) = z;
+                }
+                *(int *)((char *)inner + 0x304) = (int)fn_802A514C;
+            }
+            fn_802B249C(obj, inner, inner);
+            fn_802B4A9C(obj, inner, inner);
+            fn_802B07D8(obj, inner);
+            if ((u32)lbl_803DE448 == 0 && Obj_IsLoadingLocked() != 0) {
+                lbl_803DE448 = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x66a), 4, -1, -1,
+                                               *(int *)((char *)obj + 0x30));
+                ObjLink_AttachChild(obj, lbl_803DE448, 3);
+            }
+            if ((u32)lbl_803DE448 != 0) {
+                *(int *)(lbl_803DE448 + 0x30) = *(int *)((char *)obj + 0x30);
+                if (*(s16 *)((char *)inner + 0x81a) == 0) {
+                    *(s16 *)(lbl_803DE448 + 6) = *(s16 *)(lbl_803DE448 + 6) | 0x4000;
+                }
+            }
+            if ((u32)lbl_803DE450 == 0 && Obj_IsLoadingLocked() != 0) {
+                lbl_803DE450 = Obj_SetupObject(Obj_AllocObjectSetup(0x24, 0x773), 5, -1, -1,
+                                               *(int *)((char *)obj + 0x30));
+            }
+            if ((u32)lbl_803DE450 != 0) {
+                ObjPath_GetPointWorldPosition(obj, 4, (void *)(lbl_803DE450 + 0xc),
+                                              (void *)(lbl_803DE450 + 0x10),
+                                              (void *)(lbl_803DE450 + 0x14), 0);
+            }
+            if (*(s16 **)((char *)obj + 0x30) != NULL) {
+                v = (**(s16 **)((char *)obj + 0x30) & 0xffffU) -
+                    ((0x8000U - *(s16 *)cam) & 0xffff);
+                if (v > 0x8000) {
+                    v -= 0xffff;
+                }
+                if (v < -0x8000) {
+                    v += 0xffff;
+                }
+                *(s16 *)((char *)inner + 0x330) = (s16)(v + 0x8000);
+            } else {
+                *(s16 *)((char *)inner + 0x330) = *(s16 *)cam;
+            }
+            *(f32 *)((char *)inner + 0x778) = lbl_803E8164;
+            *(u8 *)((char *)inner + 0x8c9) = 0;
+            *(int *)((char *)inner + 0x310) = 0;
+            for (i = 0; i < *(u8 *)((char *)inner + 0x8b8); i++) {
+                int idx = i + 0x8b9;
+                *(u32 *)((char *)inner + 0x310) |= 1 << *(u8 *)((char *)inner + idx);
+            }
+            *(u32 *)((char *)inner + 0x360) &= 0xfffff4ff;
+            dt = timeDelta;
+            fn_802B19F8(obj, inner, dt);
+            fn_802B4C18(obj, inner, dt);
+            ((void (*)(int, int, f32))fn_802AEF34)(obj, inner, dt);
+            fn_802B1E5C(obj, inner, inner, dt);
+            ((void (*)(int, int, int, f32))fn_802B1BF8)(obj, inner, inner, dt);
+            {
+                f32 t = *(f32 *)((char *)obj + 0x24);
+                *(f32 *)((char *)obj + 0x24) =
+                    (t < lbl_803E801C) ? lbl_803E801C
+                                       : ((t > lbl_803E7F10) ? lbl_803E7F10 : t);
+                t = *(f32 *)((char *)obj + 0x28);
+                *(f32 *)((char *)obj + 0x28) =
+                    (t < lbl_803E811C) ? lbl_803E811C
+                                       : ((t > lbl_803E80E4) ? lbl_803E80E4 : t);
+                t = *(f32 *)((char *)obj + 0x2c);
+                *(f32 *)((char *)obj + 0x2c) =
+                    (t < lbl_803E801C) ? lbl_803E801C
+                                       : ((t > lbl_803E7F10) ? lbl_803E7F10 : t);
+            }
+            ym = *(f32 *)((char *)obj + 0x28) * dt;
+            if (ym > lbl_803E7ED8) {
+                ym = lbl_803E7ED8;
+            }
+            objMove(obj, *(f32 *)((char *)obj + 0x24) * dt, ym,
+                    *(f32 *)((char *)obj + 0x2c) * dt);
+            *(s16 *)obj = *(s16 *)((char *)inner + 0x478);
+            m = *(UiMsgBlock *)lbl_802C2C50;
+            (*(void (*)(void *, int))(*(int *)(*gGameUIInterface + 0x24)))(&m, 6);
+            fn_802B0920(obj, inner);
+            {
+                s16 nv = *(s16 *)((char *)inner + 0x810) - framesThisStep;
+                *(s16 *)((char *)inner + 0x810) = nv;
+                if (nv < 0) {
+                    *(s16 *)((char *)inner + 0x810) =
+                        lbl_803DC6A8[*(u8 *)((char *)inner + 0x8b0)];
+                    *(u8 *)((char *)inner + 0x8b1) =
+                        lbl_803DC6B0[*(u8 *)((char *)inner + 0x8b0)];
+                }
+            }
+            fn_802B066C(obj, inner);
+            if (*(u8 *)((char *)inner + 0x8ca) == 1) {
+                *(f32 *)((char *)inner + 0x7d0) =
+                    *(f32 *)((char *)inner + 0x7cc) * timeDelta + *(f32 *)((char *)inner + 0x7d0);
+                if (*(f32 *)((char *)inner + 0x7d0) >= lbl_803E80C4) {
+                    *(f32 *)((char *)inner + 0x7d0) = lbl_803E80C4;
+                    *(f32 *)((char *)inner + 0x7cc) = lbl_803E7EA4;
+                } else if (*(f32 *)((char *)inner + 0x7d0) <= lbl_803E7EA4) {
+                    *(f32 *)((char *)inner + 0x7d0) = lbl_803E7EA4;
+                    *(f32 *)((char *)inner + 0x7cc) = lbl_803E7F14;
+                }
+            }
+            fn_802AFB0C(obj, inner, inner);
+            if (*(void **)((char *)inner + 0x7f8) != NULL &&
+                Obj_IsObjectAlive(*(int *)((char *)inner + 0x7f8)) == 0) {
+                *(u8 *)((char *)inner + 0x800) = 0;
+                if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                    s16 typ = *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x46);
+                    if (typ == 0x3cf || typ == 0x662) {
+                        objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                    } else {
+                        objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                    }
+                    *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) =
+                        *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) & ~0x4000;
+                    *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                    *(int *)((char *)inner + 0x7f8) = 0;
+                }
+            }
+            if ((*(u8 *)(*(int *)((char *)obj + 0xb8) + 0xc4) & 0x40) != 0) {
+                v = (int)-(lbl_803E80E4 * timeDelta -
+                           (f32)(u32)*(u8 *)((char *)obj + 0xf1));
+            } else {
+                v = (int)(lbl_803E80E4 * timeDelta +
+                          (f32)(u32)*(u8 *)((char *)obj + 0xf1));
+            }
+            if (v < (u8)getSkyColorFn_80088e30(2)) {
+                v = (u8)getSkyColorFn_80088e30(2);
+            } else if (v > 0xff) {
+                v = 0xff;
+            }
+            *(u8 *)((char *)obj + 0xf1) = (u8)v;
+            fn_802AF7F8(obj, inner);
+            playerProcessQueuedItemCommand(obj, inner);
+            if (((ByteFlags *)((char *)inner + 0x3f3))->b20 != 0 &&
+                (*(int (*)(void))(*(int *)(*gScreenTransitionInterface + 0x14)))() != 0) {
+                (*(void (*)(void))(*(int *)(*gMapEventInterface + 0x28)))();
+            }
+            if (((ByteFlags *)((char *)inner + 0x3f3))->b20 == 0 &&
+                (*(int *)((char *)inner + 0x310) & 1) != 0) {
+                if (Sfx_IsPlayingFromObject(
+                        obj, (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x2d0 : 0x26)) == 0) {
+                    Sfx_PlayFromObject(
+                        0, (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x2d0 : 0x26));
+                }
+                ((ByteFlags *)((char *)inner + 0x3f3))->b20 = 1;
+                (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0x8)))(0x1e, 1);
+                Pause_ResetMenuFrameCounter();
+            }
+            if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0) {
+                *(u16 *)((char *)lbl_803DE44C + 0xb0) =
+                    *(u16 *)((char *)lbl_803DE44C + 0xb0) & ~7;
+                if (*(u8 *)((char *)inner + 0x8b3) == 0) {
+                    *(u16 *)((char *)lbl_803DE44C + 0xb0) =
+                        *(u16 *)((char *)lbl_803DE44C + 0xb0) | 2;
+                }
+            }
+            hov = ((ByteFlags *)((char *)inner + 0x3f4))->b40;
+            if (hov != 0) {
+                if (*(u8 *)((char *)inner + 0x8b3) != 0) {
+                    setAButtonIcon(1);
+                } else {
+                    int ok = (*(void **)((char *)inner + 0x7f8) == NULL && hov != 0 &&
+                              ((ByteFlags *)((char *)inner + 0x3f0))->b20 == 0 &&
+                              ((ByteFlags *)((char *)inner + 0x3f0))->b10 == 0);
+                    if (ok) {
+                        setAButtonIcon(0xb);
+                    }
+                }
+                if (*(u8 *)((char *)inner + 0x8b3) != 0) {
+                    setBButtonIcon(0xc);
+                }
+            }
+            (*(void (*)(int))(*(int *)(*gCameraInterface + 0x68)))(*(u8 *)((char *)inner + 0x8c9));
+            *(u8 *)((char *)inner + 0x800) = 0;
+            *(u8 *)((char *)inner + 0x8b8) = 0;
+            *(s16 *)obj = *(s16 *)((char *)inner + 0x478);
+            objAudioFn_8006edcc(obj, *(int *)((char *)inner + 0x314),
+                                *(u8 *)((char *)inner + 0x8a6), (void *)(inner + 0x3c4),
+                                (void *)(inner + 4), *(f32 *)((char *)inner + 0x280),
+                                lbl_803E7EE0);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 Curve_EvalCatmullRom(int curve, f32 t, int mode);
+extern f32 lbl_803E7FA8;
+extern f32 lbl_803E7F6C;
+extern f64 lbl_803E7EC0;
+extern f32 lbl_803E7F00;
+extern f32 lbl_803E7F44;
+extern f32 lbl_803E80E4;
+extern f32 lbl_803E7F10;
+extern f32 lbl_803E7FFC;
+extern f32 lbl_803E8098;
+extern f32 lbl_803E7E98;
+extern f32 lbl_803E7EE8;
+extern f32 lbl_803E7EAC;
+extern f32 lbl_803E7EFC;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_802B0EA4(int obj, int inner, int state)
+{
+    int d;
+    char *cam;
+    f32 dx;
+    f32 dz;
+    f32 spd;
+    f32 t;
+    f32 u;
+    int idx;
+    f32 one;
+    f32 v;
+
+    if ((*(u32 *)((char *)inner + 0x360) & 0x800000) != 0) {
+        s16 a = *(s16 *)obj;
+        *(s16 *)((char *)inner + 0x484) = a;
+        *(s16 *)((char *)inner + 0x478) = a;
+        *(int *)((char *)inner + 0x494) = a;
+        *(f32 *)((char *)state + 0x298) = lbl_803E7EA4;
+    }
+    *(f32 *)((char *)state + 0x29c) = *(f32 *)((char *)state + 0x298);
+    *(s16 *)((char *)inner + 0x490) = *(s16 *)((char *)inner + 0x484);
+    *(s16 *)((char *)inner + 0x492) = *(s16 *)((char *)inner + 0x478);
+    *(f32 *)((char *)state + 0x298) =
+        sqrtf(*(f32 *)((char *)state + 0x290) * *(f32 *)((char *)state + 0x290) +
+              *(f32 *)((char *)state + 0x28c) * *(f32 *)((char *)state + 0x28c));
+    if (*(f32 *)((char *)state + 0x298) > lbl_803E7FA8) {
+        *(f32 *)((char *)state + 0x298) = lbl_803E7FA8;
+    }
+    *(f32 *)((char *)state + 0x298) = *(f32 *)((char *)state + 0x298) / lbl_803E7FA8;
+    *(f32 *)((char *)inner + 0x470) =
+        *(f32 *)((char *)state + 0x298) - *(f32 *)((char *)state + 0x29c);
+    if (*(f32 *)((char *)state + 0x298) < lbl_803E7F6C) {
+        *(f32 *)((char *)state + 0x298) = lbl_803E7EA4;
+        *(int *)((char *)inner + 0x474) = *(int *)((char *)inner + 0x494);
+    } else {
+        *(int *)((char *)inner + 0x474) =
+            getAngle(*(f32 *)((char *)state + 0x290), -*(f32 *)((char *)state + 0x28c)) & 0xffff;
+        *(int *)((char *)inner + 0x474) =
+            *(int *)((char *)inner + 0x474) - *(s16 *)((char *)state + 0x330);
+        if ((*(u32 *)((char *)inner + 0x360) & 0x1000000) == 0) {
+            *(int *)((char *)inner + 0x494) = *(int *)((char *)inner + 0x474);
+        }
+    }
+    d = *(int *)((char *)inner + 0x474) - (u16)*(s16 *)((char *)inner + 0x484);
+    if (d > 0x8000) {
+        d = d - 0xffff;
+    }
+    if (d < -0x8000) {
+        d = d + 0xffff;
+    }
+    *(int *)((char *)inner + 0x48c) = (int)((f32)d / lbl_803E7F00);
+    if (*(f32 *)((char *)inner + 0x85c) != lbl_803E7EA4) {
+        f32 dead = *(f32 *)((char *)inner + 0x85c) * *(f32 *)((char *)state + 0x280);
+        if ((f32)*(int *)((char *)inner + 0x48c) < dead &&
+            (f32)*(int *)((char *)inner + 0x48c) > -dead) {
+            *(int *)((char *)inner + 0x48c) = 0;
+        }
+    }
+    if (d < 0) {
+        *(int *)((char *)inner + 0x488) = -*(int *)((char *)inner + 0x48c);
+    } else {
+        *(int *)((char *)inner + 0x488) = *(int *)((char *)inner + 0x48c);
+    }
+    if (*(f32 *)((char *)state + 0x298) < lbl_803E7F6C) {
+        *(u8 *)((char *)state + 0x34b) = 0;
+    } else {
+        d = d + 0xa000;
+        if (d < 0) {
+            d = d + 0xffff;
+        }
+        if (d > 0xffff) {
+            d = d - 0xffff;
+        }
+        *(u8 *)((char *)state + 0x34b) = (u8)(4 - d / 0x4000);
+    }
+    d = *(int *)((char *)inner + 0x474) - (u16)*(s16 *)((char *)inner + 0x478);
+    if (d > 0x8000) {
+        d = d - 0xffff;
+    }
+    if (d < -0x8000) {
+        d = d + 0xffff;
+    }
+    *(int *)((char *)inner + 0x480) = (int)((f32)d / lbl_803E7F00);
+    if (*(f32 *)((char *)inner + 0x85c) != lbl_803E7EA4) {
+        f32 dead = *(f32 *)((char *)inner + 0x85c) * *(f32 *)((char *)state + 0x280);
+        if ((f32)*(int *)((char *)inner + 0x480) < dead &&
+            (f32)*(int *)((char *)inner + 0x480) > -dead) {
+            *(int *)((char *)inner + 0x480) = 0;
+        }
+    }
+    if (d < 0) {
+        *(int *)((char *)inner + 0x47c) = -*(int *)((char *)inner + 0x480);
+    } else {
+        *(int *)((char *)inner + 0x47c) = *(int *)((char *)inner + 0x480);
+    }
+    d = *(int *)((char *)inner + 0x474) - (u16)*(s16 *)((char *)inner + 0x4d4);
+    if (d > 0x8000) {
+        d = d - 0xffff;
+    }
+    if (d < -0x8000) {
+        d = d + 0xffff;
+    }
+    *(int *)((char *)inner + 0x49c) = (int)((f32)d / lbl_803E7F00);
+    if (d < 0) {
+        *(int *)((char *)inner + 0x498) = -*(int *)((char *)inner + 0x49c);
+    } else {
+        *(int *)((char *)inner + 0x498) = *(int *)((char *)inner + 0x49c);
+    }
+    *(int *)((char *)inner + 0x4b8) =
+        (**(int (**)(void))((char *)(*gCameraInterface) + 0x40))();
+    cam = *(char **)((char *)inner + 0x4b8);
+    if (cam != NULL) {
+        dx = *(f32 *)(cam + 0xc) - *(f32 *)((char *)obj + 0xc);
+        dz = *(f32 *)(cam + 0x14) - *(f32 *)((char *)obj + 0x14);
+        *(int *)((char *)inner + 0x4ac) = getAngle(-dx, -dz) & 0xffff;
+        *(f32 *)((char *)inner + 0x4b0) = sqrtf(dx * dx + dz * dz);
+        *(u16 *)((char *)inner + 0x4b4) =
+            *(u8 *)(*(int *)(*(int *)(cam + 0x50) + 0x40) + 0x10) & 0xf;
+    }
+    d = *(int *)((char *)inner + 0x4ac) - (u16)*(s16 *)((char *)inner + 0x478);
+    if (d > 0x8000) {
+        d = d - 0xffff;
+    }
+    if (d < -0x8000) {
+        d = d + 0xffff;
+    }
+    *(int *)((char *)inner + 0x4a4) = (int)(f32)d;
+    if (d < 0) {
+        *(int *)((char *)inner + 0x4a8) = -*(int *)((char *)inner + 0x4a4);
+    } else {
+        *(int *)((char *)inner + 0x4a8) = *(int *)((char *)inner + 0x4a4);
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f1))->b20 != 0) {
+        spd = sqrtf(*(f32 *)((char *)state + 0x280) * *(f32 *)((char *)state + 0x280) +
+                    *(f32 *)((char *)state + 0x284) * *(f32 *)((char *)state + 0x284));
+        t = lbl_803E7EA4;
+        if (spd < t) {
+        } else {
+            t = *(f32 *)((char *)inner + 0x404);
+            if (spd > t) {
+            } else {
+                t = spd;
+            }
+        }
+        if (lbl_803E7EE0 == *(f32 *)((char *)inner + 0x82c)) {
+            *(f32 *)((char *)inner + 0x438) = lbl_803E7F44;
+        } else {
+            u = t * *(f32 *)((char *)inner + 0x7e0);
+            idx = (int)u;
+            *(f32 *)((char *)inner + 0x438) =
+                lbl_803E7EE0 / Curve_EvalCatmullRom(*(int *)((char *)inner + 0x450) + (idx + 1) * 4, u - (f32)idx, 0);
+        }
+    } else {
+        spd = *(f32 *)((char *)state + 0x280);
+        t = lbl_803E7EA4;
+        if (spd < t) {
+        } else {
+            t = *(f32 *)((char *)inner + 0x404);
+            if (spd > t) {
+            } else {
+                t = spd;
+            }
+        }
+        u = t * *(f32 *)((char *)inner + 0x7e0);
+        idx = (int)u;
+        *(f32 *)((char *)inner + 0x438) =
+            lbl_803E7EE0 / Curve_EvalCatmullRom(*(int *)((char *)inner + 0x450) + (idx + 1) * 4, u - (f32)idx, 0);
+    }
+    u = t * *(f32 *)((char *)inner + 0x7e0);
+    idx = (int)u;
+    *(f32 *)((char *)inner + 0x428) = Curve_EvalCatmullRom(*(int *)((char *)inner + 0x454) + (idx + 1) * 4, u - (f32)idx, 0);
+    u = t * *(f32 *)((char *)inner + 0x7e0);
+    idx = (int)u;
+    *(f32 *)((char *)inner + 0x42c) = Curve_EvalCatmullRom(*(int *)((char *)inner + 0x458) + (idx + 1) * 4, u - (f32)idx, 0);
+    u = t * *(f32 *)((char *)inner + 0x7e0);
+    idx = (int)u;
+    *(f32 *)((char *)inner + 0x430) = Curve_EvalCatmullRom(*(int *)((char *)inner + 0x45c) + (idx + 1) * 4, u - (f32)idx, 0);
+    u = t * *(f32 *)((char *)inner + 0x7e0);
+    idx = (int)u;
+    *(f32 *)((char *)inner + 0x434) = Curve_EvalCatmullRom(*(int *)((char *)inner + 0x460) + (idx + 1) * 4, u - (f32)idx, 0);
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b20 != 0) {
+        *(f32 *)((char *)inner + 0x428) = *(f32 *)((char *)inner + 0x428) * lbl_803E80E4;
+        *(f32 *)((char *)inner + 0x430) = *(f32 *)((char *)inner + 0x430) * lbl_803E80E4;
+        *(f32 *)((char *)inner + 0x438) = *(f32 *)((char *)inner + 0x438) * lbl_803E7F44;
+    } else {
+        if (lbl_803E7EE0 != *(f32 *)((char *)inner + 0x834)) {
+            f32 base = *(f32 *)(*(int *)((char *)inner + 0x400) + 0x10);
+            f32 frac = (*(f32 *)((char *)state + 0x280) - base) /
+                       (*(f32 *)((char *)inner + 0x404) - base);
+            f32 c = lbl_803E7EA4;
+            if (frac < c) {
+            } else {
+                if (frac > lbl_803E7EE0) {
+                    c = lbl_803E7EE0;
+                } else {
+                    c = frac;
+                }
+            }
+            *(f32 *)((char *)inner + 0x430) =
+                *(f32 *)((char *)inner + 0x430) *
+                ((*(f32 *)((char *)inner + 0x834) - lbl_803E7EE0) * c + lbl_803E7EE0);
+        }
+    }
+    if (*(void **)((char *)inner + 0x464) != NULL) {
+        int n = *(int *)((char *)inner + 0x47c);
+        *(f32 *)((char *)inner + 0x420) = Curve_EvalCatmullRom(
+            *(int *)((char *)inner + 0x464) + (n / 5 + 1) * 4, (f32)(n % 5) / lbl_803E7F10, 0);
+    } else {
+        *(f32 *)((char *)inner + 0x420) = lbl_803E7EE0;
+    }
+    one = lbl_803E7EE0;
+    *(f32 *)((char *)inner + 0x420) = one;
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b20 == 0 &&
+        *(f32 *)((char *)inner + 0x838) > lbl_803E7EA4) {
+        *(f32 *)((char *)inner + 0x840) =
+            (*(f32 *)((char *)inner + 0x838) - lbl_803E7FFC) / lbl_803E8098;
+        v = *(f32 *)((char *)inner + 0x840);
+        t = lbl_803E7EA4;
+        if (v < t) {
+        } else {
+            if (v > one) {
+                t = one;
+            } else {
+                t = v;
+            }
+        }
+        *(f32 *)((char *)inner + 0x840) = t;
+        *(f32 *)((char *)inner + 0x840) =
+            -(lbl_803E7E98 * *(f32 *)((char *)inner + 0x840) - lbl_803E7EE0);
+    } else {
+        if (*(s16 *)((char *)state + 0x19c) < 1) {
+            *(f32 *)((char *)inner + 0x840) = lbl_803E7EE0;
+        } else {
+            *(f32 *)((char *)inner + 0x840) =
+                (f32)*(s16 *)((char *)state + 0x19c) / lbl_803E7EE8;
+            v = *(f32 *)((char *)inner + 0x840);
+            t = lbl_803E7EA4;
+            if (v < t) {
+            } else {
+                t = lbl_803E7EE0;
+                if (v > t) {
+                } else {
+                    t = v;
+                }
+            }
+            *(f32 *)((char *)inner + 0x840) = t;
+            *(f32 *)((char *)inner + 0x840) =
+                -(lbl_803E7EAC * *(f32 *)((char *)inner + 0x840) - lbl_803E7EE0);
+        }
+    }
+    if (*(void **)((char *)inner + 0x7f8) != NULL) {
+        *(f32 *)((char *)inner + 0x840) = *(f32 *)((char *)inner + 0x840) - lbl_803E7EFC;
+    }
+    v = *(f32 *)((char *)inner + 0x840);
+    t = lbl_803E7E98;
+    if (v < t) {
+    } else {
+        t = lbl_803E7EE0;
+        if (v > t) {
+        } else {
+            t = v;
+        }
+    }
+    *(f32 *)((char *)inner + 0x840) = t;
+    *(u32 *)((char *)inner + 0x360) = *(u32 *)((char *)inner + 0x360) & 0xfe7fffff;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct {
+    u8 pad[0x170];
+    f32 off;
+    u8 pad2[12];
+    f32 def;
+} IdleEntry;
+
+extern s16 lbl_803DC6CC[4];
+extern f32 lbl_803E7FC8;
+extern f32 lbl_803E7FBC;
+extern f32 lbl_803E7F78;
+extern f32 lbl_803E7ED4;
+extern f32 lbl_803E8018;
+extern f32 lbl_803E8084;
+extern f32 lbl_803E8088;
+extern f32 lbl_803E7E90;
+extern f32 lbl_803E7F94;
+extern f32 lbl_803E7F98;
+extern f32 lbl_803E7F14;
+extern f32 lbl_803E806C;
+extern f32 lbl_803E8064;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802A6694(int obj, int state, f32 fv)
+{
+    char *tbl;
+    int inner;
+    int move;
+    f32 t;
+    f32 v;
+    int calm;
+
+    tbl = (char *)lbl_80332EC0;
+    inner = *(int *)((char *)obj + 0xb8);
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        if (*(s16 *)((char *)state + 0x276) != 0x24 &&
+            *(s16 *)((char *)state + 0x276) != 0x25) {
+            *(f32 *)((char *)state + 0x294) = lbl_803E7EA4;
+        } else if (((ByteFlags *)((char *)inner + 0x3f1))->b20 == 0) {
+            int a = *(int *)((char *)inner + 0x474);
+            *(int *)((char *)inner + 0x494) = a;
+            *(s16 *)((char *)inner + 0x484) = a;
+            *(int *)((char *)inner + 0x48c) = 0;
+            *(int *)((char *)inner + 0x488) = 0;
+        } else {
+            f32 z = lbl_803E7EA4;
+            *(f32 *)((char *)inner + 0x4c8) = z;
+            *(f32 *)((char *)inner + 0x4cc) = z;
+        }
+        *(f32 *)((char *)inner + 0x814) = lbl_803E7EA4;
+        *(s16 *)((char *)inner + 0x812) = randomGetRange(800, 0x44c);
+    }
+    *(f32 *)((char *)state + 0x280) =
+        *(f32 *)((char *)state + 0x280) -
+        interpolate(*(f32 *)((char *)state + 0x280), *(f32 *)((char *)inner + 0x82c),
+                    timeDelta);
+    if (*(f32 *)((char *)state + 0x280) <= *(f32 *)(tbl + 0x398)) {
+        *(f32 *)((char *)state + 0x280) = lbl_803E7EA4;
+    }
+    {
+        f32 z = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x284) = z;
+        *(f32 *)((char *)obj + 0x24) = z;
+        *(f32 *)((char *)obj + 0x2c) = z;
+    }
+    {
+        int r = ((int (*)(int, int, int, f32))fn_802AC7DC)(obj, state, inner, fv);
+        if (r != 0) {
+            return r;
+        }
+    }
+    if (*(f32 *)((char *)state + 0x29c) >= lbl_803E7FC8 ||
+        *(f32 *)((char *)state + 0x298) >= lbl_803E7FC8 ||
+        *(f32 *)((char *)state + 0x294) >= *(f32 *)(*(int *)((char *)inner + 0x400) + 4)) {
+        goto active;
+    }
+    *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+    return 3;
+active:
+    fn_802AD204(obj, inner);
+    if (*(s16 **)((char *)inner + 0x3f8) == (s16 *)(tbl + 0x190)) {
+        if (*(f32 *)((char *)inner + 0x814) >= lbl_803E7FBC ||
+            **(s8 **)((char *)inner + 0x35c) > 4) {
+            goto pick;
+        }
+        move = 0x5d;
+        fv = lbl_803E7F78;
+        if (RandomTimer_UpdateRangeTrigger(inner + 0x3ec, lbl_803E7ED4, lbl_803E7F10) != 0) {
+            Sfx_PlayFromObject(obj, 0x452);
+        }
+        goto picked;
+    pick:
+        {
+            move = **(s16 **)((char *)inner + 0x3f8);
+            fv = lbl_803E7F78;
+            if (*(s16 *)((char *)inner + 0x812) <= 0) {
+                if (*(u8 *)((char *)inner + 0x8c8) != 0x44) {
+                    u32 i = *(u8 *)((char *)inner + 0x86f);
+                    move = lbl_803DC6CC[i];
+                    {
+                        IdleEntry *e = (IdleEntry *)(tbl + i * 4);
+                        if (*(s16 *)((char *)inner + 0x81a) == 0) {
+                            fv = e->off;
+                        } else {
+                            fv = e->def;
+                        }
+                    }
+                    *(u8 *)((char *)inner + 0x86f) += 1;
+                    *(u8 *)((char *)inner + 0x86f) =
+                        (u8)(*(u8 *)((char *)inner + 0x86f) % 3);
+                }
+                *(s16 *)((char *)inner + 0x812) = randomGetRange(800, 0x44c);
+            }
+        }
+    picked:
+        if (*(s16 *)((char *)obj + 0xa0) == **(s16 **)((char *)inner + 0x3f8)) {
+            *(f32 *)((char *)inner + 0x814) =
+                *(f32 *)((char *)inner + 0x814) + timeDelta;
+            v = *(f32 *)((char *)inner + 0x814);
+            t = lbl_803E7EA4;
+            if (v < t) {
+            } else {
+                t = lbl_803E7FBC;
+                if (v > t) {
+                } else {
+                    t = v;
+                }
+            }
+            *(f32 *)((char *)inner + 0x814) = t;
+            *(u16 *)((char *)inner + 0x812) =
+                (int)((f32)*(s16 *)((char *)inner + 0x812) - timeDelta);
+            {
+                int cd = *(s16 *)((char *)inner + 0x812);
+                if (cd < 0) {
+                    cd = 0;
+                } else if (cd > 0x44c) {
+                    cd = 0x44c;
+                }
+                *(s16 *)((char *)inner + 0x812) = (s16)cd;
+            }
+        } else {
+            if (*(s16 *)((char *)obj + 0xa0) != 0x5d) {
+                *(f32 *)((char *)inner + 0x814) = lbl_803E7EA4;
+            }
+            *(s16 *)((char *)inner + 0x812) = randomGetRange(800, 0x44c);
+        }
+    } else {
+        move = **(s16 **)((char *)inner + 0x3f8);
+        fv = lbl_803E7F78;
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b20 != 0) {
+        *(u32 *)state |= 0x200000;
+        *(u32 *)((char *)inner + 0x360) &= 0xfdffffff;
+        *(s16 *)((char *)state + 0x278) = 1;
+        *(int *)((char *)inner + 0x898) = (int)fn_802A514C;
+        if (((ByteFlags *)((char *)inner + 0x3f1))->b20 != 0) {
+            *(f32 *)((char *)inner + 0x404) = lbl_803E7F2C;
+        } else {
+            *(f32 *)((char *)inner + 0x404) = lbl_803E8064;
+        }
+    } else {
+        if (((ByteFlags *)((char *)inner + 0x3f1))->b20 != 0) {
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
+            *(s16 *)((char *)state + 0x278) = 0;
+            *(f32 *)((char *)inner + 0x404) = lbl_803E7ED4;
+        } else {
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
+            *(s16 *)((char *)state + 0x278) = 0;
+            *(f32 *)((char *)inner + 0x404) = lbl_803E806C;
+        }
+    }
+    {
+        f32 frac = (*(f32 *)((char *)state + 0x298) - lbl_803E7F14) / lbl_803E7F2C;
+        t = lbl_803E7EA4;
+        if (frac < t) {
+        } else {
+            t = lbl_803E7EE0;
+            if (frac > t) {
+            } else {
+                t = frac;
+            }
+        }
+    }
+    *(f32 *)((char *)inner + 0x408) =
+        (*(f32 *)((char *)inner + 0x404) - lbl_803E7F6C) *
+        (t * *(f32 *)((char *)inner + 0x840));
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b20 != 0) {
+        fn_802ADE80(obj, inner, state);
+    }
+    {
+        u32 fl = *(u8 *)((char *)inner + 0x3f0);
+        if ((fl >> 5 & 1) == 0 && (fl >> 6 & 1) == 0 && (fl >> 4 & 1) == 0 &&
+            (fl >> 2 & 1) == 0 && (fl >> 3 & 1) == 0 && (fl >> 1 & 1) == 0 &&
+            *(void **)((char *)inner + 0x7f8) == NULL &&
+            *(u8 *)((char *)inner + 0x8c8) != 0x44) {
+            calm = 1;
+        } else {
+            calm = 0;
+        }
+    }
+    if (calm && (*(u16 *)((char *)inner + 0x6e2) & 0x400) != 0) {
+        fn_802AED2C(obj, inner, state);
+        *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+        return 3;
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f1))->b20 == 0) {
+        *(f32 *)((char *)state + 0x294) =
+            *(f32 *)((char *)state + 0x294) +
+            interpolate(*(f32 *)((char *)inner + 0x408) - *(f32 *)((char *)state + 0x294),
+                        *(f32 *)((char *)inner + 0x438), timeDelta);
+    }
+    if (*(s8 *)((char *)state + 0x27a) != 0) {
+        *(int *)((char *)inner + 0x47c) = 0;
+        *(int *)((char *)inner + 0x480) = 0;
+        *(int *)((char *)inner + 0x488) = 0;
+        *(int *)((char *)inner + 0x48c) = 0;
+        *(u8 *)((char *)inner + 0x8a6) = *(u8 *)((char *)inner + 0x8a3);
+        *(u8 *)((char *)inner + 0x8b0) = 0;
+        *(f32 *)((char *)state + 0x2b8) = lbl_803E8018;
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E8084;
+        if (((ByteFlags *)((char *)inner + 0x3f0))->b20 == 0 &&
+            ((ByteFlags *)((char *)inner + 0x3f1))->b20 == 0) {
+            if (*(s16 *)((char *)state + 0x276) == 2) {
+                int mA = *(s16 *)(*(int *)((char *)inner + 0x3f8) + 0x30);
+                int mB;
+                if (*(s16 *)((char *)obj + 0xa0) != mA &&
+                    (mB = *(s16 *)(*(int *)((char *)inner + 0x3f8) + 0x32),
+                     *(s16 *)((char *)obj + 0xa0) != mB) &&
+                    ((ByteFlags *)((char *)inner + 0x3f3))->b40 == 0) {
+                    if (*(f32 *)((char *)obj + 0x98) > lbl_803E7E98) {
+                        ObjAnim_SetCurrentMove(obj, mB, lbl_803E7EA4, 0);
+                    } else {
+                        ObjAnim_SetCurrentMove(obj, mA, lbl_803E7EA4, 0);
+                    }
+                }
+                *(f32 *)((char *)state + 0x2a0) = lbl_803E8088;
+            } else if (*(s16 *)((char *)obj + 0xa0) != move) {
+                ObjAnim_SetCurrentMove(obj, move, lbl_803E7EA4, 0);
+                *(f32 *)((char *)state + 0x2a0) = fv;
+            }
+        } else if (*(s16 *)((char *)obj + 0xa0) != move) {
+            ObjAnim_SetCurrentMove(obj, move, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = fv;
+        }
+    }
+    if (*(s16 *)((char *)obj + 0xa0) == *(s16 *)(*(int *)((char *)inner + 0x3f8) + 0x30) ||
+        *(s16 *)((char *)obj + 0xa0) == *(s16 *)(*(int *)((char *)inner + 0x3f8) + 0x32)) {
+        if (*(s8 *)((char *)state + 0x346) != 0 &&
+            ((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0) {
+            ObjAnim_SetCurrentMove(obj, move, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = fv;
+        }
+    } else if (((ByteFlags *)((char *)inner + 0x3f0))->b20 == 0 &&
+               ((ByteFlags *)((char *)inner + 0x3f1))->b20 == 0 &&
+               *(int *)((char *)inner + 0x47c) > 5) {
+        if (*(s16 *)((char *)obj + 0xa0) !=
+                *(s16 *)(*(int *)((char *)inner + 0x3f8) + 0x3e) &&
+            ((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0) {
+            ObjAnim_SetCurrentMove(obj, *(s16 *)(*(int *)((char *)inner + 0x3f8) + 0x3e),
+                                   lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = lbl_803E7E90;
+        }
+    } else if (*(s16 *)((char *)obj + 0xa0) != move &&
+               ((int (*)(int))ObjAnim_GetCurrentEventCountdown)(obj) == 0) {
+        s16 cur = *(s16 *)((char *)obj + 0xa0);
+        if (cur == lbl_803DC6CC[0] || cur == lbl_803DC6CC[1] ||
+            cur == lbl_803DC6CC[2] || cur == lbl_803DC6CC[3]) {
+            if (*(s8 *)((char *)state + 0x346) != 0) {
+                ObjAnim_SetCurrentMove(obj, move, lbl_803E7EA4, 0);
+                *(f32 *)((char *)state + 0x2a0) = fv;
+            }
+        } else {
+            ObjAnim_SetCurrentMove(obj, move, lbl_803E7EA4, 0);
+            *(f32 *)((char *)state + 0x2a0) = fv;
+            if (move == 0x5d) {
+                ((void (*)(int, int))ObjAnim_SetCurrentEventStepFrames)(obj, 0x1e);
+            }
+        }
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f1))->b20 == 0) {
+        f32 step;
+        f32 lim;
+        step = interpolate((f32)*(int *)((char *)inner + 0x47c),
+                           lbl_803E7EE0 / *(f32 *)((char *)inner + 0x428), timeDelta);
+        lim = timeDelta * (*(f32 *)((char *)inner + 0x42c) * *(f32 *)((char *)inner + 0x420));
+        if (step < lim) {
+        } else {
+            step = lim;
+        }
+        if (*(int *)((char *)inner + 0x480) < 0) {
+            step = -step;
+        }
+        *(u16 *)((char *)inner + 0x478) =
+            (int)(lbl_803E7F00 * step + (f32)*(s16 *)((char *)inner + 0x478));
+        step = interpolate((f32)*(int *)((char *)inner + 0x488),
+                           lbl_803E7EE0 / *(f32 *)((char *)inner + 0x430), timeDelta);
+        lim = *(f32 *)((char *)inner + 0x434) * timeDelta;
+        if (step < lim) {
+        } else {
+            step = lim;
+        }
+        if (*(int *)((char *)inner + 0x48c) < 0) {
+            step = -step;
+        }
+        *(u16 *)((char *)inner + 0x484) =
+            (int)(lbl_803E7F00 * step + (f32)*(s16 *)((char *)inner + 0x484));
+    } else {
+        f32 vx;
+        f32 vz;
+        f32 c;
+        c = fn_80293E80((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) /
+                        lbl_803E7F98);
+        vx = *(f32 *)((char *)inner + 0x404) * (t * -c);
+        c = sin((lbl_803E7F94 * (f32)*(int *)((char *)inner + 0x474)) / lbl_803E7F98);
+        vz = *(f32 *)((char *)inner + 0x404) * (t * -c);
+        vx = interpolate(vx - *(f32 *)((char *)inner + 0x4c8),
+                         *(f32 *)((char *)inner + 0x438), timeDelta);
+        vz = interpolate(vz - *(f32 *)((char *)inner + 0x4cc),
+                         *(f32 *)((char *)inner + 0x438), timeDelta);
+        *(f32 *)((char *)inner + 0x4c8) = *(f32 *)((char *)inner + 0x4c8) + vx;
+        *(f32 *)((char *)inner + 0x4cc) = *(f32 *)((char *)inner + 0x4cc) + vz;
+        *(f32 *)((char *)state + 0x294) =
+            sqrtf(*(f32 *)((char *)inner + 0x4c8) * *(f32 *)((char *)inner + 0x4c8) +
+                  *(f32 *)((char *)inner + 0x4cc) * *(f32 *)((char *)inner + 0x4cc));
+        v = *(f32 *)((char *)state + 0x294);
+        t = lbl_803E7EA4;
+        if (v < t) {
+        } else {
+            t = *(f32 *)((char *)inner + 0x404);
+            if (v > t) {
+            } else {
+                t = v;
+            }
+        }
+        *(f32 *)((char *)state + 0x294) = t;
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b20 == 0) {
+        fn_802AC32C(obj, state, inner);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+
+
+extern void fn_80026C54(int a);
+
+typedef struct {
+    u8 pad[0x88];
+    u8 flags;
+    u8 pad2[0x1f];
+    u8 valsA[3];
+    u8 valsB[5];
+} HitDesc;
+extern int getSbGalleon(void);
+extern int DBprotection_getCameraState(void);
+extern f32 lbl_803E8160;
+
+#pragma scheduling off
+#pragma peephole off
+void playerDoHitDetection(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 dt = timeDelta;
+    f32 spd;
+    int sub;
+    int desc;
+    u32 fl;
+    f32 x;
+    f32 y;
+    f32 z;
+
+    *(u32 *)((char *)inner + 0x360) &= 0xf7ffffff;
+    if (((ByteFlags *)((char *)inner + 0x3f2))->b20 != 0 &&
+        (*(u16 *)((char *)obj + 0xb0) & 0x1000) != 0) {
+        *(u8 *)((char *)inner + 0x25f) = 0;
+    }
+    (*(void (*)(int, void *, f32))(*(int *)(*gPathControlInterface + 0x10)))(
+        obj, (void *)(inner + 4), timeDelta);
+    (*(void (*)(int, void *))(*(int *)(*gPathControlInterface + 0x14)))(obj,
+                                                                        (void *)(inner + 4));
+    (*(void (*)(int, void *, f32))(*(int *)(*gPathControlInterface + 0x18)))(
+        obj, (void *)(inner + 4), timeDelta);
+    fn_80026C54(lbl_803DE420);
+    if (!(*(f32 *)((char *)inner + 0x820) >= lbl_803E7EF0)) {
+        (*(void (*)(int, int, void *))(*(int *)(*gPlayerInterface + 0xc)))(obj, inner,
+                                                                           lbl_803DAFC8);
+        if (*(s8 *)((char *)inner + 0x34d) == 1) {
+            if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0 &&
+                (*(void **)((sub = *(int *)((char *)lbl_803DE44C + 0x54)) + 0x50) != NULL ||
+                 (*(s8 *)(sub + 0xad) != 0 && *(s8 *)(sub + 0xac) != 0xe))) {
+                *(u8 *)(*(int *)((char *)obj + 0x54) + 0x70) = 1;
+                *(f32 *)((char *)inner + 0x7d8) = lbl_803E7EA4;
+                *(u8 *)((char *)inner + 0x8ce) = *(u8 *)((char *)inner + 0x8cd);
+                {
+                    HitDesc *t = (HitDesc *)*(int *)((char *)inner + 0x3dc) +
+                                 *(u8 *)((char *)inner + 0x8a9);
+                    if ((t->flags & 1) != 0) {
+                        *(f32 *)((char *)inner + 0x820) = lbl_803E80A8;
+                    }
+                }
+                {
+                HitDesc *d = &((HitDesc *)*(int *)((char *)inner + 0x3dc))[*(u8 *)((char *)inner + 0x8a9)];
+                if ((d->flags & 2) != 0) {
+                    *(u8 *)((char *)inner + 0x8ad) = d->valsA[*(s8 *)((char *)inner + 0x8cd)];
+                    {
+                        HitDesc *e = (HitDesc *)*(int *)((char *)inner + 0x3dc) +
+                                     *(u8 *)((char *)inner + 0x8a9);
+                        *(u8 *)((char *)inner + 0x8ac) =
+                            e->valsB[*(s8 *)((char *)inner + 0x8cd)];
+                    }
+                    *(f32 *)((char *)inner + 0x828) =
+                        (f32)(u32)*(u8 *)((char *)inner + 0x8ad);
+                    *(u8 *)((char *)inner + 0x8ab) += 1;
+                    *(int *)((char *)inner + 0x4c0) = *(int *)(sub + 0x50);
+                }
+                }
+                {
+                    char *h2 = *(char **)(sub + 0x50);
+                    if (h2 != NULL) {
+                        if ((*(u8 *)(*(int *)((char *)h2 + 0x50) + 0x76) & 4) != 0) {
+                            doRumble(lbl_803E7ED8);
+                        }
+                        if ((*(u8 *)(*(int *)((char *)h2 + 0x50) + 0x76) & 8) != 0) {
+                            lbl_803DE459 = 1;
+                        }
+                    } else if (*(s8 *)(sub + 0xad) != 0) {
+                        doRumble(lbl_803E7ED8);
+                        lbl_803DE459 = 1;
+                    }
+                }
+                {
+                    u8 c = *(u8 *)((char *)inner + 0x8a9);
+                    if (c == 0xf) {
+                        *(u8 *)((char *)inner + 0x8c1) = 1;
+                    } else if (c == 0x1b) {
+                        *(u8 *)((char *)inner + 0x8c1) = 2;
+                    } else if (c == 0x11) {
+                        *(u8 *)((char *)inner + 0x8c1) = 0;
+                    } else {
+                        *(u8 *)((char *)inner + 0x8c1) = 1;
+                    }
+                }
+            }
+            if (*(void **)(*(int *)((char *)obj + 0x54) + 0x50) != NULL) {
+                *(u8 *)(*(int *)((char *)obj + 0x54) + 0x70) = 1;
+                *(f32 *)((char *)inner + 0x7d8) = lbl_803E7EA4;
+                *(u8 *)((char *)inner + 0x8ce) = *(u8 *)((char *)inner + 0x8cd);
+                {
+                    HitDesc *t = (HitDesc *)*(int *)((char *)inner + 0x3dc) +
+                                 *(u8 *)((char *)inner + 0x8a9);
+                    if ((t->flags & 1) != 0) {
+                        *(f32 *)((char *)inner + 0x820) = lbl_803E80A8;
+                    }
+                }
+                {
+                HitDesc *d = &((HitDesc *)*(int *)((char *)inner + 0x3dc))[*(u8 *)((char *)inner + 0x8a9)];
+                if ((d->flags & 2) != 0) {
+                    *(u8 *)((char *)inner + 0x8ad) = d->valsA[*(s8 *)((char *)inner + 0x8cd)];
+                    {
+                        HitDesc *e = (HitDesc *)*(int *)((char *)inner + 0x3dc) +
+                                     *(u8 *)((char *)inner + 0x8a9);
+                        *(u8 *)((char *)inner + 0x8ac) =
+                            e->valsB[*(s8 *)((char *)inner + 0x8cd)];
+                    }
+                    *(f32 *)((char *)inner + 0x828) =
+                        (f32)(u32)*(u8 *)((char *)inner + 0x8ad);
+                    *(u8 *)((char *)inner + 0x8ab) += 1;
+                    *(int *)((char *)inner + 0x4c0) =
+                        *(int *)(*(int *)((char *)obj + 0x54) + 0x50);
+                }
+                }
+            }
+        }
+        if ((*(u32 *)((char *)inner + 0x360) & 2) != 0) {
+            int h = *(int *)((char *)inner + 0xdc);
+            if (h != 0 && ((fl = *(u32 *)(*(int *)(h + 0x50) + 0x44)) & 0x40) != 0 &&
+                (fl & 0x8000) == 0) {
+                objHitDetectFn_80062e84(obj, h, 1);
+            } else if (*(void **)((char *)obj + 0x30) != NULL && h == 0) {
+                objHitDetectFn_80062e84(obj, 0, 1);
+            }
+        }
+        *(u32 *)((char *)inner + 0x360) |= 2;
+        if (*(int *)((char *)inner + 0x7f0) != 0 &&
+            ((*(u16 *)((char *)obj + 0xb0) & 0x1000) != 0 ||
+             arrayIndexOf(&lbl_803DC6C4, 2, *(s16 *)((char *)inner + 0x274)) != -1)) {
+            (*(void (*)(int, f32 *, f32 *, f32 *))(
+                *(int *)(*(int *)(*(int *)(*(int *)((char *)inner + 0x7f0) + 0x68)) + 0x34)))(
+                *(int *)((char *)inner + 0x7f0), &x, &y, &z);
+            (*(void (*)(f32, f32, f32))(*(int *)(*gCameraInterface + 0x2c)))(x, y, z);
+            fn_802A9D0C(obj, inner, *(int *)((char *)inner + 0x7f0), 0, 0, 0, 0, 0);
+        }
+        if (*(s8 *)((char *)inner + 0x25f) == 1 &&
+            (*(int *)((char *)inner + 4) & 0x100000) == 0) {
+            if ((*(u32 *)((char *)inner + 0x360) & 0x2000) == 0 &&
+                (*(s8 *)((char *)inner + 0x264) & 0x33) != 0) {
+                *(f32 *)((char *)obj + 0x28) =
+                    (*(f32 *)((char *)obj + 0x1c) - *(f32 *)((char *)obj + 0x90)) / dt;
+                if (*(f32 *)((char *)obj + 0x28) < lbl_803E811C) {
+                    *(f32 *)((char *)obj + 0x28) = lbl_803E811C;
+                }
+                if (*(f32 *)((char *)obj + 0x28) > lbl_803E7EA4) {
+                    *(f32 *)((char *)obj + 0x28) = lbl_803E7EA4;
+                }
+            }
+            if ((*(int *)inner & 0x800000) != 0 &&
+                lbl_803E7EA4 == *(f32 *)((char *)inner + 0x890) &&
+                lbl_803E7EA4 == *(f32 *)((char *)inner + 0x894)) {
+                spd = sqrtf(*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
+                            *(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c));
+                if (*(void **)((char *)obj + 0x30) != NULL) {
+                    *(f32 *)((char *)obj + 0x24) =
+                        (*(f32 *)((char *)obj + 0xc) - *(f32 *)((char *)obj + 0x80)) / dt;
+                    *(f32 *)((char *)obj + 0x2c) =
+                        (*(f32 *)((char *)obj + 0x14) - *(f32 *)((char *)obj + 0x88)) / dt;
+                } else {
+                    *(f32 *)((char *)obj + 0x24) =
+                        (*(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)obj + 0x8c)) / dt;
+                    *(f32 *)((char *)obj + 0x2c) =
+                        (*(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)obj + 0x94)) / dt;
+                }
+                if (((*(s8 *)((char *)inner + 0x264) & 2) != 0 &&
+                     (*(s8 *)((char *)inner + 0x264) & 0x20) == 0) ||
+                    *(u8 *)((char *)inner + 0x262) != 0 ||
+                    (*(s16 *)(*(int *)((char *)obj + 0x54) + 0x60) & 8) != 0) {
+                    if (*(f32 *)((char *)inner + 0x410) <= lbl_803E7EA4 &&
+                        *(f32 *)((char *)inner + 0x280) > lbl_803E8160) {
+                        doRumble(lbl_803E7F10);
+                        *(f32 *)((char *)inner + 0x410) = lbl_803E7F30;
+                        Sfx_PlayFromObject(obj, 0x404);
+                    }
+                    dt = fn_80293E80((lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x484)) /
+                                     lbl_803E7F98);
+                    {
+                        f32 s = sin((lbl_803E7F94 * (f32)*(s16 *)((char *)inner + 0x484)) /
+                                    lbl_803E7F98);
+                        *(f32 *)((char *)inner + 0x280) =
+                            -*(f32 *)((char *)obj + 0x2c) * s -
+                            *(f32 *)((char *)obj + 0x24) * dt;
+                    }
+                    *(f32 *)((char *)inner + 0x280) =
+                        *(f32 *)((char *)inner + 0x280) * lbl_803E7FC4;
+                    {
+                        f32 c = *(f32 *)((char *)inner + 0x280);
+                        f32 lo = lbl_803E8110 * *(f32 *)((char *)inner + 0x298);
+                        *(f32 *)((char *)inner + 0x280) =
+                            (c < lo) ? lo
+                                     : ((c > *(f32 *)((char *)inner + 0x404))
+                                            ? *(f32 *)((char *)inner + 0x404)
+                                            : c);
+                    }
+                    {
+                        f32 c = *(f32 *)((char *)inner + 0x280);
+                        *(f32 *)((char *)inner + 0x280) =
+                            (c < lbl_803E7EA4) ? lbl_803E7EA4 : ((c > spd) ? spd : c);
+                    }
+                    if (((ByteFlags *)((char *)inner + 0x3f0))->b40 == 0) {
+                        *(f32 *)((char *)inner + 0x294) = *(f32 *)((char *)inner + 0x280);
+                    }
+                }
+                *(u32 *)inner &= ~0x800000;
+            }
+        }
+        if ((*(u16 *)((char *)obj + 0xb0) & 0x1000) == 0) {
+            *(s16 *)obj = *(s16 *)((char *)inner + 0x478);
+        }
+        {
+            int g = getSbGalleon();
+            if (g != 0 && DBprotection_getCameraState() == 2) {
+                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x20) =
+                    *(f32 *)((char *)obj + 0xc) - *(f32 *)((char *)g + 0xc);
+                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x24) =
+                    *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)g + 0x10);
+                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x28) =
+                    *(f32 *)((char *)obj + 0x14) - *(f32 *)((char *)g + 0x14);
+                mathFn_80021ac8((void *)g, (void *)(*(int *)((char *)obj + 0x64) + 0x20));
+                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x20) =
+                    *(f32 *)(*(int *)((char *)obj + 0x64) + 0x20) + *(f32 *)((char *)g + 0xc);
+                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x24) =
+                    *(f32 *)(*(int *)((char *)obj + 0x64) + 0x24) + *(f32 *)((char *)g + 0x10);
+                *(f32 *)(*(int *)((char *)obj + 0x64) + 0x28) =
+                    *(f32 *)(*(int *)((char *)obj + 0x64) + 0x28) + *(f32 *)((char *)g + 0x14);
+                *(u32 *)(*(int *)((char *)obj + 0x64) + 0x30) |= 0x2020;
+                *(s16 *)((char *)obj + 4) = *(s16 *)((char *)g + 4);
+                *(u32 *)((char *)inner + 0x360) |= 0x8000000;
+            }
+        }
+        *(u32 *)((char *)inner + 0x360) &= 0xffbfffff;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct {
+    s16 rx, ry, rz;
+    f32 scale;
+    f32 x, y, z;
+} HitFxDesc;
+
+typedef struct {
+    int a, b, c, d;
+} ColQuad;
+
+typedef struct {
+    u8 knock : 3;
+    u8 low : 5;
+} KnockBits;
+
+typedef struct {
+    f32 x, y, z;
+} VecXYZ;
+
+extern int objGetFlagsE5_2(int obj);
+extern void *Resource_Acquire(int id, int n);
+extern void objLightFn_8009a1dc(int obj, f32 fv, void *buf, int n, int m);
+extern void fn_8009A8C8(int obj, f32 fv);
+extern int lbl_803DE470;
+extern int lbl_803DE474;
+extern int lbl_802C2C68[];
+extern f32 lbl_803E8134;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_802AFB0C(int obj, int inner, int state)
+{
+    int orig;
+    int work;
+    int newAnim;
+    int keepKnock;
+    int knockKind;
+    int canCounter;
+    int anim;
+    HitFxDesc desc;
+    VecXYZ pos;
+    u8 buf[12];
+    ColQuad col;
+    int surfIdx;
+    int damage;
+    char *hitObj;
+
+    col = *(ColQuad *)lbl_802C2C68;
+    knockKind = 0;
+    if (*(f32 *)(*(int *)((char *)obj + 0xb8) + 0x838) > lbl_803E7ED8) {
+        *(f32 *)((char *)inner + 0x79c) = lbl_803E7EA4;
+    }
+    if (lbl_803DE470 > 0) {
+        lbl_803DE470 = lbl_803DE470 - framesThisStep;
+        if (lbl_803DE470 < 0) {
+            lbl_803DE470 = 0;
+        }
+    }
+    work = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, &surfIdx, &damage, &pos.x, &pos.y, &pos.z);
+    orig = work;
+    if (**(s8 **)((char *)inner + 0x35c) <= 0) {
+        **(s8 **)((char *)inner + 0x35c) = 1;
+    }
+    if ((*(int (*)(int))ObjHits_IsObjectEnabled)(obj) == 0 || objGetFlagsE5_2(obj) != 0 ||
+        ((ByteFlags *)((char *)inner + 0x3f3))->b20 != 0 ||
+        (*(u16 *)((char *)obj + 0xb0) & 0x1000)) {
+        return;
+    }
+    if (*(void **)((char *)inner + 0x7f0) != NULL && work != 0) {
+        work = 0x15;
+    }
+    keepKnock = 1;
+    if (work != 0) {
+        if (surfIdx != -1) {
+            pos.x = pos.x + playerMapOffsetX;
+            pos.z = pos.z + playerMapOffsetZ;
+        }
+        if (*(s16 *)((char *)state + 0x278) != 0) {
+            work = 0x1b;
+        }
+        if (*(s8 *)((char *)state + 0x34d) == 3 && *(s8 *)((char *)state + 0x34f) <= work) {
+            return;
+        }
+        *(s8 *)((char *)state + 0x34f) = work;
+        *(s16 *)((char *)obj + 0xa2) = -1;
+        newAnim = -1;
+        {
+            u32 fl = *(u8 *)((char *)inner + 0x3f0);
+            if ((fl >> 4 & 1) != 0 || (fl >> 2 & 1) != 0 || (fl >> 3 & 1) != 0 ||
+                (fl >> 5 & 1) != 0 ||
+                (anim = *(s16 *)((char *)state + 0x274)) == 0x36) {
+                canCounter = 0;
+            } else if ((u16)(anim - 1) <= 1 || (u16)(anim - 0x24) <= 1 ||
+                       *(void **)((char *)state + 0x2d0) != NULL) {
+                canCounter = 1;
+            } else {
+                canCounter = 0;
+            }
+        }
+        switch (work) {
+        case 0xb:
+            if (canCounter && *(void **)((char *)state + 0x2d0) != NULL) {
+                *(u8 *)((char *)inner + 0x8a2) = 2;
+                newAnim = 0x23;
+                *(int *)((char *)inner + 0x898) = 0;
+            }
+            break;
+        case 7:
+        case 8:
+        case 9:
+            if (canCounter && *(void **)((char *)state + 0x2d0) != NULL) {
+                *(u8 *)((char *)inner + 0x8a2) = 3;
+                newAnim = 0x23;
+                *(int *)((char *)inner + 0x898) = 0;
+            }
+            break;
+        case 0xc:
+            if (canCounter && *(void **)((char *)state + 0x2d0) != NULL) {
+                *(u8 *)((char *)inner + 0x8a2) = 1;
+                newAnim = 0x23;
+                *(int *)((char *)inner + 0x898) = 0;
+            }
+            break;
+        case 0xa:
+            if (canCounter && *(void **)((char *)state + 0x2d0) != NULL) {
+                *(u8 *)((char *)inner + 0x8a2) = 3;
+                newAnim = 0x23;
+                *(int *)((char *)inner + 0x898) = 0;
+            }
+            break;
+        case 4:
+            if (canCounter) {
+                newAnim = 0x1f;
+                *(int *)((char *)inner + 0x898) = 0;
+            }
+            break;
+        case 1:
+            damage = **(s8 **)((char *)inner + 0x35c);
+            break;
+        case 0x15:
+            switch (*(s16 *)(*(int *)((char *)inner + 0x7f0) + 0x46)) {
+            case 0x714:
+                Camera_EnableViewYOffset();
+                CameraShake_SetAllMagnitudes(lbl_803E7EE0);
+                break;
+            }
+            break;
+        case 0x16:
+            if (((ByteFlags *)((char *)inner + 0x3f0))->b02 == 0) {
+                keepKnock = 0;
+            }
+            if (canCounter && *(void **)((char *)state + 0x2d0) == NULL) {
+                *(u8 *)((char *)inner + 0x8a2) = 5;
+            }
+            break;
+        case 0x19:
+            Camera_EnableViewYOffset();
+            CameraShake_SetAllMagnitudes(lbl_803E7EE0);
+            break;
+        case 0x1b:
+            newAnim = *(s16 *)((char *)state + 0x278);
+            break;
+        case 0x14:
+        case 0x1a:
+        case 0x1f:
+            if (*(f32 *)((char *)inner + 0x79c) <= lbl_803E7EA4) {
+                knockKind = 1;
+            }
+            if (((ByteFlags *)((char *)inner + 0x3f0))->b02 == 0) {
+                keepKnock = 0;
+            }
+            if (canCounter && *(void **)((char *)state + 0x2d0) == NULL) {
+                *(u8 *)((char *)inner + 0x8a2) = 5;
+            }
+            break;
+        case 0x1e:
+            if (((ByteFlags *)((char *)inner + 0x3f3))->b08 != 0) {
+                return;
+            }
+            knockKind = 2;
+            if (((ByteFlags *)((char *)inner + 0x3f0))->b02 == 0) {
+                keepKnock = 0;
+            }
+            if (canCounter && *(void **)((char *)state + 0x2d0) == NULL) {
+                *(u8 *)((char *)inner + 0x8a2) = 5;
+            }
+            break;
+            return;
+        case 2:
+        case 5:
+        case 0x12:
+        case 0x17:
+        case 0x18:
+            break;
+        default:
+            if (canCounter && *(void **)((char *)state + 0x2d0) != NULL) {
+                *(u8 *)((char *)inner + 0x8a2) = 0;
+                newAnim = 0x23;
+                *(int *)((char *)inner + 0x898) = 0;
+            }
+            break;
+        }
+        if ((*(u32 *)((char *)inner + 0x360) & 0x800) == 0 && knockKind != 0) {
+            *(f32 *)((char *)inner + 0x79c) = lbl_803E7EDC;
+            *(f32 *)((char *)inner + 0x7a0) = lbl_803E8050;
+            *(f32 *)((char *)inner + 0x7a4) = lbl_803E7EE0;
+            ((KnockBits *)((char *)inner + 0x7a8))->knock = (u8)knockKind;
+        }
+        if ((*(u32 *)((char *)inner + 0x360) & 0x800) != 0 && keepKnock != 0) {
+            damage = 0;
+            ((ByteFlags *)((char *)inner + 0x3f6))->b10 = 1;
+            if (hitObj != NULL && *(s16 *)(hitObj + 0x46) != 0x2c5) {
+                if (lbl_803DE470 == 0) {
+                    Sfx_PlayFromObject(
+                        obj, (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x2ce : 0x48c));
+                }
+                lbl_803DE470 = 6;
+            }
+            if (lbl_803DE474 == 0) {
+                char *pt = *(char **)(*(int *)(*(int *)((char *)obj + 0x7c) +
+                                               *(s8 *)((char *)obj + 0xad) * 4) +
+                                      0x50);
+                desc.x = playerMapOffsetX + *(f32 *)(pt + surfIdx * 0x10 + 4);
+                desc.y = *(f32 *)(pt + surfIdx * 0x10 + 8);
+                desc.z = playerMapOffsetZ + *(f32 *)(pt + surfIdx * 0x10 + 0xc);
+                (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+                    obj, 0x328, &desc, 0x200001, -1, 0);
+                desc.x -= *(f32 *)((char *)obj + 0x18);
+                desc.y -= *(f32 *)((char *)obj + 0x1c);
+                desc.z -= *(f32 *)((char *)obj + 0x20);
+                if (lbl_803DE454 == NULL) {
+                    lbl_803DE454 = Resource_Acquire(0x5a, 1);
+                }
+                col.b += randomGetRange(0, 0x9b);
+                col.c += randomGetRange(0, 0x9b);
+                desc.scale = lbl_803E7EE0;
+                desc.rx = 0;
+                desc.ry = 0;
+                desc.rz = 0;
+                (**(void (**)(int, int, void *, int, int, ColQuad *))((char *)*(int **)lbl_803DE454 + 0x4))(
+                    obj, 0, &desc, 1, -1, &col);
+                if (lbl_803DE454 != NULL) {
+                    Resource_Release(lbl_803DE454);
+                }
+                lbl_803DE454 = NULL;
+                lbl_803DE474 = 10;
+                return;
+            } else {
+                lbl_803DE474 = lbl_803DE474 - 1;
+                return;
+            }
+        }
+        if (damage != 0) {
+            {
+                int v;
+                int hb = *(int *)((char *)obj + 0xb8);
+                s8 *hp = *(s8 **)((char *)hb + 0x35c);
+                v = *hp - damage;
+                if (v < 0) {
+                    v = 0;
+                } else if (v > hp[1]) {
+                    v = hp[1];
+                }
+                *hp = v;
+                if (**(s8 **)((char *)hb + 0x35c) <= 0) {
+                    playerDie(obj);
+                }
+            }
+            lbl_803DE474 = 0;
+            if (hitObj != NULL) {
+                switch (*(s16 *)(hitObj + 0x46)) {
+                case 0x11:
+                case 0x33:
+                case 0x13a:
+                case 0x5b7:
+                case 0x5b8:
+                case 0x5b9:
+                case 0x5e1:
+                    Sfx_PlayFromObject((int)hitObj, 0x36e);
+                    break;
+                case 0x5f9:
+                case 0x5fa:
+                case 0x5fe:
+                    Sfx_PlayFromObject((int)hitObj, 0x239);
+                    break;
+                case 0x2c5:
+                    Sfx_PlayFromObject((int)hitObj, 0xd0);
+                    break;
+                case 0x709:
+                    Sfx_PlayFromObject((int)hitObj, 0x486);
+                    break;
+                case 0x458:
+                case 0x842:
+                    Sfx_PlayFromObject((int)hitObj, 0x36f);
+                    break;
+                }
+            }
+            switch (orig) {
+            case 0x16:
+                if (hitObj != NULL && (*(s16 *)(hitObj + 0x46) == 0x613 ||
+                                    *(s16 *)(hitObj + 0x46) == 0x70f)) {
+                    Sfx_PlayFromObject(obj,
+                                       (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x1f : 0x24));
+                } else {
+                    Sfx_PlayFromObject(obj, 0x367);
+                }
+                break;
+            case 0x14:
+            case 0x1f:
+                Sfx_PlayFromObject(obj, (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x1f : 0x24));
+                Sfx_PlayFromObject(obj, 0x393);
+                if (Sfx_IsPlayingFromObject(obj, 0x394) == 0) {
+                    Sfx_PlayFromObject(obj, 0x394);
+                }
+                if (**(s8 **)((char *)inner + 0x35c) > 0) {
+                    objLightFn_8009a1dc(obj, lbl_803E8024, buf, 6, 0);
+                }
+                break;
+            case 0x1c:
+                Sfx_PlayFromObject(obj, 0x318);
+                if (**(s8 **)((char *)inner + 0x35c) > 0) {
+                    objLightFn_8009a1dc(obj, lbl_803E8024, buf, 8, 0);
+                }
+                break;
+            default:
+                Sfx_PlayFromObject(obj, (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x1f : 0x24));
+                if (hitObj != NULL) {
+                    switch (*(s16 *)(hitObj + 0x46)) {
+                    case 0x33:
+                        Sfx_PlayFromObject(obj, 0x36e);
+                        if (**(s8 **)((char *)inner + 0x35c) > 0) {
+                            objLightFn_8009a1dc(obj, lbl_803E8024, buf, 5, 0);
+                        }
+                        break;
+                    case 0x7c8:
+                        if (**(s8 **)((char *)inner + 0x35c) > 0) {
+                            objLightFn_8009a1dc(obj, lbl_803E8024, buf, 8, 0);
+                        }
+                        break;
+                    default:
+                        if (**(s8 **)((char *)inner + 0x35c) > 0) {
+                            objLightFn_8009a1dc(obj, lbl_803E8024, buf, 5, 0);
+                        }
+                        break;
+                    }
+                } else {
+                    if (**(s8 **)((char *)inner + 0x35c) > 0) {
+                        objLightFn_8009a1dc(obj, lbl_803E8024, buf, 5, 0);
+                    }
+                }
+                break;
+            }
+            if (**(s8 **)((char *)inner + 0x35c) > 0) {
+                Obj_SetModelColorFadeRecursive(obj, 0xb4, 200, 0, 0, 1);
+            }
+            if (*(s16 *)((char *)state + 0x274) == 0x1a) {
+                fn_8009A8C8(obj, lbl_803E8134);
+            }
+            *(f32 *)((char *)inner + 0x814) = lbl_803E7EA4;
+            *(s16 *)((char *)inner + 0x812) = randomGetRange(800, 0x44c);
+            *(u8 *)((char *)inner + 0x800) = 0;
+            if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                s16 t = *(s16 *)(*(int *)((char *)inner + 0x7f8) + 0x46);
+                if (t == 0x3cf || t == 0x662) {
+                    objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                } else {
+                    objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                }
+                *(s16 *)(*(int *)((char *)inner + 0x7f8) + 6) =
+                    *(s16 *)(*(int *)((char *)inner + 0x7f8) + 6) & ~0x4000;
+                *(int *)(*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                *(int *)((char *)inner + 0x7f8) = 0;
+            }
+            if (newAnim != -1 && *(s16 *)((char *)state + 0x274) != newAnim &&
+                **(s8 **)((char *)inner + 0x35c) > 0) {
+                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, newAnim);
+                *(int *)((char *)state + 0x304) = *(int *)((char *)inner + 0x898);
+            }
+        } else {
+            lbl_803DE474 = 0;
+        }
+    } else {
+        lbl_803DE474 = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+
+#pragma scheduling off
+#pragma peephole off
+void fn_802B249C(int obj, int inner, int state)
+{
+    int p;
+    int param = 0;
+    int msg;
+
+    while (ObjMsg_Pop(obj, &msg, &p, &param) != 0) {
+        switch (msg) {
+        case 0x80002:
+            *(s16 *)((char *)inner + 0x80c) = (s16)param;
+            if (*(void **)((char *)state + 0x2d0) != NULL &&
+                (param == 0x2d || param == 0x5ce)) {
+                *(s16 *)((char *)inner + 0x80e) = (s16)param;
+                *(s16 *)((char *)inner + 0x80c) = -1;
+            }
+            break;
+        case 0x60003: {
+            f32 dx = *(f32 *)(p + 0xc) - *(f32 *)((char *)obj + 0xc);
+            f32 dz = *(f32 *)(p + 0x14) - *(f32 *)((char *)obj + 0x14);
+            f32 d = sqrtf(dx * dx + dz * dz);
+            if (d > lbl_803E7EE0) {
+                dx = dx / d;
+                dz = dz / d;
+            }
+            *(f32 *)((char *)obj + 0x24) = lbl_803E7F9C * dx;
+            *(f32 *)((char *)obj + 0x2c) = lbl_803E7F9C * dz;
+            *(f32 *)((char *)obj + 0x28) = lbl_803E7F9C;
+            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0x21);
+            *(int *)((char *)state + 0x304) = 0;
+            {
+                int in2 = *(int *)((char *)obj + 0xb8);
+                s8 *pc = *(s8 **)((char *)in2 + 0x35c);
+                int v = pc[0] - param;
+                if (v < 0) {
+                    v = 0;
+                } else if (v > pc[1]) {
+                    v = pc[1];
+                }
+                pc[0] = (s8)v;
+                if (**(s8 **)((char *)in2 + 0x35c) < 1) {
+                    playerDie(obj);
+                }
+            }
+            *(u8 *)((char *)inner + 0x800) = 0;
+            if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                s16 typ = *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x46);
+                if (typ == 0x3cf || typ == 0x662) {
+                    objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                } else {
+                    objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                }
+                *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) =
+                    *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) & ~0x4000;
+                *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                *(int *)((char *)inner + 0x7f8) = 0;
+            }
+            break;
+        }
+        case 0x60004: {
+            f32 dx = *(f32 *)(p + 0xc) - *(f32 *)((char *)obj + 0xc);
+            f32 dz = *(f32 *)(p + 0x14) - *(f32 *)((char *)obj + 0x14);
+            f32 d = sqrtf(dx * dx + dz * dz);
+            if (d > lbl_803E7EE0) {
+                dx = dx / d;
+                dz = dz / d;
+            }
+            *(f32 *)((char *)obj + 0x24) = lbl_803E7F9C * -dx;
+            *(f32 *)((char *)obj + 0x2c) = lbl_803E7F9C * -dz;
+            *(f32 *)((char *)obj + 0x28) = lbl_803E7F9C;
+            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0x21);
+            *(int *)((char *)state + 0x304) = 0;
+            {
+                int in2 = *(int *)((char *)obj + 0xb8);
+                s8 *pc = *(s8 **)((char *)in2 + 0x35c);
+                int v = pc[0] - param;
+                if (v < 0) {
+                    v = 0;
+                } else if (v > pc[1]) {
+                    v = pc[1];
+                }
+                pc[0] = (s8)v;
+                if (**(s8 **)((char *)in2 + 0x35c) < 1) {
+                    playerDie(obj);
+                }
+            }
+            *(u8 *)((char *)inner + 0x800) = 0;
+            if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                s16 typ = *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x46);
+                if (typ == 0x3cf || typ == 0x662) {
+                    objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                } else {
+                    objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                }
+                *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) =
+                    *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) & ~0x4000;
+                *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                *(int *)((char *)inner + 0x7f8) = 0;
+            }
+            Sfx_PlayFromObject(obj,
+                               (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x1f : 0x24));
+            break;
+        }
+        case 0x60005: {
+            f32 dx = *(f32 *)(p + 0xc) - *(f32 *)((char *)obj + 0xc);
+            f32 dz = *(f32 *)(p + 0x14) - *(f32 *)((char *)obj + 0x14);
+            f32 d = sqrtf(dx * dx + dz * dz);
+            if (d > lbl_803E7EE0) {
+                dx = dx / d;
+                dz = dz / d;
+            }
+            *(f32 *)((char *)obj + 0x24) = lbl_803E7F9C * -dx;
+            *(f32 *)((char *)obj + 0x2c) = lbl_803E7F9C * -dz;
+            *(f32 *)((char *)obj + 0x28) = lbl_803E7F9C;
+            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0x21);
+            *(int *)((char *)state + 0x304) = 0;
+            ObjAnim_SetCurrentMove(obj, 0x450, lbl_803E7EA4, 0);
+            {
+                int in2 = *(int *)((char *)obj + 0xb8);
+                s8 *pc = *(s8 **)((char *)in2 + 0x35c);
+                int v = pc[0] - param;
+                if (v < 0) {
+                    v = 0;
+                } else if (v > pc[1]) {
+                    v = pc[1];
+                }
+                pc[0] = (s8)v;
+                if (**(s8 **)((char *)in2 + 0x35c) < 1) {
+                    playerDie(obj);
+                }
+            }
+            *(u8 *)((char *)inner + 0x800) = 0;
+            if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                s16 typ = *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x46);
+                if (typ == 0x3cf || typ == 0x662) {
+                    objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                } else {
+                    objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                }
+                *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) =
+                    *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) & ~0x4000;
+                *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                *(int *)((char *)inner + 0x7f8) = 0;
+            }
+            break;
+        }
+        case 0x7000a: {
+            int t;
+            s16 bit;
+            *(int *)((char *)inner + 0x8dc) = param;
+            t = *(int *)(p + 0x64);
+            if (t != 0) {
+                *(u32 *)(t + 0x30) &= 0xfffffffb;
+            }
+            bit = **(s16 **)((char *)inner + 0x8dc);
+            if (bit > 0) {
+                if (GameBit_Get(bit) != 0) {
+                    ObjMsg_SendToObject(p, 0x7000b, obj, 0);
+                    break;
+                } else {
+                    f32 r = *(f32 *)(p + 8) / *(f32 *)(*(int *)(p + 0x50) + 4);
+                    f32 k = lbl_803E7F68;
+                    f32 lim = lbl_803E7F30;
+                    while (r * (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8)) >
+                           lim) {
+                        *(f32 *)(p + 8) = *(f32 *)(p + 8) * k;
+                        r = *(f32 *)(p + 8) / *(f32 *)(*(int *)(p + 0x50) + 4);
+                    }
+                    GameBit_Set(**(s16 **)((char *)inner + 0x8dc), 1);
+                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x7c)))(
+                        *(s16 *)(p + 0x46), 0, 0);
+                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+                        0, obj, -1);
+                }
+            } else {
+                f32 r = *(f32 *)(p + 8) / *(f32 *)(*(int *)(p + 0x50) + 4);
+                f32 k = lbl_803E7F68;
+                f32 lim = lbl_803E7F30;
+                while (r * (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8)) > lim) {
+                    *(f32 *)(p + 8) = *(f32 *)(p + 8) * k;
+                    r = *(f32 *)(p + 8) / *(f32 *)(*(int *)(p + 0x50) + 4);
+                }
+                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x7c)))(
+                    *(s16 *)(p + 0x46), 0, 0);
+                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj,
+                                                                                        -1);
+            }
+            *(int *)((char *)inner + 0x684) = p;
+            *(s16 *)((char *)inner + 0x688) = *(s16 *)(*(int *)((char *)inner + 0x8dc) + 2);
+            t = *(int *)(*(int *)((char *)inner + 0x684) + 0x64);
+            if (t != 0) {
+                *(int *)(t + 0x30) = 0x1000;
+            }
+            if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0) {
+                *(u8 *)((char *)inner + 0x8b4) = 1;
+                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+            }
+            break;
+        }
+        case 0x100008:
+            *(u8 *)((char *)inner + 0x800) = 1;
+            if (*(int *)((char *)inner + 0x7f8) == 0) {
+                int *mdl;
+                *(int *)((char *)inner + 0x7f8) = p;
+                mdl = (int *)Obj_GetActiveModel(*(int *)((char *)inner + 0x7f8));
+                if (mdl != NULL && *mdl != 0 && (*(u16 *)(*mdl + 2) & 0x8000) == 0) {
+                    *(u8 *)(*(int *)((char *)inner + 0x7f8) + 0xf2) =
+                        *(u8 *)((char *)obj + 0xf2);
+                }
+                *(f32 *)((char *)inner + 0x7fc) = (f32)(param >> 0x10) / lbl_803E7ED8;
+                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 5);
+                *(int *)((char *)state + 0x304) = (int)fn_802A4B4C;
+                if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0) {
+                    *(u8 *)((char *)inner + 0x8b4) = 1;
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+                }
+            }
+            break;
+        case 0x100010:
+            *(u8 *)((char *)inner + 0x800) = 1;
+            if (*(int *)((char *)inner + 0x7f8) == 0) {
+                int *mdl;
+                *(int *)((char *)inner + 0x7f8) = p;
+                mdl = (int *)Obj_GetActiveModel(*(int *)((char *)inner + 0x7f8));
+                if (mdl != NULL && *mdl != 0 && (*(u16 *)(*mdl + 2) & 0x8000) == 0) {
+                    *(u8 *)(*(int *)((char *)inner + 0x7f8) + 0xf2) =
+                        *(u8 *)((char *)obj + 0xf2);
+                }
+                *(f32 *)((char *)inner + 0x7fc) = (f32)(param >> 0x10);
+                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 5);
+                *(int *)((char *)state + 0x304) = (int)fn_802A4B4C;
+                if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0) {
+                    *(u8 *)((char *)inner + 0x8b4) = 1;
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+                }
+            }
+            break;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_80295B2C(int obj, f32 f1, f32 f2, f32 f3)
@@ -2738,7 +8355,7 @@ void fn_802967E0(int obj, int mode)
 int fn_8029B6BC(int obj, int state)
 {
     int inner = *(int *)((char *)obj + 0xb8);
-    int r = fn_802AC7DC(obj, state, inner);
+    int r = ((int (*)(int, int, int))fn_802AC7DC)(obj, state, inner);
     if (r != 0) {
         return r;
     }
@@ -4105,7 +9722,7 @@ void fn_802B4DE0(int obj)
     int off;
     int i;
 
-    if (lbl_803DE448 != 0) {
+    if ((u32)lbl_803DE448 != 0) {
         Obj_FreeObject(lbl_803DE448);
         ObjLink_DetachChild(obj, lbl_803DE448);
         lbl_803DE448 = 0;
@@ -4880,7 +10497,7 @@ int fn_802A49C8(int obj, int state)
     f32 k;
 
     if (*(s8 *)((char *)state + 0x27a) != 0) {
-        if (*(int *)((char *)inner + 0x7f8) != 0) {
+        if (*(void **)((char *)inner + 0x7f8) != NULL) {
             ObjHits_MarkObjectPositionDirty(*(int *)((char *)inner + 0x7f8));
         }
         ObjAnim_SetCurrentMove(obj, 0x443, lbl_803E7EAC, 0);
@@ -4907,7 +10524,7 @@ int fn_802A49C8(int obj, int state)
     }
     if (sub != 0 && *(f32 *)((char *)obj + 0x98) > lbl_803E7E9C) {
         *(u8 *)((char *)inner + 0x800) = 0;
-        if (*(int *)((char *)inner + 0x7f8) != 0) {
+        if (*(void **)((char *)inner + 0x7f8) != NULL) {
             int s2 = *(int *)((char *)inner + 0x7f8);
             s16 id = *(s16 *)((char *)s2 + 0x46);
             if (id == 0x3cf || id == 0x662) {
@@ -5156,7 +10773,7 @@ int fn_802A4B78(int obj, int state)
     }
     if (sub != 0 && *(f32 *)((char *)obj + 0x98) > lbl_803E7F48) {
         *(u8 *)((char *)inner + 0x800) = 0;
-        if (*(int *)((char *)inner + 0x7f8) != 0) {
+        if (*(void **)((char *)inner + 0x7f8) != NULL) {
             int s2 = *(int *)((char *)inner + 0x7f8);
             s16 id = *(s16 *)((char *)s2 + 0x46);
             if (id == 0x3cf || id == 0x662) {
@@ -5857,12 +11474,6 @@ int Lightfoot_SeqFn(int p1, int p2, int p3)
 
 #pragma scheduling off
 #pragma peephole off
-void player_SeqFn(void) {}
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
 void objLoadPlayerFromSave(int obj)
 {
     int inner = *(int *)((char *)obj + 0xb8);
@@ -6547,7 +12158,7 @@ void fn_802B4A9C(int obj, int sA, int sB)
 int fn_8029A5E4(int obj, int state)
 {
     int inner = *(int *)((char *)obj + 0xb8);
-    int r = fn_802AC7DC(obj, state, inner);
+    int r = ((int (*)(int, int, int))fn_802AC7DC)(obj, state, inner);
     if (r != 0) {
         return r;
     }
@@ -6667,7 +12278,7 @@ void fn_802A81B8(int obj, int state, f32 *out)
 int fn_8029B7B0(int obj, int state)
 {
     int inner = *(int *)((char *)obj + 0xb8);
-    int r = fn_802AC7DC(obj, state, inner);
+    int r = ((int (*)(int, int, int))fn_802AC7DC)(obj, state, inner);
     u32 b;
     if (r != 0) {
         return r;
@@ -6995,6 +12606,960 @@ int fn_8029C9C8(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
+extern int gameBitDecrement(int);
+extern u8 objGetByteParam1C(int obj);
+extern f32 lbl_803E8054;
+int fn_802A418C(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int i;
+    s8 c;
+    int *list;
+    u8 buf[64];
+    f32 dist;
+    int cnt41;
+    int cnt20;
+    int cnt30;
+
+    dist = lbl_803E8050;
+    if (*(u8 *)((char *)inner + 0x8c8) == 0x44) {
+        goto ui_block;
+    }
+    if (*(void **)((char *)inner + 0x7f8) != NULL) {
+        c = ((s8 (*)(int, int, int, void *, int))fn_802A74A4)(obj, inner, state, buf, 0x22);
+    } else {
+        c = ((s8 (*)(int, int, int, void *, int))fn_802A74A4)(obj, inner, state, buf, -0x141);
+    }
+    if (c == -1) {
+        *(s8 *)((char *)inner + 0x8c2) = -1;
+        *(u8 *)((char *)inner + 0x8c3) = 0;
+    } else if (c == *(s8 *)((char *)inner + 0x8c2)) {
+        int n = *(s8 *)((char *)inner + 0x8c3) + 1;
+        *(u8 *)((char *)inner + 0x8c3) = n;
+        if ((u8)n > 200) {
+            *(u8 *)((char *)inner + 0x8c3) = 200;
+        }
+    } else {
+        *(s8 *)((char *)inner + 0x8c2) = c;
+        *(u8 *)((char *)inner + 0x8c3) = 0;
+    }
+    switch (*(s8 *)((char *)inner + 0x8c2)) {
+    case 0:
+        if (((ByteFlags *)((char *)inner + 0x3f1))->b01) {
+            *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
+            return 0xf;
+        }
+        goto deflt;
+    case 9:
+        if (((ByteFlags *)((char *)inner + 0x3f1))->b01) {
+            *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
+            return 0x13;
+        }
+        goto deflt;
+    case 4:
+        lbl_803DC6A0 = -1;
+        *(int *)((char *)state + 0x308) = 0;
+        return 0xd;
+    case 5:
+        if (*(void **)((char *)inner + 0x7f8) == NULL) {
+            lbl_803DC6A0 = -1;
+            *(int *)((char *)state + 0x308) = 0;
+            return 0xc;
+        }
+        goto deflt;
+    case 6:
+        *(int *)((char *)state + 0x308) = (int)fn_8029DAE0;
+        return -0x1d;
+    case 0xd:
+        *(int *)((char *)state + 0x308) = 0;
+        return 0x1d;
+    case 7:
+        fn_802AE9C8(obj, inner, state);
+        return 0;
+    case 8:
+        *(int *)((char *)state + 0x308) = 0;
+        return 0xb;
+    case 0xb:
+        *(int *)((char *)state + 0x308) = (int)fn_802A00C0;
+        return 0x1c;
+    case 10:
+        *(int *)((char *)state + 0x308) = 0;
+        return 0x17;
+    default:
+    deflt:
+        if (*(void **)((char *)inner + 0x7f8) == NULL &&
+            ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+            list = (int *)ObjGroup_GetObjects(0x41, &cnt41);
+            for (i = 0; i < cnt41; i++) {
+                int o = *list;
+                lbl_803DE434 = o;
+                if ((*(u8 *)((char *)o + 0xaf) & 4) != 0 &&
+                    (*(u8 *)((char *)o + 0xaf) & 0x10) == 0) {
+                    switch ((u8)objGetByteParam1C(o)) {
+                    case 2:
+                        setAButtonIcon(2);
+                        if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
+                            buttonDisable(0, 0x100);
+                            *(int *)((char *)state + 0x308) = (int)fn_80298924;
+                            return 0x34;
+                        }
+                        break;
+                    case 4:
+                    case 5:
+                        setAButtonIcon(0xe);
+                        if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
+                            buttonDisable(0, 0x100);
+                            *(int *)((char *)state + 0x308) = (int)fn_80298924;
+                            return 0x36;
+                        }
+                        break;
+                    case 3:
+                        setAButtonIcon(2);
+                        if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
+                            buttonDisable(0, 0x100);
+                            *(int *)((char *)state + 0x308) = (int)fn_80298924;
+                            return 0x35;
+                        }
+                        break;
+                    case 0:
+                        break;
+                    }
+                }
+                list++;
+            }
+        }
+    ui_block:
+        ((void (*)(int, int *))ObjGroup_GetObjects)(0x20, &cnt20);
+        GameBit_Set(0xeb5, !cnt20);
+        if ((*(int (*)(void))(*(int *)(*gGameUIInterface + 0x1c)))() != 0) {
+            if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x1ee) != 0) {
+                char *found;
+                s16 *def = NULL;
+                buttonDisable(0, 0x100);
+                found = ((char *(*)(int, int, f32 *))ObjGroup_FindNearestObject)(0xf, obj, &dist);
+                if (found != NULL) {
+                    def = *(s16 **)((char *)found + 0x4c);
+                }
+                if (def != NULL && *def == 0x860 && (*(u8 *)((char *)found + 0xaf) & 4) != 0) {
+                    GameBit_Set(0x3f1, 1);
+                    GameBit_Set(0x3d8, 1);
+                    GameBit_Set(0x651, 1);
+                }
+                return 0;
+            }
+            if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x953) != 0 &&
+                lbl_803DE444 == NULL) {
+                int player;
+                void *att;
+                buttonDisable(0, 0x100);
+                if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                    *(u8 *)((char *)inner + 0x8b4) = 1;
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+                }
+                player = Obj_GetPlayerObject();
+                if (Obj_IsLoadingLocked() == 0) {
+                    att = NULL;
+                } else {
+                    char *setup = (char *)Obj_AllocObjectSetup(0x24, 0x62d);
+                    *(s16 *)setup = 0x62d;
+                    *(u8 *)(setup + 0x4) = 2;
+                    *(u8 *)(setup + 0x6) = 0xff;
+                    *(u8 *)(setup + 0x5) = 1;
+                    *(u8 *)(setup + 0x7) = 0xff;
+                    *(int *)(setup + 0x8) = *(int *)((char *)player + 0xc);
+                    *(int *)(setup + 0xc) = *(int *)((char *)player + 0x10);
+                    *(int *)(setup + 0x10) = *(int *)((char *)player + 0x14);
+                    att = (void *)Obj_SetupObject((int)setup, 4, *(s8 *)((char *)player + 0xac),
+                                                  -1, *(int *)((char *)player + 0x30));
+                    lbl_803DE444 = att;
+                }
+                ((void (*)(int, void *, int))ObjLink_AttachChild)(obj, att, 1);
+                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0xd, obj, -1);
+            }
+        }
+        if (*(u8 *)((char *)inner + 0x8c8) != 0x44 &&
+            (*(int (*)(void))(*(int *)(*gGameUIInterface + 0x1c)))() != 0 &&
+            (*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x13e) != 0 &&
+            (((void (*)(int, int *))ObjGroup_GetObjects)(0x30, &cnt30), cnt30 == 0)) {
+            gameBitDecrement(0x13d);
+            if (Obj_IsLoadingLocked() != 0) {
+                char *setup = (char *)Obj_AllocObjectSetup(0x24, 0x43b);
+                *(s16 *)setup = 0x43b;
+                *(u8 *)(setup + 0x2) = 9;
+                *(u8 *)(setup + 0x4) = 2;
+                *(u8 *)(setup + 0x6) = 0xff;
+                *(u8 *)(setup + 0x5) = 1;
+                *(u8 *)(setup + 0x7) = 0xff;
+                *(int *)(setup + 0x8) = *(int *)((char *)obj + 0xc);
+                *(f32 *)(setup + 0xc) = lbl_803E7F58 + *(f32 *)((char *)obj + 0x10);
+                *(int *)(setup + 0x10) = *(int *)((char *)obj + 0x14);
+                *(u8 *)(setup + 0x19) = 1;
+                Obj_SetupObject((int)setup, 5, -1, -1, *(int *)((char *)obj + 0x30));
+            }
+            (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x10)))();
+            return 0;
+        }
+        {
+            if (*(s8 *)((char *)inner + 0x8b3) == 0) {
+                if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
+                    int ok2;
+                    if (*(void **)((char *)inner + 0x7f8) != NULL ||
+                        !((ByteFlags *)((char *)inner + 0x3f4))->b40 ||
+                        ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
+                        ((ByteFlags *)((char *)inner + 0x3f0))->b10) {
+                        ok2 = 0;
+                    } else {
+                        ok2 = 1;
+                    }
+                    if (ok2 != 0) {
+                        if (*(s8 *)((char *)inner + 0x8b4) == 2 ||
+                            (*(void **)((char *)inner + 0x4b8) != NULL &&
+                             *(f32 *)((char *)inner + 0x4b0) < lbl_803E8054 &&
+                             *(int *)((char *)inner + 0x4a8) < 0x4000 &&
+                             *(s16 *)((char *)inner + 0x4b4) == 1)) {
+                            if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                                *(u8 *)((char *)inner + 0x8b4) = 4;
+                                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+                            }
+                            *(int *)((char *)state + 0x308) = 0;
+                            return 0x32;
+                        }
+                        if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                            *(u8 *)((char *)inner + 0x8b4) = 2;
+                            ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+                        }
+                    }
+                }
+            } else {
+                int r2;
+                if ((*(int *)((char *)state + 0x31c) & 0x200) != 0 && lbl_803DE44C != NULL &&
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                    *(u8 *)((char *)inner + 0x8b4) = 0;
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+                }
+                {
+                    int in2 = *(int *)((char *)obj + 0xb8);
+                    u8 b;
+                    if ((*(int *)((char *)state + 0x31c) & 0x100) == 0 ||
+                        (b = ((ByteFlags *)((char *)in2 + 0x3f4))->b40, b == 0)) {
+                        r2 = 0;
+                    } else {
+                        if (lbl_803DE44C != NULL && b != 0) {
+                            *(u8 *)((char *)in2 + 0x8b4) = 4;
+                            ((ByteFlags *)((char *)in2 + 0x3f4))->b08 = 1;
+                        }
+                        *(int *)((char *)state + 0x308) = 0;
+                        r2 = 0x32;
+                    }
+                    if (r2 != 0) {
+                        return r2;
+                    }
+                }
+            }
+            return 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+extern int *gPlayerShadowInterface;
+extern u8 lbl_8033322C[];
+extern int lbl_803E7E68;
+extern int lbl_803E7E6C;
+void playerRender(int obj, int a, int b, int c, int d, s8 flag)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 sx;
+    f32 sy;
+    f32 sz;
+    f32 px;
+    f32 py;
+    f32 pz;
+    f32 qx;
+    f32 qy;
+    f32 qz;
+    int tbl[2];
+    struct {
+        u8 pad[6];
+        u16 mode;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } pfx;
+    f32 vel[3];
+
+    if (flag == -1 || (*(u32 *)((char *)inner + 0x360) & 0x4001) == 0) {
+        if (*(void **)((char *)inner + 0x7f0) != NULL &&
+            ((*(u16 *)((char *)obj + 0xb0) & 0x1000) != 0 ||
+             arrayIndexOf(&lbl_803DC6C4, 2, *(s16 *)((char *)inner + 0x274)) != -1)) {
+            fn_802A9D0C(obj, inner, *(int *)((char *)inner + 0x7f0), a, b, c, d, 1);
+        }
+        if (*(u8 *)((char *)inner + 0x8ca) == 1) {
+            fn_802AAD44(obj);
+        }
+        (*(void (*)(int))(*(int *)(*gPlayerShadowInterface + 0x8)))(obj);
+        if (*(void **)((char *)inner + 0x7f0) != NULL &&
+            ((*(u16 *)((char *)obj + 0xb0) & 0x1000) != 0 ||
+             arrayIndexOf(&lbl_803DC6C4, 2, *(s16 *)((char *)inner + 0x274)) != -1)) {
+            {
+                int held = *(int *)((char *)inner + 0x7f0);
+                (*(void (*)(f32))*(int *)(*(int *)(*(int *)((char *)held + 0x68)) + 0x50))(
+                    *(f32 *)((char *)*(int *)((char *)obj + 0x50) + 0x4));
+            }
+        }
+        if ((*(u32 *)((char *)inner + 0x360) & 0x8000000) != 0) {
+            sx = *(f32 *)((char *)obj + 0xc);
+            sy = *(f32 *)((char *)obj + 0x10);
+            sz = *(f32 *)((char *)obj + 0x14);
+            *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x20);
+            *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x24);
+            *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)*(int *)((char *)obj + 0x64) + 0x28);
+        }
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) + *(f32 *)((char *)inner + 0x7c8);
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, a, b, c, d, lbl_803E7EE0);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)inner + 0x7c8);
+        if ((*(u32 *)((char *)inner + 0x360) & 0x8000000) != 0) {
+            *(f32 *)((char *)obj + 0xc) = sx;
+            *(f32 *)((char *)obj + 0x10) = sy;
+            *(f32 *)((char *)obj + 0x14) = sz;
+        }
+        if (flag != 0) {
+            fn_802AAF80(obj, inner, a, b, c);
+        }
+        ((void (*)(int, int, int, int))ObjPath_GetPointWorldPositionArray)(obj, 6, 2,
+                                                                           inner + 0x3c4);
+        ObjPath_GetPointWorldPosition(obj, 0xb, (f32 *)((char *)inner + 0x768),
+                                      (f32 *)((char *)inner + 0x76c),
+                                      (f32 *)((char *)inner + 0x770), 0);
+        if (((int (*)(int, int))playerHasKrazoaSpirit)(1, 0) == 0) {
+            if (lbl_803DE428 != 0) {
+                *(int *)((char *)lbl_803DE428 + 0x3c) &= ~0x100000;
+                lbl_803DE428 = 0;
+            }
+        } else if (lbl_803DE428 == 0) {
+            int *mdl = (int *)Obj_GetActiveModel(obj);
+            int m = *mdl;
+            int i;
+            for (i = 0; i < (int)(u32)*(u8 *)((char *)m + 0xf8); i++) {
+                int op = ObjModel_GetRenderOp(m, i);
+                if (*(s8 *)((char *)op + 0x41) == 2) {
+                    Shader_getLayer(op, 1);
+                    lbl_803DE428 = op;
+                    *(int *)((char *)op + 0x3c) |= 0x100000;
+                    break;
+                }
+            }
+        }
+        {
+            int in2 = *(int *)((char *)obj + 0xb8);
+            if (*(void **)((char *)in2 + 0x7f8) != NULL &&
+                *(int *)((char *)*(int *)((char *)in2 + 0x7f8) + 0xf8) == 1) {
+                ObjPath_GetPointWorldPosition(obj, 8, &px, &py, &pz, 0);
+                ObjPath_GetPointWorldPosition(obj, 9, &qx, &qy, &qz, 0);
+                px = lbl_803E7E98 * (px + qx);
+                py = lbl_803E7E98 * (py + qy);
+                pz = lbl_803E7E98 * (pz + qz);
+                if (*(s16 *)((char *)*(int *)((char *)in2 + 0x7f8) + 0x46) == 0x112) {
+                    py = py + lbl_803E7ED4;
+                }
+                *(f32 *)((char *)*(int *)((char *)in2 + 0x7f8) + 0x18) = px;
+                *(f32 *)((char *)*(int *)((char *)in2 + 0x7f8) + 0xc) = px;
+                *(f32 *)((char *)*(int *)((char *)in2 + 0x7f8) + 0x1c) = py;
+                *(f32 *)((char *)*(int *)((char *)in2 + 0x7f8) + 0x10) = py;
+                *(f32 *)((char *)*(int *)((char *)in2 + 0x7f8) + 0x20) = pz;
+                *(f32 *)((char *)*(int *)((char *)in2 + 0x7f8) + 0x14) = pz;
+                if (*(s16 **)((char *)obj + 0x30) == NULL) {
+                    *(s16 *)*(int *)((char *)in2 + 0x7f8) = *(s16 *)((char *)in2 + 0x478);
+                } else {
+                    *(s16 *)*(int *)((char *)in2 + 0x7f8) =
+                        **(s16 **)((char *)obj + 0x30) + *(s16 *)((char *)obj + 0x0);
+                }
+                (*(void (*)(int, int, int, int, int, int))*(int *)(
+                    *(int *)(*(int *)((char *)*(int *)((char *)in2 + 0x7f8) + 0x68)) + 0x10))(
+                    *(int *)((char *)in2 + 0x7f8), 0, 0, 0, 0, -1);
+            }
+        }
+        if (lbl_803E7EA4 < *(f32 *)((char *)inner + 0x79c) ||
+            (*(u16 *)((char *)inner + 0x8d8) & 2) != 0) {
+            tbl[0] = lbl_803E7E68;
+            tbl[1] = lbl_803E7E6C;
+            objParticleFn_80099d84(obj, lbl_803E7E9C,
+                                   tbl[*(u8 *)((char *)inner + 0x7a8) >> 5] & 0xff,
+                                   lbl_803E7EE0, 0);
+        }
+        if ((*(u16 *)((char *)inner + 0x8d8) & 1) != 0) {
+            objParticleFn_80099d84(obj, lbl_803E7E9C, 8, lbl_803E7EE0, 0);
+        }
+        if (*(f32 *)((char *)inner + 0x838) <= lbl_803E7EA4) {
+            if (lbl_8033322C[*(u8 *)((char *)inner + 0x86c)] == 6 ||
+                lbl_8033322C[*(u8 *)((char *)inner + 0x86c)] == 3) {
+                if ((*(u16 *)((char *)inner + 0x8d8) & 8) != 0) {
+                    int n;
+                    vel[0] = lbl_803E7F6C * *(f32 *)((char *)obj + 0x24);
+                    vel[1] = lbl_803E7F6C * *(f32 *)((char *)obj + 0x28);
+                    vel[2] = lbl_803E7F6C * *(f32 *)((char *)obj + 0x2c);
+                    pfx.x = lbl_803E8018 * *(f32 *)((char *)obj + 0x24) + *(f32 *)((char *)inner + 0x3c4);
+                    pfx.y = lbl_803E8018 * *(f32 *)((char *)obj + 0x28) + *(f32 *)((char *)inner + 0x3c8);
+                    pfx.z = lbl_803E8018 * *(f32 *)((char *)obj + 0x2c) + *(f32 *)((char *)inner + 0x3cc);
+                    pfx.scale = lbl_803E7F18;
+                    pfx.mode = lbl_8033322C[*(u8 *)((char *)inner + 0x86c)];
+                    for (n = 5; n != 0; n--) {
+                        (*(void (*)(int, int, void *, int, int, f32 *))(*(int *)(*gPartfxInterface + 0x8)))(
+                            obj, 0x7e6, &pfx, 0x200001, -1, vel);
+                    }
+                    pfx.x = lbl_803E8018 * *(f32 *)((char *)obj + 0x24) + *(f32 *)((char *)inner + 0x3d0);
+                    pfx.y = lbl_803E8018 * *(f32 *)((char *)obj + 0x28) + *(f32 *)((char *)inner + 0x3d4);
+                    pfx.z = lbl_803E8018 * *(f32 *)((char *)obj + 0x2c) + *(f32 *)((char *)inner + 0x3d8);
+                    pfx.scale = lbl_803E7F18;
+                    pfx.mode = lbl_8033322C[*(u8 *)((char *)inner + 0x86c)];
+                    for (n = 5; n != 0; n--) {
+                        (*(void (*)(int, int, void *, int, int, f32 *))(*(int *)(*gPartfxInterface + 0x8)))(
+                            obj, 0x7e6, &pfx, 0x200001, -1, vel);
+                    }
+                    *(u16 *)((char *)inner + 0x8d8) = *(u16 *)((char *)inner + 0x8d8) & ~0x8;
+                }
+                if ((*(u16 *)((char *)inner + 0x8d8) & 4) != 0) {
+                    u8 n2;
+                    vel[0] = lbl_803E7F44 * *(f32 *)((char *)obj + 0x24);
+                    vel[1] = lbl_803E7F44 * *(f32 *)((char *)obj + 0x28);
+                    vel[2] = lbl_803E7F44 * *(f32 *)((char *)obj + 0x2c);
+                    pfx.x = *(f32 *)((char *)obj + 0x18);
+                    pfx.y = lbl_803E7F10 + *(f32 *)((char *)obj + 0x1c);
+                    pfx.z = *(f32 *)((char *)obj + 0x20);
+                    pfx.scale = lbl_803E7EE0;
+                    pfx.mode = lbl_8033322C[*(u8 *)((char *)inner + 0x86c)];
+                    for (n2 = 0; n2 < 10; n2++) {
+                        (*(void (*)(int, int, void *, int, int, f32 *))(*(int *)(*gPartfxInterface + 0x8)))(
+                            obj, 0x7e6, &pfx, 0x200001, -1, vel);
+                    }
+                    *(u16 *)((char *)inner + 0x8d8) = *(u16 *)((char *)inner + 0x8d8) & ~0x4;
+                }
+            }
+        } else if ((*(u16 *)((char *)inner + 0x8d8) & 4) != 0) {
+            *(int *)((char *)inner + 0x360) |= 0x20000;
+            *(u16 *)((char *)inner + 0x8d8) = *(u16 *)((char *)inner + 0x8d8) & ~0x4;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+extern u64 lbl_803DE4A0;
+extern u64 lbl_803DE4A8;
+typedef struct { int a; int b; } IntPair2;
+extern int lbl_803E7E70;
+extern f32 lbl_803E7FA0;
+extern f32 lbl_803E80FC;
+extern f32 lbl_803E7F30;
+extern f32 lbl_803E8100;
+extern f32 lbl_803E7FC0;
+extern f32 lbl_803E7EF8;
+int fn_802AC7DC(int obj, int state, int inner, f32 fv)
+{
+    int r;
+    int ok;
+    IntPair2 camp;
+    struct {
+        s16 a;
+        s16 b;
+        s16 c;
+        f32 d;
+        f32 e;
+        f32 f;
+        f32 g;
+    } pos;
+    u8 buf[52];
+    f32 mtx[16];
+    f32 dummy;
+
+    camp = *(IntPair2 *)&lbl_803E7E70;
+    if (*(u8 *)((char *)inner + 0x8c8) != 0x48 && *(u8 *)((char *)inner + 0x8c8) != 0x47 &&
+        !((ByteFlags *)((char *)inner + 0x3f0))->b04 && !((ByteFlags *)((char *)inner + 0x3f0))->b08 &&
+        *(void **)((char *)inner + 0x7f8) == NULL && !((ByteFlags *)((char *)inner + 0x3f0))->b02 &&
+        *(void **)((char *)inner + 0x2d0) == NULL && !((ByteFlags *)((char *)inner + 0x3f6))->b40 &&
+        *(s16 *)((char *)inner + 0x274) != 0x26) {
+        ok = 1;
+    } else {
+        ok = 0;
+    }
+    if (ok != 0 && (*(u16 *)((char *)inner + 0x6e0) & 0x40) != 0 && getCurSeqNo() == 0) {
+        if (!((ByteFlags *)((char *)inner + 0x3f1))->b20 &&
+            !((ByteFlags *)((char *)inner + 0x3f0))->b10) {
+            f32 b;
+            f32 a;
+            a = *(f32 *)((char *)state + 0x284);
+            b = *(f32 *)((char *)state + 0x280);
+            pos.a = *(s16 *)((char *)inner + 0x484);
+            pos.b = 0;
+            pos.c = 0;
+            pos.d = lbl_803E7EE0;
+            pos.e = lbl_803E7EA4;
+            pos.f = lbl_803E7EA4;
+            pos.g = lbl_803E7EA4;
+            setMatrixFromObjectPos(mtx, &pos.a);
+            Matrix_TransformPoint(mtx, a, lbl_803E7EA4, -b, (f32 *)((char *)inner + 0x4c8), &dummy,
+                                  (f32 *)((char *)inner + 0x4cc));
+            ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f0))->b10 = 0;
+            ((ByteFlags *)((char *)inner + 0x3f1))->b08 = 1;
+            {
+                s16 v = *(s16 *)((char *)inner + 0x478);
+                *(s16 *)((char *)inner + 0x484) = v;
+                *(s16 *)((char *)obj + 0x0) = v;
+            }
+            ((ByteFlags *)((char *)inner + 0x3f1))->b20 = 1;
+            {
+                f32 z = lbl_803E7EA4;
+                *(f32 *)((char *)inner + 0x7bc) = z;
+                *(f32 *)((char *)inner + 0x7b8) = z;
+            }
+        }
+        if (!((ByteFlags *)((char *)inner + 0x3f1))->b10) {
+            cameraSetInterpMode(2);
+            (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x52, 1, 0, 8, &camp, 0x1e, 0xff);
+            if (lbl_803DE4A8 - lbl_803DE4A0 > 2) {
+                Sfx_PlayFromObject(obj, 0x3e4);
+            }
+            lbl_803DE4A0 = lbl_803DE4A8;
+            ((ByteFlags *)((char *)inner + 0x3f1))->b10 = 1;
+        }
+    } else {
+        if (((ByteFlags *)((char *)inner + 0x3f1))->b20) {
+            s16 v = *(s16 *)((char *)obj + 0x0);
+            *(s16 *)((char *)inner + 0x484) = v;
+            *(s16 *)((char *)inner + 0x478) = v;
+            *(int *)((char *)inner + 0x494) = v;
+            *(f32 *)((char *)inner + 0x284) = lbl_803E7EA4;
+        }
+        ((ByteFlags *)((char *)inner + 0x3f1))->b20 = 0;
+        if (((ByteFlags *)((char *)inner + 0x3f1))->b10 && *(u8 *)((char *)inner + 0x8c8) != 0x48 &&
+            *(u8 *)((char *)inner + 0x8c8) != 0x47 && getCurSeqNo() == 0) {
+            (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x42, 0, 1, 0, 0, 0x1e, 0xff);
+            ((ByteFlags *)((char *)inner + 0x3f1))->b10 = 0;
+        }
+    }
+    lbl_803DE4A8 = lbl_803DE4A8 + 1;
+    if (!((ByteFlags *)((char *)inner + 0x3f0))->b20 &&
+        *(f32 *)((char *)inner + 0x838) > lbl_803E7FA0 &&
+        *(f32 *)((char *)state + 0x1b0) < lbl_803E80FC) {
+        ((void (*)(int, int, int))fn_802AE83C)(obj, inner, state);
+        return 0;
+    }
+    {
+        if (!((ByteFlags *)((char *)inner + 0x3f0))->b20 &&
+            !((ByteFlags *)((char *)inner + 0x3f0))->b08 &&
+            !((ByteFlags *)((char *)inner + 0x3f0))->b04) {
+            if (((ByteFlags *)((char *)inner + 0x3f1))->b01 ||
+                *(f32 *)((char *)state + 0x1b0) < lbl_803E7F58) {
+                *(u8 *)((char *)inner + 0x40d) = 0;
+            } else {
+                *(u8 *)((char *)inner + 0x40d) = *(u8 *)((char *)inner + 0x40d) + 1;
+            }
+            if (*(u8 *)((char *)inner + 0x40d) > 10) {
+                *(u8 *)((char *)inner + 0x40d) = 10;
+            }
+            if (*(u8 *)((char *)inner + 0x40d) > 2) {
+                ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+                ((ByteFlags *)((char *)inner + 0x3f0))->b10 = 0;
+                ((ByteFlags *)((char *)inner + 0x3f0))->b08 = 0;
+                staffFn_80170380(lbl_803DE450, 2);
+                ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 0;
+                *(int *)((char *)inner + 0x360) |= 0x800000;
+                ((void (*)(int))ObjHits_SyncObjectPositionIfDirty)(obj);
+                ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+                ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 1;
+                ((ByteFlags *)((char *)inner + 0x3f4))->b10 = 0;
+                *(u8 *)((char *)inner + 0x800) = 0;
+                if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                    s16 t = *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x46);
+                    if (t == 0x3cf || t == 0x662) {
+                        objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                    } else {
+                        objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                    }
+                    *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) =
+                        *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) & ~0x4000;
+                    *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                    *(int *)((char *)inner + 0x7f8) = 0;
+                }
+                *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+                return 3;
+            }
+        }
+        if (!((ByteFlags *)((char *)inner + 0x3f0))->b20 &&
+            lbl_803E7EA4 != *(f32 *)((char *)inner + 0x784)) {
+            *(int *)((char *)state + 0x308) = 0;
+            return 0x42;
+        }
+        if (!((ByteFlags *)((char *)inner + 0x3f0))->b20 &&
+            !((ByteFlags *)((char *)inner + 0x3f0))->b08 &&
+            !((ByteFlags *)((char *)inner + 0x3f0))->b04 &&
+            *(void **)((char *)inner + 0x2d0) == NULL &&
+            !((ByteFlags *)((char *)inner + 0x3f6))->b40 &&
+            *(s16 *)((char *)inner + 0x274) != 0x26) {
+            ok = 1;
+        } else {
+            ok = 0;
+        }
+        if (ok != 0 && *(void **)((char *)inner + 0x7f8) != NULL &&
+            *(s8 *)((char *)inner + 0x800) == 0) {
+            if ((*(int *)((char *)state + 0x310) & 0x4000) == 0) {
+                *(int *)((char *)state + 0x308) = (int)fn_802A49A8;
+                return 8;
+            }
+            *(int *)((char *)state + 0x308) = (int)fn_802A49A8;
+            return 7;
+        }
+        if (!((ByteFlags *)((char *)inner + 0x3f0))->b20 &&
+            !((ByteFlags *)((char *)inner + 0x3f0))->b08 &&
+            !((ByteFlags *)((char *)inner + 0x3f0))->b04 &&
+            !((ByteFlags *)((char *)inner + 0x3f0))->b02 &&
+            *(void **)((char *)inner + 0x2d0) == NULL &&
+            !((ByteFlags *)((char *)inner + 0x3f6))->b40 &&
+            *(s16 *)((char *)inner + 0x274) != 0x26) {
+            ok = 1;
+        } else {
+            ok = 0;
+        }
+        if (ok != 0) {
+            r = ((int (*)(int, int, f32))fn_802A418C)(obj, state, fv);
+            if (r != 0) {
+                return r;
+            }
+        }
+        if (*(void **)((char *)state + 0x2d0) != NULL) {
+            s16 t = *(s16 *)((char *)state + 0x274);
+            if (t != 0x24 && t != 0x25 && t != 0x26 &&
+                !((ByteFlags *)((char *)inner + 0x3f6))->b20 &&
+                *(s8 *)((char *)state + 0x349) == 1) {
+                *(int *)((char *)state + 0x308) = (int)fn_8029C8C8;
+                return 0x25;
+            }
+        }
+        {
+            u32 btn = getButtons_80014dd8(0);
+            if ((btn & 0x20) != 0) {
+                if (!((ByteFlags *)((char *)inner + 0x3f4))->b40 ||
+                    ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
+                    ((ByteFlags *)((char *)inner + 0x3f0))->b08 ||
+                    ((ByteFlags *)((char *)inner + 0x3f0))->b04 ||
+                    *(u8 *)((char *)inner + 0x8c8) == 0x44 ||
+                    *(void **)((char *)inner + 0x7f8) != NULL ||
+                    *(void **)((char *)inner + 0x2d0) != NULL ||
+                    ((ByteFlags *)((char *)inner + 0x3f6))->b40 ||
+                    *(s16 *)((char *)inner + 0x274) == 0x26 ||
+                    (*(u16 *)((char *)obj + 0xb0) & 0x1000) != 0 ||
+                    *(f32 *)((char *)inner + 0x880) != lbl_803E7EA4) {
+                    ok = 0;
+                } else {
+                    ok = 1;
+                }
+                if (ok != 0 && !((ByteFlags *)((char *)inner + 0x3f0))->b02) {
+                    staffFn_80170380(lbl_803DE450, 1);
+                    ObjAnim_SetCurrentMove(obj, 0x4f, *(f32 *)((char *)obj + 0x98), 0);
+                    ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 8);
+                    if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                        *(u8 *)((char *)inner + 0x8b4) = 4;
+                        ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+                    }
+                    *(f32 *)((char *)state + 0x2a0) = lbl_803E7EF8;
+                    ((ByteFlags *)((char *)inner + 0x3f0))->b10 = 0;
+                    ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
+                    ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
+                    ((ByteFlags *)((char *)inner + 0x3f0))->b08 = 0;
+                    ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 0;
+                    *(u8 *)((char *)inner + 0x40d) = 0;
+                    ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 1;
+                    *(u8 *)((char *)inner + 0x800) = 0;
+                    if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                        s16 t = *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x46);
+                        if (t == 0x3cf || t == 0x662) {
+                            objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                        } else {
+                            objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                        }
+                        *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) =
+                            *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) & ~0x4000;
+                        *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                        *(int *)((char *)inner + 0x7f8) = 0;
+                    }
+                    ((void (*)(int))ObjHits_MarkObjectPositionDirty)(obj);
+                    *(int *)((char *)state + 0x308) = (int)fn_802A514C;
+                    return 3;
+                }
+            }
+        }
+        if (((ByteFlags *)((char *)inner + 0x3f0))->b08 ||
+            ((ByteFlags *)((char *)inner + 0x3f0))->b04) {
+            r = fn_802A74A4(obj, inner, state, buf, fv, 0x14);
+            if (r == 0xc) {
+                *(int *)((char *)state + 0x308) = 0;
+                return 10;
+            }
+            if (r == 9) {
+                if (lbl_803E7F30 + *(f32 *)((char *)inner + 0x550) <=
+                        lbl_803E8100 + *(f32 *)((char *)obj + 0x8) &&
+                    lbl_803E8100 + *(f32 *)((char *)obj + 0x8) <=
+                        *(f32 *)((char *)inner + 0x54c) - lbl_803E7F10) {
+                    doRumble(lbl_803E7ED8);
+                    *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
+                    return 0x12;
+                }
+            }
+        }
+        if (((ByteFlags *)((char *)inner + 0x3f0))->b20) {
+            r = fn_802A74A4(obj, inner, state, buf, lbl_803E7EE0, 0x100);
+            if (r == 5) {
+                lbl_803DC6A0 = -1;
+                *(int *)((char *)state + 0x308) = 0;
+                return 0xc;
+            }
+            if (*(f32 *)((char *)inner + 0x838) < lbl_803E7FC0 &&
+                ((ByteFlags *)((char *)inner + 0x3f1))->b01) {
+                ((ByteFlags *)((char *)inner + 0x3f0))->b20 = 0;
+            }
+        }
+        return 0;
+    }
+}
+
+extern f32 lbl_803E80C0;
+extern f32 lbl_803E80A0;
+extern f32 lbl_803DC6B8[2];
+int fn_802A87CC(int obj, char *cam, f32 *out, f32 *vec, f32 fa, f32 fb)
+{
+    s8 mode;
+    int inner;
+    void *parent;
+    int wallHit;
+    int tris;
+    int verts;
+    void **list;
+    f32 y1;
+    f32 y2;
+    f32 z1;
+    f32 z2;
+    f32 x1;
+    f32 x2;
+    f32 dists[4];
+    f32 z9c;
+    f32 planes[7];
+    f32 p7c;
+
+    mode = 0;
+    inner = *(int *)((char *)obj + 0xb8);
+    if (fa <= *(f32 *)((char *)inner + 0x280) * fb || fa <= lbl_803E80C0) {
+        s8 st = *(s8 *)((char *)cam + 0x50);
+        if (st == 2 || st == 0x11) {
+            mode = 4;
+        } else if (!(*(f32 *)((char *)inner + 0x280) >= lbl_803E80A0)) {
+            mode = 5;
+        } else if (st != 4) {
+            mode = 4;
+        }
+    }
+    out[7] = *(f32 *)((char *)cam + 0x1c);
+    out[8] = *(f32 *)((char *)cam + 0x20);
+    out[9] = *(f32 *)((char *)cam + 0x24);
+    out[7] = -out[7];
+    out[8] = -out[8];
+    out[9] = -out[9];
+    out[10] = -*(f32 *)((char *)cam + 0x28);
+    out[0xb] = vec[0];
+    out[0xc] = vec[1];
+    out[0xd] = vec[2];
+    parent = *(void **)cam;
+    if (mode == 4) {
+        char *cp;
+        f32 *pl;
+        f32 *dp;
+        int i;
+        f32 *b6b8;
+        f32 *px2;
+        f32 *py2;
+        f32 *pz2;
+        f32 thresh;
+        wallHit = 0;
+        if (parent != NULL) {
+            tris = *(int *)((char *)*(int *)((char *)parent + 0x50) + 0x34);
+            verts = *(int *)((char *)*(int *)((char *)parent + 0x50) + 0x3c);
+        } else {
+            tris = lbl_803DCF34;
+            verts = lbl_803DCF38;
+        }
+        planes[0] = out[9];
+        planes[1] = lbl_803E7EA4;
+        planes[2] = -out[7];
+        planes[3] = -(planes[0] * *(f32 *)((char *)cam + 0x4) +
+                      planes[2] * *(f32 *)((char *)cam + 0x14));
+        planes[4] = -planes[0];
+        planes[5] = lbl_803E7EA4;
+        planes[6] = -planes[2];
+        p7c = -(planes[4] * *(f32 *)((char *)cam + 0x8) +
+                planes[6] * *(f32 *)((char *)cam + 0x18));
+        i = 0;
+        pl = planes;
+        dp = dists;
+        cp = cam;
+        b6b8 = lbl_803DC6B8;
+        px2 = &x2;
+        py2 = &y2;
+        pz2 = &z2;
+        thresh = lbl_803E7E98;
+        do {
+            f32 dot = ((f32 (*)(f32 *, f32 *))PSVECDotProduct)(pl, vec);
+            *dp = pl[3] + dot;
+            if (*dp < thresh + b6b8[1]) {
+                int tri;
+                if (*(s16 *)(cp + 0x4c) > -1) {
+                    tri = tris + *(s16 *)(cp + 0x4c) * 0x10;
+                } else {
+                    tri = 0;
+                }
+                if (tri == 0 || ((*(s8 *)(tri + 3) & 0x3f) != 5 && (*(s8 *)(tri + 3) & 0x3f) != 2)) {
+                    wallHit = 1;
+                } else {
+                    x1 = *(f32 *)(verts + *(s16 *)(tri + 4) * 0xc);
+                    y1 = lbl_803E7EA4;
+                    z1 = *(f32 *)(verts + *(s16 *)(tri + 4) * 0xc + 8);
+                    x2 = *(f32 *)(verts + *(s16 *)(tri + 6) * 0xc);
+                    y2 = lbl_803E7EA4;
+                    z2 = *(f32 *)(verts + *(s16 *)(tri + 6) * 0xc + 8);
+                    if (parent != NULL) {
+                        ((void (*)(f32 *, f32 *, f32 *, void *))Obj_TransformLocalPointToWorld)(
+                            &x1, &y1, &z1, parent);
+                        ((void (*)(f32, f32, f32, f32 *, f32 *, f32 *, void *))
+                             Obj_TransformLocalPointToWorld)(x2, y2, z2, px2, py2, pz2, parent);
+                    }
+                    {
+                        f32 dz = z2 - z1;
+                        f32 dx = x1 - x2;
+                        f32 inv = lbl_803E7EE0 / sqrtf(dz * dz + dx * dx);
+                        dz = dz * inv;
+                        dx = dx * inv;
+                        if (dz * out[7] + dx * out[9] < lbl_803E7E98) {
+                            wallHit = 1;
+                        }
+                    }
+                }
+            }
+            pl += 4;
+            dp++;
+            cp += 2;
+            i++;
+        } while (i < 2);
+        if (dists[0] < dists[1]) {
+            *(u8 *)((char *)out + 0x5f) = 0;
+        } else {
+            *(u8 *)((char *)out + 0x5f) = 1;
+        }
+        if (wallHit != 0) {
+            f32 e = lbl_803E7E98;
+            out[0xb] = out[0xb] + ((e + b6b8[1]) - dists[*(u8 *)((char *)out + 0x5f)]) *
+                                      planes[(u32)*(u8 *)((char *)out + 0x5f) * 4];
+            out[0xd] = out[0xd] + ((e + b6b8[1]) - dists[*(u8 *)((char *)out + 0x5f)]) *
+                                      planes[(u32)*(u8 *)((char *)out + 0x5f) * 4 + 2];
+        }
+        {
+            f32 e2 = lbl_803E7E98;
+            out[0x11] = -(out[7] * (e2 + lbl_803DC6C0) - out[0xb]);
+            out[0x13] = -(out[9] * (e2 + lbl_803DC6C0) - out[0xd]);
+        }
+        {
+            f32 f = lbl_803E7F10;
+            out[0x14] = f * out[7] + out[0xb];
+            out[0x16] = f * out[9] + out[0xd];
+        }
+        out[1] = *(f32 *)((char *)cam + 0xc) +
+                 *(f32 *)((char *)cam + 0x48) *
+                     (*(f32 *)((char *)cam + 0x10) - *(f32 *)((char *)cam + 0xc));
+        dists[2] = out[0x14];
+        dists[3] = out[1];
+        z9c = out[0x16];
+        ((void (*)(f32 *, f32 *, f32 *, int))Obj_TransformLocalPointToWorld)(
+            &dists[2], &dists[3], &z9c, *(int *)((char *)obj + 0x30));
+        {
+            int cnt = hitDetectFn_80065e50(obj, (int ***)&list, 0, 0x201, dists[2], dists[3], z9c);
+            if (cnt != 0) {
+                f32 best = lbl_803E80AC;
+                f32 best2 = best;
+                int bi = -1;
+                int i2 = 0;
+                void **pp = list;
+                if (cnt > 0) {
+                    do {
+                        f32 dy = dists[3] - *(f32 *)*pp;
+                        if (lbl_803E7EA4 <= dy && (best < lbl_803E7EA4 || dy < best)) {
+                            best = dy;
+                            bi = i2;
+                        }
+                        if (lbl_803E80B0 < ((f32 *)*pp)[2] && lbl_803E7EA4 <= dy &&
+                            (best2 < lbl_803E7EA4 || dy < best2)) {
+                            best2 = dy;
+                        }
+                        pp++;
+                        i2++;
+                        cnt--;
+                    } while (cnt != 0);
+                }
+                if (best < lbl_803E80C4 && bi != -1 && ((f32 *)list[bi])[2] <= lbl_803E80B0 &&
+                    lbl_803E7EB0 < ((f32 *)list[bi])[2]) {
+                    return 0;
+                }
+                if (best2 < lbl_803E80C4) {
+                    return 0;
+                }
+            }
+        }
+        dists[2] = out[0x11];
+        dists[3] = out[1];
+        z9c = out[0x13];
+        ((void (*)(f32 *, f32 *, f32 *, int))Obj_TransformLocalPointToWorld)(
+            &dists[2], &dists[3], &z9c, *(int *)((char *)obj + 0x30));
+        if (hitDetectFn_800658a4(obj, out + 0x12, 0x205, dists[2], dists[3], z9c) == 0) {
+            out[0x12] = out[1] - out[0x12];
+        } else {
+            out[0x12] = out[1];
+        }
+        out[2] = *(f32 *)((char *)cam + 0xc);
+        out[0] = out[1] - out[2];
+        *(u8 *)((char *)out + 0x5e) = *(u8 *)((char *)cam + 0x50);
+        *(u8 *)((char *)out + 0x60) = *(u8 *)((char *)cam + 0x53);
+        if (*(int *)((char *)obj + 0x30) != 0) {
+            ((void (*)(f32, f32, f32, f32 *, f32 *, f32 *))Obj_TransformLocalPointToWorld)(
+                out[0xb], out[0xc], out[0xd], out + 0xb, out + 0xc, out + 0xd);
+            ((void (*)(f32, f32, f32, f32 *, f32 *, f32 *, int))Obj_TransformLocalPointToWorld)(
+                out[0x11], out[0x12], out[0x13], out + 0x11, out + 0x12, out + 0x13,
+                *(int *)((char *)obj + 0x30));
+            ((void (*)(f32, f32, f32, f32 *, f32 *, f32 *, int))Obj_TransformLocalPointToWorld)(
+                out[0x14], out[0x15], out[0x16], out + 0x14, out + 0x15, out + 0x16,
+                *(int *)((char *)obj + 0x30));
+            *(f32 *)((char *)inner + 0x5ac) =
+                *(f32 *)((char *)inner + 0x5ac) + *(f32 *)(*(int *)((char *)obj + 0x30) + 0x10);
+            *(f32 *)((char *)inner + 0x5b0) =
+                *(f32 *)((char *)inner + 0x5b0) + *(f32 *)(*(int *)((char *)obj + 0x30) + 0x10);
+        }
+        *(u8 *)((char *)out + 0x61) = 1;
+        if (parent != NULL && (*(u32 *)((char *)*(int *)((char *)parent + 0x50) + 0x44) & 0x8000) == 0) {
+            *(void **)((char *)inner + 0x4c4) = parent;
+        } else {
+            *(int *)((char *)inner + 0x4c4) = 0;
+        }
+    } else {
+        *(int *)((char *)inner + 0x4c4) = 0;
+    }
+    return mode;
+}
+
 int fn_802A8EE4(int a, int b, int c, int d, int e)
 {
     EmitPlane planes[2];
@@ -10523,7 +17088,7 @@ void fn_802AEF34(int obj, int state)
                 } else {
                     s16 t = *(s16 *)((char *)state + 0x274);
                     ok = (u16)(t - 1) <= 1 || (u16)(t - 0x24) <= 1 ||
-                         *(int *)((char *)state + 0x2d0) != 0;
+                         *(void **)((char *)state + 0x2d0) != NULL;
                 }
                 if (ok) {
                     Object_ObjAnimAdvanceMove(lbl_8033369C[*(u8 *)((char *)state + 0x8a2)],

@@ -3,12 +3,11 @@
 
 #include "ghidra_import.h"
 
-void objAudioFn_8006ef38(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
-                 uint param_5,int param_6,int param_7);
+void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unused, f32 scale);
 void* fn_8006F388(u32 i);
 void timeFn_8006f400(f32 step);
 void drawFn_8006f500(void);
-void playerEarthWalkerAudioFn_8006f950(undefined4 param_1,undefined4 param_2,undefined param_3,uint param_4);
+void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type);
 void fn_8006FC00(int param_1);
 void mapInitFn_8006fccc(void);
 int maybeReadDepthBuffer(int x, int y, int id);

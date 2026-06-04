@@ -503,6 +503,8 @@ void dfsh_door2speci_initialise(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_801C2914(int obj)
 {
   int def;
@@ -524,9 +526,9 @@ void fn_801C2914(int obj)
     return;
   }
 
-  state->orbitA += (s16)(s32)(lbl_803E4E50 * timeDelta);
-  state->orbitB += (s16)(s32)(lbl_803E4E54 * timeDelta);
-  state->orbitC += (s16)(s32)(lbl_803E4E58 * timeDelta);
+  state->orbitA += (s32)(lbl_803E4E50 * timeDelta);
+  state->orbitB += (s32)(lbl_803E4E54 * timeDelta);
+  state->orbitC += (s32)(lbl_803E4E58 * timeDelta);
 
   *(f32 *)(obj + 0x10) =
       lbl_803E4E5C +
@@ -535,11 +537,13 @@ void fn_801C2914(int obj)
 
   trigA = fn_80293E80((lbl_803E4E60 * (f32)state->orbitB) / lbl_803E4E64);
   trigB = fn_80293E80((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
-  *(s16 *)(obj + 4) = (s16)(s32)(lbl_803E4E68 * (trigB + trigA));
+  trigB = trigB + trigA;
+  *(s16 *)(obj + 4) = (s32)(lbl_803E4E68 * trigB);
 
   trigA = fn_80293E80((lbl_803E4E60 * (f32)state->orbitC) / lbl_803E4E64);
   trigB = fn_80293E80((lbl_803E4E60 * (f32)state->orbitA) / lbl_803E4E64);
-  *(s16 *)(obj + 2) = (s16)(s32)(lbl_803E4E68 * (trigB + trigA));
+  trigB = trigB + trigA;
+  *(s16 *)(obj + 2) = (s32)(lbl_803E4E68 * trigB);
 
   ObjAnim_AdvanceCurrentMove(obj,lbl_803E4E6C,timeDelta,animEvents);
   if (player != NULL) {
@@ -565,6 +569,8 @@ void fn_801C2914(int obj)
     }
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -650,6 +656,13 @@ void dfsh_shrine_free(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+typedef struct LanternFlagBits {
+    u8 on : 1;
+    u8 rest : 7;
+} LanternFlagBits;
+
+#pragma scheduling off
+#pragma peephole off
 int dfsh_shrine_SeqFn(int obj,int unused,void *seq)
 {
   int objLocal;
@@ -671,13 +684,13 @@ int dfsh_shrine_SeqFn(int obj,int unused,void *seq)
     if (cmd != 0) {
       switch (cmd) {
       case 3:
-        state->flags = (state->flags & 0x7f) | 0x80;
+        ((LanternFlagBits *)&state->flags)->on = 1;
         break;
       case 7:
         fn_80296518(player,1,1);
         GameBit_Set(0xbfd,1);
         GameBit_Set(0x956,1);
-        (*gMapEventInterface)->setMode(0xb,2);
+        (*(void (**)(int, int))((char *)*gMapEventInterface + 0x44))(0xb,2);
         break;
       case 0xe:
         *(s16 *)(objLocal + 6) = (s16)(*(s16 *)(objLocal + 6) | 0x4000);
@@ -697,6 +710,8 @@ int dfsh_shrine_SeqFn(int obj,int unused,void *seq)
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E4E38;

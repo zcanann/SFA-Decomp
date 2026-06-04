@@ -1,6 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/baddieControl.h"
 
+typedef struct {
+    u8 b7 : 1;
+    u8 rest : 7;
+} WmFlags;
+
+
 extern undefined4 ABS();
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_8000676c();
@@ -48,7 +54,7 @@ extern uint FUN_8005d06c();
 extern int FUN_800620e8();
 extern int FUN_8007f810();
 extern u8 *getSaveFileStruct();
-extern undefined4 camcontrol_traceMove();
+extern int camcontrol_traceMove(void *a, void *b, void *c, void *d, int e, int f, int g, f32 h);
 extern undefined4 camcontrol_traceFromTarget();
 extern undefined4 camcontrol_getTargetPosition();
 extern void Movie_SetVolumeFade();
@@ -293,7 +299,7 @@ extern f32 lbl_803E28E8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeNpcSpeak_update(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
+void FUN_8010de18_v11_drift(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
 {
   float fVar1;
   float *pfVar2;
@@ -3097,7 +3103,7 @@ void CameraModeArwing_free(void) {}
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void *memset(void *dst, int val, u32 n);
-extern void audioSetVolumes(u8 volume, int p1, int p2, int p3, int p4);
+extern void audioSetVolumes(int volume, int p1, int p2, int p3, int p4);
 extern f32 lbl_803E1A88;
 extern u32 lbl_803DD590;
 extern u32 lbl_803DD598;
@@ -3281,9 +3287,12 @@ extern f32 lbl_803E1BD0;
 extern f32 lbl_803E1BD4;
 extern f32 lbl_803E1BD8;
 extern f32 lbl_803E1BDC;
+#pragma opt_common_subs off
 void CameraModeArwing_init(int *obj, int mode, int unused)
 {
     int *a4 = ((int**)obj)[0xA4/4];
+    char *base;
+    f32 *p;
     f32 fc;
     f32 fc2;
     if (mode != 1) {
@@ -3291,10 +3300,12 @@ void CameraModeArwing_init(int *obj, int mode, int unused)
         *(f32*)((char*)lbl_803A43C0 + 16) = *(f32*)((char*)a4 + 0x1C);
         *(f32*)((char*)lbl_803A43C0 + 20) = *(f32*)((char*)a4 + 0x20);
     }
-    *(f32*)((char*)lbl_803A43C0 + 48) = lbl_803E1BA4;
-    *(f32*)((char*)lbl_803A43C0 + 52) = lbl_803E1BC0;
-    *(f32*)((char*)lbl_803A43C0 + 56) = lbl_803E1BC4;
-    PSVECAdd((f32*)((char*)a4 + 0x18), (f32*)((char*)lbl_803A43C0 + 48), (f32*)((char*)obj + 0x18));
+    base = (char *)lbl_803A43C0;
+    p = (f32 *)(base + 48);
+    *p = lbl_803E1BA4;
+    *(f32 *)(base + 52) = lbl_803E1BC0;
+    *(f32 *)(base + 56) = lbl_803E1BC4;
+    PSVECAdd((f32*)((char*)a4 + 0x18), p, (f32*)((char*)obj + 0x18));
     *(u8*)((char*)lbl_803A43C0 + 0x5E) = 1;
     *(f32*)((char*)lbl_803A43C0 + 68) = lbl_803E1BC8;
     *(f32*)((char*)lbl_803A43C0 + 72) = lbl_803E1BCC;
@@ -3313,8 +3324,9 @@ void CameraModeArwing_init(int *obj, int mode, int unused)
     *(f32*)((char*)lbl_803A43C0 + 0) = fc;
     *(f32*)((char*)obj + 0x18) = *(f32*)((char*)a4 + 0x18);
     *(f32*)((char*)obj + 0x1C) = *(f32*)((char*)a4 + 0x1C);
-    *(f32*)((char*)obj + 0x20) = *(f32*)((char*)a4 + 0x20) + *(f32*)((char*)lbl_803A43C0 + 56);
+    *(f32*)((char*)obj + 0x20) = *(f32*)((char*)a4 + 0x20) + *(f32 *)(base + 56);
 }
+#pragma opt_common_subs reset
 
 extern u8 lbl_80319FB8[];
 extern u8 lbl_803DD5D2;
@@ -3386,6 +3398,7 @@ int dll_19_func1B(int p)
         case 864:
         case 905:
         case 906:
+        case 1021:
         case 1197:
         case 1209:
         case 1235:
@@ -3468,13 +3481,13 @@ void CameraModeTitle_moveCam(u8 newCam)
 {
     if (newCam == lbl_803DD5D2) return;
     if (lbl_803DD5D1 == 4) {
-        if (lbl_803E1BE0 == lbl_803DB9D8) {
-            Music_Trigger(190, 1);
-            Music_Trigger(193, 1);
-        } else {
+        if (lbl_803E1BE0 != lbl_803DB9D8) {
             u8 *save = getSaveFileStruct();
             Movie_SetVolumeFade(0, 1000);
             audioSetVolumes(save[10], 1000, 1, 0, 0);
+        } else {
+            Music_Trigger(190, 1);
+            Music_Trigger(193, 1);
         }
     }
     lbl_803DD5D1 = lbl_803DD5D2;
@@ -3703,6 +3716,13 @@ extern f32 lbl_803DB9C8;
 extern f32 lbl_803DD5AC;
 extern f32 lbl_803DD5B0;
 extern f32 sqrtf(f32 x);
+
+extern f32 lbl_803DD5A8;
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, int mtx);
+extern f32 interpolate(f32 cur, f32 target, f32 t);
+extern void fn_8029697C(int state, s16 *a, s16 *b);
+extern f32 lbl_803E1B18;
+
 
 /* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
 #pragma peephole off
@@ -3965,82 +3985,86 @@ extern f32 lbl_803E1C64;
 #pragma peephole off
 #pragma scheduling off
 int dll_19_func14(u8 *p1, u8 *p2, f32 frange, int p4) {
+    f32 bboxOut[20];
     int objs[2];
+    f32 diff[3];
+    f32 gridIn[3];
+    int gridB[2];
+    int gridA[2];
+    u8 losOut;
+    f32 *dp = diff;
     int *list;
     int obj;
-    int found;
+    int found = 0;
     int negP4;
     int newangle;
     int delta;
-    int traced;
-    f32 diff[3];
-    f32 gridIn[3];
-    int gridA[2];
-    int gridB[2];
-    u8 losOut;
-    f32 bboxOut[20];
+    u8 traced;
 
     objs[0] = Obj_GetPlayerObject();
     objs[1] = 0;
-    found = 0;
-    negP4 = -p4;
     list = objs;
+    negP4 = -p4;
 
-    while (found == 0) {
-        obj = *list;
-        list++;
-        if (obj == 0) {
-            break;
-        }
-        diff[0] = *(f32 *)(obj + 0x18) - *(f32 *)(p1 + 0x18);
-        diff[1] = *(f32 *)(obj + 0x1c) - *(f32 *)(p1 + 0x1c);
-        diff[2] = *(f32 *)(obj + 0x20) - *(f32 *)(p1 + 0x20);
-        if (sqrtf(diff[0] * diff[0] + diff[1] * diff[1] + diff[2] * diff[2]) >= frange) {
-            continue;
-        }
-        if ((s8)p2[852] == 0) {
-            continue;
-        }
-        if (fn_8029610C(obj) > lbl_803E1C64) {
-            found = 1;
-        }
-        newangle = (u16)getAngle(-diff[0], -diff[2]);
-        if (*(int *)(p1 + 0x30) != 0) {
-            delta = newangle - (u16)(*(s16 *)p1 + *(s16 *)(*(int *)(p1 + 0x30)));
-        } else {
-            delta = newangle - (u16)*(s16 *)p1;
-        }
-        if (delta > 0x8000) {
-            delta -= 0xffff;
-        }
-        if (delta < -0x8000) {
-            delta += 0xffff;
-        }
-        if (delta < p4 && delta > negP4) {
-            found = 1;
-        }
-        if (fn_80295A04(obj, 1) == 0) {
-            found = 0;
-        }
-        if (fn_80296AE8(obj) <= 0) {
-            found = 0;
-            continue;
-        }
-        gridIn[0] = *(f32 *)(p1 + 12);
-        gridIn[1] = lbl_803E1C68 + *(f32 *)(p1 + 16);
-        gridIn[2] = *(f32 *)(p1 + 20);
-        voxmaps_worldToGrid(gridIn, gridA);
-        gridIn[0] = *(f32 *)(obj + 12);
-        gridIn[1] = lbl_803E1C68 + *(f32 *)(obj + 16);
-        gridIn[2] = *(f32 *)(obj + 20);
-        voxmaps_worldToGrid(gridIn, gridB);
-        traced = voxmaps_traceLine(gridB, gridA, 0, &losOut, 0);
-        if (losOut == 1 || traced != 0) {
-            if (objBboxFn_800640cc((int)(p1 + 12), gridIn, lbl_803E1C48, 0, bboxOut, (int)p1, 4, -1, 0, 0) != 0) {
-                found = 0;
+    while ((obj = *list) != 0) {
+        dp[0] = *(f32 *)(obj + 0x18) - *(f32 *)(p1 + 0x18);
+        dp[1] = *(f32 *)(obj + 0x1c) - *(f32 *)(p1 + 0x1c);
+        dp[2] = *(f32 *)(obj + 0x20) - *(f32 *)(p1 + 0x20);
+        if (sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1])) < frange) {
+            if ((s8)p2[852] != 0) {
+                if (fn_8029610C(obj) > lbl_803E1C64) {
+                    found = 1;
+                }
+                newangle = (u16)getAngle(-dp[0], -dp[2]);
+                if (*(void **)(p1 + 0x30) != NULL) {
+                    delta = newangle - (u16)(*(s16 *)p1 + *(s16 *)(*(int *)(p1 + 0x30)));
+                    if (delta > 0x8000) {
+                        delta -= 0xffff;
+                    }
+                    if (delta < -0x8000) {
+                        delta += 0xffff;
+                    }
+                } else {
+                    delta = newangle - (u16)*(s16 *)p1;
+                    if (delta > 0x8000) {
+                        delta -= 0xffff;
+                    }
+                    if (delta < -0x8000) {
+                        delta += 0xffff;
+                    }
+                }
+                if (delta < p4 && delta > negP4) {
+                    found = 1;
+                }
+                if (fn_80295A04(obj, 1) == 0) {
+                    found = 0;
+                }
+                if (fn_80296AE8(obj) <= 0) {
+                    found = 0;
+                } else {
+                    gridIn[0] = *(f32 *)(p1 + 12);
+                    gridIn[1] = lbl_803E1C68 + *(f32 *)(p1 + 16);
+                    gridIn[2] = *(f32 *)(p1 + 20);
+                    voxmaps_worldToGrid(gridIn, gridA);
+                    gridIn[0] = *(f32 *)(obj + 12);
+                    gridIn[1] = lbl_803E1C68 + *(f32 *)(obj + 16);
+                    gridIn[2] = *(f32 *)(obj + 20);
+                    voxmaps_worldToGrid(gridIn, gridB);
+                    traced = voxmaps_traceLine(gridB, gridA, 0, &losOut, 0);
+                    if (losOut == 1 || traced != 0) {
+                        if (objBboxFn_800640cc((int)(p1 + 12), gridIn, lbl_803E1C48, 0, bboxOut,
+                                               (int)p1, 4, -1, 0, 0) != 0) {
+                            found = 0;
+                        }
+                    } else {
+                        found = 0;
+                    }
+                }
             }
-        } else {
-            found = 0;
+        }
+        list++;
+        if (found != 0) {
+            break;
         }
     }
     return obj;
@@ -4417,16 +4441,14 @@ extern f32 lbl_803E1ADC;
 #pragma scheduling off
 void CameraModeCrawl_update(u8 *obj) {
     u8 *state = *(u8 **)(obj + 164);
-    int newangle;
     int delta;
-    f32 work[2];
     f32 v20, v16, v12, v8;
     int other;
 
     if (state == NULL) {
         return;
     }
-    if ((((u8 *)lbl_803DD598)[8] >> 7) & 1) {
+    if (((WmFlags *)(lbl_803DD598 + 8))->b7 == 0) {
         *(f32 *)(obj + 24) =
             lbl_803E1AD0 * fn_80293E80(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
             *(f32 *)(state + 24);
@@ -4434,26 +4456,24 @@ void CameraModeCrawl_update(u8 *obj) {
             lbl_803E1AD0 * sin(lbl_803E1AC0 * (f32)(s32)*(s16 *)state / lbl_803E1AC4) +
             *(f32 *)(state + 32);
         *(f32 *)(obj + 28) = lbl_803E1AD4 + *(f32 *)(state + 28);
-        work[0] = *(f32 *)(obj + 12) - *(f32 *)(state + 24);
-        work[1] = *(f32 *)(obj + 20) - *(f32 *)(state + 32);
-        newangle = (u16)getAngle(work[0], work[1]);
-        delta = (0x8000 - newangle) - (u16)*(s16 *)obj;
+        v20 = *(f32 *)(obj + 12) - *(f32 *)(state + 24);
+        v12 = *(f32 *)(obj + 20) - *(f32 *)(state + 32);
+        delta = (0x8000 - (u16)getAngle(v20, v12)) - (u16)*(s16 *)obj;
         if (delta > 0x8000) {
             delta -= 0xffff;
         }
         if (delta < -0x8000) {
             delta += 0xffff;
         }
-        *(s16 *)obj = (s16)(s32)((f32)(s32)*(s16 *)obj +
-                                 interpolate((f32)(s32)delta, lbl_803E1AD8, timeDelta));
-        *(s16 *)obj = (s16)(0x8000 - (u16)getAngle(work[0], work[1]));
+        *(s16 *)obj = (s32)((f32)(s32)*(s16 *)obj +
+                            interpolate((f32)(s32)delta, lbl_803E1AD8, timeDelta));
+        *(s16 *)obj = (s16)(0x8000 - getAngle(v20, v12));
         *(s16 *)(obj + 2) = 2048;
     } else {
         other = (*(int (**)(void))(*(int *)gCameraInterface + 24))();
         (*(void (**)(u8 *, f32 *, f32 *, f32 *, f32 *, f32, int))(*(int *)gCameraInterface + 56))(
             obj, &v20, &v16, &v12, &v8, lbl_803E1ADC, 0);
-        newangle = (u16)getAngle(v20, v12);
-        delta = (0x8000 - newangle) - (u16)*(s16 *)obj;
+        delta = (0x8000 - (u16)getAngle(v20, v12)) - (u16)*(s16 *)obj;
         if (delta > 0x8000) {
             delta -= 0xffff;
         }
@@ -4489,27 +4509,27 @@ extern int lbl_803DB9D4;
 #pragma scheduling off
 void CameraModeCloudRunner_update(u8 *obj) {
     u8 *state = *(u8 **)(obj + 164);
-    int curve;
+    u8 *curve;
     s16 tgtYaw;
     s16 tgtPitch;
     f32 baseX, baseY, baseZ;
-    int delta;
     f32 cosYaw, sinYaw, sinPitch, cosPitch;
     f32 radius;
+    f32 rx, ry, rz, rs;
     u8 mxin[24];
     f32 matrix[12];
 
     fn_8029697C((int)state, &tgtYaw, &tgtPitch);
-    curve = fn_802972A8((int)state);
-    if (curve != 0) {
+    curve = (u8 *)fn_802972A8((int)state);
+    if (curve != NULL) {
         if (*(s16 *)(curve + 70) == 1049) {
+            *(f32 *)(mxin + 12) = *(f32 *)(curve + 24);
+            *(f32 *)(mxin + 16) = *(f32 *)(curve + 28);
+            *(f32 *)(mxin + 20) = *(f32 *)(curve + 32);
             *(s16 *)(mxin + 0) = *(s16 *)(curve + 0);
             *(s16 *)(mxin + 2) = *(s16 *)(curve + 2);
             *(s16 *)(mxin + 4) = *(s16 *)(curve + 4);
             *(f32 *)(mxin + 8) = lbl_803E1B20;
-            *(f32 *)(mxin + 12) = *(f32 *)(curve + 24);
-            *(f32 *)(mxin + 16) = *(f32 *)(curve + 28);
-            *(f32 *)(mxin + 20) = *(f32 *)(curve + 32);
             setMatrixFromObjectPos(matrix, mxin);
             Matrix_TransformPoint(matrix, lbl_803E1B24, lbl_803E1B28, lbl_803E1B2C,
                                   &baseX, &baseY, &baseZ);
@@ -4525,34 +4545,984 @@ void CameraModeCloudRunner_update(u8 *obj) {
     }
 
     tgtYaw = (s16)((0x8000 - *(s16 *)state) + tgtYaw);
-    delta = tgtYaw - (u16)*(s16 *)obj;
-    if (delta > 0x8000) {
-        delta -= 0xffff;
+    tgtYaw = (s16)(tgtYaw - (u16)*(s16 *)obj);
+    if (tgtYaw > 0x8000) {
+        tgtYaw -= 0xffff;
     }
-    if (delta < -0x8000) {
-        delta += 0xffff;
+    if (tgtYaw < -0x8000) {
+        tgtYaw += 0xffff;
     }
-    *(s16 *)obj = (s16)(*(s16 *)obj + (s16)delta);
+    *(s16 *)obj = *(s16 *)obj + tgtYaw;
 
-    delta = tgtPitch - (u16)*(s16 *)(obj + 2);
-    if (delta > 0x8000) {
-        delta -= 0xffff;
+    tgtPitch = (s16)(tgtPitch - (u16)*(s16 *)(obj + 2));
+    if (tgtPitch > 0x8000) {
+        tgtPitch -= 0xffff;
     }
-    if (delta < -0x8000) {
-        delta += 0xffff;
+    if (tgtPitch < -0x8000) {
+        tgtPitch += 0xffff;
     }
-    *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) + (s16)delta);
+    *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + tgtPitch;
 
     *(s16 *)(obj + 4) = (s16)(*(s16 *)(state + 4) * lbl_803DB9D4);
 
     cosYaw = fn_80293E80(lbl_803E1B30 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B34);
     sinYaw = sin(lbl_803E1B30 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B34);
-    sinPitch = sin(lbl_803E1B30 * (f32)(s32)(*(s16 *)(obj + 2) - 0x4000) / lbl_803E1B34);
-    cosPitch = fn_80293E80(lbl_803E1B30 * (f32)(s32)(*(s16 *)(obj + 2) - 0x4000) / lbl_803E1B34);
+    sinPitch = sin(lbl_803E1B30 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B34);
+    cosPitch = fn_80293E80(lbl_803E1B30 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B34);
     radius = *(f32 *)(lbl_803DD5B8 + 12);
+    ry = radius * cosPitch;
+    rs = radius * sinPitch;
+    rx = rs * sinYaw;
+    rz = rs * cosYaw;
+    *(f32 *)(obj + 24) = baseX + rx;
+    *(f32 *)(obj + 28) = baseY + ry;
+    *(f32 *)(obj + 32) = baseZ + rz;
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803DD5A8;
+extern f32 lbl_803E1B18;
+
+/* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeForceBehind_update(u8 *obj) {
+    u8 *state = *(u8 **)(obj + 0xa4);
+    s16 extra;
+    s16 pitch;
+    s16 yaw;
+    f32 pos[3];
+    f32 angle;
+    f32 cosv, sinv;
+    f32 sx, sz;
+    f32 baseX, baseY, baseZ;
+    f32 cosYaw, sinYaw, sinPitch, cosPitch;
+    f32 radius;
+
+    angle = lbl_803E1B00 * (f32)(0x8000 - *(s16 *)obj) / lbl_803E1B04;
+    cosv = fn_80293E80(angle);
+    sinv = sin(angle);
+    sx = *(f32 *)(state + 0x18);
+    pos[0] = cosv * lbl_803DB9C8 + sx;
+    pos[1] = lbl_803E1B08 + *(f32 *)(state + 0x1c);
+    sz = *(f32 *)(state + 0x20);
+    pos[2] = sinv * lbl_803DB9C8 + sz;
+    camcontrol_traceFromTarget(pos, state, pos, &extra);
+    lbl_803DD5A8 = lbl_803DD5B0 = sqrtf((pos[0] - sx) * (pos[0] - sx) + (pos[2] - sz) * (pos[2] - sz));
+
+    fn_8029697C((int)state, &yaw, &pitch);
+    yaw = (s16)((0x8000 - *(s16 *)state) + (yaw >> 1));
+    pitch = (s16)(pitch >> 1);
+    baseX = *(f32 *)(state + 0x18);
+    baseY = *(f32 *)(state + 0x1c) + lbl_803DD5AC;
+    baseZ = *(f32 *)(state + 0x20);
+
+    yaw = (s16)(yaw - (u16)*(s16 *)obj);
+    if (yaw > 0x8000) {
+        yaw -= 0xffff;
+    }
+    if (yaw < -0x8000) {
+        yaw += 0xffff;
+    }
+    *(s16 *)obj = (s16)(s32)((f32)(s32)*(s16 *)obj + interpolate((f32)yaw, lbl_803E1B18, timeDelta));
+
+    pitch = (s16)(pitch - (u16)*(s16 *)(obj + 2));
+    if (pitch > 0x8000) {
+        pitch -= 0xffff;
+    }
+    if (pitch < -0x8000) {
+        pitch += 0xffff;
+    }
+    *(s16 *)(obj + 2) = (s16)(s32)((f32)(s32)*(s16 *)(obj + 2) +
+                                   interpolate((f32)pitch, lbl_803E1B18, timeDelta));
+
+    cosYaw = fn_80293E80(lbl_803E1B00 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B04);
+    sinYaw = sin(lbl_803E1B00 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B04);
+    sinPitch = sin(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
+    cosPitch = fn_80293E80(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
+    radius = lbl_803DD5A8;
     *(f32 *)(obj + 24) = baseX + radius * sinPitch * sinYaw;
     *(f32 *)(obj + 28) = baseY + radius * cosPitch;
     *(f32 *)(obj + 32) = baseZ + radius * sinPitch * cosYaw;
+    camcontrol_traceFromTarget((f32 *)(obj + 24), state, (f32 *)(obj + 24), (s16 *)(obj + 2));
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int ObjList_GetObjects(int *idx, int *count);
+extern f32 lbl_803E1B40;
+extern f32 lbl_803E1B44;
+extern f32 lbl_803E1B48;
+extern f32 lbl_803E1B4C;
+extern f32 lbl_803E1B50;
+extern f32 lbl_803E1B54;
+extern f32 lbl_803E1B58;
+extern f32 lbl_803E1B60;
+extern f32 lbl_803E1B64;
+extern f32 lbl_803E1B68;
+
+/* dll_54_update  addr=0x801106E4  size=0x490  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void dll_54_update(u8 *obj) {
+    int count;
+    int i;
+    f32 dx, dy, dz;
+    f32 xx, zz;
+    f32 dist;
+    f32 nx, nz;
+    f32 fx, fz;
+    f32 d2, t, h;
+    f32 lim;
+    s16 cur;
+    s16 d;
+
+    if (*(u8 *)(lbl_803DD5C0 + 13) != 0) {
+        (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(
+            0x42, 0, 1, 0, 0, 0, 0xff);
+    } else {
+        if (*(int *)(lbl_803DD5C0 + 4) == 0) {
+            int *arr = (int *)ObjList_GetObjects(&i, &count);
+            for (; i < count; i++) {
+                int o = arr[i];
+                if (*(s16 *)(o + 0x46) == 0x2ab) {
+                    *(int *)(lbl_803DD5C0 + 4) = o;
+                } else if (*(s16 *)(o + 0x46) == 0x4dc) {
+                    *(int *)lbl_803DD5C0 = o;
+                }
+            }
+        }
+        if (*(int *)(lbl_803DD5C0 + 8) == 0) {
+            *(int *)(lbl_803DD5C0 + 8) = Obj_GetPlayerObject();
+        }
+        {
+            int a = *(int *)(lbl_803DD5C0 + 4);
+            int b = *(int *)lbl_803DD5C0;
+            dx = *(f32 *)(a + 0x18) - *(f32 *)(b + 0x18);
+            dy = *(f32 *)(a + 0x1c) - *(f32 *)(b + 0x1c);
+            dz = *(f32 *)(a + 0x20) - *(f32 *)(b + 0x20);
+        }
+        zz = dz * dz;
+        xx = dx * dx;
+        dist = sqrtf(zz + (dy * dy + xx));
+        nx = dx / dist;
+        nz = dz / dist;
+        fx = -(lbl_803E1B40 * nx - *(f32 *)(*(int *)lbl_803DD5C0 + 0x18)) -
+             *(f32 *)(*(int *)(lbl_803DD5C0 + 8) + 0x18);
+        fz = -(lbl_803E1B40 * nz - *(f32 *)(*(int *)lbl_803DD5C0 + 0x20)) -
+             *(f32 *)(*(int *)(lbl_803DD5C0 + 8) + 0x20);
+        d2 = sqrtf(fx * fx + fz * fz);
+        t = (lbl_803E1B44 - d2) / lbl_803E1B44;
+        *(f32 *)(obj + 0xb4) = lbl_803E1B4C * t + lbl_803E1B48;
+        h = lbl_803E1B54 * t + lbl_803E1B50;
+        *(f32 *)(obj + 0x18) = -(nx * h - *(f32 *)(*(int *)lbl_803DD5C0 + 0x18));
+        *(f32 *)(obj + 0x1c) =
+            lbl_803E1B5C * t + (lbl_803E1B58 + *(f32 *)(*(int *)lbl_803DD5C0 + 0x1c));
+        *(f32 *)(obj + 0x20) = -(nz * h - *(f32 *)(*(int *)lbl_803DD5C0 + 0x20));
+        *(s16 *)obj = -getAngle(dx, dz);
+        *(s16 *)(obj + 2) =
+            -getAngle(-(lbl_803E1B60 * (dist / lbl_803E1B64) - dy), sqrtf(xx + zz));
+
+        if (*(u8 *)(lbl_803DD5C0 + 12) == 0) {
+            t = *(f32 *)(lbl_803DD5C0 + 16) / lbl_803E1B5C;
+            *(f32 *)(obj + 0x18) =
+                t * (*(f32 *)(lbl_803DD5C0 + 20) - *(f32 *)(obj + 0x18)) + *(f32 *)(obj + 0x18);
+            *(f32 *)(obj + 0x1c) =
+                t * (*(f32 *)(lbl_803DD5C0 + 24) - *(f32 *)(obj + 0x1c)) + *(f32 *)(obj + 0x1c);
+            *(f32 *)(obj + 0x20) =
+                t * (*(f32 *)(lbl_803DD5C0 + 28) - *(f32 *)(obj + 0x20)) + *(f32 *)(obj + 0x20);
+
+            cur = *(s16 *)obj;
+            d = (s16)(*(s16 *)(lbl_803DD5C0 + 32) - (u16)cur);
+            if (d > 0x8000) {
+                d -= 0xffff;
+            }
+            if (d < -0x8000) {
+                d += 0xffff;
+            }
+            *(s16 *)obj = (s16)(s32)((f32)d * t + (f32)cur);
+
+            cur = *(s16 *)(obj + 2);
+            d = (s16)(*(s16 *)(lbl_803DD5C0 + 34) - (u16)cur);
+            if (d > 0x8000) {
+                d -= 0xffff;
+            }
+            if (d < -0x8000) {
+                d += 0xffff;
+            }
+            *(s16 *)(obj + 2) = (s16)(s32)((f32)d * t + (f32)cur);
+
+            *(f32 *)(lbl_803DD5C0 + 16) -= timeDelta;
+            lim = lbl_803E1B68;
+            if (*(f32 *)(lbl_803DD5C0 + 16) < lim) {
+                *(u8 *)(lbl_803DD5C0 + 12) = 1;
+                *(f32 *)(lbl_803DD5C0 + 16) = lim;
+            }
+        }
+        Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                       (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                       *(int *)(obj + 48));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int getFocusedNpc(void);
+extern int randomGetRange(int lo, int hi);
+extern void fn_8010DB7C(int npcstate, f32 *a, f32 *b, f32 *c);
+extern u32 lbl_803DD584;
+extern f32 lbl_803E19E8;
+extern f32 lbl_803E19EC;
+extern f32 lbl_803E19DC;
+extern f32 lbl_803E19F0;
+extern f32 lbl_803E19F4;
+extern f32 lbl_803E19F8;
+extern f32 lbl_803E19FC;
+extern f32 lbl_803E1A00;
+extern f32 lbl_803E1A04;
+extern f32 lbl_803E1A08;
+extern f32 lbl_803E1A0C;
+extern f32 lbl_803E1A10;
+extern f32 lbl_803E1A14;
+extern f32 lbl_803E1A18;
+extern f32 lbl_803E1A1C;
+extern f32 lbl_803E1A20;
+extern f32 lbl_803DB9C0;
+extern f32 lbl_803DB9A8;
+extern f32 lbl_803DB9AC;
+extern f32 lbl_803DB9B0;
+extern f32 lbl_803DB9B4;
+extern f32 lbl_803DB9B8;
+extern int lbl_803DB9BC;
+extern f32 lbl_803DD580;
+
+/* CameraModeNpcSpeak_init  addr=0x8010DFF0  size=0x524  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeNpcSpeak_init(u8 *obj, int unused, u8 *p3) {
+    int mode = 0;
+    int yawA, yawB;
+    int spd;
+    int d1, d2;
+    int npc;
+    f32 va, vb, vc, vd;
+
+    if (lbl_803DD584 == 0) {
+        lbl_803DD584 = (u32)mmAlloc(0x4c, 15, 0);
+    }
+    if (p3 != NULL) {
+        *(f32 *)lbl_803DD584 = *(f32 *)p3;
+        *(f32 *)(lbl_803DD584 + 4) = *(f32 *)(p3 + 4);
+        *(f32 *)(lbl_803DD584 + 8) = *(f32 *)(p3 + 8);
+        mode = *(u8 *)(p3 + 12);
+    } else {
+        u8 *focus = (u8 *)getFocusedNpc();
+        f32 *fpos;
+        if (focus == NULL) {
+            *(f32 *)lbl_803DD584 = lbl_803E19E8;
+            *(f32 *)(lbl_803DD584 + 4) = lbl_803E19E8;
+            *(f32 *)(lbl_803DD584 + 8) = lbl_803E19E8;
+        }
+        fpos = *(f32 **)(focus + 0x74);
+        if (fpos == NULL) {
+            *(f32 *)lbl_803DD584 = lbl_803E19E8;
+            *(f32 *)(lbl_803DD584 + 4) = lbl_803E19E8;
+            *(f32 *)(lbl_803DD584 + 8) = lbl_803E19E8;
+        }
+        *(f32 *)lbl_803DD584 = fpos[0];
+        *(f32 *)(lbl_803DD584 + 4) = fpos[1];
+        *(f32 *)(lbl_803DD584 + 8) = fpos[2];
+    }
+    if (mode == 4) {
+        mode = randomGetRange(0, 3);
+    }
+    {
+        f32 a, b;
+        *(s16 *)(lbl_803DD584 + 0x20) = 0;
+        *(int *)(lbl_803DD584 + 0x1c) = mode;
+        *(f32 *)(lbl_803DD584 + 0x14) = lbl_803E19E8;
+        a = lbl_803E19EC;
+        *(f32 *)(lbl_803DD584 + 0x30) = a;
+        *(f32 *)(lbl_803DD584 + 0x38) = lbl_803E19DC;
+        *(f32 *)(lbl_803DD584 + 0x3c) = lbl_803E19F0;
+        b = lbl_803E19F4;
+        *(f32 *)(lbl_803DD584 + 0x44) = b;
+        *(f32 *)(lbl_803DD584 + 0x48) = b;
+        *(f32 *)(lbl_803DD584 + 0x40) = a;
+    }
+    *(int *)(lbl_803DD584 + 0x18) = randomGetRange(0x2000, 0x2c00);
+
+    switch (mode) {
+    case 0:
+        *(f32 *)(lbl_803DD584 + 0x10) = lbl_803E19F8;
+        break;
+    case 1:
+        *(f32 *)(lbl_803DD584 + 0x10) = lbl_803E19FC;
+        break;
+    case 2:
+        *(f32 *)(lbl_803DD584 + 0x10) = lbl_803E1A00;
+        break;
+    case 5:
+        *(f32 *)(lbl_803DD584 + 0x10) = lbl_803E1A04;
+        break;
+    case 3:
+        *(f32 *)(lbl_803DD584 + 0x10) = lbl_803DB9C0;
+        *(int *)(lbl_803DD584 + 0x18) = randomGetRange(0xf00, 0x1f00);
+        *(f32 *)(lbl_803DD584 + 0x38) = lbl_803E19E8;
+        break;
+    case 6:
+        *(f32 *)(lbl_803DD584 + 0x30) = lbl_803DB9A8;
+        *(f32 *)(lbl_803DD584 + 0x38) = lbl_803DB9AC;
+        *(f32 *)(lbl_803DD584 + 0x44) = lbl_803DD580;
+        *(f32 *)(lbl_803DD584 + 0x3c) = lbl_803DB9B0;
+        *(int *)(lbl_803DD584 + 0x18) = lbl_803DB9BC;
+        *(f32 *)(lbl_803DD584 + 0x48) = lbl_803DB9B4;
+        *(f32 *)(lbl_803DD584 + 0x10) = lbl_803DB9B8;
+        *(s16 *)(lbl_803DD584 + 0x22) = 0xb6;
+        *(f32 *)(lbl_803DD584 + 0x40) = lbl_803E19E8;
+        break;
+    case 7:
+        *(f32 *)(lbl_803DD584 + 0x10) = lbl_803E19F8;
+        *(f32 *)(lbl_803DD584 + 0x30) = lbl_803E1A08;
+        *(f32 *)(lbl_803DD584 + 0x44) = lbl_803E1A0C;
+        *(f32 *)(lbl_803DD584 + 0x48) = lbl_803E1A10;
+        *(f32 *)(lbl_803DD584 + 0x3c) = lbl_803E1A14;
+        *(int *)(lbl_803DD584 + 0x18) = randomGetRange(0x1800, 0x1c00);
+        break;
+    case 8:
+        *(f32 *)(lbl_803DD584 + 0x10) = lbl_803E1A18;
+        *(f32 *)(lbl_803DD584 + 0x38) = lbl_803E1A1C;
+        break;
+    default:
+        *(f32 *)(lbl_803DD584 + 0x10) = lbl_803E19F8;
+        break;
+    }
+
+    yawA = (u16)getAngle(*(f32 *)(obj + 0x18) - *(f32 *)lbl_803DD584,
+                         *(f32 *)(obj + 0x20) - *(f32 *)(lbl_803DD584 + 8));
+    yawB = (u16)getAngle(*(f32 *)(*(int *)(obj + 0xa4) + 0x18) - *(f32 *)lbl_803DD584,
+                         *(f32 *)(*(int *)(obj + 0xa4) + 0x20) - *(f32 *)(lbl_803DD584 + 8));
+    spd = *(int *)(lbl_803DD584 + 0x18);
+    d1 = (yawB + spd) - yawA;
+    if (d1 > 0x8000) {
+        d1 -= 0xffff;
+    }
+    if (d1 < -0x8000) {
+        d1 += 0xffff;
+    }
+    d2 = (yawB - spd) - yawA;
+    if (d2 > 0x8000) {
+        d2 -= 0xffff;
+    }
+    if (d2 < -0x8000) {
+        d2 += 0xffff;
+    }
+    if (d1 < 0) {
+        d1 = -d1;
+    }
+    if (d2 < 0) {
+        d2 = -d2;
+    }
+    if (d2 < d1) {
+        *(int *)(lbl_803DD584 + 0x18) = -spd;
+        *(s16 *)(lbl_803DD584 + 0x22) = -0x80;
+    }
+
+    if (mode != 6 && mode != 7 && (npc = getFocusedNpc()) != 0) {
+        s16 sd;
+        int dd;
+        sd = (s16)(yawB - (u16)**(s16 **)(obj + 0xa4));
+        if (sd > 0x8000) {
+            sd -= 0xffff;
+        }
+        if (sd < -0x8000) {
+            sd += 0xffff;
+        }
+        dd = sd - (u16)(s16)Obj_GetYawDeltaToObject(*(int *)(obj + 0xa4), npc, 0);
+        if (dd > 0x8000) {
+            dd -= 0xffff;
+        }
+        if (dd < -0x8000) {
+            dd += 0xffff;
+        }
+        if ((dd > 0x1000 && *(int *)(lbl_803DD584 + 0x18) > 0) ||
+            (dd < -0x1000 && *(int *)(lbl_803DD584 + 0x18) < 0)) {
+            *(int *)(lbl_803DD584 + 0x18) = -*(int *)(lbl_803DD584 + 0x18);
+        }
+    }
+
+    fn_8010DB7C(*(int *)(obj + 0xa4), &va, &vb, &vc);
+    camcontrol_traceMove((f32 *)(obj + 0x18), &va, (void *)(lbl_803DD584 + 0x24), &vd, 3, 1, 1,
+                         lbl_803E1A20);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct {
+    f32 x, y, z;
+    u16 yaw, pitch, roll;
+} TitleCamPos;
+
+extern TitleCamPos lbl_803A4420;
+extern u8 lbl_803DD5D0;
+extern u8 lbl_803DD5D1;
+extern u8 lbl_803DD5D2;
+extern f32 lbl_803E1BE0;
+extern f32 lbl_803E1BE8;
+extern f32 lbl_803E1BEC;
+extern f32 lbl_803E1BF0;
+extern f32 lbl_803E1BF4;
+extern f32 lbl_803E1BF8;
+extern f32 lbl_803E1BFC;
+extern f32 lbl_803E1C00;
+
+/* CameraModeTitle_update  addr=0x801116E0  size=0x58C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeTitle_update(u8 *obj) {
+    if (lbl_803DD5D0 != 0) {
+        lbl_803A4420.x = *(f32 *)(obj + 0xc);
+        lbl_803A4420.y = *(f32 *)(obj + 0x10);
+        lbl_803A4420.z = *(f32 *)(obj + 0x14);
+        lbl_803A4420.yaw = *(s16 *)obj;
+        lbl_803A4420.pitch = *(s16 *)(obj + 2);
+        lbl_803A4420.roll = *(s16 *)(obj + 4);
+        lbl_803DD5D0 = 0;
+    }
+    if (lbl_803DD5D2 != lbl_803DD5D1) {
+        u8 *save = getSaveFileStruct();
+        f32 v;
+
+        lbl_803DB9D8 = lbl_803DB9D8 + lbl_803E1BE8;
+        if (lbl_803DB9D8 >= lbl_803E1BE0) {
+            if (lbl_803DD5D2 == 4) {
+                Movie_SetVolumeFade(100, 1);
+                audioSetVolumes(0, 10, 1, 0, 0);
+                Music_Trigger(0xbe, 0);
+                Music_Trigger(0xc1, 0);
+            } else if (lbl_803DD5D1 == 4) {
+                Movie_SetVolumeFade(0, 1);
+                audioSetVolumes(*(u8 *)(save + 10), 10, 1, 0, 0);
+            }
+            lbl_803DB9D8 = lbl_803E1BE0;
+            lbl_803DD5D1 = lbl_803DD5D2;
+        } else {
+            if (lbl_803DD5D2 == 4) {
+                Movie_SetVolumeFade((s32)(lbl_803E1BEC * lbl_803DB9D8), 1);
+                audioSetVolumes(
+                    (s32)((f32)(u32)*(u8 *)(save + 10) * (lbl_803E1BE0 - lbl_803DB9D8)), 10, 1, 0,
+                    0);
+            } else if (lbl_803DD5D1 == 4) {
+                Movie_SetVolumeFade((s32)(lbl_803E1BEC * (lbl_803E1BE0 - lbl_803DB9D8)), 1);
+                audioSetVolumes((s32)((f32)(u32)*(u8 *)(save + 10) * lbl_803DB9D8), 10, 1, 0, 0);
+            }
+        }
+
+        if (lbl_803DB9D8 < lbl_803E1BF0) {
+            v = lbl_803E1BF0 *
+                ((lbl_803E1BF4 * lbl_803DB9D8) * (lbl_803E1BF4 * lbl_803DB9D8));
+        } else {
+            f32 w = -(lbl_803E1BF4 * (lbl_803DB9D8 - lbl_803E1BF0) - lbl_803E1BE0);
+            w = w * w;
+            v = lbl_803E1BF0 * (lbl_803E1BE0 - w) + lbl_803E1BF0;
+        }
+        v = v * ((lbl_803E1BFC * v) * v) + (lbl_803E1BF0 * v + (lbl_803E1BF8 * v) * v);
+
+        *(f32 *)(obj + 0xc) =
+            v * (((TitleCamPos *)lbl_80319FB8)[lbl_803DD5D2].x - lbl_803A4420.x) + lbl_803A4420.x;
+        *(f32 *)(obj + 0x10) =
+            v * (((TitleCamPos *)lbl_80319FB8)[lbl_803DD5D2].y - lbl_803A4420.y) + lbl_803A4420.y;
+        *(f32 *)(obj + 0x14) =
+            v * (((TitleCamPos *)lbl_80319FB8)[lbl_803DD5D2].z - lbl_803A4420.z) + lbl_803A4420.z;
+
+        {
+            u16 sy = lbl_803A4420.yaw;
+            u16 ty = *(u16 *)((u32)(lbl_80319FB8 + 0xc) + (u32)lbl_803DD5D2 * 0x14);
+            int d = ty - sy;
+            if (__fabs((f32)d) > lbl_803E1C00) {
+                int d2 = (s16)ty - (s16)sy;
+                *(s16 *)obj = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+            } else {
+                *(u16 *)obj = v * (f32)d + (f32)sy;
+            }
+        }
+        {
+            u16 sy = lbl_803A4420.pitch;
+            u16 ty = *(u16 *)((u32)(lbl_80319FB8 + 0xe) + (u32)lbl_803DD5D2 * 0x14);
+            int d = ty - sy;
+            if (__fabs((f32)d) > lbl_803E1C00) {
+                int d2 = (s16)ty - (s16)sy;
+                *(s16 *)(obj + 2) = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+            } else {
+                *(u16 *)(obj + 2) = v * (f32)d + (f32)sy;
+            }
+        }
+        {
+            u16 sy = lbl_803A4420.roll;
+            u16 ty = *(u16 *)((u32)(lbl_80319FB8 + 0x10) + (u32)lbl_803DD5D2 * 0x14);
+            int d = ty - sy;
+            if (__fabs((f32)d) > lbl_803E1C00) {
+                int d2 = (s16)ty - (s16)sy;
+                *(s16 *)(obj + 4) = (s16)(s32)(v * (f32)d2 + (f32)(s16)sy);
+            } else {
+                *(u16 *)(obj + 4) = v * (f32)d + (f32)sy;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int fn_8022D750(int state);
+extern int fn_8022D710(int state);
+extern f32 lbl_803E1BA0;
+extern f32 lbl_803E1BA4;
+extern f32 lbl_803E1BA8;
+extern f32 lbl_803E1BAC;
+extern f32 lbl_803E1BB0;
+
+/* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeArwing_update(u8 *obj) {
+    u8 *state = *(u8 **)(obj + 0xa4);
+    int yaw0, pitch0;
+    int d;
+
+    *(f32 *)(obj + 0x18) = lbl_803A43C0[0] * *(f32 *)((char *)lbl_803A43C0 + 0x24);
+    *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0x18) + *(f32 *)((char *)lbl_803A43C0 + 0xc);
+    *(f32 *)(obj + 0x1c) = lbl_803A43C0[1] * *(f32 *)((char *)lbl_803A43C0 + 0x28);
+    *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x1c) + *(f32 *)((char *)lbl_803A43C0 + 0x10);
+    *(f32 *)(obj + 0x20) = *(f32 *)(state + 0x20) + *(f32 *)((char *)lbl_803A43C0 + 0x38);
+
+    if ((s8)state[0xac] != 0x26) {
+        f32 t = *(f32 *)((char *)lbl_803A43C0 + 0x40) / *(f32 *)((char *)lbl_803A43C0 + 0x3c) -
+                lbl_803E1BA0;
+        if (t < lbl_803E1BA4) {
+            *(f32 *)(obj + 0x20) =
+                (f32)-(s32)*(u8 *)((char *)lbl_803A43C0 + 0x5a) * t + *(f32 *)(obj + 0x20);
+        } else {
+            *(f32 *)(obj + 0x20) =
+                (f32)-(s32)*(u8 *)((char *)lbl_803A43C0 + 0x5b) * t + *(f32 *)(obj + 0x20);
+        }
+    }
+
+    yaw0 = (s32)((f32)*(s16 *)((char *)lbl_803A43C0 + 0x54) *
+                 *(f32 *)((char *)lbl_803A43C0 + 0x44));
+    pitch0 = (s32)((f32)*(s16 *)((char *)lbl_803A43C0 + 0x56) *
+                   *(f32 *)((char *)lbl_803A43C0 + 0x48));
+
+    if (fn_8022D750((int)state) != 0) {
+        f32 vd, vc, vb, va;
+        int step;
+        *(f32 *)((char *)lbl_803A43C0 + 0x50) = lbl_803E1BA8;
+        (*(void (**)(u8 *, f32 *, f32 *, f32 *, f32 *, f32, int))(*(int *)gCameraInterface + 56))(
+            obj, &va, &vb, &vc, &vd, lbl_803E1BA4, 0);
+        *(s16 *)(obj + 4) = *(f32 *)((char *)lbl_803A43C0 + 0x50) * timeDelta +
+                            (f32)*(s16 *)(obj + 4);
+        d = 0x8000 - (u16)getAngle(va, vc);
+        pitch0 = (u16)getAngle(vb, vd);
+        d -= (u16)*(s16 *)obj;
+        if (d > 0x8000) {
+            d -= 0xffff;
+        }
+        if (d < -0x8000) {
+            d += 0xffff;
+        }
+        step = (s32)((f32)d * timeDelta);
+        *(s16 *)obj = (f32)step * lbl_803E1BAC + (f32)*(s16 *)obj;
+        d = pitch0 - (u16)*(s16 *)(obj + 2);
+        if (d > 0x8000) {
+            d -= 0xffff;
+        }
+        if (d < -0x8000) {
+            d += 0xffff;
+        }
+        step = (s32)((f32)d * timeDelta);
+        *(s16 *)(obj + 2) = (f32)step * lbl_803E1BAC + (f32)*(s16 *)(obj + 2);
+    } else if (fn_8022D710((int)state) != 0) {
+        f32 nv = *(f32 *)((char *)lbl_803A43C0 + 0x50) * lbl_803E1BB0;
+        *(f32 *)((char *)lbl_803A43C0 + 0x50) = nv;
+        *(s16 *)(obj + 4) = nv * timeDelta + (f32)*(s16 *)(obj + 4);
+    } else {
+        int roll0 = (s32)((f32)*(s16 *)((char *)lbl_803A43C0 + 0x58) *
+                          *(f32 *)((char *)lbl_803A43C0 + 0x4c));
+        d = roll0 - (u16)*(s16 *)(obj + 4);
+        if (d > 0x8000) {
+            d -= 0xffff;
+        }
+        if (d < -0x8000) {
+            d += 0xffff;
+        }
+        *(s16 *)(obj + 4) = (f32)d * timeDelta * lbl_803E1BAC + (f32)*(s16 *)(obj + 4);
+        d = yaw0 - (u16)*(s16 *)obj;
+        if (d > 0x8000) {
+            d -= 0xffff;
+        }
+        if (d < -0x8000) {
+            d += 0xffff;
+        }
+        *(s16 *)obj = (f32)d * timeDelta * lbl_803E1BAC + (f32)*(s16 *)obj;
+        d = pitch0 - (u16)*(s16 *)(obj + 2);
+        if (d > 0x8000) {
+            d -= 0xffff;
+        }
+        if (d < -0x8000) {
+            d += 0xffff;
+        }
+        *(s16 *)(obj + 2) = (f32)d * timeDelta * lbl_803E1BAC + (f32)*(s16 *)(obj + 2);
+    }
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int ObjList_FindObjectById(int id);
+extern int getButtonsHeld(int pad);
+extern int getButtonsJustPressed(int pad);
+extern int padGetCX(int pad);
+extern int padGetCY(int pad);
+extern int isWidescreen(void);
+extern void fn_8012DDB8(int mode);
+extern void **gScreenTransitionInterface;
+extern f32 lbl_80319DF8[];
+extern f32 lbl_803E1A2C;
+extern f32 lbl_803E1A30;
+extern f32 lbl_803E1A34;
+extern f32 lbl_803E1A38;
+extern f32 lbl_803E1A3C;
+extern f32 lbl_803E1A44;
+extern f32 lbl_803E1A48;
+extern f32 lbl_803E1A4C;
+extern f32 lbl_803E1A50;
+extern f32 lbl_803E1A54;
+extern f32 lbl_803E1A58;
+extern f32 lbl_803E1A5C;
+extern f32 lbl_803E1A60;
+extern f32 lbl_803E1A64;
+extern f32 lbl_803E1A68;
+extern f32 lbl_803E1A6C;
+
+/* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeWorldMap_update(u8 *obj) {
+    u8 *state;
+    int objA, objB;
+    int buttons;
+    f32 spd = lbl_803E1A28;
+    int m;
+    f32 mdx, mdz;
+    s16 e;
+
+    state = *(u8 **)(obj + 0xa4);
+    objA = ObjList_FindObjectById(0x42fff);
+    objB = ObjList_FindObjectById(0x4325b);
+    buttons = (u16)getButtonsHeld(0);
+    getButtonsJustPressed(0);
+
+    switch (*(u8 *)(lbl_803DD588 + 8)) {
+    case 0:
+        if (*(u8 *)(lbl_803DD588 + 9) != *(u8 *)(lbl_803DD588 + 8)) {
+            *(u8 *)(lbl_803DD588 + 0x14) = 1;
+            (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 8))(0xc, 1);
+            *(s16 *)(lbl_803DD588 + 0xa) = 2;
+            ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 1;
+        } else {
+            s16 dYaw, dPitch;
+            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 != 0 &&
+                (*(int (**)(void))((char *)*gScreenTransitionInterface + 0x14))() != 0) {
+                fn_8012DDB8(0);
+                (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0xc))(0xc, 1);
+                ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 0;
+                *(u8 *)(*(int *)(ObjList_FindObjectById(0x43077) + 0xb8) + 0x27d) = 0;
+            }
+            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 == 0) {
+                *(s16 *)(lbl_803DD588 + 0xa) -= 1;
+                if (*(s16 *)(lbl_803DD588 + 0xa) < 1) {
+                    *(s16 *)(lbl_803DD588 + 0xa) = 1;
+                }
+                if (buttons & 8) {
+                    spd = lbl_803E1A2C * *(f32 *)lbl_803DD588;
+                }
+                if (buttons & 4) {
+                    spd = lbl_803E1A30 * *(f32 *)lbl_803DD588;
+                }
+                {
+                    f32 a, b, rate, vel;
+                    if (spd < lbl_803E1A28) {
+                        a = -spd;
+                    } else {
+                        a = spd;
+                    }
+                    vel = *(f32 *)(lbl_803DD588 + 4);
+                    if (vel < lbl_803E1A28) {
+                        b = -vel;
+                    } else {
+                        b = vel;
+                    }
+                    if (b > a) {
+                        rate = lbl_803E1A34;
+                    } else {
+                        rate = lbl_803E1A38;
+                    }
+                    *(f32 *)(lbl_803DD588 + 4) =
+                        rate * (spd - vel) + *(f32 *)(lbl_803DD588 + 4);
+                }
+                *(f32 *)lbl_803DD588 = *(f32 *)lbl_803DD588 + *(f32 *)(lbl_803DD588 + 4);
+                if (*(f32 *)lbl_803DD588 < lbl_803E1A3C) {
+                    *(f32 *)lbl_803DD588 = lbl_803E1A3C;
+                }
+                if (*(f32 *)lbl_803DD588 > lbl_803E1A40) {
+                    *(f32 *)lbl_803DD588 = lbl_803E1A40;
+                }
+                dYaw = (s16)((s8)padGetCX(0) * 3);
+                dPitch = (s16)((s8)padGetCY(0) * 3);
+                if (*(u8 *)(lbl_803DD588 + 0x14) != 0) {
+                    int f = ObjList_FindObjectById(*(int *)(lbl_803DD588 + 0x10));
+                    f32 dx = *(f32 *)(f + 0x18) - *(f32 *)(objA + 0x18);
+                    f32 dz = *(f32 *)(f + 0x20) - *(f32 *)(objA + 0x20);
+                    s16 d;
+                    f32 cur;
+                    *(s16 *)(lbl_803DD588 + 0xc) = (s16)(0x8000 - getAngle(dx, dz));
+                    d = (s16)(*(s16 *)(lbl_803DD588 + 0xc) - (u16)*(s16 *)obj);
+                    if (d > 0x8000) {
+                        d -= 0xffff;
+                    }
+                    if (d < -0x8000) {
+                        d += 0xffff;
+                    }
+                    *(s16 *)obj = *(s16 *)obj + d / *(u8 *)(lbl_803DD588 + 0x14);
+                    *(s16 *)(lbl_803DD588 + 0xc) =
+                        (s16)(0x47d0 - getAngle(sqrtf(dx * dx + dz * dz),
+                                                *(f32 *)(f + 0x1c) - *(f32 *)(objA + 0x1c)));
+                    d = (s16)(*(s16 *)(lbl_803DD588 + 0xc) - (u16)*(s16 *)(obj + 2));
+                    if (d > 0x8000) {
+                        d -= 0xffff;
+                    }
+                    if (d < -0x8000) {
+                        d += 0xffff;
+                    }
+                    *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + d / *(u8 *)(lbl_803DD588 + 0x14);
+                    cur = *(f32 *)lbl_803DD588;
+                    *(f32 *)lbl_803DD588 =
+                        cur + (f32)((s16)(s32)(lbl_803E1A44 - cur) /
+                                    (s32)*(u8 *)(lbl_803DD588 + 0x14));
+                    *(u8 *)(lbl_803DD588 + 0x14) -= 1;
+                }
+                *(s16 *)obj += dYaw;
+                *(s16 *)(obj + 2) += dPitch;
+                if (*(s16 *)(obj + 2) > 12000) {
+                    *(s16 *)(obj + 2) = 12000;
+                }
+                if (*(s16 *)(obj + 2) < -12000) {
+                    *(s16 *)(obj + 2) = -12000;
+                }
+                {
+                    f32 snYaw, csYaw, snPit, csPit;
+                    f32 r, vy, h, px, pz;
+                    f32 dxx, dyy, dzz;
+                    snYaw = -sin(lbl_803E1A48 * (f32)*(s16 *)obj / lbl_803E1A4C);
+                    csYaw = fn_80293E80(lbl_803E1A48 * (f32)*(s16 *)obj / lbl_803E1A4C);
+                    snPit = sin(lbl_803E1A48 * (f32)(*(s16 *)(obj + 2) + 0x320) / lbl_803E1A4C);
+                    csPit = fn_80293E80(lbl_803E1A48 * (f32)(*(s16 *)(obj + 2) + 0x320) /
+                                        lbl_803E1A4C);
+                    r = *(f32 *)lbl_803DD588;
+                    vy = r * csPit;
+                    h = r * snPit;
+                    px = h * csYaw;
+                    pz = h * snYaw;
+                    dxx = *(f32 *)(obj + 0x18) - (*(f32 *)(state + 0x18) + px);
+                    dyy = *(f32 *)(obj + 0x1c) - ((lbl_803E1A50 + *(f32 *)(state + 0x1c)) + vy);
+                    dzz = *(f32 *)(obj + 0x20) - (*(f32 *)(state + 0x20) + pz);
+                    *(f32 *)(obj + 0x18) =
+                        *(f32 *)(obj + 0x18) - dxx / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                    *(f32 *)(obj + 0x1c) =
+                        *(f32 *)(obj + 0x1c) - dyy / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                    *(f32 *)(obj + 0x20) =
+                        *(f32 *)(obj + 0x20) - dzz / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                }
+            }
+        }
+        break;
+    case 1: {
+        int g = ObjList_FindObjectById(0x43077);
+        if (*(u8 *)(lbl_803DD588 + 9) != *(u8 *)(lbl_803DD588 + 8)) {
+            (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 8))(0xc, 1);
+            *(s16 *)(lbl_803DD588 + 0xa) = 2;
+            ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 1;
+        } else {
+            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 != 0 &&
+                (*(int (**)(void))((char *)*gScreenTransitionInterface + 0x14))() != 0) {
+                fn_8012DDB8(1);
+                (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0xc))(0xc, 1);
+                ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 0;
+                *(u8 *)(*(int *)(ObjList_FindObjectById(0x43077) + 0xb8) + 0x27d) = 1;
+            }
+            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 == 0) {
+                int ang;
+                s16 d;
+                u16 my;
+                *(s16 *)(lbl_803DD588 + 0xa) -= 1;
+                if (*(s16 *)(lbl_803DD588 + 0xa) < 1) {
+                    *(s16 *)(lbl_803DD588 + 0xa) = 1;
+                }
+                ang = (u16)-getAngle(*(f32 *)(objA + 0x18) - *(f32 *)(state + 0x18),
+                                     *(f32 *)(objA + 0x20) - *(f32 *)(state + 0x20));
+                d = (s16)((ang - 0x308f) - (u16)*(s16 *)obj);
+                if (d > 0x8000) {
+                    d -= 0xffff;
+                }
+                if (d < -0x8000) {
+                    d += 0xffff;
+                }
+                *(s16 *)obj = *(s16 *)obj + d / *(s16 *)(lbl_803DD588 + 0xa);
+                d = (s16)(0x7d0 - (u16)*(s16 *)(obj + 2));
+                if (d > 0x8000) {
+                    d -= 0xffff;
+                }
+                if (d < -0x8000) {
+                    d += 0xffff;
+                }
+                *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + d / *(s16 *)(lbl_803DD588 + 0xa);
+                {
+                    f32 a, sn, cs, sn54, cs54;
+                    f32 t6, t5, px, pz;
+                    f32 dxx, dyy, dzz;
+                    a = lbl_803E1A48 * (f32)(u16)(ang - 0x39dc) / lbl_803E1A4C;
+                    sn = -sin(a);
+                    cs = fn_80293E80(a);
+                    sn54 = sin(lbl_803E1A54);
+                    cs54 = fn_80293E80(lbl_803E1A54);
+                    t6 = lbl_803E1A58 * cs54;
+                    t5 = lbl_803E1A58 * sn54;
+                    px = t5 * cs;
+                    pz = t5 * sn;
+                    dxx = *(f32 *)(obj + 0x18) - (*(f32 *)(state + 0x18) + px);
+                    dyy = *(f32 *)(obj + 0x1c) -
+                          (lbl_803E1A5C + (*(f32 *)(state + 0x1c) + t6));
+                    dzz = *(f32 *)(obj + 0x20) - (*(f32 *)(state + 0x20) + pz);
+                    *(f32 *)(obj + 0x18) =
+                        *(f32 *)(obj + 0x18) - dxx / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                    *(f32 *)(obj + 0x1c) =
+                        *(f32 *)(obj + 0x1c) - dyy / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                    *(f32 *)(obj + 0x20) =
+                        *(f32 *)(obj + 0x20) - dzz / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                }
+                my = (u16)(*(s16 *)obj + 0x1388);
+                if (isWidescreen() != 0) {
+                    my = (u16)(my + 0x514);
+                }
+                {
+                    f32 b = lbl_803E1A48 * (f32)my / lbl_803E1A4C;
+                    f32 sb = sin(b);
+                    f32 cb = -fn_80293E80(b);
+                    *(f32 *)(g + 0xc) = lbl_803E1A60 * cb + *(f32 *)(obj + 0x18);
+                    *(f32 *)(g + 0x10) =
+                        *(f32 *)(obj + 0x1c) + lbl_80319DF8[(s8)*(u8 *)(g + 0xad)];
+                    *(f32 *)(g + 0x14) = lbl_803E1A60 * sb + *(f32 *)(obj + 0x20);
+                    *(s16 *)g = (s16)(-0xbb8 - my);
+                }
+            }
+        }
+        break;
+    }
+    }
+
+    *(u8 *)(lbl_803DD588 + 9) = *(u8 *)(lbl_803DD588 + 8);
+    m = ObjList_FindObjectById(0x431dc);
+    mdx = *(f32 *)(m + 0x18) - *(f32 *)(obj + 0x18);
+    mdz = *(f32 *)(m + 0x20) - *(f32 *)(obj + 0x20);
+    *(s16 *)m = (s16)(getAngle(mdx, mdz) + 0x8000);
+    *(s16 *)(m + 2) = (s16)(0x8000 - getAngle(sqrtf(mdx * mdx + mdz * mdz),
+                                              *(f32 *)(m + 0x1c) - *(f32 *)(obj + 0x1c)));
+    *(f32 *)(m + 8) = lbl_803E1A64 + lbl_803E1A68 / *(f32 *)lbl_803DD588;
+    *(s16 *)objB = *(s16 *)m;
+    *(s16 *)(objB + 2) = *(s16 *)(m + 2);
+    *(f32 *)(objB + 8) = *(f32 *)(m + 8);
+
+    e = (s16)(*(s16 *)objB - 0x2198);
+    if (e > -0x2000 && e < 0x2000) {
+        f32 lim = lbl_803E1A28;
+        if (lbl_803E1A28 <=
+            lbl_803E1A6C *
+                (sin(lbl_803E1A48 * (f32)((*(s16 *)objB - 0x2198) * 2) / lbl_803E1A4C) *
+                 sin(lbl_803E1A48 * (f32)((*(s16 *)(objB + 2) - 0x4000) * 2) / lbl_803E1A4C))) {
+            lim = lbl_803E1A6C *
+                  (sin(lbl_803E1A48 * (f32)((*(s16 *)objB - 0x2198) * 2) / lbl_803E1A4C) *
+                   sin(lbl_803E1A48 * (f32)((*(s16 *)(objB + 2) - 0x4000) * 2) / lbl_803E1A4C));
+        }
+        *(s8 *)(objB + 0x36) = (s32)lim;
+    } else {
+        *(u8 *)(objB + 0x36) = 0;
+    }
+
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
+extern f32 lbl_803DB9C4;
+
+/* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeNpcSpeak_update(u8 *obj) {
+    u8 *npc;
+    u8 *state = *(u8 **)(obj + 0xa4);
+    f32 ex, ey, ez;
+    f32 dx, dy, dz;
+
+    if (state == NULL) {
+        return;
+    }
+    npc = (u8 *)lbl_803DD584;
+    if (*(int *)(npc + 0x1c) == 6) {
+        *(int *)(npc + 0x18) =
+            (s32)((f32)*(s16 *)(npc + 0x22) * timeDelta + (f32)*(int *)(npc + 0x18));
+        if (*(s16 *)(lbl_803DD584 + 0x22) > 0 && *(int *)(lbl_803DD584 + 0x18) > 0xd6d8) {
+            *(int *)(lbl_803DD584 + 0x18) = 0xd6d8;
+        } else if (*(s16 *)(lbl_803DD584 + 0x22) < 0 && *(int *)(lbl_803DD584 + 0x18) < -0xd6d8) {
+            *(int *)(lbl_803DD584 + 0x18) = -0xd6d8;
+        }
+        fn_8010DB7C((int)state, (f32 *)(lbl_803DD584 + 0x24), (f32 *)(lbl_803DD584 + 0x28),
+                     (f32 *)(lbl_803DD584 + 0x2c));
+    }
+    *(f32 *)(obj + 0x18) = *(f32 *)(lbl_803DD584 + 0x24);
+    *(f32 *)(obj + 0x1c) = *(f32 *)(lbl_803DD584 + 0x28);
+    *(f32 *)(obj + 0x20) = *(f32 *)(lbl_803DD584 + 0x2c);
+    dx = *(f32 *)(state + 0x18) - *(f32 *)npc;
+    dy = (*(f32 *)(state + 0x1c) + *(f32 *)(lbl_803DD584 + 0x38)) - *(f32 *)(npc + 4);
+    dz = *(f32 *)(state + 0x20) - *(f32 *)(npc + 8);
+    dx *= *(f32 *)(lbl_803DD584 + 0x48);
+    dy *= *(f32 *)(lbl_803DD584 + 0x3c);
+    dz *= *(f32 *)(lbl_803DD584 + 0x48);
+    if (*(int *)(lbl_803DD584 + 0x1c) == 3) {
+        *(s16 *)(obj + 2) = (s16)(s32)getAngle(lbl_803DB9C4 * dy, sqrtf(dx * dx + dz * dz));
+    }
+    dx += *(f32 *)npc;
+    dy += *(f32 *)(npc + 4);
+    dz += *(f32 *)(npc + 8);
+    ex = *(f32 *)(obj + 0x18) - dx;
+    ey = *(f32 *)(obj + 0x1c) - dy;
+    ez = *(f32 *)(obj + 0x20) - dz;
+    *(s16 *)obj = (s16)(0x8000 - getAngle(ex, ez));
+    if (*(int *)(lbl_803DD584 + 0x1c) != 3) {
+        *(s16 *)(obj + 2) = (s16)(s32)getAngle(ey, sqrtf(ex * ex + ez * ez));
+    }
+    turnOnBlurFilter(*(f32 *)npc, *(f32 *)(npc + 4), *(f32 *)(npc + 8), 1, 0);
     Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
                                    (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
                                    *(int *)(obj + 48));

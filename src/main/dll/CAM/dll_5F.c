@@ -6,22 +6,27 @@
 #pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,float *outX,float *outY,float *outZ,int obj);
-extern double Curve_EvalCatmullRom();
-extern double Curve_EvalBSpline();
+extern f32 Curve_EvalCatmullRom(f32 *samples, f32 t, f32 *out);
+extern f32 Curve_EvalBSpline(f32 *samples, f32 t, f32 *out);
 extern void *mmAlloc(int size, int heap, int flags);
 extern undefined4 getButtonsJustPressed();
 extern int FUN_80017730();
 extern undefined4 FUN_80017830();
 extern undefined4 fn_8010A104();
-extern undefined4 pathcam_buildWindowSamples();
-extern undefined8 pathcam_findTaggedNodeWindow();
-extern double fn_8010AC48();
-extern undefined4 fn_8010AEA8();
+extern void pathcam_buildWindowSamples(int *window, f32 *x, f32 *y, f32 *z, f32 *pitch, f32 *yaw, f32 *roll, f32 *fov);
+extern void pathcam_findTaggedNodeWindow(int node, int *window, int p3);
+extern f32 fn_8010AC48(f32 x, f32 y, f32 z, int *window);
+extern int fn_8010AEA8(short *cam, int flags);
+extern int getAngle(f32 a, f32 b);
+typedef int (*RomCurveGetNodeFn)(int);
+typedef void (*CameraRequestFn)(int, int, int, int, int, int, int);
 extern undefined4 FUN_8010b218();
 extern undefined8 FUN_8028683c();
 extern undefined4 FUN_80286888();
-extern undefined4 sqrtf();
-extern void cameraModeTestStrengthFn_8010b238(int camera, f32 *pos, s32 pitch, s32 yaw, s32 roll);
+extern f32 sqrtf(f32);
+extern void cameraModeTestStrengthFn_8010b238(int camera, f32 *pos, s16 pitch, s16 yaw, s16 roll);
+extern void *memset(void *p, int c, int n);
+typedef int (*RomCurveFindFn)(f32 x, f32 y, f32 z, int *tags, int count, int map);
 
 extern u8 framesThisStep;
 extern int *gCameraInterface;
@@ -45,242 +50,148 @@ extern f32 lbl_803E18BC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeTestStrength_update(short *param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void CameraModeTestStrength_update(short *cam)
 {
-  float fVar1;
-  byte bVar2;
-  short *psVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  int iVar6;
-  uint uVar7;
-  undefined4 in_r6;
-  float *pfVar8;
-  undefined4 in_r7;
-  float *pfVar9;
-  undefined4 in_r8;
-  float *pfVar10;
-  undefined4 in_r9;
-  float *pfVar11;
-  undefined4 in_r10;
-  float *pfVar12;
-  int iVar13;
-  double dVar14;
-  undefined8 extraout_f1;
-  undefined8 uVar15;
-  double dVar16;
-  undefined8 extraout_f1_00;
-  undefined8 extraout_f1_01;
-  undefined8 extraout_f1_02;
-  undefined8 extraout_f1_03;
-  double dVar17;
-  double dVar18;
-  double in_f28;
-  double in_f29;
-  double in_f30;
-  double in_f31;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  float afStack_108 [4];
-  float afStack_f8 [4];
-  float afStack_e8 [4];
-  float afStack_d8 [4];
-  float afStack_c8 [4];
-  float afStack_b8 [4];
-  float afStack_a8 [4];
-  int local_98 [2];
-  int local_90;
-  int local_8c;
-  int local_88 [2];
-  int local_80;
-  int local_7c;
-  undefined8 local_78;
-  undefined4 local_70;
-  uint uStack_6c;
-  longlong local_68;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  psVar3 = param_1;
-  if (*(char *)((int)lbl_803DD560 + 0x65) == '\0') {
-    iVar13 = *(int *)(psVar3 + 0x52);
+  int m4;
+  int obj;
+  int m2;
+  int node;
+  int m1;
+  int flags;
+  int yaw;
+  f32 t;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 t2;
+  int node2;
+  int w2[4];
+  int w1[4];
+  f32 x[4];
+  f32 y[4];
+  f32 z[4];
+  f32 pitchS[4];
+  f32 yawS[4];
+  f32 rollS[4];
+  f32 fov[4];
+
+  if (*((u8 *)lbl_803DD560 + 0x65) != 0) {
+    (*(CameraRequestFn *)(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0, 0xff);
+  } else {
+    obj = *(int *)((char *)cam + 0xa4);
     getButtonsJustPressed(0);
-    uVar4 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
-    uVar5 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
-    uVar15 = pathcam_findTaggedNodeWindow(extraout_f1,param_2,param_3,param_4,param_5,param_6,
-                                          param_7,param_8,uVar5,local_98,lbl_803DD560[1],in_r6,
-                                          in_r7,in_r8,in_r9,in_r10);
-    pathcam_findTaggedNodeWindow(uVar15,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                 uVar4,local_88,lbl_803DD560[1],in_r6,in_r7,in_r8,in_r9,in_r10);
-    pfVar8 = afStack_c8;
-    pfVar9 = afStack_d8;
-    pfVar10 = afStack_e8;
-    pfVar11 = afStack_f8;
-    pfVar12 = afStack_108;
-    pathcam_buildWindowSamples(local_98,afStack_a8,afStack_b8,pfVar8,pfVar9,pfVar10,pfVar11,
-                               pfVar12);
-    dVar17 = (double)*(float *)(iVar13 + 0x1c);
-    dVar18 = (double)*(float *)(iVar13 + 0x20);
-    dVar16 = fn_8010AC48((double)*(float *)(iVar13 + 0x18),dVar17,dVar18,local_88);
-    dVar14 = (double)lbl_803E1888;
-    if (dVar14 <= dVar16) {
-      dVar14 = dVar16;
-      if ((double)lbl_803E188C < dVar16) {
-        if ((local_80 < 0) || (local_7c < 0)) {
-          dVar14 = (double)lbl_803E188C;
+    node = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
+    node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
+    pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560[1]);
+    pathcam_findTaggedNodeWindow(node, w2, lbl_803DD560[1]);
+    pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
+    t2 = fn_8010AC48(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), w2);
+    if (t2 < lbl_803E1888) {
+      if (w2[0] > -1) {
+        lbl_803DD560[3] = w2[0];
+        node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
+        pathcam_findTaggedNodeWindow(node2, w2, lbl_803DD560[1]);
+        if (w1[0] > -1) {
+          lbl_803DD560[2] = w1[0];
+          node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
+          pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560[1]);
+          pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
+          t2 = fn_8010AC48(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), w2);
+          *(f32 *)((char *)lbl_803DD560 + 0x58) += lbl_803E188C;
+        } else {
+          t2 = lbl_803E1888;
         }
-        else {
-          lbl_803DD560[3] = local_80;
-          uVar4 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
-          pathcam_findTaggedNodeWindow(extraout_f1_02,dVar17,dVar18,param_4,param_5,param_6,param_7,
-                                       param_8,uVar4,local_88,lbl_803DD560[1],pfVar8,pfVar9,
-                                       pfVar10,pfVar11,pfVar12);
-          if ((local_90 < 0) || (local_8c < 0)) {
-            dVar14 = (double)lbl_803E188C;
-          }
-          else {
-            lbl_803DD560[2] = local_90;
-            uVar4 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
-            pathcam_findTaggedNodeWindow(extraout_f1_03,dVar17,dVar18,param_4,param_5,param_6,
-                                         param_7,param_8,uVar4,local_98,lbl_803DD560[1],pfVar8,
-                                         pfVar9,pfVar10,pfVar11,pfVar12);
-            pathcam_buildWindowSamples(local_98,afStack_a8,afStack_b8,afStack_c8,afStack_d8,
-                                       afStack_e8,afStack_f8,afStack_108);
-            dVar14 = fn_8010AC48((double)*(float *)(iVar13 + 0x18),
-                                  (double)*(float *)(iVar13 + 0x1c),
-                                  (double)*(float *)(iVar13 + 0x20),local_88);
-            lbl_803DD560[0x16] = (int)((float)lbl_803DD560[0x16] - lbl_803E188C);
-          }
+      } else {
+        t2 = lbl_803E1888;
+      }
+    } else if (t2 > lbl_803E188C) {
+      if (w2[2] > -1 && w2[3] > -1) {
+        lbl_803DD560[3] = w2[2];
+        node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
+        pathcam_findTaggedNodeWindow(node2, w2, lbl_803DD560[1]);
+        if (w1[2] > -1 && w1[3] > -1) {
+          lbl_803DD560[2] = w1[2];
+          node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
+          pathcam_findTaggedNodeWindow(node2, w1, lbl_803DD560[1]);
+          pathcam_buildWindowSamples(w1, x, y, z, pitchS, yawS, rollS, fov);
+          t2 = fn_8010AC48(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), w2);
+          *(f32 *)((char *)lbl_803DD560 + 0x58) -= lbl_803E188C;
+        } else {
+          t2 = lbl_803E188C;
         }
+      } else {
+        t2 = lbl_803E188C;
       }
     }
-    else if (-1 < local_88[0]) {
-      lbl_803DD560[3] = local_88[0];
-      uVar4 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
-      pathcam_findTaggedNodeWindow(extraout_f1_00,dVar17,dVar18,param_4,param_5,param_6,param_7,
-                                   param_8,uVar4,local_88,lbl_803DD560[1],pfVar8,pfVar9,pfVar10,
-                                   pfVar11,pfVar12);
-      if (local_98[0] < 0) {
-        dVar14 = (double)lbl_803E1888;
+    t = lbl_803E18BC * (t2 - *(f32 *)((char *)lbl_803DD560 + 0x58)) +
+        *(f32 *)((char *)lbl_803DD560 + 0x58);
+    *(f32 *)((char *)lbl_803DD560 + 0x58) = t;
+    *(f32 *)((char *)cam + 0x18) = Curve_EvalBSpline(x, t, (f32 *)0);
+    *(f32 *)((char *)cam + 0x1c) = Curve_EvalBSpline(y, t, (f32 *)0);
+    *(f32 *)((char *)cam + 0x20) = Curve_EvalBSpline(z, t, (f32 *)0);
+    node2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
+    flags = *(u8 *)(node2 + 0x3b);
+    m1 = flags & 1;
+    if (m1 == 0) {
+      *cam = (int)Curve_EvalCatmullRom(pitchS, t, (f32 *)0) + 0x8000;
+    }
+    m2 = flags & 2;
+    if (m2 == 0) {
+      cam[1] = Curve_EvalCatmullRom(yawS, t, (f32 *)0);
+    }
+    m4 = flags & 4;
+    if (m4 == 0) {
+      cam[2] = Curve_EvalCatmullRom(rollS, t, (f32 *)0);
+    }
+    *(f32 *)((char *)cam + 0xb4) = Curve_EvalBSpline(fov, t, (f32 *)0);
+    if (*((u8 *)lbl_803DD560 + 0x64) == 0 && fn_8010AEA8(cam, flags) != 0) {
+      *((u8 *)lbl_803DD560 + 0x64) = 1;
+    }
+    dx = *(f32 *)((char *)cam + 0x18) - *(f32 *)(obj + 0x18);
+    dy = *(f32 *)((char *)cam + 0x1c) - *(f32 *)(obj + 0x1c);
+    dz = *(f32 *)((char *)cam + 0x20) - *(f32 *)(obj + 0x20);
+    if (m1 != 0) {
+      *cam = 0x8000 - getAngle(dx, dz);
+    }
+    if (m2 != 0) {
+      int d;
+      yaw = (u16)getAngle(dy, sqrtf(dx * dx + dz * dz));
+      d = (int)(((f32)yaw - Curve_EvalCatmullRom(yawS, t, (f32 *)0)) -
+                    (f32)(cam[1] & 0xffff));
+      if (d > 0x8000) {
+        d -= 0xffff;
       }
-      else {
-        lbl_803DD560[2] = local_98[0];
-        uVar4 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
-        pathcam_findTaggedNodeWindow(extraout_f1_01,dVar17,dVar18,param_4,param_5,param_6,param_7,
-                                     param_8,uVar4,local_98,lbl_803DD560[1],pfVar8,pfVar9,
-                                     pfVar10,pfVar11,pfVar12);
-        pathcam_buildWindowSamples(local_98,afStack_a8,afStack_b8,afStack_c8,afStack_d8,afStack_e8,
-                                   afStack_f8,afStack_108);
-        dVar14 = fn_8010AC48((double)*(float *)(iVar13 + 0x18),(double)*(float *)(iVar13 + 0x1c),
-                              (double)*(float *)(iVar13 + 0x20),local_88);
-        lbl_803DD560[0x16] = (int)((float)lbl_803DD560[0x16] + lbl_803E188C);
+      if (d < -0x8000) {
+        d += 0xffff;
       }
+      cam[1] = cam[1] + ((int)(d * (u32)framesThisStep) >> 3);
     }
-    fVar1 = (float)((double)lbl_803E18BC *
-                    (double)(float)(dVar14 - (double)(float)lbl_803DD560[0x16]) +
-                   (double)(float)lbl_803DD560[0x16]);
-    dVar16 = (double)fVar1;
-    lbl_803DD560[0x16] = (int)fVar1;
-    dVar14 = Curve_EvalBSpline(dVar16,afStack_a8,(float *)0x0);
-    *(float *)(psVar3 + 0xc) = (float)dVar14;
-    dVar14 = Curve_EvalBSpline(dVar16,afStack_b8,(float *)0x0);
-    *(float *)(psVar3 + 0xe) = (float)dVar14;
-    dVar14 = Curve_EvalBSpline(dVar16,afStack_c8,(float *)0x0);
-    *(float *)(psVar3 + 0x10) = (float)dVar14;
-    iVar6 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
-    bVar2 = *(byte *)(iVar6 + 0x3b);
-    if ((bVar2 & 1) == 0) {
-      dVar14 = Curve_EvalCatmullRom(dVar16,afStack_d8,(float *)0x0);
-      local_78 = (double)(longlong)(int)dVar14;
-      *psVar3 = (short)(int)dVar14 + -0x8000;
-    }
-    if ((bVar2 & 2) == 0) {
-      dVar14 = Curve_EvalCatmullRom(dVar16,afStack_e8,(float *)0x0);
-      local_78 = (double)(longlong)(int)dVar14;
-      psVar3[1] = (short)(int)dVar14;
-    }
-    if ((bVar2 & 4) == 0) {
-      dVar14 = Curve_EvalCatmullRom(dVar16,afStack_f8,(float *)0x0);
-      local_78 = (double)(longlong)(int)dVar14;
-      psVar3[2] = (short)(int)dVar14;
-    }
-    dVar14 = Curve_EvalBSpline(dVar16,afStack_108,(float *)0x0);
-    *(float *)(psVar3 + 0x5a) = (float)dVar14;
-    if ((*(char *)(lbl_803DD560 + 0x19) == '\0') &&
-       (uVar7 = fn_8010AEA8(psVar3,(uint)bVar2), uVar7 != 0)) {
-      *(undefined *)(lbl_803DD560 + 0x19) = 1;
-    }
-    dVar17 = (double)(*(float *)(psVar3 + 0xc) - *(float *)(iVar13 + 0x18));
-    dVar14 = (double)(*(float *)(psVar3 + 0x10) - *(float *)(iVar13 + 0x20));
-    if ((bVar2 & 1) != 0) {
-      iVar6 = FUN_80017730();
-      *psVar3 = -0x8000 - (short)iVar6;
-    }
-    if ((bVar2 & 2) != 0) {
-      sqrtf((double)(float)(dVar17 * dVar17 + (double)(float)(dVar14 * dVar14)));
-      uVar7 = FUN_80017730();
-      dVar14 = Curve_EvalCatmullRom(dVar16,afStack_e8,(float *)0x0);
-      local_78 = (double)CONCAT44(0x43300000,uVar7 & 0xffff ^ 0x80000000);
-      uStack_6c = (ushort)psVar3[1] ^ 0x80000000;
-      local_70 = 0x43300000;
-      iVar6 = (int)((float)((double)(float)(local_78 - lbl_803E18A0) - dVar14) -
-                   (float)((double)CONCAT44(0x43300000,uStack_6c) - lbl_803E18A0));
-      local_68 = (longlong)iVar6;
-      if (0x8000 < iVar6) {
-        iVar6 = iVar6 + -0xffff;
+    if (m4 != 0) {
+      int d = cam[2] - (*(s16 *)(obj + 4) & 0xffff);
+      if (d > 0x8000) {
+        d -= 0xffff;
       }
-      if (iVar6 < -0x8000) {
-        iVar6 = iVar6 + 0xffff;
+      if (d < -0x8000) {
+        d += 0xffff;
       }
-      psVar3[1] = psVar3[1] + (short)((int)(iVar6 * (uint)framesThisStep) >> 3);
+      cam[2] = cam[2] + ((int)(d * (u32)framesThisStep) >> 3);
     }
-    if ((bVar2 & 4) != 0) {
-      iVar13 = (int)psVar3[2] - (uint)*(ushort *)(iVar13 + 4);
-      if (0x8000 < iVar13) {
-        iVar13 = iVar13 + -0xffff;
-      }
-      if (iVar13 < -0x8000) {
-        iVar13 = iVar13 + 0xffff;
-      }
-      psVar3[2] = psVar3[2] + (short)((int)(iVar13 * (uint)framesThisStep) >> 3);
+    if (*(void **)lbl_803DD560 != (void *)0) {
+      f32 v;
+      v = *(f32 *)((char *)cam + 0x18);
+      *(f32 *)(*(int *)lbl_803DD560 + 0x18) = v;
+      *(f32 *)(*(int *)lbl_803DD560 + 0xc) = v;
+      v = *(f32 *)((char *)cam + 0x1c);
+      *(f32 *)(*(int *)lbl_803DD560 + 0x1c) = v;
+      *(f32 *)(*(int *)lbl_803DD560 + 0x10) = v;
+      v = *(f32 *)((char *)cam + 0x20);
+      *(f32 *)(*(int *)lbl_803DD560 + 0x20) = v;
+      *(f32 *)(*(int *)lbl_803DD560 + 0x14) = v;
     }
-    if (*lbl_803DD560 != 0) {
-      uVar4 = *(undefined4 *)(psVar3 + 0xc);
-      *(undefined4 *)(*lbl_803DD560 + 0x18) = uVar4;
-      *(undefined4 *)(*lbl_803DD560 + 0xc) = uVar4;
-      uVar4 = *(undefined4 *)(psVar3 + 0xe);
-      *(undefined4 *)(*lbl_803DD560 + 0x1c) = uVar4;
-      *(undefined4 *)(*lbl_803DD560 + 0x10) = uVar4;
-      uVar4 = *(undefined4 *)(psVar3 + 0x10);
-      *(undefined4 *)(*lbl_803DD560 + 0x20) = uVar4;
-      *(undefined4 *)(*lbl_803DD560 + 0x14) = uVar4;
-    }
-    Obj_TransformWorldPointToLocal((double)*(float *)(psVar3 + 0xc),(double)*(float *)(psVar3 + 0xe),
-                 (double)*(float *)(psVar3 + 0x10),(float *)(psVar3 + 6),(float *)(psVar3 + 8),
-                 (float *)(psVar3 + 10),*(int *)(psVar3 + 0x18));
+    Obj_TransformWorldPointToLocal(*(f32 *)((char *)cam + 0x18), *(f32 *)((char *)cam + 0x1c),
+                                   *(f32 *)((char *)cam + 0x20), (float *)(cam + 6),
+                                   (float *)(cam + 8), (float *)(cam + 10), *(int *)(cam + 0x18));
   }
-  else {
-    (**(code **)(*gCameraInterface + 0x1c))(0x42,0,1,0,0,0,0xff);
-  }
-  FUN_80286888();
-  return;
 }
 
 /*
@@ -296,136 +207,103 @@ void CameraModeTestStrength_update(short *param_1,undefined8 param_2,undefined8 
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeTestStrength_init(undefined4 param_1,undefined4 param_2,undefined4 *param_3,undefined4 param_4,
-                 undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
+void CameraModeTestStrength_init(short *cam, int param2, int *param3)
 {
-  short *camera;
-  undefined4 curveNode;
-  undefined4 curveNode2;
   int romNode;
-  short pitch;
-  short yaw;
-  int cameraObj;
-  short roll;
-  float curveT;
-  double dVar1;
-  double dVar2;
-  double dVar3;
-  double dx;
-  double dy;
-  double dz;
-  undefined4 searchTags[2];
-  float samplesX[4];
-  float samplesY[4];
-  float samplesZ[4];
-  float samplesPitch[4];
-  float samplesYaw[4];
-  float samplesRoll[4];
-  float samplesFov[4];
-  int prevWindow[4];
-  int nextWindow[4];
-  float pos[3];
+  int obj;
+  int curveNode2;
+  int pitch;
+  int yaw;
+  int roll;
+  f32 t;
+  f32 px;
+  f32 py;
+  f32 pz;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 fov;
+  f32 pos[3];
+  int nextW[4];
+  int prevW[4];
+  f32 pitchS[4];
+  f32 yawS[4];
+  f32 rollS[4];
+  f32 fovS[4];
+  f32 xS[4];
+  f32 yS[4];
+  f32 zS[4];
+  int tags[2];
 
-  camera = (short *)param_1;
-  cameraObj = *(int *)(camera + 0x52);
-
+  obj = *(int *)((char *)cam + 0xa4);
   if (lbl_803DD560 == 0) {
     lbl_803DD560 = mmAlloc(0x68, 0xf, 0);
   }
-  FUN_800033a8(lbl_803DD560, 0, 0x68);
-
-  lbl_803DD560[1] = *param_3;
-  *(u8 *)((int)lbl_803DD560 + 0x64) = 1;
-
-  searchTags[0] = 9;
-  searchTags[1] = 0x1b;
-  curveNode = (**(code **)(*gRomCurveInterface + 0x14))(*(f32 *)(cameraObj + 0x18),
-                                                        *(f32 *)(cameraObj + 0x1c),
-                                                        *(f32 *)(cameraObj + 0x20),
-                                                        searchTags, 2, lbl_803DD560[1]);
-  lbl_803DD560[3] = curveNode;
-
-  searchTags[0] = 8;
-  searchTags[1] = 0x1a;
-  curveNode = (**(code **)(*gRomCurveInterface + 0x14))(*(f32 *)(cameraObj + 0x18),
-                                                        *(f32 *)(cameraObj + 0x1c),
-                                                        *(f32 *)(cameraObj + 0x20),
-                                                        searchTags, 2, lbl_803DD560[1]);
-  lbl_803DD560[2] = curveNode;
-
-  fn_8010A104((int *)&lbl_803DD560[3], (int *)&lbl_803DD560[2], *(f32 *)(cameraObj + 0x18),
-              *(f32 *)(cameraObj + 0x1c), *(f32 *)(cameraObj + 0x20), lbl_803DD560[1]);
-
-  romNode = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
-  curveNode2 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
-
-  pathcam_findTaggedNodeWindow(romNode, prevWindow, lbl_803DD560[1]);
-  pathcam_findTaggedNodeWindow(curveNode2, nextWindow, lbl_803DD560[1]);
-  pathcam_buildWindowSamples(prevWindow, samplesX, samplesY, samplesZ, samplesPitch, samplesYaw,
-                             samplesRoll, samplesFov);
-
-  curveT = fn_8010AC48(*(f32 *)(cameraObj + 0x18), *(f32 *)(cameraObj + 0x1c),
-                       *(f32 *)(cameraObj + 0x20), nextWindow);
-  if (curveT < lbl_803E1888) {
-    curveT = lbl_803E1888;
+  memset(lbl_803DD560, 0, 0x68);
+  lbl_803DD560[1] = *param3;
+  *((u8 *)lbl_803DD560 + 0x64) = 1;
+  tags[0] = 9;
+  tags[1] = 0x1b;
+  lbl_803DD560[3] = (*(RomCurveFindFn *)(*(int *)gRomCurveInterface + 0x14))(
+      *(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), tags, 2, lbl_803DD560[1]);
+  tags[0] = 8;
+  tags[1] = 0x1a;
+  lbl_803DD560[2] = (*(RomCurveFindFn *)(*(int *)gRomCurveInterface + 0x14))(
+      *(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), tags, 2, lbl_803DD560[1]);
+  fn_8010A104((int *)&lbl_803DD560[3], (int *)&lbl_803DD560[2], *(f32 *)(obj + 0x18),
+              *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), lbl_803DD560[1]);
+  romNode = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
+  curveNode2 = (*(RomCurveGetNodeFn *)(*(int *)gRomCurveInterface + 0x1c))(lbl_803DD560[3]);
+  pathcam_findTaggedNodeWindow(romNode, prevW, lbl_803DD560[1]);
+  pathcam_findTaggedNodeWindow(curveNode2, nextW, lbl_803DD560[1]);
+  pathcam_buildWindowSamples(prevW, xS, yS, zS, pitchS, yawS, rollS, fovS);
+  t = fn_8010AC48(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20), nextW);
+  if (t < lbl_803E1888) {
+    t = lbl_803E1888;
+  } else if (t > lbl_803E188C) {
+    t = lbl_803E188C;
   }
-  else if (curveT > lbl_803E188C) {
-    curveT = lbl_803E188C;
+  px = Curve_EvalBSpline(xS, t, (f32 *)0);
+  py = Curve_EvalBSpline(yS, t, (f32 *)0);
+  pz = Curve_EvalBSpline(zS, t, (f32 *)0);
+  dx = px - *(f32 *)(obj + 0x18);
+  dy = py - *(f32 *)(obj + 0x1c);
+  dz = pz - *(f32 *)(obj + 0x20);
+  if ((*(u8 *)(romNode + 0x3b) & 1) != 0) {
+    pitch = (s16)(0x8000 - getAngle(dx, dz));
+  } else {
+    pitch = (s16)((int)Curve_EvalCatmullRom(pitchS, t, (f32 *)0) + 0x8000);
   }
-
-  dVar1 = Curve_EvalBSpline(curveT, samplesX, (float *)0);
-  dVar2 = Curve_EvalBSpline(curveT, samplesY, (float *)0);
-  dVar3 = Curve_EvalBSpline(curveT, samplesZ, (float *)0);
-
-  dx = (double)(float)(dVar1 - (double)*(f32 *)(cameraObj + 0x18));
-  dy = (double)(float)(dVar2 - (double)*(f32 *)(cameraObj + 0x1c));
-  dz = (double)(float)(dVar3 - (double)*(f32 *)(cameraObj + 0x20));
-
-  if ((*(u8 *)(romNode + 0x3b) & 1) == 0) {
-    pitch = (short)(int)Curve_EvalCatmullRom(curveT, samplesPitch, (float *)0);
+  if ((*(u8 *)(romNode + 0x3b) & 4) != 0) {
+    roll = *(s16 *)(obj + 4);
+  } else {
+    roll = (int)Curve_EvalCatmullRom(rollS, t, (f32 *)0);
   }
-  else {
-    pitch = -getAngle(dx, dz);
+  if ((*(u8 *)(romNode + 0x3b) & 2) != 0) {
+    yaw = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz));
+    yaw = (int)((f32)yaw - Curve_EvalCatmullRom(yawS, t, (f32 *)0));
+  } else {
+    yaw = (int)Curve_EvalCatmullRom(yawS, t, (f32 *)0);
   }
-
-  if ((*(u8 *)(romNode + 0x3b) & 4) == 0) {
-    roll = (short)(int)Curve_EvalCatmullRom(curveT, samplesRoll, (float *)0);
+  fov = Curve_EvalBSpline(fovS, t, (f32 *)0);
+  pos[0] = px;
+  pos[1] = py;
+  pos[2] = pz;
+  if (*((u8 *)param3 + 4) == 0 && param2 != 3) {
+    cameraModeTestStrengthFn_8010b238((int)cam, pos, pitch, yaw, roll);
+  } else {
+    *(f32 *)((char *)cam + 0x18) = px;
+    *(f32 *)((char *)cam + 0x1c) = py;
+    *(f32 *)((char *)cam + 0x20) = pz;
+    Obj_TransformWorldPointToLocal(*(f32 *)((char *)cam + 0x18), *(f32 *)((char *)cam + 0x1c),
+                                   *(f32 *)((char *)cam + 0x20), (float *)(cam + 6),
+                                   (float *)(cam + 8), (float *)(cam + 10), *(int *)(cam + 0x18));
+    cam[0] = pitch;
+    cam[1] = yaw;
+    cam[2] = roll;
+    *(f32 *)((char *)cam + 0xb4) = fov;
   }
-  else {
-    roll = *(short *)(cameraObj + 4);
-  }
-
-  if ((*(u8 *)(romNode + 0x3b) & 2) == 0) {
-    yaw = (short)(int)Curve_EvalCatmullRom(curveT, samplesYaw, (float *)0);
-  }
-  else {
-    yaw = getAngle(dy, sqrtf((float)(dx * dx + (double)(float)(dz * dz))));
-    yaw = (short)((int)yaw - (int)Curve_EvalCatmullRom(curveT, samplesYaw, (float *)0));
-  }
-
-  dVar3 = Curve_EvalBSpline(curveT, samplesFov, (float *)0);
-  pos[0] = (float)dVar1;
-  pos[1] = (float)dVar2;
-  pos[2] = (float)dVar3;
-
-  if ((*(u8 *)(param_3 + 1) == 0) && ((int)param_2 != 3)) {
-    cameraModeTestStrengthFn_8010b238((int)camera, pos, (short)(pitch - 0x8000), yaw, roll);
-  }
-  else {
-    *(f32 *)(camera + 0xc) = (float)dVar1;
-    *(f32 *)(camera + 0xe) = (float)dVar2;
-    *(f32 *)(camera + 0x10) = (float)dVar3;
-    Obj_TransformWorldPointToLocal(*(f32 *)(camera + 0xc), *(f32 *)(camera + 0xe),
-                                   *(f32 *)(camera + 0x10), (float *)(camera + 6),
-                                   (float *)(camera + 8), (float *)(camera + 10),
-                                   *(int *)(camera + 0x18));
-    camera[0] = pitch - 0x8000;
-    camera[1] = yaw;
-    camera[2] = roll;
-    *(f32 *)(camera + 0x5a) = (float)dVar3;
-  }
-
-  *(f32 *)((int)lbl_803DD560 + 0x58) = curveT;
+  *(f32 *)((char *)lbl_803DD560 + 0x58) = t;
 }
 
 
@@ -449,54 +327,60 @@ extern void Rcp_DisableBlurFilter(void);
  * EN v1.0 Address: 0x8010BF08
  * EN v1.0 Size: 348b
  */
+typedef struct {
+    u8 pad[0xc];
+    f32 x;
+    f32 y;
+    f32 z;
+} CamPathEntry;
+
 void fn_8010BF08(int control, float *outX, float *outY, float *outZ, void *inFloatPtr)
 {
   int cameraObj;
-  int paths;
+  CamPathEntry *paths;
   int settings;
   u8 curIdx;
   float t;
+  float lim;
 
   settings = *(int *)(control + 0x11c);
   cameraObj = *(int *)(control + 0xa4);
-  paths = *(int *)(settings + 0x74);
+  paths = *(CamPathEntry **)(settings + 0x74);
   curIdx = *(u8 *)(settings + 0xe4);
   if ((u32)curIdx != (u32)*(u8 *)(*(int **)&lbl_803DD568 + 0x14/4)) {
     *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x13) = *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x14);
     *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = lbl_803E18C0;
   }
   t = *(float *)((char *)*(int **)&lbl_803DD568 + 0x18);
-  if (t > lbl_803E18C4) {
+  lim = lbl_803E18C4;
+  if (t > lim) {
     t = -(lbl_803E18C8 * timeDelta) + t;
     *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = t;
-    if (*(float *)((char *)*(int **)&lbl_803DD568 + 0x18) < lbl_803E18C4) {
-      *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = lbl_803E18C4;
+    if (*(float *)((char *)*(int **)&lbl_803DD568 + 0x18) < lim) {
+      *(float *)((char *)*(int **)&lbl_803DD568 + 0x18) = lim;
       *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x13) = *(u8 *)(settings + 0xe4);
     }
     {
       u8 ci = *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x13);
       u8 ti = *(u8 *)(settings + 0xe4);
-      float dx = *(float *)((char *)paths + ci * 0x18 + 0xc) - *(float *)((char *)paths + ti * 0x18 + 0xc);
-      float dy = *(float *)((char *)paths + ci * 0x18 + 0x10) - *(float *)((char *)paths + ti * 0x18 + 0x10);
-      float dz = *(float *)((char *)paths + ci * 0x18 + 0x14) - *(float *)((char *)paths + ti * 0x18 + 0x14);
+      float dx = paths[ci].x - paths[ti].x;
+      float dy = paths[ci].y - paths[ti].y;
+      float dz = paths[ci].z - paths[ti].z;
       float w = *(float *)((char *)*(int **)&lbl_803DD568 + 0x18);
       dx *= w;
       dy *= w;
       dz *= w;
-      dx += *(float *)((char *)paths + ti * 0x18 + 0xc);
-      dy += *(float *)((char *)paths + ti * 0x18 + 0x10);
-      dz += *(float *)((char *)paths + ti * 0x18 + 0x14);
+      dx += paths[ti].x;
+      dy += paths[ti].y;
+      dz += paths[ti].z;
       *outX = dx - *(float *)(cameraObj + 0x18);
       *outY = dy - *(float *)inFloatPtr;
       *outZ = dz - *(float *)(cameraObj + 0x20);
     }
   } else {
-    *outX = *(float *)((char *)paths + (u32)*(u8 *)(settings + 0xe4) * 0x18 + 0xc) -
-            *(float *)(cameraObj + 0x18);
-    *outY = *(float *)((char *)paths + (u32)*(u8 *)(settings + 0xe4) * 0x18 + 0x10) -
-            *(float *)inFloatPtr;
-    *outZ = *(float *)((char *)paths + (u32)*(u8 *)(settings + 0xe4) * 0x18 + 0x14) -
-            *(float *)(cameraObj + 0x20);
+    *outX = paths[*(u8 *)(settings + 0xe4)].x - *(float *)(cameraObj + 0x18);
+    *outY = paths[*(u8 *)(settings + 0xe4)].y - *(float *)inFloatPtr;
+    *outZ = paths[*(u8 *)(settings + 0xe4)].z - *(float *)(cameraObj + 0x20);
   }
   *(u8 *)((char *)*(int **)&lbl_803DD568 + 0x14) = *(u8 *)(settings + 0xe4);
 }
@@ -510,6 +394,10 @@ void fn_8010BF08(int control, float *outX, float *outY, float *outZ, void *inFlo
  */
 #pragma peephole off
 #pragma scheduling off
+typedef struct {
+    u8 flag80 : 1;
+} CamByte143;
+
 void CameraModeCombat_free(int obj)
 {
   if (*(void **)(obj + 0x11c) != NULL) {
@@ -518,7 +406,7 @@ void CameraModeCombat_free(int obj)
   mm_free(lbl_803DD568);
   *(int *)&lbl_803DD568 = 0;
   Rcp_DisableBlurFilter();
-  *(u8 *)(obj + 0x143) &= 0x7f;
+  ((CamByte143 *)(obj + 0x143))->flag80 = 0;
 }
 #pragma scheduling reset
 #pragma peephole reset

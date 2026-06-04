@@ -72,6 +72,64 @@ extern u8 lbl_803DD088;
 extern u8 curSeqNo;
 extern void Obj_TransformWorldPointToLocal(f32 *x, f32 *y, f32 *z, void *m, f32 wx, f32 wy, f32 wz);
 
+extern u8 lbl_8039944C[];
+extern int lbl_803DD0C0;
+extern s16 lbl_803DD08A;
+extern f32 lbl_803DF030;
+extern f32 lbl_803DF034;
+extern f32 MTRCallback;
+extern f32 DBGCallback;
+extern f32 lbl_803DD0CC;
+extern f32 lbl_803DD0C8;
+extern f32 lbl_803DD0C4;
+extern f32 lbl_803DF038;
+extern f32 lbl_803DF03C;
+extern f32 lbl_803DF040;
+extern f32 lbl_803DF044;
+extern int Sfx_IsPlayingFromObject(void *obj, int sfxId);
+extern void Sfx_SetObjectSfxVolume(void *obj, int sfxId, int volume, f32 p4);
+extern int *seqFn_800394a0(void);
+extern u8 lbl_803DB411;
+extern int lbl_803DB72C;
+extern int lbl_803DB714;
+extern int lbl_803DB71C;
+extern u8 lbl_803DD0D9;
+extern u8 lbl_803DD078;
+extern s16 lbl_8030ECF8[];
+extern int fn_80296C2C(void *obj);
+extern void fn_80297254(void *obj);
+extern void fn_8029726C(void *obj);
+extern void fn_80297284(void *obj);
+extern void gameTextLoadTaskText(int textId);
+extern void cameraFocusNpc(int param1, u8 *obj);
+
+typedef struct SeqByte0B4 {
+    u8 useAltPos : 1;
+    u8 rest : 7;
+} SeqByte0B4;
+
+extern int lbl_803DB724;
+extern f32 lbl_803DD074;
+extern f32 RecvDataLeng;
+extern f32 SendMailData;
+extern u32 getButtonsJustPressed(int controller);
+extern int isTalkingToNpc(void);
+extern void setJoypadDisabled(void);
+extern u8 lbl_803DD111;
+extern u8 lbl_803DD112;
+extern f32 lbl_803DF02C;
+extern void ObjAnim_SetCurrentMove(void *obj, int move, int p3, f32 phase);
+extern void ObjModel_SetBlendChannelTargets(void *action, int mode, int target, int channel, int p5, f32 t);
+extern void Sfx_PlayFromObject(void *obj, int sfxId);
+extern void Sfx_RemoveLoopedObjectSound(void *obj, int sfxId);
+extern void Sfx_AddLoopedObjectSound(void *obj, int sfxId);
+extern void Music_Trigger(int id, int mode);
+extern void warpToMap(int map, int mode);
+extern int ObjAnim_SampleRootCurvePhase(void *obj, f32 *out, f32 dist);
+extern void ObjAnim_AdvanceCurrentMove(void *obj, void *state, f32 speed, f32 t);
+int objSeqInterpFn_80085358(u8 *obj, u8 *action, u8 **cmd, int flags, void *out);
+void *objSeqCmd3(u8 *obj, u8 *seq, u8 *src);
+
 typedef struct CamRequest {
     s16 rot[3];
     u8 pad6[6];
@@ -99,7 +157,26 @@ typedef struct SeqByte136 {
     u8 mapEvent : 1;
     u8 rest : 2;
 } SeqByte136;
-void ObjSeq_update(u8 *obj, f32 t);
+int ObjSeq_update(u8 *obj, f32 t);
+
+typedef struct SeqRunFlags {
+    u8 active : 1;
+} SeqRunFlags;
+extern SeqRunFlags lbl_803DD0B4;
+extern u8 *lbl_803DD07C;
+extern u8 lbl_803DD078;
+extern u8 lbl_803DD0D9;
+extern int lbl_803DB714;
+extern int lbl_803DB71C;
+extern int lbl_803DB72C;
+extern s16 lbl_8030ECF8[];
+extern int fn_80296C2C(void *obj);
+extern void fn_80297284(void *obj);
+extern void fn_8029726C(void *obj);
+extern void fn_80297254(void *obj);
+extern void gameTextLoadTaskText(int taskId);
+extern void cameraFocusNpc(int param1, u8 *obj);
+
 
 void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
 {
@@ -1249,6 +1326,1483 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
 
 #pragma peephole off
 #pragma scheduling off
+void objSeqUpdateCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode)
+{
+    struct {
+        f32 x;
+        f32 y;
+        f32 z;
+    } pos;
+    int out;
+    u8 *cmd;
+    f32 speed;
+    u8 *model;
+    u8 *activeObj;
+    u8 *action;
+    s8 flags;
+    int found;
+    int targetFrame;
+    int i;
+    int stop;
+    int frame;
+    f32 val;
+    f32 rate;
+    f32 prevX;
+    f32 prevZ;
+    int opcode;
+    u8 *entry;
+
+    (void)seqObj;
+
+    if (*(void **)(seq + 0x94) == NULL) {
+        return;
+    }
+
+    flags = 1;
+    if (mode != 0) {
+        flags |= 2;
+    }
+
+    model = *(u8 **)(obj + 0x4c);
+    targetFrame = *(s16 *)(seq + 0x58);
+    lbl_803DD08A = targetFrame;
+    *(s16 *)(seq + 0x66) = 0;
+    *(s16 *)(seq + 0x68) = -0x32;
+    seq[0x78] = 0;
+    seq[0x7a] = 0;
+    seq[0x79] = 0;
+    *(void **)seq = NULL;
+    seq[0x7b] = 0;
+    *(f32 *)(seq + 0x20) = lbl_803DEFB0;
+    *(s16 *)(seq + 0x58) = -1;
+
+    found = -1;
+    activeObj = obj;
+    i = 0;
+    while (i < *(s16 *)(seq + 0x62) && *(s16 *)(seq + 0x58) <= targetFrame) {
+        cmd = *(u8 **)(seq + 0x94) + i * 4;
+        opcode = (s8)cmd[0];
+        switch (opcode) {
+        case 3:
+            flags = (s8)(flags | 4);
+            activeObj = objSeqCmd3(obj, seq, model);
+            *(s16 *)(activeObj + 0xa2) = -1;
+            break;
+        case 0:
+            *(s16 *)(seq + 0x58) = *(s16 *)(cmd + 2);
+            break;
+        case 9:
+            found = *(s16 *)(seq + 0x58);
+            break;
+        case 11:
+            if (*(s16 *)(cmd + 2) > 0) {
+                i += *(s16 *)(cmd + 2);
+            }
+            break;
+        default:
+            if (opcode != 0xf) {
+                *(s16 *)(seq + 0x58) = *(s16 *)(seq + 0x58) + cmd[1];
+            }
+            break;
+        }
+        i++;
+    }
+
+    *(s16 *)(seq + 0x58) = (s16)found;
+    action = *(u8 **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+    if (action != NULL) {
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xdc) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb6) * 8),
+                    *(s16 *)(seq + 0xdc) & 0xfff, -1);
+            }
+        }
+        prevX = *(f32 *)(model + 0x8) + val;
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xd8) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb2) * 8),
+                    *(s16 *)(seq + 0xd8) & 0xfff, -1);
+            }
+        }
+        prevZ = *(f32 *)(model + 0x10) + val;
+    }
+
+    entry = lbl_8039944C;
+    while (*(s16 *)(seq + 0x58) < targetFrame) {
+        *(s16 *)(seq + 0x58) += 1;
+        frame = *(s16 *)(seq + 0x58);
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xdc) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb6) * 8),
+                    *(s16 *)(seq + 0xdc) & 0xfff, frame);
+            }
+        }
+        pos.x = *(f32 *)(model + 0x8) + val;
+        frame = *(s16 *)(seq + 0x58);
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xda) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb4) * 8),
+                    *(s16 *)(seq + 0xda) & 0xfff, frame);
+            }
+        }
+        pos.y = *(f32 *)(model + 0xc) + val;
+        frame = *(s16 *)(seq + 0x58);
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xd8) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb2) * 8),
+                    *(s16 *)(seq + 0xd8) & 0xfff, frame);
+            }
+        }
+        pos.z = *(f32 *)(model + 0x10) + val;
+
+        if (*(s16 *)(seq + 0x58) > 0 && mode != 0) {
+            if ((s8)seq[0x78] == 1 && (s8)seq[0x7b] == 0 && action != NULL) {
+                if (ObjAnim_SampleRootCurvePhase(
+                        activeObj, &speed,
+                        sqrtf((pos.x - prevX) * (pos.x - prevX) +
+                              (pos.z - prevZ) * (pos.z - prevZ))) == 0) {
+                    frame = *(s16 *)(seq + 0x58) - 1;
+                    if (*(void **)(seq + 0x98) == NULL) {
+                        val = lbl_803DEFB0;
+                    } else {
+                        val = lbl_803DEFB0;
+                        if (*(s16 *)(seq + 0xd4) != 0) {
+                            val = objCurveInterpolate(
+                                (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xae) * 8),
+                                *(s16 *)(seq + 0xd4) & 0xfff, frame);
+                        }
+                    }
+                    speed = lbl_803DF030 * val;
+                }
+            } else {
+                frame = *(s16 *)(seq + 0x58) - 1;
+                if (*(void **)(seq + 0x98) == NULL) {
+                    val = lbl_803DEFB0;
+                } else {
+                    val = lbl_803DEFB0;
+                    if (*(s16 *)(seq + 0xd4) != 0) {
+                        val = objCurveInterpolate(
+                            (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xae) * 8),
+                            *(s16 *)(seq + 0xd4) & 0xfff, frame);
+                    }
+                }
+                speed = lbl_803DF030 * val;
+            }
+
+            if (action != NULL) {
+                ObjAnim_AdvanceCurrentMove(activeObj, seq + 0xf0, speed, lbl_803DEFC8);
+                if (mode != 0) {
+                    if (*(f32 *)(seq + 0x20) > lbl_803DEFB0) {
+                        if (*(s16 *)(seq + 0xd6) != 0) {
+                            frame = *(s16 *)(seq + 0x58) - 1;
+                            if (*(void **)(seq + 0x98) != NULL && *(s16 *)(seq + 0xd6) != 0) {
+                                rate = objCurveInterpolate(
+                                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) +
+                                                    *(s16 *)(seq + 0xb0) * 8),
+                                    *(s16 *)(seq + 0xd6) & 0xfff, frame);
+                            }
+                        } else {
+                            rate = lbl_803DF034;
+                        }
+                        if (rate < lbl_803DEFC8) {
+                            rate = lbl_803DEFC8;
+                        }
+                        *(f32 *)(seq + 0x20) = *(f32 *)(seq + 0x20) - lbl_803DEFC8 / rate;
+                        if (*(f32 *)(seq + 0x20) < lbl_803DEFB0) {
+                            *(f32 *)(seq + 0x20) = lbl_803DEFB0;
+                        }
+                    }
+                }
+            } else {
+                *(f32 *)(activeObj + 0x98) = *(f32 *)(activeObj + 0x98) + speed;
+                while (*(f32 *)(activeObj + 0x98) > lbl_803DEFC8) {
+                    *(f32 *)(activeObj + 0x98) = *(f32 *)(activeObj + 0x98) - lbl_803DEFC8;
+                }
+                while (*(f32 *)(activeObj + 0x98) < lbl_803DEFB0) {
+                    *(f32 *)(activeObj + 0x98) = *(f32 *)(activeObj + 0x98) + lbl_803DEFC8;
+                }
+            }
+        }
+
+        prevX = pos.x;
+        prevZ = pos.z;
+
+        stop = 0;
+        lbl_803DD0C0 = 0;
+        while (stop == 0 && *(s16 *)(seq + 0x66) < *(s16 *)(seq + 0x62)) {
+            cmd = *(u8 **)(seq + 0x94) + *(s16 *)(seq + 0x66) * 4;
+            opcode = (s8)cmd[0];
+            if (opcode == 0) {
+                if (*(s16 *)(seq + 0x58) >= *(s16 *)(cmd + 2)) {
+                    *(s16 *)(seq + 0x68) = *(s16 *)(cmd + 2);
+                    *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + 1;
+                } else {
+                    stop = 1;
+                }
+            } else {
+                if (*(s16 *)(seq + 0x58) >= *(s16 *)(seq + 0x68)) {
+                    if (opcode != 0xf) {
+                        *(s16 *)(seq + 0x68) = *(s16 *)(seq + 0x68) + cmd[1];
+                    }
+                    *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + 1;
+                    if (objSeqInterpFn_80085358(obj, action, &cmd, flags, &out) != 0) {
+                        return;
+                    }
+                    activeObj = *(u8 **)*(u8 **)(obj + 0xb8);
+                    if (activeObj == NULL) {
+                        activeObj = obj;
+                    }
+                    action = *(u8 **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+                } else {
+                    stop = 1;
+                }
+            }
+        }
+
+        for (i = 0; i < lbl_803DD0C0; i++) {
+            if (seqDoSubCmd0B(obj, activeObj, seq, *(u8 **)(entry + i * 8),
+                              *(s16 *)(entry + i * 8 + 6), *(s16 *)(entry + i * 8 + 4), 1,
+                              0) != 0) {
+                i = lbl_803DD0C0;
+            }
+            activeObj = *(u8 **)*(u8 **)(obj + 0xb8);
+            if (activeObj == NULL) {
+                activeObj = obj;
+            }
+            action = *(u8 **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+        }
+        lbl_803DD0C0 = 0;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void objSeqUpdateMoreCurves(u8 *obj, u8 *seqObj, u8 *seq, int frame)
+{
+    u8 *model;
+    u8 *walk;
+    s16 *vec;
+    s16 *vec2;
+    u8 *tex1;
+    u8 *tex2;
+    u8 *tex5;
+    int *modelIds;
+    int vol;
+    int i;
+    int k;
+    int slots;
+    int scroll;
+    f32 val;
+
+    model = *(u8 **)(obj + 0x4c);
+    *(f32 *)(obj + 0xc) = *(f32 *)(model + 0x8);
+    *(f32 *)(obj + 0x10) = *(f32 *)(model + 0xc);
+    *(f32 *)(obj + 0x14) = *(f32 *)(model + 0x10);
+    *(s16 *)(obj + 2) = 0;
+    *(s16 *)(obj + 0) = 0;
+    *(s16 *)(obj + 4) = 0;
+    if ((*(s16 *)(seq + 0x6e) & 0x20) != 0) {
+        seqObj[0x36] = 0xff;
+    }
+    lbl_803DD0CC = lbl_803DEFB0;
+    lbl_803DD0C8 = lbl_803DEFB0;
+    lbl_803DD0C4 = lbl_803DEFB0;
+
+    if (*(void **)(seq + 0x98) != NULL) {
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xe6) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xc0) * 8),
+                    *(s16 *)(seq + 0xe6) & 0xfff, frame);
+            }
+        }
+        vol = (int)val;
+
+        walk = seq;
+        for (i = 0; i < 3; i++) {
+            if (*(s16 *)(walk + 0x30) != 0) {
+                Sfx_IsPlayingFromObject(seqObj, (u16)*(s16 *)(walk + 0x38));
+            }
+            walk += 2;
+        }
+
+        if (vol > 0 && *(s16 *)(seq + 0x36) != 0) {
+            if (Sfx_IsPlayingFromObject(seqObj, (u16)*(s16 *)(seq + 0x3e)) != 0) {
+                Sfx_SetObjectSfxVolume(seqObj, (u16)*(s16 *)(seq + 0x3e), (u8)vol,
+                                       lbl_803DF038);
+            }
+        }
+
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xd0) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xaa) * 8),
+                    *(s16 *)(seq + 0xd0) & 0xfff, frame);
+            }
+        }
+        *(s16 *)(obj + 0) = (int)(lbl_803DF03C * val);
+
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xd2) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xac) * 8),
+                    *(s16 *)(seq + 0xd2) & 0xfff, frame);
+            }
+        }
+        *(s16 *)(obj + 2) = (int)(lbl_803DF03C * val);
+
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xce) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xa8) * 8),
+                    *(s16 *)(seq + 0xce) & 0xfff, frame);
+            }
+        }
+        *(s16 *)(obj + 4) = (int)(lbl_803DF03C * val);
+
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xdc) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb6) * 8),
+                    *(s16 *)(seq + 0xdc) & 0xfff, frame);
+            }
+        }
+        lbl_803DD0CC = val;
+
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xda) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb4) * 8),
+                    *(s16 *)(seq + 0xda) & 0xfff, frame);
+            }
+        }
+        lbl_803DD0C8 = val;
+
+        if (*(void **)(seq + 0x98) == NULL) {
+            val = lbl_803DEFB0;
+        } else {
+            val = lbl_803DEFB0;
+            if (*(s16 *)(seq + 0xd8) != 0) {
+                val = objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb2) * 8),
+                    *(s16 *)(seq + 0xd8) & 0xfff, frame);
+            }
+        }
+        lbl_803DD0C4 = val;
+
+        lbl_803DD120 = lbl_803DD0CC;
+        lbl_803DD11C = lbl_803DD0C8;
+        lbl_803DD118 = lbl_803DD0C4;
+        lbl_803DD116 = *(s16 *)obj;
+        lbl_803DD114 = 1;
+        *(f32 *)(obj + 0xc) = *(f32 *)(model + 0x8) + lbl_803DD0CC;
+        *(f32 *)(obj + 0x10) = *(f32 *)(model + 0xc) + lbl_803DD0C8;
+        *(f32 *)(obj + 0x14) = *(f32 *)(model + 0x10) + lbl_803DD0C4;
+
+        if (*(s16 *)(seq + 0xde) != 0) {
+            if (*(void **)(seq + 0x98) == NULL) {
+                val = lbl_803DEFB0;
+            } else {
+                val = lbl_803DEFB0;
+                if (*(s16 *)(seq + 0xde) != 0) {
+                    val = objCurveInterpolate(
+                        (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb8) * 8),
+                        *(s16 *)(seq + 0xde) & 0xfff, frame);
+                }
+            }
+            if ((s8)seq[0x7b] != 0) {
+                if (val < lbl_803DF040) {
+                    val = lbl_803DF040;
+                }
+                if (val > MTRCallback) {
+                    val = lbl_803DF044;
+                }
+                lbl_803DD088 = 1;
+                lbl_803DD0D0 = val;
+            } else {
+                *(f32 *)(seq + 0x10) = val;
+            }
+        }
+
+        if ((*(s16 *)(seq + 0x6e) & 0x20) != 0 && *(s16 *)(seq + 0xc8) != 0) {
+            if (*(void **)(seq + 0x98) == NULL) {
+                val = lbl_803DEFB0;
+            } else {
+                val = lbl_803DEFB0;
+                if (*(s16 *)(seq + 0xc8) != 0) {
+                    val = objCurveInterpolate(
+                        (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xa2) * 8),
+                        *(s16 *)(seq + 0xc8) & 0xfff, frame);
+                }
+            }
+            if (val < lbl_803DEFB0) {
+                val = lbl_803DEFB0;
+            }
+            if (val > DBGCallback) {
+                val = DBGCallback;
+            }
+            seqObj[0x36] = (u8)(int)val;
+        }
+
+        if (*(s16 *)(seq + 0xca) != 0) {
+            if (*(void **)(seq + 0x98) == NULL) {
+                val = lbl_803DEFB0;
+            } else {
+                val = lbl_803DEFB0;
+                if (*(s16 *)(seq + 0xca) != 0) {
+                    val = objCurveInterpolate(
+                        (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xa4) * 8),
+                        *(s16 *)(seq + 0xca) & 0xfff, frame);
+                }
+            }
+            (*(void (*)(f32))(*(int *)((char *)*gSHthorntailAnimationInterface + 0x28)))(
+                lbl_803DEFFC * val);
+        }
+
+        if ((*(s16 *)(seq + 0x6e) & 0x10) != 0 && *(s16 *)(seq + 0xcc) != 0) {
+            if (*(void **)(seq + 0x98) == NULL) {
+                val = lbl_803DEFB0;
+            } else {
+                val = lbl_803DEFB0;
+                if (*(s16 *)(seq + 0xcc) != 0) {
+                    val = objCurveInterpolate(
+                        (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xa6) * 8),
+                        *(s16 *)(seq + 0xcc) & 0xfff, frame);
+                }
+            }
+            *(f32 *)(seqObj + 8) = val * *(f32 *)(*(u8 **)(seqObj + 0x50) + 4);
+        }
+
+        if ((*(s16 *)(seq + 0x6e) & 8) != 0) {
+            vec = objModelGetVecFn_800395d8(seqObj, 0);
+            if (vec != NULL) {
+                if (*(s16 *)(seq + 0xc4) != 0) {
+                    if (*(void **)(seq + 0x98) == NULL) {
+                        val = lbl_803DEFB0;
+                    } else {
+                        val = lbl_803DEFB0;
+                        if (*(s16 *)(seq + 0xc4) != 0) {
+                            val = objCurveInterpolate(
+                                (ObjCurveKey *)(*(u8 **)(seq + 0x98) +
+                                                *(s16 *)(seq + 0x9e) * 8),
+                                *(s16 *)(seq + 0xc4) & 0xfff, frame);
+                        }
+                    }
+                } else {
+                    val = lbl_803DEFB0;
+                }
+                vec[0] = (s16)(*(s16 *)(seq + 0x116) + (int)(lbl_803DF03C * val));
+
+                if (*(s16 *)(seq + 0xc6) != 0) {
+                    if (*(void **)(seq + 0x98) == NULL) {
+                        val = lbl_803DEFB0;
+                    } else {
+                        val = lbl_803DEFB0;
+                        if (*(s16 *)(seq + 0xc6) != 0) {
+                            val = objCurveInterpolate(
+                                (ObjCurveKey *)(*(u8 **)(seq + 0x98) +
+                                                *(s16 *)(seq + 0xa0) * 8),
+                                *(s16 *)(seq + 0xc6) & 0xfff, frame);
+                        }
+                    }
+                } else {
+                    val = lbl_803DEFB0;
+                }
+                vec[1] = (s16)(*(s16 *)(seq + 0x114) + (int)(lbl_803DF03C * val));
+
+                if (*(s16 *)(seq + 0xc2) != 0) {
+                    if (*(void **)(seq + 0x98) == NULL) {
+                        val = lbl_803DEFB0;
+                    } else {
+                        val = lbl_803DEFB0;
+                        if (*(s16 *)(seq + 0xc2) != 0) {
+                            val = objCurveInterpolate(
+                                (ObjCurveKey *)(*(u8 **)(seq + 0x98) +
+                                                *(s16 *)(seq + 0x9c) * 8),
+                                *(s16 *)(seq + 0xc2) & 0xfff, frame);
+                        }
+                    }
+                } else {
+                    val = lbl_803DEFB0;
+                }
+                vec[2] = (int)(lbl_803DF03C * val);
+
+                if ((*(s16 *)(seq + 0x6e) & 0x400) != 0) {
+                    slots = ((SeqByte136 *)(seq + 0x136))->modelSlot;
+                    modelIds = seqFn_800394a0();
+                    if (slots == 0) {
+                        slots = 9;
+                    }
+                    if (vec != NULL) {
+                        for (k = 1; k < slots; k++) {
+                            vec2 = objModelGetVecFn_800395d8(seqObj, modelIds[k]);
+                            if (vec2 != NULL) {
+                                vec2[1] = vec[1];
+                                vec2[0] = vec[0];
+                                vec2[2] = vec[2];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if ((*(s16 *)(seq + 0x6e) & 0x200) != 0) {
+            vec = objModelGetVecFn_800395d8(seqObj, 1);
+            if (vec != NULL) {
+                if (*(s16 *)(seq + 0xe4) != 0) {
+                    if (*(void **)(seq + 0x98) == NULL) {
+                        val = lbl_803DEFB0;
+                    } else {
+                        val = lbl_803DEFB0;
+                        if (*(s16 *)(seq + 0xe4) != 0) {
+                            val = objCurveInterpolate(
+                                (ObjCurveKey *)(*(u8 **)(seq + 0x98) +
+                                                *(s16 *)(seq + 0xbe) * 8),
+                                *(s16 *)(seq + 0xe4) & 0xfff, frame);
+                        }
+                    }
+                } else {
+                    val = lbl_803DEFB0;
+                }
+                vec[0] = (int)(lbl_803DF03C * val);
+            }
+        }
+
+        if ((*(s16 *)(seq + 0x6e) & 0x40) != 0) {
+            tex1 = (u8 *)objFindTexture((int)seqObj, 1, 0);
+            tex2 = (u8 *)objFindTexture((int)seqObj, 0, 0);
+            if (tex1 != NULL || tex2 != NULL) {
+                if (*(s16 *)(seq + 0xe0) != 0) {
+                    if (*(void **)(seq + 0x98) == NULL) {
+                        val = lbl_803DEFB0;
+                    } else {
+                        val = lbl_803DEFB0;
+                        if (*(s16 *)(seq + 0xe0) != 0) {
+                            val = objCurveInterpolate(
+                                (ObjCurveKey *)(*(u8 **)(seq + 0x98) +
+                                                *(s16 *)(seq + 0xba) * 8),
+                                *(s16 *)(seq + 0xe0) & 0xfff, frame);
+                        }
+                    }
+                } else {
+                    val = lbl_803DEFB0;
+                }
+                scroll = (int)(lbl_803DF004 * val);
+                if (tex1 != NULL) {
+                    *(s16 *)(tex1 + 8) = scroll;
+                }
+                if (tex2 != NULL) {
+                    *(s16 *)(tex2 + 8) = (s16)-scroll;
+                }
+
+                if (*(s16 *)(seq + 0xe2) != 0) {
+                    if (*(void **)(seq + 0x98) == NULL) {
+                        val = lbl_803DEFB0;
+                    } else {
+                        val = lbl_803DEFB0;
+                        if (*(s16 *)(seq + 0xe2) != 0) {
+                            val = objCurveInterpolate(
+                                (ObjCurveKey *)(*(u8 **)(seq + 0x98) +
+                                                *(s16 *)(seq + 0xbc) * 8),
+                                *(s16 *)(seq + 0xe2) & 0xfff, frame);
+                        }
+                    }
+                } else {
+                    val = lbl_803DEFB0;
+                }
+                scroll = (s16)-(int)(lbl_803DF004 * val);
+                if (tex1 != NULL) {
+                    *(s16 *)(tex1 + 0xa) = scroll;
+                }
+                if (tex2 != NULL) {
+                    *(s16 *)(tex2 + 0xa) = scroll;
+                }
+            }
+
+            tex5 = (u8 *)objFindTexture((int)seqObj, 5, 0);
+            tex2 = (u8 *)objFindTexture((int)seqObj, 4, 0);
+            if (tex5 != NULL) {
+                *(int *)tex5 = (s16)seq[0x8d] << 8;
+            }
+            if (tex2 != NULL) {
+                *(int *)tex2 = (s16)seq[0x8e] << 8;
+            }
+        }
+    } else {
+        lbl_803DD120 = lbl_803DEFB0;
+        lbl_803DD11C = lbl_803DEFB0;
+        lbl_803DD118 = lbl_803DEFB0;
+        lbl_803DD116 = 0;
+        lbl_803DD114 = 1;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+int objSeqInterpFn_80085358(u8 *obj, u8 *action, u8 **cmdPtr, int flags, void *out)
+{
+    u8 *base = lbl_80396918;
+    u8 *cmd;
+    u8 *model;
+    u8 *seq;
+    u8 *activeObj;
+    u8 *animState;
+    u8 *act2;
+    u8 *st2;
+    u8 *entry;
+    s8 noExec;
+    int doUpdate;
+    s8 flag8;
+    int opcode;
+    int sub;
+    int restart;
+    int reps;
+    int val;
+    int slot;
+    int minRot;
+    f32 blend;
+    f32 t;
+
+    (void)out;
+
+    cmd = *cmdPtr;
+    noExec = (s8)(flags & 1);
+    doUpdate = (s8)(flags & 2);
+    flag8 = (s8)(flags & 8);
+    if (noExec == 0) {
+        doUpdate = 1;
+    }
+    seq = *(u8 **)(obj + 0xb8);
+    model = *(u8 **)(obj + 0x4c);
+    activeObj = *(u8 **)seq;
+    if (activeObj == NULL) {
+        activeObj = obj;
+    }
+
+    opcode = (s8)cmd[0];
+    switch (opcode) {
+    case 2:
+        if (flag8 != 0) {
+            break;
+        }
+        *(s16 *)(seq + 0x6c) = (s16)(*(s16 *)(cmd + 2) & 0xfff);
+        if (*(s16 *)(activeObj + 0x44) == 1 && *(s16 *)(seq + 0x6c) < 4) {
+            *(s16 *)(seq + 0x6c) += 0x531;
+        }
+        seq[0x8c] = (*(s16 *)(cmd + 2) >> 8) & 0xf0;
+        if (action == NULL) {
+            break;
+        }
+        animState = *(u8 **)(action + 0x2c);
+        if (*(s16 *)(activeObj + 0xa0) == *(s16 *)(seq + 0x6c)) {
+            if ((s8)animState[0x60] == 0) {
+                restart = 1;
+            } else {
+                restart = 0;
+            }
+        } else {
+            restart = 1;
+        }
+        if (doUpdate == 0) {
+            break;
+        }
+        if (restart == 0) {
+            break;
+        }
+        if ((*(s16 *)(seq + 0x6e) & 4) == 0) {
+            break;
+        }
+        if (action == NULL) {
+            break;
+        }
+        *(f32 *)(animState + 4) = *(f32 *)(activeObj + 0x98) * *(f32 *)(animState + 0x14);
+        if (*(s16 *)(seq + 0xd6) != 0) {
+            sub = *(s16 *)(seq + 0x58) - 1;
+            if (*(void **)(seq + 0x98) != NULL && *(s16 *)(seq + 0xd6) != 0) {
+                objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb0) * 8),
+                    *(s16 *)(seq + 0xd6) & 0xfff, sub);
+            }
+        }
+        if (*(s16 *)(activeObj + 0x44) == 1) {
+            act2 = *(u8 **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+            animState = *(u8 **)(act2 + 0x2c);
+            *(s16 *)(animState + 0x64) = -1;
+            *(s16 *)(animState + 0x5a) = 0;
+            *(s16 *)(animState + 0x5c) = 0;
+            st2 = *(u8 **)(act2 + 0x30);
+            if (st2 != NULL) {
+                *(s16 *)(st2 + 0x64) = -1;
+                *(s16 *)(st2 + 0x58) = 0;
+                *(s16 *)(st2 + 0x5a) = 0;
+                *(s16 *)(st2 + 0x5c) = 0;
+            }
+        }
+        *(f32 *)(seq + 0x20) = lbl_803DEFC8;
+        ObjAnim_SetCurrentMove(activeObj, *(s16 *)(seq + 0x6c), 0,
+                               (f32)seq[0x8c] * lbl_803DF02C);
+        break;
+    case 1:
+        if (flag8 != 0) {
+            break;
+        }
+        if ((s8)seq[0x7b] != 0 && (s8)base[(s8)seq[0x57] + 0x3a40] != 0) {
+            seq[0x78] = 0;
+            break;
+        }
+        seq[0x78] = (s8)(1 - seq[0x78]);
+        break;
+    case 7:
+        seq[0x7a] = (s8)(1 - seq[0x7a]);
+        break;
+    case 3:
+        if (flag8 != 0) {
+            break;
+        }
+        if ((flags & 4) != 0) {
+            break;
+        }
+        activeObj = objSeqCmd3(obj, seq, model);
+        *(s16 *)(activeObj + 0xa2) = -1;
+        break;
+    case 0xb:
+        if (doUpdate != 0 && *(s16 *)(cmd + 2) > 0 && lbl_803DD0C0 < 0x14) {
+            entry = base + lbl_803DD0C0 * 8;
+            *(u8 **)(entry + 0x2b34) = cmd + 4;
+            *(s16 *)(entry + 0x2b3a) = *(s16 *)(seq + 0x58);
+            reps = *(s16 *)(cmd + 2);
+            lbl_803DD0C0 = lbl_803DD0C0 + 1;
+            *(s16 *)(entry + 0x2b38) = reps;
+        }
+        *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + *(s16 *)(cmd + 2);
+        break;
+    case 4:
+        if (flag8 != 0) {
+            break;
+        }
+        if (doUpdate == 0) {
+            break;
+        }
+        if (action == NULL) {
+            break;
+        }
+        if (*(u8 *)(*(u8 **)action + 0xf9) == 0) {
+            break;
+        }
+        blend = (f32)(int)((*(s16 *)(cmd + 2) >> 8) & 0xff);
+        if (lbl_803DEFB0 == blend) {
+            t = lbl_803DEFC8;
+        } else {
+            t = lbl_803DEFC8 / blend;
+        }
+        sub = *(s16 *)(cmd + 2) & 0xff;
+        if (sub < 0xf) {
+            ObjModel_SetBlendChannelTargets(action, 2,
+                                            (s8)(*(u8 **)(action + 0x28))[0x2d], sub - 1, 0,
+                                            t);
+        } else {
+            ObjModel_SetBlendChannelTargets(action, 0,
+                                            (s8)(*(u8 **)(action + 0x28))[0xd], sub - 1, 0,
+                                            t);
+        }
+        break;
+    case 0xe:
+        if (flag8 != 0) {
+            break;
+        }
+        (*(void (*)(int, int, int, int))(*(int *)(*gGameUIInterface + 0x38)))(
+            *(s16 *)(cmd + 2), 0x14, 0x8c, 0);
+        break;
+    case 0xd:
+        if (noExec != 0) {
+            break;
+        }
+        if (((*(s16 *)(cmd + 2) >> 12) & 0xf) == 8) {
+            break;
+        }
+        if ((s8)lbl_803DD113 < 10) {
+            entry = base + (s8)lbl_803DD113 * 8;
+            *(u8 **)(entry + 0x3ca4) = activeObj;
+            *(s8 *)(entry + 0x3caa) = (s8)((*(s16 *)(cmd + 2) >> 12) & 0xf);
+            if ((s8)*(entry + 0x3caa) == 0xb || (s8)*(entry + 0x3caa) == 0xc) {
+                val = *(s16 *)(cmd + 6);
+                slot = (s8)lbl_803DD113;
+                lbl_803DD113 = lbl_803DD113 + 1;
+                *(s16 *)(base + slot * 8 + 0x3ca8) = val;
+            } else {
+                val = (s16)(*(s16 *)(cmd + 2) & 0xfff);
+                lbl_803DD113 = lbl_803DD113 + 1;
+                *(s16 *)(entry + 0x3ca8) = val;
+            }
+        }
+        break;
+    case 0:
+        break;
+    }
+
+    if (noExec != 0) {
+        return 0;
+    }
+
+    if ((s8)lbl_803DD112 != 0 || (s8)lbl_803DD111 != 0) {
+        if ((s8)cmd[0] == 0xd) {
+            switch ((*(s16 *)(cmd + 2) >> 12) & 0xf) {
+            case 2:
+                getEnvfxAct(activeObj, activeObj, *(s16 *)(cmd + 2) & 0xfff, 0);
+                break;
+            case 6:
+                warpToMap(*(s16 *)(cmd + 2) & 0xfff, 0);
+                break;
+            case 5:
+                break;
+            }
+        }
+        return 0;
+    }
+
+    switch ((s8)cmd[0]) {
+    case 6:
+        if (flag8 != 0) {
+            break;
+        }
+        if ((base[(s8)seq[0x57] + 0x3538] & 0x10) == 0) {
+            break;
+        }
+        if ((s8)base[(s8)seq[0x57] + 0x3c4c] == 3) {
+            break;
+        }
+        if (((*(s16 *)(cmd + 2) >> 12) & 0xf) != 0xf) {
+            Sfx_PlayFromObject(obj, (u16)(*(s16 *)(cmd + 2) & 0xfff));
+        } else {
+            Sfx_PlayFromObject(obj, (u16)(*(s16 *)(cmd + 2) & 0xfff));
+            *(s16 *)(seq + 0x36) = -1;
+            *(s16 *)(seq + 0x3e) = (s16)(*(s16 *)(cmd + 2) & 0xfff);
+        }
+        break;
+    case 0xd:
+        switch ((*(s16 *)(cmd + 2) >> 12) & 0xf) {
+        case 0:
+            if ((base[(s8)seq[0x57] + 0x3538] & 0x10) != 0) {
+                val = (*(s16 *)(cmd + 2) & 0xfff) + 1;
+                if (val == 0xd9 || val == 0x92) {
+                    Music_Trigger(val, 1);
+                }
+            }
+            break;
+        case 2:
+            getEnvfxAct(activeObj, activeObj, *(s16 *)(cmd + 2) & 0xfff, 0);
+            break;
+        case 6:
+            if (flag8 != 0) {
+                break;
+            }
+            warpToMap(*(s16 *)(cmd + 2) & 0xfff, 0);
+            break;
+        case 7:
+            break;
+        case 8:
+            if (flag8 != 0) {
+                break;
+            }
+            seq[0x8d] = (u8)(*(s16 *)(cmd + 2) & 0xfff);
+            seq[0x8e] = seq[0x8d];
+            break;
+        case 0xe:
+            if (flag8 != 0) {
+                break;
+            }
+            seq[0x8d] = (u8)(*(s16 *)(cmd + 2) & 0xfff);
+            break;
+        case 0xf:
+            if (flag8 != 0) {
+                break;
+            }
+            seq[0x8e] = (u8)(*(s16 *)(cmd + 2) & 0xfff);
+            break;
+        }
+        break;
+    case 0xf:
+        if (flag8 != 0) {
+            break;
+        }
+        if ((base[(s8)seq[0x57] + 0x3538] & 0x10) == 0) {
+            break;
+        }
+        if ((s8)base[(s8)seq[0x57] + 0x3c4c] == 3) {
+            break;
+        }
+        if (((*(s16 *)(cmd + 2) >> 12) & 0xf) != 0xf) {
+            minRot = 0x7fff;
+            slot = 0;
+            if (*(s16 *)(seq + 0x30) < 0x7fff) {
+                slot = 0;
+                minRot = *(s16 *)(seq + 0x30);
+            }
+            if (*(s16 *)(seq + 0x32) < (s16)minRot) {
+                slot = 1;
+                minRot = *(s16 *)(seq + 0x32);
+            }
+            if (*(s16 *)(seq + 0x34) < (s16)minRot) {
+                slot = 2;
+            }
+        } else {
+            slot = 3;
+        }
+        entry = seq + slot * 2;
+        if (*(s16 *)(entry + 0x30) > 0) {
+            Sfx_RemoveLoopedObjectSound(obj, (u16)*(s16 *)(entry + 0x38));
+        }
+        cmd[1] = cmd[5];
+        cmd[4] = 0x63;
+        *(s16 *)(entry + 0x30) = *(s16 *)(cmd + 6);
+        *(s16 *)(seq + slot * 2 + 0x38) = (s16)(*(s16 *)(cmd + 2) & 0xfff);
+        Sfx_AddLoopedObjectSound(obj, (u16)*(s16 *)(seq + slot * 2 + 0x38));
+        break;
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+int ObjSeq_update(u8 *obj, f32 t)
+{
+    u8 *base = lbl_80396918;
+    u8 *activeObj;
+    u8 *action;
+    u8 *cmd;
+    f32 scratch[2];
+    u8 *model;
+    u8 *seq;
+    u8 *p;
+    u8 *entry;
+    int runs;
+    int step;
+    int slot;
+    int i;
+    int k;
+    int stop;
+    int opcode;
+    int found;
+    int pressed;
+    int targetFrame;
+    int restart;
+    int aInt;
+    f32 val;
+    f32 rate;
+    f32 fval;
+    f32 prevX;
+    f32 prevZ;
+    f32 px;
+    f32 pz;
+    int (*cb)(void *, u8 *);
+
+    (void)t;
+
+    runs = 0;
+    step = lbl_803DB411;
+    model = *(u8 **)(obj + 0x4c);
+    if (model == NULL) {
+        return 1;
+    }
+
+    seq = *(u8 **)(obj + 0xb8);
+    if ((seq[0x7f] & 2) != 0) {
+        setJoypadDisabled();
+    }
+    activeObj = *(u8 **)seq;
+    lbl_803DD0DA = 0;
+    lbl_803DD114 = 0;
+    lbl_803DD112 = 0;
+    lbl_803DD111 = 0;
+
+    if (seq[0x7e] == 3) {
+        if (*(void **)seq != NULL) {
+            *(void **)(activeObj + 0xc0) = obj;
+            *(u16 *)(activeObj + 0xb0) |= 0x1000;
+        }
+        return 0;
+    }
+
+    slot = (s8)seq[0x57];
+    if (base[slot + 0x338c] == 1) {
+        *(s16 *)(seq + 0x58) = *(s16 *)(base + slot * 2 + 0x3694);
+        *(s16 *)(seq + 0x5a) = *(s16 *)(seq + 0x58);
+        ObjSeq_RefreshActionCursor(obj, activeObj, seq);
+    } else {
+        *(s16 *)(seq + 0x58) = (int)*(f32 *)(base + slot * 4 + 0x3894);
+    }
+
+    p = seq + 6;
+    for (i = 3; i != 0; i--) {
+        p -= 2;
+        if (*(s16 *)(p + 0x30) > 0) {
+            *(s16 *)(p + 0x30) = *(s16 *)(p + 0x30) - framesThisStep;
+            if (*(s16 *)(p + 0x30) <= 0) {
+                *(s16 *)(p + 0x30) = 0;
+                Sfx_RemoveLoopedObjectSound(obj, (u16)*(s16 *)(p + 0x38));
+            }
+        }
+    }
+    base[(s8)seq[0x57] + 0x3cf4] = 0;
+
+    do {
+        lbl_803DD113 = 0;
+        if (seq[0x7e] == 0) {
+            obj[0x36] = 0;
+            return 1;
+        }
+
+        activeObj = obj;
+        if (*(void **)seq != NULL) {
+            activeObj = *(u8 **)seq;
+            *(void **)(activeObj + 0xc0) = obj;
+            *(u16 *)(activeObj + 0xb0) |= 0x1000;
+        } else if ((s8)seq[0x7b] == 0 && (s8)seq[0x56] < 4) {
+            *(s8 *)(seq + 0x56) = -1;
+        }
+
+        slot = (s8)seq[0x57];
+        if ((s8)base[slot + 0x3c4c] != 0 && (s8)base[slot + 0x39e8] != 0) {
+            *(s16 *)(seq + 0x58) = *(s16 *)(seq + 0x58) - (s8)base[slot + 0x39e8];
+            if (*(s16 *)(seq + 0x58) < 0) {
+                *(s16 *)(seq + 0x58) = 0;
+            }
+            *(s16 *)(seq + 0x5a) = (s16)(*(s16 *)(seq + 0x58) - 1);
+            objSeqUpdateCurves(obj, activeObj, seq, 1);
+        }
+
+        lbl_803DD0D8 = 0;
+        if (activeObj != obj) {
+            objCallSeqFn(activeObj, obj, seq, base[(s8)seq[0x57] + 0x3c4c]);
+            lbl_803DD0D8 = 1;
+        }
+
+        if ((seq[0x90] & 1) != 0) {
+            base[(s8)seq[0x57] + 0x3b9c] = 1;
+        }
+        if ((seq[0x90] & 2) != 0) {
+            base[(s8)seq[0x57] + 0x3b9c] = 0;
+        }
+        if ((seq[0x90] & 4) != 0) {
+            base[(s8)seq[0x57] + 0x3b44] = 1;
+        }
+        if ((seq[0x90] & 8) != 0) {
+            base[(s8)seq[0x57] + 0x3b44] = 0;
+        }
+        if ((seq[0x90] & 0x10) != 0) {
+            base[(s8)seq[0x57] + 0x3a40] = 1;
+        }
+        if ((seq[0x90] & 0x20) != 0) {
+            base[(s8)seq[0x57] + 0x3a40] = 0;
+        }
+
+        if (seq[0x7e] == 2) {
+            objSeqSetupFn_80085b34(obj, &activeObj, seq, model, (void **)&action);
+            return 0;
+        }
+
+        if ((s8)base[(s8)seq[0x57] + 0x3c4c] == 1) {
+            step = 0;
+        } else if ((s8)base[(s8)seq[0x57] + 0x3c4c] == 2) {
+            *(s16 *)(seq + 0x58) = *(s16 *)(seq + 0x5c);
+            lbl_803DD112 = 1;
+        } else if ((s8)base[(s8)seq[0x57] + 0x3c4c] == 3) {
+            found = objSeqFindConditional(seq, obj);
+            if (found > -1) {
+                base[(s8)seq[0x57] + 0x3cf4] = 1;
+                *(s16 *)(seq + 0x58) = (s16)found;
+                *(s16 *)(seq + 0x5a) = *(s16 *)(seq + 0x58);
+            }
+        }
+
+        if (*(void **)seq != NULL && *(s16 *)(*(u8 **)seq + 0xb4) != -1 &&
+            (base[(s8)seq[0x57] + 0x3538] & 0x10) == 0) {
+            (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x5c)))(0x41, 1);
+        }
+
+        slot = (s8)seq[0x57];
+        if (base[slot + 0x3590] != 0) {
+            *(s16 *)(seq + 0x1a) = *(s16 *)(base + slot * 2 + 0x35e8);
+        }
+
+        if ((s8)seq[0x7c] != 0) {
+            if (seqEvalCondition((s8)seq[0x7c] - 1, seq, (int)model) == 0) {
+                seq[0x7c] = 0;
+            } else {
+                *(f32 *)(base + (s8)seq[0x57] * 4 + 0x3740) = (f32)*(s16 *)(seq + 0x58);
+                return 0;
+            }
+        }
+
+        *(s16 *)(seq + 0x58) = (s16)(*(s16 *)(seq + 0x58) + step);
+        if (*(s16 *)(seq + 0x58) > *(s16 *)(seq + 0x5c)) {
+            *(s16 *)(seq + 0x58) = *(s16 *)(seq + 0x5c);
+        }
+        targetFrame = *(s16 *)(seq + 0x58);
+        objSeqUpdateMoreCurves(obj, activeObj, seq, targetFrame);
+        *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + *(f32 *)(seq + 4);
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + *(f32 *)(seq + 8);
+        *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + *(f32 *)(seq + 0xc);
+        *(u16 *)(obj + 4) = *(s16 *)(obj + 4) + *(s16 *)(seq + 0x18);
+        *(u16 *)(obj + 2) = *(s16 *)(obj + 2) + *(s16 *)(seq + 0x16);
+        *(u16 *)(obj + 0) = *(s16 *)(obj + 0) + *(s16 *)(seq + 0x14);
+
+        action = *(u8 **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+        lbl_803DD0C0 = 0;
+        if (action != NULL) {
+            if (*(void **)(seq + 0x98) == NULL) {
+                val = lbl_803DEFB0;
+            } else {
+                val = lbl_803DEFB0;
+                if (*(s16 *)(seq + 0xdc) != 0) {
+                    val = objCurveInterpolate(
+                        (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb6) * 8),
+                        *(s16 *)(seq + 0xdc) & 0xfff, *(s16 *)(seq + 0x5a));
+                }
+            }
+            prevX = *(f32 *)(model + 0x8) + val;
+            if (*(void **)(seq + 0x98) == NULL) {
+                val = lbl_803DEFB0;
+            } else {
+                val = lbl_803DEFB0;
+                if (*(s16 *)(seq + 0xd8) != 0) {
+                    val = objCurveInterpolate(
+                        (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb2) * 8),
+                        *(s16 *)(seq + 0xd8) & 0xfff, *(s16 *)(seq + 0x5a));
+                }
+            }
+            prevZ = *(f32 *)(model + 0x10) + val;
+        }
+        *(s16 *)(seq + 0x58) = *(s16 *)(seq + 0x5a);
+
+        while (*(s16 *)(seq + 0x58) < targetFrame) {
+            *(s16 *)(seq + 0x58) += 1;
+            if (*(void **)(seq + 0x98) == NULL) {
+                val = lbl_803DEFB0;
+            } else {
+                val = lbl_803DEFB0;
+                if (*(s16 *)(seq + 0xdc) != 0) {
+                    val = objCurveInterpolate(
+                        (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb6) * 8),
+                        *(s16 *)(seq + 0xdc) & 0xfff, *(s16 *)(seq + 0x58));
+                }
+            }
+            px = *(f32 *)(model + 0x8) + val;
+            if (*(void **)(seq + 0x98) == NULL) {
+                val = lbl_803DEFB0;
+            } else {
+                val = lbl_803DEFB0;
+                if (*(s16 *)(seq + 0xd8) != 0) {
+                    val = objCurveInterpolate(
+                        (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb2) * 8),
+                        *(s16 *)(seq + 0xd8) & 0xfff, *(s16 *)(seq + 0x58));
+                }
+            }
+            pz = *(f32 *)(model + 0x10) + val;
+
+            if (*(s16 *)(seq + 0x58) > 0 && (*(s16 *)(seq + 0x6e) & 4) != 0) {
+                if ((s8)seq[0x78] == 1 && (s8)seq[0x7b] == 0 && action != NULL) {
+                    if (ObjAnim_SampleRootCurvePhase(
+                            activeObj, &scratch[1],
+                            sqrtf((px - prevX) * (px - prevX) +
+                                  (pz - prevZ) * (pz - prevZ))) == 0) {
+                        i = *(s16 *)(seq + 0x58) - 1;
+                        if (*(void **)(seq + 0x98) == NULL) {
+                            val = lbl_803DEFB0;
+                        } else {
+                            val = lbl_803DEFB0;
+                            if (*(s16 *)(seq + 0xd4) != 0) {
+                                val = objCurveInterpolate(
+                                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) +
+                                                    *(s16 *)(seq + 0xae) * 8),
+                                    *(s16 *)(seq + 0xd4) & 0xfff, i);
+                            }
+                        }
+                        scratch[1] = lbl_803DF030 * val;
+                    }
+                } else {
+                    i = *(s16 *)(seq + 0x58) - 1;
+                    if (*(void **)(seq + 0x98) == NULL) {
+                        val = lbl_803DEFB0;
+                    } else {
+                        val = lbl_803DEFB0;
+                        if (*(s16 *)(seq + 0xd4) != 0) {
+                            val = objCurveInterpolate(
+                                (ObjCurveKey *)(*(u8 **)(seq + 0x98) +
+                                                *(s16 *)(seq + 0xae) * 8),
+                                *(s16 *)(seq + 0xd4) & 0xfff, i);
+                        }
+                    }
+                    scratch[1] = lbl_803DF030 * val;
+                }
+
+                if (action != NULL) {
+                    ObjAnim_AdvanceCurrentMove(activeObj, seq + 0xf0, scratch[1],
+                                               lbl_803DEFC8);
+                    if (*(f32 *)(seq + 0x20) > lbl_803DEFB0) {
+                        if (*(s16 *)(seq + 0xd6) != 0) {
+                            i = *(s16 *)(seq + 0x58) - 1;
+                            if (*(void **)(seq + 0x98) != NULL && *(s16 *)(seq + 0xd6) != 0) {
+                                rate = objCurveInterpolate(
+                                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) +
+                                                    *(s16 *)(seq + 0xb0) * 8),
+                                    *(s16 *)(seq + 0xd6) & 0xfff, i);
+                            }
+                        } else {
+                            rate = lbl_803DF034;
+                        }
+                        if (rate < lbl_803DEFC8) {
+                            rate = lbl_803DEFC8;
+                        }
+                        *(f32 *)(seq + 0x20) = *(f32 *)(seq + 0x20) - lbl_803DEFC8 / rate;
+                        if (*(f32 *)(seq + 0x20) < lbl_803DEFB0) {
+                            *(f32 *)(seq + 0x20) = lbl_803DEFB0;
+                        }
+                    }
+                } else {
+                    *(f32 *)(activeObj + 0x98) = *(f32 *)(activeObj + 0x98) + scratch[1];
+                    while (*(f32 *)(activeObj + 0x98) > lbl_803DEFC8) {
+                        *(f32 *)(activeObj + 0x98) =
+                            *(f32 *)(activeObj + 0x98) - lbl_803DEFC8;
+                    }
+                    while (*(f32 *)(activeObj + 0x98) < lbl_803DEFB0) {
+                        *(f32 *)(activeObj + 0x98) =
+                            *(f32 *)(activeObj + 0x98) + lbl_803DEFC8;
+                    }
+                }
+            }
+
+            prevX = px;
+            prevZ = pz;
+
+            stop = 0;
+            while (stop == 0 && *(s16 *)(seq + 0x66) < *(s16 *)(seq + 0x62)) {
+                cmd = *(u8 **)(seq + 0x94) + *(s16 *)(seq + 0x66) * 4;
+                opcode = (s8)cmd[0];
+                if (opcode == 0) {
+                    if (*(s16 *)(seq + 0x58) >= *(s16 *)(cmd + 2)) {
+                        *(s16 *)(seq + 0x68) = *(s16 *)(cmd + 2);
+                        *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + 1;
+                    } else {
+                        stop = 1;
+                    }
+                } else {
+                    if (*(s16 *)(seq + 0x58) >= *(s16 *)(seq + 0x68)) {
+                        if (opcode != 0xf) {
+                            *(s16 *)(seq + 0x68) = *(s16 *)(seq + 0x68) + cmd[1];
+                        }
+                        *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + 1;
+                        if (objSeqInterpFn_80085358(obj, action, &cmd, 0, 0) != 0) {
+                            targetFrame = *(s16 *)(seq + 0x58);
+                        }
+                        activeObj = *(u8 **)*(u8 **)(obj + 0xb8);
+                        if (activeObj == NULL) {
+                            activeObj = obj;
+                        }
+                        action = *(u8 **)(*(u8 **)(activeObj + 0x7c) +
+                                          (s8)activeObj[0xad] * 4);
+                    } else {
+                        stop = 1;
+                    }
+                }
+            }
+        }
+
+        for (k = 0; k < 10; k++) {
+            opcode = seq[k + 0x12c];
+            if (opcode == 0) {
+                continue;
+            }
+            switch (opcode) {
+            case 0x12:
+                if ((getButtonsJustPressed(0) & 0x100) != 0) {
+                    pressed = 1;
+                } else {
+                    pressed = 0;
+                }
+                break;
+            case 0x13:
+                if ((getButtonsJustPressed(0) & 0x200) != 0) {
+                    pressed = 1;
+                } else {
+                    pressed = 0;
+                }
+                break;
+            case 0x1a:
+                pressed = isTalkingToNpc() == 0;
+                break;
+            default:
+                cb = *(int (**)(void *, u8 *))(seq + 0xec);
+                if (cb != NULL) {
+                    pressed = cb(*(void **)(seq + 0x110), obj);
+                } else {
+                    pressed = 0;
+                }
+                break;
+            }
+            if (pressed != 0) {
+                base[(s8)seq[0x57] + 0x3cf4] = 1;
+                *(s16 *)(seq + 0x58) = *(s16 *)(seq + k * 2 + 0x118);
+                *(s16 *)(seq + 0x5a) = *(s16 *)(seq + 0x58);
+                seq[0x12c] = 0;
+                seq[0x12d] = 0;
+                seq[0x12e] = 0;
+                seq[0x12f] = 0;
+                seq[0x130] = 0;
+                seq[0x131] = 0;
+                seq[0x132] = 0;
+                seq[0x133] = 0;
+                seq[0x134] = 0;
+                seq[0x135] = 0;
+                break;
+            }
+        }
+
+        if ((s8)lbl_803DD0D8 == 0 && activeObj != obj) {
+            objCallSeqFn(activeObj, obj, seq, base[(s8)seq[0x57] + 0x3c4c]);
+        }
+
+        if (seq[0x90] != 0) {
+            restart = 0;
+            if ((seq[0x90] & 0x40) != 0) {
+                restart = 1;
+                seq[0x90] = seq[0x90] & ~0x40;
+                *(s16 *)(seq + 0x58) = (s16)*(int *)(seq + 0x74);
+                *(s16 *)(seq + 0x5a) = *(s16 *)(seq + 0x58);
+            }
+            seq[0x90] = 0;
+            base[(s8)seq[0x57] + 0x3cf4] = (s8)restart;
+        }
+
+        seq[0x8b] = 0;
+        seq[0x80] = 0;
+        if (action != NULL && (*(s16 *)(seq + 0x6e) & 4) != 0) {
+            *(s16 *)(*(u8 **)(action + 0x2c) + 0x58) =
+                (u16)(int)(SendMailData * *(f32 *)(seq + 0x20));
+        }
+        objAnimCurvFn_800849e8(obj, seq);
+        if ((s8)seq[0x7a] == 1 &&
+            hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                                 *(f32 *)(obj + 0x14), scratch, 0) == 0) {
+            *(f32 *)(obj + 0x10) =
+                *(f32 *)(obj + 0x10) +
+                ((*(f32 *)(obj + 0x10) - scratch[0]) - *(f32 *)(model + 0xc));
+        }
+        *(u16 *)obj = *(s16 *)obj + *(s16 *)(seq + 0x1a);
+        objAnimFn_8008718c(obj, activeObj, seq);
+        objSeqDoBgCmds0D(seq, activeObj, 0);
+
+        for (k = 0; k < lbl_803DD0C0; k++) {
+            entry = base + k * 8 + 0x2b34;
+            if (seqDoSubCmd0B(obj, activeObj, seq, *(u8 **)entry, *(s16 *)(entry + 6),
+                              *(s16 *)(entry + 4), 0, 0) != 0) {
+                k = lbl_803DD0C0;
+            }
+            activeObj = *(u8 **)*(u8 **)(obj + 0xb8);
+            if (activeObj == NULL) {
+                activeObj = obj;
+            }
+            action = *(u8 **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+        }
+
+        if (lbl_803DD070 != 0) {
+            lbl_803DD070 = seqStreamFn_8008023c(lbl_803DB720) == 0;
+        }
+        *(s16 *)(seq + 0x5a) = *(s16 *)(seq + 0x58);
+
+        if ((s8)lbl_803DD0DA != 0) {
+            activeObj = *(u8 **)*(u8 **)(obj + 0xb8);
+            if (activeObj == NULL) {
+                activeObj = obj;
+            }
+            action = *(u8 **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+            animatedObjFreeAndSavePlayerPos(obj, activeObj, seq);
+        } else {
+            slot = (s8)seq[0x57];
+            if ((s8)base[slot + 0x3cf4] != 0) {
+                *(s16 *)(base + slot * 2 + 0x3694) = *(s16 *)(seq + 0x58);
+                base[(s8)seq[0x57] + 0x338c] = 2;
+                *(f32 *)(base + (s8)seq[0x57] * 4 + 0x3740) = (f32)*(s16 *)(seq + 0x58);
+            }
+            slot = (s8)seq[0x57];
+            if (lbl_803DEFF0 == *(f32 *)(base + slot * 4 + 0x3740)) {
+                if (lbl_803DB724 == slot) {
+                    fval = lbl_803DD074;
+                    aInt = (int)fval;
+                    fval = fval - RecvDataLeng;
+                    lbl_803DD074 = fval;
+                    if (aInt != (int)fval) {
+                        step--;
+                        if (fval <= lbl_803DEFB0) {
+                            lbl_803DB724 = -1;
+                        }
+                    }
+                }
+                *(f32 *)(base + (s8)seq[0x57] * 4 + 0x3740) =
+                    (f32)step + *(f32 *)(base + (s8)seq[0x57] * 4 + 0x3894);
+            }
+        }
+
+        if ((s8)lbl_803DD0DA != 0) {
+            break;
+        }
+        if (*(s16 *)(seq + 0x58) >= *(s16 *)(seq + 0x5c)) {
+            break;
+        }
+    } while (runs-- != 0);
+
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
 void objSeqSetupFn_80085b34(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void **outAction)
 {
     u8 *activeObj;
@@ -1728,6 +3282,397 @@ int fn_80081964(void)
 {
     return 1;
 }
+
+typedef struct SeqRunRec {
+    s16 slot;
+    s16 flags;
+    s16 count;
+} SeqRunRec;
+
+typedef struct SeqRunTables {
+    u8 pad0[0x2a80];
+    SeqRunRec recs[0x1e];
+    u8 pad1[0x800];
+    u8 marks[0xb0];
+    int handles[0x55];
+    u8 cmdFlags[0x58];
+    u8 counts[0x58];
+    s16 headings[0x55];
+    u8 pad2[0xae];
+    f32 dists[0x55];
+    f32 frames[0x55];
+    u8 pad3[0xb0];
+    s16 modes[0x55];
+} SeqRunTables;
+
+#pragma peephole off
+#pragma scheduling off
+int objRunSeq(int seqIdx, u8 *obj, int flags)
+{
+    u8 *base;
+    u8 *walk2;
+    u8 *walk;
+    int packed;
+    u8 *mon;
+    int i;
+    int idx;
+    int count;
+    int first;
+    int bit;
+    int objId;
+    int slot;
+    u8 *hdr;
+    u8 *parent;
+    u8 *srcSeq;
+    u8 *setup;
+    u8 *seq;
+    int size;
+    s16 heading;
+    int camArg;
+    u8 *player;
+    int doCam;
+    u8 *newObj;
+    u8 *slotPtr;
+    u8 *buf;
+    u8 *blk;
+    u8 *p;
+    s16 *mapTbl;
+    int j;
+    int k;
+    int v;
+    int seqFlags;
+    int found;
+    int cur;
+    int n;
+    s16 val;
+    u32 objIdU;
+    u32 mapFlags;
+    u32 trackId;
+    f32 x;
+    f32 y;
+    f32 z;
+
+    base = lbl_80396918;
+    srcSeq = *(u8 **)(obj + 0x4c);
+    camArg = 0;
+    doCam = 0;
+    player = Obj_GetPlayerObject();
+
+    if (seqIdx == -1) {
+        return -1;
+    }
+    if (seqIdx < 0 || seqIdx >= *(u8 *)(*(u8 **)(obj + 0x50) + 0x5e)) {
+        return -1;
+    }
+
+    for (i = 0x19; i < 0x55; i++) {
+        if (*(s16 *)((base + i * 2) + 0x3a98) == 0) {
+            slot = i;
+            *(s16 *)((base + i * 2) + 0x3a98) = 1;
+            blk = base + i * 0x80;
+            for (j = 0; j < 16; j++) {
+                *(u8 **)blk = NULL;
+                blk += 8;
+            }
+            i = 0x56;
+        }
+    }
+    if (i == 0x55) {
+        return -1;
+    }
+
+    mapTbl = *(s16 **)(*(u8 **)(obj + 0x50) + 0x1c);
+    if (mapTbl != NULL) {
+        seqIdx = mapTbl[seqIdx];
+    }
+
+    cur = *(s16 *)(obj + 0xb4);
+    if (cur != -1 && lbl_803DD07C == NULL) {
+        endObjSequence(cur);
+    }
+
+    val = seqIdx + 1;
+    slotPtr = base + slot * 2;
+    slotPtr += 0x3a98;
+    *(s16 *)slotPtr = val;
+    lbl_803DB714 = -1;
+    lbl_803DB718 = -1;
+
+    mon = base + 0x3d4c;
+    walk = mon;
+    n = (s8)lbl_803DD124;
+    for (i = 0; i < n; i++) {
+        if (*(u8 **)walk == obj) {
+            found = 1;
+            goto checked;
+        }
+        walk += 8;
+    }
+    found = 0;
+checked:
+    if (found == 0) {
+        lbl_803DB714 = seqIdx;
+    }
+
+    hdr = mmAlloc(0x20, 0x11, 0);
+    getTabEntry(hdr, 0x3c, seqIdx * 2, 8);
+    first = *(s16 *)hdr;
+    count = *(s16 *)(hdr + 2) - first;
+    size = count << 3;
+    buf = mmAlloc(size, 0x11, 0);
+    getTabEntry(buf, 0x3b, first * 8, size);
+    mm_free(hdr);
+
+    if (lbl_803DD07C != NULL) {
+        obj = lbl_803DD07C;
+    }
+    *(s16 *)(obj + 0xb4) = slot;
+    parent = *(u8 **)(obj + 0x30);
+    x = *(f32 *)(obj + 0xc);
+    y = *(f32 *)(obj + 0x10);
+    z = *(f32 *)(obj + 0x14);
+    if (lbl_803DD0B4.active) {
+        parent = NULL;
+        x = *(f32 *)(obj + 0x18);
+        y = *(f32 *)(obj + 0x1c);
+        z = *(f32 *)(obj + 0x20);
+    }
+    heading = *(s16 *)obj;
+    if (lbl_803DD078 != 0) {
+        x -= *(f32 *)(obj + 8) *
+             (*(f32 *)(obj + 0xa8) * fn_80293E80((lbl_803DEFE8 * (f32)*(s16 *)obj) / lbl_803DEFEC));
+        z -= *(f32 *)(obj + 8) *
+             (*(f32 *)(obj + 0xa8) * sin((lbl_803DEFE8 * (f32)*(s16 *)obj) / lbl_803DEFEC));
+    }
+
+    i = 0;
+    base[*(s16 *)(obj + 0xb4) + 0x3538] = 0;
+    base[*(s16 *)(obj + 0xb4) + 0x3334] = 0;
+    lbl_8030ECF8[*(s16 *)(obj + 0xb4)] = 0;
+    ((SeqRunTables *)base)->handles[*(s16 *)(obj + 0xb4)] = *(s16 *)(obj + 0x46);
+
+    walk = buf;
+    bit = 1;
+    for (; i < count; i++) {
+        if ((flags & (bit << i)) && (*(u16 *)(walk + 4) & 0x4000)) {
+            objIdU = *(u16 *)(walk + 6);
+            if (objIdU == 0x1f || objIdU == 0) {
+                if (fn_80296C2C(Obj_GetPlayerObject()) == 0) {
+                    return -1;
+                }
+            }
+        }
+        walk += 8;
+    }
+
+    idx = 0;
+    walk2 = buf;
+    packed = ((seqIdx & 0x7ff) << 4) | 0x8000;
+    for (; idx < count; idx++) {
+        if (flags & (1 << idx)) {
+            setup = Obj_AllocObjectSetup(0x28, 6);
+            objId = *(u16 *)(walk2 + 6);
+            if (objId == 0x1f || objId == 0) {
+                u8 *pp = Obj_GetPlayerObject();
+                *(u16 *)(pp + 0xb0) |= 0x1000;
+            }
+            if (objId == 0xffff) {
+                *(s16 *)setup = 6;
+                *(s16 *)(setup + 0x1c) = *(s16 *)(obj + 0x46) + 4;
+                if (*(s16 *)(obj + 0x46) == 0x443 && lbl_803DB72C != -1) {
+                    *(s16 *)(setup + 0x1c) = lbl_803DB72C + 4;
+                }
+                *(u16 *)(walk2 + 4) |= 0x8000;
+            } else if (objId == 0xfffe) {
+                *(s16 *)setup = 0x1e;
+                *(s16 *)(setup + 0x1c) = 3;
+                curSeqNo = slot;
+            } else {
+                if (*(u16 *)(walk2 + 4) & 0x4000) {
+                    *(s16 *)setup = 6;
+                    if (objId == 0x443) {
+                        if (lbl_803DB72C != -1) {
+                            *(s16 *)(setup + 0x1c) = lbl_803DB72C + 4;
+                        } else {
+                            *(s16 *)(setup + 0x1c) = objId + 4;
+                        }
+                    } else {
+                        *(s16 *)(setup + 0x1c) = objId + 4;
+                    }
+                } else {
+                    *(s16 *)setup = objId;
+                    *(s16 *)(setup + 0x1c) = 0;
+                }
+            }
+            if (*(u16 *)(walk2 + 4) & 0x8000) {
+                setup[0x20] = 0;
+                setup[0x21] = 0;
+            } else {
+                setup[0x20] = 1;
+                setup[0x21] = 1;
+            }
+            if (idx == 0 && (*(u16 *)(walk2 + 4) & 0x1000) && player != NULL) {
+                fn_80297284(player);
+            }
+            *(s16 *)(setup + 0x18) = packed | (idx & 0xf);
+            *(s16 *)(setup + 0x1a) = -1;
+            if (idx != 0) {
+                if (lbl_803DD0D9 != 0 && *(s16 *)setup == 0x1e) {
+                    *(f32 *)(setup + 8) = x + *(f32 *)(base + 0x2bd4);
+                    *(f32 *)(setup + 0xc) = y + *(f32 *)(base + 0x2bd8);
+                    *(f32 *)(setup + 0x10) = z + *(f32 *)(base + 0x2bdc);
+                    lbl_803DD0D9 = 0;
+                } else {
+                    *(f32 *)(setup + 8) = x;
+                    *(f32 *)(setup + 0xc) = y;
+                    *(f32 *)(setup + 0x10) = z;
+                }
+            } else {
+                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+                *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
+                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+            }
+            *(s8 *)(setup + 0x1f) = (s8)slot;
+            setup[0x22] = 1;
+            setup[0x24] = (*(u16 *)(walk2 + 4) & 0xf00) >> 8;
+            setup[4] = 2;
+            setup[5] = 1;
+            if (srcSeq != NULL) {
+                setup[5] = setup[5] | (srcSeq[5] & 0x18);
+            }
+            if (*(s16 *)setup == 0x1e) {
+                setup[4] = 1;
+            }
+            if (*(s16 *)setup == 0x443 && lbl_803DB72C != -1) {
+                *(s16 *)setup = lbl_803DB72C;
+            }
+            newObj = Obj_SetupObject(setup, 5, -1, -1, parent);
+            *(s16 *)(newObj + 0xb4) = -2;
+            seq = *(u8 **)(newObj + 0xb8);
+            *(s16 *)(seq + 0x1a) = heading;
+            *(s16 *)(seq + 0x6e) = -1;
+            *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) & ~0x400;
+            seq[0x12c] = 0;
+            seq[0x12d] = 0;
+            seq[0x12e] = 0;
+            seq[0x12f] = 0;
+            if (*(u16 *)(walk2 + 4) & 1) {
+                *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) & ~1;
+            }
+            if (*(u16 *)(walk2 + 4) & 2) {
+                *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) & ~2;
+            }
+            if (*(u16 *)(walk2 + 4) & 4) {
+                *(s16 *)(seq + 0x1a) = 0;
+            }
+            if (*(u16 *)(walk2 + 4) & 8) {
+                *(s16 *)(seq + 0x6e) = *(s16 *)(seq + 0x6e) & ~0x100;
+            }
+            if (*(u16 *)(walk2 + 4) & 0x80) {
+                seq[0x7f] = seq[0x7f] | 4;
+            }
+            if (*(u16 *)(walk2 + 4) & 0x40) {
+                seq[0x7f] = seq[0x7f] | 2;
+            }
+            if (*(u16 *)(walk2 + 4) & 0x2000) {
+                if (idx == 0 && player != NULL) {
+                    fn_8029726C(player);
+                }
+                if (lbl_803DD064 == 0 || lbl_803DD064 == *(s16 *)(obj + 0xb4)) {
+                    lbl_803DD064 = *(s16 *)(obj + 0xb4);
+                    curSeqNo = slot;
+                }
+                seq[0x56] = 4;
+                if (camArg == 0) {
+                    camArg = (*(u16 *)(walk2 + 4) & 0xf00) >> 8;
+                }
+                doCam = 1;
+            } else {
+                *(s8 *)(seq + 0x56) = -1;
+            }
+            if ((objId == 0x1f || objId == 0) && (*(s16 *)(seq + 0x6e) & 1)) {
+                fn_80297254(player);
+            }
+            *(int *)(seq + 0x10c) = *(int *)walk2;
+            *(s16 *)(seq + 0x70) = *(s16 *)(seq + 0x6e);
+            if (idx == 0) {
+                ((SeqRunTables *)base)->cmdFlags[*(s16 *)(obj + 0xb4)] = *(u16 *)(walk2 + 4);
+                ((SeqRunTables *)base)->handles[*(s16 *)(obj + 0xb4)] =
+                    *(int *)(*(u8 **)(newObj + 0x4c) + 0x14);
+                mapFlags = *(u32 *)(*(u8 **)(obj + 0x50) + 0x44);
+                if ((mapFlags & 0x40) && !(mapFlags & 0x8000)) {
+                    parent = obj;
+                    z = y = x = lbl_803DEFB0;
+                    heading = 0;
+                }
+            }
+        }
+        walk2 += 8;
+    }
+
+    ((SeqRunTables *)base)->headings[*(s16 *)(obj + 0xb4)] = heading;
+    j = 0;
+    base[*(s16 *)(obj + 0xb4) + 0x3590] = 0;
+    base[*(s16 *)(obj + 0xb4) + 0x338c] = 0;
+    n = (s8)lbl_803DD124;
+    for (; j < n; j++) {
+        if (*(u8 **)mon == obj) {
+            seqFlags = *(int *)(base + j * 8 + 0x3d50);
+            lbl_803DD124 -= 1;
+            p = base + j * 8 + 0x3d4c;
+            for (k = 0; k < (s8)lbl_803DD124 - j; k++) {
+                v = *(int *)(p + 8);
+                *(int *)p = v;
+                *(int *)(p + 4) = v;
+                p += 8;
+            }
+            goto gotFlags;
+        }
+        mon += 8;
+    }
+    seqFlags = 0;
+gotFlags:
+    if (seqFlags != 0) {
+        base[*(s16 *)(obj + 0xb4) + 0x3538] |= 0x10;
+    } else {
+        lbl_803DD070 = 0;
+        trackId = (u32)(*(s16 *)slotPtr - 1) & 0x3fff;
+        lbl_803DD068 = trackId;
+        if (AudioStream_Play(trackId, streamCb_80080384) == 0) {
+            if (lbl_803DB714 != -1) {
+                gameTextLoadTaskText(lbl_803DB714);
+                lbl_803DB714 = -1;
+            }
+        } else {
+            lbl_803DB720 = slot;
+            lbl_803DB71C = lbl_803DB714;
+            lbl_803DB724 = -1;
+            lbl_803DD074 = lbl_803DEFB0;
+            lbl_803DB728 = -1;
+        }
+    }
+
+    ((SeqRunTables *)base)->dists[*(s16 *)(obj + 0xb4)] = (f32)seqFlags;
+    ((SeqRunTables *)base)->frames[*(s16 *)(obj + 0xb4)] = (f32)seqFlags;
+
+    if (slot >= 0 && slot < 0x55) {
+        if (lbl_803DD0BC < 0x1e) {
+            ((SeqRunTables *)base)->recs[lbl_803DD0BC].slot = slot;
+            ((SeqRunTables *)base)->recs[lbl_803DD0BC].count = count;
+            ((SeqRunTables *)base)->recs[lbl_803DD0BC++].flags = seqFlags;
+        }
+    }
+
+    if (doCam != 0) {
+        cameraFocusNpc(camArg, obj);
+    }
+    mm_free(buf);
+    lbl_803DD078 = 0;
+    lbl_803DD0B4.active = 0;
+    return slot;
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 #pragma peephole off
 #pragma scheduling off

@@ -3,8 +3,7 @@
 
 #include "ghidra_import.h"
 
-void dll_199_update(undefined8 param_1,double param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void dll_199_update(int obj);
 void dll_199_release(void);
 void dll_199_initialise(void);
 int dll_19A_getExtraSize(void);

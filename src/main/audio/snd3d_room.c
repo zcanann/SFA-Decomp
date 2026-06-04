@@ -20,29 +20,177 @@ extern void synthDeactivateStudio(u8 studio);
 extern void synthAddStudioInput(u8 studio, u8 *input);
 extern void synthRemoveStudioInput(u8 studio, u8 *input);
 
+typedef struct {
+    f32 vol[129];
+    f32 pan[4];
+    f32 pan_dpl2[4];
+    f32 end;
+} SalVolTab;
+
+extern SalVolTab lbl_8032FDB8;
+extern f32 voiceAdsrSustainTable[129];
+
+extern f32 lbl_803E7858;
+extern f32 lbl_803E785C;
+extern f32 lbl_803E7860;
+extern f32 lbl_803E7870;
+extern f32 lbl_803E7874;
+extern f32 lbl_803E7878;
+extern f32 lbl_803E787C;
+
+#pragma fp_contract off
+#define SAL_FMOD1(dst, x) \
+    if (__fabs(lbl_803E785C) > __fabs(x)) { \
+        dst = (x); \
+    } else { \
+        dst = (x) - lbl_803E785C * (f32)(s64)(u64)((x) / lbl_803E785C); \
+    }
+
 /*
- * salCalcVolumeMatrix - large pre-mix processing (~1944 instructions). Stubbed.
+ * salCalcVolumeMatrix
+ * EN v1.0 Address: 0x8027F2AC
+ * EN v1.0 Size: 1944b
  */
-#pragma dont_inline on
-void salCalcVolumeMatrix(undefined4 tableSelect, f32 *out, u32 auxA, undefined4 auxB,
-                         BOOL surround, BOOL auxMode, f32 a, f32 b, f32 c)
+void salCalcVolumeMatrix(u8 voltab_index, f32 *out, u32 pan, u32 span, u32 itd, u32 dpl2,
+                         f32 vol, f32 auxa, f32 auxb)
 {
-    (void)tableSelect;
-    (void)out;
-    (void)auxA;
-    (void)auxB;
-    (void)surround;
-    (void)auxMode;
-    (void)a;
-    (void)b;
-    (void)c;
+    SalVolTab *tabs;
+    f32 *vol_tab;
+    f32 p, sp, t;
+    f32 pan_f, pan_fm, span_f, span_fm;
+    u32 pan_i, pan_im, span_i, span_im;
+    f32 rpan_f, rpan_fm;
+    u32 rpan_i, rpan_im;
+    u32 pan2, span2;
+    u32 i;
+    f32 v, f, vs, ftmp, one_;
+    f32 om_span_f, om_span_fm, om_pan_f, om_pan_fm;
+    f32 *pan1;
+
+    tabs = &lbl_8032FDB8;
+    if (voltab_index == 0) {
+        vol_tab = tabs->vol;
+    }
+    else {
+        vol_tab = voiceAdsrSustainTable;
+    }
+
+    if (pan == 0x800000) {
+        pan = 0;
+        span = 0x7f0000;
+    }
+
+    if (pan <= 0x10000) {
+        pan2 = 0;
+    }
+    else {
+        pan2 = pan - 0x10000;
+    }
+    if (span <= 0x10000) {
+        span2 = 0;
+    }
+    else {
+        span2 = span - 0x10000;
+    }
+
+    p = lbl_803E7870 * (f32)pan2;
+    sp = lbl_803E7870 * (f32)span2;
+
+    if (dpl2 != 0) {
+        SAL_FMOD1(rpan_f, p);
+        rpan_i = (u32)p;
+        t = lbl_803E7874 - p;
+        SAL_FMOD1(rpan_fm, t);
+        rpan_im = (u32)t;
+    }
+
+    if (itd != 0) {
+        p = lbl_803E785C + lbl_803E7878 * (p - lbl_803E785C);
+    }
+
+    SAL_FMOD1(pan_f, p);
+    pan_i = (u32)p;
+    SAL_FMOD1(span_f, sp);
+    span_i = (u32)sp;
+    p = lbl_803E7874 - p;
+    sp = lbl_803E7874 - sp;
+    SAL_FMOD1(pan_fm, p);
+    pan_im = (u32)p;
+    SAL_FMOD1(span_fm, sp);
+    span_im = (u32)sp;
+
+    if (dpl2 == 0) {
+        ftmp = lbl_803E7858 * vol;
+        i = (u32)ftmp;
+        one_ = lbl_803E785C;
+        pan1 = tabs->pan + 1;
+        om_span_f = one_ - span_f;
+        v = ftmp - (f32)i;
+        om_span_fm = one_ - span_fm;
+        f = (one_ - v) * vol_tab[i] + v * vol_tab[i + 1];
+        om_pan_f = one_ - pan_f;
+        om_pan_fm = one_ - pan_fm;
+        out[2] = lbl_803E7860 * (f * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]));
+        f = f * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
+        out[1] = f * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
+        out[0] = f * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
+
+        ftmp = lbl_803E7858 * auxa;
+        i = (u32)ftmp;
+        v = ftmp - (f32)i;
+        v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
+        out[5] = lbl_803E7860 * (v * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]));
+        v = v * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
+        out[4] = v * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
+        out[3] = v * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
+
+        ftmp = lbl_803E7858 * auxb;
+        i = (u32)ftmp;
+        v = ftmp - (f32)i;
+        v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
+        out[8] = lbl_803E7860 * (v * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]));
+        v = v * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
+        out[7] = v * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
+        out[6] = v * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
+    }
+    else {
+        ftmp = lbl_803E7858 * vol;
+        i = (u32)ftmp;
+        one_ = lbl_803E785C;
+        pan1 = tabs->pan + 1;
+        om_span_f = one_ - span_f;
+        om_span_fm = one_ - span_fm;
+        v = ftmp - (f32)i;
+        om_pan_f = one_ - pan_f;
+        f = (one_ - v) * vol_tab[i] + v * vol_tab[i + 1];
+        om_pan_fm = one_ - pan_fm;
+        vs = f * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]);
+        f = f * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
+        out[1] = f * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
+        out[0] = f * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
+        out[7] = vs * ((one_ - rpan_f) * tabs->pan_dpl2[rpan_i] + rpan_f * pan1[rpan_i]);
+        out[6] = vs * ((one_ - rpan_fm) * tabs->pan_dpl2[rpan_im] + rpan_fm * pan1[rpan_im]);
+
+        ftmp = lbl_803E7858 * auxa;
+        i = (u32)ftmp;
+        v = ftmp - (f32)i;
+        v = (lbl_803E785C - v) * vol_tab[i] + v * vol_tab[i + 1];
+        out[5] = lbl_803E7860 * (v * (om_span_f * tabs->pan[span_i] + span_f * pan1[span_i]));
+        v = v * (om_span_fm * tabs->pan[span_im] + span_fm * pan1[span_im]);
+        out[4] = v * (om_pan_f * tabs->pan[pan_i] + pan_f * pan1[pan_i]);
+        out[3] = v * (om_pan_fm * tabs->pan[pan_im] + pan_fm * pan1[pan_im]);
+
+        out[2] = lbl_803E787C;
+        out[8] = lbl_803E787C;
+    }
 }
-#pragma dont_inline reset
+#pragma fp_contract reset
 
 /*
  * Update average squared distance from each active spatial entry to all
  * registered listeners.
  */
+#pragma fp_contract off
 #pragma dont_inline on
 void s3dUpdateRoomDistances(void)
 {
@@ -59,15 +207,14 @@ void s3dUpdateRoomDistances(void)
         for (entry = s3dRoomRoot; entry != NULL; entry = entry->next) {
             f32 distanceSq;
 
-            listener = s3dListenerRoot;
-            distanceSq = lbl_803E7880;
-            if (entry->assignedVoice != -1) {
-                for (; listener != NULL; listener = listener->next) {
+            if (entry->assignedVoice != 0xff) {
+                distanceSq = lbl_803E7880;
+                for (listener = s3dListenerRoot; listener != NULL; listener = listener->next) {
                     f32 dx = entry->posX - listener->posX;
                     f32 dy = entry->posY - listener->posY;
                     f32 dz = entry->posZ - listener->posZ;
 
-                    distanceSq = distanceSq + dz * dz + dx * dx + dy * dy;
+                    distanceSq += dz * dz + (dx * dx + dy * dy);
                 }
                 entry->averageDistanceSq = distanceSq / (f32)listenerCount;
             }
@@ -96,7 +243,7 @@ void s3dAllocateRoomStudios(void)
 
     if (listenerCount != 0) {
         for (entry = s3dRoomRoot; entry != NULL; entry = entry->next) {
-            if (entry->assignedVoice == -1) {
+            if (entry->assignedVoice == 0xff) {
                 SndSpatialEntry *evictedEntry;
                 u32 studioCount;
                 f32 distanceSq;
@@ -108,7 +255,7 @@ void s3dAllocateRoomStudios(void)
                     f32 dy = entry->posY - listener->posY;
                     f32 dz = entry->posZ - listener->posZ;
 
-                    distanceSq = distanceSq + dz * dz + dx * dx + dy * dy;
+                    distanceSq += dz * dz + (dx * dx + dy * dy);
                 }
                 listenerOwned = false;
                 distanceSq = distanceSq / (f32)listenerCount;
@@ -120,13 +267,23 @@ void s3dAllocateRoomStudios(void)
                 }
 
                 studioCount = snd_max_studios;
-                if (((1u << studioCount) - 1) == (((1u << studioCount) - 1) & snd_used_studios)) {
+                if (~(-1 << studioCount) != (~(-1 << studioCount) & snd_used_studios)) {
+                    int i;
+
+                    for (i = 0; i < studioCount; i++) {
+                        if ((snd_used_studios & (1 << i)) == 0) {
+                            break;
+                        }
+                    }
+                    snd_used_studios |= 1 << i;
+                    entry->assignedVoice = (u8)(i + snd_base_studio);
+                } else {
                     f32 worstDistance = lbl_803E7890;
                     Snd3DEmitter *voice;
                     SndSpatialEntry *scanEntry;
 
                     for (scanEntry = s3dRoomRoot; scanEntry != NULL; scanEntry = scanEntry->next) {
-                        if (scanEntry->assignedVoice != -1 &&
+                        if (scanEntry->assignedVoice != 0xff &&
                             worstDistance < scanEntry->averageDistanceSq) {
                             evictedEntry = scanEntry;
                             worstDistance = scanEntry->averageDistanceSq;
@@ -147,16 +304,8 @@ void s3dAllocateRoomStudios(void)
                     }
                     synthDeactivateStudio(evictedEntry->assignedVoice);
                     entry->assignedVoice = evictedEntry->assignedVoice;
-                    evictedEntry->assignedVoice = -1;
+                    evictedEntry->assignedVoice = 0xff;
                     evictedEntry->flags = 0;
-                } else {
-                    int i;
-
-                    for (i = 0; (studioCount != 0 && ((snd_used_studios & (1 << i)) != 0)); i++) {
-                        studioCount--;
-                    }
-                    snd_used_studios |= 1 << i;
-                    entry->assignedVoice = (s8)(i + snd_base_studio);
                 }
 
                 entry->averageDistanceSq = distanceSq;
@@ -165,10 +314,10 @@ void s3dAllocateRoomStudios(void)
                 } else {
                     entry->fade = 0;
                 }
-                if ((f32)(lbl_803E7894 * (f32)entry->fade) < lbl_803E7898) {
-                    synthActivateStudio(entry->assignedVoice, 0, 0);
-                } else {
+                if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898) {
                     synthActivateStudio(entry->assignedVoice, 1, 0);
+                } else {
+                    synthActivateStudio(entry->assignedVoice, 0, 0);
                 }
                 if (entry->activateCallback != NULL) {
                     entry->activateCallback(entry->assignedVoice, entry->callbackUser);
@@ -176,14 +325,14 @@ void s3dAllocateRoomStudios(void)
             } else {
                 if ((entry->flags & 0x80000000) != 0) {
                     entry->fade += 0x40000;
-                    if (entry->fade > 0x7effff) {
+                    if (entry->fade >= 0x7f0000) {
                         entry->fade = 0x7f0000;
                         entry->flags &= 0x7fffffff;
                     }
-                    if ((f32)(lbl_803E7894 * (f32)entry->fade) < lbl_803E7898) {
-                        synthActivateStudio(entry->assignedVoice, 0, 0);
-                    } else {
+                    if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898) {
                         synthActivateStudio(entry->assignedVoice, 1, 0);
+                    } else {
+                        synthActivateStudio(entry->assignedVoice, 0, 0);
                     }
                 }
                 if ((entry->flags & 0x40000000) != 0) {
@@ -192,10 +341,10 @@ void s3dAllocateRoomStudios(void)
                         entry->fade = 0;
                         entry->flags &= 0xbfffffff;
                     }
-                    if ((f32)(lbl_803E7894 * (f32)entry->fade) < lbl_803E7898) {
-                        synthActivateStudio(entry->assignedVoice, 0, 0);
-                    } else {
+                    if ((f32)(lbl_803E7894 * (f32)entry->fade) >= lbl_803E7898) {
                         synthActivateStudio(entry->assignedVoice, 1, 0);
+                    } else {
+                        synthActivateStudio(entry->assignedVoice, 0, 0);
                     }
                 }
             }
@@ -212,40 +361,48 @@ void s3dAllocateRoomStudios(void)
 void s3dUpdateDoorStudioInputs(void)
 {
     SndStudioInputLink *link;
+    f32 scale;
+    s32 v0, v1;
 
+    scale = lbl_803E78A0;
     for (link = s3dDoorRoot; link != NULL; link = link->next) {
         if ((link->flags & 0x80000000) == 0) {
-            if (link->source->assignedVoice != -1) {
-                if (link->target->assignedVoice != -1) {
-                    link->studioInput[1] = (s8)((f32)link->sendLevel * link->inputScale);
+            if (link->source->assignedVoice != 0xff) {
+                if (link->target->assignedVoice != 0xff) {
+                    v0 = (s32)(scale * link->inputScale);
+                    v1 = (s32)((f32)link->sendLevel * link->inputScale);
+                    link->studioInput[1] = v1;
                     link->studioInput[2] = 0;
-                    link->studioInput[0] = (s8)(lbl_803E78A0 * link->inputScale);
-                    if ((link->flags & 1) == 0) {
-                        link->studioInput[3] = link->source->assignedVoice;
-                        synthAddStudioInput(link->target->assignedVoice, link->studioInput);
-                    } else {
+                    link->studioInput[0] = v0;
+                    if ((link->flags & 1) != 0) {
                         link->studioInput[3] = link->target->assignedVoice;
                         synthAddStudioInput(link->source->assignedVoice, link->studioInput);
+                    } else {
+                        link->studioInput[3] = link->source->assignedVoice;
+                        synthAddStudioInput(link->target->assignedVoice, link->studioInput);
                     }
                     link->flags |= 0x80000000;
                 }
             }
         } else {
-            s8 sourceVoice = link->source->assignedVoice;
+            u8 sourceVoice = link->source->assignedVoice;
 
-            if (sourceVoice == -1 || link->target->assignedVoice == -1) {
-                if ((sourceVoice != -1 && sourceVoice == link->activeInput) ||
-                    (link->target->assignedVoice != -1 &&
+            if (sourceVoice == 0xff || link->target->assignedVoice == 0xff) {
+                if ((sourceVoice != 0xff && sourceVoice == link->activeInput) ||
+                    (link->target->assignedVoice != 0xff &&
                      link->target->assignedVoice == link->activeInput)) {
                     synthRemoveStudioInput(link->activeInput, link->studioInput);
                 }
                 link->flags &= 0x7fffffff;
             } else {
-                link->studioInput[1] = (s8)((f32)link->sendLevel * link->inputScale);
+                v0 = (s32)(scale * link->inputScale);
+                v1 = (s32)((f32)link->sendLevel * link->inputScale);
+                link->studioInput[1] = v1;
                 link->studioInput[2] = 0;
-                link->studioInput[0] = (s8)(lbl_803E78A0 * link->inputScale);
+                link->studioInput[0] = v0;
             }
         }
     }
 }
 #pragma dont_inline reset
+#pragma fp_contract reset

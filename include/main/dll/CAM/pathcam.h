@@ -23,7 +23,7 @@ typedef struct CamcontrolPathSampleWork {
   f32 worldZ[33];
 } CamcontrolPathSampleWork;
 
-void pathcam_loadSettings(undefined2 *param_1,int param_2,int param_3);
+void pathcam_loadSettings(u16 *cam, int mode, u8 *data);
 void camcontrol_releaseModeSettings(void);
 void camcontrol_initialiseModeSettings(void);
 void camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,undefined4 param_4,int param_5);

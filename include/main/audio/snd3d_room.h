@@ -4,8 +4,8 @@
 #include "ghidra_import.h"
 #include "main/audio/snd3d.h"
 
-void salCalcVolumeMatrix(undefined4 tableSelect, f32 *out, u32 auxA, undefined4 auxB,
-                         BOOL surround, BOOL auxMode, f32 a, f32 b, f32 c);
+void salCalcVolumeMatrix(u8 voltab_index, f32 *out, u32 pan, u32 span, u32 itd, u32 dpl2,
+                         f32 vol, f32 auxa, f32 auxb);
 void s3dUpdateRoomDistances(void);
 void s3dAllocateRoomStudios(void);
 void s3dUpdateDoorStudioInputs(void);

@@ -903,7 +903,7 @@ int fn_801E86F4(int obj, int p2, int p3)
   extern void ObjAnim_AdvanceCurrentMove(int obj, f32 a, f32 b, int x);
   extern void fn_801F4D54(int obj, int sub);
   extern void fn_801F4ECC(int obj, int sub);
-  extern f32 Curve_EvalBSpline(int p, int m, f32 t);
+  extern f32 Curve_EvalBSpline(int p, f32 t, int m);
   extern int getAngle(f32 a, f32 b);
   extern int *gPartfxInterface;
   extern f32 lbl_803E5A30;
@@ -919,32 +919,33 @@ int fn_801E86F4(int obj, int p2, int p3)
     ObjAnim_AdvanceCurrentMove(obj, lbl_803E5A60, timeDelta, 0);
   }
 
-  if (*(s16 *)(obj + 0x46) != 1127) return 0;
-
-  {
+  switch (*(s16 *)(obj + 0x46)) {
+  case 1127: {
     f32 t = *(f32 *)(sub + 0x40);
     if (t > lbl_803E5A30) {
       u32 v;
       *(f32 *)(sub + 0x40) = t - lbl_803E5A30;
       v = *(u8 *)(sub + 0x68);
-      if (v < 4) {
-        fn_801F4D54(obj, sub);
+      if (v >= 4) {
+        *(u8 *)(sub + 0x68) = v + 1;
       } else {
-        *(u8 *)(sub + 0x68) = (u8)(v + 1);
+        fn_801F4D54(obj, sub);
       }
       fn_801F4ECC(obj, sub);
     }
   }
   {
-    *(f32 *)(obj + 0xc) = Curve_EvalBSpline(sub + 4, 0, *(f32 *)(sub + 0x40));
-    *(f32 *)(obj + 0x10) = Curve_EvalBSpline(sub + 0x14, 0, *(f32 *)(sub + 0x40));
-    *(f32 *)(obj + 0x14) = Curve_EvalBSpline(sub + 0x24, 0, *(f32 *)(sub + 0x40));
+    *(f32 *)(obj + 0xc) = Curve_EvalBSpline(sub + 4, *(f32 *)(sub + 0x40), 0);
+    *(f32 *)(obj + 0x10) = Curve_EvalBSpline(sub + 0x14, *(f32 *)(sub + 0x40), 0);
+    *(f32 *)(obj + 0x14) = Curve_EvalBSpline(sub + 0x24, *(f32 *)(sub + 0x40), 0);
     *(f32 *)(sub + 0x40) = *(f32 *)(sub + 0x44) * timeDelta + *(f32 *)(sub + 0x40);
     *(s16 *)(obj + 0) = (s16)getAngle(
         *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
         *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
     (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 415, 0, 1, -1, 0);
     (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 416, 0, 1, -1, 0);
+  }
+  break;
   }
   return 0;
 }
@@ -1001,8 +1002,10 @@ extern int *gExpgfxInterface;
 #pragma peephole off
 void shopitem_free(int obj) {
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
-    if (*(s16 *)(obj + 0x46) == 0x468) {
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x468:
         ObjGroup_RemoveObject(obj, 0x4F);
+        break;
     }
 }
 #pragma peephole reset
@@ -1063,10 +1066,10 @@ extern f32 timeDelta;
 extern f32 lbl_803E59DC;
 extern void gameTextShow(int);
 extern u32 ObjGroup_FindNearestObject(int kind, int obj, f32 *out);
-extern u16 playerGetMoney(void *player);
+extern int playerGetMoney(void *player);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void dll_2E_func03(int, int);
-extern void shopKeeperRotateFn_801e7c4c(int, void *, int);
+extern f32 shopKeeperRotateFn_801e7c4c(s16 *obj, void *player, int mode);
 extern int *gPlayerInterface;
 
 typedef struct {
@@ -1098,15 +1101,15 @@ void shopkeeper_update(int obj) {
         }
     }
     if ((*(u8 *)(state + 0x9D4) & 0x04) != 0) {
-        shopKeeperRotateFn_801e7c4c(obj, player, 1);
+        shopKeeperRotateFn_801e7c4c((s16 *)obj, player, 1);
     }
     *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4);
     if (*(void **)(state + 0x9B4) == NULL) {
         *(int *)(state + 0x9B4) = ObjGroup_FindNearestObject(9, obj, &dist);
     }
     *(s16 *)(state + 0x9C8) = (s16)playerGetMoney(player);
-    ((void (*)(int, int, void *, void *, f32, f32))(*(int *)((int)*gPlayerInterface + 8)))
-        (obj, state, lbl_803AD068, &lbl_803DDC58, timeDelta, timeDelta);
+    ((void (*)(int, int, f32, f32, void *, void *))(*(int *)((int)*gPlayerInterface + 8)))
+        (obj, state, timeDelta, timeDelta, lbl_803AD068, &lbl_803DDC58);
     dll_2E_func03(obj, state + 0x35C);
     characterDoEyeAnims(obj, state + 0x980);
     *(u8 *)(obj + 0x36) = *(u8 *)(state + 0x9D6);
@@ -1118,7 +1121,7 @@ extern f32 lbl_803E59F0;
 extern f32 lbl_803E5A28;
 extern void *allocModelStruct_800139e8(int, int);
 extern void dll_2E_func05(int, int, int, int, int);
-extern void fn_801E76A0(int);
+extern int fn_801E76A0(int obj, int p2, u8 *data, s8 advance);
 extern void *Obj_GetActiveModel(int);
 extern void ObjModel_SetPostRenderCallback(void *, void *);
 extern void ObjGroup_AddObject(int, int);
@@ -1159,7 +1162,7 @@ void shopitem_init(int obj, int data) {
 void shopkeeper_init(int obj) {
     int state = *(int *)(obj + 0xB8);
     *(u16 *)(obj + 0xB0) |= 0x2000;
-    *(void (**)(int))(obj + 0xBC) = fn_801E76A0;
+    *(void (**)(int))(obj + 0xBC) = (void (*)(int))fn_801E76A0;
     *(u32 *)(*(int *)(obj + 0x64) + 0x30) |= 0x810;
     *(f32 *)(state + 0x9B8) = lbl_803E59F0 * (f32)(s32)randomGetRange(0xF, 0x23);
     *(void **)(state + 0x9B0) = allocModelStruct_800139e8(4, 4);
@@ -1195,6 +1198,395 @@ void fn_801E8660(int obj) {
         int *vptr2 = *(int **)(state + 0x90);
         int *cls2 = **(int ***)((char *)vptr2 + 0x68);
         (*(void (*)(int *, int))cls2[0x40 / 4])(vptr2, -1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E5A60;
+extern f32 lbl_803E5A64;
+extern f32 lbl_803E5A68;
+extern void ObjMsg_SendToObject(void *to, int msg, int obj, void *data);
+extern void forceAButtonIcon(int icon);
+extern void showHelpText(int textId);
+extern void buttonDisable(int a, int b);
+extern int *gObjectTriggerInterface;
+extern void objRenderFn_80041018(int obj);
+extern f32 Curve_EvalBSpline(int p, f32 t, int m);
+
+#pragma scheduling off
+#pragma peephole off
+void shopitem_update(int obj)
+{
+    int def = *(int *)(obj + 0x4C);
+    void *player = Obj_GetPlayerObject();
+    int state = *(int *)(obj + 0xB8);
+    f32 range = lbl_803E5A64;
+    PushcartState97 *b = (PushcartState97 *)(state + 0x97);
+    int money;
+    int price;
+
+    if (b->flag_40) {
+        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+        *(u16 *)(obj + 0xB0) = (u16)(*(u16 *)(obj + 0xB0) | 0x8000);
+        *(u8 *)(obj + 0xAF) |= 8;
+    } else if (b->flag_80) {
+        *(s16 *)(state + 0x88) = -1;
+        ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x7000A, obj, (void *)(state + 0x88));
+        b->flag_80 = 0;
+        b->flag_40 = 1;
+    } else {
+        if (*(u32 *)(state + 0x90) == 0) {
+            int item;
+            *(int *)(state + 0x90) = ObjGroup_FindNearestObject(9, obj, &range);
+            item = *(int *)(state + 0x90);
+            if ((u32)item != 0) {
+                if ((*(int (**)(int, int))((char *)**(int ***)(item + 0x68) + 0x28))(item, *(u8 *)(def + 0x19)) == 0
+                    || (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x2C))(*(int *)(state + 0x90), *(u8 *)(def + 0x19)) != 0) {
+                    b->flag_40 = 1;
+                    *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+                    *(u16 *)(obj + 0xB0) = (u16)(*(u16 *)(obj + 0xB0) | 0x8000);
+                    *(u8 *)(obj + 0xAF) |= 8;
+                }
+                *(s16 *)(state + 0x94) = (s16)(*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x3C))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
+            }
+        } else {
+            if (*(u8 *)(obj + 0xAF) & 4) {
+                forceAButtonIcon(0x12);
+                showHelpText(*(s16 *)(state + 0x94));
+            }
+            if (*(u8 *)(obj + 0xAF) & 1) {
+                money = playerGetMoney(player);
+                price = (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x38))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
+                (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x40))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
+                switch (*(s16 *)(obj + 0x46)) {
+                case 0x467:
+                    *(f32 *)(obj + 0x10) = lbl_803E5A68 + *(f32 *)(*(int *)(obj + 0x4C) + 0xC);
+                    break;
+                }
+                if (money >= price) {
+                    hudFn_8011f38c(3);
+                    (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+                } else {
+                    (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(1, obj, -1);
+                }
+                buttonDisable(0, 0x100);
+            }
+            switch (*(s16 *)(obj + 0x46)) {
+            case 0x467: {
+                f32 t = *(f32 *)(state + 0x40);
+                if (t > lbl_803E5A30) {
+                    u32 v;
+                    *(f32 *)(state + 0x40) = t - lbl_803E5A30;
+                    v = *(u8 *)(state + 0x68);
+                    if (v >= 4) {
+                        *(u8 *)(state + 0x68) = v + 1;
+                    } else {
+                        fn_801F4D54(obj, state);
+                    }
+                    fn_801F4ECC(obj, state);
+                }
+                *(f32 *)(obj + 0xC) = Curve_EvalBSpline(state + 4, *(f32 *)(state + 0x40), 0);
+                *(f32 *)(obj + 0x10) = Curve_EvalBSpline(state + 0x14, *(f32 *)(state + 0x40), 0);
+                *(f32 *)(obj + 0x14) = Curve_EvalBSpline(state + 0x24, *(f32 *)(state + 0x40), 0);
+                *(f32 *)(state + 0x40) = *(f32 *)(state + 0x44) * timeDelta + *(f32 *)(state + 0x40);
+                *(s16 *)(obj + 0) = (s16)getAngle(
+                    *(f32 *)(obj + 0xC) - *(f32 *)(obj + 0x80),
+                    *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+                (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 0x19F, 0, 1, -1, 0);
+                (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 0x1A0, 0, 1, -1, 0);
+                break;
+            }
+            }
+        }
+        if (*(s16 *)(obj + 0x46) != 0x464 && *(s16 *)(obj + 0x46) != 0x467) {
+            ObjAnim_AdvanceCurrentMove(obj, lbl_803E5A60, timeDelta, 0);
+        }
+        if ((*(u8 *)(obj + 0xAF) & 8) == 0) {
+            objRenderFn_80041018(obj);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E59D8;
+extern void DRlaserturret_startTimedChallenge(int);
+extern void DRlaserturret_handlePromptChoice(int);
+extern void setAButtonIcon(int icon);
+extern void setBButtonIcon(int icon);
+extern void warpToMap(int mapId, int flag);
+extern int getCurUiDll(void);
+extern int *getDLL16(void);
+extern void playerAddMoney(void *player, int amount);
+extern void *objFindTexture(int obj, int target, int p3);
+extern int *gScreenTransitionInterface;
+extern int dll_2E_func07(int obj, u8 *data, int p3, int p4, int p5);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
+{
+    int state;
+    int state2;
+    void *player;
+    int slot;
+    int i;
+    int digit;
+    int hundreds;
+    int *tex;
+    f32 range;
+    f32 speed;
+
+    state = state2 = *(int *)(obj + 0xB8);
+    player = Obj_GetPlayerObject();
+    range = lbl_803E59D8;
+    *(u8 *)(state + 0x9D4) &= ~0x20;
+    if (*(u8 *)(state + 0x9D4) & 0x10) {
+        if ((*(int (**)(void))(*(int *)gScreenTransitionInterface + 0x14))() != 0) {
+            (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 0xC))(0x1E, 1);
+            (*(void (**)(int))(*(int *)gObjectTriggerInterface + 0x4C))(*(s8 *)(data + 0x57));
+        }
+        return 0;
+    }
+    if (dll_2E_func07(obj, data, state + 0x35C, 0, 0) != 0) {
+        return 1;
+    }
+    *(void (**)(int))(data + 0xE8) = DRlaserturret_startTimedChallenge;
+    *(s16 *)(data + 0x6E) = (s16)(*(s16 *)(data + 0x6E) & ~0x20);
+    speed = lbl_803E59DC;
+    *(f32 *)(state2 + 0x280) = speed;
+    *(u8 *)(state + 0x9D4) |= 4;
+    if (advance != 0) {
+        ObjAnim_AdvanceCurrentMove(obj, speed, timeDelta, 0);
+    }
+    if (*(s16 *)(obj + 0xB4) == -1) {
+        if (*(s8 *)(data + 0x56) != 0) {
+            slot = (*(int (**)(int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x44))(*(int *)(state + 0x9B4));
+            if (slot != -1) {
+                *(s16 *)(state + 0x9CC) = (s16)(*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x38))(*(int *)(state + 0x9B4), slot);
+                *(s16 *)(state + 0x9CE) = (s16)(*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x30))(*(int *)(state + 0x9B4), slot);
+                *(s16 *)(state + 0x9D0) = *(s16 *)(state + 0x9CC);
+                *(u8 *)(state + 0x9D2) = 0;
+                digit = *(s16 *)(state + 0x9CC);
+                tex = (int *)objFindTexture(obj, 8, 0);
+                *tex = (digit % 10) * 0x100;
+                tex = (int *)objFindTexture(obj, 7, 0);
+                *tex = ((digit / 10) % 10) * 0x100;
+                hundreds = digit / 100;
+                if (hundreds > 9) {
+                    hundreds = 9;
+                }
+                tex = (int *)objFindTexture(obj, 6, 0);
+                *tex = hundreds << 8;
+            }
+            *(u8 *)(data + 0x56) = 0;
+            *(void (**)(int))(data + 0xEC) = DRlaserturret_handlePromptChoice;
+        }
+        if ((*(int (**)(int))((char *)**(int ***)(*(int *)(state + 0x9B4) + 0x68) + 0x44))(*(int *)(state + 0x9B4)) != -1) {
+            setAButtonIcon(0x12);
+            setBButtonIcon(0xA);
+        }
+    }
+    for (i = 0; i < *(u8 *)(data + 0x8B); i++) {
+        switch (*(u8 *)(data + i + 0x81)) {
+        case 1:
+            fn_801E7DC8(obj, state, *(u8 *)(state + 0x9D5));
+            *(u8 *)(state + 0x9D4) |= 2;
+            break;
+        case 2:
+            (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state2, 3);
+            (*(void (**)(int, int, f32 *, int, int))(*(int *)lbl_803DCAB4 + 0xC))(obj, 0x7EF, &range, 0x50, 0);
+            *(u8 *)(state + 0x9D6) = 0;
+            break;
+        case 3:
+            (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state2, 2);
+            *(u8 *)(state + 0x9D4) |= 0x20;
+            *(u8 *)(state + 0x9D6) = 0xFF;
+            break;
+        case 4:
+            if (*(s16 *)((char *)player + 0x46) == 0) {
+                warpToMap(0xF, 0);
+            } else {
+                warpToMap(0xE, 0);
+            }
+            break;
+        case 5:
+            if (getCurUiDll() == 0x10) {
+                tex = getDLL16();
+                (*(void (**)(int))(*tex + 0x10))(0);
+            }
+            break;
+        case 6:
+            if (getCurUiDll() == 0x10) {
+                tex = getDLL16();
+                (*(void (**)(int))(*tex + 0x10))(2);
+            }
+            break;
+        case 7:
+            if (getCurUiDll() == 0x10) {
+                tex = getDLL16();
+                (*(void (**)(int))(*tex + 0x10))(4);
+            }
+            break;
+        case 9:
+            playerAddMoney(player, *(u8 *)(state + 0x9D5));
+            break;
+        case 10:
+            playerAddMoney(player, -(int)*(u8 *)(state + 0x9D5));
+            break;
+        case 0xB:
+            (*(void (**)(int, int, f32 *, int, int))(*(int *)lbl_803DCAB4 + 0xC))(obj, 0x7EF, &range, 0x50, 0);
+            break;
+        case 0xC:
+            *(u8 *)(state + 0x9D5) = 1;
+            digit = *(u8 *)(state + 0x9D5);
+            tex = (int *)objFindTexture(obj, 8, 0);
+            *tex = (digit % 10) * 0x100;
+            tex = (int *)objFindTexture(obj, 7, 0);
+            *tex = ((digit / 10) % 10) * 0x100;
+            digit = digit / 100;
+            if (digit > 9) {
+                digit = 9;
+            }
+            tex = (int *)objFindTexture(obj, 6, 0);
+            *tex = digit << 8;
+            break;
+        }
+    }
+    *(u8 *)(obj + 0x36) = *(u8 *)(state + 0x9D6);
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E5A24;
+
+#pragma scheduling off
+#pragma peephole off
+f32 shopKeeperRotateFn_801e7c4c(s16 *obj, void *player, int mode)
+{
+    f32 dx;
+    f32 dz;
+    f32 dist;
+    u32 angle;
+    int diff;
+
+    dx = *(f32 *)((char *)player + 0xC) - *(f32 *)((char *)obj + 0xC);
+    dz = *(f32 *)((char *)player + 0x14) - *(f32 *)((char *)obj + 0x14);
+    dist = sqrtf(dx * dx + dz * dz);
+    if (dist != lbl_803E59DC) {
+        dx /= dist;
+        dz /= dist;
+    }
+    if (dist > lbl_803E5A24) {
+        angle = (u16)getAngle(dx, dz);
+        if (mode != 0) {
+            *obj = (s16)angle;
+        } else {
+            diff = angle - (u16)*obj;
+            if (diff > 0x8000) {
+                diff -= 0xFFFF;
+            }
+            if (diff < -0x8000) {
+                diff += 0xFFFF;
+            }
+            if (diff > 0x2000) {
+                diff -= 0x2000;
+            } else if (diff < -0x2000) {
+                diff += 0x2000;
+            } else {
+                diff = 0;
+            }
+            *obj = (s16)(int)((f32)(diff >> 3) * timeDelta + (f32)*obj);
+        }
+    }
+    return dist;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E5A34;
+extern f32 lbl_803E5A38;
+extern f32 lbl_803E5A3C;
+extern f32 lbl_803E5A40;
+extern f32 lbl_803E5A44;
+extern f32 lbl_803E5A48;
+extern f32 lbl_803E5A4C;
+extern f32 lbl_803E5A50;
+extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
+extern int ObjModel_GetRenderOp(int model, int idx);
+extern void renderFn_8008f904(void);
+extern int getHudHiddenFrameCount(void);
+extern void mm_free_(int p);
+extern int fn_8008FB20(f32 *start, void *end, f32 a, f32 b, int c, int d, int e);
+
+typedef struct ShopSparkleSpawn {
+    f32 x;
+    f32 y;
+    f32 z;
+    int owner;
+} ShopSparkleSpawn;
+
+typedef struct PushcartStateE8 {
+    u8 flag_80 : 1;
+    u8 flag_40 : 1;
+    u8 _rest : 6;
+} PushcartStateE8;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
+{
+    int state = *(int *)(obj + 0xB8);
+    u8 spawned = 0;
+    ShopSparkleSpawn v;
+    PushcartStateE8 *b = (PushcartStateE8 *)(state + 0xE8);
+    u8 i;
+    int slot;
+    f32 scale;
+
+    if (b->flag_40) {
+        objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A34, 0, 0);
+    } else {
+        objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, 0, 0);
+    }
+    *(u8 *)(ObjModel_GetRenderOp(*(int *)Obj_GetActiveModel(obj), 0) + 0x43) = 0x7F;
+    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5A30);
+    for (i = 0; i < 10; i++) {
+        slot = state + i * 4;
+        if (*(int *)(slot + 0x98) != 0) {
+            renderFn_8008f904();
+            if (getHudHiddenFrameCount() == 0) {
+                *(f32 *)(slot + 0xC0) += timeDelta;
+                *(u16 *)(*(int *)(slot + 0x98) + 0x20) = (u16)(int)(lbl_803E5A3C + *(f32 *)(slot + 0xC0));
+                if (*(u16 *)(*(int *)(slot + 0x98) + 0x20) > 0x14) {
+                    mm_free_(*(int *)(slot + 0x98));
+                    *(int *)(slot + 0x98) = 0;
+                }
+            }
+        } else {
+            if (spawned == 0 && getHudHiddenFrameCount() == 0) {
+                v.owner = obj;
+                v.x = *(f32 *)(obj + 0xC);
+                v.y = *(f32 *)(obj + 0x10);
+                v.z = *(f32 *)(obj + 0x14);
+                if (v.owner == obj) {
+                    if (b->flag_40) {
+                        scale = lbl_803E5A40;
+                    } else {
+                        scale = lbl_803E5A44;
+                    }
+                    v.x = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.x;
+                    v.y = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.y;
+                    v.z = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.z;
+                }
+                *(int *)(slot + 0x98) = fn_8008FB20((f32 *)(obj + 0xC), &v, lbl_803E5A48, lbl_803E5A4C, 0x14, 0x40, 0);
+                *(f32 *)(slot + 0xC0) = lbl_803E5A50;
+                spawned = 1;
+            }
+        }
     }
 }
 #pragma peephole reset

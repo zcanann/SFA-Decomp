@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void objAnimFn_8014a9f0(int param_1,int param_2,float *param_3,float *param_4);
+void objAnimFn_8014a9f0(short *obj, int state);
 void FUN_8014ab58(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
                  double param_6,double param_7,undefined8 param_8,ushort *param_9,int *param_10,
                  undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,

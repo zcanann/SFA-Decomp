@@ -1315,8 +1315,8 @@ void dbegg_free(int x) { ObjGroup_RemoveObject(x, 0x24); }
 #pragma scheduling reset
 
 /* plain forwarder. */
-extern void fn_801FD6B4(void);
-void VFP_lavapool_update(void) { fn_801FD6B4(); }
+extern void fn_801FD6B4(int obj);
+void VFP_lavapool_update(int obj) { fn_801FD6B4(obj); }
 
 /* fn_X(lbl); lbl = 0; */
 extern u32 lbl_803DDCD8;
@@ -1365,16 +1365,26 @@ void dll_224_update(void *param_1) {
 #pragma peephole reset
 #pragma scheduling reset
 
+typedef struct {
+    s16 showGameBit;   /* 0x0 */
+    s16 checkGameBit;  /* 0x2 */
+    s8 counter;        /* 0x4 */
+    u8 done : 1;       /* 0x5 bit 7 */
+    u8 noCheck : 1;    /* 0x5 bit 6 */
+} VfpFlamePointData;
+
 /* fn_801FD4A8: decrement extra->[4] by x; return whether it reached 0. */
+#pragma scheduling off
 int fn_801FD4A8(void *obj, int x) {
-    s8 *extra = *(s8 **)((char *)obj + 0xb8);
+    u8 *extra = *(u8 **)((char *)obj + 0xb8);
     if (extra != NULL) {
         s8 v = extra[4] - x;
         extra[4] = v;
-        return extra[4] == 0 ? 1 : 0;
+        return *(s8 *)(extra + 4) <= 0 ? 1 : 0;
     }
     return 0;
 }
+#pragma scheduling reset
 
 int dbegg_setScale(int obj) {
     u8 *inner = *(u8 **)(obj + 0xb8);
@@ -1385,13 +1395,13 @@ int dbegg_setScale(int obj) {
 extern f32 lbl_803E61C8;
 extern f32 lbl_803E61D0;
 extern f64 lbl_803E61D8;
-extern int fn_801FE560(int obj, int *outIdx, f32 a, f32 b, int p3);
+extern int fn_801FE560(int obj, f32 *out, f32 a, f32 b, int p3);
 extern int Obj_SetActiveModelIndex(int obj, int idx);
 #pragma scheduling off
 #pragma peephole off
 void dbegg_setupFromDef(int obj, u8 *state) {
     u8 *def;
-    int local_unused;
+    f32 local_unused;
 
     def = *(u8 **)(obj + 0x4c);
     state[0x119] = 0;
@@ -1522,11 +1532,11 @@ void dll_224_init(void *obj, void *other) {
 }
 
 void vfpflamepoint_init(int *obj, s8 *def) {
-    u8 *extra = (u8 *)obj[0xb8 / 4];
-    *(s8 *)(extra + 4) = (s8)*(s16 *)(def + 0x1a);
-    extra[5] = (u8)((extra[5] & 0xbf) | ((u8)*(s16 *)(def + 0x1c) << 6));
-    *(s16 *)(extra + 0) = *(s16 *)(def + 0x1e);
-    *(s16 *)(extra + 2) = *(s16 *)(def + 0x20);
+    VfpFlamePointData *d = (VfpFlamePointData *)obj[0xb8 / 4];
+    d->counter = (s8)*(s16 *)(def + 0x1a);
+    d->noCheck = (u8)*(s16 *)(def + 0x1c);
+    d->showGameBit = *(s16 *)(def + 0x1e);
+    d->checkGameBit = *(s16 *)(def + 0x20);
     *(u16 *)((u8 *)obj + 0xb0) |= 0x6000;
 }
 #pragma peephole reset
@@ -1563,6 +1573,425 @@ void dbegg_hitDetect(int obj) {
     *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
     *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
     *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* ==== v1.0 recovered functions (drift additions) ==== */
+
+extern f32 timeDelta;
+extern f32 lbl_803DDCD0;
+extern f32 lbl_803E6158;
+extern f32 lbl_803E6160;
+extern f32 lbl_803E6164;
+extern f32 lbl_803E616C;
+extern f32 lbl_803E6170;
+extern f32 lbl_803E6174;
+extern f32 lbl_803E6178;
+extern f32 lbl_803E617C;
+extern f32 lbl_803E6180;
+extern f32 lbl_803E6184;
+extern f32 lbl_803E6188;
+extern f32 lbl_803E618C;
+extern f32 lbl_803E6190;
+extern f32 lbl_803E6194;
+extern f32 lbl_803E6198;
+extern f64 lbl_803E61A0;
+extern f64 lbl_803E61A8;
+extern f32 lbl_803E61B0;
+extern f32 lbl_803E61B4;
+extern f64 lbl_803E61B8;
+extern f32 lbl_803E61E0;
+extern f32 lbl_803E61E4;
+extern f32 lbl_803E61E8;
+extern f32 lbl_803E61EC;
+extern f32 lbl_803E61F0;
+extern f32 lbl_803E61F4;
+extern f32 lbl_803E61F8;
+extern f32 lbl_803E61FC;
+extern f32 lbl_803E6200;
+extern f32 lbl_803E6204;
+extern f32 lbl_803E6208;
+extern f64 lbl_803E6210;
+extern void *getTrickyObject(void);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern int *objFindTexture(int obj, int idx, int p3);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern f32 sqrtf(f32 x);
+extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int ***listOut, int p6, int p7);
+extern int *gPartfxInterface;
+extern int *gGameUIInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void vfpflamepoint_update(int obj) {
+    VfpFlamePointData *d;
+    void *tricky;
+
+    d = *(VfpFlamePointData **)(obj + 0xb8);
+    *(u8 *)(obj + 0xaf) |= 8;
+    if (!d->done && (d->checkGameBit == -1 || GameBit_Get(d->checkGameBit) != 0)) {
+        if (d->counter <= 0 && !d->done) {
+            if (d->showGameBit != -1) {
+                GameBit_Set(d->showGameBit, 1);
+                d->done = 1;
+            }
+        } else {
+            tricky = getTrickyObject();
+            if (tricky != NULL) {
+                f32 dist = lbl_803E6158;
+                if (d->noCheck || ObjGroup_FindNearestObject(5, obj, &dist) == 0) {
+                    if (*(u8 *)(obj + 0xaf) & 4) {
+                        (*(void (*)(void *, int, int, int))*(int *)(*(int *)*(int *)((u8 *)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
+                    }
+                    *(u8 *)(obj + 0xaf) &= ~8;
+                    objRenderFn_80041018((void *)obj);
+                }
+            }
+        }
+    } else {
+        u8 v = (u8)GameBit_Get(d->showGameBit);
+        d->done = v;
+        if (!d->done) {
+            d->counter = (s8)*(s16 *)(*(int *)(obj + 0x4c) + 0x1a);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+void fn_801FD6B4(int obj) {
+    u8 *extra;
+    int def;
+    f32 speed;
+    f32 c;
+    int *tex;
+    f32 v;
+    struct {
+        u8 pad[8];
+        f32 value;
+        f32 unused[2];
+    } parm;
+
+    extra = *(u8 **)(obj + 0xb8);
+    def = *(int *)(obj + 0x4c);
+    speed = (f32)(u32)*(u8 *)(obj + 0x36);
+    *(f32 *)(extra + 0xc) += timeDelta * ((lbl_803E6160 * *(f32 *)(extra + 0x10)) / lbl_803E6160);
+    if (*(f32 *)(extra + 0xc) > lbl_803E6164) {
+        *(f32 *)(extra + 0x10) = (f32)(int)randomGetRange(0x32, 100);
+        *(f32 *)(extra + 8) = lbl_803E6168 / ((f32)(int)*(s16 *)(def + 0x1a) / (f32)(int)randomGetRange(0x15e, 800));
+        *(f32 *)(extra + 0xc) = lbl_803E616C;
+        Sfx_PlayFromObject(obj, 0x111);
+        speed = lbl_803E6170;
+    }
+    lbl_803DDCD0 = fn_80293E80((lbl_803E6174 * (f32)(s16)(int)*(f32 *)(extra + 0xc)) / lbl_803E6178);
+    *(f32 *)(obj + 8) = lbl_803E617C * *(f32 *)(extra + 8) + lbl_803E6180 * *(f32 *)(extra + 8) * lbl_803DDCD0;
+    c = *(f32 *)(extra + 0xc);
+    if (c > lbl_803E6184 && c < lbl_803E6188) {
+        parm.value = *(f32 *)(extra + 8);
+        if (*(u16 *)(obj + 0xb0) & 0x800) {
+            (*(void (*)(int, int, void *, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x3a2, &parm, 2, -1, 0);
+        }
+    }
+    c = *(f32 *)(extra + 0xc);
+    if (c > lbl_803E618C) {
+        speed = (f32)(s16)(int)(lbl_803E6170 * lbl_803DDCD0);
+    }
+    if (c < lbl_803E6190) {
+        speed = lbl_803E6170 * (c / lbl_803E6190);
+    }
+    *(s8 *)(obj + 0x36) = (int)((speed < lbl_803E616C) ? lbl_803E616C : ((speed > lbl_803E6170) ? lbl_803E6170 : speed));
+    tex = objFindTexture(obj, 0, 0);
+    if (tex != NULL) {
+        v = (f32)(int)*(s16 *)((u8 *)tex + 0xa) + lbl_803E6160;
+        if (v >= lbl_803E6194) {
+            v -= lbl_803E6194;
+        }
+        *(s16 *)((u8 *)tex + 0xa) = (s16)(int)v;
+    }
+    tex = objFindTexture(obj, 1, 0);
+    if (tex != NULL) {
+        v = (f32)(int)*(s16 *)((u8 *)tex + 0xa) + lbl_803E6198;
+        if (v >= lbl_803E6194) {
+            v -= lbl_803E6194;
+        }
+        *(s16 *)((u8 *)tex + 0xa) = (s16)(int)v;
+    }
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void VFP_lavapool_init(int obj, int def) {
+    int extra;
+
+    extra = *(int *)(obj + 0xb8);
+    *(void **)(obj + 0xbc) = (void *)return1_801FDA08;
+    *(s16 *)(extra + 4) = 7000;
+    *(s16 *)(extra + 6) = 2000;
+    if (*(s16 *)(def + 0x1a) == 0) {
+        *(s16 *)(def + 0x1a) = 500;
+    }
+    *(f32 *)(obj + 8) = lbl_803E6168 / ((f32)(int)*(s16 *)(def + 0x1a) / (f32)(int)randomGetRange(600, 1000));
+    *(f32 *)(extra + 8) = *(f32 *)(obj + 8);
+    *(f32 *)(extra + 0x10) = (f32)(int)randomGetRange(0x32, 100);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void vfplavastar_update(int obj) {
+    int def;
+    f32 *extra;
+
+    def = *(int *)(obj + 0x4c);
+    extra = *(f32 **)(obj + 0xb8);
+    *(f32 *)(obj + 0x10) += timeDelta * extra[0];
+    if (*(f32 *)(obj + 0x10) > lbl_803E61B0 + *(f32 *)(def + 0xc)) {
+        extra[0] = lbl_803E61B4 * (f32)(int)randomGetRange(5, 0x14);
+        *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc);
+    }
+    *(s16 *)((u8 *)extra + 0xe) += (s16)(int)timeDelta;
+    if (lbl_803DDCD8 != 0 && *(s16 *)((u8 *)extra + 0xe) > 0x27) {
+        (*(void (*)(int, int, int, int, int, int))*(int *)(*(int *)lbl_803DDCD8 + 4))(obj, 0, 0, 4, -1, 0);
+        *(s16 *)((u8 *)extra + 0xe) = 0;
+    }
+    if (*(u8 *)(extra + 4) == 0) {
+        (*(void (*)(int, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x3a4, 0, 2, -1, 0);
+    }
+    *(u8 *)(extra + 4) ^= 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void vfplavastar_init(int obj, int def) {
+    f32 *extra;
+
+    extra = *(f32 **)(obj + 0xb8);
+    *(s16 *)((u8 *)extra + 0xc) = *(s16 *)(def + 0x1e);
+    extra[0] = lbl_803E61B4 * (f32)(int)randomGetRange(10, 0x19);
+    *(s16 *)((u8 *)extra + 0xe) = 0x14;
+    *(f32 *)(obj + 0x10) = *(f32 *)(def + 0xc) + (f32)(int)*(s16 *)(def + 0x1a);
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+    extra[1] = (f32)(int)randomGetRange(0x1e, 0x3c);
+    extra[2] = (f32)(int)randomGetRange(100, 200);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void vfpspellplace_update(int obj) {
+    s16 *st;
+    u8 mode;
+
+    if (*(u8 *)(*(int *)(obj + 0xb8) + 4) == 0 && GameBit_Get(*(s16 *)(*(int *)(obj + 0xb8) + 2)) != 0) {
+        *(u8 *)(obj + 0xaf) &= ~8;
+    } else {
+        *(u8 *)(obj + 0xaf) |= 8;
+    }
+    objRenderFn_80041018((void *)obj);
+    if (*(u8 *)(obj + 0xaf) & 1) {
+        mode = (*gMapEventInterface)->getMode((s8)*(u8 *)(obj + 0xac));
+        switch (mode) {
+            case 1:
+                st = *(s16 **)(obj + 0xb8);
+                if ((*(int (*)(int))*(int *)(*gGameUIInterface + 0x20))(0x123) != 0) {
+                    GameBit_Set(st[0], 1);
+                    GameBit_Set(st[1], 0);
+                    *(u8 *)(st + 2) = 1;
+                    *(u8 *)(obj + 0xaf) |= 8;
+                }
+                break;
+            case 2:
+                st = *(s16 **)(obj + 0xb8);
+                if ((*(int (*)(int))*(int *)(*gGameUIInterface + 0x20))(0x83b) != 0) {
+                    GameBit_Set(st[0], 1);
+                    GameBit_Set(st[1], 0);
+                    *(u8 *)(st + 2) = 1;
+                    *(u8 *)(obj + 0xaf) |= 8;
+                }
+                break;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void vfpspellplace_init(int obj, s8 *def) {
+    s16 *st;
+
+    st = *(s16 **)(obj + 0xb8);
+    st[0] = *(s16 *)(def + 0x1e);
+    st[1] = *(s16 *)(def + 0x20);
+    *(u8 *)(st + 2) = 0;
+    *(s16 *)obj = (s16)((s8)def[0x18] << 8);
+    if (GameBit_Get(st[0]) != 0) {
+        *(u8 *)(st + 2) = 1;
+        *(u8 *)(obj + 0xaf) |= 8;
+    }
+    *(u16 *)(obj + 0xb0) |= 0x6000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+#pragma opt_loop_invariants off
+int fn_801FE560(int obj, f32 *out, f32 a, f32 b, int flag) {
+    f32 water;
+    f32 ground;
+    f32 t;
+    f32 u;
+    f32 dy;
+    int n;
+    int i;
+    int **list;
+    int **cursor;
+    int *hit;
+
+    *out = lbl_803E61C8;
+    n = hitDetectFn_80065e50(*(f32 *)(obj + 0xc) + a, *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14) + b, obj, &list, 0, 0);
+    if (n != 0) {
+        ground = lbl_803E61E0;
+        water = ground;
+        cursor = list;
+        for (i = 0; i < n; i++) {
+            hit = *cursor;
+            dy = *(f32 *)hit - *(f32 *)(obj + 0x10);
+            if (*(s8 *)((u8 *)hit + 0x14) == 0xe) {
+                if (water >= lbl_803E61C8) {
+                    t = water;
+                } else {
+                    t = -water;
+                }
+                if (dy >= lbl_803E61C8) {
+                    u = dy;
+                } else {
+                    u = -dy;
+                }
+                if (u < t) {
+                    water = dy;
+                }
+            } else {
+                if (ground >= lbl_803E61C8) {
+                    t = ground;
+                } else {
+                    t = -ground;
+                }
+                if (dy >= lbl_803E61C8) {
+                    u = dy;
+                } else {
+                    u = -dy;
+                }
+                if (u < t) {
+                    ground = dy;
+                }
+            }
+            cursor++;
+        }
+        if (flag == 0) {
+            if (lbl_803E61E0 != ground) {
+                *out = ground;
+                return 0;
+            }
+            if (lbl_803E61E0 != water) {
+                *out = water;
+                return 1;
+            }
+            *out = lbl_803E61E4;
+        } else {
+            if (lbl_803E61E0 != water) {
+                if (ground >= lbl_803E61C8) {
+                    t = ground;
+                } else {
+                    t = -ground;
+                }
+                if (water >= lbl_803E61C8) {
+                    u = water;
+                } else {
+                    u = -water;
+                }
+                if (u <= t || water > lbl_803E61C8) {
+                    *out = water;
+                    return 0;
+                }
+                *out = ground;
+                return 1;
+            }
+            if (lbl_803E61E0 != ground) {
+                *out = ground;
+                return 1;
+            }
+            *out = lbl_803E61E4;
+        }
+    }
+    return 0;
+}
+#pragma opt_loop_invariants reset
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801FE774(int cam, f32 *vel) {
+    f32 limit;
+    f32 force;
+    f32 sumX;
+    f32 sumZ;
+    int count;
+    int *objs;
+    u8 *o;
+    int i;
+
+    sumZ = sumX = lbl_803E61C8;
+    objs = (int *)ObjGroup_GetObjects(0x14, &count);
+    limit = lbl_803E61E8;
+    for (i = 0; i < count; i++) {
+        f32 dy;
+        o = (u8 *)*objs;
+        dy = *(f32 *)(o + 0x10) - *(f32 *)(cam + 0x10);
+        if (dy <= limit && dy >= lbl_803E61EC) {
+            f32 dx = *(f32 *)(o + 0xc) - *(f32 *)(cam + 0xc);
+            f32 dz = *(f32 *)(o + 0x14) - *(f32 *)(cam + 0x14);
+            f32 dist = sqrtf(dx * dx + dz * dz);
+            f32 radius = lbl_803E61F0 * (f32)(u32)*(u8 *)(*(int *)(o + 0x4c) + 0x19);
+            if (dist < radius) {
+                force = (radius - dist) / radius;
+                force = force * (lbl_803E61F4 * *(f32 *)(o + 8));
+                sumX += force * fn_80293E80((lbl_803E61F8 * (f32)(int)*(s16 *)o) / lbl_803E61FC);
+                sumZ += force * sin((lbl_803E61F8 * (f32)(int)*(s16 *)o) / lbl_803E61FC);
+            }
+        }
+        objs++;
+    }
+    if (count != 0) {
+        f32 w;
+        f32 m;
+        sumX = sumX / (f32)count;
+        sumZ = sumZ / (f32)count;
+        vel[0] = -(sumX * (w = lbl_803E6200) - vel[0]);
+        vel[2] = -(w * sumZ - vel[2]);
+        vel[0] = vel[0] * (m = lbl_803E6204);
+        vel[2] = vel[2] * m;
+        {
+            f32 mag = sqrtf(vel[0] * vel[0] + vel[2] * vel[2]);
+            if (mag > lbl_803E6208) {
+                f32 sc = lbl_803E6208 / mag;
+                vel[0] = vel[0] * sc;
+                vel[2] = vel[2] * sc;
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -45,18 +45,21 @@ extern MapEventInterface **gMapEventInterface;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void SH_LevelControl_runBloopEvent(int obj, int state)
 {
   int player;
   u8 i;
   u8 bloopsRemaining;
+  u8 j;
 
-  if (((*gMapEventInterface)->getAnimEvent((s8)*(u8 *)(obj + 0xac), 0) == 0) &&
+  if (((*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0) == 0) &&
       (GameBit_Get(0x13f) == 0)) {
     *(u8 *)(state + 6) = 0;
     (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x64)))(*gGameUIInterface);
-    for (i = 0; i < 0x12; i++) {
-      GameBit_Set(lbl_80327618[i], 0);
+    for (j = 0; j < 0x12; j++) {
+      GameBit_Set(lbl_80327618[j], 0);
     }
   }
 
@@ -94,13 +97,13 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
       *(f32 *)(state + 8) -= (f32)bloopsRemaining * timeDelta;
       if (*(f32 *)(state + 8) >= lbl_803E54B4) {
         (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))((int)*(f32 *)(state + 8));
-      } else if ((*gMapEventInterface)->getAnimEvent((s8)*(u8 *)(obj + 0xac), 0) == 0) {
-        *(f32 *)(state + 8) = lbl_803E54B4;
-        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(1);
-      } else {
+      } else if ((*gMapEventInterface)->getAnimEvent(*(s8 *)(obj + 0xac), 0) != 0) {
         (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x64)))(*gGameUIInterface);
         (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 8)))(0x14, 1);
         *(u8 *)(state + 6) = 5;
+      } else {
+        *(f32 *)(state + 8) = lbl_803E54B4;
+        (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))(1);
       }
     }
     break;
@@ -154,6 +157,8 @@ void SH_LevelControl_runBloopEvent(int obj, int state)
     (*gMapEventInterface)->triggerEvent(0, 0, 1, 0);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--

@@ -351,6 +351,197 @@ void wmlevelcontrol_update(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern void ObjGroup_AddObject(int obj, int group);
+extern int mapGetDirIdx(int mapId);
+extern void unlockLevel(int a, int b, int c);
+extern void lockLevel(int idx, int p2);
+extern f32 lbl_803E5E90;
+
+/*
+ * --INFO--
+ *
+ * Function: wmlevelcontrol_init
+ * EN v1.0 Address: 0x801F4628
+ * EN v1.0 Size: 656b
+ */
+#pragma scheduling off
+#pragma peephole off
+void wmlevelcontrol_init(int obj)
+{
+    f32 *state;
+    u8 mode;
+
+    ObjGroup_AddObject(obj, 9);
+    unlockLevel(mapGetDirIdx(0xb), 0, 0);
+    state = *(f32 **)(obj + 0xb8);
+    *((u8 *)state + 0xb) = 0;
+    *(s16 *)((char *)state + 6) = 0x1e;
+    *state = lbl_803E5E90;
+    *(int *)(state + 4) = 0;
+    lockLevel(0xf, 0);
+    mode = (*gMapEventInterface)->getMode((int)*(char *)(obj + 0xac));
+    switch (mode) {
+    case 1:
+        (*gMapEventInterface)->setMode(0xe, 1);
+        (*gMapEventInterface)->setAnimEvent(0xe, 0, 1);
+        break;
+    case 2:
+        GameBit_Set(0xd1b, 1);
+        GameBit_Set(0xe6f, 1);
+        GameBit_Set(0xf43, 1);
+        GameBit_Set(0xf44, 0);
+        break;
+    case 3:
+        GameBit_Set(0xd1b, 1);
+        GameBit_Set(0xd1c, 1);
+        GameBit_Set(0xa7f, 1);
+        GameBit_Set(0xf43, 0);
+        GameBit_Set(0xf44, 1);
+        break;
+    case 4:
+        GameBit_Set(0xd1b, 1);
+        GameBit_Set(0xd1c, 1);
+        GameBit_Set(0xd1d, 1);
+        GameBit_Set(0xa7f, 1);
+        GameBit_Set(0xf43, 0);
+        GameBit_Set(0xf44, 1);
+        *(s16 *)((char *)state + 4) = -1;
+        break;
+    case 5:
+        GameBit_Set(0xd1b, 1);
+        GameBit_Set(0xd1c, 1);
+        GameBit_Set(0xd1d, 1);
+        GameBit_Set(0xd1e, 1);
+        GameBit_Set(0xf43, 0);
+        GameBit_Set(0xf44, 1);
+        break;
+    case 6:
+        GameBit_Set(0xd1b, 1);
+        GameBit_Set(0xd1c, 1);
+        GameBit_Set(0xd1d, 1);
+        GameBit_Set(0xd1e, 1);
+        GameBit_Set(0xd1f, 1);
+        GameBit_Set(0x164, 1);
+        GameBit_Set(0xf43, 0);
+        GameBit_Set(0xf44, 0);
+        break;
+    case 7:
+        *(s16 *)(state + 2) = 700;
+        *((u8 *)state + 0xa) = 0x1e;
+        *(s16 *)((char *)state + 6) = *((u8 *)state + 0xa);
+        *((u8 *)state + 0x14) = 1;
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Obj_SetModelRenderOpAlpha(int obj, int alpha);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
+extern void ObjLink_AttachChild(int obj, int child, int p3);
+extern int *gPartfxInterface;
+extern byte framesThisStep;
+extern f32 lbl_803E5E98;
+extern f32 lbl_803E5E9C;
+extern f32 lbl_803E5EA0;
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void ObjLink_DetachChild(int *parent, int *child);
+
+typedef void (*PartfxSpawnFn)(int, int, int, int, int, u8 *);
+
+/*
+ * --INFO--
+ *
+ * Function: wmgeneralscales_SeqFn
+ * EN v1.0 Address: 0x801F48C0
+ * EN v1.0 Size: 652b
+ */
+#pragma scheduling off
+#pragma peephole off
+int wmgeneralscales_SeqFn(int obj, int p2, u8 *seq)
+{
+    f32 *state;
+    int i;
+    u8 buf[20];
+
+    state = *(f32 **)(obj + 0xb8);
+    if (*((u8 *)state + 5) != 0) {
+        int a = *((u8 *)state + 5) + framesThisStep;
+        if (a < 0) {
+            a = 0;
+        } else if (a > 0xff) {
+            a = 0xff;
+        }
+        *((u8 *)state + 5) = (u8)a;
+        Obj_SetModelRenderOpAlpha(obj, (u8)a);
+    } else {
+        Obj_SetModelRenderOpAlpha(obj, 0);
+    }
+    for (i = 0; i < (int)seq[0x8b]; i++) {
+        switch (seq[i + 0x81]) {
+        case 1:
+            *((u8 *)state + 4) = 1;
+            break;
+        case 2:
+            *((u8 *)state + 4) = 2;
+            (*(PartfxSpawnFn *)(*gPartfxInterface + 8))(obj, 0x556, 0, 2, -1, buf);
+            Sfx_PlayFromObject(obj, 0x7b);
+            Sfx_PlayFromObject(obj, 0x7c);
+            *state = lbl_803E5E98;
+            break;
+        case 3:
+            *((u8 *)state + 4) = 3;
+            (*(PartfxSpawnFn *)(*gPartfxInterface + 8))(obj, 0x556, 0, 2, -1, (u8 *)0);
+            Sfx_PlayFromObject(obj, 0x7b);
+            Sfx_PlayFromObject(obj, 0x7c);
+            *state = lbl_803E5E9C;
+            break;
+        case 4:
+            *((u8 *)state + 4) = 0;
+            break;
+        case 5:
+            if (*(void **)(obj + 0xc8) == NULL && Obj_IsLoadingLocked() != 0) {
+                int setup = Obj_AllocObjectSetup(0x24, 0x1b8);
+                *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+                *(f32 *)(setup + 0xc) = *(f32 *)(obj + 0x10);
+                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                *(u8 *)(setup + 4) = 0x20;
+                *(u8 *)(setup + 5) = 4;
+                *(u8 *)(setup + 7) = 0xff;
+                ObjLink_AttachChild(obj, Obj_SetupObject(setup, 5, -1, -1, 0), 0);
+                *(f32 *)(*(int *)(obj + 0xc8) + 8) *= lbl_803E5EA0;
+            }
+            break;
+        case 6: {
+            int *child = *(int **)(obj + 0xc8);
+            if (child != NULL) {
+                ObjLink_DetachChild((int *)obj, child);
+            }
+            break;
+        }
+        case 7: {
+            u8 *p = *(u8 **)(obj + 0x50);
+            p[0x5f] |= 0x10;
+            *((u8 *)state + 5) = 1;
+            break;
+        }
+        case 8: {
+            u8 *p = *(u8 **)(obj + 0x50);
+            p[0x5f] &= ~0x10;
+            Obj_SetModelRenderOpAlpha(obj, 0);
+            *((u8 *)state + 5) = 0;
+            break;
+        }
+        }
+        seq[i + 0x81] = 0;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 
 /* Trivial 4b 0-arg blr leaves. */
 void wmlevelcontrol_release(void) {}
@@ -378,8 +569,6 @@ int fn_801F4C04(int *obj) { FireFlyFn_801f4f88(obj); return 0; }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void wmgeneralscales_SeqFn(void);
-extern f32 lbl_803E5E98;
 extern f32 lbl_803E5EA4;
 extern void objRenderFn_8003b8f4(f32);
 #pragma scheduling off

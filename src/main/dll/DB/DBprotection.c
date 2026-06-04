@@ -145,726 +145,722 @@ extern f32 lbl_803E57E0;
  *
  * Function: fn_801DFA28
  * EN v1.0 Address: 0x801DFA28
- * EN v1.0 Size: 6060b
+ * EN v1.0 Size: 5732b
  * EN v1.1 Address: 0x801E0018
- * EN v1.1 Size: 5732b
+ * EN v1.1 Size: 6060b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
+extern u8 framesThisStep;
+extern int *gCameraInterface;
+extern int *gMapEventInterface;
+extern f32 sqrtf(f32 x);
+extern f32 sin(f32 x);
+extern int getAngle(f32 dx, f32 dz);
+extern int ObjList_GetObjects(int *startIndex, int *objectCount);
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern void Sfx_StopObjectChannel(int obj, int channel);
+extern void Sfx_IsPlayingFromObjectChannel(int obj, int channel);
+extern void fn_801EED5C(int obj, f32 *x, f32 *y, f32 *z);
+extern int fn_801E2570(void);
+extern void setMatrixFromObjectPos(f32 *matrix, void *objPos);
+extern void Matrix_TransformPoint(f32 x, f32 y, f32 z, f32 *matrix, f32 *outX, f32 *outY, f32 *outZ);
+
+extern f32 lbl_803E56C8;
+extern f32 lbl_803E56CC;
+extern f32 lbl_803E56D0;
+extern f32 lbl_803E56D4;
+extern f32 lbl_803E56D8;
+extern f32 lbl_803E56DC;
+extern f32 lbl_803E56E0;
+extern f32 lbl_803E56E4;
+extern f32 lbl_803E56E8;
+extern f32 lbl_803E56EC;
+extern f32 lbl_803E56F0;
+extern f32 lbl_803E56F4;
+extern f32 lbl_803E56F8;
+extern f32 lbl_803E56FC;
+extern f32 lbl_803E5700;
+extern f32 lbl_803E5704;
+extern f32 lbl_803E5708;
+extern f32 lbl_803E570C;
+extern f32 lbl_803E5710;
+extern f32 lbl_803E5714;
+extern f32 lbl_803E5718;
+extern f32 lbl_803E571C;
+extern f32 lbl_803E5720;
+extern f32 lbl_803E5724;
+extern f32 lbl_803E5728;
+extern f32 lbl_803E572C;
+extern f32 lbl_803E5730;
+extern f32 lbl_803E5734;
+extern f32 lbl_803E5738;
+extern f32 lbl_803E573C;
+extern f32 lbl_803E5740;
+extern f32 lbl_803E5744;
+extern f32 lbl_803E5748;
+extern f32 lbl_803E574C;
+extern f32 lbl_803E5750;
+extern f32 lbl_803E5754;
+extern f32 lbl_803E5758;
+extern f32 lbl_803E575C;
+extern f32 lbl_803E5760;
+extern f32 lbl_803E5764;
+extern f32 lbl_803E5768;
+extern f32 lbl_803E576C;
+extern f32 lbl_803E5770;
+extern f32 lbl_803E5774;
+extern f32 lbl_803E5778;
+extern f32 lbl_803E577C;
+extern f32 lbl_803E5780;
+extern f32 lbl_803E5784;
+extern f32 lbl_803E5788;
+extern f32 lbl_803E578C;
+extern f32 lbl_803E5790;
+extern f32 lbl_803E5794;
+extern f32 lbl_803E5798;
+extern f32 lbl_803E579C;
+extern f32 lbl_803E57A0;
+extern f32 lbl_803E57A4;
+extern f32 lbl_803E57A8;
+extern f32 lbl_803E57AC;
+extern f32 lbl_803E57B0;
+extern f32 lbl_803E57B4;
+extern f32 lbl_803E57B8;
+
+#define DBPROT_CAMERA_SHAKE(amount, arg) \
+  ((void (*)(f32 *, int))(*(u32 *)((u8 *)*gCameraInterface + 0x60)))((amount), (arg))
+#define DBPROT_MAP_EVENT(layer, a, b) \
+  ((void (*)(int, int, int))(*(u32 *)((u8 *)*gMapEventInterface + 0x50)))((layer), (a), (b))
+#define DBPROT_SCREEN_FADE(kind, value) \
+  ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0x8)))((kind), (value))
+#define DBPROT_CLOUD_SET_A(flag) \
+  ((void (*)(int))(*(u32 *)((u8 *)*gCloudActionInterface + 0x20)))((flag))
+#define DBPROT_CLOUD_SET_B(flag) \
+  ((void (*)(int))(*(u32 *)((u8 *)*gCloudActionInterface + 0x24)))((flag))
+#define DBPROT_CLOUD_SET_RANGE(a, b) \
+  ((void (*)(f32, f32))(*(u32 *)((u8 *)*gCloudActionInterface + 0x28)))((a), (b))
+
 #pragma scheduling off
 #pragma peephole off
-void fn_801DFA28(void)
+void fn_801DFA28(u8 *obj)
 {
-  char cVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  ushort *puVar7;
-  int iVar8;
-  uint uVar9;
-  uint uVar10;
-  float fVar11;
-  float *pfVar12;
-  int iVar13;
-  undefined unaff_r31;
-  double dVar14;
-  double dVar15;
-  double in_f22;
-  double in_f23;
-  double in_f24;
-  double in_f25;
-  double in_f26;
-  double in_f27;
-  double in_f28;
-  double in_f29;
-  double dVar16;
-  double in_f30;
-  double in_f31;
-  double dVar17;
-  double in_ps22_1;
-  double in_ps23_1;
-  double in_ps24_1;
-  double in_ps25_1;
-  double in_ps26_1;
-  double in_ps27_1;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  float local_148;
-  int local_144;
-  int local_140;
-  ushort local_13c;
-  ushort local_13a;
-  ushort local_138;
-  float local_134;
-  float local_130;
-  float local_12c;
-  float local_128;
-  float afStack_124 [17];
-  undefined8 local_e0;
-  undefined8 local_d8;
-  undefined8 local_d0;
-  undefined4 local_c8;
-  uint uStack_c4;
-  undefined8 local_c0;
-  float local_98;
-  float fStack_94;
-  float local_88;
-  float fStack_84;
-  float local_78;
-  float fStack_74;
-  float local_68;
-  float fStack_64;
-  float local_58;
-  float fStack_54;
-  float local_48;
-  float fStack_44;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  local_48 = (float)in_f27;
-  fStack_44 = (float)in_ps27_1;
-  local_58 = (float)in_f26;
-  fStack_54 = (float)in_ps26_1;
-  local_68 = (float)in_f25;
-  fStack_64 = (float)in_ps25_1;
-  local_78 = (float)in_f24;
-  fStack_74 = (float)in_ps24_1;
-  local_88 = (float)in_f23;
-  fStack_84 = (float)in_ps23_1;
-  local_98 = (float)in_f22;
-  fStack_94 = (float)in_ps22_1;
-  puVar7 = (ushort *)FUN_80286840();
-  iVar13 = *(int *)(puVar7 + 0x26);
-  pfVar12 = *(float **)(puVar7 + 0x5c);
-  local_148 = lbl_803E6360;
-  *(undefined *)(puVar7 + 0x56) = 0xff;
-  if ((pfVar12[0x12] != 0.0) && ((*(ushort *)((int)pfVar12[0x12] + 6) & 0x40) != 0)) {
-    pfVar12[0x12] = 0.0;
+  u8 *tricky;
+  u8 *state;
+  int spawnData;
+  int objArray;
+  int sfxObj;
+  u8 *otherObj;
+  s8 c;
+  int t;
+  int nextState;
+  int wrap;
+  uint angY;
+  int iv;
+  int dv;
+  int rollA;
+  int rollB;
+  f32 amp;
+  f32 limit;
+  f32 negLimit;
+  f32 blendK;
+  f32 zRatio;
+  f32 tx;
+  f32 ty;
+  f32 tz;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 dist;
+  f32 speedTarget;
+  f32 threshold;
+  f32 ambA;
+  f32 ambB;
+  f32 ambC;
+  f32 zero;
+  f32 mtx[17];
+  struct {
+    s16 rot[3];
+    f32 scale;
+    f32 vec[3];
+  } objPos;
+  int objIndex;
+  int objCount;
+  f32 camShake;
+
+  spawnData = *(int *)(obj + 0x4C);
+  state = *(u8 **)(obj + 0xB8);
+  camShake = lbl_803E56C8;
+  *(s8 *)(obj + 0xAC) = -1;
+  if ((*(void **)(state + 0x48) != NULL) &&
+      ((*(s16 *)(*(u8 **)(state + 0x48) + 6) & 0x40) != 0)) {
+    *(u8 **)(state + 0x48) = NULL;
   }
-  if (pfVar12[0x12] == 0.0) {
-    iVar8 = FUN_80017b00(&local_140,&local_144);
-    for (; local_140 < local_144; local_140 = local_140 + 1) {
-      fVar11 = *(float *)(iVar8 + local_140 * 4);
-      if (*(short *)((int)fVar11 + 0x46) == 0x8c) {
-        pfVar12[0x12] = fVar11;
-        local_140 = local_144;
+  if (*(void **)(state + 0x48) == NULL) {
+    objArray = ObjList_GetObjects(&objIndex, &objCount);
+    for (t = objIndex; t < objCount; t++) {
+      otherObj = *(u8 **)(objArray + t * 4);
+      if (*(s16 *)(otherObj + 0x46) == 0x8C) {
+        *(u8 **)(state + 0x48) = otherObj;
+        t = objCount;
       }
     }
   }
-  if (*(char *)((int)pfVar12 + 0x29) < '\x02') {
-    FUN_80006810((int)puVar7,0x143);
+  if (*(s8 *)(state + 0x29) >= 2) {
+    Sfx_PlayFromObject((int)obj, SFXwp_cahit2_c);
   }
   else {
-    FUN_80006824((uint)puVar7,SFXwp_cahit2_c);
+    Sfx_StopFromObject((int)obj, SFXwp_cahit2_c);
   }
-  fVar11 = pfVar12[0x12];
-  if (fVar11 == 0.0) goto LAB_801e1614;
-  if ((fVar11 != 0.0) && (*(int *)((int)fVar11 + 0xf4) == 0)) {
-    FUN_801ef1e0((int)fVar11,pfVar12 + 0x14,pfVar12 + 0x15,pfVar12 + 0x16);
+  tricky = *(u8 **)(state + 0x48);
+  if (tricky == NULL) goto end;
+  if ((tricky != NULL) && (*(int *)(tricky + 0xF4) == 0)) {
+    fn_801EED5C((int)tricky, (f32 *)(state + 0x50), (f32 *)(state + 0x54), (f32 *)(state + 0x58));
   }
-  *(ushort *)((int)pfVar12 + 0x26) = *(short *)((int)pfVar12 + 0x26) - (ushort)DAT_803dc070;
-  if (*(short *)((int)pfVar12 + 0x26) < 0) {
-    *(undefined2 *)((int)pfVar12 + 0x26) = 0;
+  *(s16 *)(state + 0x26) -= framesThisStep;
+  if (*(s16 *)(state + 0x26) < 0) {
+    *(s16 *)(state + 0x26) = 0;
   }
-  cVar1 = *(char *)((int)pfVar12 + 0x2b);
-  if (cVar1 == '\a') {
-    *(undefined *)((int)pfVar12 + 0x79) = 3;
+  c = *(s8 *)(state + 0x2B);
+  if (c == 7) {
+    *(u8 *)(state + 0x79) = 3;
   }
-  else if (cVar1 == '\b') {
-    *(undefined *)((int)pfVar12 + 0x79) = 4;
+  else if (c == 8) {
+    *(u8 *)(state + 0x79) = 4;
   }
-  else if (cVar1 == '\t') {
-    *(undefined *)((int)pfVar12 + 0x79) = 5;
+  else if (c == 9) {
+    *(u8 *)(state + 0x79) = 5;
   }
-  fVar2 = lbl_803E636C;
-  if (*(char *)((int)pfVar12 + 0x29) < '\x02') {
-    pfVar12[0x24] = pfVar12[0x24] - lbl_803DC074;
-    if (pfVar12[0x24] <= lbl_803E6364) {
-      *(byte *)(pfVar12 + 0x28) = *(byte *)(pfVar12 + 0x28) ^ 1;
-      uVar9 = randomGetRange(0xb4,300);
-      pfVar12[0x24] = (f32)(s32)(uVar9);
+  if (*(s8 *)(state + 0x29) < 2) {
+    *(f32 *)(state + 0x90) -= timeDelta;
+    if (*(f32 *)(state + 0x90) <= lbl_803E56CC) {
+      *(u8 *)(state + 0xA0) ^= 1;
+      *(f32 *)(state + 0x90) = (f32)(int)randomGetRange(0xB4, 300);
     }
-    if (*(char *)(pfVar12 + 0x28) == '\0') {
-      pfVar12[0x22] = pfVar12[0x22] - lbl_803DC074;
+    if (*(u8 *)(state + 0xA0) != 0) {
+      *(f32 *)(state + 0x88) = lbl_803E56D0 * timeDelta + *(f32 *)(state + 0x88);
     }
     else {
-      pfVar12[0x22] = lbl_803E6368 * lbl_803DC074 + pfVar12[0x22];
+      *(f32 *)(state + 0x88) -= timeDelta;
     }
-    pfVar12[0x25] = pfVar12[0x25] - lbl_803DC074;
-    if (pfVar12[0x25] <= lbl_803E6364) {
-      *(byte *)((int)pfVar12 + 0xa1) = *(byte *)((int)pfVar12 + 0xa1) ^ 1;
-      uVar9 = randomGetRange(0xb4,300);
-      pfVar12[0x25] = (f32)(s32)(uVar9);
+    *(f32 *)(state + 0x94) -= timeDelta;
+    if (*(f32 *)(state + 0x94) <= lbl_803E56CC) {
+      *(u8 *)(state + 0xA1) ^= 1;
+      *(f32 *)(state + 0x94) = (f32)(int)randomGetRange(0xB4, 300);
     }
-    if (*(char *)((int)pfVar12 + 0xa1) == '\0') {
-      pfVar12[0x23] = pfVar12[0x23] - lbl_803DC074;
+    if (*(u8 *)(state + 0xA1) != 0) {
+      *(f32 *)(state + 0x8C) = lbl_803E56D0 * timeDelta + *(f32 *)(state + 0x8C);
     }
     else {
-      pfVar12[0x23] = lbl_803E6368 * lbl_803DC074 + pfVar12[0x23];
+      *(f32 *)(state + 0x8C) -= timeDelta;
     }
   }
   else {
-    pfVar12[0x22] = -(lbl_803E636C * lbl_803DC074 - pfVar12[0x22]);
-    pfVar12[0x23] = -(fVar2 * lbl_803DC074 - pfVar12[0x23]);
+    amp = lbl_803E56D4;
+    *(f32 *)(state + 0x88) = -(amp * timeDelta - *(f32 *)(state + 0x88));
+    *(f32 *)(state + 0x8C) = -(amp * timeDelta - *(f32 *)(state + 0x8C));
   }
-  fVar2 = pfVar12[0x22];
-  fVar3 = lbl_803E6364;
-  if ((lbl_803E6364 <= fVar2) && (fVar3 = fVar2, lbl_803E6370 < fVar2)) {
-    fVar3 = lbl_803E6370;
-  }
-  pfVar12[0x22] = fVar3;
-  fVar2 = pfVar12[0x23];
-  fVar3 = lbl_803E6364;
-  if ((lbl_803E6364 <= fVar2) && (fVar3 = fVar2, lbl_803E6370 < fVar2)) {
-    fVar3 = lbl_803E6370;
-  }
-  pfVar12[0x23] = fVar3;
-  cVar1 = *(char *)((int)pfVar12 + 0x29);
-  if (cVar1 == '\x01') {
-    puVar7[0x7a] = 0;
-    puVar7[0x7b] = 2;
-    local_148 = lbl_803E6360;
-    (**(code **)(*DAT_803dd6d0 + 0x60))(&local_148,0);
-    if (*(short *)((int)pfVar12 + 0x82) != 0) {
-      *(short *)((int)pfVar12 + 0x82) = *(short *)((int)pfVar12 + 0x82) + -1;
+  dx = *(f32 *)(state + 0x88);
+  *(f32 *)(state + 0x88) = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > lbl_803E56D8) ? lbl_803E56D8 : dx;
+  dx = *(f32 *)(state + 0x8C);
+  *(f32 *)(state + 0x8C) = (dx < lbl_803E56CC) ? lbl_803E56CC : (dx > lbl_803E56D8) ? lbl_803E56D8 : dx;
+  switch (*(s8 *)(state + 0x29)) {
+  case 0:
+    camShake = lbl_803E56C8;
+    Sfx_StopObjectChannel((int)obj, 1);
+    DBPROT_CAMERA_SHAKE(&camShake, 0);
+    *(int *)(obj + 0xF4) = 1;
+    tx = *(f32 *)(state + 0x50) - lbl_803E56DC;
+    tz = lbl_803E56E0 * sin((lbl_803E56E4 * (f32)*(s16 *)(state + 0x20)) / lbl_803E56E8) +
+         *(f32 *)(state + 0x58);
+    ty = lbl_803E56F0 * fn_80293E80((lbl_803E56E4 * (f32)*(s16 *)(state + 0x20)) / lbl_803E56E8) +
+         (*(f32 *)(state + 0x54) - lbl_803E56EC);
+    *(s16 *)(state + 0x20) = *(s16 *)(state + 0x20) + framesThisStep * 0xB6;
+    dx = tx - *(f32 *)(obj + 0xC);
+    dy = ty - *(f32 *)(obj + 0x10);
+    dz = tz - *(f32 *)(obj + 0x14);
+    *(f32 *)(state + 0x1C) = lbl_803E56F4;
+    dx = dx * lbl_803E56F8;
+    dy = dy * lbl_803E56F8;
+    dz = dz * lbl_803E56F8;
+    limit = *(f32 *)(state + 0x1C);
+    if (dx > limit) {
+      dx = limit;
     }
-    cVar1 = *(char *)((int)pfVar12 + 0x7a);
-    if (cVar1 == '\x03') {
-      dVar16 = (double)(*(float *)((int)fVar11 + 0xc) - lbl_803E63B4);
-      dVar15 = (double)(lbl_803E63B0 + *(float *)((int)fVar11 + 0x10));
-      dVar14 = (double)(lbl_803E63B8 + pfVar12[0x16] +
-                       (*(float *)((int)fVar11 + 0x14) - pfVar12[0xd]));
-      *(undefined *)((int)pfVar12 + 0x7b) = 0;
+    negLimit = -limit;
+    if (dx < negLimit) {
+      dx = negLimit;
     }
-    else if (cVar1 < '\x03') {
-      if (cVar1 == '\x01') {
-        dVar16 = (double)(pfVar12[0x14] - lbl_803E63A8);
-        dVar14 = (double)pfVar12[0x16];
-        dVar15 = (double)(lbl_803E6384 + *(float *)((int)fVar11 + 0x10));
-      }
-      else if (cVar1 < '\x01') {
-        if (cVar1 < '\0') goto LAB_801e0878;
-        dVar16 = (double)(pfVar12[0x14] - lbl_803E63A4);
-        dVar14 = (double)pfVar12[0x16];
-        dVar15 = (double)(lbl_803E6384 + *(float *)((int)fVar11 + 0x10));
-        if ((*(short *)((int)pfVar12 + 0x82) < 1) &&
-           ((*(char *)(pfVar12 + 0x1f) == '\0' || (*(char *)(pfVar12 + 0x1f) == '\x05')))) {
-          *(undefined2 *)((int)pfVar12 + 0x82) = 200;
-        }
-        FUN_800067f0((int)puVar7,2);
-      }
-      else {
-        dVar16 = (double)(*(float *)((int)fVar11 + 0xc) - lbl_803E63AC);
-        dVar14 = (double)pfVar12[0x16];
-        dVar15 = (double)(lbl_803E63B0 + *(float *)((int)fVar11 + 0x10));
-      }
+    if (dy > limit) {
+      dy = limit;
     }
-    else if (cVar1 == '\x05') {
-      dVar16 = (double)(*(float *)((int)fVar11 + 0xc) - lbl_803E63B4);
-      dVar15 = (double)(lbl_803E63B0 + *(float *)((int)fVar11 + 0x10));
-      dVar14 = (double)((pfVar12[0x16] - lbl_803E63B8) +
-                       (*(float *)((int)fVar11 + 0x14) - pfVar12[0xd]));
-      *(undefined *)((int)pfVar12 + 0x7b) = 0;
+    if (dy < negLimit) {
+      dy = negLimit;
     }
-    else if (cVar1 < '\x05') {
-      dVar16 = (double)(*(float *)((int)fVar11 + 0xc) - lbl_803E63B4);
-      dVar14 = (double)(lbl_803E63BC + pfVar12[0x16]);
-      dVar15 = (double)(lbl_803E63B0 + *(float *)((int)fVar11 + 0x10));
-      *(undefined *)((int)pfVar12 + 0x7b) = 0;
+    if (dz > limit) {
+      dz = limit;
     }
-    else {
-LAB_801e0878:
-      *(undefined *)((int)pfVar12 + 0x7b) = 0;
-      dVar16 = (double)(pfVar12[0x14] - lbl_803E63C0);
-      dVar14 = (double)pfVar12[0x16];
-      dVar15 = (double)(lbl_803E63C4 + *(float *)((int)fVar11 + 0x10));
+    if (dz < negLimit) {
+      dz = negLimit;
     }
-    dVar17 = (double)(float)(dVar16 - (double)*(float *)(puVar7 + 6));
-    dVar16 = (double)(float)(dVar15 - (double)*(float *)(puVar7 + 8));
-    dVar14 = (double)(float)(dVar14 - (double)*(float *)(puVar7 + 10));
-    pfVar12[7] = lbl_803E638C;
-    dVar15 = FUN_80293900((double)(float)(dVar14 * dVar14 +
-                                         (double)(float)(dVar17 * dVar17 +
-                                                        (double)(float)(dVar16 * dVar16))));
-    fVar2 = (float)(dVar16 * (double)lbl_803E6390);
-    fVar3 = (float)(dVar14 * (double)lbl_803E6390);
-    fVar4 = (float)(dVar17 * (double)lbl_803E6394);
-    if (lbl_803E63C8 < (float)(dVar17 * (double)lbl_803E6394)) {
-      fVar4 = lbl_803E63C8;
+    t = *(s16 *)(state + 0x6E);
+    if (t < 0x78) {
+      dy = lbl_803E56CC;
     }
-    if (fVar4 < lbl_803E63CC) {
-      fVar4 = lbl_803E63CC;
+    else if (t < 0xB4) {
+      dy = dy * ((f32)(t - 0x78) / lbl_803E56F0);
     }
-    if (lbl_803E63D0 < fVar2) {
-      fVar2 = lbl_803E63D0;
-    }
-    if (fVar2 < lbl_803E63D4) {
-      fVar2 = lbl_803E63D4;
-    }
-    if (lbl_803E63D8 < fVar3) {
-      fVar3 = lbl_803E63D8;
-    }
-    if (fVar3 < lbl_803E63DC) {
-      fVar3 = lbl_803E63DC;
-    }
-    *(ushort *)((int)pfVar12 + 0x6e) = *(short *)((int)pfVar12 + 0x6e) + (ushort)DAT_803dc070;
-    *pfVar12 = (fVar4 - *pfVar12) * lbl_803E63E0 + *pfVar12;
-    pfVar12[1] = pfVar12[1] + (fVar2 - pfVar12[1]) / lbl_803E63E4;
-    pfVar12[2] = pfVar12[2] + (fVar3 - pfVar12[2]) / lbl_803E63E8;
-    in_f28 = (double)lbl_803E63EC;
-    in_f29 = (double)lbl_803E63F0;
-    in_f27 = (double)lbl_803E6364;
-    cVar1 = *(char *)((int)pfVar12 + 0x7a);
-    if (cVar1 == '\x03') {
-      if ((dVar15 < (double)lbl_803E63A0) || (0x78 < *(short *)((int)pfVar12 + 0x6e))) {
-        *(undefined *)((int)pfVar12 + 0x7a) = 0;
-        *(undefined2 *)((int)pfVar12 + 0x6e) = 0;
-      }
-    }
-    else if (cVar1 < '\x03') {
-      if (cVar1 == '\x01') {
-        if (dVar15 < (double)lbl_803E63A0) {
-          *(undefined *)((int)pfVar12 + 0x7a) = 2;
-          *(undefined2 *)((int)pfVar12 + 0x6e) = 0;
-        }
-      }
-      else if (cVar1 < '\x01') {
-        if (cVar1 < '\0') goto LAB_801e0ac0;
-        if (dVar15 < (double)lbl_803E63F4) {
-          *(undefined *)((int)pfVar12 + 0x7a) = 1;
-          *(undefined2 *)((int)pfVar12 + 0x6e) = 0;
-        }
-      }
-      else if ((0xf0 < *(short *)((int)pfVar12 + 0x6e)) || (dVar15 < (double)lbl_803E63A0)) {
-        *(undefined *)((int)pfVar12 + 0x7a) = 0;
-        *(undefined2 *)((int)pfVar12 + 0x6e) = 0;
-      }
-    }
-    else if (cVar1 == '\x05') {
-      if ((dVar15 < (double)lbl_803E63A0) || (0x78 < *(short *)((int)pfVar12 + 0x6e))) {
-        *(undefined *)((int)pfVar12 + 0x7a) = 0;
-        *(undefined2 *)((int)pfVar12 + 0x6e) = 0;
-      }
-    }
-    else if (cVar1 < '\x05') {
-      if ((dVar15 < (double)lbl_803E63A0) || (0x78 < *(short *)((int)pfVar12 + 0x6e))) {
-        *(undefined *)((int)pfVar12 + 0x7a) = 5;
-        *(undefined2 *)((int)pfVar12 + 0x6e) = 3;
-      }
-    }
-    else {
-LAB_801e0ac0:
-      if (dVar15 < (double)lbl_803E63F8) {
-        if (*(char *)((int)pfVar12 + 0x2b) == '\x02') {
-          *(undefined2 *)((int)pfVar12 + 0x6e) = 0;
-          *(undefined *)((int)pfVar12 + 0x29) = 0;
-          *(undefined *)((int)pfVar12 + 0x2b) = 3;
-        }
-        else if (*(char *)((int)pfVar12 + 0x2b) == '\x05') {
-          *(undefined *)((int)pfVar12 + 0x29) = 2;
-          *(undefined *)((int)pfVar12 + 0x2b) = 6;
-        }
-      }
-    }
-    *(undefined2 *)((int)pfVar12 + 0x26) = 300;
-    if ((*(char *)(pfVar12 + 0x1f) < '\x04') || ('\x02' < *(char *)((int)pfVar12 + 0x2b))) {
-      if ('\x03' < *(char *)(pfVar12 + 0x1f)) {
-        *(undefined *)((int)pfVar12 + 0x29) = 2;
-        *(undefined *)(pfVar12 + 10) = 3;
-        *(undefined *)((int)pfVar12 + 0x2b) = 6;
-        *(undefined2 *)((int)pfVar12 + 0x82) = 200;
-        pfVar12[3] = *(float *)((int)fVar11 + 0x14);
-      }
-    }
-    else {
-      *(undefined *)((int)pfVar12 + 0x29) = 0;
-      *(undefined *)(pfVar12 + 10) = 1;
-      *(undefined *)((int)pfVar12 + 0x2b) = 3;
-      *(undefined *)(pfVar12 + 0x1f) = 5;
-      *(undefined2 *)((int)pfVar12 + 0x82) = 200;
-      uVar9 = FUN_801e2184();
-      FUN_80006810(uVar9,0x2c6);
-      FUN_80006824(uVar9,SFXwp_dsmk2_c);
-      GameBit_Set(0xf1e,0);
-    }
-  }
-  else if (cVar1 < '\x01') {
-    if (cVar1 < '\0') {
-LAB_801e1380:
-      puVar7[0x7a] = 0;
-      puVar7[0x7b] = 7;
-    }
-    else {
-      local_148 = lbl_803E6360;
-      FUN_8000680c((int)puVar7,1);
-      (**(code **)(*DAT_803dd6d0 + 0x60))(&local_148,0);
-      puVar7[0x7a] = 0;
-      puVar7[0x7b] = 1;
-      dVar16 = (double)(pfVar12[0x14] - lbl_803E6374);
-      local_e0 = (double)CONCAT44(0x43300000,(int)*(short *)(pfVar12 + 8) ^ 0x80000000);
-      dVar15 = (double)FUN_80294964();
-      dVar17 = (double)(float)((double)lbl_803E6378 * dVar15 + (double)pfVar12[0x16]);
-      local_d8 = (double)CONCAT44(0x43300000,(int)*(short *)(pfVar12 + 8) ^ 0x80000000);
-      dVar15 = (double)FUN_80293f90();
-      dVar14 = (double)lbl_803E6388;
-      fVar5 = pfVar12[0x15] - lbl_803E6384;
-      *(ushort *)(pfVar12 + 8) = *(short *)(pfVar12 + 8) + (ushort)DAT_803dc070 * 0xb6;
-      fVar2 = *(float *)(puVar7 + 6);
-      fVar3 = *(float *)(puVar7 + 8);
-      fVar4 = *(float *)(puVar7 + 10);
-      pfVar12[7] = lbl_803E638C;
-      fVar6 = (float)(dVar16 - (double)fVar2) * lbl_803E6390;
-      fVar3 = ((float)(dVar14 * dVar15 + (double)fVar5) - fVar3) * lbl_803E6390;
-      fVar4 = (float)(dVar17 - (double)fVar4) * lbl_803E6390;
-      fVar2 = pfVar12[7];
-      if (fVar2 < fVar6) {
-        fVar6 = fVar2;
-      }
-      fVar5 = -fVar2;
-      if (fVar6 < fVar5) {
-        fVar6 = fVar5;
-      }
-      if (fVar2 < fVar3) {
-        fVar3 = fVar2;
-      }
-      if (fVar3 < fVar5) {
-        fVar3 = fVar5;
-      }
-      if (fVar2 < fVar4) {
-        fVar4 = fVar2;
-      }
-      if (fVar4 < fVar5) {
-        fVar4 = fVar5;
-      }
-      iVar13 = (int)*(short *)((int)pfVar12 + 0x6e);
-      fVar2 = lbl_803E6364;
-      if ((0x77 < iVar13) && (fVar2 = fVar3, iVar13 < 0xb4)) {
-        fVar2 = fVar3 * ((f32)(s32)(iVar13 - 0x78U) / lbl_803E6388);
-      }
-      *(ushort *)((int)pfVar12 + 0x6e) = *(short *)((int)pfVar12 + 0x6e) + (ushort)DAT_803dc070;
-      fVar3 = lbl_803E6394;
-      *pfVar12 = (fVar6 - *pfVar12) * lbl_803E6394 + *pfVar12;
-      pfVar12[1] = (fVar2 - pfVar12[1]) * fVar3 + pfVar12[1];
-      pfVar12[2] = (fVar4 - pfVar12[2]) * fVar3 + pfVar12[2];
-      in_f28 = (double)lbl_803E6398;
-      in_f29 = (double)lbl_803E639C;
-      in_f27 = (double)lbl_803E63A0;
-      if (*(char *)(pfVar12 + 10) == '\0') {
-        if ((*(char *)((int)pfVar12 + 0x2b) < '\x02') && (-1 < *(char *)((int)pfVar12 + 0x2b))) {
-          if ((*(short *)((int)pfVar12 + 0x82) != 0) &&
-             (*(short *)((int)pfVar12 + 0x82) = *(short *)((int)pfVar12 + 0x82) + -1,
-             *(short *)((int)pfVar12 + 0x82) < 1)) {
-            *(undefined2 *)((int)pfVar12 + 0x82) = 200;
+    *(s16 *)(state + 0x6E) += framesThisStep;
+    *(f32 *)(state + 0x0) += (dx - *(f32 *)(state + 0x0)) * lbl_803E56FC;
+    *(f32 *)(state + 0x4) += (dy - *(f32 *)(state + 0x4)) * lbl_803E56FC;
+    *(f32 *)(state + 0x8) += (dz - *(f32 *)(state + 0x8)) * lbl_803E56FC;
+    ambA = lbl_803E5700;
+    ambB = lbl_803E5704;
+    ambC = lbl_803E5708;
+    if (*(s8 *)(state + 0x28) == 0) {
+      if ((*(s8 *)(state + 0x2B) < 2) && (-1 < *(s8 *)(state + 0x2B))) {
+        if (*(s16 *)(state + 0x82) != 0) {
+          *(s16 *)(state + 0x82) -= 1;
+          if (*(s16 *)(state + 0x82) <= 0) {
+            *(s16 *)(state + 0x82) = 200;
           }
         }
-        else {
-          *(undefined *)((int)pfVar12 + 0x2b) = 2;
-          *(undefined2 *)((int)pfVar12 + 0x6e) = 0;
-          *(undefined *)((int)pfVar12 + 0x29) = 1;
-          *(undefined *)(pfVar12 + 10) = 1;
-          *(undefined *)(pfVar12 + 0x1f) = 0;
-          *(undefined *)((int)pfVar12 + 0x7a) = 0;
-          *(undefined2 *)((int)pfVar12 + 0x82) = 200;
-          GameBit_Set(0xf1e,1);
-        }
       }
-      else if ((*(char *)((int)pfVar12 + 0x2b) < '\x05') &&
-              ('\x02' < *(char *)((int)pfVar12 + 0x2b))) {
-        if ((*(short *)((int)pfVar12 + 0x82) != 0) &&
-           (*(short *)((int)pfVar12 + 0x82) = *(short *)((int)pfVar12 + 0x82) + -1,
-           *(short *)((int)pfVar12 + 0x82) < 1)) {
-          *(undefined2 *)((int)pfVar12 + 0x82) = 200;
+      else {
+        *(s8 *)(state + 0x2B) = 2;
+        *(s16 *)(state + 0x6E) = 0;
+        *(s8 *)(state + 0x29) = 1;
+        *(s8 *)(state + 0x28) = 1;
+        *(s8 *)(state + 0x7C) = 0;
+        *(s8 *)(state + 0x7A) = 0;
+        *(s16 *)(state + 0x82) = 200;
+        GameBit_Set(0xF1E, 1);
+      }
+    }
+    else {
+      if ((*(s8 *)(state + 0x2B) < 5) && (2 < *(s8 *)(state + 0x2B))) {
+        if (*(s16 *)(state + 0x82) != 0) {
+          *(s16 *)(state + 0x82) -= 1;
+          if (*(s16 *)(state + 0x82) <= 0) {
+            *(s16 *)(state + 0x82) = 200;
+          }
         }
       }
       else {
-        *(undefined *)((int)pfVar12 + 0x2b) = 5;
-        *(undefined2 *)((int)pfVar12 + 0x6e) = 0;
-        *(undefined *)((int)pfVar12 + 0x29) = 1;
-        *(undefined *)(pfVar12 + 10) = 2;
-        *(undefined *)((int)pfVar12 + 0x7a) = 0;
-        *(undefined2 *)((int)pfVar12 + 0x82) = 200;
+        *(s8 *)(state + 0x2B) = 5;
+        *(s16 *)(state + 0x6E) = 0;
+        *(s8 *)(state + 0x29) = 1;
+        *(s8 *)(state + 0x28) = 2;
+        *(s8 *)(state + 0x7A) = 0;
+        *(s16 *)(state + 0x82) = 200;
       }
     }
-  }
-  else {
-    if ('\b' < cVar1) goto LAB_801e1380;
-    local_148 = lbl_803E6360;
-    FUN_8000680c((int)puVar7,2);
-    (**(code **)(*DAT_803dd6d0 + 0x60))(&local_148,0);
-    puVar7[0x7a] = 0;
-    puVar7[0x7b] = 3;
-    if (*(short *)((int)pfVar12 + 0x82) != 0) {
-      *(short *)((int)pfVar12 + 0x82) = *(short *)((int)pfVar12 + 0x82) + -1;
+    break;
+  case 1:
+    *(int *)(obj + 0xF4) = 2;
+    camShake = lbl_803E56C8;
+    DBPROT_CAMERA_SHAKE(&camShake, 0);
+    if (*(s16 *)(state + 0x82) != 0) {
+      *(s16 *)(state + 0x82) -= 1;
     }
-    switch(*(undefined *)((int)pfVar12 + 0x29)) {
+    switch (*(s8 *)(state + 0x7A)) {
+    case 0:
+      tx = *(f32 *)(state + 0x50) - lbl_803E570C;
+      tz = *(f32 *)(state + 0x58);
+      ty = lbl_803E56EC + *(f32 *)(tricky + 0x10);
+      if ((*(s16 *)(state + 0x82) <= 0) &&
+          ((*(s8 *)(state + 0x7C) == 0) || (*(s8 *)(state + 0x7C) == 5))) {
+        *(s16 *)(state + 0x82) = 200;
+      }
+      Sfx_IsPlayingFromObjectChannel((int)obj, 2);
+      break;
+    case 1:
+      tx = *(f32 *)(state + 0x50) - lbl_803E5710;
+      tz = *(f32 *)(state + 0x58);
+      ty = lbl_803E56EC + *(f32 *)(tricky + 0x10);
+      break;
     case 2:
-      in_f25 = (double)lbl_803E63FC;
-      in_f29 = (double)(pfVar12[0x14] - lbl_803E6400);
-      in_f31 = -(double)(lbl_803E6404 * (f32)(s32)((int)*(char *)((int)pfVar12 + 0x2a)) - pfVar12[0x16]);
-      in_f30 = (double)pfVar12[0x15];
-      in_f26 = (double)lbl_803E6408;
-      unaff_r31 = 3;
+      tx = *(f32 *)(tricky + 0xC) - lbl_803E5714;
+      tz = *(f32 *)(state + 0x58);
+      ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
       break;
     case 3:
-      in_f25 = (double)lbl_803E640C;
-      in_f29 = (double)(pfVar12[0x14] - lbl_803E6410);
-      in_f31 = -(double)(lbl_803E6408 * (f32)(s32)((int)*(char *)((int)pfVar12 + 0x2a)) - pfVar12[0x16]);
-      in_f30 = (double)(lbl_803E63BC + pfVar12[0x15]);
-      unaff_r31 = 4;
-      in_f26 = (double)lbl_803E6414;
+      tx = *(f32 *)(tricky + 0xC) - lbl_803E571C;
+      tz = lbl_803E5720 + *(f32 *)(state + 0x58);
+      ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
+      tz = tz + (*(f32 *)(tricky + 0x14) - *(f32 *)(state + 0x34));
+      *(u8 *)(state + 0x7B) = 0;
       break;
     case 4:
-      in_f25 = (double)lbl_803E640C;
-      in_f29 = (double)(pfVar12[0x14] - lbl_803E6400);
-      in_f31 = -(double)(lbl_803E63A0 * (f32)(s32)((int)*(char *)((int)pfVar12 + 0x2a)) - pfVar12[0x16]);
-      in_f30 = (double)(lbl_803E63BC + pfVar12[0x15]);
-      unaff_r31 = 5;
-      in_f26 = (double)lbl_803E6414;
+      tx = *(f32 *)(tricky + 0xC) - lbl_803E571C;
+      tz = lbl_803E5724 + *(f32 *)(state + 0x58);
+      ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
+      *(u8 *)(state + 0x7B) = 0;
       break;
     case 5:
-      in_f25 = (double)lbl_803E63A0;
-      puVar7[0x7a] = 0;
-      puVar7[0x7b] = 4;
-      in_f29 = (double)(pfVar12[0x14] - lbl_803E6418);
-      in_f31 = (double)pfVar12[0x16];
-      in_f30 = (double)(pfVar12[0x15] - lbl_803E63BC);
-      unaff_r31 = 6;
-      in_f26 = (double)lbl_803E6414;
-      if ((*(short *)((int)pfVar12 + 0x82) < 1) && (*(char *)((int)pfVar12 + 0x2b) == '\x06')) {
-        *(undefined2 *)((int)pfVar12 + 0x82) = 200;
+      tx = *(f32 *)(tricky + 0xC) - lbl_803E571C;
+      tz = *(f32 *)(state + 0x58) - lbl_803E5720;
+      ty = lbl_803E5718 + *(f32 *)(tricky + 0x10);
+      tz = tz + (*(f32 *)(tricky + 0x14) - *(f32 *)(state + 0x34));
+      *(u8 *)(state + 0x7B) = 0;
+      break;
+    default:
+      *(u8 *)(state + 0x7B) = 0;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5728;
+      tz = *(f32 *)(state + 0x58);
+      ty = lbl_803E572C + *(f32 *)(tricky + 0x10);
+      break;
+    }
+    tx = tx - *(f32 *)(obj + 0xC);
+    dy = ty - *(f32 *)(obj + 0x10);
+    tz = tz - *(f32 *)(obj + 0x14);
+    *(f32 *)(state + 0x1C) = lbl_803E56F4;
+    dist = sqrtf(tz * tz + (tx * tx + dy * dy));
+    tx = tx * lbl_803E56FC;
+    dy = dy * lbl_803E56F8;
+    tz = tz * lbl_803E56F8;
+    if (tx > lbl_803E5730) {
+      tx = lbl_803E5730;
+    }
+    if (tx < lbl_803E5734) {
+      tx = lbl_803E5734;
+    }
+    if (dy > lbl_803E5738) {
+      dy = lbl_803E5738;
+    }
+    if (dy < lbl_803E573C) {
+      dy = lbl_803E573C;
+    }
+    if (tz > lbl_803E5740) {
+      tz = lbl_803E5740;
+    }
+    if (tz < lbl_803E5744) {
+      tz = lbl_803E5744;
+    }
+    *(s16 *)(state + 0x6E) += framesThisStep;
+    *(f32 *)(state + 0x0) += (tx - *(f32 *)(state + 0x0)) * lbl_803E5748;
+    *(f32 *)(state + 0x4) += (dy - *(f32 *)(state + 0x4)) / lbl_803E574C;
+    *(f32 *)(state + 0x8) += (tz - *(f32 *)(state + 0x8)) / lbl_803E5750;
+    ambA = lbl_803E5754;
+    ambB = lbl_803E5758;
+    ambC = lbl_803E56CC;
+    switch (*(s8 *)(state + 0x7A)) {
+    case 0:
+      if (dist < lbl_803E575C) {
+        *(u8 *)(state + 0x7A) = 1;
+        *(s16 *)(state + 0x6E) = 0;
+      }
+      break;
+    case 1:
+      if (dist < lbl_803E5708) {
+        *(u8 *)(state + 0x7A) = 2;
+        *(s16 *)(state + 0x6E) = 0;
+      }
+      break;
+    case 2:
+      if ((*(s16 *)(state + 0x6E) > 0xF0) || (dist < lbl_803E5708)) {
+        *(u8 *)(state + 0x7A) = 0;
+        *(s16 *)(state + 0x6E) = 0;
+      }
+      break;
+    case 3:
+      if ((dist < lbl_803E5708) || (*(s16 *)(state + 0x6E) > 0x78)) {
+        *(u8 *)(state + 0x7A) = 0;
+        *(s16 *)(state + 0x6E) = 0;
+      }
+      break;
+    case 4:
+      if ((dist < lbl_803E5708) || (*(s16 *)(state + 0x6E) > 0x78)) {
+        *(u8 *)(state + 0x7A) = 5;
+        *(s16 *)(state + 0x6E) = 3;
+      }
+      break;
+    case 5:
+      if ((dist < lbl_803E5708) || (*(s16 *)(state + 0x6E) > 0x78)) {
+        *(u8 *)(state + 0x7A) = 0;
+        *(s16 *)(state + 0x6E) = 0;
+      }
+      break;
+    default:
+      if (dist < lbl_803E5760) {
+        if (*(s8 *)(state + 0x2B) == 2) {
+          *(s16 *)(state + 0x6E) = 0;
+          *(s8 *)(state + 0x29) = 0;
+          *(s8 *)(state + 0x2B) = 3;
+        }
+        else if (*(s8 *)(state + 0x2B) == 5) {
+          *(s8 *)(state + 0x29) = 2;
+          *(s8 *)(state + 0x2B) = 6;
+        }
+      }
+      break;
+    }
+    *(s16 *)(state + 0x26) = 300;
+    if ((*(s8 *)(state + 0x7C) >= 4) && (*(s8 *)(state + 0x2B) < 3)) {
+      *(s8 *)(state + 0x29) = 0;
+      *(s8 *)(state + 0x28) = 1;
+      *(s8 *)(state + 0x2B) = 3;
+      *(s8 *)(state + 0x7C) = 5;
+      *(s16 *)(state + 0x82) = 200;
+      sfxObj = fn_801E2570();
+      Sfx_StopFromObject(sfxObj, 0x2C6);
+      Sfx_PlayFromObject(sfxObj, SFXwp_dsmk2_c);
+      GameBit_Set(0xF1E, 0);
+    }
+    else if (*(s8 *)(state + 0x7C) >= 4) {
+      *(s8 *)(state + 0x29) = 2;
+      *(s8 *)(state + 0x28) = 3;
+      *(s8 *)(state + 0x2B) = 6;
+      *(s16 *)(state + 0x82) = 200;
+      *(f32 *)(state + 0xC) = *(f32 *)(tricky + 0x14);
+    }
+    break;
+  case 2:
+  case 3:
+  case 4:
+  case 5:
+  case 6:
+  case 7:
+  case 8:
+    camShake = lbl_803E56C8;
+    Sfx_StopObjectChannel((int)obj, 2);
+    DBPROT_CAMERA_SHAKE(&camShake, 0);
+    *(int *)(obj + 0xF4) = 3;
+    if (*(s16 *)(state + 0x82) != 0) {
+      *(s16 *)(state + 0x82) -= 1;
+    }
+    switch (*(s8 *)(state + 0x29)) {
+    case 2:
+      speedTarget = lbl_803E5764;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5768;
+      tz = -(lbl_803E576C * (f32)*(s8 *)(state + 0x2A) - *(f32 *)(state + 0x58));
+      ty = *(f32 *)(state + 0x54);
+      threshold = lbl_803E5770;
+      nextState = 3;
+      break;
+    case 3:
+      speedTarget = lbl_803E5774;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5778;
+      tz = -(lbl_803E5770 * (f32)*(s8 *)(state + 0x2A) - *(f32 *)(state + 0x58));
+      ty = lbl_803E5724 + *(f32 *)(state + 0x54);
+      nextState = 4;
+      threshold = lbl_803E577C;
+      break;
+    case 4:
+      speedTarget = lbl_803E5774;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5768;
+      tz = -(lbl_803E5708 * (f32)*(s8 *)(state + 0x2A) - *(f32 *)(state + 0x58));
+      ty = lbl_803E5724 + *(f32 *)(state + 0x54);
+      nextState = 5;
+      threshold = lbl_803E577C;
+      break;
+    case 5:
+      speedTarget = lbl_803E5708;
+      *(int *)(obj + 0xF4) = 4;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5780;
+      tz = *(f32 *)(state + 0x58);
+      ty = *(f32 *)(state + 0x54) - lbl_803E5724;
+      nextState = 6;
+      threshold = lbl_803E577C;
+      if ((*(s16 *)(state + 0x82) <= 0) && (*(s8 *)(state + 0x2B) == 6)) {
+        *(s16 *)(state + 0x82) = 200;
       }
       break;
     case 6:
-      in_f25 = (double)lbl_803E6368;
-      in_f29 = (double)(lbl_803E641C + pfVar12[0x14]);
-      in_f31 = -(double)(lbl_803E6404 * (f32)(s32)((int)*(char *)((int)pfVar12 + 0x2a)) - pfVar12[0x16]);
-      in_f30 = (double)(lbl_803E63B0 + pfVar12[0x15]);
-      unaff_r31 = 7;
-      in_f26 = (double)lbl_803E63BC;
+      speedTarget = lbl_803E56D0;
+      tx = lbl_803E5784 + *(f32 *)(state + 0x50);
+      tz = -(lbl_803E576C * (f32)*(s8 *)(state + 0x2A) - *(f32 *)(state + 0x58));
+      ty = lbl_803E5718 + *(f32 *)(state + 0x54);
+      nextState = 7;
+      threshold = lbl_803E5724;
       break;
     case 7:
-      in_f25 = (double)lbl_803E6368;
-      in_f29 = (double)(lbl_803E6420 + pfVar12[0x14]);
-      in_f31 = (double)pfVar12[0x16];
-      in_f30 = (double)(lbl_803E6424 + *(float *)((int)fVar11 + 0x10));
-      unaff_r31 = 8;
-      in_f26 = (double)lbl_803E63BC;
+      speedTarget = lbl_803E56D0;
+      tx = lbl_803E5788 + *(f32 *)(state + 0x50);
+      tz = *(f32 *)(state + 0x58);
+      ty = lbl_803E578C + *(f32 *)(tricky + 0x10);
+      nextState = 8;
+      threshold = lbl_803E5724;
       break;
     case 8:
-      in_f25 = (double)lbl_803E6428;
-      in_f29 = (double)(pfVar12[0x14] - lbl_803E642C);
-      in_f31 = (double)pfVar12[0x16];
-      in_f30 = (double)(lbl_803E63BC + *(float *)((int)fVar11 + 0x10));
-      unaff_r31 = 2;
-      in_f26 = (double)lbl_803E641C;
+      speedTarget = lbl_803E5790;
+      tx = *(f32 *)(state + 0x50) - lbl_803E5794;
+      tz = *(f32 *)(state + 0x58);
+      ty = lbl_803E5724 + *(f32 *)(tricky + 0x10);
+      nextState = 2;
+      threshold = lbl_803E5784;
+      break;
     }
-    pfVar12[7] = (float)((double)pfVar12[7] +
-                        (double)((float)(in_f25 - (double)pfVar12[7]) / lbl_803E6430));
-    dVar15 = FUN_80293900((double)((float)(in_f29 - (double)pfVar12[0xb]) *
-                                   (float)(in_f29 - (double)pfVar12[0xb]) +
-                                  (float)(in_f31 - (double)pfVar12[0xd]) *
-                                  (float)(in_f31 - (double)pfVar12[0xd])));
-    if ((*(char *)((int)pfVar12 + 0x29) == '\x05') && (dVar15 < (double)lbl_803E6434)) {
-      puVar7[0x7a] = 0;
-      puVar7[0x7b] = 5;
+    dx = tx - *(f32 *)(state + 0x2C);
+    dy = ty - *(f32 *)(state + 0x30);
+    dz = tz - *(f32 *)(state + 0x34);
+    *(f32 *)(state + 0x1C) =
+        *(f32 *)(state + 0x1C) + (speedTarget - *(f32 *)(state + 0x1C)) / lbl_803E5798;
+    dist = sqrtf(dx * dx + dz * dz);
+    if ((*(s8 *)(state + 0x29) == 5) && (dist < lbl_803E579C)) {
+      *(int *)(obj + 0xF4) = 5;
     }
-    if (dVar15 < in_f26) {
-      if (*(char *)((int)pfVar12 + 0x29) == '\x05') {
-        *(char *)((int)pfVar12 + 0x2a) = -*(char *)((int)pfVar12 + 0x2a);
+    if (dist < threshold) {
+      if (*(s8 *)(state + 0x29) == 5) {
+        *(s8 *)(state + 0x2A) = -*(s8 *)(state + 0x2A);
       }
-      *(undefined *)((int)pfVar12 + 0x29) = unaff_r31;
+      *(s8 *)(state + 0x29) = (s8)nextState;
     }
-    uVar9 = FUN_80017730();
-    uVar10 = FUN_80017730();
-    iVar8 = ((uVar9 & 0xffff) + 0x8000) - (uint)*puVar7;
-    if (0x8000 < iVar8) {
-      iVar8 = iVar8 + -0xffff;
+    wrap = (getAngle(dx, dz) & 0xFFFF) + 0x8000;
+    angY = getAngle(dy, dist) & 0xFFFF;
+    wrap = wrap - (*(s16 *)(obj + 0x0) & 0xFFFF);
+    if (wrap > 0x8000) {
+      wrap = wrap - 0xFFFF;
     }
-    if (iVar8 < -0x8000) {
-      iVar8 = iVar8 + 0xffff;
+    if (wrap < -0x8000) {
+      wrap = wrap + 0xFFFF;
     }
-    *(short *)(pfVar12 + 9) =
-         *(short *)(pfVar12 + 9) +
-         (short)((int)((uint)DAT_803dc070 * (iVar8 - *(short *)(pfVar12 + 9))) >> 4);
-    cVar1 = *(char *)((int)pfVar12 + 0x29);
-    if ((cVar1 == '\x03') || (cVar1 == '\x04')) {
-      iVar8 = (int)((int)*(short *)(pfVar12 + 9) * (uint)DAT_803dc070) / 0x3c +
-              ((int)((int)*(short *)(pfVar12 + 9) * (uint)DAT_803dc070) >> 0x1f);
-      *puVar7 = *puVar7 + ((short)iVar8 - (short)(iVar8 >> 0x1f));
+    *(s16 *)(state + 0x24) =
+        *(s16 *)(state + 0x24) + ((framesThisStep * (wrap - *(s16 *)(state + 0x24))) >> 4);
+    c = *(s8 *)(state + 0x29);
+    if ((c == 3) || (c == 4)) {
+      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (*(s16 *)(state + 0x24) * framesThisStep) / 0x3C;
     }
-    else if ((cVar1 == '\x06') || (cVar1 == '\x02')) {
-      iVar8 = (int)((int)*(short *)(pfVar12 + 9) * (uint)DAT_803dc070) / 0x78 +
-              ((int)((int)*(short *)(pfVar12 + 9) * (uint)DAT_803dc070) >> 0x1f);
-      *puVar7 = *puVar7 + ((short)iVar8 - (short)(iVar8 >> 0x1f));
+    else if ((c == 6) || (c == 2)) {
+      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (*(s16 *)(state + 0x24) * framesThisStep) / 0x78;
     }
     else {
-      iVar8 = (int)((int)*(short *)(pfVar12 + 9) * (uint)DAT_803dc070) / 0x3c +
-              ((int)((int)*(short *)(pfVar12 + 9) * (uint)DAT_803dc070) >> 0x1f);
-      *puVar7 = *puVar7 + ((short)iVar8 - (short)(iVar8 >> 0x1f));
+      *(s16 *)(obj + 0x0) = *(s16 *)(obj + 0x0) + (*(s16 *)(state + 0x24) * framesThisStep) / 0x3C;
     }
-    iVar8 = (uVar10 & 0xffff) - (uint)puVar7[1];
-    if (0x8000 < iVar8) {
-      iVar8 = iVar8 + -0xffff;
+    wrap = angY - (*(s16 *)(obj + 0x2) & 0xFFFF);
+    if (wrap > 0x8000) {
+      wrap = wrap - 0xFFFF;
     }
-    if (iVar8 < -0x8000) {
-      iVar8 = iVar8 + 0xffff;
+    if (wrap < -0x8000) {
+      wrap = wrap + 0xFFFF;
     }
-    puVar7[1] = puVar7[1] + (short)((int)(iVar8 * (uint)DAT_803dc070) >> 6);
-    FUN_80293900((double)((pfVar12[0x14] - *(float *)(puVar7 + 6)) *
-                          (pfVar12[0x14] - *(float *)(puVar7 + 6)) +
-                         (pfVar12[0x16] - *(float *)(puVar7 + 10)) *
-                         (pfVar12[0x16] - *(float *)(puVar7 + 10))));
-    iVar8 = (int)(lbl_803E6438 * (f32)(s32)((int)*(short *)(pfVar12 + 9)));
-    local_e0 = (double)(longlong)iVar8;
-    uVar9 = iVar8 - (short)puVar7[2] >> 3;
-    if (0x3c < (int)uVar9) {
-      uVar9 = 0x3c;
+    *(s16 *)(obj + 0x2) = *(s16 *)(obj + 0x2) + ((wrap * framesThisStep) >> 6);
+    dx = *(f32 *)(state + 0x50) - *(f32 *)(obj + 0xC);
+    dz = *(f32 *)(state + 0x58) - *(f32 *)(obj + 0x14);
+    sqrtf(dx * dx + dz * dz);
+    t = *(s16 *)(obj + 0x4);
+    iv = (int)(lbl_803E57A0 * (f32)*(s16 *)(state + 0x24));
+    dv = (iv - t) >> 3;
+    if (dv > 0x3C) {
+      dv = 0x3C;
     }
-    if ((int)uVar9 < -0x3c) {
-      uVar9 = 0xffffffc4;
+    if (dv < -0x3C) {
+      dv = -0x3C;
     }
-    uStack_c4 = (int)(short)puVar7[2] ^ 0x80000000;
-    local_c8 = 0x43300000;
-    iVar8 = (int)((f32)(s32)(uVar9) * lbl_803DC074 +
-                 (f32)(s32)uStack_c4);
-    local_c0 = (double)(longlong)iVar8;
-    puVar7[2] = (ushort)iVar8;
-    local_130 = lbl_803E6364;
-    local_12c = lbl_803E6364;
-    local_128 = lbl_803E6364;
-    local_134 = lbl_803E643C;
-    local_13c = *puVar7;
-    local_13a = puVar7[1];
-    local_138 = puVar7[2];
-    FUN_80017754(afStack_124,&local_13c);
-    FUN_80017778((double)lbl_803E6364,(double)lbl_803E6364,
-                 (double)(-pfVar12[7] * lbl_803DC074),afStack_124,pfVar12,pfVar12 + 1,pfVar12 + 2)
-    ;
-    if (*(char *)((int)pfVar12 + 0x29) == '\a') {
-      pfVar12[0xb] = (float)in_f29;
-      pfVar12[0xc] = (float)in_f30;
-      pfVar12[0xd] = (float)in_f31;
-      fVar2 = lbl_803E6364;
-      pfVar12[0xe] = lbl_803E6364;
-      pfVar12[0xf] = fVar2;
-      pfVar12[0x10] = fVar2;
+    *(s16 *)(obj + 0x4) = (f32)dv * timeDelta + (f32)*(s16 *)(obj + 0x4);
+    objPos.vec[0] = lbl_803E56CC;
+    objPos.vec[1] = lbl_803E56CC;
+    objPos.vec[2] = lbl_803E56CC;
+    objPos.scale = lbl_803E57A4;
+    objPos.rot[0] = *(s16 *)(obj + 0x0);
+    objPos.rot[1] = *(s16 *)(obj + 0x2);
+    objPos.rot[2] = *(s16 *)(obj + 0x4);
+    setMatrixFromObjectPos(mtx, &objPos);
+    Matrix_TransformPoint(lbl_803E56CC, lbl_803E56CC, -*(f32 *)(state + 0x1C) * timeDelta, mtx,
+                          (f32 *)(state + 0x0), (f32 *)(state + 0x4), (f32 *)(state + 0x8));
+    if (*(s8 *)(state + 0x29) == 7) {
+      *(f32 *)(state + 0x2C) = tx;
+      *(f32 *)(state + 0x30) = ty;
+      *(f32 *)(state + 0x34) = tz;
+      zero = lbl_803E56CC;
+      *(f32 *)(state + 0x38) = zero;
+      *(f32 *)(state + 0x3C) = zero;
+      *(f32 *)(state + 0x40) = zero;
     }
     else {
-      pfVar12[0xb] = pfVar12[0xb] + *pfVar12;
-      pfVar12[0xc] = pfVar12[0xc] + pfVar12[1];
-      pfVar12[0xd] = pfVar12[0xd] + pfVar12[2];
+      *(f32 *)(state + 0x2C) = *(f32 *)(state + 0x2C) + *(f32 *)(state + 0x0);
+      *(f32 *)(state + 0x30) = *(f32 *)(state + 0x30) + *(f32 *)(state + 0x4);
+      *(f32 *)(state + 0x34) = *(f32 *)(state + 0x34) + *(f32 *)(state + 0x8);
     }
-    in_f29 = (double)lbl_803E6440;
-    *(float *)(puVar7 + 6) = pfVar12[0xb] + pfVar12[0xe];
-    *(float *)(puVar7 + 8) = pfVar12[0xc] + pfVar12[0xf];
-    *(float *)(puVar7 + 10) =
-         pfVar12[0xd] + pfVar12[0x10] + (*(float *)((int)fVar11 + 0x14) - pfVar12[3]);
-    if ('\x06' < *(char *)((int)pfVar12 + 0x2b)) {
-      if (*(short *)(pfVar12 + 0x1b) == 0) {
-        ObjHits_DisableObject((int)puVar7);
-        (**(code **)(*DAT_803dd6cc + 8))(0x41,1);
+    ambB = lbl_803E57A8;
+    *(f32 *)(obj + 0xC) = *(f32 *)(state + 0x2C) + *(f32 *)(state + 0x38);
+    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x30) + *(f32 *)(state + 0x3C);
+    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x34) + *(f32 *)(state + 0x40) +
+                           (*(f32 *)(tricky + 0x14) - *(f32 *)(state + 0xC));
+    if (*(s8 *)(state + 0x2B) >= 7) {
+      if (*(s16 *)(state + 0x6C) == 0) {
+        ObjHits_DisableObject(obj);
+        DBPROT_SCREEN_FADE(0x41, 1);
       }
-      *(ushort *)(pfVar12 + 0x1b) = *(short *)(pfVar12 + 0x1b) + (ushort)DAT_803dc070;
-      if (0x41 < *(short *)(pfVar12 + 0x1b)) {
-        *puVar7 = 0;
-        *(undefined *)((int)pfVar12 + 0x29) = 6;
-        (**(code **)(*DAT_803dd6e4 + 0x20))(0);
-        (**(code **)(*DAT_803dd6e4 + 0x24))(0);
-        (**(code **)(*DAT_803dd6e4 + 0x28))((double)lbl_803E6364,(double)lbl_803E63F8);
-        if (*(char *)(pfVar12 + 0x20) == '\0') {
-          *(undefined *)(pfVar12 + 0x20) = 1;
+      *(s16 *)(state + 0x6C) += framesThisStep;
+      if (*(s16 *)(state + 0x6C) > 0x41) {
+        *(s16 *)(obj + 0x0) = 0;
+        *(s8 *)(state + 0x29) = 6;
+        DBPROT_CLOUD_SET_A(0);
+        DBPROT_CLOUD_SET_B(0);
+        DBPROT_CLOUD_SET_RANGE(lbl_803E56CC, lbl_803E5760);
+        if (*(u8 *)(state + 0x80) == 0) {
+          *(u8 *)(state + 0x80) = 1;
         }
-        *(undefined *)(pfVar12 + 0x1c) = 1;
-        *(undefined4 *)(puVar7 + 6) = *(undefined4 *)(iVar13 + 8);
-        *(float *)(puVar7 + 8) = lbl_803E6444;
-        *(undefined4 *)(puVar7 + 10) = *(undefined4 *)(iVar13 + 0x10);
-        FUN_8000680c((int)puVar7,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(*(undefined *)(puVar7 + 0x1a),2,1);
-        (**(code **)(*DAT_803dd6d4 + 0x48))(0,puVar7,0xffffffff);
-        goto LAB_801e1614;
+        *(u8 *)(state + 0x70) = 1;
+        *(f32 *)(obj + 0xC) = *(f32 *)(spawnData + 0x8);
+        *(f32 *)(obj + 0x10) = lbl_803E57AC;
+        *(f32 *)(obj + 0x14) = *(f32 *)(spawnData + 0x10);
+        Sfx_StopObjectChannel((int)obj, 1);
+        DBPROT_MAP_EVENT(*(u8 *)(obj + 0x34), 2, 1);
+        OBJECT_TRIGGER_REFRESH(0, (int *)obj, -1);
+        goto end;
       }
     }
+    break;
+  default:
+    *(int *)(obj + 0xF4) = 7;
+    break;
   }
-  if (*(char *)((int)pfVar12 + 0x29) < '\x02') {
-    pfVar12[0xb] = pfVar12[0x11] * *pfVar12 * lbl_803DC074 + pfVar12[0xb];
-    pfVar12[0xc] = pfVar12[0x11] * pfVar12[1] * lbl_803DC074 + pfVar12[0xc];
-    pfVar12[0xd] = pfVar12[0x11] * pfVar12[2] * lbl_803DC074 + pfVar12[0xd];
-    pfVar12[0x11] = pfVar12[0x11] + lbl_803E6448;
-    if (lbl_803E643C < pfVar12[0x11]) {
-      pfVar12[0x11] = lbl_803E643C;
+  if (*(s8 *)(state + 0x29) < 2) {
+    *(f32 *)(state + 0x2C) =
+        *(f32 *)(state + 0x44) * (*(f32 *)(state + 0x0) * timeDelta) + *(f32 *)(state + 0x2C);
+    *(f32 *)(state + 0x30) =
+        *(f32 *)(state + 0x44) * (*(f32 *)(state + 0x4) * timeDelta) + *(f32 *)(state + 0x30);
+    *(f32 *)(state + 0x34) =
+        *(f32 *)(state + 0x44) * (*(f32 *)(state + 0x8) * timeDelta) + *(f32 *)(state + 0x34);
+    *(f32 *)(state + 0x44) += lbl_803E57B0;
+    if (*(f32 *)(state + 0x44) > lbl_803E57A4) {
+      *(f32 *)(state + 0x44) = lbl_803E57A4;
     }
-    dVar15 = (double)lbl_803E644C;
-    pfVar12[0x17] =
-         (float)(dVar15 * (double)(lbl_803DC074 * (float)(in_f28 - (double)pfVar12[0x17])) +
-                (double)pfVar12[0x17]);
-    pfVar12[0x18] =
-         (float)(dVar15 * (double)(lbl_803DC074 * (float)(in_f27 - (double)pfVar12[0x18])) +
-                (double)pfVar12[0x18]);
-    pfVar12[0x19] =
-         (float)(dVar15 * (double)(lbl_803DC074 * (float)(in_f29 - (double)pfVar12[0x19])) +
-                (double)pfVar12[0x19]);
-    if (*(char *)((int)pfVar12 + 0x29) == '\0') {
-      local_c0 = (double)CONCAT44(0x43300000,(int)*(short *)((int)fVar11 + 2) ^ 0x80000000);
-      dVar15 = local_c0 - DOUBLE_803e6458;
-      uStack_c4 = -(int)*(short *)((int)fVar11 + 4) ^ 0x80000000;
-      local_c8 = 0x43300000;
-      pfVar12[0x10] =
-           lbl_803DC074 *
-           pfVar12[0x19] *
-           ((f32)(s32)uStack_c4 / pfVar12[0x17] -
-           pfVar12[0x10]) + pfVar12[0x10];
-      pfVar12[0xf] = lbl_803DC074 * pfVar12[0x19] * ((float)dVar15 / pfVar12[0x17] - pfVar12[0xf])
-                     + pfVar12[0xf];
-      fVar11 = lbl_803E6364;
-      pfVar12[0xe] = lbl_803E6364;
-      pfVar12[0xf] = fVar11;
-      iVar13 = (int)(-pfVar12[0x10] * pfVar12[0x18]);
-      local_d0 = (double)(longlong)iVar13;
-      iVar13 = (int)(short)iVar13;
-      iVar8 = (int)(lbl_803E6450 * -pfVar12[0xf] * pfVar12[0x18]);
-      local_d8 = (double)(longlong)iVar8;
-      iVar8 = (int)(short)iVar8;
+    blendK = lbl_803E57B4;
+    *(f32 *)(state + 0x5C) += blendK * (timeDelta * (ambA - *(f32 *)(state + 0x5C)));
+    *(f32 *)(state + 0x60) += blendK * (timeDelta * (ambC - *(f32 *)(state + 0x60)));
+    *(f32 *)(state + 0x64) += blendK * (timeDelta * (ambB - *(f32 *)(state + 0x64)));
+    if (*(s8 *)(state + 0x29) == 0) {
+      zRatio = (f32)*(s16 *)(tricky + 0x2) / *(f32 *)(state + 0x5C);
+      *(f32 *)(state + 0x40) +=
+          timeDelta * (*(f32 *)(state + 0x64) *
+                       ((f32)-*(s16 *)(tricky + 0x4) / *(f32 *)(state + 0x5C) - *(f32 *)(state + 0x40)));
+      *(f32 *)(state + 0x3C) +=
+          timeDelta * (*(f32 *)(state + 0x64) * (zRatio - *(f32 *)(state + 0x3C)));
+      zero = lbl_803E56CC;
+      *(f32 *)(state + 0x38) = zero;
+      *(f32 *)(state + 0x3C) = zero;
+      rollA = (s16)(int)(-*(f32 *)(state + 0x40) * *(f32 *)(state + 0x60));
+      rollB = (s16)(int)(lbl_803E57B8 * (-*(f32 *)(state + 0x3C) * *(f32 *)(state + 0x60)));
     }
     else {
-      pfVar12[0x10] = -(lbl_803DC074 * pfVar12[0x10] * pfVar12[0x19] - pfVar12[0x10]);
-      pfVar12[0xf] = -(lbl_803DC074 * pfVar12[0xf] * pfVar12[0x19] - pfVar12[0xf]);
-      iVar13 = 0;
-      iVar8 = 0;
+      *(f32 *)(state + 0x40) =
+          -(timeDelta * (*(f32 *)(state + 0x40) * *(f32 *)(state + 0x64)) - *(f32 *)(state + 0x40));
+      *(f32 *)(state + 0x3C) =
+          -(timeDelta * (*(f32 *)(state + 0x3C) * *(f32 *)(state + 0x64)) - *(f32 *)(state + 0x3C));
+      rollB = rollA = 0;
     }
-    *(float *)(puVar7 + 6) = pfVar12[0xe] * pfVar12[0x11] + pfVar12[0xb];
-    *(float *)(puVar7 + 8) = pfVar12[0xf] * pfVar12[0x11] + pfVar12[0xc];
-    *(float *)(puVar7 + 10) = pfVar12[0x10] * pfVar12[0x11] + pfVar12[0xd];
-    *(short *)((int)pfVar12 + 0x22) =
-         *(short *)((int)pfVar12 + 0x22) +
-         (short)((int)((uint)DAT_803dc070 * (iVar13 - *(short *)((int)pfVar12 + 0x22))) >> 5);
-    puVar7[1] = puVar7[1] + (short)((int)((uint)DAT_803dc070 * (iVar8 - (short)puVar7[1])) >> 5);
-    *puVar7 = *(short *)((int)pfVar12 + 0x22) + 0x4000;
-    puVar7[2] = *puVar7 + 0xc000;
+    *(f32 *)(obj + 0xC) = *(f32 *)(state + 0x38) * *(f32 *)(state + 0x44) + *(f32 *)(state + 0x2C);
+    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x3C) * *(f32 *)(state + 0x44) + *(f32 *)(state + 0x30);
+    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x40) * *(f32 *)(state + 0x44) + *(f32 *)(state + 0x34);
+    *(s16 *)(state + 0x22) =
+        *(s16 *)(state + 0x22) + ((framesThisStep * (rollA - *(s16 *)(state + 0x22))) >> 5);
+    *(s16 *)(obj + 0x2) =
+        *(s16 *)(obj + 0x2) + ((framesThisStep * (rollB - *(s16 *)(obj + 0x2))) >> 5);
+    *(s16 *)(obj + 0x0) = *(s16 *)(state + 0x22) + 0x4000;
+    *(s16 *)(obj + 0x4) = *(s16 *)(obj + 0x0) - 0x4000;
   }
-LAB_801e1614:
-  FUN_8028688c();
-  return;
+end:;
 }
+#pragma peephole reset
+#pragma scheduling reset
+#pragma scheduling off
+#pragma peephole off
+
 
 void DBprotection_updateEnvfxGameBits(u8 *state)
 {

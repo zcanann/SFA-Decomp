@@ -1333,8 +1333,8 @@ u8 groundanimator_func0B(int *obj)
 
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void *mapGetBlock(int idx);
-extern void fn_801923F8(void);
-extern void hitAnimatorFn_80193dbc(void *block, int *obj, u8 *vstate, int *desc);
+extern void fn_801923F8(int *cfg);
+extern void hitAnimatorFn_80193dbc(void *block, int *obj, u8 *vstate, u8 *desc);
 extern int fn_80065640(void);
 extern void fn_80065574(int a, int b, int c);
 extern u8 lbl_803DDAE8;
@@ -1357,7 +1357,7 @@ void waveanimator_init(int *obj, int *desc)
     *(f32*)((char*)vstate + 0x2C) = fz;
     *(f32*)((char*)vstate + 0x30) = fz;
     if (lbl_803DDAE8 == 0) {
-        fn_801923F8();
+        fn_801923F8(vstate);
     }
     ObjGroup_AddObject(obj, 27);
     lbl_803DDAE8++;
@@ -1409,7 +1409,7 @@ void hitanimator_update(int *obj)
     if ((*(u8*)((char*)state + 0x1C) & 4) != 0) {
         if (*(u8*)((char*)state + 0x1B) != 0) {
             if ((vstate[1] & 4) != 0) {
-                hitAnimatorFn_80193dbc(block, obj, vstate, state);
+                hitAnimatorFn_80193dbc(block, obj, vstate, (u8 *)state);
                 vstate[1] &= ~4;
             }
         }
@@ -1465,7 +1465,7 @@ void hitanimator_init(int *obj, int *desc)
         (double)*(f32*)((char*)obj + 0x14)));
     if (block != NULL) {
         if ((*(u8*)((char*)desc + 0x1C) & 4) != 0 && *(u8*)((char*)desc + 0x1B) != 0) {
-            hitAnimatorFn_80193dbc(block, obj, vstate, desc);
+            hitAnimatorFn_80193dbc(block, obj, vstate, (u8 *)desc);
         }
     }
     vstate[1] |= 2;
@@ -1566,15 +1566,15 @@ void waveanimator_hitDetect(int *obj) {
     off = 0;
     for (i = 0; i < w[8]; i++) {
         for (j = 0; j < w[8]; j++) {
-            *(s16 *)((char *)lbl_803DDAF0 + off) += framesThisStep >> 1;
-            while (*(s16 *)((char *)lbl_803DDAF0 + off) >= w[7]) {
-                *(s16 *)((char *)lbl_803DDAF0 + off) -= w[7];
+            ((s16 *)lbl_803DDAF0)[off] += framesThisStep >> 1;
+            while (((s16 *)lbl_803DDAF0)[off] >= w[7]) {
+                ((s16 *)lbl_803DDAF0)[off] -= w[7];
             }
-            *(s16 *)((char *)lbl_803DDAF0 + off + 2) += framesThisStep >> 1;
-            while (*(s16 *)((char *)lbl_803DDAF0 + off + 2) >= w[7]) {
-                *(s16 *)((char *)lbl_803DDAF0 + off + 2) -= w[7];
+            ((s16 *)lbl_803DDAF0)[off + 1] += framesThisStep >> 1;
+            while (((s16 *)lbl_803DDAF0)[off + 1] >= w[7]) {
+                ((s16 *)lbl_803DDAF0)[off + 1] -= w[7];
             }
-            off += 4;
+            off += 2;
         }
     }
     lbl_803DDAF8 = 1;
@@ -1698,7 +1698,6 @@ void fn_801932C8(int *obj, int *p2, int *p3) {
     int mid;
     int inner;
     int foff;
-    int hoff;
     int ix;
     int iz;
     f32 fracX;
@@ -1722,12 +1721,12 @@ void fn_801932C8(int *obj, int *p2, int *p3) {
     *(u8 *)((char *)p2 + 0x2a) = 0;
     radsq = *(f32 *)((char *)p2 + 0x14) * *(f32 *)((char *)p2 + 0x14);
     foff = 0;
-    hoff = 0;
     for (blkIdx = 0; blkIdx < *(u16 *)((char *)block + 0x9a); blkIdx++) {
         entry = mapBlockFn_800606ec(block, blkIdx);
         if (*(u8 *)((char *)p3 + 0x25) == mapBlockFn_80060678(entry)) {
+            mid = *(u16 *)entry;
             clampMax = lbl_803E3FC4;
-            for (mid = *(u16 *)entry; mid < *(u16 *)((char *)block + 0x14); mid++) {
+            for (; mid < *(u16 *)((char *)block + 0x14); mid++) {
                 vtx = fn_800606DC(block, mid);
                 for (inner = 0; inner < 3; inner++) {
                     void *cell = (char *)*(int *)((char *)block + 0x58) + *(u16 *)vtx * 6;
@@ -1741,18 +1740,14 @@ void fn_801932C8(int *obj, int *p2, int *p3) {
                     if (d > clampMax) {
                         d = clampMax;
                     }
-                    *(f32 *)((char *)*(int *)p2 + foff) = clampMax - d * d;
-                    *(s16 *)((char *)*(int *)((char *)p2 + 4) + hoff) = (s16)(int)vpos[1];
-                    foff += 4;
-                    hoff += 2;
+                    d = d * d;
+                    ((f32 *)*(int *)p2)[foff] = clampMax - d;
+                    *(s16 *)((char *)*(int *)((char *)p2 + 4) + foff * 2) = (int)vpos[1];
+                    foff++;
                     vtx = (char *)vtx + 2;
                 }
             }
-            {
-                int cnt = *(u8 *)((char *)p2 + 0x2a);
-                *(u8 *)((char *)p2 + 0x2a) = cnt + 1;
-                *(s16 *)((char *)p2 + cnt * 2 + 0x1c) = (s16)blkIdx;
-            }
+            *(s16 *)((char *)p2 + ((*(u8 *)((char *)p2 + 0x2a))++) * 2 + 0x1c) = (s16)blkIdx;
         }
     }
 }
@@ -1770,7 +1765,7 @@ extern u16 lbl_803DBDF0[];
 void groundanimator_update(int *obj) {
     int *g;
     int *r20;
-    int bi;
+    s8 bi;
     void *block;
     void *near;
     void *entry;
@@ -1791,9 +1786,9 @@ void groundanimator_update(int *obj) {
     if (*(u8 *)((char *)r20 + 0x25) == 0) {
         return;
     }
-    bi = (s8)objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
-                                 (double)*(f32 *)((char *)obj + 0x10),
-                                 (double)*(f32 *)((char *)obj + 0x14));
+    bi = objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
+                             (double)*(f32 *)((char *)obj + 0x10),
+                             (double)*(f32 *)((char *)obj + 0x14));
     oldbit = *(u8 *)((char *)g + 0x2d) & 1;
     if (bi > -1) {
         *(u8 *)((char *)g + 0x2d) = *(u8 *)((char *)g + 0x2d) | 1;
@@ -1806,12 +1801,14 @@ void groundanimator_update(int *obj) {
     if ((*(u8 *)((char *)g + 0x2d) & 1) == 0) {
         return;
     }
-    if (g[0] == 0) {
+    if ((*(u8 *)((char *)g + 0x2d) & 1) != 0 && *(void **)g == NULL) {
+        int p;
         block = mapGetBlock(bi);
         *(s16 *)((char *)g + 0x28) = (s16)(fn_80060688(block, *(u8 *)((char *)r20 + 0x25)) * 3);
         if (*(s16 *)((char *)g + 0x28) > 0) {
-            g[0] = (int)mmAlloc(*(s16 *)((char *)g + 0x28) * 6, 5, 0);
-            g[1] = g[0] + *(s16 *)((char *)g + 0x28) * 4;
+            p = (int)mmAlloc(*(s16 *)((char *)g + 0x28) * 6, 5, 0);
+            g[0] = p;
+            g[1] = p + *(s16 *)((char *)g + 0x28) * 4;
             fn_801932C8(obj, g, r20);
         }
     }
@@ -1819,7 +1816,7 @@ void groundanimator_update(int *obj) {
         return;
     }
     if (*(u8 *)((char *)r20 + 0x22) == 0) {
-        if (g[2] == 0) {
+        if (*(void **)(g + 2) == NULL) {
             nd = lbl_803E3F98;
             g[2] = (int)ObjGroup_FindNearestObject(4, obj, &nd);
             near = (void *)g[2];
@@ -2104,6 +2101,153 @@ void alphaanimator_update(int *obj) {
             *(u8 *)((char *)s + 0x18) = *(u8 *)((char *)s + 0x18) + 1;
         }
         *(f32 *)((char *)s + 0x8) = *(f32 *)((char *)s + 0x4) - lbl_803E3F84;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E3F40;
+extern f32 lbl_803E3F44;
+extern f32 lbl_803E3F48;
+extern f32 lbl_803E3F4C;
+extern f32 lbl_803E3F50;
+extern f32 lbl_803E3F54;
+extern f32 lbl_803E3F58;
+extern f32 lbl_803E3F5C;
+extern f32 lbl_803E3F60;
+extern f32 lbl_803E3F64;
+extern f32 fn_80293E80(f32);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801923F8(int *cfg)
+{
+    int i;
+    int j;
+    int x;
+    int stepX;
+    int y;
+    int stepY;
+    int flat;
+    int fi;
+    int bi;
+    int hi;
+    f32 c48;
+    f32 c4C;
+    f32 z;
+
+    lbl_803DDAF4 = mmAlloc(4 * cfg[7] * cfg[7], 0xFFFFFF, 0);
+    lbl_803DDAEC = mmAlloc(3 * cfg[7] * cfg[7], 0xFFFFFF, 0);
+
+    x = cfg[0];
+    stepX = (s32)((lbl_803E3F40 * (f32)cfg[2]) / (f32)cfg[7]);
+    y = cfg[1];
+    stepY = (s32)((lbl_803E3F40 * (f32)cfg[3]) / (f32)cfg[7]);
+
+    z = lbl_803E3F44;
+    *(f32 *)(cfg + 10) = z;
+    *(f32 *)(cfg + 9) = z;
+
+    flat = 0;
+    c48 = lbl_803E3F48;
+    c4C = lbl_803E3F4C;
+    for (i = 0; i < cfg[7]; i++) {
+        f32 xv = c48 * (f32)x;
+        for (j = 0; j < cfg[7]; j++) {
+            f32 s1 = fn_80293E80((c48 * (f32)y) / c4C);
+            f32 a = *(f32 *)(cfg + 5) * s1;
+            f32 s2 = fn_80293E80(xv / c4C);
+            ((f32 *)lbl_803DDAF4)[flat] = *(f32 *)(cfg + 4) * s2 + a;
+            if (((f32 *)lbl_803DDAF4)[flat] < *(f32 *)(cfg + 9)) {
+                *(f32 *)(cfg + 9) = ((f32 *)lbl_803DDAF4)[flat];
+            }
+            if (((f32 *)lbl_803DDAF4)[flat] > *(f32 *)(cfg + 10)) {
+                *(f32 *)(cfg + 10) = ((f32 *)lbl_803DDAF4)[flat];
+            }
+            y += stepY;
+            flat++;
+        }
+        x += stepX;
+    }
+
+    {
+        f32 negMin = -*(f32 *)(cfg + 9);
+        f32 zero2;
+        fi = 0;
+        bi = 0;
+        zero2 = lbl_803E3F44;
+        for (i = 0; i < cfg[7]; i++) {
+            for (j = 0; j < cfg[7]; j++) {
+                f32 v = ((f32 *)lbl_803DDAF4)[fi];
+                if (v < zero2) {
+                    f32 t = (v - *(f32 *)(cfg + 9)) / negMin;
+                    ((s8 *)lbl_803DDAEC)[bi] = (s32)(lbl_803E3F54 * t + lbl_803E3F50);
+                    ((s8 *)lbl_803DDAEC)[bi + 1] = (s32)(lbl_803E3F5C * t + lbl_803E3F58);
+                    ((s8 *)lbl_803DDAEC)[bi + 2] = (s32)(lbl_803E3F64 * t + lbl_803E3F60);
+                } else {
+                    ((s8 *)lbl_803DDAEC)[bi] = 255;
+                    ((s8 *)lbl_803DDAEC)[bi + 1] = 255;
+                    ((s8 *)lbl_803DDAEC)[bi + 2] = 255;
+                }
+                fi++;
+                bi += 3;
+            }
+        }
+    }
+
+    lbl_803DDAF0 = mmAlloc(4 * cfg[8] * cfg[8], 0xFFFFFF, 0);
+    hi = 0;
+    for (i = 0; i < cfg[8]; i++) {
+        for (j = 0; j < cfg[8]; j++) {
+            ((s16 *)lbl_803DDAF0)[hi] = (s16)(i * 10);
+            ((s16 *)lbl_803DDAF0)[hi + 1] = (s16)(j * 10);
+            hi += 2;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern char *fn_8006070C(void *block, int idx);
+extern u8 *Shader_getLayer(char *s, int layer);
+
+#pragma scheduling off
+#pragma peephole off
+void hitAnimatorFn_80193dbc(void *block, int *obj, u8 *vstate, u8 *desc)
+{
+    int i;
+    char *m;
+
+    if ((desc[0x1c] & 0x10) == 0) {
+        for (i = 0; i < *(u16 *)((char *)block + 0x9a); i++) {
+            m = (char *)mapBlockFn_800606ec(block, i);
+            if (desc[0x1b] == mapBlockFn_80060678(m)) {
+                if (*(s8 *)vstate != 0) {
+                    *(int *)(m + 0x10) &= ~2;
+                    if ((desc[0x1c] & 0x2) != 0) {
+                        *(int *)(m + 0x10) &= ~1;
+                    }
+                } else {
+                    *(int *)(m + 0x10) |= 2;
+                    if ((desc[0x1c] & 0x2) != 0) {
+                        *(int *)(m + 0x10) |= 1;
+                    }
+                }
+            }
+        }
+    }
+    if ((desc[0x1c] & 0x2) != 0) {
+        for (i = 0; i < *((u8 *)block + 0xa2); i++) {
+            char *s = fn_8006070C(block, i);
+            u8 *layer = Shader_getLayer(s, 0);
+            if (desc[0x1b] == layer[5]) {
+                if (*(s8 *)vstate != 0) {
+                    *(int *)(s + 0x3c) &= ~2;
+                } else {
+                    *(int *)(s + 0x3c) |= 2;
+                }
+            }
+        }
     }
 }
 #pragma peephole reset

@@ -87,48 +87,66 @@ typedef void (*GroundAnimatorInitAnimFn)(void *obj, undefined4 state, int param_
  * PAL Address: TODO
  * PAL Size: TODO
  */
+typedef struct {
+    s16 pad0[12];
+    s16 ev18;
+    s16 pad1a[7];
+    s16 ev28;
+    u8 pad2a[0x16];
+    u8 id40;
+} Dll115MapRow;
+
 #pragma scheduling off
 #pragma peephole off
 void dll_115_update(int obj)
 {
   u8 *state;
-  int mapData;
+  u8 *mapData;
   int step;
   int eventId;
 
   state = *(u8 **)(obj + 0xb8);
-  mapData = *(int *)(obj + 0x4c);
+  mapData = *(u8 **)(obj + 0x4c);
   if ((state[1] & 1) != 0) {
-    eventId = *(s16 *)(mapData + state[0] * 2 + 0x18);
+    eventId = ((Dll115MapRow *)(mapData + state[0] * 2))->ev18;
     if (eventId != -1) {
       GameBit_Set(eventId, 1);
     }
     state[1] = (u8)(state[1] & ~1);
     state[0]++;
   }
-  if ((s8)state[0] == 9) {
+  switch (state[0]) {
+  case 9:
     (*(GroundAnimatorActivateFn *)(*gObjectTriggerInterface + 0x54))(obj, *(s16 *)(mapData + 0x3c));
     (*(GroundAnimatorRefreshFn *)(*gObjectTriggerInterface + 0x48))
         (*(u8 *)(mapData + 0x3a), obj, *(u8 *)(mapData + 0x3b));
-  } else if ((((s8)state[0] < 8) || ((s8)state[0] >= 0xb)) &&
-             (*(s16 *)(mapData + state[0] * 2 + 0x28) == -1)) {
-    state[0] = 8;
-  } else if ((((s8)state[0] < 8) || ((s8)state[0] >= 0xb)) &&
-             ((u32)GameBit_Get(*(s16 *)(mapData + state[0] * 2 + 0x28)) != 0) &&
-             ((s8)*(u8 *)(mapData + state[0] + 0x40) != -1)) {
-    (*(GroundAnimatorRefreshFn *)(*gObjectTriggerInterface + 0x48))
-        ((s8)*(u8 *)(mapData + state[0] + 0x40), obj, -1);
+    break;
+  case 8:
+  case 10:
+    break;
+  default:
+    eventId = ((Dll115MapRow *)(mapData + state[0] * 2))->ev28;
+    if (eventId == -1) {
+      state[0] = 8;
+    } else if ((u32)GameBit_Get(eventId) != 0) {
+      s8 id = (s8)((Dll115MapRow *)(mapData + state[0]))->id40;
+      if (id != -1) {
+        (*(GroundAnimatorRefreshFn *)(*gObjectTriggerInterface + 0x48))(id, obj, -1);
+      }
+    }
+    break;
   }
   {
     short *p;
     step = state[0] - 1;
     p = (short *)mapData + step;
     while (step >= 0) {
-      if (p[12] == -1) break;
-      if ((u32)GameBit_Get(p[12]) != 0) break;
+      eventId = p[12];
+      if (eventId == -1) break;
+      if ((u32)GameBit_Get(eventId) != 0) break;
       state[0]--;
-      step--;
       p--;
+      step--;
     }
   }
 }
@@ -1046,6 +1064,276 @@ void appleontree_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     u8 *inner = *(u8 **)(obj + 0xb8);
     if ((inner[0x5a] & 2) == 0) {
         objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E37C8);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* v1.0 ground-animator drop physics (drift twins of FUN_8017db40/FUN_8017e15c/FUN_8017e3c0). */
+extern f32 timeDelta;
+extern f32 sqrtf(f32);
+extern int fn_80065684(int obj, f32 x, f32 y, f32 z, f32 *out, int flag);
+extern void ***gWaterfxInterface;
+extern f32 lbl_803E37D4;
+extern f32 lbl_803E37D8;
+extern f32 lbl_803E37DC;
+extern f32 lbl_803E37E0;
+extern f32 lbl_803E37E4;
+extern f32 lbl_803E37E8;
+extern f32 lbl_803E37F4;
+extern f32 lbl_803E37F8;
+extern f32 lbl_803E37FC;
+extern f32 lbl_803E3800;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8017D854(int obj, int msg)
+{
+    int state = *(int *)(obj + 0xb8);
+    int v;
+
+    switch (msg) {
+    case 0:
+        v = 2;
+        break;
+    case 1:
+        v = 2;
+        break;
+    case 2:
+        v = 2;
+        break;
+    default:
+        v = 0;
+        break;
+    }
+    *(u16 *)(state + 0x38) = (u16)v;
+    *(u8 *)(state + 0x3a) = 4;
+    *(f32 *)(state + 8) = timeDelta;
+    *(f32 *)(state + 0xc) = timeDelta;
+    *(s16 *)(state + 0x48) = (s16)randomGetRange(-0x8000, 0x7fff);
+    *(s16 *)(state + 0x4a) = (s16)randomGetRange(-0x8000, 0x7fff);
+    *(s16 *)(state + 0x4c) = 0x2000;
+
+    if (fn_80065684(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14),
+                    (f32 *)(state + 0x30), 0) == 0) {
+        state = *(int *)(obj + 0xb8);
+        if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
+            Obj_FreeObject(obj);
+        } else {
+            if (*(void **)(obj + 0x54) != NULL) {
+                ObjHits_DisableObject(obj);
+            }
+            *(u8 *)(state + 0x5a) = (u8)(*(u8 *)(state + 0x5a) | 2);
+        }
+    } else {
+        f32 m = *(f32 *)(state + 0x40);
+        f32 g = lbl_803E37D8 * m;
+        f32 q = sqrtf(-(g * *(f32 *)(state + 0x30) - lbl_803E37D4));
+        f32 t = lbl_803E37DC * m;
+        f32 a;
+        f32 r;
+
+        if (t >= lbl_803E37D4) {
+            a = t;
+        } else {
+            a = -t;
+        }
+        if (a <= lbl_803E37E0) {
+            r = lbl_803E37C8;
+        } else {
+            f32 r1 = (lbl_803E37E4 - q) / t;
+            f32 r2 = (lbl_803E37E4 + q) / t;
+            r = (r1 > 0.0f) ? r1 : r2;
+        }
+        *(f32 *)(state + 0x50) = r;
+
+        if (*(f32 *)(state + 0x28) < lbl_803E37D4) {
+            *(f32 *)(state + 0x30) = -(lbl_803E37D8 * *(f32 *)(state + 0x24) - *(f32 *)(state + 0x30));
+        } else {
+            *(f32 *)(state + 0x30) = lbl_803E37E8 * (lbl_803E37D8 * *(f32 *)(state + 0x24)) + *(f32 *)(state + 0x30);
+        }
+
+        if (*(f32 *)(state + 0x30) <= lbl_803E37D4) {
+            state = *(int *)(obj + 0xb8);
+            if ((*(s16 *)(obj + 6) & 0x2000) != 0) {
+                Obj_FreeObject(obj);
+            } else {
+                if (*(void **)(obj + 0x54) != NULL) {
+                    ObjHits_DisableObject(obj);
+                }
+                *(u8 *)(state + 0x5a) = (u8)(*(u8 *)(state + 0x5a) | 2);
+            }
+        } else {
+            *(f32 *)(state + 0x2c) = *(f32 *)(obj + 0x10);
+            *(f32 *)(state + 0x34) = *(f32 *)(obj + 0x10) - *(f32 *)(state + 0x30);
+            if (*(void **)(obj + 0x54) != NULL) {
+                ObjHits_DisableObject(obj);
+            }
+            Sfx_PlayFromObject(obj, SFXen_bridge_stops);
+        }
+    }
+}
+
+int fn_8017DCD4(int p, int state, f32 y)
+{
+    f32 zero = lbl_803E37D4;
+    f32 m = *(f32 *)(state + 0x40);
+
+    if (zero != m) {
+        if (*(f32 *)(state + 0x30) - (*(f32 *)(state + 0x2c) - y) < zero) {
+            f32 b = *(f32 *)(state + 0x44);
+            if (zero == b) {
+                f32 g = lbl_803E37D8 * m;
+                f32 q = sqrtf(b * b - g * *(f32 *)(state + 0x30));
+                f32 t = lbl_803E37DC * m;
+                f32 a;
+                f32 r;
+
+                if (t >= lbl_803E37D4) {
+                    a = t;
+                } else {
+                    a = -t;
+                }
+                if (a <= lbl_803E37E0) {
+                    r = lbl_803E37C8;
+                } else {
+                    f32 r1 = (-b - q) / t;
+                    f32 r2 = (-b + q) / t;
+                    r = (r1 > 0.0f) ? r1 : r2;
+                }
+                *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - r;
+                *(f32 *)(state + 0x2c) = *(f32 *)(state + 0x2c) - *(f32 *)(state + 0x30);
+                *(f32 *)(state + 0x30) = lbl_803E37D4;
+                *(f32 *)(p + 0x10) = *(f32 *)(state + 0x2c);
+                *(s16 *)(p + 0) = *(s16 *)(state + 0x48);
+                *(s16 *)(p + 2) = *(s16 *)(state + 0x4a);
+                *(s16 *)(p + 4) = *(s16 *)(state + 0x4c);
+                *(f32 *)(state + 0x44) = -*(f32 *)(state + 0x28);
+                if ((*(u8 *)(state + 0x5a) & 8) == 0) {
+                    Sfx_PlayFromObject(p, 0x407);
+                    *(u8 *)(state + 0x5a) = (u8)(*(u8 *)(state + 0x5a) | 8);
+                }
+                return 1;
+            } else if (b < lbl_803E37F4) {
+                *(f32 *)(p + 0x10) = *(f32 *)(state + 0x2c);
+                *(f32 *)(state + 0x40) = zero;
+                *(f32 *)(state + 0x44) = zero;
+                return 1;
+            } else {
+                f32 g;
+                f32 q;
+                f32 t;
+                f32 a;
+                f32 r;
+                m = m + *(f32 *)(state + 0x3c);
+                g = lbl_803E37D8 * m;
+                q = sqrtf(b * b - g * *(f32 *)(state + 0x30));
+                t = lbl_803E37DC * m;
+
+                if (t >= lbl_803E37D4) {
+                    a = t;
+                } else {
+                    a = -t;
+                }
+                if (a <= lbl_803E37E0) {
+                    r = lbl_803E37C8;
+                } else {
+                    f32 r1 = (-b - q) / t;
+                    f32 r2 = (-b + q) / t;
+                    r = (r1 > 0.0f) ? r1 : r2;
+                }
+                *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - r;
+                *(f32 *)(p + 0x10) = *(f32 *)(state + 0x2c);
+                *(f32 *)(state + 0x44) = *(f32 *)(state + 0x44) * lbl_803E37F8;
+                return 0;
+            }
+        } else {
+            *(f32 *)(p + 0x10) = y;
+            return 1;
+        }
+    }
+    return 1;
+}
+
+int fn_8017DF34(int p, int state, f32 y)
+{
+    if (lbl_803E37D4 == *(f32 *)(state + 0x3c)) {
+        if (*(f32 *)(state + 0x30) - (*(f32 *)(state + 0x2c) - y) <= lbl_803E37D4) {
+            f32 b;
+            f32 m = *(f32 *)(state + 0x40);
+            f32 g;
+            f32 q;
+            f32 t;
+            f32 a;
+            f32 r;
+            b = *(f32 *)(state + 0x44);
+            g = lbl_803E37D8 * m;
+            q = sqrtf(b * b - g * *(f32 *)(state + 0x30));
+            t = lbl_803E37DC * m;
+
+            if (t >= lbl_803E37D4) {
+                a = t;
+            } else {
+                a = -t;
+            }
+            if (a <= lbl_803E37E0) {
+                r = lbl_803E37C8;
+            } else {
+                f32 r1 = (-b - q) / t;
+                f32 r2 = (-b + q) / t;
+                r = (r1 > 0.0f) ? r1 : r2;
+            }
+            *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - r;
+            *(f32 *)(state + 0x2c) = *(f32 *)(state + 0x2c) - *(f32 *)(state + 0x30);
+            *(f32 *)(state + 0x30) = lbl_803E37D4;
+            *(f32 *)(p + 0x10) = *(f32 *)(state + 0x2c);
+            *(s16 *)(p + 0) = *(s16 *)(state + 0x48);
+            *(s16 *)(p + 2) = *(s16 *)(state + 0x4a);
+            *(s16 *)(p + 4) = *(s16 *)(state + 0x4c);
+            {
+                f32 g2 = lbl_803E37DC * *(f32 *)(state + 0x40);
+                *(f32 *)(state + 0x44) = g2 * r + *(f32 *)(state + 0x44);
+            }
+            *(f32 *)(state + 0x3c) = *(f32 *)(state + 0x28);
+            ((void (*)(int, f32, f32, f32))(*gWaterfxInterface)[4])(p, *(f32 *)(p + 0xc), *(f32 *)(state + 0x34), *(f32 *)(p + 0x14));
+            return 0;
+        } else {
+            *(f32 *)(p + 0x10) = y;
+            return 1;
+        }
+    } else if (y - *(f32 *)(state + 0x2c) >= lbl_803E37D4) {
+        f32 b;
+        f32 m = *(f32 *)(state + 0x40) + *(f32 *)(state + 0x3c);
+        f32 g;
+        f32 q;
+        f32 t;
+        f32 a;
+        f32 r;
+        b = *(f32 *)(state + 0x44);
+        g = lbl_803E37D8 * m;
+        q = sqrtf(b * b - g * *(f32 *)(state + 0x30));
+        t = lbl_803E37DC * m;
+
+        if (t >= lbl_803E37D4) {
+            a = t;
+        } else {
+            a = -t;
+        }
+        if (a <= lbl_803E37E0) {
+            r = lbl_803E37C8;
+        } else {
+            f32 r1 = (-b - q) / t;
+            f32 r2 = (-b + q) / t;
+            r = (r1 > 0.0f) ? r1 : r2;
+        }
+        *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - r;
+        *(f32 *)(p + 0x10) = *(f32 *)(state + 0x2c);
+        *(f32 *)(state + 0x3c) = lbl_803E37FC;
+        *(f32 *)(state + 0x44) = lbl_803E3800;
+        return 0;
+    } else {
+        *(f32 *)(p + 0x10) = y;
+        return 1;
     }
 }
 #pragma peephole reset

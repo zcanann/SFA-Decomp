@@ -2,25 +2,22 @@
 #define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80273F50_H_
 
 #include "ghidra_import.h"
-#include "main/audio/data_ref.h"
 
-int dataInsertLayer(u16 key, void *value, u16 count);
-int dataRemoveLayer(s16 key);
-int dataInsertCurve(u16 key, void *value);
-int dataRemoveCurve(s16 key);
-int dataInsertSDir(DataSampleDirEntry *sampleTable, void *baseAddr);
-int dataAddSampleReference(u16 sampleId);
-int dataRemoveSampleReference(u16 sampleId);
-int dataInsertFX(s16 fxId, u8 *samples, u32 count);
-int dataInsertMacro(u32 key, void *value);
-int dataRemoveMacro(u32 key);
-int maccmp(void *a, void *b);
-int smpcmp(void *a, void *b);
-int dataGetSample(u16 key, u32 *out);
-int curvecmp(void *a, void *b);
-int layercmp(void *a, void *b);
-int fxcmp(void *a, void *b);
-void dataInit(u32 unused, void *base);
-int IFFifoAlloc(int x);
+/* MusyX synthdata.c — see src/main/unknown/autos/placeholder_80273F50.c */
+
+s32 dataInsertLayer(u16 cid, void *layerdata, u16 size);
+s32 dataRemoveLayer(u16 sid);
+s32 dataInsertCurve(u16 cid, void *curvedata);
+s32 dataRemoveCurve(u16 sid);
+s32 dataAddSampleReference(u16 sid);
+s32 dataRemoveSampleReference(u16 sid);
+s32 dataInsertMacro(u16 mid, void *macroaddr);
+s32 dataRemoveMacro(u16 mid);
+void *dataGetMacro(u16 mid);
+void *dataGetCurve(u16 cid);
+void *dataGetKeymap(u16 cid);
+void *dataGetLayer(u16 cid, u16 *n);
+void dataInit(u32 smpBase, u32 smpLength);
+int IFFifoAlloc(int addr);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80273F50_H_ */

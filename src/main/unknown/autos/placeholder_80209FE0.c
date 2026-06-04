@@ -175,9 +175,6 @@ extern int ObjList_FindNearestObjectByDefNo();
 extern undefined4 ObjPath_GetPointWorldPositionArray();
 extern undefined4 ObjPath_GetPointLocalPosition();
 extern uint ObjPath_GetPointModelMtx();
-extern undefined8 ObjPath_GetPointWorldPosition();
-extern int Obj_GetYawDeltaToObject();
-extern undefined4 objAnimFn_80038f38();
 extern undefined4 FUN_80039130();
 extern undefined4 FUN_800392e0();
 extern undefined4 FUN_800392ec();
@@ -311,7 +308,6 @@ extern undefined4 SH_LevelControl_runBloopEvent();
 extern undefined4 FUN_801d8480();
 extern int FUN_801ecf58();
 extern uint SnowBike_hitDetect();
-extern undefined4 PSVECDotProduct();
 extern undefined4 FUN_80247944();
 extern undefined4 FUN_80247bf8();
 extern undefined4 FUN_80247cd8();
@@ -1708,12 +1704,12 @@ extern f32 lbl_803E65C4;
 extern f32 lbl_803E65C8;
 extern void s16toFloat(void *p, int v);
 extern int timerCountDown(f32 *p);
-extern int arrayIndexOf(int arr, int val);
+extern int arrayIndexOf();
 extern int Obj_FreeObject(int obj);
 extern int fn_80080150(int p);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern void *fn_802972A8(int obj);
-extern double Vec_distance(int *from, int *to);
+extern f32 Vec_distance(int *from, int *to);
 extern int *Obj_GetPlayerObject(void);
 extern u8 framesThisStep;
 extern f32 lbl_803E6598;
@@ -1721,7 +1717,7 @@ extern f32 lbl_803E65A8;
 extern f32 lbl_803E65AC;
 extern f32 lbl_803E65B0;
 extern f32 lbl_803E65B8;
-extern void lightFn_8001db6c(f32 intensity, void *light, int onoff);
+extern void lightFn_8001db6c(void *light, int onoff, f32 intensity);
 extern void drakorhoverpad_resetPendingMotion(int obj);
 extern int GameBit_Get(int bit);
 extern f32 lbl_803E6540;
@@ -1762,6 +1758,70 @@ typedef struct {
     u8 b01 : 1;
 } DrakorFlags;
 
+extern s16 *objModelGetVecFn_800395d8(int obj, int idx);
+extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
+extern void PSVECNormalize(f32 *in, f32 *out);
+extern f32 PSVECDotProduct(f32 *a, f32 *b);
+extern void PSVECScale(f32 *in, f32 *out, f32 scale);
+extern f32 PSVECMag(f32 *v);
+extern int getAngle(f32 dx, f32 dz);
+extern u8 Obj_IsLoadingLocked(void);
+extern u8 *Obj_AllocObjectSetup(int size, int typeId);
+extern int loadObjectAtObject(int obj, u8 *setup);
+extern void drakormissile_startActiveLaunch(int obj);
+extern int getEnvfxActImmediately(int obj, int target, int actId, int flags);
+extern void skyFn_80088e54(int p, f32 v);
+extern void timeOfDayFn_80055038(void);
+extern int objCreateLight(int a, int b);
+extern void modelLightStruct_setField50(int light, int v);
+extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d);
+extern void modelLightStruct_setColors100104(int light, int a, int b, int c, int d);
+extern void fn_8001D730(int light, int a, int b, int c, int d, int e, f32 v);
+extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
+extern void lightSetField4D(int light, int v);
+extern void lightSetFieldB0(int light, int a, int b, int c, int d);
+extern void fn_8001D9E0(int light, int a, int b, int c, int d);
+extern void lightFn_8001d620(int light, int a, int b);
+extern void lightSetField2FB(int light, int v);
+extern void fn_8001D714(int light, f32 v);
+extern int Obj_UpdateRomCurveFollowVelocityIndexed(f32 a, f32 b, f32 c, int obj, void *curve, int p, void *out);
+extern void Obj_SmoothTurnAnglesTowardVelocity(int obj, void *angles, int p, f32 a, f32 b);
+extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
+extern int randFn_80080100(int range);
+extern void objAudioFn_80039270(int obj, int p, int sfxId);
+extern void objAnimFn_80038f38(int obj, int p);
+extern int ObjPath_GetPointWorldPosition(int obj, int idx, void *x, void *y, void *z, int p);
+extern f32 sqrtf(f32 x);
+extern int *seqFn_800394a0(void);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern int *gRomCurveInterface;
+extern int *gGameUIInterface;
+extern int *gPartfxInterface;
+extern int lbl_80329FA4[];
+extern int lbl_80329FB8[];
+extern s16 lbl_803DC198;
+extern s16 lbl_803DC19A;
+extern f32 lbl_803DC188;
+extern f32 lbl_803DC18C;
+extern f32 lbl_803DC190;
+extern f32 lbl_803DC194;
+extern f32 lbl_803E6530;
+extern f32 lbl_803E6534;
+extern f32 lbl_803E6538;
+extern f32 lbl_803E653C;
+extern f32 lbl_803E6560;
+extern f32 lbl_803E6564;
+extern f32 lbl_803E6568;
+extern f32 lbl_803E656C;
+extern f32 lbl_803E6570;
+extern f32 lbl_803E6574;
+extern f32 lbl_803E6578;
+
+void bossdrakor_handleActionEvent(int obj, int state, int action);
+void bossdrakor_updateHeadTracking(int obj, int state);
+int bossdrakor_chooseNextMove(int obj, f32 *speedOut);
+void bossdrakor_spawnAttackObjects(int obj, int state, int action);
+
 int bossdrakor_getExtraSize(void)
 {
     return 0x1a4;
@@ -1769,6 +1829,399 @@ int bossdrakor_getExtraSize(void)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
+void bossdrakor_update(int obj)
+{
+    int state;
+    int state2;
+    int moveResult;
+    int adv;
+    int player;
+    int i;
+    int moveId;
+    s8 *p;
+    u16 *uvec;
+    int *tbl;
+    int v27;
+    int v28;
+    f32 v178;
+    f32 v180;
+    f32 v;
+    f32 t;
+    s16 d;
+    int step;
+    s16 *vec;
+    s8 buf[0x1c];
+    f32 hz;
+    f32 hy;
+    f32 hx;
+    int curveArg;
+
+    state = *(int *)((char *)obj + 0xb8);
+    curveArg = 0x29;
+    if (((DrakorFlags *)((char *)state + 0x198))->b10) {
+        getEnvfxActImmediately(obj, obj, 0x144, 0);
+        getEnvfxActImmediately(obj, obj, 0x10d, 0);
+        getEnvfxActImmediately(obj, obj, 0x10e, 0);
+        skyFn_80088e54(1, lbl_803E6510);
+        timeOfDayFn_80055038();
+        if ((*(u8 (**)(void *, int, f32, int *, int))(*gRomCurveInterface + 0x8c))((void *)((char *)state + 0x28), obj, lbl_803E6560, &curveArg, 0xd) != 0) {
+            (*(u8 (**)(void *, int, f32, int *, int))(*gRomCurveInterface + 0x8c))((void *)((char *)state + 0x28), obj, lbl_803E6560, &curveArg, 0);
+        }
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)state + 0x90);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)state + 0x98);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)state + 0x94);
+        ((DrakorFlags *)((char *)state + 0x198))->b20 = 1;
+        *(u8 *)((char *)state + 0x190) = 0;
+        state2 = *(int *)((char *)obj + 0xb8);
+        ((DrakorFlags *)((char *)state2 + 0x198))->b20 = 1;
+        (*(void (**)(int, int))(*gGameUIInterface + 0x58))(*(int *)((char *)state2 + 0x170), 0x63e);
+        (*(void (**)(int))(*gGameUIInterface + 0x5c))(*(int *)((char *)state2 + 0x170));
+        ((DrakorFlags *)((char *)state + 0x198))->b10 = 0;
+        *(int *)((char *)state + 0x160) = objCreateLight(0, 1);
+        if (*(void **)((char *)state + 0x160) != NULL) {
+            modelLightStruct_setField50(*(int *)((char *)state + 0x160), 2);
+            modelLightStruct_setColorsA8AC(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
+            modelLightStruct_setColors100104(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
+            fn_8001D730(*(int *)((char *)state + 0x160), 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
+            lightDistAttenFn_8001dc38(*(int *)((char *)state + 0x160), lbl_803E6544, lbl_803E6540);
+            lightSetField4D(*(int *)((char *)state + 0x160), 0);
+            lightFn_8001db6c(*(void **)((char *)state + 0x160), 1, lbl_803E6520);
+            lightSetFieldB0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
+            fn_8001D9E0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
+            lightFn_8001d620(*(int *)((char *)state + 0x160), 2, 0x28);
+            lightSetField2FB(*(int *)((char *)state + 0x160), 1);
+            fn_8001D714(*(int *)((char *)state + 0x160), lbl_803E6550);
+        }
+    }
+    moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(*(f32 *)state, lbl_803E6568, lbl_803E6520, obj, (void *)((char *)state + 0x28), 1, (void *)((char *)state + 0x194));
+    if (((DrakorFlags *)((char *)state + 0x198))->b40) {
+        player = (int)Obj_GetPlayerObject();
+        if ((void *)player != NULL) {
+            d = Obj_GetYawDeltaToObject(obj, player, 0);
+            *(s16 *)obj += (d < -0x200) ? -0x200 : ((d > 0x200) ? 0x200 : d);
+            d = *(s16 *)((char *)obj + 2);
+            if (d != 0) {
+                *(s16 *)((char *)obj + 2) -= (d < -0x100) ? -0x100 : ((d > 0x100) ? 0x100 : d);
+            }
+            d = *(s16 *)((char *)obj + 4);
+            if (d != 0) {
+                *(s16 *)((char *)obj + 4) -= (d < -0x100) ? -0x100 : ((d > 0x100) ? 0x100 : d);
+            }
+        }
+    } else {
+        Obj_SmoothTurnAnglesTowardVelocity(obj, (void *)((char *)obj + 0x24), 0x2d, lbl_803E6548, lbl_803E656C);
+    }
+    if (moveResult != 0) {
+        bossdrakor_handleActionEvent(obj, state, moveResult);
+    }
+    adv = ((int (*)(f32, int, f32, void *))ObjAnim_AdvanceCurrentMove)(lbl_803E6570 + PSVECMag((f32 *)((char *)obj + 0x24)) / *(f32 *)((char *)state + 0x164), obj, timeDelta, buf);
+    if (adv != 0) {
+        if (*(int *)((char *)state + 0x168) == 0) {
+            ObjHits_ClearHitVolumes(obj);
+            ((DrakorFlags *)((char *)state + 0x198))->b04 = 0;
+            ((DrakorFlags *)((char *)state + 0x198))->b08 = 0;
+            if (!((DrakorFlags *)((char *)state + 0x198))->b40) {
+                *(f32 *)((char *)state + 0x164) = lbl_803E6534;
+                ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 0x28);
+                moveId = 0x10;
+            } else {
+                moveId = bossdrakor_chooseNextMove(obj, (f32 *)((char *)state + 0x164));
+            }
+            ObjAnim_SetCurrentMove(obj, moveId, lbl_803E6510, 0);
+        } else {
+            ObjAnim_SetCurrentMove(obj, *(int *)((char *)state + 0x168), lbl_803E6510, 0);
+        }
+        if (arrayIndexOf(lbl_80329FB8, 5, *(int *)((char *)state + 0x168)) != -1) {
+            switch (*(int *)((char *)state + 0x168)) {
+            case 0x12:
+                ((DrakorFlags *)((char *)state + 0x198))->b40 = 0;
+                *(int *)((char *)state + 0x168) = 0;
+                break;
+            case 0x13:
+                *(int *)((char *)state + 0x168) = 0x16;
+                *(f32 *)((char *)state + 0x164) = lbl_803E6534;
+                break;
+            case 0x16:
+                *(int *)((char *)state + 0x168) = 0x16;
+                *(f32 *)((char *)state + 0x164) = lbl_803E6574;
+                break;
+            case 0x14:
+                if (((DrakorFlags *)((char *)state + 0x198))->b08) {
+                    *(int *)((char *)state + 0x168) = 0;
+                } else {
+                    ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
+                    *(int *)((char *)state + 0x168) = 0x15;
+                    *(f32 *)((char *)state + 0x164) = lbl_803E6574;
+                }
+                break;
+            case 0x15:
+                *(int *)((char *)state + 0x168) = 0;
+                *(f32 *)((char *)state + 0x164) = lbl_803E6514;
+                ((DrakorFlags *)((char *)state + 0x198))->b04 = 1;
+                break;
+            }
+        }
+    }
+    for (i = 0, p = buf; i < buf[0x1b]; i++) {
+        switch (p[0x13]) {
+        case 0:
+            Sfx_PlayFromObject(obj, 0x481);
+            break;
+        case 7:
+            Sfx_PlayFromObject(obj, 0x481);
+            break;
+        }
+        p++;
+    }
+    if (timerCountDown((f32 *)((char *)state + 0x10)) != 0) {
+        bossdrakor_spawnAttackObjects(obj, state, *(int *)((char *)state + 0x174));
+        if (*(f32 *)((char *)state + 0x14) != lbl_803E6510) {
+            s16toFloat((void *)((char *)state + 0x10), (int)*(f32 *)((char *)state + 0x14));
+        }
+    }
+    if ((*(u16 *)((char *)obj + 0xb0) & 0x800) == 0) {
+        *(f32 *)((char *)state + 0x1c) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)state + 0x20) = *(f32 *)((char *)obj + 0x10) - lbl_803E655C;
+        *(f32 *)((char *)state + 0x24) = *(f32 *)((char *)obj + 0x14);
+    }
+    objMove(obj, *(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x28), *(f32 *)((char *)obj + 0x2c));
+    if (((DrakorFlags *)((char *)state + 0x198))->b20) {
+        (*(void (**)(int))(*gGameUIInterface + 0x5c))(*(int *)((char *)state + 0x170));
+    }
+    t = lbl_803E6510;
+    if (t != *(f32 *)((char *)state + 0x178)) {
+        *(f32 *)((char *)state + 0x17c) = -(lbl_803E6578 * timeDelta - *(f32 *)((char *)state + 0x17c));
+        *(f32 *)((char *)state + 0x178) = *(f32 *)((char *)state + 0x178) + *(f32 *)((char *)state + 0x17c);
+        v = *(f32 *)((char *)state + 0x178);
+        t = (v < t) ? t : ((v > lbl_803E6550) ? lbl_803E6550 : v);
+        *(f32 *)((char *)state + 0x178) = t;
+        v180 = *(f32 *)((char *)state + 0x180);
+        v178 = *(f32 *)((char *)state + 0x178);
+        tbl = seqFn_800394a0();
+        v27 = (int)(lbl_803E6530 * v178);
+        v28 = (int)(lbl_803E6530 * (v178 * v180));
+        i = 0;
+        do {
+            uvec = (u16 *)objModelGetVecFn_800395d8(obj, tbl[0]);
+            if (uvec != NULL) {
+                uvec[1] = v28;
+                uvec[0] = v27;
+                uvec[2] = 0;
+            }
+            tbl++;
+            i++;
+        } while (i < 5);
+    }
+    if (randFn_80080100(200) != 0 && ((DrakorFlags *)((char *)state + 0x198))->b40) {
+        objAudioFn_80039270(obj, state + 0x130, 0x2ff);
+    }
+    objAnimFn_80038f38(obj, state + 0x130);
+    if (((DrakorFlags *)((char *)state + 0x198))->b04) {
+        player = (int)Obj_GetPlayerObject();
+        vec = objModelGetVecFn_800395d8(obj, 0xe);
+        if (vec != NULL) {
+            ObjPath_GetPointWorldPosition(obj, 4, &hx, &hy, &hz, 0);
+            PSVECSubtract((f32 *)((char *)player + 0xc), &hx, &hx);
+            d = (s16)getAngle(hy, sqrtf(hx * hx + hz * hz)) - (u16)vec[0];
+            if (d > 0x8000) {
+                d = (s16)((int)d - 0xffff);
+            }
+            if (d < -0x8000) {
+                d += 0xffff;
+            }
+            step = (d < -(framesThisStep << 8)) ? -(framesThisStep << 8) : ((d > (framesThisStep << 8)) ? (framesThisStep << 8) : d);
+            vec[0] += (s16)step;
+        }
+    } else {
+        bossdrakor_updateHeadTracking(obj, state);
+    }
+}
+
+void bossdrakor_updateHeadTracking(int obj, int state)
+{
+    s16 *neck;
+    s16 *vecF;
+    s16 *vec10;
+    int step;
+    int step2;
+    int v;
+    s16 d;
+    struct {
+        u8 pad[6];
+        s16 mode;
+        f32 val;
+        f32 vec[3];
+    } prm;
+
+    neck = objModelGetVecFn_800395d8(obj, 0xe);
+    if (neck != NULL) {
+        v = (s16)-neck[0];
+        step = (v < -(framesThisStep << 8)) ? -(framesThisStep << 8) : ((v > (framesThisStep << 8)) ? (framesThisStep << 8) : v);
+        neck[0] += (s16)step;
+        PSVECSubtract((f32 *)((char *)state + 0x1c), (f32 *)((char *)obj + 0xc), prm.vec);
+        prm.val = lbl_803E651C;
+        if (fn_80080150((int)((char *)state + 0x18)) != 0) {
+            vecF = objModelGetVecFn_800395d8(obj, 0xf);
+            if (vecF != NULL) {
+                vec10 = objModelGetVecFn_800395d8(obj, 0x10);
+                if (vec10 != NULL) {
+                    d = (int)(*(f32 *)((char *)state + 0x18) * (f32)lbl_803DC19A) - (u16)vecF[1];
+                    if (d > 0x8000) {
+                        d = (s16)((int)d - 0xffff);
+                    }
+                    if (d < -0x8000) {
+                        d += 0xffff;
+                    }
+                    step2 = (d < -lbl_803DC198 * framesThisStep) ? -lbl_803DC198 * framesThisStep : ((d > lbl_803DC198 * framesThisStep) ? lbl_803DC198 * framesThisStep : d);
+                    vecF[1] += (s16)step2;
+                    vec10[1] -= (s16)step2;
+                    if (timerCountDown((f32 *)((char *)state + 0x18)) != 0) {
+                        storeZeroToFloatParam((f32 *)((char *)state + 0x18));
+                    }
+                    if (*(f32 *)((char *)state + 0x18) > lbl_803E6520) {
+                        prm.mode = 45000;
+                        (*(void (**)(int, int, void *, int, int, int))(*gPartfxInterface + 0x8))(obj, 0x7ad, &prm, 1, -1, 0);
+                    }
+                }
+            }
+        }
+    }
+}
+
+int bossdrakor_chooseNextMove(int obj, f32 *speedOut)
+{
+    int state;
+    int idx;
+    int v;
+    s16 d;
+    u16 a;
+    f32 dir[3];
+
+    state = *(int *)((char *)obj + 0xb8);
+    PSVECNormalize((f32 *)((char *)obj + 0x24), dir);
+    if (*(int *)((char *)state + 0x168) != 0) {
+        *speedOut = lbl_803E6534;
+        return *(int *)((char *)state + 0x168);
+    }
+    idx = 0;
+    if (dir[1] > lbl_803E6538) {
+        idx = 3;
+    } else if (dir[1] < lbl_803E653C) {
+        idx = 4;
+    } else {
+        a = (u16)(s16)getAngle(dir[0], dir[2]);
+        d = *(s16 *)obj - a;
+        if (d > 0x8000) {
+            d = (s16)((int)d - 0xffff);
+        }
+        if (d < -0x8000) {
+            d += 0xffff;
+        }
+        v = (d < 0) ? -d : d;
+        if (v > 0x2000) {
+            v = (d < 0) ? -d : d;
+            if (v < 0x6000) {
+                if (d > 0) {
+                    idx = 1;
+                } else {
+                    idx = 2;
+                }
+            }
+        }
+    }
+    v = lbl_80329F90[idx];
+    *speedOut = (f32)lbl_80329FA4[idx];
+    return v;
+}
+
+void bossdrakor_spawnAttackObjects(int obj, int state, int action)
+{
+    int player;
+    int missile;
+    int lo;
+    int hi;
+    f32 spd;
+    f32 prod;
+    f32 *mstate;
+    u8 *setup;
+    f32 target[3];
+    f32 vecA[3];
+    f32 vecB[3];
+    f32 vecC[3];
+
+    if (action < 0) {
+        return;
+    }
+    if (action < 4) {
+        switch (action) {
+        case 4:
+            break;
+        case 1:
+            player = (int)Obj_GetPlayerObject();
+            if (((DrakorFlags *)((char *)state + 0x198))->b40) {
+                if (Obj_IsLoadingLocked() != 0) {
+                    setup = Obj_AllocObjectSetup(0x20, 0x70f);
+                    *(f32 *)(setup + 8) = *(f32 *)((char *)state + 0x1c);
+                    *(f32 *)(setup + 0xc) = *(f32 *)((char *)state + 0x20);
+                    *(f32 *)(setup + 0x10) = *(f32 *)((char *)state + 0x24);
+                    setup[4] = 1;
+                    setup[5] = 1;
+                    setup[6] = 0xff;
+                    setup[7] = 0xff;
+                    if ((void *)player != NULL) {
+                        missile = loadObjectAtObject(obj, setup);
+                        if ((void *)missile != NULL) {
+                            prod = lbl_803DC188 * Vec_distance((int *)((char *)obj + 0x18), (int *)((char *)player + 0x18));
+                            lo = (int)-prod;
+                            hi = (int)prod;
+                            target[0] = *(f32 *)((char *)player + 0xc) + (f32)(s32)randomGetRange(lo, hi);
+                            target[1] = *(f32 *)((char *)player + 0x10) + (f32)(s32)randomGetRange(lo, hi);
+                            target[2] = *(f32 *)((char *)player + 0x14) + (f32)(s32)randomGetRange(lo, hi);
+                            PSVECSubtract((f32 *)((char *)player + 0xc), (f32 *)((char *)state + 0x1c), vecA);
+                            PSVECSubtract(target, (f32 *)((char *)state + 0x1c), vecB);
+                            PSVECNormalize(vecA, vecA);
+                            spd = *(f32 *)((char *)state + 0x188) * PSVECDotProduct((f32 *)((char *)player + 0x24), vecA) + *(f32 *)((char *)state + 0x184);
+                            PSVECScale(vecA, (f32 *)((char *)missile + 0x24), spd);
+                            mstate = *(f32 **)((char *)missile + 0xb8);
+                            PSVECScale(vecA, vecC, PSVECDotProduct(vecA, vecB));
+                            PSVECSubtract(vecB, vecC, vecC);
+                            PSVECNormalize(vecC, vecC);
+                            PSVECScale(vecC, (f32 *)((char *)missile + 0x24), *(f32 *)((char *)state + 0x184) * lbl_803DC18C);
+                            *mstate = spd;
+                            drakormissile_startActiveLaunch(missile);
+                            storeZeroToFloatParam((f32 *)((char *)state + 0x18));
+                            s16toFloat((void *)((char *)state + 0x18), 0x1e);
+                            Sfx_PlayFromObject(obj, 0x477);
+                            Sfx_PlayFromObject(obj, 0x3c8);
+                        }
+                    }
+                }
+            }
+            break;
+        case 2:
+            if (!((DrakorFlags *)((char *)state + 0x198))->b40) {
+                if (Obj_IsLoadingLocked() != 0) {
+                    setup = Obj_AllocObjectSetup(0x24, 0x709);
+                    setup[4] = 2;
+                    setup[5] = 1;
+                    setup[6] = 0xff;
+                    setup[7] = 0xff;
+                    *(f32 *)(setup + 8) = *(f32 *)((char *)state + 0x1c);
+                    *(f32 *)(setup + 0xc) = *(f32 *)((char *)state + 0x20);
+                    *(f32 *)(setup + 0x10) = *(f32 *)((char *)state + 0x24);
+                    *(s16 *)(setup + 0x1a) = 0x3c;
+                    *(s16 *)(setup + 0x1c) = lbl_803DC194;
+                    *(s8 *)(setup + 0x19) = lbl_803DC190;
+                    loadObjectAtObject(obj, setup);
+                    Sfx_PlayFromObject(obj, 0x477);
+                }
+            }
+            break;
+        }
+    }
+}
+
 void bossdrakor_free(int obj)
 {
     int inner = *(int *)((char *)obj + 0xb8);
@@ -1928,12 +2381,12 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         if (((DrakorFlags *)((char *)state + 0x198))->b40) {
             *(int *)((char *)state + 0x168) = 0x12;
             if (*(void **)((char *)state + 0x160) != NULL) {
-                lightFn_8001db6c(lbl_803E651C, *(void **)((char *)state + 0x160), 0);
+                lightFn_8001db6c(*(void **)((char *)state + 0x160), 0, lbl_803E651C);
             }
         } else {
             ((DrakorFlags *)((char *)state + 0x198))->b40 = 1;
             if (*(void **)((char *)state + 0x160) != NULL) {
-                lightFn_8001db6c(lbl_803E651C, *(void **)((char *)state + 0x160), 1);
+                lightFn_8001db6c(*(void **)((char *)state + 0x160), 1, lbl_803E651C);
             }
         }
         break;
@@ -2225,5 +2678,6 @@ void drakord_thornbush_init(int obj, u8 *init)
         break;
     }
 }
+#pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset

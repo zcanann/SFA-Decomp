@@ -275,127 +275,145 @@ extern undefined4 cRam803dc288;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objShouldLoad(undefined4 param_1,undefined4 param_2,undefined4 param_3)
+extern char lbl_8030E4B0[];
+extern int* gMapEventInterface;
+extern int gMapBlockLayerTables[5];
+extern u8 lbl_80386648[];
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 gMapBlockWorldSize;
+extern f32 fastFloorf(f32 v);
+extern int* Obj_GetPlayerObject(void);
+extern void OSReport(const char* fmt, ...);
+
+int objShouldLoad(int param_1,int param_2,int param_3)
 {
-  bool bVar1;
-  int iVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  bool bVar6;
-  int iVar7;
-  uint uVar8;
-  int *piVar9;
-  int iVar10;
-  char extraout_r4;
-  char cVar11;
-  double dVar12;
-  double in_f29;
-  double in_f30;
-  double in_f31;
-  undefined8 local_58;
-  
-  iVar7 = FUN_80286840();
-  bVar1 = *(int *)(iVar7 + 0x14) == 0x49054;
-  uVar8 = (**(code **)(*DAT_803dd72c + 0x40))(param_3);
-  uVar8 = uVar8 & 0xff;
-  if (uVar8 == 0xffffffff) {
-    bVar6 = false;
-    goto LAB_80055bd4;
-  }
-  if (uVar8 == 0) {
-LAB_80055bd0:
-    bVar6 = true;
-  }
-  else if (uVar8 < 9) {
-    if (((int)(uint)*(byte *)(iVar7 + 3) >> (uVar8 - 1 & 0x3f) & 1U) == 0) goto LAB_80055bd0;
-    bVar6 = false;
-  }
-  else {
-    if (((int)(uint)*(byte *)(iVar7 + 5) >> (0x10 - uVar8 & 0x3f) & 1U) == 0) goto LAB_80055bd0;
-    bVar6 = false;
-  }
-LAB_80055bd4:
-  if (bVar6) {
-    if ((*(byte *)(iVar7 + 4) & 1) == 0) {
-      if ((*(byte *)(iVar7 + 4) & 2) == 0) {
-        if (extraout_r4 == '\0') {
-          dVar12 = (double)FUN_802924c4();
-          iVar10 = (int)dVar12;
-          dVar12 = (double)FUN_802924c4();
-          iVar2 = (int)dVar12;
-          if ((((iVar10 < 0) || (iVar2 < 0)) || (0xf < iVar10)) || (0xf < iVar2)) {
-            if (bVar1) {
-              FUN_800723a0();
-            }
-            goto LAB_80055e70;
-          }
-          bVar6 = false;
-          piVar9 = &DAT_80382f14;
-          for (cVar11 = '\0'; cVar11 < '\x05'; cVar11 = cVar11 + '\x01') {
-            if (-1 < *(char *)(iVar10 + iVar2 * 0x10 + *piVar9)) {
-              bVar6 = true;
-            }
-            piVar9 = piVar9 + 1;
-          }
-          if (!bVar6) {
-            if (bVar1) {
-              FUN_800723a0();
-            }
-            goto LAB_80055e70;
-          }
-        }
-        if ((*(byte *)(iVar7 + 4) & 0x20) == 0) {
-          bVar6 = false;
-          if (((*(byte *)(iVar7 + 4) & 4) == 0) || (extraout_r4 != '\0')) {
-            bVar6 = true;
-          }
-          else {
-            iVar10 = FUN_80017a98();
-            if (iVar10 == 0) {
-              bVar6 = true;
-            }
-            else {
-              in_f29 = (double)*(float *)(iVar10 + 0x18);
-              in_f31 = (double)*(float *)(iVar10 + 0x1c);
-              in_f30 = (double)*(float *)(iVar10 + 0x20);
-            }
-          }
-          if (bVar6) {
-            iVar10 = (int)extraout_r4;
-            in_f29 = (double)(float)(&DAT_803872a8)[iVar10 * 4];
-            in_f31 = (double)(float)(&DAT_803872ac)[iVar10 * 4];
-            in_f30 = (double)(float)(&DAT_803872b0)[iVar10 * 4];
-          }
-          local_58 = (double)CONCAT44(0x43300000,(uint)*(byte *)(iVar7 + 6) << 3 ^ 0x80000000);
-          fVar3 = (float)(in_f29 - (double)*(float *)(iVar7 + 8));
-          fVar4 = (float)(in_f31 - (double)*(float *)(iVar7 + 0xc));
-          fVar5 = (float)(in_f30 - (double)*(float *)(iVar7 + 0x10));
-          if ((float)(local_58 - DOUBLE_803df840) * (float)(local_58 - DOUBLE_803df840) <=
-              fVar5 * fVar5 + fVar4 * fVar4 + fVar3 * fVar3) {
-            if (bVar1) {
-              FUN_800723a0();
-            }
-          }
-          else if (bVar1) {
-            FUN_800723a0();
-          }
-        }
-        else if (bVar1) {
-          FUN_800723a0();
-        }
-      }
-      else if (bVar1) {
-        FUN_800723a0();
-      }
+    char* strs;
+    int verbose;
+    int useObj;
+    f32 y;
+    f32 z;
+    f32 x;
+    int t;
+    int ok;
+    int bx;
+    int bz;
+    s8 found;
+    s8 i;
+    int* tbl;
+    int* player;
+    int off;
+    f32* p;
+    f32 d;
+    f32 dz;
+    f32 dy;
+    f32 range;
+
+    strs = (char*)lbl_8030E4B0;
+    if (*(u32*)(param_1 + 0x14) == 0x49054) {
+        verbose = 1;
+    } else {
+        verbose = 0;
     }
-    else if (bVar1) {
-      FUN_800723a0();
+    t = ((u8(*)(int)) * (int*)(*gMapEventInterface + 0x40))(param_3);
+    if (t == -1) {
+        ok = 0;
+        goto test;
     }
-  }
-LAB_80055e70:
-  FUN_8028688c();
-  return;
+    if (t != 0) {
+        if (t < 9) {
+            if ((*(u8*)(param_1 + 3) >> (t - 1)) & 1) {
+                ok = 0;
+                goto test;
+            }
+        } else {
+            if ((*(u8*)(param_1 + 5) >> (16 - t)) & 1) {
+                ok = 0;
+                goto test;
+            }
+        }
+    }
+    ok = 1;
+test:
+    if (ok == 0) {
+        return 0;
+    }
+    if (*(u8*)(param_1 + 4) & 1) {
+        if (verbose) {
+            OSReport(strs + 0x1cc);
+        }
+        return 1;
+    }
+    if (*(u8*)(param_1 + 4) & 2) {
+        if (verbose) {
+            OSReport(strs + 0x1e8);
+        }
+        return 0;
+    }
+    if ((s8)param_2 == 0) {
+        bx = (int)fastFloorf((*(f32*)(param_1 + 8) - playerMapOffsetX) / gMapBlockWorldSize);
+        bz = (int)fastFloorf((*(f32*)(param_1 + 0x10) - playerMapOffsetZ) / gMapBlockWorldSize);
+        if (bx < 0 || bz < 0 || bx >= 16 || bz >= 16) {
+            if (verbose) {
+                OSReport(strs + 0x200, param_1 + 8, param_1 + 0xc, param_1 + 0x10);
+            }
+            return 0;
+        }
+        found = 0;
+        bx += bz << 4;
+        for (i = 0; i < 5; i++) {
+            if (*(s8*)(bx + gMapBlockLayerTables[i]) >= 0) {
+                found = 1;
+            }
+        }
+        if (found == 0) {
+            if (verbose) {
+                OSReport(strs + 0x228);
+            }
+            return 0;
+        }
+    }
+    if (*(u8*)(param_1 + 4) & 0x20) {
+        if (verbose) {
+            OSReport(strs + 0x240);
+        }
+        return 1;
+    }
+    useObj = 0;
+    if ((*(u8*)(param_1 + 4) & 4) && (s8)param_2 == 0) {
+        player = Obj_GetPlayerObject();
+        if (player != NULL) {
+            x = *(f32*)((char*)player + 0x18);
+            y = *(f32*)((char*)player + 0x1c);
+            z = *(f32*)((char*)player + 0x20);
+        } else {
+            useObj = 1;
+        }
+    } else {
+        useObj = 1;
+    }
+    if (useObj != 0) {
+        off = (s8)param_2 << 4;
+        x = *(f32*)(lbl_80386648 + off);
+        p = (f32*)(lbl_80386648 + off);
+        y = p[1];
+        z = p[2];
+    }
+    range = (f32)(*(u8*)(param_1 + 6) << 3);
+    d = x - *(f32*)(param_1 + 8);
+    dy = y - *(f32*)(param_1 + 0xc);
+    dz = z - *(f32*)(param_1 + 0x10);
+    d = d * d + dy * dy + dz * dz;
+    if (d < range * range) {
+        if (verbose) {
+            OSReport(strs + 0x25c, &d);
+        }
+        return 1;
+    }
+    if (verbose) {
+        OSReport(strs + 0x274);
+    }
+    return 0;
 }
 
 /*
@@ -2392,13 +2410,14 @@ extern char gViewFrustumPlanes[];
 
 #pragma scheduling off
 int ViewFrustum_IsSphereVisible(float* center, float radius) {
+	float* plane;
 	u8 i;
 	for (i = 0; i < 5; i++) {
-		float* plane = (float*)(gViewFrustumPlanes + i * 0x14);
-		float dot = plane[0] * (center[0] - playerMapOffsetX)
-		          + center[1] * plane[1]
-		          + plane[2] * (center[2] - playerMapOffsetZ)
-		          + plane[3];
+		float dot;
+		plane = (float*)(gViewFrustumPlanes + i * 0x14);
+		dot = plane[3]
+		          + (plane[2] * (center[2] - playerMapOffsetZ)
+		             + (center[1] * plane[1] + plane[0] * (center[0] - playerMapOffsetX)));
 		if (radius + dot < lbl_803DEBCC) return 0;
 	}
 	return 1;
@@ -2408,7 +2427,7 @@ int ViewFrustum_IsSphereVisible(float* center, float radius) {
 /* 112b indexed teardown/free of map block. */
 extern char lbl_803822C8[];
 extern void* gLoadedRomListPages[];
-extern void defStartFn_8005972c(void* p1, void* p2, int idx, int flag);
+extern void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);
 extern void mm_free(void* p);
 
 #pragma scheduling off
@@ -2417,7 +2436,7 @@ void fn_80059A50(int param_1) {
 	int idx = param_1;
 	void* p = gLoadedRomListPages[idx];
 	if (p != 0) {
-		defStartFn_8005972c(p, lbl_803822C8 + idx * 0x8C, idx, 1);
+		defStartFn_8005972c(p, (u32*)(lbl_803822C8 + idx * 0x8C), idx, 1);
 		mm_free(gLoadedRomListPages[idx]);
 		gLoadedRomListPages[idx] = 0;
 	}
@@ -2570,7 +2589,7 @@ extern int gMapBlockLayerTables[5];
 extern s16* lbl_803DCE94;
 extern u8 lbl_803DCE98;
 extern u8* lbl_803DCE8C;
-extern int mapBlockFn_80059354(int p1, int p2, void* entry, int layer);
+extern void mapBlockFn_80059354(int p1, int p2, s16* entry, int layer);
 extern int mapCheckCurBlocks(int v);
 extern void* MapBlock_loadFromFile(int blockId);
 extern void MapBlock_init(void* blk);
@@ -2599,7 +2618,7 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     slotIdx = p1 + (p2 << 4);
     entry += slotIdx * 12;
 
-    mapBlockFn_80059354(p3, p4, entry, layer);
+    mapBlockFn_80059354(p3, p4, (s16*)entry, layer);
 
     blockId = *(s16*)(entry + 6);
     if (mapCheckCurBlocks(*(s8*)(entry + 9)) == -1) {
@@ -2823,7 +2842,7 @@ void mapLoadForObject(int p1, char *p2)
     }
     *(u8 *)(p2 + 0x34) = (u8)slot;
     (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x48)))(p1, slot);
-    defStartFn_8005972c((void *)romList, &lbl_803822C8[slot * 0x8c], slot, 0);
+    defStartFn_8005972c((char *)romList, (u32*)&lbl_803822C8[slot * 0x8c], slot, 0);
     (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x58)))(slot);
     lbl_803DCEC8 = saved;
 }
@@ -2869,6 +2888,96 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
 #pragma scheduling reset
 #pragma peephole reset
 
+extern int isRomListLoading(void);
+extern void padUpdate(void);
+extern void checkReset(void);
+extern void waitNextFrame(void);
+extern void loadDataFiles(void);
+extern void dvdCheckError(void);
+extern void mmFreeTick(int a);
+extern void gameTextRun(void);
+extern void GXFlush_(int, int);
+extern int saveGame_restoreObjectPosToRomList(void* object);
+extern char lbl_8037E0C0[];
+extern u8 lbl_803DC950;
+extern int lbl_803DB620;
+
+#pragma scheduling off
+#pragma peephole off
+int mapProcessRomList(int slot)
+{
+    u8 flag;
+    int i;
+    int count;
+    char* p;
+    char* entry;
+    s16* rects;
+    char* cur;
+    int j;
+    int step;
+    int rl;
+    f32 dz, dx;
+    char* base;
+
+    base = lbl_8037E0C0;
+    flag = 0;
+    while (isRomListLoading()) {
+        padUpdate();
+        checkReset();
+        if (flag)
+            waitNextFrame();
+        loadDataFiles();
+        dvdCheckError();
+        if (flag) {
+            mmFreeTick(0);
+            gameTextRun();
+            GXFlush_(1, 0);
+        }
+        if (lbl_803DC950)
+            flag = 1;
+    }
+    i = 0;
+    p = base + 0x418C;
+    count = lbl_803DCDEC;
+    while (i < count && *(void**)p != 0) {
+        p += 8;
+        i++;
+    }
+    if (i == count)
+        lbl_803DCDEC = lbl_803DCDEC + 1;
+    rl = mapGetRomListAndOffsets(slot, 0);
+    entry = base + i * 8 + 0x418C;
+    *(int*)entry = rl;
+    *(int*)(base + slot * 4 + 0x83A8) = rl;
+    *(s16*)(base + i * 8 + 0x4190) = slot;
+    lbl_803DCEA0 = *(void**)entry;
+    rects = (s16*)(*(int*)(base + 0x417C) + slot * 10);
+    *(u8*)((char*)lbl_803DCEA0 + 0x19) = *(u8*)(*(int*)(base + 0x4184) + slot);
+    *(f32*)((char*)lbl_803DCEA0 + 0x24) =
+        gMapBlockWorldSize * (f32)(rects[0] + *(s16*)((char*)lbl_803DCEA0 + 4));
+    *(f32*)((char*)lbl_803DCEA0 + 0x28) =
+        gMapBlockWorldSize * (f32)(rects[2] + *(s16*)((char*)lbl_803DCEA0 + 6));
+    cur = (char*)lbl_803DCEA0;
+    dz = *(f32*)(cur + 0x28);
+    dx = *(f32*)(cur + 0x24);
+    if (cur != 0) {
+        char* obj = *(char**)(cur + 0x20);
+        for (j = 0; j < *(u16*)(cur + 8); ) {
+            if (saveGame_restoreObjectPosToRomList(obj) == 0) {
+                *(f32*)(obj + 8) += dx;
+                *(f32*)(obj + 0x10) += dz;
+            }
+            step = *(u8*)(obj + 2) * 4;
+            j += step;
+            obj += step;
+        }
+    }
+    lbl_803DB620 = slot;
+    return i;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mapsBinGetRomlistSize(int offset, int *a, int *b, int *c);
 extern void fileLoadToBufferOffset(int id, void *buf, int offset, int len);
@@ -2906,7 +3015,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
     *(u8 *)((char *)lbl_803DCEA0 + 0x18) = 0;
     *(u8 *)((char *)lbl_803DCEA0 + 0x19) = 0;
     if (flag == 0) {
-        defStartFn_8005972c(lbl_803DCEA0, &lbl_803822C8[p1 * 0x8c], p1, 0);
+        defStartFn_8005972c(lbl_803DCEA0, (u32*)&lbl_803822C8[p1 * 0x8c], p1, 0);
         (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x58)))(p1);
     }
     return (int)lbl_803DCEA0;
@@ -2994,45 +3103,57 @@ extern char sTrackGlobalTexanimOverflowError[];
 
 #pragma scheduling off
 #pragma peephole off
+typedef struct TexOverrideEntry {
+    u32 key;
+    int data0;
+    int data1;
+    s16 refs;
+    u8 type;
+    u8 pad;
+} TexOverrideEntry;
+
 int mapTextureOverrideAcquire(int key, int value, int type)
 {
-    char *base = (char *)lbl_803DCE6C;
-    char *e;
-    int idx, found, off;
+    TexOverrideEntry *e;
+    int idx;
+    int found;
+    TexOverrideEntry *e2;
+    int idx2;
 
     found = -1;
-    e = base;
-    for (idx = 0; idx < 80; idx++) {
-        if (*(s16 *)(e + 0xc) != 0 && *(u32 *)e == key && type == *(u8 *)(e + 0xe)) {
+    idx = 0;
+    e = (TexOverrideEntry *)lbl_803DCE6C;
+    for (; idx < 80; idx++) {
+        if (e->refs != 0 && e->key == key && type == e->type) {
             found = idx;
             break;
         }
-        e += 0x10;
+        e++;
     }
     if (found != -1) {
-        *(s16 *)(base + found * 0x10 + 0xc) += 1;
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].refs += 1;
         return found;
     }
     found = -1;
-    e = base;
-    for (idx = 0; idx < 80; idx++) {
-        if (*(s16 *)(e + 0xc) == 0) {
-            found = idx;
+    idx2 = 0;
+    e2 = (TexOverrideEntry *)lbl_803DCE6C;
+    for (; idx2 < 80; idx2++) {
+        if (e2->refs == 0) {
+            found = idx2;
             break;
         }
-        e += 0x10;
+        e2++;
     }
-    if (found == -1) {
-        OSReport(sTrackGlobalTexanimOverflowError);
-        return 0;
+    if (found != -1) {
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].refs = 1;
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].data0 = 0;
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].data1 = value;
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].key = key;
+        ((TexOverrideEntry *)lbl_803DCE6C)[found].type = type;
+        return found;
     }
-    off = found * 0x10;
-    *(s16 *)(base + off + 0xc) = 1;
-    *(int *)(lbl_803DCE6C + off + 4) = 0;
-    *(int *)(lbl_803DCE6C + off + 8) = value;
-    *(int *)(lbl_803DCE6C + off) = key;
-    *(u8 *)(lbl_803DCE6C + off + 0xe) = type;
-    return found;
+    OSReport(sTrackGlobalTexanimOverflowError);
+    return 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -3138,7 +3259,11 @@ void initMaps(void)
     int total;
     int i;
     int i2;
-    char* entry;
+    int ofs;
+    int idx;
+    int o;
+    int k;
+    char* e;
 
     data = 0;
     total = getDataFileSize(0x15);
@@ -3149,28 +3274,106 @@ void initMaps(void)
     lbl_80382238[3] = (int)mmAlloc(128, 5, 0);
     lbl_80382238[4] = (int)mmAlloc(8192, 5, 0);
     memset((void*)lbl_80382238[4], 0, 8192);
-    for (i = 0; i < 128; i++) {
-        char* e = (char*)lbl_80382238[1] + i * 10;
-        *(s8*)((char*)lbl_80382238[3] + i) = -128;
+    idx = 0;
+    ofs = 0;
+    for (i = 0; i < 16; i++) {
+        e = (char*)lbl_80382238[1] + ofs;
+        *(s8*)((char*)lbl_80382238[3] + idx) = -128;
         *(s16*)(e + 0) = -32768;
         *(s16*)(e + 2) = -32768;
         *(s16*)(e + 4) = -32768;
         *(s16*)(e + 6) = -32768;
         *(s8*)(e + 8) = -128;
         *(s8*)(e + 9) = -128;
-        ((s16*)lbl_80382238[2])[i * 2] = -1;
-        ((s16*)lbl_80382238[2])[i * 2 + 1] = -1;
+        ((s16*)lbl_80382238[2])[idx << 1] = -1;
+        ((s16*)lbl_80382238[2])[(idx << 1) + 1] = -1;
+        e = (char*)lbl_80382238[1] + (o = ofs + 10);
+        *(s8*)((char*)lbl_80382238[3] + (k = idx + 1)) = -128;
+        *(s16*)(e + 0) = -32768;
+        *(s16*)(e + 2) = -32768;
+        *(s16*)(e + 4) = -32768;
+        *(s16*)(e + 6) = -32768;
+        *(s8*)(e + 8) = -128;
+        *(s8*)(e + 9) = -128;
+        ((s16*)lbl_80382238[2])[k << 1] = -1;
+        ((s16*)lbl_80382238[2])[(k << 1) + 1] = -1;
+        e = (char*)lbl_80382238[1] + (o = ofs + 20);
+        *(s8*)((char*)lbl_80382238[3] + (k = idx + 2)) = -128;
+        *(s16*)(e + 0) = -32768;
+        *(s16*)(e + 2) = -32768;
+        *(s16*)(e + 4) = -32768;
+        *(s16*)(e + 6) = -32768;
+        *(s8*)(e + 8) = -128;
+        *(s8*)(e + 9) = -128;
+        ((s16*)lbl_80382238[2])[k << 1] = -1;
+        ((s16*)lbl_80382238[2])[(k << 1) + 1] = -1;
+        e = (char*)lbl_80382238[1] + (o = ofs + 30);
+        *(s8*)((char*)lbl_80382238[3] + (k = idx + 3)) = -128;
+        *(s16*)(e + 0) = -32768;
+        *(s16*)(e + 2) = -32768;
+        *(s16*)(e + 4) = -32768;
+        *(s16*)(e + 6) = -32768;
+        *(s8*)(e + 8) = -128;
+        *(s8*)(e + 9) = -128;
+        ((s16*)lbl_80382238[2])[k << 1] = -1;
+        ((s16*)lbl_80382238[2])[(k << 1) + 1] = -1;
+        e = (char*)lbl_80382238[1] + (o = ofs + 40);
+        *(s8*)((char*)lbl_80382238[3] + (k = idx + 4)) = -128;
+        *(s16*)(e + 0) = -32768;
+        *(s16*)(e + 2) = -32768;
+        *(s16*)(e + 4) = -32768;
+        *(s16*)(e + 6) = -32768;
+        *(s8*)(e + 8) = -128;
+        *(s8*)(e + 9) = -128;
+        ((s16*)lbl_80382238[2])[k << 1] = -1;
+        ((s16*)lbl_80382238[2])[(k << 1) + 1] = -1;
+        e = (char*)lbl_80382238[1] + (o = ofs + 50);
+        *(s8*)((char*)lbl_80382238[3] + (k = idx + 5)) = -128;
+        *(s16*)(e + 0) = -32768;
+        *(s16*)(e + 2) = -32768;
+        *(s16*)(e + 4) = -32768;
+        *(s16*)(e + 6) = -32768;
+        *(s8*)(e + 8) = -128;
+        *(s8*)(e + 9) = -128;
+        ((s16*)lbl_80382238[2])[k << 1] = -1;
+        ((s16*)lbl_80382238[2])[(k << 1) + 1] = -1;
+        e = (char*)lbl_80382238[1] + (o = ofs + 60);
+        *(s8*)((char*)lbl_80382238[3] + (k = idx + 6)) = -128;
+        *(s16*)(e + 0) = -32768;
+        *(s16*)(e + 2) = -32768;
+        *(s16*)(e + 4) = -32768;
+        *(s16*)(e + 6) = -32768;
+        *(s8*)(e + 8) = -128;
+        *(s8*)(e + 9) = -128;
+        ((s16*)lbl_80382238[2])[k << 1] = -1;
+        ((s16*)lbl_80382238[2])[(k << 1) + 1] = -1;
+        e = (char*)lbl_80382238[1] + (o = ofs + 70);
+        *(s8*)((char*)lbl_80382238[3] + (k = idx + 7)) = -128;
+        *(s16*)(e + 0) = -32768;
+        *(s16*)(e + 2) = -32768;
+        *(s16*)(e + 4) = -32768;
+        *(s16*)(e + 6) = -32768;
+        *(s8*)(e + 8) = -128;
+        *(s8*)(e + 9) = -128;
+        ((s16*)lbl_80382238[2])[k << 1] = -1;
+        ((s16*)lbl_80382238[2])[(k << 1) + 1] = -1;
+        ofs += 80;
+        idx += 8;
     }
-    for (i2 = 0; i2 < total / 3; i2++) {
-        entry = (char*)data + i2 * 12;
-        if (*(s16*)(entry + 6) <= -1)
-            break;
-        *(s8*)((char*)lbl_80382238[3] + *(s16*)(entry + 6)) = (s8)*(s16*)(entry + 4);
-        mapInitSetRects((s16*)((char*)lbl_80382238[1] + *(s16*)(entry + 6) * 10),
-                        (u8*)((char*)lbl_80382238[4] + *(s16*)(entry + 6) * 64),
-                        *(s16*)(entry + 0), *(s16*)(entry + 2), *(s16*)(entry + 6));
-        ((s16*)lbl_80382238[2])[*(s16*)(entry + 6) * 2] = *(s16*)(entry + 8);
-        ((s16*)lbl_80382238[2])[*(s16*)(entry + 6) * 2 + 1] = *(s16*)(entry + 0xa);
+    i2 = 0;
+    total = total / 12;
+    while (i2 < total && *(s16*)((char*)data + i2 * 12 + 6) > -1) {
+        *(s8*)((char*)lbl_80382238[3] + *(s16*)((char*)data + i2 * 12 + 6)) =
+            (s8)*(s16*)((char*)data + i2 * 12 + 4);
+        mapInitSetRects((s16*)((char*)lbl_80382238[1] + *(s16*)((char*)data + i2 * 12 + 6) * 10),
+                        (u8*)((char*)lbl_80382238[4] + *(s16*)((char*)data + i2 * 12 + 6) * 64),
+                        *(s16*)((char*)data + i2 * 12), *(s16*)((char*)data + i2 * 12 + 2),
+                        *(s16*)((char*)data + i2 * 12 + 6));
+        ((s16*)lbl_80382238[2])[*(s16*)((char*)data + i2 * 12 + 6) << 1] =
+            *(s16*)((char*)data + i2 * 12 + 8);
+        ((s16*)lbl_80382238[2])[(*(s16*)((char*)data + i2 * 12 + 6) << 1) + 1] =
+            *(s16*)((char*)data + i2 * 12 + 0xa);
+        i2++;
     }
     lbl_803DCEA4 = 0;
     lbl_803DCEB6 = 0;
@@ -3261,6 +3464,1477 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
             o1[2] = ((v2 >> 24) & 0xf) - 7;
             o1[1] = ((v2 >> 20) & 0xf) - 7;
             o1[3] = ((v2 >> 16) & 0xf) - 7;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int mapCoordsToId(int x, int z, int layerIdx)
+{
+    int x0, z0;
+    int x1;
+    s8* layers;
+    s16* rects;
+    u8* bits;
+    int id;
+    int layer;
+    int n;
+    int idx;
+
+    layer = curMapLayer + (&lbl_803DB624)[layerIdx];
+    rects = (s16*)lbl_80382238[1];
+    bits = (u8*)lbl_80382238[4];
+    id = 0;
+    layers = (s8*)lbl_80382238[3];
+    for (n = 0; n < 64; n++) {
+        if (layer == layers[0]) {
+            x0 = rects[0];
+            if (x >= x0) {
+                x1 = rects[1];
+                if (x <= x1) {
+                    z0 = rects[2];
+                    if (z >= z0 && z <= rects[3]) {
+                        idx = (x - x0) + (z - z0) * ((x1 - x0) + 1);
+                        if ((1 << (idx & 7)) & bits[idx >> 3])
+                            return id;
+                    }
+                }
+            }
+        }
+        bits += 0x40;
+        id++;
+        if (layer == layers[1]) {
+            x0 = rects[5];
+            if (x >= x0) {
+                x1 = rects[6];
+                if (x <= x1) {
+                    z0 = rects[7];
+                    if (z >= z0 && z <= rects[8]) {
+                        idx = (x - x0) + (z - z0) * ((x1 - x0) + 1);
+                        if ((1 << (idx & 7)) & bits[idx >> 3])
+                            return id;
+                    }
+                }
+            }
+        }
+        rects += 10;
+        bits += 0x40;
+        layers += 2;
+        id++;
+    }
+    return -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_8030E5D4[];
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8005A8A4(f32* planes, int count)
+{
+    int k;
+    int j;
+    int bi;
+    f32 best;
+    f32 v;
+
+    for (k = 0; k < count; k++) {
+        best = lbl_803DEBCC;
+        j = 0;
+        while (j < 24) {
+            v = planes[0] * lbl_8030E5D4[j++];
+            v += planes[1] * lbl_8030E5D4[j++];
+            v += planes[2] * lbl_8030E5D4[j++];
+            if (best < v) {
+                best = v;
+                bi = j - 3;
+            }
+        }
+        switch (bi) {
+        case 0:
+            ((u8*)planes)[16] = 0;
+            break;
+        case 3:
+            ((u8*)planes)[16] = 2;
+            break;
+        case 6:
+            ((u8*)planes)[16] = 5;
+            break;
+        case 9:
+            ((u8*)planes)[16] = 7;
+            break;
+        case 0xc:
+            ((u8*)planes)[16] = 1;
+            break;
+        case 0xf:
+            ((u8*)planes)[16] = 3;
+            break;
+        case 0x12:
+            ((u8*)planes)[16] = 4;
+            break;
+        case 0x15:
+            ((u8*)planes)[16] = 6;
+            break;
+        }
+        planes += 5;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int mapRectFn_8005a728(int bx, int bz, char* obj)
+{
+    f32 a1, a2, b1, b2, c1, c2;
+    f32 p3;
+    f32 fx, fz, x2, z2, y0, y1;
+    f32 v;
+    f32* plane;
+    int i;
+    int j;
+    int hit;
+
+    fx = gMapBlockWorldSize * (f32)bx;
+    fz = gMapBlockWorldSize * (f32)bz;
+    x2 = gMapBlockWorldSize + fx;
+    z2 = gMapBlockWorldSize + fz;
+    if (obj) {
+        y0 = (f32)*(s16*)(obj + 0x8a);
+        y1 = (f32)*(s16*)(obj + 0x8c);
+    } else {
+        y0 = (&lbl_803DEBCC)[8];
+        y1 = (&lbl_803DEBCC)[9];
+    }
+    plane = (f32*)gViewFrustumPlanes;
+    for (i = 0; i < 5; i++) {
+        f32 p0 = plane[0];
+        f32 p1 = plane[1];
+        f32 p2 = plane[2];
+        p3 = plane[3];
+        j = 0;
+        hit = 0;
+        a1 = fx * p0;
+        a2 = x2 * p0;
+        b1 = fz * p2;
+        b2 = z2 * p2;
+        c1 = y0 * p1;
+        c2 = y1 * p1;
+        while (j < 8 && hit == 0) {
+            if (j & 1)
+                v = a1;
+            else
+                v = a2;
+            if (j & 2)
+                v += b1;
+            else
+                v += b2;
+            if (j & 4)
+                v += c1;
+            else
+                v += c2;
+            v += p3;
+            if (v > lbl_803DEBCC)
+                hit = 1;
+            j++;
+        }
+        if (j == 8 && hit == 0)
+            return 0;
+        plane += 5;
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
+{
+    char* cur;
+    int count;
+    int pos;
+    u8 found;
+    u32 mask;
+    int* q;
+    int j;
+    int m;
+    int v;
+    s16 t;
+    int step;
+    int n2;
+
+    found = 0;
+    mask = 0;
+    cur = *(char**)(p + 0x20);
+    count = *(u16*)(p + 8);
+    if (count != 0) {
+        pos = 0;
+        if (flag == 0) {
+            tbl[0x21] = -1;
+            tbl[0] = -1;
+            tbl[1] = -1;
+            tbl[2] = -1;
+            tbl[3] = -1;
+            tbl[4] = -1;
+            tbl[5] = -1;
+            tbl[6] = -1;
+            tbl[7] = -1;
+            tbl[8] = -1;
+            tbl[9] = -1;
+            tbl[10] = -1;
+            tbl[11] = -1;
+            tbl[12] = -1;
+            tbl[13] = -1;
+            tbl[14] = -1;
+            tbl[15] = -1;
+            tbl[16] = -1;
+            tbl[17] = -1;
+            tbl[18] = -1;
+            tbl[19] = -1;
+            tbl[20] = -1;
+            tbl[21] = -1;
+            tbl[22] = -1;
+            tbl[23] = -1;
+            tbl[24] = -1;
+            tbl[25] = -1;
+            tbl[26] = -1;
+            tbl[27] = -1;
+            tbl[28] = -1;
+            tbl[29] = -1;
+            tbl[30] = -1;
+            tbl[31] = -1;
+        }
+        for (; pos < count; ) {
+            if (flag != 0) {
+                if (*(s16*)cur == 110)
+                    (*(void (*)(char*))(*(int*)(*gRomCurveInterface + 0xc)))(cur);
+                if (*(s16*)cur == 5)
+                    (*(void (*)(char*))(*(int*)(*gCheckpointInterface + 0xc)))(cur);
+            } else {
+                t = *(s16*)cur;
+                if (t == 110 || t == 5) {
+                    if (t == 110)
+                        (*(void (*)(char*))(*(int*)(*gRomCurveInterface + 8)))(cur);
+                    else
+                        (*(void (*)(char*))(*(int*)(*gCheckpointInterface + 8)))(cur);
+                    if (found == 0) {
+                        tbl[0x21] = (int)cur - *(int*)(p + 0x20);
+                        found = 1;
+                    }
+                } else if (*(u8*)(cur + 4) & 0x10) {
+                    if ((mask & (1 << *(u8*)(cur + 6))) == 0) {
+                        tbl[*(u8*)(cur + 6)] = (int)cur - *(int*)(p + 0x20);
+                        mask |= 1 << *(u8*)(cur + 6);
+                    }
+                }
+            }
+            step = *(u8*)(cur + 2) * 4;
+            pos += step;
+            cur += step;
+        }
+        if (flag == 0) {
+            m = count;
+            v = tbl[0x21];
+            if (v != -1 && v < count)
+                m = v;
+            j = 0;
+            q = (int*)tbl;
+            for (n2 = 0; n2 < 4; n2++) {
+                v = q[0];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[1];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[2];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[3];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[4];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[5];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[6];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[7];
+                if (v != -1 && v < m)
+                    m = v;
+                q += 8;
+                j += 7;
+            }
+            tbl[0x22] = m;
+            v = tbl[0x21];
+            if (v != -1)
+                tbl[0x20] = v;
+            else
+                tbl[0x20] = count;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803DEBB8;
+extern f32 lbl_803DEBD4;
+extern f32 lbl_803DEBD8;
+extern f32 lbl_803DEBDC;
+extern f32 Vec_distance(f32* a, f32* b);
+extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY,
+                                      f32* outZ, f32* outRadiusX, f32* outRadiusY, f32* outDepth);
+
+#pragma scheduling off
+#pragma peephole off
+int objUpdateOpacity(char* obj)
+{
+    u8 op;
+    char* ptr;
+    int alpha;
+    f32 range;
+    f32 d;
+    f32 near;
+    int* player;
+    u8 i;
+    f32 o1, o2, o3;
+    f32 sz;
+    f32 o5, o6;
+    f32 prod;
+
+    op = *(u8*)(obj + 0x36);
+    if (op == 0) {
+        *(u8*)(obj + 0x37) = 0;
+        return 0;
+    }
+    ptr = *(char**)(obj + 0x4C);
+    if (ptr != 0 && (*(u8*)(ptr + 5) & 1)) {
+        *(u8*)(obj + 0x37) = (u8)(((op + 1) * 255) >> 8);
+    } else {
+        range = *(f32*)(obj + 0x40);
+        if (range < lbl_803DEBB8) {
+            *(u8*)(obj + 0x37) = 0;
+            return 0;
+        }
+        player = Obj_GetPlayerObject();
+        if (ptr != 0 && (*(u8*)(ptr + 5) & 2) && player != 0) {
+            d = Vec_distance((f32*)(obj + 0x18), (f32*)((char*)player + 0x18));
+        } else {
+            d = Camera_DistanceToCurrentViewPosition(*(f32*)(obj + 0x18), *(f32*)(obj + 0x1c),
+                                                     *(f32*)(obj + 0x20));
+        }
+        if (d > range) {
+            *(u8*)(obj + 0x37) = 0;
+            return 0;
+        }
+        alpha = 255;
+        near = range - lbl_803DEBD4;
+        if (d > near) {
+            range = range - near;
+            d = d - near;
+            alpha = (int)(lbl_803DEBD8 * (lbl_803DEBDC - d / range));
+        }
+        Camera_ProjectWorldSphere(*(f32*)(obj + 0x18) - playerMapOffsetX, *(f32*)(obj + 0x1c),
+                                  *(f32*)(obj + 0x20) - playerMapOffsetZ,
+                                  *(f32*)(obj + 0xa8) * *(f32*)(obj + 8),
+                                  &o1, &o2, &o3, &sz, &o5, &o6);
+        sz = __fabs(sz);
+        sz = sz * gMapBlockWorldSize;
+        if (sz < (&lbl_803DEBCC)[5]) {
+            *(u8*)(obj + 0x37) = 0;
+            return 0;
+        }
+        if (sz < (&lbl_803DEBCC)[7]) {
+            alpha = (int)(((f32)alpha * (sz - (&lbl_803DEBCC)[5])) / (&lbl_803DEBCC)[6]);
+        }
+        *(u8*)(obj + 0x37) = (u8)((alpha * (*(u8*)(obj + 0x36) + 1)) >> 8);
+    }
+    if (*(u8*)(obj + 0x37) == 0) {
+        return 0;
+    } else {
+        prod = *(f32*)(obj + 0xa8) * *(f32*)(obj + 8);
+        for (i = 0; i < 5; i++) {
+            f32* plane = (f32*)(gViewFrustumPlanes + i * 20);
+            if (*(f32*)(obj + 0x1c) * plane[1] +
+                    plane[0] * (*(f32*)(obj + 0x18) - playerMapOffsetX) +
+                    plane[2] * (*(f32*)(obj + 0x20) - playerMapOffsetZ) + plane[3] + prod <
+                lbl_803DEBCC)
+                return 0;
+        }
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern int objShouldUnload(char* obj);
+extern void Obj_FreeObject(char* obj);
+extern int getLoadedFileFlags(int file);
+extern int SaveGame_findTransientMapBit(int mapId, int bit);
+extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
+extern void mapClearBit(int mapId, int bit);
+extern void Obj_SetupObject(u32 setup, int a, int b, int c, char* d);
+
+#pragma scheduling off
+#pragma peephole off
+void mapLoadUnloadObjects(int flag)
+{
+    char* base;
+    s16 count;
+    int i;
+    int n;
+    s16 list[40];
+    s16* q;
+    int k;
+    int* tp;
+    char* obj;
+    char* fp;
+    int unload;
+    u32 bits;
+    int b;
+    int bit;
+    u32 cur;
+    u32 end;
+    u32 o;
+    u8* bp;
+    u8 m;
+    int vis;
+    int idx;
+
+    base = (char*)lbl_8037E0C0;
+    count = 0;
+    tp = (int*)(base + 0x41E0);
+    for (i = 0; i < 5; i++) {
+        q = (s16*)(*tp + 0x594);
+        for (k = 0; k < 3; k++) {
+            s16 id = *q;
+            if (id >= 0 && id < 80 && *(void**)(base + 0x83A8 + id * 4) != 0) {
+                s16 dup = 0;
+                s16* w = list;
+                int j2;
+                for (j2 = 0; j2 < count; j2++) {
+                    if (*w == *q) {
+                        dup = 1;
+                        break;
+                    }
+                    w++;
+                }
+                if (dup == 0)
+                    list[count++] = id;
+            }
+            q++;
+        }
+        tp++;
+    }
+    {
+        int* objs = ObjList_GetObjects(&i, &n);
+        while (i < n) {
+            obj = (char*)objs[i];
+            fp = *(char**)(obj + 0x4C);
+            i++;
+            unload = 0;
+            if (*(s8*)(obj + 0xAC) > -1) {
+                u8 fl = *(u8*)(fp + 4);
+                if (!(fl & 2)) {
+                    if (fl & 0x10) {
+                        if (*(s16*)(obj + 0x44) > -1 && objShouldUnload(obj)) {
+                            unload = 1;
+                        } else if (*(s8*)(obj + 0xAC) < 80 &&
+                                   *(void**)(base + 0x83A8 + *(s8*)(obj + 0xAC) * 4) == 0) {
+                            unload = 1;
+                        }
+                    } else {
+                        if (*(s16*)(obj + 0x44) > -1 && objShouldUnload(obj)) {
+                            unload = 1;
+                        } else if (*(s8*)(obj + 0xAC) < 80 &&
+                                   *(s8*)(obj + 0xAC) != lbl_803DCEC8) {
+                            unload = 1;
+                        }
+                    }
+                }
+            }
+            if (unload) {
+                char* page = *(char**)(base + 0x83A8 + *(s8*)(obj + 0xAC) * 4);
+                if (page != 0) {
+                    s16 tbit = *(s16*)(obj + 0xB2);
+                    if (tbit >= 0 && tbit >= 0) {
+                        u8* bb = *(u8**)(page + 0x10);
+                        int ix = tbit >> 3;
+                        *(s8*)(bb + ix) = bb[ix] & ~(1 << (tbit & 7));
+                    }
+                }
+                if (*(s16*)(obj + 0x46) == 0x72) {
+                    s8 mid = *(s8*)(obj + 0xAC);
+                    s16 j3 = 0;
+                    s16* w2 = list;
+                    for (j3 = 0; j3 < count; j3++) {
+                        if (mid == *w2)
+                            break;
+                        w2++;
+                    }
+                }
+                Obj_FreeObject(obj);
+                i--;
+                n--;
+            }
+        }
+    }
+    if (getLoadedFileFlags(lbl_803DCEC8) == 0) {
+        for (i = 0; i < 80; i++) {
+            if (*(int*)(base + i * 4 + 0x83A8) != 0) {
+                bits = (*(u32 (*)(int))(*(int*)(*gMapEventInterface + 0x5c)))(i);
+                if (bits != 0) {
+                    b = 0;
+                    while (bits != 0) {
+                        if ((bits & 1) && (s8)SaveGame_findTransientMapBit(i, b) == -1) {
+                            mapInstantiateObjects(*(char**)(base + i * 4 + 0x83A8), i, b, 0);
+                            mapClearBit(i, b);
+                        }
+                        bits >>= 1;
+                        b++;
+                    }
+                }
+            }
+        }
+        for (i = 0; i < count; i++) {
+            int id2 = list[i];
+            if (lbl_803DCEC8 == id2) {
+                char* page = *(char**)(base + id2 * 4 + 0x83A8);
+                if (page != 0) {
+                    m = 1;
+                    bit = 0;
+                    cur = *(u32*)(page + 0x20);
+                    bp = *(u8**)(page + 0x10);
+                    end = cur + *(int*)(base + id2 * 0x8C + 0x4290);
+                    while (cur < end) {
+                        o = cur;
+                        if ((*bp & m) == 0 && objShouldLoad(cur, 0, list[i]) != 0) {
+                            if (bit >= 0) {
+                                char* pg = *(char**)(base + list[i] * 4 + 0x83A8);
+                                int ix2 = bit >> 3;
+                                int msk = 1 << (bit & 7);
+                                *(s8*)(*(int*)(pg + 0x10) + ix2) =
+                                    *(u8*)(*(int*)(pg + 0x10) + ix2) & ~msk;
+                                *(s8*)(*(int*)(pg + 0x10) + ix2) =
+                                    *(u8*)(*(int*)(pg + 0x10) + ix2) | msk;
+                            }
+                            Obj_SetupObject(o, 1, list[i], bit, 0);
+                        }
+                        bit++;
+                        m = (u8)(m << 1);
+                        if (m == 0) {
+                            bp++;
+                            while (*bp == -1) {
+                                bit += 8;
+                                cur += *(u8*)(o + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                o = cur;
+                                bp++;
+                            }
+                            m = 1;
+                        }
+                        cur += *(u8*)(o + 2) * 4;
+                    }
+                }
+            }
+        }
+        {
+            int* objs2 = (int*)ObjGroup_GetObjects(6, &n);
+            for (i = 0; i < n; i++) {
+                char* obj2 = (char*)objs2[i];
+                u32 mid2 = *(u8*)(obj2 + 0x34);
+                char** slot = (char**)(base + mid2 * 4 + 0x83A8);
+                char* page2 = *slot;
+                if (page2 != 0) {
+                    s8 lp = *(s8*)(obj2 + 0x35) + 1;
+                    bit = 0;
+                    cur = *(u32*)(page2 + 0x20);
+                    end = cur + *(int*)(base + mid2 * 0x8C + 0x4290);
+                    bits = (*(u32 (*)(u32))(*(int*)(*gMapEventInterface + 0x5c)))(mid2);
+                    if (bits != 0) {
+                        b = 0;
+                        while (bits != 0) {
+                            if ((bits & 1) && (s8)SaveGame_findTransientMapBit(mid2, b) == -1) {
+                                mapInstantiateObjects(page2, mid2, b, obj2);
+                            }
+                            bits >>= 1;
+                            mapClearBit(mid2, b);
+                            b++;
+                        }
+                    }
+                    while (cur < end) {
+                        if (bit < 0) {
+                            vis = 0;
+                        } else {
+                            char* pg2 = *slot;
+                            idx = bit >> 3;
+                            if (idx < 0xc4) {
+                                vis = 1;
+                                if (((1 << (bit & 7)) &
+                                     *(s8*)(*(int*)(pg2 + 0x10) + idx)) == 0)
+                                    vis = 0;
+                            } else {
+                                vis = 0;
+                            }
+                        }
+                        if (vis == 0 && objShouldLoad(cur, lp, mid2) != 0) {
+                            if (bit >= 0) {
+                                char* pg3 = *slot;
+                                int ix3 = bit >> 3;
+                                int msk3 = 1 << (bit & 7);
+                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) =
+                                    *(u8*)(*(int*)(pg3 + 0x10) + ix3) & ~msk3;
+                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) =
+                                    *(u8*)(*(int*)(pg3 + 0x10) + ix3) | msk3;
+                            }
+                            Obj_SetupObject(cur, 1, mid2, bit, obj2);
+                        }
+                        bit++;
+                        cur += *(u8*)(cur + 2) * 4;
+                    }
+                }
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s16 lbl_803DCEB8;
+extern u8 lbl_803DCDE0;
+extern int* gObjectTriggerInterface;
+extern int* gWaterfxInterface;
+extern int* gProjgfxInterface;
+extern int* gModgfxInterface;
+extern int* gExpgfxInterface;
+extern int* gPartfxInterface;
+extern int* gSky2Interface;
+extern int* gSHthorntailAnimationInterface;
+extern int* gCameraInterface;
+extern int lbl_803DCDD0;
+extern int lbl_803DCDD4;
+extern int lbl_803DCDC8;
+extern int lbl_803DCDCC;
+extern f32 lbl_803DCED0;
+extern f32 lbl_803DCECC;
+extern int lbl_803DCEC0;
+extern u8 lbl_803DCE04;
+extern u8 bEnableBlurFilter;
+extern u8 bEnableMotionBlur;
+extern f32 lbl_803DB62C;
+extern int lbl_803DCE00;
+extern u8 lbl_803DCEBD;
+extern f32 lbl_803DEBD0;
+extern void mapInitFn_80069990(void);
+extern void mapInitFn_8006fccc(void);
+extern void setSaveGameLoadingFlag(void);
+extern void clearSaveGameLoadingFlag(void);
+extern void trackIntersect(void);
+extern void mapSetupPlayer(void);
+extern int SaveGame_getCamActionNo(void);
+extern u8* saveGameGetEnvState(void);
+extern void getEnvfxActImmediately(void* obj, void* target, int effectId, int flags);
+extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
+extern void skyFn_80088c94(int idx, u8 on);
+extern void skyFn_80088e54(f32 a, int on);
+extern void Pause_SetDisabled(int);
+extern void Pause_ResetMenuFrameCounter(void);
+
+#pragma scheduling off
+#pragma peephole off
+void beginLoadingMap(void)
+{
+    char* base;
+    int i;
+    int j;
+    u8* a;
+    u8* b;
+    int k2, k3;
+    int mapKind;
+    f32* p;
+    f32 px, py, pz;
+    int* cam;
+    char* player;
+    u8* env;
+    int bo;
+    char buf[0x110];
+
+    base = (char*)lbl_8037E0C0;
+    if (lbl_803DCEB8 == -1) {
+        lbl_803DCEB8 = -2;
+        lbl_803DCDE0 = 8;
+    }
+    (*(void (*)(void))(*(int*)(*gObjectTriggerInterface + 4)))();
+    mapInitFn_80069990();
+    for (i = 0; i < 5; i++) {
+        a = *(u8**)(base + 0x41F4 + i * 4);
+        b = *(u8**)(base + 0x41E0 + i * 4);
+        for (j = 0; j < 256; j++) {
+            a[j] = 0xFF;
+            b[j * 12 + 9] = 0xFF;
+        }
+    }
+    for (j = 0; j < 64; j++) {
+        *(s16*)((char*)lbl_803DCE94 + j * 2) = -1;
+        *(int*)((char*)lbl_803DCE9C + j * 4) = 0;
+    }
+    lbl_803DCE98 = 0;
+    lbl_803DCDEC = 0;
+    mapKind = (u8)(*(int (*)(void))(*(int*)(*gMapEventInterface + 0x74)))();
+    p = (f32*)(*(int (*)(void))(*(int*)(*gMapEventInterface + 0x90)))();
+    lbl_803DCDD0 = (int)fastFloorf(p[0] / gMapBlockWorldSize);
+    lbl_803DCDD4 = (int)fastFloorf(p[2] / gMapBlockWorldSize);
+    *(f32*)(base + 0x8588) = p[0];
+    *(f32*)(base + 0x858C) = p[1];
+    *(f32*)(base + 0x8590) = p[2];
+    *(int*)(base + 0x8594) = 1;
+    lbl_803DCDC8 = lbl_803DCDD0 * 640;
+    lbl_803DCDCC = lbl_803DCDD4 * 640;
+    playerMapOffsetX = (f32)lbl_803DCDC8;
+    playerMapOffsetZ = (f32)lbl_803DCDCC;
+    lbl_803DCED0 = playerMapOffsetX;
+    lbl_803DCECC = playerMapOffsetZ;
+    lbl_803DCEC8 = -1;
+    lbl_803DCEC4 = lbl_803DCEC4 - 1;
+    lbl_803DCEC0 = -1;
+    curMapLayer = *((char*)p + 0xd);
+    renderFlags = (renderFlags & 0x82008) | 0x489F4;
+    lbl_803DCE04 = 0;
+    bEnableBlurFilter = 0;
+    bEnableMotionBlur = 0;
+    lbl_803DB62C = lbl_803DEBCC;
+    lbl_803DCE00 = -1;
+    setSaveGameLoadingFlag();
+    pz = p[2];
+    py = p[1];
+    px = p[0];
+    if (!(renderFlags & 2) || (renderFlags & 0x800)) {
+        lbl_803DCE64 = px;
+        lbl_803DCE60 = py;
+        lbl_803DCE5C = pz;
+        renderFlags |= 2;
+        if (renderFlags & 0x800)
+            doPendingMapLoads();
+    }
+    renderFlags &= ~4;
+    trackIntersect();
+    cam = Camera_GetCurrentViewSlot();
+    *(f32*)((char*)cam + 0xc) = p[0];
+    *(f32*)((char*)cam + 0x10) = p[1];
+    *(f32*)((char*)cam + 0x14) = p[2];
+    mapSetupPlayer();
+    lbl_803DCEBD = 0;
+    (*(void (*)(void))(*(int*)(*gWaterfxInterface + 0x1c)))();
+    (*(void (*)(void))(*(int*)(*gProjgfxInterface + 4)))();
+    (*(void (*)(void))(*(int*)(*gModgfxInterface + 4)))();
+    (*(void (*)(void))(*(int*)(*gExpgfxInterface + 4)))();
+    (*(void (*)(void))(*(int*)(*gPartfxInterface + 4)))();
+    (*(void (*)(void))(*(int*)(*gCloudActionInterface + 0x14)))();
+    (*(void (*)(void))(*(int*)(*gCloudActionInterface + 8)))();
+    (*(void (*)(void))(*(int*)(*gSky2Interface + 8)))();
+    (*(void (*)(void))(*(int*)(*gSHthorntailAnimationInterface + 8)))();
+    (*(void (*)(void))(*(int*)(*gNewCloudsInterface + 8)))();
+    mapInitFn_8006fccc();
+    player = (char*)Obj_GetPlayerObject();
+    if (lbl_803DCEB8 == -2 && player != 0 && (mapKind == 0 || mapKind == 1)) {
+        s16 cam2 = SaveGame_getCamActionNo();
+        if (cam2 != -1) {
+            (*(void (*)(int, int, int))(*(int*)(*gCameraInterface + 0x24)))(0, cam2, 1);
+        }
+        env = saveGameGetEnvState();
+        {
+            s16 v = *(s16*)(env + 4);
+            if (v != -1)
+                getEnvfxActImmediately(player, player, v & 0xFFFF, 0);
+            v = *(s16*)(env + 6);
+            if (v != -1)
+                getEnvfxActImmediately(player, player, v & 0xFFFF, 0);
+            v = *(s16*)(env + 0xa);
+            if (v != -1)
+                getEnvfxActImmediately(player, player, v & 0xFFFF, 0);
+            v = *(s16*)(env + 0xc);
+            if (v != -1)
+                getEnvfxActImmediately(player, player, v & 0xFFFF, 0);
+        }
+        skyFn_80088c94(1, (*(u8*)(env + 0x40) & 2) != 0);
+        skyFn_80088c94(2, (*(u8*)(env + 0x40) & 4) != 0);
+        skyFn_80088e54(lbl_803DEBCC, (*(u8*)(env + 0x40) & 0x10) != 0);
+        if (*(u8*)(env + 0x40) & 1)
+            bo = 1;
+        else
+            bo = 0;
+        {
+            u8* e2 = saveGameGetEnvState();
+            if (bo) {
+                renderFlags |= 0x50;
+                *(s8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) | 9;
+            } else {
+                renderFlags &= ~0x50;
+                *(s8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) & ~9;
+            }
+        }
+        if (*(u8*)(env + 0x40) & 8)
+            bo = 1;
+        else
+            bo = 0;
+        {
+            u8* e3 = saveGameGetEnvState();
+            if (bo) {
+                renderFlags |= 0x40;
+                *(s8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) | 8;
+            } else {
+                renderFlags &= ~0x40;
+                *(s8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) & ~8;
+            }
+        }
+        if (*(u8*)(env + 0x40) & 0x20)
+            lbl_803DCE00 = 1;
+        else
+            lbl_803DCE00 = -1;
+        *(int*)(buf + 0x30) = 0;
+        *(f32*)(buf + 0xc) = lbl_803DEBCC;
+        *(f32*)(buf + 0x10) = lbl_803DEBCC;
+        *(f32*)(buf + 0x14) = lbl_803DEBCC;
+        *(f32*)(buf + 0x18) = lbl_803DEBCC;
+        *(f32*)(buf + 0x1c) = lbl_803DEBCC;
+        *(f32*)(buf + 0x20) = lbl_803DEBCC;
+        {
+            s16 a1 = *(s16*)(env + 0xe);
+            if (a1 != -1) {
+                *(f32*)(buf + 0xc) = (f32)*(int*)(env + 0x14);
+                *(f32*)(buf + 0x10) = (f32)*(int*)(env + 0x18);
+                *(f32*)(buf + 0x14) = (f32)*(int*)(env + 0x1c);
+                getEnvfxAct(buf, player, a1 & 0xFFFF, 0);
+            }
+            a1 = *(s16*)(env + 0x10);
+            if (a1 != -1) {
+                *(f32*)(buf + 0xc) = (f32)*(int*)(env + 0x20);
+                *(f32*)(buf + 0x10) = (f32)*(int*)(env + 0x24);
+                *(f32*)(buf + 0x14) = (f32)*(int*)(env + 0x28);
+                getEnvfxAct(buf, player, a1 & 0xFFFF, 0);
+            }
+            a1 = *(s16*)(env + 0x12);
+            if (a1 != -1) {
+                *(f32*)(buf + 0xc) = (f32)*(int*)(env + 0x2c);
+                *(f32*)(buf + 0x10) = (f32)*(int*)(env + 0x30);
+                *(f32*)(buf + 0x14) = (f32)*(int*)(env + 0x34);
+                getEnvfxAct(buf, player, a1 & 0xFFFF, 0);
+            }
+        }
+        (*(void (*)(f32))(*(int*)(*gSHthorntailAnimationInterface + 0x28)))(*(f32*)env);
+    } else {
+        (*(void (*)(f32))(*(int*)(*gSHthorntailAnimationInterface + 0x28)))(lbl_803DEBD0);
+        (*(void (*)(int))(*(int*)(*gCloudActionInterface + 0x1c)))(1);
+    }
+    clearSaveGameLoadingFlag();
+    Pause_SetDisabled(0);
+    Pause_ResetMenuFrameCounter();
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int mapGetDirIdx(int mapId);
+extern void setForceLoadImmediately(void);
+extern void clearForceLoadImmediately(void);
+extern void loadModelAndAnimTabs(void);
+extern int getCurrentDataFile(int id);
+extern void setShadowFlag_803db658(int v);
+extern void gameTextLoadDir(int dir);
+extern char sTrackPiLockedFormat[];
+extern int lbl_803DCE88;
+extern int lbl_803DCE1C;
+extern int* lbl_803DCDE4;
+extern int lbl_803DCEB0;
+extern s16 lbl_803DCE70;
+extern u8 lbl_803DCDED;
+
+#pragma scheduling off
+#pragma peephole off
+void doPendingMapLoads(void)
+{
+    char* base;
+    u8 waited;
+    int gx, gz;
+    u32 doLoad;
+    int layer;
+    int row;
+    s16 col;
+    int cell;
+    int i;
+    int slot;
+    s16* p13;
+    s16* p5;
+    s16* p7;
+    int cnt;
+    int* o1;
+    f32 dz;
+    s16 recs[1200];
+    int oa[4], ob[4], oc[4], od[4];
+
+    base = (char*)lbl_8037E0C0;
+    waited = 0;
+    if (!(renderFlags & 0x1000)) {
+        lbl_803DCED0 = playerMapOffsetX;
+        lbl_803DCECC = playerMapOffsetZ;
+        if (lbl_803DCEC8 != -1 && lbl_803DCEC8 != lbl_803DCEC4 &&
+            (lbl_803DCEC4 = lbl_803DCEC8, lbl_803DCEC8 < 118) &&
+            lbl_8030E55C[lbl_803DCEC8] != -1) {
+            gameTextLoadDir(lbl_8030E55C[lbl_803DCEC8]);
+        }
+        if (!(renderFlags & 2) && (getLoadedFileFlags(0) != 0 || lbl_803DCE1C == 0)) {
+            lbl_803DCE1C = getLoadedFileFlags(0);
+        } else {
+            renderFlags &= ~2;
+            dz = lbl_803DCE5C - playerMapOffsetZ;
+            gx = (int)fastFloorf((lbl_803DCE64 - playerMapOffsetX) / gMapBlockWorldSize);
+            gz = (int)fastFloorf(dz / gMapBlockWorldSize);
+            {
+                u32 t = renderFlags;
+                doLoad = t & 0x800;
+                renderFlags = t & ~0x800;
+            }
+            {
+                u32 ff = getLoadedFileFlags(0);
+                if ((ff & 0xFFEFFFFF) != 0) {
+                    if (lbl_803DCEC8 != 38 && lbl_803DCEC8 != 58 && lbl_803DCEC8 != 59 &&
+                        lbl_803DCEC8 != 60 && lbl_803DCEC8 != 61 && lbl_803DCEC8 != 62 &&
+                        lbl_803DCEC8 != 28) {
+                        lbl_803DCE04 = 1;
+                    }
+                } else {
+                    if (lbl_803DCE04 != 0) {
+                        lbl_803DCE04 = 0;
+                        doLoad = 1;
+                    }
+                }
+            }
+            if (gx != 7 || gz != 7 || doLoad != 0 || (renderFlags & 0x4000)) {
+                setShadowFlag_803db658(1);
+                doNothing_8001F678(1, 0);
+                cnt = 0;
+                layer = 0;
+                {
+                    int* bp2 = (int*)(base + 0x41E0);
+                    int* ap2 = (int*)(base + 0x41F4);
+                    int* cp2 = (int*)(base + 0x41CC);
+                    int k8;
+                    s8 c;
+                    p13 = recs;
+                    for (layer = 0; layer < 5; layer++) {
+                        s16* ent = (s16*)*bp2;
+                        char* g = (char*)*ap2;
+                        lbl_803DCE88 = *cp2;
+                        cell = 0;
+                        row = 0;
+                        p5 = p13;
+                        for (row = 0; row < 16; row++) {
+                            col = 0;
+                            p7 = p5;
+                            for (k8 = 0; k8 < 8; k8++) {
+                                c = g[0];
+                                if (c > -1) {
+                                    p5[0] = lbl_803DCDD0 + col;
+                                    p5[1] = lbl_803DCDD4 + row;
+                                    p5[3] = layer;
+                                    p5[2] = c;
+                                    p5 += 4;
+                                    p7 += 4;
+                                    p13 += 4;
+                                    cnt++;
+                                }
+                                g[0] = -2;
+                                *(s8*)(lbl_803DCE88 + cell) = -1;
+                                ent[3] = -3;
+                                ent[0] = -1;
+                                ent[1] = -1;
+                                ent[2] = -1;
+                                cell++;
+                                col++;
+                                c = g[1];
+                                if (c > -1) {
+                                    p5[0] = lbl_803DCDD0 + col;
+                                    p5[1] = lbl_803DCDD4 + row;
+                                    p5[3] = layer;
+                                    p5[2] = c;
+                                    p5 += 4;
+                                    p7 += 4;
+                                    p13 += 4;
+                                    cnt++;
+                                }
+                                g[1] = -2;
+                                *(s8*)(lbl_803DCE88 + cell) = -1;
+                                ent[9] = -3;
+                                ent[6] = -1;
+                                ent[7] = -1;
+                                ent[8] = -1;
+                                ent += 12;
+                                cell++;
+                                g += 2;
+                                col++;
+                            }
+                            p5 = p7;
+                        }
+                        bp2++;
+                        ap2++;
+                        cp2++;
+                    }
+                }
+                lbl_803DCDD0 = (gx + lbl_803DCDD0) - 7;
+                lbl_803DCDD4 = (gz + lbl_803DCDD4) - 7;
+                playerMapOffsetX = gMapBlockWorldSize * (f32)lbl_803DCDD0;
+                playerMapOffsetZ = gMapBlockWorldSize * (f32)lbl_803DCDD4;
+                lbl_803DCDC8 = (int)playerMapOffsetX;
+                lbl_803DCDCC = (int)playerMapOffsetZ;
+                for (i = 0; i < lbl_803DCDEC; i++) {
+                    *(s8*)(base + 0x418C + i * 8 + 6) = 0;
+                }
+                lbl_803DCEC8 = mapCoordsToId(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, 0);
+                lbl_803DCEC0 = -1;
+                if (lbl_803DCEC8 == -1) {
+                    int d = mapGetDirIdx(41);
+                    setForceLoadImmediately();
+                    mapLoadDataFile(d, 32);
+                    mapLoadDataFile(d, 35);
+                    mapLoadDataFile(d, 48);
+                    mapLoadDataFile(d, 43);
+                    mapLoadDataFile(d, 33);
+                    mapLoadDataFile(d, 42);
+                    mapLoadDataFile(d, 47);
+                    mapLoadDataFile(d, 36);
+                    clearForceLoadImmediately();
+                    while (getLoadedFileFlags(0) != 0) {
+                        OSReport(sTrackPiLockedFormat, getLoadedFileFlags(0));
+                        padUpdate();
+                        checkReset();
+                        if (waited)
+                            waitNextFrame();
+                        loadDataFiles();
+                        dvdCheckError();
+                        if (waited) {
+                            mmFreeTick(0);
+                            gameTextRun();
+                            GXFlush_(1, 0);
+                        }
+                        if (lbl_803DC950)
+                            waited = 1;
+                    }
+                } else {
+                    if (lbl_803DCEC8 != -1) {
+                        setForceLoadImmediately();
+                        {
+                            int m = lbl_803DCEC8;
+                            int i2 = 0;
+                            char* p2 = base + 0x418C;
+                            int cn = lbl_803DCDEC;
+                            int k;
+                            for (k = 0; k < cn; k++) {
+                                if (*(int*)p2 != 0 && m == *(s16*)(p2 + 4))
+                                    goto found;
+                                p2 += 8;
+                                i2++;
+                            }
+                            i2 = -1;
+                        found:
+                            slot = i2;
+                        }
+                        if (slot == -1)
+                            slot = mapProcessRomList(lbl_803DCEC8);
+                        {
+                            int m2 = lbl_803DCEC8;
+                            u32 sz = getDataFileSize(0x1f);
+                            if (m2 < 0 || m2 >= (int)(sz >> 5)) {
+                                lbl_803DCEA4 = 0;
+                            } else {
+                                int e = lbl_803DCE78;
+                                getTabEntry(e, 0x1f, m2 << 5, 0x20);
+                                lbl_803DCEA4 = *(u8*)(e + 0x1c);
+                            }
+                        }
+                        *(s8*)(base + slot * 8 + 0x4192) = 1;
+                        lbl_803DCEC0 = slot;
+                        mapGetDirIdx(lbl_803DCEC8);
+                        mapCheckCurBlocks(0);
+                        mapLoadDataFile(mapGetDirIdx(lbl_803DCEC8), 38);
+                        mapLoadDataFile(mapGetDirIdx(lbl_803DCEC8), 37);
+                        mapLoadDataFile(mapGetDirIdx(lbl_803DCEC8), 26);
+                        mapLoadDataFile(mapGetDirIdx(lbl_803DCEC8), 27);
+                        lbl_803DCDE4 = (int*)getCurrentDataFile(38);
+                        lbl_803DCEB0 = 0;
+                        {
+                            int* p3;
+                            for (p3 = lbl_803DCDE4; lbl_803DCDE4 != 0 && *p3 != -1; p3++) {
+                                lbl_803DCEB0 = lbl_803DCEB0 + 1;
+                            }
+                        }
+                        lbl_803DCEB0 = lbl_803DCEB0 - 1;
+                        {
+                            int* tp2 = (int*)(base + 0x41E0);
+                            for (i = 0; i < 5; i++) {
+                                char* g2 = (char*)*tp2;
+                                int t2 = 0;
+                                int k2;
+                                for (k2 = 0; k2 < 2; k2++) {
+                                    g2 += 0x540;
+                                    t2 += 7;
+                                }
+                                tp2++;
+                            }
+                        }
+                        {
+                            int d2 = mapGetDirIdx(lbl_803DCEC8);
+                            mapLoadDataFile(d2, 32);
+                            mapLoadDataFile(d2, 35);
+                            mapLoadDataFile(d2, 48);
+                            mapLoadDataFile(d2, 43);
+                            mapLoadDataFile(d2, 13);
+                            mapLoadDataFile(d2, 33);
+                            mapLoadDataFile(d2, 42);
+                            mapLoadDataFile(d2, 47);
+                            mapLoadDataFile(d2, 36);
+                            mapLoadDataFile(d2, 14);
+                        }
+                        loadModelAndAnimTabs();
+                        {
+                            int* ap3 = (int*)(base + 0x41F4);
+                            int* cp3 = (int*)(base + 0x41CC);
+                            for (layer = 0; layer < 5; layer++) {
+                                char* g3;
+                                int zz, xx;
+                                s8 cnt2;
+                                mapFn_80057d24(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, oa, ob, oc, od,
+                                               layer, 0, slot);
+                                g3 = (char*)*ap3;
+                                lbl_803DCE88 = *cp3;
+                                for (zz = oa[2]; zz <= oa[3]; zz++) {
+                                    char* gp = g3 + (zz + 7) * 16 + oa[0];
+                                    for (xx = oa[0]; xx <= oa[1]; xx++) {
+                                        gp[7] = -3;
+                                        gp++;
+                                    }
+                                }
+                                for (zz = ob[2]; zz <= ob[3]; zz++) {
+                                    char* gp = g3 + (zz + 7) * 16 + ob[0];
+                                    for (xx = ob[0]; xx <= ob[1]; xx++) {
+                                        gp[7] = -3;
+                                        gp++;
+                                    }
+                                }
+                                for (zz = oc[2]; zz <= oc[3]; zz++) {
+                                    char* gp = g3 + (zz + 7) * 16 + oc[0];
+                                    for (xx = oc[0]; xx <= oc[1]; xx++) {
+                                        gp[7] = -3;
+                                        gp++;
+                                    }
+                                }
+                                for (zz = od[2]; zz <= od[3]; zz++) {
+                                    char* gp = g3 + (zz + 7) * 16 + od[0];
+                                    for (xx = od[0]; xx <= od[1]; xx++) {
+                                        gp[7] = -3;
+                                        gp++;
+                                    }
+                                }
+                                {
+                                    s8 cn2 = 0;
+                                    int cell2 = 0;
+                                    char* gp2 = g3;
+                                    int rr, cc;
+                                    for (rr = 0; rr < 16; rr++) {
+                                        for (cc = 0; cc < 16; cc++) {
+                                            int bx = lbl_803DCDD0 + cc;
+                                            int bz = lbl_803DCDD4 + rr;
+                                            if (*(s8*)gp2 == -3) {
+                                                if (mapLoadBlock(cc, rr, bx, bz, layer) == 0) {
+                                                    *gp2 = -2;
+                                                } else {
+                                                    *(s8*)(lbl_803DCE88 + cell2) = cn2++;
+                                                }
+                                            }
+                                            cell2++;
+                                            gp2++;
+                                        }
+                                    }
+                                }
+                                ap3++;
+                                cp3++;
+                            }
+                        }
+                        clearForceLoadImmediately();
+                    }
+                }
+                {
+                    s8 first = 1;
+                    int i3 = lbl_803DCDEC - 1;
+                    char* p4 = base + 0x418C + i3 * 8;
+                    for (; i3 >= 0; i3--) {
+                        if (*(s8*)(p4 + 6) == 0) {
+                            if (*(int*)p4 != 0) {
+                                s16 sl = *(s16*)(p4 + 4);
+                                defStartFn_8005972c(*(char**)p4, (u32*)(base + sl * 0x8C + 0x4208),
+                                                    sl, 1);
+                                mm_free(*(void**)p4);
+                                *(int*)(base + 0x83A8 + sl * 4) = 0;
+                            }
+                            *(int*)p4 = 0;
+                            *(s16*)(p4 + 4) = -1;
+                        }
+                        if (first) {
+                            if (*(int*)p4 == 0)
+                                lbl_803DCDEC--;
+                            else
+                                first = 0;
+                        }
+                        p4 -= 8;
+                    }
+                }
+                {
+                    s16* rc = recs;
+                    for (i = 0; i < cnt; i++) {
+                        s16 mid = rc[2];
+                        if (mid >= 0) {
+                            *(u8*)(lbl_803DCE8C + mid) = *(u8*)(lbl_803DCE8C + mid) - 1;
+                            if (*(u8*)(lbl_803DCE8C + mid) == 0) {
+                                char* blk = (char*)*(int*)((char*)lbl_803DCE9C + mid * 4);
+                                int off;
+                                int j, k;
+                                *(s16*)((char*)lbl_803DCE94 + mid * 2) = -1;
+                                *(int*)((char*)lbl_803DCE9C + mid * 4) = 0;
+                                off = 0;
+                                for (j = 0; j < *(u8*)(blk + 0xa2); j++) {
+                                    char* ent2 = (char*)(*(int*)(blk + 100) + off);
+                                    char* cur2 = ent2;
+                                    for (k = 0; k < *(u8*)(ent2 + 0x41); k++) {
+                                        if (*(u8*)(cur2 + 0x2a) != 0xFF) {
+                                            int ix = *(u8*)(cur2 + 0x2a) * 16 + 12;
+                                            u8 c2 = *(u8*)(lbl_803DCE68 + ix);
+                                            if (c2 != 0)
+                                                *(u8*)(lbl_803DCE68 + ix) = c2 - 1;
+                                        }
+                                        if (*(u8*)(cur2 + 0x29) != 0)
+                                            mapTextureOverrideRelease(*(int*)(cur2 + 0x24),
+                                                                      *(u8*)(cur2 + 0x29));
+                                        cur2 += 8;
+                                    }
+                                    off += 0x44;
+                                }
+                                {
+                                    int o2 = 0;
+                                    for (j = 0; j < *(u8*)(blk + 0xa0); j++) {
+                                        textureFree(*(int*)(*(int*)(blk + 0x54) + o2));
+                                        o2 += 4;
+                                    }
+                                }
+                                if (*(int*)(blk + 0x74) != 0)
+                                    mm_free(*(void**)(blk + 0x74));
+                                if (*(int*)(blk + 0x70) != 0)
+                                    mm_free(*(void**)(blk + 0x70));
+                                setMapBlockFlag();
+                                mm_free(blk);
+                            }
+                        }
+                        rc += 4;
+                    }
+                }
+                lbl_803DCE70 = 0;
+                lbl_803DCDED = 0;
+            }
+            mapLoadUnloadObjects(doLoad);
+            lbl_803DCE1C = getLoadedFileFlags(0);
+            renderFlags &= ~0x4000;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s16 lbl_803DCE90;
+extern int lbl_803DCE84;
+
+#pragma scheduling off
+#pragma peephole off
+void mapBlockFn_80059354(int x, int z, s16* out, int layer)
+{
+    int id;
+    int slot;
+    int cv3, cv4;
+    char* entry;
+    s16* pairs;
+    s16* rects;
+    u32 v;
+    int k;
+
+    id = mapCoordsToId(x, z, layer);
+    if (id != -1) {
+        char* p2 = (char*)lbl_8038224C;
+        char* q2 = p2;
+        int i2 = 0;
+        int cn = lbl_803DCDEC;
+        for (k = 0; k < cn; k++) {
+            if (*(int*)q2 != 0 && id == *(s16*)(q2 + 4))
+                goto found1;
+            q2 += 8;
+            i2++;
+        }
+        i2 = -1;
+    found1:
+        slot = i2;
+        if (slot == -1)
+            slot = mapProcessRomList(id);
+        ((BlockEntry*)lbl_8038224C)[slot].field_6 = (((BlockEntry*)lbl_8038224C)[slot].field_6 & 0xFF) | 0x100;
+        entry = (char*)lbl_8038224C[slot].field_0;
+        pairs = (s16*)lbl_80382238[2];
+        cv3 = *(s8*)&pairs[id * 2];
+        cv4 = *(s8*)&pairs[id * 2 + 1];
+        out[0] = id;
+        out[1] = cv3;
+        out[2] = cv4;
+        if (cv3 != -1) {
+            char* q3 = p2;
+            int i3 = 0;
+            int cn3 = lbl_803DCDEC;
+            for (k = 0; k < cn3; k++) {
+                if (*(int*)q3 != 0 && cv3 == *(s16*)(q3 + 4))
+                    goto found2;
+                q3 += 8;
+                i3++;
+            }
+            i3 = -1;
+        found2:
+            if (i3 == -1)
+                i3 = mapProcessRomList(cv3);
+            *(s8*)(p2 + 6 + i3 * 8) = 1;
+        }
+        if (cv4 != -1) {
+            int i4 = 0;
+            int cn4 = lbl_803DCDEC;
+            for (k = 0; k < cn4; k++) {
+                if (*(int*)p2 != 0 && cv4 == *(s16*)(p2 + 4))
+                    goto found3;
+                p2 += 8;
+                i4++;
+            }
+            i4 = -1;
+        found3:
+            if (i4 == -1)
+                i4 = mapProcessRomList(cv4);
+            *(s8*)((char*)lbl_8038224C + 6 + i4 * 8) = 1;
+        }
+        rects = (s16*)(lbl_80382238[1] + id * 10);
+        x = x - rects[0];
+        z = z - rects[2];
+        v = *(u32*)(*(int*)(entry + 0xc) + (x + z * *(s16*)entry) * 4);
+        *(s8*)((char*)out + 8) = (v >> 0x11) & 0x3f;
+        *(s8*)((char*)out + 9) = v >> 0x17;
+        if (*(s8*)((char*)out + 9) == 0xFF)
+            *(s8*)((char*)out + 9) = -1;
+        if (*(s8*)((char*)out + 9) == -1) {
+            out[3] = -1;
+        } else {
+            if (*(s8*)((char*)out + 9) >= lbl_803DCE90)
+                *(s8*)((char*)out + 9) = lbl_803DCE90 - 1;
+            out[3] = *(s8*)((char*)out + 8) + *(u16*)(lbl_803DCE84 + *(s8*)((char*)out + 9) * 2);
+            if (out[3] >= *(u16*)(lbl_803DCE84 + lbl_803DCE90 * 2))
+                out[3] = *(u16*)(lbl_803DCE84 + lbl_803DCE90 * 2) - 1;
+        }
+    } else {
+        out[0] = -1;
+        out[1] = -1;
+        out[2] = -1;
+        out[3] = -2;
+        *(s8*)((char*)out + 9) = -1;
+        *(s8*)((char*)out + 8) = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int gMapBlockLayerTables[];
+extern void* lbl_803DCEA8;
+extern int lbl_803DCE74;
+extern char sTrackCellCoordFormat[];
+extern void fn_80137948(char* fmt, ...);
+extern void modelRenderInstrsState_init(int* state, int buf, int s1, int s2);
+
+#pragma scheduling off
+#pragma peephole off
+void mapDebugRender(int* state)
+{
+    int bx, bz;
+    char* blk;
+    int sx, sz;
+    int wx, wz;
+    int ci;
+    s16 y0;
+    int y0a;
+    f32 cy;
+    s16 y1;
+    int yy, dy, h;
+    int step;
+    int row, cx, cz;
+    int cell;
+    s16 v;
+    int n;
+
+    if (lbl_803DCDED != 0) {
+        bx = (int)fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0xc) - playerMapOffsetX) /
+                             gMapBlockWorldSize);
+        bz = (int)fastFloorf((*(f32*)((char*)lbl_803DCEA8 + 0x14) - playerMapOffsetZ) /
+                             gMapBlockWorldSize);
+        if (bx < 0 || bz < 0 || bx >= 16 || bz >= 16) {
+            blk = 0;
+        } else {
+            ci = *(s8*)(gMapBlockLayerTables[0] + bx + bz * 16);
+            if (ci < 0 || ci >= lbl_803DCE98) {
+                blk = 0;
+            } else {
+                blk = *(char**)((char*)lbl_803DCE9C + ci * 4);
+            }
+        }
+        sx = (int)(gMapBlockWorldSize * fastFloorf(*(f32*)((char*)lbl_803DCEA8 + 0xc) /
+                                                   gMapBlockWorldSize));
+        sz = (int)(gMapBlockWorldSize * fastFloorf(*(f32*)((char*)lbl_803DCEA8 + 0x14) /
+                                                   gMapBlockWorldSize));
+        wx = (int)(*(f32*)((char*)lbl_803DCEA8 + 0xc) - (f32)sx);
+        wz = (int)(*(f32*)((char*)lbl_803DCEA8 + 0x14) - (f32)sz);
+        if (blk != 0) {
+            y0 = *(s16*)(blk + 0x8a);
+            y0a = y0;
+            if (y0 & 1)
+                y0a = y0 - 1;
+            cy = *(f32*)((char*)lbl_803DCEA8 + 0x10);
+            y1 = *(s16*)(blk + 0x8c);
+            if (cy > (f32)y1)
+                cy = (f32)(y1 - 1);
+            yy = (int)cy;
+            dy = yy - y0a;
+            h = y1 - y0;
+            if (h / 80 < 8)
+                step = h / 8;
+            else
+                step = 80;
+            row = dy / step;
+            cx = wx / 80;
+            cz = wz / 80;
+            cell = row * 0x40 + cz * 8 + cx;
+            fn_80137948(sTrackCellCoordFormat);
+            v = lbl_803DCE70;
+            n = v >> 3;
+            if (v & 7)
+                n = n + 1;
+            modelRenderInstrsState_init(state, lbl_803DCE74 + n * cell, v, v);
         }
     }
 }

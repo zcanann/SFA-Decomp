@@ -54,7 +54,7 @@ void MoonSeedPlantingSpot_free(int x);
 int MoonSeedPlantingSpot_SeqFn(int obj);
 void MoonSeedPlantingSpot_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void MoonSeedPlantingSpot_hitDetect(void);
-void MoonSeedPlantingSpot_update(void);
+void MoonSeedPlantingSpot_update(int obj);
 void MoonSeedPlantingSpot_init(int *obj, u8 *init);
 void MoonSeedPlantingSpot_release(void);
 void MoonSeedPlantingSpot_initialise(void);
@@ -69,7 +69,7 @@ int ccgasventcontrol_getExtraSize(void);
 void ccgasventcontrol_free(int obj);
 int CCGasVentControl_SeqFn(int obj);
 void ccgasventcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
-void ccgasventcontrol_update(void);
+void ccgasventcontrol_update(int obj);
 void ccgasventcontrol_init(int obj, u8 *p);
 
 int dimlogfire_getExtraSize(void);

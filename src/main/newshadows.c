@@ -231,9 +231,218 @@ extern f32 lbl_803DFA9C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006a028(undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4)
+extern void DCFlushRange(void *addr, u32 nBytes);
+
+/* Box-blur a square tiled texture in place (8-bit and 16-bit texel paths). */
+#pragma scheduling off
+#pragma peephole off
+void fn_8006A028(u8 *texData, int size, int window, u32 fill)
 {
+    u8 blurred[128];
+    u8 row[152];
+    u8 *data;
+
+    data = texData + 0x60;
+    if (window % 8 == 0) {
+        int nfill = window >> 3;
+        u32 y;
+
+        for (y = 0; y < size; y++) {
+            u32 *tile = (u32 *)(data + ((y & 3) * 8 + (y >> 2) * 4 * size));
+            u32 *dst = (u32 *)row;
+            u32 *src;
+            u32 sum;
+            u32 i;
+            u32 x;
+            int k;
+
+            for (i = 0; i < nfill; i++) {
+                *dst = fill;
+                dst++;
+            }
+            src = tile;
+            for (x = 0; x < size; x += 8) {
+                dst[0] = src[0];
+                dst[1] = src[1];
+                dst += 2;
+                src += 8;
+            }
+            for (i = 0; i < nfill; i++) {
+                *dst = fill;
+                dst++;
+            }
+            sum = 0;
+            for (k = 0; k < window; k++) {
+                sum += row[k];
+            }
+            for (k = 0; k < size; k++) {
+                blurred[k] = sum / window;
+                sum = sum - row[k] + (row + window)[k];
+            }
+            src = (u32 *)blurred;
+            for (x = 0; x < size; x += 8) {
+                tile[0] = src[0];
+                tile[1] = src[1];
+                src += 2;
+                tile += 8;
+            }
+        }
+        {
+            u32 x;
+
+            for (x = 0; x < size; x++) {
+                u8 *col = data + ((x & 7) + (x >> 3) * 32);
+                u32 *dst = (u32 *)row;
+                u8 *gp;
+                u8 *bp;
+                u32 sum;
+                u32 i;
+                u32 yy;
+                int k;
+
+                for (i = 0; i < nfill; i++) {
+                    *dst = fill;
+                    dst++;
+                }
+                gp = col;
+                bp = row + (window >> 1);
+                for (yy = 0; yy < size; yy += 4) {
+                    bp[0] = gp[0];
+                    bp[1] = gp[8];
+                    bp[2] = gp[16];
+                    bp[3] = gp[24];
+                    bp += 4;
+                    gp += (size >> 3) * 32;
+                }
+                dst = (u32 *)(row + (size + (window >> 1)));
+                for (i = 0; i < nfill; i++) {
+                    *dst = fill;
+                    dst++;
+                }
+                sum = 0;
+                for (k = 0; k < window; k++) {
+                    sum += row[k];
+                }
+                for (k = 0; k < size; k++) {
+                    blurred[k] = sum / window;
+                    sum = sum - row[k] + (row + window)[k];
+                }
+                bp = blurred;
+                for (yy = 0; yy < size; yy += 4) {
+                    col[0] = bp[0];
+                    col[8] = bp[1];
+                    col[16] = bp[2];
+                    col[24] = bp[3];
+                    bp += 4;
+                    col += (size >> 3) * 32;
+                }
+            }
+        }
+    } else {
+        int nfill = window >> 2;
+        u16 fillhw = fill;
+        u32 y;
+
+        for (y = 0; y < size; y++) {
+            u16 *tile = (u16 *)(data + ((y & 3) * 8 + (y >> 2) * 4 * size));
+            u16 *dst = (u16 *)row;
+            u16 *src;
+            u32 sum;
+            u32 i;
+            u32 x;
+            int k;
+
+            for (i = 0; i < nfill; i++) {
+                *dst = fillhw;
+                dst++;
+            }
+            src = tile;
+            for (x = 0; x < size; x += 8) {
+                dst[0] = src[0];
+                dst[1] = src[1];
+                dst[2] = src[2];
+                dst[3] = src[3];
+                dst += 4;
+                src += 16;
+            }
+            for (i = 0; i < nfill; i++) {
+                *dst = fillhw;
+                dst++;
+            }
+            sum = 0;
+            for (k = 0; k < window; k++) {
+                sum += row[k];
+            }
+            for (k = 0; k < size; k++) {
+                blurred[k] = sum / window;
+                sum = sum - row[k] + (row + window)[k];
+            }
+            src = (u16 *)blurred;
+            for (x = 0; x < size; x += 8) {
+                tile[0] = src[0];
+                tile[1] = src[1];
+                tile[2] = src[2];
+                tile[3] = src[3];
+                src += 4;
+                tile += 16;
+            }
+        }
+        {
+            u32 x;
+
+            for (x = 0; x < size; x++) {
+                u8 *col = data + ((x & 7) + (x >> 3) * 32);
+                u16 *dst = (u16 *)row;
+                u8 *gp;
+                u8 *bp;
+                u32 sum;
+                u32 i;
+                u32 yy;
+                int k;
+
+                for (i = 0; i < nfill; i++) {
+                    *dst = fillhw;
+                    dst++;
+                }
+                gp = col;
+                bp = row + (window >> 1);
+                for (yy = 0; yy < size; yy += 4) {
+                    bp[0] = gp[0];
+                    bp[1] = gp[8];
+                    bp[2] = gp[16];
+                    bp[3] = gp[24];
+                    bp += 4;
+                    gp += (size >> 3) * 32;
+                }
+                dst = (u16 *)(row + (size + (window >> 1)));
+                for (i = 0; i < nfill; i++) {
+                    *dst = fillhw;
+                    dst++;
+                }
+                sum = 0;
+                for (k = 0; k < window; k++) {
+                    sum += row[k];
+                }
+                for (k = 0; k < size; k++) {
+                    blurred[k] = sum / window;
+                    sum = sum - row[k] + (row + window)[k];
+                }
+                bp = blurred;
+                for (yy = 0; yy < size; yy += 4) {
+                    col[0] = bp[0];
+                    col[8] = bp[1];
+                    col[16] = bp[2];
+                    col[24] = bp[3];
+                    bp += 4;
+                    col += (size >> 3) * 32;
+                }
+            }
+        }
+    }
+    DCFlushRange(data, size * size);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -300,7 +509,7 @@ void newshadows_captureProjectedShadow(ushort *object)
     FUN_80259400(0x100,0xb0,0x80,0x80);
     FUN_80259504(0x80,0x80,0x2a,0);
     FUN_80259c0c((&DAT_8038ee3c)[DAT_803ddc0c] + 0x60,1);
-    FUN_8006a028((&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3],0x80,0x10,0);
+    fn_8006A028((u8 *)(&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3],0x80,0x10,0);
     **(float **)(object + 0x32) = (float)((double)lbl_803DF9AC / dVar7);
   }
   FUN_80006988();
@@ -3016,8 +3225,8 @@ u16 audioPickSoundEffect_8006ed24(s8 a, u8 b) {
         case 5: base += 0x64; break;
         case 6: base += 0x50; break;
         case 8: base += 0x78; break;
-        case 9: base += 0xa0; break;
         case 0xa: base += 0x8c; break;
+        case 9: base += 0xa0; break;
         default: base += 0x28; break;
     }
     return *(u16 *)(base + v * 2);
@@ -3045,7 +3254,7 @@ extern inline float sqrtf(float x)
     return x;
 }
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
-extern f32 Vdchuff_803DEDC0[];
+extern f32 Vdchuff_803DEDC0[2];
 #pragma scheduling off
 void fn_8006CD20(f32 *arr, int n, f32 *out1, f32 *out2, f32 a, f32 b, f32 c) {
     f32 *p;
@@ -3101,7 +3310,7 @@ void fn_8006CD20(f32 *arr, int n, f32 *out1, f32 *out2, f32 a, f32 b, f32 c) {
 extern int testAndSet_onlyUseHeap3(int);
 extern f32 fn_802943F4(f32);
 extern double floor(double);
-extern f32 Yachuff_803DEDE0[];
+extern f32 Yachuff_803DEDE0[2];
 extern f32 __PADFixBits;
 extern f32 lbl_80391978[];
 extern u8 lbl_8038E268[0x40];
@@ -3120,30 +3329,30 @@ void initFn_8006d020(void) {
     e = lbl_80391978;
     while (placed < 0x32 && attempts < 10000) {
         e[0] = (f32)(int)randomGetRange(8, 0x10);
-        e[3] = Vdchuff_803DEDC0[6] * (f32)(int)randomGetRange(5, 10);
-        e[4] = e[3] * (Vdchuff_803DEDC0[6] * (f32)(int)randomGetRange(0x14, 0x32));
+        e[3] = 0.01f * (f32)(int)randomGetRange(5, 10);
+        e[4] = e[3] * (0.01f * (f32)(int)randomGetRange(0x14, 0x32));
         attempts = 0;
         do {
             f32 *o;
-            e[1] = Vdchuff_803DEDC0[7] * (f32)(int)randomGetRange(0, 999);
-            e[2] = Vdchuff_803DEDC0[7] * (f32)(int)randomGetRange(0, 999);
+            e[1] = 0.001f * (f32)(int)randomGetRange(0, 999);
+            e[2] = 0.001f * (f32)(int)randomGetRange(0, 999);
             collide = 0;
             j = 0;
             o = lbl_80391978;
             while (j < placed && !collide) {
                 f32 mx, mz, tmp, d;
                 mx = (f32)__fabs(e[1] - o[1]);
-                tmp = (f32)__fabs((lbl_803DED2C + e[1]) - o[1]);
+                tmp = (f32)__fabs((1.0f + e[1]) - o[1]);
                 if (tmp < mx) mx = tmp;
-                tmp = (f32)__fabs((e[1] - lbl_803DED2C) - o[1]);
+                tmp = (f32)__fabs((e[1] - 1.0f) - o[1]);
                 if (tmp < mx) mx = tmp;
                 mz = (f32)__fabs(e[2] - o[2]);
-                tmp = (f32)__fabs((lbl_803DED2C + e[2]) - o[2]);
+                tmp = (f32)__fabs((1.0f + e[2]) - o[2]);
                 if (tmp < mz) mz = tmp;
-                tmp = (f32)__fabs((e[2] - lbl_803DED2C) - o[2]);
+                tmp = (f32)__fabs((e[2] - 1.0f) - o[2]);
                 if (tmp < mz) mz = tmp;
                 d = mx * mx + mz * mz;
-                if (d > lbl_803DED28) d = sqrtf(d);
+                if (d > 0.0f) d = sqrtf(d);
                 if (d < e[4] + o[3]) collide = 1;
                 o += 5;
                 j++;
@@ -3164,8 +3373,8 @@ void initFn_8006d020(void) {
                 u16 *dst = (u16 *)(*th + (row & 3) * 2 + (row >> 2) * 0x20
                                    + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
                 fn_8006CD20(lbl_80391978, placed, &o1, &o2,
-                            (f32)row * Yachuff_803DEDE0[0],
-                            (f32)col * Yachuff_803DEDE0[0],
+                            (f32)row * 0.015625f,
+                            (f32)col * 0.015625f,
                             (f32)tex);
                 hi = (int)(__PADFixBits * o2);
                 lo = (int)(__PADFixBits * o1);
@@ -3177,18 +3386,18 @@ void initFn_8006d020(void) {
 
     lbl_803DCFE0 = (u32)textureAlloc(0x40, 0x40, 3, 0, 0, 1, 1, 1, 1);
     for (row = 0; row < 0x40; row++) {
-        f32 rv = Yachuff_803DEDE0[1] * (f32)row;
+        f32 rv = 0.0981875f * (f32)row;
         for (col = 0; col < 0x40; col++) {
             f32 cv, n1, n2, prod, fa, fb;
             int hi, lo;
             u16 *dst = (u16 *)(lbl_803DCFE0 + (row & 3) * 2 + (row >> 2) * 0x20
                                + (col & 3) * 8 + (col >> 2) * 0x200 + 0x60);
-            cv = Yachuff_803DEDE0[2] * (f32)col;
+            cv = 0.39275f * (f32)col;
             n1 = fn_802943F4(CPUFifo_803DED38 * floor(cv) + rv);
             n2 = fn_802943F4(cv);
             prod = n1 * n2;
-            fb = Vdchuff_803DEDC0[0] * prod + Vdchuff_803DEDC0[0];
-            fa = Vdchuff_803DEDC0[0] * n1 + Vdchuff_803DEDC0[0];
+            fb = 127.0f * prod + 127.0f;
+            fa = 127.0f * n1 + 127.0f;
             lo = (int)fa;
             hi = (int)fb;
             *dst = (u16)(lo | ((hi & 0xffff) << 8));
@@ -3196,8 +3405,8 @@ void initFn_8006d020(void) {
     }
     DCFlushRange((void *)(lbl_803DCFE0 + 0x60), *(u32 *)(lbl_803DCFE0 + 0x44));
 
-    lbl_803DCFAC = lbl_803DED28;
-    lbl_803DCFA8 = lbl_803DED28;
+    lbl_803DCFAC = 0.0f;
+    lbl_803DCFA8 = 0.0f;
     testAndSet_onlyUseHeap3(saved);
 }
 #pragma scheduling reset
@@ -3207,7 +3416,7 @@ extern void DCInvalidateRange(void *, int);
 extern void fn_80069EB8();
 extern void GXTexModeSync(void);
 extern f32 lbl_803DED10, lbl_803DED34, Dev_803DED1C;
-extern f32 Udchuff_803DEDA0[], Uachuff_803DEE00[];
+extern f32 Udchuff_803DEDA0[2], Uachuff_803DEE00[2];
 #pragma scheduling off
 void allocLotsOfTextures(void) {
     char *g = (char *)lbl_8038DF48;
@@ -3233,74 +3442,86 @@ void allocLotsOfTextures(void) {
 
     lbl_803DCFD8 = (int)textureAlloc(0x20, 0x20, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x20; i++) {
-        f32 cy = (f32)i - Yachuff_803DEDE0[3];
+        f32 cy = (f32)i - 16.0f;
         for (j = 0; j < 0x20; j++) {
-            f32 dx = cy * Vdchuff_803DEDC0[4] * Yachuff_803DEDE0[4];
-            f32 dz = ((f32)j - Yachuff_803DEDE0[3]) * Vdchuff_803DEDC0[4] * Yachuff_803DEDE0[4];
+            f32 dx = cy * 0.0625f * 1.1f;
+            f32 dz = ((f32)j - 16.0f) * 0.0625f * 1.1f;
             f32 d2 = dx * dx + dz * dz;
-            f32 v = (d2 <= lbl_803DED2C) ? (lbl_803DED2C - d2) : lbl_803DED28;
+            f32 v;
+            if (d2 > 1.0f) {
+                v = 0.0f;
+            } else {
+                v = 1.0f - d2;
+            }
             *(u8 *)(lbl_803DCFD8 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x80 + 0x60) =
-                (u8)(int)(__PADFixBits * v);
+                (u8)(int)(255.0f * v);
         }
     }
     DCFlushRange((void *)(lbl_803DCFD8 + 0x60), *(int *)(lbl_803DCFD8 + 0x44));
 
     lbl_803DCFD4 = (int)textureAlloc(0x10, 0x10, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x10; i++) {
-        f32 cy = ((f32)i - lbl_803DED10) * __GXCurrentThread_803DED40;
         for (j = 0; j < 0x10; j++) {
-            f32 dx = cy * Yachuff_803DEDE0[5];
-            f32 dz = (((f32)j - lbl_803DED10) * __GXCurrentThread_803DED40) * Yachuff_803DEDE0[5];
+            f32 dx = ((f32)i - 8.0f) * 0.125f * 1.2f;
+            f32 dz = ((f32)j - 8.0f) * 0.125f * 1.2f;
             f32 d2 = dx * dx + dz * dz;
-            f32 v = lbl_803DED2C - d2;
-            v = sqrtf(v);
+            f32 v;
+            if (d2 > 1.0f) {
+                v = 0.0f;
+            } else {
+                v = sqrtf(1.0f - d2);
+            }
             *(u8 *)(lbl_803DCFD4 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x40 + 0x60) =
-                (u8)(int)(__PADFixBits * v);
+                (u8)(int)(255.0f * v);
         }
     }
     DCFlushRange((void *)(lbl_803DCFD4 + 0x60), *(int *)(lbl_803DCFD4 + 0x44));
 
     lbl_803DCFD0 = (int)textureAlloc(0x40, 0x40, 5, 0, 0, 0, 0, 1, 1);
     {
-        f32 mx = lbl_803DED28;
+        f32 mx = 0.0f;
         for (i = 0; i < 0x40; i++) {
-            f32 rc = ((f32)i - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
-            f32 rc2 = ((f32)(i + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+            f32 rc = ((f32)i - 32.0f) * 0.03125f;
+            f32 rc2 = ((f32)(i + 1) - 32.0f) * 0.03125f;
             for (j = 0; j < 0x40; j++) {
-                f32 cc = ((f32)j - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
-                f32 cc2 = ((f32)(j + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                f32 cc = ((f32)j - 32.0f) * 0.03125f;
+                f32 cc2 = ((f32)(j + 1) - 32.0f) * 0.03125f;
                 f32 d1 = sqrtf(rc * rc + cc * cc);
                 f32 d2 = sqrtf(rc2 * rc2 + cc * cc);
                 f32 d3 = sqrtf(rc * rc + cc2 * cc2);
-                f32 n1 = -fn_802943F4(Uachuff_803DEE00[0] * d1);
-                f32 n2 = (f32)__fabs(fn_802943F4(Uachuff_803DEE00[0] * d2));
-                f32 n3 = fn_802943F4(Uachuff_803DEE00[0] * d3);
+                f32 n1 = -fn_802943F4(18.852f * d1);
+                f32 n2 = (f32)__fabs(fn_802943F4(18.852f * d2));
+                f32 n3 = fn_802943F4(18.852f * d3);
                 if (mx < n1 - n2) mx = n1 - n2;
                 if (mx < n1 - (f32)__fabs(n3)) mx = n1 - (f32)__fabs(n3);
             }
         }
         {
-            f32 inv = lbl_803DED2C / mx;
+            f32 inv = 1.0f / mx;
             for (i = 0; i < 0x40; i++) {
-                f32 rc = ((f32)i - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
-                f32 rc2 = ((f32)(i + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                f32 rc = ((f32)i - 32.0f) * 0.03125f;
+                f32 rc2 = ((f32)(i + 1) - 32.0f) * 0.03125f;
                 for (j = 0; j < 0x40; j++) {
-                    f32 cc = ((f32)j - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
-                    f32 cc2 = ((f32)(j + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                    f32 cc = ((f32)j - 32.0f) * 0.03125f;
+                    f32 cc2 = ((f32)(j + 1) - 32.0f) * 0.03125f;
                     f32 d1 = sqrtf(rc * rc + cc * cc);
                     f32 d2 = sqrtf(rc2 * rc2 + cc * cc);
                     f32 d3 = sqrtf(rc * rc + cc2 * cc2);
-                    f32 n1 = -fn_802943F4(Uachuff_803DEE00[0] * d1);
-                    f32 n2 = -fn_802943F4(Uachuff_803DEE00[0] * d2);
-                    f32 n3 = -fn_802943F4(Uachuff_803DEE00[0] * d3);
-                    f32 a = inv * (Vdchuff_803DEDC0[0] * (n1 - n2)) + Vdchuff_803DEDC0[0];
-                    f32 b = inv * (Vdchuff_803DEDC0[0] * (n1 - n3)) + Vdchuff_803DEDC0[0];
-                    f32 dd = (d1 < lbl_803DED2C) ? sqrtf(lbl_803DED2C - d1) : lbl_803DED28;
-                    f32 c = Yachuff_803DEDE0[6] * dd;
+                    f32 n1 = -fn_802943F4(18.852f * d1);
+                    f32 n2 = -fn_802943F4(18.852f * d2);
+                    f32 n3 = -fn_802943F4(18.852f * d3);
+                    f32 a = inv * (127.0f * (n1 - n2)) + 127.0f;
+                    f32 b = inv * (127.0f * (n1 - n3)) + 127.0f;
+                    f32 dd = 0.0f;
+                    f32 c;
                     int r4, r3, r0;
-                    if (c > Uachuff_803DEE00[1]) c = Uachuff_803DEE00[1];
-                    a = a * Yachuff_803DEDE0[7];
-                    b = b * Vdchuff_803DEDC0[4];
+                    if (d1 < 1.0f) {
+                        dd = sqrtf(1.0f - d1);
+                    }
+                    c = 32.0f * dd;
+                    if (c > 15.0f) c = 15.0f;
+                    a = a * 0.03125f;
+                    b = b * 0.0625f;
                     r4 = (int)b & 0xf;
                     r3 = ((int)c & 0xf) << 4;
                     r0 = ((int)a & 7) << 12;
@@ -3337,18 +3558,17 @@ void allocLotsOfTextures(void) {
 
     lbl_803DCF90 = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x80; i++) {
-        f32 cy = ((f32)i - Dev_803DED1C) * Yachuff_803DEDE0[0];
+        f32 cy = ((f32)i - 64.0f) * 0.015625f;
         for (j = 0; j < 0x80; j++) {
-            f32 cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0[0];
-            f32 d2 = cy * cy + cx * cx;
+            f32 cx = ((f32)j - 64.0f) * 0.015625f;
+            f32 d2 = sqrtf(cy * cy + cx * cx);
             u8 v;
-            if (d2 > CPUFifo_803DED38) {
-                if (d2 <= lbl_803DED2C)
-                    v = (u8)(int)(Uachuff_803DEE00[2] * (lbl_803DED2C - (d2 - CPUFifo_803DED38) / CPUFifo_803DED38));
-                else
-                    v = 0;
-            } else {
+            if (d2 < 0.5f) {
                 v = 0xa0;
+            } else if (d2 > 1.0f) {
+                v = 0;
+            } else {
+                v = (u8)(int)(160.0f * (1.0f - (d2 - 0.5f) / 0.5f));
             }
             *(u8 *)(lbl_803DCF90 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60) = v;
         }
@@ -3357,16 +3577,14 @@ void allocLotsOfTextures(void) {
 
     lbl_803DCFC0 = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x80; i++) {
-        f32 cy = (f32)__fabs(((f32)i - Dev_803DED1C) * Yachuff_803DEDE0[0]);
+        f32 cy = (f32)__fabs(((f32)i - 64.0f) * 0.015625f);
         for (j = 0; j < 0x80; j++) {
-            f32 cx = (f32)__fabs(((f32)j - Dev_803DED1C) * Yachuff_803DEDE0[0]);
-            f32 d2 = cy * cy + cx * cx;
-            f32 v;
-            d2 = sqrtf(d2);
-            v = lbl_803DED2C - d2;
-            if (v < lbl_803DED28) v = lbl_803DED28;
+            f32 cx = (f32)__fabs(((f32)j - 64.0f) * 0.015625f);
+            f32 d2 = sqrtf(cy * cy + cx * cx);
+            f32 v = 1.0f - d2;
+            if (v < 0.0f) v = 0.0f;
             *(u8 *)(lbl_803DCFC0 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60) =
-                (u8)(int)(__PADFixBits * v);
+                (u8)(int)(255.0f * v);
         }
     }
     DCFlushRange((void *)(lbl_803DCFC0 + 0x60), *(int *)(lbl_803DCFC0 + 0x44));
@@ -3377,36 +3595,35 @@ void allocLotsOfTextures(void) {
 
     lbl_803DCFB4 = (int)textureAlloc(0x20, 4, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x20; i++) {
-        f32 c0 = (f32)__fabs(((f32)i - Yachuff_803DEDE0[3]) * Vdchuff_803DEDC0[4]);
+        f32 c0 = (f32)__fabs(((f32)i - 16.0f) * 0.0625f);
         for (j = 0; j < 4; j++) {
             f32 v = c0;
             v = sqrtf(v);
             v = sqrtf(v);
             *(u8 *)(lbl_803DCFB4 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x80 + 0x60) =
-                (u8)(int)(__PADFixBits * (lbl_803DED2C - v));
+                (u8)(int)(255.0f * (1.0f - v));
         }
     }
     DCFlushRange((void *)(lbl_803DCFB4 + 0x60), *(int *)(lbl_803DCFB4 + 0x44));
 
-    lbl_803DCFB0 = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    lbl_803DCFB0 = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 1, 1, 1, 1);
     for (i = 0; i < 0x80; i++) {
-        f32 cy = ((f32)i - Dev_803DED1C) * Yachuff_803DEDE0[0];
+        f32 cy = ((f32)i - 64.0f) * 0.015625f;
         for (j = 0; j < 0x80; j++) {
-            f32 cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0[0];
-            f32 d2 = cx * cx + cy * cy;
+            f32 cx = ((f32)j - 64.0f) * 0.015625f;
+            f32 d2 = sqrtf(cx * cx + cy * cy);
             f32 v;
-            d2 = sqrtf(d2);
-            if (d2 < GPFifo_803DED3C || d2 > Uachuff_803DEE00[3]) {
-                v = lbl_803DED28;
+            if (d2 < 0.25f || d2 > 0.75f) {
+                v = 0.0f;
             } else {
-                f32 t = lbl_803DED34 * (d2 - GPFifo_803DED3C);
-                if (t <= CPUFifo_803DED38) t = CPUFifo_803DED38 - t;
-                else t = t - CPUFifo_803DED38;
-                v = -(lbl_803DED34 * t - lbl_803DED2C);
+                f32 t = 2.0f * (d2 - 0.25f);
+                if (t > 0.5f) t = t - 0.5f;
+                else t = 0.5f - t;
+                v = -(2.0f * t - 1.0f);
                 v = sqrtf(v);
             }
             *(u8 *)(lbl_803DCFB0 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60) =
-                (u8)(int)(Yachuff_803DEDE0[3] * v);
+                (u8)(int)(16.0f * v);
         }
     }
     DCFlushRange((void *)(lbl_803DCFB0 + 0x60), *(int *)(lbl_803DCFB0 + 0x44));
@@ -3418,7 +3635,7 @@ void allocLotsOfTextures(void) {
     {
         int m = (int)Uachuff_803DEE00[7];
         for (i = 0; i < 4; i++) {
-            u16 v = (u16)(((int)(__PADFixBits * ((f32)i / Uachuff_803DEE00[4] - CPUFifo_803DED38) + Udchuff_803DEDA0[7]) & 0xff) << 8);
+            u16 v = (u16)(((int)(255.0f * ((f32)i / 3.0f - 0.5f) + 128.0f) & 0xff) << 8);
             *(u16 *)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20 + 0x60) = v | ((u16)h & 0xff);
             *(u16 *)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20 + 0x68) = v | ((u16)j & 0xff);
             *(u16 *)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20 + 0x70) = v | ((u16)k & 0xff);
@@ -3464,30 +3681,35 @@ void allocLotsOfTextures(void) {
     testAndSet_onlyUseHeap3(saved);
 }
 #pragma scheduling reset
+#pragma scheduling off
 void shadowCreate(int *obj) {
     int *cam;
     f32 dx, dy, dz, dist;
-    if (lbl_803DCF78 >= 0x12c) return;
-    *(int **)(lbl_8038E2A8 + lbl_803DCF78 * 0xc) = obj;
-    cam = lbl_803DCFE8;
-    dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)cam + 0xc);
-    dy = *(f32 *)((char *)obj + 0x1c) - *(f32 *)((char *)cam + 0x10);
-    dz = *(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)cam + 0x14);
-    dist = sqrtf(dx * dx + dy * dy + dz * dz);
-    *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) =
-        *(f32 *)(*(int *)((char *)obj + 0x64)) / dist;
-    if (*(s16 *)(*(int *)((char *)obj + 0x50) + 0x48) == 2) {
-        *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 1;
-        if (*(u8 *)(*(int *)((char *)obj + 0x50) + 0x5f) & 4) {
-            *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 2;
-            *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) = Ydchuff_803DED80[4];
+    if (lbl_803DCF78 < 0x12c) {
+        *(int **)(lbl_8038E2A8 + lbl_803DCF78 * 0xc) = obj;
+        cam = lbl_803DCFE8;
+        dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)cam + 0xc);
+        dy = *(f32 *)((char *)obj + 0x1c) - *(f32 *)((char *)cam + 0x10);
+        dz = *(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)cam + 0x14);
+        dist = sqrtf(dx * dx + dy * dy + dz * dz);
+        *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) =
+            *(f32 *)(*(int *)((char *)obj + 0x64)) / dist;
+        if (*(s16 *)(*(int *)((char *)obj + 0x50) + 0x48) == 2) {
+            *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 1;
+            if (*(u8 *)(*(int *)((char *)obj + 0x50) + 0x5f) & 4) {
+                *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 2;
+                *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) = Ydchuff_803DED80[4];
+            }
+        } else {
+            *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 0;
         }
-    } else {
-        *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 0;
+        lbl_803DCF78 = lbl_803DCF78 + 1;
     }
-    lbl_803DCF78 = lbl_803DCF78 + 1;
 }
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2) {
     s8 buf[0x1c];
     int bit;
@@ -3500,12 +3722,14 @@ void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f
     }
     objAudioFn_8006ef38(p1, buf, p5, p6, p7, f1, f2);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern int getHudHiddenFrameCount(void);
 extern f32 timeDelta;
 extern int *Camera_GetCurrentViewSlot(void);
 extern u8 framesThisStep;
-extern f32 Udchuff_803DEDA0[];
+extern f32 Udchuff_803DEDA0[2];
 extern double floor(double);
 extern void fn_80060BB0(void);
 extern u8 lbl_803DCF80;
@@ -3520,16 +3744,16 @@ void maybeHudFn_8006c91c(void) {
     f32 lo, hi;
     if (getHudHiddenFrameCount() == 0) {
         f32 d = timeDelta;
-        lbl_803DCFAC = Ydchuff_803DED80[5] * d + lbl_803DCFAC;
-        lbl_803DCFA8 = Ydchuff_803DED80[6] * d + lbl_803DCFA8;
-        if (lbl_803DCFAC > Ydchuff_803DED80[7]) lbl_803DCFAC = lbl_803DCFAC - Ydchuff_803DED80[7];
-        if (lbl_803DCFA8 > Ydchuff_803DED80[7]) lbl_803DCFA8 = lbl_803DCFA8 - Ydchuff_803DED80[7];
+        lbl_803DCFAC = 0.0084f * d + lbl_803DCFAC;
+        lbl_803DCFA8 = 0.003f * d + lbl_803DCFA8;
+        if (lbl_803DCFAC > 256.0f) lbl_803DCFAC = lbl_803DCFAC - 256.0f;
+        if (lbl_803DCFA8 > 256.0f) lbl_803DCFA8 = lbl_803DCFA8 - 256.0f;
     }
     lbl_803DCF78 = 0;
     lbl_803DCFE8 = Camera_GetCurrentViewSlot();
     lbl_803DCFA0 = (u16)(lbl_803DCFA0 + framesThisStep * 0x28a);
-    lbl_803DCFA4 = Udchuff_803DEDA0[0] *
-        floor(Udchuff_803DEDA0[1] * (f32)(u32)lbl_803DCFA0 / Udchuff_803DEDA0[2]);
+    lbl_803DCFA4 = 0.2f *
+        floor(6.284f * (f32)(u32)lbl_803DCFA0 / 65536.0f);
     fn_80060BB0();
     lbl_803DCF8C = (lbl_803DCF8C + 1) % 3;
     if (isHeavyFogEnabled()) {
@@ -3554,7 +3778,6 @@ extern void GXSetViewport(f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
 extern void set_shadowFlag_803dcc29(int x);
 extern void objRender(int a, int b, int c, int d, int *obj, int e);
 extern int *Obj_GetActiveModel(int *obj);
-extern void fn_8006A028(u32 tex, int a, int b, int c);
 extern void Camera_ApplyFullViewport(void);
 #pragma scheduling off
 void shadowRenderFn_8006b558(int *obj) {
@@ -3567,18 +3790,18 @@ void shadowRenderFn_8006b558(int *obj) {
         *(f32 *)((char *)obj + 0xc) - playerMapOffsetX,
         *(f32 *)((char *)obj + 0x10),
         *(f32 *)((char *)obj + 0x14) - playerMapOffsetZ,
-        lbl_803DED0C * (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 0x8)));
-    vD = lbl_803DED14 * vD + lbl_803DED10;
-    vE = Chan_803DED18 * vE + lbl_803DED10;
+        1.3f * (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 0x8)));
+    vD = 320.0f * vD + 8.0f;
+    vE = Chan_803DED18 * vE + 8.0f;
     if (vD > vE) m = vD;
     else m = vE;
     sc = Dev_803DED1C / m;
     objScale = *(f32 *)((char *)obj + 0x8) * sc;
     nx = -vA;
     ny = vB;
-    GXSetViewport(lbl_803DED14 * nx, Chan_803DED18 * ny, Enabled_803DED20,
-                  BarnacleEnabled_803DED24, lbl_803DED28, lbl_803DED2C);
-    if (vC < lbl_803DED28) {
+    GXSetViewport(320.0f * nx, Chan_803DED18 * ny, Enabled_803DED20,
+                  BarnacleEnabled_803DED24, 0.0f, 1.0f);
+    if (vC < 0.0f) {
         f32 saved = *(f32 *)((char *)obj + 0x8);
         int *model;
         *(f32 *)((char *)obj + 0x8) = objScale;
@@ -3592,53 +3815,48 @@ void shadowRenderFn_8006b558(int *obj) {
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
         GXSetTexCopyDst(0x80, 0x80, 0x2a, 0);
         GXCopyTex((void *)(lbl_8038E1DC[lbl_803DCF8C] + 0x60), 1);
-        fn_8006A028(lbl_8038E1DC[(lbl_803DCF8C + 1) % 3], 0x80, 0x10, 0);
-        *(f32 *)obj[0x64 / 4] = lbl_803DED2C / sc;
+        fn_8006A028((u8 *)lbl_8038E1DC[(lbl_803DCF8C + 1) % 3], 0x80, 0x10, 0);
+        *(f32 *)obj[0x64 / 4] = 1.0f / sc;
     } else {
         *(f32 *)obj[0x64 / 4] = vE;
     }
     Camera_ApplyFullViewport();
     o64 = (f32 *)obj[0x64 / 4];
-    o64[5] = lbl_803DED14 * vA;
+    o64[5] = 320.0f * vA;
     o64[6] = Chan_803DED18 * -vB;
-    o64[5] = o64[5] + lbl_803DED14;
+    o64[5] = o64[5] + 320.0f;
     o64[6] = o64[6] + Chan_803DED18;
     o64[5] = o64[5] - Dev_803DED1C * o64[0];
     o64[6] = o64[6] - Dev_803DED1C * o64[0];
 }
 #pragma scheduling reset
 
-extern f32 Vdchuff_803DEDC0[];
+extern f32 Vdchuff_803DEDC0[2];
 extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
+#pragma scheduling off
+#pragma peephole off
 void fn_8006CB50(void) {
     int y, x;
     lbl_803DCFBC = (u32)textureAlloc(0x100, 0x100, 3, 0, 0, 0, 0, 1, 1);
     for (y = 0; y < 0x100; y++) {
-        f32 fy = (f32)y - Udchuff_803DEDA0[3];
+        f32 fy = (f32)y - 127.5f;
         for (x = 0; x < 0x100; x++) {
-            char *addr = (char *)lbl_803DCFBC + (y & 3) * 2 + (y >> 2) * 0x20
-                       + (x & 3) * 8 + (x >> 2) * 0x800;
-            f32 fx = (f32)x - Udchuff_803DEDA0[3];
+            char *addr = (char *)lbl_803DCFBC + (y & 3) * 2 + (y >> 2) * 0x20 + (x & 3) * 8 + (x >> 2) * 0x800;
+            f32 fx = (f32)x - 127.5f;
             f32 dist = sqrtf(fy * fy + fx * fx);
-            f32 ny = fy / dist;
-            f32 nx = fx / dist;
-            f32 s;
-            int gv, xv;
-            if (dist <= Udchuff_803DEDA0[6]) {
-                s = (lbl_803DED34 * (Udchuff_803DEDA0[4] -
-                     GXOverflowSuspendInProgress_803DED48 * dist)) * Udchuff_803DEDA0[5];
-            } else {
-                s = lbl_803DED28;
+            f32 s = 0.0f;
+            if (dist <= 112.0f) {
+                s = 2.0f * -(0.9f * dist - 100.8f) * 0.00390625f;
             }
-            ny = ny * s;
-            nx = nx * s;
-            gv = (int)(Vdchuff_803DEDC0[0] * ny + Udchuff_803DEDA0[7]);
-            xv = (int)(Vdchuff_803DEDC0[0] * nx + Udchuff_803DEDA0[7]);
-            *(u16 *)(addr + 0x60) = (u16)(xv | ((gv & 0xffff) << 8));
+            *(u16 *)(addr + 0x60) =
+                (u16)(int)(127.0f * (fx / dist) * s + 128.0f) |
+                (u16)(((int)(127.0f * (fy / dist) * s + 128.0f) & 0xffff) << 8);
         }
     }
     DCFlushRange((char *)lbl_803DCFBC + 0x60, *(u32 *)((char *)lbl_803DCFBC + 0x44));
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 extern void Camera_DisableViewYOffset(void);
 extern void Camera_EnableViewYOffset(void);
@@ -3710,8 +3928,8 @@ void renderShadows(void) {
     Camera_SetCurrentViewIndex(1);
     slot = Camera_GetCurrentViewSlot();
     savedFovY = Camera_GetFovY();
-    Camera_SetFovY(lbl_803DED30);
-    Camera_SetAspectRatio(lbl_803DED2C);
+    Camera_SetFovY(70.0f);
+    Camera_SetAspectRatio(1.0f);
     sCamX = *(f32 *)((char *)slot + 0xc);
     sCamY = *(f32 *)((char *)slot + 0x10);
     sCamZ = *(f32 *)((char *)slot + 0x14);
@@ -3719,10 +3937,10 @@ void renderShadows(void) {
     s14 = *(s16 *)((char *)slot + 0x0);
     s19 = *(s16 *)((char *)slot + 0x4);
     *(s16 *)((char *)slot + 0x2) = 0;
-    v30[0] = lbl_803DED28;
-    v30[1] = lbl_803DED2C;
-    v30[2] = lbl_803DED28;
-    fn_80061094(v30, om100, lbl_803DED34);
+    v30[0] = 0.0f;
+    v30[1] = 1.0f;
+    v30[2] = 0.0f;
+    fn_80061094(v30, om100, 2.0f);
     mapGetBlocks(&blkArr, &blkCount);
     r23 = 0;
     r24 = 0;
@@ -3756,12 +3974,12 @@ void renderShadows(void) {
             dot24[0] = -*(f32 *)((char *)of64 + 0x14);
             dot24[1] = -*(f32 *)((char *)of64 + 0x18);
             dot24[2] = -*(f32 *)((char *)of64 + 0x1c);
-            if (PSVECDotProduct(dot24, vA) < lbl_803DED2C && PSVECDotProduct(dot24, vA) > CPGPLinked_803DED44) {
+            if (PSVECDotProduct(dot24, vA) < 1.0f && PSVECDotProduct(dot24, vA) > CPGPLinked_803DED44) {
                 proj[0] = GXOverflowSuspendInProgress_803DED48 * dot24[0] + BreakPointCB_803DED4C * vA[0];
                 proj[1] = GXOverflowSuspendInProgress_803DED48 * dot24[1] + BreakPointCB_803DED4C * vA[1];
                 proj[2] = GXOverflowSuspendInProgress_803DED48 * dot24[2] + BreakPointCB_803DED4C * vA[2];
-                if (PSVECMag(proj) > lbl_803DED28) {
-                    PSVECScale(proj, vA, lbl_803DED2C / PSVECMag(proj));
+                if (PSVECMag(proj) > 0.0f) {
+                    PSVECScale(proj, vA, 1.0f / PSVECMag(proj));
                 }
             }
             if (vA[1] > __GXOverflowCount_803DED50) {
@@ -3779,7 +3997,7 @@ void renderShadows(void) {
             dirY = -vA[1];
             {
                 f32 mag = sqrtf(dirX * dirX + dirY * dirY + dirZ * dirZ);
-                if (mag > lbl_803DED28) {
+                if (mag > 0.0f) {
                     f32 inv = FinishQueue_803DED64[1] / mag;
                     dirX *= inv;
                     dirY *= inv;
@@ -3808,8 +4026,8 @@ void renderShadows(void) {
                 *(f32 *)((char *)slot + 0x14) += playerMapOffsetZ;
             }
             GXSetScissor(2, 2, screenW - 4, screenW - 4);
-            GXSetViewport(lbl_803DED28, lbl_803DED28, (f32)(u32)screenW, (f32)(u32)screenW, lbl_803DED28, lbl_803DED2C);
-            C_MTXOrtho(mOrtho, f22, f21, f22, f21, lbl_803DED2C, FinishQueue_803DED64[2]);
+            GXSetViewport(0.0f, 0.0f, (f32)(u32)screenW, (f32)(u32)screenW, 0.0f, 1.0f);
+            C_MTXOrtho(mOrtho, f22, f21, f22, f21, 1.0f, FinishQueue_803DED64[2]);
             GXSetProjection(mOrtho, 1);
             Camera_UpdateViewMatrices();
             C_MTXLightOrtho((f32 *)castSlot, f21, f22, f22, f21, f23, f23, f23, f23);
@@ -3825,10 +4043,10 @@ void renderShadows(void) {
                     objRenderShadowIfVisible(obj, 0, 0, 0, 0, 0);
                     if (*(u8 *)(casterPtr + 8) == 2) {
                         gxSetZMode_(1, 3, 1);
-                        PSMTXScale((f32 *)(castSlot + 0x30), lbl_803DED28, lbl_803DED28, lbl_803DED28);
-                        *(f32 *)(castSlot + 0x38) = lbl_803DED70;
-                        *(f32 *)(castSlot + 0x3c) = lbl_803DED74;
-                        *(f32 *)(castSlot + 0x5c) = lbl_803DED2C;
+                        PSMTXScale((f32 *)(castSlot + 0x30), 0.0f, 0.0f, 0.0f);
+                        *(f32 *)(castSlot + 0x38) = -0.0009765625f;
+                        *(f32 *)(castSlot + 0x3c) = -0.004875183f;
+                        *(f32 *)(castSlot + 0x5c) = 1.0f;
                         PSMTXConcat((f32 *)(castSlot + 0x30), vm, (f32 *)(castSlot + 0x30));
                         GXSetTexCopySrc(0, 0, screenW, screenW);
                         GXSetTexCopyDst(screenW, screenW, 0x11, 0);
@@ -3861,17 +4079,17 @@ void renderShadows(void) {
             {
                 f32 s = CPUFifo_803DED38 / *(f32 *)of64;
                 mScale[0] = s;
-                mScale[1] = lbl_803DED28;
-                mScale[2] = lbl_803DED28;
+                mScale[1] = 0.0f;
+                mScale[2] = 0.0f;
                 mScale[3] = CPUFifo_803DED38;
-                mScale[4] = lbl_803DED28;
-                mScale[5] = lbl_803DED28;
+                mScale[4] = 0.0f;
+                mScale[5] = 0.0f;
                 mScale[6] = s;
                 mScale[7] = CPUFifo_803DED38;
-                mScale[8] = lbl_803DED28;
-                mScale[9] = lbl_803DED28;
-                mScale[10] = lbl_803DED28;
-                mScale[11] = lbl_803DED2C;
+                mScale[8] = 0.0f;
+                mScale[9] = 0.0f;
+                mScale[10] = 0.0f;
+                mScale[11] = 1.0f;
             }
             PSMTXConcat(mScale, mTrans, (f32 *)castSlot);
             *(f32 *)((char *)of64 + 0x14) = v30[0];
@@ -3904,13 +4122,13 @@ void renderShadows(void) {
     if (getDrawDistanceFlag_8005cd48() != 0) {
         Camera_SetCurrentViewIndex(0);
         Camera_SetFovY(savedFovY);
-        if (isWidescreen() != 0) Camera_SetAspectRatio(lbl_803DED78);
-        else Camera_SetAspectRatio(lbl_803DED7C);
+        if (isWidescreen() != 0) Camera_SetAspectRatio(2.25f);
+        else Camera_SetAspectRatio(1.66f);
         Camera_UpdateProjection(0, 0);
     } else if (isWidescreen() != 0) {
         Camera_SetCurrentViewIndex(0);
         Camera_SetFovY(savedFovY);
-        Camera_SetAspectRatio(Ydchuff_803DED80[0]);
+        Camera_SetAspectRatio(1.7777778f);
         Camera_UpdateProjection(0, 0);
     } else {
         Camera_SetCurrentViewIndex(0);

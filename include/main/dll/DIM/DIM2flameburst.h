@@ -44,10 +44,10 @@ void FUN_801b63c0(void);
 int explosion_getExtraSize(void);
 int explosion_getObjectTypeId(int obj);
 void explosion_free(int obj);
-void explosion_render(void);
+void explosion_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void explosion_hitDetect(void);
-void explosion_update(void);
-void explosion_init(void);
+void explosion_update(int obj);
+void explosion_init(int obj, int p2);
 void explosion_release(uint param_1);
 void explosion_initialise(void);
 

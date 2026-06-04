@@ -3,8 +3,7 @@
 
 #include "ghidra_import.h"
 
-void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void gpsh_shrine_update(int obj);
 void gpsh_shrine_init(int *obj, int *def);
 void gpsh_shrine_release(void);
 void gpsh_shrine_initialise(void);

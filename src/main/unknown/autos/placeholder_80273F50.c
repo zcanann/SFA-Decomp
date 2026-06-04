@@ -1,1036 +1,617 @@
+/*
+ * MusyX synthdata.c — sound data table management.
+ * Matches the public MusyX runtime source (see PrimeDecomp/mariopartyrd
+ * synthdata.c); SFA's build uses sndBegin/sndEnd for the IRQ guard.
+ */
 #include "ghidra_import.h"
-#include "main/audio/data_ref.h"
 
-extern int hwTransAddr(int x);
-extern void sndBegin(void);
-extern void sndEnd(void);
+typedef struct SAMPLE_HEADER {
+    u32 info;
+    u32 length;
+    u32 loopOffset;
+    u32 loopLength;
+} SAMPLE_HEADER;
+
+typedef struct SDIR_DATA {
+    u16 id;
+    u16 ref_cnt;
+    u32 offset;
+    void *addr;
+    SAMPLE_HEADER header;
+    u32 extraData;
+} SDIR_DATA;
+
+typedef struct SDIR_TAB {
+    SDIR_DATA *data;
+    void *base;
+    u16 numSmp;
+    u16 res;
+} SDIR_TAB;
+
+typedef struct DATA_TAB {
+    void *data;
+    u16 id;
+    u16 refCount;
+} DATA_TAB;
+
+typedef struct LAYER_TAB {
+    void *data;
+    u16 id;
+    u16 num;
+    u16 refCount;
+    u16 reserved;
+} LAYER_TAB;
+
+typedef struct MAC_MAINTAB {
+    u16 num;
+    u16 subTabIndex;
+} MAC_MAINTAB;
+
+typedef struct MAC_SUBTAB {
+    void *data;
+    u16 id;
+    u16 refCount;
+} MAC_SUBTAB;
+
+typedef struct FX_TAB {
+    u16 id;
+    u16 macro;
+    u8 maxVoices;
+    u8 priority;
+    u8 volume;
+    u8 panning;
+    u8 key;
+    u8 vGroup;
+} FX_TAB;
+
+typedef struct FX_GROUP {
+    u16 gid;
+    u16 fxNum;
+    FX_TAB *fxTab;
+} FX_GROUP;
+
+typedef struct SAMPLE_INFO {
+    u32 info;
+    void *addr;
+    void *extraData;
+    u32 offset;
+    u32 length;
+    u32 loop;
+    u32 loopLength;
+    u8 compType;
+} SAMPLE_INFO;
 
 /*
- * Insert a scene/sample-list entry, keeping the 12-byte table sorted by id.
+ * The original TU's static tables live in one contiguous .bss block; MWCC
+ * addressed them all off the block base, so model them as one overlay
+ * struct cast over the first table's symbol.
  */
-extern u8 dataKeymapTable[];
-extern u8 dataLayerTable[];
+typedef struct SynthDataTables {
+    SDIR_TAB sdir[128];       /* 0x0000 dataSmpSDirTable */
+    DATA_TAB curve[2048];     /* 0x0600 dataCurveTable */
+    DATA_TAB keymap[256];     /* 0x4600 dataKeymapTable */
+    LAYER_TAB layer[256];     /* 0x4E00 dataLayerTable */
+    MAC_MAINTAB macMain[512]; /* 0x5A00 dataMacroBucketTable */
+    MAC_SUBTAB macSub[2048];  /* 0x6200 dataMacroTable */
+    FX_GROUP fxGroup[128];    /* 0xA200 dataFXGroupTable */
+    SDIR_DATA getSampleKey;   /* 0xA600 dataGetSampleSearchKey */
+    LAYER_TAB getLayerKey;    /* 0xA620 dataGetLayerSearchKey */
+    FX_TAB getFXKey;          /* 0xA62C dataGetFXSearchKey */
+} SynthDataTables;
+
 extern u8 dataSmpSDirTable[];
-extern u16 dataLayerNum;
+extern DATA_TAB dataCurveTable[2048];
+extern DATA_TAB dataKeymapTable[256];
+extern MAC_MAINTAB dataMacroBucketTable[512];
 
-int dataInsertLayer(u16 key, void *value, u16 count)
-{
-    u32 moveCount;
-    u32 *entry;
-    u32 used;
-    u32 batches;
-    int index;
-    u8 *tableBase;
+#define dataSmpSDirs (((SynthDataTables *)dataSmpSDirTable)->sdir)
+#define dataCurveTab (((SynthDataTables *)dataSmpSDirTable)->curve)
+#define dataKeymapTab (((SynthDataTables *)dataSmpSDirTable)->keymap)
+#define dataLayerTab (((SynthDataTables *)dataSmpSDirTable)->layer)
+#define dataMacMainTab (((SynthDataTables *)dataSmpSDirTable)->macMain)
+#define dataMacSubTabmem (((SynthDataTables *)dataSmpSDirTable)->macSub)
+#define dataFXGroups (((SynthDataTables *)dataSmpSDirTable)->fxGroup)
+#define dataGetSampleSearchKey (((SynthDataTables *)dataSmpSDirTable)->getSampleKey)
+#define dataGetLayerSearchKey (((SynthDataTables *)dataSmpSDirTable)->getLayerKey)
+#define dataGetFXSearchKey (((SynthDataTables *)dataSmpSDirTable)->getFXKey)
 
-    tableBase = dataSmpSDirTable;
-    sndBegin();
-    used = dataLayerNum;
-    index = 0;
-    for (entry = (u32 *)(tableBase + 0x4e00);
-         (index < (int)used) && (*(u16 *)(entry + 1) < key); entry += 3) {
-        index++;
-    }
-    if (index < (int)used) {
-        if (key == *(u16 *)(tableBase + 0x4e04 + index * 0xc)) {
-            (*(u16 *)(tableBase + 0x4e08 + index * 0xc))++;
-            sndEnd();
-            return 0;
-        }
-        if (used > 0xff) {
-            sndEnd();
-            return 0;
-        }
-        moveCount = used - index;
-        entry = (u32 *)(tableBase + 0x4e00 + (used - 1) * 0xc);
-        if (index <= (int)(used - 1)) {
-            batches = moveCount >> 3;
-            if (batches != 0) {
-                do {
-                    entry[3] = entry[0];
-                    entry[4] = entry[1];
-                    entry[5] = entry[2];
-                    entry[0] = entry[-3];
-                    entry[1] = entry[-2];
-                    entry[2] = entry[-1];
-                    entry[-3] = entry[-6];
-                    entry[-2] = entry[-5];
-                    entry[-1] = entry[-4];
-                    entry[-6] = entry[-9];
-                    entry[-5] = entry[-8];
-                    entry[-4] = entry[-7];
-                    entry[-9] = entry[-12];
-                    entry[-8] = entry[-11];
-                    entry[-7] = entry[-10];
-                    entry[-12] = entry[-15];
-                    entry[-11] = entry[-14];
-                    entry[-10] = entry[-13];
-                    entry[-15] = entry[-18];
-                    entry[-14] = entry[-17];
-                    entry[-13] = entry[-16];
-                    entry[-18] = entry[-21];
-                    entry[-17] = entry[-20];
-                    entry[-16] = entry[-19];
-                    entry -= 0x18;
-                    batches--;
-                } while (batches != 0);
-                moveCount &= 7;
-                if (moveCount == 0) {
-                    goto insert;
-                }
-            }
-            do {
-                entry[3] = entry[0];
-                entry[4] = entry[1];
-                entry[5] = entry[2];
-                entry -= 3;
-                moveCount--;
-            } while (moveCount != 0);
-        }
-    } else if (used > 0xff) {
-        sndEnd();
-        return 0;
-    }
-
-insert:
-    dataLayerNum++;
-    *(u16 *)(tableBase + 0x4e04 + index * 0xc) = key;
-    *(void **)(tableBase + 0x4e00 + index * 0xc) = value;
-    *(u16 *)(tableBase + 0x4e06 + index * 0xc) = count;
-    *(u16 *)(tableBase + 0x4e08 + index * 0xc) = 1;
-    sndEnd();
-    return 1;
-}
-
-/*
- * Release a scene/sample-list entry, compacting the sorted table.
- */
-int dataRemoveLayer(s16 key)
-{
-    s16 refCount;
-    int next;
-    u32 *entry;
-    u32 moveCount;
-    u32 index;
-    u32 used;
-    u8 *tableBase;
-
-    tableBase = dataSmpSDirTable;
-    sndBegin();
-    used = dataLayerNum;
-    index = 0;
-    for (entry = (u32 *)(tableBase + 0x4e00);
-         ((int)index < (int)used) && (key != *(s16 *)(entry + 1)); entry += 3) {
-        index++;
-    }
-    if (index == used) {
-        sndEnd();
-        return 0;
-    }
-    refCount = *(s16 *)(tableBase + 0x4e08 + index * 0xc);
-    *(s16 *)(tableBase + 0x4e08 + index * 0xc) = refCount - 1;
-    if ((s16)(refCount - 1) != 0) {
-        sndEnd();
-        return 0;
-    }
-
-    next = index + 1;
-    moveCount = used - next;
-    entry = (u32 *)(tableBase + 0x4e00 + next * 0xc);
-    if (next < (int)used) {
-        used = moveCount >> 3;
-        if (used != 0) {
-            do {
-                entry[-3] = entry[0];
-                entry[-2] = entry[1];
-                entry[-1] = entry[2];
-                entry[0] = entry[3];
-                entry[1] = entry[4];
-                entry[2] = entry[5];
-                entry[3] = entry[6];
-                entry[4] = entry[7];
-                entry[5] = entry[8];
-                entry[6] = entry[9];
-                entry[7] = entry[10];
-                entry[8] = entry[11];
-                entry[9] = entry[12];
-                entry[10] = entry[13];
-                entry[11] = entry[14];
-                entry[12] = entry[15];
-                entry[13] = entry[16];
-                entry[14] = entry[17];
-                entry[15] = entry[18];
-                entry[16] = entry[19];
-                entry[17] = entry[20];
-                entry[18] = entry[21];
-                entry[19] = entry[22];
-                entry[20] = entry[23];
-                entry += 0x18;
-                used--;
-            } while (used != 0);
-            moveCount &= 7;
-            if (moveCount == 0) {
-                goto remove;
-            }
-        }
-        do {
-            entry[-3] = entry[0];
-            entry[-2] = entry[1];
-            entry[-1] = entry[2];
-            entry += 3;
-            moveCount--;
-        } while (moveCount != 0);
-    }
-
-remove:
-    dataLayerNum--;
-    sndEnd();
-    return 1;
-}
-
-/*
- * Insert a keygroup/sample indirection entry, keeping the table sorted by id.
- */
-extern u8 dataCurveTable[];
-extern u8 dataSmpSDirTable[];
+extern u16 dataSmpSDirNum;
 extern u16 dataCurveNum;
-extern void sndBegin(void);
-extern void sndEnd(void);
-
-int dataInsertCurve(u16 key, void *value)
-{
-    u32 moveCount;
-    u32 used;
-    u32 batches;
-    int index;
-    u32 *entry;
-    u8 *tableBase;
-
-    tableBase = dataSmpSDirTable;
-    sndBegin();
-    used = dataCurveNum;
-    index = 0;
-    for (entry = (u32 *)(tableBase + 0x600);
-         (index < (int)used) && (*(u16 *)(entry + 1) < key); entry += 2) {
-        index++;
-    }
-    if (index < (int)used) {
-        if (key == *(u16 *)(tableBase + 0x604 + index * 8)) {
-            sndEnd();
-            (*(u16 *)(tableBase + 0x606 + index * 8))++;
-            return 0;
-        }
-        if (used > 0x7ff) {
-            sndEnd();
-            return 0;
-        }
-        moveCount = used - index;
-        entry = (u32 *)(tableBase + 0x600 + (used - 1) * 8);
-        if (index <= (int)(used - 1)) {
-            batches = moveCount >> 3;
-            if (batches != 0) {
-                do {
-                    entry[2] = entry[0];
-                    entry[3] = entry[1];
-                    entry[0] = entry[-2];
-                    entry[1] = entry[-1];
-                    entry[-2] = entry[-4];
-                    entry[-1] = entry[-3];
-                    entry[-4] = entry[-6];
-                    entry[-3] = entry[-5];
-                    entry[-6] = entry[-8];
-                    entry[-5] = entry[-7];
-                    entry[-8] = entry[-10];
-                    entry[-7] = entry[-9];
-                    entry[-10] = entry[-12];
-                    entry[-9] = entry[-11];
-                    entry[-12] = entry[-14];
-                    entry[-11] = entry[-13];
-                    entry -= 0x10;
-                    batches--;
-                } while (batches != 0);
-                moveCount &= 7;
-                if (moveCount == 0) {
-                    goto insert;
-                }
-            }
-            do {
-                entry[2] = entry[0];
-                entry[3] = entry[1];
-                entry -= 2;
-                moveCount--;
-            } while (moveCount != 0);
-        }
-    } else if (used > 0x7ff) {
-        sndEnd();
-        return 0;
-    }
-
-insert:
-    dataCurveNum++;
-    *(u16 *)(tableBase + 0x604 + index * 8) = key;
-    *(void **)(tableBase + 0x600 + index * 8) = value;
-    *(u16 *)(tableBase + 0x606 + index * 8) = 1;
-    sndEnd();
-    return 1;
-}
-
-/*
- * Release a keygroup/sample indirection entry, compacting the sorted table.
- */
-int dataRemoveCurve(s16 key)
-{
-    s16 refCount;
-    int next;
-    u32 *entry;
-    u32 moveCount;
-    u32 index;
-    u32 used;
-    u8 *tableBase;
-
-    tableBase = dataSmpSDirTable;
-    sndBegin();
-    used = dataCurveNum;
-    index = 0;
-    for (entry = (u32 *)(tableBase + 0x600);
-         ((int)index < (int)used) && (key != *(s16 *)(entry + 1)); entry += 2) {
-        index++;
-    }
-    if (index == used) {
-        sndEnd();
-        return 0;
-    }
-    refCount = *(s16 *)(tableBase + 0x606 + index * 8);
-    *(s16 *)(tableBase + 0x606 + index * 8) = refCount - 1;
-    if ((s16)(refCount - 1) != 0) {
-        sndEnd();
-        return 0;
-    }
-
-    next = index + 1;
-    moveCount = used - next;
-    entry = (u32 *)(tableBase + 0x600 + next * 8);
-    if (next < (int)used) {
-        used = moveCount >> 3;
-        if (used != 0) {
-            do {
-                entry[-2] = entry[0];
-                entry[-1] = entry[1];
-                entry[0] = entry[2];
-                entry[1] = entry[3];
-                entry[2] = entry[4];
-                entry[3] = entry[5];
-                entry[4] = entry[6];
-                entry[5] = entry[7];
-                entry[6] = entry[8];
-                entry[7] = entry[9];
-                entry[8] = entry[10];
-                entry[9] = entry[11];
-                entry[10] = entry[12];
-                entry[11] = entry[13];
-                entry[12] = entry[14];
-                entry[13] = entry[15];
-                entry += 0x10;
-                used--;
-            } while (used != 0);
-            moveCount &= 7;
-            if (moveCount == 0) {
-                goto remove;
-            }
-        }
-        do {
-            entry[-2] = entry[0];
-            entry[-1] = entry[1];
-            entry += 2;
-            moveCount--;
-        } while (moveCount != 0);
-    }
-
-remove:
-    dataCurveNum--;
-    sndEnd();
-    return 1;
-}
-
-/*
- * Register an SDI sample table and flag entries already present in earlier tables.
- */
-extern u8 dataSmpSDirTable[];
-extern u16 dataSmpSDirNum;
-
-int dataInsertSDir(DataSampleDirEntry *sampleTable, void *baseAddr)
-{
-    DataSampleDirBucket *bucket;
-    DataSampleDirEntry *entry;
-    int result;
-    u32 bucketIndex;
-    u32 used;
-    DataSampleDirEntry *scan;
-    u16 tableCount;
-    u16 i;
-    u16 j;
-    u16 k;
-
-    bucketIndex = 0;
-    used = dataSmpSDirNum;
-    for (bucket = (DataSampleDirBucket *)dataSmpSDirTable;
-         ((int)bucketIndex < (int)used) && (bucket->entries != sampleTable); bucket++) {
-        bucketIndex++;
-    }
-    if (bucketIndex == used) {
-        if (used < 0x80) {
-            tableCount = 0;
-            for (entry = sampleTable; entry->sampleId != 0xffff; entry++) {
-                tableCount++;
-            }
-            sndBegin();
-            entry = sampleTable;
-            for (i = 0; i < tableCount; i++) {
-                j = 0;
-                bucket = (DataSampleDirBucket *)dataSmpSDirTable;
-                for (bucketIndex = dataSmpSDirNum; bucketIndex != 0; bucketIndex--) {
-                    scan = bucket->entries;
-                    for (k = 0; k < bucket->count; k++) {
-                        if (entry->sampleId == scan->sampleId) {
-                            goto foundEntry;
-                        }
-                        scan++;
-                    }
-                    bucket++;
-                    j++;
-                }
-
-foundEntry:
-                if (j == dataSmpSDirNum) {
-                    entry->refCount = 0;
-                } else {
-                    entry->refCount = 0xffff;
-                }
-                entry++;
-            }
-            bucketIndex = dataSmpSDirNum;
-            ((DataSampleDirBucket *)dataSmpSDirTable)[bucketIndex].entries = sampleTable;
-            ((DataSampleDirBucket *)dataSmpSDirTable)[bucketIndex].count = tableCount;
-            ((DataSampleDirBucket *)dataSmpSDirTable)[bucketIndex].baseAddr = baseAddr;
-            dataSmpSDirNum++;
-            sndEnd();
-            result = 1;
-        } else {
-            result = 0;
-        }
-    } else {
-        result = 1;
-    }
-    return result;
-}
-
-/*
- * Add a reference to a sample table entry, loading it on the first reference.
- */
-extern u8 dataSmpSDirTable[];
-extern u16 dataSmpSDirNum;
-extern void hwSaveSample(void *sampleDescPtr, void *addrOut);
-
-int dataAddSampleReference(u16 sampleId)
-{
-    u32 remaining;
-    u32 bucketIndex;
-    DataSampleDirBucket *bucket;
-    DataSampleDirEntry *entry;
-    u8 *sampleDesc;
-
-    bucket = (DataSampleDirBucket *)dataSmpSDirTable;
-    bucketIndex = 0;
-    for (remaining = dataSmpSDirNum, entry = 0; remaining != 0; remaining--) {
-        for (entry = bucket->entries; entry->sampleId != 0xffff; entry++) {
-            if ((entry->sampleId == sampleId) && (entry->refCount != 0xffff)) {
-                goto found;
-            }
-        }
-        bucket++;
-        bucketIndex++;
-    }
-
-found:
-    if (entry->refCount == 0) {
-        sampleDesc = entry->header;
-        entry->loadedAddr = entry->offset + *(u32 *)(dataSmpSDirTable + 4 + bucketIndex * 0xc);
-        hwSaveSample(&sampleDesc, &entry->loadedAddr);
-    }
-    entry->refCount++;
-    return 1;
-}
-
-/*
- * Release a sample table reference, removing it after the last user.
- */
-extern void hwRemoveSample(void *sampleDesc, u32 addr);
-
-int dataRemoveSampleReference(u16 sampleId)
-{
-    u32 remaining;
-    DataSampleDirBucket *bucket;
-    DataSampleDirEntry *entry;
-
-    bucket = (DataSampleDirBucket *)dataSmpSDirTable;
-    remaining = dataSmpSDirNum;
-    do {
-        if (remaining == 0) {
-            return 0;
-        }
-        for (entry = bucket->entries; entry->sampleId != 0xffff; entry++) {
-            if ((entry->sampleId == sampleId) && (entry->refCount != 0xffff)) {
-                entry->refCount--;
-                if (entry->refCount == 0) {
-                    hwRemoveSample(entry->header, entry->loadedAddr);
-                }
-                return 1;
-            }
-        }
-        bucket++;
-        remaining--;
-    } while (1);
-}
-
-/*
- * Register an FX sample-list bucket and mark each sample descriptor as resident.
- */
-extern u8 dataFXGroupTable[];
-extern u16 dataFXGroupNum;
-extern void sndBegin(void);
-extern void sndEnd(void);
-
-int dataInsertFX(s16 fxId, u8 *samples, u32 count)
-{
-    u32 i;
-    u32 used;
-    u32 batchCount;
-    u8 *tableBase;
-    DataFXGroupRef *groups;
-
-    tableBase = dataSmpSDirTable;
-    groups = (DataFXGroupRef *)(tableBase + 0xa200);
-    i = 0;
-    used = dataFXGroupNum;
-    while (((int)i < (int)used) && (fxId != groups[i].groupId)) {
-        i++;
-    }
-    if ((i != used) || (used > 0x7f)) {
-        return 0;
-    }
-
-    sndBegin();
-    used = dataFXGroupNum;
-    i = count & 0xffff;
-    groups[used].groupId = fxId;
-    groups[used].count = count;
-    groups[used].samples = samples;
-    if (i != 0) {
-        batchCount = i >> 3;
-        if (batchCount != 0) {
-            do {
-                samples[9] = 0x1f;
-                samples[0x13] = 0x1f;
-                samples[0x1d] = 0x1f;
-                samples[0x27] = 0x1f;
-                samples[0x31] = 0x1f;
-                samples[0x3b] = 0x1f;
-                samples[0x45] = 0x1f;
-                samples[0x4f] = 0x1f;
-                samples += 0x50;
-                batchCount--;
-            } while (batchCount != 0);
-            i = count & 7;
-            if (i == 0) {
-                goto done;
-            }
-        }
-        do {
-            samples[9] = 0x1f;
-            samples += 10;
-            i--;
-        } while (i != 0);
-    }
-
-done:
-    dataFXGroupNum++;
-    sndEnd();
-    return 1;
-}
-
-/*
- * Insert an instrument entry into the bucketed sorted table.
- */
+extern u16 dataKeymapNum;
+extern u16 dataLayerNum;
 extern u16 dataMacTotal;
-extern u8 dataMacroBucketTable[];
-extern u8 dataMacroTable[];
+extern u16 dataFXGroupNum;
 
-int dataInsertMacro(u32 key, void *value)
-{
-    u32 bucketOffset;
-    u32 bucketCount;
-    u32 insertIndex;
-    u32 bucketIndex;
-    DataMacroBucket *bucket;
-    u32 *entry;
-    int i;
-    u32 moveCount;
-    u32 batches;
+extern s32 dataGetMacro_main;
+extern s32 dataGetMacro_bucket;
+extern MAC_SUBTAB dataGetMacro_key;
+extern MAC_SUBTAB *dataGetMacro_result;
+extern SDIR_DATA *dataGetSample_result;
+extern SAMPLE_HEADER *dataGetSample_sheader;
+extern DATA_TAB dataGetCurve_key;
+extern DATA_TAB *dataGetCurve_result;
+extern DATA_TAB dataGetKeymap_key;
+extern DATA_TAB *dataGetKeymap_result;
+extern LAYER_TAB *dataGetLayer_result;
+
+extern void sndBegin(void);
+extern void sndEnd(void);
+extern void *sndBSearch(void *key, void *base, s32 num, s32 size, s32 (*cmp)(void *, void *));
+extern void hwSaveSample(SAMPLE_HEADER **header, void **addr);
+extern void hwRemoveSample(SAMPLE_HEADER *header, void *addr);
+extern void hwGetStreamPlayBuffer(u32 smpBase, u32 smpLength);
+extern int hwTransAddr(int addr);
+
+s32 dataInsertLayer(u16 cid, void *layerdata, u16 size) {
+    long i;
+    long j;
+    SynthDataTables *t = (SynthDataTables *)dataSmpSDirTable;
 
     sndBegin();
-    bucketOffset = (key >> 4) & 0xffc;
-    bucketCount = *(u16 *)(dataMacroBucketTable + bucketOffset);
-    bucketIndex = (key >> 6) & 0x3ff;
-    if (bucketCount == 0) {
-        bucketCount = dataMacTotal;
-        *(u16 *)(dataMacroBucketTable + bucketOffset + 2) = dataMacTotal;
-        insertIndex = bucketCount;
-    } else {
-        insertIndex = *(u16 *)(dataMacroBucketTable + bucketOffset + 2);
-        i = 0;
-        while ((i < (int)bucketCount) &&
-               (((DataRefEntry *)dataMacroTable)[insertIndex + i].key < (key & 0xffff))) {
-            i++;
-        }
-        if (i < (int)bucketCount) {
-            bucketCount = insertIndex + i;
-            i = bucketCount * 8;
-            if ((key & 0xffff) == ((DataRefEntry *)dataMacroTable)[bucketCount].key) {
-                ((DataRefEntry *)dataMacroTable)[bucketCount].refCount++;
+
+    for (i = 0; i < dataLayerNum && t->layer[i].id < cid; ++i)
+        ;
+
+    if (i < dataLayerNum) {
+        if (cid != t->layer[i].id) {
+            if (dataLayerNum < 256) {
+                for (j = dataLayerNum - 1; j >= i; --j)
+                    t->layer[j + 1] = t->layer[j];
+                ++dataLayerNum;
+            } else {
                 sndEnd();
                 return 0;
             }
         } else {
-            bucketCount = insertIndex + i;
+            t->layer[i].refCount++;
+            sndEnd();
+            return 0;
         }
-    }
-    if (dataMacTotal > 0x7ff) {
+    } else if (dataLayerNum < 256) {
+        ++dataLayerNum;
+    } else {
         sndEnd();
         return 0;
     }
 
-    i = 0x40;
-    bucket = (DataMacroBucket *)dataMacroBucketTable;
-    do {
-        if (insertIndex < bucket[0].startIndex) {
-            bucket[0].startIndex++;
-        }
-        if (insertIndex < bucket[1].startIndex) {
-            bucket[1].startIndex++;
-        }
-        if (insertIndex < bucket[2].startIndex) {
-            bucket[2].startIndex++;
-        }
-        if (insertIndex < bucket[3].startIndex) {
-            bucket[3].startIndex++;
-        }
-        if (insertIndex < bucket[4].startIndex) {
-            bucket[4].startIndex++;
-        }
-        if (insertIndex < bucket[5].startIndex) {
-            bucket[5].startIndex++;
-        }
-        if (insertIndex < bucket[6].startIndex) {
-            bucket[6].startIndex++;
-        }
-        if (insertIndex < bucket[7].startIndex) {
-            bucket[7].startIndex++;
-        }
-        bucket += 8;
-        i--;
-    } while (i != 0);
-
-    i = dataMacTotal - 1;
-    moveCount = dataMacTotal - bucketCount;
-    entry = (u32 *)(dataMacroTable + i * 8);
-    if ((int)bucketCount <= i) {
-        batches = moveCount >> 3;
-        if (batches != 0) {
-            do {
-                entry[2] = entry[0];
-                entry[3] = entry[1];
-                entry[0] = entry[-2];
-                entry[1] = entry[-1];
-                entry[-2] = entry[-4];
-                entry[-1] = entry[-3];
-                entry[-4] = entry[-6];
-                entry[-3] = entry[-5];
-                entry[-6] = entry[-8];
-                entry[-5] = entry[-7];
-                entry[-8] = entry[-10];
-                entry[-7] = entry[-9];
-                entry[-10] = entry[-12];
-                entry[-9] = entry[-11];
-                entry[-12] = entry[-14];
-                entry[-11] = entry[-13];
-                entry -= 0x10;
-                batches--;
-            } while (batches != 0);
-            moveCount &= 7;
-            if (moveCount == 0) {
-                goto insert;
-            }
-        }
-        do {
-            entry[2] = entry[0];
-            entry[3] = entry[1];
-            entry -= 2;
-            moveCount--;
-        } while (moveCount != 0);
-    }
-
-insert:
-    ((DataRefEntry *)dataMacroTable)[bucketCount].key = key;
-    ((DataRefEntry *)dataMacroTable)[bucketCount].data = value;
-    ((DataRefEntry *)dataMacroTable)[bucketCount].refCount = 1;
-    (*(u16 *)(dataMacroBucketTable + bucketIndex * 4))++;
-    dataMacTotal++;
+    t->layer[i].id = cid;
+    t->layer[i].data = layerdata;
+    t->layer[i].num = size;
+    t->layer[i].refCount = 1;
     sndEnd();
     return 1;
 }
 
-/*
- * Release an instrument entry from the bucketed sorted table.
- */
-int dataRemoveMacro(u32 key)
-{
-    s16 refCount;
-    int countOffset;
-    u32 bucketOffset;
-    u32 moveCount;
-    DataMacroBucket *bucket;
-    u32 *entry;
-    u32 startIndex;
-    int scanIndex;
-    u32 batches;
-    u8 *tableBase;
+s32 dataRemoveLayer(u16 sid) {
+    long i;
+    long j;
+    SynthDataTables *t = (SynthDataTables *)dataSmpSDirTable;
+    long num;
 
     sndBegin();
-    tableBase = dataSmpSDirTable;
-    bucketOffset = (key >> 4) & 0xffc;
-    if (*(s16 *)(tableBase + 0x5a00 + bucketOffset) == 0) {
-        goto done;
-    }
-    startIndex = *(u16 *)(tableBase + 0x5a02 + bucketOffset);
-    scanIndex = 0;
-    while ((scanIndex < (int)(u32)*(u16 *)(tableBase + 0x5a00 + bucketOffset)) &&
-           ((key & 0xffff) !=
-            *(u16 *)(tableBase + 0x6204 + (startIndex + scanIndex) * 8))) {
-        scanIndex++;
-    }
-    if ((int)(u32)*(u16 *)(tableBase + 0x5a00 + bucketOffset) <= scanIndex) {
-        goto done;
+    num = dataLayerNum;
+    for (i = 0; i < num && t->layer[i].id != sid; ++i)
+        ;
+
+    if (i != num && --t->layer[i].refCount == 0) {
+        for (j = i + 1; j < num; j++) {
+            t->layer[j - 1] = t->layer[j];
+        }
+
+        --dataLayerNum;
+        sndEnd();
+        return 1;
     }
 
-    countOffset = (startIndex + scanIndex) * 8;
-    refCount = *(s16 *)(tableBase + 0x6206 + countOffset);
-    *(s16 *)(tableBase + 0x6206 + countOffset) = refCount - 1;
-    if ((s16)(refCount - 1) != 0) {
-        goto done;
-    }
-
-    scanIndex = startIndex + scanIndex + 1;
-    moveCount = dataMacTotal - scanIndex;
-    entry = (u32 *)(tableBase + 0x6200 + scanIndex * 8);
-    if (scanIndex < (int)(u32)dataMacTotal) {
-        batches = moveCount >> 3;
-        if (batches != 0) {
-            do {
-                entry[-2] = entry[0];
-                entry[-1] = entry[1];
-                entry[0] = entry[2];
-                entry[1] = entry[3];
-                entry[2] = entry[4];
-                entry[3] = entry[5];
-                entry[4] = entry[6];
-                entry[5] = entry[7];
-                entry[6] = entry[8];
-                entry[7] = entry[9];
-                entry[8] = entry[10];
-                entry[9] = entry[11];
-                entry[10] = entry[12];
-                entry[11] = entry[13];
-                entry[12] = entry[14];
-                entry[13] = entry[15];
-                entry += 0x10;
-                batches--;
-            } while (batches != 0);
-            moveCount &= 7;
-            if (moveCount == 0) {
-                goto compactBuckets;
-            }
-        }
-        do {
-            entry[-2] = entry[0];
-            entry[-1] = entry[1];
-            entry += 2;
-            moveCount--;
-        } while (moveCount != 0);
-    }
-
-compactBuckets:
-    scanIndex = 0x40;
-    bucket = (DataMacroBucket *)(tableBase + 0x5a00);
-    do {
-        if (startIndex < bucket[0].startIndex) {
-            bucket[0].startIndex--;
-        }
-        if (startIndex < bucket[1].startIndex) {
-            bucket[1].startIndex--;
-        }
-        if (startIndex < bucket[2].startIndex) {
-            bucket[2].startIndex--;
-        }
-        if (startIndex < bucket[3].startIndex) {
-            bucket[3].startIndex--;
-        }
-        if (startIndex < bucket[4].startIndex) {
-            bucket[4].startIndex--;
-        }
-        if (startIndex < bucket[5].startIndex) {
-            bucket[5].startIndex--;
-        }
-        if (startIndex < bucket[6].startIndex) {
-            bucket[6].startIndex--;
-        }
-        if (startIndex < bucket[7].startIndex) {
-            bucket[7].startIndex--;
-        }
-        bucket += 8;
-        scanIndex--;
-    } while (scanIndex != 0);
-    (*(s16 *)(tableBase + 0x5a00 + bucketOffset))--;
-    dataMacTotal--;
-
-done:
     sndEnd();
     return 0;
 }
 
-/*
- * Comparator: return a->key2 - b->key2 (u16 at offset 4).
- *
- */
-int maccmp(void *a, void *b)
-{
-    return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
+s32 dataInsertCurve(u16 cid, void *curvedata) {
+    long i;
+    long j;
+    SynthDataTables *t = (SynthDataTables *)dataSmpSDirTable;
+
+    sndBegin();
+
+    for (i = 0; i < dataCurveNum && t->curve[i].id < cid; ++i)
+        ;
+
+    if (i < dataCurveNum) {
+        if (cid != t->curve[i].id) {
+            if (dataCurveNum < 2048) {
+                for (j = dataCurveNum - 1; j >= i; --j)
+                    t->curve[j + 1] = t->curve[j];
+                ++dataCurveNum;
+            } else {
+                sndEnd();
+                return 0;
+            }
+        } else {
+            sndEnd();
+            t->curve[i].refCount++;
+            return 0;
+        }
+    } else if (dataCurveNum < 2048) {
+        ++dataCurveNum;
+    } else {
+        sndEnd();
+        return 0;
+    }
+
+    t->curve[i].id = cid;
+    t->curve[i].data = curvedata;
+    t->curve[i].refCount = 1;
+    sndEnd();
+    return 1;
 }
 
-/*
- * Look up an instrument entry through the bucketed table.
- */
-extern void *sndBSearch(void *key, void *base, u16 count, u32 stride,
-                        int (*cmp)(void *a, void *b));
-extern u8 dataMacroBucketTable[];
-extern u8 dataMacroTable[];
-extern u32 dataGetMacro_main;
-extern u32 dataGetMacro_bucket;
-extern u8 dataGetMacro_key[8];
-extern void *dataGetMacro_result;
+s32 dataRemoveCurve(u16 sid) {
+    long i;
+    long j;
+    SynthDataTables *t = (SynthDataTables *)dataSmpSDirTable;
+    long num;
 
-void *dataGetMacro(u32 key)
-{
-    DataMacroBucket *bucketTable;
-    void *result;
+    sndBegin();
+    num = dataCurveNum;
+    for (i = 0; i < num && t->curve[i].id != sid; ++i)
+        ;
 
-    bucketTable = (DataMacroBucket *)dataMacroBucketTable;
-    dataGetMacro_bucket = (key >> 6) & 0x3ff;
-    if (bucketTable[dataGetMacro_bucket].count != 0) {
-        dataGetMacro_main = bucketTable[dataGetMacro_bucket].startIndex;
-        *(u16 *)(dataGetMacro_key + 4) = key;
-        result = sndBSearch(dataGetMacro_key, dataMacroTable + dataGetMacro_main * 8,
-                            bucketTable[dataGetMacro_bucket].count, 8, maccmp);
-        dataGetMacro_result = result;
-        if (result != 0) {
-            return ((DataRefEntry *)dataGetMacro_result)->data;
+    if (i != num && --t->curve[i].refCount == 0) {
+        for (j = i + 1; j < num; j++) {
+            t->curve[j - 1] = t->curve[j];
+        }
+
+        --dataCurveNum;
+        sndEnd();
+        return 1;
+    }
+
+    sndEnd();
+    return 0;
+}
+
+s32 dataInsertSDir(SDIR_DATA *sdir, void *smp_data) {
+    s32 i;
+    SynthDataTables *t = (SynthDataTables *)dataSmpSDirTable;
+    SDIR_DATA *s;
+    u16 n;
+    u16 j;
+    u16 k;
+    long idx;
+
+    for (i = 0; i < dataSmpSDirNum && t->sdir[i].data != sdir; ++i)
+        ;
+
+    if (i == dataSmpSDirNum) {
+        if (dataSmpSDirNum < 128) {
+            n = 0;
+            for (s = sdir; s->id != 0xFFFF; ++s) {
+                ++n;
+            }
+
+            sndBegin();
+            for (j = 0; j < n; ++j) {
+                for (i = 0; i < dataSmpSDirNum; ++i) {
+                    s = t->sdir[i].data;
+                    for (k = 0; k < t->sdir[i].numSmp; ++k) {
+                        if (sdir[j].id == s[k].id)
+                            goto found_id;
+                    }
+                }
+            found_id:
+                if (i != dataSmpSDirNum) {
+                    sdir[j].ref_cnt = 0xFFFF;
+                } else {
+                    sdir[j].ref_cnt = 0;
+                }
+            }
+
+            idx = dataSmpSDirNum;
+            t->sdir[idx].data = sdir;
+            t->sdir[idx].numSmp = n;
+            t->sdir[idx].base = smp_data;
+            ++dataSmpSDirNum;
+            sndEnd();
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+s32 dataAddSampleReference(u16 sid) {
+    u32 i;
+    SAMPLE_HEADER *header;
+    SDIR_DATA *data;
+    SDIR_DATA *sdir;
+
+    data = NULL;
+    sdir = NULL;
+    for (i = 0; i < dataSmpSDirNum; ++i) {
+        for (data = dataSmpSDirs[i].data; data->id != 0xFFFF; ++data) {
+            if (data->id == sid && data->ref_cnt != 0xFFFF) {
+                sdir = data;
+                goto done;
+            }
+        }
+    }
+done:
+
+    if (sdir->ref_cnt == 0) {
+        sdir->addr = (void *)(sdir->offset + (u32)dataSmpSDirs[i].base);
+        header = &sdir->header;
+        hwSaveSample(&header, &sdir->addr);
+    }
+
+    ++sdir->ref_cnt;
+    return 1;
+}
+
+s32 dataRemoveSampleReference(u16 sid) {
+    u32 i;
+    SDIR_DATA *sdir;
+
+    for (i = 0; i < dataSmpSDirNum; ++i) {
+        for (sdir = dataSmpSDirs[i].data; sdir->id != 0xFFFF; ++sdir) {
+            if (sdir->id == sid && sdir->ref_cnt != 0xFFFF) {
+                --sdir->ref_cnt;
+
+                if (sdir->ref_cnt == 0) {
+                    hwRemoveSample(&sdir->header, sdir->addr);
+                }
+
+                return 1;
+            }
         }
     }
     return 0;
 }
 
-/*
- * Comparator: return a->key - b->key (u16 at offset 0).
- *
- */
-int smpcmp(void *a, void *b)
-{
-    return (int)*(u16 *)a - (int)*(u16 *)b;
+s32 dataInsertFX(u16 gid, FX_TAB *fx, u16 fxNum) {
+    long i;
+    long idx;
+    FX_GROUP *g;
+    SynthDataTables *t = (SynthDataTables *)dataSmpSDirTable;
+
+    g = t->fxGroup;
+    for (i = 0; i < dataFXGroupNum && gid != g[i].gid; ++i) {
+    }
+
+    if (i == dataFXGroupNum && dataFXGroupNum < 128) {
+        sndBegin();
+        idx = dataFXGroupNum;
+        t->fxGroup[idx].gid = gid;
+        t->fxGroup[idx].fxNum = fxNum;
+        t->fxGroup[idx].fxTab = fx;
+
+        for (i = 0; i < fxNum; ++i, ++fx) {
+            fx->vGroup = 31;
+        }
+
+        dataFXGroupNum++;
+        sndEnd();
+        return 1;
+    }
+    return 0;
 }
 
-/*
- * Find an SDI sample descriptor and copy its load metadata.
- */
-extern u8 dataSmpSDirTable[];
-extern u8 dataGetSampleSearchKey[];
-extern u16 dataSmpSDirNum;
-extern void *dataGetSample_result;
-extern u8 *dataGetSample_sheader;
+s32 dataInsertMacro(u16 mid, void *macroaddr) {
+    long main;
+    SynthDataTables *t = (SynthDataTables *)dataSmpSDirTable;
+    long pos;
+    long base;
+    long i;
+    long num;
+    MAC_MAINTAB *m;
 
-int dataGetSample(u16 key, u32 *out)
-{
-    u32 i;
-    DataSampleDirBucket *bucket;
-    DataSampleDirEntry *entry;
-    u8 *searchKey;
+    sndBegin();
 
-    i = 0;
-    bucket = (DataSampleDirBucket *)dataSmpSDirTable;
-    searchKey = dataGetSampleSearchKey;
-    *(u16 *)searchKey = key;
-    while (i < dataSmpSDirNum) {
-        dataGetSample_result = sndBSearch(searchKey, bucket->entries, bucket->count, 0x20,
-                                          smpcmp);
-        entry = dataGetSample_result;
-        if ((entry != 0) && (entry->refCount != 0xffff)) {
-            dataGetSample_sheader = entry->header;
-            out[0] = *(u32 *)dataGetSample_sheader;
-            out[1] = entry->loadedAddr;
-            out[3] = 0;
-            out[5] = *(u32 *)(dataGetSample_sheader + 8);
-            out[4] = *(u32 *)(dataGetSample_sheader + 4) & 0xffffff;
-            out[6] = *(u32 *)(dataGetSample_sheader + 0xc);
-            *(u8 *)(out + 7) = *(u32 *)(dataGetSample_sheader + 4) >> 0x18;
-            if (entry->loopOffset != 0) {
-                out[2] = entry->loopOffset + (u32)bucket->entries;
-            }
-            return 0;
+    main = (mid >> 6) & 0x3ff;
+    num = t->macMain[main].num;
+
+    if (num == 0) {
+        pos = base = t->macMain[main].subTabIndex = dataMacTotal;
+    } else {
+        base = t->macMain[main].subTabIndex;
+        for (i = 0; i < num && t->macSub[base + i].id < mid; ++i) {
         }
-        bucket++;
-        i++;
+
+        if (i < num) {
+            pos = base + i;
+            if (mid == t->macSub[pos].id) {
+                t->macSub[pos].refCount++;
+                sndEnd();
+                return 0;
+            }
+        } else {
+            pos = base + i;
+        }
     }
+
+    if (dataMacTotal < 2048) {
+        m = t->macMain;
+        for (i = 0; i < 512; ++i) {
+            if (m[i].subTabIndex > base) {
+                m[i].subTabIndex++;
+            }
+        }
+
+        i = dataMacTotal - 1;
+        for (; i >= pos; --i) {
+            t->macSub[i + 1] = t->macSub[i];
+        }
+
+        t->macSub[pos].id = mid;
+        t->macSub[pos].data = macroaddr;
+        t->macSub[pos].refCount = 1;
+        t->macMain[main].num++;
+        dataMacTotal++;
+        sndEnd();
+        return 1;
+    }
+    sndEnd();
+    return 0;
+}
+
+s32 dataRemoveMacro(u16 mid) {
+    s32 main;
+    SynthDataTables *t = (SynthDataTables *)dataSmpSDirTable;
+    s32 base;
+    s32 i;
+    MAC_MAINTAB *m;
+
+    sndBegin();
+    main = (mid >> 6) & 0x3ff;
+
+    if (t->macMain[main].num != 0) {
+        base = t->macMain[main].subTabIndex;
+        for (i = 0; i < t->macMain[main].num && mid != t->macSub[base + i].id; ++i) {
+        }
+
+        if (i < t->macMain[main].num) {
+            if (--t->macSub[base + i].refCount == 0) {
+                for (i = base + i + 1; i < dataMacTotal; ++i) {
+                    t->macSub[i - 1] = t->macSub[i];
+                }
+
+                m = t->macMain;
+                for (i = 0; i < 512; ++i) {
+                    if (m[i].subTabIndex > base) {
+                        --m[i].subTabIndex;
+                    }
+                }
+
+                --t->macMain[main].num;
+                --dataMacTotal;
+            }
+        }
+    }
+
+    sndEnd();
+    return 0;
+}
+
+s32 maccmp(void *p1, void *p2) {
+    return ((MAC_SUBTAB *)p1)->id - ((MAC_SUBTAB *)p2)->id;
+}
+
+void *dataGetMacro(u16 mid) {
+    long num;
+
+    dataGetMacro_bucket = (mid >> 6) & 0x3fff;
+    num = dataMacMainTab[dataGetMacro_bucket].num;
+
+    if (num != 0) {
+        dataGetMacro_main = dataMacMainTab[dataGetMacro_bucket].subTabIndex;
+        dataGetMacro_key.id = mid;
+        if ((dataGetMacro_result = (MAC_SUBTAB *)sndBSearch(
+                 &dataGetMacro_key, &dataMacSubTabmem[dataGetMacro_main], num, 8, maccmp)) != NULL) {
+            return dataGetMacro_result->data;
+        }
+    }
+
+    return NULL;
+}
+
+s32 smpcmp(void *p1, void *p2) {
+    return ((SDIR_DATA *)p1)->id - ((SDIR_DATA *)p2)->id;
+}
+
+s32 dataGetSample(u16 sid, SAMPLE_INFO *newsmp) {
+    long i;
+    SynthDataTables *t = (SynthDataTables *)dataSmpSDirTable;
+
+    t->getSampleKey.id = sid;
+
+    for (i = 0; i < dataSmpSDirNum; ++i) {
+        if ((dataGetSample_result = (SDIR_DATA *)sndBSearch(
+                 &t->getSampleKey, t->sdir[i].data, t->sdir[i].numSmp,
+                 sizeof(SDIR_DATA), smpcmp)) != NULL) {
+            if (dataGetSample_result->ref_cnt != 0xFFFF) {
+                dataGetSample_sheader = &dataGetSample_result->header;
+                newsmp->info = dataGetSample_sheader->info;
+                newsmp->addr = dataGetSample_result->addr;
+                newsmp->offset = 0;
+                newsmp->loop = dataGetSample_sheader->loopOffset;
+                newsmp->length = dataGetSample_sheader->length & 0xFFFFFF;
+                newsmp->loopLength = dataGetSample_sheader->loopLength;
+                newsmp->compType = dataGetSample_sheader->length >> 24;
+
+                if (dataGetSample_result->extraData) {
+                    newsmp->extraData = (void *)((u32) & (t->sdir[i].data)->id +
+                                                 dataGetSample_result->extraData);
+                }
+                return 0;
+            }
+        }
+    }
+
     return -1;
 }
 
-/*
- * Comparator: return a->key2 - b->key2 (u16 at offset 4). Same body as
- * maccmp but separate symbol used for a different bsearch table.
- */
-int curvecmp(void *a, void *b)
-{
-    return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
+s32 curvecmp(void *p1, void *p2) {
+    return ((DATA_TAB *)p1)->id - ((DATA_TAB *)p2)->id;
 }
 
-/*
- * Look up a keygroup/sample indirection table by id.
- */
-extern void *sndBSearch(void *key, void *base, u16 count, u32 stride,
-                        int (*cmp)(void *a, void *b));
-extern u8 dataCurveTable[];
-extern u8 dataKeymapTable[];
-extern u8 dataLayerTable[];
-extern u8 dataGetLayerSearchKey[];
-extern u8 dataFXGroupTable[];
-extern u8 dataGetFXSearchKey[];
-extern u16 dataCurveNum;
-extern u16 dataKeymapNum;
-extern u16 dataLayerNum;
-extern u16 dataFXGroupNum;
-extern u8 dataGetCurve_key[8];
-extern void * volatile dataGetCurve_result;
-extern u8 dataGetKeymap_key[8];
-extern void * volatile dataGetKeymap_result;
-extern void * volatile dataGetLayer_result;
-
-void *dataGetCurve(u16 key)
-{
-    void *result;
-
-    *(u16 *)(dataGetCurve_key + 4) = key;
-    result = sndBSearch(dataGetCurve_key, dataCurveTable, dataCurveNum, 8, curvecmp);
-    dataGetCurve_result = result;
-    if (result != 0) {
-        return ((DataRefEntry *)dataGetCurve_result)->data;
+void *dataGetCurve(u16 cid) {
+    dataGetCurve_key.id = cid;
+    if ((dataGetCurve_result = (DATA_TAB *)sndBSearch(&dataGetCurve_key, dataCurveTable,
+                                                      dataCurveNum, sizeof(DATA_TAB), curvecmp))) {
+        return dataGetCurve_result->data;
     }
-    return 0;
+    return NULL;
 }
 
-/*
- * Look up the sample-map table used by nested sample groups.
- */
-void *dataGetKeymap(u16 key)
-{
-    void *result;
-
-    *(u16 *)(dataGetKeymap_key + 4) = key;
-    result = sndBSearch(dataGetKeymap_key, dataKeymapTable, dataKeymapNum, 8, curvecmp);
-    dataGetKeymap_result = result;
-    if (result != 0) {
-        return ((DataRefEntry *)dataGetKeymap_result)->data;
+void *dataGetKeymap(u16 cid) {
+    dataGetKeymap_key.id = cid;
+    if ((dataGetKeymap_result = (DATA_TAB *)sndBSearch(&dataGetKeymap_key, dataKeymapTable,
+                                                       dataKeymapNum, sizeof(DATA_TAB), curvecmp))) {
+        return dataGetKeymap_result->data;
     }
-    return 0;
+    return NULL;
 }
 
-/*
- * Comparator: return a->key2 - b->key2 (u16 at offset 4). Same body as
- * the others but separate symbol.
- *
- */
-int layercmp(void *a, void *b)
-{
-    return (int)*(u16 *)((u8 *)a + 4) - (int)*(u16 *)((u8 *)b + 4);
+s32 layercmp(void *p1, void *p2) {
+    return ((LAYER_TAB *)p1)->id - ((LAYER_TAB *)p2)->id;
 }
 
-/*
- * Look up a scene/sample list and return its entry count through outCount.
- */
-void *dataGetLayer(u16 key, u16 *outCount)
-{
-    u8 *tableBase = dataSmpSDirTable;
-    void *result;
-
-    *(u16 *)(tableBase + 0xa624) = key;
-    result = sndBSearch(tableBase + 0xa620, tableBase + 0x4e00, dataLayerNum, 0xc, layercmp);
-    dataGetLayer_result = result;
-    if (result != 0) {
-        *outCount = ((DataLayerRef *)dataGetLayer_result)->count;
-        return ((DataLayerRef *)dataGetLayer_result)->data;
+void *dataGetLayer(u16 cid, u16 *n) {
+    dataGetLayerSearchKey.id = cid;
+    if ((dataGetLayer_result = (LAYER_TAB *)sndBSearch(&dataGetLayerSearchKey, dataLayerTab,
+                                                       dataLayerNum, sizeof(LAYER_TAB), layercmp))) {
+        *n = dataGetLayer_result->num;
+        return dataGetLayer_result->data;
     }
-    return 0;
+    return NULL;
 }
 
-/*
- * Comparator: return a->key - b->key (u16 at offset 0). Same body as
- * smpcmp but separate symbol.
- */
-int fxcmp(void *a, void *b)
-{
-    return (int)*(u16 *)a - (int)*(u16 *)b;
+s32 fxcmp(void *p1, void *p2) {
+    return ((FX_TAB *)p1)->id - ((FX_TAB *)p2)->id;
 }
 
-/*
- * Search each FX sample-list bucket for the requested FX id.
- */
-void *dataGetFX(u16 key)
-{
-    int i;
-    u8 *tableBase;
-    DataFXGroupRef *bucket;
-    void *entry;
+FX_TAB *dataGetFX(u16 fid) {
+    FX_TAB *ret;
+    long i;
+    SynthDataTables *t = (SynthDataTables *)dataSmpSDirTable;
+    FX_GROUP *g;
 
-    tableBase = dataSmpSDirTable;
-    i = 0;
-    bucket = (DataFXGroupRef *)(tableBase + 0xa200);
-    *(u16 *)(tableBase + 0xa62c) = key;
-    while (i < dataFXGroupNum) {
-        entry = sndBSearch(tableBase + 0xa62c, bucket->samples, bucket->count, 10, fxcmp);
-        if (entry != 0) {
-            return entry;
+    t->getFXKey.id = fid;
+    g = t->fxGroup;
+    for (i = 0; i < dataFXGroupNum; ++i) {
+        if ((ret = (FX_TAB *)sndBSearch(&t->getFXKey, g[i].fxTab, g[i].fxNum, sizeof(FX_TAB),
+                                        fxcmp))) {
+            return ret;
         }
-        bucket++;
-        i++;
     }
-    return 0;
+
+    return NULL;
 }
 
-/*
- * Reset the synth sample/instrument lookup counters and bucket table.
- */
-extern u16 dataMacTotal;
-extern void hwGetStreamPlayBuffer(void);
-
-void dataInit(u32 unused, void *base)
-{
-    DataMacroBucket *bucketTable;
-    int i;
+void dataInit(u32 smpBase, u32 smpLength) {
+    long i;
 
     dataSmpSDirNum = 0;
     dataCurveNum = 0;
@@ -1038,55 +619,13 @@ void dataInit(u32 unused, void *base)
     dataLayerNum = 0;
     dataFXGroupNum = 0;
     dataMacTotal = 0;
-
-    i = 0x20;
-    bucketTable = (DataMacroBucket *)dataMacroBucketTable;
-    do {
-        bucketTable[0].count = 0;
-        bucketTable[0].startIndex = 0;
-        bucketTable[1].count = 0;
-        bucketTable[1].startIndex = 0;
-        bucketTable[2].count = 0;
-        bucketTable[2].startIndex = 0;
-        bucketTable[3].count = 0;
-        bucketTable[3].startIndex = 0;
-        bucketTable[4].count = 0;
-        bucketTable[4].startIndex = 0;
-        bucketTable[5].count = 0;
-        bucketTable[5].startIndex = 0;
-        bucketTable[6].count = 0;
-        bucketTable[6].startIndex = 0;
-        bucketTable[7].count = 0;
-        bucketTable[7].startIndex = 0;
-        bucketTable[8].count = 0;
-        bucketTable[8].startIndex = 0;
-        bucketTable[9].count = 0;
-        bucketTable[9].startIndex = 0;
-        bucketTable[10].count = 0;
-        bucketTable[10].startIndex = 0;
-        bucketTable[11].count = 0;
-        bucketTable[11].startIndex = 0;
-        bucketTable[12].count = 0;
-        bucketTable[12].startIndex = 0;
-        bucketTable[13].count = 0;
-        bucketTable[13].startIndex = 0;
-        bucketTable[14].count = 0;
-        bucketTable[14].startIndex = 0;
-        bucketTable[15].count = 0;
-        bucketTable[15].startIndex = 0;
-        bucketTable += 0x10;
-        i--;
-    } while (i != 0);
-
-    hwGetStreamPlayBuffer();
+    for (i = 0; i < 512; ++i) {
+        dataMacroBucketTable[i].num = 0;
+        dataMacroBucketTable[i].subTabIndex = 0;
+    }
+    hwGetStreamPlayBuffer(smpBase, smpLength);
 }
 
-/*
- * Wrapper for hwTransAddr.
- *
- * EN v1.1 Address: 0x80275344, size 32b
- */
-int IFFifoAlloc(int x)
-{
-    return hwTransAddr(x);
+int IFFifoAlloc(int addr) {
+    return hwTransAddr(addr);
 }

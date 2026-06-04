@@ -1,25 +1,286 @@
 #include "src/main/audio/synth_internal.h"
 
-/*
- * fn_8026C488 - large voice scheduler (~2800 instructions). Stubbed.
- */
-#pragma dont_inline on
-int fn_8026C488(int a, int b)
-{
-    (void)a; (void)b;
-    return 0;
-}
-#pragma dont_inline reset
+/* MusyX sequencer arrangement data (ARR). */
+typedef struct SynthArrangement {
+    u32 trackTableOffset;
+    u8 unk04[8];
+    u32 masterTrackOffset;
+    u32 info;
+    u8 unk14[0x40];
+    u32 trackSectionTableOffset;
+} SynthArrangement;
+
+typedef struct SynthSeqVolDef {
+    u8 track;
+    u8 volGroup;
+} SynthSeqVolDef;
+
+typedef struct SynthPlayPara {
+    u32 flags;
+    u32 trackMute[2];
+    u16 speed;
+    struct {
+        u16 time;
+        u8 target;
+    } volume;
+    u8 numSeqVolDef;
+    SynthSeqVolDef* seqVolDef;
+    u8 numFaded;
+    u8* faded;
+} SynthPlayPara;
+
+typedef struct SynthMasterTrackEvent {
+    u32 time;
+    u32 bpm;
+} SynthMasterTrackEvent;
+
+extern u8 lbl_803BD964[0x40];
+extern u16 lbl_803BCC90[8][0x10];
+extern int gSynthCurrentVoiceSlotIndex;
+extern void fn_8026E864(void);
+extern void synthVolume(u8 volume, u16 time, u8 vGroup, u8 mode, u32 seqId);
+extern void inpSetMidiCtrl(int controller, u8 slot, u8 key, u8 value);
+extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
+extern void inpResetChannelDefaults(u8 a, u8 b);
+
 
 /*
- * fn_8026CF78 - voice unlink helper (~232 instructions). Stubbed.
+ * Start playback of a sequence arrangement (seqStartPlay).
+ *
+ * EN v1.0 Address: 0x8026C488, size 2800b
  */
-#pragma dont_inline on
-void fn_8026CF78(u8 idx)
+u32 fn_8026C488(u8* norm, u8* drum, u8* midiSetup, u8* song, SynthPlayPara* para, u8 studio, u16 sgid)
 {
-    (void)idx;
+    SynthArrangement* arr;
+    u32* tracktab;
+    s32 i;
+    SynthVoice* nseq;
+    SynthVoice* oldCSeq;
+    u32 seqId;
+    u32 bpm;
+    u8* page;
+    u8 b;
+    u8 j;
+
+    if ((nseq = gSynthFreeVoices) == 0) {
+        return SYNTH_HANDLE_INVALID;
+    }
+    if ((gSynthFreeVoices = nseq->next) != 0) {
+        gSynthFreeVoices->prev = 0;
+    }
+    if ((nseq->next = gSynthQueuedVoices) != 0) {
+        gSynthQueuedVoices->prev = nseq;
+    }
+    nseq->prev = 0;
+    gSynthQueuedVoices = nseq;
+    nseq->state = 1;
+    for (i = 0; i < 16; i++) {
+        nseq->section[i].eventList = 0;
+    }
+
+    seqId = nseq->slotIndex;
+    nseq->pendingStartActive = 0;
+    nseq->normtab = norm;
+    nseq->drumtab = drum;
+    nseq->arrbase = song;
+    nseq->groupId = sgid;
+
+    page = nseq->normtab;
+    for (b = 0; b < 0x80; b++) {
+        nseq->normTrans[b] = 0xFF;
+    }
+    for (j = 0; page[4] != 0xFF; j++, page += 6) {
+        nseq->normTrans[page[4]] = j;
+    }
+    page = nseq->drumtab;
+    for (b = 0; b < 0x80; b++) {
+        nseq->drumTrans[b] = 0xFF;
+    }
+    for (j = 0; page[4] != 0xFF; j++, page += 6) {
+        nseq->drumTrans[page[4]] = j;
+    }
+
+    nseq->currentStudio = seqId + 23;
+    for (i = 0; i < 64; i++) {
+        nseq->studioMap[i] = nseq->currentStudio;
+    }
+
+    nseq->defStudio = studio;
+    if (para == 0) {
+        nseq->immediateMixValue0 = -1;
+        nseq->immediateMixValue1 = -1;
+        for (i = 0; i < 16; i++) {
+            nseq->section[i].speed = 0x100;
+        }
+        synthVolume(0x7F, 0, nseq->currentStudio, 0, -1);
+    } else {
+        if (para->flags & 1) {
+            nseq->immediateMixValue0 = para->trackMute[0];
+            nseq->immediateMixValue1 = para->trackMute[1];
+        } else {
+            nseq->immediateMixValue0 = -1;
+            nseq->immediateMixValue1 = -1;
+        }
+
+        if (para->flags & 2) {
+            for (i = 0; i < 16; i++) {
+                nseq->section[i].speed = para->speed;
+            }
+        } else {
+            for (i = 0; i < 16; i++) {
+                nseq->section[i].speed = 0x100;
+            }
+        }
+
+        if (para->flags & 8) {
+            for (i = 0; i < para->numSeqVolDef; i++) {
+                nseq->studioMap[para->seqVolDef[i].track] = para->seqVolDef[i].volGroup;
+                synthSetMusicVolumeType(para->seqVolDef[i].volGroup, 0);
+            }
+        }
+
+        if (para->flags & 4) {
+            synthVolume(para->volume.target, para->volume.time, nseq->currentStudio, 0, -1);
+            for (i = 0; i < para->numFaded; i++) {
+                synthVolume(para->volume.target, para->volume.time, para->faded[i], 0, -1);
+            }
+        }
+    }
+
+    arr = (SynthArrangement*)song;
+    if (arr->info & 0x80000000) {
+        nseq->keyGroupMap = song + arr->trackSectionTableOffset;
+    } else {
+        nseq->keyGroupMap = 0;
+    }
+
+    bpm = arr->info & 0x0FFFFFFF;
+    if (!(arr->info & 0x40000000)) {
+        bpm <<= 10;
+    }
+
+    for (i = 0; i < 16; i++) {
+        nseq->section[i].bpm = bpm;
+        synthSetStudioChannelScale(bpm >> 10, seqId, (u8)i);
+        if (arr->masterTrackOffset != 0) {
+            nseq->section[i].masterTrackBase = song + arr->masterTrackOffset;
+            nseq->section[i].masterTrackCursor =
+                nseq->section[i].masterTrackBase;
+        } else {
+            nseq->section[i].masterTrackBase = 0;
+        }
+        nseq->section[i].loopDisable = 0;
+        nseq->section[i].loopCount = 0;
+    }
+
+    tracktab = (u32*)(song + arr->trackTableOffset);
+    for (i = 0; i < 64; i++) {
+        lbl_803BD964[i] = 0x7F;
+        SYNTH_SEQUENCE_STATE(nseq, i)->stream = 0;
+        if (tracktab[i] != 0) {
+            SYNTH_TRACK_CURSOR(nseq, i)->current = SYNTH_TRACK_CURSOR(nseq, i)->base = song + tracktab[i];
+        } else {
+            SYNTH_TRACK_CURSOR(nseq, i)->current = SYNTH_TRACK_CURSOR(nseq, i)->base = 0;
+        }
+    }
+
+    nseq->callbackLists[0] = 0;
+    nseq->callbackLists[1] = 0;
+    nseq->callbackLists[2] = 0;
+
+    for (i = 0; i < 16; i++) {
+        inpResetMidiCtrl((u8)i, seqId, 1);
+    }
+    for (i = 0; i < 16; i++) {
+        nseq->prgState[i].macId = 0xFFFF;
+    }
+    for (i = 0; i < 16; i++) {
+        inpResetChannelDefaults((u8)i, seqId);
+    }
+
+    if (midiSetup != 0) {
+        for (i = 0; i < 16; i++) {
+            u8 prg = midiSetup[4];
+            lbl_803BCC90[gSynthCurrentVoiceSlotIndex][(u8)i] = 0xFFFF;
+            if ((u8)i != 9) {
+                prg = nseq->normTrans[prg];
+                if (prg != 0xFF) {
+                    nseq->prgState[(u8)i].macId = *(u16*)(nseq->normtab + prg * 6);
+                    nseq->prgState[(u8)i].priority = nseq->normtab[prg * 6 + 2];
+                    nseq->prgState[(u8)i].maxVoices = nseq->normtab[prg * 6 + 3];
+                }
+            } else {
+                prg = nseq->drumTrans[prg];
+                if (prg != 0xFF) {
+                    nseq->prgState[(u8)i].macId = *(u16*)(nseq->drumtab + prg * 6);
+                    nseq->prgState[(u8)i].priority = nseq->drumtab[prg * 6 + 2];
+                    nseq->prgState[(u8)i].maxVoices = nseq->drumtab[prg * 6 + 3];
+                }
+            }
+            inpSetMidiCtrl(7, (u8)i, seqId, midiSetup[5]);
+            inpSetMidiCtrl(0xA, (u8)i, seqId, midiSetup[6]);
+            inpSetMidiCtrl(0x5B, (u8)i, seqId, midiSetup[7]);
+            inpSetMidiCtrl(0x5D, (u8)i, seqId, midiSetup[8]);
+            midiSetup += 5;
+        }
+    }
+
+    for (i = 0; i < 16; i++) {
+        lbl_803BCC90[seqId][i] = 0xFFFF;
+    }
+
+    for (i = 0; i < 16; i++) {
+        nseq->section[i].time[0].high = 0;
+        nseq->section[i].time[0].low = 0;
+        nseq->section[i].time[1].high = 0;
+        nseq->section[i].time[1].low = 0;
+        nseq->section[i].timeIndex = 0;
+    }
+
+    nseq->keyOffCheck = 0;
+
+    if (para != 0 && (para->flags & 0x10) != 0) {
+        synthQueueVoice(nseq);
+    }
+
+    oldCSeq = gSynthCurrentVoice;
+    gSynthCurrentVoice = nseq;
+    fn_8026E864();
+    gSynthCurrentVoice = oldCSeq;
+    seqId = synthAssignHandle(seqId);
+    return seqId;
 }
-#pragma dont_inline reset
+
+/*
+ * Advance the master (tempo) track of one sequence section (HandleMasterTrack).
+ *
+ * EN v1.0 Address: 0x8026CF78, size 232b
+ */
+void fn_8026CF78(u8 secIndex)
+{
+    SynthSequenceQueue* section;
+
+    section = SYNTH_SEQUENCE_QUEUE(gSynthCurrentVoice, secIndex);
+    if (section->masterTrackBase != 0) {
+        while (((SynthMasterTrackEvent*)section->masterTrackCursor)->time != 0xFFFFFFFF) {
+            if (((SynthMasterTrackEvent*)section->masterTrackCursor)->time > section->time[section->timeIndex].high) {
+                break;
+            }
+
+            if (((SynthArrangement*)gSynthCurrentVoice->arrbase)->info & 0x40000000) {
+                synthSetStudioChannelScale(
+                    (section->bpm = ((SynthMasterTrackEvent*)section->masterTrackCursor)->bpm) >> 10,
+                    gSynthCurrentVoiceSlotIndex, secIndex);
+            } else {
+                synthSetStudioChannelScale(((SynthMasterTrackEvent*)section->masterTrackCursor)->bpm,
+                                           gSynthCurrentVoiceSlotIndex, secIndex);
+                section->bpm = ((SynthMasterTrackEvent*)section->masterTrackCursor)->bpm << 10;
+            }
+
+            section->masterTrackCursor += 8;
+        }
+    }
+}
 
 /*
  * Move a voice node from the queued list to the head of the allocated

@@ -77,35 +77,207 @@ extern f32 lbl_803E61C0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void sh_staff_render(undefined2 *param_1,int param_2)
+extern void *Obj_GetPlayerObject(void);
+extern void Obj_BuildWorldTransformMatrix(int obj, f32 *mtx, int p3);
+extern void objRenderFn_8003b8f4(int obj, undefined4 p2, undefined4 p3, undefined4 p4,
+                                  undefined4 p5, double scale);
+extern void PSMTXInverse(int src, f32 *dst);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *dst);
+extern void objSetMtxFn_800412d4(f32 *mtx);
+extern void objRenderModel(int obj);
+extern f32 timeDelta;
+extern f32 lbl_803E54D0;
+extern f32 lbl_803E54D4;
+extern f32 lbl_803E54D8;
+extern f32 lbl_803E54DC;
+extern f32 lbl_803E54E0;
+extern f32 lbl_803E54E4;
+extern f32 lbl_803E54E8;
+extern f32 lbl_803E54EC;
+extern f32 lbl_803E54F0;
+extern f32 lbl_803E54F4;
+extern f32 lbl_803E54F8;
+
+void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-  byte bVar1;
-  uint uVar2;
-  int iVar3;
-  byte *pbVar4;
-  uint *puVar5;
-  
-  pbVar4 = *(byte **)(param_1 + 0x5c);
-  *param_1 = (short)((int)*(char *)(param_2 + 0x18) << 8);
-  *(undefined4 *)(param_1 + 0x7a) = 0;
-  iVar3 = 0;
-  puVar5 = (uint *)&DAT_803dccc0;
-  do {
-    uVar2 = GameBit_Get(*puVar5);
-    if (uVar2 != 0) {
-      *pbVar4 = (char)iVar3 + 1;
+  u8 *state;
+  int player;
+  int i;
+  int j;
+  u8 *ptr;
+  int o;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 spd;
+  f32 t;
+  f32 scale;
+  f32 bx;
+  f32 cur2;
+  f32 mtxB[12];
+  f32 mtxA[12];
+  f32 z0;
+  f32 y0;
+  f32 x0;
+  f32 z1;
+  f32 y1;
+  f32 x1;
+
+  state = *(u8 **)(obj + 0xb8);
+  player = (int)Obj_GetPlayerObject();
+  if (visible != 0) {
+    if (state[0] == 3) {
+      Obj_BuildWorldTransformMatrix(obj, mtxB, 0);
+      PSMTXInverse((int)ObjPath_GetPointModelMtx((void *)player, 0), mtxA);
+      PSMTXConcat(mtxA, mtxB, (f32 *)(state + 8));
+      state[0] = 5;
     }
-    puVar5 = puVar5 + 1;
-    iVar3 = iVar3 + 1;
-  } while (iVar3 < 2);
-  bVar1 = *pbVar4;
-  if (bVar1 == 1) {
-    FUN_80017a6c((int)param_1,0,0,0,'\0','\x04');
+    if (state[0] == 4) {
+      ObjPath_GetPointLocalMtx((void *)player, 0, (f32 *)(state + 8));
+      state[0] = 5;
+    }
+    if (state[0] == 5) {
+      PSMTXConcat((f32 *)ObjPath_GetPointModelMtx((void *)player, 0), (f32 *)(state + 8), mtxB);
+      objSetMtxFn_800412d4(mtxB);
+      objRenderModel(obj);
+    } else {
+      objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E54D0);
+    }
+    ObjPath_GetPointWorldPosition(obj, 0, &x0, &y0, &z0, 0);
+    ObjPath_GetPointWorldPosition(obj, 1, &x1, &y1, &z1, 0);
+    dx = x1 - x0;
+    dy = y1 - y0;
+    dz = z1 - z0;
+    if (((state[2] & 1) != 0) && ((state[2] & 2) == 0)) {
+      ptr = state + 8;
+      for (i = 2; i < 10; i += 2) {
+        if (*(uint *)(ptr + 0x38) == 0) {
+          state[0x60 + i] = 1;
+          break;
+        }
+        ptr += 8;
+      }
+      if (i >= 10) {
+        state[2] |= 2;
+      }
+    }
+    if (((state[2] & 4) != 0) && ((state[2] & 8) == 0)) {
+      ptr = state + 4;
+      for (i = 1; i < 10; i += 2) {
+        if (*(uint *)(ptr + 0x38) == 0) {
+          state[0x60 + i] = 1;
+          break;
+        }
+        ptr += 8;
+      }
+      if (i >= 10) {
+        state[2] |= 8;
+      }
+    }
+    if (state[2] != 0) {
+      if ((state[2] & 0x20) != 0) {
+        i = 5;
+        ptr = state + 0x14;
+        for (; i < 5; i++) {
+          o = *(int *)(ptr + 0x38);
+          if ((uint)o != 0) {
+            *(s16 *)(o + 6) |= 0x4000;
+            *(int *)(ptr + 0x38) = 0;
+          }
+          ptr += 4;
+        }
+        if ((state[2] & 0x10) != 0) {
+          *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
+          if (*(f32 *)(state + 4) <= lbl_803E54D4) {
+            spd = lbl_803E54D8;
+          } else {
+            *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
+            spd = lbl_803E54DC * *(f32 *)(state + 4);
+          }
+        } else {
+          *(f32 *)(state + 4) = *(f32 *)(state + 4) + timeDelta;
+          if (*(f32 *)(state + 4) >= lbl_803E54E0) {
+            *(f32 *)(state + 4) = lbl_803E54E0;
+          }
+          spd = lbl_803E54E4 * *(f32 *)(state + 4);
+        }
+        j = 0;
+        ptr = state;
+        for (; j < 5; j++) {
+          if ((*(uint *)(ptr + 0x38) != 0) && (*(uint *)(state + 0x48) != 0)) {
+            t = lbl_803E54E8 + (f32)j / lbl_803E54EC;
+            bx = *(f32 *)(*(int *)(state + 0x48) + 0xc);
+            *(f32 *)(*(int *)(ptr + 0x38) + 0xc) = t * (x0 - bx) + bx;
+            *(f32 *)(*(int *)(ptr + 0x38) + 0x10) =
+                t * (y0 - *(f32 *)(*(int *)(state + 0x48) + 0x10)) + *(f32 *)(*(int *)(state + 0x48) + 0x10);
+            *(f32 *)(*(int *)(ptr + 0x38) + 0x14) =
+                t * (z0 - *(f32 *)(*(int *)(state + 0x48) + 0x14)) + *(f32 *)(*(int *)(state + 0x48) + 0x14);
+            *(f32 *)(*(int *)(ptr + 0x38) + 8) = spd;
+          }
+          ptr += 4;
+        }
+        j = 9;
+        ptr = state + 0x24;
+        for (; j > 4; j--) {
+          if ((*(uint *)(ptr + 0x38) != 0) && (*(uint *)(state + 0x4c) != 0)) {
+            t = lbl_803E54E8 + (f32)(9 - j) / lbl_803E54EC;
+            bx = *(f32 *)(*(int *)(state + 0x4c) + 0xc);
+            *(f32 *)(*(int *)(ptr + 0x38) + 0xc) = t * (x1 - bx) + bx;
+            *(f32 *)(*(int *)(ptr + 0x38) + 0x10) =
+                t * (y1 - *(f32 *)(*(int *)(state + 0x4c) + 0x10)) + *(f32 *)(*(int *)(state + 0x4c) + 0x10);
+            *(f32 *)(*(int *)(ptr + 0x38) + 0x14) =
+                t * (z1 - *(f32 *)(*(int *)(state + 0x4c) + 0x14)) + *(f32 *)(*(int *)(state + 0x4c) + 0x14);
+            *(f32 *)(*(int *)(ptr + 0x38) + 8) = spd;
+          }
+          ptr -= 4;
+        }
+      } else {
+        spd = lbl_803E54D8;
+        if ((state[2] & 0x10) != 0) {
+          *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
+          if (*(f32 *)(state + 4) <= lbl_803E54D4) {
+            state[2] &= ~0x10;
+          } else {
+            spd = lbl_803E54E4 * *(f32 *)(state + 4);
+          }
+        }
+        for (j = 0; j < 10; j++) {
+          if (*(uint *)(state + 0x38) != 0) {
+            t = lbl_803E54F0 * (f32)j;
+            t = t + (f32)(int)randomGetRange(-0x32, 0x32) / lbl_803E54F4;
+            *(f32 *)(*(int *)(state + 0x38) + 0xc) = dx * t + x0;
+            *(f32 *)(*(int *)(state + 0x38) + 0x10) = dy * t + y0;
+            *(f32 *)(*(int *)(state + 0x38) + 0x14) = dz * t + z0;
+            *(f32 *)(*(int *)(state + 0x38) + 8) = spd;
+          }
+          state += 4;
+        }
+      }
+    } else {
+      scale = lbl_803E54F8;
+      cur2 = *(f32 *)(state + 4);
+      bx = lbl_803E54D4;
+      if (cur2 != bx) {
+        *(f32 *)(state + 4) = cur2 - timeDelta;
+        if (*(f32 *)(state + 4) <= bx) {
+          o = *(int *)(state + 0x38);
+          if ((uint)o != 0) {
+            *(s16 *)(o + 6) |= 0x4000;
+            *(int *)(state + 0x38) = 0;
+            *(f32 *)(state + 4) = bx;
+          }
+        } else {
+          scale = lbl_803E54E4 * *(f32 *)(state + 4);
+        }
+      }
+      if (*(uint *)(state + 0x38) != 0) {
+        *(f32 *)(*(int *)(state + 0x38) + 0xc) = dx * *(f32 *)(state + 0x6c) + x0;
+        *(f32 *)(*(int *)(state + 0x38) + 0x10) = dy * *(f32 *)(state + 0x6c) + y0;
+        *(f32 *)(*(int *)(state + 0x38) + 0x14) = dz * *(f32 *)(state + 0x6c) + z0;
+        *(f32 *)(*(int *)(state + 0x38) + 8) = scale;
+      }
+    }
   }
-  else if ((bVar1 == 0) || (bVar1 < 3)) {
-    FUN_80017a6c((int)param_1,0,0,0,'\0','\x03');
-  }
-  return;
 }
 
 /*
@@ -872,7 +1044,6 @@ int sh_staff_SeqFn(int obj, int unused, u8 *buf)
 #pragma scheduling reset
 extern f32 lbl_803E5508;
 
-extern void *Obj_GetPlayerObject(void);
 extern f32 getXZDistance(f32 *a, f32 *b);
 extern void *fn_802966CC(int player);
 extern int fn_80295CF4(int player, int a);
@@ -1058,4 +1229,125 @@ void sh_beacon_init(int obj, int defData)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void sh_beacon_update(int obj) {}
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern int GameBit_Set(int eventId, int value);
+extern void gameBitDecrement(int eventId);
+extern void *getTrickyObject(void);
+extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
+extern f32 lbl_803E5528;
+extern f32 lbl_803E5530;
+extern f32 lbl_803E5534;
+extern f32 lbl_803E5538;
+extern f32 lbl_803E553C;
+extern int lbl_803DDBF8;
+
+typedef struct {
+    u8 looping : 1;
+    u8 rest : 7;
+} BeaconFlags;
+
+/*
+ * --INFO--
+ *
+ * Function: sh_beacon_update
+ * EN v1.0 Address: 0x801DAA58
+ * EN v1.0 Size: 1080b
+ */
+void sh_beacon_update(int obj)
+{
+  u8 *state;
+  int def;
+  int tmp;
+  int *setup;
+  int mode;
+  int state2;
+
+  state = *(u8 **)(obj + 0xb8);
+  def = *(int *)(obj + 0x4c);
+  switch (state[0x14]) {
+  case 0:
+    if (((*(u8 *)(obj + 0xaf) & 1) != 0) &&
+        ((*(int (*)(int))(*gGameUIInterface + 0x20))(0x194) != 0)) {
+      gameBitDecrement(0x194);
+      GameBit_Set(*(s16 *)(def + 0x20), 1);
+      if (Obj_IsLoadingLocked() != 0) {
+        setup = Obj_AllocObjectSetup(0x20, 0x55);
+        *(f32 *)((char *)setup + 8) = *(f32 *)(obj + 0xc);
+        *(f32 *)((char *)setup + 0xc) = *(f32 *)(obj + 0x10);
+        *(f32 *)((char *)setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(u8 *)((char *)setup + 4) = 2;
+        *(u8 *)((char *)setup + 5) = *(u8 *)(*(int *)(obj + 0x4c) + 5);
+        *(u8 *)((char *)setup + 7) = *(u8 *)(*(int *)(obj + 0x4c) + 7);
+        *(int *)state = loadObjectAtObject(obj, setup);
+      }
+      (*(code *)(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+      state[0x14] = 2;
+    }
+  case 2:
+    state2 = *(int *)(obj + 0xb8);
+    *(f32 *)(state2 + 4) = *(f32 *)(state2 + 4) + timeDelta;
+    if (*(f32 *)(state2 + 4) >= lbl_803E5528) {
+      *(f32 *)(state2 + 4) = *(f32 *)(state2 + 4) - lbl_803E5528;
+      if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
+        fn_80098B18(obj, *(f32 *)(obj + 8), 0, 2, 0, 0);
+      }
+    }
+    break;
+  case 1:
+    if ((((BeaconFlags *)(state + 0x15))->looping) == 0) {
+      Sfx_AddLoopedObjectSound(obj, 0x9e);
+      ((BeaconFlags *)(state + 0x15))->looping = 1;
+    }
+    if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
+      *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) + timeDelta;
+      if (*(f32 *)(state + 0x10) > lbl_803E5530) {
+        mode = 2;
+        *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) - lbl_803E5530;
+      } else {
+        mode = 0;
+      }
+      *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) + timeDelta;
+      if (*(f32 *)(state + 0xc) > lbl_803E5534) {
+        *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - lbl_803E5534;
+        fn_80098B18(obj, *(f32 *)(obj + 8), 2, mode, 0, 0);
+      }
+    }
+    break;
+  }
+  if (state[0x14] != 1) {
+    *(u8 *)(obj + 0xaf) &= ~8;
+    if (state[0x14] == 2) {
+      fn_8002B6D8(obj, 0, 0, 0, 0, 8);
+    } else if ((state[0x14] == 0) && (GameBit_Get(0x194) == 0)) {
+      *(u8 *)(obj + 0xaf) |= 0x10;
+    } else {
+      *(u8 *)(obj + 0xaf) &= ~0x10;
+    }
+    tmp = (int)getTrickyObject();
+    if (((void *)tmp != NULL) && ((*(u8 *)(obj + 0xaf) & 4) != 0)) {
+      (*(code *)(*(int *)(*(int *)(tmp + 0x68)) + 0x28))(tmp, obj, 1, 4);
+    }
+  } else {
+    if ((GameBit_Get(0x193) != 0) || (*(s16 *)(def + 0x1e) != 0x95)) {
+      *(u8 *)(obj + 0xaf) |= 8;
+    } else {
+      *(u8 *)(obj + 0xaf) |= 0x10;
+    }
+  }
+  if (*(f32 *)(state + 8) > lbl_803E5538) {
+    *(f32 *)(state + 8) = *(f32 *)(state + 8) - timeDelta;
+    if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
+      fn_80098B18(obj, lbl_803E553C * *(f32 *)(obj + 8), 3, 0, 0, 0);
+    }
+    if ((*(f32 *)(state + 8) <= lbl_803E5538) && (state[0x14] == 2)) {
+      state[0x14] = 1;
+      GameBit_Set(*(s16 *)(def + 0x1e), 1);
+      if ((GameBit_Get(0x190) != 0) && (GameBit_Get(0x191) != 0) && (GameBit_Get(0x192) != 0)) {
+        Sfx_PlayFromObject(0, 0x7e);
+      } else {
+        Sfx_PlayFromObject(0, 0x409);
+      }
+    }
+  }
+  ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, &lbl_803DDBF8);
+}

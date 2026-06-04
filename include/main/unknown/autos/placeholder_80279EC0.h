@@ -28,6 +28,7 @@ typedef struct VoiceIdSlot {
     u16 active;
 } VoiceIdSlot;
 
+#pragma pack(4)
 typedef struct SynthVoiceState {
     u8 pad00[0x34];
     u32 activeHandle;
@@ -37,13 +38,14 @@ typedef struct SynthVoiceState {
     u32 handle;
     u8 padf8[0x110 - 0xf8];
     u32 priorityTick;
-    u32 dirtyFlags;
-    u32 stateFlags;
+    u64 cFlags;
     u8 callbackActive;
     u8 pad11d[0x121 - 0x11d];
     u8 midiSlot;
     u8 midiChannel;
+    u8 pad124[0x404 - 0x124];
 } SynthVoiceState;
+#pragma pack()
 
 void voiceInitPriorityTables(void);
 void voiceBreakAndFree(u32 voice);

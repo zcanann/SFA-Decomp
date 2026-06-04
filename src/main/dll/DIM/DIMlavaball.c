@@ -155,6 +155,8 @@ extern void SCGameBitLatch_Update(void *latch, int mask, int clearIfSetBit, int 
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void MMP_levelcontrol_update(int obj)
 {
   int playerForMap;
@@ -165,7 +167,7 @@ void MMP_levelcontrol_update(int obj)
 
   if (lbl_803DDB28 > lbl_803E44C0) {
     gameTextShow(0x34f);
-    lbl_803DDB28 -= timeDelta;
+    lbl_803DDB28 = lbl_803DDB28 - timeDelta;
     if (lbl_803DDB28 < lbl_803E44C0) {
       lbl_803DDB28 = lbl_803E44C0;
     }
@@ -214,15 +216,13 @@ void MMP_levelcontrol_update(int obj)
     *(int *)(obj + 0xf4) = 0;
   }
 
-  if (*(int *)(obj + 0xf8) != 0) {
-    if (GameBit_Get(0xf33) == 0) {
-      skyFn_80088c94(7, 0);
-      getEnvfxAct(obj, playerForFx, 0x13a, 0);
-      getEnvfxAct(obj, playerForFx, 0x138, 0);
-      getEnvfxAct(obj, playerForFx, 0x139, 0);
-      *(int *)(obj + 0xf8) = 0;
-    }
-  } else if (GameBit_Get(0xf33) != 0) {
+  if (*(int *)(obj + 0xf8) != 0 && GameBit_Get(0xf33) == 0) {
+    skyFn_80088c94(7, 0);
+    getEnvfxAct(obj, playerForFx, 0x13a, 0);
+    getEnvfxAct(obj, playerForFx, 0x138, 0);
+    getEnvfxAct(obj, playerForFx, 0x139, 0);
+    *(int *)(obj + 0xf8) = 0;
+  } else if (*(int *)(obj + 0xf8) == 0 && GameBit_Get(0xf33) != 0) {
     skyFn_80088c94(7, 1);
     getEnvfxAct(obj, playerForFx, 0x13a, 0);
     getEnvfxAct(obj, playerForFx, 0x10c, 0);
@@ -233,6 +233,8 @@ void MMP_levelcontrol_update(int obj)
   SCGameBitLatch_Update(&lbl_803DDB2C, 1, -1, -1, 0x389, 0xd5);
   SCGameBitLatch_Update(&lbl_803DDB2C, 2, -1, -1, 0xcbb, 0xc4);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1537,7 +1539,7 @@ extern f32 lbl_803E44E8;
 
 extern int objPosToMapBlockIdx(double x, double y, double z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int fn_801A78C8(int obj, f32 *out1, void *out2, f32 x, f32 y, f32 z, f32 y2);
+extern int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32 *out1, int *out2);
 extern f32 lbl_803E4554;
 extern f32 lbl_803E455C;
 extern f32 lbl_803E4560;
@@ -1561,42 +1563,56 @@ void fn_801A7B10(int obj) {
     *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) - lbl_803E455C * timeDelta;
     {
         f32 v1 = *(f32 *)(obj + 0x24);
-        f32 v2 = lbl_803E4560;
-        if ((lbl_803E4560 <= v1) && (v2 = v1, lbl_803E4564 < v1)) {
+        f32 v2;
+        if (v1 < lbl_803E4560) {
+            v2 = lbl_803E4560;
+        } else if (v1 > lbl_803E4564) {
             v2 = lbl_803E4564;
+        } else {
+            v2 = v1;
         }
         *(f32 *)(obj + 0x24) = v2;
     }
     {
         f32 v1 = *(f32 *)(obj + 0x28);
-        f32 v2 = lbl_803E4560;
-        if ((lbl_803E4560 <= v1) && (v2 = v1, lbl_803E4564 < v1)) {
+        f32 v2;
+        if (v1 < lbl_803E4560) {
+            v2 = lbl_803E4560;
+        } else if (v1 > lbl_803E4564) {
             v2 = lbl_803E4564;
+        } else {
+            v2 = v1;
         }
         *(f32 *)(obj + 0x28) = v2;
     }
     {
         f32 v1 = *(f32 *)(obj + 0x24);
-        f32 v2 = lbl_803E4560;
-        if ((lbl_803E4560 <= v1) && (v2 = v1, lbl_803E4564 < v1)) {
+        f32 v2;
+        if (v1 < lbl_803E4560) {
+            v2 = lbl_803E4560;
+        } else if (v1 > lbl_803E4564) {
             v2 = lbl_803E4564;
+        } else {
+            v2 = v1;
         }
         *(f32 *)(obj + 0x24) = v2;
     }
     objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
     *(u16 *)(state + 0x24) &= ~0x80;
-    ret = fn_801A78C8(obj, &local_18, auStack_14, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), lbl_803E4568 + *(f32 *)(obj + 0x10));
+    ret = fn_801A78C8(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), lbl_803E4568 + *(f32 *)(obj + 0x10), obj, &local_18, auStack_14);
     if (ret == 0) return;
     if (ret == 2) {
-        f32 c = lbl_803E4554;
+        f32 c;
         *(u16 *)(state + 0x24) |= 0x100;
+        c = lbl_803E4554;
         *(f32 *)(obj + 0x24) = c;
         *(f32 *)(obj + 0x28) = c;
         *(f32 *)(obj + 0x2c) = c;
     } else {
-        f32 c = lbl_803E4554;
+        f32 c;
         *(u16 *)(state + 0x24) |= 0x180;
         *(f32 *)(obj + 0x10) = local_18;
+        c = lbl_803E4554;
         *(f32 *)(obj + 0x24) = c;
         *(f32 *)(obj + 0x28) = c;
         *(f32 *)(obj + 0x2c) = c;
@@ -1721,6 +1737,7 @@ extern f32 lbl_803E454C;
 extern f32 lbl_803E4550;
 extern f32 lbl_803E4558;
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_801A79E0(int obj) {
@@ -1749,6 +1766,7 @@ void fn_801A79E0(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 void fn_801A80C4(int obj, f32 x, f32 y, f32 z) {
     *(f32 *)(obj + 0xC) = x;
@@ -1819,6 +1837,7 @@ extern f32 lbl_803E4570;
 extern f32 lbl_803E4574;
 extern f32 lbl_803E4578;
 
+#pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
 void fn_801A7CC4(int obj) {
@@ -1851,6 +1870,7 @@ void fn_801A7CC4(int obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -1880,7 +1900,34 @@ void mmp_trenchfx_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { i
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void fn_801A7D74(int obj, int a, int b);
+extern void fn_801A7D74(int obj, u8 a, u8 b);
+
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, f32 ***out, int a, int b);
+extern f32 lbl_803E4548;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_801A78C8(f32 x, f32 y, f32 z, f32 y2, int obj, f32 *out1, int *out2) {
+    f32 **results;
+    f32 *e;
+    int i;
+    int count;
+
+    count = hitDetectFn_80065e50(obj, x, y, z, &results, 0, 1);
+    *out1 = y;
+    *out2 = 0;
+    for (i = 0; i < count; i++) {
+        e = results[i];
+        if (*(s8 *)((u8 *)e + 0x14) != 0xE && y < e[0] && (y2 > e[0] || i == count - 1)) {
+            *out2 = *(int *)((u8 *)results[i] + 0x10);
+            *out1 = results[i][0];
+            return (results[i][2] < lbl_803E4548) + 1;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
@@ -1913,6 +1960,444 @@ void mmp_moonrock_init(int obj, int param2)
     *(f32 *)(state + 0x20) = *(f32 *)(obj + 0x14);
     ObjHits_DisableObject(obj);
     fn_801A7D74(obj, 1, 2);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *ObjList_GetObjects(int *idx, int *count);
+extern f32 Vec_distance(void *a, void *b);
+extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+extern void setAButtonIcon(int icon);
+extern f32 lbl_803E4580;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A7D74(int obj, u8 a, u8 b) {
+    int i;
+    int count;
+    int *list;
+    int state;
+    int odef;
+    int mydef;
+    s8 g1;
+    s8 g2;
+
+    state = *(int *)(obj + 0xB8);
+    list = ObjList_GetObjects(&i, &count);
+    for (; i < count; i++) {
+        u32 o = (u32)list[i];
+        if (o != (u32)obj && *(s16 *)(o + 0x46) == 0x518 &&
+            Vec_distance((void *)(obj + 0x18), (void *)(o + 0x18)) < lbl_803E4580) {
+            u32 c;
+            odef = *(int *)(list[i] + 0x4C);
+            mydef = *(int *)(obj + 0x4C);
+            g1 = GameBit_Get(0x88C);
+            g2 = GameBit_Get(0x894);
+            if (a == 0) {
+                (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))(state, 1);
+                if (*(s16 *)(odef + 0x1E) != -1) {
+                    GameBit_Set(*(s16 *)(odef + 0x1E), 0);
+                }
+                c = *(u8 *)(state + 0x2E);
+                if (c == 3) goto dec;
+                if (c == 4) goto dec;
+                if (c == 6) {
+                dec:
+                    g1 -= 1;
+                } else {
+                    g2 -= 1;
+                }
+                if (*(s16 *)(mydef + 0x1A) != -1) {
+                    GameBit_Set(*(s16 *)(mydef + 0x1A), 0);
+                    *(u8 *)(state + 0x2E) = 0;
+                }
+                {
+                    f32 y = *(f32 *)(obj + 0x10);
+                    *(f32 *)(state + 0xC) = y;
+                    *(f32 *)(state + 0x10) = y;
+                }
+                *(u16 *)(state + 0x24) &= ~0x400;
+                *(f32 *)(obj + 0xC) = *(f32 *)(state + 0x18);
+                *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x1C);
+                *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x20);
+                saveGame_saveObjectPos(obj);
+            } else {
+                (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x20))(state, 0);
+                if (*(s16 *)(odef + 0x1E) != -1) {
+                    GameBit_Set(*(s16 *)(odef + 0x1E), 1);
+                }
+                if (b == 0) {
+                    *(f32 *)(obj + 0xC) = *(f32 *)(list[i] + 0xC);
+                    *(f32 *)(obj + 0x10) = *(f32 *)(list[i] + 0x10);
+                    *(f32 *)(obj + 0x14) = *(f32 *)(list[i] + 0x14);
+                    saveGame_saveObjectPos(obj);
+                }
+                {
+                    f32 y = *(f32 *)(obj + 0x10);
+                    *(f32 *)(state + 0xC) = y;
+                    *(f32 *)(state + 0x10) = y;
+                }
+                if (*(s16 *)(mydef + 0x1A) != -1) {
+                    GameBit_Set(*(s16 *)(mydef + 0x1A), *(s16 *)(odef + 0x1A));
+                    *(u8 *)(state + 0x2E) = *(s16 *)(odef + 0x1A);
+                }
+                c = *(u8 *)(state + 0x2E);
+                if (c == 3) goto held;
+                if (c == 4) goto held;
+                if (c == 6) {
+                held:
+                    if (b != 2) {
+                        g1 = g1 + 1;
+                    }
+                    if (b == 0) {
+                        Sfx_PlayFromObject(0, g1 < 3 ? 0x109 : 0x7E);
+                        GameBit_Set(0x9AE, 1);
+                    }
+                    *(u16 *)(state + 0x24) |= 0x400;
+                    setAButtonIcon(0);
+                } else if (b != 2) {
+                    g2 += 1;
+                }
+            }
+            if (g1 >= 3) {
+                GameBit_Set(0x89B, 1);
+            } else {
+                GameBit_Set(0x89B, 0);
+            }
+            if (g1 > 3) {
+                g1 = 3;
+            } else if (g1 < 0) {
+                g1 = 0;
+            }
+            if (g2 > 3) {
+                g2 = 3;
+            } else if (g2 < 0) {
+                g2 = 0;
+            }
+            GameBit_Set(0x88C, g1);
+            GameBit_Set(0x894, g2);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern char lbl_803AC930[];
+extern f32 lbl_803E45B0;
+extern f32 lbl_803E45B4;
+
+#pragma scheduling off
+#pragma peephole off
+void mmp_trenchfx_update(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    if (*(s16 *)state == -1 || GameBit_Get(*(s16 *)state) != 0) {
+        *(f32 *)(state + 0x28) -= timeDelta;
+        if (*(f32 *)(state + 0x28) < lbl_803E45B0) {
+            *(f32 *)(state + 0x18) = lbl_803E45B4;
+            *(f32 *)(state + 0x1C) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 2), *(u16 *)(state + 2));
+            *(f32 *)(state + 0x20) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 6), *(u16 *)(state + 6));
+            *(f32 *)(state + 0x24) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 4), *(u16 *)(state + 4));
+            mathFn_80021ac8((void *)(state + 8), (void *)(state + 0x1C));
+            *(f32 *)(state + 0x1C) += *(f32 *)(obj + 0xC);
+            *(f32 *)(state + 0x20) += *(f32 *)(obj + 0x10);
+            *(f32 *)(state + 0x24) += *(f32 *)(obj + 0x14);
+            *(f32 *)(state + 0x28) = (f32)(int)randomGetRange(0x64, 0xC8);
+            *(f32 *)(state + 0x2C) = (f32)(int)randomGetRange(0x32, 0x64);
+        }
+        *(f32 *)(state + 0x2C) -= timeDelta;
+        if (*(f32 *)(state + 0x2C) > lbl_803E45B0) {
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71F, state + 0x10, 0x200001, -1, 0);
+        }
+        *(f32 *)(lbl_803AC930 + 8) = lbl_803E45B4;
+        *(f32 *)(lbl_803AC930 + 0xC) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 2), *(u16 *)(state + 2));
+        *(f32 *)(lbl_803AC930 + 0x10) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 6), *(u16 *)(state + 6));
+        *(f32 *)(lbl_803AC930 + 0x14) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 4), *(u16 *)(state + 4));
+        mathFn_80021ac8((void *)(state + 8), (void *)(lbl_803AC930 + 0xC));
+        *(f32 *)(lbl_803AC930 + 0xC) += *(f32 *)(obj + 0xC);
+        *(f32 *)(lbl_803AC930 + 0x10) += *(f32 *)(obj + 0x10);
+        *(f32 *)(lbl_803AC930 + 0x14) += *(f32 *)(obj + 0x14);
+        (*(int (*)(int, int, char *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x720, lbl_803AC930, 0x200001, -1, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Sfx_SetObjectChannelVolume(int obj, int channel, u8 volume, f32 scale);
+extern f32 fn_80293E80(f32);
+extern void CameraShake_Start(f32 a, f32 b, f32 c);
+extern void doRumble(f32 duration);
+extern char lbl_803231D0[];
+extern char lbl_803AC900[];
+extern int lbl_803DDB30;
+extern f32 lbl_803E44F8;
+extern f32 lbl_803E44FC;
+extern f32 lbl_803E4500;
+extern f32 lbl_803E4504;
+extern f32 lbl_803E4508;
+extern f32 lbl_803E450C;
+extern f32 lbl_803E4510;
+extern f32 lbl_803E4514;
+extern f32 lbl_803E4518;
+extern f32 lbl_803E451C;
+extern f32 lbl_803E4520;
+extern f32 lbl_803E4524;
+extern f32 lbl_803E4528;
+extern f32 lbl_803E452C;
+extern f32 lbl_803E4530;
+extern f32 lbl_803E4534;
+extern f32 lbl_803E4538;
+extern f32 lbl_803E453C;
+
+#pragma scheduling off
+#pragma peephole off
+void mmp_asteroid_re_update(int obj) {
+    u8 *state = *(u8 **)(obj + 0xB8);
+    if ((*state & 0x80) == 0) {
+        if (GameBit_Get(0xD52) != 0) {
+            state[2] = 1;
+        } else {
+            state[2] = GameBit_Get(0x88C);
+        }
+        state[1] = 2;
+        Sfx_KeepAliveLoopedObjectSound(obj, 0x107);
+        {
+            int vol = state[2] * 0x20 + 0x20;
+            if (vol > 0x7F) {
+                vol = 0x7F;
+            }
+            Sfx_SetObjectChannelVolume(obj, 0x40, vol, lbl_803E44FC);
+        }
+        if (state[2] != 0) {
+            f32 speed = *(f32 *)(obj + 0x28);
+            if (speed < lbl_803E4500 * ((*(f32 *)(state + 0xC) + *(f32 *)(lbl_803231D0 + state[2] * 4)) - *(f32 *)(obj + 0x10))) {
+                *(f32 *)(obj + 0x28) = lbl_803E4504 * timeDelta + speed;
+            } else {
+                *(f32 *)(obj + 0x28) = -(lbl_803E4508 * timeDelta - speed);
+            }
+            *(s16 *)(state + 0x14) = lbl_803E450C * timeDelta + (f32)*(u16 *)(state + 0x14);
+            *(s16 *)(state + 0x16) = lbl_803E4510 * timeDelta + (f32)*(u16 *)(state + 0x16);
+            *(s16 *)(state + 0x18) = lbl_803E4514 * timeDelta + (f32)*(u16 *)(state + 0x18);
+            ((void (*)(int, f32, f32, f32))objMove)(obj, lbl_803E4518, *(f32 *)(obj + 0x28) * timeDelta, lbl_803E4518);
+            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + fn_80293E80((lbl_803E451C * (f32)*(u16 *)(state + 0x14)) / lbl_803E4520);
+            if (*(f32 *)(obj + 0x10) < *(f32 *)(state + 0xC)) {
+                *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xC);
+            }
+            *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) + (int)(lbl_803E4524 * fn_80293E80((lbl_803E451C * (f32)*(u16 *)(state + 0x16)) / lbl_803E4520)));
+            *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) + (int)(lbl_803E4524 * fn_80293E80((lbl_803E451C * (f32)*(u16 *)(state + 0x18)) / lbl_803E4520)));
+            *(f32 *)(lbl_803AC900 + 8) = lbl_803E44F8;
+            *(f32 *)(lbl_803AC900 + 0xC) = *(f32 *)(obj + 0xC);
+            *(f32 *)(lbl_803AC900 + 0x10) = *(f32 *)(state + 0xC) - lbl_803E4528;
+            *(f32 *)(lbl_803AC900 + 0x14) = *(f32 *)(obj + 0x14);
+            lbl_803DDB30 = (int)(*(f32 *)(obj + 0x10) - *(f32 *)(state + 0xC));
+            (*(int (*)(int, int, int, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x722, 0, 2, -1, &lbl_803DDB30);
+            (*(int (*)(int, int, char *, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x723, lbl_803AC900, 0x200001, -1, &lbl_803DDB30);
+            (*(int (*)(int, int, char *, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x723, lbl_803AC900, 0x200001, -1, &lbl_803DDB30);
+        }
+    }
+    if (*state != 0) {
+        if ((*state & 1) != 0) {
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x716, 0, 1, -1, 0);
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x716, 0, 1, -1, 0);
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x716, 0, 1, -1, 0);
+        }
+        if ((*state & 8) != 0) {
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71A, 0, 2, -1, 0);
+        }
+        if ((*state & 0x10) != 0) {
+            int n;
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71B, 0, 1, -1, 0);
+            n = 0x28;
+            do {
+                (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71C, 0, 1, -1, 0);
+                n--;
+            } while (n != 0);
+            spawnExplosion(obj, lbl_803E452C, 1, 1, 0, 1, 0, 1, 0);
+            CameraShake_Start(lbl_803E4530, lbl_803E4534, lbl_803E4538);
+            doRumble(lbl_803E453C);
+            *state &= ~0x10;
+        }
+        if ((*state & 0x20) != 0) {
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71D, 0, 1, -1, 0);
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71D, 0, 1, -1, 0);
+        }
+        if ((*state & 0x40) != 0) {
+            *(f32 *)(state + 8) -= timeDelta;
+            if (*(f32 *)(state + 8) < lbl_803E4518) {
+                *(f32 *)(state + 8) = (f32)(int)randomGetRange(10, 0x3C);
+                (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71E, 0, 1, -1, 0);
+            }
+        }
+    }
+    {
+        f32 v = *(f32 *)(state + 4);
+        f32 k = lbl_803E4518;
+        if (v > k) {
+            *(f32 *)(state + 4) = v - timeDelta;
+            if (*(f32 *)(state + 4) <= k) {
+                GameBit_Set(0x88B, 0);
+            }
+        }
+    }
+    *state &= ~0x80;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
+extern void objParticleFn_80099d84(int obj, f32 a, int c, f32 b, int d);
+extern f32 Vec_xzDistance(f32 *a, f32 *b);
+extern u32 playerGetStateFlag310(int player);
+extern int *gMapEventInterface;
+extern char lbl_803AC918[];
+extern f32 lbl_803E4584;
+extern f32 lbl_803E4588;
+extern f32 lbl_803E458C;
+extern f32 lbl_803E4590;
+extern f32 lbl_803E4594;
+extern f32 lbl_803E4598;
+extern f32 lbl_803E459C;
+extern f32 lbl_803E45A0;
+
+#pragma scheduling off
+#pragma peephole off
+void mmp_moonrock_update(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    int def = *(int *)(obj + 0x4C);
+    u8 grabbed;
+    int d;
+    int count;
+    if (objPosToMapBlockIdx(*(f32 *)(obj + 0xC), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14)) == -1) {
+        return;
+    }
+    if ((*(u16 *)(state + 0x24) & 4) != 0) {
+        return;
+    }
+    if ((*(u16 *)(state + 0x24) & 0x200) != 0) {
+        f32 v = *(f32 *)(state + 0x14);
+        f32 k = lbl_803E4554;
+        if (v > k) {
+            *(f32 *)(state + 0x14) = v - timeDelta;
+            if (*(f32 *)(state + 0x14) <= k) {
+                *(s16 *)(state + 0x24) = 0;
+                *(u8 *)(obj + 0x36) = 0xFF;
+                ObjHits_DisableObject(obj);
+                fn_801A7D74(obj, 1, 1);
+            } else {
+                *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E4584 * (lbl_803E457C - *(f32 *)(state + 0x14) / lbl_803E4558));
+                objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - *(f32 *)(state + 0x14) / lbl_803E4558, 0);
+                objParticleFn_80099d84(obj, lbl_803E4588, 2, lbl_803E457C - *(f32 *)(state + 0x14) / lbl_803E4558, 0);
+            }
+        }
+        return;
+    }
+    objfx_spawnDirectionalBurst(obj, 1, lbl_803E457C, 5, 1, 0xA, lbl_803E454C, 0, 0);
+    objfx_spawnDirectionalBurst(obj, 5, lbl_803E457C, 5, 1, 0x14, lbl_803E454C, 0, 0);
+    if ((*(u16 *)(state + 0x24) & 0x40) != 0) {
+        fn_801A7B10(obj);
+        fn_801A79E0(obj);
+        return;
+    }
+    grabbed = 0;
+    if ((*(u16 *)(state + 0x24) & 8) != 0 &&
+        (u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4C))(0x12, 6) == 0) {
+        *(u16 *)(state + 0x24) |= 1;
+    } else if ((*(u16 *)(state + 0x24) & 0x400) == 0) {
+        if (*(s16 *)(def + 0x20) != -1 && GameBit_Get(*(s16 *)(def + 0x20)) == 0) {
+            *(u8 *)(obj + 0xAF) |= 8;
+        } else if ((*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x8))(obj, *(int *)(obj + 0xB8)) != 0) {
+            grabbed = 1;
+        }
+    } else {
+        *(u8 *)(obj + 0xAF) |= 8;
+    }
+    *(u16 *)(state + 0x24) &= ~0x8;
+    if (grabbed != 0) {
+        int stateCopy;
+        int i;
+        int *list;
+        u8 found;
+        if ((playerGetStateFlag310((int)Obj_GetPlayerObject()) & 0x4000) != 0) {
+            setAButtonIcon(5);
+            *(u16 *)(state + 0x24) |= 0x18;
+            *(u16 *)(state + 0x24) &= ~0x20;
+        } else {
+            setAButtonIcon(4);
+            *(u16 *)(state + 0x24) |= 0x28;
+            *(u16 *)(state + 0x24) &= ~0x10;
+        }
+        stateCopy = *(int *)(obj + 0xB8);
+        (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x24))(stateCopy, 0);
+        list = (int *)ObjGroup_GetObjects(0x10, &count);
+        {
+            f32 k = lbl_803E4580;
+            for (i = 0; i < count; i++) {
+                u32 o = (u32)*list;
+                if (o != (u32)obj && *(s16 *)(o + 0x46) == 0x519 &&
+                    Vec_xzDistance((f32 *)(obj + 0x18), (f32 *)(o + 0x18)) < k) {
+                    (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x24))(stateCopy, 1);
+                    found = 0;
+                    goto checked;
+                }
+                list++;
+            }
+        }
+        found = 1;
+    checked:
+        if (found != 0) {
+            *(u16 *)(state + 0x24) |= 1;
+        }
+        if ((*(u16 *)(state + 0x24) & 2) != 0) {
+            fn_801A7D74(obj, 0, 0);
+            *(u16 *)(state + 0x24) &= ~0x2;
+        }
+        return;
+    }
+    {
+        u16 flags = *(u16 *)(state + 0x24);
+        if ((flags & 0x400) == 0 && (flags & 1) != 0) {
+            if ((flags & 0x20) != 0) {
+                fn_801A7CC4(obj);
+            } else {
+                fn_801A7D74(obj, 1, 0);
+            }
+            *(u16 *)(state + 0x24) &= ~0x1;
+        }
+    }
+    *(u16 *)(state + 0x24) |= 2;
+    if (*(u8 *)(state + 0x2E) == 0) {
+        return;
+    }
+    if ((*(u16 *)(state + 0x24) & 0x400) != 0) {
+        *(u8 *)(state + 0x2F) = GameBit_Get(0x894);
+    } else {
+        *(u8 *)(state + 0x2F) = 0;
+    }
+    Sfx_PlayFromObject(obj, 0x108);
+    Sfx_SetObjectChannelVolume(obj, 0x40, *(u8 *)(state + 0x2F) * 0x20 + 0x20, lbl_803E4588);
+    {
+        f32 speed = *(f32 *)(obj + 0x28);
+        if (speed < lbl_803E458C * ((lbl_803E4568 * (f32)*(u8 *)(state + 0x2F) + *(f32 *)(state + 0xC)) - *(f32 *)(obj + 0x10))) {
+            *(f32 *)(obj + 0x28) = speed + lbl_803E4590;
+        } else {
+            *(f32 *)(obj + 0x28) = speed - lbl_803E4594;
+        }
+    }
+    *(u16 *)(state + 0x26) += 0x1000;
+    *(u16 *)(state + 0x28) += 0xDAC;
+    *(u16 *)(state + 0x2A) += 0x800;
+    ((void (*)(int, f32, f32, f32))objMove)(obj, lbl_803E4554, *(f32 *)(obj + 0x28) * timeDelta, lbl_803E4554);
+    *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + fn_80293E80((lbl_803E4598 * (f32)*(u16 *)(state + 0x26)) / lbl_803E459C);
+    if (*(f32 *)(obj + 0x10) < *(f32 *)(state + 0xC)) {
+        *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xC);
+    }
+    *(s16 *)(obj + 4) = (s16)(*(s16 *)(obj + 4) + (int)(lbl_803E45A0 * fn_80293E80((lbl_803E4598 * (f32)*(u16 *)(state + 0x28)) / lbl_803E459C)));
+    *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) + (int)(lbl_803E45A0 * fn_80293E80((lbl_803E4598 * (f32)*(u16 *)(state + 0x2A)) / lbl_803E459C)));
+    *(f32 *)(lbl_803AC918 + 8) = lbl_803E457C;
+    *(f32 *)(lbl_803AC918 + 0xC) = *(f32 *)(obj + 0xC);
+    *(f32 *)(lbl_803AC918 + 0x10) = *(f32 *)(state + 0xC);
+    *(f32 *)(lbl_803AC918 + 0x14) = *(f32 *)(obj + 0x14);
+    d = (int)(*(f32 *)(obj + 0x10) - *(f32 *)(state + 0xC));
+    (*(int (*)(int, int, char *, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x723, lbl_803AC918, 0x200001, -1, &d);
 }
 #pragma peephole reset
 #pragma scheduling reset

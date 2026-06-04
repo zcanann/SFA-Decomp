@@ -273,99 +273,120 @@ extern f32 lbl_803DF8A0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+typedef struct {
+    s16 rx, ry, rz, pad;
+    f32 d4;
+    f32 x, y, z;
+} PosRot;
+typedef struct { f32 lo; f32 hi; } F32Pair;
+extern int Camera_GetCurrentViewSlot(void);
+extern u32 renderFlags;
+extern f32 Camera_GetFovY(void);
+extern f32 encoderType_803DEBF8;
+extern f32 displayOffsetH_803DEBFC;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803DEBCC;
+extern f32 lbl_803DEBDC;
+extern f32 changeMode_803DEC00;
+extern f32 lbl_803DEC04;
+extern F32Pair changed_803DEC08;
+extern void setMatrixFromObjectPos(f32 *m, PosRot *st);
+extern void Matrix_TransformPoint(f32 x, f32 y, f32 z, f32 *m, f32 *ox, f32 *oy, f32 *oz);
+extern f32 gViewFrustumPlanes[];
+extern f32 fn_80293AC4(int v);
+extern f32 fn_80293D0C(int v);
+extern f32 sqrtf(f32 v);
+extern f32 fn_80292248(f32 v);
+extern f32 floor(f32 v);
+extern f32 fn_802943F4(f32 v);
+extern void fn_8005A8A4(f32 *planes, int n);
+
+
+#pragma scheduling off
+#pragma peephole off
 void updateVisibleGeometry(void)
 {
-  float fVar1;
-  undefined2 *puVar2;
-  double dVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  float local_e8;
-  float local_e4;
-  float local_e0;
-  ushort local_dc;
-  short local_da;
-  undefined2 local_d8;
-  float local_d4;
-  float local_d0;
-  float local_cc;
-  float local_c8;
-  float afStack_c4 [17];
-  longlong local_80;
-  
-  puVar2 = FUN_800069a8();
-  if (((DAT_803dda68 & 8) == 0) && ((DAT_803dda68 & 0x10000) == 0)) {
-    dVar3 = FUN_800069f8();
-    dVar3 = dVar3 * (double)lbl_803DF87C;
-  }
-  else {
-    dVar3 = FUN_800069f8();
-    dVar3 = dVar3 / (double)lbl_803DF878;
-  }
-  dVar3 = (double)(float)dVar3;
-  dVar8 = (double)(*(float *)(puVar2 + 0x22) - lbl_803DDA58);
-  dVar7 = (double)*(float *)(puVar2 + 0x24);
-  dVar6 = (double)(*(float *)(puVar2 + 0x26) - lbl_803DDA5C);
-  local_d0 = lbl_803DF84C;
-  local_cc = lbl_803DF84C;
-  local_c8 = lbl_803DF84C;
-  local_d4 = lbl_803DF85C;
-  local_dc = 0x8000 - puVar2[0x28];
-  local_da = -puVar2[0x29];
-  local_d8 = puVar2[0x2a];
-  FUN_80017754(afStack_c4,&local_dc);
-  FUN_80017778((double)lbl_803DF84C,(double)lbl_803DF84C,(double)lbl_803DF880,afStack_c4,
-               &local_e0,&local_e4,&local_e8);
-  DAT_8038859c = local_e0;
-  DAT_803885a0 = local_e4;
-  DAT_803885a4 = local_e8;
-  DAT_803885a8 = -(float)(dVar6 * (double)local_e8 +
-                         (double)(float)(dVar8 * (double)local_e0 +
-                                        (double)(float)(dVar7 * (double)local_e4)));
-  local_80 = (longlong)(int)((double)lbl_803DF884 * dVar3);
-  dVar3 = (double)FUN_80293f84();
-  dVar4 = (double)FUN_80293d0c();
-  fVar1 = (float)(dVar4 / dVar3) * (float)(dVar4 / dVar3);
-  FUN_80293900((double)(lbl_803DF888 * lbl_803DF888 * fVar1 + fVar1));
-  powfCoreHighPrecision();
-  dVar3 = (double)FUN_802947f8();
-  dVar4 = (double)FUN_802949e8();
-  dVar3 = -dVar3;
-  FUN_80017778(dVar4,(double)lbl_803DF84C,dVar3,afStack_c4,&local_e0,&local_e4,&local_e8);
-  DAT_803885b0 = local_e0;
-  DAT_803885b4 = local_e4;
-  DAT_803885b8 = local_e8;
-  DAT_803885bc = -(float)(dVar6 * (double)local_e8 +
-                         (double)(float)(dVar8 * (double)local_e0 +
-                                        (double)(float)(dVar7 * (double)local_e4)));
-  dVar5 = -dVar4;
-  FUN_80017778(dVar5,(double)lbl_803DF84C,dVar3,afStack_c4,&local_e0,&local_e4,&local_e8);
-  DAT_803885c4 = local_e0;
-  DAT_803885c8 = local_e4;
-  DAT_803885cc = local_e8;
-  DAT_803885d0 = -(float)(dVar6 * (double)local_e8 +
-                         (double)(float)(dVar8 * (double)local_e0 +
-                                        (double)(float)(dVar7 * (double)local_e4)));
-  FUN_80017778((double)lbl_803DF84C,dVar5,dVar3,afStack_c4,&local_e0,&local_e4,&local_e8);
-  DAT_803885d8 = local_e0;
-  DAT_803885dc = local_e4;
-  DAT_803885e0 = local_e8;
-  DAT_803885e4 = -(float)(dVar6 * (double)local_e8 +
-                         (double)(float)(dVar8 * (double)local_e0 +
-                                        (double)(float)(dVar7 * (double)local_e4)));
-  FUN_80017778((double)lbl_803DF84C,dVar4,dVar3,afStack_c4,&local_e0,&local_e4,&local_e8);
-  DAT_803885ec = local_e0;
-  DAT_803885f0 = local_e4;
-  DAT_803885f4 = local_e8;
-  DAT_803885f8 = -(float)(dVar6 * (double)local_e8 +
-                         (double)(float)(dVar8 * (double)local_e0 +
-                                        (double)(float)(dVar7 * (double)local_e4)));
-  FUN_80057ea0(&DAT_8038859c,5);
-  return;
+    u8 *cam;
+    f32 *py;
+    f32 *pz;
+    f32 *pd;
+    int n;
+    f32 scale;
+    f32 xx, yy, zz;
+    f32 tt, ff, ss;
+    f32 negff, negss;
+    f32 ratio2;
+    u16 fov;
+    f32 oz, oy, ox;
+    PosRot st;
+    f32 m[17];
+
+    cam = (u8 *)Camera_GetCurrentViewSlot();
+    py = &gViewFrustumPlanes[1];
+    pz = &gViewFrustumPlanes[2];
+    pd = &gViewFrustumPlanes[3];
+    n = 0;
+    if ((renderFlags & 8) != 0 || (renderFlags & 0x10000) != 0) {
+        scale = Camera_GetFovY() / encoderType_803DEBF8;
+    } else {
+        scale = Camera_GetFovY() * displayOffsetH_803DEBFC;
+    }
+    xx = *(f32 *)(cam + 0x44) - playerMapOffsetX;
+    yy = *(f32 *)(cam + 0x48);
+    zz = *(f32 *)(cam + 0x4c) - playerMapOffsetZ;
+    st.x = lbl_803DEBCC;
+    st.y = lbl_803DEBCC;
+    st.z = lbl_803DEBCC;
+    st.d4 = lbl_803DEBDC;
+    st.rx = 0x8000 - *(s16 *)(cam + 0x50);
+    st.ry = -*(s16 *)(cam + 0x52);
+    st.rz = *(s16 *)(cam + 0x54);
+    setMatrixFromObjectPos(m, &st);
+    Matrix_TransformPoint(lbl_803DEBCC, lbl_803DEBCC, changeMode_803DEC00, m, &ox, &oy, &oz);
+    gViewFrustumPlanes[n * 5] = ox;
+    py[n * 5] = oy;
+    pz[n * 5] = oz;
+    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    n++;
+    fov = (int)(lbl_803DEC04 * scale) & 0xffff;
+    tt = fn_80293AC4(fov);
+    ratio2 = fn_80293D0C(fov) / tt;
+    ratio2 = ratio2 * ratio2;
+    tt = fn_80292248(sqrtf(changed_803DEC08.lo * (changed_803DEC08.lo * ratio2) + ratio2));
+    ff = floor(tt);
+    ss = fn_802943F4(tt);
+    negff = -ff;
+    Matrix_TransformPoint(ss, lbl_803DEBCC, negff, m, &ox, &oy, &oz);
+    gViewFrustumPlanes[n * 5] = ox;
+    py[n * 5] = oy;
+    pz[n * 5] = oz;
+    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    n++;
+    negss = -ss;
+    Matrix_TransformPoint(negss, lbl_803DEBCC, negff, m, &ox, &oy, &oz);
+    gViewFrustumPlanes[n * 5] = ox;
+    py[n * 5] = oy;
+    pz[n * 5] = oz;
+    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    n++;
+    Matrix_TransformPoint(lbl_803DEBCC, negss, negff, m, &ox, &oy, &oz);
+    gViewFrustumPlanes[n * 5] = ox;
+    py[n * 5] = oy;
+    pz[n * 5] = oz;
+    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    n++;
+    Matrix_TransformPoint(lbl_803DEBCC, ss, negff, m, &ox, &oy, &oz);
+    gViewFrustumPlanes[n * 5] = ox;
+    py[n * 5] = oy;
+    pz[n * 5] = oz;
+    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    n++;
+    fn_8005A8A4(gViewFrustumPlanes, 5);
 }
+#pragma peephole reset
+#pragma scheduling reset
+/* old v1.1 body removed */
 
 /*
  * --INFO--
@@ -419,19 +440,23 @@ undefined4 FUN_8005af9c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 coordsToMapCell(int param_1,int param_2,int param_3)
+extern s16 *lbl_803822A0[];
+extern f32 gMapBlockWorldSize;
+extern f32 fastFloorf(f32 v);
+extern int lbl_803DCDD0;
+extern int lbl_803DCDD4;
+#pragma scheduling off
+#pragma peephole off
+int coordsToMapCell(f32 x, f32 z)
 {
-  int iVar1;
-  
-  if ((((-1 < param_1) && (-1 < param_2)) && (param_1 < 0x10)) && (param_2 < 0x10)) {
-    iVar1 = (int)*(char *)((&DAT_80382f14)[param_3] + param_1 + param_2 * 0x10);
-    if ((-1 < iVar1) && (iVar1 < (int)(uint)DAT_803ddb18)) {
-      return *(undefined4 *)(DAT_803ddb1c + iVar1 * 4);
-    }
-    return 0;
-  }
-  return 0;
+    int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
+    int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)lbl_803DCDD4);
+    if (ix < 0 || ix >= 16) return -1;
+    if (iz < 0 || iz >= 16) return -1;
+    return *(s16 *)((char *)lbl_803822A0[0] + (ix + iz * 16) * 12);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2726,6 +2751,40 @@ void renderShadowType3(u8 *obj, u32 b, s32 offset) {
 #pragma scheduling reset
 #pragma dont_inline reset
 
+extern f32 CurrTiming_803DEC20;
+extern f32 displayOffsetH_803DEBFC;
+#pragma scheduling off
+#pragma peephole off
+void fn_8005D3B4(u8 *obj, u8 *model, s32 b) {
+    f32 stk[3];
+    s32 t, v;
+    f32 timing;
+    if (lbl_803DCE30 == 1000) {
+        sceneDrawTransparentPolys();
+        lbl_803DCE30 = 0;
+    }
+    timing = CurrTiming_803DEC20;
+    stk[0] = displayOffsetH_803DEBFC *
+             (((f32)*(s16 *)(obj + 6) * timing + *(f32 *)(model + 0x18)) +
+              ((f32)*(s16 *)(obj + 12) * timing + *(f32 *)(model + 0x18)));
+    stk[1] = displayOffsetH_803DEBFC *
+             (((f32)*(s16 *)(obj + 8) * timing + *(f32 *)(model + 0x28)) +
+              ((f32)*(s16 *)(obj + 14) * timing + *(f32 *)(model + 0x28)));
+    stk[2] = displayOffsetH_803DEBFC *
+             (((f32)*(s16 *)(obj + 10) * timing + *(f32 *)(model + 0x38)) +
+              ((f32)*(s16 *)(obj + 16) * timing + *(f32 *)(model + 0x38)));
+    PSMTXMultVec(Camera_GetViewMatrix(), stk, stk);
+    t = (s32)-stk[2];
+    if (t < 0) v = 0;
+    else if (t > 0x7ffffff) v = 0x7ffffff;
+    else v = t;
+    lbl_8037E0C0[lbl_803DCE30 * 4]     = (u32)obj;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 1] = (u32)model;
+    lbl_8037E0C0[lbl_803DCE30 * 4 + 2] = (u32)v | ((b & 0xff) << 27);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void lightmap_queueExternalRenderEntry(u32 a, u32 b, f32 *p) {
@@ -3066,11 +3125,12 @@ extern int shaderFn_8005e560(int* obj, int* state);
 extern void shaderFn_8005e348(int* obj, int v, int* state, float* p3);
 
 #pragma scheduling off
+#pragma dont_inline on
 void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
 {
     int state[5];
     int countShifted;
-    int v;
+    u32 v;
     int byteOff;
     int* base;
     int newR;
@@ -3086,20 +3146,22 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     newR = shaderFn_8005e560(obj, state);
     state[4] += 4;
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
-    cursor = state[4] + 4;
+    state[4] += 4;
+    cursor = state[4];
     byteOff = cursor >> 3;
-    v = *(u8*)(state[0] + byteOff);
+    v = ((u8*)state[0])[byteOff];
     base = (int*)(state[0] + byteOff);
     v = v | ((u32)*(u8*)((char*)base + 1) << 8);
     v = v | ((u32)*(u8*)((char*)base + 2) << 16);
-    state[4] += 8;
+    state[4] += 4;
     nibble = (v >> (cursor & 7)) & 0xf;
     for (i = 0; i < nibble; i++) {
-        *(volatile int*)&state[4] += 8;
+        *(volatile int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
     shaderFn_8005e348(obj, newR, state, p3);
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 
 extern void fn_8000F8F8(void);
@@ -3108,12 +3170,13 @@ extern int mapBlockRender_setShader(int p1, int* obj, int* state);
 extern void mapBlockRender_callList(int p1, int p2, int* obj, int v, int* state, float* p3);
 
 #pragma scheduling off
+#pragma dont_inline on
 void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
 {
     int state[5];
     int countShifted;
     int newR;
-    int v;
+    u32 v;
     int byteOff;
     int* base;
     int cursor;
@@ -3129,21 +3192,74 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     newR = mapBlockRender_setShader(1, obj, state);
     state[4] += 4;
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
-    cursor = state[4] + 4;
+    state[4] += 4;
+    cursor = state[4];
     byteOff = cursor >> 3;
-    v = *(u8*)(state[0] + byteOff);
+    v = ((u8*)state[0])[byteOff];
     base = (int*)(state[0] + byteOff);
     v = v | ((u32)*(u8*)((char*)base + 1) << 8);
     v = v | ((u32)*(u8*)((char*)base + 2) << 16);
-    state[4] += 8;
+    state[4] += 4;
     nibble = (v >> (cursor & 7)) & 0xf;
     for (i = 0; i < nibble; i++) {
-        *(volatile int*)&state[4] += 8;
+        *(volatile int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
     mapBlockRender_callList(1, 1, obj, newR, state, p3);
     Camera_ApplyFullViewport();
 }
+#pragma dont_inline reset
+#pragma scheduling reset
+
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
+extern void GXLoadTexMtxImm(f32 *m, int id, int type);
+extern void gxTextureSetupFn_8007cf7c(void);
+extern f32 lbl_80396850[12];
+extern f32 lbl_80396820[12];
+
+#pragma scheduling off
+#pragma dont_inline on
+void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
+{
+    int state[5];
+    f32 m[12];
+    int countShifted;
+    int newR;
+    u32 v;
+    int byteOff;
+    int* base;
+    int cursor;
+    int nibble;
+    int i;
+
+    PSMTXConcat(lbl_80396850, p3, m);
+    GXLoadTexMtxImm(m, 30, 0);
+    PSMTXConcat(lbl_80396820, p3, m);
+    GXLoadTexMtxImm(m, 33, 0);
+    gxTextureSetupFn_8007cf7c();
+    countShifted = (int)*(u16*)((char*)obj + 0x88) << 3;
+    modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x80), countShifted, countShifted);
+    modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
+    state[4] += 4;
+    newR = mapBlockRender_setShader(1, obj, state);
+    state[4] += 4;
+    mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
+    state[4] += 4;
+    cursor = state[4];
+    byteOff = cursor >> 3;
+    v = ((u8*)state[0])[byteOff];
+    base = (int*)(state[0] + byteOff);
+    v = v | ((u32)*(u8*)((char*)base + 1) << 8);
+    v = v | ((u32)*(u8*)((char*)base + 2) << 16);
+    state[4] += 4;
+    nibble = (v >> (cursor & 7)) & 0xf;
+    for (i = 0; i < nibble; i++) {
+        *(volatile int*)&state[4] = state[4] + 8;
+    }
+    state[4] += 4;
+    mapBlockRender_callList(1, 1, obj, newR, state, p3);
+}
+#pragma dont_inline reset
 #pragma scheduling reset
 
 extern void* lbl_803DCEA0;
@@ -3193,6 +3309,516 @@ int* mapRomListFindItem(int needle, int* out_idx, int* out_outer, int* out_type,
 #pragma peephole reset
 #pragma scheduling reset
 
+
+typedef struct { u8 r, g, b, a; } GXColor8;
+typedef struct { int a, b, key, d; } DrawQEntry;
+extern u8 framesThisStep;
+extern int *Obj_GetActiveModel(int *obj);
+extern void objShadowFn_80062498(int *obj, int p2, int p3, u8 frames);
+extern void objDrawFn_80061654(int *obj, int *model);
+extern void fn_8000F9B4(void);
+extern void Camera_ApplyFullViewport(void);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
+extern int Camera_GetViewMatrix(void);
+extern int *Obj_GetPlayerObject(void);
+extern int playerIsDisguised(int *obj);
+extern void fn_802B4ED8(int *obj, int a, int b);
+extern void objRenderFuzz(int *obj);
+extern void drawFn_8006f500(void);
+void objDrawFn_8005da48(int *obj);
+void lightmap_sortTransparentDrawQueue(void);
+extern void *gWaterfxInterface;
+extern void objGetColor(int slot, u8 *red, u8 *green, u8 *blue);
+extern void GXSetChanCtrl(int a, int b, int c, int d, int e, int f, int g);
+extern void GXSetChanAmbColor(int chan, GXColor8 *c);
+extern void GXSetNumChans(int n);
+extern void setupToRenderMapBlock(int *block, void *posMtx);
+
+
+extern u32 skyTextureFn_80094390(f32 *a, f32 *b);
+extern u32 lbl_803DCE34;
+extern f32 shdwChangeMode_803DEC10;
+extern f32 lbl_803DEBCC;
+extern int Camera_GetInverseViewMatrix(void);
+extern void mapDebugRender(void *p);
+extern void fn_80062894(void);
+extern void fn_80062808(void);
+extern u16 lbl_803DCEAC;
+extern u8 lbl_803DCE06;
+extern void drawReflectionTexture(void);
+void getVisibleObjects(s8 *opacity);
+extern void gxTextureFn_80052efc(void);
+extern void perspectiveFn_80129db4(void);
+extern void GXPixModeSync(void);
+extern void Camera_UpdateProjection(int a, int b);
+extern void Camera_UpdateViewMatrices(void);
+extern void Camera_RebuildProjectionMatrix(void);
+extern void *gSHthorntailAnimationInterface;
+extern void *gCloudActionInterface;
+extern void *gSky2Interface;
+extern void *gNewCloudsInterface;
+extern s32 heatEffectIntensity;
+extern f32 lbl_803DEBDC;
+extern void drawSkyStars(void);
+extern u8 lbl_803DCE05;
+extern void screenImageDraw(void);
+extern void renderFn_8008faf4(void);
+extern void getAmbientColor(int slot, u8 *r, u8 *g, u8 *b);
+extern s8 lbl_8030E65C[];
+extern s8 lbl_8030E66C[];
+void renderSceneGeometry(int *p1, s8 *order);
+extern void renderResetFn_8003fc60(void);
+void renderObjects(s8 *arg0);
+extern u8 CameraShake_IsActive(void);
+extern u8 bEnableMotionBlur;
+extern f32 lbl_803DB62C;
+extern void renderMotionBlur(f32 v);
+extern int getHudHiddenFrameCount(void);
+extern void updateReflectionTextures(void);
+extern u8 bEnableBlurFilter;
+extern f32 lbl_803DCE50;
+extern f32 lbl_803DCE4C;
+extern f32 blurFilterArea;
+extern u8 bBlurFilterUseArea;
+extern u8 bBiggerBlurFilter;
+extern void doBlurFilter(f32 a, f32 b, f32 c, u8 d, u8 e);
+extern void doHeatEffect(int v);
+extern void objRender(int a, int b, int c, int d, void *obj, int f);
+extern void renderParticles(void);
+void sceneDrawTransparentPolys(void);
+extern void quakeSpellTextureFn_8016dbf4(void);
+extern u8 bEnableDistortionFilter;
+extern f32 distortionFilterAngle1;
+extern f32 distortionFilterAngle2;
+extern char distortionFilterColor;
+extern void doDistortionFilter(void *buf, f32 a2, void *color, f32 a1);
+extern void renderGlows(void);
+extern void *gCameraInterface;
+extern u8 bEnableMonochromeFilter;
+extern char colorFilterColor;
+extern void doColorFilter(void *color);
+extern u8 bEnableSpiritVision;
+extern void doSpiritVisionFilter(void);
+extern u8 bEnableViewFinderHud;
+extern f32 lbl_803DEC14;
+extern void drawViewFinderAperture(f32 a, f32 b, int c, int d);
+extern s32 bEnableColorFilter;
+extern void setShadowFlag_803db658(int v);
+
+#pragma scheduling off
+#pragma peephole off
+void sceneDraw(void)
+{
+    char *q;
+    u8 *cursor;
+    int *player;
+    u8 flag;
+    int t;
+    int i;
+    GXColor8 c;
+    f32 skyA;
+    f32 skyB;
+    GXColor8 ccopy;
+    s8 buf[616];
+
+    q = (char *)lbl_8037E0C0;
+    lbl_803DCE34 = skyTextureFn_80094390(&skyA, &skyB);
+    if (lbl_803DCE34 != 0) {
+        *(f32 *)(q + 0x3f48) = shdwChangeMode_803DEC10;
+        *(f32 *)(q + 0x3f4c) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f50) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f54) = shdwChangeMode_803DEC10 * playerMapOffsetX + skyA;
+        *(f32 *)(q + 0x3f58) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f5c) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f60) = shdwChangeMode_803DEC10;
+        *(f32 *)(q + 0x3f64) = shdwChangeMode_803DEC10 * playerMapOffsetZ + skyB;
+        *(f32 *)(q + 0x3f68) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f6c) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f70) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f74) = lbl_803DEBDC;
+        PSMTXConcat((f32 *)(q + 0x3f48), (f32 *)Camera_GetInverseViewMatrix(),
+                    (f32 *)(q + 0x3f48));
+    }
+    mapDebugRender(q + 0x4164);
+    fn_80062894();
+    fn_80062808();
+    gVisibleObjectSortKeyCount = 1;
+    lbl_803DCEAC = 0;
+    lbl_803DCE06 = 0;
+    drawReflectionTexture();
+    lbl_803DCE30 = 0;
+    getVisibleObjects(buf);
+    gxTextureFn_80052efc();
+    perspectiveFn_80129db4();
+    GXPixModeSync();
+    Camera_UpdateProjection(0, 0);
+    Camera_UpdateViewMatrices();
+    Camera_RebuildProjectionMatrix();
+    t = 0;
+    if ((renderFlags & 0x40) != 0 && (renderFlags & 0x80000) == 0) {
+        t = 1;
+    }
+    flag = t;
+    if ((renderFlags & 0x40000) != 0) {
+        (*(void (***)(int, int))gSHthorntailAnimationInterface)[14](0, 0);
+        if (flag != 0) {
+            drawSkyStars();
+        }
+        (*(void (***)(int, int, int, int, int))gSHthorntailAnimationInterface)[4](0, 0, 0, 0, flag);
+        if ((renderFlags & 0x10) != 0) {
+            (*(void (***)(int, int, int, int))gCloudActionInterface)[4](0, 0, 0, 0);
+        }
+    } else {
+        (*(void (***)(int, int, int, int, int))gSHthorntailAnimationInterface)[4](0, 0, 0, 0, flag);
+        (*(void (***)(int, int, int, int))gCloudActionInterface)[4](0, 0, 0, 0);
+        drawSkyStars();
+    }
+    if (lbl_803DCE05 != 0) {
+        screenImageDraw();
+    }
+    renderFn_8008faf4();
+    (*(void (***)(int))gSky2Interface)[4](0);
+    lbl_803DCDF0 = 0;
+    getAmbientColor(0, (u8 *)&c, (u8 *)&c + 1, (u8 *)&c + 2);
+    GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    ccopy = c;
+    GXSetChanAmbColor(0, &ccopy);
+    GXSetNumChans(1);
+    renderSceneGeometry((int *)0, lbl_8030E65C);
+    renderResetFn_8003fc60();
+    renderObjects(buf);
+    if (CameraShake_IsActive() != 0 || (int)bEnableMotionBlur != 0) {
+        renderMotionBlur(lbl_803DB62C);
+    }
+    if (getHudHiddenFrameCount() == 0) {
+        updateReflectionTextures();
+    }
+    if (bEnableBlurFilter != 0) {
+        doBlurFilter(lbl_803DCE50, lbl_803DCE4C, blurFilterArea, bBlurFilterUseArea,
+                     bBiggerBlurFilter);
+    }
+    if (heatEffectIntensity != 0) {
+        doHeatEffect(heatEffectIntensity & 0xff);
+    }
+    i = 0;
+    cursor = (u8 *)(q + 0x4114);
+    for (; i < lbl_803DCDF0; i++) {
+        (*(void (***)(int, int, int, int, u32))gModgfxInterface)[7](0, 0, 0, 1, *(u32 *)cursor);
+        objRender(0, 0, 0, 0, (void *)*(u32 *)cursor, 1);
+        cursor += 4;
+    }
+    renderParticles();
+    renderSceneGeometry((int *)1, lbl_8030E66C);
+    renderSceneGeometry((int *)2, lbl_8030E66C);
+    if (lbl_803DCE30 == 1000) {
+        sceneDrawTransparentPolys();
+        lbl_803DCE30 = 0;
+    }
+    ((u32 *)(q + 8))[lbl_803DCE30 * 4] = 0x78000000;
+    ((u32 *)(q + 12))[lbl_803DCE30 * 4] = 8;
+    lbl_803DCE30++;
+    if (lbl_803DCE30 == 1000) {
+        sceneDrawTransparentPolys();
+        lbl_803DCE30 = 0;
+    }
+    ((u32 *)(q + 8))[lbl_803DCE30 * 4] = 0x50000000;
+    ((u32 *)(q + 12))[lbl_803DCE30 * 4] = 9;
+    lbl_803DCE30++;
+    sceneDrawTransparentPolys();
+    (*(void (***)(s8 *))gModgfxInterface)[12](buf);
+    (*(void (***)(int, int, int, int, int))gModgfxInterface)[7](0, 0, 0, 0, 0);
+    player = Obj_GetPlayerObject();
+    if (player != NULL) {
+        i = 0;
+        cursor = (u8 *)player;
+        for (; i < *(u8 *)((u8 *)player + 0xeb); i++) {
+            u8 *m = *(u8 **)(cursor + 200);
+            if (*(s16 *)(m + 0x44) == 45) {
+                (*(void (***)(void))*(int *)(m + 0x68))[11]();
+            }
+            cursor += 4;
+        }
+    }
+    quakeSpellTextureFn_8016dbf4();
+    (*(void (***)(int))gNewCloudsInterface)[5](0);
+    if (bEnableDistortionFilter != 0) {
+        updateReflectionTextures();
+        doDistortionFilter(q + 0x4108, distortionFilterAngle2, &distortionFilterColor,
+                           distortionFilterAngle1);
+    }
+    renderGlows();
+    (*(void (***)(int, int, int, int))gCameraInterface)[22](0, 0, 0, 0);
+    if (bEnableMonochromeFilter != 0) {
+        doColorFilter(&colorFilterColor);
+    } else if (bEnableSpiritVision != 0) {
+        doSpiritVisionFilter();
+    }
+    if (bEnableViewFinderHud != 0) {
+        drawViewFinderAperture(lbl_803DEC14, shdwChanged_803DEC18, 0x40, 0);
+    }
+    if (bEnableColorFilter == 1) {
+        doColorFilter(&colorFilterColor);
+    }
+    setShadowFlag_803db658(0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+void sceneDrawTransparentPolys(void)
+{
+    int *e;
+    int i;
+    int *block;
+    int *player;
+    GXColor8 c4copy, c4;
+    GXColor8 c5copy, c5;
+    GXColor8 c6copy, c6;
+    f32 m[16];
+
+    lightmap_sortTransparentDrawQueue();
+    i = 0;
+    e = (int *)&lbl_8037E0C0;
+    for (; i < lbl_803DCE30; i++) {
+        switch (e[3]) {
+        case 0:
+            expgfx_renderSourcePools(*e, 0);
+            objDrawFn_8005da48((int *)*e);
+            expgfx_renderSourcePools(*e, 1);
+            break;
+        case 1:
+            block = (int *)*e;
+            Obj_GetActiveModel(block);
+            player = Obj_GetPlayerObject();
+            if (block == player) {
+                if (playerIsDisguised(block) == 0) {
+                    fn_802B4ED8(block, 1, 1);
+                }
+            } else {
+                objRenderFuzz(block);
+            }
+            break;
+        case 2:
+            fn_8000F9B4();
+            objShadowFn_80062498((int *)*e, 0, 0, framesThisStep);
+            Camera_ApplyFullViewport();
+            break;
+        case 3:
+            fn_8000F9B4();
+            objDrawFn_80061654((int *)*e, Obj_GetActiveModel((int *)*e));
+            Camera_ApplyFullViewport();
+            break;
+        case 4:
+            block = (int *)e[1];
+            GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+            GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+            objGetColor(0, (u8 *)&c4, (u8 *)&c4 + 1, (u8 *)&c4 + 2);
+            c4copy = c4;
+            GXSetChanAmbColor(0, &c4copy);
+            GXSetNumChans(1);
+            PSMTXConcat((f32 *)Camera_GetViewMatrix(), (f32 *)(block + 3), m);
+            setupToRenderMapBlock(block, m);
+            modelRenderFn_8005d894((int *)*e, (int *)e[1], m);
+            break;
+        case 5:
+            block = (int *)e[1];
+            GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+            GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+            objGetColor(0, (u8 *)&c5, (u8 *)&c5 + 1, (u8 *)&c5 + 2);
+            c5copy = c5;
+            GXSetChanAmbColor(0, &c5copy);
+            GXSetNumChans(1);
+            PSMTXConcat((f32 *)Camera_GetViewMatrix(), (f32 *)(block + 3), m);
+            setupToRenderMapBlock(block, m);
+            modelRenderFn_8005d69c((int *)*e, (int *)e[1], m);
+            break;
+        case 6:
+            block = (int *)e[1];
+            GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+            GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+            objGetColor(0, (u8 *)&c6, (u8 *)&c6 + 1, (u8 *)&c6 + 2);
+            c6copy = c6;
+            GXSetChanAmbColor(0, &c6copy);
+            GXSetNumChans(1);
+            PSMTXConcat((f32 *)Camera_GetViewMatrix(), (f32 *)(block + 3), m);
+            setupToRenderMapBlock(block, m);
+            modelRenderFn_8005d4ec((int *)*e, (int *)e[1], m);
+            break;
+        case 7:
+            drawGlow((uint)*e, e[1]);
+            break;
+        case 8:
+            drawFn_8006f500();
+            break;
+        case 9:
+            (*(void (***)(int, int))gWaterfxInterface)[3](0, 0);
+        }
+        e = e + 4;
+    }
+}
+#pragma scheduling reset
+
+
+extern void mapFn_80057d24(int x, int z, int *box0, int *box1, int *box2, int *box3, int layer,
+                           int one, int v);
+extern int mapRectFn_8005a728(int row, int col, u8 *block);
+extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+extern void renderMapBlock(u8 *block, int *p1);
+extern int lbl_8038228C[];
+extern s32 lbl_803DCE88;
+extern s32 lbl_803DCEC0;
+extern f32 lbl_803DCE58;
+extern double lbl_803DEBC0;
+extern f32 lbl_803DCE54;
+
+typedef union {
+    double d;
+    struct {
+        u32 hi;
+        u32 lo;
+    } u;
+} F64Cvt;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_loop_invariants off
+void renderSceneGeometry(int *p1, s8 *order)
+{
+    F64Cvt cv;
+    F64Cvt cv2;
+    u8 map[256];
+    int box0[4];
+    int box1[4];
+    int box2[4];
+    int box3[4];
+    void **lt;
+    int *lt2;
+    int layer;
+    s8 *table;
+    u8 *p;
+    u32 n;
+    int y, x0, x1, y1;
+    int k;
+    int oi, ii;
+    s8 *op, *ip;
+    int row, col;
+    f32 rowF, colF;
+    int cell;
+    int idx;
+    u8 *blk;
+    f32 ws;
+    double bias;
+    int hi;
+
+    layer = 4;
+    lt = &gMapBlockLayerTables[4];
+    lt2 = &lbl_8038228C[4];
+    ws = gMapBlockWorldSize;
+    bias = lbl_803DEBC0;
+    hi = 0x43300000;
+    do {
+        table = (s8 *)*lt;
+        lbl_803DCE88 = *lt2;
+        mapFn_80057d24(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, box0, box1, box2, box3, layer, 1,
+                       lbl_803DCEC0);
+        p = map;
+        for (k = 0; k < 256; k++) {
+            *p = 0;
+            p++;
+        }
+        for (y = box0[2]; y <= box0[3]; y++) {
+            p = map + (y + 7) * 0x10 + box0[0];
+            n = (box0[1] + 1) - box0[0];
+            if (box0[0] <= box0[1]) {
+                while (n != 0) {
+                    p[7] = 1;
+                    p++;
+                    n--;
+                }
+            }
+        }
+        for (y = box1[2]; y <= box1[3]; y++) {
+            p = map + (y + 7) * 0x10 + box1[0];
+            n = (box1[1] + 1) - box1[0];
+            if (box1[0] <= box1[1]) {
+                while (n != 0) {
+                    p[7] = 1;
+                    p++;
+                    n--;
+                }
+            }
+        }
+        for (y = box2[2]; y <= box2[3]; y++) {
+            p = map + (y + 7) * 0x10 + box2[0];
+            n = (box2[1] + 1) - box2[0];
+            if (box2[0] <= box2[1]) {
+                while (n != 0) {
+                    p[7] = 1;
+                    p++;
+                    n--;
+                }
+            }
+        }
+        for (y = box3[2]; y <= box3[3]; y++) {
+            p = map + (y + 7) * 0x10 + box3[0];
+            n = (box3[1] + 1) - box3[0];
+            if (box3[0] <= box3[1]) {
+                while (n != 0) {
+                    p[7] = 1;
+                    p++;
+                    n--;
+                }
+            }
+        }
+        oi = 0;
+        op = order;
+        for (; oi < 16; oi++) {
+            row = *op;
+            cv.u.lo = row ^ 0x80000000;
+            cv.u.hi = hi;
+            rowF = ws * (f32)(cv.d - bias);
+            ii = 0;
+            ip = order;
+            for (; ii < 16; ii++) {
+                col = *ip;
+                cell = row + col * 0x10;
+                idx = table[cell];
+                if (idx < 0) {
+                    blk = NULL;
+                } else {
+                    blk = (u8 *)lbl_803DCE9C[idx];
+                    *(u16 *)(blk + 4) ^= 1;
+                    if (map[cell] == 0) {
+                        goto next;
+                    }
+                }
+                if (idx > -1 && mapRectFn_8005a728(row, col, blk) != 0) {
+                    lbl_803DCE58 = rowF;
+                    cv.u.lo = col ^ 0x80000000;
+                    cv.u.hi = 0x43300000;
+                    colF = gMapBlockWorldSize * (f32)(cv.d - lbl_803DEBC0);
+                    lbl_803DCE54 = colF;
+                    cv2.u.lo = (int)*(s16 *)(blk + 0x8e) ^ 0x80000000;
+                    cv2.u.hi = 0x43300000;
+                    PSMTXTrans((f32 *)(blk + 0xc), rowF, (f32)(cv2.d - lbl_803DEBC0), colF);
+                    renderMapBlock(blk, p1);
+                }
+            next:
+                ip++;
+            }
+            op++;
+        }
+        lt--;
+        lt2--;
+        layer--;
+    } while (layer >= 0);
+}
+#pragma opt_loop_invariants reset
+#pragma peephole reset
+#pragma scheduling reset
+
 typedef struct {
     u32 a;
     u32 b;
@@ -3227,6 +3853,148 @@ void lightmap_sortTransparentDrawQueue(void)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+
+extern void maybeHudFn_8006c91c(void);
+extern int ObjList_PartitionForRender(int *count);
+extern int objUpdateOpacity(u8 *obj);
+extern void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, int *a, int *b, f32 *depth, f32 *out);
+extern void shadowCreate(u8 *obj);
+extern void shadowRenderFn_8006b558(u8 *obj);
+extern void renderShadows(int a, int b, int c);
+void sortVisibleObjectKeysDescending(u32 *arr, int n);
+extern F32Pair changed_803DEC08;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_loop_invariants off
+void getVisibleObjects(s8 *opacity)
+{
+    int part;
+    int *objects;
+    int *p;
+    u8 *o;
+    int i;
+    int key;
+    int depthInt;
+    s8 *cur;
+    u8 *sub;
+    u8 *att;
+    int j;
+    u8 *s54;
+    int *model;
+    u32 tf;
+    u32 mode;
+    s16 t;
+    int t1000;
+    int count;
+    int a, b;
+    f32 depth;
+
+    maybeHudFn_8006c91c();
+    objects = ObjList_GetObjects((int *)0, (int *)0);
+    part = ObjList_PartitionForRender(&count);
+    i = 0;
+    p = objects;
+    cur = opacity;
+    for (; i < count; i++) {
+        o = (u8 *)*p;
+        *(u16 *)(o + 0xb0) &= ~0x800;
+        j = 0;
+        sub = o;
+        for (; j < *(u8 *)(o + 0xeb); j++) {
+            att = *(u8 **)(sub + 0xc8);
+            if (att != NULL) {
+                *(u16 *)(att + 0xb0) &= ~0x800;
+            }
+            sub += 4;
+        }
+        if (i >= part) {
+            *cur = (s8)objUpdateOpacity(o);
+            if (*cur != 0 || (*(u32 *)(*(u8 **)(o + 0x50) + 0x44) & 0x200000) != 0) {
+                if ((*(u32 *)(*(u8 **)(o + 0x50) + 0x44) & 0x80000) != 0) {
+                    *(f32 *)(o + 0xa4) = (f32)(*(u8 *)(*(u8 **)(o + 0x50) + 0x74) * 100);
+                    depthInt = (int)*(f32 *)(o + 0xa4);
+                } else {
+                    if (*(void **)(o + 0x30) != NULL) {
+                        Camera_ProjectWorldPoint(*(f32 *)(o + 0x18), *(f32 *)(o + 0x1c),
+                                                 *(f32 *)(o + 0x20), &a, &b, &depth,
+                                                 (f32 *)(o + 0xa4));
+                    } else {
+                        Camera_ProjectWorldPoint(*(f32 *)(o + 0xc) - playerMapOffsetX,
+                                                 *(f32 *)(o + 0x10),
+                                                 *(f32 *)(o + 0x14) - playerMapOffsetZ, &a, &b,
+                                                 &depth, (f32 *)(o + 0xa4));
+                    }
+                    depthInt = (int)(changed_803DEC08.hi * (lbl_803DEBDC + depth));
+                }
+                if ((*(s16 *)(o + 6) & 0x4000) == 0 && *(void **)(o + 0x64) != NULL &&
+                    (*(u32 *)(*(u8 **)(o + 0x64) + 0x30) & 4) != 0) {
+                    t = *(s16 *)(*(u8 **)(o + 0x50) + 0x48);
+                    if (t == 2 || t == 1) {
+                        shadowCreate(o);
+                    } else if (t == 4) {
+                        shadowRenderFn_8006b558(o);
+                    }
+                }
+                if (gVisibleObjectSortKeyCount < 1000) {
+                    key = 0;
+                    model = Obj_GetActiveModel((int *)o);
+                    if (*(u8 *)(o + 0x37) == 0xff && (*(s16 *)(o + 6) & 0x80) == 0 &&
+                        ((tf = *(u32 *)(*(u8 **)(o + 0x50) + 0x44)) & 0x40000) == 0 &&
+                        *(void **)(model + 0x16) == NULL) {
+                        key |= 0x80000000;
+                        t1000 = 1000 - (depthInt & 0xffff);
+                        if ((tf & 0x800000) != 0 && (*(u8 *)(o + 0xe5) & 2) == 0) {
+                            key |= 0x40000000;
+                            key |= (*(s16 *)(o + 0x46) & 0x3ff) << 20;
+                        }
+                        gVisibleObjectSortKeys[gVisibleObjectSortKeyCount] =
+                            (i & 0x3ff) | (((t1000 & 0x3ff) << 10) | key);
+                        gVisibleObjectSortKeyCount++;
+                        if ((*(u8 *)(*(u8 **)(o + 0x50) + 0x5f) & 0x20) != 0 &&
+                            (*(u16 *)(o + 0xb0) & 0x400) == 0 &&
+                            (*(s16 *)(o + 6) & 0x4000) == 0) {
+                            renderShadowType3(o, 7, 0x50);
+                            lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 1;
+                            lbl_803DCE30++;
+                        }
+                    } else {
+                        if ((*(u32 *)(*(u8 **)(o + 0x50) + 0x44) & 0x800) != 0 ||
+                            (*(u8 *)(*(u8 **)(o + 0x50) + 0x5f) & 0x10) != 0) {
+                            mode = 0x1f;
+                        } else {
+                            mode = 7;
+                        }
+                        renderShadowType3(o, mode, 0);
+                        lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 0;
+                        lbl_803DCE30++;
+                        if ((*(u8 *)(*(u8 **)(o + 0x50) + 0x5f) & 0x20) != 0 &&
+                            (*(s16 *)(o + 6) & 0x4000) == 0) {
+                            renderShadowType3(o, 7, 0x50);
+                            lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 1;
+                            lbl_803DCE30++;
+                        }
+                    }
+                }
+            } else {
+                s54 = *(u8 **)(o + 0x54);
+                if (s54 != NULL && (s54[0x62] & 0x30) != 0) {
+                    s54[0xaf] = 2;
+                }
+            }
+        }
+        p++;
+        cur++;
+    }
+    if (gVisibleObjectSortKeyCount > 1) {
+        sortVisibleObjectKeysDescending(gVisibleObjectSortKeys, gVisibleObjectSortKeyCount);
+    }
+    renderShadows(0, 0, 0);
+}
+#pragma opt_loop_invariants reset
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -3366,3 +4134,135 @@ void initMapBlocks(void)
     memset(mb + 0x8818, 0, 0xfa0);
     *(u32 *)(mb + 0x8818) = -1;
 }
+
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int attr, int type);
+extern void GXBegin(int prim, int fmt, u16 nverts);
+
+typedef union {
+    u8 u8;
+    s16 s16;
+    u16 u16;
+    u32 u32;
+    f32 f32;
+} WGPipe;
+volatile WGPipe wgfifo : (0xCC008000);
+
+static inline void GXPosition3s16(const s16 x, const s16 y, const s16 z) {
+    wgfifo.s16 = x;
+    wgfifo.s16 = y;
+    wgfifo.s16 = z;
+}
+static inline void GXColor4u8(const u8 r, const u8 g, const u8 b, const u8 a) {
+    wgfifo.u8 = r;
+    wgfifo.u8 = g;
+    wgfifo.u8 = b;
+    wgfifo.u8 = a;
+}
+static inline void GXTexCoord2s16(const s16 s, const s16 t) {
+    wgfifo.s16 = s;
+    wgfifo.s16 = t;
+}
+static inline void GXPosition1x8(const u8 x) { wgfifo.u8 = x; }
+
+#pragma peephole on
+void drawFn_8005cf8c(int verts, u8 *indices, int count) {
+    s16 *p;
+    int q, r;
+    int i, j;
+
+    GXClearVtxDesc();
+    GXSetVtxDesc(0, 1);
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xb, 1);
+    GXSetVtxDesc(0xd, 1);
+    GXBegin(0x90, 0, count * 3 & 0xffff);
+    for (i = 0; i < count; i++) {
+        for (j = 0; j < 3; j++) {
+            GXPosition1x8(0);
+            p = (s16 *)(verts + indices[j + 1] * 0x10);
+            GXPosition3s16(p[0], p[1], p[2]);
+            q = verts + indices[j + 1] * 0x10;
+            GXColor4u8(*(u8 *)(q + 0xc), *(u8 *)(q + 0xd), *(u8 *)(q + 0xe), *(u8 *)(q + 0xf));
+            r = verts + indices[j + 1] * 0x10;
+            GXTexCoord2s16(*(s16 *)(r + 8), *(s16 *)(r + 10));
+        }
+        indices = indices + 0x10;
+    }
+}
+#pragma peephole reset
+
+extern void envFxFn_80088884(void);
+extern void *gCloudActionInterface;
+extern void *gSky2Interface;
+extern void *gSHthorntailAnimationInterface;
+extern void *gNewCloudsInterface;
+extern void *gMinimapInterface;
+extern void *lbl_803DCAB0;
+extern int textureAnimFn_80053f2c(void *tex, void *a, void *b);
+extern void loadNextMap(void);
+extern f32 timeDelta;
+extern s32 lbl_803DCE00;
+extern s32 heatEffectIntensity;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma fp_contract off
+void updateEnvironment(int mode) {
+    if (mode == 0) {
+        char *e;
+        void *tex;
+        int i, offs, k;
+        f32 dy;
+
+        envFxFn_80088884();
+        (*(void (***)(void))gCloudActionInterface)[3]();
+        (*(void (***)(void))gSky2Interface)[3]();
+        (*(void (***)(void))gSHthorntailAnimationInterface)[3]();
+        (*(void (***)(void))gNewCloudsInterface)[4]();
+
+        i = 0;
+        offs = i;
+        do {
+            e = (char *)lbl_803DCE6C + offs;
+            if (*(s16 *)(e + 12) != 0 && (tex = *(void **)e) != NULL &&
+                *(u16 *)((char *)tex + 0x10) != 0x100 && *(u16 *)((char *)tex + 0x14) != 0) {
+                textureAnimFn_80053f2c(tex, e + 8, e + 4);
+            }
+            offs += 0x10;
+            i++;
+        } while (i < 80);
+
+        i = 0;
+        offs = i;
+        for (; i < 58; i++) {
+            e = (char *)lbl_803DCE68 + offs;
+            if (*(u8 *)(e + 12) != 0) {
+                dy = (f32)*(s16 *)(e + 10) * timeDelta;
+                *(f32 *)e = *(f32 *)e + (f32)*(s16 *)(e + 8) * timeDelta;
+                *(f32 *)(e + 4) = *(f32 *)(e + 4) + dy;
+            }
+            offs += 0x10;
+        }
+
+        loadNextMap();
+        if (lbl_803DCAB0 != NULL) {
+            (*(void (***)(void))lbl_803DCAB0)[2]();
+        }
+        (*(void (***)(void))gMinimapInterface)[1]();
+
+        if (lbl_803DCE00 != 0) {
+            heatEffectIntensity += lbl_803DCE00;
+            if (heatEffectIntensity < 0) {
+                heatEffectIntensity = 0;
+                lbl_803DCE00 = 0;
+            } else if (heatEffectIntensity > 255) {
+                heatEffectIntensity = 255;
+                lbl_803DCE00 = 0;
+            }
+        }
+    }
+}
+#pragma fp_contract reset
+#pragma peephole reset
+#pragma scheduling reset

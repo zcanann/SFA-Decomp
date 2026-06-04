@@ -2,11 +2,11 @@
 #include "main/dll/DR/DRcloudcage.h"
 
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
-extern void Sfx_SetObjectChannelVolume(double volume, int obj, int channel, uint volumeByte);
+extern void Sfx_SetObjectChannelVolume(int obj, int channel, uint volumeByte, f32 volume);
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Obj_GetPlayerObject(void);
-extern double Vec_distance(int *from, int *to);
-extern void objfx_spawnLightPulse();
+extern f32 Vec_distance(int *from, int *to);
+extern void objfx_spawnLightPulse(int obj, f32 a, int b, int c, int d, f32 e, void *params);
 extern void setMatrixFromObjectPos(f32 *matrix, void *objpos);
 extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ);
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, void *hitsOut, int unused, int mask);
@@ -17,8 +17,8 @@ extern s32 lbl_803DC0BC;
 extern f32 lbl_803DC0E0;
 extern f32 timeDelta;
 extern f32 lbl_803DDC64;
-extern undefined4 lbl_803AD088;
-extern f32 lbl_802C2428[18];
+extern undefined4 lbl_803AD088[];
+extern struct DRCloudCagePoints lbl_802C2428;
 extern f32 lbl_803E5AE8;
 extern f32 lbl_803E5AEC;
 extern f32 lbl_803E5AF0;
@@ -78,6 +78,15 @@ typedef struct DRCloudCageTrail {
     u8 pad07;
 } DRCloudCageTrail;
 
+typedef struct DRCloudCagePoints {
+    f32 m[18];
+} DRCloudCagePoints;
+
+typedef struct DRCloudCageStateFlags {
+    u8 hidden : 1;
+    u8 rest : 7;
+} DRCloudCageStateFlags;
+
 typedef struct DRCloudCageObjPos {
     s16 rotX;
     s16 rotY;
@@ -90,112 +99,145 @@ typedef struct DRCloudCageObjPos {
 
 void fn_801E9C00(int obj, int state)
 {
-    f32 localPoints[18];
-    f32 matrix[15];
-    DRCloudCageObjPos transform;
-    f32 startX;
-    f32 startY;
-    f32 startZ;
-    f32 endX;
-    f32 endY;
     f32 endZ;
+    f32 endY;
+    f32 endX;
+    f32 startZ;
+    f32 startY;
+    f32 startX;
     f32 **hits;
-    DRCloudCageTrail *trail;
-    DRCloudCageTrail *selectedTrail;
-    DRCloudCagePointPair *pair;
-    int hitCount;
+    DRCloudCageObjPos transform;
+    f32 matrix[16];
+    DRCloudCagePoints localPoints;
+    u8 *p;
     int trailIndex;
-    int pointIndex;
+    DRCloudCageTrail *trail;
+    u8 *points;
+    DRCloudCagePointPair *pair;
     int pairIndex;
+    s32 a;
+    f32 fade;
+    int nextOffset;
+    int activeOffset;
+    u8 hitDetected;
+    int activeIndex;
+    int endpointIndex;
+    DRCloudCageTrail *selectedTrail;
+    f32 *pEndX;
+    f32 *pEndY;
+    f32 *pEndZ;
+    f32 *pStartY;
+    f32 *pStartZ;
+    u8 *slot;
+    f32 *endpoint;
     int scanIndex;
     int hitIndex;
-    int endpointIndex;
-    int activeIndex;
-    int activeOffset;
-    int nextOffset;
-    int hitDetected;
+    int hitCount;
+    int copyIndex;
+    int copyOffset;
     f32 deltaY;
+    f32 zero;
+    f32 maxDelta;
+    f32 minDelta;
+    f32 scaleV;
 
-    for (pointIndex = 0; pointIndex < 18; pointIndex++) {
-        localPoints[pointIndex] = lbl_802C2428[pointIndex];
-    }
+    localPoints = lbl_802C2428;
 
-    trail = (DRCloudCageTrail *)(state + 0x4c8);
-    for (trailIndex = 0; trailIndex < 9; trailIndex++, trail++) {
-        if ((trail->flags & 1) != 0) {
+    for (trailIndex = 0, p = (u8 *)state; trailIndex < 9; p += 8, trailIndex++) {
+        trail = (DRCloudCageTrail *)(p + 0x4c8);
+        if (trail->flags & 1) {
             pairIndex = trail->count - 2;
-            pair = (DRCloudCagePointPair *)((u8 *)trail->points + pairIndex * 0x10);
-            while (pairIndex >= 0) {
-                pair->startAlpha = (s16)(s32)((f32)pair->startAlpha - lbl_803E5AF0 * timeDelta);
+            points = (u8 *)trail->points;
+            pair = (DRCloudCagePointPair *)(points + pairIndex * 0x10);
+            fade = lbl_803E5AF0;
+            for (; pairIndex >= 0; pair--, pairIndex -= 2) {
+                pair->startAlpha = -(fade * timeDelta - (f32)pair->startAlpha);
                 pair->endAlpha = pair->startAlpha;
-                if (pair->startAlpha < 0) {
-                    pair->startAlpha = 0;
-                } else if (pair->startAlpha > 0xff) {
-                    pair->startAlpha = 0xff;
+                a = pair->startAlpha;
+                if (a < 0) {
+                    a = 0;
+                } else if (a > 0xff) {
+                    a = 0xff;
                 }
-                if (pair->endAlpha < 0) {
-                    pair->endAlpha = 0;
-                } else if (pair->endAlpha > 0xff) {
-                    pair->endAlpha = 0xff;
+                pair->startAlpha = (s16)a;
+                a = pair->endAlpha;
+                if (a < 0) {
+                    a = 0;
+                } else if (a > 0xff) {
+                    a = 0xff;
                 }
-                pair = (DRCloudCagePointPair *)((u8 *)pair - 0x20);
-                pairIndex -= 2;
+                pair->endAlpha = (s16)a;
             }
 
             pairIndex = trail->count - 2;
-            pair = (DRCloudCagePointPair *)((u8 *)trail->points + pairIndex * 0x10);
-            while (pairIndex >= 0) {
-                if (pairIndex < 2) {
+            pair = (DRCloudCagePointPair *)(points + pairIndex * 0x10);
+            for (; pairIndex >= 0; pair--, pairIndex -= 2) {
+                if (pairIndex >= 2) {
+                    if ((pair->startAlpha <= 0) && (pair->endAlpha <= 0) &&
+                        (*(s16 *)((u8 *)pair - 4) <= 0) && (*(s16 *)((u8 *)pair - 0x14) <= 0)) {
+                        trail->count -= 2;
+                    }
+                } else {
                     if ((pair->startAlpha <= 0) && (pair->endAlpha <= 0)) {
                         trail->count -= 2;
                     }
-                } else if ((pair->startAlpha <= 0) && (pair->endAlpha <= 0) &&
-                           (*(s16 *)((u8 *)pair - 4) <= 0) && (*(s16 *)((u8 *)pair - 0x14) <= 0)) {
-                    trail->count -= 2;
                 }
-                pair = (DRCloudCagePointPair *)((u8 *)pair - 0x20);
-                pairIndex -= 2;
             }
 
             if ((trail != *(DRCloudCageTrail **)(state + 0x510)) &&
                 (trail != *(DRCloudCageTrail **)(state + 0x514)) &&
                 (trail != *(DRCloudCageTrail **)(state + 0x518)) &&
                 (trail->count == 0)) {
-                trail->flags &= 0xfe;
+                trail->flags &= ~1;
             }
         }
     }
 
+    activeIndex = 0;
     activeOffset = 0;
     nextOffset = 0xc;
-    for (activeIndex = 0; activeIndex < 3; activeIndex++) {
+    slot = (u8 *)state;
+    pEndX = &endX;
+    pEndY = &endY;
+    pEndZ = &endZ;
+    pStartY = &startY;
+    pStartZ = &startZ;
+    zero = lbl_803E5AE8;
+    maxDelta = lbl_803E5AF4;
+    minDelta = lbl_803E5AFC;
+    scaleV = lbl_803E5AEC;
+    for (; activeIndex < 3; activeOffset += 0x18, nextOffset += 0x18, slot += 4, activeIndex++) {
         transform.x = *(f32 *)(obj + 0x18);
         transform.y = *(f32 *)(obj + 0x1c);
         transform.z = *(f32 *)(obj + 0x20);
         transform.rotX = *(s16 *)(obj + 0);
         transform.rotY = *(s16 *)(obj + 2);
         transform.rotZ = (s16)(*(s16 *)(obj + 4) + *(s32 *)(state + 0x410));
-        transform.scale = lbl_803E5AEC;
+        transform.scale = scaleV;
         setMatrixFromObjectPos(matrix, &transform);
 
-        Matrix_TransformPoint(matrix, localPoints[activeOffset / 4], localPoints[activeOffset / 4 + 1],
-                              localPoints[activeOffset / 4 + 2], &startX, &startY, &startZ);
-        Matrix_TransformPoint(matrix, localPoints[nextOffset / 4], localPoints[nextOffset / 4 + 1],
-                              localPoints[nextOffset / 4 + 2], &endX, &endY, &endZ);
+        Matrix_TransformPoint(matrix, ((f32 *)((u8 *)&localPoints + activeOffset))[0],
+                              ((f32 *)((u8 *)&localPoints + activeOffset))[1],
+                              ((f32 *)((u8 *)&localPoints + activeOffset))[2], &startX, pStartY,
+                              pStartZ);
+        Matrix_TransformPoint(matrix, ((f32 *)((u8 *)&localPoints + nextOffset))[0],
+                              ((f32 *)((u8 *)&localPoints + nextOffset))[1],
+                              ((f32 *)((u8 *)&localPoints + nextOffset))[2], pEndX, pEndY, pEndZ);
 
         hitDetected = 0;
-        for (endpointIndex = 0; endpointIndex < 2; endpointIndex++) {
-            f32 *endpoint = (endpointIndex == 0) ? &startX : &endX;
+        endpointIndex = 0;
+        endpoint = &startX;
+        for (; endpointIndex < 2; endpoint += 3, endpointIndex++) {
             hitCount = hitDetectFn_80065e50(obj, endpoint[0], endpoint[1], endpoint[2], &hits, 0, 0x20);
             for (hitIndex = 0; hitIndex < hitCount; hitIndex++) {
                 deltaY = hits[hitIndex][0] - endpoint[1];
-                if (activeIndex < 1) {
-                    if ((lbl_803E5AFC <= deltaY) && (deltaY < lbl_803E5AF4)) {
+                if (activeIndex > 0) {
+                    if ((deltaY > zero) && (deltaY < maxDelta)) {
                         hitDetected = 1;
                         endpoint[1] = lbl_803E5AF8 + hits[hitIndex][0];
                         break;
                     }
-                } else if ((lbl_803E5AE8 < deltaY) && (deltaY < lbl_803E5AF4)) {
+                } else if ((deltaY >= minDelta) && (deltaY < maxDelta)) {
                     hitDetected = 1;
                     endpoint[1] = lbl_803E5AF8 + hits[hitIndex][0];
                     break;
@@ -203,26 +245,24 @@ void fn_801E9C00(int obj, int state)
             }
         }
 
-        if ((*(u8 *)(state + 0x428) & 0x80) != 0 || !hitDetected) {
-            *(undefined4 *)(state + 0x510 + activeIndex * 4) = 0;
-        } else {
-            selectedTrail = *(DRCloudCageTrail **)(state + 0x510 + activeIndex * 4);
+        if (!((DRCloudCageStateFlags *)(state + 0x428))->hidden && hitDetected) {
+            selectedTrail = *(DRCloudCageTrail **)(slot + 0x510);
             if (selectedTrail == (DRCloudCageTrail *)0) {
-                selectedTrail = (DRCloudCageTrail *)(state + 0x4c8);
-                scanIndex = 0;
-                while ((scanIndex < 9) && ((selectedTrail->flags & 1) != 0)) {
-                    scanIndex++;
-                    selectedTrail++;
+                for (scanIndex = 0; scanIndex < 9; scanIndex++) {
+                    selectedTrail = (DRCloudCageTrail *)(state + scanIndex * 8 + 0x4c8);
+                    if (!(selectedTrail->flags & 1)) {
+                        break;
+                    }
                 }
                 if (scanIndex >= 9) {
                     break;
                 }
                 selectedTrail->flags |= 1;
                 selectedTrail->count = 0;
-                *(DRCloudCageTrail **)(state + 0x510 + activeIndex * 4) = selectedTrail;
+                *(DRCloudCageTrail **)(slot + 0x510) = selectedTrail;
             } else {
-                int copyIndex = selectedTrail->count - 1;
-                int copyOffset = copyIndex * 0x10;
+                copyIndex = selectedTrail->count - 1;
+                copyOffset = copyIndex * 0x10;
                 while (copyIndex >= 0) {
                     memcpy((u8 *)selectedTrail->points + (copyIndex + 2) * 0x10,
                            (u8 *)selectedTrail->points + copyOffset, 0x10);
@@ -245,205 +285,182 @@ void fn_801E9C00(int obj, int state)
             *(f32 *)(state + 0x51c) = *(f32 *)(obj + 0x18);
             *(f32 *)(state + 0x520) = *(f32 *)(obj + 0x1c);
             *(f32 *)(state + 0x524) = *(f32 *)(obj + 0x20);
+        } else {
+            *(DRCloudCageTrail **)(slot + 0x510) = 0;
         }
-
-        activeOffset += 0x18;
-        nextOffset += 0x18;
     }
 }
 
-void fn_801EA240(double distanceScale, int obj, int state, uint intensity, undefined4 unused,
-                 uint channelFlags)
-{
-    float fVar1;
-    uint volumeByte;
-    int isPlaying;
-    uint signedVolume;
-    double dVar6;
-    double clampedScale;
-    undefined auStack72[8];
-    float local_40;
-    float local_3c;
-    float local_38;
-    float local_34;
-    double local_30;
-    double local_28;
+typedef struct DRCloudCagePulseParams {
+    u8 pad[8];
+    f32 unk8;
+    f32 unkC;
+    f32 unk10;
+    f32 unk14;
+} DRCloudCagePulseParams;
 
-    clampedScale = (double)lbl_803E5AE8;
-    if ((clampedScale <= distanceScale) && (clampedScale = distanceScale, (double)lbl_803E5B08 < distanceScale)) {
-        clampedScale = (double)lbl_803E5B08;
+void fn_801EA240(f32 distanceScale, int obj, int state, int intensity, int unused, u8 channelFlags)
+{
+    f32 clamped;
+    f32 d;
+    f32 fv;
+    int vol;
+    f32 v;
+    DRCloudCagePulseParams pulse;
+
+    if (distanceScale < (clamped = lbl_803E5AE8)) {
+    } else if (distanceScale > (clamped = lbl_803E5B08)) {
+    } else {
+        clamped = distanceScale;
     }
-    if (((channelFlags & 1) != 0) && (isPlaying = Sfx_IsPlayingFromObjectChannel(obj, 8), isPlaying != 0)) {
-        lbl_803DDC64 = (float)((double)lbl_803E5B0C * clampedScale);
-        if (lbl_803DDC64 < lbl_803E5AE8) {
-            lbl_803DDC64 = -lbl_803DDC64;
-        }
-        if (lbl_803DDC64 < lbl_803E5B10) {
-            lbl_803DDC64 = lbl_803E5B10;
-        }
-        if (lbl_803E5B14 < lbl_803DDC64) {
-            lbl_803DDC64 = lbl_803E5B14;
-        }
-        if (lbl_803E5B18 <= *(float *)(state + 0x424)) {
-            volumeByte = 0;
-        } else {
-            volumeByte = (uint)((double)lbl_803E5B1C * clampedScale);
-            local_30 = (double)(longlong)(int)volumeByte;
-            if ((int)volumeByte < 0) {
-                volumeByte = -volumeByte;
+    if (channelFlags & 1) {
+        if (Sfx_IsPlayingFromObjectChannel(obj, 8)) {
+            lbl_803DDC64 = lbl_803E5B0C * clamped;
+            if (lbl_803DDC64 < lbl_803E5AE8) {
+                lbl_803DDC64 = -lbl_803DDC64;
             }
-            if (0x7f < (int)volumeByte) {
-                volumeByte = 0x7f;
+            if (lbl_803DDC64 < lbl_803E5B10) {
+                lbl_803DDC64 = lbl_803E5B10;
             }
+            if (lbl_803DDC64 > lbl_803E5B14) {
+                lbl_803DDC64 = lbl_803E5B14;
+            }
+            if (*(f32 *)(state + 0x424) < lbl_803E5B18) {
+                vol = (int)(lbl_803E5B1C * clamped);
+                if (vol < 0) {
+                    vol = -vol;
+                }
+                if (vol > 0x7f) {
+                    vol = 0x7f;
+                }
+            } else {
+                vol = 0;
+            }
+            Sfx_SetObjectChannelVolume(obj, 8, vol & 0xff, lbl_803E5B20 + lbl_803DDC64 / lbl_803E5B08);
         }
-        Sfx_SetObjectChannelVolume((double)(lbl_803E5B20 + lbl_803DDC64 / lbl_803E5B08), obj, 8,
-                                   volumeByte & 0xff);
     }
-    if ((((channelFlags & 2) != 0) && (isPlaying = Sfx_IsPlayingFromObjectChannel(obj, 1), isPlaying != 0)) &&
-        (*(float *)(state + 0x424) < lbl_803E5B18)) {
-        dVar6 = (double)lbl_803E5AE8;
-        if (dVar6 != clampedScale) {
-            local_30 = (double)CONCAT44(0x43300000, (int)*(short *)(obj + 4) ^ 0x80000000);
-            dVar6 = (double)((float)(clampedScale * (double)(float)(local_30 - lbl_803E5B00)) /
-                             lbl_803E5B24);
-        }
-        lbl_803DDC64 = (float)dVar6;
-        fVar1 = (float)dVar6;
-        if (lbl_803E5AE8 <= fVar1) {
-            if (lbl_803E5AEC < fVar1) {
-                lbl_803DDC64 = lbl_803E5AEC;
+    if (channelFlags & 2) {
+        if (Sfx_IsPlayingFromObjectChannel(obj, 1)) {
+            if (*(f32 *)(state + 0x424) < lbl_803E5B18) {
+                d = 0.0f;
+                if (d != clamped) {
+                    d = clamped * (f32)*(s16 *)(obj + 4) / lbl_803E5B24;
+                }
+                lbl_803DDC64 = d;
+                fv = (f32)(f64)d;
+                if (fv < 0.0f) {
+                    lbl_803DDC64 = -fv;
+                } else if (fv > lbl_803E5AEC) {
+                    lbl_803DDC64 = lbl_803E5AEC;
+                }
+                vol = (int)(lbl_803E5B28 * lbl_803DDC64);
+                if ((f32)vol > lbl_803E5B28) {
+                    vol = 0x7f;
+                } else if ((f32)vol < 0.0f) {
+                    vol = 0;
+                }
+                Sfx_SetObjectChannelVolume(obj, 1, vol & 0xff, lbl_803E5B20 + lbl_803DDC64);
             }
-        } else {
-            lbl_803DDC64 = -fVar1;
         }
-        volumeByte = (uint)(lbl_803E5B28 * lbl_803DDC64);
-        local_30 = (double)(longlong)(int)volumeByte;
-        signedVolume = volumeByte ^ 0x80000000;
-        local_28 = (double)CONCAT44(0x43300000, signedVolume);
-        if ((float)(local_28 - lbl_803E5B00) <= lbl_803E5B28) {
-            local_28 = (double)CONCAT44(0x43300000, signedVolume);
-            if ((float)(local_28 - lbl_803E5B00) < lbl_803E5AE8) {
-                volumeByte = 0;
-            }
-        } else {
-            volumeByte = 0x7f;
-        }
-        local_28 = (double)CONCAT44(0x43300000, signedVolume);
-        Sfx_SetObjectChannelVolume((double)(lbl_803E5B20 + lbl_803DDC64), obj, 1, volumeByte & 0xff);
     }
-    if ((channelFlags & 4) != 0) {
-        Sfx_PlayFromObject(obj, *(undefined2 *)(state + 0x440));
+    if (channelFlags & 4) {
+        Sfx_PlayFromObject(obj, *(u16 *)(state + 0x440));
         Sfx_PlayFromObject(obj, SFXsp_htop_hurry2);
-        if ((int)intensity < 6) {
-            if (lbl_803E5B10 < *(float *)(state + 0x3f8)) {
-                *(float *)(state + 0x3f8) =
-                    -(lbl_803E5B2C * timeDelta - *(float *)(state + 0x3f8));
-            }
+        if (intensity > 5) {
+            *(f32 *)(state + 0x3f8) = *(f32 *)(state + 0x3f8) + timeDelta;
         } else {
-            *(float *)(state + 0x3f8) = *(float *)(state + 0x3f8) + timeDelta;
-        }
-        if (lbl_803E5B08 < *(float *)(state + 0x3f8)) {
-            *(float *)(state + 0x3f8) = lbl_803E5B08;
-        }
-        if (*(float *)(state + 0x3f8) < lbl_803E5B30) {
-            *(float *)(state + 0x3f8) = lbl_803E5B30;
-        }
-        isPlaying = (int)*(float *)(state + 0x3f8);
-        local_28 = (double)(longlong)isPlaying;
-        Sfx_SetObjectChannelVolume((double)(*(float *)(state + 0x3f8) * lbl_803E5B38 + lbl_803E5B34),
-                                   obj, 2, isPlaying);
-        if ((int)intensity < 6) {
-            if (lbl_803E5B3C < *(float *)(state + 0x3f4)) {
-                *(float *)(state + 0x3f4) =
-                    -(lbl_803E5AF8 * timeDelta - *(float *)(state + 0x3f4));
+            if (*(f32 *)(state + 0x3f8) > lbl_803E5B10) {
+                *(f32 *)(state + 0x3f8) = -(lbl_803E5B2C * timeDelta - *(f32 *)(state + 0x3f8));
             }
+        }
+        if (*(f32 *)(state + 0x3f8) > lbl_803E5B08) {
+            *(f32 *)(state + 0x3f8) = lbl_803E5B08;
+        }
+        if (*(f32 *)(state + 0x3f8) < lbl_803E5B30) {
+            *(f32 *)(state + 0x3f8) = lbl_803E5B30;
+        }
+        v = *(f32 *)(state + 0x3f8);
+        Sfx_SetObjectChannelVolume(obj, 2, (int)v, v * lbl_803E5B38 + lbl_803E5B34);
+        if (intensity > 5) {
+            *(f32 *)(state + 0x3f4) = lbl_803E5B3C + (f32)intensity;
         } else {
-            local_28 = (double)CONCAT44(0x43300000, intensity ^ 0x80000000);
-            *(float *)(state + 0x3f4) = lbl_803E5B3C + (float)(local_28 - lbl_803E5B00);
+            if (*(f32 *)(state + 0x3f4) > lbl_803E5B3C) {
+                *(f32 *)(state + 0x3f4) = -(lbl_803E5AF8 * timeDelta - *(f32 *)(state + 0x3f4));
+            }
         }
-        if (lbl_803E5B40 < *(float *)(state + 0x3f4)) {
-            *(float *)(state + 0x3f4) = lbl_803E5B40;
+        if (*(f32 *)(state + 0x3f4) > lbl_803E5B40) {
+            *(f32 *)(state + 0x3f4) = lbl_803E5B40;
         }
-        if (*(float *)(state + 0x3f4) < lbl_803E5B44) {
-            *(float *)(state + 0x3f4) = lbl_803E5B44;
+        if (*(f32 *)(state + 0x3f4) < lbl_803E5B44) {
+            *(f32 *)(state + 0x3f4) = lbl_803E5B44;
         }
-        isPlaying = (int)*(float *)(state + 0x3f4);
-        local_28 = (double)(longlong)isPlaying;
-        Sfx_SetObjectChannelVolume((double)(*(float *)(state + 0x3f4) / lbl_803E5B48), obj, 4,
-                                   isPlaying);
-        local_3c = lbl_803E5B4C;
-        local_38 = lbl_803E5B50;
-        local_34 = lbl_803E5B54;
-        local_40 = lbl_803E5AE8;
-        objfx_spawnLightPulse((double)lbl_803E5AF8, (double)(*(float *)(state + 0x3f4) / lbl_803E5B58),
-                              obj, 2, 0, 1, auStack72);
-        local_3c = lbl_803E5B5C;
-        objfx_spawnLightPulse((double)lbl_803E5AF8, (double)(*(float *)(state + 0x3f4) / lbl_803E5B58),
-                              obj, 2, 0, 1, auStack72);
+        v = *(f32 *)(state + 0x3f4);
+        Sfx_SetObjectChannelVolume(obj, 4, (int)v, v / lbl_803E5B48);
+        pulse.unkC = lbl_803E5B4C;
+        pulse.unk10 = lbl_803E5B50;
+        pulse.unk14 = lbl_803E5B54;
+        pulse.unk8 = lbl_803E5AE8;
+        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, *(f32 *)(state + 0x3f4) / lbl_803E5B58,
+                              &pulse);
+        pulse.unkC = lbl_803E5B5C;
+        objfx_spawnLightPulse(obj, lbl_803E5AF8, 2, 0, 1, *(f32 *)(state + 0x3f4) / lbl_803E5B58,
+                              &pulse);
     }
     fn_801E9C00(obj, state);
     (void)unused;
 }
 
-double fn_801EA678(int obj, int state)
+f32 fn_801EA678(int obj, int state)
 {
-    float fVar1;
-    float fVar2;
+    f32 result;
+    f32 d;
+    f32 v7;
+    f32 v6;
     int iVar3;
-    double dVar5;
-    double dVar6;
-    double dVar7;
 
     if ((lbl_803DC0BC == -1) ||
-        (iVar3 = (**(code **)(*gCheckpointInterface + 0x34))(state + 0x28), iVar3 < lbl_803DC0BC)) {
+        (iVar3 = (*(int (**)(int))(*gCheckpointInterface + 0x34))(state + 0x28), lbl_803DC0BC > iVar3)) {
         if (lbl_803DC0BC == -1) {
             iVar3 = Obj_GetPlayerObject();
-            dVar5 = (double)Vec_distance((int *)(obj + 0x18), (int *)(iVar3 + 0x18));
-            fVar1 = (float)(dVar5 * (double)lbl_803E5AF8);
+            d = Vec_distance((int *)(obj + 0x18), (int *)(iVar3 + 0x18)) * lbl_803E5AF8;
         } else {
-            dVar7 = (double)(lbl_803E5B48 *
-                             (float)((double)CONCAT44(0x43300000,
-                                                       *(uint *)((int)&lbl_803AD088 + 0x1c) ^ 0x80000000) -
-                                     lbl_803E5B00) +
-                             lbl_803E5B48 * *(float *)((int)&lbl_803AD088 + 0xc));
-            dVar6 = (double)(lbl_803E5B48 *
-                             (float)((double)CONCAT44(0x43300000,
-                                                       *(uint *)(state + 0x44) ^ 0x80000000) -
-                                     lbl_803E5B00) +
-                             lbl_803E5B48 * *(float *)(state + 0x34));
-            fVar1 = (float)(dVar7 - dVar6);
-            if (fVar1 < lbl_803E5AE8) {
-                fVar1 = -fVar1;
-            }
-        }
-        fVar2 = *(float *)(state + 0x1c);
-        if (fVar2 < fVar1) {
-            if (fVar1 < *(float *)(state + 0x18)) {
-                dVar5 = (double)(((fVar1 - fVar2) / (*(float *)(state + 0x18) - fVar2)) *
-                                 (*(float *)(state + 0x20) - *(float *)(state + 0x24)) +
-                                 *(float *)(state + 0x24));
+            v7 = lbl_803E5B48 * (f32)*(s32 *)((u8 *)lbl_803AD088 + 0x1c) +
+                 lbl_803E5B48 * *(f32 *)((u8 *)lbl_803AD088 + 0xc);
+            v6 = lbl_803E5B48 * (f32)*(s32 *)(state + 0x44) +
+                 lbl_803E5B48 * *(f32 *)(state + 0x34);
+            d = v7 - v6;
+            if (d >= lbl_803E5AE8) {
             } else {
-                dVar5 = (double)*(float *)(state + 0x20);
+                d = -d;
             }
-        } else {
-            dVar5 = (double)*(float *)(state + 0x24);
         }
-        if (*(char *)(state + 0x434) == '\0') {
-            fVar1 = (float)(dVar6 - dVar7);
-            if (fVar1 < lbl_803E5AE8) {
-                fVar1 = -fVar1;
+        if (d <= *(f32 *)(state + 0x1c)) {
+            result = *(f32 *)(state + 0x24);
+        } else if (d >= *(f32 *)(state + 0x18)) {
+            result = *(f32 *)(state + 0x20);
+        } else {
+            result = ((d - *(f32 *)(state + 0x1c)) /
+                      (*(f32 *)(state + 0x18) - *(f32 *)(state + 0x1c))) *
+                         (*(f32 *)(state + 0x20) - *(f32 *)(state + 0x24)) +
+                     *(f32 *)(state + 0x24);
+        }
+        if (*(u8 *)(state + 0x434) == 0) {
+            d = v6 - v7;
+            if (d >= lbl_803E5AE8) {
+            } else {
+                d = -d;
             }
-            if (lbl_803DC0E0 < fVar1) {
-                dVar5 = (double)lbl_803E5AE8;
+            if (d > lbl_803DC0E0) {
+                result = 0.0f;
             }
         }
     } else {
-        iVar3 = (**(code **)(*gCheckpointInterface + 0x34))(state + 0x28);
+        iVar3 = (*(int (**)(int))(*gCheckpointInterface + 0x34))(state + 0x28);
         if (iVar3 == 2) {
-            dVar5 = (double)lbl_803E5B60;
+            result = lbl_803E5B60;
         } else {
-            dVar5 = (double)lbl_803E5B64;
+            result = lbl_803E5B64;
         }
     }
-    return dVar5;
+    return result;
 }

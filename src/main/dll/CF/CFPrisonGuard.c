@@ -23,7 +23,7 @@ extern void doRumble(f32 strength);
 extern void ObjAnim_SetMoveProgress(int obj, f32 progress);
 extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);
-extern int Obj_IsLoadingLocked(void);
+extern u8 Obj_IsLoadingLocked(void);
 extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void trickyImpress(int obj);
@@ -41,15 +41,15 @@ extern f32 FLOAT_803e485c;
 extern f32 FLOAT_803e4860;
 extern f32 FLOAT_803e4864;
 extern f32 timeDelta;
-extern f32 lbl_803E3BBC;
-extern f32 lbl_803E3BC4;
+extern const f32 lbl_803E3BBC;
+extern const f32 lbl_803E3BC4;
 extern f32 lbl_803E3BC8;
 extern f32 lbl_803E3BCC;
 extern f32 lbl_803E3BD8;
-extern f32 lbl_803E3BDC;
-extern f32 lbl_803E3BE0;
+extern const f32 lbl_803E3BDC;
+extern const f32 lbl_803E3BE0;
 extern f64 lbl_803E3BE8;
-extern s16 lbl_803DBDE0[];
+extern s16 lbl_803DBDE0[4];
 extern int *gMapEventInterface;
 
 #define STAFFACTIVATED_ACTIVE 0x80
@@ -62,50 +62,62 @@ extern int *gMapEventInterface;
  * EN v1.0 Address: 0x801899B4
  * EN v1.0 Size: 560b
  */
+#pragma peephole off
+#pragma scheduling off
 void staffactivated_updateLiftHeight(int obj, int state)
 {
-  s32 currentHeight;
+  u32 flags;
+  s32 prevHeight;
   s32 rumbleStrength;
 
-  if ((*(u8 *)(state + 0x1d) & STAFFACTIVATED_ACTIVE) != 0 &&
-      ((*(u8 *)(state + 0x1d) & STAFFACTIVATED_LOCKED) == 0)) {
-    if (*(u8 *)(state + 0x1c) == 0) {
-      *(s32 *)(state + 0xc) = (s32)((f32)*(s32 *)(state + 0xc) - (lbl_803E3BC8 * timeDelta));
-      *(s32 *)(state + 0x14) =
-          (s32)((f32)*(s32 *)(state + 0x14) + ((f32)*(s32 *)(state + 0xc) * timeDelta));
-      if (*(s32 *)(state + 0x18) < *(s32 *)(state + 0x14)) {
-        *(s32 *)(state + 0x18) = *(s32 *)(state + 0x14);
+  flags = *(u8 *)(state + 0x1d);
+  if ((flags >> 7 & 1) != 0) {
+    if ((flags >> 6 & 1) == 0) goto lower;
+    goto done;
+    lower:
+    {
+      if (*(u8 *)(state + 0x1c) == 0) {
+        *(s32 *)(state + 0xc) =
+            (s32)-(lbl_803E3BC8 * timeDelta - (f32)*(s32 *)(state + 0xc));
+        *(s32 *)(state + 0x14) =
+            (s32)((f32)*(s32 *)(state + 0xc) * timeDelta + (f32)*(s32 *)(state + 0x14));
+        if (*(s32 *)(state + 0x14) > *(s32 *)(state + 0x18)) {
+          *(s32 *)(state + 0x18) = *(s32 *)(state + 0x14);
+        }
+        if (*(s32 *)(state + 0x10) == 0x800 && *(s32 *)(state + 0x14) < 0x800) {
+          Sfx_PlayFromObject(obj, 0x374);
+        }
+        if (*(s32 *)(state + 0x14) < 0) {
+          if (*(s32 *)(state + 0x10) > 0) {
+            Sfx_PlayFromObject(obj, SFXmn_dimraw36);
+            rumbleStrength = *(s32 *)(state + 0x18) / 200;
+            if (rumbleStrength > 0) {
+              doRumble((f32)rumbleStrength);
+            }
+          }
+          *(s32 *)(state + 0xc) = 0;
+          *(s32 *)(state + 0x14) = 0;
+        }
+      } else {
+        *(u8 *)(state + 0x1c) = 0;
+        *(s32 *)(state + 0x18) = 0;
       }
-      if (*(s32 *)(state + 0x10) == 0x800 && *(s32 *)(state + 0x14) < 0x800) {
+
+      prevHeight = *(s32 *)(state + 0x10);
+      if ((prevHeight < 0x40 && *(s32 *)(state + 0x14) >= 0x40) ||
+          (prevHeight >= 0x40 && *(s32 *)(state + 0x14) < 0x40)) {
         Sfx_PlayFromObject(obj, 0x374);
       }
-      if (*(s32 *)(state + 0x14) < 0) {
-        if (*(s32 *)(state + 0x10) > 0) {
-          Sfx_PlayFromObject(obj, SFXmn_dimraw36);
-          rumbleStrength = *(s32 *)(state + 0x18) / 200;
-          if (rumbleStrength > 0) {
-            doRumble((f32)rumbleStrength);
-          }
-        }
-        *(s32 *)(state + 0xc) = 0;
-        *(s32 *)(state + 0x14) = 0;
-      }
-    } else {
-      *(u8 *)(state + 0x1c) = 0;
-      *(s32 *)(state + 0x18) = 0;
+      ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
+                                                (f32 *)(state + 0x20));
+      *(s32 *)(state + 0x10) = *(s32 *)(state + 0x14);
+      ObjAnim_SetMoveProgress(obj, (f32)*(s32 *)(state + 0x14) / lbl_803E3BCC);
     }
-
-    currentHeight = *(s32 *)(state + 0x14);
-    if ((*(s32 *)(state + 0x10) < 0x40 && currentHeight >= 0x40) ||
-        (*(s32 *)(state + 0x10) >= 0x40 && currentHeight < 0x40)) {
-      Sfx_PlayFromObject(obj, 0x374);
-    }
-    ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
-                                              (f32 *)(state + 0x20));
-    *(s32 *)(state + 0x10) = *(s32 *)(state + 0x14);
-    ObjAnim_SetMoveProgress(obj, (f32)*(s32 *)(state + 0x14) / lbl_803E3BCC);
   }
+done:;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 typedef struct PrisonGuardRotationWork {
   s16 y;
@@ -125,15 +137,17 @@ typedef struct PrisonGuardRotationWork {
  * EN v1.0 Address: 0x80189C68
  * EN v1.0 Size: 732b
  */
+#pragma peephole off
+#pragma scheduling off
 void staffactivated_spawnMapEventDebris(int obj)
 {
+  int i;
   int setup;
   int player;
-  int tricky;
+  u32 tricky;
   int state;
   int spawnedSetup;
   int spawnedObj;
-  int i;
   f32 lenSq;
   f32 len;
   s32 yawDelta;
@@ -174,18 +188,18 @@ void staffactivated_spawnMapEventDebris(int obj)
 
       *(f32 *)(spawnedObj + 0x24) =
           *(f32 *)(spawnedObj + 0x24) *
-          (lbl_803E3BBC - (lbl_803E3BC4 * (f32)randomGetRange(0, 0x19)));
+          (lbl_803E3BBC - (lbl_803E3BC4 * (f32)(int)randomGetRange(0, 0x19)));
       *(f32 *)(spawnedObj + 0x2c) =
           *(f32 *)(spawnedObj + 0x2c) *
-          (lbl_803E3BBC - (lbl_803E3BC4 * (f32)randomGetRange(0, 0x19)));
+          (lbl_803E3BBC - (lbl_803E3BC4 * (f32)(int)randomGetRange(0, 0x19)));
       *(f32 *)(spawnedObj + 0x28) = lbl_803E3BE0;
 
-      rotate.scale = lbl_803E3BBC;
       rotate.tx = lbl_803E3BDC;
       rotate.ty = lbl_803E3BDC;
       rotate.tz = lbl_803E3BDC;
-      rotate.x = 0;
+      rotate.scale = lbl_803E3BBC;
       rotate.z = 0;
+      rotate.x = 0;
       rotate.y = (s16)randomGetRange(-10000, 10000);
       mathFn_80021ac8(&rotate, (void *)(spawnedObj + 0x24));
 
@@ -202,6 +216,8 @@ void staffactivated_spawnMapEventDebris(int obj)
     }
   }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -494,6 +510,13 @@ u32 cfPrisonGuard_isGameBitMirrorSet(int *obj) { return (*((u8*)((int**)obj)[0xb
  * EN v1.0 Address: 0x80189BE4
  * EN v1.0 Size: 116b
  */
+typedef struct PrisonGuardStateFlags {
+    u8 pad[0x1d];
+    u8 active : 1;
+    u8 locked : 1;
+    u8 mirror : 1;
+} PrisonGuardStateFlags;
+
 #pragma peephole off
 #pragma scheduling off
 void cfPrisonGuard_setGameBitMirror(int obj, u8 flag)
@@ -502,10 +525,10 @@ void cfPrisonGuard_setGameBitMirror(int obj, u8 flag)
     register int t = *(int *)(obj + 0xb8);
     if (flag != 0) {
         GameBit_Set((int)*(short *)(s + 0x24), 1);
-        *(u8 *)(t + 0x1d) |= 0x20;
+        ((PrisonGuardStateFlags *)t)->mirror = 1;
     } else {
         GameBit_Set((int)*(short *)(s + 0x24), 0);
-        *(u8 *)(t + 0x1d) &= ~0x20;
+        ((PrisonGuardStateFlags *)t)->mirror = 0;
     }
 }
 #pragma scheduling reset

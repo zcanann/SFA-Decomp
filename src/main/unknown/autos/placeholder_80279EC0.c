@@ -8,8 +8,24 @@ extern u32 hwIsActive(u32 voice);
 extern u32 get_vidlist(u32 id);
 extern void synthCancelJob(int voice);
 
-extern u8 *synthVoice;
-extern u8 vidListNodes[];
+typedef struct VoiceListNode {
+    u8 prev;
+    u8 next;
+    u16 time;
+} VoiceListNode;
+
+typedef struct VidListBlock {
+    u8 vidLists[0x800];
+    u8 midiKeySlots[0x80];
+    u8 directSlots[0x40];
+    VoiceListNode priorityLinks[0x40];
+    u8 priorityGroupHeads[0x100];
+    u16 prioritySortLinks[0x200];
+    VoiceListNode freeList[0x40];
+} VidListBlock;
+
+extern SynthVoiceState *synthVoice;
+extern VidListBlock vidListNodes;
 extern u8 lbl_803BD150[];
 extern u8 gSynthInitialized;
 extern u8 voiceDirectSlots[];
@@ -20,189 +36,35 @@ extern u8 voiceFxRunning;
 extern u8 voiceListInsert;
 extern u8 voiceListRoot;
 
-#define voicePriorityLinks (vidListNodes + 0x8c0)
-#define voicePriorityGroupHeads (vidListNodes + 0x9c0)
-#define voiceFreeListSlots (vidListNodes + 0xec0)
+#define voicePriorityLinks (vidListNodes.priorityLinks)
+#define voicePriorityGroupHeads (vidListNodes.priorityGroupHeads)
+#define voiceFreeListSlots (vidListNodes.freeList)
 
-#define SYNTH_VOICE_STATE(voice) ((SynthVoiceState *)(synthVoice + (voice) * SYNTH_VOICE_STRIDE))
+#define SYNTH_VOICE_STATE(voice) (&synthVoice[voice])
 
 /*
  * Initialize the voice priority and group linked-list tables.
  */
 void voiceInitPriorityTables(void)
 {
-    s8 value;
-    u8 lastVoice;
-    int remaining;
-    u8 *groupHead;
-    u32 progress;
-    u8 *activeSlot;
-    s8 *freeSlot;
-    u32 count;
-    u32 batches;
+    VidListBlock *vb = &vidListNodes;
+    u32 i;
 
-    progress = 0;
-    count = lbl_803BD150[0x210];
-    if (count != 0) {
-        if (count > 8) {
-            batches = (count - 1) >> 3;
-            freeSlot = (s8 *)voiceFreeListSlots;
-            if (count != 8) {
-                do {
-                    value = progress;
-                    freeSlot[0] = value - 1;
-                    freeSlot[1] = value + 1;
-                    *(u16 *)(freeSlot + 2) = 1;
-                    freeSlot[4] = value;
-                    freeSlot[5] = value + 2;
-                    progress += 8;
-                    *(u16 *)(freeSlot + 6) = 1;
-                    freeSlot[8] = value + 1;
-                    freeSlot[9] = value + 3;
-                    *(u16 *)(freeSlot + 10) = 1;
-                    freeSlot[12] = value + 2;
-                    freeSlot[13] = value + 4;
-                    *(u16 *)(freeSlot + 14) = 1;
-                    freeSlot[16] = value + 3;
-                    freeSlot[17] = value + 5;
-                    *(u16 *)(freeSlot + 18) = 1;
-                    freeSlot[20] = value + 4;
-                    freeSlot[21] = value + 6;
-                    *(u16 *)(freeSlot + 22) = 1;
-                    freeSlot[24] = value + 5;
-                    freeSlot[25] = value + 7;
-                    *(u16 *)(freeSlot + 26) = 1;
-                    freeSlot[28] = value + 6;
-                    freeSlot[29] = value + 8;
-                    *(u16 *)(freeSlot + 30) = 1;
-                    freeSlot += 0x20;
-                    batches--;
-                } while (batches != 0);
-            }
-        }
-        freeSlot = (s8 *)(voiceFreeListSlots + progress * 4);
-        remaining = lbl_803BD150[0x210] - progress;
-        if (progress < lbl_803BD150[0x210]) {
-            do {
-                value = progress;
-                freeSlot[0] = value - 1;
-                progress++;
-                freeSlot[1] = value + 1;
-                *(u16 *)(freeSlot + 2) = 1;
-                freeSlot += 4;
-                remaining--;
-            } while (remaining != 0);
-        }
+    for (i = 0; i < lbl_803BD150[0x210]; i++) {
+        voiceFreeListSlots[i].prev = i - 1;
+        voiceFreeListSlots[i].next = i + 1;
+        voiceFreeListSlots[i].time = 1;
     }
-
-    lastVoice = lbl_803BD150[0x210];
-    voiceFreeListSlots[0] = SYNTH_INVALID_VOICE_U8;
-    progress = 0;
-    count = lbl_803BD150[0x210];
-    *(u8 *)(voiceFreeListSlots - 3 + count * 4) = SYNTH_INVALID_VOICE_U8;
-    voiceListInsert = lastVoice - 1;
+    vb->freeList[0].prev = 0xff;
+    vb->freeList[lbl_803BD150[0x210] - 1].next = 0xff;
     voiceListRoot = 0;
-    if (count != 0) {
-        if (count > 8) {
-            batches = (count - 1) >> 3;
-            activeSlot = voicePriorityLinks;
-            if (count != 8) {
-                do {
-                    *(u16 *)(activeSlot + 2) = 0;
-                    progress += 8;
-                    *(u16 *)(activeSlot + 6) = 0;
-                    *(u16 *)(activeSlot + 10) = 0;
-                    *(u16 *)(activeSlot + 14) = 0;
-                    *(u16 *)(activeSlot + 18) = 0;
-                    *(u16 *)(activeSlot + 22) = 0;
-                    *(u16 *)(activeSlot + 26) = 0;
-                    *(u16 *)(activeSlot + 30) = 0;
-                    activeSlot += 0x20;
-                    batches--;
-                } while (batches != 0);
-            }
-        }
-        activeSlot = voicePriorityLinks + progress * 4;
-        remaining = lbl_803BD150[0x210] - progress;
-        if (progress < lbl_803BD150[0x210]) {
-            do {
-                *(u16 *)(activeSlot + 2) = 0;
-                activeSlot += 4;
-                remaining--;
-            } while (remaining != 0);
-        }
+    voiceListInsert = lbl_803BD150[0x210] - 1;
+    for (i = 0; i < lbl_803BD150[0x210]; i++) {
+        voicePriorityLinks[i].time = 0;
     }
-
-    remaining = 4;
-    groupHead = voicePriorityGroupHeads;
-    do {
-        groupHead[0] = 0xff;
-        groupHead[1] = 0xff;
-        groupHead[2] = 0xff;
-        groupHead[3] = 0xff;
-        groupHead[4] = 0xff;
-        groupHead[5] = 0xff;
-        groupHead[6] = 0xff;
-        groupHead[7] = 0xff;
-        groupHead[8] = 0xff;
-        groupHead[9] = 0xff;
-        groupHead[10] = 0xff;
-        groupHead[11] = 0xff;
-        groupHead[12] = 0xff;
-        groupHead[13] = 0xff;
-        groupHead[14] = 0xff;
-        groupHead[15] = 0xff;
-        groupHead[16] = 0xff;
-        groupHead[17] = 0xff;
-        groupHead[18] = 0xff;
-        groupHead[19] = 0xff;
-        groupHead[20] = 0xff;
-        groupHead[21] = 0xff;
-        groupHead[22] = 0xff;
-        groupHead[23] = 0xff;
-        groupHead[24] = 0xff;
-        groupHead[25] = 0xff;
-        groupHead[26] = 0xff;
-        groupHead[27] = 0xff;
-        groupHead[28] = 0xff;
-        groupHead[29] = 0xff;
-        groupHead[30] = 0xff;
-        groupHead[31] = 0xff;
-        groupHead[32] = 0xff;
-        groupHead[33] = 0xff;
-        groupHead[34] = 0xff;
-        groupHead[35] = 0xff;
-        groupHead[36] = 0xff;
-        groupHead[37] = 0xff;
-        groupHead[38] = 0xff;
-        groupHead[39] = 0xff;
-        groupHead[40] = 0xff;
-        groupHead[41] = 0xff;
-        groupHead[42] = 0xff;
-        groupHead[43] = 0xff;
-        groupHead[44] = 0xff;
-        groupHead[45] = 0xff;
-        groupHead[46] = 0xff;
-        groupHead[47] = 0xff;
-        groupHead[48] = 0xff;
-        groupHead[49] = 0xff;
-        groupHead[50] = 0xff;
-        groupHead[51] = 0xff;
-        groupHead[52] = 0xff;
-        groupHead[53] = 0xff;
-        groupHead[54] = 0xff;
-        groupHead[55] = 0xff;
-        groupHead[56] = 0xff;
-        groupHead[57] = 0xff;
-        groupHead[58] = 0xff;
-        groupHead[59] = 0xff;
-        groupHead[60] = 0xff;
-        groupHead[61] = 0xff;
-        groupHead[62] = 0xff;
-        groupHead[63] = 0xff;
-        groupHead += 0x40;
-        remaining--;
-    } while (remaining != 0);
+    for (i = 0; i < 0x100; i++) {
+        voicePriorityGroupHeads[i] = 0xff;
+    }
     voicePrioSortRootListRoot = 0xffff;
     voiceMusicRunning = 0;
     voiceFxRunning = 0;
@@ -216,17 +78,13 @@ void voiceInitPriorityTables(void)
  */
 void voiceBreakAndFree(u32 voice)
 {
-    SynthVoiceState *voiceState;
-
     if (voice == SYNTH_INVALID_VOICE) return;
     if (hwIsActive(voice) != 0) {
         hwBreak(voice);
     }
-    voiceState = SYNTH_VOICE_STATE(voice);
-    voiceState->handle = voice;
-    voiceFree((int)SYNTH_VOICE_STATE(voice));
-    voiceState = SYNTH_VOICE_STATE(voice);
-    voiceState->callbackActive = 0;
+    synthVoice[voice].handle = voice;
+    voiceFree((int)&synthVoice[voice]);
+    synthVoice[voice].callbackActive = 0;
 }
 
 /*
@@ -240,8 +98,7 @@ void voiceKill(u32 voice)
 
     if (voiceState->activeHandle != 0) {
         vidRemoveVoice((int)voiceState);
-        voiceState->stateFlags &= ~3;
-        voiceState->dirtyFlags = voiceState->dirtyFlags;
+        voiceState->cFlags &= ~3;
         voiceState->priorityTick = 0;
         voiceFree((int)voiceState);
     }
@@ -260,6 +117,9 @@ void voiceKill(u32 voice)
 int voiceKillById(u32 id)
 {
     int result = -1;
+    u32 nextHandle;
+    u32 i;
+
     if (gSynthInitialized != 0) {
         u32 s;
         if ((id != SYNTH_INVALID_VOICE) && ((s = get_vidlist(id)) != 0)) {
@@ -268,25 +128,13 @@ int voiceKillById(u32 id)
             id = SYNTH_INVALID_VOICE;
         }
 
-        while (id != SYNTH_INVALID_VOICE) {
-            u8 v = (u8)id;
-            SynthVoiceState *voiceState = SYNTH_VOICE_STATE(v);
-            u32 chain = voiceState->nextHandle;
-            if (id == voiceState->handle) {
-                if (voiceState->activeHandle != 0) {
-                    vidRemoveVoice((int)voiceState);
-                    voiceState->stateFlags &= ~3;
-                    voiceState->dirtyFlags = voiceState->dirtyFlags;
-                    voiceState->priorityTick = 0;
-                    voiceFree((int)voiceState);
-                }
-                if (voiceState->callbackActive != 0) {
-                    synthCancelJob(v);
-                }
-                hwBreak(v);
+        for (; id != SYNTH_INVALID_VOICE; id = nextHandle) {
+            i = (u8)id;
+            nextHandle = SYNTH_VOICE_STATE(i)->nextHandle;
+            if (id == SYNTH_VOICE_STATE(i)->handle) {
+                voiceKill(i);
                 result = 0;
             }
-            id = chain;
         }
     }
 

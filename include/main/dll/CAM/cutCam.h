@@ -15,14 +15,14 @@ typedef struct CamcontrolAction44Payload {
   s16 height;
 } CamcontrolAction44Payload;
 
-undefined4
-camcontrol_traceMove(float param_1,float *param_2,float *param_3,float *param_4,int param_5,
-                     char param_6,u8 param_7,u8 param_8);
+int
+camcontrol_traceMove(float *param_2,float *param_3,float *param_4,u8 *param_5,
+                     char param_6,u8 param_7,u8 param_8,float param_1);
 undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3);
 undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3,short *param_4);
 void camcontrol_updateTargetAction(int param_1,int param_2);
-void cameraFn_80103b40(void);
-void camMoveFn_80104040(void);
+int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle);
+void camMoveFn_80104040(int cam, short *tgt);
 void camcontrol_updateModeSettings(int camera);
 void doNothing_80103660(void);
 

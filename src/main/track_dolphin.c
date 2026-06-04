@@ -4109,7 +4109,9 @@ void* fn_8006070C(int *obj, int idx) { return (char*)((int**)obj)[0x64/4] + idx 
 /* arr indexing pow2. */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void* fn_800606DC(int *obj, int idx) { return (char*)((int**)obj)[0x4c/4] + idx * 8; }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -4209,12 +4211,14 @@ void playerShadowFn_80062a30(int *obj)
  * (target uses rlwinm 8,15 + srwi 16). */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 u32 fn_80060668(int *obj)
 {
     u32 v = (u32)obj[4];
     v &= 0x00FF0000;
     return v >> 16;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -4390,6 +4394,7 @@ void fn_80060BB0(void)
 extern f32 *lbl_803DCF38;
 extern s16 lbl_803DCF5C;
 
+#pragma dont_inline on
 int insertPoint(int val, s16 *arr, f32 x, f32 y, f32 z)
 {
     int i;
@@ -4420,6 +4425,7 @@ int insertPoint(int val, s16 *arr, f32 x, f32 y, f32 z)
     lbl_803DCF5C++;
     return lbl_803DCF5C - 1;
 }
+#pragma dont_inline reset
 
 extern char sTrackIntersectFuncOverflowFormat[];
 extern void debugPrintf(char *fmt, ...);
@@ -5397,7 +5403,7 @@ int objShadowFn_80062498(int *obj, int param2)
 }
 
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
-extern int fn_80067B84(int cur, void *desc, int model, int flags, f32 c, f32 x0, f32 y0, f32 z0, f32 x1, f32 y1, f32 z1);
+extern int fn_80067B84(int cur, u8 *desc, int model, int flags, f32 c, f32 x0, f64 y0, f32 z0, f32 x1, f64 y1, f32 z1);
 extern int modelFileHeaderGetCullDistance(void *hdr);
 extern u32 lbl_803DCF70;
 extern s16 lbl_803DCF6E;
@@ -6096,7 +6102,7 @@ int fn_800660C8(f32 *a, f32 *b, f32 *c, f32 *p, int type, f32 f1p, f32 y)
     return 1;
 }
 
-int hitDetectFn_800664fc(void *tri, f32 *rayOrig, f32 *rayDir, f32 maxd, f32 *out29, f32 *outNrm, f32 *outDist)
+int hitDetectFn_800664fc(void *tri, f32 *rayOrig, f32 *rayDir, f32 maxd, f32 maxStep, f32 epsArg, f32 *out29, f32 *outNrm, f32 *outDist)
 {
     f32 hit[3];
     f32 tmp14[3];
@@ -7013,4 +7019,1544 @@ void objBboxFn_800640cc(f32 *p0, f32 *p1, int p5, int *out, int *self, int p8, i
         else
             memcpy(p1, w1, 0xc);
     }
+}
+
+/* fn_80067B84 — gather model triangles overlapping a swept bbox into the
+ * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
+ * cursor. */
+extern u8 *fn_80028364(int hdr, int i);
+extern u16 *fn_80028354(int hdr, int tri);
+extern s16 *ObjModel_GetBaseVertexCoords(int hdr, u32 idx);
+extern f32 lbl_803DECF0;
+extern f32 lbl_803DECF4;
+extern f32 lbl_803DECF8;
+
+int fn_80067B84(int cur, u8 *desc, int model, int flags, f32 scale,
+                f32 x0, f64 y0d, f32 z0, f32 x1, f64 y1d, f32 z1)
+{
+    f32 xd, xc, xb, xa;
+    f32 zd, zc, zb, za;
+    f32 ytmp;
+    f32 y1, y0;
+    int count, i;
+    int flag8, flag20;
+    int flag4;
+    int hdr;
+    int maxYi, minYi;
+
+    y0 = y0d;
+    y1 = y1d;
+    hdr = *(int *)model;
+
+    Matrix_TransformPoint(*(void **)(desc + 8), x0, y0d, z0, &xa, &ytmp, &za);
+    Matrix_TransformPoint(*(void **)(desc + 8), x0, y0, z1, &xb, &y0, &zb);
+    Matrix_TransformPoint(*(void **)(desc + 8), x1, y1, z0, &xc, &ytmp, &zc);
+    Matrix_TransformPoint(*(void **)(desc + 8), x1, y1, z1, &xd, &y1, &zd);
+
+    x1 = xa;
+    x0 = x1;
+    z1 = za;
+    z0 = z1;
+    if (xb < x1) x0 = xb;
+    if (xb > x1) x1 = xb;
+    if (zb < z0) z0 = zb;
+    if (zb > z1) z1 = zb;
+    if (xc < x0) x0 = xc;
+    if (xc > x1) x1 = xc;
+    if (zc < z0) z0 = zc;
+    if (zc > z1) z1 = zc;
+    if (xd < x0) x0 = xd;
+    if (xd > x1) x1 = xd;
+    if (zd < z0) z0 = zd;
+    if (zd > z1) z1 = zd;
+
+    count = *(u16 *)(hdr + 0xf0);
+    i = 0;
+    flag20 = (u8)flags & 0x20;
+    flag8 = (u8)flags & 8;
+    flag4 = (u8)flags & 4;
+
+    for (; i < count; i++) {
+        u8 *blk = fn_80028364(hdr, i);
+        s16 *bs = (s16 *)blk;
+        u32 bf = *(u32 *)(blk + 0x10);
+        int tEnd, t;
+
+        if (bf & 0x100000) continue;
+        if ((bf & 0x8000000) && flag20 == 0) continue;
+        if (x0 > (f32)bs[2] * scale) continue;
+        if (x1 < (f32)bs[1] * scale) continue;
+        if (y0 > (f32)bs[4] * scale) continue;
+        if (y1 < (f32)bs[3] * scale) continue;
+        if (z0 > (f32)bs[6] * scale) continue;
+        if (z1 < (f32)bs[5] * scale) continue;
+
+        tEnd = *(u16 *)(blk + 0x14);
+        t = *(u16 *)blk;
+        for (; t < tEnd; t++) {
+            u16 *tw = fn_80028354(hdr, t);
+            f32 tMinX, tMaxX, tMinY, tMaxY, tMinZ, tMaxZ;
+            int j;
+            u8 *vout;
+            s16 *xs, *ys, *zs;
+            int nxi, nyi, nzi;
+            f32 fnx, fny, fnz;
+            f32 len, inv;
+
+            tMinX = lbl_803DECF0;
+            tMaxX = lbl_803DECF4;
+            tMinY = tMinX;
+            tMaxY = tMaxX;
+            tMinZ = tMinX;
+            tMaxZ = tMaxX;
+            j = 0;
+            vout = (u8 *)cur;
+            for (; j < 3; j++) {
+                s16 *v = ObjModel_GetBaseVertexCoords(hdr, *tw);
+                f32 fx, fy, fz;
+                if (*(u16 *)(hdr + 2) & 0x800) {
+                    fx = (f32)v[0] * scale;
+                    fy = (f32)v[1] * scale;
+                    fz = (f32)v[2] * scale;
+                } else {
+                    fx = (f32)v[0] * scale * lbl_803DECF8;
+                    fy = (f32)v[1] * scale * lbl_803DECF8;
+                    fz = (f32)v[2] * scale * lbl_803DECF8;
+                }
+                if (fx > tMaxX) tMaxX = fx;
+                if (fx < tMinX) tMinX = fx;
+                if (fy > tMaxY) { tMaxY = fy; maxYi = j; }
+                if (fy < tMinY) { tMinY = fy; minYi = j; }
+                if (fz > tMaxZ) tMaxZ = fz;
+                if (fz < tMinZ) tMinZ = fz;
+                *(s16 *)(vout + 0x10) = (s16)fx;
+                *(s16 *)(vout + 0x16) = (s16)fy;
+                *(s16 *)(vout + 0x1c) = (s16)fz;
+                tw++;
+                vout += 2;
+            }
+            if (tMinY > y1) continue;
+            if (tMaxY < y0) continue;
+            if (tMinX > x1) continue;
+            if (tMaxX < x0) continue;
+            if (tMinZ > z1) continue;
+            if (tMaxZ < z0) continue;
+
+            xs = (s16 *)(cur + 0x10);
+            ys = (s16 *)(cur + 0x16);
+            zs = (s16 *)(cur + 0x1c);
+
+            nxi = ys[0] * (zs[1] - zs[2]) + (ys[1] * (zs[2] - zs[0]) + ys[2] * (zs[0] - zs[1]));
+            fnx = (f32)nxi;
+            nyi = zs[0] * (xs[1] - xs[2]) + (zs[1] * (xs[2] - xs[0]) + zs[2] * (xs[0] - xs[1]));
+            fny = (f32)nyi;
+            nzi = xs[0] * (ys[1] - ys[2]) + (xs[1] * (ys[2] - ys[0]) + xs[2] * (ys[0] - ys[1]));
+            fnz = (f32)nzi;
+            len = sqrtf(fnz * fnz + (fnx * fnx + fny * fny));
+            if (len <= __AR_Callback) continue;
+            inv = lbl_803DECC4 / len;
+            *(f32 *)(cur + 4) = fnx * inv;
+            *(f32 *)(cur + 8) = fny * inv;
+            *(f32 *)(cur + 0xc) = fnz * inv;
+
+            if (flag8) {
+                if (*(f32 *)(cur + 8) >= __AR_Size) continue;
+                if (*(f32 *)(cur + 8) <= lbl_803DECEC) continue;
+            }
+            if (flag4) {
+                if (*(f32 *)(cur + 8) < __AR_Size && *(f32 *)(cur + 8) > lbl_803DECEC) continue;
+            }
+
+            *(f32 *)(cur + 0) = -(*(f32 *)(cur + 0xc) * (f32)zs[0]
+                               + (*(f32 *)(cur + 4) * (f32)xs[0] + *(f32 *)(cur + 8) * (f32)ys[0]));
+
+            {
+                int k22 = 0;
+                int deg = 0;
+                int j2 = 0;
+                s16 *xw = xs;
+                s16 *yw = ys;
+                s16 *zw = zs;
+                f32 eps = __AR_Callback;
+                for (; j2 < 3; j2++) {
+                    int k = j2 + 1;
+                    f32 px, py, pz;
+                    f32 ex, ey, ez;
+                    if (k > 2) k = 0;
+                    px = *(f32 *)(cur + 4) + (f32)xw[0];
+                    py = *(f32 *)(cur + 8) + (f32)yw[0];
+                    pz = *(f32 *)(cur + 0xc) + (f32)zw[0];
+                    ex = py * (f32)(zw[0] - zs[k]) + ((f32)yw[0] * ((f32)zs[k] - pz) + (f32)ys[k] * (pz - (f32)zw[0]));
+                    ey = pz * (f32)(xw[0] - xs[k]) + ((f32)zw[0] * ((f32)xs[k] - px) + (f32)zs[k] * (px - (f32)xw[0]));
+                    ez = px * (f32)(yw[0] - ys[k]) + ((f32)xw[0] * ((f32)ys[k] - py) + (f32)xs[k] * (py - (f32)yw[0]));
+                    len = sqrtf(ez * ez + (ex * ex + ey * ey));
+                    if (len <= eps) {
+                        deg = 1;
+                    } else {
+                        f32 inv2 = lbl_803DECC4 / len;
+                        ex *= inv2;
+                        ey *= inv2;
+                        ez *= inv2;
+                    }
+                    *(f32 *)(cur + k22 * 4 + 0x24) = ex;
+                    k22++;
+                    *(f32 *)(cur + k22 * 4 + 0x24) = ey;
+                    k22++;
+                    *(f32 *)(cur + k22 * 4 + 0x24) = ez;
+                    k22++;
+                    xw++;
+                    yw++;
+                    zw++;
+                }
+                if (deg) continue;
+            }
+
+            *(s8 *)(cur + 0x48) = (u8)fn_80060668((int *)blk);
+            *(u8 *)(cur + 0x4a) = (u8)((maxYi << 4) | minYi);
+            *(s8 *)(cur + 0x49) = 10;
+            *(s8 *)(cur + 0x49) |= 8;
+            cur += 0x4c;
+            if ((u32)cur >= lbl_803DCF70) {
+                return cur;
+            }
+        }
+    }
+    return cur;
+}
+
+/* mapLoadBlocksFn_800685cc — gather map-block collision triangles overlapping
+ * the query box into the buffer at cur; returns advanced cursor. */
+extern u8 *mapGetBlockAtPos(int x, int z, int layer);
+extern int fn_8001F978(void *p, int size, int *offIn, int *offOut, int base);
+extern void cacheFn_800229c4(int n);
+extern f32 fastFloorf(f32 x);
+extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
+extern f32 PSVECMag(f32 *v);
+extern int lbl_803DCDC8;
+extern int lbl_803DCDCC;
+
+int mapLoadBlocksFn_800685cc(cur, x0, y0, z0, x1, y1, z1, flags, doEdges)
+int cur;
+int x0;
+int y0;
+int z0;
+int x1;
+int y1;
+int z1;
+int flags;
+u8 doEdges;
+{
+    int cells[16];
+    f32 e2[3];
+    f32 e1[3];
+    f32 e0[3];
+    f32 verts[6];
+    f32 v0[3];
+    f32 en[3];
+    int offA;
+    int offB;
+    int offC;
+    int gx0, gz0, gx1, gz1;
+    int count, layer;
+    int *cellp, *cw;
+    int *descp, *dw;
+    int *firstp;
+    int f40, f80, f200, f120, f20, f8, f100, f4;
+    int last, i;
+    int dmaflip;
+    u8 typeb;
+
+    x0 = x0 - lbl_803DCDC8;
+    z0 = z0 - lbl_803DCDCC;
+    x1 = x1 - lbl_803DCDC8;
+    z1 = z1 - lbl_803DCDCC;
+    if (x0 > x1) {
+        x0 ^= x1;
+        x1 ^= x0;
+        x0 ^= x1;
+    }
+    if (z0 > z1) {
+        z0 ^= z1;
+        z1 ^= z0;
+        z0 ^= z1;
+    }
+    gx0 = (int)fastFloorf((f32)x0 / lbl_803DECE0[0]);
+    gz0 = (int)fastFloorf((f32)z0 / lbl_803DECE0[0]);
+    gx1 = (int)fastFloorf((f32)x1 / lbl_803DECE0[0]);
+    gz1 = (int)fastFloorf((f32)z1 / lbl_803DECE0[0]);
+
+    count = 0;
+    layer = 0;
+    cellp = cells;
+    cw = cellp;
+    descp = (int *)lbl_8038DE44;
+    dw = descp;
+    do {
+        int gx, gz;
+        int *p1, *q1, *p2, *q2;
+        p1 = cw;
+        q1 = dw;
+        for (gx = gx0; gx <= gx1 && count < 16; gx++) {
+            p2 = p1;
+            q2 = q1;
+            for (gz = gz0; gz <= gz1 && count < 16; gz++) {
+                u8 *blk = mapGetBlockAtPos(gx, gz, layer);
+                if (blk != NULL) {
+                    *p2 = (int)blk;
+                    q2[0] = gx * 0x280;
+                    q2[2] = gz * 0x280;
+                    p2++;
+                    q2 += 3;
+                    p1++;
+                    q1 += 3;
+                    cw++;
+                    dw += 3;
+                    count++;
+                }
+            }
+        }
+        layer++;
+    } while (layer < 5);
+
+    if (count == 0) {
+        return cur;
+    }
+
+    {
+        int c0 = cells[0];
+        void *p = fn_800606DC((int *)c0, 0);
+        dmaflip = 0;
+        offA = 0;
+        fn_8001F978(p, *(u16 *)(c0 + 0x98) << 3, &offA, &offB, 0x2000);
+        fn_8001F978(*(void **)(c0 + 0x58), *(u16 *)(c0 + 0x90) * 6, &offB, &offC, 0x2000);
+    }
+    i = 0;
+    firstp = (int *)lbl_8038DE44;
+    f40 = (u16)flags & 0x40;
+    f80 = (u16)flags & 0x80;
+    f200 = (u16)flags & 0x200;
+    f120 = (u16)flags & 0x120;
+    f20 = (u16)flags & 0x20;
+    f8 = (u16)flags & 8;
+    f100 = (u16)flags & 0x100;
+    f4 = (u16)flags & 4;
+    last = count - 1;
+    for (; i < count; i++) {
+        int bb;
+        int vb;
+        int blk;
+        int relx0, relx1, relz0, relz1;
+        int dxoff, dzoff;
+        int mask;
+        u32 bit;
+        int pos, k;
+        int mask16;
+        u8 *tri;
+        u32 triEnd;
+
+        bb = offA;
+        vb = offB;
+        if (i < last) {
+            int next = cellp[1];
+            int nextBase;
+            void *p;
+            int c13, c14;
+            dmaflip ^= 0x2000;
+            nextBase = dmaflip + 0x2000;
+            p = fn_800606DC((int *)next, 0);
+            offA = dmaflip;
+            c13 = fn_8001F978(p, *(u16 *)(next + 0x98) << 3, &offA, &offB, nextBase);
+            c14 = fn_8001F978(*(void **)(next + 0x58), *(u16 *)(next + 0x90) * 6, &offB, &offC, nextBase);
+            cacheFn_800229c4((u8)(c13 + c14));
+        } else {
+            cacheFn_800229c4(0);
+        }
+
+        blk = *cellp;
+        relx0 = x0 - descp[0];
+        relx1 = x1 - descp[0];
+        relz0 = z0 - descp[2];
+        relz1 = z1 - descp[2];
+        descp[0] = descp[0] + lbl_803DCDC8;
+        descp[2] = descp[2] + lbl_803DCDCC;
+        if (relx0 < 0) relx0 = 0;
+        if (relx1 > 0x280) relx1 = 0x280;
+        if (relz0 < 0) relz0 = 0;
+        if (relz1 > 0x280) relz1 = 0x280;
+        dxoff = descp[0] - firstp[0];
+        dzoff = descp[2] - firstp[2];
+
+        mask = 0;
+        bit = 1;
+        pos = 0;
+        for (k = 2; k != 0; k--) {
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+        }
+        pos = 0;
+        for (k = 2; k != 0; k--) {
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+        }
+        tri = *(u8 **)(blk + 0x50);
+        triEnd = (u32)tri + *(u16 *)(blk + 0x9a) * 0x14;
+        mask16 = (s16)mask;
+        for (; (u32)tri < triEnd; tri += 0x14) {
+            u32 tf = *(u32 *)(tri + 0x10);
+            u8 type;
+            int yoff;
+            int t0, vEnd;
+            u8 *vq;
+
+            if ((tf & 0x10) && f40) continue;
+            if (!(tf & 4) && f80) continue;
+            if (tf & 8) {
+                if (tf & 1) continue;
+                if (f200) continue;
+                type = 4;
+                if (f120 == 0) type |= 0x10;
+            } else {
+                if ((tf & 2) && f20 == 0) continue;
+                type = 2;
+            }
+            yoff = *(s16 *)(blk + 0x8e);
+            if (*(s16 *)(tri + 6) + yoff > y1) continue;
+            if (*(s16 *)(tri + 8) + yoff < y0) continue;
+            if (*(s16 *)(tri + 2) > relx1) continue;
+            if (*(s16 *)(tri + 4) < relx0) continue;
+            if (*(s16 *)(tri + 0xa) > relz1) continue;
+            if (*(s16 *)(tri + 0xc) < relz0) continue;
+            if (tf & 4) type |= 8;
+            typeb = (u8)fn_80060668((int *)tri);
+            t0 = *(u16 *)tri;
+            vq = (u8 *)(bb + t0 * 8);
+            vEnd = *(u16 *)(tri + 0x14);
+            for (; t0 < vEnd; t0++, vq += 8) {
+                s16 *vp;
+                int minX, maxX, minY, maxY, minZ, maxZ;
+                u8 maxYi, minYi;
+                u16 *tw;
+                u8 *vo;
+                f32 *vf;
+                int j;
+                f32 mag;
+
+                if ((mask16 & *(u16 *)(vq + 6) & 0xff) == 0) continue;
+                if ((mask16 & *(u16 *)(vq + 6) & 0xff00) == 0) continue;
+                vp = (s16 *)(vb + *(u16 *)vq * 6);
+                minX = vp[0] >> 3;
+                maxX = minX;
+                minY = (vp[1] >> 3) + *(s16 *)(blk + 0x8e);
+                maxY = minY;
+                minZ = vp[2] >> 3;
+                maxZ = minZ;
+                *(s16 *)(cur + 0x10) = minX + dxoff;
+                *(s16 *)(cur + 0x16) = minY;
+                *(s16 *)(cur + 0x1c) = minZ + dzoff;
+                v0[0] = __OSs16tof32((s16 *)(cur + 0x10));
+                v0[1] = __OSs16tof32((s16 *)(cur + 0x16));
+                v0[2] = __OSs16tof32((s16 *)(cur + 0x1c));
+                maxYi = 0;
+                minYi = 0;
+                tw = (u16 *)(vq + 2);
+                vo = (u8 *)(cur + 2);
+                vf = verts;
+                for (j = 1; j < 3; j++) {
+                    int x, yy, z;
+                    vp = (s16 *)(vb + *tw * 6);
+                    x = vp[0] >> 3;
+                    yy = (vp[1] >> 3) + *(s16 *)(blk + 0x8e);
+                    z = vp[2] >> 3;
+                    if (x > maxX) maxX = x;
+                    else if (x < minX) minX = x;
+                    if (yy > maxY) {
+                        maxY = yy;
+                        maxYi = j;
+                    } else if (yy < minY) {
+                        minY = yy;
+                        minYi = j;
+                    }
+                    if (z > maxZ) maxZ = z;
+                    else if (z < minZ) minZ = z;
+                    *(s16 *)(vo + 0x10) = x + dxoff;
+                    *(s16 *)(vo + 0x16) = yy;
+                    *(s16 *)(vo + 0x1c) = z + dzoff;
+                    vf[0] = __OSs16tof32((s16 *)(vo + 0x10));
+                    vf[1] = __OSs16tof32((s16 *)(vo + 0x16));
+                    vf[2] = __OSs16tof32((s16 *)(vo + 0x1c));
+                    tw++;
+                    vo += 2;
+                    vf += 3;
+                }
+                if (minY > y1) continue;
+                if (maxY < y0) continue;
+                if (minX > relx1) continue;
+                if (maxX < relx0) continue;
+                if (minZ > relz1) continue;
+                if (maxZ < relz0) continue;
+
+                PSVECSubtract(v0, verts, e0);
+                PSVECSubtract(verts, verts + 3, e1);
+                PSVECCrossProduct(e0, e1, (f32 *)(cur + 4));
+                mag = PSVECMag((f32 *)(cur + 4));
+                if (!(mag > __AR_Callback)) continue;
+                {
+                    f32 inv = lbl_803DECC4 / mag;
+                    PSVECScale((f32 *)(cur + 4), (f32 *)(cur + 4), inv);
+                }
+                if (f8) {
+                    if (*(f32 *)(cur + 8) >= __AR_Size || *(f32 *)(cur + 8) <= lbl_803DECEC) {
+                        if (type != 4) continue;
+                        if (f100 == 0) continue;
+                    }
+                }
+                if (f4) {
+                    if (*(f32 *)(cur + 8) < __AR_Size && *(f32 *)(cur + 8) > lbl_803DECEC) continue;
+                }
+                *(f32 *)cur = -PSVECDotProduct((f32 *)(cur + 4), v0);
+                if (doEdges) {
+                    int k22, deg, j2;
+                    f32 *ep;
+                    f32 eps = __AR_Callback;
+                    f32 one = lbl_803DECC4;
+                    PSVECSubtract(verts + 3, v0, e2);
+                    k22 = 0;
+                    deg = 0;
+                    j2 = 0;
+                    ep = e0;
+                    do {
+                        f32 m;
+                        PSVECCrossProduct((f32 *)(cur + 4), ep, en);
+                        m = PSVECMag(en);
+                        if (m > eps) {
+                            f32 inv = one / m;
+                            PSVECScale(en, en, inv);
+                            *(f32 *)(cur + (k22++) * 4 + 0x24) = en[0];
+                            *(f32 *)(cur + (k22++) * 4 + 0x24) = en[1];
+                            *(f32 *)(cur + (k22++) * 4 + 0x24) = en[2];
+                        } else {
+                            deg = 1;
+                            break;
+                        }
+                        ep += 3;
+                        j2++;
+                    } while (j2 < 3);
+                    if (deg) continue;
+                }
+                {
+                    u32 tf2 = *(u32 *)(tri + 0x10);
+                    u8 t2;
+                    if (tf2 & 8) {
+                        t2 = 0xe;
+                    } else {
+                        t2 = typeb;
+                    }
+                    if (tf2 & 0x20) type |= 0x40;
+                    *(s8 *)(cur + 0x48) = t2;
+                    *(u8 *)(cur + 0x4a) = (u8)((maxYi << 4) | minYi);
+                    *(s8 *)(cur + 0x49) = type;
+                    cur += 0x4c;
+                    if ((u32)cur >= lbl_803DCF70) {
+                        return cur;
+                    }
+                }
+            }
+        }
+        cellp++;
+        descp += 3;
+    }
+    return cur;
+}
+
+/* trackIntersect — rebuild the intersection line table from map blocks when
+ * a refresh has been requested. */
+extern u8 *mapGetBlockIdx(int layer);
+extern u8 *mapGetBlock(int idx);
+extern int getHudHiddenFrameCount(void);
+extern u8 lbl_803DCF44;
+extern int lbl_803DCF3C;
+extern int lbl_803DCF40;
+
+void trackIntersect(void)
+{
+    s16 counts[0x47];
+    s16 edges[0x6a4 * 2];
+    int i, j, off;
+    int layer;
+    s16 prev, t;
+
+    lbl_803DCF44 = 0;
+    if (lbl_803DCF4D != 0 && getHudHiddenFrameCount() == 0) {
+        lbl_803DCF4D = lbl_803DCF4D - 1;
+    }
+    if ((s8)lbl_803DCF4E == 1) {
+        lbl_803DCF4F = 1;
+        lbl_803DCF4E = 0;
+        return;
+    }
+    if ((s8)lbl_803DCF4F == 0) {
+        return;
+    }
+    lbl_803DCF4F = 0;
+    if (getHudHiddenFrameCount() != 0) {
+        lbl_803DCF4D = 2;
+    }
+
+    for (i = 0; i < 0x47; i++) {
+        counts[i] = 0;
+    }
+    lbl_803DCF5E = 0;
+    lbl_803DCF5C = 0;
+
+    for (layer = 0; layer < 5; layer++) {
+        u8 *idx = mapGetBlockIdx(layer);
+        int gz, gx, base;
+        for (gz = 0, base = 0; gz < 0x10; gz++, base += 0x10) {
+            f32 fz0 = lbl_803DECE0[0] * (f32)gz;
+            u8 *p = idx + base;
+            for (gx = 0; gx < 0x10; gx++, p++) {
+                if ((s8)*p >= 0) {
+                    u8 *blk = mapGetBlock((s8)*p);
+                    int tn, toff;
+                    f32 fx0;
+                    tn = 0;
+                    toff = 0;
+                    fx0 = lbl_803DECE0[0] * (f32)gx;
+                    for (; tn < *(u16 *)(blk + 0x9c); tn++, toff += 0x14) {
+                        if (lbl_803DCF5E < 0x5dc) {
+                            s16 *tp = (s16 *)(*(int *)(blk + 0x70) + toff);
+                            u8 *rec = (u8 *)(lbl_803DCF34 + lbl_803DCF5E * 0x10);
+                            f32 fx, fz;
+                            u8 *rp;
+                            int k;
+                            rec[0] = *((u8 *)tp + 0xc);
+                            rec[1] = *((u8 *)tp + 0xd);
+                            rec[3] = *((u8 *)tp + 0xf);
+                            if (((s8)rec[3] & 0x3f) == 0x11) {
+                                *(s8 *)(rec + 3) = rec[3] & ~0x3f;
+                                *(s8 *)(rec + 3) = rec[3] | 2;
+                            }
+                            rec[2] = *((u8 *)tp + 0xe);
+                            *(s8 *)(rec + 2) = rec[2] ^ 0x10;
+                            *(s16 *)(rec + 0xc) = tp[8];
+                            fx = fx0 + playerMapOffsetX;
+                            fz = fz0 + playerMapOffsetZ;
+                            k = 0;
+                            rp = rec;
+                            for (; k < 2; k++, tp++, rp += 2) {
+                                f32 x = fx + (f32)tp[0];
+                                f32 y = (f32)tp[2];
+                                f32 z = (f32)tp[4] + fz;
+                                if (lbl_803DCF5C < 0x6a4) {
+                                    *(s16 *)(rp + 4) = (s16)insertPoint(lbl_803DCF5E, edges, x, y, z);
+                                }
+                            }
+                            counts[(s8)rec[3] & 0x3f]++;
+                            lbl_803DCF5E++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 0x10) {
+        u8 *rec = (u8 *)(lbl_803DCF34 + off);
+        int idx = *(s16 *)(rec + 4) * 2;
+        s16 *e0 = &edges[idx];
+        s16 *e1;
+        s16 v = e0[0];
+        if (v > -1 && v != i) {
+            *(s16 *)(rec + 8) = v;
+        } else {
+            v = e0[1];
+            if (v > -1 && v != i) {
+                *(s16 *)(rec + 8) = v;
+            } else {
+                *(s16 *)(rec + 8) = -1;
+            }
+        }
+        idx = *(s16 *)(rec + 6) * 2;
+        e1 = &edges[idx];
+        v = e1[0];
+        if (v > -1 && v != i) {
+            *(s16 *)(rec + 0xa) = v;
+        } else {
+            v = e1[1];
+            if (v > -1 && v != i) {
+                *(s16 *)(rec + 0xa) = v;
+            } else {
+                *(s16 *)(rec + 0xa) = -1;
+            }
+        }
+    }
+
+    if (lbl_803DCF40 != 0) {
+        int done;
+        for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 2) {
+            *(s16 *)(lbl_803DCF40 + off) = (s16)i;
+        }
+        done = 0;
+        while (done == 0) {
+            done = 1;
+            for (j = 0, off = 0; j < lbl_803DCF5E - 1; j++, off += 2) {
+                s16 *p = (s16 *)(lbl_803DCF40 + off);
+                s16 a = p[0];
+                s16 b;
+                int ta = (s8)*(u8 *)(lbl_803DCF34 + a * 0x10 + 3) & 0x3f;
+                b = p[1];
+                if (ta < ((s8)*(u8 *)(lbl_803DCF34 + b * 0x10 + 3) & 0x3f)) {
+                    p[0] = b;
+                    *(s16 *)(lbl_803DCF40 + off + 2) = a;
+                    done = 0;
+                }
+            }
+        }
+    }
+
+    for (i = 0x46; i != 0; i--) {
+        counts[i - 1] = counts[i - 1] + counts[i];
+    }
+
+    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 0x10) {
+        int tt = ((s8)*(u8 *)(lbl_803DCF34 + off + 3) & 0x3f) + 1;
+        s16 c = counts[tt];
+        counts[tt] = c + 1;
+        *(s16 *)(lbl_803DCF3C + c * 2) = (s16)i;
+    }
+
+    for (i = 0; i < lbl_803DCF5E - 1; i++) {
+    }
+
+    for (i = 0; i < 40; i++) {
+        ((u16 *)lbl_8038D840)[i] = 0xffff;
+    }
+
+    prev = -1;
+    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 2) {
+        t = (s16)((s8)*(u8 *)(lbl_803DCF34 + *(s16 *)(lbl_803DCF3C + off) * 0x10 + 3) & 0x3f);
+        if (t >= 0x14) {
+            t = 1;
+            debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
+        }
+        if (prev != t) {
+            u16 v = (u16)i;
+            int ti = t * 2;
+            ((u16 *)lbl_8038D840)[ti] = v;
+            if (prev != -1) {
+                int pi = prev * 2;
+                ((u16 *)lbl_8038D840)[pi + 1] = v;
+            }
+            prev = t;
+        }
+    }
+    if (prev != -1) {
+        int pi = prev * 2;
+        ((u16 *)lbl_8038D840)[pi + 1] = (u16)lbl_803DCF5E;
+    }
+    lbl_803DCF44 = 1;
+}
+
+/* doLotsOfMath — sweep a 2D segment (with radius) against the intersection
+ * line table, sliding/clipping the end point; fills *out with the last hit. */
+extern f32 lbl_803DECCC;
+extern f32 lbl_803DECD0;
+extern f32 lbl_803DECD4;
+extern f32 lbl_803DB660;
+
+int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
+                 int pmask, int seg, int ytol, int self, f32 radius)
+{
+    f32 *A = (f32 *)ptA;
+    s16 hits[6];
+    f32 dists[5];
+    f32 fracs[5];
+    f32 lb[4], la[4], ld[4];
+    f32 pos[4];
+    s16 m[2];
+    int start, end;
+    int vt, vp, lineIdx;
+    s8 flag1, flag2;
+    u8 flag4;
+    f32 minX, maxX, minZ, maxZ;
+    int count, found;
+    s16 *hitp;
+    f32 *fracp, *distp;
+    int mask;
+    int si2, si16;
+    int i;
+    f32 dist;
+    s8 lineType;
+
+    if (obj != NULL) {
+        if ((s8)seg != -1) {
+            u8 *tbl = *(u8 **)(*(int *)((int)obj + 0x50) + 0x38);
+            start = tbl[(s8)seg * 2];
+            end = *(u8 *)(tbl + (s8)seg * 2 + 1);
+        } else {
+            start = 0;
+            end = *(u8 *)(*(int *)((int)obj + 0x50) + 0x5c);
+        }
+        lineIdx = 0;
+        vt = *(int *)(*(int *)((int)obj + 0x50) + 0x34);
+        vp = *(int *)(*(int *)((int)obj + 0x50) + 0x3c);
+        if (*(u16 *)((int)obj + 0xb0) & 0x100) {
+            end = 0;
+        }
+    } else {
+        if ((s8)seg != -1) {
+            start = ((u16 *)lbl_8038D840)[(s8)seg * 2];
+            end = ((u16 *)lbl_8038D840)[(s8)seg * 2 + 1];
+        } else {
+            start = 0;
+            end = lbl_803DCF5E;
+        }
+        lineIdx = lbl_803DCF3C;
+        vt = lbl_803DCF34;
+        vp = (int)lbl_803DCF38;
+    }
+
+    flag1 = !(flags & 1);
+    flag2 = flags & 2;
+    flag4 = flags & 4;
+
+    pos[2] = A[0];
+    pos[0] = A[2];
+    pos[3] = ((f32 *)ptB)[0];
+    pos[1] = ((f32 *)ptB)[2];
+    if (pos[2] < pos[3]) {
+        minX = pos[2];
+        maxX = pos[3];
+    } else {
+        minX = pos[3];
+        maxX = pos[2];
+    }
+    if (pos[0] < pos[1]) {
+        minZ = pos[0];
+        maxZ = pos[1];
+    } else {
+        minZ = pos[1];
+        maxZ = pos[0];
+    }
+    minX = minX - radius;
+    maxX = maxX + radius;
+    minZ = minZ - radius;
+    maxZ = maxZ + radius;
+    minX = minX - lbl_803DECCC;
+    maxX = maxX + lbl_803DECCC;
+    minZ = minZ - lbl_803DECCC;
+    maxZ = maxZ + lbl_803DECCC;
+
+    count = 0;
+    found = 1;
+    hitp = hits;
+    fracp = fracs;
+    distp = dists;
+    mask = (s8)pmask;
+    si2 = start << 1;
+    si16 = start << 4;
+
+    while (found) {
+        s16 *ep;
+        u8 *rp;
+        found = 0;
+        ep = (s16 *)(lineIdx + si2);
+        rp = (u8 *)(vt + si16);
+        for (i = start; i < end; i++, ep++, rp += 0x10) {
+            u8 *rec;
+            s16 i0, i1;
+            f32 *va, *vb;
+            f32 ax2, ay2, az2, bx2, by2, bz2;
+            f32 ylo, yhi, ha, hb;
+            f32 dx, dz, len;
+            int mi;
+
+            dist = lbl_803DECD0;
+            if (lineIdx != 0) {
+                rec = (u8 *)(vt + ep[0] * 0x10);
+            } else {
+                rec = rp;
+            }
+            if ((mask & ~(s8)rec[2]) == 0) continue;
+            if ((s8)rec[3] & 0x40) continue;
+            i0 = *(s16 *)(rec + 4);
+            i1 = *(s16 *)(rec + 6);
+            if ((s8)rec[3] & 0x80) {
+                if (flag4 != 0) continue;
+                lineType = 0;
+            } else {
+                lineType = 1;
+            }
+            if (flag2 != 0) {
+                lineType = 1;
+            }
+            va = (f32 *)(vp + i0 * 0xc);
+            ax2 = va[0];
+            ay2 = va[1];
+            az2 = va[2];
+            vb = (f32 *)(vp + i1 * 0xc);
+            bx2 = vb[0];
+            by2 = vb[1];
+            bz2 = vb[2];
+            if (ax2 < minX && bx2 < minX) continue;
+            if (ax2 > maxX && bx2 > maxX) continue;
+            if (az2 < minZ && bz2 < minZ) continue;
+            if (az2 > maxZ && bz2 > maxZ) continue;
+
+            ylo = ay2;
+            if (by2 < ay2) ylo = by2;
+            ylo = ylo - (f32)(s8)ytol;
+            if ((s8)rec[2] & 0x80) {
+                ha = (f32)*(s16 *)rec;
+                hb = ha;
+            } else {
+                ha = (f32)(s8)rec[0];
+                hb = (f32)(s8)rec[1];
+            }
+            yhi = ay2 + ha;
+            if (by2 + hb > ay2 + ha) yhi = by2 + hb;
+            yhi = yhi + (f32)(s8)ytol;
+            if (A[1] < ylo) continue;
+            if (A[1] > yhi) continue;
+
+            dx = bx2 - ax2;
+            dz = bz2 - az2;
+            if (__AR_Callback == dx * dx + dz * dz) continue;
+            len = sqrtf(dx * dx + dz * dz);
+            dx = dx / len;
+            dz = dz / len;
+            lb[0] = dx;
+            la[0] = dz;
+            ld[0] = -(dx * ax2 + dz * az2);
+            lb[1] = -dx;
+            la[1] = -dz;
+            ld[1] = -(-dx * bx2 + -dz * bz2);
+            lb[2] = -dz;
+            la[2] = dx;
+            {
+                f32 q0 = -dz * (lbl_803DECB8 * -dz + ax2);
+                f32 q1 = dx * (lbl_803DECB8 * dx + az2);
+                ld[2] = -(q0 + q1);
+            }
+            lb[3] = dz;
+            la[3] = -dx;
+            {
+                f32 q0 = dz * (radius * dz + ax2);
+                f32 q1 = -dx * (radius * -dx + az2);
+                ld[3] = -(q0 + q1);
+            }
+            lbl_803DCF54 = lbl_803DECD4 * (dz * radius);
+            lbl_803DCF50 = lbl_803DECD4 * (-dx * radius);
+
+            {
+                s16 *mp = m;
+                f32 *zp = &pos[0];
+                f32 *xp = &pos[2];
+                for (mi = 0; mi < 2; mi++) {
+                    s16 mb = 1;
+                    f32 pz, px;
+                    f32 *ap, *bp, *dp;
+                    int n;
+                    *mp = 0;
+                    pz = zp[0];
+                    px = xp[0];
+                    ap = la;
+                    bp = lb;
+                    dp = ld;
+                    n = 2;
+                    do {
+                        if (dp[0] + (px * bp[0] + pz * ap[0]) < __AR_Callback) *mp |= mb;
+                        mb = (s16)(mb << 1);
+                        if (dp[1] + (px * bp[1] + pz * ap[1]) < __AR_Callback) *mp |= mb;
+                        mb = (s16)(mb << 1);
+                        ap += 2;
+                        bp += 2;
+                        dp += 2;
+                        n--;
+                    } while (n != 0);
+                    xp[0] = px;
+                    zp[0] = pz;
+                    mp++;
+                    zp++;
+                    xp++;
+                }
+            }
+            {
+                s16 mx = m[0] ^ m[1];
+                s16 ma = m[0] & m[1];
+                dist = lbl_803DECC4;
+                if ((m[0] & 0xc) == 0xc) {
+                    if (m[0] & 1) {
+                        found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
+                        dist = __AR_Callback;
+                    } else if (m[0] & 2) {
+                        found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
+                        dist = lbl_803DECC4;
+                    } else if (lineType != 0) {
+                        pos[3] = pos[3] + lbl_803DCF54;
+                        pos[1] = pos[1] + lbl_803DCF50;
+                    }
+                } else if (mx & 0xc) {
+                    if (ma & 1) {
+                        found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
+                        dist = __AR_Callback;
+                    } else if (ma & 2) {
+                        found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
+                        dist = lbl_803DECC4;
+                    } else if (m[0] & 4) {
+                        f32 sx = pos[3] - pos[2];
+                        f32 sz = pos[1] - pos[0];
+                        f32 t0 = ld[3] + (pos[2] * lb[3] + pos[0] * la[3]);
+                        f32 t1 = ld[3] + (pos[3] * lb[3] + pos[1] * la[3]);
+                        f32 fr, cx, cz;
+                        s16 ok;
+                        if (t0 != t1) {
+                            fr = t0 / (t0 - t1);
+                        } else {
+                            fr = __AR_Callback;
+                        }
+                        cx = sx * fr + pos[2];
+                        cz = sz * fr + pos[0];
+                        lbl_803DCF58 = fr;
+                        ok = 1;
+                        if (ld[0] + (cx * lb[0] + cz * la[0]) < __AR_Callback) {
+                            found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
+                            ok = 0;
+                            dist = __AR_Callback;
+                        }
+                        if (ld[1] + (cx * lb[1] + cz * la[1]) < __AR_Callback) {
+                            found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
+                            ok = 0;
+                            dist = lbl_803DECC4;
+                        }
+                        if (ok != 0) {
+                            found = 1;
+                            if (lineType != 0) {
+                                int j;
+                                if (flag1 != 0) {
+                                    f32 t3 = ld[3] + (pos[3] * lb[3] + pos[1] * la[3]);
+                                    pos[3] = -(t3 * lb[3] - pos[3]);
+                                    pos[1] = -(t3 * la[3] - pos[1]);
+                                    j = 0;
+                                    while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660) {
+                                        pos[3] = pos[3] + lbl_803DB660 * lb[3];
+                                        pos[1] = pos[1] + lbl_803DB660 * la[3];
+                                        j++;
+                                        if (j > 0xa) {
+                                            pos[3] = pos[2];
+                                            pos[1] = pos[0];
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    pos[3] = cx;
+                                    pos[1] = cz;
+                                    j = 0;
+                                    while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660) {
+                                        pos[3] = pos[3] + lbl_803DB660 * lb[3];
+                                        pos[1] = pos[1] + lbl_803DB660 * la[3];
+                                        j++;
+                                        if (j > 0xa) {
+                                            pos[3] = pos[2];
+                                            pos[1] = pos[0];
+                                            break;
+                                        }
+                                    }
+                                }
+                                dist = sqrtf((pos[3] - ax2) * (pos[3] - ax2) + (pos[1] - az2) * (pos[1] - az2)) / len;
+                            }
+                        }
+                    }
+                }
+            }
+            if (found) break;
+        }
+        if (found) {
+            *hitp = (s16)i;
+            *fracp = lbl_803DCF58;
+            *distp = dist;
+            hitp++;
+            fracp++;
+            distp++;
+            count++;
+            if (count > 4) {
+                found = 0;
+                if (lineType != 0) {
+                    pos[3] = pos[2];
+                    pos[1] = pos[0];
+                }
+            }
+        }
+    }
+
+    if (count != 0 && out != NULL) {
+        f32 *outf = (f32 *)out;
+        int pick = count - 1;
+        int hi;
+        s16 *rec2;
+        f32 fa, fb;
+        f32 *va2, *vb2;
+        if (flag1 == 0) {
+            pick = 0;
+        }
+        outf[0x11] = fracs[0] * sqrtf((((f32 *)ptB)[0] - pos[2]) * (((f32 *)ptB)[0] - pos[2])
+                                       + (((f32 *)ptB)[2] - pos[0]) * (((f32 *)ptB)[2] - pos[0]));
+        outf[0x12] = dists[pick];
+        hi = hits[pick];
+        if (lineIdx != 0) {
+            rec2 = (s16 *)(vt + *(s16 *)(lineIdx + hi * 2) * 0x10);
+        } else {
+            rec2 = (s16 *)(vt + hi * 0x10);
+        }
+        {
+            s16 j0 = rec2[2];
+            s16 j1 = rec2[3];
+            if ((s8)*(u8 *)((u8 *)rec2 + 2) & 0x80) {
+                fa = (f32)rec2[0];
+                fb = fa;
+            } else {
+                fa = (f32)(s8)*(u8 *)rec2;
+                fb = (f32)(s8)*((u8 *)rec2 + 1);
+            }
+            outf[1] = *(f32 *)(vp + j0 * 0xc);
+            va2 = (f32 *)(vp + j0 * 0xc);
+            outf[3] = va2[1];
+            outf[0xf] = outf[3] + fa;
+            outf[5] = va2[2];
+            outf[2] = *(f32 *)(vp + j1 * 0xc);
+            vb2 = (f32 *)(vp + j1 * 0xc);
+            outf[4] = vb2[1];
+            outf[0x10] = outf[4] + fb;
+            outf[6] = vb2[2];
+            *(s8 *)((u8 *)out + 0x50) = (s8)(*((u8 *)rec2 + 3) & 0x3f);
+            *((u8 *)out + 0x52) = *((u8 *)rec2 + 2);
+            *(s8 *)((u8 *)out + 0x51) = (s8)rec2[6];
+            *(int **)out = obj;
+            *(s16 *)((u8 *)out + 0x4c) = rec2[4];
+            *(s16 *)((u8 *)out + 0x4e) = rec2[5];
+        }
+    }
+    if (count != 0) {
+        lbl_803DCF4C = lbl_803DCF4C + 1;
+        count = 1;
+        ((f32 *)ptB)[0] = pos[3];
+        ((f32 *)ptB)[2] = pos[1];
+    }
+    return count;
+}
+
+
+/* hitDetect_800667ec — sweep each input sphere against the gathered triangle
+ * lists, bouncing/sliding up to 10 times per slot; returns hit mask. */
+extern f32 Vec3_Normalize(f32 *v);
+extern char sTrackHitOverflowError[];
+extern void fn_80137948(char *fmt, ...);
+
+u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p5, int z)
+{
+    u8 *descBase;
+    f32 *ep1, *ep2;
+    f32 *sp1, *sp2;
+    u8 *slotp;
+    int slotByte;
+    s16 i;
+    u8 retLo;
+    u8 curBit;
+    u8 retHi;
+    u8 typeb;
+    u8 typeb2;
+    u8 *descSave;
+    u8 type;
+    f32 edge2[4];
+    f32 edge1[4];
+    f32 edge0[4];
+    f32 rdata[3];
+    f32 evec[3];
+    f32 vb[3];
+    f32 va[3];
+    f32 ws[3];
+    f32 we[3];
+    f32 delta[3];
+    f32 hitpt[3];
+    f32 cur[3];
+    f32 plane[4];
+    f32 norm4[4];
+    f32 sv[9];
+    f32 dir[3];
+    f32 tmp1[3];
+    f32 tmp2[3];
+    f32 frac;
+    u8 *descEnd;
+    f32 offX, offZ;
+    f32 radius, maxStep, negStep;
+    f32 mag;
+    f32 eps;
+    u8 *desc;
+    u8 *tri;
+    int objmtx;
+    u8 bounces;
+    u8 found;
+    s16 hit;
+
+    descEnd = (u8 *)lbl_8038DC64 + lbl_803DCF6C * 0x18;
+    descBase = lbl_8038DC64;
+    offX = (f32)*(int *)lbl_8038DE44;
+    offZ = (f32)*(int *)(lbl_8038DE44 + 8);
+    i = 0;
+    retLo = 0;
+    retHi = 0;
+    curBit = 1;
+    ep1 = (f32 *)p3;
+    ep2 = (f32 *)p3;
+    sp1 = (f32 *)p2;
+    sp2 = (f32 *)p2;
+    slotp = (u8 *)p5;
+    eps = __AR_Callback;
+    for (; i < p4; i++) {
+        cur[0] = ep1[0];
+        cur[1] = ep2[1];
+        cur[2] = ep2[2];
+        sv[6] = sp1[0];
+        sv[7] = sp2[1];
+        sv[8] = sp2[2];
+        radius = *(f32 *)(slotp + 0x40);
+        slotByte = (int)p5 + i;
+        type = *(u8 *)(slotByte + 0x54);
+        maxStep = radius + lbl_803DB660;
+        rdata[0] = radius;
+        rdata[1] = radius * radius;
+        bounces = 0;
+        negStep = -maxStep;
+        do {
+            we[0] = cur[0];
+            we[1] = cur[1];
+            we[2] = cur[2];
+            found = 0;
+            hit = 0;
+            for (desc = descBase; (u32)desc < (u32)descEnd; desc += 0x18) {
+                if (*(void **)desc != NULL) {
+                    Matrix_TransformPoint(*(void **)(desc + 0x10), sv[6], sv[7], sv[8],
+                                          &ws[0], &ws[1], &ws[2]);
+                    Matrix_TransformPoint(*(void **)(desc + 8), cur[0], cur[1], cur[2],
+                                          &we[0], &we[1], &we[2]);
+                } else {
+                    ws[0] = sv[6] - offX;
+                    ws[1] = sv[7];
+                    ws[2] = sv[8] - offZ;
+                    we[0] = cur[0] - offX;
+                    we[1] = cur[1];
+                    we[2] = cur[2] - offZ;
+                }
+                PSVECSubtract(we, ws, delta);
+                mag = PSVECMag(delta);
+                if (mag > eps) {
+                    PSVECNormalize(delta, dir);
+                }
+                for (tri = (u8 *)(lbl_803DCF30 + *(s16 *)(desc + 4) * 0x4c);
+                     (u32)tri < (u32)(lbl_803DCF30 + *(s16 *)(desc + 0x1c) * 0x4c); tri += 0x4c) {
+                    s16 *ts = (s16 *)tri;
+                    f32 dE, dS;
+                    u8 b;
+                    tri[0x4b] = 0;
+                    if ((s8)tri[0x49] & 0x10) continue;
+                    plane[0] = *(f32 *)(tri + 4);
+                    plane[1] = *(f32 *)(tri + 8);
+                    plane[2] = *(f32 *)(tri + 0xc);
+                    plane[3] = *(f32 *)tri;
+                    dE = (plane[3] + PSVECDotProduct(plane, we)) - radius;
+                    if (!(dE <= eps)) continue;
+                    dS = (plane[3] + PSVECDotProduct(plane, ws)) - radius;
+                    if ((dS <= eps && eps <= dE) || (eps <= dS && dE <= eps)) {
+                        f32 lo, hi;
+                        if (dS != dE) {
+                            frac = dS / (dS - dE);
+                        } else {
+                            frac = eps;
+                        }
+                        PSVECScale(delta, hitpt, frac);
+                        PSVECAdd(hitpt, ws, hitpt);
+                        lo = (f32)ts[(*(u8 *)(tri + 0x4a) & 0xf) + 0xb] - maxStep;
+                        if (hitpt[1] < lo) continue;
+                        hi = (f32)ts[(*(u8 *)(tri + 0x4a) >> 4) + 0xb] + maxStep;
+                        if (hitpt[1] > hi) continue;
+                        edge0[0] = *(f32 *)(tri + 0x24);
+                        edge0[1] = *(f32 *)(tri + 0x28);
+                        edge0[2] = *(f32 *)(tri + 0x2c);
+                        edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + (f32)ts[0xb] * edge0[1]))
+                                   + PSVECDotProduct(edge0, hitpt);
+                        edge1[0] = *(f32 *)(tri + 0x30);
+                        edge1[1] = *(f32 *)(tri + 0x34);
+                        edge1[2] = *(f32 *)(tri + 0x38);
+                        edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + (f32)ts[0xc] * edge1[1]))
+                                   + PSVECDotProduct(edge1, hitpt);
+                        edge2[0] = *(f32 *)(tri + 0x3c);
+                        edge2[1] = *(f32 *)(tri + 0x40);
+                        edge2[2] = *(f32 *)(tri + 0x44);
+                        edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + (f32)ts[0xd] * edge2[1]))
+                                   + PSVECDotProduct(edge2, hitpt);
+                        b = 0;
+                        if (radius > eps) {
+                            if (edge0[3] > eps) b |= 1;
+                            if (edge1[3] > eps) b |= 2;
+                            if (edge2[3] > eps) b |= 4;
+                        }
+                        if (b == 0) {
+                            hit = 1;
+                            goto found_hit;
+                        }
+                        tri[0x4b] = b;
+                    } else if (dE >= negStep && radius > eps) {
+                        edge0[0] = *(f32 *)(tri + 0x24);
+                        edge0[1] = *(f32 *)(tri + 0x28);
+                        edge0[2] = *(f32 *)(tri + 0x2c);
+                        edge0[3] = -((f32)ts[0xe] * edge0[2] + ((f32)ts[8] * edge0[0] + (f32)ts[0xb] * edge0[1]))
+                                   + PSVECDotProduct(edge0, ws);
+                        edge1[0] = *(f32 *)(tri + 0x30);
+                        edge1[1] = *(f32 *)(tri + 0x34);
+                        edge1[2] = *(f32 *)(tri + 0x38);
+                        edge1[3] = -((f32)ts[0xf] * edge1[2] + ((f32)ts[9] * edge1[0] + (f32)ts[0xc] * edge1[1]))
+                                   + PSVECDotProduct(edge1, ws);
+                        edge2[0] = *(f32 *)(tri + 0x3c);
+                        edge2[1] = *(f32 *)(tri + 0x40);
+                        edge2[2] = *(f32 *)(tri + 0x44);
+                        edge2[3] = -((f32)ts[0x10] * edge2[2] + ((f32)ts[0xa] * edge2[0] + (f32)ts[0xd] * edge2[1]))
+                                   + PSVECDotProduct(edge2, ws);
+                        b = 0;
+                        if (edge0[3] > eps) b |= 1;
+                        if (edge1[3] > eps) b |= 2;
+                        if (edge2[3] > eps) b |= 4;
+                        tri[0x4b] = b;
+                    }
+                }
+                if (eps == mag) goto found_hit;
+                for (tri = (u8 *)(lbl_803DCF30 + *(s16 *)(desc + 4) * 0x4c);
+                     (u32)tri < (u32)(lbl_803DCF30 + *(s16 *)(desc + 0x1c) * 0x4c); tri += 0x4c) {
+                    u8 bit;
+                    if (tri[0x4b] == 0) continue;
+                    for (bit = 0; bit < 3; bit++) {
+                        s16 *vs;
+                        u8 k;
+                        if ((tri[0x4b] & (1 << bit)) == 0) continue;
+                        k = bit + 1;
+                        if (k > 2) k = 0;
+                        vs = (s16 *)(tri + bit * 2);
+                        va[0] = (f32)vs[8];
+                        va[1] = (f32)vs[0xb];
+                        va[2] = (f32)vs[0xe];
+                        vs = (s16 *)(tri + k * 2);
+                        vb[0] = (f32)vs[8];
+                        vb[1] = (f32)vs[0xb];
+                        vb[2] = (f32)vs[0xe];
+                        PSVECSubtract(vb, va, evec);
+                        rdata[2] = Vec3_Normalize(evec);
+                        if (hitDetectFn_800664fc(va, ws, dir, mag, maxStep, eps, hitpt, plane, &frac)) {
+                            hit = 1;
+                            goto found_hit;
+                        }
+                    }
+                }
+                for (tri = (u8 *)(lbl_803DCF30 + *(s16 *)(desc + 4) * 0x4c);
+                     (u32)tri < (u32)(lbl_803DCF30 + *(s16 *)(desc + 0x1c) * 0x4c); tri += 0x4c) {
+                    u8 bit;
+                    if (tri[0x4b] == 0) continue;
+                    for (bit = 0; bit < 3; bit++) {
+                        s16 *vs;
+                        u8 k;
+                        int ok;
+                        f32 dotv, sq, disc, root, tt, rr;
+                        if ((tri[0x4b] & (1 << bit)) == 0) continue;
+                        k = bit + 1;
+                        if (k > 2) k = 0;
+                        vs = (s16 *)(tri + bit * 2);
+                        va[0] = (f32)vs[8];
+                        va[1] = (f32)vs[0xb];
+                        va[2] = (f32)vs[0xe];
+                        rr = rdata[1];
+                        PSVECSubtract(va, ws, tmp1);
+                        dotv = PSVECDotProduct(tmp1, dir);
+                        sq = PSVECSquareMag(tmp1);
+                        if (dotv < eps && sq > rr) {
+                            ok = 0;
+                        } else {
+                            disc = -(dotv * dotv - sq);
+                            if (disc > rr) {
+                                ok = 0;
+                            } else {
+                                root = sqrtf(rr - disc);
+                                if (sq > rr) {
+                                    dotv = dotv - root;
+                                } else {
+                                    dotv = dotv + root;
+                                }
+                                if (dotv >= eps && dotv <= mag) {
+                                    PSVECScale(dir, hitpt, dotv);
+                                    PSVECAdd(ws, hitpt, hitpt);
+                                    PSVECSubtract(hitpt, va, plane);
+                                    PSVECNormalize(plane, plane);
+                                    root = sqrtf(rr);
+                                    plane[3] = -PSVECDotProduct(hitpt, plane) + root;
+                                    frac = dotv;
+                                    ok = 1;
+                                } else {
+                                    ok = 0;
+                                }
+                            }
+                        }
+                        if (ok) {
+                            hit = 1;
+                            goto found_hit;
+                        }
+                        vs = (s16 *)(tri + k * 2);
+                        vb[0] = (f32)vs[8];
+                        vb[1] = (f32)vs[0xb];
+                        vb[2] = (f32)vs[0xe];
+                        rr = rdata[1];
+                        PSVECSubtract(vb, ws, tmp2);
+                        sq = PSVECDotProduct(tmp2, dir);
+                        dotv = PSVECSquareMag(tmp2);
+                        if (sq < eps && dotv > rr) {
+                            ok = 0;
+                        } else {
+                            disc = -(sq * sq - dotv);
+                            if (disc > rr) {
+                                ok = 0;
+                            } else {
+                                root = sqrtf(rr - disc);
+                                if (dotv > rr) {
+                                    sq = sq - root;
+                                } else {
+                                    sq = sq + root;
+                                }
+                                if (sq >= eps && sq <= mag) {
+                                    PSVECScale(dir, hitpt, sq);
+                                    PSVECAdd(ws, hitpt, hitpt);
+                                    PSVECSubtract(hitpt, vb, plane);
+                                    PSVECNormalize(plane, plane);
+                                    root = sqrtf(rr);
+                                    plane[3] = -PSVECDotProduct(hitpt, plane) + root;
+                                    frac = sq;
+                                    ok = 1;
+                                } else {
+                                    ok = 0;
+                                }
+                            }
+                        }
+                        if (ok) {
+                            hit = 1;
+                            goto found_hit;
+                        }
+                    }
+                }
+            found_hit:
+                if (hit != 0) {
+                    we[0] = hitpt[0];
+                    we[1] = hitpt[1];
+                    we[2] = hitpt[2];
+                    norm4[0] = plane[0];
+                    norm4[1] = plane[1];
+                    norm4[2] = plane[2];
+                    norm4[3] = plane[3];
+                    typeb = tri[0x48];
+                    typeb2 = tri[0x49];
+                    objmtx = *(int *)desc;
+                    sv[0] = ws[0];
+                    sv[1] = ws[1];
+                    sv[2] = ws[2];
+                    sv[3] = hitpt[0];
+                    sv[4] = hitpt[1];
+                    sv[5] = hitpt[2];
+                    descSave = desc;
+                    found = 1;
+                    if (type == 7) {
+                        f32 *out4 = (f32 *)((u8 *)p5 + i * 0x10);
+                        out4[0] = norm4[0];
+                        out4[1] = norm4[1];
+                        out4[2] = norm4[2];
+                        out4[3] = norm4[3];
+                        *(u8 *)(slotByte + 0x50) = typeb;
+                        *(u8 *)(slotByte + 0x58) = typeb2;
+                        *(int *)(slotp + 0x5c) = objmtx;
+                        bounces++;
+                        goto slot_done;
+                    }
+                    break;
+                }
+            }
+            if (found != 0) {
+                bounces++;
+                if (bounces > 10) {
+                    fn_80137948(sTrackHitOverflowError);
+                    cur[0] = sv[6];
+                    cur[1] = sv[7];
+                    cur[2] = sv[8];
+                    found = 0;
+                } else {
+                    f32 *out4;
+                    f32 pen;
+                    if (objmtx != 0) {
+                        Matrix_TransformPoint(*(void **)(descSave + 8), cur[0], cur[1], cur[2],
+                                              &cur[0], &cur[1], &cur[2]);
+                    } else {
+                        cur[0] = cur[0] - offX;
+                        cur[2] = cur[2] - offZ;
+                    }
+                    pen = (norm4[3] + (cur[2] * norm4[2] + (cur[0] * norm4[0] + cur[1] * norm4[1]))) - radius;
+                    fn_800660C8(sv, cur, &sv[3], norm4, type, pen, maxStep);
+                    if (objmtx != 0) {
+                        Matrix_TransformPoint(*(void **)(descSave + 0xc), cur[0], cur[1], cur[2],
+                                              &cur[0], &cur[1], &cur[2]);
+                    } else {
+                        cur[0] = cur[0] + offX;
+                        cur[2] = cur[2] + offZ;
+                    }
+                    out4 = (f32 *)((u8 *)p5 + i * 0x10);
+                    out4[0] = norm4[0];
+                    out4[1] = norm4[1];
+                    out4[2] = norm4[2];
+                    out4[3] = norm4[3];
+                    *(u8 *)(slotByte + 0x50) = typeb;
+                    *(u8 *)(slotByte + 0x58) = typeb2;
+                    *(int *)(slotp + 0x5c) = objmtx;
+                }
+            }
+        } while (found != 0);
+    slot_done:
+        if (bounces != 0) {
+            if (norm4[1] >= __AR_Size || norm4[1] <= lbl_803DECEC) {
+                retHi = retHi | curBit;
+            }
+            ep1[0] = cur[0];
+            ep2[1] = cur[1];
+            ep2[2] = cur[2];
+            *(s16 *)((u8 *)p5 + 0x6c) = *(s16 *)((u8 *)p5 + 0x6c) + 1;
+            retLo = retLo | curBit;
+        }
+        curBit = (u8)(curBit << 1);
+        slotp += 4;
+        ep1 += 3;
+        ep2 += 3;
+        sp1 += 3;
+        sp2 += 3;
+    }
+    return (u8)(retLo | (retHi << 4));
 }

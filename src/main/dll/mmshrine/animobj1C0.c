@@ -219,9 +219,9 @@ void FUN_801c5c2c(int param_1)
 }
 
 #pragma peephole off
-void fn_801C5990(void *objArg)
+#pragma scheduling off
+void fn_801C5990(MmShrineAnimObj *obj)
 {
-    MmShrineAnimObj *obj;
     u8 *config;
     MmShrineAnimState *state;
     void *player;
@@ -231,7 +231,6 @@ void fn_801C5990(void *objArg)
     s32 angleDelta;
     int animEvents;
 
-    obj = (MmShrineAnimObj *)objArg;
     config = obj->config;
     state = (MmShrineAnimState *)obj->state;
     player = Obj_GetPlayerObject();
@@ -252,11 +251,11 @@ void fn_801C5990(void *objArg)
 
     trigA = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitB) / lbl_803E4FA4);
     trigB = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
-    obj->roll = (s16)(s32)(lbl_803E4FA8 * (trigB + trigA));
+    obj->roll = lbl_803E4FA8 * (trigB + trigA);
 
     trigA = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitC) / lbl_803E4FA4);
     trigB = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
-    obj->pitch = (s16)(s32)(lbl_803E4FA8 * (trigB + trigA));
+    obj->pitch = lbl_803E4FA8 * (trigB + trigA);
 
     ObjAnim_AdvanceCurrentMove(lbl_803E4FAC, timeDelta, (int)obj, &animEvents);
 
@@ -332,6 +331,7 @@ int fn_801C5CE4(void *objArg, int unused, void *eventListArg)
 
     return 0;
 }
+#pragma scheduling reset
 #pragma peephole reset
 
 extern int lbl_803DDBC4;
@@ -358,13 +358,17 @@ void ecsh_shrine_func0E(u8 v) {
 }
 
 extern s16 lbl_80326238[];
-extern f32 lbl_80326208[];
+typedef struct EcshRenderPair {
+    f32 a;
+    f32 b;
+} EcshRenderPair;
+extern EcshRenderPair lbl_80326208[];
 void ecsh_shrine_render2(u8 idx, f32 a, f32 b) {
     int v;
     if ((int *)lbl_803DDBC4 == NULL) return;
-    v = (s32)lbl_80326238[(u32)idx] * 8;
-    *(f32 *)((char *)lbl_80326208 + v) = a;
-    *(f32 *)((char *)lbl_80326208 + v + 4) = b;
+    v = lbl_80326238[(u32)idx];
+    lbl_80326208[v].a = a;
+    lbl_80326208[v].b = b;
 }
 #pragma peephole reset
 #pragma scheduling reset

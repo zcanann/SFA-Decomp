@@ -191,20 +191,13 @@ void FUN_8018cf58(int param_1, int param_2, int param_3, int param_4, int param_
 void dll_127_init(short *param_1,int param_2)
 {
   float fVar1;
-  double dVar2;
   uint uVar2;
-  uint local_18[2];
-  uint local_10[2];
-  
+  u8 b;
+
   param_1[3] = param_1[3] | 2;
-  uVar2 = *(byte *)(param_2 + 0x19) ^ 0x80000000;
-  dVar2 = lbl_803E3D70;
-  local_18[1] = uVar2;
-  local_18[0] = 0x43300000;
-  fVar1 = (float)(*(double *)local_18 - dVar2);
-  local_10[1] = uVar2;
-  local_10[0] = 0x43300000;
-  if ((float)(*(double *)local_10 - dVar2) < lbl_803E3D64) {
+  b = *(u8 *)(param_2 + 0x19);
+  fVar1 = (f32)(int)b;
+  if ((f32)(int)b < lbl_803E3D64) {
     fVar1 = lbl_803E3D64;
   }
   fVar1 = fVar1 * lbl_803E3D68;
@@ -212,7 +205,7 @@ void dll_127_init(short *param_1,int param_2)
   if (*(float **)(param_1 + 0x32) != (float *)0x0) {
     **(float **)(param_1 + 0x32) = **(float **)(param_1 + 0x28) * fVar1;
   }
-  *(char *)((int)param_1 + 0xad) = *(char *)(param_2 + 0x18);
+  *(s8 *)((int)param_1 + 0xad) = (s8)*(u8 *)(param_2 + 0x18);
   uVar2 = *(byte *)(param_2 + 0x1a) & 0x3f;
   *param_1 = (short)(uVar2 << 10);
   if (*(char *)((int)param_1 + 0xad) >= *(char *)(*(int *)(param_1 + 0x28) + 0x55)) {
@@ -378,6 +371,222 @@ void FUN_8018d110(void)
 void dll_127_release_nop(void) {}
 void dll_127_initialise_nop(void) {}
 
+extern int Obj_GetPlayerObject(void);
+extern int *gSHthorntailAnimationInterface;
+extern void lightFn_8001db6c(int light, int arg, f32 f);
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
+extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32 *vec);
+extern f32 lbl_803E3D7C;
+extern f32 lbl_803E3D80;
+extern f32 lbl_803E3D84;
+
+typedef int (*ThorntailQueryFn)(u8 *);
+
+/*
+ * --INFO--
+ *
+ * Function: campfire_update
+ * EN v1.0 Address: 0x8018CFA4
+ * EN v1.0 Size: 556b
+ */
+void campfire_update(int obj)
+{
+    int *state;
+    int type;
+    int mode;
+    int flag;
+    u8 buf[4];
+    f32 params[3];
+
+    state = *(int **)(obj + 0xb8);
+    Obj_GetPlayerObject();
+    if ((*(ThorntailQueryFn *)(*gSHthorntailAnimationInterface + 0x24))(buf) != 0) {
+        if (*(void **)state != NULL) {
+            lightFn_8001db6c(*state, 1, lbl_803E3D78);
+        }
+        ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
+        *(f32 *)((char *)state + 8) -= timeDelta;
+        if (*(f32 *)((char *)state + 8) <= lbl_803E3D7C) {
+            flag = 1;
+            *(f32 *)((char *)state + 8) += lbl_803E3D78;
+        } else {
+            flag = 0;
+        }
+        type = 2;
+        mode = 0;
+        if (*((u8 *)state + 0x12) == 0) {
+            Sfx_AddLoopedObjectSound(obj, 0x9e);
+            *((u8 *)state + 0x12) = 1;
+        }
+    } else {
+        if (*(void **)state != NULL) {
+            lightFn_8001db6c(*state, 0, lbl_803E3D78);
+        }
+        ObjHits_ClearHitVolumes(obj);
+        *(f32 *)((char *)state + 4) -= timeDelta;
+        if (*(f32 *)((char *)state + 4) <= lbl_803E3D7C) {
+            mode = 3;
+            *(f32 *)((char *)state + 4) += lbl_803E3D80;
+        } else {
+            mode = 0;
+        }
+        type = 0;
+        flag = 0;
+        if (*((u8 *)state + 0x12) != 0) {
+            Sfx_RemoveLoopedObjectSound(obj, 0x9e);
+            *((u8 *)state + 0x12) = 0;
+        }
+    }
+    params[0] = lbl_803E3D7C;
+    params[1] = lbl_803E3D80;
+    params[2] = lbl_803E3D7C;
+    fn_80098B18(obj, lbl_803E3D84 * *(f32 *)(obj + 8), type, mode, flag, params);
+    {
+        u8 *light = *(u8 **)state;
+        if (light != NULL && light[0x2f8] != 0 && light[0x4c] != 0) {
+            int rnd;
+            u8 *l2;
+            s16 v;
+            rnd = randomGetRange(-0x19, 0x19);
+            l2 = *(u8 **)state;
+            v = l2[0x2f9] + *(s8 *)(l2 + 0x2fa) + rnd;
+            if (v < 0) {
+                v = 0;
+                l2[0x2fa] = 0;
+            } else if (v > 0xff) {
+                v = 0xff;
+                l2[0x2fa] = 0;
+            }
+            *(u8 *)(*state + 0x2f9) = v;
+        }
+    }
+}
+
+extern void ObjHitbox_SetCapsuleBounds(int obj, int x, int y, int z);
+extern int objCreateLight(int a, int b);
+extern void modelLightStruct_setField50(int h, int v);
+extern void modelLightStruct_setColorsA8AC(int h, int r, int g, int b, int a);
+extern void modelLightStruct_setColors100104(int h, int r, int g, int b, int a);
+extern void lightDistAttenFn_8001dc38(int light, f32 min, f32 max);
+extern void lightVecFn_8001dd88(int light, f32 x, f32 y, f32 z);
+extern void lightFn_8001d620(int light, int a, int b);
+extern void lightSetFieldB0(int light, int r, int g, int b, int a);
+extern void fn_8001D730(int light, int a, int r, int g, int b, int c, f32 scale);
+extern void fn_8001D714(int light, f32 v);
+extern f32 lbl_803E3D88;
+extern f32 lbl_803E3D8C;
+extern f32 lbl_803E3D90;
+extern f32 lbl_803E3D94;
+extern f32 lbl_803E3D98;
+
+/*
+ * --INFO--
+ *
+ * Function: campfire_init
+ * EN v1.0 Address: 0x8018D1D0
+ * EN v1.0 Size: 732b
+ */
+void campfire_init(int obj, int p2)
+{
+    int *state;
+    u8 buf[4];
+    u32 size;
+    s16 bit;
+
+    state = *(int **)(obj + 0xb8);
+    size = *(u8 *)(p2 + 0x1a);
+    if (size != 0) {
+        *(f32 *)(obj + 8) = lbl_803E3D88 * (f32)size;
+    }
+    if (GameBit_Get(0x8c) != 0) {
+        *((u8 *)state + 0x11) |= 1;
+    }
+    *(s16 *)((char *)state + 0xc) = *(s16 *)(p2 + 0x18);
+    bit = *(s16 *)((char *)state + 0xc);
+    if (bit != -1 && GameBit_Get(bit) != 0) {
+        *((u8 *)state + 0x11) |= 4;
+    }
+    *((u8 *)state + 0x10) = *(u8 *)(p2 + 0x1b);
+    {
+        f32 scale = *(f32 *)(obj + 8) / *(f32 *)(*(int *)(obj + 0x50) + 4);
+        int m = *(int *)(obj + 0x54);
+        ObjHitbox_SetCapsuleBounds(obj,
+            (int)((f32)*(s16 *)(m + 0x5a) * scale),
+            (int)((f32)*(s16 *)(m + 0x5c) * scale),
+            (int)((f32)*(s16 *)(m + 0x5e) * scale));
+    }
+    *(f32 *)(state + 1) = lbl_803E3D80;
+    *(f32 *)(state + 2) = lbl_803E3D78;
+    if (*(void **)state == NULL) {
+        *state = objCreateLight(obj, 1);
+    }
+    if (*(void **)state != NULL) {
+        int atten;
+        modelLightStruct_setField50(*state, 2);
+        modelLightStruct_setColorsA8AC(*state, 0xff, 0x7f, 0, 0xff);
+        modelLightStruct_setColors100104(*state, 0xff, 0x7f, 0, 0xff);
+        atten = (int)(lbl_803E3D8C * *(f32 *)(obj + 8));
+        lightDistAttenFn_8001dc38(*state, (f32)atten, lbl_803E3D90 + (f32)atten);
+        if ((*(ThorntailQueryFn *)(*gSHthorntailAnimationInterface + 0x24))(buf) != 0) {
+            lightFn_8001db6c(*state, 1, lbl_803E3D7C);
+        } else {
+            lightFn_8001db6c(*state, 0, lbl_803E3D7C);
+        }
+        lightVecFn_8001dd88(*state, lbl_803E3D7C, lbl_803E3D94, lbl_803E3D7C);
+        lightFn_8001d620(*state, 1, 3);
+        lightSetFieldB0(*state, 0xff, 0x5c, 0, 0xff);
+        fn_8001D730(*state, 0, 0xff, 0x7f, 0, 0x87, lbl_803E3D98 * *(f32 *)(obj + 8));
+        fn_8001D714(*state, lbl_803E3D90);
+    }
+}
+
+extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
+extern f32 lbl_803E3DC0;
+extern f32 lbl_803E3DC4;
+extern f32 lbl_803E3DC8;
+
+/*
+ * --INFO--
+ *
+ * Function: kt_torch_init
+ * EN v1.0 Address: 0x8018D584
+ * EN v1.0 Size: 348b
+ */
+void kt_torch_init(int obj, int p2)
+{
+    f32 scale;
+    u8 b;
+
+    *(s16 *)(obj + 6) |= 2;
+    b = *(u8 *)(p2 + 0x1c);
+    scale = (f32)(int)b;
+    if ((f32)(int)b < lbl_803E3DC0) {
+        scale = lbl_803E3DC0;
+    }
+    scale *= lbl_803E3DC4;
+    *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4) * scale;
+    *(s16 *)obj = (s16)((*(u8 *)(p2 + 0x1d) & 0x3f) << 10);
+    if (*(void **)(obj + 0x64) != NULL) {
+        **(f32 **)(obj + 0x64) = **(f32 **)(obj + 0x50) * scale;
+    }
+    *(s8 *)(obj + 0xad) = (s8)*(u8 *)(p2 + 0x18);
+    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        *(u8 *)(obj + 0xad) = 0;
+    }
+    ObjAnim_SetCurrentMove(obj, *(u8 *)(p2 + 0x19), (f32)*(u8 *)(p2 + 0x1a) * lbl_803E3DC8, 0);
+    {
+        s16 bit = *(s16 *)(p2 + 0x20);
+        if (bit != -1) {
+            if (GameBit_Get(bit) != 0) {
+                *(u8 *)(obj + 0x36) = 0xff;
+            } else {
+                *(u8 *)(obj + 0x36) = 0;
+            }
+        }
+    }
+}
+
 #pragma scheduling off
 void campfire_free(int obj)
 {
@@ -425,12 +634,9 @@ void kt_torch_update(int obj)
 {
   int mapData;
   int bit;
-  uint local_18[2];
 
   mapData = *(int *)(obj + 0x4c);
-  local_18[1] = *(u8 *)(mapData + 0x1b);
-  local_18[0] = 0x43300000;
-  ObjAnim_AdvanceCurrentMove((float)(*(double *)local_18 - lbl_803E3DB8) / lbl_803E3DB4,
+  ObjAnim_AdvanceCurrentMove((f32)*(u8 *)(mapData + 0x1b) / lbl_803E3DB4,
                              timeDelta,obj,(ObjAnimEventList *)0);
   bit = *(short *)(mapData + 0x20);
   if (bit != -1) {

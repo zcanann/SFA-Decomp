@@ -395,6 +395,328 @@ void DR_CloudRunner_init(int obj, int p2)
 #pragma peephole reset
 #pragma scheduling reset
 
+typedef struct {
+    f32 x;
+    f32 y;
+    f32 z;
+} Vec3x;
+
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802BF934(int obj, int p2, f32 f)
+{
+    u8 *base = (u8 *)lbl_803356F0;
+    u32 idx;
+    int flag = 0;
+    int inner;
+    int moveId;
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } s1;
+    Vec3x vecB;
+    Vec3x vecC;
+    Vec3x vecN;
+    Vec3x vecD;
+    Vec3x vecE;
+    f32 speed;
+    f32 accel;
+    f32 grav;
+    f32 d8;
+    f32 mag;
+    f32 adot;
+    f32 animSpd;
+    f32 spd;
+    f32 dot;
+    f32 dist;
+    f32 t;
+    f32 *lim;
+    vecB = ((Vec3x *)lbl_802C2D00)[2];
+    vecC = ((Vec3x *)lbl_802C2D00)[3];
+    vecD = ((Vec3x *)lbl_802C2D00)[4];
+    moveId = -1;
+    inner = *(int *)((char *)obj + 0xb8);
+    *(int *)((char *)p2 + 0) |= 0x200000;
+    *(u8 *)((char *)p2 + 0x25f) = 0;
+    if (*(s8 *)((char *)p2 + 0x346) != 0) {
+        ((ByteFlags *)((char *)inner + 0xbc0))->b80 = 0;
+        ((ByteFlags *)((char *)inner + 0xbc0))->b08 = 0;
+        flag = 1;
+    }
+    ObjHits_RegisterActiveHitVolumeObject(obj);
+    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+        if (!((ByteFlags *)((char *)inner + 0xbc0))->b20) {
+            ((ByteFlags *)((char *)inner + 0xbc0))->b20 = 1;
+            fn_802BF0C8(obj, p2, ((ByteFlags *)((char *)inner + 0xbc0))->b20);
+        }
+        ObjAnim_SetCurrentMove(obj, *(s16 *)(base + 0x68), lbl_803E83A4, 0);
+        *(s16 *)((char *)inner + 0xbbc) = *(s16 *)(base + 0x74);
+        *(s16 *)((char *)inner + 0xbba) = *(s16 *)((char *)obj + 0);
+        *(s16 *)((char *)inner + 0xbbe) = *(s16 *)((char *)obj + 4);
+        {
+            f32 fz = lbl_803E83A4;
+            *(f32 *)((char *)p2 + 0x294) = fz;
+            *(f32 *)((char *)p2 + 0x284) = fz;
+            *(f32 *)((char *)p2 + 0x280) = fz;
+            *(f32 *)((char *)obj + 0x24) = fz;
+            *(f32 *)((char *)obj + 0x28) = fz;
+            *(f32 *)((char *)obj + 0x2c) = fz;
+        }
+        flag = 1;
+        ((ByteFlags *)((char *)inner + 0xbc0))->b80 = 1;
+        *(f32 *)((char *)inner + 0xaf4) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)inner + 0xaf8) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)inner + 0xafc) = *(f32 *)((char *)obj + 0x14);
+    }
+    *(int *)((char *)p2 + 0) |= 0x1000000;
+    if (*(f32 *)((char *)p2 + 0x298) < lbl_803E83BC) {
+        *(s16 *)((char *)p2 + 0x334) = 0;
+        *(s16 *)((char *)p2 + 0x336) = 0;
+        {
+            f32 fz = lbl_803E83A4;
+            *(f32 *)((char *)p2 + 0x290) = fz;
+            *(f32 *)((char *)p2 + 0x28c) = fz;
+            *(f32 *)((char *)p2 + 0x298) = fz;
+        }
+    }
+    speed = *(f32 *)((char *)obj + 0x98);
+    {
+        s16 *p;
+        for (idx = 0, p = (s16 *)(base + 0x60); *(s16 *)((char *)obj + 0xa0) != *p && idx < 6; idx++) {
+            p += 1;
+        }
+    }
+    if (idx >= 6) {
+        idx = 4;
+    }
+    mag = sqrtf(*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
+                *(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c));
+    if (!(mag < (spd = lbl_803E83A4))) goto spd_hi;
+    goto spd_done;
+spd_hi:
+    if (!(mag > (spd = lbl_803E83C0))) goto spd_mag;
+    goto spd_done;
+spd_mag:
+    spd = mag;
+spd_done:
+    *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) + (accel = ((grav = lbl_803E83C4) * spd) / lbl_803E83C0);
+    *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) - grav;
+    if (spd > lbl_803E83A4) {
+        if ((int)idx >= 4) {
+            s1.angles[2] = *(s16 *)((char *)obj + 4);
+            s1.angles[1] = *(s16 *)((char *)inner + 0xbbc) - 0x4000;
+            s1.angles[0] = *(s16 *)((char *)obj + 0);
+            s1.mat[1] = lbl_803E83A4;
+            s1.mat[2] = lbl_803E83A4;
+            s1.mat[3] = lbl_803E83A4;
+            s1.mat[0] = lbl_803E83A8;
+            vecD.z = lbl_803E83C8;
+            mathFn_80021ac8(&s1, &vecC);
+            mathFn_80021ac8(&s1, &vecD);
+            vecC.x = vecC.x * accel;
+            vecC.y = vecC.y * accel;
+            vecC.z = vecC.z * accel;
+            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) + vecC.x;
+            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) + vecC.z;
+        } else {
+            s1.angles[2] = *(s16 *)((char *)obj + 4);
+            s1.angles[1] = *(s16 *)((char *)inner + 0xbbc);
+            s1.angles[0] = *(s16 *)((char *)obj + 0);
+            s1.mat[1] = lbl_803E83A4;
+            s1.mat[2] = lbl_803E83A4;
+            s1.mat[3] = lbl_803E83A4;
+            s1.mat[0] = lbl_803E83A8;
+            mathFn_80021ac8(&s1, &vecD);
+            vecN.x = -*(f32 *)((char *)obj + 0x24);
+            vecN.y = -*(f32 *)((char *)obj + 0x28);
+            vecN.z = -*(f32 *)((char *)obj + 0x2c);
+            dot = vecD.z * vecN.z + (vecD.x * vecN.x + vecD.y * vecN.y);
+            adot = dot >= lbl_803E83A4 ? dot : -dot;
+            Vec3_Normalize(&vecN);
+            vecN.x = vecN.x * (lbl_803E83CC * adot + lbl_803E83C4 * ((lbl_803E83D0 * adot) / lbl_803E83C0));
+            vecN.y = vecN.y * (lbl_803E83CC * adot + lbl_803E83C4 * ((lbl_803E83D0 * adot) / lbl_803E83C0));
+            vecN.z = vecN.z * (lbl_803E83CC * adot + lbl_803E83C4 * ((lbl_803E83D0 * adot) / lbl_803E83C0));
+            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) + vecN.x;
+            *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) + vecN.y;
+            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) + vecN.z;
+        }
+    }
+    if (*(f32 *)((char *)p2 + 0x298) > lbl_803E83BC) {
+        s1.angles[2] = 0;
+        s1.angles[1] = 0;
+        s1.angles[0] = *(s16 *)((char *)obj + 0);
+        s1.mat[1] = lbl_803E83A4;
+        s1.mat[2] = lbl_803E83A4;
+        s1.mat[3] = lbl_803E83A4;
+        s1.mat[0] = lbl_803E83A8;
+        vecC.x = *(f32 *)((char *)p2 + 0x290) * lbl_803E83D4 * *(f32 *)(base + ((int)idx >> 1) * 4 + 0x90);
+        vecC.y = -*(f32 *)((char *)p2 + 0x28c) * lbl_803E83D4 * *(f32 *)(base + ((int)idx >> 1) * 4 + 0x9c);
+        vecC.z = lbl_803E83A4;
+        mathFn_80021ac8(&s1, &vecC);
+        *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) + vecC.x;
+        *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) + vecC.y;
+        *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) + vecC.z;
+    }
+    if (((ByteFlags *)((char *)inner + 0xbc0))->b80 & (*(f32 *)((char *)obj + 0x98) < lbl_803E83D8)) {
+        s1.angles[2] = *(s16 *)((char *)obj + 4);
+        s1.angles[1] = *(s16 *)((char *)inner + 0xbbc);
+        s1.angles[0] = *(s16 *)((char *)obj + 0);
+        s1.mat[1] = lbl_803E83A4;
+        s1.mat[2] = lbl_803E83A4;
+        s1.mat[3] = lbl_803E83A4;
+        s1.mat[0] = lbl_803E83A8;
+        mathFn_80021ac8(&s1, &vecB);
+        *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) + vecB.x;
+        *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) + vecB.y;
+        *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) + vecB.z;
+    }
+    mag = sqrtf(*(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c) +
+                (*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
+                 *(f32 *)((char *)obj + 0x28) * *(f32 *)((char *)obj + 0x28)));
+    lim = (f32 *)(base + ((int)idx >> 1) * 4 + 0xa8);
+    if (mag > *lim) {
+        Vec3_Normalize((void *)(obj + 0x24));
+        *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * ((mag + *lim) * (d8 = lbl_803E83D8));
+        *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) * (d8 * (mag + *lim));
+        *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * (d8 * (mag + *lim));
+    } else {
+        lim = (f32 *)(base + ((int)idx >> 1) * 4 + 0xb4);
+        if (mag < *lim) {
+            Vec3_Normalize((void *)(obj + 0x24));
+            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * ((mag + *lim) * (d8 = lbl_803E83D8));
+            *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) * (d8 * (mag + *lim));
+            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * (d8 * (mag + *lim));
+        }
+    }
+    if ((int)idx >= 4) {
+        *(s16 *)((char *)inner + 0xbba) = *(s16 *)((char *)inner + 0xbba) - (int)*(f32 *)((char *)p2 + 0x290);
+        *(s16 *)((char *)inner + 0xbbe) = *(s16 *)((char *)inner + 0xbbe) - ((int)*(f32 *)((char *)p2 + 0x290) << 3);
+        *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) - (int)*(f32 *)((char *)p2 + 0x28c) * 3;
+        *(s16 *)((char *)inner + 0xbbc) = *(s16 *)((char *)inner + 0xbbc) - (int)*(f32 *)((char *)p2 + 0x28c) * 3;
+    } else {
+        *(s16 *)((char *)inner + 0xbba) = *(s16 *)((char *)inner + 0xbba) - ((int)*(f32 *)((char *)p2 + 0x290) << 3);
+        *(s16 *)((char *)inner + 0xbbe) = *(s16 *)((char *)inner + 0xbbe) - (int)*(f32 *)((char *)p2 + 0x290);
+        *(s16 *)((char *)obj + 2) = *(s16 *)((char *)obj + 2) - (int)*(f32 *)((char *)p2 + 0x28c) * 6;
+        *(s16 *)((char *)inner + 0xbbc) = *(s16 *)((char *)inner + 0xbbc) - ((int)*(f32 *)((char *)p2 + 0x28c) << 2);
+    }
+    if ((int)idx >= 4) {
+        s16 ang;
+        s16 diff;
+        ang = (s16)(getAngle(*(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x2c)) + 0x8000);
+        diff = ang - (u16)*(s16 *)((char *)inner + 0xbba);
+        if (diff > 0x8000) {
+            diff = diff - 0xffff;
+        }
+        if (diff < -0x8000) {
+            diff = diff + 0xffff;
+        }
+        *(s16 *)((char *)inner + 0xbba) += diff / 64;
+        *(s16 *)((char *)inner + 0xbbe) += diff / 128;
+    }
+    {
+        s16 lim2;
+        if (*(s16 *)((char *)inner + 0xbbe) > (lim2 = *(s16 *)((char *)&lbl_803DC794 + (idx & 0xfffffffe)))) {
+            *(s16 *)((char *)inner + 0xbbe) = lim2;
+        } else {
+            int neg = -lim2;
+            if (*(s16 *)((char *)inner + 0xbbe) < neg) {
+                *(s16 *)((char *)inner + 0xbbe) = (s16)neg;
+            }
+        }
+    }
+    if (*(s16 *)((char *)inner + 0xbbc) > 0x4000) {
+        *(s16 *)((char *)inner + 0xbbc) = 0x4000;
+    } else if (*(s16 *)((char *)inner + 0xbbc) < -0x4000) {
+        *(s16 *)((char *)inner + 0xbbc) = -0x4000;
+    }
+    *(s16 *)((char *)obj + 0) = *(s16 *)((char *)inner + 0xbba);
+    *(s16 *)((char *)obj + 4) = *(s16 *)((char *)inner + 0xbbe);
+    mag = sqrtf(*(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c) +
+                (*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
+                 *(f32 *)((char *)obj + 0x28) * *(f32 *)((char *)obj + 0x28)));
+    if (((ByteFlags *)((char *)inner + 0xbc0))->b80 == 0 && (*(int *)((char *)p2 + 0x31c) & 0x200)) {
+        Sfx_PlayFromObject(obj, 0x11d);
+        ((ByteFlags *)((char *)inner + 0xbc0))->b80 = 1;
+        speed = lbl_803E83A4;
+        flag = 1;
+    }
+    if (*(int *)((char *)p2 + 0) & 0x400000) {
+        vecE.x = *(f32 *)((char *)obj + 0x80) - *(f32 *)((char *)inner + 0xaf4);
+        vecE.y = *(f32 *)((char *)obj + 0x84) - *(f32 *)((char *)inner + 0xaf8);
+        vecE.z = *(f32 *)((char *)obj + 0x88) - *(f32 *)((char *)inner + 0xafc);
+        dist = sqrtf(vecE.z * vecE.z + (vecE.x * vecE.x + vecE.y * vecE.y));
+        if (!(dist < (t = lbl_803E83A4))) goto d_hi;
+        goto d_done;
+    d_hi:
+        if (!(dist > (t = lbl_803E83DC))) goto d_dist;
+        goto d_done;
+    d_dist:
+        t = dist;
+    d_done:;
+        Vec3_Normalize(&vecE);
+        {
+            f32 scale = ((t / lbl_803E83DC) * (lbl_803E83E0 + (mag / lbl_803E83C0) * (mag / lbl_803E83C0))) / f;
+            vecE.x = vecE.x * scale;
+            vecE.y = vecE.y * scale;
+            vecE.z = vecE.z * scale;
+        }
+        if (vecE.y < lbl_803E83A4) {
+            vecE.y = lbl_803E83A4;
+        }
+        vecE.y = vecE.y * lbl_803E83E4;
+        t = vecE.y;
+        if (vecE.y >= lbl_803E83A4) {
+        } else {
+            t = -vecE.y;
+        }
+        t = (lbl_803E83E8 - t) / lbl_803E83E8;
+        if (t < lbl_803E83A4) {
+            t = lbl_803E83A4;
+        }
+        vecE.x = vecE.x * t;
+        vecE.y = vecE.y * t;
+        vecE.z = vecE.z * t;
+        *(f32 *)((char *)obj + 0x24) = vecE.x + *(f32 *)((char *)obj + 0x24);
+        *(f32 *)((char *)obj + 0x28) = vecE.y + *(f32 *)((char *)obj + 0x28);
+        *(f32 *)((char *)obj + 0x2c) = vecE.z + *(f32 *)((char *)obj + 0x2c);
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)inner + 0xaf4);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)inner + 0xaf8);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)inner + 0xafc);
+        objMove(obj, *(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x28), *(f32 *)((char *)obj + 0x2c));
+        if ((*(s8 *)((char *)p2 + 0x264) & 0x10) && (int)(idx & 0xfe) == 0) {
+            *(f32 *)((char *)obj + 0x28) = lbl_803E83EC;
+            return 3;
+        }
+        *(f32 *)((char *)inner + 0xaf4) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)inner + 0xaf8) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)inner + 0xafc) = *(f32 *)((char *)obj + 0x14);
+    } else {
+        objMove(obj, *(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x28), *(f32 *)((char *)obj + 0x2c));
+    }
+    if (((ByteFlags *)((char *)inner + 0xbc0))->b08 == 0 && (*(int *)((char *)p2 + 0x31c) & 0x100)) {
+        buttonDisable(0, 0x100);
+        moveId = 0x20d;
+        animSpd = lbl_803E83F0;
+        ((ByteFlags *)((char *)inner + 0xbc0))->b08 = 1;
+        flag = 1;
+        speed = lbl_803E83A4;
+    }
+    if (flag != 0) {
+        if (moveId == -1) {
+            int masked;
+            ObjAnim_SetCurrentMove(obj, *(s16 *)(base + ((masked = idx & 0xfe) + ((ByteFlags *)((char *)inner + 0xbc0))->b80) * 2 + 0x60), speed, 0);
+            *(f32 *)((char *)p2 + 0x2a0) = *(f32 *)(base + (masked >> 1) * 4 + 0xc0);
+        } else {
+            ObjAnim_SetCurrentMove(obj, moveId, speed, 0);
+            *(f32 *)((char *)p2 + 0x2a0) = animSpd;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void fn_802BF0C8(int obj, int p2, int mode)
@@ -419,6 +741,180 @@ void fn_802BF0C8(int obj, int p2, int mode)
         (*(void (*)(int, int, int, int, int *))(*(int *)(*gPathControlInterface + 0xc)))(q, 1, (int)(base + 0x3c), (int)&lbl_803DC780, &stk);
     }
     (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, q);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void DR_CloudRunner_func23(int obj, int mode, int *out)
+{
+    struct gbids {
+        s16 a[4];
+    } bits;
+    struct curveids {
+        int a[4];
+    } curve;
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } stk;
+    int inner;
+    Obj_GetPlayerObject();
+    curve = *(struct curveids *)lbl_802C2D3C;
+    bits = *(struct gbids *)&lbl_803E8398;
+    inner = *(int *)((char *)obj + 0xb8);
+    switch (mode) {
+    case 2:
+        if ((*(u16 *)((char *)obj + 0xb0) & 0x1000) || ((ByteFlags *)((char *)inner + 0xbc1))->b80) {
+            *out = *(s16 *)((char *)obj + 0);
+            lbl_803DE4DC = *(s16 *)((char *)obj + 0);
+            ((ByteFlags *)((char *)inner + 0xbc1))->b80 = 0;
+        } else {
+            s16 *p;
+            s16 ang;
+            int i;
+            s16 diff;
+            s16 step;
+            ang = *(s16 *)((char *)obj + 0);
+            i = 0;
+            p = bits.a;
+            do {
+                if ((u32)GameBit_Get(*p) != 0) {
+                    break;
+                }
+                p += 1;
+                i += 1;
+            } while (i < 4);
+            if (i != 4 && dll_2E_func0A(curve.a[i], &stk) != 0) {
+                s16 tmp = (s16)getAngle(stk.mat[1] - *(f32 *)((char *)obj + 0xc),
+                                        stk.mat[3] - *(f32 *)((char *)obj + 0x14));
+                ang = tmp + lbl_803DC79C;
+            }
+            diff = ang - (u16)lbl_803DE4DC;
+            if (diff > 0x8000) {
+                diff = diff - 0xffff;
+            }
+            if (diff < -0x8000) {
+                diff = diff + 0xffff;
+            }
+            step = diff / 16;
+            if (step < -0x50) {
+                step = -0x50;
+            } else if (step > 0x50) {
+                step = 0x50;
+            }
+            lbl_803DE4DC = lbl_803DE4DC + (s16)step;
+            *out = lbl_803DE4DC;
+        }
+        break;
+    case 3:
+        if (*(u16 *)((char *)obj + 0xb0) & 0x1000) {
+            *out = 0;
+        } else {
+            *out = 1;
+        }
+        break;
+    case 4:
+        *out = 1;
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802BF75C(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int q = *(int *)((char *)obj + 0x54);
+    *(int *)((char *)p2 + 0) |= 0x200000;
+    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+        f32 dir[3];
+        struct {
+            s16 angles[4];
+            f32 mat[4];
+        } s1;
+        void *newObj;
+        int setup;
+        *(u8 *)((char *)inner + 0xbb6) &= ~8;
+        *(s16 *)((char *)q + 0x60) = *(s16 *)((char *)q + 0x60) | 0x200;
+        ObjAnim_SetCurrentMove(obj, 0xd, lbl_803E83A4, 0);
+        *(f32 *)((char *)p2 + 0x2a0) = lbl_803E83B8;
+        if (Obj_IsLoadingLocked() == 0) {
+            return 0;
+        }
+        Sfx_PlayFromObject(obj, SFXtr_cnflyby6);
+        setup = Obj_AllocObjectSetup(0x18, 0x42a);
+        *(u8 *)((char *)setup + 6) = 0xff;
+        *(u8 *)((char *)setup + 7) = 0xff;
+        *(u8 *)((char *)setup + 4) = 2;
+        *(u8 *)((char *)setup + 5) = 1;
+        *(f32 *)((char *)setup + 8) = *(f32 *)((char *)inner + 0xae8);
+        *(f32 *)((char *)setup + 0xc) = *(f32 *)((char *)inner + 0xaec);
+        *(f32 *)((char *)setup + 0x10) = *(f32 *)((char *)inner + 0xaf0);
+        newObj = (void *)Obj_SetupObject(setup, 5, -1, -1, 0);
+        if (newObj != NULL) {
+            s1.mat[1] = lbl_803E83A4;
+            s1.mat[2] = lbl_803E83A4;
+            s1.mat[3] = lbl_803E83A4;
+            s1.mat[0] = lbl_803E83A8;
+            s1.angles[0] = *(s16 *)((char *)obj + 0);
+            s1.angles[1] = (s16)((*(s16 *)((char *)obj + 2) - 0x190) >> 1);
+            s1.angles[2] = 0;
+            dir[0] = lbl_803E83A4;
+            dir[1] = lbl_803E83A4;
+            dir[2] = lbl_803E83AC;
+            mathFn_80021ac8(s1.angles, dir);
+            *(f32 *)((char *)newObj + 0x24) = dir[0];
+            *(f32 *)((char *)newObj + 0x28) = dir[1];
+            *(f32 *)((char *)newObj + 0x2c) = dir[2];
+            *(int *)((char *)newObj + 0xf4) = 0xb4;
+            *(int *)((char *)newObj + 0xf8) = obj;
+            *(s16 *)((char *)newObj + 0x4) = 0;
+            *(s16 *)((char *)newObj + 0x2) = 0;
+            *(s16 *)((char *)newObj + 0) = 0;
+            (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))((int)newObj, 0x66, 0, 2, -1, 0);
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void DR_CloudRunner_hitDetect(int obj)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int r;
+    s16 *hits[4];
+    s16 diff;
+    if (*(s16 *)((char *)inner + 0xbb0) != 0 && *(s16 *)((char *)obj + 0xa0) != 0xf &&
+        (r = ObjHits_GetPriorityHit(obj, hits, 0, 0)) != 0 && r != 0xf &&
+        *(u8 *)((char *)inner + 0xbb2) == 2) {
+        diff = *(s16 *)((char *)obj + 0) - (u16)*hits[0];
+        if (diff > 0x8000) {
+            diff = diff - 0xffff;
+        }
+        if (diff < -0x8000) {
+            diff += 0xffff;
+        }
+        if (diff > 0x4000 || diff < -0x4000) {
+            ((ByteFlags *)((char *)inner + 0xbc0))->b40 = 0;
+        } else {
+            ((ByteFlags *)((char *)inner + 0xbc0))->b40 = 1;
+        }
+        *(s16 *)((char *)inner + 0xbb0) -= 1;
+        if (*(s16 *)((char *)inner + 0xbb0) <= 0) {
+            (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(5, obj, -1);
+            *(s16 *)((char *)inner + 0xbb0) = 1;
+            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 7);
+        }
+        Sfx_PlayFromObject(obj, 0x11f);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

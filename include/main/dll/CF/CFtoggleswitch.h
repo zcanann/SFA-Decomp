@@ -12,7 +12,7 @@ extern ObjectDescriptor gInfoTextObjDescriptor;
 extern ObjectDescriptor gCCTestInfotObjDescriptor;
 extern ObjectDescriptor gDeathGasObjDescriptor;
 
-void magiccavebottom_update(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate);
+void magiccavebottom_update(int *obj);
 void FUN_8018aee4(void);
 void FUN_8018af08(int param_1);
 void FUN_8018af28(int param_1);

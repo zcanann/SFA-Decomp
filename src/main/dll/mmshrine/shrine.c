@@ -32,7 +32,7 @@ extern undefined4 FUN_80286888();
 extern uint FUN_80294cd0();
 extern int objCreateLight(int param_1,int param_2);
 extern void GameBit_Set(int eventId,int value);
-extern void Obj_FreeObject(void);
+extern void Obj_FreeObject(void *obj);
 
 extern undefined4 DAT_803dc071;
 extern undefined4* DAT_803dd6d4;
@@ -99,10 +99,62 @@ void mmsh_shrine_init(undefined2 *param_1,int param_2)
  */
 void mmsh_scales_free(int param_1,int param_2)
 {
-  (**(code **)(*gObjectTriggerInterface + 0x24))(*(undefined4 *)(param_1 + 0xb8));
-  (**(code **)(*gTitleMenuControlInterface + 8))(param_1,0xffff,0,0,0);
-  if ((*(int *)(param_1 + 200) != 0) && (param_2 == 0)) {
-    Obj_FreeObject();
+  void *child;
+  (*(code *)(*gObjectTriggerInterface + 0x24))(*(undefined4 *)(param_1 + 0xb8));
+  (*(code *)(*gTitleMenuControlInterface + 8))(param_1,0xffff,0,0,0);
+  child = *(void **)(param_1 + 200);
+  if ((child != NULL) && (param_2 == 0)) {
+    Obj_FreeObject(child);
+  }
+  return;
+}
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_scales_update
+ * EN v1.0 Address: 0x801C5474
+ * EN v1.0 Size: 372b
+ */
+extern u8 lbl_803DB411;
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+
+void mmsh_scales_update(int param_1)
+{
+  char typeId;
+  int *list;
+  int obj;
+  int found;
+  int id;
+  int n;
+  int i;
+  int count;
+
+  if ((*(void **)(param_1 + 0x4c) != NULL) && (*(short *)(*(int *)(param_1 + 0x4c) + 0x18) != -1)) {
+    i = (*(int (**)(f32))(*gObjectTriggerInterface + 0x14))((f32)(u32)lbl_803DB411);
+    if ((i != 0) && (*(short *)(param_1 + 0xb4) == -2)) {
+      typeId = *(char *)(*(int *)(param_1 + 0xb8) + 0x57);
+      found = 0;
+      list = ObjList_GetObjects(&i, &count);
+      n = 0;
+      for (i = 0, id = typeId; i < count; i++) {
+        obj = *list;
+        if (*(short *)(obj + 0xb4) == typeId) {
+          found = obj;
+        }
+        if (((*(short *)(obj + 0xb4) == -2) && (*(short *)(obj + 0x44) == 0x10)) &&
+           (id == *(char *)(*(int *)(obj + 0xb8) + 0x57))) {
+          n = n + 1;
+        }
+        list = list + 1;
+      }
+      if (((n <= 1) && ((u32)found != 0)) && (*(short *)(found + 0xb4) != -1)) {
+        *(s16 *)(found + 0xb4) = -1;
+        (*(void (**)(int))(*gObjectTriggerInterface + 0x4c))(id);
+      }
+      *(s16 *)(param_1 + 0xb4) = -1;
+      Obj_FreeObject((void *)param_1);
+    }
   }
   return;
 }
@@ -372,6 +424,84 @@ extern void objRenderFn_8003b8f4(f32);
 #pragma peephole off
 void mmsh_scales_render(int p1, int p2, int p3, int p4, int p5, s8 visible) { s32 v = visible; if (v != 0) objRenderFn_8003b8f4(lbl_803E4F68); }
 #pragma peephole reset
+
+/*
+ * --INFO--
+ *
+ * Function: mmsh_waterspike_update
+ * EN v1.0 Address: 0x801C57B0
+ * EN v1.0 Size: 380b
+ */
+extern void ObjHits_SetHitVolumeSlot(int obj, int animObjId, int frame, int flags);
+extern void *ObjList_FindObjectById(int id);
+extern f32 objFn_801948c0(void *obj, int param_2);
+extern void fn_80137948(char *fmt, ...);
+extern char sWaterSpikeInvalidXyzAnimIdWarning[];
+extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int **out, int a, int b);
+extern u8 framesThisStep;
+extern int *gWaterfxInterface;
+extern f32 lbl_803E4F80;
+extern f32 lbl_803E4F84;
+extern f32 lbl_803E4F88;
+
+void mmsh_waterspike_update(int param_1)
+{
+  void *o;
+  int *p;
+  int obj2;
+  int n;
+  int i;
+  f32 d;
+  f32 newY;
+  f32 maxY;
+  f32 dist;
+  int *list;
+  int state;
+
+  state = *(int *)(param_1 + 0x4c);
+  ObjHits_SetHitVolumeSlot(param_1, 9, 1, 0);
+  o = ObjList_FindObjectById(*(int *)(param_1 + 0xf8));
+  if (o != NULL) {
+    dist = objFn_801948c0(o, 3) - *(f32 *)(param_1 + 0x10);
+  }
+  else {
+    fn_80137948(sWaterSpikeInvalidXyzAnimIdWarning, *(int *)(state + 0x14));
+    n = hitDetectFn_80065e50(param_1, *(f32 *)(param_1 + 0xc), *(f32 *)(param_1 + 0x10),
+                             *(f32 *)(param_1 + 0x14), &list, 0, 0);
+    if (n != 0) {
+      dist = lbl_803E4F80;
+      p = list;
+      for (i = 0; i < n; i++) {
+        obj2 = *p;
+        if (*(char *)(obj2 + 0x14) == 0xe) {
+          d = *(f32 *)obj2 - *(f32 *)(param_1 + 0x10);
+          if (d > dist) {
+            dist = d;
+          }
+        }
+        p = p + 1;
+      }
+    }
+  }
+  newY = *(f32 *)(param_1 + 0x10) + dist;
+  maxY = *(f32 *)(state + 0xc);
+  if (newY > maxY) {
+    *(f32 *)(param_1 + 0x10) = maxY;
+  }
+  else {
+    *(f32 *)(param_1 + 0x10) = newY;
+    *(int *)(param_1 + 0xf4) = *(int *)(param_1 + 0xf4) - framesThisStep;
+    if (*(int *)(param_1 + 0xf4) <= 0) {
+      *(int *)(param_1 + 0xf4) = randomGetRange(0x3c, 0xf0);
+      if (lbl_803E4F84 == dist) {
+        (*(void (**)(f32, f32, f32, int, f32, int))(*gWaterfxInterface + 0x14))
+            (*(f32 *)(param_1 + 0xc), *(f32 *)(param_1 + 0x10),
+             *(f32 *)(param_1 + 0x14), 0, lbl_803E4F88, 3);
+      }
+    }
+  }
+  return;
+}
 
 extern void ObjHits_EnableObject(int obj);
 #pragma scheduling off

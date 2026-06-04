@@ -217,7 +217,7 @@ extern f32 lbl_803DD038;
 extern void* gSHthorntailAnimationInterface;
 extern undefined4* gPartfxInterface;
 extern undefined4* gWaterfxInterface;
-extern undefined4 lbl_803DCFF0;
+extern u8 lbl_803DCFF0;
 extern u8 lbl_803DCFF8;
 extern u8 lbl_803DCFF9;
 extern u16 lbl_803DD000;
@@ -318,10 +318,6 @@ extern undefined4 _DAT_803dc354;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objAudioFn_8006ef38(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
-                 uint param_5,int param_6,int param_7)
-{
-}
 
 /*
  * --INFO--
@@ -356,6 +352,136 @@ void* fn_8006F388(u32 i)
     }
 }
 #pragma scheduling reset
+
+typedef struct {
+    s16 id;
+    s16 unk2;
+    s16 unk4;
+    f32 scale;
+    Vec pos;
+} SplashFxParams;
+
+extern f32 Vachuff_803DEE20;
+extern f32 __THPHuffmanBits_803DEE24;
+extern f32 __THPHuffmanSizeTab_803DEE28;
+extern u8 lbl_8030E8B0[];
+extern u8 *Obj_GetPlayerObject(void);
+extern int Sfx_PlayFromObject(int obj, int sfxId);
+extern void Sfx_PlayAtPositionFromObject(u8 *obj, f32 x, f32 y, f32 z, int sfxId);
+extern int randomGetRange(int min, int max);
+void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type);
+
+#pragma peephole off
+#pragma scheduling off
+void objAudioFn_8006ef38(u8 *obj, s8 *hits, u8 type, f32 *vecs, u8 *st, f32 unused, f32 scale)
+{
+    Vec v;
+    SplashFxParams ps;
+    u8 *tbl;
+    u16 *sfxTab;
+    u8 flags;
+    u8 i;
+    int sfx;
+    u8 vecIdx;
+    u8 j;
+    u8 cnt;
+    f32 *vec;
+    s8 n;
+    void *desc;
+
+    tbl = lbl_8030E8B0;
+    sfxTab = fn_8006F388(type);
+    flags = 0;
+    i = 0;
+    for (i = 0; i < hits[0x1b]; i++) {
+        switch (hits[0x13 + i]) {
+        case 1: flags |= 1; vecIdx = 0; break;
+        case 2: flags |= 2; vecIdx = 1; break;
+        case 3: flags |= 4; vecIdx = 2; break;
+        case 4: flags |= 8; vecIdx = 3; break;
+        }
+    }
+    if (flags == 0) {
+        return;
+    }
+    if (!(*(s8 *)(st + 0x260) & 0x10) && *(s8 *)(st + 0x25b) != 0) {
+        return;
+    }
+    n = *(s8 *)(st + 0xb8);
+    if (n < 0 || n >= 0x23) {
+        sfx = 0;
+    } else {
+        sfx = tbl[0xb4 + n];
+    }
+    desc = *(void **)(st + 0xc4);
+    if (desc != NULL) {
+        switch (*(s16 *)((u8 *)desc + 0x46)) {
+        case 0x5d:
+        case 0x99:
+        case 0x1db:
+        case 0x223:
+            sfx = 4;
+        }
+    }
+    if (sfxTab != NULL) {
+        vec = vecs + vecIdx * 3;
+        if (*(f32 *)(st + 0x1b4) > Vachuff_803DEE20) {
+            (*(void (**)(u8 *, int, f32 *, u8 *))((int)*gWaterfxInterface + 8))(obj, flags, vecs, st);
+            sfx = 5;
+        }
+        if (obj == Obj_GetPlayerObject()) {
+            if (*(s16 *)(*(u32 *)(obj + 0xb8) + 0x81a) == 1) {
+                Sfx_PlayFromObject(0, 0x3c2);
+            }
+            Sfx_PlayFromObject(0, sfxTab[sfx]);
+        } else {
+            Sfx_PlayAtPositionFromObject(obj, vec[0], vec[1], vec[2], sfxTab[sfx]);
+        }
+    }
+    if (i == 5) {
+        return;
+    }
+    j = 0;
+    scale = __THPHuffmanBits_803DEE24 * scale;
+    while (flags != 0) {
+        vec = vecs + j * 3;
+        v.x = vec[0];
+        v.y = vec[1];
+        v.z = vec[2];
+        if (flags & 1) {
+            if (*(s16 *)(obj + 0x44) == 1 || *(s16 *)(obj + 0x46) == 0x416) {
+                playerEarthWalkerAudioFn_8006f950(obj, (f32 *)&v, j & 1, sfx);
+            }
+            ps.pos.x = vec[0];
+            ps.pos.y = vec[1];
+            ps.pos.z = vec[2];
+            ps.scale = scale;
+            ps.id = sfx;
+            ps.unk4 = 0;
+            ps.unk2 = 0;
+            v.x = __THPHuffmanSizeTab_803DEE28 * *(f32 *)(obj + 0x24);
+            v.y = __THPHuffmanSizeTab_803DEE28 * *(f32 *)(obj + 0x28);
+            v.z = __THPHuffmanSizeTab_803DEE28 * *(f32 *)(obj + 0x2c);
+            if (sfx == 6 || sfx == 3) {
+                cnt = randomGetRange(2, 4);
+                while (cnt != 0) {
+                    (*(void (**)(u8 *, int, void *, int, int, Vec *))((int)*gPartfxInterface + 8))(obj, 0x7e6, &ps, 0x200001, -1, &v);
+                    cnt--;
+                }
+            } else if (sfx == 2) {
+                cnt = randomGetRange(4, 8);
+                while (cnt != 0) {
+                    (*(void (**)(u8 *, int, void *, int, int, Vec *))((int)*gPartfxInterface + 8))(obj, 0x7e6, &ps, 0x200001, -1, &v);
+                    cnt--;
+                }
+            }
+        }
+        flags = flags >> 1;
+        j++;
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -420,8 +546,8 @@ void timeFn_8006f400(f32 step)
  * --INFO--
  *
  * Function: drawFn_8006f500
- * EN v1.0 Address: 0x8006F09C
- * EN v1.0 Size: 4b
+ * EN v1.0 Address: 0x8006F500
+ * EN v1.0 Size: 1104b
  * EN v1.1 Address: 0x8006F67C
  * EN v1.1 Size: 1104b
  * JP Address: TODO
@@ -429,9 +555,112 @@ void timeFn_8006f400(f32 step)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void drawFn_8006f500(void)
 {
+    extern f32 playerMapOffsetX, playerMapOffsetZ;
+    extern f32 Gbase;
+    extern f32 lbl_803DEE38;
+    extern f32 lbl_803DEE3C;
+    extern f32 lbl_803DEE44;
+    extern f32 lbl_803DEE48;
+    extern void *lbl_80391DD0[];
+    extern u8 lbl_80392DE0[];
+    extern f32 Vachuff_803DEE20;
+    extern f32 __THPHuffmanBits_803DEE24;
+    extern void selectTexture(void *tex, int slot);
+    extern void fn_8000F9B4(void);
+    extern f32 *Camera_GetViewMatrix(void);
+    extern void Camera_ApplyFullViewport(void);
+    extern u8 *Obj_GetPlayerObject(void);
+
+    GXColor color;
+    Mtx camTrans;
+    Mtx posMtx;
+    Mtx rot;
+    Mtx trans;
+    u8 *quad;
+    f32 *view;
+    int i;
+    f32 tTop;
+    f32 tBot;
+    u8 alpha;
+
+    if (Obj_GetPlayerObject() == NULL) {
+        return;
+    }
+    fn_8000F9B4();
+    GXSetCurrentMtx(0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xd, 1);
+    GXSetNumTexGens(1);
+    GXSetTexCoordGen2(0, 1, 4, 0x1e, 0, 0x7d);
+    GXSetNumTevStages(1);
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetTevOrder(0, 0, 0, 0xff);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
+    GXSetTevKAlphaSel(0, 0x1c);
+    GXSetTevAlphaIn(0, 7, 4, 6, 7);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetCullMode(0);
+    GXSetBlendMode(1, 4, 5, 5);
+    selectTexture(lbl_80391DD0[lbl_803DCFF0], 0);
+    view = Camera_GetViewMatrix();
+    PSMTXTrans(camTrans, -playerMapOffsetX, Vachuff_803DEE20, -playerMapOffsetZ);
+    PSMTXConcat((MtxP)view, camTrans, posMtx);
+    GXLoadPosMtxImm(posMtx, 0);
+    gxSetZMode_(1, 3, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    i = 0;
+    quad = lbl_80392DE0;
+    for (; i < 0x100; i++) {
+        alpha = quad[0x33];
+        if (alpha != 0) {
+            if (quad[0x32] == 1) {
+                color.a = alpha >> 2;
+            } else {
+                color.a = alpha >> 1;
+            }
+            GXSetTevKColor(0, color);
+            if (quad[0x34] != 0) {
+                tTop = lbl_803DEE38;
+                tBot = Vachuff_803DEE20;
+                PSMTXRotRad(rot, 0x7a, lbl_803DEE3C * (Gbase * (f32)(int)(0x8000 - *(u16 *)(quad + 0x30))) / lbl_803DEE44);
+            } else {
+                tTop = Vachuff_803DEE20;
+                tBot = lbl_803DEE38;
+                PSMTXRotRad(rot, 0x7a, lbl_803DEE3C * (Gbase * (f32)(u32)*(u16 *)(quad + 0x30)) / lbl_803DEE44);
+            }
+            PSMTXTrans(trans, lbl_803DEE48, lbl_803DEE48, Vachuff_803DEE20);
+            PSMTXConcat(rot, trans, rot);
+            PSMTXTrans(trans, __THPHuffmanBits_803DEE24, __THPHuffmanBits_803DEE24, Vachuff_803DEE20);
+            PSMTXConcat(trans, rot, rot);
+            GXLoadTexMtxImm(rot, 0x1e, 1);
+            GXBegin(0x80, 2, 4);
+            GXPosition3f32(*(f32 *)(quad + 0x0), *(f32 *)(quad + 0x4), *(f32 *)(quad + 0x8));
+            GXTexCoord2f32(Vachuff_803DEE20, tTop);
+            GXPosition3f32(*(f32 *)(quad + 0xc), *(f32 *)(quad + 0x10), *(f32 *)(quad + 0x14));
+            GXTexCoord2f32(lbl_803DEE38, tTop);
+            GXPosition3f32(*(f32 *)(quad + 0x18), *(f32 *)(quad + 0x1c), *(f32 *)(quad + 0x20));
+            GXTexCoord2f32(lbl_803DEE38, tBot);
+            GXPosition3f32(*(f32 *)(quad + 0x24), *(f32 *)(quad + 0x28), *(f32 *)(quad + 0x2c));
+            GXTexCoord2f32(Vachuff_803DEE20, tBot);
+        }
+        quad += 0x38;
+    }
+    Camera_ApplyFullViewport();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -446,115 +675,123 @@ void drawFn_8006f500(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void playerEarthWalkerAudioFn_8006f950(undefined4 param_1,undefined4 param_2,undefined param_3,uint param_4)
+typedef struct {
+    f32 x, y, z;
+    u16 id;
+    u8 alpha;
+    u8 flip;
+} RippleEntry;
+
+typedef struct {
+    f32 v[12];
+    u16 angle;
+    u8 type;
+    u8 alpha;
+    u8 flip;
+    u8 pad[3];
+} SplashQuad;
+
+typedef struct {
+    f32 scales[4];
+    u8 pad[0x10];
+    RippleEntry ripples[0x100];
+    SplashQuad quads[0x100];
+} WaterFxState;
+
+#pragma peephole off
+#pragma scheduling off
+void playerEarthWalkerAudioFn_8006f950(u8 *obj, f32 *pos, u8 flip, u8 type)
 {
-  extern undefined4 lbl_80391DE0;
-  extern undefined4 lbl_80391DC0;
-  extern undefined4 lbl_80392DE0;
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  uint uVar7;
-  short *psVar8;
-  int iVar9;
-  float *pfVar10;
-  double dVar11;
-  double in_f31;
-  double in_ps31_1;
-  undefined8 uVar12;
-  float fStack_58;
-  float afStack_54 [3];
-  float local_48;
-  float local_44;
-  float local_40;
-  float local_3c;
-  float local_38;
-  float local_34;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  uVar12 = FUN_80286840();
-  psVar8 = (short *)((ulonglong)uVar12 >> 0x20);
-  pfVar10 = (float *)uVar12;
-  if (psVar8[0x22] == 1) {
-    lbl_803DCFF0 = *(byte *)((int)psVar8 + 0xad);
-  }
-  else if (psVar8[0x23] == 0x416) {
-    lbl_803DCFF0 = 3;
-  }
-  iVar9 = FUN_800632e0((double)*(float *)(psVar8 + 6),(double)*(float *)(psVar8 + 8),
-                       (double)*(float *)(psVar8 + 10),psVar8,&fStack_58,afStack_54,0);
-  if (iVar9 == 0) {
-    if ((param_4 & 0xff) == 1) {
-      iVar9 = (uint)lbl_803DCFF8 * 0x10;
-      *(float *)(&lbl_80391DE0 + iVar9) = *pfVar10;
-      *(float *)(&DAT_80392a44 + iVar9) = FLOAT_803dfabc + pfVar10[1];
-      *(float *)(&DAT_80392a48 + iVar9) = pfVar10[2];
-      *(short *)(&DAT_80392a4c + iVar9) = *psVar8;
-      (&DAT_80392a4e)[iVar9] = 0xff;
-      (&DAT_80392a4f)[iVar9] = param_3;
-      uVar7 = lbl_803DCFF8 + 1;
-      lbl_803DCFF8 = (byte)uVar7;
-      if (0xff < (uVar7 & 0xff)) {
-        lbl_803DCFF8 = 0;
-      }
+    extern f32 lbl_80391DC0[];
+    extern f32 lbl_803DEE38;
+    extern f32 lbl_803DEE3C;
+    extern f32 lbl_803DEE58;
+    extern int fn_80065768(u8 *obj, f32 x, f32 y, f32 z, f32 *outY, Vec *outNorm, int flag);
+
+    WaterFxState *base;
+    f32 ax, px;
+    f32 x, y, z;
+    f32 ay, py, az, pz;
+    f32 xm, ym, zm;
+    f32 groundY;
+    Vec axis;
+    Vec perp;
+    Vec norm;
+    f32 fscale;
+
+    base = (WaterFxState *)lbl_80391DC0;
+    if (*(s16 *)(obj + 0x44) == 1) {
+        lbl_803DCFF0 = *(u8 *)(obj + 0xad);
+    } else if (*(s16 *)(obj + 0x46) == 0x416) {
+        lbl_803DCFF0 = 3;
     }
-    FUN_80247ef8(afStack_54,afStack_54);
-    local_3c = FLOAT_803dfab8;
-    local_38 = FLOAT_803dfaa0;
-    local_34 = FLOAT_803dfaa0;
-    dVar11 = FUN_80247f90(afStack_54,&local_3c);
-    if ((double)FLOAT_803dfad8 <= ABS(dVar11)) {
-      local_3c = FLOAT_803dfaa0;
-      local_34 = FLOAT_803dfab8;
+    if (fn_80065768(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), &groundY, &norm, 0) == 0) {
+        if (type == 1) {
+            base->ripples[lbl_803DCFF8].x = pos[0];
+            base->ripples[lbl_803DCFF8].y = lbl_803DEE3C + pos[1];
+            base->ripples[lbl_803DCFF8].z = pos[2];
+            base->ripples[lbl_803DCFF8].id = *(s16 *)obj;
+            base->ripples[lbl_803DCFF8].alpha = 0xff;
+            base->ripples[lbl_803DCFF8].flip = flip;
+            lbl_803DCFF8++;
+            if (lbl_803DCFF8 >= 0x100) {
+                lbl_803DCFF8 = 0;
+            }
+        }
+        PSVECNormalize(&norm, &norm);
+        axis.x = lbl_803DEE38;
+        axis.y = Vachuff_803DEE20;
+        axis.z = Vachuff_803DEE20;
+        if (__fabs(PSVECDotProduct(&norm, &axis)) >= lbl_803DEE58) {
+            axis.x = Vachuff_803DEE20;
+            axis.z = lbl_803DEE38;
+        }
+        PSVECCrossProduct(&norm, &axis, &perp);
+        PSVECCrossProduct(&perp, &norm, &axis);
+        PSVECNormalize(&axis, &axis);
+        PSVECNormalize(&perp, &perp);
+        fscale = base->scales[lbl_803DCFF0];
+        PSVECScale(&axis, &axis, fscale);
+        PSVECScale(&perp, &perp, fscale);
+        x = pos[0];
+        y = pos[1];
+        z = pos[2];
+        ax = axis.x;
+        xm = x - ax;
+        px = perp.x;
+        base->quads[lbl_803DCFF9].v[0] = xm - px;
+        ay = axis.y;
+        ym = y - ay;
+        py = perp.y;
+        base->quads[lbl_803DCFF9].v[1] = ym - py;
+        az = axis.z;
+        zm = z - az;
+        pz = perp.z;
+        base->quads[lbl_803DCFF9].v[2] = zm - pz;
+        x += ax;
+        base->quads[lbl_803DCFF9].v[3] = x - px;
+        y += ay;
+        base->quads[lbl_803DCFF9].v[4] = y - py;
+        z += az;
+        base->quads[lbl_803DCFF9].v[5] = z - pz;
+        base->quads[lbl_803DCFF9].v[6] = px + x;
+        base->quads[lbl_803DCFF9].v[7] = py + y;
+        base->quads[lbl_803DCFF9].v[8] = pz + z;
+        base->quads[lbl_803DCFF9].v[9] = px + xm;
+        base->quads[lbl_803DCFF9].v[10] = py + ym;
+        base->quads[lbl_803DCFF9].v[11] = pz + zm;
+        base->quads[lbl_803DCFF9].angle = 0x10000 - *(s16 *)obj;
+        base->quads[lbl_803DCFF9].type = type;
+        base->quads[lbl_803DCFF9].alpha = 0xff;
+        base->quads[lbl_803DCFF9].flip = flip;
+        lbl_803DCFF9++;
+        if (lbl_803DCFF9 >= 0x100) {
+            lbl_803DCFF9 = 0;
+        }
     }
-    FUN_80247fb0(afStack_54,&local_3c,&local_48);
-    FUN_80247fb0(&local_48,afStack_54,&local_3c);
-    FUN_80247ef8(&local_3c,&local_3c);
-    FUN_80247ef8(&local_48,&local_48);
-    dVar11 = (double)(float)(&lbl_80391DC0)[lbl_803DCFF0];
-    FUN_80247edc(dVar11,&local_3c,&local_3c);
-    FUN_80247edc(dVar11,&local_48,&local_48);
-    fVar1 = *pfVar10;
-    fVar2 = pfVar10[1];
-    fVar3 = pfVar10[2];
-    fVar4 = fVar1 - local_3c;
-    uVar7 = (uint)lbl_803DCFF9;
-    iVar9 = uVar7 * 0x38;
-    (&lbl_80392DE0)[uVar7 * 0xe] = fVar4 - local_48;
-    fVar5 = fVar2 - local_38;
-    (&DAT_80393a44)[uVar7 * 0xe] = fVar5 - local_44;
-    fVar6 = fVar3 - local_34;
-    (&DAT_80393a48)[uVar7 * 0xe] = fVar6 - local_40;
-    fVar1 = fVar1 + local_3c;
-    (&DAT_80393a4c)[uVar7 * 0xe] = fVar1 - local_48;
-    fVar2 = fVar2 + local_38;
-    (&DAT_80393a50)[uVar7 * 0xe] = fVar2 - local_44;
-    fVar3 = fVar3 + local_34;
-    (&DAT_80393a54)[uVar7 * 0xe] = fVar3 - local_40;
-    (&DAT_80393a58)[uVar7 * 0xe] = local_48 + fVar1;
-    (&DAT_80393a5c)[uVar7 * 0xe] = local_44 + fVar2;
-    (&DAT_80393a60)[uVar7 * 0xe] = local_40 + fVar3;
-    (&DAT_80393a64)[uVar7 * 0xe] = local_48 + fVar4;
-    (&DAT_80393a68)[uVar7 * 0xe] = local_44 + fVar5;
-    (&DAT_80393a6c)[uVar7 * 0xe] = local_40 + fVar6;
-    (&DAT_80393a70)[uVar7 * 0x1c] = -*psVar8;
-    (&DAT_80393a72)[iVar9] = (char)param_4;
-    (&DAT_80393a73)[iVar9] = 0xff;
-    (&DAT_80393a74)[iVar9] = param_3;
-    lbl_803DCFF9 = (byte)(uVar7 + 1);
-    if (0xff < (uVar7 + 1 & 0xff)) {
-      lbl_803DCFF9 = 0;
-    }
-  }
-  FUN_8028688c();
-  return;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -6160,9 +6397,102 @@ void setupReflectionIndirectTev(u8 flag)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007C664(int param_1)
+#pragma peephole off
+#pragma scheduling off
+void fn_8007C664(int texHandle)
 {
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
+    extern f32 gSynthDelayedActionWord0;
+    extern GXColor lbl_803DB688;
+    extern GXColor lbl_803DB68C;
+    extern u8 lbl_803DB678;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
+    extern void selectReflectionTexture(int);
+    extern u8 isHeavyFogEnabled(void);
+    extern void selectTexture(int handle, int slot);
+    f32 dummy;
+    f32 tOff;
+    f32 sOff;
+    f32 indMtx[6];
+    Mtx scaleMtx;
+
+    selectReflectionTexture(0);
+    selectTexture(texHandle, 1);
+    newshadows_getReflectionScrollOffsets(&sOff, &tOff);
+    GXSetTexCoordGen2(0, 0, 0, 0x1e, 0, 0x7d);
+    GXSetTexCoordGen2(2, 0, 0, 0x24, 0, 0x7d);
+    PSMTXScale(scaleMtx, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
+    GXLoadTexMtxImm(scaleMtx, 0x21, 1);
+    GXSetTexCoordGen2(1, 1, 4, 0x21, 0, 0x7d);
+    indMtx[0] = lbl_803DEEDC;
+    indMtx[1] = gSynthDelayedActionWord0;
+    indMtx[2] = lbl_803DEEDC;
+    indMtx[3] = lbl_803DEEDC;
+    indMtx[4] = lbl_803DEEDC;
+    indMtx[5] = gSynthDelayedActionWord0;
+    if (isHeavyFogEnabled()) {
+        lbl_803DB688.r = lbl_803DD01C.r;
+        lbl_803DB688.g = lbl_803DD01C.g;
+        lbl_803DB688.b = lbl_803DD01C.b;
+        lbl_803DB688.a = 0x80;
+    } else {
+        (*(void (**)(u8 *, u8 *, u8 *, f32 *, f32 *, f32 *))(*(int *)gSHthorntailAnimationInterface + 0x40))(
+            &lbl_803DB688.r, &lbl_803DB688.g, &lbl_803DB688.b, &dummy, &dummy, &dummy);
+        lbl_803DB688.r = lbl_803DB688.r >> 3;
+        lbl_803DB688.g = lbl_803DB688.g >> 3;
+        lbl_803DB688.b = lbl_803DB688.b >> 3;
+        lbl_803DB688.a = lbl_803DB678;
+    }
+    GXSetTevColor(3, lbl_803DB688);
+    GXSetTevKColor(0, lbl_803DB68C);
+    GXSetTevKColorSel(1, 0xc);
+    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, (f32(*)[3])indMtx, -1);
+    GXSetIndTexMtx(2, (f32(*)[3])indMtx, -2);
+    GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    GXSetTevIndirect(1, 0, 0, 7, 2, 0, 0, 0, 0, 1);
+    GXSetNumIndStages(1);
+    GXSetNumChans(1);
+    GXSetNumTexGens(3);
+    GXSetNumTevStages(2);
+    GXSetTevOrder(0, 0, 0, 0xff);
+    GXSetTevColorIn(0, 6, 0xf, 0xf, 8);
+    GXSetTevAlphaIn(0, 7, 7, 7, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    if (isHeavyFogEnabled()) {
+        GXSetTevColorOp(0, 0, 0, 3, 1, 0);
+    } else {
+        GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    }
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTevOrder(1, 2, 0, 8);
+    GXSetTevColorIn(1, 0, 8, 0xe, 0xf);
+    GXSetTevAlphaIn(1, 7, 2, 5, 7);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -6177,9 +6507,101 @@ void fn_8007C664(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void fn_8007CAF4(void)
 {
+    extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEEC;
+    extern GXColor lbl_803DB680;
+    extern GXColor lbl_803DB684;
+    extern u8 lbl_803DB678;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
+    extern void selectReflectionTexture(int);
+    extern u8 isHeavyFogEnabled(void);
+    extern void fn_8006C678(int);
+    f32 dummy;
+    f32 tOff;
+    f32 sOff;
+    f32 indMtx[6];
+    Mtx scaleMtx;
+
+    selectReflectionTexture(0);
+    fn_8006C678(1);
+    newshadows_getReflectionScrollOffsets(&sOff, &tOff);
+    GXSetTexCoordGen2(0, 0, 0, 0x1e, 0, 0x7d);
+    GXSetTexCoordGen2(2, 0, 0, 0x24, 0, 0x7d);
+    PSMTXScale(scaleMtx, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
+    GXLoadTexMtxImm(scaleMtx, 0x21, 1);
+    GXSetTexCoordGen2(1, 1, 4, 0x21, 0, 0x7d);
+    indMtx[0] = lbl_803DEEEC;
+    indMtx[1] = lbl_803DEEDC;
+    indMtx[2] = lbl_803DEEDC;
+    indMtx[3] = lbl_803DEEDC;
+    indMtx[4] = lbl_803DEEEC;
+    indMtx[5] = lbl_803DEEDC;
+    if (isHeavyFogEnabled()) {
+        lbl_803DB680.r = lbl_803DD01C.r;
+        lbl_803DB680.g = lbl_803DD01C.g;
+        lbl_803DB680.b = lbl_803DD01C.b;
+        lbl_803DB680.a = 0x80;
+    } else {
+        (*(void (**)(u8 *, u8 *, u8 *, f32 *, f32 *, f32 *))(*(int *)gSHthorntailAnimationInterface + 0x40))(
+            &lbl_803DB680.r, &lbl_803DB680.g, &lbl_803DB680.b, &dummy, &dummy, &dummy);
+        lbl_803DB680.r = lbl_803DB680.r >> 3;
+        lbl_803DB680.g = lbl_803DB680.g >> 3;
+        lbl_803DB680.b = lbl_803DB680.b >> 3;
+        lbl_803DB680.a = lbl_803DB678;
+    }
+    GXSetTevColor(3, lbl_803DB680);
+    GXSetTevKColor(0, lbl_803DB684);
+    GXSetTevKColorSel(1, 0xc);
+    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, (f32(*)[3])indMtx, -1);
+    GXSetIndTexMtx(2, (f32(*)[3])indMtx, -2);
+    GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    GXSetTevIndirect(1, 0, 0, 7, 2, 0, 0, 0, 0, 3);
+    GXSetNumIndStages(1);
+    GXSetNumChans(1);
+    GXSetNumTexGens(3);
+    GXSetNumTevStages(2);
+    GXSetTevOrder(0, 0, 0, 0xff);
+    GXSetTevColorIn(0, 6, 0xf, 0xf, 8);
+    GXSetTevAlphaIn(0, 7, 7, 7, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    if (isHeavyFogEnabled()) {
+        GXSetTevColorOp(0, 0, 0, 3, 1, 0);
+    } else {
+        GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    }
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTevOrder(1, 2, 0, 8);
+    GXSetTevColorIn(1, 0, 8, 0xe, 0xf);
+    GXSetTevAlphaIn(1, 7, 2, 5, 7);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--

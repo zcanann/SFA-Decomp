@@ -13,10 +13,30 @@ extern int *gObjectTriggerInterface;
 extern int *Resource_Acquire(int id, int flags);
 extern void Music_Trigger(s32 triggerId, s32 mode);
 
-extern undefined4 DAT_802c22b0;
-extern undefined4 DAT_802c22b4;
-extern undefined4 DAT_802c22b8;
-extern undefined4 DAT_802c22bc;
+typedef struct ChestHitParams {
+  u32 a;
+  u32 b;
+  u32 c;
+  u32 d;
+} ChestHitParams;
+
+typedef struct ChestFlags {
+  u8 open : 1;
+  u8 trigger : 1;
+} ChestFlags;
+
+typedef struct ChestHitBlock {
+  ChestHitParams params;
+  u16 a;
+  u16 b;
+  u16 c;
+  f32 scale;
+  f32 x;
+  f32 y;
+  f32 z[2];
+} ChestHitBlock;
+
+extern ChestHitParams lbl_802C22B0;
 extern int *lbl_803DDAE0;
 extern int lbl_803DDAE4;
 extern f32 playerMapOffsetX;
@@ -38,71 +58,60 @@ extern f32 lbl_803E3C2C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void treasurechest_update(int obj)
 {
-  void *uVar1;
-  int iVar2;
+  ChestFlags *flags;
+  int setup;
+  uint iVar2;
   int iVar3;
-  byte *pbVar4;
-  int hitObject;
-  int local_44;
-  uint hitVolume;
+  ChestHitBlock blk;
   float local_3c;
-  undefined4 local_38;
-  undefined4 local_34;
-  undefined4 local_30;
-  undefined4 local_2c;
-  undefined2 local_28;
-  undefined2 local_26;
-  undefined2 local_24;
-  float local_20;
-  float local_1c;
-  float hitPosY;
-  float local_14 [2];
+  uint hitVolume;
+  int local_44;
+  int hitObject;
 
-  pbVar4 = *(byte **)(obj + 0xb8);
-  iVar3 = *(int *)(obj + 0x4c);
+  flags = *(ChestFlags **)(obj + 0xb8);
+  setup = *(int *)(obj + 0x4c);
   local_3c = lbl_803E3C28;
-  if (((*pbVar4 >> 6 & 1) != 0) && ((char)*pbVar4 < '\0')) {
+  if (flags->trigger != 0 && flags->open != 0) {
     *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
     ObjAnim_SetCurrentMove(obj,0,lbl_803E3C2C,0);
   }
-  if (-1 < (char)*pbVar4) {
+  if (flags->open == 0) {
     if ((*(byte *)(obj + 0xaf) & 1) != 0) {
       *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
-      uVar1 = Obj_GetPlayerObject();
-      fn_802967E0(uVar1,1);
+      fn_802967E0(Obj_GetPlayerObject(),1);
       iVar2 = ObjGroup_FindNearestObject(4,obj,&local_3c);
-      if (iVar2 == 0) {
-        (**(code **)(*gObjectTriggerInterface + 0x7c))((int)*(short *)(iVar3 + 0x1a),0,0);
-        (**(code **)(*gObjectTriggerInterface + 0x48))(0,obj,0xffffffff);
+      if (iVar2 != 0) {
+        (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x7c))((int)*(short *)(iVar2 + 0x46),0,0);
+        (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x48))(1,obj,0xffffffff);
       }
       else {
-        (**(code **)(*gObjectTriggerInterface + 0x7c))((int)*(short *)(iVar2 + 0x46),0,0);
-        (**(code **)(*gObjectTriggerInterface + 0x48))(1,obj,0xffffffff);
+        (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x7c))((int)*(short *)(setup + 0x1a),0,0);
+        (*(void (**)(int,int,int))(*gObjectTriggerInterface + 0x48))(0,obj,0xffffffff);
       }
-      GameBit_Set((int)*(short *)(iVar3 + 0x1e),1);
-      *pbVar4 = *pbVar4 & 0x7f | 0x80;
+      GameBit_Set((int)*(short *)(setup + 0x1e),1);
+      flags->open = 1;
       ObjHits_DisableObject(obj);
     }
-    *pbVar4 = *pbVar4 & 0xbf;
-    local_38 = DAT_802c22b0;
-    local_34 = DAT_802c22b4;
-    local_30 = DAT_802c22b8;
-    local_2c = DAT_802c22bc;
+    flags->trigger = 0;
+    blk.params = lbl_802C22B0;
     local_44 = 0xffffffff;
     iVar3 = ObjHits_GetPriorityHitWithPosition(obj,&hitObject,&local_44,
-                                               &hitVolume,&local_1c,&hitPosY,
-                                               local_14);
+                                               &hitVolume,&blk.x,&blk.y,
+                                               blk.z);
     if ((iVar3 != 0) && (iVar3 != 0xe)) {
-      local_1c = local_1c + playerMapOffsetX;
-      local_14[0] = local_14[0] + playerMapOffsetZ;
-      local_20 = lbl_803E3C20;
-      local_24 = 0;
-      local_26 = 0;
-      local_28 = 0;
+      blk.x = blk.x + playerMapOffsetX;
+      blk.z[0] = blk.z[0] + playerMapOffsetZ;
+      blk.scale = lbl_803E3C20;
+      blk.c = 0;
+      blk.b = 0;
+      blk.a = 0;
       if (lbl_803DDAE4 == 0) {
-        (**(code **)(*lbl_803DDAE0 + 4))(0,1,&local_28,0x401,0xffffffff,&local_38);
+        (*(void (**)(int,int,u16 *,int,int,ChestHitParams *))(*lbl_803DDAE0 + 4))
+            (0,1,&blk.a,0x401,0xffffffff,&blk.params);
         lbl_803DDAE4 = 0x3c;
       }
     }
@@ -112,6 +121,8 @@ void treasurechest_update(int obj)
   }
   return;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -177,25 +188,23 @@ extern int treasurechest_SeqFn(int obj, int unused, u8 *events);
 #pragma scheduling off
 #pragma peephole off
 void treasurechest_init(int *obj) {
-    register u8 *state = *(u8 **)((char *)obj + 0xb8);
+    register ChestFlags *state = *(ChestFlags **)((char *)obj + 0xb8);
     register int *cfg = *(int **)((char *)obj + 0x4c);
-    register u32 b;
 
     *(int (**)(int, int, u8 *))((char *)obj + 0xbc) = treasurechest_SeqFn;
     *(s16 *)obj = (s16)((s32)*(s8 *)((char *)cfg + 0x18) << 8);
 
     if (*(s16 *)((char *)cfg + 0x1e) != -1) {
-        b = (u32)(u8)GameBit_Get(*(s16 *)((char *)cfg + 0x1e));
-        *state = (u8)((*state & ~0x80) | ((b & 1) << 7));
+        state->open = (u8)GameBit_Get(*(s16 *)((char *)cfg + 0x1e));
     } else {
-        *state &= ~0x80;
+        state->open = 0;
     }
-    if (((u32)*state >> 7) & 1) {
+    if (state->open != 0) {
         *(s16 *)((char *)obj + 6) = (s16)(*(s16 *)((char *)obj + 6) | 0x4000);
         ObjHits_DisableObject((int)obj);
     }
     lbl_803DDAE0 = Resource_Acquire(90, 1);
-    *state |= 0x40;
+    state->trigger = 1;
 }
 #pragma peephole reset
 #pragma scheduling reset

@@ -62,54 +62,51 @@ extern f32 lbl_803E3584;
  */
 #pragma peephole off
 #pragma scheduling off
-void fn_80174A80(int param_1,int param_2)
+void fn_80174A80(int obj, int ext)
 {
-  float fVar1;
-  uint uVar2;
-  int iVar3;
-  
-  iVar3 = *(int *)(param_1 + 0x4c);
-  *(float *)(param_2 + 0xcc) = lbl_803E3580;
-  fVar1 = lbl_803E3584;
-  *(float *)(param_2 + 0xd0) = lbl_803E3584;
-  *(float *)(param_2 + 0xd4) = fVar1;
-  uVar2 = randomGetRange(0x19,0x4b);
-  *(float *)(param_2 + 0xe4) =
-       (f32)(s32)(uVar2) * lbl_803E3564;
-  uVar2 = randomGetRange(0x28,0x46);
-  *(float *)(param_2 + 0xe8) =
-       *(float *)(param_2 + 0xe4) /
-       (f32)(s32)(uVar2);
-  fVar1 = lbl_803E3528;
-  *(float *)(param_2 + 0xec) = lbl_803E3528;
-  *(short *)(param_2 + 0xac) = *(short *)(iVar3 + 0x18);
-  *(short *)(param_2 + 0xae) = *(short *)(iVar3 + 0x1a);
-  *(float *)(param_2 + 0xf0) = fVar1;
-  *(undefined4 *)(param_2 + 0xbc) = 0;
-  GameBit_Set((int)*(short *)(param_2 + 0xac),0);
-  iVar3 = (int)objFindTexture(param_1,0,0);
-  *(float *)(param_2 + 0xdc) = *(float *)(param_2 + 0xdc) + *(float *)(param_2 + 0xd0);
-  if (*(float *)(param_2 + 0xdc) <= lbl_803E356C) {
-    if (*(float *)(param_2 + 0xdc) < lbl_803E3528) {
-      *(float *)(param_2 + 0xdc) = lbl_803E356C;
+    int def;
+    u8 *tex;
+    f32 f;
+    f32 v;
+    f32 lim;
+
+    def = *(int *)(obj + 0x4c);
+    *(f32 *)(ext + 0xcc) = lbl_803E3580;
+    f = lbl_803E3584;
+    *(f32 *)(ext + 0xd0) = f;
+    *(f32 *)(ext + 0xd4) = f;
+    *(f32 *)(ext + 0xe4) = lbl_803E3564 * (f32)(int)randomGetRange(0x19, 0x4b);
+    *(f32 *)(ext + 0xe8) = *(f32 *)(ext + 0xe4) / (f32)(int)randomGetRange(0x28, 0x46);
+    f = lbl_803E3528;
+    *(f32 *)(ext + 0xec) = f;
+    *(short *)(ext + 0xac) = *(short *)(def + 0x18);
+    *(short *)(ext + 0xae) = *(short *)(def + 0x1a);
+    *(f32 *)(ext + 0xf0) = f;
+    *(int *)(ext + 0xbc) = 0;
+    GameBit_Set(*(short *)(ext + 0xac), 0);
+    tex = (u8 *)objFindTexture(obj, 0, 0);
+
+    *(f32 *)(ext + 0xdc) = *(f32 *)(ext + 0xdc) + *(f32 *)(ext + 0xd0);
+    v = *(f32 *)(ext + 0xdc);
+    lim = lbl_803E356C;
+    if (v > lim) {
+        *(f32 *)(ext + 0xdc) = lim;
+    } else if (v < lbl_803E3528) {
+        *(f32 *)(ext + 0xdc) = lim;
     }
-  }
-  else {
-    *(float *)(param_2 + 0xdc) = lbl_803E356C;
-  }
-  *(float *)(param_2 + 0xe0) = *(float *)(param_2 + 0xe0) + *(float *)(param_2 + 0xd4);
-  if (*(float *)(param_2 + 0xe0) <= lbl_803E356C) {
-    if (*(float *)(param_2 + 0xe0) < lbl_803E3528) {
-      *(float *)(param_2 + 0xe0) = lbl_803E356C;
+
+    *(f32 *)(ext + 0xe0) = *(f32 *)(ext + 0xe0) + *(f32 *)(ext + 0xd4);
+    v = *(f32 *)(ext + 0xe0);
+    lim = lbl_803E356C;
+    if (v > lim) {
+        *(f32 *)(ext + 0xe0) = lim;
+    } else if (v < lbl_803E3528) {
+        *(f32 *)(ext + 0xe0) = lim;
     }
-  }
-  else {
-    *(float *)(param_2 + 0xe0) = lbl_803E356C;
-  }
-  *(undefined *)(iVar3 + 0xc) = 10;
-  *(undefined *)(iVar3 + 0xd) = 10;
-  *(undefined *)(iVar3 + 0xe) = 10;
-  return;
+
+    tex[0xc] = 10;
+    tex[0xd] = 10;
+    tex[0xe] = 10;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -118,193 +115,182 @@ void fn_80174A80(int param_1,int param_2)
  * --INFO--
  *
  * Function: fn_80174BFC
- * EN v1.0 Address: 0x8017504C
- * EN v1.0 Size: 1052b
- * EN v1.1 Address: 0x801750A8
- * EN v1.1 Size: 1296b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Address: 0x80174BFC
+ * EN v1.0 Size: 1296b
  */
-void fn_80174BFC(ushort *puVar3, int iVar7)
-{
-  ushort uVar1;
-  byte bVar2;
-  int iVar4;
-  uint uVar5;
-  undefined4 *puVar6;
-  int iVar8;
-  int iVar9;
-  int iVar10;
-  int iVar11;
-  int iVar12;
-  int iVar13;
-  float *pfVar14;
-  float *pfVar15;
-  double dVar16;
-  double dVar17;
-  double dVar18;
-  double dVar19;
-  ushort local_190;
-  ushort local_18e;
-  ushort local_18c;
-  float local_188;
-  int local_184;
-  int local_180;
-  int local_17c;
-  float afStack_178 [12];
-  float local_148;
-  float local_144;
-  float local_140;
-  int aiStack_138 [20];
-  char local_e7;
-  float local_e4 [21];
-  undefined4 local_90;
-  uint uStack_8c;
-  undefined4 local_88;
-  uint uStack_84;
+typedef struct Dll138PoseCopy {
+    s16 rot[3];
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+} Dll138PoseCopy;
 
-  iVar12 = *(int *)(puVar3 + 0x26);
-  Obj_GetPlayerObject();
-  dVar18 = (double)*(float *)(puVar3 + 6);
-  dVar17 = (double)*(float *)(puVar3 + 8);
-  dVar16 = (double)*(float *)(puVar3 + 10);
-  bVar2 = 0xf;
-  iVar10 = 0;
-  dVar19 = (double)lbl_803E3588;
-  do {
-    if (bVar2 == 0) {
-LAB_80175568:
-      FUN_80003494(iVar7 + 0x78,(uint)local_e4,*(char *)(iVar7 + 0xb4) * 0xc);
-      FUN_8028686c();
-      return;
-    }
-    bVar2 = 0xf;
-    iVar10 = iVar10 + 1;
-    if (4 < iVar10) {
-      *(float *)(puVar3 + 6) = (float)dVar18;
-      *(float *)(puVar3 + 8) = (float)dVar17;
-      *(float *)(puVar3 + 10) = (float)dVar16;
-      goto LAB_80175568;
-    }
-    iVar9 = 8;
-    iVar8 = 4;
-    pfVar15 = local_e4;
-    iVar13 = iVar7;
-    pfVar14 = (float *)(iVar7 + 0x18);
-    for (iVar11 = 0; iVar11 < *(char *)(iVar7 + 0xb4); iVar11 = iVar11 + 1) {
-      local_190 = *puVar3;
-      local_18e = puVar3[1];
-      local_18c = puVar3[2];
-      local_188 = (float)dVar19;
-      local_184 = *(int *)(puVar3 + 6);
-      local_180 = *(int *)(puVar3 + 8);
-      local_17c = *(int *)(puVar3 + 10);
-      setMatrixFromObjectPos(afStack_178,(short *)&local_190);
-      FUN_80017778((double)*pfVar14,(double)pfVar14[1],(double)pfVar14[2],afStack_178,pfVar15,
-                   (float *)((int)local_e4 + iVar8),(float *)((int)local_e4 + iVar9));
-      if ((1 << iVar11 & 0xfU) != 0) {
-        iVar4 = FUN_800620e8(iVar13 + 0x78,pfVar15,(float *)0x1,aiStack_138,(int *)puVar3,8,0xd,
-                             iVar11 + 3U & 0xff,10);
-        if (iVar4 == 0) {
-          bVar2 = bVar2 & ~(byte)(1 << iVar11);
+typedef struct Dll138HitInfo {
+    u8 pad0[0x1c];
+    f32 angleX;
+    u8 pad1[4];
+    f32 angleZ;
+    u8 pad2[0x29];
+    s8 id;
+    u8 pad3[2];
+} Dll138HitInfo;
+
+extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ);
+extern int objBboxFn_800640cc(f32 *from, f32 *to, f32 radius, int mode, void *hit, int obj, int p7, int p8, u8 p9, int p10);
+extern int getAngle(f32 a, f32 b);
+extern f32 fn_80293E80(f32);
+extern f32 sin(f32);
+extern void memcpy(void *dst, void *src, int n);
+extern void saveGame_saveObjectPos(int obj);
+extern int Sfx_PlayFromObject(int a, int b);
+extern f32 lbl_803E358C;
+extern f32 lbl_803E3590;
+extern f32 lbl_803E3594;
+
+#pragma peephole off
+#pragma scheduling off
+void fn_80174BFC(int obj, int ext)
+{
+    f32 *ptOut;
+    f32 *vel;
+    int extPtr;
+    int def;
+    int i;
+    s8 bits;
+    f32 *velBase;
+    int iter;
+    f32 scale;
+    f32 savedX;
+    f32 savedY;
+    f32 savedZ;
+    Dll138PoseCopy pose;
+    f32 mtx[16];
+    f32 points[21];
+    Dll138HitInfo hit;
+
+    def = *(int *)(obj + 0x4c);
+    velBase = (f32 *)(ext + 0x18);
+    Obj_GetPlayerObject();
+    savedX = *(f32 *)(obj + 0xc);
+    savedY = *(f32 *)(obj + 0x10);
+    savedZ = *(f32 *)(obj + 0x14);
+    bits = 0xf;
+    iter = 0;
+    scale = lbl_803E3588;
+    while (bits != 0) {
+        bits = 0xf;
+        iter = iter + 1;
+        if (iter > 4) {
+            *(f32 *)(obj + 0xc) = savedX;
+            *(f32 *)(obj + 0x10) = savedY;
+            *(f32 *)(obj + 0x14) = savedZ;
+            break;
         }
-        else {
-          if ((local_e7 != -1) && ((*(ushort *)(iVar7 + 0x100) & 1) == 0)) {
-            *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) | 1;
-            uVar5 = (uint)*(short *)(iVar12 + 0x18);
-            if (-1 < (int)uVar5) {
-              uVar1 = puVar3[0x23];
-              if (uVar1 != 0x411) {
-                if ((short)uVar1 < 0x411) {
-                  if (uVar1 != 0x21e) {
-                    if ((0x21d < (short)uVar1) || (uVar1 != 0x1cb)) goto LAB_8017533c;
-                    if (local_e7 == '\x01') {
-                      FUN_80017698(uVar5,1);
-                      FUN_80006824(0,SFXsp_lf_mutter4);
-                      *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) | 0x80;
-                      *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) | 8;
-                      FUN_800e8630((int)puVar3);
+        i = 0;
+        ptOut = points;
+        vel = velBase;
+        extPtr = ext;
+        for (; i < *(s8 *)(ext + 0xb4); i++) {
+            pose.rot[0] = *(s16 *)(obj + 0);
+            pose.rot[1] = *(s16 *)(obj + 2);
+            pose.rot[2] = *(s16 *)(obj + 4);
+            pose.scale = scale;
+            pose.x = *(f32 *)(obj + 0xc);
+            pose.y = *(f32 *)(obj + 0x10);
+            pose.z = *(f32 *)(obj + 0x14);
+            setMatrixFromObjectPos(mtx, (short *)&pose);
+            Matrix_TransformPoint(mtx, vel[0], vel[1], vel[2], ptOut, &points[i * 3 + 1],
+                                  &points[i * 3 + 2]);
+            if ((1 << i & 0xf) != 0) {
+                if (objBboxFn_800640cc((f32 *)(extPtr + 0x78), ptOut, lbl_803E358C, 1, &hit, obj,
+                                       8, 0xd, (u8)(i + 3), 10) == 0) {
+                    bits = (s8)(bits & ~(1 << i));
+                } else {
+                    int angle;
+                    int delta;
+                    if (hit.id != -1 && (*(u16 *)(ext + 0x100) & 1) == 0) {
+                        int gamebit;
+                        *(u16 *)(ext + 0x100) |= 1;
+                        gamebit = *(s16 *)(def + 0x18);
+                        if (gamebit > -1) {
+                            switch (*(s16 *)(obj + 0x46)) {
+                            case 0x411:
+                            case 0x21e:
+                                break;
+                            case 0x7df:
+                                *(u16 *)(ext + 0x100) &= ~1;
+                                if (hit.id == *(u8 *)(ext + 0x144)) {
+                                    int *tex = objFindTexture(obj, 0, 0);
+                                    if (tex != NULL) {
+                                        *tex = 0x100;
+                                    }
+                                    GameBit_Set(*(s16 *)(def + 0x18), 1);
+                                    *(u8 *)(obj + 0xaf) |= 8;
+                                    *(u16 *)(ext + 0x100) |= 0x80;
+                                }
+                                break;
+                            case 0x1cb:
+                                if (hit.id == 1) {
+                                    GameBit_Set(gamebit, 1);
+                                    Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                                    *(u16 *)(ext + 0x100) |= 0x80;
+                                    *(u8 *)(obj + 0xaf) |= 8;
+                                    saveGame_saveObjectPos(obj);
+                                }
+                                break;
+                            default: {
+                                s8 t = *(s8 *)(def + 0x23);
+                                if (t > -1 && t == hit.id) {
+                                    GameBit_Set(gamebit, 1);
+                                    Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+                                }
+                                break;
+                            }
+                            }
+                        }
                     }
-                  }
-                }
-                else if (uVar1 == 0x7df) {
-                  *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) & ~1;
-                  if ((int)local_e7 == (uint)*(byte *)(iVar7 + 0x144)) {
-                    puVar6 = (undefined4 *)objFindTexture((int)puVar3,0,0);
-                    if (puVar6 != (undefined4 *)0x0) {
-                      *puVar6 = 0x100;
+                    fn_80293E80(lbl_803E3590 * (f32)*(int *)(ext + 0x140) / lbl_803E3594);
+                    sin(lbl_803E3590 * (f32)*(int *)(ext + 0x140) / lbl_803E3594);
+                    angle = getAngle(hit.angleX, hit.angleZ);
+                    delta = *(int *)(ext + 0x140) - (angle & 0xffff);
+                    if (delta > 0x8000) {
+                        delta -= 0xffff;
                     }
-                    FUN_80017698((int)*(short *)(iVar12 + 0x18),1);
-                    *(byte *)((int)puVar3 + 0xaf) = *(byte *)((int)puVar3 + 0xaf) | 8;
-                    *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) | 0x80;
-                  }
+                    if (delta < -0x8000) {
+                        delta += 0xffff;
+                    }
+                    delta = delta / 0xb6;
+                    if (delta > -0x1e && delta < 0x1e) {
+                        *(u16 *)(ext + 0x100) |= 0x100;
+                        *(f32 *)(ext + 0x108) = lbl_803E3528;
+                    } else if (delta > 0x96 || delta < -0x96) {
+                        *(u16 *)(ext + 0x100) |= 0x200;
+                        *(f32 *)(ext + 0x108) = lbl_803E3528;
+                    } else if (delta > 0x3c && delta < 0x78) {
+                        *(u16 *)(ext + 0x100) |= 0x800;
+                        *(f32 *)(ext + 0x10c) = lbl_803E3528;
+                    } else if (delta < -0x3c && delta > -0x78) {
+                        *(u16 *)(ext + 0x100) |= 0x400;
+                        *(f32 *)(ext + 0x10c) = lbl_803E3528;
+                    }
+                    memcpy((void *)(extPtr + 0x78), ptOut, 0xc);
+                    mtx[12] = ptOut[0];
+                    mtx[13] = ptOut[1];
+                    mtx[14] = ptOut[2];
+                    Matrix_TransformPoint(mtx, -vel[0], -vel[1], -vel[2], (f32 *)(obj + 0xc),
+                                          (f32 *)(obj + 0x10), (f32 *)(obj + 0x14));
                 }
-                else {
-LAB_8017533c:
-                  if ((-1 < *(char *)(iVar12 + 0x23)) && (*(char *)(iVar12 + 0x23) == local_e7)) {
-                    FUN_80017698(uVar5,1);
-                    FUN_80006824(0,SFXsp_lf_mutter4);
-                  }
-                }
-              }
             }
-          }
-          uStack_8c = *(uint *)(iVar7 + 0x140) ^ 0x80000000;
-          local_90 = 0x43300000;
-          FUN_80293f90();
-          uStack_84 = *(uint *)(iVar7 + 0x140) ^ 0x80000000;
-          local_88 = 0x43300000;
-          FUN_80294964();
-          uVar5 = FUN_80017730();
-          iVar4 = *(int *)(iVar7 + 0x140) - (uVar5 & 0xffff);
-          if (0x8000 < iVar4) {
-            iVar4 = iVar4 + -0xffff;
-          }
-          if (iVar4 < -0x8000) {
-            iVar4 = iVar4 + 0xffff;
-          }
-          iVar4 = iVar4 / 0xb6 + (iVar4 >> 0x1f);
-          iVar4 = iVar4 - (iVar4 >> 0x1f);
-          if ((iVar4 < -0x1d) || (0x1d < iVar4)) {
-            if ((iVar4 < 0x97) && (-0x97 < iVar4)) {
-              if ((iVar4 < 0x3d) || (0x77 < iVar4)) {
-                if ((iVar4 < -0x3c) && (-0x78 < iVar4)) {
-                  *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) | 0x400;
-                  *(float *)(iVar7 + 0x10c) = lbl_803E41C0;
-                }
-              }
-              else {
-                *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) | 0x800;
-                *(float *)(iVar7 + 0x10c) = lbl_803E41C0;
-              }
-            }
-            else {
-              *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) | 0x200;
-              *(float *)(iVar7 + 0x108) = lbl_803E41C0;
-            }
-          }
-          else {
-            *(ushort *)(iVar7 + 0x100) = *(ushort *)(iVar7 + 0x100) | 0x100;
-            *(float *)(iVar7 + 0x108) = lbl_803E41C0;
-          }
-          FUN_80003494(iVar13 + 0x78,(uint)pfVar15,0xc);
-          local_148 = *pfVar15;
-          local_144 = pfVar15[1];
-          local_140 = pfVar15[2];
-          FUN_80017778(-(double)*pfVar14,-(double)pfVar14[1],-(double)pfVar14[2],afStack_178,
-                       (float *)(puVar3 + 6),(float *)(puVar3 + 8),(float *)(puVar3 + 10));
+            ptOut += 3;
+            vel += 3;
+            extPtr += 0xc;
         }
-      }
-      iVar9 = iVar9 + 0xc;
-      iVar8 = iVar8 + 0xc;
-      pfVar15 = pfVar15 + 3;
-      pfVar14 = pfVar14 + 3;
-      iVar13 = iVar13 + 0xc;
     }
-  } while( true );
+    memcpy((void *)(ext + 0x78), points, *(s8 *)(ext + 0xb4) * 0xc);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -326,14 +312,15 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
   uint uVar1;
   int iVar2;
   int iVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
+  f32 dx;
+  f32 dz;
+  f32 len;
+  f32 k;
   
   iVar3 = *(int *)(param_1 + 0x5c);
   *(undefined *)(iVar3 + 0x145) = 0x3c;
   if (param_1[0x5a] != -1) {
-    (*(void (**)(void))((char *)*gCameraInterface + 0x4c))();
+    (*(void (**)(short *))((char *)*gCameraInterface + 0x4c))(param_1);
   }
   *(short *)(param_3 + 0x70) = -1;
   if (*(char *)(param_3 + 0x56) != '\0') {
@@ -372,8 +359,7 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
     }
   }
   if (*(int *)(param_1 + 0x7c) == 0) {
-    param_1[0x7c] = 0;
-    param_1[0x7d] = 2;
+    *(int *)(param_1 + 0x7c) = 2;
   }
   if ((param_1[0x23] == 0x21e) || (param_1[0x23] == 0x411)) {
     *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
@@ -381,19 +367,19 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
        ((*(short *)(*(int *)(*(int *)(param_1 + 0x2c) + 0x100) + 0x44) == 0x24 &&
         (uVar1 = GameBit_Get(0x103), uVar1 == 0)))) {
       GameBit_Set(0x103,1);
-      *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xf7;
-      iVar2 = FUN_80017a98();
-      dVar6 = (double)(*(float *)(param_1 + 6) - *(float *)(iVar2 + 0xc));
-      dVar5 = (double)(*(float *)(param_1 + 10) - *(float *)(iVar2 + 0x14));
-      dVar4 = FUN_80293900((double)(float)(dVar6 * dVar6 + (double)(float)(dVar5 * dVar5)));
-      if (dVar4 != (double)lbl_803E3528) {
-        dVar6 = (double)(float)(dVar6 / dVar4);
-        dVar5 = (double)(float)(dVar5 / dVar4);
+      *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & ~8;
+      iVar2 = Obj_GetPlayerObject();
+      dx = *(float *)(param_1 + 6) - *(float *)(iVar2 + 0xc);
+      dz = *(float *)(param_1 + 10) - *(float *)(iVar2 + 0x14);
+      len = sqrtf(dx * dx + dz * dz);
+      if (len != lbl_803E3528) {
+        dx = dx / len;
+        dz = dz / len;
       }
-      dVar4 = (double)lbl_803E3598;
-      *(float *)(iVar3 + 0xc0) = (float)(dVar4 * dVar6);
+      k = lbl_803E3598;
+      *(float *)(iVar3 + 0xc0) = k * dx;
       *(float *)(iVar3 + 0xc4) = lbl_803E3528;
-      *(float *)(iVar3 + 200) = (float)(dVar4 * dVar5);
+      *(float *)(iVar3 + 200) = k * dz;
       return 4;
     }
   }
@@ -415,6 +401,7 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void fn_80175428(int obj)
 {
   int state;
@@ -445,6 +432,7 @@ void fn_80175428(int obj)
     }
   }
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -502,19 +490,29 @@ void pushable_modelMtxFn(int obj,int modelNo)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+typedef struct Dll138Vec3 {
+    f32 x;
+    f32 y;
+    f32 z;
+} Dll138Vec3;
+
 #pragma scheduling off
 #pragma peephole off
+#pragma fp_contract off
 int pushable_func0B(int obj,int other)
 {
   int state;
   f32 delta[3];
+  f32 *d;
 
   state = *(int *)(obj + 0xb8);
-  delta[0] = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
-  delta[1] = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
-  delta[2] = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
-  return sqrtf(delta[2] * delta[2] + (delta[0] * delta[0] + delta[1] * delta[1])) <
+  d = delta;
+  d[0] = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
+  d[1] = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
+  d[2] = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
+  return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) <
          *(f32 *)(state + 0xc);
 }
+#pragma fp_contract reset
 #pragma peephole reset
 #pragma scheduling reset

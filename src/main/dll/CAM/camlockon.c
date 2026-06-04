@@ -24,123 +24,17 @@ extern f64 lbl_803E1750;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma inline_depth(4)
 void camcontrol_buildPathAngles(s16 *outArr, u16 *outCount, s16 baseAngle, s16 deltaAngle,
                                 s16 limit)
 {
-  u16 count;
-  s16 angle;
-  s16 half;
-  s16 quarter;
-  s16 eighth;
-  s16 sixteenth;
-
-  if (deltaAngle < limit) {
-    count = *outCount;
-    *outCount = count + 1;
-    outArr[count] = baseAngle;
+  if (deltaAngle >= limit) {
+    camcontrol_buildPathAngles(outArr, outCount, baseAngle, deltaAngle >> 1, limit);
+    camcontrol_buildPathAngles(outArr, outCount, baseAngle + (deltaAngle >> 1), deltaAngle >> 1,
+                               limit);
   }
   else {
-    half = deltaAngle >> 1;
-    quarter = half >> 1;
-    eighth = quarter >> 1;
-    sixteenth = eighth >> 1;
-    if (half < limit) {
-      count = *outCount;
-      *outCount = count + 1;
-      outArr[count] = baseAngle;
-    }
-    else {
-      if (quarter < limit) {
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle;
-      }
-      else if (eighth < limit) {
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle;
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle + eighth;
-      }
-      else {
-        camcontrol_buildPathAngles(outArr, outCount, baseAngle, sixteenth, limit);
-        camcontrol_buildPathAngles(outArr, outCount, baseAngle + sixteenth, sixteenth, limit);
-        camcontrol_buildPathAngles(outArr, outCount, baseAngle + eighth, sixteenth, limit);
-        camcontrol_buildPathAngles(outArr, outCount, baseAngle + eighth + sixteenth,
-                                   sixteenth, limit);
-      }
-      if (quarter < limit) {
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle + quarter;
-      }
-      else if (eighth < limit) {
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle + quarter;
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle + quarter + eighth;
-      }
-      else {
-        camcontrol_buildPathAngles(outArr, outCount, baseAngle + quarter, sixteenth, limit);
-        camcontrol_buildPathAngles(outArr, outCount, baseAngle + quarter + sixteenth,
-                                   sixteenth, limit);
-        angle = baseAngle + quarter + eighth;
-        camcontrol_buildPathAngles(outArr, outCount, angle, sixteenth, limit);
-        camcontrol_buildPathAngles(outArr, outCount, angle + sixteenth, sixteenth, limit);
-      }
-    }
-    if (half < limit) {
-      count = *outCount;
-      *outCount = count + 1;
-      outArr[count] = baseAngle + half;
-    }
-    else {
-      if (quarter < limit) {
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle + half;
-      }
-      else if (eighth < limit) {
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle + half;
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle + half + eighth;
-      }
-      else {
-        camcontrol_buildPathAngles(outArr, outCount, baseAngle + half, sixteenth, limit);
-        camcontrol_buildPathAngles(outArr, outCount, baseAngle + half + sixteenth,
-                                   sixteenth, limit);
-        angle = baseAngle + half + eighth;
-        camcontrol_buildPathAngles(outArr, outCount, angle, sixteenth, limit);
-        camcontrol_buildPathAngles(outArr, outCount, angle + sixteenth, sixteenth, limit);
-      }
-      if (quarter < limit) {
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle + half + quarter;
-      }
-      else if (eighth < limit) {
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle + half + quarter;
-        count = *outCount;
-        *outCount = count + 1;
-        outArr[count] = baseAngle + half + quarter + eighth;
-      }
-      else {
-        angle = baseAngle + half + quarter;
-        camcontrol_buildPathAngles(outArr, outCount, angle, sixteenth, limit);
-        camcontrol_buildPathAngles(outArr, outCount, angle + sixteenth, sixteenth, limit);
-        angle = baseAngle + half + quarter + eighth;
-        camcontrol_buildPathAngles(outArr, outCount, angle, sixteenth, limit);
-        camcontrol_buildPathAngles(outArr, outCount, angle + sixteenth, sixteenth, limit);
-      }
-    }
+    outArr[(*outCount)++] = baseAngle;
   }
 }
 
@@ -157,21 +51,20 @@ void camcontrol_buildPathAngles(s16 *outArr, u16 *outCount, s16 baseAngle, s16 d
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void camcontrol_buildPathPoints(s16 angleRange, s16 angleLimit, int *outPointCount, f32 baseX,
-                                f32 baseZ, f32 targetX, f32 baseY, f32 targetZ,
-                                f32 targetY)
+void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 baseY, f32 targetZ,
+                                f32 targetY, s16 angleRange, s16 angleLimit,
+                                int *outPointCount)
 {
-  s16 absAngleRange;
-  s16 pathAngles[32];
   u16 angleCount;
   s16 rot[3];
   f32 vec[3];
+  s16 pathAngles[20];
+  s16 absAngleRange;
   f32 deltaX;
   f32 deltaY;
   f32 deltaZ;
   int i;
   int pointCount;
-  int storeOffset;
 
   if (angleRange < 0) {
     absAngleRange = -angleRange;
@@ -186,32 +79,28 @@ void camcontrol_buildPathPoints(s16 angleRange, s16 angleLimit, int *outPointCou
   deltaX = targetX - baseX;
   deltaY = targetY - baseY;
   deltaZ = targetZ - baseZ;
+  i = 1;
   pointCount = 3;
-  storeOffset = 0xc;
 
-  for (i = 1; i < angleCount; i++) {
+  while (i < angleCount) {
     vec[0] = deltaX;
     vec[1] = deltaY;
     vec[2] = deltaZ;
 
-    if (angleRange < 0) {
-      rot[0] = pathAngles[i];
-    }
-    else {
-      rot[0] = -pathAngles[i];
-    }
+    rot[0] = angleRange < 0 ? pathAngles[i] : -pathAngles[i];
     rot[1] = 0;
     rot[2] = 0;
     mathFn_80021ac8(rot, vec);
 
-    *(f32 *)(gCamcontrolPathState + storeOffset + 0x1c) = baseX + vec[0];
-    *(f32 *)(gCamcontrolPathState + storeOffset + 0x6c) =
+    *(f32 *)(gCamcontrolPathState + pointCount * 4 + 0x1c) = baseX + vec[0];
+    *(f32 *)(gCamcontrolPathState + pointCount * 4 + 0x6c) =
         baseY + (deltaY * ((f32)pathAngles[i] / (f32)absAngleRange));
-    *(f32 *)(gCamcontrolPathState + storeOffset + 0xbc) = baseZ + vec[2];
+    *(f32 *)(gCamcontrolPathState + pointCount * 4 + 0xbc) = baseZ + vec[2];
 
+    i++;
     pointCount++;
-    storeOffset += 4;
   }
 
   *outPointCount = pointCount;
 }
+

@@ -953,13 +953,300 @@ int MoonSeedPlantingSpot_SeqFn(int obj)
 #pragma scheduling reset
 
 /* CCGasVentControl_SeqFn: trampoline to CCGasVentControlFn_801a9fd0 passing (obj, obj->extra), returns 0. */
-extern int CCGasVentControlFn_801a9fd0(int obj, int extra);
+extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
 #pragma scheduling off
 int CCGasVentControl_SeqFn(int obj)
 {
     CCGasVentControlFn_801a9fd0(obj, *(int *)(obj + 0xb8));
     return 0;
 }
+#pragma scheduling reset
+
+extern u8 CCGasVentControlFn_801a9fd0(int obj, int extra);
+extern int *ObjGroup_GetObjects(int group, int *count);
+extern f32 lbl_803E4618;
+extern f32 timeDelta;
+extern int *gMapEventInterface;
+extern int *gCameraInterface;
+extern int Obj_GetPlayerObject(void);
+extern void Sfx_PlayFromObject(int obj, int id);
+extern void enableHeavyFog(f32 a, f32 b, f32 c, f32 d, f32 e, u8 mode);
+extern f32 lbl_803E4624;
+extern f32 lbl_803E4628;
+extern f32 lbl_803E462C;
+extern f32 lbl_803E4630;
+extern f32 lbl_803E4634;
+extern f32 lbl_803E4638;
+extern f32 lbl_803E463C;
+extern f32 lbl_803E4640;
+
+#pragma scheduling off
+#pragma peephole off
+void ccgasventcontrol_update(int obj)
+{
+    int ex = *(int *)((char *)obj + 0xb8);
+    u8 b = CCGasVentControlFn_801a9fd0(obj, ex);
+    switch (*(u8 *)ex) {
+    case 0: {
+        int cnt;
+        ObjGroup_GetObjects(0x3f, &cnt);
+        if (cnt == 4) {
+            *(u8 *)ex = 1;
+        }
+        break;
+    }
+    case 1:
+        if (GameBit_Get(0x3ec) != 0) {
+            (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+            *(u8 *)ex = 2;
+        }
+        break;
+    case 2:
+        (*(void (*)(int, int))(*(int *)(*gGameUIInterface + 0x58)))(6000, 0x603);
+        *(f32 *)((char *)ex + 4) = lbl_803E4624;
+        *(u8 *)ex = 3;
+        *(u8 *)((char *)ex + 0xc) = b;
+        break;
+    case 3:
+        if (b != 0) {
+            int player = Obj_GetPlayerObject();
+            *(f32 *)((char *)ex + 8) = *(f32 *)((char *)ex + 8) + timeDelta / lbl_803E4618;
+            if (*(f32 *)((char *)ex + 8) > lbl_803E4628) {
+                *(f32 *)((char *)ex + 8) = lbl_803E4628;
+            }
+            if (*(f32 *)((char *)player + 0x10) <= *(f32 *)((char *)obj + 0x10) + *(f32 *)((char *)ex + 8)) {
+                *(f32 *)((char *)ex + 4) = -(timeDelta * (f32)b - *(f32 *)((char *)ex + 4));
+            } else {
+                *(f32 *)((char *)ex + 4) = lbl_803E462C * timeDelta + *(f32 *)((char *)ex + 4);
+                if (*(f32 *)((char *)ex + 4) > lbl_803E4624) {
+                    *(f32 *)((char *)ex + 4) = lbl_803E4624;
+                }
+            }
+            enableHeavyFog(*(f32 *)((char *)obj + 0x10) + *(f32 *)((char *)ex + 8),
+                           *(f32 *)((char *)obj + 0x10) - lbl_803E4630, lbl_803E4634, lbl_803E4638,
+                           lbl_803E463C, 0);
+            if (*(f32 *)((char *)ex + 4) >= lbl_803E4640) {
+                (*(void (*)(int))(*(int *)(*gGameUIInterface + 0x5c)))((int)*(f32 *)((char *)ex + 4));
+            } else {
+                (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+                *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)player + 0xc);
+                *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)player + 0x10);
+                *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)player + 0x14);
+                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
+                (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
+                *(u8 *)ex = 4;
+            }
+            if (b != *(u8 *)((char *)ex + 0xc)) {
+                Sfx_PlayFromObject(0, 0x409);
+                *(u8 *)((char *)ex + 0xc) = b;
+            }
+        } else {
+            Sfx_PlayFromObject(0, 0x7e);
+            (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+            GameBit_Set(0xa3, 1);
+            GameBit_Set(0x620, 0);
+            *(u8 *)ex = 5;
+        }
+        break;
+    case 4:
+        (*(void (*)(void))(*(int *)(*gMapEventInterface + 0x28)))();
+        break;
+    case 5: {
+        int player = Obj_GetPlayerObject();
+        (*(void (*)(int, int, int, int))(*(int *)(*gMapEventInterface + 0x1c)))(player + 0xc, *(s16 *)player, 1, 0);
+        *(u8 *)ex = 6;
+        break;
+    }
+    case 6:
+        if (GameBit_Get(0x1c0) == 0) {
+            disableHeavyFog();
+            *(u8 *)ex = 7;
+        }
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 getXZDistance(f32 *a, f32 *b);
+extern int *ObjGroup_GetObjects(int group, int *count);
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
+extern void Sfx_SetObjectSfxVolume(int obj, int sound, int vol, f32 v);
+extern f32 lbl_803E4618;
+extern f32 lbl_803E461C;
+
+#pragma scheduling off
+#pragma peephole off
+u8 CCGasVentControlFn_801a9fd0(int obj, int extra)
+{
+    u8 i;
+    u8 count = 0;
+    if (GameBit_Get(0x1c0) != 0) {
+        int cnt;
+        int *list = ObjGroup_GetObjects(0x3f, &cnt);
+        f32 thr;
+        i = 0;
+        thr = lbl_803E4618;
+        for (; i < 4; i++) {
+            int other = ObjGroup_FindNearestObject(5, list[i], 0);
+            if (getXZDistance((f32 *)(list[i] + 0x18), (f32 *)(other + 0x18)) > thr) {
+                count = (u8)((u32)count + 1);
+            }
+        }
+    }
+    if (count != 0) {
+        if (*(u8 *)((char *)extra + 1) == 0) {
+            Sfx_AddLoopedObjectSound(obj, 0x223);
+            *(u8 *)((char *)extra + 1) = 1;
+        }
+        Sfx_SetObjectSfxVolume(obj, 0x223, (u8)(count * 0xf + 0x28), lbl_803E461C);
+    } else {
+        if (*(u8 *)((char *)extra + 1) != 0) {
+            Sfx_RemoveLoopedObjectSound(obj, 0x223);
+            *(u8 *)((char *)extra + 1) = 0;
+        }
+    }
+    return count;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int getTrickyObject(void);
+extern void objfx_spawnDirectionalBurst(int obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, int f);
+extern int *gPartfxInterface;
+extern f32 lbl_803E45DC;
+extern f64 lbl_803E45E8;
+extern f32 lbl_803E45F0;
+extern f32 lbl_803E45F4;
+extern f32 lbl_803E45F8;
+extern f32 lbl_803E45FC;
+extern f32 lbl_803E4600;
+extern f32 lbl_803E4604;
+extern f32 lbl_803E4608;
+
+#pragma scheduling off
+#pragma peephole off
+void MoonSeedPlantingSpot_update(int obj)
+{
+    int ex = *(int *)((char *)obj + 0xb8);
+    int setup = *(int *)((char *)obj + 0x4c);
+    if (*(u8 *)((char *)ex + 1) & 1) {
+        *(u8 *)ex = 2;
+        GameBit_Set(*(s16 *)((char *)ex + 8), 1);
+        *(u8 *)((char *)ex + 1) = *(u8 *)((char *)ex + 1) & ~1;
+        *(u8 *)((char *)obj + 0x36) = 0xff;
+    }
+    if ((*(u8 *)((char *)obj + 0xaf) & 4) && !(*(u8 *)((char *)obj + 0xaf) & 8)) {
+        if (GameBit_Get(0x86a) != 0) {
+            *(u8 *)((char *)obj + 0xaf) &= ~0x10;
+        } else {
+            *(u8 *)((char *)obj + 0xaf) |= 0x10;
+        }
+    }
+    *(u8 *)((char *)ex + 1) |= 2;
+    switch (*(u8 *)ex) {
+    case 0:
+        *(u8 *)ex = 1;
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup + 0xc) - lbl_803E45F0;
+        if (GameBit_Get(*(s16 *)((char *)ex + 8)) != 0) {
+            *(u8 *)ex = 2;
+            *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup + 0xc);
+            *(u8 *)((char *)obj + 0x36) = 0xff;
+        }
+        if (GameBit_Get(*(s16 *)((char *)ex + 0xa)) != 0) {
+            int setup2;
+            int ex2;
+            ex2 = *(int *)((char *)obj + 0xb8);
+            setup2 = *(int *)((char *)obj + 0x4c);
+            if (GameBit_Get(*(s16 *)((char *)ex2 + 8)) != 0) {
+                *(u8 *)((char *)obj + 0xaf) |= 8;
+                GameBit_Set(*(s16 *)((char *)ex2 + 0xa), 1);
+                *(u8 *)ex2 = 4;
+                *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup2 + 0xc);
+            }
+        }
+        break;
+    case 1:
+        if ((*(u8 *)((char *)obj + 0xaf) & 1) &&
+            (*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x86a) != 0) {
+            int cnt = GameBit_Get(0x86a);
+            if (cnt != 0) {
+                *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup + 0xc);
+                *(u8 *)((char *)obj + 0x36) = 0;
+                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+                GameBit_Set(0x86a, cnt - 1);
+                *(u8 *)((char *)obj + 0xaf) |= 8;
+            }
+        }
+        break;
+    case 2: {
+        int tricky = getTrickyObject();
+        *(u8 *)((char *)obj + 0xaf) |= 8;
+        if (*(u8 *)((char *)ex + 1) & 2) {
+            void *player;
+            if (*(u8 *)((char *)ex + 1) & 4) {
+                *(f32 *)((char *)obj + 0x10) =
+                    *(f32 *)((char *)setup + 0xc) + (f32)(int)randomGetRange(-1, 1);
+                (*(void (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x70f, 0, 2, -1, 0);
+            }
+            *(f32 *)((char *)ex + 0x14) = *(f32 *)((char *)ex + 0x14) - timeDelta;
+            if (*(f32 *)((char *)ex + 0x14) <= lbl_803E45F4) {
+                if ((int)randomGetRange(0, 1) != 0) {
+                    *(f32 *)((char *)ex + 0x14) = lbl_803E45F8;
+                    *(u8 *)((char *)ex + 1) |= 4;
+                    Sfx_PlayFromObject(obj, 0x438);
+                } else {
+                    *(f32 *)((char *)ex + 0x14) = (f32)(int)randomGetRange(0x32, 200);
+                    *(u8 *)((char *)ex + 1) &= ~4;
+                }
+            }
+            player = (void *)Obj_GetPlayerObject();
+            if (player != NULL && getXZDistance((f32 *)((char *)player + 0x18), (f32 *)(obj + 0x18)) <= lbl_803E45FC) {
+                objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 5, 1, 0x28, lbl_803E4600, 0, 0);
+                (*(void (*)(int, int, int, int))(*(int *)(*(int *)(*(int *)((char *)tricky + 0x68)) + 0x28)))(tricky, obj, 1, 4);
+            } else {
+                objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 6, 1, 0x28, lbl_803E4604, 0, 0);
+            }
+            if (ObjHits_GetPriorityHit(obj, 0, 0, 0) == 0x1a) {
+                *(u8 *)ex = 3;
+                *(s16 *)((char *)ex + 0xc) = 0;
+                *(f32 *)((char *)ex + 0x10) = lbl_803E4608;
+            }
+        }
+        break;
+    }
+    case 3: {
+        int tricky = getTrickyObject();
+        *(u8 *)((char *)obj + 0xaf) |= 8;
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup + 0xc);
+        if (getXZDistance((f32 *)(tricky + 0x18), (f32 *)(obj + 0x18)) <= lbl_803E45FC) {
+            objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 5, 1, 0x28, lbl_803E4600, 0, 0);
+        } else {
+            objfx_spawnDirectionalBurst(obj, 5, lbl_803E45DC, 6, 1, 0x28, lbl_803E4604, 0, 0);
+        }
+        if (*(f32 *)((char *)ex + 0x10) <= lbl_803E45F4 && GameBit_Get(*(s16 *)((char *)ex + 8)) != 0 &&
+            GameBit_Get(*(s16 *)((char *)ex + 0xa)) == 0) {
+            int setup2;
+            int ex2;
+            ex2 = *(int *)((char *)obj + 0xb8);
+            setup2 = *(int *)((char *)obj + 0x4c);
+            if (GameBit_Get(*(s16 *)((char *)ex2 + 8)) != 0) {
+                *(u8 *)((char *)obj + 0xaf) |= 8;
+                GameBit_Set(*(s16 *)((char *)ex2 + 0xa), 1);
+                *(u8 *)ex2 = 4;
+                *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)setup2 + 0xc);
+            }
+        }
+        *(f32 *)((char *)ex + 0x10) = *(f32 *)((char *)ex + 0x10) - timeDelta;
+        if (*(f32 *)((char *)ex + 0x10) < lbl_803E45F4) {
+            *(f32 *)((char *)ex + 0x10) = lbl_803E45F4;
+        }
+        break;
+    }
+    }
+}
+#pragma peephole reset
 #pragma scheduling reset
 
 extern int Obj_AllocObjectSetup(int size, int type);

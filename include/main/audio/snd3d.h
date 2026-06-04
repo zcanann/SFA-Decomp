@@ -32,7 +32,7 @@ typedef struct SndSpatialEntry {
     f32 posY;
     f32 posZ;
     f32 averageDistanceSq;
-    s8 assignedVoice;
+    u8 assignedVoice;
     u8 pad1d[3];
     void (*activateCallback)(u8 voice, u32 user);
     void (*evictCallback)(u8 voice);
@@ -69,7 +69,7 @@ typedef struct SndStudioInputLink {
     f32 inputScale;
     u8 pad18[4];
     u8 sendLevel;
-    s8 activeInput;
+    u8 activeInput;
     u8 pad1e[2];
     SndSpatialEntry *source;
     SndSpatialEntry *target;

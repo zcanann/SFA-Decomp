@@ -122,408 +122,423 @@ extern f32 lbl_803E5CD0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ecsh_shrine_update(ushort *param_9)
+extern void skyFn_80088c94(int a, int b);
+extern void getEnvfxAct(s16 *obj, int *target, int id, int p);
+extern void fn_801C5990(s16 *obj);
+extern int objIsCurModelNotZero(int *player);
+extern void fn_80295CF4(int *player, int a);
+extern void SCGameBitLatch_Update(u8 *latch, int mask, int a, int b, int bit, int c);
+extern void SCGameBitLatch_UpdateInverted(u8 *latch, int mask, int a, int b, int bit, int c);
+extern void audioStopByMask(int mask);
+extern int objGetAnimStateFlags(int *player, int flags);
+extern void Sfx_KeepAliveLoopedObjectSound(s16 *obj, int sfxId);
+extern void Sfx_PlayFromObject(s16 *obj, int sfxId);
+extern void Music_Trigger(int id, int restart);
+extern void GameBit_Set(int bit, int value);
+extern int GameBit_Get(int bit);
+extern int *Obj_GetPlayerObject(void);
+extern int *gGameUIInterface;
+extern int *gObjectTriggerInterface;
+extern int *gScreenTransitionInterface;
+extern u8 lbl_80326208[];
+extern int lbl_803E8470;
+extern int lbl_803E8474;
+extern f32 timeDelta;
+extern f32 lbl_803E4FA8;
+extern f32 lbl_803E4FB0;
+extern f32 lbl_803E4FCC;
+extern f32 lbl_803E4FD0;
+extern f32 lbl_803E4FD4;
+extern f32 lbl_803E4FD8;
+extern f32 lbl_803E4FDC;
+extern f32 lbl_803E4FE0;
+extern f32 lbl_803E4FE4;
+extern f32 lbl_803E4FE8;
+extern f32 lbl_803E4FEC;
+extern f32 lbl_803E4FF0;
+
+typedef struct EcshPuzzleState {
+    f32 f[12];   /* 0x00 */
+    s16 cur[6];  /* 0x30 */
+    s16 next[7]; /* 0x3c */
+} EcshPuzzleState;
+
+typedef struct EcshIntPair {
+    int a;
+    int b;
+} EcshIntPair;
+
+void ecsh_shrine_update(s16 *obj)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  short sVar5;
-  short sVar6;
-  short sVar7;
-  short sVar8;
-  int iVar9;
-  uint uVar10;
-  int iVar11;
-  int in_r7;
-  int iVar12;
-  uint uStack_38;
-  uint auStack_34 [3];
-  undefined4 local_28;
-  undefined4 local_20;
-  uint uStack_1c;
-  
-  iVar12 = *(int *)(param_9 + 0x5c);
-  iVar9 = FUN_80017a98();
-  auStack_34[2] = DAT_803e90f0;
-  local_28 = DAT_803e90f4;
-  if (*(char *)(iVar12 + 0x32) == '\0') {
-    uVar10 = FUN_80017690(0x58b);
-    *(char *)(iVar12 + 0x32) = (char)uVar10;
-    if (*(char *)(iVar12 + 0x32) != 0) {
-      in_r7 = *DAT_803dd6e8;
-      (*(code *)(in_r7 + 0x38))(0x285,0x14,0x8c,1);
+    f32 t[2];
+    int msgC;
+    int msgA;
+    int msgB;
+    EcshPuzzleState *ps;
+    u8 *sub;
+    int *player;
+    u8 gv;
+    int pick;
+    s16 sc;
+    f32 z;
+    f32 fv;
+
+    ps = (EcshPuzzleState *)lbl_80326208;
+    sub = *(u8 **)((char *)obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    *(int *)&t[0] = lbl_803E8470;
+    *(int *)&t[1] = lbl_803E8474;
+    if (sub[0x32] == 0) {
+        gv = GameBit_Get(0x58b);
+        sub[0x32] = gv;
+        if (sub[0x32] != 0) {
+            (*(void (**)(int, int, int, int))(*(int *)gGameUIInterface + 0x38))(0x285, 0x14, 0x8c, 1);
+        }
     }
-  }
-  if ((*(int *)(param_9 + 0x7a) != 0) &&
-     (*(int *)(param_9 + 0x7a) = *(int *)(param_9 + 0x7a) + -1, *(int *)(param_9 + 0x7a) == '\0')) {
-    FUN_80080f28(7,'\x01');
-    FUN_80006728(param_9, iVar9, 0x221, 0);
-    FUN_80006728(param_9, iVar9, 0x220, 0);
-    FUN_80006728(param_9, iVar9, 0x222, 0);
-  }
-  FUN_801c5f28(param_9);
-  if ((iVar9 != 0) && (uVar10 = FUN_80294be4(iVar9), uVar10 == '\0')) {
-    FUN_80294c30(iVar9,0);
-  }
-  auStack_34[1] = 0;
-  do {
-    iVar11 = ObjMsg_Pop((int)param_9,auStack_34,&uStack_38,auStack_34 + 1);
-  } while (iVar11 != 0);
-  SH_LevelControl_runBloopEvent(iVar12 + 0x34,2,-1,-1,0xb9d,(int *)0xd);
-  FUN_801d8480(iVar12 + 0x34,1,-1,-1,0xcbb,(int *)0x8);
-  SH_LevelControl_runBloopEvent(iVar12 + 0x34,0x10,-1,-1,0xcbb,(int *)0xc4);
-  fVar2 = lbl_803E5C64;
-  if (*(float *)(iVar12 + 8) <= lbl_803E5C64) {
-    switch(*(undefined *)(iVar12 + 0x2f)) {
-    case 0:
-      param_9[3] = param_9[3] & 0xbfff;
-      fVar1 = *(float *)(iVar12 + 0x10) - lbl_803DC074;
-      *(float *)(iVar12 + 0x10) = fVar1;
-      if (fVar1 <= fVar2) {
-        FUN_80006824((uint)param_9,0x343);
-        uStack_1c = randomGetRange(500,1000);
-        uStack_1c = uStack_1c ^ 0x80000000;
-        local_20 = 0x43300000;
-        *(float *)(iVar12 + 0x10) =
-             (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e5c58);
-      }
-      if ((*(byte *)((int)param_9 + 0xaf) & 1) != 0) {
-        *(undefined *)(iVar12 + 0x2f) = 1;
-        FUN_80017698(0x129,0);
-        (*(code *)(*DAT_803dd6d4 + 0x48))(0,param_9,0xffffffff);
-        FUN_800067c0((int *)0xd8,1);
-        DAT_80326e48 = lbl_803E5C64;
-        DAT_80326e4c = lbl_803E5C64;
-        DAT_80326e50 = lbl_803E5C64;
-        DAT_80326e54 = lbl_803E5C64;
-        DAT_80326e58 = lbl_803E5C64;
-        DAT_80326e5c = lbl_803E5C64;
-        DAT_80326e60 = lbl_803E5C64;
-        DAT_80326e64 = lbl_803E5C64;
-        DAT_80326e68 = lbl_803E5C64;
-        DAT_80326e6c = lbl_803E5C64;
-        DAT_80326e70 = lbl_803E5C64;
-        DAT_80326e74 = lbl_803E5C64;
-        DAT_80326e78 = DAT_80326e84;
-        DAT_80326e7a = DAT_80326e86;
-        DAT_80326e7c = DAT_80326e88;
-        DAT_80326e7e = DAT_80326e8a;
-        DAT_80326e80 = DAT_80326e8c;
-        DAT_80326e82 = DAT_80326e8e;
-        DAT_80326e84 = DAT_80326e90;
-      }
-      break;
-    case 1:
-      if (*(char *)(iVar12 + 0x30) == 0x01) {
-        *(undefined *)(iVar12 + 0x2f) = 2;
-        *(float *)(iVar12 + 8) = lbl_803E5C68;
-        *(undefined2 *)(iVar12 + 0x24) = 6;
-        FUN_80006824((uint)param_9,SFXwp_roboalarm);
-        *(float *)(iVar12 + 4) = lbl_803E5C64;
-        FUN_80017698(0xb9d,1);
-        (*(code *)(*DAT_803dd6cc + 0xc))(0x78,1);
-      }
-      param_9[3] = param_9[3] | 0x4000;
-      break;
-    case 2:
-      *(undefined *)(iVar12 + 0x2f) = 3;
-      *(float *)(iVar12 + 8) = lbl_803E5C6C;
-      *(undefined2 *)(iVar12 + 0x24) = 8;
-      *(float *)(iVar12 + 4) = lbl_803E5C70;
-      *(undefined2 *)(iVar12 + 0x22) = 5;
-      uVar10 = randomGetRange(0,5);
-      *(char *)(iVar12 + 0x2e) = (char)uVar10;
-      (*(code *)(*DAT_803dd6d4 + 0x48))(2,param_9,0xffffffff);
-      break;
-    case 3:
-    case 4:
-    case 5:
-      if (*(float *)(iVar12 + 4) <= lbl_803E5C64) {
-        switch(*(undefined2 *)(iVar12 + 0x24)) {
+    if (*(int *)((char *)obj + 0xf4) != 0) {
+        *(int *)((char *)obj + 0xf4) = *(int *)((char *)obj + 0xf4) - 1;
+        if (*(int *)((char *)obj + 0xf4) == 0) {
+            skyFn_80088c94(7, 1);
+            getEnvfxAct(obj, player, 0x221, 0);
+            getEnvfxAct(obj, player, 0x220, 0);
+            getEnvfxAct(obj, player, 0x222, 0);
+        }
+    }
+    fn_801C5990(obj);
+    if (player != NULL && objIsCurModelNotZero(player) == 0) {
+        fn_80295CF4(player, 0);
+    }
+    msgC = 0;
+    while (ObjMsg_Pop(obj, &msgA, &msgB, &msgC) != 0) {
+    }
+    SCGameBitLatch_Update(sub + 0x34, 2, -1, -1, 0xb9d, 0xd);
+    SCGameBitLatch_UpdateInverted(sub + 0x34, 1, -1, -1, 0xcbb, 8);
+    SCGameBitLatch_Update(sub + 0x34, 0x10, -1, -1, 0xcbb, 0xc4);
+    if (*(f32 *)(sub + 8) > (z = lbl_803E4FCC)) {
+        *(f32 *)(sub + 8) = *(f32 *)(sub + 8) - timeDelta;
+        if (*(f32 *)(sub + 8) <= z) {
+            *(f32 *)(sub + 8) = z;
+        }
+    } else {
+        switch (sub[0x2f]) {
         case 0:
-          *(undefined2 *)(iVar12 + 0x24) = 1;
-          *(float *)(iVar12 + 4) = lbl_803E5C7C;
-          break;
+            *(s16 *)((char *)obj + 6) &= ~0x4000;
+            fv = *(f32 *)(sub + 0x10) - timeDelta;
+            *(f32 *)(sub + 0x10) = fv;
+            if (fv <= z) {
+                Sfx_PlayFromObject(obj, 0x343);
+                *(f32 *)(sub + 0x10) = (f32)(int)randomGetRange(500, 1000);
+            }
+            if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
+                sub[0x2f] = 1;
+                GameBit_Set(0x129, 0);
+                (*(void (**)(int, s16 *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+                Music_Trigger(0xd8, 1);
+                {
+                    f32 fz = lbl_803E4FCC;
+                    ps->f[0] = fz;
+                    ps->f[1] = fz;
+                    ps->f[2] = fz;
+                    ps->f[3] = fz;
+                    ps->f[4] = fz;
+                    ps->f[5] = fz;
+                    ps->f[6] = fz;
+                    ps->f[7] = fz;
+                    ps->f[8] = fz;
+                    ps->f[9] = fz;
+                    ps->f[10] = fz;
+                    ps->f[11] = fz;
+                }
+                ps->cur[0] = ps->next[0];
+                ps->cur[1] = ps->next[1];
+                ps->cur[2] = ps->next[2];
+                ps->cur[3] = ps->next[3];
+                ps->cur[4] = ps->next[4];
+                ps->cur[5] = ps->next[5];
+                ps->next[0] = ps->next[6];
+            }
+            break;
         case 1:
-          *(undefined2 *)(iVar12 + 0x24) = 4;
-          *(float *)(iVar12 + 4) = fVar2;
-          break;
+            if (sub[0x30] == 1) {
+                sub[0x2f] = 2;
+                *(f32 *)(sub + 8) = lbl_803E4FD0;
+                *(s16 *)(sub + 0x24) = 6;
+                Sfx_PlayFromObject(obj, 0x16f);
+                *(f32 *)(sub + 4) = lbl_803E4FCC;
+                GameBit_Set(0xb9d, 1);
+                (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 0xc))(0x78, 1);
+            }
+            *(s16 *)((char *)obj + 6) |= 0x4000;
+            break;
         case 2:
-          *(short *)(iVar12 + 0x22) = *(short *)(iVar12 + 0x22) + -1;
-          if (*(short *)(iVar12 + 0x22) < 1) {
-            FUN_80006824(0,0x3a8);
-            *(undefined2 *)(iVar12 + 0x24) = 5;
-            if (*(char *)(iVar12 + 0x2f) == 0x03) {
-              *(float *)(iVar12 + 0xc) = lbl_803E5C40;
-            }
-            else if (*(char *)(iVar12 + 0x2f) == 0x04) {
-              *(float *)(iVar12 + 0xc) = lbl_803E5C40;
-            }
-            else {
-              *(float *)(iVar12 + 0xc) = lbl_803E5C40;
-            }
-          }
-          else {
-            *(undefined *)(iVar12 + 0x31) = 0;
-            uStack_1c = randomGetRange(0x28,0x3c);
-            uStack_1c = uStack_1c ^ 0x80000000;
-            local_20 = 0x43300000;
-            *(float *)(iVar12 + 0x14) =
-                 (float)((double)CONCAT44(0x43300000,uStack_1c) - DOUBLE_803e5c58);
-            FUN_80006824((uint)param_9,0x344);
-            *(undefined2 *)(iVar12 + 0x24) = 0;
-            *(float *)(iVar12 + 4) = lbl_803E5C78;
-            if (*(char *)(iVar12 + 0x2f) == 0x03) {
-              uVar10 = randomGetRange(0,1);
-            }
-            else if (*(char *)(iVar12 + 0x2f) == 0x04) {
-              uVar10 = randomGetRange(0,5);
-            }
-            else {
-              uVar10 = randomGetRange(0,7);
-            }
-            sVar8 = DAT_80326e82;
-            sVar7 = DAT_80326e80;
-            sVar6 = DAT_80326e7a;
-            sVar5 = DAT_80326e78;
-            fVar4 = DAT_80326e74;
-            fVar3 = DAT_80326e70;
-            fVar1 = DAT_80326e54;
-            fVar2 = DAT_80326e50;
-            if (uVar10 == '\0') {
-              DAT_80326e78 = DAT_80326e78 + 1;
-              if (5 < DAT_80326e78) {
-                DAT_80326e78 = 0;
-              }
-              DAT_80326e7a = DAT_80326e7a + 1;
-              if (5 < DAT_80326e7a) {
-                DAT_80326e7a = 0;
-              }
-              DAT_80326e7c = DAT_80326e7c + 1;
-              if (5 < DAT_80326e7c) {
-                DAT_80326e7c = 0;
-              }
-              DAT_80326e7e = DAT_80326e7e + 1;
-              if (5 < DAT_80326e7e) {
-                DAT_80326e7e = 0;
-              }
-              DAT_80326e80 = DAT_80326e80 + 1;
-              if (5 < DAT_80326e80) {
-                DAT_80326e80 = 0;
-              }
-              DAT_80326e82 = DAT_80326e82 + 1;
-              if (5 < DAT_80326e82) {
-                DAT_80326e82 = 0;
-              }
-            }
-            else if (uVar10 == 1) {
-              DAT_80326e78 = DAT_80326e78 + -1;
-              if (DAT_80326e78 < 0) {
-                DAT_80326e78 = 5;
-              }
-              DAT_80326e7a = DAT_80326e7a + -1;
-              if (DAT_80326e7a < 0) {
-                DAT_80326e7a = 5;
-              }
-              DAT_80326e7c = DAT_80326e7c + -1;
-              if (DAT_80326e7c < 0) {
-                DAT_80326e7c = 5;
-              }
-              DAT_80326e7e = DAT_80326e7e + -1;
-              if (DAT_80326e7e < 0) {
-                DAT_80326e7e = 5;
-              }
-              DAT_80326e80 = DAT_80326e80 + -1;
-              if (DAT_80326e80 < 0) {
-                DAT_80326e80 = 5;
-              }
-              DAT_80326e82 = DAT_80326e82 + -1;
-              if (DAT_80326e82 < 0) {
-                DAT_80326e82 = 5;
-              }
-            }
-            else if (uVar10 == 2) {
-              DAT_80326e78 = DAT_80326e7c;
-              DAT_80326e7c = DAT_80326e80;
-              DAT_80326e80 = sVar5;
-            }
-            else if (uVar10 == 3) {
-              DAT_80326e80 = DAT_80326e78;
-              DAT_80326e78 = DAT_80326e7c;
-              DAT_80326e7c = sVar7;
-            }
-            else if (uVar10 == 4) {
-              DAT_80326e7a = DAT_80326e7e;
-              DAT_80326e7e = DAT_80326e82;
-              DAT_80326e82 = sVar6;
-            }
-            else if (uVar10 == 5) {
-              DAT_80326e82 = DAT_80326e7a;
-              DAT_80326e7a = DAT_80326e7e;
-              DAT_80326e7e = sVar8;
-            }
-            else if (uVar10 == 6) {
-              DAT_80326e50 = DAT_80326e58;
-              DAT_80326e54 = DAT_80326e5c;
-              DAT_80326e58 = DAT_80326e68;
-              DAT_80326e5c = DAT_80326e6c;
-              DAT_80326e68 = DAT_80326e70;
-              DAT_80326e6c = DAT_80326e74;
-              DAT_80326e70 = fVar2;
-              DAT_80326e74 = fVar1;
-            }
-            else if (uVar10 == 7) {
-              DAT_80326e70 = DAT_80326e68;
-              DAT_80326e74 = DAT_80326e6c;
-              DAT_80326e68 = DAT_80326e58;
-              DAT_80326e6c = DAT_80326e5c;
-              DAT_80326e58 = DAT_80326e50;
-              DAT_80326e5c = DAT_80326e54;
-              DAT_80326e50 = fVar3;
-              DAT_80326e54 = fVar4;
-            }
-          }
-          break;
+            sub[0x2f] = 3;
+            *(f32 *)(sub + 8) = lbl_803E4FD4;
+            *(s16 *)(sub + 0x24) = 8;
+            *(f32 *)(sub + 4) = lbl_803E4FD8;
+            *(s16 *)(sub + 0x22) = 5;
+            gv = randomGetRange(0, 5);
+            sub[0x2e] = gv;
+            (*(void (**)(int, s16 *, int))(*(int *)gObjectTriggerInterface + 0x48))(2, obj, -1);
+            break;
+        case 3:
         case 4:
-          *(undefined2 *)(iVar12 + 0x24) = 2;
-          *(float *)(iVar12 + 4) = fVar2;
-          break;
         case 5:
-          FUN_800068c4(0,0x3a8);
-          if (*(short *)(iVar12 + 0x26) == '\0') {
-            (*(code *)(*DAT_803dd6cc + 8))(0x1e,1);
-            *(float *)(iVar12 + 8) = lbl_803E5C80;
-            *(undefined2 *)(iVar12 + 0x24) = 7;
-            FUN_80006824((uint)param_9,SFXwp_roboalarm);
-            *(undefined *)(iVar12 + 0x2f) = 10;
-          }
-          else if (*(short *)(iVar12 + 0x26) == 1) {
-            if (*(char *)(iVar12 + 0x2f) == 0x03) {
-              uVar10 = randomGetRange(0,5);
-              *(char *)(iVar12 + 0x2e) = (char)uVar10;
-              *(undefined *)(iVar12 + 0x2f) = 4;
-              *(undefined2 *)(iVar12 + 0x24) = 9;
-              *(float *)(iVar12 + 8) = lbl_803E5C84;
-              *(float *)(iVar12 + 4) = lbl_803E5C48;
-              *(undefined2 *)(iVar12 + 0x22) = 7;
-              *(undefined2 *)(iVar12 + 0x26) = 0xffff;
-              FUN_80006824((uint)param_9,SFXwp_fox_kick1);
-              (*(code *)(*DAT_803dd6d4 + 0x48))(2,param_9,0xffffffff);
+            if (*(f32 *)(sub + 4) > lbl_803E4FCC) {
+                if (*(s16 *)(sub + 0x24) == 1 && sub[0x31] == 0
+                    && *(f32 *)(sub + 4) < *(f32 *)(sub + 0x14)) {
+                    if ((int)randomGetRange(0, 10) > 7) {
+                        Sfx_PlayFromObject(obj, 0x345);
+                    }
+                    sub[0x31] = 1;
+                }
+                *(f32 *)(sub + 4) = *(f32 *)(sub + 4) - timeDelta;
+                if (*(f32 *)(sub + 4) < lbl_803E4FCC) {
+                    *(f32 *)(sub + 4) = lbl_803E4FCC;
+                }
+            } else {
+                switch (*(s16 *)(sub + 0x24)) {
+                case 8:
+                    *(s16 *)(sub + 0x24) = 2;
+                    *(f32 *)(sub + 4) = lbl_803E4FD8;
+                    *(f32 *)(sub + 8) = lbl_803E4FDC;
+                    break;
+                case 9:
+                    *(s16 *)(sub + 0x24) = 8;
+                    *(f32 *)(sub + 4) = lbl_803E4FD8;
+                    *(f32 *)(sub + 8) = lbl_803E4FDC;
+                    break;
+                case 7:
+                    *(s16 *)(sub + 0x24) = 3;
+                    *(f32 *)(sub + 4) = lbl_803E4FD8;
+                    *(f32 *)(sub + 8) = lbl_803E4FDC;
+                    break;
+                case 2:
+                    *(s16 *)(sub + 0x22) -= 1;
+                    if (*(s16 *)(sub + 0x22) < 1) {
+                        Sfx_PlayFromObject(0, 0x3a8);
+                        *(s16 *)(sub + 0x24) = 5;
+                        if (sub[0x2f] == 3) {
+                            *(f32 *)(sub + 0xc) = lbl_803E4FA8;
+                        } else if (sub[0x2f] == 4) {
+                            *(f32 *)(sub + 0xc) = lbl_803E4FA8;
+                        } else {
+                            *(f32 *)(sub + 0xc) = lbl_803E4FA8;
+                        }
+                    } else {
+                        sub[0x31] = 0;
+                        *(f32 *)(sub + 0x14) = (f32)(int)randomGetRange(0x28, 0x3c);
+                        Sfx_PlayFromObject(obj, 0x344);
+                        *(s16 *)(sub + 0x24) = 0;
+                        *(f32 *)(sub + 4) = lbl_803E4FE0;
+                        if (sub[0x2f] == 3) {
+                            pick = randomGetRange(0, 1);
+                        } else if (sub[0x2f] == 4) {
+                            pick = randomGetRange(0, 5);
+                        } else {
+                            pick = randomGetRange(0, 7);
+                        }
+                        if (pick == 0) {
+                            ps->cur[0] += 1;
+                            if (ps->cur[0] > 5) {
+                                ps->cur[0] = 0;
+                            }
+                            ps->cur[1] += 1;
+                            if (ps->cur[1] > 5) {
+                                ps->cur[1] = 0;
+                            }
+                            ps->cur[2] += 1;
+                            if (ps->cur[2] > 5) {
+                                ps->cur[2] = 0;
+                            }
+                            ps->cur[3] += 1;
+                            if (ps->cur[3] > 5) {
+                                ps->cur[3] = 0;
+                            }
+                            ps->cur[4] += 1;
+                            if (ps->cur[4] > 5) {
+                                ps->cur[4] = 0;
+                            }
+                            ps->cur[5] += 1;
+                            if (ps->cur[5] > 5) {
+                                ps->cur[5] = 0;
+                            }
+                        } else if (pick == 1) {
+                            ps->cur[0] -= 1;
+                            if (ps->cur[0] < 0) {
+                                ps->cur[0] = 5;
+                            }
+                            ps->cur[1] -= 1;
+                            if (ps->cur[1] < 0) {
+                                ps->cur[1] = 5;
+                            }
+                            ps->cur[2] -= 1;
+                            if (ps->cur[2] < 0) {
+                                ps->cur[2] = 5;
+                            }
+                            ps->cur[3] -= 1;
+                            if (ps->cur[3] < 0) {
+                                ps->cur[3] = 5;
+                            }
+                            ps->cur[4] -= 1;
+                            if (ps->cur[4] < 0) {
+                                ps->cur[4] = 5;
+                            }
+                            ps->cur[5] -= 1;
+                            if (ps->cur[5] < 0) {
+                                ps->cur[5] = 5;
+                            }
+                        } else if (pick == 2) {
+                            sc = ps->cur[0];
+                            ps->cur[0] = ps->cur[2];
+                            ps->cur[2] = ps->cur[4];
+                            ps->cur[4] = sc;
+                        } else if (pick == 3) {
+                            sc = ps->cur[4];
+                            ps->cur[4] = ps->cur[0];
+                            ps->cur[0] = ps->cur[2];
+                            ps->cur[2] = sc;
+                        } else if (pick == 4) {
+                            sc = ps->cur[1];
+                            ps->cur[1] = ps->cur[3];
+                            ps->cur[3] = ps->cur[5];
+                            ps->cur[5] = sc;
+                        } else if (pick == 5) {
+                            sc = ps->cur[5];
+                            ps->cur[5] = ps->cur[1];
+                            ps->cur[1] = ps->cur[3];
+                            ps->cur[3] = sc;
+                        } else if (pick == 6) {
+                            t[0] = ps->f[2];
+                            t[1] = ps->f[3];
+                            ps->f[2] = ps->f[4];
+                            ps->f[3] = ps->f[5];
+                            ps->f[4] = ps->f[8];
+                            ps->f[5] = ps->f[9];
+                            ps->f[8] = ps->f[10];
+                            ps->f[9] = ps->f[11];
+                            ps->f[10] = t[0];
+                            ps->f[11] = t[1];
+                        } else if (pick == 7) {
+                            t[0] = ps->f[10];
+                            t[1] = ps->f[11];
+                            ps->f[10] = ps->f[8];
+                            ps->f[11] = ps->f[9];
+                            ps->f[8] = ps->f[4];
+                            ps->f[9] = ps->f[5];
+                            ps->f[4] = ps->f[2];
+                            ps->f[5] = ps->f[3];
+                            ps->f[2] = t[0];
+                            ps->f[3] = t[1];
+                        }
+                    }
+                    break;
+                case 0:
+                    *(s16 *)(sub + 0x24) = 1;
+                    *(f32 *)(sub + 4) = lbl_803E4FE4;
+                    break;
+                case 1:
+                    *(s16 *)(sub + 0x24) = 4;
+                    *(f32 *)(sub + 4) = lbl_803E4FCC;
+                    break;
+                case 4:
+                    *(s16 *)(sub + 0x24) = 2;
+                    *(f32 *)(sub + 4) = lbl_803E4FCC;
+                    break;
+                case 5:
+                    Sfx_KeepAliveLoopedObjectSound(0, 0x3a8);
+                    if (*(s16 *)(sub + 0x26) == 0) {
+                        (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 8))(0x1e, 1);
+                        *(f32 *)(sub + 8) = lbl_803E4FE8;
+                        *(s16 *)(sub + 0x24) = 7;
+                        Sfx_PlayFromObject(obj, 0x16f);
+                        sub[0x2f] = 10;
+                    } else if (*(s16 *)(sub + 0x26) == 1) {
+                        if (sub[0x2f] == 3) {
+                            gv = randomGetRange(0, 5);
+                            sub[0x2e] = gv;
+                            sub[0x2f] = 4;
+                            *(s16 *)(sub + 0x24) = 9;
+                            *(f32 *)(sub + 8) = lbl_803E4FEC;
+                            *(f32 *)(sub + 4) = lbl_803E4FB0;
+                            *(s16 *)(sub + 0x22) = 7;
+                            *(s16 *)(sub + 0x26) = -1;
+                            Sfx_PlayFromObject(obj, 0x170);
+                            (*(void (**)(int, s16 *, int))(*(int *)gObjectTriggerInterface + 0x48))(2, obj, -1);
+                        } else if (sub[0x2f] == 4) {
+                            gv = randomGetRange(0, 5);
+                            sub[0x2e] = gv;
+                            sub[0x2f] = 5;
+                            *(s16 *)(sub + 0x24) = 9;
+                            *(f32 *)(sub + 8) = lbl_803E4FEC;
+                            *(f32 *)(sub + 4) = lbl_803E4FB0;
+                            *(s16 *)(sub + 0x22) = 9;
+                            *(s16 *)(sub + 0x26) = -1;
+                            Sfx_PlayFromObject(obj, 0x170);
+                            (*(void (**)(int, s16 *, int))(*(int *)gObjectTriggerInterface + 0x48))(2, obj, -1);
+                        } else {
+                            *(f32 *)(sub + 8) = lbl_803E4FE8;
+                            (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 8))(0x1e, 1);
+                            sub[0x2f] = 6;
+                            *(s16 *)(sub + 0x24) = 3;
+                            *(s16 *)(sub + 0x26) = 0;
+                            *(s16 *)(sub + 0x24) = 7;
+                            Sfx_PlayFromObject(obj, 0x7e);
+                            Sfx_PlayFromObject(obj, 0x16f);
+                        }
+                    } else {
+                        *(f32 *)(sub + 0xc) = *(f32 *)(sub + 0xc) - timeDelta;
+                        if (*(f32 *)(sub + 0xc) <= lbl_803E4FCC) {
+                            sub[0x2f] = 10;
+                            (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 8))(0x1e, 1);
+                            *(f32 *)(sub + 8) = lbl_803E4FE8;
+                            *(s16 *)(sub + 0x24) = 7;
+                            Sfx_PlayFromObject(obj, 0x16f);
+                        }
+                    }
+                    break;
+                }
             }
-            else if (*(char *)(iVar12 + 0x2f) == 0x04) {
-              uVar10 = randomGetRange(0,5);
-              *(char *)(iVar12 + 0x2e) = (char)uVar10;
-              *(undefined *)(iVar12 + 0x2f) = 5;
-              *(undefined2 *)(iVar12 + 0x24) = 9;
-              *(float *)(iVar12 + 8) = lbl_803E5C84;
-              *(float *)(iVar12 + 4) = lbl_803E5C48;
-              *(undefined2 *)(iVar12 + 0x22) = 9;
-              *(undefined2 *)(iVar12 + 0x26) = 0xffff;
-              FUN_80006824((uint)param_9,SFXwp_fox_kick1);
-              (*(code *)(*DAT_803dd6d4 + 0x48))(2,param_9,0xffffffff);
+            break;
+        case 10:
+            GameBit_Set(0xa6f, 1);
+            sub[0x2f] = 8;
+            break;
+        case 6:
+            GameBit_Set(0xb9d, 0);
+            audioStopByMask(3);
+            if (objGetAnimStateFlags(player, 8) != 0) {
+                GameBit_Set(0x129, 1);
+                sub[0x2f] = 7;
+            } else {
+                sub[0x2f] = 7;
+                (*(void (**)(int, s16 *, int))(*(int *)gObjectTriggerInterface + 0x48))(1, obj, -1);
             }
-            else {
-              *(float *)(iVar12 + 8) = lbl_803E5C80;
-              (*(code *)(*DAT_803dd6cc + 8))(0x1e,1);
-              *(undefined *)(iVar12 + 0x2f) = 6;
-              *(undefined2 *)(iVar12 + 0x24) = 3;
-              *(undefined2 *)(iVar12 + 0x26) = 0;
-              *(undefined2 *)(iVar12 + 0x24) = 7;
-              FUN_80006824((uint)param_9,SFXmn_sml_trex_fstep);
-              FUN_80006824((uint)param_9,SFXwp_roboalarm);
-            }
-          }
-          else {
-            *(float *)(iVar12 + 0xc) = *(float *)(iVar12 + 0xc) - lbl_803DC074;
-            if (*(float *)(iVar12 + 0xc) <= lbl_803E5C64) {
-              *(undefined *)(iVar12 + 0x2f) = 10;
-              (*(code *)(*DAT_803dd6cc + 8))(0x1e,1);
-              *(float *)(iVar12 + 8) = lbl_803E5C80;
-              *(undefined2 *)(iVar12 + 0x24) = 7;
-              FUN_80006824((uint)param_9,SFXwp_roboalarm);
-            }
-          }
-          break;
+            break;
         case 7:
-          *(undefined2 *)(iVar12 + 0x24) = 3;
-          *(float *)(iVar12 + 4) = lbl_803E5C70;
-          *(float *)(iVar12 + 8) = lbl_803E5C74;
-          break;
+            GameBit_Set(0x129, 0);
+            sub[0x2f] = 8;
+            break;
         case 8:
-          *(undefined2 *)(iVar12 + 0x24) = 2;
-          *(float *)(iVar12 + 4) = lbl_803E5C70;
-          *(float *)(iVar12 + 8) = lbl_803E5C74;
-          break;
-        case 9:
-          *(undefined2 *)(iVar12 + 0x24) = 8;
-          *(float *)(iVar12 + 4) = lbl_803E5C70;
-          *(float *)(iVar12 + 8) = lbl_803E5C74;
+            sub[0x2f] = 0;
+            *(f32 *)(sub + 4) = z;
+            *(s16 *)(sub + 0x20) = 0;
+            *(s16 *)(sub + 0x22) = 0;
+            *(s16 *)(sub + 0x24) = 0;
+            *(s16 *)(sub + 0x26) = -1;
+            sub[0x2e] = 0;
+            sub[0x30] = 0;
+            *(f32 *)(sub + 8) = lbl_803E4FF0;
+            GameBit_Set(0x129, 1);
+            GameBit_Set(0xb9d, 0);
+            GameBit_Set(0xa6d, 0);
+            GameBit_Set(0xa6f, 0);
+            GameBit_Set(0xa70, 0);
+            GameBit_Set(0x143, 0);
+            sub[0x30] = 0;
+            *(s16 *)(sub + 0x26) = -1;
+            break;
         }
-      }
-      else {
-        if (((*(short *)(iVar12 + 0x24) == 1) && (*(char *)(iVar12 + 0x31) == '\0')) &&
-           (*(float *)(iVar12 + 4) < *(float *)(iVar12 + 0x14))) {
-          uVar10 = randomGetRange(0,10);
-          if (7 < (int)uVar10) {
-            FUN_80006824((uint)param_9,0x345);
-          }
-          *(undefined *)(iVar12 + 0x31) = 1;
-        }
-        *(float *)(iVar12 + 4) = *(float *)(iVar12 + 4) - lbl_803DC074;
-        if (*(float *)(iVar12 + 4) < lbl_803E5C64) {
-          *(float *)(iVar12 + 4) = lbl_803E5C64;
-        }
-      }
-      break;
-    case 6:
-      FUN_80017698(0xb9d,0);
-      FUN_80006770(3);
-      uVar10 = FUN_80294cd0(iVar9,8);
-      if (uVar10 == '\0') {
-        *(undefined *)(iVar12 + 0x2f) = 7;
-        (*(code *)(*DAT_803dd6d4 + 0x48))(1,param_9,0xffffffff);
-      }
-      else {
-        FUN_80017698(0x129,1);
-        *(undefined *)(iVar12 + 0x2f) = 7;
-      }
-      break;
-    case 7:
-      FUN_80017698(0x129,0);
-      *(undefined *)(iVar12 + 0x2f) = 8;
-      break;
-    case 8:
-      *(undefined *)(iVar12 + 0x2f) = 0;
-      *(float *)(iVar12 + 4) = fVar2;
-      *(undefined2 *)(iVar12 + 0x20) = 0;
-      *(undefined2 *)(iVar12 + 0x22) = 0;
-      *(undefined2 *)(iVar12 + 0x24) = 0;
-      *(undefined2 *)(iVar12 + 0x26) = 0xffff;
-      *(undefined *)(iVar12 + 0x2e) = 0;
-      *(undefined *)(iVar12 + 0x30) = 0;
-      *(float *)(iVar12 + 8) = lbl_803E5C88;
-      FUN_80017698(0x129,1);
-      FUN_80017698(0xb9d,0);
-      FUN_80017698(0xa6d,0);
-      FUN_80017698(0xa6f,0);
-      FUN_80017698(0xa70,0);
-      FUN_80017698(0x143,0);
-      *(undefined *)(iVar12 + 0x30) = 0;
-      *(undefined2 *)(iVar12 + 0x26) = 0xffff;
-      break;
-    case 10:
-      FUN_80017698(0xa6f,1);
-      *(undefined *)(iVar12 + 0x2f) = 8;
     }
-  }
-  else {
-    *(float *)(iVar12 + 8) = *(float *)(iVar12 + 8) - lbl_803DC074;
-    if (*(float *)(iVar12 + 8) <= fVar2) {
-      *(float *)(iVar12 + 8) = fVar2;
-    }
-  }
-  return;
 }
 
 /*
@@ -944,3 +959,233 @@ void ecsh_creator_init(s16 *obj, s8 *def) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *Obj_GetPlayerObject(void);
+extern void fn_80296518(int *player, int a, int b);
+extern int *gMapEventInterface;
+extern int fn_801C5CE4(void *objArg, int unused, void *eventListArg);
+extern int objCreateLight(int a, int b);
+extern int lbl_803DDBC0;
+extern s16 *lbl_803DDBC4;
+extern f32 lbl_803E4FCC;
+extern f32 lbl_803E4FD0;
+
+typedef struct EcshShrineByte15 {
+    u8 flag : 1;
+    u8 rest : 7;
+} EcshShrineByte15;
+
+int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
+    u8 *sub;
+    int *player;
+    int i;
+    int idx;
+    u8 ev;
+    void *light;
+
+    sub = *(u8 **)((char *)obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    *(s16 *)((char *)seq + 0x70) = -1;
+    seq[0x56] = 0;
+    for (i = 0; i < seq[0x8b]; i++) {
+        idx = i + 0x81;
+        ev = seq[idx];
+        if (ev != 0) {
+            switch (ev) {
+            case 3:
+                ((EcshShrineByte15 *)(sub + 0x15))->flag = 1;
+                break;
+            case 7:
+                fn_80296518(player, 0x80, 1);
+                GameBit_Set(0x12b, 1);
+                GameBit_Set(0xc85, 1);
+                (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(0xb, 5);
+                break;
+            case 14:
+                *(s16 *)((char *)obj + 6) |= 0x4000;
+                light = *(void **)sub;
+                if (light != NULL) {
+                    lightFn_8001db6c(light, 0, lbl_803E5038);
+                }
+                break;
+            case 15:
+                *(s16 *)((char *)obj + 6) &= ~0x4000;
+                light = *(void **)sub;
+                if (light != NULL) {
+                    lightFn_8001db6c(light, 0, lbl_803E5038);
+                }
+                break;
+            }
+        }
+        seq[idx] = 0;
+    }
+    return 0;
+}
+
+void ecsh_shrine_init(s16 *obj, s8 *def) {
+    int *sub = *(int **)((char *)obj + 0xb8);
+    u8 gv;
+    lbl_803DDBC0 = 0;
+    lbl_803DDBC4 = 0;
+    *obj = (s16)((s32)def[0x18] << 8);
+    *(u8 *)((char *)sub + 0x2f) = 0;
+    *(u8 *)((char *)sub + 0x30) = 0;
+    *(f32 *)((char *)sub + 4) = lbl_803E4FCC;
+    *(s16 *)((char *)sub + 0x20) = 0;
+    *(s16 *)((char *)sub + 0x22) = 0;
+    *(s16 *)((char *)sub + 0x24) = 0;
+    *(s16 *)((char *)sub + 0x26) = -1;
+    *(u8 *)((char *)sub + 0x2e) = 0;
+    *(int *)((char *)sub + 0x34) = 0;
+    *(void **)((char *)obj + 0xbc) = (void *)fn_801C5CE4;
+    ObjMsg_AllocQueue(obj, 4);
+    GameBit_Set(0xba5, 1);
+    GameBit_Set(0x129, 1);
+    GameBit_Set(0x143, 0);
+    *(s16 *)((char *)sub + 0x18) = 0xc;
+    *(s16 *)((char *)sub + 0x1c) = 0x1e;
+    *(f32 *)((char *)sub + 8) = lbl_803E4FD0;
+    *(s16 *)((char *)sub + 0x1a) = 0;
+    *(s16 *)((char *)sub + 0x1e) = 0;
+    gv = GameBit_Get(0x58b);
+    *(u8 *)((char *)sub + 0x32) = gv;
+    lbl_803DDBC4 = obj;
+    ObjGroup_AddObject(obj, 0xb);
+    *(int *)((char *)obj + 0xf4) = 1;
+    if (*(void **)sub == NULL) {
+        *(int *)sub = objCreateLight(0, 1);
+    }
+    GameBit_Set(0xefa, 1);
+}
+
+extern int *Resource_Acquire(int id, int b);
+extern void Resource_Release(int *res);
+extern void Sfx_PlayFromObject(s16 *obj, int sfxId);
+extern u8 *mmAlloc(int size, int tag, int p);
+extern int Obj_SetupObject(u8 *def, int a, int b, int c, int d);
+extern u8 Obj_IsLoadingLocked(void);
+extern u8 framesThisStep;
+
+void ecsh_creator_update(s16 *obj) {
+    u8 *def;
+    s16 *sub;
+    int *res;
+    u8 *p;
+    int ret;
+
+    def = *(u8 **)((char *)obj + 0x4c);
+    sub = *(s16 **)((char *)obj + 0xb8);
+    if (*(int *)((char *)obj + 0xf8) == 0 && GameBit_Get(sub[2]) != 0) {
+        res = Resource_Acquire(0x82, 1);
+        (*(void (**)(s16 *, int, int, int, int, int))(*(int *)res + 4))(obj, 0, 0, 1, -1, 0);
+        (*(void (**)(s16 *, int, int, int, int, int))(*(int *)res + 4))(obj, 1, 0, 1, -1, 0);
+        Sfx_PlayFromObject(obj, 0x16d);
+        Resource_Release(res);
+        sub[1] = 1;
+        *(int *)((char *)obj + 0xf8) = 1;
+    }
+    if (sub[1] != 0) {
+        *sub = *sub - sub[1] * framesThisStep;
+    }
+    if (Obj_IsLoadingLocked() != 0 && *sub < 1) {
+        p = mmAlloc(0x38, 0xe, 0);
+        *(f32 *)(p + 8) = *(f32 *)(def + 8);
+        *(f32 *)(p + 0xc) = *(f32 *)(def + 0xc);
+        *(f32 *)(p + 0x10) = *(f32 *)(def + 0x10);
+        *(s16 *)p = 0x11;
+        *(int *)(p + 0x14) = -1;
+        p[4] = def[4];
+        p[5] = def[5];
+        p[6] = def[6];
+        p[7] = def[7];
+        p[0x27] = 3;
+        p[0x28] = 0;
+        *(s16 *)(p + 0x18) = sub[2] + *(s8 *)(def + 0x1f);
+        *(s16 *)(p + 0x30) = -1;
+        *(s8 *)(p + 0x2a) = (s8)(*obj >> 8);
+        p[0x2b] = 2;
+        *(s16 *)(p + 0x20) = 0;
+        *(s16 *)(p + 0x1e) = 0;
+        *(s16 *)(p + 0x22) = -1;
+        p[0x29] = 0xff;
+        *(s8 *)(p + 0x2e) = -1;
+        *(s16 *)(p + 0x24) = 0;
+        *(s16 *)(p + 0x2c) = 0;
+        *(u16 *)(p + 0x34) = 0xFFFF;
+        *(s16 *)(p + 0x1a) = 0;
+        *(u8 *)(p + 0x32) = sub[4];
+        ret = Obj_SetupObject(p, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30));
+        if (ret != 0) {
+            *(u8 *)(*(int *)(ret + 0xb8) + 0x404) = 0x20;
+        }
+        *sub = 100;
+        sub[1] = 0;
+    }
+}
+
+extern void ObjAnim_AdvanceCurrentMove(s16 *obj, f32 a, f32 b, u8 *buf);
+extern int getAngle(f32 dx, f32 dz);
+extern f32 Vec_xzDistance(f32 *a, f32 *b);
+extern f32 timeDelta;
+extern f32 lbl_803E5000;
+extern f32 lbl_803E5004;
+extern f32 lbl_803E5008;
+extern f32 lbl_803E500C;
+extern f32 lbl_803E5010;
+extern f32 lbl_803E5014;
+extern f32 lbl_803E5018;
+extern f32 lbl_803E501C;
+extern f32 lbl_803E5020;
+extern f32 lbl_803E5024;
+extern f32 lbl_803E5028;
+extern f32 fn_80293E80(f32 angle);
+
+void fn_801C70F0(s16 *obj) {
+    u8 buf[32];
+    u8 *def;
+    u8 *sub;
+    int *player;
+    int diff;
+    f32 c1;
+    f32 dist;
+
+    def = *(u8 **)((char *)obj + 0x4c);
+    sub = *(u8 **)((char *)obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    if ((*(s16 *)((char *)obj + 6) & 0x4000) != 0) {
+        *obj = 0;
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)(def + 0xc);
+    } else {
+        *(s16 *)(sub + 0xc) = (s16)(*(s16 *)(sub + 0xc) + (int)(lbl_803E5000 * timeDelta));
+        *(s16 *)(sub + 0xe) = (s16)(*(s16 *)(sub + 0xe) + (int)(lbl_803E5004 * timeDelta));
+        *(s16 *)(sub + 0x10) = (s16)(*(s16 *)(sub + 0x10) + (int)(lbl_803E5008 * timeDelta));
+        *(f32 *)((char *)obj + 0x10) =
+            lbl_803E500C + (*(f32 *)(def + 0xc)
+                            + fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014));
+        c1 = fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xe)) / lbl_803E5014);
+        obj[2] = (int)(lbl_803E5018
+                       * (fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1));
+        c1 = fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0x10)) / lbl_803E5014);
+        obj[1] = (int)(lbl_803E5018
+                       * (fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1));
+        ObjAnim_AdvanceCurrentMove(obj, lbl_803E501C, timeDelta, buf);
+        if (player != NULL) {
+            diff = (getAngle(((f32 *)obj)[6] - ((f32 *)player)[6],
+                             ((f32 *)obj)[8] - ((f32 *)player)[8]) & 0xffff)
+                 - (*obj & 0xffff);
+            if (diff > 0x8000) {
+                diff = diff - 0xffff;
+            }
+            if (diff < -0x8000) {
+                diff = diff + 0xffff;
+            }
+            *obj = (s16)(*obj + (int)(((f32)diff * timeDelta) / lbl_803E5020));
+            dist = Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18));
+            if (dist <= lbl_803E5024) {
+                *(u8 *)((char *)obj + 0x36) = (u8)(int)(lbl_803E5028 * (dist / lbl_803E5024));
+            } else {
+                *(u8 *)((char *)obj + 0x36) = 0xff;
+            }
+        }
+    }
+}

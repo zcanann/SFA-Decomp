@@ -120,9 +120,11 @@ enum NwMammothRuntimeFlag {
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void nw_mammoth_update(int obj,int param_2)
 {
-  u8 *table;
+  u8 *table = lbl_803267C0;
   u8 *state;
   u8 *objDef;
   u8 stateIndex;
@@ -133,7 +135,6 @@ void nw_mammoth_update(int obj,int param_2)
   int triggerIndex;
 
   (void)param_2;
-  table = lbl_803267C0;
   state = *(u8 **)(obj + 0xb8);
   objDef = *(u8 **)(obj + 0x4c);
   if ((state[0x43c] & NW_MAMMOTH_RUNTIME_RESET_PATH) != 0) {
@@ -235,6 +236,9 @@ void nw_mammoth_update(int obj,int param_2)
   }
 }
 
+#pragma scheduling reset
+#pragma peephole reset
+
 /*
  * --INFO--
  *
@@ -242,6 +246,8 @@ void nw_mammoth_update(int obj,int param_2)
  * EN v1.0 Address: 0x801CF4F0
  * EN v1.0 Size: 668b
  */
+#pragma peephole off
+#pragma scheduling off
 void nw_mammoth_init(int obj, u8 *objDef, int isReload)
 {
   u32 pathParam;
@@ -308,6 +314,9 @@ void nw_mammoth_init(int obj, u8 *objDef, int isReload)
   }
   ObjGroup_AddObject(obj, 0x4d);
 }
+
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--

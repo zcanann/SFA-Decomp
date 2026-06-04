@@ -1,97 +1,95 @@
 #include "ghidra_import.h"
+#include "main/audio/mcmd.h"
 #include "main/unknown/autos/placeholder_802792F8.h"
-#include "main/unknown/autos/placeholder_80279608.h"
 
 extern void hwSetPriority(u8 voiceId, u32 priority);
 
 extern u8 vidListNodes[];
-extern u16 voicePrioSortRootListRoot;    /* sorted-list head (u16) */
+extern u16 voicePrioSortRootListRoot;
 
-#define voicePriorityLinks (vidListNodes + 0x8c0)
-#define voicePriorityGroupHeads (vidListNodes + 0x9c0)
-#define voicePrioritySortLinks (vidListNodes + 0xac0)
+typedef struct VoicePrioVoice {
+    u8 prev;
+    u8 next;
+    u16 user;
+} VoicePrioVoice;
+
+typedef struct VoicePrioRoot {
+    u16 next;
+    u16 prev;
+} VoicePrioRoot;
+
+/* Voice priority bookkeeping lives directly behind the vid node pool. */
+typedef struct VoicePrioBlock {
+    u8 vidNodes[0x8C0];
+    VoicePrioVoice prioVoices[64];   /* 0x8C0 */
+    u8 prioVoicesRoot[256];          /* 0x9C0 */
+    VoicePrioRoot prioRootList[256]; /* 0xAC0 */
+} VoicePrioBlock;
 
 /*
- * Inserts the voice into the new group's linked list (prepend) and
- * into the global priority-sorted list (sorted insert). Removes the
- * voice from any prior group first.
- *
- * EN v1.0 Address: 0x802795CC
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x80279608
- * EN v1.1 Size: 400b
+ * Insert the voice into the new priority group's list and keep the global
+ * group list sorted by priority.
  */
-void voiceSetPriority(int state, u8 newGroup)
-{
-    u32 voiceHandle = *(u32 *)(state + 0xf4);
-    u8 *nodes = vidListNodes;
-    register u32 voiceId = voiceHandle & 0xff;
-    u8 *slot = nodes + 0x8c0 + ((voiceHandle << 2) & 0x3fc);
-    u32 oldFirst;
+typedef struct VoicePrioPrev {
     u16 prev;
-    u16 cur;
-    u16 scan;
+    u16 pad;
+} VoicePrioPrev;
 
-    /* if already assigned to a group: short-circuit if same group, else remove */
-    if (*(u16 *)(slot + 2) == 1) {
-        if (*(u8 *)(state + 0x10c) == newGroup) {
+/* prev links viewed as their own table at +0xAC2 (matches target addressing) */
+#define ROOT_PREV(idx) (((VoicePrioPrev *)((u8 *)vb + 0xAC2))[idx].prev)
+
+void voiceSetPriority(McmdVoiceState *svoice, u8 prio)
+{
+    u32 v;
+    VoicePrioBlock *vb;
+    u16 li;
+    VoicePrioVoice *vps;
+    u16 root;
+    u16 i;
+
+    v = (u8)svoice->voiceHandle;
+    vb = (VoicePrioBlock *)vidListNodes;
+    vps = &vb->prioVoices[v];
+    if (vps->user == 1) {
+        if (svoice->priorityGroup == prio) {
             return;
         }
-        voiceRemovePriority(state);
+
+        voiceRemovePriority((int)svoice);
     }
 
-    *(u16 *)(slot + 2) = 1;
-    *(u8 *)(slot + 0) = 0xff;
-
-    /* prepend to new group's linked list */
-    {
-        int group = newGroup;
-        u8 *groupHead = nodes + group;
-        groupHead += 0x9c0;
-        oldFirst = *groupHead;
-        *(u8 *)(slot + 1) = oldFirst;
-        if (oldFirst != 0xff) {
-            /* group had voices: link old first to new voice */
-            (nodes + *groupHead * 4)[0x8c0] = (u8)voiceId;
-        } else {
-            /* group was empty: insert into the global priority list */
-            cur = voicePrioSortRootListRoot;
-            if (cur != 0xffff) {
-                if (group >= cur) {
-                    /* walk list: find first node with id > group */
-                    scan = cur;
-                    while ((scan != 0xffff) && (scan <= group)) {
-                        prev = scan;
-                        scan = *(u16 *)(nodes + 0xac0 + scan * 4);
-                    }
-                    cur = scan;
-                    /* insert after prev */
-                    *(u16 *)(nodes + 0xac0 + prev * 4) = (u16)group;
-                    *(u16 *)(nodes + 0xac2 + group * 4) = prev;
-                    *(u16 *)(nodes + 0xac0 + group * 4) = cur;
-                    if (cur != 0xffff) {
-                        *(u16 *)(nodes + 0xac2 + cur * 4) = (u16)group;
-                    }
-                } else {
-                    /* prepend: group's next = old head, old head's prev = group */
-                    *(u16 *)(nodes + 0xac0 + group * 4) = cur;
-                    *(u16 *)(nodes + 0xac2 + group * 4) = 0xffff;
-                    *(u16 *)(nodes + 0xac2 + cur * 4) = (u16)group;
-                    voicePrioSortRootListRoot = (u16)group;
+    vps->user = 1;
+    vps->prev = 0xff;
+    if ((vps->next = vb->prioVoicesRoot[prio]) != 0xFF) {
+        vb->prioVoices[vb->prioVoicesRoot[prio]].prev = v;
+    } else if ((root = voicePrioSortRootListRoot) != 0xFFFF) {
+        if (prio >= root) {
+            for (i = root; i != 0xFFFF; i = vb->prioRootList[i].next) {
+                if ((u16)i > prio) {
+                    break;
                 }
-            } else {
-                /* list empty: group becomes head and tail */
-                *(u16 *)(nodes + 0xac0 + group * 4) = 0xffff;
-                *(u16 *)(nodes + 0xac2 + group * 4) = 0xffff;
-                voicePrioSortRootListRoot = (u16)group;
+                li = i;
             }
+
+            vb->prioRootList[li].next = (u16)prio;
+            ROOT_PREV(prio) = li;
+            vb->prioRootList[prio].next = i;
+            if (i != 0xFFFF) {
+                ROOT_PREV(i) = prio;
+            }
+        } else {
+            vb->prioRootList[prio].next = root;
+            ROOT_PREV(prio) = 0xFFFF;
+            ROOT_PREV(root) = prio;
+            voicePrioSortRootListRoot = prio;
         }
-        *groupHead = (u8)voiceId;
+    } else {
+        vb->prioRootList[prio].next = 0xFFFF;
+        ROOT_PREV(prio) = 0xFFFF;
+        voicePrioSortRootListRoot = prio;
     }
 
-    *(u8 *)(state + 0x10c) = newGroup;
-    {
-        u32 prio = (*(u32 *)(state + 0x110) >> 15) | (((u32)newGroup & 0xff) << 24);
-        hwSetPriority((u8)*(u32 *)(state + 0xf4), prio);
-    }
+    vb->prioVoicesRoot[prio] = v;
+    svoice->priorityGroup = prio;
+    hwSetPriority(svoice->voiceHandle & 0xFF, ((u32)prio << 24) | (svoice->priorityValue >> 15));
 }

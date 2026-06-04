@@ -64,7 +64,6 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
@@ -354,9 +353,235 @@ extern undefined4 _DAT_803df140;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void DIMSnowHorn1_update(undefined4 param_1, undefined4 param_2, int param_3)
+typedef struct {
+    f32 f0;
+    f32 f4;
+    f32 f8;
+    s16 hc;
+    u8 pad_e[2];
+    f32 f10;
+    f32 f14;
+    f32 f18;
+    s16 h1c;
+    u16 h1e;
+    u16 h20;
+    u8 pad_22[2];
+} SnowHornEntry;
+
+typedef struct {
+    u8 pad[0x94];
+    u8 flag;
+} SnowHornFlags;
+
+extern void *Obj_GetPlayerObject(void);
+extern u8 lbl_80335030[];
+extern void fn_8003A168(int obj, int q);
+extern void characterDoEyeAnims(int obj, int q);
+extern void fn_8003B500(int obj, int q, f32 f);
+extern void fn_802BB4B4(int obj, int a, int slot);
+extern void buttonDisable(int a, int b);
+extern void setAButtonIcon(int icon);
+extern int getCurMapLayer(void);
+extern int GameBit_Set(int bit, int val);
+extern f32 Vec_distance(int a, int b);
+extern f32 getXZDistance(int a, int b);
+extern char *ObjGroup_FindNearestObject(int group, int obj, f32 *distInOut);
+extern void setMatrixFromObjectPos(f32 *out, void *vec);
+extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern int *gPathControlInterface;
+extern int *gNewCloudsInterface;
+extern int *gMapEventInterface;
+extern int *gGameUIInterface;
+extern u8 framesThisStep;
+extern f32 lbl_803E8234;
+extern f32 lbl_803E8240;
+extern f32 lbl_803E8258;
+extern f32 lbl_803E82AC;
+extern f32 lbl_803E82B0;
+extern f32 lbl_803E82B4;
+
+#pragma scheduling off
+#pragma peephole off
+
+void DIMSnowHorn1_update(int obj)
 {
+    f32 nearDist;
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+    f32 matrix[16];
+    u8 *base = lbl_80335030;
+    int player = (int)Obj_GetPlayerObject();
+    int data;
+    s8 c = -1;
+    char *found;
+    int inner;
+    char *p2;
+    int p;
+    s16 d;
+    u32 flip;
+    int flags;
+
+    data = *(int *)((char *)obj + 0xb8);
+    *(s16 *)((char *)data + 0xa86) = 5;
+    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    *(s16 *)((char *)*(int *)((char *)obj + 0x54) + 0xb2) = 9;
+    flags = ((SnowHornFlags *)(base + *(s16 *)((char *)data + 0x274)))->flag;
+    if (!(flags & 8)) {
+        ObjHitReactEntry *arm;
+        if (flags & 2) {
+            arm = (ObjHitReactEntry *)(base + 0x80);
+        } else {
+            arm = (ObjHitReactEntry *)(base + 0x6c);
+        }
+        *(u8 *)((char *)data + 0xd00) = ((u8 (*)(int, ObjHitReactEntry *, u32, u32, f32 *))ObjHitReact_Update)(obj, arm, 1, *(u8 *)((char *)data + 0xd00), (f32 *)((char *)data + 0xa94));
+        if (*(u8 *)((char *)data + 0xd00) != 0) {
+            fn_8003A168(obj, data + 0x980);
+            characterDoEyeAnims(obj, data + 0x980);
+            return;
+        }
+    }
+    if (*(u8 *)((char *)data + 0xa8a) == 2) {
+        *(u8 *)((char *)data + 0x25f) = 1;
+        fn_802BB4B4(obj, framesThisStep, -1);
+    } else {
+        f32 fz;
+        *(u8 *)((char *)data + 0x25f) = 0;
+        fz = lbl_803E8234;
+        *(f32 *)((char *)data + 0x294) = fz;
+        *(f32 *)((char *)data + 0x284) = fz;
+        *(f32 *)((char *)data + 0x280) = fz;
+        *(f32 *)((char *)obj + 0x24) = fz;
+        *(f32 *)((char *)obj + 0x28) = fz;
+        *(f32 *)((char *)obj + 0x2c) = fz;
+        (*(void (*)(int, int))(*(int *)(*gPathControlInterface + 0x20)))(obj, data + 4);
+        fn_802BB4B4(obj, framesThisStep, -1);
+    }
+    if (*(u8 *)((char *)data + 0xa8a) == 0) {
+        (*(void (*)(int))(*(int *)(*gNewCloudsInterface + 0x20)))(0);
+    } else {
+        (*(void (*)(int))(*(int *)(*gNewCloudsInterface + 0x20)))(1);
+    }
+    switch (*(u8 *)((char *)data + 0xa8c)) {
+    case 0:
+    case 5:
+        inner = *(int *)((char *)obj + 0xb8);
+        p2 = Obj_GetPlayerObject();
+        if (p2 != NULL
+            && Vec_distance((int)p2 + 0x18, obj + 0x18) < lbl_803E8240
+            && *(u8 *)((char *)inner + 0xa8a) == 0) {
+            *(u8 *)((char *)inner + 0x980) = 1;
+            *(f32 *)((char *)inner + 0x984) = *(f32 *)(p2 + 0xc);
+            *(f32 *)((char *)inner + 0x988) = *(f32 *)(p2 + 0x10);
+            *(f32 *)((char *)inner + 0x98c) = *(f32 *)(p2 + 0x14);
+        } else {
+            *(u8 *)((char *)inner + 0x980) = 0;
+        }
+        fn_8003B500(obj, data + 0x980, lbl_803E8234);
+        break;
+    }
+    switch (*(u8 *)((char *)data + 0xa8c)) {
+    case 1:
+    case 3:
+    case 4:
+        nearDist = lbl_803E8240;
+        found = ObjGroup_FindNearestObject(0x13, obj, &nearDist);
+        if (*(u8 *)((char *)data + 0xa8a) == 0 && *(s16 *)((char *)data + 0x274) == 7
+            && getXZDistance(player + 0x18, obj + 0x18) < lbl_803E82B4) {
+            if (found != NULL && (*(u8 *)(found + 0xaf) & 4)) {
+                setAButtonIcon(0x14);
+                if (*(u8 *)(found + 0xaf) & 1) {
+                    int layer = getCurMapLayer();
+                    (*(void (*)(int, int, int, int))(*(int *)(*gMapEventInterface + 0x24)))(player + 0xc, 0x584, layer, 0);
+                    buttonDisable(0, 0x100);
+                    GameBit_Set(0x3e3, 1);
+                    d = *(s16 *)((char *)obj + 0) - (u16)*(s16 *)found;
+                    if (d > 0x8000) {
+                        d = d - 0xffff;
+                    }
+                    if (d < -0x8000) {
+                        d = d + 0xffff;
+                    }
+                    if (d > 0x4000 || d < -0x4000) {
+                        GameBit_Set(0x18, 1);
+                    } else {
+                        GameBit_Set(0x5ba, 1);
+                    }
+                    if (*(u8 *)((char *)data + 0xa8c) == 3) {
+                        *(s16 *)((char *)data + 0xa88) = 1000;
+                        (*(void (*)(int, int))(*(int *)(*gGameUIInterface + 0x58)))(1000, 0x5d0);
+                    }
+                }
+            }
+        } else if (*(u8 *)((char *)data + 0xa8a) == 2) {
+            if (found != NULL && (*(u8 *)(found + 0xaf) & 4)) {
+                setAButtonIcon(0x15);
+                if (*(u8 *)(found + 0xaf) & 1) {
+                    buttonDisable(0, 0x100);
+                    GameBit_Set(0x3e3, 0);
+                    switch (*(u8 *)((char *)data + 0xa8c)) {
+                    case 1:
+                        c = 0;
+                        break;
+                    case 3:
+                        c = 1;
+                        break;
+                    case 4:
+                        c = 2;
+                        break;
+                    }
+                    d = *(s16 *)((char *)obj + 0) - (u16)*(s16 *)found;
+                    if (d > 0x8000) {
+                        d = d - 0xffff;
+                    }
+                    if (d < -0x8000) {
+                        d = d + 0xffff;
+                    }
+                    if (c >= 0) {
+                        SnowHornEntry *tbl = (SnowHornEntry *)base;
+                        int bit2;
+                        int cc;
+                        GameBit_Set(tbl[c].h1e, *(s16 *)(*(int *)(found + 0x4c) + 0x1a));
+                        bit2 = tbl[c].h20;
+                        cc = c;
+                        flip = 0;
+                        if (d > 0x4000 || d < -0x4000) {
+                            flip = 1;
+                        }
+                        GameBit_Set(bit2, cc ^ flip);
+                    }
+                    if (d > 0x4000 || d < -0x4000) {
+                        GameBit_Set(0x19, 1);
+                    } else {
+                        GameBit_Set(0x5bb, 1);
+                    }
+                    *(int *)((char *)data + 0x31c) = 0;
+                    (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x60)))();
+                    (*(void (*)(void))(*(int *)(*gMapEventInterface + 0x2c)))();
+                }
+            } else {
+                setAButtonIcon(0x13);
+            }
+        }
+        break;
+    }
+    characterDoEyeAnims(obj, data + 0x980);
+    v.mat[1] = *(f32 *)((char *)obj + 0xc);
+    v.mat[2] = *(f32 *)((char *)obj + 0x10);
+    v.mat[3] = *(f32 *)((char *)obj + 0x14);
+    v.angles[0] = *(s16 *)((char *)obj + 0);
+    v.angles[1] = *(s16 *)((char *)obj + 2);
+    v.angles[2] = *(s16 *)((char *)obj + 4);
+    v.mat[0] = lbl_803E8258;
+    setMatrixFromObjectPos(matrix, v.angles);
+    p = *(int *)((char *)obj + 0x64);
+    Matrix_TransformPoint(matrix, lbl_803E8234, lbl_803E82AC, lbl_803E82B0,
+                          (f32 *)((char *)p + 0x20), (f32 *)((char *)p + 0x24), (f32 *)((char *)p + 0x28));
 }
+
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1704,21 +1929,6 @@ void DIMSnowHorn1_initialise(void)
     *dst = (void *)textureLoad(*src, 0);
 }
 
-typedef struct {
-    f32 f0;
-    f32 f4;
-    f32 f8;
-    s16 hc;
-    u8 pad_e[2];
-    f32 f10;
-    f32 f14;
-    f32 f18;
-    s16 h1c;
-    u16 h1e;
-    u16 h20;
-    u8 pad_22[2];
-} SnowHornEntry;
-
 extern u8 lbl_80335030[];
 extern void ddh_cc_initinterrupts();
 extern int lbl_803E8230;
@@ -1832,7 +2042,7 @@ void dim2prisonmammoth_update(int obj)
     int p;
     *(u8 *)((char *)obj + 0xaf) &= ~8;
     if (((&lbl_803DC750)[*(s16 *)((char *)inner + 0x274)] & 8) == 0) {
-        *(u8 *)((char *)inner + 0x5fc) = ObjHitReact_Update(obj, lbl_803351A8, 1, *(u8 *)((char *)inner + 0x5fc), (void *)(inner + 0x390));
+        *(u8 *)((char *)inner + 0x5fc) = ((u8 (*)(int, ObjHitReactEntry *, u32, u32, f32 *))ObjHitReact_Update)(obj, lbl_803351A8, 1, *(u8 *)((char *)inner + 0x5fc), (f32 *)(inner + 0x390));
         if (*(u8 *)((char *)inner + 0x5fc) != 0) {
             fn_8003A168(obj, inner + 0x35c);
             characterDoEyeAnims(obj, inner + 0x35c);

@@ -96,103 +96,100 @@ extern f32 lbl_803E54D4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void dimlogfire_update(int obj)
 {
-  bool hitPulseB;
-  byte stateId;
-  float sparkAlpha;
-  s16 lightAlpha;
-  int light;
-  int tricky;
-  int *state;
-  float local_28;
-  float local_24;
-  float local_20;
+    int a;
+    int b;
+    int rand;
+    s16 alpha;
+    uint light;
+    int tricky;
+    int *state;
+    f32 local_28;
+    f32 local_24;
+    f32 local_20;
 
-  state = *(int **)(obj + 0xb8);
-  tricky = *(int *)(obj + 0x4c);
-  *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) | 8;
-  stateId = *(byte *)((int)state + 0x1a);
-  if (stateId != 3) {
-    if (stateId < 3) {
-      if (stateId == 1) {
-        if (*state != 0) {
-          lightFn_8001db6c(*state,1,lbl_803E4824);
+    state = *(int **)(obj + 0xb8);
+    tricky = *(int *)(obj + 0x4c);
+    *(u8 *)(obj + 0xaf) |= 8;
+    switch (*(u8 *)((u8 *)state + 0x1a)) {
+    case 1:
+        if (*(void **)state != NULL) {
+            lightFn_8001db6c(*state, 1, lbl_803E4824);
         }
-        Sfx_PlayFromObject(obj,SFXmn_eggylaugh216);
-        *(float *)(state + 4) = *(float *)(state + 4) - timeDelta;
-        if (lbl_803E4828 < *(float *)(state + 4)) {
-          tricky = 0;
+        Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
+        *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
+        if (*(f32 *)(state + 4) <= lbl_803E4828) {
+            a = 7;
+            *(f32 *)(state + 4) = *(f32 *)(state + 4) + lbl_803E482C;
+        } else {
+            a = 0;
         }
-        else {
-          tricky = 7;
-          *(float *)(state + 4) = *(float *)(state + 4) + lbl_803E482C;
-        }
-        *(float *)(state + 5) = *(float *)(state + 5) - timeDelta;
-        sparkAlpha = *(float *)(state + 5);
-        hitPulseB = sparkAlpha <= lbl_803E4828;
-        if (hitPulseB) {
-          *(float *)(state + 5) = sparkAlpha + lbl_803E4820;
+        *(f32 *)(state + 5) = *(f32 *)(state + 5) - timeDelta;
+        if (*(f32 *)(state + 5) <= lbl_803E4828) {
+            b = 1;
+            *(f32 *)(state + 5) = *(f32 *)(state + 5) + lbl_803E4820;
+        } else {
+            b = 0;
         }
         local_28 = lbl_803E4828;
         local_24 = lbl_803E482C;
         local_20 = lbl_803E4828;
-        fn_80098B18(obj,*(float *)(obj + 8),2,tricky,hitPulseB,(int)&local_28);
-        ObjHits_SetHitVolumeSlot(obj,0x1f,1,0);
-        goto LAB_801b0b30;
-      }
-      if (stateId != 0) {
-        if (*state != 0) {
-          lightFn_8001db6c(*state,0,lbl_803E4824);
+        fn_80098B18(obj, *(f32 *)(obj + 8), 2, a, b, (int)&local_28);
+        ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
+        break;
+    case 2:
+        if (*(void **)state != NULL) {
+            lightFn_8001db6c(*state, 0, lbl_803E4824);
         }
-        if (*(char *)(state + 7) < '\x01') {
-          ObjHits_DisableObject(obj);
-          *(undefined *)((int)state + 0x1a) = 1;
-          *(undefined *)((int)state + 0x1d) = 1;
-          GameBit_Set((int)*(short *)(tricky + 0x1e),1);
+        if (*(s8 *)((u8 *)state + 0x1c) <= 0) {
+            ObjHits_DisableObject(obj);
+            *(u8 *)((u8 *)state + 0x1a) = 1;
+            *(u8 *)((u8 *)state + 0x1d) = 1;
+            GameBit_Set(*(s16 *)(tricky + 0x1e), 1);
         }
         tricky = getTrickyObject();
-        if (tricky != 0) {
-          if ((*(byte *)(obj + 0xaf) & 4) != 0) {
-            (*(void (**)(int,int,int,int))(**(int **)(tricky + 0x68) + 0x28))(tricky,obj,1,4);
-          }
-          *(byte *)(obj + 0xaf) = *(byte *)(obj + 0xaf) & 0xf7;
+        if ((uint)tricky != 0) {
+            if ((*(u8 *)(obj + 0xaf) & 4) != 0) {
+                (*(void (**)(int, int, int, int))(**(int **)(tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
+            }
+            *(u8 *)(obj + 0xaf) &= ~8;
         }
-        ObjHits_SetHitVolumeSlot(obj,0,0,0);
-        goto LAB_801b0b30;
-      }
+        ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);
+        break;
+    case 4:
+        break;
+    default:
+        if (*(u8 *)((u8 *)state + 0x18) == 0) {
+            *(u8 *)((u8 *)state + 0x1a) = 1;
+            *(u8 *)((u8 *)state + 0x1d) = 1;
+        } else {
+            *(u8 *)((u8 *)state + 0x1a) = 2;
+        }
+        break;
     }
-    else if (stateId < 5) {
-      goto LAB_801b0b30;
+    if (*(s8 *)((u8 *)state + 0x1d) != 0) {
+        *(u8 *)((u8 *)state + 0x1d) = 0;
     }
-  }
-  if (*(char *)(state + 6) == '\0') {
-    *(undefined *)((int)state + 0x1a) = 1;
-    *(undefined *)((int)state + 0x1d) = 1;
-  }
-  else {
-    *(undefined *)((int)state + 0x1a) = 2;
-  }
-LAB_801b0b30:
-  if (*(char *)((int)state + 0x1d) != '\0') {
-    *(undefined *)((int)state + 0x1d) = 0;
-  }
-  light = *state;
-  if (((light != 0) && (*(char *)(light + 0x2f8) != '\0')) && (*(char *)(light + 0x4c) != '\0')) {
-    lightAlpha = (ushort)*(byte *)(light + 0x2f9) + *(char *)(light + 0x2fa) +
-                 (short)randomGetRange(-0x19,0x19);
-    if (lightAlpha < 0) {
-      lightAlpha = 0;
-      *(undefined *)(light + 0x2fa) = 0;
+    light = *state;
+    if (light != 0 && *(u8 *)(light + 0x2f8) != 0 && *(u8 *)(light + 0x4c) != 0) {
+        rand = randomGetRange(-0x19, 0x19);
+        light = *state;
+        alpha = *(u8 *)(light + 0x2f9) + (*(s8 *)(light + 0x2fa) + rand);
+        if (alpha < 0) {
+            alpha = 0;
+            *(u8 *)(light + 0x2fa) = 0;
+        } else if (alpha > 0xff) {
+            alpha = 0xff;
+            *(u8 *)(light + 0x2fa) = 0;
+        }
+        *(u8 *)(*state + 0x2f9) = alpha;
     }
-    else if (0xff < lightAlpha) {
-      lightAlpha = 0xff;
-      *(undefined *)(light + 0x2fa) = 0;
-    }
-    *(char *)(*state + 0x2f9) = (char)lightAlpha;
-  }
-  return;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -290,47 +287,46 @@ void FUN_801b0ae8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dimlogfire_init(int obj,int def)
+#pragma peephole off
+#pragma scheduling off
+void dimlogfire_init(int obj, int def)
 {
-  int eventActive;
-  u32 radius;
-  int *state;
-  
-  *(void **)(obj + 0xbc) = (void *)dimlogfire_SeqFn;
-  ObjGroup_AddObject(obj,0x31);
-  state = *(int **)(obj + 0xb8);
-  *(undefined *)(state + 8) = 0;
-  *(char *)(state + 6) = (char)*(short *)(def + 0x1a);
-  *(char *)(state + 7) = (char)*(short *)(def + 0x1c);
-  *(undefined *)((int)state + 0x1e) = *(undefined *)(state + 7);
-  eventActive = GameBit_Get((int)*(short *)(def + 0x1e));
-  if (eventActive != 0) {
-    *(undefined *)((int)state + 0x1a) = 1;
-    *(undefined *)((int)state + 0x1d) = 1;
-  }
-  *(ushort *)(obj + 0xb0) = *(ushort *)(obj + 0xb0) | 0x2000;
-  state[4] = (int)lbl_803E482C;
-  state[5] = (int)lbl_803E4820;
-  if (*state == 0) {
-    *state = objCreateLight(obj,1);
-  }
-  if (*state != 0) {
-    modelLightStruct_setField50(*state,2);
-    modelLightStruct_setColorsA8AC(*state,0xff,0x7f,0,0xff);
-    modelLightStruct_setColors100104(*state,0xff,0x7f,0,0xff);
-    radius = (int)(lbl_803E4830 * *(float *)(obj + 8)) ^ 0x80000000;
-    lightDistAttenFn_8001dc38
-              (*state,(float)((double)CONCAT44(0x43300000,radius) - lbl_803E4840),
-               lbl_803E4834 + (float)((double)CONCAT44(0x43300000,radius) - lbl_803E4840));
-    lightFn_8001db6c(*state,1,lbl_803E4828);
-    lightVecFn_8001dd88(*state,lbl_803E4828,lbl_803E4838,lbl_803E4828);
-    lightFn_8001d620(*state,1,3);
-    lightSetFieldB0(*state,0xff,0x5c,0,0xff);
-    fn_8001D730(*state,0,0xff,0x7f,0,0x87,lbl_803E483C * *(float *)(obj + 8));
-    fn_8001D714(*state,lbl_803E4834);
-  }
-  return;
+    int radius;
+    int *state;
+
+    *(void **)(obj + 0xbc) = (void *)dimlogfire_SeqFn;
+    ObjGroup_AddObject(obj, 0x31);
+    state = *(int **)(obj + 0xb8);
+    *(u8 *)((u8 *)state + 0x20) = 0;
+    *(u8 *)((u8 *)state + 0x18) = *(s16 *)(def + 0x1a);
+    *(s8 *)((u8 *)state + 0x1c) = (s8)*(s16 *)(def + 0x1c);
+    *(u8 *)((u8 *)state + 0x1e) = *(u8 *)((u8 *)state + 0x1c);
+    if (GameBit_Get(*(s16 *)(def + 0x1e)) != 0) {
+        *(u8 *)((u8 *)state + 0x1a) = 1;
+        *(u8 *)((u8 *)state + 0x1d) = 1;
+    }
+    *(u16 *)(obj + 0xb0) |= 0x2000;
+    *(f32 *)(state + 4) = lbl_803E482C;
+    *(f32 *)(state + 5) = lbl_803E4820;
+    if (*(void **)state == NULL) {
+        *state = objCreateLight(obj, 1);
+    }
+    if (*(void **)state != NULL) {
+        modelLightStruct_setField50(*state, 2);
+        modelLightStruct_setColorsA8AC(*state, 0xff, 0x7f, 0, 0xff);
+        modelLightStruct_setColors100104(*state, 0xff, 0x7f, 0, 0xff);
+        radius = (int)(lbl_803E4830 * *(f32 *)(obj + 8));
+        lightDistAttenFn_8001dc38(*state, (f32)radius, lbl_803E4834 + (f32)radius);
+        lightFn_8001db6c(*state, 1, lbl_803E4828);
+        lightVecFn_8001dd88(*state, lbl_803E4828, lbl_803E4838, lbl_803E4828);
+        lightFn_8001d620(*state, 1, 3);
+        lightSetFieldB0(*state, 0xff, 0x5c, 0, 0xff);
+        fn_8001D730(*state, 0, 0xff, 0x7f, 0, 0x87, lbl_803E483C * *(f32 *)(obj + 8));
+        fn_8001D714(*state, lbl_803E4834);
+    }
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -398,103 +394,104 @@ void dimsnowball_hitDetect(int *obj) {
     state[0] = 0;
 }
 
+#pragma scheduling off
 void dimsnowball_update(int obj)
 {
-  float currentX;
-  float currentY;
-  float currentZ;
-  float nextX;
-  float nextY;
-  float nextZ;
-  s16 pathIndex;
-  s16 prevIndex;
-  s16 nextIndex;
-  s16 nextNextIndex;
-  s16 lastIndex;
-  int model;
-  int player;
-  int *state;
-  f32 velocityLen;
+    s16 idx[4];
+    f32 x[4];
+    f32 y[4];
+    f32 z[4];
+    void *ap;
+    int *state;
+    int player;
+    int count;
+    int last;
+    u8 frames;
+    u8 *model;
+    f32 dy1;
+    f32 dy2;
+    f32 v24;
 
-  state = *(int **)(obj + 0xb8);
-  player = Obj_GetPlayerObject();
-  if (*state == 0) {
-    Obj_FreeObject(obj);
-    return;
-  }
-  pathIndex = (short)state[2];
-  lastIndex = lbl_803DBEE8 - 1;
-  if (pathIndex >= lastIndex) {
-    Obj_FreeObject(obj);
-    return;
-  }
-  prevIndex = pathIndex - 1;
-  if (prevIndex < 0) {
-    prevIndex = 0;
-  }
-  nextIndex = pathIndex + 1;
-  if (nextIndex >= lbl_803DBEE8) {
-    nextIndex = lastIndex;
-  }
-  nextNextIndex = pathIndex + 2;
-  if (nextNextIndex >= lbl_803DBEE8) {
-    nextNextIndex = lastIndex;
-  }
-  currentX = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[pathIndex * 3] ^ 0x80000000) -
-                    lbl_803E4858) * lbl_803E484C;
-  currentY = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[pathIndex * 3 + 1] ^ 0x80000000) -
-                    lbl_803E4858) * lbl_803E484C;
-  currentZ = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[pathIndex * 3 + 2] ^ 0x80000000) -
-                    lbl_803E4858) * lbl_803E484C;
-  nextX = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextIndex * 3] ^ 0x80000000) -
-                 lbl_803E4858) * lbl_803E484C;
-  nextY = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextIndex * 3 + 1] ^ 0x80000000) -
-                 lbl_803E4858) * lbl_803E484C;
-  nextZ = (float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextIndex * 3 + 2] ^ 0x80000000) -
-                 lbl_803E4858) * lbl_803E484C;
-  if (((nextY - ((float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[nextNextIndex * 3 + 1] ^
-                                             0x80000000) - lbl_803E4858) * lbl_803E484C) <=
-        lbl_803E4850) &&
-      (currentY - ((float)((double)CONCAT44(0x43300000,(int)lbl_80323BC0[prevIndex * 3 + 1] ^
-                                            0x80000000) - lbl_803E4858) * lbl_803E484C) <=
-       lbl_803E4850)) && (*(char *)(state + 3) < '\x01')) {
-    velocityLen = sqrtf(*(float *)(obj + 0x2c) * *(float *)(obj + 0x2c) +
-                        *(float *)(obj + 0x24) * *(float *)(obj + 0x24) +
-                        *(float *)(obj + 0x28) * *(float *)(obj + 0x28));
-    if ((*(ushort *)(player + 0xb0) & 0x1000) == 0) {
-      Sfx_PlayFromObject(obj,SFXfoot_run_jingle2);
+    ap = idx;
+    ap = x;
+    ap = y;
+    ap = z;
+    state = *(int **)(obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    if (*(void **)state == NULL) {
+        Obj_FreeObject(obj);
+        return;
     }
-    *(undefined *)(state + 3) = 0x1e;
-  }
-  *(float *)(obj + 0xc) = lbl_803E4850 * (nextX - currentX) + currentX;
-  *(float *)(obj + 0x10) = lbl_803E4850 * (nextY - currentY) + currentY;
-  *(float *)(obj + 0x14) = lbl_803E4850 * (nextZ - currentZ) + currentZ;
-  *(float *)(obj + 0xc) = *(float *)(obj + 0xc) + *(float *)(*state + 0xc);
-  *(float *)(obj + 0x10) = *(float *)(obj + 0x10) + *(float *)(*state + 0x10);
-  *(float *)(obj + 0x14) = *(float *)(obj + 0x14) + *(float *)(*state + 0x14);
-  *(float *)(obj + 0x24) = oneOverTimeDelta * (*(float *)(obj + 0xc) - *(float *)(obj + 0x80));
-  *(float *)(obj + 0x28) = oneOverTimeDelta * (*(float *)(obj + 0x10) - *(float *)(obj + 0x84));
-  *(float *)(obj + 0x2c) = oneOverTimeDelta * (*(float *)(obj + 0x14) - *(float *)(obj + 0x88));
-  state[2] = state[2] + framesThisStep;
-  if ('\0' < *(char *)(state + 3)) {
-    *(byte *)(state + 3) = *(char *)(state + 3) - framesThisStep;
-  }
-  *(short *)(obj + 2) =
-       (short)(int)-(lbl_803E4854 * -*(float *)(obj + 0x2c) -
-                    (float)((double)CONCAT44(0x43300000,(int)*(short *)(obj + 2) ^ 0x80000000) -
-                           lbl_803E4858));
-  *(short *)(obj + 4) =
-       (short)(int)-(lbl_803E4854 * *(float *)(obj + 0x24) -
-                    (float)((double)CONCAT44(0x43300000,(int)*(short *)(obj + 4) ^ 0x80000000) -
-                           lbl_803E4858));
-  model = *(int *)(obj + 0x54);
-  if (model != 0) {
-    *(ushort *)(model + 0x60) = *(ushort *)(model + 0x60) | 1;
-    *(undefined *)(model + 0x6e) = 4;
-    *(undefined *)(model + 0x6f) = 2;
-    *(undefined4 *)(model + 0x48) = 0x10;
-    *(undefined4 *)(model + 0x4c) = 0x10;
-  }
-  return;
+    frames = framesThisStep;
+    idx[1] = (s16)state[2];
+    count = lbl_803DBEE8;
+    last = count - 1;
+    if (idx[1] >= last) {
+        Obj_FreeObject(obj);
+        return;
+    }
+    idx[0] = idx[1] - 1;
+    if (idx[0] < 0) {
+        idx[0] = 0;
+    }
+    idx[2] = idx[1] + 1;
+    if (idx[2] >= count) {
+        idx[2] = last;
+    }
+    idx[3] = idx[1] + 2;
+    if (idx[3] >= count) {
+        idx[3] = last;
+    }
+    idx[0] *= 3;
+    x[0] = (f32)lbl_80323BC0[idx[0]] * lbl_803E484C;
+    y[0] = (f32)lbl_80323BC0[idx[0] + 1] * lbl_803E484C;
+    z[0] = (f32)lbl_80323BC0[idx[0] + 2] * lbl_803E484C;
+    idx[1] *= 3;
+    x[1] = (f32)lbl_80323BC0[idx[1]] * lbl_803E484C;
+    y[1] = (f32)lbl_80323BC0[idx[1] + 1] * lbl_803E484C;
+    z[1] = (f32)lbl_80323BC0[idx[1] + 2] * lbl_803E484C;
+    idx[2] *= 3;
+    x[2] = (f32)lbl_80323BC0[idx[2]] * lbl_803E484C;
+    y[2] = (f32)lbl_80323BC0[idx[2] + 1] * lbl_803E484C;
+    z[2] = (f32)lbl_80323BC0[idx[2] + 2] * lbl_803E484C;
+    idx[3] *= 3;
+    x[3] = (f32)lbl_80323BC0[idx[3]] * lbl_803E484C;
+    y[3] = (f32)lbl_80323BC0[idx[3] + 1] * lbl_803E484C;
+    z[3] = (f32)lbl_80323BC0[idx[3] + 2] * lbl_803E484C;
+    dy1 = y[1] - y[0];
+    dy2 = y[2] - y[3];
+    if (dy2 <= lbl_803E4850 && dy1 <= lbl_803E4850 && *(s8 *)((u8 *)state + 0xc) <= 0) {
+        sqrtf(*(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c) +
+              (*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x28) * *(f32 *)(obj + 0x28)));
+        if ((*(u16 *)(player + 0xb0) & 0x1000) == 0) {
+            Sfx_PlayFromObject(obj, SFXfoot_run_jingle2);
+        }
+        *(s8 *)((u8 *)state + 0xc) = 0x1e;
+    }
+    *(f32 *)(obj + 0xc) = lbl_803E4850 * (x[2] - x[1]) + x[1];
+    *(f32 *)(obj + 0x10) = lbl_803E4850 * (y[2] - y[1]) + y[1];
+    *(f32 *)(obj + 0x14) = lbl_803E4850 * (z[2] - z[1]) + z[1];
+    *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + *(f32 *)(*state + 0xc);
+    *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + *(f32 *)(*state + 0x10);
+    *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + *(f32 *)(*state + 0x14);
+    *(f32 *)(obj + 0x24) = oneOverTimeDelta * (*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80));
+    *(f32 *)(obj + 0x28) = oneOverTimeDelta * (*(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84));
+    *(f32 *)(obj + 0x2c) = oneOverTimeDelta * (*(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+    state[2] = state[2] + frames;
+    if (*(s8 *)((u8 *)state + 0xc) > 0) {
+        *(s8 *)((u8 *)state + 0xc) -= frames;
+    }
+    v24 = *(f32 *)(obj + 0x24);
+    *(s16 *)(obj + 2) = (int)-(lbl_803E4854 * -*(f32 *)(obj + 0x2c) - (f32)*(s16 *)(obj + 2));
+    *(s16 *)(obj + 4) = (int)-(lbl_803E4854 * v24 - (f32)*(s16 *)(obj + 4));
+    model = *(u8 **)(obj + 0x54);
+    if (model != NULL) {
+        *(s16 *)(model + 0x60) |= 1;
+        *(u8 *)(model + 0x6e) = 4;
+        *(u8 *)(model + 0x6f) = 2;
+        *(int *)(model + 0x48) = 0x10;
+        *(int *)(model + 0x4c) = 0x10;
+    }
 }
+#pragma scheduling reset
 #pragma peephole reset
