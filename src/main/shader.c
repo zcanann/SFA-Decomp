@@ -3670,3 +3670,93 @@ void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803DEBB8;
+extern f32 lbl_803DEBD4;
+extern f32 lbl_803DEBD8;
+extern f32 lbl_803DEBDC;
+extern f32 Vec_distance(f32* a, f32* b);
+extern void Camera_ProjectWorldSphere(f32 x, f32 y, f32 z, f32 radius, f32* outX, f32* outY,
+                                      f32* outZ, f32* outRadiusX, f32* outRadiusY, f32* outDepth);
+
+#pragma scheduling off
+#pragma peephole off
+int objUpdateOpacity(char* obj)
+{
+    u8 op;
+    char* ptr;
+    int alpha;
+    f32 range;
+    f32 d;
+    f32 near;
+    int* player;
+    u8 i;
+    f32 o1, o2, o3;
+    f32 sz;
+    f32 o5, o6;
+    f32 prod;
+
+    op = *(u8*)(obj + 0x36);
+    if (op == 0) {
+        *(u8*)(obj + 0x37) = 0;
+        return 0;
+    }
+    ptr = *(char**)(obj + 0x4C);
+    if (ptr != 0 && (*(u8*)(ptr + 5) & 1)) {
+        *(u8*)(obj + 0x37) = (u8)(((op + 1) * 255) >> 8);
+    } else {
+        range = *(f32*)(obj + 0x40);
+        if (range < lbl_803DEBB8) {
+            *(u8*)(obj + 0x37) = 0;
+            return 0;
+        }
+        player = Obj_GetPlayerObject();
+        if (ptr != 0 && (*(u8*)(ptr + 5) & 2) && player != 0) {
+            d = Vec_distance((f32*)(obj + 0x18), (f32*)((char*)player + 0x18));
+        } else {
+            d = Camera_DistanceToCurrentViewPosition(*(f32*)(obj + 0x18), *(f32*)(obj + 0x1c),
+                                                     *(f32*)(obj + 0x20));
+        }
+        if (d > range) {
+            *(u8*)(obj + 0x37) = 0;
+            return 0;
+        }
+        alpha = 255;
+        near = range - lbl_803DEBD4;
+        if (d > near) {
+            range = range - near;
+            d = d - near;
+            alpha = (int)(lbl_803DEBD8 * (lbl_803DEBDC - d / range));
+        }
+        Camera_ProjectWorldSphere(*(f32*)(obj + 0x18) - playerMapOffsetX, *(f32*)(obj + 0x1c),
+                                  *(f32*)(obj + 0x20) - playerMapOffsetZ,
+                                  *(f32*)(obj + 0xa8) * *(f32*)(obj + 8),
+                                  &o1, &o2, &o3, &sz, &o5, &o6);
+        sz = __fabs(sz);
+        sz = sz * gMapBlockWorldSize;
+        if (sz < (&lbl_803DEBCC)[5]) {
+            *(u8*)(obj + 0x37) = 0;
+            return 0;
+        }
+        if (sz < (&lbl_803DEBCC)[7]) {
+            alpha = (int)(((f32)alpha * (sz - (&lbl_803DEBCC)[5])) / (&lbl_803DEBCC)[6]);
+        }
+        *(u8*)(obj + 0x37) = (u8)((alpha * (*(u8*)(obj + 0x36) + 1)) >> 8);
+    }
+    if (*(u8*)(obj + 0x37) == 0) {
+        return 0;
+    } else {
+        prod = *(f32*)(obj + 0xa8) * *(f32*)(obj + 8);
+        for (i = 0; i < 5; i++) {
+            f32* plane = (f32*)(gViewFrustumPlanes + i * 20);
+            if (*(f32*)(obj + 0x1c) * plane[1] +
+                    plane[0] * (*(f32*)(obj + 0x18) - playerMapOffsetX) +
+                    plane[2] * (*(f32*)(obj + 0x20) - playerMapOffsetZ) + plane[3] + prod <
+                lbl_803DEBCC)
+                return 0;
+        }
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
