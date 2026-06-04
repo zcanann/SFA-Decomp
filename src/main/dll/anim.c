@@ -4598,7 +4598,7 @@ extern void ObjAnim_SetCurrentMove(void *obj, int move, f32 weight, int flag);
 void dbstealerworm_init(int *obj, u8 *def, int param3) {
     u8 *sub;
     int *p40c;
-    u8 mode;
+    int mode;
     int r;
 
     sub = *(u8**)((char*)obj + 0xb8);
@@ -5798,4 +5798,66 @@ void fn_80203144(int obj, int p2, int p3)
     }
 }
 #pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+void dfplevelcontrol_update(int obj)
+{
+    extern void *Obj_GetPlayerObject(void);
+    extern uint GameBit_Get(int);
+    extern void GameBit_Set(int, int);
+    extern void Sfx_PlayFromObject(int, u16);
+    extern void coordsToMapCell(f32, f32);
+    extern void fn_80204098(int);
+    extern void SCGameBitLatch_Update(void *, int, int, int, int, int);
+    extern void SCGameBitLatch_UpdateInverted(void *, int, int, int, int, int);
+    extern s16 lbl_803DC180;
+    extern f32 timeDelta;
+    int state = *(int *)(obj + 0xb8);
+    char *player;
+    u8 b1;
+    u8 b2;
+    u8 b3;
+    int mode;
+
+    player = Obj_GetPlayerObject();
+    b1 = GameBit_Get(0xd5d);
+    b2 = GameBit_Get(0xd59);
+    b3 = GameBit_Get(0xd5a);
+    if ((b1 != 0 && ((u32)*(u8 *)(state + 7) >> 7 & 1) == 0)
+        || (b2 != 0 && ((u32)*(u8 *)(state + 7) >> 6 & 1) == 0)
+        || (b3 != 0 && ((u32)*(u8 *)(state + 7) >> 5 & 1) == 0)) {
+        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+    }
+    ((DfpFlags7 *)(state + 7))->b80 = b1;
+    ((DfpFlags7 *)(state + 7))->b40 = b2;
+    ((DfpFlags7 *)(state + 7))->b20 = b3;
+    if (GameBit_Get(0x5e8) == 0 && GameBit_Get(0x5ee) != 0 && GameBit_Get(0x5ef) != 0) {
+        GameBit_Set(0x5e8, 1);
+    }
+    coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
+    mode = (u8)(**(int (**)(int))((char *)*(int *)gMapEventInterface + 0x40))(*(s8 *)(obj + 0xac));
+    switch (mode) {
+    case 1:
+        if (lbl_803DC180 != 0) {
+            lbl_803DC180 -= (int)timeDelta;
+            if (lbl_803DC180 <= 0) {
+                lbl_803DC180 = 0;
+            }
+        }
+        fn_80204320(obj);
+        break;
+    case 2:
+        fn_80204098(obj);
+        break;
+    case 4:
+        break;
+    case 0:
+        break;
+    }
+    SCGameBitLatch_Update((void *)(state + 8), 2, -1, -1, 0xdce, 0x95);
+    SCGameBitLatch_UpdateInverted((void *)(state + 8), 4, -1, -1, 0xdce, 0x37);
+    SCGameBitLatch_UpdateInverted((void *)(state + 8), 1, -1, -1, 0xdce, 0xe4);
+    GameBit_Set(0xdcf, 0);
+}
 #pragma scheduling reset

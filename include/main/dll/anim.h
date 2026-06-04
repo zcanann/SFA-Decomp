@@ -217,7 +217,7 @@ int dfplevelcontrol_getObjectTypeId(void);
 void dfplevelcontrol_free(int x);
 void dfplevelcontrol_render(void);
 void dfplevelcontrol_hitDetect(void);
-void dfplevelcontrol_update(void);
+void dfplevelcontrol_update(int obj);
 void dfplevelcontrol_init(int obj, int param2);
 void dfplevelcontrol_release(void);
 void dfplevelcontrol_initialise(void);
