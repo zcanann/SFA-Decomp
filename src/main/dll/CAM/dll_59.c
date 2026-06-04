@@ -10,9 +10,9 @@ extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *
 extern void curvesMove(void *curve);
 extern int getAngle(f32 dx, f32 dz);
 extern undefined camcontrol_getTargetPosition(int obj, s16 *target, f32 *outPos, s16 *outAngle);
-extern void camcontrol_buildPathPoints(s16 angleRange, s16 angleLimit, int *outPointCount,
-                                       f32 baseX, f32 baseZ, f32 targetX, f32 baseY,
-                                       f32 targetZ, f32 targetY);
+extern void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 baseY, f32 targetZ,
+                                       f32 targetY, s16 angleRange, s16 angleLimit,
+                                       int *outPointCount);
 extern int Camera_GetCurrentViewSlot();
 extern undefined4 FUN_8028688c();
 extern f32 sqrtf(f32 value);
@@ -206,11 +206,10 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
     *(void **)(gCamcontrolPathState + 0x1b4) = Curve_EvalBSpline;
     *(void **)(gCamcontrolPathState + 0x1b8) = Curve_BuildBSplineCoeffs;
 
-    camcontrol_buildPathPoints(pathAngle, 0x1555, &pointCount,
-                               localPos[0] - (relCos * pathScale),
+    camcontrol_buildPathPoints(localPos[0] - (relCos * pathScale),
                                localPos[2] - (relSin * pathScale),
                                *(f32 *)(obj + 0xc), localPos[1], *(f32 *)(obj + 0x14),
-                               *(f32 *)(obj + 0x10));
+                               *(f32 *)(obj + 0x10), pathAngle, 0x1555, &pointCount);
 
     pointOffset = pointCount * 4;
     for (i = pointCount; i < pointCount + 3; i++) {
