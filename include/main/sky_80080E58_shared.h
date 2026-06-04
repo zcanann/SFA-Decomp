@@ -42,7 +42,7 @@ extern int ObjSeq_func20(void *obj, u8 *seq, int cmd, int maxCount, int paramOff
 extern int seqEvalCondition(int condition, u8 *seq, int obj);
 extern int isGameTimerDisabled(void);
 extern void playerEnvFxFn_80088ad4(int envFxValue);
-extern void renderSunAndMoon(void);
+extern void renderSunAndMoon();
 extern void AudioStream_CancelPrepared(void);
 extern void *Obj_AllocObjectSetup(int size, int objectId);
 extern void *Obj_SetupObject(void *setup, int mode, int mapLayer, int objIndex, void *parent);
@@ -60,7 +60,7 @@ extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
 extern void renderFn_8008f904(void *state);
 extern void Obj_GetWorldPosition(void *obj, f32 *x, f32 *y, f32 *z);
-extern void Camera_GetCurrentViewSlot(void);
+extern s16 *Camera_GetCurrentViewSlot(void);
 extern int randomGetRange(int min, int max);
 extern int return0xFFFF_80008B6C(int obj, int a, int b, int c, int d, int e, int f);
 extern void objSeqUpdateMoreCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode);
@@ -162,6 +162,37 @@ extern f32 lbl_803DF088;
 extern void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2);
 extern f32 fn_80010C50(f32 *curve, f32 t, int mode);
 extern f32 *Camera_GetInverseViewMatrix(void);
+extern f32 Camera_GetFarPlane(void);
+extern void Camera_SetFarPlane(f32 dist, int mode);
+extern void Camera_RebuildProjectionMatrix(void);
+extern void mathFn_80021ac8(void *rot, f32 *vec);
+extern void objRender(int a, int b, int c, int d, void *obj, int mode);
+extern u16 lbl_803DD128;
+extern u16 lbl_803DD12A;
+extern u8 lbl_802C1F80[];
+extern u8 lbl_802C1F8C[];
+extern const f32 lbl_803DF098;
+extern const f32 lbl_803DF09C;
+extern const f32 lbl_803DF0A0;
+extern const f32 lbl_803DF0A4;
+extern const f32 lbl_803DF0A8;
+extern const f32 lbl_803DF0AC;
+extern const f32 lbl_803DF0B0;
+extern const f32 lbl_803DF0B4;
+extern const f32 lbl_803DF0B8;
+extern const f32 lbl_803DF0BC;
+extern const f32 lbl_803DF0C0;
+extern const f32 lbl_803DF0C4;
+
+typedef struct SkyVec3 {
+    f32 x, y, z;
+} SkyVec3;
+
+typedef struct SkyRotQ {
+    u16 rx, ry, rz;
+    f32 w;
+    f32 x, y, z;
+} SkyRotQ;
 extern void PSMTXMultVecSR(f32 *m, f32 *src, f32 *dst);
 extern f32 mathFn_80010c64(u8 *curve, f32 t, int mode);
 extern const f32 lbl_803DF108;

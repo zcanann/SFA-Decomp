@@ -592,7 +592,6 @@ int getSunPos(f32 *outTime)
     return 0;
 }
 #pragma dont_inline reset
-#pragma opt_common_subs reset
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -2047,5 +2046,192 @@ void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int
     lbl_803DD12C[slot * 0xa4 + 0x8a] = (u8)c13;
     lbl_803DD12C[slot * 0xa4 + 0xc0] = c2;
 }
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void renderSunAndMoon(int a, int b, int c, int d, int visible)
+{
+    SkyRotQ q1;
+    SkyRotQ q2;
+    f32 vec[3];
+    SkyVec3 sunDir;
+    SkyVec3 moonDir;
+    int v;
+    s16 *cam;
+    f32 far;
+    f32 yaw;
+    f32 scale;
+    f32 sunT;
+    f32 moonT;
+    f32 moonTC;
+    f32 riseT;
+    f32 time2;
+    u8 vis;
+    u8 *model;
+
+    cam = Camera_GetCurrentViewSlot();
+    sunDir = *(SkyVec3 *)lbl_802C1F80;
+    moonDir = *(SkyVec3 *)lbl_802C1F8C;
+    v = 0;
+    q1.x = pEXIInputFlag;
+    q1.y = pEXIInputFlag;
+    q1.z = pEXIInputFlag;
+    q1.w = EXIInputFlag;
+    q1.rz = 0;
+    q1.ry = 0;
+    q1.rx = 0;
+    q2.x = pEXIInputFlag;
+    q2.y = pEXIInputFlag;
+    q2.z = pEXIInputFlag;
+    q2.w = EXIInputFlag;
+    q2.rz = 0;
+    q2.ry = 0;
+    q2.rx = 0;
+    (*(void (**)(int *))((char *)*gSHthorntailAnimationInterface + 0x20))(&v);
+    if (cam != NULL && lbl_803DD12C != NULL) {
+        far = Camera_GetFarPlane();
+        Camera_SetFarPlane(lbl_803DF098, 0);
+        Camera_RebuildProjectionMatrix();
+        sunT = (*(f32 *)(lbl_803DD12C + 0x20c) - lbl_803DF084) / lbl_803DF09C;
+        if (sunT < pEXIInputFlag) {
+            sunT = pEXIInputFlag;
+        } else if (sunT > EXIInputFlag) {
+            sunT = EXIInputFlag;
+        }
+        if (sunT < lbl_803DF0A0) {
+            if (sunT < pEXIInputFlag) {
+                lbl_803DD128 = 0;
+            } else {
+                lbl_803DD128 = (u16)(int)(lbl_803DF0A4 * sunT);
+            }
+        } else {
+            if (sunT > lbl_803DF0A8) {
+                if (sunT > EXIInputFlag) {
+                    lbl_803DD128 = 0;
+                } else {
+                    lbl_803DD128 = (u16)(int)(lbl_803DF0A4 * (lbl_803DF0A0 - (sunT - lbl_803DF0A8)));
+                }
+            } else {
+                lbl_803DD128 = 0xff;
+            }
+        }
+        sunT *= lbl_803DF0AC;
+        riseT = (*(f32 *)(lbl_803DD12C + 0x20c) - lbl_803DF084) / lbl_803DF0B0;
+        if (riseT < pEXIInputFlag) {
+            riseT = pEXIInputFlag;
+        } else if (riseT > EXIInputFlag) {
+            riseT = EXIInputFlag - (riseT - EXIInputFlag);
+        }
+        scale = -(lbl_803DF0B4 * riseT - EXIInputFlag);
+        vec[0] = lbl_803DF0B8 * sunDir.x;
+        vec[1] = lbl_803DF0B8 * sunDir.y;
+        vec[2] = lbl_803DF0B8 * sunDir.z;
+        yaw = *(f32 *)(lbl_803DD12C + 0x1c);
+        q1.rx = (u16)(int)sunT;
+        mathFn_80021ac8(&q1, vec);
+        q1.w = EXIInputFlag;
+        q1.rz = (u16)(int)yaw;
+        q1.ry = 0;
+        q1.rx = 0;
+        mathFn_80021ac8(&q1, vec);
+        lbl_8030F2C8[0] = vec[0];
+        lbl_8030F2C8[1] = vec[1];
+        lbl_8030F2C8[2] = vec[2];
+        *(f32 *)(gSkySunObject + 0xc) = *(f32 *)(cam + 0x22) + (f32)(s16)(int)vec[0];
+        *(f32 *)(gSkySunObject + 0x10) = *(f32 *)(cam + 0x24) + (f32)(s16)(int)vec[1];
+        *(f32 *)(gSkySunObject + 0x14) = *(f32 *)(cam + 0x26) + (f32)(s16)(int)vec[2];
+        *(f32 *)(gSkySunObject + 8) = lbl_803DF0BC * scale;
+        *(s16 *)gSkySunObject = 0x10000 - cam[0];
+        *(s16 *)(gSkySunObject + 2) = cam[1];
+        *(s16 *)(gSkySunObject + 4) = 0;
+        gSkySunObject[0x37] = (u8)lbl_803DD128;
+        time2 = *(f32 *)(lbl_803DD12C + 0x20c);
+        if (time2 >= lbl_803DF088) {
+            moonT = time2 - lbl_803DF088;
+        } else {
+            moonT = time2 + lbl_803DF0C0;
+        }
+        moonTC = moonT / lbl_803DF0B0;
+        if (moonTC < pEXIInputFlag) {
+            moonTC = pEXIInputFlag;
+        } else if (moonTC > EXIInputFlag) {
+            moonTC = EXIInputFlag;
+        }
+        if (moonTC < lbl_803DF0A0) {
+            if (moonTC < pEXIInputFlag) {
+                lbl_803DD12A = 0;
+            } else {
+                lbl_803DD12A = (u16)(int)(lbl_803DF0A4 * moonTC);
+            }
+        } else {
+            if (moonTC > lbl_803DF0A8) {
+                if (moonTC > EXIInputFlag) {
+                    lbl_803DD12A = 0;
+                } else {
+                    lbl_803DD12A = (u16)(int)(lbl_803DF0A4 * (lbl_803DF0A0 - (moonTC - lbl_803DF0A8)));
+                }
+            } else {
+                lbl_803DD12A = 0xff;
+            }
+        }
+        moonTC *= lbl_803DF0AC;
+        riseT = moonT / lbl_803DF0C4;
+        if (riseT < pEXIInputFlag) {
+            riseT = pEXIInputFlag;
+        } else if (riseT > EXIInputFlag) {
+            riseT = EXIInputFlag - (riseT - EXIInputFlag);
+        }
+        scale = -(lbl_803DF0B4 * riseT - EXIInputFlag);
+        vec[0] = lbl_803DF0B8 * moonDir.x;
+        vec[1] = lbl_803DF0B8 * moonDir.y;
+        vec[2] = lbl_803DF0B8 * moonDir.z;
+        q2.rx = (u16)(int)moonTC;
+        mathFn_80021ac8(&q2, vec);
+        q2.w = EXIInputFlag;
+        q2.rz = (u16)(int)yaw;
+        q2.ry = 0;
+        q2.rx = 0;
+        mathFn_80021ac8(&q2, vec);
+        lbl_8030F2D4[0] = vec[0];
+        lbl_8030F2D4[1] = vec[1];
+        lbl_8030F2D4[2] = vec[2];
+        *(f32 *)((u8 *)gSkyMoonObject + 0xc) = *(f32 *)(cam + 0x22) + (f32)(s16)(int)vec[0];
+        *(f32 *)((u8 *)gSkyMoonObject + 0x10) = *(f32 *)(cam + 0x24) + (f32)(s16)(int)vec[1];
+        *(f32 *)((u8 *)gSkyMoonObject + 0x14) = *(f32 *)(cam + 0x26) + (f32)(s16)(int)vec[2];
+        *(f32 *)((u8 *)gSkyMoonObject + 8) = lbl_803DF0BC * scale;
+        *(s16 *)gSkyMoonObject = 0x10000 - cam[0];
+        *(s16 *)((u8 *)gSkyMoonObject + 2) = cam[1];
+        *(s16 *)((u8 *)gSkyMoonObject + 4) = 0;
+        vis = 0;
+        ((u8 *)gSkyMoonObject)[0x37] = (u8)lbl_803DD12A;
+        if (gSkySunObject[0x37] != 0) {
+            if (lbl_803DD12C != NULL) {
+                vis = (lbl_803DD12C[0x209] >> 7) & 1;
+            }
+            if (vis == 0 && (u8)visible != 0) {
+                model = Obj_GetActiveModel(gSkySunObject);
+                *(u16 *)(model + 0x18) &= ~8;
+                objRender(a, b, c, d, gSkySunObject, 1);
+            }
+        }
+        if (((u8 *)gSkyMoonObject)[0x37] != 0) {
+            if (lbl_803DD12C == NULL) {
+                vis = 0;
+            } else {
+                vis = (lbl_803DD12C[0x209] >> 7) & 1;
+            }
+            if (vis == 0 && (u8)visible != 0) {
+                model = Obj_GetActiveModel(gSkyMoonObject);
+                *(u16 *)(model + 0x18) &= ~8;
+                objRender(a, b, c, d, gSkyMoonObject, 1);
+            }
+        }
+        Camera_SetFarPlane(far, 0);
+        Camera_RebuildProjectionMatrix();
+    }
+}
+#pragma opt_common_subs reset
 #pragma scheduling reset
 #pragma peephole reset
