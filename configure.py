@@ -1393,7 +1393,7 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_8026F134.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026FD94.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_80271BFC.c", mw_version="GC/1.2.5n"),
-            Object(NonMatching, "main/unknown/autos/placeholder_80272F0C.c"),
+            Object(NonMatching, "main/unknown/autos/placeholder_80272F0C.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_802736D4.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_80273F50.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_802755E0.c", mw_version="GC/1.2.5n"),
