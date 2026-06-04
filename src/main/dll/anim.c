@@ -5105,7 +5105,7 @@ extern int fn_80201BD8(int obj, int p2, f32 t);
 extern int fn_802017A4(int obj, int p2, f32 t);
 extern int fn_80201358();
 extern int fn_80200E44(int obj, int p2, f32 t);
-extern int fn_80200A70();
+extern int fn_80200A70(int obj, int p2, f32 t);
 extern int fn_80200850();
 extern int fn_80200750();
 extern int fn_802004B0();
@@ -7143,6 +7143,149 @@ void fn_80204BF8(int obj)
         }
         break;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80200A70(int obj, int p2, f32 t)
+{
+    extern int Stack_IsFull(int sp);
+    extern void Stack_Push(int sp, int *args);
+    extern void fn_80137948(char *, ...);
+    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+    extern int Obj_GetPlayerObject(void);
+    extern int *ObjGroup_GetObjects(int, int *);
+    extern f32 Vec_xzDistance(int, int);
+    extern f32 vec3f_distanceSquared(int, int);
+    extern f32 sqrtf(f32);
+    extern int randomGetRange(int, int);
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E62B0;
+    extern f32 lbl_803E62B8;
+    extern f32 lbl_803E6300;
+    extern f32 lbl_803E6304;
+    extern f32 lbl_803E6308;
+    extern f32 lbl_803E630C;
+    extern f32 lbl_803E62CC;
+    extern u8 lbl_803293B8[];
+    char *tbl = (char *)lbl_803293B8;
+    int blob = *(int *)(obj + 0xb8);
+    int sub = *(int *)(blob + 0x40c);
+    int c30 = *(int *)(sub + 0x30);
+    s16 h;
+    int n;
+    int q;
+    int *objs;
+    int player;
+    int o;
+    int best;
+    int i;
+    int tmpB;
+    int tmpA;
+    f32 frac;
+    f32 ratio;
+    f32 ds;
+    f32 bestD;
+    int msg0[3];
+    int msgA[3];
+    int msgB[3];
+    int msgC[3];
+    int cnt;
+
+    *(u8 *)(sub + 0x15) &= ~4;
+    *(u8 *)(sub + 0x14) |= 2;
+    fn_80137948(tbl + 0x430, *(int *)(sub + 0x3c), *(int *)(sub + 0x18));
+    if (*(void **)(sub + 0x3c) == NULL) {
+        player = Obj_GetPlayerObject();
+        q = *(int *)(sub + 0x24);
+        msg0[0] = 0xf;
+        msg0[1] = 1;
+        msg0[2] = player;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, msg0);
+        }
+        *(u8 *)(sub + 0x34) = 1;
+        return 0;
+    }
+    if (*(s8 *)(p2 + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E62A8, 0);
+        *(u8 *)(p2 + 0x346) = 0;
+    }
+    *(f32 *)(p2 + 0x2a0) = lbl_803E6300;
+    frac = (f32)*(u8 *)(blob + 0x406) / lbl_803E62B8;
+    if (*(void **)(sub + 0x18) == NULL) {
+        h = *(s16 *)(sub + 0x1c);
+        if (h != -1) {
+            tmpA = *(int *)(sub + 0x30);
+            tmpB = *(int *)(sub + 0x2c);
+            q = *(int *)(sub + 0x24);
+            msgA[0] = *(int *)(sub + 0x28);
+            msgA[1] = tmpB;
+            msgA[2] = tmpA;
+            if (Stack_IsFull(q) == 0) {
+                Stack_Push(q, msgA);
+            }
+            q = *(int *)(sub + 0x24);
+            msgB[0] = 9;
+            msgB[1] = 0;
+            msgB[2] = h;
+            if (Stack_IsFull(q) == 0) {
+                Stack_Push(q, msgB);
+            }
+            *(u8 *)(sub + 0x34) = 1;
+            *(s16 *)(sub + 0x1c) = -1;
+        }
+    }
+    if (((u32)*(u8 *)(sub + 0x44) >> 5 & 1) != 0) {
+        fn_80202A2C(obj, (int *)(tbl + 0x344), (f32 *)(tbl + 0x354), 4, frac);
+    }
+    player = Obj_GetPlayerObject();
+    ratio = (Vec_xzDistance(obj + 0x18, player + 0x18) - lbl_803E6304) / (lbl_803E6308 * (f32)*(u8 *)(blob + 0x406));
+    n = (int)(ratio < lbl_803E62A8 ? lbl_803E62A8 : (ratio > lbl_803E62B0 ? lbl_803E62B0 : ratio));
+    fn_80137948(tbl + 0x444, n);
+    player = Obj_GetPlayerObject();
+    best = 0;
+    bestD = lbl_803E62A8;
+    objs = ObjGroup_GetObjects(c30, &cnt);
+    for (i = 0; i < cnt; i++) {
+        o = *objs;
+        if ((u32)o != (u32)player) {
+            ds = vec3f_distanceSquared(player + 0x18, o + 0x18);
+            if (ds > bestD) {
+                bestD = ds;
+                best = *objs;
+            }
+        }
+        objs++;
+    }
+    if ((u32)best != 0) {
+        sqrtf(bestD);
+    }
+    if ((u32)best != 0) {
+        if ((u32)best != (u32)obj) {
+            if (*(s16 *)(best + 0x46) == 0x539) {
+                *(int *)(p2 + 0x2d0) = best;
+                if (randomGetRange(0, n) == 0) {
+                    if ((**(int (**)(int, int, int))(*(int *)(*(int *)(best + 0x68)) + 0x24))(best, 0x82, *(int *)(sub + 0x18)) != 0) {
+                        *(int *)(sub + 0x3c) = 0;
+                        q = *(int *)(sub + 0x24);
+                        msgC[0] = 0xa;
+                        msgC[1] = 1;
+                        msgC[2] = best;
+                        if (Stack_IsFull(q) == 0) {
+                            Stack_Push(q, msgC);
+                        }
+                        *(u8 *)(sub + 0x34) = 1;
+                    }
+                } else {
+                    fn_80202C78(obj, best, lbl_803E630C, frac, lbl_803E62CC, t);
+                }
+            }
+        }
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
