@@ -4109,7 +4109,9 @@ void* fn_8006070C(int *obj, int idx) { return (char*)((int**)obj)[0x64/4] + idx 
 /* arr indexing pow2. */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void* fn_800606DC(int *obj, int idx) { return (char*)((int**)obj)[0x4c/4] + idx * 8; }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -7216,6 +7218,370 @@ int fn_80067B84(int cur, u8 *desc, int model, int flags, f32 scale,
                 return cur;
             }
         }
+    }
+    return cur;
+}
+
+/* mapLoadBlocksFn_800685cc — gather map-block collision triangles overlapping
+ * the query box into the buffer at cur; returns advanced cursor. */
+extern u8 *mapGetBlockAtPos(int x, int z, int layer);
+extern int fn_8001F978(void *p, int size, int *offIn, int *offOut, int base);
+extern void cacheFn_800229c4(int n);
+extern f32 fastFloorf(f32 x);
+extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
+extern f32 PSVECMag(f32 *v);
+extern int lbl_803DCDC8;
+extern int lbl_803DCDCC;
+
+int mapLoadBlocksFn_800685cc(cur, x0, y0, z0, x1, y1, z1, flags, doEdges)
+int cur;
+int x0;
+int y0;
+int z0;
+int x1;
+int y1;
+int z1;
+int flags;
+u8 doEdges;
+{
+    int cells[16];
+    f32 e2[3];
+    f32 e1[3];
+    f32 e0[3];
+    f32 verts[6];
+    f32 v0[3];
+    f32 en[3];
+    int offA;
+    int offB;
+    int offC;
+    int gx0, gz0, gx1, gz1;
+    int count, layer;
+    int *cellp, *cw;
+    int *descp, *dw;
+    int *firstp;
+    int f40, f80, f200, f120, f20, f8, f100, f4;
+    int last, i;
+    int dmaflip;
+    u8 typeb;
+
+    x0 = x0 - lbl_803DCDC8;
+    z0 = z0 - lbl_803DCDCC;
+    x1 = x1 - lbl_803DCDC8;
+    z1 = z1 - lbl_803DCDCC;
+    if (x0 > x1) {
+        x0 ^= x1;
+        x1 ^= x0;
+        x0 ^= x1;
+    }
+    if (z0 > z1) {
+        z0 ^= z1;
+        z1 ^= z0;
+        z0 ^= z1;
+    }
+    gx0 = (int)fastFloorf((f32)x0 / lbl_803DECE0[0]);
+    gz0 = (int)fastFloorf((f32)z0 / lbl_803DECE0[0]);
+    gx1 = (int)fastFloorf((f32)x1 / lbl_803DECE0[0]);
+    gz1 = (int)fastFloorf((f32)z1 / lbl_803DECE0[0]);
+
+    count = 0;
+    layer = 0;
+    cellp = cells;
+    cw = cellp;
+    descp = (int *)lbl_8038DE44;
+    dw = descp;
+    do {
+        int gx, gz;
+        int *p1, *q1, *p2, *q2;
+        p1 = cw;
+        q1 = dw;
+        for (gx = gx0; gx <= gx1 && count < 16; gx++) {
+            p2 = p1;
+            q2 = q1;
+            for (gz = gz0; gz <= gz1 && count < 16; gz++) {
+                u8 *blk = mapGetBlockAtPos(gx, gz, layer);
+                if (blk != NULL) {
+                    *p2 = (int)blk;
+                    q2[0] = gx * 0x280;
+                    q2[2] = gz * 0x280;
+                    p2++;
+                    q2 += 3;
+                    p1++;
+                    q1 += 3;
+                    cw++;
+                    dw += 3;
+                    count++;
+                }
+            }
+        }
+        layer++;
+    } while (layer < 5);
+
+    if (count == 0) {
+        return cur;
+    }
+
+    {
+        int c0 = cells[0];
+        void *p = fn_800606DC((int *)c0, 0);
+        dmaflip = 0;
+        offA = 0;
+        fn_8001F978(p, *(u16 *)(c0 + 0x98) << 3, &offA, &offB, 0x2000);
+        fn_8001F978(*(void **)(c0 + 0x58), *(u16 *)(c0 + 0x90) * 6, &offB, &offC, 0x2000);
+    }
+    i = 0;
+    firstp = (int *)lbl_8038DE44;
+    f40 = (u16)flags & 0x40;
+    f80 = (u16)flags & 0x80;
+    f200 = (u16)flags & 0x200;
+    f120 = (u16)flags & 0x120;
+    f20 = (u16)flags & 0x20;
+    f8 = (u16)flags & 8;
+    f100 = (u16)flags & 0x100;
+    f4 = (u16)flags & 4;
+    last = count - 1;
+    for (; i < count; i++) {
+        int bb;
+        int vb;
+        int blk;
+        int relx0, relx1, relz0, relz1;
+        int dxoff, dzoff;
+        int mask;
+        u32 bit;
+        int pos, k;
+        int mask16;
+        u8 *tri;
+        u32 triEnd;
+
+        bb = offA;
+        vb = offB;
+        if (i < last) {
+            int next = cellp[1];
+            int nextBase;
+            void *p;
+            int c13, c14;
+            dmaflip ^= 0x2000;
+            nextBase = dmaflip + 0x2000;
+            p = fn_800606DC((int *)next, 0);
+            offA = dmaflip;
+            c13 = fn_8001F978(p, *(u16 *)(next + 0x98) << 3, &offA, &offB, nextBase);
+            c14 = fn_8001F978(*(void **)(next + 0x58), *(u16 *)(next + 0x90) * 6, &offB, &offC, nextBase);
+            cacheFn_800229c4((u8)(c13 + c14));
+        } else {
+            cacheFn_800229c4(0);
+        }
+
+        blk = *cellp;
+        relx0 = x0 - descp[0];
+        relx1 = x1 - descp[0];
+        relz0 = z0 - descp[2];
+        relz1 = z1 - descp[2];
+        descp[0] = descp[0] + lbl_803DCDC8;
+        descp[2] = descp[2] + lbl_803DCDCC;
+        if (relx0 < 0) relx0 = 0;
+        if (relx1 > 0x280) relx1 = 0x280;
+        if (relz0 < 0) relz0 = 0;
+        if (relz1 > 0x280) relz1 = 0x280;
+        dxoff = descp[0] - firstp[0];
+        dzoff = descp[2] - firstp[2];
+
+        mask = 0;
+        bit = 1;
+        pos = 0;
+        for (k = 2; k != 0; k--) {
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relx0 <= pos + 0x50 && relx1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+        }
+        pos = 0;
+        for (k = 2; k != 0; k--) {
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+            if (relz0 <= pos + 0x50 && relz1 >= pos) mask |= bit;
+            bit = (s16)(bit << 1);
+            pos += 0x50;
+        }
+        tri = *(u8 **)(blk + 0x50);
+        triEnd = (u32)tri + *(u16 *)(blk + 0x9a) * 0x14;
+        mask16 = (s16)mask;
+        for (; (u32)tri < triEnd; tri += 0x14) {
+            u32 tf = *(u32 *)(tri + 0x10);
+            u8 type;
+            int yoff;
+            int t0, vEnd;
+            u8 *vq;
+
+            if ((tf & 0x10) && f40) continue;
+            if (!(tf & 4) && f80) continue;
+            if (tf & 8) {
+                if (tf & 1) continue;
+                if (f200) continue;
+                type = 4;
+                if (f120 == 0) type |= 0x10;
+            } else {
+                if ((tf & 2) && f20 == 0) continue;
+                type = 2;
+            }
+            yoff = *(s16 *)(blk + 0x8e);
+            if (*(s16 *)(tri + 6) + yoff > y1) continue;
+            if (*(s16 *)(tri + 8) + yoff < y0) continue;
+            if (*(s16 *)(tri + 2) > relx1) continue;
+            if (*(s16 *)(tri + 4) < relx0) continue;
+            if (*(s16 *)(tri + 0xa) > relz1) continue;
+            if (*(s16 *)(tri + 0xc) < relz0) continue;
+            if (tf & 4) type |= 8;
+            typeb = (u8)fn_80060668((int *)tri);
+            t0 = *(u16 *)tri;
+            vq = (u8 *)(bb + t0 * 8);
+            vEnd = *(u16 *)(tri + 0x14);
+            for (; t0 < vEnd; t0++, vq += 8) {
+                s16 *vp;
+                int minX, maxX, minY, maxY, minZ, maxZ;
+                u8 maxYi, minYi;
+                u16 *tw;
+                u8 *vo;
+                f32 *vf;
+                int j;
+                f32 mag;
+
+                if ((mask16 & *(u16 *)(vq + 6) & 0xff) == 0) continue;
+                if ((mask16 & *(u16 *)(vq + 6) & 0xff00) == 0) continue;
+                vp = (s16 *)(vb + *(u16 *)vq * 6);
+                minX = vp[0] >> 3;
+                maxX = minX;
+                minY = (vp[1] >> 3) + *(s16 *)(blk + 0x8e);
+                maxY = minY;
+                minZ = vp[2] >> 3;
+                maxZ = minZ;
+                *(s16 *)(cur + 0x10) = minX + dxoff;
+                *(s16 *)(cur + 0x16) = minY;
+                *(s16 *)(cur + 0x1c) = minZ + dzoff;
+                v0[0] = __OSs16tof32((s16 *)(cur + 0x10));
+                v0[1] = __OSs16tof32((s16 *)(cur + 0x16));
+                v0[2] = __OSs16tof32((s16 *)(cur + 0x1c));
+                maxYi = 0;
+                minYi = 0;
+                tw = (u16 *)(vq + 2);
+                vo = (u8 *)(cur + 2);
+                vf = verts;
+                for (j = 1; j < 3; j++) {
+                    int x, yy, z;
+                    vp = (s16 *)(vb + *tw * 6);
+                    x = vp[0] >> 3;
+                    yy = (vp[1] >> 3) + *(s16 *)(blk + 0x8e);
+                    z = vp[2] >> 3;
+                    if (x > maxX) maxX = x;
+                    else if (x < minX) minX = x;
+                    if (yy > maxY) {
+                        maxY = yy;
+                        maxYi = j;
+                    } else if (yy < minY) {
+                        minY = yy;
+                        minYi = j;
+                    }
+                    if (z > maxZ) maxZ = z;
+                    else if (z < minZ) minZ = z;
+                    *(s16 *)(vo + 0x10) = x + dxoff;
+                    *(s16 *)(vo + 0x16) = yy;
+                    *(s16 *)(vo + 0x1c) = z + dzoff;
+                    vf[0] = __OSs16tof32((s16 *)(vo + 0x10));
+                    vf[1] = __OSs16tof32((s16 *)(vo + 0x16));
+                    vf[2] = __OSs16tof32((s16 *)(vo + 0x1c));
+                    tw++;
+                    vo += 2;
+                    vf += 3;
+                }
+                if (minY > y1) continue;
+                if (maxY < y0) continue;
+                if (minX > relx1) continue;
+                if (maxX < relx0) continue;
+                if (minZ > relz1) continue;
+                if (maxZ < relz0) continue;
+
+                PSVECSubtract(v0, verts, e0);
+                PSVECSubtract(verts, verts + 3, e1);
+                PSVECCrossProduct(e0, e1, (f32 *)(cur + 4));
+                mag = PSVECMag((f32 *)(cur + 4));
+                if (!(mag > __AR_Callback)) continue;
+                {
+                    f32 inv = lbl_803DECC4 / mag;
+                    PSVECScale((f32 *)(cur + 4), (f32 *)(cur + 4), inv);
+                }
+                if (f8) {
+                    if (*(f32 *)(cur + 8) >= __AR_Size || *(f32 *)(cur + 8) <= lbl_803DECEC) {
+                        if (type != 4) continue;
+                        if (f100 == 0) continue;
+                    }
+                }
+                if (f4) {
+                    if (*(f32 *)(cur + 8) < __AR_Size && *(f32 *)(cur + 8) > lbl_803DECEC) continue;
+                }
+                *(f32 *)cur = -PSVECDotProduct((f32 *)(cur + 4), v0);
+                if (doEdges) {
+                    int k22, deg, j2;
+                    f32 *ep;
+                    f32 eps = __AR_Callback;
+                    f32 one = lbl_803DECC4;
+                    PSVECSubtract(verts + 3, v0, e2);
+                    k22 = 0;
+                    deg = 0;
+                    j2 = 0;
+                    ep = e0;
+                    do {
+                        f32 m;
+                        PSVECCrossProduct((f32 *)(cur + 4), ep, en);
+                        m = PSVECMag(en);
+                        if (m > eps) {
+                            f32 inv = one / m;
+                            PSVECScale(en, en, inv);
+                            *(f32 *)(cur + (k22++) * 4 + 0x24) = en[0];
+                            *(f32 *)(cur + (k22++) * 4 + 0x24) = en[1];
+                            *(f32 *)(cur + (k22++) * 4 + 0x24) = en[2];
+                        } else {
+                            deg = 1;
+                            break;
+                        }
+                        ep += 3;
+                        j2++;
+                    } while (j2 < 3);
+                    if (deg) continue;
+                }
+                {
+                    u32 tf2 = *(u32 *)(tri + 0x10);
+                    u8 t2;
+                    if (tf2 & 8) {
+                        t2 = 0xe;
+                    } else {
+                        t2 = typeb;
+                    }
+                    if (tf2 & 0x20) type |= 0x40;
+                    *(s8 *)(cur + 0x48) = t2;
+                    *(u8 *)(cur + 0x4a) = (u8)((maxYi << 4) | minYi);
+                    *(s8 *)(cur + 0x49) = type;
+                    cur += 0x4c;
+                    if ((u32)cur >= lbl_803DCF70) {
+                        return cur;
+                    }
+                }
+            }
+        }
+        cellp++;
+        descp += 3;
     }
     return cur;
 }
