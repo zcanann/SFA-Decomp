@@ -405,12 +405,12 @@ void andross_update(int obj)
   switch (piVar14[0x1f]) {
   case 1:
         if (stateChanged) {
-          if (*(char *)(piVar14 + 0x2f) == '\0') {
-            androsshand_setState(piVar14[1],2,1);
-            androsshand_setState(piVar14[2],2,1);
+          if (*(u8 *)(piVar14 + 0x2f) != 0) {
+            *(undefined *)(piVar14 + 0x2f) = 0;
           }
           else {
-            *(undefined *)(piVar14 + 0x2f) = 0;
+            androsshand_setState(piVar14[1],2,1);
+            androsshand_setState(piVar14[2],2,1);
           }
           *(undefined *)((int)piVar14 + 0xae) = 10;
           *(undefined *)((int)piVar14 + 0xaf) = 10;
@@ -546,11 +546,13 @@ void andross_update(int obj)
         *(undefined *)(piVar14 + 0x2b) = 0;
         break;
       case 0x14:
-        if (*(char *)(piVar14 + 0x2b) == '\x01') {
-          piVar14[0x22] = 0xb;
-        }
-        else if (*(char *)(piVar14 + 0x2b) == '\0') {
+        switch (*(u8 *)(piVar14 + 0x2b)) {
+        case 0:
           piVar14[0x22] = 0x15;
+          break;
+        case 1:
+          piVar14[0x22] = 0xb;
+          break;
         }
         *(u8 *)(piVar14 + 0x2b) = *(u8 *)(piVar14 + 0x2b) ^ 1;
         break;
@@ -654,7 +656,7 @@ void andross_update(int obj)
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x22] = 2;
       piVar14[0x21] = 0;
     }
@@ -741,7 +743,7 @@ void andross_update(int obj)
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
@@ -1063,7 +1065,7 @@ LAB_8023c584:
     *(f32 *)(piVar14 + 0x34) = (lbl_803E7514 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       iVar12 = piVar14[0x22];
       if (((iVar12 == 0xc) || (iVar12 < 0xc)) || (0xd < iVar12)) {
         piVar14[0x22] = 0xc;
@@ -1311,7 +1313,7 @@ LAB_8023cbdc:
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
@@ -1355,7 +1357,7 @@ LAB_8023cbdc:
       fVar2 = lbl_803E74EC;
     }
     *(f32 *)(piVar14 + 0x2a) = fVar2;
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       *(u16 *)(*piVar14 + 6) = *(u16 *)(*piVar14 + 6) | 0x4000;
       piVar14[0x22] = 0x11;
     }
@@ -1396,7 +1398,7 @@ LAB_8023cbdc:
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74D4 * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
@@ -1407,7 +1409,7 @@ LAB_8023cbdc:
       *(f32 *)(iVar12 + 100) = lbl_8032C0E0[0];
       androsshand_setState(piVar14[1],0,0);
       androsshand_setState(piVar14[2],0,0);
-      if ((piVar14[0x1f] == 5) && (*(char *)(piVar14 + 0x2b) != '\0')) {
+      if ((piVar14[0x1f] == 5) && (*(u8 *)(piVar14 + 0x2b) != 0)) {
         GameBit_Set(0xe,1);
       }
     }
@@ -1423,7 +1425,7 @@ LAB_8023cbdc:
     for (iVar12 = 0; iVar12 < (int)(u32)*(u8 *)(iVar8 + 0xf8); iVar12 = iVar12 + 1) {
       *(s8 *)(ObjModel_GetRenderOp(iVar8,iVar12) + 0x43) = (int)fVar2;
     }
-    if ((piVar14[0x1f] == 5) && (*(char *)(piVar14 + 0x2b) == '\0')) {
+    if ((piVar14[0x1f] == 5) && (*(u8 *)(piVar14 + 0x2b) == 0)) {
       for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
         if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
           *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
@@ -1459,7 +1461,7 @@ LAB_8023d59c:
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x22] = 0x13;
     }
     break;
@@ -1477,7 +1479,7 @@ LAB_8023d59c:
       *(s16 *)(piVar14 + 0x26) = 0xffff;
     }
     Sfx_KeepAliveLoopedObjectSound(obj,0x469);
-    if ((piVar14[0x1f] == 5) && (*(char *)(piVar14 + 0x2b) == '\0')) {
+    if ((piVar14[0x1f] == 5) && (*(u8 *)(piVar14 + 0x2b) == 0)) {
       for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
         if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
           *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
@@ -1557,7 +1559,7 @@ LAB_8023d7cc:
       ObjAnim_SetCurrentMove(obj,0x14,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0E8[0];
     }
-    if ((piVar14[0x1f] == 5) && (*(char *)(piVar14 + 0x2b) == '\0')) {
+    if ((piVar14[0x1f] == 5) && (*(u8 *)(piVar14 + 0x2b) == 0)) {
       for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
         if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
           *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
@@ -1593,7 +1595,7 @@ LAB_8023db24:
     *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
@@ -1605,7 +1607,7 @@ LAB_8023db24:
       ObjAnim_SetCurrentMove(obj,4,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0A8[0];
     }
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
@@ -1747,7 +1749,7 @@ LAB_8023de5c:
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
     }
-    if (*(char *)(piVar14 + 0x2e) != '\0') {
+    if (*(u8 *)(piVar14 + 0x2e) != 0) {
       iVar12 = *piVar14;
       local_fc.x = (*(f32 *)(piVar14 + 0x30) - *(float *)(iVar12 + 0xc)) * lbl_803DC488;
       local_fc.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC488;
@@ -1827,16 +1829,14 @@ LAB_8023de5c:
     cVar11 = *(char *)(iVar12 + 0x23);
     if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
         (cVar11 = *(char *)(iVar5 + 0x23), cVar11 != '\x02')) && (cVar11 != '\x01')) {
-      if (*(float *)(obj + 0x98) < lbl_803E74DC) {
-        if (lbl_803E7568 < *(float *)(obj + 0x98)) {
-          *(s16 *)(piVar14 + 0x28) = 0;
-            androsshand_setState(piVar14[1],1,(u8)((piVar14[0x1f] == 4) + 1));
-          androsshand_setState(piVar14[2],1,(u8)((piVar14[0x1f] == 4) + 1));
-          *(u8 *)((int)piVar14 + 0xad) = *(u8 *)((int)piVar14 + 0xad) & 0xf9;
-        }
-      }
-      else {
+      if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
         piVar14[0x21] = 1;
+      }
+      else if (*(float *)(obj + 0x98) > lbl_803E7568) {
+        *(s16 *)(piVar14 + 0x28) = 0;
+          androsshand_setState(piVar14[1],1,(u8)((piVar14[0x1f] == 4) + 1));
+        androsshand_setState(piVar14[2],1,(u8)((piVar14[0x1f] == 4) + 1));
+        *(u8 *)((int)piVar14 + 0xad) = *(u8 *)((int)piVar14 + 0xad) & 0xf9;
       }
     }
     break;
@@ -1883,7 +1883,7 @@ LAB_8023de5c:
       local_b4 = local_9c;
       fn_8022D4AC(*piVar14,(int)&local_b4);
     }
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
@@ -1925,7 +1925,7 @@ LAB_8023de5c:
         ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 1;
       }
     }
-    if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
+    if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
       piVar14[0x21] = 1;
     }
     break;
@@ -1962,14 +1962,14 @@ LAB_8023de5c:
   *(float *)(obj + 0x10) = *(float *)(obj + 0x10) + *(float *)(obj + 0x28);
   *(float *)(obj + 0x14) = *(float *)(obj + 0x14) + *(float *)(obj + 0x2c);
   if (lbl_803E74D4 == *(f32 *)(piVar14 + 0x38)) {
-    if (*(char *)(piVar14 + 0x2e) == '\0') {
-      *(f32 *)(piVar14 + 0x38) = lbl_803DC4B0 * (*(f32 *)(piVar14 + 0x1c) - *(float *)(*piVar14 + 0x14));
-    }
-    else {
+    if (*(u8 *)(piVar14 + 0x2e) != 0) {
       fn_8023A6A4((int)piVar14,lbl_803DC4B4,lbl_803DC4B8,lbl_803E74D4);
     }
+    else {
+      *(f32 *)(piVar14 + 0x38) = lbl_803DC4B0 * (*(f32 *)(piVar14 + 0x1c) - *(float *)(*piVar14 + 0x14));
+    }
   }
-  if (*(int *)(*piVar14 + 0xc0) == 0) {
+  if (*(void **)(*piVar14 + 0xc0) == NULL) {
     local_cc = *(SunVec3 *)(piVar14 + 0x36);
     fn_8022D4CC(*piVar14,(int)&local_cc);
   }
