@@ -181,61 +181,138 @@ extern undefined2 uRam803de8b6;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_801E1AAC(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9)
-{
-  uint uVar1;
-  int iVar2;
-  int iVar3;
-  double dVar4;
-  
-  iVar3 = *(int *)(param_9 + 0xb8);
-  *(undefined4 *)(param_9 + 0xf4) = 7;
-  uVar1 = GameBit_Get(0x9f);
-  if (((uVar1 != 0) && (uVar1 = GameBit_Get(0xa0), uVar1 == 0)) &&
-     (uVar1 = GameBit_Get(0x91c), uVar1 != 0)) {
-    DAT_803de8ac = '\x01';
-    GameBit_Set(0xa0,1);
-    param_1 = (**(code **)(*DAT_803dd6cc + 8))(10,1);
-  }
-  fn_801E1588(param_9,iVar3);
-  if ((DAT_803de8ac != '\0') && (iVar2 = (**(code **)(*DAT_803dd6cc + 0x14))(), iVar2 != 0)) {
-    (**(code **)(*DAT_803dd6cc + 0xc))(0x50,1);
-    (**(code **)(*DAT_803dd6d4 + 0x48))(1,param_9,0xffffffff);
-    *(undefined *)(iVar3 + 0x70) = 3;
-    DAT_803de8ac = '\0';
-  }
-  (**(code **)(*DAT_803dd6e4 + 0x28))((double)lbl_803E6460,(double)lbl_803E6364);
-  (**(code **)(*DAT_803dd6e4 + 0x20))(0);
-  dVar4 = (double)FUN_80293f90();
-  if (*(char *)(iVar3 + 0x81) == '\0') {
-    if ((double)lbl_803E6464 <= dVar4) {
-      if ((double)lbl_803E6468 < dVar4) {
-        uVar1 = GameBit_Get(0xa71);
-        if (uVar1 == 0) {
-          FUN_80006824(param_9,SFXwp_crtsmsh6);
+extern void DBprotection_storeHomePosition(int obj);
+extern int ObjList_GetObjects(int *start, int *end);
+extern void Sfx_PlayFromObject(int obj, int sfxId);
+extern void Music_Trigger(s32 snd, s32 mode);
+extern f32 lbl_803E56CC;
+extern void Sfx_StopFromObject(int obj, int sfxId);
+extern u32 fn_801E2570(void);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShow(int id);
+extern f32 lbl_803E57F4;
+extern f32 lbl_803E57F8;
+extern f32 lbl_803E5790;
+extern f32 timeDelta;
+int fn_801E1AAC(int obj, int p2, int msgSrc) {
+    int state = *(int *)(obj + 0xb8);
+    int i;
+    *(s8 *)(obj + 0xac) = -1;
+    fn_801E1588(obj, state);
+    {
+        f32 z = lbl_803E56CC;
+        *(f32 *)(state + 0x44) = lbl_803E56CC;
+        *(f32 *)(state + 0x38) = z;
+        *(f32 *)(state + 0x3c) = z;
+        *(f32 *)(state + 0x40) = z;
+    }
+    *(void **)(msgSrc + 0xe8) = (void *)DBprotection_storeHomePosition;
+    for (i = 0; i < *(u8 *)(msgSrc + 0x8b); i++) {
+        switch (*(u8 *)(msgSrc + i + 0x81)) {
+        case 2:
+            if (*(u8 *)(state + 0x79) == 1) {
+                *(u8 *)(state + 0x79) = 0;
+            }
+            else {
+                *(u8 *)(state + 0x79) = 1;
+            }
+            break;
+        case 3: {
+            int start;
+            int end;
+            int *arr = (int *)ObjList_GetObjects(&start, &end);
+            for (i = start; i < end; i++) {
+                if (*(s16 *)(arr[i] + 0x46) == 0xf7) {
+                    *(int *)(state + 0x4c) = arr[i];
+                    i = end;
+                }
+            }
+            *(u8 *)(state + 0x85) = 1;
+            break;
         }
-        *(undefined *)(iVar3 + 0x81) = 1;
-      }
+        case 4:
+            *(u8 *)(state + 0x85) = 0;
+            break;
+        case 5:
+            if (*(u8 *)(state + 0x79) == 2) {
+                *(u8 *)(state + 0x79) = 0;
+            }
+            else {
+                *(u8 *)(state + 0x79) = 2;
+            }
+            break;
+        case 6:
+            Sfx_PlayFromObject(obj, 0x143);
+            break;
+        case 7:
+            Sfx_StopFromObject(obj, 0x143);
+            break;
+        case 8:
+            if (*(u8 *)(state + 0x79) == 8) {
+                *(u8 *)(state + 0x79) = 1;
+            }
+            else {
+                *(u8 *)(state + 0x79) = 8;
+            }
+            break;
+        case 9:
+            *(u8 *)(state + 0xab) = 1;
+            break;
+        case 10:
+            *(u8 *)(state + 0xab) = 0;
+            break;
+        case 0xb:
+            Sfx_PlayFromObject(fn_801E2570(), 0x2c6);
+            break;
+        case 0xc:
+            *(int *)(state + 0x9c) = 0xa3;
+            Music_Trigger(*(int *)(state + 0x9c), 1);
+            Music_Trigger(*(int *)(state + 0x98), 0);
+            break;
+        case 0xd:
+            *(f32 *)(state + 0xac) = lbl_803E57F8;
+            *(u8 *)(state + 0x78) = 1;
+            *(f32 *)(state + 0x74) = lbl_803E56CC;
+            break;
+        }
+    }
+    {
+        f32 z = lbl_803E56CC;
+        if (*(f32 *)(state + 0xac) >= z) {
+            *(f32 *)(state + 0xac) = *(f32 *)(state + 0xac) - timeDelta;
+            if (*(f32 *)(state + 0xac) < z) {
+                *(f32 *)(state + 0xac) = z;
+                *(u8 *)(state + 0x78) = 0;
+            }
+        }
+    }
+    if (*(u8 *)(state + 0x78) != 0) {
+        *(f32 *)(state + 0x74) = lbl_803E5790 * timeDelta + *(f32 *)(state + 0x74);
     }
     else {
-      uVar1 = GameBit_Get(0xa71);
-      if (uVar1 == 0) {
-        FUN_80006824(param_9,SFXwp_crthit6);
-      }
-      *(undefined *)(iVar3 + 0x81) = 1;
+        *(f32 *)(state + 0x74) = -(lbl_803E5790 * timeDelta - *(f32 *)(state + 0x74));
     }
-  }
-  else if (((double)lbl_803E646C < dVar4) && (dVar4 < (double)lbl_803E6470)) {
-    *(undefined *)(iVar3 + 0x81) = 0;
-  }
-  *(short *)(param_9 + 4) = (short)(int)((double)lbl_803E6474 * dVar4);
-  *(short *)(iVar3 + 0x68) =
-       (short)(int)(lbl_803E6478 * lbl_803DC074 +
-                   (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(iVar3 + 0x68)) -
-                          DOUBLE_803e6480));
-  return;
+    {
+        f32 v = *(f32 *)(state + 0x74);
+        f32 c = lbl_803E56CC;
+        if (!(v < lbl_803E56CC)) {
+            c = lbl_803E57F4;
+            if (!(v > lbl_803E57F4)) {
+                c = v;
+            }
+        }
+        *(f32 *)(state + 0x74) = c;
+    }
+    if (*(f32 *)(state + 0x74) > lbl_803E56CC) {
+        gameTextSetColor(0xff, 0xff, 0xff, (int)*(f32 *)(state + 0x74));
+        gameTextShow(0x4b1);
+    }
+    *(f32 *)(state + 0x2c) = *(f32 *)(obj + 0xc);
+    *(f32 *)(state + 0x30) = *(f32 *)(obj + 0x10);
+    *(f32 *)(state + 0x34) = *(f32 *)(obj + 0x14);
+    *(s16 *)(msgSrc + 0x6e) = *(s16 *)(msgSrc + 0x70);
+    *(u8 *)(msgSrc + 0x56) = 0;
+    return 0;
 }
 
 /*
@@ -1034,6 +1111,115 @@ void SB_Galleon_hitDetect(int obj) {
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+
+/*
+ * --INFO--
+ *
+ * Function: SB_Galleon_update
+ * EN v1.0 Address: 0x801E21AC
+ * EN v1.0 Size: 568b
+ */
+extern int mapGetDirIdx(int mapId);
+extern void lockLevel(int idx, int p2);
+extern void fn_801DFA28(int obj);
+extern void DBprotection_updateShield(int obj);
+extern void SCGameBitLatch_Update(u8 *latch, int mask, int a, int b, int bit, int c);
+extern int *gMapEventInterface;
+extern int *gObjectTriggerInterface;
+void SB_Galleon_update(int obj) {
+    s8 *p = (s8 *)((int **)obj)[0xb8/4];
+    *(s8 *)(obj + 0xac) = *(s16 *)(p + 0x72);
+    fn_801E1588(obj, (int)p);
+    if (GameBit_Get(0x75) == 0) {
+        (**(void (**)(int, int))((char *)(*gMapEventInterface) + 0x44))(0xb, 1);
+        (**(void (**)(int, int, int))((char *)(*gMapEventInterface) + 0x50))(0xb, 0, 1);
+        (**(void (**)(int, int, int))((char *)(*gMapEventInterface) + 0x50))(0xb, 1, 1);
+        (**(void (**)(int, int, int))((char *)(*gMapEventInterface) + 0x50))(0xb, 5, 1);
+        lockLevel(mapGetDirIdx(0xb), 0);
+        if ((**(u8 (**)(int, int))((char *)(*gMapEventInterface) + 0x4c))(*(u8 *)(obj + 0x34), 1) == 0) {
+            (**(void (**)(int, int, int))((char *)(*gMapEventInterface) + 0x50))(*(u8 *)(obj + 0x34), 1, 1);
+        }
+        *(int *)(obj + 0xf4) = 0;
+    }
+    else {
+        if ((*(u8 *)(p + 0x80) == 0) && (p[0x70] > 0)) {
+            p[0x80] = 1;
+        }
+        switch (p[0x70]) {
+        case 0:
+            fn_801DFA28(obj);
+            break;
+        case 1:
+            (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(3, obj, -1);
+            p[0x70] = 2;
+            break;
+        case 2:
+            DBprotection_updateShield(obj);
+            break;
+        case 3:
+            (**(void (**)(int, int))((char *)(*gMapEventInterface) + 0x44))(0xb, 1);
+            *(s8 *)(obj + 0xac) = -1;
+            (**(void (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(2, obj, -1);
+            p[0x70] = 4;
+            break;
+        }
+        SCGameBitLatch_Update((u8 *)p + 0xb0, 1, -1, -1, 0xa71, 0xa4);
+    }
+}
+
+/*
+ * --INFO--
+ *
+ * Function: SB_Galleon_init
+ * EN v1.0 Address: 0x801E23E4
+ * EN v1.0 Size: 388b
+ */
+extern void objSetSlot(void *obj, int slot);
+extern void *textureLoadAsset(int id);
+extern void setDrawLights(int mode);
+extern void Music_Trigger(s32 snd, s32 mode);
+extern int lbl_803DDC18;
+extern int lbl_803DDC1C;
+extern f32 lbl_803E580C;
+void SB_Galleon_init(int obj) {
+    int p = *(int *)(obj + 0xb8);
+    lbl_803DDC20 = obj;
+    ObjGroup_AddObject(obj, 3);
+    objSetSlot((void *)obj, 0x5a);
+    *(void **)(obj + 0xbc) = (void *)fn_801E1AAC;
+    *(f32 *)(p + 0x2c) = *(f32 *)(obj + 0xc);
+    *(f32 *)(p + 0x30) = *(f32 *)(obj + 0x10);
+    *(f32 *)(p + 0x34) = *(f32 *)(obj + 0x14);
+    *(u8 *)(p + 0x2a) = 1;
+    *(s16 *)(p + 0x26) = 0xf0;
+    *(s16 *)(p + 0x6e) = 0xf0;
+    *(u8 *)(p + 0x79) = 0;
+    *(s16 *)(p + 0x82) = 200;
+    *(u8 *)(p + 0xa7) = 0x89;
+    *(u8 *)(p + 0xa8) = 0x95;
+    *(u8 *)(p + 0xa9) = 0x86;
+    *(u8 *)(p + 0xaa) = 0x88;
+    *(u8 *)(p + 0xa5) = 0x87;
+    *(u8 *)(p + 0xa6) = 0x97;
+    *(s16 *)(p + 0x72) = *(s8 *)(obj + 0xac);
+    *(s16 *)obj = 0x4000;
+    *(s16 *)(obj + 2) = 0;
+    *(s16 *)(obj + 4) = 0;
+    lbl_803DDC18 = (int)textureLoadAsset(0x16d);
+    lbl_803DDC1C = (int)textureLoadAsset(0x89);
+    *(u8 *)(p + 0x84) = 100;
+    (**(void (**)(int, int))((char *)(*gMapEventInterface) + 0x44))(*(s8 *)(obj + 0xac), 1);
+    getLActions(obj, obj, 0x58, 0, 0, 0);
+    *(f32 *)(p + 0x90) = lbl_803E56CC;
+    *(f32 *)(p + 0x94) = lbl_803E580C;
+    *(s16 *)(*(int *)(obj + 0x54) + 0x60) = *(s16 *)(*(int *)(obj + 0x54) + 0x60) | 0x1800;
+    setDrawLights(0);
+    *(int *)(p + 0x98) = 0x92;
+    *(int *)(p + 0x9c) = 0x91;
+    Music_Trigger(*(int *)(p + 0x9c), 1);
+}
+
 
 /* SB_Galleon_free: textureFree manager textures, ObjGroup_RemoveObject, kill music, set bit. */
 extern void textureFree(void *tex);
