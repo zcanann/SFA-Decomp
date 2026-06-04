@@ -6310,3 +6310,80 @@ void dim2roofrub_render(int *obj, int p2, int p3, int p4, int p5)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct Dim2PartVec {
+    u8 pad[0xc];
+    f32 x;
+    f32 y;
+    f32 z;
+} Dim2PartVec;
+
+extern int *gPartfxInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void dim2roofrub_update(int *obj)
+{
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    int *params = *(int **)((char *)obj + 0x4c);
+
+    if (params != NULL && *(s16 *)((char *)params + 0x18) != -1) {
+        Dim2PartVec v;
+        int count;
+        int res;
+        for (res = 0; res < *(u8 *)(state + 0x8b); res++) {
+            int b = *(u8 *)(state + res + 0x81);
+            switch (b) {
+            case 1:
+                *(int *)((char *)obj + 0xf8) ^= 1;
+                break;
+            case 2:
+                *(int *)((char *)obj + 0xf8) ^= 2;
+                break;
+            case 3:
+                *(int *)((char *)obj + 0xf8) ^= 4;
+                break;
+            case 4: {
+                int k;
+                v.x = *(f32 *)((char *)obj + 0xc);
+                v.y = *(f32 *)((char *)obj + 0x10);
+                v.z = *(f32 *)((char *)obj + 0x14);
+                for (k = 3; k != 0; k--) {
+                    ((void (*)(int *, int, void *, u32, int, int))((int *)*gPartfxInterface)[2])(obj, 2046, &v, 0x200001, -1, 0);
+                }
+                break;
+            }
+            }
+        }
+        res = ((int (*)(int *, f32))((int *)*(int **)gObjectTriggerInterface)[0x14 / 4])(obj, timeDelta);
+        if (res != 0 && *(s16 *)((char *)obj + 0xb4) == -2) {
+            int slot8 = *(s8 *)(state + 0x57);
+            int *match = NULL;
+            int *list;
+            int cnt;
+            int slot;
+            list = ObjList_GetObjects(&res, &count);
+            slot = slot8;
+            for (res = cnt = 0; res < count; res++) {
+                int *other = (int *)*list;
+                if (*(s16 *)((char *)other + 0xb4) == slot8) {
+                    match = other;
+                }
+                if (*(s16 *)((char *)other + 0xb4) == -2 && *(s16 *)((char *)other + 0x44) == 0x10) {
+                    u8 *st2 = *(u8 **)((char *)other + 0xb8);
+                    if (slot == *(s8 *)(st2 + 0x57)) {
+                        cnt++;
+                    }
+                }
+                list++;
+            }
+            if (cnt <= 1 && match != NULL && *(s16 *)((char *)match + 0xb4) != -1) {
+                *(s16 *)((char *)match + 0xb4) = -1;
+                ((void (*)(int))((int *)*(int **)gObjectTriggerInterface)[0x4c / 4])(slot);
+            }
+            *(s16 *)((char *)obj + 0xb4) = -1;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
