@@ -5528,3 +5528,45 @@ int fn_802025C0(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    extern void fn_8003B5E0(int, int, int, int);
+    extern void objParticleFn_80099d84(int, f32, int, f32, int);
+    extern void ObjPath_GetPointWorldPosition(int, int, char *, char *, char *, int);
+    extern f32 lbl_803E62D0;
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E62C8;
+    int sub;
+    int state;
+    char *path;
+
+    state = *(int *)(obj + 0xb8);
+    sub = *(int *)(state + 0x40c);
+    if (*(void **)(sub + 0x18) != NULL) {
+        *(f32 *)(*(int *)(sub + 0x18) + 0xc) = *(f32 *)(obj + 0xc);
+        *(f32 *)(*(int *)(sub + 0x18) + 0x10) = *(f32 *)(obj + 0x10);
+        *(f32 *)(*(int *)(sub + 0x18) + 0x14) = *(f32 *)(obj + 0x14);
+        *(f32 *)(*(int *)(sub + 0x18) + 0x10) += lbl_803E62D0;
+    }
+    if (visible != 0 && *(int *)(obj + 0xf4) == 0 && *(s16 *)(state + 0x402) != 0) {
+        {
+            if (*(f32 *)(state + 0x3e8) != lbl_803E62A8) {
+                fn_8003B5E0(0xc8, 0, 0, (int)*(f32 *)(state + 0x3e8));
+            }
+            ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E62C8);
+            if ((*(u16 *)(state + 0x400) & 0x60) != 0) {
+                objParticleFn_80099d84(obj, lbl_803E62C8, 3, *(f32 *)(state + 0x3e8), 0);
+            }
+            path = *(char **)(sub + 0x18);
+            if (path != NULL && *(void **)(path + 0x50) != NULL) {
+                ObjPath_GetPointWorldPosition(obj, 3, path + 0xc, path + 0x10, path + 0x14, 0);
+                ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(*(int *)(sub + 0x18), p2, p3, p4, p5, lbl_803E62C8);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset

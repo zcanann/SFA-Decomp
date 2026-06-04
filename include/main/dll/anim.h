@@ -194,7 +194,7 @@ s16 DBstealerworm_setScale(int *obj);
 int dbstealerworm_getExtraSize(void);
 int dbstealerworm_getObjectTypeId(void);
 void dbstealerworm_free(int *obj);
-void dbstealerworm_render(void);
+void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void dbstealerworm_hitDetect(int obj);
 void dbstealerworm_update(void);
 void dbstealerworm_init(int *obj, u8 *def, int param3);
