@@ -4394,6 +4394,7 @@ void fn_80060BB0(void)
 extern f32 *lbl_803DCF38;
 extern s16 lbl_803DCF5C;
 
+#pragma dont_inline on
 int insertPoint(int val, s16 *arr, f32 x, f32 y, f32 z)
 {
     int i;
@@ -4424,6 +4425,7 @@ int insertPoint(int val, s16 *arr, f32 x, f32 y, f32 z)
     lbl_803DCF5C++;
     return lbl_803DCF5C - 1;
 }
+#pragma dont_inline reset
 
 extern char sTrackIntersectFuncOverflowFormat[];
 extern void debugPrintf(char *fmt, ...);
@@ -7584,4 +7586,193 @@ u8 doEdges;
         descp += 3;
     }
     return cur;
+}
+
+/* trackIntersect — rebuild the intersection line table from map blocks when
+ * a refresh has been requested. */
+extern u8 *mapGetBlockIdx(int layer);
+extern u8 *mapGetBlock(int idx);
+extern int getHudHiddenFrameCount(void);
+extern u8 lbl_803DCF44;
+extern int lbl_803DCF3C;
+extern int lbl_803DCF40;
+
+void trackIntersect(void)
+{
+    s16 counts[0x47];
+    s16 edges[0x6a4 * 2];
+    int i, j, off;
+    int layer;
+    s16 prev, t;
+
+    lbl_803DCF44 = 0;
+    if (lbl_803DCF4D != 0 && getHudHiddenFrameCount() == 0) {
+        lbl_803DCF4D = lbl_803DCF4D - 1;
+    }
+    if ((s8)lbl_803DCF4E == 1) {
+        lbl_803DCF4F = 1;
+        lbl_803DCF4E = 0;
+        return;
+    }
+    if ((s8)lbl_803DCF4F == 0) {
+        return;
+    }
+    lbl_803DCF4F = 0;
+    if (getHudHiddenFrameCount() != 0) {
+        lbl_803DCF4D = 2;
+    }
+
+    for (i = 0; i < 0x47; i++) {
+        counts[i] = 0;
+    }
+    lbl_803DCF5E = 0;
+    lbl_803DCF5C = 0;
+
+    for (layer = 0; layer < 5; layer++) {
+        u8 *idx = mapGetBlockIdx(layer);
+        int gz, gx, base;
+        for (gz = 0, base = 0; gz < 0x10; gz++, base += 0x10) {
+            f32 fz0 = lbl_803DECE0[0] * (f32)gz;
+            u8 *p = idx + base;
+            for (gx = 0; gx < 0x10; gx++, p++) {
+                if ((s8)*p >= 0) {
+                    u8 *blk = mapGetBlock((s8)*p);
+                    int tn, toff;
+                    f32 fx0;
+                    tn = 0;
+                    toff = 0;
+                    fx0 = lbl_803DECE0[0] * (f32)gx;
+                    for (; tn < *(u16 *)(blk + 0x9c); tn++, toff += 0x14) {
+                        if (lbl_803DCF5E < 0x5dc) {
+                            s16 *tp = (s16 *)(*(int *)(blk + 0x70) + toff);
+                            u8 *rec = (u8 *)(lbl_803DCF34 + lbl_803DCF5E * 0x10);
+                            f32 fx, fz;
+                            u8 *rp;
+                            int k;
+                            rec[0] = *((u8 *)tp + 0xc);
+                            rec[1] = *((u8 *)tp + 0xd);
+                            rec[3] = *((u8 *)tp + 0xf);
+                            if (((s8)rec[3] & 0x3f) == 0x11) {
+                                *(s8 *)(rec + 3) = rec[3] & ~0x3f;
+                                *(s8 *)(rec + 3) = rec[3] | 2;
+                            }
+                            rec[2] = *((u8 *)tp + 0xe);
+                            *(s8 *)(rec + 2) = rec[2] ^ 0x10;
+                            *(s16 *)(rec + 0xc) = tp[8];
+                            fx = fx0 + playerMapOffsetX;
+                            fz = fz0 + playerMapOffsetZ;
+                            k = 0;
+                            rp = rec;
+                            for (; k < 2; k++, tp++, rp += 2) {
+                                f32 x = fx + (f32)tp[0];
+                                f32 y = (f32)tp[2];
+                                f32 z = (f32)tp[4] + fz;
+                                if (lbl_803DCF5C < 0x6a4) {
+                                    *(s16 *)(rp + 4) = (s16)insertPoint(lbl_803DCF5E, edges, x, y, z);
+                                }
+                            }
+                            counts[(s8)rec[3] & 0x3f]++;
+                            lbl_803DCF5E++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 0x10) {
+        u8 *rec = (u8 *)(lbl_803DCF34 + off);
+        int idx = *(s16 *)(rec + 4) * 2;
+        s16 *e0 = &edges[idx];
+        s16 *e1;
+        s16 v = e0[0];
+        if (v > -1 && v != i) {
+            *(s16 *)(rec + 8) = v;
+        } else {
+            v = e0[1];
+            if (v > -1 && v != i) {
+                *(s16 *)(rec + 8) = v;
+            } else {
+                *(s16 *)(rec + 8) = -1;
+            }
+        }
+        idx = *(s16 *)(rec + 6) * 2;
+        e1 = &edges[idx];
+        v = e1[0];
+        if (v > -1 && v != i) {
+            *(s16 *)(rec + 0xa) = v;
+        } else {
+            v = e1[1];
+            if (v > -1 && v != i) {
+                *(s16 *)(rec + 0xa) = v;
+            } else {
+                *(s16 *)(rec + 0xa) = -1;
+            }
+        }
+    }
+
+    if (lbl_803DCF40 != 0) {
+        int done;
+        for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 2) {
+            *(s16 *)(lbl_803DCF40 + off) = (s16)i;
+        }
+        done = 0;
+        while (done == 0) {
+            done = 1;
+            for (j = 0, off = 0; j < lbl_803DCF5E - 1; j++, off += 2) {
+                s16 *p = (s16 *)(lbl_803DCF40 + off);
+                s16 a = p[0];
+                s16 b;
+                int ta = (s8)*(u8 *)(lbl_803DCF34 + a * 0x10 + 3) & 0x3f;
+                b = p[1];
+                if (ta < ((s8)*(u8 *)(lbl_803DCF34 + b * 0x10 + 3) & 0x3f)) {
+                    p[0] = b;
+                    *(s16 *)(lbl_803DCF40 + off + 2) = a;
+                    done = 0;
+                }
+            }
+        }
+    }
+
+    for (i = 0x46; i != 0; i--) {
+        counts[i - 1] = counts[i - 1] + counts[i];
+    }
+
+    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 0x10) {
+        int tt = ((s8)*(u8 *)(lbl_803DCF34 + off + 3) & 0x3f) + 1;
+        s16 c = counts[tt];
+        counts[tt] = c + 1;
+        *(s16 *)(lbl_803DCF3C + c * 2) = (s16)i;
+    }
+
+    for (i = 0; i < lbl_803DCF5E - 1; i++) {
+    }
+
+    for (i = 0; i < 40; i++) {
+        ((u16 *)lbl_8038D840)[i] = 0xffff;
+    }
+
+    prev = -1;
+    for (i = 0, off = 0; i < lbl_803DCF5E; i++, off += 2) {
+        t = (s16)((s8)*(u8 *)(lbl_803DCF34 + *(s16 *)(lbl_803DCF3C + off) * 0x10 + 3) & 0x3f);
+        if (t >= 0x14) {
+            t = 1;
+            debugPrintf(sTrackIntersectFuncOverflowFormat, 1);
+        }
+        if (prev != t) {
+            u16 v = (u16)i;
+            int ti = t * 2;
+            ((u16 *)lbl_8038D840)[ti] = v;
+            if (prev != -1) {
+                int pi = prev * 2;
+                ((u16 *)lbl_8038D840)[pi + 1] = v;
+            }
+            prev = t;
+        }
+    }
+    if (prev != -1) {
+        int pi = prev * 2;
+        ((u16 *)lbl_8038D840)[pi + 1] = (u16)lbl_803DCF5E;
+    }
+    lbl_803DCF44 = 1;
 }
