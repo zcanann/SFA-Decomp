@@ -7008,3 +7008,141 @@ int fn_802017A4(int obj, int p2, f32 t)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80204BF8(int obj)
+{
+    extern int Obj_GetPlayerObject(void);
+    extern uint GameBit_Get(int);
+    extern f32 Vec_xzDistance(int, int);
+    extern int Sfx_IsPlayingFromObjectChannel(int, int);
+    extern void Sfx_PlayFromObject(int, int);
+    extern void Sfx_StopObjectChannel(int, int);
+    extern f32 timeDelta;
+    extern f32 lbl_803E639C;
+    extern f32 lbl_803E63A0;
+    extern f32 lbl_803E63A4;
+    extern f32 lbl_803E63A8;
+    int data = *(int *)(obj + 0x4c);
+    int blob = *(int *)(obj + 0xb8);
+    int player;
+    int h;
+    f32 d;
+    f32 k;
+
+    player = Obj_GetPlayerObject();
+    if ((u32)player == 0) {
+        return;
+    }
+    switch (*(s16 *)(blob + 4)) {
+    case 0:
+        if (GameBit_Get(*(s16 *)(blob + 6)) != 0 && *(u8 *)(blob + 0xc) != 1) {
+            if (Vec_xzDistance(obj + 0x18, player + 0x18) < lbl_803E639C) {
+                if (*(f32 *)(obj + 0x10) < lbl_803E63A0 + *(f32 *)(data + 0xc)) {
+                    if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0) {
+                        Sfx_PlayFromObject(obj, 0x116);
+                        *(u8 *)(blob + 0xd) = 1;
+                    }
+                    *(f32 *)(obj + 0x10) += timeDelta;
+                    if (*(f32 *)(obj + 0x10) >= lbl_803E63A0 + *(f32 *)(data + 0xc)) {
+                        *(f32 *)(obj + 0x10) = lbl_803E63A0 + *(f32 *)(data + 0xc);
+                        *(s16 *)(blob + 4) = 1;
+                        Sfx_StopObjectChannel(obj, 8);
+                    }
+                }
+            }
+        } else {
+            if (*(u8 *)(blob + 0xc) == 1) {
+                if (Vec_xzDistance(obj + 0x18, player + 0x18) < lbl_803E639C) {
+                    if (*(f32 *)(obj + 0x10) < (k = lbl_803E63A0) + *(f32 *)(data + 0xc)) {
+                        *(f32 *)(obj + 0x10) += timeDelta;
+                        if (*(f32 *)(obj + 0x10) >= k + *(f32 *)(data + 0xc)) {
+                            *(f32 *)(obj + 0x10) = k + *(f32 *)(data + 0xc);
+                            *(s16 *)(blob + 4) = 1;
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    case 1:
+        *(s16 *)(blob + 4) = 2;
+        *(s16 *)(blob + 0xa) = 0x64;
+        break;
+    case 2:
+        h = *(s16 *)(blob + 0xa);
+        if (h != 0) {
+            *(s16 *)(blob + 0xa) = h - (int)timeDelta;
+            if (*(s16 *)(blob + 0xa) <= 0) {
+                *(s16 *)(blob + 0xa) = 0;
+            }
+        } else {
+            d = Vec_xzDistance(obj + 0x18, player + 0x18);
+            if (d < lbl_803E63A4) {
+                if (*(f32 *)(obj + 0x10) == lbl_803E63A0 + *(f32 *)(data + 0xc)) {
+                    *(s16 *)(blob + 4) = 3;
+                    if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0) {
+                        Sfx_PlayFromObject(obj, 0x1cb);
+                        *(u8 *)(blob + 0xd) = 1;
+                    }
+                } else if (*(f32 *)(obj + 0x10) == d - lbl_803E63A8) {
+                    *(s16 *)(blob + 4) = 4;
+                    if (Sfx_IsPlayingFromObjectChannel(obj, 8) == 0) {
+                        Sfx_PlayFromObject(obj, 0x1cb);
+                        *(u8 *)(blob + 0xd) = 1;
+                    }
+                }
+            } else {
+                if (*(f32 *)(player + 0x10) < *(f32 *)(data + 0xc)) {
+                    *(s16 *)(blob + 4) = 3;
+                    if (*(u8 *)(blob + 0xd) == 1) {
+                        *(u8 *)(blob + 0xd) = 0;
+                    }
+                } else if (*(f32 *)(player + 0x10) > *(f32 *)(data + 0xc)) {
+                    *(s16 *)(blob + 4) = 4;
+                    if (*(u8 *)(blob + 0xd) == 1) {
+                        *(u8 *)(blob + 0xd) = 0;
+                    }
+                }
+            }
+        }
+        break;
+    case 3:
+        if (*(f32 *)(obj + 0x10) > *(f32 *)(data + 0xc) - (k = lbl_803E63A8)) {
+            *(f32 *)(obj + 0x10) -= timeDelta;
+            if (*(f32 *)(obj + 0x10) <= *(f32 *)(data + 0xc) - k) {
+                *(f32 *)(obj + 0x10) = *(f32 *)(data + 0xc) - k;
+                *(s16 *)(blob + 4) = 2;
+                Sfx_StopObjectChannel(obj, 8);
+                *(s16 *)(blob + 0xa) = 0x64;
+            }
+            Vec_xzDistance(obj + 0x18, player + 0x18);
+        } else {
+            Sfx_StopObjectChannel(obj, 8);
+            Vec_xzDistance(obj + 0x18, player + 0x18);
+            *(s16 *)(blob + 4) = 2;
+            *(s16 *)(blob + 0xa) = 0x64;
+        }
+        break;
+    case 4:
+        if (*(f32 *)(obj + 0x10) < (k = lbl_803E63A0) + *(f32 *)(data + 0xc)) {
+            *(f32 *)(obj + 0x10) += timeDelta;
+            if (*(f32 *)(obj + 0x10) >= k + *(f32 *)(data + 0xc)) {
+                *(f32 *)(obj + 0x10) = k + *(f32 *)(data + 0xc);
+                *(s16 *)(blob + 4) = 2;
+                *(s16 *)(blob + 0xa) = 0x64;
+                Sfx_StopObjectChannel(obj, 8);
+            }
+            Vec_xzDistance(obj + 0x18, player + 0x18);
+        } else {
+            *(s16 *)(blob + 4) = 2;
+            *(s16 *)(blob + 0xa) = 0x64;
+            Sfx_StopObjectChannel(obj, 8);
+            Vec_xzDistance(obj + 0x18, player + 0x18);
+        }
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
