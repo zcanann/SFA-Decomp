@@ -12532,7 +12532,7 @@ void *ObjModel_LoadAnimData(u8 *p, int b, int c) {
 extern void *ObjModel_LoadModelData(int id);
 extern void ObjModel_RelocateModelData(u8 *model);
 extern void ObjModel_ResolveRenderOpTextures(u8 *model);
-extern void modelLoadAnimations(void *model, int id, void *animBase);
+extern int modelLoadAnimations(void *model, int id, void *animBase);
 extern int modelLoad_calcSizes(void *model, int arg, void *out, int flag);
 extern int ModelList_getHeader(void *list, int index, void *out);
 extern void modelInitModelList(void *list, s16 index, void *out);
@@ -15214,6 +15214,145 @@ void *modelLoadFn_80025ae4(u8 *p, int b, int isType1, int c)
     *(u8 **)(out + 0) = p;
     *(u8 *)(out + 0x60) = 0;
     return out;
+}
+#pragma dont_inline reset
+#pragma pop
+
+extern char sModelAnimationBufferOverflowWarning[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_loop_invariants off
+#pragma dont_inline on
+int modelLoadAnimations(void *model, int id, void *animBase)
+{
+    u8 *hdr = (u8 *)model;
+    u8 *buf = (u8 *)animBase;
+    int *tbl;
+    int base;
+    int aln;
+    int sz;
+    int o;
+    int slot;
+    int i;
+    int cnt;
+    int toff;
+    int woff;
+    int anim;
+    int sz4;
+    int idxout;
+    u8 *q2;
+    u8 buf2[4];
+    int sz2;
+    u8 *hp2;
+    u8 *pc;
+    int d;
+
+    aln = 0;
+    tbl = lbl_803DCB60;
+    fileLoadToBufferOffset(0x2d, tbl, id << 1, 0x10);
+    base = *(s16 *)tbl;
+    if (*(u16 *)(hdr + 0xec) == 0) {
+        return 0;
+    }
+    sz = (*(u16 *)(hdr + 0xec) << 1) + 8;
+    if (sz > 0x800) {
+        debugPrintf(sModelAnimationBufferOverflowWarning, sz);
+    }
+    fileLoadToBufferOffset(0x31, lbl_803DCB60, (id & ~3) << 2, 0x20);
+    *(int *)(hdr + 0x80) = *(int *)((u8 *)lbl_803DCB60 + (id & 3) * 4);
+    sz4 = *(int *)((u8 *)lbl_803DCB60 + (id & 3) * 4);
+    id = *(int *)((u8 *)lbl_803DCB60 + (id & 3) * 4 + 4) - sz4;
+    if (*(u16 *)(hdr + 2) & 0x40) {
+        *(u8 **)(hdr + 0x6c) = buf;
+        while (sz & 7) {
+            sz++;
+        }
+        aln = sz;
+        buf += sz;
+        fileLoadToBufferOffset(0x2e, *(void **)(hdr + 0x6c), base, sz);
+    } else {
+        fileLoadToBufferOffset(0x2e, lbl_803DCB64, base, sz);
+        *(s16 **)(hdr + 0x6c) = lbl_803DCB64;
+    }
+    o = 0;
+    slot = 1;
+    *(s16 *)(hdr + (slot - 1) * 2 + 0x70) = o;
+    i = 0;
+    for (; i < (int)*(u16 *)(hdr + 0xec); i++) {
+        if (*(s16 *)(*(u8 **)(hdr + 0x6c) + o) == -1) {
+            *(s16 *)(hdr + slot++ * 2 + 0x70) = (s16)(i + 1);
+        }
+        o += 2;
+    }
+    if ((*(u16 *)(hdr + 2) & 0x40) == 0) {
+        *(int *)(hdr + 0x6c) = 0;
+        *(u8 **)(hdr + 0x64) = buf;
+        buf += *(u16 *)(hdr + 0xec) * 4;
+        aln += *(u16 *)(hdr + 0xec) * 4;
+        while (aln & 7) {
+            buf++;
+            aln++;
+        }
+        *(u8 **)(hdr + 0x68) = buf;
+        fileLoadToBufferOffset(0x32, *(void **)(hdr + 0x68), *(int *)(hdr + 0x80), id);
+        cnt = 0;
+        toff = 0;
+        woff = toff;
+        do {
+            anim = *(s16 *)((u8 *)lbl_803DCB64 + toff);
+            if (anim != -1) {
+                if ((getLoadedFileFlags(0) & 0x100000) && *(u16 *)(hdr + 4) != 1 &&
+                    *(u16 *)(hdr + 4) != 3) {
+                    pc = 0;
+                } else {
+                    if (ModelList_getHeader(lbl_803DCB50, anim, &hp2) == 0) {
+                        sz4 = *(int *)((u8 *)lbl_803DCB4C + anim * 4);
+                        loadAndDecompressDataFile(0x30, 0, sz4, 0, (int)&sz2, anim, 1);
+                        hp2 = (u8 *)mmAlloc(sz2, 10, 0);
+                        loadAndDecompressDataFile(0x30, (void *)hp2, sz4, sz2, (int)buf2, anim, 0);
+                        *hp2 = 1;
+                        modelInitModelList(lbl_803DCB50, anim, &hp2);
+                    } else {
+                        *hp2 += 1;
+                    }
+                    pc = hp2;
+                }
+                *(u8 **)(*(u8 **)(hdr + 0x64) + woff) = pc;
+                if (*(u8 **)(*(u8 **)(hdr + 0x64) + woff) == 0) {
+                    int k;
+                    int o3;
+
+                    k = 0;
+                    o3 = 0;
+                    for (; k < cnt; k++) {
+                        q2 = *(u8 **)(*(u8 **)(hdr + 0x64) + o3);
+                        if (q2 != 0) {
+                            d = *q2 - 1;
+                            *q2 = d;
+                            if ((s8)d <= 0) {
+                                model_findIdxInModelList(lbl_803DCB50, &q2, &idxout);
+                                model_adjustModelList(lbl_803DCB50, idxout);
+                                mm_free(q2);
+                            }
+                        }
+                        o3 += 4;
+                    }
+                    *(int *)(hdr + 0x64) = 0;
+                    return 1;
+                }
+            } else {
+                *(int *)(*(u8 **)(hdr + 0x64) + woff) = 0;
+            }
+            toff += 2;
+            woff += 4;
+            cnt++;
+        } while (cnt < (int)*(u16 *)(hdr + 0xec));
+    } else {
+        *(int *)(hdr + 0x64) = 0;
+    }
+    return 0;
 }
 #pragma dont_inline reset
 #pragma pop
