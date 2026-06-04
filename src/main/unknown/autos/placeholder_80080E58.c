@@ -6726,6 +6726,7 @@ extern void mm_free(void *p);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void snowFreeSnowCloud(int cloudId) {
     u8 *env;
     u8 *p;
@@ -6762,6 +6763,7 @@ void snowFreeSnowCloud(int cloudId) {
         lbl_8039A828[i] = NULL;
     }
 }
+#pragma dont_inline reset
 #pragma pop
 
 extern inline float sqrtf__inline(float x) {
@@ -6783,10 +6785,11 @@ typedef struct WindSource {
     s32 x;
     s32 z;
     f32 vx;
-    f32 pad0c;
+    f32 vy;
     f32 vz;
-    f32 pad14;
-    f32 pad18;
+    f32 scale;
+    s16 flag;
+    s16 pad1a;
 } WindSource;
 
 extern WindSource lbl_8039A848[];
@@ -7773,6 +7776,254 @@ void snowReposSnowCloud(int cloudId) {
             }
         }
         part += 0x18;
+    }
+}
+#pragma pop
+
+extern char lbl_8030F500[];
+extern int lbl_803DB76C;
+extern f32 lbl_803DF1FC;
+extern f32 lbl_803DF214;
+extern f32 lbl_803DF234;
+extern f32 lbl_803DF238;
+extern f32 lbl_803DF23C;
+extern f32 lbl_803DF240;
+extern f32 lbl_803DF244;
+
+#define NC_CLOUD ((u8 *)lbl_8039A828[id])
+#define NC_PARTS ((u8 *)*(void **)(NC_CLOUD + 4))
+
+/*
+ * --INFO--
+ *
+ * Function: newClouds
+ * EN v1.0 Address: 0x800919DC
+ * EN v1.0 Size: 2632b
+ */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
+    char *strs;
+    int ok;
+    int id;
+    int i;
+    u8 fl;
+    WindSource *w;
+
+    strs = lbl_8030F500;
+    ok = 1;
+    id = *(u16 *)(params + 0x26);
+    if (lbl_8039A828[id] != NULL) {
+        snowFreeSnowCloud(id);
+    }
+    lbl_8039A828[id] = mmAlloc(0x1454, 0x17, 0);
+    if (lbl_8039A828[id] == NULL) {
+        debugPrintf(strs + 0x1b0);
+        return;
+    }
+    memset(lbl_8039A828[id], 0, 0x1454);
+    *(int *)(NC_CLOUD + 0x13f0) = id;
+    NC_CLOUD[0x1453] = 0;
+    *(int *)(NC_CLOUD + 0x13f4) = params[0x5c];
+    *(void **)(NC_CLOUD + 0x0) = owner;
+    NC_CLOUD[0x144a] = params[0x58];
+    NC_CLOUD[0x144b] = params[0x59];
+    *(f32 *)(NC_CLOUD + 0x140c) = x;
+    *(f32 *)(NC_CLOUD + 0x1410) = y;
+    *(f32 *)(NC_CLOUD + 0x1414) = z;
+    if (params[0x58] & 1) {
+        NC_CLOUD[0x1451] = 1;
+    }
+    if (params[0x58] & 0x10) {
+        NC_CLOUD[0x144e] = 1;
+    }
+    NC_CLOUD[0x1452] = 1;
+    NC_CLOUD[0x144d] = params[0x5d];
+    if (*(int *)(NC_CLOUD + 0x13f4) == 0) {
+        *(int *)(NC_CLOUD + 0x13fc) = *(u16 *)(params + 0x28) << 3;
+    } else {
+        *(int *)(NC_CLOUD + 0x13fc) = *(u16 *)(params + 0x28);
+    }
+    if (*(u16 *)(params + 0x2a) != 0) {
+        *(f32 *)(NC_CLOUD + 0x142c) =
+            (f32)*(int *)(NC_CLOUD + 0x13fc) / (f32)*(u16 *)(params + 0x2a);
+    } else {
+        *(f32 *)(NC_CLOUD + 0x142c) = (f32)*(int *)(NC_CLOUD + 0x13fc);
+    }
+    if (*(u16 *)(params + 0x2c) != 0) {
+        *(f32 *)(NC_CLOUD + 0x1430) =
+            (f32)*(int *)(NC_CLOUD + 0x13fc) / (f32)*(u16 *)(params + 0x2c);
+    } else {
+        *(f32 *)(NC_CLOUD + 0x1430) = (f32)*(int *)(NC_CLOUD + 0x13fc);
+    }
+    *(f32 *)(NC_CLOUD + 0x1438) = *(f32 *)(params + 8);
+    if (*(int *)(NC_CLOUD + 0x13f4) == 0) {
+        *(f32 *)(NC_CLOUD + 0x1418) = lbl_803DF234;
+        *(f32 *)(NC_CLOUD + 0x141c) = lbl_803DF238;
+    } else {
+        *(f32 *)(NC_CLOUD + 0x1418) = *(f32 *)(params + 4);
+        *(f32 *)(NC_CLOUD + 0x141c) = lbl_803DF1E4 * *(f32 *)(params + 0);
+    }
+    if (*(f32 *)(params + 8) < lbl_803DF1A4) {
+        *(f32 *)(params + 8) = lbl_803DF1A0;
+    }
+    if (lbl_803DF1A0 != *(f32 *)(params + 8)) {
+        *(f32 *)(NC_CLOUD + 0x1444) = lbl_803DF23C;
+        *(f32 *)(NC_CLOUD + 0x143c) =
+            (f32)(int)randomGetRange(1, (int)*(f32 *)(params + 8)) * lbl_803DF214;
+    }
+    *(int *)(NC_CLOUD + 0x1400) = 1;
+    fl = NC_CLOUD[0x144b];
+    if (fl & 8) {
+        *(s16 *)(NC_CLOUD + 0x1448) = 0x320;
+    } else if (fl & 0x10) {
+        *(s16 *)(NC_CLOUD + 0x1448) = 0xc8;
+    } else if (fl & 0x20) {
+        *(s16 *)(NC_CLOUD + 0x1448) = 0x64;
+    }
+    snowCloudFn_8008fc9c((f32 *)(NC_CLOUD + 8), id, *(f32 *)(NC_CLOUD + 0x1418),
+                         *(f32 *)(NC_CLOUD + 0x141c));
+    fn_8008FC00((f32 *)(NC_CLOUD + 0x1378), *(f32 *)(NC_CLOUD + 0x1418),
+                *(f32 *)(NC_CLOUD + 0x141c));
+    *(void **)(NC_CLOUD + 4) = mmAlloc(*(int *)(NC_CLOUD + 0x13fc) * 0x18, 0x17, 0);
+    if (*(void **)(NC_CLOUD + 4) == NULL) {
+        ok = 0;
+    }
+    if (ok == 0) {
+        debugPrintf(strs + 0x1f0);
+        mm_free(lbl_8039A828[id]);
+        lbl_8039A828[id] = NULL;
+        return;
+    }
+    for (i = 0; i < *(int *)(NC_CLOUD + 0x13fc); i++) {
+        *(f32 *)(NC_PARTS + i * 0x18) =
+            (f32)(int)randomGetRange((int)*(f32 *)(NC_CLOUD + 0x1378),
+                                     (int)*(f32 *)(NC_CLOUD + 0x139c));
+        *(f32 *)(NC_PARTS + i * 0x18 + 4) = *(f32 *)(NC_CLOUD + 0x1388);
+        *(f32 *)(NC_PARTS + i * 0x18 + 8) =
+            (f32)(int)randomGetRange((int)*(f32 *)(NC_CLOUD + 0x1380),
+                                     (int)*(f32 *)(NC_CLOUD + 0x13b0));
+        *(u16 *)(NC_PARTS + i * 0x18 + 0x10) = (u16)randomGetRange(0, 0x3d0);
+        *(u16 *)(NC_PARTS + i * 0x18 + 0x12) = (u16)randomGetRange(0, 0x13);
+        if (*(int *)(NC_CLOUD + 0x13f4) == 0) {
+            *(s8 *)(NC_PARTS + i * 0x18 + 0x14) =
+                (s8)(randomGetRange(*(int *)(strs + params[0x5a] * 8 + 0x58),
+                                    *(int *)(strs + params[0x5a] * 8 + 0x5c)) /
+                     4);
+            *(f32 *)(NC_PARTS + i * 0x18 + 0xc) =
+                (f32)(int)randomGetRange(0x4b, 0x64) / lbl_803DF1FC;
+            *(u8 *)(NC_PARTS + i * 0x18 + 0x16) =
+                (u8)(i / (*(int *)(NC_CLOUD + 0x13fc) / 4));
+        } else {
+            *(s8 *)(NC_PARTS + i * 0x18 + 0x14) =
+                (s8)(randomGetRange(*(int *)(strs + params[0x5a] * 8 + 0x58),
+                                    *(int *)(strs + params[0x5a] * 8 + 0x5c)) *
+                     2);
+            *(f32 *)(NC_PARTS + i * 0x18 + 0xc) = lbl_803DF1A4;
+            *(u8 *)(NC_PARTS + i * 0x18 + 0x16) = 0;
+        }
+        if (*(s8 *)(NC_PARTS + i * 0x18 + 0x14) < 1) {
+            *(s8 *)(NC_PARTS + i * 0x18 + 0x14) = 1;
+        }
+        *(s8 *)(NC_PARTS + i * 0x18 + 0x15) =
+            (s8)(*(int *)(strs + params[0x5b] * 8 + 0x34) / 2 -
+                 randomGetRange(*(int *)(strs + params[0x5b] * 8 + 0x30),
+                                *(int *)(strs + params[0x5b] * 8 + 0x34)));
+    }
+    if (lbl_803DB76C != 0) {
+        lbl_8039A848[0].x = 0x31e;
+        lbl_8039A848[0].z = 0xa9c;
+        lbl_8039A848[0].vx = lbl_803DF240;
+        lbl_8039A848[0].vy = lbl_803DF1A0;
+        lbl_8039A848[0].vz = lbl_803DF1A0;
+        normalize(&lbl_8039A848[0].vx, &lbl_8039A848[0].vy, &lbl_8039A848[0].vz);
+        lbl_8039A848[0].scale = lbl_803DF1A4;
+        lbl_8039A848[0].flag = 0;
+        lbl_8039A848[1].x = 0x3c5;
+        lbl_8039A848[1].z = 0xb72;
+        lbl_8039A848[1].vx = lbl_803DF1A0;
+        lbl_8039A848[1].vy = lbl_803DF1A0;
+        lbl_8039A848[1].vz = lbl_803DF240;
+        normalize(&lbl_8039A848[1].vx, &lbl_8039A848[1].vy, &lbl_8039A848[1].vz);
+        lbl_8039A848[1].scale = lbl_803DF1A4;
+        lbl_8039A848[1].flag = 0;
+        lbl_8039A848[2].x = 0x335;
+        lbl_8039A848[2].z = 0xe13;
+        lbl_8039A848[2].vx = lbl_803DF1FC;
+        lbl_8039A848[2].vy = lbl_803DF1A0;
+        lbl_8039A848[2].vz = lbl_803DF1A0;
+        normalize(&lbl_8039A848[2].vx, &lbl_8039A848[2].vy, &lbl_8039A848[2].vz);
+        lbl_8039A848[2].scale = lbl_803DF1A4;
+        lbl_8039A848[2].flag = 0;
+        lbl_8039A848[3].x = 0x254;
+        lbl_8039A848[3].z = 0xc70;
+        lbl_8039A848[3].vx = lbl_803DF1A0;
+        lbl_8039A848[3].vy = lbl_803DF1A0;
+        lbl_8039A848[3].vz = lbl_803DF1FC;
+        normalize(&lbl_8039A848[3].vx, &lbl_8039A848[3].vy, &lbl_8039A848[3].vz);
+        lbl_8039A848[3].scale = lbl_803DF1A4;
+        lbl_8039A848[3].flag = 0;
+        lbl_8039A848[4].x = 0x107;
+        lbl_8039A848[4].z = 0xb4a;
+        lbl_8039A848[4].vx = lbl_803DF1FC;
+        lbl_8039A848[4].vy = lbl_803DF1A0;
+        lbl_8039A848[4].vz = lbl_803DF1CC;
+        normalize(&lbl_8039A848[4].vx, &lbl_8039A848[4].vy, &lbl_8039A848[4].vz);
+        lbl_8039A848[4].scale = lbl_803DF1A4;
+        lbl_8039A848[4].flag = 0;
+        lbl_8039A848[5].x = 0x68;
+        lbl_8039A848[5].z = 0xdf6;
+        lbl_8039A848[5].vx = lbl_803DF1A0;
+        lbl_8039A848[5].vy = lbl_803DF1A0;
+        lbl_8039A848[5].vz = lbl_803DF240;
+        normalize(&lbl_8039A848[5].vx, &lbl_8039A848[5].vy, &lbl_8039A848[5].vz);
+        lbl_8039A848[5].scale = lbl_803DF1A4;
+        lbl_8039A848[5].flag = 0;
+        lbl_8039A848[0].x = 0x31e;
+        lbl_8039A848[0].z = 0xa9c;
+        lbl_8039A848[0].vx = lbl_803DF1A0;
+        lbl_8039A848[0].vy = lbl_803DF1A0;
+        lbl_8039A848[0].vz = lbl_803DF1A0;
+        lbl_8039A848[0].scale = lbl_803DF1A0;
+        lbl_8039A848[0].flag = 0;
+        lbl_8039A848[1].x = 0x3c5;
+        lbl_8039A848[1].z = 0xb72;
+        lbl_8039A848[1].vx = lbl_803DF1A0;
+        lbl_8039A848[1].vy = lbl_803DF1A0;
+        lbl_8039A848[1].vz = lbl_803DF1A0;
+        lbl_8039A848[1].scale = lbl_803DF1A0;
+        lbl_8039A848[1].flag = 0;
+        lbl_8039A848[2].x = 0x335;
+        lbl_8039A848[2].z = 0xe13;
+        lbl_8039A848[2].vx = lbl_803DF1A0;
+        lbl_8039A848[2].vy = lbl_803DF1A0;
+        lbl_8039A848[2].vz = lbl_803DF1A0;
+        lbl_8039A848[2].scale = lbl_803DF1A0;
+        lbl_8039A848[2].flag = 0;
+        lbl_8039A848[3].x = 0x254;
+        lbl_8039A848[3].z = 0xc70;
+        lbl_8039A848[3].vx = lbl_803DF1A0;
+        lbl_8039A848[3].vy = lbl_803DF1A0;
+        lbl_8039A848[3].vz = lbl_803DF1A0;
+        lbl_8039A848[3].scale = lbl_803DF1A0;
+        lbl_8039A848[3].flag = 0;
+        lbl_8039A848[4].x = 0x107;
+        lbl_8039A848[4].z = 0xb4a;
+        lbl_8039A848[4].vx = lbl_803DF1A0;
+        lbl_8039A848[4].vy = lbl_803DF1A0;
+        lbl_8039A848[4].vz = lbl_803DF1A0;
+        lbl_8039A848[4].scale = lbl_803DF1A0;
+        lbl_8039A848[4].flag = 0;
+        lbl_8039A848[5].x = 0;
+        lbl_8039A848[5].z = 0x7d0;
+        lbl_8039A848[5].vx = lbl_803DF1A0;
+        lbl_8039A848[5].vy = lbl_803DF1A0;
+        lbl_8039A848[5].vz = lbl_803DF244;
+        normalize(&lbl_8039A848[5].vx, &lbl_8039A848[5].vy, &lbl_8039A848[5].vz);
+        lbl_8039A848[5].scale = lbl_803DF1FC;
+        lbl_8039A848[5].flag = 0;
+        lbl_803DB76C = 0;
     }
 }
 #pragma pop
