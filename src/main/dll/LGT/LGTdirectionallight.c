@@ -34,6 +34,25 @@ extern void ObjGroup_RemoveObject(int obj, int group);
 extern void Music_Trigger(int musicId, int param);
 extern void GameBit_Set(int eventId, int value);
 
+typedef struct {
+    f32 x, y, z;
+} LightVec3;
+
+typedef struct {
+    LightVec3 light;
+    LightVec3 color;
+    LightVec3 fog;
+} LightVecSet;
+
+extern f64 lbl_803E5E88;
+
+extern void *Obj_GetPlayerObject(void);
+extern f32 Vec_xzDistance(f32 *a, f32 *b);
+extern int *gPartfxInterface;
+extern byte framesThisStep;
+extern f32 lbl_803E5E58;
+extern f32 lbl_803E5E5C;
+extern f32 lbl_803E5E60;
 extern f32 lbl_802C24B8[];
 extern undefined4 DAT_802c2c08;
 extern undefined4 DAT_802c2c0c;
@@ -102,33 +121,38 @@ extern f32 lbl_803E6AF8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void wmworm_update(short *param_1)
 {
   float fVar1;
   float fVar2;
   float fVar3;
-  int iVar4;
+  u8 *player;
   int iVar5;
   short sVar6;
-  double dVar7;
-  
+  f32 dist;
+
+  player = (u8 *)Obj_GetPlayerObject();
   iVar5 = *(int *)(param_1 + 0x5c);
-  iVar4 = FUN_80017a98();
-  if (iVar4 != 0) {
-    dVar7 = (double)FUN_80017710((float *)(iVar4 + 0x18),(float *)(*(int *)(param_1 + 0x26) + 8));
-    if (dVar7 <= (double)lbl_803E6AF0) {
-      fVar1 = *(float *)(iVar4 + 0x18) - *(float *)(param_1 + 6);
-      fVar2 = *(float *)(iVar4 + 0x1c) - *(float *)(param_1 + 8);
-      fVar3 = *(float *)(iVar4 + 0x20) - *(float *)(param_1 + 10);
-      if ((lbl_803E6AF4 < fVar1) || (fVar1 < lbl_803E6AF4)) {
-        *(float *)(param_1 + 6) = lbl_803E6AF8 * fVar1 * lbl_803DC074 + *(float *)(param_1 + 6);
+  if (player != NULL) {
+    dist = Vec_xzDistance((f32 *)(player + 0x18),(f32 *)(*(int *)(param_1 + 0x26) + 8));
+    if (dist > lbl_803E5E58) {
+      *(f32 *)(param_1 + 6) = *(f32 *)(iVar5 + 0x10);
+      *(f32 *)(param_1 + 8) = *(f32 *)(iVar5 + 0x14);
+      *(f32 *)(param_1 + 10) = *(f32 *)(iVar5 + 0x18);
+    }
+    else {
+      fVar1 = *(f32 *)(player + 0x18) - *(f32 *)(param_1 + 6);
+      fVar2 = *(f32 *)(player + 0x1c) - *(f32 *)(param_1 + 8);
+      fVar3 = *(f32 *)(player + 0x20) - *(f32 *)(param_1 + 10);
+      if ((fVar1 > lbl_803E5E5C) || (fVar1 < lbl_803E5E5C)) {
+        *(f32 *)(param_1 + 6) = lbl_803E5E60 * fVar1 * timeDelta + *(f32 *)(param_1 + 6);
       }
-      if ((lbl_803E6AF4 < fVar2) || (fVar2 < lbl_803E6AF4)) {
-        *(float *)(param_1 + 8) = lbl_803E6AF8 * fVar2 * lbl_803DC074 + *(float *)(param_1 + 8);
+      if ((fVar2 > lbl_803E5E5C) || (fVar2 < lbl_803E5E5C)) {
+        *(f32 *)(param_1 + 8) = lbl_803E5E60 * fVar2 * timeDelta + *(f32 *)(param_1 + 8);
       }
-      if ((lbl_803E6AF4 < fVar3) || (fVar3 < lbl_803E6AF4)) {
-        *(float *)(param_1 + 10) =
-             lbl_803E6AF8 * fVar3 * lbl_803DC074 + *(float *)(param_1 + 10);
+      if ((fVar3 > lbl_803E5E5C) || (fVar3 < lbl_803E5E5C)) {
+        *(f32 *)(param_1 + 10) = lbl_803E5E60 * fVar3 * timeDelta + *(f32 *)(param_1 + 10);
       }
       sVar6 = *(short *)(iVar5 + 8);
       if ((-1 < sVar6) || ((-1 >= sVar6 && (*(int *)(param_1 + 0x7a) < 1)))) {
@@ -136,28 +160,26 @@ void wmworm_update(short *param_1)
           *(undefined2 *)(iVar5 + 0xc) = 1;
         }
         *param_1 = *param_1 + 300;
-        if (*(short *)(iVar5 + 8) < 1) {
-          (**(code **)(*DAT_803dd708 + 8))(param_1,(int)*(short *)(iVar5 + 4),0,4,0xffffffff,0);
+        if (0 < *(short *)(iVar5 + 8)) {
+          for (sVar6 = 0; sVar6 < *(short *)(iVar5 + 8); sVar6 = sVar6 + 1) {
+            (**(code **)(*gPartfxInterface + 8))(param_1,(int)*(short *)(iVar5 + 4),0,4,
+                                                 0xffffffff,0);
+          }
         }
         else {
-          for (sVar6 = 0; sVar6 < *(short *)(iVar5 + 8); sVar6 = sVar6 + 1) {
-            (**(code **)(*DAT_803dd708 + 8))(param_1,(int)*(short *)(iVar5 + 4),0,4,0xffffffff,0);
-          }
+          (**(code **)(*gPartfxInterface + 8))(param_1,(int)*(short *)(iVar5 + 4),0,4,
+                                               0xffffffff,0);
         }
         *(int *)(param_1 + 0x7a) = -(int)*(short *)(iVar5 + 8);
       }
       else if ((sVar6 < 0) && (0 < *(int *)(param_1 + 0x7a))) {
-        *(uint *)(param_1 + 0x7a) = *(int *)(param_1 + 0x7a) - (uint)DAT_803dc070;
+        *(uint *)(param_1 + 0x7a) = *(int *)(param_1 + 0x7a) - (uint)framesThisStep;
       }
-    }
-    else {
-      *(undefined4 *)(param_1 + 6) = *(undefined4 *)(iVar5 + 0x10);
-      *(undefined4 *)(param_1 + 8) = *(undefined4 *)(iVar5 + 0x14);
-      *(undefined4 *)(param_1 + 10) = *(undefined4 *)(iVar5 + 0x18);
     }
   }
   return;
 }
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -189,39 +211,23 @@ void wmworm_release(void) {}
 void wmworm_initialise(void) {}
 
 #pragma scheduling off
-#pragma peephole off
 void fn_801F3F18(int obj)
 {
-    f32 *lightVectors;
-    f32 fogX;
-    f32 fogY;
-    f32 fogZ;
-    f32 colorX;
-    f32 colorY;
-    f32 colorZ;
-    f32 lightX;
-    f32 lightY;
-    f32 lightZ;
+    LightVecSet L;
+    LightVec3 *vecs;
     u8 *fromColor;
     u8 *toColor;
     u8 *outColor;
     u32 red;
     u32 green;
     u32 blue;
-    f32 blend;
 
-    lightVectors = lbl_802C24B8;
-    fogX = lightVectors[3];
-    fogY = lightVectors[4];
-    fogZ = lightVectors[5];
-    colorX = lightVectors[6];
-    colorY = lightVectors[7];
-    colorZ = lightVectors[8];
-    lightX = lightVectors[9];
-    lightY = lightVectors[10];
-    lightZ = lightVectors[11];
+    vecs = (LightVec3 *)lbl_802C24B8;
+    L.fog = vecs[1];
+    L.color = vecs[2];
+    L.light = vecs[3];
 
-    if ((*gMapEventInterface)->getMode((s8)*(u8 *)(obj + 0xac)) == 7) {
+    if ((u8)(*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 7) {
         return;
     }
 
@@ -235,9 +241,9 @@ void fn_801F3F18(int obj)
 
     skySetOverrideLightColorEnabled(1);
     skySetOverrideLightColor(0x88, 0xb7, 0xba);
-    if ((*(u32 *)(obj + 0xf4) & 4) == 0) {
+    if ((*(int *)(obj + 0xf4) & 4) == 0) {
         skyFn_80089710(1, 1, 0);
-        *(u32 *)(obj + 0xf4) |= 4;
+        *(int *)(obj + 0xf4) |= 4;
     } else {
         skyFn_80089710(1, 1, 1);
     }
@@ -250,50 +256,58 @@ void fn_801F3F18(int obj)
     if (lbl_803DDC8C < lbl_803E5E70) {
         lbl_803DDC8C = lbl_803E5E70;
     }
-    blend = lbl_803DDC8C;
 
     fromColor = &lbl_803DC118;
     toColor = &lbl_803DC11C;
     outColor = &lbl_803DDC9C;
-    red = (u32)(blend * (f32)((s32)toColor[0] - (s32)fromColor[0]) + (f32)(s32)fromColor[0]);
-    green = (u32)(blend * (f32)((s32)toColor[1] - (s32)fromColor[1]) + (f32)(s32)fromColor[1]);
-    blue = (u32)(blend * (f32)((s32)toColor[2] - (s32)fromColor[2]) + (f32)(s32)fromColor[2]);
+    red = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+                (f32)(s32)fromColor[0]);
     outColor[0] = red;
+    green = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+                  (f32)(s32)fromColor[1]);
     outColor[1] = green;
+    blue = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+                 (f32)(s32)fromColor[2]);
     outColor[2] = blue;
-    skyFn_800895e0(1, red, green, blue, 0x40, 0x40);
+    skyFn_800895e0(1, outColor[0], outColor[1], outColor[2], 0x40, 0x40);
 
     fromColor = &lbl_803DC110;
     toColor = &lbl_803DC114;
     outColor = &lbl_803DDC98;
-    red = (u32)(blend * (f32)((s32)toColor[0] - (s32)fromColor[0]) + (f32)(s32)fromColor[0]);
-    green = (u32)(blend * (f32)((s32)toColor[1] - (s32)fromColor[1]) + (f32)(s32)fromColor[1]);
-    blue = (u32)(blend * (f32)((s32)toColor[2] - (s32)fromColor[2]) + (f32)(s32)fromColor[2]);
+    red = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+                (f32)(s32)fromColor[0]);
     outColor[0] = red;
+    green = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+                  (f32)(s32)fromColor[1]);
     outColor[1] = green;
+    blue = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+                 (f32)(s32)fromColor[2]);
     outColor[2] = blue;
-    fn_80089510(1, red, green, blue);
+    fn_80089510(1, outColor[0], outColor[1], outColor[2]);
 
     fromColor = &lbl_803DC120;
     toColor = &lbl_803DC124;
     outColor = &lbl_803DDC94;
-    red = (u32)(blend * (f32)((s32)toColor[0] - (s32)fromColor[0]) + (f32)(s32)fromColor[0]);
-    green = (u32)(blend * (f32)((s32)toColor[1] - (s32)fromColor[1]) + (f32)(s32)fromColor[1]);
-    blue = (u32)(blend * (f32)((s32)toColor[2] - (s32)fromColor[2]) + (f32)(s32)fromColor[2]);
+    red = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[0] - (s32)fromColor[0]) +
+                (f32)(s32)fromColor[0]);
     outColor[0] = red;
+    green = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[1] - (s32)fromColor[1]) +
+                  (f32)(s32)fromColor[1]);
     outColor[1] = green;
+    blue = (u32)(s32)(lbl_803DDC8C * (f32)((s32)toColor[2] - (s32)fromColor[2]) +
+                 (f32)(s32)fromColor[2]);
     outColor[2] = blue;
-    fn_80089578(1, red, green, blue);
+    fn_80089578(1, outColor[0], outColor[1], outColor[2]);
 
-    lbl_803DDC90 = (u8)(s32)(blend * lbl_803E5E80 + lbl_803E5E7C);
+    red = (u32)(s32)(lbl_803DDC8C * lbl_803E5E80 + lbl_803E5E7C);
+    lbl_803DDC90 = red;
     skySetOverrideLightDirectionEnabled(1);
-    skySetOverrideLightDirection(blend * (lightX - colorX) + colorX,
-                                 blend * (lightY - colorY) + colorY,
-                                 blend * (lightZ - colorZ) + colorZ,
+    skySetOverrideLightDirection(lbl_803DDC8C * (L.light.x - L.color.x) + L.color.x,
+                                 lbl_803DDC8C * (L.light.y - L.color.y) + L.color.y,
+                                 lbl_803DDC8C * (L.light.z - L.color.z) + L.color.z,
                                  lbl_803E5E84);
-    skyFn_800894a8(1, fogX, fogY, fogZ);
+    skyFn_800894a8(1, L.fog.x, L.fog.y, L.fog.z);
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 /* 8b "li r3, N; blr" returners. */
