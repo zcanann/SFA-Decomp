@@ -2,7 +2,7 @@
  * Asm symbols: 13.  Fill bodies one at a time using:
  *   python3 tools/function_objdump.py --diff main/main/dll/baddie/skeetla <symbol>
  */
-#include "types.h"
+#include "ghidra_import.h"
 #include "main/dll/baddie/skeetla.h"
 
 #define SFXfox_outofwater122 575
@@ -233,18 +233,18 @@ int trickyAdvanceRouteTargetAhead(f32 param_1, int param_2, int param_3)
 /* trickyTurnTowardYaw  addr=0x80139930  size=0x15C  linkage=global */
 #pragma peephole off
 #pragma scheduling off
-int trickyTurnTowardYaw(u8 *obj, u16 targetYaw)
+int trickyTurnTowardYaw(u8 *obj, s16 targetYaw)
 {
     u8 *state;
     int currentYaw;
     int delta;
-    s16 step;
+    int step;
 
     state = *(u8 **)(obj + 0xb8);
-    *(u16 *)(state + 0x5a) = targetYaw;
+    *(s16 *)(state + 0x5a) = targetYaw;
 
     currentYaw = *(s16 *)obj;
-    delta = currentYaw - (u16)(s16)targetYaw;
+    delta = currentYaw - (u16)targetYaw;
     if (delta > 0x8000) {
         delta -= 0xffff;
     }
@@ -269,12 +269,12 @@ int trickyTurnTowardYaw(u8 *obj, u16 targetYaw)
     }
 
     if (delta > 0x200) {
-        step = (s16)(s32)(lbl_803E2450 * timeDelta);
-        *(s16 *)obj = (s16)(currentYaw - step);
+        step = (s32)(lbl_803E2450 * timeDelta);
+        *(s16 *)obj = currentYaw - step;
         *(u32 *)(state + 0x54) |= 0x10000000;
     } else if (delta < -0x200) {
-        step = (s16)(s32)(lbl_803E2450 * timeDelta);
-        *(s16 *)obj = (s16)(currentYaw + step);
+        step = (s32)(lbl_803E2450 * timeDelta);
+        *(s16 *)obj = currentYaw + step;
         *(u32 *)(state + 0x54) |= 0x10000000;
     } else {
         *(u16 *)obj = targetYaw;
@@ -302,7 +302,7 @@ extern f32 lbl_803E2478;
 extern f32 lbl_803E2480;
 extern f32 lbl_803E2484;
 extern f32 oneOverTimeDelta;
-extern char lbl_803DBC4C[];
+extern char lbl_803DBC4C;
 extern char lbl_8031D2E8[];
 extern u32 lbl_803E23D4;
 extern u16 lbl_803E23D8;
@@ -319,10 +319,10 @@ extern u32 randomGetRange(int min, int max);
 
 static int skeetla_isInWater(u8 *state)
 {
-    if (*(f32 *)(state + 0x2ac) == lbl_803E23DC) {
+    if (lbl_803E23DC == *(f32 *)(state + 0x2ac)) {
         return 0;
     }
-    if (*(f32 *)(state + 0x2b0) == lbl_803E2410) {
+    if (lbl_803E2410 == *(f32 *)(state + 0x2b0)) {
         return 1;
     }
     if ((*(f32 *)(state + 0x2b4) - *(f32 *)(state + 0x2b0)) > lbl_803E2414) {
@@ -331,8 +331,9 @@ static int skeetla_isInWater(u8 *state)
     return 0;
 }
 
-static f32 skeetla_pathSpeedDelta(u8 *obj, u8 *state)
+static f32 skeetla_pathSpeedDelta(u8 *obj)
 {
+    u8 *state = *(u8 **)(obj + 0xb8);
     f32 *currentPathPoint;
     f32 dx;
     f32 dz;
@@ -340,77 +341,43 @@ static f32 skeetla_pathSpeedDelta(u8 *obj, u8 *state)
     f32 currentSpeed;
 
     currentPathPoint = *(f32 **)(state + 0x28);
-    if (currentPathPoint != *(f32 **)(state + 0x6f0)) {
-        return lbl_803E23DC;
+    if (currentPathPoint == *(f32 **)(state + 0x6f0)) {
+        dx = *(f32 *)(state + 0x6f4) - *(f32 *)(obj + 0x18);
+        dz = *(f32 *)(state + 0x6fc) - *(f32 *)(obj + 0x20);
+        previousSpeed = oneOverTimeDelta * sqrtf((dx * dx) + (dz * dz));
+
+        dx = currentPathPoint[0] - *(f32 *)(obj + 0x18);
+        dz = currentPathPoint[2] - *(f32 *)(obj + 0x20);
+        currentSpeed = oneOverTimeDelta * sqrtf((dx * dx) + (dz * dz));
+        return currentSpeed - previousSpeed;
     }
-
-    dx = *(f32 *)(state + 0x6f4) - *(f32 *)(obj + 0x18);
-    dz = *(f32 *)(state + 0x6fc) - *(f32 *)(obj + 0x20);
-    previousSpeed = sqrtf((dx * dx) + (dz * dz)) * oneOverTimeDelta;
-
-    dx = currentPathPoint[0] - *(f32 *)(obj + 0x18);
-    dz = currentPathPoint[2] - *(f32 *)(obj + 0x20);
-    currentSpeed = sqrtf((dx * dx) + (dz * dz)) * oneOverTimeDelta;
-    return currentSpeed - previousSpeed;
+    return lbl_803E23DC;
 }
 
-static void skeetla_updateFacingFromMoveVector(u8 *obj, u8 *state, int *turnDeltaOut)
+static void skeetla_updateFacingFromMoveVector(u8 *obj, s16 *turnDeltaOut)
 {
+    u8 *state = *(u8 **)(obj + 0xb8);
     f32 dx;
+    f32 xx;
     f32 dz;
+    f32 zz;
     s16 yaw;
-    f32 angle;
 
     dx = *(f32 *)(state + 0x2c);
+    xx = dx * dx;
     dz = *(f32 *)(state + 0x30);
-    if (((dx * dx) + (dz * dz)) > lbl_803E23EC) {
+    zz = dz * dz;
+    if ((xx + zz) > lbl_803E23EC) {
         yaw = getAngle(-dx, -dz);
         *turnDeltaOut = trickyTurnTowardYaw(obj, yaw);
-        angle = (lbl_803E2454 * (f32)*(s16 *)obj) / lbl_803E2458;
-        *(f32 *)(state + 0x2c) = -fn_80293E80(angle);
-        *(f32 *)(state + 0x30) = -sin(angle);
+        *(f32 *)(state + 0x2c) = -fn_80293E80((lbl_803E2454 * (f32)(int)*(s16 *)obj) / lbl_803E2458);
+        *(f32 *)(state + 0x30) = -sin((lbl_803E2454 * (f32)(int)*(s16 *)obj) / lbl_803E2458);
     }
 }
 
-static void skeetla_maybePlayFootstep(u8 *obj, u8 *state, f32 moveSpeed)
+static void skeetla_playFootstepSfx(u8 *obj, u16 sfxId)
 {
-    f32 speedDelta;
-    u16 sfxIds[3];
-    u16 sfxId;
-
-    speedDelta = skeetla_pathSpeedDelta(obj, state);
-    if (speedDelta < lbl_803E23DC) {
-        speedDelta = -speedDelta;
-    }
-    if (speedDelta <= lbl_803E23DC) {
-        return;
-    }
-
-    *(f32 *)(state + 0x7a4) -= timeDelta;
-    if (*(f32 *)(state + 0x7a4) > lbl_803E23DC) {
-        return;
-    }
-
-    *(f32 *)(state + 0x7a4) = (f32)(s32)randomGetRange(600, 1200);
-    if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0) {
-        return;
-    }
-
-    if (moveSpeed > lbl_803E23E8) {
-        sfxId = (u16)randomGetRange(0x34d, 0x34e);
-    }
-    else {
-        *(u32 *)sfxIds = lbl_803E23D4;
-        sfxIds[2] = lbl_803E23D8;
-        if (GameBit_Get(0x25) != 0) {
-            randomGetRange(0, 2);
-        }
-        else {
-            randomGetRange(0, 1);
-        }
-        sfxId = sfxIds[randomGetRange(0, 2)];
-    }
-
+    u8 *state = *(u8 **)(obj + 0xb8);
     if (((*(u8 *)(state + 0x58) >> 6) & 1) == 0 &&
         ((*(s16 *)(obj + 0xa0) >= 0x30) || (*(s16 *)(obj + 0xa0) < 0x29)) &&
         (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0)) {
@@ -419,46 +386,50 @@ static void skeetla_maybePlayFootstep(u8 *obj, u8 *state, f32 moveSpeed)
 }
 
 /* trickyMove  addr=0x80139A8C  size=0x964  linkage=global */
+#pragma peephole off
+#pragma scheduling off
 int trickyMove(u8 *obj, f32 *targetPos) {
+  f32 prospectivePos[3];
+  f32 adjustedPos[3];
+  u16 sfxIds[3];
+  u16 sfxId;
   char *debugStrings;
   u8 *state;
   f32 moveSpeed;
   f32 length;
-  f32 prospectivePos[3];
-  f32 adjustedPos[3];
-  int turnDelta;
-  int previousYaw;
-  int absTurnDelta;
+  s16 previousYaw;
+  s16 turnDelta;
+  int td;
   int animId;
 
   debugStrings = lbl_8031D2E8;
   state = *(u8 **)(obj + 0xb8);
   moveSpeed = *(f32 *)(state + 0x14);
-  trickyDebugPrint(lbl_803DBC4C, moveSpeed);
+  trickyDebugPrint(&lbl_803DBC4C, moveSpeed);
 
   *(f32 *)(state + 0x2c) = targetPos[0] - *(f32 *)(obj + 0x18);
   *(f32 *)(state + 0x30) = targetPos[2] - *(f32 *)(obj + 0x20);
   length =
       sqrtf((*(f32 *)(state + 0x2c) * *(f32 *)(state + 0x2c)) +
             (*(f32 *)(state + 0x30) * *(f32 *)(state + 0x30)));
-  if (length != lbl_803E23DC) {
+  if (lbl_803E23DC != length) {
     *(f32 *)(state + 0x2c) /= length;
     *(f32 *)(state + 0x30) /= length;
   }
 
   if (moveSpeed < lbl_803E2420) {
     prospectivePos[0] =
-        *(f32 *)(obj + 0x18) + (lbl_803E2420 * *(f32 *)(state + 0x2c) * timeDelta);
+        lbl_803E2420 * *(f32 *)(state + 0x2c) * timeDelta + *(f32 *)(obj + 0x18);
     prospectivePos[1] = *(f32 *)(obj + 0x1c);
     prospectivePos[2] =
-        *(f32 *)(obj + 0x20) + (lbl_803E2420 * *(f32 *)(state + 0x30) * timeDelta);
+        lbl_803E2420 * *(f32 *)(state + 0x30) * timeDelta + *(f32 *)(obj + 0x20);
   }
   else {
     prospectivePos[0] =
-        *(f32 *)(obj + 0x18) + (moveSpeed * *(f32 *)(state + 0x2c) * timeDelta);
+        timeDelta * (*(f32 *)(state + 0x2c) * moveSpeed) + *(f32 *)(obj + 0x18);
     prospectivePos[1] = *(f32 *)(obj + 0x1c);
     prospectivePos[2] =
-        *(f32 *)(obj + 0x20) + (moveSpeed * *(f32 *)(state + 0x30) * timeDelta);
+        timeDelta * (*(f32 *)(state + 0x30) * moveSpeed) + *(f32 *)(obj + 0x20);
   }
 
   adjustedPos[0] = prospectivePos[0];
@@ -471,15 +442,14 @@ int trickyMove(u8 *obj, f32 *targetPos) {
     length =
         sqrtf((*(f32 *)(state + 0x2c) * *(f32 *)(state + 0x2c)) +
               (*(f32 *)(state + 0x30) * *(f32 *)(state + 0x30)));
-    if (length != lbl_803E23DC) {
+    if (lbl_803E23DC != length) {
       *(f32 *)(state + 0x2c) /= length;
       *(f32 *)(state + 0x30) /= length;
     }
   }
 
-  turnDelta = 0;
-  if (moveSpeed < lbl_803E2420) {
-    skeetla_updateFacingFromMoveVector(obj, state, &turnDelta);
+  if (!(moveSpeed >= lbl_803E2420)) {
+    skeetla_updateFacingFromMoveVector(obj, &turnDelta);
     if (skeetla_isInWater(state) != 0) {
       objAnimFn_8013a3f0(lbl_803E2468, (int)obj, 7, 0x2000000);
       *(f32 *)(state + 0x79c) = lbl_803E2440;
@@ -489,7 +459,31 @@ int trickyMove(u8 *obj, f32 *targetPos) {
     }
 
     if (*(u8 *)(state + 8) == 1) {
-      skeetla_maybePlayFootstep(obj, state, moveSpeed);
+      if ((skeetla_pathSpeedDelta(obj) >= lbl_803E23DC ? skeetla_pathSpeedDelta(obj)
+                                                       : -skeetla_pathSpeedDelta(obj)) > lbl_803E23DC) {
+        *(f32 *)(state + 0x7a4) -= timeDelta;
+        if (*(f32 *)(state + 0x7a4) <= lbl_803E23DC) {
+          *(f32 *)(state + 0x7a4) = (f32)(int)randomGetRange(600, 1200);
+          if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) == 0) {
+            if (moveSpeed > lbl_803E23E8) {
+              sfxId = (u16)randomGetRange(0x34d, 0x34e);
+              skeetla_playFootstepSfx(obj, sfxId);
+            }
+            else {
+              *(u32 *)sfxIds = lbl_803E23D4;
+              sfxIds[2] = lbl_803E23D8;
+              if (GameBit_Get(0x25) != 0) {
+                randomGetRange(0, 2);
+              }
+              else {
+                randomGetRange(0, 1);
+              }
+              sfxId = sfxIds[randomGetRange(0, 2)];
+              skeetla_playFootstepSfx(obj, sfxId);
+            }
+          }
+        }
+      }
     }
 
     if (moveSpeed > lbl_803E246C) {
@@ -513,8 +507,9 @@ int trickyMove(u8 *obj, f32 *targetPos) {
   }
 
   previousYaw = *(s16 *)obj;
-  skeetla_updateFacingFromMoveVector(obj, state, &turnDelta);
-  turnDelta = (s16)turnDelta;
+  turnDelta = 0;
+  skeetla_updateFacingFromMoveVector(obj, &turnDelta);
+  td = turnDelta;
 
   if ((*(u32 *)(state + 0x54) & 0x100000) != 0) {
     if (skeetla_isInWater(state) != 0) {
@@ -524,46 +519,47 @@ int trickyMove(u8 *obj, f32 *targetPos) {
       *(f32 *)(state + 0x838) = lbl_803E23DC;
     }
     else {
+      u32 flags;
       trickyDebugPrint(debugStrings + 0x1d0);
-      animId = 0;
-      absTurnDelta = turnDelta;
-      if (absTurnDelta < 0) {
-        absTurnDelta = -absTurnDelta;
-      }
-      if ((*(u32 *)(state + 0x54) & 0x400000) != 0) {
-        if (absTurnDelta > 0x3555) {
+      flags = *(u32 *)(state + 0x54);
+      if ((flags & 0x400000) != 0) {
+        if ((td >= 0 ? td : -td) > 0x3555) {
           animId = 0x27;
         }
-        else if (absTurnDelta > 0x2000) {
+        else if ((td >= 0 ? td : -td) > 0x2000) {
           animId = 0xb;
         }
         else {
           animId = 9;
         }
       }
-      else if ((*(u32 *)(state + 0x54) & 0x800000) != 0) {
-        if (absTurnDelta > 0x3555) {
+      else if ((flags & 0x800000) != 0) {
+        if ((td >= 0 ? td : -td) > 0x3555) {
           animId = 0x28;
         }
-        else if (absTurnDelta > 0x2000) {
+        else if ((td >= 0 ? td : -td) > 0x2000) {
           animId = 0xc;
         }
         else {
           animId = 10;
         }
       }
-      *(s16 *)obj = (s16)previousYaw;
+      *(s16 *)obj = previousYaw;
       objAnimFn_8013a3f0(lbl_803E2478, (int)obj, animId, 0x1000100);
     }
   }
 
   *(f32 *)(state + 0x14) = lbl_803E2420;
-  if (((*(u32 *)(state + 0x54) & 0x100000) == 0) &&
-      ((*(u32 *)(state + 0x54) & 0x200000) == 0)) {
-    return 0;
+  {
+    u32 f = *(u32 *)(state + 0x54);
+    if (((f & 0x100000) == 0) && ((f & 0x200000) == 0)) {
+      return 0;
+    }
   }
   return 1;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /* objAnimFn_8013a3f0  addr=0x8013A3F0  size=0xFC  linkage=global */
 #pragma peephole off
@@ -854,12 +850,21 @@ void trickyRankLinkedRouteCandidates(u8 *obj, u8 *outRouteFlags, s16 linkSelecto
     u8 routeFlags;
     f32 dx;
     f32 dz;
+    f32 dx2;
+    f32 dz2;
+    f32 zz;
+    f32 xx;
+    f32 xx2;
+    f32 zz2;
+    f32 cx;
+    f32 cz;
+    f32 *p;
     f32 score;
     f32 init;
     int count;
     int i;
-    int j;
-    int k;
+    u8 j;
+    u8 k;
     int linkCurveId;
     u8 *state;
 
@@ -888,47 +893,51 @@ void trickyRankLinkedRouteCandidates(u8 *obj, u8 *outRouteFlags, s16 linkSelecto
             continue;
         }
 
-        dx = *(f32 *)(*(int *)(state + 0x28) + 0) - *(f32 *)((u8 *)curve + 8);
-        dz = *(f32 *)(*(int *)(state + 0x28) + 8) - *(f32 *)((u8 *)curve + 0x10);
-        score = (dz * dz) + (dx * dx);
-        dx = *(f32 *)(obj + 0x18) - *(f32 *)((u8 *)curve + 8);
-        dz = *(f32 *)(obj + 0x20) - *(f32 *)((u8 *)curve + 0x10);
-        score += (dx * dx) + (dz * dz);
-        if (score >= bestDistances[7]) {
-            continue;
-        }
-
-        for (j = 0; j < 4; j++) {
-            linkCurveId = *(int *)((u8 *)curve + 0x1c + j * 4);
-            if ((linkCurveId > -1) && (*(u8 *)((u8 *)curve + 4 + j) == (u16)linkSelector)) {
-                if (*(s8 *)((u8 *)curve + 0x1a) == 8) {
-                    linkedCurve = (*(void *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(linkCurveId);
-                    if ((linkedCurve != NULL) && (*(s8 *)((u8 *)linkedCurve + 0x1a) == 9)) {
-                        continue;
+        cz = *(f32 *)((u8 *)curve + 0x10);
+        p = *(f32 **)(state + 0x28);
+        dz = p[2] - cz;
+        zz = dz * dz;
+        cx = *(f32 *)((u8 *)curve + 8);
+        dx = p[0] - cx;
+        xx = dx * dx;
+        dx2 = *(f32 *)(obj + 0x18) - cx;
+        xx2 = dx2 * dx2;
+        dz2 = *(f32 *)(obj + 0x20) - cz;
+        zz2 = dz2 * dz2;
+        score = zz + (xx + (xx2 + zz2));
+        if (score < bestDistances[7]) {
+            for (j = 0; j < 4; j++) {
+                linkCurveId = *(int *)((u8 *)curve + 0x1c + j * 4);
+                if ((linkCurveId > -1) && (*(u8 *)((u8 *)curve + 4 + j) == linkSelector)) {
+                    if (*(s8 *)((u8 *)curve + 0x1a) == 8) {
+                        linkedCurve = (*(void *(**)(int))(*(int *)gRomCurveInterface + 0x1c))(linkCurveId);
+                        if ((linkedCurve != NULL) && (*(s8 *)((u8 *)linkedCurve + 0x1a) == 9)) {
+                            continue;
+                        }
                     }
-                }
 
-                routeFlags = (u8)(*(s8 *)((u8 *)curve + 0x1b) >> j);
-                break;
+                    routeFlags = (u8)(*(s8 *)((u8 *)curve + 0x1b) >> (u8)j);
+                    break;
+                }
             }
-        }
 
-        if (j == 4) {
-            continue;
-        }
+            if (j == 4) {
+                continue;
+            }
 
-        for (j = 0; j < 8; j++) {
-            if (score < bestDistances[j]) {
-                for (k = 7; k > j; k--) {
-                    outRouteFlags[k] = outRouteFlags[k - 1];
-                    outRoutes[k] = outRoutes[k - 1];
-                    bestDistances[k] = bestDistances[k - 1];
+            for (j = 0; j < 8; j++) {
+                if (score < bestDistances[j]) {
+                    for (k = 7; k > j; k--) {
+                        outRouteFlags[k] = outRouteFlags[k - 1];
+                        outRoutes[k] = outRoutes[k - 1];
+                        bestDistances[k] = bestDistances[k - 1];
+                    }
+
+                    outRouteFlags[j] = (routeFlags & 1) ^ 1;
+                    outRoutes[j] = curve;
+                    bestDistances[j] = score;
+                    break;
                 }
-
-                outRouteFlags[j] = (routeFlags & 1) == 0;
-                outRoutes[j] = curve;
-                bestDistances[j] = score;
-                break;
             }
         }
     }
