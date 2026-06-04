@@ -19173,3 +19173,95 @@ void fn_80025F38(int *a, int b, u8 *blend, u8 *chain) {
     }
 }
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_80026308(int *a, int b, u8 *blend, u8 *chain, int cb, int cbArg) {
+    u8 *model = (u8 *)a;
+    f32 tmp[12];
+    f32 mt[12];
+    f32 target[3];
+    f32 work[3];
+    f32 out[3];
+    f32 dir2[3];
+    f32 dir1[3];
+    f32 axis[3];
+    f32 *m;
+    int i;
+    int idx;
+    int nextIdx;
+    int prevOff;
+    f32 dot;
+    f32 cap;
+
+    idx = *(s8 *)(*(u8 **)(b + 0x3c) + (*(int ***)(chain + 4))[0][0] * 0x1c);
+    if (idx >= boneBlendSlotLimit(model)) {
+        idx = 0;
+    }
+    PSMTXCopy(*(f32 **)(model + ((*(u16 *)(model + 0x18) & 1) << 2) + 0xc) + idx * 0x10, tmp);
+    idx = (*(int ***)(chain + 4))[0][0];
+    if (idx >= boneBlendSlotLimit(model)) {
+        idx = 0;
+    }
+    m = *(f32 **)(model + ((*(u16 *)(model + 0x18) & 1) << 2) + 0xc) + idx * 0x10;
+    cap = lbl_803DE838;
+    for (i = 1; i < *(int *)(chain + 8) + 1; i++) {
+        nextIdx = (*(int ***)(chain + 4))[0][i];
+        prevOff = (i - 1) * 0x54;
+        PSMTXMultVec(tmp, (f32 *)(*(u8 **)chain + prevOff + 0x18), out);
+        target[0] = lbl_803DCED0 + (*(f32 *)(*(u8 **)chain + i * 0x54) + *(f32 *)(*(u8 **)chain + i * 0x54 + 0xc)) - playerMapOffsetX;
+        target[1] = *(f32 *)(*(u8 **)chain + i * 0x54 + 4) + *(f32 *)(*(u8 **)chain + i * 0x54 + 0x10);
+        target[2] = lbl_803DCECC + (*(f32 *)(*(u8 **)chain + i * 0x54 + 8) + *(f32 *)(*(u8 **)chain + i * 0x54 + 0x14)) - playerMapOffsetZ;
+        work[0] = *(f32 *)(*(u8 **)chain + i * 0x54 - 0x3c);
+        work[1] = *(f32 *)(*(u8 **)chain + i * 0x54 - 0x38);
+        work[2] = *(f32 *)(*(u8 **)chain + i * 0x54 - 0x34);
+        if ((u32)cb != 0) {
+            ((void (*)(int, int *, f32 *, int, int, f32))cb)(b, a, work, cbArg, i, *(f32 *)(blend + 0x14));
+        }
+        PSVECAdd(work, (f32 *)(*(u8 **)chain + i * 0x54 + 0x18), work);
+        PSMTXMultVec(tmp, work, work);
+        PSVECSubtract(target, out, dir1);
+        PSVECNormalize(dir1, dir1);
+        PSVECSubtract(work, out, dir2);
+        PSVECNormalize(dir2, dir2);
+        dot = PSVECDotProduct(dir2, dir1);
+        if (dot < cap && dot > lbl_803DE83C) {
+            PSVECCrossProduct(dir2, dir1, axis);
+            if (dot < lbl_803DE840) {
+                dot = lbl_803DE840;
+            } else {
+                dot = (lbl_803DE818 - dot) * *(f32 *)(blend + 8) + dot;
+            }
+            PSMTXTranspose(tmp, mt);
+            PSMTXMultVecSR(mt, axis, axis);
+            PSMTXRotAxisRad(m, axis, fn_802920A4(dot));
+        } else {
+            PSMTXIdentity(m);
+        }
+        PSMTXConcat(tmp, m, m);
+        m[3] = out[0];
+        m[7] = out[1];
+        m[11] = out[2];
+        PSMTXCopy(m, tmp);
+        work[0] = *(f32 *)(*(u8 **)chain + i * 0x54 + 0x18);
+        work[1] = *(f32 *)(*(u8 **)chain + i * 0x54 + 0x1c);
+        work[2] = *(f32 *)(*(u8 **)chain + i * 0x54 + 0x20);
+        PSMTXMultVec(m, work, work);
+        PSMTXCopy(m, (f32 *)(*(u8 **)chain + prevOff + 0x24));
+        if (i < *(int *)(chain + 8)) {
+            idx = nextIdx;
+            if (nextIdx >= boneBlendSlotLimit(model)) {
+                idx = 0;
+            }
+            m = *(f32 **)((u8 *)model + ((*(u16 *)(model + 0x18) & 1) << 2) + 0xc) + idx * 0x10;
+        }
+        *(f32 *)(*(u8 **)chain + i * 0x54 + 0xc) = work[0] - (lbl_803DCED0 + *(f32 *)(*(u8 **)chain + i * 0x54) - playerMapOffsetX);
+        *(f32 *)(*(u8 **)chain + i * 0x54 + 0x10) = work[1] - *(f32 *)(*(u8 **)chain + i * 0x54 + 4);
+        *(f32 *)(*(u8 **)chain + i * 0x54 + 0x14) = work[2] - (lbl_803DCECC + *(f32 *)(*(u8 **)chain + i * 0x54 + 8) - playerMapOffsetZ);
+        *(f32 *)(*(u8 **)chain + i * 0x54) = work[0];
+        *(f32 *)(*(u8 **)chain + i * 0x54 + 4) = work[1];
+        *(f32 *)(*(u8 **)chain + i * 0x54 + 8) = work[2];
+    }
+}
+#pragma pop
