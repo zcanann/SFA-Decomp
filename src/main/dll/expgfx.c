@@ -795,36 +795,36 @@ void expgfx_updateActivePools(u8 sourceMode, int sourceId, int resetSourceFrameS
   ambScaledG = (int)((f32)ambG8 * camScale);
   ambScaledB = (int)((f32)ambB8 * camScale);
 
-  pool = 0;
+  next = 0;
   scan = (s8 *)(runtimeBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET);
   for (batch = 8; batch != 0; batch--) {
     switch (scan[0]) { case 0: break; default: goto foundFirst; }
-    pool++;
+    next++;
     switch (scan[1]) { case 0: break; default: goto foundFirst; }
-    pool++;
+    next++;
     switch (scan[2]) { case 0: break; default: goto foundFirst; }
-    pool++;
+    next++;
     switch (scan[3]) { case 0: break; default: goto foundFirst; }
-    pool++;
+    next++;
     switch (scan[4]) { case 0: break; default: goto foundFirst; }
-    pool++;
+    next++;
     switch (scan[5]) { case 0: break; default: goto foundFirst; }
-    pool++;
+    next++;
     switch (scan[6]) { case 0: break; default: goto foundFirst; }
-    pool++;
+    next++;
     switch (scan[7]) { case 0: break; default: goto foundFirst; }
-    pool++;
+    next++;
     switch (scan[8]) { case 0: break; default: goto foundFirst; }
-    pool++;
+    next++;
     switch (scan[9]) { case 0: break; default: goto foundFirst; }
     scan += 10;
-    pool++;
+    next++;
   }
-  pool = -1;
+  next = -1;
 foundFirst:
+  pool = next;
   if (pool != -1) {
-    copyToCache(cache,
-                (void *)*(u32 *)((runtimeBase + (pool << 2)) + EXPGFX_SLOT_POOL_BASES_OFFSET),
+    copyToCache(cache, (void *)((ExpgfxRuntimeDataLayout *)runtimeBase)->slotPoolBases[pool],
                 0x7e);
     parity = 1;
     curCache = cache;
@@ -858,11 +858,11 @@ foundFirst:
       next = pool + 1;
       scan = (s8 *)(runtimeBase + EXPGFX_POOL_ACTIVE_COUNTS_OFFSET + next);
       if (next < EXPGFX_POOL_COUNT) {
-        do {
+        for (batch = EXPGFX_POOL_COUNT - next; batch != 0; batch--) {
           switch (*scan) { case 0: break; default: goto foundNext; }
           scan++;
           next++;
-        } while (next < EXPGFX_POOL_COUNT);
+        }
       }
       next = -1;
     foundNext:
@@ -870,8 +870,7 @@ foundFirst:
       if (next > -1) {
         nextBuf = (u8 *)cache + (u32)parity * 0x1000;
         copyToCache(nextBuf,
-                    (void *)*(u32 *)((runtimeBase + (next << 2)) + EXPGFX_SLOT_POOL_BASES_OFFSET),
-                    0x7e);
+                    (void *)((ExpgfxRuntimeDataLayout *)runtimeBase)->slotPoolBases[next], 0x7e);
         curCache = nextBuf;
         prefetched = 1;
       }
@@ -894,10 +893,9 @@ foundFirst:
         if (slot->sequenceId == -1) {
           continue;
         }
-        entry = (ExpgfxTableEntry *)(runtimeBase + EXPGFX_EXPTAB_OFFSET +
-                                     (((u32)slot->encodedTableIndex >> 1) &
-                                      EXPGFX_SLOT_TABLE_INDEX_MASK) *
-                                         EXPGFX_TABLE_ENTRY_SIZE);
+        entry = &((ExpgfxRuntimeDataLayout *)runtimeBase)
+                     ->expTab[((u32)slot->encodedTableIndex >> 1) &
+                              EXPGFX_SLOT_TABLE_INDEX_MASK];
         srcObj = (u8 *)entry->sourceId;
         resource = entry->resource;
         slot->stateBits.bits.frameParity = 0;
@@ -970,8 +968,8 @@ foundFirst:
             if ((slot->behaviorFlags & 0x8000000) != 0) {
               slot->behaviorFlags ^= 0x8000000;
             }
-            slot->lifetimeFrame = (s16)randomGetRange(0, 0x28) + 0xdc;
-            slot->lifetimeFrameLimit = (s16)randomGetRange(0, 0x28) + 0xdc;
+            slot->lifetimeFrame = randomGetRange(0, 0x28) + 0xdc;
+            slot->lifetimeFrameLimit = randomGetRange(0, 0x28) + 0xdc;
             slot->behaviorFlags |= 0x1000;
             slot->renderFlags |= 0x40000000;
             slot->velocityX = -(vecBuf[0] * attractRatio);
@@ -1044,8 +1042,7 @@ foundFirst:
             f32 fade;
 
             rnd = randomGetRange(0, 5);
-            slot->velocityY =
-                slot->velocityY * -(lbl_803DF3E4 * (f32)(int)rnd + lbl_803DF38C);
+            slot->velocityY *= -(lbl_803DF3E4 * (f32)(int)rnd + lbl_803DF38C);
             if (slot->velocityY > lbl_803DF390) {
               slot->velocityY = lbl_803DF390;
             }
@@ -1118,7 +1115,11 @@ foundFirst:
               rot.angleZ = 0;
               rot.angleY = 0;
               rot.angleX = 0;
-              if ((slot->behaviorFlags & 1) == 0 && srcObj != NULL) {
+              if ((slot->behaviorFlags & 1) != 0) {
+                rot.x = *(f32 *)&slot->posX;
+                rot.y = lbl_803DF35C;
+                rot.z = *(f32 *)&slot->posZ;
+              } else if (srcObj != NULL) {
                 rot.x = *(f32 *)&slot->posX + *(f32 *)(srcObj + 0x18);
                 rot.y = *(f32 *)(srcObj + 0x1c);
                 rot.z = *(f32 *)&slot->posZ + *(f32 *)(srcObj + 0x20);
@@ -1147,7 +1148,11 @@ foundFirst:
             rot.angleZ = 0;
             rot.angleY = 0;
             rot.angleX = 0;
-            if ((slot->behaviorFlags & 1) == 0 && srcObj != NULL) {
+            if ((slot->behaviorFlags & 1) != 0) {
+              rot.x = *(f32 *)&slot->posX;
+              rot.y = *(f32 *)&slot->posY;
+              rot.z = *(f32 *)&slot->posZ;
+            } else if (srcObj != NULL) {
               rot.x = *(f32 *)&slot->posX + *(f32 *)(srcObj + 0xc);
               rot.y = *(f32 *)&slot->posY + *(f32 *)(srcObj + 0x10);
               rot.z = *(f32 *)&slot->posZ + *(f32 *)(srcObj + 0x14);
@@ -1161,13 +1166,13 @@ foundFirst:
                                                           0x200001, -1, 0);
             gExpgfxFrameParityBit = 0;
           }
-          if ((slot->behaviorFlags & 0x80000000) != 0 && randomGetRange(0, 4) == 1) {
+          if ((slot->behaviorFlags & 0x80000000) != 0 && (int)randomGetRange(0, 4) == 1) {
             slot->velocityX +=
                 lbl_803DF3F8 - (f32)(int)randomGetRange(0, 9) / lbl_803DF3FC;
             slot->velocityZ +=
                 lbl_803DF3F8 - (f32)(int)randomGetRange(0, 9) / lbl_803DF3FC;
           }
-          if ((slot->renderFlags & 0x100000) != 0 && randomGetRange(0, 10) == 1) {
+          if ((slot->renderFlags & 0x100000) != 0 && (int)randomGetRange(0, 10) == 1) {
             if ((f32)slot->lifetimeFrame < (f32)slot->lifetimeFrameLimit) {
               slot->velocityX +=
                   lbl_803DF400 * (f32)(int)randomGetRange(-800, 800) + lbl_803DF3E8;
@@ -1202,7 +1207,9 @@ foundFirst:
           }
         }
         quad = (ExpgfxQuadVertex *)slot;
-        if (resource != 0) {
+        if (resource == 0) {
+          debugPrintf((char *)(staticBase + EXPGFX_STATIC_NO_TEXTURE_STRING_OFFSET));
+        } else {
           u8 *attached;
 
           texT0 = 0;
@@ -1240,9 +1247,9 @@ foundFirst:
               quad[0].colorG = (s16)colG * (ambG8 + 1) >> 8;
               quad[0].colorB = (s16)colB * (ambB8 + 1) >> 8;
             } else if ((slot->renderFlags & 0x800000) != 0) {
-              quad[0].colorR = (u32)((s16)colR * ambRPlus1) >> 8;
-              quad[0].colorG = (u32)((s16)colG * ambGPlus1) >> 8;
-              quad[0].colorB = (u32)((s16)colB * ambBPlus1) >> 8;
+              quad[0].colorR = (s16)colR * ambRPlus1 >> 8;
+              quad[0].colorG = (s16)colG * ambGPlus1 >> 8;
+              quad[0].colorB = (s16)colB * ambBPlus1 >> 8;
             } else {
               quad[0].colorR = colR;
               quad[0].colorG = colG;
@@ -1309,22 +1316,22 @@ foundFirst:
             axisY = lbl_803DF408 * (workB / norm);
             axisZ = lbl_803DF408 * (attractRatio / norm);
             attractRatio = lbl_803DF40C / (lbl_803DF410 * (f32)(u16)slot->scaleTarget);
-            baseX = (s16)(int)axisX;
+            baseX = (int)axisX;
             quad[0].x = baseX;
-            baseY = (s16)(int)axisY;
+            baseY = (int)axisY;
             quad[0].y = baseY;
-            baseZ = (s16)(int)axisZ;
+            baseZ = (int)axisZ;
             quad[0].z = baseZ;
             quad[0].texS = texS0;
             quad[0].texT = texT0;
-            quad[1].x = (s16)(int)(attractRatio * (*(f32 *)&slot->posX - prevX) + axisX);
-            quad[1].y = (s16)(int)(attractRatio * (*(f32 *)&slot->posY - prevY) + axisY);
-            quad[1].z = (s16)(int)(attractRatio * (*(f32 *)&slot->posZ - prevZ) + axisZ);
+            quad[1].x = (int)(attractRatio * (*(f32 *)&slot->posX - prevX) + axisX);
+            quad[1].y = (int)(attractRatio * (*(f32 *)&slot->posY - prevY) + axisY);
+            quad[1].z = (int)(attractRatio * (*(f32 *)&slot->posZ - prevZ) + axisZ);
             quad[1].texS = texS1;
             quad[1].texT = texT0;
-            quad[2].x = (s16)(int)(attractRatio * (*(f32 *)&slot->posX - prevX) - axisX);
-            quad[2].y = (s16)(int)(attractRatio * (*(f32 *)&slot->posY - prevY) - axisY);
-            quad[2].z = (s16)(int)(attractRatio * (*(f32 *)&slot->posZ - prevZ) - axisZ);
+            quad[2].x = (int)(attractRatio * (*(f32 *)&slot->posX - prevX) - axisX);
+            quad[2].y = (int)(attractRatio * (*(f32 *)&slot->posY - prevY) - axisY);
+            quad[2].z = (int)(attractRatio * (*(f32 *)&slot->posZ - prevZ) - axisZ);
             quad[2].texS = texS1;
             quad[2].texT = texT1;
             quad[3].x = -baseX;
@@ -1352,9 +1359,9 @@ foundFirst:
             rot.angleY = slot->sourceVecZ;
             rot.angleX = 0;
             mathFn_80021ac8(&rot, vecBuf);
-            quad[0].x = (s16)(int)vecBuf[0];
-            quad[0].y = (s16)(int)vecBuf[1];
-            quad[0].z = (s16)(int)vecBuf[2];
+            quad[0].x = (int)vecBuf[0];
+            quad[0].y = (int)vecBuf[1];
+            quad[0].z = (int)vecBuf[2];
             quad[0].texS = texS0;
             quad[0].texT = texT0;
             vecBuf[0] = (f32)template[1].x;
@@ -1368,9 +1375,9 @@ foundFirst:
             rot.angleY = slot->sourceVecZ;
             rot.angleX = 0;
             mathFn_80021ac8(&rot, vecBuf);
-            quad[1].x = (s16)(int)vecBuf[0];
-            quad[1].y = (s16)(int)vecBuf[1];
-            quad[1].z = (s16)(int)vecBuf[2];
+            quad[1].x = (int)vecBuf[0];
+            quad[1].y = (int)vecBuf[1];
+            quad[1].z = (int)vecBuf[2];
             quad[1].texS = texS1;
             quad[1].texT = texT0;
             vecBuf[0] = (f32)template[2].x;
@@ -1384,9 +1391,9 @@ foundFirst:
             rot.angleY = slot->sourceVecZ;
             rot.angleX = 0;
             mathFn_80021ac8(&rot, vecBuf);
-            quad[2].x = (s16)(int)vecBuf[0];
-            quad[2].y = (s16)(int)vecBuf[1];
-            quad[2].z = (s16)(int)vecBuf[2];
+            quad[2].x = (int)vecBuf[0];
+            quad[2].y = (int)vecBuf[1];
+            quad[2].z = (int)vecBuf[2];
             quad[2].texS = texS1;
             quad[2].texT = texT1;
             vecBuf[0] = (f32)template[3].x;
@@ -1400,9 +1407,9 @@ foundFirst:
             rot.angleY = slot->sourceVecZ;
             rot.angleX = 0;
             mathFn_80021ac8(&rot, vecBuf);
-            quad[3].x = (s16)(int)vecBuf[0];
-            quad[3].y = (s16)(int)vecBuf[1];
-            quad[3].z = (s16)(int)vecBuf[2];
+            quad[3].x = (int)vecBuf[0];
+            quad[3].y = (int)vecBuf[1];
+            quad[3].z = (int)vecBuf[2];
             quad[3].texS = texS0;
             quad[3].texT = texT1;
           } else if ((slot->renderFlags & 0x20) != 0) {
@@ -1429,74 +1436,74 @@ foundFirst:
           } else if ((slot->renderFlags & 0x100) != 0) {
             quad[0].x = template[0].x;
             quad[0].y = template[0].y;
-            quad[0].y = quad[0].y << 3;
+            quad[0].y <<= 3;
             quad[0].z = template[0].z;
             quad[0].texS = texS0;
             quad[0].texT = texT0;
             quad[1].x = template[1].x;
             quad[1].y = template[1].y;
-            quad[1].y = quad[1].y << 3;
+            quad[1].y <<= 3;
             quad[1].z = template[1].z;
             quad[1].texS = texS1;
             quad[1].texT = texT0;
             quad[2].x = template[2].x;
             quad[2].y = template[2].y;
-            quad[2].y = quad[2].y << 3;
+            quad[2].y <<= 3;
             quad[2].z = template[2].z;
             quad[2].texS = texS1;
             quad[2].texT = texT1;
             quad[3].x = template[3].x;
             quad[3].y = template[3].y;
-            quad[3].y = quad[3].y << 3;
+            quad[3].y <<= 3;
             quad[3].z = template[3].z;
             quad[3].texS = texS0;
             quad[3].texT = texT1;
           } else if ((slot->renderFlags & 0x400) != 0) {
             quad[0].z = template[0].x;
-            quad[0].z = quad[0].z << 5;
+            quad[0].z <<= 5;
             quad[0].y = template[0].y;
             quad[0].x = template[0].z;
             quad[0].texS = texS0;
             quad[0].texT = texT0;
             quad[1].z = template[1].x;
-            quad[1].z = quad[1].z << 5;
+            quad[1].z <<= 5;
             quad[1].y = template[1].y;
             quad[1].x = template[1].z;
             quad[1].texS = texS1;
             quad[1].texT = texT0;
             quad[2].z = template[2].x;
-            quad[2].z = quad[2].z << 5;
+            quad[2].z <<= 5;
             quad[2].y = template[2].y;
             quad[2].x = template[2].z;
             quad[2].texS = texS1;
             quad[2].texT = texT1;
             quad[3].z = template[3].x;
-            quad[3].z = quad[3].z << 5;
+            quad[3].z <<= 5;
             quad[3].y = template[3].y;
             quad[3].x = template[3].z;
             quad[3].texS = texS0;
             quad[3].texT = texT1;
           } else if ((slot->renderFlags & 0x200) != 0) {
             quad[0].x = template[0].x;
-            quad[0].x = quad[0].x << 5;
+            quad[0].x <<= 5;
             quad[0].y = template[0].y;
             quad[0].z = template[0].z;
             quad[0].texS = texS0;
             quad[0].texT = texT0;
             quad[1].x = template[1].x;
-            quad[1].x = quad[1].x << 5;
+            quad[1].x <<= 5;
             quad[1].y = template[1].y;
             quad[1].z = template[1].z;
             quad[1].texS = texS1;
             quad[1].texT = texT0;
             quad[2].x = template[2].x;
-            quad[2].x = quad[2].x << 5;
+            quad[2].x <<= 5;
             quad[2].y = template[2].y;
             quad[2].z = template[2].z;
             quad[2].texS = texS1;
             quad[2].texT = texT1;
             quad[3].x = template[3].x;
-            quad[3].x = quad[3].x << 5;
+            quad[3].x <<= 5;
             quad[3].y = template[3].y;
             quad[3].z = template[3].z;
             quad[3].texS = texS0;
@@ -1523,11 +1530,10 @@ foundFirst:
             quad[3].texS = texS0;
             quad[3].texT = texT1;
           }
-          attached = (u8 *)((ExpgfxTableEntry *)(runtimeBase + EXPGFX_EXPTAB_OFFSET +
-                                                 (((u32)slot->encodedTableIndex >> 1) &
-                                                  EXPGFX_SLOT_TABLE_INDEX_MASK) *
-                                                     EXPGFX_TABLE_ENTRY_SIZE))
-                         ->attachedKey1;
+          attached = (u8 *)((ExpgfxRuntimeDataLayout *)runtimeBase)
+                         ->expTab[((u32)slot->encodedTableIndex >> 1) &
+                                  EXPGFX_SLOT_TABLE_INDEX_MASK]
+                         .attachedKey1;
           rot.x = lbl_803DF35C;
           rot.y = lbl_803DF35C;
           rot.z = lbl_803DF35C;
@@ -1555,21 +1561,21 @@ foundFirst:
           rotPos[0] = *(f32 *)&slot->posX;
           rotPos[1] = *(f32 *)&slot->posY;
           rotPos[2] = *(f32 *)&slot->posZ;
-          if ((u16)(rot.angleZ | rot.angleX | rot.angleY) != 0) {
+          if ((rot.angleZ | rot.angleX | rot.angleY) != 0) {
             mathFn_80021ac8(&rot, rotPos);
           }
           if ((slot->behaviorFlags & 1) == 0) {
-            if (srcObj == NULL) {
+            if (srcObj != NULL) {
+              srcVel[0] = *(f32 *)(srcObj + 0x18);
+              srcVel[1] = *(f32 *)(srcObj + 0x1c);
+              srcVel[2] = *(f32 *)(srcObj + 0x20);
+            } else {
               srcVel[0] = *(f32 *)&slot->sourcePosY;
               srcVel[1] = *(f32 *)&slot->sourcePosZ;
               srcVel[2] = *(f32 *)&slot->sourcePosW;
               if (attached != NULL) {
                 Obj_RotateLocalOffsetByYaw(&slot->sourcePosY, srcVel, *(attached + 0x35));
               }
-            } else {
-              srcVel[0] = *(f32 *)(srcObj + 0x18);
-              srcVel[1] = *(f32 *)(srcObj + 0x1c);
-              srcVel[2] = *(f32 *)(srcObj + 0x20);
             }
           } else {
             srcVel[0] = lbl_803DF35C;
@@ -1610,8 +1616,6 @@ foundFirst:
           if (rot.z > *maxZPtr) {
             *maxZPtr = rot.z;
           }
-        } else {
-          debugPrintf((char *)(staticBase + EXPGFX_STATIC_NO_TEXTURE_STRING_OFFSET));
         }
       }
       memcpyToCache((void *)*(u32 *)((runtimeBase + pool4) + EXPGFX_SLOT_POOL_BASES_OFFSET),
