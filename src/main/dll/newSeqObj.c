@@ -13,9 +13,28 @@ extern void fn_8001FEA8(void);
 extern void fn_8015039C(void *p1, void *p2);
 extern u32 fn_8014FFB4(void *p1, void *p2, int p3);
 extern void fn_8014D08C(void *p1, void *p2, int p3, f32 f1, int p5, int p6);
-extern void fn_8014CF7C(void *p1, void *p2, int p3, int p4, f32 f1, f32 f2);
+extern void fn_8014CF7C(void *p1, void *p2, f32 f1, f32 f2, int p5, int p6);
 
 extern u8 lbl_8031DD30[];
+
+typedef struct {
+    f32 speed; /* 0x0 */
+    u32 flags; /* 0x4 */
+    u8 anim;   /* 0x8 */
+    u8 next;   /* 0x9 */
+    u8 alt;    /* 0xa */
+    u8 padB;   /* 0xb */
+    u32 extra; /* 0xc */
+} SeqRow16;
+
+typedef struct {
+    f32 speed; /* 0x0 */
+    u32 flags; /* 0x4 */
+    u8 anim;   /* 0x8 */
+    u8 next;   /* 0x9 */
+    u8 alt;    /* 0xa */
+    u8 padB;   /* 0xb */
+} SeqRow12;
 extern f32 timeDelta;
 extern f32 lbl_803E2740;
 extern f32 lbl_803E274C;
@@ -172,8 +191,10 @@ void fn_80150EDC(void *p1, void *p2) {
         if (*(f32 *)((u8 *)p2 + 0x328) <= lbl_803E2740) {
             *(f32 *)((u8 *)p2 + 0x328) = lbl_803E2740;
             *(u32 *)((u8 *)p2 + 0x2dc) |= 0x40000000;
-            *(u16 *)((u8 *)p2 + 0x338) =
-                *(u8 *)(r28 + (*(u16 *)((u8 *)p2 + 0x338) << 4) + 0xa);
+            {
+                SeqRow16 *arow = (SeqRow16 *)r28 + *(u16 *)((u8 *)p2 + 0x338);
+                *(u16 *)((u8 *)p2 + 0x338) = arow->alt;
+            }
         }
     }
 
@@ -190,23 +211,22 @@ void fn_80150EDC(void *p1, void *p2) {
     if ((*(u32 *)((u8 *)p2 + 0x2dc) & 0x40000000) != 0) {
         u16 cur338 = *(u16 *)((u8 *)p2 + 0x338);
         if (cur338 != 0) {
-            u8 *row = r28 + (cur338 << 4);
-            *(u8 *)((u8 *)p2 + 0x2f2) = (u8)*(u32 *)(row + 0xc);
-            fn_8014D08C(p1, p2, *(u8 *)(row + 0x8),
-                        *(f32 *)(r28 + (cur338 << 4)), 0,
-                        (u8)*(u32 *)(row + 0x4));
+            *(u8 *)((u8 *)p2 + 0x2f2) = (u8)((SeqRow16 *)r28)[cur338].extra;
+            fn_8014D08C(p1, p2, ((SeqRow16 *)r28)[*(u16 *)((u8 *)p2 + 0x338)].anim,
+                        *(f32 *)(r28 + (*(u16 *)((u8 *)p2 + 0x338) << 4)), 0,
+                        (u8)((SeqRow16 *)r28)[*(u16 *)((u8 *)p2 + 0x338)].flags);
             ObjAnim_SetMoveProgress(
-                *(f32 *)(table + (*(u8 *)(r28 + (*(u16 *)((u8 *)p2 + 0x338) << 4) + 0x8) << 2)),
+                *(f32 *)(table + (((SeqRow16 *)r28)[*(u16 *)((u8 *)p2 + 0x338)].anim << 2)),
                 (ObjAnimComponent *)p1);
             *(u16 *)((u8 *)p2 + 0x338) =
-                *(u8 *)(r28 + (*(u16 *)((u8 *)p2 + 0x338) << 4) + 0x9);
+                ((SeqRow16 *)r28)[*(u16 *)((u8 *)p2 + 0x338)].next;
         } else {
             u16 idx2a0 = *(u16 *)((u8 *)p2 + 0x2a0);
-            u8 *row = (u8 *)r29 + idx2a0 * 0xc;
-            u8 v8 = *(u8 *)(row + 0x8);
+            u8 v8;
             *(u8 *)((u8 *)p2 + 0x2f2) = 0;
             *(u8 *)((u8 *)p2 + 0x2f3) = 0;
             *(u8 *)((u8 *)p2 + 0x2f4) = 0;
+            v8 = *(u8 *)((u8 *)r29 + idx2a0 * 0xc + 0x8);
             if (v8 == 0) {
                 *(u8 *)((u8 *)p2 + 0x323) = 3;
                 ObjAnim_SetCurrentMove((int)p1, *(u8 *)((u8 *)r30 + 0x2c), lbl_803E2740, 0);
@@ -223,7 +243,7 @@ void fn_80150EDC(void *p1, void *p2) {
     if ((s32)*(s16 *)((u8 *)p1 + 0xa0) == *(u8 *)((u8 *)r30 + 0x2c)) {
         *(f32 *)((u8 *)p2 + 0x308) =
             *(f32 *)((u8 *)p2 + 0x2fc) *
-            (((f32)(s32) * (u16 *)((u8 *)p2 + 0x2a4) /
+            (((f32)(u32)*(u16 *)((u8 *)p2 + 0x2a4) /
               *(f32 *)((u8 *)p2 + 0x2a8) / lbl_803E274C) *
              *(f32 *)(table + (*(u8 *)((u8 *)p2 + 0x33b) << 2) + 0x1538));
         if (*(f32 *)((u8 *)p2 + 0x308) < lbl_803E27A0) {
@@ -231,11 +251,9 @@ void fn_80150EDC(void *p1, void *p2) {
         }
     }
 
-    if ((*(u8 *)((u8 *)p2 + 0x323) & 0x10) == 0) {
+    if ((*(u8 *)((u8 *)p2 + 0x323) & 8) == 0) {
         void *p_29c = *(void **)((u8 *)p2 + 0x29c);
-        f32 f1 = *(f32 *)((u8 *)p_29c + 0xc);
-        f32 f2 = *(f32 *)((u8 *)p_29c + 0x14);
-        fn_8014CF7C(p1, p2, 0xf, 0, f1, f2);
+        fn_8014CF7C(p1, p2, *(f32 *)((u8 *)p_29c + 0xc), *(f32 *)((u8 *)p_29c + 0x14), 0xf, 0);
     }
 }
 
