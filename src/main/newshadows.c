@@ -3254,7 +3254,7 @@ extern inline float sqrtf(float x)
     return x;
 }
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40, lbl_803DED2C;
-extern f32 Vdchuff_803DEDC0[];
+extern f32 Vdchuff_803DEDC0[2];
 #pragma scheduling off
 void fn_8006CD20(f32 *arr, int n, f32 *out1, f32 *out2, f32 a, f32 b, f32 c) {
     f32 *p;
@@ -3310,7 +3310,7 @@ void fn_8006CD20(f32 *arr, int n, f32 *out1, f32 *out2, f32 a, f32 b, f32 c) {
 extern int testAndSet_onlyUseHeap3(int);
 extern f32 fn_802943F4(f32);
 extern double floor(double);
-extern f32 Yachuff_803DEDE0[];
+extern f32 Yachuff_803DEDE0[2];
 extern f32 __PADFixBits;
 extern f32 lbl_80391978[];
 extern u8 lbl_8038E268[0x40];
@@ -3416,7 +3416,7 @@ extern void DCInvalidateRange(void *, int);
 extern void fn_80069EB8();
 extern void GXTexModeSync(void);
 extern f32 lbl_803DED10, lbl_803DED34, Dev_803DED1C;
-extern f32 Udchuff_803DEDA0[], Uachuff_803DEE00[];
+extern f32 Udchuff_803DEDA0[2], Uachuff_803DEE00[2];
 #pragma scheduling off
 void allocLotsOfTextures(void) {
     char *g = (char *)lbl_8038DF48;
@@ -3442,74 +3442,86 @@ void allocLotsOfTextures(void) {
 
     lbl_803DCFD8 = (int)textureAlloc(0x20, 0x20, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x20; i++) {
-        f32 cy = (f32)i - Yachuff_803DEDE0[3];
+        f32 cy = (f32)i - 16.0f;
         for (j = 0; j < 0x20; j++) {
-            f32 dx = cy * Vdchuff_803DEDC0[4] * Yachuff_803DEDE0[4];
-            f32 dz = ((f32)j - Yachuff_803DEDE0[3]) * Vdchuff_803DEDC0[4] * Yachuff_803DEDE0[4];
+            f32 dx = cy * 0.0625f * 1.1f;
+            f32 dz = ((f32)j - 16.0f) * 0.0625f * 1.1f;
             f32 d2 = dx * dx + dz * dz;
-            f32 v = (d2 <= lbl_803DED2C) ? (lbl_803DED2C - d2) : lbl_803DED28;
+            f32 v;
+            if (d2 > 1.0f) {
+                v = 0.0f;
+            } else {
+                v = 1.0f - d2;
+            }
             *(u8 *)(lbl_803DCFD8 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x80 + 0x60) =
-                (u8)(int)(__PADFixBits * v);
+                (u8)(int)(255.0f * v);
         }
     }
     DCFlushRange((void *)(lbl_803DCFD8 + 0x60), *(int *)(lbl_803DCFD8 + 0x44));
 
     lbl_803DCFD4 = (int)textureAlloc(0x10, 0x10, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x10; i++) {
-        f32 cy = ((f32)i - lbl_803DED10) * __GXCurrentThread_803DED40;
         for (j = 0; j < 0x10; j++) {
-            f32 dx = cy * Yachuff_803DEDE0[5];
-            f32 dz = (((f32)j - lbl_803DED10) * __GXCurrentThread_803DED40) * Yachuff_803DEDE0[5];
+            f32 dx = ((f32)i - 8.0f) * 0.125f * 1.2f;
+            f32 dz = ((f32)j - 8.0f) * 0.125f * 1.2f;
             f32 d2 = dx * dx + dz * dz;
-            f32 v = lbl_803DED2C - d2;
-            v = sqrtf(v);
+            f32 v;
+            if (d2 > 1.0f) {
+                v = 0.0f;
+            } else {
+                v = sqrtf(1.0f - d2);
+            }
             *(u8 *)(lbl_803DCFD4 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x40 + 0x60) =
-                (u8)(int)(__PADFixBits * v);
+                (u8)(int)(255.0f * v);
         }
     }
     DCFlushRange((void *)(lbl_803DCFD4 + 0x60), *(int *)(lbl_803DCFD4 + 0x44));
 
     lbl_803DCFD0 = (int)textureAlloc(0x40, 0x40, 5, 0, 0, 0, 0, 1, 1);
     {
-        f32 mx = lbl_803DED28;
+        f32 mx = 0.0f;
         for (i = 0; i < 0x40; i++) {
-            f32 rc = ((f32)i - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
-            f32 rc2 = ((f32)(i + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+            f32 rc = ((f32)i - 32.0f) * 0.03125f;
+            f32 rc2 = ((f32)(i + 1) - 32.0f) * 0.03125f;
             for (j = 0; j < 0x40; j++) {
-                f32 cc = ((f32)j - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
-                f32 cc2 = ((f32)(j + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                f32 cc = ((f32)j - 32.0f) * 0.03125f;
+                f32 cc2 = ((f32)(j + 1) - 32.0f) * 0.03125f;
                 f32 d1 = sqrtf(rc * rc + cc * cc);
                 f32 d2 = sqrtf(rc2 * rc2 + cc * cc);
                 f32 d3 = sqrtf(rc * rc + cc2 * cc2);
-                f32 n1 = -fn_802943F4(Uachuff_803DEE00[0] * d1);
-                f32 n2 = (f32)__fabs(fn_802943F4(Uachuff_803DEE00[0] * d2));
-                f32 n3 = fn_802943F4(Uachuff_803DEE00[0] * d3);
+                f32 n1 = -fn_802943F4(18.852f * d1);
+                f32 n2 = (f32)__fabs(fn_802943F4(18.852f * d2));
+                f32 n3 = fn_802943F4(18.852f * d3);
                 if (mx < n1 - n2) mx = n1 - n2;
                 if (mx < n1 - (f32)__fabs(n3)) mx = n1 - (f32)__fabs(n3);
             }
         }
         {
-            f32 inv = lbl_803DED2C / mx;
+            f32 inv = 1.0f / mx;
             for (i = 0; i < 0x40; i++) {
-                f32 rc = ((f32)i - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
-                f32 rc2 = ((f32)(i + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                f32 rc = ((f32)i - 32.0f) * 0.03125f;
+                f32 rc2 = ((f32)(i + 1) - 32.0f) * 0.03125f;
                 for (j = 0; j < 0x40; j++) {
-                    f32 cc = ((f32)j - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
-                    f32 cc2 = ((f32)(j + 1) - Yachuff_803DEDE0[6]) * Yachuff_803DEDE0[7];
+                    f32 cc = ((f32)j - 32.0f) * 0.03125f;
+                    f32 cc2 = ((f32)(j + 1) - 32.0f) * 0.03125f;
                     f32 d1 = sqrtf(rc * rc + cc * cc);
                     f32 d2 = sqrtf(rc2 * rc2 + cc * cc);
                     f32 d3 = sqrtf(rc * rc + cc2 * cc2);
-                    f32 n1 = -fn_802943F4(Uachuff_803DEE00[0] * d1);
-                    f32 n2 = -fn_802943F4(Uachuff_803DEE00[0] * d2);
-                    f32 n3 = -fn_802943F4(Uachuff_803DEE00[0] * d3);
-                    f32 a = inv * (Vdchuff_803DEDC0[0] * (n1 - n2)) + Vdchuff_803DEDC0[0];
-                    f32 b = inv * (Vdchuff_803DEDC0[0] * (n1 - n3)) + Vdchuff_803DEDC0[0];
-                    f32 dd = (d1 < lbl_803DED2C) ? sqrtf(lbl_803DED2C - d1) : lbl_803DED28;
-                    f32 c = Yachuff_803DEDE0[6] * dd;
+                    f32 n1 = -fn_802943F4(18.852f * d1);
+                    f32 n2 = -fn_802943F4(18.852f * d2);
+                    f32 n3 = -fn_802943F4(18.852f * d3);
+                    f32 a = inv * (127.0f * (n1 - n2)) + 127.0f;
+                    f32 b = inv * (127.0f * (n1 - n3)) + 127.0f;
+                    f32 dd = 0.0f;
+                    f32 c;
                     int r4, r3, r0;
-                    if (c > Uachuff_803DEE00[1]) c = Uachuff_803DEE00[1];
-                    a = a * Yachuff_803DEDE0[7];
-                    b = b * Vdchuff_803DEDC0[4];
+                    if (d1 < 1.0f) {
+                        dd = sqrtf(1.0f - d1);
+                    }
+                    c = 32.0f * dd;
+                    if (c > 15.0f) c = 15.0f;
+                    a = a * 0.03125f;
+                    b = b * 0.0625f;
                     r4 = (int)b & 0xf;
                     r3 = ((int)c & 0xf) << 4;
                     r0 = ((int)a & 7) << 12;
@@ -3546,14 +3558,14 @@ void allocLotsOfTextures(void) {
 
     lbl_803DCF90 = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x80; i++) {
-        f32 cy = ((f32)i - Dev_803DED1C) * Yachuff_803DEDE0[0];
+        f32 cy = ((f32)i - 64.0f) * 0.015625f;
         for (j = 0; j < 0x80; j++) {
-            f32 cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0[0];
-            f32 d2 = cy * cy + cx * cx;
+            f32 cx = ((f32)j - 64.0f) * 0.015625f;
+            f32 d2 = sqrtf(cy * cy + cx * cx);
             u8 v;
-            if (d2 > CPUFifo_803DED38) {
-                if (d2 <= lbl_803DED2C)
-                    v = (u8)(int)(Uachuff_803DEE00[2] * (lbl_803DED2C - (d2 - CPUFifo_803DED38) / CPUFifo_803DED38));
+            if (0.5f <= d2) {
+                if (d2 <= 1.0f)
+                    v = (u8)(int)(160.0f * (1.0f - (d2 - 0.5f) / 0.5f));
                 else
                     v = 0;
             } else {
@@ -3566,16 +3578,14 @@ void allocLotsOfTextures(void) {
 
     lbl_803DCFC0 = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x80; i++) {
-        f32 cy = (f32)__fabs(((f32)i - Dev_803DED1C) * Yachuff_803DEDE0[0]);
+        f32 cy = (f32)__fabs(((f32)i - 64.0f) * 0.015625f);
         for (j = 0; j < 0x80; j++) {
-            f32 cx = (f32)__fabs(((f32)j - Dev_803DED1C) * Yachuff_803DEDE0[0]);
-            f32 d2 = cy * cy + cx * cx;
-            f32 v;
-            d2 = sqrtf(d2);
-            v = lbl_803DED2C - d2;
-            if (v < lbl_803DED28) v = lbl_803DED28;
+            f32 cx = (f32)__fabs(((f32)j - 64.0f) * 0.015625f);
+            f32 d2 = sqrtf(cy * cy + cx * cx);
+            f32 v = 1.0f - d2;
+            if (v < 0.0f) v = 0.0f;
             *(u8 *)(lbl_803DCFC0 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60) =
-                (u8)(int)(__PADFixBits * v);
+                (u8)(int)(255.0f * v);
         }
     }
     DCFlushRange((void *)(lbl_803DCFC0 + 0x60), *(int *)(lbl_803DCFC0 + 0x44));
@@ -3586,36 +3596,35 @@ void allocLotsOfTextures(void) {
 
     lbl_803DCFB4 = (int)textureAlloc(0x20, 4, 1, 0, 0, 0, 0, 1, 1);
     for (i = 0; i < 0x20; i++) {
-        f32 c0 = (f32)__fabs(((f32)i - Yachuff_803DEDE0[3]) * Vdchuff_803DEDC0[4]);
+        f32 c0 = (f32)__fabs(((f32)i - 16.0f) * 0.0625f);
         for (j = 0; j < 4; j++) {
             f32 v = c0;
             v = sqrtf(v);
             v = sqrtf(v);
             *(u8 *)(lbl_803DCFB4 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x80 + 0x60) =
-                (u8)(int)(__PADFixBits * (lbl_803DED2C - v));
+                (u8)(int)(255.0f * (1.0f - v));
         }
     }
     DCFlushRange((void *)(lbl_803DCFB4 + 0x60), *(int *)(lbl_803DCFB4 + 0x44));
 
-    lbl_803DCFB0 = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 0, 0, 1, 1);
+    lbl_803DCFB0 = (int)textureAlloc(0x80, 0x80, 1, 0, 0, 1, 1, 1, 1);
     for (i = 0; i < 0x80; i++) {
-        f32 cy = ((f32)i - Dev_803DED1C) * Yachuff_803DEDE0[0];
+        f32 cy = ((f32)i - 64.0f) * 0.015625f;
         for (j = 0; j < 0x80; j++) {
-            f32 cx = ((f32)j - Dev_803DED1C) * Yachuff_803DEDE0[0];
-            f32 d2 = cx * cx + cy * cy;
+            f32 cx = ((f32)j - 64.0f) * 0.015625f;
+            f32 d2 = sqrtf(cx * cx + cy * cy);
             f32 v;
-            d2 = sqrtf(d2);
-            if (d2 < GPFifo_803DED3C || d2 > Uachuff_803DEE00[3]) {
-                v = lbl_803DED28;
+            if (d2 < 0.25f || 0.75f < d2) {
+                v = 0.0f;
             } else {
-                f32 t = lbl_803DED34 * (d2 - GPFifo_803DED3C);
-                if (t <= CPUFifo_803DED38) t = CPUFifo_803DED38 - t;
-                else t = t - CPUFifo_803DED38;
-                v = -(lbl_803DED34 * t - lbl_803DED2C);
+                f32 t = 2.0f * (d2 - 0.25f);
+                if (t <= 0.5f) t = 0.5f - t;
+                else t = t - 0.5f;
+                v = -(2.0f * t - 1.0f);
                 v = sqrtf(v);
             }
             *(u8 *)(lbl_803DCFB0 + (i & 7) + (i >> 3) * 0x20 + (j & 3) * 8 + (j >> 2) * 0x200 + 0x60) =
-                (u8)(int)(Yachuff_803DEDE0[3] * v);
+                (u8)(int)(16.0f * v);
         }
     }
     DCFlushRange((void *)(lbl_803DCFB0 + 0x60), *(int *)(lbl_803DCFB0 + 0x44));
@@ -3627,7 +3636,7 @@ void allocLotsOfTextures(void) {
     {
         int m = (int)Uachuff_803DEE00[7];
         for (i = 0; i < 4; i++) {
-            u16 v = (u16)(((int)(__PADFixBits * ((f32)i / Uachuff_803DEE00[4] - CPUFifo_803DED38) + Udchuff_803DEDA0[7]) & 0xff) << 8);
+            u16 v = (u16)(((int)(255.0f * ((f32)i / 3.0f - 0.5f) + 128.0f) & 0xff) << 8);
             *(u16 *)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20 + 0x60) = v | ((u16)h & 0xff);
             *(u16 *)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20 + 0x68) = v | ((u16)j & 0xff);
             *(u16 *)(lbl_803DCF94 + (i & 3) * 2 + (i >> 2) * 0x20 + 0x70) = v | ((u16)k & 0xff);
@@ -3714,7 +3723,7 @@ extern int getHudHiddenFrameCount(void);
 extern f32 timeDelta;
 extern int *Camera_GetCurrentViewSlot(void);
 extern u8 framesThisStep;
-extern f32 Udchuff_803DEDA0[];
+extern f32 Udchuff_803DEDA0[2];
 extern double floor(double);
 extern void fn_80060BB0(void);
 extern u8 lbl_803DCF80;
@@ -3816,7 +3825,7 @@ void shadowRenderFn_8006b558(int *obj) {
 }
 #pragma scheduling reset
 
-extern f32 Vdchuff_803DEDC0[];
+extern f32 Vdchuff_803DEDC0[2];
 extern f32 lbl_803DED34, GXOverflowSuspendInProgress_803DED48;
 void fn_8006CB50(void) {
     int y, x;
