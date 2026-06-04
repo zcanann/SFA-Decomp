@@ -93,6 +93,44 @@ void FUN_80167764(undefined8 param_1,double param_2,double param_3,undefined8 pa
   return;
 }
 
+extern f32 timeDelta;
+extern f32 lbl_803E3060;
+extern int *gBaddieControlInterface;
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80167764(int obj, int p)
+{
+  int state;
+  int timer;
+  int def;
+
+  state = *(int *)(obj + 0xb8);
+  timer = *(int *)(state + 0x40c);
+  if (*(short *)(p + 0x274) == 2) {
+    *(f32 *)(timer + 0x34) = *(f32 *)(timer + 0x34) - timeDelta;
+    if (*(f32 *)(timer + 0x34) <= lbl_803E3060) {
+      *(u8 *)(p + 0x346) = 1;
+    }
+  }
+  if ((s8)*(u8 *)(p + 0x346) != 0 || (s8)*(u8 *)(p + 0x27b) != 0) {
+    if (((int (*)(int, int, f32, int))((void **)*(int *)gBaddieControlInterface)[0x11])
+            (obj, p, (f32)(u32)*(u16 *)(state + 0x3fe), 1) != 0) {
+      return 5;
+    }
+    def = *(int *)(obj + 0x4c);
+    if ((int)randomGetRange(0, 0x63) < (int)*(u8 *)(def + 0x2f)) {
+      ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, p, 3);
+    } else {
+      *(f32 *)(timer + 0x34) = (f32)(int)randomGetRange(0x12c, 0x258);
+      ((void (*)(int, int, int))((void **)*gPlayerInterface)[5])(obj, p, 2);
+    }
+  }
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 int fn_801678E4(int obj, u8 *state)
@@ -246,7 +284,7 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80167B60(int obj, int p)
+int fn_80167B60(int obj, int p)
 {
   extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern void fn_80169360(int obj, int n);
@@ -272,9 +310,9 @@ void fn_80167B60(int obj, int p)
     }
   }
   {
-    u32 v = *(u32 *)(p + 0x314);
+    int v = *(int *)(p + 0x314);
     if ((v & 0x1000) != 0) {
-      *(u32 *)(p + 0x314) = v & ~0x1000;
+      *(int *)(p + 0x314) = v & ~0x1000;
       fn_80169360(obj, 2);
     }
   }
@@ -285,13 +323,15 @@ void fn_80167B60(int obj, int p)
     Sfx_PlayFromObject(obj, SFXdoor_unlocked);
     *(u8 *)(b8_40c + 0x4b) |= 0x1;
     {
-      int r = 0;
+      char *r;
       if (*(s16 *)(b8 + 0x3f0) != 0) {
-        r = (int)(**(int (**)(int, int, int, int))(*(int *)(*gBaddieControlInterface) + 0x4c))(obj, 6, -1, 0);
+        r = ((char *(*)(int, int, int, int))((void **)*gBaddieControlInterface)[0x13])(obj, 6, -1, 0);
+      } else {
+        r = NULL;
       }
-      if (r != 0) {
+      if (r != NULL) {
         f32 fz = lbl_803E3060;
-        (**(void (**)(int, f32, f32, f32))(*(int *)(*(int *)(r + 0x68)) + 0x2c))(r, fz, lbl_803E3078, fz);
+        (**(void (**)(char *, f32, f32, f32))(*(int *)(*(int *)(r + 0x68)) + 0x2c))(r, fz, lbl_803E3078, fz);
       }
     }
   }
@@ -301,7 +341,8 @@ void fn_80167B60(int obj, int p)
       *(u8 *)(b8_40c + 0x4b) |= 0x2;
     }
   }
-  *(u8 *)(obj + 0x36) = (u8)(s32)((lbl_803E3078 - *(f32 *)(obj + 0x98)) * lbl_803E308C);
+  *(u8 *)(obj + 0x36) = (s32)((lbl_803E3078 - *(f32 *)(obj + 0x98)) * lbl_803E308C);
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
