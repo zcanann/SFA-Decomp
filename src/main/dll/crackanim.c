@@ -140,16 +140,16 @@ void appleontree_update(int param_1)
         *(undefined *)(iVar8 + 0x3a) = 5;
       }
       else {
-        if (fVar13 <= *(float *)(iVar8 + 0x10)) {
-          iVar7 = *(int *)(puVar2 + 0x5c);
-          *(float *)(puVar2 + 4) =
-               *(float *)(*(int *)(puVar2 + 0x28) + 4) *
-               (*(float *)(iVar7 + 8) / *(float *)(iVar7 + 4)) *
-               (lbl_803E37C8 / *(float *)(iVar7 + 0x10));
+        if (fVar13 > *(float *)(iVar8 + 0x10)) {
+          *(float *)(puVar2 + 4) = *(float *)(*(int *)(puVar2 + 0x28) + 4);
+          *(undefined *)(iVar8 + 0x3a) = 1;
         }
         else {
-          *(undefined4 *)(puVar2 + 4) = *(undefined4 *)(*(int *)(puVar2 + 0x28) + 4);
-          *(undefined *)(iVar8 + 0x3a) = 1;
+          iVar7 = *(int *)(puVar2 + 0x5c);
+          *(float *)(puVar2 + 4) =
+               (*(float *)(iVar7 + 8) / *(float *)(iVar7 + 4)) *
+               (lbl_803E37C8 / *(float *)(iVar7 + 0x10)) *
+               *(float *)(*(int *)(puVar2 + 0x28) + 4);
         }
       }
       break;
@@ -172,7 +172,15 @@ void appleontree_update(int param_1)
         *(undefined *)(iVar8 + 0x3a) = 5;
       }
       else {
-        if (fVar13 <= *(float *)(iVar8 + 0x14)) {
+        if (fVar13 > *(float *)(iVar8 + 0x14)) {
+          iVar7 = 0;
+          do {
+            (*(void (**)(undefined2 *, int, int, int, int, int))(*gPartfxInterface + 8))(puVar2,0x55a,0,2,0xffffffff,0);
+            iVar7 = iVar7 + 1;
+          } while (iVar7 < 8);
+          *(undefined *)(iVar8 + 0x3a) = 2;
+        }
+        else {
           iVar7 = (*(int (**)(void *))(*gSHthorntailAnimationInterface + 0x24))(auStack_74);
           if (iVar7 != 0) {
             FUN_8002fc3c(lbl_803E3804, timeDelta);
@@ -181,18 +189,19 @@ void appleontree_update(int param_1)
             FUN_8002fc3c(lbl_803E3808, timeDelta);
           }
         }
-        else {
-          iVar7 = 0;
-          do {
-            (*(void (**)(undefined2 *, int, int, int, int, int))(*gPartfxInterface + 8))(puVar2,0x55a,0,2,0xffffffff,0);
-            iVar7 = iVar7 + 1;
-          } while (iVar7 < 8);
-          *(undefined *)(iVar8 + 0x3a) = 2;
-        }
       }
       break;
     case 2:
-      if (fVar13 <= *(float *)(iVar8 + 0x18)) {
+      if (fVar13 > *(float *)(iVar8 + 0x18)) {
+        iVar3 = *(int *)(puVar2 + 0x5c);
+        puVar4 = (undefined4 *)FUN_80039520((int)puVar2,0);
+        *puVar4 = 0;
+        *(float *)(iVar3 + 0x24) = lbl_803E37C8;
+        *(float *)(puVar2 + 4) = *(float *)(*(int *)(puVar2 + 0x28) + 4);
+        FUN_80017a78((int)puVar2,1);
+        *(undefined *)(iVar8 + 0x3a) = 3;
+      }
+      else {
         iVar3 = *(int *)(puVar2 + 0x5c);
         fVar1 = *(float *)(iVar3 + 8);
         fVar11 = -(*(float *)(iVar3 + 4) * *(float *)(iVar3 + 0x14) - fVar1) /
@@ -206,15 +215,6 @@ void appleontree_update(int param_1)
         *(float *)(puVar2 + 4) = *(float *)(*(int *)(puVar2 + 0x28) + 4) * *(float *)(iVar3 + 0x24);
         FUN_80017a78((int)puVar2,1);
       }
-      else {
-        iVar3 = *(int *)(puVar2 + 0x5c);
-        puVar4 = (undefined4 *)FUN_80039520((int)puVar2,0);
-        *puVar4 = 0;
-        *(float *)(iVar3 + 0x24) = lbl_803E37C8;
-        *(undefined4 *)(puVar2 + 4) = *(undefined4 *)(*(int *)(puVar2 + 0x28) + 4);
-        FUN_80017a78((int)puVar2,1);
-        *(undefined *)(iVar8 + 0x3a) = 3;
-      }
       iVar8 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
       if ((iVar8 != 0) ||
          ((*(short *)(iVar7 + 0x26) != -1 &&
@@ -224,7 +224,10 @@ void appleontree_update(int param_1)
       break;
     case 3:
       *(float *)(iVar8 + 8) = fVar11 - timeDelta;
-      if (fVar13 <= *(float *)(iVar8 + 0x1c)) {
+      if (fVar13 > *(float *)(iVar8 + 0x1c)) {
+        FUN_8017db40((uint)puVar2,0);
+      }
+      else {
         iVar8 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
         if ((iVar8 != 0) ||
            ((*(short *)(iVar7 + 0x26) != -1 &&
@@ -232,12 +235,13 @@ void appleontree_update(int param_1)
           FUN_8017db40((uint)puVar2,2);
         }
       }
-      else {
-        FUN_8017db40((uint)puVar2,0);
-      }
       break;
     case 4:
-      if (fVar13 <= *(float *)(iVar8 + 0x20)) {
+      if (fVar13 > *(float *)(iVar8 + 0x20)) {
+        *(undefined *)(iVar8 + 0x3a) = 6;
+        *(float *)(iVar8 + 8) = timeDelta;
+      }
+      else {
         iVar7 = 0;
         iVar3 = 0;
         fVar12 = lbl_803E37D4;
@@ -264,10 +268,6 @@ void appleontree_update(int param_1)
         *piVar6 = (int)(lbl_803E380C * fVar13);
         FUN_8017de58((uint)puVar2);
       }
-      else {
-        *(undefined *)(iVar8 + 0x3a) = 6;
-        *(float *)(iVar8 + 8) = timeDelta;
-      }
       break;
     case 5:
       if (lbl_803E3810 < fVar11) {
@@ -285,12 +285,7 @@ void appleontree_update(int param_1)
       break;
     case 6:
       fVar13 = lbl_803E3814;
-      if (fVar11 <= fVar13) {
-        iVar7 = (int)(lbl_803E3818 * fVar11 / fVar13);
-        *(char *)(puVar2 + 0x1b) = -1 - (char)iVar7;
-        FUN_8017de58((uint)puVar2);
-      }
-      else {
+      if (fVar11 > fVar13) {
         iVar7 = *(int *)(puVar2 + 0x5c);
         if (*(s16 *)((u8 *)puVar2 + 6) & 0x2000) {
           Obj_FreeObject((int)puVar2);
@@ -301,6 +296,11 @@ void appleontree_update(int param_1)
           }
           *(byte *)(iVar7 + 0x5a) = *(byte *)(iVar7 + 0x5a) | 2;
         }
+      }
+      else {
+        iVar7 = (int)(lbl_803E3818 * fVar11 / fVar13);
+        *(char *)(puVar2 + 0x1b) = -1 - (char)iVar7;
+        FUN_8017de58((uint)puVar2);
       }
     }
   }
