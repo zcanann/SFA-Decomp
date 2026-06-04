@@ -15046,3 +15046,174 @@ void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
 }
 #pragma dont_inline reset
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void *modelLoadFn_80025ae4(u8 *p, int b, int isType1, int c)
+{
+    u8 *out;
+    int szs[7];
+    int pos;
+    int end;
+    int n;
+    int k;
+    int o2;
+    u8 *q;
+    f32 f;
+
+    out = (u8 *)c;
+    if (p == 0) {
+        return 0;
+    }
+    modelLoad_calcSizes(p, b, szs, 0);
+    pos = roundUpTo32((int)out + 0x64);
+    *(int *)(out + 0xc) = pos;
+    pos += szs[6] >> 1;
+    *(int *)(out + 0x10) = pos;
+    pos += szs[6] >> 1;
+    *(int *)(out + 0x5c) = *(int *)(out + 0xc);
+    if (*(u8 *)(p + 0xf9) != 0 || *(int *)(p + 0xa4) != 0 || (*(u16 *)(p + 2) & 0x10)) {
+        pos = roundUpTo32(pos);
+        *(int *)(out + 0x1c) = pos;
+        pos = roundUpTo32(pos + *(u16 *)(p + 0xe4) * 6);
+        *(int *)(out + 0x20) = pos;
+        end = pos + *(u16 *)(p + 0xe4) * 6;
+        memcpy(*(void **)(out + 0x1c), *(void **)(p + 0x28), *(u16 *)(p + 0xe4) * 6);
+        DCFlushRange(*(void **)(out + 0x1c), *(u16 *)(p + 0xe4) * 6);
+        memcpy(*(void **)(out + 0x20), *(void **)(p + 0x28), *(u16 *)(p + 0xe4) * 6);
+        DCFlushRange(*(void **)(out + 0x20), *(u16 *)(p + 0xe4) * 6);
+        pos = roundUpTo32(end);
+    } else {
+        end = *(int *)(p + 0x28);
+        *(int *)(out + 0x20) = end;
+        *(int *)(out + 0x1c) = end;
+    }
+    if (*(int *)(p + 0xc8) != 0) {
+        if (*(u8 *)(p + 0x24) & 8) {
+            n = 9;
+        } else {
+            n = 3;
+        }
+        pos = roundUpTo32(pos);
+        *(int *)(out + 0x24) = pos;
+        end = pos + *(u16 *)(p + 0xe6) * n;
+        memcpy(*(void **)(out + 0x24), *(void **)(p + 0x2c), *(u16 *)(p + 0xe6) * n);
+        DCFlushRange(*(void **)(out + 0x24), n * *(u16 *)(p + 0xe6));
+        pos = roundUpTo32(end);
+    } else {
+        *(int *)(out + 0x24) = *(int *)(p + 0x2c);
+    }
+    pos = roundUpTo4(pos);
+    *(int *)(out + 0x2c) = pos;
+    pos += 0x68;
+    if (b & 0x80) {
+        *(int *)(out + 0x30) = pos;
+        pos += 0x68;
+    }
+    if (*(u16 *)(p + 2) & 0x40) {
+        pos = roundUpTo8(pos);
+        q = *(u8 **)(out + 0x2c);
+        *(int *)(q + 0x1c) = pos;
+        pos += szs[5];
+        *(int *)(q + 0x20) = pos;
+        pos += szs[5];
+        *(int *)(q + 0x24) = pos;
+        pos += szs[5];
+        *(int *)(q + 0x28) = pos;
+        pos += szs[5];
+        q = *(u8 **)(out + 0x30);
+        if (q != 0) {
+            *(int *)(q + 0x1c) = pos;
+            pos += szs[5];
+            *(int *)(q + 0x20) = pos;
+            pos += szs[5];
+            *(int *)(q + 0x24) = pos;
+            pos += szs[5];
+            *(int *)(q + 0x28) = pos;
+            pos += szs[5];
+        }
+    }
+    if (*(u8 *)(p + 0xf9) != 0) {
+        pos = roundUpTo4(pos);
+        *(int *)(out + 0x28) = pos;
+        pos += 0x30;
+        q = *(u8 **)(out + 0x28);
+        *(s8 *)(q + 0xc) = -1;
+        *(s8 *)(q + 0xd) = -1;
+        f = lbl_803DE828;
+        *(f32 *)(q + 0) = f;
+        *(f32 *)(q + 4) = f;
+        *(f32 *)(q + 8) = f;
+        q = *(u8 **)(out + 0x28);
+        *(s8 *)(q + 0x1c) = -1;
+        *(s8 *)(q + 0x1d) = -1;
+        *(f32 *)(q + 0x10) = f;
+        *(f32 *)(q + 0x14) = f;
+        *(f32 *)(q + 0x18) = f;
+        q = *(u8 **)(out + 0x28);
+        *(s8 *)(q + 0x2c) = -1;
+        *(s8 *)(q + 0x2d) = -1;
+        *(f32 *)(q + 0x20) = f;
+        *(f32 *)(q + 0x24) = f;
+        *(f32 *)(q + 0x28) = f;
+    }
+    if (szs[1] > 0) {
+        pos = roundUpTo4(pos);
+        *(int *)(out + 0x48) = pos;
+        pos += *(u8 *)(p + 0xf7) * 0x10;
+        *(int *)(out + 0x4c) = pos;
+        pos += *(u8 *)(p + 0xf7) * 0x10;
+        *(int *)(out + 0x50) = *(int *)(out + 0x48);
+    }
+    if (*(int *)(p + 0x3c) != 0 && *(u8 *)(p + 0xf3) != 0 && *(int *)(p + 0x18) != 0 && *(int *)(p + 0x1c) != 0) {
+        pos = roundUpTo4(pos);
+        *(int *)(out + 0x14) = pos;
+        pos += 0x1c;
+        *(int *)(*(u8 **)(out + 0x14) + 0) = pos;
+        pos += *(u8 *)(p + 0xf3) * 0xc;
+        *(int *)(*(u8 **)(out + 0x14) + 4) = pos;
+        pos += *(u8 *)(p + 0xf3) * 4;
+        *(int *)(*(u8 **)(out + 0x14) + 8) = pos;
+        pos += *(u8 *)(p + 0xf3) * 4;
+        *(int *)(*(u8 **)(out + 0x14) + 0xc) = pos;
+        pos += *(u8 *)(p + 0xf3) * 4;
+        *(int *)(*(u8 **)(out + 0x14) + 0x10) = pos;
+        pos += *(u8 *)(p + 0xf3) * 4;
+        *(int *)(*(u8 **)(out + 0x14) + 0x18) = pos;
+        pos += *(u8 *)(p + 0xf3);
+    } else {
+        *(int *)(out + 0x14) = 0;
+    }
+    if (*(int *)(p + 0xa4) != 0) {
+        pos = roundUpTo4(pos);
+        *(int *)(out + 0x40) = pos;
+        pos += *(u16 *)(p + 0x8a) * 4;
+    }
+    if (*(int *)(p + 0xc8) != 0) {
+        pos = roundUpTo4(pos);
+        *(int *)(out + 0x44) = pos;
+        pos += *(u16 *)(p + 0xae) * 4;
+    }
+    pos = roundUpTo4(pos);
+    *(int *)(out + 0x34) = pos;
+    pos += *(u8 *)(p + 0xf8) * 0xc;
+    k = 0;
+    o2 = 0;
+    for (; k < (int)*(u8 *)(p + 0xf8); k++) {
+        *(u8 *)(*(u8 **)(out + 0x34) + o2 + 8) = 0;
+        o2 += 0xc;
+    }
+    if (b & 0x8000) {
+        pos = fn_80022E0C(pos);
+        *(int *)(out + 0x54) = pos;
+        *(u8 *)(*(u8 **)(out + 0x54) + 0x18) = 0;
+    }
+    *(int *)(out + 0x58) = 0;
+    *(u8 **)(out + 0) = p;
+    *(u8 *)(out + 0x60) = 0;
+    return out;
+}
+#pragma dont_inline reset
+#pragma pop
