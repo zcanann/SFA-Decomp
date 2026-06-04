@@ -97,7 +97,7 @@ int memCardFn_8007dd04(u8 retry);
 int cardProbe(u8 retry);
 void _initCardAndDsp(void);
 void cardGetMessage(u32* buttons, u32* texts, u32* count);
-void showMemCardError(int param_1);
+void showMemCardError(u8 err);
 void cardShowLoadingMsg(u8 kind);
 int cardCb_8007e6d4(u8 slot, int unused, void* src1, void* src2);
 int saveCb_8007e748(int param_1, int param_2, void* dst);
