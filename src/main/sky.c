@@ -146,9 +146,7 @@ int getSkyColorFn_80088e08(int slot)
 
     sky = lbl_803DD12C;
     if (sky != NULL) {
-        slot *= 0xa4;
-        slot += 0xc1;
-        return (sky[slot] >> 7) & 1;
+        return ((SkyBlendStateFlags *)(sky + slot * 0xa4 + 0xc1))->unused80;
     }
     return 0;
 }
@@ -286,9 +284,7 @@ int skyFn_8008919c(int slot)
         return 0;
     }
 
-    slot *= 0xa4;
-    slot += 0xc1;
-    if ((u32)((sky[slot] >> 7) & 1) != 0) {
+    if (((SkyBlendStateFlags *)(sky + slot * 0xa4 + 0xc1))->unused80 != 0) {
         return 0;
     }
     return gSkySunObject[0x37];
@@ -826,9 +822,7 @@ int fn_8008B71C(int slot)
 
     sky = lbl_803DD12C;
     if (sky != NULL) {
-        slot *= 0xa4;
-        slot += 0xc1;
-        return (sky[slot] >> 5) & 1;
+        return ((SkyBlendStateFlags *)(sky + slot * 0xa4 + 0xc1))->bit20;
     }
     return 0;
 }
