@@ -1371,361 +1371,143 @@ RomCurveDef *RomCurve_findByIdWithIndex(uint curveId,int *outIndex)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void RomCurve_func20(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5)
+extern f32 lbl_803E0610;
+extern f32 lbl_803E0614;
+extern f32 lbl_803E0618;
+extern f32 fn_80293E80(f32);
+extern f32 sin(f32);
+
+#define ROMCURVE_PLACEMENT_ANGLE(v) ((lbl_803E0614 * (f32)((s32)(v) << 8)) / lbl_803E0618)
+
+static inline int RomCurve_noUnblockedLinks(RomCurvePlacementDef *curve) {
+  int bit;
+
+  for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++) {
+    if ((s32)curve->base.linkIds[bit] != -1 && (curve->base.blockedLinkMask & (1 << bit)) == 0) {
+      return 0;
+    }
+  }
+  return 1;
+}
+
+static inline int RomCurve_noBlockedLinks(RomCurvePlacementDef *curve) {
+  int bit;
+
+  for (bit = 0; bit < ROMCURVE_LINK_COUNT; bit++) {
+    if ((s32)curve->base.linkIds[bit] != -1 && (curve->base.blockedLinkMask & (1 << bit)) != 0) {
+      return 0;
+    }
+  }
+  return 1;
+}
+
+int RomCurve_func20(RomCurvePlacementDef *curve, f32 *outX, f32 *outY, f32 *outZ, s8 *outTypes)
 {
-  bool bVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  uint uVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  int iVar9;
-  int iVar10;
-  double dVar11;
-  undefined8 uVar12;
-  uint local_a8 [4];
-  uint local_98 [4];
-  undefined4 local_88;
-  uint uStack_84;
-  undefined4 local_80;
-  uint uStack_7c;
-  undefined4 local_78;
-  uint uStack_74;
-  undefined4 local_70;
-  uint uStack_6c;
-  undefined4 local_68;
-  uint uStack_64;
-  undefined4 local_60;
-  uint uStack_5c;
-  undefined4 local_58;
-  uint uStack_54;
-  undefined4 local_50;
-  uint uStack_4c;
-  undefined4 local_48;
-  uint uStack_44;
-  undefined4 local_40;
-  uint uStack_3c;
-  undefined4 local_38;
-  uint uStack_34;
-  undefined4 local_30;
-  uint uStack_2c;
-  
-  uVar12 = FUN_8028682c();
-  iVar3 = (int)((ulonglong)uVar12 >> 0x20);
-  iVar2 = (int)uVar12;
-  bVar1 = false;
-  if ((*(int *)(iVar3 + 0x1c) == -1) || ((*(byte *)(iVar3 + 0x1b) & 1) != 0)) {
-    if ((*(int *)(iVar3 + 0x20) == -1) || ((*(byte *)(iVar3 + 0x1b) & 2) != 0)) {
-      if ((*(int *)(iVar3 + 0x24) == -1) || ((*(byte *)(iVar3 + 0x1b) & 4) != 0)) {
-        if ((*(int *)(iVar3 + 0x28) == -1) || ((*(byte *)(iVar3 + 0x1b) & 8) != 0)) {
-          bVar1 = true;
+  RomCurvePlacementDef *next;
+  int done;
+  int n;
+  int mA;
+  int mB;
+  int count;
+  int link;
+  int id;
+  uint mask;
+  int i;
+  int idsB[ROMCURVE_LINK_COUNT];
+  int idsA[ROMCURVE_LINK_COUNT];
+
+  done = RomCurve_noUnblockedLinks(curve) ? 1 : 0;
+  n = 0;
+  mA = 0;
+  mB = 0;
+  if (!done) {
+    while (curve != NULL && !RomCurve_noUnblockedLinks(curve)) {
+      count = 0;
+      mask = 1;
+      for (i = 0; i < ROMCURVE_LINK_COUNT; i++) {
+        link = curve->base.linkIds[i];
+        if ((-1 < link) && ((curve->base.blockedLinkMask & mask) == 0) && (link != 0)) {
+          idsB[count++] = link;
         }
-        else {
-          bVar1 = false;
+        mask = mask << 1;
+      }
+      if (count != 0) {
+        id = idsB[randomGetRange(0, count - 1)];
+      } else {
+        id = -1;
+      }
+      next = (RomCurvePlacementDef *)RomCurve_FindByIdInline(id);
+      if (next != NULL) {
+        if (outTypes != NULL) {
+          outTypes[n >> 2] = curve->base.type;
         }
+        outX[mB] = curve->base.x;
+        outY[mB] = curve->base.y;
+        outZ[mB] = curve->base.z;
+        mB++;
+        outX[mB] = next->base.x;
+        outY[mB] = next->base.y;
+        outZ[mB] = next->base.z;
+        mB++;
+        n += 2;
+        outX[mB] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
+        outY[mB] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotY)));
+        outZ[n] = lbl_803E0610 * ((f32)curve->rotX * sin(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
+        n++;
+        mB++;
+        outX[mB] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
+        outY[mB] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotY)));
+        outZ[n] = lbl_803E0610 * ((f32)next->rotX * sin(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
+        n++;
+        mB++;
       }
-      else {
-        bVar1 = false;
-      }
+      curve = next;
     }
-    else {
-      bVar1 = false;
-    }
-  }
-  iVar10 = 0;
-  iVar9 = 0;
-  iVar8 = 0;
-  if (bVar1) {
-    while (iVar8 = iVar3, iVar8 != 0) {
-      bVar1 = false;
-      if ((*(int *)(iVar8 + 0x1c) == -1) || ((*(byte *)(iVar8 + 0x1b) & 1) == 0)) {
-        if ((*(int *)(iVar8 + 0x20) == -1) || ((*(byte *)(iVar8 + 0x1b) & 2) == 0)) {
-          if ((*(int *)(iVar8 + 0x24) == -1) || ((*(byte *)(iVar8 + 0x1b) & 4) == 0)) {
-            if ((*(int *)(iVar8 + 0x28) == -1) || ((*(byte *)(iVar8 + 0x1b) & 8) == 0)) {
-              bVar1 = true;
-            }
-            else {
-              bVar1 = false;
-            }
-          }
-          else {
-            bVar1 = false;
-          }
+  } else {
+    while (curve != NULL && !RomCurve_noBlockedLinks(curve)) {
+      count = 0;
+      mask = 1;
+      for (i = 0; i < ROMCURVE_LINK_COUNT; i++) {
+        link = curve->base.linkIds[i];
+        if ((-1 < link) && ((curve->base.blockedLinkMask & mask) != 0) && (link != 0)) {
+          idsA[count++] = link;
         }
-        else {
-          bVar1 = false;
+        mask = mask << 1;
+      }
+      if (count != 0) {
+        id = idsA[randomGetRange(0, count - 1)];
+      } else {
+        id = -1;
+      }
+      next = (RomCurvePlacementDef *)RomCurve_FindByIdInline(id);
+      if (next != NULL) {
+        if (outTypes != NULL) {
+          outTypes[n >> 2] = curve->base.type;
         }
+        outX[mA] = curve->base.x;
+        outY[mA] = curve->base.y;
+        outZ[mA] = curve->base.z;
+        mA++;
+        outX[mA] = next->base.x;
+        outY[mA] = next->base.y;
+        outZ[mA] = next->base.z;
+        mA++;
+        n += 2;
+        outX[mA] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
+        outY[mA] = lbl_803E0610 * ((f32)curve->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(curve->rotY)));
+        outZ[n] = lbl_803E0610 * ((f32)curve->rotX * sin(ROMCURVE_PLACEMENT_ANGLE(curve->rotZ)));
+        n++;
+        mA++;
+        outX[mA] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
+        outY[mA] = lbl_803E0610 * ((f32)next->rotX * fn_80293E80(ROMCURVE_PLACEMENT_ANGLE(next->rotY)));
+        outZ[n] = lbl_803E0610 * ((f32)next->rotX * sin(ROMCURVE_PLACEMENT_ANGLE(next->rotZ)));
+        n++;
+        mA++;
       }
-      if (bVar1) break;
-      iVar3 = 0;
-      uVar5 = *(uint *)(iVar8 + 0x1c);
-      if (((-1 < (int)uVar5) && ((*(byte *)(iVar8 + 0x1b) & 1) != 0)) && (uVar5 != 0)) {
-        iVar3 = 1;
-        local_a8[0] = uVar5;
-      }
-      uVar5 = *(uint *)(iVar8 + 0x20);
-      iVar4 = iVar3;
-      if (((-1 < (int)uVar5) && ((*(byte *)(iVar8 + 0x1b) & 2) != 0)) && (uVar5 != 0)) {
-        iVar4 = iVar3 + 1;
-        local_a8[iVar3] = uVar5;
-      }
-      uVar5 = *(uint *)(iVar8 + 0x24);
-      iVar3 = iVar4;
-      if (((-1 < (int)uVar5) && ((*(byte *)(iVar8 + 0x1b) & 4) != 0)) && (uVar5 != 0)) {
-        iVar3 = iVar4 + 1;
-        local_a8[iVar4] = uVar5;
-      }
-      uVar5 = *(uint *)(iVar8 + 0x28);
-      iVar4 = iVar3;
-      if (((-1 < (int)uVar5) && ((*(byte *)(iVar8 + 0x1b) & 8) != 0)) && (uVar5 != 0)) {
-        iVar4 = iVar3 + 1;
-        local_a8[iVar3] = uVar5;
-      }
-      if (iVar4 == 0) {
-        uVar5 = 0xffffffff;
-      }
-      else {
-        uVar5 = randomGetRange(0,iVar4 - 1);
-        uVar5 = local_a8[uVar5];
-      }
-      if ((int)uVar5 < 0) {
-        iVar3 = 0;
-      }
-      else {
-        iVar7 = nRomCurves + -1;
-        iVar4 = 0;
-        while (iVar4 <= iVar7) {
-          iVar6 = iVar7 + iVar4 >> 1;
-          iVar3 = (int)romCurves[iVar6];
-          if (*(uint *)(iVar3 + 0x14) < uVar5) {
-            iVar4 = iVar6 + 1;
-          }
-          else {
-            if (*(uint *)(iVar3 + 0x14) <= uVar5) goto LAB_800e41e4;
-            iVar7 = iVar6 + -1;
-          }
-        }
-        iVar3 = 0;
-      }
-LAB_800e41e4:
-      if (iVar3 != 0) {
-        if (param_5 != 0) {
-          *(undefined *)(param_5 + (iVar10 >> 2)) = *(undefined *)(iVar8 + 0x19);
-        }
-        *(undefined4 *)(iVar2 + iVar9) = *(undefined4 *)(iVar8 + 8);
-        *(undefined4 *)(param_3 + iVar9) = *(undefined4 *)(iVar8 + 0xc);
-        iVar4 = iVar9 + 4;
-        *(undefined4 *)(param_4 + iVar9) = *(undefined4 *)(iVar8 + 0x10);
-        *(undefined4 *)(iVar2 + iVar4) = *(undefined4 *)(iVar3 + 8);
-        *(undefined4 *)(param_3 + iVar4) = *(undefined4 *)(iVar3 + 0xc);
-        *(undefined4 *)(param_4 + iVar4) = *(undefined4 *)(iVar3 + 0x10);
-        uStack_2c = (int)*(char *)(iVar8 + 0x2c) << 8 ^ 0x80000000;
-        local_30 = 0x43300000;
-        dVar11 = (double)FUN_80293f90();
-        uStack_34 = (uint)*(byte *)(iVar8 + 0x2e);
-        local_38 = 0x43300000;
-        *(float *)(iVar2 + iVar9 + 8) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_34 *
-                    dVar11);
-        uStack_3c = (int)*(char *)(iVar8 + 0x2d) << 8 ^ 0x80000000;
-        local_40 = 0x43300000;
-        dVar11 = (double)FUN_80293f90();
-        uStack_44 = (uint)*(byte *)(iVar8 + 0x2e);
-        local_48 = 0x43300000;
-        *(float *)(param_3 + iVar9 + 8) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_44 *
-                    dVar11);
-        uStack_4c = (int)*(char *)(iVar8 + 0x2c) << 8 ^ 0x80000000;
-        local_50 = 0x43300000;
-        dVar11 = (double)FUN_80294964();
-        uStack_54 = (uint)*(byte *)(iVar8 + 0x2e);
-        local_58 = 0x43300000;
-        iVar8 = iVar10 + 3;
-        *(float *)(param_4 + (iVar10 + 2) * 4) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_54 *
-                    dVar11);
-        uStack_5c = (int)*(char *)(iVar3 + 0x2c) << 8 ^ 0x80000000;
-        local_60 = 0x43300000;
-        dVar11 = (double)FUN_80293f90();
-        uStack_64 = (uint)*(byte *)(iVar3 + 0x2e);
-        local_68 = 0x43300000;
-        *(float *)(iVar2 + iVar9 + 0xc) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_64 *
-                    dVar11);
-        uStack_6c = (int)*(char *)(iVar3 + 0x2d) << 8 ^ 0x80000000;
-        local_70 = 0x43300000;
-        dVar11 = (double)FUN_80293f90();
-        uStack_74 = (uint)*(byte *)(iVar3 + 0x2e);
-        local_78 = 0x43300000;
-        *(float *)(param_3 + iVar9 + 0xc) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_74 *
-                    dVar11);
-        uStack_7c = (int)*(char *)(iVar3 + 0x2c) << 8 ^ 0x80000000;
-        local_80 = 0x43300000;
-        dVar11 = (double)FUN_80294964();
-        uStack_84 = (uint)*(byte *)(iVar3 + 0x2e);
-        local_88 = 0x43300000;
-        iVar10 = iVar10 + 4;
-        iVar9 = iVar9 + 0x10;
-        *(float *)(param_4 + iVar8 * 4) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_84 *
-                    dVar11);
-      }
+      curve = next;
     }
   }
-  else {
-    while (iVar9 = iVar3, iVar9 != 0) {
-      bVar1 = false;
-      if ((*(int *)(iVar9 + 0x1c) == -1) || ((*(byte *)(iVar9 + 0x1b) & 1) != 0)) {
-        if ((*(int *)(iVar9 + 0x20) == -1) || ((*(byte *)(iVar9 + 0x1b) & 2) != 0)) {
-          if ((*(int *)(iVar9 + 0x24) == -1) || ((*(byte *)(iVar9 + 0x1b) & 4) != 0)) {
-            if ((*(int *)(iVar9 + 0x28) == -1) || ((*(byte *)(iVar9 + 0x1b) & 8) != 0)) {
-              bVar1 = true;
-            }
-            else {
-              bVar1 = false;
-            }
-          }
-          else {
-            bVar1 = false;
-          }
-        }
-        else {
-          bVar1 = false;
-        }
-      }
-      if (bVar1) break;
-      iVar3 = 0;
-      uVar5 = *(uint *)(iVar9 + 0x1c);
-      if (((-1 < (int)uVar5) && ((*(byte *)(iVar9 + 0x1b) & 1) == 0)) && (uVar5 != 0)) {
-        iVar3 = 1;
-        local_98[0] = uVar5;
-      }
-      uVar5 = *(uint *)(iVar9 + 0x20);
-      iVar4 = iVar3;
-      if (((-1 < (int)uVar5) && ((*(byte *)(iVar9 + 0x1b) & 2) == 0)) && (uVar5 != 0)) {
-        iVar4 = iVar3 + 1;
-        local_98[iVar3] = uVar5;
-      }
-      uVar5 = *(uint *)(iVar9 + 0x24);
-      iVar3 = iVar4;
-      if (((-1 < (int)uVar5) && ((*(byte *)(iVar9 + 0x1b) & 4) == 0)) && (uVar5 != 0)) {
-        iVar3 = iVar4 + 1;
-        local_98[iVar4] = uVar5;
-      }
-      uVar5 = *(uint *)(iVar9 + 0x28);
-      iVar4 = iVar3;
-      if (((-1 < (int)uVar5) && ((*(byte *)(iVar9 + 0x1b) & 8) == 0)) && (uVar5 != 0)) {
-        iVar4 = iVar3 + 1;
-        local_98[iVar3] = uVar5;
-      }
-      if (iVar4 == 0) {
-        uVar5 = 0xffffffff;
-      }
-      else {
-        uVar5 = randomGetRange(0,iVar4 - 1);
-        uVar5 = local_98[uVar5];
-      }
-      if ((int)uVar5 < 0) {
-        iVar3 = 0;
-      }
-      else {
-        iVar7 = nRomCurves + -1;
-        iVar4 = 0;
-        while (iVar4 <= iVar7) {
-          iVar6 = iVar7 + iVar4 >> 1;
-          iVar3 = (int)romCurves[iVar6];
-          if (*(uint *)(iVar3 + 0x14) < uVar5) {
-            iVar4 = iVar6 + 1;
-          }
-          else {
-            if (*(uint *)(iVar3 + 0x14) <= uVar5) goto LAB_800e3ca0;
-            iVar7 = iVar6 + -1;
-          }
-        }
-        iVar3 = 0;
-      }
-LAB_800e3ca0:
-      if (iVar3 != 0) {
-        if (param_5 != 0) {
-          *(undefined *)(param_5 + (iVar10 >> 2)) = *(undefined *)(iVar9 + 0x19);
-        }
-        *(undefined4 *)(iVar2 + iVar8) = *(undefined4 *)(iVar9 + 8);
-        *(undefined4 *)(param_3 + iVar8) = *(undefined4 *)(iVar9 + 0xc);
-        iVar4 = iVar8 + 4;
-        *(undefined4 *)(param_4 + iVar8) = *(undefined4 *)(iVar9 + 0x10);
-        *(undefined4 *)(iVar2 + iVar4) = *(undefined4 *)(iVar3 + 8);
-        *(undefined4 *)(param_3 + iVar4) = *(undefined4 *)(iVar3 + 0xc);
-        *(undefined4 *)(param_4 + iVar4) = *(undefined4 *)(iVar3 + 0x10);
-        uStack_84 = (int)*(char *)(iVar9 + 0x2c) << 8 ^ 0x80000000;
-        local_88 = 0x43300000;
-        dVar11 = (double)FUN_80293f90();
-        uStack_7c = (uint)*(byte *)(iVar9 + 0x2e);
-        local_80 = 0x43300000;
-        *(float *)(iVar2 + iVar8 + 8) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_7c *
-                    dVar11);
-        uStack_74 = (int)*(char *)(iVar9 + 0x2d) << 8 ^ 0x80000000;
-        local_78 = 0x43300000;
-        dVar11 = (double)FUN_80293f90();
-        uStack_6c = (uint)*(byte *)(iVar9 + 0x2e);
-        local_70 = 0x43300000;
-        *(float *)(param_3 + iVar8 + 8) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_6c *
-                    dVar11);
-        uStack_64 = (int)*(char *)(iVar9 + 0x2c) << 8 ^ 0x80000000;
-        local_68 = 0x43300000;
-        dVar11 = (double)FUN_80294964();
-        uStack_5c = (uint)*(byte *)(iVar9 + 0x2e);
-        local_60 = 0x43300000;
-        iVar9 = iVar10 + 3;
-        *(float *)(param_4 + (iVar10 + 2) * 4) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_5c *
-                    dVar11);
-        uStack_54 = (int)*(char *)(iVar3 + 0x2c) << 8 ^ 0x80000000;
-        local_58 = 0x43300000;
-        dVar11 = (double)FUN_80293f90();
-        uStack_4c = (uint)*(byte *)(iVar3 + 0x2e);
-        local_50 = 0x43300000;
-        *(float *)(iVar2 + iVar8 + 0xc) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_4c *
-                    dVar11);
-        uStack_44 = (int)*(char *)(iVar3 + 0x2d) << 8 ^ 0x80000000;
-        local_48 = 0x43300000;
-        dVar11 = (double)FUN_80293f90();
-        uStack_3c = (uint)*(byte *)(iVar3 + 0x2e);
-        local_40 = 0x43300000;
-        *(float *)(param_3 + iVar8 + 0xc) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_3c *
-                    dVar11);
-        uStack_34 = (int)*(char *)(iVar3 + 0x2c) << 8 ^ 0x80000000;
-        local_38 = 0x43300000;
-        dVar11 = (double)FUN_80294964();
-        uStack_2c = (uint)*(byte *)(iVar3 + 0x2e);
-        local_30 = 0x43300000;
-        iVar10 = iVar10 + 4;
-        iVar8 = iVar8 + 0x10;
-        *(float *)(param_4 + iVar9 * 4) =
-             lbl_803E1290 *
-             (float)((double)(f32)(s32)uStack_2c *
-                    dVar11);
-      }
-    }
-  }
-  return;
+  return n;
 }
 
 /*

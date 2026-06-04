@@ -91,7 +91,7 @@ f32 curves_distXZ(f32 x,f32 z,uint curveId);
 f32 curves_distFn0B(int obj,uint curveId);
 f32 curves_find(int type,int action,f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ);
 RomCurveDef *RomCurve_findByIdWithIndex(uint curveId,int *outIndex);
-void RomCurve_func20(undefined4 param_1,undefined4 param_2,int param_3,int param_4,int param_5);
+int RomCurve_func20(RomCurvePlacementDef *curve, f32 *outX, f32 *outY, f32 *outZ, s8 *outTypes);
 int RomCurve_countRandomPoints(RomCurveDef *curve);
 void RomCurve_func1E(uint *curveIds,float *outX,float *outY,float *outZ);
 void RomCurve_getAdjacentWindow(RomCurveDef *curve,int *outIds);
