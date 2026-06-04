@@ -4821,104 +4821,6 @@ int mathFn_800dbff0(float *point)
  * PAL Size: TODO
  */
 #pragma scheduling off
-int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outPhase)
-{
-  bool noOpenLinks;
-  int projected;
-  int linkCount;
-  uint linkId;
-  int mid;
-  float phase;
-  float verticalOffset;
-  float lateralOffset;
-  uint candidateLinkIds[4];
-  uint adjacentWindow[8];
-  
-LAB_800e1c9c:
-  do {
-    while( true ) {
-      noOpenLinks = false;
-      if ((*(int *)(curve + 0x1c) == -1) || ((*(byte *)(curve + 0x1b) & 1) != 0)) {
-        if ((*(int *)(curve + 0x20) == -1) || ((*(byte *)(curve + 0x1b) & 2) != 0)) {
-          if ((*(int *)(curve + 0x24) == -1) || ((*(byte *)(curve + 0x1b) & 4) != 0)) {
-            if ((*(int *)(curve + 0x28) == -1) || ((*(byte *)(curve + 0x1b) & 8) != 0)) {
-              noOpenLinks = true;
-            }
-            else {
-              noOpenLinks = false;
-            }
-          }
-          else {
-            noOpenLinks = false;
-          }
-        }
-        else {
-          noOpenLinks = false;
-        }
-      }
-      if (noOpenLinks) {
-        *outPhase = lbl_803E12B8;
-        return curve;
-      }
-      RomCurve_getAdjacentWindow(curve,(int *)adjacentWindow);
-      projected = RomCurve_projectPointToAdjacentWindow(x,y,z,adjacentWindow,&lateralOffset,
-                                                        &verticalOffset,&phase);
-      if ((((projected != 0) && (lbl_803E12C8 < lateralOffset)) &&
-           (lateralOffset < lbl_803E12CC)) &&
-         ((lbl_803E12D0 < verticalOffset && (verticalOffset < lbl_803E12D4)))) {
-        *outPhase = phase;
-        return curve;
-      }
-      projected = 0;
-      linkId = *(uint *)(curve + 0x1c);
-      if (((-1 < (int)linkId) && ((*(byte *)(curve + 0x1b) & 1) == 0)) && (linkId != 0)) {
-        projected = 1;
-        candidateLinkIds[0] = linkId;
-      }
-      linkId = *(uint *)(curve + 0x20);
-      linkCount = projected;
-      if (((-1 < (int)linkId) && ((*(byte *)(curve + 0x1b) & 2) == 0)) && (linkId != 0)) {
-        linkCount = projected + 1;
-        candidateLinkIds[projected] = linkId;
-      }
-      linkId = *(uint *)(curve + 0x24);
-      projected = linkCount;
-      if (((-1 < (int)linkId) && ((*(byte *)(curve + 0x1b) & 4) == 0)) && (linkId != 0)) {
-        projected = linkCount + 1;
-        candidateLinkIds[linkCount] = linkId;
-      }
-      linkId = *(uint *)(curve + 0x28);
-      linkCount = projected;
-      if (((-1 < (int)linkId) && ((*(byte *)(curve + 0x1b) & 8) == 0)) && (linkId != 0)) {
-        linkCount = projected + 1;
-        candidateLinkIds[projected] = linkId;
-      }
-      if (linkCount == 0) {
-        linkId = 0xffffffff;
-      }
-      else {
-        linkId = randomGetRange(0,linkCount - 1);
-        linkId = candidateLinkIds[linkId];
-      }
-      if (-1 < (int)linkId) break;
-      curve = 0;
-    }
-    linkCount = DAT_803de0f0 + -1;
-    projected = 0;
-    while (projected <= linkCount) {
-      mid = linkCount + projected >> 1;
-      curve = (int)romCurves[mid];
-      if (linkId > *(uint *)(curve + 0x14)) {
-        projected = mid + 1;
-      }
-      else {
-        if (linkId >= *(uint *)(curve + 0x14)) goto LAB_800e1c9c;
-        linkCount = mid + -1;
-      }
-    }
-    curve = 0;
-  } while( true );
-}
 #pragma scheduling reset
 
 
@@ -5748,6 +5650,53 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 gFloatZero;
+extern f32 lbl_803E0648;
+extern f32 lbl_803E064C;
+extern f32 lbl_803E0650;
+extern f32 lbl_803E0654;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_strength_reduction off
+int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outPhase)
+{
+  int projected;
+  uint linkId;
+  float lateralOffset;
+  float verticalOffset;
+  float phase;
+  int adjacentWindow[8];
+
+  while (!((*(int *)(curve + 0x1c) == -1 || (*(u8 *)(curve + 0x1b) & 1) != 0) &&
+           (*(int *)(curve + 0x20) == -1 || (*(u8 *)(curve + 0x1b) & 2) != 0) &&
+           (*(int *)(curve + 0x24) == -1 || (*(u8 *)(curve + 0x1b) & 4) != 0) &&
+           (*(int *)(curve + 0x28) == -1 || (*(u8 *)(curve + 0x1b) & 8) != 0))) {
+    RomCurve_getAdjacentWindow(curve, adjacentWindow);
+    projected = RomCurve_projectPointToAdjacentWindow(x, y, z, adjacentWindow,
+                                                      &lateralOffset, &verticalOffset, &phase);
+    if (projected != 0 && lateralOffset > lbl_803E0648 && lateralOffset < lbl_803E064C &&
+        verticalOffset > lbl_803E0650 && verticalOffset < lbl_803E0654) {
+      *outPhase = phase;
+      return curve;
+    }
+
+    linkId = RomCurve_getControlPointId_2A(curve, 0, -1);
+    if ((int)linkId < 0) {
+      curve = 0;
+    } else {
+      curve = Objfsa_FindRomCurveById(linkId);
+    }
+  }
+
+  *outPhase = gFloatZero;
+  return curve;
+}
+#pragma opt_strength_reduction reset
+#pragma peephole reset
+#pragma scheduling reset
+
 
 #pragma scheduling off
 #pragma peephole off
