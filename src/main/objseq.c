@@ -15,6 +15,10 @@ extern int *gCameraInterface;
 extern u8 lbl_80399E50[];
 extern int lbl_803DD064;
 extern int lbl_803DD084;
+extern s16 lbl_803DD060;
+extern s16 lbl_803DD062;
+extern char sObjSequenceMissingObjectFormat[];
+void ObjSeq_update(u8 *obj, f32 t);
 
 void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
 {
@@ -245,6 +249,151 @@ void *objSeqCmd3(u8 *obj, u8 *seq, u8 *src)
         }
     }
     return result;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void ObjSeq_run(void)
+{
+    int count;
+    int matchCount;
+    int ok;
+    int keepCount;
+    void **objects;
+    u8 *base;
+    void **objPtr;
+    u8 *cmd;
+    s16 *keepWalk;
+    s16 *keepBase;
+    int i;
+    int index;
+    int xrot;
+    u8 *model;
+    u8 *seqp;
+    u8 *candidate;
+    u8 **mp;
+    int n;
+    int k;
+    u8 *pending;
+    u8 *results;
+    u8 *actions;
+    f32 *dists;
+    f32 *frames;
+    u8 *marks;
+    s8 frames8;
+    u8 *matched[0x28];
+    s16 keepBuf[0x5a];
+    int objectCount;
+    void *unused;
+
+    base = lbl_80396918;
+    objects = ObjList_GetObjects(&unused, &objectCount);
+    if (lbl_803DD060 != lbl_803DD062) {
+        lbl_803DD062 = lbl_803DD060;
+    }
+
+    pending = base + 0x39e8;
+    results = base + 0x3bf4;
+    actions = base + 0x3c4c;
+    dists = (f32 *)(base + 0x3740);
+    frames = (f32 *)(base + 0x3894);
+    marks = base + 0x338c;
+    frames8 = framesThisStep;
+
+    for (i = 0; i < 0x55; i++) {
+        *pending = 0;
+        if ((s8)*results != 0 && (s8)*actions == 0) {
+            *pending = frames8;
+        }
+        *actions = *results;
+        *results = 0;
+        *frames = *dists;
+        *dists = lbl_803DEFF0;
+        if (*marks == 2) {
+            *marks = 1;
+        } else {
+            *marks = 0;
+        }
+        pending++;
+        results++;
+        actions++;
+        dists++;
+        frames++;
+        marks++;
+    }
+
+    count = (s8)lbl_803DD0BC;
+    keepCount = 0;
+    cmd = base + count * 6 + 0x2a80;
+    keepBase = keepBuf;
+    keepWalk = keepBase;
+    while (count > 0) {
+        cmd -= 6;
+        count--;
+        index = *(s16 *)cmd;
+        xrot = *(s16 *)(cmd + 2);
+        i = 0;
+        base[index + 0x3b44] = 0;
+        base[index + 0x3b9c] = 0;
+        base[index + 0x3a40] = 0;
+        matchCount = 0;
+        ok = 1;
+        objPtr = objects;
+        for (; i < objectCount; i++) {
+            candidate = *objPtr;
+            if (*(s16 *)(candidate + 0x44) == 0x10) {
+                model = *(u8 **)(candidate + 0x4c);
+                seqp = *(u8 **)(candidate + 0xb8);
+                if (model != NULL && (s8)model[0x1f] == index) {
+                    if (*(s16 *)(model + 0x1c) >= 4 &&
+                        objFindForSeqFn_80081bf0(candidate) == NULL) {
+                        ok = 0;
+                        fn_80137948(sObjSequenceMissingObjectFormat,
+                                    *(s16 *)(model + 0x1c) - 4);
+                    } else {
+                        *(void **)seqp = NULL;
+                    }
+                    if (matchCount < 0x28) {
+                        matched[matchCount++] = candidate;
+                    }
+                }
+            }
+            objPtr++;
+        }
+
+        mp = matched;
+        for (n = 0; n < matchCount; n++) {
+            candidate = *mp;
+            model = *(u8 **)(candidate + 0x4c);
+            if (model != NULL && (s8)model[0x1f] == index) {
+                seqp = *(u8 **)(candidate + 0xb8);
+                if (ok != 0) {
+                    seqp[0x7e] = 2;
+                    *(s16 *)(seqp + 0x5e) = xrot;
+                    ObjSeq_update(candidate, lbl_803DEFC8);
+                    Obj_GetWorldPosition(candidate, (f32 *)(candidate + 0x18),
+                                         (f32 *)(candidate + 0x1c), (f32 *)(candidate + 0x20));
+                } else {
+                    seqp[0x7e] = 3;
+                }
+            }
+            mp++;
+        }
+
+        if (ok == 0) {
+            *keepWalk = index;
+            keepWalk += 3;
+            keepBuf[keepCount++ * 3 + 1] = xrot;
+        }
+    }
+
+    for (k = 0; k < keepCount; k++) {
+        ((s16 *)(base + 0x2a80))[k * 3] = keepBase[k * 3];
+        ((s16 *)(base + 0x2a80))[k * 3 + 1] = keepBase[k * 3 + 1];
+    }
+    lbl_803DD0BC = (s8)keepCount;
 }
 #pragma scheduling reset
 #pragma peephole reset
