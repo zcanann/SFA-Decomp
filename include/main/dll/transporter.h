@@ -10,9 +10,7 @@ extern ObjectDescriptor gInvHitObjDescriptor;
 extern ObjectDescriptor gIceblastObjDescriptor;
 extern ObjectDescriptor gFlameblastObjDescriptor;
 
-void pushable_setScale(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 int param_9);
+int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz);
 uint FUN_80175740(int param_1,int param_2);
 void FUN_801757ac(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  int param_5);
