@@ -13505,6 +13505,16 @@ int Carryable_updateHeld(u8 *obj)
   return *(s8 *)(held + 5);
 }
 
+void objSaveFn_800ea774(int *obj) {
+    u8 *sub = *(u8 **)((char *)obj + 0xb8);
+    sub[5] = 0;
+    sub[6] = 0;
+    if ((sub[7] & 8) == 0) {
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) + lbl_803E06D8;
+        saveGame_saveObjectPos(obj);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) - lbl_803E06D8;
+    }
+}
 void saveGame_saveObjectPos(int *obj) {
     register u8 *slot;
     register int v;
@@ -13557,16 +13567,7 @@ int Carryable_updateRenderState(int *obj, int flag) {
     }
     return 1;
 }
-void objSaveFn_800ea774(int *obj) {
-    u8 *sub = *(u8 **)((char *)obj + 0xb8);
-    sub[5] = 0;
-    sub[6] = 0;
-    if ((sub[7] & 8) == 0) {
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) + lbl_803E06D8;
-        saveGame_saveObjectPos(obj);
-        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) - lbl_803E06D8;
-    }
-}
+
 #pragma peephole reset
 #pragma scheduling reset
 
