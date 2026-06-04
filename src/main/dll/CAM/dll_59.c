@@ -10,8 +10,8 @@ extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *
 extern void curvesMove(void *curve);
 extern int getAngle(f32 dx, f32 dz);
 extern undefined camcontrol_getTargetPosition(int obj, s16 *target, f32 *outPos, s16 *outAngle);
-extern void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 baseY, f32 targetZ,
-                                       f32 targetY, s16 angleRange, s16 angleLimit,
+extern void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 targetY, f32 targetZ,
+                                       f32 height, s16 angleRange, s16 angleLimit,
                                        int *outPointCount);
 extern int Camera_GetCurrentViewSlot();
 extern undefined4 FUN_8028688c();
@@ -40,10 +40,9 @@ extern f32 lbl_803E1778;
 
 #define gCamcontrolPathState lbl_803DD538
 
-static f32 CameraModeStaffAnim_angleToRadians(s16 angle)
+static f32 CameraModeStaffAnim_angleToRadians(int angle)
 {
-  u64 bits = CONCAT44(0x43300000, (u32)(s32)angle ^ 0x80000000);
-  return (lbl_803E1760 * (f32)(*(f64 *)&bits - lbl_803E1750)) / lbl_803E1764;
+  return (lbl_803E1760 * (f32)angle) / lbl_803E1764;
 }
 
 /*
@@ -59,6 +58,8 @@ static f32 CameraModeStaffAnim_angleToRadians(s16 angle)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
 {
   int cameraObj;
@@ -70,7 +71,7 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   f32 relAngleRad;
   f32 relCos;
   f32 relSin;
-  s16 facingDelta;
+  int facingDelta;
   s16 approachAngle;
   s16 turnAmount;
   s16 absTurn;
@@ -78,6 +79,8 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   s16 threshold;
   f32 pathRadius;
   f32 pathScale;
+  f32 dx;
+  f32 dz;
   f32 localPos[3];
   int pointCount;
   int i;
@@ -93,10 +96,9 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
 
   iface = *gCameraInterface;
   view = (*(int (**)(int))(iface + 0x18))(iface);
-  (*(void (**)(int, f32 *, f32 *, f32 *, int, f32 *))(**(int **)(view + 4) + 0x20))
-      (*(int *)(view + 4), (f32 *)(gCamcontrolPathState + 4),
-       (f32 *)(gCamcontrolPathState + 8), (f32 *)(gCamcontrolPathState + 0xc), 0,
-       (f32 *)(gCamcontrolPathState + 0x10));
+  (*(void (**)(f32 *, f32 *, f32 *, int, f32 *))(**(int **)(view + 4) + 0x20))
+      ((f32 *)(gCamcontrolPathState + 4), (f32 *)(gCamcontrolPathState + 8),
+       (f32 *)(gCamcontrolPathState + 0xc), 0, (f32 *)(gCamcontrolPathState + 0x10));
 
   gCamcontrolPathState[0x1bc] = 0;
   *(int *)gCamcontrolPathState = *(int *)(obj + 0x30);
@@ -104,8 +106,8 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   cosFacing = fn_80293E80(CameraModeStaffAnim_angleToRadians(target[0]));
   sinFacing = sin(CameraModeStaffAnim_angleToRadians(target[0]));
 
-  if (*(int *)gCamcontrolPathState != 0) {
-    facingDelta = target[0] - *(s16 *)*(int *)gCamcontrolPathState;
+  if (*(s16 **)gCamcontrolPathState != NULL) {
+    facingDelta = target[0] - (*(s16 **)gCamcontrolPathState)[0];
   }
   else {
     facingDelta = target[0];
@@ -115,13 +117,13 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
   relCos = fn_80293E80(relAngleRad);
   relSin = sin(relAngleRad);
 
-  approachAngle = target[0] - getAngle(*(f32 *)(obj + 0x18) - *(f32 *)(target + 0xc),
-                                       *(f32 *)(obj + 0x20) - *(f32 *)(target + 0x10));
+  approachAngle = target[0] - (u16)getAngle(*(f32 *)(obj + 0x18) - *(f32 *)(target + 0xc),
+                                            *(f32 *)(obj + 0x20) - *(f32 *)(target + 0x10));
   if (approachAngle > 0x8000) {
-    approachAngle++;
+    approachAngle = approachAngle - 0xffff;
   }
   if (approachAngle < -0x8000) {
-    approachAngle--;
+    approachAngle = approachAngle + 0xffff;
   }
   if (approachAngle < 0) {
     approachAngle = -approachAngle;
@@ -140,8 +142,8 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
     pathRadius = sqrtf(pathRadius);
 
     localPos[0] = (cosFacing * pathRadius) + *(f32 *)(target + 0xc);
-    localPos[1] = *(f32 *)(gCamcontrolPathState + 0xc) + *(f32 *)(target + 0xe) +
-                  *(f32 *)(gCamcontrolPathState + 0x10);
+    localPos[1] = *(f32 *)(gCamcontrolPathState + 0xc) +
+                  (*(f32 *)(target + 0xe) + *(f32 *)(gCamcontrolPathState + 0x10));
     localPos[2] = (sinFacing * pathRadius) + *(f32 *)(target + 0x10);
 
     if (settings[3] != 0) {
@@ -151,53 +153,48 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
     Obj_TransformWorldPointToLocal(localPos[0], localPos[1], localPos[2], &localPos[0],
                                    &localPos[1], &localPos[2], *(int *)(obj + 0x30));
 
-    for (i = 0; i < 3; i++) {
-      *(f32 *)(gCamcontrolPathState + (i * 4) + 0x1c) = *(f32 *)(obj + 0xc);
-      *(f32 *)(gCamcontrolPathState + (i * 4) + 0x6c) = *(f32 *)(obj + 0x10);
-      *(f32 *)(gCamcontrolPathState + (i * 4) + 0xbc) = *(f32 *)(obj + 0x14);
+    for (pointCount = 0; pointCount < 3; pointCount++) {
+      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0x1c) = *(f32 *)(obj + 0xc);
+      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0x6c) = *(f32 *)(obj + 0x10);
+      *(f32 *)(gCamcontrolPathState + (pointCount * 4) + 0xbc) = *(f32 *)(obj + 0x14);
     }
 
-    pathRadius = sqrtf((*(f32 *)(obj + 0xc) - localPos[0]) *
-                           (*(f32 *)(obj + 0xc) - localPos[0]) +
-                       (*(f32 *)(obj + 0x14) - localPos[2]) *
-                           (*(f32 *)(obj + 0x14) - localPos[2]));
-    pathRadius *= lbl_803E1770;
-    turnAmount = getAngle(-relCos, -relSin) -
-                 getAngle(*(f32 *)(obj + 0xc) - localPos[0],
-                          *(f32 *)(obj + 0x14) - localPos[2]);
+    dx = *(f32 *)(obj + 0xc) - localPos[0];
+    dz = *(f32 *)(obj + 0x14) - localPos[2];
+    pathRadius = lbl_803E1770 * sqrtf(dx * dx + dz * dz);
+    turnAmount = getAngle(-relCos, -relSin) - (u16)getAngle(dx, dz);
 
     if (turnAmount > 0x8000) {
-      turnAmount++;
+      turnAmount = turnAmount - 0xffff;
     }
     if (turnAmount < -0x8000) {
-      turnAmount--;
+      turnAmount = turnAmount + 0xffff;
     }
 
     pathAngle = turnAmount;
     if (turnAmount < 0) {
-      absTurn = -turnAmount;
-    }
-    else {
-      absTurn = turnAmount;
+      turnAmount = -turnAmount;
     }
 
-    if (absTurn <= 0x4000) {
-      absTurn = 0x4000 - absTurn;
-    }
-    else {
+    if (turnAmount > 0x4000) {
       absTurn = 0;
     }
+    else {
+      absTurn = 0x4000 - turnAmount;
+    }
 
-    if (turnAmount < 0) {
+    if (pathAngle < 0) {
       pathAngle = -(absTurn << 1);
     }
     else {
       pathAngle = absTurn << 1;
     }
 
-    pathScale = lbl_803E1740;
     if (absTurn != 0) {
       pathScale = pathRadius / fn_80293E80(CameraModeStaffAnim_angleToRadians(absTurn));
+    }
+    else {
+      pathScale = lbl_803E1740;
     }
 
     *(f32 **)(gCamcontrolPathState + 0x1a4) = (f32 *)(gCamcontrolPathState + 0x1c);
@@ -208,8 +205,8 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
 
     camcontrol_buildPathPoints(localPos[0] - (relCos * pathScale),
                                localPos[2] - (relSin * pathScale),
-                               *(f32 *)(obj + 0xc), localPos[1], *(f32 *)(obj + 0x14),
-                               *(f32 *)(obj + 0x10), pathAngle, 0x1555, &pointCount);
+                               *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14),
+                               localPos[1], pathAngle, 0x1555, &pointCount);
 
     pointOffset = pointCount * 4;
     for (i = pointCount; i < pointCount + 3; i++) {
@@ -230,15 +227,16 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
       Sfx_PlayFromObject(0, SFXsc_snort03);
     }
 
-    iface = *gCameraInterface;
-    (*(void (**)(int, f32 *, f32, f32, f32, f32, f32))(iface + 0x34))
-        (iface, (f32 *)(gCamcontrolPathState + 0x10c), *(f32 *)(gCamcontrolPathState + 0x12c),
+    (*(void (**)(f32 *, f32, f32, f32, f32, f32))(*gCameraInterface + 0x34))
+        ((f32 *)(gCamcontrolPathState + 0x10c), *(f32 *)(gCamcontrolPathState + 0x12c),
          lbl_803E1774, lbl_803E1770, lbl_803E1744, lbl_803E1778);
 
     *(f32 *)(gCamcontrolPathState + 0x14) = lbl_803E1758;
     *(f32 *)(gCamcontrolPathState + 0x18) = lbl_803E175C;
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 void CameraModeBike_copyToCurrent(f32 *param_1)
 {
