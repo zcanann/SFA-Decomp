@@ -3772,7 +3772,7 @@ extern void Obj_SetupObject(u32 setup, int a, int b, int c, char* d);
 
 #pragma scheduling off
 #pragma peephole off
-void mapLoadUnloadObjects(void)
+void mapLoadUnloadObjects(int flag)
 {
     char* base;
     s16 count;
@@ -4230,6 +4230,398 @@ void beginLoadingMap(void)
     clearSaveGameLoadingFlag();
     Pause_SetDisabled(0);
     Pause_ResetMenuFrameCounter();
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int mapGetDirIdx(int mapId);
+extern void setForceLoadImmediately(void);
+extern void clearForceLoadImmediately(void);
+extern void loadModelAndAnimTabs(void);
+extern int getCurrentDataFile(int id);
+extern void setShadowFlag_803db658(int v);
+extern void gameTextLoadDir(int dir);
+extern char sTrackPiLockedFormat[];
+extern int lbl_803DCE88;
+extern int lbl_803DCE1C;
+extern int* lbl_803DCDE4;
+extern int lbl_803DCEB0;
+extern s16 lbl_803DCE70;
+extern u8 lbl_803DCDED;
+
+#pragma scheduling off
+#pragma peephole off
+void doPendingMapLoads(void)
+{
+    char* base;
+    u8 waited;
+    int gx, gz;
+    u32 doLoad;
+    int layer;
+    int row;
+    s16 col;
+    int cell;
+    int i;
+    int slot;
+    s16* p13;
+    s16* p5;
+    s16* p7;
+    int cnt;
+    int* o1;
+    f32 dz;
+    s16 recs[1200];
+    int oa[4], ob[4], oc[4], od[4];
+
+    base = (char*)lbl_8037E0C0;
+    waited = 0;
+    if (!(renderFlags & 0x1000)) {
+        lbl_803DCED0 = playerMapOffsetX;
+        lbl_803DCECC = playerMapOffsetZ;
+        if (lbl_803DCEC8 != -1 && lbl_803DCEC8 != lbl_803DCEC4 &&
+            (lbl_803DCEC4 = lbl_803DCEC8, lbl_803DCEC8 < 118) &&
+            lbl_8030E55C[lbl_803DCEC8] != -1) {
+            gameTextLoadDir(lbl_8030E55C[lbl_803DCEC8]);
+        }
+        if (!(renderFlags & 2) && (getLoadedFileFlags(0) != 0 || lbl_803DCE1C == 0)) {
+            lbl_803DCE1C = getLoadedFileFlags(0);
+        } else {
+            renderFlags &= ~2;
+            dz = lbl_803DCE5C - playerMapOffsetZ;
+            gx = (int)fastFloorf((lbl_803DCE64 - playerMapOffsetX) / gMapBlockWorldSize);
+            gz = (int)fastFloorf(dz / gMapBlockWorldSize);
+            {
+                u32 t = renderFlags;
+                doLoad = t & 0x800;
+                renderFlags = t & ~0x800;
+            }
+            {
+                u32 ff = getLoadedFileFlags(0);
+                if ((ff & 0xFFEFFFFF) != 0) {
+                    if (lbl_803DCEC8 != 38 && lbl_803DCEC8 != 58 && lbl_803DCEC8 != 59 &&
+                        lbl_803DCEC8 != 60 && lbl_803DCEC8 != 61 && lbl_803DCEC8 != 62 &&
+                        lbl_803DCEC8 != 28) {
+                        lbl_803DCE04 = 1;
+                    }
+                } else {
+                    if (lbl_803DCE04 != 0) {
+                        lbl_803DCE04 = 0;
+                        doLoad = 1;
+                    }
+                }
+            }
+            if (gx != 7 || gz != 7 || doLoad != 0 || (renderFlags & 0x4000)) {
+                setShadowFlag_803db658(1);
+                doNothing_8001F678(1, 0);
+                cnt = 0;
+                layer = 0;
+                {
+                    int* bp2 = (int*)(base + 0x41E0);
+                    int* ap2 = (int*)(base + 0x41F4);
+                    int* cp2 = (int*)(base + 0x41CC);
+                    p13 = recs;
+                    for (layer = 0; layer < 5; layer++) {
+                        s16* ent = (s16*)*bp2;
+                        char* g = (char*)*ap2;
+                        lbl_803DCE88 = *cp2;
+                        cell = 0;
+                        row = 0;
+                        p5 = p13;
+                        for (row = 0; row < 16; row++) {
+                            col = 0;
+                            p7 = p5;
+                            for (col = 0; col < 16; col++) {
+                                s8 c = *(s8*)g;
+                                if (c > -1) {
+                                    p5[0] = lbl_803DCDD0 + col;
+                                    p5[1] = lbl_803DCDD4 + row;
+                                    p5[3] = layer;
+                                    p5[2] = c;
+                                    p5 += 4;
+                                    p7 += 4;
+                                    p13 += 4;
+                                    cnt++;
+                                }
+                                *g = -2;
+                                *(s8*)(lbl_803DCE88 + cell) = -1;
+                                ent[3] = -3;
+                                ent[0] = -1;
+                                ent[1] = -1;
+                                ent[2] = -1;
+                                ent += 6;
+                                cell++;
+                                g++;
+                            }
+                            p5 = p7;
+                        }
+                        bp2++;
+                        ap2++;
+                        cp2++;
+                    }
+                }
+                lbl_803DCDD0 = (gx + lbl_803DCDD0) - 7;
+                lbl_803DCDD4 = (gz + lbl_803DCDD4) - 7;
+                playerMapOffsetX = gMapBlockWorldSize * (f32)lbl_803DCDD0;
+                playerMapOffsetZ = gMapBlockWorldSize * (f32)lbl_803DCDD4;
+                lbl_803DCDC8 = (int)playerMapOffsetX;
+                lbl_803DCDCC = (int)playerMapOffsetZ;
+                for (i = 0; i < lbl_803DCDEC; i++) {
+                    *(s8*)(base + 0x418C + i * 8 + 6) = 0;
+                }
+                lbl_803DCEC8 = mapCoordsToId(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, 0);
+                lbl_803DCEC0 = -1;
+                if (lbl_803DCEC8 == -1) {
+                    int d = mapGetDirIdx(41);
+                    setForceLoadImmediately();
+                    mapLoadDataFile(d, 32);
+                    mapLoadDataFile(d, 35);
+                    mapLoadDataFile(d, 48);
+                    mapLoadDataFile(d, 43);
+                    mapLoadDataFile(d, 33);
+                    mapLoadDataFile(d, 42);
+                    mapLoadDataFile(d, 47);
+                    mapLoadDataFile(d, 36);
+                    clearForceLoadImmediately();
+                    while (getLoadedFileFlags(0) != 0) {
+                        OSReport(sTrackPiLockedFormat, getLoadedFileFlags(0));
+                        padUpdate();
+                        checkReset();
+                        if (waited)
+                            waitNextFrame();
+                        loadDataFiles();
+                        dvdCheckError();
+                        if (waited) {
+                            mmFreeTick(0);
+                            gameTextRun();
+                            GXFlush_(1, 0);
+                        }
+                        if (lbl_803DC950)
+                            waited = 1;
+                    }
+                } else {
+                    if (lbl_803DCEC8 != -1) {
+                        setForceLoadImmediately();
+                        {
+                            int m = lbl_803DCEC8;
+                            int i2 = 0;
+                            char* p2 = base + 0x418C;
+                            int cn = lbl_803DCDEC;
+                            int k;
+                            for (k = 0; k < cn; k++) {
+                                if (*(int*)p2 != 0 && m == *(s16*)(p2 + 4))
+                                    goto found;
+                                p2 += 8;
+                                i2++;
+                            }
+                            i2 = -1;
+                        found:
+                            slot = i2;
+                        }
+                        if (slot == -1)
+                            slot = mapProcessRomList(lbl_803DCEC8);
+                        {
+                            int m2 = lbl_803DCEC8;
+                            u32 sz = getDataFileSize(0x1f);
+                            if (m2 < 0 || m2 >= (int)(sz >> 5)) {
+                                lbl_803DCEA4 = 0;
+                            } else {
+                                int e = lbl_803DCE78;
+                                getTabEntry(e, 0x1f, m2 << 5, 0x20);
+                                lbl_803DCEA4 = *(u8*)(e + 0x1c);
+                            }
+                        }
+                        *(s8*)(base + slot * 8 + 0x4192) = 1;
+                        lbl_803DCEC0 = slot;
+                        mapGetDirIdx(lbl_803DCEC8);
+                        mapCheckCurBlocks(0);
+                        mapLoadDataFile(mapGetDirIdx(lbl_803DCEC8), 38);
+                        mapLoadDataFile(mapGetDirIdx(lbl_803DCEC8), 37);
+                        mapLoadDataFile(mapGetDirIdx(lbl_803DCEC8), 26);
+                        mapLoadDataFile(mapGetDirIdx(lbl_803DCEC8), 27);
+                        lbl_803DCDE4 = (int*)getCurrentDataFile(38);
+                        lbl_803DCEB0 = 0;
+                        {
+                            int* p3;
+                            for (p3 = lbl_803DCDE4; lbl_803DCDE4 != 0 && *p3 != -1; p3++) {
+                                lbl_803DCEB0 = lbl_803DCEB0 + 1;
+                            }
+                        }
+                        lbl_803DCEB0 = lbl_803DCEB0 - 1;
+                        {
+                            int* tp2 = (int*)(base + 0x41E0);
+                            for (i = 0; i < 5; i++) {
+                                char* g2 = (char*)*tp2;
+                                int t2 = 0;
+                                int k2;
+                                for (k2 = 0; k2 < 2; k2++) {
+                                    g2 += 0x540;
+                                    t2 += 7;
+                                }
+                                tp2++;
+                            }
+                        }
+                        {
+                            int d2 = mapGetDirIdx(lbl_803DCEC8);
+                            mapLoadDataFile(d2, 32);
+                            mapLoadDataFile(d2, 35);
+                            mapLoadDataFile(d2, 48);
+                            mapLoadDataFile(d2, 43);
+                            mapLoadDataFile(d2, 13);
+                            mapLoadDataFile(d2, 33);
+                            mapLoadDataFile(d2, 42);
+                            mapLoadDataFile(d2, 47);
+                            mapLoadDataFile(d2, 36);
+                            mapLoadDataFile(d2, 14);
+                        }
+                        loadModelAndAnimTabs();
+                        {
+                            int* ap3 = (int*)(base + 0x41F4);
+                            int* cp3 = (int*)(base + 0x41CC);
+                            for (layer = 0; layer < 5; layer++) {
+                                char* g3;
+                                int zz, xx;
+                                s8 cnt2;
+                                mapFn_80057d24(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, oa, ob, oc, od,
+                                               layer, 0, slot);
+                                g3 = (char*)*ap3;
+                                lbl_803DCE88 = *cp3;
+                                for (zz = oa[2]; zz <= oa[3]; zz++) {
+                                    char* gp = g3 + (zz + 7) * 16 + oa[0];
+                                    for (xx = oa[0]; xx <= oa[1]; xx++) {
+                                        gp[7] = -3;
+                                        gp++;
+                                    }
+                                }
+                                for (zz = ob[2]; zz <= ob[3]; zz++) {
+                                    char* gp = g3 + (zz + 7) * 16 + ob[0];
+                                    for (xx = ob[0]; xx <= ob[1]; xx++) {
+                                        gp[7] = -3;
+                                        gp++;
+                                    }
+                                }
+                                for (zz = oc[2]; zz <= oc[3]; zz++) {
+                                    char* gp = g3 + (zz + 7) * 16 + oc[0];
+                                    for (xx = oc[0]; xx <= oc[1]; xx++) {
+                                        gp[7] = -3;
+                                        gp++;
+                                    }
+                                }
+                                for (zz = od[2]; zz <= od[3]; zz++) {
+                                    char* gp = g3 + (zz + 7) * 16 + od[0];
+                                    for (xx = od[0]; xx <= od[1]; xx++) {
+                                        gp[7] = -3;
+                                        gp++;
+                                    }
+                                }
+                                {
+                                    s8 cn2 = 0;
+                                    int cell2 = 0;
+                                    char* gp2 = g3;
+                                    int rr, cc;
+                                    for (rr = 0; rr < 16; rr++) {
+                                        for (cc = 0; cc < 16; cc++) {
+                                            int bx = lbl_803DCDD0 + cc;
+                                            int bz = lbl_803DCDD4 + rr;
+                                            if (*(s8*)gp2 == -3) {
+                                                if (mapLoadBlock(cc, rr, bx, bz, layer) == 0) {
+                                                    *gp2 = -2;
+                                                } else {
+                                                    *(s8*)(lbl_803DCE88 + cell2) = cn2;
+                                                    cn2++;
+                                                }
+                                            }
+                                            cell2++;
+                                            gp2++;
+                                        }
+                                    }
+                                }
+                                ap3++;
+                                cp3++;
+                            }
+                        }
+                        clearForceLoadImmediately();
+                    }
+                }
+                {
+                    s8 first = 1;
+                    int i3 = lbl_803DCDEC - 1;
+                    char* p4 = base + 0x418C + i3 * 8;
+                    for (; i3 >= 0; i3--) {
+                        if (*(s8*)(p4 + 6) == 0) {
+                            if (*(int*)p4 != 0) {
+                                s16 sl = *(s16*)(p4 + 4);
+                                defStartFn_8005972c(*(char**)p4, (u32*)(base + sl * 0x8C + 0x4208),
+                                                    sl, 1);
+                                mm_free(*(void**)p4);
+                                *(int*)(base + 0x83A8 + sl * 4) = 0;
+                            }
+                            *(int*)p4 = 0;
+                            *(s16*)(p4 + 4) = -1;
+                        }
+                        if (first) {
+                            if (*(int*)p4 == 0)
+                                lbl_803DCDEC--;
+                            else
+                                first = 0;
+                        }
+                        p4 -= 8;
+                    }
+                }
+                {
+                    s16* rc = recs;
+                    for (i = 0; i < cnt; i++) {
+                        s16 mid = rc[2];
+                        if (mid >= 0) {
+                            *(u8*)(lbl_803DCE8C + mid) = *(u8*)(lbl_803DCE8C + mid) - 1;
+                            if (*(u8*)(lbl_803DCE8C + mid) == 0) {
+                                char* blk = (char*)*(int*)((char*)lbl_803DCE9C + mid * 4);
+                                int off;
+                                int j, k;
+                                *(s16*)((char*)lbl_803DCE94 + mid * 2) = -1;
+                                *(int*)((char*)lbl_803DCE9C + mid * 4) = 0;
+                                off = 0;
+                                for (j = 0; j < *(u8*)(blk + 0xa2); j++) {
+                                    char* ent2 = (char*)(*(int*)(blk + 100) + off);
+                                    char* cur2 = ent2;
+                                    for (k = 0; k < *(u8*)(ent2 + 0x41); k++) {
+                                        if (*(u8*)(cur2 + 0x2a) != 0xFF) {
+                                            int ix = *(u8*)(cur2 + 0x2a) * 16 + 12;
+                                            u8 c2 = *(u8*)(lbl_803DCE68 + ix);
+                                            if (c2 != 0)
+                                                *(u8*)(lbl_803DCE68 + ix) = c2 - 1;
+                                        }
+                                        if (*(u8*)(cur2 + 0x29) != 0)
+                                            mapTextureOverrideRelease(*(int*)(cur2 + 0x24),
+                                                                      *(u8*)(cur2 + 0x29));
+                                        cur2 += 8;
+                                    }
+                                    off += 0x44;
+                                }
+                                {
+                                    int o2 = 0;
+                                    for (j = 0; j < *(u8*)(blk + 0xa0); j++) {
+                                        textureFree(*(int*)(*(int*)(blk + 0x54) + o2));
+                                        o2 += 4;
+                                    }
+                                }
+                                if (*(int*)(blk + 0x74) != 0)
+                                    mm_free(*(void**)(blk + 0x74));
+                                if (*(int*)(blk + 0x70) != 0)
+                                    mm_free(*(void**)(blk + 0x70));
+                                setMapBlockFlag();
+                                mm_free(blk);
+                            }
+                        }
+                        rc += 4;
+                    }
+                }
+                lbl_803DCE70 = 0;
+                lbl_803DCDED = 0;
+            }
+            mapLoadUnloadObjects(doLoad);
+            lbl_803DCE1C = getLoadedFileFlags(0);
+            renderFlags &= ~0x4000;
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
