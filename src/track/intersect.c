@@ -7009,7 +7009,7 @@ s32 saveGameGetStatus(void)
  */
 extern void cardShowLoadingMsg(u8);
 extern int saveGame_prepareAndWrite(int, int, int, int, int, void*);
-extern void showMemCardError(int);
+extern void showMemCardError(u8);
 extern int cardCb_8007e6d4(u8, int, void*, void*);
 extern int saveCb_8007e748(int, int, void*);
 extern void saveCb_8007e77c(void);
@@ -7161,6 +7161,161 @@ int loadSaveGame(int a, int b)
     return ret;
 }
 #pragma scheduling reset
+
+#pragma peephole off
+#pragma scheduling off
+void showMemCardError(u8 err)
+{
+    extern f32 lbl_803DEF90, lbl_803DEF94;
+    extern u8 lbl_803DB424;
+    extern u8 lbl_803DD058;
+    extern int lbl_803DB708;
+    extern void checkReset(void);
+    extern int padUpdate(void);
+    extern void mmFreeTick(int);
+    extern void waitNextFrame(void);
+    extern int getLastRenderedFrame(void);
+    extern void hudDrawColored(int, int, int, void*, int, int);
+    extern void gameTextSetColor(int, int, int, int);
+    extern int *gameTextGet(int id);
+    extern void gameTextShowStr(int str, int x, int y, int yPos);
+    extern void gameTextRun(void);
+    extern void GXFlush_(int, int);
+    extern char padGetStickY(int port);
+    extern char padGetCY(int port);
+    extern u32 getButtonsJustPressed(int controller);
+    extern void setGameState(int state);
+    extern f32 fn_80293AC4(int v);
+
+    int opts[8];
+    int msgs[8];
+    int count;
+    int saved;
+    int sel;
+    u8 submenu;
+    int timer;
+    u8 held;
+    int i;
+    int j;
+    int y;
+    int yy;
+    char *t;
+    int v;
+
+    sel = 0;
+    submenu = 0;
+    timer = 0;
+    held = 0;
+    lbl_803DD058 = 0;
+    if (lbl_803DB700 == 0xd) {
+        return;
+    }
+    if (err != 0) {
+        if (lbl_803DB700 == 0xc) {
+            return;
+        }
+    }
+    do {
+        checkReset();
+        padUpdate();
+        mmFreeTick(0);
+        timer += 0x3e8;
+        waitNextFrame();
+        saved = lbl_803DB708;
+        hudDrawColored(getLastRenderedFrame(), 0, 0, &saved, 0x200, 0);
+        if (submenu != 0) {
+            opts[0] = 6;
+            opts[1] = 5;
+            msgs[0] = 0x327;
+            msgs[1] = 0x321;
+            msgs[2] = 0x320;
+            count = 2;
+        } else {
+            cardGetMessage((u32 *)opts, (u32 *)msgs, (u32 *)&count);
+        }
+        gameTextSetColor(0xff, 0xc0, 0x40, 0xff);
+        y = 0x64;
+        for (i = 0; i < count + 1; i++) {
+            t = (char *)gameTextGet(msgs[i]);
+            yy = y + ((i > 0) ? 0x64 : 0);
+            for (j = 0; j < *(u16 *)(t + 2); j++) {
+                gameTextShowStr((*(int **)(t + 8))[j], 0, 0, yy);
+                yy += 0x18;
+            }
+            if (i == sel) {
+                v = (int)(lbl_803DEF94 * fn_80293AC4(timer) + lbl_803DEF90);
+                gameTextSetColor(v, v, v, 0xff);
+            } else {
+                gameTextSetColor(0xa0, 0xa0, 0xa0, 0xff);
+            }
+            y += 0x14;
+        }
+        gameTextRun();
+        GXFlush_(1, 0);
+        if (padGetStickY(0) < 0 || padGetCY(0) < 0) {
+            if (held == 0) {
+                sel++;
+                held = 1;
+            }
+        } else if (padGetStickY(0) > 0 || padGetCY(0) > 0) {
+            if (held == 0) {
+                sel--;
+                held = 1;
+            }
+        } else {
+            held = 0;
+        }
+        if (sel < 0) {
+            sel = 0;
+        } else if (sel > count - 1) {
+            sel = count - 1;
+        }
+        if (getButtonsJustPressed(0) & 0x100) {
+            switch (opts[sel]) {
+            case 0:
+                submenu = 1;
+                sel = 0;
+                break;
+            case 1:
+                lbl_803DB700 = 0xd;
+                lbl_803DD058 = 1;
+                break;
+            case 2:
+                lbl_803DB424 = 0;
+                lbl_803DB700 = 0xd;
+                break;
+            case 3:
+                setGameState(6);
+                lbl_803DB424 = 0;
+                lbl_803DB700 = 0xd;
+                break;
+            case 4:
+                cardDeleteFn_8007d99c();
+                memCardFn_8007dd04(0);
+                if (lbl_803DB700 == 0xd) {
+                    lbl_803DD058 = 1;
+                }
+                break;
+            case 5:
+                submenu = 0;
+                if (cardLoadFn_8007d72c() != 0) {
+                    memCardFn_8007dd04(0);
+                }
+                if (lbl_803DB700 == 0xd) {
+                    lbl_803DD058 = 1;
+                }
+                break;
+            case 6:
+                submenu = 0;
+                break;
+            default:
+                lbl_803DB700 = 0xd;
+            }
+        }
+    } while (lbl_803DB700 != 0xd);
+}
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -7430,10 +7585,6 @@ void cardGetMessage(u32* buttons, u32* texts, u32* count)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void showMemCardError(int param_1)
-{
-}
-
 /*
  * --INFO--
  *
