@@ -18123,6 +18123,123 @@ void cutsceneEnterExit(int entering, int affectSounds) {
 }
 #pragma pop
 
+extern int lbl_803DCA18;
+extern int lbl_803DCA08;
+extern int lbl_803DCA10;
+extern f32 lbl_803DE730;
+extern f32 lbl_803DE734;
+int fn_8001860C(u8 *str);
+int fn_80018ED4(u8 *str, u32 target, int *out);
+extern char **textMeasureFn_80016c9c(char *str, f32 width, f32 height, int *outCount, f32 *outLineH);
+
+typedef struct SubtitleLineTable {
+    void *blocks[256];
+    char *lines[256];
+    f32 times[256];
+} SubtitleLineTable;
+
+typedef struct SubtitleTextEntry {
+    u8 pad0[2];
+    u16 count;
+    u8 pad4[4];
+    char **strs;
+} SubtitleTextEntry;
+
+#pragma push
+#pragma optimization_level 1
+#pragma scheduling off
+#pragma peephole off
+void textFn_8001b7b8(void) {
+    int total;
+    SubtitleLineTable *s = (SubtitleLineTable *)lbl_8033B240;
+    f32 delta;
+    f32 curTime;
+    int savedCharset;
+    SubtitleTextEntry *t;
+    u8 *win;
+    int i;
+    char *str;
+    int k;
+    int m;
+    int oldDelay;
+    char **strLines;
+    int found;
+    int q;
+    int n;
+    int count;
+    int args[3];
+    f32 ftotal;
+
+    total = 0;
+    curTime = lbl_803DE730;
+    if (lbl_803DC9F0 != 0) {
+        savedCharset = gameTextFn_80019b14();
+        gameTextSetCharset(1, 1);
+    }
+    t = (SubtitleTextEntry *)gameTextGet(lbl_803DC9FC);
+    win = lbl_802C7400 + 0x140;
+    lbl_803DCA18 = 0;
+    lbl_803DCA14 = 0;
+    for (i = 0; i < 256; i++) {
+        s->times[i] = lbl_803DE734;
+    }
+    for (i = 0; i < t->count; i++) {
+        str = t->strs[i];
+        n = fn_80018ED4((u8 *)str, 0xE018, args);
+        if (n != 0) {
+            q = args[2] / 60;
+            s->times[lbl_803DCA18] = (f32)(args[1] + (args[0] * 60 + q));
+        }
+        strLines = textMeasureFn_80016c9c(str, (f32)(u32)*(u16 *)(win + 2), *(f32 *)(win + 0xc), &count, NULL);
+        if (strLines != NULL) {
+            for (k = 0; k < count; k++) {
+                s->lines[lbl_803DCA18++] = strLines[k];
+            }
+            if (s->blocks[lbl_803DCA14] != NULL) {
+                oldDelay = mmSetFreeDelay(0);
+                mm_free(s->blocks[lbl_803DCA14]);
+                mmSetFreeDelay(oldDelay);
+            }
+            s->blocks[lbl_803DCA14++] = strLines;
+        }
+    }
+    for (k = 0; k < lbl_803DCA18; k++) {
+        if (lbl_803DE734 != s->times[k]) {
+            curTime = s->times[k];
+            total = fn_8001860C((u8 *)s->lines[k]);
+        } else {
+            found = 0;
+            m = k;
+            for (i = 0; i < 256; i++) {
+                ftotal = (f32)total;
+                if (m < 255) {
+                    if (lbl_803DE734 != s->times[m + 1]) {
+                        delta = s->times[m + 1] - curTime;
+                        found = 1;
+                    }
+                    n = fn_8001860C((u8 *)s->lines[m]);
+                    s->times[m] = (f32)n;
+                    total += n;
+                    if (found != 0) {
+                        for (q = m; q >= k; q--) {
+                            s->times[q] = s->times[q + 1] - delta * (s->times[q] / (f32)total);
+                        }
+                        break;
+                    }
+                    m++;
+                }
+            }
+        }
+    }
+    lbl_803DCA08 = 0;
+    lbl_803DCA10 = 0;
+    lbl_803DCA04 = 2;
+    if (lbl_803DC9F0 != 0) {
+        gameTextSetCharset(savedCharset, 1);
+    }
+}
+#pragma pop
+
 #pragma push
 #pragma scheduling off
 #pragma peephole off
