@@ -224,6 +224,387 @@ void FUN_800c2924(void)
   return;
 }
 
+typedef struct EffectSrcParams {
+  s16 rot0;
+  s16 rot1;
+  s16 rot2;
+  f32 w;
+  f32 x;
+  f32 y;
+  f32 z;
+} EffectSrcParams;
+
+typedef struct EffectSpawnParams {
+  s16 *model;
+  int unk04;
+  uint count;
+  s16 rot0;
+  s16 rot1;
+  s16 rot2;
+  f32 srcW;
+  f32 srcX;
+  f32 srcY;
+  f32 srcZ;
+  f32 velX;
+  f32 velY;
+  f32 velZ;
+  f32 posX;
+  f32 posY;
+  f32 posZ;
+  f32 scale;
+  s16 unk40;
+  s16 kind;
+  uint flagsA;
+  uint flagsB;
+  u32 colA;
+  u32 colB;
+  u32 colC;
+  u16 colD;
+  u16 colE;
+  u16 colF;
+  u8 idByte;
+  u8 pad5F;
+  u8 alpha;
+  u8 unk61;
+  u8 srcFlag;
+} EffectSpawnParams;
+
+extern int *gExpgfxInterface;
+extern EffectSrcParams lbl_8039C3F8;
+extern void mathFn_80021ac8(void *params, f32 *vec);
+
+extern EffectSrcParams lbl_8039C3C8;
+extern f32 lbl_803DFF38;
+extern f32 lbl_803DFF3C;
+extern f32 lbl_803DFF40;
+extern f32 lbl_803DFF44;
+extern f32 lbl_803DFF48;
+extern f32 lbl_803DFF4C;
+extern f32 lbl_803DFF50;
+extern f32 lbl_803DFF54;
+extern f32 lbl_803DFF58;
+extern f32 lbl_803DFF5C;
+extern f32 lbl_803DFF60;
+extern f32 lbl_803DFF64;
+extern f32 lbl_803DFF68;
+extern f32 lbl_803DFF6C;
+extern f32 lbl_803DFF70;
+extern f32 lbl_803DFF74;
+extern f32 lbl_803DFF78;
+extern f32 lbl_803DFF7C;
+extern f32 lbl_803DFF80;
+extern f32 lbl_803DFF84;
+extern f32 lbl_803DFF88;
+extern f32 lbl_803DFF8C;
+extern f32 lbl_803DFF90;
+extern f32 lbl_803DFF94;
+extern f32 lbl_803DFF98;
+extern f32 lbl_803DFF9C;
+
+#pragma scheduling off
+#pragma peephole off
+int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcByte)
+{
+  EffectSpawnParams p;
+  uint hasOffset;
+
+  if (obj == NULL) {
+    return -1;
+  }
+  hasOffset = flags & 0x200000;
+  if (hasOffset != 0) {
+    if (src == NULL) {
+      return -1;
+    }
+    p.srcX = src->x;
+    p.srcY = src->y;
+    p.srcZ = src->z;
+    p.srcW = src->w;
+    p.rot2 = src->rot2;
+    p.rot1 = src->rot1;
+    p.rot0 = src->rot0;
+    p.srcFlag = srcByte;
+  }
+  p.flagsA = 0;
+  p.flagsB = 0;
+  p.idByte = id;
+  p.model = obj;
+  p.posX = lbl_803DFF38;
+  p.posY = lbl_803DFF38;
+  p.posZ = lbl_803DFF38;
+  p.velX = lbl_803DFF38;
+  p.velY = lbl_803DFF38;
+  p.velZ = lbl_803DFF38;
+  p.scale = lbl_803DFF38;
+  p.count = 0;
+  p.unk04 = -1;
+  p.alpha = 0xff;
+  p.unk61 = 0;
+  p.kind = 0;
+  p.colD = 0xffff;
+  p.colE = 0xffff;
+  p.colF = 0xffff;
+  p.colA = 0xffff;
+  p.colB = 0xffff;
+  p.colC = 0xffff;
+  p.unk40 = 0;
+  switch (id) {
+  case 0x12c:
+    p.scale = lbl_803DFF3C;
+    p.count = 0xa;
+    p.alpha = 0xff;
+    p.flagsA = 0x40200;
+    p.kind = 0xdb;
+    break;
+  case 0x12d:
+    if (src == NULL) {
+      lbl_8039C3C8.x = lbl_803DFF38;
+      lbl_8039C3C8.y = lbl_803DFF38;
+      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.w = lbl_803DFF40;
+      lbl_8039C3C8.rot0 = 0;
+      lbl_8039C3C8.rot1 = 0;
+      lbl_8039C3C8.rot2 = 0;
+      src = &lbl_8039C3C8;
+    }
+    p.scale = lbl_803DFF44;
+    p.count = randomGetRange(0, 0x1e) + 0x46;
+    p.alpha = src->w > lbl_803DFF38 ? 0x50 : 0x41;
+    p.flagsA = 0x80110;
+    p.kind = src->w > lbl_803DFF38 ? 0x7b : 0xdb;
+    break;
+  case 0x12e:
+    if (src == NULL) {
+      lbl_8039C3C8.x = lbl_803DFF38;
+      lbl_8039C3C8.y = lbl_803DFF38;
+      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.w = lbl_803DFF40;
+      lbl_8039C3C8.rot0 = 0;
+      lbl_8039C3C8.rot1 = 0;
+      lbl_8039C3C8.rot2 = 0;
+      src = &lbl_8039C3C8;
+    }
+    p.posX = lbl_803DFF48 * (f32)(int)randomGetRange(-10, 10);
+    p.posY = lbl_803DFF38;
+    p.posZ = lbl_803DFF4C;
+    p.velY = lbl_803DFF50 * (f32)(int)randomGetRange(1, 3);
+    p.velX = lbl_803DFF48 * src->x;
+    p.velZ = lbl_803DFF48 * -src->z;
+    p.scale = lbl_803DFF3C * (f32)(int)randomGetRange(1, 3);
+    p.count = 0x19;
+    p.alpha = 0x55;
+    p.flagsA = 0x80118;
+    p.kind = 0x5f;
+    break;
+  case 0x12f:
+    if (src == NULL) {
+      lbl_8039C3C8.x = lbl_803DFF38;
+      lbl_8039C3C8.y = lbl_803DFF38;
+      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.w = lbl_803DFF40;
+      lbl_8039C3C8.rot0 = 0;
+      lbl_8039C3C8.rot1 = 0;
+      lbl_8039C3C8.rot2 = 0;
+      src = &lbl_8039C3C8;
+    }
+    p.posX = lbl_803DFF48 * (f32)(int)randomGetRange(-10, 10);
+    p.posY = lbl_803DFF38;
+    p.posZ = lbl_803DFF4C;
+    p.velY = lbl_803DFF50 * (f32)(int)randomGetRange(1, 3);
+    p.velX = lbl_803DFF54 * src->x;
+    p.velZ = lbl_803DFF54 * -src->z;
+    p.scale = lbl_803DFF58 * (f32)(int)randomGetRange(1, 3);
+    p.count = 0x19;
+    p.alpha = 0x55;
+    p.flagsA = 0x80118;
+    p.kind = 0x5f;
+    break;
+  case 0x130:
+    if (src == NULL) {
+      lbl_8039C3C8.x = lbl_803DFF38;
+      lbl_8039C3C8.y = lbl_803DFF38;
+      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.w = lbl_803DFF40;
+      lbl_8039C3C8.rot0 = 0;
+      lbl_8039C3C8.rot1 = 0;
+      lbl_8039C3C8.rot2 = 0;
+      src = &lbl_8039C3C8;
+    }
+    p.posX = lbl_803DFF48 * (f32)(int)randomGetRange(-10, 10);
+    p.posY = lbl_803DFF38;
+    p.posZ = lbl_803DFF4C;
+    p.velY = lbl_803DFF50 * (f32)(int)randomGetRange(1, 3);
+    p.velX = lbl_803DFF5C * src->x;
+    p.velZ = lbl_803DFF5C * -src->z;
+    p.scale = lbl_803DFF60 * (f32)(int)randomGetRange(1, 3);
+    p.count = 0x19;
+    p.alpha = 0x55;
+    p.flagsA = 0x80118;
+    p.kind = 0x5f;
+    break;
+  case 0x131:
+    p.posX = lbl_803DFF50 * (f32)(int)randomGetRange(-0xc, 0xc);
+    p.posY = lbl_803DFF50 * (f32)(int)randomGetRange(-0xc, 0xc) + lbl_803DFF64;
+    p.posZ = lbl_803DFF4C;
+    p.velZ = lbl_803DFF68 * (f32)(int)randomGetRange(5, 10);
+    p.scale = lbl_803DFF6C;
+    p.count = 100;
+    p.alpha = 0xff;
+    p.flagsA = 0x100;
+    p.kind = 0x33;
+    break;
+  case 0x132:
+    p.posX = lbl_803DFF70 * (f32)(int)randomGetRange(-10, 10);
+    p.posY = lbl_803DFF70 * (f32)(int)randomGetRange(-10, 10);
+    p.posZ = lbl_803DFF70 * (f32)(int)randomGetRange(-10, 10);
+    p.scale = lbl_803DFF74;
+    p.count = randomGetRange(0x78, 0x96);
+    p.unk61 = 0x1e;
+    p.alpha = 0xff;
+    p.flagsA = 0x11;
+    p.kind = 0x5f;
+    break;
+  case 0x133:
+    if (src == NULL) {
+      lbl_8039C3C8.x = lbl_803DFF38;
+      lbl_8039C3C8.y = lbl_803DFF38;
+      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.w = lbl_803DFF40;
+      lbl_8039C3C8.rot0 = 0;
+      lbl_8039C3C8.rot1 = 0;
+      lbl_8039C3C8.rot2 = 0;
+      src = &lbl_8039C3C8;
+    }
+    p.posX = src->x;
+    p.posY = src->y;
+    p.posZ = src->z;
+    p.scale = lbl_803DFF74;
+    p.count = 5;
+    p.alpha = 0x80;
+    p.flagsA = p.flagsA | 0x80210;
+    p.kind = 0x26d;
+    break;
+  case 0x134:
+    if (src == NULL) {
+      lbl_8039C3C8.x = lbl_803DFF38;
+      lbl_8039C3C8.y = lbl_803DFF38;
+      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.w = lbl_803DFF40;
+      lbl_8039C3C8.rot0 = 0;
+      lbl_8039C3C8.rot1 = 0;
+      lbl_8039C3C8.rot2 = 0;
+      src = &lbl_8039C3C8;
+    }
+    p.posX = lbl_803DFF78 * (f32)(int)randomGetRange(-200, 200) + src->x;
+    p.posY = src->y;
+    p.posZ = lbl_803DFF78 * (f32)(int)randomGetRange(-200, 200) + src->z;
+    p.scale = lbl_803DFF7C * (f32)(int)randomGetRange(5, 0xc);
+    p.count = 0xc;
+    p.alpha = randomGetRange(0x96, 0xfa);
+    p.flagsA = p.flagsA | 0x80210;
+    p.kind = 0xe0;
+    break;
+  case 0x135:
+    if (src == NULL) {
+      lbl_8039C3C8.x = lbl_803DFF38;
+      lbl_8039C3C8.y = lbl_803DFF38;
+      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.w = lbl_803DFF40;
+      lbl_8039C3C8.rot0 = 0;
+      lbl_8039C3C8.rot1 = 0;
+      lbl_8039C3C8.rot2 = 0;
+      src = &lbl_8039C3C8;
+    }
+    p.posX = lbl_803DFF70 * (f32)(int)randomGetRange(-10, 10);
+    p.posY = lbl_803DFF70 * (f32)(int)randomGetRange(-0x1e, 0);
+    p.posZ = lbl_803DFF70 * (f32)(int)randomGetRange(-10, 10);
+    p.velX = lbl_803DFF74 * (f32)(int)randomGetRange(-0xf, 0xf);
+    p.velY = lbl_803DFF80 * (f32)(int)randomGetRange(0xf, 0x23);
+    p.velZ = lbl_803DFF74 * (f32)(int)randomGetRange(-0xf, 0xf);
+    p.scale = lbl_803DFF84 * (f32)(int)randomGetRange(0x64, 0x96);
+    p.count = randomGetRange(0x32, 0x50);
+    p.unk61 = randomGetRange(0xa, 0x1e);
+    p.flagsA = 0x218;
+    p.kind = src->rot2;
+    break;
+  case 0x136:
+    if (src == NULL) {
+      lbl_8039C3C8.x = lbl_803DFF38;
+      lbl_8039C3C8.y = lbl_803DFF38;
+      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.w = lbl_803DFF40;
+      lbl_8039C3C8.rot0 = 0;
+      lbl_8039C3C8.rot1 = 0;
+      lbl_8039C3C8.rot2 = 0;
+      src = &lbl_8039C3C8;
+    }
+    p.posX = (f32)(int)randomGetRange(-src->rot1, src->rot1) / lbl_803DFF88;
+    p.posY = (f32)(int)randomGetRange(-src->rot1, src->rot1) / lbl_803DFF88;
+    p.posZ = (f32)(int)randomGetRange(-src->rot1, src->rot1) / lbl_803DFF88;
+    p.scale = lbl_803DFF8C;
+    p.count = randomGetRange(0x14, 0x1e);
+    p.flagsA = 0x100200;
+    p.kind = src->rot2;
+    break;
+  case 0x137:
+    if (src == NULL) {
+      lbl_8039C3C8.x = lbl_803DFF38;
+      lbl_8039C3C8.y = lbl_803DFF38;
+      lbl_8039C3C8.z = lbl_803DFF38;
+      lbl_8039C3C8.w = lbl_803DFF40;
+      lbl_8039C3C8.rot0 = 0;
+      lbl_8039C3C8.rot1 = 0;
+      lbl_8039C3C8.rot2 = 0;
+      src = &lbl_8039C3C8;
+    }
+    if (src == NULL) {
+      return -1;
+    }
+    p.velX = lbl_803DFF94 * (f32)(int)randomGetRange(0, 100) + lbl_803DFF90;
+    p.velY = lbl_803DFF98 * (f32)(int)randomGetRange(0, 100) + lbl_803DFF74;
+    p.velZ = lbl_803DFF98 * (f32)(int)randomGetRange(0, 100) + lbl_803DFF74;
+    mathFn_80021ac8(src, &p.velX);
+    p.scale = lbl_803DFF9C * (f32)(int)randomGetRange(0x14, 0x1e);
+    p.alpha = 0xff;
+    p.count = 0xf0;
+    p.unk61 = 0x10;
+    p.unk04 = 0x138;
+    p.flagsA = 0x480200;
+    p.flagsB = 0x100000;
+    p.kind = 0x167;
+    break;
+  case 0x138:
+    p.scale = lbl_803DFF7C * (f32)(int)randomGetRange(0x14, 0x1e);
+    p.alpha = 0x37;
+    p.count = 4;
+    p.unk61 = 0x10;
+    p.flagsA = 0x80201;
+    p.flagsB = 2;
+    p.kind = 0x167;
+    break;
+  default:
+    return -1;
+  }
+  p.flagsA = p.flagsA | flags;
+  if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0)) {
+    p.flagsA = p.flagsA ^ 2;
+  }
+  if ((p.flagsA & 1) != 0) {
+    if (hasOffset != 0) {
+      p.posX = p.posX + p.srcX;
+      p.posY = p.posY + p.srcY;
+      p.posZ = p.posZ + p.srcZ;
+    } else if (p.model != NULL) {
+      p.posX = p.posX + *(f32 *)((char *)p.model + 0x18);
+      p.posY = p.posY + *(f32 *)((char *)p.model + 0x1c);
+      p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
+    }
+  }
+  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 2))(&p, -1, id, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /*
  * --INFO--
  *
@@ -241,6 +622,302 @@ void FUN_800c2a18(undefined4 param_1,undefined4 param_2,ushort *param_3,uint par
                  undefined param_5)
 {
 }
+
+extern EffectSrcParams lbl_8039C3E0;
+extern f32 lbl_803DFFA8;
+extern f32 lbl_803DFFAC;
+extern f32 lbl_803DFFB0;
+extern f32 lbl_803DFFB4;
+extern f32 lbl_803DFFB8;
+extern f32 lbl_803DFFBC;
+extern f32 lbl_803DFFC0;
+extern f32 lbl_803DFFC4;
+extern f32 lbl_803DFFC8;
+extern f32 lbl_803DFFCC;
+extern f32 lbl_803DFFD0;
+extern f32 lbl_803DFFD4;
+extern f32 lbl_803DFFD8;
+extern f32 lbl_803DFFDC;
+extern f32 lbl_803DFFE0;
+extern f32 lbl_803DFFE4;
+extern f32 lbl_803DFFE8;
+extern f32 lbl_803DFFEC;
+extern f32 lbl_803DFFF0;
+
+#pragma scheduling off
+#pragma peephole off
+int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcByte, f32 *p6)
+{
+  EffectSrcParams local;
+  EffectSpawnParams p;
+  uint hasOffset;
+
+  if (obj == NULL) {
+    return -1;
+  }
+  hasOffset = flags & 0x200000;
+  if (hasOffset != 0) {
+    if (src == NULL) {
+      return -1;
+    }
+    p.srcX = src->x;
+    p.srcY = src->y;
+    p.srcZ = src->z;
+    p.srcW = src->w;
+    p.rot2 = src->rot2;
+    p.rot1 = src->rot1;
+    p.rot0 = src->rot0;
+    p.srcFlag = srcByte;
+  }
+  p.flagsA = 0;
+  p.flagsB = 0;
+  p.idByte = id;
+  p.model = obj;
+  p.posX = lbl_803DFFA8;
+  p.posY = lbl_803DFFA8;
+  p.posZ = lbl_803DFFA8;
+  p.velX = lbl_803DFFA8;
+  p.velY = lbl_803DFFA8;
+  p.velZ = lbl_803DFFA8;
+  p.scale = lbl_803DFFA8;
+  p.count = 0;
+  p.unk04 = -1;
+  p.alpha = 0xff;
+  p.unk61 = 0;
+  p.kind = 0;
+  p.colD = 0xffff;
+  p.colE = 0xffff;
+  p.colF = 0xffff;
+  p.colA = 0xffff;
+  p.colB = 0xffff;
+  p.colC = 0xffff;
+  switch (id) {
+  case 0x47e:
+    p.scale = lbl_803DFFAC;
+    p.count = randomGetRange(0x32, 0x3c);
+    p.alpha = 0x4b;
+    p.flagsA = 0x180110;
+    p.flagsB = 0x4000800;
+    p.kind = 0x159;
+    break;
+  case 0x483:
+    if (src == NULL) {
+      lbl_8039C3E0.x = lbl_803DFFA8;
+      lbl_8039C3E0.y = lbl_803DFFA8;
+      lbl_8039C3E0.z = lbl_803DFFA8;
+      lbl_8039C3E0.w = lbl_803DFFB0;
+      lbl_8039C3E0.rot0 = 0;
+      lbl_8039C3E0.rot1 = 0;
+      lbl_8039C3E0.rot2 = 0;
+      src = &lbl_8039C3E0;
+    }
+    p.posX = (f32)(int)randomGetRange(-10, 10);
+    p.posZ = (f32)(int)randomGetRange(-10, 10);
+    p.velX = lbl_803DFFB4 * src->w * (f32)(int)randomGetRange(-100, 100);
+    p.velY = lbl_803DFFB4 * src->w * (f32)(int)randomGetRange(0x28, 0x50);
+    p.velZ = lbl_803DFFB4 * src->w * (f32)(int)randomGetRange(-100, 100);
+    p.scale = lbl_803DFFB8;
+    p.count = 0x3c;
+    p.flagsA = 0x81080200;
+    p.flagsB = 0x8000000;
+    p.kind = 0x2b;
+    p.alpha = 0x3c;
+    break;
+  case 0x484:
+    if (src == NULL) {
+      lbl_8039C3E0.x = lbl_803DFFA8;
+      lbl_8039C3E0.y = lbl_803DFFA8;
+      lbl_8039C3E0.z = lbl_803DFFA8;
+      lbl_8039C3E0.w = lbl_803DFFB0;
+      lbl_8039C3E0.rot0 = 0;
+      lbl_8039C3E0.rot1 = 0;
+      lbl_8039C3E0.rot2 = 0;
+      src = &lbl_8039C3E0;
+    }
+    p.velX = lbl_803DFFB8 * src->w * (f32)(int)randomGetRange(-100, 100);
+    p.velY = lbl_803DFFB8 * src->w * (f32)(int)randomGetRange(0x14, 0x50);
+    p.velZ = lbl_803DFFB8 * src->w * (f32)(int)randomGetRange(-100, 100);
+    p.scale = lbl_803DFFBC;
+    p.count = 0x3c;
+    p.flagsB = 0x200000;
+    p.flagsA = 0x3000200;
+    p.kind = 0x185;
+    p.alpha = 0x7f;
+    break;
+  case 0x485:
+    if (src == NULL) {
+      lbl_8039C3E0.x = lbl_803DFFA8;
+      lbl_8039C3E0.y = lbl_803DFFA8;
+      lbl_8039C3E0.z = lbl_803DFFA8;
+      lbl_8039C3E0.w = lbl_803DFFB0;
+      lbl_8039C3E0.rot0 = 0;
+      lbl_8039C3E0.rot1 = 0;
+      lbl_8039C3E0.rot2 = 0;
+      src = &lbl_8039C3E0;
+    }
+    p.posX = (f32)(int)randomGetRange(-10, 10);
+    p.posZ = (f32)(int)randomGetRange(-10, 10);
+    p.velX = lbl_803DFFB4 * src->w * (f32)(int)randomGetRange(-100, 100);
+    p.velY = lbl_803DFFB4 * src->w * (f32)(int)randomGetRange(0x28, 0x50);
+    p.velZ = lbl_803DFFB4 * src->w * (f32)(int)randomGetRange(-100, 100);
+    p.scale = lbl_803DFFB8;
+    p.count = 0x3c;
+    p.flagsA = 0x81080200;
+    p.flagsB = 0x8000000;
+    p.kind = 0x2b;
+    p.alpha = 0x3c;
+    break;
+  case 0x486:
+    p.posX = lbl_803DFFC0;
+    p.posY = lbl_803DFFC4;
+    p.posZ = lbl_803DFFC0;
+    p.velX = lbl_803DFFC8 * (f32)(int)randomGetRange(-100, 100);
+    p.velY = lbl_803DFFCC * (f32)(int)randomGetRange(-0x28, 0x140);
+    p.velZ = lbl_803DFFC8 * (f32)(int)randomGetRange(-100, 100);
+    p.scale = lbl_803DFFD0 * (f32)(int)randomGetRange(0xa, 0xf);
+    p.count = randomGetRange(0x2c, 0x2f);
+    p.kind = 0x156;
+    p.alpha = 0x7f;
+    p.flagsA = 0xc80000;
+    p.flagsB = 0x908;
+    break;
+  case 0x487:
+    if (p6 == NULL) {
+      return 0;
+    }
+    p.velX = *p6;
+    p.velY = p6[1];
+    p.velZ = p6[2];
+    p.scale = lbl_803DFFD4;
+    p.alpha = 0x40;
+    p.count = 100;
+    p.flagsA = 0x3000200;
+    p.kind = 0x62;
+    p.flagsB = 0x200000;
+    break;
+  case 0x488:
+    p.posX = lbl_803DFFC0 + (f32)(int)randomGetRange(-0x18, 0x18);
+    p.posY = lbl_803DFFA8;
+    p.posZ = lbl_803DFFC0 + (f32)(int)randomGetRange(-0x18, 0x18);
+    p.velX = lbl_803DFFBC * (f32)(int)randomGetRange(-5, 5);
+    p.velY = lbl_803DFFBC * (f32)(int)randomGetRange(2, 10);
+    p.velZ = lbl_803DFFBC * (f32)(int)randomGetRange(-5, 5);
+    p.scale = lbl_803DFFB4;
+    p.count = 0x6e;
+    p.flagsA = 0x80180200;
+    p.flagsB = 0x8000000;
+    p.kind = 0x2b;
+    p.alpha = 0xff;
+    break;
+  case 0x489:
+    p.scale = lbl_803DFFD8;
+    p.count = randomGetRange(0x32, 100);
+    p.alpha = 0x7f;
+    p.flagsA = 0x1180100;
+    p.kind = 0x2b;
+    p.flagsB = 0x4000000;
+    break;
+  case 0x48a:
+    p.velX = lbl_803DFFB4 * (f32)(int)randomGetRange(-0x32, 0x32);
+    p.velY = lbl_803DFFB4 * (f32)(int)randomGetRange(0x1e, 0x32);
+    p.velZ = lbl_803DFFB4 * (f32)(int)randomGetRange(-0x32, 0x32);
+    p.scale = lbl_803DFFDC;
+    p.count = randomGetRange(0x32, 0x46);
+    p.alpha = 0x7f;
+    p.flagsA = 0x1180100;
+    p.flagsB = 0x8000000;
+    p.kind = 0x2b;
+    break;
+  case 0x48b:
+    p.posX = (f32)(int)randomGetRange(-0x32, 0x32);
+    p.posY = lbl_803DFFE0;
+    p.posZ = (f32)(int)randomGetRange(-0x32, 0x32);
+    p.velX = lbl_803DFFBC * (f32)(int)randomGetRange(-0x14, 0x14);
+    p.velY = lbl_803DFFB8 * (f32)(int)randomGetRange(-0x14, 0);
+    p.velZ = lbl_803DFFBC * (f32)(int)randomGetRange(-0x14, 0x14);
+    p.scale = lbl_803DFFE8 * (f32)(int)randomGetRange(0, 10) + lbl_803DFFE4;
+    p.count = randomGetRange(0xbe, 0xfa);
+    p.flagsA = 0x81088000;
+    p.kind = (s16)randomGetRange(0, 2) + 0x208;
+    p.colD = 0xb400;
+    p.colE = 0x8000;
+    p.colF = 0;
+    p.colA = 0xb400;
+    p.colB = 0xa000;
+    p.colC = 0;
+    p.flagsB = 0x20;
+    p.alpha = 0xd2;
+    break;
+  case 0x48c:
+    if (src == NULL) {
+      lbl_8039C3E0.x = lbl_803DFFA8;
+      lbl_8039C3E0.y = lbl_803DFFA8;
+      lbl_8039C3E0.z = lbl_803DFFA8;
+      lbl_8039C3E0.w = lbl_803DFFB0;
+      lbl_8039C3E0.rot0 = 0;
+      lbl_8039C3E0.rot1 = 0;
+      lbl_8039C3E0.rot2 = 0;
+    }
+    if (p6 == NULL) {
+      return -1;
+    }
+    if (*(int *)p6 == 0) {
+      p.scale = lbl_803DFFEC * (f32)(int)randomGetRange(8, 0x11);
+      p.count = randomGetRange(5, 10);
+      p.alpha = 0x64;
+      p.flagsA = 0x80110;
+      p.flagsB = 0x4000800;
+    } else if (*(int *)p6 == 1) {
+      p.velX = lbl_803DFFB4 * (f32)(int)randomGetRange(-0x32, 0x32);
+      p.velY = lbl_803DFFB4 * (f32)(int)randomGetRange(-0x32, 0x32);
+      p.velZ = lbl_803DFFB4 * (f32)(int)randomGetRange(0, 0x32);
+      p.scale = lbl_803DFFF0 * (f32)(int)randomGetRange(10, 0x14);
+      p.count = 0x2d;
+      p.alpha = 0;
+      p.flagsA = 0x880014;
+      p.flagsB = 0x4010808;
+    } else {
+      p.velX = lbl_803DFFB4 * (f32)(int)randomGetRange(-0x28, 0x28);
+      p.velY = lbl_803DFFD8 * (f32)(int)randomGetRange(-10, 0x1e);
+      p.velZ = lbl_803DFFD8 * (f32)(int)randomGetRange(0, 0x28);
+      local.x = lbl_803DFFA8;
+      local.y = lbl_803DFFA8;
+      local.z = lbl_803DFFA8;
+      local.w = lbl_803DFFB0;
+      local.rot2 = 0;
+      local.rot1 = 0;
+      local.rot0 = obj[0];
+      mathFn_80021ac8(&local, &p.velX);
+      p.scale = lbl_803DFFB4;
+      p.count = 100;
+      p.alpha = 0xff;
+      p.flagsB = 0x300800;
+      p.flagsA = 0x300210;
+    }
+    p.kind = randomGetRange(0x156, 0x157);
+    break;
+  default:
+    return -1;
+  }
+  p.flagsA = p.flagsA | flags;
+  if (((p.flagsA & 1) != 0) && ((p.flagsA & 2) != 0)) {
+    p.flagsA = p.flagsA ^ 2;
+  }
+  if ((p.flagsA & 1) != 0) {
+    if (hasOffset != 0) {
+      p.posX = p.posX + p.srcX;
+      p.posY = p.posY + p.srcY;
+      p.posZ = p.posZ + p.srcZ;
+    } else if (p.model != NULL) {
+      p.posX = p.posX + *(f32 *)((char *)p.model + 0x18);
+      p.posY = p.posY + *(f32 *)((char *)p.model + 0x1c);
+      p.posZ = p.posZ + *(f32 *)((char *)p.model + 0x20);
+    }
+  }
+  return (*(int (**)(EffectSpawnParams *, int, int, int))(*gExpgfxInterface + 2))(&p, -1, id, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -273,54 +950,6 @@ void FUN_800c2a1c(undefined4 param_1,undefined4 param_2,undefined2 *param_3,uint
  * PAL Address: TODO
  * PAL Size: TODO
  */
-typedef struct EffectSrcParams {
-  s16 rot0;
-  s16 rot1;
-  s16 rot2;
-  f32 w;
-  f32 x;
-  f32 y;
-  f32 z;
-} EffectSrcParams;
-
-typedef struct EffectSpawnParams {
-  s16 *model;
-  int unk04;
-  uint count;
-  s16 rot0;
-  s16 rot1;
-  s16 rot2;
-  f32 srcW;
-  f32 srcX;
-  f32 srcY;
-  f32 srcZ;
-  f32 velX;
-  f32 velY;
-  f32 velZ;
-  f32 posX;
-  f32 posY;
-  f32 posZ;
-  f32 scale;
-  u8 pad40[2];
-  s16 kind;
-  uint flagsA;
-  uint flagsB;
-  u32 colA;
-  u32 colB;
-  u32 colC;
-  u16 colD;
-  u16 colE;
-  u16 colF;
-  u8 idByte;
-  u8 pad5F;
-  u8 alpha;
-  u8 unk61;
-  u8 srcFlag;
-} EffectSpawnParams;
-
-extern int *gExpgfxInterface;
-extern EffectSrcParams lbl_8039C3F8;
-extern void mathFn_80021ac8(void *params, f32 *vec);
 
 extern f32 lbl_803E0000;
 extern f32 lbl_803E0004;
