@@ -109,7 +109,7 @@ extern f32 lbl_803E24BC;
 extern f32 lbl_803E24C0;
 
 extern char lbl_8031D2E8[];
-extern int *gPathControlInterface;
+extern u8 *gPathControlInterface;
 
 extern int isInWalkGroupOrPatch(f32 *pos);
 extern void ObjHits_SyncObjectPosition(u8 *obj);
@@ -122,7 +122,7 @@ extern s16 walkGroupFn_800db3e4(f32 *pos, f32 *target, int walkGroup);
 extern u16 Objfsa_GetPatchGroupIdAtPoint(void *pos);
 extern void fn_800DB240(void *pos, void *out, u32 patch);
 extern int isPointWithinPatchGroup(f32 *pos, int walkGroup, u32 patch);
-extern void trickyUpdateApproachSpeed(u8 *obj, u8 *state, f32 *targetPos, u8 flag, f32 baseRadius);
+extern void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPos, u8 flag);
 extern int trickyMove(u8 *obj, void *moveState);
 extern void trickyRankLinkedRouteCandidates(u8 *obj, u8 *flags, int walkGroup, int *routes);
 extern int trickyFindReachableRouteIndex(u8 *state, int *routes, u8 *flags, u16 group);
@@ -140,7 +140,7 @@ extern void fn_800D9EE8(void *route);
 extern void fn_8004B31C(void *search, u32 route, void *target, int pathId, u32 dir);
 extern int fn_8004B218(void *search, int timeout);
 extern void trickyTurnTowardYaw(u8 *obj, int yaw);
-extern void ObjAnim_SampleRootCurvePhase(u8 *obj, u8 *animState, f32 speed);
+extern void ObjAnim_SampleRootCurvePhase(u8 *obj, f32 speed, u8 *animState);
 extern void objHitDetectFn_80062e84(u8 *obj, int a, int b);
 
 /*
@@ -156,8 +156,8 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
 {
     char *strs = (char *)lbl_8031D2E8;
     u8 *target;
-    u32 wg;
-    u32 targetWg;
+    int wg;
+    int targetWg;
     u32 tpRaw;
     u32 tp;
     u32 trickyPatch;
@@ -177,6 +177,7 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
     u8 moved;
     u8 slot;
     u8 step;
+    u8 mask;
     char found;
     f32 velBefore;
     f32 dist;
@@ -184,23 +185,23 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
     f32 v;
     f32 k;
     u8 pair[2];
+    u8 routeFlags[8];
     struct {
         s16 yaw;
         s16 b;
         s16 c;
     } rot;
-    u8 routeFlags[8];
+    f32 delta[3];
     struct {
         u8 pad;
         u8 mask;
         u16 patch[5];
     } wgi;
-    f32 delta[3];
     int routePtrs[9];
 
     moved = 1;
     if ((*(u8 *)(state + 9) < 5) && (isInWalkGroupOrPatch((f32 *)(obj + 0x18)) == 0)) {
-        (*(code *)*(int *)(*gPathControlInterface + 0x20))(obj, state + 0xf8);
+        ((void (*)(u8 *, u8 *))*(void **)(*(int *)gPathControlInterface + 0x20))(obj, state + 0xf8);
         *(f32 *)(obj + 0xc) = *(f32 *)(state + 0xe0);
         *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xe4);
         *(f32 *)(obj + 0x14) = *(f32 *)(state + 0xe8);
@@ -212,8 +213,18 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
     target = *(u8 **)(state + 0x28);
     wg = Objfsa_GetWalkGroupIndexAtPoint((f32 *)(obj + 0x18), 0);
     if ((wg != 0) && (*(u16 *)(state + 0xd0) != wg)) {
-        *(s16 *)(state + 0xd0) = wg;
-        *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & ~0x400;
+        *(u16 *)(state + 0xd0) = wg;
+        {
+            register u32 m;
+            register u32 v;
+            register u8 *st = state;
+            asm {
+                lwz v, 0x54(st)
+                li m, -0x401
+                and m, v, m
+                stw m, 0x54(st)
+            }
+        }
         *(u16 *)(state + 0x98) = 0;
         *(u16 *)(state + 0x9a) = 0;
         *(u16 *)(state + 0x9c) = 0;
@@ -221,34 +232,37 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
     }
     targetWg = Objfsa_GetWalkGroupIndexAtPoint((f32 *)target, &wgi);
     if (((wg != 0) && (targetWg == 0)) &&
-        (link = getPatchGroup((f32 *)target, wg), link != 0)) {
-        walkPath_writeU16LE(link, pair);
-        targetWg = pair[0];
-        if (targetWg == wg) {
+        ((ulink = getPatchGroup((f32 *)target, wg)) != 0)) {
+        walkPath_writeU16LE(ulink, pair);
+        if (pair[0] == wg) {
             targetWg = pair[1];
+        } else {
+            targetWg = pair[0];
         }
     }
     if ((targetWg != 0) && (targetWg != *(u16 *)(state + 0x532))) {
-        *(s16 *)(state + 0x532) = targetWg;
+        *(u16 *)(state + 0x532) = targetWg;
     }
     *(u16 *)(state + 0x534) = *(u16 *)(state + 0x532);
     trickyDebugPrint(strs + 0x1e8, *(u16 *)(state + 0xd0), wg, targetWg, *(u16 *)(state + 0x532));
-    if (*(s16 *)(state + 0xd0) == 0) {
+    if (*(u16 *)(state + 0xd0) == 0) {
         trickyReportError(strs + 0x214, *(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c),
                           *(f32 *)(obj + 0x20));
     }
     velBefore = *(f32 *)(state + 0x14);
-    trickyUpdateApproachSpeed(obj, state, (f32 *)target, 0, vel);
+    trickyUpdateApproachSpeed(obj, vel, state, (f32 *)target, 0);
     trickyDebugPrint(strs + 0x268, velBefore, *(f32 *)(state + 0x14));
     if (targetWg == *(u16 *)(state + 0xd0)) {
         *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) | 0x400;
+        mask = 1;
         for (i = 0; i < 4; i++) {
-            if ((1 << i) & wgi.mask) {
-                *(u16 *)(state + 0x98 + i * 2) = wgi.patch[i];
-                *(u32 *)(state + 0xa0 + i * 0xc) = *(u32 *)target;
-                *(u32 *)(state + 0xa4 + i * 0xc) = *(u32 *)(target + 4);
-                *(u32 *)(state + 0xa8 + i * 0xc) = *(u32 *)(target + 8);
+            if (wgi.mask & mask) {
+                *(s16 *)(state + 0x98 + i * 2) = wgi.patch[i];
+                *(f32 *)(state + 0xa0 + i * 0xc) = *(f32 *)target;
+                *(f32 *)(state + 0xa4 + i * 0xc) = *(f32 *)(target + 4);
+                *(f32 *)(state + 0xa8 + i * 0xc) = *(f32 *)(target + 8);
             }
+            mask = mask << 1;
         }
     }
     if ((targetWg == 0) || (targetWg != *(u16 *)(state + 0xd0))) {
@@ -311,7 +325,17 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
             *(u8 *)(state + 9) = 1;
             if (ulink != *(u16 *)(state + 0xd0)) {
                 *(s16 *)(state + 0xd0) = ulink;
-                *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & ~0x400;
+                {
+                    register u32 m;
+                    register u32 v;
+                    register u8 *st = state;
+                    asm {
+                        lwz v, 0x54(st)
+                        li m, -0x401
+                        and m, v, m
+                        stw m, 0x54(st)
+                    }
+                }
                 *(u16 *)(state + 0x98) = 0;
                 *(u16 *)(state + 0x9a) = 0;
                 *(u16 *)(state + 0x9c) = 0;
@@ -454,7 +478,17 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
     }
 state_selected:
     if (*(u8 *)(state + 9) < 5) {
-        *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & ~0x2000;
+        {
+            register u32 m;
+            register u32 v;
+            register u8 *st = state;
+            asm {
+                lwz v, 0x54(st)
+                li m, -0x2001
+                and m, v, m
+                stw m, 0x54(st)
+            }
+        }
     }
     trickyDebugPrint(strs + 0x404, *(u8 *)(state + 9));
     switch (*(u8 *)(state + 9)) {
@@ -478,19 +512,19 @@ state_selected:
     case 2:
         trickyDebugPrint(strs + 0x434);
         *(f32 *)(state + 0x14) = velBefore;
-        trickyUpdateApproachSpeed(obj, state, (f32 *)(state + slot * 0xc + 0xa0), 1, lbl_803E23DC);
+        trickyUpdateApproachSpeed(obj, lbl_803E23DC, state, (f32 *)(state + slot * 0xc + 0xa0), 1);
         moved = trickyMove(obj, state + slot * 0xc + 0xa0);
         break;
     case 3:
         trickyDebugPrint(strs + 0x45c);
         *(f32 *)(state + 0x14) = velBefore;
-        trickyUpdateApproachSpeed(obj, state, (f32 *)(state + 0xd4), 1, lbl_803E2488);
+        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32 *)(state + 0xd4), 1);
         moved = trickyMove(obj, state + 0xd4);
         break;
     case 4:
         trickyDebugPrint(strs + 0x448);
         *(f32 *)(state + 0x14) = velBefore;
-        trickyUpdateApproachSpeed(obj, state, (f32 *)(state + 0xec), 1, lbl_803E2488);
+        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32 *)(state + 0xec), 1);
         moved = trickyMove(obj, state + 0xec);
         break;
     case 6:
@@ -534,8 +568,7 @@ state_selected:
                     }
                     if (0x1000 < d) {
                         *(f32 *)(state + 0x14) = velBefore;
-                        trickyUpdateApproachSpeed(obj, state, (f32 *)(state + 0x488), 1,
-                                                  lbl_803E246C);
+                        trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
                     }
                     trickyAdvanceRouteTargetAhead(obj, state + 0x420, *(f32 *)(state + 0x14));
                     moved = trickyMove(obj, state + 0x488);
@@ -636,8 +669,7 @@ state_selected:
                 *(u8 *)(state + 9) = 0;
             } else {
                 *(f32 *)(state + 0x14) = velBefore;
-                trickyUpdateApproachSpeed(obj, state, (f32 *)(*(int *)(state + 0x418) + 8), 1,
-                                          lbl_803E246C);
+                trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(*(int *)(state + 0x418) + 8), 1);
                 moved = trickyMove(obj, (u8 *)(*(int *)(state + 0x418) + 8));
             }
         }
@@ -653,8 +685,7 @@ state_selected:
         *(u8 *)(state + 0x41c) = routeFlags[i];
         *(int *)(state + 0x418) = routePtrs[i];
         *(f32 *)(state + 0x14) = velBefore;
-        trickyUpdateApproachSpeed(obj, state, (f32 *)(*(int *)(state + 0x418) + 8), 1,
-                                  lbl_803E2488);
+        trickyUpdateApproachSpeed(obj, lbl_803E2488, state, (f32 *)(*(int *)(state + 0x418) + 8), 1);
         moved = trickyMove(obj, (u8 *)(*(int *)(state + 0x418) + 8));
         *(u8 *)(state + 9) = 6;
         break;
@@ -724,10 +755,17 @@ state_selected:
                 type = *(s8 *)(*(int *)(state + 0x4bc) + 0x1a);
                 if ((type == 7) || ((type < 7 && (type == 2)))) {
                     prod = *(u32 *)(state + 0x54);
-                    if ((prod & 0x2000) == 0) {
-                        *(u32 *)(state + 0x54) = prod | 0x2000;
+                    if ((prod & 0x2000) != 0) {
+                        register u32 m;
+                        register u8 *st = state;
+                        register u32 pv = prod;
+                        asm {
+                            li m, -0x2001
+                            and m, pv, m
+                            stw m, 0x54(st)
+                        }
                     } else {
-                        *(u32 *)(state + 0x54) = prod & ~0x2000;
+                        *(u32 *)(state + 0x54) = prod | 0x2000;
                     }
                 }
                 goto walk_nodes_common;
@@ -767,8 +805,7 @@ state_selected:
                     }
                     if (0x1000 < d) {
                         *(f32 *)(state + 0x14) = velBefore;
-                        trickyUpdateApproachSpeed(obj, state, (f32 *)(state + 0x488), 1,
-                                                  lbl_803E246C);
+                        trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
                     }
                 }
                 trickyAdvanceRouteTargetAhead(obj, state + 0x420, *(f32 *)(state + 0x14));
@@ -824,7 +861,7 @@ state_selected:
         }
         if (0x1000 < d) {
             *(f32 *)(state + 0x14) = velBefore;
-            trickyUpdateApproachSpeed(obj, state, (f32 *)(state + 0x488), 1, lbl_803E246C);
+            trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
         }
         trickyAdvanceRouteTargetAhead(obj, state + 0x420, *(f32 *)(state + 0x14));
         trickyMove(obj, state + 0x488);
@@ -876,7 +913,7 @@ state_selected:
             }
         }
         if (lbl_803E24A8 <= *(f32 *)(obj + 0x98)) {
-            ObjAnim_SampleRootCurvePhase(obj, state + 0x34, *(f32 *)(state + 0x14) * lbl_803E24AC);
+            ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(state + 0x14) * lbl_803E24AC, state + 0x34);
             k = lbl_803E24AC;
             *(f32 *)(obj + 0xc) =
                 timeDelta * *(f32 *)(state + 0x2c) * *(f32 *)(state + 0x14) * k +
@@ -885,7 +922,7 @@ state_selected:
                 timeDelta * *(f32 *)(state + 0x30) * *(f32 *)(state + 0x14) * k +
                 *(f32 *)(obj + 0x14);
         } else {
-            ObjAnim_SampleRootCurvePhase(obj, state + 0x34, *(f32 *)(state + 0x14));
+            ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(state + 0x14), state + 0x34);
             *(f32 *)(obj + 0xc) =
                 timeDelta * *(f32 *)(state + 0x2c) * *(f32 *)(state + 0x14) + *(f32 *)(obj + 0xc);
             *(f32 *)(obj + 0x14) =
@@ -1001,7 +1038,7 @@ state_selected:
         }
         if (0x1000 < d) {
             *(f32 *)(state + 0x14) = velBefore;
-            trickyUpdateApproachSpeed(obj, state, (f32 *)(state + 0x488), 1, lbl_803E246C);
+            trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
         }
         trickyAdvanceRouteTargetAhead(obj, state + 0x420, *(f32 *)(state + 0x14));
         trickyMove(obj, state + 0x488);
@@ -1102,7 +1139,7 @@ state_selected:
         }
         if (0x1000 < d) {
             *(f32 *)(state + 0x14) = velBefore;
-            trickyUpdateApproachSpeed(obj, state, (f32 *)(state + 0x488), 1, lbl_803E246C);
+            trickyUpdateApproachSpeed(obj, lbl_803E246C, state, (f32 *)(state + 0x488), 1);
         }
         trickyAdvanceRouteTargetAhead(obj, state + 0x420, *(f32 *)(state + 0x14));
         trickyMove(obj, state + 0x488);
@@ -1151,7 +1188,7 @@ state_selected:
             *(f32 *)(state + 0xe4) = *(f32 *)(obj + 0x1c);
             *(f32 *)(state + 0xe8) = *(f32 *)(obj + 0x20);
         } else {
-            (*(code *)*(int *)(*gPathControlInterface + 0x20))(obj, state + 0xf8);
+            ((void (*)(u8 *, u8 *))*(void **)(*(int *)gPathControlInterface + 0x20))(obj, state + 0xf8);
             *(f32 *)(obj + 0xc) = *(f32 *)(state + 0xe0);
             *(f32 *)(obj + 0x10) = *(f32 *)(state + 0xe4);
             *(f32 *)(obj + 0x14) = *(f32 *)(state + 0xe8);
@@ -1172,7 +1209,7 @@ state_selected:
     return 0;
 }
 
-void trickyUpdateApproachSpeed(u8 *obj, u8 *state, f32 *targetPos, u8 flag, f32 baseRadius)
+void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPos, u8 flag)
 {
     struct {
         s16 a;
