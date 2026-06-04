@@ -6210,7 +6210,7 @@ extern f32 lbl_803E327C;
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8016C4AC(int *obj)
+void dim2roofrub_spawnEffects(int *obj)
 {
     Dim2FxVec v;
     int flags;
@@ -6277,7 +6277,7 @@ void dim2roofrub_render(int *obj, int p2, int p3, int p4, int p5)
     f32 mD[12];
     f32 mFinal[12];
 
-    fn_8016C4AC(obj);
+    dim2roofrub_spawnEffects(obj);
     if ((*(u8 *)(*(u8 **)((char *)obj + 0xb8) + 0x7f) & 4) != 0) {
         int *prm;
         s16 *cam;
