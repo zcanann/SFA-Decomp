@@ -145,7 +145,11 @@ typedef struct {
         u32 px = (u32)((char *)(X) + 0x18); \
         if (*(u32 *)((st) + 0x28) != px) { \
             *(u32 *)((st) + 0x28) = px; \
-            *(u32 *)((st) + 0x54) = *(u32 *)((st) + 0x54) & 0xfffffbffU; \
+            { \
+                register u32 m; \
+                register u32 v; \
+                asm { lwz v, 0x54(st); li m, -1025; and m, v, m; stw m, 0x54(st); } \
+            } \
             *(u16 *)((st) + 0xd2) = 0; \
         } \
     }
@@ -155,10 +159,15 @@ typedef struct {
         f32 z = lbl_803E23DC; \
         *(f32 *)((st) + 0x71c) = z; \
         *(f32 *)((st) + 0x720) = z; \
-        *(u32 *)((st) + 0x54) = *(u32 *)((st) + 0x54) & 0xffffffefU; \
-        *(u32 *)((st) + 0x54) = *(u32 *)((st) + 0x54) & 0xfffeffffU; \
-        *(u32 *)((st) + 0x54) = *(u32 *)((st) + 0x54) & 0xfffdffffU; \
-        *(u32 *)((st) + 0x54) = *(u32 *)((st) + 0x54) & 0xfffbffffU; \
+        { \
+            register u32 m; \
+            register u32 t; \
+            register u32 v; \
+            asm { lwz t, 0x54(st); li m, -17; and m, t, m; stw m, 0x54(st); \
+                  lwz v, 0x54(st); lis t, -1; addi m, t, -1; and m, v, m; stw m, 0x54(st); \
+                  lwz v, 0x54(st); lis t, -2; addi m, t, -1; and m, v, m; stw m, 0x54(st); \
+                  lwz v, 0x54(st); lis t, -4; addi m, t, -1; and m, v, m; stw m, 0x54(st); } \
+        } \
         *(s8 *)((st) + 0xd) = -1; \
     }
 #define TRICKY_RESET(st) \
@@ -181,7 +190,7 @@ typedef struct {
 
 #pragma opt_loop_invariants off
 #pragma opt_common_subs off
-void fn_8013E0D0(int *obj, u8 *st) {
+void fn_8013E0D0(int *obj, register u8 *st) {
     char *str = lbl_8031D2E8;
     int *best = NULL;
     f32 bestd = lbl_803E23DC;
