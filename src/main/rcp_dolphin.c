@@ -3584,5 +3584,122 @@ void initFn_800534f8(void)
     lbl_803DCDA0 = textureLoadAsset(0x5dc);
 }
 
+extern int *getCurrentDataFile(int id);
+extern void loadAssetFileById(void *out, int id);
+extern int *lbl_8037E0B4[3];
+extern int lbl_8037E0A8[3];
+extern u32 lbl_803DCDC0;
+extern void *lbl_803DCDB8;
+void textureLoad(int a, int b);
+
+void loadTextureFiles(void)
+{
+    int *p;
+    int **q;
+    int *out;
+    int n;
+
+    lbl_803DCDC4 = (void *)mmAlloc(0x2bc0, 6, 0);
+    n = 0;
+    lbl_803DCDBC = n;
+    p = getCurrentDataFile(0x24);
+    lbl_8037E0B4[0] = p;
+    if (lbl_8037E0B4 != NULL) {
+        while (*p != -1) {
+            p++;
+            n++;
+        }
+        lbl_8037E0A8[0] = n - 1;
+    }
+    n = 0;
+    p = getCurrentDataFile(0x21);
+    lbl_8037E0B4[1] = p;
+    if (lbl_8037E0B4 != NULL) {
+        while (*p != -1) {
+            p++;
+            n++;
+        }
+        lbl_8037E0A8[1] = n - 1;
+    }
+    n = 0;
+    p = getCurrentDataFile(0x50);
+    lbl_8037E0B4[2] = p;
+    while (*p != -1) {
+        p++;
+        n++;
+    }
+    lbl_8037E0A8[2] = n - 1;
+    loadAssetFileById(&lbl_803DCDC0, 0x22);
+    q = lbl_8037E0B4;
+    out = lbl_8037E0A8;
+    n = 0;
+    p = *q;
+    while (*p != -1) {
+        p++;
+        n++;
+    }
+    *out = n - 1;
+    q++;
+    out++;
+    n = 0;
+    p = *q;
+    while (*p != -1) {
+        p++;
+        n++;
+    }
+    *out = n - 1;
+    lbl_803DCDB8 = (void *)mmAlloc(0x120, 6, 0);
+    textureLoad(0, 0);
+}
+
+extern void *gCloudActionInterface;
+extern void *gSky2Interface;
+extern void *gSHthorntailAnimationInterface;
+extern void *gNewCloudsInterface;
+extern s16 lbl_803DCEB8;
+extern u8 lbl_803DCDE0;
+extern u8 lbl_803DCA40;
+extern void gameUiResetMenuState(void);
+extern void mapReload(void);
+extern void blankScreen(int);
+
+void loadNextMap(void)
+{
+    u8 *pos;
+    pos = (*gMapEventInterface)->getWarpPos();
+    if (lbl_803DCEB8 != -1) {
+        lbl_803DCDE0 -= 1;
+        if ((s8)lbl_803DCDE0 < 0) {
+            if (lbl_803DCEB8 > -1 && (s8)lbl_803DCEBC != 0) {
+                (*(void (***)(int, int))gScreenTransitionInterface)[3](3, 1);
+            }
+            lbl_803DCEB8 = -1;
+            Pause_SetDisabled(0);
+        }
+    }
+    if ((s8)lbl_803DCEBD != 0) {
+        if ((*(int (***)(void))gScreenTransitionInterface)[5]() != 0 || (s8)lbl_803DCEBC == 0) {
+            (*(void (***)(void))gCloudActionInterface)[5]();
+            (*(void (***)(void))gCloudActionInterface)[2]();
+            (*(void (***)(void))gSky2Interface)[2]();
+            (*(void (***)(void))gSHthorntailAnimationInterface)[2]();
+            (*(void (***)(void))gNewCloudsInterface)[2]();
+            gameUiResetMenuState();
+            lbl_803DCEBD = 0;
+            *(f32 *)(pos + 0) = *(f32 *)(lbl_803879A0 + 0);
+            *(f32 *)(pos + 4) = *(f32 *)(lbl_803879A0 + 4);
+            *(f32 *)(pos + 8) = *(f32 *)(lbl_803879A0 + 8);
+            pos[0xd] = (s8)*(s16 *)(lbl_803879A0 + 0xc);
+            pos[0xc] = (s8)*(s16 *)(lbl_803879A0 + 0xe);
+            mapReload();
+            lbl_803DCEB8 = lbl_803DCEBA;
+            lbl_803DCEBA = -1;
+            lbl_803DCDE0 = 8;
+            lbl_803DCA40 = 1;
+            blankScreen(1);
+        }
+    }
+}
+
 #pragma scheduling reset
 #pragma peephole reset

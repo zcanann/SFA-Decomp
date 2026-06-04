@@ -14,6 +14,8 @@ typedef struct MapEventInterface {
     u8 pad48[0x4C - 0x48];
     u8 (*getAnimEvent)(int mapId, int eventId);
     void (*setAnimEvent)(int mapId, int eventId, int value);
+    u8 pad54[0x90 - 0x54];
+    u8 *(*getWarpPos)(void);
 } MapEventInterface;
 
 #endif /* MAIN_MAPEVENTTYPES_H_ */
