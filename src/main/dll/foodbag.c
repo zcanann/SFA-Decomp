@@ -349,6 +349,16 @@ extern f32 lbl_803E0DEC;
 extern f32 lbl_803E0DF0;
 extern f32 lbl_803E0DF4;
 extern f32 lbl_803E0DF8;
+extern u8 lbl_80315258[];
+extern u8 lbl_803DB8E0;
+extern f32 lbl_803E0E00;
+extern f32 lbl_803E0E04;
+extern f32 lbl_803E0E08;
+extern f32 lbl_803E0E0C;
+extern f32 lbl_803E0E10;
+extern f32 lbl_803E0E14;
+extern f32 lbl_803E0E18;
+extern f32 lbl_803E0E1C;
 extern u8 lbl_80315468[];
 extern u8 lbl_80316240[];
 extern f32 lbl_803E1010;
@@ -840,184 +850,74 @@ void dll_7D_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_7E_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,float *param_6
+void dll_7E_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 param_5,f32 *param_6
                  )
 {
-  undefined4 *local_378;
-  int local_374;
-  float local_358;
-  float local_354;
-  float local_350;
-  float local_34c;
-  float local_348;
-  float local_344;
-  float local_340;
-  undefined4 local_33c;
-  undefined4 local_338;
-  undefined2 local_334;
-  undefined2 local_332;
-  undefined2 local_330;
-  undefined2 local_32e;
-  undefined2 local_32c;
-  undefined2 local_32a;
-  undefined2 local_328;
-  undefined2 local_326;
-  uint local_324;
-  undefined local_320;
-  undefined local_31f;
-  undefined local_31e;
-  undefined local_31d;
-  undefined local_31b;
-  undefined4 local_318;
-  float local_314;
-  float local_310;
-  float local_30c;
-  undefined *local_308;
-  undefined2 local_304;
-  undefined local_302;
-  undefined4 local_300;
-  float local_2fc;
-  float local_2f8;
-  float local_2f4;
-  undefined *local_2f0;
-  undefined2 local_2ec;
-  undefined local_2ea;
-  undefined4 local_2e8;
-  float local_2e4;
-  float local_2e0;
-  float local_2dc;
-  undefined *local_2d8;
-  undefined2 local_2d4;
-  undefined local_2d2;
-  undefined4 local_2d0;
-  float local_2cc;
-  float local_2c8;
-  float local_2c4;
-  undefined *local_2c0;
-  undefined2 local_2bc;
-  undefined local_2ba;
-  undefined4 local_2b8;
-  float local_2b4;
-  float local_2b0;
-  float local_2ac;
-  undefined *local_2a8;
-  undefined2 local_2a4;
-  undefined local_2a2;
-  undefined4 local_2a0;
-  float local_29c;
-  float local_298;
-  float local_294;
-  undefined *local_290;
-  undefined2 local_28c;
-  undefined local_28a;
-  undefined4 local_288;
-  float local_284;
-  float local_280;
-  float local_27c;
-  undefined *local_278;
-  undefined2 local_274;
-  undefined local_272;
-  
-  local_2e4 = lbl_803E1A80;
-  if (param_6 != (float *)0x0) {
-    local_2e4 = *param_6;
+  FbBuf buf;
+  u8 *base = lbl_80315258;
+  f32 s = lbl_803E0E00;
+  FbCmd *e;
+  FbCmd *p;
+  if (param_6 != (f32 *)0) {
+    s = *param_6;
   }
   if (param_3 != 0) {
-    local_2e4 = *(float *)(param_3 + 8);
+    s = *(f32 *)(param_3 + 8);
   }
-  local_302 = 0;
-  local_304 = 5;
-  local_308 = &DAT_80315f38;
-  local_318 = 0x4000;
-  local_314 = lbl_803E1A84;
-  local_310 = lbl_803E1A88;
-  local_30c = lbl_803E1A84;
-  local_2ea = 0;
-  local_2ec = 9;
-  local_2f0 = &DAT_80315f24;
-  local_300 = 4;
-  local_2fc = lbl_803E1A84;
-  local_2f8 = lbl_803E1A84;
-  local_2f4 = lbl_803E1A84;
+  e = buf.entries;
+  p = &e[2];
+  e[0].layer = 0; e[0].flags = 5; e[0].tex = base + 0x90; e[0].mode = 0x4000;
+  e[0].x = lbl_803E0E04; e[0].y = lbl_803E0E08; e[0].z = lbl_803E0E04;
+  e[1].layer = 0; e[1].flags = 9; e[1].tex = base + 0x7c; e[1].mode = 4;
+  e[1].x = lbl_803E0E04; e[1].y = lbl_803E0E04; e[1].z = lbl_803E0E04;
   if (param_2 == 1) {
-    local_2e4 = lbl_803E1A8C * local_2e4;
+    p->layer = 0; p->flags = 9; p->tex = base + 0x7c; p->mode = 2;
+    p->x = lbl_803E0E0C * s; p->y = lbl_803E0E00; p->z = lbl_803E0E10;
+    p++;
+  } else {
+    p->layer = 0; p->flags = 9; p->tex = base + 0x7c; p->mode = 2;
+    p->x = lbl_803E0E14 * s; p->y = lbl_803E0E00; p->z = lbl_803E0E10;
+    p++;
   }
-  else {
-    local_2e4 = lbl_803E1A94 * local_2e4;
-  }
-  local_2d2 = 0;
-  local_2d4 = 9;
-  local_2d8 = &DAT_80315f24;
-  local_2dc = lbl_803E1A90;
-  local_2e8 = 2;
-  local_2ba = 1;
-  local_2bc = 3;
-  local_2c0 = &DAT_803dc540;
-  local_2d0 = 4;
-  local_2cc = lbl_803E1A98;
-  local_2c8 = lbl_803E1A84;
-  local_2c4 = lbl_803E1A84;
-  local_2a2 = 1;
-  local_2a4 = 5;
-  local_2a8 = &DAT_80315f38;
-  local_2b8 = 0x4000;
-  local_2b4 = lbl_803E1A9C;
-  local_2b0 = lbl_803E1A88;
-  local_2ac = lbl_803E1A84;
-  local_28a = 2;
-  local_28c = 5;
-  local_290 = &DAT_80315f38;
-  local_2a0 = 0x4000;
-  local_29c = lbl_803E1A9C;
-  local_298 = lbl_803E1A88;
-  local_294 = lbl_803E1A84;
-  local_272 = 2;
-  local_274 = 3;
-  local_278 = &DAT_803dc540;
-  local_288 = 4;
-  local_284 = lbl_803E1A84;
-  local_280 = lbl_803E1A84;
-  local_27c = lbl_803E1A84;
-  local_320 = 0;
-  local_334 = (undefined2)param_2;
-  local_34c = lbl_803E1A84;
-  local_348 = lbl_803E1A84;
-  local_344 = lbl_803E1A84;
-  local_358 = lbl_803E1A84;
-  local_354 = lbl_803E1A84;
-  local_350 = lbl_803E1A84;
-  local_2e0 = lbl_803E1A80;
-  local_340 = lbl_803E1A80;
-  local_338 = 1;
-  local_33c = 9;
-  local_31f = 9;
-  local_31e = 0;
-  local_31d = 10;
-  local_31b = 7;
-  local_332 = DAT_80315f44;
-  local_330 = DAT_80315f46;
-  local_32e = DAT_80315f48;
-  local_32c = DAT_80315f4a;
-  local_32a = DAT_80315f4c;
-  local_328 = DAT_80315f4e;
-  local_326 = DAT_80315f50;
-  local_378 = &local_318;
-  local_324 = param_4 | 0x4010080;
-  if ((param_4 & 1) != 0) {
-    if (param_1 == 0) {
-      local_34c = lbl_803E1A84 + *(float *)(param_3 + 0xc);
-      local_348 = lbl_803E1A84 + *(float *)(param_3 + 0x10);
-      local_344 = lbl_803E1A84 + *(float *)(param_3 + 0x14);
-    }
-    else {
-      local_34c = lbl_803E1A84 + *(float *)(param_1 + 0x18);
-      local_348 = lbl_803E1A84 + *(float *)(param_1 + 0x1c);
-      local_344 = lbl_803E1A84 + *(float *)(param_1 + 0x20);
+  p[0].layer = 1; p[0].flags = 3; p[0].tex = &lbl_803DB8E0; p[0].mode = 4;
+  p[0].x = lbl_803E0E18; p[0].y = lbl_803E0E04; p[0].z = lbl_803E0E04;
+  p[1].layer = 1; p[1].flags = 5; p[1].tex = base + 0x90; p[1].mode = 0x4000;
+  p[1].x = lbl_803E0E1C; p[1].y = lbl_803E0E08; p[1].z = lbl_803E0E04;
+  p[2].layer = 2; p[2].flags = 5; p[2].tex = base + 0x90; p[2].mode = 0x4000;
+  p[2].x = lbl_803E0E1C; p[2].y = lbl_803E0E08; p[2].z = lbl_803E0E04;
+  p[3].layer = 2; p[3].flags = 3; p[3].tex = &lbl_803DB8E0; p[3].mode = 4;
+  p[3].x = lbl_803E0E04; p[3].y = lbl_803E0E04; p[3].z = lbl_803E0E04;
+  buf.v58 = 0;
+  buf.ctx = param_1;
+  buf.v44 = (s16)param_2;
+  buf.pos[0] = lbl_803E0E04; buf.pos[1] = lbl_803E0E04; buf.pos[2] = lbl_803E0E04;
+  buf.col[0] = lbl_803E0E04; buf.col[1] = lbl_803E0E04; buf.col[2] = lbl_803E0E04;
+  buf.scale = lbl_803E0E00;
+  buf.v40 = 1;
+  buf.v3c = 9;
+  buf.v59 = 9;
+  buf.v5a = 0;
+  buf.v5b = 0xa;
+  buf.count = (FbCmd *)((u8 *)p + 0x60) - e;
+  buf.hw[0] = *(s16 *)(base + 0x9c); buf.hw[1] = *(s16 *)(base + 0x9e);
+  buf.hw[2] = *(s16 *)(base + 0xa0); buf.hw[3] = *(s16 *)(base + 0xa2);
+  buf.hw[4] = *(s16 *)(base + 0xa4); buf.hw[5] = *(s16 *)(base + 0xa6);
+  buf.hw[6] = *(s16 *)(base + 0xa8);
+  buf.cmds = buf.entries;
+  buf.flags = 0x4010080;
+  buf.flags |= param_4;
+  if ((buf.flags & 1) != 0) {
+    if ((uint)param_1 != 0) {
+      buf.pos[0] = lbl_803E0E04 + *(f32 *)(param_1 + 0x18);
+      buf.pos[1] = lbl_803E0E04 + *(f32 *)(param_1 + 0x1c);
+      buf.pos[2] = lbl_803E0E04 + *(f32 *)(param_1 + 0x20);
+    } else {
+      buf.pos[0] = lbl_803E0E04 + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E0E04 + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E0E04 + *(f32 *)(param_3 + 0x14);
     }
   }
-  local_374 = param_1;
-  (**(code **)(*gModgfxInterface + 8))(&local_378,0,9,&DAT_80315ea8,5,&DAT_80315f04,0x3c,0);
-  return;
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,9,base,5,base + 0x5c,0x3c,0);
 }
 
 /*
