@@ -2094,6 +2094,236 @@ int fn_8029ABD8(int obj, int state, f32 fv)
 
 #pragma scheduling off
 #pragma peephole off
+int fn_8029AF9C(int obj, int state)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int r;
+    f32 spin;
+    struct {
+        u8 pad[6];
+        u16 mode;
+        f32 scale;
+        f32 x;
+        f32 y;
+        f32 z;
+    } pfx;
+
+    r = fn_802AC7DC(obj, state, inner);
+    if (r != 0) {
+        return r;
+    }
+    {
+        f32 z = lbl_803E7EA4;
+        *(f32 *)((char *)state + 0x294) = z;
+        *(f32 *)((char *)state + 0x284) = z;
+        *(f32 *)((char *)state + 0x280) = z;
+        *(f32 *)((char *)obj + 0x24) = z;
+        *(f32 *)((char *)obj + 0x28) = z;
+        *(f32 *)((char *)obj + 0x2c) = z;
+    }
+    *(int *)((char *)inner + 0x360) |= 0x2000000;
+    setAButtonIcon(6);
+    setBButtonIcon(0xa);
+    switch (*(s16 *)((char *)obj + 0xa0)) {
+    case 0x43e: {
+        f32 t;
+        f32 c;
+        f32 a;
+        t = *(f32 *)((char *)state + 0x28c) / lbl_803E7FA8;
+        c = (t < lbl_803E7ECC) ? lbl_803E7ECC : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
+        *(f32 *)((char *)inner + 0x7bc) =
+            *(f32 *)((char *)inner + 0x7bc) +
+            interpolate(c - *(f32 *)((char *)inner + 0x7bc), lbl_803E7EFC, timeDelta);
+        t = *(f32 *)((char *)state + 0x290) / lbl_803E7FA8;
+        c = (t < lbl_803E7ECC) ? lbl_803E7ECC : ((t > lbl_803E7EE0) ? lbl_803E7EE0 : t);
+        *(f32 *)((char *)inner + 0x7b8) =
+            *(f32 *)((char *)inner + 0x7b8) +
+            interpolate(c - *(f32 *)((char *)inner + 0x7b8), lbl_803E7EFC, timeDelta);
+        if (*(f32 *)((char *)inner + 0x7b8) > lbl_803E7EA4) {
+            spin = *(f32 *)((char *)inner + 0x7b8) - lbl_803E7EA0;
+            if (spin < lbl_803E7EA4) {
+                spin = lbl_803E7EA4;
+            }
+        } else {
+            spin = lbl_803E7EA0 + *(f32 *)((char *)inner + 0x7b8);
+            if (spin > lbl_803E7EA4) {
+                spin = lbl_803E7EA4;
+            }
+        }
+        a = *(f32 *)((char *)inner + 0x7bc);
+        if (a > lbl_803E7EA4) {
+            Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, 0x441,
+                                                (int)(lbl_803E7FAC * a));
+        } else {
+            Object_ObjAnimSetSecondaryBlendMove((ObjAnimComponent *)obj, 0x440,
+                                                (int)(lbl_803E7FAC * -a));
+        }
+        *(s16 *)((char *)inner + 0x4d2) = lbl_803E7FB0 * *(f32 *)((char *)inner + 0x7b8);
+        objModelGetVecFn_800395d8(obj, 9);
+        *(int *)((char *)inner + 0x360) &= ~0x400;
+        if (lbl_803DE4B2 == 0x2d) {
+            f32 bv;
+            f32 av;
+            int res;
+            int half;
+            int low;
+            f32 k;
+            av = *(f32 *)((char *)inner + 0x7bc);
+            bv = *(f32 *)((char *)inner + 0x7b8);
+            res = getScreenResolution();
+            half = res >> 17;
+            low = (res & 0xffff) >> 1;
+            k = lbl_803E7E98;
+            *(f32 *)((char *)inner + 0x788) =
+                k * (bv * (f32)(int)low) + (f32)(int)low;
+            if (av < lbl_803E7EA4) {
+                *(f32 *)((char *)inner + 0x78c) =
+                    k * (av * (f32)(int)half) + (f32)(int)half;
+            } else {
+                *(f32 *)((char *)inner + 0x78c) =
+                    lbl_803E7F44 * (av * (f32)(int)half) + (f32)(int)half;
+            }
+            *(int *)((char *)inner + 0x360) |= 0x400;
+        }
+        if (lbl_803DE42C != 0) {
+            f32 x;
+            int hi;
+            Sfx_KeepAliveLoopedObjectSound(obj, 0x382);
+            x = *(f32 *)((char *)inner + 0x854) - timeDelta;
+            *(f32 *)((char *)inner + 0x854) = x;
+            if (x <= lbl_803E7EA4) {
+                int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                int v = *(s16 *)((char *)sub + 0x4) - 1;
+                if (v < 0) {
+                    v = 0;
+                } else if (v > *(s16 *)((char *)sub + 0x6)) {
+                    v = *(s16 *)((char *)sub + 0x6);
+                }
+                *(s16 *)((char *)sub + 0x4) = v;
+                *(f32 *)((char *)inner + 0x854) = lbl_803E7F58;
+            }
+            ObjPath_GetPointWorldPosition(lbl_803DE44C, 5, &pfx.x, &pfx.y, &pfx.z, 0);
+            pfx.scale = lbl_803E7F9C;
+            hi = 0x200000;
+            pfx.mode = 0;
+            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+                (int)lbl_803DE44C, 0x7f5, &pfx, hi + 1, -1, 0);
+            pfx.mode = 1;
+            (**(void (**)(int, int, void *, int, int, int))((char *)(*gPartfxInterface) + 0x8))(
+                (int)lbl_803DE44C, 0x7f5, &pfx, hi + 1, -1, 0);
+            if ((*(u16 *)((char *)inner + 0x6e0) & lbl_803DE4B4) == 0 ||
+                *(s16 *)((char *)*(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c) + 0x4) == 0 ||
+                getCurSeqNo() != 0) {
+                int i;
+                void **p;
+                lbl_803DE42C = 0;
+                i = 0;
+                p = lbl_80332ED4;
+                for (; i < 7; i++) {
+                    if (*p != NULL) {
+                        Obj_FreeObject((int)*p);
+                        *p = NULL;
+                    }
+                    p++;
+                }
+                if (lbl_803DE454 != NULL) {
+                    Resource_Release(lbl_803DE454);
+                    lbl_803DE454 = NULL;
+                }
+            }
+        } else if ((*(u16 *)((char *)inner + 0x6e2) & 0x900) != 0) {
+            int yitem;
+            u16 b28;
+            s16 item;
+            if (*(u16 *)((char *)inner + 0x6e2) & 0x800) {
+                yitem = getYButtonItem(&item);
+                b28 = 0x800;
+            } else {
+                yitem = 0;
+                item = lbl_803DE4B2;
+                b28 = 0x100;
+            }
+            if ((*(u16 *)((char *)inner + 0x6e2) & 0x100) != 0 ||
+                (yitem == 1 && (item == 0x2d || item == 0x5ce))) {
+                buttonDisable(0, 0x900);
+                *(u16 *)((char *)inner + 0x6e2) = *(u16 *)((char *)inner + 0x6e2) & ~0x900;
+                lbl_803DE4B2 = item;
+                if (item != *(s16 *)((char *)inner + 0x80a)) {
+                    fn_802AB38C(obj, inner, item);
+                }
+                switch (lbl_803DE4B2) {
+                case 0x2d: {
+                    int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                    if (*(s16 *)((char *)sub + 0x4) >= 2) {
+                        *(int *)((char *)state + 0x308) = (int)fn_8029A4A8;
+                        return 0x2f;
+                    }
+                    Sfx_PlayFromObject(0, 0x40c);
+                    break;
+                }
+                case 0x958: {
+                    int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                    if (*(s16 *)((char *)sub + 0x4) >= 0) {
+                        *(int *)((char *)state + 0x308) = (int)fn_8029A4A8;
+                        return 0x30;
+                    }
+                    Sfx_PlayFromObject(0, 0x40c);
+                    break;
+                }
+                case 0x5ce: {
+                    int sub = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                    if (*(s16 *)((char *)sub + 0x4) >= 1) {
+                        int sub2;
+                        int v;
+                        ((void (*)(int))fn_802A96D8)(obj);
+                        lbl_803DE4B4 = b28;
+                        lbl_803DE42C = 1;
+                        lbl_803DE430 = lbl_803E7EA4;
+                        *(f32 *)((char *)inner + 0x854) = lbl_803E7F58;
+                        sub2 = *(int *)((char *)*(int *)((char *)obj + 0xb8) + 0x35c);
+                        v = *(s16 *)((char *)sub2 + 0x4) - 1;
+                        if (v < 0) {
+                            v = 0;
+                        } else if (v > *(s16 *)((char *)sub2 + 0x6)) {
+                            v = *(s16 *)((char *)sub2 + 0x6);
+                        }
+                        *(s16 *)((char *)sub2 + 0x4) = v;
+                        break;
+                    }
+                    Sfx_PlayFromObject(0, 0x40c);
+                    break;
+                }
+                }
+            }
+        }
+        *(s16 *)((char *)inner + 0x478) =
+            lbl_803E7FB4 * spin + (f32)(int)*(s16 *)((char *)inner + 0x478);
+        {
+            s16 v = *(s16 *)((char *)inner + 0x478);
+            *(s16 *)((char *)inner + 0x484) = v;
+            *(s16 *)((char *)obj + 0x0) = v;
+        }
+        break;
+    }
+    default:
+        ObjAnim_SetCurrentMove(obj, 0x43e, lbl_803E7EA4, 0);
+        *(f32 *)((char *)state + 0x2a0) = lbl_803E7F34;
+        lbl_803DE42C = 0;
+        lbl_803DE430 = lbl_803E7EA4;
+        break;
+    }
+    if ((*(u16 *)((char *)inner + 0x6e2) & 0x200) != 0 || *(u8 *)((char *)inner + 0x8c8) != 0x52) {
+        *(int *)((char *)inner + 0x360) &= ~0x2000000;
+        *(int *)((char *)state + 0x308) = (int)fn_8029A420;
+        return 0x2c;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 int fn_802977A8(int obj, int state)
 {
     if (*(s8 *)((char *)state + 0x27a) != 0) {
