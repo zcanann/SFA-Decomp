@@ -15919,3 +15919,65 @@ void gameTextLoadGraphicsFn_8001a918(void)
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern void fn_80013B6C(int *p, int n);
+extern void AudioStream_StopAll(void);
+extern int lbl_803DB448;
+extern int lbl_803DCB8C;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void Obj_ResetObjectSystem(void)
+{
+    int off;
+    int i;
+    int zero;
+
+    i = 0;
+    off = i;
+    zero = i;
+    for (; i < lbl_803DCB94; i++) {
+        if (*(void **)((int)lbl_803DCB98 + off) != 0) {
+            objFreeObjDef(*(void **)((int)lbl_803DCB98 + off), 0);
+            *(int *)((int)lbl_803DCB98 + off) = zero;
+        }
+        off += 4;
+    }
+    lbl_803DCB94 = 0;
+    lbl_803DB448 = 0;
+    i = lbl_803DCB84 - 1;
+    off = i << 2;
+    for (; i >= 0; i--) {
+        Obj_FreeObject(*(void **)((int)lbl_803DCB88 + off));
+        off -= 4;
+    }
+    i = 0;
+    off = i;
+    zero = i;
+    for (; i < lbl_803DCB94; i++) {
+        if (*(void **)((int)lbl_803DCB98 + off) != 0) {
+            objFreeObjDef(*(void **)((int)lbl_803DCB98 + off), 0);
+            *(int *)((int)lbl_803DCB98 + off) = zero;
+        }
+        off += 4;
+    }
+    lbl_803DB448 = 2;
+    lbl_803DCB94 = 0;
+    lbl_803DCB8C = 0;
+    lbl_803DCB84 = 0;
+    fn_80013B6C(&lbl_803DCB7C, 0x38);
+    lbl_803DCB94 = 0;
+    lbl_803DCB8C = 0;
+    lbl_803DCB70 = 0;
+    lbl_803DCB84 = 0;
+    fn_80013B6C(&lbl_803DCB7C, 0x38);
+    lbl_803DCBC4 = 0;
+    ObjGroup_ClearAll();
+    ObjHits_ResetWorkBuffers();
+    (*(void (**)(int, int))(*(int *)gCameraInterface + 0x28))(0, 0);
+    AudioStream_StopAll();
+}
+#pragma dont_inline reset
+#pragma pop
