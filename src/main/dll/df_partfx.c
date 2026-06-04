@@ -2301,34 +2301,33 @@ extern u8 lbl_803DD434;
 extern f32 lbl_803E05A0;
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void player_animFn16(int *obj, int *ctx, int moveA, int moveB) {
     f32 mag;
     f32 tmp;
-    f32 ratio;
+    f32 q1, q2;
+    f64 ratio;
     int idx;
     if ((s8)lbl_803DD434 != 0) {
-        if (*(f32 *)((char *)ctx + 0x280) > lbl_803E0570) {
-            if (*(s16 *)((char *)obj + 0xa0) != lbl_803DD43C) {
-                ObjAnim_SetCurrentMove((int)obj, lbl_803DD43C, *(f32 *)((char *)obj + 0x98), 0);
-                *(u8 *)((char *)ctx + 0x346) = 0;
-            }
-        } else if (*(f32 *)((char *)ctx + 0x280) < lbl_803E0570) {
-            if (*(s16 *)((char *)obj + 0xa0) != lbl_803DD438) {
-                ObjAnim_SetCurrentMove((int)obj, lbl_803DD438, *(f32 *)((char *)obj + 0x98), 0);
-                *(u8 *)((char *)ctx + 0x346) = 0;
-            }
+        if (*(f32 *)((char *)ctx + 0x280) > lbl_803E0570 && *(s16 *)((char *)obj + 0xa0) != (int)lbl_803DD43C) {
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DD43C, *(f32 *)((char *)obj + 0x98), 0);
+            *(u8 *)((char *)ctx + 0x346) = 0;
+        } else if (*(f32 *)((char *)ctx + 0x280) < lbl_803E0570 && *(s16 *)((char *)obj + 0xa0) != (int)lbl_803DD438) {
+            ObjAnim_SetCurrentMove((int)obj, lbl_803DD438, *(f32 *)((char *)obj + 0x98), 0);
+            *(u8 *)((char *)ctx + 0x346) = 0;
         }
-        mag = sqrtf(*(f32 *)((char *)ctx + 0x280) * *(f32 *)((char *)ctx + 0x280) +
-                    *(f32 *)((char *)ctx + 0x284) * *(f32 *)((char *)ctx + 0x284));
+        q1 = *(f32 *)((char *)ctx + 0x280) * *(f32 *)((char *)ctx + 0x280);
+        q2 = *(f32 *)((char *)ctx + 0x284) * *(f32 *)((char *)ctx + 0x284);
+        mag = sqrtf(q1 + q2);
         if (ObjAnim_SampleRootCurvePhase(mag, (ObjAnimComponent *)obj, &tmp) != 0) {
             *(f32 *)((char *)ctx + 0x2a0) = tmp;
         }
         ratio = lbl_803E0570;
-        if (lbl_803E0570 != mag) {
+        if (ratio != mag) {
             ratio = *(f32 *)((char *)ctx + 0x284) / mag;
         }
         tmp = ratio;
-        idx = (int)(lbl_803E05A0 * ratio);
+        idx = (int)(lbl_803E05A0 * (f32)ratio);
         if (idx < 0) {
             idx = -idx;
         }
@@ -2342,6 +2341,7 @@ void player_animFn16(int *obj, int *ctx, int moveA, int moveB) {
         }
     }
 }
+#pragma opt_common_subs reset
 typedef struct {
     u8 r;
     u8 g;
