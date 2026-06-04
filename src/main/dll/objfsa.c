@@ -4569,24 +4569,36 @@ int Objfsa_GetWalkGroupIndexAtPoint(float *point,ObjfsaWalkGroupPatchInfo *patch
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 u16 Objfsa_GetPatchGroupIdAtPoint(float *point)
 {
-  int patchCount;
-  ObjfsaPatch *patch;
+  int n;
+  ObjfsaPatch *patch = lbl_8039CAE8;
 
-  patch = Objfsa_GetPatch(0);
-  patchCount = lbl_803DD468;
-  if (0 < patchCount) {
-    do {
-      if (Objfsa_IsPointInsidePatch(point,patch)) {
+  for (n = lbl_803DD468; n > 0; n--, patch++) {
+    f32 y = point[1];
+    if (y < (f32)patch->maxY && y > (f32)patch->minY) {
+      f32 z = point[2];
+      f32 x = point[0];
+      u8 i = 0;
+      u8 j = i;
+      for (; i < 4; i++, j += 2) {
+        if (patch->planeOffsets[i] +
+                (x * (f32)((s16 *)patch)[j] + z * (f32)((s16 *)patch)[j + 1]) >
+            0.0f) {
+          break;
+        }
+      }
+      if (i == 4) {
         return patch->groupId;
       }
-      patch++;
-      patchCount--;
-    } while (patchCount != 0);
+    }
   }
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
