@@ -111,7 +111,7 @@ extern undefined4 fn_8003A328();
 extern undefined4 FUN_8003b1a4();
 extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b818();
-extern void objRenderFn_8003b8f4(f32 scale,...);
+extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern int objModelGetVecFn_800395d8(int obj,int param_2);
 extern undefined4 FUN_80046f44();
 extern undefined4 FUN_80046f84();
@@ -196,7 +196,7 @@ extern int fn_80296240(int obj);
 extern int fn_80296448(int obj);
 extern undefined4 FUN_80294dc4();
 extern void trickyReportError(const char *fmt, ...);
-extern void objParticleFn_80099d84(f32 param_1,f32 param_2,int obj,int param_4,int param_5);
+extern void objParticleFn_80099d84(int obj,f32 param_1,int param_4,f32 param_2,int param_5);
 extern int objBboxFn_800640cc(Vec *from,Vec *to,f32 radius,int mode,void *hit,int obj,int param_7,
                               int param_8,int param_9,int param_10);
 extern f32 fn_80293E80(f32 x);
@@ -2793,7 +2793,7 @@ void Tricky_render(int obj,int param_2,int param_3,int param_4,int param_5,char 
 
   if (doRender != '\0') {
     state = *(int *)(obj + 0xb8);
-    objRenderFn_8003b8f4(lbl_803E23E8);
+    objRenderFn_8003b8f4(obj,param_2,param_3,param_4,param_5,lbl_803E23E8);
     pathState = *(int *)(obj + 0xb8);
     i = 0;
     pathPoint = pathState;
@@ -2808,30 +2808,31 @@ void Tricky_render(int obj,int param_2,int param_3,int param_4,int param_5,char 
     pathInfo = objModelGetVecFn_800395d8(obj,0);
     *(s16 *)(pathState + 0x414) = *(s16 *)(pathInfo + 2);
     if ((*(u32 *)(state + 0x54) & 0x10) != 0) {
-      mode = *(u8 *)(state + 8);
-      if (mode == 3) {
+      switch (*(u8 *)(state + 8)) {
+      case 2:
+        fn_8013ADFC(obj);
+        break;
+      case 3:
         if (*(u8 *)(state + 10) == 4) {
           fn_8013ADFC(obj);
         }
-      }
-      else if ((mode < 3) && (1 < mode)) {
-        fn_8013ADFC(obj);
+        break;
       }
       if ((((*(u32 *)(state + 0x54) & 0x200) == 0) && (*(u8 *)(state + 8) == 0xb)) &&
-         (2 < *(u8 *)(state + 10))) {
+         (*(u8 *)(state + 10) >= 3)) {
         if (*(u8 *)(state + 10) != 3) {
           *(f32 *)(*(int *)(state + 0x700) + 0xc) = *(f32 *)(state + 0x408);
           *(f32 *)(*(int *)(state + 0x700) + 0x10) = *(f32 *)(state + 0x40c);
           *(f32 *)(*(int *)(state + 0x700) + 0x14) = *(f32 *)(state + 0x410);
         }
-        objRenderFn_8003b8f4(lbl_803E23E8,*(int *)(state + 0x700),param_2,param_3,param_4,param_5);
+        objRenderFn_8003b8f4(*(int *)(state + 0x700),param_2,param_3,param_4,param_5,lbl_803E23E8);
       }
     }
     Tricky_emitQueuedPathParticles(obj,state);
     ObjPath_GetPointWorldPositionArray(obj,4,4,(float *)(state + 0x7d8));
     *(f32 *)(state + 0x838) = *(f32 *)(state + 0x838) - timeDelta;
-    if (lbl_803E23DC < *(f32 *)(state + 0x838)) {
-      objParticleFn_80099d84(lbl_803E253C,lbl_803E23E8,obj,6,0);
+    if (*(f32 *)(state + 0x838) > lbl_803E23DC) {
+      objParticleFn_80099d84(obj,lbl_803E253C,6,lbl_803E23E8,0);
     }
   }
   return;
