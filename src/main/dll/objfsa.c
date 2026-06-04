@@ -4238,88 +4238,6 @@ LAB_800e1778:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void curves_getPos(double phase,int curve,float *outX,float *outY,float *outZ)
-{
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  uint uVar8;
-  int iVar9;
-  uint local_38 [6];
-  
-  iVar5 = 0;
-  uVar8 = *(uint *)(curve + 0x1c);
-  if (((-1 < (int)uVar8) && ((*(byte *)(curve + 0x1b) & 1) == 0)) && (uVar8 != 0)) {
-    iVar5 = 1;
-    local_38[0] = uVar8;
-  }
-  uVar8 = *(uint *)(curve + 0x20);
-  iVar6 = iVar5;
-  if (((-1 < (int)uVar8) && ((*(byte *)(curve + 0x1b) & 2) == 0)) && (uVar8 != 0)) {
-    iVar6 = iVar5 + 1;
-    local_38[iVar5] = uVar8;
-  }
-  uVar8 = *(uint *)(curve + 0x24);
-  iVar5 = iVar6;
-  if (((-1 < (int)uVar8) && ((*(byte *)(curve + 0x1b) & 4) == 0)) && (uVar8 != 0)) {
-    iVar5 = iVar6 + 1;
-    local_38[iVar6] = uVar8;
-  }
-  uVar8 = *(uint *)(curve + 0x28);
-  iVar6 = iVar5;
-  if (((-1 < (int)uVar8) && ((*(byte *)(curve + 0x1b) & 8) == 0)) && (uVar8 != 0)) {
-    iVar6 = iVar5 + 1;
-    local_38[iVar5] = uVar8;
-  }
-  if (iVar6 == 0) {
-    uVar8 = 0xffffffff;
-  }
-  else {
-    uVar8 = randomGetRange(0,iVar6 - 1);
-    uVar8 = local_38[uVar8];
-  }
-  if ((int)uVar8 < 0) {
-    iVar9 = 0;
-  }
-  else {
-    iVar6 = nRomCurves + -1;
-    iVar5 = 0;
-    while (iVar5 <= iVar6) {
-      iVar7 = iVar6 + iVar5 >> 1;
-      iVar9 = (int)romCurves[iVar7];
-      if (*(uint *)(iVar9 + 0x14) < uVar8) {
-        iVar5 = iVar7 + 1;
-      }
-      else {
-        if (*(uint *)(iVar9 + 0x14) <= uVar8) goto LAB_800e19bc;
-        iVar6 = iVar7 + -1;
-      }
-    }
-    iVar9 = 0;
-  }
-LAB_800e19bc:
-  if (iVar9 == 0) {
-    *outX = *(float *)(curve + 8);
-    *outY = *(float *)(curve + 0xc);
-    *outZ = *(float *)(curve + 0x10);
-  }
-  else {
-    fVar1 = *(float *)(iVar9 + 0xc);
-    fVar2 = *(float *)(curve + 0xc);
-    fVar3 = *(float *)(iVar9 + 0x10);
-    fVar4 = *(float *)(curve + 0x10);
-    *outX = (float)((double)(float)((double)*(float *)(iVar9 + 8) -
-                                      (double)*(float *)(curve + 8)) * phase +
-                      (double)*(float *)(curve + 8));
-    *outY = (float)((double)(fVar1 - fVar2) * phase + (double)*(float *)(curve + 0xc));
-    *outZ = (float)((double)(fVar3 - fVar4) * phase + (double)*(float *)(curve + 0x10));
-  }
-  return;
-}
 
 /*
  * --INFO--
@@ -5696,6 +5614,38 @@ int RomCurve_findProjectedCurveFromStart(f32 x,f32 y,f32 z,int curve,float *outP
 #pragma opt_strength_reduction reset
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void curves_getPos(f32 phase,int curve,float *outX,float *outY,float *outZ)
+{
+  f32 dy;
+  f32 dz;
+  uint linkId;
+  int c2;
+
+  linkId = RomCurve_getControlPointId_2A(curve, 0, -1);
+  if ((int)linkId < 0) {
+    c2 = 0;
+  } else {
+    c2 = Objfsa_FindRomCurveById(linkId);
+  }
+
+  if (c2 == 0) {
+    *outX = *(f32 *)(curve + 8);
+    *outY = *(f32 *)(curve + 0xc);
+    *outZ = *(f32 *)(curve + 0x10);
+  } else {
+    dy = *(f32 *)(c2 + 0xc) - *(f32 *)(curve + 0xc);
+    dz = *(f32 *)(c2 + 0x10) - *(f32 *)(curve + 0x10);
+    *outX = (*(f32 *)(c2 + 8) - *(f32 *)(curve + 8)) * phase + *(f32 *)(curve + 8);
+    *outY = dy * phase + *(f32 *)(curve + 0xc);
+    *outZ = dz * phase + *(f32 *)(curve + 0x10);
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 
 
 #pragma scheduling off
