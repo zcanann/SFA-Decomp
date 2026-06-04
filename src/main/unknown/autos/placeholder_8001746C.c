@@ -16285,3 +16285,74 @@ void Obj_InitObjectSystem(void)
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern int loadModLines(int n, s16 *out);
+extern void intersectModLineBuild(u8 *buf);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+u8 *loadObjectFile(int id)
+{
+    int size;
+    int base;
+    u8 *buf;
+    int off;
+    int n;
+    s16 modLine;
+
+    if (id >= lbl_803DCBB8) {
+        return 0;
+    }
+    if (lbl_803DCBA4[id] != 0) {
+        lbl_803DCBA4[id]++;
+        return *(u8 **)((int)lbl_803DCBA8 + (id << 2));
+    }
+    off = id << 2;
+    base = ((int *)lbl_803DCBBC)[id];
+    {
+        int *t = (int *)((int)lbl_803DCBBC + off);
+        size = t[1] - base;
+    }
+    buf = (u8 *)mmAlloc(size, 0xe, 0);
+    if (buf != 0) {
+        fileLoadToBufferOffset(0x3e, buf, base, size);
+        if (*(void **)(buf + 0x20) != 0) {
+            *(int *)(buf + 0x20) = (int)buf + *(int *)(buf + 0x20);
+        }
+        if (*(void **)(buf + 0x24) != 0) {
+            *(int *)(buf + 0x24) = (int)buf + *(int *)(buf + 0x24);
+        }
+        if (*(void **)(buf + 0x28) != 0) {
+            *(int *)(buf + 0x28) = (int)buf + *(int *)(buf + 0x28);
+        }
+        *(int *)(buf + 8) = (int)buf + *(int *)(buf + 8);
+        *(int *)(buf + 0xc) = (int)buf + *(int *)(buf + 0xc);
+        *(int *)(buf + 0x10) = (int)buf + *(int *)(buf + 0x10);
+        if (*(void **)(buf + 0x18) != 0) {
+            *(int *)(buf + 0x18) = (int)buf + *(int *)(buf + 0x18);
+        }
+        if (*(void **)(buf + 0x40) != 0) {
+            *(int *)(buf + 0x40) = (int)buf + *(int *)(buf + 0x40);
+        }
+        if (*(void **)(buf + 0x1c) != 0) {
+            *(int *)(buf + 0x1c) = (int)buf + *(int *)(buf + 0x1c);
+        }
+        *(int *)(buf + 0x2c) = (int)buf + *(int *)(buf + 0x2c);
+        *(int *)(buf + 0x30) = 0;
+        *(int *)(buf + 0x34) = 0;
+        n = (s8)buf[0x5d];
+        if (n > -1) {
+            *(int *)(buf + 0x30) = loadModLines(n, &modLine);
+            *(u8 *)(buf + 0x5c) = modLine;
+            intersectModLineBuild(buf);
+        }
+        *(u8 **)((int)lbl_803DCBA8 + off) = buf;
+        lbl_803DCBA4[id] = 1;
+        return buf;
+    }
+    return 0;
+}
+#pragma dont_inline reset
+#pragma pop
