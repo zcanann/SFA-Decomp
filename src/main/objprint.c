@@ -194,68 +194,67 @@ extern undefined4 _DAT_803dc0f4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objAnimFn_80038f38(int param_1,char *param_2)
+void objAnimFn_80038f38(int obj, char *p2)
 {
-  float fVar1;
-  uint uVar2;
-  bool bVar4;
-  int *piVar3;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  short *psVar8;
-  undefined8 local_18;
-  
-  fVar1 = *(float *)(param_2 + 0xc);
-  psVar8 = (short *)0x0;
-  iVar5 = *(int *)(param_1 + 0x50);
-  if (iVar5 != 0) {
-    iVar6 = 0;
-    iVar7 = 0;
-    for (uVar2 = (uint)*(byte *)(iVar5 + 0x5a); uVar2 != 0; uVar2 = uVar2 - 1) {
-      if ((*(char *)(*(int *)(iVar5 + 0x10) + *(char *)(param_1 + 0xad) + iVar6 + 1) != -1) &&
-         (*(char *)(*(int *)(iVar5 + 0x10) + iVar6) == '\x01')) {
-        psVar8 = (short *)(*(int *)(param_1 + 0x6c) + iVar7);
-      }
-      iVar6 = *(char *)(iVar5 + 0x55) + iVar6 + 1;
-      iVar7 = iVar7 + 0x12;
-    }
-  }
-  if (*param_2 == '\0') {
-    bVar4 = FUN_800067f0(param_1,0x10);
-    if (bVar4) {
-      if ((int)fVar1 != -1) {
-        uVar2 = (int)fVar1 - (uint)DAT_803dc070;
-        if ((int)uVar2 < 0) {
-          FUN_8000680c(param_1,0x10);
-          *(float *)(param_2 + 4) = lbl_803DF624;
-          param_2[0x14] = '\0';
-          param_2[0x15] = '\0';
+    extern int Sfx_StopObjectChannel(int obj, int ch);
+    extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
+    extern f32 lbl_803DE9A4;
+    extern f32 lbl_803DE9C8;
+    extern f32 lbl_803DE99C;
+    extern f32 lbl_803DB464;
+    extern u8 framesThisStep;
+    int t;
+    s16 *found;
+    void *m;
+
+    t = (s32)*(f32 *)(p2 + 0xc);
+    found = NULL;
+    m = *(void **)(obj + 0x50);
+    if (m != NULL) {
+        int entryIdx = 0, vecOffset = 0;
+        int n = *(u8 *)((char *)m + 0x5a);
+        int j;
+        for (j = 0; j < n; j++) {
+            u8 *entries = *(u8 **)((char *)m + 0x10);
+            int idx = (s8)*(s8 *)(obj + 0xad) + entryIdx + 1;
+            if ((int)entries[idx] != 0xff && entries[entryIdx] == 1) {
+                found = (s16 *)((char *)*(void **)(obj + 0x6c) + vecOffset);
+            }
+            entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+            vecOffset += 0x12;
         }
-        *(float *)(param_2 + 0xc) = (f32)(s32)(uVar2);
-      }
     }
-    else {
-      *(float *)(param_2 + 0xc) = lbl_803DF648;
-      param_2[0x14] = '\0';
-      param_2[0x15] = '\0';
-      if (lbl_803DF624 < *(float *)(param_2 + 4)) {
-        *(float *)(param_2 + 4) = lbl_803DF624;
-        piVar3 = *(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
-        if (*(char *)(*piVar3 + 0xf9) != '\0') {
-          FUN_800178e8((double)(lbl_803DF61C / lbl_803DC0C4),piVar3,2,
-                       (int)*(char *)(piVar3[10] + 0x2d),-1,0);
+
+    if (*(s8 *)p2 != 0) {
+        *(s8 *)p2 = 0;
+    } else if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0) {
+        if (t != -1) {
+            t -= framesThisStep;
+            if (t < 0) {
+                Sfx_StopObjectChannel(obj, 0x10);
+                *(f32 *)(p2 + 4) = lbl_803DE9A4;
+                *(s16 *)(p2 + 0x14) = 0;
+            }
+            *(f32 *)(p2 + 0xc) = (f32)t;
         }
-      }
+    } else {
+        *(f32 *)(p2 + 0xc) = lbl_803DE9C8;
+        *(s16 *)(p2 + 0x14) = 0;
+        if (*(f32 *)(p2 + 4) > lbl_803DE9A4) {
+            int *pi;
+            *(f32 *)(p2 + 4) = lbl_803DE9A4;
+            pi = *(int **)(*(int *)(obj + 0x7c) + (s8)*(s8 *)(obj + 0xad) * 4);
+            if (*(u8 *)(*pi + 0xf9) != 0) {
+                ObjModel_SetBlendChannelTargets((int)pi, 2,
+                    (s8)*(s8 *)(*(int *)((char *)pi + 0x28) + 0x2d), -1,
+                    lbl_803DE99C / lbl_803DB464, 0);
+            }
+        }
     }
-  }
-  else {
-    *param_2 = '\0';
-  }
-  if (psVar8 != (short *)0x0) {
-    *psVar8 = (short)((int)*psVar8 + (int)*(short *)(param_2 + 0x14) >> 1);
-  }
-  return;
+
+    if (found != NULL) {
+        found[0] = (s16)((found[0] + *(s16 *)(p2 + 0x14)) >> 1);
+    }
 }
 
 /*
