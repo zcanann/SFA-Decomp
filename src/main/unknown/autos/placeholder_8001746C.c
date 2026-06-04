@@ -18289,7 +18289,7 @@ extern s16 lbl_803DC7A4;
 extern s16 lbl_803DC7A6;
 extern s16 lbl_803DC7A8;
 extern void ObjModel_SampleJointTransform(u8 *model, int a, int b, f32 t, f32 s, f32 *outPos, s16 *outRot);
-extern void modelAnimFn_800246a0(u8 *dst, u8 *model, u8 *ch, f32 t, int max, int b, int c, int d, int e, int f);
+extern void modelAnimFn_800246a0(u8 *dst, u8 *model, u8 *ch, f32 t, int max, int b, int c, int d, int e, s16 f);
 
 #pragma push
 #pragma scheduling off
@@ -18329,5 +18329,89 @@ void ObjModel_UpdateAnimMatrices(u8 *model, u8 *blend, u8 *obj, u8 *dst) {
             modelWalkAnimFn_800248b8(dst, model, *(u8 **)(model + 0x30), -1, *(f32 *)(obj + 0x9c));
         }
     }
+}
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+typedef struct {
+    u8 _0[0xc];
+    int bufs[2];
+} MdlSelBufs;
+typedef struct {
+    u8 _0[0x34];
+    int vals[2];
+} ChF34;
+
+void modelAnimFn_800246a0(u8 *a, u8 *b, u8 *c, f32 t, int d, int e, int f, int g, int h, s16 w) {
+    u8 stk[0x64];
+    int px;
+    u8 *hdr;
+    u32 i2;
+    u32 i1;
+    int fl;
+    u8 *p;
+
+    hdr = *(u8 **)b;
+    {
+        u32 sel = *(u16 *)(b + 0x18) & 1;
+        px = ((MdlSelBufs *)b)->bufs[sel];
+    }
+    if ((u8)h & 0x10) {
+        *(f32 *)(c + 4) = t * *(f32 *)(c + 0x14);
+    }
+    i1 = (u8)e;
+    p = c + i1;
+    *(u8 *)(stk + 0x60) = *(u8 *)(p + 0x60);
+    p = c + i1 * 4;
+    *(f32 *)(stk + 0x14) = *(f32 *)(p + 0x14);
+    *(f32 *)(stk + 4) = *(f32 *)(p + 4);
+    *(int *)(stk + 0x34) = *(int *)(p + 0x34);
+    i2 = (u8)f;
+    p = c + i2;
+    *(u8 *)(stk + 0x61) = *(u8 *)(p + 0x60);
+    p = c + i2 * 4;
+    *(f32 *)(stk + 0x18) = *(f32 *)(p + 0x14);
+    *(f32 *)(stk + 8) = *(f32 *)(p + 4);
+    i2 = (u8)g;
+    *(int *)(stk + 0x38) = ((ChF34 *)c)->vals[i2];
+    if (*(u16 *)(hdr + 2) & 0x40) {
+        *(u16 *)(stk + 0x44) = 0;
+        *(u16 *)(stk + 0x46) = 1;
+        p = c + i1 * 2;
+        p = c + *(u16 *)(p + 0x44) * 4;
+        *(int *)(stk + 0x1c) = *(int *)(p + 0x1c);
+        if (i2 < 2) {
+            p = c + i2 * 2;
+            p = c + *(u16 *)(p + 0x44) * 4;
+            *(int *)(stk + 0x20) = *(int *)(p + 0x1c);
+        } else {
+            p = c + i2 * 2;
+            p = c + *(u16 *)(p + 0x44) * 4;
+            *(int *)(stk + 0x20) = *(int *)(p + 0x24);
+        }
+    } else {
+        p = c + i1 * 2;
+        *(u16 *)(stk + 0x44) = *(u16 *)(p + 0x44);
+        p = c + i2 * 2;
+        *(u16 *)(stk + 0x46) = *(u16 *)(p + 0x44);
+    }
+    if (w == 0) {
+        w = 1;
+    }
+    *(u16 *)(stk + 0x58) = w;
+    modelAnimFn_80024524(hdr, stk, 2);
+    fl = h & 0xF;
+    if ((fl & 0xC) == 0) {
+        int sv = *(s8 *)(c + 0x63);
+        if (sv & 1) {
+            fl = (u8)(fl | 0x10);
+        }
+        if (sv & 4) {
+            fl = (u8)(fl | 0x20);
+        }
+    }
+    lbl_80006C6C(&px, a, stk, *(int *)(hdr + 0x3c), *(u8 *)(hdr + 0xf3), lbl_80340740, d, (u8)fl);
 }
 #pragma pop
