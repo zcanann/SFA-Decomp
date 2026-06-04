@@ -903,7 +903,7 @@ int fn_801E86F4(int obj, int p2, int p3)
   extern void ObjAnim_AdvanceCurrentMove(int obj, f32 a, f32 b, int x);
   extern void fn_801F4D54(int obj, int sub);
   extern void fn_801F4ECC(int obj, int sub);
-  extern f32 Curve_EvalBSpline(int p, int m, f32 t);
+  extern f32 Curve_EvalBSpline(int p, f32 t, int m);
   extern int getAngle(f32 a, f32 b);
   extern int *gPartfxInterface;
   extern f32 lbl_803E5A30;
@@ -919,32 +919,33 @@ int fn_801E86F4(int obj, int p2, int p3)
     ObjAnim_AdvanceCurrentMove(obj, lbl_803E5A60, timeDelta, 0);
   }
 
-  if (*(s16 *)(obj + 0x46) != 1127) return 0;
-
-  {
+  switch (*(s16 *)(obj + 0x46)) {
+  case 1127: {
     f32 t = *(f32 *)(sub + 0x40);
     if (t > lbl_803E5A30) {
       u32 v;
       *(f32 *)(sub + 0x40) = t - lbl_803E5A30;
       v = *(u8 *)(sub + 0x68);
-      if (v < 4) {
-        fn_801F4D54(obj, sub);
+      if (v >= 4) {
+        *(u8 *)(sub + 0x68) = v + 1;
       } else {
-        *(u8 *)(sub + 0x68) = (u8)(v + 1);
+        fn_801F4D54(obj, sub);
       }
       fn_801F4ECC(obj, sub);
     }
   }
   {
-    *(f32 *)(obj + 0xc) = Curve_EvalBSpline(sub + 4, 0, *(f32 *)(sub + 0x40));
-    *(f32 *)(obj + 0x10) = Curve_EvalBSpline(sub + 0x14, 0, *(f32 *)(sub + 0x40));
-    *(f32 *)(obj + 0x14) = Curve_EvalBSpline(sub + 0x24, 0, *(f32 *)(sub + 0x40));
+    *(f32 *)(obj + 0xc) = Curve_EvalBSpline(sub + 4, *(f32 *)(sub + 0x40), 0);
+    *(f32 *)(obj + 0x10) = Curve_EvalBSpline(sub + 0x14, *(f32 *)(sub + 0x40), 0);
+    *(f32 *)(obj + 0x14) = Curve_EvalBSpline(sub + 0x24, *(f32 *)(sub + 0x40), 0);
     *(f32 *)(sub + 0x40) = *(f32 *)(sub + 0x44) * timeDelta + *(f32 *)(sub + 0x40);
     *(s16 *)(obj + 0) = (s16)getAngle(
         *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
         *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
     (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 415, 0, 1, -1, 0);
     (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 416, 0, 1, -1, 0);
+  }
+  break;
   }
   return 0;
 }
@@ -1209,7 +1210,7 @@ extern void showHelpText(int textId);
 extern void buttonDisable(int a, int b);
 extern int *gObjectTriggerInterface;
 extern void objRenderFn_80041018(int obj);
-extern f32 Curve_EvalBSpline(int p, int m, f32 t);
+extern f32 Curve_EvalBSpline(int p, f32 t, int m);
 
 #pragma scheduling off
 #pragma peephole off
@@ -1283,9 +1284,9 @@ void shopitem_update(int obj)
                     }
                     fn_801F4ECC(obj, state);
                 }
-                *(f32 *)(obj + 0xC) = Curve_EvalBSpline(state + 4, 0, *(f32 *)(state + 0x40));
-                *(f32 *)(obj + 0x10) = Curve_EvalBSpline(state + 0x14, 0, *(f32 *)(state + 0x40));
-                *(f32 *)(obj + 0x14) = Curve_EvalBSpline(state + 0x24, 0, *(f32 *)(state + 0x40));
+                *(f32 *)(obj + 0xC) = Curve_EvalBSpline(state + 4, *(f32 *)(state + 0x40), 0);
+                *(f32 *)(obj + 0x10) = Curve_EvalBSpline(state + 0x14, *(f32 *)(state + 0x40), 0);
+                *(f32 *)(obj + 0x14) = Curve_EvalBSpline(state + 0x24, *(f32 *)(state + 0x40), 0);
                 *(f32 *)(state + 0x40) = *(f32 *)(state + 0x44) * timeDelta + *(f32 *)(state + 0x40);
                 *(s16 *)(obj + 0) = (s16)getAngle(
                     *(f32 *)(obj + 0xC) - *(f32 *)(obj + 0x80),
