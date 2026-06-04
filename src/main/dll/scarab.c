@@ -4762,6 +4762,86 @@ int fn_801615C8(int obj, u8 *p)
   return 0;
 }
 
+int fn_8016176C(short *obj, u8 *p)
+{
+  extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
+  extern f32 lbl_803E2EB8;
+  extern f32 lbl_803E2EEC;
+  int hit;
+  s16 yaw;
+  int diff;
+  f32 spd;
+
+  hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjAnim_SetCurrentMove(obj, 7, lbl_803E2EB8, 0);
+    *(s8 *)(p + 0x346) = 0;
+  }
+  if (*(char *)(p + 0x27a) != '\0') {
+    Sfx_PlayFromObject(obj, SFXsc_attack04);
+  }
+  *(f32 *)(p + 0x2a0) = lbl_803E2EEC;
+  yaw = *(s16 *)(hit + 0x58);
+  diff = *obj - (yaw & 0xffff);
+  if (diff > 0x8000) {
+    diff -= 0xffff;
+  }
+  if (diff < -0x8000) {
+    diff += 0xffff;
+  }
+  *obj = yaw;
+  if (diff > 0x3ffc || diff < -0x3ffc) {
+    *obj += 0x8000;
+  }
+  spd = lbl_803E2EB8;
+  *(f32 *)(p + 0x280) = spd;
+  *(f32 *)(p + 0x284) = spd;
+  if (*(char *)(p + 0x346) != '\0') {
+    return 1;
+  }
+  return 0;
+}
+
+int fn_80161AF8(short *obj, u8 *p)
+{
+  extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
+  extern f32 sqrtf(f32);
+  extern int getAngle(f32 a, f32 b);
+  extern f32 lbl_803E2EB8;
+  extern f32 lbl_803E2EF0;
+  extern f32 lbl_803E2EFC;
+  int hit;
+  f64 d;
+  f32 r;
+  struct {
+    f32 x, y, z;
+  } b;
+  struct {
+    f32 x, y, z;
+  } a;
+
+  hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjAnim_SetCurrentMove(obj, 6, lbl_803E2EB8, 0);
+    *(s8 *)(p + 0x346) = 0;
+  }
+  *(f32 *)(p + 0x2a0) = lbl_803E2EF0;
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+                                                  0x24))(
+      *(void **)(hit + 0x38), *(f32 *)(hit + 0x48) - lbl_803E2EFC, &a.x, &a.y, &a.z);
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+                                                  0x24))(
+      *(void **)(hit + 0x38), lbl_803E2EFC + *(f32 *)(hit + 0x48), &b.x, &b.y, &b.z);
+  a.x = a.x - b.x;
+  a.y = a.y - b.y;
+  a.z = a.z - b.z;
+  r = sqrtf(a.x * a.x + a.z * a.z);
+  d = r;
+  a.x = r;
+  obj[1] = ((*(s8 *)(hit + 0x45) << 1) - 1) * (s16)getAngle(a.y, (f32)d);
+  return 0;
+}
+
 void dll_CB_free(int* obj)
 {
     int* state = *(int**)((char*)obj + 0xb8);
