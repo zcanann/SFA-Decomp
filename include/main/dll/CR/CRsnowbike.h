@@ -33,6 +33,8 @@ void sc_levelcontrol_init(int obj);
 void sc_levelcontrol_release(void);
 void sc_levelcontrol_initialise(void);
 
+void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx);
+void sc_musictree_handleHitObject(int obj, int p2, int effectType);
 int sc_musictree_getExtraSize(void);
 int sc_musictree_getObjectTypeId(void);
 void sc_musictree_free(void);

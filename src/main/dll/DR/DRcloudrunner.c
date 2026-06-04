@@ -26,8 +26,8 @@ extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void *vec, f32 f, 
 extern void mathFn_80021ac8(int obj, void *vec);
 extern f32 sqrtf(f32 x);
 extern f32 fn_8001461C(void);
-extern void fn_801DBFA0(int obj, int inner, u8 frames, int idx);
-extern void fn_801DC0BC(int obj, int inner, int p3);
+extern void sc_musictree_spawnAmbientEffect(int obj, int inner, u8 frames, int idx);
+extern void sc_musictree_handleHitObject(int obj, int inner, int effectType);
 
 extern void objRenderFn_8003b8f4(f32);
 
@@ -95,7 +95,7 @@ void sc_musictree_update(int obj)
         q = (int *)inner;
         for (i = 0; i < 3; i++) {
             if (*(void **)p == NULL) {
-                fn_801DBFA0(obj, inner, framesThisStep, (s8)i);
+                sc_musictree_spawnAmbientEffect(obj, inner, framesThisStep, (s8)i);
             } else {
                 int r = (*(int (**)(int))(*(int *)(*p + 0x68) + 0x28))(*p);
                 if (r > 3) {
@@ -127,7 +127,7 @@ void sc_musictree_update(int obj)
         hz = hz + playerMapOffsetZ;
         objLightFn_8009a1dc(obj, &hx, 1, 0);
         Obj_SetModelColorFadeRecursive(obj, 0xf, 0xc8, 0, 0, 1);
-        fn_801DC0BC(obj, inner, *(u8 *)(inner + 0x4c) & 0xf);
+        sc_musictree_handleHitObject(obj, inner, *(u8 *)(inner + 0x4c) & 0xf);
     } else {
         Sfx_PlayFromObject(obj, 0x129);
         Sfx_PlayFromObject(obj, 0x12a);

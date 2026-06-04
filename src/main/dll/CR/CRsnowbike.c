@@ -867,7 +867,7 @@ extern int randomGetRange(int lo, int hi);
 extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 #pragma peephole off
 #pragma scheduling off
-void fn_801DBFA0(int obj, int p2, int p3, s8 idx)
+void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 {
     int def = *(int *)(obj + 0x4c);
     int setup;
@@ -902,9 +902,10 @@ void fn_801DBFA0(int obj, int p2, int p3, s8 idx)
 extern f32 lbl_803E5588;
 #pragma peephole on
 #pragma scheduling off
-void fn_801DC0BC(int p1, int p2)
+void sc_musictree_handleHitObject(int p1, int p2, int effectType)
 {
     int id = *(int *)(*(int *)(p1 + 0x4c) + 0x14);
+    (void)effectType;
 
     switch (id) {
     case 0x30d9c:
