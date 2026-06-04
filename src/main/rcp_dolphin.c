@@ -2625,21 +2625,25 @@ extern void gxTextureFn_8004bf88(int *p, int a, int b, int *out_sel, int *out_ot
 
 extern f32 LastCommandWasRead_803DEB60;
 extern f32 sDvdfsCurrentDirEntry;
-extern f32 LastReadIssued_803DEB58[2];
+typedef struct F32Pair {
+    f32 lo;
+    f32 hi;
+} F32Pair;
+extern F32Pair LastReadIssued_803DEB58;
 extern f32 lbl_803DEB7C;
 void gxFn_80052dc0(void) {
     f32 omtx[4][4];
     f32 pmtx[3][4];
     GXSetViewport(LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60,
                   sDvdfsCurrentDirEntry, sDvdfsCurrentDirEntry,
-                  LastCommandWasRead_803DEB60, LastReadIssued_803DEB58[1]);
+                  LastCommandWasRead_803DEB60, LastReadIssued_803DEB58.hi);
     GXSetScissor(0, 0, 32, 32);
     GXSetDispCopySrc(0, 0, 32, 32);
     GXSetDispCopyDst(32, 32);
     GXSetTexCopySrc(0, 0, 32, 32);
-    C_MTXOrtho(omtx, LastReadIssued_803DEB58[1], lbl_803DEB7C,
-               LastReadIssued_803DEB58[1], lbl_803DEB7C,
-               LastReadIssued_803DEB58[1], LastReadIssued_803DEB58[0]);
+    C_MTXOrtho(omtx, LastReadIssued_803DEB58.hi, lbl_803DEB7C,
+               LastReadIssued_803DEB58.hi, lbl_803DEB7C,
+               LastReadIssued_803DEB58.hi, LastReadIssued_803DEB58.lo);
     GXSetProjection(omtx, 1);
     GXSetBlendMode(0, 1, 0, 5);
     gxSetZMode_(0, 2, 0);
@@ -3391,6 +3395,88 @@ void fn_80053C40(u8 *tex, u8 *obj)
                         lbl_803DEB9C, lbl_803DEB9C, lbl_803DEB9C, 0, 0, 0);
     }
 }
+
+extern void GXSetMisc(int token, u32 val);
+extern void DCInvalidateRange(void *addr, u32 nBytes);
+extern void GXBeginDisplayList(void *list, u32 size);
+extern u32 GXEndDisplayList(void);
+extern void GXCallDisplayList(void *list, u32 nbytes);
+extern void GXBegin(int prim, int vtxfmt, u16 nverts);
+extern f32 sqrtf(f32 x);
+extern u8 lbl_803DCD98;
+extern u32 lbl_803DCD9C;
+extern u8 lbl_803779C0[];
+extern F32Pair LastReadFinished_803DEB50;
+extern f32 lbl_803DEB64;
+
+#pragma opt_loop_invariants off
+void lightFn_80052974(void)
+{
+    f32 z;
+    f32 scale;
+    f32 half;
+    f32 w;
+    f32 x0;
+    f32 y;
+    f32 yy;
+    f32 x1;
+    f32 d;
+    f32 r;
+    f32 fa;
+    f32 fb;
+    u32 i;
+    u32 j;
+
+    if (lbl_803DCD98 == 0) {
+        GXSetMisc(1, 0);
+        DCInvalidateRange(lbl_803779C0, 0x6640);
+        GXBeginDisplayList(lbl_803779C0, 0x6640);
+        w = LastReadIssued_803DEB58.lo;
+        half = LastReadIssued_803DEB58.hi;
+        scale = LastReadFinished_803DEB50.hi;
+        z = lbl_803DEB64;
+        for (i = 0; i < 0x10; i++) {
+            GXBegin(0x98, 4, 0x22);
+            fa = scale * (f32)i;
+            fb = scale * (f32)(i + 1);
+            x0 = fa / w - half;
+            x1 = fb / w - half;
+            for (j = 0; j <= 0x10; j++) {
+                y = (scale * (f32)j) / w - half;
+                yy = y * y;
+                d = x0 * x0 + yy;
+                if (d < half) {
+                    r = sqrtf(half - d);
+                } else {
+                    r = LastCommandWasRead_803DEB60;
+                }
+                *(volatile f32 *)0xCC008000 = x0;
+                *(volatile f32 *)0xCC008000 = y;
+                *(volatile f32 *)0xCC008000 = z;
+                *(volatile f32 *)0xCC008000 = x0;
+                *(volatile f32 *)0xCC008000 = y;
+                *(volatile f32 *)0xCC008000 = r;
+                d = x1 * x1 + yy;
+                if (d < half) {
+                    r = sqrtf(half - d);
+                } else {
+                    r = LastCommandWasRead_803DEB60;
+                }
+                *(volatile f32 *)0xCC008000 = x1;
+                *(volatile f32 *)0xCC008000 = y;
+                *(volatile f32 *)0xCC008000 = z;
+                *(volatile f32 *)0xCC008000 = x1;
+                *(volatile f32 *)0xCC008000 = y;
+                *(volatile f32 *)0xCC008000 = r;
+            }
+        }
+        lbl_803DCD9C = GXEndDisplayList();
+        lbl_803DCD98 = 1;
+        GXSetMisc(1, 8);
+    }
+    GXCallDisplayList(lbl_803779C0, lbl_803DCD9C);
+}
+#pragma opt_loop_invariants reset
 
 #pragma scheduling reset
 #pragma peephole reset
