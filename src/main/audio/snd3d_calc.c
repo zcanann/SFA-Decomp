@@ -27,6 +27,7 @@ typedef struct S3DMixGroup {
 } S3DMixGroup;
 
 extern u8 lbl_803CC8C0[];
+extern u8 lbl_803CC910[];
 extern u8 lbl_803DE36B;
 extern u8 lbl_803DE36C;
 extern u8 lbl_803DE36D;
@@ -297,17 +298,15 @@ void s3dApplyEmitterControls(Snd3DEmitter *emitter, f32 distance, f32 pan, f32 u
 #pragma dont_inline on
 void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
 {
-    S3DMixGroup *groups;
     S3DMixGroup *group;
     S3DSortedNode *node;
     S3DSortedNode *prev;
     u8 *base;
-    int groupIndex;
     int groupCount;
+    int groupIndex;
 
     base = lbl_803CC8C0;
-    groups = (S3DMixGroup *)(base + 0x50);
-    group = groups;
+    group = (S3DMixGroup *)(base + 0x50);
     groupCount = lbl_803DE36B;
     for (groupIndex = 0; groupIndex < groupCount; groupIndex++) {
         if (emitter->groupKey == group->key) {
@@ -317,15 +316,15 @@ void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
     }
 
     if (groupIndex == groupCount) {
-        groups[groupIndex].activeHead = (S3DActiveNode *)0x0;
-        groups[groupIndex].sortedHead = (S3DSortedNode *)0x0;
-        groups[groupIndex].sortedCount = 0;
-        groups[groupIndex].key = emitter->groupKey;
+        ((S3DMixGroup *)(base + 0x50))[groupIndex].activeHead = (S3DActiveNode *)0x0;
+        ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedHead = (S3DSortedNode *)0x0;
+        ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedCount = 0;
+        ((S3DMixGroup *)(base + 0x50))[groupIndex].key = emitter->groupKey;
         lbl_803DE36B++;
     }
 
-    groups[groupIndex].sortedCount++;
-    node = groups[groupIndex].sortedHead;
+    ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedCount++;
+    node = ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedHead;
     prev = (S3DSortedNode *)0x0;
     while (node != (S3DSortedNode *)0x0) {
         if (node->distance > distance) {
@@ -336,7 +335,7 @@ void s3dInsertSortedEmitter(Snd3DEmitter *emitter, f32 distance)
     }
 
     if (prev == (S3DSortedNode *)0x0) {
-        groups[groupIndex].sortedHead = &((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D];
+        ((S3DMixGroup *)(base + 0x50))[groupIndex].sortedHead = &((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D];
     } else {
         prev->next = &((S3DSortedNode *)(base + 0xb50))[lbl_803DE36D];
     }
@@ -429,13 +428,13 @@ void s3dStartQueuedEmitters(void)
     u32 groupIndex;
     u32 handle;
     u8 studio;
-    f32 lowerWindow;
-    f32 upperWindow;
-    f32 zero;
     f32 one;
+    f32 zero;
+    f32 upperWindow;
+    f32 lowerWindow;
     f32 distanceDelta;
 
-    group = S3D_MIX_GROUPS;
+    group = (S3DMixGroup *)lbl_803CC910;
     groupIndex = 0;
     zero = lbl_803E7880;
     one = lbl_803E78A4;
@@ -454,25 +453,26 @@ void s3dStartQueuedEmitters(void)
             }
 
             distanceDelta = node->distance - group->sortedHead->distance;
-            if (distanceDelta > lowerWindow) {
-                if (distanceDelta <= upperWindow) {
-                    emitter = node->emitter;
-                    emitter->retryCounter++;
-                    if (emitter->retryCounter < 0x14) {
-                        goto next_node;
-                    }
-                } else {
-                    node->emitter->retryCounter = 0;
+            if (distanceDelta <= lowerWindow) {
+                goto next_node;
+            }
+            if (distanceDelta <= upperWindow) {
+                emitter = node->emitter;
+                if (++emitter->retryCounter < 0x14) {
+                    goto next_node;
                 }
+            } else {
+                node->emitter->retryCounter = 0;
+            }
 
 start_voice:
                 emitter = node->emitter;
                 entry = emitter->entry;
                 if ((entry == (SndSpatialEntry *)0x0) || (entry->assignedVoice != 0xff)) {
-                    if (entry == (SndSpatialEntry *)0x0) {
-                        studio = emitter->studio;
-                    } else {
+                    if (emitter->entry != (SndSpatialEntry *)0x0) {
                         studio = entry->assignedVoice;
+                    } else {
+                        studio = emitter->studio;
                     }
 
                     handle = synthFXStart(emitter->fxId, 0x7f, 0x40, studio,
@@ -500,7 +500,6 @@ start_voice:
                     emitter->flags |= S3D_EMITTER_FLAG_REMOVE;
                     emitter->flags &= ~S3D_EMITTER_FLAG_PLAYING;
                 }
-            }
 
 next_node:
             node = node->next;
