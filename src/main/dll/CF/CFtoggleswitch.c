@@ -75,56 +75,6 @@ extern f32 FLOAT_803e4904;
 /*
  * --INFO--
  *
- * Function: magiccavebottom_update
- * EN v1.0 Address: 0x8018ADF0
- * EN v1.0 Size: 244b
- * EN v1.1 Address: 0x8018AE14
- * EN v1.1 Size: 264b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void magiccavebottom_update(undefined4 param_1,undefined4 param_2,ObjAnimUpdateState *animUpdate)
-{
-  byte eventId;
-  int iVar2;
-  int iVar3;
-  byte *pbVar4;
-  int iVar5;
-  int iVar6;
-  
-  iVar2 = FUN_80286840();
-  iVar5 = *(int *)(iVar2 + 0x4c);
-  pbVar4 = *(byte **)(iVar2 + 0xb8);
-  for (iVar6 = 0; iVar6 < (int)(uint)animUpdate->eventCount; iVar6 = iVar6 + 1) {
-    eventId = animUpdate->eventIds[iVar6];
-    if (eventId == 3) {
-      *pbVar4 = *pbVar4 & 0xdf;
-    }
-    else if (eventId < 3) {
-      if (eventId == 1) {
-        iVar3 = (int)*(short *)(iVar5 + 0x1c);
-        if (iVar3 != 0) {
-          (**(code **)(*DAT_803dd6e8 + 0x38))(iVar3,200,0x8c,0);
-        }
-      }
-      else if (eventId != 0) {
-        *pbVar4 = *pbVar4 & 0xdf | 0x20;
-      }
-    }
-    else if (eventId < 5) {
-      *(ushort *)(iVar2 + 6) = *(ushort *)(iVar2 + 6) | 0x4000;
-      ObjHits_DisableObject(iVar2);
-    }
-  }
-  FUN_8028688c();
-  return;
-}
-
-/*
- * --INFO--
- *
  * Function: FUN_8018aee4
  * EN v1.0 Address: 0x8018AEE4
  * EN v1.0 Size: 36b
@@ -848,6 +798,296 @@ void magiccavetop_free(int *obj) {
     if (state[0] == 1) {
         if (def[0x22] == 0) {
             mapUnload(mapGetDirIdx(def[0x1f]), 0x20000000);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void envFxActFn_800887f8(int a);
+extern void getEnvfxAct(int *obj, int *target, int id, int p);
+extern void Music_Trigger(int a, int b);
+extern void setAButtonIcon(int idx);
+extern void warpToMap(int mapId, int b);
+extern int *gObjectTriggerInterface;
+
+#pragma scheduling off
+#pragma peephole off
+void magiccavebottom_update(int *obj) {
+    u8 *def = *(u8 **)((char *)obj + 0x4c);
+    u8 *sub = *(u8 **)((char *)obj + 0xb8);
+
+    *(s16 *)obj = (s16)((s32)def[0x1a] << 8);
+    switch (*sub) {
+    case 0:
+        GameBit_Set(0xefb, 1);
+        envFxActFn_800887f8(0);
+        getEnvfxAct(obj, obj, 0x2c, 0);
+        getEnvfxAct(obj, obj, 0x2d, 0);
+        *sub = 1;
+        if (def[0x1b] != 0) {
+            (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+        } else {
+            (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(2, obj, -1);
+        }
+        break;
+    case 1:
+        Music_Trigger(0x2f, 1);
+        *sub = 2;
+        break;
+    case 2:
+        if ((*(u8 *)((char *)obj + 0xaf) & 4) != 0) {
+            setAButtonIcon(0x19);
+        }
+        if (ObjTrigger_IsSet((int)obj) != 0) {
+            *sub = 3;
+            if (def[0x1b] != 0) {
+                (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(1, obj, -1);
+            } else {
+                (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(3, obj, -1);
+            }
+        } else {
+            objRenderFn_80041018((int)obj);
+        }
+        break;
+    case 3:
+        GameBit_Set(0x91e, 1);
+        warpToMap(GameBit_Get(0x1b8), 0);
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E3C80;
+extern f32 lbl_803E3C84;
+
+#pragma scheduling off
+#pragma peephole off
+void infotext_update(int *obj) {
+    f32 *sub = *(f32 **)((char *)obj + 0xb8);
+    if (ObjTrigger_IsSet((int)obj) != 0 && fn_801334E0() == 0) {
+        *sub = lbl_803E3C80;
+    }
+    if (*sub > lbl_803E3C84) {
+        if ((*(u8 *)((char *)obj + 0xaf) & 4) == 0) {
+            *sub = lbl_803E3C84;
+        } else {
+            *sub = *sub - timeDelta;
+            showHelpText(*(s16 *)((char *)*(int **)((char *)obj + 0x50) + 0x7c + (*(u8 **)((char *)obj + 0x4c))[0x19] * 2));
+        }
+    }
+    if ((*(u32 *)((char *)*(int **)((char *)obj + 0x50) + 0x44) & 1) != 0) {
+        objRenderFn_80041018((int)obj);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 vec3f_distanceSquared(f32 *a, f32 *b);
+extern int loadMapAndParent(int mapId);
+extern void unlockLevel(int a, int b, int c);
+extern void lockLevel(int idx, int b);
+extern void stopRumble(void);
+extern void doRumble(f32 v);
+extern void Sfx_PlayFromObject(int *obj, int sfxId);
+extern void objfx_spawnArcedBurst(int *obj, int enabled, f32 radius, int particleKind,
+                                  int particleId, int lifetime, f32 sx, f32 sy, f32 sz,
+                                  void *args, int a);
+extern int *gMapEventInterface;
+extern int *gCameraInterface;
+extern f32 lbl_803E3C30;
+extern f32 lbl_803E3C34;
+extern f32 lbl_803E3C38;
+extern f32 lbl_803E3C3C;
+extern f32 lbl_803E3C40;
+extern f32 lbl_803E3C44;
+extern f32 lbl_803E3C48;
+extern f32 lbl_803E3C4C;
+extern f32 lbl_803E3C50;
+extern f32 lbl_803E3C54;
+extern f32 lbl_803E3C58;
+extern f32 lbl_803E3C5C;
+extern f32 lbl_803E3C60;
+extern f32 lbl_803E3C64;
+extern f32 lbl_803E3C68;
+extern f32 lbl_803E3C6C;
+
+typedef struct MagicCaveTopFxArgs {
+    u8 pad[12];
+    f32 x;
+    f32 y;
+    f32 z;
+} MagicCaveTopFxArgs;
+
+#pragma scheduling off
+#pragma peephole off
+void magiccavetop_update(int *obj) {
+    MagicCaveTopFxArgs fx;
+    int *player;
+    u8 *sub;
+    u8 *def;
+    int gb;
+    u8 dirIdx;
+    int range;
+    void *staff;
+    f32 dist;
+    f32 t;
+
+    player = (int *)Obj_GetPlayerObject();
+    sub = *(u8 **)((char *)obj + 0xb8);
+    def = *(u8 **)((char *)obj + 0x4c);
+    gb = 0;
+    if (player != NULL) {
+        if (GameBit_Get(0x91e) != 0) {
+            GameBit_Set(0x91e, 0);
+            (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(def[0x1f], def[0x1a], 0);
+            (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(1, obj, -1);
+            unlockLevel(0, 0, 1);
+            *sub = 3;
+            return;
+        }
+        dirIdx = mapGetDirIdx(def[0x1f]);
+        dist = vec3f_distanceSquared((f32 *)((char *)player + 0x18), (f32 *)((char *)obj + 0x18));
+        gb = GameBit_Get(*(s16 *)(def + 0x1c));
+        switch (*sub) {
+        case 0:
+            range = def[0x19] * 2;
+            if (dist < (f32)(range * range)) {
+                if (def[0x22] == 0) {
+                    loadMapAndParent(def[0x1f]);
+                }
+                *sub = 1;
+            }
+            break;
+        case 1:
+            range = def[0x18] * 2;
+            if (dist > (f32)(range * range)) {
+                if (def[0x22] == 0) {
+                    mapUnload(dirIdx, 0x20000000);
+                }
+                *sub = 0;
+            } else if (dist < lbl_803E3C30 && gb != 0) {
+                *sub = 2;
+                (*(void (**)(int, int, int))(*(int *)gMapEventInterface + 0x50))(def[0x1f], def[0x1a], 1);
+                (*(void (**)(int, int))(*(int *)gMapEventInterface + 0x44))(def[0x1f], def[0x1b]);
+                (*(void (**)(int, int *, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+                (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x42, 0, 1, 0, 0, 0x1e, 0xff);
+            }
+            break;
+        case 2:
+            GameBit_Set(0x1b8, *(s8 *)(def + 0x21));
+            if (def[0x22] != 0) {
+                unlockLevel(0, 0, 1);
+                lockLevel(def[0x1e], 0);
+                lockLevel(def[0x1e], 1);
+            } else {
+                unlockLevel(0, 0, 1);
+                lockLevel(mapGetDirIdx(*(s8 *)((char *)obj + 0xac)), 0);
+                lockLevel(dirIdx, 1);
+            }
+            if (*(s8 *)((char *)obj + 0xac) == 0xd) {
+                GameBit_Set(0xe05, 0);
+            }
+            warpToMap(*(s8 *)(def + 0x20), 0);
+            break;
+        case 3:
+            if (dist > lbl_803E3C30) {
+                *sub = 1;
+            }
+            break;
+        }
+        if ((sub[1] & 4) == 0) {
+            if (dist >= lbl_803E3C34) {
+                *(f32 *)(sub + 8) = lbl_803E3C38;
+                sub[1] &= ~2;
+            } else if ((sub[1] & 2) == 0) {
+                if ((sub[1] & 1) != 0) {
+                    if (dist < lbl_803E3C3C) {
+                        stopRumble();
+                        if (player != NULL) {
+                            staff = fn_802966CC(player);
+                            if (staff != NULL) {
+                                staffSetGlow(staff, 5, 0);
+                            }
+                        }
+                        sub[2] = 0;
+                    } else if (dist < lbl_803E3C40) {
+                        if (sub[2] == 1) {
+                            stopRumble();
+                            if (player != NULL) {
+                                staff = fn_802966CC(player);
+                                if (staff != NULL) {
+                                    staffSetGlow(staff, 5, 0);
+                                }
+                            }
+                            sub[2] = 0;
+                        } else {
+                            stopRumble2();
+                            if (player != NULL) {
+                                staff = fn_802966CC(player);
+                                if (staff != NULL) {
+                                    staffSetGlow(staff, 5, 0);
+                                }
+                            }
+                            sub[2] = 1;
+                        }
+                    } else {
+                        stopRumble2();
+                        if (player != NULL) {
+                            staff = fn_802966CC(player);
+                            if (staff != NULL) {
+                                staffSetGlow(staff, 5, 0);
+                            }
+                        }
+                        sub[2] = 1;
+                    }
+                    sub[1] &= ~1;
+                    *(f32 *)(sub + 8) += timeDelta;
+                } else if (dist < lbl_803E3C34) {
+                    doRumble(lbl_803E3C44);
+                    if (player != NULL) {
+                        staff = fn_802966CC(player);
+                        if (staff != NULL) {
+                            staffSetGlow(staff, 5, 2);
+                        }
+                    }
+                    sub[1] |= 1;
+                    *(f32 *)(sub + 8) += timeDelta;
+                }
+                if (*(f32 *)(sub + 8) > lbl_803E3C48) {
+                    sub[1] |= 2;
+                }
+            }
+        }
+    }
+    if (gb != 0) {
+        if (lbl_803E3C38 == *(f32 *)(sub + 4)) {
+            Sfx_PlayFromObject(obj, 0x4a2);
+        }
+        *(f32 *)(sub + 4) += timeDelta;
+        if (*(f32 *)(sub + 4) > lbl_803E3C4C) {
+            *(f32 *)(sub + 4) = lbl_803E3C4C;
+            *(u8 *)((char *)obj + 0x36) = 0xff;
+        } else {
+            *(u8 *)((char *)obj + 0x36) = (u8)(int)(lbl_803E3C50 * (*(f32 *)(sub + 4) / lbl_803E3C4C));
+        }
+    } else {
+        *(u8 *)((char *)obj + 0x36) = 0;
+    }
+    if (*(u8 *)((char *)obj + 0x36) != 0) {
+        t = lbl_803E3C38;
+        fx.x = t;
+        fx.y = lbl_803E3C54;
+        fx.z = t;
+        if ((sub[1] & 8) != 0) {
+            objfx_spawnArcedBurst(obj, 1, lbl_803E3C58, 5, 2, 0x32, lbl_803E3C5C, lbl_803E3C60, lbl_803E3C64, fx.pad, 0);
+            fx.y = lbl_803E3C68;
+            objfx_spawnArcedBurst(obj, 5, lbl_803E3C58, 5, 2, 0x14, t = lbl_803E3C6C, t, t, fx.pad, 0);
+        } else {
+            objfx_spawnArcedBurst(obj, 1, lbl_803E3C58, 2, 2, 0x32, lbl_803E3C5C, lbl_803E3C60, lbl_803E3C64, fx.pad, 0);
+            fx.y = lbl_803E3C68;
+            objfx_spawnArcedBurst(obj, 5, lbl_803E3C58, 2, 2, 0x14, t = lbl_803E3C6C, t, t, fx.pad, 0);
         }
     }
 }
