@@ -1746,14 +1746,20 @@ int fn_8017805C(int *obj, f32 *state) {
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
+typedef struct InvHitState {
+    f32 anchorX;
+    f32 anchorZ;
+    u8 mode;
+} InvHitState;
+
 void invhit_init(int *obj, u8 *def) {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    InvHitState *state = *(InvHitState **)((char *)obj + 0xb8);
     char *sub;
 
-    state[8] = def[0x1a];
+    state->mode = def[0x1a];
     sub = *(char **)((char *)obj + 0x54);
     *(s16 *)(sub + 0x60) = *(s16 *)(sub + 0x60) & ~1;
-    switch (state[8]) {
+    switch (state->mode) {
     case 0:
         *(int *)((char *)obj + 0xf8) = def[0x18];
         break;
@@ -1822,10 +1828,10 @@ void invhit_init(int *obj, u8 *def) {
         *(int *)(sub + 0x48) = 0x10;
         *(int *)((char *)obj + 0xf8) = 0x78;
         {
-            char *q = *(char **)(def + 0x1c);
-            if (q != NULL) {
-                *(f32 *)state = *(f32 *)(q + 0xc);
-                *(f32 *)(state + 4) = *(f32 *)(*(char **)(def + 0x1c) + 0x14);
+            char *anchorObj = *(char **)(def + 0x1c);
+            if (anchorObj != NULL) {
+                state->anchorX = *(f32 *)(anchorObj + 0xc);
+                state->anchorZ = *(f32 *)(*(char **)(def + 0x1c) + 0x14);
             }
         }
         break;
@@ -1945,36 +1951,35 @@ extern f32 lbl_803E35F4;
 #pragma scheduling off
 #pragma peephole off
 void invhit_update(int *obj) {
-    char *q;
-    char *p;
-    f32 *state;
+    InvHitState *state;
     int i;
 
-    state = *(f32 **)((char *)obj + 0xb8);
+    state = *(InvHitState **)((char *)obj + 0xb8);
     *(f32 *)((char *)obj + 0x80) = *(f32 *)((char *)obj + 0xc);
     *(f32 *)((char *)obj + 0x84) = *(f32 *)((char *)obj + 0x10);
     *(f32 *)((char *)obj + 0x88) = *(f32 *)((char *)obj + 0x14);
-    switch (*(u8 *)((char *)state + 8)) {
-    case 0:
-        p = (char *)Obj_GetPlayerObject();
-        while (p != NULL) {
-            f32 dx = *(f32 *)((char *)obj + 0xc) - *(f32 *)(p + 0xc);
-            f32 dy = *(f32 *)((char *)obj + 0x10) - *(f32 *)(p + 0x10);
-            f32 dz = *(f32 *)((char *)obj + 0x14) - *(f32 *)(p + 0x14);
+    switch (state->mode) {
+    case 0: {
+        char *victim = (char *)Obj_GetPlayerObject();
+        while (victim != NULL) {
+            f32 dx = *(f32 *)((char *)obj + 0xc) - *(f32 *)(victim + 0xc);
+            f32 dy = *(f32 *)((char *)obj + 0x10) - *(f32 *)(victim + 0x10);
+            f32 dz = *(f32 *)((char *)obj + 0x14) - *(f32 *)(victim + 0x14);
             f32 dist = sqrtf(dx * dx + dy * dy + dz * dz);
             if (dist < (f32)*(int *)((char *)obj + 0xf8)) {
-                u8 *s2 = *(u8 **)(p + 0x54);
-                s2[0x71] += 1;
-                *(s16 *)(s2 + 0x60) = *(s16 *)(s2 + 0x60) & ~1;
+                u8 *victimHits = *(u8 **)(victim + 0x54);
+                victimHits[0x71] += 1;
+                *(s16 *)(victimHits + 0x60) = *(s16 *)(victimHits + 0x60) & ~1;
                 (*(u8 **)((char *)obj + 0x54))[0x71] += 1;
             }
-            if (*(s16 *)(p + 0x44) == 1) {
-                p = (char *)getTrickyObject();
+            if (*(s16 *)(victim + 0x44) == 1) {
+                victim = (char *)getTrickyObject();
             } else {
-                p = NULL;
+                victim = NULL;
             }
         }
         break;
+    }
     case 3:
         if (Obj_GetPlayerObject() != NULL) {
             lbl_803AC780[0] = *(f32 *)((char *)obj + 0x18);
@@ -1995,21 +2000,24 @@ void invhit_update(int *obj) {
     case 1:
         ObjList_ContainsObject(*(int *)((char *)obj + 0xf4));
         break;
-    case 7:
-        p = *(char **)((char *)obj + 0x54);
-        state = (f32 *)*(char **)(*(int *)((char *)obj + 0xf4) + 0x54);
+    case 7: {
+        char *hitState = *(char **)((char *)obj + 0x54);
+        char *ownerHitState = *(char **)(*(int *)((char *)obj + 0xf4) + 0x54);
+        char *ownerHitSlot = ownerHitState;
+
         i = 0;
-        q = (char *)state;
-        for (; i < *(s8 *)((char *)state + 0x71); i++) {
-            if (*(int **)(q + 0x7c) == obj) {
-                *(s16 *)(p + 0x60) = *(s16 *)(p + 0x60) & ~1;
+        for (; i < *(s8 *)(ownerHitState + 0x71); i++) {
+            if (*(int **)(ownerHitSlot + 0x7c) == obj) {
+                *(s16 *)(hitState + 0x60) = *(s16 *)(hitState + 0x60) & ~1;
                 Obj_FreeObject(obj);
             }
-            q += 4;
+            ownerHitSlot += 4;
         }
         break;
+    }
     case 4: {
-        char *s4 = *(char **)((char *)obj + 0x54);
+        char *hitState = *(char **)((char *)obj + 0x54);
+        char *targetObj;
         f32 **hits[2];
         f32 reach;
         f32 dx2;
@@ -2018,37 +2026,37 @@ void invhit_update(int *obj) {
         f32 thr;
 
         *(int *)((char *)obj + 0xf8) -= framesThisStep;
-        if (*(void **)(s4 + 0x50) != NULL) {
-            *(s16 *)(s4 + 0x60) = 0;
+        if (*(void **)(hitState + 0x50) != NULL) {
+            *(s16 *)(hitState + 0x60) = 0;
         }
-        p = *(char **)((char *)obj + 0xf4);
-        if (p != NULL) {
+        targetObj = *(char **)((char *)obj + 0xf4);
+        if (targetObj != NULL) {
             f32 dx;
             f32 dz;
             f32 k;
             f32 qt;
             f32 d;
 
-            if (ObjList_ContainsObject(p) == 0) break;
-            dx = *(f32 *)(p + 0xc) - *(f32 *)((char *)obj + 0xc);
-            dz = *(f32 *)(p + 0x14) - *(f32 *)((char *)obj + 0x14);
+            if (ObjList_ContainsObject(targetObj) == 0) break;
+            dx = *(f32 *)(targetObj + 0xc) - *(f32 *)((char *)obj + 0xc);
+            dz = *(f32 *)(targetObj + 0x14) - *(f32 *)((char *)obj + 0x14);
             k = lbl_803E35EC;
             qt = dx / k;
             *(f32 *)((char *)obj + 0xc) = qt * timeDelta + *(f32 *)((char *)obj + 0xc);
             qt = dz / k;
             *(f32 *)((char *)obj + 0x14) = qt * timeDelta + *(f32 *)((char *)obj + 0x14);
-            dx = *(f32 *)(p + 0xc) - state[0];
-            dz = *(f32 *)(p + 0x14) - state[1];
+            dx = *(f32 *)(targetObj + 0xc) - state->anchorX;
+            dz = *(f32 *)(targetObj + 0x14) - state->anchorZ;
             reach = lbl_803E35F0 + sqrtf(dx * dx + dz * dz);
-            dx2 = *(f32 *)((char *)obj + 0xc) - state[0];
-            dz2 = *(f32 *)((char *)obj + 0x14) - state[1];
+            dx2 = *(f32 *)((char *)obj + 0xc) - state->anchorX;
+            dz2 = *(f32 *)((char *)obj + 0x14) - state->anchorZ;
             d = sqrtf(dx2 * dx2 + dz2 * dz2);
             if (d > reach) {
                 f32 r = reach / d;
                 dx2 = dx2 * r;
                 dz2 = dz2 * r;
-                *(f32 *)((char *)obj + 0xc) = state[0] + dx2;
-                *(f32 *)((char *)obj + 0x14) = state[1] + dz2;
+                *(f32 *)((char *)obj + 0xc) = state->anchorX + dx2;
+                *(f32 *)((char *)obj + 0x14) = state->anchorZ + dz2;
             }
             (*(void (*)(int *, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x25, 0, 0, -1, 0);
             (*(void (*)(int *, int, int, int, int, int))*(int *)(*gPartfxInterface + 8))(obj, 0x56, 0, 0, -1, 0);
