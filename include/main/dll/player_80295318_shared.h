@@ -1318,7 +1318,7 @@ extern f32 lbl_803E802C;
 extern f32 lbl_803DE438;
 extern f32 lbl_803DE43C;
 extern int fn_8029AF9C();
-extern int fn_8029BDB4();
+extern int fn_8029BDB4(int obj, int state, f32 fv);
 extern int fn_8029DB70();
 extern int fn_802A0680();
 extern int fn_802A1CA8();
