@@ -9178,7 +9178,7 @@ extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
 extern void *Resource_Acquire(u32 id, u32 arg);
 extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
 extern int textureLoad(int id, int flag);
-extern void *loadAnimation(int hdr, int id, int b, u8 *bufout);
+extern void *loadAnimation(int hdr, s16 id, int b, u8 *bufout);
 
 void *loadAsset(void *reqVoid) {
     u8 tmp[0x14];
@@ -10224,6 +10224,7 @@ extern int getTableFileEntry(int fileId, int index, int *out);
 extern void loadModelsBin();
 extern int loadAndDecompressDataFile(int id, void *buf, int blockOff, int len, int a, int b, int c);
 
+#pragma dont_inline on
 void *ObjModel_LoadModelData(int id) {
     int a18, a14, a10, aC, a8;
     void *model;
@@ -10248,6 +10249,7 @@ void *ObjModel_LoadModelData(int id) {
     }
     return model;
 }
+#pragma dont_inline reset
 
 void ObjModel_ResolveRenderOpTextures(u8 *m) {
     int j, k;
@@ -12539,35 +12541,42 @@ extern void ObjModel_ResolveRenderOpTextures(u8 *model);
 extern int modelLoadAnimations(void *model, int id, void *animBase);
 extern int modelLoad_calcSizes(void *model, int arg, int *out, int flag);
 extern int ModelList_getHeader(void *list, int index, void *out);
-extern void modelInitModelList(void *list, int index, void *out);
+extern void modelInitModelList(void *list, s16 index, void *out);
 extern int textureLoad(int id, int flag);
 extern s16 *lbl_803DCB64;
 
 void *ObjModel_Load(int id, int arg2, int *outSize) {
-    int idx;
-    void *header;
+    int sizes[7];
+    u8 *header;
+    int off;
+    u8 *h;
+    int i;
     int realId;
-    if (id >= 0) {
+    int tex;
+    if (id < 0) {
+        realId = -id;
+    } else {
         fileLoadToBufferOffset(0x2c, lbl_803DCB64, id * 2, 8);
         realId = lbl_803DCB64[0];
-    } else {
-        realId = -id;
     }
-    if (ModelList_getHeader(lbl_803DCB54, realId, &header)) {
-        (*(u8 *)header)++;
-    } else {
-        int i;
+    if (ModelList_getHeader(lbl_803DCB54, realId, &header) == 0) {
         header = ObjModel_LoadModelData(realId);
         ObjModel_RelocateModelData(header);
-        for (i = 0; i < ((u8 *)header)[0xf2]; i++) {
-            *(int *)(*(u8 **)((u8 *)header + 0x20) + i * 4) =
-                textureLoad(-(*(int *)(*(u8 **)((u8 *)header + 0x20) + i * 4) | 0x8000), 1);
+        h = header;
+        i = 0;
+        off = i;
+        for (; i < h[0xf2]; i++) {
+            tex = textureLoad(-(*(int *)(*(int *)(h + 0x20) + off) | 0x8000), 1);
+            *(int *)(*(int *)(h + 0x20) + off) = tex;
+            off += 4;
         }
         ObjModel_ResolveRenderOpTextures(header);
         modelLoadAnimations(header, realId, (u8 *)header + *(int *)((u8 *)header + 0xc));
         modelInitModelList(lbl_803DCB54, realId, &header);
+    } else {
+        (*(u8 *)header)++;
     }
-    *outSize = modelLoad_calcSizes(header, arg2, &idx, 0);
+    *outSize = modelLoad_calcSizes(header, arg2, sizes, 0);
     return header;
 }
 
@@ -17099,7 +17108,7 @@ void *animLoadFromTable(u8 *hdr, int id, int idx, u8 *out)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void *loadAnimation(int hdr, int id, int b, u8 *bufout)
+void *loadAnimation(int hdr, s16 id, int b, u8 *bufout)
 {
     int tmp;
     int size;
@@ -17111,7 +17120,7 @@ void *loadAnimation(int hdr, int id, int b, u8 *bufout)
         return 0;
     }
     if (bufout == 0) {
-        i = (s16)id;
+        i = id;
         if (ModelList_getHeader(lbl_803DCB50, i, &ptr) == 0) {
             v = ((u32 *)lbl_803DCB4C)[i];
             loadAndDecompressDataFile(0x30, 0, v, 0, (int)&size, i, 1);
@@ -17124,7 +17133,7 @@ void *loadAnimation(int hdr, int id, int b, u8 *bufout)
         }
         return ptr;
     }
-    return animLoadFromTable((u8 *)hdr, (s16)id, (s16)b, bufout);
+    return animLoadFromTable((u8 *)hdr, id, (s16)b, bufout);
 }
 #pragma dont_inline reset
 #pragma pop
