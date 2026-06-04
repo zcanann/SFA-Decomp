@@ -2,59 +2,52 @@
 #include "main/dll/fx_800944A0_shared.h"
 
 extern f32 lbl_8030F9D8[];
-extern s16 lbl_803DB788[];
+extern s16 lbl_803DB788[4];
 extern f64 lbl_803DF360;
 extern f32 fcos16(u16 angle);
 
 #pragma scheduling off
 #pragma peephole off
-void WM_newcrystalFn_800969b0(void *obj, u16 *state, u8 flags, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff)
+void WM_newcrystalFn_800969b0(void *obj, s16 *state, u8 flags, f32 period, f32 xMul, f32 yMul, f32 xOff, f32 yOff)
 {
     PartfxParams params;
-    f32 vec[3];
     int i;
     int j;
-    f32 cZero;
-    f32 cOne;
     f32 cHalf;
-    f32 cFull;
     f32 invPeriod;
+    f32 cOne;
+    f32 cZero;
     int spawnFlags;
     f32 phase;
 
     cZero = lbl_803DF35C;
     cOne = lbl_803DF354;
+    invPeriod = lbl_803DF350 / period;
     cHalf = lbl_803DF358;
-    cFull = lbl_803DF350;
-    invPeriod = cFull / period;
 
     for (i = 0; i < 4; i++) {
-        state[0x12 + i] = (s16)((s32)(invPeriod + (f32)(i * randomGetRange(0x78, 0x7f))));
-        state[0xe + i] = (s16)((s32)((f32)state[0x12 + i] * timeDelta + (f32)(s16)state[0xe + i]));
+        state[0x12 + i] = (s32)(invPeriod + (f32)(i * randomGetRange(120, 127)));
+        state[0xe + i] = (s32)((f32)state[0x12 + i] * timeDelta + (f32)state[0xe + i]);
         phase = fcos16(state[0xe + i]);
         *(f32 *)((char *)state + 0xc + i * 4) = lbl_8030F9D8[i] * ((cOne + phase) * cHalf);
 
-        state[0x16 + i] = (s16)((s32)(timeDelta * (f32)lbl_803DB788[i] + (f32)(s16)state[0x16 + i]));
-        state[0] = state[0x16 + i];
+        state[0x16 + i] = (s32)(timeDelta * (f32)lbl_803DB788[i] + (f32)state[0x16 + i]);
+        *(u16 *)state = state[0x16 + i];
         *(f32 *)((char *)state + 8) = *(f32 *)((char *)state + 0xc + i * 4);
 
         for (j = 0; j < 0xffff; j += 0x7fff) {
-            vec[0] = *(f32 *)((char *)state + 8) * xMul + xOff;
-            vec[1] = *(f32 *)((char *)state + 8) * yMul + yOff;
-            vec[2] = cZero;
-            state[0] += 0x7fff;
-            mathFn_80021ac8(state, vec);
-            vec[0] += *(f32 *)((char *)obj + 0xc);
-            vec[1] += *(f32 *)((char *)obj + 0x10);
-            vec[2] += *(f32 *)((char *)obj + 0x14);
-
+            params.vec[0] = *(f32 *)((char *)state + 8) * xMul + xOff;
+            params.vec[1] = *(f32 *)((char *)state + 8) * yMul + yOff;
+            params.vec[2] = cZero;
+            *(u16 *)state += 0x7fff;
+            mathFn_80021ac8(state, params.vec);
+            params.vec[0] += *(f32 *)((char *)obj + 0xc);
+            params.vec[1] += *(f32 *)((char *)obj + 0x10);
+            params.vec[2] += *(f32 *)((char *)obj + 0x14);
             params.f8 = cOne;
-            params.vec[0] = vec[0];
-            params.vec[1] = vec[1];
-            params.vec[2] = vec[2];
             spawnFlags = 0x200001;
             if (flags != 0) {
-                spawnFlags = 0x20200001;
+                spawnFlags |= 0x20000000;
             }
             (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
                 obj, 0x7ec, &params, spawnFlags, -1, 0);
@@ -1012,93 +1005,117 @@ void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *ligh
 {
     u8 args[40];
     int i;
-    int pairCount;
-    int glowCount;
-    int variant;
-    u8 *colors;
 
-    if (type != 0 && type <= 9) {
-        switch (type) {
-            case 1:
-                variant = 1;
-                pairCount = 10;
-                glowCount = 4;
-                args[0] = variant;
-                for (i = pairCount; (u8)i != 0; i--) {
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x325, origin, 0x200001, -1, args);
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x323, origin, 0x200001, -1, args);
-                }
-                for (i = glowCount; (u8)i != 0; i--) {
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x326, origin, 0x200001, -1, args);
-                }
-                break;
-            case 2:
-                variant = 2;
-                pairCount = 13;
-                glowCount = 6;
-                args[0] = variant;
-                for (i = pairCount; (u8)i != 0; i--) {
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x325, origin, 0x200001, -1, args);
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x323, origin, 0x200001, -1, args);
-                }
-                for (i = glowCount; (u8)i != 0; i--) {
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x326, origin, 0x200001, -1, args);
-                }
-                break;
-            case 3:
-                variant = 3;
-                pairCount = 30;
-                glowCount = 8;
-                args[0] = variant;
-                for (i = pairCount; (u8)i != 0; i--) {
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x325, origin, 0x200001, -1, args);
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x323, origin, 0x200001, -1, args);
-                }
-                for (i = glowCount; (u8)i != 0; i--) {
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x326, origin, 0x200001, -1, args);
-                }
-                break;
-            case 4:
-                for (i = 7; (u8)i != 0; i--) {
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x328, origin, 0x200001, -1, NULL);
-                }
-                break;
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-                args[0] = type - 1;
-                for (i = 10; (u8)i != 0; i--) {
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x323, origin, 0x200001, -1, args);
-                }
-                for (i = 4; (u8)i != 0; i--) {
-                    (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
-                        obj, 0x326, origin, 0x200001, -1, args);
-                }
-                break;
-        }
+    switch (type) {
+        case 1:
+            args[0] = 1;
+            for (i = 10; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x325, origin, 0x200001, -1, args);
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 2:
+            args[0] = 2;
+            for (i = 13; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x325, origin, 0x200001, -1, args);
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 6; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 3:
+            args[0] = 3;
+            for (i = 30; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x325, origin, 0x200001, -1, args);
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 8; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 4:
+            for (i = 7; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x328, origin, 0x200001, -1, NULL);
+            }
+            break;
+        case 5:
+            args[0] = 4;
+            for (i = 10; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 6:
+            args[0] = 5;
+            for (i = 10; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 7:
+            args[0] = 6;
+            for (i = 10; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 8:
+            args[0] = 7;
+            for (i = 10; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
+        case 9:
+            args[0] = 8;
+            for (i = 10; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x323, origin, 0x200001, -1, args);
+            }
+            for (i = 4; (u8)i != 0; i--) {
+                (*(void (*)(void *, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 8)))(
+                obj, 0x326, origin, 0x200001, -1, args);
+            }
+            break;
     }
 
     if (light != NULL) {
-        colors = &lbl_8030FA30[type * 3];
         modelLightStruct_setField50(light, 2);
         lightVecFn_8001dd88(light, *(f32 *)((char *)origin + 0xc),
                             lbl_803DF384 + *(f32 *)((char *)origin + 0x10),
                             *(f32 *)((char *)origin + 0x14));
-        modelLightStruct_setColorsA8AC(light, colors[0], colors[1], colors[2], 0xff);
-        modelLightStruct_setColors100104(light, colors[0], colors[1], colors[2], 0xff);
+        modelLightStruct_setColorsA8AC(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1], lbl_8030FA30[type * 3 + 2], 0xff);
+        modelLightStruct_setColors100104(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1], lbl_8030FA30[type * 3 + 2], 0xff);
         lightDistAttenFn_8001dc38(light, lbl_803DF394, lbl_803DF39C);
         lightSetField4D(light, 0);
         lightFn_8001db6c(light, lbl_803DF35C, 1);
