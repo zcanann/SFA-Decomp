@@ -15610,3 +15610,113 @@ void Obj_UpdateAllObjects(u8 flags)
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern int getCurMapType(void);
+extern void Obj_ResetObjectSystem(void);
+extern u8 lbl_802CABF8[];
+extern s16 lbl_803DB44C[2];
+extern f32 lbl_803DE8BC;
+extern f32 lbl_803DE8C0;
+extern f32 lbl_803DE8C4;
+extern f32 lbl_803DE8C8;
+extern f32 fn_80293E80(f32);
+extern f32 sin(f32);
+extern int getCurUiDll(void);
+extern u8 *Camera_GetCurrentViewSlot(void);
+extern int lbl_803DCB70;
+extern void playerUpdateFn_8005649c(void);
+
+typedef struct CharSpawn {
+    s16 id;
+    u8 unk2;
+    u8 unk3;
+    u8 unk4;
+    u8 unk5;
+    u8 unk6;
+    u8 unk7;
+    f32 x;
+    f32 y;
+    f32 z;
+    int unk14;
+} CharSpawn;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void mapSetupPlayer(void)
+{
+    u8 *base;
+    int playerNo;
+    int mapType;
+    u8 *obj;
+    f32 *pos;
+    f32 x, y, z;
+    int uiDll;
+    u8 *view;
+    u8 *vp;
+    CharSpawn spawn;
+
+    base = (u8 *)&lbl_802CABF8;
+    mapType = getCurMapType();
+    if (mapType == 2 || mapType == 3) {
+        OSReport((char *)(base + 0x70));
+        Obj_ResetObjectSystem();
+    } else {
+        playerNo = (*(u8 (**)(void))(*gMapEventInterface + 0x74))();
+        pos = (*(f32 *(**)(void))(*gMapEventInterface + 0x90))();
+        x = pos[0];
+        y = pos[1];
+        z = pos[2];
+        obj = 0;
+        if (playerNo > -1 && mapType != 4) {
+            OSReport((char *)(base + 0x88), mapType, playerNo);
+            memset(&spawn, 0, 0x18);
+            spawn.unk14 = -1;
+            spawn.unk3 = 0;
+            spawn.unk4 = 1;
+            spawn.unk5 = 4;
+            spawn.unk6 = 0xff;
+            spawn.unk7 = 0xff;
+            spawn.id = lbl_803DB44C[playerNo];
+            spawn.unk2 = 0x18;
+            spawn.x = x;
+            spawn.y = y;
+            spawn.z = z;
+            if (getLoadedFileFlags(0) & 0x100000) {
+                OSReport((char *)(base + 0x20), -1);
+                obj = 0;
+            } else {
+                obj = loadCharacter((s16 *)&spawn, 1, -1, -1, 0, 0);
+                if (obj != 0) {
+                    Obj_RegisterObject(obj, 1);
+                    OSReport((char *)(base + 0x5c), *(int *)(obj + 0x50) + 0x91);
+                }
+            }
+        }
+        *(f32 *)(base + 8) = lbl_803DE8BC * fn_80293E80((lbl_803DE8C0 * (f32)(*(s8 *)((u8 *)pos + 0xc) << 8)) / lbl_803DE8C4) + x;
+        *(f32 *)(base + 0xc) = lbl_803DE8C8 + y;
+        *(f32 *)(base + 0x10) = lbl_803DE8BC * sin((lbl_803DE8C0 * (f32)(*(s8 *)((u8 *)pos + 0xc) << 8)) / lbl_803DE8C4) + z;
+        uiDll = getCurUiDll();
+        if ((u32)(uiDll - 2) <= 4 || uiDll == 7) {
+            (*(void (**)(u8 *, f32, f32, f32))(*(int *)gCameraInterface + 4))(obj, *(f32 *)(base + 8), *(f32 *)(base + 0xc), *(f32 *)(base + 0x10));
+            (*(void (**)(int, int, int, int, int, int, int))(*(int *)gCameraInterface + 0x1c))(0x57, 0, 3, 0, 0, 0, 0);
+            (*(void (**)(u8 *, int))(*(int *)gCameraInterface + 0x28))(obj, 0);
+            (*(void (**)(int))(*(int *)gCameraInterface + 8))(1);
+        } else {
+            (*(void (**)(u8 *, f32, f32, f32))(*(int *)gCameraInterface + 4))(obj, *(f32 *)(base + 8), *(f32 *)(base + 0xc), *(f32 *)(base + 0x10));
+            (*(void (**)(int, int, int, int, u8 *, int, int))(*(int *)gCameraInterface + 0x1c))(0x42, 0, 0, 0x20, base, 0, 0xff);
+            (*(void (**)(int))(*(int *)gCameraInterface + 8))(1);
+        }
+        vp = Camera_GetCurrentViewSlot();
+        view = (*(u8 *(**)(void))(*(int *)gCameraInterface + 0xc))();
+        *(f32 *)(vp + 0xc) = *(f32 *)(view + 0x18);
+        *(f32 *)(vp + 0x10) = *(f32 *)(view + 0x1c);
+        *(f32 *)(vp + 0x14) = *(f32 *)(view + 0x20);
+        (*(void (**)(u8 *))(*(int *)gTitleMenuControlInterface + 0x10))(obj);
+        lbl_803DCB70 = 0;
+        playerUpdateFn_8005649c();
+    }
+}
+#pragma dont_inline reset
+#pragma pop
