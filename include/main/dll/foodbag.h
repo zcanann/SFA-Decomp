@@ -24,7 +24,7 @@ void dll_8B_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
                  f32 *param_6);
 void dll_8C_func03(int param_1,int param_2,int param_3,uint param_4);
 void dll_8D_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_4);
-void dll_8E_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_4);
+void dll_8E_func03(int param_1,int param_2,int param_3,uint param_4);
 void dll_8F_func03(int param_1,int param_2,int param_3,uint param_4);
 void dll_90_func03(int param_1,int param_2,int param_3,uint param_4);
 
