@@ -1891,6 +1891,7 @@ void screenTransition_screenFade(int duration, int type)
     lbl_803DD42E = 1;
 }
 
+#pragma opt_common_subs off
 void screenTransition_Do(int duration, int type)
 {
     if (lbl_803DD424 <= lbl_803E0560 || lbl_803E0558 == lbl_803DD420) {
@@ -1901,6 +1902,7 @@ void screenTransition_Do(int duration, int type)
     lbl_803DD42C = (u8)type;
     lbl_803DD42E = 0;
 }
+#pragma opt_common_subs reset
 
 void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3)
 {
