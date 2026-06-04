@@ -3681,29 +3681,32 @@ void allocLotsOfTextures(void) {
     testAndSet_onlyUseHeap3(saved);
 }
 #pragma scheduling reset
+#pragma scheduling off
 void shadowCreate(int *obj) {
     int *cam;
     f32 dx, dy, dz, dist;
-    if (lbl_803DCF78 >= 0x12c) return;
-    *(int **)(lbl_8038E2A8 + lbl_803DCF78 * 0xc) = obj;
-    cam = lbl_803DCFE8;
-    dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)cam + 0xc);
-    dy = *(f32 *)((char *)obj + 0x1c) - *(f32 *)((char *)cam + 0x10);
-    dz = *(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)cam + 0x14);
-    dist = sqrtf(dx * dx + dy * dy + dz * dz);
-    *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) =
-        *(f32 *)(*(int *)((char *)obj + 0x64)) / dist;
-    if (*(s16 *)(*(int *)((char *)obj + 0x50) + 0x48) == 2) {
-        *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 1;
-        if (*(u8 *)(*(int *)((char *)obj + 0x50) + 0x5f) & 4) {
-            *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 2;
-            *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) = Ydchuff_803DED80[4];
+    if (lbl_803DCF78 < 0x12c) {
+        *(int **)(lbl_8038E2A8 + lbl_803DCF78 * 0xc) = obj;
+        cam = lbl_803DCFE8;
+        dx = *(f32 *)((char *)obj + 0x18) - *(f32 *)((char *)cam + 0xc);
+        dy = *(f32 *)((char *)obj + 0x1c) - *(f32 *)((char *)cam + 0x10);
+        dz = *(f32 *)((char *)obj + 0x20) - *(f32 *)((char *)cam + 0x14);
+        dist = sqrtf(dx * dx + dy * dy + dz * dz);
+        *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) =
+            *(f32 *)(*(int *)((char *)obj + 0x64)) / dist;
+        if (*(s16 *)(*(int *)((char *)obj + 0x50) + 0x48) == 2) {
+            *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 1;
+            if (*(u8 *)(*(int *)((char *)obj + 0x50) + 0x5f) & 4) {
+                *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 2;
+                *(f32 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 4) = Ydchuff_803DED80[4];
+            }
+        } else {
+            *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 0;
         }
-    } else {
-        *(u8 *)(lbl_8038E2A8 + lbl_803DCF78 * 0xc + 8) = 0;
+        lbl_803DCF78 = lbl_803DCF78 + 1;
     }
-    lbl_803DCF78 = lbl_803DCF78 + 1;
 }
+#pragma scheduling reset
 
 void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f2) {
     s8 buf[0x1c];
