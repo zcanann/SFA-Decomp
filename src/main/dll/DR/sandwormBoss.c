@@ -4558,3 +4558,93 @@ int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int seqStreamLookupFn_8007fff8(void *table, int count, int key);
+extern u8  lbl_80322A48[];
+extern u8  lbl_80322A68[];
+extern f32 lbl_803E41C8;
+extern f32 lbl_803E41CC;
+extern f32 lbl_803E4168;
+extern f32 lbl_803E416C;
+
+typedef struct {
+    int i0;
+    f32 f4;
+    f32 f8;
+    f32 fc;
+    u8  b10;
+    u8  b11;
+    u8  pad12[6];
+} WindLiftSlot;
+
+typedef struct {
+    int duration;
+    int seqId;
+    int delay;
+    int gamebit;
+    int pad10;
+    int timer;
+    WindLiftSlot slots[14];
+    int pad168;
+    int pad16c;
+    f32 liftHeight;
+    u8  _f0 : 1;
+    u8  active : 1;
+    u8  _f2 : 6;
+} WindLiftSub;
+
+/* EN v1.0 0x8019D2AC  size: 708b  windlift_init: look up the lift's sequence
+ * timings, scale its rise height from the def byte, arm it from the
+ * gamebits and clear all 14 rider slots. */
+#pragma scheduling off
+#pragma peephole off
+void windlift_init(int* obj, u8* def)
+{
+    int i;
+    WindLiftSub* sub = *(WindLiftSub**)((char*)obj + 0xb8);
+    sub->seqId = *(s16*)(def + 0x1e);
+    sub->duration = seqStreamLookupFn_8007fff8(lbl_80322A48, 4, sub->seqId);
+    sub->gamebit = seqStreamLookupFn_8007fff8(lbl_80322A68, 3, sub->seqId);
+    if (sub->gamebit == 0) {
+        sub->gamebit = -1;
+    }
+    if (sub->duration == 0) {
+        sub->duration = 100;
+    }
+    sub->delay = *(s16*)(def + 0x1c);
+    sub->timer = 0;
+    if (*(s8*)(def + 0x19) != 0) {
+        sub->liftHeight = lbl_803E41C8 * (f32)*(s8*)(def + 0x19);
+    } else {
+        sub->liftHeight = lbl_803E41CC;
+    }
+    *(f32*)((char*)obj + 8) = (*(f32*)(*(char**)((char*)obj + 0x50) + 4) * sub->liftHeight) / lbl_803E41CC;
+    if (GameBit_Get(0x57) != 0 || sub->duration >= 0xa) {
+        sub->timer = 0x3c;
+    }
+    sub->active = 1;
+    if (sub->gamebit != -1) {
+        if (GameBit_Get(sub->gamebit) != 0) {
+            sub->timer = 0x3c;
+        } else {
+            sub->active = 0;
+            *(u8*)((char*)obj + 0x36) = 0;
+        }
+    }
+    {
+        f32 v2 = lbl_803E416C;
+        f32 v1 = lbl_803E4168;
+        for (i = 0; i < 14; i++) {
+            sub->slots[i].b10 = 0;
+            sub->slots[i].b10 &= ~0xf1;
+            sub->slots[i].f4 = v1;
+            sub->slots[i].fc = v2;
+            sub->slots[i].f8 = v2;
+            sub->slots[i].i0 = 0;
+            sub->slots[i].b11 = 0;
+        }
+    }
+    ObjGroup_AddObject(obj, 0x49);
+}
+#pragma peephole reset
+#pragma scheduling reset
