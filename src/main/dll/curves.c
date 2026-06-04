@@ -33,12 +33,12 @@ extern int FUN_800620e8();
 extern int objBboxFn_800640cc(void *hitOut,void *pos,f32 radius,int mode,void *bbox,int obj,
                               int p7,int p8,int p9,int p10);
 extern int FUN_800632f4();
-extern void fn_80063368(int obj);
+extern void fn_80063368(short *obj);
 extern int hitDetectFn_80065e50(int obj,f32 x,f32 y,f32 z,void *out,int p5,int p6);
 extern undefined FUN_80063a68();
 extern undefined4 FUN_80063a74();
-extern void hitDetectFn_80067958(int obj,void *startPoints,void *endPoints,int pointCount,
-                                 void *hitResults,int arg6);
+extern int hitDetectFn_80067958(int obj,void *startPoints,void *endPoints,int pointCount,
+                                void *hitResults,int arg6);
 extern undefined4 FUN_800723a0();
 extern void PSVECSubtract(f32 *a,f32 *b,f32 *out);
 extern f32 PSVECMag(f32 *v);
@@ -2629,6 +2629,7 @@ void fn_800E58FC(int obj,f32 *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 void fn_800E5CBC(short *param_1,int param_2)
 {
   float fVar1;
@@ -2686,6 +2687,7 @@ void fn_800E5CBC(short *param_1,int param_2)
   }
   return;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2700,6 +2702,7 @@ void fn_800E5CBC(short *param_1,int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 void fn_800E5E38(int obj,f32 *state)
 {
   u32 hitCount;
@@ -2729,6 +2732,7 @@ void fn_800E5E38(int obj,f32 *state)
     hitIndex--;
   }
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -3176,7 +3180,7 @@ void curves_updateLocalPointTransforms(int obj,u32 *state)
       point[0x47] = point[0x3b];
       point += 3;
     }
-    fn_80063368(obj);
+    fn_80063368((short *)obj);
   }
 }
 
@@ -3244,7 +3248,7 @@ void dll_15_func0A(int obj,u32 *state)
       point[0x47] = point[0x3b];
       point += 3;
     }
-    fn_80063368(obj);
+    fn_80063368((short *)obj);
   }
 }
 
@@ -3397,374 +3401,326 @@ LAB_800e6f44:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_15_func08(ushort *curveObj,uint *state,uint updateValue,f32 step)
-{
-  byte bVar1;
-  float fVar2;
-  float fVar3;
-  ushort *puVar4;
-  ushort uVar6;
-  undefined uVar7;
-  uint uVar5;
-  uint *puVar8;
-  float *pfVar9;
-  uint *puVar10;
-  int iVar11;
-  int iVar12;
-  int iVar13;
-  double dVar14;
-  ushort local_1e8;
-  ushort local_1e6;
-  ushort local_1e4;
-  float local_1e0;
-  undefined4 local_1dc;
-  undefined4 local_1d8;
-  undefined4 local_1d4;
-  ushort local_1d0;
-  ushort local_1ce;
-  ushort local_1cc;
-  float local_1c8;
-  undefined4 local_1c4;
-  undefined4 local_1c0;
-  undefined4 local_1bc;
-  ushort local_1b8;
-  ushort local_1b6;
-  ushort local_1b4;
-  float local_1b0;
-  undefined4 local_1ac;
-  undefined4 local_1a8;
-  undefined4 local_1a4;
-  ushort local_1a0;
-  ushort local_19e;
-  ushort local_19c;
-  float local_198;
-  undefined4 local_194;
-  undefined4 local_190;
-  undefined4 local_18c;
-  ushort local_188;
-  ushort local_186;
-  ushort local_184;
-  float local_180;
-  undefined4 local_17c;
-  undefined4 local_178;
-  undefined4 local_174;
-  float afStack_170 [16];
-  float afStack_130 [16];
-  float afStack_f0 [16];
-  float afStack_b0 [16];
-  float afStack_70 [26];
+extern f32 lbl_803E0668;
+extern f32 lbl_803E068C;
+extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
 
-  fVar3 = lbl_803E130C;
-  puVar4 = curveObj;
-  puVar8 = state;
-  if ((*puVar8 & 0x4000000) == 0) goto LAB_800e78f0;
-  dVar14 = (double)(float)((double)lbl_803E130C / step);
-  puVar8[0x36] = updateValue;
-  fVar2 = lbl_803E12E8;
-  if (*(char *)((int)puVar8 + 0x25b) == '\x01') {
+void dll_15_func08(short *curveObj,int *state,uint updateValue,f32 step)
+{
+  int flags;
+  f32 *pf;
+  int *walk;
+  int byteOff;
+  int outOff;
+  int i;
+  int linked;
+  f32 invStep;
+  f32 one;
+  f32 zero;
+  f32 m1a[16];
+  f32 m1b[16];
+  f32 m2b[16];
+  f32 m2a[16];
+  f32 mE[16];
+  CurvesTransformScratch s1a;
+  CurvesTransformScratch s1b;
+  CurvesTransformScratch s2b;
+  CurvesTransformScratch s2a;
+  CurvesTransformScratch sE;
+
+  if ((*state & 0x4000000) == 0) {
+    return;
+  }
+  one = lbl_803E068C;
+  invStep = one / step;
+  state[0x36] = 0;
+  if (*(char *)((u8 *)state + 0x25b) == 1) {
     sCurvesCachedHitObj = 0;
     sCurvesCachedHitCount = 0;
-    *(f32 *)(puVar8 + 0x68) = lbl_803E12E8;
-    *(f32 *)(puVar8 + 0x69) = fVar3;
-    *(f32 *)(puVar8 + 0x6a) = fVar2;
-    if (((*puVar8 & 8) != 0) && ((*(byte *)(puVar8 + 0x97) & 0xf) != 0)) {
-      local_188 = *puVar4;
-      if ((*puVar8 & 0x20) == 0) {
-        local_186 = puVar4[1];
-        local_184 = puVar4[2];
-      }
-      else {
-        local_186 = 0;
-        local_184 = 0;
-      }
-      local_180 = lbl_803E130C;
-      local_17c = *(undefined4 *)(puVar4 + 6);
-      local_178 = *(undefined4 *)(puVar4 + 8);
-      local_174 = *(undefined4 *)(puVar4 + 10);
-      setMatrixFromObjectPos(afStack_70,&local_188);
-      iVar13 = 0;
-      iVar11 = 0;
-      puVar10 = puVar8;
-      for (iVar12 = 0; iVar12 < (int)(*(byte *)(puVar8 + 0x97) & 0xf); iVar12 = iVar12 + 1) {
-        pfVar9 = (float *)(puVar8[0x37] + iVar11);
-        Matrix_TransformPoint(afStack_70,(double)*pfVar9,(double)pfVar9[1],
-                              (double)pfVar9[2],(float *)(puVar10 + 0x39),
-                              (float *)(puVar8 + iVar13 + 0x3a),
-                              (float *)(puVar8 + iVar13 + 0x3b));
-        puVar10 = puVar10 + 3;
-        iVar11 = iVar11 + 0xc;
-        iVar13 = iVar13 + 3;
-      }
-      curves_updateLocalPointCollision((int)puVar4,(f32 *)puVar8);
-      iVar11 = *(int *)(puVar4 + 0x18);
-      if (iVar11 == 0) {
-        *(undefined4 *)(puVar4 + 0xc) = *(undefined4 *)(puVar4 + 6);
-        *(undefined4 *)(puVar4 + 0xe) = *(undefined4 *)(puVar4 + 8);
-        *(undefined4 *)(puVar4 + 0x10) = *(undefined4 *)(puVar4 + 10);
-      }
-      else if ((*(int *)(iVar11 + 0x58) == 0) || (uVar6 = ObjHits_IsObjectEnabled(iVar11), uVar6 == 0)) {
-        FUN_800068f8((double)*(float *)(puVar4 + 6),(double)*(float *)(puVar4 + 8),
-                     (double)*(float *)(puVar4 + 10),(float *)(puVar4 + 0xc),(float *)(puVar4 + 0xe)
-                     ,(float *)(puVar4 + 0x10),*(int *)(puVar4 + 0x18));
-      }
-      else {
-        Matrix_TransformPoint((float *)(*(int *)(*(int *)(puVar4 + 0x18) + 0x58) +
-                                         (*(byte *)(*(int *)(*(int *)(puVar4 + 0x18) +
-                                                            0x58) +
-                                                   0x10c) +
-                                          2) *
-                                             0x40),
-                              (double)*(float *)(puVar4 + 6),
-                              (double)*(float *)(puVar4 + 8),
-                              (double)*(float *)(puVar4 + 10),(float *)(puVar4 + 0xc),
-                              (float *)(puVar4 + 0xe),(float *)(puVar4 + 0x10));
-      }
-    }
-    if (((*puVar8 & 0x2000) != 0) && ((*(byte *)(puVar8 + 0x97) & 0xf0) != 0)) {
-      local_1a0 = *puVar4;
-      if ((*puVar8 & 0x20) == 0) {
-        local_19e = puVar4[1];
-        local_19c = puVar4[2];
-      }
-      else {
-        local_19e = 0;
-        local_19c = 0;
-      }
-      local_198 = lbl_803E130C;
-      local_194 = *(undefined4 *)(puVar4 + 0xc);
-      local_190 = *(undefined4 *)(puVar4 + 0xe);
-      local_18c = *(undefined4 *)(puVar4 + 0x10);
-      setMatrixFromObjectPos(afStack_b0,&local_1a0);
-      iVar12 = 0;
-      iVar11 = 0;
-      puVar10 = puVar8;
-      for (iVar13 = 0; iVar13 < (int)(uint)*(byte *)(puVar8 + 0x97) >> 4; iVar13 = iVar13 + 1) {
-        pfVar9 = (float *)(puVar8[1] + iVar11);
-        Matrix_TransformPoint(afStack_b0,(double)*pfVar9,(double)pfVar9[1],
-                              (double)pfVar9[2],(float *)(puVar10 + 2),
-                              (float *)(puVar8 + iVar12 + 3),
-                              (float *)(puVar8 + iVar12 + 4));
-        *(undefined *)((int)puVar8 + iVar13 + 0xb8) = 0xff;
-        puVar10 = puVar10 + 3;
-        iVar11 = iVar11 + 0xc;
-        iVar12 = iVar12 + 3;
-      }
-      if ((*puVar8 & 2) != 0) {
-        uVar7 = FUN_80063a68();
-        *(undefined *)(puVar8 + 0x98) = uVar7;
-        *(char *)((int)puVar8 + 0x261) = (char)*(undefined2 *)(puVar8 + 0x35);
-        *(undefined *)((int)puVar8 + 0x25f) = 0;
-      }
-      bVar1 = *(byte *)((int)puVar8 + 0x262);
-      if (bVar1 == 3) {
-          curves_countRandomPoints((int)puVar4,puVar8);
-      }
-      else if (bVar1 < 3) {
-        if (bVar1 == 1) {
-          fn_800E56A4((int)puVar4,(f32 *)puVar8);
+    zero = lbl_803E0668;
+    *(f32 *)(state + 0x68) = zero;
+    *(f32 *)(state + 0x69) = one;
+    *(f32 *)(state + 0x6a) = zero;
+    if (((*state & 8) != 0) && ((*(byte *)(state + 0x97) & 0xf) != 0)) {
+      s1a.angles[0] = curveObj[0];
+      if ((*state & 0x20) != 0) {
+        s1a.angles[1] = 0;
+        s1a.angles[2] = 0;
         }
         else {
-LAB_800e7350:
-          fn_800E58FC((int)puVar4,(f32 *)puVar8);
+        s1a.angles[1] = curveObj[1];
+        s1a.angles[2] = curveObj[2];
+        }
+      s1a.scale = lbl_803E068C;
+      s1a.x = *(f32 *)(curveObj + 6);
+      s1a.y = *(f32 *)(curveObj + 8);
+      s1a.z = *(f32 *)(curveObj + 10);
+      setMatrixFromObjectPos(m1a, &s1a);
+      outOff = 0;
+      i = 0;
+      walk = state;
+      byteOff = 0;
+      for (; i < (int)(*(byte *)(state + 0x97) & 0xf); i++) {
+        pf = (f32 *)(state[0x37] + byteOff);
+        Matrix_TransformPoint(m1a, pf[0], pf[1], pf[2], (f32 *)(walk + 0x39),
+                              (f32 *)(state + (outOff + 1) + 0x39), (f32 *)(state + (outOff + 2) + 0x39));
+        walk = walk + 3;
+        byteOff = byteOff + 0xc;
+        outOff = outOff + 3;
+      }
+      curves_updateLocalPointCollision((int)curveObj, (f32 *)state);
+      if (*(void **)(curveObj + 0x18) != NULL) {
+        if ((*(void **)(*(int *)(curveObj + 0x18) + 0x58) != NULL) &&
+            (ObjHits_IsObjectEnabled(*(int *)(curveObj + 0x18)) != 0)) {
+          Matrix_TransformPoint((f32 *)(*(int *)(*(int *)(curveObj + 0x18) + 0x58)) +
+                                    (*(byte *)(*(int *)(*(int *)(curveObj + 0x18) + 0x58) + 0x10c) + 2) * 0x10,
+                                *(f32 *)(curveObj + 6), *(f32 *)(curveObj + 8), *(f32 *)(curveObj + 10),
+                                (f32 *)(curveObj + 0xc), (f32 *)(curveObj + 0xe), (f32 *)(curveObj + 0x10));
+        }
+        else {
+          Obj_TransformLocalPointToWorld(*(f32 *)(curveObj + 6), *(f32 *)(curveObj + 8),
+                                         *(f32 *)(curveObj + 10), (f32 *)(curveObj + 0xc),
+                                         (f32 *)(curveObj + 0xe), (f32 *)(curveObj + 0x10),
+                                         *(u32 *)(curveObj + 0x18));
         }
       }
       else {
-        if (4 < bVar1) goto LAB_800e7350;
-        *(f32 *)(puVar8 + 0x68) = *(f32 *)(puVar8 + 0x1a);
-        *(f32 *)(puVar8 + 0x69) = *(f32 *)(puVar8 + 0x1b);
-        *(f32 *)(puVar8 + 0x6a) = *(f32 *)(puVar8 + 0x1c);
-        if (((*(byte *)(puVar8 + 0x98) & 1) != 0) && (*(char *)(puVar8 + 0x2e) == '!')) {
-          *(uint *)(puVar4 + 0xc) = puVar8[2];
-          *(uint *)(puVar4 + 0xe) = puVar8[3];
-          *(uint *)(puVar4 + 0x10) = puVar8[4];
+        *(f32 *)(curveObj + 0xc) = *(f32 *)(curveObj + 6);
+        *(f32 *)(curveObj + 0xe) = *(f32 *)(curveObj + 8);
+        *(f32 *)(curveObj + 0x10) = *(f32 *)(curveObj + 10);
+      }
+    }
+    if (((*state & 0x2000) != 0) && ((*(byte *)(state + 0x97) & 0xf0) != 0)) {
+      s1b.angles[0] = curveObj[0];
+      if ((*state & 0x20) != 0) {
+        s1b.angles[1] = 0;
+        s1b.angles[2] = 0;
         }
+        else {
+        s1b.angles[1] = curveObj[1];
+        s1b.angles[2] = curveObj[2];
+        }
+      s1b.scale = lbl_803E068C;
+      s1b.x = *(f32 *)(curveObj + 0xc);
+      s1b.y = *(f32 *)(curveObj + 0xe);
+      s1b.z = *(f32 *)(curveObj + 0x10);
+      setMatrixFromObjectPos(m1b, &s1b);
+      outOff = 0;
+      i = 0;
+      walk = state;
+      byteOff = 0;
+      for (; i < (int)(uint)*(byte *)(state + 0x97) >> 4; i++) {
+        pf = (f32 *)(state[1] + byteOff);
+        Matrix_TransformPoint(m1b, pf[0], pf[1], pf[2], (f32 *)(walk + 2),
+                              (f32 *)(state + (outOff + 1) + 2), (f32 *)(state + (outOff + 2) + 2));
+        *(char *)((i + 0xb8) + (int)state) = -1;
+        walk = walk + 3;
+        byteOff = byteOff + 0xc;
+        outOff = outOff + 3;
       }
-      if ((*puVar8 & 0x100) != 0) {
-        fn_800E5E38((int)puVar4,(f32 *)puVar8);
+      if ((*state & 2) != 0) {
+        *(char *)(state + 0x98) = hitDetectFn_80067958((int)curveObj, state + 0xe, state + 2,
+                                                       (int)(uint)*(byte *)(state + 0x97) >> 4,
+                                                       state + 0x1a, 0);
+        *(char *)((u8 *)state + 0x261) = *(s16 *)((u8 *)state + 0xd4);
+        *(u8 *)((u8 *)state + 0x25f) = 0;
       }
-      if ((*puVar8 & 0x80) != 0) {
-        fn_800E5CBC((short *)puVar4,(int)puVar8);
+      switch (*(byte *)((u8 *)state + 0x262)) {
+      case 3:
+        curves_countRandomPoints((int)curveObj, (uint *)state);
+        break;
+      case 1:
+        fn_800E56A4((int)curveObj, (f32 *)state);
+        break;
+      case 4:
+        *(f32 *)(state + 0x68) = *(f32 *)(state + 0x1a);
+        *(f32 *)(state + 0x69) = *(f32 *)(state + 0x1b);
+        *(f32 *)(state + 0x6a) = *(f32 *)(state + 0x1c);
+        if (((*(char *)(state + 0x98) & 1) != 0) && (*(char *)(state + 0x2e) == 0x21)) {
+          *(f32 *)(curveObj + 0xc) = *(f32 *)(state + 2);
+          *(f32 *)(curveObj + 0xe) = *(f32 *)(state + 3);
+          *(f32 *)(curveObj + 0x10) = *(f32 *)(state + 4);
+        }
+        break;
+      default:
+        fn_800E58FC((int)curveObj, (f32 *)state);
+        break;
       }
-      if ((*puVar8 & 1) != 0) {
-        fn_800E5F1C((int)puVar4,(f32 *)puVar8);
+      if ((*state & 0x100) != 0) {
+        fn_800E5E38((int)curveObj, (f32 *)state);
       }
-      FUN_80003494((uint)(puVar8 + 0xe),(uint)(puVar8 + 2),
-                   ((int)(uint)*(byte *)(puVar8 + 0x97) >> 4) * 0xc);
+      if ((*state & 0x80) != 0) {
+        fn_800E5CBC((short *)curveObj, (int)state);
+      }
+      if ((*state & 1) != 0) {
+        fn_800E5F1C((int)curveObj, (f32 *)state);
+      }
+      memcpy(state + 0xe, state + 2, ((int)(uint)*(byte *)(state + 0x97) >> 4) * 0xc);
     }
-    if ((*puVar8 & 0x800) != 0) {
-      if (0x3400 < (short)puVar4[1]) {
-        puVar4[1] = 0x3400;
+    if ((*state & 0x800) != 0) {
+      if (0x3400 < curveObj[1]) {
+        curveObj[1] = 0x3400;
       }
-      if ((short)puVar4[1] < -0x3400) {
-        puVar4[1] = 0xcc00;
-      }
-    }
-    if ((*puVar8 & 0x1000) != 0) {
-      if (0x3400 < (short)puVar4[2]) {
-        puVar4[2] = 0x3400;
-      }
-      if ((short)puVar4[2] < -0x3400) {
-        puVar4[2] = 0xcc00;
+      if (curveObj[1] < -0x3400) {
+        curveObj[1] = -0x3400;
       }
     }
-    if ((*puVar8 & 0x40000) == 0) {
-      iVar11 = *(int *)(puVar4 + 0x2a);
-      if ((iVar11 == 0) || ((*(ushort *)(iVar11 + 0x60) & 1) == 0)) {
-        *(float *)(puVar4 + 0x14) =
-             (float)(dVar14 * (double)(*(float *)(puVar4 + 0xe) - *(float *)(puVar4 + 0x48)));
+    if ((*state & 0x1000) != 0) {
+      if (0x3400 < curveObj[2]) {
+        curveObj[2] = 0x3400;
+      }
+      if (curveObj[2] < -0x3400) {
+        curveObj[2] = -0x3400;
+      }
+    }
+    if ((*state & 0x40000) == 0) {
+      linked = *(int *)(curveObj + 0x2a);
+      if ((linked == 0) || ((*(ushort *)(linked + 0x60) & 1) == 0)) {
+        *(f32 *)(curveObj + 0x14) =
+            (f32)((f64)invStep * (f64)(*(f32 *)(curveObj + 0xe) - *(f32 *)(curveObj + 0x48)));
       }
       else {
-        *(float *)(puVar4 + 0x14) =
-             (float)(dVar14 * (double)(*(float *)(puVar4 + 0xe) - *(float *)(iVar11 + 0x20)));
-        if (*(float *)(*(int *)(puVar4 + 0x2a) + 0x20) < *(float *)(puVar4 + 0xe)) {
-          *(float *)(puVar4 + 0x14) = lbl_803E12E8;
+        *(f32 *)(curveObj + 0x14) =
+            (f32)((f64)invStep * (f64)(*(f32 *)(curveObj + 0xe) - *(f32 *)(linked + 0x20)));
+        if (*(f32 *)(*(int *)(curveObj + 0x2a) + 0x20) < *(f32 *)(curveObj + 0xe)) {
+          *(f32 *)(curveObj + 0x14) = lbl_803E0668;
         }
       }
     }
   }
-  else if (*(char *)((int)puVar8 + 0x25b) == '\x02') {
-    curves_preparePointCollisionFrame((int)puVar4,puVar8);
-    uVar5 = *puVar8;
-    if (((uVar5 & 0x4000000) != 0) && ((uVar5 & 8) != 0)) {
-      local_1d0 = *puVar4;
-      if ((uVar5 & 0x20) == 0) {
-        local_1ce = puVar4[1];
-        local_1cc = puVar4[2];
+  else if (*(char *)((u8 *)state + 0x25b) == 2) {
+    curves_preparePointCollisionFrame((int)curveObj, (u32 *)state);
+    flags = *state;
+    if (((flags & 0x4000000) != 0) && ((flags & 8) != 0)) {
+      s2a.angles[0] = curveObj[0];
+      if ((flags & 0x20) != 0) {
+        s2a.angles[1] = 0;
+        s2a.angles[2] = 0;
+        }
+        else {
+        s2a.angles[1] = curveObj[1];
+        s2a.angles[2] = curveObj[2];
+        }
+      s2a.scale = lbl_803E068C;
+      s2a.x = *(f32 *)(curveObj + 6);
+      s2a.y = *(f32 *)(curveObj + 8);
+      s2a.z = *(f32 *)(curveObj + 10);
+      setMatrixFromObjectPos(m2a, &s2a);
+      outOff = 0;
+      i = 0;
+      walk = state;
+      byteOff = 0;
+      for (; i < (int)(*(byte *)(state + 0x97) & 0xf); i++) {
+        pf = (f32 *)(state[0x37] + byteOff);
+        Matrix_TransformPoint(m2a, pf[0], pf[1], pf[2], (f32 *)(walk + 0x39),
+                              (f32 *)(state + (outOff + 1) + 0x39), (f32 *)(state + (outOff + 2) + 0x39));
+        walk = walk + 3;
+        byteOff = byteOff + 0xc;
+        outOff = outOff + 3;
       }
-      else {
-        local_1ce = 0;
-        local_1cc = 0;
+      walk = state;
+      for (i = 0; i < (int)(*(byte *)(state + 0x97) & 0xf); i++) {
+        walk[0x45] = walk[0x39];
+        *(f32 *)(walk + 0x46) = lbl_803E068C + *(f32 *)(walk + 0x3a);
+        walk[0x47] = walk[0x3b];
+        walk = walk + 3;
       }
-      local_1c8 = lbl_803E130C;
-      local_1c4 = *(undefined4 *)(puVar4 + 6);
-      local_1c0 = *(undefined4 *)(puVar4 + 8);
-      local_1bc = *(undefined4 *)(puVar4 + 10);
-      setMatrixFromObjectPos(afStack_130,&local_1d0);
-      iVar12 = 0;
-      iVar11 = 0;
-      puVar10 = puVar8;
-      for (iVar13 = 0; fVar3 = lbl_803E130C, iVar13 < (int)(*(byte *)(puVar8 + 0x97) & 0xf);
-          iVar13 = iVar13 + 1) {
-        pfVar9 = (float *)(puVar8[0x37] + iVar11);
-        Matrix_TransformPoint(afStack_130,(double)*pfVar9,(double)pfVar9[1],
-                              (double)pfVar9[2],(float *)(puVar10 + 0x39),
-                              (float *)(puVar8 + iVar12 + 0x3a),
-                              (float *)(puVar8 + iVar12 + 0x3b));
-        puVar10 = puVar10 + 3;
-        iVar11 = iVar11 + 0xc;
-        iVar12 = iVar12 + 3;
-      }
-      puVar10 = puVar8;
-      for (iVar11 = 0; iVar11 < (int)(*(byte *)(puVar8 + 0x97) & 0xf); iVar11 = iVar11 + 1) {
-        *(f32 *)(puVar10 + 0x45) = *(f32 *)(puVar10 + 0x39);
-        *(f32 *)(puVar10 + 0x46) = fVar3 + *(f32 *)(puVar10 + 0x3a);
-        *(f32 *)(puVar10 + 0x47) = *(f32 *)(puVar10 + 0x3b);
-        puVar10 = puVar10 + 3;
-      }
-      FUN_80061fc8((int)puVar4);
+      fn_80063368(curveObj);
     }
-    if ((*puVar8 & 0x2000) != 0) {
-      local_1b8 = *puVar4;
-      if ((*puVar8 & 0x20) == 0) {
-        local_1b6 = puVar4[1];
-        local_1b4 = puVar4[2];
+    if ((*state & 0x2000) != 0) {
+      s2b.angles[0] = curveObj[0];
+      if ((*state & 0x20) != 0) {
+        s2b.angles[1] = 0;
+        s2b.angles[2] = 0;
+        }
+        else {
+        s2b.angles[1] = curveObj[1];
+        s2b.angles[2] = curveObj[2];
+        }
+      s2b.scale = lbl_803E068C;
+      s2b.x = *(f32 *)(curveObj + 0xc);
+      s2b.y = *(f32 *)(curveObj + 0xe);
+      s2b.z = *(f32 *)(curveObj + 0x10);
+      setMatrixFromObjectPos(m2b, &s2b);
+      outOff = 0;
+      i = 0;
+      walk = state;
+      byteOff = 0;
+      for (; i < (int)(uint)*(byte *)(state + 0x97) >> 4; i++) {
+        pf = (f32 *)(state[1] + byteOff);
+        Matrix_TransformPoint(m2b, pf[0], pf[1], pf[2], (f32 *)(walk + 2),
+                              (f32 *)(state + (outOff + 1) + 2), (f32 *)(state + (outOff + 2) + 2));
+        *(char *)((i + 0xb8) + (int)state) = -1;
+        walk = walk + 3;
+        byteOff = byteOff + 0xc;
+        outOff = outOff + 3;
       }
-      else {
-        local_1b6 = 0;
-        local_1b4 = 0;
-      }
-      local_1b0 = lbl_803E130C;
-      local_1ac = *(undefined4 *)(puVar4 + 0xc);
-      local_1a8 = *(undefined4 *)(puVar4 + 0xe);
-      local_1a4 = *(undefined4 *)(puVar4 + 0x10);
-      setMatrixFromObjectPos(afStack_f0,&local_1b8);
-      iVar12 = 0;
-      iVar11 = 0;
-      puVar10 = puVar8;
-      for (iVar13 = 0; iVar13 < (int)(uint)*(byte *)(puVar8 + 0x97) >> 4; iVar13 = iVar13 + 1) {
-        pfVar9 = (float *)(puVar8[1] + iVar11);
-        Matrix_TransformPoint(afStack_f0,(double)*pfVar9,(double)pfVar9[1],
-                              (double)pfVar9[2],(float *)(puVar10 + 2),
-                              (float *)(puVar8 + iVar12 + 3),
-                              (float *)(puVar8 + iVar12 + 4));
-        *(undefined *)((int)puVar8 + iVar13 + 0xb8) = 0xff;
-        puVar10 = puVar10 + 3;
-        iVar11 = iVar11 + 0xc;
-        iVar12 = iVar12 + 3;
-      }
-      FUN_80003494((uint)(puVar8 + 0xe),(uint)(puVar8 + 2),
-                   ((int)(uint)*(byte *)(puVar8 + 0x97) >> 4) * 0xc);
-      if ((*puVar8 & 1) != 0) {
-        fn_800E5F1C((int)puVar4,(f32 *)puVar8);
+      memcpy(state + 0xe, state + 2, ((int)(uint)*(byte *)(state + 0x97) >> 4) * 0xc);
+      if ((*state & 1) != 0) {
+        fn_800E5F1C((int)curveObj, (f32 *)state);
       }
     }
   }
   else {
-    curves_preparePointCollisionFrame((int)puVar4,puVar8);
-    uVar5 = *puVar8;
-    if (((uVar5 & 0x4000000) != 0) && ((uVar5 & 8) != 0)) {
-      local_1e8 = *puVar4;
-      if ((uVar5 & 0x20) == 0) {
-        local_1e6 = puVar4[1];
-        local_1e4 = puVar4[2];
+    curves_preparePointCollisionFrame((int)curveObj, (u32 *)state);
+    flags = *state;
+    if (((flags & 0x4000000) != 0) && ((flags & 8) != 0)) {
+      sE.angles[0] = curveObj[0];
+      if ((flags & 0x20) != 0) {
+        sE.angles[1] = 0;
+        sE.angles[2] = 0;
+        }
+        else {
+        sE.angles[1] = curveObj[1];
+        sE.angles[2] = curveObj[2];
+        }
+      sE.scale = lbl_803E068C;
+      sE.x = *(f32 *)(curveObj + 6);
+      sE.y = *(f32 *)(curveObj + 8);
+      sE.z = *(f32 *)(curveObj + 10);
+      setMatrixFromObjectPos(mE, &sE);
+      outOff = 0;
+      i = 0;
+      walk = state;
+      byteOff = 0;
+      for (; i < (int)(*(byte *)(state + 0x97) & 0xf); i++) {
+        pf = (f32 *)(state[0x37] + byteOff);
+        Matrix_TransformPoint(mE, pf[0], pf[1], pf[2], (f32 *)(walk + 0x39),
+                              (f32 *)(state + (outOff + 1) + 0x39), (f32 *)(state + (outOff + 2) + 0x39));
+        walk = walk + 3;
+        byteOff = byteOff + 0xc;
+        outOff = outOff + 3;
       }
-      else {
-        local_1e6 = 0;
-        local_1e4 = 0;
+      walk = state;
+      for (i = 0; i < (int)(*(byte *)(state + 0x97) & 0xf); i++) {
+        walk[0x45] = walk[0x39];
+        *(f32 *)(walk + 0x46) = lbl_803E068C + *(f32 *)(walk + 0x3a);
+        walk[0x47] = walk[0x3b];
+        walk = walk + 3;
       }
-      local_1e0 = lbl_803E130C;
-      local_1dc = *(undefined4 *)(puVar4 + 6);
-      local_1d8 = *(undefined4 *)(puVar4 + 8);
-      local_1d4 = *(undefined4 *)(puVar4 + 10);
-      setMatrixFromObjectPos(afStack_170,&local_1e8);
-      iVar12 = 0;
-      iVar11 = 0;
-      puVar10 = puVar8;
-      for (iVar13 = 0; fVar3 = lbl_803E130C, iVar13 < (int)(*(byte *)(puVar8 + 0x97) & 0xf);
-          iVar13 = iVar13 + 1) {
-        pfVar9 = (float *)(puVar8[0x37] + iVar11);
-        Matrix_TransformPoint(afStack_170,(double)*pfVar9,(double)pfVar9[1],
-                              (double)pfVar9[2],(float *)(puVar10 + 0x39),
-                              (float *)(puVar8 + iVar12 + 0x3a),
-                              (float *)(puVar8 + iVar12 + 0x3b));
-        puVar10 = puVar10 + 3;
-        iVar11 = iVar11 + 0xc;
-        iVar12 = iVar12 + 3;
-      }
-      puVar10 = puVar8;
-      for (iVar11 = 0; iVar11 < (int)(*(byte *)(puVar8 + 0x97) & 0xf); iVar11 = iVar11 + 1) {
-        *(f32 *)(puVar10 + 0x45) = *(f32 *)(puVar10 + 0x39);
-        *(f32 *)(puVar10 + 0x46) = fVar3 + *(f32 *)(puVar10 + 0x3a);
-        *(f32 *)(puVar10 + 0x47) = *(f32 *)(puVar10 + 0x3b);
-        puVar10 = puVar10 + 3;
-      }
-      FUN_80061fc8((int)puVar4);
+      fn_80063368(curveObj);
     }
   }
-  iVar11 = *(int *)(puVar4 + 0x18);
-  if (iVar11 == 0) {
-    *(undefined4 *)(puVar4 + 6) = *(undefined4 *)(puVar4 + 0xc);
-    *(undefined4 *)(puVar4 + 8) = *(undefined4 *)(puVar4 + 0xe);
-    *(undefined4 *)(puVar4 + 10) = *(undefined4 *)(puVar4 + 0x10);
-  }
-  else if ((*(int *)(iVar11 + 0x58) == 0) || (uVar6 = ObjHits_IsObjectEnabled(iVar11), uVar6 == 0)) {
-    FUN_800068f4((double)*(float *)(puVar4 + 0xc),(double)*(float *)(puVar4 + 0xe),
-                 (double)*(float *)(puVar4 + 0x10),(float *)(puVar4 + 6),(float *)(puVar4 + 8),
-                 (float *)(puVar4 + 10),*(int *)(puVar4 + 0x18));
+  if (*(void **)(curveObj + 0x18) != NULL) {
+    if ((*(void **)(*(int *)(curveObj + 0x18) + 0x58) != NULL) &&
+        (ObjHits_IsObjectEnabled(*(int *)(curveObj + 0x18)) != 0)) {
+      outOff = (uint)*(byte *)(*(int *)(*(int *)(curveObj + 0x18) + 0x58) + 0x10c) * 0x10;
+      Matrix_TransformPoint((f32 *)(*(int *)(*(int *)(curveObj + 0x18) + 0x58)) + outOff,
+                            *(f32 *)(curveObj + 0xc), *(f32 *)(curveObj + 0xe), *(f32 *)(curveObj + 0x10),
+                            (f32 *)(curveObj + 6), (f32 *)(curveObj + 8), (f32 *)(curveObj + 10));
+    }
+    else {
+      Obj_TransformWorldPointToLocal(*(f32 *)(curveObj + 0xc), *(f32 *)(curveObj + 0xe),
+                                     *(f32 *)(curveObj + 0x10), (f32 *)(curveObj + 6),
+                                     (f32 *)(curveObj + 8), (f32 *)(curveObj + 10),
+                                     *(u32 *)(curveObj + 0x18));
+    }
   }
   else {
-    Matrix_TransformPoint((float *)(*(int *)(*(int *)(puVar4 + 0x18) + 0x58) +
-                                     (uint)*(byte *)(*(int *)(*(int *)(puVar4 + 0x18) +
-                                                        0x58) +
-                                               0x10c) *
-                                         0x40),
-                          (double)*(float *)(puVar4 + 0xc),
-                          (double)*(float *)(puVar4 + 0xe),
-                          (double)*(float *)(puVar4 + 0x10),(float *)(puVar4 + 6),
-                          (float *)(puVar4 + 8),(float *)(puVar4 + 10));
+    *(f32 *)(curveObj + 6) = *(f32 *)(curveObj + 0xc);
+    *(f32 *)(curveObj + 8) = *(f32 *)(curveObj + 0xe);
+    *(f32 *)(curveObj + 10) = *(f32 *)(curveObj + 0x10);
   }
-LAB_800e78f0:
-  return;
 }
 
 /*
