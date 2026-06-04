@@ -7699,7 +7699,9 @@ void FUN_80017b20(undefined8 param_1,double param_2,double param_3,undefined8 pa
 
 /* Pattern wrappers. */
 void doNothing_8001F678(void) {}
+#pragma dont_inline on
 void doNothing_startOfFrame(void) {}
+#pragma dont_inline reset
 void doNothing_onSaveSelectScreenExit(void) {}
 int return1_800202BC(void) { return 0x1; }
 int return0_8002969C(void) { return 0x0; }
@@ -8238,9 +8240,11 @@ int gameTextFn_80019b14(void) {
     return lbl_803DC9E8;
 }
 
+#pragma dont_inline on
 void gameTextSetDrawFunc(void *fn) {
     gameTextDrawFunc = fn;
 }
+#pragma dont_inline reset
 
 void lightSetField2FB(u8 *p, u8 v) {
     p[0x2fb] = v;
@@ -16920,6 +16924,72 @@ void gameUpdate(void)
             lbl_803DCA3B = 0;
         }
     }
+}
+#pragma dont_inline reset
+#pragma pop
+
+extern void voxmaps_updateTimers(void);
+extern void viewportEffectFn_8000e380(void);
+extern void loadDataFiles(void);
+extern void audioUpdate(void);
+extern void Sfx_UpdateLoopedObjectSounds(void);
+extern void debugPrintDraw(int a);
+extern void drawRect(f32 a, f32 b, int w, int h);
+extern void objRenderFn_8003b8f4(int obj, int b, int c, int d, int e, f32 a);
+extern void objRenderFuzz(void);
+extern void textFn_8001b46c(int a);
+extern void doNothing_endOfFrame(void);
+extern int doQueuedLoads();
+extern f32 lbl_803DE7A8;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void gameLoop(void)
+{
+    waitNextFrame();
+    if (lbl_803DCA3D == 1) {
+        padUpdate();
+        voxmaps_updateTimers();
+        gameUpdate();
+        viewportEffectFn_8000e380();
+        doNothing_startOfFrame();
+        loadDataFiles();
+        audioUpdate();
+        Sfx_UpdateLoopedObjectSounds();
+    }
+    debugPrintDraw(0);
+    (*(void (**)(int, int, int))(*(int *)gScreenTransitionInterface + 4))(0, 0, 0);
+    if (lbl_803DCA3D == 1) {
+        if (lbl_803DCA48 != 0) {
+            if (lbl_803DCA46 == 0) {
+                int *p;
+                int i;
+
+                drawRect(lbl_803DE7B0, lbl_803DE7B0, 0x280, 0x1e0);
+                i = 0;
+                p = (int *)&lbl_803DCAE8;
+                for (; i < lbl_803DCA48; i++) {
+                    objRenderFn_8003b8f4(*p, 0, 0, 0, 0, lbl_803DE7A8);
+                    if (*(s16 *)(*p + 0x46) == 0x882 || *(s16 *)(*p + 0x46) == 0x887) {
+                        objRenderFuzz();
+                    }
+                    p++;
+                }
+                curUiDllDraw(0, 0, 0, 0);
+            }
+            dvdCheckError();
+            gameTextRun();
+        }
+        textFn_8001b46c(0);
+        doNothing_endOfFrame();
+        gameTextSetDrawFunc(0);
+    }
+    GXFlush_(1, 1);
+    Obj_FlushDeferredFreeList();
+    mmFreeTick(1);
+    doQueuedLoads();
 }
 #pragma dont_inline reset
 #pragma pop
