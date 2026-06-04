@@ -896,80 +896,75 @@ int RomCurve_func11(RomCurveDef *curve,int typeFilter,int actionFilter,int *outC
 #pragma peephole off
 int RomCurve_getRandomLinkedOfTypes(RomCurveDef *curve,int *types,int typeCount,int *previousLinkId)
 {
-  int candidates[7];
   int candidateCount;
   int linkIndex;
   int typeIndex;
   int low;
   int high;
   int mid;
-  int removeCount;
-  int *candidate;
-  u32 linkId;
+  int top;
+  int j;
+  int linkId;
   RomCurveDef *linkedCurve;
+  int candidates[7];
 
   if (curve == NULL) {
-    candidates[0] = ROMCURVE_LINK_ID_NONE;
-  } else {
-    candidateCount = 0;
-    for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++) {
-      linkId = curve->linkIds[linkIndex];
-      if ((s32)linkId > -1) {
-        if ((s32)linkId < 0) {
-          linkedCurve = NULL;
-        } else {
-          low = 0;
-          high = nRomCurves - 1;
-          while (low <= high) {
-            mid = (high + low) >> 1;
-            linkedCurve = romCurves[mid];
-            if (linkId > linkedCurve->id) {
-              low = mid + 1;
-            } else if (linkId < linkedCurve->id) {
-              high = mid - 1;
-            } else {
-              goto foundLinkedCurve;
-            }
+    return -1;
+  }
+  candidateCount = 0;
+  top = nRomCurves - 1;
+  for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++) {
+    linkId = curve->linkIds[linkIndex];
+    if (linkId > -1) {
+      if (linkId < 0) {
+        linkedCurve = NULL;
+      } else {
+        high = top;
+        low = 0;
+        while (high >= low) {
+          mid = (high + low) >> 1;
+          linkedCurve = romCurves[mid];
+          if ((u32)linkId > linkedCurve->id) {
+            low = mid + 1;
+          } else if ((u32)linkId < linkedCurve->id) {
+            high = mid - 1;
+          } else {
+            goto foundLinkedCurve;
           }
-          linkedCurve = NULL;
         }
+        linkedCurve = NULL;
+      }
 
 foundLinkedCurve:
-        for (typeIndex = 0; typeIndex < typeCount; typeIndex++) {
-          if (linkedCurve->type == types[typeIndex]) {
-            candidates[candidateCount] = linkId;
-            candidateCount++;
-            typeIndex = typeCount;
-          }
+      for (typeIndex = 0; typeIndex < typeCount; typeIndex++) {
+        if (linkedCurve->type == types[typeIndex]) {
+          candidates[candidateCount] = linkId;
+          candidateCount++;
+          typeIndex = typeCount;
         }
       }
-    }
-
-    if (candidateCount == 0) {
-      candidates[0] = ROMCURVE_LINK_ID_NONE;
-    } else if (candidateCount == 1) {
-      *previousLinkId = curve->id;
-    } else if (candidateCount < 2) {
-      candidates[0] = ROMCURVE_LINK_ID_NONE;
-    } else {
-      for (linkIndex = 0; linkIndex < candidateCount; linkIndex++) {
-        candidate = &candidates[linkIndex];
-        if (*previousLinkId == *candidate) {
-          removeCount = (candidateCount - 1) - linkIndex;
-          while (linkIndex < candidateCount - 1) {
-            *candidate = candidate[1];
-            candidate++;
-            linkIndex++;
-          }
-          linkIndex += removeCount - 1;
-          candidateCount--;
-        }
-      }
-      *previousLinkId = curve->id;
-      candidates[0] = candidates[randomGetRange(0,candidateCount - 1)];
     }
   }
-  return candidates[0];
+  if (candidateCount == 0) {
+    return -1;
+  }
+  if (candidateCount == 1) {
+    *previousLinkId = curve->id;
+    return candidates[0];
+  }
+  if (candidateCount < 2) {
+    return -1;
+  }
+  for (j = 0; j < candidateCount; j++) {
+    if (*previousLinkId == candidates[j]) {
+      for (; j < candidateCount - 1; j++) {
+        candidates[j] = candidates[j + 1];
+      }
+      candidateCount--;
+    }
+  }
+  *previousLinkId = curve->id;
+  return candidates[randomGetRange(0, candidateCount - 1)];
 }
 #pragma peephole reset
 #pragma scheduling reset
