@@ -4162,3 +4162,199 @@ void fn_80039B54(int obj, s16 *curve, s16 *state, f32 val)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 val)
+{
+    extern f32 lbl_803DE9E4;
+    extern f32 lbl_803DE9E8;
+    extern u8 framesThisStep;
+    int masked;
+    int flag;
+
+    masked = (curve[13] >> 8) & 0xff;
+    if (val > lbl_803DE9E4) {
+        flag = 1;
+    } else {
+        flag = 0;
+    }
+    if (masked != flag) {
+        curve[13] = (s16)(flag << 8);
+    }
+
+    switch ((u8)curve[13]) {
+    case 0:
+        if (*(s8 *)curve != 0) {
+            curve[13] = (s16)(flag << 8 | 3);
+            curve[11] = state[1];
+            *(f32 *)((char *)curve + 0x10) = lbl_803DE99C;
+        } else {
+            curve[13] = (s16)(flag << 8 | 1);
+            curve[14] = (s16)randomGetRange(100, 400);
+            curve[10] = state[1];
+        }
+        break;
+    case 1:
+        curve[14] -= framesThisStep;
+        if (curve[14] < 0) {
+            int old = curve[10];
+            curve[10] = (s16)randomGetRange(0, 0x1fff);
+            if (old > 0) {
+                if (old - curve[10] < 0xe38) {
+                    curve[10] += 0xe38;
+                }
+                if (curve[10] > 0x1fff) {
+                    curve[10] = 0x1fff;
+                }
+                curve[10] = -curve[10];
+            } else {
+                if (curve[10] - old < 0xe38) {
+                    curve[10] += 0xe38;
+                }
+                if (curve[10] > 0x1fff) {
+                    curve[10] = 0x1fff;
+                }
+            }
+            curve[13] = (s16)(flag << 8 | 2);
+            curve[14] = 0;
+            curve[11] = state[1];
+        }
+        break;
+    case 2:
+        if (*(s8 *)curve != 0 || fn_800399C0(curve, state) != 0) {
+            curve[13] = (s16)(flag << 8);
+        }
+        break;
+    case 3:
+        if (*(s8 *)curve == 0) {
+            curve[13] = (s16)(flag << 8);
+        } else {
+            int angle;
+            int n;
+            angle = getAngle(*(f32 *)(obj + 0xc) - *(f32 *)((char *)curve + 4),
+                             *(f32 *)(obj + 0x14) - *(f32 *)((char *)curve + 0xc));
+            curve[10] = (s16)(angle - (u16)*(s16 *)obj);
+            if (curve[10] > 0x8000) {
+                curve[10] = (s16)(curve[10] - 0xffff);
+            }
+            if (curve[10] < -0x8000) {
+                curve[10] = (s16)(curve[10] + 0xffff);
+            }
+            n = curve[10];
+            if (n > 0x1fff || n < -0x1fff) {
+                curve[13] = (s16)(flag << 8);
+            } else {
+                f32 t = *(f32 *)((char *)curve + 0x10);
+                f32 lo = lbl_803DE9A4;
+                if (t > lo) {
+                    f32 nv;
+                    state[1] = (s32)(t * (f32)(curve[11] - n) + (f32)n);
+                    nv = -(lbl_803DE9E8 * timeDelta - *(f32 *)((char *)curve + 0x10));
+                    *(f32 *)((char *)curve + 0x10) = nv;
+                    if (nv < lo) {
+                        *(f32 *)((char *)curve + 0x10) = lo;
+                    }
+                } else {
+                    state[1] = n;
+                }
+            }
+        }
+        break;
+    }
+
+    if (state[1] < -0x1fff) {
+        state[1] = -0x1fff;
+    } else if (state[1] > 0x1fff) {
+        state[1] = 0x1fff;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
+{
+    extern f32 sqrtf(f32);
+    extern f32 lbl_803DE9EC;
+    s16 ang[2];
+    s16 *found;
+    void *m;
+
+    found = NULL;
+    m = *(void **)(obj + 0x50);
+    if (m != NULL) {
+        int entryIdx = 0, vecOffset = 0;
+        int n = *(u8 *)((char *)m + 0x5a);
+        int j;
+        for (j = 0; j < n; j++) {
+            u8 *entries = *(u8 **)((char *)m + 0x10);
+            int idx = (s8)*(s8 *)(obj + 0xad) + entryIdx + 1;
+            if ((int)entries[idx] != 0xff && entries[entryIdx] == 0) {
+                found = (s16 *)((char *)*(void **)(obj + 0x6c) + vecOffset);
+            }
+            entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+            vecOffset += 0x12;
+        }
+    }
+    if (found != NULL) {
+        if (tgt == NULL) {
+            found[1] = found[1] >> 1;
+            found[0] = found[0] >> 1;
+        } else {
+            f32 dx = *(f32 *)(obj + 0xc) - *(f32 *)(tgt + 0xc);
+            f32 dy = *(f32 *)(obj + 0x14) - *(f32 *)(tgt + 0x14);
+            f32 dz = *(f32 *)(obj + 0x10) - *(f32 *)(tgt + 0x10);
+            f32 dist = sqrtf(dx * dx + dy * dy);
+            s16 limA;
+            int minB;
+            int negA;
+            char *p;
+            s16 *ap;
+            int i;
+
+            ang[0] = (s16)getAngle(dx, dy) - (u16)*(s16 *)obj;
+            if (ang[0] > 0x8000) {
+                ang[0] = (s16)(ang[0] - 0xffff);
+            }
+            if (ang[0] < -0x8000) {
+                ang[0] = (s16)(ang[0] + 0xffff);
+            }
+            if (inv != 0) {
+                ang[0] = (s16)(ang[0] + 0x8000);
+            }
+            ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
+
+            limA = (s16)(s32)(lbl_803DE9EC * (f32)a);
+            p = p3;
+            ap = ang;
+            minB = -(s16)(s32)(lbl_803DE9EC * (f32)b);
+            negA = -limA;
+            for (i = 0; i < 2; i++) {
+                s16 v;
+                *ap = *ap - *(s16 *)(p + 0x14);
+                v = *ap;
+                if (v < minB) {
+                    v = (s16)minB;
+                } else if ((s16)(s32)(lbl_803DE9EC * (f32)b) < v) {
+                    v = (s16)(s32)(lbl_803DE9EC * (f32)b);
+                }
+                *ap = v;
+                *(s16 *)(p + 0x14) = *(s16 *)(p + 0x14) + *ap;
+                if (*(s16 *)(p + 0x14) > limA) {
+                    *(s16 *)(p + 0x14) = limA;
+                }
+                if (*(s16 *)(p + 0x14) < negA) {
+                    *(s16 *)(p + 0x14) = (s16)negA;
+                }
+                p += 0x30;
+                ap++;
+            }
+            found[1] = *(s16 *)(p3 + 0x14);
+            found[0] = *(s16 *)(p3 + 0x44);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
