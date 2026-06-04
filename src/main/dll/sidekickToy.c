@@ -104,72 +104,478 @@ extern f32 lbl_803E326C;
 extern f32 lbl_803E3270;
 extern f32 lbl_803E3280;
 
+typedef struct {
+    s16 rx, ry, rz, pad;
+    f32 scale;
+    f32 x, y, z;
+} TrickyPosRot;
+
+typedef struct {
+    f32 dx, dy, dz;
+    u8 pad0[2];
+    s16 dAngle;
+    u8 pad1[3];
+    s8 events[8];
+    s8 eventCount;
+} TrickyMoveResult;
+
+extern void *memcpy(void *dst, void *src, int n);
+extern void characterDoEyeAnims(short *obj, void *p);
+extern void fn_8003B0D0(short *obj, int b, void *c, int d);
+extern void trickyFn_80148d8c(short *obj, int state);
+extern void Tricky_resumeAfterCommand(short *obj, int state);
+extern void Tricky_applyFloorResponse(short *obj, int state);
+extern int ObjAnim_SetCurrentMove(short *obj, int moveId, f32 progress, int flags);
+extern int ObjAnim_AdvanceCurrentMove(short *obj, f32 scale, f32 dt, void *events);
+extern int ObjAnim_SampleRootCurvePhase(short *obj, f32 dist, f32 *out);
+extern void setMatrixFromObjectPos(f32 *mtx, void *rec);
+extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern f32 sqrtf(f32);
+extern f32 powfBitEstimate(f32 x, f32 y);
+extern void objMove(short *obj, f32 dx, f32 dy, f32 dz);
+extern void fn_8014FF20(short *obj, int state);
+extern void fn_8014FF24(short *obj, int state);
+extern void fn_80150910(short *obj, int state);
+extern void fn_80150EDC(short *obj, int state);
+extern void fn_8015165C(short *obj, int state);
+extern void fn_80152040(short *obj, int state);
+extern void fn_80152514(short *obj, int state);
+extern void fn_80152B90(short *obj, int state);
+extern void fn_80153040(short *obj, int state);
+extern void fn_80153248(short *obj, int state);
+extern void fn_8015383C(short *obj, int state);
+extern void fn_80153BFC(short *obj, int state);
+extern void fn_80153E0C(short *obj, int state);
+extern void fn_801540A0(short *obj, int state);
+extern void fn_80154584(short *obj, int state);
+extern void fn_80155884(short *obj, int state);
+extern void fn_80155948(short *obj, int state);
+extern void fn_801557D4(short *obj, int state);
+extern void fn_80155F20(short *obj, int state);
+extern void fn_80156010(short *obj, int state);
+extern void fn_8015625C(short *obj, int state);
+extern void fn_8015652C(short *obj, int state);
+extern void fn_80156B0C(short *obj, int state);
+extern void fn_80156C34(short *obj, int state);
+extern void fn_80156DA0(short *obj, int state);
+extern void fn_80157004(short *obj, int state);
+extern void fn_80157558(short *obj, int state);
+extern void fn_80158494(short *obj, int state);
+extern void fn_80158C2C(short *obj, int state);
+extern void fn_80159284(short *obj, int state);
+extern void fn_80159958(short *obj, int state);
+extern void fn_80159FCC(short *obj, int state);
+extern void fn_8015A924(short *obj, int state);
+extern void smallbasket_applyReactionState(short *obj, int state);
+extern void mediumbasket_enterWhirlpoolGroup(short *obj, int state);
+extern void mediumbasket_leaveWhirlpoolGroup(short *obj, int state);
+extern f32 lbl_803E256C;
+extern f32 lbl_803E2570;
+extern f32 lbl_803E2574;
+extern f32 lbl_803E2578;
+extern f32 lbl_803E257C;
+extern f32 lbl_803E25CC;
+extern f32 lbl_803E25D0;
+extern f32 lbl_803E25D4;
+extern f32 timeDelta;
+extern f32 oneOverTimeDelta;
+
 /*
  * --INFO--
  *
  * Function: objAnimFn_8014a9f0
  * EN v1.0 Address: 0x8014A9F0
- * EN v1.0 Size: 360b
- * EN v1.1 Address: 0x8014ACCC
- * EN v1.1 Size: 388b
+ * EN v1.0 Size: 3720b
+ * EN v1.1 Address: 0x8014AE50
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objAnimFn_8014a9f0(int param_1,int param_2,float *param_3,float *param_4)
+#pragma scheduling off
+#pragma peephole off
+void objAnimFn_8014a9f0(short *obj, int state)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  ushort uVar7;
-  ushort uVar8;
-  float *pfVar9;
-  int local_18 [2];
-  
-  fVar2 = lbl_803E3258;
-  *param_3 = lbl_803E3258;
-  *param_4 = fVar2;
-  uVar7 = FUN_800632f4((double)*(float *)(param_1 + 0xc),(double)*(float *)(param_1 + 0x10),
-                       (double)*(float *)(param_1 + 0x14),param_1,local_18,0,0);
-  *param_3 = *(float *)(param_1 + 0x10);
-  *param_4 = *(float *)(param_1 + 0x10);
-  fVar2 = lbl_803E325C;
-  *(uint *)(param_2 + 0x2dc) = *(uint *)(param_2 + 0x2dc) & 0xefffffff;
-  fVar6 = lbl_803E31FC;
-  *(float *)(param_2 + 0x1b8) = lbl_803E31FC;
-  *(byte *)(param_2 + 0x264) = *(byte *)(param_2 + 0x264) & 0xef;
-  fVar4 = fVar2;
-  for (uVar8 = 0; uVar8 < uVar7; uVar8 = uVar8 + 1) {
-    pfVar9 = *(float **)(local_18[0] + (uint)uVar8 * 4);
-    fVar1 = *pfVar9;
-    fVar5 = fVar1 - *(float *)(param_1 + 0x10);
-    fVar3 = fVar5;
-    if (fVar5 < fVar6) {
-      fVar3 = -fVar5;
-    }
-    if (*(char *)(pfVar9 + 5) == '\x0e') {
-      if (fVar3 < fVar4) {
-        *(float *)(param_2 + 0x1b8) = fVar5;
-        *(byte *)(param_2 + 0x264) = *(byte *)(param_2 + 0x264) | 0x10;
-        *param_4 = **(float **)(local_18[0] + (uint)uVar8 * 4);
-        fVar4 = fVar3;
-        if (lbl_803E3234 < *(float *)(param_2 + 0x1b8)) {
-          *(uint *)(param_2 + 0x2dc) = *(uint *)(param_2 + 0x2dc) | 0x10100000;
-        }
+  f32 vy;
+  f32 dz;
+  f32 dx;
+  f32 dy;
+  uint flags;
+  int mode;
+  int i;
+  f32 v;
+  f32 c;
+  f32 outY;
+  f32 phase;
+  TrickyPosRot rec;
+  TrickyMoveResult res;
+  f32 mtx[16];
+
+  memcpy((void *)(state + 0x2c4), (void *)(state + 0x2b8), 0xc);
+  memcpy((void *)(state + 0x2b8), obj + 0x12, 0xc);
+  if ((*(uint *)(state + 0x2e4) & 0x400) != 0) {
+    characterDoEyeAnims(obj, (void *)(state + 0x26c));
+  }
+  if ((*(void **)(state + 0x29c) != 0) && ((*(uint *)(state + 0x2e4) & 0x800) != 0)) {
+    fn_8003B0D0(obj, *(int *)(state + 0x29c), (void *)(state + 0x26c), 0x19);
+  }
+  *(u8 *)(state + 0x2f0) = *(u8 *)(state + 0x2ef);
+  flags = *(uint *)(state + 0x2dc);
+  if ((flags & 0x800) != 0) {
+    trickyFn_80148d8c(obj, state);
+  }
+  else if ((flags & 0x1000) != 0) {
+    Tricky_resumeAfterCommand(obj, state);
+  }
+  else if ((flags & 0x20000000) != 0) {
+    if ((flags & 0x400) != 0) {
+      *(u8 *)(state + 0x2ef) = 3;
+      switch (obj[0x23]) {
+      case 0x11: case 0x13a: case 0x5b7: case 0x5b8: case 0x5b9: case 0x5e1: case 0x7a6:
+        fn_8015165C(obj, state);
+        break;
+      case 0xd8: case 0x281:
+        fn_80152040(obj, state);
+        break;
+      case 0x613:
+        fn_80152514(obj, state);
+        break;
+      case 0x642:
+        fn_80152B90(obj, state);
+        break;
+      case 0x3fe: case 0x7c6:
+        fn_80153248(obj, state);
+        break;
+      case 0x58b:
+        fn_80153BFC(obj, state);
+        break;
+      case 0x369:
+        fn_801540A0(obj, state);
+        break;
+      case 0x251:
+        fn_80154870(obj, state);
+        break;
+      case 0x25d:
+        fn_80155948(obj, state);
+        break;
+      case 0x457:
+        fn_80156010(obj, state);
+        break;
+      case 0x4d7:
+        fn_8015625C(obj, state);
+        break;
+      case 0x458:
+        fn_80156B0C(obj, state);
+        break;
+      case 0x851:
+        mediumbasket_enterWhirlpoolGroup(obj, state);
+        break;
+      case 0x842: case 0x84b:
+        fn_8015A924(obj, state);
+        break;
+      case 0x4ac:
+        fn_80157558(obj, state);
+        break;
+      case 0x427:
+        fn_8014FF24(obj, state);
+        break;
+      case 0x6a2: case 0x6a3: case 0x6a4: case 0x6a5:
+        fn_80159284(obj, state);
+        break;
+      case 0x7c8:
+        fn_80159958(obj, state);
+        break;
+      case 0x7c7:
+      default:
+        fn_8014FF24(obj, state);
+        break;
       }
     }
-    else if (fVar3 < fVar2) {
-      *param_3 = fVar1;
-      *(byte *)(param_2 + 0x264) = *(byte *)(param_2 + 0x264) | 0x10;
-      fVar2 = fVar3;
+    else {
+      *(u8 *)(state + 0x2ef) = 4;
+      switch (obj[0x23]) {
+      case 0x11: case 0x13a: case 0x5b7: case 0x5b8: case 0x5b9: case 0x5e1: case 0x7a6:
+        fn_80150EDC(obj, state);
+        break;
+      case 0xd8: case 0x281:
+        fn_80152040(obj, state);
+        break;
+      case 0x613:
+        fn_80152514(obj, state);
+        break;
+      case 0x642:
+        fn_80152B90(obj, state);
+        break;
+      case 0x3fe: case 0x7c6:
+        fn_80153248(obj, state);
+        break;
+      case 0x58b:
+        fn_80153BFC(obj, state);
+        break;
+      case 0x369:
+        fn_801540A0(obj, state);
+        break;
+      case 0x251:
+        fn_80154870(obj, state);
+        break;
+      case 0x25d:
+        fn_80155884(obj, state);
+        break;
+      case 0x457:
+        fn_80156010(obj, state);
+        break;
+      case 0x4d7:
+        fn_8015625C(obj, state);
+        break;
+      case 0x458:
+        fn_80156B0C(obj, state);
+        break;
+      case 0x851:
+        mediumbasket_enterWhirlpoolGroup(obj, state);
+        break;
+      case 0x842: case 0x84b:
+        fn_8015A924(obj, state);
+        break;
+      case 0x4ac:
+        fn_80157004(obj, state);
+        break;
+      case 0x427:
+        fn_8014FF20(obj, state);
+        break;
+      case 0x6a2: case 0x6a3: case 0x6a4: case 0x6a5:
+        fn_80158C2C(obj, state);
+        break;
+      case 0x7c8:
+        fn_80159FCC(obj, state);
+        break;
+      case 0x7c7:
+      default:
+        fn_8014FF20(obj, state);
+        break;
+      }
     }
   }
-  return;
+  else if ((flags & 0x100) != 0) {
+    *(u8 *)(state + 0x2ef) = 2;
+    if (((*(uint *)(state + 0x2dc) & 0x100) != 0) && ((*(uint *)(state + 0x2e0) & 0x100) == 0)) {
+      int moveId = *(u8 *)(state + 0x322);
+      *(f32 *)(state + 0x308) = lbl_803E256C / (lbl_803E2570 * *(f32 *)(state + 0x31c));
+      *(u8 *)(state + 0x323) = 1;
+      ObjAnim_SetCurrentMove(obj, moveId, lbl_803E2574, 0x10);
+      if (*(void **)(obj + 0x2a) != 0) {
+        *(u8 *)(*(int *)(obj + 0x2a) + 0x70) = 0;
+      }
+    }
+    if ((*(uint *)(state + 0x2dc) & 0x40000000) != 0) {
+      *(f32 *)(state + 0x308) = lbl_803E2578;
+      *(u8 *)(state + 0x323) = 0;
+      ObjAnim_SetCurrentMove(obj, 0, lbl_803E2574, 0);
+      if (*(void **)(obj + 0x2a) != 0) {
+        *(u8 *)(*(int *)(obj + 0x2a) + 0x70) = 0;
+      }
+      *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) & ~0x100;
+      *(u8 *)(obj + 0x1b) = 0xff;
+    }
+    else {
+      *(u8 *)(obj + 0x1b) = (u8)(int)(lbl_803E257C * *(f32 *)(obj + 0x4c));
+      obj[3] = obj[3] & ~0x4000;
+    }
+  }
+  else {
+    *(u8 *)(state + 0x2ef) = 5;
+    switch (obj[0x23]) {
+    case 0x11: case 0x13a: case 0x5b7: case 0x5b8: case 0x5b9: case 0x5e1: case 0x7a6:
+      fn_80150910(obj, state);
+      break;
+    case 0xd8: case 0x281:
+      fn_80152040(obj, state);
+      break;
+    case 0x613:
+      fn_80152514(obj, state);
+      break;
+    case 0x642:
+      fn_80152B90(obj, state);
+      break;
+    case 0x3fe: case 0x7c6:
+      fn_80153040(obj, state);
+      break;
+    case 0x58b:
+      fn_8015383C(obj, state);
+      break;
+    case 0x369:
+      fn_80153E0C(obj, state);
+      break;
+    case 0x251:
+      fn_80154584(obj, state);
+      break;
+    case 0x25d:
+      fn_801557D4(obj, state);
+      break;
+    case 0x457:
+      fn_80155F20(obj, state);
+      break;
+    case 0x4d7:
+      fn_8015652C(obj, state);
+      break;
+    case 0x458:
+      fn_80156C34(obj, state);
+      break;
+    case 0x851:
+      mediumbasket_leaveWhirlpoolGroup(obj, state);
+      break;
+    case 0x842: case 0x84b:
+      smallbasket_applyReactionState(obj, state);
+      break;
+    case 0x4ac:
+      fn_80156DA0(obj, state);
+      break;
+    case 0x427:
+      fn_8014FF20(obj, state);
+      break;
+    case 0x6a2: case 0x6a3: case 0x6a4: case 0x6a5:
+      fn_80158494(obj, state);
+      break;
+    case 0x7c8:
+      fn_80159958(obj, state);
+      break;
+    case 0x7c7:
+    default:
+      fn_8014FF20(obj, state);
+      break;
+    }
+  }
+  if (*(u8 *)(state + 0x2ef) != *(u8 *)(state + 0x2f0)) {
+    *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) | 0x80000000;
+  }
+  else {
+    *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) & 0x7fffffff;
+  }
+  res.eventCount = 0;
+  if (ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(state + 0x308), timeDelta, &res) != 0) {
+    *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) | 0x40000000;
+  }
+  else {
+    *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) & ~0x40000000;
+  }
+  *(u16 *)(state + 0x2f8) = 0;
+  for (i = 0; i < res.eventCount; i++) {
+    *(u16 *)(state + 0x2f8) |= 1 << res.events[i];
+  }
+  vy = lbl_803E2574;
+  if ((((*(uint *)(state + 0x2e4) & 0x20) != 0) && ((*(uint *)(state + 0x2e4) & 0x400000) == 0))
+      && (((*(uint *)(state + 0x2dc) & 0x1800) == 0) && ((*(u8 *)(state + 0x323) & 4) == 0))) {
+    vy = -(*(f32 *)(state + 0x300) * timeDelta - *(f32 *)(obj + 0x14));
+  }
+  v = *(f32 *)(obj + 0x12);
+  c = lbl_803E25CC;
+  if (v >= lbl_803E25CC) {
+    c = lbl_803E25D0;
+    if (v <= lbl_803E25D0) {
+      c = v;
+    }
+  }
+  *(f32 *)(obj + 0x12) = c;
+  v = *(f32 *)(obj + 0x14);
+  c = lbl_803E25CC;
+  if (v >= lbl_803E25CC) {
+    c = lbl_803E25D0;
+    if (v <= lbl_803E25D0) {
+      c = v;
+    }
+  }
+  *(f32 *)(obj + 0x14) = c;
+  v = *(f32 *)(obj + 0x16);
+  c = lbl_803E25CC;
+  if (v >= lbl_803E25CC) {
+    c = lbl_803E25D0;
+    if (v <= lbl_803E25D0) {
+      c = v;
+    }
+  }
+  *(f32 *)(obj + 0x16) = c;
+  mode = 0;
+  if (((*(uint *)(state + 0x2e4) & 0x80) != 0) && (*(u8 *)(state + 0x323) != 0)) {
+    mode = 1;
+  }
+  else if ((*(uint *)(state + 0x2e4) & 0x100) != 0) {
+    mode = 2;
+  }
+  else if ((*(uint *)(state + 0x2e4) & 0x10) != 0) {
+    mode = 3;
+  }
+  if (((*(uint *)(state + 0x2e4) & 0x200) != 0) && ((*(uint *)(state + 0x2dc) & 0x4010) != 0)) {
+    mode = 3;
+  }
+  if (mode == 1) {
+    f32 zero;
+    dz = lbl_803E2574;
+    dx = dz;
+    dy = dz;
+    if ((*(u8 *)(state + 0x323) & 2) != 0) {
+      dx = res.dx * oneOverTimeDelta;
+    }
+    if ((*(u8 *)(state + 0x323) & 4) != 0) {
+      dy = res.dy * oneOverTimeDelta;
+    }
+    if ((*(u8 *)(state + 0x323) & 1) != 0) {
+      dz = -res.dz * oneOverTimeDelta;
+    }
+    if ((*(u8 *)(state + 0x323) & 8) != 0) {
+      obj[0] = obj[0] + res.dAngle;
+    }
+    rec.rx = obj[0];
+    rec.ry = obj[1];
+    rec.rz = obj[2];
+    rec.scale = lbl_803E256C;
+    zero = lbl_803E2574;
+    rec.x = zero;
+    rec.y = zero;
+    rec.z = zero;
+    setMatrixFromObjectPos(mtx, &rec);
+    if ((*(u8 *)(state + 0x323) & 4) != 0) {
+      Matrix_TransformPoint(mtx, dx, dy, -dz, (f32 *)(obj + 0x12), (f32 *)(obj + 0x14), (f32 *)(obj + 0x16));
+    }
+    else {
+      Matrix_TransformPoint(mtx, dx, lbl_803E2574, -dz, (f32 *)(obj + 0x12), &outY, (f32 *)(obj + 0x16));
+    }
+  }
+  else if (mode == 2) {
+    if (ObjAnim_SampleRootCurvePhase(obj,
+            sqrtf(*(f32 *)(obj + 0x12) * *(f32 *)(obj + 0x12) + *(f32 *)(obj + 0x16) * *(f32 *)(obj + 0x16)),
+            &phase) != 0) {
+      *(f32 *)(state + 0x308) = phase;
+    }
+  }
+  else if (mode == 3) {
+    if ((*(u8 *)(state + 0x2f1) & 0x80) == 0) {
+      *(f32 *)(obj + 0x12) = *(f32 *)(obj + 0x12) * powfBitEstimate(*(f32 *)(state + 0x304), timeDelta);
+      *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) * powfBitEstimate(*(f32 *)(state + 0x304), timeDelta);
+      *(f32 *)(obj + 0x16) = *(f32 *)(obj + 0x16) * powfBitEstimate(*(f32 *)(state + 0x304), timeDelta);
+    }
+  }
+  Tricky_applyFloorResponse(obj, state);
+  if (((*(uint *)(state + 0x2e4) & 0x400000) != 0) || ((*(uint *)(state + 0x2dc) & 0x8100000) != 0)) {
+    if ((*(u8 *)(state + 0x2f1) & 0x80) == 0) {
+      objMove(obj, *(f32 *)(obj + 0x12) * timeDelta, *(f32 *)(obj + 0x14) * timeDelta,
+              *(f32 *)(obj + 0x16) * timeDelta);
+    }
+  }
+  else if ((*(uint *)(state + 0x2e4) & 0x20) != 0) {
+    f32 newY = -(lbl_803E25D4 * (*(f32 *)(state + 0x300) * (timeDelta * timeDelta))
+                 - (*(f32 *)(obj + 0x14) * timeDelta + *(f32 *)(obj + 8)));
+    if ((*(u8 *)(state + 0x2f1) & 0x80) == 0) {
+      objMove(obj, *(f32 *)(obj + 0x12) * timeDelta, newY - *(f32 *)(obj + 8),
+              *(f32 *)(obj + 0x16) * timeDelta);
+      *(f32 *)(obj + 0x14) = vy;
+    }
+  }
+  else if ((*(u8 *)(state + 0x2f1) & 0x80) == 0) {
+    objMove(obj, *(f32 *)(obj + 0x12) * timeDelta, *(f32 *)(obj + 0x14) * timeDelta,
+            *(f32 *)(obj + 0x16) * timeDelta);
+  }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1861,6 +2267,152 @@ void sidekickToy_updateCurveTargetLatch(int obj) {
     } else {
         *(u32*)(state + 0x2dc) = *(u32*)(state + 0x2dc) | 0x2000;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct {
+    f32 x, y, z;
+} TrickyVec3;
+
+typedef struct {
+    short *obj;
+    s16 dist;
+} TrickyTargetRec;
+
+extern f32 vec3f_distanceSquared(void *a, void *b);
+extern int getAngle(f32 x, f32 z);
+extern uint lbl_8031DBF0[];
+extern uint lbl_8031DC10[];
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8014C11C
+ * EN v1.0 Address: 0x8014C11C
+ * EN v1.0 Size: 956b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+#pragma scheduling off
+#pragma peephole off
+int fn_8014C11C(short *obj, u8 flags, int max, TrickyTargetRec *out, f32 radius)
+{
+  int i;
+  int n;
+  int state;
+  TrickyTargetRec *cur;
+  short **arr;
+  short ang;
+  short *tgt;
+  uint diff;
+  int b2;
+  int b4;
+  f32 d2;
+  int count;
+  TrickyVec3 d;
+  void *dp = &d;
+
+  state = *(int *)(obj + 0x5c);
+  count = 0;
+  n = 0;
+  if ((flags & 1) != 0) {
+    tgt = (short *)ObjGroup_FindNearestObject(3, obj, &radius);
+    out->obj = tgt;
+    if (tgt != 0) {
+      out->dist = radius;
+      n = 1;
+      if ((flags & 2) != 0) {
+        if ((*(uint *)(state + 0x2e4) & 0x8000) != 0) {
+          d.x = *(f32 *)(obj + 0xc) - *(f32 *)(out->obj + 0xc);
+          d.y = lbl_803E2574;
+          d.z = *(f32 *)(obj + 0x10) - *(f32 *)(out->obj + 0x10);
+        }
+        else {
+          d.x = *(f32 *)(obj + 0xc) - *(f32 *)(out->obj + 0xc);
+          d.y = *(f32 *)(obj + 0xe) - *(f32 *)(out->obj + 0xe);
+          d.z = *(f32 *)(obj + 0x10) - *(f32 *)(out->obj + 0x10);
+        }
+        diff = (u16)getAngle(-d.x, -d.z);
+        if (*(short **)(obj + 0x18) != 0) {
+          ang = (s16)(obj[0] + **(short **)(obj + 0x18));
+        }
+        else {
+          ang = obj[0];
+        }
+        diff = diff - ((int)ang & 0xffffU);
+        if (0x8000 < (int)diff) {
+          diff = diff - 0xffff;
+        }
+        if ((int)diff < -0x8000) {
+          diff = diff + 0xffff;
+        }
+        ang = (short)((diff & 0xffff) >> 0xd);
+        *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) & ~lbl_8031DBF0[ang];
+        if ((flags & 4) != 0) {
+          *(uint *)(*(int *)(out->obj + 0x5c) + 0x2dc) =
+              *(uint *)(*(int *)(out->obj + 0x5c) + 0x2dc) & ~lbl_8031DC10[ang];
+        }
+      }
+    }
+  }
+  else {
+    radius = (f32)(f64)radius * (f32)(f64)radius;
+    arr = (short **)ObjGroup_GetObjects(3, &count);
+    if (count != 0) {
+      i = 0;
+      cur = out;
+      b2 = flags & 2;
+      b4 = flags & 4;
+      for (; i < count; i++) {
+        d2 = vec3f_distanceSquared(obj + 0xc, arr[i] + 0xc);
+        if ((d2 < radius) && (arr[i] != obj)) {
+          cur->obj = arr[i];
+          cur->dist = sqrtf(d2);
+          if (b2 != 0) {
+            if ((*(uint *)(state + 0x2e4) & 0x8000) != 0) {
+              d.x = *(f32 *)(obj + 0xc) - *(f32 *)(cur->obj + 0xc);
+              d.y = lbl_803E2574;
+              d.z = *(f32 *)(obj + 0x10) - *(f32 *)(cur->obj + 0x10);
+            }
+            else {
+              d.x = *(f32 *)(obj + 0xc) - *(f32 *)(cur->obj + 0xc);
+              d.y = *(f32 *)(obj + 0xe) - *(f32 *)(cur->obj + 0xe);
+              d.z = *(f32 *)(obj + 0x10) - *(f32 *)(cur->obj + 0x10);
+            }
+            diff = (u16)getAngle(-d.x, -d.z);
+            if (*(short **)(obj + 0x18) != 0) {
+              ang = (s16)(obj[0] + **(short **)(obj + 0x18));
+            }
+            else {
+              ang = obj[0];
+            }
+            diff = diff - ((int)ang & 0xffffU);
+            if (0x8000 < (int)diff) {
+              diff = diff - 0xffff;
+            }
+            if ((int)diff < -0x8000) {
+              diff = diff + 0xffff;
+            }
+            ang = (short)((diff & 0xffff) >> 0xd);
+            *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) & ~lbl_8031DBF0[ang];
+            if (b4 != 0) {
+              *(uint *)(*(int *)(cur->obj + 0x5c) + 0x2dc) =
+                  *(uint *)(*(int *)(cur->obj + 0x5c) + 0x2dc) & ~lbl_8031DC10[ang];
+            }
+          }
+          cur++;
+          n++;
+          if (n >= max) {
+            i = count;
+          }
+        }
+      }
+    }
+  }
+  return n;
 }
 #pragma peephole reset
 #pragma scheduling reset
