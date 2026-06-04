@@ -5241,3 +5241,295 @@ void CameraModeArwing_update(u8 *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int ObjList_FindObjectById(int id);
+extern int getButtonsHeld(int pad);
+extern int getButtonsJustPressed(int pad);
+extern int padGetCX(int pad);
+extern int padGetCY(int pad);
+extern int isWidescreen(void);
+extern void fn_8012DDB8(int mode);
+extern void **gScreenTransitionInterface;
+extern f32 lbl_80319DF8[];
+extern f32 lbl_803E1A2C;
+extern f32 lbl_803E1A30;
+extern f32 lbl_803E1A34;
+extern f32 lbl_803E1A38;
+extern f32 lbl_803E1A3C;
+extern f32 lbl_803E1A44;
+extern f32 lbl_803E1A48;
+extern f32 lbl_803E1A4C;
+extern f32 lbl_803E1A50;
+extern f32 lbl_803E1A54;
+extern f32 lbl_803E1A58;
+extern f32 lbl_803E1A5C;
+extern f32 lbl_803E1A60;
+extern f32 lbl_803E1A64;
+extern f32 lbl_803E1A68;
+extern f32 lbl_803E1A6C;
+
+typedef struct {
+    u8 b7 : 1;
+    u8 rest : 7;
+} WmFlags;
+
+/* CameraModeWorldMap_update  addr=0x8010E5B4  size=0xC8C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeWorldMap_update(u8 *obj) {
+    u8 *state;
+    int objA, objB;
+    int buttons;
+    f32 spd = lbl_803E1A28;
+    int m;
+    f32 mdx, mdz;
+    s16 e;
+
+    state = *(u8 **)(obj + 0xa4);
+    objA = ObjList_FindObjectById(0x42fff);
+    objB = ObjList_FindObjectById(0x4325b);
+    buttons = (u16)getButtonsHeld(0);
+    getButtonsJustPressed(0);
+
+    switch (*(u8 *)(lbl_803DD588 + 8)) {
+    case 0:
+        if (*(u8 *)(lbl_803DD588 + 9) != *(u8 *)(lbl_803DD588 + 8)) {
+            *(u8 *)(lbl_803DD588 + 0x14) = 1;
+            (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 8))(0xc, 1);
+            *(s16 *)(lbl_803DD588 + 0xa) = 2;
+            ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 1;
+        } else {
+            s16 dYaw, dPitch;
+            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 != 0 &&
+                (*(int (**)(void))((char *)*gScreenTransitionInterface + 0x14))() != 0) {
+                fn_8012DDB8(0);
+                (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0xc))(0xc, 1);
+                ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 0;
+                *(u8 *)(*(int *)(ObjList_FindObjectById(0x43077) + 0xb8) + 0x27d) = 0;
+            }
+            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 == 0) {
+                *(s16 *)(lbl_803DD588 + 0xa) -= 1;
+                if (*(s16 *)(lbl_803DD588 + 0xa) < 1) {
+                    *(s16 *)(lbl_803DD588 + 0xa) = 1;
+                }
+                if (buttons & 8) {
+                    spd = lbl_803E1A2C * *(f32 *)lbl_803DD588;
+                }
+                if (buttons & 4) {
+                    spd = lbl_803E1A30 * *(f32 *)lbl_803DD588;
+                }
+                {
+                    f32 a, b, rate, vel;
+                    if (spd < lbl_803E1A28) {
+                        a = -spd;
+                    } else {
+                        a = spd;
+                    }
+                    vel = *(f32 *)(lbl_803DD588 + 4);
+                    if (vel < lbl_803E1A28) {
+                        b = -vel;
+                    } else {
+                        b = vel;
+                    }
+                    if (b > a) {
+                        rate = lbl_803E1A34;
+                    } else {
+                        rate = lbl_803E1A38;
+                    }
+                    *(f32 *)(lbl_803DD588 + 4) =
+                        rate * (spd - vel) + *(f32 *)(lbl_803DD588 + 4);
+                }
+                *(f32 *)lbl_803DD588 = *(f32 *)lbl_803DD588 + *(f32 *)(lbl_803DD588 + 4);
+                if (*(f32 *)lbl_803DD588 < lbl_803E1A3C) {
+                    *(f32 *)lbl_803DD588 = lbl_803E1A3C;
+                }
+                if (*(f32 *)lbl_803DD588 > lbl_803E1A40) {
+                    *(f32 *)lbl_803DD588 = lbl_803E1A40;
+                }
+                dYaw = (s16)((s8)padGetCX(0) * 3);
+                dPitch = (s16)((s8)padGetCY(0) * 3);
+                if (*(u8 *)(lbl_803DD588 + 0x14) != 0) {
+                    int f = ObjList_FindObjectById(*(int *)(lbl_803DD588 + 0x10));
+                    f32 dx = *(f32 *)(f + 0x18) - *(f32 *)(objA + 0x18);
+                    f32 dz = *(f32 *)(f + 0x20) - *(f32 *)(objA + 0x20);
+                    s16 d;
+                    f32 cur;
+                    *(s16 *)(lbl_803DD588 + 0xc) = (s16)(0x8000 - getAngle(dx, dz));
+                    d = (s16)(*(s16 *)(lbl_803DD588 + 0xc) - (u16)*(s16 *)obj);
+                    if (d > 0x8000) {
+                        d -= 0xffff;
+                    }
+                    if (d < -0x8000) {
+                        d += 0xffff;
+                    }
+                    *(s16 *)obj = *(s16 *)obj + d / *(u8 *)(lbl_803DD588 + 0x14);
+                    *(s16 *)(lbl_803DD588 + 0xc) =
+                        (s16)(0x47d0 - getAngle(sqrtf(dx * dx + dz * dz),
+                                                *(f32 *)(f + 0x1c) - *(f32 *)(objA + 0x1c)));
+                    d = (s16)(*(s16 *)(lbl_803DD588 + 0xc) - (u16)*(s16 *)(obj + 2));
+                    if (d > 0x8000) {
+                        d -= 0xffff;
+                    }
+                    if (d < -0x8000) {
+                        d += 0xffff;
+                    }
+                    *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + d / *(u8 *)(lbl_803DD588 + 0x14);
+                    cur = *(f32 *)lbl_803DD588;
+                    *(f32 *)lbl_803DD588 =
+                        cur + (f32)((s16)(s32)(lbl_803E1A44 - cur) /
+                                    (s32)*(u8 *)(lbl_803DD588 + 0x14));
+                    *(u8 *)(lbl_803DD588 + 0x14) -= 1;
+                }
+                *(s16 *)obj += dYaw;
+                *(s16 *)(obj + 2) += dPitch;
+                if (*(s16 *)(obj + 2) > 12000) {
+                    *(s16 *)(obj + 2) = 12000;
+                }
+                if (*(s16 *)(obj + 2) < -12000) {
+                    *(s16 *)(obj + 2) = -12000;
+                }
+                {
+                    f32 snYaw, csYaw, snPit, csPit;
+                    f32 r, vy, h, px, pz;
+                    f32 dxx, dyy, dzz;
+                    snYaw = -sin(lbl_803E1A48 * (f32)*(s16 *)obj / lbl_803E1A4C);
+                    csYaw = fn_80293E80(lbl_803E1A48 * (f32)*(s16 *)obj / lbl_803E1A4C);
+                    snPit = sin(lbl_803E1A48 * (f32)(*(s16 *)(obj + 2) + 0x320) / lbl_803E1A4C);
+                    csPit = fn_80293E80(lbl_803E1A48 * (f32)(*(s16 *)(obj + 2) + 0x320) /
+                                        lbl_803E1A4C);
+                    r = *(f32 *)lbl_803DD588;
+                    vy = r * csPit;
+                    h = r * snPit;
+                    px = h * csYaw;
+                    pz = h * snYaw;
+                    dxx = *(f32 *)(obj + 0x18) - (*(f32 *)(state + 0x18) + px);
+                    dyy = *(f32 *)(obj + 0x1c) - ((lbl_803E1A50 + *(f32 *)(state + 0x1c)) + vy);
+                    dzz = *(f32 *)(obj + 0x20) - (*(f32 *)(state + 0x20) + pz);
+                    *(f32 *)(obj + 0x18) =
+                        *(f32 *)(obj + 0x18) - dxx / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                    *(f32 *)(obj + 0x1c) =
+                        *(f32 *)(obj + 0x1c) - dyy / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                    *(f32 *)(obj + 0x20) =
+                        *(f32 *)(obj + 0x20) - dzz / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                }
+            }
+        }
+        break;
+    case 1: {
+        int g = ObjList_FindObjectById(0x43077);
+        if (*(u8 *)(lbl_803DD588 + 9) != *(u8 *)(lbl_803DD588 + 8)) {
+            (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 8))(0xc, 1);
+            *(s16 *)(lbl_803DD588 + 0xa) = 2;
+            ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 1;
+        } else {
+            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 != 0 &&
+                (*(int (**)(void))((char *)*gScreenTransitionInterface + 0x14))() != 0) {
+                fn_8012DDB8(1);
+                (*(void (**)(int, int))((char *)*gScreenTransitionInterface + 0xc))(0xc, 1);
+                ((WmFlags *)(lbl_803DD588 + 0x15))->b7 = 0;
+                *(u8 *)(*(int *)(ObjList_FindObjectById(0x43077) + 0xb8) + 0x27d) = 1;
+            }
+            if (((WmFlags *)(lbl_803DD588 + 0x15))->b7 == 0) {
+                int ang;
+                s16 d;
+                u16 my;
+                *(s16 *)(lbl_803DD588 + 0xa) -= 1;
+                if (*(s16 *)(lbl_803DD588 + 0xa) < 1) {
+                    *(s16 *)(lbl_803DD588 + 0xa) = 1;
+                }
+                ang = (u16)-getAngle(*(f32 *)(objA + 0x18) - *(f32 *)(state + 0x18),
+                                     *(f32 *)(objA + 0x20) - *(f32 *)(state + 0x20));
+                d = (s16)((ang - 0x308f) - (u16)*(s16 *)obj);
+                if (d > 0x8000) {
+                    d -= 0xffff;
+                }
+                if (d < -0x8000) {
+                    d += 0xffff;
+                }
+                *(s16 *)obj = *(s16 *)obj + d / *(s16 *)(lbl_803DD588 + 0xa);
+                d = (s16)(0x7d0 - (u16)*(s16 *)(obj + 2));
+                if (d > 0x8000) {
+                    d -= 0xffff;
+                }
+                if (d < -0x8000) {
+                    d += 0xffff;
+                }
+                *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + d / *(s16 *)(lbl_803DD588 + 0xa);
+                {
+                    f32 a, sn, cs, sn54, cs54;
+                    f32 t6, t5, px, pz;
+                    f32 dxx, dyy, dzz;
+                    a = lbl_803E1A48 * (f32)(u16)(ang - 0x39dc) / lbl_803E1A4C;
+                    sn = -sin(a);
+                    cs = fn_80293E80(a);
+                    sn54 = sin(lbl_803E1A54);
+                    cs54 = fn_80293E80(lbl_803E1A54);
+                    t6 = lbl_803E1A58 * cs54;
+                    t5 = lbl_803E1A58 * sn54;
+                    px = t5 * cs;
+                    pz = t5 * sn;
+                    dxx = *(f32 *)(obj + 0x18) - (*(f32 *)(state + 0x18) + px);
+                    dyy = *(f32 *)(obj + 0x1c) -
+                          (lbl_803E1A5C + (*(f32 *)(state + 0x1c) + t6));
+                    dzz = *(f32 *)(obj + 0x20) - (*(f32 *)(state + 0x20) + pz);
+                    *(f32 *)(obj + 0x18) =
+                        *(f32 *)(obj + 0x18) - dxx / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                    *(f32 *)(obj + 0x1c) =
+                        *(f32 *)(obj + 0x1c) - dyy / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                    *(f32 *)(obj + 0x20) =
+                        *(f32 *)(obj + 0x20) - dzz / (f32)*(s16 *)(lbl_803DD588 + 0xa);
+                }
+                my = (u16)(*(s16 *)obj + 0x1388);
+                if (isWidescreen() != 0) {
+                    my = (u16)(my + 0x514);
+                }
+                {
+                    f32 b = lbl_803E1A48 * (f32)my / lbl_803E1A4C;
+                    f32 sb = sin(b);
+                    f32 cb = -fn_80293E80(b);
+                    *(f32 *)(g + 0xc) = lbl_803E1A60 * cb + *(f32 *)(obj + 0x18);
+                    *(f32 *)(g + 0x10) =
+                        *(f32 *)(obj + 0x1c) + lbl_80319DF8[(s8)*(u8 *)(g + 0xad)];
+                    *(f32 *)(g + 0x14) = lbl_803E1A60 * sb + *(f32 *)(obj + 0x20);
+                    *(s16 *)g = (s16)(-0xbb8 - my);
+                }
+            }
+        }
+        break;
+    }
+    }
+
+    *(u8 *)(lbl_803DD588 + 9) = *(u8 *)(lbl_803DD588 + 8);
+    m = ObjList_FindObjectById(0x431dc);
+    mdx = *(f32 *)(m + 0x18) - *(f32 *)(obj + 0x18);
+    mdz = *(f32 *)(m + 0x20) - *(f32 *)(obj + 0x20);
+    *(s16 *)m = (s16)(getAngle(mdx, mdz) + 0x8000);
+    *(s16 *)(m + 2) = (s16)(0x8000 - getAngle(sqrtf(mdx * mdx + mdz * mdz),
+                                              *(f32 *)(m + 0x1c) - *(f32 *)(obj + 0x1c)));
+    *(f32 *)(m + 8) = lbl_803E1A64 + lbl_803E1A68 / *(f32 *)lbl_803DD588;
+    *(s16 *)objB = *(s16 *)m;
+    *(s16 *)(objB + 2) = *(s16 *)(m + 2);
+    *(f32 *)(objB + 8) = *(f32 *)(m + 8);
+
+    e = (s16)(*(s16 *)objB - 0x2198);
+    if (e > -0x2000 && e < 0x2000) {
+        f32 lim = lbl_803E1A28;
+        if (lbl_803E1A28 <=
+            lbl_803E1A6C *
+                (sin(lbl_803E1A48 * (f32)((*(s16 *)objB - 0x2198) * 2) / lbl_803E1A4C) *
+                 sin(lbl_803E1A48 * (f32)((*(s16 *)(objB + 2) - 0x4000) * 2) / lbl_803E1A4C))) {
+            lim = lbl_803E1A6C *
+                  (sin(lbl_803E1A48 * (f32)((*(s16 *)objB - 0x2198) * 2) / lbl_803E1A4C) *
+                   sin(lbl_803E1A48 * (f32)((*(s16 *)(objB + 2) - 0x4000) * 2) / lbl_803E1A4C));
+        }
+        *(s8 *)(objB + 0x36) = (s32)lim;
+    } else {
+        *(u8 *)(objB + 0x36) = 0;
+    }
+
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+}
+#pragma peephole reset
+#pragma scheduling reset
