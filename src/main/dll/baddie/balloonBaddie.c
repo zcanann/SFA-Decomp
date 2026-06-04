@@ -687,3 +687,267 @@ int cMenuRenderFn_80124854(int obj, int param2, int param3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int Camera_GetCurrentViewSlot(void);
+extern void Camera_SetCurrentViewIndex(int idx);
+extern void Camera_SetCurrentViewRotation(int a, int b, int c);
+extern void Camera_SetCurrentViewPosition(f32 x, f32 y, f32 z);
+extern void Camera_UpdateViewMatrices(void);
+extern void Camera_ApplyFullViewport(void);
+extern int Camera_IsViewYOffsetEnabled(void);
+extern void Camera_DisableViewYOffset(void);
+extern void Camera_EnableViewYOffset(void);
+extern void Camera_RebuildProjectionMatrix(void);
+extern f32 Camera_GetFovY(void);
+extern void Camera_SetFovY(f32 fov);
+extern int Obj_GetActiveModel(int obj);
+extern void objRender(int p1, int p2, int p3, int p4, int obj, int p6);
+extern void GXSetViewport(f32 x, f32 y, f32 w, f32 h, f32 nearz, f32 farz);
+extern void GXSetScissor(int x, int y, int w, int h);
+extern f32 sin(f32 x);
+extern u8 cMenuState;
+extern u8 framesThisStep;
+extern s16 lbl_803DD796;
+extern s16 cMenuFadeCounter;
+extern s16 lbl_803DD79A;
+extern s16 lbl_803DD79C;
+extern s16 lbl_803DD79E;
+extern s16 lbl_803DBA30;
+extern int lbl_803DCCF0;
+extern int lbl_803DD7E0;
+extern u8 lbl_803DD8B6;
+extern u8 lbl_803DD8B7;
+extern u8 lbl_803DD8D4;
+extern f32 lbl_803DBAA4;
+extern f32 lbl_803DBAC4;
+extern f32 lbl_803DBAC8;
+extern int lbl_803A93E0[3];
+extern int lbl_803A93EC[3];
+extern f32 lbl_803E1E3C;
+extern f32 lbl_803E1E40;
+extern f32 lbl_803E1E68;
+extern f32 lbl_803E1E94;
+extern f32 lbl_803E1EC4;
+extern f32 lbl_803E1EC8;
+extern f32 lbl_803E1F34;
+extern f32 lbl_803E201C;
+extern f32 lbl_803E2020;
+extern f32 lbl_803E2024;
+extern f64 lbl_803E2028;
+extern f64 lbl_803E2030;
+
+void hudDrawCMenu(int p1, int p2, int p3) {
+    int slot;
+    int i;
+    int sel;
+    int model;
+    char used[5];
+    f32 vals[4];
+    f32 sx;
+    f32 sy;
+    f32 fov;
+    f32 small;
+
+    Camera_GetCurrentViewSlot();
+    slot = 0;
+    if (cMenuState == 3) {
+        slot = 1;
+    } else if (cMenuState < 3) {
+        if (cMenuState > 1) {
+            slot = 0;
+        }
+    } else if (cMenuState < 5) {
+        slot = 2;
+    }
+    vals[3] = 176.0f;
+    *(f32 *)(lbl_803A93E0[slot] + 0x10) =
+        lbl_803E1E40 + (f32)(-lbl_803DD796 * (u16)lbl_803DBA30) / lbl_803E201C;
+    sy = lbl_803DBAC8;
+    sx = lbl_803DBAC4;
+    fov = Camera_GetFovY();
+    lbl_803DBAA4 = fov;
+    Camera_SetFovY(lbl_803E2020);
+    Camera_SetCurrentViewIndex(1);
+    lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
+    Camera_DisableViewYOffset();
+    small = lbl_803E1E3C;
+    Camera_SetCurrentViewPosition(small, small, small);
+    Camera_SetCurrentViewRotation(0x8000, 0, 0);
+    Camera_UpdateViewMatrices();
+    Camera_RebuildProjectionMatrix();
+    GXSetViewport(sx - lbl_803E1F34, sy - lbl_803E2024, (f32)(u32)*(u16 *)(lbl_803DCCF0 + 4),
+                  (f32)(u32)*(u16 *)(lbl_803DCCF0 + 8), lbl_803E1E3C, lbl_803E1E68);
+    {
+        char *u = used;
+        int *objs = lbl_803A93EC;
+        f32 *v = vals;
+        i = 0;
+        do {
+            u += 1;
+            *u = 0;
+            *v = sin(lbl_803E1EC8 * (f32)*(s16 *)*objs / lbl_803E1E94);
+            objs += 1;
+            v += 1;
+            i += 1;
+        } while (i < 3);
+    }
+    i = 0;
+    do {
+        f32 best = lbl_803E1EC4;
+        sel = -1;
+        if (used[1] == 0 && vals[0] < best) {
+            sel = 0;
+            best = vals[0];
+        }
+        if (used[2] == 0 && vals[1] < best) {
+            sel = 1;
+            best = vals[1];
+        }
+        if (used[3] == 0 && vals[2] < best) {
+            sel = 2;
+            best = vals[2];
+        }
+        if (sel == -1) break;
+        model = Obj_GetActiveModel(lbl_803A93EC[sel]);
+        *(u16 *)(model + 0x18) &= ~8;
+        *(s8 *)(lbl_803A93EC[sel] + 0x37) = cMenuFadeCounter;
+        model = Obj_GetActiveModel(lbl_803A93E0[sel]);
+        *(u16 *)(model + 0x18) &= ~8;
+        *(s8 *)(lbl_803A93E0[sel] + 0x37) = (s8)(cMenuFadeCounter * lbl_803DD8D4 / 0xff);
+        if (best <= lbl_803E1E3C) {
+            objRender(p1, p2, p3, 0, lbl_803A93EC[sel], 1);
+        } else {
+            objRender(p1, p2, p3, 0, lbl_803A93EC[sel], 1);
+            GXSetScissor(0, 0x79, 0x280, 0x95);
+            objRender(p1, p2, p3, 0, lbl_803A93E0[sel], 1);
+            GXSetScissor(0, 0, 0x280, 0x1e0);
+        }
+        used[sel + 1] = 1;
+        i += 1;
+    } while (i < 3);
+    Camera_SetCurrentViewIndex(0);
+    if (lbl_803DD7E0 != 0) {
+        Camera_EnableViewYOffset();
+    }
+    Camera_UpdateViewMatrices();
+    Camera_SetFovY(lbl_803DBAA4);
+    Camera_RebuildProjectionMatrix();
+    Camera_ApplyFullViewport();
+}
+
+void cMenuRotateFn_80124d80(void) {
+    s16 step;
+    int astep;
+    int adiff;
+    int diff;
+    s16 cur;
+    int d1;
+    int d2;
+    int d3;
+    int a1;
+    int a2;
+    int a3;
+    s16 r;
+
+    step = lbl_803DD79A * (u16)framesThisStep * 1000;
+    astep = step;
+    if (astep != 0) {
+        diff = (s16)(lbl_803DD79C - lbl_803DD79E);
+        if (diff > 0x8000) {
+            diff = (s16)(diff + 1);
+        }
+        if (diff < -0x8000) {
+            diff = (s16)(diff + -1);
+        }
+        if (astep < 0) {
+            astep = -astep;
+        }
+        adiff = diff;
+        if (adiff < 0) {
+            adiff = -adiff;
+        }
+        if (astep < adiff) {
+            lbl_803DD79C = lbl_803DD79C + step;
+        } else {
+            lbl_803DD79C = lbl_803DD79E;
+            lbl_803DD79A = 0;
+        }
+        cur = lbl_803DD79C;
+        diff = (s16)(lbl_803DD79C - lbl_803DD79E);
+        if (diff > 0x8000) {
+            diff = (s16)(diff + 1);
+        }
+        if (diff < -0x8000) {
+            diff = (s16)(diff + -1);
+        }
+        adiff = diff;
+        if (adiff < 0) {
+            adiff = -adiff;
+        }
+        if (adiff < 0x2aab) {
+            lbl_803DD8B6 = lbl_803DD8B7;
+        }
+        *(s16 *)lbl_803A93EC[0] = lbl_803DD79C;
+        *(s16 *)lbl_803A93E0[0] = cur;
+        *(s16 *)lbl_803A93EC[1] = cur + 0x5555;
+        *(s16 *)lbl_803A93E0[1] = cur + 0x5555;
+        *(s16 *)lbl_803A93EC[2] = cur + -0x5556;
+        *(s16 *)lbl_803A93E0[2] = cur + -0x5556;
+    }
+    cur = lbl_803DD79C;
+    *(s16 *)lbl_803A93EC[0] = lbl_803DD79C;
+    *(s16 *)lbl_803A93E0[0] = cur;
+    *(s16 *)lbl_803A93EC[1] = cur + 0x5555;
+    *(s16 *)lbl_803A93E0[1] = cur + 0x5555;
+    *(s16 *)lbl_803A93EC[2] = cur + -0x5556;
+    *(s16 *)lbl_803A93E0[2] = cur + -0x5556;
+    d1 = lbl_803DD79C;
+    if (d1 > 0x8000) {
+        d1 = (s16)(lbl_803DD79C + 1);
+    }
+    if (d1 < -0x8000) {
+        d1 = (s16)(d1 + -1);
+    }
+    d2 = (s16)(lbl_803DD79C + -0x5555);
+    if (d2 > 0x8000) {
+        d2 = (s16)(lbl_803DD79C + -0x5554);
+    }
+    if (d2 < -0x8000) {
+        d2 = (s16)(d2 + -1);
+    }
+    d3 = (s16)(lbl_803DD79C + 0x5556);
+    if (d3 > 0x8000) {
+        d3 = (s16)(lbl_803DD79C + 0x5557);
+    }
+    if (d3 < -0x8000) {
+        d3 = (s16)(d3 + -1);
+    }
+    a2 = d2;
+    if (a2 < 0) {
+        a2 = -a2;
+    }
+    a1 = d1;
+    if (a1 < 0) {
+        a1 = -a1;
+    }
+    if (a1 < a2) {
+        d2 = d1;
+        if (d1 < 0) {
+            d2 = -d1;
+        }
+    } else if (d2 < 0) {
+        d2 = -d2;
+    }
+    a3 = d3;
+    if (a3 < 0) {
+        a3 = -a3;
+    }
+    if (a3 <= d2 && (d2 = d3, d3 < 0)) {
+        d2 = -d3;
+    }
+    r = (s16)(int)-(lbl_803E2030 * (f64)(f32)d2 - lbl_803E2028);
+    if (r < 1) {
+        r = 0;
+    }
+    lbl_803DD8D4 = (s8)r;
+}
