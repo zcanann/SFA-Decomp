@@ -987,6 +987,129 @@ int fn_8015E5DC(short *obj, u8 *p)
   *(f32 *)(p + 0x280) = lbl_803E2DC8;
   return 0;
 }
+
+int fn_8015E798(int obj, u8 *p)
+{
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern void GameBit_Set(int bit, int val);
+  extern f32 lbl_803E2DC8;
+  extern f32 lbl_803E2DD8;
+  extern f32 lbl_803E2DE4;
+  int sub;
+  u8 *hit;
+
+  sub = *(int *)(obj + 0xb8);
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjAnim_SetCurrentMove(obj, 14, lbl_803E2DC8, 0);
+    *(s8 *)(p + 0x346) = 0;
+  }
+  if (lbl_803E2DE4 < *(f32 *)(obj + 0x98)) {
+    hit = *(u8 **)(sub + 0x40c);
+    hit[8] |= 2;
+  }
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjHits_DisableObject(obj);
+    *(f32 *)(p + 0x2a0) = lbl_803E2DD8;
+    *(f32 *)(p + 0x280) = lbl_803E2DC8;
+  }
+  if (*(char *)(p + 0x346) != '\0') {
+    GameBit_Set(*(s16 *)(sub + 0x3f4), 0);
+    ObjAnim_SetCurrentMove(obj, 8, lbl_803E2DC8, 0);
+    *(int *)(p + 0x2d0) = 0;
+    *(s8 *)(p + 0x25f) = 0;
+    *(s8 *)(p + 0x349) = 0;
+    *(s16 *)(sub + 0x402) = 0;
+    if ((hit[9] & 2) == 0) {
+      *(u8 *)(obj + 0xaf) |= 8;
+    }
+  }
+  return 0;
+}
+
+int fn_8015E8BC(int obj, u8 *p)
+{
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern void GameBit_Set(int bit, int val);
+  extern f32 lbl_803E2DC8;
+  extern f32 lbl_803E2DE8;
+  extern f32 lbl_803E2DEC;
+  extern f32 lbl_803E2DF0;
+  int sub;
+  u8 *hit;
+  u32 flags;
+
+  sub = *(int *)(obj + 0xb8);
+  hit = *(u8 **)(sub + 0x40c);
+  if (*(char *)(p + 0x27a) != '\0') {
+    ObjAnim_SetCurrentMove(obj, 11, lbl_803E2DC8, 0);
+    *(s8 *)(p + 0x346) = 0;
+  }
+  if (*(char *)(p + 0x27a) != '\0') {
+    *(s8 *)(p + 0x25f) = 1;
+    GameBit_Set(*(s16 *)(sub + 0x3f4), 1);
+    *(u8 *)(obj + 0xaf) &= ~8;
+    *(u8 *)(obj + 0x36) = 0xff;
+    *(s8 *)(p + 0x34d) = 1;
+    *(f32 *)(p + 0x2a0) =
+        lbl_803E2DE8 + (f32)(u32)*(u8 *)(sub + 0x406) / lbl_803E2DEC;
+    ObjHits_EnableObject(obj);
+  } else {
+    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    *(u8 *)(*(int *)(obj + 0x54) + 0x6c) = 10;
+    *(u8 *)(*(int *)(obj + 0x54) + 0x6d) = 1;
+    ObjHits_RegisterActiveHitVolumeObject(obj);
+  }
+  if (*(char *)(p + 0x346) != '\0') {
+    *(s16 *)(sub + 0x402) = 1;
+  }
+  flags = *(u32 *)(p + 0x314);
+  if ((flags & 0x200) != 0) {
+    *(u32 *)(p + 0x314) = flags & ~0x200;
+    hit[8] |= 4;
+  }
+  if (*(f32 *)(obj + 0x98) < lbl_803E2DF0) {
+    hit[8] |= 2;
+  }
+  return 0;
+}
+
+void fn_8015EA48(int obj, u8 *p)
+{
+  extern u8 Obj_IsLoadingLocked(void);
+  extern int Obj_AllocObjectSetup(int size, int id);
+  extern u8 *Obj_SetupObject(int setup, int a, int b, int c, int d);
+  extern f64 lbl_803E2DC0;
+  extern f32 lbl_803E2DF4;
+  extern f32 lbl_803E2DF8;
+  extern f32 lbl_803E2DFC;
+  f32 t;
+  f32 dur;
+  int setup;
+  u8 *o;
+
+  if (Obj_IsLoadingLocked() == 0) {
+    setup = Obj_AllocObjectSetup(36, 778);
+    *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+    *(f32 *)(setup + 0xc) = lbl_803E2DF4 + *(f32 *)(obj + 0x10);
+    *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+    *(s8 *)(setup + 4) = 1;
+    *(s8 *)(setup + 5) = 1;
+    *(u8 *)(setup + 6) = 0xff;
+    *(u8 *)(setup + 7) = 0xff;
+    o = Obj_SetupObject(setup, 5, -1, -1, 0);
+    if (o != NULL) {
+      t = *(f32 *)(p + 0x2c0) / (f32)(u32)*(u16 *)(p + 0x3fe);
+      dur = lbl_803E2DF8 * t;
+      *(f32 *)(o + 0x24) =
+          (*(f32 *)(*(int *)(p + 0x2d0) + 0xc) - *(f32 *)(obj + 0xc)) / dur;
+      *(f32 *)(o + 0x28) =
+          ((lbl_803E2DFC * t + *(f32 *)(*(int *)(p + 0x2d0) + 0x10)) - *(f32 *)(obj + 0x10)) / dur;
+      *(f32 *)(o + 0x2c) =
+          (*(f32 *)(*(int *)(p + 0x2d0) + 0x14) - *(f32 *)(obj + 0x14)) / dur;
+      *(int *)(o + 0xc4) = obj;
+    }
+  }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -3675,8 +3798,8 @@ int fn_801603E8(int* obj, u8* obj2);
 
 extern void* lbl_803AC5B0[];
 extern void* lbl_803AC598[];
-extern int fn_8015E8BC(int* obj, u8* state);
-extern int fn_8015E798(int* obj, u8* state);
+extern int fn_8015E8BC(int obj, u8* state);
+extern int fn_8015E798(int obj, u8* state);
 extern int fn_8015E5DC(short* out, u8* obj);
 extern int fn_8015E520(int* obj, u8* state);
 extern int fn_8015E3A0(int obj, int state);
