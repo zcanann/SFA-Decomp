@@ -48,9 +48,9 @@ extern undefined8 waitNextFrame();
 extern undefined4 FUN_80053b3c();
 extern undefined4 FUN_8005fe14();
 extern void setDrawCloudsAndLights(int param_1);
-extern undefined4 skyFn_800894a8();
-extern undefined4 skyFn_800895e0();
-extern undefined4 skyFn_80089710();
+extern void skyFn_800894a8(int layer, f32 x, f32 y, f32 z);
+extern void skyFn_800895e0(int layer,int red,int green,int blue,int alpha,int duration);
+extern void skyFn_80089710(int layer,int enabled,int param_3);
 extern undefined8 dll_2E_func07();
 extern undefined4 FUN_801150a4();
 extern undefined8 FUN_801150ac();
@@ -319,8 +319,10 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       break;
     case DIMBOSS_EVENT_LOAD_DIMTOP_ASSETS:
       OSReport(sDIMBossLoadingAssetsForDIMTop);
-      lockLevel(mapGetDirIdx(DIMTOP_MAP_DIR),0);
-      mapLoadDataFile(mapGetDirIdx(DIMTOP_MAP_DIR),DIMTOP_BOOT_DATA_FILE);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      lockLevel(mapDirIndex,0);
+      mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
+      mapLoadDataFile(mapDirIndex,DIMTOP_BOOT_DATA_FILE);
       mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
       mapLoadDataFile(mapDirIndex,DIMTOP_INTRO_DATA_FILE);
       mapDirIndex = mapGetDirIdx(DIMTOP_MAP_DIR);
@@ -673,7 +675,7 @@ void DIMboss_update(DIMbossObject *obj)
           getEnvfxAct(0,0,0xdb,0);
           getEnvfxAct(0,0,0xdc,0);
           skyFn_80089710(7,1,0);
-          skyFn_800894a8((double)lbl_803E4C4C,(double)lbl_803E4C50,(double)lbl_803E4C54,7);
+          skyFn_800894a8(7,lbl_803E4C4C,lbl_803E4C50,lbl_803E4C54);
           skyFn_800895e0(7,0xa0,0xa0,0xff,0x7f,0x28);
           topState->steamSfxPending &= ~0x80;
         }
