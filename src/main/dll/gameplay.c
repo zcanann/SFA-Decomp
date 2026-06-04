@@ -16411,3 +16411,43 @@ void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, 
         param_2 != 0 ? (u8 *)&base[0x48] : &lbl_803DB898, 0, 0);
   }
 }
+
+extern u8 lbl_80312340[];
+extern f32 lbl_803E07C0, lbl_803E07C4, lbl_803E07C8, lbl_803E07CC, lbl_803E07D0, lbl_803E07D4;
+extern f32 lbl_803E07D8, lbl_803E07DC, lbl_803E07E0, lbl_803E07E4, lbl_803E07E8, lbl_803E07EC;
+extern f32 lbl_803E07F0, lbl_803E07F4, lbl_803E07F8;
+
+
+void dll_5E_func03(int param_1, int param_2, u8 *param_3, uint param_4)
+{
+  u8 *base = lbl_80312340;
+  (*(code *)(*gModgfxInterface + 0x34))(param_1, (u8)param_2, 0x12, 3, 9);
+  (*(code *)(*gModgfxInterface + 0x4c))(&base[0x2cc]);
+  (*(code *)(*gModgfxInterface + 0x54))(param_4 | 0x4004484);
+  (*(code *)(*gModgfxInterface + 0x38))();
+  (*(code *)(*gModgfxInterface + 0x3c))(2, lbl_803E07C0, lbl_803E07C4, lbl_803E07C0, 9, &base[0x1c8]);
+  (*(code *)(*gModgfxInterface + 0x3c))(2, lbl_803E07C8, lbl_803E07C4, lbl_803E07CC, 9, &base[0x1dc]);
+  (*(code *)(*gModgfxInterface + 0x3c))(2, lbl_803E07C8, lbl_803E07C4, lbl_803E07C8, 9, &base[0x1f0]);
+  (*(code *)(*gModgfxInterface + 0x3c))(2, lbl_803E07C8, lbl_803E07C4, lbl_803E07C8, 9, &base[0x204]);
+  (*(code *)(*gModgfxInterface + 0x3c))(4, lbl_803E07D0, lbl_803E07D0, lbl_803E07D0, 0x24, &base[0x260]);
+  (*(code *)(*gModgfxInterface + 0x3c))(8, lbl_803E07D4, lbl_803E07D8, lbl_803E07DC, 0x24, &base[0x260]);
+  (*(code *)(*gModgfxInterface + 0x40))();
+  (*(code *)(*gModgfxInterface + 0x3c))(2, lbl_803E07E0, lbl_803E07E4, lbl_803E07E0, 0, (u8 *)0);
+  (*(code *)(*gModgfxInterface + 0x3c))(0x4000, lbl_803E07D0, lbl_803E07E8, lbl_803E07D0, 0, (u8 *)0);
+  (*(code *)(*gModgfxInterface + 0x3c))(0x1800000, lbl_803E07EC, lbl_803E07EC, lbl_803E07F0, 0x5e0, (u8 *)0);
+  (*(code *)(*gModgfxInterface + 0x40))();
+  (*(code *)(*gModgfxInterface + 0x3c))(4, lbl_803E07F4, lbl_803E07D0, lbl_803E07D0, 0x12, &base[0x2a8]);
+  (*(code *)(*gModgfxInterface + 0x3c))(0x4000, lbl_803E07D0, lbl_803E07E8, lbl_803E07D0, 0x24, &base[0x260]);
+  (*(code *)(*gModgfxInterface + 0x3c))(0x100, lbl_803E07D0, lbl_803E07D0, lbl_803E07F8, 0, (u8 *)0);
+  (*(code *)(*gModgfxInterface + 0x3c))(0x1800000, lbl_803E07EC, lbl_803E07EC, lbl_803E07F0, 0x5e0, (u8 *)0);
+  (*(code *)(*gModgfxInterface + 0x40))();
+  (*(code *)(*gModgfxInterface + 0x3c))(0x4000, lbl_803E07D0, lbl_803E07E8, lbl_803E07D0, 0x24, &base[0x260]);
+  (*(code *)(*gModgfxInterface + 0x3c))(0x100, lbl_803E07D0, lbl_803E07D0, lbl_803E07F8, 0, (u8 *)0);
+  (*(code *)(*gModgfxInterface + 0x3c))(0x1800000, lbl_803E07EC, lbl_803E07EC, lbl_803E07F0, 0x5e0, (u8 *)0);
+  (*(code *)(*gModgfxInterface + 0x40))();
+  (*(code *)(*gModgfxInterface + 0x3c))(0x4000, lbl_803E07D0, lbl_803E07E8, lbl_803E07D0, 0x24, &base[0x260]);
+  (*(code *)(*gModgfxInterface + 0x3c))(0x100, lbl_803E07D0, lbl_803E07D0, lbl_803E07F8, 0, (u8 *)0);
+  (*(code *)(*gModgfxInterface + 0x3c))(4, lbl_803E07D0, lbl_803E07D0, lbl_803E07D0, 0x24, &base[0x260]);
+  (*(code *)(*gModgfxInterface + 0x50))(param_3, base, 0x24, &base[0x168], 0x10, 0x120, 0);
+  (*(code *)(*gModgfxInterface + 0x58))();
+}
