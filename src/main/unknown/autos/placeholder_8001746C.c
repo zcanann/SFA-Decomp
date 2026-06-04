@@ -12569,7 +12569,7 @@ void *ObjModel_Load(int id, int arg2, int *outSize) {
 
 extern void OSReport(char *fmt, ...);
 extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
-extern void Obj_RegisterObject(void *obj, int b);
+extern void Obj_RegisterObject(u8 *obj, int b);
 extern char sObjSetupObjectLoadingLockedWarning[];
 extern char lbl_802CAC54[];
 
@@ -12708,7 +12708,7 @@ void mapLoadByCoords(int arg) {
 extern void objLoadPlayerFromSave(u8 *obj);
 extern f32 lbl_803DE88C;
 
-void Obj_RunInitCallback(u8 *obj) {
+void Obj_RunInitCallback(u8 *obj, int cb, int unused) {
     s16 mode = *(s16 *)(obj + 0x46);
     if (mode == 0x1f || mode == 0) {
         objLoadPlayerFromSave(obj);
@@ -16052,6 +16052,80 @@ void Obj_UpdateModelBlendStates(void)
             }
         }
         ioff += 4;
+    }
+}
+#pragma dont_inline reset
+#pragma pop
+
+extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, void *ox, void *oy, void *oz);
+extern void mapLoadForObject(int id, void *obj);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void Obj_RegisterObject(u8 *obj, int flags)
+{
+    int id;
+    int prev;
+    int cur;
+    int off;
+
+    if (*(void **)(obj + 0x30) != 0) {
+        Obj_TransformLocalPointToWorld(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), obj + 0x18, obj + 0x1c, obj + 0x20);
+    } else {
+        *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
+        *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
+        *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+    }
+    *(f32 *)(obj + 0x8c) = *(f32 *)(obj + 0x18);
+    *(f32 *)(obj + 0x90) = *(f32 *)(obj + 0x1c);
+    *(f32 *)(obj + 0x94) = *(f32 *)(obj + 0x20);
+    *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
+    *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+    Obj_RunInitCallback(obj, *(int *)(obj + 0x4c), 0);
+    if (*(u8 **)(obj + 0x54) != 0) {
+        *(f32 *)(*(u8 **)(obj + 0x54) + 0x10) = *(f32 *)(obj + 0xc);
+        *(f32 *)(*(u8 **)(obj + 0x54) + 0x14) = *(f32 *)(obj + 0x10);
+        *(f32 *)(*(u8 **)(obj + 0x54) + 0x18) = *(f32 *)(obj + 0x14);
+        *(f32 *)(*(u8 **)(obj + 0x54) + 0x1c) = *(f32 *)(obj + 0xc);
+        *(f32 *)(*(u8 **)(obj + 0x54) + 0x20) = *(f32 *)(obj + 0x10);
+        *(f32 *)(*(u8 **)(obj + 0x54) + 0x24) = *(f32 *)(obj + 0x14);
+    }
+    id = *(s16 *)(*(u8 **)(obj + 0x50) + 0x78);
+    if (id > -1) {
+        mapLoadForObject(id, obj);
+    }
+    if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40) {
+        ObjGroup_AddObject(obj, 6);
+        if (*(s8 *)(obj + 0xae) != 0x5a && (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40)) {
+            *(u8 *)(obj + 0xae) = 0x5a;
+        }
+    } else {
+        if (*(s8 *)(obj + 0xae) == 0) {
+            *(u8 *)(obj + 0xae) = 0x50;
+        }
+    }
+    if (flags & 1) {
+        *(u16 *)(obj + 0xb0) |= 0x10;
+        ((u8 **)lbl_803DCB88)[lbl_803DCB84++] = obj;
+        if (*(u16 *)(obj + 0xb0) & 0x10) {
+            prev = 0;
+            cur = *(int *)((u8 *)&lbl_803DCB7C + 4);
+            off = *(s16 *)((u8 *)&lbl_803DCB7C + 2);
+            while (cur != 0 && *(s8 *)(obj + 0xae) < *(s8 *)(cur + 0xae)) {
+                prev = cur;
+                cur = *(int *)(cur + off);
+            }
+            objListAdd(&lbl_803DCB7C, prev, (int)obj);
+        }
+    }
+    if (*(s8 *)(*(u8 **)(obj + 0x50) + 0x56) > 0) {
+        ObjGroup_AddObject(obj, 8);
+    }
+    if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 1) {
+        lbl_803DCBC4 = 0;
     }
 }
 #pragma dont_inline reset
