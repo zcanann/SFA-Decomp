@@ -275,127 +275,145 @@ extern undefined4 cRam803dc288;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+extern char lbl_8030E4B0[];
+extern int* gMapEventInterface;
+extern int gMapBlockLayerTables[5];
+extern u8 lbl_80386648[];
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 gMapBlockWorldSize;
+extern f32 fastFloorf(f32 v);
+extern int* Obj_GetPlayerObject(void);
+extern void OSReport(const char* fmt, ...);
+
 int objShouldLoad(int param_1,int param_2,int param_3)
 {
-  bool bVar1;
-  int iVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  bool bVar6;
-  int iVar7;
-  uint uVar8;
-  int *piVar9;
-  int iVar10;
-  char extraout_r4;
-  char cVar11;
-  double dVar12;
-  double in_f29;
-  double in_f30;
-  double in_f31;
-  undefined8 local_58;
-  
-  iVar7 = FUN_80286840();
-  bVar1 = *(int *)(iVar7 + 0x14) == 0x49054;
-  uVar8 = (**(code **)(*DAT_803dd72c + 0x40))(param_3);
-  uVar8 = uVar8 & 0xff;
-  if (uVar8 == 0xffffffff) {
-    bVar6 = false;
-    goto LAB_80055bd4;
-  }
-  if (uVar8 == 0) {
-LAB_80055bd0:
-    bVar6 = true;
-  }
-  else if (uVar8 < 9) {
-    if (((int)(uint)*(byte *)(iVar7 + 3) >> (uVar8 - 1 & 0x3f) & 1U) == 0) goto LAB_80055bd0;
-    bVar6 = false;
-  }
-  else {
-    if (((int)(uint)*(byte *)(iVar7 + 5) >> (0x10 - uVar8 & 0x3f) & 1U) == 0) goto LAB_80055bd0;
-    bVar6 = false;
-  }
-LAB_80055bd4:
-  if (bVar6) {
-    if ((*(byte *)(iVar7 + 4) & 1) == 0) {
-      if ((*(byte *)(iVar7 + 4) & 2) == 0) {
-        if (extraout_r4 == '\0') {
-          dVar12 = (double)FUN_802924c4();
-          iVar10 = (int)dVar12;
-          dVar12 = (double)FUN_802924c4();
-          iVar2 = (int)dVar12;
-          if ((((iVar10 < 0) || (iVar2 < 0)) || (0xf < iVar10)) || (0xf < iVar2)) {
-            if (bVar1) {
-              FUN_800723a0();
-            }
-            goto LAB_80055e70;
-          }
-          bVar6 = false;
-          piVar9 = &DAT_80382f14;
-          for (cVar11 = '\0'; cVar11 < '\x05'; cVar11 = cVar11 + '\x01') {
-            if (-1 < *(char *)(iVar10 + iVar2 * 0x10 + *piVar9)) {
-              bVar6 = true;
-            }
-            piVar9 = piVar9 + 1;
-          }
-          if (!bVar6) {
-            if (bVar1) {
-              FUN_800723a0();
-            }
-            goto LAB_80055e70;
-          }
-        }
-        if ((*(byte *)(iVar7 + 4) & 0x20) == 0) {
-          bVar6 = false;
-          if (((*(byte *)(iVar7 + 4) & 4) == 0) || (extraout_r4 != '\0')) {
-            bVar6 = true;
-          }
-          else {
-            iVar10 = FUN_80017a98();
-            if (iVar10 == 0) {
-              bVar6 = true;
-            }
-            else {
-              in_f29 = (double)*(float *)(iVar10 + 0x18);
-              in_f31 = (double)*(float *)(iVar10 + 0x1c);
-              in_f30 = (double)*(float *)(iVar10 + 0x20);
-            }
-          }
-          if (bVar6) {
-            iVar10 = (int)extraout_r4;
-            in_f29 = (double)(float)(&DAT_803872a8)[iVar10 * 4];
-            in_f31 = (double)(float)(&DAT_803872ac)[iVar10 * 4];
-            in_f30 = (double)(float)(&DAT_803872b0)[iVar10 * 4];
-          }
-          local_58 = (double)CONCAT44(0x43300000,(uint)*(byte *)(iVar7 + 6) << 3 ^ 0x80000000);
-          fVar3 = (float)(in_f29 - (double)*(float *)(iVar7 + 8));
-          fVar4 = (float)(in_f31 - (double)*(float *)(iVar7 + 0xc));
-          fVar5 = (float)(in_f30 - (double)*(float *)(iVar7 + 0x10));
-          if ((float)(local_58 - DOUBLE_803df840) * (float)(local_58 - DOUBLE_803df840) <=
-              fVar5 * fVar5 + fVar4 * fVar4 + fVar3 * fVar3) {
-            if (bVar1) {
-              FUN_800723a0();
-            }
-          }
-          else if (bVar1) {
-            FUN_800723a0();
-          }
-        }
-        else if (bVar1) {
-          FUN_800723a0();
-        }
-      }
-      else if (bVar1) {
-        FUN_800723a0();
-      }
+    char* strs;
+    int verbose;
+    int useObj;
+    f32 y;
+    f32 z;
+    f32 x;
+    int t;
+    int ok;
+    int bx;
+    int bz;
+    s8 found;
+    s8 i;
+    int* tbl;
+    int* player;
+    int off;
+    f32* p;
+    f32 d;
+    f32 dz;
+    f32 dy;
+    f32 range;
+
+    strs = (char*)lbl_8030E4B0;
+    if (*(u32*)(param_1 + 0x14) == 0x49054) {
+        verbose = 1;
+    } else {
+        verbose = 0;
     }
-    else if (bVar1) {
-      FUN_800723a0();
+    t = ((u8(*)(int)) * (int*)(*gMapEventInterface + 0x40))(param_3);
+    if (t == -1) {
+        ok = 0;
+        goto test;
     }
-  }
-LAB_80055e70:
-  FUN_8028688c();
-  return 0;
+    if (t != 0) {
+        if (t < 9) {
+            if ((*(u8*)(param_1 + 3) >> (t - 1)) & 1) {
+                ok = 0;
+                goto test;
+            }
+        } else {
+            if ((*(u8*)(param_1 + 5) >> (16 - t)) & 1) {
+                ok = 0;
+                goto test;
+            }
+        }
+    }
+    ok = 1;
+test:
+    if (ok == 0) {
+        return 0;
+    }
+    if (*(u8*)(param_1 + 4) & 1) {
+        if (verbose) {
+            OSReport(strs + 0x1cc);
+        }
+        return 1;
+    }
+    if (*(u8*)(param_1 + 4) & 2) {
+        if (verbose) {
+            OSReport(strs + 0x1e8);
+        }
+        return 0;
+    }
+    if ((s8)param_2 == 0) {
+        bx = (int)fastFloorf((*(f32*)(param_1 + 8) - playerMapOffsetX) / gMapBlockWorldSize);
+        bz = (int)fastFloorf((*(f32*)(param_1 + 0x10) - playerMapOffsetZ) / gMapBlockWorldSize);
+        if (bx < 0 || bz < 0 || bx >= 16 || bz >= 16) {
+            if (verbose) {
+                OSReport(strs + 0x200, param_1 + 8, param_1 + 0xc, param_1 + 0x10);
+            }
+            return 0;
+        }
+        found = 0;
+        bx += bz << 4;
+        for (i = 0; i < 5; i++) {
+            if (*(s8*)(bx + gMapBlockLayerTables[i]) >= 0) {
+                found = 1;
+            }
+        }
+        if (found == 0) {
+            if (verbose) {
+                OSReport(strs + 0x228);
+            }
+            return 0;
+        }
+    }
+    if (*(u8*)(param_1 + 4) & 0x20) {
+        if (verbose) {
+            OSReport(strs + 0x240);
+        }
+        return 1;
+    }
+    useObj = 0;
+    if ((*(u8*)(param_1 + 4) & 4) && (s8)param_2 == 0) {
+        player = Obj_GetPlayerObject();
+        if (player != NULL) {
+            x = *(f32*)((char*)player + 0x18);
+            y = *(f32*)((char*)player + 0x1c);
+            z = *(f32*)((char*)player + 0x20);
+        } else {
+            useObj = 1;
+        }
+    } else {
+        useObj = 1;
+    }
+    if (useObj != 0) {
+        off = (s8)param_2 << 4;
+        x = *(f32*)(lbl_80386648 + off);
+        p = (f32*)(lbl_80386648 + off);
+        y = p[1];
+        z = p[2];
+    }
+    range = (f32)(*(u8*)(param_1 + 6) << 3);
+    d = x - *(f32*)(param_1 + 8);
+    dy = y - *(f32*)(param_1 + 0xc);
+    dz = z - *(f32*)(param_1 + 0x10);
+    d = d * d + dy * dy + dz * dz;
+    if (d < range * range) {
+        if (verbose) {
+            OSReport(strs + 0x25c, &d);
+        }
+        return 1;
+    }
+    if (verbose) {
+        OSReport(strs + 0x274);
+    }
+    return 0;
 }
 
 /*
