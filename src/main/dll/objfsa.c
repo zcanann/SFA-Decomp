@@ -2,6 +2,7 @@
 #include "main/dll/objfsa.h"
 
 extern void OSReport(const char *fmt, ...);
+typedef struct RomCurveDef RomCurveDef;
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006a10();
@@ -30,7 +31,7 @@ extern undefined4 FUN_800d8088();
 extern undefined4 FUN_800d8240();
 extern int RomCurve_projectPointToAdjacentWindow();
 extern int curves_distFn15();
-extern int RomCurve_findByIdWithIndex();
+extern RomCurveDef *RomCurve_findByIdWithIndex(uint curveId,int *outIndex);
 extern int mathFn_800dbff0(float *point);
 extern void *romCurves[];
 extern s32 nRomCurves;
@@ -3424,7 +3425,7 @@ void FUN_800dece0(void)
   local_8 = (float)in_f31;
   fStack_4 = (float)in_ps31_1;
   iVar5 = FUN_80286818();
-  if ((iVar5 != 0) && (iVar6 = RomCurve_findByIdWithIndex(*(uint *)(iVar5 + 0x14),&local_6d8), iVar6 != 0)) {
+  if ((iVar5 != 0) && (iVar6 = (int)RomCurve_findByIdWithIndex(*(uint *)(iVar5 + 0x14),&local_6d8), iVar6 != 0)) {
     iVar6 = 0;
     iVar18 = 0;
     pfVar20 = local_6d0;
@@ -3499,7 +3500,7 @@ void FUN_800dece0(void)
           } while (iVar25 != 0);
         }
         local_570[local_6d8] = '\x01';
-        iVar14 = RomCurve_findByIdWithIndex(*(uint *)(iVar22 + 0x1c),&local_6d4);
+        iVar14 = (int)RomCurve_findByIdWithIndex(*(uint *)(iVar22 + 0x1c),&local_6d4);
         if (iVar14 != 0) {
           fVar1 = *(float *)(iVar14 + 0x10) - *(float *)(iVar5 + 0x10);
           fVar2 = *(float *)(iVar14 + 8) - *(float *)(iVar5 + 8);
@@ -3533,7 +3534,7 @@ void FUN_800dece0(void)
                 iVar23 = iVar19;
                 do {
                   if ((((-1 < (int)*(uint *)(iVar23 + 0x1c)) &&
-                       (iVar7 = RomCurve_findByIdWithIndex(*(uint *)(iVar23 + 0x1c),&local_6d4), iVar7 != 0)) &&
+                       (iVar7 = (int)RomCurve_findByIdWithIndex(*(uint *)(iVar23 + 0x1c),&local_6d4), iVar7 != 0)) &&
                       (local_570[local_6d4] == '\0')) && (iVar14 < 0x28)) {
                     fVar1 = *(float *)(iVar19 + 0x10) - *(float *)(iVar7 + 0x10);
                     fVar2 = *(float *)(iVar19 + 8) - *(float *)(iVar7 + 8);
@@ -5700,7 +5701,7 @@ int RomCurve_func1C(int startCurve, int unused1, int unused2, int unused3, int u
         }
         visited[startIndex] = 1;
 
-        directCurve = RomCurve_findByIdWithIndex(directLinkId, &directIndex);
+        directCurve = (int)RomCurve_findByIdWithIndex(directLinkId, &directIndex);
         if (directCurve == 0) {
             continue;
         }
@@ -5732,7 +5733,7 @@ int RomCurve_func1C(int startCurve, int unused1, int unused2, int unused3, int u
                     continue;
                 }
 
-                linkCurve = RomCurve_findByIdWithIndex(linkId, &linkIndex);
+                linkCurve = (int)RomCurve_findByIdWithIndex(linkId, &linkIndex);
                 if (linkCurve == 0 || visited[linkIndex] != 0 || queueCount >= 0x28) {
                     continue;
                 }
