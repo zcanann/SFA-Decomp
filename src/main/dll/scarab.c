@@ -1624,21 +1624,24 @@ void fn_8015ED1C(int p1, int p2, int p3)
   extern int *gBaddieControlInterface;
   extern void *Obj_GetPlayerObject(void);
   extern f32 sqrtf(f32);
-  extern int lbl_8031FEA8;
-  extern int lbl_8031FF20;
-  extern int lbl_803AC580;
+  extern u8 lbl_8031FEA8[];
+  extern u8 lbl_8031FF20[];
+  extern u8 lbl_803AC580[];
   void *player;
-  int t;
+  char *t;
   int r;
+  struct {
+    f32 x, y, z;
+  } d;
+  f32 *dp = &d.x;
 
   player = Obj_GetPlayerObject();
-  t = *(int *)(p3 + 0x2d0);
-  if (t != 0) {
-    f32 d[3];
-    d[0] = *(f32 *)(t + 0x18) - *(f32 *)(p1 + 0x18);
-    d[1] = *(f32 *)(t + 0x1c) - *(f32 *)(p1 + 0x1c);
-    d[2] = *(f32 *)(t + 0x20) - *(f32 *)(p1 + 0x20);
-    *(f32 *)(p3 + 0x2c0) = sqrtf(d[0]*d[0] + d[1]*d[1] + d[2]*d[2]);
+  t = *(char **)(p3 + 0x2d0);
+  if (t != NULL) {
+    d.x = *(f32 *)(t + 0x18) - *(f32 *)(p1 + 0x18);
+    d.y = *(f32 *)(t + 0x1c) - *(f32 *)(p1 + 0x1c);
+    d.z = *(f32 *)(t + 0x20) - *(f32 *)(p1 + 0x20);
+    *(f32 *)(p3 + 0x2c0) = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
   }
 
   if ((*(u8 *)(p2 + 0x404) & 0x20) == 0) {
@@ -1649,12 +1652,12 @@ void fn_8015ED1C(int p1, int p2, int p3)
   (**(void (**)(int, int, int, int, int, int, int, int))((char *)(*gBaddieControlInterface) + 0x54))(
       p1, p3, p2 + 0x35c, (s32)*(s16 *)(p2 + 0x3f4), 0, 0, 0, 8);
 
-  r = (int)(**(int (**)(int, int, int, int, int *, int *, int, int *))((char *)(*gBaddieControlInterface) + 0x50))(
-      p1, p3, p2 + 0x35c, (s32)*(s16 *)(p2 + 0x3f4), &lbl_8031FEA8, &lbl_8031FF20, 1, &lbl_803AC580);
+  r = (int)(**(int (**)(int, int, int, int, u8 *, u8 *, int, u8 *))((char *)(*gBaddieControlInterface) + 0x50))(
+      p1, p3, p2 + 0x35c, (s32)*(s16 *)(p2 + 0x3f4), lbl_8031FEA8, lbl_8031FF20, 1, lbl_803AC580);
 
   if (r != 0) {
     void *pc8 = *(void **)((char *)player + 0xc8);
-    (**(void (**)(void *))((char *)*(int *)((char *)pc8 + 0x68) + 0x50))(pc8);
+    (*(void (**)(void *))(**(int **)((char *)pc8 + 0x68) + 0x50))(pc8);
   }
 }
 #pragma fp_contract reset
