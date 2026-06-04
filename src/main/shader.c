@@ -3266,3 +3266,63 @@ void mapFn_80057d24(int a, int b, int* o0, int* o1, int* o2, int* o3, int f1, in
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int mapCoordsToId(int x, int z, int layerIdx)
+{
+    int x0, z0;
+    int x1;
+    s8* layers;
+    s16* rects;
+    u8* bits;
+    int id;
+    int layer;
+    int n;
+    int idx;
+
+    layer = curMapLayer + (&lbl_803DB624)[layerIdx];
+    rects = (s16*)lbl_80382238[1];
+    bits = (u8*)lbl_80382238[4];
+    id = 0;
+    layers = (s8*)lbl_80382238[3];
+    for (n = 0; n < 64; n++) {
+        if (layer == layers[0]) {
+            x0 = rects[0];
+            if (x >= x0) {
+                x1 = rects[1];
+                if (x <= x1) {
+                    z0 = rects[2];
+                    if (z >= z0 && z <= rects[3]) {
+                        idx = (x - x0) + (z - z0) * ((x1 - x0) + 1);
+                        if ((1 << (idx & 7)) & bits[idx >> 3])
+                            return id;
+                    }
+                }
+            }
+        }
+        bits += 0x40;
+        id++;
+        if (layer == layers[1]) {
+            x0 = rects[5];
+            if (x >= x0) {
+                x1 = rects[6];
+                if (x <= x1) {
+                    z0 = rects[7];
+                    if (z >= z0 && z <= rects[8]) {
+                        idx = (x - x0) + (z - z0) * ((x1 - x0) + 1);
+                        if ((1 << (idx & 7)) & bits[idx >> 3])
+                            return id;
+                    }
+                }
+            }
+        }
+        rects += 10;
+        bits += 0x40;
+        layers += 2;
+        id++;
+    }
+    return -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
