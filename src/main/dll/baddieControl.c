@@ -5541,10 +5541,10 @@ extern f32 lbl_803DB9C4;
 #pragma peephole off
 #pragma scheduling off
 void CameraModeNpcSpeak_update(u8 *obj) {
-    u8 *state = *(u8 **)(obj + 0xa4);
     u8 *npc;
-    f32 dx, dy, dz;
+    u8 *state = *(u8 **)(obj + 0xa4);
     f32 ex, ey, ez;
+    f32 dx, dy, dz;
 
     if (state == NULL) {
         return;
@@ -5571,7 +5571,7 @@ void CameraModeNpcSpeak_update(u8 *obj) {
     dy *= *(f32 *)(lbl_803DD584 + 0x3c);
     dz *= *(f32 *)(lbl_803DD584 + 0x48);
     if (*(int *)(lbl_803DD584 + 0x1c) == 3) {
-        *(s16 *)(obj + 2) = getAngle(lbl_803DB9C4 * dy, sqrtf(dx * dx + dz * dz));
+        *(s16 *)(obj + 2) = (s16)(s32)getAngle(lbl_803DB9C4 * dy, sqrtf(dx * dx + dz * dz));
     }
     dx += *(f32 *)npc;
     dy += *(f32 *)(npc + 4);
@@ -5581,7 +5581,7 @@ void CameraModeNpcSpeak_update(u8 *obj) {
     ez = *(f32 *)(obj + 0x20) - dz;
     *(s16 *)obj = (s16)(0x8000 - getAngle(ex, ez));
     if (*(int *)(lbl_803DD584 + 0x1c) != 3) {
-        *(s16 *)(obj + 2) = getAngle(ey, sqrtf(ex * ex + ez * ez));
+        *(s16 *)(obj + 2) = (s16)(s32)getAngle(ey, sqrtf(ex * ex + ez * ez));
     }
     turnOnBlurFilter(*(f32 *)npc, *(f32 *)(npc + 4), *(f32 *)(npc + 8), 1, 0);
     Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
