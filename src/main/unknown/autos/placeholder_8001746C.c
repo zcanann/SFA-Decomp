@@ -16742,6 +16742,7 @@ extern f32 lbl_803DE850;
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
+#pragma dont_inline on
 void fn_80026928(int *obj, int b, int *p3)
 {
     int off4;
@@ -16834,6 +16835,7 @@ void fn_80026928(int *obj, int b, int *p3)
         PSMTXMultVec((f32 *)(obj[(*(u16 *)((u8 *)obj + 0x18) & 1) + 3] + e2 * 0x40), (f32 *)(out + 0x18), (f32 *)out);
     }
 }
+#pragma dont_inline reset
 #pragma dont_inline reset
 #pragma pop
 
@@ -17446,6 +17448,7 @@ extern f32 lbl_802CABB8[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void modelAnimFn_80026790(u8 *model, int idx, u8 *m, u8 *anim)
 {
     extern f32 lbl_803DCB48;
@@ -17496,6 +17499,7 @@ void modelAnimFn_80026790(u8 *model, int idx, u8 *m, u8 *anim)
         i++;
     }
 }
+#pragma dont_inline reset
 #pragma pop
 
 extern void PSMTXRotAxisRad(f32 *m, f32 *axis, f32 angle);
@@ -18017,5 +18021,35 @@ int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, f32 *timer) {
         return trig;
     }
     return 0;
+}
+#pragma pop
+
+extern void fn_80026308(int *a, int b, u8 *p, u8 *q, int d, int i);
+extern void fn_80025F38(int *a, int b, u8 *p, u8 *q);
+
+#pragma push
+#pragma scheduling off
+void playerTailFn_80026b3c(int *a, int b, u8 *p, int d) {
+    int i;
+    int off;
+
+    if (*(u8 *)(p + 0x1a) != 0) {
+        i = 0;
+        off = 0;
+        for (; i < *(int *)(p + 4); i++) {
+            if (*(u8 *)(p + 0x19) == 0) {
+                fn_80026928(a, b, (int *)(*(int *)p + off));
+            }
+            if (getHudHiddenFrameCount() == 0) {
+                modelAnimFn_80026790((u8 *)a, b, p, (u8 *)(*(int *)p + off));
+                fn_80026308(a, b, p, (u8 *)(*(int *)p + off), d, i);
+            } else {
+                fn_80025F38(a, b, p, (u8 *)(*(int *)p + off));
+            }
+            off += 0xc;
+        }
+        *(u8 *)(p + 0x18) = 1;
+        *(u8 *)(p + 0x19) = 1;
+    }
 }
 #pragma pop
