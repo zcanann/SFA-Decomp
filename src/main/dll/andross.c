@@ -283,6 +283,12 @@ extern f32 lbl_803DC4CC;
 extern void turnOnDistortionFilter(f32 *pos, f32 a, f32 *b, f32 c);
 extern void fn_8022D460(int obj, f32 x);
 
+typedef struct {
+    u8 f80 : 1;
+    u8 f40 : 1;
+    u8 f20 : 1;
+} AndrossFlagByte;
+
 #pragma peephole off
 #pragma scheduling off
 void andross_update(int obj)
@@ -1781,8 +1787,8 @@ LAB_8023de5c:
       iVar8 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0x16,lbl_803E74D4,0);
       *(f32 *)(iVar8 + 100) = lbl_8032C0F0[0];
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0x7f;
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xbf;
+      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f80 = 0;
+      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f40 = 0;
     }
     dVar19 = *(float *)(obj + 0x98);
     if (lbl_803E7540 <= dVar19) {
@@ -1811,11 +1817,11 @@ LAB_8023de5c:
         uVar9 = 0x471;
       }
       Sfx_PlayFromObject(obj,uVar9);
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xbf | 0x40;
+      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f40 = 1;
     }
     if ((lbl_803E7570 < *(float *)(obj + 0x98)) && (-1 < *(char *)(piVar14 + 0x3a))) {
       Sfx_PlayFromObject(obj,0x46d);
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0x7f | 0x80;
+      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f80 = 1;
     }
     cVar11 = *(char *)(iVar12 + 0x23);
     if ((((cVar11 != '\x02') && (cVar11 != '\x01')) &&
@@ -1839,12 +1845,12 @@ LAB_8023de5c:
       ObjAnim_SetCurrentMove(obj,3,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0A4[0];
       *(f32 *)(piVar14 + 0x39) = lbl_803E74D4;
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf;
+      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 0;
     }
     *(f32 *)(piVar14 + 0x39) = *(f32 *)(piVar14 + 0x39) + timeDelta;
     if ((lbl_803E7578 < *(f32 *)(piVar14 + 0x39)) && ((*(u8 *)(piVar14 + 0x3a) >> 5 & 1) == 0)) {
       Sfx_PlayFromObject(obj,0x46f);
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf | 0x20;
+      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 1;
     }
     if (lbl_803DC490 < *(float *)(obj + 0x98)) {
       dVar19 = (*(f32 *)(piVar14 + 0x1c) - *(float *)(*piVar14 + 0x14));
@@ -1884,7 +1890,7 @@ LAB_8023de5c:
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0x11,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0DC[0];
-      *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf;
+      ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 0;
     }
     if (lbl_803DC4A0 < *(float *)(obj + 0x98)) {
       dVar19 = (*(f32 *)(piVar14 + 0x1c) - *(float *)(*piVar14 + 0x14));
@@ -1905,7 +1911,7 @@ LAB_8023de5c:
       fn_8022D4AC(*piVar14,(int)&local_c0);
       if ((*(u8 *)(piVar14 + 0x3a) >> 5 & 1) == 0) {
         Sfx_PlayFromObject(obj,0x46f);
-        *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf | 0x20;
+        ((AndrossFlagByte *)((u8 *)piVar14 + 0xe8))->f20 = 1;
       }
     }
     else {
