@@ -3697,7 +3697,10 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     void (*vfn)(int, int, int, int, int, int);
 
     if ((*(u16*)((char*)obj + 0xb0) & 0x40) != 0) return;
-    if (*(void**)((char*)obj + 0xc4) != NULL) return;
+    if (*(void**)((char*)obj + 0xc4) == NULL) {
+    } else {
+        return;
+    }
     if ((*(s16*)((char*)obj + 6) & 0x4000) != 0) return;
     sub = *(void**)((char*)obj + 0x30);
     if (sub != NULL && (*(s16*)((char*)sub + 6) & 0x4000) != 0) return;
@@ -3706,34 +3709,36 @@ void objRender(int a, int b, int c, int d, int obj, int flag)
     *(u16*)((char*)obj + 0xb0) |= 0x800;
     sub = *(void**)((char*)obj + 0x68);
     if (sub != NULL) {
-        if ((*(u16*)((char*)obj + 0xb0) & 0x4000) != 0) {
-            if ((s8)flag != 0 &&
-                ((void**)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)] != NULL) {
-                (*(void(*)(int))objRenderModel)(obj);
-                if (*(void**)((char*)obj + 0x74) != NULL) {
-                    objRenderFn_80041018((int*)obj);
-                }
-            }
-        } else {
+        if ((*(u16*)((char*)obj + 0xb0) & 0x4000) == 0) {
             vfn = *(void(**)(int, int, int, int, int, int))(*(int*)sub + 0x10);
             if (vfn != NULL) {
                 vfn(obj, a, b, c, d, flag);
             }
-        }
-    } else if ((s8)flag != 0) {
-        s16 m = *(s16*)((char*)obj + 0x46);
-        if (m == 0x1f || m == 0) {
-            playerRender(obj, a, b, c, d, flag);
-        } else if (((void**)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)] != NULL) {
+        } else if ((s8)flag != 0 &&
+                   ((void**)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)] != NULL) {
             (*(void(*)(int))objRenderModel)(obj);
             if (*(void**)((char*)obj + 0x74) != NULL) {
                 objRenderFn_80041018((int*)obj);
             }
         }
+    } else if ((s8)flag != 0) {
+        switch (*(s16*)((char*)obj + 0x46)) {
+        case 0:
+        case 0x1f:
+            playerRender(obj, a, b, c, d, flag);
+            break;
+        default:
+            if (((void**)*(int*)((char*)obj + 0x7c))[*(s8*)((char*)obj + 0xad)] != NULL) {
+                (*(void(*)(int))objRenderModel)(obj);
+                if (*(void**)((char*)obj + 0x74) != NULL) {
+                    objRenderFn_80041018((int*)obj);
+                }
+            }
+            break;
+        }
     }
     doNothing_afterRenderObject();
-    walk = obj;
-    for (i = 0; i < (s32)(u32)*(u8*)((char*)obj + 0xeb); i++) {
+    for (i = 0, walk = obj; i < (s32)(u32)*(u8*)((char*)obj + 0xeb); i++) {
         int staff = *(int*)((char*)walk + 0xc8);
         if (*(s16*)((char*)staff + 0x44) == 0x2d) {
             staffMtxFn_8003b620(staff, obj,
