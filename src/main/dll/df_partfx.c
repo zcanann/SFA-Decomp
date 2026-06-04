@@ -1842,6 +1842,54 @@ void player_updateCurve(int* obj, int* state, f32 t)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E0574;
+extern f32 lbl_803E0578;
+extern f32 lbl_803E057C;
+extern f32 lbl_803E0580;
+extern f32 lbl_803E0584;
+
+#pragma scheduling off
+#pragma peephole off
+void player_followCurve(int* obj, int* state, int p5, f32 cx, f32 cz, f32 t)
+{
+    f32 dx, dz, dist, max;
+
+    *(u32*)state &= ~0x100000;
+    dx = *(f32*)((char*)obj + 0xc) - cx;
+    dz = *(f32*)((char*)obj + 0x14) - cz;
+    dist = sqrtf(dx * dx + dz * dz);
+    *(f32*)((char*)state + 0x2bc) = dist;
+    max = lbl_803E0578;
+    if (*(f32*)((char*)state + 0x2bc) < lbl_803E0580) {
+        max = lbl_803E0584 * *(f32*)((char*)state + 0x2bc);
+        *(f32*)((char*)state + 0x294) = *(f32*)((char*)state + 0x294) * lbl_803E0574;
+    }
+    if (dist > max) {
+        f32 q = dist / max;
+        dx = dx / q;
+        dz = dz / q;
+    }
+    *(f32*)((char*)state + 0x290) = dx;
+    *(f32*)((char*)state + 0x28c) = -dz;
+    *(f32*)((char*)state + 0x290) = *(f32*)((char*)state + 0x290) * t;
+    *(f32*)((char*)state + 0x28c) = *(f32*)((char*)state + 0x28c) * t;
+    if (*(f32*)((char*)state + 0x290) > lbl_803E0578) {
+        *(f32*)((char*)state + 0x290) = lbl_803E0578;
+    }
+    if (*(f32*)((char*)state + 0x290) < lbl_803E057C) {
+        *(f32*)((char*)state + 0x290) = lbl_803E057C;
+    }
+    if (*(f32*)((char*)state + 0x28c) > lbl_803E0578) {
+        *(f32*)((char*)state + 0x28c) = lbl_803E0578;
+    }
+    if (*(f32*)((char*)state + 0x28c) < lbl_803E057C) {
+        *(f32*)((char*)state + 0x28c) = lbl_803E057C;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void Checkpoint_initialise(void) {
