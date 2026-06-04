@@ -3018,3 +3018,43 @@ void lavaball1bf_update(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void lavaball1be_setScale(s16 *obj, int p2, int p3) {
+    u8 *state;
+    u8 *setup;
+    f32 vxz;
+    f32 x;
+
+    state = *(u8 **)((char *)obj + 0xb8);
+    setup = *(u8 **)((char *)obj + 0x4c);
+    vxz = lbl_803E47D8 * (f32)p3;
+    x = *(f32 *)(*(char **)state + 0xc);
+    *(f32 *)((char *)obj + 0x18) = x;
+    *(f32 *)((char *)obj + 0xc) = x;
+    x = *(f32 *)(*(char **)state + 0x10);
+    *(f32 *)((char *)obj + 0x1c) = x;
+    *(f32 *)((char *)obj + 0x10) = x;
+    x = *(f32 *)(*(char **)state + 0x14);
+    *(f32 *)((char *)obj + 0x20) = x;
+    *(f32 *)((char *)obj + 0x14) = x;
+    x = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)obj + 0x8c) = x;
+    *(f32 *)((char *)obj + 0x80) = x;
+    x = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)obj + 0x90) = x;
+    *(f32 *)((char *)obj + 0x84) = x;
+    x = *(f32 *)((char *)obj + 0x14);
+    *(f32 *)((char *)obj + 0x94) = x;
+    *(f32 *)((char *)obj + 0x88) = x;
+    obj[0] = (s16)((s32)*(s8 *)(setup + 0x18) << 8);
+    *(f32 *)((char *)obj + 0x24) = vxz * -fn_80293E80(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
+    *(f32 *)((char *)obj + 0x28) = lbl_803E47D8 * (f32)p2;
+    *(f32 *)((char *)obj + 0x2c) = vxz * -sin(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
+    obj[3] &= ~0x4000;
+    ObjHits_EnableObject(obj);
+    state[0x10] &= ~0x10;
+}
+#pragma peephole reset
+#pragma scheduling reset
