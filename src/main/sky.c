@@ -1635,3 +1635,72 @@ void sky2_update(int a, int b, u8 *cfg)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_8008C9F4(u8 *cfg, u8 flags)
+{
+    int b1;
+    int i;
+    u8 *p2;
+
+    b1 = (cfg[0x58] & 0x80) ? 1 : 0;
+    *(int *)((&lbl_803DD184)[b1]) = 0;
+    (&lbl_803DD184)[b1][0x317] = 1;
+    for (i = 0; i < 0x21; i++) {
+        *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x178) = lbl_803DF108;
+    }
+    for (i = 0; i < 0x21; i++) {
+        *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x70) = lbl_803DF108;
+    }
+    for (i = 0; i < 0x16; i++) {
+        *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x2ac) = lbl_803DF108;
+    }
+    for (i = 0; i < 0xb; i++) {
+        *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x1fc) = lbl_803DF10C;
+        *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x228) = lbl_803DF110;
+    }
+    p2 = lbl_8030F4A0;
+    for (i = 0; i < 0xb; i++) {
+        *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0xf4) = (f32)(u32)cfg[*p2 + 0xc];
+        *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x120) = (f32)(u32)cfg[*p2 + 0x14];
+        *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x14c) = (f32)(u32)cfg[*p2 + 0x1c];
+        *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x254) = (f32)(u32)*(u16 *)(cfg + *p2 * 2 + 0x3e);
+        *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x280) = (f32)(u32)*(u16 *)(cfg + *p2 * 2 + 0x2e);
+        p2++;
+    }
+    *(u16 *)((&lbl_803DD184)[b1] + 4) = cfg[0x58];
+    *(u16 *)((&lbl_803DD184)[b1] + 6) = cfg[0x59];
+    *(f32 *)((&lbl_803DD184)[b1] + 0x64) = lbl_803DF108;
+    *(f32 *)((&lbl_803DD184)[b1] + 0x68) = lbl_803DF108;
+    *(s8 *)((&lbl_803DD184)[b1] + 0x314) = -1;
+    *(f32 *)((&lbl_803DD184)[b1] + 0x6c) = lbl_803DF108;
+    if (*(u16 *)(cfg + 0x2a) == 0) {
+        *(u16 *)(cfg + 0x2a) = 1;
+    }
+    if (*(u16 *)(cfg + 0x2a) != 0) {
+        *(int *)((&lbl_803DD184)[b1] + 0x3c) = *(u16 *)(cfg + 0x2a);
+        *(int *)((&lbl_803DD184)[b1] + 0x48) = 1;
+        *(int *)((&lbl_803DD184)[b1] + 8) = *(u16 *)(cfg + 0x2e);
+        *(f32 *)((&lbl_803DD184)[b1] + 0x5c) = lbl_803DF114 / (f32)(u32)*(u16 *)(cfg + 0x2a);
+    } else {
+        *(int *)((&lbl_803DD184)[b1] + 0x3c) = 0;
+        *(f32 *)((&lbl_803DD184)[b1] + 0x5c) = lbl_803DF114;
+    }
+    if (*(u16 *)(cfg + 0x2c) == 0) {
+        *(u16 *)(cfg + 0x2c) = 1;
+    }
+    if (*(u16 *)(cfg + 0x2c) != 0) {
+        *(int *)((&lbl_803DD184)[b1] + 0x40) = *(u16 *)(cfg + 0x2c);
+        *(f32 *)((&lbl_803DD184)[b1] + 0x58) =
+            lbl_803DF118 / (lbl_803DF11C * ((f32)(u32)*(u16 *)(cfg + 0x2c) / lbl_803DF120));
+        *(int *)((&lbl_803DD184)[b1] + 0xc) = 0x5dc;
+        *(f32 *)((&lbl_803DD184)[b1] + 0x60) = lbl_803DF114 / (f32)(u32)*(u16 *)(cfg + 0x2c);
+    } else {
+        *(int *)((&lbl_803DD184)[b1] + 0x40) = 0;
+        *(f32 *)((&lbl_803DD184)[b1] + 0x60) = lbl_803DF114;
+    }
+    *(int *)((&lbl_803DD184)[b1] + 0x44) = 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
