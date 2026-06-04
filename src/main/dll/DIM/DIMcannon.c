@@ -2417,6 +2417,18 @@ void linkb_levcontrol_update(int *obj) {
 extern f32 lbl_803E47C0;
 extern u8 framesThisStep;
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int extraSize, int id);
+extern void Obj_SetupObject(int obj, int a, int b, int c, int d);
+extern f32 lbl_803E47C4;
+
+typedef struct {
+    int *ringA;
+    int *ringB;
+    u8 visible;
+} RingGenState;
+
 #pragma scheduling off
 #pragma peephole off
 void imspacering_init(s16 *obj, s8 *p) {
@@ -2443,6 +2455,75 @@ void imspaceringgen_render(int obj, int p1, int p2, int p3, int p4, s8 visible) 
     u8 *inner = *(u8 **)(obj + 0xb8);
     if (visible != 0 && (inner[8] != 0 || *(u8 *)(obj + 0x36) != 0)) {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E47C0);
+    }
+}
+void imspaceringgen_update(s16 *obj) {
+    int i;
+    int ring;
+    u8 *setup;
+    RingGenState *state;
+    int objIndex;
+    int objCount;
+
+    setup = *(u8 **)((char *)obj + 0x4c);
+    state = *(RingGenState **)((char *)obj + 0xb8);
+    if (state->ringA == NULL || state->ringB == NULL) {
+        int *objs = ObjList_GetObjects(&objIndex, &objCount);
+        for (objIndex = 0; objIndex < objCount; objIndex++) {
+            int *o = (int *)objs[objIndex];
+            if (*(s16 *)((char *)o + 0x46) == 0x164) {
+                state->ringA = o;
+            }
+            if (*(s16 *)((char *)o + 0x46) == 0x168) {
+                state->ringB = o;
+            }
+        }
+    } else {
+        int v;
+        state->visible = ((int (*)(int *))((void **)*(void **)*(int *)((char *)state->ringB + 0x68))[9])(state->ringB);
+        if (state->visible != 0) {
+            v = *(u8 *)((char *)obj + 0x36) + framesThisStep * 8;
+            if (v > 0xff) {
+                v = 0xff;
+            }
+        } else {
+            v = *(u8 *)((char *)obj + 0x36) - framesThisStep * 8;
+            if (v < 0) {
+                v = 0;
+            }
+        }
+        *(u8 *)((char *)obj + 0x36) = v;
+        if (*(int *)((char *)obj + 0xf4) == 0 && Obj_IsLoadingLocked() != 0) {
+            for (i = 0; i < 10; i++) {
+                ring = Obj_AllocObjectSetup(0x24, 0x301);
+                *(f32 *)(ring + 8) = *(f32 *)((char *)obj + 0xc);
+                *(f32 *)(ring + 0xc) = *(f32 *)((char *)obj + 0x10);
+                *(f32 *)(ring + 0x10) = *(f32 *)((char *)obj + 0x14);
+                *(s8 *)(ring + 0x18) = (s8)randomGetRange(0, 0xffff);
+                *(s16 *)(ring + 0x1a) = (s16)randomGetRange(200, 400);
+                if ((int)randomGetRange(0, 1) == 0) {
+                    *(s16 *)(ring + 0x1a) = -*(s16 *)(ring + 0x1a);
+                }
+                *(s16 *)(ring + 0x1c) = (s16)randomGetRange(200, 400);
+                if ((int)randomGetRange(0, 1) == 0) {
+                    *(s16 *)(ring + 0x1c) = -*(s16 *)(ring + 0x1c);
+                }
+                *(u8 *)(ring + 4) = setup[4];
+                *(u8 *)(ring + 6) = setup[6];
+                *(u8 *)(ring + 5) = 1;
+                *(u8 *)(ring + 7) = 0xff;
+                Obj_SetupObject(ring, 5, *(s8 *)((char *)obj + 0xac), -1, *(int *)((char *)obj + 0x30));
+            }
+            *(int *)((char *)obj + 0xf4) = 1;
+        }
+        objMove((int)obj,
+            *(f32 *)((char *)state->ringA + 0xc) - *(f32 *)((char *)obj + 0xc),
+            (lbl_803E47C4 + *(f32 *)((char *)state->ringA + 0x10)) - *(f32 *)((char *)obj + 0x10),
+            *(f32 *)((char *)state->ringA + 0x14) - *(f32 *)((char *)obj + 0x14));
+        obj[0] = obj[0] + framesThisStep * 0x100;
+        obj[1] = obj[1] + framesThisStep * 0x20;
+        obj[2] = obj[2] + framesThisStep * 0x40;
+        *(int *)((char *)obj + 0x30) = 0;
     }
 }
 #pragma peephole reset
