@@ -109,18 +109,19 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   f32 dx;
   f32 dy;
   f32 dz;
-  f32 scale;
   f32 spd;
   f32 t;
+  f32 scale;
   f32 bx;
-  f32 x1;
-  f32 y1;
-  f32 z1;
-  f32 x0;
-  f32 y0;
-  f32 z0;
-  f32 mtxA[12];
+  f32 cur2;
   f32 mtxB[12];
+  f32 mtxA[12];
+  f32 z0;
+  f32 y0;
+  f32 x0;
+  f32 z1;
+  f32 y1;
+  f32 x1;
 
   state = *(u8 **)(obj + 0xb8);
   player = (int)Obj_GetPlayerObject();
@@ -150,47 +151,42 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (((state[2] & 1) != 0) && ((state[2] & 2) == 0)) {
       ptr = state + 8;
       for (i = 2; i < 10; i += 2) {
-        if (*(int *)(ptr + 0x38) == 0) {
+        if (*(uint *)(ptr + 0x38) == 0) {
           state[0x60 + i] = 1;
           break;
         }
         ptr += 8;
       }
-      if (i > 9) {
+      if (i >= 10) {
         state[2] |= 2;
       }
     }
     if (((state[2] & 4) != 0) && ((state[2] & 8) == 0)) {
       ptr = state + 4;
       for (i = 1; i < 10; i += 2) {
-        if (*(int *)(ptr + 0x38) == 0) {
+        if (*(uint *)(ptr + 0x38) == 0) {
           state[0x60 + i] = 1;
           break;
         }
         ptr += 8;
       }
-      if (i > 9) {
+      if (i >= 10) {
         state[2] |= 8;
       }
     }
     if (state[2] != 0) {
       if ((state[2] & 0x20) != 0) {
+        i = 5;
         ptr = state + 0x14;
-        for (i = 5; i < 5; i++) {
+        for (; i < 5; i++) {
           o = *(int *)(ptr + 0x38);
-          if (o != 0) {
+          if ((uint)o != 0) {
             *(s16 *)(o + 6) |= 0x4000;
             *(int *)(ptr + 0x38) = 0;
           }
           ptr += 4;
         }
-        if ((state[2] & 0x10) == 0) {
-          *(f32 *)(state + 4) = *(f32 *)(state + 4) + timeDelta;
-          if (*(f32 *)(state + 4) >= lbl_803E54E0) {
-            *(f32 *)(state + 4) = lbl_803E54E0;
-          }
-          spd = lbl_803E54E4 * *(f32 *)(state + 4);
-        } else {
+        if ((state[2] & 0x10) != 0) {
           *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
           if (*(f32 *)(state + 4) <= lbl_803E54D4) {
             spd = lbl_803E54D8;
@@ -198,10 +194,17 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
             *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
             spd = lbl_803E54DC * *(f32 *)(state + 4);
           }
+        } else {
+          *(f32 *)(state + 4) = *(f32 *)(state + 4) + timeDelta;
+          if (*(f32 *)(state + 4) >= lbl_803E54E0) {
+            *(f32 *)(state + 4) = lbl_803E54E0;
+          }
+          spd = lbl_803E54E4 * *(f32 *)(state + 4);
         }
+        j = 0;
         ptr = state;
-        for (j = 0; j < 5; j++) {
-          if ((*(int *)(ptr + 0x38) != 0) && (*(int *)(state + 0x48) != 0)) {
+        for (; j < 5; j++) {
+          if ((*(uint *)(ptr + 0x38) != 0) && (*(uint *)(state + 0x48) != 0)) {
             t = lbl_803E54E8 + (f32)j / lbl_803E54EC;
             bx = *(f32 *)(*(int *)(state + 0x48) + 0xc);
             *(f32 *)(*(int *)(ptr + 0x38) + 0xc) = t * (x0 - bx) + bx;
@@ -213,9 +216,10 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
           }
           ptr += 4;
         }
+        j = 9;
         ptr = state + 0x24;
-        for (j = 9; j > 4; j--) {
-          if ((*(int *)(ptr + 0x38) != 0) && (*(int *)(state + 0x4c) != 0)) {
+        for (; j > 4; j--) {
+          if ((*(uint *)(ptr + 0x38) != 0) && (*(uint *)(state + 0x4c) != 0)) {
             t = lbl_803E54E8 + (f32)(9 - j) / lbl_803E54EC;
             bx = *(f32 *)(*(int *)(state + 0x4c) + 0xc);
             *(f32 *)(*(int *)(ptr + 0x38) + 0xc) = t * (x1 - bx) + bx;
@@ -238,7 +242,7 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
           }
         }
         for (j = 0; j < 10; j++) {
-          if (*(int *)(state + 0x38) != 0) {
+          if (*(uint *)(state + 0x38) != 0) {
             t = lbl_803E54F0 * (f32)j;
             t = t + (f32)(int)randomGetRange(-0x32, 0x32) / lbl_803E54F4;
             *(f32 *)(*(int *)(state + 0x38) + 0xc) = dx * t + x0;
@@ -251,20 +255,22 @@ void sh_staff_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
       }
     } else {
       scale = lbl_803E54F8;
-      if (*(f32 *)(state + 4) != lbl_803E54D4) {
-        *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
-        if (*(f32 *)(state + 4) <= lbl_803E54D4) {
+      cur2 = *(f32 *)(state + 4);
+      bx = lbl_803E54D4;
+      if (cur2 != bx) {
+        *(f32 *)(state + 4) = cur2 - timeDelta;
+        if (*(f32 *)(state + 4) <= bx) {
           o = *(int *)(state + 0x38);
-          if (o != 0) {
+          if ((uint)o != 0) {
             *(s16 *)(o + 6) |= 0x4000;
             *(int *)(state + 0x38) = 0;
-            *(f32 *)(state + 4) = lbl_803E54D4;
+            *(f32 *)(state + 4) = bx;
           }
         } else {
           scale = lbl_803E54E4 * *(f32 *)(state + 4);
         }
       }
-      if (*(int *)(state + 0x38) != 0) {
+      if (*(uint *)(state + 0x38) != 0) {
         *(f32 *)(*(int *)(state + 0x38) + 0xc) = dx * *(f32 *)(state + 0x6c) + x0;
         *(f32 *)(*(int *)(state + 0x38) + 0x10) = dy * *(f32 *)(state + 0x6c) + y0;
         *(f32 *)(*(int *)(state + 0x38) + 0x14) = dz * *(f32 *)(state + 0x6c) + z0;
