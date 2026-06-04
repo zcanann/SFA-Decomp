@@ -4586,7 +4586,7 @@ void staff_func14(int *obj, f32 *outA, f32 *outB);
 void staff_func15(int *obj, s16 idx, f32 f1, f32 f2);
 extern s32 staff_func16(int *obj);
 extern void fireball_free();
-extern void fireball_render();
+extern void fireball_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void fireball_hitDetect();
 extern void fireball_update();
 extern void fireball_init();
@@ -6588,6 +6588,72 @@ void fireball_update(int *obj)
         }
         if ((*(int *)((char *)obj + 0xf4) -= framesThisStep) < 0) {
             Obj_FreeObject(obj);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 lbl_803DBD58[8];
+extern void queueGlowRender(int light);
+extern f32 lbl_803E3350;
+
+#pragma scheduling off
+#pragma peephole off
+void fireball_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int *model;
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u16 savedRot4;
+    u16 savedRot2;
+    u8 i;
+    f32 savedF8;
+    s32 v = visible;
+    if (v == 0) {
+        return;
+    }
+    if ((*(u8 *)(state + 0x70) & 8) != 0) {
+        return;
+    }
+    if (*(f32 *)(state + 0x3c) == lbl_803E3330) {
+        *(u8 *)((char *)obj + 0xad) = 1;
+        model = Obj_GetActiveModel((int)obj);
+        *(u8 *)((char *)*(int **)((char *)model + 0x34) + 8) = lbl_803DBD58[*(u8 *)(state + 0x71)];
+        savedRot4 = *(s16 *)((char *)obj + 4);
+        savedRot2 = *(s16 *)((char *)obj + 2);
+        savedF8 = *(f32 *)((char *)obj + 8);
+        *(f32 *)((char *)obj + 8) = lbl_803E3350;
+        for (i = 0; i < 5; i++) {
+            u8 *p = state + i * 2;
+            *(u16 *)(p + 0x48) += *(u16 *)(p + 0x52);
+            *(u16 *)(p + 0x5c) += *(u16 *)(p + 0x66);
+            *(s16 *)((char *)obj + 4) = (s16)*(u16 *)(p + 0x48);
+            *(s16 *)((char *)obj + 2) = (s16)*(u16 *)(p + 0x5c);
+            *(u16 *)((char *)model + 0x18) &= ~0x8;
+            ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
+        }
+        *(s16 *)((char *)obj + 4) = (s16)savedRot4;
+        *(s16 *)((char *)obj + 2) = (s16)savedRot2;
+        *(f32 *)((char *)obj + 8) = savedF8;
+        *(u8 *)((char *)obj + 0xad) = 0;
+        *(u8 *)((char *)*(int **)((char *)Obj_GetActiveModel((int)obj) + 0x34) + 8) =
+            lbl_803DBD58[*(u8 *)(state + 0x71)];
+        ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3354);
+        if (*(int **)state != NULL) {
+            if (*(u8 *)((char *)*(int **)state + 0x2f8) != 0 && *(u8 *)((char *)*(int **)state + 0x4c) != 0) {
+                u16 sum = *(u8 *)((char *)*(int **)state + 0x2f9) + *(s8 *)((char *)*(int **)state + 0x2fa);
+                if (sum > 12) {
+                    sum += randomGetRange(-12, 12);
+                    if (sum > 255) {
+                        sum = 255;
+                        *(u8 *)((char *)*(int **)state + 0x2fa) = 0;
+                    }
+                }
+                *(u8 *)((char *)*(int **)state + 0x2f9) = sum;
+            }
+            if (*(u8 *)((char *)*(int **)state + 0x2f8) != 0 && *(u8 *)((char *)*(int **)state + 0x4c) != 0) {
+                queueGlowRender(*(int *)state);
+            }
         }
     }
 }
