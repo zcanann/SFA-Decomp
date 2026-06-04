@@ -4468,9 +4468,101 @@ void objectShadow_setupProjectedTexture(f32* obj, u32* colorPtr, Mtx mtx)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80077AD8(double param_1,float *param_2,int param_3,float *param_4)
+#pragma peephole off
+#pragma scheduling off
+void fn_80077AD8(u8 *st, u8 *p2, f32 *m, f32 depth)
 {
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
+    extern f32 lbl_803DD020, lbl_803DD024, lbl_803DD034, lbl_803DD038;
+    extern GXColor lbl_803E8454;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern void selectTexture(int tex, int slot);
+    extern void fn_8006C5B8(int *out);
+    Mtx m58;
+    Mtx m28;
+    Vec v;
+    GXColor c;
+    int handle;
+    GXColor kc;
+    f32 z;
+    f32 d;
+    f32 q;
+    u8 t;
+
+    kc = lbl_803E8454;
+    PSMTXConcat((MtxP)st, (MtxP)m, m58);
+    GXLoadTexMtxImm(m58, 0x1e, 1);
+    GXSetTexCoordGen2(0, 1, 0, 0x1e, 0, 0x7d);
+    selectTexture(*(int *)(st + 0x60), 0);
+    t = p2[3];
+    p2[3] = (t >> 1) + (t >> 2);
+    c.r = p2[3];
+    c.g = p2[3];
+    c.b = p2[3];
+    GXSetTevKColor(0, c);
+    GXSetTevKColorSel(0, 0xc);
+    GXSetTevOrder(0, 0, 0, 0xff);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xf, 8, 0xe, 0xf);
+    GXSetTevAlphaIn(0, 7, 7, 7, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    v.x = m[3];
+    v.y = m[7];
+    v.z = m[11];
+    PSMTXMultVec((MtxP)(st + 0x30), &v, &v);
+    z = -v.z;
+    fn_8006C5B8(&handle);
+    selectTexture(handle, 1);
+    m58[0][0] = lbl_803DEEDC;
+    m58[0][1] = lbl_803DEEDC;
+    d = z - depth;
+    q = z - d;
+    m58[0][2] = lbl_803DEEE4 / q;
+    m58[0][3] = z / q;
+    m58[1][0] = lbl_803DEEDC;
+    m58[1][1] = lbl_803DEEDC;
+    m58[1][2] = lbl_803DEEDC;
+    m58[1][3] = lbl_803DEEDC;
+    PSMTXConcat((MtxP)(st + 0x30), (MtxP)m, m28);
+    PSMTXConcat(m58, m28, m28);
+    GXLoadTexMtxImm(m28, 0x21, 1);
+    GXSetTexCoordGen2(1, 1, 0, 0x21, 0, 0x7d);
+    GXSetTevDirect(1);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevOrder(1, 1, 1, 0xff);
+    GXSetTevColorIn(1, 0, 0xf, 8, 0xf);
+    GXSetTevAlphaIn(1, 7, 7, 7, 7);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetNumTexGens(2);
+    GXSetNumTevStages(2);
+    GXSetFog(4, lbl_803DD024, lbl_803DD020, lbl_803DD038, lbl_803DD034, kc);
+    GXSetBlendMode(1, 0, 3, 5);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
