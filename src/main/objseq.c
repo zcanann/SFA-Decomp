@@ -3283,45 +3283,66 @@ int fn_80081964(void)
     return 1;
 }
 
+typedef struct SeqRunRec {
+    s16 slot;
+    s16 flags;
+    s16 count;
+} SeqRunRec;
+
+typedef struct SeqRunTables {
+    u8 pad0[0x2a80];
+    SeqRunRec recs[0x1e];
+    u8 pad1[0x800];
+    u8 marks[0xb0];
+    int handles[0x55];
+    u8 cmdFlags[0x58];
+    u8 counts[0x58];
+    s16 headings[0x55];
+    u8 pad2[0xae];
+    f32 dists[0x55];
+    f32 frames[0x55];
+    u8 pad3[0xb0];
+    s16 modes[0x55];
+} SeqRunTables;
+
 #pragma peephole off
 #pragma scheduling off
 int objRunSeq(int seqIdx, u8 *obj, int flags)
 {
     u8 *base;
-    u8 *srcSeq;
-    u8 *player;
-    u8 *parent;
+    u8 *walk2;
+    int i;
+    int packed;
     u8 *mon;
     u8 *walk;
-    u8 *walk2;
-    u8 *setup;
-    u8 *newObj;
-    u8 *seq;
+    int idx;
+    int count;
+    int size;
+    int bit;
+    int objId;
+    int slot;
     u8 *hdr;
-    u8 *buf;
+    u8 *parent;
+    u8 *srcSeq;
+    u8 *setup;
+    u8 *seq;
+    int first;
+    s16 heading;
+    int camArg;
+    u8 *player;
+    int doCam;
+    u8 *newObj;
     u8 *slotPtr;
+    u8 *buf;
     u8 *blk;
     u8 *p;
     s16 *mapTbl;
-    int slot;
-    int i;
     int j;
     int k;
-    int idx;
-    int count;
-    int first;
-    int size;
-    s16 heading;
-    int camArg;
-    int doCam;
-    int objId;
     int seqFlags;
-    int packed;
     int found;
     int cur;
     int n;
-    int rem;
-    int bit;
     s16 val;
     u32 objIdU;
     u32 mapFlags;
@@ -3344,9 +3365,9 @@ int objRunSeq(int seqIdx, u8 *obj, int flags)
     }
 
     for (i = 0x19; i < 0x55; i++) {
-        if (*(s16 *)(base + i * 2 + 0x3a98) == 0) {
+        if (*(s16 *)((base + i * 2) + 0x3a98) == 0) {
             slot = i;
-            *(s16 *)(base + i * 2 + 0x3a98) = 1;
+            *(s16 *)((base + i * 2) + 0x3a98) = 1;
             blk = base + i * 0x80;
             for (j = 0; j < 16; j++) {
                 *(u8 **)blk = NULL;
@@ -3427,7 +3448,7 @@ checked:
     base[*(s16 *)(obj + 0xb4) + 0x3538] = 0;
     base[*(s16 *)(obj + 0xb4) + 0x3334] = 0;
     lbl_8030ECF8[*(s16 *)(obj + 0xb4)] = 0;
-    *(int *)(base + *(s16 *)(obj + 0xb4) * 4 + 0x33e4) = *(s16 *)(obj + 0x46);
+    ((SeqRunTables *)base)->handles[*(s16 *)(obj + 0xb4)] = *(s16 *)(obj + 0x46);
 
     walk = buf;
     bit = 1;
@@ -3574,15 +3595,13 @@ checked:
             *(int *)(seq + 0x10c) = *(int *)walk2;
             *(s16 *)(seq + 0x70) = *(s16 *)(seq + 0x6e);
             if (idx == 0) {
-                base[*(s16 *)(obj + 0xb4) + 0x3538] = *(u16 *)(walk2 + 4);
-                *(int *)(base + *(s16 *)(obj + 0xb4) * 4 + 0x33e4) =
+                ((SeqRunTables *)base)->cmdFlags[*(s16 *)(obj + 0xb4)] = *(u16 *)(walk2 + 4);
+                ((SeqRunTables *)base)->handles[*(s16 *)(obj + 0xb4)] =
                     *(int *)(*(u8 **)(newObj + 0x4c) + 0x14);
                 mapFlags = *(u32 *)(*(u8 **)(obj + 0x50) + 0x44);
                 if ((mapFlags & 0x40) && !(mapFlags & 0x8000)) {
                     parent = obj;
-                    x = lbl_803DEFB0;
-                    y = x;
-                    z = y;
+                    z = y = x = lbl_803DEFB0;
                     heading = 0;
                 }
             }
@@ -3590,7 +3609,7 @@ checked:
         walk2 += 8;
     }
 
-    *(s16 *)(base + *(s16 *)(obj + 0xb4) * 2 + 0x35e8) = heading;
+    ((SeqRunTables *)base)->headings[*(s16 *)(obj + 0xb4)] = heading;
     j = 0;
     base[*(s16 *)(obj + 0xb4) + 0x3590] = 0;
     base[*(s16 *)(obj + 0xb4) + 0x338c] = 0;
@@ -3600,14 +3619,11 @@ checked:
             seqFlags = *(int *)(base + j * 8 + 0x3d50);
             lbl_803DD124 -= 1;
             p = base + j * 8 + 0x3d4c;
-            rem = (s8)lbl_803DD124 - j;
-            if (j < (s8)lbl_803DD124) {
-                for (k = 0; k < rem; k++) {
-                    int v = *(int *)(p + 8);
-                    *(int *)p = v;
-                    *(int *)(p + 4) = v;
-                    p += 8;
-                }
+            for (k = 0; k < (s8)lbl_803DD124 - j; k++) {
+                int v = *(int *)(p + 8);
+                *(int *)p = v;
+                *(int *)(p + 4) = v;
+                p += 8;
             }
             goto gotFlags;
         }
@@ -3635,14 +3651,14 @@ gotFlags:
         }
     }
 
-    *(f32 *)(base + *(s16 *)(obj + 0xb4) * 4 + 0x3740) = (f32)seqFlags;
-    *(f32 *)(base + *(s16 *)(obj + 0xb4) * 4 + 0x3894) = (f32)seqFlags;
+    ((SeqRunTables *)base)->dists[*(s16 *)(obj + 0xb4)] = (f32)seqFlags;
+    ((SeqRunTables *)base)->frames[*(s16 *)(obj + 0xb4)] = (f32)seqFlags;
 
     if (slot >= 0 && slot < 0x55) {
         if (lbl_803DD0BC < 0x1e) {
-            *(s16 *)(base + lbl_803DD0BC * 6 + 0x2a80) = slot;
-            *(s16 *)(base + lbl_803DD0BC * 6 + 0x2a84) = count;
-            *(s16 *)(base + lbl_803DD0BC++ * 6 + 0x2a82) = seqFlags;
+            ((SeqRunTables *)base)->recs[lbl_803DD0BC].slot = slot;
+            ((SeqRunTables *)base)->recs[lbl_803DD0BC].count = count;
+            ((SeqRunTables *)base)->recs[lbl_803DD0BC++].flags = seqFlags;
         }
     }
 
