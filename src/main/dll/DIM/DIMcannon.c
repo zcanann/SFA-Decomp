@@ -2079,6 +2079,23 @@ void link_levcontrol_free(int obj) {
         case 0x49: Music_Trigger(0x36, 0); break;
     }
 }
+void link_levcontrol_update(int *obj) {
+    s8 *inner = *(s8 **)((char *)obj + 0xb8);
+    f32 *player = (f32 *)Obj_GetPlayerObject();
+    if (player == NULL) return;
+
+    if ((s32)inner[0] != (s32)*((s8 *)obj + 0xac)) {
+        if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
+            link_levcontrol_applyEnterAreaEffects(obj);
+        } else {
+            return;
+        }
+    }
+    if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
+        link_levcontrol_updateAreaMusic(obj);
+    }
+    inner[0] = (s8)coordsToMapCell(player[3], player[5]);
+}
 extern void *gSHthorntailAnimationInterface;
 extern void SCGameBitLatch_Update(void *p, int a, int b, int c, int d, int e);
 void link_levcontrol_updateAreaMusic(int *obj) {
@@ -2201,23 +2218,6 @@ void imspacethruster_init(int *obj, u8 *param2) {
         }
     }
     *(u8 *)((char *)obj + 0x36) = 0;
-}
-void link_levcontrol_update(int *obj) {
-    s8 *inner = *(s8 **)((char *)obj + 0xb8);
-    f32 *player = (f32 *)Obj_GetPlayerObject();
-    if (player == NULL) return;
-
-    if ((s32)inner[0] != (s32)*((s8 *)obj + 0xac)) {
-        if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
-            link_levcontrol_applyEnterAreaEffects(obj);
-        } else {
-            return;
-        }
-    }
-    if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
-        link_levcontrol_updateAreaMusic(obj);
-    }
-    inner[0] = (s8)coordsToMapCell(player[3], player[5]);
 }
 void link_levcontrol_init(int *obj) {
     s8 *inner = *(s8 **)((char *)obj + 0xb8);
