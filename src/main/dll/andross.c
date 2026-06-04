@@ -362,18 +362,18 @@ void andross_update(int obj)
   fstate = (f32 *)piVar14;
   iVar12 = 0;
   if (*(u8 *)((int)piVar14 + 0xb6) != 0) {
-    *(u8 *)((int)piVar14 + 0xb6) = *(u8 *)((int)piVar14 + 0xb6) - 1;
+    *(u8 *)((int)piVar14 + 0xb6) -= 1;
     goto LAB_8023ef14;
   }
-  if (piVar14[1] == 0) {
+  if (*(void **)(piVar14 + 1) == NULL) {
     iVar5 = ObjList_FindObjectById(0x47b78);
     piVar14[1] = iVar5;
   }
-  if (piVar14[2] == 0) {
+  if (*(void **)(piVar14 + 2) == NULL) {
     iVar5 = ObjList_FindObjectById(0x47b6a);
     piVar14[2] = iVar5;
   }
-  if (piVar14[3] == 0) {
+  if (*(void **)(piVar14 + 3) == NULL) {
     iVar5 = ObjList_FindObjectById(0x47dd9);
     piVar14[3] = iVar5;
   }
