@@ -3382,3 +3382,68 @@ void fn_8005A8A4(f32* planes, int count)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int mapRectFn_8005a728(int bx, int bz, char* obj)
+{
+    f32 a1, a2, b1, b2, c1, c2;
+    f32 p3;
+    f32 fx, fz, x2, z2, y0, y1;
+    f32 v;
+    f32* plane;
+    int i;
+    int j;
+    int hit;
+
+    fx = gMapBlockWorldSize * (f32)bx;
+    fz = gMapBlockWorldSize * (f32)bz;
+    x2 = gMapBlockWorldSize + fx;
+    z2 = gMapBlockWorldSize + fz;
+    if (obj) {
+        y0 = (f32)*(s16*)(obj + 0x8a);
+        y1 = (f32)*(s16*)(obj + 0x8c);
+    } else {
+        y0 = (&lbl_803DEBCC)[8];
+        y1 = (&lbl_803DEBCC)[9];
+    }
+    plane = (f32*)gViewFrustumPlanes;
+    for (i = 0; i < 5; i++) {
+        f32 p0 = plane[0];
+        f32 p1 = plane[1];
+        f32 p2 = plane[2];
+        p3 = plane[3];
+        j = 0;
+        hit = 0;
+        a1 = fx * p0;
+        a2 = x2 * p0;
+        b1 = fz * p2;
+        b2 = z2 * p2;
+        c1 = y0 * p1;
+        c2 = y1 * p1;
+        while (j < 8 && hit == 0) {
+            if (j & 1)
+                v = a1;
+            else
+                v = a2;
+            if (j & 2)
+                v += b1;
+            else
+                v += b2;
+            if (j & 4)
+                v += c1;
+            else
+                v += c2;
+            v += p3;
+            if (v > lbl_803DEBCC)
+                hit = 1;
+            j++;
+        }
+        if (j == 8 && hit == 0)
+            return 0;
+        plane += 5;
+    }
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
