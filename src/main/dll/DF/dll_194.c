@@ -42,69 +42,74 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distan
                       float *phaseOut, u8 *sideOut)
 {
   DFropenodeExtra *extra;
-  DFRope *rope;
-  f32 localX;
-  f32 localY;
+  int result;
+  int offset;
+  int i;
   f32 localZ;
-  f32 distance;
-  f32 segmentPhase;
+  f32 localY;
+  f32 localX;
+  f32 best;
+  f32 phase;
+  f32 x;
+  f32 y;
+  f32 z;
   f32 dx;
   f32 dy;
   f32 dz;
-  f32 x;
-  f32 bestDistance;
-  f32 *node;
-  int segmentIndex;
-  int nodeOffset;
-  u32 i;
+  f32 distance;
 
   extra = *(DFropenodeExtra **)(obj + 0xb8);
-  segmentIndex = 0;
   if ((*(u8 *)(*(int *)(obj + 0x4c) + 0x18) & 1) == 0) {
-    segmentIndex = 0;
-  } else if (extra->linkedObj == 0) {
-    segmentIndex = 0;
-  } else if ((((double)extra->minX > (double)worldX) ||
-              ((double)extra->maxX < (double)worldX)) ||
-             ((double)worldZ < (double)extra->minZ) || ((double)extra->maxZ < (double)worldZ)) {
-    segmentIndex = 0;
-  } else {
-    *distanceOut = lbl_803E4E1C;
-    localX = (f32)((double)worldX - (double)*(f32 *)(obj + 0xc));
-    localY = (f32)((double)worldY - (double)*(f32 *)(obj + 0x10));
-    localZ = (f32)((double)worldZ - (double)*(f32 *)(obj + 0x14));
-    rope = (DFRope *)extra->rope;
-    nodeOffset = 0;
-    bestDistance = lbl_803E4DFC;
-    for (i = 0; (int)i < (int)(rope->count - 1); i++) {
+    return 0;
+  }
+  if (extra->linkedObj == NULL) {
+    return 0;
+  }
+  if (worldX < extra->minX || worldX > extra->maxX || worldZ < extra->minZ ||
+      worldZ > extra->maxZ) {
+    return 0;
+  }
+  *distanceOut = lbl_803E4E1C;
+  localX = worldX - *(f32 *)(obj + 0xc);
+  localY = worldY - *(f32 *)(obj + 0x10);
+  localZ = worldZ - *(f32 *)(obj + 0x14);
+  {
+    i = 0;
+    result = 0;
+    offset = 0;
+    best = lbl_803E4DFC;
+    for (; i < extra->rope->count - 1; i++) {
+      int node;
+
       x = localX;
-      dy = localY;
-      dz = localZ;
-      node = (float *)((int)rope->nodes + nodeOffset);
-      segmentPhase = fn_801C1698(node[0], node[1], node[2], node[13], node[14], node[15], &x, &dy,
-                                 &dz);
-      if ((bestDistance <= segmentPhase) && (segmentPhase < lbl_803E4E18)) {
-        dx = dz - localZ;
-        dz = x - localX;
-        dy = localY - dy;
-        distance = sqrtf(dx * dx + dz * dz + dy * dy);
+      y = localY;
+      z = localZ;
+      node = (int)extra->rope->nodes + offset;
+      phase = fn_801C1698(*(f32 *)(node + 0), *(f32 *)(node + 4), *(f32 *)(node + 8),
+                          *(f32 *)(node + 0x34), *(f32 *)(node + 0x38), *(f32 *)(node + 0x3c),
+                          &x, &y, &z);
+      if (phase >= best && phase < lbl_803E4E18) {
+        dx = x - localX;
+        dy = y - localY;
+        dz = z - localZ;
+        distance = sqrtf(dx * dx + dy * dy + dz * dz);
         if (distance < *distanceOut) {
-          segmentIndex = i + 1;
+          result = i + 1;
           *distanceOut = distance;
-          *phaseOut = DFRope_S32AsFloat(i) + segmentPhase;
+          *phaseOut = (f32)i + phase;
         }
       }
-      nodeOffset += 0x34;
-    }
-    if (segmentIndex != 0) {
-      if (((int)(u32)rope->count >> 1) < segmentIndex - 1) {
-        *sideOut = 1;
-      } else {
-        *sideOut = 0;
-      }
+      offset += 0x34;
     }
   }
-  return segmentIndex;
+  if (result != 0) {
+    if (result - 1 <= ((int)extra->rope->count >> 1)) {
+      *sideOut = 0;
+    } else {
+      *sideOut = 1;
+    }
+  }
+  return result;
 }
 #pragma scheduling reset
 
@@ -124,21 +129,20 @@ int dfropenode_func0E(int obj, f32 worldX, f32 worldY, f32 worldZ, float *distan
 #pragma scheduling off
 void dfropenode_render2(f32 phase, f32 force, int obj)
 {
-  DFropenodeExtra *extra;
-  int segmentOffset;
-  int node;
-  s8 segmentIndex;
+  int extra;
+  s8 idx;
   f32 fraction;
+  int node;
 
-  extra = *(DFropenodeExtra **)(obj + 0xb8);
-  phase = phase - DFRope_S32AsFloat((s32)(s8)(s32)phase);
-  segmentIndex = (s8)(s32)phase;
-  fraction = phase - DFRope_S32AsFloat(segmentIndex);
-  segmentOffset = segmentIndex * 0x34;
-  node = **(int **)&extra->rope + segmentOffset;
-  *(f32 *)(node + 0x1c) = (f32)force * fraction + *(f32 *)(node + 0x1c);
-  node = **(int **)&extra->rope + segmentOffset;
-  *(f32 *)(node + 0x1c) = (f32)force * (lbl_803E4E18 - fraction) + *(f32 *)(node + 0x1c);
+  extra = *(int *)(obj + 0xb8);
+  phase = phase - (f32)(s8)phase;
+  idx = (s8)phase;
+  fraction = phase - (f32)idx;
+  node = **(int **)(extra + 0x2c) + idx * 0x34;
+  *(f32 *)(node + 0x1c) = force * fraction + *(f32 *)(node + 0x1c);
+  fraction = lbl_803E4E18 - fraction;
+  node = **(int **)(extra + 0x2c) + idx * 0x34;
+  *(f32 *)(node + 0x1c) = force * fraction + *(f32 *)(node + 0x1c);
 }
 #pragma scheduling reset
 
@@ -158,26 +162,29 @@ void dfropenode_render2(f32 phase, f32 force, int obj)
 #pragma scheduling off
 void dfropenode_modelMtxFn(f32 distance, int obj, float *phase)
 {
-  DFropenodeExtra *extra;
-  int nodeBase;
-  int segmentOffset;
-  s32 segmentRaw;
-  s8 segmentIndex;
+  int extra;
+  s32 raw;
+  s8 idx;
+  int node;
+  f32 ph;
+  f32 x0;
   f32 dx;
   f32 dz;
-  f32 segmentLength;
+  f32 len;
 
-  extra = *(DFropenodeExtra **)(obj + 0xb8);
-  segmentRaw = (s32)*phase;
-  segmentIndex = (s8)segmentRaw;
-  *phase = *phase - DFRope_S32AsFloat(segmentIndex);
-  nodeBase = **(int **)&extra->rope;
-  segmentOffset = segmentIndex * 0x34;
-  dx = *(f32 *)(nodeBase + segmentOffset) - *(f32 *)(nodeBase + segmentOffset + 0x34);
-  dz = *(f32 *)(nodeBase + segmentOffset + 8) - *(f32 *)(nodeBase + segmentOffset + 0x3c);
-  segmentLength = sqrtf(dx * dx + dz * dz);
-  *phase = *phase + distance / segmentLength;
-  *phase = *phase + DFRope_S32AsFloat((s8)segmentRaw);
+  extra = *(int *)(obj + 0xb8);
+  ph = *phase;
+  raw = (s32)ph;
+  idx = (s8)raw;
+  *phase = ph - (f32)idx;
+  x0 = *((f32 *)**(int **)(extra + 0x2c) + idx * 13);
+  node = **(int **)(extra + 0x2c) + idx * 0x34;
+  dx = x0 - *(f32 *)(node + 0x34);
+  dz = *(f32 *)(node + 8) - *(f32 *)(node + 0x3c);
+  len = sqrtf(dx * dx + dz * dz);
+  distance = distance / len;
+  *phase = *phase + distance;
+  *phase = *phase + (f32)(s8)raw;
 }
 #pragma scheduling reset
 
@@ -198,30 +205,24 @@ void dfropenode_modelMtxFn(f32 distance, int obj, float *phase)
 void dfropenode_func0B(f32 phase, int obj, float *xOut, float *yOut, float *zOut)
 {
   DFropenodeExtra *extra;
-  int segmentOffset;
-  int node;
-  s8 segmentIndex;
-  f32 fraction;
+  s8 idx;
   f32 x0;
-  f32 y0;
-  f32 y1;
-  f32 z0;
-  f32 z1;
+  f32 dy;
+  f32 dz;
+  f32 fraction;
+  DFRopeNode *node;
+  int nodes;
 
   extra = *(DFropenodeExtra **)(obj + 0xb8);
-  segmentIndex = (s8)(s32)phase;
-  fraction = (f32)(phase - (double)DFRope_S32AsFloat_SubAsFloat(segmentIndex));
-  segmentOffset = segmentIndex * 0x34;
-  node = **(int **)&extra->rope + segmentOffset;
-  y0 = *(f32 *)(node + 0x38);
-  y1 = *(f32 *)(node + 4);
-  z0 = *(f32 *)(node + 0x3c);
-  z1 = *(f32 *)(node + 8);
-  x0 = *(f32 *)(**(int **)&extra->rope + segmentOffset);
-  *xOut = (*(f32 *)(node + 0x34) - x0) * fraction + (*(f32 *)(obj + 0xc) + x0);
-  *yOut = (y0 - y1) * fraction +
-          (*(f32 *)(obj + 0x10) + *(f32 *)(**(int **)&extra->rope + segmentOffset + 4));
-  *zOut = (z0 - z1) * fraction +
-          (*(f32 *)(obj + 0x14) + *(f32 *)(**(int **)&extra->rope + segmentOffset + 8));
+  idx = (s8)phase;
+  fraction = phase - (f32)idx;
+  nodes = (int)extra->rope->nodes;
+  node = (DFRopeNode *)(nodes + idx * 0x34);
+  dy = node[1].pos[1] - node->pos[1];
+  dz = node[1].pos[2] - node->pos[2];
+  x0 = *(f32 *)(nodes + idx * 0x34);
+  *xOut = (node[1].pos[0] - x0) * fraction + (*(f32 *)(obj + 0xc) + x0);
+  *yOut = dy * fraction + (*(f32 *)(obj + 0x10) + extra->rope->nodes[idx].pos[1]);
+  *zOut = dz * fraction + (*(f32 *)(obj + 0x14) + extra->rope->nodes[idx].pos[2]);
 }
 #pragma scheduling reset
