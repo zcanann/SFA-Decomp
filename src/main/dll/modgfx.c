@@ -4728,6 +4728,242 @@ void boneParticleEffect_release(void)
     if (lbl_803DD2A8 != NULL) textureFree(lbl_803DD2A8);
 }
 
+extern uint GameBit_Get(int eventId);
+extern undefined4 GameBit_Set(int eventId, int value);
+extern void Sfx_PlayFromObject(void *obj, int id);
+extern u32 randomGetRange(int min, int max);
+extern f32 lbl_8030FE38[];
+extern s16 lbl_803DD2BC;
+extern s16 lbl_803DD2B4;
+extern s32 lbl_803DD2B0;
+extern s32 lbl_803DD2B8;
+extern f32 lbl_803DD2AC;
+extern f32 lbl_803DB798;
+extern s32 lbl_803DD2A0;
+extern f32 lbl_803DF4A8;
+extern f32 lbl_803DF4AC;
+extern f32 lbl_803DF4B0;
+extern f32 lbl_803DF4B4;
+extern f32 lbl_803DF4B8;
+extern f32 lbl_803DF4BC;
+extern f32 lbl_803DF4C0;
+extern f32 lbl_803DF4C4;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern int *gPartfxInterface;
+typedef void (*BoneFxSpawnFn)(void *, void *, void *, int, int, void *);
+typedef u8 BoneFxJRow[16];
+typedef struct BoneFxVtx {
+    u16 e0;
+    u16 de;
+    u16 dc;
+    u16 pad;
+    f32 w;
+    f32 vx;
+    f32 vy;
+    f32 vz;
+} BoneFxVtx;
+extern void Matrix_TransformPoint(void *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern void Camera_LoadModelViewMatrix(void *a, int b, void *c, f32 e, f32 f, int d);
+extern void GXSetCullMode(int mode);
+extern void setTextColor(void *ctx, int r, int g, int b, int a);
+extern void _textSetColor(void *ctx, int r, int g, int b, int a);
+extern void textureFn_800541ac(void *ctx, void *tex, int a, int b, int c, int d, int e);
+extern void textureSetupFn_800799c0(void);
+extern void geomDrawFn_800796f0(void);
+extern void gxTexColorFn_80079254(void);
+extern void textRenderSetupFn_80079804(void);
+extern void gxBlendFn_80078b4c(void);
+extern void drawFn_8005cf8c(void *a, void *b, int count);
+
+/* EN v1.0 0x800A433C  size: 1764b  per-bone particle vertex update + draw. */
+#pragma scheduling off
+#pragma peephole off
+void boneParticleEffect_update(void *ctx, int p2, u8 *o)
+{
+    BoneFxVtx s;
+    u8 *base;
+    int *m;
+    int slot;
+    void **grp;
+    void **grp2;
+    int row;
+    s16 j;
+    s16 k;
+    u32 id;
+    u32 cls;
+    u8 *mtx;
+    u8 *idp;
+    f32 *pa;
+    f32 *pb;
+    f32 *pc;
+    u8 *jb;
+    s32 idx;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 kA8;
+    f32 kB8;
+    f32 kBC;
+
+    base = (u8 *)lbl_8030FE38;
+    if (GameBit_Get(0x468) != 0) {
+        GameBit_Set(0x468, 0);
+        lbl_803DD2BC = 0xf;
+        Sfx_PlayFromObject(o, 0x281);
+    }
+    m = *(int **)(*(int *)(o + 0x7c) + *(s8 *)(o + 0xad) * 4);
+    if (lbl_803DD2B4 > 6) {
+        lbl_803DD2B4 = 0;
+    }
+    if (lbl_803DD2B0 > *(u8 *)(*m + 0xf3) - 1) {
+        lbl_803DD2B0 = 0;
+    }
+    lbl_803DD2B8 = lbl_803DD2B8 + framesThisStep;
+    if (lbl_803DD2B8 > 0x1f) {
+        lbl_803DD2B8 = lbl_803DD2B8 - 0x1f;
+    }
+    lbl_803DD2AC = lbl_803DB798 * timeDelta + lbl_803DD2AC;
+    if (lbl_803DD2AC > lbl_803DF4AC) {
+        lbl_803DB798 = lbl_803DB798 * lbl_803DF4B0;
+        lbl_803DD2AC = lbl_803DF4AC;
+        Sfx_PlayFromObject(o, 0x282);
+    } else if (lbl_803DD2AC < lbl_803DF4B4) {
+        lbl_803DB798 = lbl_803DB798 * lbl_803DF4B0;
+        lbl_803DD2AC = lbl_803DF4B4;
+        Sfx_PlayFromObject(o, 0x282);
+    }
+    slot = 0;
+    grp2 = (void **)lbl_8039C2C0;
+    grp = (void **)lbl_8039C2C0;
+    do {
+        if (slot != 5) {
+            lbl_803DD2B4 = slot;
+            row = 0;
+            j = 0;
+            idp = base + 0x5b4;
+            kA8 = lbl_803DF4A8;
+            kB8 = lbl_803DF4B8;
+            kBC = lbl_803DF4BC;
+            while (j < 5) {
+                s.vx = kA8;
+                s.vy = kA8;
+                s.vz = kA8;
+                s.w = kB8;
+                s.dc = 0;
+                s.de = 0;
+                s.e0 = 0;
+                jb = (u8 *)((int *)m)[(*(u16 *)((u8 *)m + 0x18) & 1) + 3];
+                id = *(u8 *)(base + lbl_803DD2B4 * 5 + j + 0x5b4);
+                mtx = (u8 *)((BoneFxJRow *)jb + (id << 4));
+                dx = *(f32 *)(mtx + 0x30) + playerMapOffsetX;
+                dy = *(f32 *)(mtx + 0x34);
+                dz = *(f32 *)(mtx + 0x38) + playerMapOffsetZ;
+                dx = dx - *(f32 *)(o + 0xc);
+                dy = dy - *(f32 *)(o + 0x10);
+                dz = dz - *(f32 *)(o + 0x14);
+                dx = dx * kBC;
+                if (id == 0x1d || id == 0x1d) {
+                    dy = lbl_803DF4BC * (lbl_803DF4C0 + dy);
+                } else {
+                    dy = dy * kBC;
+                }
+                dz = dz * kBC;
+                Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
+                k = 0;
+                pa = (f32 *)(base + 0x90);
+                pb = (f32 *)base;
+                pc = (f32 *)(base + 0x120);
+                while (k < 4) {
+                    u8 *t;
+                    u8 *t4;
+                    id = *(u8 *)(idp + lbl_803DD2B4 * 5);
+                    t = base + id;
+                    cls = *(u8 *)(t + 0x590);
+                    if (cls == 0) {
+                        t4 = base + id * 4;
+                        s.vx = pa[0] * *(f32 *)(t4 + 0x5d8);
+                        s.vy = pa[1] * *(f32 *)(t4 + 0x5d8);
+                        s.vz = pa[2] * *(f32 *)(t4 + 0x664);
+                    } else if (cls == 1) {
+                        t4 = base + id * 4;
+                        s.vx = pb[0] * *(f32 *)(t4 + 0x5d8);
+                        s.vy = pb[1] * *(f32 *)(t4 + 0x5d8);
+                        s.vz = pb[2] * *(f32 *)(t4 + 0x664);
+                    } else if (cls == 2) {
+                        t4 = base + id * 4;
+                        s.vx = pc[0] * *(f32 *)(t4 + 0x5d8);
+                        s.vy = pc[1] * *(f32 *)(t4 + 0x5d8);
+                        s.vz = pc[2] * *(f32 *)(t4 + 0x664);
+                    }
+                    Matrix_TransformPoint(mtx, s.vx, s.vy, s.vz, &s.vx, &s.vy, &s.vz);
+                    s.vx = s.vx + playerMapOffsetX;
+                    s.vz = s.vz + playerMapOffsetZ;
+                    idx = (k + row) * 0x10;
+                    *(s16 *)((u8 *)*grp + idx) = (s32)(dx + (s.vx - *(f32 *)(o + 0xc)));
+                    *(s16 *)((u8 *)*grp + idx + 2) = (s32)(dy + (s.vy - *(f32 *)(o + 0x10)));
+                    *(s16 *)((u8 *)*grp + idx + 4) = (s32)(dz + (s.vz - *(f32 *)(o + 0x14)));
+                    *(u8 *)((u8 *)*grp + idx + 0xf) = 0x9b;
+                    t = base + idx;
+                    *(s16 *)((u8 *)*grp + idx + 0xa) = (s16)(*(s16 *)(t + 0x1ba) - (lbl_803DD2B8 << 2));
+                    pa += 3;
+                    pb += 3;
+                    pc += 3;
+                    k += 1;
+                }
+                row += 4;
+                idp += 1;
+                j += 1;
+            }
+        }
+        grp += 1;
+        slot += 1;
+    } while (slot < 7);
+    s.vx = *(f32 *)(o + 0xc);
+    s.vy = *(f32 *)(o + 0x10);
+    s.vz = *(f32 *)(o + 0x14);
+    s.w = lbl_803DF4C4;
+    setTextColor(ctx, 0xff, 0xff, 0xff, 0xff);
+    if (lbl_803DD2BC != 0) {
+        (*(BoneFxSpawnFn *)(*(int *)gPartfxInterface + 8))(o, (void *)0x28c, NULL, 1, -1, NULL);
+        (*(BoneFxSpawnFn *)(*(int *)gPartfxInterface + 8))(o, (void *)0x28c, NULL, 1, -1, NULL);
+        (*(BoneFxSpawnFn *)(*(int *)gPartfxInterface + 8))(o, (void *)0x28c, NULL, 1, -1, NULL);
+        if ((int)randomGetRange(0, 1) != 0) {
+            textureFn_800541ac(ctx, lbl_803DD2A4, 0, 0, 0, 0, 0);
+        } else {
+            textureFn_800541ac(ctx, lbl_803DD2A8, 0, 0, 0, 0, 0);
+        }
+        lbl_803DD2BC -= framesThisStep;
+        if (lbl_803DD2BC < 0) {
+            lbl_803DD2BC = 0;
+        }
+    } else {
+        textureFn_800541ac(ctx, lbl_803DD2A4, 0, 0, 0, 0, 0);
+    }
+    Camera_LoadModelViewMatrix(ctx, p2, &s, lbl_803DF4B8, lbl_803DF4A8, 0);
+    GXSetCullMode(0);
+    _textSetColor(ctx, 0xff, 0xff, 0xff, 0xff);
+    textureSetupFn_800799c0();
+    geomDrawFn_800796f0();
+    gxTexColorFn_80079254();
+    textRenderSetupFn_80079804();
+    gxBlendFn_80078b4c();
+    {
+        int i;
+        i = 0;
+        do {
+            drawFn_8005cf8c(*grp2, base + 0x2f0, 0x20);
+            grp2 += 1;
+            i += 1;
+        } while (i < 7);
+    }
+    lbl_803DD2A0 = 1 - lbl_803DD2A0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 typedef struct {
     s16 a, b, c;
     u16 pad;
