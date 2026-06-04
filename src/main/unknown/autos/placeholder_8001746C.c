@@ -14383,3 +14383,152 @@ void init(void) {
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern u8 *textureAlloc(u32 w, u32 h, int kind, int a, int b, int c, int d, int e, int f);
+
+typedef struct GameTextCharset {
+    u8 *strings;
+    u8 *entries;
+    int headerCount;
+    int count;
+    u8 pad10[0xc];
+    int status;
+} GameTextCharset;
+
+#pragma push
+#pragma scheduling off
+#pragma dont_inline on
+void setLanguageFn_8001ad64(void *reqp) {
+    u8 *req = (u8 *)reqp;
+    GameTextCharset *cs;
+    int *data;
+    u8 *hdr;
+    int ofs;
+    int *table;
+    int numStrings;
+    int *strs;
+    int i;
+    u8 *txt;
+    int *texHdr;
+    u16 *p;
+    u16 *texStart;
+    int **slot;
+    int kind;
+    u32 bpp;
+    u32 w;
+    u32 h;
+    int n;
+    u32 size;
+    u16 *newBuf;
+    u16 *old;
+    int delta;
+    int *strs2;
+
+    DCStoreRange(*(void **)(req + 0x3c), *(u32 *)(req + 0x40));
+    if (req[0x4b] == 1) {
+        cs = (GameTextCharset *)&lbl_8033AF40[1];
+    } else if (req[0x4b] == 3) {
+        cs = (GameTextCharset *)&lbl_8033AF40[3];
+    } else {
+        cs = (GameTextCharset *)&lbl_8033AF40[0];
+        curGameTextDir = (void *)req[0x48];
+        curLanguage = req[0x49];
+    }
+    data = *(int **)(req + 0x3c);
+    cs->headerCount = data[0];
+    if (cs->headerCount == 0) {
+        cs->status = 3;
+        *(int *)(req + 0x44) = 6;
+        return;
+    }
+    cs->strings = (u8 *)(data + 1);
+    hdr = (u8 *)data + cs->headerCount * 16;
+    cs->count = *(u16 *)(hdr + 4);
+    ofs = *(u16 *)(hdr + 6);
+    cs->entries = hdr + 8;
+    table = (int *)(cs->entries + cs->count * 12);
+    numStrings = table[0];
+    strs = table + 1;
+    for (i = 0; i < cs->count; i++) {
+        *(int **)(cs->entries + i * 12 + 8) = strs + *(int *)(cs->entries + i * 12 + 8);
+    }
+    txt = (u8 *)(table + numStrings + 1);
+    for (i = 0; i < numStrings; i++) {
+        strs[i] = strs[i] + (int)txt;
+    }
+    texHdr = (int *)(txt + ofs);
+    p = (u16 *)((u8 *)texHdr + texHdr[0] + 4);
+    texStart = p;
+    slot = (int **)cs;
+    while (1) {
+        kind = p[0];
+        bpp = p[1];
+        w = p[2];
+        h = p[3];
+        p += 4;
+        if (w == 0 && h == 0) {
+            break;
+        }
+        switch (kind) {
+        case 1:
+            kind = 5;
+            break;
+        case 2:
+            kind = 0;
+            break;
+        }
+        if (slot[4] != NULL) {
+            mmSetFreeDelay(0);
+            mm_free(slot[4]);
+            mmSetFreeDelay(2);
+        }
+        slot[4] = (int *)textureAlloc(w, h, kind, 0, 0, 0, 0, 1, 1);
+        if (slot[4] != NULL) {
+            if (bpp == 4) {
+                u8 *dst8 = (u8 *)slot[4] + 0x60;
+                u8 *src8 = (u8 *)p;
+                n = (int)(w * h) >> 1;
+                for (i = 0; i < n; i++) {
+                    dst8[i] = src8[i];
+                }
+                DCFlushRange((u8 *)slot[4] + 0x60, *(u32 *)((u8 *)slot[4] + 0x44));
+            } else {
+                u16 *dst16 = (u16 *)((u8 *)slot[4] + 0x60);
+                u16 *src16 = p;
+                n = w * h;
+                for (i = 0; i < n; i++) {
+                    dst16[i] = src16[i];
+                }
+                DCFlushRange((u8 *)slot[4] + 0x60, *(u32 *)((u8 *)slot[4] + 0x44));
+            }
+        }
+        p += (int)(w * h * bpp) >> 4;
+        slot = slot + 1;
+    }
+    size = (u32)((u8 *)texStart - *(u8 **)(req + 0x3c));
+    newBuf = (u16 *)mmAlloc(size, 0x1a, 0);
+    old = *(u16 **)(req + 0x3c);
+    delta = (int)newBuf - (int)old;
+    n = size >> 1;
+    for (i = 0; i < n; i++) {
+        newBuf[i] = old[i];
+    }
+    cs->strings = cs->strings + delta;
+    cs->entries = cs->entries + delta;
+    for (i = 0; i < cs->count; i++) {
+        *(int *)(cs->entries + i * 12 + 8) = *(int *)(cs->entries + i * 12 + 8) + delta;
+    }
+    strs2 = (int *)((u8 *)strs + delta);
+    for (i = 0; i < numStrings; i++) {
+        strs2[i] = strs2[i] + delta;
+    }
+    mmSetFreeDelay(0);
+    mm_free(*(void **)(req + 0x3c));
+    *(int *)(req + 0x3c) = 0;
+    mmSetFreeDelay(2);
+    *(u16 **)(req + 0x3c) = newBuf;
+    cs->status = 2;
+    *(int *)(req + 0x44) = 3;
+}
+#pragma dont_inline reset
+#pragma pop
