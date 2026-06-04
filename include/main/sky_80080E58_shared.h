@@ -155,6 +155,7 @@ extern const f32 lbl_803DF0F4;
 extern const f32 lbl_803DF0F8;
 extern const f32 lbl_803DF0FC;
 extern const f32 lbl_803DF100;
+extern const f32 lbl_803DF104;
 extern f64 lbl_803DF090;
 extern void *textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int e, int f);
 extern f32 lbl_803DF07C;
