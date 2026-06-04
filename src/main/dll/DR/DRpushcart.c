@@ -1066,7 +1066,7 @@ extern u32 ObjGroup_FindNearestObject(int kind, int obj, f32 *out);
 extern int playerGetMoney(void *player);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void dll_2E_func03(int, int);
-extern void shopKeeperRotateFn_801e7c4c(int, void *, int);
+extern f32 shopKeeperRotateFn_801e7c4c(s16 *obj, void *player, int mode);
 extern int *gPlayerInterface;
 
 typedef struct {
@@ -1098,7 +1098,7 @@ void shopkeeper_update(int obj) {
         }
     }
     if ((*(u8 *)(state + 0x9D4) & 0x04) != 0) {
-        shopKeeperRotateFn_801e7c4c(obj, player, 1);
+        shopKeeperRotateFn_801e7c4c((s16 *)obj, player, 1);
     }
     *(f32 *)(obj + 8) = *(f32 *)(*(int *)(obj + 0x50) + 4);
     if (*(void **)(state + 0x9B4) == NULL) {
@@ -1453,6 +1453,53 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
     }
     *(u8 *)(obj + 0x36) = *(u8 *)(state + 0x9D6);
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E5A24;
+
+#pragma scheduling off
+#pragma peephole off
+f32 shopKeeperRotateFn_801e7c4c(s16 *obj, void *player, int mode)
+{
+    f32 dx;
+    f32 dz;
+    f32 dist;
+    u32 angle;
+    int diff;
+
+    dx = *(f32 *)((char *)player + 0xC) - *(f32 *)((char *)obj + 0xC);
+    dz = *(f32 *)((char *)player + 0x14) - *(f32 *)((char *)obj + 0x14);
+    dist = sqrtf(dx * dx + dz * dz);
+    if (dist != lbl_803E59DC) {
+        dx /= dist;
+        dz /= dist;
+    }
+    if (dist > lbl_803E5A24) {
+        angle = (u16)getAngle(dx, dz);
+        if (mode != 0) {
+            *obj = (s16)angle;
+        } else {
+            diff = angle - (u16)*obj;
+            if (diff > 0x8000) {
+                diff -= 0xFFFF;
+            }
+            if (diff < -0x8000) {
+                diff += 0xFFFF;
+            }
+            if (diff > 0x2000) {
+                diff -= 0x2000;
+            } else if (diff < -0x2000) {
+                diff += 0x2000;
+            } else {
+                diff = 0;
+            }
+            *obj = (s16)(int)((f32)(diff >> 3) * timeDelta + (f32)*obj);
+        }
+    }
+    return dist;
 }
 #pragma peephole reset
 #pragma scheduling reset
