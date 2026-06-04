@@ -16229,3 +16229,59 @@ void Obj_FreeObject(u8 *obj)
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern void *lbl_803DCBC0;
+extern int *lbl_803DCBBC;
+extern int lbl_803DCBB8;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void Obj_InitObjectSystem(void)
+{
+    s16 *p;
+    int *q;
+    int i;
+
+    lbl_803DCB98 = (void **)mmAlloc(0x640, 0xe, 0);
+    lbl_803DCB90 = mmAlloc(0x60, 0xe, 0);
+    lbl_803DCBC0 = mmAlloc(0x10, 0xe, 0);
+    loadAssetFileById((int)&lbl_803DCBA0, 0x3f);
+    lbl_803DCB9C = (getDataFileSize(0x3f) >> 1) - 1;
+    for (p = lbl_803DCBA0 + lbl_803DCB9C; *p == 0;) {
+        p--;
+        lbl_803DCB9C--;
+    }
+    loadAssetFileById((int)&lbl_803DCBBC, 0x3d);
+    lbl_803DCBB8 = 0;
+    for (q = lbl_803DCBBC; *q != -1;) {
+        q++;
+        lbl_803DCBB8++;
+    }
+    lbl_803DCBB8--;
+    lbl_803DCBA8 = (u8 *)mmAlloc(lbl_803DCBB8 * 4, 0xe, 0);
+    lbl_803DCBA4 = (u8 *)mmAlloc(lbl_803DCBB8, 0xe, 0);
+    for (i = 0; i < lbl_803DCBB8; i++) {
+        lbl_803DCBA4[i] = 0;
+    }
+    loadAssetFileById((int)&lbl_803DCBB4, 0x16);
+    loadAssetFileById((int)&lbl_803DCBB0, 0x17);
+    lbl_803DCBAC = 0;
+    for (q = lbl_803DCBB0; *q != -1;) {
+        q++;
+        lbl_803DCBAC++;
+    }
+    lbl_803DCB88 = mmAlloc(0x960, 0xe, 0);
+    ObjHits_InitWorkBuffers();
+    lbl_803DCB94 = 0;
+    lbl_803DCB8C = 0;
+    lbl_803DCB70 = 0;
+    lbl_803DCB84 = 0;
+    fn_80013B6C(&lbl_803DCB7C, 0x38);
+    lbl_803DCBC4 = 0;
+    ObjGroup_ClearAll();
+    ObjHits_ResetWorkBuffers();
+}
+#pragma dont_inline reset
+#pragma pop
