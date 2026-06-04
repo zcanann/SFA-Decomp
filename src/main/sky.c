@@ -1356,11 +1356,11 @@ void sky2_run(void)
                     u = (t - lbl_803DF174) / step;
                     k = 7;
                 }
-                r = mathFn_80010c64(*pp + (off1 = k * 4) + 0x70, u, 0);
-                g = mathFn_80010c64(*pp + (off2 = (k + 0xb) * 4) + 0x70, u, 0);
-                b = mathFn_80010c64(*pp + (k + 0x16) * 4 + 0x70, u, 0);
-                sa = mathFn_80010c64(*pp + off1 + 0x1fc, u, 0);
-                sb = mathFn_80010c64(*pp + off2 + 0x1fc, u, 0);
+                r = Curve_EvalCatmullRom(*pp + (off1 = k * 4) + 0x70, u, 0);
+                g = Curve_EvalCatmullRom(*pp + (off2 = (k + 0xb) * 4) + 0x70, u, 0);
+                b = Curve_EvalCatmullRom(*pp + (k + 0x16) * 4 + 0x70, u, 0);
+                sa = Curve_EvalCatmullRom(*pp + off1 + 0x1fc, u, 0);
+                sb = Curve_EvalCatmullRom(*pp + off2 + 0x1fc, u, 0);
             } else {
                 k = 0;
                 dirp = lbl_8039A7B8;
@@ -2309,13 +2309,13 @@ void skyFn_8008a04c(void)
                 cB = 0;
                 cC = 0x60;
             } else {
-                cA = (u8)(int)fn_80010C50(pA, frac, 0);
-                cB = (int)fn_80010C50(pB, frac, 0);
-                cC = (int)fn_80010C50(pC, frac, 0);
+                cA = (u8)(int)Curve_EvalLinear(pA, frac, 0);
+                cB = (int)Curve_EvalLinear(pB, frac, 0);
+                cC = (int)Curve_EvalLinear(pC, frac, 0);
             }
-            c1 = (int)mathFn_80010c64(lbl_803DD12C + iofs + part4 + 0x20, frac, 0);
-            t2 = (int)mathFn_80010c64(lbl_803DD12C + iofs + idx7 + 0x20, frac, 0);
-            blue = (int)mathFn_80010c64(lbl_803DD12C + iofs + idx14 + 0x20, frac, 0);
+            c1 = (int)Curve_EvalCatmullRom(lbl_803DD12C + iofs + part4 + 0x20, frac, 0);
+            t2 = (int)Curve_EvalCatmullRom(lbl_803DD12C + iofs + idx7 + 0x20, frac, 0);
+            blue = (int)Curve_EvalCatmullRom(lbl_803DD12C + iofs + idx14 + 0x20, frac, 0);
             p = lbl_803DD12C + iofs;
             blend = *(f32 *)(p + 0xb8);
             if (blend != zero) {

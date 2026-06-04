@@ -7592,7 +7592,7 @@ void fn_80172144(int *obj)
 
 extern f32 fn_80293E80(f32 x);
 extern f32 fastFloorf(f32 v);
-extern f32 mathFn_80010ee0(f32 *a, f32 t, f32 *out);
+extern f32 Curve_EvalBSpline(f32 *a, f32 t, f32 *out);
 extern f32 lbl_803E3304;
 extern f32 lbl_803E3308;
 extern f32 lbl_803E32A4;
@@ -7742,9 +7742,9 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                             first = 0;
                         }
                         vp = *(u8 **)slot + *(u16 *)(slot + 0xe) * 20;
-                        *(f32 *)(vp + 0) = mathFn_80010ee0(arrH, frac, NULL);
-                        *(f32 *)(vp + 4) = mathFn_80010ee0(arrI, frac, NULL);
-                        *(f32 *)(vp + 8) = mathFn_80010ee0(arrJ, frac, NULL);
+                        *(f32 *)(vp + 0) = Curve_EvalBSpline(arrH, frac, NULL);
+                        *(f32 *)(vp + 4) = Curve_EvalBSpline(arrI, frac, NULL);
+                        *(f32 *)(vp + 8) = Curve_EvalBSpline(arrJ, frac, NULL);
                         *(f32 *)(vp + 0) = *(f32 *)(vp + 0) + (acc * (*(f32 *)(obj + 0x18) - *(f32 *)(swipe + 0x8c)) + *(f32 *)(swipe + 0x8c));
                         *(f32 *)(vp + 4) = *(f32 *)(vp + 4) + (acc * (*(f32 *)(obj + 0x1c) - *(f32 *)(swipe + 0x90)) + *(f32 *)(swipe + 0x90));
                         *(f32 *)(vp + 8) = *(f32 *)(vp + 8) + (acc * (*(f32 *)(obj + 0x20) - *(f32 *)(swipe + 0x94)) + *(f32 *)(swipe + 0x94));
@@ -7764,9 +7764,9 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
                             }
                             *(s16 *)(vp + 0x10) = k - v;
                         }
-                        *(f32 *)(vp + 0x14) = mathFn_80010ee0(arrE, frac, NULL);
-                        *(f32 *)(vp + 0x18) = mathFn_80010ee0(arrF, frac, NULL);
-                        *(f32 *)(vp + 0x1c) = mathFn_80010ee0(arrG, frac, NULL);
+                        *(f32 *)(vp + 0x14) = Curve_EvalBSpline(arrE, frac, NULL);
+                        *(f32 *)(vp + 0x18) = Curve_EvalBSpline(arrF, frac, NULL);
+                        *(f32 *)(vp + 0x1c) = Curve_EvalBSpline(arrG, frac, NULL);
                         *(f32 *)(vp + 0x14) = *(f32 *)(vp + 0x14) + (acc * (*(f32 *)(obj + 0x18) - *(f32 *)(swipe + 0x8c)) + *(f32 *)(swipe + 0x8c));
                         *(f32 *)(vp + 0x18) = *(f32 *)(vp + 0x18) + (acc * (*(f32 *)(obj + 0x1c) - *(f32 *)(swipe + 0x90)) + *(f32 *)(swipe + 0x90));
                         *(f32 *)(vp + 0x1c) = *(f32 *)(vp + 0x1c) + (acc * (*(f32 *)(obj + 0x20) - *(f32 *)(swipe + 0x94)) + *(f32 *)(swipe + 0x94));

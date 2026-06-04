@@ -1130,8 +1130,8 @@ extern f32 lbl_803DE680;
 extern f32 lbl_803DC8B0;
 extern int lbl_803DB270;
 extern f32 lbl_80338790[];
-extern f32 curveFn_80010ce4(f32 t, f32 *values, f32 *outTangent);
-extern f32 curveFn_80010dc0(f32 t, f32 *values, f32 *outTangent);
+extern f32 Curve_EvalBezier(f32 t, f32 *values, f32 *outTangent);
+extern f32 Curve_EvalHermite(f32 t, f32 *values, f32 *outTangent);
 extern void debugPrintf(char *message, ...);
 extern char sCurvesSetupMoveNetworkCurveTooFewControlPoints[];
 extern char sCurvesSetupMoveNetworkCurveBadControlPointCount[];
@@ -1604,21 +1604,14 @@ void Camera_SetAspectRatio(f32 aspectRatio);
 f32 Camera_GetFovY(void);
 void Camera_SetFovY(f32 fovY);
 void Camera_InitState(void);
-f32 fn_80010C50(f32 t, f32* values);
-f32 mathFn_80010c64(f32 t, f32* values, f32* outTangent);
-f32 curveFn_80010ce4(f32 t, f32* values, f32* outTangent);
-void curveFn_80010d54(f32* values, f32* coefficients);
-f32 curveFn_80010dc0(f32 t, f32* values, f32* outTangent);
-void fn_80010E2C(f32* values, f32* coefficients);
-f32 mathFn_80010ee0(f32 t, f32* values, f32* outTangent);
+f32 Curve_EvalLinear(f32 t, f32* values);
+f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent);
+f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent);
+void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients);
+f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent);
+void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients);
+f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent);
 void fn_80010F6C(CurveHeapNode* heap, s32 count, s32 index);
-#define Curve_EvalLinear fn_80010C50
-#define Curve_EvalCatmullRom mathFn_80010c64
-#define Curve_EvalBezier curveFn_80010ce4
-#define Curve_BuildHermiteCoeffs curveFn_80010d54
-#define Curve_EvalHermite curveFn_80010dc0
-#define Curve_BuildBSplineCoeffs fn_80010E2C
-#define Curve_EvalBSpline mathFn_80010ee0
 #define CurveHeap_SiftDown fn_80010F6C
 s16 Queue_GetCount(RingBufferQueue* queue);
 BOOL Queue_IsEmpty(RingBufferQueue* queue);

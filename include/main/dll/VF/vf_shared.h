@@ -253,7 +253,7 @@ extern f32 FLOAT_803e6d78;
 extern f32 FLOAT_803e6d7c;
 extern f32 FLOAT_803e6d80;
 extern void *Obj_GetPlayerObject(void);
-extern f32 mathFn_80010ee0(f32 *src, int b, f32 t);
+extern f32 Curve_EvalBSpline(f32 *src, int b, f32 t);
 extern int getAngle(f32 dx, f32 dy);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern f32 getXZDistance(f32 *a, f32 *b);

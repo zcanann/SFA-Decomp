@@ -3117,7 +3117,7 @@ void dll_4F_init(void)
     *(f32*)((char*)lbl_803DD590 + 4) = lbl_803E1A88;
 }
 
-extern f32 curveFn_80010dc0(f32 *pts, int mode, f32 t);
+extern f32 Curve_EvalHermite(f32 *pts, int mode, f32 t);
 extern f32 sin(f32);
 extern f32 fn_80293E80(f32);
 extern f32 timeDelta;
@@ -3145,7 +3145,7 @@ void dll_4F_update(int *obj) {
     pts[1] = lbl_803E1A8C;
     pts[2] = lbl_803E1A88;
     pts[3] = lbl_803E1A88;
-    fz = curveFn_80010dc0(pts, 0, *(f32*)((char*)lbl_803DD590 + 4));
+    fz = Curve_EvalHermite(pts, 0, *(f32*)((char*)lbl_803DD590 + 4));
     r30 = *(int**)((char*)obj + 0xa4);
     a = (s16)(0x8000 - *(s16*)r30);
     a = (s16)(a + (s32)(lbl_803E1A90 * fz));

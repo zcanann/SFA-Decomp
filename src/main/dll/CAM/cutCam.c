@@ -11,7 +11,7 @@ extern undefined4 FUN_80006a88();
 extern undefined4 FUN_80006a8c();
 extern ushort FUN_80006be8();
 extern uint FUN_80006c00();
-extern f32 curveFn_80010dc0(f32 param_1,float *param_2,float *param_3);
+extern f32 Curve_EvalHermite(f32 param_1,float *param_2,float *param_3);
 extern ushort getPadFn_80014d9c(int controller);
 extern ushort getButtonsJustPressed(int controller);
 extern uint FUN_80017730();
@@ -593,7 +593,7 @@ void camcontrol_updateModeSettings(int camera)
     curve[1] = lbl_803E16A4;
     curve[2] = lbl_803E16AC;
     curve[3] = lbl_803E16AC;
-    blend = curveFn_80010dc0((float)(*(f64 *)&local_18 - lbl_803E1698) /
+    blend = Curve_EvalHermite((float)(*(f64 *)&local_18 - lbl_803E1698) /
                              (float)(*(f64 *)&local_10 - lbl_803E1698),curve,(float *)0x0);
     cameraMtxVar57[0x23] =
          blend * (cameraMtxVar57[0x25] - cameraMtxVar57[0x24]) + cameraMtxVar57[0x24];

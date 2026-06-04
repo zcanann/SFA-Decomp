@@ -14,8 +14,8 @@ extern undefined4 FUN_80017814();
 extern undefined4 FUN_80017830();
 extern undefined4 camcontrol_getTargetPosition(int param_1,int param_2,float *outPos,void *outAngle);
 extern void curvesMove(void *param_1);
-extern f32 curveFn_80010dc0(f32 param_1,float *param_2,float *param_3);
-extern void curveFn_80010d54(void);
+extern f32 Curve_EvalHermite(f32 param_1,float *param_2,float *param_3);
+extern void Curve_BuildHermiteCoeffs(void);
 extern int getAngle(f32 dx,f32 dz);
 extern void *getSbGalleon(void);
 extern int DBprotection_getCameraState(int *obj);
@@ -313,8 +313,8 @@ void firstPersonExit(short *param_1)
   *(undefined4 *)(lbl_803DD548 + 0x104) = 0;
   *(undefined4 *)(lbl_803DD548 + 0x108) = 4;
   *(undefined4 *)(lbl_803DD548 + 0xf8) = 0;
-  *(code **)(lbl_803DD548 + 0x10c) = (code *)curveFn_80010dc0;
-  *(void **)(lbl_803DD548 + 0x110) = curveFn_80010d54;
+  *(code **)(lbl_803DD548 + 0x10c) = (code *)Curve_EvalHermite;
+  *(void **)(lbl_803DD548 + 0x110) = Curve_BuildHermiteCoeffs;
   uStack_14 = (int)*self ^ 0x80000000;
   local_18 = 0x43300000;
   *(float *)(lbl_803DD548 + 0x40) =

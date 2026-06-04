@@ -340,7 +340,7 @@ void curvesMove(Curve *curve)
 
 #pragma scheduling off
 #pragma peephole off
-f32 fn_80010C50(f32 t, f32* values)
+f32 Curve_EvalLinear(f32 t, f32* values)
 {
     return t * (values[1] - values[0]) + values[0];
 }
@@ -349,7 +349,7 @@ f32 fn_80010C50(f32 t, f32* values)
 
 #pragma scheduling off
 #pragma peephole off
-f32 mathFn_80010c64(f32 t, f32* values, f32* outTangent)
+f32 Curve_EvalCatmullRom(f32 t, f32* values, f32* outTangent)
 {
     f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
     f32 b = (lbl_803DE65C * values[2] + (lbl_803DE660 * values[0] + lbl_803DE694 * values[1])) - values[3];
@@ -366,7 +366,7 @@ f32 mathFn_80010c64(f32 t, f32* values, f32* outTangent)
 
 #pragma scheduling off
 #pragma peephole off
-f32 curveFn_80010ce4(f32 t, f32* values, f32* outTangent)
+f32 Curve_EvalBezier(f32 t, f32* values, f32* outTangent)
 {
     f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
     f32 b = lbl_803DE664 * values[2] +
@@ -383,7 +383,7 @@ f32 curveFn_80010ce4(f32 t, f32* values, f32* outTangent)
 
 #pragma scheduling off
 #pragma peephole off
-void curveFn_80010d54(f32* values, f32* coefficients)
+void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients)
 {
     f32 k698 = lbl_803DE698;
 
@@ -399,7 +399,7 @@ void curveFn_80010d54(f32* values, f32* coefficients)
 
 #pragma scheduling off
 #pragma peephole off
-f32 curveFn_80010dc0(f32 t, f32* values, f32* outTangent)
+f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent)
 {
     f32 a = values[3] + (values[2] + (lbl_803DE660 * values[0] + lbl_803DE698 * values[1]));
     f32 b = (lbl_803DE698 * values[2] + (lbl_803DE668 * values[0] + lbl_803DE664 * values[1])) - values[3];
@@ -414,7 +414,7 @@ f32 curveFn_80010dc0(f32 t, f32* values, f32* outTangent)
 
 #pragma scheduling off
 #pragma peephole off
-void fn_80010E2C(f32* values, f32* coefficients)
+void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients)
 {
     f32 scale;
 
@@ -435,7 +435,7 @@ void fn_80010E2C(f32* values, f32* coefficients)
 
 #pragma scheduling off
 #pragma peephole off
-f32 mathFn_80010ee0(f32 t, f32* values, f32* outTangent)
+f32 Curve_EvalBSpline(f32 t, f32* values, f32* outTangent)
 {
     f32 a = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
     f32 b = lbl_803DE664 * values[2] +

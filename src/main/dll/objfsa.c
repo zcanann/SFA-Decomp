@@ -5188,8 +5188,8 @@ void RomCurve_setA4(void *a, void *b) {
 #pragma scheduling on
 #pragma peephole on
 
-extern void curveFn_80010d54(void);
-extern void curveFn_80010dc0(void);
+extern void Curve_BuildHermiteCoeffs(void);
+extern void Curve_EvalHermite(void);
 extern void curvesMove(float *state);
 extern void curvesSetupMoveNetworkCurve(float *state);
 extern f32 gFloatZero;
@@ -5259,8 +5259,8 @@ int RomCurve_setClosed(float *state, int closed) {
         return 1;
     }
 
-    *(void **)(state + 0x25) = curveFn_80010dc0;
-    *(void **)(state + 0x26) = curveFn_80010d54;
+    *(void **)(state + 0x25) = Curve_EvalHermite;
+    *(void **)(state + 0x26) = Curve_BuildHermiteCoeffs;
     *(float **)(state + 0x21) = state + 0x2a;
     *(float **)(state + 0x22) = state + 0x32;
     *(float **)(state + 0x23) = state + 0x3a;
@@ -5556,8 +5556,8 @@ int RomCurve_func2C(float *state, int unused, int startCurveId)
         return 1;
     }
 
-    *(void **)(stateBytes + 0x94) = curveFn_80010dc0;
-    *(void **)(stateBytes + 0x98) = curveFn_80010d54;
+    *(void **)(stateBytes + 0x94) = Curve_EvalHermite;
+    *(void **)(stateBytes + 0x98) = Curve_BuildHermiteCoeffs;
     *(void **)(stateBytes + 0x84) = stateBytes + 0xa8;
     *(void **)(stateBytes + 0x88) = stateBytes + 0xc8;
     *(void **)(stateBytes + 0x8c) = stateBytes + 0xe8;
@@ -5642,8 +5642,8 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxD
         return 1;
     }
 
-    *(void **)(stateBytes + 0x94) = curveFn_80010dc0;
-    *(void **)(stateBytes + 0x98) = curveFn_80010d54;
+    *(void **)(stateBytes + 0x94) = Curve_EvalHermite;
+    *(void **)(stateBytes + 0x98) = Curve_BuildHermiteCoeffs;
     *(void **)(stateBytes + 0x84) = stateBytes + 0xa8;
     *(void **)(stateBytes + 0x88) = stateBytes + 0xc8;
     *(void **)(stateBytes + 0x8c) = stateBytes + 0xe8;
@@ -5948,8 +5948,8 @@ int fn_800DA980(float *state,void *fromCurve,void *toCurve,void *targetCurve)
         return 1;
     }
 
-    *(void **)(stateBytes + 0x94) = curveFn_80010dc0;
-    *(void **)(stateBytes + 0x98) = curveFn_80010d54;
+    *(void **)(stateBytes + 0x94) = Curve_EvalHermite;
+    *(void **)(stateBytes + 0x98) = Curve_BuildHermiteCoeffs;
     *(float **)(stateBytes + 0x84) = (float *)(stateBytes + 0xa8);
     *(float **)(stateBytes + 0x88) = (float *)(stateBytes + 0xc8);
     *(float **)(stateBytes + 0x8c) = (float *)(stateBytes + 0xe8);

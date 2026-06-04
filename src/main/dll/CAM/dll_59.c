@@ -19,8 +19,8 @@ extern f32 sqrtf(f32 value);
 extern f32 fn_80293E80(f32 angle);
 extern f32 sin(f32 angle);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void mathFn_80010ee0(void);
-extern void fn_80010E2C(void);
+extern void Curve_EvalBSpline(void);
+extern void Curve_BuildBSplineCoeffs(void);
 
 extern int *gCameraInterface;
 extern u8 *lbl_803DD538;
@@ -203,8 +203,8 @@ void CameraModeStaffAnim_init(int obj, undefined4 param_2, u8 *settings)
     *(f32 **)(gCamcontrolPathState + 0x1a4) = (f32 *)(gCamcontrolPathState + 0x1c);
     *(f32 **)(gCamcontrolPathState + 0x1a8) = (f32 *)(gCamcontrolPathState + 0x6c);
     *(f32 **)(gCamcontrolPathState + 0x1ac) = (f32 *)(gCamcontrolPathState + 0xbc);
-    *(void **)(gCamcontrolPathState + 0x1b4) = mathFn_80010ee0;
-    *(void **)(gCamcontrolPathState + 0x1b8) = fn_80010E2C;
+    *(void **)(gCamcontrolPathState + 0x1b4) = Curve_EvalBSpline;
+    *(void **)(gCamcontrolPathState + 0x1b8) = Curve_BuildBSplineCoeffs;
 
     camcontrol_buildPathPoints(pathAngle, 0x1555, &pointCount,
                                localPos[0] - (relCos * pathScale),

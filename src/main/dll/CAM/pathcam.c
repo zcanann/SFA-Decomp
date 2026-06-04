@@ -12,7 +12,7 @@ extern void Obj_TransformLocalPointToWorld(f32 x,f32 y,f32 z,f32 *outX,f32 *outY
 extern s16 getAngle(f32 dx,f32 dz);
 extern void *mmAlloc(int size,int heap,int flags);
 extern undefined4 camcontrol_getTargetPosition();
-extern f32 curveFn_80010dc0(f32 param_1, f32 *param_2, f32 *param_3);
+extern f32 Curve_EvalHermite(f32 param_1, f32 *param_2, f32 *param_3);
 extern undefined4 Curve_AdvanceAlongPath(f32 param_1, f32 *param_2);
 extern void mm_free(void *ptr);
 
@@ -366,7 +366,7 @@ void camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,undefined4 param
   else if (pathT < lbl_803E1740) {
     pathT = lbl_803E1740;
   }
-  pathT = curveFn_80010dc0(pathT,(float *)(gCamcontrolPathState + 0x10c),(float *)0x0);
+  pathT = Curve_EvalHermite(pathT,(float *)(gCamcontrolPathState + 0x10c),(float *)0x0);
   if (pathT < lbl_803E1748) {
     pathT = lbl_803E1748;
   }

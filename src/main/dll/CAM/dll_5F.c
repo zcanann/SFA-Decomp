@@ -6,8 +6,8 @@
 #pragma scheduling off
 extern undefined4 FUN_800033a8();
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,float *outX,float *outY,float *outZ,int obj);
-extern double mathFn_80010c64();
-extern double mathFn_80010ee0();
+extern double Curve_EvalCatmullRom();
+extern double Curve_EvalBSpline();
 extern void *mmAlloc(int size, int heap, int flags);
 extern undefined4 getButtonsJustPressed();
 extern int FUN_80017730();
@@ -198,30 +198,30 @@ void CameraModeTestStrength_update(short *param_1,undefined8 param_2,undefined8 
                    (double)(float)lbl_803DD560[0x16]);
     dVar16 = (double)fVar1;
     lbl_803DD560[0x16] = (int)fVar1;
-    dVar14 = mathFn_80010ee0(dVar16,afStack_a8,(float *)0x0);
+    dVar14 = Curve_EvalBSpline(dVar16,afStack_a8,(float *)0x0);
     *(float *)(psVar3 + 0xc) = (float)dVar14;
-    dVar14 = mathFn_80010ee0(dVar16,afStack_b8,(float *)0x0);
+    dVar14 = Curve_EvalBSpline(dVar16,afStack_b8,(float *)0x0);
     *(float *)(psVar3 + 0xe) = (float)dVar14;
-    dVar14 = mathFn_80010ee0(dVar16,afStack_c8,(float *)0x0);
+    dVar14 = Curve_EvalBSpline(dVar16,afStack_c8,(float *)0x0);
     *(float *)(psVar3 + 0x10) = (float)dVar14;
     iVar6 = (**(code **)(*gRomCurveInterface + 0x1c))(lbl_803DD560[2]);
     bVar2 = *(byte *)(iVar6 + 0x3b);
     if ((bVar2 & 1) == 0) {
-      dVar14 = mathFn_80010c64(dVar16,afStack_d8,(float *)0x0);
+      dVar14 = Curve_EvalCatmullRom(dVar16,afStack_d8,(float *)0x0);
       local_78 = (double)(longlong)(int)dVar14;
       *psVar3 = (short)(int)dVar14 + -0x8000;
     }
     if ((bVar2 & 2) == 0) {
-      dVar14 = mathFn_80010c64(dVar16,afStack_e8,(float *)0x0);
+      dVar14 = Curve_EvalCatmullRom(dVar16,afStack_e8,(float *)0x0);
       local_78 = (double)(longlong)(int)dVar14;
       psVar3[1] = (short)(int)dVar14;
     }
     if ((bVar2 & 4) == 0) {
-      dVar14 = mathFn_80010c64(dVar16,afStack_f8,(float *)0x0);
+      dVar14 = Curve_EvalCatmullRom(dVar16,afStack_f8,(float *)0x0);
       local_78 = (double)(longlong)(int)dVar14;
       psVar3[2] = (short)(int)dVar14;
     }
-    dVar14 = mathFn_80010ee0(dVar16,afStack_108,(float *)0x0);
+    dVar14 = Curve_EvalBSpline(dVar16,afStack_108,(float *)0x0);
     *(float *)(psVar3 + 0x5a) = (float)dVar14;
     if ((*(char *)(lbl_803DD560 + 0x19) == '\0') &&
        (uVar7 = fn_8010AEA8(psVar3,(uint)bVar2), uVar7 != 0)) {
@@ -236,7 +236,7 @@ void CameraModeTestStrength_update(short *param_1,undefined8 param_2,undefined8 
     if ((bVar2 & 2) != 0) {
       sqrtf((double)(float)(dVar17 * dVar17 + (double)(float)(dVar14 * dVar14)));
       uVar7 = FUN_80017730();
-      dVar14 = mathFn_80010c64(dVar16,afStack_e8,(float *)0x0);
+      dVar14 = Curve_EvalCatmullRom(dVar16,afStack_e8,(float *)0x0);
       local_78 = (double)CONCAT44(0x43300000,uVar7 & 0xffff ^ 0x80000000);
       uStack_6c = (ushort)psVar3[1] ^ 0x80000000;
       local_70 = 0x43300000;
@@ -373,37 +373,37 @@ void CameraModeTestStrength_init(undefined4 param_1,undefined4 param_2,undefined
     curveT = lbl_803E188C;
   }
 
-  dVar1 = mathFn_80010ee0(curveT, samplesX, (float *)0);
-  dVar2 = mathFn_80010ee0(curveT, samplesY, (float *)0);
-  dVar3 = mathFn_80010ee0(curveT, samplesZ, (float *)0);
+  dVar1 = Curve_EvalBSpline(curveT, samplesX, (float *)0);
+  dVar2 = Curve_EvalBSpline(curveT, samplesY, (float *)0);
+  dVar3 = Curve_EvalBSpline(curveT, samplesZ, (float *)0);
 
   dx = (double)(float)(dVar1 - (double)*(f32 *)(cameraObj + 0x18));
   dy = (double)(float)(dVar2 - (double)*(f32 *)(cameraObj + 0x1c));
   dz = (double)(float)(dVar3 - (double)*(f32 *)(cameraObj + 0x20));
 
   if ((*(u8 *)(romNode + 0x3b) & 1) == 0) {
-    pitch = (short)(int)mathFn_80010c64(curveT, samplesPitch, (float *)0);
+    pitch = (short)(int)Curve_EvalCatmullRom(curveT, samplesPitch, (float *)0);
   }
   else {
     pitch = -getAngle(dx, dz);
   }
 
   if ((*(u8 *)(romNode + 0x3b) & 4) == 0) {
-    roll = (short)(int)mathFn_80010c64(curveT, samplesRoll, (float *)0);
+    roll = (short)(int)Curve_EvalCatmullRom(curveT, samplesRoll, (float *)0);
   }
   else {
     roll = *(short *)(cameraObj + 4);
   }
 
   if ((*(u8 *)(romNode + 0x3b) & 2) == 0) {
-    yaw = (short)(int)mathFn_80010c64(curveT, samplesYaw, (float *)0);
+    yaw = (short)(int)Curve_EvalCatmullRom(curveT, samplesYaw, (float *)0);
   }
   else {
     yaw = getAngle(dy, sqrtf((float)(dx * dx + (double)(float)(dz * dz))));
-    yaw = (short)((int)yaw - (int)mathFn_80010c64(curveT, samplesYaw, (float *)0));
+    yaw = (short)((int)yaw - (int)Curve_EvalCatmullRom(curveT, samplesYaw, (float *)0));
   }
 
-  dVar3 = mathFn_80010ee0(curveT, samplesFov, (float *)0);
+  dVar3 = Curve_EvalBSpline(curveT, samplesFov, (float *)0);
   pos[0] = (float)dVar1;
   pos[1] = (float)dVar2;
   pos[2] = (float)dVar3;

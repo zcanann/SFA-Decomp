@@ -34,9 +34,9 @@ void FireFlyFn_801f4f88(int obj)
         *(f32 *)(state + 0x20) = *(f32 *)(state + 0x38);
         *(f32 *)(state + 0x30) = *(f32 *)(state + 0x3c);
     }
-    *(f32 *)(obj + 0xc) = mathFn_80010ee0((f32 *)(state + 0x4), 0, *(f32 *)(state + 0x40));
-    *(f32 *)(obj + 0x10) = mathFn_80010ee0((f32 *)(state + 0x14), 0, *(f32 *)(state + 0x40));
-    *(f32 *)(obj + 0x14) = mathFn_80010ee0((f32 *)(state + 0x24), 0, *(f32 *)(state + 0x40));
+    *(f32 *)(obj + 0xc) = Curve_EvalBSpline((f32 *)(state + 0x4), 0, *(f32 *)(state + 0x40));
+    *(f32 *)(obj + 0x10) = Curve_EvalBSpline((f32 *)(state + 0x14), 0, *(f32 *)(state + 0x40));
+    *(f32 *)(obj + 0x14) = Curve_EvalBSpline((f32 *)(state + 0x24), 0, *(f32 *)(state + 0x40));
     *(f32 *)(state + 0x40) = *(f32 *)(state + 0x44) * timeDelta + *(f32 *)(state + 0x40);
     *(s16 *)obj = (s16)getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
                                  *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));

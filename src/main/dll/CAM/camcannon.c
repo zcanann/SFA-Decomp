@@ -4,8 +4,8 @@
 
 #pragma peephole off
 #pragma scheduling off
-extern f32 fn_80010C50(f32 param_1, float *param_2, float *param_3);
-extern f32 curveFn_80010dc0(f32 param_1, float *param_2, float *param_3);
+extern f32 Curve_EvalLinear(f32 param_1, float *param_2, float *param_3);
+extern f32 Curve_EvalHermite(f32 param_1, float *param_2, float *param_3);
 extern undefined4 FUN_80017814();
 extern f32 sqrtf(f32 x);
 
@@ -62,7 +62,7 @@ uint fn_8010AEA8(short *param_1,uint param_2)
   if ((double)lbl_803E188C < dVar2) {
     dVar2 = (double)lbl_803E188C;
   }
-  dVar2 = curveFn_80010dc0(dVar2,(float *)(lbl_803DD560 + 0x48),(float *)0x0);
+  dVar2 = Curve_EvalHermite(dVar2,(float *)(lbl_803DD560 + 0x48),(float *)0x0);
   if (dVar2 < (double)lbl_803E18AC) {
     dVar2 = (double)lbl_803E18AC;
   }
@@ -76,13 +76,13 @@ uint fn_8010AEA8(short *param_1,uint param_2)
   if ((double)lbl_803E188C < dVar2) {
     dVar2 = (double)lbl_803E188C;
   }
-  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x10),(float *)0x0);
+  dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x10),(float *)0x0);
   *(float *)(param_1 + 6) = (float)dVar3;
-  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x18),(float *)0x0);
+  dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x18),(float *)0x0);
   *(float *)(param_1 + 8) = (float)dVar3;
-  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x20),(float *)0x0);
+  dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x20),(float *)0x0);
   *(float *)(param_1 + 10) = (float)dVar3;
-  dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x40),(float *)0x0);
+  dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x40),(float *)0x0);
   *(float *)(param_1 + 0x5a) = (float)dVar3;
   fVar1 = *(float *)(lbl_803DD560 + 0x28) - *(float *)(lbl_803DD560 + 0x2c);
   if ((lbl_803E1890 < fVar1) || (fVar1 < lbl_803E1894)) {
@@ -118,15 +118,15 @@ uint fn_8010AEA8(short *param_1,uint param_2)
     }
   }
   if ((param_2 & 1) == 0) {
-    dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x28),(float *)0x0);
+    dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x28),(float *)0x0);
     *param_1 = (short)(int)dVar3;
   }
   if ((param_2 & 2) == 0) {
-    dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x30),(float *)0x0);
+    dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x30),(float *)0x0);
     param_1[1] = (short)(int)dVar3;
   }
   if ((param_2 & 4) == 0) {
-    dVar3 = fn_80010C50(dVar2,(float *)(lbl_803DD560 + 0x38),(float *)0x0);
+    dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x38),(float *)0x0);
     param_1[2] = (short)(int)dVar3;
   }
   return ((uint)(byte)(((double)lbl_803E188C <= dVar2) << 1) << 0x1c) >> 0x1d;

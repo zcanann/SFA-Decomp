@@ -165,7 +165,7 @@ extern void *textureAlloc(int w, int h, int fmt, int a, int b, int c, int d, int
 extern f32 lbl_803DF07C;
 extern f32 lbl_803DF088;
 extern void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2);
-extern f32 fn_80010C50(f32 *curve, f32 t, int mode);
+extern f32 Curve_EvalLinear(f32 *curve, f32 t, int mode);
 extern f32 *Camera_GetInverseViewMatrix(void);
 extern f32 Camera_GetFarPlane(void);
 extern void Camera_SetFarPlane(f32 dist, int mode);
@@ -199,7 +199,7 @@ typedef struct SkyRotQ {
     f32 x, y, z;
 } SkyRotQ;
 extern void PSMTXMultVecSR(f32 *m, f32 *src, f32 *dst);
-extern f32 mathFn_80010c64(u8 *curve, f32 t, int mode);
+extern f32 Curve_EvalCatmullRom(u8 *curve, f32 t, int mode);
 extern const f32 lbl_803DF108;
 extern f64 lbl_803DF130;
 extern const f32 lbl_803DF10C;
@@ -4346,8 +4346,8 @@ extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 x, f32 z);
 extern void Curve_SampleSegmentPoints(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ,
                              int count, void (*evalFn)(f32 *values, f32 *coefficients));
-extern void curveFn_80010d54(f32 *values, f32 *coefficients);
-extern f32 curveFn_80010dc0(f32 t, f32 *values, f32 *outTangent);
+extern void Curve_BuildHermiteCoeffs(f32 *values, f32 *coefficients);
+extern f32 Curve_EvalHermite(f32 t, f32 *values, f32 *outTangent);
 extern f32 lbl_803DEFE8;
 extern f32 lbl_803DEFEC;
 extern f32 lbl_803DF008;

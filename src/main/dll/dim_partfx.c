@@ -6623,7 +6623,7 @@ int Checkpoint_func09_ret_1(void) { return 0x1; }
 
 extern f32 lbl_803E0504;
 extern f32 lbl_803E0508;
-extern f32 curveFn_80010dc0(f32 *values, f32 t, f32 *outTangent);
+extern f32 Curve_EvalHermite(f32 *values, f32 t, f32 *outTangent);
 extern u16 getAngle(f32 a, f32 b);
 
 /* Advance along the checkpoint curve by dist; write position/angles to out. */
@@ -6689,9 +6689,9 @@ s32 Checkpoint_func08(u8 *out, u8 *o, f32 dist, s32 p3, u8 flag)
             t = kMax;
             clamp = 1;
         }
-        x = curveFn_80010dc0(v1, t, &outX);
-        y = curveFn_80010dc0(v2, t, &outY);
-        z = curveFn_80010dc0(v3, t, &outZ);
+        x = Curve_EvalHermite(v1, t, &outX);
+        y = Curve_EvalHermite(v2, t, &outY);
+        z = Curve_EvalHermite(v3, t, &outZ);
         ang1 = getAngle(outX, outZ) + 0x8000;
         if (flag != 0) {
             f32 xd;

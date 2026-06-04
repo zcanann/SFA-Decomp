@@ -5937,8 +5937,8 @@ extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 x, f32 z);
 extern void Curve_SampleSegmentPoints(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ,
                              int count, void (*evalFn)(f32 *values, f32 *coefficients));
-extern void curveFn_80010d54(f32 *values, f32 *coefficients);
-extern f32 curveFn_80010dc0(f32 t, f32 *values, f32 *outTangent);
+extern void Curve_BuildHermiteCoeffs(f32 *values, f32 *coefficients);
+extern f32 Curve_EvalHermite(f32 t, f32 *values, f32 *outTangent);
 extern f32 lbl_803DEFE8;
 extern f32 lbl_803DEFEC;
 extern f32 lbl_803DF008;
@@ -5984,7 +5984,7 @@ void curveFn_80083e00(RomCurveInterpState *out, RomCurveNode *curve, RomCurveNod
     zPoints[3] = nextScale * sin(ROM_CURVE_NODE_ANGLE(next->yaw));
 
     Curve_SampleSegmentPoints(xPoints, yPoints, zPoints, xSamples, ySamples, zSamples, 8,
-                     curveFn_80010d54);
+                     Curve_BuildHermiteCoeffs);
 
     times = &out->fromTime;
     times[0] = lbl_803DEFB0;
@@ -6161,11 +6161,11 @@ int romCurveFn_800844b8(RomCurveInterpState *state, f32 *offset, f32 *outPos, s1
         zPoints[2] = fromScale * sin(ROM_CURVE_NODE_ANGLE(from->yaw));
         zPoints[3] = toScale * sin(ROM_CURVE_NODE_ANGLE(to->yaw));
 
-        outPos[0] = curveFn_80010dc0(segmentT, xPoints, &xTangent);
+        outPos[0] = Curve_EvalHermite(segmentT, xPoints, &xTangent);
         if ((s8)ignoreY == 0) {
-            outPos[1] = curveFn_80010dc0(segmentT, yPoints, &yTangent);
+            outPos[1] = Curve_EvalHermite(segmentT, yPoints, &yTangent);
         }
-        outPos[2] = curveFn_80010dc0(segmentT, zPoints, &zTangent);
+        outPos[2] = Curve_EvalHermite(segmentT, zPoints, &zTangent);
 
         length = sqrtf(xTangent * xTangent + zTangent * zTangent);
         if (length > lbl_803DF020) {
@@ -6407,7 +6407,7 @@ f32 objCurveInterpolate(ObjCurveKey *keys, int count, int frame) {
     if (span > lbl_803DEFB0) {
         t = (f32)(frame - keys[prevIndex].frame) / span;
         if (mode == 0) {
-            return curveFn_80010dc0(t, values, NULL);
+            return Curve_EvalHermite(t, values, NULL);
         }
         if (mode == 1) {
             return t * (values[1] - values[0]) + values[0];

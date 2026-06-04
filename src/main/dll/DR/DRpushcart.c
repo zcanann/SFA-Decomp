@@ -903,7 +903,7 @@ int fn_801E86F4(int obj, int p2, int p3)
   extern void ObjAnim_AdvanceCurrentMove(int obj, f32 a, f32 b, int x);
   extern void fn_801F4D54(int obj, int sub);
   extern void fn_801F4ECC(int obj, int sub);
-  extern f32 mathFn_80010ee0(int p, int m, f32 t);
+  extern f32 Curve_EvalBSpline(int p, int m, f32 t);
   extern int getAngle(f32 a, f32 b);
   extern int *gPartfxInterface;
   extern f32 lbl_803E5A30;
@@ -936,9 +936,9 @@ int fn_801E86F4(int obj, int p2, int p3)
     }
   }
   {
-    *(f32 *)(obj + 0xc) = mathFn_80010ee0(sub + 4, 0, *(f32 *)(sub + 0x40));
-    *(f32 *)(obj + 0x10) = mathFn_80010ee0(sub + 0x14, 0, *(f32 *)(sub + 0x40));
-    *(f32 *)(obj + 0x14) = mathFn_80010ee0(sub + 0x24, 0, *(f32 *)(sub + 0x40));
+    *(f32 *)(obj + 0xc) = Curve_EvalBSpline(sub + 4, 0, *(f32 *)(sub + 0x40));
+    *(f32 *)(obj + 0x10) = Curve_EvalBSpline(sub + 0x14, 0, *(f32 *)(sub + 0x40));
+    *(f32 *)(obj + 0x14) = Curve_EvalBSpline(sub + 0x24, 0, *(f32 *)(sub + 0x40));
     *(f32 *)(sub + 0x40) = *(f32 *)(sub + 0x44) * timeDelta + *(f32 *)(sub + 0x40);
     *(s16 *)(obj + 0) = (s16)getAngle(
         *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),

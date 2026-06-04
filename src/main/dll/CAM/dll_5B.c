@@ -212,8 +212,8 @@ void firstPersonDoControls(short *param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void curveFn_80010dc0(void);
-extern void curveFn_80010d54(void);
+extern void Curve_EvalHermite(void);
+extern void Curve_BuildHermiteCoeffs(void);
 extern void curvesMove(void *curve);
 extern int fn_802966D4(int obj, int *out);
 
@@ -254,8 +254,8 @@ int firstPersonEnter(u8 *cam, s16 *p2)
     *(int *)((char *)lbl_803DD548 + 256) = 0;
     *(int *)((char *)lbl_803DD548 + 260) = 0;
     *(int *)((char *)lbl_803DD548 + 264) = 4;
-    *(int *)((char *)lbl_803DD548 + 268) = (int)&curveFn_80010dc0;
-    *(int *)((char *)lbl_803DD548 + 272) = (int)&curveFn_80010d54;
+    *(int *)((char *)lbl_803DD548 + 268) = (int)&Curve_EvalHermite;
+    *(int *)((char *)lbl_803DD548 + 272) = (int)&Curve_BuildHermiteCoeffs;
     *(int *)((char *)lbl_803DD548 + 248) = 0;
     *(f32 *)((char *)lbl_803DD548 + 64) = (f32)(s32)*(s16 *)cam;
     *(f32 *)((char *)lbl_803DD548 + 68) = (f32)(s32)(0x8000 - p2[0]);

@@ -68,7 +68,7 @@ extern f32 lbl_803DBDD8;
 extern u8 framesThisStep;
 extern u8 lbl_803DDAD8;
 extern void *gPartfxInterface;
-extern f32 mathFn_80010ee0(f32 t, void *control, int mode);
+extern f32 Curve_EvalBSpline(f32 t, void *control, int mode);
 extern f32 Vec_distance(void *a, void *b);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setField50(int light, int value);
@@ -126,9 +126,9 @@ void LanternFireFly_update(int obj)
         fn_801869DC(obj);
     }
 
-    *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x54) + mathFn_80010ee0(*(f32 *)(state + 0x40), state + 4, 0);
-    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x58) + mathFn_80010ee0(*(f32 *)(state + 0x40), state + 0x14, 0);
-    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x5c) + mathFn_80010ee0(*(f32 *)(state + 0x40), state + 0x24, 0);
+    *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x54) + Curve_EvalBSpline(*(f32 *)(state + 0x40), state + 4, 0);
+    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x58) + Curve_EvalBSpline(*(f32 *)(state + 0x40), state + 0x14, 0);
+    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x5c) + Curve_EvalBSpline(*(f32 *)(state + 0x40), state + 0x24, 0);
 
     if ((state[0x70] >> 6) == 1) {
         *(f32 *)(state + 0x44) =

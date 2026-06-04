@@ -820,7 +820,7 @@ undefined4 FUN_80114340(int param_1,undefined2 *param_2)
   return uVar1;
 }
 
-extern f32 curveFn_80010dc0(f32 *points, f32 t, int unused);
+extern f32 Curve_EvalHermite(f32 *points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
 extern f64 lbl_803E1C98;
 
@@ -849,21 +849,21 @@ f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
         buf[1] = *(f32*)(p3 + 0);
         buf[2] = *(f32*)(p2 + 0);
         buf[3] = *(f32*)(p4 + 0);
-        cur_x = curveFn_80010dc0(buf, t, 0);
+        cur_x = Curve_EvalHermite(buf, t, 0);
         dx = cur_x - prev_x;
 
         buf[0] = *(f32*)(p1 + 4);
         buf[1] = *(f32*)(p3 + 4);
         buf[2] = *(f32*)(p2 + 4);
         buf[3] = *(f32*)(p4 + 4);
-        cur_y = curveFn_80010dc0(buf, t, 0);
+        cur_y = Curve_EvalHermite(buf, t, 0);
         dy = cur_y - prev_y;
 
         buf[0] = *(f32*)(p1 + 8);
         buf[1] = *(f32*)(p3 + 8);
         buf[2] = *(f32*)(p2 + 8);
         buf[3] = *(f32*)(p4 + 8);
-        cur_z = curveFn_80010dc0(buf, t, 0);
+        cur_z = Curve_EvalHermite(buf, t, 0);
         dz = cur_z - prev_z;
 
         total += sqrtf(dx * dx + dy * dy + dz * dz);
@@ -920,17 +920,17 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     buf[1] = *(f32 *)(p3 + 0x0c);
     buf[2] = *(f32 *)(p3 + 0x18);
     buf[3] = *(f32 *)(p3 + 0x24);
-    *(f32 *)(p1 + 0x0c) = curveFn_80010dc0(buf, *(f32 *)p4, 0);
+    *(f32 *)(p1 + 0x0c) = Curve_EvalHermite(buf, *(f32 *)p4, 0);
     buf[0] = *(f32 *)(p3 + 0x04);
     buf[1] = *(f32 *)(p3 + 0x10);
     buf[2] = *(f32 *)(p3 + 0x1c);
     buf[3] = *(f32 *)(p3 + 0x28);
-    *(f32 *)(p1 + 0x10) = curveFn_80010dc0(buf, *(f32 *)p4, 0);
+    *(f32 *)(p1 + 0x10) = Curve_EvalHermite(buf, *(f32 *)p4, 0);
     buf[0] = *(f32 *)(p3 + 0x08);
     buf[1] = *(f32 *)(p3 + 0x14);
     buf[2] = *(f32 *)(p3 + 0x20);
     buf[3] = *(f32 *)(p3 + 0x2c);
-    *(f32 *)(p1 + 0x14) = curveFn_80010dc0(buf, *(f32 *)p4, 0);
+    *(f32 *)(p1 + 0x14) = Curve_EvalHermite(buf, *(f32 *)p4, 0);
   }
   return ret;
 }

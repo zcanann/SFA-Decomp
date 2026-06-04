@@ -1852,8 +1852,8 @@ void dll_1D6_update(int *obj)
 #pragma scheduling reset
 
 extern int Curve_AdvanceAlongPath(int *extra, f32 t);
-extern void curveFn_80010d54(void);
-extern void curveFn_80010dc0(void);
+extern void Curve_BuildHermiteCoeffs(void);
+extern void Curve_EvalHermite(void);
 extern void curvesMove(int *extra);
 extern int **ObjList_GetObjects(int *startOut, int *countOut);
 extern void objMove(int *obj, f32 dx, f32 dy, f32 dz);
@@ -1902,8 +1902,8 @@ void dim2snowball_update(int *obj)
             (*(int (**)(int *, void *, void *, void *, void *))(**(int **)((char *)cobj + 0x68) + 0x20))(
                 cobj, (char *)extra + 0x84, (char *)extra + 0x88, (char *)extra + 0x8c, (char *)extra + 0xa8);
         *(int *)((char *)extra + 0x80) = 0;
-        *(int *)((char *)extra + 0x94) = (int)curveFn_80010dc0;
-        *(int *)((char *)extra + 0x98) = (int)curveFn_80010d54;
+        *(int *)((char *)extra + 0x94) = (int)Curve_EvalHermite;
+        *(int *)((char *)extra + 0x98) = (int)Curve_BuildHermiteCoeffs;
         curvesMove(extra);
         *(u8 *)((char *)extra + 0xac) |= 1;
     }
