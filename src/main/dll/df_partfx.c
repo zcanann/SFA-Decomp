@@ -2558,3 +2558,150 @@ void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f64 lbl_803E0520;
+extern f32 lbl_803E051C;
+extern f32 lbl_803E0528;
+extern f32 lbl_803E052C;
+extern f32 lbl_803E0530;
+extern f32 lbl_803E0534;
+extern f32 lbl_803E0538;
+
+#pragma scheduling off
+#pragma peephole off
+void Checkpoint_func06(int* obj, int* state, int filter)
+{
+    int stack[64];
+    char visited[200];
+    int cur;
+    int slot;
+    int k, count, i, j;
+    char* cp;
+    char* p;
+    char* n;
+    char* e;
+    f32 cos1, sin1, cos2, sin2;
+    f32 dist1, dist2, nx, nz, offs1, dz;
+    f32 offs2, distA, distB, dx, dy, len, q, t0, sum, frac, b1, width;
+    f32 px, py, pz, outX, outY;
+    f32 ddx, ddy, ddz;
+
+    count = 0;
+    for (i = 0; i < (int)lbl_803DD410; i++) {
+        visited[i] = 0;
+    }
+    cp = (char*)Checkpoint_find(*(int*)((char*)state + 0x10), &cur);
+    if (cp != NULL) {
+        stack[count++] = cur;
+    } else {
+        for (i = 0; i < (int)lbl_803DD410; i++) {
+            e = (char*)lbl_8039C458[i].entry;
+            if (visited[i] == 0 && (filter == -1 || *(s8*)(e + 0x28) == filter)) {
+                ddx = *(f32*)(e + 8) - *(f32*)((char*)obj + 0xc);
+                ddy = *(f32*)(e + 0xc) - *(f32*)((char*)obj + 0x10);
+                ddz = *(f32*)(e + 0x10) - *(f32*)((char*)obj + 0x14);
+                if (ddz * ddz + (ddx * ddx + ddy * ddy) < lbl_803E051C) {
+                    stack[count++] = i;
+                    for (j = i; j < (int)lbl_803DD410; j++) {
+                        if (filter == *(s8*)((char*)lbl_8039C458[j].entry + 0x28)) {
+                            visited[j] = 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    for (i = 0; i < (int)lbl_803DD410; i++) {
+        visited[i] = 0;
+    }
+    for (;;) {
+        if (count > 0) {
+            count--;
+            cur = stack[count];
+            cp = (char*)lbl_8039C458[cur].entry;
+        } else {
+            *(int*)((char*)state + 0x10) = -1;
+            return;
+        }
+        if (cp == NULL) {
+            return;
+        }
+        p = cp;
+        for (k = 0; k < 2; k++) {
+            n = (char*)Checkpoint_find(*(int*)(p + 0x20), &slot);
+            if (n != NULL) {
+                cos1 = fn_80293E80((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+                sin1 = sin((lbl_803E04D8 * (f32)(*(u8*)(cp + 0x29) << 8)) / lbl_803E04DC);
+                offs1 = -(*(f32*)(cp + 8) * cos1 + *(f32*)(cp + 0x10) * sin1);
+                cos2 = fn_80293E80((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
+                sin2 = sin((lbl_803E04D8 * (f32)(*(u8*)(n + 0x29) << 8)) / lbl_803E04DC);
+                offs2 = -(*(f32*)(n + 8) * cos2 + *(f32*)(n + 0x10) * sin2);
+                dist1 = offs1 + (cos1 * *(f32*)((char*)obj + 0xc) + sin1 * *(f32*)((char*)obj + 0x14));
+                dist2 = offs2 + (cos2 * *(f32*)((char*)obj + 0xc) + sin2 * *(f32*)((char*)obj + 0x14));
+                distA = offs1 + (cos1 * *(f32*)(n + 8) + sin1 * *(f32*)(n + 0x10));
+                distB = offs2 + (cos2 * *(f32*)(cp + 8) + sin2 * *(f32*)(cp + 0x10));
+                if (((distA <= lbl_803E04E8 && dist1 <= lbl_803E04E8) || (distA > lbl_803E04E8 && dist1 > lbl_803E04E8)) &&
+                    ((distB <= lbl_803E04E8 && dist2 <= lbl_803E04E8) || (distB > lbl_803E04E8 && dist2 > lbl_803E04E8))) {
+                    dx = *(f32*)(cp + 8) - *(f32*)(n + 8);
+                    dy = *(f32*)(cp + 0xc) - *(f32*)(n + 0xc);
+                    dz = *(f32*)(cp + 0x10) - *(f32*)(n + 0x10);
+                    len = sqrtf(dz * dz + (dx * dx + dy * dy));
+                    if (len > lbl_803E0520) {
+                        q = lbl_803E0504 / len;
+                        nx = dx * q;
+                        nz = dz * q;
+                    }
+                    q = cos1 * nx + sin1 * nz;
+                    t0 = -dist1 / q;
+                    sum = t0 + dist2 / (cos2 * nx + sin2 * nz);
+                    if (sum > lbl_803E0528 || sum < lbl_803E052C) {
+                        frac = t0 / sum;
+                    } else {
+                        frac = lbl_803E04E8;
+                    }
+                    if (frac < lbl_803E04E8) {
+                        frac = lbl_803E04E8;
+                    }
+                    if (frac >= lbl_803E0518) {
+                        frac = lbl_803E0518;
+                    }
+                    b1 = (f32)*(u8*)(cp + 0x2a);
+                    width = frac * ((f32)*(u8*)(n + 0x2a) - b1) + b1;
+                    px = -(dx * frac - *(f32*)(cp + 8));
+                    py = -(dy * frac - *(f32*)(cp + 0xc));
+                    pz = -(dz * frac - *(f32*)(cp + 0x10));
+                    outY = (*(f32*)((char*)obj + 0x10) - py) / width;
+                    outX = (-(px * nz - pz * nx) + (*(f32*)((char*)obj + 0xc) * nz - *(f32*)((char*)obj + 0x14) * nx)) / width;
+                    if (outX < lbl_803E0530 || outX > lbl_803E0534 || outY < lbl_803E0538 || outY > lbl_803E0534) {
+                    } else {
+                        *(int*)((char*)state + 0x10) = *(int*)(cp + 0x14);
+                        *(int*)((char*)state + 0x14) = *(int*)(cp + 0x14);
+                        *(f32*)((char*)state + 0) = outX;
+                        *(f32*)((char*)state + 4) = outY;
+                        *(f32*)((char*)state + 8) = frac;
+                        *(s16*)((char*)state + 0x20) = *(s8*)(cp + 0x28);
+                        return;
+                    }
+                }
+            }
+            p += 4;
+        }
+        if (visited[cur] == 0) {
+            p = cp + 4;
+            for (k = 1; k >= 0; k--) {
+                n = (char*)Checkpoint_find(*(int*)(p + 0x18), &slot);
+                if (n != NULL && visited[slot] == 0 && count < 0x3c) {
+                    stack[count++] = slot;
+                }
+                n = (char*)Checkpoint_find(*(int*)(p + 0x20), &slot);
+                if (n != NULL && visited[slot] == 0 && count < 0x3c) {
+                    stack[count++] = slot;
+                }
+                p -= 4;
+            }
+            visited[cur] = 1;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
