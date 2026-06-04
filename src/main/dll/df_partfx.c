@@ -1855,13 +1855,13 @@ void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
 
 void player_findCurve(int* obj, int* state, int p3)
 {
-    int tmp = p3;
-    *(int**)((char*)state + 828) = (int*)((int(*)(int*, int, int, f32, f32, f32))
-        ((void**)*gRomCurveInterface)[5])(&tmp, 1,
-            (s8)*(s8*)((char*)state + 836),
-            *(f32*)((char*)obj + 12),
-            *(f32*)((char*)obj + 16),
-            *(f32*)((char*)obj + 20));
+    *(int*)((char*)state + 0x33c) = ((int(*)(f32, f32, f32, int*, int, int))
+        ((void**)*gRomCurveInterface)[5])(
+            *(f32*)((char*)obj + 0xc),
+            *(f32*)((char*)obj + 0x10),
+            *(f32*)((char*)obj + 0x14),
+            &p3, 1,
+            *(s8*)((char*)state + 0x344));
 }
 
 void screenTransitionFn_800d7b04(int duration, int type)
