@@ -18480,3 +18480,83 @@ void ObjModel_BlendPrimaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, int *offs, u
     }
 }
 #pragma pop
+
+extern void ObjModel_TransformVerticesLinear(u8 *m1, u8 *m2, u8 *src, int d1, int d2, int count);
+extern void ObjModel_TransformQuadVerticesLinear(u8 *m1, u8 *m2, u8 *src, int d1, int d2, int count);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void ObjModel_BlendSecondaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, u8 **outs, int quad) {
+    u16 sizes[2];
+
+    fn_8002A3D4(hdr[6], 6, hdr[6], 6);
+    ObjModel_InitScratchBuffers();
+    if (*(u16 *)(hdr + 2) != 0) {
+        u8 *q;
+        int words;
+        u32 i;
+        u32 nb;
+        int bi;
+        u8 *dst;
+
+        q = *(u8 **)(hdr + 0xc);
+        words = (u32)((q[0x73] << 5) + 0x1f) >> 5;
+        copyToCache(lbl_80340898[0], data + *(int *)(q + 0x60), words);
+        sizes[0] = words;
+        q = *(u8 **)(hdr + 0xc);
+        copyToCache(lbl_80340898[1], *(u8 **)(q + 0x64), (u32)((q[0x6f] << 5) + 0x1f) >> 5);
+        for (i = 0; i < (u32)(*(u16 *)(hdr + 2) - 1); i++) {
+            q = *(u8 **)(hdr + 0xc) + i * 0x74;
+            words = (u32)((q[0xe7] << 5) + 0x1f) >> 5;
+            nb = (i + 1) & 1;
+            bi = nb * 2;
+            copyToCache(lbl_80340898[(u8)bi], data + *(int *)(q + 0xd4), words);
+            sizes[nb] = words;
+            {
+                u8 *q2 = *(u8 **)(hdr + 0xc) + i * 0x74;
+                copyToCache(lbl_80340898[(u8)((u8)bi + 1)], *(u8 **)(q2 + 0xd8),
+                            (u32)((q2[0xe3] << 5) + 0x1f) >> 5);
+            }
+            cacheFn_800229c4(2);
+            if ((u8)quad) {
+                dst = outs[i];
+                ObjModel_TransformQuadVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                                     lbl_80340898[(u8)((i & 1) * 2) + 1],
+                                                     q[0x72] + (int)lbl_80340898[(u8)((i & 1) * 2)],
+                                                     q[0x72] + (int)lbl_80340898[(u8)((i & 1) * 2)],
+                                                     *(u16 *)(q + 0x70));
+                memcpyToCache(dst, lbl_80340898[(u8)((i & 1) * 2)], sizes[i & 1]);
+            } else {
+                dst = outs[i];
+                ObjModel_TransformVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                                 lbl_80340898[(u8)((i & 1) * 2) + 1],
+                                                 q[0x72] + (int)lbl_80340898[(u8)((i & 1) * 2)],
+                                                 q[0x72] + (int)lbl_80340898[(u8)((i & 1) * 2)],
+                                                 *(u16 *)(q + 0x70));
+                memcpyToCache(dst, lbl_80340898[(u8)((i & 1) * 2)], sizes[i & 1]);
+            }
+        }
+        q = *(u8 **)(hdr + 0xc) + i * 0x74;
+        cacheFn_800229c4(0);
+        if ((u8)quad) {
+            dst = outs[i];
+            ObjModel_TransformQuadVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                                 lbl_80340898[(u8)((i & 1) * 2) + 1],
+                                                 q[0x72] + (int)lbl_80340898[(u8)((i & 1) * 2)],
+                                                 q[0x72] + (int)lbl_80340898[(u8)((i & 1) * 2)],
+                                                 *(u16 *)(q + 0x70));
+            memcpyToCache(dst, lbl_80340898[(u8)((i & 1) * 2)], sizes[i & 1]);
+        } else {
+            dst = outs[i];
+            ObjModel_TransformVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
+                                             lbl_80340898[(u8)((i & 1) * 2) + 1],
+                                             q[0x72] + (int)lbl_80340898[(u8)((i & 1) * 2)],
+                                             q[0x72] + (int)lbl_80340898[(u8)((i & 1) * 2)],
+                                             *(u16 *)(q + 0x70));
+            memcpyToCache(dst, lbl_80340898[(u8)((i & 1) * 2)], sizes[i & 1]);
+        }
+        cacheFn_800229c4(0);
+    }
+}
+#pragma pop
