@@ -1966,7 +1966,7 @@ void imanimspacecraft_free(int *obj) {
     (*(void (***)(int*))gExpgfxInterface)[6](obj);
 }
 
-extern void imanimspacecraft_SeqFn(void);
+extern int imanimspacecraft_SeqFn(int *obj, int unused, u8 *p3);
 extern f32 lbl_803E4784;
 extern char lbl_803AC948[];
 #pragma scheduling off
@@ -2820,6 +2820,71 @@ void lavaball1be_update(s16 *obj) {
             }
         }
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int *objFindTexture(int *obj, int a, int b);
+extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
+
+#pragma scheduling off
+#pragma peephole off
+int imanimspacecraft_SeqFn(int *obj, int unused, u8 *p3) {
+    s16 *state;
+    int i;
+    int *tex;
+
+    state = *(s16 **)((char *)obj + 0xb8);
+    tex = objFindTexture(obj, 1, 0);
+    *tex = ((*((u8 *)state + 3) >> 1 & 1) ^ 1) << 8;
+    if (!(*((u8 *)state + 3) & 2)) {
+        state[0] -= framesThisStep;
+        if (state[0] < 0) {
+            *((u8 *)state + 3) |= 2;
+            state[0] = 0x78;
+        }
+    } else {
+        *((u8 *)state + 3) &= ~2;
+    }
+    if (*((u8 *)state + 3) & 2) {
+        *(f32 *)(lbl_803AC948 + 0xc) = lbl_803E4770;
+        *(f32 *)(lbl_803AC948 + 0x10) = lbl_803E4774;
+        *(f32 *)(lbl_803AC948 + 0x14) = lbl_803E4778;
+        (*((void (***)(int *, int, char *, int, int, int))gPartfxInterface))[2](obj, 0x133, lbl_803AC948, 4, -1, 0);
+        *(f32 *)(lbl_803AC948 + 0xc) = lbl_803E477C;
+        *(f32 *)(lbl_803AC948 + 0x10) = lbl_803E4774;
+        *(f32 *)(lbl_803AC948 + 0x14) = lbl_803E4778;
+        (*((void (***)(int *, int, char *, int, int, int))gPartfxInterface))[2](obj, 0x133, lbl_803AC948, 4, -1, 0);
+    }
+    tex = objFindTexture(obj, 0, 0);
+    *tex = 0x100;
+    for (i = 0; i < p3[0x8b]; i++) {
+        u32 ev = p3[i + 0x81];
+        switch (ev) {
+        case 1:
+            *((u8 *)state + 2) = (u8)(*((u8 *)state + 2) ^ (1 << (ev - 1)));
+            break;
+        case 2:
+            *((u8 *)state + 2) = (u8)(*((u8 *)state + 2) ^ (1 << (ev - 1)));
+            break;
+        case 3:
+            *((u8 *)state + 2) = (u8)(*((u8 *)state + 2) ^ (1 << (ev - 1)));
+            break;
+        case 4:
+            *((u8 *)state + 2) = (u8)(*((u8 *)state + 2) ^ (1 << (ev - 1)));
+            break;
+        case 5:
+            *((u8 *)state + 2) = (u8)(*((u8 *)state + 2) ^ 0x70);
+            break;
+        case 6:
+            *((u8 *)state + 3) = (u8)(*((u8 *)state + 3) ^ 8);
+            break;
+        case 7:
+            *((u8 *)state + 3) = (u8)(*((u8 *)state + 3) ^ 4);
+            break;
+        }
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
