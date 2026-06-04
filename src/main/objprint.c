@@ -4988,3 +4988,275 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct ObjPrintS10Color { s16 r, g, b, a; } ObjPrintS10Color;
+
+#pragma scheduling off
+#pragma peephole off
+int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
+{
+    extern u8 *ObjModel_GetRenderOp(int m, int p);
+    extern void textureFn_8006c4e0(int *tbl, int *cnt);
+    extern u32 *Shader_getLayer(u8 *shader, int idx);
+    extern void *textureIdxToPtr(int idx);
+    extern void selectTexture(void *tex, int p2);
+    extern void GXSetTexCoordGen2(int a, int b, int c, int d, int e, int f);
+    extern void GXSetTevDirect(int stage);
+    extern void GXSetTevOrder(int stage, int coord, int map, int color);
+    extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
+    extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
+    extern void GXSetTevSwapMode(int stage, int a, int b);
+    extern void GXSetTevColorOp(int stage, int a, int b, int c, int d, int e);
+    extern void GXSetTevAlphaOp(int stage, int a, int b, int c, int d, int e);
+    extern void GXSetTevKColor(int id, ObjPrintGXColor c);
+    extern void GXSetTevKAlphaSel(int stage, int sel);
+    extern void GXSetTevKColorSel(int stage, int sel);
+    extern void GXSetTevColorS10(int id, ObjPrintS10Color c);
+    extern void PSMTXScale(f32 *m, f32 x, f32 y, f32 z);
+    extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+    extern void GXLoadTexMtxImm(f32 *m, int id, int type);
+    extern void **ObjModel_GetRenderOpTextureRefs(int *p2, int p3);
+    extern void getTextureFn_8006c5e4(int *out);
+    extern void newshadows_getReflectionScrollOffsets(f32 *x, f32 *y);
+    extern void GXSetIndTexOrder(int a, int b, int c);
+    extern void GXSetIndTexCoordScale(int a, int b, int c);
+    extern void GXSetIndTexMtx(int id, IndTexMtx23 *m, int scale);
+    extern void GXSetTevIndirect(int a, int b, int c, int d, int e, int f, int g, int h, int i, int j);
+    extern void GXSetNumTevStages(int n);
+    extern void GXSetNumIndStages(int n);
+    extern void GXSetNumTexGens(int n);
+    extern void GXSetCullMode(int mode);
+    extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
+    extern void GXSetBlendMode(int a, int b, int c, int d);
+    extern void fn_8001D7F8(int p, int *a, int *b);
+    extern f32 *fn_8001D818(int p);
+    extern void *fn_8001D984(int p);
+    extern void _gxSetFogParams(void);
+    extern IndTexMtx23 lbl_802C1B10;
+    extern IndTexMtx23 lbl_802C1B28;
+    extern ObjPrintS10Color lbl_803DE9F4;
+    extern ObjPrintGXColor lbl_803DB494;
+    extern int lbl_803DCC44;
+    extern u8 lbl_803DCC3E;
+    extern u8 lbl_803DCC35;
+    extern u8 lbl_803DCC36;
+    extern int lbl_803DCC5C;
+    extern u8 lbl_803DCC60;
+    extern int lbl_803DCC64;
+    extern u32 lbl_803DB468;
+    extern s8 lbl_803DB48C;
+    extern s8 lbl_803DB490;
+    extern f32 lbl_803DEA28;
+    extern f32 lbl_803DEA2C;
+    extern f32 lbl_803DEA30;
+    extern f32 lbl_803DEA04;
+    extern f32 lbl_803DEA1C;
+    f32 mtx4[12];
+    f32 mtx3[12];
+    f32 mtx2[12];
+    f32 mtxR[12];
+    IndTexMtx23 mtxA;
+    IndTexMtx23 mtxB;
+    ObjPrintS10Color s10;
+    int texTbl;
+    int texCnt;
+    int t150;
+    f32 sx;
+    f32 sy;
+    int stk348;
+    int t160;
+    int stk364;
+    int t170;
+    u8 *rop;
+    f32 fz;
+    u8 fancy;
+    int stage;
+    int coord;
+
+    s10 = lbl_803DE9F4;
+    mtxA = lbl_802C1B10;
+    mtxB = lbl_802C1B28;
+    rop = ObjModel_GetRenderOp(*p2, p3);
+    if ((*(u32 *)(rop + 0x3c) & 0x200) == 0) {
+        lbl_803DCC3E = 0;
+        return 0;
+    }
+    lbl_803DCC3E = 1;
+    textureFn_8006c4e0(&texTbl, &texCnt);
+    if (lbl_803DCC35 != 0) {
+        fz = lbl_803DEA04;
+    } else {
+        fz = (f32)lbl_803DCC44 / (f32)texCnt;
+        fz = fz * lbl_803DEA28;
+    }
+    selectTexture(textureIdxToPtr(*Shader_getLayer(rop, 0)), 0);
+    GXSetTexCoordGen2(2, 1, 4, 0x3c, 0, 0x7d);
+    if (lbl_803DCC36 == 0) {
+        GXSetTevColorIn(0, 0xf, 0xf, 0xf, 8);
+    } else {
+        if (lbl_803DCC36 == 1) {
+            u8 v = lbl_803DCC44 << 4;
+            lbl_803DB494.b = v;
+            lbl_803DB494.g = v;
+            lbl_803DB494.r = v;
+            GXSetTevColorIn(0, 8, 0xc, 0xe, 0xf);
+        } else {
+            if (lbl_803DCC44 < 8) {
+                lbl_803DB494.b = lbl_803DCC44 << 5;
+            } else {
+                lbl_803DB494.b = 0xff;
+            }
+            lbl_803DB494.g = lbl_803DB494.b;
+            lbl_803DB494.r = lbl_803DB494.b;
+            GXSetTevColorIn(0, 8, 0xf, 0xe, 0xf);
+        }
+        GXSetTevKColor(1, lbl_803DB494);
+        GXSetTevKAlphaSel(0, 0x1d);
+        GXSetTevKColorSel(0, 0xd);
+    }
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 2, 0, 0xff);
+    GXSetTevAlphaIn(0, 7, 7, 7, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 0, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    {
+        u8 v = *(u8 *)(obj + 0xf1);
+        s10.g = v;
+        s10.r = v;
+        s10.b = v;
+        s10.a = *(u8 *)(obj + 0x37) - 0xff;
+    }
+    GXSetTevColorS10(3, s10);
+    PSMTXScale(mtx3, lbl_803DEA2C, lbl_803DEA2C, lbl_803DEA04);
+    PSMTXTrans(mtx2, lbl_803DEA28, lbl_803DEA28, lbl_803DEA1C);
+    PSMTXConcat(mtx2, mtx3, mtx3);
+    GXLoadTexMtxImm(mtx3, 0x43, 0);
+    GXSetTexCoordGen2(0, 1, 1, 0x1e, 0, 0x43);
+    selectTexture(*ObjModel_GetRenderOpTextureRefs(p2, p3), 1);
+    GXSetTevDirect(1);
+    GXSetTevOrder(1, 0, 1, 4);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorIn(1, 0xf, 8, 6, 10);
+    GXSetTevAlphaIn(1, 7, 7, 7, 3);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 2);
+    GXSetTevAlphaOp(1, 0, 0, 0, 0, 0);
+    fancy = 0;
+    if (lbl_803DCC5C != 0) {
+        fn_8001D7F8(lbl_803DCC64, &t170, &stk364);
+        fancy = 1;
+        if (t170 != 0) {
+            fancy = 0;
+        }
+    }
+    if (fancy) {
+        GXSetTevDirect(2);
+        GXLoadTexMtxImm(fn_8001D818(lbl_803DCC64), 0x49, 0);
+        GXSetTexCoordGen2(1, 0, 0, 0, 0, 0x49);
+        if (lbl_803DCC60 == 0 || lbl_803DCC60 == 2) {
+            GXSetTevOrder(2, 1, 5, 4);
+        } else {
+            GXSetTevOrder(2, 1, 5, 5);
+        }
+        selectTexture(fn_8001D984(lbl_803DCC64), 5);
+        fn_8001D7F8(lbl_803DCC64, &stk348, &t160);
+        if (t160 == 2) {
+            GXSetTevColorIn(2, 0xf, 4, 8, 0xf);
+        } else if (t160 == 3) {
+            GXSetTevColorIn(2, 4, 0xf, 8, 0xf);
+        } else if (t160 == 1) {
+            GXSetTevColorIn(2, 0xf, 0xf, 8, 4);
+        } else if (lbl_803DCC60 == 0 || lbl_803DCC60 == 1) {
+            GXSetTevColorIn(2, 0xf, 10, 8, 4);
+        } else {
+            GXSetTevColorIn(2, 0xf, 0xb, 8, 4);
+        }
+        GXSetTevSwapMode(2, 0, 0);
+        if (t160 == 1) {
+            GXSetTevColorOp(2, 1, 0, 0, 1, 2);
+        } else {
+            GXSetTevColorOp(2, 0, 0, 0, 1, 2);
+        }
+        GXSetTevAlphaIn(2, 7, 7, 7, 0);
+        GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
+        stage = 3;
+        coord = 5;
+    } else {
+        stage = 2;
+        coord = 1;
+    }
+    getTextureFn_8006c5e4(&t150);
+    selectTexture((void *)t150, 4);
+    newshadows_getReflectionScrollOffsets(&sx, &sy);
+    PSMTXTrans(mtxR, lbl_803DEA28 * sx, lbl_803DEA28 * sy, lbl_803DEA04);
+    mtxR[0] = lbl_803DEA1C;
+    mtxR[5] = lbl_803DEA1C;
+    GXLoadTexMtxImm(mtxR, 0x46, 0);
+    GXSetTexCoordGen2(coord, 1, 4, 0x3c, 0, 0x46);
+    GXSetIndTexOrder(0, coord, 4);
+    GXSetIndTexCoordScale(0, 0, 0);
+    mtxA.m[0] = fz;
+    mtxA.m[4] = fz;
+    GXSetIndTexMtx(1, &mtxA, lbl_803DB48C);
+    GXSetTevIndirect(stage, 0, 0, 7, 1, 6, 6, 0, 0, 0);
+    GXSetTevOrder(stage, 0xff, 0xff, 0xff);
+    GXSetTevSwapMode(stage, 0, 0);
+    GXSetTevColorIn(stage, 0xf, 0, 4, 0xf);
+    GXSetTevAlphaIn(stage, 7, 7, 7, 0);
+    GXSetTevColorOp(stage, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(stage, 0, 0, 0, 0, 0);
+    if (*(void **)(rop + 0x38) != NULL) {
+        selectTexture(textureIdxToPtr(*(int *)(rop + 0x38)), 2);
+        GXSetTexCoordGen2(3, 1, 4, 0x3c, 0, 0x7d);
+        GXSetIndTexOrder(1, 3, 2);
+        GXSetIndTexCoordScale(1, 0, 0);
+        mtxB.m[1] = fz;
+        mtxB.m[5] = fz;
+        GXSetIndTexMtx(2, &mtxB, lbl_803DB490);
+        GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 1);
+    } else {
+        GXSetIndTexOrder(1, 3, 2);
+        GXSetIndTexCoordScale(1, 0, 0);
+        mtxB.m[1] = lbl_803DEA04;
+        mtxB.m[5] = lbl_803DEA04;
+        GXSetIndTexMtx(2, &mtxB, -0xf);
+        GXSetTevIndirect(stage + 1, 1, 0, 7, 2, 0, 0, 1, 0, 0);
+    }
+    selectTexture(*(void **)(texTbl + lbl_803DCC44 * 4), 3);
+    PSMTXScale(mtx4, lbl_803DEA30, lbl_803DEA30, lbl_803DEA1C);
+    GXLoadTexMtxImm(mtx4, 0x40, 0);
+    GXSetTexCoordGen2(4, 1, 4, 0x3c, 1, 0x40);
+    GXSetTevKColorSel(stage + 1, 4);
+    if (*(void **)(rop + 0x38) != NULL) {
+        GXSetTevOrder(stage + 1, 4, 3, 8);
+        GXSetTevAlphaIn(stage + 1, 7, 4, 5, 0);
+    } else {
+        GXSetTevOrder(stage + 1, 4, 3, 0xff);
+        GXSetTevAlphaIn(stage + 1, 4, 7, 7, 0);
+    }
+    GXSetTevColorIn(stage + 1, 8, 0xe, 0, 0);
+    GXSetTevSwapMode(stage + 1, 0, 0);
+    GXSetTevColorOp(stage + 1, 1, 1, 0, 1, 0);
+    GXSetTevAlphaOp(stage + 1, 0, 0, 0, 1, 0);
+    if (fancy) {
+        GXSetNumTevStages(5);
+        GXSetNumTexGens(6);
+    } else {
+        GXSetNumTevStages(4);
+        GXSetNumTexGens(5);
+    }
+    GXSetNumIndStages(2);
+    GXSetCullMode(2);
+    if ((*(u16 *)(*p2 + 2) & 0x100) != 0) {
+        f32 g = lbl_803DEA04;
+        GXSetFog(0, g, g, g, g, *(ObjPrintGXColor *)&lbl_803DB468);
+    } else {
+        _gxSetFogParams();
+    }
+    gxSetZMode_(1, 3, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetBlendMode(1, 4, 5, 5);
+    return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
