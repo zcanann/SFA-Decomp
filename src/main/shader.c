@@ -2869,6 +2869,96 @@ int mapTextureScrollAcquire(int xStep, int yStep, int texWidthFixed, int texHeig
 #pragma scheduling reset
 #pragma peephole reset
 
+extern int isRomListLoading(void);
+extern void padUpdate(void);
+extern void checkReset(void);
+extern void waitNextFrame(void);
+extern void loadDataFiles(void);
+extern void dvdCheckError(void);
+extern void mmFreeTick(int a);
+extern void gameTextRun(void);
+extern void GXFlush_(int, int);
+extern int saveGame_restoreObjectPosToRomList(void* object);
+extern char lbl_8037E0C0[];
+extern u8 lbl_803DC950;
+extern int lbl_803DB620;
+
+#pragma scheduling off
+#pragma peephole off
+int mapProcessRomList(int slot)
+{
+    u8 flag;
+    int i;
+    int count;
+    char* p;
+    char* entry;
+    s16* rects;
+    char* cur;
+    int j;
+    int step;
+    int rl;
+    f32 dz, dx;
+    char* base;
+
+    base = lbl_8037E0C0;
+    flag = 0;
+    while (isRomListLoading()) {
+        padUpdate();
+        checkReset();
+        if (flag)
+            waitNextFrame();
+        loadDataFiles();
+        dvdCheckError();
+        if (flag) {
+            mmFreeTick(0);
+            gameTextRun();
+            GXFlush_(1, 0);
+        }
+        if (lbl_803DC950)
+            flag = 1;
+    }
+    i = 0;
+    p = base + 0x418C;
+    count = lbl_803DCDEC;
+    while (i < count && *(void**)p != 0) {
+        p += 8;
+        i++;
+    }
+    if (i == count)
+        lbl_803DCDEC = lbl_803DCDEC + 1;
+    rl = mapGetRomListAndOffsets(slot, 0);
+    entry = base + i * 8 + 0x418C;
+    *(int*)entry = rl;
+    *(int*)(base + slot * 4 + 0x83A8) = rl;
+    *(s16*)(base + i * 8 + 0x4190) = slot;
+    lbl_803DCEA0 = *(void**)entry;
+    rects = (s16*)(*(int*)(base + 0x417C) + slot * 10);
+    *(u8*)((char*)lbl_803DCEA0 + 0x19) = *(u8*)(*(int*)(base + 0x4184) + slot);
+    *(f32*)((char*)lbl_803DCEA0 + 0x24) =
+        gMapBlockWorldSize * (f32)(rects[0] + *(s16*)((char*)lbl_803DCEA0 + 4));
+    *(f32*)((char*)lbl_803DCEA0 + 0x28) =
+        gMapBlockWorldSize * (f32)(rects[2] + *(s16*)((char*)lbl_803DCEA0 + 6));
+    cur = (char*)lbl_803DCEA0;
+    dz = *(f32*)(cur + 0x28);
+    dx = *(f32*)(cur + 0x24);
+    if (cur != 0) {
+        char* obj = *(char**)(cur + 0x20);
+        for (j = 0; j < *(u16*)(cur + 8); ) {
+            if (saveGame_restoreObjectPosToRomList(obj) == 0) {
+                *(f32*)(obj + 8) += dx;
+                *(f32*)(obj + 0x10) += dz;
+            }
+            step = *(u8*)(obj + 2) * 4;
+            j += step;
+            obj += step;
+        }
+    }
+    lbl_803DB620 = slot;
+    return i;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mapsBinGetRomlistSize(int offset, int *a, int *b, int *c);
 extern void fileLoadToBufferOffset(int id, void *buf, int offset, int len);
