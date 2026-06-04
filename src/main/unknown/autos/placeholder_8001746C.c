@@ -17378,3 +17378,56 @@ void setMatrixFromObjectPos(f32 *m, u8 *p)
     m[15] = lbl_803DE7C4;
 }
 #pragma pop
+
+extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
+{
+    extern f32 __kernel_sin(f32);
+    extern f32 __kernel_cos(f32, f32);
+    extern f32 lbl_803DE7C8;
+    extern f32 lbl_803DE7CC;
+    extern f32 lbl_803DE7D4;
+    f32 cross[3];
+    f32 sinp;
+    f32 c0;
+    f32 c1;
+    f32 c2;
+    f32 b0;
+    f32 b1;
+    f32 a2;
+    f32 roll;
+    f32 yaw;
+
+    PSVECCrossProduct(b, a, cross);
+    c0 = cross[0];
+    c1 = cross[1];
+    c2 = cross[2];
+    b0 = b[0];
+    b1 = b[1];
+    a2 = a[2];
+    sinp = __kernel_sin(-b[2]);
+    if (sinp < lbl_803DE7C8) {
+        if (sinp > lbl_803DE7CC) {
+            roll = __kernel_cos(c2, a2);
+            yaw = __kernel_cos(b0, b1);
+        } else {
+            roll = lbl_803DE7C0 - __kernel_cos(c1, c0);
+            yaw = lbl_803DE7C0;
+        }
+    } else {
+        roll = __kernel_cos(c1, c0) - lbl_803DE7C0;
+        yaw = lbl_803DE7C0;
+    }
+    {
+        f32 s = lbl_803DE7D0;
+        f32 d = lbl_803DE7D4;
+        *out0 = s * yaw / d;
+        *out1 = s * sinp / d;
+        *out2 = s * roll / d;
+    }
+}
+#pragma pop
