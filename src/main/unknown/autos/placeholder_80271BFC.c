@@ -19,6 +19,7 @@ extern f32 lbl_803E77D4;
 #define SYNTH_FADE_COUNT 0x20
 #define SYNTH_FADE_TABLE_OFFSET 0x5d4
 #define SYNTH_FADE_SELECTOR_ACTION_2 0xfa
+#define SYNTH_FADE_SELECTOR_ACTION_2_OR_3 0xfc
 #define SYNTH_FADE_SELECTOR_ACTION_3 0xfb
 #define SYNTH_FADE_SELECTOR_ACTION_0 0xfd
 #define SYNTH_FADE_SELECTOR_ACTION_1 0xfe
@@ -54,139 +55,139 @@ extern void synthDispatchFadeAction(SynthFade *fade);
  * Route synth fade commands to one slot or to the broadcast pseudo-slots
  * 0xfa through 0xff.
  */
-void synthVolume(u32 volume, u32 timeMs, u32 target, u8 action, u32 handle)
+void synthVolume(u8 volume, u16 timeMs, u8 target, u8 action, u32 handle)
 {
     u32 convertedTime;
-    u32 targetIndex;
     u32 i;
-    u32 matchState;
+    u8 matchState;
     f32 targetVolume;
-    f32 fadePos;
     f32 fadeStepBase;
+    f32 fadePos;
     u8 *stateBase;
     SynthFade *fade;
 
     stateBase = lbl_803BCD90;
-    if ((convertedTime = timeMs & 0xffff) != 0) {
+    if ((convertedTime = timeMs) != 0) {
         sndConvertMs(&convertedTime);
     }
 
-    targetIndex = target & 0xff;
-    if (targetIndex == SYNTH_FADE_SELECTOR_ACTION_0) {
+    switch (target) {
+    case SYNTH_FADE_SELECTOR_ACTION_0_OR_1:
+        targetVolume = lbl_803E7798 * (f32)volume;
+        fadePos = lbl_803E77A8;
+        fadeStepBase = lbl_803E77D4;
+        fade = (SynthFade *)(stateBase + SYNTH_FADE_TABLE_OFFSET);
+        for (i = 0; i < SYNTH_FADE_COUNT; i++, fade++) {
+            if (fade->type == SYNTH_FADE_TYPE_ACTION_0 ||
+                fade->type == SYNTH_FADE_TYPE_ACTION_1) {
+                u32 fadeTime = convertedTime;
+                fade->delayAction = action;
+                fade->handle = SYNTH_INVALID_LINK_ID;
+                if (fadeTime != 0) {
+                    fade->start = fade->current;
+                    fade->target = targetVolume;
+                    fade->progress = fadePos;
+                    fade->progressStep = fadeStepBase / (f32)fadeTime;
+                } else {
+                    fade->current = fade->target = targetVolume;
+                    if (fade->handle != SYNTH_INVALID_LINK_ID) {
+                        synthDispatchFadeAction(fade);
+                    }
+                }
+                synthMasterFaderActiveFlags |= 1U << i;
+            }
+        }
+        return;
+
+    case SYNTH_FADE_SELECTOR_ACTION_2_OR_3:
+        targetVolume = lbl_803E7798 * (f32)volume;
+        fadePos = lbl_803E77A8;
+        fadeStepBase = lbl_803E77D4;
+        fade = (SynthFade *)(stateBase + SYNTH_FADE_TABLE_OFFSET);
+        for (i = 0; i < SYNTH_FADE_COUNT; i++, fade++) {
+            if (fade->type == SYNTH_FADE_TYPE_ACTION_2 ||
+                fade->type == SYNTH_FADE_TYPE_ACTION_3) {
+                u32 fadeTime = convertedTime;
+                fade->delayAction = action;
+                fade->handle = SYNTH_INVALID_LINK_ID;
+                if (fadeTime != 0) {
+                    fade->start = fade->current;
+                    fade->target = targetVolume;
+                    fade->progress = fadePos;
+                    fade->progressStep = fadeStepBase / (f32)fadeTime;
+                } else {
+                    fade->current = fade->target = targetVolume;
+                    if (fade->handle != SYNTH_INVALID_LINK_ID) {
+                        synthDispatchFadeAction(fade);
+                    }
+                }
+                synthMasterFaderActiveFlags |= 1U << i;
+            }
+        }
+        return;
+
+    case SYNTH_FADE_SELECTOR_ACTION_2:
+        matchState = SYNTH_FADE_TYPE_ACTION_2;
+        goto setup_type;
+
+    case SYNTH_FADE_SELECTOR_ACTION_3:
+        matchState = SYNTH_FADE_TYPE_ACTION_3;
+        goto setup_type;
+
+    case SYNTH_FADE_SELECTOR_ACTION_0:
         matchState = SYNTH_FADE_TYPE_ACTION_0;
-    } else if (targetIndex < SYNTH_FADE_SELECTOR_ACTION_0) {
-        if (targetIndex == SYNTH_FADE_SELECTOR_ACTION_3) {
-            matchState = SYNTH_FADE_TYPE_ACTION_3;
-        } else {
-            if (targetIndex > SYNTH_FADE_SELECTOR_ACTION_2) {
-                targetVolume = lbl_803E7798 * (f32)(volume & 0xff);
-                fadePos = lbl_803E77A8;
-                fadeStepBase = lbl_803E77D4;
-                fade = (SynthFade *)(stateBase + SYNTH_FADE_TABLE_OFFSET);
-                for (i = 0; i < SYNTH_FADE_COUNT; i++, fade++) {
-                    if ((fade->type == SYNTH_FADE_TYPE_ACTION_2) ||
-                        (fade->type == SYNTH_FADE_TYPE_ACTION_3)) {
-                        fade->delayAction = action;
-                        fade->handle = SYNTH_INVALID_LINK_ID;
-                        if (convertedTime != 0) {
-                            fade->start = fade->current;
-                            fade->target = targetVolume;
-                            fade->progress = fadePos;
-                            fade->progressStep = fadeStepBase / (f32)convertedTime;
-                        } else {
-                            fade->target = targetVolume;
-                            fade->current = targetVolume;
-                            if (fade->handle != SYNTH_INVALID_LINK_ID) {
-                                synthDispatchFadeAction(fade);
-                            }
-                        }
-                        synthMasterFaderActiveFlags |= 1U << i;
-                    }
-                }
-                return;
-            }
-            if (targetIndex < SYNTH_FADE_SELECTOR_ACTION_2) {
-                goto single_slot;
-            }
-            matchState = SYNTH_FADE_TYPE_ACTION_2;
-        }
-    } else {
-        if (targetIndex == SYNTH_FADE_SELECTOR_ACTION_0_OR_1) {
-            targetVolume = lbl_803E7798 * (f32)(volume & 0xff);
-            fadePos = lbl_803E77A8;
-            fadeStepBase = lbl_803E77D4;
-            fade = (SynthFade *)(stateBase + SYNTH_FADE_TABLE_OFFSET);
-            for (i = 0; i < SYNTH_FADE_COUNT; i++, fade++) {
-                if ((fade->type == SYNTH_FADE_TYPE_ACTION_0) ||
-                    (fade->type == SYNTH_FADE_TYPE_ACTION_1)) {
-                    fade->delayAction = action;
-                    fade->handle = SYNTH_INVALID_LINK_ID;
-                    if (convertedTime != 0) {
-                        fade->start = fade->current;
-                        fade->target = targetVolume;
-                        fade->progress = fadePos;
-                        fade->progressStep = fadeStepBase / (f32)convertedTime;
-                    } else {
-                        fade->target = targetVolume;
-                        fade->current = targetVolume;
-                        if (fade->handle != SYNTH_INVALID_LINK_ID) {
-                            synthDispatchFadeAction(fade);
-                        }
-                    }
-                    synthMasterFaderActiveFlags |= 1U << i;
-                }
-            }
-            return;
-        }
-        if (targetIndex > SYNTH_FADE_SELECTOR_ACTION_1) {
-            goto single_slot;
-        }
+        goto setup_type;
+
+    case SYNTH_FADE_SELECTOR_ACTION_1:
         matchState = SYNTH_FADE_TYPE_ACTION_1;
-    }
 
-    targetVolume = lbl_803E7798 * (f32)(volume & 0xff);
-    fadePos = lbl_803E77A8;
-    fadeStepBase = lbl_803E77D4;
-    fade = (SynthFade *)(stateBase + SYNTH_FADE_TABLE_OFFSET);
-    for (i = 0; i < SYNTH_FADE_COUNT; i++, fade++) {
-        if (fade->type == matchState) {
-            fade->delayAction = action;
-            fade->handle = SYNTH_INVALID_LINK_ID;
-            if (convertedTime != 0) {
-                fade->start = fade->current;
-                fade->target = targetVolume;
-                fade->progress = fadePos;
-                fade->progressStep = fadeStepBase / (f32)convertedTime;
-            } else {
-                fade->target = targetVolume;
-                fade->current = targetVolume;
-                if (fade->handle != SYNTH_INVALID_LINK_ID) {
-                    synthDispatchFadeAction(fade);
+    setup_type:
+        targetVolume = lbl_803E7798 * (f32)volume;
+        fadePos = lbl_803E77A8;
+        fadeStepBase = lbl_803E77D4;
+        fade = (SynthFade *)(stateBase + SYNTH_FADE_TABLE_OFFSET);
+        for (i = 0; i < SYNTH_FADE_COUNT; i++, fade++) {
+            if (fade->type == matchState) {
+                u32 fadeTime = convertedTime;
+                fade->delayAction = action;
+                fade->handle = SYNTH_INVALID_LINK_ID;
+                if (fadeTime != 0) {
+                    fade->start = fade->current;
+                    fade->target = targetVolume;
+                    fade->progress = fadePos;
+                    fade->progressStep = fadeStepBase / (f32)fadeTime;
+                } else {
+                    fade->current = fade->target = targetVolume;
+                    if (fade->handle != SYNTH_INVALID_LINK_ID) {
+                        synthDispatchFadeAction(fade);
+                    }
                 }
+                synthMasterFaderActiveFlags |= 1U << i;
             }
-            synthMasterFaderActiveFlags |= 1U << i;
         }
-    }
-    return;
+        return;
 
-single_slot:
-    fade = (SynthFade *)(stateBase + SYNTH_FADE_TABLE_OFFSET + targetIndex * sizeof(SynthFade));
-    fade->delayAction = action;
-    fade->handle = handle;
-    if (convertedTime != 0) {
-        fade->start = fade->current;
-        fade->target = lbl_803E7798 * (f32)(volume & 0xff);
-        fade->progress = lbl_803E77A8;
-        fade->progressStep = lbl_803E77D4 / (f32)convertedTime;
-    } else {
-        targetVolume = lbl_803E7798 * (f32)(volume & 0xff);
-        fade->target = targetVolume;
-        fade->current = targetVolume;
-        if (fade->handle != SYNTH_INVALID_LINK_ID) {
-            synthDispatchFadeAction(fade);
+    default:
+        {
+        u32 fadeTime = convertedTime;
+        fade = (SynthFade *)(stateBase + SYNTH_FADE_TABLE_OFFSET) + target;
+        fade->delayAction = action;
+        fade->handle = handle;
+        if (fadeTime != 0) {
+            fade->start = fade->current;
+            fade->target = lbl_803E7798 * (f32)volume;
+            fade->progress = lbl_803E77A8;
+            fade->progressStep = lbl_803E77D4 / (f32)fadeTime;
+        } else {
+            fade->current = fade->target = lbl_803E7798 * (f32)volume;
+            if (fade->handle != SYNTH_INVALID_LINK_ID) {
+                synthDispatchFadeAction(fade);
+            }
+        }
+        synthMasterFaderActiveFlags |= 1U << target;
+        return;
         }
     }
-    synthMasterFaderActiveFlags |= 1U << targetIndex;
 }
 
 /*
