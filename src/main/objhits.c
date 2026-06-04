@@ -37,7 +37,7 @@ extern undefined4 _restgpr_21();
 extern undefined4 _restgpr_23();
 extern undefined4 _restgpr_24();
 extern undefined4 _restgpr_27();
-extern double sqrtf();
+extern f32 sqrtf(f32 v);
 extern f32 sin(f32 v);
 
 extern ObjHitsSweepEntry *gObjHitsSweepEntryPtrs[OBJHITS_SWEEP_ENTRY_CAPACITY];
@@ -2417,168 +2417,153 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_DetectObjectPair(void)
+void ObjHits_DetectObjectPair(int objA,int objB)
 {
-  byte bVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  bool bVar9;
-  int iVar10;
-  int iVar11;
-  int iVar12;
-  int iVar13;
-  int iVar14;
-  int iVar15;
-  double dVar16;
-  double dVar17;
-  double dVar18;
-  double dVar19;
-  double dVar20;
-  double dVar21;
-  double dVar22;
-  double dVar23;
-  double dVar24;
-  undefined8 uVar25;
-  double local_b0;
-  
-  uVar25 = _savegpr_27();
-  iVar10 = (int)((ulonglong)uVar25 >> 0x20);
-  iVar12 = (int)uVar25;
-  iVar15 = *(int *)(iVar10 + OBJHITBOX_DEF_OFFSET);
-  iVar14 = *(int *)(iVar12 + OBJHITBOX_DEF_OFFSET);
-  if ((*(char *)(iVar15 + OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET) != '\0') ||
-      (*(char *)(iVar14 + OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET) != '\0')) goto LAB_800344f4;
-  dVar23 = (double)(*(float *)(iVar12 + OBJHITBOX_WORLD_X_OFFSET) -
-                    *(float *)(iVar10 + OBJHITBOX_WORLD_X_OFFSET));
-  dVar18 = (double)*(float *)(iVar12 + OBJHITBOX_WORLD_Y_OFFSET);
-  dVar17 = (double)*(float *)(iVar10 + OBJHITBOX_WORLD_Y_OFFSET);
-  dVar22 = (double)(float)(dVar18 - dVar17);
-  dVar21 = (double)(*(float *)(iVar12 + OBJHITBOX_WORLD_Z_OFFSET) -
-                    *(float *)(iVar10 + OBJHITBOX_WORLD_Z_OFFSET));
-  dVar24 = (f64)(f32)(s32)*(s16 *)(iVar15 + OBJHITBOX_DEF_RADIUS_OFFSET);
-  dVar20 = (f64)(f32)(s32)*(s16 *)(iVar14 + OBJHITBOX_DEF_RADIUS_OFFSET);
-  bVar9 = false;
-  bVar1 = *(byte *)(iVar14 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET);
-  if (((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) ||
-      ((*(byte *)(iVar15 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET) &
-        OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0)) {
-    if (dVar22 <= (f64)lbl_803DF590) {
-      dVar22 = dVar20;
-      if ((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
-        dVar22 = (f64)(f32)(s32)*(s16 *)(iVar14 + OBJHITBOX_DEF_VERTICAL_MAX_OFFSET);
+  ObjHitsPriorityState *stateA;
+  ObjHitsPriorityState *stateB;
+  u8 shapeB;
+  int vertical;
+  int distInt;
+  int distClamped;
+  f32 dx;
+  f32 dy;
+  f32 dz;
+  f32 yA;
+  f32 yB;
+  f32 radiusA;
+  f32 radiusB;
+  f32 span;
+  f32 dist;
+  f32 sumRadius;
+  f32 bx;
+  f32 by;
+  f32 bz;
+  f32 sx;
+  f32 sy;
+  f32 sz;
+  f32 segSq;
+  f32 t;
+  f32 cx;
+  f32 cy;
+  f32 cz;
+  f32 nx;
+  f32 ny;
+  f32 nz;
+  f32 len;
+  f32 diff;
+
+  stateA = *(ObjHitsPriorityState **)(objA + 0x54);
+  stateB = *(ObjHitsPriorityState **)(objB + 0x54);
+  if ((*(u8 *)((int)stateA + 0xae) != 0) || (*(u8 *)((int)stateB + 0xae) != 0)) goto end;
+  dx = *(f32 *)(objB + 0x18) - *(f32 *)(objA + 0x18);
+  yB = *(f32 *)(objB + 0x1c);
+  yA = *(f32 *)(objA + 0x1c);
+  dy = yB - yA;
+  dz = *(f32 *)(objB + 0x20) - *(f32 *)(objA + 0x20);
+  radiusA = (f32)*(s16 *)((int)stateA + 0x5a);
+  radiusB = (f32)*(s16 *)((int)stateB + 0x5a);
+  vertical = 0;
+  shapeB = stateB->shapeFlags;
+  if (((shapeB & 2) != 0) || ((stateA->shapeFlags & 2) != 0)) {
+    if (dy <= gObjHitsScalarZero) {
+      span = radiusB;
+      if ((shapeB & 2) != 0) {
+        span = (f32)*(s16 *)((int)stateB + 0x5e);
       }
-      if ((*(byte *)(iVar15 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET) &
-           OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
-        dVar17 = dVar17 - dVar24;
+      if ((stateA->shapeFlags & 2) == 0) {
+        yA = yA - radiusA;
+      } else {
+        yA = yA + (f32)*(s16 *)((int)stateA + 0x5c);
       }
-      else {
-        dVar17 = dVar17 + (f64)(f32)(s32)*(s16 *)(iVar15 + OBJHITBOX_DEF_VERTICAL_MIN_OFFSET);
+      if (yB + span < yA) goto end;
+    } else {
+      span = radiusA;
+      if ((stateA->shapeFlags & 2) != 0) {
+        span = (f32)*(s16 *)((int)stateA + 0x5e);
       }
-      if ((float)(dVar18 + dVar22) < (float)dVar17) goto LAB_800344f4;
+      if ((shapeB & 2) == 0) {
+        yB = yB - radiusB;
+      } else {
+        yB = yB + (f32)*(s16 *)((int)stateB + 0x5c);
+      }
+      if (yA + span < yB) goto end;
     }
-    else {
-      dVar22 = dVar24;
-      if ((*(byte *)(iVar15 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET) &
-           OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
-        dVar22 = (f64)(f32)(s32)*(s16 *)(iVar15 + OBJHITBOX_DEF_VERTICAL_MAX_OFFSET);
-      }
-      if ((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
-        dVar18 = dVar18 - dVar20;
-      }
-      else {
-        dVar18 = dVar18 + (f64)(f32)(s32)*(s16 *)(iVar14 + OBJHITBOX_DEF_VERTICAL_MIN_OFFSET);
-      }
-      if ((float)(dVar17 + dVar22) < (float)dVar18) goto LAB_800344f4;
+    dy = gObjHitsScalarZero;
+    vertical = 1;
+  }
+  dist = dz * dz + (dx * dx + dy * dy);
+  if (dist != gObjHitsScalarZero) {
+    dist = sqrtf(dist);
+  }
+  distInt = (int)dist;
+  distClamped = distInt;
+  if (distInt > 0x400) {
+    distClamped = 0x400;
+  }
+  if (distClamped <= *(s16 *)((int)stateA + 0x58)) {
+    *(s16 *)((int)stateA + 0x58) = distClamped;
+  }
+  if (distInt > 0x400) {
+    distInt = 0x400;
+  }
+  if (distInt <= *(s16 *)((int)stateB + 0x58)) {
+    *(s16 *)((int)stateB + 0x58) = distInt;
+  }
+  if ((stateB->flags & 1) != 0) {
+    sumRadius = radiusB + radiusA;
+    bx = *(f32 *)((int)stateA + 0x1c);
+    sx = *(f32 *)(objA + 0x18) - bx;
+    by = *(f32 *)((int)stateA + 0x20);
+    bz = *(f32 *)((int)stateA + 0x24);
+    sz = *(f32 *)(objA + 0x20) - bz;
+    sy = *(f32 *)(objA + 0x1c) - by;
+    if (vertical) {
+      sy = gObjHitsScalarZero;
     }
-    dVar22 = (double)lbl_803DF590;
-    bVar9 = true;
-  }
-  dVar18 = (double)(float)(dVar21 * dVar21 +
-                          (double)(float)(dVar23 * dVar23 + (double)(float)(dVar22 * dVar22)));
-  if (dVar18 != (double)lbl_803DF590) {
-    dVar18 = sqrtf(dVar18);
-  }
-  iVar11 = (int)(f32)(s32)(int)dVar18;
-  iVar13 = iVar11;
-  if (0x400 < iVar11) {
-    iVar13 = 0x400;
-  }
-  if (iVar13 <= *(short *)(iVar15 + OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET)) {
-    *(short *)(iVar15 + OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET) = (short)iVar13;
-  }
-  if (0x400 < iVar11) {
-    iVar11 = 0x400;
-  }
-  if (iVar11 <= *(short *)(iVar14 + OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET)) {
-    *(short *)(iVar14 + OBJHITBOX_DEF_DISTANCE_CACHE_OFFSET) = (short)iVar11;
-  }
-  if ((*(ushort *)(iVar14 + OBJHITBOX_DEF_FLAGS_OFFSET) & OBJHITBOX_DEF_SOLID) != 0) {
-    dVar17 = (double)(float)(dVar20 + dVar24);
-    fVar2 = *(float *)(iVar15 + 0x1c);
-    fVar5 = *(float *)(iVar10 + 0x18) - fVar2;
-    fVar3 = *(float *)(iVar15 + 0x20);
-    fVar4 = *(float *)(iVar15 + 0x24);
-    fVar7 = *(float *)(iVar10 + 0x20) - fVar4;
-    fVar6 = *(float *)(iVar10 + 0x1c) - fVar3;
-    if (bVar9) {
-      fVar6 = lbl_803DF590;
-    }
-    fVar8 = fVar7 * fVar7 + fVar5 * fVar5 + fVar6 * fVar6;
-    if (lbl_803DF598 < fVar8) {
-      fVar8 = (fVar7 * (*(float *)(iVar12 + 0x20) - fVar4) +
-              fVar5 * (*(float *)(iVar12 + 0x18) - fVar2) +
-              fVar6 * (*(float *)(iVar12 + 0x1c) - fVar3)) / fVar8;
-      if ((lbl_803DF590 <= fVar8) && (fVar8 <= lbl_803DF598)) {
-        fVar4 = (fVar8 * fVar7 + fVar4) - *(float *)(iVar12 + 0x20);
-        fVar5 = (fVar8 * fVar5 + fVar2) - *(float *)(iVar12 + 0x18);
-        fVar2 = (fVar8 * fVar6 + fVar3) - *(float *)(iVar12 + 0x1c);
-        dVar18 = sqrtf((double)(fVar4 * fVar4 + fVar5 * fVar5 + fVar2 * fVar2));
+    segSq = sz * sz + sx * sx + sy * sy;
+    if (segSq > gObjHitsScalarOne) {
+      t = (sz * (*(f32 *)(objB + 0x20) - bz) + sx * (*(f32 *)(objB + 0x18) - bx) +
+           sy * (*(f32 *)(objB + 0x1c) - by)) / segSq;
+      if ((t >= gObjHitsScalarZero) && (t <= gObjHitsScalarOne)) {
+        cz = (t * sz + bz) - *(f32 *)(objB + 0x20);
+        cx = (t * sx + bx) - *(f32 *)(objB + 0x18);
+        cy = (t * sy + by) - *(f32 *)(objB + 0x1c);
+        dist = sqrtf(cz * cz + cx * cx + cy * cy);
       }
     }
-    if ((dVar18 < dVar17) && ((double)lbl_803DF590 < dVar18)) {
-      ObjHits_RecordObjectHit(iVar12,iVar10,*(char *)(iVar15 + OBJHITBOX_DEF_HIT_TYPE_OFFSET),
-                              *(undefined *)(iVar15 + OBJHITBOX_DEF_HIT_PRIORITY_OFFSET),0);
-      ObjHits_RecordObjectHit(iVar10,iVar12,*(char *)(iVar14 + OBJHITBOX_DEF_HIT_TYPE_OFFSET),
-                              *(undefined *)(iVar14 + OBJHITBOX_DEF_HIT_PRIORITY_OFFSET),0);
-      if (((*(ushort *)(iVar14 + OBJHITBOX_DEF_FLAGS_OFFSET) &
-            OBJHITBOX_DEF_NO_SEPARATION_RESPONSE) == 0) &&
-          ((*(ushort *)(iVar15 + OBJHITBOX_DEF_FLAGS_OFFSET) &
-            OBJHITBOX_DEF_NO_SEPARATION_RESPONSE) == 0)) {
-        dVar20 = (double)(*(float *)(iVar14 + 0x1c) - *(float *)(iVar15 + 0x1c));
-        dVar24 = (double)(*(float *)(iVar14 + 0x24) - *(float *)(iVar15 + 0x24));
-        fVar2 = *(float *)(iVar14 + 0x20) - *(float *)(iVar15 + 0x20);
-        if (bVar9) {
-          fVar2 = lbl_803DF590;
+    if ((dist < sumRadius) && (dist > gObjHitsScalarZero)) {
+      ObjHits_RecordObjectHit(objB, objA, *(s8 *)((int)stateA + 0x6c),
+                              *(u8 *)((int)stateA + 0x6d), 0);
+      ObjHits_RecordObjectHit(objA, objB, *(s8 *)((int)stateB + 0x6c),
+                              *(u8 *)((int)stateB + 0x6d), 0);
+      if (((stateB->flags & 2) == 0) && ((stateA->flags & 2) == 0)) {
+        nx = *(f32 *)((int)stateB + 0x1c) - *(f32 *)((int)stateA + 0x1c);
+        nz = *(f32 *)((int)stateB + 0x24) - *(f32 *)((int)stateA + 0x24);
+        ny = *(f32 *)((int)stateB + 0x20) - *(f32 *)((int)stateA + 0x20);
+        if (vertical) {
+          ny = gObjHitsScalarZero;
         }
-        dVar19 = (double)fVar2;
-        dVar16 = sqrtf((double)(float)(dVar24 * dVar24 +
-                                             (double)(float)(dVar20 * dVar20 +
-                                                            (double)(float)(dVar19 * dVar19))));
-        if (dVar16 <= (double)lbl_803DF590) {
-          dVar20 = dVar23 / dVar18;
-          dVar19 = dVar22 / dVar18;
-          dVar24 = dVar21 / dVar18;
+        len = sqrtf(nz * nz + (nx * nx + ny * ny));
+        if (len > gObjHitsScalarZero) {
+          nx = nx / len;
+          ny = ny / len;
+          nz = nz / len;
+        } else {
+          nx = dx / dist;
+          ny = dy / dist;
+          nz = dz / dist;
         }
-        else {
-          dVar20 = dVar20 / dVar16;
-          dVar19 = dVar19 / dVar16;
-          dVar24 = dVar24 / dVar16;
-        }
-        fVar2 = (float)(dVar17 - dVar18);
-        ObjHits_ApplyPairResponse((double)((float)dVar20 * fVar2),(double)((float)dVar19 * fVar2),
-                                  (double)((float)dVar24 * fVar2),iVar10,iVar12,0);
+        diff = sumRadius - dist;
+        nx = nx * diff;
+        ny = ny * diff;
+        nz = nz * diff;
+        ObjHits_ApplyPairResponse(objA, objB, nx, ny, nz, 0);
       }
     }
   }
-LAB_800344f4:
-  _restgpr_27();
-  return;
+end:;
 }
+
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -3079,7 +3064,7 @@ void ObjHits_Update(int objectCount)
                   }
                 } else if ((*(u8 *)((int)objState + 0x6a) != 0) ||
                            (*(u8 *)((int)candState + 0x6a) != 0)) {
-                  ((void (*)(int, int))ObjHits_DetectObjectPair)(obj, candObj);
+                  ObjHits_DetectObjectPair(obj, candObj);
                 }
               }
             }
