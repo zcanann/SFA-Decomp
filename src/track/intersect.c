@@ -6397,9 +6397,102 @@ void setupReflectionIndirectTev(u8 flag)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_8007C664(int param_1)
+#pragma peephole off
+#pragma scheduling off
+void fn_8007C664(int texHandle)
 {
+    extern f32 lbl_803DEEDC, lbl_803DEEE4;
+    extern f32 gSynthDelayedActionWord0;
+    extern GXColor lbl_803DB688;
+    extern GXColor lbl_803DB68C;
+    extern u8 lbl_803DB678;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
+    extern void selectReflectionTexture(int);
+    extern u8 isHeavyFogEnabled(void);
+    extern void selectTexture(int handle, int slot);
+    f32 dummy;
+    f32 tOff;
+    f32 sOff;
+    f32 indMtx[6];
+    Mtx scaleMtx;
+
+    selectReflectionTexture(0);
+    selectTexture(texHandle, 1);
+    newshadows_getReflectionScrollOffsets(&sOff, &tOff);
+    GXSetTexCoordGen2(0, 0, 0, 0x1e, 0, 0x7d);
+    GXSetTexCoordGen2(2, 0, 0, 0x24, 0, 0x7d);
+    PSMTXScale(scaleMtx, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
+    GXLoadTexMtxImm(scaleMtx, 0x21, 1);
+    GXSetTexCoordGen2(1, 1, 4, 0x21, 0, 0x7d);
+    indMtx[0] = lbl_803DEEDC;
+    indMtx[1] = gSynthDelayedActionWord0;
+    indMtx[2] = lbl_803DEEDC;
+    indMtx[3] = lbl_803DEEDC;
+    indMtx[4] = lbl_803DEEDC;
+    indMtx[5] = gSynthDelayedActionWord0;
+    if (isHeavyFogEnabled()) {
+        lbl_803DB688.r = lbl_803DD01C.r;
+        lbl_803DB688.g = lbl_803DD01C.g;
+        lbl_803DB688.b = lbl_803DD01C.b;
+        lbl_803DB688.a = 0x80;
+    } else {
+        (*(void (**)(u8 *, u8 *, u8 *, f32 *, f32 *, f32 *))(*(int *)gSHthorntailAnimationInterface + 0x40))(
+            &lbl_803DB688.r, &lbl_803DB688.g, &lbl_803DB688.b, &dummy, &dummy, &dummy);
+        lbl_803DB688.r = lbl_803DB688.r >> 3;
+        lbl_803DB688.g = lbl_803DB688.g >> 3;
+        lbl_803DB688.b = lbl_803DB688.b >> 3;
+        lbl_803DB688.a = lbl_803DB678;
+    }
+    GXSetTevColor(3, lbl_803DB688);
+    GXSetTevKColor(0, lbl_803DB68C);
+    GXSetTevKColorSel(1, 0xc);
+    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, (f32(*)[3])indMtx, -1);
+    GXSetIndTexMtx(2, (f32(*)[3])indMtx, -2);
+    GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    GXSetTevIndirect(1, 0, 0, 7, 2, 0, 0, 0, 0, 1);
+    GXSetNumIndStages(1);
+    GXSetNumChans(1);
+    GXSetNumTexGens(3);
+    GXSetNumTevStages(2);
+    GXSetTevOrder(0, 0, 0, 0xff);
+    GXSetTevColorIn(0, 6, 0xf, 0xf, 8);
+    GXSetTevAlphaIn(0, 7, 7, 7, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    if (isHeavyFogEnabled()) {
+        GXSetTevColorOp(0, 0, 0, 3, 1, 0);
+    } else {
+        GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    }
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTevOrder(1, 2, 0, 8);
+    GXSetTevColorIn(1, 0, 8, 0xe, 0xf);
+    GXSetTevAlphaIn(1, 7, 2, 5, 7);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -6414,9 +6507,101 @@ void fn_8007C664(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void fn_8007CAF4(void)
 {
+    extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEEEC;
+    extern GXColor lbl_803DB680;
+    extern GXColor lbl_803DB684;
+    extern u8 lbl_803DB678;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern void newshadows_getReflectionScrollOffsets(f32* a, f32* b);
+    extern void selectReflectionTexture(int);
+    extern u8 isHeavyFogEnabled(void);
+    extern void fn_8006C678(int);
+    f32 dummy;
+    f32 tOff;
+    f32 sOff;
+    f32 indMtx[6];
+    Mtx scaleMtx;
+
+    selectReflectionTexture(0);
+    fn_8006C678(1);
+    newshadows_getReflectionScrollOffsets(&sOff, &tOff);
+    GXSetTexCoordGen2(0, 0, 0, 0x1e, 0, 0x7d);
+    GXSetTexCoordGen2(2, 0, 0, 0x24, 0, 0x7d);
+    PSMTXScale(scaleMtx, lbl_803DEEE4, lbl_803DEEE4, lbl_803DEEE4);
+    GXLoadTexMtxImm(scaleMtx, 0x21, 1);
+    GXSetTexCoordGen2(1, 1, 4, 0x21, 0, 0x7d);
+    indMtx[0] = lbl_803DEEEC;
+    indMtx[1] = lbl_803DEEDC;
+    indMtx[2] = lbl_803DEEDC;
+    indMtx[3] = lbl_803DEEDC;
+    indMtx[4] = lbl_803DEEEC;
+    indMtx[5] = lbl_803DEEDC;
+    if (isHeavyFogEnabled()) {
+        lbl_803DB680.r = lbl_803DD01C.r;
+        lbl_803DB680.g = lbl_803DD01C.g;
+        lbl_803DB680.b = lbl_803DD01C.b;
+        lbl_803DB680.a = 0x80;
+    } else {
+        (*(void (**)(u8 *, u8 *, u8 *, f32 *, f32 *, f32 *))(*(int *)gSHthorntailAnimationInterface + 0x40))(
+            &lbl_803DB680.r, &lbl_803DB680.g, &lbl_803DB680.b, &dummy, &dummy, &dummy);
+        lbl_803DB680.r = lbl_803DB680.r >> 3;
+        lbl_803DB680.g = lbl_803DB680.g >> 3;
+        lbl_803DB680.b = lbl_803DB680.b >> 3;
+        lbl_803DB680.a = lbl_803DB678;
+    }
+    GXSetTevColor(3, lbl_803DB680);
+    GXSetTevKColor(0, lbl_803DB684);
+    GXSetTevKColorSel(1, 0xc);
+    GXSetIndTexOrder(0, 1, 1);
+    GXSetIndTexCoordScale(0, 0, 0);
+    GXSetIndTexMtx(1, (f32(*)[3])indMtx, -1);
+    GXSetIndTexMtx(2, (f32(*)[3])indMtx, -2);
+    GXSetTevIndirect(0, 0, 0, 7, 1, 0, 0, 0, 0, 0);
+    GXSetTevIndirect(1, 0, 0, 7, 2, 0, 0, 0, 0, 3);
+    GXSetNumIndStages(1);
+    GXSetNumChans(1);
+    GXSetNumTexGens(3);
+    GXSetNumTevStages(2);
+    GXSetTevOrder(0, 0, 0, 0xff);
+    GXSetTevColorIn(0, 6, 0xf, 0xf, 8);
+    GXSetTevAlphaIn(0, 7, 7, 7, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    if (isHeavyFogEnabled()) {
+        GXSetTevColorOp(0, 0, 0, 3, 1, 0);
+    } else {
+        GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    }
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTevOrder(1, 2, 0, 8);
+    GXSetTevColorIn(1, 0, 8, 0xe, 0xf);
+    GXSetTevAlphaIn(1, 7, 2, 5, 7);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
