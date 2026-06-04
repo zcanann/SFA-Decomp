@@ -14706,3 +14706,194 @@ void objFreeObjDef(void *objp, int flag) {
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern void lbl_80006C6C(int *out, u8 *a, void *buf, int c, int d, u8 *e, int f, int g);
+extern u8 lbl_80340740[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void modelAnimFn_80024524(u8 *hdr, u8 *stk, int n)
+{
+    u8 *p2;
+    u8 *p4;
+    int i;
+    u8 *p5;
+    u8 *p6;
+    u8 *q;
+    int bv;
+    int off;
+    int k;
+    int n2;
+    int t;
+    f32 g;
+
+    i = 0;
+    p2 = stk;
+    p4 = stk;
+    for (; i < n; i++) {
+        if (*(u16 *)(hdr + 2) & 0x40) {
+            p6 = *(u8 **)(stk + *(u16 *)(p2 + 0x44) * 4 + 0x1c);
+            p5 = p6;
+            p6 += 0x80;
+        } else {
+            p5 = *(u8 **)(hdr + 0x68) + *(u16 *)(p2 + 0x44) * (((*(u8 *)(hdr + 0xf3) - 1) & ~7) + 8);
+            p6 = *(u8 **)(*(u8 **)(hdr + 0x64) + *(u16 *)(p2 + 0x44) * 4);
+        }
+        bv = *(u8 *)(*(u8 **)(p4 + 0x34) + 2);
+        k = 0;
+        off = 0;
+        q = p5;
+        while (k < *(u8 *)(hdr + 0xf3)) {
+            *(u8 *)(i + *(int *)(hdr + 0x3c) + off + 2) = *q;
+            off += 0x1c;
+            k++;
+            q++;
+        }
+        n2 = (int)*(f32 *)(p4 + 4);
+        g = (f32)n2;
+        if (g != *(f32 *)(p4 + 4)) {
+            *(s16 *)(p2 + 0x4c) = (s16)bv;
+        } else {
+            *(s16 *)(p2 + 0x4c) = 0;
+        }
+        if (*(s8 *)(stk + i + 0x60) != 0 && g == *(f32 *)(p4 + 0x14) - lbl_803DE818) {
+            *(s16 *)(p2 + 0x4c) = (s16)(-bv * n2);
+        }
+        t = *(s16 *)(p6 + 2) + bv * n2;
+        *(u8 **)(p4 + 0x2c) = p6 + t;
+        p2 += 2;
+        p4 += 4;
+    }
+}
+
+#pragma peephole off
+void modelWalkAnimFn_800248b8(u8 *a, u8 *b, u8 *c, int d, f32 e)
+{
+    u8 stk[0x64];
+    int px;
+    int fl;
+    u8 *hdr;
+    int v;
+    int sv;
+    int n;
+    int j;
+    int idx;
+    u8 bvv;
+    f32 fb;
+    f32 fa;
+
+    hdr = *(u8 **)b;
+    px = ((int *)(b + (*(u16 *)(b + 0x18) & 1) * 4))[3];
+    *(f32 *)(c + 4) = e * *(f32 *)(c + 0x14);
+    fl = 0;
+    if (*(u16 *)(hdr + 2) & 8) {
+        *(u32 *)(stk + 0x1c) = *(u32 *)(c + 0x1c);
+        *(u32 *)(stk + 0x20) = *(u32 *)(c + 0x20);
+        *(u32 *)(stk + 0x24) = *(u32 *)(c + 0x24);
+        *(u32 *)(stk + 0x28) = *(u32 *)(c + 0x28);
+        for (j = 0; j < 2; j++) {
+            if (*(u16 *)(c + 0x58)) {
+                idx = j;
+            } else {
+                idx = 0;
+            }
+            *(u16 *)(stk + j * 2 + 0x44) = *(u16 *)(c + idx * 2 + 0x44);
+            *(u8 *)(stk + j + 0x60) = *(u8 *)(c + idx + 0x60);
+            *(f32 *)(stk + j * 4 + 0x14) = *(f32 *)(c + idx * 4 + 0x14);
+            *(f32 *)(stk + j * 4 + 4) = *(f32 *)(c + idx * 4 + 4);
+            *(u32 *)(stk + j * 4 + 0x34) = *(u32 *)(c + idx * 4 + 0x34);
+        }
+        *(u16 *)(stk + 0x58) = *(u16 *)(c + 0x58);
+        modelAnimFn_80024524(hdr, stk, 2);
+        sv = *(s8 *)(c + 0x63);
+        if (sv & 1) {
+            fl |= 0x10;
+        }
+        if (sv & 4) {
+            fl |= 0x20;
+        }
+        lbl_80006C6C(&px, a, stk, *(int *)(hdr + 0x3c), *(u8 *)(hdr + 0xf3), lbl_80340740, d, fl | 0x40);
+    } else {
+        u8 *p4;
+        u8 *p2;
+        int i;
+        int m;
+
+        i = 0;
+        p4 = c;
+        p2 = c;
+        for (; i < 2; i++) {
+            if (i != 0) {
+                v = *(u16 *)(c + 0x5c);
+            } else {
+                v = *(u16 *)(c + 0x5a);
+            }
+            if (v != 0) {
+                if (*(u16 *)(c + 0x58)) {
+                    m = 4 << i;
+                } else {
+                    m = 0;
+                }
+                bvv = *(u8 *)(c + i + 0x60);
+                *(u8 *)(stk + 0x60) = bvv;
+                fa = *(f32 *)(p4 + 0x14);
+                *(f32 *)(stk + 0x14) = fa;
+                fb = *(f32 *)(p4 + 4);
+                *(f32 *)(stk + 4) = fb;
+                *(u32 *)(stk + 0x34) = *(u32 *)(p4 + 0x34);
+                *(u8 *)(stk + 0x61) = bvv;
+                *(f32 *)(stk + 0x18) = fa;
+                *(f32 *)(stk + 8) = fb;
+                *(u32 *)(stk + 0x38) = *(u32 *)(p4 + 0x3c);
+                if (*(u16 *)(hdr + 2) & 0x40) {
+                    *(u16 *)(stk + 0x44) = 0;
+                    *(u16 *)(stk + 0x46) = 1;
+                    *(u32 *)(stk + 0x1c) = *(u32 *)(c + *(u16 *)(p2 + 0x44) * 4 + 0x1c);
+                    *(u32 *)(stk + 0x20) = *(u32 *)(c + *(u16 *)(p2 + 0x48) * 4 + 0x24);
+                } else {
+                    *(u16 *)(stk + 0x44) = *(u16 *)(p2 + 0x44);
+                    *(u16 *)(stk + 0x46) = *(u16 *)(p2 + 0x48);
+                }
+                *(u16 *)(stk + 0x58) = (u16)v;
+                modelAnimFn_80024524(hdr, stk, 2);
+                lbl_80006C6C(&px, a, stk, *(int *)(hdr + 0x3c), *(u8 *)(hdr + 0xf3), lbl_80340740, d, m);
+                if (m != 0) {
+                    fl |= 1 << i;
+                }
+            }
+            p4 += 4;
+            p2 += 2;
+        }
+        if ((*(u16 *)(c + 0x5a) == 0 && *(u16 *)(c + 0x5c) == 0) || fl != 0) {
+            n = 1;
+            if (*(u16 *)(c + 0x58) != 0) {
+                n = 2;
+            }
+            *(u32 *)(stk + 0x1c) = *(u32 *)(c + 0x1c);
+            *(u32 *)(stk + 0x20) = *(u32 *)(c + 0x20);
+            *(u32 *)(stk + 0x24) = *(u32 *)(c + 0x24);
+            *(u32 *)(stk + 0x28) = *(u32 *)(c + 0x28);
+            for (j = 0; j < n; j++) {
+                *(u16 *)(stk + j * 2 + 0x44) = *(u16 *)(c + j * 2 + 0x44);
+                *(u8 *)(stk + j + 0x60) = *(u8 *)(c + j + 0x60);
+                *(f32 *)(stk + j * 4 + 0x14) = *(f32 *)(c + j * 4 + 0x14);
+                *(f32 *)(stk + j * 4 + 4) = *(f32 *)(c + j * 4 + 4);
+                *(u32 *)(stk + j * 4 + 0x34) = *(u32 *)(c + j * 4 + 0x34);
+            }
+            *(u16 *)(stk + 0x58) = *(u16 *)(c + 0x58);
+            modelAnimFn_80024524(hdr, stk, n);
+            sv = *(s8 *)(c + 0x63);
+            if (sv & 1) {
+                fl |= 0x10;
+            }
+            if (sv & 4) {
+                fl |= 0x20;
+            }
+            lbl_80006C6C(&px, a, stk, *(int *)(hdr + 0x3c), *(u8 *)(hdr + 0xf3), lbl_80340740, d, fl);
+        }
+    }
+}
+#pragma dont_inline reset
+#pragma pop
