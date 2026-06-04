@@ -7229,5 +7229,92 @@ void staff_hitDetectGeometry(int *obj)
         }
     }
 }
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef union {
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+} GenPropsWGPipe;
+volatile GenPropsWGPipe GXWGFifo : (0xCC008000);
+
+static inline void swipePos3f32(const f32 x, const f32 y, const f32 z) { GXWGFifo.f32 = x; GXWGFifo.f32 = y; GXWGFifo.f32 = z; }
+static inline void swipeColor4u8(const u8 r, const u8 g, const u8 b, const u8 a) { GXWGFifo.u8 = r; GXWGFifo.u8 = g; GXWGFifo.u8 = b; GXWGFifo.u8 = a; }
+static inline void swipeTexCoord2f32(const f32 s, const f32 t) { GXWGFifo.f32 = s; GXWGFifo.f32 = t; }
+
+extern void selectTexture(void *tex, int x);
+extern void textureSetupFn_800799c0(void);
+extern void geomDrawFn_800796f0(void);
+extern void textRenderSetupFn_80079804(void);
+extern void GXSetBlendMode(int a, int b, int c, int d);
+extern void GXSetAlphaCompare(int a, int b, int c, int d, int e);
+extern void GXSetCullMode(int a);
+extern void GXClearVtxDesc(void);
+extern void GXSetVtxDesc(int a, int b);
+extern void GXSetCurrentMtx(int a);
+extern void GXBegin(int type, int fmt, int n);
+extern f32 lbl_803E3294;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+void staffDrawSwipe(int *obj, int *swipe)
+{
+    u8 *swp;
+    int i;
+
+    selectTexture(lbl_803DDAA8[*(s8 *)((char *)swipe + 0xb9)], 0);
+    textureSetupFn_800799c0();
+    geomDrawFn_800796f0();
+    textRenderSetupFn_80079804();
+    gxSetZMode_(1, 3, 0);
+    GXSetBlendMode(1, 4, 1, 5);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetCullMode(0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(11, 1);
+    GXSetVtxDesc(13, 1);
+    GXLoadPosMtxImm(Camera_GetViewMatrix(), 0);
+    GXSetCurrentMtx(0);
+
+    i = 0;
+    swp = (u8 *)swipe;
+    for (; i < 3; i++) {
+        if ((*(u8 *)(swp + 0x14) & 2) && *(s16 *)(swp + 0x12) >= 4) {
+            u8 *vp;
+            int j;
+            f32 v1, v0, u;
+            j = *(u16 *)(swp + 0xc);
+            vp = *(u8 **)swp + j * 20;
+            u = lbl_803E3294;
+            v0 = lbl_803E32B4;
+            v1 = lbl_803E3288;
+            for (; j < *(u16 *)(swp + 0xe) - 2; j += 2) {
+                GXBegin(128, 2, 4);
+                swipePos3f32(*(f32 *)(vp + 0) - playerMapOffsetX, *(f32 *)(vp + 4), *(f32 *)(vp + 8) - playerMapOffsetZ);
+                swipeColor4u8(255, 255, 255, (u8)*(s16 *)(vp + 0x10));
+                swipeTexCoord2f32(u, v0);
+                swipePos3f32(*(f32 *)(vp + 0x14) - playerMapOffsetX, *(f32 *)(vp + 0x18), *(f32 *)(vp + 0x1c) - playerMapOffsetZ);
+                swipeColor4u8(255, 255, 255, (u8)*(s16 *)(vp + 0x24));
+                swipeTexCoord2f32(u, v1);
+                swipePos3f32(*(f32 *)(vp + 0x3c) - playerMapOffsetX, *(f32 *)(vp + 0x40), *(f32 *)(vp + 0x44) - playerMapOffsetZ);
+                swipeColor4u8(255, 255, 255, (u8)*(s16 *)(vp + 0x4c));
+                swipeTexCoord2f32(u, v1);
+                swipePos3f32(*(f32 *)(vp + 0x28) - playerMapOffsetX, *(f32 *)(vp + 0x2c), *(f32 *)(vp + 0x30) - playerMapOffsetZ);
+                swipeColor4u8(255, 255, 255, (u8)*(s16 *)(vp + 0x38));
+                swipeTexCoord2f32(u, v0);
+                vp += 0x28;
+            }
+        }
+        swp += 0x18;
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
