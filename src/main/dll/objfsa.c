@@ -5751,6 +5751,8 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxD
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_func1C(int startCurve, int unused1, int unused2, int unused3, int unused4, int *previousCurveId)
 {
     int startIndex;
@@ -5890,6 +5892,8 @@ int RomCurve_func1C(int startCurve, int unused1, int unused2, int unused3, int u
     }
     return candidateIds[selectedIndex];
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /* RomCurve_stepClamped: keep the curve phase just inside the endpoints, then advance it. */
 #pragma scheduling off
@@ -5906,6 +5910,8 @@ void RomCurve_stepClamped(float *state, f32 dt) {
 
 extern int curveFn_800da23c(float *state, void *targetCurve);
 
+#pragma scheduling off
+#pragma peephole off
 int curveFn_800da23c(float *state,void *targetCurve)
 {
     char *stateBytes;
@@ -5989,7 +5995,10 @@ int curveFn_800da23c(float *state,void *targetCurve)
 
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
 int fn_800DA980(float *state,void *fromCurve,void *toCurve,void *targetCurve)
 {
     char *stateBytes;
@@ -6043,6 +6052,7 @@ int fn_800DA980(float *state,void *fromCurve,void *toCurve,void *targetCurve)
     curvesMove(state);
     return 0;
 }
+#pragma scheduling reset
 
 extern void **gRomCurveInterface;
 extern f32 lbl_803E05F8;
