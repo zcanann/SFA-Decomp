@@ -84,7 +84,7 @@ undefined4 FUN_800e1b2c(double param_1,undefined8 param_2,double param_3,int par
 int curves_distFn15(u32 curveId,f32 x,f32 y,f32 z,f32 *outDistance);
 int curves_distanceToNearestOfType16(f32 x,f32 y,f32 z,int param_4);
 void RomCurve_func13(uint curveId,int typeFilter,uint param_3,int *param_4);
-void RomCurve_func11(RomCurveDef *curve,int typeFilter,int actionFilter,int *outCurveId);
+int RomCurve_func11(RomCurveDef *curve,int typeFilter,int actionFilter,int *outCurveId);
 int RomCurve_getRandomLinkedOfTypes(RomCurveDef *curve,int *types,int typeCount,int *previousLinkId);
 int curves_findByAction(int action);
 f32 curves_distXZ(f32 x,f32 z,uint curveId);
