@@ -6304,10 +6304,10 @@ void walkgroupFindExitPointFn_800dc398(void)
     f32 len;
     f32 ex;
     f32 ez;
+    f32 z1;
+    f32 x1;
     f32 x0;
     f32 z0;
-    f32 x1;
-    f32 z1;
     f32 x2;
     f32 z2;
     f32 x3;
