@@ -5135,3 +5135,109 @@ void CameraModeTitle_update(u8 *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int fn_8022D750(int state);
+extern int fn_8022D710(int state);
+extern f32 lbl_803E1BA0;
+extern f32 lbl_803E1BA4;
+extern f32 lbl_803E1BA8;
+extern f32 lbl_803E1BAC;
+extern f32 lbl_803E1BB0;
+
+/* CameraModeArwing_update  addr=0x80110EC4  size=0x5FC  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeArwing_update(u8 *obj) {
+    u8 *state = *(u8 **)(obj + 0xa4);
+    int yaw0, pitch0;
+    int d;
+
+    *(f32 *)(obj + 0x18) = lbl_803A43C0[0] * *(f32 *)((char *)lbl_803A43C0 + 0x24);
+    *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0x18) + *(f32 *)((char *)lbl_803A43C0 + 0xc);
+    *(f32 *)(obj + 0x1c) = lbl_803A43C0[1] * *(f32 *)((char *)lbl_803A43C0 + 0x28);
+    *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x1c) + *(f32 *)((char *)lbl_803A43C0 + 0x10);
+    *(f32 *)(obj + 0x20) = *(f32 *)(state + 0x20) + *(f32 *)((char *)lbl_803A43C0 + 0x38);
+
+    if ((s8)state[0xac] != 0x26) {
+        f32 t = *(f32 *)((char *)lbl_803A43C0 + 0x40) / *(f32 *)((char *)lbl_803A43C0 + 0x3c) -
+                lbl_803E1BA0;
+        if (t < lbl_803E1BA4) {
+            *(f32 *)(obj + 0x20) =
+                (f32)-(s32)*(u8 *)((char *)lbl_803A43C0 + 0x5a) * t + *(f32 *)(obj + 0x20);
+        } else {
+            *(f32 *)(obj + 0x20) =
+                (f32)-(s32)*(u8 *)((char *)lbl_803A43C0 + 0x5b) * t + *(f32 *)(obj + 0x20);
+        }
+    }
+
+    yaw0 = (s32)((f32)*(s16 *)((char *)lbl_803A43C0 + 0x54) *
+                 *(f32 *)((char *)lbl_803A43C0 + 0x44));
+    pitch0 = (s32)((f32)*(s16 *)((char *)lbl_803A43C0 + 0x56) *
+                   *(f32 *)((char *)lbl_803A43C0 + 0x48));
+
+    if (fn_8022D750((int)state) != 0) {
+        f32 vd, vc, vb, va;
+        int step;
+        *(f32 *)((char *)lbl_803A43C0 + 0x50) = lbl_803E1BA8;
+        (*(void (**)(u8 *, f32 *, f32 *, f32 *, f32 *, f32, int))(*(int *)gCameraInterface + 56))(
+            obj, &va, &vb, &vc, &vd, lbl_803E1BA4, 0);
+        *(s16 *)(obj + 4) = *(f32 *)((char *)lbl_803A43C0 + 0x50) * timeDelta +
+                            (f32)*(s16 *)(obj + 4);
+        d = 0x8000 - (u16)getAngle(va, vc);
+        pitch0 = (u16)getAngle(vb, vd);
+        d -= (u16)*(s16 *)obj;
+        if (d > 0x8000) {
+            d -= 0xffff;
+        }
+        if (d < -0x8000) {
+            d += 0xffff;
+        }
+        step = (s32)((f32)d * timeDelta);
+        *(s16 *)obj = (f32)step * lbl_803E1BAC + (f32)*(s16 *)obj;
+        d = pitch0 - (u16)*(s16 *)(obj + 2);
+        if (d > 0x8000) {
+            d -= 0xffff;
+        }
+        if (d < -0x8000) {
+            d += 0xffff;
+        }
+        step = (s32)((f32)d * timeDelta);
+        *(s16 *)(obj + 2) = (f32)step * lbl_803E1BAC + (f32)*(s16 *)(obj + 2);
+    } else if (fn_8022D710((int)state) != 0) {
+        f32 nv = *(f32 *)((char *)lbl_803A43C0 + 0x50) * lbl_803E1BB0;
+        *(f32 *)((char *)lbl_803A43C0 + 0x50) = nv;
+        *(s16 *)(obj + 4) = nv * timeDelta + (f32)*(s16 *)(obj + 4);
+    } else {
+        int roll0 = (s32)((f32)*(s16 *)((char *)lbl_803A43C0 + 0x58) *
+                          *(f32 *)((char *)lbl_803A43C0 + 0x4c));
+        d = roll0 - (u16)*(s16 *)(obj + 4);
+        if (d > 0x8000) {
+            d -= 0xffff;
+        }
+        if (d < -0x8000) {
+            d += 0xffff;
+        }
+        *(s16 *)(obj + 4) = (f32)d * timeDelta * lbl_803E1BAC + (f32)*(s16 *)(obj + 4);
+        d = yaw0 - (u16)*(s16 *)obj;
+        if (d > 0x8000) {
+            d -= 0xffff;
+        }
+        if (d < -0x8000) {
+            d += 0xffff;
+        }
+        *(s16 *)obj = (f32)d * timeDelta * lbl_803E1BAC + (f32)*(s16 *)obj;
+        d = pitch0 - (u16)*(s16 *)(obj + 2);
+        if (d > 0x8000) {
+            d -= 0xffff;
+        }
+        if (d < -0x8000) {
+            d += 0xffff;
+        }
+        *(s16 *)(obj + 2) = (f32)d * timeDelta * lbl_803E1BAC + (f32)*(s16 *)(obj + 2);
+    }
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+}
+#pragma peephole reset
+#pragma scheduling reset
