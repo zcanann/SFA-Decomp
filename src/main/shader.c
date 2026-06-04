@@ -2570,7 +2570,7 @@ extern int gMapBlockLayerTables[5];
 extern s16* lbl_803DCE94;
 extern u8 lbl_803DCE98;
 extern u8* lbl_803DCE8C;
-extern int mapBlockFn_80059354(int p1, int p2, void* entry, int layer);
+extern void mapBlockFn_80059354(int p1, int p2, s16* entry, int layer);
 extern int mapCheckCurBlocks(int v);
 extern void* MapBlock_loadFromFile(int blockId);
 extern void MapBlock_init(void* blk);
@@ -2599,7 +2599,7 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
     slotIdx = p1 + (p2 << 4);
     entry += slotIdx * 12;
 
-    mapBlockFn_80059354(p3, p4, entry, layer);
+    mapBlockFn_80059354(p3, p4, (s16*)entry, layer);
 
     blockId = *(s16*)(entry + 6);
     if (mapCheckCurBlocks(*(s8*)(entry + 9)) == -1) {
@@ -4642,6 +4642,107 @@ void doPendingMapLoads(void)
             lbl_803DCE1C = getLoadedFileFlags(0);
             renderFlags &= ~0x4000;
         }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s16 lbl_803DCE90;
+extern int lbl_803DCE84;
+
+#pragma scheduling off
+#pragma peephole off
+void mapBlockFn_80059354(int x, int z, s16* out, int layer)
+{
+    int id;
+    int slot;
+    int cv3, cv4;
+    char* entry;
+    s16* pairs;
+    s16* rects;
+    u32 v;
+    int k;
+
+    id = mapCoordsToId(x, z, layer);
+    if (id != -1) {
+        char* p2 = (char*)lbl_8038224C;
+        char* q2 = p2;
+        int i2 = 0;
+        int cn = lbl_803DCDEC;
+        for (k = 0; k < cn; k++) {
+            if (*(int*)q2 != 0 && id == *(s16*)(q2 + 4))
+                goto found1;
+            q2 += 8;
+            i2++;
+        }
+        i2 = -1;
+    found1:
+        slot = i2;
+        if (slot == -1)
+            slot = mapProcessRomList(id);
+        ((BlockEntry*)lbl_8038224C)[slot].field_6 = (((BlockEntry*)lbl_8038224C)[slot].field_6 & 0xFF) | 0x100;
+        entry = (char*)lbl_8038224C[slot].field_0;
+        pairs = (s16*)lbl_80382238[2];
+        cv3 = *(s8*)&pairs[id * 2];
+        cv4 = *(s8*)&pairs[id * 2 + 1];
+        out[0] = id;
+        out[1] = cv3;
+        out[2] = cv4;
+        if (cv3 != -1) {
+            char* q3 = p2;
+            int i3 = 0;
+            int cn3 = lbl_803DCDEC;
+            for (k = 0; k < cn3; k++) {
+                if (*(int*)q3 != 0 && cv3 == *(s16*)(q3 + 4))
+                    goto found2;
+                q3 += 8;
+                i3++;
+            }
+            i3 = -1;
+        found2:
+            if (i3 == -1)
+                i3 = mapProcessRomList(cv3);
+            *(s8*)(p2 + 6 + i3 * 8) = 1;
+        }
+        if (cv4 != -1) {
+            int i4 = 0;
+            int cn4 = lbl_803DCDEC;
+            for (k = 0; k < cn4; k++) {
+                if (*(int*)p2 != 0 && cv4 == *(s16*)(p2 + 4))
+                    goto found3;
+                p2 += 8;
+                i4++;
+            }
+            i4 = -1;
+        found3:
+            if (i4 == -1)
+                i4 = mapProcessRomList(cv4);
+            *(s8*)((char*)lbl_8038224C + 6 + i4 * 8) = 1;
+        }
+        rects = (s16*)(lbl_80382238[1] + id * 10);
+        x = x - rects[0];
+        z = z - rects[2];
+        v = *(u32*)(*(int*)(entry + 0xc) + (x + z * *(s16*)entry) * 4);
+        *(s8*)((char*)out + 8) = (v >> 0x11) & 0x3f;
+        *(s8*)((char*)out + 9) = v >> 0x17;
+        if (*(s8*)((char*)out + 9) == 0xFF)
+            *(s8*)((char*)out + 9) = -1;
+        if (*(s8*)((char*)out + 9) == -1) {
+            out[3] = -1;
+        } else {
+            if (*(s8*)((char*)out + 9) >= lbl_803DCE90)
+                *(s8*)((char*)out + 9) = lbl_803DCE90 - 1;
+            out[3] = *(s8*)((char*)out + 8) + *(u16*)(lbl_803DCE84 + *(s8*)((char*)out + 9) * 2);
+            if (out[3] >= *(u16*)(lbl_803DCE84 + lbl_803DCE90 * 2))
+                out[3] = *(u16*)(lbl_803DCE84 + lbl_803DCE90 * 2) - 1;
+        }
+    } else {
+        out[0] = -1;
+        out[1] = -1;
+        out[2] = -1;
+        out[3] = -2;
+        *(s8*)((char*)out + 9) = -1;
+        *(s8*)((char*)out + 8) = 0;
     }
 }
 #pragma peephole reset
