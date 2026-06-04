@@ -2,6 +2,7 @@
 #include "main/engine_shared.h"
 
 #pragma scheduling off
+#pragma peephole off
 void dvdCheckError(void)
 {
     int msgId = 0xffff;
@@ -86,6 +87,7 @@ void dvdCheckError(void)
         }
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
