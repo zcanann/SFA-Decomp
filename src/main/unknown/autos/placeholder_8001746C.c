@@ -15356,3 +15356,121 @@ int modelLoadAnimations(void *model, int id, void *animBase)
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern void playerUpdateWhileTimeStopped(u8 *obj);
+extern void playerRenderQuakeSpell(void);
+extern void playerUpdate(u8 *obj);
+extern void Sfx_PlayFromObject(u8 *obj, int sfx);
+extern void Obj_GetWorldPosition(u8 *obj, void *x, void *y, void *z);
+extern u32 lbl_803DCB78;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void Obj_UpdateObject(u8 *obj)
+{
+    u8 *t;
+    void (*cb)(u8 *, int, int, int, int);
+    void (*cb2)(u8 *);
+
+    if (*(u16 *)(obj + 0xb0) & 0x40) {
+        return;
+    }
+    if (lbl_803DCB78 & 1) {
+        switch (*(s16 *)(obj + 0x46)) {
+        case 0:
+        case 0x1f:
+            playerUpdateWhileTimeStopped(obj);
+            break;
+        case 0x69:
+            playerRenderQuakeSpell();
+            break;
+        case 0x4f3:
+        case 0x882:
+        case 0x887:
+            cb2 = (void (*)(u8 *))*(int *)(**(int **)(obj + 0x68) + 8);
+            cb2(obj);
+            break;
+        }
+        return;
+    }
+    if (*(u8 *)(obj + 0xe5) != 0 && *(int *)(obj + 0xc4) == 0 && (*(u8 *)(obj + 0xe5) & 2)) {
+        Obj_TickModelColorFadeRecursive(obj);
+    }
+    if (*(int *)(obj + 0xc0) != 0) {
+        if (*(int *)(obj + 0xc8) != 0) {
+            t = *(u8 **)(*(u8 **)(obj + 0xc8) + 0x54);
+            if (t != 0) {
+                *(int *)(t + 0x50) = 0;
+                *(u8 *)(*(u8 **)(*(u8 **)(obj + 0xc8) + 0x54) + 0x71) = 0;
+            }
+        }
+        if (*(int *)(obj + 0x54) == 0) {
+            return;
+        }
+        *(int *)(*(u8 **)(obj + 0x54) + 0x50) = 0;
+        *(u8 *)(*(u8 **)(obj + 0x54) + 0x71) = 0;
+        return;
+    }
+    if ((*(s16 *)(obj + 6) & 8) == 0) {
+        *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
+        *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
+        *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+        *(f32 *)(obj + 0x8c) = *(f32 *)(obj + 0x18);
+        *(f32 *)(obj + 0x90) = *(f32 *)(obj + 0x1c);
+        *(f32 *)(obj + 0x94) = *(f32 *)(obj + 0x20);
+    }
+    *(f32 *)(obj + 0xfc) = *(f32 *)(obj + 0x24);
+    *(f32 *)(obj + 0x100) = *(f32 *)(obj + 0x28);
+    *(f32 *)(obj + 0x104) = *(f32 *)(obj + 0x2c);
+    if (*(u8 *)(obj + 0xe5) != 0 && *(int *)(obj + 0xc4) == 0 && (*(u8 *)(obj + 0xe5) & 1)) {
+        *(s16 *)(obj + 0xe6) = (s16)(int)((f32)*(s16 *)(obj + 0xe6) - timeDelta);
+        if (*(s16 *)(obj + 0xe6) <= 0) {
+            *(s16 *)(obj + 0xe6) = 0;
+            *(u8 *)(obj + 0xe5) &= ~1;
+            *(u8 *)(obj + 0xf0) = 0;
+            ObjModel_ClearRenderAttachment(*(u8 **)(*(u8 **)(obj + 0x7c) + *(s8 *)(obj + 0xad) * 4));
+            cb = (void (*)(u8 *, int, int, int, int))*(int *)(*lbl_803DCAB4 + 0xc);
+            cb(obj, 0x7fb, 0, 0x50, 0);
+            cb = (void (*)(u8 *, int, int, int, int))*(int *)(*lbl_803DCAB4 + 0xc);
+            cb(obj, 0x7fc, 0, 0x32, 0);
+            Sfx_PlayFromObject(obj, 0x47b);
+        }
+    }
+    if ((*(u16 *)(obj + 0xb0) & 0x8000) == 0) {
+        switch (*(s16 *)(obj + 0x46)) {
+        case 0:
+        case 0x1f:
+            playerUpdate(obj);
+            break;
+        default:
+            if (*(int **)(obj + 0x68) == 0) {
+                goto skip;
+            }
+            cb2 = (void (*)(u8 *))*(int *)(**(int **)(obj + 0x68) + 8);
+            if (cb2 != 0) {
+                cb2(obj);
+            }
+            break;
+        }
+        Obj_GetWorldPosition(obj, obj + 0x18, obj + 0x1c, obj + 0x20);
+    }
+skip:
+    if (*(int *)(obj + 0x54) != 0) {
+        if (*(int *)(obj + 0xc8) != 0) {
+            t = *(u8 **)(*(u8 **)(obj + 0xc8) + 0x54);
+            if (t != 0) {
+                *(int *)(t + 0x50) = 0;
+                *(u8 *)(*(u8 **)(*(u8 **)(obj + 0xc8) + 0x54) + 0x71) = 0;
+            }
+        }
+        *(int *)(*(u8 **)(obj + 0x54) + 0x50) = 0;
+        *(u8 *)(*(u8 **)(obj + 0x54) + 0x71) = 0;
+    }
+    if (*(int *)(obj + 0x58) != 0) {
+        *(u8 *)(*(u8 **)(obj + 0x58) + 0x10f) = 0;
+    }
+}
+#pragma dont_inline reset
+#pragma pop
