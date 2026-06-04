@@ -288,21 +288,20 @@ extern void fn_8022D460(int obj, f32 x);
 void andross_update(int obj)
 
 {
+  int *piVar14;
   u8 moveChanged;
   u8 stateChanged;
+  int iVar8;
+  int iVar12;
+  u32 uVar6;
   float fVar2;
   short sVar3;
   int iVar5;
   char cVar11;
   s16 uVar10;
-  u32 uVar6;
   int *piVar7;
-  int iVar8;
   int uVar9;
-  int iVar12;
   u8 bVar13;
-  int *piVar14;
-  f32 *fstate;
   f32 dVar16;
   f32 dVar17;
   f32 dVar18;
@@ -334,7 +333,6 @@ void andross_update(int obj)
   u32 uStack100;
   f32 local_50;
     piVar14 = *(int **)(obj + 0xb8);
-  fstate = (f32 *)piVar14;
   moveChanged = 0;
   stateChanged = 0;
   iVar12 = 0;
@@ -358,26 +356,26 @@ void andross_update(int obj)
     iVar5 = getArwing();
     *piVar14 = iVar5;
     if (*piVar14 == 0) goto LAB_8023ef14;
-    fstate[0x1c] = *(f32 *)(*piVar14 + 0x14);
+    *(f32 *)(piVar14 + 0x1c) = *(f32 *)(*piVar14 + 0x14);
         fn_8022D460(*piVar14,(f32)lbl_803DC438);
   }
   for (iVar8 = 0; (u8)iVar8 < 4; iVar8 = iVar8 + 1) {
     uVar6 = (u8)iVar8;
-    if (*(void **)(piVar14 + uVar6 + 6) == NULL) {
-      piVar14[uVar6 + 6] = ObjList_FindObjectById(lbl_8032C088[uVar6]);
-      if (*(void **)(piVar14 + uVar6 + 6) != NULL) {
-        fstate[uVar6 * 3 + 10] = *(float *)(piVar14[uVar6 + 6] + 0xc) - *(float *)(obj + 0xc);
-        fstate[uVar6 * 3 + 0xb] = *(float *)(piVar14[uVar6 + 6] + 0x10) - *(float *)(obj + 0x10);
-        fstate[uVar6 * 3 + 0xc] = *(float *)(piVar14[uVar6 + 6] + 0x14) - *(float *)(obj + 0x14);
+    if (*(void **)((int)piVar14 + uVar6 * 4 + 0x18) == NULL) {
+      *(int *)((int)piVar14 + uVar6 * 4 + 0x18) = ObjList_FindObjectById(lbl_8032C088[uVar6]);
+      if (*(void **)((int)piVar14 + uVar6 * 4 + 0x18) != NULL) {
+        *(f32 *)(piVar14 + uVar6 * 3 + 10) = *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0xc) - *(float *)(obj + 0xc);
+        *(f32 *)(piVar14 + uVar6 * 3 + 0xb) = *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0x10) - *(float *)(obj + 0x10);
+        *(f32 *)(piVar14 + uVar6 * 3 + 0xc) = *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0x14) - *(float *)(obj + 0x14);
       }
     }
     else {
-      *(float *)(piVar14[uVar6 + 6] + 0xc) = *(float *)(obj + 0xc) + fstate[uVar6 * 3 + 10]
+      *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0xc) = *(float *)(obj + 0xc) + *(f32 *)(piVar14 + uVar6 * 3 + 10)
       ;
-      *(float *)(piVar14[uVar6 + 6] + 0x10) =
-           *(float *)(obj + 0x10) + fstate[uVar6 * 3 + 0xb];
-      *(float *)(piVar14[uVar6 + 6] + 0x14) =
-           *(float *)(obj + 0x14) + fstate[uVar6 * 3 + 0xc];
+      *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0x10) =
+           *(float *)(obj + 0x10) + *(f32 *)(piVar14 + uVar6 * 3 + 0xb);
+      *(float *)(*(int *)((int)piVar14 + uVar6 * 4 + 0x18) + 0x14) =
+           *(float *)(obj + 0x14) + *(f32 *)(piVar14 + uVar6 * 3 + 0xc);
     }
   }
   iVar5 = piVar14[0x1f];
@@ -386,17 +384,17 @@ void andross_update(int obj)
   }
   piVar14[0x20] = iVar5;
   fVar2 = lbl_803E74D4;
-  fstate[0x36] = lbl_803E74D4;
-  fstate[0x37] = fVar2;
-  fstate[0x38] = fVar2;
+  *(f32 *)(piVar14 + 0x36) = lbl_803E74D4;
+  *(f32 *)(piVar14 + 0x37) = fVar2;
+  *(f32 *)(piVar14 + 0x38) = fVar2;
   if ((-0x4000 < *(short *)(piVar14 + 0x28)) && (*(s16 *)obj < 0x4000)) {
     iVar12 = 1;
   }
   ObjPath_GetPointWorldPosition(obj,iVar12,(f32 *)(piVar14 + 0x30),(f32 *)(piVar14 + 0x31),(f32 *)(piVar14 + 0x32),0);
   fVar2 = lbl_803E74E0;
   if (iVar12 == 1) {
-    fstate[0x31] = fstate[0x31] + lbl_803E74E0;
-    fstate[0x32] = fstate[0x32] + fVar2;
+    *(f32 *)(piVar14 + 0x31) = *(f32 *)(piVar14 + 0x31) + lbl_803E74E0;
+    *(f32 *)(piVar14 + 0x32) = *(f32 *)(piVar14 + 0x32) + fVar2;
   }
   switch (piVar14[0x1f]) {
   case 1:
@@ -582,16 +580,16 @@ LAB_8023ad84:
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
       if (piVar14[0x1f] == 1) {
-        fstate[0x27] = lbl_803E74E4;
+        *(f32 *)(piVar14 + 0x27) = lbl_803E74E4;
       }
       else {
-        fstate[0x27] = lbl_803E74E8;
+        *(f32 *)(piVar14 + 0x27) = lbl_803E74E8;
       }
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74EC;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
       dVar19 = lbl_803E74F0;
@@ -602,15 +600,15 @@ LAB_8023ad84:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74CC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
-    fstate[0x27] = fstate[0x27] - timeDelta;
-    if (fstate[0x27] < lbl_803E74D4) {
+    *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - timeDelta;
+    if (*(f32 *)(piVar14 + 0x27) < lbl_803E74D4) {
       piVar14[0x21] = 1;
     }
     if ((u32)*(u8 *)((int)piVar14 + 0xae) + (u32)*(u8 *)((int)piVar14 + 0xaf) +
@@ -629,8 +627,8 @@ LAB_8023ad84:
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74EC;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
       dVar19 = lbl_803E74F0;
@@ -641,12 +639,12 @@ LAB_8023ad84:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74CC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
       piVar14[0x22] = 2;
@@ -665,13 +663,13 @@ LAB_8023ad84:
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,0xe,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0D0[0];
-      fstate[0x27] = lbl_803E74F0;
+      *(f32 *)(piVar14 + 0x27) = lbl_803E74F0;
       *(s16 *)(piVar14 + 0x26) = 0xffff;
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74EC;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
       dVar19 = lbl_803E74F0;
@@ -682,12 +680,12 @@ LAB_8023ad84:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74CC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     Sfx_KeepAliveLoopedObjectSound(obj,0x467);
     *(u16 *)(piVar14 + 0x26) = *(short *)(piVar14 + 0x26) - (u16)framesThisStep;
@@ -695,8 +693,8 @@ LAB_8023ad84:
       fn_8023A268(obj,(int)piVar14,0);
       *(short *)(piVar14 + 0x26) = (short)lbl_803DC43C;
     }
-    fstate[0x27] = fstate[0x27] - timeDelta;
-    if (fstate[0x27] < lbl_803E74D4) {
+    *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - timeDelta;
+    if (*(f32 *)(piVar14 + 0x27) < lbl_803E74D4) {
       piVar14[0x22] = 3;
       piVar14[0x21] = 0;
     }
@@ -716,8 +714,8 @@ LAB_8023ad84:
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74EC;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
       dVar19 = lbl_803E74F0;
@@ -728,12 +726,12 @@ LAB_8023ad84:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74CC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
       piVar14[0x21] = 1;
@@ -745,12 +743,12 @@ LAB_8023ad84:
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
       GameBit_Set(0xd,1);
-      fstate[0x27] = lbl_803E7504;
+      *(f32 *)(piVar14 + 0x27) = lbl_803E7504;
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74EC;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
       dVar19 = lbl_803E74F0;
@@ -761,15 +759,15 @@ LAB_8023ad84:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74CC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
-    fstate[0x27] = fstate[0x27] - timeDelta;
-    if (fstate[0x27] < lbl_803E74D4) {
+    *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - timeDelta;
+    if (*(f32 *)(piVar14 + 0x27) < lbl_803E74D4) {
       piVar14[0x21] = 1;
       GameBit_Set(0xd,0);
     }
@@ -787,7 +785,7 @@ LAB_8023ad84:
       ObjAnim_SetCurrentMove(obj,0,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C098[0];
       GameBit_Set(0xd,1);
-      fstate[0x27] = lbl_803E7504;
+      *(f32 *)(piVar14 + 0x27) = lbl_803E7504;
     }
     for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
       if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
@@ -804,8 +802,8 @@ LAB_8023ad84:
 LAB_8023bb18:
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74EC;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
       dVar19 = lbl_803E74F0;
@@ -816,15 +814,15 @@ LAB_8023bb18:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74CC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
-    fstate[0x27] = fstate[0x27] - timeDelta;
-    if (fstate[0x27] < lbl_803E74D4) {
+    *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - timeDelta;
+    if (*(f32 *)(piVar14 + 0x27) < lbl_803E74D4) {
       piVar14[0x21] = 1;
       GameBit_Set(0xd,0);
     }
@@ -838,8 +836,8 @@ LAB_8023bb18:
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E7508;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E750C < dVar17)) {
       dVar19 = lbl_803E750C;
@@ -850,12 +848,12 @@ LAB_8023bb18:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74E8 * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     bVar13 = *(u8 *)(*(int *)(obj + 0xb8) + 0xad);
     if ((bVar13 & 1) != 0) {
@@ -869,8 +867,8 @@ LAB_8023bb18:
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E7508;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E750C < dVar17)) {
       dVar19 = lbl_803E750C;
@@ -881,12 +879,12 @@ LAB_8023bb18:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74E8 * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     bVar13 = *(u8 *)(*(int *)(obj + 0xb8) + 0xad);
     if ((bVar13 & 1) != 0) {
@@ -900,8 +898,8 @@ LAB_8023bb18:
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74EC;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
       dVar19 = lbl_803E74F0;
@@ -912,12 +910,12 @@ LAB_8023bb18:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74CC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     bVar13 = *(u8 *)(*(int *)(obj + 0xb8) + 0xad);
     if ((bVar13 & 1) != 0) {
@@ -931,8 +929,8 @@ LAB_8023bb18:
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74EC;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
       dVar19 = lbl_803E74F0;
@@ -943,12 +941,12 @@ LAB_8023bb18:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74CC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     bVar13 = *(u8 *)(*(int *)(obj + 0xb8) + 0xad);
     if ((bVar13 & 1) != 0) {
@@ -975,8 +973,8 @@ LAB_8023bb18:
     else {
       lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
       lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-      dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-      dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+      dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+      dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
       dVar19 = lbl_803E7508;
       if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E750C < dVar17)) {
         dVar19 = lbl_803E750C;
@@ -987,12 +985,12 @@ LAB_8023bb18:
       }
             dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA))
                                             / lbl_803E74A4));
-      fstate[0x33] = (lbl_803E74E8 * dVar16 +
-                       (float)(fstate[0x16] + dVar19));
+      *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
+                       (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
             dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8))
                                             / lbl_803E74A4));
-      fstate[0x34] = (lbl_803E74FC * dVar19 +
-                       (float)(fstate[0x17] + dVar17));
+      *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                       (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
       piVar14[0x35] = piVar14[0x18];
       if (moveChanged) {
         androsshand_setState(piVar14[1],5,0);
@@ -1038,8 +1036,8 @@ LAB_8023bb18:
 LAB_8023c584:
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E7510;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74FC < dVar17)) {
       dVar19 = lbl_803E74FC;
@@ -1050,12 +1048,12 @@ LAB_8023c584:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74FC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74FC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E7514 * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E7514 * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
       iVar12 = piVar14[0x22];
@@ -1105,12 +1103,12 @@ LAB_8023c584:
       *(undefined *)((int)piVar14 + 0xb1) = 0;
       GameBit_Set(0x10,0);
       *(short *)(piVar14 + 0x26) = (short)lbl_803DC44C;
-      fstate[0x27] = lbl_803E74D4;
+      *(f32 *)(piVar14 + 0x27) = lbl_803E74D4;
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74EC;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
       dVar19 = lbl_803E74F0;
@@ -1121,12 +1119,12 @@ LAB_8023c584:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74FC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74FC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E7514 * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E7514 * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     fn_8023A6A4((int)piVar14,lbl_803DC440,lbl_803DC444,lbl_803DC448);
     Sfx_KeepAliveLoopedObjectSound(obj,0x466);
@@ -1136,10 +1134,10 @@ LAB_8023c584:
       *(s16 *)(piVar14 + 0x26) = 0;
       GameBit_Set(0xf,1);
     }
-    fstate[0x27] = fstate[0x27] - timeDelta;
-    if (fstate[0x27] < lbl_803E74D4) {
+    *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - timeDelta;
+    if (*(f32 *)(piVar14 + 0x27) < lbl_803E74D4) {
       fn_80239FCC(obj,(int)piVar14);
-            fstate[0x27] = fstate[0x27] + (f32)(lbl_803DC450);
+            *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) + (f32)(lbl_803DC450);
     }
     fn_80239EAC(obj,(int)piVar14);
     iVar12 = GameBit_Get(0x10);
@@ -1178,7 +1176,7 @@ LAB_8023c584:
         *(undefined *)((int)piVar14 + 0xb1) = 1;
       }
       *(short *)(piVar14 + 0x26) = (short)lbl_803DC460;
-      fstate[0x27] = lbl_803E74D4;
+      *(f32 *)(piVar14 + 0x27) = lbl_803E74D4;
     }
     Sfx_KeepAliveLoopedObjectSound(obj,0x466);
     if (piVar14[0x1f] == 5) {
@@ -1198,8 +1196,8 @@ LAB_8023c584:
 LAB_8023cbdc:
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74F4;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F8 < dVar17)) {
       dVar19 = lbl_803E74F8;
@@ -1210,12 +1208,12 @@ LAB_8023cbdc:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74FC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74FC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E7514 * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E7514 * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     cVar11 = fn_8023A6A4((int)piVar14,lbl_803DC454,lbl_803DC458,lbl_803DC45C);
     if (cVar11 != '\0') {
@@ -1227,18 +1225,18 @@ LAB_8023cbdc:
       turnOnDistortionFilter((f32 *)(piVar14 + 0x30),lbl_803E74BC,&lbl_803DC4CC,lbl_803DDDB8);
       Rcp_DisableDistortionFilter();
     }
-    fstate[0x27] = fstate[0x27] - timeDelta;
-    if (fstate[0x27] < lbl_803E74D4) {
+    *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - timeDelta;
+    if (*(f32 *)(piVar14 + 0x27) < lbl_803E74D4) {
       fn_80239FCC(obj,(int)piVar14);
-            fstate[0x27] = fstate[0x27] + (f32)(lbl_803DC464);
+            *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) + (f32)(lbl_803DC464);
     }
     fn_80239EAC(obj,(int)piVar14);
     if (*(char *)((int)piVar14 + 0xb5) == '\0') {
-      if (fstate[0x32] < *(float *)(*piVar14 + 0x14)) {
+      if (*(f32 *)(piVar14 + 0x32) < *(float *)(*piVar14 + 0x14)) {
         piVar14[0x22] = 0x10;
         *(undefined *)(piVar14 + 0x2e) = 1;
         *(int *)(*piVar14 + 0x14) = piVar14[0x32];
-        fstate[0x38] = lbl_803E74D4;
+        *(f32 *)(piVar14 + 0x38) = lbl_803E74D4;
         lbl_803DDDB8 = lbl_803DC4D4 + lbl_803DC4D0;
         if (lbl_803E74D0 < lbl_803DDDB8) {
           lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
@@ -1281,8 +1279,8 @@ LAB_8023cbdc:
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E7500;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74CC < dVar17)) {
       dVar19 = lbl_803E74CC;
@@ -1293,12 +1291,12 @@ LAB_8023cbdc:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74E8 * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
       piVar14[0x21] = 1;
@@ -1312,8 +1310,8 @@ LAB_8023cbdc:
     }
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar18 = lbl_803E74D4;
     dVar19 = dVar18;
     if ((dVar18 <= dVar17) && (dVar19 = dVar17, dVar18 < dVar17)) {
@@ -1326,24 +1324,24 @@ LAB_8023cbdc:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74D4 * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74D4 * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74D4 * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74D4 * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     iVar12 = *piVar14;
-    local_e4.x = (fstate[0x30] - *(float *)(iVar12 + 0xc)) * lbl_803DC468;
-    local_e4.y = (fstate[0x31] - *(float *)(iVar12 + 0x10)) * lbl_803DC468;
-    local_e4.z = (fstate[0x32] - *(float *)(iVar12 + 0x14)) * lbl_803DC468;
+    local_e4.x = (*(f32 *)(piVar14 + 0x30) - *(float *)(iVar12 + 0xc)) * lbl_803DC468;
+    local_e4.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC468;
+    local_e4.z = (*(f32 *)(piVar14 + 0x32) - *(float *)(iVar12 + 0x14)) * lbl_803DC468;
     local_d8 = local_e4;
     fn_8022D4AC(iVar12,(int)&local_d8);
-    fVar2 = -(lbl_803E74B0 * timeDelta - fstate[0x2a]);
+    fVar2 = -(lbl_803E74B0 * timeDelta - *(f32 *)(piVar14 + 0x2a));
     if (fVar2 < lbl_803E74EC) {
       fVar2 = lbl_803E74EC;
     }
-    fstate[0x2a] = fVar2;
+    *(f32 *)(piVar14 + 0x2a) = fVar2;
     if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
       *(u16 *)(*piVar14 + 6) = *(u16 *)(*piVar14 + 6) | 0x4000;
       piVar14[0x22] = 0x11;
@@ -1357,15 +1355,15 @@ LAB_8023cbdc:
       *(f32 *)(iVar12 + 100) = lbl_8032C0EC[0];
       arwarwing_addShield(*piVar14,0xfffffffc);
     }
-    fVar2 = -(lbl_803E74B0 * timeDelta - fstate[0x2a]);
+    fVar2 = -(lbl_803E74B0 * timeDelta - *(f32 *)(piVar14 + 0x2a));
     if (fVar2 < lbl_803E74EC) {
       fVar2 = lbl_803E74EC;
     }
-    fstate[0x2a] = fVar2;
+    *(f32 *)(piVar14 + 0x2a) = fVar2;
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar18 = lbl_803E74D4;
     dVar19 = dVar18;
     if ((dVar18 <= dVar17) && (dVar19 = dVar17, dVar18 < dVar17)) {
@@ -1378,12 +1376,12 @@ LAB_8023cbdc:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74D4 * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74D4 * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74D4 * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74D4 * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
       piVar14[0x21] = 1;
@@ -1400,13 +1398,13 @@ LAB_8023cbdc:
         GameBit_Set(0xe,1);
       }
     }
-    fstate[0x1a] = fstate[0x1a] - lbl_803E751C;
-    fVar2 = fstate[0x1a];
+    *(f32 *)(piVar14 + 0x1a) = *(f32 *)(piVar14 + 0x1a) - lbl_803E751C;
+    fVar2 = *(f32 *)(piVar14 + 0x1a);
     if (fVar2 < lbl_803E74D4) {
       fVar2 = lbl_803E74D4;
     }
-    fstate[0x1a] = fVar2;
-    dVar19 = fstate[0x1a];
+    *(f32 *)(piVar14 + 0x1a) = fVar2;
+    dVar19 = *(f32 *)(piVar14 + 0x1a);
     piVar7 = (int *)Obj_GetActiveModel(obj);
     iVar5 = *piVar7;
     dVar19 = (longlong)(int)(lbl_803E74B4 * dVar19);
@@ -1432,8 +1430,8 @@ LAB_8023cbdc:
 LAB_8023d59c:
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74EC;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
       dVar19 = lbl_803E74F0;
@@ -1444,12 +1442,12 @@ LAB_8023d59c:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74E8 * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
       piVar14[0x22] = 0x13;
@@ -1461,10 +1459,10 @@ LAB_8023d59c:
       ObjAnim_SetCurrentMove(obj,0x13,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0E4[0];
       if (piVar14[0x1f] == 5) {
-        fstate[0x27] = lbl_803E74A8;
+        *(f32 *)(piVar14 + 0x27) = lbl_803E74A8;
       }
       else {
-        fstate[0x27] = lbl_803E74F0;
+        *(f32 *)(piVar14 + 0x27) = lbl_803E74F0;
       }
       *(s16 *)(piVar14 + 0x26) = 0xffff;
     }
@@ -1486,8 +1484,8 @@ LAB_8023d59c:
 LAB_8023d7cc:
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E7520;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74A8 < dVar17)) {
       dVar19 = lbl_803E74A8;
@@ -1498,16 +1496,16 @@ LAB_8023d7cc:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74E8 * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74E8 * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     *(u16 *)(piVar14 + 0x26) = *(short *)(piVar14 + 0x26) - (u16)framesThisStep;
-    iVar12 = (int)fstate[0x27];
-    fstate[0x27] = fstate[0x27] - (f32)framesThisStep;
+    iVar12 = (int)*(f32 *)(piVar14 + 0x27);
+    *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - (f32)framesThisStep;
     if (piVar14[0x1f] == 5) {
       local_130[0] = 300;
       local_130[1] = 600;
@@ -1539,7 +1537,7 @@ LAB_8023d7cc:
       fn_8023A168(obj,(int)piVar14);
       *(short *)(piVar14 + 0x26) = (short)lbl_803DC46C;
     }
-    if (fstate[0x27] < lbl_803E74D4) {
+    if (*(f32 *)(piVar14 + 0x27) < lbl_803E74D4) {
       piVar14[0x22] = 0x14;
     }
     break;
@@ -1566,8 +1564,8 @@ LAB_8023d7cc:
 LAB_8023db24:
     lbl_803DDDCA = lbl_803DDDCA + lbl_803DC4BC;
     lbl_803DDDC8 = lbl_803DDDC8 + lbl_803DC4BE;
-    dVar17 = (*(float *)(*piVar14 + 0xc) - fstate[0x16]);
-    dVar16 = (*(float *)(*piVar14 + 0x10) - fstate[0x17]);
+    dVar17 = (*(float *)(*piVar14 + 0xc) - *(f32 *)(piVar14 + 0x16));
+    dVar16 = (*(float *)(*piVar14 + 0x10) - *(f32 *)(piVar14 + 0x17));
     dVar19 = lbl_803E74EC;
     if ((dVar19 <= dVar17) && (dVar19 = dVar17, lbl_803E74F0 < dVar17)) {
       dVar19 = lbl_803E74F0;
@@ -1578,12 +1576,12 @@ LAB_8023db24:
     }
         dVar16 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDCA)) /
                                           lbl_803E74A4));
-    fstate[0x33] = (lbl_803E74CC * dVar16 +
-                     (float)(fstate[0x16] + dVar19));
+    *(f32 *)(piVar14 + 0x33) = (lbl_803E74CC * dVar16 +
+                     (float)(*(f32 *)(piVar14 + 0x16) + dVar19));
         dVar19 = fn_80293E80(((lbl_803E74A0 * (f32)(lbl_803DDDC8)) /
                                           lbl_803E74A4));
-    fstate[0x34] = (lbl_803E74FC * dVar19 +
-                     (float)(fstate[0x17] + dVar17));
+    *(f32 *)(piVar14 + 0x34) = (lbl_803E74FC * dVar19 +
+                     (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     piVar14[0x35] = piVar14[0x18];
     if (lbl_803E74DC <= *(float *)(obj + 0x98)) {
       piVar14[0x21] = 1;
@@ -1607,7 +1605,7 @@ LAB_8023db24:
       *(s16 *)(piVar14 + 0x26) = 0x1e;
       fn_8022D308(*piVar14);
       *(int *)(*piVar14 + 0x14) = piVar14[0x1c];
-      fstate[0x2a] = lbl_803E74D4;
+      *(f32 *)(piVar14 + 0x2a) = lbl_803E74D4;
     }
     piVar14[0x33] = piVar14[0x16];
     piVar14[0x34] = piVar14[0x17];
@@ -1624,7 +1622,7 @@ LAB_8023db24:
       androssbrain_setState(piVar14[3],1,0);
       ObjHits_DisableObject(obj);
       *(s16 *)(piVar14 + 0x26) = 0x3c;
-      fstate[0x27] = lbl_803E74D8;
+      *(f32 *)(piVar14 + 0x27) = lbl_803E74D8;
       piVar14[0x33] = piVar14[0x16];
       piVar14[0x34] = piVar14[0x17];
       piVar14[0x35] = piVar14[0x18];
@@ -1632,15 +1630,15 @@ LAB_8023db24:
       *(float *)(obj + 0x24) = lbl_803E74D4;
       *(float *)(obj + 0x28) = fVar2;
       *(float *)(obj + 0x2c) = fVar2;
-      fstate[0x1d] = lbl_803E74C8;
-      fstate[0x1e] = lbl_803E7530;
+      *(f32 *)(piVar14 + 0x1d) = lbl_803E74C8;
+      *(f32 *)(piVar14 + 0x1e) = lbl_803E7530;
     }
-    fstate[0x1a] = fstate[0x1a] + lbl_803E751C;
-    fVar2 = fstate[0x1a];
+    *(f32 *)(piVar14 + 0x1a) = *(f32 *)(piVar14 + 0x1a) + lbl_803E751C;
+    fVar2 = *(f32 *)(piVar14 + 0x1a);
     if (lbl_803E7534 < fVar2) {
       fVar2 = lbl_803E7534;
     }
-    fstate[0x1a] = fVar2;
+    *(f32 *)(piVar14 + 0x1a) = fVar2;
     for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
       if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
         *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
@@ -1656,16 +1654,16 @@ LAB_8023db24:
 LAB_8023de5c:
     *(u16 *)(piVar14 + 0x26) = *(short *)(piVar14 + 0x26) - (u16)framesThisStep;
     if (*(short *)(piVar14 + 0x26) < 0) {
-      fstate[0x27] = fstate[0x27] - lbl_803E74DC;
-      if (lbl_803E74D4 <= fstate[0x27]) {
+      *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) - lbl_803E74DC;
+      if (lbl_803E74D4 <= *(f32 *)(piVar14 + 0x27)) {
         uVar10 = randomGetRange(0x14,0x1e);
         *(s16 *)(piVar14 + 0x26) = uVar10;
         uVar6 = randomGetRange((int)-lbl_803DC470,(int)lbl_803DC470);
-                fstate[0x33] = fstate[0x16] + (f32)(int)uVar6;
+                *(f32 *)(piVar14 + 0x33) = *(f32 *)(piVar14 + 0x16) + (f32)(int)uVar6;
         uStack100 = randomGetRange((int)-lbl_803DC474,(int)lbl_803DC474);
-        fstate[0x34] = fstate[0x17] + (f32)(int)uStack100;
+        *(f32 *)(piVar14 + 0x34) = *(f32 *)(piVar14 + 0x17) + (f32)(int)uStack100;
         uVar6 = randomGetRange((int)-lbl_803DC478,(int)lbl_803DC478);
-                fstate[0x35] = fstate[0x18] + (f32)(int)uVar6;
+                *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18) + (f32)(int)uVar6;
       }
       else {
         *(char *)(piVar14 + 0x2b) = *(char *)(piVar14 + 0x2b) + '\x01';
@@ -1692,7 +1690,7 @@ LAB_8023de5c:
       mapUnload(uVar9,0x20000000);
       Music_Trigger(0xf3,0);
     }
-    dVar19 = fstate[0x1a];
+    dVar19 = *(f32 *)(piVar14 + 0x1a);
     piVar7 = (int *)Obj_GetActiveModel(obj);
     iVar5 = *piVar7;
     dVar19 = (longlong)(int)(lbl_803E74B4 * dVar19);
@@ -1708,8 +1706,8 @@ LAB_8023de5c:
       ObjHits_DisableObject(obj);
       *(short *)(piVar14 + 0x26) = (short)lbl_803DC484;
       piVar14[0x33] = *(int *)(*piVar14 + 0xc);
-      fstate[0x34] = *(float *)(*piVar14 + 0x10) + lbl_803DC47C;
-      fstate[0x35] = *(float *)(*piVar14 + 0x14) + lbl_803DC480;
+      *(f32 *)(piVar14 + 0x34) = *(float *)(*piVar14 + 0x10) + lbl_803DC47C;
+      *(f32 *)(piVar14 + 0x35) = *(float *)(*piVar14 + 0x14) + lbl_803DC480;
       fVar2 = lbl_803E74D4;
       *(float *)(obj + 0x24) = lbl_803E74D4;
       *(float *)(obj + 0x28) = fVar2;
@@ -1744,16 +1742,16 @@ LAB_8023de5c:
     }
     if (*(char *)(piVar14 + 0x2e) != '\0') {
       iVar12 = *piVar14;
-      local_fc.x = (fstate[0x30] - *(float *)(iVar12 + 0xc)) * lbl_803DC488;
-      local_fc.y = (fstate[0x31] - *(float *)(iVar12 + 0x10)) * lbl_803DC488;
-      local_fc.z = (fstate[0x32] - *(float *)(iVar12 + 0x14)) * lbl_803DC488;
+      local_fc.x = (*(f32 *)(piVar14 + 0x30) - *(float *)(iVar12 + 0xc)) * lbl_803DC488;
+      local_fc.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC488;
+      local_fc.z = (*(f32 *)(piVar14 + 0x32) - *(float *)(iVar12 + 0x14)) * lbl_803DC488;
       local_f0 = local_fc;
       fn_8022D4AC(iVar12,(int)&local_f0);
-      fVar2 = -(lbl_803E753C * timeDelta - fstate[0x2a]);
+      fVar2 = -(lbl_803E753C * timeDelta - *(f32 *)(piVar14 + 0x2a));
       if (fVar2 < lbl_803E7538) {
         fVar2 = lbl_803E7538;
       }
-      fstate[0x2a] = fVar2;
+      *(f32 *)(piVar14 + 0x2a) = fVar2;
     }
     sVar3 = *(short *)(piVar14 + 0x28) - *(s16 *)obj;
     if (0x8000 < sVar3) {
@@ -1793,15 +1791,15 @@ LAB_8023de5c:
                                                     (lbl_803E7558 *
                                                      ((dVar19 - lbl_803E7540) / lbl_803E7560)
                                                     + lbl_803E7550))) / lbl_803E74A4));
-            fstate[0x35] = ((f32)(lbl_803DC48C) * dVar19 +
-                       fstate[0x18]);
+            *(f32 *)(piVar14 + 0x35) = ((f32)(lbl_803DC48C) * dVar19 +
+                       *(f32 *)(piVar14 + 0x18));
     }
     else {
       dVar19 = fn_80293E80(((lbl_803E74A0 *
                                              (float)(lbl_803E7548 *
                                                     lbl_803E7550 * (dVar19 / lbl_803E7540))) /
                                             lbl_803E74A4));
-      fstate[0x35] = (lbl_803E74A8 * dVar19 + fstate[0x18]);
+      *(f32 *)(piVar14 + 0x35) = (lbl_803E74A8 * dVar19 + *(f32 *)(piVar14 + 0x18));
     }
     if ((lbl_803E7568 < *(float *)(obj + 0x98)) &&
        ((*(u8 *)(piVar14 + 0x3a) >> 6 & 1) == 0)) {
@@ -1840,21 +1838,21 @@ LAB_8023de5c:
       iVar12 = *(int *)(obj + 0xb8);
       ObjAnim_SetCurrentMove(obj,3,lbl_803E74D4,0);
       *(f32 *)(iVar12 + 100) = lbl_8032C0A4[0];
-      fstate[0x39] = lbl_803E74D4;
+      *(f32 *)(piVar14 + 0x39) = lbl_803E74D4;
       *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf;
     }
-    fstate[0x39] = fstate[0x39] + timeDelta;
-    if ((lbl_803E7578 < fstate[0x39]) && ((*(u8 *)(piVar14 + 0x3a) >> 5 & 1) == 0)) {
+    *(f32 *)(piVar14 + 0x39) = *(f32 *)(piVar14 + 0x39) + timeDelta;
+    if ((lbl_803E7578 < *(f32 *)(piVar14 + 0x39)) && ((*(u8 *)(piVar14 + 0x3a) >> 5 & 1) == 0)) {
       Sfx_PlayFromObject(obj,0x46f);
       *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf | 0x20;
     }
     if (lbl_803DC490 < *(float *)(obj + 0x98)) {
-      dVar19 = (fstate[0x1c] - *(float *)(*piVar14 + 0x14));
-      fVar2 = lbl_803E753C * timeDelta + fstate[0x2a];
+      dVar19 = (*(f32 *)(piVar14 + 0x1c) - *(float *)(*piVar14 + 0x14));
+      fVar2 = lbl_803E753C * timeDelta + *(f32 *)(piVar14 + 0x2a);
       if (lbl_803E74D4 < fVar2) {
         fVar2 = lbl_803E74D4;
       }
-      fstate[0x2a] = fVar2;
+      *(f32 *)(piVar14 + 0x2a) = fVar2;
       *(undefined *)(piVar14 + 0x2e) = 0;
       *(u16 *)(*piVar14 + 6) = *(u16 *)(*piVar14 + 6) & 0xbfff;
       sVar3 = fn_8022D46C(*piVar14);
@@ -1868,12 +1866,12 @@ LAB_8023de5c:
     }
     else {
       piVar14[0x30] = *(int *)(obj + 0xc);
-      fstate[0x31] = *(float *)(obj + 0x10) - lbl_803E757C;
-      fstate[0x32] = *(float *)(obj + 0x14) - lbl_803E7580;
+      *(f32 *)(piVar14 + 0x31) = *(float *)(obj + 0x10) - lbl_803E757C;
+      *(f32 *)(piVar14 + 0x32) = *(float *)(obj + 0x14) - lbl_803E7580;
       iVar12 = *piVar14;
-      local_114.x = (fstate[0x30] - *(float *)(iVar12 + 0xc)) * lbl_803DC494;
-      local_114.y = (fstate[0x31] - *(float *)(iVar12 + 0x10)) * lbl_803DC494;
-      local_114.z = (fstate[0x32] - *(float *)(iVar12 + 0x14)) * lbl_803DC494;
+      local_114.x = (*(f32 *)(piVar14 + 0x30) - *(float *)(iVar12 + 0xc)) * lbl_803DC494;
+      local_114.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC494;
+      local_114.z = (*(f32 *)(piVar14 + 0x32) - *(float *)(iVar12 + 0x14)) * lbl_803DC494;
       local_108 = local_114;
       fn_8022D4AC(iVar12,(int)&local_108);
     }
@@ -1889,12 +1887,12 @@ LAB_8023de5c:
       *(u8 *)(piVar14 + 0x3a) = *(u8 *)(piVar14 + 0x3a) & 0xdf;
     }
     if (lbl_803DC4A0 < *(float *)(obj + 0x98)) {
-      dVar19 = (fstate[0x1c] - *(float *)(*piVar14 + 0x14));
-      fVar2 = lbl_803E7514 * timeDelta + fstate[0x2a];
+      dVar19 = (*(f32 *)(piVar14 + 0x1c) - *(float *)(*piVar14 + 0x14));
+      fVar2 = lbl_803E7514 * timeDelta + *(f32 *)(piVar14 + 0x2a);
       if (lbl_803E74D4 < fVar2) {
         fVar2 = lbl_803E74D4;
       }
-      fstate[0x2a] = fVar2;
+      *(f32 *)(piVar14 + 0x2a) = fVar2;
       *(undefined *)(piVar14 + 0x2e) = 0;
       *(u16 *)(*piVar14 + 6) = *(u16 *)(*piVar14 + 6) & 0xbfff;
       sVar3 = fn_8022D46C(*piVar14);
@@ -1912,9 +1910,9 @@ LAB_8023de5c:
     }
     else {
       iVar12 = *piVar14;
-      local_12c.x = (fstate[0x30] - *(float *)(iVar12 + 0xc)) * lbl_803DC4A4;
-      local_12c.y = (fstate[0x31] - *(float *)(iVar12 + 0x10)) * lbl_803DC4A4;
-      local_12c.z = (fstate[0x32] - *(float *)(iVar12 + 0x14)) * lbl_803DC4A4;
+      local_12c.x = (*(f32 *)(piVar14 + 0x30) - *(float *)(iVar12 + 0xc)) * lbl_803DC4A4;
+      local_12c.y = (*(f32 *)(piVar14 + 0x31) - *(float *)(iVar12 + 0x10)) * lbl_803DC4A4;
+      local_12c.z = (*(f32 *)(piVar14 + 0x32) - *(float *)(iVar12 + 0x14)) * lbl_803DC4A4;
       local_120 = local_12c;
       fn_8022D4AC(iVar12,(int)&local_120);
     }
@@ -1933,30 +1931,30 @@ LAB_8023de5c:
       uVar9 = mapGetDirIdx(0xb);
       lockLevel(uVar9,1);
       warpToMap(0x4e,0);
-      fstate[0x1a] = lbl_803E74D4;
+      *(f32 *)(piVar14 + 0x1a) = lbl_803E74D4;
       piVar14[0x22] = 0x1f;
     }
   }
-  local_134 = lbl_803E7584 + fstate[0x2a];
+  local_134 = lbl_803E7584 + *(f32 *)(piVar14 + 0x2a);
   (*(void (*)())*(int *)(*gCameraInterface + 0x60))(&local_134,4);
   *(float *)(obj + 0x24) =
-       fstate[0x1d] * (fstate[0x33] - *(float *)(obj + 0xc)) +
+       *(f32 *)(piVar14 + 0x1d) * (*(f32 *)(piVar14 + 0x33) - *(float *)(obj + 0xc)) +
        *(float *)(obj + 0x24);
   *(float *)(obj + 0x28) =
-       fstate[0x1d] * (fstate[0x34] - *(float *)(obj + 0x10)) +
+       *(f32 *)(piVar14 + 0x1d) * (*(f32 *)(piVar14 + 0x34) - *(float *)(obj + 0x10)) +
        *(float *)(obj + 0x28);
   *(float *)(obj + 0x2c) =
-       fstate[0x1d] * (fstate[0x35] - *(float *)(obj + 0x14)) +
+       *(f32 *)(piVar14 + 0x1d) * (*(f32 *)(piVar14 + 0x35) - *(float *)(obj + 0x14)) +
        *(float *)(obj + 0x2c);
-  *(float *)(obj + 0x24) = *(float *)(obj + 0x24) * fstate[0x1e];
-  *(float *)(obj + 0x28) = *(float *)(obj + 0x28) * fstate[0x1e];
-  *(float *)(obj + 0x2c) = *(float *)(obj + 0x2c) * fstate[0x1e];
+  *(float *)(obj + 0x24) = *(float *)(obj + 0x24) * *(f32 *)(piVar14 + 0x1e);
+  *(float *)(obj + 0x28) = *(float *)(obj + 0x28) * *(f32 *)(piVar14 + 0x1e);
+  *(float *)(obj + 0x2c) = *(float *)(obj + 0x2c) * *(f32 *)(piVar14 + 0x1e);
   *(float *)(obj + 0xc) = *(float *)(obj + 0xc) + *(float *)(obj + 0x24);
   *(float *)(obj + 0x10) = *(float *)(obj + 0x10) + *(float *)(obj + 0x28);
   *(float *)(obj + 0x14) = *(float *)(obj + 0x14) + *(float *)(obj + 0x2c);
-  if (lbl_803E74D4 == fstate[0x38]) {
+  if (lbl_803E74D4 == *(f32 *)(piVar14 + 0x38)) {
     if (*(char *)(piVar14 + 0x2e) == '\0') {
-      fstate[0x38] = lbl_803DC4B0 * (fstate[0x1c] - *(float *)(*piVar14 + 0x14));
+      *(f32 *)(piVar14 + 0x38) = lbl_803DC4B0 * (*(f32 *)(piVar14 + 0x1c) - *(float *)(*piVar14 + 0x14));
     }
     else {
       fn_8023A6A4((int)piVar14,lbl_803DC4B4,lbl_803DC4B8,lbl_803E74D4);
@@ -1981,7 +1979,7 @@ LAB_8023de5c:
        (short)((-(int)*(s16 *)(obj + 2) / lbl_803DC430 - (int)*(short *)(piVar14 + 0x29)) / lbl_803DC434);
   *(s16 *)obj = *(s16 *)obj + *(short *)((int)piVar14 + 0xa2);
   *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + *(short *)(piVar14 + 0x29);
-  ObjAnim_AdvanceCurrentMove(fstate[0x19],timeDelta,obj,0);
+  ObjAnim_AdvanceCurrentMove(*(f32 *)(piVar14 + 0x19),timeDelta,obj,0);
   fn_8023A3E4(obj,(int)piVar14);
   fn_8023A87C(obj,(int)piVar14);
   iVar12 = piVar14[5];
