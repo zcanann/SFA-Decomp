@@ -4596,7 +4596,7 @@ extern void flamethrowerspe_render(void);
 extern void flamethrowerspe_update();
 extern void flamethrowerspe_init();
 extern void shield_free();
-extern void shield_render();
+extern void shield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void shield_update();
 
 extern void curve_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
@@ -6957,6 +6957,115 @@ void staff_initialise(void)
     }
     if (lbl_803DDAA0 == NULL) {
         lbl_803DDAA0 = (void *)Resource_Acquire(90, 1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+typedef struct ShieldFxVec {
+    u8 pad[8];
+    f32 a;
+    f32 v[3];
+} ShieldFxVec;
+
+extern s16 lbl_803DBD70[4];
+extern s16 lbl_803DBD78[4];
+extern s16 lbl_803DBD80[4];
+extern s16 lbl_803DBD88[4];
+extern f32 lbl_803E33D8;
+extern f32 lbl_803E33DC;
+
+#pragma scheduling off
+#pragma peephole off
+void shield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    s32 v = visible;
+    if (v != 0) {
+        ShieldFxVec s;
+        int *model;
+        f32 savedF8;
+        u8 savedB36;
+        s16 saved0;
+        s16 saved2;
+        s16 saved4;
+        u8 hud;
+        f32 dt;
+        u8 i;
+        model = Obj_GetActiveModel((int)obj);
+        savedF8 = *(f32 *)((char *)obj + 8);
+        savedB36 = *(u8 *)((char *)obj + 0x36);
+        saved0 = *(s16 *)obj;
+        saved2 = *(s16 *)((char *)obj + 2);
+        saved4 = *(s16 *)((char *)obj + 4);
+        hud = getHudHiddenFrameCount();
+        if (hud != 0) {
+            dt = lbl_803E33AC;
+        } else {
+            dt = timeDelta;
+        }
+        if (*(s16 *)((char *)obj + 0x46) == 2102) {
+            for (i = 0; i < 4; i++) {
+                if ((*(u8 *)(state + i + 0x5c) & 1) == 0) {
+                    u8 *q = state + i * 2;
+                    *(s16 *)obj = *(s16 *)(q + 0x44);
+                    *(s16 *)((char *)obj + 2) = *(s16 *)(q + 0x4c);
+                    *(s16 *)((char *)obj + 4) = *(s16 *)(q + 0x54);
+                    *(s16 *)(q + 0x44) = (s32)(dt * (f32)lbl_803DBD78[i] + (f32)*(s16 *)(q + 0x44));
+                    *(s16 *)(q + 0x4c) = (s32)(dt * (f32)lbl_803DBD80[i] + (f32)*(s16 *)(q + 0x4c));
+                    *(s16 *)(q + 0x54) = (s32)(dt * (f32)lbl_803DBD88[i] + (f32)*(s16 *)(q + 0x54));
+                    {
+                        u8 *r = state + i * 4;
+                        *(f32 *)((char *)obj + 8) = *(f32 *)(r + 0x24) * savedF8 *
+                            (*(f32 *)(state + 4) / *(f32 *)(state + 0x10));
+                        *(u8 *)((char *)obj + 0x37) = (s32)(*(f32 *)(r + 0x14) * (f32)savedB36);
+                    }
+                    *(u16 *)((char *)model + 0x18) &= ~0x8;
+                    ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E33C4);
+                }
+            }
+        } else {
+            f32 *pv = s.v;
+            for (i = 0; i < 4; i++) {
+                if ((*(u8 *)(state + i + 0x5c) & 1) == 0) {
+                    u32 off = i * 2 + 0x44;
+                    *(s16 *)obj = *(s16 *)(state + off);
+                    *(s16 *)(state + off) = (s32)(dt * (f32)lbl_803DBD70[i] + (f32)*(s16 *)(state + off));
+                    {
+                        u8 *r = state + i * 4;
+                        *(f32 *)((char *)obj + 8) = *(f32 *)(r + 0x24) * savedF8;
+                        *(u8 *)((char *)obj + 0x37) = (s32)(*(f32 *)(r + 0x14) * (f32)savedB36);
+                    }
+                    *(u16 *)((char *)model + 0x18) &= ~0x8;
+                    ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E33C4);
+                    if (hud == 0) {
+                        u8 j;
+                        f32 cA = lbl_803E33D8;
+                        f32 cB = lbl_803E33DC;
+                        f32 cC = lbl_803E33AC;
+                        f32 cD = lbl_803E33C4;
+                        for (j = 0; j < 2; j++) {
+                            f32 f8v = *(f32 *)((char *)obj + 8);
+                            pv[0] = cA * f8v;
+                            pv[1] = cB * f8v;
+                            pv[2] = cC;
+                            *(s16 *)obj += 32767;
+                            mathFn_80021ac8(obj, pv);
+                            pv[0] += *(f32 *)((char *)obj + 0xc);
+                            pv[1] += *(f32 *)((char *)obj + 0x10);
+                            pv[2] += *(f32 *)((char *)obj + 0x14);
+                            s.a = cD;
+                            ((void (*)(int *, int, void *, u32, int, int))((int *)*gPartfxInterface)[2])(obj, 2028, &s, 0x200001, -1, 0);
+                        }
+                    }
+                }
+            }
+        }
+        *(f32 *)((char *)obj + 8) = savedF8;
+        *(u8 *)((char *)obj + 0x36) = savedB36;
+        *(s16 *)obj = saved0;
+        *(s16 *)((char *)obj + 2) = saved2;
+        *(s16 *)((char *)obj + 4) = saved4;
     }
 }
 #pragma peephole reset
