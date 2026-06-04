@@ -169,11 +169,6 @@ extern undefined4 FUN_80153440();
 extern undefined4 FUN_80153db4();
 extern undefined4 FUN_80154108();
 extern undefined4 FUN_80154cc8();
-extern void rachnopUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int param_4);
-extern void baddieUpdateWhileFrozen_80155e10(uint param_9,int param_10,undefined4 param_11,
-                                            int param_12,undefined4 param_13,int param_14);
-extern void wbUpdateWhileFrozen(uint param_1,int param_2,undefined4 param_3,int param_4);
-extern void mutatedEbaUpdateWhileFrozen(uint param_9,int param_10,undefined4 param_11,int param_12);
 extern undefined4 FUN_80157168();
 extern undefined4 FUN_80158540();
 extern undefined4 FUN_80159c60();
@@ -1516,6 +1511,296 @@ int collectibleFn_80149cec(int obj,int state,u32 spawnBits,u32 useAltMode,u32 mo
   return lbl_803DDA54;
 }
 #pragma scheduling reset
+
+/* baddie_updateWhileFrozen: 2796b - shared frozen-state update + per-baddie reaction dispatch. */
+typedef struct {
+  s16 rot[3];
+  f32 scale;
+  Vec pos;
+} FrozenFxParams;
+
+typedef struct {
+  int c0;
+  int c1;
+  int c2;
+  int c3;
+} FrozenFxColors;
+
+typedef struct {
+  u8 fadeCounter : 5;
+  u8 low : 3;
+} FrozenByte2F6;
+
+extern f32 sqrtf(f32 x);
+extern int getAngle(f32 x, f32 z);
+void frozenEnemyFn_80149bb4(int *obj, u32 flags, f32 f, u16 val);
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern int lbl_802C2200[];
+extern int *lbl_803DCAB4;
+extern int *lbl_803DDA50;
+extern f32 lbl_803E2588;
+extern f32 lbl_803E258C;
+extern f32 lbl_803E2590;
+extern f32 lbl_803E2594;
+extern f32 lbl_803E259C;
+extern void fn_802972B4(int player, uint *outEffects, f32 *outA, f32 *outB, f32 *outC, u16 *outSfx);
+extern void mathFn_80021ac8(int obj, void *vel);
+extern int objCreateLight(int a, int b);
+extern void objLightFn_8009a1dc(int obj, f32 intensity, void *params, int mode, int light);
+extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
+extern void Obj_ResetModelColorState(int obj);
+extern void Obj_StartModelFadeIn(int obj, int duration);
+extern void fn_802961FC(u8 *proj, int result);
+extern int fn_801504F8(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector, f32 hDist, f32 vDist);
+extern void fn_80152004(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void fn_80152440(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void fn_80152B2C(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void fn_80152FA8(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void fn_80153790(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void fn_80153CF8(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void fn_801544E8(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void rachnopUpdateWhileFrozen(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void wbUpdateWhileFrozen(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void baddieUpdateWhileFrozen_80155e10(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void mutatedEbaUpdateWhileFrozen(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void smallbasket_nop(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void smallbasket_handleReactionEvent(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void hoodedZyckUpdateWhileFrozen(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void fn_8014FEF8(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void fn_80157EBC(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+extern void smallbasket_handleHitStateEvent(int obj, u8 *state, int attacker, int hit, int p5, int p6, Vec *hitPos, int sector);
+
+void baddie_updateWhileFrozen(int obj, u8 *state, u8 fromHit)
+{
+  int player;
+  int hit;
+  int result;
+  u16 sector;
+  int diff;
+  f32 hDist;
+  f32 vDist;
+  u8 *proj;
+  f32 *dp;
+  f32 zero;
+  FrozenFxParams params;
+  Vec hitPos;
+  f32 delta[3];
+  FrozenFxColors colors;
+  int attacker;
+  f32 fxA;
+  f32 fxB;
+  f32 fxC;
+  int hitArg;
+  int hitCount;
+  uint hitEffects;
+  u16 impactSfx;
+
+  player = Obj_GetPlayerObject();
+  colors = *(FrozenFxColors *)lbl_802C2200;
+  result = 2;
+  if ((*(uint *)(state + 0x2dc) & 0x1800) == 0) {
+    if ((*(uint *)(state + 0x2e4) & 1) != 0) {
+      ObjHits_EnableObject(obj);
+    } else {
+      ObjHits_DisableObject(obj);
+    }
+    hit = ObjHits_GetPriorityHitWithPosition(obj,&attacker,&hitArg,&hitCount,&hitPos.x,&hitPos.y,&hitPos.z);
+    hitPos.x += playerMapOffsetX;
+    hitPos.z += playerMapOffsetZ;
+    *(f32 *)(state + 0x2d4) -= timeDelta;
+    if (hit == 0x1a) {
+      if (*(f32 *)(state + 0x2d4) >= lbl_803E2574) {
+        hit = 0;
+      } else {
+        *(f32 *)(state + 0x2d4) = lbl_803E2588;
+      }
+    }
+    *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) & 0xffffffcf;
+    *(f32 *)(state + 0x2d8) -= timeDelta;
+    if (*(f32 *)(state + 0x2d8) < lbl_803E2574) {
+      *(f32 *)(state + 0x2d8) = lbl_803E2574;
+    }
+    fn_802972B4(player,&hitEffects,&fxA,&fxB,&fxC,&impactSfx);
+    frozenEnemyFn_80149bb4((int *)state,hitEffects,fxA,impactSfx);
+    if (hit != 0) {
+      if (fromHit) {
+        if (hit != 0x10) {
+          params.scale = lbl_803E258C;
+          ((void (**)(int,int,int,int,void *))*(int *)lbl_803DCAB4)[3](obj,0x7fb,0,0x64,&params);
+          ((void (**)(int,int,int,int,void *))*(int *)lbl_803DCAB4)[3](obj,0x7fc,0,0x32,0);
+          Obj_ResetModelColorState(obj);
+          *(u16 *)(state + 0x2b0) = 0;
+          *(uint *)(state + 0x2e8) = *(uint *)(state + 0x2e8) & 0xffffffdf;
+          *(uint *)(state + 0x2e8) = *(uint *)(state + 0x2e8) | 0x200;
+          Sfx_PlayFromObject(obj,0x47b);
+        } else {
+          *(uint *)(state + 0x2e8) = *(uint *)(state + 0x2e8) | 0x10;
+        }
+      } else {
+        if (hitEffects != 0) {
+          if (*(s16 *)(attacker + 0x44) == 1 || *(s16 *)(attacker + 0x44) == 0x2d) {
+            if ((*(uint *)(state + 0x2e4) & 0x200) != 0) {
+              if (fxC >= lbl_803E2590 && fxC <= lbl_803E256C) {
+                *(f32 *)(state + 0x304) = fxC;
+              }
+              zero = lbl_803E2574;
+              *(f32 *)(obj + 0x24) = zero;
+              *(f32 *)(obj + 0x28) = zero;
+              if ((*(uint *)(state + 0x2dc) & 0x40) != 0) {
+                *(f32 *)(obj + 0x2c) = lbl_803E2594 * fxB;
+              } else {
+                *(f32 *)(obj + 0x2c) = fxB;
+              }
+              mathFn_80021ac8(obj,(void *)(obj + 0x24));
+            }
+          }
+        }
+        *(f32 *)(state + 0x2d8) += lbl_803E2598 * (f32)hitCount;
+        if ((*(uint *)(state + 0x2dc) & 0x4000) != 0) {
+          *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) | 0x10;
+        }
+        if ((*(uint *)(state + 0x2dc) & 0x40) == 0) {
+          *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) | 0x4000;
+        }
+        *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) | 0x20;
+        dp = delta;
+        dp[0] = *(f32 *)(obj + 0x18) - hitPos.x;
+        dp[1] = *(f32 *)(obj + 0x1c) - hitPos.y;
+        dp[2] = *(f32 *)(obj + 0x20) - hitPos.z;
+        diff = (u16)getAngle(-dp[0],-dp[2]) - (u16)*(s16 *)obj;
+        if (diff > 0x8000) {
+          diff -= 0xffff;
+        }
+        if (diff < -0x8000) {
+          diff += 0xffff;
+        }
+        sector = (uint)(u16)diff >> 13;
+        hDist = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
+        vDist = sqrtf(dp[1] * dp[1]);
+        switch (*(s16 *)(obj + 0x46)) {
+        case 0x11: case 0x13a: case 0x5b7: case 0x5b8: case 0x5b9: case 0x5e1: case 0x7a6:
+          result = fn_801504F8(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector,hDist,vDist);
+          break;
+        case 0xd8: case 0x281:
+          fn_80152004(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x613:
+          fn_80152440(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x642:
+          fn_80152B2C(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x3fe: case 0x7c6:
+          fn_80152FA8(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x58b:
+          fn_80153790(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x369:
+          fn_80153CF8(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x251:
+          fn_801544E8(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x25d:
+          rachnopUpdateWhileFrozen(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x4d7:
+          wbUpdateWhileFrozen(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x457:
+          baddieUpdateWhileFrozen_80155e10(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x458:
+          mutatedEbaUpdateWhileFrozen(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x851:
+          smallbasket_nop(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x842: case 0x84b:
+          smallbasket_handleReactionEvent(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x4ac:
+          hoodedZyckUpdateWhileFrozen(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x427:
+          fn_8014FEF8(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x6a2: case 0x6a3: case 0x6a4: case 0x6a5:
+          fn_80157EBC(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        case 0x7c8:
+          smallbasket_handleHitStateEvent(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        default:
+          fn_8014FEF8(obj,state,attacker,hit,hitArg,hitCount,&hitPos,sector);
+          break;
+        }
+      }
+    } else {
+      if ((*(uint *)(state + 0x2dc) & 0x40000000) != 0) {
+        *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) & 0xffffbfff;
+      }
+    }
+    if ((*(uint *)(state + 0x2e8) & 0x208) != 0) {
+      params.pos.x = hitPos.x;
+      params.pos.y = hitPos.y;
+      params.pos.z = hitPos.z;
+      if (*(void **)(state + 0x368) == NULL) {
+        *(int *)(state + 0x368) = objCreateLight(0,1);
+      }
+      if ((*(uint *)(state + 0x2e8) & 0x200) != 0) {
+        objLightFn_8009a1dc(obj,lbl_803E259C,&params,1,*(int *)(state + 0x368));
+      } else if ((*(u8 *)(state + 0x2f1) & 0x10) != 0) {
+        objLightFn_8009a1dc(obj,lbl_803E259C,&params,3,*(int *)(state + 0x368));
+      } else if ((*(u8 *)(state + 0x2f1) & 8) != 0) {
+        objLightFn_8009a1dc(obj,lbl_803E259C,&params,2,*(int *)(state + 0x368));
+      } else {
+        objLightFn_8009a1dc(obj,lbl_803E259C,&params,1,*(int *)(state + 0x368));
+      }
+      Obj_SetModelColorFadeRecursive(obj,0xf,0xc8,0,0,1);
+    }
+    *(f32 *)(state + 0x2d0) -= timeDelta;
+    if (*(f32 *)(state + 0x2d0) < lbl_803E2574) {
+      *(f32 *)(state + 0x2d0) = lbl_803E2574;
+    }
+    if ((*(uint *)(state + 0x2e8) & 0x10) != 0) {
+      if (*(f32 *)(state + 0x2d0) <= lbl_803E2574) {
+        params.pos.x = hitPos.x;
+        params.pos.y = hitPos.y;
+        params.pos.z = hitPos.z;
+        params.scale = lbl_803E256C;
+        params.rot[2] = 0;
+        params.rot[1] = 0;
+        params.rot[0] = 0;
+        if (lbl_803DDA50 != NULL) {
+          ((void (**)(int,int,void *,int,int,void *))*(int *)lbl_803DDA50)[1](0,1,&params,0x401,-1,&colors);
+        }
+        *(f32 *)(state + 0x2d0) = lbl_803E25A0;
+        if (*(void **)(state + 0x368) == NULL) {
+          *(int *)(state + 0x368) = objCreateLight(0,1);
+        }
+        objLightFn_8009a1dc(obj,lbl_803E259C,&params,4,*(int *)(state + 0x368));
+      }
+      proj = *(u8 **)(state + 0x29c);
+      if (proj != NULL && *(s16 *)(proj + 0x44) == 1) {
+        fn_802961FC(proj,result);
+      }
+    } else if ((*(uint *)(state + 0x2e8) & 0x20) != 0) {
+      if (((FrozenByte2F6 *)(state + 0x2f6))->fadeCounter == 0) {
+        Sfx_PlayFromObject(obj,0x47a);
+        ((FrozenByte2F6 *)(state + 0x2f6))->fadeCounter = 0x1f;
+      }
+      Obj_StartModelFadeIn(obj,0x12c);
+    } else {
+      if (((FrozenByte2F6 *)(state + 0x2f6))->fadeCounter != 0) {
+        ((FrozenByte2F6 *)(state + 0x2f6))->fadeCounter -= 1;
+      }
+    }
+    *(uint *)(state + 0x2e8) = *(uint *)(state + 0x2e8) & 0xfffffdc7;
+  }
+}
 
 /* baddieInstantiateWeapon: 248b - refresh Tricky's attached child object when its setup id changes. */
 #pragma scheduling off
@@ -2994,7 +3279,7 @@ void trickyFn_80144f50(int obj, int state) {
 /* frozenEnemyFn_80149bb4: 312b - flag bits to byte field. */
 #pragma peephole off
 #pragma scheduling off
-void frozenEnemyFn_80149bb4(int *obj, u32 flags, s16 val, f32 f) {
+void frozenEnemyFn_80149bb4(int *obj, u32 flags, f32 f, u16 val) {
     *((u8*)obj + 0x2f1) = 0;
     if ((flags & 0x2) != 0) {
         *((u8*)obj + 0x2f1) = (u8)(*((u8*)obj + 0x2f1) | 0x20);
@@ -3026,7 +3311,7 @@ void frozenEnemyFn_80149bb4(int *obj, u32 flags, s16 val, f32 f) {
     } else if ((flags & 0x400) != 0) {
         *((u8*)obj + 0x2f5) = 3;
     }
-    *(s16*)((char*)obj + 0x2ec) = val;
+    *(u16*)((char*)obj + 0x2ec) = val;
 }
 #pragma scheduling reset
 #pragma peephole reset
