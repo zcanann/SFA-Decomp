@@ -3,6 +3,6 @@
 
 #include "ghidra_import.h"
 
-void fn_8027C48C(u32 param_1, u32 elapsed);
+void fn_8027C48C(s16 *dest, u32 nsDelay);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027C728_H_ */
