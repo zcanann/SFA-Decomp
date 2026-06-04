@@ -18,6 +18,11 @@ extern int lbl_803DD084;
 extern s16 lbl_803DD060;
 extern s16 lbl_803DD062;
 extern char sObjSequenceMissingObjectFormat[];
+extern s8 lbl_8030EE1C[];
+extern int lbl_8030EDC0[];
+extern f32 lbl_803DF018;
+extern s8 lbl_8039A60C[];
+int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag);
 void ObjSeq_update(u8 *obj, f32 t);
 
 void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
@@ -30,6 +35,7 @@ void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma dont_inline on
 int objSeqFindLabel(u8 *seq, int label)
 {
     int currentLabel;
@@ -61,6 +67,7 @@ int objSeqFindLabel(u8 *seq, int label)
     }
     return -1;
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -498,6 +505,192 @@ void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
             break;
         }
     }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+int seqDoSubCmd0B(u8 *obj, u8 *sourceObj, u8 *seq, u8 *cmdsArg, s16 xrot, int countArg,
+                  s8 flag1, s8 flag2)
+{
+    int count;
+    u8 *cmds;
+    int opcode;
+    int arg10;
+    int top16;
+    int subId;
+    int i;
+    int freeSlot;
+    u32 packed;
+    int result;
+    int j;
+    int found;
+    u8 v;
+    int n;
+    int slot;
+
+    i = 0;
+    cmds = cmdsArg;
+    count = (s16)countArg;
+    for (; i < count; i++) {
+        packed = *(u32 *)cmds;
+        opcode = packed & 0x3f;
+        arg10 = (packed >> 6) & 0x3ff;
+        top16 = packed >> 16;
+        if (opcode == 2 || opcode == 3) {
+            if ((top16 & 0x8000) != 0) {
+                top16 |= 0xffff0000;
+            }
+            subId = arg10;
+            arg10 = 0;
+        }
+
+        result = 0;
+        switch (opcode) {
+        case 6:
+            if (objSeqExecCmd06(obj, sourceObj, seq, arg10 | (top16 << 8), flag2) == 0) {
+                return 1;
+            }
+            result = -1;
+            arg10 = 0;
+            break;
+        case 7:
+            if (sourceObj != obj) {
+                switch ((s8)lbl_8030EE1C[arg10]) {
+                case 1:
+                    ObjMsg_SendToObjects(0, 2, obj, lbl_8030EDC0[arg10], obj);
+                    break;
+                case 2:
+                    ObjMsg_SendToNearbyObjects(0, lbl_803DF018, 2, obj,
+                                               lbl_8030EDC0[arg10], obj);
+                    break;
+                default:
+                    ObjMsg_SendToObject(sourceObj, lbl_8030EDC0[arg10], obj, 0);
+                    break;
+                }
+            }
+            result = -1;
+            arg10 = 0;
+            break;
+        case 8:
+            if (flag2 == 0) {
+                found = 0;
+                freeSlot = -1;
+                for (j = 0; j < 12; j++) {
+                    v = seq[j + 0x12c];
+                    if (v == arg10) {
+                        found = 1;
+                    }
+                    if (v == 0) {
+                        freeSlot = j;
+                    }
+                }
+                if (found == 0 && freeSlot != -1) {
+                    seq[freeSlot + 0x12c] = (u8)arg10;
+                    *(s16 *)(seq + freeSlot * 2 + 0x118) =
+                        (s16)objSeqFindLabel(seq, top16);
+                }
+                result = 0;
+            }
+            break;
+        case 9:
+            break;
+        default:
+            result = seqEvalCondition(arg10, seq, *(int *)(obj + 0x4c));
+            break;
+        }
+
+        if (result > 0 && flag1 == 0) {
+            switch (opcode) {
+            case 1:
+                if (flag2 != 0) {
+                    break;
+                }
+                slot = (s8)seq[0x57];
+                if ((s8)lbl_8039A60C[slot] == 0) {
+                    lbl_8039A60C[slot] = 1;
+                    *(s16 *)(seq + 0x58) = (s16)top16;
+                    *(s16 *)(seq + 0x5a) = *(s16 *)(seq + 0x58);
+                }
+                return 1;
+            case 10:
+                if (flag2 != 0) {
+                    break;
+                }
+                slot = (s8)seq[0x57];
+                if ((s8)lbl_8039A60C[slot] == 0) {
+                    lbl_8039A60C[slot] = 1;
+                    *(s16 *)(seq + 0x58) = (s16)objSeqFindLabel(seq, top16);
+                    *(s16 *)(seq + 0x5a) = *(s16 *)(seq + 0x58);
+                }
+                return 1;
+            case 2:
+                switch (subId) {
+                case 0:
+                    seq[0x80] = (u8)top16;
+                    n = seq[0x8b];
+                    if ((u32)n < 10) {
+                        seq[0x8b] = n + 1;
+                        seq[n + 0x81] = (u8)top16;
+                    }
+                    break;
+                case 1:
+                    *(s16 *)(seq + 0x60) = (s16)top16;
+                    break;
+                case 3:
+                    seqGlobal1 = top16;
+                    break;
+                case 4:
+                    seqGlobal2 = top16;
+                    break;
+                case 5:
+                    lbl_8039A45C[(s8)seq[0x57]] = (s8)top16;
+                    break;
+                case 6:
+                    GameBit_Set(*(s16 *)(seq + 0x6a), top16 != 0);
+                    break;
+                case 2:
+                    break;
+                }
+                break;
+            case 3:
+                if (flag2 != 0) {
+                    break;
+                }
+                switch (subId) {
+                case 0:
+                    *(s16 *)(seq + 0x60) = *(s16 *)(seq + 0x60) + top16;
+                    break;
+                case 1:
+                    break;
+                }
+                break;
+            case 4:
+                if (flag2 != 0) {
+                    break;
+                }
+                *(s16 *)(seq + 0x58) = xrot;
+                *(s16 *)(seq + 0x5a) = xrot;
+                *(s8 *)(seq + 0x7c) = (s8)(arg10 + 1);
+                lbl_8039A60C[(s8)seq[0x57]] = 1;
+                return 1;
+            case 5:
+                if (flag2 != 0) {
+                    break;
+                }
+                return 0;
+            case 0:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                break;
+            }
+        }
+        cmds += 4;
+    }
+    return 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
