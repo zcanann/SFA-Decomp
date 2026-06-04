@@ -169,77 +169,65 @@ u8 fn_8005DF5C(int param_1,float *param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void shaderFn_8005e348(undefined4 param_1,undefined4 param_2,int *param_3,Mtx param_4)
-{
-  undefined uVar1;
-  undefined uVar2;
-  undefined uVar3;
-  int iVar4;
-  uint uVar5;
-  undefined4 *puVar6;
-  f32 fVar7;
-  int local_b8;
-  undefined4 uStack_b4;
-  float local_b0;
-  undefined4 local_ac;
-  undefined4 local_a8;
-  undefined4 local_a4;
-  float local_a0;
-  undefined4 local_9c;
-  Mtx afStack_98;
-  SfaIntDouble iD2;
-  SfaIntDouble iD1;
-  float local_28[6];
+typedef struct IndMtxCopy {
+    int w[6];
+} IndMtxCopy;
 
-  uVar5 = param_3[4];
-  uVar3 = *(undefined *)(*param_3 + ((int)uVar5 >> 3));
-  iVar4 = *param_3 + ((int)uVar5 >> 3);
-  uVar1 = *(undefined *)(iVar4 + 1);
-  uVar2 = *(undefined *)(iVar4 + 2);
-  param_3[4] = uVar5 + 8;
-  puVar6 = (undefined4 *)
-           (*(int *)((int)param_1 + 0x68) +
-           ((uint3)(CONCAT12(uVar2,CONCAT11(uVar1,uVar3)) >> (uVar5 & 7)) & 0xff) * 0x1c);
-  uVar5 = *(uint *)((int)param_2 + 0x3c);
-  if ((uVar5 & 0x4000) == 0) {
-    if ((uVar5 & 0x8000) == 0) {
-      if ((uVar5 & 0x10000) == 0) goto LAB_8005E528;
-      iVar4 = 0x10;
-    }
-    else {
-      iVar4 = 8;
-    }
+void shaderFn_8005e348(int param_1,u8 *param_2,int *param_3,Mtx param_4)
+{
+  Mtx m2;
+  float m[2][3];
+  int lb;
+  int la;
+  int ptr;
+  int bptr;
+  int pos;
+  uint word;
+  uint flags;
+  u8 count;
+  int i;
+  f32 k;
+  f32 k24;
+  f32 kH;
+  u8 *tbl;
+
+  pos = param_3[4];
+  word = *(u8 *)(*param_3 + (pos >> 3));
+  bptr = *param_3 + (pos >> 3);
+  word = word | (u32)(*(u8 *)(bptr + 1) << 8);
+  word = word | (u32)(*(u8 *)(bptr + 2) << 16);
+  param_3[4] = pos + 8;
+  ptr = *(int *)(param_1 + 0x68) + ((word >> (pos & 7)) & 0xff) * 0x1c;
+  flags = *(uint *)(param_2 + 0x3c);
+  if ((flags & 0x4000) != 0) {
+    count = 4;
+  }
+  else if ((flags & 0x8000) != 0) {
+    count = 8;
+  }
+  else if ((flags & 0x10000) != 0) {
+    count = 0x10;
   }
   else {
-    iVar4 = 4;
+    return;
   }
-  fVar7 = lbl_803DEC2C;
-  for (uVar5 = 0; (int)uVar5 < iVar4; uVar5 = uVar5 + 1) {
-    iD1.words.lo = uVar5 + 1 ^ 0x80000000;
-    iD1.words.hi = 0x43300000;
-    PSMTXTrans(afStack_98, lbl_803DEBCC,
-               fVar7 * (float)(iD1.d - lbl_803DEBC0),
-               lbl_803DEBCC);
-    PSMTXConcat(param_4,afStack_98,afStack_98);
-    GXLoadPosMtxImm(afStack_98,0);
-    local_28[0] = *(float*)((int)&lbl_802C1E40 + 0);
-    local_28[1] = *(float*)((int)&lbl_802C1E40 + 4);
-    local_28[2] = *(float*)((int)&lbl_802C1E40 + 8);
-    local_28[3] = *(float*)((int)&lbl_802C1E40 + 12);
-    local_28[4] = *(float*)((int)&lbl_802C1E40 + 16);
-    local_28[5] = *(float*)((int)&lbl_802C1E40 + 20);
-    textureFn_8006c4e0((int*)&local_b8,(int*)&uStack_b4);
-    selectTexture(*(int *)(local_b8 + (uVar5 & 0xff) * 4),1);
-    iD2.words.lo = (uVar5 & 0xff) + 1 ^ 0x80000000;
-    iD2.words.hi = 0x43300000;
-    local_28[0] = (float)(iD2.d - lbl_803DEBC0) *
-                  lbl_803DEC24 * displayOffsetH_803DEBFC;
-    local_28[4] = local_28[0];
-    GXSetIndTexMtx(1,(const float (*)[3])local_28,lbl_803DB644);
-    GXCallDisplayList((void *)*(int *)puVar6,(uint)*(ushort *)(puVar6 + 1));
+  i = 0;
+  k = lbl_803DEC2C;
+  tbl = (u8 *)&lbl_802C1E40;
+  k24 = lbl_803DEC24;
+  kH = displayOffsetH_803DEBFC;
+  for (; i < count; i = i + 1) {
+    PSMTXTrans(m2,lbl_803DEBCC,k * (f32)(i + 1),lbl_803DEBCC);
+    PSMTXConcat(param_4,m2,m2);
+    GXLoadPosMtxImm(m2,0);
+    *(IndMtxCopy *)m = *(IndMtxCopy *)tbl;
+    textureFn_8006c4e0(&la,&lb);
+    selectTexture(*(int *)(la + (u8)i * 4),1);
+    m[0][0] = (f32)((u8)i + 1) * k24 * kH;
+    m[1][1] = m[0][0];
+    GXSetIndTexMtx(1,(const float (*)[3])m,lbl_803DB644);
+    GXCallDisplayList(*(void **)ptr,(uint)*(u16 *)(ptr + 4));
   }
-LAB_8005E528:
-  return;
 }
 #pragma peephole reset
 #pragma scheduling reset
