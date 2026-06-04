@@ -5095,47 +5095,44 @@ int scarab_updateProximityGate(int* obj, u8* state) {
     int* target;
     f32 dx;
     f32 dz;
-    f32 mag;
-    s16 mode;
     f32 magAbs;
+    u32 rel;
 
     target = *(int**)(state + 0x2d0);
     if (target == NULL) {
         ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 0);
         return 1;
     }
-    mode = *(s16*)(state + 0x274);
-    if (mode != 6) {
+    if (*(s16*)(state + 0x274) != 6) {
     dx = *(f32*)((char*)obj + 0xc) - *(f32*)((char*)target + 0xc);
     dz = *(f32*)((char*)obj + 0x14) - *(f32*)((char*)target + 0x14);
-    {
-        s16 ang = (s16)getAngle(dx, dz);
-        u16 rel = (u16)((s16)((s32)ang - (s32)*(s16*)obj));
-        if (rel > 0x4000 && rel < 0xc000) {
-            mag = lbl_803E2EB0;
-        } else {
-            mag = sqrtf(dx * dx + dz * dz) - lbl_803E2EB4;
-        }
+    rel = (getAngle(dx, dz) - *(s16*)obj) & 0xffff;
+    if (rel > 0x4000 && rel < 0xc000) {
+        dx = lbl_803E2EB0;
+    } else {
+        dx = sqrtf(dx * dx + dz * dz) - lbl_803E2EB4;
     }
-    magAbs = mag < lbl_803E2EB8 ? -mag : mag;
+    magAbs = dx < lbl_803E2EB8 ? -dx : dx;
     if (magAbs < lbl_803E2EBC) {
-        if (mode == 1 || (mode == 5 && (s8)state[0x346] != 0)) {
+        if (*(s16*)(state + 0x274) == 1 ||
+            (*(s16*)(state + 0x274) == 5 && (s8)state[0x346] != 0)) {
             ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 6);
             goto post;
         }
     }
-    if (mode == 1) goto post;
-    if (mag > lbl_803E2EC0) {
-        if (mode != 4 && (mode != 5 || (s8)state[0x346] != 0)) {
+    if (*(s16*)(state + 0x274) == 1) goto post;
+    if (dx > lbl_803E2EC0) {
+        if (*(s16*)(state + 0x274) != 4 &&
+            (*(s16*)(state + 0x274) != 5 || (s8)state[0x346] != 0)) {
             ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
         }
     }
-    if (mag < lbl_803E2EC4) {
+    if (dx < lbl_803E2EC4) {
         ((void(*)(int*, u8*, int))((void**)*gPlayerInterface)[5])(obj, state, 1);
     }
 post:
     if (*(s16*)(state + 0x274) == 1) {
-        if (mag > lbl_803E2EB8) {
+        if (dx > lbl_803E2EB8) {
             *(f32*)(state + 0x2a0) = lbl_803E2EC8;
         } else {
             *(f32*)(state + 0x2a0) = lbl_803E2ECC;
