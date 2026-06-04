@@ -5570,3 +5570,86 @@ void dbstealerworm_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80200850(int obj, int p2)
+{
+    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+    extern int Stack_IsFull(int sp);
+    extern void Stack_Push(int sp, int *args);
+    extern f32 sqrtf(f32 x);
+    extern f32 lbl_803E62F0;
+    extern f32 lbl_803E62F4;
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E62EC;
+    extern f32 lbl_803E62F8;
+    extern f32 lbl_803E62FC;
+    extern f32 lbl_803E62B8;
+    int sub = *(int *)(*(int *)(obj + 0xb8) + 0x40c);
+    int q;
+    int tmp;
+    f32 v;
+    f32 d;
+    struct {
+        int msgE[3];
+        int msg7[3];
+        int msg9[3];
+        f32 pos[3];
+    } stk;
+
+    *(u8 *)(sub + 0x14) |= 2;
+    *(u8 *)(sub + 0x15) &= ~4;
+    v = *(f32 *)(p2 + 0x280);
+    d = lbl_803E62F0;
+    *(f32 *)(p2 + 0x280) = v / d;
+    *(f32 *)(p2 + 0x284) = *(f32 *)(p2 + 0x284) / d;
+    *(f32 *)(p2 + 0x2a0) = lbl_803E62F4;
+    if (*(s8 *)(p2 + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0x11, lbl_803E62A8, 0);
+        *(u8 *)(p2 + 0x346) = 0;
+    }
+    *(u8 *)(p2 + 0x34d) = 0x1f;
+    if (*(f32 *)(obj + 0x98) > lbl_803E62EC
+        && *(f32 *)(*(int *)(p2 + 0x2d0) + 0x10) - lbl_803E62F8 <= *(f32 *)(obj + 0x10)) {
+        q = *(int *)(sub + 0x24);
+        stk.msg9[0] = 9;
+        stk.msg9[1] = 0;
+        stk.msg9[2] = 0x24;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, stk.msg9);
+        }
+        *(u8 *)(sub + 0x34) = 1;
+        tmp = *(int *)(p2 + 0x2d0);
+        q = *(int *)(sub + 0x24);
+        stk.msg7[0] = 7;
+        stk.msg7[1] = 1;
+        stk.msg7[2] = tmp;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, stk.msg7);
+        }
+        *(u8 *)(sub + 0x34) = 1;
+    } else {
+        stk.pos[0] = *(f32 *)(obj + 0xc);
+        stk.pos[1] = *(f32 *)(obj + 0x10);
+        stk.pos[2] = *(f32 *)(obj + 0x14);
+        stk.pos[1] = stk.pos[1] + lbl_803E62FC;
+        stk.pos[0] = *(f32 *)(*(int *)(p2 + 0x2d0) + 0xc) - stk.pos[0];
+        stk.pos[1] = *(f32 *)(*(int *)(p2 + 0x2d0) + 0x10) - stk.pos[1];
+        stk.pos[2] = *(f32 *)(*(int *)(p2 + 0x2d0) + 0x14) - stk.pos[2];
+        if (sqrtf(stk.pos[2] * stk.pos[2] + (stk.pos[0] * stk.pos[0] + stk.pos[1] * stk.pos[1])) < lbl_803E62B8) {
+            tmp = *(int *)(p2 + 0x2d0);
+            q = *(int *)(sub + 0x24);
+            stk.msgE[0] = 0xe;
+            stk.msgE[1] = 1;
+            stk.msgE[2] = tmp;
+            if (Stack_IsFull(q) == 0) {
+                Stack_Push(q, stk.msgE);
+            }
+            *(u8 *)(sub + 0x34) = 1;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
