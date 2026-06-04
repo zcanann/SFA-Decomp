@@ -231,9 +231,218 @@ extern f32 lbl_803DFA9C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8006a028(undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4)
+extern void DCFlushRange(void *addr, u32 nBytes);
+
+/* Box-blur a square tiled texture in place (8-bit and 16-bit texel paths). */
+#pragma scheduling off
+#pragma peephole off
+void fn_8006A028(u8 *texData, int size, int window, u32 fill)
 {
+    u8 blurred[128];
+    u8 row[152];
+    u8 *data;
+
+    data = texData + 0x60;
+    if (window % 8 == 0) {
+        int nfill = window >> 3;
+        u32 y;
+
+        for (y = 0; y < size; y++) {
+            u32 *tile = (u32 *)(data + ((y & 3) * 8 + (y >> 2) * 4 * size));
+            u32 *dst = (u32 *)row;
+            u32 *src;
+            u32 sum;
+            u32 i;
+            u32 x;
+            int k;
+
+            for (i = 0; i < nfill; i++) {
+                *dst = fill;
+                dst++;
+            }
+            src = tile;
+            for (x = 0; x < size; x += 8) {
+                dst[0] = src[0];
+                dst[1] = src[1];
+                dst += 2;
+                src += 8;
+            }
+            for (i = 0; i < nfill; i++) {
+                *dst = fill;
+                dst++;
+            }
+            sum = 0;
+            for (k = 0; k < window; k++) {
+                sum += row[k];
+            }
+            for (k = 0; k < size; k++) {
+                blurred[k] = sum / window;
+                sum = sum - row[k] + (row + window)[k];
+            }
+            src = (u32 *)blurred;
+            for (x = 0; x < size; x += 8) {
+                tile[0] = src[0];
+                tile[1] = src[1];
+                src += 2;
+                tile += 8;
+            }
+        }
+        {
+            u32 x;
+
+            for (x = 0; x < size; x++) {
+                u8 *col = data + ((x & 7) + (x >> 3) * 32);
+                u32 *dst = (u32 *)row;
+                u8 *gp;
+                u8 *bp;
+                u32 sum;
+                u32 i;
+                u32 yy;
+                int k;
+
+                for (i = 0; i < nfill; i++) {
+                    *dst = fill;
+                    dst++;
+                }
+                gp = col;
+                bp = row + (window >> 1);
+                for (yy = 0; yy < size; yy += 4) {
+                    bp[0] = gp[0];
+                    bp[1] = gp[8];
+                    bp[2] = gp[16];
+                    bp[3] = gp[24];
+                    bp += 4;
+                    gp += (size >> 3) * 32;
+                }
+                dst = (u32 *)(row + (size + (window >> 1)));
+                for (i = 0; i < nfill; i++) {
+                    *dst = fill;
+                    dst++;
+                }
+                sum = 0;
+                for (k = 0; k < window; k++) {
+                    sum += row[k];
+                }
+                for (k = 0; k < size; k++) {
+                    blurred[k] = sum / window;
+                    sum = sum - row[k] + (row + window)[k];
+                }
+                bp = blurred;
+                for (yy = 0; yy < size; yy += 4) {
+                    col[0] = bp[0];
+                    col[8] = bp[1];
+                    col[16] = bp[2];
+                    col[24] = bp[3];
+                    bp += 4;
+                    col += (size >> 3) * 32;
+                }
+            }
+        }
+    } else {
+        int nfill = window >> 2;
+        u16 fillhw = fill;
+        u32 y;
+
+        for (y = 0; y < size; y++) {
+            u16 *tile = (u16 *)(data + ((y & 3) * 8 + (y >> 2) * 4 * size));
+            u16 *dst = (u16 *)row;
+            u16 *src;
+            u32 sum;
+            u32 i;
+            u32 x;
+            int k;
+
+            for (i = 0; i < nfill; i++) {
+                *dst = fillhw;
+                dst++;
+            }
+            src = tile;
+            for (x = 0; x < size; x += 8) {
+                dst[0] = src[0];
+                dst[1] = src[1];
+                dst[2] = src[2];
+                dst[3] = src[3];
+                dst += 4;
+                src += 16;
+            }
+            for (i = 0; i < nfill; i++) {
+                *dst = fillhw;
+                dst++;
+            }
+            sum = 0;
+            for (k = 0; k < window; k++) {
+                sum += row[k];
+            }
+            for (k = 0; k < size; k++) {
+                blurred[k] = sum / window;
+                sum = sum - row[k] + (row + window)[k];
+            }
+            src = (u16 *)blurred;
+            for (x = 0; x < size; x += 8) {
+                tile[0] = src[0];
+                tile[1] = src[1];
+                tile[2] = src[2];
+                tile[3] = src[3];
+                src += 4;
+                tile += 16;
+            }
+        }
+        {
+            u32 x;
+
+            for (x = 0; x < size; x++) {
+                u8 *col = data + ((x & 7) + (x >> 3) * 32);
+                u16 *dst = (u16 *)row;
+                u8 *gp;
+                u8 *bp;
+                u32 sum;
+                u32 i;
+                u32 yy;
+                int k;
+
+                for (i = 0; i < nfill; i++) {
+                    *dst = fillhw;
+                    dst++;
+                }
+                gp = col;
+                bp = row + (window >> 1);
+                for (yy = 0; yy < size; yy += 4) {
+                    bp[0] = gp[0];
+                    bp[1] = gp[8];
+                    bp[2] = gp[16];
+                    bp[3] = gp[24];
+                    bp += 4;
+                    gp += (size >> 3) * 32;
+                }
+                dst = (u16 *)(row + (size + (window >> 1)));
+                for (i = 0; i < nfill; i++) {
+                    *dst = fillhw;
+                    dst++;
+                }
+                sum = 0;
+                for (k = 0; k < window; k++) {
+                    sum += row[k];
+                }
+                for (k = 0; k < size; k++) {
+                    blurred[k] = sum / window;
+                    sum = sum - row[k] + (row + window)[k];
+                }
+                bp = blurred;
+                for (yy = 0; yy < size; yy += 4) {
+                    col[0] = bp[0];
+                    col[8] = bp[1];
+                    col[16] = bp[2];
+                    col[24] = bp[3];
+                    bp += 4;
+                    col += (size >> 3) * 32;
+                }
+            }
+        }
+    }
+    DCFlushRange(data, size * size);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -300,7 +509,7 @@ void newshadows_captureProjectedShadow(ushort *object)
     FUN_80259400(0x100,0xb0,0x80,0x80);
     FUN_80259504(0x80,0x80,0x2a,0);
     FUN_80259c0c((&DAT_8038ee3c)[DAT_803ddc0c] + 0x60,1);
-    FUN_8006a028((&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3],0x80,0x10,0);
+    fn_8006A028((u8 *)(&DAT_8038ee3c)[(DAT_803ddc0c + 1) % 3],0x80,0x10,0);
     **(float **)(object + 0x32) = (float)((double)lbl_803DF9AC / dVar7);
   }
   FUN_80006988();
@@ -3554,7 +3763,6 @@ extern void GXSetViewport(f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
 extern void set_shadowFlag_803dcc29(int x);
 extern void objRender(int a, int b, int c, int d, int *obj, int e);
 extern int *Obj_GetActiveModel(int *obj);
-extern void fn_8006A028(u32 tex, int a, int b, int c);
 extern void Camera_ApplyFullViewport(void);
 #pragma scheduling off
 void shadowRenderFn_8006b558(int *obj) {
@@ -3592,7 +3800,7 @@ void shadowRenderFn_8006b558(int *obj) {
         GXSetTexCopySrc(0x100, 0xb0, 0x80, 0x80);
         GXSetTexCopyDst(0x80, 0x80, 0x2a, 0);
         GXCopyTex((void *)(lbl_8038E1DC[lbl_803DCF8C] + 0x60), 1);
-        fn_8006A028(lbl_8038E1DC[(lbl_803DCF8C + 1) % 3], 0x80, 0x10, 0);
+        fn_8006A028((u8 *)lbl_8038E1DC[(lbl_803DCF8C + 1) % 3], 0x80, 0x10, 0);
         *(f32 *)obj[0x64 / 4] = lbl_803DED2C / sc;
     } else {
         *(f32 *)obj[0x64 / 4] = vE;
