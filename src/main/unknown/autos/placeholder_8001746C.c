@@ -16422,3 +16422,50 @@ int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
 }
 #pragma dont_inline reset
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void *stackCreate(int count, int size)
+{
+    u8 *s;
+    int prev;
+    void **first;
+    void **cur;
+    u8 *next;
+    int n;
+
+    prev = testAndSet_onlyUseHeaps1and2(2);
+    s = mmAlloc(size * count + 0x20, 0x11, 0);
+    testAndSet_onlyUseHeaps1and2(prev);
+    *(s16 *)(s + 0xc) = size;
+    *(s16 *)(s + 0xe) = count;
+    *(u16 *)(s + 0x10) = 0;
+    *(int *)(s + 4) = *(s16 *)(s + 0xe) * *(s16 *)(s + 0xc) + 0x20 + (int)s;
+    first = (void **)(s + 0x20);
+    cur = first;
+    next = (u8 *)first + size;
+    n = count - 2;
+    for (; n > 0; n--) {
+        *cur = next;
+        cur = (void **)*cur;
+        next += size;
+    }
+    *cur = 0;
+    *(void **)s = first;
+    cur = *(void ***)s;
+    while (cur != 0) {
+        int ok = 0;
+        if (cur >= first && cur < *(void ***)(s + 4)) {
+            ok = 1;
+        }
+        if (ok == 0) {
+            break;
+        }
+        cur = (void **)*cur;
+    }
+    return s;
+}
+#pragma dont_inline reset
+#pragma pop
