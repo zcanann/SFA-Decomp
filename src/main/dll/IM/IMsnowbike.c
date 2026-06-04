@@ -385,11 +385,72 @@ void warpstonelift_init(int obj, s8 *def) {
     switch (*(u8 *)state) {
     case 0:
     case 2:
-        fn_8002B6D8(obj, 0, 0, 0, 0, 3);
+        fn_8002B6D8((int)obj, 0, 0, 0, 0, 3);
         break;
     case 1:
-        fn_8002B6D8(obj, 0, 0, 0, 0, 4);
+        fn_8002B6D8((int)obj, 0, 0, 0, 0, 4);
         break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void getYButtonItem(s16 *out);
+extern int cMenuGetSelectedItem(void);
+extern int ObjTrigger_IsSetById(int obj, int id);
+extern int ObjTrigger_IsSet(int obj);
+
+#pragma scheduling off
+#pragma peephole off
+void warpstonelift_update(u8 *obj) {
+    u8 *state = *(u8 **)(obj + 0xB8);
+    int off;
+    char *p;
+    int found = 0;
+    int count;
+    int i;
+    s16 item;
+
+    p = *(char **)(obj + 0x58);
+    count = *(s8 *)(p + 0x10F);
+    if (count > 0) {
+        off = 0;
+        for (i = 0; i < count; i++) {
+            char *o = *(char **)((int)p + (off + 0x100));
+            if (*(s16 *)(o + 0x44) == 1) {
+                found = 1;
+            }
+            off += 4;
+        }
+    }
+    if (found) {
+        *(u8 *)(obj + 0xAF) &= ~0x8;
+        switch (*state) {
+        case 0:
+        case 1:
+            getYButtonItem(&item);
+            if ((GameBit_Get(0xC7C) != 0 && cMenuGetSelectedItem() != -1) || item == 0xC7C) {
+                fn_8002B6D8((int)obj, 0, 0, 0, 0, 4);
+            } else {
+                fn_8002B6D8((int)obj, 0, 0, 0, 0, 2);
+            }
+            if (ObjTrigger_IsSetById((int)obj, 0xC7C) != 0) {
+                GameBit_Set(0x886, 1);
+                GameBit_Set(0xC7D, 1);
+                *state = 2;
+                fn_8002B6D8((int)obj, 0, 0, 0, 0, 3);
+            } else if (ObjTrigger_IsSet((int)obj) != 0) {
+                GameBit_Set(0xC7E, 1);
+            }
+            break;
+        case 2:
+            if (ObjTrigger_IsSet((int)obj) != 0) {
+                GameBit_Set(0x886, 1);
+            }
+            break;
+        }
+    } else {
+        *(u8 *)(obj + 0xAF) |= 0x8;
     }
 }
 #pragma peephole reset
