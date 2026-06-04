@@ -4414,3 +4414,53 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E4230;
+extern f32 lbl_803E4234;
+extern f32 lbl_803DBE4C;
+
+typedef struct { u8 _p0 : 1; u8 spitLatch : 1; u8 _p1 : 6; } WormSpitByte;
+
+/* EN v1.0 0x8019E3F4  size: 372b  fn_8019E3F4: pick the burrow/surface move
+ * from the vertical speed, clamp the playback rate, latch the spit SFX
+ * while surfacing fast, and advance the current move. */
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+int fn_8019E3F4(int* obj)
+{
+    f32 speed;
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    if (*(s16*)((char*)obj + 0xa0) != 5 && *(s16*)((char*)obj + 0xa0) != 0xd) {
+        ObjAnim_SetCurrentMove((int)obj, 0xd, *(f32*)((char*)obj + 0x98), 0);
+    }
+    if (*(s16*)((char*)obj + 0xa0) == 5 && *(f32*)((char*)obj + 0x28) > lbl_803E422C) {
+        ObjAnim_SetCurrentMove((int)obj, 0xd, *(f32*)((char*)obj + 0x98), 0);
+    }
+    if (*(s16*)((char*)obj + 0xa0) == 0xd && *(f32*)((char*)obj + 0x28) < lbl_803E4218) {
+        ObjAnim_SetCurrentMove((int)obj, 5, *(f32*)((char*)obj + 0x98), 0);
+    }
+    speed = *(f32*)((char*)obj + 0x28) * lbl_803DBE4C + lbl_803E4230;
+    speed *= lbl_803E4234;
+    if (speed < lbl_803E4218) {
+        speed = lbl_803E4218;
+    }
+    if (speed > lbl_803E4234) {
+        speed = lbl_803E4234;
+    }
+    if (*(s16*)((char*)obj + 0xa0) == 0xd) {
+        if (*(f32*)((char*)obj + 0x98) > lbl_803E4234) {
+            if (!((WormSpitByte*)(sub + 0x244))->spitLatch) {
+                Sfx_PlayFromObject((int)obj, SFXand_spitout);
+                ((WormSpitByte*)(sub + 0x244))->spitLatch = 1;
+            }
+        } else {
+            ((WormSpitByte*)(sub + 0x244))->spitLatch = 0;
+        }
+    }
+    ObjAnim_AdvanceCurrentMove(speed, timeDelta, (int)obj, 0);
+    return 1;
+}
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
