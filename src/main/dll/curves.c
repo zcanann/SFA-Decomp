@@ -20,6 +20,7 @@ extern void Matrix_TransformPoint(float *mtx, double x, double y, double z, floa
 extern void setMatrixFromObjectPos(float *mtx, void *obj);
 extern u8 framesThisStep;
 extern f32 lbl_803E0668;
+extern f32 lbl_803E066C;
 extern f32 lbl_803E068C;
 extern undefined4 FUN_8001774c();
 extern undefined4 FUN_80017754();
@@ -1382,98 +1383,34 @@ int RomCurve_func20(RomCurvePlacementDef *curve, f32 *outX, f32 *outY, f32 *outZ
  */
 int RomCurve_countRandomPoints(RomCurveDef *curve)
 {
-  u32 linkIds[ROMCURVE_LINK_COUNT];
-  u32 *linkIdList;
-  u32 linkId;
-  int linkCount;
   int count;
-  int low;
-  int high;
-  int mid;
-  int mask;
-  RomCurveDef *nextCurve;
+  int linkCount;
+  int link;
+  int id;
+  uint mask;
+  int i;
+  int ids[ROMCURVE_LINK_COUNT];
 
   count = 1;
-  linkIdList = linkIds;
-  goto checkCurve;
-
-chooseNext:
-  linkCount = 0;
-  mask = 1;
-  linkId = curve->linkIds[0];
-  if (((s32)linkId > -1) && ((curve->blockedLinkMask & mask) == 0) && (linkId != 0)) {
-    linkCount = 1;
-    linkIdList[0] = linkId;
-  }
-  mask <<= 1;
-  linkId = curve->linkIds[1];
-  if (((s32)linkId > -1) && ((curve->blockedLinkMask & mask) == 0) && (linkId != 0)) {
-    linkIdList[linkCount] = linkId;
-    linkCount++;
-  }
-  mask <<= 1;
-  linkId = curve->linkIds[2];
-  if (((s32)linkId > -1) && ((curve->blockedLinkMask & mask) == 0) && (linkId != 0)) {
-    linkIdList[linkCount] = linkId;
-    linkCount++;
-  }
-  mask <<= 1;
-  linkId = curve->linkIds[3];
-  if (((s32)linkId > -1) && ((curve->blockedLinkMask & mask) == 0) && (linkId != 0)) {
-    linkIdList[linkCount] = linkId;
-    linkCount++;
-  }
-
-  if (linkCount == 0) {
-    linkId = ROMCURVE_LINK_ID_NONE;
-  } else {
-    linkId = linkIdList[randomGetRange(0, linkCount - 1)];
-  }
-
-  if ((s32)linkId < 0) {
-    curve = NULL;
-  } else {
-    high = nRomCurves - 1;
-    low = 0;
-    while (low <= high) {
-      mid = (high + low) >> 1;
-      nextCurve = romCurves[mid];
-      if (linkId > nextCurve->id) {
-        low = mid + 1;
-      } else if (linkId < nextCurve->id) {
-        high = mid - 1;
-      } else {
-        curve = nextCurve;
-        goto foundCurve;
+  while (curve != NULL && !RomCurve_noUnblockedLinks((RomCurvePlacementDef *)curve)) {
+    linkCount = 0;
+    mask = 1;
+    for (i = 0; i < ROMCURVE_LINK_COUNT; i++) {
+      link = curve->linkIds[i];
+      if ((-1 < link) && ((curve->blockedLinkMask & mask) == 0) && (link != 0)) {
+        ids[linkCount++] = link;
       }
+      mask = mask << 1;
     }
-    curve = NULL;
-  }
-
-foundCurve:
-  if (curve != NULL) {
-    count++;
-  }
-
-checkCurve:
-  if (curve == NULL) {
-    return count;
-  }
-  mask = 1;
-  if (((s32)curve->linkIds[0] != -1) && ((curve->blockedLinkMask & mask) == 0)) {
-    goto chooseNext;
-  }
-  mask <<= 1;
-  if (((s32)curve->linkIds[1] != -1) && ((curve->blockedLinkMask & mask) == 0)) {
-    goto chooseNext;
-  }
-  mask <<= 1;
-  if (((s32)curve->linkIds[2] != -1) && ((curve->blockedLinkMask & mask) == 0)) {
-    goto chooseNext;
-  }
-  mask <<= 1;
-  if (((s32)curve->linkIds[3] != -1) && ((curve->blockedLinkMask & mask) == 0)) {
-    goto chooseNext;
+    if (linkCount != 0) {
+      id = ids[randomGetRange(0, linkCount - 1)];
+    } else {
+      id = -1;
+    }
+    curve = RomCurve_FindByIdInline(id);
+    if (curve != NULL) {
+      count++;
+    }
   }
   return count;
 }
@@ -2185,83 +2122,78 @@ void curves_addCurveDef(RomCurveDef *curve)
  */
 void curves_countRandomPoints(int obj,uint *curve)
 {
-  bool bVar1;
-  int iVar2;
-  int iVar3;
-  float *pfVar4;
-  uint *puVar5;
-  undefined4 *puVar6;
-  uint uVar7;
-  int iVar8;
-  float *pfVar9;
-  uint *puVar10;
-  double dVar11;
-  double dVar12;
-  double dVar13;
-  double dVar14;
-  double dVar15;
-  undefined4 *local_98;
-  float local_94 [5];
+  int found1;
+  int hits;
+  f32 *pt;
+  f32 w;
+  f32 dx;
+  f32 dz;
+  s16 ang;
+  uint count;
+  int i;
+  f32 *pf;
+  uint *walk;
+  f32 **list;
+  f32 sum0;
+  f32 sum1;
+  f32 sum2;
+  f32 sum3;
+  f32 **hitOut;
+  f32 heights[5];
 
-  iVar2 = obj;
-  puVar5 = curve;
-  if ((int)(uint)*(byte *)(puVar5 + 0x97) >> 4 == 4) {
-    dVar12 = (double)lbl_803E12E8;
-    uVar7 = 0;
-    pfVar9 = local_94;
-    puVar10 = puVar5;
-    dVar13 = dVar12;
-    dVar14 = dVar12;
-    dVar15 = dVar12;
-    for (iVar8 = 0; dVar11 = DOUBLE_803e12f0, iVar8 < (int)(uint)*(byte *)(puVar5 + 0x97) >> 4;
-        iVar8 = iVar8 + 1) {
-      *pfVar9 = *(float *)(puVar10 + 3);
-      iVar3 = hitDetectFn_80065e50(iVar2,*(float *)(puVar10 + 2),*(float *)(iVar2 + 0x1c),
-                          *(float *)(puVar10 + 4),&local_98,-1,0);
-      bVar1 = false;
-      if ((iVar3 != 0) && (puVar6 = local_98, 0 < iVar3)) {
+  if ((int)(uint)*(byte *)(curve + 0x97) >> 4 == 4) {
+    sum0 = lbl_803E0668;
+    count = 0;
+    sum1 = sum0;
+    sum2 = sum0;
+    sum3 = sum0;
+    pf = heights;
+    walk = curve;
+    for (i = 0; i < (int)(uint)*(byte *)(curve + 0x97) >> 4; i++) {
+      *pf = *(f32 *)(walk + 3);
+      hits = hitDetectFn_80065e50(obj, *(f32 *)(walk + 2), *(f32 *)(obj + 0x1c),
+                                  *(f32 *)(walk + 4), &hitOut, -1, 0);
+      found1 = 0;
+      if ((hits != 0) && (list = hitOut, 0 < hits)) {
         do {
-          if (!bVar1) {
-            pfVar4 = (float *)*puVar6;
-            dVar11 = (double)*pfVar4;
-            if ((dVar11 < (double)(lbl_803E12EC + *(float *)(iVar2 + 0x1c))) &&
-               (*(char *)(pfVar4 + 5) != '\x0e')) {
-              *pfVar9 = *pfVar4;
-              dVar15 = (double)(float)(dVar15 + (double)pfVar4[1]);
-              dVar14 = (double)(float)(dVar14 + (double)pfVar4[2]);
-              dVar13 = (double)(float)(dVar13 + (double)pfVar4[3]);
-              dVar12 = (double)(float)(dVar12 + dVar11);
-              uVar7 = uVar7 + 1;
-              bVar1 = true;
+          if (!found1) {
+            pt = *list;
+            w = pt[0];
+            if ((w < lbl_803E066C + *(f32 *)(obj + 0x1c)) && (*(char *)(pt + 5) != 0xe)) {
+              *pf = pt[0];
+              sum1 = sum1 + pt[1];
+              sum2 = sum2 + pt[2];
+              sum3 = sum3 + pt[3];
+              sum0 = sum0 + w;
+              count = count + 1;
+              found1 = 1;
             }
           }
-          iVar3 = iVar3 + -1;
-          puVar6 = puVar6 + 1;
-        } while (iVar3 != 0);
+          list = list + 1;
+        } while (--hits != 0);
       }
-      *(float *)(puVar10 + 3) = *pfVar9;
-      puVar10 = puVar10 + 3;
-      pfVar9 = pfVar9 + 1;
+      *(f32 *)(walk + 3) = *pf;
+      walk = walk + 3;
+      pf = pf + 1;
     }
-    if (uVar7 == 0) {
-      *(undefined *)((int)puVar5 + 0x261) = 0;
+    if (count != 0) {
+      *(f32 *)(obj + 0x1c) = sum0 / (f32)(s32)count;
+      *(f32 *)(curve + 0x68) = sum1 / (f32)(s32)count;
+      *(f32 *)(curve + 0x69) = sum2 / (f32)(s32)count;
+      *(f32 *)(curve + 0x6a) = sum3 / (f32)(s32)count;
+      *(u8 *)((u8 *)curve + 0x261) = 1;
     }
     else {
-      *(f32 *)(iVar2 + 0x1c) = (f32)(dVar12 / (f64)(f32)(s32)uVar7);
-      *(f32 *)(puVar5 + 0x68) = (f32)(dVar15 / (f64)(f32)(s32)uVar7);
-      *(f32 *)(puVar5 + 0x69) = (f32)(dVar14 / (f64)(f32)(s32)uVar7);
-      *(f32 *)(puVar5 + 0x6a) = (f32)(dVar13 / (f64)(f32)(s32)uVar7);
-      *(u8 *)((int)puVar5 + 0x261) = 1;
+      *(u8 *)((u8 *)curve + 0x261) = 0;
     }
-    dVar14 = (double)(*(float *)(puVar5[1] + 0x2c) - *(float *)(puVar5[1] + 8));
-    dVar13 = (double)(local_94[3] - local_94[0]);
-    getAngle((float)dVar13,(float)dVar14);
-    iVar8 = getAngle((float)dVar13,(float)dVar14);
-    *(short *)(iVar2 + 2) = -(short)iVar8;
-    if ((*puVar5 & 0x400) != 0) {
-      iVar8 = getAngle(local_94[1] - local_94[0],
-                       *(float *)(puVar5[1] + 0xc) - *(float *)puVar5[1]);
-      *(short *)(iVar2 + 4) = (short)iVar8;
+    dz = *(f32 *)(curve[1] + 0x2c) - *(f32 *)(curve[1] + 8);
+    dx = heights[3] - heights[0];
+    getAngle(dx, dz);
+    ang = getAngle(dx, dz);
+    *(s16 *)(obj + 2) = -ang;
+    if ((*curve & 0x400) != 0) {
+      *(s16 *)(obj + 4) = getAngle(heights[1] - heights[0],
+                                   *(f32 *)(curve[1] + 0xc) - *(f32 *)curve[1]);
     }
   }
 }
@@ -3259,6 +3191,7 @@ LAB_800e6f44:
  * PAL Size: TODO
  */
 extern f32 lbl_803E0668;
+extern f32 lbl_803E066C;
 extern f32 lbl_803E068C;
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);
 
