@@ -7181,3 +7181,53 @@ void superQuakeFn_8016d9fc(f32 *pos)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct SwipeColorTable {
+    u32 w[16];
+} SwipeColorTable;
+
+extern SwipeColorTable lbl_802C2220;
+void staffDrawSwipe(int *obj, int *swipe);
+
+#pragma scheduling off
+#pragma peephole off
+void staff_hitDetectGeometry(int *obj)
+{
+    u8 *state = *(u8 **)((char *)obj + 0x54);
+    int *swipe = *(int **)((char *)obj + 0xb8);
+    SwipeColorTable tbl = lbl_802C2220;
+
+    staffDrawSwipe(obj, swipe);
+    if (*(s8 *)(state + 0xad) != 0 && getHudHiddenFrameCount() == 0) {
+        int t = *(s8 *)(state + 0xac);
+        int idx;
+        if (t < 0) {
+            idx = 0;
+        } else if (t > 35) {
+            idx = 35;
+        } else {
+            idx = t;
+        }
+        if (idx == 14) {
+            Sfx_PlayAtPositionFromObject(obj, *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40), *(f32 *)(state + 0x44), 186);
+            ((void (*)(int *, f32, f32, f32, f32))((int *)*gWaterfxInterface)[4])(obj,
+                *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40), *(f32 *)(state + 0x44), lbl_803E32B4);
+            ((void (*)(f32, f32, f32, int, f32, int))((int *)*gWaterfxInterface)[5])(
+                *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40), *(f32 *)(state + 0x44), 0, lbl_803E32B4, 2);
+        } else {
+            QuakePartVec v;
+            v.scale = lbl_803E3288;
+            v.h2 = 0;
+            v.h1 = 0;
+            v.h0 = 0;
+            v.x = *(f32 *)(state + 0x3c);
+            v.y = *(f32 *)(state + 0x40);
+            v.z = *(f32 *)(state + 0x44);
+            ((void (*)(int, int, void *, int, int, u8 *))(*(int **)lbl_803DDAA0)[1])(0, 1, &v, 0x401, -1,
+                (u8 *)&tbl + (((u8 *)lbl_803208E8)[idx] << 4));
+            Sfx_PlayAtPositionFromObject(obj, *(f32 *)(state + 0x3c), *(f32 *)(state + 0x40), *(f32 *)(state + 0x44), (u16)((s16 *)lbl_803208A0)[idx]);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
