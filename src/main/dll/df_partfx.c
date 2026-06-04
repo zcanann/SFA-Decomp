@@ -2270,7 +2270,7 @@ extern void GXGetScissor(int *x, int *y, int *w, int *h);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern void hudDrawRect(int x, int y, int w, int h, HudColor col);
 extern void setHudOpacity(int op);
-extern void screenRectFn_800d7568(int p1, int p2, int p3, int r, int g, int b);
+extern void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b);
 #pragma scheduling off
 #pragma peephole off
 void screenTransition_do2(int p1, int p2, int p3) {
@@ -2349,3 +2349,127 @@ void screenTransition_do2(int p1, int p2, int p3) {
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+extern f32 lbl_803E0540;
+extern f32 lbl_803E0544;
+extern f32 lbl_803E0548;
+extern void Camera_GetCurrentViewport(int *x1, int *y1, int *x2, int *y2);
+
+#pragma scheduling off
+#pragma peephole off
+void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b)
+{
+    int vx;
+    int vy;
+    int vr;
+    int vb;
+    int sx;
+    int sy;
+    int sw;
+    int sh;
+    HudColor col;
+    uint uVar1, uVar3, uVar5, uVar7, uVar8, uVar9, uVar10, uVar11, uVar12, H;
+    u8 step, a8;
+    int iVar6;
+    f32 conv;
+
+    GXGetScissor(&sx, &sy, &sw, &sh);
+    Camera_GetCurrentViewport(&vx, &vy, &vr, &vb);
+    uVar5 = (vr - vx) & 0xffff;
+    H = (vb - vy) & 0xffff;
+    if (lbl_803DD420 > lbl_803E0540) {
+        uVar12 = 0xff;
+        uVar11 = (int)(lbl_803DD420 - lbl_803E0540);
+    } else {
+        uVar12 = (int)(lbl_803E0544 * lbl_803DD420);
+        uVar11 = 0;
+    }
+    uVar1 = (uVar5 >> 1) & 0xffff;
+    uVar11 = uVar11 & 0xffff;
+    conv = (f32)(int)(uVar11 * uVar1);
+    uVar7 = (uint)(int)(conv * lbl_803E0548) & 0xffff;
+    if (uVar7 == uVar1) {
+        int sh2;
+        int sw2;
+        int sy2;
+        int sx2;
+        HudColor col2;
+        GXGetScissor(&sx2, &sy2, &sw2, &sh2);
+        GXSetScissor(0, 0, 0x280, 0x1e0);
+        col2.r = r;
+        col2.g = b;
+        col2.b = g;
+        col2.a = (int)lbl_803DD420;
+        hudDrawRect(sx2, sy2, sw2, sh2, col2);
+        GXSetScissor(sx2, sy2, sw2, sh2);
+    } else {
+        uVar10 = (uVar1 - uVar7) & 0xffff;
+        uVar8 = (uVar1 + uVar7) & 0xffff;
+        uVar7 = ((uVar1 - 1) - uVar7) & 0xffff;
+        GXSetScissor(vx, vy, vr - vx, vb - vy);
+        col.r = 0xff;
+        col.g = 0xff;
+        col.b = 0xff;
+        col.a = uVar12;
+        hudDrawRect(vx + uVar7 + 1, vy, vx + uVar8, vb, col);
+        step = (int)uVar10 / ((int)uVar1 / 6);
+        if (step == 0) {
+            step = 1;
+        }
+        a8 = uVar12;
+        for (uVar9 = 0; uVar3 = uVar9 & 0xffff, (int)uVar3 < (int)(uVar10 - step); uVar9 += step) {
+            col.r = 0xff;
+            col.g = 0xff;
+            col.b = 0xff;
+            col.a = ((int)(a8 * (uVar1 - uVar3)) / (int)uVar1) & 0xff;
+            iVar6 = vx + (uVar8 & 0xffff);
+            hudDrawRect(iVar6, vy, step + iVar6, vb, col);
+            iVar6 = vx + (uVar7 & 0xffff);
+            hudDrawRect((iVar6 - step) + 1, vy, iVar6 + 1, vb, col);
+            uVar8 += step;
+            uVar7 -= step;
+        }
+        col.r = 0xff;
+        col.g = 0xff;
+        col.b = 0xff;
+        col.a = ((int)(a8 * (uVar1 - uVar3)) / (int)uVar1) & 0xff;
+        hudDrawRect(vx + (uVar8 & 0xffff), vy, vr, vb, col);
+        hudDrawRect(vx, vy, vx + (uVar7 & 0xffff) + 1, vb, col);
+        uVar7 = (H >> 1) & 0xffff;
+        conv = (f32)(int)(uVar11 * uVar7);
+        uVar11 = (uint)(int)(conv * lbl_803E0548) & 0xffff;
+        uVar1 = (uVar7 - uVar11) & 0xffff;
+        uVar10 = (uVar7 + uVar11) & 0xffff;
+        uVar11 = ((uVar7 - 1) - uVar11) & 0xffff;
+        col.r = 0xff;
+        col.g = 0xff;
+        col.b = 0xff;
+        col.a = uVar12;
+        hudDrawRect(vx, vy + uVar11 + 1, vr, vy + uVar10, col);
+        step = (int)uVar1 / (int)(uVar7 >> 3);
+        if (step == 0) {
+            step = 1;
+        }
+        for (uVar12 = 0; uVar8 = uVar12 & 0xffff, (int)uVar8 < (int)(uVar1 - step); uVar12 += step) {
+            col.r = 0xff;
+            col.g = 0xff;
+            col.b = 0xff;
+            col.a = ((int)(a8 * (uVar7 - uVar8)) / (int)uVar7) & 0xff;
+            iVar6 = vy + (uVar10 & 0xffff);
+            hudDrawRect(vx, iVar6, vr, step + iVar6, col);
+            iVar6 = vy + (uVar11 & 0xffff);
+            hudDrawRect(vx, (iVar6 - step) + 1, vr, iVar6 + 1, col);
+            uVar10 += step;
+            uVar11 -= step;
+        }
+        col.r = 0xff;
+        col.g = 0xff;
+        col.b = 0xff;
+        col.a = ((int)(a8 * (uVar7 - uVar8)) / (int)uVar7) & 0xff;
+        hudDrawRect(vx, vy + (uVar10 & 0xffff), vr, vb, col);
+        hudDrawRect(vx, vy, vr, vy + (uVar11 & 0xffff) + 1, col);
+        GXSetScissor(sx, sy, sw, sh);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
