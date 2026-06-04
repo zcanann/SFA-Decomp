@@ -7,6 +7,7 @@
 extern uint GameBit_Get(int eventId);
 extern undefined8 GameBit_Set(int eventId, int value);
 extern u32 randomGetRange(int min, int max);
+extern void getLActions(int obj, int obj2, int action, int p4, int p5, int p6);
 extern void* FUN_80017aa4();
 extern int FUN_80017ae4();
 extern uint FUN_80017ae8();
@@ -17,10 +18,13 @@ extern undefined4 FUN_80286840();
 extern undefined4 FUN_8028688c();
 
 extern undefined4 DAT_803dc070;
+extern u32 lbl_803DC0F0;
+extern u8 framesThisStep;
 extern s8 lbl_803DDC70;
 extern undefined4* DAT_803dd708;
 extern undefined4 DAT_803de8e8;
 extern int *gScreensInterface;
+extern undefined4 *lbl_803DCA94;
 extern void *lbl_803DDC74;
 extern f64 DOUBLE_803e6978;
 extern f32 lbl_803E5CE8;
@@ -30,6 +34,34 @@ extern f32 lbl_803E6968;
 extern f32 lbl_803E696C;
 extern f32 lbl_803E6970;
 extern f32 lbl_803E6974;
+
+typedef struct WCGalleonMapEventInterface {
+    u8 pad00[0x4C];
+    int (*getAnimEvent)(int mapId, int eventId);
+    void (*setAnimEvent)(int mapId, int eventId, int value);
+} WCGalleonMapEventInterface;
+
+extern WCGalleonMapEventInterface **gMapEventInterface;
+
+#define WM_GALLEON_GAMEBIT_CUTSCENE_DONE 0x429
+#define WM_GALLEON_GAMEBIT_CLEAR_DOOR 0xD1
+#define WM_GALLEON_COMMAND_OPENED 1
+#define WM_GALLEON_COMMAND_CLEAR_LACTIONS 2
+#define WM_GALLEON_COMMAND_SCREEN_FADE 3
+#define WM_GALLEON_COMMAND_ACTION_12 4
+#define WM_GALLEON_COMMAND_ACTION_13 5
+#define WM_GALLEON_COMMAND_CLEAR_MAP_EVENTS 6
+#define WM_GALLEON_COMMAND_SHOW_MODEL 7
+#define WM_GALLEON_COMMAND_HIDE_MODEL 8
+#define WM_GALLEON_COMMAND_ACTION_11 9
+#define WM_GALLEON_ACTION_OPENED 10
+#define WM_GALLEON_ACTION_11 11
+#define WM_GALLEON_ACTION_12 12
+#define WM_GALLEON_ACTION_13 13
+
+#define OBJ_U8(obj, offset) (*(u8 *)((u8 *)(obj) + (offset)))
+#define OBJ_S16(obj, offset) (*(s16 *)((u8 *)(obj) + (offset)))
+#define OBJ_S32(obj, offset) (*(s32 *)((u8 *)(obj) + (offset)))
 
 /*
  * --INFO--
@@ -431,4 +463,57 @@ void WM_ObjCreator_init(int *obj, s8 *def) {
     state[1] = *(s16*)((char*)def + 0x1c);
     state[2] = state[1];
     state[3] = (s16)(s32)def[0x1f];
+}
+
+int WM_Galleon_SeqFn(int obj, int unused, u8 *script)
+{
+    int i;
+
+    lbl_803DC0F0 = framesThisStep;
+    *(s16 *)(script + 0x6e) = -1;
+    script[0x56] = 0;
+    for (i = 0; i < (int)script[0x8b]; i++) {
+        switch (script[0x81 + i]) {
+        case WM_GALLEON_COMMAND_OPENED:
+            OBJ_S32(obj, 0xf4) = WM_GALLEON_ACTION_OPENED;
+            break;
+        case WM_GALLEON_COMMAND_ACTION_11:
+            OBJ_S32(obj, 0xf4) = WM_GALLEON_ACTION_11;
+            break;
+        case WM_GALLEON_COMMAND_ACTION_12:
+            OBJ_S32(obj, 0xf4) = WM_GALLEON_ACTION_12;
+            break;
+        case WM_GALLEON_COMMAND_ACTION_13:
+            OBJ_S32(obj, 0xf4) = WM_GALLEON_ACTION_13;
+            break;
+        case WM_GALLEON_COMMAND_CLEAR_MAP_EVENTS:
+            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 1, 0);
+            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 2, 0);
+            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 4, 0);
+            GameBit_Set(WM_GALLEON_GAMEBIT_CLEAR_DOOR, 0);
+            break;
+        case WM_GALLEON_COMMAND_CLEAR_LACTIONS:
+            getLActions(obj, obj, 0x77, 0, 0, 0);
+            getLActions(obj, obj, 0x78, 0, 0, 0);
+            getLActions(obj, obj, 0x80, 0, 0, 0);
+            break;
+        case WM_GALLEON_COMMAND_SCREEN_FADE:
+            (*(void (**)(int, int, int))((u8 *)*lbl_803DCA94 + 0x14))(0, 0x1e, 0x50);
+            break;
+        case WM_GALLEON_COMMAND_SHOW_MODEL:
+            lbl_803DDC70 = 1;
+            break;
+        case WM_GALLEON_COMMAND_HIDE_MODEL:
+            lbl_803DDC70 = 0;
+            break;
+        }
+    }
+
+    if (GameBit_Get(WM_GALLEON_GAMEBIT_CUTSCENE_DONE) != 0) {
+        if ((u8)(*gMapEventInterface)->getAnimEvent(OBJ_U8(obj, 0x34), 2) != 0) {
+            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 1, 0);
+            (*gMapEventInterface)->setAnimEvent(OBJ_U8(obj, 0x34), 2, 0);
+        }
+    }
+    return 0;
 }
