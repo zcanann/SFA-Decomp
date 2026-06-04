@@ -3398,6 +3398,7 @@ int dll_19_func1B(int p)
         case 864:
         case 905:
         case 906:
+        case 1021:
         case 1197:
         case 1209:
         case 1235:
