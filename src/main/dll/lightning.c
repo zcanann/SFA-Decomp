@@ -18,6 +18,19 @@ extern f32 getXZDistance(void *a, void *b);
 extern int fn_8029622C(int player);
 extern u8 framesThisStep;
 extern char sMagicDustCollectedMessage[];
+extern f32 sin(f32 x);
+extern f32 fn_80293E80(f32 x);
+extern int Obj_GetActiveModel(int obj);
+extern u16 lbl_803E34A8;
+extern u16 lbl_803E34AC;
+extern u8 lbl_80320CB8[];
+extern f32 lbl_803E34E4;
+extern f32 lbl_803E34E8;
+extern f32 lbl_803E34EC;
+extern f32 lbl_803E34F0;
+extern f32 lbl_803E34F4;
+extern f32 lbl_803E34F8;
+extern f32 lbl_803E34FC;
 extern int *gExpgfxInterface;
 extern int *gPartfxInterface;
 extern int *gPathControlInterface;
@@ -339,11 +352,11 @@ void magicdust_init(int param_1,int param_2)
   uint uVar3;
   int iVar4;
   int iVar5;
-  double dVar6;
-  double dVar7;
-  undefined local_58 [4];
-  undefined2 local_54 [2];
-  undefined2 local_50 [4];
+  f32 ang;
+  f32 spd;
+  u16 local_50 [2];
+  u16 local_54 [2];
+  u8 local_58 [4];
   undefined4 local_48;
   uint uStack_44;
   undefined4 local_40;
@@ -353,21 +366,14 @@ void magicdust_init(int param_1,int param_2)
   
   iVar5 = *(int *)(param_1 + 0xb8);
   local_58[0] = 3;
-  local_50[0] = DAT_803e4140;
-  local_54[0] = DAT_803e4144;
+  local_50[0] = lbl_803E34A8;
+  local_54[0] = lbl_803E34AC;
   uVar3 = randomGetRange(0,0xffff);
-  uStack_44 = randomGetRange(0x27,0x2c);
-  dVar7 = (double)((f32)(s32)uStack_44 /
-                  lbl_803E417C);
-  uStack_3c = uVar3 ^ 0x80000000;
-  local_40 = 0x43300000;
-  dVar6 = (double)FUN_80293f90();
-  *(float *)(param_1 + 0x24) = (float)(dVar7 * dVar6);
-  dVar6 = (double)FUN_80294964();
-  *(float *)(param_1 + 0x2c) = (float)(dVar7 * dVar6);
-  uStack_34 = randomGetRange(0x28,0x32);
-  *(float *)(param_1 + 0x28) =
-       (f32)(s32)uStack_34 / lbl_803E4188;
+  spd = (f32)(int)randomGetRange(0x27,0x2c) / lbl_803E34E4;
+  ang = (lbl_803E34E8 * (f32)(int)uVar3) / lbl_803E34EC;
+  *(float *)(param_1 + 0x24) = spd * fn_80293E80(ang);
+  *(float *)(param_1 + 0x2c) = spd * sin(ang);
+  *(float *)(param_1 + 0x28) = (f32)(int)randomGetRange(0x28,0x32) / lbl_803E34F0;
   sVar1 = *(short *)(param_2 + 0x2e);
   if (sVar1 == 1) {
     *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 1;
@@ -376,85 +382,81 @@ void magicdust_init(int param_1,int param_2)
   else if (sVar1 == 2) {
     *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 1;
     *(undefined *)(param_1 + 0x36) = 1;
-    if (*(int *)(param_1 + 0x54) != 0) {
+    if (*(uint *)(param_1 + 0x54) != 0) {
       ObjHits_DisableObject(param_1);
     }
-    iVar4 = FUN_80017a98();
-    fVar2 = lbl_803E418C;
+    iVar4 = (int)Obj_GetPlayerObject();
+    fVar2 = lbl_803E34F4;
     *(float *)(param_1 + 0x24) =
-         (*(float *)(iVar4 + 0xc) - *(float *)(param_1 + 0xc)) / lbl_803E418C;
+         (*(float *)(iVar4 + 0xc) - *(float *)(param_1 + 0xc)) / lbl_803E34F4;
     *(float *)(param_1 + 0x28) = (*(float *)(iVar4 + 0x10) - *(float *)(param_1 + 0x10)) / fVar2;
     *(float *)(param_1 + 0x2c) = (*(float *)(iVar4 + 0x14) - *(float *)(param_1 + 0x14)) / fVar2;
   }
   else if (sVar1 == 3) {
     *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 1;
     *(undefined *)(param_1 + 0x36) = 1;
-    uStack_34 = randomGetRange(0x8c,0x96);
     *(float *)(param_1 + 0x28) =
-         -((f32)(s32)uStack_34 / lbl_803E4188);
+         -((f32)(int)randomGetRange(0x8c,0x96) / lbl_803E34F0);
   }
-  *(undefined *)(param_1 + 0xad) = *(undefined *)(param_2 + 0x26);
-  if (*(char *)(*(int *)(param_1 + 0x50) + 0x55) <= *(char *)(param_1 + 0xad)) {
+  *(u8 *)(param_1 + 0xad) = *(u8 *)(param_2 + 0x26);
+  if (*(s8 *)(param_1 + 0xad) >= *(s8 *)(*(int *)(param_1 + 0x50) + 0x55)) {
     *(undefined *)(param_1 + 0xad) = 0;
   }
-  if (*(int *)(param_1 + 100) != 0) {
+  if (*(uint *)(param_1 + 100) != 0) {
     *(undefined *)(*(int *)(param_1 + 100) + 0x3a) = 100;
     *(undefined *)(*(int *)(param_1 + 100) + 0x3b) = 0x96;
   }
-  iVar4 = FUN_80017a54(param_1);
+  iVar4 = Obj_GetActiveModel(param_1);
   sVar1 = *(short *)(param_1 + 0x46);
-  if (sVar1 == 0x2cd) {
+  switch (sVar1) {
+  case 0x2c4:
     uVar3 = randomGetRange(0,1);
-    *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = *(undefined *)((int)local_54 + uVar3);
+    *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = *(u8 *)((int)local_50 + uVar3);
+    *(undefined2 *)(iVar5 + 0x272) = 0x54f;
+    *(undefined2 *)(iVar5 + 0x270) = 0x54b;
+    *(undefined2 *)(iVar5 + 0x274) = 0x58;
+    *(undefined2 *)(iVar5 + 0x276) = 0x5b0;
+    *(undefined *)(iVar5 + 0x27c) = 4;
+    break;
+  case 0x2cd:
+    uVar3 = randomGetRange(0,1);
+    *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = *(u8 *)((int)local_54 + uVar3);
     *(undefined2 *)(iVar5 + 0x272) = 0x54e;
     *(undefined2 *)(iVar5 + 0x270) = 0x54a;
     *(undefined2 *)(iVar5 + 0x274) = 0x59;
     *(undefined2 *)(iVar5 + 0x276) = 0x5b1;
     *(undefined *)(iVar5 + 0x27c) = 1;
-  }
-  else {
-    if (sVar1 < 0x2cd) {
-      if (sVar1 == 0x2c4) {
-        uVar3 = randomGetRange(0,1);
-        *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = *(undefined *)((int)local_50 + uVar3);
-        *(undefined2 *)(iVar5 + 0x272) = 0x54f;
-        *(undefined2 *)(iVar5 + 0x270) = 0x54b;
-        *(undefined2 *)(iVar5 + 0x274) = 0x58;
-        *(undefined2 *)(iVar5 + 0x276) = 0x5b0;
-        *(undefined *)(iVar5 + 0x27c) = 4;
-        goto LAB_80174324;
-      }
-    }
-    else if ((sVar1 != 0x2cf) && (sVar1 < 0x2cf)) {
-      *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = 3;
-      *(undefined2 *)(iVar5 + 0x272) = 0x54d;
-      *(undefined2 *)(iVar5 + 0x270) = 0x549;
-      *(undefined2 *)(iVar5 + 0x274) = 0x5a;
-      *(undefined2 *)(iVar5 + 0x276) = 0x5b2;
-      *(undefined *)(iVar5 + 0x27c) = 2;
-      goto LAB_80174324;
-    }
+    break;
+  case 0x2ce:
+    *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = 3;
+    *(undefined2 *)(iVar5 + 0x272) = 0x54d;
+    *(undefined2 *)(iVar5 + 0x270) = 0x549;
+    *(undefined2 *)(iVar5 + 0x274) = 0x5a;
+    *(undefined2 *)(iVar5 + 0x276) = 0x5b2;
+    *(undefined *)(iVar5 + 0x27c) = 2;
+    break;
+  default:
     *(undefined *)(*(int *)(iVar4 + 0x34) + 8) = 2;
     *(undefined2 *)(iVar5 + 0x272) = 0x550;
     *(undefined2 *)(iVar5 + 0x270) = 0x54c;
     *(undefined2 *)(iVar5 + 0x274) = 0x5b;
     *(undefined2 *)(iVar5 + 0x276) = 0x5b3;
     *(undefined *)(iVar5 + 0x27c) = 6;
+    break;
   }
-LAB_80174324:
-  *(float *)(iVar5 + 0x268) = lbl_803E4190;
-  if ((*(ushort *)(param_1 + 6) & 0x2000) != 0) {
-    (*(code *)(*DAT_803dd728 + 4))(iVar5,0,0x40007,0);
-    (*(code *)(*DAT_803dd728 + 0xc))(iVar5,1,&DAT_80321908,iVar5 + 0x268,local_58);
-    (*(code *)(*DAT_803dd728 + 0x20))(param_1,iVar5);
+  *(float *)(iVar5 + 0x268) = lbl_803E34F8;
+  if ((*(short *)(param_1 + 6) & 0x2000) != 0) {
+    (*(code *)(*gPathControlInterface + 4))(iVar5,0,0x40007,0);
+    (*(code *)(*gPathControlInterface + 0xc))(iVar5,1,lbl_80320CB8,iVar5 + 0x268,local_58);
+    (*(code *)(*gPathControlInterface + 0x20))(param_1,iVar5);
   }
   *(ushort *)(param_1 + 0xb0) = *(ushort *)(param_1 + 0xb0) | 0x2000;
-  if ((*(byte *)(iVar5 + 0x27a) & 1) == 0) {
-    *(float *)(iVar5 + 0x26c) = lbl_803E4160;
-    *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 4;
+  if ((*(byte *)(iVar5 + 0x27a) & 1) != 0) {
+    *(float *)(iVar5 + 0x26c) = lbl_803E34FC;
   }
   else {
-    *(float *)(iVar5 + 0x26c) = lbl_803E4194;
+    *(float *)(iVar5 + 0x26c) = lbl_803E34C8;
+    *(byte *)(iVar5 + 0x27a) = *(byte *)(iVar5 + 0x27a) | 4;
   }
   ObjMsg_AllocQueue(param_1,1);
   return;
