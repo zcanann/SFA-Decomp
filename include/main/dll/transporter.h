@@ -15,7 +15,7 @@ uint FUN_80175740(int param_1,int param_2);
 void FUN_801757ac(undefined8 param_1,double param_2,undefined4 param_3,undefined4 param_4,
                  int param_5);
 void FUN_80175ed4(int param_1);
-void pushable_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
+void pushable_render(int *obj, int p1, int p2, int p3, int p4, s8 visible);
 void pushable_hitDetect(int *obj);
 void FUN_801765c8(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
@@ -52,7 +52,7 @@ int WarpPoint_getObjectTypeId(void);
 
 int invhit_getExtraSize(void);
 int invhit_getObjectTypeId(void);
-void invhit_render(void);
+void invhit_render(int *obj, int a, int b, int c, int d);
 void invhit_hitDetect(void);
 void invhit_release(void);
 void invhit_initialise(void);
@@ -60,7 +60,7 @@ void invhit_initialise(void);
 int iceblast_getExtraSize(void);
 int iceblast_getObjectTypeId(void);
 void iceblast_free(void);
-void iceblast_render(void);
+void iceblast_render(int *obj, int a, int b, int c, int d);
 void iceblast_hitDetect(void);
 void iceblast_release(void);
 void iceblast_initialise(void);
