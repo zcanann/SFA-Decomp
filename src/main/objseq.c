@@ -89,6 +89,16 @@ extern f32 lbl_803DF044;
 extern int Sfx_IsPlayingFromObject(void *obj, int sfxId);
 extern void Sfx_SetObjectSfxVolume(void *obj, int sfxId, int volume, f32 p4);
 extern int *seqFn_800394a0(void);
+extern u8 lbl_803DD111;
+extern u8 lbl_803DD112;
+extern f32 lbl_803DF02C;
+extern void ObjAnim_SetCurrentMove(void *obj, int move, int p3, f32 phase);
+extern void ObjModel_SetBlendChannelTargets(void *action, int mode, int target, int channel, int p5, f32 t);
+extern void Sfx_PlayFromObject(void *obj, int sfxId);
+extern void Sfx_RemoveLoopedObjectSound(void *obj, int sfxId);
+extern void Sfx_AddLoopedObjectSound(void *obj, int sfxId);
+extern void Music_Trigger(int id, int mode);
+extern void warpToMap(int map, int mode);
 extern int ObjAnim_SampleRootCurvePhase(void *obj, f32 *out, f32 dist);
 extern void ObjAnim_AdvanceCurrentMove(void *obj, void *state, f32 speed, f32 t);
 int objSeqInterpFn_80085358(u8 *obj, u8 *action, u8 **cmd, int flags, void *out);
@@ -1921,6 +1931,333 @@ void objSeqUpdateMoreCurves(u8 *obj, u8 *seqObj, u8 *seq, int frame)
         lbl_803DD116 = 0;
         lbl_803DD114 = 1;
     }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+int objSeqInterpFn_80085358(u8 *obj, u8 *action, u8 **cmdPtr, int flags, void *out)
+{
+    u8 *base = lbl_80396918;
+    u8 *cmd;
+    u8 *model;
+    u8 *seq;
+    u8 *activeObj;
+    u8 *animState;
+    u8 *act2;
+    u8 *st2;
+    u8 *entry;
+    s8 noExec;
+    int doUpdate;
+    s8 flag8;
+    int opcode;
+    int sub;
+    int restart;
+    int reps;
+    int val;
+    int slot;
+    int minRot;
+    f32 blend;
+    f32 t;
+
+    (void)out;
+
+    cmd = *cmdPtr;
+    noExec = (s8)(flags & 1);
+    doUpdate = (s8)(flags & 2);
+    flag8 = (s8)(flags & 8);
+    if (noExec == 0) {
+        doUpdate = 1;
+    }
+    seq = *(u8 **)(obj + 0xb8);
+    model = *(u8 **)(obj + 0x4c);
+    activeObj = *(u8 **)seq;
+    if (activeObj == NULL) {
+        activeObj = obj;
+    }
+
+    opcode = (s8)cmd[0];
+    switch (opcode) {
+    case 2:
+        if (flag8 != 0) {
+            break;
+        }
+        *(s16 *)(seq + 0x6c) = (s16)(*(s16 *)(cmd + 2) & 0xfff);
+        if (*(s16 *)(activeObj + 0x44) == 1 && *(s16 *)(seq + 0x6c) < 4) {
+            *(s16 *)(seq + 0x6c) += 0x531;
+        }
+        seq[0x8c] = (*(s16 *)(cmd + 2) >> 8) & 0xf0;
+        if (action == NULL) {
+            break;
+        }
+        animState = *(u8 **)(action + 0x2c);
+        if (*(s16 *)(activeObj + 0xa0) == *(s16 *)(seq + 0x6c)) {
+            if ((s8)animState[0x60] == 0) {
+                restart = 1;
+            } else {
+                restart = 0;
+            }
+        } else {
+            restart = 1;
+        }
+        if (doUpdate == 0) {
+            break;
+        }
+        if (restart == 0) {
+            break;
+        }
+        if ((*(s16 *)(seq + 0x6e) & 4) == 0) {
+            break;
+        }
+        if (action == NULL) {
+            break;
+        }
+        *(f32 *)(animState + 4) = *(f32 *)(activeObj + 0x98) * *(f32 *)(animState + 0x14);
+        if (*(s16 *)(seq + 0xd6) != 0) {
+            sub = *(s16 *)(seq + 0x58) - 1;
+            if (*(void **)(seq + 0x98) != NULL && *(s16 *)(seq + 0xd6) != 0) {
+                objCurveInterpolate(
+                    (ObjCurveKey *)(*(u8 **)(seq + 0x98) + *(s16 *)(seq + 0xb0) * 8),
+                    *(s16 *)(seq + 0xd6) & 0xfff, sub);
+            }
+        }
+        if (*(s16 *)(activeObj + 0x44) == 1) {
+            act2 = *(u8 **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
+            animState = *(u8 **)(act2 + 0x2c);
+            *(s16 *)(animState + 0x64) = -1;
+            *(s16 *)(animState + 0x5a) = 0;
+            *(s16 *)(animState + 0x5c) = 0;
+            st2 = *(u8 **)(act2 + 0x30);
+            if (st2 != NULL) {
+                *(s16 *)(st2 + 0x64) = -1;
+                *(s16 *)(st2 + 0x58) = 0;
+                *(s16 *)(st2 + 0x5a) = 0;
+                *(s16 *)(st2 + 0x5c) = 0;
+            }
+        }
+        *(f32 *)(seq + 0x20) = lbl_803DEFC8;
+        ObjAnim_SetCurrentMove(activeObj, *(s16 *)(seq + 0x6c), 0,
+                               (f32)seq[0x8c] * lbl_803DF02C);
+        break;
+    case 1:
+        if (flag8 != 0) {
+            break;
+        }
+        if ((s8)seq[0x7b] != 0 && (s8)base[(s8)seq[0x57] + 0x3a40] != 0) {
+            seq[0x78] = 0;
+            break;
+        }
+        seq[0x78] = (s8)(1 - seq[0x78]);
+        break;
+    case 7:
+        seq[0x7a] = (s8)(1 - seq[0x7a]);
+        break;
+    case 3:
+        if (flag8 != 0) {
+            break;
+        }
+        if ((flags & 4) != 0) {
+            break;
+        }
+        activeObj = objSeqCmd3(obj, seq, model);
+        *(s16 *)(activeObj + 0xa2) = -1;
+        break;
+    case 0xb:
+        if (doUpdate != 0 && *(s16 *)(cmd + 2) > 0 && lbl_803DD0C0 < 0x14) {
+            entry = base + lbl_803DD0C0 * 8;
+            *(u8 **)(entry + 0x2b34) = cmd + 4;
+            *(s16 *)(entry + 0x2b3a) = *(s16 *)(seq + 0x58);
+            reps = *(s16 *)(cmd + 2);
+            lbl_803DD0C0 = lbl_803DD0C0 + 1;
+            *(s16 *)(entry + 0x2b38) = reps;
+        }
+        *(s16 *)(seq + 0x66) = *(s16 *)(seq + 0x66) + *(s16 *)(cmd + 2);
+        break;
+    case 4:
+        if (flag8 != 0) {
+            break;
+        }
+        if (doUpdate == 0) {
+            break;
+        }
+        if (action == NULL) {
+            break;
+        }
+        if (*(u8 *)(*(u8 **)action + 0xf9) == 0) {
+            break;
+        }
+        blend = (f32)(int)((*(s16 *)(cmd + 2) >> 8) & 0xff);
+        if (lbl_803DEFB0 == blend) {
+            t = lbl_803DEFC8;
+        } else {
+            t = lbl_803DEFC8 / blend;
+        }
+        sub = *(s16 *)(cmd + 2) & 0xff;
+        if (sub < 0xf) {
+            ObjModel_SetBlendChannelTargets(action, 2,
+                                            (s8)(*(u8 **)(action + 0x28))[0x2d], sub - 1, 0,
+                                            t);
+        } else {
+            ObjModel_SetBlendChannelTargets(action, 0,
+                                            (s8)(*(u8 **)(action + 0x28))[0xd], sub - 1, 0,
+                                            t);
+        }
+        break;
+    case 0xe:
+        if (flag8 != 0) {
+            break;
+        }
+        (*(void (*)(int, int, int, int))(*(int *)(*gGameUIInterface + 0x38)))(
+            *(s16 *)(cmd + 2), 0x14, 0x8c, 0);
+        break;
+    case 0xd:
+        if (noExec != 0) {
+            break;
+        }
+        if (((*(s16 *)(cmd + 2) >> 12) & 0xf) == 8) {
+            break;
+        }
+        if ((s8)lbl_803DD113 < 10) {
+            entry = base + (s8)lbl_803DD113 * 8;
+            *(u8 **)(entry + 0x3ca4) = activeObj;
+            *(s8 *)(entry + 0x3caa) = (s8)((*(s16 *)(cmd + 2) >> 12) & 0xf);
+            if ((s8)*(entry + 0x3caa) == 0xb || (s8)*(entry + 0x3caa) == 0xc) {
+                val = *(s16 *)(cmd + 6);
+                slot = (s8)lbl_803DD113;
+                lbl_803DD113 = lbl_803DD113 + 1;
+                *(s16 *)(base + slot * 8 + 0x3ca8) = val;
+            } else {
+                val = (s16)(*(s16 *)(cmd + 2) & 0xfff);
+                lbl_803DD113 = lbl_803DD113 + 1;
+                *(s16 *)(entry + 0x3ca8) = val;
+            }
+        }
+        break;
+    case 0:
+        break;
+    }
+
+    if (noExec != 0) {
+        return 0;
+    }
+
+    if ((s8)lbl_803DD112 != 0 || (s8)lbl_803DD111 != 0) {
+        if ((s8)cmd[0] == 0xd) {
+            switch ((*(s16 *)(cmd + 2) >> 12) & 0xf) {
+            case 2:
+                getEnvfxAct(activeObj, activeObj, *(s16 *)(cmd + 2) & 0xfff, 0);
+                break;
+            case 6:
+                warpToMap(*(s16 *)(cmd + 2) & 0xfff, 0);
+                break;
+            case 5:
+                break;
+            }
+        }
+        return 0;
+    }
+
+    switch ((s8)cmd[0]) {
+    case 6:
+        if (flag8 != 0) {
+            break;
+        }
+        if ((base[(s8)seq[0x57] + 0x3538] & 0x10) == 0) {
+            break;
+        }
+        if ((s8)base[(s8)seq[0x57] + 0x3c4c] == 3) {
+            break;
+        }
+        if (((*(s16 *)(cmd + 2) >> 12) & 0xf) != 0xf) {
+            Sfx_PlayFromObject(obj, (u16)(*(s16 *)(cmd + 2) & 0xfff));
+        } else {
+            Sfx_PlayFromObject(obj, (u16)(*(s16 *)(cmd + 2) & 0xfff));
+            *(s16 *)(seq + 0x36) = -1;
+            *(s16 *)(seq + 0x3e) = (s16)(*(s16 *)(cmd + 2) & 0xfff);
+        }
+        break;
+    case 0xd:
+        switch ((*(s16 *)(cmd + 2) >> 12) & 0xf) {
+        case 0:
+            if ((base[(s8)seq[0x57] + 0x3538] & 0x10) != 0) {
+                val = (*(s16 *)(cmd + 2) & 0xfff) + 1;
+                if (val == 0xd9 || val == 0x92) {
+                    Music_Trigger(val, 1);
+                }
+            }
+            break;
+        case 2:
+            getEnvfxAct(activeObj, activeObj, *(s16 *)(cmd + 2) & 0xfff, 0);
+            break;
+        case 6:
+            if (flag8 != 0) {
+                break;
+            }
+            warpToMap(*(s16 *)(cmd + 2) & 0xfff, 0);
+            break;
+        case 7:
+            break;
+        case 8:
+            if (flag8 != 0) {
+                break;
+            }
+            seq[0x8d] = (u8)(*(s16 *)(cmd + 2) & 0xfff);
+            seq[0x8e] = seq[0x8d];
+            break;
+        case 0xe:
+            if (flag8 != 0) {
+                break;
+            }
+            seq[0x8d] = (u8)(*(s16 *)(cmd + 2) & 0xfff);
+            break;
+        case 0xf:
+            if (flag8 != 0) {
+                break;
+            }
+            seq[0x8e] = (u8)(*(s16 *)(cmd + 2) & 0xfff);
+            break;
+        }
+        break;
+    case 0xf:
+        if (flag8 != 0) {
+            break;
+        }
+        if ((base[(s8)seq[0x57] + 0x3538] & 0x10) == 0) {
+            break;
+        }
+        if ((s8)base[(s8)seq[0x57] + 0x3c4c] == 3) {
+            break;
+        }
+        if (((*(s16 *)(cmd + 2) >> 12) & 0xf) != 0xf) {
+            minRot = 0x7fff;
+            slot = 0;
+            if (*(s16 *)(seq + 0x30) < 0x7fff) {
+                slot = 0;
+                minRot = *(s16 *)(seq + 0x30);
+            }
+            if (*(s16 *)(seq + 0x32) < (s16)minRot) {
+                slot = 1;
+                minRot = *(s16 *)(seq + 0x32);
+            }
+            if (*(s16 *)(seq + 0x34) < (s16)minRot) {
+                slot = 2;
+            }
+        } else {
+            slot = 3;
+        }
+        entry = seq + slot * 2;
+        if (*(s16 *)(entry + 0x30) > 0) {
+            Sfx_RemoveLoopedObjectSound(obj, (u16)*(s16 *)(entry + 0x38));
+        }
+        cmd[1] = cmd[5];
+        cmd[4] = 0x63;
+        *(s16 *)(entry + 0x30) = *(s16 *)(cmd + 6);
+        *(s16 *)(seq + slot * 2 + 0x38) = (s16)(*(s16 *)(cmd + 2) & 0xfff);
+        Sfx_AddLoopedObjectSound(obj, (u16)*(s16 *)(seq + slot * 2 + 0x38));
+        break;
+    }
+    return 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
