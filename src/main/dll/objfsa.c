@@ -4267,6 +4267,8 @@ LAB_800e19bc:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroupIndex)
 {
   u8 patchListIndex;
@@ -4357,6 +4359,8 @@ int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroup
 
   return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -4900,6 +4904,8 @@ extern void setMatrixFromObjectPos(f32 *matrix, void *objpos);
 extern void Matrix_TransformPoint(f32 *matrix, f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 
+#pragma scheduling off
+#pragma peephole off
 void playerRunStateMachine(char *pos, char *state, float dt, int stateFns) {
     int changed;
     int done;
@@ -5000,7 +5006,11 @@ void playerRunStateMachine(char *pos, char *state, float dt, int stateFns) {
         *(s16 *)(pos + 4) = *(s16 *)(pos + 4) - (s16)decay;
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void player_update(char *pos, char *state, float dt, float pathDt, int stateFns, int auxStateFns) {
     struct {
         s16 rotX;
@@ -5141,6 +5151,8 @@ void player_update(char *pos, char *state, float dt, float pathDt, int stateFns,
         }
     }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma peephole off
 #pragma scheduling off
