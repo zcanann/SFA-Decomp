@@ -1,40 +1,128 @@
 #include "ghidra_import.h"
+#include "main/unknown/autos/musyx_dsp.h"
+
+/* MusyX runtime DSP control (hw_dspctrl.c, MUSY_VERSION <= 2.0.0 paths),
+ * recovered against the public MusyX runtime source. */
 
 extern void *memset(void *dst, int val, u32 n);
+extern void DCFlushRange(void *p, u32 n);
 extern void DCFlushRangeNoSync(void *p, u32 n);
-extern void salFree(int p);
+extern void DCInvalidateRange(void *p, u32 n);
+extern void DCStoreRangeNoSync(void *p, u32 n);
+extern void *salMalloc(u32 size);
+extern void salFree(void *p);
+extern u32 aramGetBaseAddress(void);
 
-extern u8 *dspCmdBuffer;
-extern u8 *dspVoice;
-extern u8 *dspITDBuffer;
-extern u8 *dspSurround;
-extern u8 *dspCmdList;
-extern u8 lbl_803CC1E0[][0xbc];
+extern void *dspCmdBuffer;  /* dspHrtfHistoryBuffer */
+extern DSPvoice *dspVoice;
+extern void *dspITDBuffer;
+extern s32 *dspSurround;
+extern void *dspCmdList;
+extern u32 lbl_803DE310; /* dspARAMZeroBuffer */
+extern DSPstudioinfo lbl_803CC1E0[];
 extern u8 salMaxStudioNum;
 extern u8 salNumVoices;
 
-typedef struct DspVoiceResources {
-    void *commands;
-    void *buffer;
-} DspVoiceResources;
+#define dspARAMZeroBuffer lbl_803DE310
+#define dspStudio lbl_803CC1E0
 
-typedef struct DspStudioResources {
-    void *buffer;
-    u8 pad04[0x24];
-    void *itdBuffer;
-} DspStudioResources;
+void fn_8027BDA8(void);                   /* salInitHRTFBuffer */
+void fn_8027BEBC(u8 studio, u32 isMaster, u32 type); /* salActivateStudio */
 
 /*
- * fn_8027BA04 - large voice processing (~932 instructions). Stubbed.
- */
-#pragma dont_inline on
-void fn_8027BA04(void) {}
-#pragma dont_inline reset
-
-/*
- * Clear and flush a 256-byte voice scratch buffer.
+ * salInitDspCtrl
  *
- * EN v1.1 Address: 0x8027BDA8, size 56b
+ * EN v1.0 Address: 0x8027BA04, size 932b
+ */
+u32 fn_8027BA04(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
+{
+    u32 i;
+    u32 j;
+    u32 itdPtr;
+
+    salNumVoices = numVoices;
+    salMaxStudioNum = numStudios;
+
+    dspARAMZeroBuffer = aramGetBaseAddress();
+    if ((dspCmdList = salMalloc(1024 * sizeof(u16)))) {
+        if ((dspSurround = salMalloc(160 * sizeof(s32)))) {
+            memset(dspSurround, 0, 160 * sizeof(s32));
+            DCFlushRange(dspSurround, 160 * sizeof(s32));
+            if ((dspVoice = salMalloc(salNumVoices * sizeof(DSPvoice)))) {
+                if ((dspITDBuffer = salMalloc(salNumVoices * 64))) {
+                    DCInvalidateRange(dspITDBuffer, salNumVoices * 64);
+                    itdPtr = (u32)dspITDBuffer;
+                    for (i = 0; i < salNumVoices; ++i) {
+                        dspVoice[i].state = 0;
+                        dspVoice[i].postBreak = 0;
+                        dspVoice[i].startupBreak = 0;
+                        dspVoice[i].lastUpdate.pitch = 0xff;
+                        dspVoice[i].lastUpdate.vol = 0xff;
+                        dspVoice[i].lastUpdate.volA = 0xff;
+                        dspVoice[i].lastUpdate.volB = 0xff;
+                        dspVoice[i].pb = salMalloc(sizeof(_PB));
+                        memset(dspVoice[i].pb, 0, sizeof(_PB));
+                        dspVoice[i].patchData = salMalloc(0x80);
+                        dspVoice[i].pb->currHi = ((u32)dspVoice[i].pb >> 16);
+                        dspVoice[i].pb->currLo = (u16)(u32)dspVoice[i].pb;
+                        dspVoice[i].pb->update.dataHi = ((u32)dspVoice[i].patchData >> 16);
+                        dspVoice[i].pb->update.dataLo = (u16)(u32)dspVoice[i].patchData;
+                        dspVoice[i].pb->itd.bufferHi = (itdPtr >> 16);
+                        dspVoice[i].pb->itd.bufferLo = (u16)itdPtr;
+                        dspVoice[i].itdBuffer = (void *)itdPtr;
+                        itdPtr += 0x40;
+                        dspVoice[i].virtualSampleID = 0xFFFFFFFF;
+                        DCStoreRangeNoSync(dspVoice[i].pb, sizeof(_PB));
+                        for (j = 0; j < 5; ++j) {
+                            dspVoice[i].changed[j] = 0;
+                        }
+                    }
+
+                    for (i = 0; i < salMaxStudioNum; ++i) {
+                        dspStudio[i].state = 0;
+                        if (!(dspStudio[i].spb = salMalloc(sizeof(_SPB)))) {
+                            return 0;
+                        }
+                        if (!(dspStudio[i].main[0] = salMalloc(0x3c00))) {
+                            return 0;
+                        }
+                        memset(dspStudio[i].main[0], 0, 0x3c00);
+                        DCFlushRangeNoSync(dspStudio[i].main[0], 0x3c00);
+                        dspStudio[i].main[1] = dspStudio[i].main[0] + 0x1e0;
+                        dspStudio[i].auxA[0] = dspStudio[i].main[1] + 0x1e0;
+                        dspStudio[i].auxA[1] = dspStudio[i].auxA[0] + 0x1e0;
+                        dspStudio[i].auxA[2] = dspStudio[i].auxA[1] + 0x1e0;
+                        dspStudio[i].auxB[0] = dspStudio[i].auxA[2] + 0x1e0;
+                        dspStudio[i].auxB[1] = dspStudio[i].auxB[0] + 0x1e0;
+                        dspStudio[i].auxB[2] = dspStudio[i].auxB[1] + 0x1e0;
+                        memset(dspStudio[i].spb, 0, sizeof(_SPB));
+                        dspStudio[i].hostDPopSum.l = dspStudio[i].hostDPopSum.r =
+                            dspStudio[i].hostDPopSum.s = 0;
+                        dspStudio[i].hostDPopSum.lA = dspStudio[i].hostDPopSum.rA =
+                            dspStudio[i].hostDPopSum.sA = 0;
+                        dspStudio[i].hostDPopSum.lB = dspStudio[i].hostDPopSum.rB =
+                            dspStudio[i].hostDPopSum.sB = 0;
+                        DCFlushRangeNoSync(dspStudio[i].spb, sizeof(_SPB));
+                    }
+
+                    fn_8027BEBC(0, 1, defaultStudioDPL2 != 0 ? 1 : 0);
+                    if (!(dspCmdBuffer = salMalloc(0x100))) {
+                        return 0;
+                    }
+                    fn_8027BDA8();
+                    return 1;
+                }
+            }
+        }
+    }
+
+    return 0;
+}
+
+/*
+ * salInitHRTFBuffer
+ *
+ * EN v1.0 Address: 0x8027BDA8, size 56b
  */
 void fn_8027BDA8(void)
 {
@@ -43,273 +131,191 @@ void fn_8027BDA8(void)
 }
 
 /*
- * Free all voice/studio resources, then return 1.
+ * salExitDspCtrl
  *
- * EN v1.1 Address: 0x8027BDE0, size 220b
+ * EN v1.0 Address: 0x8027BDE0, size 220b
  */
 int audioFreeFn_8027bde0(void)
 {
     u8 i;
-    int offset;
 
-    salFree((int)dspCmdBuffer);
-    i = 0;
-    offset = i * 0xf4;
-    for (; (u8)i < salNumVoices; i++) {
-        salFree((int)((DspVoiceResources *)(dspVoice + offset))->commands);
-        salFree((int)((DspVoiceResources *)(dspVoice + offset))->buffer);
-        offset += 0xf4;
+    salFree(dspCmdBuffer);
+    for (i = 0; i < salNumVoices; ++i) {
+        salFree(dspVoice[i].pb);
+        salFree(dspVoice[i].patchData);
     }
-    for (i = 0; (u8)i < salMaxStudioNum; i++) {
-        salFree((int)((DspStudioResources *)lbl_803CC1E0[i])->buffer);
-        salFree((int)((DspStudioResources *)lbl_803CC1E0[i])->itdBuffer);
+    for (i = 0; i < salMaxStudioNum; ++i) {
+        salFree(dspStudio[i].spb);
+        salFree(dspStudio[i].main[0]);
     }
-    salFree((int)dspITDBuffer);
-    salFree((int)dspVoice);
-    salFree((int)dspSurround);
-    salFree((int)dspCmdList);
+    salFree(dspITDBuffer);
+    salFree(dspVoice);
+    salFree(dspSurround);
+    salFree(dspCmdList);
     return 1;
 }
 
 /*
- * fn_8027BEBC - voice-buffer init with several memset/flush calls
- * (~264 instructions). Stubbed.
- */
-#pragma dont_inline on
-void fn_8027BEBC(u8 idx, u8 a, int b)
-{
-    u8 *studio;
-    u32 idx8;
-
-    idx8 = idx;
-    studio = lbl_803CC1E0[idx8];
-
-    memset(*(void **)(studio + 0x28), 0, 0x3c00);
-    DCFlushRangeNoSync(*(void **)(studio + 0x28), 0x3c00);
-
-    memset(*(void **)(studio + 0x00), 0, 0x36);
-    *(u32 *)(studio + 0x0c) = 0;
-    *(u32 *)(studio + 0x08) = 0;
-    *(u32 *)(studio + 0x04) = 0;
-    *(u32 *)(studio + 0x18) = 0;
-    *(u32 *)(studio + 0x14) = 0;
-    *(u32 *)(studio + 0x10) = 0;
-    *(u32 *)(studio + 0x24) = 0;
-    *(u32 *)(studio + 0x20) = 0;
-    *(u32 *)(studio + 0x1c) = 0;
-    DCFlushRangeNoSync(*(void **)(studio + 0x00), 0x36);
-
-    memset(*(void **)(studio + 0x30), 0, 0x780);
-    DCFlushRangeNoSync(*(void **)(studio + 0x30), 0x780);
-
-    memset(*(void **)(studio + 0x3c), 0, 0x780);
-    DCFlushRangeNoSync(*(void **)(studio + 0x3c), 0x780);
-
-    *(u32 *)(studio + 0x48) = 0;
-    *(u32 *)(studio + 0x4c) = 0;
-    studio[0x50] = 1;
-    studio[0x51] = a;
-    studio[0x52] = 0;
-    *(u32 *)(studio + 0x54) = b;
-    *(u32 *)(studio + 0xb0) = 0;
-    *(u32 *)(studio + 0xac) = 0;
-}
-#pragma dont_inline reset
-
-/*
- * Clear active flag for studio idx.
+ * salActivateStudio
  *
- * EN v1.1 Address: 0x8027BFC4, size 32b
+ * EN v1.0 Address: 0x8027BEBC, size 264b
  */
-void fn_8027BFC4(u8 idx)
+void fn_8027BEBC(u8 studio, u32 isMaster, u32 type)
 {
-    lbl_803CC1E0[idx][0x50] = 0;
+    memset(dspStudio[studio].main[0], 0, 0x3c00);
+    DCFlushRangeNoSync(dspStudio[studio].main[0], 0x3c00);
+    memset(dspStudio[studio].spb, 0, sizeof(_SPB));
+    dspStudio[studio].hostDPopSum.l = dspStudio[studio].hostDPopSum.r =
+        dspStudio[studio].hostDPopSum.s = 0;
+    dspStudio[studio].hostDPopSum.lA = dspStudio[studio].hostDPopSum.rA =
+        dspStudio[studio].hostDPopSum.sA = 0;
+    dspStudio[studio].hostDPopSum.lB = dspStudio[studio].hostDPopSum.rB =
+        dspStudio[studio].hostDPopSum.sB = 0;
+    DCFlushRangeNoSync(dspStudio[studio].spb, sizeof(_SPB));
+    memset(dspStudio[studio].auxA[0], 0, 0x780);
+    DCFlushRangeNoSync(dspStudio[studio].auxA[0], 0x780);
+    memset(dspStudio[studio].auxB[0], 0, 0x780);
+    DCFlushRangeNoSync(dspStudio[studio].auxB[0], 0x780);
+    dspStudio[studio].voiceRoot = NULL;
+    dspStudio[studio].alienVoiceRoot = NULL;
+    dspStudio[studio].state = 1;
+    dspStudio[studio].isMaster = isMaster;
+    dspStudio[studio].numInputs = 0;
+    dspStudio[studio].type = type;
+    dspStudio[studio].auxAHandler = dspStudio[studio].auxBHandler = NULL;
 }
 
 /*
- * fn_8027BFE4 - pitch/interval mapper (~244 instructions). Stubbed.
+ * salDeactivateStudio
+ *
+ * EN v1.0 Address: 0x8027BFC4, size 32b
+ */
+void fn_8027BFC4(u8 studio)
+{
+    dspStudio[studio].state = 0;
+}
+
+/*
+ * salCheckVolErrorAndResetDelta
+ *
+ * EN v1.0 Address: 0x8027BFE4, size 244b
  */
 #pragma dont_inline on
-int fn_8027BFE4(u16 *active, u16 *direction, u16 *current, u16 target, u16 *stepFlags, u16 mask)
+int fn_8027BFE4(u16 *dsp_vol, u16 *dsp_delta, u16 *last_vol, u16 targetVol, u16 *resetFlags,
+                u16 resetMask)
 {
     int delta;
     int step;
 
-    if (target != *current) {
-        delta = (s16)target - (s16)*current;
+    if (targetVol != *last_vol) {
+        delta = (s16)targetVol - (s16)*last_vol;
         delta = (s16)delta;
         if ((delta >= 0x20) && (delta < 0xa0)) {
             step = (s16)(delta >> 5);
             if (step < 5) {
-                stepFlags[step] |= mask;
+                resetFlags[step] |= resetMask;
             }
-            *direction = 1;
-            *current += step << 5;
+            *dsp_delta = 1;
+            *last_vol += step << 5;
             return 1;
         }
         if ((delta <= -0x20) && (delta > -0xa0)) {
             step = (s16)(-delta >> 5);
             if (step < 5) {
-                stepFlags[step] |= mask;
+                resetFlags[step] |= resetMask;
             }
-            *direction = 0xffff;
-            *current -= step << 5;
+            *dsp_delta = 0xffff;
+            *last_vol -= step << 5;
             return 1;
         }
-        if ((target == 0) && (delta > -0x20)) {
-            *current = 0;
-            *active = 0;
+        if ((targetVol == 0) && (delta > -0x20)) {
+            *last_vol = 0;
+            *dsp_vol = 0;
         }
     }
-    *direction = 0;
+    *dsp_delta = 0;
     return 0;
 }
 #pragma dont_inline reset
 
-/*
- * fn_8027C0D8 - large voice param updater (~696 instructions). Stubbed.
- */
-#pragma dont_inline on
-void fn_8027C0D8(int accum, int *voiceRef)
+static void AddDpop(s32 *sum, s16 delta)
 {
-    int value;
-    int clamped;
-    int voice;
+    *sum += (int)delta;
+    *sum = (*sum > 0x7fffff) ? 0x7fffff : (*sum < -0x7fffff ? -0x7fffff : *sum);
+}
 
-    *(u8 *)((int)voiceRef + 0xed) = 0;
-    clamped = 0x7fffff;
-    *(u16 *)(*voiceRef + 0xe) = 0;
-    voice = *voiceRef;
+/*
+ * HandleDepopVoice
+ *
+ * EN v1.0 Address: 0x8027C0D8, size 696b
+ */
+void fn_8027C0D8(DSPstudioinfo *stp, DSPvoice *dsp_vptr)
+{
+    _PB *pb;
 
-    *(int *)(accum + 4) += *(s16 *)(voice + 0x52);
-    value = *(int *)(accum + 4);
-    if ((value < 0x800000) && (clamped = value, value < -0x7fffff)) {
-        clamped = -0x7fffff;
-    }
-    *(int *)(accum + 4) = clamped;
+    dsp_vptr->postBreak = 0;
+    dsp_vptr->pb->state = 0;
+    pb = dsp_vptr->pb;
 
-    clamped = 0x7fffff;
-    *(int *)(accum + 8) += *(s16 *)(voice + 0x58);
-    value = *(int *)(accum + 8);
-    if ((value < 0x800000) && (clamped = value, value < -0x7fffff)) {
-        clamped = -0x7fffff;
-    }
-    *(int *)(accum + 8) = clamped;
+    AddDpop(&stp->hostDPopSum.l, pb->dpop.aL);
+    AddDpop(&stp->hostDPopSum.r, pb->dpop.aR);
 
-    if ((*(u16 *)(voice + 0xc) & 4) != 0) {
-        clamped = 0x7fffff;
-        *(int *)(accum + 0xc) += *(s16 *)(voice + 0x5e);
-        value = *(int *)(accum + 0xc);
-        if ((value < 0x800000) && (clamped = value, value < -0x7fffff)) {
-            clamped = -0x7fffff;
-        }
-        *(int *)(accum + 0xc) = clamped;
+    if ((pb->mixerCtrl & 0x04) != 0) {
+        AddDpop(&stp->hostDPopSum.s, pb->dpop.aS);
     }
 
-    if ((*(u16 *)(voice + 0xc) & 1) != 0) {
-        clamped = 0x7fffff;
-        *(int *)(accum + 0x10) += *(s16 *)(voice + 0x54);
-        value = *(int *)(accum + 0x10);
-        if ((value < 0x800000) && (clamped = value, value < -0x7fffff)) {
-            clamped = -0x7fffff;
-        }
-        *(int *)(accum + 0x10) = clamped;
+    if ((pb->mixerCtrl & 0x01) != 0) {
+        AddDpop(&stp->hostDPopSum.lA, pb->dpop.aAuxAL);
+        AddDpop(&stp->hostDPopSum.rA, pb->dpop.aAuxAR);
 
-        clamped = 0x7fffff;
-        *(int *)(accum + 0x14) += *(s16 *)(voice + 0x5a);
-        value = *(int *)(accum + 0x14);
-        if ((value < 0x800000) && (clamped = value, value < -0x7fffff)) {
-            clamped = -0x7fffff;
-        }
-        *(int *)(accum + 0x14) = clamped;
-
-        if ((*(u16 *)(voice + 0xc) & 0x14) != 0) {
-            clamped = 0x7fffff;
-            *(int *)(accum + 0x18) += *(s16 *)(voice + 0x60);
-            value = *(int *)(accum + 0x18);
-            if ((value < 0x800000) && (clamped = value, value < -0x7fffff)) {
-                clamped = -0x7fffff;
-            }
-            *(int *)(accum + 0x18) = clamped;
+        if ((pb->mixerCtrl & 0x14) != 0) {
+            AddDpop(&stp->hostDPopSum.sA, pb->dpop.aAuxAS);
         }
     }
 
-    if ((*(u16 *)(voice + 0xc) & 0x12) != 0) {
-        clamped = 0x7fffff;
-        *(int *)(accum + 0x1c) += *(s16 *)(voice + 0x56);
-        value = *(int *)(accum + 0x1c);
-        if ((value < 0x800000) && (clamped = value, value < -0x7fffff)) {
-            clamped = -0x7fffff;
-        }
-        *(int *)(accum + 0x1c) = clamped;
+    if ((pb->mixerCtrl & 0x12) != 0) {
+        AddDpop(&stp->hostDPopSum.lB, pb->dpop.aAuxBL);
+        AddDpop(&stp->hostDPopSum.rB, pb->dpop.aAuxBR);
 
-        clamped = 0x7fffff;
-        *(int *)(accum + 0x20) += *(s16 *)(voice + 0x5c);
-        value = *(int *)(accum + 0x20);
-        if ((value < 0x800000) && (clamped = value, value < -0x7fffff)) {
-            clamped = -0x7fffff;
-        }
-        *(int *)(accum + 0x20) = clamped;
-
-        if ((*(u16 *)(voice + 0xc) & 4) != 0) {
-            clamped = 0x7fffff;
-            *(int *)(accum + 0x24) += *(s16 *)(voice + 0x62);
-            value = *(int *)(accum + 0x24);
-            if ((value < 0x800000) && (clamped = value, value < -0x7fffff)) {
-                clamped = -0x7fffff;
-            }
-            *(int *)(accum + 0x24) = clamped;
+        if ((pb->mixerCtrl & 0x4) != 0) {
+            AddDpop(&stp->hostDPopSum.sB, pb->dpop.aAuxBS);
         }
     }
 }
-#pragma dont_inline reset
 
 /*
- * fn_8027C390 - large voice routing (~252 instructions). Stubbed.
+ * SortVoices
+ *
+ * EN v1.0 Address: 0x8027C390, size 252b
  */
-#pragma dont_inline on
-void fn_8027C390(int *items, int left, int right)
+void fn_8027C390(DSPvoice **voices, int l, int r)
 {
-    int pivot;
-    int middle;
-    int scanCount;
-    int *leftPtr;
-    int *scanPtr;
-    int *swapPtr;
-    int split;
-    u32 midpoint;
+    int i;
+    int last;
+    DSPvoice *tmp;
 
-    if (left < right) {
-        midpoint = left + right;
-        leftPtr = items + left;
-        pivot = *leftPtr;
-        swapPtr = items + (((int)midpoint >> 1) + ((int)midpoint < 0 && (midpoint & 1) != 0));
-        middle = left + 1;
-        *leftPtr = *swapPtr;
-        scanCount = (right + 1) - middle;
-        *swapPtr = pivot;
-        scanPtr = items + middle;
-        swapPtr = leftPtr;
-        split = left;
-        if (middle <= right) {
-            do {
-                if (*(u32 *)(*scanPtr + 0x1c) < *(u32 *)(*leftPtr + 0x1c)) {
-                    pivot = swapPtr[1];
-                    split++;
-                    swapPtr++;
-                    *swapPtr = *scanPtr;
-                    *scanPtr = pivot;
-                }
-                scanPtr++;
-                scanCount--;
-            } while (scanCount != 0);
-        }
-        pivot = *leftPtr;
-        swapPtr = items + split;
-        *leftPtr = *swapPtr;
-        *swapPtr = pivot;
-        fn_8027C390(items, left, split - 1);
-        fn_8027C390(items, split + 1, right);
+    if (l >= r) {
+        return;
     }
+
+    tmp = voices[l];
+    voices[l] = voices[(l + r) / 2];
+    voices[(l + r) / 2] = tmp;
+    last = l;
+    i = l + 1;
+
+    for (; i <= r; ++i) {
+        if (voices[i]->prio < voices[l]->prio) {
+            last += 1;
+            tmp = voices[last];
+            voices[last] = voices[i];
+            voices[i] = tmp;
+        }
+    }
+
+    tmp = voices[l];
+    voices[l] = voices[last];
+    voices[last] = tmp;
+    fn_8027C390(voices, l, last - 1);
+    fn_8027C390(voices, last + 1, r);
 }
-#pragma dont_inline reset
