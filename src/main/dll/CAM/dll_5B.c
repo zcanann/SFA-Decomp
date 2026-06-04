@@ -375,7 +375,8 @@ extern char sCam5BYDebugFormat;
 typedef struct ViewfinderFlags {
     u8 b7 : 1;
     u8 b6 : 1;
-    u8 rest : 6;
+    u8 b5 : 1;
+    u8 rest : 5;
 } ViewfinderFlags;
 
 /*
@@ -541,6 +542,16 @@ void CameraModeViewfinder_update(s16 *param_1)
                                  *(int *)(param_1 + 0x18));
 }
 
+extern u32 GameBit_Get(int bit);
+extern void *memset(void *dst, int v, int n);
+extern f32 lbl_803E17C8;
+extern f32 lbl_803E17CC;
+extern f32 lbl_803E17D0;
+extern f32 lbl_803E17E4;
+extern f32 lbl_803E1830;
+extern f32 lbl_803E1834;
+extern f64 lbl_803E1838x;
+
 /*
  * --INFO--
  *
@@ -556,6 +567,113 @@ void CameraModeViewfinder_update(s16 *param_1)
  */
 void CameraModeViewfinder_init(s16 *param_1, int param_2, int *param_3)
 {
+  s16 *camObj;
+  s16 diff;
+  s16 absDiff;
+  s16 a2;
+  f32 dx;
+  f32 dz;
+  f32 dist;
+  f32 spinRate;
+  f32 rollRate;
+  f32 cosv;
+  f32 sinv;
+  f32 zero;
+
+  camObj = *(s16 **)(param_1 + 0x52);
+  if (lbl_803DD548 == NULL) {
+    lbl_803DD548 = mmAlloc(0x134, 0xf, 0);
+  }
+  memset(lbl_803DD548, 0, 0x134);
+  *(f32 *)lbl_803DD548 = *(f32 *)param_3;
+  *(f32 *)((int)lbl_803DD548 + 0x114) = (f32)(u32)*(u16 *)((int)param_3 + 8);
+  *(f32 *)((int)lbl_803DD548 + 4) = *(f32 *)(param_3 + 1);
+  *(f32 *)((int)lbl_803DD548 + 0x11c) = lbl_803E17C4;
+  diff = 0x8000 - param_1[0] - camObj[0];
+  if (diff < 0) {
+    absDiff = -diff;
+  }
+  else {
+    absDiff = diff;
+  }
+  spinRate = (f32)diff / lbl_803E17E4;
+  rollRate = (f32)absDiff / lbl_803E1830;
+  *(int *)((int)lbl_803DD548 + 0xfc) = (int)lbl_803DD548 + 0x10;
+  *(int *)((int)lbl_803DD548 + 0x100) = (int)lbl_803DD548 + 0x20;
+  *(int *)((int)lbl_803DD548 + 0x104) = (int)lbl_803DD548 + 0x30;
+  *(int *)((int)lbl_803DD548 + 0x108) = 4;
+  *(int *)((int)lbl_803DD548 + 0xf8) = 0;
+  *(int *)((int)lbl_803DD548 + 0x10c) = (int)Curve_EvalHermite;
+  *(int *)((int)lbl_803DD548 + 0x110) = (int)Curve_BuildHermiteCoeffs;
+  dx = *(f32 *)(param_1 + 0xc) - *(f32 *)(camObj + 0xc);
+  dz = *(f32 *)(param_1 + 0x10) - *(f32 *)(camObj + 0x10);
+  dist = sqrtf(dx * dx + dz * dz);
+  if (lbl_803E17C4 != dist) {
+    dx = dx / dist;
+    dz = dz / dist;
+  }
+  firstPersonPlaceCamera((int)camObj, 1);
+  cosv = -fn_80293E80((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
+  sinv = -sin((lbl_803E1834 * (f32)camObj[0]) / lbl_803E17C8);
+  *(f32 *)((int)lbl_803DD548 + 0x10) = *(f32 *)(param_1 + 0xc);
+  *(f32 *)((int)lbl_803DD548 + 0x14) = *(f32 *)((int)lbl_803DD548 + 0x120);
+  *(f32 *)((int)lbl_803DD548 + 0x18) = -dz * spinRate;
+  *(f32 *)((int)lbl_803DD548 + 0x1c) = cosv * rollRate;
+  *(f32 *)((int)lbl_803DD548 + 0x20) = *(f32 *)(param_1 + 0xe);
+  *(f32 *)((int)lbl_803DD548 + 0x24) = *(f32 *)((int)lbl_803DD548 + 0x124);
+  zero = lbl_803E17C4;
+  *(f32 *)((int)lbl_803DD548 + 0x28) = zero;
+  *(f32 *)((int)lbl_803DD548 + 0x2c) = zero;
+  *(f32 *)((int)lbl_803DD548 + 0x30) = *(f32 *)(param_1 + 0x10);
+  *(f32 *)((int)lbl_803DD548 + 0x34) = *(f32 *)((int)lbl_803DD548 + 0x128);
+  *(f32 *)((int)lbl_803DD548 + 0x38) = dx * spinRate;
+  *(f32 *)((int)lbl_803DD548 + 0x3c) = sinv * rollRate;
+  *(f32 *)((int)lbl_803DD548 + 0x18) = zero;
+  *(f32 *)((int)lbl_803DD548 + 0x1c) = zero;
+  *(f32 *)((int)lbl_803DD548 + 0x28) = zero;
+  *(f32 *)((int)lbl_803DD548 + 0x2c) = zero;
+  *(f32 *)((int)lbl_803DD548 + 0x38) = zero;
+  *(f32 *)((int)lbl_803DD548 + 0x3c) = zero;
+  curvesMove((char *)lbl_803DD548 + 0x78);
+  a2 = param_1[0] - (u16)(0x8000 - getAngle(*(f32 *)(param_1 + 0xc) - *(f32 *)((int)lbl_803DD548 + 0x14),
+                                            *(f32 *)(param_1 + 0x10) - *(f32 *)((int)lbl_803DD548 + 0x34)));
+  if (a2 > 0x8000) {
+    a2 = a2 - 0xffff;
+  }
+  if (a2 < -0x8000) {
+    a2 = a2 + 0xffff;
+  }
+  *(f32 *)((int)lbl_803DD548 + 0x40) = (f32)a2;
+  *(f32 *)((int)lbl_803DD548 + 0x44) = lbl_803E17C4;
+  *(f32 *)((int)lbl_803DD548 + 0x48) = lbl_803E17C4;
+  *(f32 *)((int)lbl_803DD548 + 0x4c) = lbl_803E17C4;
+  dx = *(f32 *)((int)lbl_803DD548 + 0x40) - *(f32 *)((int)lbl_803DD548 + 0x44);
+  if (dx > lbl_803E17C8 || dx < lbl_803E17CC) {
+    if (*(f32 *)((int)lbl_803DD548 + 0x40) < lbl_803E17C4) {
+      *(f32 *)((int)lbl_803DD548 + 0x40) = *(f32 *)((int)lbl_803DD548 + 0x40) + lbl_803E17D0;
+    }
+    else if (*(f32 *)((int)lbl_803DD548 + 0x44) < lbl_803E17C4) {
+      *(f32 *)((int)lbl_803DD548 + 0x44) = *(f32 *)((int)lbl_803DD548 + 0x44) + lbl_803E17D0;
+    }
+  }
+  *(f32 *)((int)lbl_803DD548 + 0x50) = (f32)param_1[1];
+  *(f32 *)((int)lbl_803DD548 + 0x54) = lbl_803E17C4;
+  *(f32 *)((int)lbl_803DD548 + 0x58) = lbl_803E17C4;
+  *(f32 *)((int)lbl_803DD548 + 0x5c) = lbl_803E17C4;
+  *(u8 *)(param_1 + 0x9f) = 1;
+  if (GameBit_Get(0xc64) != 0) {
+    ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7 = 1;
+  }
+  if (param_2 == 1) {
+    *(u8 *)((int)lbl_803DD548 + 0x12c) = 5;
+  }
+  else {
+    *(u8 *)((int)lbl_803DD548 + 0x12c) = 0;
+    ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b6 = 1;
+    Sfx_PlayFromObject(0, ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b7 ? 0x3f4 : 0x28b);
+  }
+  ((ViewfinderFlags *)((int)lbl_803DD548 + 0x12d))->b5 = 0;
+  *(f32 *)((int)lbl_803DD548 + 0x130) = *(f32 *)((int)lbl_803DD548 + 0x124);
 }
 
 /*
