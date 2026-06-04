@@ -19,6 +19,7 @@ extern f32 lbl_803E24D4;
 extern f32 lbl_803E2488;
 extern const char sTrickyShouldNeverStopCirclingError[];
 
+#pragma dont_inline on
 void *trickyFindCirclingTarget(void *obj, void *arg2) {
     void *target;
     void **list;
@@ -49,6 +50,7 @@ void *trickyFindCirclingTarget(void *obj, void *arg2) {
 fail:
     return NULL;
 }
+#pragma dont_inline reset
 
 void trickyUpdateCirclingTargetPosition(void *p1, void *p2) {
     void *p_24 = *(void **)((u8 *)p2 + 0x24);
