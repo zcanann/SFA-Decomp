@@ -4199,6 +4199,294 @@ void playerUpdate(int obj)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern f32 Curve_EvalCatmullRom(int curve, f32 t, int mode);
+extern f32 lbl_803E7FA8;
+extern f32 lbl_803E7F6C;
+extern f64 lbl_803E7EC0;
+extern f32 lbl_803E7F00;
+extern f32 lbl_803E7F44;
+extern f32 lbl_803E80E4;
+extern f32 lbl_803E7F10;
+extern f32 lbl_803E7FFC;
+extern f32 lbl_803E8098;
+extern f32 lbl_803E7E98;
+extern f32 lbl_803E7EE8;
+extern f32 lbl_803E7EAC;
+extern f32 lbl_803E7EFC;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_802B0EA4(int obj, int inner, int state)
+{
+    int d;
+    char *cam;
+    f32 dx;
+    f32 dz;
+    f32 spd;
+    f32 t;
+    f32 u;
+    int idx;
+    f32 one;
+    f32 v;
+
+    if ((*(u32 *)((char *)inner + 0x360) & 0x800000) != 0) {
+        s16 a = *(s16 *)obj;
+        *(s16 *)((char *)inner + 0x484) = a;
+        *(s16 *)((char *)inner + 0x478) = a;
+        *(int *)((char *)inner + 0x494) = a;
+        *(f32 *)((char *)state + 0x298) = lbl_803E7EA4;
+    }
+    *(f32 *)((char *)state + 0x29c) = *(f32 *)((char *)state + 0x298);
+    *(s16 *)((char *)inner + 0x490) = *(s16 *)((char *)inner + 0x484);
+    *(s16 *)((char *)inner + 0x492) = *(s16 *)((char *)inner + 0x478);
+    *(f32 *)((char *)state + 0x298) =
+        sqrtf(*(f32 *)((char *)state + 0x290) * *(f32 *)((char *)state + 0x290) +
+              *(f32 *)((char *)state + 0x28c) * *(f32 *)((char *)state + 0x28c));
+    if (*(f32 *)((char *)state + 0x298) > lbl_803E7FA8) {
+        *(f32 *)((char *)state + 0x298) = lbl_803E7FA8;
+    }
+    *(f32 *)((char *)state + 0x298) = *(f32 *)((char *)state + 0x298) / lbl_803E7FA8;
+    *(f32 *)((char *)inner + 0x470) =
+        *(f32 *)((char *)state + 0x298) - *(f32 *)((char *)state + 0x29c);
+    if (*(f32 *)((char *)state + 0x298) < lbl_803E7F6C) {
+        *(f32 *)((char *)state + 0x298) = lbl_803E7EA4;
+        *(int *)((char *)inner + 0x474) = *(int *)((char *)inner + 0x494);
+    } else {
+        *(int *)((char *)inner + 0x474) =
+            getAngle(*(f32 *)((char *)state + 0x290), -*(f32 *)((char *)state + 0x28c)) & 0xffff;
+        *(int *)((char *)inner + 0x474) =
+            *(int *)((char *)inner + 0x474) - *(s16 *)((char *)state + 0x330);
+        if ((*(u32 *)((char *)inner + 0x360) & 0x1000000) == 0) {
+            *(int *)((char *)inner + 0x494) = *(int *)((char *)inner + 0x474);
+        }
+    }
+    d = *(int *)((char *)inner + 0x474) - (u16)*(s16 *)((char *)inner + 0x484);
+    if (d > 0x8000) {
+        d = d - 0xffff;
+    }
+    if (d < -0x8000) {
+        d = d + 0xffff;
+    }
+    *(int *)((char *)inner + 0x48c) = (int)((f32)d / lbl_803E7F00);
+    if (*(f32 *)((char *)inner + 0x85c) != lbl_803E7EA4) {
+        f32 dead = *(f32 *)((char *)inner + 0x85c) * *(f32 *)((char *)state + 0x280);
+        if ((f32)*(int *)((char *)inner + 0x48c) < dead &&
+            (f32)*(int *)((char *)inner + 0x48c) > -dead) {
+            *(int *)((char *)inner + 0x48c) = 0;
+        }
+    }
+    if (d < 0) {
+        *(int *)((char *)inner + 0x488) = -*(int *)((char *)inner + 0x48c);
+    } else {
+        *(int *)((char *)inner + 0x488) = *(int *)((char *)inner + 0x48c);
+    }
+    if (*(f32 *)((char *)state + 0x298) < lbl_803E7F6C) {
+        *(u8 *)((char *)state + 0x34b) = 0;
+    } else {
+        d = d + 0xa000;
+        if (d < 0) {
+            d = d + 0xffff;
+        }
+        if (d > 0xffff) {
+            d = d - 0xffff;
+        }
+        *(u8 *)((char *)state + 0x34b) = (u8)(4 - d / 0x4000);
+    }
+    d = *(int *)((char *)inner + 0x474) - (u16)*(s16 *)((char *)inner + 0x478);
+    if (d > 0x8000) {
+        d = d - 0xffff;
+    }
+    if (d < -0x8000) {
+        d = d + 0xffff;
+    }
+    *(int *)((char *)inner + 0x480) = (int)((f32)d / lbl_803E7F00);
+    if (*(f32 *)((char *)inner + 0x85c) != lbl_803E7EA4) {
+        f32 dead = *(f32 *)((char *)inner + 0x85c) * *(f32 *)((char *)state + 0x280);
+        if ((f32)*(int *)((char *)inner + 0x480) < dead &&
+            (f32)*(int *)((char *)inner + 0x480) > -dead) {
+            *(int *)((char *)inner + 0x480) = 0;
+        }
+    }
+    if (d < 0) {
+        *(int *)((char *)inner + 0x47c) = -*(int *)((char *)inner + 0x480);
+    } else {
+        *(int *)((char *)inner + 0x47c) = *(int *)((char *)inner + 0x480);
+    }
+    d = *(int *)((char *)inner + 0x474) - (u16)*(s16 *)((char *)inner + 0x4d4);
+    if (d > 0x8000) {
+        d = d - 0xffff;
+    }
+    if (d < -0x8000) {
+        d = d + 0xffff;
+    }
+    *(int *)((char *)inner + 0x49c) = (int)((f32)d / lbl_803E7F00);
+    if (d < 0) {
+        *(int *)((char *)inner + 0x498) = -*(int *)((char *)inner + 0x49c);
+    } else {
+        *(int *)((char *)inner + 0x498) = *(int *)((char *)inner + 0x49c);
+    }
+    *(int *)((char *)inner + 0x4b8) =
+        (**(int (**)(void))((char *)(*gCameraInterface) + 0x40))();
+    cam = *(char **)((char *)inner + 0x4b8);
+    if (cam != NULL) {
+        dx = *(f32 *)(cam + 0xc) - *(f32 *)((char *)obj + 0xc);
+        dz = *(f32 *)(cam + 0x14) - *(f32 *)((char *)obj + 0x14);
+        *(int *)((char *)inner + 0x4ac) = getAngle(-dx, -dz) & 0xffff;
+        *(f32 *)((char *)inner + 0x4b0) = sqrtf(dx * dx + dz * dz);
+        *(u16 *)((char *)inner + 0x4b4) =
+            *(u8 *)(*(int *)(*(int *)(cam + 0x50) + 0x40) + 0x10) & 0xf;
+    }
+    d = *(int *)((char *)inner + 0x4ac) - (u16)*(s16 *)((char *)inner + 0x478);
+    if (d > 0x8000) {
+        d = d - 0xffff;
+    }
+    if (d < -0x8000) {
+        d = d + 0xffff;
+    }
+    *(int *)((char *)inner + 0x4a4) = (int)(f32)d;
+    if (d < 0) {
+        *(int *)((char *)inner + 0x4a8) = -*(int *)((char *)inner + 0x4a4);
+    } else {
+        *(int *)((char *)inner + 0x4a8) = *(int *)((char *)inner + 0x4a4);
+    }
+    if (((ByteFlags *)((char *)inner + 0x3f1))->b20 != 0) {
+        spd = sqrtf(*(f32 *)((char *)state + 0x280) * *(f32 *)((char *)state + 0x280) +
+                    *(f32 *)((char *)state + 0x284) * *(f32 *)((char *)state + 0x284));
+        t = lbl_803E7EA4;
+        if (spd < t) {
+        } else {
+            t = *(f32 *)((char *)inner + 0x404);
+            if (spd > t) {
+            } else {
+                t = spd;
+            }
+        }
+        if (lbl_803E7EE0 == *(f32 *)((char *)inner + 0x82c)) {
+            *(f32 *)((char *)inner + 0x438) = lbl_803E7F44;
+        } else {
+            u = t * *(f32 *)((char *)inner + 0x7e0);
+            idx = (int)u;
+            *(f32 *)((char *)inner + 0x438) =
+                lbl_803E7EE0 / Curve_EvalCatmullRom(*(int *)((char *)inner + 0x450) + (idx + 1) * 4, u - (f32)idx, 0);
+        }
+    } else {
+        spd = *(f32 *)((char *)state + 0x280);
+        t = lbl_803E7EA4;
+        if (spd < t) {
+        } else {
+            t = *(f32 *)((char *)inner + 0x404);
+            if (spd > t) {
+            } else {
+                t = spd;
+            }
+        }
+        u = t * *(f32 *)((char *)inner + 0x7e0);
+        idx = (int)u;
+        *(f32 *)((char *)inner + 0x438) =
+            lbl_803E7EE0 / Curve_EvalCatmullRom(*(int *)((char *)inner + 0x450) + (idx + 1) * 4, u - (f32)idx, 0);
+    }
+    u = t * *(f32 *)((char *)inner + 0x7e0);
+    idx = (int)u;
+    *(f32 *)((char *)inner + 0x428) = Curve_EvalCatmullRom(*(int *)((char *)inner + 0x454) + (idx + 1) * 4, u - (f32)idx, 0);
+    u = t * *(f32 *)((char *)inner + 0x7e0);
+    idx = (int)u;
+    *(f32 *)((char *)inner + 0x42c) = Curve_EvalCatmullRom(*(int *)((char *)inner + 0x458) + (idx + 1) * 4, u - (f32)idx, 0);
+    u = t * *(f32 *)((char *)inner + 0x7e0);
+    idx = (int)u;
+    *(f32 *)((char *)inner + 0x430) = Curve_EvalCatmullRom(*(int *)((char *)inner + 0x45c) + (idx + 1) * 4, u - (f32)idx, 0);
+    u = t * *(f32 *)((char *)inner + 0x7e0);
+    idx = (int)u;
+    *(f32 *)((char *)inner + 0x434) = Curve_EvalCatmullRom(*(int *)((char *)inner + 0x460) + (idx + 1) * 4, u - (f32)idx, 0);
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b20 != 0) {
+        *(f32 *)((char *)inner + 0x428) = *(f32 *)((char *)inner + 0x428) * lbl_803E80E4;
+        *(f32 *)((char *)inner + 0x430) = *(f32 *)((char *)inner + 0x430) * lbl_803E80E4;
+        *(f32 *)((char *)inner + 0x438) = *(f32 *)((char *)inner + 0x438) * lbl_803E7F44;
+    } else {
+        if (lbl_803E7EE0 != *(f32 *)((char *)inner + 0x834)) {
+            f32 base = *(f32 *)(*(int *)((char *)inner + 0x400) + 0x10);
+            f32 frac = (*(f32 *)((char *)state + 0x280) - base) /
+                       (*(f32 *)((char *)inner + 0x404) - base);
+            f32 c = lbl_803E7EA4;
+            if (frac < c) {
+            } else {
+                if (frac > lbl_803E7EE0) {
+                    c = lbl_803E7EE0;
+                } else {
+                    c = frac;
+                }
+            }
+            *(f32 *)((char *)inner + 0x430) =
+                *(f32 *)((char *)inner + 0x430) *
+                ((*(f32 *)((char *)inner + 0x834) - lbl_803E7EE0) * c + lbl_803E7EE0);
+        }
+    }
+    if (*(void **)((char *)inner + 0x464) != NULL) {
+        int n = *(int *)((char *)inner + 0x47c);
+        *(f32 *)((char *)inner + 0x420) = Curve_EvalCatmullRom(
+            *(int *)((char *)inner + 0x464) + (n / 5 + 1) * 4, (f32)(n % 5) / lbl_803E7F10, 0);
+    } else {
+        *(f32 *)((char *)inner + 0x420) = lbl_803E7EE0;
+    }
+    one = lbl_803E7EE0;
+    *(f32 *)((char *)inner + 0x420) = one;
+    if (((ByteFlags *)((char *)inner + 0x3f0))->b20 == 0 &&
+        *(f32 *)((char *)inner + 0x838) > lbl_803E7EA4) {
+        *(f32 *)((char *)inner + 0x840) =
+            (*(f32 *)((char *)inner + 0x838) - lbl_803E7FFC) / lbl_803E8098;
+        v = *(f32 *)((char *)inner + 0x840);
+        t = lbl_803E7EA4;
+        if (v < t) {
+        } else {
+            if (v > one) {
+                t = one;
+            } else {
+                t = v;
+            }
+        }
+        *(f32 *)((char *)inner + 0x840) = t;
+        *(f32 *)((char *)inner + 0x840) =
+            -(lbl_803E7E98 * *(f32 *)((char *)inner + 0x840) - lbl_803E7EE0);
+    } else {
+        if (*(s16 *)((char *)state + 0x19c) < 1) {
+            *(f32 *)((char *)inner + 0x840) = lbl_803E7EE0;
+        } else {
+            *(f32 *)((char *)inner + 0x840) =
+                (f32)*(s16 *)((char *)state + 0x19c) / lbl_803E7EE8;
+            v = *(f32 *)((char *)inner + 0x840);
+            t = lbl_803E7EA4;
+            if (v < t) {
+            } else {
+                t = lbl_803E7EE0;
+                if (v > t) {
+                } else {
+                    t = v;
+                }
+            }
+            *(f32 *)((char *)inner + 0x840) = t;
+            *(f32 *)((char *)inner + 0x840) =
+                -(lbl_803E7EAC * *(f32 *)((char *)inner + 0x840) - lbl_803E7EE0);
+        }
+    }
+    if (*(void **)((char *)inner + 0x7f8) != NULL) {
+        *(f32 *)((char *)inner + 0x840) = *(f32 *)((char *)inner + 0x840) - lbl_803E7EFC;
+    }
+    v = *(f32 *)((char *)inner + 0x840);
+    t = lbl_803E7E98;
+    if (v < t) {
+    } else {
+        t = lbl_803E7EE0;
+        if (v > t) {
+        } else {
+            t = v;
+        }
+    }
+    *(f32 *)((char *)inner + 0x840) = t;
+    *(u32 *)((char *)inner + 0x360) = *(u32 *)((char *)inner + 0x360) & 0xfe7fffff;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+
 extern void fn_80026C54(int a);
 
 typedef struct {
