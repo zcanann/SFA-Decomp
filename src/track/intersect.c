@@ -546,8 +546,8 @@ void timeFn_8006f400(f32 step)
  * --INFO--
  *
  * Function: drawFn_8006f500
- * EN v1.0 Address: 0x8006F09C
- * EN v1.0 Size: 4b
+ * EN v1.0 Address: 0x8006F500
+ * EN v1.0 Size: 1104b
  * EN v1.1 Address: 0x8006F67C
  * EN v1.1 Size: 1104b
  * JP Address: TODO
@@ -555,9 +555,112 @@ void timeFn_8006f400(f32 step)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void drawFn_8006f500(void)
 {
+    extern f32 playerMapOffsetX, playerMapOffsetZ;
+    extern f32 Gbase;
+    extern f32 lbl_803DEE38;
+    extern f32 lbl_803DEE3C;
+    extern f32 lbl_803DEE44;
+    extern f32 lbl_803DEE48;
+    extern void *lbl_80391DD0[];
+    extern u8 lbl_80392DE0[];
+    extern f32 Vachuff_803DEE20;
+    extern f32 __THPHuffmanBits_803DEE24;
+    extern void selectTexture(void *tex, int slot);
+    extern void fn_8000F9B4(void);
+    extern f32 *Camera_GetViewMatrix(void);
+    extern void Camera_ApplyFullViewport(void);
+    extern u8 *Obj_GetPlayerObject(void);
+
+    GXColor color;
+    Mtx camTrans;
+    Mtx posMtx;
+    Mtx rot;
+    Mtx trans;
+    u8 *quad;
+    f32 *view;
+    int i;
+    f32 tTop;
+    f32 tBot;
+    u8 alpha;
+
+    if (Obj_GetPlayerObject() == NULL) {
+        return;
+    }
+    fn_8000F9B4();
+    GXSetCurrentMtx(0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xd, 1);
+    GXSetNumTexGens(1);
+    GXSetTexCoordGen2(0, 1, 4, 0x1e, 0, 0x7d);
+    GXSetNumTevStages(1);
+    GXSetNumIndStages(0);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    GXSetNumChans(0);
+    GXSetTevOrder(0, 0, 0, 0xff);
+    GXSetTevDirect(0);
+    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
+    GXSetTevKAlphaSel(0, 0x1c);
+    GXSetTevAlphaIn(0, 7, 4, 6, 7);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetCullMode(0);
+    GXSetBlendMode(1, 4, 5, 5);
+    selectTexture(lbl_80391DD0[lbl_803DCFF0], 0);
+    view = Camera_GetViewMatrix();
+    PSMTXTrans(camTrans, -playerMapOffsetX, Vachuff_803DEE20, -playerMapOffsetZ);
+    PSMTXConcat((MtxP)view, camTrans, posMtx);
+    GXLoadPosMtxImm(posMtx, 0);
+    gxSetZMode_(1, 3, 0);
+    gxSetPeControl_ZCompLoc_(1);
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    i = 0;
+    quad = lbl_80392DE0;
+    for (; i < 0x100; i++) {
+        alpha = quad[0x33];
+        if (alpha != 0) {
+            if (quad[0x32] == 1) {
+                color.a = alpha >> 2;
+            } else {
+                color.a = alpha >> 1;
+            }
+            GXSetTevKColor(0, color);
+            if (quad[0x34] != 0) {
+                tTop = lbl_803DEE38;
+                tBot = Vachuff_803DEE20;
+                PSMTXRotRad(rot, 0x7a, lbl_803DEE3C * (Gbase * (f32)(int)(0x8000 - *(u16 *)(quad + 0x30))) / lbl_803DEE44);
+            } else {
+                tTop = Vachuff_803DEE20;
+                tBot = lbl_803DEE38;
+                PSMTXRotRad(rot, 0x7a, lbl_803DEE3C * (Gbase * (f32)(u32)*(u16 *)(quad + 0x30)) / lbl_803DEE44);
+            }
+            PSMTXTrans(trans, lbl_803DEE48, lbl_803DEE48, Vachuff_803DEE20);
+            PSMTXConcat(rot, trans, rot);
+            PSMTXTrans(trans, __THPHuffmanBits_803DEE24, __THPHuffmanBits_803DEE24, Vachuff_803DEE20);
+            PSMTXConcat(trans, rot, rot);
+            GXLoadTexMtxImm(rot, 0x1e, 1);
+            GXBegin(0x80, 2, 4);
+            GXPosition3f32(*(f32 *)(quad + 0x0), *(f32 *)(quad + 0x4), *(f32 *)(quad + 0x8));
+            GXTexCoord2f32(Vachuff_803DEE20, tTop);
+            GXPosition3f32(*(f32 *)(quad + 0xc), *(f32 *)(quad + 0x10), *(f32 *)(quad + 0x14));
+            GXTexCoord2f32(lbl_803DEE38, tTop);
+            GXPosition3f32(*(f32 *)(quad + 0x18), *(f32 *)(quad + 0x1c), *(f32 *)(quad + 0x20));
+            GXTexCoord2f32(lbl_803DEE38, tBot);
+            GXPosition3f32(*(f32 *)(quad + 0x24), *(f32 *)(quad + 0x28), *(f32 *)(quad + 0x2c));
+            GXTexCoord2f32(Vachuff_803DEE20, tBot);
+        }
+        quad += 0x38;
+    }
+    Camera_ApplyFullViewport();
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
