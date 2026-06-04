@@ -913,7 +913,7 @@ int trickyFn_801430e0(u8 *obj, u8 *state)
             if (ret < 5 && ret >= 0) {
                 tricky_startRandomIdleMove((int)obj, (int)state);
             } else {
-                objAnimFn_801441c0((int)obj, (int)state);
+                objAnimFn_801441c0(obj, state);
             }
         }
     }
@@ -1486,7 +1486,7 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
         tricky_startRandomIdleMove(param_1,(int)param_2);
       }
       else {
-        objAnimFn_801441c0(param_1,(int)param_2);
+        objAnimFn_801441c0((u8 *)param_1,(u8 *)param_2);
       }
     }
     else {
@@ -1523,88 +1523,79 @@ undefined4 fn_80143DD4(int param_1,int *param_2)
  */
 #pragma scheduling off
 #pragma peephole off
-void objAnimFn_801441c0(int param_1,int param_2)
-{
-  short *psVar1;
-  int iVar2;
-  int iVar3;
-  uint uVar4;
-  bool bVar5;
-  int iVar6;
-  uint uVar7;
-  uint uVar8;
-  double dVar9;
-  float local_38 [2];
-  undefined4 local_30;
-  uint uStack_2c;
+extern f32 fn_80293E80(f64 x);
+extern f64 sin(f64 x);
+extern f64 lbl_803E2528;
+extern f32 lbl_803E2454;
+extern f32 lbl_803E2458;
+extern f32 lbl_803E2484;
+extern f32 lbl_803E2524;
+extern f32 lbl_803E2530;
 
-  psVar1 = (short *)param_1;
-  iVar6 = param_2;
-  uVar8 = 1;
-  uVar7 = 3;
-  local_38[0] = lbl_803E31B4;
-  iVar2 = ObjGroup_FindNearestObject(0x4d,psVar1,local_38);
-  if ((iVar2 != 0) && ((*(ushort *)(iVar2 + 0xb0) & 0x800) != 0)) {
-    uVar8 = 0;
-  }
-  iVar3 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
-  if ((iVar3 == 0) || (uVar4 = FUN_80017690(0xdd), uVar4 == 0)) {
-    uVar7 = 2;
-  }
-  uVar7 = randomGetRange(uVar8,uVar7);
-  if (uVar7 == 2) {
-    objAnimFn_8013a3f0((int)psVar1,0x2d,lbl_803E31C0,0);
-    *(uint *)(iVar6 + 0x54) = *(uint *)(iVar6 + 0x54) | 0x10;
-    *(undefined *)(iVar6 + 10) = 9;
-  }
-  else if ((int)uVar7 < 2) {
-    if (uVar7 == 0) {
-      *(int *)(iVar6 + 0x24) = iVar2;
-      FUN_80039580(iVar2,0,(float *)(iVar6 + 0x72c));
-      if (*(int *)(iVar6 + 0x28) != iVar6 + 0x72c) {
-        *(int *)(iVar6 + 0x28) = iVar6 + 0x72c;
-        *(uint *)(iVar6 + 0x54) = *(uint *)(iVar6 + 0x54) & 0xfffffbff;
-        *(undefined2 *)(iVar6 + 0xd2) = 0;
-      }
-      *(byte *)(iVar6 + 0x728) = *(byte *)(iVar6 + 0x728) & 0xdf;
-      *(undefined *)(iVar6 + 10) = 0xc;
+void objAnimFn_801441c0(u8 *obj, u8 *state)
+{
+    f32 arr[2];
+    u8 *found;
+    u8 *ptr;
+    u8 lo;
+    u8 hi;
+    int sv;
+    f32 ang;
+
+    lo = 1;
+    hi = 3;
+    arr[0] = lbl_803E2524;
+    found = (u8 *)ObjGroup_FindNearestObject(0x4d, obj, arr);
+    if (found != NULL && (*(u16 *)(found + 0xb0) & 0x800) != 0) {
+        lo = 0;
     }
-    else if (-1 < (int)uVar7) {
-      uVar7 = randomGetRange(0x20,0xff);
-      uStack_2c = (int)(short)((*psVar1 + (short)uVar7) * 0x100) ^ 0x80000000;
-      local_30 = 0x43300000;
-      dVar9 = (double)FUN_80293f90();
-      *(float *)(iVar6 + 0x72c) = (float)(DOUBLE_803e31b8 * -dVar9 + (double)*(float *)(psVar1 + 6))
-      ;
-      *(undefined4 *)(iVar6 + 0x730) = *(undefined4 *)(psVar1 + 8);
-      dVar9 = (double)FUN_80294964();
-      *(float *)(iVar6 + 0x734) =
-           (float)((double)lbl_803E3114 * -dVar9 + (double)*(float *)(psVar1 + 10));
-      if (*(int *)(iVar6 + 0x28) != iVar6 + 0x72c) {
-        *(int *)(iVar6 + 0x28) = iVar6 + 0x72c;
-        *(uint *)(iVar6 + 0x54) = *(uint *)(iVar6 + 0x54) & 0xfffffbff;
-        *(undefined2 *)(iVar6 + 0xd2) = 0;
-      }
-      *(undefined *)(iVar6 + 10) = 8;
+    if (((int (**)(int))*gSHthorntailAnimationInterface)[9](0) == 0 || GameBit_Get(0xdd) == 0) {
+        hi = 2;
     }
-  }
-  else if ((int)uVar7 < 4) {
-    objAnimFn_8013a3f0((int)psVar1,0x29,lbl_803E30D4,0);
-    iVar2 = *(int *)(psVar1 + 0x5c);
-    if (((*(byte *)(iVar2 + 0x58) >> 6 & 1) == 0) &&
-       (((0x2f < psVar1[0x50] || (psVar1[0x50] < 0x29)) &&
-        (bVar5 = Sfx_IsPlayingFromObjectChannel((int)psVar1,0x10), !bVar5)))) {
-      objAudioFn_800393f8((int)psVar1,(void *)(iVar2 + 0x3a8),0x354,0x1000,0xffffffff,0);
+    switch (randomGetRange(lo, hi)) {
+    case 0:
+        *(u8 **)(state + 0x24) = found;
+        objPosFn_80039510((int)found, 0, (float *)(state + 0x72c));
+        if (*(u8 **)(state + 0x28) != state + 0x72c) {
+            *(u8 **)(state + 0x28) = state + 0x72c;
+            *(u32 *)(state + 0x54) &= ~0x400;
+            *(u16 *)(state + 0xd2) = 0;
+        }
+        *(u8 *)(state + 0x728) &= ~0x20;
+        state[0xa] = 0xc;
+        break;
+    case 1:
+        sv = randomGetRange(0x20, 0xff);
+        ang = lbl_803E2454 * (f32)(s16)((*(s16 *)obj + sv) * 0x100) / lbl_803E2458;
+        *(f32 *)(state + 0x72c) = (f32)(lbl_803E2528 * -fn_80293E80(ang) + *(f32 *)(obj + 0xc));
+        *(u32 *)(state + 0x730) = *(u32 *)(obj + 0x10);
+        *(f32 *)(state + 0x734) = (f32)((f64)lbl_803E2484 * -sin(ang) + *(f32 *)(obj + 0x14));
+        if (*(u8 **)(state + 0x28) != state + 0x72c) {
+            *(u8 **)(state + 0x28) = state + 0x72c;
+            *(u32 *)(state + 0x54) &= ~0x400;
+            *(u16 *)(state + 0xd2) = 0;
+        }
+        state[0xa] = 8;
+        break;
+    case 2:
+        objAnimFn_8013a3f0((int)obj, 0x2d, lbl_803E2530, 0);
+        *(u32 *)(state + 0x54) |= 0x10;
+        state[0xa] = 9;
+        break;
+    case 3:
+        objAnimFn_8013a3f0((int)obj, 0x29, lbl_803E2444, 0);
+        ptr = *(u8 **)(obj + 0xb8);
+        if (((u32)*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+            && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+            && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+            objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x354, 0x1000, -1, 0);
+        }
+        *(u32 *)(state + 0x54) |= 0x10;
+        state[0xa] = 4;
+        *(f32 *)(state + 0x73c) = (f32)(int)randomGetRange(0x78, 0xf0);
+        break;
     }
-    *(uint *)(iVar6 + 0x54) = *(uint *)(iVar6 + 0x54) | 0x10;
-    *(undefined *)(iVar6 + 10) = 4;
-    uStack_2c = randomGetRange(0x78,0xf0);
-    *(float *)(iVar6 + 0x73c) = (f32)(s32)uStack_2c;
-  }
-  return;
 }
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--

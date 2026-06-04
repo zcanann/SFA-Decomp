@@ -20,7 +20,7 @@ undefined4 trickyFn_80143b04(int param_1,int *param_2);
 undefined4 trickyFn_80143b78(int param_1,int *param_2);
 int trickyFn_80143c04(int obj, int state);
 undefined4 fn_80143DD4(int param_1,int *param_2);
-void objAnimFn_801441c0(int param_1,int param_2);
+void objAnimFn_801441c0(u8 *obj, u8 *state);
 void tricky_startRandomIdleMove(int param_1,int param_2);
 int trickyFoodFn_8014460c(int param_1,int *param_2);
 
