@@ -647,6 +647,8 @@ void kaldachompspit_update(int obj)
     s16 v;
     int rnd;
     f32 t;
+    u8 glow;
+    s8 drift;
 
     state = *(u32 **)(obj + 0xb8);
     *(int *)(obj + 0xf4) = (int)((f32)*(int *)(obj + 0xf4) - timeDelta);
@@ -706,8 +708,9 @@ void kaldachompspit_update(int obj)
             if ((ptr != 0) && (*(u8 *)(ptr + 0x2f8) != 0) && (*(u8 *)(ptr + 0x4c) != 0)) {
                 rnd = randomGetRange(-0x19, 0x19);
                 ptr = *state;
-                v = *(u8 *)(ptr + 0x2f9);
-                v = v + (*(s8 *)(ptr + 0x2fa) + rnd);
+                glow = *(u8 *)(ptr + 0x2f9);
+                drift = *(s8 *)(ptr + 0x2fa);
+                v = glow + (drift + rnd);
                 if (v < 0) {
                     v = 0;
                     *(u8 *)(ptr + 0x2fa) = 0;
