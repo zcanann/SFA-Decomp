@@ -129,50 +129,204 @@ extern f32 FLOAT_803e2cbc;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cMenuSetItems(void)
+extern u8 lbl_803A87F0[];
+extern s16 lbl_8031B4E0[];
+extern s16 lbl_803DD894;
+extern s8 lbl_803DD896;
+extern u16 yButtonState;
+extern u16 yButtonItem;
+extern s16 yButtonItemTextureId;
+extern int gTrickyHudItemMask;
+extern int gTrickyHudActionMask;
+extern int getTrickyObject(void);
+extern int getLoadedFileFlags(int flags);
+extern void textureFree();
+extern void *textureLoadAsset(int idx);
+
+#pragma peephole off
+#pragma scheduling off
+int cMenuSetItems(s16 *itemsIn, char useTricky)
 {
-  if (DAT_803dc6cd < '\0') {
-    DAT_803de416 = DAT_803de416 + (ushort)DAT_803dc070 * -(short)DAT_803dc6cd;
-    if (0 < DAT_803de416) {
-      DAT_803de416 = 0;
-      DAT_803dc6cd = '\0';
-      DAT_803de40e = 0;
+    int count;
+    u8 *base;
+    s16 *ids;
+    u8 *flP;
+    int *wordP;
+    s16 *stP;
+    s16 *dst;
+    s16 *items;
+    int halfOff;
+    int wordOff;
+    s16 *src;
+    int active;
+    int i;
+    s16 *w1;
+    s16 *w2;
+    s16 *w3;
+    u8 *w4;
+    s16 *idsW2;
+    void **texW;
+    void **texP2;
+    s16 saved[64];
+
+    items = itemsIn;
+    base = lbl_803A87F0;
+    ids = (s16 *)(base + 0x948);
+    w1 = ids;
+    dst = saved;
+    w2 = dst;
+    stP = (s16 *)(base + 0x548);
+    w3 = stP;
+    flP = base + 0x448;
+    w4 = flP;
+    for (i = 0; i < 64; i++) {
+        *w2 = *w1;
+        *w1 = -1;
+        halfOff = 0;
+        *w3 = halfOff;
+        *w4 = 1;
+        w1++;
+        w2++;
+        w3++;
+        w4++;
     }
-  }
-  else {
-    DAT_803de416 = DAT_803de416 - (ushort)DAT_803dc070 * (short)DAT_803dc6cd;
-    if (DAT_803de416 < 0) {
-      DAT_803de416 = 0;
-      DAT_803dc6cd = '\0';
-      DAT_803de40e = 0;
+    count = 0;
+    wordOff = 0;
+    wordP = (int *)(base + 0x848);
+    *wordP = -1;
+    if (useTricky == 0) {
+        lbl_803DD894 = -1;
+        for (src = items; *src > -1; src += 8) {
+            active = GameBit_Get(*src);
+            if (active != 0) {
+                if (items == lbl_8031B4E0) {
+                    if (src[1] < 0 || GameBit_Get(src[1]) == 0) {
+                        *(s16 *)(base + halfOff + 0x948) = src[3];
+                        *(int *)(base + wordOff + 0x848) = src[0];
+                        *(int *)(base + wordOff + 0x748) = src[2];
+                        *(int *)(base + wordOff + 0x648) = src[1];
+                        *(u8 *)(base + count + 0x448) = active;
+                        *(s16 *)(base + halfOff + 0x548) = src[6];
+                        *(s16 *)(base + halfOff + 0x5c8) = src[5];
+                        *(u8 *)(base + count + 0x508) = *(u8 *)(src + 7);
+                        *(u8 *)(base + count + 0x4c8) = ((u8 *)src)[0xf];
+                        if (src[2] < 0 || GameBit_Get(src[2]) == 0) {
+                            *(u8 *)(base + count + 0x488) = 1;
+                        } else {
+                            *(u8 *)(base + count + 0x488) = 0;
+                        }
+                        count++;
+                        wordOff += 4;
+                        halfOff += 2;
+                    }
+                } else if (src[1] < 0 || GameBit_Get(src[1]) == 0) {
+                    if (lbl_803DD896 != 0 && lbl_803DD896 == *src) {
+                        lbl_803DD894 = count;
+                    }
+                    *(s16 *)(base + halfOff + 0x948) = src[3];
+                    *(int *)(base + wordOff + 0x848) = src[0];
+                    *(int *)(base + wordOff + 0x748) = src[2];
+                    *(int *)(base + wordOff + 0x648) = src[1];
+                    *(u8 *)(base + count + 0x448) = active;
+                    *(s16 *)(base + halfOff + 0x548) = src[6];
+                    *(s16 *)(base + halfOff + 0x5c8) = src[5];
+                    *(u8 *)(base + count + 0x508) = *(u8 *)(src + 7);
+                    *(u8 *)(base + count + 0x4c8) = ((u8 *)src)[0xf];
+                    if (src[2] < 0 || GameBit_Get(src[2]) == 0) {
+                        *(u8 *)(base + count + 0x488) = 1;
+                    } else {
+                        *(u8 *)(base + count + 0x488) = 0;
+                    }
+                    count++;
+                    wordOff += 4;
+                    halfOff += 2;
+                }
+            }
+        }
+    } else {
+        int itemMask;
+        int actionMask;
+        int yItem;
+        s16 *idsW;
+        s16 *aW;
+        u8 *cW;
+        u8 *dW;
+        u8 *eW;
+
+        getTrickyObject();
+        itemMask = gTrickyHudItemMask;
+        if (itemMask == -1) {
+            if (yButtonState == 2) {
+                yButtonState = 0;
+                yButtonItemTextureId = -1;
+            }
+        } else {
+            idsW = ids;
+            aW = (s16 *)(base + 0x5c8);
+            cW = base + 0x508;
+            dW = base + 0x4c8;
+            eW = base + 0x488;
+            actionMask = gTrickyHudActionMask;
+            yItem = yButtonItem;
+            for (src = items; *src > -1; src += 8) {
+                if ((actionMask & *src) != 0) {
+                    *idsW = src[3];
+                    *flP = 1;
+                    *wordP = src[2];
+                    *stP = src[6];
+                    *aW = src[5];
+                    *cW = *(u8 *)(src + 7);
+                    *dW = ((u8 *)src)[0xf];
+                    if ((itemMask & *src) != 0) {
+                        *eW = 1;
+                    } else {
+                        *eW = 0;
+                    }
+                    idsW++;
+                    flP++;
+                    wordP++;
+                    stP++;
+                    aW++;
+                    cW++;
+                    dW++;
+                    eW++;
+                    count++;
+                } else if (yButtonState == 2 && yItem == src[2]) {
+                    yButtonState = 0;
+                    yButtonItemTextureId = -1;
+                }
+            }
+        }
     }
-  }
-  if (DAT_803de415 == '\0') {
-    if ((DAT_803de556 == 0) &&
-       (DAT_803de418 = DAT_803de418 + (ushort)DAT_803dc070 * -8, DAT_803de418 < 0)) {
-      DAT_803de418 = 0;
+    i = 0;
+    idsW2 = ids;
+    texP2 = (void **)(base + 0x9c8);
+    texW = texP2;
+    do {
+        if (*dst > -1 && *dst != *idsW2 && *texW != 0) {
+            textureFree(*texW);
+            *texW = 0;
+        }
+        dst++;
+        idsW2++;
+        texW++;
+        i++;
+    } while (i < 0x40);
+    if (getLoadedFileFlags(0) == 0) {
+        i = 0;
+        do {
+            if (*ids > -1 && *texP2 == 0) {
+                *texP2 = textureLoadAsset(*ids);
+            }
+            ids++;
+            texP2++;
+            i++;
+        } while (i < 0x40);
     }
-  }
-  else {
-    DAT_803de418 = DAT_803de418 + (ushort)DAT_803dc070 * 8;
-    if (0xff < DAT_803de418) {
-      DAT_803de418 = 0xff;
-    }
-  }
-  if ((DAT_803de415 == '\0') || (DAT_803de418 < 0x41)) {
-    DAT_803de556 = DAT_803de556 + (ushort)DAT_803dc070 * -0x10;
-    if (DAT_803de556 < 0) {
-      DAT_803de556 = 0;
-    }
-  }
-  else {
-    DAT_803de556 = DAT_803de556 + (ushort)DAT_803dc070 * 0x10;
-    if (DAT_803dc6ce < DAT_803de556) {
-      DAT_803de556 = DAT_803dc6ce;
-    }
-  }
-  return;
+    return count;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -657,7 +811,6 @@ extern f32 lbl_803E2010;
 extern f64 lbl_803E1E88;
 extern void gxColorFn_80052764(void *p);
 
-#pragma peephole off
 #pragma scheduling off
 int cMenuRenderFn_80124854(int obj, int param2, int param3)
 {
@@ -671,7 +824,8 @@ int cMenuRenderFn_80124854(int obj, int param2, int param3)
         if (lbl_803A93A8[idx] != 0) {
             cfg[3] = *(u8 *)(obj + 0x37);
         } else {
-            cfg[3] = (int)(lbl_803E2010 * (f32)(u32)*(u8 *)(obj + 0x37));
+            int v = (int)(lbl_803E2010 * (f32)(u32)*(u8 *)(obj + 0x37));
+            cfg[3] = v;
         }
         gxFn_80051fb8(tex, 0, 0, cfg, 0, 1);
     } else {
@@ -685,7 +839,6 @@ int cMenuRenderFn_80124854(int obj, int param2, int param3)
     GXSetAlphaCompare(7, 0, 0, 7, 0);
     return 1;
 }
-#pragma peephole reset
 #pragma scheduling reset
 
 extern int Camera_GetCurrentViewSlot(void);
@@ -705,14 +858,14 @@ extern void objRender(int p1, int p2, int p3, int p4, int obj, int p6);
 extern void GXSetViewport(f32 x, f32 y, f32 w, f32 h, f32 nearz, f32 farz);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern f32 sin(f32 x);
-extern u8 cMenuState;
+extern s8 cMenuState;
 extern u8 framesThisStep;
 extern s16 lbl_803DD796;
 extern s16 cMenuFadeCounter;
 extern s16 lbl_803DD79A;
 extern s16 lbl_803DD79C;
 extern s16 lbl_803DD79E;
-extern s16 lbl_803DBA30;
+extern u16 lbl_803DBA30;
 extern int lbl_803DCCF0;
 extern int lbl_803DD7E0;
 extern u8 lbl_803DD8B6;
@@ -736,95 +889,107 @@ extern f32 lbl_803E2024;
 extern f64 lbl_803E2028;
 extern f64 lbl_803E2030;
 
+#pragma peephole off
+#pragma scheduling off
 void hudDrawCMenu(int p1, int p2, int p3) {
-    int slot;
-    int i;
+    u8 slot;
     int sel;
     int model;
-    char used[5];
-    f32 vals[4];
-    f32 sx;
+    int *objs;
+    u8 *u;
+    f32 *v;
+    int i;
+    int j;
+    f32 div;
     f32 sy;
-    f32 fov;
-    f32 small;
+    f32 sx;
+    f32 mul;
+    f32 thresh;
+    u8 used[4];
+    f32 vals[3];
 
     Camera_GetCurrentViewSlot();
     slot = 0;
-    if (cMenuState == 3) {
+    switch (cMenuState) {
+    case 2:
+        slot = 0;
+        break;
+    case 3:
         slot = 1;
-    } else if (cMenuState < 3) {
-        if (cMenuState > 1) {
-            slot = 0;
-        }
-    } else if (cMenuState < 5) {
+        break;
+    case 4:
         slot = 2;
+        break;
     }
-    vals[3] = 176.0f;
     *(f32 *)(lbl_803A93E0[slot] + 0x10) =
-        lbl_803E1E40 + (f32)(-lbl_803DD796 * (u16)lbl_803DBA30) / lbl_803E201C;
+        lbl_803E1E40 + (f32)(-lbl_803DD796 * lbl_803DBA30) / lbl_803E201C;
     sy = lbl_803DBAC8;
     sx = lbl_803DBAC4;
-    fov = Camera_GetFovY();
-    lbl_803DBAA4 = fov;
+    lbl_803DBAA4 = Camera_GetFovY();
     Camera_SetFovY(lbl_803E2020);
     Camera_SetCurrentViewIndex(1);
     lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
     Camera_DisableViewYOffset();
-    small = lbl_803E1E3C;
-    Camera_SetCurrentViewPosition(small, small, small);
+    {
+        f32 small = lbl_803E1E3C;
+        Camera_SetCurrentViewPosition(small, small, small);
+    }
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
     GXSetViewport(sx - lbl_803E1F34, sy - lbl_803E2024, (f32)(u32)*(u16 *)(lbl_803DCCF0 + 4),
                   (f32)(u32)*(u16 *)(lbl_803DCCF0 + 8), lbl_803E1E3C, lbl_803E1E68);
-    {
-        char *u = used;
-        int *objs = lbl_803A93EC;
-        f32 *v = vals;
-        i = 0;
-        do {
-            u += 1;
-            *u = 0;
-            *v = sin(lbl_803E1EC8 * (f32)*(s16 *)*objs / lbl_803E1E94);
-            objs += 1;
-            v += 1;
-            i += 1;
-        } while (i < 3);
-    }
     i = 0;
+    u = used;
+    objs = lbl_803A93EC;
+    v = vals;
+    mul = lbl_803E1EC8;
+    div = lbl_803E1E94;
+    do {
+        *u = 0;
+        *v = sin(mul * (f32)*(s16 *)*objs / div);
+        u++;
+        objs++;
+        v++;
+        i++;
+    } while (i < 3);
+    j = 0;
+    thresh = lbl_803E1E3C;
     do {
         f32 best = lbl_803E1EC4;
         sel = -1;
-        if (used[1] == 0 && vals[0] < best) {
-            sel = 0;
+        if (used[0] == 0 && vals[0] < best) {
             best = vals[0];
+            sel = 0;
         }
-        if (used[2] == 0 && vals[1] < best) {
-            sel = 1;
+        if (used[1] == 0 && vals[1] < best) {
             best = vals[1];
+            sel = 1;
         }
-        if (used[3] == 0 && vals[2] < best) {
-            sel = 2;
+        if (used[2] == 0 && vals[2] < best) {
             best = vals[2];
+            sel = 2;
         }
-        if (sel == -1) break;
+        if (sel == -1) {
+            break;
+        }
         model = Obj_GetActiveModel(lbl_803A93EC[sel]);
         *(u16 *)(model + 0x18) &= ~8;
-        *(s8 *)(lbl_803A93EC[sel] + 0x37) = cMenuFadeCounter;
+        *(u8 *)(lbl_803A93EC[sel] + 0x37) = cMenuFadeCounter;
         model = Obj_GetActiveModel(lbl_803A93E0[sel]);
         *(u16 *)(model + 0x18) &= ~8;
-        *(s8 *)(lbl_803A93E0[sel] + 0x37) = (s8)(cMenuFadeCounter * lbl_803DD8D4 / 0xff);
-        if (best <= lbl_803E1E3C) {
-            objRender(p1, p2, p3, 0, lbl_803A93EC[sel], 1);
-        } else {
+        *(u8 *)(lbl_803A93E0[sel] + 0x37) = cMenuFadeCounter * lbl_803DD8D4 / 0xff;
+        if (best > thresh) {
             objRender(p1, p2, p3, 0, lbl_803A93EC[sel], 1);
             GXSetScissor(0, 0x79, 0x280, 0x95);
             objRender(p1, p2, p3, 0, lbl_803A93E0[sel], 1);
             GXSetScissor(0, 0, 0x280, 0x1e0);
+        } else {
+            objRender(p1, p2, p3, 0, lbl_803A93EC[sel], 1);
         }
-        used[sel + 1] = 1;
-        i += 1;
-    } while (i < 3);
+        used[sel] = 1;
+        j++;
+    } while (j < 3);
     Camera_SetCurrentViewIndex(0);
     if (lbl_803DD7E0 != 0) {
         Camera_EnableViewYOffset();
@@ -834,120 +999,186 @@ void hudDrawCMenu(int p1, int p2, int p3) {
     Camera_RebuildProjectionMatrix();
     Camera_ApplyFullViewport();
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+
+#pragma peephole off
+#pragma scheduling off
 void cMenuRotateFn_80124d80(void) {
+    u16 uend;
+    s16 end;
+    s16 diff;
     s16 step;
-    int astep;
-    int adiff;
-    int diff;
-    s16 cur;
-    int d1;
-    int d2;
-    int d3;
-    int a1;
-    int a2;
-    int a3;
+    int cur;
+    s16 diff2;
+    s16 curd;
+    s16 d1;
+    s16 d2;
+    s16 d3;
     s16 r;
+    int t1;
+    int t5;
+    int tmp;
+    s16 best;
 
-    step = lbl_803DD79A * (u16)framesThisStep * 1000;
-    astep = step;
-    if (astep != 0) {
-        diff = (s16)(lbl_803DD79C - lbl_803DD79E);
+    step = (s16)(lbl_803DD79A * (framesThisStep * 1000));
+    if (step != 0) {
+        end = lbl_803DD79E;
+        uend = end;
+        diff = (s16)(lbl_803DD79C - uend);
         if (diff > 0x8000) {
-            diff = (s16)(diff + 1);
+            diff = (s16)(diff - 0xFFFF);
         }
         if (diff < -0x8000) {
-            diff = (s16)(diff + -1);
+            diff = (s16)(diff + 0xFFFF);
         }
-        if (astep < 0) {
-            astep = -astep;
+        t5 = (step < 0) ? -step : step;
+        t1 = diff;
+        if (t1 < 0) {
+            t1 = -t1;
         }
-        adiff = diff;
-        if (adiff < 0) {
-            adiff = -adiff;
-        }
-        if (astep < adiff) {
-            lbl_803DD79C = lbl_803DD79C + step;
-        } else {
-            lbl_803DD79C = lbl_803DD79E;
+        if (t1 <= t5) {
+            lbl_803DD79C = end;
             lbl_803DD79A = 0;
+        } else {
+            lbl_803DD79C += step;
         }
         cur = lbl_803DD79C;
-        diff = (s16)(lbl_803DD79C - lbl_803DD79E);
-        if (diff > 0x8000) {
-            diff = (s16)(diff + 1);
+        diff2 = (s16)(cur - uend);
+        if (diff2 > 0x8000) {
+            diff2 = (s16)(diff2 - 0xFFFF);
         }
-        if (diff < -0x8000) {
-            diff = (s16)(diff + -1);
+        if (diff2 < -0x8000) {
+            diff2 = (s16)(diff2 + 0xFFFF);
         }
-        adiff = diff;
-        if (adiff < 0) {
-            adiff = -adiff;
+        t1 = diff2;
+        if (t1 < 0) {
+            t1 = -t1;
         }
-        if (adiff < 0x2aab) {
+        if (t1 <= 0x2aaa) {
             lbl_803DD8B6 = lbl_803DD8B7;
         }
-        *(s16 *)lbl_803A93EC[0] = lbl_803DD79C;
+        *(s16 *)lbl_803A93EC[0] = cur;
         *(s16 *)lbl_803A93E0[0] = cur;
-        *(s16 *)lbl_803A93EC[1] = cur + 0x5555;
-        *(s16 *)lbl_803A93E0[1] = cur + 0x5555;
-        *(s16 *)lbl_803A93EC[2] = cur + -0x5556;
-        *(s16 *)lbl_803A93E0[2] = cur + -0x5556;
+        t1 = cur + 0x5555;
+        *(s16 *)lbl_803A93EC[1] = t1;
+        *(s16 *)lbl_803A93E0[1] = t1;
+        t1 = cur + 0xAAAA;
+        *(s16 *)lbl_803A93EC[2] = t1;
+        *(s16 *)lbl_803A93E0[2] = t1;
+        curd = lbl_803DD79C;
+        d1 = curd;
+        if (curd > 0x8000) {
+            d1 = (s16)(curd - 0xFFFF);
+        }
+        if (d1 < -0x8000) {
+            d1 = (s16)(d1 + 0xFFFF);
+        }
+        d2 = (s16)(curd - 0x5555);
+        if (d2 > 0x8000) {
+            d2 = (s16)(d2 - 0xFFFF);
+        }
+        if (d2 < -0x8000) {
+            d2 = (s16)(d2 + 0xFFFF);
+        }
+        d3 = (s16)(curd - 0xAAAA);
+        if (d3 > 0x8000) {
+            d3 = (s16)(d3 - 0xFFFF);
+        }
+        if (d3 < -0x8000) {
+            d3 = (s16)(d3 + 0xFFFF);
+        }
+        t5 = d2;
+        if (t5 < 0) {
+            t5 = -t5;
+        }
+        t1 = d1;
+        if (t1 < 0) {
+            t1 = -t1;
+        }
+        if (t1 < t5) {
+            tmp = d1;
+            if (d1 < 0) {
+                tmp = -d1;
+            }
+        } else {
+            tmp = d2;
+            if (d2 < 0) {
+                tmp = -d2;
+            }
+        }
+        best = tmp;
+        t1 = d3;
+        if (t1 < 0) {
+            t1 = -t1;
+        }
+        if (best >= t1 && (best = d3, d3 < 0)) {
+            best = -d3;
+        }
+        r = (s16)(int)-(lbl_803E2030 * (f64)best - lbl_803E2028);
+        lbl_803DD8D4 = (r > 0) ? r : 0;
     }
     cur = lbl_803DD79C;
-    *(s16 *)lbl_803A93EC[0] = lbl_803DD79C;
+    *(s16 *)lbl_803A93EC[0] = cur;
     *(s16 *)lbl_803A93E0[0] = cur;
-    *(s16 *)lbl_803A93EC[1] = cur + 0x5555;
-    *(s16 *)lbl_803A93E0[1] = cur + 0x5555;
-    *(s16 *)lbl_803A93EC[2] = cur + -0x5556;
-    *(s16 *)lbl_803A93E0[2] = cur + -0x5556;
-    d1 = lbl_803DD79C;
-    if (d1 > 0x8000) {
-        d1 = (s16)(lbl_803DD79C + 1);
+    t1 = cur + 0x5555;
+    *(s16 *)lbl_803A93EC[1] = t1;
+    *(s16 *)lbl_803A93E0[1] = t1;
+    t1 = cur + 0xAAAA;
+    *(s16 *)lbl_803A93EC[2] = t1;
+    *(s16 *)lbl_803A93E0[2] = t1;
+    curd = lbl_803DD79C;
+    d1 = curd;
+    if (curd > 0x8000) {
+        d1 = (s16)(curd - 0xFFFF);
     }
     if (d1 < -0x8000) {
-        d1 = (s16)(d1 + -1);
+        d1 = (s16)(d1 + 0xFFFF);
     }
-    d2 = (s16)(lbl_803DD79C + -0x5555);
+    d2 = (s16)(curd - 0x5555);
     if (d2 > 0x8000) {
-        d2 = (s16)(lbl_803DD79C + -0x5554);
+        d2 = (s16)(d2 - 0xFFFF);
     }
     if (d2 < -0x8000) {
-        d2 = (s16)(d2 + -1);
+        d2 = (s16)(d2 + 0xFFFF);
     }
-    d3 = (s16)(lbl_803DD79C + 0x5556);
+    d3 = (s16)(curd - 0xAAAA);
     if (d3 > 0x8000) {
-        d3 = (s16)(lbl_803DD79C + 0x5557);
+        d3 = (s16)(d3 - 0xFFFF);
     }
     if (d3 < -0x8000) {
-        d3 = (s16)(d3 + -1);
+        d3 = (s16)(d3 + 0xFFFF);
     }
-    a2 = d2;
-    if (a2 < 0) {
-        a2 = -a2;
+    t5 = d2;
+    if (t5 < 0) {
+        t5 = -t5;
     }
-    a1 = d1;
-    if (a1 < 0) {
-        a1 = -a1;
+    t1 = d1;
+    if (t1 < 0) {
+        t1 = -t1;
     }
-    if (a1 < a2) {
-        d2 = d1;
+    if (t1 < t5) {
+        tmp = d1;
         if (d1 < 0) {
-            d2 = -d1;
+            tmp = -d1;
         }
-    } else if (d2 < 0) {
-        d2 = -d2;
+    } else {
+        tmp = d2;
+        if (d2 < 0) {
+            tmp = -d2;
+        }
     }
-    a3 = d3;
-    if (a3 < 0) {
-        a3 = -a3;
+    best = tmp;
+    t1 = d3;
+    if (t1 < 0) {
+        t1 = -t1;
     }
-    if (a3 <= d2 && (d2 = d3, d3 < 0)) {
-        d2 = -d3;
+    if (best >= t1 && (best = d3, d3 < 0)) {
+        best = -d3;
     }
-    r = (s16)(int)-(lbl_803E2030 * (f64)(f32)d2 - lbl_803E2028);
-    if (r < 1) {
-        r = 0;
-    }
-    lbl_803DD8D4 = (s8)r;
+    r = (s16)(int)-(lbl_803E2030 * (f64)best - lbl_803E2028);
+    lbl_803DD8D4 = (r > 0) ? r : 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
