@@ -2960,3 +2960,61 @@ void imspacethruster_update(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E4814;
+
+#pragma scheduling off
+#pragma peephole off
+void lavaball1bf_update(int *obj) {
+    u8 *setup;
+    u8 *state;
+    int *spawned;
+    f32 t;
+
+    state = *(u8 **)((char *)obj + 0xb8);
+    setup = *(u8 **)((char *)obj + 0x4c);
+    state[0x1a] = GameBit_Get(*(s16 *)(setup + 0x24));
+    if (state[0x1b] != 0) {
+        if (GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+            state[0x1a] = 1;
+            state[0x1b] = 0;
+            *(f32 *)(state + 0xc) = lbl_803E4814;
+        } else {
+            state[0x1a] = 0;
+        }
+    }
+    if (*(void **)(state + 8) == NULL && Obj_IsLoadingLocked() != 0) {
+        int s = Obj_AllocObjectSetup(0x24, 0x18d);
+        *(u8 *)(s + 2) = 9;
+        *(u8 *)(s + 4) = 2;
+        *(u8 *)(s + 6) = 0xff;
+        *(u8 *)(s + 5) = 4;
+        *(u8 *)(s + 7) = 0x50;
+        *(f32 *)(s + 8) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)(s + 0xc) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)(s + 0x10) = *(f32 *)((char *)obj + 0x14);
+        *(s8 *)(s + 0x18) = (s8)setup[0x1c];
+        *(s16 *)(s + 0x1a) = setup[0x1a];
+        *(s16 *)(s + 0x1c) = setup[0x1b];
+        *(int *)(s + 0x14) = *(int *)(setup + 0x14);
+        *(int *)(state + 8) = ((int (*)(int, int, int, int, int))Obj_SetupObject)(s, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
+    }
+    spawned = *(int **)(state + 8);
+    t = *(f32 *)(state + 0xc) - timeDelta;
+    *(f32 *)(state + 0xc) = t;
+    if (t <= lbl_803E4814 && ((int (*)(int *))((void **)*(void **)*(int *)((char *)spawned + 0x68))[9])(spawned) != 0) {
+        if (state[0x1a] != 0) {
+            int a;
+            if (GameBit_Get(*(s16 *)(setup + 0x1e)) != 0 && state[0x18] == 0) {
+                a = setup[0x20];
+                state[0x18] = 1;
+            } else {
+                a = setup[0x1a];
+            }
+            ((void (*)(int *, int, int))((void **)*(void **)*(int *)((char *)spawned + 0x68))[8])(spawned, a, setup[0x1b]);
+        }
+        *(f32 *)(state + 0xc) = *(f32 *)(state + 0x10) + (f32)(int)randomGetRange(0, 0x3c);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
