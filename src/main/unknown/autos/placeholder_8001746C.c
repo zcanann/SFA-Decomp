@@ -8114,9 +8114,11 @@ void setFrameCountdown_800202c4(u8 v) {
     lbl_803DCA3B = v;
 }
 
+#pragma dont_inline on
 int getHudHiddenFrameCount(void) {
     return lbl_803DCA3A;
 }
+#pragma dont_inline reset
 
 s16 getScreenBlankFrameCount(void) {
     return lbl_803DCA46;
@@ -8236,9 +8238,11 @@ void fn_80026C30(u8 *p, u8 v) {
     p[0x1a] = v;
 }
 
+#pragma dont_inline on
 int gameTextFn_80019b14(void) {
     return lbl_803DC9E8;
 }
+#pragma dont_inline reset
 
 #pragma dont_inline on
 void gameTextSetDrawFunc(void *fn) {
@@ -9403,6 +9407,7 @@ extern int gameTextFn_8001bcb4(void);
 extern int gameTextFn_8001b44c(int x);
 extern void gameTextLoadForCurMap(int sourceId);
 
+#pragma dont_inline on
 void gameTextSetCharset(int charset, int flags) {
     if (gameTextDrawFunc != NULL || (flags & 1)) {
         gameTextFonts = (u8 *)&lbl_8033AF40[charset];
@@ -9422,6 +9427,8 @@ void gameTextSetCharset(int charset, int flags) {
         s->f4 = charset;
     }
 }
+
+#pragma dont_inline reset
 
 void gameTextLoadDir(int dirId) {
     GameTextSlot *cmd;
@@ -11661,6 +11668,7 @@ void lightFn_8001d6b0(u8 *obj) {
     obj[0x2f9] = v;
 }
 
+#pragma dont_inline on
 void gameTextSetColor(u8 r, u8 g, u8 b, u8 a) {
     if (gameTextDrawFunc != NULL) {
         lbl_803DC9A7 = r;
@@ -11679,6 +11687,7 @@ void gameTextSetColor(u8 r, u8 g, u8 b, u8 a) {
         s->f10 = a;
     }
 }
+#pragma dont_inline reset
 
 void gameTextSetWindowStrPos(int idx, int x, int y) {
     if (gameTextDrawFunc != NULL) {
@@ -11770,6 +11779,7 @@ void gameTextInitFn_8001bd14(void) {
 }
 #pragma optimize_for_size reset
 
+#pragma dont_inline on
 void subtitleFn_8001b700(void) {
     void **slot;
     int i;
@@ -11796,6 +11806,8 @@ void subtitleFn_8001b700(void) {
         }
     }
 }
+
+#pragma dont_inline reset
 
 void fn_8001BDD4(int mode) {
     switch (mode) {
@@ -17136,4 +17148,75 @@ void *loadAnimation(int hdr, s16 id, int b, u8 *bufout)
     return animLoadFromTable((u8 *)hdr, id, (s16)b, bufout);
 }
 #pragma dont_inline reset
+#pragma pop
+
+extern int lbl_803DCA08;
+extern f32 lbl_803DCA0C;
+extern int lbl_803DCA10;
+extern int lbl_803DCA18;
+extern int lbl_8033B640[];
+extern f32 lbl_8033BA40[];
+extern f32 lbl_803DE720;
+
+typedef struct {
+    u32 code;
+    u16 r, g, b, a;
+} SubtitleCmd;
+
+extern SubtitleCmd *textFn_80018bc4(int str, int *count);
+extern void gameTextShowStr(int str, int a, int b, int c);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void textFn_8001b46c(int a)
+{
+    int charset;
+    SubtitleCmd *cmds;
+    int delay;
+    int n;
+
+    if (lbl_803DCA04 == 2) {
+        if (lbl_803DC9F0 != 0) {
+            charset = gameTextFn_80019b14();
+            gameTextSetCharset(1, 2);
+        }
+        if (getHudHiddenFrameCount() == 0) {
+            lbl_803DCA10 += framesThisStep;
+        }
+        lbl_803DCA0C = (f32)lbl_803DCA10 / lbl_803DE720;
+        if (lbl_803DCA08 + 1 < lbl_803DCA18 && lbl_803DCA0C >= lbl_8033BA40[lbl_803DCA08 + 1]) {
+            cmds = textFn_80018bc4(lbl_8033B640[lbl_803DCA08], &n);
+            if (cmds != NULL) {
+                SubtitleCmd *p = &cmds[n];
+                while (p--, n-- != 0) {
+                    if (p->code == 0xf8ff) {
+                        SubtitleCmd *e = &cmds[n];
+                        lbl_803DC9F7 = e->r;
+                        lbl_803DC9F6 = e->g;
+                        lbl_803DC9F5 = e->b;
+                        lbl_803DC9F4 = e->a;
+                        break;
+                    }
+                }
+                delay = mmSetFreeDelay(0);
+                mm_free(cmds);
+                mmSetFreeDelay(delay);
+            }
+            lbl_803DCA08++;
+            if (lbl_803DCA08 + 1 >= lbl_803DCA18) {
+                subtitleFn_8001b700();
+                if (lbl_803DC9F0 != 0) {
+                    gameTextSetCharset(charset, 2);
+                }
+                return;
+            }
+        }
+        gameTextSetColor(lbl_803DC9F7, lbl_803DC9F6, lbl_803DC9F5, lbl_803DC9F4);
+        gameTextShowStr(lbl_8033B640[lbl_803DCA08], 10, 0, 0);
+        if (lbl_803DC9F0 != 0) {
+            gameTextSetCharset(charset, 2);
+        }
+    }
+}
 #pragma pop
