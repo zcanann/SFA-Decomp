@@ -1820,7 +1820,7 @@ void player_playSoundFn10(int* obj, int* state, int bit, int idx, int* sfxTable)
     }
 }
 
-void player_render2(int* obj, int* state, f32 f1, f32 f2)
+void player_render2(s16* obj, int* state, f32 f1, f32 f2)
 {
     f32 cur = *(f32*)((char*)state + 680);
     f32 new_ = f2 * f1 + cur;
@@ -1830,7 +1830,7 @@ void player_render2(int* obj, int* state, f32 f1, f32 f2)
     {
         f32 delta = new_ - cur;
         if (delta > lbl_803E0570) {
-            *(s16*)obj = *(s16*)obj + (s32)(*(f32*)((char*)state + 768) * delta);
+            *obj = *obj + (s32)(*(f32*)((char*)state + 768) * delta);
         }
     }
     *(f32*)((char*)state + 680) = new_;
@@ -1845,12 +1845,13 @@ void player_modelMtxFn(f32* mtx, int* state, f32 f1, f32 f2)
     }
     {
         f32 delta = new_ - cur;
-        if (delta <= lbl_803E0570) return;
-        *(f32*)((char*)mtx + 12) = *(f32*)((char*)state + 756) * delta + *(f32*)((char*)mtx + 12);
-        *(f32*)((char*)mtx + 16) = *(f32*)((char*)state + 760) * delta + *(f32*)((char*)mtx + 16);
-        *(f32*)((char*)mtx + 20) = *(f32*)((char*)state + 764) * delta + *(f32*)((char*)mtx + 20);
+        if (delta > lbl_803E0570) {
+            *(f32*)((char*)mtx + 12) = *(f32*)((char*)state + 756) * delta + *(f32*)((char*)mtx + 12);
+            *(f32*)((char*)mtx + 16) = *(f32*)((char*)state + 760) * delta + *(f32*)((char*)mtx + 16);
+            *(f32*)((char*)mtx + 20) = *(f32*)((char*)state + 764) * delta + *(f32*)((char*)mtx + 20);
+            *(f32*)((char*)state + 684) = new_;
+        }
     }
-    *(f32*)((char*)state + 684) = new_;
 }
 
 void player_findCurve(int* obj, int* state, int p3)
@@ -1912,7 +1913,7 @@ void dll_0F_func0B(int* obj, int* state, f32 f1, f32 f2, f32 f3)
 {
     if (*(f32*)((char*)state + 664) > lbl_803E05B4) {
         f32 q = (f2 * f1) / f3;
-        *(s16*)obj = (s32)((f32)*(s16*)obj + lbl_803E05B8 * q);
+        *(s16*)obj = (f32)*(s16*)obj + lbl_803E05B8 * q;
     }
 }
 
@@ -2420,7 +2421,7 @@ void screenTransition_do2(int p1, int p2, int p3) {
         col.b = 0;
         col.g = 0;
         col.r = 0;
-        col.a = (u8)(int)lbl_803DD420;
+        col.a = (int)lbl_803DD420;
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
@@ -2430,7 +2431,7 @@ void screenTransition_do2(int p1, int p2, int p3) {
         col.r = 0xff;
         col.g = 0xff;
         col.b = 0xff;
-        col.a = (u8)(int)lbl_803DD420;
+        col.a = (int)lbl_803DD420;
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
@@ -2443,7 +2444,7 @@ void screenTransition_do2(int p1, int p2, int p3) {
         col.r = 0xff;
         col.g = 0;
         col.b = 0;
-        col.a = (u8)(int)lbl_803DD420;
+        col.a = (int)lbl_803DD420;
         hudDrawRect(sx, sy, sw, sh, col);
         GXSetScissor(sx, sy, sw, sh);
         break;
