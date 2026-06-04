@@ -2408,7 +2408,7 @@ int ViewFrustum_IsSphereVisible(float* center, float radius) {
 /* 112b indexed teardown/free of map block. */
 extern char lbl_803822C8[];
 extern void* gLoadedRomListPages[];
-extern void defStartFn_8005972c(void* p1, void* p2, int idx, int flag);
+extern void defStartFn_8005972c(char* p1, u32* p2, int idx, int flag);
 extern void mm_free(void* p);
 
 #pragma scheduling off
@@ -2417,7 +2417,7 @@ void fn_80059A50(int param_1) {
 	int idx = param_1;
 	void* p = gLoadedRomListPages[idx];
 	if (p != 0) {
-		defStartFn_8005972c(p, lbl_803822C8 + idx * 0x8C, idx, 1);
+		defStartFn_8005972c(p, (u32*)(lbl_803822C8 + idx * 0x8C), idx, 1);
 		mm_free(gLoadedRomListPages[idx]);
 		gLoadedRomListPages[idx] = 0;
 	}
@@ -2823,7 +2823,7 @@ void mapLoadForObject(int p1, char *p2)
     }
     *(u8 *)(p2 + 0x34) = (u8)slot;
     (*(void (*)(int, int))(*(int *)(*gMapEventInterface + 0x48)))(p1, slot);
-    defStartFn_8005972c((void *)romList, &lbl_803822C8[slot * 0x8c], slot, 0);
+    defStartFn_8005972c((char *)romList, (u32*)&lbl_803822C8[slot * 0x8c], slot, 0);
     (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x58)))(slot);
     lbl_803DCEC8 = saved;
 }
@@ -2996,7 +2996,7 @@ int mapGetRomListAndOffsets(int p1, int flag)
     *(u8 *)((char *)lbl_803DCEA0 + 0x18) = 0;
     *(u8 *)((char *)lbl_803DCEA0 + 0x19) = 0;
     if (flag == 0) {
-        defStartFn_8005972c(lbl_803DCEA0, &lbl_803822C8[p1 * 0x8c], p1, 0);
+        defStartFn_8005972c(lbl_803DCEA0, (u32*)&lbl_803822C8[p1 * 0x8c], p1, 0);
         (*(void (*)(int))(*(int *)(*gMapEventInterface + 0x58)))(p1);
     }
     return (int)lbl_803DCEA0;
@@ -3534,6 +3534,139 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
         plane += 5;
     }
     return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void defStartFn_8005972c(char* p, u32* tbl, int idx, int flag)
+{
+    char* cur;
+    int count;
+    int pos;
+    u8 found;
+    u32 mask;
+    int* q;
+    int j;
+    int m;
+    int v;
+    s16 t;
+    int step;
+    int n2;
+
+    found = 0;
+    mask = 0;
+    cur = *(char**)(p + 0x20);
+    count = *(u16*)(p + 8);
+    if (count != 0) {
+        pos = 0;
+        if (flag == 0) {
+            tbl[0x21] = -1;
+            tbl[0] = -1;
+            tbl[1] = -1;
+            tbl[2] = -1;
+            tbl[3] = -1;
+            tbl[4] = -1;
+            tbl[5] = -1;
+            tbl[6] = -1;
+            tbl[7] = -1;
+            tbl[8] = -1;
+            tbl[9] = -1;
+            tbl[10] = -1;
+            tbl[11] = -1;
+            tbl[12] = -1;
+            tbl[13] = -1;
+            tbl[14] = -1;
+            tbl[15] = -1;
+            tbl[16] = -1;
+            tbl[17] = -1;
+            tbl[18] = -1;
+            tbl[19] = -1;
+            tbl[20] = -1;
+            tbl[21] = -1;
+            tbl[22] = -1;
+            tbl[23] = -1;
+            tbl[24] = -1;
+            tbl[25] = -1;
+            tbl[26] = -1;
+            tbl[27] = -1;
+            tbl[28] = -1;
+            tbl[29] = -1;
+            tbl[30] = -1;
+            tbl[31] = -1;
+        }
+        for (; pos < count; ) {
+            if (flag != 0) {
+                if (*(s16*)cur == 110)
+                    (*(void (*)(char*))(*(int*)(*gRomCurveInterface + 0xc)))(cur);
+                if (*(s16*)cur == 5)
+                    (*(void (*)(char*))(*(int*)(*gCheckpointInterface + 0xc)))(cur);
+            } else {
+                t = *(s16*)cur;
+                if (t == 110 || t == 5) {
+                    if (t == 110)
+                        (*(void (*)(char*))(*(int*)(*gRomCurveInterface + 8)))(cur);
+                    else
+                        (*(void (*)(char*))(*(int*)(*gCheckpointInterface + 8)))(cur);
+                    if (found == 0) {
+                        tbl[0x21] = (int)cur - *(int*)(p + 0x20);
+                        found = 1;
+                    }
+                } else if (*(u8*)(cur + 4) & 0x10) {
+                    if ((mask & (1 << *(u8*)(cur + 6))) == 0) {
+                        tbl[*(u8*)(cur + 6)] = (int)cur - *(int*)(p + 0x20);
+                        mask |= 1 << *(u8*)(cur + 6);
+                    }
+                }
+            }
+            step = *(u8*)(cur + 2) * 4;
+            pos += step;
+            cur += step;
+        }
+        if (flag == 0) {
+            m = count;
+            v = tbl[0x21];
+            if (v != -1 && v < count)
+                m = v;
+            j = 0;
+            q = (int*)tbl;
+            for (n2 = 0; n2 < 4; n2++) {
+                v = q[0];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[1];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[2];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[3];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[4];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[5];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[6];
+                if (v != -1 && v < m)
+                    m = v;
+                v = q[7];
+                if (v != -1 && v < m)
+                    m = v;
+                q += 8;
+                j += 7;
+            }
+            tbl[0x22] = m;
+            v = tbl[0x21];
+            if (v != -1)
+                tbl[0x20] = v;
+            else
+                tbl[0x20] = count;
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
