@@ -7225,6 +7225,234 @@ int fn_8029C9C8(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
+extern f32 lbl_803E80C0;
+extern f32 lbl_803E80A0;
+extern f32 lbl_803DC6B8[2];
+int fn_802A87CC(int obj, char *cam, f32 *out, f32 *vec, f32 fa, f32 fb)
+{
+    s8 mode;
+    int inner;
+    void *parent;
+    int wallHit;
+    int tris;
+    int verts;
+    void **list;
+    f32 y1;
+    f32 y2;
+    f32 z1;
+    f32 z2;
+    f32 x1;
+    f32 x2;
+    f32 dists[4];
+    f32 z9c;
+    f32 planes[7];
+    f32 p7c;
+
+    mode = 0;
+    inner = *(int *)((char *)obj + 0xb8);
+    if (fa <= *(f32 *)((char *)inner + 0x280) * fb || fa <= lbl_803E80C0) {
+        s8 st = *(s8 *)((char *)cam + 0x50);
+        if (st == 2 || st == 0x11) {
+            mode = 4;
+        } else if (!(*(f32 *)((char *)inner + 0x280) >= lbl_803E80A0)) {
+            mode = 5;
+        } else if (st != 4) {
+            mode = 4;
+        }
+    }
+    out[7] = *(f32 *)((char *)cam + 0x1c);
+    out[8] = *(f32 *)((char *)cam + 0x20);
+    out[9] = *(f32 *)((char *)cam + 0x24);
+    out[7] = -out[7];
+    out[8] = -out[8];
+    out[9] = -out[9];
+    out[10] = -*(f32 *)((char *)cam + 0x28);
+    out[0xb] = vec[0];
+    out[0xc] = vec[1];
+    out[0xd] = vec[2];
+    parent = *(void **)cam;
+    if (mode == 4) {
+        char *cp;
+        f32 *pl;
+        f32 *dp;
+        int i;
+        f32 *b6b8;
+        f32 *px2;
+        f32 *py2;
+        f32 *pz2;
+        f32 thresh;
+        wallHit = 0;
+        if (parent != NULL) {
+            tris = *(int *)((char *)*(int *)((char *)parent + 0x50) + 0x34);
+            verts = *(int *)((char *)*(int *)((char *)parent + 0x50) + 0x3c);
+        } else {
+            tris = lbl_803DCF34;
+            verts = lbl_803DCF38;
+        }
+        planes[0] = out[9];
+        planes[1] = lbl_803E7EA4;
+        planes[2] = -out[7];
+        planes[3] = -(planes[0] * *(f32 *)((char *)cam + 0x4) +
+                      planes[2] * *(f32 *)((char *)cam + 0x14));
+        planes[4] = -planes[0];
+        planes[5] = lbl_803E7EA4;
+        planes[6] = -planes[2];
+        p7c = -(planes[4] * *(f32 *)((char *)cam + 0x8) +
+                planes[6] * *(f32 *)((char *)cam + 0x18));
+        i = 0;
+        pl = planes;
+        dp = dists;
+        cp = cam;
+        b6b8 = lbl_803DC6B8;
+        px2 = &x2;
+        py2 = &y2;
+        pz2 = &z2;
+        thresh = lbl_803E7E98;
+        do {
+            f32 dot = ((f32 (*)(f32 *, f32 *))PSVECDotProduct)(pl, vec);
+            *dp = pl[3] + dot;
+            if (*dp < thresh + b6b8[1]) {
+                int tri;
+                if (*(s16 *)(cp + 0x4c) > -1) {
+                    tri = tris + *(s16 *)(cp + 0x4c) * 0x10;
+                } else {
+                    tri = 0;
+                }
+                if (tri == 0 || ((*(s8 *)(tri + 3) & 0x3f) != 5 && (*(s8 *)(tri + 3) & 0x3f) != 2)) {
+                    wallHit = 1;
+                } else {
+                    x1 = *(f32 *)(verts + *(s16 *)(tri + 4) * 0xc);
+                    y1 = lbl_803E7EA4;
+                    z1 = *(f32 *)(verts + *(s16 *)(tri + 4) * 0xc + 8);
+                    x2 = *(f32 *)(verts + *(s16 *)(tri + 6) * 0xc);
+                    y2 = lbl_803E7EA4;
+                    z2 = *(f32 *)(verts + *(s16 *)(tri + 6) * 0xc + 8);
+                    if (parent != NULL) {
+                        ((void (*)(f32 *, f32 *, f32 *, void *))Obj_TransformLocalPointToWorld)(
+                            &x1, &y1, &z1, parent);
+                        ((void (*)(f32, f32, f32, f32 *, f32 *, f32 *, void *))
+                             Obj_TransformLocalPointToWorld)(x2, y2, z2, px2, py2, pz2, parent);
+                    }
+                    {
+                        f32 dz = z2 - z1;
+                        f32 dx = x1 - x2;
+                        f32 inv = lbl_803E7EE0 / sqrtf(dz * dz + dx * dx);
+                        dz = dz * inv;
+                        dx = dx * inv;
+                        if (dz * out[7] + dx * out[9] < lbl_803E7E98) {
+                            wallHit = 1;
+                        }
+                    }
+                }
+            }
+            pl += 4;
+            dp++;
+            cp += 2;
+            i++;
+        } while (i < 2);
+        if (dists[0] < dists[1]) {
+            *(u8 *)((char *)out + 0x5f) = 0;
+        } else {
+            *(u8 *)((char *)out + 0x5f) = 1;
+        }
+        if (wallHit != 0) {
+            f32 e = lbl_803E7E98;
+            out[0xb] = out[0xb] + ((e + b6b8[1]) - dists[*(u8 *)((char *)out + 0x5f)]) *
+                                      planes[(u32)*(u8 *)((char *)out + 0x5f) * 4];
+            out[0xd] = out[0xd] + ((e + b6b8[1]) - dists[*(u8 *)((char *)out + 0x5f)]) *
+                                      planes[(u32)*(u8 *)((char *)out + 0x5f) * 4 + 2];
+        }
+        {
+            f32 e2 = lbl_803E7E98;
+            out[0x11] = -(out[7] * (e2 + lbl_803DC6C0) - out[0xb]);
+            out[0x13] = -(out[9] * (e2 + lbl_803DC6C0) - out[0xd]);
+        }
+        {
+            f32 f = lbl_803E7F10;
+            out[0x14] = f * out[7] + out[0xb];
+            out[0x16] = f * out[9] + out[0xd];
+        }
+        out[1] = *(f32 *)((char *)cam + 0xc) +
+                 *(f32 *)((char *)cam + 0x48) *
+                     (*(f32 *)((char *)cam + 0x10) - *(f32 *)((char *)cam + 0xc));
+        dists[2] = out[0x14];
+        dists[3] = out[1];
+        z9c = out[0x16];
+        ((void (*)(f32 *, f32 *, f32 *, int))Obj_TransformLocalPointToWorld)(
+            &dists[2], &dists[3], &z9c, *(int *)((char *)obj + 0x30));
+        {
+            int cnt = hitDetectFn_80065e50(obj, (int ***)&list, 0, 0x201, dists[2], dists[3], z9c);
+            if (cnt != 0) {
+                f32 best = lbl_803E80AC;
+                f32 best2 = best;
+                int bi = -1;
+                int i2 = 0;
+                void **pp = list;
+                if (cnt > 0) {
+                    do {
+                        f32 dy = dists[3] - *(f32 *)*pp;
+                        if (lbl_803E7EA4 <= dy && (best < lbl_803E7EA4 || dy < best)) {
+                            best = dy;
+                            bi = i2;
+                        }
+                        if (lbl_803E80B0 < ((f32 *)*pp)[2] && lbl_803E7EA4 <= dy &&
+                            (best2 < lbl_803E7EA4 || dy < best2)) {
+                            best2 = dy;
+                        }
+                        pp++;
+                        i2++;
+                        cnt--;
+                    } while (cnt != 0);
+                }
+                if (best < lbl_803E80C4 && bi != -1 && ((f32 *)list[bi])[2] <= lbl_803E80B0 &&
+                    lbl_803E7EB0 < ((f32 *)list[bi])[2]) {
+                    return 0;
+                }
+                if (best2 < lbl_803E80C4) {
+                    return 0;
+                }
+            }
+        }
+        dists[2] = out[0x11];
+        dists[3] = out[1];
+        z9c = out[0x13];
+        ((void (*)(f32 *, f32 *, f32 *, int))Obj_TransformLocalPointToWorld)(
+            &dists[2], &dists[3], &z9c, *(int *)((char *)obj + 0x30));
+        if (hitDetectFn_800658a4(obj, out + 0x12, 0x205, dists[2], dists[3], z9c) == 0) {
+            out[0x12] = out[1] - out[0x12];
+        } else {
+            out[0x12] = out[1];
+        }
+        out[2] = *(f32 *)((char *)cam + 0xc);
+        out[0] = out[1] - out[2];
+        *(u8 *)((char *)out + 0x5e) = *(u8 *)((char *)cam + 0x50);
+        *(u8 *)((char *)out + 0x60) = *(u8 *)((char *)cam + 0x53);
+        if (*(int *)((char *)obj + 0x30) != 0) {
+            ((void (*)(f32, f32, f32, f32 *, f32 *, f32 *))Obj_TransformLocalPointToWorld)(
+                out[0xb], out[0xc], out[0xd], out + 0xb, out + 0xc, out + 0xd);
+            ((void (*)(f32, f32, f32, f32 *, f32 *, f32 *, int))Obj_TransformLocalPointToWorld)(
+                out[0x11], out[0x12], out[0x13], out + 0x11, out + 0x12, out + 0x13,
+                *(int *)((char *)obj + 0x30));
+            ((void (*)(f32, f32, f32, f32 *, f32 *, f32 *, int))Obj_TransformLocalPointToWorld)(
+                out[0x14], out[0x15], out[0x16], out + 0x14, out + 0x15, out + 0x16,
+                *(int *)((char *)obj + 0x30));
+            *(f32 *)((char *)inner + 0x5ac) =
+                *(f32 *)((char *)inner + 0x5ac) + *(f32 *)(*(int *)((char *)obj + 0x30) + 0x10);
+            *(f32 *)((char *)inner + 0x5b0) =
+                *(f32 *)((char *)inner + 0x5b0) + *(f32 *)(*(int *)((char *)obj + 0x30) + 0x10);
+        }
+        *(u8 *)((char *)out + 0x61) = 1;
+        if (parent != NULL && (*(u32 *)((char *)*(int *)((char *)parent + 0x50) + 0x44) & 0x8000) == 0) {
+            *(void **)((char *)inner + 0x4c4) = parent;
+        } else {
+            *(int *)((char *)inner + 0x4c4) = 0;
+        }
+    } else {
+        *(int *)((char *)inner + 0x4c4) = 0;
+    }
+    return mode;
+}
+
 int fn_802A8EE4(int a, int b, int c, int d, int e)
 {
     EmitPlane planes[2];
