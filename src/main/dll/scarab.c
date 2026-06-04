@@ -4705,6 +4705,63 @@ int fn_80161468(int* obj, u8* state)
     return 0;
 }
 
+int fn_801614D4(int obj, u8 *p)
+{
+  extern f32 timeDelta;
+  extern f64 lbl_803E2ED8;
+  extern f32 lbl_803E2ED0;
+  extern f32 lbl_803E2ED4;
+  u16 a;
+  u16 b;
+  u16 c;
+
+  if (*(void **)(p + 0x2d0) != NULL && *(s16 *)(p + 0x274) != 2) {
+    if ((f32)*(s16 *)(p + 0x32e) > lbl_803E2ED0 * timeDelta) {
+      (*(void (**)(int, int, int, u16 *, u16 *, u16 *))((char *)*gBaddieControlInterface + 0x14))(
+          obj, *(int *)(p + 0x2d0), 16, &a, &b, &c);
+      if (a < 4 || a > 11) {
+        return 3;
+      }
+      (*(void (**)(int, u8 *, int))((char *)*gPlayerInterface + 0x14))(obj, p, 2);
+      *(f32 *)(p + 0x2a0) = lbl_803E2ED4;
+      *(s8 *)(p + 0x346) = 0;
+    }
+  }
+  return 0;
+}
+
+int fn_801615C8(int obj, u8 *p)
+{
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern f32 lbl_803E2EB8;
+  extern f32 lbl_803E2EE0;
+  extern f32 lbl_803E2EE4;
+  int sub;
+  f32 spd;
+
+  sub = *(int *)(obj + 0xb8);
+  *(s8 *)(p + 0x34d) = 0;
+  *(f32 *)(p + 0x2a0) = lbl_803E2EE0;
+  spd = lbl_803E2EB8;
+  *(f32 *)(p + 0x280) = spd;
+  *(f32 *)(p + 0x284) = spd;
+  if (*(char *)(p + 0x27a) != '\0') {
+    Sfx_PlayFromObject(obj, SFXsc_death02);
+    if (*(char *)(p + 0x27a) != '\0') {
+      ObjAnim_SetCurrentMove(obj, 2, lbl_803E2EB8, 0);
+      *(s8 *)(p + 0x346) = 0;
+    }
+    *(f32 *)(p + 0x2a0) = lbl_803E2EE4;
+    *(s8 *)(p + 0x346) = 0;
+    *(u8 *)(obj + 0x36) = 0xff;
+    *(u16 *)(sub + 0x400) |= 0x100;
+  }
+  if (*(char *)(p + 0x346) != '\0') {
+    return 1;
+  }
+  return 0;
+}
+
 void dll_CB_free(int* obj)
 {
     int* state = *(int**)((char*)obj + 0xb8);
