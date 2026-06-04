@@ -48,9 +48,11 @@ extern void fn_80165C8C(int obj, int state);
 extern void fn_80166444(int obj, int state);
 extern void updateConstrainedChaseVelocity(int obj, f32 x, f32 y, f32 z, f32 scale);
 
+extern void* gSHthorntailAnimationInterface;
 extern f32 timeDelta;
 extern u8 framesThisStep;
 extern f32 lbl_803E2F5C;
+extern f32 lbl_803E2F84;
 extern f32 lbl_803E2F68;
 extern f32 lbl_803E2F98;
 extern f32 lbl_803E2F9C;
@@ -152,7 +154,7 @@ void tumbleweed_updateStateMachine(int obj) {
         if (tricky != 0 && *(s16*)((char*)tricky + 0x46) == 0x24) {
             f32 ndx, ndz, ndist2;
             if (dist2 < lbl_803E2FA0) {
-                (*(int(**)(int, int, int, int))(*(int*)((char*)tricky + 0x68) + 0x28))((int)tricky, obj, 0, 1);
+                (*(int(**)(int, int, int, int))(*(int*)*(int*)((char*)tricky + 0x68) + 0x28))((int)tricky, obj, 0, 1);
             }
             ndx = *(f32*)(obj + 0xc) - *(f32*)((char*)tricky + 0xc);
             ndz = *(f32*)(obj + 0x14) - *(f32*)((char*)tricky + 0x14);
@@ -164,26 +166,26 @@ void tumbleweed_updateStateMachine(int obj) {
             }
         }
         d = sqrtf(dist2);
-        *(s16*)(aux + 0x268) = (s32)d;
+        *(s16*)(aux + 0x268) = d;
         {
             f32 dpx = *(f32*)(obj + 0xc) - *(f32*)(aux + 0x288);
             f32 dpz = *(f32*)(obj + 0x14) - *(f32*)(aux + 0x28c);
-            longlong local_70 = (longlong)(s32)sqrtf(dpx*dpx + dpz*dpz);
-            u32 uStack_64;
+            int dpdist = sqrtf(dpx*dpx + dpz*dpz);
+            u32 dist;
             *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) & ~8);
-            uStack_64 = *(u16*)(aux + 0x268);
-            if ((f32)((f64)CONCAT44(0x43300000, uStack_64) - lbl_803E2F90) < lbl_803E2FA4 && uStack_64 != 0) {
-                f32 denom = lbl_803E2FA8 * ((f32)((f64)CONCAT44(0x43300000, uStack_64) - lbl_803E2F90) - lbl_803E2FA4);
-                *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) - dx / denom;
-                uStack_64 = *(u16*)(aux + 0x268);
-                *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) - dz / denom;
-                *(s16*)(aux + 0x27c) = (s32)(lbl_803E2FAC * *(f32*)(obj + 0x24));
-                *(s16*)(aux + 0x27e) = (s32)(lbl_803E2FAC * *(f32*)(obj + 0x2c));
+            dist = *(u16*)(aux + 0x268);
+            if ((f32)dist < lbl_803E2FA4 && dist != 0) {
+                f32 k;
+                *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) - dx / (lbl_803E2FA8 * ((f32)dist - lbl_803E2FA4));
+                *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) - dz / (lbl_803E2FA8 * ((f32)(u32)*(u16*)(aux + 0x268) - lbl_803E2FA4));
+                k = lbl_803E2FAC;
+                *(s16*)(aux + 0x27c) = k * *(f32*)(obj + 0x24);
+                *(s16*)(aux + 0x27e) = k * *(f32*)(obj + 0x2c);
                 *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 8);
             } else {
-                u32 dpdi = (s32)local_70 & 0xffff;
-                if ((f32)((f64)CONCAT44(0x43300000, dpdi) - lbl_803E2F90) > lbl_803E2F5C && dpdi != 0) {
-                    f32 denom = lbl_803E2F5C * ((f32)((f64)CONCAT44(0x43300000, dpdi) - lbl_803E2F90));
+                u32 dpdi = (u16)dpdist;
+                if ((f32)dpdi > lbl_803E2F5C && dpdi != 0) {
+                    f32 denom = lbl_803E2F5C * (f32)dpdi;
                     *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) - dpx / denom;
                     *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) - dpz / denom;
                 }
@@ -192,7 +194,9 @@ void tumbleweed_updateStateMachine(int obj) {
         tumbleweed_updateRollingMotion(obj, aux);
         (*(int(**)(int, int, f32))(*(int*)gPathControlInterface + 0x18))(obj, aux, timeDelta);
         *(f32*)(aux + 0x2a0) = *(f32*)(aux + 0x2a0) - timeDelta;
-        if (*(f32*)(aux + 0x2a0) >= lbl_803E2F68) {
+        if (*(f32*)(aux + 0x2a0) < lbl_803E2F68) {
+            *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
+        } else {
             if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0 &&
                 *(s16*)(hitObject + 0x46) != *(s16*)(obj + 0x46)) {
                 if (*(s16*)(obj + 0x46) == TUMBLEWEED_TYPE_3) {
@@ -206,8 +210,6 @@ void tumbleweed_updateStateMachine(int obj) {
                     *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
                 }
             }
-        } else {
-            *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
         }
     } else if (state == 3) {
         f32 d;
@@ -252,20 +254,24 @@ void tumbleweed_updateStateMachine(int obj) {
         d = sqrtf(vx*vx + vy*vy + vz*vz);
         vx /= d; vy /= d; vz /= d;
         *(f32*)(aux + 0x294) = timeDelta * lbl_803E2F98 + *(f32*)(aux + 0x294);
-        *(f32*)(obj + 0x24) = lbl_803E2FBC * vx * *(f32*)(aux + 0x294);
-        *(f32*)(obj + 0x28) = lbl_803E2FBC * vy * *(f32*)(aux + 0x294);
-        *(f32*)(obj + 0x2c) = lbl_803E2FBC * vz * *(f32*)(aux + 0x294);
+        {
+            f32 k = lbl_803E2FBC;
+            *(f32*)(obj + 0x24) = (k * vx) * *(f32*)(aux + 0x294);
+            *(f32*)(obj + 0x28) = (k * vy) * *(f32*)(aux + 0x294);
+            *(f32*)(obj + 0x2c) = (k * vz) * *(f32*)(aux + 0x294);
+        }
         d = getXZDistance((f32*)(obj + 0xc), *(f32**)(aux + 0x290));
         objMove(obj, *(f32*)(obj + 0x24) * timeDelta, *(f32*)(obj + 0x28) * timeDelta, *(f32*)(obj + 0x2c) * timeDelta);
         if (getXZDistance((f32*)(obj + 0xc), *(f32**)(aux + 0x290)) > d) {
-            *(f32*)(obj + 0xc) = (*(f32**)(aux + 0x290))[0] + (*(f32*)(obj + 0xc) - (*(f32**)(aux + 0x290))[0]) * lbl_803E2F98;
-            *(f32*)(obj + 0x10) = (*(f32**)(aux + 0x290))[1] + (*(f32*)(obj + 0x10) - (*(f32**)(aux + 0x290))[1]) * lbl_803E2F98;
-            *(f32*)(obj + 0x14) = (*(f32**)(aux + 0x290))[2] + (*(f32*)(obj + 0x14) - (*(f32**)(aux + 0x290))[2]) * lbl_803E2F98;
+            *(f32*)(obj + 0xc) += ((*(f32**)(aux + 0x290))[0] - *(f32*)(obj + 0xc)) * lbl_803E2F98;
+            *(f32*)(obj + 0x10) += ((*(f32**)(aux + 0x290))[1] - *(f32*)(obj + 0x10)) * lbl_803E2F98;
+            *(f32*)(obj + 0x14) += ((*(f32**)(aux + 0x290))[2] - *(f32*)(obj + 0x14)) * lbl_803E2F98;
         }
     } else if (state == 7) {
-        u32 j;
-        for (j = 0; (s32)(j & 0xffff) < (s32)timeDelta; j = j + 1) {
-            *(f32*)(obj + 0x8) = *(f32*)(obj + 0x8) * lbl_803E2FC0;
+        u32 j = 0;
+        f32 k = lbl_803E2FC0;
+        for (; (s32)(j & 0xffff) < (s32)timeDelta; j = j + 1) {
+            *(f32*)(obj + 0x8) = *(f32*)(obj + 0x8) * k;
         }
         *(f32*)(obj + 0xc) = (*(f32**)(aux + 0x290))[0];
         *(f32*)(obj + 0x10) = (*(f32**)(aux + 0x290))[1];
@@ -577,11 +583,79 @@ update_action:
  * Function: tumbleweed_updateTargetedStateMachine
  * EN v1.0 Address: 0x80164940
  * EN v1.0 Size: 772b
- *
- * TODO: stub. Body is a state machine on extra->field_0x278 (case 0/1/2 with
- * gSHthorntailAnimationInterface checks, sqrtf distance to player, motion
- * updates, hit detection). Adding as stub so function set aligns.
  */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 void tumbleweed_updateTargetedStateMachine(int obj)
 {
+    int sphereIndex;
+    u32 hitVolume;
+    int hitObject;
+    int animPhase;
+    int aux;
+    int *player;
+    u32 state;
+
+    aux = *(int*)(obj + 0xb8);
+    state = *(u8*)(aux + 0x278);
+    if (state == 0) {
+        if ((*(int(**)(int*))(*(int*)gSHthorntailAnimationInterface + 0x24))(&animPhase) != 0) {
+            if (*(f32*)(obj + 0x8) < *(f32*)(aux + 0x26c)) {
+                *(f32*)(obj + 0x8) = *(f32*)(aux + 0x270) * timeDelta + *(f32*)(obj + 0x8);
+            } else {
+                *(u8*)(aux + 0x278) = 1;
+            }
+        }
+    } else if (state == 1) {
+        if ((*(int(**)(int*))(*(int*)gSHthorntailAnimationInterface + 0x24))(&animPhase) != 0) {
+            f32 dx, dz, d;
+            player = *(int**)(aux + 0x284);
+            player = player ? player : (int*)Obj_GetPlayerObject();
+            dx = *(f32*)(obj + 0xc) - *(f32*)((char*)player + 0xc);
+            dz = *(f32*)(obj + 0x14) - *(f32*)((char*)player + 0x14);
+            d = sqrtf(dx*dx + dz*dz);
+            *(s16*)(aux + 0x268) = d;
+            if (*(u16*)(aux + 0x268) < *(u16*)(aux + 0x26a)) {
+                *(u8*)(aux + 0x278) = 2;
+                *(u8*)(obj + 0xaf) = (u8)(*(u8*)(obj + 0xaf) & ~8);
+                ObjHits_EnableObject(obj);
+            }
+        }
+    } else if (state == 2) {
+        f32 dz, dx, d;
+        u32 dist;
+        player = *(int**)(aux + 0x284);
+        player = player ? player : (int*)Obj_GetPlayerObject();
+        dx = *(f32*)(obj + 0xc) - *(f32*)((char*)player + 0xc);
+        dz = *(f32*)(obj + 0x14) - *(f32*)((char*)player + 0x14);
+        d = sqrtf(dx*dx + dz*dz);
+        *(s16*)(aux + 0x268) = d;
+        dist = *(u16*)(aux + 0x268);
+        if ((f32)dist > lbl_803E2FC4) {
+            f32 k;
+            *(f32*)(obj + 0x24) = *(f32*)(obj + 0x24) - dx / (lbl_803E2FC4 * (f32)dist);
+            *(f32*)(obj + 0x2c) = *(f32*)(obj + 0x2c) - dz / (lbl_803E2FC4 * (f32)(u32)*(u16*)(aux + 0x268));
+            k = lbl_803E2FAC;
+            *(s16*)(aux + 0x27c) = k * *(f32*)(obj + 0x24);
+            *(s16*)(aux + 0x27e) = k * *(f32*)(obj + 0x2c);
+        } else {
+            f32 k = lbl_803E2F84;
+            *(f32*)(obj + 0x24) = -(k * *(f32*)(obj + 0x24));
+            *(f32*)(obj + 0x2c) = -(k * *(f32*)(obj + 0x2c));
+        }
+        tumbleweed_updateRollingMotion(obj, aux);
+        (*(int(**)(int, int, f32))(*(int*)gPathControlInterface + 0x18))(obj, aux, timeDelta);
+        if (ObjHits_GetPriorityHit(obj, &hitObject, &sphereIndex, &hitVolume) != 0) {
+            GameBit_Set(0x642, 1);
+            *(u8*)(aux + 0x27a) = (u8)(*(u8*)(aux + 0x27a) | 7);
+        }
+    } else {
+        if (*(f32*)(aux + 0x270) <= lbl_803E2F68) {
+            Obj_FreeObject(obj);
+        } else {
+            *(f32*)(aux + 0x270) = *(f32*)(aux + 0x270) - timeDelta;
+        }
+    }
 }
+#pragma pop
