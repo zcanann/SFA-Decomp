@@ -4648,3 +4648,89 @@ void windlift_init(int* obj, u8* def)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E42C0;
+extern f32 lbl_803E42DC;
+extern f32 lbl_803E42E0;
+extern f32 lbl_803E42E4;
+extern const f32 lbl_803E42E8;
+extern f32 lbl_803E42EC;
+extern f32 lbl_803E42F0;
+
+/* EN v1.0 0x801A0F58  size: 728b  fn_801A0F58: home the object on the nearest
+ * group-0x1e object above it, scaling velocity and the two heading words by
+ * approach rate; on a steep approach play the dive cue and bump the target's
+ * cycle phase. */
+#pragma scheduling off
+#pragma peephole off
+void fn_801A0F58(int* obj, s16 a, s16 b)
+{
+    f32 dx;
+    f32 dz;
+    f32 dy2;
+    f32 scale;
+    f32 rate;
+    f32 dy;
+    int v;
+    int w;
+    char* player;
+    char* near;
+    f32 radius = lbl_803E42E0;
+    player = (char*)Obj_GetPlayerObject();
+    near = (char*)ObjGroup_FindNearestObject(0x1e, obj, &radius);
+    if (near == NULL) {
+        return;
+    }
+    dy = *(f32*)(near + 0x10) - *(f32*)(player + 0x10);
+    dy = (dy >= 0.0f) ? dy : -dy;
+    if (dy < lbl_803E42E4) {
+        return;
+    }
+    dx = *(f32*)(near + 0xc) - *(f32*)((char*)obj + 0xc);
+    dy2 = *(f32*)(near + 0x10) - *(f32*)((char*)obj + 0x10);
+    scale = 0.0f;
+    if (dy2 > scale) {
+        return;
+    }
+    dz = *(f32*)(near + 0x14) - *(f32*)((char*)obj + 0x14);
+    rate = (dy2 != scale) ? *(f32*)((char*)obj + 0x28) / dy2 : scale;
+    if (rate >= lbl_803E42DC) {
+        Sfx_PlayFromObject((int)obj, 0xd2);
+        rate = lbl_803E42DC;
+        *(f32*)((char*)obj + 0x28) = dy2;
+        *(f32*)(near + 0xc) += lbl_803E42E8;
+        *(f32*)(near + 0x2c) += lbl_803E42E8;
+        if (*(f32*)(near + 0x2c) > lbl_803E42EC) {
+            *(f32*)(near + 0xc) -= *(f32*)(near + 0x2c);
+            *(f32*)(near + 0x2c) = 0.0f;
+        }
+        *(s16*)((char*)obj + 2) = 0;
+        *(s16*)((char*)obj + 4) = 0;
+        a = 0;
+        b = 0;
+    }
+    *(f32*)((char*)obj + 0x24) = dx * rate;
+    *(f32*)((char*)obj + 0x2c) = dz * rate;
+    v = a;
+    if (v != 0) {
+        f32 t;
+        if (v == 1) {
+            t = (lbl_803E42F0 - (f32)(u16)*(s16*)((char*)obj + 2)) * rate;
+        } else {
+            t = (f32)(u16)*(s16*)((char*)obj + 2) * (rate * (f32)v);
+        }
+        *(s16*)((char*)obj + 2) = (f32)*(s16*)((char*)obj + 2) + t;
+    }
+    w = b;
+    if (w != 0) {
+        f32 t;
+        if (w == 1) {
+            t = 0.0f;
+        } else {
+            t = (f32)(u16)*(s16*)((char*)obj + 4) * (rate * (f32)w);
+        }
+        *(s16*)((char*)obj + 4) = (f32)*(s16*)((char*)obj + 4) + t;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
