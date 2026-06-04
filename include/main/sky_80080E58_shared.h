@@ -161,6 +161,8 @@ extern f32 lbl_803DF07C;
 extern f32 lbl_803DF088;
 extern void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2);
 extern f32 fn_80010C50(f32 *curve, f32 t, int mode);
+extern f32 *Camera_GetInverseViewMatrix(void);
+extern void PSMTXMultVecSR(f32 *m, f32 *src, f32 *dst);
 extern f32 mathFn_80010c64(u8 *curve, f32 t, int mode);
 extern const f32 lbl_803DF108;
 extern f64 lbl_803DF130;

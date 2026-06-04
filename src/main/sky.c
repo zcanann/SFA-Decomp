@@ -1930,3 +1930,122 @@ void skyFn_8008a04c(void)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_80089A60(int slot, f32 x, f32 y, f32 z, int r, int g, int b, int a2, int b2, int c2)
+{
+    f32 dir[3];
+    int c01;
+    int c02;
+    int c03;
+    int c11;
+    int c12;
+    int c13;
+    int pb;
+    int cb;
+    int ofs;
+    u8 *p3;
+    f32 bl;
+    int scale1;
+    int scale2;
+    u8 *prev;
+    u8 *cur2;
+
+    dir[0] = -x;
+    dir[1] = -y;
+    dir[2] = -z;
+    if (slot == 2) {
+        prev = lbl_803DD12C + lbl_803DD12C[0x24d] * 0xa4 + 0x20;
+        cur2 = lbl_803DD12C + lbl_803DD12C[0x24c] * 0xa4 + 0x20;
+        dir[0] = *(f32 *)(prev + 0x70) + *(f32 *)(lbl_803DD12C + 0x244) *
+                                             (*(f32 *)(cur2 + 0x70) - *(f32 *)(prev + 0x70));
+        dir[1] = *(f32 *)(prev + 0x74) + *(f32 *)(lbl_803DD12C + 0x244) *
+                                             (*(f32 *)(cur2 + 0x74) - *(f32 *)(prev + 0x74));
+        dir[2] = *(f32 *)(prev + 0x78) + *(f32 *)(lbl_803DD12C + 0x244) *
+                                             (*(f32 *)(cur2 + 0x78) - *(f32 *)(prev + 0x78));
+        bl = *(f32 *)(lbl_803DD12C + 0x244);
+        pb = prev[0x58];
+        cb = cur2[0x58];
+        r = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
+        pb = prev[0x59];
+        cb = cur2[0x59];
+        g = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
+        pb = prev[0x5a];
+        cb = cur2[0x5a];
+        b = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
+        pb = prev[0x60];
+        cb = cur2[0x60];
+        c01 = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
+        pb = prev[0x61];
+        cb = cur2[0x61];
+        c02 = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
+        pb = prev[0x62];
+        cb = cur2[0x62];
+        c03 = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
+        pb = prev[0x68];
+        cb = cur2[0x68];
+        c11 = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
+        pb = prev[0x69];
+        cb = cur2[0x69];
+        c12 = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
+        pb = prev[0x6a];
+        cb = cur2[0x6a];
+        c13 = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
+        pb = prev[0xa0];
+        cb = cur2[0xa0];
+        c2 = (int)(bl * ((f32)(u32)cb - (f32)(u32)pb) + (f32)(u32)pb);
+    } else {
+        ofs = slot * 0xa4;
+        if ((u32)((lbl_803DD12C[ofs + 0xc1] >> 7) & 1) != 0) {
+            dir[0] = lbl_803DF06C;
+            dir[1] = lbl_803DF06C;
+            dir[2] = lbl_803DF06C;
+            PSVECNormalize(dir, dir);
+            PSMTXMultVecSR(Camera_GetInverseViewMatrix(), dir, dir);
+        }
+        if ((u32)((lbl_803DD12C[ofs + 0xc1] >> 6) & 1) != 0) {
+            p3 = lbl_803DD12C + ofs;
+            dir[0] = *(f32 *)(p3 + 0xa8);
+            dir[1] = *(f32 *)(p3 + 0xac);
+            dir[2] = *(f32 *)(p3 + 0xb0);
+            r = p3[0x7c];
+            g = p3[0x7d];
+            b = p3[0x7e];
+            c01 = p3[0x84];
+            c02 = p3[0x85];
+            c03 = p3[0x86];
+            c11 = p3[0x8c];
+            c12 = p3[0x8d];
+            c13 = p3[0x8e];
+            c2 = 0xff;
+        } else {
+            scale1 = a2 + 1;
+            c01 = r * scale1 >> 8;
+            c02 = g * scale1 >> 8;
+            c03 = b * scale1 >> 8;
+            scale2 = b2 + 1;
+            c11 = r * scale2 >> 8;
+            c12 = g * scale2 >> 8;
+            c13 = b * scale2 >> 8;
+        }
+    }
+    *(f32 *)(lbl_803DD12C + slot * 0xa4 + 0x90) = dir[0];
+    *(f32 *)(lbl_803DD12C + slot * 0xa4 + 0x94) = dir[1];
+    *(f32 *)(lbl_803DD12C + slot * 0xa4 + 0x98) = dir[2];
+    lbl_803DD12C[slot * 0xa4 + 0x78] = (u8)r;
+    lbl_803DD12C[slot * 0xa4 + 0x79] = (u8)g;
+    lbl_803DD12C[slot * 0xa4 + 0x7a] = (u8)b;
+    *(f32 *)(lbl_803DD12C + slot * 0xa4 + 0x9c) = -dir[0];
+    *(f32 *)(lbl_803DD12C + slot * 0xa4 + 0xa0) = -dir[1];
+    *(f32 *)(lbl_803DD12C + slot * 0xa4 + 0xa4) = -dir[2];
+    lbl_803DD12C[slot * 0xa4 + 0x80] = (u8)(c01 * (colorScale + 1) >> 8);
+    lbl_803DD12C[slot * 0xa4 + 0x81] = (u8)(c02 * (colorScale + 1) >> 8);
+    lbl_803DD12C[slot * 0xa4 + 0x82] = (u8)(c03 * (colorScale + 1) >> 8);
+    lbl_803DD12C[slot * 0xa4 + 0x88] = (u8)c11;
+    lbl_803DD12C[slot * 0xa4 + 0x89] = (u8)c12;
+    lbl_803DD12C[slot * 0xa4 + 0x8a] = (u8)c13;
+    lbl_803DD12C[slot * 0xa4 + 0xc0] = c2;
+}
+#pragma scheduling reset
+#pragma peephole reset
