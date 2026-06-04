@@ -1765,7 +1765,7 @@ extern u16 lbl_803DBDF0[];
 void groundanimator_update(int *obj) {
     int *g;
     int *r20;
-    int bi;
+    s8 bi;
     void *block;
     void *near;
     void *entry;
@@ -1786,9 +1786,9 @@ void groundanimator_update(int *obj) {
     if (*(u8 *)((char *)r20 + 0x25) == 0) {
         return;
     }
-    bi = (s8)objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
-                                 (double)*(f32 *)((char *)obj + 0x10),
-                                 (double)*(f32 *)((char *)obj + 0x14));
+    bi = objPosToMapBlockIdx((double)*(f32 *)((char *)obj + 0xc),
+                             (double)*(f32 *)((char *)obj + 0x10),
+                             (double)*(f32 *)((char *)obj + 0x14));
     oldbit = *(u8 *)((char *)g + 0x2d) & 1;
     if (bi > -1) {
         *(u8 *)((char *)g + 0x2d) = *(u8 *)((char *)g + 0x2d) | 1;
@@ -1801,12 +1801,14 @@ void groundanimator_update(int *obj) {
     if ((*(u8 *)((char *)g + 0x2d) & 1) == 0) {
         return;
     }
-    if (g[0] == 0) {
+    if ((*(u8 *)((char *)g + 0x2d) & 1) != 0 && *(void **)g == NULL) {
+        int p;
         block = mapGetBlock(bi);
         *(s16 *)((char *)g + 0x28) = (s16)(fn_80060688(block, *(u8 *)((char *)r20 + 0x25)) * 3);
         if (*(s16 *)((char *)g + 0x28) > 0) {
-            g[0] = (int)mmAlloc(*(s16 *)((char *)g + 0x28) * 6, 5, 0);
-            g[1] = g[0] + *(s16 *)((char *)g + 0x28) * 4;
+            p = (int)mmAlloc(*(s16 *)((char *)g + 0x28) * 6, 5, 0);
+            g[0] = p;
+            g[1] = p + *(s16 *)((char *)g + 0x28) * 4;
             fn_801932C8(obj, g, r20);
         }
     }
@@ -1814,7 +1816,7 @@ void groundanimator_update(int *obj) {
         return;
     }
     if (*(u8 *)((char *)r20 + 0x22) == 0) {
-        if (g[2] == 0) {
+        if (*(void **)(g + 2) == NULL) {
             nd = lbl_803E3F98;
             g[2] = (int)ObjGroup_FindNearestObject(4, obj, &nd);
             near = (void *)g[2];
