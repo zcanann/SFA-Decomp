@@ -1,5 +1,29 @@
 #include "main/dll/VF/vf_shared.h"
 
+#define VFP_OBJCREATOR_FALLING_MODE 1
+#define VFP_OBJCREATOR_PROJECTILE_MODE 6
+
+#define VFP_OBJCREATOR_FALLING_OBJECT_ID 0x263
+#define VFP_OBJCREATOR_PROJECTILE_OBJECT_ID 0x549
+
+typedef struct VfpObjCreatorState {
+    s16 gameBit;
+    s16 spawnInterval;
+    s16 spawnTimer;
+    s16 spawnParam;
+    s16 spawnRadius;
+} VfpObjCreatorState;
+
+typedef struct VfpObjCreatorPlacement {
+    u8 pad0[0x18];
+    s16 gameBit;
+    s16 spawnMode;
+    s16 spawnInterval;
+    s8 yaw;
+    s8 spawnParam;
+    u8 spawnRadius;
+} VfpObjCreatorPlacement;
+
 int vfpobjcreator_getExtraSize(void) { return 0xa; }
 
 int vfpobjcreator_getObjectTypeId(void) { return 0x0; }
@@ -23,13 +47,14 @@ void vfpobjcreator_initialise(void) {}
 #pragma peephole off
 #pragma scheduling off
 void vfpobjcreator_init(int *obj, u8 *init) {
-    int *inner = *(int **)((char *)obj + 0xb8);
-    *(s16 *)obj = (s16)((s8)init[0x1e] << 8);
-    *(s16 *)inner = *(s16 *)((char *)init + 0x18);
-    *(s16 *)((char *)inner + 2) = *(s16 *)((char *)init + 0x1c);
-    *(s16 *)((char *)inner + 4) = *(s16 *)((char *)inner + 2);
-    *(s16 *)((char *)inner + 6) = (s8)init[0x1f];
-    *(s16 *)((char *)inner + 8) = init[0x20];
+    VfpObjCreatorPlacement *placement = (VfpObjCreatorPlacement *)init;
+    VfpObjCreatorState *state = *(VfpObjCreatorState **)((char *)obj + 0xb8);
+    *(s16 *)obj = (s16)(placement->yaw << 8);
+    state->gameBit = placement->gameBit;
+    state->spawnInterval = placement->spawnInterval;
+    state->spawnTimer = state->spawnInterval;
+    state->spawnParam = placement->spawnParam;
+    state->spawnRadius = placement->spawnRadius;
     *(u16 *)((char *)obj + 0xb0) |= 0x2000;
 }
 #pragma scheduling reset
@@ -51,36 +76,37 @@ extern f32 lbl_803E6078;
 #pragma scheduling off
 void vfpobjcreator_update(int *obj)
 {
-    char *setup = *(char **)((char *)obj + 0x4c);
-    char *st = *(char **)((char *)obj + 0xb8);
+    VfpObjCreatorPlacement *placement = *(VfpObjCreatorPlacement **)((char *)obj + 0x4c);
+    char *setup = (char *)placement;
+    VfpObjCreatorState *state = *(VfpObjCreatorState **)((char *)obj + 0xb8);
 
     if (Obj_IsLoadingLocked() == 0) {
         return;
     }
-    switch (*(s16 *)(setup + 0x1a)) {
+    switch (placement->spawnMode) {
     case 0:
         break;
-    case 1:
-        if ((u32)GameBit_Get(*(s16 *)(st + 0x0)) == 0 && *(s16 *)(st + 0x0) != -1) {
+    case VFP_OBJCREATOR_FALLING_MODE:
+        if ((u32)GameBit_Get(state->gameBit) == 0 && state->gameBit != -1) {
             break;
         }
-        *(s16 *)(st + 0x4) -= (s16)timeDelta;
-        if (*(s16 *)(st + 0x4) <= 0) {
+        state->spawnTimer -= (s16)timeDelta;
+        if (state->spawnTimer <= 0) {
             char *o;
             char *n;
-            *(s16 *)(st + 0x4) = *(s16 *)(st + 0x2);
-            o = Obj_AllocObjectSetup(0x28, 0x263);
+            state->spawnTimer = state->spawnInterval;
+            o = Obj_AllocObjectSetup(0x28, VFP_OBJCREATOR_FALLING_OBJECT_ID);
             *(u8 *)(o + 6) = 0xff;
             *(u8 *)(o + 7) = 0xff;
             o[4] = 2;
             o[5] = 1;
             *(f32 *)(o + 0x8) =
                 *(f32 *)((char *)obj + 0xc) +
-                (f32)(int)randomGetRange(-*(s16 *)(st + 0x8), *(s16 *)(st + 0x8));
+                (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
             *(f32 *)(o + 0xc) = *(f32 *)((char *)obj + 0x10);
             *(f32 *)(o + 0x10) =
                 *(f32 *)((char *)obj + 0x14) +
-                (f32)(int)randomGetRange(-*(s16 *)(st + 0x8), *(s16 *)(st + 0x8));
+                (f32)(int)randomGetRange(-state->spawnRadius, state->spawnRadius);
             *(s16 *)(o + 0x20) = 0x50;
             *(s16 *)(o + 0x1e) = (s16)(randomGetRange(0, 2) + 0x16a);
             *(s16 *)(o + 0x22) = -1;
@@ -99,17 +125,17 @@ void vfpobjcreator_update(int *obj)
             *(f32 *)(n + 0x2c) = lbl_803E6070 * (f32)(int)randomGetRange(-10, 10);
         }
         break;
-    case 6:
-        *(s16 *)(st + 0x4) -= (s16)timeDelta;
-        if (*(s16 *)(st + 0x4) <= 0) {
+    case VFP_OBJCREATOR_PROJECTILE_MODE:
+        state->spawnTimer -= (s16)timeDelta;
+        if (state->spawnTimer <= 0) {
             char *o;
             char *n;
             struct {
                 s16 ang[3];
                 f32 v[4];
             } m;
-            *(s16 *)(st + 0x4) = *(s16 *)(st + 0x2);
-            o = Obj_AllocObjectSetup(0x24, 0x549);
+            state->spawnTimer = state->spawnInterval;
+            o = Obj_AllocObjectSetup(0x24, VFP_OBJCREATOR_PROJECTILE_OBJECT_ID);
             *(f32 *)(o + 0x8) = *(f32 *)(setup + 0x8);
             *(f32 *)(o + 0xc) = *(f32 *)(setup + 0xc);
             *(f32 *)(o + 0x10) = *(f32 *)(setup + 0x10);
