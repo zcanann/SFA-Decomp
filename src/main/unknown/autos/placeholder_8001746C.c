@@ -18130,8 +18130,8 @@ extern int lbl_803DCA08;
 extern int lbl_803DCA10;
 extern f32 lbl_803DE730;
 extern f32 lbl_803DE734;
-int fn_8001860C(u8 *str);
-int fn_80018ED4(u8 *str, u32 target, int *out);
+int GameText_CountPrintableChars(u8 *str);
+int GameText_FindControlCodeArgs(u8 *str, u32 target, int *out);
 extern char **textMeasureFn_80016c9c(char *str, f32 width, f32 height, int *outCount, f32 *outLineH);
 
 typedef struct SubtitleLineTable {
@@ -18187,7 +18187,7 @@ void textFn_8001b7b8(void) {
     }
     for (i = 0; i < t->count; i++) {
         str = t->strs[i];
-        n = fn_80018ED4((u8 *)str, 0xE018, args);
+        n = GameText_FindControlCodeArgs((u8 *)str, 0xE018, args);
         if (n != 0) {
             q = args[2] / 60;
             s->times[lbl_803DCA18] = (f32)(args[1] + (args[0] * 60 + q));
@@ -18208,7 +18208,7 @@ void textFn_8001b7b8(void) {
     for (k = 0; k < lbl_803DCA18; k++) {
         if (lbl_803DE734 != s->times[k]) {
             curTime = s->times[k];
-            total = fn_8001860C((u8 *)s->lines[k]);
+            total = GameText_CountPrintableChars((u8 *)s->lines[k]);
         } else {
             found = 0;
             m = k;
@@ -18219,7 +18219,7 @@ void textFn_8001b7b8(void) {
                         delta = s->times[m + 1] - curTime;
                         found = 1;
                     }
-                    n = fn_8001860C((u8 *)s->lines[m]);
+                    n = GameText_CountPrintableChars((u8 *)s->lines[m]);
                     s->times[m] = (f32)n;
                     total += n;
                     if (found != 0) {
@@ -18245,7 +18245,7 @@ void textFn_8001b7b8(void) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-int fn_8001860C(u8 *str) {
+int GameText_CountPrintableChars(u8 *str) {
     int count;
     int off;
     int len;
@@ -18324,7 +18324,7 @@ void deathRenderFn_8001fd98(u32 h) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-int fn_80018ED4(u8 *str, u32 target, int *out) {
+int GameText_FindControlCodeArgs(u8 *str, u32 target, int *out) {
     int off;
     int len;
     u32 ch;
