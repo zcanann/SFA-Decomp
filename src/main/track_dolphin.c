@@ -7776,3 +7776,391 @@ void trackIntersect(void)
     }
     lbl_803DCF44 = 1;
 }
+
+/* doLotsOfMath — sweep a 2D segment (with radius) against the intersection
+ * line table, sliding/clipping the end point; fills *out with the last hit. */
+extern f32 lbl_803DECCC;
+extern f32 lbl_803DECD0;
+extern f32 lbl_803DECD4;
+extern f32 lbl_803DB660;
+
+int doLotsOfMath(void *ptA, void *ptB, int flags, void *out, int *obj,
+                 int pmask, int seg, int ytol, int self, f32 radius)
+{
+    f32 *A = (f32 *)ptA;
+    s16 hits[6];
+    f32 dists[5];
+    f32 fracs[5];
+    f32 lb[4], la[4], ld[4];
+    f32 pos[4];
+    s16 m[2];
+    int start, end;
+    int vt, vp, lineIdx;
+    s8 flag1, flag2;
+    u8 flag4;
+    f32 minX, maxX, minZ, maxZ;
+    int count, found;
+    s16 *hitp;
+    f32 *fracp, *distp;
+    int mask;
+    int si2, si16;
+    int i;
+    f32 dist;
+    s8 lineType;
+
+    if (obj != NULL) {
+        if ((s8)seg != -1) {
+            u8 *tbl = *(u8 **)(*(int *)((int)obj + 0x50) + 0x38);
+            start = tbl[(s8)seg * 2];
+            end = *(u8 *)(tbl + (s8)seg * 2 + 1);
+        } else {
+            start = 0;
+            end = *(u8 *)(*(int *)((int)obj + 0x50) + 0x5c);
+        }
+        lineIdx = 0;
+        vt = *(int *)(*(int *)((int)obj + 0x50) + 0x34);
+        vp = *(int *)(*(int *)((int)obj + 0x50) + 0x3c);
+        if (*(u16 *)((int)obj + 0xb0) & 0x100) {
+            end = 0;
+        }
+    } else {
+        if ((s8)seg != -1) {
+            start = ((u16 *)lbl_8038D840)[(s8)seg * 2];
+            end = ((u16 *)lbl_8038D840)[(s8)seg * 2 + 1];
+        } else {
+            start = 0;
+            end = lbl_803DCF5E;
+        }
+        lineIdx = lbl_803DCF3C;
+        vt = lbl_803DCF34;
+        vp = (int)lbl_803DCF38;
+    }
+
+    flag1 = !(flags & 1);
+    flag2 = flags & 2;
+    flag4 = flags & 4;
+
+    pos[2] = A[0];
+    pos[0] = A[2];
+    pos[3] = ((f32 *)ptB)[0];
+    pos[1] = ((f32 *)ptB)[2];
+    if (pos[2] < pos[3]) {
+        minX = pos[2];
+        maxX = pos[3];
+    } else {
+        minX = pos[3];
+        maxX = pos[2];
+    }
+    if (pos[0] < pos[1]) {
+        minZ = pos[0];
+        maxZ = pos[1];
+    } else {
+        minZ = pos[1];
+        maxZ = pos[0];
+    }
+    minX = minX - radius;
+    maxX = maxX + radius;
+    minZ = minZ - radius;
+    maxZ = maxZ + radius;
+    minX = minX - lbl_803DECCC;
+    maxX = maxX + lbl_803DECCC;
+    minZ = minZ - lbl_803DECCC;
+    maxZ = maxZ + lbl_803DECCC;
+
+    count = 0;
+    found = 1;
+    hitp = hits;
+    fracp = fracs;
+    distp = dists;
+    mask = (s8)pmask;
+    si2 = start << 1;
+    si16 = start << 4;
+
+    while (found) {
+        s16 *ep;
+        u8 *rp;
+        found = 0;
+        ep = (s16 *)(lineIdx + si2);
+        rp = (u8 *)(vt + si16);
+        for (i = start; i < end; i++, ep++, rp += 0x10) {
+            u8 *rec;
+            s16 i0, i1;
+            f32 *va, *vb;
+            f32 ax2, ay2, az2, bx2, by2, bz2;
+            f32 ylo, yhi, ha, hb;
+            f32 dx, dz, len;
+            int mi;
+
+            dist = lbl_803DECD0;
+            if (lineIdx != 0) {
+                rec = (u8 *)(vt + ep[0] * 0x10);
+            } else {
+                rec = rp;
+            }
+            if ((mask & ~(s8)rec[2]) == 0) continue;
+            if ((s8)rec[3] & 0x40) continue;
+            i0 = *(s16 *)(rec + 4);
+            i1 = *(s16 *)(rec + 6);
+            if ((s8)rec[3] & 0x80) {
+                if (flag4 != 0) continue;
+                lineType = 0;
+            } else {
+                lineType = 1;
+            }
+            if (flag2 != 0) {
+                lineType = 1;
+            }
+            va = (f32 *)(vp + i0 * 0xc);
+            ax2 = va[0];
+            ay2 = va[1];
+            az2 = va[2];
+            vb = (f32 *)(vp + i1 * 0xc);
+            bx2 = vb[0];
+            by2 = vb[1];
+            bz2 = vb[2];
+            if (ax2 < minX && bx2 < minX) continue;
+            if (ax2 > maxX && bx2 > maxX) continue;
+            if (az2 < minZ && bz2 < minZ) continue;
+            if (az2 > maxZ && bz2 > maxZ) continue;
+
+            ylo = ay2;
+            if (by2 < ay2) ylo = by2;
+            ylo = ylo - (f32)(s8)ytol;
+            if ((s8)rec[2] & 0x80) {
+                ha = (f32)*(s16 *)rec;
+                hb = ha;
+            } else {
+                ha = (f32)(s8)rec[0];
+                hb = (f32)(s8)rec[1];
+            }
+            yhi = ay2 + ha;
+            if (by2 + hb > ay2 + ha) yhi = by2 + hb;
+            yhi = yhi + (f32)(s8)ytol;
+            if (A[1] < ylo) continue;
+            if (A[1] > yhi) continue;
+
+            dx = bx2 - ax2;
+            dz = bz2 - az2;
+            if (__AR_Callback == dx * dx + dz * dz) continue;
+            len = sqrtf(dx * dx + dz * dz);
+            dx = dx / len;
+            dz = dz / len;
+            lb[0] = dx;
+            la[0] = dz;
+            ld[0] = -(dx * ax2 + dz * az2);
+            lb[1] = -dx;
+            la[1] = -dz;
+            ld[1] = -(-dx * bx2 + -dz * bz2);
+            lb[2] = -dz;
+            la[2] = dx;
+            {
+                f32 q0 = -dz * (lbl_803DECB8 * -dz + ax2);
+                f32 q1 = dx * (lbl_803DECB8 * dx + az2);
+                ld[2] = -(q0 + q1);
+            }
+            lb[3] = dz;
+            la[3] = -dx;
+            {
+                f32 q0 = dz * (radius * dz + ax2);
+                f32 q1 = -dx * (radius * -dx + az2);
+                ld[3] = -(q0 + q1);
+            }
+            lbl_803DCF54 = lbl_803DECD4 * (dz * radius);
+            lbl_803DCF50 = lbl_803DECD4 * (-dx * radius);
+
+            {
+                s16 *mp = m;
+                f32 *zp = &pos[0];
+                f32 *xp = &pos[2];
+                for (mi = 0; mi < 2; mi++) {
+                    s16 mb = 1;
+                    f32 pz, px;
+                    f32 *ap, *bp, *dp;
+                    int n;
+                    *mp = 0;
+                    pz = zp[0];
+                    px = xp[0];
+                    ap = la;
+                    bp = lb;
+                    dp = ld;
+                    n = 2;
+                    do {
+                        if (dp[0] + (px * bp[0] + pz * ap[0]) < __AR_Callback) *mp |= mb;
+                        mb = (s16)(mb << 1);
+                        if (dp[1] + (px * bp[1] + pz * ap[1]) < __AR_Callback) *mp |= mb;
+                        mb = (s16)(mb << 1);
+                        ap += 2;
+                        bp += 2;
+                        dp += 2;
+                        n--;
+                    } while (n != 0);
+                    xp[0] = px;
+                    zp[0] = pz;
+                    mp++;
+                    zp++;
+                    xp++;
+                }
+            }
+            {
+                s16 mx = m[0] ^ m[1];
+                s16 ma = m[0] & m[1];
+                dist = lbl_803DECC4;
+                if ((m[0] & 0xc) == 0xc) {
+                    if (m[0] & 1) {
+                        found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
+                        dist = __AR_Callback;
+                    } else if (m[0] & 2) {
+                        found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
+                        dist = lbl_803DECC4;
+                    } else if (lineType != 0) {
+                        pos[3] = pos[3] + lbl_803DCF54;
+                        pos[1] = pos[1] + lbl_803DCF50;
+                    }
+                } else if (mx & 0xc) {
+                    if (ma & 1) {
+                        found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
+                        dist = __AR_Callback;
+                    } else if (ma & 2) {
+                        found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
+                        dist = lbl_803DECC4;
+                    } else if (m[0] & 4) {
+                        f32 sx = pos[3] - pos[2];
+                        f32 sz = pos[1] - pos[0];
+                        f32 t0 = ld[3] + (pos[2] * lb[3] + pos[0] * la[3]);
+                        f32 t1 = ld[3] + (pos[3] * lb[3] + pos[1] * la[3]);
+                        f32 fr, cx, cz;
+                        s16 ok;
+                        if (t0 != t1) {
+                            fr = t0 / (t0 - t1);
+                        } else {
+                            fr = __AR_Callback;
+                        }
+                        cx = sx * fr + pos[2];
+                        cz = sz * fr + pos[0];
+                        lbl_803DCF58 = fr;
+                        ok = 1;
+                        if (ld[0] + (cx * lb[0] + cz * la[0]) < __AR_Callback) {
+                            found = fn_800630D8(ax2, az2, radius, &pos[2], &pos[0], lineType);
+                            ok = 0;
+                            dist = __AR_Callback;
+                        }
+                        if (ld[1] + (cx * lb[1] + cz * la[1]) < __AR_Callback) {
+                            found = fn_800630D8(bx2, bz2, radius, &pos[2], &pos[0], lineType);
+                            ok = 0;
+                            dist = lbl_803DECC4;
+                        }
+                        if (ok != 0) {
+                            found = 1;
+                            if (lineType != 0) {
+                                int j;
+                                if (flag1 != 0) {
+                                    f32 t3 = ld[3] + (pos[3] * lb[3] + pos[1] * la[3]);
+                                    pos[3] = -(t3 * lb[3] - pos[3]);
+                                    pos[1] = -(t3 * la[3] - pos[1]);
+                                    j = 0;
+                                    while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660) {
+                                        pos[3] = pos[3] + lbl_803DB660 * lb[3];
+                                        pos[1] = pos[1] + lbl_803DB660 * la[3];
+                                        j++;
+                                        if (j > 0xa) {
+                                            pos[3] = pos[2];
+                                            pos[1] = pos[0];
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    pos[3] = cx;
+                                    pos[1] = cz;
+                                    j = 0;
+                                    while (ld[3] + (pos[3] * lb[3] + pos[1] * la[3]) < lbl_803DB660) {
+                                        pos[3] = pos[3] + lbl_803DB660 * lb[3];
+                                        pos[1] = pos[1] + lbl_803DB660 * la[3];
+                                        j++;
+                                        if (j > 0xa) {
+                                            pos[3] = pos[2];
+                                            pos[1] = pos[0];
+                                            break;
+                                        }
+                                    }
+                                }
+                                dist = sqrtf((pos[3] - ax2) * (pos[3] - ax2) + (pos[1] - az2) * (pos[1] - az2)) / len;
+                            }
+                        }
+                    }
+                }
+            }
+            if (found) break;
+        }
+        if (found) {
+            *hitp = (s16)i;
+            *fracp = lbl_803DCF58;
+            *distp = dist;
+            hitp++;
+            fracp++;
+            distp++;
+            count++;
+            if (count > 4) {
+                found = 0;
+                if (lineType != 0) {
+                    pos[3] = pos[2];
+                    pos[1] = pos[0];
+                }
+            }
+        }
+    }
+
+    if (count != 0 && out != NULL) {
+        f32 *outf = (f32 *)out;
+        int pick = count - 1;
+        int hi;
+        s16 *rec2;
+        f32 fa, fb;
+        f32 *va2, *vb2;
+        if (flag1 == 0) {
+            pick = 0;
+        }
+        outf[0x11] = fracs[0] * sqrtf((((f32 *)ptB)[0] - pos[2]) * (((f32 *)ptB)[0] - pos[2])
+                                       + (((f32 *)ptB)[2] - pos[0]) * (((f32 *)ptB)[2] - pos[0]));
+        outf[0x12] = dists[pick];
+        hi = hits[pick];
+        if (lineIdx != 0) {
+            rec2 = (s16 *)(vt + *(s16 *)(lineIdx + hi * 2) * 0x10);
+        } else {
+            rec2 = (s16 *)(vt + hi * 0x10);
+        }
+        {
+            s16 j0 = rec2[2];
+            s16 j1 = rec2[3];
+            if ((s8)*(u8 *)((u8 *)rec2 + 2) & 0x80) {
+                fa = (f32)rec2[0];
+                fb = fa;
+            } else {
+                fa = (f32)(s8)*(u8 *)rec2;
+                fb = (f32)(s8)*((u8 *)rec2 + 1);
+            }
+            outf[1] = *(f32 *)(vp + j0 * 0xc);
+            va2 = (f32 *)(vp + j0 * 0xc);
+            outf[3] = va2[1];
+            outf[0xf] = outf[3] + fa;
+            outf[5] = va2[2];
+            outf[2] = *(f32 *)(vp + j1 * 0xc);
+            vb2 = (f32 *)(vp + j1 * 0xc);
+            outf[4] = vb2[1];
+            outf[0x10] = outf[4] + fb;
+            outf[6] = vb2[2];
+            *(s8 *)((u8 *)out + 0x50) = (s8)(*((u8 *)rec2 + 3) & 0x3f);
+            *((u8 *)out + 0x52) = *((u8 *)rec2 + 2);
+            *(s8 *)((u8 *)out + 0x51) = (s8)rec2[6];
+            *(int **)out = obj;
+            *(s16 *)((u8 *)out + 0x4c) = rec2[4];
+            *(s16 *)((u8 *)out + 0x4e) = rec2[5];
+        }
+    }
+    if (count != 0) {
+        lbl_803DCF4C = lbl_803DCF4C + 1;
+        count = 1;
+        ((f32 *)ptB)[0] = pos[3];
+        ((f32 *)ptB)[2] = pos[1];
+    }
+    return count;
+}
