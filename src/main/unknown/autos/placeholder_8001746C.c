@@ -16580,3 +16580,54 @@ void mtxFn_80022404(int a, int b, f32 *out)
 #pragma opt_strength_reduction reset
 #pragma dont_inline reset
 #pragma pop
+
+extern f32 lbl_803DE7E8;
+extern f32 lbl_803DE7EC;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void fn_800218AC(s16 *a, f32 *v)
+{
+    f32 x, y, z;
+    f32 s1, s2;
+    f32 c;
+
+    x = v[0];
+    y = v[1];
+    z = v[2];
+
+    c = fn_80293E80((lbl_803DE7E8 * (f32)a[0]) / lbl_803DE7EC);
+    s1 = x * c;
+    s2 = z * c;
+    c = sin((lbl_803DE7E8 * (f32)a[0]) / lbl_803DE7EC);
+    x *= c;
+    z *= c;
+    x += s2;
+    z -= s1;
+
+    c = fn_80293E80((lbl_803DE7E8 * (f32)a[1]) / lbl_803DE7EC);
+    s1 = y * c;
+    s2 = z * c;
+    c = sin((lbl_803DE7E8 * (f32)a[1]) / lbl_803DE7EC);
+    y *= c;
+    z *= c;
+    y -= s2;
+    z += s1;
+
+    c = fn_80293E80((lbl_803DE7E8 * (f32)a[2]) / lbl_803DE7EC);
+    s1 = x * c;
+    s2 = y * c;
+    c = sin((lbl_803DE7E8 * (f32)a[2]) / lbl_803DE7EC);
+    x *= c;
+    y *= c;
+    x -= s2;
+    y += s1;
+
+    v[0] = x;
+    v[1] = y;
+    v[2] = z;
+}
+#pragma dont_inline reset
+#pragma pop
