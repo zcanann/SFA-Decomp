@@ -1333,7 +1333,28 @@ extern int lbl_803DC988;
 extern int lbl_803DC99C;
 extern int lbl_803DC9E8;
 extern int lbl_803DB3CC;
-int getControlCharLen(u32 c);
+typedef struct {
+    u32 key;
+    int len;
+} CtrlCharEntry;
+extern CtrlCharEntry lbl_802C86F0[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+int getControlCharLen(u32 c) {
+    CtrlCharEntry *p = lbl_802C86F0;
+    int i;
+    for (i = 45; i >= 0; i--) {
+        if (p->key == c) {
+            return p->len;
+        }
+        p++;
+    }
+    return 0;
+}
+#pragma pop
+
 extern int utf8GetNextChar(u8 *p, int *outLen);
 void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *outMaxAdv, f32 *outMaxH, int glyphLang);
 extern void translateToDinoLanguage(u8 *str);
@@ -1666,7 +1687,7 @@ void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
 #pragma peephole off
 void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *outMaxAdv, f32 *outMaxH, int glyphLang) {
     int byteOff;
-    int ch;
+    u32 ch;
     int charLen;
     int n2;
     int i;
@@ -9553,24 +9574,6 @@ void gameTextFn_8001984c(s16 x, s16 y, int flags) {
         s->f4 = (u16)x;
         s->f8 = (u16)y;
     }
-}
-
-typedef struct {
-    u32 key;
-    int len;
-} CtrlCharEntry;
-extern CtrlCharEntry lbl_802C86F0[];
-
-int getControlCharLen(u32 c) {
-    CtrlCharEntry *p = lbl_802C86F0;
-    int i;
-    for (i = 45; i >= 0; i--) {
-        if (p->key == c) {
-            return p->len;
-        }
-        p++;
-    }
-    return 0;
 }
 
 #pragma dont_inline on
