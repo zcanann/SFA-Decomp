@@ -4209,12 +4209,14 @@ void playerShadowFn_80062a30(int *obj)
  * (target uses rlwinm 8,15 + srwi 16). */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 u32 fn_80060668(int *obj)
 {
     u32 v = (u32)obj[4];
     v &= 0x00FF0000;
     return v >> 16;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -5397,7 +5399,7 @@ int objShadowFn_80062498(int *obj, int param2)
 }
 
 extern int mapLoadBlocksFn_800685cc(int base, int x0, int y0, int z0, int x1, int y1, int z1, int a, int b);
-extern int fn_80067B84(int cur, void *desc, int model, int flags, f32 c, f32 x0, f32 y0, f32 z0, f32 x1, f32 y1, f32 z1);
+extern int fn_80067B84(int cur, u8 *desc, int model, int flags, f32 c, f32 x0, f64 y0, f32 z0, f32 x1, f64 y1, f32 z1);
 extern int modelFileHeaderGetCullDistance(void *hdr);
 extern u32 lbl_803DCF70;
 extern s16 lbl_803DCF6E;
@@ -7013,4 +7015,207 @@ void objBboxFn_800640cc(f32 *p0, f32 *p1, int p5, int *out, int *self, int p8, i
         else
             memcpy(p1, w1, 0xc);
     }
+}
+
+/* fn_80067B84 — gather model triangles overlapping a swept bbox into the
+ * hit-detect triangle buffer at cur (0x4c-byte records); returns advanced
+ * cursor. */
+extern u8 *fn_80028364(int hdr, int i);
+extern u16 *fn_80028354(int hdr, int tri);
+extern s16 *ObjModel_GetBaseVertexCoords(int hdr, u32 idx);
+extern f32 lbl_803DECF0;
+extern f32 lbl_803DECF4;
+extern f32 lbl_803DECF8;
+
+int fn_80067B84(int cur, u8 *desc, int model, int flags, f32 scale,
+                f32 x0, f64 y0d, f32 z0, f32 x1, f64 y1d, f32 z1)
+{
+    f32 xd, xc, xb, xa;
+    f32 zd, zc, zb, za;
+    f32 ytmp;
+    f32 y1, y0;
+    int count, i;
+    int flag8, flag20;
+    int flag4;
+    int hdr;
+    int maxYi, minYi;
+
+    y0 = y0d;
+    y1 = y1d;
+    hdr = *(int *)model;
+
+    Matrix_TransformPoint(*(void **)(desc + 8), x0, y0d, z0, &xa, &ytmp, &za);
+    Matrix_TransformPoint(*(void **)(desc + 8), x0, y0, z1, &xb, &y0, &zb);
+    Matrix_TransformPoint(*(void **)(desc + 8), x1, y1, z0, &xc, &ytmp, &zc);
+    Matrix_TransformPoint(*(void **)(desc + 8), x1, y1, z1, &xd, &y1, &zd);
+
+    x1 = xa;
+    x0 = x1;
+    z1 = za;
+    z0 = z1;
+    if (xb < x1) x0 = xb;
+    if (xb > x1) x1 = xb;
+    if (zb < z0) z0 = zb;
+    if (zb > z1) z1 = zb;
+    if (xc < x0) x0 = xc;
+    if (xc > x1) x1 = xc;
+    if (zc < z0) z0 = zc;
+    if (zc > z1) z1 = zc;
+    if (xd < x0) x0 = xd;
+    if (xd > x1) x1 = xd;
+    if (zd < z0) z0 = zd;
+    if (zd > z1) z1 = zd;
+
+    count = *(u16 *)(hdr + 0xf0);
+    i = 0;
+    flag20 = (u8)flags & 0x20;
+    flag8 = (u8)flags & 8;
+    flag4 = (u8)flags & 4;
+
+    for (; i < count; i++) {
+        u8 *blk = fn_80028364(hdr, i);
+        s16 *bs = (s16 *)blk;
+        u32 bf = *(u32 *)(blk + 0x10);
+        int tEnd, t;
+
+        if (bf & 0x100000) continue;
+        if ((bf & 0x8000000) && flag20 == 0) continue;
+        if (x0 > (f32)bs[2] * scale) continue;
+        if (x1 < (f32)bs[1] * scale) continue;
+        if (y0 > (f32)bs[4] * scale) continue;
+        if (y1 < (f32)bs[3] * scale) continue;
+        if (z0 > (f32)bs[6] * scale) continue;
+        if (z1 < (f32)bs[5] * scale) continue;
+
+        tEnd = *(u16 *)(blk + 0x14);
+        t = *(u16 *)blk;
+        for (; t < tEnd; t++) {
+            u16 *tw = fn_80028354(hdr, t);
+            f32 tMinX, tMaxX, tMinY, tMaxY, tMinZ, tMaxZ;
+            int j;
+            u8 *vout;
+            s16 *xs, *ys, *zs;
+            int nxi, nyi, nzi;
+            f32 fnx, fny, fnz;
+            f32 len, inv;
+
+            tMinX = lbl_803DECF0;
+            tMaxX = lbl_803DECF4;
+            tMinY = tMinX;
+            tMaxY = tMaxX;
+            tMinZ = tMinX;
+            tMaxZ = tMaxX;
+            j = 0;
+            vout = (u8 *)cur;
+            for (; j < 3; j++) {
+                s16 *v = ObjModel_GetBaseVertexCoords(hdr, *tw);
+                f32 fx, fy, fz;
+                if (*(u16 *)(hdr + 2) & 0x800) {
+                    fx = (f32)v[0] * scale;
+                    fy = (f32)v[1] * scale;
+                    fz = (f32)v[2] * scale;
+                } else {
+                    fx = (f32)v[0] * scale * lbl_803DECF8;
+                    fy = (f32)v[1] * scale * lbl_803DECF8;
+                    fz = (f32)v[2] * scale * lbl_803DECF8;
+                }
+                if (fx > tMaxX) tMaxX = fx;
+                if (fx < tMinX) tMinX = fx;
+                if (fy > tMaxY) { tMaxY = fy; maxYi = j; }
+                if (fy < tMinY) { tMinY = fy; minYi = j; }
+                if (fz > tMaxZ) tMaxZ = fz;
+                if (fz < tMinZ) tMinZ = fz;
+                *(s16 *)(vout + 0x10) = (s16)fx;
+                *(s16 *)(vout + 0x16) = (s16)fy;
+                *(s16 *)(vout + 0x1c) = (s16)fz;
+                tw++;
+                vout += 2;
+            }
+            if (tMinY > y1) continue;
+            if (tMaxY < y0) continue;
+            if (tMinX > x1) continue;
+            if (tMaxX < x0) continue;
+            if (tMinZ > z1) continue;
+            if (tMaxZ < z0) continue;
+
+            xs = (s16 *)(cur + 0x10);
+            ys = (s16 *)(cur + 0x16);
+            zs = (s16 *)(cur + 0x1c);
+
+            nxi = ys[0] * (zs[1] - zs[2]) + (ys[1] * (zs[2] - zs[0]) + ys[2] * (zs[0] - zs[1]));
+            fnx = (f32)nxi;
+            nyi = zs[0] * (xs[1] - xs[2]) + (zs[1] * (xs[2] - xs[0]) + zs[2] * (xs[0] - xs[1]));
+            fny = (f32)nyi;
+            nzi = xs[0] * (ys[1] - ys[2]) + (xs[1] * (ys[2] - ys[0]) + xs[2] * (ys[0] - ys[1]));
+            fnz = (f32)nzi;
+            len = sqrtf(fnz * fnz + (fnx * fnx + fny * fny));
+            if (len <= __AR_Callback) continue;
+            inv = lbl_803DECC4 / len;
+            *(f32 *)(cur + 4) = fnx * inv;
+            *(f32 *)(cur + 8) = fny * inv;
+            *(f32 *)(cur + 0xc) = fnz * inv;
+
+            if (flag8) {
+                if (*(f32 *)(cur + 8) >= __AR_Size) continue;
+                if (*(f32 *)(cur + 8) <= lbl_803DECEC) continue;
+            }
+            if (flag4) {
+                if (*(f32 *)(cur + 8) < __AR_Size && *(f32 *)(cur + 8) > lbl_803DECEC) continue;
+            }
+
+            *(f32 *)(cur + 0) = -(*(f32 *)(cur + 0xc) * (f32)zs[0]
+                               + (*(f32 *)(cur + 4) * (f32)xs[0] + *(f32 *)(cur + 8) * (f32)ys[0]));
+
+            {
+                int k22 = 0;
+                int deg = 0;
+                int j2 = 0;
+                s16 *xw = xs;
+                s16 *yw = ys;
+                s16 *zw = zs;
+                f32 eps = __AR_Callback;
+                for (; j2 < 3; j2++) {
+                    int k = j2 + 1;
+                    f32 px, py, pz;
+                    f32 ex, ey, ez;
+                    if (k > 2) k = 0;
+                    px = *(f32 *)(cur + 4) + (f32)xw[0];
+                    py = *(f32 *)(cur + 8) + (f32)yw[0];
+                    pz = *(f32 *)(cur + 0xc) + (f32)zw[0];
+                    ex = py * (f32)(zw[0] - zs[k]) + ((f32)yw[0] * ((f32)zs[k] - pz) + (f32)ys[k] * (pz - (f32)zw[0]));
+                    ey = pz * (f32)(xw[0] - xs[k]) + ((f32)zw[0] * ((f32)xs[k] - px) + (f32)zs[k] * (px - (f32)xw[0]));
+                    ez = px * (f32)(yw[0] - ys[k]) + ((f32)xw[0] * ((f32)ys[k] - py) + (f32)xs[k] * (py - (f32)yw[0]));
+                    len = sqrtf(ez * ez + (ex * ex + ey * ey));
+                    if (len <= eps) {
+                        deg = 1;
+                    } else {
+                        f32 inv2 = lbl_803DECC4 / len;
+                        ex *= inv2;
+                        ey *= inv2;
+                        ez *= inv2;
+                    }
+                    *(f32 *)(cur + k22 * 4 + 0x24) = ex;
+                    k22++;
+                    *(f32 *)(cur + k22 * 4 + 0x24) = ey;
+                    k22++;
+                    *(f32 *)(cur + k22 * 4 + 0x24) = ez;
+                    k22++;
+                    xw++;
+                    yw++;
+                    zw++;
+                }
+                if (deg) continue;
+            }
+
+            *(s8 *)(cur + 0x48) = (u8)fn_80060668((int *)blk);
+            *(u8 *)(cur + 0x4a) = (u8)((maxYi << 4) | minYi);
+            *(s8 *)(cur + 0x49) = 10;
+            *(s8 *)(cur + 0x49) |= 8;
+            cur += 0x4c;
+            if ((u32)cur >= lbl_803DCF70) {
+                return cur;
+            }
+        }
+    }
+    return cur;
 }
