@@ -14680,60 +14680,70 @@ void dll_62_func03(int param_1, int param_2, int param_3, uint param_4)
   (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0x15, &lbl_803129C8[0], 0x18, &lbl_803129C8[212], 0x5e0, 0);
 }
 
-void dll_64_func03(int param_1, int param_2, int param_3, uint param_4)
+void dll_64_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
 {
-  struct { GfxCmd *cmds; int ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
+  struct { GfxCmd *cmds; u8 *ctx; u8 pad0[0x18]; f32 col[3]; f32 pos[3]; f32 scale;
     u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
-    u8 v58, v59, v5a, v5b, v5c, count; u8 pad1[2]; GfxCmd entries[32]; } buf;
-  GfxCmd *e = buf.entries;
-  int ctx;
-  e[0].layer = 0; e[0].flags = 7; e[0].tex = &lbl_80312D18[240]; e[0].mode = 2;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2]; GfxCmd entries[32]; } buf;
+  GfxCmd *e;
+  uint flag;
+  u8 *base = lbl_80312D18;
+  if (param_2 == 1) {
+    *(s16 *)&base[0x112] = 0;
+  }
+  flag = *(u8 *)(*(u8 **)(param_1 + 0x4c) + 0x1a);
+  e = buf.entries;
+  e[0].layer = 0; e[0].flags = 7; e[0].tex = &base[0xf0]; e[0].mode = 2;
   e[0].x = lbl_803E0908; e[0].y = lbl_803E090C; e[0].z = lbl_803E0908;
-  e[1].layer = 0; e[1].flags = 7; e[1].tex = &lbl_80312D18[256]; e[1].mode = 2;
+  e[1].layer = 0; e[1].flags = 7; e[1].tex = &base[0x100]; e[1].mode = 2;
   e[1].x = lbl_803E0910; e[1].y = lbl_803E0914; e[1].z = lbl_803E0910;
-  e[2].layer = 0; e[2].flags = 0xe; e[2].tex = &lbl_80312D18[212]; e[2].mode = 4;
+  e[2].layer = 0; e[2].flags = 0xe; e[2].tex = &base[0xd4]; e[2].mode = 4;
   e[2].x = lbl_803E0918; e[2].y = lbl_803E0918; e[2].z = lbl_803E0918;
-  e[3].layer = 1; e[3].flags = 7; e[3].tex = &lbl_80312D18[256]; e[3].mode = 4;
+  e[3].layer = 1; e[3].flags = 7; e[3].tex = &base[0x100]; e[3].mode = 4;
   e[3].x = lbl_803E091C; e[3].y = lbl_803E0918; e[3].z = lbl_803E0918;
-  e[4].layer = 1; e[4].flags = 0xe; e[4].tex = &lbl_80312D18[212]; e[4].mode = 0x100;
+  e[4].layer = 1; e[4].flags = 0xe; e[4].tex = &base[0xd4]; e[4].mode = 0x100;
   e[4].x = lbl_803E0918; e[4].y = lbl_803E0918; e[4].z = lbl_803E0920;
-  e[5].layer = 2; e[5].flags = 0xe; e[5].tex = &lbl_80312D18[212]; e[5].mode = 0x100;
+  e[5].layer = 2; e[5].flags = 0xe; e[5].tex = &base[0xd4]; e[5].mode = 0x100;
   e[5].x = lbl_803E0918; e[5].y = lbl_803E0918; e[5].z = lbl_803E0920;
   e[6].layer = 3; e[6].flags = 1; e[6].tex = (void *)0; e[6].mode = 0x2000;
   e[6].x = lbl_803E0918; e[6].y = lbl_803E0918; e[6].z = lbl_803E0918;
-  e[7].layer = 4; e[7].flags = 7; e[7].tex = &lbl_80312D18[256]; e[7].mode = 4;
+  e[7].layer = 4; e[7].flags = 7; e[7].tex = &base[0x100]; e[7].mode = 4;
   e[7].x = lbl_803E0918; e[7].y = lbl_803E0918; e[7].z = lbl_803E0918;
-  e[8].layer = 4; e[8].flags = 0xe; e[8].tex = &lbl_80312D18[212]; e[8].mode = 0x100;
+  e[8].layer = 4; e[8].flags = 0xe; e[8].tex = &base[0xd4]; e[8].mode = 0x100;
   e[8].x = lbl_803E0918; e[8].y = lbl_803E0918; e[8].z = lbl_803E0920;
   buf.v58 = 0;
-  ctx = param_1;
-  buf.ctx = ctx;
-  buf.v44 = 0x2000;
-  buf.pos[0] = lbl_803E0920; buf.pos[1] = lbl_803E0920; buf.pos[2] = lbl_803E0920;
+  buf.ctx = param_1;
+  buf.v44 = param_2;
+  buf.pos[0] = lbl_803E0918; buf.pos[1] = lbl_803E0918; buf.pos[2] = lbl_803E0918;
   buf.col[0] = lbl_803E0918; buf.col[1] = lbl_803E0918; buf.col[2] = lbl_803E0918;
-  buf.scale = lbl_803E0924;
+  if (flag != 0) {
+    buf.scale = lbl_803E0924 * (f32)flag;
+  } else {
+    buf.scale = lbl_803E090C;
+  }
   buf.v40 = 1;
   buf.v3c = 0;
   buf.v59 = 0xe;
   buf.v5a = 0;
   buf.v5b = 0x1e;
   buf.count = 9;
-  buf.hw[0] = *(s16 *)&lbl_80312D18[272]; buf.hw[1] = *(s16 *)&lbl_80312D18[274]; buf.hw[2] = *(s16 *)&lbl_80312D18[276]; buf.hw[3] = *(s16 *)&lbl_80312D18[278];
-  buf.hw[4] = *(s16 *)&lbl_80312D18[280]; buf.hw[5] = *(s16 *)&lbl_80312D18[282]; buf.hw[6] = *(s16 *)&lbl_80312D18[284];
+  buf.hw[0] = *(s16 *)&base[0x110]; buf.hw[1] = *(s16 *)&base[0x112]; buf.hw[2] = *(s16 *)&base[0x114]; buf.hw[3] = *(s16 *)&base[0x116];
+  buf.hw[4] = *(s16 *)&base[0x118]; buf.hw[5] = *(s16 *)&base[0x11a]; buf.hw[6] = *(s16 *)&base[0x11c];
   buf.cmds = buf.entries;
-  buf.flags = 0x4040080 | 0;
-  if ((param_4 & 1) != 0) {
-    if (ctx == 0) {
-      buf.pos[0] = lbl_803E0920 + *(f32 *)(param_3 + 0xc);
-      buf.pos[1] = lbl_803E0920 + *(f32 *)(param_3 + 0x10);
-      buf.pos[2] = lbl_803E0920 + *(f32 *)(param_3 + 0x14);
+  buf.flags = 0x4040080;
+  buf.flags |= param_4;
+  if ((buf.flags & 1) != 0) {
+    if (buf.ctx != 0) {
+      buf.pos[0] += *(f32 *)(buf.ctx + 0x18);
+      buf.pos[1] += *(f32 *)(buf.ctx + 0x1c);
+      buf.pos[2] += *(f32 *)(buf.ctx + 0x20);
     } else {
-      buf.pos[0] = lbl_803E0920 + *(f32 *)(ctx + 0x18);
-      buf.pos[1] = lbl_803E0920 + *(f32 *)(ctx + 0x1c);
-      buf.pos[2] = lbl_803E0920 + *(f32 *)(ctx + 0x20);
+      buf.pos[0] += *(f32 *)(param_3 + 0xc);
+      buf.pos[1] += *(f32 *)(param_3 + 0x10);
+      buf.pos[2] += *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0xe, &lbl_80312D18[0], 0xc, &lbl_80312D18[140], 0x5e0, 0);
+  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x5e0, 0);
 }
 
 void dll_65_func03(int param_1, int param_2, int param_3, uint param_4)
