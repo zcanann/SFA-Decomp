@@ -561,6 +561,7 @@ void *fn_80089A58(void)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma opt_common_subs off
 int getSunPos(f32 *outTime)
 {
     f32 time;
@@ -573,12 +574,12 @@ int getSunPos(f32 *outTime)
     }
 
     time = *(f32 *)(lbl_803DD12C + 0x20c);
-    if (time >= lbl_803DF088 || time < *(&init_803DF080 + 1)) {
+    if (time >= lbl_803DF088 || time < lbl_803DF084) {
         if (outTime != NULL) {
             if (time >= lbl_803DF088) {
-                *outTime = *(&init_803DF080 + 1) + (time - lbl_803DF088);
+                *outTime = lbl_803DF084 + (time - lbl_803DF088);
             } else {
-                *outTime = *(&init_803DF080 + 1) - time;
+                *outTime = lbl_803DF084 - time;
             }
         }
         return 1;
@@ -589,6 +590,7 @@ int getSunPos(f32 *outTime)
     }
     return 0;
 }
+#pragma opt_common_subs reset
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -1252,6 +1254,112 @@ void skyFn_80088c94(int flags, int mode) {
             env[0x40] |= 4;
         } else {
             env[0x40] &= ~4;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void skyFn_80088e54(int mode, f32 brightness)
+{
+    u8 *env;
+    u8 *env2;
+    u32 cloudMode;
+    int bit;
+    f32 unset;
+    f32 fullBlend;
+
+    env = saveGameGetEnvState();
+    if (lbl_803DD12C[0x24c] != mode) {
+        lbl_803DD12C[0x24d] = lbl_803DD12C[0x24c];
+        lbl_803DD12C[0x24c] = (u8)mode;
+        unset = pEXIInputFlag;
+        if (brightness != unset) {
+            *(f32 *)(lbl_803DD12C + 0x248) = EXIInputFlag / (lbl_803DF060 * brightness);
+            *(f32 *)(lbl_803DD12C + 0x244) = unset;
+        } else {
+            fullBlend = EXIInputFlag;
+            *(f32 *)(lbl_803DD12C + 0x248) = fullBlend;
+            *(f32 *)(lbl_803DD12C + 0x244) = fullBlend;
+        }
+        cloudMode = ((SkyBlendStateFlags *)(lbl_803DD12C + mode * 0xa4 + 0xc1))->cloud;
+        if (cloudMode != 0) {
+            setDrawCloudsAndLights(cloudMode - 1);
+        }
+        ((SkyBlendStateFlags *)(lbl_803DD12C + 0x209))->unused80 =
+            ((SkyBlendStateFlags *)(lbl_803DD12C + mode * 0xa4 + 0xc1))->unused80;
+        ((SkyBlendStateFlags *)(lbl_803DD12C + 0x209))->bit20 =
+            ((SkyBlendStateFlags *)(lbl_803DD12C + mode * 0xa4 + 0xc1))->bit20;
+        env2 = saveGameGetEnvState();
+        if (getSaveGameLoadStatus() == 0) {
+            for (bit = 0; bit < 2; bit++) {
+                if ((u32)((lbl_803DD12C[bit * 0xa4 + 0xc1] >> 7) & 1) != 0) {
+                    env2[0x40] |= 2 << bit;
+                } else {
+                    env2[0x40] &= ~(2 << bit);
+                }
+            }
+        }
+        if (mode != 0) {
+            env[0x40] |= 0x10;
+        } else {
+            env[0x40] &= ~0x10;
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void skyFn_8008a500(void)
+{
+    f32 dot;
+    f32 len;
+    f32 time;
+
+    if (lbl_803DD12C != NULL) {
+        dot = lbl_8030F2C8[2] * lbl_8030F2C8[2] + (lbl_8030F2C8[0] * lbl_8030F2C8[0] +
+                                                   lbl_8030F2C8[1] * lbl_8030F2C8[1]);
+        if (pEXIInputFlag != dot) {
+            len = sqrtf(dot);
+        } else {
+            len = EXIInputFlag;
+        }
+        *lbl_8030F2C8 = *lbl_8030F2C8 / len;
+        lbl_8030F2C8[1] = lbl_8030F2C8[1] / len;
+        lbl_8030F2C8[2] = lbl_8030F2C8[2] / len;
+        dot = lbl_8030F2D4[2] * lbl_8030F2D4[2] + (lbl_8030F2D4[0] * lbl_8030F2D4[0] +
+                                                   lbl_8030F2D4[1] * lbl_8030F2D4[1]);
+        if (pEXIInputFlag != dot) {
+            len = sqrtf(dot);
+        } else {
+            len = EXIInputFlag;
+        }
+        *lbl_8030F2D4 = *lbl_8030F2D4 / len;
+        lbl_8030F2D4[1] = lbl_8030F2D4[1] / len;
+        lbl_8030F2D4[2] = lbl_8030F2D4[2] / len;
+        time = *(f32 *)(lbl_803DD12C + 0x20c);
+        if (time >= lbl_803DF084 && time <= lbl_803DF088) {
+            if (gSkyOverrideLightDirectionEnabled != 0) {
+                skyFn_80062a54(gSkyOverrideLightDirection[0], gSkyOverrideLightDirection[1],
+                               gSkyOverrideLightDirection[2], (int)gSkyOverrideLightIntensity);
+            } else {
+                skyFn_80062a54(*lbl_8030F2C8, lbl_8030F2C8[1], lbl_8030F2C8[2], 100);
+            }
+            (*(void (**)(f32, f32, f32, int))(*gCloudActionInterface + 0x18))(
+                *lbl_8030F2C8, lbl_8030F2C8[1], lbl_8030F2C8[2], 1);
+        } else {
+            if (gSkyOverrideLightDirectionEnabled != 0) {
+                skyFn_80062a54(gSkyOverrideLightDirection[0], gSkyOverrideLightDirection[1],
+                               gSkyOverrideLightDirection[2], (int)gSkyOverrideLightIntensity);
+            } else {
+                skyFn_80062a54(-(*lbl_8030F2D4), lbl_8030F2D4[1], -lbl_8030F2D4[2], 100);
+            }
+            (*(void (**)(f32, f32, f32, int))(*gCloudActionInterface + 0x18))(
+                -(*lbl_8030F2D4), lbl_8030F2D4[1], -lbl_8030F2D4[2], 0);
         }
     }
 }

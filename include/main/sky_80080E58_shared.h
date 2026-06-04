@@ -14,8 +14,14 @@ typedef struct ObjSeqBgCmd {
 typedef struct SkyBlendStateFlags {
     u8 unused80 : 1;
     u8 active : 1;
-    u8 rest : 6;
+    u8 bit20 : 1;
+    u8 cloud : 2;
+    u8 rest : 3;
 } SkyBlendStateFlags;
+
+extern void setDrawCloudsAndLights(int mode);
+extern void skyFn_80062a54(f32 x, f32 y, f32 z, int intensity);
+extern int *gCloudActionInterface;
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void mm_free(void *ptr);
@@ -131,8 +137,10 @@ extern f32 lbl_803DEFC8;
 extern f32 lbl_803DEFF0;
 extern f32 lbl_803DF024;
 extern f32 lbl_803DF028;
+extern f32 lbl_803DF060;
 extern f32 lbl_803DF06C;
 extern f32 init_803DF080;
+extern f32 lbl_803DF084;
 extern f32 lbl_803DF088;
 extern f32 lbl_803DF108;
 extern f64 lbl_803DF130;
