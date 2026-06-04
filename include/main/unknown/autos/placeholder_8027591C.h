@@ -10,6 +10,6 @@ void mcmdVibrato(McmdVoiceState *state, McmdCommandArgs *args);
 void DoSetPitch(McmdVoiceState *state);
 void mcmdSetADSR(McmdVoiceState *state, McmdCommandArgs *args);
 void mcmdSetPitchADSR(McmdVoiceState *state, McmdCommandArgs *args);
-void voiceConfigureParamRamp(McmdVoiceState *state, McmdCommandArgs *args, u32 idx);
+void voiceConfigureParamRamp(McmdVoiceState *state, McmdCommandArgs *args, u8 idx);
 
 #endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027591C_H_ */

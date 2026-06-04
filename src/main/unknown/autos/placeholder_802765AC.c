@@ -952,13 +952,13 @@ void macHandleActive(McmdVoiceState *sv)
             MAC_CFLAGS(sv) |= MAC_FLAG64(0, 0x10000);
             break;
         case 0x36: /* set priority */
-            voiceSetPriority((int)sv, (cmd >> 8) & 0xff);
+            voiceSetPriority(sv, (cmd >> 8) & 0xff);
             break;
         case 0x37: /* add priority */
         {
             s16 prio = sv->priorityGroup + (s16)(cmd >> 0x10);
             prio = prio < 0 ? 0 : prio > 0xff ? 0xff : prio;
-            voiceSetPriority((int)sv, (u8)prio);
+            voiceSetPriority(sv, (u8)prio);
             break;
         }
         case 0x38: /* set age counter speed */
@@ -1439,7 +1439,7 @@ u32 audioFn_80278b94(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, 
             sv->queuedMessageReadIndex = 0;
             sv->queuedMessageCount = 0;
             sv->voiceHandle = voice | ((macid << 0x10) | ((key & 0xff) << 8));
-            voiceSetPriority((int)sv, priority);
+            voiceSetPriority(sv, priority);
 
             if ((vid = vidMakeNew((int)sv, new_vid)) != 0xffffffff) {
                 if (sv->queueMode != 0) {
