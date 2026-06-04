@@ -18,6 +18,10 @@
 #define ROMCURVE_LINK_ID_STRIDE sizeof(u32)
 #define ROMCURVE_LINK_COUNT 4
 #define ROMCURVE_LINK_ID_NONE 0xffffffff
+#define ROMCURVE_PLACEMENT_ROT_Z_OFFSET 0x2c
+#define ROMCURVE_PLACEMENT_ROT_Y_OFFSET 0x2d
+#define ROMCURVE_PLACEMENT_ROT_X_OFFSET 0x2e
+#define ROMCURVE_PLACEMENT_EXT_SIZE 0x30
 #define ROMCURVE_TYPE_ACTION 0x15
 #define ROMCURVE_GETCURVES_MAX_POINTS 0x23
 
@@ -33,6 +37,14 @@ typedef struct RomCurveDef {
   s8 blockedLinkMask;
   u32 linkIds[ROMCURVE_LINK_COUNT];
 } RomCurveDef;
+
+typedef struct RomCurvePlacementDef {
+  RomCurveDef base;
+  s8 rotZ;
+  s8 rotY;
+  u8 rotX;
+  u8 pad2F;
+} RomCurvePlacementDef;
 
 typedef struct RomCurvePoint {
   f32 x;
@@ -52,6 +64,11 @@ STATIC_ASSERT(offsetof(RomCurveDef, action) == ROMCURVE_ACTION_OFFSET);
 STATIC_ASSERT(offsetof(RomCurveDef, type) == ROMCURVE_TYPE_OFFSET);
 STATIC_ASSERT(offsetof(RomCurveDef, blockedLinkMask) == ROMCURVE_LINK_FLAGS_OFFSET);
 STATIC_ASSERT(offsetof(RomCurveDef, linkIds) == ROMCURVE_LINK_IDS_OFFSET);
+
+STATIC_ASSERT(sizeof(RomCurvePlacementDef) == ROMCURVE_PLACEMENT_EXT_SIZE);
+STATIC_ASSERT(offsetof(RomCurvePlacementDef, rotZ) == ROMCURVE_PLACEMENT_ROT_Z_OFFSET);
+STATIC_ASSERT(offsetof(RomCurvePlacementDef, rotY) == ROMCURVE_PLACEMENT_ROT_Y_OFFSET);
+STATIC_ASSERT(offsetof(RomCurvePlacementDef, rotX) == ROMCURVE_PLACEMENT_ROT_X_OFFSET);
 
 STATIC_ASSERT(sizeof(RomCurvePoint) == ROMCURVE_POINT_SIZE);
 STATIC_ASSERT(offsetof(RomCurvePoint, flags) == 0x10);

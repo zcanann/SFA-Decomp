@@ -65,6 +65,7 @@ extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern uint countLeadingZeros();
 
+/* Hcurves keeps the ROM curve definitions sorted by id for binary searches. */
 extern RomCurveDef *romCurves[];
 extern RomCurvePoint sCurvesHitPoints[ROMCURVE_GETCURVES_MAX_POINTS];
 extern undefined4 DAT_803dc070;
@@ -2451,34 +2452,34 @@ int RomCurve_find(int *types,int typeCount,f32 x,f32 y,f32 z,int action)
 #pragma peephole off
 void curves_remove(RomCurveDef *curve)
 {
-  RomCurveDef **slot;
-  int count;
-  int index;
+  int curveCount;
+  RomCurveDef **tableSlot;
+  int removeIndex;
   u32 remaining;
 
-  index = 0;
-  slot = romCurves;
-  count = nRomCurves;
-  while ((index < count) &&
-         (curve->id != (*slot)->id)) {
-    slot = slot + 1;
-    index = index + 1;
+  removeIndex = 0;
+  tableSlot = romCurves;
+  curveCount = nRomCurves;
+  while ((removeIndex < curveCount) &&
+         (curve->id != (*tableSlot)->id)) {
+    tableSlot = tableSlot + 1;
+    removeIndex = removeIndex + 1;
   }
 
-  if (index >= count) {
+  if (removeIndex >= curveCount) {
     return;
   }
 
-  count = nRomCurves - 1;
-  nRomCurves = count;
-  slot = romCurves + index;
-  remaining = count - index;
-  if (index >= count) {
+  curveCount = nRomCurves - 1;
+  nRomCurves = curveCount;
+  tableSlot = romCurves + removeIndex;
+  remaining = curveCount - removeIndex;
+  if (removeIndex >= curveCount) {
     return;
   }
   for (; remaining != 0; remaining--) {
-    slot[0] = slot[1];
-    slot = slot + 1;
+    tableSlot[0] = tableSlot[1];
+    tableSlot = tableSlot + 1;
   }
 }
 #pragma peephole reset
@@ -2501,25 +2502,25 @@ void curves_remove(RomCurveDef *curve)
  */
 void curves_addCurveDef(RomCurveDef *curve)
 {
-  RomCurveDef **slot;
+  int curveCount;
+  RomCurveDef **scanSlot;
   RomCurveDef **shiftSlot;
-  int count;
   int insertIndex;
 
-  count = nRomCurves;
-  if (count == ROMCURVE_MAX_CURVES) {
+  curveCount = nRomCurves;
+  if (curveCount == ROMCURVE_MAX_CURVES) {
     OSReport(sCurvesMaxRomCurvesExceeded);
     return;
   }
 
   insertIndex = 0;
-  slot = romCurves;
-  while ((insertIndex < count) && (curve->id > (*slot)->id)) {
-    slot++;
+  scanSlot = romCurves;
+  while ((insertIndex < curveCount) && (curve->id > (*scanSlot)->id)) {
+    scanSlot++;
     insertIndex++;
   }
 
-  for (shiftSlot = romCurves + count; insertIndex < count; count--) {
+  for (shiftSlot = romCurves + curveCount; insertIndex < curveCount; curveCount--) {
     shiftSlot[0] = shiftSlot[-1];
     shiftSlot--;
   }
