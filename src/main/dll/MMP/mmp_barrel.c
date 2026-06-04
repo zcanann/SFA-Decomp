@@ -1566,15 +1566,15 @@ void waveanimator_hitDetect(int *obj) {
     off = 0;
     for (i = 0; i < w[8]; i++) {
         for (j = 0; j < w[8]; j++) {
-            *(s16 *)((char *)lbl_803DDAF0 + off) += framesThisStep >> 1;
-            while (*(s16 *)((char *)lbl_803DDAF0 + off) >= w[7]) {
-                *(s16 *)((char *)lbl_803DDAF0 + off) -= w[7];
+            ((s16 *)lbl_803DDAF0)[off] += framesThisStep >> 1;
+            while (((s16 *)lbl_803DDAF0)[off] >= w[7]) {
+                ((s16 *)lbl_803DDAF0)[off] -= w[7];
             }
-            *(s16 *)((char *)lbl_803DDAF0 + off + 2) += framesThisStep >> 1;
-            while (*(s16 *)((char *)lbl_803DDAF0 + off + 2) >= w[7]) {
-                *(s16 *)((char *)lbl_803DDAF0 + off + 2) -= w[7];
+            ((s16 *)lbl_803DDAF0)[off + 1] += framesThisStep >> 1;
+            while (((s16 *)lbl_803DDAF0)[off + 1] >= w[7]) {
+                ((s16 *)lbl_803DDAF0)[off + 1] -= w[7];
             }
-            off += 4;
+            off += 2;
         }
     }
     lbl_803DDAF8 = 1;
@@ -1698,7 +1698,6 @@ void fn_801932C8(int *obj, int *p2, int *p3) {
     int mid;
     int inner;
     int foff;
-    int hoff;
     int ix;
     int iz;
     f32 fracX;
@@ -1722,12 +1721,12 @@ void fn_801932C8(int *obj, int *p2, int *p3) {
     *(u8 *)((char *)p2 + 0x2a) = 0;
     radsq = *(f32 *)((char *)p2 + 0x14) * *(f32 *)((char *)p2 + 0x14);
     foff = 0;
-    hoff = 0;
     for (blkIdx = 0; blkIdx < *(u16 *)((char *)block + 0x9a); blkIdx++) {
         entry = mapBlockFn_800606ec(block, blkIdx);
         if (*(u8 *)((char *)p3 + 0x25) == mapBlockFn_80060678(entry)) {
+            mid = *(u16 *)entry;
             clampMax = lbl_803E3FC4;
-            for (mid = *(u16 *)entry; mid < *(u16 *)((char *)block + 0x14); mid++) {
+            for (; mid < *(u16 *)((char *)block + 0x14); mid++) {
                 vtx = fn_800606DC(block, mid);
                 for (inner = 0; inner < 3; inner++) {
                     void *cell = (char *)*(int *)((char *)block + 0x58) + *(u16 *)vtx * 6;
@@ -1741,18 +1740,14 @@ void fn_801932C8(int *obj, int *p2, int *p3) {
                     if (d > clampMax) {
                         d = clampMax;
                     }
-                    *(f32 *)((char *)*(int *)p2 + foff) = clampMax - d * d;
-                    *(s16 *)((char *)*(int *)((char *)p2 + 4) + hoff) = (s16)(int)vpos[1];
-                    foff += 4;
-                    hoff += 2;
+                    d = d * d;
+                    ((f32 *)*(int *)p2)[foff] = clampMax - d;
+                    *(s16 *)((char *)*(int *)((char *)p2 + 4) + foff * 2) = (int)vpos[1];
+                    foff++;
                     vtx = (char *)vtx + 2;
                 }
             }
-            {
-                int cnt = *(u8 *)((char *)p2 + 0x2a);
-                *(u8 *)((char *)p2 + 0x2a) = cnt + 1;
-                *(s16 *)((char *)p2 + cnt * 2 + 0x1c) = (s16)blkIdx;
-            }
+            *(s16 *)((char *)p2 + ((*(u8 *)((char *)p2 + 0x2a))++) * 2 + 0x1c) = (s16)blkIdx;
         }
     }
 }
