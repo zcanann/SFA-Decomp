@@ -2838,8 +2838,7 @@ int imanimspacecraft_SeqFn(int *obj, int unused, u8 *p3) {
     tex = objFindTexture(obj, 1, 0);
     *tex = ((*((u8 *)state + 3) >> 1 & 1) ^ 1) << 8;
     if (!(*((u8 *)state + 3) & 2)) {
-        state[0] -= framesThisStep;
-        if (state[0] < 0) {
+        if ((state[0] -= framesThisStep) < 0) {
             *((u8 *)state + 3) |= 2;
             state[0] = 0x78;
         }
@@ -2885,6 +2884,79 @@ int imanimspacecraft_SeqFn(int *obj, int unused, u8 *p3) {
         }
     }
     return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
+
+#pragma scheduling off
+#pragma peephole off
+void imspacethruster_update(int *obj) {
+    u8 *state;
+    int mode;
+    s16 v;
+    int *tex;
+
+    state = *(u8 **)((char *)obj + 0xb8);
+    if (*(void **)((char *)obj + 0x30) != NULL) {
+        mode = ((s16 (*)(int, int))((void **)*(void **)*(int *)(*(int *)((char *)obj + 0x30) + 0x68))[8])(*(int *)((char *)obj + 0x30), state[0]);
+        switch (state[1]) {
+        case 0:
+            if (mode == 1) {
+                ObjModel_SetBlendChannelTargets(((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)], 0, -1, 0, lbl_803E478C, 0x10);
+                *(u8 *)((char *)obj + 0x36) = 0xff;
+                state[1] = 1;
+            } else {
+                int d = *(u8 *)((char *)obj + 0x36) - framesThisStep * 8;
+                if (d < 0) {
+                    d = 0;
+                }
+                *(u8 *)((char *)obj + 0x36) = d;
+            }
+            break;
+        case 1:
+            if (mode == 0) {
+                ObjModel_SetBlendChannelTargets(((int *)*(int *)((char *)obj + 0x7c))[*(s8 *)((char *)obj + 0xad)], 0, -1, 0, lbl_803E4790, 0x10);
+                *(s16 *)(state + 2) = 0xb4;
+                *(u8 *)((char *)obj + 0x36) = 0xa4;
+                state[1] = 2;
+            }
+            break;
+        case 2:
+            if (mode == 1) {
+                state[1] = 1;
+            } else {
+                if ((*(s16 *)(state + 2) -= framesThisStep) < 0) {
+                    state[1] = 0;
+                }
+            }
+            break;
+        }
+        if (state[0] < 5) {
+            f32 a = (f32)*(u8 *)((char *)obj + 0x36) / lbl_803E4794;
+            if (a > lbl_803E4788) {
+                a = lbl_803E4788;
+            } else if (a < lbl_803E4798) {
+                a = lbl_803E4798;
+            }
+            ((void (*)(int, f32))((void **)*(void **)*(int *)(*(int *)((char *)obj + 0x30) + 0x68))[10])(*(int *)((char *)obj + 0x30), a);
+        }
+        tex = objFindTexture(obj, 0, 0);
+        v = -*(s16 *)((char *)tex + 0xa);
+        v += 0x100;
+        if (v > 0x800) {
+            v -= 0x800;
+        }
+        *(s16 *)((char *)tex + 0xa) = -v;
+        tex = objFindTexture(obj, 1, 0);
+        v = -*(s16 *)((char *)tex + 0xa);
+        v += 0xa0;
+        if (v > 0x800) {
+            v -= 0x800;
+        }
+        *(s16 *)((char *)tex + 0xa) = -v;
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
