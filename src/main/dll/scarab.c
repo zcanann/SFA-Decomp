@@ -1672,52 +1672,82 @@ void fn_8015ED1C(int p1, int p2, int p3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-dll_CE_func0B(undefined8 param_1,double param_2,double param_3,undefined8 param_4,undefined8 param_5,
-            undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,int param_10,
-            undefined4 param_11,undefined4 param_12,undefined4 param_13,undefined4 param_14,
-            undefined4 param_15,undefined4 param_16)
+#pragma scheduling off
+#pragma peephole off
+void dll_CE_func0B(int obj, int v)
 {
-  int iVar1;
-  int iVar2;
-  
-  iVar2 = *(int *)(param_9 + 0xb8);
-  iVar1 = *(int *)(iVar2 + 0x40c);
-  if (*(char *)(param_10 + 0x27a) != '\0') {
-    FUN_800305f8((double)lbl_803E3A60,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                 param_9,0xb,0,param_12,param_13,param_14,param_15,param_16);
-    *(undefined *)(param_10 + 0x346) = 0;
+  extern void Sfx_PlayFromObject(int obj, int sfx);
+  extern int *gPlayerInterface;
+  int sub = *(int *)(obj + 0xb8);
+
+  switch ((u8)v) {
+  case 0x80:
+    *(u8 *)(*(int *)(sub + 0x40c) + 9) |= 2;
+    Sfx_PlayFromObject(obj, SFXfoxcom_flame);
+    (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, sub, 1);
+    *(s16 *)(sub + 0x270) = 4;
+    *(s8 *)(sub + 0x27b) = 1;
+    break;
+  case 0x81:
+    *(u8 *)(sub + 0x404) &= ~4;
+    break;
   }
-  if (*(char *)(param_10 + 0x27a) == '\0') {
-    ObjHits_SetHitVolumeSlot(param_9,10,1,-1);
-    *(undefined *)(*(int *)(param_9 + 0x54) + 0x6c) = 10;
-    *(undefined *)(*(int *)(param_9 + 0x54) + 0x6d) = 1;
-    ObjHits_RegisterActiveHitVolumeObject(param_9);
-  }
-  else {
-    *(undefined *)(param_10 + 0x25f) = 1;
-    FUN_80017698((int)*(short *)(iVar2 + 0x3f4),1);
-    *(byte *)(param_9 + 0xaf) = *(byte *)(param_9 + 0xaf) & 0xf7;
-    *(undefined *)(param_9 + 0x36) = 0xff;
-    *(undefined *)(param_10 + 0x34d) = 1;
-    *(float *)(param_10 + 0x2a0) =
-         lbl_803E3A80 +
-         (float)((double)CONCAT44(0x43300000,(uint)*(byte *)(iVar2 + 0x406)) - DOUBLE_803e3a58) /
-         lbl_803E3A84;
-    ObjHits_EnableObject(param_9);
-  }
-  if (*(char *)(param_10 + 0x346) != '\0') {
-    *(undefined2 *)(iVar2 + 0x402) = 1;
-  }
-  if ((*(uint *)(param_10 + 0x314) & 0x200) != 0) {
-    *(uint *)(param_10 + 0x314) = *(uint *)(param_10 + 0x314) & 0xfffffdff;
-    *(byte *)(iVar1 + 8) = *(byte *)(iVar1 + 8) | 4;
-  }
-  if (*(float *)(param_9 + 0x98) < lbl_803E3A88) {
-    *(byte *)(iVar1 + 8) = *(byte *)(iVar1 + 8) | 2;
-  }
-  return 0;
 }
+
+void dll_CE_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
+{
+  extern void objRenderFn_8003b8f4(f32);
+  extern void fn_8003B5E0(int, int, int, int);
+  extern f32 lbl_803E2DC8;
+  extern f32 lbl_803E2E10;
+  int sub = *(int *)(p1 + 0xb8);
+  f32 t;
+
+  if (visible != 0 && *(int *)(p1 + 0xf4) == 0 && *(s16 *)(sub + 0x402) != 0) {
+    t = *(f32 *)(sub + 0x3e8);
+    if (t != lbl_803E2DC8) {
+      fn_8003B5E0(200, 0, 0, (int)t);
+    }
+    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5,
+                                                                   lbl_803E2E10);
+  }
+}
+
+void dll_CE_init(int obj, u8 *p, int flags)
+{
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern int randomGetRange(int min, int max);
+  extern int *gBaddieControlInterface;
+  extern int *gPlayerInterface;
+  extern f64 lbl_803E2E08;
+  extern f32 lbl_803E2DC8;
+  extern f32 lbl_803E2E14;
+  int sub;
+  u8 mode;
+  f32 *v;
+
+  sub = *(int *)(obj + 0xb8);
+  mode = 6;
+  if (flags != 0) {
+    mode |= 1;
+  }
+  if ((*(u8 *)(p + 0x2b) & 0x20) == 0) {
+    mode |= 8;
+  }
+  (*(void (**)(int, u8 *, int, int, int, int, u8, f32))(*(int *)gBaddieControlInterface + 0x58))(
+      obj, p, sub, 7, 6, 0x102, mode, lbl_803E2E14);
+  *(int *)(obj + 0xbc) = 0;
+  v = *(f32 **)(sub + 0x40c);
+  *v = (f32)(int)randomGetRange(10, 300);
+  ObjAnim_SetCurrentMove(obj, 8, lbl_803E2DC8, 0);
+  *(u8 *)(obj + 0xaf) |= 8;
+  (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, sub, 0);
+  *(s16 *)(sub + 0x270) = 0;
+  *(s8 *)(sub + 0x25f) = 0;
+  ObjHits_DisableObject(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
