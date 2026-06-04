@@ -4579,10 +4579,10 @@ extern void staff_initialise();
 extern void staff_modelMtxFn(int *obj, int p4, int p5);
 extern void staff_hitDetectGeometry();
 void staff_func10(int *obj, s32 v);
-void staff_func11(int *obj, s32 v);
-void staff_func12(int *obj, s32 delta);
-extern s16 staff_func13(int *obj);
-void staff_func14(int *obj, f32 *outA, f32 *outB);
+void staff_setHitReactValue(int *obj, s32 v);
+void staff_addHitReactValue(int *obj, s32 delta);
+extern s16 staff_getHitReactValue(int *obj);
+void staff_getHitGeometryPoints(int *obj, f32 *outA, f32 *outB);
 void staff_func15(int *obj, s16 idx, f32 f1, f32 f2);
 extern s32 staff_func16(int *obj);
 extern void fireball_free();
@@ -4844,10 +4844,10 @@ ObjectDescriptor23 gStaffObjDescriptor = {
     (ObjectDescriptorCallback)staff_func0E,
     (ObjectDescriptorCallback)staff_func0F,
     (ObjectDescriptorCallback)staff_func10,
-    (ObjectDescriptorCallback)staff_func11,
-    (ObjectDescriptorCallback)staff_func12,
-    (ObjectDescriptorCallback)staff_func13,
-    (ObjectDescriptorCallback)staff_func14,
+    (ObjectDescriptorCallback)staff_setHitReactValue,
+    (ObjectDescriptorCallback)staff_addHitReactValue,
+    (ObjectDescriptorCallback)staff_getHitReactValue,
+    (ObjectDescriptorCallback)staff_getHitGeometryPoints,
     (ObjectDescriptorCallback)staff_func15,
     (ObjectDescriptorCallback)staff_func16,
 };
@@ -5032,7 +5032,7 @@ typedef struct StaffState {
 } StaffState;
 
 /* Pattern wrappers. */
-s16 staff_func13(int *obj) { return ((StaffState*)((int**)obj)[0xb8/4])->hitReactValue; }
+s16 staff_getHitReactValue(int *obj) { return ((StaffState*)((int**)obj)[0xb8/4])->hitReactValue; }
 u8 fn_8016F16C(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x71); }
 u8 collectible_func0F(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1e); }
 
@@ -5106,7 +5106,7 @@ void staff_func10(int *obj, s32 v) {
     ((StaffState*)((int**)obj)[0xb8/4])->fieldB2 = (s16)v;
 }
 
-void staff_func11(int *obj, s32 v) {
+void staff_setHitReactValue(int *obj, s32 v) {
     s16 *p = &((StaffState*)((int**)obj)[0xb8/4])->hitReactValue;
     if (v > 0xff) v = 0xff;
     *p = (s16)v;
@@ -5195,7 +5195,7 @@ void flamethrowerspe_setScale(int *obj, s16 a, s16 b, f32 f1, f32 f2, f32 f3) {
     *(s16*)((char*)obj + 0x0) = b;
 }
 
-void staff_func12(int *obj, s32 delta) {
+void staff_addHitReactValue(int *obj, s32 delta) {
     s16 *p = &((StaffState*)((int**)obj)[0xb8/4])->hitReactValue;
     s32 v;
     *p = (s16)(*p + delta);
@@ -5208,7 +5208,7 @@ void staff_func12(int *obj, s32 delta) {
     *p = (s16)v;
 }
 
-void staff_func14(int *obj, f32 *outA, f32 *outB) {
+void staff_getHitGeometryPoints(int *obj, f32 *outA, f32 *outB) {
     StaffState *state = ((StaffState**)(obj))[0xb8/4];
     outA[0] = state->geometryPointAX;
     outA[1] = state->geometryPointAY;
