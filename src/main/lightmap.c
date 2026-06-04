@@ -3403,6 +3403,164 @@ void sceneDrawTransparentPolys(void)
 }
 #pragma scheduling reset
 
+
+extern void mapFn_80057d24(int x, int z, int *box0, int *box1, int *box2, int *box3, int layer,
+                           int one, int v);
+extern int mapRectFn_8005a728(int row, int col, u8 *block);
+extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+extern void renderMapBlock(u8 *block, int *p1);
+extern int lbl_8038228C[];
+extern s32 lbl_803DCE88;
+extern s32 lbl_803DCEC0;
+extern f32 lbl_803DCE58;
+extern double lbl_803DEBC0;
+extern f32 lbl_803DCE54;
+
+typedef union {
+    double d;
+    struct {
+        u32 hi;
+        u32 lo;
+    } u;
+} F64Cvt;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_loop_invariants off
+void renderSceneGeometry(int *p1, s8 *order)
+{
+    F64Cvt cv;
+    F64Cvt cv2;
+    u8 map[256];
+    int box0[4];
+    int box1[4];
+    int box2[4];
+    int box3[4];
+    void **lt;
+    int *lt2;
+    int layer;
+    s8 *table;
+    u8 *p;
+    u32 n;
+    int y, x0, x1, y1;
+    int k;
+    int oi, ii;
+    s8 *op, *ip;
+    int row, col;
+    f32 rowF, colF;
+    int cell;
+    int idx;
+    u8 *blk;
+    f32 ws;
+    double bias;
+    int hi;
+
+    layer = 4;
+    lt = &gMapBlockLayerTables[4];
+    lt2 = &lbl_8038228C[4];
+    ws = gMapBlockWorldSize;
+    bias = lbl_803DEBC0;
+    hi = 0x43300000;
+    do {
+        table = (s8 *)*lt;
+        lbl_803DCE88 = *lt2;
+        mapFn_80057d24(lbl_803DCDD0 + 7, lbl_803DCDD4 + 7, box0, box1, box2, box3, layer, 1,
+                       lbl_803DCEC0);
+        p = map;
+        for (k = 0; k < 256; k++) {
+            *p = 0;
+            p++;
+        }
+        for (y = box0[2]; y <= box0[3]; y++) {
+            p = map + (y + 7) * 0x10 + box0[0];
+            n = (box0[1] + 1) - box0[0];
+            if (box0[0] <= box0[1]) {
+                while (n != 0) {
+                    p[7] = 1;
+                    p++;
+                    n--;
+                }
+            }
+        }
+        for (y = box1[2]; y <= box1[3]; y++) {
+            p = map + (y + 7) * 0x10 + box1[0];
+            n = (box1[1] + 1) - box1[0];
+            if (box1[0] <= box1[1]) {
+                while (n != 0) {
+                    p[7] = 1;
+                    p++;
+                    n--;
+                }
+            }
+        }
+        for (y = box2[2]; y <= box2[3]; y++) {
+            p = map + (y + 7) * 0x10 + box2[0];
+            n = (box2[1] + 1) - box2[0];
+            if (box2[0] <= box2[1]) {
+                while (n != 0) {
+                    p[7] = 1;
+                    p++;
+                    n--;
+                }
+            }
+        }
+        for (y = box3[2]; y <= box3[3]; y++) {
+            p = map + (y + 7) * 0x10 + box3[0];
+            n = (box3[1] + 1) - box3[0];
+            if (box3[0] <= box3[1]) {
+                while (n != 0) {
+                    p[7] = 1;
+                    p++;
+                    n--;
+                }
+            }
+        }
+        oi = 0;
+        op = order;
+        for (; oi < 16; oi++) {
+            row = *op;
+            cv.u.lo = row ^ 0x80000000;
+            cv.u.hi = hi;
+            rowF = ws * (f32)(cv.d - bias);
+            ii = 0;
+            ip = order;
+            for (; ii < 16; ii++) {
+                col = *ip;
+                cell = row + col * 0x10;
+                idx = table[cell];
+                if (idx < 0) {
+                    blk = NULL;
+                } else {
+                    blk = (u8 *)lbl_803DCE9C[idx];
+                    *(u16 *)(blk + 4) ^= 1;
+                    if (map[cell] == 0) {
+                        goto next;
+                    }
+                }
+                if (idx > -1 && mapRectFn_8005a728(row, col, blk) != 0) {
+                    lbl_803DCE58 = rowF;
+                    cv.u.lo = col ^ 0x80000000;
+                    cv.u.hi = 0x43300000;
+                    colF = gMapBlockWorldSize * (f32)(cv.d - lbl_803DEBC0);
+                    lbl_803DCE54 = colF;
+                    cv2.u.lo = (int)*(s16 *)(blk + 0x8e) ^ 0x80000000;
+                    cv2.u.hi = 0x43300000;
+                    PSMTXTrans((f32 *)(blk + 0xc), rowF, (f32)(cv2.d - lbl_803DEBC0), colF);
+                    renderMapBlock(blk, p1);
+                }
+            next:
+                ip++;
+            }
+            op++;
+        }
+        lt--;
+        lt2--;
+        layer--;
+    } while (layer >= 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 typedef struct {
     u32 a;
     u32 b;
