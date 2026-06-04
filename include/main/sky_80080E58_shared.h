@@ -4404,6 +4404,56 @@ typedef struct FogColor {
 } FogColor;
 
 extern void GXSetFog(int type, f32 startz, f32 endz, f32 nearz, f32 farz, FogColor color);
+extern void GXSetTevOrder(int stage, int coord, int map, int color);
+extern void GXSetTevDirect(int stage);
+extern void GXSetTevColorIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevAlphaIn(int stage, int a, int b, int c, int d);
+extern void GXSetTevSwapMode(int stage, int ras, int tex);
+extern void GXSetTevColorOp(int stage, int op, int bias, int scale, int clamp, int reg);
+extern void GXSetTevAlphaOp(int stage, int op, int bias, int scale, int clamp, int reg);
+extern void GXSetTexCoordGen2(int coord, int func, int src, int mtx, int normalize, int pttexmtx);
+extern void GXSetNumIndStages(int n);
+extern void GXSetNumChans(int n);
+extern void GXSetNumTexGens(int n);
+extern void GXSetNumTevStages(int n);
+extern void selectTexture(void *tex, int slot);
+extern void fn_8007880C(void);
+extern void fn_80069B1C(void *a, void *b, f32 t, void *c);
+
+typedef struct SkyTimeBlend {
+    void *texA;          /* 0x00 */
+    void *texB;          /* 0x04 */
+    void *texList[3];    /* 0x08 */
+    int texAId;          /* 0x14 */
+    int texBId;          /* 0x18 */
+    u8 pad1C[0x1F0];     /* 0x1c */
+    f32 time;            /* 0x20c */
+    u8 pad210[0xC];      /* 0x210 */
+    int palettes[8];     /* 0x21c */
+    f32 blend;           /* 0x23c */
+    u8 pad240[0xF];      /* 0x240 */
+    u8 phase;            /* 0x24f */
+    s8 prevPhase;        /* 0x250 */
+    u8 texSel;           /* 0x251 */
+} SkyTimeBlend;
+extern void skyDrawFn_80075d5c(f32 a, f32 b, f32 c, f32 d, int e, int f, int g, int h, int i);
+extern u8 lbl_8030F31C[];
+extern int lbl_803E8458;
+extern f64 lbl_803DF070;
+extern int coordsToMapCell(f32 x, f32 z);
+extern f32 Camera_GetFovY(void);
+extern u32 getScreenResolution(void);
+extern int *gSky2Interface;
+extern const f32 lbl_803DF0C8;
+extern const f32 lbl_803DF0CC;
+extern const f32 lbl_803DF0D0;
+extern const f32 lbl_803DF0D4;
+extern const f32 lbl_803DF0D8;
+extern const f32 lbl_803DF0DC;
+extern const f32 lbl_803DF0E0;
+extern const f32 lbl_803DF0E4;
+extern const f32 lbl_803DF0E8;
+extern const f32 lbl_803DF0EC;
 extern int snowPrintSnowCloud(int arg, int x);
 extern void drawFn_80079e64(double s1, double s2, double s3, u8 mtxIdx, void *vec, u8 a0, u8 a1);
 extern f32 lbl_8039A8F0[];
