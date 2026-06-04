@@ -36,7 +36,7 @@ void FUN_801769e8(undefined8 param_1,double param_2,double param_3,undefined8 pa
 void FUN_80177204(short *param_1,int param_2);
 void FUN_80177208(int param_1);
 void FUN_8017724c(int param_1);
-void invhit_update(int obj);
+void invhit_update(int *obj);
 void FUN_801776f0(int param_1);
 void FUN_80177710(ushort *param_1);
 void FUN_80177874(int param_1,int param_2);
