@@ -3438,6 +3438,150 @@ void lightmap_sortTransparentDrawQueue(void)
 #pragma scheduling reset
 #pragma peephole reset
 
+
+extern void maybeHudFn_8006c91c(void);
+extern int ObjList_PartitionForRender(int *count);
+extern int objUpdateOpacity(u8 *obj);
+extern void Camera_ProjectWorldPoint(f32 x, f32 y, f32 z, int *a, int *b, f32 *depth, f32 *out);
+extern void shadowCreate(u8 *obj);
+extern void shadowRenderFn_8006b558(u8 *obj);
+extern void renderShadows(int a, int b, int c);
+void sortVisibleObjectKeysDescending(u32 *arr, int n);
+typedef struct { f32 lo; f32 hi; } F32Pair;
+extern F32Pair changed_803DEC08;
+extern f32 lbl_803DEBDC;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_loop_invariants off
+void getVisibleObjects(s8 *opacity)
+{
+    int part;
+    int *objects;
+    int *p;
+    u8 *o;
+    int i;
+    int key;
+    int depthInt;
+    s8 *cur;
+    u8 *sub;
+    u8 *att;
+    int j;
+    u8 *s54;
+    int *model;
+    u32 tf;
+    u32 mode;
+    s16 t;
+    int t1000;
+    int count;
+    int a, b;
+    f32 depth;
+
+    maybeHudFn_8006c91c();
+    objects = ObjList_GetObjects((int *)0, (int *)0);
+    part = ObjList_PartitionForRender(&count);
+    i = 0;
+    p = objects;
+    cur = opacity;
+    for (; i < count; i++) {
+        o = (u8 *)*p;
+        *(u16 *)(o + 0xb0) &= ~0x800;
+        j = 0;
+        sub = o;
+        for (; j < *(u8 *)(o + 0xeb); j++) {
+            att = *(u8 **)(sub + 0xc8);
+            if (att != NULL) {
+                *(u16 *)(att + 0xb0) &= ~0x800;
+            }
+            sub += 4;
+        }
+        if (i >= part) {
+            *cur = (s8)objUpdateOpacity(o);
+            if (*cur != 0 || (*(u32 *)(*(u8 **)(o + 0x50) + 0x44) & 0x200000) != 0) {
+                if ((*(u32 *)(*(u8 **)(o + 0x50) + 0x44) & 0x80000) != 0) {
+                    *(f32 *)(o + 0xa4) = (f32)(*(u8 *)(*(u8 **)(o + 0x50) + 0x74) * 100);
+                    depthInt = (int)*(f32 *)(o + 0xa4);
+                } else {
+                    if (*(void **)(o + 0x30) != NULL) {
+                        Camera_ProjectWorldPoint(*(f32 *)(o + 0x18), *(f32 *)(o + 0x1c),
+                                                 *(f32 *)(o + 0x20), &a, &b, &depth,
+                                                 (f32 *)(o + 0xa4));
+                    } else {
+                        Camera_ProjectWorldPoint(*(f32 *)(o + 0xc) - playerMapOffsetX,
+                                                 *(f32 *)(o + 0x10),
+                                                 *(f32 *)(o + 0x14) - playerMapOffsetZ, &a, &b,
+                                                 &depth, (f32 *)(o + 0xa4));
+                    }
+                    depthInt = (int)(changed_803DEC08.hi * (lbl_803DEBDC + depth));
+                }
+                if ((*(s16 *)(o + 6) & 0x4000) == 0 && *(void **)(o + 0x64) != NULL &&
+                    (*(u32 *)(*(u8 **)(o + 0x64) + 0x30) & 4) != 0) {
+                    t = *(s16 *)(*(u8 **)(o + 0x50) + 0x48);
+                    if (t == 2 || t == 1) {
+                        shadowCreate(o);
+                    } else if (t == 4) {
+                        shadowRenderFn_8006b558(o);
+                    }
+                }
+                if (gVisibleObjectSortKeyCount < 1000) {
+                    key = 0;
+                    model = Obj_GetActiveModel((int *)o);
+                    if (*(u8 *)(o + 0x37) == 0xff && (*(s16 *)(o + 6) & 0x80) == 0 &&
+                        ((tf = *(u32 *)(*(u8 **)(o + 0x50) + 0x44)) & 0x40000) == 0 &&
+                        *(void **)(model + 0x16) == NULL) {
+                        key |= 0x80000000;
+                        t1000 = 1000 - (depthInt & 0xffff);
+                        if ((tf & 0x800000) != 0 && (*(u8 *)(o + 0xe5) & 2) == 0) {
+                            key |= 0x40000000;
+                            key |= (*(s16 *)(o + 0x46) & 0x3ff) << 20;
+                        }
+                        gVisibleObjectSortKeys[gVisibleObjectSortKeyCount] =
+                            (i & 0x3ff) | (((t1000 & 0x3ff) << 10) | key);
+                        gVisibleObjectSortKeyCount++;
+                        if ((*(u8 *)(*(u8 **)(o + 0x50) + 0x5f) & 0x20) != 0 &&
+                            (*(u16 *)(o + 0xb0) & 0x400) == 0 &&
+                            (*(s16 *)(o + 6) & 0x4000) == 0) {
+                            renderShadowType3(o, 7, 0x50);
+                            lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 1;
+                            lbl_803DCE30++;
+                        }
+                    } else {
+                        if ((*(u32 *)(*(u8 **)(o + 0x50) + 0x44) & 0x800) != 0 ||
+                            (*(u8 *)(*(u8 **)(o + 0x50) + 0x5f) & 0x10) != 0) {
+                            mode = 0x1f;
+                        } else {
+                            mode = 7;
+                        }
+                        renderShadowType3(o, mode, 0);
+                        lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 0;
+                        lbl_803DCE30++;
+                        if ((*(u8 *)(*(u8 **)(o + 0x50) + 0x5f) & 0x20) != 0 &&
+                            (*(s16 *)(o + 6) & 0x4000) == 0) {
+                            renderShadowType3(o, 7, 0x50);
+                            lbl_8037E0C0[lbl_803DCE30 * 4 + 3] = 1;
+                            lbl_803DCE30++;
+                        }
+                    }
+                }
+            } else {
+                s54 = *(u8 **)(o + 0x54);
+                if (s54 != NULL && (s54[0x62] & 0x30) != 0) {
+                    s54[0xaf] = 2;
+                }
+            }
+        }
+        p++;
+        cur++;
+    }
+    if (gVisibleObjectSortKeyCount > 1) {
+        sortVisibleObjectKeysDescending(gVisibleObjectSortKeys, gVisibleObjectSortKeyCount);
+    }
+    renderShadows(0, 0, 0);
+}
+#pragma opt_loop_invariants reset
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void sortVisibleObjectKeysDescending(u32 *arr, int n)
