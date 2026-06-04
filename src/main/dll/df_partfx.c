@@ -2062,15 +2062,14 @@ void Checkpoint_Add(int *entry) {
     }
     {
         CheckpointSlot *end = &lbl_8039C458[count];
-        int remaining = count - i;
-        while (remaining > 0) {
+        while (count > i) {
             end->entry = (end - 1)->entry;
             end->key   = (end - 1)->key;
             end--;
-            remaining--;
+            count--;
         }
     }
-    lbl_803DD410 = count + 1;
+    lbl_803DD410 = lbl_803DD410 + 1;
     lbl_8039C458[i].entry = entry;
     lbl_8039C458[i].key   = entry[5];
 }
