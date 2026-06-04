@@ -2622,6 +2622,89 @@ int fn_8016043C(int obj, u8 *p)
   }
   return 0;
 }
+
+void fn_801606F0(int obj, void *p2, int sub, u8 *p)
+{
+  extern int *gBaddieControlInterface;
+  extern int *gObjectTriggerInterface;
+  extern int *gPlayerInterface;
+  extern void *lbl_803AC5D0[];
+  extern void *lbl_803AC5E8[];
+  extern f32 timeDelta;
+  extern f64 lbl_803E2EA0;
+  extern f32 lbl_803E2E9C;
+  int setup;
+
+  setup = *(int *)(obj + 0x4c);
+  *(s8 *)(p + 0x346) = 1;
+  if ((*(int (**)(int, u8 *, f32, int))(*(int *)gBaddieControlInterface + 0x44))(
+          obj, p, (f32)(u32)*(u16 *)(sub + 0x3fe), 1) != 0) {
+    *(int *)(p + 0x2d0) = *(int *)(sub + 0x3e0);
+    *(s8 *)(p + 0x349) = 0;
+    if (*(char *)(setup + 0x2e) != -1) {
+      if (p2 != NULL) {
+        (*(void (**)(void *, int))(*(int *)gObjectTriggerInterface + 0x58))(
+            p2, *(s16 *)(setup + 0x24));
+      }
+      *(s8 *)(sub + 0x405) = 1;
+    } else {
+      *(int *)(p + 0x2d0) = 0;
+    }
+  }
+  (*(void (**)(int, u8 *, f32, int))(*(int *)gBaddieControlInterface + 0x2c))(obj, p,
+                                                                              lbl_803E2E9C, 1);
+  *(int *)(sub + 0x3e0) = *(int *)(obj + 0xc0);
+  *(int *)(obj + 0xc0) = 0;
+  (*(void (**)(int, u8 *, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(
+      obj, p, timeDelta, timeDelta, lbl_803AC5E8, lbl_803AC5D0);
+  *(int *)(obj + 0xc0) = *(int *)(sub + 0x3e0);
+}
+
+#pragma dont_inline on
+#pragma fp_contract off
+void fn_8016083C(int *obj, u8 *sub, u8 *p)
+{
+  extern void characterDoEyeAnims(int *obj, u8 *a);
+  extern f32 sqrtf(f32);
+  extern int Obj_GetPlayerObject(void);
+  extern int *gBaddieControlInterface;
+  extern u8 lbl_80320008[];
+  extern u8 lbl_80320080[];
+  char *o;
+  int t;
+  struct {
+    f32 x, y, z;
+  } d;
+  f32 *dp = &d.x;
+
+  if (*(void **)((char *)obj + 0xc8) != NULL) {
+    *(int *)(*(int *)((char *)obj + 0xc8) + 0x30) = *(int *)((char *)obj + 0x30);
+  }
+  o = *(char **)(p + 0x2d0);
+  if (o != NULL) {
+    d.x = *(f32 *)(o + 0x18) - *(f32 *)((char *)obj + 0x18);
+    d.y = *(f32 *)(o + 0x1c) - *(f32 *)((char *)obj + 0x1c);
+    d.z = *(f32 *)(o + 0x20) - *(f32 *)((char *)obj + 0x20);
+    *(f32 *)(p + 0x2c0) = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
+  }
+  characterDoEyeAnims(obj, sub + 0x3ac);
+  if ((*(u8 *)(sub + 0x404) & 1) == 0) {
+    (*(void (**)(int *, u8 *, u8 *, int, int, int, int))(*(int *)gBaddieControlInterface + 0x3c))(
+        obj, p, sub + 0x400, 2, 3, *(s16 *)(sub + 0x3fc), *(s16 *)(sub + 0x3fa));
+  }
+  (*(void (**)(int *, u8 *, u8 *, int, u8 *, int, int, int))(*(int *)gBaddieControlInterface +
+                                                             0x54))(
+      obj, p, sub + 0x35c, *(s16 *)(sub + 0x3f4), sub + 0x405, 0, 0, 0);
+  t = (*(int (**)(int *, u8 *, u8 *, int, u8 *, u8 *, int, int))(*(int *)gBaddieControlInterface +
+                                                                 0x50))(
+      obj, p, sub + 0x35c, *(s16 *)(sub + 0x3f4), lbl_80320008, lbl_80320080, 1, 0);
+  if (t >= 4) {
+    *(s8 *)(sub + 0x405) = 2;
+    *(int *)(p + 0x2d0) = Obj_GetPlayerObject();
+  }
+}
+#pragma fp_contract reset
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -3919,7 +4002,7 @@ void dll_CB_init(int *obj, u8 *params, int extra) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int fn_8016083C(int *obj, u8 *sub, u8 *sub2);
+
 extern f32 Curve_AdvanceAlongPath(int *p, f32 t);
 extern int getAngle(f32 a, f32 b);
 extern f32 lbl_803E2E98;
