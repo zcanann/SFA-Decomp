@@ -2070,3 +2070,138 @@ void invhit_update(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int getCurMapLayer(void);
+extern int *gMapEventInterface;
+extern f32 Vec_distance(f32 *a, f32 *b);
+extern s16 lbl_803DCEB8;
+extern u8 lbl_803DCDE0;
+extern f32 lbl_803E35D8;
+extern f32 lbl_803E35DC;
+
+#pragma scheduling off
+#pragma peephole off
+void WarpPoint_update(int *obj) {
+    char *def;
+    s16 *state;
+    char *player;
+    f32 dist;
+
+    def = *(char **)((char *)obj + 0x4c);
+    state = *(s16 **)((char *)obj + 0xb8);
+    player = (char *)Obj_GetPlayerObject();
+    if (player == NULL) {
+        return;
+    }
+    *state -= framesThisStep;
+    if (*state < 0) {
+        *state = 0;
+    }
+    if (*(u8 *)(def + 0x1f) != 0 && *(u8 *)((char *)state + 0xd) == 0 && lbl_803DCEB8 > -1 &&
+        lbl_803DCEB8 == *(s8 *)(def + 0x19)) {
+        (*(void (*)(f32 *, int, int, int))*(int *)(*gMapEventInterface + 0x1c))(
+            (f32 *)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
+        *(u8 *)((char *)state + 0xd) = 1;
+    }
+    switch (*(s8 *)(def + 0x1d)) {
+    case 0:
+        if (lbl_803DCEB8 > -1 || GameBit_Get(0xd53) != 0) {
+            f32 dx = *(f32 *)(player + 0xc) - *(f32 *)((char *)obj + 0xc);
+            f32 dy = *(f32 *)(player + 0x10) - *(f32 *)((char *)obj + 0x10);
+            f32 dz = *(f32 *)(player + 0x14) - *(f32 *)((char *)obj + 0x14);
+            dist = sqrtf(dx * dx + dy * dy + dz * dz);
+            if (*(u8 *)((char *)state + 0xc) == 0 && *(s8 *)(def + 0x1c) != 0 &&
+                dist < *(f32 *)((char *)state + 8) &&
+                *(u32 *)(player + 0x30) == *(u32 *)((char *)obj + 0x30)) {
+                if (*(s16 *)((char *)obj + 0x46) == 0x27e) {
+                    GameBit_Set(0xd53, 1);
+                    (*(void (*)(f32 *, int, int, int))*(int *)(*gMapEventInterface + 0x1c))(
+                        (f32 *)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
+                }
+                (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(state[2], obj, -1);
+                GameBit_Set(0xd53, 0);
+                lbl_803DCDE0 = 2;
+                *(u8 *)((char *)state + 0xc) = 1;
+            }
+        }
+        if (*(s8 *)(def + 0x1a) > -1) {
+            f32 d2 = Vec_distance((f32 *)((char *)obj + 0x18), (f32 *)(player + 0x18));
+            if (d2 < *(f32 *)((char *)state + 8)) {
+                warpToMap(*(s8 *)(def + 0x1a), 1);
+            }
+        }
+        break;
+    case 1: {
+        f32 dx = *(f32 *)(player + 0xc) - *(f32 *)((char *)obj + 0xc);
+        f32 dy = *(f32 *)(player + 0x10) - *(f32 *)((char *)obj + 0x10);
+        f32 dz = *(f32 *)(player + 0x14) - *(f32 *)((char *)obj + 0x14);
+        dist = sqrtf(dx * dx + dy * dy + dz * dz);
+        if (lbl_803DCEB8 > -1 && *(s8 *)(def + 0x1c) != 0 && dist < lbl_803E35D8 &&
+            *(u32 *)(player + 0x30) == *(u32 *)((char *)obj + 0x30)) {
+            (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+            lbl_803DCDE0 = 2;
+        }
+        if (*state == 0 && dist < (f32)*(s8 *)(def + 0x1e) && *(s8 *)(def + 0x1a) > -1 &&
+            *(s8 *)(def + 0x1a) > -1) {
+            (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+        }
+        break;
+    }
+    case 2:
+        if (lbl_803E35DC != (dist = *(f32 *)((char *)state + 8))) {
+            f32 dx = *(f32 *)(player + 0x18) - *(f32 *)((char *)obj + 0x18);
+            f32 dy = *(f32 *)(player + 0x1c) - *(f32 *)((char *)obj + 0x1c);
+            f32 dz = *(f32 *)(player + 0x20) - *(f32 *)((char *)obj + 0x20);
+            dist = sqrtf(dx * dx + dy * dy + dz * dz);
+        }
+        if (GameBit_Get(state[1]) != 0 && *(u8 *)((char *)state + 0xc) == 0 &&
+            *(s8 *)(def + 0x1c) != 0 && dist <= *(f32 *)((char *)state + 8) &&
+            *(u32 *)(player + 0x30) == *(u32 *)((char *)obj + 0x30)) {
+            (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(state[2], obj, -1);
+            *(u8 *)((char *)state + 0xc) = 1;
+        } else {
+            if (*(u8 *)((char *)state + 0xc) == 1 && GameBit_Get(state[1]) != 0 && *state == 0 &&
+                dist <= *(f32 *)((char *)state + 8) && *(s8 *)(def + 0x1a) > -1) {
+                GameBit_Set(state[1], 0);
+                warpToMap(*(s8 *)(def + 0x1a), 0);
+            }
+        }
+        break;
+    case 3: {
+        f32 dx = *(f32 *)(player + 0xc) - *(f32 *)((char *)obj + 0xc);
+        f32 dy = *(f32 *)(player + 0x10) - *(f32 *)((char *)obj + 0x10);
+        f32 dz = *(f32 *)(player + 0x14) - *(f32 *)((char *)obj + 0x14);
+        dist = sqrtf(dx * dx + dy * dy + dz * dz);
+        if (GameBit_Get(state[1]) != 0 && *(u8 *)((char *)state + 0xc) == 0 &&
+            *(s8 *)(def + 0x1c) != 0 && dist < *(f32 *)((char *)state + 8) &&
+            *(u32 *)(player + 0x30) == *(u32 *)((char *)obj + 0x30)) {
+            GameBit_Set(state[1], 0);
+            (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(state[2], obj, -1);
+            *(u8 *)((char *)state + 0xc) = 1;
+        }
+        break;
+    }
+    case 4:
+        if (lbl_803E35DC != (dist = *(f32 *)((char *)state + 8))) {
+            f32 dx = *(f32 *)(player + 0x18) - *(f32 *)((char *)obj + 0x18);
+            f32 dy = *(f32 *)(player + 0x1c) - *(f32 *)((char *)obj + 0x1c);
+            f32 dz = *(f32 *)(player + 0x20) - *(f32 *)((char *)obj + 0x20);
+            dist = sqrtf(dx * dx + dy * dy + dz * dz);
+        }
+        if (lbl_803DCEB8 > -1 && *(u8 *)((char *)state + 0xc) == 0 && *(s8 *)(def + 0x1c) != 0 &&
+            dist < *(f32 *)((char *)state + 8) &&
+            *(u32 *)(player + 0x30) == *(u32 *)((char *)obj + 0x30)) {
+            (*(void (*)(int, int *, int))*(int *)(*gObjectTriggerInterface + 0x48))(state[2], obj, -1);
+            lbl_803DCDE0 = 2;
+            *(u8 *)((char *)state + 0xc) = 1;
+        }
+        if (GameBit_Get(state[1]) != 0 && *state == 0 && dist <= *(f32 *)((char *)state + 8) &&
+            *(s8 *)(def + 0x1a) > -1) {
+            GameBit_Set(state[1], 0);
+            warpToMap(*(s8 *)(def + 0x1a), 1);
+        }
+        break;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
