@@ -2554,6 +2554,74 @@ void iceball_update(undefined2 *param_1,int param_2)
     *(short *)(*(int *)(p + 0x54) + 0x60) = (short)(*(short *)(*(int *)(p + 0x54) + 0x60) & ~1);
   }
 }
+
+int fn_801601C4(int obj, u8 *p)
+{
+  extern int *gPlayerInterface;
+  extern void *memcpy(void *dst, const void *src, int n);
+  extern void voxmaps_updateRoutePath(char *a, char *b);
+  extern f32 lbl_803E2E68;
+  extern f32 lbl_803E2E6C;
+  extern f32 lbl_803E2E70;
+  extern f32 lbl_803E2E74;
+  extern f32 lbl_803E2E78;
+  int sub;
+  char *wp;
+  f32 z;
+
+  sub = *(int *)(obj + 0xb8);
+  if (*(void **)(p + 0x2d0) != NULL) {
+    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 1);
+    wp = (char *)(sub + 0x35c);
+    z = lbl_803E2E68;
+    *(f32 *)(p + 0x290) = z;
+    *(f32 *)(p + 0x28c) = z;
+    memcpy(wp, (void *)(obj + 0xc), 12);
+    memcpy((void *)(sub + 0x368), (void *)(*(int *)(p + 0x2d0) + 0xc), 12);
+    voxmaps_updateRoutePath(wp, (char *)(sub + 0x384));
+    if (*(f32 *)(p + 0x2c0) < lbl_803E2E6C && *(u8 *)(sub + 0x405) == 2) {
+      return 5;
+    }
+    if (*(u8 *)(wp + 0x25) == 0) {
+      (*(void (**)(int, u8 *, f32, f32, f32, f32, f32))(*(int *)gPlayerInterface + 0x1c))(
+          obj, p, *(f32 *)(wp + 0x18), *(f32 *)(wp + 0x20), lbl_803E2E68, lbl_803E2E68,
+          lbl_803E2E70);
+    } else {
+      (*(void (**)(int, u8 *, f32, f32, f32, f32, f32))(*(int *)gPlayerInterface + 0x1c))(
+          obj, p, *(f32 *)(wp + 0x18), *(f32 *)(wp + 0x20), lbl_803E2E74, lbl_803E2E78,
+          lbl_803E2E70);
+    }
+  } else {
+    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 0);
+    *(s8 *)(p + 0x346) = 0;
+  }
+  return 0;
+}
+
+int fn_8016043C(int obj, u8 *p)
+{
+  extern int *gPlayerInterface;
+  extern int Obj_GetPlayerObject(void);
+  extern void ObjMsg_SendToObject(int target, int msg, int from, int a);
+  extern void Obj_FreeObject(int *obj);
+
+  if (*(char *)(p + 0x27b) != '\0') {
+    (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(obj, p, 3);
+    *(int *)(p + 0x2d0) = 0;
+    *(s8 *)(p + 0x25f) = 0;
+    *(s8 *)(p + 0x349) = 0;
+    *(s16 *)(*(int *)(obj + 0x54) + 0x60) &= ~1;
+    *(u8 *)(obj + 0xaf) |= 8;
+  } else {
+    ObjMsg_SendToObject(Obj_GetPlayerObject(), 0xe0000, obj, 0);
+    if (*(void **)(obj + 0x4c) == NULL) {
+      Obj_FreeObject((int *)obj);
+      return 0;
+    }
+    return 4;
+  }
+  return 0;
+}
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -4365,8 +4433,8 @@ int fn_8016118C(int* obj, u8* state)
 
 extern void* lbl_803AC5D0[];
 extern int fn_8016032C(int* obj, u8* state);
-extern int fn_801601C4(int* obj, u8* state);
-extern int fn_8016043C(int* obj, u8* state);
+extern int fn_801601C4(int obj, u8* state);
+extern int fn_8016043C(int obj, u8* state);
 extern int fn_801605D4(int* obj, u8* def);
 int fn_80160690(short* out, u8* obj);
 int fn_801605A8(short* out, u8* obj);
