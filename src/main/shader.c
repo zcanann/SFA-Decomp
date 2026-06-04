@@ -4318,6 +4318,8 @@ void doPendingMapLoads(void)
                     int* bp2 = (int*)(base + 0x41E0);
                     int* ap2 = (int*)(base + 0x41F4);
                     int* cp2 = (int*)(base + 0x41CC);
+                    int k8;
+                    s8 c;
                     p13 = recs;
                     for (layer = 0; layer < 5; layer++) {
                         s16* ent = (s16*)*bp2;
@@ -4329,8 +4331,8 @@ void doPendingMapLoads(void)
                         for (row = 0; row < 16; row++) {
                             col = 0;
                             p7 = p5;
-                            for (col = 0; col < 16; col++) {
-                                s8 c = *(s8*)g;
+                            for (k8 = 0; k8 < 8; k8++) {
+                                c = g[0];
                                 if (c > -1) {
                                     p5[0] = lbl_803DCDD0 + col;
                                     p5[1] = lbl_803DCDD4 + row;
@@ -4341,15 +4343,35 @@ void doPendingMapLoads(void)
                                     p13 += 4;
                                     cnt++;
                                 }
-                                *g = -2;
+                                g[0] = -2;
                                 *(s8*)(lbl_803DCE88 + cell) = -1;
                                 ent[3] = -3;
                                 ent[0] = -1;
                                 ent[1] = -1;
                                 ent[2] = -1;
-                                ent += 6;
                                 cell++;
-                                g++;
+                                col++;
+                                c = g[1];
+                                if (c > -1) {
+                                    p5[0] = lbl_803DCDD0 + col;
+                                    p5[1] = lbl_803DCDD4 + row;
+                                    p5[3] = layer;
+                                    p5[2] = c;
+                                    p5 += 4;
+                                    p7 += 4;
+                                    p13 += 4;
+                                    cnt++;
+                                }
+                                g[1] = -2;
+                                *(s8*)(lbl_803DCE88 + cell) = -1;
+                                ent[9] = -3;
+                                ent[6] = -1;
+                                ent[7] = -1;
+                                ent[8] = -1;
+                                ent += 12;
+                                cell++;
+                                g += 2;
+                                col++;
                             }
                             p5 = p7;
                         }
@@ -4525,8 +4547,7 @@ void doPendingMapLoads(void)
                                                 if (mapLoadBlock(cc, rr, bx, bz, layer) == 0) {
                                                     *gp2 = -2;
                                                 } else {
-                                                    *(s8*)(lbl_803DCE88 + cell2) = cn2;
-                                                    cn2++;
+                                                    *(s8*)(lbl_803DCE88 + cell2) = cn2++;
                                                 }
                                             }
                                             cell2++;
