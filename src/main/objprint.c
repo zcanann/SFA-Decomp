@@ -3652,7 +3652,7 @@ void objPosFn_80039510(int obj, int key, int out)
 }
 
 extern void cacheFn_800229c4(int x);
-extern void PSMTXConcat(int a, int b, int c);
+extern void PSMTXConcat(void *a, void *b, void *c);
 extern f32 lbl_803DEA04;
 
 void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
@@ -3673,8 +3673,8 @@ void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
     cacheFn_800229c4(0);
     fill = lbl_803DEA04;
     for (i = 0; i < count; i++) {
-        PSMTXConcat(p3, dstA, mid);
-        PSMTXConcat(mid, p4, dstB);
+        PSMTXConcat((void*)p3, (void*)dstA, (void*)mid);
+        PSMTXConcat((void*)mid, (void*)p4, (void*)dstB);
         *(f32*)((char*)dstB + 0xc) = fill;
         *(f32*)((char*)dstB + 0x1c) = fill;
         *(f32*)((char*)dstB + 0x2c) = fill;
@@ -4530,6 +4530,61 @@ void characterDoEyeAnims(int obj, int p2)
             break;
         }
         characterDoEyeMovements(obj, p2, lbl_803DE9A4);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void modelCalcVtxGroupMtxs(int p1, int p2)
+{
+    extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+    extern f32 lbl_803DEA18;
+    extern f32 lbl_803DEA1C;
+    f32 ma[12];
+    f32 mb[12];
+    f32 trans[12];
+    int i;
+    int off;
+    f32 scale;
+    f32 one;
+
+    off = 0;
+    scale = lbl_803DEA18;
+    one = lbl_803DEA1C;
+    for (i = 0; i < *(u8 *)(p1 + 0xf4); i++) {
+        u8 *grp = (u8 *)(*(int *)(p1 + 0x54) + off);
+        f32 *out = (f32 *)ObjModel_GetJointMatrix((int *)p2, i + *(u8 *)(p1 + 0xf3));
+        f32 *m1 = (f32 *)ObjModel_GetJointMatrix((int *)p2, grp[0]);
+        f32 *m2 = (f32 *)ObjModel_GetJointMatrix((int *)p2, grp[1]);
+        f32 w;
+        f32 wi;
+        char *jd;
+
+        w = (f32)grp[2] * scale;
+        wi = one - w;
+
+        jd = (char *)(*(int *)(p1 + 0x3c) + grp[0] * 0x1c);
+        PSMTXTrans(trans, -*(f32 *)(jd + 0x10), -*(f32 *)(jd + 0x14), -*(f32 *)(jd + 0x18));
+        PSMTXConcat(m1, trans, ma);
+        jd = (char *)(*(int *)(p1 + 0x3c) + grp[1] * 0x1c);
+        PSMTXTrans(trans, -*(f32 *)(jd + 0x10), -*(f32 *)(jd + 0x14), -*(f32 *)(jd + 0x18));
+        PSMTXConcat(m2, trans, mb);
+
+        out[0] = ma[0] * w + mb[0] * wi;
+        out[1] = ma[1] * w + mb[1] * wi;
+        out[2] = ma[2] * w + mb[2] * wi;
+        out[3] = ma[3] * w + mb[3] * wi;
+        out[4] = ma[4] * w + mb[4] * wi;
+        out[5] = ma[5] * w + mb[5] * wi;
+        out[6] = ma[6] * w + mb[6] * wi;
+        out[7] = ma[7] * w + mb[7] * wi;
+        out[8] = ma[8] * w + mb[8] * wi;
+        out[9] = ma[9] * w + mb[9] * wi;
+        out[10] = ma[10] * w + mb[10] * wi;
+        out[11] = ma[11] * w + mb[11] * wi;
+        off += 4;
     }
 }
 #pragma peephole reset
