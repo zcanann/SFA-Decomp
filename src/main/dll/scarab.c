@@ -1527,27 +1527,30 @@ void fn_8015EB6C(int obj, int p2, int p3)
   extern f32 lbl_803E2DEC;
   extern f32 lbl_803E2E00;
   int sub = *(int *)(p2 + 0x40c);
-  int r;
+  char *r;
 
-  r = (int)(**(int (**)(int, f32, int, int))((char *)(*gBaddieControlInterface) + 0x48))(
-      obj, (f32)(u32)*(u16 *)(p2 + 0x3fe), p3, 0x8000);
+  r = (char *)(**(int (**)(int, int, f32, int))((char *)(*gBaddieControlInterface) + 0x48))(
+      obj, p3, (f32)(u32)*(u16 *)(p2 + 0x3fe), 0x8000);
 
-  if (r != 0 && (*(u8 *)(p2 + 0x404) & 0x4) == 0) {
+  if (r != NULL && (*(u8 *)(p2 + 0x404) & 0x4) == 0) {
     int v = -1;
     (**(void (**)(int, int, int, int, int, int, int, int, int))((char *)(*gBaddieControlInterface) + 0x28))(
         obj, p3, p2 + 0x35c, (s32)*(s16 *)(p2 + 0x3f4), 0, 0, 0, 8, v);
-    *(int *)(p3 + 0x2d0) = r;
+    *(int *)(p3 + 0x2d0) = (int)r;
     *(u8 *)(p3 + 0x349) = 0;
     *(s16 *)(p2 + 0x402) = 1;
   } else {
     void *player = Obj_GetPlayerObject();
     f32 dist;
+    struct {
+      f32 x, y, z;
+    } d;
+    f32 *dp = &d.x;
     if (player != NULL) {
-      f32 d[3];
-      d[0] = *(f32 *)((int)player + 0x18) - *(f32 *)(obj + 0x18);
-      d[1] = *(f32 *)((int)player + 0x1c) - *(f32 *)(obj + 0x1c);
-      d[2] = *(f32 *)((int)player + 0x20) - *(f32 *)(obj + 0x20);
-      dist = sqrtf(d[0]*d[0] + d[1]*d[1] + d[2]*d[2]);
+      d.x = *(f32 *)((int)player + 0x18) - *(f32 *)(obj + 0x18);
+      d.y = *(f32 *)((int)player + 0x1c) - *(f32 *)(obj + 0x1c);
+      d.z = *(f32 *)((int)player + 0x20) - *(f32 *)(obj + 0x20);
+      dist = sqrtf(d.z * d.z + (d.x * d.x + d.y * d.y));
     } else {
       dist = lbl_803E2DEC;
     }
