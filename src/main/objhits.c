@@ -950,7 +950,8 @@ float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius, float axial, fl
     out[1] = gObjHitsScalarZero;
     out[2] = point[2] - surfacePoint[2];
     Vec3_Normalize(out);
-    pointRadius = (tipRadius - baseRadius) * (axial / length) + (baseRadius + pointRadius);
+    invLength = (tipRadius - baseRadius) * (axial / length);
+    pointRadius = invLength + (baseRadius + pointRadius);
     out[0] = out[0] * pointRadius;
     out[1] = out[1] * pointRadius;
     out[2] = out[2] * pointRadius;
