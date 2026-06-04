@@ -101,8 +101,8 @@ extern f32 lbl_803E234C;
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-undefined4
-camcontrol_traceMove(float param_1,float *param_2,float *param_3,float *param_4,int param_5,
+int
+camcontrol_traceMove(float param_1,float *param_2,float *param_3,float *param_4,u8 *param_5,
                      char param_6,u8 param_7,u8 param_8)
 {
   u8 cVar2;
@@ -129,7 +129,7 @@ camcontrol_traceMove(float param_1,float *param_2,float *param_3,float *param_4,
     hitDetect_calcSweptSphereBounds(auStack_34,param_2,param_4,(float *)(param_5 + 0x40),1);
     hitDetectFn_800691c0(0,auStack_34,0x240,'\x01');
   }
-  hitDetectFn_80067958(0, param_2, param_4, 1, param_5, 0);
+  hitDetectFn_80067958(0, param_2, param_4, 1, (int)param_5, 0);
   uVar1 = 0;
   if ((lbl_803DD528 == '\0') && (*(short *)(param_5 + 0x6c) == 0)) {
     uVar1 = 1;
@@ -168,7 +168,7 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
     local_84 = *(float *)(param_2 + 0x1c) + cameraMtxVar57[0x23];
     local_80 = *(float *)(param_2 + 0x20);
   }
-  camcontrol_traceMove((double)lbl_803E1688,&local_88,param_1,param_3,(int)auStack_7c,3,'\x01',
+  camcontrol_traceMove((double)lbl_803E1688,&local_88,param_1,param_3,auStack_7c,3,'\x01',
                        '\x01');
   return auStack_7c[110];
 }
@@ -224,7 +224,7 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
     local_b8 = *(float *)(param_2 + 0xe) + cameraMtxVar57[0x23];
     local_b4 = *(float *)(param_2 + 0x10);
   }
-  camcontrol_traceMove((double)lbl_803E1688,&local_bc,&local_c8,param_3,(int)auStack_b0,3,
+  camcontrol_traceMove((double)lbl_803E1688,&local_bc,&local_c8,param_3,auStack_b0,3,
                        '\x01','\x01');
   (**(code **)(*gCameraInterface + 0x38))
             ((double)cameraMtxVar57[0x23],param_1,auStack_d0,&local_d4,auStack_d8,
@@ -324,226 +324,208 @@ done:
  * Function: cameraFn_80103b40
  * EN v1.0 Address: 0x80103B40
  * EN v1.0 Size: 1280b
- *
- * NOTE: body inherited from Ghidra-imported v1.1 FUN_80103e00 (v1.1 size 1280b
- * matches asm v1.0 size). Signature/byte-match is approximate.
  */
-void cameraFn_80103b40(void)
+extern u32 OSGetTick(void);
+extern f32 lbl_803E16A0;
+extern f32 lbl_803E16A4;
+extern f32 lbl_803E16A8;
+extern f32 lbl_803E16B0;
+extern f32 lbl_803E16B4;
+extern f32 lbl_803E16B8;
+extern f32 lbl_803E16BC;
+extern f32 lbl_803E16C0;
+extern f32 lbl_803E16C4;
+extern f32 lbl_803E16C8;
+extern f32 lbl_803E16CC;
+extern f32 lbl_803DD52C;
+
+int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
 {
-  float fVar1;
-  float fVar2;
-  short *psVar3;
-  int iVar4;
-  uint in_r6;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  short sVar8;
-  float *pfVar9;
-  float *pfVar10;
-  float *pfVar11;
-  float *pfVar12;
-  short sVar13;
-  double dVar14;
-  double dVar15;
-  double in_f28;
-  double in_f29;
-  double dVar16;
-  double in_f30;
-  double dVar17;
-  double in_f31;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  float local_2f8;
-  undefined auStack_2f4 [4];
-  float local_2f0;
-  undefined auStack_2ec [4];
-  float local_2e8;
-  float local_2e4;
-  undefined4 local_2e0;
-  float local_2dc [21];
-  float local_288 [21];
-  undefined auStack_234 [136];
-  float local_1ac;
-  float local_1a8;
-  float local_1a4;
-  int local_120;
-  undefined4 local_80;
-  uint uStack_7c;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  psVar3 = (short *)FUN_8028681c();
-  FUN_802473cc();
-  (**(code **)(*DAT_803dd6d0 + 0x38))
-            ((double)*(float *)(gCamcontrolModeSettings + 0x8c),psVar3,&local_2f0,auStack_2f4,
-             &local_2f8,
-             auStack_2ec,0);
-  local_120 = *(int *)(psVar3 + 0x52);
-  local_2dc[1] = *(float *)(psVar3 + 0xe);
-  local_2dc[0] = *(float *)(psVar3 + 0xc);
-  local_2dc[2] = *(float *)(psVar3 + 0x10);
-  local_288[0] = local_2dc[0];
-  local_288[1] = local_2dc[1];
-  local_288[2] = local_2dc[2];
-  local_1a8 = local_2dc[1];
-  if (*(short *)(local_120 + 0x44) == 1) {
-    FUN_80294d78(local_120,&local_2e8,&local_2e4,&local_2e0);
+  int tgt0;
+  float probe[35];
+  u8 box[136];
+  float pathA[21];
+  float pathB[21];
+  float prev[3];
+  f32 spinA;
+  f32 spinB;
+  f32 spinC;
+  f32 spinD;
+  int tgt;
+  int ang;
+  float *pA;
+  float *pB;
+  float *pp;
+  float *pA0;
+  float *pB0;
+  int result;
+  int s;
+  int i;
+  int found1;
+  int found2;
+  int dir;
+  int d;
+  f32 cosv;
+  f32 rad;
+  f32 dx;
+  f32 dz;
+  f32 sinv;
+  f32 t;
+  f32 v;
+
+  OSGetTick();
+  result = 0;
+  (*(void (**)(short *, f32 *, f32 *, f32 *, f32 *, f32, int))(*gCameraInterface + 0x38))
+      (cam, &spinB, &spinC, &spinD, &spinA, *(f32 *)((char *)cameraMtxVar57 + 0x8c), 0);
+  tgt0 = *(int *)((char *)cam + 0xa4);
+  probe[1] = *(f32 *)((char *)cam + 0x1c);
+  pathA[0] = *(f32 *)((char *)cam + 0x18);
+  pathA[1] = *(f32 *)((char *)cam + 0x1c);
+  pathA[2] = *(f32 *)((char *)cam + 0x20);
+  pathB[0] = pathA[0];
+  pathB[1] = pathA[1];
+  pathB[2] = pathA[2];
+  if (*(short *)(tgt0 + 0x44) == 1) {
+    cameraGetPrevPos2(tgt0, &prev[0], &prev[1], &prev[2]);
   }
   else {
-    local_2e8 = *(float *)(local_120 + 0x18);
-    local_2e4 = *(float *)(local_120 + 0x1c) + *(float *)(gCamcontrolModeSettings + 0x8c);
-    local_2e0 = *(undefined4 *)(local_120 + 0x20);
+    prev[0] = *(f32 *)(tgt0 + 0x18);
+    prev[1] = *(f32 *)(tgt0 + 0x1c) + *(f32 *)((char *)cameraMtxVar57 + 0x8c);
+    prev[2] = *(f32 *)(tgt0 + 0x20);
   }
-  iVar7 = 0;
-  iVar6 = -1;
-  iVar5 = -1;
-  sVar13 = 0xaaa;
-  pfVar10 = local_288;
-  pfVar9 = local_2dc;
-  pfVar11 = pfVar9;
-  pfVar12 = pfVar10;
-  for (sVar8 = 0xf; sVar8 < 0x5b; sVar8 = sVar8 + 0xf) {
-    if (iVar6 == -1) {
-      dVar16 = (double)local_2f8;
-      dVar17 = (double)local_2f0;
-      iVar4 = *(int *)(psVar3 + 0x52);
-      uStack_7c = (int)sVar13 ^ 0x80000000;
-      local_80 = 0x43300000;
-      dVar14 = (double)FUN_80293f90();
-      dVar15 = (double)FUN_80294964();
-      dVar17 = (double)(float)(dVar17 * dVar15 - (double)(float)(dVar16 * dVar14));
-      local_1ac = (float)(dVar17 + (double)*(float *)(iVar4 + 0x18));
-      fVar1 = (float)(dVar17 * dVar14 + (double)(float)(dVar16 * dVar15)) + *(float *)(iVar4 + 0x20)
-      ;
-      local_1a4 = fVar1;
-      pfVar12[3] = local_1ac;
-      pfVar12[4] = local_1a8;
-      pfVar12[5] = fVar1;
-      iVar4 = camcontrol_traceMove((double)lbl_803E2320,&local_2e8,&local_1ac,(float *)0x0,
-                                   (int)auStack_234,7,'\0','\0');
-      if (iVar4 != 0) {
-        iVar6 = iVar7;
+  s = 0xf;
+  i = 0;
+  found1 = -1;
+  found2 = -1;
+  ang = 0xaaa;
+  pA0 = pathA;
+  pA = pA0;
+  pB0 = pathB;
+  pB = pB0;
+  pp = probe;
+  while ((s16)s <= 0x5a) {
+    if (found1 == -1) {
+      dx = spinD;
+      dz = spinB;
+      tgt = *(int *)((char *)cam + 0xa4);
+      rad = (lbl_803E168C * (f32)(s16)ang) / lbl_803E1690;
+      cosv = fn_80293E80(rad);
+      sinv = sin(rad);
+      t = dz * sinv - dx * cosv;
+      v = t * cosv + dx * sinv;
+      t = t + *(f32 *)(tgt + 0x18);
+      probe[0] = t;
+      v = v + *(f32 *)(tgt + 0x20);
+      probe[2] = v;
+      pA[3] = probe[0];
+      pA[4] = probe[1];
+      pA[5] = probe[2];
+      if (camcontrol_traceMove(lbl_803E16A0, prev, pp, (float *)0x0, box, 7, '\0', '\0') != 0) {
+        found1 = i;
       }
     }
-    if (iVar5 == -1) {
-      dVar16 = (double)local_2f8;
-      dVar17 = (double)local_2f0;
-      iVar4 = *(int *)(psVar3 + 0x52);
-      uStack_7c = (int)(short)(sVar8 * -0xb6) ^ 0x80000000;
-      local_80 = 0x43300000;
-      dVar14 = (double)FUN_80293f90();
-      dVar15 = (double)FUN_80294964();
-      dVar17 = (double)(float)(dVar17 * dVar15 - (double)(float)(dVar16 * dVar14));
-      local_1ac = (float)(dVar17 + (double)*(float *)(iVar4 + 0x18));
-      fVar1 = (float)(dVar17 * dVar14 + (double)(float)(dVar16 * dVar15)) + *(float *)(iVar4 + 0x20)
-      ;
-      local_1a4 = fVar1;
-      pfVar11[3] = local_1ac;
-      pfVar11[4] = local_1a8;
-      pfVar11[5] = fVar1;
-      iVar4 = camcontrol_traceMove((double)lbl_803E2320,&local_2e8,&local_1ac,(float *)0x0,
-                                   (int)auStack_234,7,'\0','\0');
-      if (iVar4 != 0) {
-        iVar5 = iVar7;
+    if (found2 == -1) {
+      dx = spinD;
+      dz = spinB;
+      tgt = *(int *)((char *)cam + 0xa4);
+      rad = (lbl_803E168C * (f32)(s16)(-s * 0xb6)) / lbl_803E1690;
+      cosv = fn_80293E80(rad);
+      sinv = sin(rad);
+      t = dz * sinv - dx * cosv;
+      v = t * cosv + dx * sinv;
+      t = t + *(f32 *)(tgt + 0x18);
+      probe[0] = t;
+      v = v + *(f32 *)(tgt + 0x20);
+      probe[2] = v;
+      pB[3] = probe[0];
+      pB[4] = probe[1];
+      pB[5] = probe[2];
+      if (camcontrol_traceMove(lbl_803E16A0, prev, pp, (float *)0x0, box, 7, '\0', '\0') != 0) {
+        found2 = i;
       }
     }
-    pfVar12 = pfVar12 + 3;
-    pfVar11 = pfVar11 + 3;
-    iVar7 = iVar7 + 1;
-    sVar13 = sVar13 + 0xaaa;
+    pA = pA + 3;
+    pB = pB + 3;
+    i = i + 1;
+    ang = ang + 0xaaa;
+    s = s + 0xf;
   }
-  if (iVar6 == -1) {
-    iVar6 = 6;
+  if (found1 == -1) {
+    found1 = 6;
   }
   else {
-    for (iVar7 = 0; iVar7 <= iVar6; iVar7 = iVar7 + 1) {
-      iVar4 = camcontrol_traceMove((double)lbl_803E2320,pfVar10,local_288 + (iVar7 + 1) * 3,
-                                   (float *)0x0,(int)auStack_234,7,'\0','\0');
-      if (iVar4 == 0) {
-        iVar6 = 6;
+    for (i = 0; i <= found1; i = i + 1) {
+      if (camcontrol_traceMove(lbl_803E16A0, pA0, pathA + (i + 1) * 3, (float *)0x0, box, 7,
+                               '\0', '\0') == 0) {
+        found1 = 6;
         break;
       }
-      pfVar10 = pfVar10 + 3;
+      pA0 = pA0 + 3;
     }
   }
-  if (iVar5 == -1) {
-    iVar5 = 6;
+  if (found2 == -1) {
+    found2 = 6;
   }
   else {
-    for (iVar7 = 0; iVar7 <= iVar5; iVar7 = iVar7 + 1) {
-      iVar4 = camcontrol_traceMove((double)lbl_803E2320,pfVar9,local_2dc + (iVar7 + 1) * 3,
-                                   (float *)0x0,(int)auStack_234,7,'\0','\0');
-      if (iVar4 == 0) {
-        iVar5 = 6;
+    for (i = 0; i <= found2; i = i + 1) {
+      if (camcontrol_traceMove(lbl_803E16A0, pB0, pathB + (i + 1) * 3, (float *)0x0, box, 7,
+                               '\0', '\0') == 0) {
+        found2 = 6;
         break;
       }
-      pfVar9 = pfVar9 + 3;
+      pB0 = pB0 + 3;
     }
   }
-  iVar7 = 0;
-  if (iVar6 < iVar5) {
-    iVar7 = 1;
+  dir = 0;
+  if (found1 < found2) {
+    dir = 1;
   }
-  else if (iVar5 < iVar6) {
-    iVar7 = -1;
+  else if (found2 < found1) {
+    dir = -1;
   }
-  else if (iVar6 < 6) {
-    iVar7 = 1;
+  else if (found1 < 6) {
+    dir = 1;
   }
-  if (iVar7 != 0) {
-    uStack_7c = (0x8000 - *psVar3) - (in_r6 & 0xffff);
-    if (0x8000 < (int)uStack_7c) {
-      uStack_7c = uStack_7c - 0xffff;
+  if (dir != 0) {
+    f32 f;
+    f32 g;
+    d = (0x8000 - *cam) - (angle & 0xffff);
+    if (0x8000 < d) {
+      d = d - 0xffff;
     }
-    if ((int)uStack_7c < -0x8000) {
-      uStack_7c = uStack_7c + 0xffff;
+    if (d < -0x8000) {
+      d = d + 0xffff;
     }
-    if ((int)uStack_7c < 0) {
-      uStack_7c = -uStack_7c;
+    if (d < 0) {
+      d = -d;
     }
-    fVar1 = *(float *)(psVar3 + 0x62) * *(float *)(psVar3 + 0x62);
-    if (fVar1 < lbl_803E2324) {
-      fVar1 = lbl_803E2324;
+    f = *(f32 *)((char *)cam + 0xc4) * *(f32 *)((char *)cam + 0xc4);
+    if (f < lbl_803E16A4) {
+      f = lbl_803E16A4;
     }
-    uStack_7c = uStack_7c ^ 0x80000000;
-    local_80 = 0x43300000;
-    fVar1 = lbl_803E232C + fVar1 * lbl_803E2328 +
-            (float)((double)CONCAT44(0x43300000,uStack_7c) - DOUBLE_803e2318) / lbl_803E2330;
-    if (fVar1 < lbl_803E2334) {
-      fVar1 = lbl_803E2334;
+    g = f * lbl_803E16A8;
+    g = lbl_803E16AC + g;
+    g = g + (f32)d / lbl_803E16B0;
+    if (g < lbl_803E16B4) {
+      g = lbl_803E16B4;
     }
-    if (lbl_803E2338 < fVar1) {
-      fVar1 = lbl_803E2338;
+    if (lbl_803E16B8 < g) {
+      g = lbl_803E16B8;
     }
-    if (iVar7 == -1) {
-      fVar1 = -fVar1;
+    if (dir == -1) {
+      g = -g;
     }
-    fVar1 = fVar1 * lbl_803DE1A4 + *(float *)(gCamcontrolModeSettings + 0x28);
-    fVar2 = lbl_803E233C;
-    if ((fVar1 <= lbl_803E233C) && (fVar2 = fVar1, fVar1 < lbl_803E2340)) {
-      fVar2 = lbl_803E2340;
+    g = g * lbl_803DD52C + *(f32 *)((char *)cameraMtxVar57 + 0x28);
+    if (g > lbl_803E16BC) {
+      g = lbl_803E16BC;
     }
-    *(float *)(gCamcontrolModeSettings + 0x28) = fVar2;
+    else if (g < lbl_803E16C0) {
+      g = lbl_803E16C0;
+    }
+    *(f32 *)((char *)cameraMtxVar57 + 0x28) = g;
+    result = 1;
   }
-  FUN_80286868();
-  return;
+  return result;
 }
 
 /*
@@ -552,12 +534,130 @@ void cameraFn_80103b40(void)
  * Function: camMoveFn_80104040
  * EN v1.0 Address: 0x80104040
  * EN v1.0 Size: 1280b
- *
- * TODO: stub. Body is 1280b move/animation update; needs reverse-engineering.
- * Adding so the function set aligns with v1.0 asm.
  */
-void camMoveFn_80104040(void)
+typedef struct {
+    u8 bit80 : 1;
+    u8 rest : 7;
+} CamcontrolByteC6;
+
+extern void Obj_TransformLocalPointToWorld(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
+                                           int xform);
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
+                                           int xform);
+
+void camMoveFn_80104040(int cam, short *tgt)
 {
+  float path[39];
+  float endPts[39];
+  u8 box[112];
+  float radii[13];
+  uint bounds[6];
+  float prev[3];
+  f32 outB[2];
+  f32 outA[2];
+  int ang;
+  float *p;
+  int i;
+  int j;
+  f32 kB;
+  f32 kA;
+  f32 dx;
+  f32 dz;
+  f32 cosv;
+  f32 rad;
+  f32 sinv;
+  f32 t;
+  f32 z;
+  u8 trace;
+  u8 blocked;
+  s16 spin;
+
+  Obj_TransformLocalPointToWorld(*(f32 *)(cam + 0xc), *(f32 *)(cam + 0x10), *(f32 *)(cam + 0x14),
+                                 (f32 *)(cam + 0x18), (f32 *)(cam + 0x1c), (f32 *)(cam + 0x20),
+                                 *(int *)(cam + 0x30));
+  lbl_803DD528 = 0;
+  if (*(short *)((char *)tgt + 0x44) == 1) {
+    cameraGetPrevPos2((int)tgt, &prev[0], &prev[1], &prev[2]);
+  }
+  else {
+    prev[0] = *(f32 *)((char *)tgt + 0x18);
+    prev[1] = *(f32 *)((char *)tgt + 0x1c) + *(f32 *)((char *)cameraMtxVar57 + 0x8c);
+    prev[2] = *(f32 *)((char *)tgt + 0x20);
+  }
+  path[0] = *(f32 *)(cam + 0x18);
+  path[1] = *(f32 *)(cam + 0x1c);
+  path[2] = *(f32 *)(cam + 0x20);
+  dx = path[0] - prev[0];
+  dz = path[2] - prev[2];
+  i = 1;
+  ang = 0xaaa;
+  p = path + 3;
+  kA = lbl_803E168C;
+  kB = lbl_803E1690;
+  do {
+    rad = (kA * (f32)(s16)ang) / kB;
+    cosv = fn_80293E80(rad);
+    sinv = sin(rad);
+    t = dx * sinv - dz * cosv;
+    z = t * cosv + dz * sinv;
+    z = z + *(f32 *)((char *)tgt + 0x20);
+    p[0] = t + *(f32 *)((char *)tgt + 0x18);
+    p[1] = *(f32 *)(cam + 0x1c);
+    p[2] = z;
+    rad = (kA * (f32)(s16)(-i * 0xaaa)) / kB;
+    cosv = fn_80293E80(rad);
+    sinv = sin(rad);
+    t = dx * sinv - dz * cosv;
+    z = t * cosv + dz * sinv;
+    z = z + *(f32 *)((char *)tgt + 0x20);
+    p[3] = t + *(f32 *)((char *)tgt + 0x18);
+    p[4] = *(f32 *)(cam + 0x1c);
+    p[5] = z;
+    ang = ang + 0x1554;
+    p = p + 6;
+    i = i + 2;
+  } while (i <= 0xc);
+  for (j = 0; j <= 0xc; j = j + 1) {
+    endPts[j * 3] = prev[0];
+    endPts[j * 3 + 1] = prev[1];
+    endPts[j * 3 + 2] = prev[2];
+    radii[j] = lbl_803E16A0;
+  }
+  hitDetect_calcSweptSphereBounds(bounds, (float *)path, endPts, radii, 0xd);
+  hitDetectFn_800691c0(0, bounds, 0x248, 1);
+  trace = camcontrol_traceMove(lbl_803E16A0, prev, (float *)(cam + 0x18), (float *)0x0, box, 7,
+                               '\0', '\0');
+  blocked = 0;
+  if (trace == 0) {
+    blocked = 1;
+  }
+  *(u8 *)((char *)cameraMtxVar57 + 0xc0) = blocked;
+  if (blocked != 0) {
+    ((CamcontrolByteC6 *)((char *)cameraMtxVar57 + 0xc6))->bit80 = 0;
+    if (cameraFn_80103b40((short *)cam, outA, outB, (int)tgt[0]) == 0) {
+      *(f32 *)((char *)cameraMtxVar57 + 0x28) = lbl_803E16AC;
+    }
+  }
+  if (lbl_803E16AC != *(f32 *)((char *)cameraMtxVar57 + 0x28)) {
+    spin = (s16)(int)*(f32 *)((char *)cameraMtxVar57 + 0x28);
+    if ((spin < -0x1e) || (0x1e < spin)) {
+      rad = (lbl_803E168C * (f32)spin) / lbl_803E1690;
+      cosv = fn_80293E80(rad);
+      sinv = sin(rad);
+      t = dx * sinv - dz * cosv;
+      *(f32 *)(cam + 0x18) = t + *(f32 *)((char *)tgt + 0x18);
+      z = t * cosv + dz * sinv;
+      *(f32 *)(cam + 0x20) = z + *(f32 *)((char *)tgt + 0x20);
+    }
+    *(f32 *)((char *)cameraMtxVar57 + 0x28) = *(f32 *)((char *)cameraMtxVar57 + 0x28) * lbl_803E16C4;
+    if ((*(f32 *)((char *)cameraMtxVar57 + 0x28) < lbl_803E16C8) &&
+        (lbl_803E16CC < *(f32 *)((char *)cameraMtxVar57 + 0x28))) {
+      *(f32 *)((char *)cameraMtxVar57 + 0x28) = lbl_803E16AC;
+    }
+  }
+  Obj_TransformWorldPointToLocal(*(f32 *)(cam + 0x18), *(f32 *)(cam + 0x1c), *(f32 *)(cam + 0x20),
+                                 (f32 *)(cam + 0xc), (f32 *)(cam + 0x10), (f32 *)(cam + 0x14),
+                                 *(int *)(cam + 0x30));
 }
 
 /*
