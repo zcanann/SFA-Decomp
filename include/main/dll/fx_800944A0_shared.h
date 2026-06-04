@@ -264,7 +264,7 @@ extern int lbl_802C1FF8[];
 extern int lbl_802C200C[];
 extern f32 lbl_803DF35C;
 extern f32 gExpgfxFrameTimerB;
-extern void fn_80098B18(void *obj, int a, int b, int c, f32 *vec);
+extern void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec);
 extern int lbl_802C2114[];
 extern int lbl_803DF340;
 extern u16 lbl_803DF344;

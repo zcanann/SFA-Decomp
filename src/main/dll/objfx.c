@@ -540,7 +540,7 @@ void objfx_spawnFrameTimedHitPulse(void *obj, u8 a, u8 b, f32 c, f32 d) {
     vec[1] = d;
     vec[2] = lbl_803DF35C;
     if (a == 1) {
-        fn_80098B18(obj, (u8)t1.v[b], frame, 0, vec);
+        fn_80098B18(obj, c, (u8)t1.v[b], frame, 0, vec);
     }
 }
 #pragma peephole reset
@@ -1224,3 +1224,244 @@ void spawnExplosion(u8 *src, f32 fval, u8 a, u8 flag4, u8 flag8, u8 flag10, u8 d
 #pragma peephole reset
 #pragma scheduling reset
 
+
+extern f32 lbl_803DF388;
+extern f32 lbl_803DF38C;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80098B18(void *obj, f32 scale, int type, int count, int mode, f32 *vec) {
+    PartfxParams params;
+    int i;
+    int j;
+    int effB;
+    int t;
+    int n;
+
+    if (framesThisStep > 3) {
+        n = 3;
+    } else {
+        n = framesThisStep;
+    }
+
+    params.f8 = scale;
+    if (vec != NULL) {
+        params.vec[0] = vec[0];
+        params.vec[1] = vec[1];
+        params.vec[2] = vec[2];
+    } else {
+        f32 z = lbl_803DF35C;
+        params.vec[0] = z;
+        params.vec[1] = z;
+        params.vec[2] = z;
+    }
+
+    t = (u8)type;
+    switch (t) {
+    case 3:
+        params.f8 = params.f8 * lbl_803DF388;
+        effB = 1968;
+        break;
+    case 9:
+    case 10:
+        mode = 0;
+        count = 0;
+        break;
+    case 12:
+    case 13:
+    case 14:
+        mode = 0;
+        if (count != 0) {
+            count = 8;
+        }
+        break;
+    default:
+        effB = 1967;
+        break;
+    }
+
+    if ((u8)count != 0) {
+        switch ((u8)count) {
+        case 1:
+            params.f6 = -20536;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
+            break;
+        case 2:
+            params.f6 = 10000;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
+            break;
+        case 3:
+            params.f6 = 500;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
+            break;
+        case 4:
+            params.f6 = -1;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            break;
+        case 5:
+            params.f6 = 32767;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            break;
+        case 6:
+            params.f6 = 10000;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1965, &params, 1, -1, 0);
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            break;
+        case 7:
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1966, &params, 1, -1, 0);
+            break;
+        case 8:
+            if (params.f8 < lbl_803DF358) {
+                params.f8 = lbl_803DF358;
+            }
+            params.pad[2] = 90;
+            for (i = 0; i < (u8)n * 2; i++) {
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1981, &params, 1, -1, 0);
+            }
+            break;
+        }
+    }
+
+    if ((u8)mode != 0) {
+        switch ((u8)mode) {
+        case 1:
+            params.f6 = 127;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, effB, &params, 1, -1, 0);
+            break;
+        case 2:
+            params.f6 = 192;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, effB, &params, 1, -1, 0);
+            break;
+        case 3:
+            params.f6 = 255;
+            (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, effB, &params, 1, -1, 0);
+            break;
+        }
+    }
+
+    params.f8 = scale;
+    if ((u8)type != 0) {
+        switch (t) {
+        case 1:
+            params.f6 = 3085;
+            for (j = 0; j < (u8)n; j++) {
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1960, &params, 1, -1, 0);
+            }
+            break;
+        case 2:
+            params.f6 = 3082;
+            for (j = 0; j < (u8)n; j++) {
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1961, &params, 1, -1, 0);
+            }
+            break;
+        case 3:
+            params.f6 = 3082;
+            for (j = 0; j < (u8)n; j++) {
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1962, &params, 1, -1, 0);
+            }
+            break;
+        case 4:
+            params.f6 = 3086;
+            for (j = 0; j < (u8)n; j++) {
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1963, &params, 1, -1, 0);
+            }
+            break;
+        case 5:
+            params.f6 = 132;
+            for (j = 0; j < (u8)n; j++) {
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1963, &params, 1, -1, 0);
+            }
+            break;
+        case 6:
+            params.f6 = 3087;
+            for (j = 0; j < (u8)n; j++) {
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1963, &params, 1, -1, 0);
+            }
+            break;
+        case 7:
+            params.f6 = 100;
+            for (j = 0; j < (u8)n; j++) {
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1964, &params, 1, -1, 0);
+            }
+            break;
+        case 8:
+            params.f6 = 3198;
+            for (j = 0; j < (u8)n; j++) {
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1964, &params, 1, -1, 0);
+            }
+            break;
+        case 9:
+            if (params.f8 < lbl_803DF358) {
+                params.f8 = lbl_803DF358;
+            }
+            for (j = 0; j < (u8)n * 2; j++) {
+                params.f6 = 0;
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1973, &params, 1, -1, 0);
+                params.f6 = 1;
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1973, &params, 1, -1, 0);
+            }
+            break;
+        case 10:
+            if (params.f8 < lbl_803DF358) {
+                params.f8 = lbl_803DF358;
+            }
+            for (j = 0; j < (u8)n * 2; j++) {
+                params.f6 = 0;
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1974, &params, 1, -1, 0);
+                params.f6 = 1;
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1974, &params, 1, -1, 0);
+            }
+            break;
+        case 11:
+            params.f6 = 100;
+            for (j = 0; j < (u8)n; j++) {
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1964, &params, 1, -1, 0);
+            }
+            break;
+        case 12:
+            if (params.f8 < lbl_803DF38C) {
+                params.f8 = lbl_803DF38C;
+            }
+            params.pad[2] = 50;
+            for (j = 0; j < (u8)n * 2; j++) {
+                params.f6 = 0;
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1979, &params, 1, -1, 0);
+                params.f6 = 1;
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1979, &params, 1, -1, 0);
+            }
+            break;
+        case 13:
+            if (params.f8 < lbl_803DF358) {
+                params.f8 = lbl_803DF358;
+            }
+            params.pad[2] = 90;
+            for (j = 0; j < (u8)n * 2; j++) {
+                params.f6 = 0;
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1980, &params, 1, -1, 0);
+                params.f6 = 1;
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1980, &params, 1, -1, 0);
+            }
+            break;
+        case 14:
+            if (params.f8 < lbl_803DF358) {
+                params.f8 = lbl_803DF358;
+            }
+            params.pad[2] = 240;
+            for (j = 0; j < (u8)n * 2; j++) {
+                params.f6 = 0;
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1980, &params, 1, -1, 0);
+                params.f6 = 1;
+                (*(void (*)(void *, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(obj, 1980, &params, 1, -1, 0);
+            }
+            break;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
