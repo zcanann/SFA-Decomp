@@ -419,7 +419,7 @@ extern u16 lbl_8032FDA0[3][3]; /* dspSRCCycles */
 #define dspMixerCycles lbl_802C26B8
 #define pbOffsets lbl_802C26F8
 #define dspSRCCycles lbl_8032FDA0
-#define __OSBusClock (*(u32 *)&DAT_800000f8)
+#define __OSBusClock (*(u32 *)0x800000F8)
 
 extern int fn_8027BFE4(u16 *dsp_vol, u16 *dsp_delta, u16 *last_vol, u16 targetVol,
                        u16 *resetFlags, u16 resetMask); /* salCheckVolErrorAndResetDelta */
@@ -484,7 +484,7 @@ static void DoDepopFade(s32 *dspStart, s16 *dspDelta, s32 *hostSum) {
         dspCmdPtr[0] = 13;                                                              \
         dspCmdPtr[1] = (u32)dspCmdMaxPtr >> 16;                                         \
         dspCmdPtr[2] = (u32)dspCmdMaxPtr;                                               \
-        size = (((u32)(dspCmdPtr + 4) - (u32)dspCmdCurBase) + 3) & ~3;                  \
+        size = (((u32)(dspCmdPtr + 4) - (u32)dspCmdCurBase) + 3) & 0xFFFC;              \
         if (dspCmdLastLoad) {                                                           \
             dspCmdLastLoad[3] = size;                                                   \
             DCStoreRangeNoSync(dspCmdLastBase, dspCmdLastSize);                         \
@@ -534,6 +534,7 @@ void fn_8027C48C(s16 *dest, u32 nsDelay)
     u32 endAddr;
     u32 loopAddr;
     u32 zeroAddr;
+    u32 frameCycles;
 
     msp = &dspStudio[0];
     dspCmdCurBase = dspCmdPtr = dspCmdList;
@@ -548,6 +549,7 @@ void fn_8027C48C(s16 *dest, u32 nsDelay)
         cyclesUsed += 45000;
     }
     rampResetOffsetFlags[0] = 0;
+    frameCycles = __OSBusClock / 400;
     for (st = 0, stp = &dspStudio[0]; st < salMaxStudioNum; st++, stp++) {
         if (stp->state == 1) {
             for (dsp_vptr = stp->voiceRoot; dsp_vptr; dsp_vptr = next_dsp_vptr) {
@@ -1106,7 +1108,7 @@ void fn_8027C48C(s16 *dest, u32 nsDelay)
                     for (s = 0; s < 5; s++) {
                         cyclesUsed += pb->update.updNum[s] * 4;
                     }
-                    if (cyclesUsed > (__OSBusClock / 400)) {
+                    if (cyclesUsed > frameCycles) {
                         if ((newVoice == 0) && (VoiceDone == 0)) {
                             fn_8027C0D8(stp, dsp_vptr);
                         }
@@ -1231,7 +1233,7 @@ void fn_8027C48C(s16 *dest, u32 nsDelay)
         dspCmdPtr[4] = (u32)dest;
         dspCmdPtr += 5;
         *dspCmdPtr++ = 15;
-        size = (((u32)dspCmdPtr - (u32)dspCmdCurBase) + 3) & ~3;
+        size = (((u32)dspCmdPtr - (u32)dspCmdCurBase) + 3) & 0xFFFC;
         if (dspCmdLastLoad) {
             dspCmdLastLoad[3] = size;
             DCStoreRangeNoSync(dspCmdLastBase, dspCmdLastSize);
