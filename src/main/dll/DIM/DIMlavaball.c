@@ -1561,25 +1561,37 @@ void fn_801A7B10(int obj) {
     *(f32 *)(obj + 0x28) = *(f32 *)(obj + 0x28) - lbl_803E455C * timeDelta;
     {
         f32 v1 = *(f32 *)(obj + 0x24);
-        f32 v2 = lbl_803E4560;
-        if ((lbl_803E4560 <= v1) && (v2 = v1, lbl_803E4564 < v1)) {
+        f32 v2;
+        if (v1 < lbl_803E4560) {
+            v2 = lbl_803E4560;
+        } else if (v1 > lbl_803E4564) {
             v2 = lbl_803E4564;
+        } else {
+            v2 = v1;
         }
         *(f32 *)(obj + 0x24) = v2;
     }
     {
         f32 v1 = *(f32 *)(obj + 0x28);
-        f32 v2 = lbl_803E4560;
-        if ((lbl_803E4560 <= v1) && (v2 = v1, lbl_803E4564 < v1)) {
+        f32 v2;
+        if (v1 < lbl_803E4560) {
+            v2 = lbl_803E4560;
+        } else if (v1 > lbl_803E4564) {
             v2 = lbl_803E4564;
+        } else {
+            v2 = v1;
         }
         *(f32 *)(obj + 0x28) = v2;
     }
     {
         f32 v1 = *(f32 *)(obj + 0x24);
-        f32 v2 = lbl_803E4560;
-        if ((lbl_803E4560 <= v1) && (v2 = v1, lbl_803E4564 < v1)) {
+        f32 v2;
+        if (v1 < lbl_803E4560) {
+            v2 = lbl_803E4560;
+        } else if (v1 > lbl_803E4564) {
             v2 = lbl_803E4564;
+        } else {
+            v2 = v1;
         }
         *(f32 *)(obj + 0x24) = v2;
     }
@@ -1588,15 +1600,17 @@ void fn_801A7B10(int obj) {
     ret = fn_801A78C8(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), lbl_803E4568 + *(f32 *)(obj + 0x10), obj, &local_18, auStack_14);
     if (ret == 0) return;
     if (ret == 2) {
-        f32 c = lbl_803E4554;
+        f32 c;
         *(u16 *)(state + 0x24) |= 0x100;
+        c = lbl_803E4554;
         *(f32 *)(obj + 0x24) = c;
         *(f32 *)(obj + 0x28) = c;
         *(f32 *)(obj + 0x2c) = c;
     } else {
-        f32 c = lbl_803E4554;
+        f32 c;
         *(u16 *)(state + 0x24) |= 0x180;
         *(f32 *)(obj + 0x10) = local_18;
+        c = lbl_803E4554;
         *(f32 *)(obj + 0x24) = c;
         *(f32 *)(obj + 0x28) = c;
         *(f32 *)(obj + 0x2c) = c;
@@ -2248,6 +2262,8 @@ void mmp_moonrock_update(int obj) {
     int state = *(int *)(obj + 0xB8);
     int def = *(int *)(obj + 0x4C);
     u8 grabbed;
+    int d;
+    int count;
     if (objPosToMapBlockIdx(*(f32 *)(obj + 0xC), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14)) == -1) {
         return;
     }
@@ -2295,7 +2311,6 @@ void mmp_moonrock_update(int obj) {
     *(u16 *)(state + 0x24) &= ~0x8;
     if (grabbed != 0) {
         int stateCopy;
-        int count;
         int i;
         int *list;
         u8 found;
@@ -2311,10 +2326,9 @@ void mmp_moonrock_update(int obj) {
         stateCopy = *(int *)(obj + 0xB8);
         (*(int (**)(int, int))(*(int *)lbl_803DCAC0 + 0x24))(stateCopy, 0);
         list = (int *)ObjGroup_GetObjects(0x10, &count);
-        i = 0;
         {
             f32 k = lbl_803E4580;
-            for (; i < count; i++) {
+            for (i = 0; i < count; i++) {
                 u32 o = (u32)*list;
                 if (o != (u32)obj && *(s16 *)(o + 0x46) == 0x519 &&
                     Vec_xzDistance((f32 *)(obj + 0x18), (f32 *)(o + 0x18)) < k) {
@@ -2380,10 +2394,8 @@ void mmp_moonrock_update(int obj) {
     *(f32 *)(lbl_803AC918 + 0xC) = *(f32 *)(obj + 0xC);
     *(f32 *)(lbl_803AC918 + 0x10) = *(f32 *)(state + 0xC);
     *(f32 *)(lbl_803AC918 + 0x14) = *(f32 *)(obj + 0x14);
-    {
-        int d = (int)(*(f32 *)(obj + 0x10) - *(f32 *)(state + 0xC));
-        (*(int (*)(int, int, char *, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x723, lbl_803AC918, 0x200001, -1, &d);
-    }
+    d = (int)(*(f32 *)(obj + 0x10) - *(f32 *)(state + 0xC));
+    (*(int (*)(int, int, char *, int, int, int *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x723, lbl_803AC918, 0x200001, -1, &d);
 }
 #pragma peephole reset
 #pragma scheduling reset
