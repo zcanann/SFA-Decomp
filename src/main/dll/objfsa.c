@@ -5426,43 +5426,60 @@ u8 RomCurve_goNextPoint(float *state) {
 #pragma scheduling on
 #pragma peephole on
 
-#undef ROMCURVE_REFRESH_CONTROL
-#undef ROMCURVE_ADD_LINK
 
-static inline f32 RomCurveNode_GetHermiteTangent(void *node, int angleOffset, int useSin);
+static inline f32 RomCurveNode_GetHermiteTangent(void *node, int angleOffset, int useSin)
+{
+    f32 angle;
+    f32 trig;
+
+    angle = lbl_803E05D4 * (f32)((s32)*(s8 *)((char *)node + angleOffset) << 8) / lbl_803E05D8;
+    if (useSin) {
+        trig = sin(angle);
+    } else {
+        trig = fn_80293E80(angle);
+    }
+    return lbl_803E05D0 * ((f32)(u32)*(u8 *)((char *)node + 0x2e) * trig);
+}
+
+static inline int Objfsa_FindRomCurveById(int curveId) {
+    int lo;
+    int hi;
+    int mid;
+    int curve;
+    u32 id;
+
+    if (curveId < 0) {
+        return 0;
+    }
+
+    lo = 0;
+    hi = nRomCurves - 1;
+    id = (u32)curveId;
+    while (lo <= hi) {
+        mid = (hi + lo) >> 1;
+        curve = (int)romCurves[mid];
+        if (id > *(u32 *)(curve + 0x14)) {
+            lo = mid + 1;
+        } else if (id < *(u32 *)(curve + 0x14)) {
+            hi = mid - 1;
+        } else {
+            return curve;
+        }
+    }
+
+    return 0;
+}
+
 int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx);
-static inline int Objfsa_FindRomCurveById(int curveId);
 
-static inline void RomCurve_RefreshForwardControls(char *stateBytes, int secondCurveOff)
-{
-    void *currentCurve;
-    void *secondCurve;
-
-    currentCurve = *(void **)(stateBytes + 0xa0);
-    secondCurve = *(void **)(stateBytes + secondCurveOff);
-
-    *(f32 *)(stateBytes + 0xb8) = *(f32 *)((char *)currentCurve + 0x8);
-    *(f32 *)(stateBytes + 0xbc) = *(f32 *)((char *)secondCurve + 0x8);
-    *(f32 *)(stateBytes + 0xc0) = RomCurveNode_GetHermiteTangent(currentCurve, 0x2c, 0);
-    *(f32 *)(stateBytes + 0xc4) = RomCurveNode_GetHermiteTangent(secondCurve, 0x2c, 0);
-
-    *(f32 *)(stateBytes + 0xd8) = *(f32 *)((char *)currentCurve + 0xc);
-    *(f32 *)(stateBytes + 0xdc) = *(f32 *)((char *)secondCurve + 0xc);
-    *(f32 *)(stateBytes + 0xe0) = RomCurveNode_GetHermiteTangent(currentCurve, 0x2d, 0);
-    *(f32 *)(stateBytes + 0xe4) = RomCurveNode_GetHermiteTangent(secondCurve, 0x2d, 0);
-
-    *(f32 *)(stateBytes + 0xf8) = *(f32 *)((char *)currentCurve + 0x10);
-    *(f32 *)(stateBytes + 0xfc) = *(f32 *)((char *)secondCurve + 0x10);
-    *(f32 *)(stateBytes + 0x100) = RomCurveNode_GetHermiteTangent(currentCurve, 0x2c, 1);
-    *(f32 *)(stateBytes + 0x104) = RomCurveNode_GetHermiteTangent(secondCurve, 0x2c, 1);
-}
 
 int RomCurve_func29(float *state, int pickIdx)
 {
     char *stateBytes;
     int nextId;
     int nextCurve;
+    f32 t;
 
     if (state == NULL) {
         return 1;
@@ -5497,9 +5514,9 @@ int RomCurve_func29(float *state, int pickIdx)
     }
 
     if (*(s32 *)(stateBytes + 0x80) != 0) {
-        RomCurve_RefreshForwardControls(stateBytes, 0x9c);
+        ROMCURVE_REFRESH_CONTROL(0x9c);
     } else {
-        RomCurve_RefreshForwardControls(stateBytes, 0xa4);
+        ROMCURVE_REFRESH_CONTROL(0xa4);
     }
 
     if (*(s32 *)(stateBytes + 0x90) != 0) {
@@ -5515,12 +5532,65 @@ int RomCurve_func29(float *state, int pickIdx)
     return 0;
 }
 
+#pragma scheduling off
+#pragma peephole off
+int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx) {
+    int candidates[4];
+    int count = 0;
+    u32 mask = 1;
+    int neighbor;
+    int i;
+    for (i = 0; i < 4; i++) {
+        neighbor = *(int *)(curve + 0x1C + i * 4);
+        if (neighbor > -1 && ((s32)*(s8 *)(curve + 0x1B) & mask) == 0 && neighbor != exclude) {
+            candidates[count] = neighbor;
+            count++;
+        }
+        mask <<= 1;
+    }
+    if (count != 0) {
+        if (pickIdx > count - 1) pickIdx = count - 1;
+        if (pickIdx == -1) {
+            pickIdx = (int)randomGetRange(0, count - 1);
+        }
+        return candidates[pickIdx];
+    }
+    return -1;
+}
+
+int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
+    int candidates[4];
+    int count = 0;
+    u32 mask = 1;
+    int neighbor;
+    int i;
+    for (i = 0; i < 4; i++) {
+        neighbor = *(int *)(curve + 0x1C + i * 4);
+        if (neighbor > -1 && ((s32)*(s8 *)(curve + 0x1B) & mask) != 0 && neighbor != exclude) {
+            candidates[count] = neighbor;
+            count++;
+        }
+        mask <<= 1;
+    }
+    if (count != 0) {
+        if (pickIdx > count - 1) pickIdx = count - 1;
+        if (pickIdx == -1) {
+            pickIdx = (int)randomGetRange(0, count - 1);
+        }
+        return candidates[pickIdx];
+    }
+    return -1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 int RomCurve_func2C(float *state, int unused, int startCurveId)
 {
     char *stateBytes;
     int currentCurve;
     int nextId;
     int nextCurve;
+    f32 t;
 
     if (state == NULL) {
         return 1;
@@ -5563,7 +5633,7 @@ int RomCurve_func2C(float *state, int unused, int startCurveId)
         return 1;
     }
 
-    RomCurve_RefreshForwardControls(stateBytes, 0xa4);
+    ROMCURVE_REFRESH_CONTROL(0xa4);
     if (RomCurve_goNextPoint(state) != 0) {
         return 1;
     }
@@ -5590,6 +5660,7 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxD
     f32 dy;
     f32 dz;
     f32 distance;
+    f32 t;
 
     if (state == NULL) {
         return 1;
@@ -5649,7 +5720,7 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxD
         }
     }
 
-    RomCurve_RefreshForwardControls(stateBytes, 0xa4);
+    ROMCURVE_REFRESH_CONTROL(0xa4);
     if (RomCurve_goNextPoint(state) != 0) {
         return 1;
     }
@@ -5816,19 +5887,6 @@ void RomCurve_stepClamped(float *state, f32 dt) {
 }
 #pragma scheduling reset
 
-static inline f32 RomCurveNode_GetHermiteTangent(void *node, int angleOffset, int useSin)
-{
-    f32 angle;
-    f32 trig;
-
-    angle = lbl_803E05D4 * (f32)((s32)*(s8 *)((char *)node + angleOffset) << 8) / lbl_803E05D8;
-    if (useSin) {
-        trig = sin(angle);
-    } else {
-        trig = fn_80293E80(angle);
-    }
-    return lbl_803E05D0 * ((f32)(u32)*(u8 *)((char *)node + 0x2e) * trig);
-}
 
 extern int curveFn_800da23c(float *state, void *targetCurve);
 
@@ -6056,86 +6114,7 @@ void *Objfsa_FindNearestEnabledCurveType24(int pos, int p4_filter, int p5_filter
 
 extern u32 randomGetRange(int min, int max);
 
-#pragma scheduling off
-#pragma peephole off
-int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx) {
-    int candidates[4];
-    int count = 0;
-    u32 mask = 1;
-    int neighbor;
-    int i;
-    for (i = 0; i < 4; i++) {
-        neighbor = *(int *)(curve + 0x1C + i * 4);
-        if (neighbor > -1 && ((s32)*(s8 *)(curve + 0x1B) & mask) == 0 && neighbor != exclude) {
-            candidates[count] = neighbor;
-            count++;
-        }
-        mask <<= 1;
-    }
-    if (count != 0) {
-        if (pickIdx > count - 1) pickIdx = count - 1;
-        if (pickIdx == -1) {
-            pickIdx = (int)randomGetRange(0, count - 1);
-        }
-        return candidates[pickIdx];
-    }
-    return -1;
-}
 
-int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
-    int candidates[4];
-    int count = 0;
-    u32 mask = 1;
-    int neighbor;
-    int i;
-    for (i = 0; i < 4; i++) {
-        neighbor = *(int *)(curve + 0x1C + i * 4);
-        if (neighbor > -1 && ((s32)*(s8 *)(curve + 0x1B) & mask) != 0 && neighbor != exclude) {
-            candidates[count] = neighbor;
-            count++;
-        }
-        mask <<= 1;
-    }
-    if (count != 0) {
-        if (pickIdx > count - 1) pickIdx = count - 1;
-        if (pickIdx == -1) {
-            pickIdx = (int)randomGetRange(0, count - 1);
-        }
-        return candidates[pickIdx];
-    }
-    return -1;
-}
-#pragma peephole reset
-#pragma scheduling reset
-
-static inline int Objfsa_FindRomCurveById(int curveId) {
-    int lo;
-    int hi;
-    int mid;
-    int curve;
-    u32 id;
-
-    if (curveId < 0) {
-        return 0;
-    }
-
-    lo = 0;
-    hi = nRomCurves - 1;
-    id = (u32)curveId;
-    while (lo <= hi) {
-        mid = (hi + lo) >> 1;
-        curve = (int)romCurves[mid];
-        if (id > *(u32 *)(curve + 0x14)) {
-            lo = mid + 1;
-        } else if (id < *(u32 *)(curve + 0x14)) {
-            hi = mid - 1;
-        } else {
-            return curve;
-        }
-    }
-
-    return 0;
-}
 
 extern void mapBlockFn_80059c2c(u8 *outFlags);
 extern f32 lbl_803E0600;
