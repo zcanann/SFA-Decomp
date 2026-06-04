@@ -1724,7 +1724,7 @@ void pollenfragment_update(int obj) {
         PSVECScale(&sc, &sc, lbl_803E315C);
         PSVECAdd(&dir, &sc, &dir);
         *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) +
-            (((w = lbl_803E315C) + *(f32 *)(extra + 8)) * (dir.x * *(f32 *)(extra + 4))) / (m = lbl_803E3164);
+            ((*(f32 *)(extra + 8) + (w = lbl_803E315C)) * (dir.x * *(f32 *)(extra + 4))) / (m = lbl_803E3164);
         *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) +
             ((w + *(f32 *)(extra + 8)) * (dir.z * *(f32 *)(extra + 4))) / m;
         if (!(*(PollenFragmentDef **)(extra + 0x1c))->noVertical) {
