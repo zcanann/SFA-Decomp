@@ -4556,7 +4556,7 @@ int objSeqFindLabel(u8 *seq, int label);
 int objSeqFindConditional(u8 *seq, u8 *seqState);
 void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, int action);
 void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns);
-void objSeqSetupFn_80085b34(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void **outAction);
+void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void **outAction);
 void objAnimFn_8008718c(u8 *obj, u8 *seqObj, u8 *seq);
 int seqEvalCondition(int condition, u8 *seq, int obj);
 void ObjSeq_setXrot(int index, int xrot);

@@ -2442,7 +2442,7 @@ int ObjSeq_update(u8 *obj, f32 t)
         }
 
         if (seq[0x7e] == 2) {
-            objSeqSetupFn_80085b34(obj, &activeObj, seq, model, (void **)&action);
+            ObjSeq_SetupInitialPlaybackState(obj, &activeObj, seq, model, (void **)&action);
             return 0;
         }
 
@@ -2803,7 +2803,7 @@ int ObjSeq_update(u8 *obj, f32 t)
 
 #pragma peephole off
 #pragma scheduling off
-void objSeqSetupFn_80085b34(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void **outAction)
+void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void **outAction)
 {
     u8 *activeObj;
     s16 *modelVec;

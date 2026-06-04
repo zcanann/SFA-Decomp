@@ -4318,7 +4318,7 @@ void objSeqDoBgCmds0D(u8 *seq, u8 *obj, int skipSpawns)
     }
 }
 
-void objSeqSetupFn_80085b34(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void **outAction)
+void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void **outAction)
 {
     u8 *activeObj;
     s16 *modelVec;
