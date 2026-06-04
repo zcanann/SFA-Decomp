@@ -2123,11 +2123,12 @@ void player_doProjGfx(int *p1, int p2, int p3, int count, int p5, int mode)
 #pragma peephole off
 #pragma opt_common_subs off
 void Checkpoint_remove(int *obj) {
+    int count;
     int i = 0;
     CheckpointSlot *p = lbl_8039C458;
-    int count = lbl_803DD410;
     CheckpointSlot *e;
-    int remaining;
+
+    count = lbl_803DD410;
 
     while (i < count && (u32)obj[5] != p[i].key) {
         i++;
@@ -2136,13 +2137,11 @@ void Checkpoint_remove(int *obj) {
     count = lbl_803DD410 - 1;
     lbl_803DD410 = count;
     e = &lbl_8039C458[i];
-    remaining = count - i;
-    if (i >= count) return;
-    while (remaining > 0) {
+    while (i < count) {
         e->entry = (e + 1)->entry;
         e->key   = (e + 1)->key;
         e++;
-        remaining--;
+        i++;
     }
 }
 #pragma opt_common_subs reset
