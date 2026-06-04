@@ -4,160 +4,136 @@
 #define NULL ((void*)0)
 #endif
 
-extern void* dataGetLayer(int sceneId, void* outBuf);
-extern int inpGetMidiCtrl(int ctrl, int slot, int key);
-extern int audioFn_8026f630(int key, int slot, int chan, int unk, int* outFlags);
-extern int audioKeymapFn_8026fc8c(u8 a0, u8 a1, int a2, int a3, int a4, u32 a5, u32 a6,
-                        u8 a7, u32 a8, int a9, u32 aA, u32 aB, u32 aC, u32 aD,
-                        u32 aE, u32 aF);
-extern int audioFn_80278b94(u8 a0, u8 a1, int a2, int a3, int a4, u32 a5, u32 a6,
-                        u8 a7, u32 a8, int a9, u32 aA, u32 aB, u32 aC, u32 aD,
-                        u32 aE, u32 aF);
-extern int vidMakeRoot(void* slotPtr);
+typedef signed char s8;
 
-extern u8* synthVoice;
+typedef struct LAYER {
+    u16 id;
+    u8 keyLow;
+    u8 keyHigh;
+    s8 transpose;
+    u8 volume;
+    s16 prioOffset;
+    u8 panning;
+    u8 reserved[3];
+} LAYER;
 
-typedef struct SynthBuf {
-    u16 count;
-    u16 pad;
-} SynthBuf;
+typedef struct LayerVoice {
+    u8 pad0[0xEC];
+    u32 child;
+    u32 parent;
+    u8 padF4[0x11C - 0xF4];
+    u8 block;
+    u8 pad11D[0x404 - 0x11D];
+} LayerVoice;
 
-int audioLayerFn_8026f8b8(
-    int sceneId, int chan, int slot, int unk4,
-    int velPair, char unk6, int prog, int unkR10,
-    char arg9, char arg10, short arg11, short arg12,
-    int arg13, char arg14, char arg15, int arg16
-) {
-    SynthBuf buf;
-    int hoist40, hoist3c, hoist48, hoist44;
-    char* p;
-    int handle = -1;
-    int subResult;
-    int range_lo;
-    int chosen_key;
-    int useFlag;
+extern LayerVoice* synthVoice;
 
-    p = (char*)dataGetLayer(sceneId, &buf);
-    if (p == NULL) {
-        return handle;
+extern void* dataGetLayer(u16 cid, u16* n);
+extern u16 inpGetMidiCtrl(u8 ctrl, u8 midi, u8 midiSet);
+extern u32 audioFn_8026f630(u8 key, u8 midi, u8 midiSet, u32 newVID, u32* rejected);
+extern u32 audioFn_80278b94(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
+                            u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                            u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
+extern u32 audioKeymapFn_8026fc8c(u16 keymapID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol,
+                                  u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                                  u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
+extern u32 vidMakeRoot(LayerVoice* voice);
+
+u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol,
+                          u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
+                          u32 vidFlag, u8 vGroup, u8 studio, u32 itd) {
+    u16 n;
+    u32 vid;
+    u32 new_id;
+    u32 id;
+    LAYER* l;
+    s32 p;
+    s32 k;
+    u8 v;
+    u8 mKey;
+
+    vid = 0xFFFFFFFF;
+    if ((l = dataGetLayer(layerID, &n)) == NULL) {
+        goto end;
     }
 
-    hoist40 = (u8)prog;
-    hoist3c = (u8)unk6;
-    hoist48 = 0x8000;
-    hoist44 = 0x81020409;
-    range_lo = velPair & 0x7F;
-    velPair = velPair & 0x80;
+    mKey = key & 0x7f;
+    for (; n != 0; --n, l++) {
+        if (l->id == 0xffff || l->keyLow > mKey || l->keyHigh < mKey) {
+            continue;
+        }
 
-    while (buf.count != 0) {
-        u16 rec0;
-        rec0 = *(u16*)p;
-        if (rec0 != 0xFFFF) {
-            if ((u32)*((u8*)p + 2) <= (u32)range_lo &&
-                (u32)*((u8*)p + 3) >= (u32)range_lo) {
-                int off = (signed char)*((u8*)p + 4);
-                chosen_key = range_lo + off;
-                if (chosen_key > 0x7F) chosen_key = 0x7F;
-                else if (chosen_key < 0) chosen_key = 0;
+        k = mKey + l->transpose;
+        k = k > 127 ? 127 : k < 0 ? 0 : k;
 
-                useFlag = 1;
-                if ((rec0 & 0xC000) == 0) {
-                    if ((u16)inpGetMidiCtrl(0x41, arg9, unkR10) > 0x1F80) {
-                        int outVal = 0;
-                        subResult = audioFn_8026f630(chosen_key & 0x7F, arg9, 0, unkR10, &outVal);
-                        useFlag = (outVal == 0);
-                    } else {
-                        subResult = -1;
-                        useFlag = 1;
-                    }
-                    if (useFlag != 0 && (subResult & 0xFFFF0000) != 0xFFFF0000) {
-                        goto skipDispatch;
-                    }
-                }
-
-                /* dispatch via 0xC000 mask */
-                {
-                    u8 flag8 = *((u8*)p + 8);
-                    int v;
-                    if ((flag8 & 0x80) == 0) {
-                        v = (flag8 - 0x40) + hoist40;
-                        if (v < 0) v = 0;
-                        else if (v > 0x7F) v = 0x7F;
-                    } else {
-                        v = 0x80;
-                    }
-                    {
-                        u8 e5 = *((u8*)p + 5);
-                        s16 e67 = *(s16*)(p + 6);
-                        int prod = hoist3c * e5;
-                        int magic = (int)(((long long)hoist44 * prod) >> 32);
-                        magic = magic + prod;
-                        unk4 = unk4 + e67;
-                        magic = (magic >> 6) + ((unsigned)magic >> 31);
-                        magic = (u8)magic;
-                        if ((short)unk4 > 0xFF) unk4 = 0xFF;
-                        else if ((short)unk4 < 0) unk4 = 0;
-                        unk4 = (short)unk4;
-
-                        switch (rec0 & 0xC000) {
-                        case 0x4000:
-                            subResult = audioKeymapFn_8026fc8c((u8)arg9, (u8)arg10, chan, slot, (u8)unk4,
-                                                    (u32)(chosen_key | velPair), 0, (u8)magic,
-                                                    arg11, (int)unkR10, arg14, arg13, arg12,
-                                                    arg15, 0, arg16);
-                            break;
-                        case 0:
-                            subResult = audioLayerFn_8026f8b8(arg9, chan, slot, (u8)unk4, velPair,
-                                                    unk6, chosen_key, unkR10, arg11,
-                                                    (char)magic, arg12, arg13, 0, arg14,
-                                                    arg15, arg16);
-                            break;
-                        case 0x8000:
-                        default:
-                            subResult = audioFn_80278b94((u8)arg9, (u8)arg10, chan, slot, (u8)unk4,
-                                                    (u32)(chosen_key | velPair), 0, (u8)magic,
-                                                    arg11, (int)unkR10, arg14, arg13, arg12,
-                                                    arg15, 0, arg16);
-                            break;
-                        }
-                    }
-                    if ((subResult & 0xFFFF0000) == 0xFFFF0000) goto nextIter;
-                }
-
-skipDispatch:
-                if ((handle & 0xFFFF0000) == 0xFFFF0000) {
-                    if (arg13 != 0) {
-                        u8 idx = (u8)subResult;
-                        u32* slotData = (u32*)(synthVoice + idx * 0x404);
-                        handle = vidMakeRoot(slotData);
-                    } else {
-                        handle = subResult;
-                    }
-                } else {
-                    u8 prevIdx = (u8)handle;
-                    u8 newIdx = (u8)subResult;
-                    *(int*)(synthVoice + prevIdx * 0x404 + 0xEC) = subResult;
-                    *(int*)(synthVoice + newIdx * 0x404 + 0xF0) = handle;
-                }
-                {
-                    u32 cur = (u32)handle;
-                    while (1) {
-                        u8 idx = (u8)cur;
-                        u32 next = *(u32*)(synthVoice + idx * 0x404 + 0xEC);
-                        if ((next & 0xFFFF0000) == 0xFFFF0000) {
-                            *(u8*)(synthVoice + idx * 0x404 + 0x11C) = 1;
-                            break;
-                        }
-                        *(u8*)(synthVoice + idx * 0x404 + 0x11C) = 1;
-                        cur = next;
-                    }
-                }
+        if ((l->id & 0xC000) == 0) {
+            u32 rejected;
+            u32 ok;
+            if (inpGetMidiCtrl(65, midi, midiSet) > 8064) {
+                new_id = audioFn_8026f630(k & 0x7f, midi, midiSet, 0, &rejected);
+                ok = !rejected;
+            } else {
+                new_id = 0xFFFFFFFF;
+                ok = 1;
+            }
+            if (!ok) {
+                continue;
+            }
+            if (new_id != 0xFFFFFFFF) {
+                goto apply_new_id;
             }
         }
-nextIter:
-        p += 0xC;
-        buf.count--;
+
+        if ((l->panning & 0x80) == 0) {
+            p = l->panning - 0x40;
+            p += panning;
+            p = p < 0 ? 0 : p > 0x7f ? 0x7f : p;
+        } else {
+            p = 0x80;
+        }
+
+        v = (vol * l->volume) / 0x7f;
+        prio += l->prioOffset;
+        prio = prio > 0xff ? 0xff : prio < 0 ? 0 : prio;
+
+        switch (l->id & 0xC000) {
+        case 0:
+            new_id = audioFn_80278b94(l->id, prio, maxVoices, allocId, k | (key & 0x80), v, p, midi,
+                                      midiSet, section, step, trackid, 0, vGroup, studio, itd);
+            break;
+        case 0x4000:
+            new_id = audioKeymapFn_8026fc8c(l->id, prio, maxVoices, allocId, k | (key & 0x80), v, p,
+                                            midi, midiSet, section, step, trackid, 0, vGroup, studio,
+                                            itd);
+            break;
+        case 0x8000:
+            new_id = audioLayerFn_8026f8b8(l->id, prio, maxVoices, allocId, k | (key & 0x80), v, p,
+                                           midi, midiSet, section, step, trackid, 0, vGroup, studio,
+                                           itd);
+            break;
+        }
+
+        if (new_id != 0xFFFFFFFF) {
+        apply_new_id:
+            if (vid == 0xFFFFFFFF) {
+                if (vidFlag != 0) {
+                    vid = vidMakeRoot(&synthVoice[new_id & 0xff]);
+                } else {
+                    vid = new_id;
+                }
+            } else {
+                synthVoice[id & 0xff].child = new_id;
+                synthVoice[new_id & 0xff].parent = id;
+            }
+            id = new_id;
+            while (synthVoice[id & 0xff].child != 0xFFFFFFFF) {
+                synthVoice[id & 0xff].block = 1;
+                id = synthVoice[id & 0xff].child;
+            }
+            synthVoice[id & 0xff].block = 1;
+        }
     }
 
-    return handle;
+end:
+    return vid;
 }
