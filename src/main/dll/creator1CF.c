@@ -54,76 +54,91 @@ void dll_19E_free(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-void dll_19E_render(int param_1, undefined4 param_2, undefined4 param_3, undefined4 param_4,
-                 undefined4 param_5, char param_6)
+#pragma fp_contract off
+void dll_19E_render(int param_1, int param_2, int param_3, int param_4,
+                 int param_5, s8 visible)
 {
   int state;
-  void *camera;
-  float dx, dy, dz;
-  float dist;
-  float invDist;
-  float fac1x, fac1y, fac1z;
-  float fac2x, fac2y, fac2z;
-  float gridA[2];
-  float gridB[2];
-  void *traceOut;
-  float midA[3];
-  float midB[3];
-  float vecBA[3];
-  float gfxVec[3];
-  int auStack_28[2];
+  u8 *camera;
+  f32 dist;
+  f32 invDist;
+  f32 facz, facy, facx;
+  f32 facz2, facy2, facx2;
+  f32 nz, ny, nx;
+  struct {
+    f32 delta[3];
+    struct {
+      u8 pad[0xc];
+      f32 x, y, z;
+    } args;
+  } stk;
+  f32 midA[3];
+  f32 midB[3];
+  f32 gridA[2];
+  f32 gridB[2];
+  int traceOut[2];
 
   state = *(int *)(param_1 + 0xb8);
-  if ((int)(signed char)param_6 == 0) {
-    *(short *)(state + 4) = 0;
-    *(char *)(state + 0xa) = 0;
-    goto end;
+  if (visible == 0) {
+    *(s16 *)(state + 4) = 0;
+    *(u8 *)(state + 0xa) = 0;
   }
-  if (*(char *)(state + 0xc) == '\0') goto end;
-  *(char *)(state + 0xa) = 1;
-  camera = Camera_GetCurrentViewSlot();
-  dx = *(float *)((int)camera + 0xc) - *(float *)(param_1 + 0xc);
-  dy = *(float *)((int)camera + 0x10) - *(float *)(param_1 + 0x10);
-  dz = *(float *)((int)camera + 0x14) - *(float *)(param_1 + 0x14);
-  dist = sqrtf(dx * dx + dy * dy + dz * dz);
-  if (dist > lbl_803E51C8) {
-    invDist = lbl_803E51CC / dist;
-    dx = dx * invDist;
-    dy = dy * invDist;
-    dz = dz * invDist;
-    fac1x = lbl_803E51D0 * dx;
-    fac1y = lbl_803E51D0 * dy;
-    fac1z = lbl_803E51D0 * dz;
-    midA[0] = fac1x + *(float *)(param_1 + 0xc);
-    midA[1] = fac1y + *(float *)(param_1 + 0x10);
-    midA[2] = fac1z + *(float *)(param_1 + 0x14);
-    fac2x = lbl_803E51D4 * dx;
-    fac2y = lbl_803E51D4 * dy;
-    fac2z = lbl_803E51D4 * dz;
-    midB[0] = fac2x + *(float *)((int)camera + 0xc);
-    midB[1] = fac2y + *(float *)((int)camera + 0x10);
-    midB[2] = fac2z + *(float *)((int)camera + 0x14);
-    voxmaps_worldToGrid(midA, gridA);
-    voxmaps_worldToGrid(midB, gridB);
-    if (voxmaps_traceLine(gridA, gridB, auStack_28, 0, 0) == 0) {
-      *(char *)(state + 0xa) = 0;
-      (*(code *)(*(int *)gExpgfxInterface + 0x14))(param_1);
+  else if (*(u8 *)(state + 0xc) != 0) {
+    *(u8 *)(state + 0xa) = 1;
+    camera = (u8 *)Camera_GetCurrentViewSlot();
+    stk.delta[0] = *(f32 *)(camera + 0xc) - *(f32 *)(param_1 + 0xc);
+    stk.delta[1] = *(f32 *)(camera + 0x10) - *(f32 *)(param_1 + 0x10);
+    stk.delta[2] = *(f32 *)(camera + 0x14) - *(f32 *)(param_1 + 0x14);
+    dist = sqrtf(stk.delta[2] * stk.delta[2] + (stk.delta[0] * stk.delta[0] + stk.delta[1] * stk.delta[1]));
+    if (dist > lbl_803E51C8) {
+      invDist = lbl_803E51CC / dist;
+      nx = stk.delta[0] * invDist;
+      stk.delta[0] = nx;
+      ny = stk.delta[1] * invDist;
+      stk.delta[1] = ny;
+      nz = stk.delta[2] * invDist;
+      stk.delta[2] = nz;
+      facx = lbl_803E51D0 * nx;
+      midA[0] = facx;
+      facy = lbl_803E51D0 * ny;
+      midA[1] = facy;
+      facz = lbl_803E51D0 * nz;
+      midA[2] = facz;
+      midA[0] = facx + *(f32 *)(param_1 + 0xc);
+      midA[1] = facy + *(f32 *)(param_1 + 0x10);
+      midA[2] = facz + *(f32 *)(param_1 + 0x14);
+      facx2 = lbl_803E51D4 * nx;
+      midB[0] = facx2;
+      facy2 = lbl_803E51D4 * ny;
+      midB[1] = facy2;
+      facz2 = lbl_803E51D4 * nz;
+      midB[2] = facz2;
+      midB[0] = facx2 + *(f32 *)(camera + 0xc);
+      midB[1] = facy2 + *(f32 *)(camera + 0x10);
+      midB[2] = facz2 + *(f32 *)(camera + 0x14);
+      voxmaps_worldToGrid(midA, gridA);
+      voxmaps_worldToGrid(midB, gridB);
+      if (voxmaps_traceLine(gridA, gridB, traceOut, 0, 0) == 0) {
+        *(u8 *)(state + 0xa) = 0;
+        (*(void (*)(int))(*(int *)(*gExpgfxInterface) + 0x14))(param_1);
+      }
+    }
+    if (*(s16 *)(state + 4) > 0) {
+      *(s16 *)(state + 4) -= framesThisStep;
+    }
+    else {
+      if (*(u8 *)(state + 0xa) != 0) {
+        stk.args.x = lbl_803E51D8;
+        stk.args.y = lbl_803E51DC;
+        stk.args.z = lbl_803E51D8;
+        (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface) + 0x8))(
+            param_1, 0x1f7, &stk.args, 0x12, -1, 0);
+      }
+      *(s16 *)(state + 4) = (s16)(randomGetRange(-10, 10) + 0x3c);
     }
   }
-  if (*(short *)(state + 4) > 0) {
-    *(short *)(state + 4) = *(short *)(state + 4) - framesThisStep;
-    goto end;
-  }
-  if (*(char *)(state + 0xa) != '\0') {
-    gfxVec[0] = lbl_803E51D8;
-    gfxVec[1] = lbl_803E51DC;
-    gfxVec[2] = lbl_803E51D8;
-    (*(code *)(*(int *)gPartfxInterface + 0x8))(param_1, 0x1f7, gfxVec, 0x12, 0xffffffff, 0);
-  }
-  *(short *)(state + 4) = (short)(randomGetRange(-10, 10) + 0x3c);
-end:
-  return;
 }
+#pragma fp_contract reset
 #pragma peephole reset
 #pragma scheduling reset
 
