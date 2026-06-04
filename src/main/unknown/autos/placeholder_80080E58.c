@@ -7494,3 +7494,137 @@ void fn_8008F2C8(f32 *start, f32 *end, int width, f32 segScale, f32 d, int *seed
     }
 }
 #pragma pop
+
+extern void GXSetMisc(int token, u32 val);
+extern void DCInvalidateRange(void *addr, u32 nBytes);
+extern int GXBeginDisplayList(void *list, u32 size);
+extern u32 GXEndDisplayList(void);
+extern void GXResetWriteGatherPipe(void);
+extern void PSMTXRotRad(f32 *mtx, int axis, f32 rad);
+extern u8 lbl_803DD1D8;
+extern f32 lbl_803DF290;
+extern f32 lbl_803DF294;
+extern f32 lbl_803DF298;
+extern f32 lbl_803DF29C;
+extern f32 lbl_803DF2A0;
+extern f32 lbl_803DF2A4;
+
+/*
+ * --INFO--
+ *
+ * Function: titleScreenDrawFn_80093db4
+ * EN v1.0 Address: 0x80093DB4
+ * EN v1.0 Size: 1464b
+ */
+#pragma push
+#pragma scheduling off
+void titleScreenDrawFn_80093db4(void) {
+    f32 *constellation;
+    f32 *cp;
+    int i;
+    int j;
+    int k;
+    int idx;
+    f32 zero;
+    f32 v[3];
+    f32 mtx2[12];
+    f32 mtx1[12];
+
+    GXSetMisc(1, 0);
+    testAndSet_onlyUseHeap3(0);
+    constellation = mmAlloc(0x4b0, 0x7f7f7fff, 0);
+    testAndSet_onlyUseHeap3(1);
+    cp = constellation;
+    zero = lbl_803DF28C;
+    for (i = 0; i < 0x64; i++) {
+        do {
+            v[0] = (f32)(int)randomGetRange(-5000, 5000);
+            v[1] = (f32)(int)randomGetRange(-5000, 5000);
+            v[2] = (f32)(int)randomGetRange(-5000, 5000);
+        } while (zero == v[0] && zero == v[1] && zero == v[2]);
+        PSVECNormalize(v, v);
+        PSVECScale(v, v, lbl_803DF290);
+        cp[0] = v[0];
+        cp[1] = v[1];
+        cp[2] = v[2];
+        cp += 3;
+    }
+    lbl_803DD1D8 = 1;
+    lbl_803DD1D0 = textureLoadAsset(0xc21);
+    lbl_803DD1D4 = textureLoadAsset(0xc22);
+    for (k = 0; k < 0x5c; k++) {
+        lbl_8039A9B8[k] = mmAlloc(0x220, 0x7f7f7fff, 0);
+        DCInvalidateRange(lbl_8039A9B8[k], 0x220);
+        GXBeginDisplayList(lbl_8039A9B8[k], 0x220);
+        GXResetWriteGatherPipe();
+        GXBegin(0xb8, 0, 0x32);
+        for (j = 0; j < 0x32; j++) {
+            if (randomGetRange(0, 9) < 5) {
+                f32 z2 = lbl_803DF28C;
+                do {
+                    v[0] = (f32)(int)randomGetRange(-5000, 5000);
+                    v[1] = (f32)(int)randomGetRange(-5000, 5000);
+                    v[2] = (f32)(int)randomGetRange(-5000, 5000);
+                } while (z2 == v[0] && z2 == v[1] && z2 == v[2]);
+                PSVECNormalize(v, v);
+                PSVECScale(v, v, lbl_803DF290);
+            } else {
+                idx = randomGetRange(0, 0x63);
+                v[0] = constellation[idx * 3];
+                v[1] = constellation[idx * 3 + 1];
+                v[2] = constellation[idx * 3 + 2];
+                if (__fabs(v[0]) > lbl_803DF294) {
+                    PSMTXRotRad(mtx1, 0x79,
+                                (lbl_803DF298 *
+                                 (lbl_803DF29C *
+                                  (lbl_803DF2A0 *
+                                   (f32)(int)randomGetRange(-0x8000, 0x8000)))) /
+                                    lbl_803DF2A4);
+                    PSMTXRotRad(mtx2, 0x7a,
+                                (lbl_803DF298 *
+                                 (lbl_803DF29C *
+                                  (lbl_803DF2A0 *
+                                   (f32)(int)randomGetRange(-0x8000, 0x8000)))) /
+                                    lbl_803DF2A4);
+                } else if (__fabs(v[1]) > lbl_803DF294) {
+                    PSMTXRotRad(mtx1, 0x78,
+                                (lbl_803DF298 *
+                                 (lbl_803DF29C *
+                                  (lbl_803DF2A0 *
+                                   (f32)(int)randomGetRange(-0x8000, 0x8000)))) /
+                                    lbl_803DF2A4);
+                    PSMTXRotRad(mtx2, 0x7a,
+                                (lbl_803DF298 *
+                                 (lbl_803DF29C *
+                                  (lbl_803DF2A0 *
+                                   (f32)(int)randomGetRange(-0x8000, 0x8000)))) /
+                                    lbl_803DF2A4);
+                } else {
+                    PSMTXRotRad(mtx1, 0x78,
+                                (lbl_803DF298 *
+                                 (lbl_803DF29C *
+                                  (lbl_803DF2A0 *
+                                   (f32)(int)randomGetRange(-0x8000, 0x8000)))) /
+                                    lbl_803DF2A4);
+                    PSMTXRotRad(mtx2, 0x79,
+                                (lbl_803DF298 *
+                                 (lbl_803DF29C *
+                                  (lbl_803DF2A0 *
+                                   (f32)(int)randomGetRange(-0x8000, 0x8000)))) /
+                                    lbl_803DF2A4);
+                }
+                PSMTXConcat((void *)mtx2, (void *)mtx1, (void *)mtx1);
+                PSMTXMultVecSR(mtx1, v, v);
+            }
+            GXWGFifo.s16 = v[0];
+            GXWGFifo.s16 = v[1];
+            GXWGFifo.s16 = v[2];
+            GXWGFifo.s16 = 0;
+            GXWGFifo.s16 = 0;
+        }
+        lbl_8039A900[k] = (u16)GXEndDisplayList();
+    }
+    mm_free(constellation);
+    GXSetMisc(1, 8);
+}
+#pragma pop
