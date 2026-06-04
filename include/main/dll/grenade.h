@@ -10,15 +10,10 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
 void trickyFn_80141fec(u8 *obj, u8 *state);
 void trickyFn_80142524(u8 *obj, u8 *state);
 int trickyFn_80142a14(int obj, int state);
-void trickyFlameFn_80142b6c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+int trickyFlameFn_80142b6c(u8 *obj, u8 *state);
 int trickyFoodFn_80142d2c(int obj, int state);
 int trickyFn_80142eb0(int obj, int state);
-undefined4
-trickyFn_801430e0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
-            int *param_10,int param_11,undefined4 param_12,byte param_13,uint param_14,
-            undefined4 param_15,undefined4 param_16);
+int trickyFn_801430e0(u8 *obj, u8 *state);
 undefined4 trickyFn_80143210(int param_1,int *param_2);
 undefined4 trickyFn_801432cc(int param_1,int *param_2);
 undefined4 trickyFn_80143388(int param_1,int *param_2);

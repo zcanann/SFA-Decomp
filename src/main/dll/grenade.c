@@ -708,78 +708,61 @@ int trickyFn_80142a14(int obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trickyFlameFn_80142b6c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+extern u8 Obj_IsLoadingLocked(void);
+extern u8 *Obj_AllocObjectSetup(int size, int id);
+extern u8 *Obj_SetupObject(u8 *e, int a, int b, int c, void *d);
+extern void objSetAnimSpeedTo1(u8 *e);
+extern f32 lbl_803E24AC;
+extern f32 lbl_803E23E4;
+
+int trickyFlameFn_80142b6c(u8 *obj, u8 *state)
 {
-  uint uVar1;
-  uint uVar2;
-  undefined2 *puVar3;
-  undefined4 uVar4;
-  bool bVar5;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  double dVar9;
-  double extraout_f1;
-  undefined8 uVar10;
-  
-  uVar10 = FUN_80286840();
-  uVar1 = (uint)((ulonglong)uVar10 >> 0x20);
-  iVar6 = (int)uVar10;
-  if (*(short *)(uVar1 + 0xa0) == 0x1a) {
-    dVar9 = (double)*(float *)(uVar1 + 0x98);
-    if ((dVar9 <= (double)lbl_803E313C) || ((*(uint *)(iVar6 + 0x54) & 0x800) != 0)) {
-      if ((*(uint *)(iVar6 + 0x54) & 0x8000000) != 0) {
-        *(uint *)(iVar6 + 0x54) = *(uint *)(iVar6 + 0x54) & 0xfffff7ff;
-        *(uint *)(iVar6 + 0x54) = *(uint *)(iVar6 + 0x54) | 0x1000;
-        iVar8 = 0;
-        iVar7 = iVar6;
-        do {
-          FUN_801778d0(*(int *)(iVar7 + 0x700));
-          iVar7 = iVar7 + 4;
-          iVar8 = iVar8 + 1;
-        } while (iVar8 < 7);
-        FUN_800068cc();
-        iVar7 = *(int *)(uVar1 + 0xb8);
-        if (((*(byte *)(iVar7 + 0x58) >> 6 & 1) == 0) &&
-           (((0x2f < *(short *)(uVar1 + 0xa0) || (*(short *)(uVar1 + 0xa0) < 0x29)) &&
-            (bVar5 = Sfx_IsPlayingFromObjectChannel(uVar1,0x10), !bVar5)))) {
-          objAudioFn_800393f8(uVar1,(void *)(iVar7 + 0x3a8),0x29d,0,0xffffffff,0);
+    int i;
+    u8 *p;
+    u8 *ptr;
+    u8 *e;
+
+    switch (*(s16 *)(obj + 0xa0)) {
+    case 0x1a:
+        if (*(f32 *)(obj + 0x98) > lbl_803E24AC && (*(u32 *)(state + 0x54) & 0x800) == 0) {
+            if (Obj_IsLoadingLocked() != 0) {
+                *(u32 *)(state + 0x54) |= 0x800;
+                p = state;
+                for (i = 0; i < 7; i++) {
+                    e = Obj_AllocObjectSetup(0x24, 0x4f0);
+                    e[4] = 2;
+                    e[5] = 1;
+                    *(s16 *)(e + 0x1a) = i;
+                    *(u8 **)(p + 0x700) = Obj_SetupObject(e, 5, *(s8 *)(obj + 0xac), -1, *(void **)(obj + 0x30));
+                    p += 4;
+                }
+                Sfx_PlayFromObject((int)obj, 0x3db);
+                Sfx_AddLoopedObjectSound(obj, 0x3dc);
+            }
+        } else {
+            if (*(u32 *)(state + 0x54) & 0x8000000) {
+                *(u32 *)(state + 0x54) &= ~0x800;
+                *(u32 *)(state + 0x54) |= 0x1000;
+                p = state;
+                for (i = 0; i < 7; i++) {
+                    objSetAnimSpeedTo1(*(u8 **)(p + 0x700));
+                    p += 4;
+                }
+                Sfx_RemoveLoopedObjectSound(obj, 0x3dc);
+                ptr = *(u8 **)(obj + 0xb8);
+                if (((u32)*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+                    && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                    && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                    objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x29d, 0, -1, 0);
+                }
+                state[0xa] = 10;
+            }
         }
-        *(undefined *)(iVar6 + 10) = 10;
-      }
+        break;
+    default:
+        objAnimFn_8013a3f0((int)obj, 0x1a, lbl_803E23E4, 0);
     }
-    else {
-      uVar2 = FUN_80017ae8();
-      if ((uVar2 & 0xff) != 0) {
-        *(uint *)(iVar6 + 0x54) = *(uint *)(iVar6 + 0x54) | 0x800;
-        iVar7 = 0;
-        do {
-          puVar3 = FUN_80017aa4(0x24,0x4f0);
-          *(undefined *)(puVar3 + 2) = 2;
-          *(undefined *)((int)puVar3 + 5) = 1;
-          puVar3[0xd] = (short)iVar7;
-          uVar4 = FUN_80017ae4(dVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar3,
-                               5,*(undefined *)(uVar1 + 0xac),0xffffffff,*(uint **)(uVar1 + 0x30),
-                               in_r8,in_r9,in_r10);
-          *(undefined4 *)(iVar6 + 0x700) = uVar4;
-          iVar6 = iVar6 + 4;
-          iVar7 = iVar7 + 1;
-          dVar9 = extraout_f1;
-        } while (iVar7 < 7);
-        FUN_80006824(uVar1,0x3db);
-        FUN_800068d0(uVar1,0x3dc);
-      }
-    }
-  }
-  else {
-    objAnimFn_8013a3f0(uVar1,0x1a,lbl_803E3074,0);
-  }
-  FUN_8028688c();
-  return;
+    return 1;
 }
 
 /*
@@ -937,43 +920,36 @@ int trickyFn_80142eb0(int obj, int state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4
-trickyFn_801430e0(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-            undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9,
-            int *param_10,int param_11,undefined4 param_12,byte param_13,uint param_14,
-            undefined4 param_15,undefined4 param_16)
+extern f32 lbl_803E251C;
+
+int trickyFn_801430e0(u8 *obj, u8 *state)
 {
-  int iVar1;
-  char cVar3;
-  bool bVar4;
-  uint uVar2;
-  
-  iVar1 = trickyFoodFn_8014460c(param_9,param_10);
-  if ((iVar1 == 0) &&
-     (cVar3 = trickyFn_8013b368((double)lbl_803E30A8,param_2,param_3,param_4,param_5,param_6,param_7,
-                           param_8,param_9,param_10,param_11,param_12,param_13,param_14,param_15,
-                           param_16), cVar3 != '\x01')) {
-    if (param_10[0x1ec] == 0) {
-      uVar2 = randomGetRange(0,6);
-      if (((int)uVar2 < 5) && (-1 < (int)uVar2)) {
-        tricky_startRandomIdleMove(param_9,(int)param_10);
-      }
-      else {
-        objAnimFn_801441c0(param_9,(int)param_10);
-      }
+    u8 *ptr;
+    int ret;
+
+    if (trickyFoodFn_8014460c((int)obj, (int *)state) != 0) {
+        return 1;
     }
-    else {
-      iVar1 = *(int *)(param_9 + 0xb8);
-      if (((*(byte *)(iVar1 + 0x58) >> 6 & 1) == 0) &&
-         (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-          (bVar4 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar4)))) {
-        objAudioFn_800393f8(param_9,(void *)(iVar1 + 0x3a8),0x357,0,0xffffffff,0);
-      }
-      objAnimFn_8013a3f0(param_9,0x26,lbl_803E31AC,0);
-      *(undefined *)((int)param_10 + 10) = 5;
+    if ((u8)trickyFn_8013b368((int)obj, lbl_803E2418, (int)state) != 1) {
+        if (*(u8 **)(state + 0x7b0) != NULL) {
+            ptr = *(u8 **)(obj + 0xb8);
+            if (((u32)*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x357, 0, -1, 0);
+            }
+            objAnimFn_8013a3f0((int)obj, 0x26, lbl_803E251C, 0);
+            state[0xa] = 5;
+        } else {
+            ret = randomGetRange(0, 6);
+            if (ret < 5 && ret >= 0) {
+                tricky_startRandomIdleMove((int)obj, (int)state);
+            } else {
+                objAnimFn_801441c0((int)obj, (int)state);
+            }
+        }
     }
-  }
-  return 1;
+    return 1;
 }
 
 /*
