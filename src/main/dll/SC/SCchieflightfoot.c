@@ -25,11 +25,9 @@ extern undefined4 dll_2E_func05();
 extern undefined4 dll_2E_func08();
 extern void dll_2E_func03(SHthorntailObject *obj,SHthorntailRuntime *runtime);
 extern undefined4 FUN_80286888();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
 
-extern ObjHitReactEntry gSHthorntailNormalHitReactEntries;
-extern ObjHitReactEntry gSHthorntailHeavyHitReactEntries;
 extern u8 gSHthorntailDataTables[];
 extern u8 gSHthorntailPathHeaders[0x30];
 extern u8 gSHthorntailPathData[0x4AC];
@@ -46,6 +44,8 @@ extern f32 lbl_803E5418;
 extern f32 lbl_803E5448;
 extern f32 lbl_803E544C;
 extern f32 lbl_803E5450;
+extern f32 lbl_803E5454;
+extern f32 lbl_803E5458;
 extern f32 lbl_803E545C;
 extern f32 lbl_803E5460;
 extern f32 lbl_803E5464;
@@ -62,12 +62,18 @@ extern f64 lbl_803E5490;
 
 #define gSHthorntailPathControlInterface gPathControlInterface
 
+#define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES_OFFSET 0x0A0
+#define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES_OFFSET 0x294
 #define SHTHORNTAIL_STATE_MOVE_IDS_OFFSET 0x488
 #define SHTHORNTAIL_STATE_MOVE_STEP_SCALES_OFFSET 0x4AC
 #define SHTHORNTAIL_STATE_FLAGS_OFFSET 0x4F0
 #define SHTHORNTAIL_STATE_TRIGGER0_SFX_OFFSET 0x504
 #define SHTHORNTAIL_STATE_TRIGGER7_SFX_OFFSET 0x528
 
+#define SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(tables) \
+  ((ObjHitReactEntry *)((tables) + SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES_OFFSET))
+#define SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(tables) \
+  ((ObjHitReactEntry *)((tables) + SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES_OFFSET))
 #define SHTHORNTAIL_STATE_MOVE_IDS(tables) ((s16 *)((tables) + SHTHORNTAIL_STATE_MOVE_IDS_OFFSET))
 #define SHTHORNTAIL_STATE_MOVE_STEP_SCALES(tables) \
   ((f32 *)((tables) + SHTHORNTAIL_STATE_MOVE_STEP_SCALES_OFFSET))
@@ -85,6 +91,11 @@ typedef struct SHthorntailDustEffectParams {
   f32 scale;
   Vec position;
 } SHthorntailDustEffectParams;
+
+typedef struct SHthorntailTailSwingEffectScratch {
+  undefined particleParams[12];
+  Vec position;
+} SHthorntailTailSwingEffectScratch;
 
 /*
  * --INFO--
@@ -115,36 +126,25 @@ void SHthorntail_update(SHthorntailObject *obj)
   int iVar9;
   s8 *eventId;
   u8 *stateTables;
-  double extraout_f1;
   double dVar11;
-  double extraout_f1_00;
   double dVar12;
-  double in_f31;
-  double in_ps31_1;
-  undefined auStack_78 [12];
-  float fStack_6c;
-  float fStack_68;
-  float fStack_64;
+  f32 facingAngleRadians;
+  f32 facingCos;
+  f32 facingSin;
   ObjAnimEventList animEvents;
-  undefined4 local_40;
-  uint uStack_3c;
-  undefined4 local_38;
-  uint uStack_34;
-  float local_8;
-  float fStack_4;
+  SHthorntailTailSwingEffectScratch effectScratch;
   
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
   stateTables = gSHthorntailDataTables;
   runtime = obj->runtime;
   config = obj->config;
   iVar9 = (int)config;
-  dVar11 = extraout_f1;
   if (runtime->behaviorState == '\f') {
     if (runtime->effectTimer <= lbl_803E5418) {
       if ((obj->objectFlags & 0x800U) != 0) {
-        ObjPath_GetPointWorldPosition(obj,4,&fStack_6c,&fStack_68,&fStack_64,0);
-        (*(code *)(*gPartfxInterface + 8))(obj,0x7f0,auStack_78,0x200001,0xffffffff,0);
+        ObjPath_GetPointWorldPosition(obj,4,&effectScratch.position.x,&effectScratch.position.y,
+                                      &effectScratch.position.z,0);
+        (*(code *)(*gPartfxInterface + 8))(obj,0x7f0,effectScratch.particleParams,0x200001,
+                                           0xffffffff,0);
       }
       runtime->effectTimer = lbl_803E5450;
     }
@@ -154,10 +154,10 @@ void SHthorntail_update(SHthorntailObject *obj)
   runtime->behaviorFlags = runtime->behaviorFlags & 0xf7;
   if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
        SHTHORNTAIL_STATE_FLAG_HEAVY_HIT_REACT) == 0) {
-    hitReactEntries = &gSHthorntailNormalHitReactEntries;
+    hitReactEntries = SHTHORNTAIL_NORMAL_HIT_REACT_ENTRIES(stateTables);
   }
   else {
-    hitReactEntries = &gSHthorntailHeavyHitReactEntries;
+    hitReactEntries = SHTHORNTAIL_HEAVY_HIT_REACT_ENTRIES(stateTables);
   }
   iVar6 = 0x19;
   uVar7 = (uint)runtime->hitReactState;
@@ -222,13 +222,14 @@ void SHthorntail_update(SHthorntailObject *obj)
       if ((runtime->behaviorFlags & SHTHORNTAIL_FLAG_MOVE_COMPLETE) != 0) {
         runtime->storedFacingAngle = obj->facingAngle;
       }
-      uStack_3c = (int)runtime->storedFacingAngle ^ 0x80000000;
-      local_40 = 0x43300000;
-      dVar11 = (double)FUN_80293f90();
-      dVar11 = -dVar11;
-      uStack_34 = (int)runtime->storedFacingAngle ^ 0x80000000;
-      local_38 = 0x43300000;
-      dVar12 = (double)FUN_80294964();
+      facingAngleRadians =
+          (lbl_803E5454 * (f32)(s32)runtime->storedFacingAngle) / lbl_803E5458;
+      facingCos = -fn_80293E80(facingAngleRadians);
+      facingAngleRadians =
+          (lbl_803E5454 * (f32)(s32)runtime->storedFacingAngle) / lbl_803E5458;
+      facingSin = -sin(facingAngleRadians);
+      dVar11 = (double)facingCos;
+      dVar12 = (double)facingSin;
       obj->modelPos.x =
            (float)(dVar11 * -(double)animEvents.rootDeltaZ + (double)obj->modelPos.x);
       obj->modelPos.z =

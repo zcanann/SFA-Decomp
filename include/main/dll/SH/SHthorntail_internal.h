@@ -92,7 +92,10 @@ typedef struct SHthorntailPathControlInterface {
   void (*initControl)(int control,int mode,int flags,int loopMode);
   u8 pad08[0x0C - 0x08];
   void (*attachPathData)(int control,int channel,u8 *headers,u8 *pathData,undefined4 *events);
-  u8 pad10[0x20 - 0x10];
+  void (*advanceControl)(SHthorntailObject *obj,u8 *control,f32 deltaTime);
+  void (*applyControl)(SHthorntailObject *obj,u8 *control);
+  void (*finishControl)(SHthorntailObject *obj,u8 *control,f32 deltaTime);
+  u8 pad1C[0x20 - 0x1C];
   void (*bindObject)(SHthorntailObject *obj,int control);
 } SHthorntailPathControlInterface;
 
