@@ -504,8 +504,8 @@ void RomCurve_func13(uint curveId,int typeFilter,uint param_3,int *param_4)
   int local_6dc;
   float local_6d8 [4];
   undefined4 local_6c8 [4];
-  float local_6b8 [40];
-  int local_618 [40];
+  float local_6b8 [ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
+  int local_618 [ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
   char local_578 [48];
   undefined local_548 [1344];
 
@@ -613,7 +613,7 @@ void RomCurve_func13(uint curveId,int typeFilter,uint param_3,int *param_4)
                  ) {
                 bVar4 = true;
                 *pfVar23 = local_6b8[iVar12];
-                if (iVar16 < 4) {
+                if (iVar16 < ROMCURVE_LINK_SEARCH_RESULT_COUNT) {
                   *puVar22 = *(undefined4 *)(iVar25 + 0x14);
                   pfVar19 = pfVar19 + 1;
                   puVar18 = puVar18 + 1;
@@ -630,7 +630,8 @@ void RomCurve_func13(uint curveId,int typeFilter,uint param_3,int *param_4)
                 do {
                   if ((((-1 < (int)*(uint *)(iVar21 + 0x1c)) &&
                        (iVar6 = (int)RomCurve_findByIdWithIndex(*(uint *)(iVar21 + 0x1c),&local_6dc), iVar6 != 0)) &&
-                      (local_578[local_6dc] == '\0')) && (iVar12 < 0x28)) {
+                      (local_578[local_6dc] == '\0')) &&
+                     (iVar12 < ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY)) {
                     fVar1 = *(float *)(iVar25 + 0x10) - *(float *)(iVar6 + 0x10);
                     fVar2 = *(float *)(iVar25 + 8) - *(float *)(iVar6 + 8);
                     fVar3 = *(float *)(iVar25 + 0xc) - *(float *)(iVar6 + 0xc);
@@ -696,7 +697,7 @@ LAB_800e2a50:
       }
       iVar20 = iVar20 + 4;
       iVar17 = iVar17 + 1;
-    } while (iVar17 < 4);
+    } while (iVar17 < ROMCURVE_LINK_SEARCH_RESULT_COUNT);
     if (0 < iVar16) {
       iVar5 = 0;
       iVar20 = 0;
@@ -764,8 +765,8 @@ void RomCurve_func11(RomCurveDef *curve,int typeFilter,int actionFilter,int *out
   int local_6d4;
   float local_6d0 [4];
   int local_6c0 [4];
-  float local_6b0 [40];
-  int local_610 [40];
+  float local_6b0 [ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
+  int local_610 [ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY];
   char local_570 [48];
   undefined local_540 [1336];
 
@@ -881,7 +882,8 @@ void RomCurve_func11(RomCurveDef *curve,int typeFilter,int actionFilter,int *out
                 do {
                   if ((((-1 < (int)*(uint *)(iVar22 + 0x1c)) &&
                        (iVar6 = (int)RomCurve_findByIdWithIndex(*(uint *)(iVar22 + 0x1c),&local_6d4), iVar6 != 0)) &&
-                      (local_570[local_6d4] == '\0')) && (iVar13 < 0x28)) {
+                      (local_570[local_6d4] == '\0')) &&
+                     (iVar13 < ROMCURVE_LINK_SEARCH_QUEUE_CAPACITY)) {
                     fVar1 = *(float *)(iVar25 + 0x10) - *(float *)(iVar6 + 0x10);
                     fVar2 = *(float *)(iVar25 + 8) - *(float *)(iVar6 + 8);
                     fVar3 = *(float *)(iVar25 + 0xc) - *(float *)(iVar6 + 0xc);
@@ -939,7 +941,7 @@ LAB_800e2fbc:
                   }
                   iVar22 = iVar22 + 4;
                   iVar17 = iVar17 + 1;
-                } while (iVar17 < 4);
+                } while (iVar17 < ROMCURVE_LINK_SEARCH_RESULT_COUNT);
               }
             }
           } while (!bVar4);
@@ -947,7 +949,7 @@ LAB_800e2fbc:
       }
       iVar21 = iVar21 + 4;
       iVar18 = iVar18 + 1;
-    } while (iVar18 < 4);
+    } while (iVar18 < ROMCURVE_LINK_SEARCH_RESULT_COUNT);
     if (iVar5 != 0) {
       if (iVar5 == 1) {
         *outCurveId = *(int *)(iVar15 + 0x14);
