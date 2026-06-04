@@ -5474,6 +5474,8 @@ int RomCurve_getControlPointId_2A(int curve, int exclude, int pickIdx);
 int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx);
 
 
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_func29(float *state, int pickIdx)
 {
     char *stateBytes;
@@ -5503,14 +5505,13 @@ int RomCurve_func29(float *state, int pickIdx)
     }
 
     if (nextId == -1) {
-        *(void **)(stateBytes + 0xa4) = NULL;
-        return 1;
+        goto failClear;
     }
 
     nextCurve = Objfsa_FindRomCurveById(nextId);
     *(s32 *)(stateBytes + 0xa4) = nextCurve;
     if (*(void **)(stateBytes + 0xa4) == NULL) {
-        return 1;
+        goto fail;
     }
 
     if (*(s32 *)(stateBytes + 0x80) != 0) {
@@ -5530,7 +5531,14 @@ int RomCurve_func29(float *state, int pickIdx)
     }
 
     return 0;
+
+failClear:
+    *(void **)(stateBytes + 0xa4) = NULL;
+fail:
+    return 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
@@ -5584,6 +5592,8 @@ int RomCurve_getControlPointId_2B(int curve, int exclude, int pickIdx) {
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_func2C(float *state, int unused, int startCurveId)
 {
     char *stateBytes;
@@ -5647,7 +5657,11 @@ int RomCurve_func2C(float *state, int unused, int startCurveId)
     curvesMove(state);
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxDistance)
 {
     char *stateBytes;
@@ -5734,6 +5748,8 @@ int RomCurve_get(float *state, int obj, int *curveTypes, int curveType, f32 maxD
     curvesMove(state);
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 int RomCurve_func1C(int startCurve, int unused1, int unused2, int unused3, int unused4, int *previousCurveId)
 {
