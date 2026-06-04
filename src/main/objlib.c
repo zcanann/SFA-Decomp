@@ -389,16 +389,18 @@ uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitSt
 #pragma peephole off
 void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
 {
-  int iVar1;
+  ObjAnimComponent *obj;
   ObjHitsPriorityState *hitState;
   ObjHitsPriorityWorkSlot *workSlot;
+  int modelCount;
   int slotIndex;
   int slotOffset;
   int clearedState;
 
-  iVar1 = (int)*(char *)(*(int *)(param_1 + 0x50) + 0x55);
-  if (param_3 >= iVar1) {
-    param_3 = iVar1 + -1;
+  obj = (ObjAnimComponent *)param_1;
+  modelCount = obj->modelInstance->modelCount;
+  if (param_3 >= modelCount) {
+    param_3 = modelCount + -1;
   }
   else if (param_3 < 0) {
     param_3 = 0;
@@ -412,7 +414,7 @@ void ObjHitbox_SetStateIndex(int param_1,int param_2,int param_3)
   clearedState = slotOffset;
   for (; (s16)slotIndex < OBJHITS_PRIORITY_WORK_SLOT_COUNT; slotIndex = slotIndex + 1) {
     workSlot = (ObjHitsPriorityWorkSlot *)(gObjHitsPriorityHitStates + slotOffset);
-    if ((workSlot->active != 0) && ((u32)workSlot->obj == (u32)param_1)) {
+    if ((workSlot->active != 0) && ((u32)workSlot->obj == (u32)obj)) {
       workSlot->active = clearedState;
     }
     slotOffset = slotOffset + OBJHITS_PRIORITY_WORK_SLOT_SIZE;
