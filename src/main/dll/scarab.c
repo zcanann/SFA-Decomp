@@ -1746,6 +1746,96 @@ void dll_CE_init(int obj, u8 *p, int flags)
   *(s8 *)(sub + 0x25f) = 0;
   ObjHits_DisableObject(obj);
 }
+
+void dll_CE_update(int obj, int p2, int p3)
+{
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern void Sfx_PlayFromObject(int obj, int sfx);
+  extern void fn_8015ED1C(int p1, int p2, int p3);
+  extern void fn_8015EB6C(int obj, int p2, int p3);
+  extern void fn_8015EA48(int obj, u8 *p);
+  extern int *gBaddieControlInterface;
+  extern int *gMapEventInterface;
+  extern int *gObjectTriggerInterface;
+  extern int *gSHthorntailAnimationInterface;
+  extern int *gPartfxInterface;
+  extern int *gPlayerInterface;
+  extern void *lbl_803AC5B0[];
+  extern void *lbl_803AC598[];
+  extern f32 timeDelta;
+  extern f32 lbl_803E2DC8;
+  extern f32 lbl_803E2E14;
+  extern f32 lbl_803E2E18;
+  int sub;
+  int setup;
+  u8 *hit;
+  int n;
+  int buf[5];
+
+  sub = *(int *)(obj + 0xb8);
+  setup = *(int *)(obj + 0x4c);
+  if (*(int *)(obj + 0xf4) != 0) {
+    if ((*(s16 *)(sub + 0x270) != 3 || (*(u8 *)(sub + 0x404) & 1) != 0) &&
+        (*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(*(int *)(setup + 0x14)) != 0) {
+      (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
+                                                            0x58))(
+          obj, setup, sub, 7, 6, 0x102, 0x26, lbl_803E2E14);
+      *(s16 *)(sub + 0x402) = 0;
+      Sfx_PlayFromObject(obj, SFXfoxcom_find);
+      ObjAnim_SetCurrentMove(obj, 8, lbl_803E2DC8, 0x10);
+      *(s8 *)(sub + 0x346) = 0;
+      *(u8 *)(obj + 0x36) = 0xff;
+      *(u8 *)(obj + 0xaf) |= 8;
+    }
+  } else if (*(int *)(obj + 0xf8) == 0) {
+    *(f32 *)(obj + 0xc) = *(f32 *)(setup + 8);
+    *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc);
+    *(f32 *)(obj + 0x14) = *(f32 *)(setup + 0x10);
+    (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(
+        *(s8 *)(setup + 0x2e), obj, -1);
+    *(int *)(obj + 0xf8) = 1;
+  } else {
+    if ((*(int (**)(int, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, sub, 0) == 0) {
+      *(s16 *)(sub + 0x402) = 0;
+    } else if ((*(u8 *)(sub + 0x404) & 0x10) != 0 &&
+               (*(int (**)(int *))(*(int *)gSHthorntailAnimationInterface + 0x24))(buf) == 0) {
+      *(s16 *)(sub + 0x402) = 0;
+    } else {
+      fn_8015ED1C(obj, sub, sub);
+      if (*(s16 *)(sub + 0x402) == 0) {
+        fn_8015EB6C(obj, sub, sub);
+      } else {
+        hit = *(u8 **)(sub + 0x40c);
+        if ((hit[8] & 1) != 0) {
+          fn_8015EA48(obj, (u8 *)sub);
+        }
+        if ((hit[8] & 2) != 0) {
+          (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
+              obj, 0x345, 0, 1, -1, 0);
+        }
+        if ((hit[8] & 4) != 0) {
+          n = 0;
+          do {
+            (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
+                obj, 0x343, 0, 1, -1, 0);
+            n++;
+          } while (n < 10);
+        }
+        hit[8] = 0;
+        (*(void (**)(int, int, f32, int))(*(int *)gBaddieControlInterface + 0x2c))(
+            obj, sub, lbl_803E2DC8, -1);
+        (*(void (**)(int, int, f32, int))(*(int *)gPlayerInterface + 0x30))(obj, sub, timeDelta,
+                                                                            4);
+        *(int *)(sub + 0x3e0) = *(int *)(obj + 0xc0);
+        *(int *)(obj + 0xc0) = 0;
+        (*(void (**)(int, int, f32, f32, void *, void *))(*(int *)gPlayerInterface + 8))(
+            obj, sub, timeDelta, timeDelta, lbl_803AC5B0, lbl_803AC598);
+        *(int *)(obj + 0xc0) = *(int *)(sub + 0x3e0);
+      }
+      *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) - lbl_803E2E18;
+    }
+  }
+}
 #pragma peephole reset
 #pragma scheduling reset
 
