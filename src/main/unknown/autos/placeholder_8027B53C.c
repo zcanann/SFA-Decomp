@@ -1,167 +1,315 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027B53C.h"
 
-typedef struct SynthLoadedGroupEntry {
-    u8 *header;
-    u32 sdi;
-    u8 *base;
-} SynthLoadedGroupEntry;
+typedef struct GROUP_DATA {
+    u32 nextOff;
+    u16 id;
+    u16 type;
+    u32 macroOff;
+    u32 sampleOff;
+    u32 curveOff;
+    u32 keymapOff;
+    u32 layerOff;
+    union {
+        struct {
+            u32 tableOff;
+        } fx;
+        struct {
+            u32 normpageOff;
+            u32 drumpageOff;
+            u32 midiSetupOff;
+        } song;
+    } data;
+} GROUP_DATA;
 
-extern int fn_8026C488(u8 *a, u8 *b, u8 *c, u32 d, u32 e, u32 f, u32 groupId);
+typedef struct GSTACK {
+    GROUP_DATA *gAddr;
+    void *sdirAddr;
+    void *prjAddr;
+} GSTACK;
+
+typedef struct MEM_DATA {
+    u32 nextOff;
+    u16 id;
+    u16 reserved;
+    union {
+        struct {
+            u32 num;
+            u8 entry[1];
+        } layer;
+        u8 map[1];
+        u8 tab[1];
+        u8 cmd[1];
+    } data;
+} MEM_DATA;
+
+typedef struct POOL_DATA {
+    u32 macroOff;
+    u32 curveOff;
+    u32 keymapOff;
+    u32 layerOff;
+} POOL_DATA;
+
+typedef struct FX_DATA {
+    u16 num;
+    u16 reserved;
+    u8 fx[1];
+} FX_DATA;
+
+typedef struct MIDISETUP {
+    u16 songId;
+    u8 reserved[0x52];
+} MIDISETUP;
+
+extern void dataInsertMacro(u16 id, void *data);
+extern void dataRemoveMacro(u16 id);
+extern void dataInsertKeymap(u16 id, void *data);
+extern void dataRemoveKeymap(u16 id);
+extern void dataInsertLayer(u16 id, void *data, u16 num);
+extern void dataRemoveLayer(u16 id);
+extern void dataInsertCurve(u16 id, void *data);
+extern void dataRemoveCurve(u16 id);
+extern void dataAddSampleReference(u16 id);
+extern void dataRemoveSampleReference(u16 id);
+extern u32 hwInitStream(void *samples);
+extern u32 dataInsertSDir(void *sdir, u32 addr);
+extern void hwSyncSampleMem(void);
+extern void dataInsertFX(u16 gid, void *fx, u16 num);
+extern u32 fn_8026C488(void *norm, void *drum, void *midiSetup, void *arrfile, void *para, u8 studio, u16 sgid);
 extern void sndBegin(void);
 extern void sndEnd(void);
-extern u32 hwInitStream(u32 stream);
-extern int dataInsertSDir(u32 sdi, u32 streamHandle);
-extern void hwSyncSampleMem(void);
-extern int dataInsertFX(u16 groupId, u16 *fxData, u16 count);
 
 extern u8 gSynthInitialized;
 extern s16 synthLoadedGroupCount;
-extern SynthLoadedGroupEntry synthLoadedGroupTable[];
+extern GSTACK synthLoadedGroupTable[];
 
-/*
- * audioFn_8027b42c - large voice-update inner helper (~152 instructions).
- * Stubbed pending full decode.
- */
 #pragma dont_inline on
-void audioFn_8027b42c(u16 voiceId, u16 a, u16 b, u16 c)
+void audioFn_8027b42c(u16 id, void *data, u8 dataType, u32 remove)
 {
-    (void)voiceId;
-    (void)a;
-    (void)b;
-    (void)c;
+    MEM_DATA *m;
+
+    switch (dataType) {
+    case 0:
+        if (!remove) {
+            if (data == NULL) {
+                m = NULL;
+            } else {
+                m = (MEM_DATA *)((u8 *)data + ((POOL_DATA *)data)->macroOff);
+                while (m->nextOff != 0xFFFFFFFF) {
+                    if (m->id == id) {
+                        goto macro_check;
+                    }
+                    m = (MEM_DATA *)((u8 *)m + m->nextOff);
+                }
+                m = NULL;
+            }
+        macro_check:
+            if (m != NULL) {
+                dataInsertMacro(id, &m->data.cmd);
+            } else {
+                dataInsertMacro(id, NULL);
+            }
+        } else {
+            dataRemoveMacro(id);
+        }
+        break;
+    case 2: {
+        id |= 0x4000;
+        if (!remove) {
+            if (data == NULL) {
+                m = NULL;
+            } else {
+                m = (MEM_DATA *)((u8 *)data + ((POOL_DATA *)data)->keymapOff);
+                while (m->nextOff != 0xFFFFFFFF) {
+                    if (m->id == id) {
+                        goto keymap_check;
+                    }
+                    m = (MEM_DATA *)((u8 *)m + m->nextOff);
+                }
+                m = NULL;
+            }
+        keymap_check:
+            if (m != NULL) {
+                dataInsertKeymap(id, &m->data.map);
+            } else {
+                dataInsertKeymap(id, NULL);
+            }
+        } else {
+            dataRemoveKeymap(id);
+        }
+    } break;
+    case 3: {
+        id |= 0x8000;
+        if (!remove) {
+            if (data == NULL) {
+                m = NULL;
+            } else {
+                m = (MEM_DATA *)((u8 *)data + ((POOL_DATA *)data)->layerOff);
+                while (m->nextOff != 0xFFFFFFFF) {
+                    if (m->id == id) {
+                        goto layer_check;
+                    }
+                    m = (MEM_DATA *)((u8 *)m + m->nextOff);
+                }
+                m = NULL;
+            }
+        layer_check:
+            if (m != NULL) {
+                dataInsertLayer(id, &m->data.layer.entry, m->data.layer.num);
+            } else {
+                dataInsertLayer(id, NULL, 0);
+            }
+        } else {
+            dataRemoveLayer(id);
+        }
+    } break;
+    case 4:
+        if (!remove) {
+            if (data == NULL) {
+                m = NULL;
+            } else {
+                m = (MEM_DATA *)((u8 *)data + ((POOL_DATA *)data)->curveOff);
+                while (m->nextOff != 0xFFFFFFFF) {
+                    if (m->id == id) {
+                        goto curve_check;
+                    }
+                    m = (MEM_DATA *)((u8 *)m + m->nextOff);
+                }
+                m = NULL;
+            }
+        curve_check:
+            if (m != NULL) {
+                dataInsertCurve(id, &m->data.tab);
+            } else {
+                dataInsertCurve(id, NULL);
+            }
+        } else {
+            dataRemoveCurve(id);
+        }
+        break;
+    case 1:
+        if (!remove) {
+            dataAddSampleReference(id);
+        } else {
+            dataRemoveSampleReference(id);
+        }
+        break;
+    }
 }
 #pragma dont_inline reset
 
 /*
- * Iterate a u16 list terminated by 0xFFFF, dispatching each entry to
- * audioFn_8027b42c. Entries with bit 0x8000 set are ranges: low 14 bits
- * are the start, the following u16 is the inclusive end.
- *
  * EN v1.0 Address: 0x8027B260
  * EN v1.0 Size: 4b (stub)
  * EN v1.1 Address: 0x8027B690
  * EN v1.1 Size: 156b
  */
 #pragma dont_inline on
-void audioFn_8027b690(u16 *list, u16 a, u16 b, u16 c)
+void audioFn_8027b690(u16 *ref, void *data, u8 dataType, u32 remove)
 {
-    while (*list != 0xffff) {
-        u16 v = *list;
-        if ((v & 0x8000) != 0) {
-            u16 i = v & 0x3fff;
-            for (; (u32)i <= (u32)list[1]; i++) {
-                audioFn_8027b42c(i, a, b, c);
+    u16 id;
+
+    while (*ref != 0xFFFF) {
+        if ((*ref & 0x8000)) {
+            id = *ref & 0x3fff;
+            while (id <= ref[1]) {
+                audioFn_8027b42c(id, data, dataType, remove);
+                ++id;
             }
-            list += 2;
+            ref += 2;
         } else {
-            u16 single = *list++;
-            audioFn_8027b42c(single, a, b, c);
+            audioFn_8027b42c(*ref++, data, dataType, remove);
         }
     }
 }
 #pragma dont_inline reset
 
-/*
- * Register a sound group, load its stream directory, and fan out its
- * voice/event lists into the synth data tables.
- */
-int sndPushGroup(u8 *groupBase, u32 groupId, u32 stream, u32 sdi, u32 tableSet)
+s32 sndPushGroup(void *prj_data, u16 gid, void *samples, void *sdir, void *pool)
 {
-    s16 slot;
-    u8 *group;
-    SynthLoadedGroupEntry *entry;
-    u8 *preloadList;
+    GROUP_DATA *g;
+    u16 *sampleRef;
+    GSTACK *gs = synthLoadedGroupTable;
+    s16 sp;
 
-    if (gSynthInitialized == 0) {
-        return 0;
-    }
+    if (gSynthInitialized && (sp = synthLoadedGroupCount) < 128) {
+        g = prj_data;
 
-    slot = synthLoadedGroupCount;
-    if (slot >= 0x80) {
-        return 0;
-    }
-
-    group = groupBase;
-    while (*(s32 *)group != -1) {
-        if (*(u16 *)(group + 4) == (u16)groupId) {
-            entry = &synthLoadedGroupTable[slot];
-            entry->header = group;
-            entry->base = groupBase;
-            entry->sdi = sdi;
-
-            preloadList = groupBase + *(u32 *)(group + 0xc);
-            if (dataInsertSDir(sdi, hwInitStream(stream)) != 0) {
-                audioFn_8027b690((u16 *)preloadList, sdi, 1, 0);
+        while (g->nextOff != 0xFFFFFFFF) {
+            if (g->id == gid) {
+                gs[sp].gAddr = g;
+                gs[sp].prjAddr = prj_data;
+                gs[sp].sdirAddr = sdir;
+                sampleRef = (u16 *)((u8 *)prj_data + g->sampleOff);
+                if (dataInsertSDir(sdir, hwInitStream(samples))) {
+                    audioFn_8027b690(sampleRef, sdir, 1, 0);
+                }
+                audioFn_8027b690((u16 *)((u8 *)prj_data + g->macroOff), pool, 0, 0);
+                audioFn_8027b690((u16 *)((u8 *)prj_data + g->curveOff), pool, 4, 0);
+                audioFn_8027b690((u16 *)((u8 *)prj_data + g->keymapOff), pool, 2, 0);
+                audioFn_8027b690((u16 *)((u8 *)prj_data + g->layerOff), pool, 3, 0);
+                if (g->type == 1) {
+                    FX_DATA *fd = (FX_DATA *)((u8 *)prj_data + g->data.song.normpageOff);
+                    dataInsertFX(gid, fd->fx, fd->num);
+                }
+                hwSyncSampleMem();
+                ++synthLoadedGroupCount;
+                return 1;
             }
-            audioFn_8027b690((u16 *)(groupBase + *(u32 *)(group + 8)), tableSet, 0, 0);
-            audioFn_8027b690((u16 *)(groupBase + *(u32 *)(group + 0x10)), tableSet, 4, 0);
-            audioFn_8027b690((u16 *)(groupBase + *(u32 *)(group + 0x14)), tableSet, 2, 0);
-            audioFn_8027b690((u16 *)(groupBase + *(u32 *)(group + 0x18)), tableSet, 3, 0);
-            if (*(u16 *)(group + 6) == 1) {
-                u16 *fxData = (u16 *)(groupBase + *(u32 *)(group + 0x1c));
-                dataInsertFX(groupId, fxData + 2, fxData[0]);
-            }
-            hwSyncSampleMem();
-            synthLoadedGroupCount++;
-            return 1;
+
+            g = (GROUP_DATA *)((u8 *)prj_data + g->nextOff);
         }
-        group = groupBase + *(s32 *)group;
     }
+
     return 0;
 }
 
-/*
- * Find a loaded group/sample entry and start it through the synth scheduler.
- */
-int fn_8027B89C(u32 groupId, u16 sampleId, u32 a, u32 b, u8 noLock, u32 c)
+u32 fn_8027B89C(u16 sgid, u16 sid, void *arrfile, void *para, u8 irq_call, u8 studio)
 {
-    s16 i;
-    u8 *group;
-    u8 *base;
-    u8 *tableA;
-    u8 *tableB;
-    u8 *sample;
-    int result;
+    int i;
+    GROUP_DATA *g;
+    void *norm;
+    void *drum;
+    MIDISETUP *midiSetup;
+    u32 seqId;
+    void *prj;
+    GSTACK *gs = synthLoadedGroupTable;
 
-    for (i = 0; i < synthLoadedGroupCount; i++) {
-        group = synthLoadedGroupTable[i].header;
-        if ((u16)groupId == *(u16 *)(group + 4)) {
-            if (*(u16 *)(group + 6) != 0) {
-                return -1;
-            }
-            base = synthLoadedGroupTable[i].base;
-            tableA = base + *(u32 *)(group + 0x1c);
-            tableB = base + *(u32 *)(group + 0x20);
-            sample = base + *(u32 *)(group + 0x24);
-            while (*(u16 *)sample != 0xffff) {
-                if (*(u16 *)sample == sampleId) {
-                    if (noLock != 0) {
-                        return fn_8026C488(tableA, tableB, sample, a, b, c, groupId);
+    for (i = 0; i < synthLoadedGroupCount; ++i) {
+        if (gs[i].gAddr->id != sgid) {
+            continue;
+        }
+
+        g = gs[i].gAddr;
+        if (g->type == 0) {
+            prj = gs[i].prjAddr;
+            norm = (u8 *)prj + g->data.song.normpageOff;
+            drum = (u8 *)prj + g->data.song.drumpageOff;
+            midiSetup = (MIDISETUP *)((u8 *)prj + g->data.song.midiSetupOff);
+            while (midiSetup->songId != 0xFFFF) {
+                if (midiSetup->songId == sid) {
+                    if (irq_call != 0) {
+                        seqId = fn_8026C488(norm, drum, midiSetup, arrfile, para, studio, sgid);
+                    } else {
+                        sndBegin();
+                        seqId = fn_8026C488(norm, drum, midiSetup, arrfile, para, studio, sgid);
+                        sndEnd();
                     }
-                    sndBegin();
-                    result = fn_8026C488(tableA, tableB, sample, a, b, c, groupId);
-                    sndEnd();
-                    return result;
+                    return seqId;
                 }
-                sample += 0x54;
+
+                ++midiSetup;
             }
-            return -1;
+
+            return 0xffffffff;
+        } else {
+            return 0xffffffff;
         }
     }
-    return -1;
+
+    return 0xffffffff;
 }
 
-/*
- * Thin wrapper inserting 0 as the no-lock flag into fn_8027B89C and
- * shifting the caller's last arg into position.
- *
- * EN v1.0 Address: 0x8027B26C
- * EN v1.0 Size: 4b (stub)
- * EN v1.1 Address: 0x8027B9DC
- * EN v1.1 Size: 36b
- */
-int fn_8027B9DC(u32 groupId, u16 sampleId, u32 a, u32 b, u32 c)
+u32 fn_8027B9DC(u16 sgid, u16 sid, void *arrfile, void *para, u8 studio)
 {
-    return fn_8027B89C(groupId, sampleId, a, b, 0, c);
+    return fn_8027B89C(sgid, sid, arrfile, para, 0, studio);
 }
