@@ -177,6 +177,8 @@ typedef struct {
         } \
     }
 
+#pragma opt_loop_invariants off
+#pragma opt_common_subs off
 void fn_8013E0D0(int *obj, u8 *st) {
     char *str = lbl_8031D2E8;
     int *best = NULL;
@@ -196,13 +198,13 @@ void fn_8013E0D0(int *obj, u8 *st) {
         } else {
             *(u8 *)(st + 8) = 1;
             go = 0;
-            st[0xa] = 0;
+            st[0xa] = go;
             TRICKY_RESET_TAIL(st)
         }
         if (go != 0) {
             if (*(int *)(st + 0x728) == 0) {
-                *(int *)(st + 0x720) = (int)trickyFindCirclingTarget(obj, st);
-                if (*(int *)(st + 0x720) != 0) {
+                *(void **)(st + 0x720) = trickyFindCirclingTarget(obj, st);
+                if (*(void **)(st + 0x720) != NULL) {
                     *(int *)(st + 0x24) = *(int *)(st + 0x720);
                     *(int *)(st + 0x724) = 0;
                     st[0xa] = 5;
@@ -246,13 +248,13 @@ void fn_8013E0D0(int *obj, u8 *st) {
         } else {
             *(u8 *)(st + 8) = 1;
             go = 0;
-            st[0xa] = 0;
+            st[0xa] = go;
             TRICKY_RESET_TAIL(st)
         }
         if (go != 0) {
             if (*(int *)(st + 0x728) == 0) {
-                *(int *)(st + 0x720) = (int)trickyFindCirclingTarget(obj, st);
-                if (*(int *)(st + 0x720) != 0) {
+                *(void **)(st + 0x720) = trickyFindCirclingTarget(obj, st);
+                if (*(void **)(st + 0x720) != NULL) {
                     *(int *)(st + 0x24) = *(int *)(st + 0x720);
                     *(int *)(st + 0x724) = 0;
                     st[0xa] = 5;
@@ -337,7 +339,7 @@ void fn_8013E0D0(int *obj, u8 *st) {
         } else {
             *(u8 *)(st + 8) = 1;
             go = 0;
-            st[0xa] = 0;
+            st[0xa] = go;
             TRICKY_RESET_TAIL(st)
         }
         if (go != 0 && ok != 1) {
