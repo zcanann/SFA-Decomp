@@ -18118,3 +18118,29 @@ void cutsceneEnterExit(int entering, int affectSounds) {
     }
 }
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+int fn_8001860C(u8 *str) {
+    int count;
+    int off;
+    int len;
+    u32 ch;
+
+    count = 0;
+    off = 0;
+    if (str == NULL) {
+        return 0;
+    }
+    while ((ch = utf8GetNextChar(str + off, &len)) != 0) {
+        off += len;
+        if (ch >= 0xE000 && ch <= 0xF8FF) {
+            off += getControlCharLen(ch) * 2;
+        } else {
+            count++;
+        }
+    }
+    return count;
+}
+#pragma pop
