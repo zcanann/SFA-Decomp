@@ -9287,6 +9287,18 @@ int cos16(u16 angle) {
     return (int)(lbl_803DE7D0 * fcos16(angle));
 }
 
+asm void setGQR6(register u32 v) {
+    nofralloc
+    mtspr GQR6, v
+    blr
+}
+
+asm void setGQR7(register u32 v) {
+    nofralloc
+    mtspr GQR7, v
+    blr
+}
+
 void fn_8002A3D4(int a, int b, int c, int d) {
     setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
 }
@@ -9337,6 +9349,7 @@ void Vec3_ReflectAgainstNormal(f32 *a, f32 *n, f32 *out) {
     }
 }
 
+#pragma dont_inline on
 void *loadAssetFileById(int id, int arg) {
     lbl_8033BF88.f0 = 1;
     lbl_8033BF88.f1 = 0;
@@ -9352,6 +9365,7 @@ void *loadTextureFile(int id, int arg) {
     lbl_8033BF88.f8 = id;
     return loadAsset(&lbl_8033BF88);
 }
+#pragma dont_inline reset
 
 void Obj_SetActiveModelIndex(u8 *obj, int idx) {
     if (idx == (s8)obj[0xad]) {
@@ -18076,5 +18090,31 @@ void mathFn_80021ac8(u8 *p, f32 *v) {
     t2 = v[2] * c1 + t3 * s1;
     v[0] = t5 * c0 + t2 * s0;
     v[2] = t2 * c0 - t5 * s0;
+}
+#pragma pop
+
+extern void stopRumble2(void);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void cutsceneEnterExit(int entering, int affectSounds) {
+    if (entering != 0) {
+        stopRumble2();
+        if (lbl_803DCA3A == 0 && affectSounds != 0) {
+            Sfx_SetObjectSoundsPaused(1);
+        }
+        if ((s8)(u8)++lbl_803DCA3A > 2) {
+            lbl_803DCA3A = 2;
+        }
+    } else {
+        if ((s8)(u8)--lbl_803DCA3A <= 0) {
+            lbl_803DCA3C = 0;
+            lbl_803DCA3A = 0;
+            if (affectSounds != 0) {
+                Sfx_SetObjectSoundsPaused(0);
+            }
+        }
+    }
 }
 #pragma pop
