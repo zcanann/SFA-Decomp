@@ -7628,3 +7628,150 @@ void titleScreenDrawFn_80093db4(void) {
     GXSetMisc(1, 8);
 }
 #pragma pop
+
+extern void Sfx_PlayAtPositionFromObject(int obj, int sfx, f32 x, f32 y, f32 z);
+extern u8 framesThisStep;
+extern char lbl_8030F670[];
+extern f32 lbl_803DF228;
+extern f32 lbl_803DF22C;
+extern f32 lbl_803DF230;
+
+/*
+ * --INFO--
+ *
+ * Function: snowReposSnowCloud
+ * EN v1.0 Address: 0x80090F58
+ * EN v1.0 Size: 1848b
+ */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void snowReposSnowCloud(int cloudId) {
+    u8 *p;
+    u8 *part;
+    f32 *cam;
+    f32 *m;
+    u8 *q;
+    int i;
+    int j;
+    int dx;
+    int dy;
+    int dz;
+    int distSq;
+    u8 fl;
+    f32 dist;
+    struct {
+        s16 f8;
+        s16 fa;
+        s16 fc;
+        s16 pad_e;
+        f32 f10;
+        f32 f14;
+        f32 f18;
+        f32 f1c;
+    } args;
+    f32 dir[3] = {0.0f, 0.0f, 0.0f};
+    f32 fwd[3];
+    f32 from[3];
+    f32 to[3];
+
+    if (renderModeSetOrGet(-1) == 1) {
+        return;
+    }
+    srand(randomGetRange(1, 0xffff));
+    for (i = 0; i < 8; i++) {
+        p = lbl_8039A828[i];
+        if (p != NULL && cloudId == *(int *)(p + 0x13f0)) {
+            break;
+        }
+    }
+    p = lbl_8039A828[i];
+    if (p == NULL) {
+        return;
+    }
+    if (i == 8) {
+        return;
+    }
+    if (cloudId != *(int *)(p + 0x13f0)) {
+        debugPrintf(lbl_8030F670, cloudId);
+        return;
+    }
+    part = *(u8 **)(p + 4);
+    cam = (f32 *)Camera_GetCurrentViewSlot();
+    dx = cam[0x44 / 4] - *(f32 *)((u8 *)lbl_8039A828[i] + 0x140c);
+    dy = cam[0x48 / 4] - *(f32 *)((u8 *)lbl_8039A828[i] + 0x1410);
+    dz = cam[0x4c / 4] - *(f32 *)((u8 *)lbl_8039A828[i] + 0x1414);
+    distSq = dx * dx + (dy * dy + dz * dz);
+    dist = sqrtf__inline((f32)distSq);
+    *(s16 *)((u8 *)lbl_8039A828[i] + 0x1448) =
+        (f32)*(s16 *)((u8 *)lbl_8039A828[i] + 0x1448) - timeDelta;
+    q = lbl_8039A828[cloudId];
+    if (*(int *)(q + 0x13f4) == 4 && (q[0x144b] & 0x38) != 0 &&
+        *(s16 *)(q + 0x1448) <= 0 && q[0x144d] == 0 && lbl_803DD19C == 0) {
+        if (q[0x1452] != 0 && cam != NULL) {
+            dir[0] = lbl_803DF1A0;
+            dir[1] = lbl_803DF1A0;
+            dir[2] = lbl_803DF228;
+            args.f14 = lbl_803DF1A0;
+            args.f18 = lbl_803DF1A0;
+            args.f1c = lbl_803DF1A0;
+            args.f10 = lbl_803DF1A4;
+            args.fc = 0;
+            args.fa = 0;
+            args.f8 = 0xffff - (*(s16 *)cam + randomGetRange(-5000, 5000));
+            mathFn_80021ac8(&args.f8, dir);
+        }
+        args.f14 = dir[0];
+        args.f18 = dir[1];
+        args.f1c = dir[2];
+        args.f10 = lbl_803DF1A4;
+        args.f8 = 0;
+        args.fc = 0;
+        args.fa = 0;
+        m = Camera_GetViewMatrix();
+        fwd[0] = m[8];
+        fwd[1] = m[9];
+        fwd[2] = m[10];
+        PSVECNormalize(fwd, fwd);
+        from[0] = (cam[0x44 / 4] + (f32)(int)randomGetRange(-3000, 3000)) -
+                  lbl_803DF22C * fwd[0];
+        from[1] = (cam[0x48 / 4] + (f32)(int)randomGetRange(2000, 4000)) -
+                  lbl_803DF22C * fwd[1];
+        from[2] = (cam[0x4c / 4] + (f32)(int)randomGetRange(-3000, 3000)) -
+                  lbl_803DF22C * fwd[2];
+        to[0] = (cam[0x44 / 4] + (f32)(int)randomGetRange(-3000, 3000)) -
+                lbl_803DF22C * fwd[0];
+        to[1] = (cam[0x48 / 4] - (f32)(int)randomGetRange(2000, 4000)) -
+                lbl_803DF22C * fwd[1];
+        to[2] = (cam[0x4c / 4] + (f32)(int)randomGetRange(-3000, 3000)) -
+                lbl_803DF22C * fwd[2];
+        lbl_803DD19C = (u8 *)fn_8008FB20(from, to, lbl_803DF230, lbl_803DF1BC, 0xf, 0xc0, 0);
+        Sfx_PlayAtPositionFromObject(0, 0x2c9, from[0], from[1], from[2]);
+        fl = ((u8 *)lbl_8039A828[cloudId])[0x144b];
+        if (fl & 8) {
+            *(s16 *)((u8 *)lbl_8039A828[cloudId] + 0x1448) = (s16)randomGetRange(0x78, 0xf0);
+        } else if (fl & 0x10) {
+            *(s16 *)((u8 *)lbl_8039A828[cloudId] + 0x1448) = (s16)randomGetRange(0x78, 0xf0);
+        } else if (fl & 0x20) {
+            *(s16 *)((u8 *)lbl_8039A828[cloudId] + 0x1448) = (s16)randomGetRange(0x5a, 0xb4);
+        }
+    }
+    fn_80090C0C(lbl_8039A828[i]);
+    for (j = 0; j < *(int *)((u8 *)lbl_8039A828[i] + 0x13fc); j++) {
+        if (*(int *)((u8 *)lbl_8039A828[i] + 0x13f4) == 0) {
+            *(u16 *)(part + 0x10) =
+                *(u16 *)(part + 0x10) + (s8)part[0x14] * framesThisStep;
+            if (*(u16 *)(part + 0x10) > 0x3ff) {
+                *(u16 *)(part + 0x10) = *(u16 *)(part + 0x10) - 0x3ff;
+            }
+        } else if (*(int *)((u8 *)lbl_8039A828[i] + 0x13f4) == 4) {
+            *(u16 *)(part + 0x10) = *(u16 *)(part + 0x10) +
+                                    framesThisStep * ((s8)part[0x14] + (s8)part[0x14]);
+            if (*(u16 *)(part + 0x10) > 0x3ff) {
+                *(u16 *)(part + 0x10) = *(u16 *)(part + 0x10) - 0x3ff;
+            }
+        }
+        part += 0x18;
+    }
+}
+#pragma pop
