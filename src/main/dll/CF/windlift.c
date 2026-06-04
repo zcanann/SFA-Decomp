@@ -1582,71 +1582,84 @@ typedef struct LanternFireFlyVectorParams {
 #pragma peephole off
 void LanternFireFly_func0B(int obj)
 {
-    u8 *state;
-    u8 *setup;
-    int player;
+    typedef struct { u8 mode : 2; } LFFlags;
+    int state;
+    int setup;
+    int p;
     f32 vec[3];
-    f32 playerY;
-    int i;
+    f32 *vp = vec;
+    f32 py;
+    f32 y2;
 
-    state = *(u8 **)(obj + 0xb8);
-    setup = *(u8 **)(obj + 0x4c);
-    *(s16 *)(state + 0x68) = (s16)(s8)setup[0x18];
-    state[0x6a] = setup[0x19];
+    state = *(int *)(obj + 0xb8);
+    setup = *(int *)(obj + 0x4c);
+    *(s16 *)(state + 0x68) = *(s8 *)(setup + 0x18);
+    *(u8 *)(state + 0x6a) = *(u8 *)(setup + 0x19);
     *(f32 *)(state + 0x4c) = lbl_803E3AA0;
-    *(f32 *)(state + 0x50) = (f32)(s32)*(s16 *)(setup + 0x1c);
-    state[0x6f] = 0;
+    *(f32 *)(state + 0x50) = (f32)(int)*(s16 *)(setup + 0x1c);
+    *(u8 *)(state + 0x6f) = 0;
     objHitDetectFn_80062e84(obj, 0, 1);
-
-    player = Obj_GetPlayerObject();
-    vec[0] = *(f32 *)(player + 0x18);
-    playerY = *(f32 *)(player + 0x1c);
-    vec[1] = playerY + lbl_803E3AA4;
-    vec[2] = *(f32 *)(player + 0x20);
-    *(f32 *)(state + 0x54) = vec[0];
-    *(f32 *)(state + 0x58) = playerY + lbl_803E3AA8;
-    *(f32 *)(state + 0x5c) = vec[2];
-    vec[0] -= *(f32 *)(state + 0x54);
-    vec[1] -= *(f32 *)(state + 0x58);
-    vec[2] -= *(f32 *)(state + 0x5c);
-    *(f32 *)(state + 0x34) = vec[0];
-    *(f32 *)(state + 0x38) = vec[1];
-    *(f32 *)(state + 0x3c) = vec[2];
-    state[0x6c] = 4;
-
-    for (i = 0; i < 6; i++) {
-        fn_801869DC(obj);
+    p = Obj_GetPlayerObject();
+    vec[0] = *(f32 *)(p + 0x18);
+    py = *(f32 *)(p + 0x1c);
+    vec[1] = py;
+    vec[2] = *(f32 *)(p + 0x20);
+    vec[1] = py + lbl_803E3AA4;
+    y2 = lbl_803E3AA8 + py;
+    {
+        int st = *(int *)(obj + 0xb8);
+        *(f32 *)(st + 0x54) = vec[0];
+        *(f32 *)(st + 0x58) = y2;
+        *(f32 *)(st + 0x5c) = vec[2];
+        st = *(int *)(obj + 0xb8);
+        vec[0] = vec[0] - *(f32 *)(st + 0x54);
+        vec[1] = vec[1] - *(f32 *)(st + 0x58);
+        vec[2] = vec[2] - *(f32 *)(st + 0x5c);
+        *(f32 *)(st + 0x34) = vec[0];
+        *(f32 *)(st + 0x38) = vec[1];
+        *(f32 *)(st + 0x3c) = vec[2];
+        *(u8 *)(st + 0x6c) = 4;
     }
-    state[0x70] = (state[0x70] & 0x3f) | 0x40;
-    *(s32 *)(state + 0x60) = *(s16 *)(setup + 0x1a);
+    fn_801869DC(obj);
+    fn_801869DC(obj);
+    fn_801869DC(obj);
+    fn_801869DC(obj);
+    fn_801869DC(obj);
+    fn_801869DC(obj);
+    ((LFFlags *)(state + 0x70))->mode = 1;
+    *(int *)(state + 0x60) = *(s16 *)(setup + 0x1a);
     gameBitIncrement(0x698);
 }
 
 void fn_801868D0(int obj)
 {
-    u8 *state;
-    LanternFireFlyVectorParams params;
-    int randomHeight;
+    typedef struct { s16 ang; s16 b; s16 c; f32 scale; f32 x; f32 y; f32 z; } LFRot;
+    extern f32 lbl_803E3ABC;
+    LFRot rot;
+    int state;
+    s16 r;
+    f32 fz;
 
-    state = *(u8 **)(obj + 0xb8);
+    state = *(int *)(obj + 0xb8);
     *(f32 *)(state + 0x34) = lbl_803E3AB8;
-    *(f32 *)(state + 0x38) = (f32)(s32)randomGetRange(-*(s16 *)(state + 0x68), *(s16 *)(state + 0x68));
+    *(f32 *)(state + 0x38) = (f32)(int)randomGetRange(-*(s16 *)(state + 0x68), *(s16 *)(state + 0x68));
     if (*(f32 *)(state + 0x50) < lbl_803E3ABC) {
         *(f32 *)(state + 0x3c) = lbl_803E3AB8;
     } else {
-        randomHeight = randomGetRange(0x14, (s16)(s32)*(f32 *)(state + 0x50));
-        *(f32 *)(state + 0x3c) = *(f32 *)(state + 0x50) - (f32)randomHeight;
+        *(f32 *)(state + 0x3c) = *(f32 *)(state + 0x50) -
+                                 (f32)(int)randomGetRange(0x14, (s16)(int)*(f32 *)(state + 0x50));
     }
-    *(s16 *)(state + 0x64) = (s16)(*(s16 *)(state + 0x64) + (s16)randomGetRange(0xbb8, 0x1388));
-    params.yaw = *(s16 *)(state + 0x64);
-    params.pitch = 0;
-    params.roll = 0;
-    params.pad06 = 0;
-    params.scale = lbl_803E3AA0;
-    params.x = lbl_803E3AB8;
-    params.y = lbl_803E3AB8;
-    params.z = lbl_803E3AB8;
-    mathFn_80021ac8(&params, (f32 *)(state + 0x34));
+    r = (s16)randomGetRange(3000, 5000);
+    *(s16 *)(state + 0x64) += r;
+    fz = lbl_803E3AB8;
+    rot.x = fz;
+    rot.y = fz;
+    rot.z = fz;
+    rot.scale = lbl_803E3AA0;
+    rot.c = 0;
+    rot.b = 0;
+    rot.ang = *(s16 *)(state + 0x64);
+    mathFn_80021ac8(&rot, (f32 *)(state + 0x34));
 }
 
 void fn_801869DC(int obj)
