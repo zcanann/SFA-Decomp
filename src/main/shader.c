@@ -4000,3 +4000,236 @@ void mapLoadUnloadObjects(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern s16 lbl_803DCEB8;
+extern u8 lbl_803DCDE0;
+extern int* gObjectTriggerInterface;
+extern int* gWaterfxInterface;
+extern int* gProjgfxInterface;
+extern int* gModgfxInterface;
+extern int* gExpgfxInterface;
+extern int* gPartfxInterface;
+extern int* gSky2Interface;
+extern int* gSHthorntailAnimationInterface;
+extern int* gCameraInterface;
+extern int lbl_803DCDD0;
+extern int lbl_803DCDD4;
+extern int lbl_803DCDC8;
+extern int lbl_803DCDCC;
+extern f32 lbl_803DCED0;
+extern f32 lbl_803DCECC;
+extern int lbl_803DCEC0;
+extern u8 lbl_803DCE04;
+extern u8 bEnableBlurFilter;
+extern u8 bEnableMotionBlur;
+extern f32 lbl_803DB62C;
+extern int lbl_803DCE00;
+extern u8 lbl_803DCEBD;
+extern f32 lbl_803DEBD0;
+extern void mapInitFn_80069990(void);
+extern void mapInitFn_8006fccc(void);
+extern void setSaveGameLoadingFlag(void);
+extern void clearSaveGameLoadingFlag(void);
+extern void trackIntersect(void);
+extern void mapSetupPlayer(void);
+extern int SaveGame_getCamActionNo(void);
+extern u8* saveGameGetEnvState(void);
+extern void getEnvfxActImmediately(void* obj, void* target, int effectId, int flags);
+extern void getEnvfxAct(void* obj, void* source, int actId, int flags);
+extern void skyFn_80088c94(int idx, u8 on);
+extern void skyFn_80088e54(f32 a, int on);
+extern void Pause_SetDisabled(int);
+extern void Pause_ResetMenuFrameCounter(void);
+
+#pragma scheduling off
+#pragma peephole off
+void beginLoadingMap(void)
+{
+    char* base;
+    int i;
+    int j;
+    u8* a;
+    u8* b;
+    int k2, k3;
+    int mapKind;
+    f32* p;
+    f32 px, py, pz;
+    int* cam;
+    char* player;
+    u8* env;
+    int bo;
+    char buf[0x110];
+
+    base = (char*)lbl_8037E0C0;
+    if (lbl_803DCEB8 == -1) {
+        lbl_803DCEB8 = -2;
+        lbl_803DCDE0 = 8;
+    }
+    (*(void (*)(void))(*(int*)(*gObjectTriggerInterface + 4)))();
+    mapInitFn_80069990();
+    for (i = 0; i < 5; i++) {
+        a = *(u8**)(base + 0x41F4 + i * 4);
+        b = *(u8**)(base + 0x41E0 + i * 4);
+        for (j = 0; j < 256; j++) {
+            a[j] = 0xFF;
+            b[j * 12 + 9] = 0xFF;
+        }
+    }
+    for (j = 0; j < 64; j++) {
+        *(s16*)((char*)lbl_803DCE94 + j * 2) = -1;
+        *(int*)((char*)lbl_803DCE9C + j * 4) = 0;
+    }
+    lbl_803DCE98 = 0;
+    lbl_803DCDEC = 0;
+    mapKind = (u8)(*(int (*)(void))(*(int*)(*gMapEventInterface + 0x74)))();
+    p = (f32*)(*(int (*)(void))(*(int*)(*gMapEventInterface + 0x90)))();
+    lbl_803DCDD0 = (int)fastFloorf(p[0] / gMapBlockWorldSize);
+    lbl_803DCDD4 = (int)fastFloorf(p[2] / gMapBlockWorldSize);
+    *(f32*)(base + 0x8588) = p[0];
+    *(f32*)(base + 0x858C) = p[1];
+    *(f32*)(base + 0x8590) = p[2];
+    *(int*)(base + 0x8594) = 1;
+    lbl_803DCDC8 = lbl_803DCDD0 * 640;
+    lbl_803DCDCC = lbl_803DCDD4 * 640;
+    playerMapOffsetX = (f32)lbl_803DCDC8;
+    playerMapOffsetZ = (f32)lbl_803DCDCC;
+    lbl_803DCED0 = playerMapOffsetX;
+    lbl_803DCECC = playerMapOffsetZ;
+    lbl_803DCEC8 = -1;
+    lbl_803DCEC4 = lbl_803DCEC4 - 1;
+    lbl_803DCEC0 = -1;
+    curMapLayer = *((char*)p + 0xd);
+    renderFlags = (renderFlags & 0x82008) | 0x489F4;
+    lbl_803DCE04 = 0;
+    bEnableBlurFilter = 0;
+    bEnableMotionBlur = 0;
+    lbl_803DB62C = lbl_803DEBCC;
+    lbl_803DCE00 = -1;
+    setSaveGameLoadingFlag();
+    pz = p[2];
+    py = p[1];
+    px = p[0];
+    if (!(renderFlags & 2) || (renderFlags & 0x800)) {
+        lbl_803DCE64 = px;
+        lbl_803DCE60 = py;
+        lbl_803DCE5C = pz;
+        renderFlags |= 2;
+        if (renderFlags & 0x800)
+            doPendingMapLoads();
+    }
+    renderFlags &= ~4;
+    trackIntersect();
+    cam = Camera_GetCurrentViewSlot();
+    *(f32*)((char*)cam + 0xc) = p[0];
+    *(f32*)((char*)cam + 0x10) = p[1];
+    *(f32*)((char*)cam + 0x14) = p[2];
+    mapSetupPlayer();
+    lbl_803DCEBD = 0;
+    (*(void (*)(void))(*(int*)(*gWaterfxInterface + 0x1c)))();
+    (*(void (*)(void))(*(int*)(*gProjgfxInterface + 4)))();
+    (*(void (*)(void))(*(int*)(*gModgfxInterface + 4)))();
+    (*(void (*)(void))(*(int*)(*gExpgfxInterface + 4)))();
+    (*(void (*)(void))(*(int*)(*gPartfxInterface + 4)))();
+    (*(void (*)(void))(*(int*)(*gCloudActionInterface + 0x14)))();
+    (*(void (*)(void))(*(int*)(*gCloudActionInterface + 8)))();
+    (*(void (*)(void))(*(int*)(*gSky2Interface + 8)))();
+    (*(void (*)(void))(*(int*)(*gSHthorntailAnimationInterface + 8)))();
+    (*(void (*)(void))(*(int*)(*gNewCloudsInterface + 8)))();
+    mapInitFn_8006fccc();
+    player = (char*)Obj_GetPlayerObject();
+    if (lbl_803DCEB8 == -2 && player != 0 && (mapKind == 0 || mapKind == 1)) {
+        s16 cam2 = SaveGame_getCamActionNo();
+        if (cam2 != -1) {
+            (*(void (*)(int, int, int))(*(int*)(*gCameraInterface + 0x24)))(0, cam2, 1);
+        }
+        env = saveGameGetEnvState();
+        {
+            s16 v = *(s16*)(env + 4);
+            if (v != -1)
+                getEnvfxActImmediately(player, player, v & 0xFFFF, 0);
+            v = *(s16*)(env + 6);
+            if (v != -1)
+                getEnvfxActImmediately(player, player, v & 0xFFFF, 0);
+            v = *(s16*)(env + 0xa);
+            if (v != -1)
+                getEnvfxActImmediately(player, player, v & 0xFFFF, 0);
+            v = *(s16*)(env + 0xc);
+            if (v != -1)
+                getEnvfxActImmediately(player, player, v & 0xFFFF, 0);
+        }
+        skyFn_80088c94(1, (*(u8*)(env + 0x40) & 2) != 0);
+        skyFn_80088c94(2, (*(u8*)(env + 0x40) & 4) != 0);
+        skyFn_80088e54(lbl_803DEBCC, (*(u8*)(env + 0x40) & 0x10) != 0);
+        if (*(u8*)(env + 0x40) & 1)
+            bo = 1;
+        else
+            bo = 0;
+        {
+            u8* e2 = saveGameGetEnvState();
+            if (bo) {
+                renderFlags |= 0x50;
+                *(s8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) | 9;
+            } else {
+                renderFlags &= ~0x50;
+                *(s8*)(e2 + 0x40) = *(u8*)(e2 + 0x40) & ~9;
+            }
+        }
+        if (*(u8*)(env + 0x40) & 8)
+            bo = 1;
+        else
+            bo = 0;
+        {
+            u8* e3 = saveGameGetEnvState();
+            if (bo) {
+                renderFlags |= 0x40;
+                *(s8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) | 8;
+            } else {
+                renderFlags &= ~0x40;
+                *(s8*)(e3 + 0x40) = *(u8*)(e3 + 0x40) & ~8;
+            }
+        }
+        if (*(u8*)(env + 0x40) & 0x20)
+            lbl_803DCE00 = 1;
+        else
+            lbl_803DCE00 = -1;
+        *(int*)(buf + 0x30) = 0;
+        *(f32*)(buf + 0xc) = lbl_803DEBCC;
+        *(f32*)(buf + 0x10) = lbl_803DEBCC;
+        *(f32*)(buf + 0x14) = lbl_803DEBCC;
+        *(f32*)(buf + 0x18) = lbl_803DEBCC;
+        *(f32*)(buf + 0x1c) = lbl_803DEBCC;
+        *(f32*)(buf + 0x20) = lbl_803DEBCC;
+        {
+            s16 a1 = *(s16*)(env + 0xe);
+            if (a1 != -1) {
+                *(f32*)(buf + 0xc) = (f32)*(int*)(env + 0x14);
+                *(f32*)(buf + 0x10) = (f32)*(int*)(env + 0x18);
+                *(f32*)(buf + 0x14) = (f32)*(int*)(env + 0x1c);
+                getEnvfxAct(buf, player, a1 & 0xFFFF, 0);
+            }
+            a1 = *(s16*)(env + 0x10);
+            if (a1 != -1) {
+                *(f32*)(buf + 0xc) = (f32)*(int*)(env + 0x20);
+                *(f32*)(buf + 0x10) = (f32)*(int*)(env + 0x24);
+                *(f32*)(buf + 0x14) = (f32)*(int*)(env + 0x28);
+                getEnvfxAct(buf, player, a1 & 0xFFFF, 0);
+            }
+            a1 = *(s16*)(env + 0x12);
+            if (a1 != -1) {
+                *(f32*)(buf + 0xc) = (f32)*(int*)(env + 0x2c);
+                *(f32*)(buf + 0x10) = (f32)*(int*)(env + 0x30);
+                *(f32*)(buf + 0x14) = (f32)*(int*)(env + 0x34);
+                getEnvfxAct(buf, player, a1 & 0xFFFF, 0);
+            }
+        }
+        (*(void (*)(f32))(*(int*)(*gSHthorntailAnimationInterface + 0x28)))(*(f32*)env);
+    } else {
+        (*(void (*)(f32))(*(int*)(*gSHthorntailAnimationInterface + 0x28)))(lbl_803DEBD0);
+        (*(void (*)(int))(*(int*)(*gCloudActionInterface + 0x1c)))(1);
+    }
+    clearSaveGameLoadingFlag();
+    Pause_SetDisabled(0);
+    Pause_ResetMenuFrameCounter();
+}
+#pragma peephole reset
+#pragma scheduling reset
