@@ -3468,13 +3468,13 @@ void CameraModeTitle_moveCam(u8 newCam)
 {
     if (newCam == lbl_803DD5D2) return;
     if (lbl_803DD5D1 == 4) {
-        if (lbl_803E1BE0 == lbl_803DB9D8) {
-            Music_Trigger(190, 1);
-            Music_Trigger(193, 1);
-        } else {
+        if (lbl_803E1BE0 != lbl_803DB9D8) {
             u8 *save = getSaveFileStruct();
             Movie_SetVolumeFade(0, 1000);
             audioSetVolumes(save[10], 1000, 1, 0, 0);
+        } else {
+            Music_Trigger(190, 1);
+            Music_Trigger(193, 1);
         }
     }
     lbl_803DD5D1 = lbl_803DD5D2;
