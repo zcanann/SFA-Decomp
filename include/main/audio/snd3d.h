@@ -69,7 +69,7 @@ typedef struct SndStudioInputLink {
     f32 inputScale;
     u8 pad18[4];
     u8 sendLevel;
-    s8 activeInput;
+    u8 activeInput;
     u8 pad1e[2];
     SndSpatialEntry *source;
     SndSpatialEntry *target;

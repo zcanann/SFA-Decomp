@@ -361,20 +361,25 @@ void s3dAllocateRoomStudios(void)
 void s3dUpdateDoorStudioInputs(void)
 {
     SndStudioInputLink *link;
+    f32 scale;
+    s32 v0, v1;
 
+    scale = lbl_803E78A0;
     for (link = s3dDoorRoot; link != NULL; link = link->next) {
         if ((link->flags & 0x80000000) == 0) {
             if (link->source->assignedVoice != 0xff) {
                 if (link->target->assignedVoice != 0xff) {
-                    link->studioInput[1] = (s8)((f32)link->sendLevel * link->inputScale);
+                    v0 = (s32)(scale * link->inputScale);
+                    v1 = (s32)((f32)link->sendLevel * link->inputScale);
+                    link->studioInput[1] = v1;
                     link->studioInput[2] = 0;
-                    link->studioInput[0] = (s8)(lbl_803E78A0 * link->inputScale);
-                    if ((link->flags & 1) == 0) {
-                        link->studioInput[3] = link->source->assignedVoice;
-                        synthAddStudioInput(link->target->assignedVoice, link->studioInput);
-                    } else {
+                    link->studioInput[0] = v0;
+                    if ((link->flags & 1) != 0) {
                         link->studioInput[3] = link->target->assignedVoice;
                         synthAddStudioInput(link->source->assignedVoice, link->studioInput);
+                    } else {
+                        link->studioInput[3] = link->source->assignedVoice;
+                        synthAddStudioInput(link->target->assignedVoice, link->studioInput);
                     }
                     link->flags |= 0x80000000;
                 }
@@ -383,16 +388,18 @@ void s3dUpdateDoorStudioInputs(void)
             u8 sourceVoice = link->source->assignedVoice;
 
             if (sourceVoice == 0xff || link->target->assignedVoice == 0xff) {
-                if ((sourceVoice != -1 && sourceVoice == link->activeInput) ||
+                if ((sourceVoice != 0xff && sourceVoice == link->activeInput) ||
                     (link->target->assignedVoice != 0xff &&
                      link->target->assignedVoice == link->activeInput)) {
                     synthRemoveStudioInput(link->activeInput, link->studioInput);
                 }
                 link->flags &= 0x7fffffff;
             } else {
-                link->studioInput[1] = (s8)((f32)link->sendLevel * link->inputScale);
+                v0 = (s32)(scale * link->inputScale);
+                v1 = (s32)((f32)link->sendLevel * link->inputScale);
+                link->studioInput[1] = v1;
                 link->studioInput[2] = 0;
-                link->studioInput[0] = (s8)(lbl_803E78A0 * link->inputScale);
+                link->studioInput[0] = v0;
             }
         }
     }
