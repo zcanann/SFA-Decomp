@@ -5617,7 +5617,7 @@ int Fireball_SeqFn(int *obj, int msg, u8 *cmds)
 
 extern int cmbsrc_getColorIndex(int *p);
 extern void modelLightStruct_setColorsA8AC(int *light, int r, int g, int b, int a);
-extern void projectileParticleFxFn_80099660(int *obj, int kind, f32 v);
+extern void projectileParticleFxFn_80099660(int *obj, f32 v, int kind);
 extern f32 lbl_803E3354;
 extern f32 lbl_803E3358;
 void fireball_hitDetect(int *obj)
@@ -5644,11 +5644,11 @@ void fireball_hitDetect(int *obj)
         *(f32 *)((char *)state + 0x38) = lbl_803E3358;
         v = *(u8 *)((char *)state + 0x71);
         if (v == 0) {
-            projectileParticleFxFn_80099660(obj, 3, lbl_803E3354);
+            projectileParticleFxFn_80099660(obj, lbl_803E3354, 3);
         } else if (v == 1) {
-            projectileParticleFxFn_80099660(obj, 0, lbl_803E3354);
+            projectileParticleFxFn_80099660(obj, lbl_803E3354, 0);
         } else {
-            projectileParticleFxFn_80099660(obj, 6, lbl_803E3354);
+            projectileParticleFxFn_80099660(obj, lbl_803E3354, 6);
         }
         *(u8 *)((char *)obj + 0x36) = 0;
         if (*(void **)state != NULL) {
@@ -6452,6 +6452,142 @@ void fireball_init(int *obj)
         ObjGroup_AddObject((int)obj, 2);
         if (*(s16 *)((char *)obj + 0x46) != 2110 && *(s16 *)((char *)params + 0x1a) != 0) {
             *(f32 *)((char *)state + 0x3c) = lbl_803E3380;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 Vec3_Length(f32 *v);
+extern int hitDetectFn_800658a4(int *obj, f32 x, f32 y, f32 z, f32 *out, int flag);
+extern int *gWaterfxInterface;
+extern f32 fn_80293E80(f32 v);
+extern f32 sin(f32 x);
+extern void fn_8016F260(int *obj, int *state, int *other);
+extern f32 lbl_803E3334;
+extern f32 lbl_803E3338;
+extern f32 lbl_803E333C;
+extern f32 lbl_803E335C;
+extern f32 lbl_803E3360;
+extern f32 lbl_803E3364;
+extern f32 lbl_803E3368;
+extern f32 lbl_803E336C;
+
+#pragma scheduling off
+#pragma peephole off
+void fireball_update(int *obj)
+{
+    int *state = *(int **)((char *)obj + 0xb8);
+    int *other = *(int **)((char *)obj + 0xf8);
+    int *params = *(int **)((char *)obj + 0x4c);
+
+    if ((*(u8 *)((char *)state + 0x70) & 8) != 0) {
+        return;
+    }
+    *(f32 *)((char *)state + 0x3c) -= timeDelta;
+    if (*(f32 *)((char *)state + 0x3c) < lbl_803E3330) {
+        *(f32 *)((char *)state + 0x3c) = lbl_803E3330;
+    }
+    if (*(s16 *)((char *)obj + 0x46) == 2110) {
+        if (*(void **)state != NULL) {
+            lightFn_8001db6c(*(int *)state, 0, lbl_803E3330);
+        }
+        *(s16 *)((char *)obj + 6) |= 0x4000;
+        return;
+    }
+    if (lbl_803E3330 == *(f32 *)((char *)state + 0x34)) {
+        *(f32 *)((char *)state + 0x30) = lbl_803E335C / Vec3_Length((f32 *)((char *)obj + 0x24));
+    }
+    *(f32 *)((char *)state + 0x34) += timeDelta;
+    if (*(f32 *)((char *)state + 0x34) > *(f32 *)((char *)state + 0x30)) {
+        ObjHits_SetHitVolumeSlot(obj, 14, *(s8 *)((char *)params + 0x19) != 0 ? 3 : 1, 0);
+    }
+    if ((*(u8 *)((char *)state + 0x70) & 1) == 0) {
+        *(f32 *)((char *)state + 0x24) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)state + 0x28) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)state + 0x2c) = *(f32 *)((char *)obj + 0x14);
+        *(u8 *)((char *)state + 0x70) |= 1;
+    }
+    {
+        int *r54 = *(int **)((char *)obj + 0x54);
+        if (*(s8 *)((char *)r54 + 0xad) != 0) {
+            if (*(s8 *)((char *)r54 + 0xac) != 14) {
+                Sfx_PlayFromObject(obj, 179);
+            } else {
+                Sfx_PlayFromObject(obj, 186);
+                ((void (*)(int *, f32, f32, f32, f32))((int *)*gWaterfxInterface)[4])(obj,
+                    *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+                    *(f32 *)((char *)obj + 0x14), lbl_803E3360);
+                ((void (*)(f32, f32, f32, int, f32, int))((int *)*gWaterfxInterface)[5])(
+                    *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10),
+                    *(f32 *)((char *)obj + 0x14), *(s16 *)obj, lbl_803E3330, 2);
+            }
+            {
+                u8 v = *(u8 *)((char *)state + 0x71);
+                if (v == 0) {
+                    projectileParticleFxFn_80099660(obj, lbl_803E3354, 3);
+                } else if (v == 1) {
+                    projectileParticleFxFn_80099660(obj, lbl_803E3354, 0);
+                } else {
+                    projectileParticleFxFn_80099660(obj, lbl_803E3354, 6);
+                }
+            }
+            *(f32 *)((char *)state + 0x38) = lbl_803E3358;
+            *(u8 *)((char *)obj + 0x36) = 0;
+            if (*(void **)state != NULL) {
+                ModelLightStruct_free(*(void **)state);
+                *(int *)state = 0;
+            }
+            ObjGroup_RemoveObject((int)obj, 2);
+            ObjHits_DisableObject(obj);
+        }
+    }
+    if (*(f32 *)((char *)state + 0x38) != lbl_803E3330) {
+        *(f32 *)((char *)obj + 0x24) = lbl_803E3330;
+        *(f32 *)((char *)obj + 0x28) = lbl_803E3330;
+        *(f32 *)((char *)obj + 0x2c) = lbl_803E3330;
+        ObjHits_ClearHitVolumes(obj);
+        *(f32 *)((char *)state + 0x38) -= timeDelta;
+        if (*(f32 *)((char *)state + 0x38) <= lbl_803E3330) {
+            Obj_FreeObject(obj);
+        }
+    } else {
+        *(f32 *)((char *)obj + 0x80) = *(f32 *)((char *)obj + 0xc);
+        *(f32 *)((char *)obj + 0x84) = *(f32 *)((char *)obj + 0x10);
+        *(f32 *)((char *)obj + 0x88) = *(f32 *)((char *)obj + 0x14);
+        if (other != NULL) {
+            if ((*(u16 *)((char *)other + 0xb0) & 0x40) != 0) {
+                *(int *)((char *)obj + 0xf8) = 0;
+            } else {
+                fn_8016F260(obj, state, other);
+            }
+        }
+        *(f32 *)((char *)state + 0x24) += *(f32 *)((char *)obj + 0x24) * timeDelta;
+        *(f32 *)((char *)state + 0x28) += *(f32 *)((char *)obj + 0x28) * timeDelta;
+        *(f32 *)((char *)state + 0x2c) += *(f32 *)((char *)obj + 0x2c) * timeDelta;
+        *(u16 *)((char *)state + 0x46) += framesThisStep * 1500;
+        if ((*(u8 *)((char *)state + 0x70) & 4) != 0) {
+            f32 ground;
+            *(f32 *)((char *)state + 0x28) -= lbl_803E3364 * timeDelta;
+            if (hitDetectFn_800658a4(obj, *(f32 *)((char *)state + 0x24), *(f32 *)((char *)state + 0x28),
+                                     *(f32 *)((char *)state + 0x2c), &ground, 0) == 0) {
+                ground -= lbl_803E3368;
+                if (ground < lbl_803E3330 && ground > lbl_803E336C) {
+                    *(f32 *)((char *)state + 0x28) -= ground;
+                }
+            }
+        }
+        *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)state + 0x24);
+        *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)state + 0x28);
+        *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)state + 0x2c);
+        if (other != NULL) {
+            *(f32 *)((char *)obj + 0xc) += lbl_803E3334 *
+                fn_80293E80(lbl_803E3338 * (f32)*(u16 *)((char *)state + 0x46) / lbl_803E333C);
+            *(f32 *)((char *)obj + 0x14) += lbl_803E3334 *
+                sin(lbl_803E3338 * (f32)*(u16 *)((char *)state + 0x46) / lbl_803E333C);
+        }
+        if ((*(int *)((char *)obj + 0xf4) -= framesThisStep) < 0) {
+            Obj_FreeObject(obj);
         }
     }
 }
