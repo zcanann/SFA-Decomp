@@ -58,7 +58,7 @@ void mcmdPlayMacro(McmdVoiceState *state, McmdCommandArgs *args)
                               (state->volume >> 8) & 0xff, (state->pan >> 8) & 0xff,
                               state->midiSlot, state->midiEvent, state->midiLayer,
                               args->value & 0xffff, state->studio, 0, state->auxA,
-                              state->auxB, state->deferStart == 0);
+                              state->auxB, state->itdMode == 0);
 
     state->macroAllocating = 0;
 
@@ -121,7 +121,7 @@ void mcmdStartSample(McmdVoiceState *state, McmdCommandArgs *args)
                              ((u32)state->priorityGroup << 0x18) |
                                  (state->priorityValue >> 0xf),
                              state->voiceHandle, noStartOffset >> 5,
-                             state->deferStart);
+                             state->itdMode);
         state->prevSampleId = dataSampleInfo[0];
         if (state->targetPitch != 0xffffffff) {
             DoSetPitch(state);

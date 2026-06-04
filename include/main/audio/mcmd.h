@@ -111,6 +111,15 @@ typedef struct McmdEnvelopeState {
     u8 unk24[4];
 } McmdEnvelopeState;
 
+typedef struct McmdDlsAdsrInfo {
+    s32 atime;
+    s32 dtime;
+    u16 slevel;
+    u16 rtime;
+    s32 ascale;
+    s32 dscale;
+} McmdDlsAdsrInfo;
+
 typedef struct McmdVidListNode {
     struct McmdVidListNode *next;
     struct McmdVidListNode *prev;
@@ -132,12 +141,22 @@ typedef struct McmdVoiceState {
     struct McmdVoiceState *timeNext;
     struct McmdVoiceState *timePrev;
     u32 queueMode;
-    u8 *keyoffMacroBase;
-    u8 *sampleEndMacroBase;
-    u8 *messageMacroBase;
-    u8 *keyoffMacroCursor;
-    u8 *sampleEndMacroCursor;
-    u8 *messageMacroCursor;
+    union {
+        struct {
+            u8 *keyoffMacroBase;
+            u8 *sampleEndMacroBase;
+            u8 *messageMacroBase;
+        };
+        u8 *trapMacroBase[3];
+    };
+    union {
+        struct {
+            u8 *keyoffMacroCursor;
+            u8 *sampleEndMacroCursor;
+            u8 *messageMacroCursor;
+        };
+        u8 *trapMacroCursor[3];
+    };
     u8 hasTriggerMacros;
     u8 unk69[3];
     McmdMacroStackEntry macroStack[4];
@@ -189,16 +208,22 @@ typedef struct McmdVoiceState {
     u8 portamentoMode;
     u16 portamentoCtrlValue;
     u32 portamentoDuration;
-    u8 unk138[0x140 - 0x138];
+    u8 unk138[0x13C - 0x138];
+    u32 portamentoTime;
     s8 vibratoStart;
     s8 vibratoTarget;
     u8 unk142[2];
     u32 vibratoDuration;
     u32 vibratoHalfDuration;
-    u8 unk14C[0x154 - 0x14C];
+    u8 unk14C[0x150 - 0x14C];
+    s16 vibratoModAddScale;
+    u8 unk152[2];
     u32 volume;
     u32 volumeBase;
-    u8 unk15C[0x170 - 0x15C];
+    u8 unk15C[0x168 - 0x15C];
+    f32 tremoloCurScale;
+    u16 tremoloScale;
+    u16 tremoloModAddScale;
     union {
         struct {
             u32 pan;
@@ -209,12 +234,18 @@ typedef struct McmdVoiceState {
     s32 paramStep[2];
     u32 paramTarget[2];
     u32 paramDuration[2];
-    u8 unk190[3];
-    u8 deferStart;
+    u8 revVolScale;
+    u8 revVolOffset;
+    u8 volTable;
+    u8 itdMode;
     s32 volumeStep;
     u32 volumeTarget;
     u32 volumeStart;
-    u8 unk1A0[0x1BC - 0x1A0];
+    s32 sweepOff[2];
+    s32 sweepAdd[2];
+    s32 sweepCnt[2];
+    u8 sweepNum[2];
+    u8 unk1BA[2];
     union {
         struct {
             McmdExCtrlState exCtrlA0;
@@ -272,7 +303,8 @@ typedef struct McmdVoiceState {
     u8 queuedMessageWriteIndex;
     u8 unk3EF;
     u32 queuedMessages[4];
-    u8 unk400[4];
+    u16 curOutputVolume;
+    u8 unk402[2];
 } McmdVoiceState;
 
 #endif /* MAIN_AUDIO_MCMD_H_ */
