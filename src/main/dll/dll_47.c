@@ -151,8 +151,8 @@ extern FrontendSaveSlot *saveFileSelect_saveSlotsBase;
 extern FrontendSaveSlot *saveFileSelect_saveSlots;
 extern int lbl_803DB9FC;
 extern u8 lbl_803DB424;
-extern char sFrontendStringFormat[];
-extern char lbl_803DBA20[];
+extern char sFrontendStringFormat;
+extern char lbl_803DBA20;
 extern int saveSelect_getInfo(void);
 extern int sprintf(char *dst, const char *fmt, ...);
 
@@ -398,12 +398,12 @@ void saveSelectFn_8011a70c(void) {
     i = lbl_803DB9FC;
     off = i * 0x24;
     while (i < 3) {
-        sprintf((char *)saveFileSelect_saveSlots + off, sFrontendStringFormat, lbl_803DBA20);
-        *((u8 *)saveFileSelect_saveSlots + off + 0x5) = 0;
-        *((u8 *)saveFileSelect_saveSlots + off + 0x6) = 0;
-        *((u8 *)saveFileSelect_saveSlots + off + 0x4) = 0;
-        *((int *)((char *)saveFileSelect_saveSlots + off + 0x8)) = 0;
-        *((u8 *)saveFileSelect_saveSlots + off + 0x21) = 0;
+        sprintf((char *)saveFileSelect_saveSlots + off, &sFrontendStringFormat, &lbl_803DBA20);
+        *((u8 *)saveFileSelect_saveSlots + (off + 0x5)) = 0;
+        *((u8 *)saveFileSelect_saveSlots + (off + 0x6)) = 0;
+        *((u8 *)saveFileSelect_saveSlots + (off + 0x4)) = 0;
+        *((int *)((char *)saveFileSelect_saveSlots + (off + 0x8))) = 0;
+        *((u8 *)saveFileSelect_saveSlots + (off + 0x21)) = 0;
         off += 0x24;
         i++;
     }
