@@ -14532,3 +14532,177 @@ void setLanguageFn_8001ad64(void *reqp) {
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern void fn_802B4DE0(u8 *obj, int flag);
+extern void Resource_Release(void *res);
+extern void Obj_FreeObject(void *obj);
+extern void fn_80059A50(int arg);
+extern void setShadowFlag_803db658(int v);
+extern void *textureFn_8006c5c4(void);
+extern u8 *lbl_803DCBA4;
+extern u8 *lbl_803DCBA8;
+extern char sObjFreeObjdefError[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void objFreeObjDef(void *objp, int flag) {
+    u8 *obj = (u8 *)objp;
+    int defs[46];
+    void (*fp)(u8 *, int);
+    void (*cb)(u8 *);
+    void (*cb2)(u8 *, int, int, int, int);
+    void (*cb3)(void);
+    int i;
+    int count;
+    int n;
+    u8 *o;
+    int *bp;
+    void *curTex;
+    u8 *tex;
+    int t2;
+    s8 modelCount;
+    int group;
+    int type;
+
+    if (*(s8 *)(obj + 0xe9) != 0) {
+        ObjContact_RemoveObjectCallbacks(obj);
+    }
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0:
+    case 0x1f:
+        fn_802B4DE0(obj, flag);
+        break;
+    default:
+        if (*(int **)(obj + 0x68) != NULL) {
+            fp = (void (*)(u8 *, int))*(int *)(*(int *)(obj + 0x68) + 0x14);
+            if (fp != NULL) {
+                fp(obj, flag);
+            }
+            Resource_Release(*(void **)(obj + 0x68));
+            *(int *)(obj + 0x68) = 0;
+        }
+        break;
+    }
+    (*(void (**)(u8 *))(*(int *)gTitleMenuControlInterface + 0x48))(obj);
+    (*(void (**)(u8 *))(*(int *)gExpgfxInterface + 0x28))(obj);
+    if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 0x40) {
+        ObjGroup_RemoveObject(obj, 6);
+        if (flag == 0) {
+            count = 0;
+            for (i = 0; i < lbl_803DCB84; i++) {
+                o = ((u8 **)lbl_803DCB88)[i];
+                if (*(u8 **)(o + 0x30) == obj) {
+                    *(int *)(o + 0x30) = 0;
+                    if (*(int *)(o + 0x4c) != 0) {
+                        defs[count] = (int)o;
+                        count++;
+                    }
+                }
+            }
+            for (i = 0; i < count; i++) {
+                Obj_FreeObject((void *)defs[i]);
+            }
+            fn_80059A50(*(u8 *)(obj + 0x34));
+        }
+    }
+    if (flag == 0 && *(s16 *)(obj + 0x44) == 0x10) {
+        for (i = 0; i < lbl_803DCB84; i++) {
+            if (*(u8 **)(((u8 **)lbl_803DCB88)[i] + 0xc0) == obj) {
+                *(int *)(((u8 **)lbl_803DCB88)[i] + 0xc0) = 0;
+            }
+        }
+    }
+    for (i = 0; i < lbl_803DCB84; i++) {
+        if (*(s16 *)(((u8 **)lbl_803DCB88)[i] + 0x44) == 0x10) {
+            bp = *(int **)(((u8 **)lbl_803DCB88)[i] + 0xb8);
+            if (*(u8 **)bp == obj) {
+                *bp = 0;
+                *((u8 *)bp + 0x8f) = 1;
+            }
+        }
+    }
+    if (*(s8 *)(*(u8 **)(obj + 0x50) + 0x56) > 0) {
+        ObjGroup_RemoveObject(obj, 8);
+    }
+    if (*(int *)(obj + 0x64) != 0) {
+        if (*(s16 *)(*(u8 **)(obj + 0x50) + 0x48) == 1) {
+            setShadowFlag_803db658(1);
+        }
+        if (*(int *)(*(u8 **)(obj + 0x64) + 4) != 0) {
+            curTex = textureFn_8006c5c4();
+            tex = *(u8 **)(*(u8 **)(obj + 0x64) + 4);
+            if (tex != curTex) {
+                if ((*(u8 *)(*(u8 **)(obj + 0x50) + 0x5f) & 4) == 0) {
+                    textureFree(tex);
+                } else {
+                    mm_free(tex);
+                }
+            }
+        }
+        if (*(int *)(*(u8 **)(obj + 0x64) + 8) != 0) {
+            mm_free(*(void **)(*(u8 **)(obj + 0x64) + 8));
+        }
+        t2 = *(int *)(*(u8 **)(obj + 0x64) + 0x10);
+        if (t2 != 0 && t2 != -1) {
+            mm_free((void *)t2);
+        }
+    }
+    if (*(int *)(obj + 0xdc) != 0) {
+        mm_free(*(void **)(obj + 0xdc));
+        *(int *)(obj + 0xdc) = 0;
+    }
+    modelCount = *(s8 *)(*(u8 **)(obj + 0x50) + 0x55);
+    for (i = 0; i < modelCount; i++) {
+        if (*(int *)(*(u8 **)(obj + 0x7c) + i * 4) != 0) {
+            ObjModel_Release(*(u8 **)(*(u8 **)(obj + 0x7c) + i * 4));
+        }
+    }
+    if (*(u8 *)(obj + 0xe5) & 1) {
+        *(u16 *)(obj + 0xe6) = 0;
+        *(u8 *)(obj + 0xe5) = *(u8 *)(obj + 0xe5) & ~1;
+        *(u8 *)(obj + 0xf0) = 0;
+        ObjModel_ClearRenderAttachment(*(u8 **)(*(u8 **)(obj + 0x7c) + *(s8 *)(obj + 0xad) * 4));
+        cb2 = (void (*)(u8 *, int, int, int, int))*(int *)(*(int *)lbl_803DCAB4 + 0xc);
+        cb2(obj, 0x7fb, 0, 0x50, 0);
+        cb2 = (void (*)(u8 *, int, int, int, int))*(int *)(*(int *)lbl_803DCAB4 + 0xc);
+        cb2(obj, 0x7fc, 0, 0x32, 0);
+    }
+    if (*(u8 *)(obj + 0xe5) & 2) {
+        Obj_ClearModelColorFadeRecursive(obj);
+    }
+    group = ObjGroup_GetObjectGroup(obj);
+    if (group != 0) {
+        ObjGroup_RemoveObject(obj, group - 1);
+    }
+    type = *(s16 *)(obj + 0x48);
+    if (*(s8 *)(lbl_803DCBA4 + type) == 0) {
+        debugPrintf(sObjFreeObjdefError);
+    } else {
+        *(s8 *)(lbl_803DCBA4 + type) -= 1;
+        if (*(s8 *)(lbl_803DCBA4 + type) == 0) {
+            o = ((u8 **)lbl_803DCBA8)[type];
+            if (*(int *)(o + 0x30) != 0) {
+                mm_free(*(void **)(o + 0x30));
+            }
+            if (*(int *)(o + 0x34) != 0) {
+                mm_free(*(void **)(o + 0x34));
+            }
+            mm_free(o);
+        }
+    }
+    if (*(s16 *)(obj + 0xb4) >= 0) {
+        if (flag == 0) {
+            cb3 = (void (*)(void))*(int *)(*(int *)gObjectTriggerInterface + 0x4c);
+            cb3();
+        }
+        *(s16 *)(obj + 0xb4) = 0xffff;
+    }
+    if ((*(u16 *)(obj + 6) & 0x2000) && *(int *)(obj + 0x4c) != 0) {
+        mm_free(*(void **)(obj + 0x4c));
+    }
+    mm_free(obj);
+}
+#pragma dont_inline reset
+#pragma pop
