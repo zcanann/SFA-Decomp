@@ -2324,3 +2324,103 @@ void lightsource_update(int obj)
 #pragma opt_strength_reduction reset
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct Dll1FFSlot {
+    int obj;
+} Dll1FFSlot;
+typedef struct Dll1FFSlots {
+    u8 pad[0x100];
+    Dll1FFSlot slots[3];
+    u8 pad2[3];
+    u8 count;
+} Dll1FFSlots;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_1FF_update(int obj)
+{
+    extern void *Obj_GetPlayerObject(void);
+    extern void buttonDisable(int a, int b);
+    extern uint getButtonsJustPressed(int pad);
+    extern void objFn_80035F20(int obj);
+    extern void objFn_80035F00(int obj);
+    extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int *list, int a, int b);
+    extern void objFn_800378C4(void *player, int msg, int obj, int data);
+    extern f32 timeDelta;
+    extern f32 lbl_803E5D84;
+    extern const f32 lbl_803E5D88;
+    extern const f32 lbl_803E5D8C;
+    void *player;
+    s16 *b;
+    int flag;
+    int count;
+    char *found;
+    int i;
+    char *t;
+    u8 c;
+    char *p;
+    int stk[3];
+
+    b = *(s16 **)(obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    if (*(s8 *)((char *)b + 5) == 0) {
+        flag = 0;
+        if ((*(u8 *)(obj + 0xaf) & 1) != 0 && *(int *)(obj + 0xf8) == 0) {
+            b[0] = (s16)flag;
+            b[1] = 0x28;
+            buttonDisable(0, 0x100);
+            flag = 1;
+        }
+        *(s8 *)((char *)b + 5) = (s8)flag;
+        if (*(s8 *)((char *)b + 5) != 0) {
+            *(u8 *)(b + 3) = 1;
+        }
+        if (*(int *)(obj + 0xf8) == 0) {
+            ObjHits_EnableObject(obj);
+            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
+            *(f32 *)(obj + 0x28) = -(lbl_803E5D84 * timeDelta - *(f32 *)(obj + 0x28));
+            *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+            count = hitDetectFn_80065e50(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                                         *(f32 *)(obj + 0x14), stk, 0, 1);
+            found = NULL;
+            for (i = 0; i < count; i++) {
+                p = ((char **)stk[0])[i];
+                if (*(s8 *)(p + 0x14) != 14) {
+                    if (*(f32 *)(obj + 0x10) < *(f32 *)p) {
+                        if (*(f32 *)(obj + 0x10) > *(f32 *)p - lbl_803E5D88 || i == 0) {
+                            found = *(char **)(p + 0x10);
+                            *(f32 *)(obj + 0x10) = *(f32 *)p;
+                            *(f32 *)(obj + 0x28) = lbl_803E5D8C;
+                        }
+                    }
+                }
+            }
+            if (found != NULL) {
+                Dll1FFSlots *ts = *(Dll1FFSlots **)(found + 0x58);
+                c = ts->count;
+                ts->count += 1;
+                ts->slots[(s8)c].obj = obj;
+            }
+        }
+    } else {
+        ObjHits_DisableObject(obj);
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+        if ((getButtonsJustPressed(0) & 0x100) != 0) {
+            *(u8 *)(b + 3) = 0;
+            buttonDisable(0, 0x100);
+        }
+        if (*(int *)(obj + 0xf8) == 1) {
+            *(s8 *)((char *)b + 5) = 2;
+        }
+        if (*(s8 *)((char *)b + 5) == 2 && *(int *)(obj + 0xf8) == 0) {
+            *(s8 *)((char *)b + 5) = 0;
+            *(u8 *)(b + 3) = 0;
+        }
+        if (*(s8 *)(b + 3) != 0) {
+            ObjMsg_SendToObject(player, 0x100008, obj,
+                                ((int)b[1] << 16) | ((int)b[0] & 0xffff));
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
