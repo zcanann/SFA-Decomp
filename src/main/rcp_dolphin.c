@@ -2770,6 +2770,7 @@ extern u16 GXGetTexObjHeight(void *obj);
 extern f32 lbl_803DEB98;
 extern f32 lbl_803DEB9C;
 #pragma dont_inline reset
+#pragma dont_inline on
 void textureFn_80053d58(void *vobj) {
     u8 *obj = (u8 *)vobj;
     u8 mipmap = 0;
@@ -2795,6 +2796,7 @@ void textureFn_80053d58(void *vobj) {
         *(u32 *)(obj + 68) = GXGetTexBufferSize(w, h, fmt, 0, 0);
     }
 }
+#pragma dont_inline reset
 
 extern void findSomething(int);
 extern void mm_free(void *);
@@ -3956,6 +3958,139 @@ void gxTextureFn_80052efc(void)
     GXSetTexCopySrc(0, 0, 0x280, 0x1e0);
     Camera_ApplyFullViewport();
     lbl_803DCDA4 = 0;
+}
+
+extern void texFlagFn_80023cbc(int flag);
+extern void OSReport(char *fmt, ...);
+extern void printHeapStats(int mode);
+extern int testAndSet_onlyUseHeaps1and2(int val);
+extern int mmGetRegionForPtr(void *p);
+extern int getHeapItemSize(void *p);
+extern int mmSetFreeDelay(int delay);
+extern void DCStoreRange(void *p, u32 len);
+extern void defragMemory(int mode);
+extern char lbl_8030D058[];
+
+void texRestructRefs(int mode)
+{
+    char *strs;
+    u8 *ent;
+    u8 *tex;
+    u8 *na;
+    int done;
+    int pass;
+    int i;
+    int off;
+    u32 size;
+    int d;
+
+    strs = lbl_8030D058;
+    done = 0;
+    pass = 0;
+    texFlagFn_80023cbc(2);
+    OSReport(strs + 0x1164);
+    printHeapStats(1);
+    OSReport(strs + 0x1194);
+    testAndSet_onlyUseHeaps1and2(1);
+    i = 0;
+    off = 0;
+    for (; i < lbl_803DCDBC; i++) {
+        ent = (u8 *)lbl_803DCDC4 + off;
+        tex = *(u8 **)(ent + 4);
+        if (tex != NULL && *(u8 *)(ent + 8) != 0 && tex[0x49] == 0 && *(int *)(ent + 0xc) != -1 &&
+            mmGetRegionForPtr(tex) == 0 && *(void **)tex == NULL) {
+            size = *(u32 *)((u8 *)lbl_803DCDC4 + off + 0xc);
+            na = (u8 *)mmAlloc(size, 0xa0a0a0a0, 0);
+            if (na == NULL) {
+                OSReport(strs + 0x11b4, tex, getHeapItemSize(tex));
+            } else {
+                OSReport(strs + 0x11f4, tex, na, getHeapItemSize(tex));
+                done = 0;
+                memcpy(na, tex, size);
+                DCStoreRange(na, size);
+                textureFn_80053d58(na);
+                d = mmSetFreeDelay(0);
+                mm_free(*(void **)((u8 *)lbl_803DCDC4 + off + 4));
+                mmSetFreeDelay(d);
+                *(u8 **)((u8 *)lbl_803DCDC4 + off + 4) = na;
+            }
+        }
+        off += 0x10;
+    }
+    testAndSet_onlyUseHeaps1and2(-1);
+    OSReport(strs + 0x1238);
+    printHeapStats(1);
+    defragMemory(2);
+    while (done == 0 && pass < 4) {
+        done = 1;
+        i = 0;
+        off = 0;
+        for (; i < lbl_803DCDBC; i++) {
+            ent = (u8 *)lbl_803DCDC4 + off;
+            tex = *(u8 **)(ent + 4);
+            if (tex != NULL && *(u8 *)(ent + 8) != 0 && tex[0x49] == 0 && *(int *)(ent + 0xc) != -1) {
+                if (mmGetRegionForPtr(tex) == 0) {
+                    if (*(void **)tex == NULL) {
+                        size = *(u32 *)((u8 *)lbl_803DCDC4 + off + 0xc);
+                        na = (u8 *)mmAlloc(size, 0xa0a0a0a0, 0);
+                        if (na == NULL) {
+                            OSReport(strs + 0x125c, tex, getHeapItemSize(tex));
+                        } else if (mmGetRegionForPtr(na) != 0) {
+                            OSReport(strs + 0x129c, tex, na, getHeapItemSize(tex));
+                            d = mmSetFreeDelay(0);
+                            mm_free(na);
+                            mmSetFreeDelay(d);
+                        } else if (na < tex) {
+                            OSReport(strs + 0x12d8, tex, na, getHeapItemSize(tex));
+                            d = mmSetFreeDelay(0);
+                            mm_free(na);
+                            mmSetFreeDelay(d);
+                        } else if (na != NULL) {
+                            OSReport(strs + 0x1320, tex, na, getHeapItemSize(tex));
+                            done = 0;
+                            memcpy(na, tex, size);
+                            DCStoreRange(na, size);
+                            textureFn_80053d58(na);
+                            d = mmSetFreeDelay(0);
+                            mm_free(*(void **)((u8 *)lbl_803DCDC4 + off + 4));
+                            mmSetFreeDelay(d);
+                            *(u8 **)((u8 *)lbl_803DCDC4 + off + 4) = na;
+                        }
+                    }
+                } else if (mode == 0) {
+                    if (mmGetRegionForPtr(tex) == 1 || mmGetRegionForPtr(tex) == 2) {
+                        if (*(void **)tex == NULL && getHeapItemSize(tex) >= 0x3000) {
+                            size = *(u32 *)((u8 *)lbl_803DCDC4 + off + 0xc);
+                            na = (u8 *)mmAlloc(size, 0xa0a0a0a0, 0);
+                            if (na == NULL) {
+                                OSReport(strs + 0x125c, tex, getHeapItemSize(tex));
+                            } else if (mmGetRegionForPtr(na) != 0) {
+                                OSReport(strs + 0x1368, tex, na, getHeapItemSize(tex));
+                                d = mmSetFreeDelay(0);
+                                mm_free(na);
+                                mmSetFreeDelay(d);
+                            } else if (na != NULL) {
+                                OSReport(strs + 0x13c8, tex, na, getHeapItemSize(tex));
+                                done = 0;
+                                memcpy(na, tex, size);
+                                DCStoreRange(na, size);
+                                textureFn_80053d58(na);
+                                d = mmSetFreeDelay(0);
+                                mm_free(*(void **)((u8 *)lbl_803DCDC4 + off + 4));
+                                mmSetFreeDelay(d);
+                                *(u8 **)((u8 *)lbl_803DCDC4 + off + 4) = na;
+                            }
+                        }
+                    }
+                }
+            }
+            off += 0x10;
+        }
+        printHeapStats(1);
+        pass++;
+    }
+    OSReport(strs + 0x1420, pass);
+    texFlagFn_80023cbc(0);
 }
 
 #pragma scheduling reset
