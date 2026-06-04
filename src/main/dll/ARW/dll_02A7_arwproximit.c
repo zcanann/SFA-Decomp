@@ -150,7 +150,7 @@ void arwproximit_update(int obj)
         u8 b0, b1, b2, b3;
         *(u8 *)(obj + 0x36) = 0xff;
         if (*(void **)(state + 4) != NULL) {
-            fn_8001DACC(*(void **)(state + 4), &b0, &b1, &b2, &b3);
+            modelLightStruct_getColorsA8AC(*(void **)(state + 4), &b0, &b1, &b2, &b3);
             fn_8001D71C(*(void **)(state + 4), b0, b1, b2, 0x64);
         }
         if (timerCountDown((void *)(state + 0xc)) != 0 ||

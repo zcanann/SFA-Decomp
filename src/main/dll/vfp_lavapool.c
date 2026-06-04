@@ -7,7 +7,7 @@
 #pragma scheduling off
 extern void Music_Trigger(s32 triggerId,s32 mode);
 extern uint GameBit_Get(int eventId);
-extern void fn_8001D9F4(void *light,void *red,void *green,void *blue,void *alpha);
+extern void modelLightStruct_getColors100104(void *light,void *red,void *green,void *blue,void *alpha);
 extern void fn_8001D71C(void *light,u8 red,u8 green,u8 blue,int alpha);
 extern int randomGetRange(int min,int max);
 extern void skyFn_80089710(int id,int enabled,int arg);
@@ -69,7 +69,7 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
   config = *(DIMbosstonsilConfig **)((u8 *)obj + 0x4c);
 
   if (gDIMbosstonsilLight != NULL) {
-    fn_8001D9F4(gDIMbosstonsilLight,&red,&green,&blue,&alpha);
+    modelLightStruct_getColors100104(gDIMbosstonsilLight,&red,&green,&blue,&alpha);
     fn_8001D71C(gDIMbosstonsilLight,red,green,blue,0xc0);
     if (gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0) {
       lightValue = gDIMbosstonsilLight->glowIntensity + gDIMbosstonsilLight->glowIntensityStep;

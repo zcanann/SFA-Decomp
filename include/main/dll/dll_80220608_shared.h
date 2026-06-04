@@ -1122,7 +1122,7 @@ extern f32 lbl_803E721C;
 extern f32 lbl_803E7220;
 
 
-extern void fn_8001DACC(void *light, u8 *a, u8 *b, u8 *c, u8 *d);
+extern void modelLightStruct_getColorsA8AC(void *light, u8 *a, u8 *b, u8 *c, u8 *d);
 extern void fn_8001D71C(void *light, u8 r, u8 g, u8 b, int e);
 extern f32 lbl_803E71D8;
 extern f32 lbl_803E71DC;

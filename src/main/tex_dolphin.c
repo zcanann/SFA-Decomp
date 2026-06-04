@@ -12,10 +12,10 @@ typedef union {
     } words;
 } SfaIntDouble;
 
-extern void fn_8001DACC();
-extern void fn_8001DD48();
-extern void fn_8001DD50();
-extern void fn_8001E928(undefined *dest, int count, int *out, f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2);
+extern void modelLightStruct_getColorsA8AC(void *light, u8 *a, u8 *b, u8 *c, u8 *d);
+extern f32 modelLightStruct_getRadius(void *light);
+extern void modelLightStruct_getPosition(void *light, void *a, void *b, void *c);
+extern void modelLightStruct_selectBrightestAabbLights(undefined *dest, int count, int *out, f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2);
 extern int Shader_getLayer();
 extern void selectTexture();
 extern void fn_8004CE0C();
@@ -338,7 +338,7 @@ void renderFn_8005e730(undefined4 param_1,undefined4 param_2,int param_3)
   byte local_9;
   byte local_8;
 
-  fn_8001E928((undefined*)&lbl_803DCE20,2,&local_C,
+  modelLightStruct_selectBrightestAabbLights((undefined*)&lbl_803DCE20,2,&local_C,
               (f32)(*(short *)((int)param_1 + 6) >> 3) + *(float *)((int)param_2 + 0x18) + playerMapOffsetX,
               (f32)(*(short *)((int)param_1 + 8) >> 3) + *(float *)((int)param_2 + 0x28),
               (f32)(*(short *)((int)param_1 + 10) >> 3) + *(float *)((int)param_2 + 0x38) + playerMapOffsetZ,
@@ -356,12 +356,12 @@ void renderFn_8005e730(undefined4 param_1,undefined4 param_2,int param_3)
     f32 *p18 = &fStack_18;
     f32 *p14 = &fStack_14;
     for (; param_3 < local_C; piVar3 = piVar3 + 1, param_3 = param_3 + 1) {
-      fn_8001DACC(*piVar3,&local_8,p9,pA,pB);
+      modelLightStruct_getColorsA8AC((void *)*piVar3,&local_8,p9,pA,pB);
       local_8 = ((int)local_8 >> 1) + ((int)local_8 >> 2);
       local_9 = ((int)local_9 >> 1) + ((int)local_9 >> 2);
       local_A = ((int)local_A >> 1) + ((int)local_A >> 2);
-      fn_8001DD50(*piVar3,&fStack_10,p14,p18);
-      fn_8001DD48(*piVar3);
+      modelLightStruct_getPosition((void *)*piVar3,&fStack_10,p14,p18);
+      modelLightStruct_getRadius((void *)*piVar3);
       fn_8004FA30(&local_8,&fStack_10);
     }
   }
@@ -589,16 +589,16 @@ void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float
           count = 0;
         }
         else {
-          fn_8001E928((undefined *)&lbl_803DCE28,2,&count,x1 + playerMapOffsetX,y1,
+          modelLightStruct_selectBrightestAabbLights((undefined *)&lbl_803DCE28,2,&count,x1 + playerMapOffsetX,y1,
                       z1 + playerMapOffsetZ,x2 + playerMapOffsetX,y2,z2 + playerMapOffsetZ);
         }
         if ((obj == NULL) ||
             (((*(uint *)(obj + 0x3c) & 0x800) == 0 && ((*(uint *)(obj + 0x3c) & 0x1000) == 0)))) {
           p = &lbl_803DCE28;
           for (i = 0; i < count; i = i + 1) {
-            fn_8001DACC((void *)*p,&c0,pc1,pc2,pc3);
-            fn_8001DD50((void *)*p,&dOut0,pd1,pdb);
-            fn_8001DD48((void *)*p);
+            modelLightStruct_getColorsA8AC((void *)*p,&c0,pc1,pc2,pc3);
+            modelLightStruct_getPosition((void *)*p,&dOut0,pd1,pdb);
+            modelLightStruct_getRadius((void *)*p);
             fn_8004FA30(&c0,&dOut0);
             p = p + 1;
           }
@@ -618,15 +618,15 @@ void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float
             }
           }
           else {
-            fn_8001DACC((void *)lbl_803DCE28,&c0,pc1,pc2,pc3);
-            fn_8001DD50((void *)lbl_803DCE28,&dOut0,pd1,pdb);
-            fn_8001DD48((void *)lbl_803DCE28);
+            modelLightStruct_getColorsA8AC((void *)lbl_803DCE28,&c0,pc1,pc2,pc3);
+            modelLightStruct_getPosition((void *)lbl_803DCE28,&dOut0,pd1,pdb);
+            modelLightStruct_getRadius((void *)lbl_803DCE28);
             fn_8004F6D8(&c0,&dOut0,&g0);
             p = &lbl_803DCE28 + 1;
             for (i = 1; i < count; i = i + 1) {
-              fn_8001DACC((void *)*p,&c0,pc1,pc2,pc3);
-              fn_8001DD50((void *)*p,&dOut0,pd1,pdb);
-              fn_8001DD48((void *)*p);
+              modelLightStruct_getColorsA8AC((void *)*p,&c0,pc1,pc2,pc3);
+              modelLightStruct_getPosition((void *)*p,&dOut0,pd1,pdb);
+              modelLightStruct_getRadius((void *)*p);
               fn_8004F380(&c0,&dOut0);
               p = p + 1;
             }

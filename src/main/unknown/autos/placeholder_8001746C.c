@@ -8257,7 +8257,7 @@ void *fn_8001DB64(u8 *p) {
     return *(void **)(p + 0x58);
 }
 
-f32 fn_8001DD48(u8 *p) {
+f32 modelLightStruct_getRadius(u8 *p) {
     return *(f32 *)(p + 0x144);
 }
 
@@ -8694,7 +8694,7 @@ void blankScreen(int frames) {
     }
 }
 
-void fn_8001DD50(u8 *p, f32 *a, f32 *b, f32 *c) {
+void modelLightStruct_getPosition(u8 *p, f32 *a, f32 *b, f32 *c) {
     *a = *(f32 *)(p + 0x1c);
     *b = *(f32 *)(p + 0x20);
     *c = *(f32 *)(p + 0x24);
@@ -8789,14 +8789,14 @@ extern int randomGetRange(int lo, int hi);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void fn_8001D9F4(u8 *p, u8 *a, u8 *b, u8 *c, u8 *d) {
+void modelLightStruct_getColors100104(u8 *p, u8 *a, u8 *b, u8 *c, u8 *d) {
     *a = p[0x100];
     *b = p[0x101];
     *c = p[0x102];
     *d = p[0x103];
 }
 
-void fn_8001DACC(u8 *p, u8 *a, u8 *b, u8 *c, u8 *d) {
+void modelLightStruct_getColorsA8AC(u8 *p, u8 *a, u8 *b, u8 *c, u8 *d) {
     *a = p[0xa8];
     *b = p[0xa9];
     *c = p[0xaa];
@@ -11392,7 +11392,7 @@ f32 ModelLightStruct_getLightAmount(u8 *light, u8 *obj) {
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void fn_8001E928(u8 **outLights, int maxLights, int *outCount, f32 minX, f32 minY, f32 minZ, f32 maxX,
+void modelLightStruct_selectBrightestAabbLights(u8 **outLights, int maxLights, int *outCount, f32 minX, f32 minY, f32 minZ, f32 maxX,
                  f32 maxY, f32 maxZ) {
     f32 center[3];
     f32 delta[3];
