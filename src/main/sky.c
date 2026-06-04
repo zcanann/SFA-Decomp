@@ -2232,6 +2232,167 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
 
 #pragma peephole off
 #pragma scheduling off
+#pragma opt_common_subs off
+void skyFn_8008aee8(void)
+{
+    int *sky;
+    int texA;
+    int texB;
+    u8 *texC;
+    s16 *cam;
+    u8 *player;
+    int cell;
+    u8 *tbl;
+    u8 *p;
+    u8 *lc;
+    u8 *ac;
+    int idxA;
+    int idxB;
+    int a;
+    int b;
+    int hw;
+    u32 res;
+    int tmp;
+    f32 frac;
+    f32 t;
+    f32 tc;
+    f32 u;
+    f32 widthF;
+    f32 sinProd;
+    f32 angle;
+    f32 blend;
+    f32 v;
+    FogColor fogColor;
+
+    fogColor = *(FogColor *)&lbl_803E8458;
+    if (lbl_803DD12C != NULL &&
+        ((player = Obj_GetPlayerObject()) == NULL ||
+         ((cell = coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14))) != 0x30 &&
+          cell != 0x2b))) {
+        sky = *(int **)&lbl_803DD12C;
+        frac = ((SkyTimeBlend *)sky)->time / lbl_803DF078;
+        t = (frac < pEXIInputFlag) ? pEXIInputFlag : ((frac > EXIInputFlag) ? EXIInputFlag : frac);
+        if (t >= pEXIInputFlag && t < lbl_803DF0C8) {
+            u = t / lbl_803DF0C8;
+            ((SkyTimeBlend *)sky)->phase = 0;
+        } else if (t >= lbl_803DF0C8 && t < lbl_803DF07C) {
+            u = (t - lbl_803DF0C8) / lbl_803DF0C8;
+            ((SkyTimeBlend *)sky)->phase = 1;
+        } else if (t >= lbl_803DF07C && t < lbl_803DF0CC) {
+            u = (t - lbl_803DF07C) / lbl_803DF0C8;
+            ((SkyTimeBlend *)sky)->phase = 2;
+        } else if (t >= lbl_803DF0CC && t < lbl_803DF068) {
+            u = (t - lbl_803DF0CC) / lbl_803DF0C8;
+            ((SkyTimeBlend *)sky)->phase = 3;
+        } else if (t >= lbl_803DF068 && t < lbl_803DF0D0) {
+            u = (t - lbl_803DF068) / lbl_803DF0C8;
+            ((SkyTimeBlend *)sky)->phase = 4;
+        } else if (t >= lbl_803DF0D0 && t < init_803DF080) {
+            u = (t - lbl_803DF0D0) / lbl_803DF0C8;
+            ((SkyTimeBlend *)sky)->phase = 5;
+        } else if (t >= init_803DF080 && t < lbl_803DF0D4) {
+            u = (t - init_803DF080) / lbl_803DF0C8;
+            ((SkyTimeBlend *)sky)->phase = 6;
+        } else if (t >= lbl_803DF0D4 && t <= EXIInputFlag) {
+            u = (t - lbl_803DF0D4) / lbl_803DF0C8;
+            ((SkyTimeBlend *)sky)->phase = 7;
+        }
+        tc = (u < pEXIInputFlag) ? pEXIInputFlag : ((u > EXIInputFlag) ? EXIInputFlag : u);
+        sky = *(int **)&lbl_803DD12C;
+        if (((SkyTimeBlend *)sky)->phase != ((SkyTimeBlend *)sky)->prevPhase) {
+            texA = sky[((SkyTimeBlend *)sky)->phase + 0x87];
+            texB = sky[(((SkyTimeBlend *)sky)->phase + 1) % 8 + 0x87];
+            if (((SkyTimeBlend *)sky)->texAId != texA) {
+                textureFree((void *)sky[0]);
+                *(void **)lbl_803DD12C = textureLoadAsset(texA);
+                ((SkyTimeBlend *)lbl_803DD12C)->texAId = texA;
+            }
+            sky = *(int **)&lbl_803DD12C;
+            if (((SkyTimeBlend *)sky)->texBId != texB) {
+                textureFree((void *)sky[1]);
+                ((SkyTimeBlend *)lbl_803DD12C)->texB = textureLoadAsset(texB);
+                ((SkyTimeBlend *)lbl_803DD12C)->texBId = texB;
+            }
+            ((SkyTimeBlend *)lbl_803DD12C)->prevPhase = (s8)((SkyTimeBlend *)lbl_803DD12C)->phase;
+        }
+        fn_80069B1C(((SkyTimeBlend *)lbl_803DD12C)->texB, ((SkyTimeBlend *)lbl_803DD12C)->texA, tc,
+                    (void *)(*(int **)&lbl_803DD12C)[((SkyTimeBlend *)lbl_803DD12C)->texSel + 2]);
+        ((SkyBlendStateFlags *)(lbl_803DD12C + 0x255))->unused80 = 1;
+        sky = *(int **)&lbl_803DD12C;
+        blend = ((SkyTimeBlend *)sky)->blend;
+        if (blend != pEXIInputFlag) {
+            tmp = sky[((SkyTimeBlend *)sky)->texSel + 2];
+            fn_80069B1C((void *)sky[4], (void *)tmp, blend, (void *)tmp);
+        }
+        sky = *(int **)&lbl_803DD12C;
+        idxA = (s16)(sky[((SkyTimeBlend *)sky)->phase + 0x87] - 0xc38) * 6;
+        tbl = lbl_8030F31C;
+        a = tbl[idxA];
+        idxB = (s16)(sky[(((SkyTimeBlend *)sky)->phase + 1) % 8 + 0x87] - 0xc38) * 6;
+        b = tbl[idxB];
+        gSkyCurrentLightColor = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
+        p = tbl + 1;
+        a = p[idxA];
+        b = p[idxB];
+        lc = &gSkyCurrentLightColor;
+        lc[1] = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
+        p = tbl + 2;
+        a = p[idxA];
+        b = p[idxB];
+        lc[2] = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
+        p = tbl + 3;
+        a = p[idxA];
+        b = p[idxB];
+        gSkyCurrentAmbientColor = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
+        p = tbl + 4;
+        a = p[idxA];
+        b = p[idxB];
+        ac = &gSkyCurrentAmbientColor;
+        ac[1] = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
+        p = tbl + 5;
+        a = p[idxA];
+        b = p[idxB];
+        ac[2] = (u8)(int)(tc * (f32)(b - a) + (f32)(u32)a);
+        texC = (u8 *)sky[((SkyTimeBlend *)sky)->texSel + 2];
+        cam = Camera_GetCurrentViewSlot();
+        frac = Camera_GetFovY() * lbl_803DF068;
+        widthF = (f32)(u32)*(u16 *)(texC + 0xc);
+        sinProd = widthF * frac / lbl_803DF0D8;
+        sinProd *= lbl_803DF0DC;
+        sinProd *= sin(lbl_803DF0E0 * (f32)-cam[0x2a] / lbl_803DF0E4);
+        angle = widthF * lbl_803DF068 - lbl_803DF0E8 -
+                lbl_803DF0DC * (widthF * (f32)cam[0x29]) / lbl_803DF0E4 + sinProd;
+        angle *= lbl_803DF0EC;
+        (*(void (**)(int))((char *)*gSky2Interface + 0x18))(0);
+        GXSetFog(0, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, fogColor);
+        selectTexture(texC, 0);
+        fn_8007880C();
+        GXSetTevOrder(0, 0, 0, 0xff);
+        GXSetTevDirect(0);
+        GXSetTevColorIn(0, 8, 4, 5, 0xf);
+        GXSetTevAlphaIn(0, 7, 7, 7, 4);
+        GXSetTevSwapMode(0, 0, 0);
+        GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+        GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
+        GXSetNumIndStages(0);
+        GXSetNumChans(0);
+        GXSetNumTexGens(1);
+        GXSetNumTevStages(1);
+        res = getScreenResolution();
+        sinProd *= lbl_803DF0B8;
+        hw = *(u16 *)(texC + 0xc);
+        v = angle / (lbl_803DF0EC * (f32)(u32)hw);
+        skyDrawFn_80075d5c(pEXIInputFlag, v, EXIInputFlag, v - sinProd / (f32)(u32)hw, 0, 0,
+                           (res & 0xffff) << 2, (res >> 16) << 2, -0x18f);
+    }
+}
+#pragma opt_common_subs reset
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
 void Sky_func03(int a, int b, u8 *cfg)
 {
     s16 *envp;
