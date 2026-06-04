@@ -1251,8 +1251,9 @@ extern void fn_8003A230(int obj, void *p, f32 f);
 #define TRICKY_RESET_COMMAND(state) \
   *(u8 *)((state) + 8) = 1; \
   *(u8 *)((state) + 0xa) = 0; \
-  *(f32 *)((state) + 0x71c) = lbl_803E23DC; \
-  *(f32 *)((state) + 0x720) = lbl_803E23DC; \
+  z = lbl_803E23DC; \
+  *(f32 *)((state) + 0x71c) = z; \
+  *(f32 *)((state) + 0x720) = z; \
   *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & 0xffffffef; \
   *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & 0xfffeffff; \
   *(uint *)((state) + 0x54) = *(uint *)((state) + 0x54) & 0xfffdffff; \
@@ -1268,21 +1269,21 @@ extern void fn_8003A230(int obj, void *p, f32 f);
   }
 
 #define TRICKY_SPAWN_BUBBLE(obj, state) \
-  if (*(int *)((state) + 0x7b8) == 0) { \
+  if (*(void **)((state) + 0x7b8) == NULL) { \
     int setup_; \
     s8 used_[4]; \
-    u8 slot_; \
+    int slot_; \
     setup_ = Obj_AllocObjectSetup(0x20, 0x17b); \
     used_[0] = -1; \
     used_[1] = -1; \
     used_[2] = -1; \
-    if (*(int *)((state) + 0x7a8) != 0) { \
+    if (*(void **)((state) + 0x7a8) != NULL) { \
       used_[((TrickySlotBits *)((state) + 0x7bc))->slotA] = 1; \
     } \
-    if (*(int *)((state) + 0x7b0) != 0) { \
+    if (*(void **)((state) + 0x7b0) != NULL) { \
       used_[((TrickySlotBits *)((state) + 0x7bc))->slotB] = 1; \
     } \
-    if (*(int *)((state) + 0x7b8) != 0) { \
+    if (*(void **)((state) + 0x7b8) != NULL) { \
       used_[((TrickySlotBits *)((state) + 0x7bc))->slotC] = 1; \
     } \
     if (used_[0] == -1) { slot_ = 0; } \
@@ -1290,12 +1291,13 @@ extern void fn_8003A230(int obj, void *p, f32 f);
     else if (used_[2] == -1) { slot_ = 2; } \
     else if (used_[3] == -1) { slot_ = 3; } \
     else { slot_ = -1; } \
-    ((TrickySlotBits *)((state) + 0x7bc))->slotC = slot_; \
+    ((TrickySlotBits *)((state) + 0x7bc))->slotC = (u8)slot_; \
     *(int *)((state) + 0x7b8) = Obj_SetupObject(setup_, 4, -1, -1, *(int *)((obj) + 0x30)); \
     ObjLink_AttachChild((obj), *(int *)((state) + 0x7b8), ((TrickySlotBits *)((state) + 0x7bc))->slotC); \
-    *(f32 *)((state) + 0x7c0) = lbl_803E23DC; \
-    *(f32 *)((state) + 0x7c4) = lbl_803E23DC; \
-    *(f32 *)((state) + 0x7c8) = lbl_803E23DC; \
+    z = lbl_803E23DC; \
+    *(f32 *)((state) + 0x7c0) = z; \
+    *(f32 *)((state) + 0x7c4) = z; \
+    *(f32 *)((state) + 0x7c8) = z; \
   }
 
 void Tricky_update(int obj)
@@ -1303,13 +1305,13 @@ void Tricky_update(int obj)
   char *base;
   int state;
   int found;
+  int p;
   int cmd;
   int st;
   bool playing;
   int i;
   int setup;
   int count;
-  u8 st8;
   uint f;
   int diff;
   int step;
@@ -1317,8 +1319,8 @@ void Tricky_update(int obj)
   int talking;
   int sfx2;
   u16 sfxId;
-  int p;
   u32 target;
+  f32 z;
   s8 flagsByte;
   u8 blockFlags[120];
   TrickyCmdQuery cmdQuery;
@@ -1352,14 +1354,15 @@ void Tricky_update(int obj)
   flagsByte = *(s8 *)(state + 0x358);
   trickyDebugPrint(base + 0x894,flagsByte & 1,flagsByte & 2,flagsByte & 4,flagsByte & 8,
                    flagsByte & 0x10,flagsByte & 0x20,flagsByte & 0x40,flagsByte & 0x80);
-  trickyDebugPrint(base + 0x8b4,**(u8 **)state,*(u8 *)(*(int *)state + 1));
+  p = *(int *)state;
+  trickyDebugPrint(base + 0x8b4,*(u8 *)p,*(u8 *)(p + 1));
   if ((*(uint *)(state + 0x54) & 0x200) != 0) {
     ObjHits_EnableObject(obj);
     if ((*(uint *)(state + 0x54) & 0x4000) == 0) {
       TRICKY_RESET_COMMAND(state);
       *(u8 *)(state + 9) = 0;
-      *(f32 *)(state + 0x10) = lbl_803E23DC;
-      *(f32 *)(state + 0x14) = lbl_803E23DC;
+      *(f32 *)(state + 0x10) = z;
+      *(f32 *)(state + 0x14) = z;
       *(f32 *)(state + 0xe0) = *(f32 *)(obj + 0x18);
       *(f32 *)(state + 0xe4) = *(f32 *)(obj + 0x1c);
       *(f32 *)(state + 0xe8) = *(f32 *)(obj + 0x20);
@@ -1378,7 +1381,7 @@ void Tricky_update(int obj)
       ((TrickyByteFlags *)(state + 0x82e))->bit7 = 1;
     }
   }
-  if (*(int *)(state + 0x24) != 0 && (*(u16 *)(*(int *)(state + 0x24) + 0xb0) & 0x40) != 0) {
+  if (*(void **)(state + 0x24) != NULL && (*(u16 *)(*(int *)(state + 0x24) + 0xb0) & 0x40) != 0) {
     if ((*(uint *)(state + 0x54) & 0x10) != 0) {
       *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xffffffef;
       *(u8 *)(state + 0x374) = 2;
@@ -1391,9 +1394,10 @@ void Tricky_update(int obj)
       *(f32 *)(obj + 0x20) = *(f32 *)(state + 0xe8);
       ObjHits_SyncObjectPosition(obj);
       i = 0;
-      *(u8 *)(state + 9) = 0;
-      *(f32 *)(state + 0x10) = lbl_803E23DC;
-      *(f32 *)(state + 0x14) = lbl_803E23DC;
+      *(u8 *)(state + 9) = i;
+      z = lbl_803E23DC;
+      *(f32 *)(state + 0x10) = z;
+      *(f32 *)(state + 0x14) = z;
       *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x80000;
       *(uint *)(state + 0x54) = *(uint *)(state + 0x54) & 0xffffdfff;
       if ((*(uint *)(state + 0x54) & 0x800) != 0) {
@@ -1428,14 +1432,13 @@ void Tricky_update(int obj)
     }
     p = p + 8;
   }
-  st8 = *(u8 *)(state + 8);
   if ((*(uint *)(state + 0x54) & 0x10) == 0 && trickyFoodFn_8013db3c(obj,state) == 2) {
     *(u8 *)(state + 8) = 0x11;
-  } else if (st8 == 8 && cmd == 4) {
+  } else if (*(u8 *)(state + 8) == 8 && cmd == 4) {
     *(u8 *)(state + 0x734) = *(u8 *)(state + 0x734) ^ 1;
-  } else if (st8 == 0xd && cmd == 4 && found == 0) {
+  } else if (*(u8 *)(state + 8) == 0xd && cmd == 4 && found == 0) {
     *(int *)(state + 0x728) = 1;
-  } else if (st8 == 0xe && cmd == 4) {
+  } else if (*(u8 *)(state + 8) == 0xe && cmd == 4) {
     *(int *)(state + 0x728) = 1;
   } else if (cmd == 0) {
     *(uint *)(state + 0x54) = *(uint *)(state + 0x54) | 0x30002;
@@ -1616,7 +1619,7 @@ void Tricky_update(int obj)
         }
         break;
       default:
-        if (st8 == 1 && *(s8 *)(state + 0xd) != 0 && (f & 0x20000) == 0) {
+        if (*(u8 *)(state + 8) == 1 && *(s8 *)(state + 0xd) != 0 && (f & 0x20000) == 0) {
           step = trickyFindNearestUsableBaddie(*(int *)(state + 4),0,lbl_803E24D8);
           if (step != 0) {
             *(int *)(state + 0x24) = step;
@@ -1724,7 +1727,7 @@ void Tricky_update(int obj)
     *(f32 *)(obj + 0xc) += *(f32 *)(state + 0x40) * (*(f32 *)(state + 0x30) * *(f32 *)(state + 0x80c));
     *(f32 *)(obj + 0x14) += *(f32 *)(state + 0x40) * (*(f32 *)(state + 0x2c) * -*(f32 *)(state + 0x80c));
   }
-  if (*(int *)(state + 0x24) != 0) {
+  if (*(void **)(state + 0x24) != NULL) {
     *(u8 *)(state + 0x378) = 1;
     *(f32 *)(state + 0x37c) = *(f32 *)(*(int *)(state + 0x24) + 0x18);
     *(f32 *)(state + 0x380) = *(f32 *)(*(int *)(state + 0x24) + 0x1c);
