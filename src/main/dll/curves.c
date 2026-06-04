@@ -3681,172 +3681,160 @@ void FUN_800e6140(undefined4 param_1,uint *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_15_func06(ushort *curveObj,uint *state)
-{
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
-  float fVar8;
-  float fVar9;
-  uint *puVar10;
-  int iVar11;
-  ushort *puVar12;
-  int iVar13;
-  ushort uVar14;
-  uint *puVar15;
-  float *pfVar16;
-  int iVar17;
-  float *pfVar18;
-  float *pfVar19;
-  float *pfVar20;
-  uint *puVar21;
-  int iVar22;
-  float *pfVar23;
-  double dVar24;
-  double dVar25;
-  float local_118 [4];
-  ushort local_108;
-  ushort local_106;
-  ushort local_104;
-  float local_100;
-  undefined4 local_fc;
-  undefined4 local_f8;
-  undefined4 local_f4;
-  float local_f0 [12];
-  float afStack_c0 [16];
+extern f32 lbl_803E06C0;
 
-  puVar12 = curveObj;
-  puVar15 = state;
-  if (((*(char *)((int)puVar15 + 0x25b) != '\0') && ((*puVar15 & 0x4000000) != 0)) &&
-     ((*puVar15 & 0x2000) != 0)) {
-    iVar13 = *(int *)(puVar12 + 0x18);
-    if (iVar13 == 0) {
-      *(undefined4 *)(puVar12 + 0xc) = *(undefined4 *)(puVar12 + 6);
-      *(undefined4 *)(puVar12 + 0xe) = *(undefined4 *)(puVar12 + 8);
-      *(undefined4 *)(puVar12 + 0x10) = *(undefined4 *)(puVar12 + 10);
-    }
-    else if ((*(int *)(iVar13 + 0x58) == 0) || (uVar14 = ObjHits_IsObjectEnabled(iVar13), uVar14 == 0)) {
-      FUN_800068f8((double)*(float *)(puVar12 + 6),(double)*(float *)(puVar12 + 8),
-                   (double)*(float *)(puVar12 + 10),(float *)(puVar12 + 0xc),
-                   (float *)(puVar12 + 0xe),(float *)(puVar12 + 0x10),*(int *)(puVar12 + 0x18));
+void dll_15_func06(short *curveObj,int *state)
+{
+  f32 r;
+  f32 v;
+  f32 maxX;
+  f32 maxZ;
+  f32 maxY;
+  f32 minX;
+  f32 minZ;
+  f32 minY;
+  f32 *pin;
+  int idx3;
+  int byteOff;
+  int i;
+  int n;
+  int count;
+  f64 c;
+  f32 *ptsWalk;
+  f32 *radWalk;
+  f32 *radWrite;
+  f32 *ptsRead;
+  int *walk;
+  int *walk2;
+  f32 m[16];
+  f32 pts[12];
+  CurvesTransformScratch s;
+  f32 radii[4];
+
+  if ((*(char *)((u8 *)state + 0x25b) != 0) && ((*state & 0x4000000) != 0) &&
+      ((*state & 0x2000) != 0)) {
+    if (*(void **)(curveObj + 0x18) != NULL) {
+      if ((*(void **)(*(int *)(curveObj + 0x18) + 0x58) != NULL) &&
+          (ObjHits_IsObjectEnabled(*(int *)(curveObj + 0x18)) != 0)) {
+        idx3 = (*(byte *)(*(int *)(*(int *)(curveObj + 0x18) + 0x58) + 0x10c) + 2) * 0x10;
+        Matrix_TransformPoint((f32 *)(*(int *)(*(int *)(curveObj + 0x18) + 0x58)) + idx3,
+                              *(f32 *)(curveObj + 6), *(f32 *)(curveObj + 8), *(f32 *)(curveObj + 10),
+                              (f32 *)(curveObj + 0xc), (f32 *)(curveObj + 0xe), (f32 *)(curveObj + 0x10));
+      }
+      else {
+        Obj_TransformLocalPointToWorld(*(f32 *)(curveObj + 6), *(f32 *)(curveObj + 8),
+                                       *(f32 *)(curveObj + 10), (f32 *)(curveObj + 0xc),
+                                       (f32 *)(curveObj + 0xe), (f32 *)(curveObj + 0x10),
+                                       *(u32 *)(curveObj + 0x18));
+      }
     }
     else {
-      Matrix_TransformPoint((float *)(*(int *)(*(int *)(puVar12 + 0x18) + 0x58) +
-                                       (*(byte *)(*(int *)(*(int *)(puVar12 + 0x18) +
-                                                          0x58) +
-                                                 0x10c) +
-                                        2) *
-                                           0x40),
-                            (double)*(float *)(puVar12 + 6),
-                            (double)*(float *)(puVar12 + 8),
-                            (double)*(float *)(puVar12 + 10),(float *)(puVar12 + 0xc),
-                            (float *)(puVar12 + 0xe),(float *)(puVar12 + 0x10));
+      *(f32 *)(curveObj + 0xc) = *(f32 *)(curveObj + 6);
+      *(f32 *)(curveObj + 0xe) = *(f32 *)(curveObj + 8);
+      *(f32 *)(curveObj + 0x10) = *(f32 *)(curveObj + 10);
     }
-    local_108 = *puVar12;
-    if ((*puVar15 & 0x20) == 0) {
-      local_106 = puVar12[1];
-      local_104 = puVar12[2];
+    s.angles[0] = curveObj[0];
+    if ((*state & 0x20) != 0) {
+      s.angles[1] = 0;
+      s.angles[2] = 0;
     }
     else {
-      local_106 = 0;
-      local_104 = 0;
+      s.angles[1] = curveObj[1];
+      s.angles[2] = curveObj[2];
     }
-    local_100 = lbl_803E130C;
-    local_fc = *(undefined4 *)(puVar12 + 0xc);
-    local_f8 = *(undefined4 *)(puVar12 + 0xe);
-    local_f4 = *(undefined4 *)(puVar12 + 0x10);
-    setMatrixFromObjectPos(afStack_c0,&local_108);
-    iVar13 = 0;
-    pfVar18 = local_f0;
-    iVar22 = 0;
-    pfVar19 = local_118;
-    dVar25 = (double)lbl_803E1340;
-    pfVar20 = pfVar19;
-    puVar21 = puVar15;
-    pfVar23 = pfVar18;
-    for (iVar17 = 0; iVar11 = (int)(uint)*(byte *)(puVar15 + 0x97) >> 4, puVar10 = puVar15,
-        fVar3 = lbl_803E1324, fVar4 = lbl_803E1324, fVar5 = lbl_803E1324,
-        fVar6 = lbl_803E1328, fVar7 = lbl_803E1328, fVar8 = lbl_803E1328, iVar17 < iVar11;
-        iVar17 = iVar17 + 1) {
-      pfVar16 = (float *)(puVar15[1] + iVar22);
-      Matrix_TransformPoint(afStack_c0,(double)*pfVar16,(double)pfVar16[1],
-                            (double)pfVar16[2],pfVar23,local_f0 + iVar13 + 1,
-                            local_f0 + iVar13 + 2);
-      *pfVar20 = *(f32 *)(puVar21 + 0x2a);
-      dVar24 = FUN_80293900((double)(float)((double)(float)(dVar25 * (double)*pfVar20) *
-                                           (double)*pfVar20));
-      *pfVar20 = (float)dVar24;
-      pfVar23 = pfVar23 + 3;
-      iVar22 = iVar22 + 0xc;
-      iVar13 = iVar13 + 3;
-      puVar21 = puVar21 + 1;
-      pfVar20 = pfVar20 + 1;
+    s.scale = lbl_803E068C;
+    s.x = *(f32 *)(curveObj + 0xc);
+    s.y = *(f32 *)(curveObj + 0xe);
+    s.z = *(f32 *)(curveObj + 0x10);
+    setMatrixFromObjectPos(m, &s);
+    idx3 = 0;
+    byteOff = 0;
+    ptsWalk = pts;
+    ptsRead = ptsWalk;
+    walk2 = state;
+    radWrite = radii;
+    radWalk = radWrite;
+    c = lbl_803E06C0;
+    for (i = 0; i < (int)(uint)*(byte *)(state + 0x97) >> 4; i++) {
+      pin = (f32 *)(state[1] + byteOff);
+      Matrix_TransformPoint(m, pin[0], pin[1], pin[2], ptsWalk,
+                            pts + (idx3 + 1), pts + (idx3 + 2));
+      *radWalk = *(f32 *)(walk2 + 0x2a);
+      *radWalk = sqrtf((f32)((f64)(f32)(c * (f64)*radWalk) * (f64)*radWalk));
+      ptsWalk = ptsWalk + 3;
+      byteOff = byteOff + 0xc;
+      idx3 = idx3 + 3;
+      walk2 = walk2 + 1;
+      radWalk = radWalk + 1;
     }
-    for (; iVar11 != 0; iVar11 = iVar11 + -1) {
-      fVar2 = *pfVar19;
-      fVar9 = *pfVar18 + fVar2;
-      if (fVar3 < fVar9) {
-        fVar3 = fVar9;
+    maxX = lbl_803E06A4;
+    maxZ = lbl_803E06A4;
+    maxY = lbl_803E06A4;
+    minX = lbl_803E06A8;
+    minZ = lbl_803E06A8;
+    minY = lbl_803E06A8;
+    walk = state;
+    for (n = (int)(uint)*(byte *)(state + 0x97) >> 4; n != 0; n--) {
+      r = *radWrite;
+      v = *ptsRead + r;
+      if (maxX < v) {
+        maxX = v;
       }
-      fVar9 = *pfVar18 - fVar2;
-      if (fVar9 < fVar6) {
-        fVar6 = fVar9;
+      v = *ptsRead - r;
+      if (v < minX) {
+        minX = v;
       }
-      fVar9 = pfVar18[1] + fVar2;
-      if (fVar5 < fVar9) {
-        fVar5 = fVar9;
+      v = ptsRead[1] + r;
+      if (maxY < v) {
+        maxY = v;
       }
-      fVar9 = pfVar18[1] - fVar2;
-      if (fVar9 < fVar8) {
-        fVar8 = fVar9;
+      v = ptsRead[1] - r;
+      if (v < minY) {
+        minY = v;
       }
-      fVar9 = pfVar18[2] + fVar2;
-      if (fVar4 < fVar9) {
-        fVar4 = fVar9;
+      v = ptsRead[2] + r;
+      if (maxZ < v) {
+        maxZ = v;
       }
-      fVar9 = pfVar18[2] - fVar2;
-      if (fVar9 < fVar7) {
-        fVar7 = fVar9;
+      v = ptsRead[2] - r;
+      if (v < minZ) {
+        minZ = v;
       }
-      fVar9 = *(f32 *)(puVar10 + 0xe) + fVar2;
-      if (fVar3 < fVar9) {
-        fVar3 = fVar9;
+      v = *(f32 *)(walk + 0xe) + r;
+      if (maxX < v) {
+        maxX = v;
       }
-      fVar9 = *(f32 *)(puVar10 + 0xe) - fVar2;
-      if (fVar9 < fVar6) {
-        fVar6 = fVar9;
+      v = *(f32 *)(walk + 0xe) - r;
+      if (v < minX) {
+        minX = v;
       }
-      fVar9 = *(f32 *)(puVar10 + 0xf) + fVar2;
-      if (fVar5 < fVar9) {
-        fVar5 = fVar9;
+      v = *(f32 *)(walk + 0xf) + r;
+      if (maxY < v) {
+        maxY = v;
       }
-      fVar9 = *(f32 *)(puVar10 + 0xf) - fVar2;
-      if (fVar9 < fVar8) {
-        fVar8 = fVar9;
+      v = *(f32 *)(walk + 0xf) - r;
+      if (v < minY) {
+        minY = v;
       }
-      fVar9 = *(f32 *)(puVar10 + 0x10) + fVar2;
-      if (fVar4 < fVar9) {
-        fVar4 = fVar9;
+      v = *(f32 *)(walk + 0x10) + r;
+      if (maxZ < v) {
+        maxZ = v;
       }
-      fVar2 = *(f32 *)(puVar10 + 0x10) - fVar2;
-      if (fVar2 < fVar7) {
-        fVar7 = fVar2;
+      r = *(f32 *)(walk + 0x10) - r;
+      if (r < minZ) {
+        minZ = r;
       }
-      pfVar18 = pfVar18 + 3;
-      pfVar19 = pfVar19 + 1;
-      puVar10 = puVar10 + 3;
+      ptsRead = ptsRead + 3;
+      radWrite = radWrite + 1;
+      walk = walk + 3;
     }
-    *(f32 *)(puVar15 + 0x90) = fVar6;
-    *(f32 *)(puVar15 + 0x93) = fVar3;
-    *(f32 *)(puVar15 + 0x91) = fVar8 - (f32)(u32)*(byte *)(puVar15 + 0x96);
-    *(f32 *)(puVar15 + 0x94) = fVar5 + (f32)(u32)*(byte *)(puVar15 + 0x96);
-    *(f32 *)(puVar15 + 0x92) = fVar7;
-    *(f32 *)(puVar15 + 0x95) = fVar4;
+    state[0x90] = (int)minX;
+    state[0x93] = (int)maxX;
+    state[0x91] = (int)(minY - (f32)*(u8 *)((u8 *)state + 0x258));
+    state[0x94] = (int)(maxY + (f32)*(u8 *)((u8 *)state + 0x258));
+    state[0x92] = (int)minZ;
+    state[0x95] = (int)maxZ;
   }
-  return;
 }
 
 /*
