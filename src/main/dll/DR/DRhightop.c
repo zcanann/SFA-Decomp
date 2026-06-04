@@ -619,7 +619,7 @@ undefined4 fn_801EB420(short *param_1,undefined4 param_2,int param_3)
     }
 
     intensity = (int)(lbl_803E6838 * -*(float *)(state + 0x430));
-    fn_801EA240((double)*(float *)(state + 0x49c), (int)param_1, state, intensity,
+    fn_801EA240(*(float *)(state + 0x49c), (int)param_1, state, intensity,
                 state + 0x461, 4);
   }
 
