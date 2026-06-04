@@ -4500,27 +4500,27 @@ extern int lbl_803DB9D4;
 #pragma scheduling off
 void CameraModeCloudRunner_update(u8 *obj) {
     u8 *state = *(u8 **)(obj + 164);
-    int curve;
+    u8 *curve;
     s16 tgtYaw;
     s16 tgtPitch;
     f32 baseX, baseY, baseZ;
-    int delta;
     f32 cosYaw, sinYaw, sinPitch, cosPitch;
     f32 radius;
+    f32 rx, ry, rz, rs;
     u8 mxin[24];
     f32 matrix[12];
 
     fn_8029697C((int)state, &tgtYaw, &tgtPitch);
-    curve = fn_802972A8((int)state);
-    if (curve != 0) {
+    curve = (u8 *)fn_802972A8((int)state);
+    if (curve != NULL) {
         if (*(s16 *)(curve + 70) == 1049) {
+            *(f32 *)(mxin + 12) = *(f32 *)(curve + 24);
+            *(f32 *)(mxin + 16) = *(f32 *)(curve + 28);
+            *(f32 *)(mxin + 20) = *(f32 *)(curve + 32);
             *(s16 *)(mxin + 0) = *(s16 *)(curve + 0);
             *(s16 *)(mxin + 2) = *(s16 *)(curve + 2);
             *(s16 *)(mxin + 4) = *(s16 *)(curve + 4);
             *(f32 *)(mxin + 8) = lbl_803E1B20;
-            *(f32 *)(mxin + 12) = *(f32 *)(curve + 24);
-            *(f32 *)(mxin + 16) = *(f32 *)(curve + 28);
-            *(f32 *)(mxin + 20) = *(f32 *)(curve + 32);
             setMatrixFromObjectPos(matrix, mxin);
             Matrix_TransformPoint(matrix, lbl_803E1B24, lbl_803E1B28, lbl_803E1B2C,
                                   &baseX, &baseY, &baseZ);
@@ -4536,34 +4536,38 @@ void CameraModeCloudRunner_update(u8 *obj) {
     }
 
     tgtYaw = (s16)((0x8000 - *(s16 *)state) + tgtYaw);
-    delta = tgtYaw - (u16)*(s16 *)obj;
-    if (delta > 0x8000) {
-        delta -= 0xffff;
+    tgtYaw = (s16)(tgtYaw - (u16)*(s16 *)obj);
+    if (tgtYaw > 0x8000) {
+        tgtYaw -= 0xffff;
     }
-    if (delta < -0x8000) {
-        delta += 0xffff;
+    if (tgtYaw < -0x8000) {
+        tgtYaw += 0xffff;
     }
-    *(s16 *)obj = (s16)(*(s16 *)obj + (s16)delta);
+    *(s16 *)obj = *(s16 *)obj + tgtYaw;
 
-    delta = tgtPitch - (u16)*(s16 *)(obj + 2);
-    if (delta > 0x8000) {
-        delta -= 0xffff;
+    tgtPitch = (s16)(tgtPitch - (u16)*(s16 *)(obj + 2));
+    if (tgtPitch > 0x8000) {
+        tgtPitch -= 0xffff;
     }
-    if (delta < -0x8000) {
-        delta += 0xffff;
+    if (tgtPitch < -0x8000) {
+        tgtPitch += 0xffff;
     }
-    *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) + (s16)delta);
+    *(s16 *)(obj + 2) = *(s16 *)(obj + 2) + tgtPitch;
 
     *(s16 *)(obj + 4) = (s16)(*(s16 *)(state + 4) * lbl_803DB9D4);
 
     cosYaw = fn_80293E80(lbl_803E1B30 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B34);
     sinYaw = sin(lbl_803E1B30 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B34);
-    sinPitch = sin(lbl_803E1B30 * (f32)(s32)(*(s16 *)(obj + 2) - 0x4000) / lbl_803E1B34);
-    cosPitch = fn_80293E80(lbl_803E1B30 * (f32)(s32)(*(s16 *)(obj + 2) - 0x4000) / lbl_803E1B34);
+    sinPitch = sin(lbl_803E1B30 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B34);
+    cosPitch = fn_80293E80(lbl_803E1B30 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B34);
     radius = *(f32 *)(lbl_803DD5B8 + 12);
-    *(f32 *)(obj + 24) = baseX + radius * sinPitch * sinYaw;
-    *(f32 *)(obj + 28) = baseY + radius * cosPitch;
-    *(f32 *)(obj + 32) = baseZ + radius * sinPitch * cosYaw;
+    ry = radius * cosPitch;
+    rs = radius * sinPitch;
+    rx = rs * sinYaw;
+    rz = rs * cosYaw;
+    *(f32 *)(obj + 24) = baseX + rx;
+    *(f32 *)(obj + 28) = baseY + ry;
+    *(f32 *)(obj + 32) = baseZ + rz;
     Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
                                    (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
                                    *(int *)(obj + 48));
