@@ -527,46 +527,7 @@ void FUN_80175ed4(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-void pushable_render(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  short sVar1;
-  float fVar2;
-  int iVar3;
-  int iVar4;
-  uint uVar5;
-  
-  iVar3 = FUN_80286840();
-  fVar2 = lbl_803E41C0;
-  if (visible == 0) goto LAB_80176578;
-  iVar4 = *(int *)(iVar3 + 0xb8);
-  sVar1 = *(short *)(iVar3 + 0x46);
-  if (sVar1 == 0x411) {
-    uVar5 = FUN_80017690((int)*(short *)(iVar4 + 0xac));
-joined_r0x801764e4:
-    if (uVar5 != 0) goto LAB_80176578;
-  }
-  else if (sVar1 < 0x411) {
-    if (sVar1 == 0x21e) {
-      uVar5 = FUN_80017690((int)*(short *)(iVar4 + 0xac));
-      goto joined_r0x801764e4;
-    }
-  }
-  else if ((sVar1 == 0x54a) && (lbl_803E41C0 < *(float *)(iVar4 + 0x14))) {
-    *(float *)(iVar4 + 0x14) = *(float *)(iVar4 + 0x14) - lbl_803DC074;
-    if (fVar2 < *(float *)(iVar4 + 0x14)) {
-      FUN_8003b540(200,0,0,0xff);
-    }
-    else {
-      *(float *)(iVar4 + 0x14) = fVar2;
-    }
-  }
-  iVar4 = **(int **)(*(int *)(iVar3 + 0x7c) + *(char *)(iVar3 + 0xad) * 4);
-  *(ushort *)(iVar4 + 2) = *(ushort *)(iVar4 + 2) | 2;
-  FUN_8003b818(iVar3);
-LAB_80176578:
-  FUN_8028688c();
-  return;
-}
+/* pushable_render: recovered v1.0 body defined at end of file. */
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1250,12 +1211,12 @@ void objSetAnimSpeedTo1(int *obj) { u8 v = 0x1; *((u8*)((int**)obj)[0xb8/4] + 0x
 
 /* render-with-fn(lbl) (no visibility check). */
 extern f32 lbl_803E35E8;
-extern void objRenderFn_8003b8f4(f32);
+extern void objRenderFn_8003b8f4(int *obj, int a, int b, int c, int d, f32 scale);
 extern f32 lbl_803E3600;
 #pragma scheduling off
 #pragma peephole off
-void invhit_render(void) { objRenderFn_8003b8f4(lbl_803E35E8); }
-void iceblast_render(void) { objRenderFn_8003b8f4(lbl_803E3600); }
+void invhit_render(int *obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E35E8); }
+void iceblast_render(int *obj, int a, int b, int c, int d) { objRenderFn_8003b8f4(obj, a, b, c, d, lbl_803E3600); }
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1384,32 +1345,32 @@ void iceblast_update(int *obj) {
     player = (int *)Obj_GetPlayerObject();
     state = *(f32 **)((char *)obj + 0xb8);
     def = *(int **)((char *)obj + 0x4c);
-    if (player == NULL) return;
-    path = *(int **)((char *)player + 0xc8);
-    if (path == NULL) return;
-    *(s16 *)((char *)obj + 4) = *(s16 *)((char *)path + 4);
-    *(s16 *)((char *)obj + 2) = *(s16 *)((char *)path + 2);
-    *(s16 *)obj = *(s16 *)path;
+    if (player != NULL && (path = *(int **)((char *)player + 0xc8)) != NULL) {
+        *(s16 *)((char *)obj + 4) = *(s16 *)((char *)path + 4);
+        *(s16 *)((char *)obj + 2) = *(s16 *)((char *)path + 2);
+        *(s16 *)obj = *(s16 *)path;
+    } else {
+        return;
+    }
     ObjHits_SetHitVolumeSlot(obj, 0x10, *(s8 *)((char *)def + 0x19) != 0 ? 3 : 1, 0);
     state[0] = state[0] - timeDelta;
-    {
-        f32 zero = lbl_803E3604;
-        if (state[0] <= zero) {
-            state[0] = state[0] + lbl_803E3608;
-            *(f32 *)((char *)obj + 0x24) = zero;
-            *(f32 *)((char *)obj + 0x2c) = zero;
-            *(f32 *)((char *)obj + 0x28) = lbl_803E360C;
-            vec.pos[1] = zero;
-            vec.pos[2] = zero;
-            vec.pos[3] = zero;
-            vec.pos[0] = lbl_803E3600;
+    if (state[0] <= lbl_803E3604) {
+        f32 zero;
+        state[0] = state[0] + lbl_803E3608;
+        zero = lbl_803E3604;
+        ((f32 *)obj)[9] = zero;
+        ((f32 *)obj)[11] = zero;
+        ((f32 *)obj)[10] = lbl_803E360C;
+        vec.pos[1] = zero;
+        vec.pos[2] = zero;
+        vec.pos[3] = zero;
+        vec.pos[0] = lbl_803E3600;
         vec.dir[2] = *(s16 *)((char *)path + 4);
         vec.dir[1] = *(s16 *)((char *)path + 2);
         vec.dir[0] = *(s16 *)path;
-            mathFn_80021ac8(&vec, (f32 *)((char *)obj + 0x24));
-            ObjPath_GetPointWorldPosition((int)path, 0, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14), 0);
-            ObjHits_EnableObject((u32)obj);
-        }
+        mathFn_80021ac8(&vec, (f32 *)((char *)obj + 0x24));
+        ObjPath_GetPointWorldPosition((int)path, 0, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14), 0);
+        ObjHits_EnableObject((u32)obj);
     }
     *(f32 *)((char *)obj + 0x80) = *(f32 *)((char *)obj + 0xc);
     *(f32 *)((char *)obj + 0x84) = *(f32 *)((char *)obj + 0x10);
@@ -2571,6 +2532,48 @@ int pushable_setScale(int *obj, s16 *tgt, int flag, f32 dx, f32 dz) {
         *(u16 *)(state + 0x100) = fl & ~0xf00;
     }
     return ret;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_8003B5E0(int a, int b, int c, int d);
+
+#pragma scheduling off
+#pragma peephole off
+void pushable_render(int *obj, int p1, int p2, int p3, int p4, s8 visible) {
+    if (visible != 0) {
+        u8 *state = *(u8 **)((char *)obj + 0xb8);
+        switch (*(s16 *)((char *)obj + 0x46)) {
+        case 0x21e:
+            if (GameBit_Get(*(s16 *)(state + 0xac)) == 0) {
+                break;
+            }
+            return;
+        case 0x411:
+            if (GameBit_Get(*(s16 *)(state + 0xac)) == 0) {
+                break;
+            }
+            return;
+        case 0x54a: {
+            f32 v = *(f32 *)(state + 0x14);
+            f32 zero = lbl_803E3528;
+            if (v > zero) {
+                *(f32 *)(state + 0x14) = v - timeDelta;
+                if (*(f32 *)(state + 0x14) <= zero) {
+                    *(f32 *)(state + 0x14) = zero;
+                } else {
+                    fn_8003B5E0(0xc8, 0, 0, 0xff);
+                }
+            }
+            break;
+        }
+        }
+        {
+            char *hdr = *(char **)(*(int *)((char *)obj + 0x7c) + *(s8 *)((char *)obj + 0xad) * 4);
+            *(u16 *)(*(char **)hdr + 2) = *(u16 *)(*(char **)hdr + 2) | 2;
+        }
+        objRenderFn_8003b8f4(obj, p1, p2, p3, p4, lbl_803E3588);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

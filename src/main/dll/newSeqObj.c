@@ -12,7 +12,7 @@ extern int Sfx_PlayFromObject(void *obj, int sfxId);
 extern void fn_8001FEA8(void);
 extern void fn_8015039C(void *p1, void *p2);
 extern u32 fn_8014FFB4(void *p1, void *p2, int p3);
-extern void fn_8014D08C(void *p1, void *p2, int p3, int p4, f32 f1, int p6);
+extern void fn_8014D08C(void *p1, void *p2, int p3, f32 f1, int p5, int p6);
 extern void fn_8014CF7C(void *p1, void *p2, int p3, int p4, f32 f1, f32 f2);
 
 extern u8 lbl_8031DD30[];
@@ -24,28 +24,127 @@ extern f32 lbl_803E276C;
 extern f32 lbl_803E27A0;
 extern f64 lbl_803E2770;
 
-int fn_801504F8(void *p1, void *p2, void *p3, int msgId, int arrIdx, int p6) {
-    u8 *table = lbl_8031DD30;
-    u8 idx = *(u8 *)((u8 *)p2 + 0x33b);
-    u8 *entry = table + 0x143c + idx * 0x28;
-    u8 *r31 = *(u8 **)(entry + 0x10);
-    int retVal = 0;
+extern u8 lbl_8031F16C[];
 
-    if (idx == 5) {
-        *(u32 *)((u8 *)p2 + 0x2e8) |= 0x10;
+int fn_801504F8(int *obj, u8 *state, int *p3, int msgId, int arrIdx, int p6)
+{
+    u8 *base = lbl_8031F16C;
+    u8 *animRows = *(u8 **)(base + state[0x33b] * 0x28 + 0x10);
+    u8 *rowsC = *(u8 **)(base + state[0x33b] * 0x28 + 0x24);
+    u8 *rowsB = *(u8 **)(base + state[0x33b] * 0x28 + 0x1c);
+    u8 *trig = *(u8 **)(base + state[0x33b] * 0x28 + 0x20);
+    int ret = 0;
+
+    if (state[0x33b] == 5) {
+        *(u32 *)(state + 0x2e8) |= 0x10;
         return 0;
     }
     if (msgId == 0xe) {
         p6 = p6 * 0xa;
     }
-    if ((s32)*(s16 *)((u8 *)p1 + 0xa0) == *(u8 *)(r31 + 0x128)) {
+    if (*(s16 *)((char *)obj + 0xa0) == animRows[0x128]) {
         return 0;
     }
     if (msgId == 0x10) {
-        *(u32 *)((u8 *)p2 + 0x2e8) |= 0x28;
+        *(u32 *)(state + 0x2e8) |= 0x28;
         return 0;
     }
-    return retVal;
+    if ((*(u32 *)(state + 0x2dc) & 0x40) != 0 ||
+        (trig[arrIdx] != 0 && ((u32)(msgId - 0xe) <= 1 || msgId == 0x13))) {
+        if (msgId != 0x11) {
+            if (msgId != 0x1a && *(s16 *)((char *)p3 + 0x46) != 0x6d &&
+                *(s16 *)((char *)p3 + 0x46) != 0x754) {
+                Sfx_PlayFromObject(obj, 0x255);
+                Sfx_PlayFromObject(obj, 0x16);
+            }
+            *(u32 *)(state + 0x2e8) |= 0x10;
+            fn_8014D08C(obj, state, rowsC[state[0x33c] * 12 + 8],
+                        *(f32 *)(rowsC + state[0x33c] * 12), 0,
+                        (u8)*(u32 *)(rowsC + state[0x33c] * 12 + 4));
+            ObjAnim_SetMoveProgress(
+                *(f32 *)(lbl_8031DD30 + rowsC[state[0x33c] * 12 + 8] * 4),
+                (ObjAnimComponent *)obj);
+            if (rowsC[state[0x33c] * 12 + 0xa] != 0) {
+                state[0x33a] = rowsC[state[0x33c] * 12 + 0xa];
+            }
+            ret = rowsC[state[0x33c] * 12 + 9];
+            *(f32 *)(state + 0x32c) = *(f32 *)(state + 0x330);
+            *(f32 *)(state + 0x324) = lbl_803E2740;
+            *(f32 *)(state + 0x334) = lbl_803E2740;
+        }
+    } else {
+        u32 amount;
+        f32 z;
+
+        if (msgId == 0x11) {
+            amount = 0x18;
+        } else {
+            amount = state[0x2f1] & 0x1f;
+            if (amount > 0x18) {
+                amount = 0;
+            }
+        }
+        z = lbl_803E2740;
+        *(f32 *)(state + 0x324) = z;
+        if (state[0x2f1] & 0x18) {
+            if (state[0x2f1] & 1) {
+                *(f32 *)(state + 0x334) = lbl_803E2768;
+            } else {
+                *(f32 *)(state + 0x334) = lbl_803E276C;
+            }
+        } else {
+            *(f32 *)(state + 0x334) = z;
+        }
+        if (*(f32 *)(state + 0x328) != lbl_803E2740 && *(u16 *)(state + 0x338) != 0) {
+            fn_8014D08C(obj, state,
+                        rowsB[rowsB[*(u16 *)(state + 0x338) * 16 + 0xb] * 16 + 8],
+                        *(f32 *)(rowsB + rowsB[*(u16 *)(state + 0x338) * 16 + 0xb] * 16), 0,
+                        (u8)*(u32 *)(rowsB + rowsB[*(u16 *)(state + 0x338) * 16 + 0xb] * 16 + 4));
+            ObjAnim_SetMoveProgress(
+                *(f32 *)(lbl_8031DD30 +
+                         rowsB[rowsB[*(u16 *)(state + 0x338) * 16 + 0xb] * 16 + 8] * 4),
+                (ObjAnimComponent *)obj);
+        } else {
+            int off = (u8)amount * 12;
+
+            fn_8014D08C(obj, state, animRows[off + 8], *(f32 *)(animRows + off), 0,
+                        (u8)*(u32 *)(animRows + off + 4));
+            ObjAnim_SetMoveProgress(*(f32 *)(lbl_8031DD30 + animRows[off + 8] * 4),
+                                    (ObjAnimComponent *)obj);
+            *(u16 *)(state + 0x338) = animRows[off + 9];
+            *(f32 *)(state + 0x328) = (f32)(u32)*(u16 *)(state + 0x2ec);
+        }
+        *(u32 *)(state + 0x2e8) |= 8;
+        if (*(s16 *)((char *)p3 + 0x44) == 0x1c) {
+            return 0;
+        }
+        {
+            int *other = *(int **)((char *)p3 + 0xc4);
+            if (other != 0 && *(s16 *)((char *)other + 0x44) == 0x1c) {
+                return 0;
+            }
+        }
+        if (state[0x2f1] & 0x10) {
+            p6 = 0x14;
+        } else {
+            state[0x2f5] = 0;
+        }
+        if (p6 > *(u16 *)(state + 0x2b0)) {
+            *(u16 *)(state + 0x2b0) = 0;
+        } else {
+            *(u16 *)(state + 0x2b0) = *(u16 *)(state + 0x2b0) - p6;
+        }
+        if (*(u16 *)(state + 0x2b0) == 0) {
+            Sfx_PlayFromObject(obj, 0x13);
+        } else {
+            Sfx_PlayFromObject(obj, 0x14);
+        }
+        if (msgId != 0x1a && msgId != 0x1f && *(s16 *)((char *)p3 + 0x46) != 0x6d &&
+            *(s16 *)((char *)p3 + 0x46) != 0x754) {
+            Sfx_PlayFromObject(obj, 0x22);
+        }
+    }
+    return ret;
 }
 
 void fn_80150EDC(void *p1, void *p2) {
@@ -93,8 +192,8 @@ void fn_80150EDC(void *p1, void *p2) {
         if (cur338 != 0) {
             u8 *row = r28 + (cur338 << 4);
             *(u8 *)((u8 *)p2 + 0x2f2) = (u8)*(u32 *)(row + 0xc);
-            fn_8014D08C(p1, p2, *(u8 *)(row + 0x8), 0,
-                        *(f32 *)(r28 + (cur338 << 4)),
+            fn_8014D08C(p1, p2, *(u8 *)(row + 0x8),
+                        *(f32 *)(r28 + (cur338 << 4)), 0,
                         (u8)*(u32 *)(row + 0x4));
             ObjAnim_SetMoveProgress(
                 *(f32 *)(table + (*(u8 *)(r28 + (*(u16 *)((u8 *)p2 + 0x338) << 4) + 0x8) << 2)),
@@ -112,8 +211,8 @@ void fn_80150EDC(void *p1, void *p2) {
                 *(u8 *)((u8 *)p2 + 0x323) = 3;
                 ObjAnim_SetCurrentMove((int)p1, *(u8 *)((u8 *)r30 + 0x2c), lbl_803E2740, 0);
             } else {
-                fn_8014D08C(p1, p2, v8, 0,
-                            *(f32 *)((u8 *)r29 + idx2a0 * 0xc), 0xb);
+                fn_8014D08C(p1, p2, v8,
+                            *(f32 *)((u8 *)r29 + idx2a0 * 0xc), 0, 0xb);
                 ObjAnim_SetMoveProgress(
                     *(f32 *)(table + (*(u8 *)((u8 *)r29 + (*(u16 *)((u8 *)p2 + 0x2a0)) * 0xc + 0x8) << 2)),
                     (ObjAnimComponent *)p1);
@@ -137,5 +236,175 @@ void fn_80150EDC(void *p1, void *p2) {
         f32 f1 = *(f32 *)((u8 *)p_29c + 0xc);
         f32 f2 = *(f32 *)((u8 *)p_29c + 0x14);
         fn_8014CF7C(p1, p2, 0xf, 0, f1, f2);
+    }
+}
+
+/* EN v1.0 0x80150910  size: 1484b  sidekick-toy main update: timer-driven
+ * 16-stride anim chain, curve chase with speed/turn shaping, idle anims. */
+
+extern void sidekickToy_updateCurveTargetLatch(int *obj);
+extern int curveFn_80010320(u8 *curve, f32 t);
+extern int *gRomCurveInterface;
+extern f32 sqrtf(f32 x);
+extern int getAngle(f32 a, f32 b);
+extern u32 randomGetRange(int min, int max);
+extern f32 lbl_803E2744;
+extern f32 lbl_803E2748;
+extern f32 lbl_803E2754;
+extern f64 lbl_803E2758;
+extern f32 lbl_803E2778;
+extern f32 lbl_803E277C;
+extern f32 lbl_803E2780;
+extern f32 lbl_803E2784;
+extern f32 lbl_803E2788;
+extern f32 lbl_803E278C;
+extern f32 lbl_803E2790;
+extern f32 lbl_803E2794;
+extern f32 lbl_803E2798;
+extern f32 lbl_803E279C;
+
+void fn_80150910(int *obj, u8 *state)
+{
+    u8 *path = *(u8 **)state;
+    u8 *base = lbl_8031F16C;
+    u8 *tbl4 = *(u8 **)(base + state[0x33b] * 0x28 + 4);
+    u8 *tbl0 = *(u8 **)(base + state[0x33b] * 0x28);
+    u8 *tbl1c = *(u8 **)(base + state[0x33b] * 0x28 + 0x1c);
+    u32 flags;
+
+    if (state[0x33b] == 5 && (*(u32 *)(state + 0x2dc) & 0x800000)) {
+        GameBit_Set(0x1c8, 1);
+    }
+    fn_8015039C(obj, state);
+    {
+        f32 t = *(f32 *)(state + 0x328);
+        f32 z = lbl_803E2740;
+        if (t != z && *(u16 *)(state + 0x338) != 0) {
+            *(f32 *)(state + 0x328) = t - timeDelta;
+            if (*(f32 *)(state + 0x328) <= z) {
+                *(f32 *)(state + 0x328) = z;
+                *(u32 *)(state + 0x2dc) |= 0x40000000;
+                *(u16 *)(state + 0x338) = tbl1c[*(u16 *)(state + 0x338) * 16 + 0xa];
+            }
+        }
+    }
+    if ((u8)fn_8014FFB4(obj, state, 0) != 0) {
+        return;
+    }
+    if (state[0x33d] != 0) {
+        if (*(u32 *)(state + 0x2dc) & 0x40000000) {
+            f32 z = lbl_803E2740;
+            *(f32 *)((char *)obj + 0x2c) = z;
+            *(f32 *)((char *)obj + 0x28) = z;
+            *(f32 *)((char *)obj + 0x24) = z;
+            fn_8014D08C(obj, state, tbl4[state[0x33d] * 12 + 8],
+                        *(f32 *)(tbl4 + state[0x33d] * 12), 0,
+                        (u8)*(u32 *)(tbl4 + state[0x33d] * 12 + 4));
+            ObjAnim_SetMoveProgress(*(f32 *)(lbl_8031DD30 + tbl4[state[0x33d] * 12 + 8] * 4),
+                                    (ObjAnimComponent *)obj);
+            state[0x33d] = tbl4[state[0x33d] * 12 + 9];
+            state[0x33e] = 0;
+        }
+        if (state[0x33e] == 0) {
+            return;
+        }
+    }
+    if ((*(u32 *)(state + 0x2dc) & 0x80000000) && state[0x33d] == 0) {
+        sidekickToy_updateCurveTargetLatch(obj);
+    }
+    flags = *(u32 *)(state + 0x2dc);
+    if (flags & 0x2000) {
+        f32 d;
+        f32 delta;
+
+        {
+            f32 dx = *(f32 *)(path + 0x68) - *(f32 *)((char *)obj + 0xc);
+            f32 dz = *(f32 *)(path + 0x70) - *(f32 *)((char *)obj + 0x14);
+            d = sqrtf(dx * dx + dz * dz);
+        }
+        if (d > lbl_803E2778) {
+            d = lbl_803E2778;
+        }
+        {
+            f32 spd = (lbl_803E2778 - d) * lbl_803E277C;
+            *(f32 *)(state + 0x310) = spd * *(f32 *)(state + 0x2fc);
+        }
+        if (*(f32 *)(state + 0x310) < lbl_803E2780) {
+            *(f32 *)(state + 0x310) = lbl_803E2780;
+        }
+        if (curveFn_80010320(path, *(f32 *)(state + 0x310)) != 0 || *(int *)(path + 0x10) != 0) {
+            if ((*(u8 (**)(u8 *))(*(int *)gRomCurveInterface + 0x90))(path) != 0) {
+                sidekickToy_updateCurveTargetLatch(obj);
+            }
+        }
+        delta = (f32)(int)((u16)getAngle(*(f32 *)(path + 0x74), *(f32 *)(path + 0x7c)) + 0x8000 -
+                           (u16)*(s16 *)obj);
+        if (delta > lbl_803E2788) {
+            delta = lbl_803E2784 + delta;
+        }
+        if (delta < lbl_803E2790) {
+            delta = lbl_803E278C + delta;
+        }
+        *(f32 *)(state + 0x308) =
+            (*(f32 *)(state + 0x2fc) - *(f32 *)(state + 0x310)) / lbl_803E274C *
+            (lbl_803E2748 - ((delta >= lbl_803E2740) ? delta : -delta) / lbl_803E278C);
+        if (*(f32 *)(state + 0x308) < lbl_803E2754) {
+            *(f32 *)(state + 0x308) = lbl_803E2754;
+        }
+        if ((*(u32 *)(state + 0x2dc) & 0x40000000) && state[0x33d] == 0) {
+            if (*(u16 *)(state + 0x338) != 0) {
+                fn_8014D08C(obj, state, tbl1c[*(u16 *)(state + 0x338) * 16 + 8],
+                            *(f32 *)(tbl1c + *(u16 *)(state + 0x338) * 16), 0,
+                            (u8)*(u32 *)(tbl1c + *(u16 *)(state + 0x338) * 16 + 4));
+                ObjAnim_SetMoveProgress(
+                    *(f32 *)(lbl_8031DD30 + tbl1c[*(u16 *)(state + 0x338) * 16 + 8] * 4),
+                    (ObjAnimComponent *)obj);
+                *(u16 *)(state + 0x338) = tbl1c[*(u16 *)(state + 0x338) * 16 + 9];
+            } else if (*(f32 *)(state + 0x310) > lbl_803E2794) {
+                state[0x2f2] = 0;
+                state[0x2f3] = 0;
+                state[0x2f4] = 0;
+                if (*(f32 *)(state + 0x310) > lbl_803E2798) {
+                    state[0x323] = 1;
+                    ObjAnim_SetCurrentMove((int)obj, tbl0[0x20], lbl_803E2740, 0);
+                } else {
+                    state[0x323] = 1;
+                    ObjAnim_SetCurrentMove((int)obj, tbl0[0x14], lbl_803E2740, 0);
+                }
+            } else {
+                state[0x2f2] = 0;
+                state[0x2f3] = 0;
+                state[0x2f4] = 0;
+                state[0x323] = 1;
+                *(f32 *)(state + 0x308) = lbl_803E279C;
+                ObjAnim_SetCurrentMove((int)obj, tbl0[8], lbl_803E2740, 0);
+                *(f32 *)(state + 0x310) = lbl_803E2740;
+            }
+        }
+        fn_8014CF7C(obj, state, *(f32 *)(path + 0x68), *(f32 *)(path + 0x70), 0xf, 0);
+    } else {
+        if (state[0x33d] == 0 && (flags & 0x40000000)) {
+            u8 r = (u8)randomGetRange(1, tbl4[8]);
+            if (*(u16 *)(state + 0x338) != 0) {
+                state[0x2f2] = (u8)*(u32 *)(tbl1c + *(u16 *)(state + 0x338) * 16 + 0xc);
+                fn_8014D08C(obj, state, tbl1c[*(u16 *)(state + 0x338) * 16 + 8],
+                            *(f32 *)(tbl1c + *(u16 *)(state + 0x338) * 16), 0,
+                            (u8)*(u32 *)(tbl1c + *(u16 *)(state + 0x338) * 16 + 4));
+                ObjAnim_SetMoveProgress(
+                    *(f32 *)(lbl_8031DD30 + tbl1c[*(u16 *)(state + 0x338) * 16 + 8] * 4),
+                    (ObjAnimComponent *)obj);
+                *(u16 *)(state + 0x338) = tbl1c[*(u16 *)(state + 0x338) * 16 + 9];
+            } else {
+                int off = r * 12;
+                if (*(s16 *)((char *)obj + 0xa0) != tbl4[off + 8] || tbl4[off + 8] != 0) {
+                    state[0x2f2] = 0;
+                    state[0x2f3] = 0;
+                    state[0x2f4] = 0;
+                    fn_8014D08C(obj, state, tbl4[off + 8], *(f32 *)(tbl4 + off), 0, 3);
+                    ObjAnim_SetMoveProgress(*(f32 *)(lbl_8031DD30 + tbl4[off + 8] * 4),
+                                            (ObjAnimComponent *)obj);
+                }
+            }
+        }
     }
 }
