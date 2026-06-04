@@ -17761,3 +17761,87 @@ void objUpdateHitSpheres(u8 *a, u8 *b, u8 *c, u8 *d, u8 *e) {
     }
 }
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void modelInitBones(f32 scale, void *model) {
+    extern f32 lbl_803DE88C;
+    extern f32 lbl_803DE890;
+    extern f32 lbl_803DE8D4;
+    extern f32 lbl_803DE8D8;
+    f32 *srcP;
+    int off;
+    int boneOff;
+    f32 *sumP;
+    u8 *hdr;
+    u8 *tbl;
+    int i;
+    int parent;
+    f32 *src;
+    u8 *bone;
+    f32 zero;
+    f32 sc;
+    f32 minScale;
+    f32 w;
+    f32 len;
+    f32 vx;
+    f32 vy;
+    f32 vz;
+    f32 v;
+    f32 pv;
+    f32 sums[152];
+    u8 *m = model;
+
+    sc = scale;
+    hdr = *(u8 **)m;
+    if (!(!*(u16 *)(hdr + 2) & 0x1000)) {
+        if (*(u8 *)(hdr + 0xf3) == 0) {
+        } else if ((src = *(f32 **)(hdr + 0x18)) != NULL && (tbl = *(u8 **)(m + 0x14)) != NULL) {
+        **(f32 **)(tbl + 4) = src[0] * sc;
+        if (**(f32 **)(tbl + 4) == lbl_803DE88C) {
+            **(f32 **)(tbl + 4) = src[1] * sc;
+        }
+        **(f32 **)(tbl + 8) = **(f32 **)(tbl + 4) * **(f32 **)(tbl + 4);
+        **(f32 **)(tbl + 0xc) = lbl_803DE8D4;
+        **(f32 **)(tbl + 0x10) = **(f32 **)(tbl + 4);
+        zero = lbl_803DE88C;
+        sums[0] = zero;
+        i = 1;
+        srcP = src + 1;
+        off = 4;
+        boneOff = 0x1c;
+        sumP = &sums[1];
+        minScale = lbl_803DE890;
+        for (; i < *(u8 *)(*(u8 **)m + 0xf3); srcP++, off += 4, boneOff += 0x1c, sumP++, i++) {
+            *(f32 *)(*(u8 **)(tbl + 4) + off) = sc * *srcP;
+            *(f32 *)(*(u8 **)(tbl + 8) + off) =
+                *(f32 *)(*(u8 **)(tbl + 4) + off) * *(f32 *)(*(u8 **)(tbl + 4) + off);
+            bone = *(u8 **)(hdr + 0x3c) + boneOff;
+            parent = *(s8 *)bone;
+            vx = *(f32 *)(bone + 4);
+            vy = *(f32 *)(bone + 8);
+            vz = *(f32 *)(bone + 0xc);
+            len = sqrtf(vx * vx + vy * vy + vz * vz);
+            *(f32 *)(*(u8 **)(tbl + 0xc) + off) = sc * len;
+            if (*(f32 *)(*(u8 **)(tbl + 0xc) + off) == zero) {
+                *(f32 *)(*(u8 **)(tbl + 0xc) + off) = lbl_803DE8D8;
+            }
+            w = *(f32 *)(*(u8 **)(hdr + 0x1c) + off);
+            if (w >= minScale) {
+                *(f32 *)(*(u8 **)(tbl + 0xc) + off) *= w;
+            }
+            *sumP = sums[parent] + *(f32 *)(*(u8 **)(tbl + 0xc) + off);
+            if (*srcP == zero) {
+                *(f32 *)(*(u8 **)(tbl + 0x10) + off) = *(f32 *)(*(u8 **)(tbl + 0x10) + parent * 4);
+            } else {
+                *(f32 *)(*(u8 **)(tbl + 0x10) + off) = *sumP + *(f32 *)(*(u8 **)(tbl + 4) + off);
+                v = *(f32 *)(*(u8 **)(tbl + 0x10) + off);
+                pv = *(f32 *)(*(u8 **)(tbl + 0x10) + parent * 4);
+                *(f32 *)(*(u8 **)(tbl + 0x10) + off) = (v > pv) ? v : pv;
+            }
+        }
+    }
+}
+}
+#pragma pop
