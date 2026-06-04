@@ -57,10 +57,10 @@ void andross_setPartSignal(int obj, int signal)
 int andross_updateModelAlpha(int obj)
 {
     int state = *(int *)(obj + 0xb8);
+    int i;
     f32 v;
     f32 alpha;
     int model;
-    int i;
     int op;
 
     *(f32 *)(state + 0x68) = lbl_803E74D4;
