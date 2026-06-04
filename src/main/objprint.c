@@ -3109,6 +3109,7 @@ void objRenderShadowIfVisible(void* obj) {
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 int fn_800399C0(s16 *curve, s16 *state)
 {
   extern f32 curveFn_80010dc0(int, int, f32);
@@ -3130,11 +3131,11 @@ int fn_800399C0(s16 *curve, s16 *state)
 
   lo = curve[10];
   hi = curve[11];
-  if (lo == hi) {
+  if (lo != hi) {
+    ratio = ((f32)(s32)state[1] - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
+  } else {
     return 1;
   }
-
-  ratio = ((f32)(s32)state[1] - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
 
   if (ratio > lbl_803DE99C) {
     ratio = lbl_803DE99C;
@@ -3147,15 +3148,16 @@ int fn_800399C0(s16 *curve, s16 *state)
     if (curve[10] < curve[11]) {
       rate = -rate;
     }
-    state[1] = (s16)(s32)((f32)(s32)state[1] + rate * timeDelta);
+    state[1] = rate * timeDelta + (f32)(s32)state[1];
   }
 
-  if (lbl_803DE99C != ratio && state[1] < 8191 && state[1] > -8191) {
-    return 0;
+  if (lbl_803DE99C == ratio || state[1] >= 8191 || state[1] <= -8191) {
+    state[1] = curve[10];
+    return 1;
   }
-  state[1] = curve[10];
-  return 1;
+  return 0;
 }
+#pragma dont_inline reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -3879,6 +3881,110 @@ void fn_8003B0D0(int obj, int p2, int p3, int p4)
         }
         found[1] = *(s16*)((char*)p3 + 0x14);
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b);
+
+#pragma scheduling off
+#pragma peephole off
+int fn_8003A8B4(int objArg, int *keyList, int countArg, char *p4Arg)
+{
+    extern f32 lbl_803DE9D8;
+    extern f32 lbl_803DE9DC;
+    int obj;
+    int count;
+    char *p4;
+    int total;
+    int i;
+    int *keys;
+
+    obj = objArg;
+    count = countArg;
+    p4 = p4Arg;
+    total = 0;
+    i = 0;
+    keys = keyList;
+    while (i < count) {
+        int key;
+        int found;
+        void *m;
+
+        key = *keys;
+        found = 0;
+        m = *(void **)(obj + 0x50);
+        if (m != NULL) {
+            int entryIdx = found;
+            int vecOffset = found;
+            int n = *(u8 *)((char *)m + 0x5a);
+            int j;
+            for (j = 0; j < n; j++) {
+                u8 *entries = *(u8 **)((char *)m + 0x10);
+                int idx = (s8)*(s8 *)(obj + 0xad) + entryIdx + 1;
+                if ((int)entries[idx] != 0xff && key == entries[entryIdx]) {
+                    found = *(int *)(obj + 0x6c) + vecOffset;
+                }
+                entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+                vecOffset += 0x12;
+            }
+        }
+        total += fn_800399C0((s16 *)p4, (s16 *)found);
+        total += fn_80039834((s16 *)(p4 + 0x30), (s16 *)found, lbl_803DE9D8, lbl_803DE9DC);
+        keys++;
+        i++;
+        p4 += 0x60;
+    }
+    return (count * 2 - total) == 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80039834(s16 *curve, s16 *state, f32 a, f32 b)
+{
+    extern f32 curveFn_80010dc0(int, int, f32);
+    extern f32 timeDelta;
+    extern f32 lbl_803DE99C;
+    extern f32 lbl_803DE9A4;
+    f32 buf[4];
+    f32 ratio;
+    s16 lo;
+    s16 hi;
+
+    buf[0] = a;
+    buf[1] = a;
+    buf[2] = b;
+    buf[3] = -b;
+
+    lo = curve[10];
+    hi = curve[11];
+    if (lo != hi) {
+        ratio = ((f32)(s32)*state - (f32)(s32)hi) / ((f32)(s32)lo - (f32)(s32)hi);
+    } else {
+        return 1;
+    }
+
+    if (ratio > lbl_803DE99C) {
+        ratio = lbl_803DE99C;
+    } else if (ratio < lbl_803DE9A4) {
+        ratio = lbl_803DE9A4;
+    }
+
+    {
+        f32 rate = curveFn_80010dc0((int)buf, 0, ratio);
+        if (curve[10] < curve[11]) {
+            rate = -rate;
+        }
+        *state = rate * timeDelta + (f32)(s32)*state;
+    }
+
+    if (lbl_803DE99C == ratio || *state >= 8191 || *state <= -8191) {
+        *state = curve[10];
+        return 1;
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
