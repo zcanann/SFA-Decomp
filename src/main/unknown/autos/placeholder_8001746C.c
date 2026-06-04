@@ -18197,3 +18197,36 @@ void deathRenderFn_8001fd98(u32 h) {
     lbl_803DCA48--;
 }
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+int fn_80018ED4(u8 *str, u32 target, int *out) {
+    int off;
+    int len;
+    u32 ch;
+    int n;
+    int i;
+
+    off = 0;
+    if (str == NULL) {
+        return 0;
+    }
+    while ((ch = utf8GetNextChar(str + off, &len)) != 0) {
+        off += len;
+        if (ch >= 0xE000 && ch <= 0xF8FF) {
+            n = getControlCharLen(ch);
+            if (ch == target) {
+                for (i = 0; i < n; i++) {
+                    u32 hi = str[off++];
+                    u32 lo = str[off++];
+                    out[i] = (hi << 8) | lo;
+                }
+                return 1;
+            }
+            off += n * 2;
+        }
+    }
+    return 0;
+}
+#pragma pop
