@@ -2270,6 +2270,7 @@ void FUN_8015fae4(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void fn_8015FBEC(int obj)
 {
   extern int *gPartfxInterface;
@@ -2293,6 +2294,7 @@ void fn_8015FBEC(int obj)
   Camera_EnableViewYOffset();
   CameraShake_SetAllMagnitudes(lbl_803E2E50);
 }
+#pragma dont_inline reset
 
 static inline u8 scarab_isObjectInList(void *o)
 {
@@ -2512,6 +2514,8 @@ extern f32 lbl_803E2E58;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void iceball_update(undefined2 *param_1,int param_2)
 {
   int p;
@@ -2527,17 +2531,17 @@ void iceball_update(undefined2 *param_1,int param_2)
   }
   *(float *)(p + 0x28) = *(float *)(p + 0x28) - lbl_803E2E54 * timeDelta;
   *(float *)(p + 0x28) = *(float *)(p + 0x28) * lbl_803E2E58;
-  *(short *)(p + 0) = *(short *)(p + 0) + 910;
-  *(short *)(p + 4) = *(short *)(p + 4) + 910;
-  *(short *)(p + 2) = *(short *)(p + 2) + 910;
+  *(s16 *)(p + 0) += 910;
+  *(s16 *)(p + 4) += 910;
+  *(s16 *)(p + 2) += 910;
   objMove(p, *(float *)(p + 0x24) * timeDelta, *(float *)(p + 0x28) * timeDelta,
           *(float *)(p + 0x2c) * timeDelta);
   ObjHits_SetHitVolumeSlot(p, 10, 1, 0);
   ObjHitbox_SetSphereRadius(p, 5);
   ObjHits_EnableObject(p);
-  if (*(int *)(*(int *)(p + 0x54) + 0x50) != 0 &&
-      (*(int *)(*(int *)(p + 0x54) + 0x50) == Obj_GetPlayerObject() ||
-       *(int *)(*(int *)(p + 0x54) + 0x50) == getTrickyObject())) {
+  if (*(void **)(*(int *)(p + 0x54) + 0x50) != NULL &&
+      (*(void **)(*(int *)(p + 0x54) + 0x50) == (void *)Obj_GetPlayerObject() ||
+       *(void **)(*(int *)(p + 0x54) + 0x50) == (void *)getTrickyObject())) {
     fn_8015FCCC(p);
     *(u8 *)(p + 0x36) = 0;
     *(int *)(p + 0xf4) = 120;
@@ -2550,6 +2554,8 @@ void iceball_update(undefined2 *param_1,int param_2)
     *(short *)(*(int *)(p + 0x54) + 0x60) = (short)(*(short *)(*(int *)(p + 0x54) + 0x60) & ~1);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
