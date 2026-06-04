@@ -3257,30 +3257,32 @@ store_ph:
 #pragma peephole off
 int player_SeqFn(int obj, int obj2, int seq, int endFlag)
 {
-    int tbl = (int)lbl_80332EC0;
-    int ctrl = *(int *)((char *)obj2 + 0x4c);
-    int inner = *(int *)((char *)obj + 0xb8);
-    int result = 0;
-    u8 found;
-    int va;
+    int ctrl;
+    register int va;
     int vb;
+    int tbl;
     int mapVal;
-    f32 nz;
-    f32 ny;
-    f32 nx;
+    int result;
+    register u8 *inner;
+    u8 found;
+    f32 npos[3];
     f32 pz;
     f32 py;
     f32 px;
     int objCount;
     f32 nearArg;
 
+    tbl = (int)lbl_80332EC0;
+    ctrl = *(int *)((char *)obj2 + 0x4c);
+    inner = *(u8 **)((char *)obj + 0xb8);
+    result = 0;
     va = (int)objModelGetVecFn_800395d8(obj, 0);
     vb = (int)objModelGetVecFn_800395d8(obj, 9);
     *(int *)((char *)seq + 0xe8) = (int)fn_802A93F4;
     if (*(void **)&lbl_803DE450 != NULL) {
         staffFn_80170380(lbl_803DE450, 0);
     }
-    fn_802B07D8(obj, inner);
+    fn_802B07D8(obj, (int)inner);
     if (*(void **)&lbl_803DE448 == NULL && Obj_IsLoadingLocked() != 0) {
         ObjLink_AttachChild(obj,
                             lbl_803DE448 = Obj_SetupObject(Obj_AllocObjectSetup(0x18, 0x66a), 4, -1,
@@ -3311,12 +3313,11 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
     {
         register u32 m;
         register u32 v;
-        register int base = inner;
         asm {
-            lwz v, 0x360(base)
+            lwz v, 0x360(inner)
             li m, -3
             and m, v, m
-            stw m, 0x360(base)
+            stw m, 0x360(inner)
         }
     }
     if (*(s8 *)((char *)seq + 0x56) != 0) {
@@ -3324,12 +3325,11 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
         {
             register u32 m;
             register u32 v;
-            register int base = inner;
             asm {
-                lwz v, 0x360(base)
+                lwz v, 0x360(inner)
                 li m, -0x401
                 and m, v, m
-                stw m, 0x360(base)
+                stw m, 0x360(inner)
             }
         }
         {
@@ -3345,7 +3345,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             *(u8 *)((char *)inner + 0x800) = 0;
             {
                 int p = *(int *)((char *)inner + 0x7f8);
-                if (p != 0) {
+                if ((u32)p != 0) {
                     s16 sp = *(s16 *)(p + 0x46);
                     if (sp == 0x3cf || sp == 0x662) {
                         objThrowFn_80182504(p);
@@ -3371,26 +3371,26 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 *(s16 *)((char *)seq + 0x50) =
                     *(s16 *)((char *)inner + 0x478) - (u16)*(s16 *)obj2;
                 if (*(s16 *)((char *)seq + 0x50) > 0x8000) {
-                    *(s16 *)((char *)seq + 0x50) -= 0xffff;
+                    *(s16 *)((char *)seq + 0x50) = *(s16 *)((char *)seq + 0x50) - 0xffff;
                 }
                 if (*(s16 *)((char *)seq + 0x50) < -0x8000) {
-                    *(s16 *)((char *)seq + 0x50) += 0xffff;
+                    *(s16 *)((char *)seq + 0x50) = *(s16 *)((char *)seq + 0x50) + 0xffff;
                 }
                 *(s16 *)((char *)seq + 0x52) =
                     *(s16 *)((char *)obj + 2) - (u16)*(s16 *)((char *)obj2 + 2);
                 if (*(s16 *)((char *)seq + 0x52) > 0x8000) {
-                    *(s16 *)((char *)seq + 0x52) -= 0xffff;
+                    *(s16 *)((char *)seq + 0x52) = *(s16 *)((char *)seq + 0x52) - 0xffff;
                 }
                 if (*(s16 *)((char *)seq + 0x52) < -0x8000) {
-                    *(s16 *)((char *)seq + 0x52) += 0xffff;
+                    *(s16 *)((char *)seq + 0x52) = *(s16 *)((char *)seq + 0x52) + 0xffff;
                 }
                 *(s16 *)((char *)seq + 0x54) =
                     (u16)*(s16 *)((char *)obj2 + 4) - (u16)*(s16 *)((char *)obj + 4);
                 if (*(s16 *)((char *)seq + 0x54) > 0x8000) {
-                    *(s16 *)((char *)seq + 0x54) -= 0xffff;
+                    *(s16 *)((char *)seq + 0x54) = *(s16 *)((char *)seq + 0x54) - 0xffff;
                 }
                 if (*(s16 *)((char *)seq + 0x54) < -0x8000) {
-                    *(s16 *)((char *)seq + 0x54) += 0xffff;
+                    *(s16 *)((char *)seq + 0x54) = *(s16 *)((char *)seq + 0x54) + 0xffff;
                 }
                 *(u8 *)((char *)seq + 0x56) = 2;
             }
@@ -3405,31 +3405,31 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             *(s16 *)((char *)inner + 0x4d4) = 0;
             *(s16 *)((char *)inner + 0x4d6) = 0;
         } else if (c == 4) {
-            f32 dx;
-            f32 dy;
             f32 dz;
+            f32 dy;
+            f32 dx;
             int d;
             *(s16 *)((char *)seq + 0x6e) &= ~0x4c;
             *(s16 *)((char *)seq + 0x70) &= ~0x48;
             obj2 = getFocusedNpc();
             if (objModelGetVecFn_800395d8(obj2, 0) != 0) {
-                objPosFn_80039510(obj2, 0, &nx);
+                objPosFn_80039510(obj2, 0, npos);
             } else {
                 f32 *pv = *(f32 **)(obj2 + 0x74);
                 if (pv == NULL) {
-                    nx = *(f32 *)(obj2 + 0x18);
-                    ny = *(f32 *)(obj2 + 0x1c);
-                    nz = *(f32 *)(obj2 + 0x20);
+                    npos[0] = *(f32 *)(obj2 + 0x18);
+                    npos[1] = *(f32 *)(obj2 + 0x1c);
+                    npos[2] = *(f32 *)(obj2 + 0x20);
                 } else {
-                    nx = pv[0];
-                    ny = pv[1];
-                    nz = pv[2];
+                    npos[0] = pv[0];
+                    npos[1] = pv[1];
+                    npos[2] = pv[2];
                 }
             }
             ObjPath_GetPointWorldPosition(obj, 5, (int)&px, (int)&py, (int)&pz, 0);
-            dx = *(f32 *)((char *)obj + 0x18) - nx;
-            dy = (*(f32 *)((char *)inner + 0x7dc) + *(f32 *)((char *)obj + 0x1c)) - ny;
-            dz = *(f32 *)((char *)obj + 0x20) - nz;
+            dx = *(f32 *)((char *)obj + 0x18) - npos[0];
+            dy = (*(f32 *)((char *)inner + 0x7dc) + *(f32 *)((char *)obj + 0x1c)) - npos[1];
+            dz = *(f32 *)((char *)obj + 0x20) - npos[2];
             {
                 s16 ang = (s16)getAngle(dx, dz);
                 lbl_803DE4B0 = ang;
@@ -3474,7 +3474,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             *(u8 *)((char *)seq + 0x56) = 5;
             {
                 int mv;
-                if (*(int *)((char *)inner + 0x7f8) != 0) {
+                if (*(u32 *)((char *)inner + 0x7f8) != 0) {
                     mv = 8;
                 } else {
                     mv = 0;
@@ -3484,7 +3484,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                     ObjAnim_SetCurrentEventStepFrames((ObjAnimComponent *)obj, 1);
                 }
             }
-            ObjAnim_AdvanceCurrentMove(lbl_803E7F78, timeDelta, obj, 0);
+            ((void (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7F78, timeDelta, 0);
             result = 1;
         } else if (c == 5) {
             *(s16 *)((char *)seq + 0x6e) &= ~0x4c;
@@ -3499,57 +3499,55 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 } else {
                     *(u8 *)((char *)seq + 0x56) = 6;
                 }
-                if (*(int *)((char *)inner + 0x7f0) != 0) {
-                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                if (*(u32 *)((char *)inner + 0x7f0) != 0) {
+                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, (int)inner,
                                                                                        0x18);
                     *(void (**)(int))((char *)inner + 0x304) = fn_8029F67C;
                 } else {
-                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, (int)inner,
                                                                                        1);
                     *(void (**)(int, int))((char *)inner + 0x304) = fn_802A514C;
                     *(s16 *)((char *)inner + 0x276) = 1;
                 }
             } else {
                 f32 prev = *(f32 *)((char *)seq + 0x4c);
+                f32 one;
+                int dd;
                 *(f32 *)((char *)seq + 0x4c) = *(f32 *)((char *)seq + 0x24) * timeDelta + prev;
                 if (*(f32 *)((char *)seq + 0x4c) > lbl_803E7EE0) {
                     *(f32 *)((char *)seq + 0x4c) = lbl_803E7EE0;
                 }
+                prev = *(f32 *)((char *)seq + 0x4c) - prev;
                 *(s16 *)((char *)inner + 0x478) +=
-                    (int)((*(f32 *)((char *)seq + 0x4c) - prev) *
-                          *(s16 *)((char *)inner + 0x4e0));
+                    (s16)(prev * (f32)*(s16 *)((char *)inner + 0x4e0));
                 *(s16 *)obj = *(s16 *)((char *)inner + 0x484) = *(s16 *)((char *)inner + 0x478);
-                {
-                    int base1 = *(s16 *)((char *)inner + 0x4d8);
-                    int dd = base1 - (u16)*(s16 *)((char *)inner + 0x4da);
-                    if (dd > 0x8000) {
-                        dd -= 0xffff;
-                    }
-                    if (dd < -0x8000) {
-                        dd += 0xffff;
-                    }
-                    *(s16 *)(va + 2) = (int)((f32)dd * *(f32 *)((char *)seq + 0x4c) + (f32)base1);
+                dd = *(s16 *)((char *)inner + 0x4d8) - (u16)*(s16 *)((char *)inner + 0x4da);
+                if (dd > 0x8000) {
+                    dd = dd - 0xffff;
                 }
-                {
-                    int base2 = *(s16 *)((char *)inner + 0x4dc);
-                    int dd2 = base2 - (u16)*(s16 *)((char *)inner + 0x4de);
-                    if (dd2 > 0x8000) {
-                        dd2 -= 0xffff;
-                    }
-                    if (dd2 < -0x8000) {
-                        dd2 += 0xffff;
-                    }
-                    *(s16 *)va = (int)((f32)dd2 * *(f32 *)((char *)seq + 0x4c) + (f32)base2);
+                if (dd < -0x8000) {
+                    dd = dd + 0xffff;
                 }
-                *(s16 *)(vb + 2) = (int)((f32)*(s16 *)((char *)inner + 0x4d2) *
-                                         (lbl_803E7EE0 - *(f32 *)((char *)seq + 0x4c)));
-                *(s16 *)(vb + 4) = (int)((f32)*(s16 *)((char *)inner + 0x4d0) *
-                                         (lbl_803E7EE0 - *(f32 *)((char *)seq + 0x4c)));
+                *(s16 *)(va + 2) = (s16)((f32)dd * *(f32 *)((char *)seq + 0x4c) +
+                                         (f32)*(s16 *)((char *)inner + 0x4d8));
+                dd = *(s16 *)((char *)inner + 0x4dc) - (u16)*(s16 *)((char *)inner + 0x4de);
+                if (dd > 0x8000) {
+                    dd = dd - 0xffff;
+                }
+                if (dd < -0x8000) {
+                    dd = dd + 0xffff;
+                }
+                *(s16 *)va = (s16)((f32)dd * *(f32 *)((char *)seq + 0x4c) +
+                                   (f32)*(s16 *)((char *)inner + 0x4dc));
+                *(s16 *)(vb + 2) = (s16)((f32)*(s16 *)((char *)inner + 0x4d2) *
+                                         ((one = lbl_803E7EE0) - *(f32 *)((char *)seq + 0x4c)));
+                *(s16 *)(vb + 4) = (s16)((f32)*(s16 *)((char *)inner + 0x4d0) *
+                                         (one - *(f32 *)((char *)seq + 0x4c)));
                 *(s16 *)((char *)obj + 4) = *(s16 *)(vb + 4) / 4;
                 *(s16 *)((char *)inner + 0x4d4) = *(s16 *)(va + 2);
                 *(s16 *)((char *)inner + 0x4d6) = -*(s16 *)va;
             }
-            ObjAnim_AdvanceCurrentMove(lbl_803E7F78, timeDelta, obj, 0);
+            ((void (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7F78, timeDelta, 0);
             result = 1;
         } else if (c == 6) {
             *(s16 *)((char *)seq + 0x6e) &= ~0x4c;
@@ -3558,12 +3556,12 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             if ((s8)endFlag == 0) {
                 *(u8 *)((char *)seq + 0x56) = 0;
             }
-            ObjAnim_AdvanceCurrentMove(lbl_803E7F78, timeDelta, obj, 0);
+            ((void (*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)(obj, lbl_803E7F78, timeDelta, 0);
             result = 0;
         } else {
+            f32 dz2;
             f32 dist;
             f32 dx2;
-            f32 dz2;
             f32 d2;
             if (c != 1) {
                 *(f32 *)((char *)seq + 0x40) = *(f32 *)((char *)obj + 0xc);
@@ -3623,10 +3621,10 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                     *(u8 *)((char *)inner + 0x25f) = 1;
                     *(u32 *)((char *)inner + 4) = *(u32 *)((char *)inner + 4) & ~0x100000;
                     *(u8 *)((char *)inner + 0x8c5) = 0;
-                    fn_802B0EA4(obj, inner, inner);
-                    (**(void (**)(f32, f32, int, int, void *, void *))((char *)(*gPlayerInterface) +
+                    fn_802B0EA4(obj, (int)inner, (int)inner);
+                    (**(void (**)(f32, int, int, f32, void *, void *))((char *)(*gPlayerInterface) +
                                                                        8))(
-                        timeDelta, timeDelta, obj, inner, lbl_803DAFC8, &lbl_803DE4B8);
+                        timeDelta, obj, (int)inner, timeDelta, lbl_803DAFC8, &lbl_803DE4B8);
                 }
             } else {
                 dx2 = dx2 / d2;
@@ -3646,16 +3644,16 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 *(u8 *)((char *)inner + 0x25f) = 1;
                 *(u32 *)((char *)inner + 4) = *(u32 *)((char *)inner + 4) & ~0x100000;
                 *(u8 *)((char *)inner + 0x8c5) = 0;
-                fn_802B0EA4(obj, inner, inner);
-                (**(void (**)(f32, f32, int, int, void *, void *))((char *)(*gPlayerInterface) +
-                                                                   8))(timeDelta, timeDelta, obj,
-                                                                       inner, lbl_803DAFC8,
+                fn_802B0EA4(obj, (int)inner, (int)inner);
+                (**(void (**)(f32, int, int, f32, void *, void *))((char *)(*gPlayerInterface) +
+                                                                   8))(timeDelta, obj, (int)inner,
+                                                                       timeDelta, lbl_803DAFC8,
                                                                        &lbl_803DE4B8);
             }
             lbl_803DE468 = dist;
         }
         if (*(s8 *)((char *)seq + 0x56) == 0) {
-            (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner, 1);
+            (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, (int)inner, 1);
             *(void (**)(int, int))((char *)inner + 0x304) = fn_802A514C;
             *(s16 *)((char *)inner + 0x276) = 1;
         }
@@ -3675,7 +3673,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             *(u8 *)((char *)inner + 0x25f) = 0;
         }
         for (vb = 0; vb < *(u8 *)((char *)seq + 0x8b); vb++) {
-            switch (*(u8 *)((char *)seq + (vb + 0x81))) {
+            switch (((u8 *)seq)[vb + 0x81]) {
             case 3: {
                 f32 best;
                 obj2 = (int)ObjGroup_GetObjects(10, &objCount);
@@ -3683,7 +3681,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 best = lbl_803E80AC;
                 for (endFlag = 0; endFlag < objCount; endFlag++) {
                     va = *(int *)obj2;
-                    if (va != 0 && arrayIndexOf((void *)(tbl + 0x13c), 9, *(s16 *)(va + 0x46)) != -1) {
+                    if ((u32)va != 0 && arrayIndexOf((void *)(tbl + 0x13c), 9, *(s16 *)(va + 0x46)) != -1) {
                         f32 dsq = vec3f_distanceSquared((void *)(va + 0x18), (void *)(obj + 0x18));
                         if (dsq < best || found == 0) {
                             best = dsq;
@@ -3718,7 +3716,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                         *(int *)((char *)inner + 0x6e8) = tbl + 0x408;
                         *(u8 *)((char *)inner + 0x6ec) = 4;
                         ObjAnim_SetCurrentMove(obj, 0x7b, lbl_803E7EA4, 1);
-                        if (getSbGalleon() != 0) {
+                        if ((u32)getSbGalleon() != 0) {
                             (**(void (**)(int, int))((char *)(*gCameraInterface) + 0x28))(va, 0);
                             (**(void (**)(int, int, int, int))((char *)(*gObjectTriggerInterface) +
                                                                0x50))(0x4a, 1, 0, 0x78);
@@ -3751,11 +3749,11 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                     }
                     if (arrayIndexOf((void *)(tbl + 0x160), 4, *(s16 *)(va + 0x46)) != -1) {
                         (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(
-                            obj, inner, 0x1a);
+                            obj, (int)inner, 0x1a);
                         *(void (**)(int))((char *)inner + 0x304) = fn_8029F67C;
                     } else {
                         (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(
-                            obj, inner, 0x18);
+                            obj, (int)inner, 0x18);
                         *(void (**)(int))((char *)inner + 0x304) = fn_8029F67C;
                     }
                 }
@@ -3772,24 +3770,24 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 (**(void (**)(int, int, int, int))((char *)(*gObjectTriggerInterface) + 0x50))(
                     0x45, 0, 0, 0);
                 *(int *)((char *)inner + 0x6e8) = 0;
-                if (obj2 != 0 && *(s16 *)(obj2 + 0x46) == 0x22) {
-                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                if ((u32)obj2 != 0 && *(s16 *)(obj2 + 0x46) == 0x22) {
+                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, (int)inner,
                                                                                        0x16);
                     *(int *)((char *)inner + 0x304) = 0;
                 } else {
-                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                    (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, (int)inner,
                                                                                        0x18);
                     *(void (**)(int))((char *)inner + 0x304) = fn_8029F67C;
                 }
                 break;
             case 0xb: {
                 int gb = *(int *)((char *)inner + 0x7f0);
-                if (gb != 0 && *(s16 *)(gb + 0x46) == 0x416) {
+                if ((u32)gb != 0 && *(s16 *)(gb + 0x46) == 0x416) {
                     (**(void (**)(int, int))((char *)(*gCameraInterface) + 0x28))(gb, 0);
                     (**(void (**)(int, int, int))((char *)(*gCameraInterface) + 0x24))(0, 0x69, 0);
                     (**(void (**)(int, int, int, int))((char *)(*gObjectTriggerInterface) + 0x50))(
                         0x42, 4, 0, 0);
-                } else if (gb != 0 && arrayIndexOf((void *)(tbl + 0x160), 4, *(s16 *)(gb + 0x46)) != -1) {
+                } else if ((u32)gb != 0 && arrayIndexOf((void *)(tbl + 0x160), 4, *(s16 *)(gb + 0x46)) != -1) {
                     (**(void (**)(int, int, int, int))((char *)(*gObjectTriggerInterface) + 0x50))(
                         0x53, 0, 0, 0);
                 } else {
@@ -3802,7 +3800,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             case 6:
                 (**(void (**)(int, int, int, int))((char *)(*gObjectTriggerInterface) + 0x50))(
                     0x44, 0, 0, 0);
-                (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, (int)inner,
                                                                                    0x17);
                 *(int *)((char *)inner + 0x304) = 0;
                 break;
@@ -3858,7 +3856,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 {
                     int prt = *(int *)((char *)obj + 0xc4);
                     obj2 = *(int *)(prt + 0xb8);
-                    if (*(int *)(prt + 0x54) != 0) {
+                    if (*(u32 *)(prt + 0x54) != 0) {
                         spd = (f32)*(s16 *)(*(int *)(prt + 0x54) + 0x5a);
                     } else {
                         spd = *(f32 *)(prt + 0xa8) * *(f32 *)(prt + 8);
@@ -3883,18 +3881,18 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 int t;
                 nearArg = lbl_803E815C;
                 t = ObjGroup_FindNearestObject(6, obj, &nearArg);
-                if (t != 0) {
+                if ((u32)t != 0) {
                     objHitDetectFn_80062e84(obj, t, 1);
                 }
                 break;
             }
             case 0x17:
                 va = *(int *)((char *)obj + 0xb8);
-                if (*(int *)(va + 0x7f8) != 0) {
+                if (*(u32 *)(va + 0x7f8) != 0) {
                     *(u8 *)(va + 0x800) = 0;
                     {
                         int p17 = *(int *)(va + 0x7f8);
-                        if (p17 != 0) {
+                        if ((u32)p17 != 0) {
                             s16 sp17 = *(s16 *)(p17 + 0x46);
                             if (sp17 == 0x3cf || sp17 == 0x662) {
                                 objThrowFn_80182504(p17);
@@ -3925,12 +3923,11 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             case 0x14: {
                 register u32 m;
                 register u32 v;
-                register int base = inner;
                 asm {
-                    lwz v, 0x360(base)
+                    lwz v, 0x360(inner)
                     lis m, 0x4
                     or m, v, m
-                    stw m, 0x360(base)
+                    stw m, 0x360(inner)
                 }
                 break;
             }
@@ -3938,25 +3935,23 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 register u32 t15;
                 register u32 m;
                 register u32 v;
-                register int base = inner;
                 asm {
-                    lwz v, 0x360(base)
+                    lwz v, 0x360(inner)
                     lis t15, 0xfffc
                     subi m, t15, 0x1
                     and m, v, m
-                    stw m, 0x360(base)
+                    stw m, 0x360(inner)
                 }
                 break;
             }
             case 0x16: {
                 register u32 m;
                 register u32 v;
-                register int base = inner;
                 asm {
-                    lwz v, 0x360(base)
+                    lwz v, 0x360(inner)
                     lis m, 0x2
                     or m, v, m
-                    stw m, 0x360(base)
+                    stw m, 0x360(inner)
                 }
                 break;
             }
@@ -3964,13 +3959,12 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 register u32 t12;
                 register u32 m;
                 register u32 v;
-                register int base = inner;
                 asm {
-                    lwz v, 0x360(base)
+                    lwz v, 0x360(inner)
                     lis t12, 0x1
                     addi m, t12, -0x8000
                     or m, v, m
-                    stw m, 0x360(base)
+                    stw m, 0x360(inner)
                 }
                 break;
             }
@@ -3984,12 +3978,12 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 fn_80295CF4(obj, 0);
                 break;
             case 0x1d:
-                (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner,
+                (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, (int)inner,
                                                                                    0x1a);
                 *(void (**)(int))((char *)inner + 0x304) = fn_8029F67C;
                 break;
             case 0x1e:
-                (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, inner, 1);
+                (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, (int)inner, 1);
                 *(void (**)(int, int))((char *)inner + 0x304) = fn_802A514C;
                 break;
             case 0x1f:
@@ -4006,7 +4000,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 lbl_803DC66C = 1;
                 break;
             case 0x1a:
-                if (*(int *)((char *)inner + 0x684) != 0) {
+                if (*(u32 *)((char *)inner + 0x684) != 0) {
                     int p1a = *(int *)(*(int *)((char *)inner + 0x684) + 0x50);
                     int snd = *(s16 *)(p1a + 0x7a);
                     if (snd > -1) {
@@ -4019,7 +4013,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 }
                 break;
             case 1:
-                if (*(int *)((char *)inner + 0x684) != 0) {
+                if (*(u32 *)((char *)inner + 0x684) != 0) {
                     ObjMsg_SendToObject(*(int *)((char *)inner + 0x684), 0x7000b, obj, 0);
                     *(int *)((char *)inner + 0x684) = 0;
                 }
@@ -4051,7 +4045,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                     break;
                 }
                 h = *(int *)((char *)obj + 0xb8);
-                if (*(s8 *)(*(int *)(h + 0x35c) + 1) <= mapVal - 4) {
+                if ((s8)*(s8 *)(*(int *)(h + 0x35c) + 1) <= mapVal - 4) {
                     int vv = mapVal;
                     if (mapVal < 0) {
                         vv = 0;
@@ -4090,7 +4084,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                     getEnvfxActImmediately(obj, obj, 0x84, 0);
                     getEnvfxActImmediately(obj, obj, 0x8a, 0);
                 }
-                skyFn_80088e54(lbl_803E7EA4, 0);
+                ((void (*)(int, f32))skyFn_80088e54)(0, lbl_803E7EA4);
                 break;
             case 0x2d:
                 Rcp_SetSpiritVisionEnabled(1);
@@ -4132,7 +4126,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
     }
     {
         int g = *(int *)((char *)inner + 0x7f0);
-        if (g != 0 &&
+        if ((u32)g != 0 &&
             (*(int (*)(int))*(int *)((char *)*(int *)(*(int *)(g + 0x68)) + 0x38))(g) == 2) {
             *(s16 *)((char *)seq + 0x6e) &= ~3;
         }
@@ -4146,7 +4140,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
     if (*(s16 *)((char *)lbl_803DE44C + 0x44) == 0x2d) {
         ((void (*)(void))objSetAnimField48to0)();
     }
-    ((void (*)(int, int, f32))fn_802AEF34)(obj, inner, timeDelta);
+    ((void (*)(int, int, f32))fn_802AEF34)(obj, (int)inner, timeDelta);
     if (lbl_803DE44C != NULL && ((u32)*(u8 *)((char *)inner + 0x3f4) >> 6 & 1) != 0) {
         *(u16 *)((char *)lbl_803DE44C + 0xb0) &= ~7;
         if (*(u8 *)((char *)inner + 0x8b3) == 0) {
@@ -4156,12 +4150,11 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
     {
         register u32 m;
         register u32 v;
-        register int base = inner;
         asm {
-            lwz v, 0x360(base)
+            lwz v, 0x360(inner)
             lis m, 0x80
             or m, v, m
-            stw m, 0x360(base)
+            stw m, 0x360(inner)
         }
     }
     ((void (*)(int, int, int, int, int, f32, f32))objAudioFn_8006ef38)(
