@@ -88,7 +88,7 @@ extern undefined4 jumptable_8030E844;
 /*
  * --INFO--
  *
- * Function: fn_8005DF5C
+ * Function: mapBlockBounds_HasCornerPastDepthThreshold
  * EN v1.0 Address: 0x8005DF5C
  * EN v1.0 Size: 1004b
  * EN v1.1 Address: 0x8005E0D8
@@ -96,7 +96,7 @@ extern undefined4 jumptable_8030E844;
  */
 #pragma scheduling off
 #pragma peephole off
-u8 fn_8005DF5C(int param_1,float *param_2)
+u8 mapBlockBounds_HasCornerPastDepthThreshold(int param_1,float *param_2)
 {
   float v[3];
   uint i;
@@ -668,7 +668,7 @@ void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float
     GXCallDisplayList(*(void **)ptr,*(u16 *)(ptr + 4));
     flags = *(uint *)(obj + 0x3c);
     if ((((flags & 0x4000) != 0) || ((flags & 0x8000) != 0) || ((flags & 0x10000) != 0)) &&
-        (fn_8005DF5C(ptr,mtx) != 0)) {
+        (mapBlockBounds_HasCornerPastDepthThreshold(ptr,mtx) != 0)) {
       fn_8005D3B4(ptr,block,0x17);
       *(int *)(base + lbl_803DCE30 * 16 + 0xc) = 6;
       lbl_803DCE30 = lbl_803DCE30 + 1;
