@@ -1,6 +1,10 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8001746C.h"
 
+typedef struct {
+    int x, y, z;
+} IVec3;
+
 extern undefined4 FUN_800033a8();
 extern undefined8 FUN_80003494();
 extern int FUN_800066e8();
@@ -8429,10 +8433,15 @@ void *fn_8001CC9C(int unused, u8 red, u8 green, u8 blue, u8 setFlag) {
 #pragma pop
 
 #pragma dont_inline on
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 void *objAllocLight(void *owner) {
     u8 *light;
     f32 tmp[3];
     f32 *view;
+    f32 zero;
+    f32 atten;
 
     light = mmAlloc(0x300, 0x1a, 0);
     if (light == NULL) {
@@ -8443,14 +8452,16 @@ void *objAllocLight(void *owner) {
     *(void **)light = owner;
 
     if (*(void **)light != NULL) {
-        *(f32 *)(light + 4) = lbl_803DE75C;
-        *(f32 *)(light + 8) = lbl_803DE75C;
-        *(f32 *)(light + 0xc) = lbl_803DE75C;
+        zero = lbl_803DE75C;
+        *(f32 *)(light + 4) = zero;
+        *(f32 *)(light + 8) = zero;
+        *(f32 *)(light + 0xc) = zero;
         Obj_TransformLocalPointByWorldMatrix(*(u8 **)light, (f32 *)(light + 4), (f32 *)(light + 0x10), 1);
     } else {
-        *(f32 *)(light + 0x10) = lbl_803DE75C;
-        *(f32 *)(light + 0x14) = lbl_803DE75C;
-        *(f32 *)(light + 0x18) = lbl_803DE75C;
+        zero = lbl_803DE75C;
+        *(f32 *)(light + 0x10) = zero;
+        *(f32 *)(light + 0x14) = zero;
+        *(f32 *)(light + 0x18) = zero;
     }
 
     view = Camera_GetViewMatrix();
@@ -8460,20 +8471,20 @@ void *objAllocLight(void *owner) {
         tmp[2] = *(f32 *)(light + 0x18) - playerMapOffsetZ;
         PSMTXMultVec(view, tmp, (f32 *)(light + 0x1c));
     } else {
-        *(int *)(light + 0x1c) = *(int *)(light + 0x10);
-        *(int *)(light + 0x20) = *(int *)(light + 0x14);
-        *(int *)(light + 0x24) = *(int *)(light + 0x18);
+        *(IVec3 *)(light + 0x1c) = *(IVec3 *)(light + 0x10);
     }
 
     if (*(void **)light != NULL) {
-        *(f32 *)(light + 0x28) = lbl_803DE75C;
-        *(f32 *)(light + 0x2c) = lbl_803DE75C;
+        zero = lbl_803DE75C;
+        *(f32 *)(light + 0x28) = zero;
+        *(f32 *)(light + 0x2c) = zero;
         *(f32 *)(light + 0x30) = lbl_803DE760;
         Vec_normalize((f32 *)(light + 0x28), (f32 *)(light + 0x28));
         Obj_TransformLocalVectorByWorldMatrix(*(void **)light, (f32 *)(light + 0x28), (f32 *)(light + 0x34));
     } else {
-        *(f32 *)(light + 0x34) = lbl_803DE75C;
-        *(f32 *)(light + 0x38) = lbl_803DE75C;
+        zero = lbl_803DE75C;
+        *(f32 *)(light + 0x34) = zero;
+        *(f32 *)(light + 0x38) = zero;
         *(f32 *)(light + 0x3c) = lbl_803DE760;
         Vec_normalize((f32 *)(light + 0x34), (f32 *)(light + 0x34));
     }
@@ -8482,9 +8493,7 @@ void *objAllocLight(void *owner) {
     if (*(int *)(light + 0x60) == 0) {
         PSMTXMultVecSR(view, (f32 *)(light + 0x34), (f32 *)(light + 0x40));
     } else {
-        *(int *)(light + 0x40) = *(int *)(light + 0x34);
-        *(int *)(light + 0x44) = *(int *)(light + 0x38);
-        *(int *)(light + 0x48) = *(int *)(light + 0x3c);
+        *(IVec3 *)(light + 0x40) = *(IVec3 *)(light + 0x34);
     }
 
     lightFn_8001db6c(light, 1, lbl_803DE75C);
@@ -8494,7 +8503,8 @@ void *objAllocLight(void *owner) {
     *(f32 *)(light + 0x144) = lbl_803DE754;
     GXInitLightDistAttn(light + 0x68, *(f32 *)(light + 0x140), lbl_803DE758, 2);
     GXGetLightAttnK(light + 0x68, (f32 *)(light + 0x124), (f32 *)(light + 0x128), (f32 *)(light + 0x12c));
-    *(f32 *)(light + 0x144) = lbl_803DE75C;
+    zero = lbl_803DE75C;
+    *(f32 *)(light + 0x144) = zero;
     light[0x2fc] = 0x7f;
     *(int *)(light + 0x5c) = 0;
     light[0x64] = 1;
@@ -8511,7 +8521,7 @@ void *objAllocLight(void *owner) {
     light[0xab] = 0xff;
     *(f32 *)(light + 0xb4) = lbl_803DE79C;
     *(int *)(light + 0xb8) = 0;
-    GXInitLightAttnA(light + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
+    GXInitLightAttnA(light + 0x68, lbl_803DE760, zero, zero);
     light[0x114] = 0;
     light[0x104] = 0xff;
     light[0x100] = 0xff;
@@ -8523,9 +8533,10 @@ void *objAllocLight(void *owner) {
     light[0x103] = 0xff;
     *(f32 *)(light + 0x10c) = lbl_803DE7A0;
     *(f32 *)(light + 0x110) = lbl_803DE76C;
-    GXInitLightAttn(light + 0xc0, lbl_803DE75C, lbl_803DE75C, lbl_803DE760,
-                    *(f32 *)(light + 0x10c) * lbl_803DE790, lbl_803DE75C,
-                    lbl_803DE760 - *(f32 *)(light + 0x10c) * lbl_803DE790);
+    atten = *(f32 *)(light + 0x10c) * lbl_803DE790;
+    zero = lbl_803DE75C;
+    GXInitLightAttn(light + 0xc0, zero, zero, lbl_803DE760, atten, zero,
+                    lbl_803DE760 - atten);
     lightFn_8001d620(light, 0, 0);
     light[0xb0] = 0xff;
     light[0xb1] = 0xff;
@@ -8538,12 +8549,15 @@ void *objAllocLight(void *owner) {
     if (*(void **)light != NULL) {
         Obj_BuildInverseWorldTransformMatrix(*(u8 **)light, (f32 *)(light + 0x170));
     }
-    *(f32 *)(light + 0x134) = lbl_803DE760;
-    *(f32 *)(light + 0x124) = lbl_803DE760;
-    *(f32 *)(light + 0x128) = lbl_803DE75C;
-    *(f32 *)(light + 0x12c) = lbl_803DE75C;
+    atten = lbl_803DE760;
+    *(f32 *)(light + 0x134) = atten;
+    *(f32 *)(light + 0x124) = atten;
+    zero = lbl_803DE75C;
+    *(f32 *)(light + 0x128) = zero;
+    *(f32 *)(light + 0x12c) = zero;
     return light;
 }
+#pragma pop
 #pragma dont_inline reset
 
 void fn_8001D80C(u8 *p, void *a, void *b) {
@@ -9846,10 +9860,6 @@ extern f32 lbl_803DE7A4;
 extern f32 *Camera_GetInverseViewMatrix(void);
 extern void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);
 extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
-
-typedef struct {
-    int x, y, z;
-} IVec3;
 
 #pragma push
 #pragma scheduling off
