@@ -13990,7 +13990,7 @@ extern void drawTexture(f32 x, f32 y, void *tex, int alpha, int scale);
 extern void drawScaledTexture(f32 x, f32 y, void *tex, int alpha, int scale, int w, int h, int flag);
 extern void drawPartialTexture(f32 x, f32 y, void *tex, int alpha, int scale, int w, int h, int part, int flag);
 extern void drawHudBox(int x, int y, int w, int h, int alpha, int flag);
-extern void boxDrawFn_8001c5ac(void);
+extern void boxDrawFn_8001c5ac(u16 *strPtr, int boxId, u8 *box);
 
 #pragma push
 #pragma scheduling off
@@ -14125,7 +14125,7 @@ void gameTextDrawBox(u16 *strPtr, int boxId, u8 *box) {
         }
         break;
     case 4:
-        boxDrawFn_8001c5ac();
+        boxDrawFn_8001c5ac(strPtr, boxId, box);
         break;
     }
     *(s16 *)(box + 0x18) = savedX;
@@ -17218,5 +17218,42 @@ void textFn_8001b46c(int a)
             gameTextSetCharset(charset, 2);
         }
     }
+}
+#pragma pop
+
+extern int lbl_803DB3F0;
+extern int lbl_803DB3F4;
+extern int lbl_803DB3F8;
+extern int lbl_803DB3FC;
+extern int lbl_803DB400;
+extern void *lbl_803DCA20;
+
+#pragma push
+#pragma scheduling off
+void boxDrawFn_8001c5ac(u16 *strPtr, int boxId, u8 *p)
+{
+    int x;
+    int y;
+    int alpha;
+    int halfW;
+    int halfH;
+    int midX;
+    int midY;
+
+    alpha = *(u8 *)(p + 0x1e);
+    x = *(s16 *)(p + 0x14);
+    y = *(s16 *)(p + 0x16);
+    halfW = ((x + *(u16 *)(p + 0x8)) - *(s16 *)(p + 0x14)) >> 1;
+    halfH = ((y + *(u16 *)(p + 0xa)) - *(s16 *)(p + 0x16)) >> 1;
+    midX = x + halfW;
+    midY = y + halfH;
+    setTextColor(0, lbl_803DB3F4 & 0xff, lbl_803DB3F8 & 0xff, lbl_803DB3FC & 0xff, lbl_803DB400 & 0xff);
+    textureSetupFn_800799c0();
+    textRenderSetupFn_800795e8();
+    textRenderSetupFn_80079804();
+    ((void (*)(void *, f32, f32, int, int, int, int, int))drawScaledTexture)(lbl_803DCA20, (f32)(x - lbl_803DB3F0), (f32)(y - lbl_803DB3F0), alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 0);
+    ((void (*)(void *, f32, f32, int, int, int, int, int))drawScaledTexture)(lbl_803DCA20, (f32)midX, (f32)(y - lbl_803DB3F0), alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 1);
+    ((void (*)(void *, f32, f32, int, int, int, int, int))drawScaledTexture)(lbl_803DCA20, (f32)(x - lbl_803DB3F0), (f32)midY, alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 2);
+    ((void (*)(void *, f32, f32, int, int, int, int, int))drawScaledTexture)(lbl_803DCA20, (f32)midX, (f32)midY, alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 3);
 }
 #pragma pop
