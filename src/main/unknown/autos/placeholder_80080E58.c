@@ -49,7 +49,7 @@ extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
 extern void renderFn_8008f904(void *state);
 extern void Obj_GetWorldPosition(void *obj, f32 *x, f32 *y, f32 *z);
-extern void Camera_GetCurrentViewSlot(void);
+extern s16 *Camera_GetCurrentViewSlot(void);
 extern int randomGetRange(int min, int max);
 extern int return0xFFFF_80008B6C(int obj, int a, int b, int c, int d, int e, int f);
 extern void objSeqUpdateMoreCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode);
@@ -7155,6 +7155,211 @@ void drawSkyStars(void) {
             GXSetPointSize((u8)(randomGetRange(0x48, 0x60) / div), 5);
         }
         GXCallDisplayList(lbl_8039A9B8[i], lbl_8039A900[i]);
+    }
+}
+#pragma pop
+
+typedef union PPCWGPipe2 {
+    u8 u8;
+    u16 u16;
+    u32 u32;
+    s8 s8;
+    s16 s16;
+    s32 s32;
+    f32 f32;
+    f64 f64;
+} PPCWGPipe2;
+
+volatile PPCWGPipe2 GXWGFifo : (0xCC008000);
+
+extern int getHudHiddenFrameCount(void);
+extern void PSVECScale(f32 *in, f32 *out, f32 scale);
+extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *axb);
+extern void PSMTXRotAxisRad(f32 *mtx, f32 *axis, f32 rad);
+extern void PSMTXMultVecSR(f32 *mtx, f32 *src, f32 *dst);
+extern void GXSetLineWidth(int width, int fmt);
+extern void GXBegin(int prim, int fmt, u16 count);
+extern f32 lbl_803DF1B8;
+extern f32 lbl_803DF1BC;
+extern f32 lbl_803DF1C0;
+extern f32 lbl_803DF1C4;
+extern f32 lbl_803DF1C8;
+extern f32 lbl_803DF1CC;
+
+/*
+ * --INFO--
+ *
+ * Function: drawFn_8008ee18
+ * EN v1.0 Address: 0x8008EE18
+ * EN v1.0 Size: 1200b
+ */
+#pragma push
+#pragma scheduling off
+void drawFn_8008ee18(f32 *from, f32 *to, int width, f32 segScale, int *seed) {
+    int savedRand;
+    int segs;
+    int i;
+    f32 total;
+    f32 len;
+    f32 weight;
+    f32 px;
+    f32 py;
+    f32 pz;
+    f32 step;
+    f32 mtx[12];
+    f32 dir[3];
+    f32 scaled[3];
+    f32 up[3];
+    f32 side[3];
+    f32 offset[3];
+
+    if (getHudHiddenFrameCount() == 0) {
+        savedRand = rand();
+        srand(*seed);
+    }
+    PSVECSubtract(to, from, dir);
+    len = PSVECMag(dir);
+    PSVECScale(dir, scaled, lbl_803DF1A4 / len);
+    if (__fabs(scaled[0]) < lbl_803DF1B8) {
+        up[0] = lbl_803DF1A4;
+        up[1] = lbl_803DF1A0;
+        up[2] = lbl_803DF1A0;
+    } else {
+        up[0] = lbl_803DF1A0;
+        up[1] = lbl_803DF1A0;
+        up[2] = lbl_803DF1A4;
+    }
+    PSVECCrossProduct(scaled, up, side);
+    PSVECCrossProduct(side, scaled, up);
+    PSVECNormalize(up, up);
+    segs = (int)(len * segScale);
+    if (segs > 10) {
+        segs = 10;
+    }
+    if (segs == 0) {
+        segs = 1;
+    }
+    total = lbl_803DF1A0;
+    for (i = 0; i < segs; i++) {
+        total += (f32)(i + 1);
+    }
+    weight = lbl_803DF1A4 / total;
+    GXSetLineWidth(width, 5);
+    GXBegin(0xb0, 2, segs + 1);
+    for (i = 0; i <= segs; i++) {
+        if (i == 0) {
+            GXWGFifo.f32 = from[0];
+            GXWGFifo.f32 = from[1];
+            GXWGFifo.f32 = from[2];
+            GXWGFifo.f32 = lbl_803DF1A0;
+            GXWGFifo.f32 = lbl_803DF1A0;
+            px = from[0];
+            py = from[1];
+            pz = from[2];
+        } else if (i < segs) {
+            PSVECScale(up, offset,
+                       lbl_803DF1BC *
+                           (lbl_803DF1C0 * (len * (f32)(int)randomGetRange(1, 100))));
+            PSMTXRotAxisRad(
+                mtx, scaled,
+                lbl_803DF1C4 *
+                    (lbl_803DF1C8 * (lbl_803DF1CC * (f32)(int)randomGetRange(0, 1000))));
+            PSMTXMultVecSR(mtx, offset, offset);
+            step = weight * (len * (f32)(segs - i));
+            px += scaled[0] * step;
+            py += scaled[1] * step;
+            pz += scaled[2] * step;
+            GXWGFifo.f32 = px + offset[0];
+            GXWGFifo.f32 = py + offset[1];
+            GXWGFifo.f32 = pz + offset[2];
+            GXWGFifo.f32 = lbl_803DF1A0;
+            GXWGFifo.f32 = lbl_803DF1A0;
+        } else {
+            GXWGFifo.f32 = to[0];
+            GXWGFifo.f32 = to[1];
+            GXWGFifo.f32 = to[2];
+            GXWGFifo.f32 = lbl_803DF1A0;
+            GXWGFifo.f32 = lbl_803DF1A0;
+        }
+    }
+    if (getHudHiddenFrameCount() == 0) {
+        *seed = rand();
+        srand(savedRand);
+    }
+}
+#pragma pop
+
+/*
+ * --INFO--
+ *
+ * Function: fn_80090C0C
+ * EN v1.0 Address: 0x80090C0C
+ * EN v1.0 Size: 892b
+ */
+#pragma push
+#pragma scheduling off
+void fn_80090C0C(u8 *snow) {
+    s16 *cam;
+    u8 *e;
+    f32 *m;
+    int i;
+    int c;
+    f32 c1;
+    f32 s1;
+    f32 c2;
+    f32 s2;
+    f32 c3;
+    f32 s3;
+
+    cam = Camera_GetCurrentViewSlot();
+    e = snow + 0x1008;
+    if (*(int *)(snow + 0x13f4) == 0) {
+        f32 size = lbl_803DF1E8;
+        f32 negSize = -size;
+        for (i = 0; i < 20; i++) {
+            m = (f32 *)e;
+            m[0] = negSize;
+            m[3] = negSize;
+            m[6] = lbl_803DF1A0;
+            m[1] = size;
+            m[4] = negSize;
+            m[7] = lbl_803DF1A0;
+            m[2] = lbl_803DF1A0;
+            m[5] = size;
+            m[8] = lbl_803DF1A0;
+            *(u16 *)(e + 0x28) =
+                timeDelta * (f32)*(u16 *)(e + 0x24) + (f32)*(u16 *)(e + 0x28);
+            *(u16 *)(e + 0x2a) =
+                timeDelta * (f32)*(u16 *)(e + 0x26) + (f32)*(u16 *)(e + 0x2a);
+            angleToVec2((u16)(0xffff - *cam), &c1, &s1);
+            angleToVec2(*(u16 *)(e + 0x28), &c2, &s2);
+            angleToVec2(*(u16 *)(e + 0x2a), &c3, &s3);
+            for (c = 0; c < 3; c++) {
+                f32 m0 = m[c];
+                f32 m1 = m[c + 3];
+                f32 m2 = m[c + 6];
+                f32 t1 = m0 * s3 - m1 * c3;
+                f32 t2 = m0 * c3 + m1 * s3;
+                m[c] = t1 * s1 + c1 * (t2 * c2) + c1 * (m2 * s2);
+                m[c + 3] = -m2 * c2 + t2 * s2;
+                m[c + 6] = -t1 * c1 + s1 * (t2 * c2) + s1 * (m2 * s2);
+            }
+            e += 0x2c;
+        }
+    } else {
+        f32 size2;
+        f32 negSize2;
+        angleToVec2((u16)(0xffff - *cam), &c1, &s1);
+        size2 = lbl_803DF1E4;
+        negSize2 = -size2;
+        m = (f32 *)e;
+        for (i = 0; i < 20; i++) {
+            m[0] = negSize2 * s1;
+            m[6] = size2 * c1;
+            m[1] = size2 * s1;
+            m[7] = size2 * -c1;
+            m += 0xb;
+        }
     }
 }
 #pragma pop
