@@ -2238,6 +2238,23 @@ extern void fn_80088870(u8 *a, u8 *b, u8 *c, u8 *d);
 extern void envFxActFn_800887f8(int id);
 extern void getEnvfxAct(int a, int b, int c, int d);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
+extern int *getTrickyObject(void);
+extern void fn_80138908(int *tricky, int mode);
+extern void *gObjectTriggerInterface;
+extern f32 timeDelta;
+extern f32 lbl_803E47C8;
+
+typedef struct {
+    int flags;
+    s8 cnt : 2;
+    u8 stage : 3;
+    u8 low : 3;
+    u8 flag5 : 1;
+    u8 pad5 : 7;
+    u8 pad6[2];
+    f32 timer;
+    s16 music;
+} LinkbLevState;
 
 void linkb_levcontrol_init(int *obj) {
     u8 *sub;
@@ -2273,6 +2290,126 @@ void linkb_levcontrol_init(int *obj) {
         getEnvfxAct(0, 0, 0x23c, 0);
     }
     *(s16*)(sub + 0xc) = 0;
+}
+void linkb_levcontrol_update(int *obj) {
+    LinkbLevState *state;
+    int *tricky;
+    int *player;
+    u8 *cur;
+
+    state = *(LinkbLevState **)((char *)obj + 0xb8);
+    player = (int *)Obj_GetPlayerObject();
+    tricky = getTrickyObject();
+    cur = (*gMapEventInterface)->getProgressPtr();
+    if (((int (*)(int))((void **)*(int *)gSHthorntailAnimationInterface)[9])(0) != 0) {
+        if (state->music != -1) {
+            state->music = -1;
+            if (state->flags & 8) {
+                Music_Trigger(0x1a, 0);
+            }
+        }
+    } else {
+        if (state->music != 0x1a) {
+            state->music = 0x1a;
+            if (state->flags & 8) {
+                Music_Trigger(0x1a, 1);
+            }
+        }
+    }
+    SCGameBitLatch_Update(state, 1, -1, -1, 0x3a0, 0x35);
+    SCGameBitLatch_Update(state, 2, -1, -1, 0xb36, 0x96);
+    SCGameBitLatch_Update(state, 8, -1, -1, 0x3a1, state->music);
+    if (state->flags & 4) {
+        if (GameBit_Get(0x1fd) == 0 && GameBit_Get(0x256) == 0) {
+            GameBit_Set(0x36e, 0);
+            state->flags &= ~4;
+        }
+    } else {
+        if (GameBit_Get(0x256) != 0 || GameBit_Get(0x1fd) != 0) {
+            GameBit_Set(0x36e, 1);
+            state->flags |= 4;
+        }
+    }
+    if (tricky != NULL) {
+        fn_80138908(tricky, 0);
+        switch (state->stage) {
+        case 0:
+            if (GameBit_Get(0x384) != 0) {
+                fn_80138908(tricky, 1);
+                ((void (*)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[18])(state->stage, obj, -1);
+                state->stage++;
+                state->low = 0;
+                return;
+            }
+            break;
+        case 1:
+            if (GameBit_Get(0xc1) != 0) {
+                if (!(*(u16 *)((char *)player + 0xb0) & 0x1000)) {
+                    GameBit_Set(0x385, 1);
+                    fn_80138908(tricky, 1);
+                    ((void (*)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[18])(state->stage, obj, -1);
+                    state->stage++;
+                    state->low = 0;
+                    return;
+                }
+            }
+            break;
+        case 2:
+            if (cur[0] != 0) {
+                fn_80138908(tricky, 1);
+                if (state->cnt-- == -1 && !(*(u16 *)((char *)tricky + 0xb0) & 0x1000)) {
+                    GameBit_Set(0x386, 1);
+                    ((void (*)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[18])(state->stage, obj, -1);
+                    state->stage++;
+                    state->low = 0;
+                    return;
+                }
+            }
+            break;
+        case 3:
+            if (GameBit_Get(0x1fd) != 0) {
+                GameBit_Set(0x387, 1);
+                state->stage++;
+                break;
+            }
+            if (GameBit_Get(0x380) != 0) {
+                state->flag5 = 1;
+                break;
+            }
+            if (state->flag5 != 0) {
+                GameBit_Set(0x387, 1);
+                fn_80138908(tricky, 1);
+                ((void (*)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[18])(state->stage, obj, -1);
+                state->stage++;
+                state->low = 0;
+                return;
+            }
+            break;
+        case 4:
+            if (GameBit_Get(0x543) != 0) {
+                fn_80138908(tricky, 1);
+                ((void (*)(int, int *, int))((void **)*(int *)gObjectTriggerInterface)[18])(state->stage, obj, -1);
+                state->stage++;
+                state->low = 0;
+                return;
+            }
+            break;
+        }
+    }
+    if (tricky != NULL) {
+        if (!(*(u16 *)((char *)tricky + 0xb0) & 0x1000)) {
+            state->timer = state->timer + timeDelta;
+        }
+        if (GameBit_Get(0x4e3) == 1 && cur[0] >= 4) {
+            GameBit_Set(0x4e3, 0xff);
+        }
+        if (state->timer >= lbl_803E47C8) {
+            state->timer = state->timer - lbl_803E47C8;
+            if (GameBit_Get(0x4e3) == 0xff && cur[0] < 4) {
+                GameBit_Set(0x4e3, 1);
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
