@@ -203,12 +203,15 @@ void fn_8013E0D0(int *obj, u8 *st) {
         }
         if (go != 0) {
             if (*(int *)(st + 0x728) == 0) {
-                *(void **)(st + 0x720) = trickyFindCirclingTarget(obj, st);
-                if (*(void **)(st + 0x720) != NULL) {
-                    *(int *)(st + 0x24) = *(int *)(st + 0x720);
-                    *(int *)(st + 0x724) = 0;
-                    st[0xa] = 5;
-                    break;
+                {
+                    void *ct = trickyFindCirclingTarget(obj, st);
+                    *(void **)(st + 0x720) = ct;
+                    if (ct != NULL) {
+                        *(int *)(st + 0x24) = *(int *)(st + 0x720);
+                        *(int *)(st + 0x724) = 0;
+                        st[0xa] = 5;
+                        break;
+                    }
                 }
             }
             if (ok == 2) {
@@ -253,12 +256,15 @@ void fn_8013E0D0(int *obj, u8 *st) {
         }
         if (go != 0) {
             if (*(int *)(st + 0x728) == 0) {
-                *(void **)(st + 0x720) = trickyFindCirclingTarget(obj, st);
-                if (*(void **)(st + 0x720) != NULL) {
-                    *(int *)(st + 0x24) = *(int *)(st + 0x720);
-                    *(int *)(st + 0x724) = 0;
-                    st[0xa] = 5;
-                    break;
+                {
+                    void *ct = trickyFindCirclingTarget(obj, st);
+                    *(void **)(st + 0x720) = ct;
+                    if (ct != NULL) {
+                        *(int *)(st + 0x24) = *(int *)(st + 0x720);
+                        *(int *)(st + 0x724) = 0;
+                        st[0xa] = 5;
+                        break;
+                    }
                 }
             }
             if (ok == 2) {
@@ -437,10 +443,10 @@ void fn_8013E0D0(int *obj, u8 *st) {
                 }
             }
             if (best != NULL) {
-                if (*(int *)(st + 0x724) == 0) {
+                if (*(void **)(st + 0x724) == NULL) {
                     TRICKY_BARK(obj, 0x35b, 0x500);
                 }
-                if (*(int *)(st + 0x724) == 0 || *(int **)(st + 0x724) != best) {
+                if (*(void **)(st + 0x724) == NULL || *(int **)(st + 0x724) != best) {
                     *(int **)(st + 0x724) = best;
                     TRICKY_RETARGET(st, *(int *)(st + 0x724));
                 }
@@ -448,7 +454,7 @@ void fn_8013E0D0(int *obj, u8 *st) {
         }
         {
             u8 r;
-            if (*(int *)(st + 0x724) != 0) {
+            if (*(void **)(st + 0x724) != NULL) {
                 r = trickyFn_8013b368(obj, lbl_803E2488, st);
             } else {
                 r = trickyFn_8013b368(obj, lbl_803E2418, st);
