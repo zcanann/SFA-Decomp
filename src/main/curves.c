@@ -73,7 +73,7 @@ void curveFn_80010018(f32 *px, f32 *py, f32 *pz, f32 *outX, f32 *outY, f32 *outZ
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void curveFn_8000fe8c(Curve *curve, int count)
+void Curve_BuildSegmentLengthTable(Curve *curve, int count)
 {
     f32 outX[21];
     f32 outY[21];
@@ -163,7 +163,7 @@ int curveFn_80010320(Curve *curve, f32 dt)
                     curve->idx = curve->count - 4;
                     return 1;
                 }
-                curveFn_8000fe8c(curve, 20);
+                Curve_BuildSegmentLengthTable(curve, 20);
                 seg = 0;
             }
         }
@@ -220,7 +220,7 @@ int curveFn_80010320(Curve *curve, f32 dt)
                     curve->idx = 0;
                     return 1;
                 }
-                curveFn_8000fe8c(curve, 20);
+                Curve_BuildSegmentLengthTable(curve, 20);
                 seg = 19;
             }
         }
@@ -260,7 +260,7 @@ void curvesSetupMoveNetworkCurve(Curve *curve)
     curve->pathLength = lbl_803DE658;
     curve->idx = 0;
     while (curve->idx < curve->count - 3) {
-        curveFn_8000fe8c(curve, 5);
+        Curve_BuildSegmentLengthTable(curve, 5);
         curve->pathLength += curve->totalLen;
         if (curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) {
             curve->idx += 4;
@@ -274,7 +274,7 @@ void curvesSetupMoveNetworkCurve(Curve *curve)
     } else {
         curve->idx = 0;
     }
-    curveFn_8000fe8c(curve, 20);
+    Curve_BuildSegmentLengthTable(curve, 20);
     if (curve->dir != 0) {
         curve->pathDistance = curve->pathLength - curve->segmentDistance;
     } else {
@@ -299,7 +299,7 @@ void curvesMove(Curve *curve)
     curve->pathLength = lbl_803DE658;
     curve->idx = 0;
     while (curve->idx < curve->count - 3) {
-        curveFn_8000fe8c(curve, 5);
+        Curve_BuildSegmentLengthTable(curve, 5);
         curve->pathLength += curve->totalLen;
         if (curve->eval == Curve_EvalBezier || curve->eval == Curve_EvalHermite) {
             curve->idx += 4;
@@ -313,7 +313,7 @@ void curvesMove(Curve *curve)
     } else {
         curve->idx = 0;
     }
-    curveFn_8000fe8c(curve, 20);
+    Curve_BuildSegmentLengthTable(curve, 20);
 
     if (curve->dir != 0) {
         curve->t = lbl_803DE674;
