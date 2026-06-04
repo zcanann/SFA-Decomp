@@ -1850,3 +1850,154 @@ void iceblast_update(int *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern s16 *getTrickyObject(void);
+extern void Obj_FreeObject(int *obj);
+extern int fn_80138F90(void);
+extern f32 *trickyGetQueuedPathParticlePos(s16 *tricky);
+extern f32 lbl_803E361C;
+extern f32 lbl_803E3624;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+int fn_8017805C(int *obj, f32 *state) {
+    s16 *tricky;
+    f32 *pf;
+    f32 k;
+    struct { s16 dir[3]; s16 pad; f32 pos[4]; } vec;
+
+    tricky = getTrickyObject();
+    if (*(u8 *)((char *)state + 0x10) != 0 || tricky == NULL) {
+        Obj_FreeObject(obj);
+        return 0;
+    }
+    {
+        f32 f = lbl_803E3618;
+        *(f32 *)((char *)obj + 0x24) = f;
+        *(f32 *)((char *)obj + 0x28) = f;
+        *(f32 *)((char *)obj + 0x2c) = lbl_803E361C;
+        vec.pos[1] = f;
+        vec.pos[2] = f;
+        vec.pos[3] = f;
+        vec.pos[0] = lbl_803E3620;
+    }
+    vec.dir[2] = tricky[2];
+    vec.dir[1] = tricky[1];
+    vec.dir[0] = tricky[0] + fn_80138F90();
+    mathFn_80021ac8(&vec, (f32 *)((char *)obj + 0x24));
+    if ((*(u16 *)((char *)tricky + 0xb0) & 0x800) != 0) {
+        pf = trickyGetQueuedPathParticlePos(tricky);
+    } else {
+        pf = (f32 *)((char *)tricky + 0xc);
+    }
+    k = lbl_803E3624;
+    state[1] = -(k * *(f32 *)((char *)obj + 0x24) - pf[0]);
+    state[2] = -(k * *(f32 *)((char *)obj + 0x28) - pf[1]);
+    state[3] = -(k * *(f32 *)((char *)obj + 0x2c) - pf[2]);
+    {
+        u32 v = *(u8 *)((char *)state + 0x11);
+        if (v != 0) {
+            *(u8 *)((char *)state + 0x11) = v - 1;
+        } else {
+            ObjHits_ClearHitVolumes(obj);
+        }
+    }
+    return 1;
+}
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+void invhit_init(int *obj, u8 *def) {
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    char *sub;
+
+    state[8] = def[0x1a];
+    sub = *(char **)((char *)obj + 0x54);
+    *(s16 *)(sub + 0x60) = *(s16 *)(sub + 0x60) & ~1;
+    switch (state[8]) {
+    case 0:
+        *(int *)((char *)obj + 0xf8) = def[0x18];
+        break;
+    case 6:
+        sub[0x62] = 1;
+        *(s16 *)(sub + 0x5a) = 0x23;
+        *(s16 *)(sub + 0x60) = *(s16 *)(sub + 0x60) | 0x45;
+        sub[0x6e] = 0xb;
+        sub[0x6f] = 1;
+        sub[0xae] = 0;
+        sub[0xaf] = 0;
+        *(int *)(sub + 0x48) = 0x10;
+        *(int *)(sub + 0x4c) = 0x10;
+        sub[0x6a] = 0;
+        sub[0x6b] = 0;
+        break;
+    case 3:
+        *(int *)((char *)obj + 0xf8) = def[0x18];
+        *(int *)((char *)obj + 0xf4) = 0;
+        break;
+    case 5:
+        *(int *)((char *)obj + 0xf8) = def[0x18];
+        *(int *)((char *)obj + 0xf4) = 0;
+        break;
+    case 7:
+        sub[0x62] = 1;
+        *(s16 *)(sub + 0x5a) = def[0x18];
+        *(s16 *)(sub + 0x60) = *(s16 *)(sub + 0x60) | 0x45;
+        sub[0xae] = 0;
+        sub[0x6e] = 0xa;
+        sub[0x6f] = 0;
+        sub[0xaf] = 0;
+        *(int *)(sub + 0x48) = 0x10;
+        *(int *)(sub + 0x4c) = 0x10;
+        sub[0x6a] = 0;
+        sub[0x6b] = 0;
+        break;
+    case 1:
+        sub[0x62] = 1;
+        *(s16 *)(sub + 0x5a) = def[0x18];
+        *(s16 *)(sub + 0x60) = *(s16 *)(sub + 0x60) | 0x45;
+        sub[0xae] = 0;
+        sub[0x6e] = 0xb;
+        sub[0x6f] = 1;
+        sub[0xaf] = 0;
+        sub[0x6e] = 0x11;
+        sub[0x6f] = 1;
+        *(int *)(sub + 0x48) = 0x10;
+        *(int *)(sub + 0x4c) = 0x10;
+        sub[0x6a] = 0;
+        sub[0x6b] = 0;
+        break;
+    case 2:
+        *(u8 *)(sub + 0x62) = def[0x19];
+        *(s16 *)(sub + 0x5a) = def[0x18];
+        *(s16 *)(sub + 0x60) = *(s16 *)(sub + 0x60) | 1;
+        sub[0xae] = 0;
+        sub[0xaf] = 0;
+        sub[0x6a] = 0;
+        sub[0x6b] = 0;
+        break;
+    case 4:
+        sub[0x62] = 1;
+        *(s16 *)(sub + 0x5a) = 0xa;
+        *(s16 *)(sub + 0x60) = 3;
+        *(int *)(sub + 0x48) = 0x10;
+        *(int *)((char *)obj + 0xf8) = 0x78;
+        {
+            char *q = *(char **)(def + 0x1c);
+            if (q != NULL) {
+                *(f32 *)state = *(f32 *)(q + 0xc);
+                *(f32 *)(state + 4) = *(f32 *)(*(char **)(def + 0x1c) + 0x14);
+            }
+        }
+        break;
+    }
+    *(u16 *)((char *)obj + 0xb0) = *(u16 *)((char *)obj + 0xb0) | 0x6000;
+}
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
