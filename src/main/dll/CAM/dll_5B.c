@@ -799,7 +799,8 @@ void CameraModeDebug_init(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void *fn_80109B04(int filter1, int filter2, f32 x, f32 y, f32 z)
+#pragma dont_inline on
+void *fn_80109B04(f32 x, f32 y, f32 z, int filter1, int filter2)
 {
     void *best;
     double bestDist;
@@ -830,6 +831,7 @@ void *fn_80109B04(int filter1, int filter2, f32 x, f32 y, f32 z)
     }
     return best;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -943,33 +945,36 @@ void CameraModeStatic_update(short *param_1)
  */
 void CameraModeStatic_init(u8 *cam, int p2, int *p3)
 {
-  u8 *state = *(u8 **)(cam + 164);
-  int obj;
+  u8 *state;
+  u8 *best;
   u8 *setup;
   s16 yaw;
-  s16 pitch;
+  int pitch;
   s16 roll;
-  f32 dx, dy, dz;
+  f32 dx;
+  f32 dy;
+  f32 dz;
 
+  state = *(u8 **)(cam + 164);
   if (lbl_803DD558 == NULL) {
     lbl_803DD558 = (undefined4 *)mmAlloc(248, 15, 0);
   }
   *(u8 *)((int)lbl_803DD558 + 244) = 1;
   *(u8 *)((int)lbl_803DD558 + 245) = 0;
-  obj = (int)fn_80109B04(*p3, 18, *(f32 *)(state + 24), *(f32 *)(state + 28), *(f32 *)(state + 32));
-  if (obj == 0) {
+  best = (u8 *)fn_80109B04(*(f32 *)(state + 24), *(f32 *)(state + 28), *(f32 *)(state + 32), *p3, 18);
+  if (best == NULL) {
     *(u8 *)((int)lbl_803DD558 + 245) = 1;
     return;
   }
-  *(int *)lbl_803DD558 = obj;
-  setup = *(u8 **)(obj + 76);
-  dx = *(f32 *)(obj + 24) - *(f32 *)(state + 24);
-  dy = *(f32 *)(obj + 28) - *(f32 *)(state + 28);
-  dz = *(f32 *)(obj + 32) - *(f32 *)(state + 32);
+  *(int *)lbl_803DD558 = (int)best;
+  setup = *(u8 **)(best + 76);
+  dx = *(f32 *)(best + 24) - *(f32 *)(state + 24);
+  dy = *(f32 *)(best + 28) - *(f32 *)(state + 28);
+  dz = *(f32 *)(best + 32) - *(f32 *)(state + 32);
   if ((setup[27] & 1) != 0) {
-    yaw = (s16)(0x8000 - getAngle(dx, dz));
+    yaw = 0x8000 - getAngle(dx, dz);
   } else {
-    yaw = (s16)(*(s16 *)(setup + 28) + 0x8000);
+    yaw = *(s16 *)(setup + 28) + 0x8000;
   }
   if ((setup[27] & 2) != 0) {
     pitch = (s16)getAngle(dy, sqrtf(dx * dx + dz * dz)) - *(s16 *)(setup + 30);
@@ -981,17 +986,22 @@ void CameraModeStatic_init(u8 *cam, int p2, int *p3)
   } else {
     roll = *(s16 *)(setup + 32);
   }
-  *(f32 *)(cam + 24) = *(f32 *)(obj + 24);
-  *(f32 *)(cam + 28) = *(f32 *)(obj + 28);
-  *(f32 *)(cam + 32) = *(f32 *)(obj + 32);
-  *(s16 *)(cam + 0) = yaw;
-  *(s16 *)(cam + 2) = pitch;
-  *(s16 *)(cam + 4) = roll;
-  *(f32 *)(cam + 180) = (f32)(u32)setup[26];
+  {
+    f32 fov = (f32)(u32)setup[26];
+    *(f32 *)(cam + 24) = *(f32 *)(best + 24);
+    *(f32 *)(cam + 28) = *(f32 *)(best + 28);
+    *(f32 *)(cam + 32) = *(f32 *)(best + 32);
+    *(s16 *)(cam + 0) = yaw;
+    *(s16 *)(cam + 2) = pitch;
+    *(s16 *)(cam + 4) = roll;
+    *(f32 *)(cam + 180) = fov;
+  }
   Obj_TransformWorldPointToLocal(*(f32 *)(cam + 24), *(f32 *)(cam + 28), *(f32 *)(cam + 32),
                                  (f32 *)(cam + 12), (f32 *)(cam + 16), (f32 *)(cam + 20),
                                  *(int *)(cam + 48));
 }
+
+
 
 /*
  * --INFO--
