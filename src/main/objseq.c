@@ -10,6 +10,11 @@ extern char sObjLoadAnimdataNullACRomTabWarning[];
 extern char sSeqAAnimDataTag;
 extern char sSeqBAnimDataTag;
 void ObjSeq_seqState_init(u8 *seq);
+extern void endObjSequence(int seq);
+extern int *gCameraInterface;
+extern u8 lbl_80399E50[];
+extern int lbl_803DD064;
+extern int lbl_803DD084;
 
 void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
 {
@@ -730,6 +735,143 @@ void ObjSeq_seqState_init(u8 *seq)
         }
         commandIndex++;
     }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+void fn_80081940(void)
+{
+}
+
+int fn_80081944(void)
+{
+    return 0;
+}
+
+int fn_8008194C(void)
+{
+    return 0;
+}
+
+void fn_80081954(int value)
+{
+    lbl_803DD084 = value;
+}
+
+int fn_8008195C(void)
+{
+    return lbl_803DD084;
+}
+
+int fn_80081964(void)
+{
+    return 1;
+}
+
+#pragma peephole off
+#pragma scheduling off
+int fn_8008196C(u8 *obj)
+{
+    int objectCount;
+    void *unused;
+    void **objects;
+    u8 *seqObj;
+    u8 *model;
+    u8 *found;
+    int j;
+    u8 *entry;
+    u8 *slotBase;
+    u8 *candidate;
+    int objType;
+    int i;
+    u8 *linked;
+    f32 bestDist;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distSq;
+
+    objects = ObjList_GetObjects(&unused, &objectCount);
+    seqObj = *(u8 **)(obj + 0xb8);
+    model = *(u8 **)(obj + 0x4c);
+    if (*(s16 *)(obj + 0x44) == 0x11) {
+        *(void **)seqObj = NULL;
+        return -1;
+    }
+
+    switch (*(s16 *)(model + 0x1c)) {
+    case 0:
+        *(void **)seqObj = NULL;
+        break;
+    case 1:
+        *(void **)seqObj = Obj_GetPlayerObject();
+        break;
+    case 2:
+        *(void **)seqObj = getTrickyObject();
+        break;
+    case 3:
+        *(void **)seqObj = NULL;
+        *(s8 *)(seqObj + 0x7b) = (s8)(*(s16 *)(model + 0x1c) - 2);
+        if (lbl_803DD064 != 0) {
+            lbl_803DD064 = 0;
+        }
+        if ((lbl_80399E50[(s8)seqObj[0x57]] & 0x10) == 0) {
+            (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x5c)))(0x41, 1);
+        }
+        break;
+    default:
+        *(void **)seqObj = NULL;
+        objType = *(s16 *)(model + 0x1c) - 4;
+        if (objType == 0x1f || objType == 0) {
+            *(void **)seqObj = Obj_GetPlayerObject();
+        } else if (*(int *)(seqObj + 0x10c) != 0) {
+            *(void **)seqObj = ObjList_FindObjectById(*(int *)(seqObj + 0x10c));
+        } else {
+            bestDist = lbl_803DEFF0;
+            for (i = 0; i < objectCount; i++) {
+                candidate = objects[i];
+                slotBase = lbl_80396918 + (s8)seqObj[0x57] * 0x80;
+                entry = slotBase;
+                for (j = 0; j < 16; j++) {
+                    if (*(u8 **)entry == candidate) {
+                        linked = *(u8 **)(slotBase + j * 8 + 4);
+                        goto check;
+                    }
+                    entry += 8;
+                }
+                linked = NULL;
+            check:
+                if (linked == obj) {
+                    *(void **)seqObj = candidate;
+                    break;
+                }
+                if (linked == NULL) {
+                    if (*(s16 *)(candidate + 0x46) == objType) {
+                        dx = *(f32 *)(obj + 0xc) - *(f32 *)(candidate + 0xc);
+                        dy = *(f32 *)(obj + 0x10) - *(f32 *)(candidate + 0x10);
+                        dz = *(f32 *)(obj + 0x14) - *(f32 *)(candidate + 0x14);
+                        distSq = dx * dx + dy * dy + dz * dz;
+                        if (bestDist < lbl_803DEFB0 || distSq < bestDist) {
+                            bestDist = distSq;
+                            *(void **)seqObj = candidate;
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    }
+
+    found = *(u8 **)seqObj;
+    if (found != NULL) {
+        if ((s8)seqObj[0x57] < 0x19) {
+            if (*(s16 *)(found + 0xb4) != -1) {
+                endObjSequence(*(s16 *)(found + 0xb4));
+            }
+        }
+        return *(s16 *)(*(u8 **)seqObj + 0x48);
+    }
+    return -1;
 }
 #pragma scheduling reset
 #pragma peephole reset
