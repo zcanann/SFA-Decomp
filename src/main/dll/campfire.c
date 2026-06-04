@@ -46,7 +46,7 @@ extern int FUN_8028683c();
 extern undefined8 FUN_80286840();
 extern undefined4 FUN_80286888();
 extern undefined4 FUN_8028688c();
-extern double sqrtf();
+extern f32 sqrtf(f32);
 extern double FUN_80293900();
 extern f32 fn_80293E80(f32 x);
 extern undefined4 FUN_80293f90();
@@ -323,113 +323,120 @@ void kaldachom_handleAnimEvents(int obj, int p2, int p3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+typedef struct KaldaCombatParams {
+    u32 a;
+    u32 b;
+    u32 c;
+    u32 d;
+} KaldaCombatParams;
+
+typedef struct KaldaCombatStack {
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    KaldaCombatParams p;
+} KaldaCombatStack;
+
+extern u8 lbl_803AC668[0x18];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
 void kaldachom_updateCombat(int obj, int stateWithBaddieData, int state)
 {
-  uint uVar1;
-  float fVar1;
-  int playerObj;
-  int iVar5;
-  undefined uVar6;
   int *piVar8;
-  double dVar8;
-  undefined auStack72 [2];
-  undefined auStack70 [2];
-  short local_44 [2];
-  float local_40;
-  float local_3c;
-  float local_38;
-  undefined4 local_34;
-  undefined4 local_30;
-  undefined4 local_2c;
-  undefined4 local_28;
-  longlong local_20;
-  
+  int playerObj;
+  int result;
+  u8 rnd;
+  KaldaCombatStack st;
+  u16 hitType;
+  u16 hitAux1;
+  u16 hitAux2;
+
   piVar8 = *(int **)(stateWithBaddieData + 0x40c);
-  local_34 = lbl_802C2210[0];
-  local_30 = lbl_802C2210[1];
-  local_2c = lbl_802C2210[2];
-  local_28 = lbl_802C2210[3];
+  st.p = *(KaldaCombatParams *)lbl_802C2210;
   playerObj = Obj_GetPlayerObject();
-  iVar5 = *(int *)(state + 0x2d0);
-  if (iVar5 != 0) {
-    local_40 = *(float *)(iVar5 + 0x18) - *(float *)(obj + 0x18);
-    local_3c = *(float *)(iVar5 + 0x1c) - *(float *)(obj + 0x1c);
-    local_38 = *(float *)(iVar5 + 0x20) - *(float *)(obj + 0x20);
-    dVar8 = (double)sqrtf((double)(local_38 * local_38 + local_40 * local_40 + local_3c * local_3c));
-    *(float *)(state + 0x2c0) = (float)dVar8;
+  if (*(void **)(state + 0x2d0) != NULL) {
+    int target = *(int *)(state + 0x2d0);
+    st.dx = *(f32 *)(target + 0x18) - *(f32 *)(obj + 0x18);
+    st.dy = *(f32 *)(target + 0x1c) - *(f32 *)(obj + 0x1c);
+    st.dz = *(f32 *)(target + 0x20) - *(f32 *)(obj + 0x20);
+    *(f32 *)(state + 0x2c0) = sqrtf(st.dz * st.dz + (st.dx * st.dx + st.dy * st.dy));
   }
-  (**(code **)(*gBaddieControlInterface + 0x54))
-            (obj,state,stateWithBaddieData + 0x35c,(int)*(short *)(stateWithBaddieData + 0x3f4),0,0,0,4);
-  (**(code **)(*gBaddieControlInterface + 0x14))(obj,playerObj,4,local_44,auStack70,auStack72);
-  if ((local_44[0] == 1) || (local_44[0] == 2)) {
-    iVar5 = (**(code **)(*gBaddieControlInterface + 0x50))
-                      (obj,state,stateWithBaddieData + 0x35c,(int)*(short *)(stateWithBaddieData + 0x3f4),0,0,1,
-                       &DAT_803ad2c8);
-    if (iVar5 != 0) {
-      if ((iVar5 != 0x10) && (iVar5 != 0x11)) {
-        objLightFn_8009a1dc((double)lbl_803E30BC,obj,&DAT_803ad2c8,3,0);
-        (**(code **)(*gPlayerInterface + 0x14))(obj,state,4);
-        *(char *)(state + 0x354) = *(char *)(state + 0x354) + -1;
-        Obj_SetModelColorFadeRecursive(obj,0xf,200,0,0,1);
-        Sfx_PlayFromObject(obj,SFXen_blkscrp6);
+  (*(void (**)(int, int, int, int, int, int, int, int))(*(int *)gBaddieControlInterface + 0x54))(
+      obj, state, stateWithBaddieData + 0x35c, *(s16 *)(stateWithBaddieData + 0x3f4), 0, 0, 0, 4);
+  (*(void (**)(int, int, int, u16 *, u16 *, u16 *))(*(int *)gBaddieControlInterface + 0x14))(
+      obj, playerObj, 4, &hitType, &hitAux1, &hitAux2);
+  if ((hitType == 1) || (hitType == 2)) {
+    result = (*(int (**)(int, int, int, int, int, int, int, void *))(*(int *)gBaddieControlInterface + 0x50))(
+        obj, state, stateWithBaddieData + 0x35c, *(s16 *)(stateWithBaddieData + 0x3f4), 0, 0, 1,
+        lbl_803AC668);
+    if (result != 0) {
+      if ((result != 0x10) && (result != 0x11)) {
+        objLightFn_8009a1dc(lbl_803E30BC, obj, lbl_803AC668, 3, 0);
+        (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 4);
+        *(u8 *)(state + 0x354) -= 1;
+        Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
+        Sfx_PlayFromObject(obj, SFXen_blkscrp6);
       }
-      if (*(char *)(state + 0x354) < '\x01') {
-        *(undefined2 *)(state + 0x270) = 2;
+      if (*(s8 *)(state + 0x354) < 1) {
+        *(s16 *)(state + 0x270) = 2;
       }
     }
   }
   else {
-    iVar5 = (**(code **)(*gBaddieControlInterface + 0x50))
-                      (obj,state,stateWithBaddieData + 0x35c,(int)*(short *)(stateWithBaddieData + 0x3f4),0,0,1,
-                       &DAT_803ad2c8);
-    if (iVar5 != 0) {
-      if (iVar5 == 0x11) {
-        if (*(short *)(state + 0x270) != 1) {
-          (**(code **)(*gPlayerInterface + 0x14))(obj,state,6);
-          *(undefined *)(state + 0x27b) = 1;
-          *(undefined *)(state + 0x27a) = 1;
-          *(undefined2 *)(state + 0x270) = 1;
-          objLightFn_8009a1dc((double)lbl_803E30BC,obj,&DAT_803ad2c8,1,0);
-          Sfx_PlayFromObject(obj,SFXen_blkscrp6);
-          Sfx_PlayFromObject(obj,0x3ac);
+    result = (*(int (**)(int, int, int, int, int, int, int, void *))(*(int *)gBaddieControlInterface + 0x50))(
+        obj, state, stateWithBaddieData + 0x35c, *(s16 *)(stateWithBaddieData + 0x3f4), 0, 0, 1,
+        lbl_803AC668);
+    if (result != 0) {
+      if (result != 0x11) {
+        if ((result != 0x10) && (*(f32 *)((char *)piVar8 + 0x40) < lbl_803E30C0)) {
+          kaldaChomFn_8016821c(obj, piVar8);
+          *(f32 *)(lbl_803AC668 + 8) = lbl_803E3078;
+          *(u16 *)(lbl_803AC668 + 4) = 0;
+          *(u16 *)(lbl_803AC668 + 2) = 0;
+          *(u16 *)(lbl_803AC668 + 0) = 0;
+          (*(void (**)(int, int, void *, int, int, void *))(*(int *)lbl_803DDA90 + 4))(
+              0, 1, lbl_803AC668, 0x401, -1, (KaldaCombatParams *)((u8 *)&st + 0xc));
+          fn_802961FC(playerObj, 2);
+          (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 5);
+          objLightFn_8009a1dc(lbl_803E30BC, obj, lbl_803AC668, 4, 0);
+          Sfx_PlayFromObject(obj, 0x255);
         }
       }
-      else if ((iVar5 != 0x10) && ((float)piVar8[0x10] < lbl_803E30C0)) {
-        kaldaChomFn_8016821c(obj,piVar8);
-        DAT_803ad2d0 = lbl_803E3078;
-        DAT_803ad2cc = 0;
-        DAT_803ad2ca = 0;
-        DAT_803ad2c8 = 0;
-        (**(code **)(*lbl_803DDA90 + 4))(0,1,&DAT_803ad2c8,0x401,0xffffffff,&local_34);
-        fn_802961FC(playerObj,2);
-        (**(code **)(*gPlayerInterface + 0x14))(obj,state,5);
-        objLightFn_8009a1dc((double)lbl_803E30BC,obj,&DAT_803ad2c8,4,0);
-        Sfx_PlayFromObject(obj,SFXfox_runbreath3);
+      else {
+        if (*(s16 *)(state + 0x270) != 1) {
+          (*(void (**)(int, int, int))(*(int *)gPlayerInterface + 0x14))(obj, state, 6);
+          *(u8 *)(state + 0x27b) = 1;
+          *(u8 *)(state + 0x27a) = 1;
+          *(s16 *)(state + 0x270) = 1;
+          objLightFn_8009a1dc(lbl_803E30BC, obj, lbl_803AC668, 1, 0);
+          Sfx_PlayFromObject(obj, SFXen_blkscrp6);
+          Sfx_PlayFromObject(obj, 0x3ac);
+        }
       }
     }
-    if (*(char *)(state + 0x354) < '\x01') {
-      *(undefined2 *)(state + 0x270) = 2;
+    if (*(s8 *)(state + 0x354) < 1) {
+      *(s16 *)(state + 0x270) = 2;
     }
   }
-  fVar1 = lbl_803E3060;
-  if (*piVar8 != 0) {
-    if (lbl_803E3060 < (float)piVar8[0x10]) {
-      uVar1 = (uint)(float)piVar8[0x10];
-      local_20 = (longlong)(int)uVar1;
-      uVar6 = randomGetRange(0,uVar1 & 0xff);
-      *(undefined *)(*piVar8 + 0x36) = uVar6;
-      *(undefined2 *)(*piVar8 + 4) = *(undefined2 *)(obj + 4);
-      *(undefined2 *)(*piVar8 + 2) = *(undefined2 *)(obj + 2);
-      *(undefined2 *)*piVar8 = *(undefined2 *)obj;
-      piVar8[0x10] = (int)-(lbl_803E30C4 * timeDelta - (float)piVar8[0x10]);
+
+  if (*(void **)piVar8 != NULL) {
+    if (*(f32 *)((char *)piVar8 + 0x40) <= lbl_803E3060) {
+      *(u8 *)(*(int *)piVar8 + 0x36) = 0;
+      *(f32 *)((char *)piVar8 + 0x40) = lbl_803E3060;
     }
     else {
-      *(undefined *)(*piVar8 + 0x36) = 0;
-      piVar8[0x10] = (int)fVar1;
+      rnd = randomGetRange(0, (u8)(s32)*(f32 *)((char *)piVar8 + 0x40));
+      *(u8 *)(*(int *)piVar8 + 0x36) = rnd;
+      *(s16 *)(*(int *)piVar8 + 4) = *(s16 *)(obj + 4);
+      *(s16 *)(*(int *)piVar8 + 2) = *(s16 *)(obj + 2);
+      *(s16 *)(*(int *)piVar8 + 0) = *(s16 *)obj;
+      *(f32 *)((char *)piVar8 + 0x40) = *(f32 *)((char *)piVar8 + 0x40) - lbl_803E30C4 * timeDelta;
     }
   }
-  return;
 }
+#pragma pop
 
 /* Trivial 4b 0-arg blr leaves. */
 void kaldachom_func0B(void) {}
