@@ -4450,6 +4450,250 @@ void playerDoHitDetection(int obj)
 
 #pragma scheduling off
 #pragma peephole off
+void fn_802B249C(int obj, int inner, int state)
+{
+    int p;
+    int param = 0;
+    int msg;
+
+    while (ObjMsg_Pop(obj, &msg, &p, &param) != 0) {
+        switch (msg) {
+        case 0x80002:
+            *(s16 *)((char *)inner + 0x80c) = (s16)param;
+            if (*(void **)((char *)state + 0x2d0) != NULL &&
+                (param == 0x2d || param == 0x5ce)) {
+                *(s16 *)((char *)inner + 0x80e) = (s16)param;
+                *(s16 *)((char *)inner + 0x80c) = -1;
+            }
+            break;
+        case 0x60003: {
+            f32 dx = *(f32 *)(p + 0xc) - *(f32 *)((char *)obj + 0xc);
+            f32 dz = *(f32 *)(p + 0x14) - *(f32 *)((char *)obj + 0x14);
+            f32 d = sqrtf(dx * dx + dz * dz);
+            if (d > lbl_803E7EE0) {
+                dx = dx / d;
+                dz = dz / d;
+            }
+            *(f32 *)((char *)obj + 0x24) = lbl_803E7F9C * dx;
+            *(f32 *)((char *)obj + 0x2c) = lbl_803E7F9C * dz;
+            *(f32 *)((char *)obj + 0x28) = lbl_803E7F9C;
+            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0x21);
+            *(int *)((char *)state + 0x304) = 0;
+            {
+                int in2 = *(int *)((char *)obj + 0xb8);
+                s8 *pc = *(s8 **)((char *)in2 + 0x35c);
+                int v = pc[0] - param;
+                if (v < 0) {
+                    v = 0;
+                } else if (v > pc[1]) {
+                    v = pc[1];
+                }
+                pc[0] = (s8)v;
+                if (**(s8 **)((char *)in2 + 0x35c) < 1) {
+                    playerDie(obj);
+                }
+            }
+            *(u8 *)((char *)inner + 0x800) = 0;
+            if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                s16 typ = *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x46);
+                if (typ == 0x3cf || typ == 0x662) {
+                    objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                } else {
+                    objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                }
+                *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) =
+                    *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) & ~0x4000;
+                *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                *(int *)((char *)inner + 0x7f8) = 0;
+            }
+            break;
+        }
+        case 0x60004: {
+            f32 dx = *(f32 *)(p + 0xc) - *(f32 *)((char *)obj + 0xc);
+            f32 dz = *(f32 *)(p + 0x14) - *(f32 *)((char *)obj + 0x14);
+            f32 d = sqrtf(dx * dx + dz * dz);
+            if (d > lbl_803E7EE0) {
+                dx = dx / d;
+                dz = dz / d;
+            }
+            *(f32 *)((char *)obj + 0x24) = lbl_803E7F9C * -dx;
+            *(f32 *)((char *)obj + 0x2c) = lbl_803E7F9C * -dz;
+            *(f32 *)((char *)obj + 0x28) = lbl_803E7F9C;
+            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0x21);
+            *(int *)((char *)state + 0x304) = 0;
+            {
+                int in2 = *(int *)((char *)obj + 0xb8);
+                s8 *pc = *(s8 **)((char *)in2 + 0x35c);
+                int v = pc[0] - param;
+                if (v < 0) {
+                    v = 0;
+                } else if (v > pc[1]) {
+                    v = pc[1];
+                }
+                pc[0] = (s8)v;
+                if (**(s8 **)((char *)in2 + 0x35c) < 1) {
+                    playerDie(obj);
+                }
+            }
+            *(u8 *)((char *)inner + 0x800) = 0;
+            if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                s16 typ = *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x46);
+                if (typ == 0x3cf || typ == 0x662) {
+                    objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                } else {
+                    objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                }
+                *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) =
+                    *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) & ~0x4000;
+                *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                *(int *)((char *)inner + 0x7f8) = 0;
+            }
+            Sfx_PlayFromObject(obj,
+                               (u16)(*(s16 *)((char *)inner + 0x81a) == 0 ? 0x1f : 0x24));
+            break;
+        }
+        case 0x60005: {
+            f32 dx = *(f32 *)(p + 0xc) - *(f32 *)((char *)obj + 0xc);
+            f32 dz = *(f32 *)(p + 0x14) - *(f32 *)((char *)obj + 0x14);
+            f32 d = sqrtf(dx * dx + dz * dz);
+            if (d > lbl_803E7EE0) {
+                dx = dx / d;
+                dz = dz / d;
+            }
+            *(f32 *)((char *)obj + 0x24) = lbl_803E7F9C * -dx;
+            *(f32 *)((char *)obj + 0x2c) = lbl_803E7F9C * -dz;
+            *(f32 *)((char *)obj + 0x28) = lbl_803E7F9C;
+            (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 0x21);
+            *(int *)((char *)state + 0x304) = 0;
+            ObjAnim_SetCurrentMove(obj, 0x450, lbl_803E7EA4, 0);
+            {
+                int in2 = *(int *)((char *)obj + 0xb8);
+                s8 *pc = *(s8 **)((char *)in2 + 0x35c);
+                int v = pc[0] - param;
+                if (v < 0) {
+                    v = 0;
+                } else if (v > pc[1]) {
+                    v = pc[1];
+                }
+                pc[0] = (s8)v;
+                if (**(s8 **)((char *)in2 + 0x35c) < 1) {
+                    playerDie(obj);
+                }
+            }
+            *(u8 *)((char *)inner + 0x800) = 0;
+            if (*(void **)((char *)inner + 0x7f8) != NULL) {
+                s16 typ = *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x46);
+                if (typ == 0x3cf || typ == 0x662) {
+                    objThrowFn_80182504(*(int *)((char *)inner + 0x7f8));
+                } else {
+                    objSaveFn_800ea774(*(int *)((char *)inner + 0x7f8));
+                }
+                *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) =
+                    *(s16 *)((char *)*(int *)((char *)inner + 0x7f8) + 0x6) & ~0x4000;
+                *(int *)((char *)*(int *)((char *)inner + 0x7f8) + 0xf8) = 0;
+                *(int *)((char *)inner + 0x7f8) = 0;
+            }
+            break;
+        }
+        case 0x7000a: {
+            int t;
+            s16 bit;
+            *(int *)((char *)inner + 0x8dc) = param;
+            t = *(int *)(p + 0x64);
+            if (t != 0) {
+                *(u32 *)(t + 0x30) &= 0xfffffffb;
+            }
+            bit = **(s16 **)((char *)inner + 0x8dc);
+            if (bit > 0) {
+                if (GameBit_Get(bit) != 0) {
+                    ObjMsg_SendToObject(p, 0x7000b, obj, 0);
+                    break;
+                } else {
+                    f32 r = *(f32 *)(p + 8) / *(f32 *)(*(int *)(p + 0x50) + 4);
+                    f32 k = lbl_803E7F68;
+                    f32 lim = lbl_803E7F30;
+                    while (r * (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8)) >
+                           lim) {
+                        *(f32 *)(p + 8) = *(f32 *)(p + 8) * k;
+                        r = *(f32 *)(p + 8) / *(f32 *)(*(int *)(p + 0x50) + 4);
+                    }
+                    GameBit_Set(**(s16 **)((char *)inner + 0x8dc), 1);
+                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x7c)))(
+                        *(s16 *)(p + 0x46), 0, 0);
+                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(
+                        0, obj, -1);
+                }
+            } else {
+                f32 r = *(f32 *)(p + 8) / *(f32 *)(*(int *)(p + 0x50) + 4);
+                f32 k = lbl_803E7F68;
+                f32 lim = lbl_803E7F30;
+                while (r * (*(f32 *)((char *)obj + 0xa8) * *(f32 *)((char *)obj + 8)) > lim) {
+                    *(f32 *)(p + 8) = *(f32 *)(p + 8) * k;
+                    r = *(f32 *)(p + 8) / *(f32 *)(*(int *)(p + 0x50) + 4);
+                }
+                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x7c)))(
+                    *(s16 *)(p + 0x46), 0, 0);
+                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj,
+                                                                                        -1);
+            }
+            *(int *)((char *)inner + 0x684) = p;
+            *(s16 *)((char *)inner + 0x688) = *(s16 *)(*(int *)((char *)inner + 0x8dc) + 2);
+            t = *(int *)(*(int *)((char *)inner + 0x684) + 0x64);
+            if (t != 0) {
+                *(int *)(t + 0x30) = 0x1000;
+            }
+            if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0) {
+                *(u8 *)((char *)inner + 0x8b4) = 1;
+                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+            }
+            break;
+        }
+        case 0x100008:
+            *(u8 *)((char *)inner + 0x800) = 1;
+            if (*(int *)((char *)inner + 0x7f8) == 0) {
+                int *mdl;
+                *(int *)((char *)inner + 0x7f8) = p;
+                mdl = (int *)Obj_GetActiveModel(*(int *)((char *)inner + 0x7f8));
+                if (mdl != NULL && *mdl != 0 && (*(u16 *)(*mdl + 2) & 0x8000) == 0) {
+                    *(u8 *)(*(int *)((char *)inner + 0x7f8) + 0xf2) =
+                        *(u8 *)((char *)obj + 0xf2);
+                }
+                *(f32 *)((char *)inner + 0x7fc) = (f32)(param >> 0x10) / lbl_803E7ED8;
+                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 5);
+                *(int *)((char *)state + 0x304) = (int)fn_802A4B4C;
+                if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0) {
+                    *(u8 *)((char *)inner + 0x8b4) = 1;
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+                }
+            }
+            break;
+        case 0x100010:
+            *(u8 *)((char *)inner + 0x800) = 1;
+            if (*(int *)((char *)inner + 0x7f8) == 0) {
+                int *mdl;
+                *(int *)((char *)inner + 0x7f8) = p;
+                mdl = (int *)Obj_GetActiveModel(*(int *)((char *)inner + 0x7f8));
+                if (mdl != NULL && *mdl != 0 && (*(u16 *)(*mdl + 2) & 0x8000) == 0) {
+                    *(u8 *)(*(int *)((char *)inner + 0x7f8) + 0xf2) =
+                        *(u8 *)((char *)obj + 0xf2);
+                }
+                *(f32 *)((char *)inner + 0x7fc) = (f32)(param >> 0x10);
+                (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, state, 5);
+                *(int *)((char *)state + 0x304) = (int)fn_802A4B4C;
+                if (lbl_803DE44C != 0 && ((ByteFlags *)((char *)inner + 0x3f4))->b40 != 0) {
+                    *(u8 *)((char *)inner + 0x8b4) = 1;
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+                }
+            }
+            break;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 void fn_80295B2C(int obj, f32 f1, f32 f2, f32 f3)
 {
     int inner = *(int *)((char *)obj + 0xb8);
