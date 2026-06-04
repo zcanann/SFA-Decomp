@@ -275,7 +275,7 @@ extern undefined4 cRam803dc288;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objShouldLoad(undefined4 param_1,undefined4 param_2,undefined4 param_3)
+int objShouldLoad(int param_1,int param_2,int param_3)
 {
   bool bVar1;
   int iVar2;
@@ -395,7 +395,7 @@ LAB_80055bd4:
   }
 LAB_80055e70:
   FUN_8028688c();
-  return;
+  return 0;
 }
 
 /*
@@ -3757,6 +3757,246 @@ int objUpdateOpacity(char* obj)
         }
     }
     return 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int* ObjList_GetObjects(int* startIndex, int* objectCount);
+extern int objShouldUnload(char* obj);
+extern void Obj_FreeObject(char* obj);
+extern int getLoadedFileFlags(int file);
+extern int SaveGame_findTransientMapBit(int mapId, int bit);
+extern void mapInstantiateObjects(char* page, int mapId, int bit, char* obj);
+extern void mapClearBit(int mapId, int bit);
+extern void Obj_SetupObject(u32 setup, int a, int b, int c, char* d);
+
+#pragma scheduling off
+#pragma peephole off
+void mapLoadUnloadObjects(void)
+{
+    char* base;
+    s16 count;
+    int i;
+    int n;
+    s16 list[40];
+    s16* q;
+    int k;
+    int* tp;
+    char* obj;
+    char* fp;
+    int unload;
+    u32 bits;
+    int b;
+    int bit;
+    u32 cur;
+    u32 end;
+    u32 o;
+    u8* bp;
+    u8 m;
+    int vis;
+    int idx;
+
+    base = (char*)lbl_8037E0C0;
+    count = 0;
+    tp = (int*)(base + 0x41E0);
+    for (i = 0; i < 5; i++) {
+        q = (s16*)(*tp + 0x594);
+        for (k = 0; k < 3; k++) {
+            s16 id = *q;
+            if (id >= 0 && id < 80 && *(void**)(base + 0x83A8 + id * 4) != 0) {
+                s16 dup = 0;
+                s16* w = list;
+                int j2;
+                for (j2 = 0; j2 < count; j2++) {
+                    if (*w == *q) {
+                        dup = 1;
+                        break;
+                    }
+                    w++;
+                }
+                if (dup == 0)
+                    list[count++] = id;
+            }
+            q++;
+        }
+        tp++;
+    }
+    {
+        int* objs = ObjList_GetObjects(&i, &n);
+        while (i < n) {
+            obj = (char*)objs[i];
+            fp = *(char**)(obj + 0x4C);
+            i++;
+            unload = 0;
+            if (*(s8*)(obj + 0xAC) > -1) {
+                u8 fl = *(u8*)(fp + 4);
+                if (!(fl & 2)) {
+                    if (fl & 0x10) {
+                        if (*(s16*)(obj + 0x44) > -1 && objShouldUnload(obj)) {
+                            unload = 1;
+                        } else if (*(s8*)(obj + 0xAC) < 80 &&
+                                   *(void**)(base + 0x83A8 + *(s8*)(obj + 0xAC) * 4) == 0) {
+                            unload = 1;
+                        }
+                    } else {
+                        if (*(s16*)(obj + 0x44) > -1 && objShouldUnload(obj)) {
+                            unload = 1;
+                        } else if (*(s8*)(obj + 0xAC) < 80 &&
+                                   *(s8*)(obj + 0xAC) != lbl_803DCEC8) {
+                            unload = 1;
+                        }
+                    }
+                }
+            }
+            if (unload) {
+                char* page = *(char**)(base + 0x83A8 + *(s8*)(obj + 0xAC) * 4);
+                if (page != 0) {
+                    s16 tbit = *(s16*)(obj + 0xB2);
+                    if (tbit >= 0 && tbit >= 0) {
+                        u8* bb = *(u8**)(page + 0x10);
+                        int ix = tbit >> 3;
+                        *(s8*)(bb + ix) = bb[ix] & ~(1 << (tbit & 7));
+                    }
+                }
+                if (*(s16*)(obj + 0x46) == 0x72) {
+                    s8 mid = *(s8*)(obj + 0xAC);
+                    s16 j3 = 0;
+                    s16* w2 = list;
+                    for (j3 = 0; j3 < count; j3++) {
+                        if (mid == *w2)
+                            break;
+                        w2++;
+                    }
+                }
+                Obj_FreeObject(obj);
+                i--;
+                n--;
+            }
+        }
+    }
+    if (getLoadedFileFlags(lbl_803DCEC8) == 0) {
+        for (i = 0; i < 80; i++) {
+            if (*(int*)(base + i * 4 + 0x83A8) != 0) {
+                bits = (*(u32 (*)(int))(*(int*)(*gMapEventInterface + 0x5c)))(i);
+                if (bits != 0) {
+                    b = 0;
+                    while (bits != 0) {
+                        if ((bits & 1) && (s8)SaveGame_findTransientMapBit(i, b) == -1) {
+                            mapInstantiateObjects(*(char**)(base + i * 4 + 0x83A8), i, b, 0);
+                            mapClearBit(i, b);
+                        }
+                        bits >>= 1;
+                        b++;
+                    }
+                }
+            }
+        }
+        for (i = 0; i < count; i++) {
+            int id2 = list[i];
+            if (lbl_803DCEC8 == id2) {
+                char* page = *(char**)(base + id2 * 4 + 0x83A8);
+                if (page != 0) {
+                    m = 1;
+                    bit = 0;
+                    cur = *(u32*)(page + 0x20);
+                    bp = *(u8**)(page + 0x10);
+                    end = cur + *(int*)(base + id2 * 0x8C + 0x4290);
+                    while (cur < end) {
+                        o = cur;
+                        if ((*bp & m) == 0 && objShouldLoad(cur, 0, list[i]) != 0) {
+                            if (bit >= 0) {
+                                char* pg = *(char**)(base + list[i] * 4 + 0x83A8);
+                                int ix2 = bit >> 3;
+                                int msk = 1 << (bit & 7);
+                                *(s8*)(*(int*)(pg + 0x10) + ix2) =
+                                    *(u8*)(*(int*)(pg + 0x10) + ix2) & ~msk;
+                                *(s8*)(*(int*)(pg + 0x10) + ix2) =
+                                    *(u8*)(*(int*)(pg + 0x10) + ix2) | msk;
+                            }
+                            Obj_SetupObject(o, 1, list[i], bit, 0);
+                        }
+                        bit++;
+                        m = (u8)(m << 1);
+                        if (m == 0) {
+                            bp++;
+                            while (*bp == -1) {
+                                bit += 8;
+                                cur += *(u8*)(o + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                cur += *(u8*)(cur + 2) * 4;
+                                o = cur;
+                                bp++;
+                            }
+                            m = 1;
+                        }
+                        cur += *(u8*)(o + 2) * 4;
+                    }
+                }
+            }
+        }
+        {
+            int* objs2 = (int*)ObjGroup_GetObjects(6, &n);
+            for (i = 0; i < n; i++) {
+                char* obj2 = (char*)objs2[i];
+                u32 mid2 = *(u8*)(obj2 + 0x34);
+                char** slot = (char**)(base + mid2 * 4 + 0x83A8);
+                char* page2 = *slot;
+                if (page2 != 0) {
+                    s8 lp = *(s8*)(obj2 + 0x35) + 1;
+                    bit = 0;
+                    cur = *(u32*)(page2 + 0x20);
+                    end = cur + *(int*)(base + mid2 * 0x8C + 0x4290);
+                    bits = (*(u32 (*)(u32))(*(int*)(*gMapEventInterface + 0x5c)))(mid2);
+                    if (bits != 0) {
+                        b = 0;
+                        while (bits != 0) {
+                            if ((bits & 1) && (s8)SaveGame_findTransientMapBit(mid2, b) == -1) {
+                                mapInstantiateObjects(page2, mid2, b, obj2);
+                            }
+                            bits >>= 1;
+                            mapClearBit(mid2, b);
+                            b++;
+                        }
+                    }
+                    while (cur < end) {
+                        if (bit < 0) {
+                            vis = 0;
+                        } else {
+                            char* pg2 = *slot;
+                            idx = bit >> 3;
+                            if (idx < 0xc4) {
+                                vis = 1;
+                                if (((1 << (bit & 7)) &
+                                     *(s8*)(*(int*)(pg2 + 0x10) + idx)) == 0)
+                                    vis = 0;
+                            } else {
+                                vis = 0;
+                            }
+                        }
+                        if (vis == 0 && objShouldLoad(cur, lp, mid2) != 0) {
+                            if (bit >= 0) {
+                                char* pg3 = *slot;
+                                int ix3 = bit >> 3;
+                                int msk3 = 1 << (bit & 7);
+                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) =
+                                    *(u8*)(*(int*)(pg3 + 0x10) + ix3) & ~msk3;
+                                *(s8*)(*(int*)(pg3 + 0x10) + ix3) =
+                                    *(u8*)(*(int*)(pg3 + 0x10) + ix3) | msk3;
+                            }
+                            Obj_SetupObject(cur, 1, mid2, bit, obj2);
+                        }
+                        bit++;
+                        cur += *(u8*)(cur + 2) * 4;
+                    }
+                }
+            }
+        }
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
