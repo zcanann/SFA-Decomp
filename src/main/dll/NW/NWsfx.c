@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/NW/NWsfx.h"
+#include "main/dll/SH/SHthorntail_internal.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 extern int hitDetectFn_80065e50(void *obj, f32 x, f32 y, f32 z, void *hitsOut, int p6, int p7);
@@ -25,7 +26,6 @@ extern void ObjAnim_SetCurrentMove(u8 *obj, int moveId, f32 blend, int flag);
 extern int ObjAnim_AdvanceCurrentMove(u8 *obj, f32 moveStepScale, f32 deltaTime, void *events);
 extern void objMove(u8 *obj, f32 vx, f32 vy, f32 vz);
 
-extern int *gSHthorntailAnimationInterface;
 extern int *gRomCurveInterface;
 extern int *gPartfxInterface;
 extern int *gExpgfxInterface;
@@ -100,7 +100,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
     case 0:
         if (state[0x137] & 0x10) {
             state[0x136] = 9;
-        } else if ((int)(*(code *)(*(int *)gSHthorntailAnimationInterface + 0x24))(&thorntailOut) == 0) {
+        } else if ((*gSHthorntailAnimationInterface)->isTailSwingQueued(&thorntailOut) == 0) {
             if (*(f32 *)(state + 0x108) < (f32)other[0x19]) {
                 if (state[0x137] & 2) {
                     rangeSq = *(f32 *)(state + 0x118) * *(f32 *)(state + 0x118);

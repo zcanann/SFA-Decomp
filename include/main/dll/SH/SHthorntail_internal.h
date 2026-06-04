@@ -76,7 +76,7 @@ typedef struct SHthorntailObject {
 
 typedef struct SHthorntailAnimationInterface {
   u8 pad00[0x24];
-  int (*isTailSwingQueued)(int);
+  int (*isTailSwingQueued)(void *out);
 } SHthorntailAnimationInterface;
 
 typedef struct SHthorntailEventInterface {
