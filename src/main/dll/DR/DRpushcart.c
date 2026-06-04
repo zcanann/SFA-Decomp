@@ -1503,3 +1503,88 @@ f32 shopKeeperRotateFn_801e7c4c(s16 *obj, void *player, int mode)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E5A34;
+extern f32 lbl_803E5A38;
+extern f32 lbl_803E5A3C;
+extern f32 lbl_803E5A40;
+extern f32 lbl_803E5A44;
+extern f32 lbl_803E5A48;
+extern f32 lbl_803E5A4C;
+extern f32 lbl_803E5A50;
+extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
+extern int ObjModel_GetRenderOp(int model, int idx);
+extern void renderFn_8008f904(void);
+extern int getHudHiddenFrameCount(void);
+extern void mm_free_(int p);
+extern int fn_8008FB20(f32 *start, void *end, f32 a, f32 b, int c, int d, int e);
+
+typedef struct ShopSparkleSpawn {
+    f32 x;
+    f32 y;
+    f32 z;
+    int owner;
+} ShopSparkleSpawn;
+
+typedef struct PushcartStateE8 {
+    u8 flag_80 : 1;
+    u8 flag_40 : 1;
+    u8 _rest : 6;
+} PushcartStateE8;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
+{
+    int state = *(int *)(obj + 0xB8);
+    u8 spawned = 0;
+    ShopSparkleSpawn v;
+    PushcartStateE8 *b = (PushcartStateE8 *)(state + 0xE8);
+    u8 i;
+    int slot;
+    f32 scale;
+
+    if (b->flag_40) {
+        objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A34, 0, 0);
+    } else {
+        objfx_spawnDirectionalBurst(obj, 5, lbl_803E5A30, 1, 1, 0x14, lbl_803E5A38, 0, 0);
+    }
+    *(u8 *)(ObjModel_GetRenderOp(*(int *)Obj_GetActiveModel(obj), 0) + 0x43) = 0x7F;
+    ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5A30);
+    for (i = 0; i < 10; i++) {
+        slot = state + i * 4;
+        if (*(int *)(slot + 0x98) != 0) {
+            renderFn_8008f904();
+            if (getHudHiddenFrameCount() == 0) {
+                *(f32 *)(slot + 0xC0) += timeDelta;
+                *(u16 *)(*(int *)(slot + 0x98) + 0x20) = (u16)(int)(lbl_803E5A3C + *(f32 *)(slot + 0xC0));
+                if (*(u16 *)(*(int *)(slot + 0x98) + 0x20) > 0x14) {
+                    mm_free_(*(int *)(slot + 0x98));
+                    *(int *)(slot + 0x98) = 0;
+                }
+            }
+        } else {
+            if (spawned == 0 && getHudHiddenFrameCount() == 0) {
+                v.owner = obj;
+                v.x = *(f32 *)(obj + 0xC);
+                v.y = *(f32 *)(obj + 0x10);
+                v.z = *(f32 *)(obj + 0x14);
+                if (v.owner == obj) {
+                    if (b->flag_40) {
+                        scale = lbl_803E5A40;
+                    } else {
+                        scale = lbl_803E5A44;
+                    }
+                    v.x = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.x;
+                    v.y = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.y;
+                    v.z = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.z;
+                }
+                *(int *)(slot + 0x98) = fn_8008FB20((f32 *)(obj + 0xC), &v, lbl_803E5A48, lbl_803E5A4C, 0x14, 0x40, 0);
+                *(f32 *)(slot + 0xC0) = lbl_803E5A50;
+                spawned = 1;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
