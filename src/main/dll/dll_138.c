@@ -312,14 +312,15 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
   uint uVar1;
   int iVar2;
   int iVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
+  f32 dx;
+  f32 dz;
+  f32 len;
+  f32 k;
   
   iVar3 = *(int *)(param_1 + 0x5c);
   *(undefined *)(iVar3 + 0x145) = 0x3c;
   if (param_1[0x5a] != -1) {
-    (*(void (**)(void))((char *)*gCameraInterface + 0x4c))();
+    (*(void (**)(short *))((char *)*gCameraInterface + 0x4c))(param_1);
   }
   *(short *)(param_3 + 0x70) = -1;
   if (*(char *)(param_3 + 0x56) != '\0') {
@@ -358,8 +359,7 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
     }
   }
   if (*(int *)(param_1 + 0x7c) == 0) {
-    param_1[0x7c] = 0;
-    param_1[0x7d] = 2;
+    *(int *)(param_1 + 0x7c) = 2;
   }
   if ((param_1[0x23] == 0x21e) || (param_1[0x23] == 0x411)) {
     *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) | 8;
@@ -367,19 +367,19 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
        ((*(short *)(*(int *)(*(int *)(param_1 + 0x2c) + 0x100) + 0x44) == 0x24 &&
         (uVar1 = GameBit_Get(0x103), uVar1 == 0)))) {
       GameBit_Set(0x103,1);
-      *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & 0xf7;
-      iVar2 = FUN_80017a98();
-      dVar6 = (double)(*(float *)(param_1 + 6) - *(float *)(iVar2 + 0xc));
-      dVar5 = (double)(*(float *)(param_1 + 10) - *(float *)(iVar2 + 0x14));
-      dVar4 = FUN_80293900((double)(float)(dVar6 * dVar6 + (double)(float)(dVar5 * dVar5)));
-      if (dVar4 != (double)lbl_803E3528) {
-        dVar6 = (double)(float)(dVar6 / dVar4);
-        dVar5 = (double)(float)(dVar5 / dVar4);
+      *(byte *)((int)param_1 + 0xaf) = *(byte *)((int)param_1 + 0xaf) & ~8;
+      iVar2 = Obj_GetPlayerObject();
+      dx = *(float *)(param_1 + 6) - *(float *)(iVar2 + 0xc);
+      dz = *(float *)(param_1 + 10) - *(float *)(iVar2 + 0x14);
+      len = sqrtf(dx * dx + dz * dz);
+      if (len != lbl_803E3528) {
+        dx = dx / len;
+        dz = dz / len;
       }
-      dVar4 = (double)lbl_803E3598;
-      *(float *)(iVar3 + 0xc0) = (float)(dVar4 * dVar6);
+      k = lbl_803E3598;
+      *(float *)(iVar3 + 0xc0) = k * dx;
       *(float *)(iVar3 + 0xc4) = lbl_803E3528;
-      *(float *)(iVar3 + 200) = (float)(dVar4 * dVar5);
+      *(float *)(iVar3 + 200) = k * dz;
       return 4;
     }
   }
@@ -401,6 +401,7 @@ undefined4 fn_8017510C(short *param_1,short *param_2,int param_3)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 void fn_80175428(int obj)
 {
   int state;
@@ -431,6 +432,7 @@ void fn_80175428(int obj)
     }
   }
 }
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -488,19 +490,29 @@ void pushable_modelMtxFn(int obj,int modelNo)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+typedef struct Dll138Vec3 {
+    f32 x;
+    f32 y;
+    f32 z;
+} Dll138Vec3;
+
 #pragma scheduling off
 #pragma peephole off
+#pragma fp_contract off
 int pushable_func0B(int obj,int other)
 {
   int state;
   f32 delta[3];
+  f32 *d;
 
   state = *(int *)(obj + 0xb8);
-  delta[0] = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
-  delta[1] = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
-  delta[2] = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
-  return sqrtf(delta[2] * delta[2] + (delta[0] * delta[0] + delta[1] * delta[1])) <
+  d = delta;
+  d[0] = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
+  d[1] = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
+  d[2] = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
+  return sqrtf(d[2] * d[2] + (d[0] * d[0] + d[1] * d[1])) <
          *(f32 *)(state + 0xc);
 }
+#pragma fp_contract reset
 #pragma peephole reset
 #pragma scheduling reset
