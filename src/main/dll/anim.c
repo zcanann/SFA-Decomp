@@ -6026,3 +6026,68 @@ void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80204098(int obj)
+{
+    extern void *Obj_GetPlayerObject(void);
+    extern uint GameBit_Get(int);
+    extern void GameBit_Set(int, int);
+    extern void Sfx_PlayFromObject(int, u16);
+    extern void ObjMsg_SendToObject(void *, int, int, int);
+    extern u8 lbl_803DC183;
+    extern s16 lbl_80329848[];
+    int state = *(int *)(obj + 0xb8);
+    void *player;
+    s16 i;
+    s16 *p;
+
+    player = Obj_GetPlayerObject();
+    if (lbl_803DC183 != 0) {
+        GameBit_Set(0x2d, 1);
+        GameBit_Set(0x1d7, 1);
+        for (i = 0, p = lbl_80329848; i < 9; i++) {
+            *p = (s16)randomGetRange(1, 4);
+            p++;
+        }
+        GameBit_Set(0x5e4, 0);
+        *(s16 *)(state + 0) = 0;
+        lbl_803DC183 = 0;
+    }
+    if (GameBit_Get(0x5e3) == 0 && GameBit_Get(0x5e0) != 0 && GameBit_Get(0x5e1) != 0) {
+        Sfx_PlayFromObject(obj, SFXmn_spithit6);
+        GameBit_Set(0x5e3, 1);
+    }
+    if (GameBit_Get(0x792) == 0 && GameBit_Get(0xb8c) != 0 && GameBit_Get(0xb8c) != 0) {
+        Sfx_PlayFromObject(obj, SFXmn_spithit6);
+        GameBit_Set(0x792, 1);
+    }
+    if (GameBit_Get(0xe58) == 0) {
+        if (GameBit_Get(0x635) != 0 && *(u8 *)(state + 6) == 0) {
+            Sfx_PlayFromObject(0, SFXfoot_wood_run_2);
+            for (i = 0, p = lbl_80329848; i < 9; i++) {
+                *p = (s16)randomGetRange(1, 4);
+                p++;
+            }
+            GameBit_Set(0x5e4, 1);
+            *(u8 *)(state + 6) = 1;
+        } else {
+            if (GameBit_Get(0x635) == 0 && *(u8 *)(state + 6) == 1) {
+                *(u8 *)(state + 6) = 0;
+                GameBit_Set(0x5e4, 0);
+            }
+        }
+        if (GameBit_Get(0x5e5) != 0) {
+            *(s16 *)(state + 0) = 300;
+            ObjMsg_SendToObject(player, 0x60005, obj, 0);
+        }
+    }
+    if (GameBit_Get(0x7a1) != 0) {
+        if ((u8)(**(int (**)(int, int))((char *)*(int *)gMapEventInterface + 0x4c))(*(s8 *)(obj + 0xac), 6) == 0) {
+            (**(void (**)(int, int, int))((char *)*(int *)gMapEventInterface + 0x50))(*(s8 *)(obj + 0xac), 6, 1);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
