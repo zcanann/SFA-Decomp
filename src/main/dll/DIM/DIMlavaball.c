@@ -2061,3 +2061,43 @@ void fn_801A7D74(int obj, u8 a, u8 b) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern char lbl_803AC930[];
+extern f32 lbl_803E45B0;
+extern f32 lbl_803E45B4;
+
+#pragma scheduling off
+#pragma peephole off
+void mmp_trenchfx_update(int obj) {
+    int state = *(int *)(obj + 0xB8);
+    if (*(s16 *)state == -1 || GameBit_Get(*(s16 *)state) != 0) {
+        *(f32 *)(state + 0x28) -= timeDelta;
+        if (*(f32 *)(state + 0x28) < lbl_803E45B0) {
+            *(f32 *)(state + 0x18) = lbl_803E45B4;
+            *(f32 *)(state + 0x1C) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 2), *(u16 *)(state + 2));
+            *(f32 *)(state + 0x20) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 6), *(u16 *)(state + 6));
+            *(f32 *)(state + 0x24) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 4), *(u16 *)(state + 4));
+            mathFn_80021ac8((void *)(state + 8), (void *)(state + 0x1C));
+            *(f32 *)(state + 0x1C) += *(f32 *)(obj + 0xC);
+            *(f32 *)(state + 0x20) += *(f32 *)(obj + 0x10);
+            *(f32 *)(state + 0x24) += *(f32 *)(obj + 0x14);
+            *(f32 *)(state + 0x28) = (f32)(int)randomGetRange(0x64, 0xC8);
+            *(f32 *)(state + 0x2C) = (f32)(int)randomGetRange(0x32, 0x64);
+        }
+        *(f32 *)(state + 0x2C) -= timeDelta;
+        if (*(f32 *)(state + 0x2C) > lbl_803E45B0) {
+            (*(int (*)(int, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x71F, state + 0x10, 0x200001, -1, 0);
+        }
+        *(f32 *)(lbl_803AC930 + 8) = lbl_803E45B4;
+        *(f32 *)(lbl_803AC930 + 0xC) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 2), *(u16 *)(state + 2));
+        *(f32 *)(lbl_803AC930 + 0x10) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 6), *(u16 *)(state + 6));
+        *(f32 *)(lbl_803AC930 + 0x14) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 4), *(u16 *)(state + 4));
+        mathFn_80021ac8((void *)(state + 8), (void *)(lbl_803AC930 + 0xC));
+        *(f32 *)(lbl_803AC930 + 0xC) += *(f32 *)(obj + 0xC);
+        *(f32 *)(lbl_803AC930 + 0x10) += *(f32 *)(obj + 0x10);
+        *(f32 *)(lbl_803AC930 + 0x14) += *(f32 *)(obj + 0x14);
+        (*(int (*)(int, int, char *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x720, lbl_803AC930, 0x200001, -1, 0);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
