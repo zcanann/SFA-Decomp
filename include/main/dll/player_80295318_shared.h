@@ -1643,5 +1643,21 @@ int fn_802BA7EC(int obj, int state);
 int fn_802BA938(int obj, int state, f32 fv);
 int fn_802BAA54(int obj, int state, f32 fv);
 int fn_802BABB4(int obj);
+extern f32 vec3f_distanceSquared(void *a, void *b);
+extern void loadUiDll(int id);
+extern void hudFn_8011f38c(int arg);
+extern void getEnvfxActImmediately(int a, int b, int c, int d);
+extern void skyFn_80088e54(f32 a, int b);
+extern void Rcp_SetSpiritVisionEnabled(int on);
+extern void viewFinderSetZoomTo50(void);
+extern void __set_debug_bba(int a);
+extern int getFocusedNpc(void);
+extern u8 lbl_803DE458;
+extern f32 lbl_803DE468;
+extern s8 lbl_803DE46C;
+extern s16 lbl_803DE4B0;
+extern f32 lbl_803E8154;
+extern f32 lbl_803E8158;
+extern f32 lbl_803E815C;
 
 #endif
