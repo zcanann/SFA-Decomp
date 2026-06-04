@@ -1475,51 +1475,61 @@ void fn_801862CC(int obj, int p)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void portalspelldoor_update(int param_1)
+#pragma scheduling off
+#pragma peephole off
+void portalspelldoor_update(int obj)
 {
-  uint uVar1;
-  uint uVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  
-  uVar1 = FUN_80017a98();
-  iVar5 = *(int *)(param_1 + 0xb8);
-  iVar4 = *(int *)(param_1 + 0x4c);
-  uVar2 = FUN_80294cc4(uVar1,3);
-  if (uVar2 == 0) {
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 0x10;
-  }
-  else {
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) & 0xef;
-  }
-  if (*(char *)(iVar5 + 0xc) < '\0') {
-    *(ushort *)(param_1 + 6) = *(ushort *)(param_1 + 6) | 0x4000;
-    iVar3 = FUN_80294d6c(uVar1);
-    if (iVar3 == 0x5bd) {
-      FUN_80294d68(uVar1,-1);
+    extern int playerHasSpell(int player, int spell);
+    extern int objGetAnimState80A(int player);
+    extern void fn_80296B78(int player, int v);
+    extern int getTrickyObject(void);
+    extern void trickyImpress(int tricky);
+    extern void *gObjectTriggerInterface;
+    typedef struct {
+        u8 open : 1;
+    } PortalFlags;
+    int state;
+    int player;
+    int p4c;
+    int t;
+
+    player = Obj_GetPlayerObject();
+    state = *(int *)(obj + 0xb8);
+    p4c = *(int *)(obj + 0x4c);
+    if (playerHasSpell(player, 3) != 0) {
+        *(u8 *)(obj + 0xaf) &= ~0x10;
+    } else {
+        *(u8 *)(obj + 0xaf) |= 0x10;
     }
-    GameBit_Set((int)*(short *)(iVar4 + 0x1e),1);
-  }
-  else {
-    iVar4 = FUN_80294d6c(uVar1);
-    if ((iVar4 == 0x5bd) && (*(int *)(iVar5 + 8) == -1)) {
-      *(undefined4 *)(iVar5 + 8) = 0;
+    if (((PortalFlags *)(state + 0xc))->open) {
+        *(s16 *)(obj + 6) |= 0x4000;
+        if (objGetAnimState80A(player) == 0x5bd) {
+            fn_80296B78(player, -1);
+        }
+        GameBit_Set(*(s16 *)(p4c + 0x1e), 1);
+    } else {
+        if (objGetAnimState80A(player) == 0x5bd && *(int *)(state + 8) == -1) {
+            *(int *)(state + 8) = 0;
+        }
     }
-  }
-  if ((*(int *)(iVar5 + 8) != -1) &&
-     (iVar4 = *(int *)(iVar5 + 8) - (uint)DAT_803dc070, *(int *)(iVar5 + 8) = iVar4, iVar4 < 0)) {
-    *(byte *)(param_1 + 0xaf) = *(byte *)(param_1 + 0xaf) | 8;
-    (**(code **)(*DAT_803dd6d4 + 0x48))(0,param_1,0xffffffff);
-    iVar4 = FUN_80017a90();
-    if (iVar4 != 0) {
-      FUN_8013651c(iVar4);
+    if (*(int *)(state + 8) != -1) {
+        t = *(int *)(state + 8) - framesThisStep;
+        *(int *)(state + 8) = t;
+        if (t < 0) {
+            int tricky;
+            *(u8 *)(obj + 0xaf) |= 8;
+            (*(code *)(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+            tricky = getTrickyObject();
+            if ((void *)tricky != NULL) {
+                trickyImpress(tricky);
+            }
+            ((PortalFlags *)(state + 0xc))->open = 1;
+            *(int *)(state + 8) = -1;
+        }
     }
-    *(byte *)(iVar5 + 0xc) = *(byte *)(iVar5 + 0xc) & 0x7f | 0x80;
-    *(undefined4 *)(iVar5 + 8) = 0xffffffff;
-  }
-  return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 
 /* Trivial 4b 0-arg blr leaves. */
