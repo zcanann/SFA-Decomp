@@ -42,7 +42,7 @@ extern int objFn_802962b4(int);
 extern int objFn_80296700(int);
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
-extern f32 sqrtf(f32 x);
+extern f64 sqrtf(f64 x);
 extern int getAngle(f32 dx, f32 dy);
 
 extern undefined4 DAT_803a4ed8;
@@ -102,8 +102,8 @@ extern f32 lbl_803E234C;
 #pragma scheduling off
 #pragma peephole off
 int
-camcontrol_traceMove(float param_1,float *param_2,float *param_3,float *param_4,u8 *param_5,
-                     char param_6,u8 param_7,u8 param_8)
+camcontrol_traceMove(float *param_2,float *param_3,float *param_4,u8 *param_5,
+                     char param_6,u8 param_7,u8 param_8,float param_1)
 {
   u8 cVar2;
   undefined4 uVar1;
@@ -168,8 +168,7 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
     local_84 = *(float *)(param_2 + 0x1c) + cameraMtxVar57[0x23];
     local_80 = *(float *)(param_2 + 0x20);
   }
-  camcontrol_traceMove((double)lbl_803E1688,&local_88,param_1,param_3,auStack_7c,3,'\x01',
-                       '\x01');
+  camcontrol_traceMove(&local_88,param_1,param_3,auStack_7c,3,'\x01','\x01',(double)lbl_803E1688);
   return auStack_7c[110];
 }
 
@@ -189,60 +188,53 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
 #pragma scheduling off
 undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3,short *param_4)
 {
-  uint uVar4;
-  int iVar5;
+  u8 box[112];
+  float prev[3];
+  float pos[3];
+  f32 d2;
+  f32 a;
+  f32 b;
+  f32 c;
   f32 cosv;
   f32 sinv;
-  undefined auStack_d8 [4];
-  float local_d4;
-  undefined auStack_d0 [4];
-  float local_cc;
-  float local_c8;
-  float local_c4;
-  float local_c0;
-  float local_bc;
-  float local_b8;
-  float local_b4;
-  undefined auStack_b0 [110];
-  undefined local_42;
+  uint ang;
+  int d;
 
-  cosv = fn_80293E80(lbl_803E168C * (f32)*param_2 / lbl_803E1690);
-  sinv = sin(lbl_803E168C * (f32)*param_2 / lbl_803E1690);
-  local_cc = cameraMtxVar57[1] * cameraMtxVar57[1] - cameraMtxVar57[2] * cameraMtxVar57[2];
-  if (local_cc < lbl_803E1694) {
-    local_cc = lbl_803E1694;
+  cosv = fn_80293E80((lbl_803E168C * (f32)*param_2) / lbl_803E1690);
+  sinv = sin((lbl_803E168C * (f32)*param_2) / lbl_803E1690);
+  d2 = cameraMtxVar57[1] * cameraMtxVar57[1] - cameraMtxVar57[2] * cameraMtxVar57[2];
+  if (d2 < lbl_803E1694) {
+    d2 = lbl_803E1694;
   }
-  local_cc = sqrtf(local_cc);
-  local_c8 = cosv * local_cc + *(float *)(param_2 + 0xc);
-  local_c4 = cameraMtxVar57[2] + (*(float *)(param_2 + 0xe) + cameraMtxVar57[0x23]);
-  local_c0 = sinv * local_cc + *(float *)(param_2 + 0x10);
+  d2 = sqrtf(d2);
+  pos[0] = cosv * d2 + *(float *)(param_2 + 0xc);
+  pos[1] = cameraMtxVar57[2] + (*(float *)(param_2 + 0xe) + cameraMtxVar57[0x23]);
+  pos[2] = sinv * d2 + *(float *)(param_2 + 0x10);
   if (param_2[0x22] == 1) {
-    cameraGetPrevPos2((int)param_2,&local_bc,&local_b8,&local_b4);
+    cameraGetPrevPos2((int)param_2,&prev[0],&prev[1],&prev[2]);
   }
   else {
-    local_bc = *(float *)(param_2 + 0xc);
-    local_b8 = *(float *)(param_2 + 0xe) + cameraMtxVar57[0x23];
-    local_b4 = *(float *)(param_2 + 0x10);
+    prev[0] = *(float *)(param_2 + 0xc);
+    prev[1] = *(float *)(param_2 + 0xe) + cameraMtxVar57[0x23];
+    prev[2] = *(float *)(param_2 + 0x10);
   }
-  camcontrol_traceMove((double)lbl_803E1688,&local_bc,&local_c8,param_3,auStack_b0,3,
-                       '\x01','\x01');
-  (**(code **)(*gCameraInterface + 0x38))
-            ((double)cameraMtxVar57[0x23],param_1,auStack_d0,&local_d4,auStack_d8,
-             &local_cc,0);
-  local_d4 = *(float *)(param_1 + 0x1c) -
-             (*(float *)(param_2 + 0xe) + cameraMtxVar57[0x23]);
-  uVar4 = getAngle(local_d4,local_cc);
-  iVar5 = (uVar4 & 0xffff) - (uint)*(ushort *)(param_1 + 2);
-  if (0x8000 < iVar5) {
-    iVar5 = iVar5 + -0xffff;
+  camcontrol_traceMove(prev,pos,param_3,box,3,'\x01','\x01',lbl_803E1688);
+  (*(void (**)(int, f32 *, f32 *, f32 *, f32 *, f32, int))(*gCameraInterface + 0x38))
+      (param_1, &a, &b, &c, &d2, cameraMtxVar57[0x23], 0);
+  b = *(float *)(param_1 + 0x1c) -
+      (*(float *)(param_2 + 0xe) + cameraMtxVar57[0x23]);
+  ang = getAngle(b,d2);
+  d = (ang & 0xffff) - (u16)*(s16 *)(param_1 + 2);
+  if (0x8000 < d) {
+    d = d - 0xffff;
   }
-  if (iVar5 < -0x8000) {
-    iVar5 = iVar5 + 0xffff;
+  if (d < -0x8000) {
+    d = d + 0xffff;
   }
   if (param_4 != (short *)0x0) {
-    *param_4 = *(ushort *)(param_1 + 2) + (short)iVar5;
+    *param_4 = *(s16 *)(param_1 + 2) + d;
   }
-  return local_42;
+  return box[110];
 }
 #pragma scheduling reset
 
@@ -420,7 +412,7 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
       pA[3] = probe[0];
       pA[4] = probe[1];
       pA[5] = probe[2];
-      if (camcontrol_traceMove(lbl_803E16A0, prev, pp, (float *)0x0, box, 7, '\0', '\0') != 0) {
+      if (camcontrol_traceMove(prev, pp, (float *)0x0, box, 7, '\0', '\0', lbl_803E16A0) != 0) {
         found1 = i;
       }
     }
@@ -440,7 +432,7 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
       pB[3] = probe[0];
       pB[4] = probe[1];
       pB[5] = probe[2];
-      if (camcontrol_traceMove(lbl_803E16A0, prev, pp, (float *)0x0, box, 7, '\0', '\0') != 0) {
+      if (camcontrol_traceMove(prev, pp, (float *)0x0, box, 7, '\0', '\0', lbl_803E16A0) != 0) {
         found2 = i;
       }
     }
@@ -455,8 +447,8 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
   }
   else {
     for (i = 0; i <= found1; i = i + 1) {
-      if (camcontrol_traceMove(lbl_803E16A0, pA0, pathA + (i + 1) * 3, (float *)0x0, box, 7,
-                               '\0', '\0') == 0) {
+      if (camcontrol_traceMove(pA0, pathA + (i + 1) * 3, (float *)0x0, box, 7,
+                               '\0', '\0', lbl_803E16A0) == 0) {
         found1 = 6;
         break;
       }
@@ -468,8 +460,8 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
   }
   else {
     for (i = 0; i <= found2; i = i + 1) {
-      if (camcontrol_traceMove(lbl_803E16A0, pB0, pathB + (i + 1) * 3, (float *)0x0, box, 7,
-                               '\0', '\0') == 0) {
+      if (camcontrol_traceMove(pB0, pathB + (i + 1) * 3, (float *)0x0, box, 7,
+                               '\0', '\0', lbl_803E16A0) == 0) {
         found2 = 6;
         break;
       }
@@ -618,15 +610,15 @@ void camMoveFn_80104040(int cam, short *tgt)
     i = i + 2;
   } while (i <= 0xc);
   for (j = 0; j <= 0xc; j = j + 1) {
+    radii[j] = lbl_803E16A0;
     endPts[j * 3] = prev[0];
     endPts[j * 3 + 1] = prev[1];
     endPts[j * 3 + 2] = prev[2];
-    radii[j] = lbl_803E16A0;
   }
   hitDetect_calcSweptSphereBounds(bounds, (float *)path, endPts, radii, 0xd);
   hitDetectFn_800691c0(0, bounds, 0x248, 1);
-  trace = camcontrol_traceMove(lbl_803E16A0, prev, (float *)(cam + 0x18), (float *)0x0, box, 7,
-                               '\0', '\0');
+  trace = camcontrol_traceMove(prev, (float *)(cam + 0x18), (float *)0x0, box, 7,
+                               '\0', '\0', lbl_803E16A0);
   blocked = 0;
   if (trace == 0) {
     blocked = 1;
@@ -672,29 +664,22 @@ void camMoveFn_80104040(int cam, short *tgt)
 void camcontrol_updateModeSettings(int camera)
 {
   f32 blend;
+  f32 ratio;
   float curve[4];
-  undefined4 local_18;
-  uint uStack_14;
-  undefined4 local_10;
-  uint uStack_c;
-  
+
   if (*(s16 *)((int)cameraMtxVar57 + 0x82) != 0) {
-    *(u16 *)((int)cameraMtxVar57 + 0x82) =
-         *(s16 *)((int)cameraMtxVar57 + 0x82) - (u16)framesThisStep;
+    *(s16 *)((int)cameraMtxVar57 + 0x82) -= framesThisStep;
     if (*(s16 *)((int)cameraMtxVar57 + 0x82) < 0) {
-      *(undefined2 *)((int)cameraMtxVar57 + 0x82) = 0;
+      *(s16 *)((int)cameraMtxVar57 + 0x82) = 0;
     }
-    uStack_14 = (int)*(s16 *)(cameraMtxVar57 + 0x21) -
-                (int)*(s16 *)((int)cameraMtxVar57 + 0x82) ^ 0x80000000;
-    local_18 = 0x43300000;
-    uStack_c = (int)*(s16 *)(cameraMtxVar57 + 0x21) ^ 0x80000000;
-    local_10 = 0x43300000;
+    ratio = (f32)(*(s16 *)((int)cameraMtxVar57 + 0x84) -
+                  *(s16 *)((int)cameraMtxVar57 + 0x82)) /
+            (f32)(s32)*(s16 *)((int)cameraMtxVar57 + 0x84);
     curve[0] = lbl_803E16AC;
     curve[1] = lbl_803E16A4;
     curve[2] = lbl_803E16AC;
     curve[3] = lbl_803E16AC;
-    blend = Curve_EvalHermite((float)(*(f64 *)&local_18 - lbl_803E1698) /
-                             (float)(*(f64 *)&local_10 - lbl_803E1698),curve,(float *)0x0);
+    blend = Curve_EvalHermite(ratio,curve,(float *)0x0);
     cameraMtxVar57[0x23] =
          blend * (cameraMtxVar57[0x25] - cameraMtxVar57[0x24]) + cameraMtxVar57[0x24];
     cameraMtxVar57[0] =
