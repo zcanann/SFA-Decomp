@@ -822,124 +822,6 @@ void FUN_801ff9e0(int param_1)
   return;
 }
 
-/*
- * --INFO--
- *
- * Function: drakorenergy_update
- * EN v1.0 Address: 0x801FFA1C
- * EN v1.0 Size: 1044b
- * EN v1.1 Address: 0x80200054
- * EN v1.1 Size: 864b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void drakorenergy_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                         undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                         short *param_9)
-{
-  byte bVar1;
-  float fVar2;
-  int iVar3;
-  uint uVar4;
-  float fVar5;
-  float *pfVar6;
-  double dVar7;
-  double dVar8;
-  float afStack_68 [3];
-  float afStack_5c [3];
-  undefined2 local_50;
-  short local_4e;
-  undefined2 local_4c;
-  undefined4 local_38;
-  float fStack_34;
-  
-  pfVar6 = *(float **)(param_9 + 0x5c);
-  iVar3 = FUN_80017a98();
-  fVar5 = lbl_803E6F14;
-  bVar1 = *(byte *)(pfVar6 + 2);
-  if (bVar1 == 3) {
-    dVar7 = (double)FUN_80017710((float *)(param_9 + 0xc),(float *)(iVar3 + 0x18));
-    if ((double)lbl_803DCDD0 <= dVar7) {
-      dVar8 = (double)lbl_803DCDD4;
-      FUN_8020a488((double)(float)(dVar8 / (double)lbl_803E6F2C),param_2,param_3,param_4,param_5,
-                   param_6,param_7,param_8,iVar3,(float *)(param_9 + 6),afStack_5c);
-      FUN_80247eb8(afStack_5c,(float *)(param_9 + 6),afStack_68);
-      FUN_80247ef8(afStack_68,afStack_68);
-      if (dVar7 < dVar8) {
-        dVar8 = dVar7;
-      }
-      FUN_80247edc(dVar8,afStack_68,(float *)(param_9 + 0x12));
-      FUN_80017a88((double)(*(float *)(param_9 + 0x12) * lbl_803DC074),
-                   (double)(*(float *)(param_9 + 0x14) * lbl_803DC074),
-                   (double)(*(float *)(param_9 + 0x16) * lbl_803DC074),(int)param_9);
-      local_4c = 0xff;
-      local_4e = 0;
-      local_50 = 0xff;
-      FUN_8008110c((double)playerMapOffsetZ,param_9,1,0xc22,0x14,param_9 + 0x12);
-    }
-    else {
-      FUN_80294d60(dVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar3,DAT_803dcdd8)
-      ;
-      FUN_80006824((uint)param_9,SFXen_treadlpc);
-      *(undefined *)(pfVar6 + 2) = 4;
-    }
-  }
-  else if (bVar1 < 3) {
-    if (bVar1 == 1) {
-      if (lbl_803E6F14 < *pfVar6 - *(float *)(param_9 + 8)) {
-        *(float *)(param_9 + 0x14) = lbl_803E6F18 * -*(float *)(param_9 + 0x14);
-        fVar2 = *(float *)(param_9 + 0x14);
-        if (fVar2 < fVar5) {
-          fVar2 = -fVar2;
-        }
-        if (fVar2 < lbl_803E6F1C) {
-          *(undefined *)(pfVar6 + 2) = 2;
-          fVar5 = lbl_803E6F14;
-          *(float *)(param_9 + 0x12) = lbl_803E6F14;
-          *(float *)(param_9 + 0x16) = fVar5;
-          goto LAB_80200364;
-        }
-      }
-      *(float *)(param_9 + 0x14) = *(float *)(param_9 + 0x14) + lbl_803E6F20;
-      FUN_80017a88((double)*(float *)(param_9 + 0x12),(double)*(float *)(param_9 + 0x14),
-                   (double)*(float *)(param_9 + 0x16),(int)param_9);
-      local_4c = 0xff;
-      fVar5 = pfVar6[1];
-      iVar3 = (int)fVar5 / 0x500 + ((int)fVar5 >> 0x1f);
-      local_4e = 0xff - (SUB42(fVar5,0) + ((short)iVar3 - (short)(iVar3 >> 0x1f)) * -0x500);
-      local_50 = 0xff;
-      (**(code **)(*DAT_803dd708 + 8))(param_9,0x357,&local_50,0,0xffffffff,0);
-    }
-    else if (bVar1 == 0) {
-      uVar4 = FUN_80017690((int)*(short *)(*(int *)(param_9 + 0x26) + 0x20));
-      if (uVar4 == 1) {
-        *(undefined *)(pfVar6 + 2) = 2;
-      }
-    }
-    else {
-      fStack_34 = -pfVar6[1];
-      local_38 = 0x43300000;
-      dVar7 = (double)FUN_80293f90();
-      *(float *)(param_9 + 0x14) = (float)((double)lbl_803DCDC8 * dVar7);
-      FUN_80017a88((double)*(float *)(param_9 + 0x12),(double)*(float *)(param_9 + 0x14),
-                   (double)*(float *)(param_9 + 0x16),(int)param_9);
-      dVar7 = (double)FUN_8001771c((float *)(param_9 + 0xc),(float *)(iVar3 + 0x18));
-      if (dVar7 < (double)lbl_803DCDCC) {
-        *(undefined *)(pfVar6 + 2) = 3;
-      }
-      FUN_8008110c((double)playerMapOffsetZ,param_9,1,0xc22,0x14,param_9 + 0x12);
-    }
-  }
-  else if (bVar1 == 5) {
-    *(undefined *)(pfVar6 + 2) = 0;
-  }
-LAB_80200364:
-  *param_9 = *param_9 + DAT_803dcde0;
-  pfVar6[1] = (float)((int)pfVar6[1] + (uint)DAT_803dc070 * 0x500);
-  return;
-}
 
 /*
  * --INFO--
@@ -7517,6 +7399,117 @@ void DFP_Torch_update(int obj)
         }
         break;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void drakorenergy_update(int obj)
+{
+    extern int Obj_GetPlayerObject(void);
+    extern uint GameBit_Get(int);
+    extern void objMove(int, f32, f32, f32);
+    extern f32 Vec_distance(int, int);
+    extern f32 Vec_xzDistance(int, int);
+    extern void playerAddHealth(int, int);
+    extern void Sfx_PlayFromObject(int, int);
+    extern f32 fn_80293E80(f32);
+    extern void fn_80221C18(int, int, f32 *, f32);
+    extern void PSVECSubtract(f32 *, f32 *, f32 *);
+    extern void PSVECNormalize(f32 *, f32 *);
+    extern void PSVECScale(f32 *, f32 *, f32);
+    extern void objfx_spawnFlaggedTrailBurst(int, f32, int, int, int, int);
+    extern int *gPartfxInterface;
+    extern f32 timeDelta;
+    extern u8 framesThisStep;
+    extern f32 lbl_803E627C;
+    extern f32 lbl_803E6280;
+    extern f32 lbl_803E6284;
+    extern f32 lbl_803E6288;
+    extern f32 lbl_803E628C;
+    extern f32 lbl_803E6290;
+    extern f32 lbl_803E6294;
+    extern f32 lbl_803DC160;
+    extern f32 lbl_803DC164;
+    extern f32 lbl_803DC168;
+    extern f32 lbl_803DC16C;
+    extern int lbl_803DC170;
+    extern f32 lbl_803DC174;
+    extern s16 lbl_803DC178;
+    int blob = *(int *)(obj + 0xb8);
+    int data;
+    int player;
+    f32 v;
+    f32 dist;
+    f32 spd;
+    f32 v1[3];
+    f32 v2[3];
+    s16 trio[12];
+
+    player = Obj_GetPlayerObject();
+    data = *(int *)(obj + 0x4c);
+    switch (*(u8 *)(blob + 8)) {
+    case 0:
+        if (GameBit_Get(*(s16 *)(data + 0x20)) == 1) {
+            *(u8 *)(blob + 8) = 2;
+        }
+        break;
+    case 1:
+        if (*(f32 *)blob - *(f32 *)(obj + 0x10) > (v = lbl_803E627C)) {
+            *(f32 *)(obj + 0x28) = lbl_803E6280 * -*(f32 *)(obj + 0x28);
+            dist = *(f32 *)(obj + 0x28);
+            dist = dist >= v ? -dist : dist;
+            if (dist < lbl_803E6284) {
+                *(u8 *)(blob + 8) = 2;
+                *(f32 *)(obj + 0x24) = lbl_803E627C;
+                *(f32 *)(obj + 0x2c) = lbl_803E627C;
+                break;
+            }
+        }
+        *(f32 *)(obj + 0x28) += lbl_803E6288;
+        objMove(obj, *(f32 *)(obj + 0x24), *(f32 *)(obj + 0x28), *(f32 *)(obj + 0x2c));
+        trio[2] = 0xff;
+        trio[1] = 0xff - *(int *)(blob + 4) % 0x500;
+        trio[0] = 0xff;
+        (**(void (**)(int, int, s16 *, int, int, int))((char *)*gPartfxInterface + 8))(obj, 0x357, trio, 0, -1, 0);
+        break;
+    case 2:
+        *(f32 *)(obj + 0x28) = lbl_803DC160 * fn_80293E80(lbl_803E628C * (f32)*(int *)(blob + 4) / lbl_803E6290);
+        objMove(obj, *(f32 *)(obj + 0x24), *(f32 *)(obj + 0x28), *(f32 *)(obj + 0x2c));
+        if (Vec_distance(obj + 0x18, player + 0x18) < lbl_803DC164) {
+            *(u8 *)(blob + 8) = 3;
+        }
+        objfx_spawnFlaggedTrailBurst(obj, lbl_803DC174, 1, 0xc22, 0x14, obj + 0x24);
+        break;
+    case 3:
+        dist = Vec_xzDistance(obj + 0x18, player + 0x18);
+        if (dist < lbl_803DC168) {
+            playerAddHealth(player, lbl_803DC170);
+            Sfx_PlayFromObject(obj, 0x49);
+            *(u8 *)(blob + 8) = 4;
+        } else {
+            spd = lbl_803DC16C;
+            fn_80221C18(player, obj + 0xc, v1, spd / lbl_803E6294);
+            PSVECSubtract(v1, (f32 *)(obj + 0xc), v2);
+            PSVECNormalize(v2, v2);
+            if (dist < spd) {
+                spd = dist;
+            }
+            PSVECScale(v2, (f32 *)(obj + 0x24), spd);
+            objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
+            trio[2] = 0xff;
+            trio[1] = 0;
+            trio[0] = 0xff;
+            objfx_spawnFlaggedTrailBurst(obj, lbl_803DC174, 1, 0xc22, 0x14, obj + 0x24);
+        }
+        break;
+    case 5:
+        *(u8 *)(blob + 8) = 0;
+        break;
+    }
+    *(s16 *)obj += lbl_803DC178;
+    *(int *)(blob + 4) += framesThisStep * 0x500;
 }
 #pragma peephole reset
 #pragma scheduling reset
