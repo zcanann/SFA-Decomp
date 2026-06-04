@@ -6169,3 +6169,144 @@ void animatedobj_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct Dim2FxRow {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 w;
+    u8 b1;
+    u8 b2;
+    u8 pad[2];
+} Dim2FxRow;
+
+typedef struct Dim2FxVec {
+    u8 pad[8];
+    f32 fade;
+    f32 x;
+    f32 y;
+    f32 z;
+} Dim2FxVec;
+
+extern void objfx_spawnMaskedHitEffect(int *obj, f32 scale, int a, int b, int c, void *params);
+extern void objfx_spawnLightPulse(int *obj, f32 scale, int a, int b, int c, f32 v, void *params);
+extern void objfx_spawnDirectionalBurst(int *obj, int a, f32 fa, int b, int c, int d, f32 fb, int e, u32 f);
+extern f32 lbl_803E3240;
+extern f32 lbl_803E3244;
+extern f32 lbl_803E3248;
+extern f32 lbl_803E324C;
+extern f32 lbl_803E3250;
+extern f32 lbl_803E3254;
+extern f32 lbl_803E3258;
+extern f32 lbl_803E325C;
+extern f32 lbl_803E3260;
+extern f32 lbl_803E3264;
+extern f32 lbl_803E3268;
+extern f32 lbl_803E326C;
+extern f32 lbl_803E3270;
+extern f32 lbl_803E3274;
+extern f32 lbl_803E3278;
+extern f32 lbl_803E327C;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8016C4AC(int *obj)
+{
+    Dim2FxVec v;
+    int flags;
+
+    if ((*(int *)((char *)obj + 0xf8) & 4) != 0) {
+        u8 i = 0;
+        f32 scale = lbl_803E3240;
+        Dim2FxRow *tbl = (Dim2FxRow *)lbl_80320768;
+        for (; i < 10; i++) {
+            f32 f = *(f32 *)((char *)obj + 8);
+            Dim2FxRow *row = &tbl[i];
+            v.x = scale * (f * row->x);
+            v.y = scale * (f * row->y);
+            v.z = scale * (f * row->z);
+            objfx_spawnMaskedHitEffect(obj, f * row->w, 3, row->b1, row->b2, &v);
+        }
+    }
+    v.fade = lbl_803E3244;
+    flags = *(int *)((char *)obj + 0xf8);
+    if ((flags & 1) != 0) {
+        int n;
+        if ((flags & 2) != 0) {
+            n = 6;
+        } else {
+            n = 3;
+        }
+        v.x = lbl_803E3240 * (lbl_803E3248 * *(f32 *)((char *)obj + 8));
+        v.y = lbl_803E3240 * (lbl_803E324C * *(f32 *)((char *)obj + 8));
+        v.z = lbl_803E3240 * (lbl_803E3250 * *(f32 *)((char *)obj + 8));
+        objfx_spawnLightPulse(obj, lbl_803E3254 * *(f32 *)((char *)obj + 8), 1, 0, n, lbl_803E3258, &v);
+        v.x = lbl_803E325C;
+        v.y = lbl_803E3240 * (lbl_803E3260 * *(f32 *)((char *)obj + 8));
+        v.z = lbl_803E3240 * (lbl_803E3264 * *(f32 *)((char *)obj + 8));
+        objfx_spawnLightPulse(obj, lbl_803E3254 * *(f32 *)((char *)obj + 8), 1, 0, n, lbl_803E3268, &v);
+        v.x = lbl_803E3240 * (lbl_803E326C * *(f32 *)((char *)obj + 8));
+        v.y = lbl_803E3240 * (lbl_803E324C * *(f32 *)((char *)obj + 8));
+        v.z = lbl_803E3240 * (lbl_803E3250 * *(f32 *)((char *)obj + 8));
+        objfx_spawnLightPulse(obj, lbl_803E3254 * *(f32 *)((char *)obj + 8), 1, 0, n, lbl_803E3258, &v);
+    }
+    if (*(s16 *)((char *)obj + 0x46) == 0xa8) {
+        objfx_spawnDirectionalBurst(obj, 7, lbl_803E3270, 5, 1, 10, lbl_803E3274, 0, 0x20000000);
+    } else if (*(s16 *)((char *)obj + 0x46) == 0x451) {
+        int *model = Obj_GetActiveModel((int)obj);
+        *(u8 *)((char *)*(int **)((char *)model + 0x34) + 8) = 2;
+        if ((*(u16 *)((char *)obj + 0xb0) & 0x800) != 0) {
+            objfx_spawnDirectionalBurst(obj, 5, lbl_803E3270, 2, 1, 20, lbl_803E3278, 0, 0);
+        }
+    }
+}
+
+void dim2roofrub_render(int *obj, int p2, int p3, int p4, int p5)
+{
+    f32 mWorld[12];
+    f32 mTransPlayer[12];
+    f32 mWorldCombined[12];
+    f32 mTransNeg[12];
+    f32 mRotY[12];
+    f32 mRotZ[12];
+    f32 mTransPos[12];
+    f32 mCam[12];
+    f32 mA[12];
+    f32 mB[12];
+    f32 mC[12];
+    f32 mD[12];
+    f32 mFinal[12];
+
+    fn_8016C4AC(obj);
+    if ((*(u8 *)(*(u8 **)((char *)obj + 0xb8) + 0x7f) & 4) != 0) {
+        int *prm;
+        s16 *cam;
+        Obj_BuildWorldTransformMatrix(obj, mWorld, 0);
+        prm = *(int **)((char *)obj + 0x4c);
+        PSMTXTrans(mTransPlayer, -(*(f32 *)((char *)prm + 8) - playerMapOffsetX),
+                   -*(f32 *)((char *)prm + 0xc),
+                   -(*(f32 *)((char *)prm + 0x10) - playerMapOffsetZ));
+        PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
+        cam = ((s16 *(*)(void))((int *)*gCameraInterface)[3])();
+        *(s16 *)((char *)cam + 2) += 0x8000;
+        *(f32 *)((char *)cam + 8) = lbl_803E3270;
+        Obj_BuildWorldTransformMatrix((int *)cam, mCam, 0);
+        *(s16 *)((char *)cam + 2) += 0x8000;
+        *(f32 *)((char *)cam + 8) = lbl_803E325C;
+        PSMTXTrans(mTransNeg, -mCam[3], -mCam[7], -mCam[11]);
+        PSMTXRotRad(mRotY, 'y', lbl_803E327C);
+        PSMTXRotRad(mRotZ, 'z', lbl_803E327C);
+        PSMTXTrans(mTransPos, mCam[3], mCam[7], mCam[11]);
+        PSMTXConcat(mTransNeg, mCam, mA);
+        PSMTXConcat(mRotY, mA, mB);
+        PSMTXConcat(mRotZ, mB, mC);
+        PSMTXConcat(mTransPos, mC, mD);
+        PSMTXConcat(mD, mWorldCombined, mFinal);
+        objSetMtxFn_800412d4(mFinal);
+        objRenderModel(obj);
+    } else {
+        ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E3270);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
