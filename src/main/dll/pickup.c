@@ -374,7 +374,7 @@ void dll_9D_func03(int param_1,undefined4 param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E2078 + *(f32 *)(param_1 + 0x20);
     }
   }
-  (**(code **)(*gModgfxInterface + 8))(&buf,0,0x15,lbl_80318038,0x18,&lbl_80318038[212],0x46c,0);
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,0x15,lbl_80318038,0x18,&lbl_80318038[212],0x46c,0);
 }
 
 /*
@@ -469,25 +469,119 @@ void dll_9E_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_
       buf.pos[2] = lbl_803E2098 + *(f32 *)(ctx + 0x20);
     }
   }
-  (**(code **)(*gModgfxInterface + 8))(&buf,0,0x15,&DAT_80318eb0,0x18,&DAT_80318f84,0x46c,0);
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,0x15,&DAT_80318eb0,0x18,&DAT_80318f84,0x46c,0);
   FUN_8028688c();
 }
 
 /*
  * --INFO--
  *
- * Function: FUN_800fd81c
- * EN v1.0 Address: 0x800FD81C
- * EN v1.0 Size: 4b
- * EN v1.1 Address: 0x800FE0B4
- * EN v1.1 Size: 1064b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * Function: dll_9F_func03
+ * EN v1.0 Address: 0x800FDE18
+ * EN v1.0 Size: 1056b
  */
-void FUN_800fd81c(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
+extern u8 lbl_80318488[];
+extern f32 lbl_803E1448;
+extern f32 lbl_803E144C;
+extern f32 lbl_803E1450;
+extern f32 lbl_803E1454;
+extern f32 lbl_803E1458;
+extern f32 lbl_803E145C;
+extern f32 lbl_803E1460;
+extern f32 lbl_803E1464;
+extern f32 lbl_803E1468;
+extern f32 lbl_803E146C;
+extern f32 lbl_803E1470;
+extern f32 lbl_803E1474;
+extern f32 lbl_803E1478;
+extern f32 lbl_803E147C;
+void dll_9F_func03(short *param_1,int param_2,int param_3,uint param_4)
 {
+  struct {
+    GfxCmd *cmds; int ctx; u8 pad0[0x18];
+    f32 col[3]; f32 pos[3]; f32 scale;
+    u32 v3c; u32 v40; s16 v44; s16 hw[7]; u32 flags;
+    u8 v58, v59, v5a, v5b, v5c; s8 count; u8 pad1[2];
+    GfxCmd entries[32];
+  } buf;
+  u8 *tab = lbl_80318488;
+  GfxCmd *base = buf.entries;
+  GfxCmd *e = base;
+  int head = *param_1;
+  u32 fl;
+
+  if (head != 0) {
+    e->layer = 0; e->flags = 0x15; e->tex = &tab[0x1b0]; e->mode = 0x80;
+    e->x = lbl_803E1448; e->y = lbl_803E1448;
+    e->z = (f32)head;
+    e = base + 1;
+  }
+  e[0].layer = 0; e[0].flags = 0x15; e[0].tex = &tab[0x1b0]; e[0].mode = 4;
+  e[0].x = lbl_803E1448; e[0].y = lbl_803E1448; e[0].z = lbl_803E1448;
+  e[1].layer = 0; e[1].flags = 7; e[1].tex = &tab[0x164]; e[1].mode = 2;
+  e[1].x = lbl_803E144C; e[1].y = lbl_803E144C; e[1].z = lbl_803E1450;
+  e[2].layer = 0; e[2].flags = 7; e[2].tex = &tab[0x174]; e[2].mode = 2;
+  e[2].x = lbl_803E1454; e[2].y = lbl_803E1454; e[2].z = lbl_803E1450;
+  e[3].layer = 0; e[3].flags = 7; e[3].tex = &tab[0x184]; e[3].mode = 2;
+  e[3].x = lbl_803E144C; e[3].y = lbl_803E144C; e[3].z = lbl_803E1450;
+  e[4].layer = 1; e[4].flags = 7; e[4].tex = &tab[0x174]; e[4].mode = 4;
+  e[4].x = lbl_803E1458; e[4].y = lbl_803E1448; e[4].z = lbl_803E1448;
+  e[5].layer = 1; e[5].flags = 0x15; e[5].tex = &tab[0x1b0]; e[5].mode = 0x4000;
+  e[5].x = lbl_803E145C; e[5].y = lbl_803E1460; e[5].z = lbl_803E1448;
+  e[6].layer = 1; e[6].flags = 0; e[6].tex = (void *)0; e[6].mode = 0x400000;
+  e[6].x = lbl_803E1448; e[6].y = lbl_803E1448; e[6].z = lbl_803E1464;
+  e[7].layer = 2; e[7].flags = 0x15; e[7].tex = &tab[0x1b0]; e[7].mode = 0x4000;
+  e[7].x = lbl_803E145C; e[7].y = lbl_803E1460; e[7].z = lbl_803E1448;
+  e[8].layer = 2; e[8].flags = 0; e[8].tex = (void *)0; e[8].mode = 0x400000;
+  e[8].x = lbl_803E1448; e[8].y = lbl_803E1448; e[8].z = lbl_803E1468;
+  e[9].layer = 2; e[9].flags = 0x15; e[9].tex = &tab[0x1b0]; e[9].mode = 8;
+  e[9].x = lbl_803E146C; e[9].y = lbl_803E146C; e[9].z = lbl_803E1470;
+  e[10].layer = 3; e[10].flags = 0x15; e[10].tex = &tab[0x1b0]; e[10].mode = 0x4000;
+  e[10].x = lbl_803E145C; e[10].y = lbl_803E145C; e[10].z = lbl_803E1448;
+  e[11].layer = 3; e[11].flags = 0; e[11].tex = (void *)0; e[11].mode = 0x400000;
+  e[11].x = lbl_803E1448; e[11].y = lbl_803E1448; e[11].z = lbl_803E1474;
+  e[12].layer = 3; e[12].flags = 0x15; e[12].tex = &tab[0x1b0]; e[12].mode = 8;
+  e[12].x = lbl_803E146C; e[12].y = lbl_803E146C; e[12].z = lbl_803E146C;
+  e[13].layer = 4; e[13].flags = 0x15; e[13].tex = &tab[0x1b0]; e[13].mode = 0x4000;
+  e[13].x = lbl_803E145C; e[13].y = lbl_803E145C; e[13].z = lbl_803E1448;
+  e[14].layer = 4; e[14].flags = 7; e[14].tex = &tab[0x174]; e[14].mode = 4;
+  e[14].x = lbl_803E1448; e[14].y = lbl_803E1448; e[14].z = lbl_803E1448;
+  e[15].layer = 4; e[15].flags = 0; e[15].tex = (void *)0; e[15].mode = 0x400000;
+  e[15].x = lbl_803E1448; e[15].y = lbl_803E1448; e[15].z = lbl_803E1478;
+
+  buf.v58 = 0;
+  buf.ctx = (int)param_1;
+  buf.v44 = param_2;
+  buf.pos[0] = lbl_803E1448; buf.pos[1] = lbl_803E1448; buf.pos[2] = lbl_803E1448;
+  buf.col[0] = lbl_803E1448; buf.col[1] = lbl_803E1448; buf.col[2] = lbl_803E1448;
+  buf.scale = lbl_803E147C;
+  buf.v40 = 2;
+  buf.v3c = 7;
+  buf.v59 = 0xe;
+  buf.v5a = 0;
+  buf.v5b = 0x1e;
+  buf.count = &e[16] - base;
+  buf.hw[0] = *(s16 *)&tab[0x1f8]; buf.hw[1] = *(s16 *)&tab[0x1fa];
+  buf.hw[2] = *(s16 *)&tab[0x1fc]; buf.hw[3] = *(s16 *)&tab[0x1fe];
+  buf.hw[4] = *(s16 *)&tab[0x200]; buf.hw[5] = *(s16 *)&tab[0x202];
+  buf.hw[6] = *(s16 *)&tab[0x204];
+  buf.cmds = buf.entries;
+  fl = 0xc0104c0;
+  buf.flags = fl;
+  fl |= param_4;
+  buf.flags = fl;
+  if (fl & 1) {
+    if (param_1 != 0) {
+      buf.pos[0] = lbl_803E1448 + *(f32 *)(param_1 + 0xc);
+      buf.pos[1] = lbl_803E1448 + *(f32 *)(param_1 + 0xe);
+      buf.pos[2] = lbl_803E1448 + *(f32 *)(param_1 + 0x10);
+    } else {
+      buf.pos[0] = lbl_803E1448 + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E1448 + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E1448 + *(f32 *)(param_3 + 0x14);
+    }
+  }
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,0x15,tab,0x18,&tab[0xd4],0x46c,0);
 }
 
 /*
@@ -713,7 +807,7 @@ void dll_A0_func03(int param_1,int param_2,int param_3,uint param_4)
   }
   local_374 = param_1;
   local_2f4 = local_2fc;
-  (**(code **)(*gModgfxInterface + 8))(&local_378,0,0x15,&DAT_80319300,0x18,&DAT_803193d4,0x1d9,0);
+  (*(code *)(*gModgfxInterface + 8))(&local_378,0,0x15,&DAT_80319300,0x18,&DAT_803193d4,0x1d9,0);
   return;
 }
 
@@ -808,7 +902,7 @@ void dll_A1_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_
       buf.pos[2] = lbl_803E2138 + *(f32 *)(ctx + 0x20);
     }
   }
-  (**(code **)(*gModgfxInterface + 8))(&buf,0,0x15,&DAT_80319528,0x18,&DAT_803195fc,0x203,0);
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,0x15,&DAT_80319528,0x18,&DAT_803195fc,0x203,0);
   FUN_8028683c();
 }
 
@@ -899,7 +993,7 @@ void dll_A2_func03(int param_1,undefined2 param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E2160 + *(f32 *)(ctx + 0x20);
     }
   }
-  (**(code **)(*gModgfxInterface + 8))(&buf,0,0x15,&DAT_80319750,0x18,&DAT_80319824,0x24,0);
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,0x15,&DAT_80319750,0x18,&DAT_80319824,0x24,0);
 }
 
 /*
@@ -985,7 +1079,7 @@ void dll_A5_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E1524 + *(f32 *)(ctx + 0x20);
     }
   }
-  (**(code **)(*gModgfxInterface + 8))(&buf, 0, 8, &lbl_80318D48[0], 4, &lbl_80318D48[80], 0x5e0, 0);
+  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 8, &lbl_80318D48[0], 4, &lbl_80318D48[80], 0x5e0, 0);
 }
 
 extern u8 lbl_80318E40[];
@@ -1039,7 +1133,7 @@ void dll_A7_func03(int param_1, int param_2, int param_3, uint param_4)
       buf.pos[2] = lbl_803E1580 + *(f32 *)(ctx + 0x20);
     }
   }
-  (**(code **)(*gModgfxInterface + 8))(&buf, 0, 8, &lbl_80318E40[0], 4, &lbl_80318E40[80], 0x5e0, 0);
+  (*(code *)(*gModgfxInterface + 8))(&buf, 0, 8, &lbl_80318E40[0], 4, &lbl_80318E40[80], 0x5e0, 0);
 }
 
 /*
@@ -1163,7 +1257,7 @@ void dll_A8_func03(int param_1,undefined2 param_2,int param_3,uint param_4,undef
       buf.pos[2] = lbl_803E2220 + *(f32 *)(ctx + 0x20);
     }
   }
-  (**(code **)(*gModgfxInterface + 8))(&buf,0,0xe,&DAT_80319b38,0xc,&DAT_80319bc4,0x586,0);
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,0xe,&DAT_80319b38,0xc,&DAT_80319bc4,0x586,0);
 }
 
 /*
@@ -1252,7 +1346,7 @@ void dll_A9_func03(int param_1,undefined2 param_2,int param_3,uint param_4,undef
       buf.pos[2] = lbl_803E2258 + *(f32 *)(ctx + 0x20);
     }
   }
-  (**(code **)(*gModgfxInterface + 8))(&buf,0,0xe,&DAT_80319c78,0xc,&DAT_80319d04,0x586,0);
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,0xe,&DAT_80319c78,0xc,&DAT_80319d04,0x586,0);
 }
 
 void dll_AA_func03(double param_1,undefined4 param_2,undefined param_3,int param_4,undefined4 param_5)
