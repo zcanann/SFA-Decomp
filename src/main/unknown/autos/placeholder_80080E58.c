@@ -52,8 +52,8 @@ extern void Obj_GetWorldPosition(void *obj, f32 *x, f32 *y, f32 *z);
 extern s16 *Camera_GetCurrentViewSlot(void);
 extern int randomGetRange(int min, int max);
 extern int return0xFFFF_80008B6C(int obj, int a, int b, int c, int d, int e, int f);
-extern void objSeqUpdateMoreCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode);
-extern void objSeqUpdateCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode);
+extern void ObjSeq_ApplyFrameCurves(u8 *obj, u8 *seqObj, u8 *seq, int frame);
+extern void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode);
 extern void ObjSeq_UpdateCurvePosition(u8 *obj, u8 *seq);
 extern int hitDetectFn_800658a4(void *obj, f32 x, f32 y, f32 z, f32 *out, int flags);
 extern void objAnimFn_8008718c(u8 *obj, u8 *seqObj, u8 *seq);
@@ -4335,8 +4335,8 @@ void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceO
 
     *(s16 *)(seq + 0x58) = *(s16 *)(seq + 0x5e);
     *(s16 *)(seq + 0x5a) = -0x3c;
-    objSeqUpdateMoreCurves(obj, *seqObj, seq, 0);
-    objSeqUpdateCurves(obj, *seqObj, seq, 1);
+    ObjSeq_ApplyFrameCurves(obj, *seqObj, seq, 0);
+    ObjSeq_RebuildCurveStateToFrame(obj, *seqObj, seq, 1);
 
     activeObj = *(u8 **)(*(u8 **)(obj + 0xb8));
     if (activeObj == NULL) {

@@ -1326,7 +1326,7 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
 
 #pragma peephole off
 #pragma scheduling off
-void objSeqUpdateCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode)
+void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
 {
     struct {
         f32 x;
@@ -1599,7 +1599,7 @@ void objSeqUpdateCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode)
 
 #pragma peephole off
 #pragma scheduling off
-void objSeqUpdateMoreCurves(u8 *obj, u8 *seqObj, u8 *seq, int frame)
+void ObjSeq_ApplyFrameCurves(u8 *obj, u8 *seqObj, u8 *seq, int frame)
 {
     u8 *model;
     u8 *walk;
@@ -2413,7 +2413,7 @@ int ObjSeq_update(u8 *obj, f32 t)
                 *(s16 *)(seq + 0x58) = 0;
             }
             *(s16 *)(seq + 0x5a) = (s16)(*(s16 *)(seq + 0x58) - 1);
-            objSeqUpdateCurves(obj, activeObj, seq, 1);
+            ObjSeq_RebuildCurveStateToFrame(obj, activeObj, seq, 1);
         }
 
         lbl_803DD0D8 = 0;
@@ -2484,7 +2484,7 @@ int ObjSeq_update(u8 *obj, f32 t)
             *(s16 *)(seq + 0x58) = *(s16 *)(seq + 0x5c);
         }
         targetFrame = *(s16 *)(seq + 0x58);
-        objSeqUpdateMoreCurves(obj, activeObj, seq, targetFrame);
+        ObjSeq_ApplyFrameCurves(obj, activeObj, seq, targetFrame);
         *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc) + *(f32 *)(seq + 4);
         *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + *(f32 *)(seq + 8);
         *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14) + *(f32 *)(seq + 0xc);
@@ -2820,8 +2820,8 @@ void ObjSeq_SetupInitialPlaybackState(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceO
 
     *(s16 *)(seq + 0x58) = *(s16 *)(seq + 0x5e);
     *(s16 *)(seq + 0x5a) = -0x3c;
-    objSeqUpdateMoreCurves(obj, *seqObj, seq, 0);
-    objSeqUpdateCurves(obj, *seqObj, seq, 1);
+    ObjSeq_ApplyFrameCurves(obj, *seqObj, seq, 0);
+    ObjSeq_RebuildCurveStateToFrame(obj, *seqObj, seq, 1);
 
     activeObj = *(u8 **)(*(u8 **)(obj + 0xb8));
     if (activeObj == NULL) {
