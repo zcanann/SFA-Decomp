@@ -708,7 +708,7 @@ render_basic:
 }
 #pragma peephole reset
 
-extern int Door_SeqFn;
+int Door_SeqFn(int obj, int p2, int seq);
 extern f32 lbl_803E3780;
 extern f32 lbl_803E3784;
 extern f32 lbl_803E3788;
@@ -719,7 +719,7 @@ void Door_init(int *obj, u8 *def) {
     u8 *state = *(u8 **)((char *)obj + 0xb8);
     state[5] = 1;
     *(s16 *)obj = (s16)(def[0x1f] << 8);
-    *(int *)((char *)obj + 0xbc) = (int)&Door_SeqFn;
+    *(int *)((char *)obj + 0xbc) = (int)Door_SeqFn;
     *(u16 *)((char *)obj + 0xb0) = (u16)(*(u16 *)((char *)obj + 0xb0) | 0x2000);
     *(f32 *)((char *)obj + 8) = ((f32)(u32)*(u8 *)((char *)def + 0x21) - lbl_803E3790) * lbl_803E3784;
     if (*(f32 *)((char *)obj + 8) == lbl_803E3788) {
@@ -802,6 +802,247 @@ void mmp_bridge_update(int *obj)
       fn_80137948(lbl_803DBD90,(int)*(s16 *)((char *)tex + 8));
     }
     ObjHits_EnableObject((int)obj);
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int Sfx_PlayFromObject(int obj, int sfxId);
+extern int Sfx_IsPlayingFromObject(int obj, int sfxId);
+extern int Sfx_StopFromObject(int obj, int sfxId);
+extern int GameBit_Set(int eventId, int value);
+extern int ObjTrigger_IsSetById(int obj, int id);
+extern int ObjTrigger_IsSet(int obj);
+extern void buttonDisable(int index, int mask);
+
+/*
+ * --INFO--
+ *
+ * Function: Door_SeqFn
+ * EN v1.0 Address: 0x8017B5C8
+ * EN v1.0 Size: 788b
+ */
+#pragma scheduling off
+#pragma peephole off
+int Door_SeqFn(int obj, int p2, int seq)
+{
+  int state;
+  int def;
+  int opened;
+  int closeReady;
+  int i;
+  int *tex;
+  int ret;
+
+  state = *(int *)(obj + 0xb8);
+  def = *(int *)(obj + 0x4c);
+  if (*(u8 *)(obj + 0x36) == 0) {
+    ObjHits_DisableObject(obj);
+  }
+  if (*(u8 *)(*(int *)(obj + 0x50) + 0x59) != 0) {
+    if ((*(u8 *)(state + 6) & 1) != 0) {
+      tex = (int *)objFindTexture((int *)obj, 0, 0);
+      if (tex != NULL) {
+        *tex = 0x100;
+      }
+    }
+    if ((*(u8 *)(state + 6) & 2) != 0) {
+      tex = (int *)objFindTexture((int *)obj, 1, 0);
+      if (tex != NULL) {
+        *tex = 0x100;
+      }
+    }
+  }
+  if (*(u8 *)(state + 4) == 0) {
+    opened = GameBit_Get(*(s16 *)(def + 0x18));
+    closeReady = 0;
+    if ((*(s16 *)(def + 0x22) == -1) || (GameBit_Get(*(s16 *)(def + 0x22)) != 0)) {
+      closeReady = 1;
+    }
+    if ((opened != 0) && ((*(u8 *)(state + 6) & 1) == 0)) {
+      if (*(u8 *)(*(int *)(obj + 0x50) + 0x59) != 0) {
+        Sfx_PlayFromObject(obj, 0x4b);
+      }
+      *(u8 *)(state + 6) |= 1;
+    }
+    if ((closeReady != 0) && ((*(u8 *)(state + 6) & 2) == 0)) {
+      if (*(u8 *)(*(int *)(obj + 0x50) + 0x59) != 0) {
+        Sfx_PlayFromObject(obj, 0x4b);
+      }
+      *(u8 *)(state + 6) |= 2;
+    }
+    if (*(u8 *)(state + 6) == 3) {
+      *(u8 *)(state + 4) = 2;
+      if (*(u16 *)state != 0) {
+        Sfx_PlayFromObject(obj, *(u16 *)state);
+      }
+    }
+  } else if (*(u8 *)(state + 4) == 1) {
+    if (GameBit_Get(*(s16 *)(def + 0x18)) == 0) {
+      *(u8 *)(state + 4) = 3;
+      if (*(u16 *)state != 0) {
+        Sfx_PlayFromObject(obj, *(u16 *)state);
+      }
+    }
+  }
+  if (*(u8 *)(state + 4) == 2) {
+    for (i = 0; i < *(u8 *)(seq + 0x8b); i++) {
+      if (*(u8 *)(seq + i + 0x81) == 2) {
+        *(u8 *)(state + 4) = 1;
+        if (*(s16 *)(def + 0x1a) != -1) {
+          GameBit_Set(*(s16 *)(def + 0x1a), 1);
+        }
+        if ((*(u16 *)state != 0) && (Sfx_IsPlayingFromObject(obj, *(u16 *)state) != 0)) {
+          Sfx_StopFromObject(obj, *(u16 *)state);
+        }
+        if (*(u16 *)(state + 2) != 0) {
+          Sfx_PlayFromObject(obj, *(u16 *)(state + 2));
+        }
+      }
+    }
+  } else if (*(u8 *)(state + 4) == 3) {
+    for (i = 0; i < *(u8 *)(seq + 0x8b); i++) {
+      if (*(u8 *)(seq + i + 0x81) == 1) {
+        *(u8 *)(state + 4) = 0;
+        *(u8 *)(state + 6) = 0;
+        if (*(s16 *)(def + 0x1a) != -1) {
+          GameBit_Set(*(s16 *)(def + 0x1a), 0);
+        }
+        if ((*(u16 *)state != 0) && (Sfx_IsPlayingFromObject(obj, *(u16 *)state) != 0)) {
+          Sfx_StopFromObject(obj, *(u16 *)state);
+        }
+        if (*(u16 *)(state + 2) != 0) {
+          Sfx_PlayFromObject(obj, *(u16 *)(state + 2));
+        }
+      }
+    }
+  }
+  ret = 0;
+  if ((*(u8 *)(state + 4) != 2) && (*(u8 *)(state + 4) != 3)) {
+    ret = 1;
+  }
+  return ret;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: Lock_DoorLock_SeqFn
+ * EN v1.0 Address: 0x8017BCF8
+ * EN v1.0 Size: 180b
+ */
+#pragma scheduling off
+#pragma peephole off
+int Lock_DoorLock_SeqFn(int obj, int p2, int seq)
+{
+  int def;
+
+  def = *(int *)(obj + 0x4c);
+  if (*(u8 *)(seq + 0x80) != 0) {
+    if (((*(u8 *)(def + 0x1b) & 4) != 0) && (*(u8 *)(seq + 0x80) == 1)) {
+      GameBit_Set(*(s16 *)(def + 0x1c), 1);
+    }
+    if ((*(u8 *)(seq + 0x80) == 2) && (*(s16 *)(def + 0x24) != 0)) {
+      (*(code *)(*gObjectTriggerInterface + 0x58))(seq);
+    }
+    *(u8 *)(seq + 0x80) = 0;
+  }
+  *(int *)(obj + 0xf8) = 0;
+  return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/*
+ * --INFO--
+ *
+ * Function: doorlock_update
+ * EN v1.0 Address: 0x8017BE28
+ * EN v1.0 Size: 848b
+ */
+#pragma scheduling off
+#pragma peephole off
+void doorlock_update(int obj)
+{
+  int state;
+  int def;
+  int flags;
+  u8 b;
+
+  state = *(int *)(obj + 0xb8);
+  def = *(int *)(obj + 0x4c);
+  if (((*(u8 *)(obj + 0xaf) & 4) != 0) && (GameBit_Get(0x930) == 0)) {
+    buttonDisable(0, 0x100);
+    (*(code *)(*gObjectTriggerInterface + 0x84))(obj, 0);
+    (*(code *)(*gObjectTriggerInterface + 0x48))(1, obj, -1);
+    GameBit_Set(0x930, 1);
+  } else {
+    *(u8 *)state = GameBit_Get(*(s16 *)(def + 0x1c));
+    if ((*(u8 *)(def + 0x1b) & 1) != 0) {
+      if (*(u8 *)state != 0) {
+        *(u8 *)(obj + 0x36) = 0;
+      }
+    } else if ((*(s16 *)(def + 0x26) & 1) != 0) {
+      if (*(u8 *)state != 0) {
+        *(int *)(obj + 0xf8) = 0;
+      } else {
+        *(int *)(obj + 0xf8) = 1;
+      }
+    }
+    if (*(u8 *)state == 0) {
+      *(u8 *)(obj + 0xaf) &= ~8;
+      *(u8 *)(obj + 0xaf) &= ~0x10;
+      if ((*(s16 *)(def + 0x22) != -1) && (GameBit_Get(*(s16 *)(def + 0x22)) == 0)) {
+        *(u8 *)(obj + 0xaf) |= 0x10;
+        if ((*(u8 *)(def + 0x1b) & 0x10) != 0) {
+          *(u8 *)(obj + 0xaf) |= 8;
+        }
+      }
+      if ((*(s16 *)(def + 0x1e) != -1) && (GameBit_Get(*(s16 *)(def + 0x1e)) == 0)) {
+        *(u8 *)(obj + 0xaf) |= 0x10;
+      }
+      if (((*(s16 *)(def + 0x1e) != -1) && (ObjTrigger_IsSetById(obj, *(s16 *)(def + 0x1e)) != 0)) ||
+          ((*(s16 *)(def + 0x1e) == -1) && (ObjTrigger_IsSet(obj) != 0))) {
+        if (*(s8 *)(def + 0x20) != -1) {
+          (*(code *)(*gObjectTriggerInterface + 0x48))((int)*(s8 *)(def + 0x20), obj, -1);
+        }
+        if ((*(u8 *)(def + 0x1b) & 4) == 0) {
+          GameBit_Set(*(s16 *)(def + 0x1c), 1);
+        }
+        if ((*(u8 *)(def + 0x1b) & 8) != 0) {
+          GameBit_Set(*(s16 *)(def + 0x22), 0);
+        } else {
+          *(u8 *)state = 1;
+          *(int *)(obj + 0xf4) = 1;
+        }
+        buttonDisable(0, 0x100);
+      }
+    } else {
+      if (*(int *)(obj + 0xf4) == 0) {
+        if ((*(s8 *)(def + 0x20) != -1) && (*(s16 *)(def + 0x24) != 0)) {
+          (*(code *)(*gObjectTriggerInterface + 0x54))(obj);
+          flags = 1;
+          b = *(u8 *)(def + 0x1b);
+          if ((b & 0x20) != 0) {
+            flags |= 2;
+          }
+          if ((b & 0x40) != 0) {
+            flags |= 4;
+          }
+          if ((b & 0x80) != 0) {
+            flags |= 8;
+          }
+          (*(code *)(*gObjectTriggerInterface + 0x48))((int)*(s8 *)(def + 0x20), obj, flags);
+        }
+        *(int *)(obj + 0xf4) = 1;
+      }
+      *(u8 *)(obj + 0xaf) |= 8;
+    }
+    if (((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0) && (*(int *)(obj + 0x74) != 0)) {
+      objRenderFn_80041018((int *)obj);
+    }
   }
 }
 #pragma peephole reset
