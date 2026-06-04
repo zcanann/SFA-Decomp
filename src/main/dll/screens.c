@@ -80,351 +80,7 @@ extern f32 lbl_803E2068;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_9A_func03(undefined4 param_1,undefined4 param_2,int param_3,uint param_4)
-{
-  float fVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  undefined2 uVar5;
-  int iVar6;
-  int iVar7;
-  uint uVar8;
-  uint uVar9;
-  uint uVar10;
-  uint uVar11;
-  uint uVar12;
-  undefined4 *puVar13;
-  double in_f30;
-  double dVar14;
-  double in_f31;
-  double dVar15;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar16;
-  undefined2 local_428;
-  short sStack_426;
-  short local_424;
-  short sStack_422;
-  short local_420;
-  undefined2 uStack_41e;
-  undefined4 *local_418;
-  int local_414;
-  float local_3f8;
-  float local_3f4;
-  float local_3f0;
-  float local_3ec;
-  float local_3e8;
-  float local_3e4;
-  float local_3e0;
-  undefined4 local_3dc;
-  undefined4 local_3d8;
-  undefined2 local_3d4;
-  undefined2 local_3d2;
-  short local_3d0;
-  short local_3ce;
-  short local_3cc;
-  short local_3ca;
-  undefined2 local_3c8;
-  undefined2 local_3c6;
-  uint local_3c4;
-  undefined local_3c0;
-  undefined local_3bf;
-  undefined local_3be;
-  undefined local_3bd;
-  char local_3bb;
-  undefined4 local_3b8;
-  float local_3b4;
-  float local_3b0;
-  float local_3ac;
-  undefined *local_3a8;
-  undefined2 local_3a4;
-  undefined local_3a2 [2];
-  undefined4 local_3a0 [5];
-  undefined local_38a [722];
-  undefined4 local_b8;
-  uint uStack_b4;
-  undefined4 local_b0;
-  uint uStack_ac;
-  undefined4 local_a8;
-  uint uStack_a4;
-  undefined4 local_a0;
-  uint uStack_9c;
-  undefined4 local_98;
-  uint uStack_94;
-  undefined4 local_90;
-  uint uStack_8c;
-  undefined4 local_88;
-  uint uStack_84;
-  undefined4 local_80;
-  uint uStack_7c;
-  undefined4 local_78;
-  uint uStack_74;
-  undefined4 local_70;
-  uint uStack_6c;
-  undefined4 local_68;
-  uint uStack_64;
-  undefined4 local_60;
-  uint uStack_5c;
-  undefined4 local_58;
-  uint uStack_54;
-  undefined4 local_50;
-  uint uStack_4c;
-  undefined4 local_48;
-  uint uStack_44;
-  undefined4 local_40;
-  uint uStack_3c;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  uVar16 = FUN_8028683c();
-  uVar5 = DAT_802c290c;
-  uVar4 = DAT_802c2908;
-  uVar3 = DAT_802c2904;
-  uVar2 = DAT_802c2900;
-  iVar7 = (int)((ulonglong)uVar16 >> 0x20);
-  iVar6 = (int)uVar16;
-  uVar8 = randomGetRange(0,0x14);
-  sStack_426 = (short)uVar2;
-  local_428 = (undefined2)((uint)uVar2 >> 0x10);
-  uVar9 = randomGetRange(0xffffffec,0x14);
-  local_424 = (short)((uint)uVar3 >> 0x10);
-  sStack_422 = (short)uVar3;
-  uVar10 = randomGetRange(0xffffffec,0x14);
-  uVar11 = randomGetRange(0xffffffec,0x14);
-  local_420 = (short)((uint)uVar4 >> 0x10);
-  uStack_41e = (undefined2)uVar4;
-  if (iVar6 == 0) {
-    local_3a2[0] = 0;
-    local_3a4 = 3;
-    local_3a8 = &DAT_803dc5c4;
-    local_3b8 = 8;
-    uVar12 = randomGetRange(0,0x69);
-    uStack_b4 = uVar12 + 0x8c ^ 0x80000000;
-    local_b8 = 0x43300000;
-    local_3b4 = (f32)(s32)uStack_b4;
-    uVar12 = randomGetRange(0,0x69);
-    uStack_ac = uVar12 + 0x8c ^ 0x80000000;
-    local_b0 = 0x43300000;
-    local_3b0 = (f32)(s32)uStack_ac;
-    uVar12 = randomGetRange(0,0x1e);
-    uStack_a4 = uVar12 + 0xe1 ^ 0x80000000;
-    local_a8 = 0x43300000;
-    local_3ac = (f32)(s32)uStack_a4;
-    puVar13 = (undefined4 *)(local_3a2 + 2);
-  }
-  else {
-    puVar13 = &local_3b8;
-    if (iVar6 == 1) {
-      local_3a2[0] = 0;
-      local_3a4 = 3;
-      local_3a8 = &DAT_803dc5c4;
-      local_3b8 = 8;
-      uVar12 = randomGetRange(0,0x1e);
-      uStack_a4 = uVar12 + 0xe1 ^ 0x80000000;
-      local_a8 = 0x43300000;
-      local_3b4 = (f32)(s32)uStack_a4;
-      uVar12 = randomGetRange(0,0x69);
-      uStack_ac = uVar12 + 0x8c ^ 0x80000000;
-      local_b0 = 0x43300000;
-      local_3b0 = (f32)(s32)uStack_ac;
-      uVar12 = randomGetRange(0,0x41);
-      uStack_b4 = uVar12 + 0x78 ^ 0x80000000;
-      local_b8 = 0x43300000;
-      local_3ac = (f32)(s32)uStack_b4;
-      puVar13 = (undefined4 *)(local_3a2 + 2);
-    }
-  }
-  uStack_a4 = randomGetRange(0xffffc950,14000);
-  dVar15 = (double)(f32)(s32)uStack_a4;
-  uStack_ac = randomGetRange(0xffffd120,12000);
-  fVar1 = (f32)(s32)uStack_ac;
-  dVar14 = (double)fVar1;
-  *(undefined *)((int)puVar13 + 0x16) = 0;
-  *(undefined2 *)(puVar13 + 5) = 0;
-  puVar13[4] = 0;
-  *puVar13 = 0x80;
-  puVar13[1] = lbl_803E1FF0;
-  puVar13[2] = fVar1;
-  puVar13[3] = (float)dVar15;
-  *(undefined *)((int)puVar13 + 0x2e) = 0;
-  *(undefined2 *)(puVar13 + 0xb) = 3;
-  puVar13[10] = (undefined4)&DAT_803dc5c4;
-  puVar13[6] = 4;
-  puVar13[7] = lbl_803E1FF0;
-  puVar13[8] = lbl_803E1FF0;
-  puVar13[9] = lbl_803E1FF0;
-  *(undefined *)((int)puVar13 + 0x46) = 0;
-  *(undefined2 *)(puVar13 + 0x11) = 3;
-  puVar13[0x10] = (undefined4)&DAT_803dc5c4;
-  puVar13[0xc] = 2;
-  puVar13[0xd] = lbl_803E1FF4;
-  uStack_b4 = randomGetRange(0,0x32);
-  puVar13[0xe] = lbl_803E1FFC * (f32)(s32)uStack_b4
-                 + lbl_803E1FF8;
-  uStack_9c = randomGetRange(4,6);
-  puVar13[0xf] = lbl_803E1FFC * (f32)(s32)uStack_9c
-                 + lbl_803E2000;
-  *(undefined *)((int)puVar13 + 0x5e) = 1;
-  *(undefined2 *)(puVar13 + 0x17) = 1;
-  puVar13[0x16] = (undefined4)&DAT_803dc5c0;
-  puVar13[0x12] = 4;
-  puVar13[0x13] = lbl_803E2004;
-  puVar13[0x14] = lbl_803E1FF0;
-  puVar13[0x15] = lbl_803E1FF0;
-  *(undefined *)((int)puVar13 + 0x76) = 1;
-  *(undefined2 *)(puVar13 + 0x1d) = 0;
-  puVar13[0x1c] = (undefined4)&DAT_803dc5c0;
-  puVar13[0x18] = 0x4000;
-  puVar13[0x19] = lbl_803E2008;
-  puVar13[0x1a] = lbl_803E1FF0;
-  puVar13[0x1b] = lbl_803E1FF0;
-  *(undefined *)((int)puVar13 + 0x8e) = 1;
-  *(undefined2 *)(puVar13 + 0x23) = 3;
-  puVar13[0x22] = (undefined4)&DAT_803dc5c4;
-  puVar13[0x1e] = 2;
-  puVar13[0x1f] = lbl_803E200C;
-  puVar13[0x20] = lbl_803E2010;
-  puVar13[0x21] = lbl_803E2010;
-  *(undefined *)((int)puVar13 + 0xa6) = 1;
-  *(undefined2 *)(puVar13 + 0x29) = 0;
-  puVar13[0x28] = 0;
-  puVar13[0x24] = 0x80;
-  uStack_94 = randomGetRange(0xffff8300,32000);
-  puVar13[0x25] = (f32)(s32)uStack_94;
-  uStack_8c = randomGetRange(0xffffffff,1);
-  puVar13[0x26] =
-       (float)(dVar14 * (double)(f32)(s32)uStack_8c);
-  uStack_84 = randomGetRange(0xffffffff,1);
-  puVar13[0x27] =
-       (float)(dVar15 * (double)(f32)(s32)uStack_84);
-  *(undefined *)((int)puVar13 + 0xbe) = 2;
-  *(undefined2 *)(puVar13 + 0x2f) = 0;
-  puVar13[0x2e] = 0;
-  puVar13[0x2a] = 0x80;
-  uStack_7c = randomGetRange(0xffff8300,32000);
-  puVar13[0x2b] = (f32)(s32)uStack_7c;
-  uStack_74 = randomGetRange(0xffffffff,1);
-  puVar13[0x2c] =
-       (float)(dVar14 * (double)(f32)(s32)uStack_74);
-  uStack_6c = randomGetRange(0xffffffff,1);
-  puVar13[0x2d] =
-       (float)(dVar15 * (double)(f32)(s32)uStack_6c);
-  *(undefined *)((int)puVar13 + 0xd6) = 2;
-  *(undefined2 *)(puVar13 + 0x35) = 0;
-  puVar13[0x34] = (undefined4)&DAT_803dc5c0;
-  puVar13[0x30] = 0x4000;
-  puVar13[0x31] = lbl_803E2008;
-  puVar13[0x32] = lbl_803E1FF0;
-  puVar13[0x33] = lbl_803E1FF0;
-  *(undefined *)((int)puVar13 + 0xee) = 3;
-  *(undefined2 *)(puVar13 + 0x3b) = 0;
-  puVar13[0x3a] = 0;
-  puVar13[0x36] = 0x80;
-  uStack_64 = randomGetRange(0xffff8300,32000);
-  puVar13[0x37] = (f32)(s32)uStack_64;
-  uStack_5c = randomGetRange(0xffffffff,1);
-  puVar13[0x38] =
-       (float)(dVar14 * (double)(f32)(s32)uStack_5c);
-  uStack_54 = randomGetRange(0xffffffff,1);
-  puVar13[0x39] =
-       (float)(dVar15 * (double)(f32)(s32)uStack_54);
-  *(undefined *)((int)puVar13 + 0x106) = 3;
-  *(undefined2 *)(puVar13 + 0x41) = 0;
-  puVar13[0x40] = (undefined4)&DAT_803dc5c0;
-  puVar13[0x3c] = 0x4000;
-  puVar13[0x3d] = lbl_803E2008;
-  puVar13[0x3e] = lbl_803E1FF0;
-  puVar13[0x3f] = lbl_803E1FF0;
-  *(undefined *)((int)puVar13 + 0x11e) = 4;
-  *(undefined2 *)(puVar13 + 0x47) = 0;
-  puVar13[0x46] = 0;
-  puVar13[0x42] = 0x80;
-  uStack_4c = randomGetRange(0xffff8300,32000);
-  puVar13[0x43] = (f32)(s32)uStack_4c;
-  uStack_44 = randomGetRange(0xffffffff,1);
-  puVar13[0x44] =
-       (float)(dVar14 * (double)(f32)(s32)uStack_44);
-  uStack_3c = randomGetRange(0xffffffff,1);
-  puVar13[0x45] =
-       (float)(dVar15 * (double)(f32)(s32)uStack_3c);
-  *(undefined *)((int)puVar13 + 0x136) = 4;
-  *(undefined2 *)(puVar13 + 0x4d) = 0;
-  puVar13[0x4c] = (undefined4)&DAT_803dc5c0;
-  puVar13[0x48] = 0x4000;
-  puVar13[0x49] = lbl_803E2008;
-  puVar13[0x4a] = lbl_803E1FF0;
-  puVar13[0x4b] = lbl_803E1FF0;
-  *(undefined *)((int)puVar13 + 0x14e) = 4;
-  *(undefined2 *)(puVar13 + 0x53) = 1;
-  puVar13[0x52] = (undefined4)&DAT_803dc5c0;
-  puVar13[0x4e] = 4;
-  puVar13[0x4f] = lbl_803E1FF0;
-  puVar13[0x50] = lbl_803E1FF0;
-  puVar13[0x51] = lbl_803E1FF0;
-  local_3c0 = 0;
-  local_3d4 = (undefined2)uVar16;
-  local_3ec = lbl_803E1FF0;
-  if (iVar6 == 0) {
-    local_3e8 = lbl_803E1FF0;
-  }
-  else if (iVar6 == 1) {
-    local_3e8 = lbl_803E2014;
-  }
-  local_3e4 = lbl_803E1FF0;
-  local_3f8 = lbl_803E1FF0;
-  local_3f4 = lbl_803E1FF0;
-  local_3f0 = lbl_803E1FF0;
-  local_3e0 = lbl_803E2010;
-  local_3d8 = 1;
-  local_3dc = 0;
-  local_3bf = 3;
-  local_3be = 0;
-  local_3bd = 0;
-  iVar6 = (int)puVar13 + (0x150 - (int)&local_3b8);
-  iVar6 = iVar6 / 0x18 + (iVar6 >> 0x1f);
-  local_3bb = (char)iVar6 - (char)(iVar6 >> 0x1f);
-  local_3d2 = local_428;
-  local_3c8 = uStack_41e;
-  local_3c6 = uVar5;
-  local_418 = &local_3b8;
-  local_3c4 = param_4 | 0x4000400;
-  if ((param_4 & 1) != 0) {
-    if ((iVar7 == 0) || (param_3 == 0)) {
-      if (iVar7 == 0) {
-        if (param_3 != 0) {
-          local_3ec = lbl_803E1FF0 + *(float *)(param_3 + 0xc);
-          local_3e8 = local_3e8 + *(float *)(param_3 + 0x10);
-          local_3e4 = lbl_803E1FF0 + *(float *)(param_3 + 0x14);
-        }
-      }
-      else {
-        local_3ec = lbl_803E1FF0 + *(float *)(iVar7 + 0x18);
-        local_3e8 = local_3e8 + *(float *)(iVar7 + 0x1c);
-        local_3e4 = lbl_803E1FF0 + *(float *)(iVar7 + 0x20);
-      }
-    }
-    else {
-      local_3ec = lbl_803E1FF0 + *(float *)(iVar7 + 0x18) + *(float *)(param_3 + 0xc);
-      local_3e8 = local_3e8 + *(float *)(iVar7 + 0x1c) + *(float *)(param_3 + 0x10);
-      local_3e4 = lbl_803E1FF0 + *(float *)(iVar7 + 0x20) + *(float *)(param_3 + 0x14);
-    }
-  }
-  local_414 = iVar7;
-  local_3d0 = sStack_426 + (short)uVar8;
-  local_3ce = local_424 + (short)uVar9;
-  local_3cc = sStack_422 + (short)uVar10;
-  local_3ca = local_420 + (short)uVar11;
-  (**(code **)(*DAT_803dd6fc + 8))(&local_418,0,3,&DAT_803187e8,1,&DAT_803dc5b8,0x31,0);
-  FUN_80286888();
-  return;
-}
+/* dll_9A_func03 rewritten below (after shared screen-fx typedefs). */
 
 /*
  * --INFO--
@@ -487,13 +143,219 @@ extern f32 lbl_803E13BC;
 extern f32 lbl_803E13C0;
 extern f32 lbl_803E13C4;
 
+typedef struct {
+    s16 v[7];
+} ScreenSeq;
+
+extern u8 lbl_802C2180[];
+extern u8 lbl_80317B98[];
+extern u8 lbl_803DB958;
+extern u8 lbl_803DB960;
+extern u8 lbl_803DB964;
+extern f32 lbl_803E1370;
+extern f32 lbl_803E1374;
+extern f32 lbl_803E1378;
+extern f32 lbl_803E137C;
+extern f32 lbl_803E1380;
+extern f32 lbl_803E1384;
+extern f32 lbl_803E1388;
+extern f32 lbl_803E138C;
+extern f32 lbl_803E1390;
+extern f32 lbl_803E1394;
+
+void dll_9A_func03(int a, int b, int p, uint flags)
+{
+    ScreenSeq seq;
+    ScreenFxPart parts[32];
+    ScreenFxHdr hdr;
+    ScreenFxPart *cur;
+    ScreenFxPart *pp;
+    f32 rz;
+    f32 ry;
+
+    seq = *(ScreenSeq *)lbl_802C2180;
+    seq.v[1] += randomGetRange(0, 0x14);
+    seq.v[2] += randomGetRange(-0x14, 0x14);
+    seq.v[3] += randomGetRange(-0x14, 0x14);
+    seq.v[4] += randomGetRange(-0x14, 0x14);
+    pp = parts;
+    cur = pp;
+    if (b == 0) {
+        cur->state = 0;
+        cur->id = 3;
+        cur->tex = &lbl_803DB964;
+        cur->flags = 8;
+        cur->x = (f32)(s32)(randomGetRange(0, 0x69) + 0x8c);
+        cur->y = (f32)(s32)(randomGetRange(0, 0x69) + 0x8c);
+        cur->z = (f32)(s32)(randomGetRange(0, 0x1e) + 0xe1);
+        cur++;
+    } else if (b == 1) {
+        cur->state = 0;
+        cur->id = 3;
+        cur->tex = &lbl_803DB964;
+        cur->flags = 8;
+        cur->x = (f32)(s32)(randomGetRange(0, 0x1e) + 0xe1);
+        cur->y = (f32)(s32)(randomGetRange(0, 0x69) + 0x8c);
+        cur->z = (f32)(s32)(randomGetRange(0, 0x41) + 0x78);
+        cur++;
+    }
+    rz = (f32)(s32)randomGetRange(-0x36b0, 0x36b0);
+    ry = (f32)(s32)randomGetRange(-0x2ee0, 0x2ee0);
+    cur[0].state = 0;
+    cur[0].id = 0;
+    cur[0].tex = 0;
+    cur[0].flags = 0x80;
+    cur[0].x = lbl_803E1370;
+    cur[0].y = ry;
+    cur[0].z = rz;
+    cur[1].state = 0;
+    cur[1].id = 3;
+    cur[1].tex = &lbl_803DB964;
+    cur[1].flags = 4;
+    cur[1].x = lbl_803E1370;
+    cur[1].y = lbl_803E1370;
+    cur[1].z = lbl_803E1370;
+    cur[2].state = 0;
+    cur[2].id = 3;
+    cur[2].tex = &lbl_803DB964;
+    cur[2].flags = 2;
+    cur[2].x = lbl_803E1374;
+    cur[2].y = lbl_803E137C * (f32)(s32)randomGetRange(0, 0x32) + lbl_803E1378;
+    cur[2].z = lbl_803E137C * (f32)(s32)randomGetRange(4, 6) + lbl_803E1380;
+    cur[3].state = 1;
+    cur[3].id = 1;
+    cur[3].tex = &lbl_803DB960;
+    cur[3].flags = 4;
+    cur[3].x = lbl_803E1384;
+    cur[3].y = lbl_803E1370;
+    cur[3].z = lbl_803E1370;
+    cur[4].state = 1;
+    cur[4].id = 0;
+    cur[4].tex = &lbl_803DB960;
+    cur[4].flags = 0x4000;
+    cur[4].x = lbl_803E1388;
+    cur[4].y = lbl_803E1370;
+    cur[4].z = lbl_803E1370;
+    cur[5].state = 1;
+    cur[5].id = 3;
+    cur[5].tex = &lbl_803DB964;
+    cur[5].flags = 2;
+    cur[5].x = lbl_803E138C;
+    cur[5].y = lbl_803E1390;
+    cur[5].z = lbl_803E1390;
+    cur[6].state = 1;
+    cur[6].id = 0;
+    cur[6].tex = 0;
+    cur[6].flags = 0x80;
+    cur[6].x = (f32)(s32)randomGetRange(-32000, 32000);
+    cur[6].y = ry * (f32)(s32)randomGetRange(-1, 1);
+    cur[6].z = rz * (f32)(s32)randomGetRange(-1, 1);
+    cur[7].state = 2;
+    cur[7].id = 0;
+    cur[7].tex = 0;
+    cur[7].flags = 0x80;
+    cur[7].x = (f32)(s32)randomGetRange(-32000, 32000);
+    cur[7].y = ry * (f32)(s32)randomGetRange(-1, 1);
+    cur[7].z = rz * (f32)(s32)randomGetRange(-1, 1);
+    cur[8].state = 2;
+    cur[8].id = 0;
+    cur[8].tex = &lbl_803DB960;
+    cur[8].flags = 0x4000;
+    cur[8].x = lbl_803E1388;
+    cur[8].y = lbl_803E1370;
+    cur[8].z = lbl_803E1370;
+    cur[9].state = 3;
+    cur[9].id = 0;
+    cur[9].tex = 0;
+    cur[9].flags = 0x80;
+    cur[9].x = (f32)(s32)randomGetRange(-32000, 32000);
+    cur[9].y = ry * (f32)(s32)randomGetRange(-1, 1);
+    cur[9].z = rz * (f32)(s32)randomGetRange(-1, 1);
+    cur[10].state = 3;
+    cur[10].id = 0;
+    cur[10].tex = &lbl_803DB960;
+    cur[10].flags = 0x4000;
+    cur[10].x = lbl_803E1388;
+    cur[10].y = lbl_803E1370;
+    cur[10].z = lbl_803E1370;
+    cur[11].state = 4;
+    cur[11].id = 0;
+    cur[11].tex = 0;
+    cur[11].flags = 0x80;
+    cur[11].x = (f32)(s32)randomGetRange(-32000, 32000);
+    cur[11].y = ry * (f32)(s32)randomGetRange(-1, 1);
+    cur[11].z = rz * (f32)(s32)randomGetRange(-1, 1);
+    cur[12].state = 4;
+    cur[12].id = 0;
+    cur[12].tex = &lbl_803DB960;
+    cur[12].flags = 0x4000;
+    cur[12].x = lbl_803E1388;
+    cur[12].y = lbl_803E1370;
+    cur[12].z = lbl_803E1370;
+    cur[13].state = 4;
+    cur[13].id = 1;
+    cur[13].tex = &lbl_803DB960;
+    cur[13].flags = 4;
+    cur[13].x = lbl_803E1370;
+    cur[13].y = lbl_803E1370;
+    cur[13].z = lbl_803E1370;
+
+    hdr.v0 = 0;
+    hdr.target = a;
+    hdr.b = (s16)b;
+    hdr.bx = lbl_803E1370;
+    if (b == 0) {
+        hdr.by = lbl_803E1370;
+    } else if (b == 1) {
+        hdr.by = lbl_803E1394;
+    }
+    hdr.bz = lbl_803E1370;
+    hdr.ax = lbl_803E1370;
+    hdr.ay = lbl_803E1370;
+    hdr.az = lbl_803E1370;
+    hdr.r = lbl_803E1390;
+    hdr.c2 = 1;
+    hdr.c7 = 0;
+    hdr.v1 = 3;
+    hdr.v2 = 0;
+    hdr.v3 = 0;
+    hdr.count = (s8)(((u8 *)(cur + 14) - (u8 *)pp) / 0x18);
+    hdr.anim[0] = seq.v[0];
+    hdr.anim[1] = seq.v[1];
+    hdr.anim[2] = seq.v[2];
+    hdr.anim[3] = seq.v[3];
+    hdr.anim[4] = seq.v[4];
+    hdr.anim[5] = seq.v[5];
+    hdr.anim[6] = seq.v[6];
+    hdr.parts = parts;
+    hdr.flags = 0x4000400;
+    hdr.flags |= flags;
+    if ((hdr.flags & 1) != 0) {
+        if ((void *)hdr.target != NULL && (void *)p != NULL) {
+            hdr.bx = hdr.bx + (*(f32 *)(hdr.target + 0x18) + *(f32 *)(p + 0xc));
+            hdr.by = hdr.by + (*(f32 *)(hdr.target + 0x1c) + *(f32 *)(p + 0x10));
+            hdr.bz = hdr.bz + (*(f32 *)(hdr.target + 0x20) + *(f32 *)(p + 0x14));
+        } else if ((void *)hdr.target != NULL) {
+            hdr.bx = hdr.bx + *(f32 *)(hdr.target + 0x18);
+            hdr.by = hdr.by + *(f32 *)(hdr.target + 0x1c);
+            hdr.bz = hdr.bz + *(f32 *)(hdr.target + 0x20);
+        } else if ((void *)p != NULL) {
+            hdr.bx = hdr.bx + *(f32 *)(p + 0xc);
+            hdr.by = hdr.by + *(f32 *)(p + 0x10);
+            hdr.bz = hdr.bz + *(f32 *)(p + 0x14);
+        }
+    }
+    (*(ModgfxLaunchFn)*(int *)(*gModgfxInterface + 8))(&hdr, 0, 3, lbl_80317B98, 1, &lbl_803DB958,
+                                                       0x31, 0);
+}
+
 void dll_9B_func03(int a, int b, int p, uint flags)
 {
     ScreenFxHdr hdr;
     u8 buf[440];
     ScreenFxPart parts[14];
-    u8 *base = (u8 *)lbl_80317BD8;
     ScreenFxPart *pp = parts;
+    u8 *base = (u8 *)lbl_80317BD8;
 
     parts[0].state = 0;
     parts[0].id = 0x15;
