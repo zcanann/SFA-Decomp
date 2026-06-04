@@ -3815,6 +3815,7 @@ void renderSceneGeometry(int *p1, s8 *order)
         layer--;
     } while (layer >= 0);
 }
+#pragma opt_loop_invariants reset
 #pragma peephole reset
 #pragma scheduling reset
 
