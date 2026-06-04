@@ -135,12 +135,16 @@ extern f32 lbl_803E5368;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma peephole off
+#pragma scheduling off
 void ccqueen_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
   void *state = *(void **)((char *)obj + 0xb8);
   objRenderFn_8003b8f4(lbl_803E4660);
   dll_2E_func06(obj, state, 0);
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
