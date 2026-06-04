@@ -4639,3 +4639,75 @@ void CameraModeCloudRunner_update(u8 *obj) {
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803DD5A8;
+extern f32 lbl_803E1B18;
+
+/* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeForceBehind_update(u8 *obj) {
+    u8 *state = *(u8 **)(obj + 0xa4);
+    s16 extra;
+    s16 pitch;
+    s16 yaw;
+    f32 pos[3];
+    f32 angle;
+    f32 cosv, sinv;
+    f32 sx, sz;
+    f32 baseX, baseY, baseZ;
+    f32 cosYaw, sinYaw, sinPitch, cosPitch;
+    f32 radius;
+
+    angle = lbl_803E1B00 * (f32)(0x8000 - *(s16 *)obj) / lbl_803E1B04;
+    cosv = fn_80293E80(angle);
+    sinv = sin(angle);
+    sx = *(f32 *)(state + 0x18);
+    pos[0] = cosv * lbl_803DB9C8 + sx;
+    pos[1] = lbl_803E1B08 + *(f32 *)(state + 0x1c);
+    sz = *(f32 *)(state + 0x20);
+    pos[2] = sinv * lbl_803DB9C8 + sz;
+    camcontrol_traceFromTarget(pos, state, pos, &extra);
+    lbl_803DD5A8 = lbl_803DD5B0 = sqrtf((pos[0] - sx) * (pos[0] - sx) + (pos[2] - sz) * (pos[2] - sz));
+
+    fn_8029697C((int)state, &yaw, &pitch);
+    yaw = (s16)((0x8000 - *(s16 *)state) + (yaw >> 1));
+    pitch = (s16)(pitch >> 1);
+    baseX = *(f32 *)(state + 0x18);
+    baseY = *(f32 *)(state + 0x1c) + lbl_803DD5AC;
+    baseZ = *(f32 *)(state + 0x20);
+
+    yaw = (s16)(yaw - (u16)*(s16 *)obj);
+    if (yaw > 0x8000) {
+        yaw -= 0xffff;
+    }
+    if (yaw < -0x8000) {
+        yaw += 0xffff;
+    }
+    *(s16 *)obj = (s16)(s32)((f32)(s32)*(s16 *)obj + interpolate((f32)yaw, lbl_803E1B18, timeDelta));
+
+    pitch = (s16)(pitch - (u16)*(s16 *)(obj + 2));
+    if (pitch > 0x8000) {
+        pitch -= 0xffff;
+    }
+    if (pitch < -0x8000) {
+        pitch += 0xffff;
+    }
+    *(s16 *)(obj + 2) = (s16)(s32)((f32)(s32)*(s16 *)(obj + 2) +
+                                   interpolate((f32)pitch, lbl_803E1B18, timeDelta));
+
+    cosYaw = fn_80293E80(lbl_803E1B00 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B04);
+    sinYaw = sin(lbl_803E1B00 * (f32)(s32)(*(s16 *)obj - 0x4000) / lbl_803E1B04);
+    sinPitch = sin(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
+    cosPitch = fn_80293E80(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
+    radius = lbl_803DD5A8;
+    *(f32 *)(obj + 24) = baseX + radius * sinPitch * sinYaw;
+    *(f32 *)(obj + 28) = baseY + radius * cosPitch;
+    *(f32 *)(obj + 32) = baseZ + radius * sinPitch * cosYaw;
+    camcontrol_traceFromTarget((f32 *)(obj + 24), state, (f32 *)(obj + 24), (s16 *)(obj + 2));
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+}
+#pragma peephole reset
+#pragma scheduling reset
