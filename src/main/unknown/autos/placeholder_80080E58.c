@@ -8503,3 +8503,217 @@ void dll_07_func06(void) {
     }
 }
 #pragma pop
+
+extern char sSnowPrintSnowCloudInvalidCloudId[];
+extern void initRotationMtx(f32 *mtx, f32 xScale, f32 yScale, f32 zScale);
+extern void mtx44_mult(f32 *a, f32 *b, f32 *out);
+extern void mtx44Transpose(f32 *in, f32 *out);
+extern void getAmbientColor(int mode, u8 *r, u8 *g, u8 *b);
+extern void gxBlendFn_80078b4c(void);
+extern int lbl_803DD1A4;
+extern f32 lbl_803DF204;
+
+/*
+ * --INFO--
+ *
+ * Function: snowPrintSnowCloud
+ * EN v1.0 Address: 0x80090250
+ * EN v1.0 Size: 2456b
+ */
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+int snowPrintSnowCloud(int arg, int cloudId) {
+    u8 *p;
+    u8 *part;
+    int i;
+    int j;
+    int texIdx;
+    u8 hudHidden;
+    u8 cr;
+    u8 cg;
+    u8 cb;
+    f32 scale;
+    f32 driftX;
+    f32 driftZ;
+    f32 stepX;
+    f32 stepZ;
+    f32 yb;
+    f32 size;
+    int base;
+    f32 mtxA[16];
+    f32 mtxB[16];
+    f32 mtxOut[16];
+    f32 mtxT[12];
+    f32 vx[3];
+    f32 vy[3];
+    f32 vz[3];
+    s16 uvs[6] = {-0x30, 0, 0xb0, 0, 0x40, 0x100};
+
+    scale = lbl_803DF1A4;
+    if (renderModeSetOrGet(-1) == 1) {
+        return 0;
+    }
+    for (i = 0; i < 8; i++) {
+        p = lbl_8039A828[i];
+        if (p != NULL && cloudId == *(int *)(p + 0x13f0)) {
+            break;
+        }
+    }
+    p = lbl_8039A828[i];
+    if (p == NULL || i == 8) {
+        return 0;
+    }
+    if (cloudId != *(int *)(p + 0x13f0)) {
+        debugPrintf(sSnowPrintSnowCloudInvalidCloudId, cloudId);
+        return 0;
+    }
+    lbl_803DD1A4 = lbl_803DF1FC * timeDelta + (f32)lbl_803DD1A4;
+    if (lbl_803DD1A4 > 0xffff) {
+        lbl_803DD1A4 = 0;
+    }
+    scale = scale * lbl_803DF200;
+    initRotationMtx(mtxA, scale, scale, scale);
+    memset(mtxB, 0, 0x40);
+    mtxB[0] = lbl_803DF1A4;
+    mtxB[5] = lbl_803DF1A4;
+    mtxB[10] = lbl_803DF1A4;
+    mtxB[15] = lbl_803DF1A4;
+    if (*(int *)(p + 0x13f4) != 4 && p[0x1451] != 0) {
+        mtxB[0] = sin((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
+        mtxB[1] = -fn_80293E80((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
+        mtxB[4] = fn_80293E80((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
+        mtxB[5] = sin((lbl_803DF1F0 * (f32)lbl_803DD1A4) / lbl_803DF1F4);
+    } else if (*(int *)(p + 0x13f4) == 4) {
+        if (p[0x144a] & 0x80) {
+            mtxB[0] = sin(lbl_803DF204);
+            mtxB[1] = -fn_80293E80(lbl_803DF204);
+            mtxB[4] = fn_80293E80(lbl_803DF204);
+            mtxB[5] = sin(lbl_803DF204);
+        } else if (p[0x1451] != 0) {
+            lbl_803DD1A4 =
+                lbl_803DF20C * (*(f32 *)(p + 0x1440) / lbl_803DF210) + lbl_803DF208;
+            mtxB[0] = sin((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
+            mtxB[1] = -fn_80293E80((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
+            mtxB[4] = fn_80293E80((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
+            mtxB[5] = sin((lbl_803DF1F0 * (f32)-lbl_803DD1A4) / lbl_803DF1F4);
+        }
+    }
+    mtxB[12] = *(f32 *)(p + 0x140c) - playerMapOffsetX;
+    mtxB[13] = *(f32 *)(p + 0x1410);
+    mtxB[14] = *(f32 *)(p + 0x1414) - playerMapOffsetZ;
+    mtx44_mult(mtxA, mtxB, mtxOut);
+    mtx44Transpose(mtxOut, mtxT);
+    PSMTXConcat((void *)Camera_GetViewMatrix(), (void *)mtxT, (void *)mtxT);
+    GXLoadPosMtxImm(mtxT, 0);
+    texIdx = 0;
+    if (*(int *)(p + 0x13f4) == 0) {
+        selectTexture(lbl_8039A818[0], 0);
+    } else {
+        selectTexture(lbl_803DD1C4, 0);
+    }
+    GXSetCullMode(0);
+    textureSetupFn_800799c0();
+    textRenderSetupFn_800795e8();
+    textRenderSetupFn_80079804();
+    if (*(int *)(p + 0x13f4) == 4) {
+        setTextColor(arg, 0x7d, 0x7d, 0x9b, 0xff);
+    } else if (*(int *)(p + 0x13f4) == 0) {
+        getAmbientColor(0, &cr, &cg, &cb);
+        setTextColor(arg, cr, cg, cb, 0xff);
+    }
+    gxBlendFn_80078b4c();
+    GXClearVtxDesc();
+    GXSetVtxDesc(0, 1);
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xb, 1);
+    GXSetVtxDesc(0xd, 1);
+    GXSetCurrentMtx(0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xd, 1);
+    hudHidden = getHudHiddenFrameCount();
+    driftX = lbl_803DF1E4 * (*(f32 *)(p + 0x13e4) - *(f32 *)(p + 0x13d8));
+    stepX = lbl_803DF214 * *(f32 *)(p + 0x1378);
+    if (driftX < stepX) {
+    } else {
+        stepX = lbl_803DF214 * *(f32 *)(p + 0x1390);
+        if (driftX > stepX) {
+        } else {
+            stepX = driftX;
+        }
+    }
+    driftZ = lbl_803DF1E4 * (*(f32 *)(p + 0x13ec) - *(f32 *)(p + 0x13e0));
+    stepZ = lbl_803DF214 * *(f32 *)(p + 0x1380);
+    if (driftZ < stepZ) {
+    } else {
+        stepZ = lbl_803DF214 * *(f32 *)(p + 0x13b0);
+        if (driftZ > stepZ) {
+        } else {
+            stepZ = driftZ;
+        }
+    }
+    if (*(int *)(p + 0x13f4) == 4) {
+        GXBegin(0x90, 4, (u16)(*(int *)(p + 0x13fc) * 3));
+    } else {
+        GXBegin(0x90, 4, (u16)(*(int *)(p + 0x13fc) * 3 / 4));
+    }
+    part = *(u8 **)(p + 4);
+    for (j = 0; j < *(int *)(p + 0x13fc); j++) {
+        if (part[0x16] != (u8)texIdx) {
+            texIdx = part[0x16];
+            selectTexture(lbl_8039A818[texIdx], 0);
+            GXBegin(0x90, 4, (u16)(*(int *)(p + 0x13fc) * 3 / 4));
+        }
+        if (hudHidden == 0) {
+            if (p[0x144d] == 0) {
+                *(f32 *)part = *(f32 *)part + stepX;
+                *(f32 *)(part + 8) = *(f32 *)(part + 8) + stepZ;
+            }
+            *(f32 *)part = *(f32 *)(p + 0x1420) * timeDelta + *(f32 *)part;
+            *(f32 *)(part + 8) = *(f32 *)(p + 0x1424) * timeDelta + *(f32 *)(part + 8);
+            if (*(f32 *)part < *(f32 *)(p + 0x1378)) {
+                *(f32 *)part = lbl_803DF1C8 * *(f32 *)(p + 0x1390) + *(f32 *)part;
+            } else if (*(f32 *)part > *(f32 *)(p + 0x1390)) {
+                *(f32 *)part = *(f32 *)part - lbl_803DF1C8 * *(f32 *)(p + 0x1390);
+            }
+            if (*(f32 *)(part + 8) < *(f32 *)(p + 0x1380)) {
+                *(f32 *)(part + 8) =
+                    lbl_803DF1C8 * *(f32 *)(p + 0x13b0) + *(f32 *)(part + 8);
+            } else if (*(f32 *)(part + 8) > *(f32 *)(p + 0x13b0)) {
+                *(f32 *)(part + 8) =
+                    *(f32 *)(part + 8) - lbl_803DF1C8 * *(f32 *)(p + 0x13b0);
+            }
+        }
+        yb = *(f32 *)(part + 4) - *(f32 *)(p + *(u16 *)(part + 0x10) * 4 + 8);
+        base = *(u16 *)(part + 0x12) * 0x2c;
+        size = *(f32 *)(part + 0xc);
+        vx[0] = *(f32 *)(p + base + 0x1008) * size + *(f32 *)part;
+        vy[0] = *(f32 *)(p + base + 0x1014) * size + yb;
+        vz[0] = *(f32 *)(p + base + 0x1020) * size + *(f32 *)(part + 8);
+        vx[1] = *(f32 *)(p + base + 0x100c) * size + *(f32 *)part;
+        vy[1] = *(f32 *)(p + base + 0x1018) * size + yb;
+        vz[1] = *(f32 *)(p + base + 0x1024) * size + *(f32 *)(part + 8);
+        vx[2] = *(f32 *)(p + base + 0x1010) * size + *(f32 *)part;
+        vy[2] = *(f32 *)(p + base + 0x101c) * size + yb;
+        vz[2] = *(f32 *)(p + base + 0x1028) * size + *(f32 *)(part + 8);
+        GXWGFifo.f32 = vx[0];
+        GXWGFifo.f32 = vy[0];
+        GXWGFifo.f32 = vz[0];
+        GXWGFifo.s16 = uvs[0];
+        GXWGFifo.s16 = uvs[1];
+        GXWGFifo.f32 = vx[1];
+        GXWGFifo.f32 = vy[1];
+        GXWGFifo.f32 = vz[1];
+        GXWGFifo.s16 = uvs[2];
+        GXWGFifo.s16 = uvs[3];
+        GXWGFifo.f32 = vx[2];
+        GXWGFifo.f32 = vy[2];
+        GXWGFifo.f32 = vz[2];
+        GXWGFifo.s16 = uvs[4];
+        GXWGFifo.s16 = uvs[5];
+        part += 0x18;
+    }
+    return 0;
+}
+#pragma pop
