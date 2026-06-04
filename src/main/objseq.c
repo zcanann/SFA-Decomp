@@ -53,6 +53,46 @@ extern f32 lbl_803DF00C;
 extern f32 lbl_803DF010;
 extern f32 lbl_803DF014;
 
+extern f32 lbl_803DD0F4;
+extern f32 lbl_803DD0F0;
+extern f32 lbl_803DD0EC;
+extern f32 lbl_803DD0D0;
+extern f32 lbl_803DB710;
+extern f32 lbl_803DD0B0;
+extern f32 lbl_803DD0AC;
+extern f32 lbl_803DD0A8;
+extern f32 lbl_803DD0A4;
+extern int lbl_803DD0A0;
+extern int lbl_803DD09C;
+extern int lbl_803DD098;
+extern f32 lbl_803DEFF4;
+extern f32 lbl_803DEFF8;
+extern f32 lbl_803DEFFC;
+extern u8 lbl_803DD088;
+extern u8 curSeqNo;
+extern void Obj_TransformWorldPointToLocal(f32 *x, f32 *y, f32 *z, void *m, f32 wx, f32 wy, f32 wz);
+
+typedef struct CamRequest {
+    s16 rot[3];
+    u8 pad6[6];
+    f32 posB[3];
+    f32 pos[3];
+    u8 pad24[0x90];
+    f32 fov;
+    u8 padB8[0x8c];
+} CamRequest;
+
+typedef struct CamFloats {
+    f32 a;
+    f32 b;
+    s16 c;
+} CamFloats;
+
+typedef struct CamMode {
+    int mode;
+    u8 flag;
+} CamMode;
+
 typedef struct SeqByte136 {
     u8 modelSlot : 4;
     u8 pad3 : 1;
@@ -727,6 +767,187 @@ int seqDoSubCmd0B(u8 *obj, u8 *sourceObj, u8 *seq, u8 *cmdsArg, s16 xrot, int co
         cmds += 4;
     }
     return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void ObjSeq_updateCamera(void)
+{
+    CamRequest block;
+    CamFloats fblock;
+    CamMode mode47;
+    CamMode mode48;
+    void *groupObjs;
+    u8 *obj;
+    u8 *model;
+    u8 *camObj;
+    f32 x;
+    f32 y;
+    f32 z;
+    s16 pitch;
+    s16 yaw;
+    s16 roll;
+    int code;
+
+    obj = lbl_803DD0B8;
+    if (obj != NULL) {
+        model = *(u8 **)(obj + 0x4c);
+        if (lbl_803DD0F8 != 0) {
+            x = lbl_803DD0F4;
+            y = lbl_803DD0F0;
+            z = lbl_803DD0EC;
+        } else {
+            x = *(f32 *)(obj + 0x18);
+            y = *(f32 *)(obj + 0x1c);
+            z = *(f32 *)(obj + 0x20);
+        }
+        pitch = *(s16 *)obj;
+        yaw = *(s16 *)(obj + 2);
+        roll = *(s16 *)(obj + 4);
+        if (*(void **)(obj + 0x30) != NULL) {
+            pitch = (s16)(pitch + *(s16 *)*(u8 **)(obj + 0x30));
+        }
+        lbl_803DD0DC = lbl_803DEFC8;
+        if ((s8)lbl_803DD110 == 0) {
+            block.pos[0] = x;
+            block.pos[1] = y;
+            block.pos[2] = z;
+            block.rot[0] = (s16)(0x8000 - pitch);
+            block.rot[1] = (s16)-yaw;
+            block.rot[2] = roll;
+            if ((s8)lbl_803DD088 != 0) {
+                block.fov = lbl_803DD0D0;
+                lbl_803DB710 = lbl_803DD0D0;
+            } else {
+                block.fov = lbl_803DB710;
+            }
+            (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                0x4c, 0, 1, 0x144, &block, model[0x24], 0xff);
+            lbl_803DD110 = 1;
+        } else {
+            camObj = (u8 *)(*(void *(*)(void))(*(int *)(*gCameraInterface + 0xc)))();
+            *(f32 *)(camObj + 0x18) = x;
+            *(f32 *)(camObj + 0x1c) = y;
+            *(f32 *)(camObj + 0x20) = z;
+            Obj_TransformWorldPointToLocal((f32 *)(camObj + 0xc), (f32 *)(camObj + 0x10),
+                                           (f32 *)(camObj + 0x14), *(void **)(camObj + 0x30),
+                                           *(f32 *)(camObj + 0x18), *(f32 *)(camObj + 0x1c),
+                                           *(f32 *)(camObj + 0x20));
+            *(s16 *)camObj = (s16)(0x8000 - pitch);
+            *(s16 *)(camObj + 2) = (s16)-yaw;
+            *(s16 *)(camObj + 4) = roll;
+            if ((s8)lbl_803DD088 != 0) {
+                *(f32 *)(camObj + 0xb4) = lbl_803DD0D0;
+                lbl_803DB710 = lbl_803DD0D0;
+            } else {
+                *(f32 *)(camObj + 0xb4) = lbl_803DB710;
+            }
+            lbl_803DD0B0 = *(f32 *)(camObj + 0x18);
+            lbl_803DD0AC = *(f32 *)(camObj + 0x1c);
+            lbl_803DD0A8 = *(f32 *)(camObj + 0x20);
+            lbl_803DD0A0 = *(s16 *)camObj;
+            lbl_803DD09C = *(s16 *)(camObj + 2);
+            lbl_803DD098 = *(s16 *)(camObj + 4);
+            lbl_803DD0A4 = *(f32 *)(camObj + 0xb4);
+        }
+    } else {
+        if ((s8)lbl_803DD110 != 0) {
+            if (lbl_803DD064 == 0) {
+                switch (lbl_803DD10C) {
+                case 0x47:
+                    mode47.mode = lbl_803DD108;
+                    mode47.flag = (u8)lbl_803DD104;
+                    (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                        0x47, 1, 3, 8, &mode47, lbl_803DD100, 0xff);
+                    break;
+                case 0x48:
+                    mode48.mode = lbl_803DD108;
+                    code = lbl_803DD100;
+                    if (code == 0) {
+                        mode48.flag = 1;
+                    }
+                    (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                        0x48, 1, 3, 8, &mode48, code, 0xff);
+                    break;
+                case 0x4a:
+                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                        0x4a, 1, 0, 0, 0, lbl_803DD100, 0xff);
+                    break;
+                case 0x4c:
+                    block.posB[0] = lbl_803DD0B0;
+                    block.posB[1] = lbl_803DD0AC;
+                    block.posB[2] = lbl_803DD0A8;
+                    block.rot[0] = (s16)lbl_803DD0A0;
+                    block.rot[1] = (s16)lbl_803DD09C;
+                    block.rot[2] = (s16)lbl_803DD098;
+                    block.fov = lbl_803DD0A4;
+                    (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                        0x4c, 1, 0, 0x144, &block, 0, 0xff);
+                    break;
+                case 0x45:
+                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                        0x45, 1, 0, 0, 0, lbl_803DD100, 0xff);
+                    break;
+                case 0x44:
+                    if (lbl_803DD108 != 0) {
+                        fblock.a = lbl_803DEFF4;
+                        fblock.b = lbl_803DEFF8;
+                        fblock.c = 5;
+                        (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                            0x44, 1, 1, 0xc, &fblock, 0, 0xff);
+                    } else {
+                        fblock.a = lbl_803DEFF4;
+                        fblock.b = lbl_803DEFF8;
+                        fblock.c = 0x1e;
+                        (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                            0x44, 1, 0, 0xc, &fblock, 0, 0xff);
+                    }
+                    break;
+                case 0x49:
+                    (*(void (*)(int, int, int, int, void *, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                        0x49, 1, 0, lbl_803DD108, &lbl_803DD104, lbl_803DD100, 0xff);
+                    break;
+                case 0x53:
+                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                        0x53, 1, 0, 0, 0, 0, 0xff);
+                    break;
+                case 0x56:
+                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                        0x56, 1, lbl_803DD108, 0, 0, 0, 0);
+                    break;
+                case 0x57:
+                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                        0x57, 0, 3, 0, 0, 0, 0);
+                    (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x28)))(
+                        *(int *)ObjGroup_GetObjects(0xf, &groupObjs), 0);
+                    break;
+                default:
+                    if (lbl_803DD108 == 0) {
+                        lbl_803DD108 = 1;
+                    }
+                    (*(void (*)(int, int, int, int, int, int, int))(*(int *)(*gCameraInterface + 0x1c)))(
+                        0x42, 0, lbl_803DD108, 0, 0, lbl_803DD100, 0xff);
+                    break;
+                }
+            }
+            lbl_803DD110 = 0;
+            lbl_803DB710 = lbl_803DEFFC;
+            lbl_803DD108 = 1;
+            lbl_803DD100 = 0x5a;
+            lbl_803DD10C = 0x42;
+            curSeqNo = 0;
+        } else {
+            lbl_803DD108 = 1;
+            lbl_803DD100 = 0x5a;
+            lbl_803DD10C = 0x42;
+        }
+    }
+
+    lbl_803DD088 = 0;
+    lbl_803DD0B8 = NULL;
+    lbl_803DD0F8 = 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
