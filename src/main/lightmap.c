@@ -3104,7 +3104,7 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
 {
     int state[5];
     int countShifted;
-    int v;
+    u32 v;
     int byteOff;
     int* base;
     int newR;
@@ -3120,16 +3120,17 @@ void modelRenderFn_8005d4ec(int* p1, int* obj, float* p3)
     newR = shaderFn_8005e560(obj, state);
     state[4] += 4;
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
-    cursor = state[4] + 4;
+    state[4] += 4;
+    cursor = state[4];
     byteOff = cursor >> 3;
-    v = *(u8*)(state[0] + byteOff);
+    v = ((u8*)state[0])[byteOff];
     base = (int*)(state[0] + byteOff);
     v = v | ((u32)*(u8*)((char*)base + 1) << 8);
     v = v | ((u32)*(u8*)((char*)base + 2) << 16);
-    state[4] += 8;
+    state[4] += 4;
     nibble = (v >> (cursor & 7)) & 0xf;
     for (i = 0; i < nibble; i++) {
-        *(volatile int*)&state[4] += 8;
+        *(volatile int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
     shaderFn_8005e348(obj, newR, state, p3);
@@ -3147,7 +3148,7 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     int state[5];
     int countShifted;
     int newR;
-    int v;
+    u32 v;
     int byteOff;
     int* base;
     int cursor;
@@ -3163,20 +3164,70 @@ void modelRenderFn_8005d894(int* p1, int* obj, float* p3)
     newR = mapBlockRender_setShader(1, obj, state);
     state[4] += 4;
     mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
-    cursor = state[4] + 4;
+    state[4] += 4;
+    cursor = state[4];
     byteOff = cursor >> 3;
-    v = *(u8*)(state[0] + byteOff);
+    v = ((u8*)state[0])[byteOff];
     base = (int*)(state[0] + byteOff);
     v = v | ((u32)*(u8*)((char*)base + 1) << 8);
     v = v | ((u32)*(u8*)((char*)base + 2) << 16);
-    state[4] += 8;
+    state[4] += 4;
     nibble = (v >> (cursor & 7)) & 0xf;
     for (i = 0; i < nibble; i++) {
-        *(volatile int*)&state[4] += 8;
+        *(volatile int*)&state[4] = state[4] + 8;
     }
     state[4] += 4;
     mapBlockRender_callList(1, 1, obj, newR, state, p3);
     Camera_ApplyFullViewport();
+}
+#pragma scheduling reset
+
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
+extern void GXLoadTexMtxImm(f32 *m, int id, int type);
+extern void gxTextureSetupFn_8007cf7c(void);
+extern f32 lbl_80396850[12];
+extern f32 lbl_80396820[12];
+
+#pragma scheduling off
+void modelRenderFn_8005d69c(int* p1, int* obj, float* p3)
+{
+    int state[5];
+    f32 m[12];
+    int countShifted;
+    int newR;
+    u32 v;
+    int byteOff;
+    int* base;
+    int cursor;
+    int nibble;
+    int i;
+
+    PSMTXConcat(lbl_80396850, p3, m);
+    GXLoadTexMtxImm(m, 30, 0);
+    PSMTXConcat(lbl_80396820, p3, m);
+    GXLoadTexMtxImm(m, 33, 0);
+    gxTextureSetupFn_8007cf7c();
+    countShifted = (int)*(u16*)((char*)obj + 0x88) << 3;
+    modelRenderInstrsState_init(state, *(void**)((char*)obj + 0x80), countShifted, countShifted);
+    modelRenderInstrsState_setBit(state, (int)*(u16*)((char*)p1 + 0x14));
+    state[4] += 4;
+    newR = mapBlockRender_setShader(1, obj, state);
+    state[4] += 4;
+    mapBlockRender_setVtxDcrs(1, (int)obj, newR, (int)state);
+    state[4] += 4;
+    cursor = state[4];
+    byteOff = cursor >> 3;
+    v = ((u8*)state[0])[byteOff];
+    base = (int*)(state[0] + byteOff);
+    v = v | ((u32)*(u8*)((char*)base + 1) << 8);
+    v = v | ((u32)*(u8*)((char*)base + 2) << 16);
+    state[4] += 4;
+    nibble = (v >> (cursor & 7)) & 0xf;
+    for (i = 0; i < nibble; i++) {
+        *(volatile int*)&state[4] = state[4] + 8;
+    }
+    state[4] += 4;
+    mapBlockRender_callList(1, 1, obj, newR, state, p3);
 }
 #pragma scheduling reset
 
