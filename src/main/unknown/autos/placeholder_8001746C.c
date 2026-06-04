@@ -9172,7 +9172,7 @@ extern void *fileLoad(int id, int heap);
 extern void fileLoadToBuffer(int id, void *buf);
 extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
 extern void *Resource_Acquire(u32 id, u32 arg);
-extern void *loadCharacter(int a, int b, int c, int d, int e, int f);
+extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
 extern int textureLoad(int id, int flag);
 extern void *loadAnimation(int id, s16 a, s16 b, int flags);
 
@@ -9193,9 +9193,9 @@ void *loadAsset(void *reqVoid) {
             break;
         case 4:
             *(void **)req->f8 =
-                loadCharacter(*(int *)((u8 *)req + 0x18), *(int *)((u8 *)req + 0x1c),
+                loadCharacter(*(s16 **)((u8 *)req + 0x18), *(int *)((u8 *)req + 0x1c),
                               *(int *)((u8 *)req + 0x24), *(int *)((u8 *)req + 0x20),
-                              *(int *)((u8 *)req + 0x14), *(int *)((u8 *)req + 0x28));
+                              *(void **)((u8 *)req + 0x14), *(int *)((u8 *)req + 0x28));
             break;
         case 3:
             *(void **)req->f8 = (void *)textureLoad(req->f4, 0);
@@ -12568,7 +12568,7 @@ void *ObjModel_Load(int id, int arg2, int *outSize) {
 }
 
 extern void OSReport(char *fmt, ...);
-extern void *loadCharacter(int a, int b, int c, int d, int e, int f);
+extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused);
 extern void Obj_RegisterObject(void *obj, int b);
 extern char sObjSetupObjectLoadingLockedWarning[];
 extern char lbl_802CAC54[];
@@ -12581,7 +12581,7 @@ void *Obj_SetupObject(int a, int b, int c, int d, int e) {
         OSReport(sObjSetupObjectLoadingLockedWarning, d);
         return NULL;
     }
-    obj = loadCharacter(a, b, c, d, e, 0);
+    obj = loadCharacter((s16 *)a, b, c, d, (void *)e, 0);
     if (obj != NULL) {
         Obj_RegisterObject(obj, b);
         OSReport(lbl_802CAC54, *(int *)((u8 *)obj + 0x50) + 0x91);
@@ -12599,7 +12599,7 @@ void *loadObjectAtObject(u8 *src, int arg1) {
         OSReport(sObjSetupObjectLoadingLockedWarning, -1);
         obj = NULL;
     } else {
-        obj = loadCharacter(arg1, 5, type, -1, objF30, 0);
+        obj = loadCharacter((s16 *)arg1, 5, type, -1, (void *)objF30, 0);
         if (obj != NULL) {
             Obj_RegisterObject(obj, 5);
             OSReport(lbl_802CAC54, *(int *)((u8 *)obj + 0x50) + 0x91);
@@ -13596,4 +13596,359 @@ void mtxRotateByVec3s(f32 *mtx, void *transform) {
     mtx[14] = mtx[6] * y + mtx[2] * x + mtx[10] * z;
     mtx[15] = lbl_803DE7C4;
 }
+#pragma pop
+
+extern int lbl_803DCB9C;
+extern s16 *lbl_803DCBA0;
+extern char sObjUnknownTypeUsingDummyObjectWarning[];
+extern f64 lbl_803DE8B0;
+extern f64 lbl_803DE8A8;
+extern f32 lbl_803DE8CC;
+extern f32 lbl_803DE8D0;
+extern u8 *loadObjectFile(int id);
+extern int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags);
+extern void modelInitBones(f32 scale, void *model);
+extern int shadowInit(void *obj, int cursor, int arg);
+extern void debugPrintf(char *fmt, ...);
+extern int objCallback_80074d04();
+extern int modelCb_80073d04();
+extern int modelCb_80074518();
+
+typedef struct LoadedObj {
+    u8 pad00[0x06];
+    s16 flags06;
+    f32 scale;
+    f32 x;
+    f32 y;
+    f32 z;
+    u8 pad18[0x18];
+    void *parent;
+    u8 pad34[0x2];
+    u8 f36;
+    u8 pad37[0x5];
+    f32 f3c;
+    f32 f40;
+    s16 f44;
+    s16 seqId;
+    s16 typeId;
+    u8 pad4a[0x2];
+    s16 *data;
+    u8 *def;
+    void *f54;
+    u8 pad58[0x4];
+    int f5c;
+    int f60;
+    u8 pad64[0x4];
+    int **dll;
+    int f6c;
+    int f70;
+    int f74;
+    int f78;
+    u8 **models;
+    u8 pad80[0x22];
+    s16 fa2;
+    u8 pada4[0x4];
+    f32 cullDist;
+    s8 fac;
+    u8 padad[0x3];
+    u16 fb0;
+    s16 fb2;
+    s16 fb4;
+    u8 padb6[0x2];
+    int fb8;
+    u8 padbc[0x20];
+    int fdc;
+    u8 pade0[0x11];
+    u8 ff1;
+    s8 ff2;
+    u8 padf3[0x15];
+    int f108;
+} LoadedObj;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *parent, int unused) {
+    int size;
+    int offsets[20];
+    void *models[20];
+    LoadedObj tmpl;
+    LoadedObj *tp;
+    s16 seq;
+    int id;
+    u8 *def;
+    int fnFlags;
+    int (*fp)(void *);
+    int (*fp2)(void *, int);
+    int flags29;
+    int total;
+    int i;
+    int count;
+    int idx;
+    LoadedObj *obj;
+    int base;
+    int cursor;
+    u8 n;
+    u16 h;
+    u8 cb;
+    f32 max;
+    int m;
+    u32 v;
+    s16 seq2;
+    int sz;
+    int tmp;
+    int j;
+    int k;
+
+    seq = *data;
+    if (flags & 2) {
+        id = seq;
+    } else {
+        if (seq > lbl_803DCB9C) {
+            return NULL;
+        }
+        id = lbl_803DCBA0[seq];
+    }
+    memset(&tmpl, 0, 0x10c);
+    tp = &tmpl;
+    def = loadObjectFile(id);
+    tmpl.def = def;
+    if (def == NULL || (int)def == -1) {
+        debugPrintf(sObjUnknownTypeUsingDummyObjectWarning, id, *data, tmpl.seqId);
+        return NULL;
+    }
+    tmpl.f44 = *(s16 *)(def + 0x52);
+    tmpl.scale = *(f32 *)(def + 4);
+    tmpl.flags06 = 2;
+    if (*(u32 *)(def + 0x44) & 0x80) {
+        tmpl.flags06 = tmpl.flags06 | 0x80;
+    }
+    if (*(u32 *)(def + 0x44) & 0x40000) {
+        tmpl.fb0 = tmpl.fb0 | 0x80;
+    }
+    if (flags & 4) {
+        tmpl.flags06 = tmpl.flags06 | 0x2000;
+    }
+    tmpl.x = *(f32 *)(data + 4);
+    tmpl.y = *(f32 *)(data + 6);
+    tmpl.z = *(f32 *)(data + 8);
+    tmpl.typeId = (s16)id;
+    tmpl.data = data;
+    tmpl.seqId = seq;
+    tmpl.fb2 = (s16)arg3;
+    tmpl.fac = (s8)arg2;
+    tmpl.fa2 = -1;
+    tmpl.fb4 = -1;
+    tmpl.f36 = 0xff;
+    tmpl.fdc = 0;
+    tmpl.ff1 = 0xff;
+    tmpl.f3c = (f32)(int)(((u8 *)data)[6] << 3);
+    tmpl.f40 = (f32)(int)(((u8 *)data)[7] << 3);
+    n = (((u8 *)data)[5] & 0x18) >> 3;
+    tmpl.ff2 = n;
+    if (n == 0) {
+        tmpl.ff2 = *(s8 *)(tmpl.def + 0x8e);
+    } else {
+        tmpl.ff2 = n - 1;
+    }
+    tmpl.dll = NULL;
+    if ((int)*(s16 *)(def + 0x50) != -1) {
+        tmpl.dll = Resource_Acquire(*(s16 *)(def + 0x50) & 0xffff, 6);
+    }
+    switch (tmpl.seqId) {
+    case 0:
+    case 0x1f:
+        fnFlags = 0x1cb;
+        break;
+    default:
+        if (tmpl.dll != NULL && (int)(fp = (int (*)(void *))*(int *)(*(int *)tmpl.dll + 0x18)) != -1 && fp != NULL) {
+            fnFlags = fp(tp);
+        } else {
+            fnFlags = 0;
+        }
+        break;
+    }
+    if (*(u32 *)(def + 0x44) & 0x20) {
+        flags29 = fnFlags & ~1;
+    } else {
+        flags29 = fnFlags | 1;
+    }
+    if (*(s16 *)(def + 0x48) != 0) {
+        flags29 |= 2;
+    } else {
+        flags29 &= ~2;
+    }
+    if (*(s16 *)(def + 0x48) == 3) {
+        flags29 |= 0x8000;
+    }
+    if (*(u32 *)(def + 0x44) & 1) {
+        flags29 |= 0x200;
+    }
+    total = 0;
+    i = 0;
+    count = *(s8 *)(def + 0x55);
+    if (flags29 & 0x400) {
+        idx = (flags29 >> 0xb) & 0xf;
+        if (idx < count) {
+            models[idx] = ObjModel_Load(-(*(int **)(def + 8))[idx], flags29, &size);
+            offsets[idx] = 0;
+            total = size;
+        }
+    } else if (!(flags29 & 0x200)) {
+        for (; i < count; i++) {
+            models[i] = ObjModel_Load(-(*(int **)(def + 8))[i], flags29, &size);
+            offsets[i] = total;
+            total += size;
+        }
+    }
+    base = objGetTotalDataSize(tp, def, data, flags29);
+    obj = mmAlloc(base + total, 0xe, 0);
+    memcpy(obj, &tmpl, 0x10c);
+    memset((u8 *)obj + 0x10c, 0, base + total - 0x10c);
+    obj->models = (u8 **)(obj + 1);
+    *(u32 *)(obj->def + 0x44) |= 0x800000;
+    i = 0;
+    obj->f108 = 0;
+    if (flags29 & 0x400) {
+        idx = (flags29 >> 0xb) & 0xf;
+        if (idx < count) {
+            obj->models[idx] = (u8 *)obj + base + offsets[idx];
+            ObjModel_LoadAnimData(models[idx], flags29, (int)obj->models[idx]);
+            if (!(*(u16 *)(*(u8 **)obj->models[idx] + 2) & 0x8000)) {
+                *(u32 *)(obj->def + 0x44) &= 0xff7fffff;
+            }
+            ObjModel_LoadRenderOpTextures(obj->models[idx], (int)obj);
+            modelInitBones(obj->scale, obj->models[idx]);
+            if (*(u32 *)(obj->def + 0x44) & 0x800) {
+                ObjModel_SetRenderCallback(obj->models[idx], objCallback_80074d04);
+            } else {
+                cb = *(u8 *)(obj->def + 0x5f);
+                if (cb & 1) {
+                    ObjModel_SetRenderCallback(obj->models[idx], modelCb_80073d04);
+                } else if (cb & 0x80) {
+                    ObjModel_SetRenderCallback(obj->models[idx], modelCb_80074518);
+                }
+            }
+        }
+    } else if (!(flags29 & 0x200)) {
+        for (; i < count; i++) {
+            obj->models[i] = (u8 *)obj + base + offsets[i];
+            ObjModel_LoadAnimData(models[i], flags29, (int)obj->models[i]);
+            h = *(u16 *)(*(u8 **)obj->models[i] + 2);
+            if (!(h & 0x8000) && !(h & 0x4000)) {
+                *(u32 *)(obj->def + 0x44) &= 0xff7fffff;
+            }
+            ObjModel_LoadRenderOpTextures(obj->models[i], (int)obj);
+            modelInitBones(obj->scale, obj->models[i]);
+            if (*(u32 *)(obj->def + 0x44) & 0x800) {
+                ObjModel_SetRenderCallback(obj->models[i], objCallback_80074d04);
+            } else {
+                cb = *(u8 *)(obj->def + 0x5f);
+                if (cb & 1) {
+                    ObjModel_SetRenderCallback(obj->models[i], modelCb_80073d04);
+                } else if (cb & 0x80) {
+                    ObjModel_SetRenderCallback(obj->models[i], modelCb_80074518);
+                }
+            }
+        }
+    }
+    cursor = roundUpTo4((int)obj->models + *(s8 *)(def + 0x55) * 4);
+    switch (obj->seqId) {
+    case 0:
+    case 0x1f:
+        sz = 0x8e0;
+        break;
+    default:
+        if (obj->dll != NULL && (fp2 = (int (*)(void *, int))*(int *)(*(int *)obj->dll + 0x1c)) != NULL) {
+            sz = fp2(obj, cursor);
+        } else {
+            sz = 0;
+        }
+        break;
+    }
+    if (sz != 0) {
+        obj->fb8 = cursor;
+        cursor += sz;
+    } else {
+        obj->fb8 = 0;
+    }
+    if ((flags29 & 0x40) || (*(u32 *)(obj->def + 0x44) & 0x400000)) {
+        seq2 = obj->seqId;
+        tmp = roundUpTo4(cursor);
+        obj->f60 = tmp;
+        cursor = roundUpTo8(tmp + 8);
+        *(int *)(obj->f60 + 4) = cursor;
+        ObjAnim_LoadMoveEvents((u8 *)obj, seq2, (int *)obj->f60, 0, 1);
+        cursor += 0x50;
+    }
+    if ((flags29 & 0x100) && *(void **)obj->models != NULL) {
+        tmp = roundUpTo4(cursor);
+        obj->f5c = tmp;
+        cursor = roundUpTo8(tmp + 8);
+        *(int *)(obj->f5c + 4) = cursor;
+        cursor += 0x800;
+    }
+    if ((flags29 & 2) && *(s16 *)(def + 0x48) != 0) {
+        cursor = shadowInit(obj, cursor, 0);
+    }
+    max = lbl_803DE8CC;
+    i = 0;
+    for (; i < *(s8 *)(obj->def + 0x55); i++) {
+        m = *(int *)((u8 *)obj->models + i * 4);
+        if (m != 0) {
+            if ((f32)modelFileHeaderGetCullDistance(*(u8 **)m) > max) {
+                max = (f32)modelFileHeaderGetCullDistance(*(u8 **)m);
+            }
+        }
+    }
+    v = *(u8 *)(obj->def + 0x73);
+    if (v != 0) {
+        max = max * ((lbl_803DE8CC * (f32)v) / lbl_803DE8D0);
+    }
+    obj->cullDist = max;
+    if (*(u8 *)(def + 0x61) != 0) {
+        cursor = ObjHits_AllocObjectState(obj, cursor);
+        if (*(s8 *)(def + 0x65) & 8) {
+            cursor = ObjHitbox_AllocRotatedBounds(obj, cursor);
+        }
+    }
+    if (*(u8 *)(def + 0x5a) != 0) {
+        tmp = roundUpTo4(cursor);
+        obj->f6c = tmp;
+        cursor = tmp + *(u8 *)(def + 0x5a) * 0x12;
+    }
+    if (*(u8 *)(def + 0x59) != 0) {
+        tmp = roundUpTo4(cursor);
+        obj->f70 = tmp;
+        cursor = tmp + *(u8 *)(def + 0x59) * 0x10;
+    }
+    if (*(u8 *)(def + 0x72) != 0) {
+        tmp = roundUpTo4(cursor);
+        obj->f74 = tmp;
+        cursor = tmp + *(u8 *)(def + 0x72) * 0x18;
+    }
+    if (*(u8 *)(def + 0x61) != 0 && *(u8 *)(def + 0x66) != 0) {
+        tmp = roundUpTo4(cursor);
+        cursor = ObjHitReact_InitState(obj->seqId, (int)*(u8 **)obj->models, obj->f54, tmp, obj);
+    }
+    if (*(u8 *)(def + 0x72) != 0) {
+        obj->f78 = roundUpTo4(cursor);
+        i = 0;
+        k = 0;
+        j = 0;
+        for (; i < *(u8 *)(def + 0x72); i++) {
+            ((u8 *)obj->f78)[j + 4] = ((u8 *)*(int *)(def + 0x40))[k + 0x10];
+            ((u8 *)obj->f78)[j] = ((u8 *)*(int *)(def + 0x40))[k + 0xc];
+            ((u8 *)obj->f78)[j + 3] = ((u8 *)*(int *)(def + 0x40))[k + 0xf];
+            ((u8 *)obj->f78)[j + 1] = ((u8 *)*(int *)(def + 0x40))[k + 0xd];
+            ((u8 *)obj->f78)[j + 2] = ((u8 *)*(int *)(def + 0x40))[k + 0xe];
+            k += 0x18;
+            j += 5;
+        }
+    }
+    obj->parent = parent;
+    return obj;
+}
+#pragma dont_inline reset
 #pragma pop
