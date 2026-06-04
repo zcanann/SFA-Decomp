@@ -98,7 +98,7 @@ void fn_802788B4(McmdVoiceState *state, u32 skipFadeReset);
 extern u32 inpGetExCtrl(McmdVoiceState *state, u32 ctrl);
 extern void inpSetExCtrl(McmdVoiceState *state, u32 ctrl, s16 value);
 extern void voiceKill(u32 voice);
-extern u8 lbl_803BDA34[];
+extern u32 lbl_803BDA34[];
 extern void fn_8026F5B8(int state);
 extern int voiceIsRegistered(int state);
 extern int mcmdWait(McmdVoiceState *state, McmdCommandArgs *args);
@@ -106,7 +106,7 @@ extern int vidGetInternalId(u32 id);
 extern void (*synthMessageCallback)(u32 id);
 
 #define SYNTH_VOICE_STRIDE 0x404
-#define SYNTH_GLOBAL_REG(index) (*(u32 *)(lbl_803BDA34 + (index) * 4 - 0x40))
+#define SYNTH_GLOBAL_REG(index) (lbl_803BDA34[(index) - 0x10])
 
 /* 64-bit control-flag word overlaying inputFlags(hi)/outputFlags(lo). */
 #define MAC_CFLAGS(sv) (*(u64 *)&(sv)->inputFlags)
@@ -232,20 +232,14 @@ void SelectSource(McmdVoiceState *svoice, McmdInputSlot *dest, McmdCommandArgs *
 #pragma dont_inline on
 u32 varGet32(McmdVoiceState *state, u32 useExCtrl, u32 index)
 {
-    u32 value;
-
     if (useExCtrl != 0) {
-        value = inpGetExCtrl(state, index);
-        value &= 0xffff;
-    } else {
-        index &= 0x1f;
-        if (index < 0x10) {
-            value = state->localRegs[index];
-        } else {
-            value = SYNTH_GLOBAL_REG(index);
-        }
+        return (u16)inpGetExCtrl(state, index);
     }
-    return value;
+    index &= 0x1f;
+    if (index < 0x10) {
+        return state->localRegs[index];
+    }
+    return SYNTH_GLOBAL_REG(index);
 }
 
 /*
@@ -256,7 +250,7 @@ int varGet(McmdVoiceState *state, u32 useExCtrl, u32 index)
     u32 value;
 
     if (useExCtrl != 0) {
-        value = inpGetExCtrl(state, index) & 0xffff;
+        value = (u16)inpGetExCtrl(state, index);
     } else {
         index &= 0x1f;
         if (index < 0x10) {
@@ -275,14 +269,14 @@ void varSet32(McmdVoiceState *state, u32 useExCtrl, u32 index, u32 value)
 {
     if (useExCtrl != 0) {
         inpSetExCtrl(state, index, (s16)value);
-    } else {
-        index &= 0x1f;
-        if (index < 0x10) {
-            state->localRegs[index] = value;
-        } else {
-            SYNTH_GLOBAL_REG(index) = value;
-        }
+        return;
     }
+    index &= 0x1f;
+    if (index < 0x10) {
+        state->localRegs[index] = value;
+        return;
+    }
+    SYNTH_GLOBAL_REG(index) = value;
 }
 #pragma dont_inline reset
 
@@ -291,106 +285,78 @@ void varSet32(McmdVoiceState *state, u32 useExCtrl, u32 index, u32 value)
  */
 void mcmdPortamento(McmdVoiceState *state, McmdCommandArgs *args)
 {
-    u32 duration[2];
-    int mode;
+    u32 time;
 
-    state->portamentoMode = args->flags >> 0x10;
-    duration[0] = args->value >> 0x10;
-    if (((args->value >> 8) & 1) != 0) {
-        sndConvertMs(duration);
+    state->portamentoMode = (args->flags >> 0x10) & 0xff;
+    time = args->value >> 0x10;
+    if ((args->value >> 8) & 1) {
+        sndConvertMs(&time);
     } else {
-        sndConvertTicks(duration, (int)state);
+        sndConvertTicks(&time, (int)state);
     }
-    state->portamentoDuration = duration[0];
-    mode = (args->flags >> 8) & 0xff;
-    if (mode == 1) {
+
+    state->portamentoDuration = time;
+
+    switch ((args->flags >> 8) & 0xff) {
+    case 0:
         if (state->midiSlot != 0xff) {
-            inpSetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent, 0x7f);
+            inpSetMidiCtrl(0x41, state->midiSlot, state->midiEvent, 0);
         }
-    } else {
-        if (mode == 0) {
-            if (state->midiSlot != 0xff) {
-                inpSetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent, 0);
-            }
-            state->outputFlags &= ~MCMD_VOICE_PORTAMENTO_OUTPUT_FLAG;
-            state->inputFlags = state->inputFlags;
-            return;
+        MAC_CFLAGS(state) &= ~MAC_FLAG64(0, 0x400);
+        return;
+    case 1:
+        if (state->midiSlot != 0xff) {
+            inpSetMidiCtrl(0x41, state->midiSlot, state->midiEvent, 0x7f);
         }
-        if (mode > 2) {
-            return;
+    init_port:
+        if (!(MAC_CFLAGS(state) & MAC_FLAG64(0, 0x400))) {
+            fn_8026F5B8((int)state);
         }
-        if (state->midiSlot == 0xff) {
-            return;
+        state->outputFlags |= 0x400;
+        break;
+    case 2:
+        if (state->midiSlot != 0xff &&
+            (u16)inpGetMidiCtrl(0x41, state->midiSlot, state->midiEvent) > 0x1f80) {
+            goto init_port;
         }
-        if ((u16)inpGetMidiCtrl(MCMD_CTRL_PORTAMENTO, state->midiSlot, state->midiEvent) <=
-            0x1f80) {
-            return;
-        }
+        break;
     }
-    if ((state->outputFlags & MCMD_VOICE_PORTAMENTO_OUTPUT_FLAG) == 0) {
-        fn_8026F5B8((int)state);
-    }
-    state->outputFlags |= MCMD_VOICE_PORTAMENTO_OUTPUT_FLAG;
 }
 
 /*
- * Arithmetic command over synth registers.
+ * Perform 16-bit register arithmetic with saturation.
  */
 void mcmdVarCalculation(McmdVoiceState *state, McmdCommandArgs *args, u8 op)
 {
-    u32 command;
-    u32 operand;
-    int opValue;
-    s16 lhs;
-    s16 rhs;
-    int result;
+    s16 s1;
+    s16 s2;
+    s32 t;
 
-    operand = args->value;
-    command = args->flags;
-    lhs = (s16)varGet32(state, command >> 0x18, operand & 0xff);
-    opValue = op;
-    if (opValue == 4) {
-        rhs = (s16)(operand >> 8);
+    s1 = varGet32(state, args->flags >> 0x18, (u8)args->value);
+    if (op == 4) {
+        s2 = args->value >> 8;
     } else {
-        operand = args->value;
-        rhs = (s16)varGet32(state, (operand >> 8) & 0xff, (operand >> 0x10) & 0xff);
+        s2 = varGet32(state, (args->value >> 8) & 0xff, (args->value >> 0x10) & 0xff);
     }
 
-    opValue = op;
-    if (opValue == 2) {
-        result = lhs * rhs;
-    } else {
-        if (opValue < 2) {
-            if (opValue == 0) {
-                result = lhs + rhs;
-            } else {
-                result = lhs - rhs;
-                goto clamp;
-            }
-        } else if (opValue != 4) {
-            if (opValue < 4) {
-                if (rhs == 0) {
-                    result = 0;
-                } else {
-                    result = lhs / (int)rhs;
-                }
-            }
-            goto clamp;
-        } else {
-            result = lhs + rhs;
-        }
+    switch (op) {
+    case 4:
+    case 0:
+        t = s1 + s2;
+        break;
+    case 1:
+        t = s1 - s2;
+        break;
+    case 2:
+        t = s1 * s2;
+        break;
+    case 3:
+        t = s2 != 0 ? s1 / s2 : 0;
+        break;
     }
 
-clamp:
-    command = args->flags;
-    if (result < -0x8000) {
-        rhs = -0x8000;
-    } else if (result <= 0x7fff) {
-        rhs = (s16)result;
-    } else {
-        rhs = 0x7fff;
-    }
-    varSet32(state, (command >> 8) & 0xff, (command >> 0x10) & 0xff, (int)rhs);
+    varSet32(state, (args->flags >> 8) & 0xff, (args->flags >> 0x10) & 0xff,
+             (s16)(t < -0x8000 ? -0x8000 : t > 0x7fff ? 0x7fff : t));
 }
 
 /*
@@ -998,7 +964,7 @@ void macHandleActive(McmdVoiceState *sv)
                           ((u32)sv->priorityGroup << 0x18) | (sv->priorityValue >> 0xf));
             break;
         case 0x32: /* send flag */
-            *(u32 *)(lbl_803BDA34 + ((cmd >> 8) & 0xff) * 4) = (cmd >> 0x10) & 0xff;
+            lbl_803BDA34[(cmd >> 8) & 0xff] = (cmd >> 0x10) & 0xff;
             break;
         case 0x33: /* set pitch wheel range */
             sv->pitchBendRangeUp = (cmd >> 0x10) & 0xff;
