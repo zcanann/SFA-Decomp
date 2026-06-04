@@ -6927,3 +6927,37 @@ void dll_F7_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern s16 lbl_803DBD50[4];
+extern s16 *lbl_803DDAA4;
+extern void *textureLoad(int id, int flag);
+
+#pragma scheduling off
+#pragma peephole off
+void staff_initialise(void)
+{
+    s16 *p = (s16 *)lbl_803208A0;
+    int n = 0;
+    int i;
+    int j;
+    for (i = 0; i < 5; i++) {
+        for (j = 0; j < 7; j++) {
+            if (*p == 0) {
+                *p = 0xc3;
+            }
+            p++;
+        }
+        n += 6;
+    }
+    lbl_803DDAA4 = lbl_803DBD50;
+    if (lbl_803DDAA8[0] == NULL) {
+        for (i = 0; i < 2; i++) {
+            lbl_803DDAA8[i] = textureLoad(lbl_803DDAA4[i], 0);
+        }
+    }
+    if (lbl_803DDAA0 == NULL) {
+        lbl_803DDAA0 = (void *)Resource_Acquire(90, 1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
