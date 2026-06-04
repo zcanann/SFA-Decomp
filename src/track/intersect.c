@@ -2762,10 +2762,101 @@ void fn_80073AAC(void* texture, u32* colorA, u32* colorB)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 modelCb_80073d04(int param_1,int *param_2)
+#pragma peephole off
+#pragma scheduling off
+int modelCb_80073d04(u8 *obj, int *objB)
 {
-    return 0;
+    extern f32 lbl_803DEEDC, lbl_803DEEE4, lbl_803DEF34;
+    extern f32 gSynthDelayedActionWord0;
+    extern GXColor lbl_803DEEB4;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern int ObjModel_GetRenderOp(int model, int slot);
+    extern int* Shader_getLayer(int op, int slot);
+    extern int textureIdxToPtr(int idx);
+    extern void selectTexture(int tex, int slot);
+    extern void fn_8006C5CC(int* out);
+    GXColor colorB;
+    GXColor colorK;
+    int handle;
+    Mtx texMtx;
+    int model;
+    int tex;
+
+    colorB = lbl_803DEEB4;
+    model = objB[0];
+    tex = textureIdxToPtr(*Shader_getLayer(ObjModel_GetRenderOp(model, 0), 0));
+    texMtx[0][0] = lbl_803DEF34;
+    texMtx[0][1] = lbl_803DEEDC;
+    texMtx[0][2] = lbl_803DEEDC;
+    texMtx[0][3] = gSynthDelayedActionWord0;
+    texMtx[1][0] = lbl_803DEEDC;
+    texMtx[1][1] = lbl_803DEF34;
+    texMtx[1][2] = lbl_803DEEDC;
+    texMtx[1][3] = gSynthDelayedActionWord0;
+    texMtx[2][0] = lbl_803DEEDC;
+    texMtx[2][1] = lbl_803DEEDC;
+    texMtx[2][2] = lbl_803DEEDC;
+    texMtx[2][3] = lbl_803DEEE4;
+    GXLoadTexMtxImm(texMtx, 0x55, 0);
+    GXSetTexCoordGen2(0, 1, 1, 0x1e, 1, 0x55);
+    fn_8006C5CC(&handle);
+    selectTexture(handle, 0);
+    colorK.a = obj[0x37];
+    GXSetTevKColor(0, colorK);
+    GXSetTevKAlphaSel(1, 0x1c);
+    GXSetTevColor(1, colorB);
+    GXSetNumIndStages(0);
+    GXSetNumTexGens(2);
+    GXSetNumTevStages(2);
+    GXSetTevDirect(0);
+    if (*(u8 *)(model + 0x24) & 2) {
+        GXSetNumChans(1);
+        GXSetChanCtrl(4, 0, 0, 1, 0, 0, 2);
+        GXSetTevOrder(0, 0, 0, 4);
+        GXSetTevAlphaIn(0, 7, 4, 5, 5);
+        GXSetBlendMode(1, 4, 1, 5);
+    } else {
+        GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
+        GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+        GXSetNumChans(0);
+        GXSetTevOrder(0, 0, 0, 0xff);
+        GXSetTevAlphaIn(0, 4, 7, 7, 1);
+        GXSetBlendMode(1, 4, 5, 5);
+    }
+    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 0xf);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 1, 0, 0, 1, 0);
+    GXSetTexCoordGen2(1, 1, 4, 0x3c, 0, 0x7d);
+    selectTexture(tex, 1);
+    GXSetTevDirect(1);
+    GXSetTevOrder(1, 1, 1, 0xff);
+    GXSetTevColorIn(1, 2, 0xf, 0xf, 8);
+    GXSetTevAlphaIn(1, 7, 0, 6, 7);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 0, 1, 0);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    GXSetCullMode(2);
+    return 1;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
@@ -2780,10 +2871,87 @@ undefined4 modelCb_80073d04(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 moonFxCb_80074110(int param_1,int *param_2,int param_3)
+#pragma peephole off
+#pragma scheduling off
+int moonFxCb_80074110(u8 *obj, int *objB, int slot)
 {
-    return 0;
+    extern f32 lbl_803DEEDC, lbl_803DEF38;
+    extern u8 lbl_803DD010;
+    extern u8 lbl_803DD012, lbl_803DD018, lbl_803DD01A;
+    extern u8 lbl_803DD011, lbl_803DD019;
+    extern int lbl_803DD014;
+    extern int ObjModel_GetRenderOp(int model, int slot);
+    extern int* Shader_getLayer(int op, int slot);
+    extern int textureIdxToPtr(int idx);
+    extern void selectTexture(int tex, int slot);
+    extern int GameBit_Get(int bit);
+    GXColor colorK;
+    GXColor colorFog;
+    Mtx mtx;
+    int op;
+    int tex;
+    f32 tx;
+
+    op = ObjModel_GetRenderOp(objB[0], slot);
+    tex = textureIdxToPtr(*Shader_getLayer(op, 0));
+    GXSetTexCoordGen2(0, 1, 4, 0x3c, 0, 0x7d);
+    lbl_803DD010 = GameBit_Get(0x2ba);
+    tx = (f32)lbl_803DD010 / lbl_803DEF38;
+    PSMTXTrans(mtx, tx, lbl_803DEEDC, lbl_803DEEDC);
+    GXLoadTexMtxImm(mtx, 0x1e, 1);
+    GXSetTexCoordGen2(1, 1, 4, 0x1e, 0, 0x7d);
+    GXSetNumTexGens(2);
+    GXSetNumTevStages(3);
+    GXSetNumIndStages(0);
+    selectTexture(tex, 0);
+    colorK.a = (*(u8 *)(op + 0xc) * obj[0x37]) >> 8;
+    GXSetTevKColor(0, colorK);
+    GXSetTevKAlphaSel(0, 0x1c);
+    GXSetTevDirect(0);
+    GXSetTevOrder(0, 0, 0, 0xff);
+    GXSetTevColorIn(0, 0xf, 0xf, 0xf, 8);
+    GXSetTevAlphaIn(0, 7, 4, 6, 7);
+    GXSetTevSwapMode(0, 0, 0);
+    GXSetTevColorOp(0, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(0, 0, 0, 0, 1, 0);
+    colorFog.a = 0x3e;
+    GXSetTevKColor(1, colorFog);
+    GXSetTevKAlphaSel(1, 0x1d);
+    GXSetTevDirect(1);
+    GXSetTevOrder(1, 1, 0, 0xff);
+    GXSetTevColorIn(1, 0xf, 0xf, 0xf, 0);
+    GXSetTevAlphaIn(1, 7, 6, 4, 7);
+    GXSetTevSwapMode(1, 0, 0);
+    GXSetTevColorOp(1, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(1, 0, 0, 2, 1, 1);
+    GXSetTevDirect(2);
+    GXSetTevOrder(2, 0xff, 0xff, 0xff);
+    GXSetTevColorIn(2, 0xf, 0xf, 0xf, 0);
+    GXSetTevAlphaIn(2, 0, 7, 1, 7);
+    GXSetTevSwapMode(2, 0, 0);
+    GXSetTevColorOp(2, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(2, 0, 0, 0, 1, 0);
+    GXSetBlendMode(1, 4, 5, 5);
+    if ((u32)lbl_803DD018 != 1 || lbl_803DD014 != 3 ||
+        (u32)lbl_803DD012 != 0 || lbl_803DD01A == 0) {
+        GXSetZMode(1, 3, 0);
+        lbl_803DD018 = 1;
+        lbl_803DD014 = 3;
+        lbl_803DD012 = 0;
+        lbl_803DD01A = 1;
+    }
+    GXSetAlphaCompare(7, 0, 0, 7, 0);
+    if ((u32)lbl_803DD011 != 1 || (u32)lbl_803DD019 == 0) {
+        GXSetZCompLoc(1);
+        lbl_803DD011 = 1;
+        lbl_803DD019 = 1;
+    }
+    GXSetCullMode(0);
+    GXSetFog(0, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, lbl_803DEEDC, colorFog);
+    return 1;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--
