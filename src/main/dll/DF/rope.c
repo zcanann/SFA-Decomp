@@ -149,7 +149,7 @@ extern f32 lbl_803E4CE8;
 extern f32 lbl_803E4CEC;
 extern f64 lbl_803E4CF8;
 extern f32 lbl_803E4D20;
-extern int curveFn_80010320(int a, f32 f);
+extern int Curve_AdvanceAlongPath(int a, f32 f);
 extern int getAngle(f32 dx, f32 dy);
 extern int Obj_GetPlayerObject(void);
 extern int *gRomCurveInterface;
@@ -185,7 +185,7 @@ void dimbossgut2_updateTracking(int obj, int state)
   curve = *(int *)(state + 0x40c);
   r30v = *(int *)(state + 0x3dc);
   if ((*(u16 *)(state + 0x400) & 8) != 0) {
-    if ((curveFn_80010320(r30v, *(f32 *)(curve + 0x10)) != 0) || (*(int *)(r30v + 0x10) != 0)) {
+    if ((Curve_AdvanceAlongPath(r30v, *(f32 *)(curve + 0x10)) != 0) || (*(int *)(r30v + 0x10) != 0)) {
       if ((u8)(*((u8 (***)(int))gRomCurveInterface))[0x24](r30v) != 0) {
         *(u16 *)(state + 0x400) = *(u16 *)(state + 0x400) & ~0x8;
       }

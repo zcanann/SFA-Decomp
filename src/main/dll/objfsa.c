@@ -4795,7 +4795,7 @@ extern f32 lbl_803E05C8;
 extern f32 lbl_803E05CC;
 extern f32 lbl_803E05F0;
 extern f32 lbl_803E05F4;
-extern int curveFn_80010320(float *p, f32 dt);
+extern int Curve_AdvanceAlongPath(float *p, f32 dt);
 #pragma scheduling off
 #pragma peephole off
 void player_init(int unused, void *obj, int a, int b) {
@@ -5405,9 +5405,9 @@ u8 RomCurve_goNextPoint(float *state) {
         curvesSetupMoveNetworkCurve(state);
     }
     if (*(s32 *)(stateBytes + 0x80) == 0) {
-        ((void (*)(float *, double))curveFn_80010320)(state, gFloatOne);
+        ((void (*)(float *, double))Curve_AdvanceAlongPath)(state, gFloatOne);
     } else {
-        ((void (*)(float *, double))curveFn_80010320)(state, gFloatNegOne);
+        ((void (*)(float *, double))Curve_AdvanceAlongPath)(state, gFloatNegOne);
     }
     return 0;
 }
@@ -5495,9 +5495,9 @@ int RomCurve_func29(float *state, int pickIdx)
     }
 
     if (*(s32 *)(stateBytes + 0x80) != 0) {
-        ((void (*)(float *, double))curveFn_80010320)(state, gFloatNegOne);
+        ((void (*)(float *, double))Curve_AdvanceAlongPath)(state, gFloatNegOne);
     } else {
-        ((void (*)(float *, double))curveFn_80010320)(state, gFloatOne);
+        ((void (*)(float *, double))Curve_AdvanceAlongPath)(state, gFloatOne);
     }
 
     return 0;
@@ -5800,7 +5800,7 @@ void RomCurve_stepClamped(float *state, f32 dt) {
     } else if (*state >= lbl_803E05C8) {
         *state = lbl_803E05CC;
     }
-    curveFn_80010320(state, dt);
+    Curve_AdvanceAlongPath(state, dt);
 }
 #pragma scheduling reset
 

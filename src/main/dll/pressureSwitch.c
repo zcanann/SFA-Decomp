@@ -693,7 +693,7 @@ extern f32 playerMapOffsetZ;
 extern MapEventInterface **gMapEventInterface;
 extern int Obj_GetPlayerObject(void);
 extern f32 Vec_distance(void *a, void *b);
-extern int curveFn_80010320(int curve, f32 t);
+extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void objLightFn_8009a1dc(int obj, f32 radius, void *pos, int type, int flags);
 extern f32 sqrtf(f32 x);
@@ -745,7 +745,7 @@ void fn_8014E1DC(int obj, int *state) {
     curve = state[0];
     flags = (unsigned char *)state + 0x26;
 
-    if (((curveFn_80010320(curve, *(f32 *)(state + 2)) != 0) ||
+    if (((Curve_AdvanceAlongPath(curve, *(f32 *)(state + 2)) != 0) ||
          (*(int *)(curve + 0x10) != *(int *)&lbl_803DDA58)) &&
         ((*(int (**)(int))(*(int *)gRomCurveInterface + 0x90))(curve) != 0) &&
         ((*(int (**)(int, f32, int, int *, int))(*(int *)gRomCurveInterface + 0x8c))
@@ -958,7 +958,7 @@ void fn_8014EE8C(int obj, SwarmBaddieState *state)
     PressureSwitchIntToDouble angleAsDouble;
 
     curve = state->curve;
-    done = curveFn_80010320(curve, state->curveStep);
+    done = Curve_AdvanceAlongPath(curve, state->curveStep);
     if (((done != 0) || (*(int *)(curve + 0x10) != lbl_803DDA60)) &&
         ((*(u8(**)(int))(*gRomCurveInterface + 0x90))(curve) != 0) &&
         ((*(u8(**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
@@ -1049,7 +1049,7 @@ void fn_8014F620(int obj, int *state)
         CONCAT44(0x43300000, (s32)*(s16 *)((u8 *)state + 0x26) ^ 0x80000000);
     wave = fn_80293E80((lbl_803E26DC * (f32)(angleAsDouble.value - lbl_803E2700)) /
                        lbl_803E26E0);
-    done = curveFn_80010320(curve, *(f32 *)(state + 2) * (lbl_803E26D8 + wave));
+    done = Curve_AdvanceAlongPath(curve, *(f32 *)(state + 2) * (lbl_803E26D8 + wave));
     if (((done != 0) || (*(int *)(curve + 0x10) != lbl_803DDA68)) &&
         ((*(u8(**)(int))(*gRomCurveInterface + 0x90))(curve) != 0) &&
         ((*(u8(**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(

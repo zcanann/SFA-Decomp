@@ -579,7 +579,7 @@ extern int lbl_803DBF98;
 extern int lbl_803DBF9C;
 extern int lbl_803DBFA0;
 extern int lbl_803DBFA4;
-extern int curveFn_80010320(u8 *cv, f32 t);
+extern int Curve_AdvanceAlongPath(u8 *cv, f32 t);
 extern void *gRomCurveInterface;
 extern void ObjAnim_SampleRootCurvePhase(short *obj, u8 *p2, f32 speed);
 extern int getAngle(f32 a, f32 b);
@@ -615,7 +615,7 @@ void fn_801CEA14(short *obj, u8 *st, u8 *p3) {
     case 8:
     {
         u8 *cv = st + 0x5c;
-        if (curveFn_80010320(cv, *(f32 *)(st + 0x54)) != 0 || *(int *)(cv + 0x10) != 0) {
+        if (Curve_AdvanceAlongPath(cv, *(f32 *)(st + 0x54)) != 0 || *(int *)(cv + 0x10) != 0) {
             ((void (*)(u8 *))((void **)*(void **)gRomCurveInterface)[0x90 / 4])(cv);
         }
         {

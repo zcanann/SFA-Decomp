@@ -1412,7 +1412,7 @@ void cloudprisoncontrol_update(int obj)
 
 extern int findRomCurvePointNearObject(int obj, int sel, int p3, int p4);
 extern int fn_8019B1D8(int obj, void *buf, f32 t, int p4);
-extern int curveFn_80010320(int p1);
+extern int Curve_AdvanceAlongPath(int p1);
 extern int hitDetectFn_800658a4(f32 x, f32 y, f32 z, int obj, f32 *out, int p6);
 extern void ObjAnim_SampleRootCurvePhase(int obj, f32 t, int p3);
 extern s16 getAngle(f32 a, f32 b);
@@ -1461,7 +1461,7 @@ int fn_8019AF64(int obj, int p2, f32 t, int p3, int p4)
         }
     } else {
         ret = 0;
-        if (curveFn_80010320(p2) != 0 || *(int *)(p2 + 0x10) != 0) {
+        if (Curve_AdvanceAlongPath(p2) != 0 || *(int *)(p2 + 0x10) != 0) {
             ret = (u8)(*(code *)(*gRomCurveInterface + 0x90))(p2);
         }
         *(f32 *)(obj + 0xc) = *(f32 *)(p2 + 0x68);

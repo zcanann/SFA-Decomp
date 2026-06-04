@@ -1851,7 +1851,7 @@ void dll_1D6_update(int *obj)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int curveFn_80010320(int *extra, f32 t);
+extern int Curve_AdvanceAlongPath(int *extra, f32 t);
 extern void curveFn_80010d54(void);
 extern void curveFn_80010dc0(void);
 extern void curvesMove(int *extra);
@@ -1968,7 +1968,7 @@ void dim2snowball_update(int *obj)
             }
         }
     } else {
-        int done = curveFn_80010320(extra, lbl_803E4AC0);
+        int done = Curve_AdvanceAlongPath(extra, lbl_803E4AC0);
         *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)extra + 0x68);
         *(f32 *)((char *)obj + 0x10) = (f32)(lbl_803E4AC8 + *(f32 *)((char *)extra + 0x6c));
         *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)extra + 0x70);

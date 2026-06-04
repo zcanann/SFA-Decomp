@@ -925,7 +925,7 @@ extern f32 lbl_803E28D0;
 extern int* gRomCurveInterface;
 extern int lbl_803DBCB8;
 extern f32 timeDelta;
-extern int curveFn_80010320(int* curve, f32 t);
+extern int Curve_AdvanceAlongPath(int* curve, f32 t);
 extern void fn_8014CF7C(int obj, int state, int p3, int p4, f32 f1, f32 f2);
 extern void fn_8014C678(int obj, int state, void* vec, f32 f1, f32 f2, f32 f3, int p6);
 extern void fn_8014CD1C(int obj, int state, int p3, f32 f1, f32 f2, int p6);
@@ -945,7 +945,7 @@ void fn_80153040(int obj, int state)
         *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x80;
     }
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
-        if (curveFn_80010320(curve, *(f32*)(state + 0x2fc)) != 0 || curve[0x10/4] != 0) {
+        if (Curve_AdvanceAlongPath(curve, *(f32*)(state + 0x2fc)) != 0 || curve[0x10/4] != 0) {
             if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
                 if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
                         *(int*)state, obj, lbl_803E28B8, &lbl_803DBCB8, -1, *(void**)gRomCurveInterface) != 0) {
@@ -1184,7 +1184,7 @@ void fn_80153248(int obj, int state)
         Sfx_PlayFromObject(obj, SFXfox_climbgrunt3);
     }
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
-        if (curveFn_80010320(curve, lbl_803E28D4 * *(f32*)(state + 0x2fc)) != 0
+        if (Curve_AdvanceAlongPath(curve, lbl_803E28D4 * *(f32*)(state + 0x2fc)) != 0
             || curve[0x10/4] != 0) {
             if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
                 if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
@@ -1416,7 +1416,7 @@ void fn_80153E0C(int obj, int state)
     *(u8*)(state + 0x33a) = 0;
     *(f32*)(state + 0x328) = lbl_803E294C;
     if ((*(u32*)(state + 0x2dc) & 0x2000) != 0) {
-        if (curveFn_80010320(curve, *(f32*)(state + 0x2fc)) != 0 || curve[0x10/4] != 0) {
+        if (Curve_AdvanceAlongPath(curve, *(f32*)(state + 0x2fc)) != 0 || curve[0x10/4] != 0) {
             if ((u8)((u8(*)(int*))((void**)*gRomCurveInterface)[0x90/4])(curve) != 0) {
                 if ((u8)((u8(*)(int, int, f32, int*, int, void*))((void**)*gRomCurveInterface)[0x8c/4])(
                         *(int*)state, obj, lbl_803E2950, &lbl_803DBCC8, -1, *(void**)gRomCurveInterface) != 0) {

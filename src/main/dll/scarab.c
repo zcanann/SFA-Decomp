@@ -3308,7 +3308,7 @@ void dll_CB_init(int *obj, u8 *params, int extra) {
 #pragma scheduling reset
 
 extern int fn_8016083C(int *obj, u8 *sub, u8 *sub2);
-extern f32 curveFn_80010320(int *p, f32 t);
+extern f32 Curve_AdvanceAlongPath(int *p, f32 t);
 extern int getAngle(f32 a, f32 b);
 extern f32 lbl_803E2E98;
 
@@ -3341,7 +3341,7 @@ void dll_CB_update(int *obj) {
     fn_8016083C(obj, sub, sub);
     path = *(int**)(sub + 0x3dc);
     if ((*(u16*)(sub + 0x400) & 8) == 0) return;
-    if (curveFn_80010320(path, *(f32*)(sub + 0x280)) != 0.0f || path[4] != 0) {
+    if (Curve_AdvanceAlongPath(path, *(f32*)(sub + 0x280)) != 0.0f || path[4] != 0) {
         if ((u8)((int(*)(int*))((int**)*(int**)gRomCurveInterface)[36])(path) != 0) {
             *(u16*)(sub + 0x400) = (u16)(*(u16*)(sub + 0x400) & ~8);
         }

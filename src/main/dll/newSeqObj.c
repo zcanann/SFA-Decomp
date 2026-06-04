@@ -261,7 +261,7 @@ void fn_80150EDC(void *p1, void *p2) {
  * 16-stride anim chain, curve chase with speed/turn shaping, idle anims. */
 
 extern void sidekickToy_updateCurveTargetLatch(int *obj);
-extern int curveFn_80010320(u8 *curve, f32 t);
+extern int Curve_AdvanceAlongPath(u8 *curve, f32 t);
 extern int *gRomCurveInterface;
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 a, f32 b);
@@ -350,7 +350,7 @@ void fn_80150910(int *obj, u8 *state)
         if (*(f32 *)(state + 0x310) < lbl_803E2780) {
             *(f32 *)(state + 0x310) = lbl_803E2780;
         }
-        if (curveFn_80010320(path, *(f32 *)(state + 0x310)) != 0 || *(int *)(path + 0x10) != 0) {
+        if (Curve_AdvanceAlongPath(path, *(f32 *)(state + 0x310)) != 0 || *(int *)(path + 0x10) != 0) {
             if ((*(u8 (**)(u8 *))(*(int *)gRomCurveInterface + 0x90))(path) != 0) {
                 sidekickToy_updateCurveTargetLatch(obj);
             }

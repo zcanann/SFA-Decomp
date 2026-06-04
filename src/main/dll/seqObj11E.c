@@ -221,7 +221,7 @@ void fn_80152440(int obj, int p, int p3, int msg)
 extern int fn_80152370(int obj, int p2);
 extern void Obj_FreeObject(int *obj);
 extern void Sfx_StopObjectChannel(int *obj, int channel);
-extern int curveFn_80010320(u8 *curve, f32 t);
+extern int Curve_AdvanceAlongPath(u8 *curve, f32 t);
 extern int *gRomCurveInterface;
 extern u8 lbl_803DBCA8;
 extern int Sfx_IsPlayingFromObject(int *obj, int sfxId);
@@ -291,7 +291,7 @@ void fn_80152514(int *obj, u8 *state)
     if (*(u32 *)(state + 0x2dc) & 0x2000) {
         int step;
 
-        if (curveFn_80010320(path, *(f32 *)(state + 0x2fc)) != 0 || *(int *)(path + 0x10) != 0) {
+        if (Curve_AdvanceAlongPath(path, *(f32 *)(state + 0x2fc)) != 0 || *(int *)(path + 0x10) != 0) {
             if ((*(u8 (**)(u8 *))(*(int *)gRomCurveInterface + 0x90))(path) != 0) {
                 if ((*(u8 (**)(u8 *, int *, f32, u8 *, int))(*(int *)gRomCurveInterface + 0x8c))(
                         *(u8 **)state, obj, lbl_803E2824, &lbl_803DBCA8, -1) != 0) {

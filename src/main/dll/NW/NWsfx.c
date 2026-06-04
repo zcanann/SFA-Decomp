@@ -10,7 +10,7 @@ extern void *Obj_GetPlayerObject(void);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
-extern int curveFn_80010320(u8 *curve, f32 t);
+extern int Curve_AdvanceAlongPath(u8 *curve, f32 t);
 extern void Sfx_PlayFromObject(u8 *obj, int sfxId);
 extern void Sfx_KeepAliveLoopedObjectSound(u8 *obj, int sfxId);
 extern void ObjHits_ClearSourceMask(u8 *obj, int mask);
@@ -108,7 +108,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                         dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
                         dz = *(f32 *)(state + 0x70) - *(f32 *)(obj + 0x14);
                         if (dx * dx + dz * dz < rangeSq) {
-                            if (curveFn_80010320(state, *(f32 *)(state + 0x120)) != 0 ||
+                            if (Curve_AdvanceAlongPath(state, *(f32 *)(state + 0x120)) != 0 ||
                                 *(int *)(state + 0x10) != 0) {
                                 (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
                             }
@@ -180,7 +180,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                             dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
                             dz = *(f32 *)(state + 0x70) - *(f32 *)(obj + 0x14);
                             if (dx * dx + dz * dz < rangeSq) {
-                                if (curveFn_80010320(state, *(f32 *)(state + 0x120)) != 0 ||
+                                if (Curve_AdvanceAlongPath(state, *(f32 *)(state + 0x120)) != 0 ||
                                     *(int *)(state + 0x10) != 0) {
                                     (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
                                 }
@@ -203,7 +203,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                             dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
                             dz = *(f32 *)(state + 0x70) - *(f32 *)(obj + 0x14);
                             if (dx * dx + dz * dz < rangeSq) {
-                                if (curveFn_80010320(state, *(f32 *)(state + 0x120)) != 0 ||
+                                if (Curve_AdvanceAlongPath(state, *(f32 *)(state + 0x120)) != 0 ||
                                     *(int *)(state + 0x10) != 0) {
                                     (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
                                 }
@@ -236,7 +236,7 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
                     dx = *(f32 *)(state + 0x68) - *(f32 *)(obj + 0xc);
                     dz = *(f32 *)(state + 0x70) - *(f32 *)(obj + 0x14);
                     if (dx * dx + dz * dz < rangeSq) {
-                        if (curveFn_80010320(state, *(f32 *)(state + 0x120)) != 0 ||
+                        if (Curve_AdvanceAlongPath(state, *(f32 *)(state + 0x120)) != 0 ||
                             *(int *)(state + 0x10) != 0) {
                             (*(code *)(*(int *)gRomCurveInterface + 0x90))(state);
                         }

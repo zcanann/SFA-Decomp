@@ -3492,7 +3492,7 @@ typedef struct {
 
 extern int* gRomCurveInterface;
 extern char lbl_803DBCF0;
-extern int curveFn_80010320(int p, f32 v);
+extern int Curve_AdvanceAlongPath(int p, f32 v);
 extern void ObjAnim_SetCurrentMove(s16* obj, int move, f32 blend, int flag);
 extern u8 lbl_8031FB48[];
 extern f32 lbl_803E2BA0;
@@ -3591,7 +3591,7 @@ void fn_80158494(s16* obj, u8* state)
                     *(f32*)(state + 0x310) = lbl_803E2BBC;
                 }
             }
-            if ((curveFn_80010320(base, *(f32*)(state + 0x310)) != 0 || *(int*)(base + 0x10) != 0)
+            if ((Curve_AdvanceAlongPath(base, *(f32*)(state + 0x310)) != 0 || *(int*)(base + 0x10) != 0)
                 && ((u8(*)(int))((int*)*gRomCurveInterface)[0x90/4])(base) != 0
                 && ((u8(*)(int, s16*, f32, void*, int))((int*)*gRomCurveInterface)[0x8c/4])(
                        *(int*)state, obj, lbl_803E2BC0, &lbl_803DBCF0, -1) != 0) {
@@ -3939,7 +3939,7 @@ void fn_80159958(s16* obj, u8* state)
         } else if (t > lbl_803E2C3C) {
             t = lbl_803E2C3C;
         }
-        if ((curveFn_80010320(base, *(f32*)(state + 0x2fc) * t) != 0 || *(int*)(base + 0x10) != 0)
+        if ((Curve_AdvanceAlongPath(base, *(f32*)(state + 0x2fc) * t) != 0 || *(int*)(base + 0x10) != 0)
             && ((u8(*)(int))((int*)*gRomCurveInterface)[0x90/4])(base) != 0
             && ((u8(*)(int, s16*, f32, void*, int))((int*)*gRomCurveInterface)[0x8c/4])(
                    *(int*)state, obj, lbl_803E2C44, &lbl_803DBCF8, -1) != 0) {

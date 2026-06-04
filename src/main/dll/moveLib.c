@@ -1749,7 +1749,7 @@ u8 dll_19_func08(int obj, char *st, f32 dist)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int curveFn_80010320(int curve);
+extern int Curve_AdvanceAlongPath(int curve);
 extern int ObjAnim_SampleRootCurvePhase(int objAnim, f32 distance, f32 *phaseOut);
 extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32 *out, int flag);
 extern f32 lbl_803E1CB0;
@@ -1784,7 +1784,7 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32 *d, int *fla
         }
     } else {
         hit = 0;
-        if (curveFn_80010320(curve) != 0 || *(int *)(curve + 0x10) != 0) {
+        if (Curve_AdvanceAlongPath(curve) != 0 || *(int *)(curve + 0x10) != 0) {
             hit = (*(u8 (*)(int))(*(int *)(*gRomCurveInterface + 0x90)))(curve);
         }
         *(f32 *)(obj + 0xc) = *(f32 *)(curve + 0x68);

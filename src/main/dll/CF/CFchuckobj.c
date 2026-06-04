@@ -31,7 +31,7 @@ extern void objfx_spawnArcedBurst(int obj, int enabled, f32 radius, int particle
 extern undefined4 FUN_800810f8();
 extern undefined4 FUN_8011e868();
 extern int Obj_GetPlayerObject(void);
-extern int curveFn_80010320(int curve, f32 progress);
+extern int Curve_AdvanceAlongPath(int curve, f32 progress);
 extern int fxemit_SeqFn(int obj, int unused, int events);
 extern void fxemit_emitEffect(int obj);
 extern void getTabEntry(void* dst, int fileId, int offset, int size);
@@ -1359,7 +1359,7 @@ void lfxemitter_update(int obj)
     *(s16*)(obj + 2) = *(s16*)(obj + 2) + *(s16*)(state + 0x11a);
 
     if ((*(u8*)(state + 0x120) & 1) != 0) {
-        if ((curveFn_80010320(state, *(f32*)(state + 0x10c)) != 0) ||
+        if ((Curve_AdvanceAlongPath(state, *(f32*)(state + 0x10c)) != 0) ||
             (*(int*)(state + 0x10) != 0)) {
             (*(void (**)(int))(*(int*)(*gRomCurveInterface) + 0x90))(state);
         }

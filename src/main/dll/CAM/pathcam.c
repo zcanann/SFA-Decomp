@@ -13,7 +13,7 @@ extern s16 getAngle(f32 dx,f32 dz);
 extern void *mmAlloc(int size,int heap,int flags);
 extern undefined4 camcontrol_getTargetPosition();
 extern f32 curveFn_80010dc0(f32 param_1, f32 *param_2, f32 *param_3);
-extern undefined4 curveFn_80010320(f32 param_1, f32 *param_2);
+extern undefined4 Curve_AdvanceAlongPath(f32 param_1, f32 *param_2);
 extern void mm_free(void *ptr);
 
 extern int *gCameraInterface;
@@ -370,7 +370,7 @@ void camcontrol_samplePathState(f32 *outX,f32 *height,f32 *outZ,undefined4 param
   if (pathT < lbl_803E1748) {
     pathT = lbl_803E1748;
   }
-  curveFn_80010320(pathT,(float *)(gCamcontrolPathState + 0x120));
+  Curve_AdvanceAlongPath(pathT,(float *)(gCamcontrolPathState + 0x120));
   *outX = *(float *)(gCamcontrolPathState + 0x188);
   *outZ = *(float *)(gCamcontrolPathState + 400);
   return;

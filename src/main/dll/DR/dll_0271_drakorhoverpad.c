@@ -256,9 +256,9 @@ int drakorhoverpad_update(void *curve, int arg) {
         curvesSetupMoveNetworkCurve(curve);
     }
     if (*(int *)(p + 0x80) != 0) {
-        curveFn_80010320(curve, lbl_803E6A70);
+        Curve_AdvanceAlongPath(curve, lbl_803E6A70);
     } else {
-        curveFn_80010320(curve, lbl_803E6A48);
+        Curve_AdvanceAlongPath(curve, lbl_803E6A48);
     }
     return 0;
 }
@@ -296,7 +296,7 @@ void drakorhoverpad_updateMain(int obj) {
             curveArg = 0x2a;
             (*(void (**)(int, int, f32, int *, int))((char *)*gRomCurveInterface + 0x8c))(
                 (int)(p + 4), obj, lbl_803E6A4C, &curveArg, -1);
-            curveFn_80010320(p + 4, lbl_803E6A50);
+            Curve_AdvanceAlongPath(p + 4, lbl_803E6A50);
             *(f32 *)((char *)obj + 0xc) = *(f32 *)(p + 0x6c);
             *(f32 *)((char *)obj + 0x10) = *(f32 *)(p + 0x70);
             *(f32 *)((char *)obj + 0x14) = *(f32 *)(p + 0x74);
@@ -358,7 +358,7 @@ void drakorhoverpad_updateMain(int obj) {
     }
     *(f32 *)(p + 0x114) = lbl_803E6A3C;
     if (lbl_803E6A3C != *(f32 *)(p + 0x110)) {
-        curveFn_80010320(curve, *(f32 *)(p + 0x110));
+        Curve_AdvanceAlongPath(curve, *(f32 *)(p + 0x110));
         if ((*(int *)(curve + 0x80) != 0) != (*(int *)(curve + 0x10) != 0)) {
             if (drakorhoverpad_handlePathPointEvent(obj, *(u8 *)(*(int *)(curve + 0xa0) + 0x18),
                                                     *(u8 *)(*(int *)(curve + 0xa4) + 0x18),

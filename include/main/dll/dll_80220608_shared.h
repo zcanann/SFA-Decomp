@@ -973,7 +973,7 @@ extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
 
 extern int *gPlayerInterface;
 extern int *gRomCurveInterface;
-extern int curveFn_80010320(int curve, f32 val);
+extern int Curve_AdvanceAlongPath(int curve, f32 val);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 oneOverTimeDelta;
 extern f32 Vec_xzDistance(int a, int b);

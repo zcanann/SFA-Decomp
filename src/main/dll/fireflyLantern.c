@@ -5,7 +5,7 @@
 #define SFXfox_fightbreath2 0x24c
 
 extern int Sfx_PlayFromObject(int obj, int sfxId);
-extern int curveFn_80010320(double t, int curve);
+extern int Curve_AdvanceAlongPath(double t, int curve);
 extern uint randomGetRange(int min, int max);
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern int Obj_GetPlayerObject(void);
@@ -76,7 +76,7 @@ void fn_80154870(int obj, int *state)
         Sfx_PlayFromObject(obj, 0x4c0);
     }
     if ((((state[0xb7] & 0x2000U) != 0) &&
-         (((iVar2 = curveFn_80010320((double)lbl_803E2990, iVar4), iVar2 != 0 ||
+         (((iVar2 = Curve_AdvanceAlongPath((double)lbl_803E2990, iVar4), iVar2 != 0 ||
             (*(int *)(iVar4 + 0x10) != 0)) &&
            (cVar3 = (*(code *)(*gRomCurveInterface + 0x90))(iVar4), cVar3 != '\0')))) &&
         (cVar3 = (*(code *)(*gRomCurveInterface + 0x8c))

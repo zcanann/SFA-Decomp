@@ -286,7 +286,7 @@ extern s16 lbl_803DC2AE;
 extern f32 lbl_803E6998;
 extern f32 lbl_803E69A0;
 extern char sKytesMumYawDiffMessage[];
-extern void curveFn_80010320(void *curve, f32 v);
+extern void Curve_AdvanceAlongPath(void *curve, f32 v);
 extern s16 Obj_GetYawDeltaToObject(int obj, int target, int p3);
 extern void Obj_SteerVelocityTowardVector(int obj, f32 *a, f32 *b, f32 f1, f32 f2, f32 f3);
 extern f32 lbl_803E6A4C;

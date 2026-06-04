@@ -337,7 +337,7 @@ int fn_80223AFC(int obj, int ai)
         *(u8 *)(state + 0xac0) &= ~1;
         (*(void (**)(int, int, int))(*gPlayerInterface + 0x14))(obj, ai, 2);
     }
-    if (curveFn_80010320(curve, lbl_803E6D08) != 0 || *(int *)(curve + 0x10) != 0) {
+    if (Curve_AdvanceAlongPath(curve, lbl_803E6D08) != 0 || *(int *)(curve + 0x10) != 0) {
         (*(void (**)(int))(*gRomCurveInterface + 0x90))(curve);
     }
     if (*(f32 *)(state + 0xab8) < lbl_803E6D0C) {

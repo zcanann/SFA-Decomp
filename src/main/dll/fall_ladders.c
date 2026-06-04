@@ -242,7 +242,7 @@ void FUN_80154290(undefined8 param_1,undefined8 param_2,double param_3,undefined
 
 extern f32 lbl_803E294C;
 extern f32 lbl_803E2958;
-extern int curveFn_80010320(int curve, f32 t);
+extern int Curve_AdvanceAlongPath(int curve, f32 t);
 extern int fn_8014D08C(int obj, int p, int c, f32 f, int d, int e);
 extern void fn_8014CF7C(int obj, int p, f32 a, f32 b, int c, int d);
 extern void fn_8014C678(int obj, int p, f32 *vec, f32 a, f32 b, f32 c, int d);
@@ -337,7 +337,7 @@ void fn_80154584(int obj, int p)
     *(u8 *)(p + 0x33b) = 0;
     *(u8 *)(*(int *)(obj + 0x54) + 0x70) = 0;
     if ((*(u32 *)(p + 0x2dc) & 0x2000) != 0) {
-        if ((curveFn_80010320(curve, *(f32 *)(p + 0x2fc)) != 0 || *(int *)(curve + 0x10) != 0) &&
+        if ((Curve_AdvanceAlongPath(curve, *(f32 *)(p + 0x2fc)) != 0 || *(int *)(curve + 0x10) != 0) &&
             (**(u8 (**)(int))(*gRomCurveInterface + 0x90))(curve) != 0 &&
             (**(u8 (**)(int, int, f32, f64 *, int))(*gRomCurveInterface + 0x8c))(*(int *)p, obj, lbl_803E29B0, &lbl_803DBCD0, -1) != 0) {
             *(u32 *)(p + 0x2dc) &= ~0x2000;

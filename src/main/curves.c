@@ -119,7 +119,7 @@ void Curve_BuildSegmentLengthTable(Curve *curve, int count)
 
 #pragma scheduling off
 #pragma peephole off
-int curveFn_80010320(Curve *curve, f32 dt)
+int Curve_AdvanceAlongPath(Curve *curve, f32 dt)
 {
     int seg, savedIdx;
     f32 *lengths = &curve->totalLen;

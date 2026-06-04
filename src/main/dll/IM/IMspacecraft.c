@@ -18,7 +18,7 @@ extern void GameBit_Set(int eventId, int value);
 extern int fn_8001CC9C(int obj, int a, int b, int c, int d);
 extern void fn_8001CB3C(void *p);
 extern void lightDistAttenFn_8001dc38(void *p, f32 a, f32 b);
-extern f32 curveFn_80010320(void *state, f32 t);
+extern f32 Curve_AdvanceAlongPath(void *state, f32 t);
 extern s16 getAngle(f32 dx, f32 dz);
 
 extern void ObjHitbox_SetSphereRadius(int obj, int r);
@@ -376,7 +376,7 @@ void RollingBarrel_update(int obj)
             if (*(s16 *)descriptor == 0x72a) {
                 f32 vmax = lbl_803E446C;
                 while (blocked == 0 && dist_sq < vmax * timeDelta) {
-                    blocked = (int)curveFn_80010320(state, *(f32 *)((char *)state + 0x108));
+                    blocked = (int)Curve_AdvanceAlongPath(state, *(f32 *)((char *)state + 0x108));
                     if (blocked == 0 && *(int *)((char *)state + 0x10) != 0) {
                         ((void (*)(int *))((void **)*gRomCurveInterface)[36])(state);
                     }
@@ -387,7 +387,7 @@ void RollingBarrel_update(int obj)
                     }
                 }
             } else {
-                blocked = (int)curveFn_80010320(state, *(f32 *)((char *)state + 0x108));
+                blocked = (int)Curve_AdvanceAlongPath(state, *(f32 *)((char *)state + 0x108));
                 if (blocked == 0 && *(int *)((char *)state + 0x10) != 0) {
                     ((void (*)(int *))((void **)*gRomCurveInterface)[36])(state);
                 }

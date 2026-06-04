@@ -212,7 +212,7 @@ int Obj_UpdateRomCurveFollowVelocity(int p1, int p2, f32 a, f32 b, f32 c, int fl
     d[2] = *(f32 *)(p1 + 0x14) - *(f32 *)(p2 + 0x70);
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
     if (dist < b) {
-        if (curveFn_80010320(p2, a) != 0 || *(int *)(p2 + 0x10) != 0) {
+        if (Curve_AdvanceAlongPath(p2, a) != 0 || *(int *)(p2 + 0x10) != 0) {
             if ((u8)(*(int (**)(int))(*gRomCurveInterface + 0x90))(p2) != 0)
                 result = -1;
             else
@@ -252,7 +252,7 @@ int Obj_UpdateRomCurveFollowVelocityIndexed(int p1, int p2, f32 a, f32 b, f32 c,
     d[2] = *(f32 *)(p1 + 0x14) - *(f32 *)(p2 + 0x70);
     dist = sqrtf(d[0] * d[0] + d[2] * d[2]);
     if (dist < b) {
-        if (curveFn_80010320(p2, a) != 0 || *(int *)(p2 + 0x10) != 0) {
+        if (Curve_AdvanceAlongPath(p2, a) != 0 || *(int *)(p2 + 0x10) != 0) {
             if ((u8)(*(int (**)(int, int))(*gRomCurveInterface + 0x9c))(p2, *p6) != 0)
                 result = -1;
             else

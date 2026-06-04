@@ -85,7 +85,7 @@ extern int fn_80138F84(int tricky);
 extern int fn_8029622C(int obj);
 extern int fn_80296448(int obj);
 extern int fn_800DA980(int curveState,int firstNode,int secondNode,int thirdNode);
-extern int curveFn_80010320(int curveState,f32 step);
+extern int Curve_AdvanceAlongPath(int curveState,f32 step);
 extern int curveFn_800da23c(int curveState,int node);
 extern undefined4 FUN_801816f8();
 extern void fn_801816F8(int obj,int param_2,u8 *state);
@@ -2488,7 +2488,7 @@ void curvefish_update(int obj) {
     distance = getXZDistance(&state->targetX, (f32 *)(obj + 0xc));
     i = 0;
     while (distance < distLimit && i < 5) {
-      curveFn_80010320((int)state, lbl_803E38F8);
+      Curve_AdvanceAlongPath((int)state, lbl_803E38F8);
       distance = getXZDistance(&state->targetX, (f32 *)(obj + 0xc));
       i++;
     }
