@@ -272,25 +272,83 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId,uint currentWalkGro
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void player_setScale(ushort *param_1,int param_2,uint param_3)
+extern u8 lbl_803DD440;
+extern f32 lbl_803E0570;
+extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimArg, void *events);
+
+typedef struct PlayerMoveBuf {
+  f32 a;
+  f32 b;
+  f32 c;
+  u8 padC[2];
+  s16 angleDelta;
+  u8 pad10[2];
+  u8 flag;
+  s8 ids[8];
+  s8 count;
+} PlayerMoveBuf;
+
+#pragma scheduling off
+#pragma peephole off
+void player_setScale(f32 dt, short *moveState, uint *obj, uint flags)
 {
-  uint uVar1;
-  
-  if (*(int *)(param_2 + 0x2d0) != 0) {
-    uVar1 = FUN_80017730();
-    uVar1 = (uVar1 & 0xffff) - (uint)*param_1;
-    if (0x8000 < (int)uVar1) {
-      uVar1 = uVar1 - 0xffff;
-    }
-    if ((int)uVar1 < -0x8000) {
-      uVar1 = uVar1 + 0xffff;
-    }
-    *param_1 = *param_1 +
-               (short)(int)(((f32)(s32)uVar1 * lbl_803DC074) /
-                           (lbl_803E1204 * (f32)(s32)param_3));
+  PlayerMoveBuf buf;
+  s8 *ptr;
+  int i;
+  f32 stopVal;
+
+  buf.flag = 0;
+  *(s8 *)((char *)obj + 0x346) = (s8)ObjAnim_AdvanceCurrentMove(
+      *(f32 *)((char *)obj + 0x2a0), dt, (int)moveState, &buf);
+
+  *(u32 *)((char *)obj + 0x314) = 0;
+  ptr = (s8 *)&buf;
+  for (i = 0; i < buf.count; i++) {
+    *(u32 *)((char *)obj + 0x314) |= 1 << ptr[0x13];
+    ptr++;
   }
-  return;
+
+  *obj &= ~0x10000;
+
+  if (buf.flag != 0) {
+    if ((flags & 0x10) != 0) {
+      if ((flags & 1) != 0) {
+        *(f32 *)((char *)obj + 0x2b4) = -buf.c;
+      }
+      if ((flags & 2) != 0) {
+        *(f32 *)((char *)obj + 0x2b4) = buf.a;
+      }
+      if ((flags & 4) != 0) {
+        *(f32 *)((char *)obj + 0x2b4) = buf.b;
+      }
+      if ((flags & 8) != 0) {
+        *moveState += buf.angleDelta;
+      }
+    } else {
+      if ((flags & 1) != 0) {
+        *(f32 *)((char *)obj + 0x280) = (f32)(-(f64)buf.c / dt);
+      }
+      if ((flags & 2) != 0) {
+        *(f32 *)((char *)obj + 0x284) = (f32)((f64)buf.a / dt);
+      }
+      if ((flags & 8) != 0) {
+        *moveState += buf.angleDelta;
+      }
+      if ((flags & 4) != 0) {
+        *(f32 *)((char *)obj + 0x288) = (f32)((f64)buf.b / dt);
+        *obj |= 0x10000;
+      }
+    }
+  } else {
+    stopVal = lbl_803E0570;
+    *(f32 *)((char *)obj + 0x280) = stopVal;
+    *(f32 *)((char *)obj + 0x284) = stopVal;
+  }
+
+  lbl_803DD440 = 1;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
