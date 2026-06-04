@@ -3457,3 +3457,78 @@ void drawFn_8005cf8c(int verts, u8 *indices, int count) {
     }
 }
 #pragma peephole reset
+
+extern void envFxFn_80088884(void);
+extern void *gCloudActionInterface;
+extern void *gSky2Interface;
+extern void *gSHthorntailAnimationInterface;
+extern void *gNewCloudsInterface;
+extern void *gMinimapInterface;
+extern void *lbl_803DCAB0;
+extern int textureAnimFn_80053f2c(void *tex, void *a, void *b);
+extern void loadNextMap(void);
+extern f32 timeDelta;
+extern s32 lbl_803DCE00;
+extern s32 heatEffectIntensity;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma fp_contract off
+void updateEnvironment(int mode) {
+    if (mode == 0) {
+        char *e;
+        void *tex;
+        int i, offs, k;
+        f32 dy;
+
+        envFxFn_80088884();
+        (*(void (***)(void))gCloudActionInterface)[3]();
+        (*(void (***)(void))gSky2Interface)[3]();
+        (*(void (***)(void))gSHthorntailAnimationInterface)[3]();
+        (*(void (***)(void))gNewCloudsInterface)[4]();
+
+        i = 0;
+        offs = i;
+        do {
+            e = (char *)lbl_803DCE6C + offs;
+            if (*(s16 *)(e + 12) != 0 && (tex = *(void **)e) != NULL &&
+                *(u16 *)((char *)tex + 0x10) != 0x100 && *(u16 *)((char *)tex + 0x14) != 0) {
+                textureAnimFn_80053f2c(tex, e + 8, e + 4);
+            }
+            offs += 0x10;
+            i++;
+        } while (i < 80);
+
+        i = 0;
+        offs = i;
+        for (; i < 58; i++) {
+            e = (char *)lbl_803DCE68 + offs;
+            if (*(u8 *)(e + 12) != 0) {
+                dy = (f32)*(s16 *)(e + 10) * timeDelta;
+                *(f32 *)e = *(f32 *)e + (f32)*(s16 *)(e + 8) * timeDelta;
+                *(f32 *)(e + 4) = *(f32 *)(e + 4) + dy;
+            }
+            offs += 0x10;
+        }
+
+        loadNextMap();
+        if (lbl_803DCAB0 != NULL) {
+            (*(void (***)(void))lbl_803DCAB0)[2]();
+        }
+        (*(void (***)(void))gMinimapInterface)[1]();
+
+        if (lbl_803DCE00 != 0) {
+            heatEffectIntensity += lbl_803DCE00;
+            if (heatEffectIntensity < 0) {
+                heatEffectIntensity = 0;
+                lbl_803DCE00 = 0;
+            } else if (heatEffectIntensity > 255) {
+                heatEffectIntensity = 255;
+                lbl_803DCE00 = 0;
+            }
+        }
+    }
+}
+#pragma fp_contract reset
+#pragma peephole reset
+#pragma scheduling reset
