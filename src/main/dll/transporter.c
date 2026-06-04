@@ -31,6 +31,7 @@ extern undefined4 ObjHits_EnableObject();
 extern undefined4 ObjHits_AddContactObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
+extern void Obj_FreeObject(int *obj);
 extern int ObjMsg_Pop();
 extern undefined4 ObjMsg_AllocQueue();
 extern int ObjList_ContainsObject();
@@ -1235,18 +1236,17 @@ void FUN_8017724c(int param_1)
 /*
  * --INFO--
  *
- * Function: FUN_8017726c
- * EN v1.0 Address: 0x8017726C
- * EN v1.0 Size: 1156b
- * EN v1.1 Address: 0x80177CC4
- * EN v1.1 Size: 1572b
+ * Function: invhit_update
+ * EN v1.0 Address: 0x80177818
+ * EN v1.0 Size: 1024b
+ * EN v1.1 Address: TODO
+ * EN v1.1 Size: TODO
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_8017726c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void invhit_update(int obj)
 {
   float fVar1;
   float fVar2;
@@ -1258,35 +1258,15 @@ void FUN_8017726c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
   int iVar8;
   int iVar9;
   int iVar10;
-  undefined8 extraout_f1;
-  undefined8 uVar11;
   double dVar12;
-  double in_f29;
   double dVar13;
-  double in_f30;
   double dVar14;
-  double in_f31;
   double dVar15;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
   int local_58 [2];
   undefined4 local_50;
   uint uStack_4c;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
   
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  iVar4 = FUN_80286840();
+  iVar4 = obj;
   pfVar7 = *(float **)(iVar4 + 0xb8);
   *(undefined4 *)(iVar4 + 0x80) = *(undefined4 *)(iVar4 + 0xc);
   *(undefined4 *)(iVar4 + 0x84) = *(undefined4 *)(iVar4 + 0x10);
@@ -1383,11 +1363,10 @@ void FUN_8017726c(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
     iVar9 = *(int *)(iVar4 + 0x54);
     iVar8 = *(int *)(*(int *)(iVar4 + 0xf4) + 0x54);
     iVar10 = iVar8;
-    uVar11 = extraout_f1;
     for (iVar6 = 0; iVar6 < *(char *)(iVar8 + 0x71); iVar6 = iVar6 + 1) {
       if (*(int *)(iVar10 + 0x7c) == iVar4) {
         *(ushort *)(iVar9 + 0x60) = *(ushort *)(iVar9 + 0x60) & ~1;
-        uVar11 = FUN_80017ac8(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar4);
+        Obj_FreeObject((int *)iVar4);
       }
       iVar10 = iVar10 + 4;
     }
