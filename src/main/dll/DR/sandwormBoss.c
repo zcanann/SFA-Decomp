@@ -3513,7 +3513,7 @@ void cfprisonguard_free(void) {}
 void cfprisonguard_release(void) {}
 void cfprisonguard_initialise(void) {}
 
-extern void cfprisonguard_SeqFn(int* obj);
+extern int cfprisonguard_SeqFn(int* obj, int p2, u8* p3);
 
 typedef struct { u8 top : 1; u8 rest : 7; } Bit80;
 
@@ -4829,6 +4829,134 @@ int babycloudrunner_SeqFn(int* obj, int p2, u8* p3)
         fn_8003ADC4(obj, (int*)getTrickyObject(), (char*)sub + 0x3c, 0x28, 0, 3);
         *(s16*)obj += (s16)yaw / 8;
         break;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Sfx_StopObjectChannel(int obj, int ch);
+
+
+/* EN v1.0 0x8019F540  size: 1000b  cfprisonguard_SeqFn: drive the guard state
+ * machine - ramp/reset the alarm on cues, bail when captured or freed, watch
+ * the player distance/water impacts and chase or stand down, with idle digging
+ * SFX and queued-message drain. */
+#pragma scheduling off
+#pragma peephole off
+int cfprisonguard_SeqFn(int* obj, int p2, u8* p3)
+{
+    char* player;
+    u8* sub = *(u8**)((char*)obj + 0xb8);
+    s8 gb50;
+    s8 gb48;
+    s8 moved;
+    f32 dist;
+    int msgB;
+    int msgA;
+    int payload = 0;
+    u8* def = *(u8**)((char*)obj + 0x4c);
+    switch (p3[0x80]) {
+    case 0x29:
+        *(f32*)(sub + 0x30) = lbl_803E4260;
+        break;
+    case 4:
+        *(s8*)(sub + 0x37) = 6;
+        return 0;
+    case 5:
+        *(f32*)(sub + 0x30) = lbl_803E4264 * (f32)framesThisStep + *(f32*)(sub + 0x30);
+        break;
+    }
+    if (*(s16*)((char*)obj + 0xb4) < 0) {
+        return 0;
+    }
+    ObjHits_EnableObject(obj);
+    gb50 = GameBit_Get(0x50);
+    gb48 = GameBit_Get(0x48);
+    if ((*(u8*)(sub + 0x38) & 2) != 0 && GameBit_Get(0x4d) != 0) {
+        *(u8*)(sub + 0x38) &= ~0x2;
+        return 4;
+    }
+    if (gb50 != 0) {
+        return 4;
+    }
+    if (gb50 != 0 || *(s8*)(sub + 0x37) == 5) {
+        *(s8*)(sub + 0x37) = 5;
+        return 0;
+    }
+    moved = 0;
+    player = (char*)Obj_GetPlayerObject();
+    switch (*(s8*)(sub + 0x37)) {
+    case 0:
+        fn_8003B228(obj, sub);
+        dist = Vec_distance((char*)obj + 0x18, player + 0x18);
+        if (gb48 == 0) {
+            if (dist < (f32)*(s16*)(def + 0x1a)
+                || waterfx_consumePendingImpactNearPoint((f32*)((char*)obj + 0xc), lbl_803E4268) != 0) {
+                if (objGetAnimState80A(player) != 0x40) {
+                    moved = 1;
+                    *(s8*)(sub + 0x37) = 4;
+                } else {
+                    *(u8*)((char*)obj + 0xaf) |= 8;
+                    *(s8*)(sub + 0x37) = 5;
+                    *(s16*)(sub + 0x34) = 0x14;
+                    ((void (*)(int, int*, int))((int*)*gObjectTriggerInterface)[0x48 / 4])(2, obj, -1);
+                    return 4;
+                }
+            }
+        }
+        break;
+    case 2:
+        if ((*(s16*)(sub + 0x34) -= framesThisStep) <= 0) {
+            *(s8*)(sub + 0x37) = 1;
+        }
+        fn_8003B228(obj, sub);
+        break;
+    case 1:
+        dist = Vec_distance((char*)obj + 0x18, player + 0x18);
+        if (gb48 == 0) {
+            if (dist < (f32)*(s16*)(def + 0x1a)) {
+                if (objGetAnimState80A(player) != 0x40) {
+                    moved = 1;
+                    *(s8*)(sub + 0x37) = 4;
+                } else {
+                    *(s8*)(sub + 0x37) = 2;
+                }
+            }
+        }
+        break;
+    case 3:
+        if ((*(s16*)(sub + 0x34) -= framesThisStep) <= 0) {
+            *(s8*)(sub + 0x37) = 0;
+        }
+        break;
+    case 5:
+        return 0;
+    case 6:
+        return 0;
+    case 7:
+        moved = 1;
+        *(s8*)(sub + 0x37) = 4;
+        break;
+    }
+    if (*(s16*)((char*)obj + 0xa0) == 0x103 || *(s16*)((char*)obj + 0xa0) == 0x2e) {
+        Sfx_PlayFromObject((int)obj, SFXsk_doggydig11);
+    } else {
+        Sfx_StopObjectChannel((int)obj, 0x10);
+    }
+    if (gb50 != 0 && *(s8*)(sub + 0x36) == 0) {
+        moved = 1;
+    }
+    if (moved != 0) {
+        return 4;
+    }
+    *(s8*)(sub + 0x36) = gb50;
+    p3[0x56] = 0;
+    while (ObjMsg_Pop(obj, &msgA, &msgB, &payload) != 0) {
+    }
+    if (p3[0x80] == 1) {
+        getLActions(obj, obj, 0x18, 0, 0, 0);
+        p3[0x80] = 0;
     }
     return 0;
 }
