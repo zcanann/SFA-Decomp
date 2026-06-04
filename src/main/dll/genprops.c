@@ -7424,3 +7424,101 @@ void staff_update(int *obj)
 #pragma peephole reset
 #pragma opt_loop_invariants reset
 #pragma scheduling reset
+
+extern void playerAddHealth(void *player, int amount);
+extern void gameBitIncrement(int eventId);
+extern void saveGame_unsaveObjectPos(int *obj);
+extern void itemPickupDoParticleFx(int *obj, f32 f, int a, int b);
+extern f32 lbl_803E3450;
+extern f32 lbl_803E3454;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80171E5C(int *obj)
+{
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *params = *(u8 **)((char *)obj + 0x4c);
+    u8 *setup2 = *(u8 **)(*(int *)((char *)obj + 0x50) + 0x18);
+    Obj_GetPlayerObject();
+    getTrickyObject();
+    Obj_GetPlayerObject();
+    getTrickyObject();
+    ObjHits_DisableObject(obj);
+    if (*(s16 *)((char *)obj + 6) & 0x2000) {
+        *(f32 *)(state + 8) = lbl_803E3450;
+        if (*(int **)((char *)obj + 0x64) != NULL) {
+            *(int *)(*(int *)((char *)obj + 0x64) + 0x30) = 0x1000;
+        }
+    }
+    if (*(s16 *)(state + 0x10) != -1) {
+        GameBit_Set(*(s16 *)(state + 0x10), 1);
+        saveGame_unsaveObjectPos(obj);
+    }
+    if (*(s16 *)(params + 0x1e) != -1) {
+        GameBit_Set(*(s16 *)(params + 0x1e), 1);
+    }
+    if (*(s16 *)(params + 0x2c) > 0) {
+        gameBitIncrement(*(s16 *)(params + 0x2c));
+    }
+    switch (*(s16 *)(setup2 + 2)) {
+    case 1:
+        switch (*(s16 *)((char *)obj + 0x46)) {
+        case 90:
+            Sfx_PlayFromObject(obj, 73);
+            itemPickupDoParticleFx(obj, lbl_803E3454, 2, 40);
+            break;
+        case 793:
+            Sfx_PlayFromObject(obj, 362);
+            GameBit_Set(1001, 1);
+            *(s16 *)(state + 0x3c) = 1200;
+            itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
+            break;
+        case 1702:
+        {
+            s8 c = GameBit_Get(2154);
+            if (c < 7) {
+                c = c + 1;
+            }
+            GameBit_Set(2154, c);
+            itemPickupDoParticleFx(obj, lbl_803E3454, 6, 40);
+            Sfx_PlayFromObject(obj, 73);
+            break;
+        }
+        case 34:
+            Sfx_PlayFromObject(obj, 73);
+            itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
+            break;
+        default:
+            Sfx_PlayFromObject(obj, 88);
+            itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
+            break;
+        }
+        break;
+    case 4:
+        switch (*(s16 *)((char *)obj + 0x46)) {
+        case 11:
+            Sfx_PlayFromObject(Obj_GetPlayerObject(), 73);
+            playerAddHealth(Obj_GetPlayerObject(), 4);
+            itemPickupDoParticleFx(obj, lbl_803E3454, 3, 40);
+            break;
+        case 973:
+            playerAddHealth(Obj_GetPlayerObject(), 2);
+            Sfx_PlayFromObject(Obj_GetPlayerObject(), 73);
+            itemPickupDoParticleFx(obj, lbl_803E3454, 1, 40);
+            break;
+        default:
+            Sfx_PlayFromObject(Obj_GetPlayerObject(), 88);
+            itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
+            break;
+        }
+        break;
+    default:
+        Sfx_PlayFromObject(obj, 88);
+        itemPickupDoParticleFx(obj, lbl_803E3454, 255, 40);
+        break;
+    }
+    *(f32 *)((char *)obj + 8) = *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
+    *(int *)((char *)obj + 0xf4) = 1;
+}
+#pragma peephole reset
+#pragma scheduling reset
