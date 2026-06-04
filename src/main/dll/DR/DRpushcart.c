@@ -1063,7 +1063,7 @@ extern f32 timeDelta;
 extern f32 lbl_803E59DC;
 extern void gameTextShow(int);
 extern u32 ObjGroup_FindNearestObject(int kind, int obj, f32 *out);
-extern u16 playerGetMoney(void *player);
+extern int playerGetMoney(void *player);
 extern void characterDoEyeAnims(int obj, int p2);
 extern void dll_2E_func03(int, int);
 extern void shopKeeperRotateFn_801e7c4c(int, void *, int);
@@ -1195,6 +1195,113 @@ void fn_801E8660(int obj) {
         int *vptr2 = *(int **)(state + 0x90);
         int *cls2 = **(int ***)((char *)vptr2 + 0x68);
         (*(void (*)(int *, int))cls2[0x40 / 4])(vptr2, -1);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803E5A60;
+extern f32 lbl_803E5A64;
+extern f32 lbl_803E5A68;
+extern void ObjMsg_SendToObject(void *to, int msg, int obj, void *data);
+extern void forceAButtonIcon(int icon);
+extern void showHelpText(int textId);
+extern void buttonDisable(int a, int b);
+extern int *gObjectTriggerInterface;
+extern void objRenderFn_80041018(int obj);
+extern f32 Curve_EvalBSpline(int p, int m, f32 t);
+
+#pragma scheduling off
+#pragma peephole off
+void shopitem_update(int obj)
+{
+    int def = *(int *)(obj + 0x4C);
+    void *player = Obj_GetPlayerObject();
+    int state = *(int *)(obj + 0xB8);
+    f32 range = lbl_803E5A64;
+    PushcartState97 *b = (PushcartState97 *)(state + 0x97);
+    int money;
+    int price;
+
+    if (b->flag_40) {
+        *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+        *(u16 *)(obj + 0xB0) = (u16)(*(u16 *)(obj + 0xB0) | 0x8000);
+        *(u8 *)(obj + 0xAF) |= 8;
+    } else if (b->flag_80) {
+        *(s16 *)(state + 0x88) = -1;
+        ObjMsg_SendToObject(Obj_GetPlayerObject(), 0x7000A, obj, (void *)(state + 0x88));
+        b->flag_80 = 0;
+        b->flag_40 = 1;
+    } else {
+        if (*(u32 *)(state + 0x90) == 0) {
+            int item;
+            *(int *)(state + 0x90) = ObjGroup_FindNearestObject(9, obj, &range);
+            item = *(int *)(state + 0x90);
+            if ((u32)item != 0) {
+                if ((*(int (**)(int, int))((char *)**(int ***)(item + 0x68) + 0x28))(item, *(u8 *)(def + 0x19)) == 0
+                    || (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x2C))(*(int *)(state + 0x90), *(u8 *)(def + 0x19)) != 0) {
+                    b->flag_40 = 1;
+                    *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
+                    *(u16 *)(obj + 0xB0) = (u16)(*(u16 *)(obj + 0xB0) | 0x8000);
+                    *(u8 *)(obj + 0xAF) |= 8;
+                }
+                *(s16 *)(state + 0x94) = (s16)(*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x3C))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
+            }
+        } else {
+            if (*(u8 *)(obj + 0xAF) & 4) {
+                forceAButtonIcon(0x12);
+                showHelpText(*(s16 *)(state + 0x94));
+            }
+            if (*(u8 *)(obj + 0xAF) & 1) {
+                money = playerGetMoney(player);
+                price = (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x38))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
+                (*(int (**)(int, int))((char *)**(int ***)(*(int *)(state + 0x90) + 0x68) + 0x40))(*(int *)(state + 0x90), *(u8 *)(def + 0x19));
+                switch (*(s16 *)(obj + 0x46)) {
+                case 0x467:
+                    *(f32 *)(obj + 0x10) = lbl_803E5A68 + *(f32 *)(*(int *)(obj + 0x4C) + 0xC);
+                    break;
+                }
+                if (money >= price) {
+                    hudFn_8011f38c(3);
+                    (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(0, obj, -1);
+                } else {
+                    (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(1, obj, -1);
+                }
+                buttonDisable(0, 0x100);
+            }
+            switch (*(s16 *)(obj + 0x46)) {
+            case 0x467: {
+                f32 t = *(f32 *)(state + 0x40);
+                if (t > lbl_803E5A30) {
+                    u32 v;
+                    *(f32 *)(state + 0x40) = t - lbl_803E5A30;
+                    v = *(u8 *)(state + 0x68);
+                    if (v >= 4) {
+                        *(u8 *)(state + 0x68) = v + 1;
+                    } else {
+                        fn_801F4D54(obj, state);
+                    }
+                    fn_801F4ECC(obj, state);
+                }
+                *(f32 *)(obj + 0xC) = Curve_EvalBSpline(state + 4, 0, *(f32 *)(state + 0x40));
+                *(f32 *)(obj + 0x10) = Curve_EvalBSpline(state + 0x14, 0, *(f32 *)(state + 0x40));
+                *(f32 *)(obj + 0x14) = Curve_EvalBSpline(state + 0x24, 0, *(f32 *)(state + 0x40));
+                *(f32 *)(state + 0x40) = *(f32 *)(state + 0x44) * timeDelta + *(f32 *)(state + 0x40);
+                *(s16 *)(obj + 0) = (s16)getAngle(
+                    *(f32 *)(obj + 0xC) - *(f32 *)(obj + 0x80),
+                    *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
+                (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 0x19F, 0, 1, -1, 0);
+                (**(void (**)(int, int, int, int, int, int))((char *)(*gPartfxInterface) + 0x8))(obj, 0x1A0, 0, 1, -1, 0);
+                break;
+            }
+            }
+        }
+        if (*(s16 *)(obj + 0x46) != 0x464 && *(s16 *)(obj + 0x46) != 0x467) {
+            ObjAnim_AdvanceCurrentMove(obj, lbl_803E5A60, timeDelta, 0);
+        }
+        if ((*(u8 *)(obj + 0xAF) & 8) == 0) {
+            objRenderFn_80041018(obj);
+        }
     }
 }
 #pragma peephole reset
