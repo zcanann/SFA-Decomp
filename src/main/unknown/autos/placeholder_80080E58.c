@@ -7363,3 +7363,134 @@ void fn_80090C0C(u8 *snow) {
     }
 }
 #pragma pop
+
+extern void PSVECAdd(f32 *a, f32 *b, f32 *ab);
+extern f32 lbl_803DF1D0;
+
+/*
+ * --INFO--
+ *
+ * Function: fn_8008F2C8
+ * EN v1.0 Address: 0x8008F2C8
+ * EN v1.0 Size: 1596b
+ */
+#pragma push
+#pragma scheduling off
+void fn_8008F2C8(f32 *start, f32 *end, int width, f32 segScale, f32 d, int *seed, int depth,
+                 int flags) {
+    f32 len;
+    int segs;
+    f32 total;
+    f32 weight;
+    f32 px;
+    f32 py;
+    f32 pz;
+    f32 nx;
+    f32 ny;
+    f32 nz;
+    f32 progress;
+    f32 step;
+    int i;
+    int oddFlag;
+    int halfWidth;
+    f32 mtx[12];
+    f32 dir[3];
+    f32 scaled[3];
+    f32 up[3];
+    f32 side[3];
+    f32 offset[3];
+    f32 cur[3];
+    f32 next[3];
+    f32 branchEnd[3];
+
+    if ((u32)depth > 2) {
+        return;
+    }
+    PSVECSubtract(end, start, dir);
+    len = PSVECMag(dir);
+    PSVECScale(dir, scaled, lbl_803DF1A4 / len);
+    if (__fabs(scaled[0]) < lbl_803DF1B8) {
+        up[0] = lbl_803DF1A4;
+        up[1] = lbl_803DF1A0;
+        up[2] = lbl_803DF1A0;
+    } else {
+        up[0] = lbl_803DF1A0;
+        up[1] = lbl_803DF1A0;
+        up[2] = lbl_803DF1A4;
+    }
+    PSVECCrossProduct(scaled, up, side);
+    PSVECCrossProduct(side, scaled, up);
+    PSVECNormalize(up, up);
+    segs = (int)(len * segScale);
+    if (segs > 10) {
+        segs = 10;
+    }
+    if (segs == 0) {
+        return;
+    }
+    total = lbl_803DF1A0;
+    for (i = 0; i < segs; i++) {
+        total += (f32)(i + 1);
+    }
+    weight = lbl_803DF1A4 / total;
+    px = start[0];
+    py = start[1];
+    pz = start[2];
+    cur[0] = px;
+    cur[1] = py;
+    cur[2] = pz;
+    progress = lbl_803DF1A0;
+    oddFlag = (u8)flags & 1;
+    halfWidth = (u8)width >> 1;
+    for (i = 0; i <= segs; i++) {
+        if (i < segs) {
+            PSVECScale(up, offset,
+                       lbl_803DF1BC *
+                           (lbl_803DF1C0 * (len * (f32)(int)randomGetRange(1, 100))));
+            PSMTXRotAxisRad(
+                mtx, scaled,
+                lbl_803DF1C4 *
+                    (lbl_803DF1C8 * (lbl_803DF1CC * (f32)(int)randomGetRange(0, 1000))));
+            PSMTXMultVecSR(mtx, offset, offset);
+            progress += weight * (f32)(segs - i);
+            step = weight * (len * (f32)(segs - i));
+            nx = px + scaled[0] * step;
+            ny = py + scaled[1] * step;
+            nz = pz + scaled[2] * step;
+            next[0] = nx + offset[0];
+            next[1] = ny + offset[1];
+            next[2] = nz + offset[2];
+            if (randomGetRange(1, 3) == 1 && (u8)width >= 0xc && oddFlag == 0) {
+                PSVECScale(up, offset,
+                           lbl_803DF1BC * (lbl_803DF1D0 *
+                                           (len * (f32)(int)randomGetRange(0x32, 0x64))));
+                PSMTXRotAxisRad(mtx, scaled,
+                                lbl_803DF1C4 *
+                                    (lbl_803DF1C8 *
+                                     (lbl_803DF1CC * (f32)(int)randomGetRange(0, 1000))));
+                PSMTXMultVecSR(mtx, offset, offset);
+                PSVECScale(scaled, branchEnd,
+                           (lbl_803DF1CC * ((lbl_803DF1A4 - progress) *
+                                            (f32)(int)randomGetRange(0, 1000)) +
+                            progress) *
+                               len);
+                PSVECAdd(start, branchEnd, branchEnd);
+                PSVECAdd(branchEnd, offset, branchEnd);
+                fn_8008F2C8(next, branchEnd, (u8)halfWidth, segScale, d, seed, depth + 1,
+                            flags);
+            }
+        } else {
+            next[0] = end[0];
+            next[1] = end[1];
+            next[2] = end[2];
+        }
+        drawFn_8008ee18(cur, next, width, d, seed);
+        px = nx;
+        py = ny;
+        pz = nz;
+        cur[0] = next[0];
+        cur[1] = next[1];
+        cur[2] = next[2];
+    }
+}
+#pragma pop
