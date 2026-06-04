@@ -217,53 +217,66 @@ extern f32 lbl_803E3B94;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_CA_update(int param_1,int param_2,int param_3)
+#pragma scheduling off
+#pragma peephole off
+void dll_CA_update(int obj, int p2, int p3)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  int iVar4;
-  float *pfVar5;
-  double dVar6;
-  undefined auStack_2c [28];
-  
-  pfVar5 = *(float **)(param_2 + 0x40c);
-  FUN_80017a98();
-  iVar4 = *(int *)(param_3 + 0x2d0);
-  if (iVar4 != 0) {
-    fVar1 = *(float *)(iVar4 + 0x18) - *(float *)(param_1 + 0x18);
-    fVar2 = *(float *)(iVar4 + 0x1c) - *(float *)(param_1 + 0x1c);
-    fVar3 = *(float *)(iVar4 + 0x20) - *(float *)(param_1 + 0x20);
-    dVar6 = FUN_80293900((double)(fVar3 * fVar3 + fVar1 * fVar1 + fVar2 * fVar2));
-    *(float *)(param_3 + 0x2c0) = (float)dVar6;
-  }
-  if ((*(byte *)(param_2 + 0x404) & 0x20) == 0) {
-    (**(code **)(*DAT_803dd738 + 0x3c))
-              (param_1,param_3,param_2 + 0x400,2,3,(int)*(short *)(param_2 + 0x3fc),
-               (int)*(short *)(param_2 + 0x3fa));
-  }
-  (**(code **)(*DAT_803dd738 + 0x54))
-            (param_1,param_3,param_2 + 0x35c,(int)*(short *)(param_2 + 0x3f4),0,0,0,8);
-  *pfVar5 = *pfVar5 + lbl_803DC074;
-  if ((*(short *)(param_3 + 0x274) != 3) &&
-     (iVar4 = (**(code **)(*DAT_803dd738 + 0x50))
-                        (param_1,param_3,param_2 + 0x35c,(int)*(short *)(param_2 + 0x3f4),
-                         &DAT_803209f0,&DAT_80320a68,1,auStack_2c), iVar4 != 0)) {
-    if (lbl_803E3A4C <= *pfVar5) {
-      *(undefined2 *)((int)pfVar5 + 6) = 0;
+  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+  extern void Sfx_PlayFromObject(int obj, int sfx);
+  extern int fn_8015D3C0(int obj, int sub, int sub2);
+  extern void mediumbasket_updateControlEffects(int obj, int sub);
+  extern void mediumbasket_tryAcquireTarget(int obj, int sub, int sub2);
+  extern void mediumbasket_updateTargetMotion(int obj, int sub, int sub2);
+  extern int *gBaddieControlInterface;
+  extern int *gMapEventInterface;
+  extern int *gObjectTriggerInterface;
+  extern f32 lbl_803E2D14;
+  extern f32 lbl_803E2D90;
+  extern f32 lbl_803E2DB8;
+  int sub;
+  int setup;
+
+  sub = *(int *)(obj + 0xb8);
+  setup = *(int *)(obj + 0x4c);
+  if (*(int *)(obj + 0xf4) != 0) {
+    if ((*(s16 *)(sub + 0x270) != 3 || (*(u8 *)(sub + 0x404) & 1) != 0) &&
+        (*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(*(int *)(setup + 0x14)) != 0) {
+      (*(void (**)(int, int, int, int, int, int, int, f32))(*(int *)gBaddieControlInterface +
+                                                            0x58))(
+          obj, setup, sub, 14, 8, 0x102, 0x26, lbl_803E2DB8);
+      *(s16 *)(sub + 0x402) = 0;
+      Sfx_PlayFromObject(obj, SFXfoxcom_find);
+      ObjAnim_SetCurrentMove(obj, 8, lbl_803E2D14, 0x10);
+      *(s8 *)(sub + 0x346) = 0;
+      *(u8 *)(obj + 0x36) = 0xff;
+      *(u8 *)(obj + 0xaf) |= 8;
     }
-    else {
-      *(short *)((int)pfVar5 + 6) = *(short *)((int)pfVar5 + 6) + 1;
-    }
-    *pfVar5 = lbl_803E39AC;
-    if (('\0' < *(char *)(param_3 + 0x354)) && (1 < *(short *)((int)pfVar5 + 6))) {
-      (**(code **)(*DAT_803dd70c + 0x14))(param_1,param_3,3);
-      *(undefined2 *)((int)pfVar5 + 6) = 0;
-      *(undefined2 *)(param_3 + 0x270) = 5;
+  } else if (*(int *)(obj + 0xf8) == 0) {
+    *(f32 *)(obj + 0xc) = *(f32 *)(setup + 8);
+    *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc);
+    *(f32 *)(obj + 0x14) = *(f32 *)(setup + 0x10);
+    (*(void (**)(int, int, int))(*(int *)gObjectTriggerInterface + 0x48))(
+        *(s8 *)(setup + 0x2e), obj, -1);
+    *(int *)(obj + 0xf8) = 1;
+  } else {
+    if ((*(int (**)(int, int, int))(*(int *)gBaddieControlInterface + 0x30))(obj, sub, 0) == 0) {
+      *(s16 *)(sub + 0x402) = 0;
+    } else {
+      fn_8015D3C0(obj, sub, sub);
+      mediumbasket_updateControlEffects(obj, sub);
+      if (*(s16 *)(sub + 0x402) == 0) {
+        mediumbasket_tryAcquireTarget(obj, sub, sub);
+      } else {
+        mediumbasket_updateTargetMotion(obj, sub, sub);
+      }
+      if ((*(u8 *)(sub + 0x404) & 2) != 0) {
+        *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) - lbl_803E2D90;
+      }
     }
   }
-  return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
