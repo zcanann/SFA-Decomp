@@ -1717,7 +1717,7 @@ extern f32 lbl_803E65A8;
 extern f32 lbl_803E65AC;
 extern f32 lbl_803E65B0;
 extern f32 lbl_803E65B8;
-extern void lightFn_8001db6c(f32 intensity, void *light, int onoff);
+extern void lightFn_8001db6c(void *light, int onoff, f32 intensity);
 extern void drakorhoverpad_resetPendingMotion(int obj);
 extern int GameBit_Get(int bit);
 extern f32 lbl_803E6540;
@@ -1764,28 +1764,28 @@ extern void PSVECNormalize(f32 *in, f32 *out);
 extern f32 PSVECDotProduct(f32 *a, f32 *b);
 extern void PSVECScale(f32 *in, f32 *out, f32 scale);
 extern f32 PSVECMag(f32 *v);
-extern s16 getAngle(f32 dx, f32 dz);
+extern int getAngle(f32 dx, f32 dz);
 extern u8 Obj_IsLoadingLocked(void);
 extern u8 *Obj_AllocObjectSetup(int size, int typeId);
 extern int loadObjectAtObject(int obj, u8 *setup);
 extern void drakormissile_startActiveLaunch(int obj);
 extern int getEnvfxActImmediately(int obj, int target, int actId, int flags);
-extern void skyFn_80088e54(f32 v, int p);
+extern void skyFn_80088e54(int p, f32 v);
 extern void timeOfDayFn_80055038(void);
 extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setField50(int light, int v);
 extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setColors100104(int light, int a, int b, int c, int d);
-extern void fn_8001D730(f32 v, int light, int a, int b, int c, int d, int e);
-extern void lightDistAttenFn_8001dc38(f32 a, f32 b, int light);
+extern void fn_8001D730(int light, int a, int b, int c, int d, int e, f32 v);
+extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
 extern void lightSetField4D(int light, int v);
 extern void lightSetFieldB0(int light, int a, int b, int c, int d);
 extern void fn_8001D9E0(int light, int a, int b, int c, int d);
 extern void lightFn_8001d620(int light, int a, int b);
 extern void lightSetField2FB(int light, int v);
-extern void fn_8001D714(f32 v, int light);
+extern void fn_8001D714(int light, f32 v);
 extern int Obj_UpdateRomCurveFollowVelocityIndexed(f32 a, f32 b, f32 c, int obj, void *curve, int p, void *out);
-extern void Obj_SmoothTurnAnglesTowardVelocity(f32 a, f32 b, int obj, void *angles, int p);
+extern void Obj_SmoothTurnAnglesTowardVelocity(int obj, void *angles, int p, f32 a, f32 b);
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
 extern int randFn_80080100(int range);
 extern void objAudioFn_80039270(int obj, int p, int sfxId);
@@ -1860,10 +1860,10 @@ void bossdrakor_update(int obj)
         getEnvfxActImmediately(obj, obj, 0x144, 0);
         getEnvfxActImmediately(obj, obj, 0x10d, 0);
         getEnvfxActImmediately(obj, obj, 0x10e, 0);
-        skyFn_80088e54(lbl_803E6510, 1);
+        skyFn_80088e54(1, lbl_803E6510);
         timeOfDayFn_80055038();
-        if ((*(u8 (**)(f32, void *, int, int *, int))(*gRomCurveInterface + 0x8c))(lbl_803E6560, (void *)((char *)state + 0x28), obj, &curveArg, 0xd) != 0) {
-            (*(u8 (**)(f32, void *, int, int *, int))(*gRomCurveInterface + 0x8c))(lbl_803E6560, (void *)((char *)state + 0x28), obj, &curveArg, 0);
+        if ((*(u8 (**)(void *, int, f32, int *, int))(*gRomCurveInterface + 0x8c))((void *)((char *)state + 0x28), obj, lbl_803E6560, &curveArg, 0xd) != 0) {
+            (*(u8 (**)(void *, int, f32, int *, int))(*gRomCurveInterface + 0x8c))((void *)((char *)state + 0x28), obj, lbl_803E6560, &curveArg, 0);
         }
         *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)state + 0x90);
         *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)state + 0x98);
@@ -1880,15 +1880,15 @@ void bossdrakor_update(int obj)
             modelLightStruct_setField50(*(int *)((char *)state + 0x160), 2);
             modelLightStruct_setColorsA8AC(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
             modelLightStruct_setColors100104(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
-            fn_8001D730(lbl_803E6564, *(int *)((char *)state + 0x160), 0, 0x40, 0, 0x80, 0x5a);
-            lightDistAttenFn_8001dc38(lbl_803E6544, lbl_803E6540, *(int *)((char *)state + 0x160));
+            fn_8001D730(*(int *)((char *)state + 0x160), 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
+            lightDistAttenFn_8001dc38(*(int *)((char *)state + 0x160), lbl_803E6544, lbl_803E6540);
             lightSetField4D(*(int *)((char *)state + 0x160), 0);
-            lightFn_8001db6c(lbl_803E6520, *(void **)((char *)state + 0x160), 1);
+            lightFn_8001db6c(*(void **)((char *)state + 0x160), 1, lbl_803E6520);
             lightSetFieldB0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
             fn_8001D9E0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
             lightFn_8001d620(*(int *)((char *)state + 0x160), 2, 0x28);
             lightSetField2FB(*(int *)((char *)state + 0x160), 1);
-            fn_8001D714(lbl_803E6550, *(int *)((char *)state + 0x160));
+            fn_8001D714(*(int *)((char *)state + 0x160), lbl_803E6550);
         }
     }
     moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(*(f32 *)state, lbl_803E6568, lbl_803E6520, obj, (void *)((char *)state + 0x28), 1, (void *)((char *)state + 0x194));
@@ -1896,38 +1896,23 @@ void bossdrakor_update(int obj)
         player = (int)Obj_GetPlayerObject();
         if ((void *)player != NULL) {
             d = Obj_GetYawDeltaToObject(obj, player, 0);
-            if (d < -0x200) {
-                d = -0x200;
-            } else if (d > 0x200) {
-                d = 0x200;
-            }
-            *(s16 *)obj += d;
+            *(s16 *)obj += (d < -0x200) ? -0x200 : ((d > 0x200) ? 0x200 : d);
             d = *(s16 *)((char *)obj + 2);
             if (d != 0) {
-                if (d < -0x100) {
-                    d = -0x100;
-                } else if (d > 0x100) {
-                    d = 0x100;
-                }
-                *(s16 *)((char *)obj + 2) -= d;
+                *(s16 *)((char *)obj + 2) -= (d < -0x100) ? -0x100 : ((d > 0x100) ? 0x100 : d);
             }
             d = *(s16 *)((char *)obj + 4);
             if (d != 0) {
-                if (d < -0x100) {
-                    d = -0x100;
-                } else if (d > 0x100) {
-                    d = 0x100;
-                }
-                *(s16 *)((char *)obj + 4) -= d;
+                *(s16 *)((char *)obj + 4) -= (d < -0x100) ? -0x100 : ((d > 0x100) ? 0x100 : d);
             }
         }
     } else {
-        Obj_SmoothTurnAnglesTowardVelocity(lbl_803E6548, lbl_803E656C, obj, (void *)((char *)obj + 0x24), 0x2d);
+        Obj_SmoothTurnAnglesTowardVelocity(obj, (void *)((char *)obj + 0x24), 0x2d, lbl_803E6548, lbl_803E656C);
     }
     if (moveResult != 0) {
         bossdrakor_handleActionEvent(obj, state, moveResult);
     }
-    adv = ObjAnim_AdvanceCurrentMove(PSVECMag((f32 *)((char *)obj + 0x24)) / *(f32 *)((char *)state + 0x164) + lbl_803E6570, timeDelta, obj, (ObjAnimEventList *)buf);
+    adv = ((int (*)(f32, int, f32, void *))ObjAnim_AdvanceCurrentMove)(PSVECMag((f32 *)((char *)obj + 0x24)) / *(f32 *)((char *)state + 0x164) + lbl_803E6570, obj, timeDelta, buf);
     if (adv != 0) {
         if (*(int *)((char *)state + 0x168) == 0) {
             ObjHits_ClearHitVolumes(obj);
@@ -1975,8 +1960,7 @@ void bossdrakor_update(int obj)
             }
         }
     }
-    p = buf;
-    for (i = 0; i < buf[0x1b]; i++) {
+    for (i = 0, p = buf; i < buf[0x1b]; i++) {
         switch (p[0x13]) {
         case 0:
             Sfx_PlayFromObject(obj, 0x481);
@@ -2034,9 +2018,9 @@ void bossdrakor_update(int obj)
         if (vec != NULL) {
             ObjPath_GetPointWorldPosition(obj, 4, &hx, &hy, &hz, 0);
             PSVECSubtract((f32 *)((char *)player + 0xc), &hx, &hx);
-            d = getAngle(hy, sqrtf(hx * hx + hz * hz)) - (u16)vec[0];
+            d = (s16)getAngle(hy, sqrtf(hx * hx + hz * hz)) - (u16)vec[0];
             if (d > 0x8000) {
-                d -= 0xffff;
+                d = (s16)((int)d - 0xffff);
             }
             if (d < -0x8000) {
                 d += 0xffff;
@@ -2054,8 +2038,9 @@ void bossdrakor_updateHeadTracking(int obj, int state)
     s16 *neck;
     s16 *vecF;
     s16 *vec10;
-    int v;
     int step;
+    int step2;
+    int v;
     s16 d;
     struct {
         u8 pad[6];
@@ -2078,14 +2063,14 @@ void bossdrakor_updateHeadTracking(int obj, int state)
                 if (vec10 != NULL) {
                     d = (int)(*(f32 *)((char *)state + 0x18) * (f32)lbl_803DC19A) - (u16)vecF[1];
                     if (d > 0x8000) {
-                        d -= 0xffff;
+                        d = (s16)((int)d - 0xffff);
                     }
                     if (d < -0x8000) {
                         d += 0xffff;
                     }
-                    step = (d < -lbl_803DC198 * framesThisStep) ? -lbl_803DC198 * framesThisStep : ((d > lbl_803DC198 * framesThisStep) ? lbl_803DC198 * framesThisStep : d);
-                    vecF[1] += (s16)step;
-                    vec10[1] -= (s16)step;
+                    step2 = (d < -lbl_803DC198 * framesThisStep) ? -lbl_803DC198 * framesThisStep : ((d > lbl_803DC198 * framesThisStep) ? lbl_803DC198 * framesThisStep : d);
+                    vecF[1] += (s16)step2;
+                    vec10[1] -= (s16)step2;
                     if (timerCountDown((f32 *)((char *)state + 0x18)) != 0) {
                         storeZeroToFloatParam((f32 *)((char *)state + 0x18));
                     }
@@ -2120,25 +2105,17 @@ int bossdrakor_chooseNextMove(int obj, f32 *speedOut)
     } else if (dir[1] < lbl_803E653C) {
         idx = 4;
     } else {
-        a = getAngle(dir[0], dir[2]);
+        a = (u16)(s16)getAngle(dir[0], dir[2]);
         d = *(s16 *)obj - a;
         if (d > 0x8000) {
-            d -= 0xffff;
+            d = (s16)((int)d - 0xffff);
         }
         if (d < -0x8000) {
             d += 0xffff;
         }
-        v = d;
-        if (v >= 0) {
-        } else {
-            v = -v;
-        }
+        v = (d < 0) ? -d : d;
         if (v > 0x2000) {
-            v = d;
-            if (v >= 0) {
-            } else {
-                v = -v;
-            }
+            v = (d < 0) ? -d : d;
             if (v < 0x6000) {
                 if (d > 0) {
                     idx = 1;
@@ -2148,8 +2125,9 @@ int bossdrakor_chooseNextMove(int obj, f32 *speedOut)
             }
         }
     }
+    v = lbl_80329F90[idx];
     *speedOut = (f32)lbl_80329FA4[idx];
-    return lbl_80329F90[idx];
+    return v;
 }
 
 void bossdrakor_spawnAttackObjects(int obj, int state, int action)
@@ -2398,12 +2376,12 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         if (((DrakorFlags *)((char *)state + 0x198))->b40) {
             *(int *)((char *)state + 0x168) = 0x12;
             if (*(void **)((char *)state + 0x160) != NULL) {
-                lightFn_8001db6c(lbl_803E651C, *(void **)((char *)state + 0x160), 0);
+                lightFn_8001db6c(*(void **)((char *)state + 0x160), 0, lbl_803E651C);
             }
         } else {
             ((DrakorFlags *)((char *)state + 0x198))->b40 = 1;
             if (*(void **)((char *)state + 0x160) != NULL) {
-                lightFn_8001db6c(lbl_803E651C, *(void **)((char *)state + 0x160), 1);
+                lightFn_8001db6c(*(void **)((char *)state + 0x160), 1, lbl_803E651C);
             }
         }
         break;
