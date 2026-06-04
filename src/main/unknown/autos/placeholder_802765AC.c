@@ -138,53 +138,41 @@ extern void fn_802712C8(McmdVoiceState *state); /* synthStartSynthJobHandling */
 
 /*
  * Choose a randomized note/velocity command and dispatch it through the
- * normal sample-start handler.
+ * normal set-key handler.
  */
 void mcmdRandomKey(McmdVoiceState *state, McmdCommandArgs *args)
 {
-    u32 command;
-    int lowKey;
-    int highKey;
-    int fineTune;
-    u32 randomValue;
-    int keyRange;
+    u8 k1;
+    u8 k2;
+    u8 t;
+    s32 i1;
+    s32 i2;
+    u8 detune;
 
     if (((args->value >> 8) & 0xff) == 0) {
-        command = args->flags;
-        lowKey = (command >> 8) & 0xff;
-        highKey = command >> 0x18;
-        if (highKey < lowKey) {
-            highKey = lowKey;
-            lowKey = command >> 0x18;
+        k1 = (args->flags >> 8) & 0xff;
+        k2 = args->flags >> 0x18;
+        if (k1 > k2) {
+            t = k1;
+            k1 = k2;
+            k2 = t;
         }
     } else {
-        lowKey = state->key - (int)((args->flags >> 8) & 0xff);
-        highKey = state->key + (int)(args->flags >> 0x18);
-        if ((int)lowKey < 0) {
-            lowKey = 0;
-        } else if ((int)lowKey > 0x7f) {
-            lowKey = 0x7f;
-        }
-        lowKey &= 0xff;
-        if (highKey > 0x7f) {
-            highKey = 0x7f;
-        }
-        highKey &= 0xff;
+        i1 = state->key - (s32)((args->flags >> 8) & 0xff);
+        i2 = state->key + (args->flags >> 0x18);
+        k1 = i1 < 0 ? 0 : i1 > 0x7f ? 0x7f : i1;
+        k2 = i2 < 0 ? 0 : i2 > 0x7f ? 0x7f : i2;
     }
 
-    if ((args->value & 0xff) == 0) {
-        fineTune = (args->flags >> 0x10) & 0xff;
+    if ((u8)args->value != 0) {
+        detune = (sndRand() % 0xc9) - 100;
     } else {
-        fineTune = (sndRand() & 0xffff) % 0xc9 - 100;
+        detune = (args->flags >> 0x10) & 0xff;
     }
-    randomValue = sndRand();
-    keyRange = (highKey - lowKey) + 1;
-    args->flags = ((fineTune & 0xff) << 0x10) | 0x19 |
-            (lowKey + ((randomValue & 0xffff) -
-                       ((int)(randomValue & 0xffff) / keyRange) * keyRange)) *
-                0x100;
+
+    args->flags = ((u8)detune << 0x10) | 0x19 | ((k1 + (sndRand() % ((k2 - k1) + 1))) << 8);
     args->value = 0;
-    state->key = (u16)(args->flags >> 8) & 0x7f;
+    state->key = (args->flags >> 8) & 0x7f;
     state->fineTune = (s8)(args->flags >> 0x10);
     if (voiceIsRegistered((int)state) != 0) {
         inpSetMidiLastNote(state->midiSlot, state->midiEvent, state->key & 0xff);
@@ -328,9 +316,9 @@ void mcmdPortamento(McmdVoiceState *state, McmdCommandArgs *args)
  */
 void mcmdVarCalculation(McmdVoiceState *state, McmdCommandArgs *args, u8 op)
 {
+    s32 t;
     s16 s1;
     s16 s2;
-    s32 t;
 
     s1 = varGet32(state, args->flags >> 0x18, (u8)args->value);
     if (op == 4) {
@@ -384,7 +372,7 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
         targetInstrument = args->flags >> 0x10;
         if (targetInstrument != 0xffff) {
             offset = 0;
-            for (i = 0; i < *(u8 *)(lbl_803BD150 + 0x210); i++) {
+            for (i = 0; i < lbl_803BD150[0x210]; i++) {
                 voice = (int)(synthVoice + offset);
                 voiceState = (McmdVoiceState *)voice;
                 if (voiceState->macroBase != 0 && targetInstrument == voiceState->instrumentKey) {
@@ -442,38 +430,33 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
 }
 
 /*
- * Key off other voices in the same tag group, optionally by immediate stop.
+ * Key off other voices in the same key group, optionally by immediate kill.
  */
 void mcmdSetKeyGroup(McmdVoiceState *state, McmdCommandArgs *args)
 {
-    u32 group;
-    u32 doKill;
+    u32 kg;
+    u32 kill;
     u32 i;
-    int synthInfo;
-    int offset;
+    int off;
     McmdVoiceState *voice;
 
-    offset = 0;
     state->keyGroup = 0;
-    group = (args->flags >> 8) & 0xff;
-    doKill = ((args->flags >> 0x10) & 0xff) != 0;
-    if (group != 0) {
-        synthInfo = (int)lbl_803BD150;
-        for (i = 0; i < *(u8 *)(synthInfo + 0x210); i++) {
-            voice = (McmdVoiceState *)(synthVoice + offset);
-            if (voice->macroBase != 0) {
-                if (((voice->outputFlags & MCMD_VOICE_ALLOCATED_OUTPUT_FLAG) == 0) &&
-                    group == voice->keyGroup) {
-                    if (doKill == 0) {
-                        macSetExternalKeyoff(voice);
-                    } else {
-                        voiceKill(i);
-                    }
+    kg = (args->flags >> 8) & 0xff;
+    kill = ((args->flags >> 0x10) & 0xff) != 0;
+    if (kg != 0) {
+        off = 0;
+        for (i = 0; i < lbl_803BD150[0x210]; off += SYNTH_VOICE_STRIDE, i++) {
+            voice = (McmdVoiceState *)(synthVoice + off);
+            if (voice->macroBase != 0 && (MAC_CFLAGS(voice) & MAC_FLAG64(0, 2)) == 0 &&
+                kg == voice->keyGroup) {
+                if (kill == 0) {
+                    macSetExternalKeyoff(voice);
+                } else {
+                    voiceKill(i);
                 }
             }
-            offset += 0x404;
         }
-        state->keyGroup = group;
+        state->keyGroup = kg;
     }
 }
 
@@ -641,7 +624,7 @@ void macHandleActive(McmdVoiceState *sv)
             voiceid = ((sv->keyBase + ((cmd >> 8) & 0xff)) << 8) | ((cmd >> 0x10) << 0x10);
             i = 0;
             off = 0;
-            for (; i < *(u8 *)(lbl_803BD150 + 0x210); off += SYNTH_VOICE_STRIDE, i++) {
+            for (; i < lbl_803BD150[0x210]; off += SYNTH_VOICE_STRIDE, i++) {
                 u32 id = voiceid | i;
                 if (*(u32 *)(synthVoice + off + 0xf4) == id) {
                     if (id != 0xffffffff) {
@@ -1534,13 +1517,15 @@ u32 audioFn_80278b94(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, 
  */
 void fn_80278EA4(void)
 {
-    u32 i;
     int off;
+    u32 i;
 
+    macRealTimeLo = 0;
+    off = 0;
     macActiveRoot = 0;
     macTimeQueueRoot = 0;
-    *(u64 *)&macRealTimeHi = 0;
-    for (i = 0, off = 0; i < *(u8 *)(lbl_803BD150 + 0x210); i++, off += SYNTH_VOICE_STRIDE) {
+    macRealTimeHi = 0;
+    for (i = 0; i < lbl_803BD150[0x210]; off += SYNTH_VOICE_STRIDE, i++) {
         *(u32 *)(synthVoice + off + 0x34) = 0;
         *(s32 *)(synthVoice + off + 0x4c) = 2;
         *(u16 *)(synthVoice + off + 0xaa) = 0;
