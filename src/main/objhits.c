@@ -2048,10 +2048,11 @@ LAB_80033418:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void doNothing_800333C8(void)
+#pragma dont_inline on
+void doNothing_800333C8(int objA,int objB,int att,void *state,void *attState,f32 dt)
 {
-  return;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -2068,132 +2069,126 @@ void doNothing_800333C8(void)
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
-                                   undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                   undefined8 param_7,undefined8 param_8,undefined4 param_9,
-                                   undefined4 param_10,int param_11,int param_12)
+void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
 {
-  int iVar1;
-  char cVar2;
-  int iVar3;
-  undefined4 in_r10;
-  ObjHitsPriorityState *objStateB;
-  ObjHitsPriorityState *objStateA;
-  uint uVar6;
-  int *piVar7;
-  undefined8 extraout_f1;
-  undefined8 extraout_f1_00;
-  undefined8 extraout_f1_01;
-  undefined8 extraout_f1_02;
-  undefined8 uVar8;
+  ObjHitsPriorityState *stateA;
+  ObjHitsPriorityState *stateB;
+  ObjHitsPriorityState *attStateA;
+  ObjHitsPriorityState *attStateB;
+  int *hitboxBuf;
+  uint bufIndex;
+  uint mask;
+  u8 result;
 
-  uVar8 = _savegpr_21();
-  iVar1 = (int)((ulonglong)uVar8 >> 0x20);
-  iVar3 = (int)uVar8;
-  objStateA = *(ObjHitsPriorityState **)(iVar1 + 0x54);
-  objStateB = *(ObjHitsPriorityState **)(iVar3 + 0x54);
-  cVar2 = '\0';
-  uVar8 = extraout_f1;
-  if ((objStateA->objectHitMask != 0) && (objStateA->pad70 == '\0')) {
-    if (*(short *)(iVar1 + 0x44) == 1) {
-      piVar7 = *(int **)(*(int *)(iVar1 + 0x7c) + *(char *)(iVar1 + 0xad) * 4);
-      uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-      if ((objStateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) == 0) {
-        memcpy(gObjHitsPrimaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = memcpy(gObjHitsPrimaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
-                             (uint)*(byte *)(*piVar7 + 0xf7) << 4);
+  stateA = *(ObjHitsPriorityState **)(objA + 0x54);
+  stateB = *(ObjHitsPriorityState **)(objB + 0x54);
+  if (attA != 0) {
+    attStateA = *(ObjHitsPriorityState **)(attA + 0x54);
+  } else {
+    attStateA = NULL;
+  }
+  if (attB != 0) {
+    attStateB = *(ObjHitsPriorityState **)(attB + 0x54);
+  } else {
+    attStateB = NULL;
+  }
+  result = 0;
+  if ((*(uint *)((int)stateA + 0x48) != 0) && (*(s8 *)((int)stateA + 0x70) == 0)) {
+    if (*(s16 *)(objA + 0x44) == 1) {
+      hitboxBuf = *(int **)(*(int *)(objA + 0x7c) + *(s8 *)(objA + 0xad) * 4);
+      bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
+      if ((stateA->flags & 0x2000) != 0) {
+        memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsPrimaryHitboxBufferScratch0,
+               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+        memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsPrimaryHitboxBufferScratch1,
+               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+      } else {
+        memcpy(gObjHitsPrimaryHitboxBufferScratch0, (void *)hitboxBuf[bufIndex + 0x12],
+               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+        memcpy(gObjHitsPrimaryHitboxBufferScratch1, (void *)hitboxBuf[(bufIndex ^ 1) + 0x12],
+               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
       }
-      else {
-        memcpy(piVar7[uVar6 + 0x12],gObjHitsPrimaryHitboxBufferScratch0,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],gObjHitsPrimaryHitboxBufferScratch1,
-                             (uint)*(byte *)(*piVar7 + 0xf7) << 4);
-      }
-      if (param_11 != 0) {
-        piVar7 = *(int **)(*(int *)(param_11 + 0x7c) + *(char *)(param_11 + 0xad) * 4);
-        uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-        if ((objStateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) == 0) {
-          memcpy(gObjHitsSecondaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = memcpy(gObjHitsSecondaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
-                               (uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          objStateA->flags = objStateA->flags | OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
+      if (attA != 0) {
+        hitboxBuf = *(int **)(*(int *)(attA + 0x7c) + *(s8 *)(attA + 0xad) * 4);
+        bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
+        if ((stateA->flags & 0x2000) != 0) {
+          memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsSecondaryHitboxBufferScratch0,
+                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+          memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsSecondaryHitboxBufferScratch1,
+                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+        } else {
+          memcpy(gObjHitsSecondaryHitboxBufferScratch0, (void *)hitboxBuf[bufIndex + 0x12],
+                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+          memcpy(gObjHitsSecondaryHitboxBufferScratch1, (void *)hitboxBuf[(bufIndex ^ 1) + 0x12],
+                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+          stateA->flags = stateA->flags | 0x2000;
         }
-        else {
-          memcpy(piVar7[uVar6 + 0x12],gObjHitsSecondaryHitboxBufferScratch0,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],gObjHitsSecondaryHitboxBufferScratch1,
-                               (uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        }
       }
     }
-    uVar6 = objStateA->objectHitMask >> 4;
-    if (uVar6 != 0) {
-      cVar2 = ObjHits_CheckHitVolumes(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                      iVar1,iVar3,iVar1,1,0,uVar6,
-                                      objStateA->skeletonHitMask >> 4,in_r10);
-      uVar8 = extraout_f1_00;
+    mask = *(uint *)((int)stateA + 0x48) >> 4;
+    if (mask != 0) {
+      result = ((u8 (*)(int, int, int, int, int, uint, uint))ObjHits_CheckHitVolumes)(
+          objA, objB, objA, 1, 0, mask, *(uint *)((int)stateA + 0x4c) >> 4);
     }
-    if (((param_11 != 0) && (cVar2 == '\0')) && (uVar6 = objStateA->objectHitMask & 0xf, uVar6 != 0))
-    {
-      cVar2 = ObjHits_CheckHitVolumes(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                      param_11,iVar3,iVar1,1,0,uVar6,
-                                      objStateA->skeletonHitMask & 0xf,in_r10);
-      uVar8 = extraout_f1_01;
+    if (((attA != 0) && (result == 0)) &&
+        (mask = *(uint *)((int)stateA + 0x48) & 0xf, mask != 0)) {
+      result = ((u8 (*)(int, int, int, int, int, uint, uint))ObjHits_CheckHitVolumes)(
+          attA, objB, objA, 1, 0, mask, *(uint *)((int)stateA + 0x4c) & 0xf);
     }
-    if ((cVar2 == '\0') && (*(short *)(iVar1 + 0x44) == 1)) {
-      doNothing_800333C8();
+    if ((result == 0) && (*(s16 *)(objA + 0x44) == 1)) {
+      doNothing_800333C8(objA, objB, attA, stateA, attStateA, dt);
     }
   }
-  cVar2 = '\0';
-  if ((((objStateB->sourceMask & 0x80) == 0) && (objStateB->objectHitMask != 0)) &&
-     (objStateB->pad70 == '\0')) {
-    if (*(short *)(iVar3 + 0x44) == 1) {
-      piVar7 = *(int **)(*(int *)(iVar3 + 0x7c) + *(char *)(iVar3 + 0xad) * 4);
-      uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-      if ((objStateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) == 0) {
-        memcpy(gObjHitsPrimaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = memcpy(gObjHitsPrimaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
-                             (uint)*(byte *)(*piVar7 + 0xf7) << 4);
+  result = 0;
+  if (((*(u8 *)((int)stateB + 0xb4) & 0x80) == 0) && (*(uint *)((int)stateB + 0x48) != 0) &&
+      (*(s8 *)((int)stateB + 0x70) == 0)) {
+    if (*(s16 *)(objB + 0x44) == 1) {
+      hitboxBuf = *(int **)(*(int *)(objB + 0x7c) + *(s8 *)(objB + 0xad) * 4);
+      bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
+      if ((stateB->flags & 0x2000) != 0) {
+        memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsPrimaryHitboxBufferScratch0,
+               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+        memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsPrimaryHitboxBufferScratch1,
+               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+      } else {
+        memcpy(gObjHitsPrimaryHitboxBufferScratch0, (void *)hitboxBuf[bufIndex + 0x12],
+               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+        memcpy(gObjHitsPrimaryHitboxBufferScratch1, (void *)hitboxBuf[(bufIndex ^ 1) + 0x12],
+               (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
       }
-      else {
-        memcpy(piVar7[uVar6 + 0x12],gObjHitsPrimaryHitboxBufferScratch0,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],gObjHitsPrimaryHitboxBufferScratch1,
-                             (uint)*(byte *)(*piVar7 + 0xf7) << 4);
-      }
-      if (param_12 != 0) {
-        piVar7 = *(int **)(*(int *)(param_12 + 0x7c) + *(char *)(param_12 + 0xad) * 4);
-        uVar6 = *(ushort *)(piVar7 + 6) >> 2 & 1;
-        if ((objStateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) == 0) {
-          memcpy(gObjHitsSecondaryHitboxBufferScratch0,piVar7[uVar6 + 0x12],(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = memcpy(gObjHitsSecondaryHitboxBufferScratch1,piVar7[(uVar6 ^ 1) + 0x12],
-                               (uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          objStateB->flags = objStateB->flags | OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
+      if (attB != 0) {
+        hitboxBuf = *(int **)(*(int *)(attB + 0x7c) + *(s8 *)(attB + 0xad) * 4);
+        bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
+        if ((stateB->flags & 0x2000) != 0) {
+          memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsSecondaryHitboxBufferScratch0,
+                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+          memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsSecondaryHitboxBufferScratch1,
+                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+        } else {
+          memcpy(gObjHitsSecondaryHitboxBufferScratch0, (void *)hitboxBuf[bufIndex + 0x12],
+                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+          memcpy(gObjHitsSecondaryHitboxBufferScratch1, (void *)hitboxBuf[(bufIndex ^ 1) + 0x12],
+                 (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
+          stateB->flags = stateB->flags | 0x2000;
         }
-        else {
-          memcpy(piVar7[uVar6 + 0x12],gObjHitsSecondaryHitboxBufferScratch0,(uint)*(byte *)(*piVar7 + 0xf7) << 4);
-          uVar8 = memcpy(piVar7[(uVar6 ^ 1) + 0x12],gObjHitsSecondaryHitboxBufferScratch1,
-                               (uint)*(byte *)(*piVar7 + 0xf7) << 4);
-        }
       }
     }
-    uVar6 = objStateB->objectHitMask >> 4;
-    if (uVar6 != 0) {
-      cVar2 = ObjHits_CheckHitVolumes(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                      iVar3,iVar1,iVar3,1,0,uVar6,
-                                      objStateB->skeletonHitMask >> 4,in_r10);
-      uVar8 = extraout_f1_02;
+    mask = *(uint *)((int)stateB + 0x48) >> 4;
+    if (mask != 0) {
+      result = ((u8 (*)(int, int, int, int, int, uint, uint))ObjHits_CheckHitVolumes)(
+          objB, objA, objB, 1, 0, mask, *(uint *)((int)stateB + 0x4c) >> 4);
     }
-    if (((param_12 != 0) && (cVar2 == '\0')) && (uVar6 = objStateB->objectHitMask & 0xf, uVar6 != 0))
-    {
-      cVar2 = ObjHits_CheckHitVolumes(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                                      param_12,iVar1,iVar3,1,0,uVar6,
-                                      objStateB->skeletonHitMask & 0xf,in_r10);
+    if (((attB != 0) && (result == 0)) &&
+        (mask = *(uint *)((int)stateB + 0x48) & 0xf, mask != 0)) {
+      result = ((u8 (*)(int, int, int, int, int, uint, uint))ObjHits_CheckHitVolumes)(
+          attB, objA, objB, 1, 0, mask, *(uint *)((int)stateB + 0x4c) & 0xf);
     }
-    if ((cVar2 == '\0') && (*(short *)(iVar3 + 0x44) == 1)) {
-      doNothing_800333C8();
+    if ((result == 0) && (*(s16 *)(objB + 0x44) == 1)) {
+      doNothing_800333C8(objB, objA, attB, stateB, attStateB, dt);
     }
   }
-  _restgpr_21();
-  return;
 }
+
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -3085,8 +3080,8 @@ void ObjHits_Update(int objectCount)
                      (((*(ObjHitsPriorityState **)(candAttachedObj + 0x54))->flags & 1) == 0))) {
                   candAttachedObj = 0;
                 }
-                ((void (*)(int, int, int, int, f32))ObjHits_CheckObjectHitVolumes)(
-                    obj, candObj, attachedObj, candAttachedObj, timeDelta);
+                ObjHits_CheckObjectHitVolumes(obj, candObj, attachedObj, candAttachedObj,
+                                              timeDelta);
               }
             }
           }

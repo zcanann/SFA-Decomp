@@ -258,11 +258,8 @@ u8 ObjHits_CheckHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
                            undefined8 param_8,undefined4 param_9,undefined4 param_10,
                            int param_11,undefined4 param_12,undefined4 param_13,uint param_14,
                            uint param_15,undefined4 param_16);
-void doNothing_800333C8(void);
-void ObjHits_CheckObjectHitVolumes(undefined8 param_1,double param_2,undefined8 param_3,
-                                   undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                                   undefined8 param_7,undefined8 param_8,undefined4 param_9,
-                                   undefined4 param_10,int param_11,int param_12);
+void doNothing_800333C8(int objA,int objB,int att,void *state,void *attState,f32 dt);
+void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt);
 void ObjHits_RegisterActiveHitVolumeObject(int obj);
 void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag);
 void ObjHits_DetectObjectPair(int objA,int objB);
