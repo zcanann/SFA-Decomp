@@ -7318,3 +7318,109 @@ void staffDrawSwipe(int *obj, int *swipe)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int objGetAnimState80A(int obj);
+extern f32 lbl_803E330C;
+extern f32 lbl_803E3310;
+extern f32 lbl_803E332C;
+extern f32 lbl_803E32E0;
+extern f32 lbl_803E32E4;
+extern f32 lbl_803E32E8;
+extern f32 lbl_803E32EC;
+extern f32 lbl_803E32F0;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_loop_invariants off
+void staff_update(int *obj)
+{
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    u8 *swp;
+    int n;
+    int *model = Obj_GetActiveModel((int)obj);
+    *(u16 *)((char *)model + 0x18) &= ~0x8;
+    ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(state + 0x50), timeDelta, 0);
+
+    swp = state;
+    for (n = 3; n != 0; n--) {
+        if (*(u8 *)(swp + 0x14) & 2) {
+            int j;
+            u8 *vp;
+            j = *(u16 *)(swp + 0xc);
+            vp = *(u8 **)swp + j * 20;
+            for (; j < *(u16 *)(swp + 0xe); j += 2) {
+                if (swp == *(u8 **)(state + 0x48)) {
+                    f32 k = lbl_803E32F4;
+                    f32 t = lbl_803E330C * *(f32 *)(state + 0x98) - *(f32 *)(vp + 0xc);
+                    f32 v;
+                    t = k * (t * lbl_803E3310);
+                    if (t < lbl_803E32B4) {
+                        v = lbl_803E32B4;
+                    } else if (t > k) {
+                        v = k;
+                    } else {
+                        v = t;
+                    }
+                    *(s16 *)(vp + 0x10) = k - v;
+                    *(s16 *)(vp + 0x24) = *(s16 *)(vp + 0x10);
+                } else {
+                    *(s16 *)(vp + 0x10) = -(lbl_803E332C * timeDelta - (f32)(int)*(s16 *)(vp + 0x10));
+                    *(s16 *)(vp + 0x24) = *(s16 *)(vp + 0x10);
+                }
+                {
+                    int c = *(s16 *)(vp + 0x10);
+                    if (c < 0) {
+                        c = 0;
+                    } else if (c > 255) {
+                        c = 255;
+                    }
+                    *(s16 *)(vp + 0x10) = (s16)c;
+                    c = *(s16 *)(vp + 0x24);
+                    if (c < 0) {
+                        c = 0;
+                    } else if (c > 255) {
+                        c = 255;
+                    }
+                    *(s16 *)(vp + 0x24) = (s16)c;
+                }
+                if (*(s16 *)(vp + 0x10) <= 0 && *(s16 *)(vp + 0x24) <= 0) {
+                    *(s16 *)(swp + 0x12) += -2;
+                    *(u16 *)(swp + 0xc) += 2;
+                }
+                vp += 0x28;
+            }
+            if (swp != *(u8 **)(state + 0x48) && *(s16 *)(swp + 0x12) == 0) {
+                *(u8 *)(swp + 0x14) &= ~2;
+            }
+        }
+        swp += 0x18;
+    }
+
+    quakeSpellFn_8016cee8(obj, *(int *)((char *)obj + 0xc4));
+    objGetAnimState80A(*(int *)((char *)obj + 0xc4));
+    state[0xb9] = 0;
+    {
+        u8 *q = lbl_803AC6B8;
+        if (q[0x20] != 0) {
+            f32 sc = *(f32 *)(q + 0xc) + lbl_803E32E0;
+            f32 w;
+            *(f32 *)(q + 0xc) = sc;
+            ObjHitbox_SetSphereRadius(*(int *)(q + 0x1c), (int)sc);
+            ObjHits_SetHitVolumeSlot(*(int *)(q + 0x1c), 17, 5, 0);
+            w = *(f32 *)(lbl_803AC6B8 + 0x18) + lbl_803E32E4;
+            *(f32 *)(lbl_803AC6B8 + 0x18) = w;
+            *(f32 *)(lbl_803AC6B8 + 0x10) = *(f32 *)(lbl_803AC6B8 + 0x10) * lbl_803E32E8;
+            *(f32 *)(lbl_803AC6B8 + 0x14) = *(f32 *)(lbl_803AC6B8 + 0x14) * lbl_803E32EC;
+            *(u8 *)(*(int *)(q + 0x1c) + 0x36) = w;
+            *(f32 *)(*(int *)(q + 0x1c) + 8) += lbl_803E32F0;
+            if (*(f32 *)(lbl_803AC6B8 + 0x18) < lbl_803E3288) {
+                q[0x20] = 0;
+                Obj_FreeObject(*(int **)(q + 0x1c));
+                *(int **)(q + 0x1c) = NULL;
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma opt_loop_invariants reset
+#pragma scheduling reset
