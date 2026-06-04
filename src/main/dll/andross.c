@@ -1083,7 +1083,7 @@ LAB_8023c584:
       }
     }
     lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
-    if (lbl_803E74D0 < lbl_803DDDB8) {
+    if (lbl_803DDDB8 > lbl_803E74D0) {
       lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
     }
     turnOnDistortionFilter((f32 *)(piVar14 + 0x30),dVar19,&lbl_803DC4CC,lbl_803DDDB8);
@@ -1100,7 +1100,7 @@ LAB_8023c584:
       }
     }
     lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
-    if (lbl_803E74D0 < lbl_803DDDB8) {
+    if (lbl_803DDDB8 > lbl_803E74D0) {
       lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
     }
     turnOnDistortionFilter((f32 *)(piVar14 + 0x30),dVar19,&lbl_803DC4CC,lbl_803DDDB8);
@@ -1152,8 +1152,9 @@ LAB_8023c584:
     if (iVar12 != 0) {
       GameBit_Set(0x10,0);
       piVar14[0x22] = 0x1a;
-      lbl_803DDDB8 = lbl_803DC4D4 + lbl_803DC4D0;
-      if (lbl_803E74D0 < lbl_803DDDB8) {
+      lbl_803DDDB8 = lbl_803DC4D4;
+      lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
+      if (lbl_803DDDB8 > lbl_803E74D0) {
         lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
       }
       turnOnDistortionFilter((f32 *)(piVar14 + 0x30),lbl_803E74BC,&lbl_803DC4CC,lbl_803DDDB8);
@@ -1172,7 +1173,7 @@ LAB_8023c584:
       }
     }
     lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
-    if (lbl_803E74D0 < lbl_803DDDB8) {
+    if (lbl_803DDDB8 > lbl_803E74D0) {
       lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
     }
     turnOnDistortionFilter((f32 *)(piVar14 + 0x30),dVar19,&lbl_803DC4CC,lbl_803DDDB8);
@@ -1226,8 +1227,9 @@ LAB_8023cbdc:
     cVar11 = fn_8023A6A4((int)piVar14,lbl_803DC454,lbl_803DC458,lbl_803DC45C);
     if (cVar11 != '\0') {
       piVar14[0x22] = 0xf;
-      lbl_803DDDB8 = lbl_803DC4D4 + lbl_803DC4D0;
-      if (lbl_803E74D0 < lbl_803DDDB8) {
+      lbl_803DDDB8 = lbl_803DC4D4;
+      lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
+      if (lbl_803DDDB8 > lbl_803E74D0) {
         lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
       }
       turnOnDistortionFilter((f32 *)(piVar14 + 0x30),lbl_803E74BC,&lbl_803DC4CC,lbl_803DDDB8);
@@ -1239,14 +1241,30 @@ LAB_8023cbdc:
             *(f32 *)(piVar14 + 0x27) = *(f32 *)(piVar14 + 0x27) + (f32)(lbl_803DC464);
     }
     fn_80239EAC(obj,(int)piVar14);
-    if (*(char *)((int)piVar14 + 0xb5) == '\0') {
-      if (*(f32 *)(piVar14 + 0x32) < *(float *)(*piVar14 + 0x14)) {
+    if (*(u8 *)((int)piVar14 + 0xb5) != 0) {
+      if (piVar14[0x1f] == 5) {
+        piVar14[0x22] = 0x19;
+      }
+      else {
+        piVar14[0x22] = 0xf;
+      }
+      lbl_803DDDB8 = lbl_803DC4D4;
+      lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
+      if (lbl_803DDDB8 > lbl_803E74D0) {
+        lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
+      }
+      turnOnDistortionFilter((f32 *)(piVar14 + 0x30),lbl_803E74BC,&lbl_803DC4CC,lbl_803DDDB8);
+      Rcp_DisableDistortionFilter();
+    }
+    else {
+      if (*(float *)(*piVar14 + 0x14) > *(f32 *)(piVar14 + 0x32)) {
         piVar14[0x22] = 0x10;
         *(undefined *)(piVar14 + 0x2e) = 1;
-        *(int *)(*piVar14 + 0x14) = piVar14[0x32];
+        *(f32 *)(*piVar14 + 0x14) = *(f32 *)(piVar14 + 0x32);
         *(f32 *)(piVar14 + 0x38) = lbl_803E74D4;
-        lbl_803DDDB8 = lbl_803DC4D4 + lbl_803DC4D0;
-        if (lbl_803E74D0 < lbl_803DDDB8) {
+        lbl_803DDDB8 = lbl_803DC4D4;
+        lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
+        if (lbl_803DDDB8 > lbl_803E74D0) {
           lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
         }
         turnOnDistortionFilter((f32 *)(piVar14 + 0x30),lbl_803E74BC,&lbl_803DC4CC,lbl_803DDDB8);
@@ -1254,25 +1272,12 @@ LAB_8023cbdc:
         break;
       }
     }
-    else {
-      if (piVar14[0x1f] == 5) {
-        piVar14[0x22] = 0x19;
-      }
-      else {
-        piVar14[0x22] = 0xf;
-      }
-      lbl_803DDDB8 = lbl_803DC4D4 + lbl_803DC4D0;
-      if (lbl_803E74D0 < lbl_803DDDB8) {
-        lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
-      }
-      turnOnDistortionFilter((f32 *)(piVar14 + 0x30),lbl_803E74BC,&lbl_803DC4CC,lbl_803DDDB8);
-      Rcp_DisableDistortionFilter();
-    }
     *(u16 *)(piVar14 + 0x26) = *(short *)(piVar14 + 0x26) - (u16)framesThisStep;
     if (*(short *)(piVar14 + 0x26) < 0) {
       piVar14[0x22] = 0xf;
-      lbl_803DDDB8 = lbl_803DC4D4 + lbl_803DC4D0;
-      if (lbl_803E74D0 < lbl_803DDDB8) {
+      lbl_803DDDB8 = lbl_803DC4D4;
+      lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
+      if (lbl_803DDDB8 > lbl_803E74D0) {
         lbl_803DDDB8 = lbl_803DDDB8 - lbl_803E74D0;
       }
       turnOnDistortionFilter((f32 *)(piVar14 + 0x30),lbl_803E74BC,&lbl_803DC4CC,lbl_803DDDB8);
