@@ -52,241 +52,233 @@ extern void *objCreateLight(int obj, int kind);
  * PAL Address: TODO
  * PAL Size: TODO
  */
+typedef struct {
+    u8 b80 : 1;
+    u8 b40 : 1;
+    u8 b20 : 1;
+    u8 b10 : 1;
+    u8 b08 : 1;
+    u8 b04 : 1;
+    u8 b02 : 1;
+    u8 b01 : 1;
+} GpshShrineFlags;
+
+extern void *Obj_GetPlayerObject(void);
+extern u32 GameBit_Get(int bit);
+extern int GameBit_Set(int bit, int val);
+extern void Sfx_PlayFromObject(int obj, int sfx);
+extern void skyFn_80088c94(int a, int b);
+extern int getEnvfxAct(int obj, int player, int id, int p);
+extern void fn_801C70F0(int obj);
+extern int mapGetDirIdx(int a);
+extern int unlockLevel(int a, int b, int c);
+extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);
+extern void SCGameBitLatch_UpdateInverted(int state, int a, int b, int c, int d, int e);
+extern void gameTimerInit(int a, int b);
+extern void timerSetToCountUp(void);
+extern void gameTimerStop(void);
+extern int isGameTimerDisabled(void);
+extern int Obj_FreeObject(int obj);
+extern int objGetAnimStateFlags(int obj, int flag);
+extern void audioStopByMask(int mask);
+extern int Music_Trigger(int id, int value);
+extern int *gObjectTriggerInterface;
+extern int *gScreenTransitionInterface;
+extern int *gMapEventInterface;
+extern f32 timeDelta;
+extern f32 lbl_803E503C;
+extern f32 lbl_803E5040;
+
 #pragma scheduling off
 #pragma peephole off
-void gpsh_shrine_update(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+void gpsh_shrine_update(int obj)
 {
-  float fVar1;
-  ushort *puVar2;
-  int iVar3;
-  uint uVar4;
-  uint uVar5;
-  uint uVar6;
-  uint uVar7;
-  uint uVar8;
-  uint uVar9;
-  int iVar10;
-  byte bVar12;
-  undefined4 *puVar11;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  int iVar13;
-  undefined8 uVar14;
-  double dVar15;
-  double dVar16;
-  int local_38 [2];
-  undefined4 local_30;
-  uint uStack_2c;
-  
-  puVar2 = (ushort *)FUN_80286834();
-  iVar13 = *(int *)(puVar2 + 0x5c);
-  iVar3 = FUN_80017a98();
-  local_38[0] = 0;
-  if (iVar3 != 0) {
-    uVar4 = FUN_80017690(0x149);
-    uVar5 = FUN_80017690(0x14c);
-    uVar6 = FUN_80017690(0x14d);
-    uVar7 = FUN_80017690(0x14e);
-    uVar8 = FUN_80017690(0x14a);
-    uVar9 = FUN_80017690(0x14b);
-    if ((((((uVar4 & 0xff) == 0) || ((uVar5 & 0xff) == 0)) || ((uVar6 & 0xff) == 0)) ||
-        (((uVar7 & 0xff) == 0 || ((uVar8 & 0xff) == 0)))) || ((uVar9 & 0xff) == 0)) {
-      if (((*(byte *)(iVar13 + 0x15) >> 6 & 1) == 0) && ((uVar4 & 0xff) != 0)) {
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xbf | 0x40;
-        FUN_80006824(0,SFXsp_lf_mutter4);
-      }
-      else if (((*(byte *)(iVar13 + 0x15) >> 5 & 1) == 0) && ((uVar5 & 0xff) != 0)) {
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xdf | 0x20;
-        FUN_80006824(0,SFXsp_lf_mutter4);
-      }
-      else if (((*(byte *)(iVar13 + 0x15) >> 4 & 1) == 0) && ((uVar6 & 0xff) != 0)) {
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xef | 0x10;
-        FUN_80006824(0,SFXsp_lf_mutter4);
-      }
-      else if (((*(byte *)(iVar13 + 0x15) >> 3 & 1) == 0) && ((uVar7 & 0xff) != 0)) {
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xf7 | 8;
-        FUN_80006824(0,SFXsp_lf_mutter4);
-      }
-      else if (((*(byte *)(iVar13 + 0x15) >> 2 & 1) == 0) && ((uVar8 & 0xff) != 0)) {
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xfb | 4;
-        FUN_80006824(0,SFXsp_lf_mutter4);
-      }
-      else if (((*(byte *)(iVar13 + 0x15) >> 1 & 1) == 0) && ((uVar9 & 0xff) != 0)) {
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xfd | 2;
-        FUN_80006824(0,SFXsp_lf_mutter4);
-      }
-    }
-    if ((*(int *)(puVar2 + 0x7a) != 0) &&
-       (*(int *)(puVar2 + 0x7a) = *(int *)(puVar2 + 0x7a) + -1, *(int *)(puVar2 + 0x7a) == 0)) {
-      uVar14 = FUN_80080f28(7,'\x01');
-      uVar14 = FUN_80006728(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,
-                            iVar3,0xcc,0,in_r7,in_r8,in_r9,in_r10);
-      uVar14 = FUN_80006728(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,
-                            iVar3,0xcd,0,in_r7,in_r8,in_r9,in_r10);
-      FUN_80006728(uVar14,param_2,param_3,param_4,param_5,param_6,param_7,param_8,puVar2,iVar3,0x222
-                   ,0,in_r7,in_r8,in_r9,in_r10);
-    }
-    FUN_801c70c4(puVar2);
-    iVar10 = FUN_80044404(0x22);
-    FUN_80042b9c(iVar10,1,0);
-    SH_LevelControl_runBloopEvent(iVar13 + 0x13,2,-1,-1,0xdd2,(int *)0xb);
-    FUN_801d8480(iVar13 + 0x13,1,-1,-1,0xcbb,(int *)0x8);
-    SH_LevelControl_runBloopEvent(iVar13 + 0x13,4,-1,-1,0xcbb,(int *)0xc4);
-    fVar1 = lbl_803E5CD4;
-    dVar15 = (double)*(float *)(iVar13 + 4);
-    dVar16 = (double)lbl_803E5CD4;
-    if (dVar15 <= dVar16) {
-      switch(*(undefined *)(iVar13 + 0x14)) {
-      case 0:
-        puVar2[3] = puVar2[3] & 0xbfff;
-        fVar1 = *(float *)(iVar13 + 8) - lbl_803DC074;
-        *(float *)(iVar13 + 8) = fVar1;
-        if ((double)fVar1 <= dVar16) {
-          FUN_80006824((uint)puVar2,0x343);
-          uStack_2c = randomGetRange(500,1000);
-          uStack_2c = uStack_2c ^ 0x80000000;
-          local_30 = 0x43300000;
-          *(float *)(iVar13 + 8) = (float)((double)CONCAT44(0x43300000,uStack_2c) - DOUBLE_803e5cc8)
-          ;
-        }
-        if ((*(byte *)((int)puVar2 + 0xaf) & 1) != 0) {
-          *(undefined *)(iVar13 + 0x14) = 5;
-          FUN_80017698(0x129,0);
-          FUN_80017698(0x5af,0);
-          FUN_80017698(0xdd2,1);
-          (*(code *)(*DAT_803dd6d4 + 0x48))(0,puVar2,0xffffffff);
-          FUN_800067c0((int *)0xd8,1);
-        }
-        break;
-      case 1:
-        if (*(char *)(iVar13 + 0x15) < '\0') {
-          FUN_80017698(0x148,1);
-          *(undefined *)(iVar13 + 0x14) = 2;
-          FUN_80006b54(0x1d,0x4e);
-          FUN_80006b50();
-        }
-        break;
-      case 2:
-        *(undefined *)(iVar13 + 0x12) = 0;
-        uVar4 = FUN_80017690(0x149);
-        if (uVar4 != 0) {
-          *(char *)(iVar13 + 0x12) = *(char *)(iVar13 + 0x12) + '\x01';
-        }
-        uVar4 = FUN_80017690(0x14b);
-        if (uVar4 != 0) {
-          *(char *)(iVar13 + 0x12) = *(char *)(iVar13 + 0x12) + '\x01';
-        }
-        uVar4 = FUN_80017690(0x14e);
-        if (uVar4 != 0) {
-          *(char *)(iVar13 + 0x12) = *(char *)(iVar13 + 0x12) + '\x01';
-        }
-        uVar4 = FUN_80017690(0x14d);
-        if (uVar4 != 0) {
-          *(char *)(iVar13 + 0x12) = *(char *)(iVar13 + 0x12) + '\x01';
-        }
-        uVar4 = FUN_80017690(0x14c);
-        if (uVar4 != 0) {
-          *(char *)(iVar13 + 0x12) = *(char *)(iVar13 + 0x12) + '\x01';
-        }
-        uVar4 = FUN_80017690(0x14a);
-        if (uVar4 != 0) {
-          *(char *)(iVar13 + 0x12) = *(char *)(iVar13 + 0x12) + '\x01';
-        }
-        if (*(char *)(iVar13 + 0x12) == '\x06') {
-          *(undefined *)(iVar13 + 0x14) = 6;
-          FUN_80006b4c();
-          FUN_80017698(0xdd2,0);
-          *(float *)(iVar13 + 4) = lbl_803E5CD8;
-          (*(code *)(*DAT_803dd6cc + 8))(0x1e,1);
-          FUN_80006824(0,SFXmn_sml_trex_fstep);
-        }
-        else {
-          bVar12 = FUN_80006b44();
-          if (bVar12 == 0) {
-            *(undefined *)(iVar13 + 0x12) = 0;
-          }
-          else {
-            *(undefined *)(iVar13 + 0x14) = 7;
-            puVar11 = ObjGroup_GetObjects(0x10,local_38);
-            for (; local_38[0] != 0; local_38[0] = local_38[0] + -1) {
-              dVar15 = (double)FUN_80017ac8(dVar15,dVar16,param_3,param_4,param_5,param_6,param_7,
-                                            param_8,puVar11[local_38[0] + -1]);
+    int count;
+    int data = *(int *)((char *)obj + 0xb8);
+    char *player = Obj_GetPlayerObject();
+    u8 b149;
+    u8 b14c;
+    u8 b14d;
+    u8 b14e;
+    u8 b14a;
+    u8 b14b;
+    int *objs;
+    f32 t;
+    f32 k;
+
+    count = 0;
+    if (player != NULL) {
+        b149 = GameBit_Get(0x149);
+        b14c = GameBit_Get(0x14c);
+        b14d = GameBit_Get(0x14d);
+        b14e = GameBit_Get(0x14e);
+        b14a = GameBit_Get(0x14a);
+        b14b = GameBit_Get(0x14b);
+        if (b149 == 0 || b14c == 0 || b14d == 0 || b14e == 0 || b14a == 0 || b14b == 0) {
+            if (!((GpshShrineFlags *)((char *)data + 0x15))->b40 && b149 != 0) {
+                ((GpshShrineFlags *)((char *)data + 0x15))->b40 = 1;
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+            } else if (!((GpshShrineFlags *)((char *)data + 0x15))->b20 && b14c != 0) {
+                ((GpshShrineFlags *)((char *)data + 0x15))->b20 = 1;
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+            } else if (!((GpshShrineFlags *)((char *)data + 0x15))->b10 && b14d != 0) {
+                ((GpshShrineFlags *)((char *)data + 0x15))->b10 = 1;
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+            } else if (!((GpshShrineFlags *)((char *)data + 0x15))->b08 && b14e != 0) {
+                ((GpshShrineFlags *)((char *)data + 0x15))->b08 = 1;
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+            } else if (!((GpshShrineFlags *)((char *)data + 0x15))->b04 && b14a != 0) {
+                ((GpshShrineFlags *)((char *)data + 0x15))->b04 = 1;
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+            } else if (!((GpshShrineFlags *)((char *)data + 0x15))->b02 && b14b != 0) {
+                ((GpshShrineFlags *)((char *)data + 0x15))->b02 = 1;
+                Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             }
-            *(float *)(iVar13 + 4) = lbl_803E5CD8;
-            (*(code *)(*DAT_803dd6cc + 8))(0x1e,1);
-          }
         }
-        break;
-      case 3:
-        uVar4 = FUN_80294cd0(iVar3,0x80);
-        if (uVar4 == 0) {
-          FUN_80006770(3);
-          (*(code *)(*DAT_803dd6d4 + 0x48))(1,puVar2,0xffffffff);
-          *(undefined *)(iVar13 + 0x14) = 4;
-          FUN_80017698(0x36a,0);
-          (*(code *)(*DAT_803dd72c + 0x50))(0xd,0,1);
-          (*(code *)(*DAT_803dd72c + 0x50))(0xd,1,1);
-          (*(code *)(*DAT_803dd72c + 0x50))(0xd,5,1);
-          (*(code *)(*DAT_803dd72c + 0x50))(0xd,10,1);
-          (*(code *)(*DAT_803dd72c + 0x50))(0xd,0xb,1);
-          FUN_80017698(0xc91,1);
-          FUN_80017698(0xe05,0);
+        if (*(int *)((char *)obj + 0xf4) != 0) {
+            *(int *)((char *)obj + 0xf4) -= 1;
+            if (*(int *)((char *)obj + 0xf4) == 0) {
+                skyFn_80088c94(7, 1);
+                getEnvfxAct(obj, (int)player, 0xcc, 0);
+                getEnvfxAct(obj, (int)player, 0xcd, 0);
+                getEnvfxAct(obj, (int)player, 0x222, 0);
+            }
         }
-        else {
-          FUN_80017698(0x129,1);
-          *(undefined *)(iVar13 + 0x14) = 4;
+        fn_801C70F0(obj);
+        unlockLevel(mapGetDirIdx(0x22), 1, 0);
+        SCGameBitLatch_Update(data + 0x13, 2, -1, -1, 0xdd2, 0xb);
+        SCGameBitLatch_UpdateInverted(data + 0x13, 1, -1, -1, 0xcbb, 8);
+        SCGameBitLatch_Update(data + 0x13, 4, -1, -1, 0xcbb, 0xc4);
+        k = lbl_803E503C;
+        if (*(f32 *)((char *)data + 4) > k) {
+            *(f32 *)((char *)data + 4) -= timeDelta;
+            if (*(f32 *)((char *)data + 4) <= k) {
+                *(f32 *)((char *)data + 4) = k;
+            }
+        } else {
+            switch (*(u8 *)((char *)data + 0x14)) {
+            case 0:
+                *(s16 *)((char *)obj + 6) &= ~0x4000;
+                t = *(f32 *)((char *)data + 8) - timeDelta;
+                *(f32 *)((char *)data + 8) = t;
+                if (t <= k) {
+                    Sfx_PlayFromObject(obj, 0x343);
+                    *(f32 *)((char *)data + 8) = (f32)(int)randomGetRange(500, 1000);
+                }
+                if (*(u8 *)((char *)obj + 0xaf) & 1) {
+                    *(u8 *)((char *)data + 0x14) = 5;
+                    GameBit_Set(0x129, 0);
+                    GameBit_Set(0x5af, 0);
+                    GameBit_Set(0xdd2, 1);
+                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+                    Music_Trigger(0xd8, 1);
+                }
+                break;
+            case 5:
+                *(f32 *)((char *)data + 4) = lbl_803E5040;
+                (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 0xc)))(0x1e, 1);
+                *(u8 *)((char *)data + 0x14) = 1;
+                *(s16 *)((char *)obj + 6) |= 0x4000;
+                break;
+            case 1:
+                if (((GpshShrineFlags *)((char *)data + 0x15))->b80 == 1) {
+                    GameBit_Set(0x148, 1);
+                    *(u8 *)((char *)data + 0x14) = 2;
+                    gameTimerInit(0x1d, 0x4e);
+                    timerSetToCountUp();
+                }
+                break;
+            case 2:
+                *(u8 *)((char *)data + 0x12) = 0;
+                if (GameBit_Get(0x149)) {
+                    *(u8 *)((char *)data + 0x12) += 1;
+                }
+                if (GameBit_Get(0x14b)) {
+                    *(u8 *)((char *)data + 0x12) += 1;
+                }
+                if (GameBit_Get(0x14e)) {
+                    *(u8 *)((char *)data + 0x12) += 1;
+                }
+                if (GameBit_Get(0x14d)) {
+                    *(u8 *)((char *)data + 0x12) += 1;
+                }
+                if (GameBit_Get(0x14c)) {
+                    *(u8 *)((char *)data + 0x12) += 1;
+                }
+                if (GameBit_Get(0x14a)) {
+                    *(u8 *)((char *)data + 0x12) += 1;
+                }
+                if (*(u8 *)((char *)data + 0x12) == 6) {
+                    *(u8 *)((char *)data + 0x14) = 6;
+                    gameTimerStop();
+                    GameBit_Set(0xdd2, 0);
+                    *(f32 *)((char *)data + 4) = lbl_803E5040;
+                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 8)))(0x1e, 1);
+                    Sfx_PlayFromObject(0, SFXmn_sml_trex_fstep);
+                } else if (isGameTimerDisabled()) {
+                    *(u8 *)((char *)data + 0x14) = 7;
+                    objs = (int *)ObjGroup_GetObjects(0x10, &count);
+                    for (; count != 0; count--) {
+                        Obj_FreeObject(objs[count - 1]);
+                    }
+                    *(f32 *)((char *)data + 4) = lbl_803E5040;
+                    (*(void (*)(int, int))(*(int *)(*gScreenTransitionInterface + 8)))(0x1e, 1);
+                } else {
+                    *(u8 *)((char *)data + 0x12) = 0;
+                }
+                break;
+            case 7:
+                *(u8 *)((char *)data + 0x14) = 4;
+                GameBit_Set(0xdd2, 0);
+                GameBit_Set(0xe37, 1);
+                break;
+            case 6:
+                *(u8 *)((char *)data + 0x14) = 3;
+                break;
+            case 3:
+                if (objGetAnimStateFlags((int)player, 0x80)) {
+                    GameBit_Set(0x129, 1);
+                    *(u8 *)((char *)data + 0x14) = 4;
+                } else {
+                    audioStopByMask(3);
+                    (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(1, obj, -1);
+                    *(u8 *)((char *)data + 0x14) = 4;
+                    GameBit_Set(0x36a, 0);
+                    (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(0xd, 0, 1);
+                    (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(0xd, 1, 1);
+                    (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(0xd, 5, 1);
+                    (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(0xd, 10, 1);
+                    (*(void (*)(int, int, int))(*(int *)(*gMapEventInterface + 0x50)))(0xd, 0xb, 1);
+                    GameBit_Set(0xc91, 1);
+                    GameBit_Set(0xe05, 0);
+                }
+                break;
+            case 4:
+                *(u8 *)((char *)data + 0x14) = 0;
+                ((GpshShrineFlags *)((char *)data + 0x15))->b80 = 0;
+                GameBit_Set(0xdd2, 0);
+                GameBit_Set(0x129, 1);
+                GameBit_Set(0x149, 0);
+                GameBit_Set(0x14c, 0);
+                GameBit_Set(0x14d, 0);
+                GameBit_Set(0x14e, 0);
+                GameBit_Set(0x14a, 0);
+                GameBit_Set(0x14b, 0);
+                GameBit_Set(0x14b, 0);
+                GameBit_Set(0x5af, 1);
+                GameBit_Set(0x148, 0);
+                GameBit_Set(0xe37, 0);
+                GameBit_Set(0xe3a, 0);
+                ((GpshShrineFlags *)((char *)data + 0x15))->b40 = 0;
+                ((GpshShrineFlags *)((char *)data + 0x15))->b20 = 0;
+                ((GpshShrineFlags *)((char *)data + 0x15))->b10 = 0;
+                ((GpshShrineFlags *)((char *)data + 0x15))->b08 = 0;
+                ((GpshShrineFlags *)((char *)data + 0x15))->b04 = 0;
+                ((GpshShrineFlags *)((char *)data + 0x15))->b02 = 0;
+                break;
+            }
         }
-        break;
-      case 4:
-        *(undefined *)(iVar13 + 0x14) = 0;
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0x7f;
-        FUN_80017698(0xdd2,0);
-        FUN_80017698(0x129,1);
-        FUN_80017698(0x149,0);
-        FUN_80017698(0x14c,0);
-        FUN_80017698(0x14d,0);
-        FUN_80017698(0x14e,0);
-        FUN_80017698(0x14a,0);
-        FUN_80017698(0x14b,0);
-        FUN_80017698(0x14b,0);
-        FUN_80017698(0x5af,1);
-        FUN_80017698(0x148,0);
-        FUN_80017698(0xe37,0);
-        FUN_80017698(0xe3a,0);
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xbf;
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xdf;
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xef;
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xf7;
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xfb;
-        *(byte *)(iVar13 + 0x15) = *(byte *)(iVar13 + 0x15) & 0xfd;
-        break;
-      case 5:
-        *(float *)(iVar13 + 4) = lbl_803E5CD8;
-        (*(code *)(*DAT_803dd6cc + 0xc))(0x1e,1);
-        *(undefined *)(iVar13 + 0x14) = 1;
-        puVar2[3] = puVar2[3] | 0x4000;
-        break;
-      case 6:
-        *(undefined *)(iVar13 + 0x14) = 3;
-        break;
-      case 7:
-        *(undefined *)(iVar13 + 0x14) = 4;
-        FUN_80017698(0xdd2,0);
-        FUN_80017698(0xe37,1);
-      }
     }
-    else {
-      *(float *)(iVar13 + 4) = (float)(dVar15 - (double)lbl_803DC074);
-      if ((double)*(float *)(iVar13 + 4) <= dVar16) {
-        *(float *)(iVar13 + 4) = fVar1;
-      }
-    }
-  }
-  FUN_80286880();
-  return;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -351,11 +343,11 @@ void gpsh_objcreator_update(int *obj) {
     sub = *(u8**)((char*)obj + 0xb8);
     if (GameBit_Get(0x5af) != 0) {
         *(int*)((char*)obj + 0xf8) = 0;
-        sub[5] = (u8)(sub[5] & ~0x80);
+        ((GpshShrineFlags *)(sub + 5))->b80 = 0;
         *(u8*)((char*)obj + 0x37) = 0xff;
         *(u8*)((char*)obj + 0x36) = 0xff;
     }
-    if ((sub[5] & 0x80) != 0) return;
+    if (((GpshShrineFlags *)(sub + 5))->b80) return;
     if (*(int*)((char*)obj + 0xf8) == 0) {
         if (GameBit_Get(0x148) != 0) {
             *(f32*)sub = lbl_803E504C;
@@ -366,20 +358,21 @@ void gpsh_objcreator_update(int *obj) {
     if (*(f32*)sub == lbl_803E5050) return;
     *(f32*)sub = *(f32*)sub - timeDelta;
     hitDetectFn_80097070(obj, 2, 1, 1, 0, lbl_803E5054);
-    if (*(f32*)sub > lbl_803E5050) return;
-    Sfx_PlayFromObjectLimited(0, SFXwp_swtst1_c, 1);
-    setup = Obj_AllocObjectSetup(0x24, sub[4] + 0x1f4);
-    sub[5] = (u8)(sub[5] | 0x80);
-    *(u8*)((char*)setup + 7) = 0xff;
-    *(u8*)((char*)setup + 4) = 0x20;
-    *(u8*)((char*)setup + 5) = 2;
-    *(f32*)((char*)setup + 8) = *(f32*)((char*)obj + 0xc);
-    *(f32*)((char*)setup + 0xc) = *(f32*)((char*)obj + 0x10);
-    *(f32*)((char*)setup + 0x10) = *(f32*)((char*)obj + 0x14);
-    *(s16*)setup = (s16)(sub[4] + 0x1f4);
-    *(u8*)((char*)setup + 0x18) = (u8)((s32)*(s16*)obj >> 8);
-    *(s16*)((char*)setup + 0x1a) = lbl_803263B8[sub[4]];
-    Obj_SetupObject(setup, 5, (s8)*(s8*)((char*)obj + 0xac), -1, *(void**)((char*)obj + 0x30));
+    if (*(f32*)sub <= lbl_803E5050) {
+        Sfx_PlayFromObjectLimited(0, SFXwp_swtst1_c, 1);
+        setup = Obj_AllocObjectSetup(0x24, sub[4] + 0x1f4);
+        ((GpshShrineFlags *)(sub + 5))->b80 = 1;
+        *(u8*)((char*)setup + 7) = 0xff;
+        *(u8*)((char*)setup + 4) = 0x20;
+        *(u8*)((char*)setup + 5) = 2;
+        *(f32*)((char*)setup + 8) = *(f32*)((char*)obj + 0xc);
+        *(f32*)((char*)setup + 0xc) = *(f32*)((char*)obj + 0x10);
+        *(f32*)((char*)setup + 0x10) = *(f32*)((char*)obj + 0x14);
+        *(s16*)setup = (s16)(sub[4] + 0x1f4);
+        *(u8*)((char*)setup + 0x18) = (u8)((s32)*(s16*)obj >> 8);
+        *(s16*)((char*)setup + 0x1a) = lbl_803263B8[sub[4]];
+        Obj_SetupObject(setup, 5, *(s8*)((char*)obj + 0xac), -1, *(void**)((char*)obj + 0x30));
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -430,7 +423,7 @@ void gpsh_objcreator_init(int *obj, int *def) {
     zero = 0;
     *(int *)((char *)obj + 0xf8) = zero;
     *(u8 *)((char *)state + 4) = (u8)*(s16 *)((char *)def + 0x1a);
-    *(u8 *)((char *)state + 5) &= 0x7f;
+    ((GpshShrineFlags *)((char *)state + 5))->b80 = 0;
     *(u8 *)((char *)obj + 0x37) = 0xff;
     *(u8 *)((char *)obj + 0x36) = 0xff;
 }
