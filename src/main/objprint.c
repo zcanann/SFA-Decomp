@@ -194,68 +194,67 @@ extern undefined4 _DAT_803dc0f4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void objAnimFn_80038f38(int param_1,char *param_2)
+void objAnimFn_80038f38(int obj, char *p2)
 {
-  float fVar1;
-  uint uVar2;
-  bool bVar4;
-  int *piVar3;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  short *psVar8;
-  undefined8 local_18;
-  
-  fVar1 = *(float *)(param_2 + 0xc);
-  psVar8 = (short *)0x0;
-  iVar5 = *(int *)(param_1 + 0x50);
-  if (iVar5 != 0) {
-    iVar6 = 0;
-    iVar7 = 0;
-    for (uVar2 = (uint)*(byte *)(iVar5 + 0x5a); uVar2 != 0; uVar2 = uVar2 - 1) {
-      if ((*(char *)(*(int *)(iVar5 + 0x10) + *(char *)(param_1 + 0xad) + iVar6 + 1) != -1) &&
-         (*(char *)(*(int *)(iVar5 + 0x10) + iVar6) == '\x01')) {
-        psVar8 = (short *)(*(int *)(param_1 + 0x6c) + iVar7);
-      }
-      iVar6 = *(char *)(iVar5 + 0x55) + iVar6 + 1;
-      iVar7 = iVar7 + 0x12;
-    }
-  }
-  if (*param_2 == '\0') {
-    bVar4 = FUN_800067f0(param_1,0x10);
-    if (bVar4) {
-      if ((int)fVar1 != -1) {
-        uVar2 = (int)fVar1 - (uint)DAT_803dc070;
-        if ((int)uVar2 < 0) {
-          FUN_8000680c(param_1,0x10);
-          *(float *)(param_2 + 4) = lbl_803DF624;
-          param_2[0x14] = '\0';
-          param_2[0x15] = '\0';
+    extern int Sfx_StopObjectChannel(int obj, int ch);
+    extern void ObjModel_SetBlendChannelTargets(int model, int a, int b, int c, f32 ratio, int d);
+    extern f32 lbl_803DE9A4;
+    extern f32 lbl_803DE9C8;
+    extern f32 lbl_803DE99C;
+    extern f32 lbl_803DB464;
+    extern u8 framesThisStep;
+    int t;
+    s16 *found;
+    void *m;
+
+    t = (s32)*(f32 *)(p2 + 0xc);
+    found = NULL;
+    m = *(void **)(obj + 0x50);
+    if (m != NULL) {
+        int entryIdx = 0, vecOffset = 0;
+        int n = *(u8 *)((char *)m + 0x5a);
+        int j;
+        for (j = 0; j < n; j++) {
+            u8 *entries = *(u8 **)((char *)m + 0x10);
+            int idx = (s8)*(s8 *)(obj + 0xad) + entryIdx + 1;
+            if ((int)entries[idx] != 0xff && entries[entryIdx] == 1) {
+                found = (s16 *)((char *)*(void **)(obj + 0x6c) + vecOffset);
+            }
+            entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+            vecOffset += 0x12;
         }
-        *(float *)(param_2 + 0xc) = (f32)(s32)(uVar2);
-      }
     }
-    else {
-      *(float *)(param_2 + 0xc) = lbl_803DF648;
-      param_2[0x14] = '\0';
-      param_2[0x15] = '\0';
-      if (lbl_803DF624 < *(float *)(param_2 + 4)) {
-        *(float *)(param_2 + 4) = lbl_803DF624;
-        piVar3 = *(int **)(*(int *)(param_1 + 0x7c) + *(char *)(param_1 + 0xad) * 4);
-        if (*(char *)(*piVar3 + 0xf9) != '\0') {
-          FUN_800178e8((double)(lbl_803DF61C / lbl_803DC0C4),piVar3,2,
-                       (int)*(char *)(piVar3[10] + 0x2d),-1,0);
+
+    if (*(s8 *)p2 != 0) {
+        *(s8 *)p2 = 0;
+    } else if (Sfx_IsPlayingFromObjectChannel(obj, 0x10) != 0) {
+        if (t != -1) {
+            t -= framesThisStep;
+            if (t < 0) {
+                Sfx_StopObjectChannel(obj, 0x10);
+                *(f32 *)(p2 + 4) = lbl_803DE9A4;
+                *(s16 *)(p2 + 0x14) = 0;
+            }
+            *(f32 *)(p2 + 0xc) = (f32)t;
         }
-      }
+    } else {
+        *(f32 *)(p2 + 0xc) = lbl_803DE9C8;
+        *(s16 *)(p2 + 0x14) = 0;
+        if (*(f32 *)(p2 + 4) > lbl_803DE9A4) {
+            int *pi;
+            *(f32 *)(p2 + 4) = lbl_803DE9A4;
+            pi = *(int **)(*(int *)(obj + 0x7c) + (s8)*(s8 *)(obj + 0xad) * 4);
+            if (*(u8 *)(*pi + 0xf9) != 0) {
+                ObjModel_SetBlendChannelTargets((int)pi, 2,
+                    (s8)*(s8 *)(*(int *)((char *)pi + 0x28) + 0x2d), -1,
+                    lbl_803DE99C / lbl_803DB464, 0);
+            }
+        }
     }
-  }
-  else {
-    *param_2 = '\0';
-  }
-  if (psVar8 != (short *)0x0) {
-    *psVar8 = (short)((int)*psVar8 + (int)*(short *)(param_2 + 0x14) >> 1);
-  }
-  return;
+
+    if (found != NULL) {
+        found[0] = (s16)((found[0] + *(s16 *)(p2 + 0x14)) >> 1);
+    }
 }
 
 /*
@@ -3355,7 +3354,7 @@ void fn_8003AAE0(int obj, int* keys, int count, int lo, int hi)
 
 extern u8 framesThisStep;
 
-void characterDoEyeMovements(int obj, int p4)
+void characterDoEyeMovements(int obj, int p4, f32 unused)
 {
     int* foundA;
     int* foundB;
@@ -3652,7 +3651,7 @@ void objPosFn_80039510(int obj, int key, int out)
 }
 
 extern void cacheFn_800229c4(int x);
-extern void PSMTXConcat(int a, int b, int c);
+extern void PSMTXConcat(void *a, void *b, void *c);
 extern f32 lbl_803DEA04;
 
 void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
@@ -3673,8 +3672,8 @@ void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
     cacheFn_800229c4(0);
     fill = lbl_803DEA04;
     for (i = 0; i < count; i++) {
-        PSMTXConcat(p3, dstA, mid);
-        PSMTXConcat(mid, p4, dstB);
+        PSMTXConcat((void*)p3, (void*)dstA, (void*)mid);
+        PSMTXConcat((void*)mid, (void*)p4, (void*)dstB);
         *(f32*)((char*)dstB + 0xc) = fill;
         *(f32*)((char*)dstB + 0x1c) = fill;
         *(f32*)((char*)dstB + 0x2c) = fill;
@@ -4432,6 +4431,159 @@ void staffMtxFn_8003b620(int staff, int obj, int model, int a, int b, int c)
             *(s16 *)(staff + 2) = (s16)(-getAngle(va[1], sqrtf(va[0] * va[0] + va[2] * va[2])) + 0x4000);
             *(s16 *)(staff + 4) = 0;
         }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void characterDoEyeAnims(int obj, int p2)
+{
+    extern f32 lbl_803DE9A4;
+    extern u8 framesThisStep;
+    int *a;
+    int *b;
+    void *m;
+
+    a = NULL;
+    m = *(void **)(obj + 0x50);
+    if (m != NULL) {
+        u8 *p = *(u8 **)((char *)m + 0xc);
+        if (p == NULL) {
+        } else {
+            int n = *(u8 *)((char *)m + 0x59);
+            int off = 0;
+            int j;
+            for (j = 0; j < n; j++) {
+                if (*p == 5) {
+                    a = (int *)(*(int *)(obj + 0x70) + off);
+                }
+                p += 2;
+                off += 0x10;
+            }
+        }
+    }
+
+    b = NULL;
+    if (m != NULL) {
+        u8 *p = *(u8 **)((char *)m + 0xc);
+        if (p == NULL) {
+        } else {
+            int n = *(u8 *)((char *)m + 0x59);
+            int off = 0;
+            int j;
+            for (j = 0; j < n; j++) {
+                if (*p == 4) {
+                    b = (int *)(*(int *)(obj + 0x70) + off);
+                }
+                p += 2;
+                off += 0x10;
+            }
+        }
+    }
+
+    if (a == NULL) {
+        return;
+    }
+    if (b == NULL) {
+    } else {
+        int v = *b;
+        int st = (s8)*(s8 *)(p2 + 0x1e);
+
+        switch (st & 0xf) {
+        case 0:
+            {
+                s8 t = *(s8 *)(p2 + 0x1f);
+                if (t > 0) {
+                    *(s8 *)(p2 + 0x1f) = t - framesThisStep;
+                } else if ((int)randomGetRange(0, 1000) > 0x3de) {
+                    *(u8 *)(p2 + 0x1e) = 1;
+                    *(u8 *)(p2 + 0x1f) = 0;
+                }
+            }
+            break;
+        case 1:
+            if ((st & 0x80) != 0) {
+                v = v - framesThisStep * 0x60;
+                if (v < 0) {
+                    v = 0;
+                    *(u8 *)(p2 + 0x1e) = 0;
+                    *(u8 *)(p2 + 0x1f) = 0;
+                }
+            } else {
+                v = v + framesThisStep * 0x60;
+                if (v > 0x200) {
+                    if (v - 0x200 < 0) {
+                        v = 0;
+                        *(u8 *)(p2 + 0x1e) = 0;
+                    } else {
+                        v = 0x2ff;
+                        *(u8 *)(p2 + 0x1e) = 0x81;
+                    }
+                    *(u8 *)(p2 + 0x1f) = 0x28;
+                }
+            }
+            *a = v;
+            *b = v;
+            break;
+        }
+        characterDoEyeMovements(obj, p2, lbl_803DE9A4);
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void modelCalcVtxGroupMtxs(int p1, int p2)
+{
+    extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+    extern f32 lbl_803DEA18;
+    extern f32 lbl_803DEA1C;
+    f32 ma[12];
+    f32 mb[12];
+    f32 trans[12];
+    int i;
+    int off;
+    f32 scale;
+    f32 one;
+
+    off = 0;
+    scale = lbl_803DEA18;
+    one = lbl_803DEA1C;
+    for (i = 0; i < *(u8 *)(p1 + 0xf4); i++) {
+        u8 *grp = (u8 *)(*(int *)(p1 + 0x54) + off);
+        f32 *out = (f32 *)ObjModel_GetJointMatrix((int *)p2, i + *(u8 *)(p1 + 0xf3));
+        f32 *m1 = (f32 *)ObjModel_GetJointMatrix((int *)p2, grp[0]);
+        f32 *m2 = (f32 *)ObjModel_GetJointMatrix((int *)p2, grp[1]);
+        f32 w;
+        f32 wi;
+        char *jd;
+
+        w = (f32)grp[2] * scale;
+        wi = one - w;
+
+        jd = (char *)(*(int *)(p1 + 0x3c) + grp[0] * 0x1c);
+        PSMTXTrans(trans, -*(f32 *)(jd + 0x10), -*(f32 *)(jd + 0x14), -*(f32 *)(jd + 0x18));
+        PSMTXConcat(m1, trans, ma);
+        jd = (char *)(*(int *)(p1 + 0x3c) + grp[1] * 0x1c);
+        PSMTXTrans(trans, -*(f32 *)(jd + 0x10), -*(f32 *)(jd + 0x14), -*(f32 *)(jd + 0x18));
+        PSMTXConcat(m2, trans, mb);
+
+        out[0] = ma[0] * w + mb[0] * wi;
+        out[1] = ma[1] * w + mb[1] * wi;
+        out[2] = ma[2] * w + mb[2] * wi;
+        out[3] = ma[3] * w + mb[3] * wi;
+        out[4] = ma[4] * w + mb[4] * wi;
+        out[5] = ma[5] * w + mb[5] * wi;
+        out[6] = ma[6] * w + mb[6] * wi;
+        out[7] = ma[7] * w + mb[7] * wi;
+        out[8] = ma[8] * w + mb[8] * wi;
+        out[9] = ma[9] * w + mb[9] * wi;
+        out[10] = ma[10] * w + mb[10] * wi;
+        out[11] = ma[11] * w + mb[11] * wi;
+        off += 4;
     }
 }
 #pragma peephole reset
