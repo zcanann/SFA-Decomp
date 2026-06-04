@@ -2235,10 +2235,12 @@ void fn_801B3DE4(int obj, int b, f32 spd, f32 x, f32 y, f32 z)
     {
         f32 sp = *(f32 *)((char *)e + 0x1c);
         f32 ev = expf((lbl_803E4934 * ((f32)(int)*(int *)((char *)e + 0x14) - (f32)(int)*(int *)((char *)e + 0x10))) / (f32)(int)*(int *)((char *)e + 0x14));
-        *(f32 *)((char *)e + 0xc) = sp - lbl_803DDB70 * ((sp - *(f32 *)((char *)e + 0x18)) * ev);
+        f32 t = (sp - *(f32 *)((char *)e + 0x18)) * ev;
+        *(f32 *)((char *)e + 0xc) = sp - t * lbl_803DDB70;
         ev = expf((lbl_803E493C * (f32)(int)*(int *)((char *)e + 0x10)) / (f32)(int)*(int *)((char *)e + 0x14));
+        t = lbl_803E4938 * ev;
         p = state + off;
-        *(s8 *)((char *)p + 0x2e) = lbl_803E4938 - lbl_803DDB6C * (lbl_803E4938 * ev);
+        *(s8 *)((char *)p + 0x2e) = lbl_803E4938 - t * lbl_803DDB6C;
         *(int *)((char *)p + 0x20) = (int)lbl_803E4940;
         *(int *)((char *)p + 0x24) = *(int *)((char *)p + 0x20);
         *(u8 *)((char *)p + 0x2f) = 1;
@@ -2414,8 +2416,8 @@ void explosion_update(int obj)
     f32 m[12];
     u8 rgb[3];
     int state = *(int *)((char *)obj + 0xb8);
-    int p;
     int i;
+    int p;
     lbl_803DDB58 += 1;
     *(int *)((char *)state + 0xa4c) += framesThisStep;
     for (i = 0, p = state; i < *(u8 *)((char *)state + 0xa58); i++) {
@@ -2423,9 +2425,11 @@ void explosion_update(int obj)
         if (*(u8 *)((char *)p + 0x2f) != 0) {
             f32 sp = *(f32 *)((char *)p + 0x1c);
             f32 ev = expf((lbl_803E4934 * ((f32)(int)*(int *)((char *)p + 0x14) - (f32)(int)*(int *)((char *)p + 0x10))) / (f32)(int)*(int *)((char *)p + 0x14));
-            *(f32 *)((char *)p + 0xc) = sp - lbl_803DDB70 * ((sp - *(f32 *)((char *)p + 0x18)) * ev);
+            f32 t = (sp - *(f32 *)((char *)p + 0x18)) * ev;
+            *(f32 *)((char *)p + 0xc) = sp - t * lbl_803DDB70;
             ev = expf((lbl_803E493C * (f32)(int)*(int *)((char *)p + 0x10)) / (f32)(int)*(int *)((char *)p + 0x14));
-            *(s8 *)((char *)p + 0x2e) = lbl_803E4938 - lbl_803DDB6C * (lbl_803E4938 * ev);
+            t = lbl_803E4938 * ev;
+            *(s8 *)((char *)p + 0x2e) = lbl_803E4938 - t * lbl_803DDB6C;
             if (*(int *)((char *)p + 0x10) >= *(int *)((char *)p + 0x14)) {
                 *(u8 *)((char *)p + 0x2f) = 0;
             } else {
@@ -2436,9 +2440,10 @@ void explosion_update(int obj)
                 if (*(u8 *)((char *)p + 0x2d) < 5) {
                     if ((f32)(int)*(int *)((char *)p + 0x10) / (f32)(int)*(int *)((char *)p + 0x14) < lbl_803E4998 &&
                         (*(int *)((char *)p + 0x20) -= framesThisStep, *(int *)((char *)p + 0x20) <= 0)) {
-                        s8 c = *(s8 *)((char *)p + 0x2d);
+                        u8 c = *(u8 *)((char *)p + 0x2d);
                         f32 sp2 = *(f32 *)((char *)p + 0x1c);
                         int st2 = *(int *)((char *)obj + 0xb8);
+                        f32 sv;
                         vpos[0] = *(f32 *)((char *)p + 0xc) * (lbl_803E495C * (f32)(int)randomGetRange(-5, 3) + lbl_803E492C);
                         vpos[1] = lbl_803E4960;
                         vpos[2] = lbl_803E4960;
@@ -2448,8 +2453,9 @@ void explosion_update(int obj)
                         vpos[0] += *(f32 *)((char *)p + 0x0);
                         vpos[1] += *(f32 *)((char *)p + 0x4);
                         vpos[2] += *(f32 *)((char *)p + 0x8);
+                        sv = sp2 * (f32)(int)randomGetRange(0xc0, 0x100);
                         if (*(u8 *)((char *)st2 + 0xa58) < 0x32) {
-                            fn_801B3DE4(obj, c + 1, sp2 * (f32)(int)randomGetRange(0xc0, 0x100) * lbl_803E4974, vpos[0], vpos[1], vpos[2]);
+                            fn_801B3DE4(obj, (u8)(c + 1), sv * lbl_803E4974, vpos[0], vpos[1], vpos[2]);
                         }
                         *(int *)((char *)p + 0x20) = *(int *)((char *)p + 0x24);
                     }
@@ -2466,11 +2472,14 @@ void explosion_update(int obj)
     for (i = 0, p = state; i < *(u8 *)((char *)state + 0xa5a); i++) {
         if (*(u8 *)((char *)p + 0x984) != 0) {
             *(int *)((char *)p + 0x97c) += framesThisStep;
-            if (*(int *)((char *)p + 0x97c) < *(int *)((char *)p + 0x980)) {
+            if (*(int *)((char *)p + 0x97c) >= *(int *)((char *)p + 0x980)) {
+                *(u8 *)((char *)p + 0x984) = 0;
+            } else {
                 f32 grav = *(f32 *)((char *)state + 0xa3c);
                 u32 ft = framesThisStep;
-                *(f32 *)((char *)p + 0x968) = -(lbl_803E499C * grav * (f32)(int)(ft * ft) - (*(f32 *)((char *)p + 0x974) * (f32)(u32)framesThisStep + *(f32 *)((char *)p + 0x968)));
-                *(f32 *)((char *)p + 0x974) = -(grav * (f32)(u32)ft - *(f32 *)((char *)p + 0x974));
+                f32 n974 = -(grav * (f32)(u32)ft - *(f32 *)((char *)p + 0x974));
+                *(f32 *)((char *)p + 0x968) = -(lbl_803E499C * (grav * (f32)(int)(ft * ft)) - (*(f32 *)((char *)p + 0x974) * (f32)(u32)ft + *(f32 *)((char *)p + 0x968)));
+                *(f32 *)((char *)p + 0x974) = n974;
                 *(f32 *)((char *)p + 0x964) += *(f32 *)((char *)p + 0x970) * (f32)(u32)framesThisStep;
                 *(f32 *)((char *)p + 0x96c) += *(f32 *)((char *)p + 0x978) * (f32)(u32)framesThisStep;
                 if (*(s8 *)((char *)state + 0xa5c) != 0 && *(f32 *)((char *)p + 0x968) < *(f32 *)((char *)state + 0x960) &&
@@ -2532,8 +2541,6 @@ void explosion_update(int obj)
                     }
                     (*(void (*)(int, int, void *, int, int, void *))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x5e, fake, 0x200001, -1, ang);
                 }
-            } else {
-                *(u8 *)((char *)p + 0x984) = 0;
             }
         }
         p += 0x24;
