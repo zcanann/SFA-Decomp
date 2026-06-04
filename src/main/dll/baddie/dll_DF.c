@@ -430,26 +430,28 @@ int trickyFn_8013b368(u8 *obj, u8 *state, f32 vel)
                         }
                     } else {
                         u32 p = (u16)getPatchGroup((f32 *)(obj + 0x18), *(u16 *)(state + 0xd0));
-                        if (p == 0) {
-                            trickyReportError(strs + 0x3ec);
-                            *(u8 *)(state + 9) = 0;
-                        } else if (targetWg == *(u16 *)(state + 0xd0)) {
-                            for (i = 0; i < 4; i++) {
-                                if (*(s16 *)(state + 0x98 + i * 2) == (int)p) {
-                                    slot = i;
-                                    *(u8 *)(state + 9) = 2;
-                                    break;
+                        if (p != 0) {
+                            if (targetWg == *(u16 *)(state + 0xd0)) {
+                                for (i = 0; i < 4; i++) {
+                                    if (*(s16 *)(state + 0x98 + i * 2) == (int)p) {
+                                        slot = i;
+                                        *(u8 *)(state + 9) = 2;
+                                        break;
+                                    }
                                 }
-                            }
-                            if (i == 4) {
+                                if (i == 4) {
+                                    fn_800DB240(target, state + 0xec, p);
+                                    *(u8 *)(state + 9) = 4;
+                                }
+                            } else if (*(s16 *)(state + 0xd2) == (int)p) {
+                                *(u8 *)(state + 9) = 3;
+                            } else {
                                 fn_800DB240(target, state + 0xec, p);
                                 *(u8 *)(state + 9) = 4;
                             }
-                        } else if (*(s16 *)(state + 0xd2) == (int)p) {
-                            *(u8 *)(state + 9) = 3;
                         } else {
-                            fn_800DB240(target, state + 0xec, p);
-                            *(u8 *)(state + 9) = 4;
+                            trickyReportError(strs + 0x3ec);
+                            *(u8 *)(state + 9) = 0;
                         }
                     }
                 }
@@ -898,7 +900,13 @@ state_selected:
                 trickyTurnTowardYaw(obj, yawA);
             }
         }
-        if (lbl_803E24A8 <= *(f32 *)(obj + 0x98)) {
+        if (*(f32 *)(obj + 0x98) < lbl_803E24A8) {
+            ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(state + 0x14), state + 0x34);
+            *(f32 *)(obj + 0xc) =
+                timeDelta * *(f32 *)(state + 0x2c) * *(f32 *)(state + 0x14) + *(f32 *)(obj + 0xc);
+            *(f32 *)(obj + 0x14) =
+                timeDelta * *(f32 *)(state + 0x30) * *(f32 *)(state + 0x14) + *(f32 *)(obj + 0x14);
+        } else {
             ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(state + 0x14) * lbl_803E24AC, state + 0x34);
             k = lbl_803E24AC;
             *(f32 *)(obj + 0xc) =
@@ -907,12 +915,6 @@ state_selected:
             *(f32 *)(obj + 0x14) =
                 timeDelta * *(f32 *)(state + 0x30) * *(f32 *)(state + 0x14) * k +
                 *(f32 *)(obj + 0x14);
-        } else {
-            ObjAnim_SampleRootCurvePhase(obj, *(f32 *)(state + 0x14), state + 0x34);
-            *(f32 *)(obj + 0xc) =
-                timeDelta * *(f32 *)(state + 0x2c) * *(f32 *)(state + 0x14) + *(f32 *)(obj + 0xc);
-            *(f32 *)(obj + 0x14) =
-                timeDelta * *(f32 *)(state + 0x30) * *(f32 *)(state + 0x14) + *(f32 *)(obj + 0x14);
         }
         if ((*(u32 *)(state + 0x54) & 0x8000000) != 0) {
             f32 dx;
@@ -949,14 +951,18 @@ state_selected:
     case 10:
         trickyDebugPrint(strs + 0x4b8);
         *(f32 *)(state + 0x68) = *(f32 *)(state + 0x68) + timeDelta;
-        if (*(f32 *)(state + 0x68) < *(f32 *)(state + 0x64)) {
+        if (*(f32 *)(state + 0x68) >= *(f32 *)(state + 0x64)) {
+            *(u32 *)(obj + 0x10) = *(u32 *)(*(int *)(state + 0x4c0) + 0xc);
+            *(f32 *)(state + 0x3c) = lbl_803E23E8;
+            *(u8 *)(state + 9) = 7;
+        } else {
             *(f32 *)(obj + 0xc) =
                 (*(f32 *)(state + 0x7c) - *(f32 *)(state + 0x74)) *
                     (*(f32 *)(state + 0x68) / *(f32 *)(state + 0x64)) +
                 *(f32 *)(state + 0x74);
             k = *(f32 *)(state + 0x68);
             *(f32 *)(obj + 0x10) =
-                lbl_803E24B0 * k * k + *(f32 *)(state + 0x6c) * k + *(f32 *)(state + 0x70);
+                lbl_803E24B0 * k * k + (*(f32 *)(state + 0x6c) * k + *(f32 *)(state + 0x70));
             *(f32 *)(obj + 0x14) =
                 (*(f32 *)(state + 0x80) - *(f32 *)(state + 0x78)) *
                     (*(f32 *)(state + 0x68) / *(f32 *)(state + 0x64)) +
@@ -980,10 +986,6 @@ state_selected:
             }
             objHitDetectFn_80062e84(obj, 0, 0);
             *(u8 *)(state + 0x353) = 0;
-        } else {
-            *(u32 *)(obj + 0x10) = *(u32 *)(*(int *)(state + 0x4c0) + 0xc);
-            *(f32 *)(state + 0x3c) = lbl_803E23E8;
-            *(u8 *)(state + 9) = 7;
         }
         break;
     case 0xb:
