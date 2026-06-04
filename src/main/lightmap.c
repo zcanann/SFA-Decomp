@@ -273,99 +273,120 @@ extern f32 lbl_803DF8A0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+typedef struct {
+    s16 rx, ry, rz, pad;
+    f32 d4;
+    f32 x, y, z;
+} PosRot;
+typedef struct { f32 lo; f32 hi; } F32Pair;
+extern int Camera_GetCurrentViewSlot(void);
+extern u32 renderFlags;
+extern f32 Camera_GetFovY(void);
+extern f32 encoderType_803DEBF8;
+extern f32 displayOffsetH_803DEBFC;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803DEBCC;
+extern f32 lbl_803DEBDC;
+extern f32 changeMode_803DEC00;
+extern f32 lbl_803DEC04;
+extern F32Pair changed_803DEC08;
+extern void setMatrixFromObjectPos(f32 *m, PosRot *st);
+extern void Matrix_TransformPoint(f32 x, f32 y, f32 z, f32 *m, f32 *ox, f32 *oy, f32 *oz);
+extern f32 gViewFrustumPlanes[];
+extern f32 fn_80293AC4(int v);
+extern f32 fn_80293D0C(int v);
+extern f32 sqrtf(f32 v);
+extern f32 fn_80292248(f32 v);
+extern f32 floor(f32 v);
+extern f32 fn_802943F4(f32 v);
+extern void fn_8005A8A4(f32 *planes, int n);
+
+
+#pragma scheduling off
+#pragma peephole off
 void updateVisibleGeometry(void)
 {
-  float fVar1;
-  undefined2 *puVar2;
-  double dVar3;
-  double dVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
-  double dVar8;
-  float local_e8;
-  float local_e4;
-  float local_e0;
-  ushort local_dc;
-  short local_da;
-  undefined2 local_d8;
-  float local_d4;
-  float local_d0;
-  float local_cc;
-  float local_c8;
-  float afStack_c4 [17];
-  longlong local_80;
-  
-  puVar2 = FUN_800069a8();
-  if (((DAT_803dda68 & 8) == 0) && ((DAT_803dda68 & 0x10000) == 0)) {
-    dVar3 = FUN_800069f8();
-    dVar3 = dVar3 * (double)lbl_803DF87C;
-  }
-  else {
-    dVar3 = FUN_800069f8();
-    dVar3 = dVar3 / (double)lbl_803DF878;
-  }
-  dVar3 = (double)(float)dVar3;
-  dVar8 = (double)(*(float *)(puVar2 + 0x22) - lbl_803DDA58);
-  dVar7 = (double)*(float *)(puVar2 + 0x24);
-  dVar6 = (double)(*(float *)(puVar2 + 0x26) - lbl_803DDA5C);
-  local_d0 = lbl_803DF84C;
-  local_cc = lbl_803DF84C;
-  local_c8 = lbl_803DF84C;
-  local_d4 = lbl_803DF85C;
-  local_dc = 0x8000 - puVar2[0x28];
-  local_da = -puVar2[0x29];
-  local_d8 = puVar2[0x2a];
-  FUN_80017754(afStack_c4,&local_dc);
-  FUN_80017778((double)lbl_803DF84C,(double)lbl_803DF84C,(double)lbl_803DF880,afStack_c4,
-               &local_e0,&local_e4,&local_e8);
-  DAT_8038859c = local_e0;
-  DAT_803885a0 = local_e4;
-  DAT_803885a4 = local_e8;
-  DAT_803885a8 = -(float)(dVar6 * (double)local_e8 +
-                         (double)(float)(dVar8 * (double)local_e0 +
-                                        (double)(float)(dVar7 * (double)local_e4)));
-  local_80 = (longlong)(int)((double)lbl_803DF884 * dVar3);
-  dVar3 = (double)FUN_80293f84();
-  dVar4 = (double)FUN_80293d0c();
-  fVar1 = (float)(dVar4 / dVar3) * (float)(dVar4 / dVar3);
-  FUN_80293900((double)(lbl_803DF888 * lbl_803DF888 * fVar1 + fVar1));
-  powfCoreHighPrecision();
-  dVar3 = (double)FUN_802947f8();
-  dVar4 = (double)FUN_802949e8();
-  dVar3 = -dVar3;
-  FUN_80017778(dVar4,(double)lbl_803DF84C,dVar3,afStack_c4,&local_e0,&local_e4,&local_e8);
-  DAT_803885b0 = local_e0;
-  DAT_803885b4 = local_e4;
-  DAT_803885b8 = local_e8;
-  DAT_803885bc = -(float)(dVar6 * (double)local_e8 +
-                         (double)(float)(dVar8 * (double)local_e0 +
-                                        (double)(float)(dVar7 * (double)local_e4)));
-  dVar5 = -dVar4;
-  FUN_80017778(dVar5,(double)lbl_803DF84C,dVar3,afStack_c4,&local_e0,&local_e4,&local_e8);
-  DAT_803885c4 = local_e0;
-  DAT_803885c8 = local_e4;
-  DAT_803885cc = local_e8;
-  DAT_803885d0 = -(float)(dVar6 * (double)local_e8 +
-                         (double)(float)(dVar8 * (double)local_e0 +
-                                        (double)(float)(dVar7 * (double)local_e4)));
-  FUN_80017778((double)lbl_803DF84C,dVar5,dVar3,afStack_c4,&local_e0,&local_e4,&local_e8);
-  DAT_803885d8 = local_e0;
-  DAT_803885dc = local_e4;
-  DAT_803885e0 = local_e8;
-  DAT_803885e4 = -(float)(dVar6 * (double)local_e8 +
-                         (double)(float)(dVar8 * (double)local_e0 +
-                                        (double)(float)(dVar7 * (double)local_e4)));
-  FUN_80017778((double)lbl_803DF84C,dVar4,dVar3,afStack_c4,&local_e0,&local_e4,&local_e8);
-  DAT_803885ec = local_e0;
-  DAT_803885f0 = local_e4;
-  DAT_803885f4 = local_e8;
-  DAT_803885f8 = -(float)(dVar6 * (double)local_e8 +
-                         (double)(float)(dVar8 * (double)local_e0 +
-                                        (double)(float)(dVar7 * (double)local_e4)));
-  FUN_80057ea0(&DAT_8038859c,5);
-  return;
+    u8 *cam;
+    f32 *py;
+    f32 *pz;
+    f32 *pd;
+    int n;
+    f32 scale;
+    f32 xx, yy, zz;
+    f32 tt, ff, ss;
+    f32 negff, negss;
+    f32 ratio2;
+    u16 fov;
+    f32 oz, oy, ox;
+    PosRot st;
+    f32 m[17];
+
+    cam = (u8 *)Camera_GetCurrentViewSlot();
+    py = &gViewFrustumPlanes[1];
+    pz = &gViewFrustumPlanes[2];
+    pd = &gViewFrustumPlanes[3];
+    n = 0;
+    if ((renderFlags & 8) != 0 || (renderFlags & 0x10000) != 0) {
+        scale = Camera_GetFovY() / encoderType_803DEBF8;
+    } else {
+        scale = Camera_GetFovY() * displayOffsetH_803DEBFC;
+    }
+    xx = *(f32 *)(cam + 0x44) - playerMapOffsetX;
+    yy = *(f32 *)(cam + 0x48);
+    zz = *(f32 *)(cam + 0x4c) - playerMapOffsetZ;
+    st.x = lbl_803DEBCC;
+    st.y = lbl_803DEBCC;
+    st.z = lbl_803DEBCC;
+    st.d4 = lbl_803DEBDC;
+    st.rx = 0x8000 - *(s16 *)(cam + 0x50);
+    st.ry = -*(s16 *)(cam + 0x52);
+    st.rz = *(s16 *)(cam + 0x54);
+    setMatrixFromObjectPos(m, &st);
+    Matrix_TransformPoint(lbl_803DEBCC, lbl_803DEBCC, changeMode_803DEC00, m, &ox, &oy, &oz);
+    gViewFrustumPlanes[n * 5] = ox;
+    py[n * 5] = oy;
+    pz[n * 5] = oz;
+    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    n++;
+    fov = (int)(lbl_803DEC04 * scale) & 0xffff;
+    tt = fn_80293AC4(fov);
+    ratio2 = fn_80293D0C(fov) / tt;
+    ratio2 = ratio2 * ratio2;
+    tt = fn_80292248(sqrtf(changed_803DEC08.lo * (changed_803DEC08.lo * ratio2) + ratio2));
+    ff = floor(tt);
+    ss = fn_802943F4(tt);
+    negff = -ff;
+    Matrix_TransformPoint(ss, lbl_803DEBCC, negff, m, &ox, &oy, &oz);
+    gViewFrustumPlanes[n * 5] = ox;
+    py[n * 5] = oy;
+    pz[n * 5] = oz;
+    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    n++;
+    negss = -ss;
+    Matrix_TransformPoint(negss, lbl_803DEBCC, negff, m, &ox, &oy, &oz);
+    gViewFrustumPlanes[n * 5] = ox;
+    py[n * 5] = oy;
+    pz[n * 5] = oz;
+    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    n++;
+    Matrix_TransformPoint(lbl_803DEBCC, negss, negff, m, &ox, &oy, &oz);
+    gViewFrustumPlanes[n * 5] = ox;
+    py[n * 5] = oy;
+    pz[n * 5] = oz;
+    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    n++;
+    Matrix_TransformPoint(lbl_803DEBCC, ss, negff, m, &ox, &oy, &oz);
+    gViewFrustumPlanes[n * 5] = ox;
+    py[n * 5] = oy;
+    pz[n * 5] = oz;
+    pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
+    n++;
+    fn_8005A8A4(gViewFrustumPlanes, 5);
 }
+#pragma peephole reset
+#pragma scheduling reset
+/* old v1.1 body removed */
 
 /*
  * --INFO--
@@ -419,19 +440,23 @@ undefined4 FUN_8005af9c(int param_1)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-undefined4 coordsToMapCell(int param_1,int param_2,int param_3)
+extern s16 *lbl_803822A0[];
+extern f32 gMapBlockWorldSize;
+extern f32 fastFloorf(f32 v);
+extern int lbl_803DCDD0;
+extern int lbl_803DCDD4;
+#pragma scheduling off
+#pragma peephole off
+int coordsToMapCell(f32 x, f32 z)
 {
-  int iVar1;
-  
-  if ((((-1 < param_1) && (-1 < param_2)) && (param_1 < 0x10)) && (param_2 < 0x10)) {
-    iVar1 = (int)*(char *)((&DAT_80382f14)[param_3] + param_1 + param_2 * 0x10);
-    if ((-1 < iVar1) && (iVar1 < (int)(uint)DAT_803ddb18)) {
-      return *(undefined4 *)(DAT_803ddb1c + iVar1 * 4);
-    }
-    return 0;
-  }
-  return 0;
+    int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
+    int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)lbl_803DCDD4);
+    if (ix < 0 || ix >= 16) return -1;
+    if (iz < 0 || iz >= 16) return -1;
+    return *(s16 *)((char *)lbl_803822A0[0] + (ix + iz * 16) * 12);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -3837,9 +3862,7 @@ extern void shadowCreate(u8 *obj);
 extern void shadowRenderFn_8006b558(u8 *obj);
 extern void renderShadows(int a, int b, int c);
 void sortVisibleObjectKeysDescending(u32 *arr, int n);
-typedef struct { f32 lo; f32 hi; } F32Pair;
 extern F32Pair changed_803DEC08;
-extern f32 lbl_803DEBDC;
 
 #pragma scheduling off
 #pragma peephole off
