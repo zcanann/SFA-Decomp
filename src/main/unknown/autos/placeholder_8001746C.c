@@ -16356,3 +16356,69 @@ u8 *loadObjectFile(int id)
 }
 #pragma dont_inline reset
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
+{
+    int size;
+    int extra;
+    int (*cb)(void *, int);
+
+    size = *(s8 *)(def + 0x55) * 4 + 0x10c;
+    switch (*(s16 *)((u8 *)tmpl + 0x46)) {
+    case 0:
+    case 0x1f:
+        extra = 0x8e0;
+        break;
+    default:
+        if (*(int **)((u8 *)tmpl + 0x68) == 0) {
+            goto none;
+        }
+        cb = (int (*)(void *, int))*(int *)(**(int **)((u8 *)tmpl + 0x68) + 0x1c);
+        if (cb == 0) {
+            goto none;
+        }
+        extra = cb(tmpl, size);
+        break;
+    none:
+        extra = 0;
+        break;
+    }
+    size += extra;
+    if ((flags & 0x40) || (*(u32 *)(def + 0x44) & 0x400000)) {
+        size = roundUpTo8(roundUpTo4(size) + 8) + 0x50;
+    }
+    if (flags & 0x100) {
+        size = roundUpTo8(roundUpTo4(size) + 8) + 0x800;
+    }
+    if ((flags & 2) && *(s16 *)(def + 0x48) != 0) {
+        size = roundUpTo4(size) + 0x44;
+    }
+    if (*(u8 *)(def + 0x61) != 0) {
+        size = roundUpTo4(size) + 0xb8;
+        if (*(s8 *)(def + 0x65) & 8) {
+            size += 0x110;
+        }
+    }
+    if (*(u8 *)(def + 0x5a) != 0) {
+        size = roundUpTo4(size) + *(u8 *)(def + 0x5a) * 0x12;
+    }
+    if (*(u8 *)(def + 0x59) != 0) {
+        size = roundUpTo4(size) + *(u8 *)(def + 0x59) * 0x10;
+    }
+    if (*(u8 *)(def + 0x72) != 0) {
+        size = roundUpTo4(size) + *(u8 *)(def + 0x72) * 0x18;
+    }
+    if (*(u8 *)(def + 0x61) != 0 && *(u8 *)(def + 0x66) != 0) {
+        size = roundUpTo8(size) + 0x12c;
+    }
+    if (*(u8 *)(def + 0x72) != 0) {
+        size = roundUpTo4(size) + *(u8 *)(def + 0x72) * 5;
+    }
+    return roundUpTo32(size);
+}
+#pragma dont_inline reset
+#pragma pop
