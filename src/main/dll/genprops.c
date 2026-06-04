@@ -6742,3 +6742,68 @@ void fn_8016F260(int *obj, int *state, int *other)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 fcos16(u16 angle);
+extern void Sfx_SetObjectSfxVolume(f32 ratio, s16 *obj, int sfx, int vol);
+extern f32 lbl_803E33A8;
+extern f32 lbl_803E33AC;
+extern f32 lbl_803E33C4;
+extern f32 lbl_803E33E8;
+extern f32 lbl_803E33EC;
+
+#pragma scheduling off
+#pragma peephole off
+void shield_update(int *obj)
+{
+    f32 *tbl = lbl_80320A28;
+    f32 *state = *(f32 **)((char *)obj + 0xb8);
+    int i;
+
+    if (state[1] != state[2]) {
+        state[1] = state[3] * timeDelta + state[1];
+        if (state[3] > lbl_803E33AC) {
+            if (state[1] >= state[2]) {
+                state[1] = state[2];
+            }
+            *(u8 *)((char *)state + 0x5c) &= ~1;
+            *(u8 *)((char *)state + 0x5d) &= ~1;
+            *(u8 *)((char *)state + 0x5e) &= ~1;
+            *(u8 *)((char *)state + 0x5f) &= ~1;
+        } else {
+            if (state[1] <= state[2]) {
+                state[1] = state[2];
+                *(u8 *)((char *)state + 0x5c) |= 1;
+                *(u8 *)((char *)state + 0x5d) |= 1;
+                *(u8 *)((char *)state + 0x5e) |= 1;
+                *(u8 *)((char *)state + 0x5f) |= 1;
+            }
+        }
+    }
+    if (*(s16 *)((char *)obj + 0x46) == 2102) {
+        *(u8 *)((char *)obj + 0x36) = (s32)(state[1] / state[4] * (f32)(s32)randomGetRange(96, 127));
+    } else {
+        *(u8 *)((char *)obj + 0x36) = (s32)(state[1] / state[4] * (f32)(s32)randomGetRange(192, 255));
+    }
+    Sfx_SetObjectSfxVolume(lbl_803E33A8, (s16 *)obj, 1069, (s32)(lbl_803E33E8 * (state[1] / state[4])));
+    if (*(u8 *)((char *)obj + 0x36) != 0) {
+        *(s16 *)((char *)obj + 6) &= ~0x4000;
+    } else {
+        *(s16 *)((char *)obj + 6) |= 0x4000;
+    }
+    for (i = 0; i < 4; i++) {
+        *(s16 *)((char *)state + 0x34 + i * 2) =
+            (s32)((f32)*(s16 *)((char *)state + 0x3c + i * 2) * timeDelta +
+                  (f32)*(s16 *)((char *)state + 0x34 + i * 2));
+        if (*(s16 *)((char *)obj + 0x46) == 2102) {
+            *(f32 *)((char *)state + 0x24 + i * 4) =
+                tbl[8 + i] * (fcos16(*(s16 *)((char *)state + 0x34 + i * 2)) * lbl_803E33EC + lbl_803E33C4);
+            *(f32 *)((char *)state + 0x14 + i * 4) = tbl[12 + i];
+        } else {
+            *(f32 *)((char *)state + 0x24 + i * 4) =
+                tbl[i] * ((lbl_803E33C4 + fcos16(*(s16 *)((char *)state + 0x34 + i * 2))) * lbl_803E33A8);
+            *(f32 *)((char *)state + 0x14 + i * 4) = tbl[4 + i];
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
