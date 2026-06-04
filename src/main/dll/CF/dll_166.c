@@ -44,9 +44,9 @@ void treasurechest_update(int obj)
   int iVar2;
   int iVar3;
   byte *pbVar4;
-  undefined auStack72 [4];
+  int hitObject;
   int local_44;
-  undefined auStack64 [4];
+  uint hitVolume;
   float local_3c;
   undefined4 local_38;
   undefined4 local_34;
@@ -57,7 +57,7 @@ void treasurechest_update(int obj)
   undefined2 local_24;
   float local_20;
   float local_1c;
-  undefined auStack24 [4];
+  float hitPosY;
   float local_14 [2];
 
   pbVar4 = *(byte **)(obj + 0xb8);
@@ -91,8 +91,8 @@ void treasurechest_update(int obj)
     local_30 = DAT_802c22b8;
     local_2c = DAT_802c22bc;
     local_44 = 0xffffffff;
-    iVar3 = ObjHits_GetPriorityHitWithPosition(obj,(undefined4 *)auStack72,&local_44,
-                                               (uint *)auStack64,&local_1c,(float *)auStack24,
+    iVar3 = ObjHits_GetPriorityHitWithPosition(obj,&hitObject,&local_44,
+                                               &hitVolume,&local_1c,&hitPosY,
                                                local_14);
     if ((iVar3 != 0) && (iVar3 != 0xe)) {
       local_1c = local_1c + playerMapOffsetX;

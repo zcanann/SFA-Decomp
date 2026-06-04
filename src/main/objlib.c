@@ -1301,7 +1301,7 @@ void ObjHits_AddContactObject(int obj,int contactObj)
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *outSphereIndex,
+int ObjHits_GetPriorityHitWithPosition(int obj,int *outHitObject,int *outSphereIndex,
                 uint *outHitVolume,float *outHitPosX,float *outHitPosY,float *outHitPosZ)
 {
   u8 hitPriority;
@@ -1327,8 +1327,8 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
       }
     }
     if (bestHitSlot != -1) {
-      if (outHitObject != (undefined4 *)0x0) {
-        *outHitObject = *(undefined4 *)((int)hitState->hitObjects + bestHitSlot * 4);
+      if (outHitObject != (int *)0x0) {
+        *outHitObject = hitState->hitObjects[bestHitSlot];
       }
       if (outSphereIndex != (int *)0x0) {
         *outSphereIndex = (int)hitState->sphereIndices[bestHitSlot];
@@ -1366,7 +1366,7 @@ int ObjHits_GetPriorityHitWithPosition(int obj,undefined4 *outHitObject,int *out
 #pragma dont_inline on
 #pragma scheduling off
 #pragma peephole off
-int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,uint *outHitVolume)
+int ObjHits_GetPriorityHit(int obj,int *outHitObject,int *outSphereIndex,uint *outHitVolume)
 {
   u8 hitPriority;
   int hitCount;
@@ -1391,8 +1391,8 @@ int ObjHits_GetPriorityHit(int obj,undefined4 *outHitObject,int *outSphereIndex,
       }
     }
     if (bestHitSlot != -1) {
-      if (outHitObject != (undefined4 *)0x0) {
-        *outHitObject = *(undefined4 *)((int)hitState->hitObjects + bestHitSlot * 4);
+      if (outHitObject != (int *)0x0) {
+        *outHitObject = hitState->hitObjects[bestHitSlot];
       }
       if (outSphereIndex != (int *)0x0) {
         *outSphereIndex = (int)hitState->sphereIndices[bestHitSlot];
@@ -2361,7 +2361,7 @@ bool ObjTrigger_UpdateIdBlockFlag(int param_1)
  */
 #pragma scheduling off
 #pragma peephole off
-int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,undefined4 *outHitObject,float *outHitPos)
+int ObjHits_PollPriorityHitWithCooldown(int obj,float *cooldown,int *outHitObject,float *outHitPos)
 {
   int collisionType;
   
@@ -2414,7 +2414,7 @@ int ObjHits_PollPriorityHitEffectWithCooldown(int obj,uint hitFxMode,uint colorR
   u32 hitObject;
 
   *cooldown = *cooldown - timeDelta;
-  collisionType = ObjHits_GetPriorityHitWithPosition(obj,(undefined4 *)&hitObject,(int *)0x0,
+  collisionType = ObjHits_GetPriorityHitWithPosition(obj,(int *)&hitObject,(int *)0x0,
                                                      (uint *)0x0,&hitPos[0],&hitPos[1],&hitPos[2]);
   if ((*cooldown <= lbl_803DE970) && (collisionType != 0)) {
     *cooldown = lbl_803DE978;
