@@ -293,7 +293,7 @@ extern f32 lbl_803E28E8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void CameraModeNpcSpeak_update(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
+void FUN_8010de18_v11_drift(undefined4 param_1,undefined4 param_2,float *param_3,float *param_4)
 {
   float fVar1;
   float *pfVar2;
@@ -5527,6 +5527,63 @@ void CameraModeWorldMap_update(u8 *obj) {
         *(u8 *)(objB + 0x36) = 0;
     }
 
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
+                                   (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
+                                   *(int *)(obj + 48));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void turnOnBlurFilter(f32 x, f32 y, f32 z, int a, int b);
+extern f32 lbl_803DB9C4;
+
+/* CameraModeNpcSpeak_update  addr=0x8010DD58  size=0x298  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeNpcSpeak_update(u8 *obj) {
+    u8 *state = *(u8 **)(obj + 0xa4);
+    u8 *npc;
+    f32 dx, dy, dz;
+    f32 ex, ey, ez;
+
+    if (state == NULL) {
+        return;
+    }
+    npc = (u8 *)lbl_803DD584;
+    if (*(int *)(npc + 0x1c) == 6) {
+        *(int *)(npc + 0x18) =
+            (s32)((f32)*(s16 *)(npc + 0x22) * timeDelta + (f32)*(int *)(npc + 0x18));
+        if (*(s16 *)(lbl_803DD584 + 0x22) > 0 && *(int *)(lbl_803DD584 + 0x18) > 0xd6d8) {
+            *(int *)(lbl_803DD584 + 0x18) = 0xd6d8;
+        } else if (*(s16 *)(lbl_803DD584 + 0x22) < 0 && *(int *)(lbl_803DD584 + 0x18) < -0xd6d8) {
+            *(int *)(lbl_803DD584 + 0x18) = -0xd6d8;
+        }
+        fn_8010DB7C((int)state, (f32 *)(lbl_803DD584 + 0x24), (f32 *)(lbl_803DD584 + 0x28),
+                     (f32 *)(lbl_803DD584 + 0x2c));
+    }
+    *(f32 *)(obj + 0x18) = *(f32 *)(lbl_803DD584 + 0x24);
+    *(f32 *)(obj + 0x1c) = *(f32 *)(lbl_803DD584 + 0x28);
+    *(f32 *)(obj + 0x20) = *(f32 *)(lbl_803DD584 + 0x2c);
+    dx = *(f32 *)(state + 0x18) - *(f32 *)npc;
+    dy = (*(f32 *)(state + 0x1c) + *(f32 *)(lbl_803DD584 + 0x38)) - *(f32 *)(npc + 4);
+    dz = *(f32 *)(state + 0x20) - *(f32 *)(npc + 8);
+    dx *= *(f32 *)(lbl_803DD584 + 0x48);
+    dy *= *(f32 *)(lbl_803DD584 + 0x3c);
+    dz *= *(f32 *)(lbl_803DD584 + 0x48);
+    if (*(int *)(lbl_803DD584 + 0x1c) == 3) {
+        *(s16 *)(obj + 2) = getAngle(lbl_803DB9C4 * dy, sqrtf(dx * dx + dz * dz));
+    }
+    dx += *(f32 *)npc;
+    dy += *(f32 *)(npc + 4);
+    dz += *(f32 *)(npc + 8);
+    ex = *(f32 *)(obj + 0x18) - dx;
+    ey = *(f32 *)(obj + 0x1c) - dy;
+    ez = *(f32 *)(obj + 0x20) - dz;
+    *(s16 *)obj = (s16)(0x8000 - getAngle(ex, ez));
+    if (*(int *)(lbl_803DD584 + 0x1c) != 3) {
+        *(s16 *)(obj + 2) = getAngle(ey, sqrtf(ex * ex + ez * ez));
+    }
+    turnOnBlurFilter(*(f32 *)npc, *(f32 *)(npc + 4), *(f32 *)(npc + 8), 1, 0);
     Obj_TransformWorldPointToLocal(*(f32 *)(obj + 24), *(f32 *)(obj + 28), *(f32 *)(obj + 32),
                                    (f32 *)(obj + 12), (f32 *)(obj + 16), (f32 *)(obj + 20),
                                    *(int *)(obj + 48));
