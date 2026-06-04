@@ -7116,3 +7116,68 @@ void quakeSpellTextureFn_8016dbf4(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern f32 lbl_803E32A8;
+extern f32 lbl_803E3290;
+extern f32 lbl_803E32F4;
+extern f32 lbl_803E32F8;
+extern f32 lbl_803E32FC;
+extern f32 lbl_803E32D0;
+
+typedef struct QuakePartVec {
+    u16 h0, h1, h2;
+    f32 scale;
+    f32 x, y, z;
+} QuakePartVec;
+
+#pragma scheduling off
+#pragma peephole off
+void superQuakeFn_8016d9fc(f32 *pos)
+{
+    int *player;
+
+    if (lbl_803AC6B8[0x20] != 0) {
+        Obj_FreeObject(*(int **)(lbl_803AC6B8 + 0x1c));
+        *(int **)(lbl_803AC6B8 + 0x1c) = NULL;
+    }
+    *(f32 *)(lbl_803AC6B8 + 0) = pos[0];
+    *(f32 *)(lbl_803AC6B8 + 4) = lbl_803E32A8 + pos[1];
+    *(f32 *)(lbl_803AC6B8 + 8) = pos[2];
+    *(f32 *)(lbl_803AC6B8 + 0x18) = lbl_803E32F4;
+    *(f32 *)(lbl_803AC6B8 + 0xc) = lbl_803E3288;
+    *(f32 *)(lbl_803AC6B8 + 0x10) = lbl_803E3290;
+    *(f32 *)(lbl_803AC6B8 + 0x14) = lbl_803E3288;
+    CameraShake_Start(lbl_803E32F8, lbl_803E32A8, lbl_803E32FC);
+    player = (int *)Obj_GetPlayerObject();
+    if (player != NULL && Obj_IsLoadingLocked() != 0) {
+        QuakePartVec v;
+        void *setup;
+        lbl_803AC6B8[0x20] = 1;
+        v.x = *(f32 *)(lbl_803AC6B8 + 0);
+        v.y = *(f32 *)(lbl_803AC6B8 + 4);
+        v.z = *(f32 *)(lbl_803AC6B8 + 8);
+        v.scale = lbl_803E3288;
+        v.h0 = 0;
+        v.h2 = 0;
+        v.h1 = 0;
+        ((void (*)(int *, int, void *, u32, int, int))((int *)*gPartfxInterface)[2])(player, 0x565, &v, 0x200000, -1, 0);
+        setup = Obj_AllocObjectSetup(36, 0x63c);
+        *((u8 *)setup + 4) = 1;
+        *((u8 *)setup + 6) = 0xff;
+        *((u8 *)setup + 5) = 2;
+        *((u8 *)setup + 7) = 0xff;
+        *(f32 *)((u8 *)setup + 8) = *(f32 *)(lbl_803AC6B8 + 0);
+        *(f32 *)((u8 *)setup + 0xc) = *(f32 *)(lbl_803AC6B8 + 4);
+        *(f32 *)((u8 *)setup + 0x10) = *(f32 *)(lbl_803AC6B8 + 8);
+        *(int **)(lbl_803AC6B8 + 0x1c) = Obj_SetupObject(setup, 5, *(s8 *)((u8 *)player + 0xac), -1, *(void **)((u8 *)player + 0x30));
+        if (GameBit_Get(0xc55) != 0) {
+            *(u8 *)(*(int *)(lbl_803AC6B8 + 0x1c) + 0xad) = 1;
+        }
+        ObjHitbox_SetSphereRadius(*(int *)(lbl_803AC6B8 + 0x1c), 1);
+        ObjHits_SetHitVolumeSlot(*(int *)(lbl_803AC6B8 + 0x1c), 17, 5, 0);
+        *(f32 *)(*(int *)(lbl_803AC6B8 + 0x1c) + 8) = lbl_803E32D0;
+        *(u8 *)(*(int *)(lbl_803AC6B8 + 0x1c) + 0x36) = 0xff;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
