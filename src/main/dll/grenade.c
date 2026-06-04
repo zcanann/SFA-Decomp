@@ -337,151 +337,134 @@ void trickyDigTunnel(undefined8 param_1,undefined8 param_2,double param_3,undefi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void trickyFn_80141fec(undefined8 param_1,undefined8 param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9,undefined4 *param_10,undefined4 param_11,undefined4 param_12,
-                 byte param_13,uint param_14,undefined4 param_15,undefined4 param_16)
+extern void *Objfsa_FindNearestEnabledCurveType24(void *pos, int a, int b);
+extern float getXZDistance(float *a, float *b);
+extern void Sfx_AddLoopedObjectSound(u8 *obj, int soundId);
+extern void Sfx_RemoveLoopedObjectSound(u8 *obj, int soundId);
+extern float sqrtf(float x);
+extern u32 lbl_803E23CC;
+extern f32 lbl_803E2418;
+extern f32 lbl_803E23DC;
+extern f32 lbl_803E2488;
+extern f32 lbl_803E2510;
+extern f32 lbl_803E2514;
+extern f32 lbl_803E2424;
+extern f32 lbl_803E24F8;
+
+void trickyFn_80141fec(u8 *obj, u8 *state)
 {
-  byte bVar1;
-  ushort uVar2;
-  float fVar3;
-  int iVar4;
-  undefined4 uVar5;
-  bool bVar7;
-  char cVar8;
-  uint uVar6;
-  int iVar9;
-  double dVar10;
-  undefined4 local_28 [2];
-  undefined4 local_20;
-  uint uStack_1c;
-  
-  local_28[0] = DAT_803e305c;
-  iVar9 = param_10[9];
-  bVar1 = *(byte *)((int)param_10 + 10);
-  if (bVar1 == 2) {
-    iVar9 = trickyFn_8013b368((double)lbl_803E30A8,param_2,param_3,param_4,param_5,param_6,param_7,
-                         param_8,param_9,param_10,iVar9,param_12,param_13,param_14,param_15,param_16
-                        );
-    if (iVar9 == 0) {
-      param_10[0x15] = param_10[0x15] | 0x10;
-      *(undefined *)((int)param_10 + 10) = 3;
-      param_10[0x1c0] = lbl_803E306C;
-      FUN_800068d0(param_9,0x13d);
-      objAnimFn_8013a3f0(param_9,0xe,lbl_803E31A0,0x4000000);
-    }
-  }
-  else if (bVar1 < 2) {
-    if (bVar1 == 0) {
-      iVar4 = iVar9 + 0x18;
-      iVar9 = 2;
-      uVar5 = FUN_800da700(iVar4,0xffffffff,2);
-      param_10[0x1c3] = uVar5;
-      if ((param_10[0x1c3] != 0) &&
-         (dVar10 = FUN_80017708((float *)(param_10[9] + 0x18),(float *)(param_10[0x1c3] + 8)),
-         (double)lbl_803E31A4 < dVar10)) {
-        param_10[0x1c3] = 0;
-      }
-      *(undefined *)((int)param_10 + 10) = 1;
-    }
-    iVar9 = trickyFn_8013b368((double)lbl_803E3118,param_2,param_3,param_4,param_5,param_6,param_7,
-                         param_8,param_9,param_10,iVar9,param_12,param_13,param_14,param_15,param_16
-                        );
-    if (iVar9 == 0) {
-      if (param_10[0x1c3] == 0) {
-        param_10[0x15] = param_10[0x15] | 0x10;
-        *(undefined *)((int)param_10 + 10) = 3;
-        param_10[0x1c0] = lbl_803E306C;
-        uStack_1c = randomGetRange(0x28,0x50);
-        param_10[0x1c4] = (f32)(s32)uStack_1c;
-        FUN_800068d0(param_9,0x13d);
-        objAnimFn_8013a3f0(param_9,0xe,lbl_803E31A0,0x4000000);
-      }
-      else {
-        *(undefined *)((int)param_10 + 10) = 2;
-        if (param_10[10] != param_10[0x1c3] + 8) {
-          param_10[10] = param_10[0x1c3] + 8;
-          param_10[0x15] = param_10[0x15] & 0xfffffbff;
-          *(undefined2 *)((int)param_10 + 0xd2) = 0;
+    u32 sfxTable;
+    u8 *ptr;
+    u8 *pc;
+    int ret;
+    f32 spd;
+    f32 d;
+    u16 id;
+
+    sfxTable = lbl_803E23CC;
+    pc = *(u8 **)(state + 0x24);
+    switch (state[0xa]) {
+    case 0:
+        *(u8 **)(state + 0x70c) = Objfsa_FindNearestEnabledCurveType24(*(u8 **)(state + 0x24) + 0x18, -1, 2);
+        if (*(u8 **)(state + 0x70c) != NULL
+            && getXZDistance((float *)(*(u8 **)(state + 0x24) + 0x18), (float *)(*(u8 **)(state + 0x70c) + 8)) > lbl_803E2514) {
+            *(u8 **)(state + 0x70c) = NULL;
         }
-      }
-    }
-    else if (iVar9 == 2) {
-      *(undefined *)(param_10 + 2) = 1;
-      *(undefined *)((int)param_10 + 10) = 0;
-      fVar3 = lbl_803E306C;
-      param_10[0x1c7] = lbl_803E306C;
-      param_10[0x1c8] = fVar3;
-      param_10[0x15] = param_10[0x15] & 0xffffffef;
-      param_10[0x15] = param_10[0x15] & 0xfffeffff;
-      param_10[0x15] = param_10[0x15] & 0xfffdffff;
-      param_10[0x15] = param_10[0x15] & 0xfffbffff;
-      *(undefined *)((int)param_10 + 0xd) = 0xff;
-    }
-  }
-  else if (bVar1 == 4) {
-    param_10[0x1c4] = (float)param_10[0x1c4] - lbl_803DC074;
-    if ((float)param_10[0x1c4] <= lbl_803E306C) {
-      uStack_1c = randomGetRange(0x28,0x50);
-      param_10[0x1c4] = (f32)(s32)uStack_1c;
-      param_10[0x1c4] = (float)param_10[0x1c4] * lbl_803E30B4;
-      iVar4 = *(int *)(param_9 + 0xb8);
-      if (((*(byte *)(iVar4 + 0x58) >> 6 & 1) == 0) &&
-         (((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)) &&
-          (bVar7 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar7)))) {
-        objAudioFn_800393f8(param_9,(void *)(iVar4 + 0x3a8),0x360,0x500,0xffffffff,0);
-      }
-    }
-    dVar10 = (double)(**(code **)(**(int **)(iVar9 + 0x68) + 0x20))(iVar9,param_9);
-    *(float *)(param_9 + 0xc) =
-         -(float)((double)(float)param_10[0xb] * dVar10 - (double)(float)param_10[0x1c1]);
-    *(float *)(param_9 + 0x14) =
-         -(float)((double)(float)param_10[0xc] * dVar10 - (double)(float)param_10[0x1c2]);
-    cVar8 = (**(code **)(**(int **)(iVar9 + 0x68) + 0x24))(iVar9);
-    if (cVar8 != '\0') {
-      FUN_800068cc();
-      *(char *)*param_10 = *(char *)*param_10 + -4;
-      *(undefined *)(param_10 + 2) = 1;
-      *(undefined *)((int)param_10 + 10) = 0;
-      fVar3 = lbl_803E306C;
-      param_10[0x1c7] = lbl_803E306C;
-      param_10[0x1c8] = fVar3;
-      param_10[0x15] = param_10[0x15] & 0xffffffef;
-      param_10[0x15] = param_10[0x15] & 0xfffeffff;
-      param_10[0x15] = param_10[0x15] & 0xfffdffff;
-      param_10[0x15] = param_10[0x15] & 0xfffbffff;
-      *(undefined *)((int)param_10 + 0xd) = 0xff;
-      uVar6 = randomGetRange(0,1);
-      uVar2 = *(ushort *)((int)local_28 + uVar6 * 2);
-      iVar9 = *(int *)(param_9 + 0xb8);
-      if ((((*(byte *)(iVar9 + 0x58) >> 6 & 1) == 0) &&
-          ((0x2f < *(short *)(param_9 + 0xa0) || (*(short *)(param_9 + 0xa0) < 0x29)))) &&
-         (bVar7 = Sfx_IsPlayingFromObjectChannel(param_9,0x10), !bVar7)) {
-        objAudioFn_800393f8(param_9,(void *)(iVar9 + 0x3a8),uVar2,0x500,0xffffffff,0);
-      }
-    }
-  }
-  else if (bVar1 < 4) {
-    param_10[0x1c0] = (float)param_10[0x1c0] + lbl_803DC074;
-    param_10[0x1c4] = (float)param_10[0x1c4] - lbl_803DC074;
-    if (lbl_803E3188 <= (float)param_10[0x1c0]) {
-      *(undefined *)((int)param_10 + 10) = 4;
-      param_10[0x1c1] = *(undefined4 *)(param_9 + 0x18);
-      param_10[0x1c2] = *(undefined4 *)(param_9 + 0x20);
-      iVar9 = param_10[0x1c3];
-      if (iVar9 != 0) {
-        param_10[0xb] = *(float *)(iVar9 + 8) - *(float *)(param_10[9] + 0x18);
-        param_10[0xc] = *(float *)(iVar9 + 0x10) - *(float *)(param_10[9] + 0x20);
-        dVar10 = FUN_80293900((double)((float)param_10[0xb] * (float)param_10[0xb] +
-                                      (float)param_10[0xc] * (float)param_10[0xc]));
-        if ((double)lbl_803E306C != dVar10) {
-          param_10[0xb] = (float)((double)(float)param_10[0xb] / dVar10);
-          param_10[0xc] = (float)((double)(float)param_10[0xc] / dVar10);
+        state[0xa] = 1;
+    case 1:
+        ret = trickyFn_8013b368((int)obj, lbl_803E2488, (int)state);
+        if (ret == 0) {
+            if (*(u8 **)(state + 0x70c) == NULL) {
+                *(u32 *)(state + 0x54) |= 0x10;
+                state[0xa] = 3;
+                *(f32 *)(state + 0x700) = lbl_803E23DC;
+                *(f32 *)(state + 0x710) = (f32)(int)randomGetRange(0x28, 0x50);
+                Sfx_AddLoopedObjectSound(obj, 0x13d);
+                objAnimFn_8013a3f0((int)obj, 0xe, lbl_803E2510, 0x4000000);
+            } else {
+                state[0xa] = 2;
+                if (*(u8 **)(state + 0x28) != *(u8 **)(state + 0x70c) + 8) {
+                    *(u8 **)(state + 0x28) = *(u8 **)(state + 0x70c) + 8;
+                    *(u32 *)(state + 0x54) &= ~0x400;
+                    *(u16 *)(state + 0xd2) = 0;
+                }
+            }
+        } else if (ret == 2) {
+            state[0x8] = 1;
+            state[0xa] = 0;
+            *(f32 *)(state + 0x71c) = lbl_803E23DC;
+            *(f32 *)(state + 0x720) = lbl_803E23DC;
+            *(u32 *)(state + 0x54) &= ~0x10;
+            *(u32 *)(state + 0x54) &= ~0x10000;
+            *(u32 *)(state + 0x54) &= ~0x20000;
+            *(u32 *)(state + 0x54) &= ~0x40000;
+            state[0xd] = 0xff;
         }
-      }
+        break;
+    case 2:
+        if (trickyFn_8013b368((int)obj, lbl_803E2418, (int)state) == 0) {
+            *(u32 *)(state + 0x54) |= 0x10;
+            state[0xa] = 3;
+            *(f32 *)(state + 0x700) = lbl_803E23DC;
+            Sfx_AddLoopedObjectSound(obj, 0x13d);
+            objAnimFn_8013a3f0((int)obj, 0xe, lbl_803E2510, 0x4000000);
+        }
+        break;
+    case 3:
+        *(f32 *)(state + 0x700) += timeDelta;
+        *(f32 *)(state + 0x710) -= timeDelta;
+        if (*(f32 *)(state + 0x700) >= lbl_803E24F8) {
+            state[0xa] = 4;
+            *(f32 *)(state + 0x704) = *(f32 *)(obj + 0x18);
+            *(f32 *)(state + 0x708) = *(f32 *)(obj + 0x20);
+            if (*(u8 **)(state + 0x70c) != NULL) {
+                *(f32 *)(state + 0x2c) = *(f32 *)(*(u8 **)(state + 0x70c) + 8) - *(f32 *)(*(u8 **)(state + 0x24) + 0x18);
+                *(f32 *)(state + 0x30) = *(f32 *)(*(u8 **)(state + 0x70c) + 0x10) - *(f32 *)(*(u8 **)(state + 0x24) + 0x20);
+                d = sqrtf(*(f32 *)(state + 0x2c) * *(f32 *)(state + 0x2c) + *(f32 *)(state + 0x30) * *(f32 *)(state + 0x30));
+                if (lbl_803E23DC != d) {
+                    *(f32 *)(state + 0x2c) = *(f32 *)(state + 0x2c) / d;
+                    *(f32 *)(state + 0x30) = *(f32 *)(state + 0x30) / d;
+                }
+            }
+        }
+        break;
+    case 4:
+        *(f32 *)(state + 0x710) -= timeDelta;
+        if (*(f32 *)(state + 0x710) <= lbl_803E23DC) {
+            *(f32 *)(state + 0x710) = (f32)(int)randomGetRange(0x28, 0x50);
+            *(f32 *)(state + 0x710) *= lbl_803E2424;
+            ptr = *(u8 **)(obj + 0xb8);
+            if ((*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                objAudioFn_800393f8((int)obj, ptr + 0x3a8, 0x360, 0x500, -1, 0);
+            }
+        }
+        spd = ((f32 (**)(u8 *, u8 *))(**(u8 ***)(pc + 0x68)))[8](pc, obj);
+        *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x704) - *(f32 *)(state + 0x2c) * spd;
+        *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x708) - *(f32 *)(state + 0x30) * spd;
+        if (((u8 (**)(u8 *))(**(u8 ***)(pc + 0x68)))[9](pc) != 0) {
+            Sfx_RemoveLoopedObjectSound(obj, 0x13d);
+            **(u8 **)state -= 4;
+            state[0x8] = 1;
+            state[0xa] = 0;
+            *(f32 *)(state + 0x71c) = lbl_803E23DC;
+            *(f32 *)(state + 0x720) = lbl_803E23DC;
+            *(u32 *)(state + 0x54) &= ~0x10;
+            *(u32 *)(state + 0x54) &= ~0x10000;
+            *(u32 *)(state + 0x54) &= ~0x20000;
+            *(u32 *)(state + 0x54) &= ~0x40000;
+            state[0xd] = 0xff;
+            id = *(u16 *)((char *)&sfxTable + randomGetRange(0, 1) * 2);
+            ptr = *(u8 **)(obj + 0xb8);
+            if ((*(u8 *)(ptr + 0x58) >> 6 & 1) == 0
+                && (*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29)
+                && Sfx_IsPlayingFromObjectChannel((int)obj, 0x10) == 0) {
+                objAudioFn_800393f8((int)obj, ptr + 0x3a8, id, 0x500, -1, 0);
+            }
+        }
+        break;
     }
-  }
-  return;
 }
 
 /*
