@@ -109,6 +109,7 @@ extern f32 lbl_803E0518;
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 int Checkpoint_func07(int* obj, int* state)
 {
     int slotC;
@@ -196,6 +197,7 @@ int Checkpoint_func07(int* obj, int* state)
     }
     return ang;
 }
+#pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1880,6 +1882,7 @@ void screenTransition_fadeFrom(int duration, int type, f32 from)
     lbl_803DD42E = 1;
 }
 
+#pragma opt_common_subs off
 void screenTransition_screenFade(int duration, int type)
 {
     if (lbl_803DD424 >= lbl_803E0560 || lbl_803E0560 == lbl_803DD420) {
@@ -1890,6 +1893,7 @@ void screenTransition_screenFade(int duration, int type)
     lbl_803DD42C = (u8)type;
     lbl_803DD42E = 1;
 }
+#pragma opt_common_subs reset
 
 #pragma opt_common_subs off
 void screenTransition_Do(int duration, int type)
@@ -1938,6 +1942,7 @@ extern f32 lbl_803E0584;
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void player_followCurve(int* obj, int* state, int p5, f32 cx, f32 cz, f32 t)
 {
     f32 dx, dz, dist, max;
@@ -1974,6 +1979,7 @@ void player_followCurve(int* obj, int* state, int p5, f32 cx, f32 cz, f32 t)
         *(f32*)((char*)state + 0x28c) = lbl_803E057C;
     }
 }
+#pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -1988,6 +1994,7 @@ extern f32 lbl_803E0570;
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
 {
     f32 ang, vx, vz, q, w, dist, c, s;
@@ -2023,6 +2030,7 @@ void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
     *(f32*)((char*)state + 0x284) = *(f32*)((char*)obj + 0x24) * s - *(f32*)((char*)obj + 0x2c) * c;
     *(f32*)((char*)state + 0x280) = -*(f32*)((char*)obj + 0x2c) * s - *(f32*)((char*)obj + 0x24) * c;
 }
+#pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2044,6 +2052,7 @@ typedef struct CheckpointSlot {
 extern CheckpointSlot lbl_8039C458[];
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void Checkpoint_Add(int *entry) {
     int i = 0;
     CheckpointSlot *p = lbl_8039C458;
@@ -2065,6 +2074,7 @@ void Checkpoint_Add(int *entry) {
     lbl_8039C458[i].entry = entry;
     lbl_8039C458[i].key   = entry[5];
 }
+#pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
 
@@ -2111,6 +2121,7 @@ void player_doProjGfx(int *p1, int p2, int p3, int count, int p5, int mode)
 
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void Checkpoint_remove(int *obj) {
     int i = 0;
     CheckpointSlot *p = lbl_8039C458;
@@ -2134,11 +2145,13 @@ void Checkpoint_remove(int *obj) {
         remaining--;
     }
 }
+#pragma opt_common_subs reset
 extern int getAngle(f32 a, f32 b);
 extern f32 lbl_803E0584;
 extern f32 timeDelta;
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void player_rotateTowardEnemy(int *obj, int *ctx, int spd) {
     int *enemy;
     f32 dx;
@@ -2165,6 +2178,7 @@ void player_rotateTowardEnemy(int *obj, int *ctx, int spd) {
                   (int)((f32)diff * timeDelta / (lbl_803E0584 * (f32)spd)));
     }
 }
+#pragma opt_common_subs reset
 extern f32 lbl_803E058C;
 extern void setMatrixFromObjectPos(f32 *mtx, void *desc);
 extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
@@ -2266,6 +2280,7 @@ extern f32 lbl_803E0574;
 extern f32 lbl_803E057C;
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void player_getExtraSize(int *a, int *ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 spd) {
     f32 dx;
     f32 dz;
@@ -2299,6 +2314,7 @@ void player_getExtraSize(int *a, int *ctx, f32 px, f32 pz, f32 lo, f32 hi, f32 s
         *(f32 *)((char *)ctx + 0x28c) = lbl_803E057C;
     }
 }
+#pragma opt_common_subs reset
 extern u8 lbl_803DD434;
 extern f32 lbl_803E05A0;
 #pragma scheduling off
@@ -2360,6 +2376,7 @@ extern void setHudOpacity(int op);
 extern void screenRectFn_800d7568(int p1, int p2, int p3, u8 r, u8 g, u8 b);
 #pragma scheduling off
 #pragma peephole off
+#pragma opt_common_subs off
 void screenTransition_do2(int p1, int p2, int p3) {
     int sx;
     int sy;
@@ -2434,6 +2451,7 @@ void screenTransition_do2(int p1, int p2, int p3) {
         break;
     }
 }
+#pragma opt_common_subs reset
 #pragma scheduling reset
 #pragma peephole reset
 
