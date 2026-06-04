@@ -5352,3 +5352,55 @@ void fn_80202EF0(int obj, int p2)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+int fn_80202C78(f32 p1, f32 p2, f32 p3, f32 p4, int obj, int p6)
+{
+    extern int Obj_GetYawDeltaToObject(int, int, f32 *);
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E6370;
+    extern f32 timeDelta;
+    extern f32 lbl_803E634C;
+    extern f32 lbl_803E62C8;
+    extern f32 lbl_803E6374;
+    int state = *(int *)(obj + 0xb8);
+    f32 yawF;
+    int yaw;
+    f32 zero;
+    f32 a;
+    f32 ratio;
+    f32 k;
+    f32 cur;
+    f32 prod;
+
+    yaw = Obj_GetYawDeltaToObject(obj, p6, &yawF);
+    zero = lbl_803E62A8;
+    if (zero == p4) {
+        return 0;
+    }
+    yawF -= p1;
+    ratio = yawF / p4;
+    yawF = ratio;
+    if (ratio >= zero) {
+        a = ratio;
+    } else {
+        a = -ratio;
+    }
+    if (a < lbl_803E6370) {
+        return 1;
+    }
+    if (ratio < lbl_803E62A8) {
+        p2 = -p2;
+    }
+    cur = *(f32 *)(state + 0x280);
+    k = timeDelta * lbl_803E634C;
+    prod = p2 * (lbl_803E62C8 - (f32)(s16)yaw / lbl_803E6374);
+    *(f32 *)(state + 0x280) = k * (prod - cur) + cur;
+    *(f32 *)(state + 0x284) = lbl_803E62A8;
+    return 0;
+}
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
