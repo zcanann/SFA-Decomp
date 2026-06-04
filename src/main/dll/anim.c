@@ -5940,3 +5940,89 @@ int fn_80202A2C(int obj, int *objs, f32 *weights, int n, f32 limit)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void DFP_Torch_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    extern char *Camera_GetCurrentViewSlot(void);
+    extern void voxmaps_worldToGrid(f32 *, s16 *);
+    extern int voxmaps_traceLine(s16 *, s16 *, void *, int, int);
+    extern f32 sqrtf(f32 x);
+    extern u32 randomGetRange(int min, int max);
+    extern f32 lbl_803E63C8;
+    extern f32 lbl_803E63CC;
+    extern f32 lbl_803E63D0;
+    extern f32 lbl_803E63D4;
+    extern f32 lbl_803E63D8;
+    extern f32 lbl_803E63DC;
+    extern f32 timeDelta;
+    int state = *(int *)(obj + 0xb8);
+    char *cam;
+    f32 dist;
+    f32 scale;
+    struct {
+        u8 pad[12];
+        f32 col[3];
+    } fx;
+    struct {
+        s32 out[2];
+        s16 g2[4];
+        s16 g1[4];
+        f32 b[3];
+        f32 a[3];
+        f32 d[3];
+    } stk2;
+
+    if (visible == 0) {
+        *(s16 *)(state + 4) = 0;
+        *(u8 *)(state + 8) = 0;
+    } else {
+        objRenderFn_8003b8f4(lbl_803E63C8);
+        if (*(u8 *)(state + 0xa) != 0) {
+            *(u8 *)(state + 8) = 1;
+            cam = Camera_GetCurrentViewSlot();
+            stk2.d[0] = *(f32 *)(cam + 0xc) - *(f32 *)(obj + 0xc);
+            stk2.d[1] = *(f32 *)(cam + 0x10) - *(f32 *)(obj + 0x10);
+            stk2.d[2] = *(f32 *)(cam + 0x14) - *(f32 *)(obj + 0x14);
+            dist = sqrtf(stk2.d[2] * stk2.d[2] + (stk2.d[0] * stk2.d[0] + stk2.d[1] * stk2.d[1]));
+            if (dist > lbl_803E63CC) {
+                scale = lbl_803E63C8 / dist;
+                stk2.d[0] *= scale;
+                stk2.d[1] *= scale;
+                stk2.d[2] *= scale;
+                stk2.a[0] = lbl_803E63D0 * stk2.d[0];
+                stk2.a[1] = lbl_803E63D0 * stk2.d[1];
+                stk2.a[2] = lbl_803E63D0 * stk2.d[2];
+                stk2.a[0] = stk2.a[0] + *(f32 *)(obj + 0xc);
+                stk2.a[1] = stk2.a[1] + *(f32 *)(obj + 0x10);
+                stk2.a[2] = stk2.a[2] + *(f32 *)(obj + 0x14);
+                stk2.b[0] = lbl_803E63D4 * stk2.d[0];
+                stk2.b[1] = lbl_803E63D4 * stk2.d[1];
+                stk2.b[2] = lbl_803E63D4 * stk2.d[2];
+                stk2.b[0] = stk2.b[0] + *(f32 *)(cam + 0xc);
+                stk2.b[1] = stk2.b[1] + *(f32 *)(cam + 0x10);
+                stk2.b[2] = stk2.b[2] + *(f32 *)(cam + 0x14);
+                voxmaps_worldToGrid(stk2.a, stk2.g1);
+                voxmaps_worldToGrid(stk2.b, stk2.g2);
+                if (voxmaps_traceLine(stk2.g1, stk2.g2, stk2.out, 0, 0) == 0) {
+                    *(u8 *)(state + 8) = 0;
+                    (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+                }
+            }
+            if (*(s16 *)(state + 4) > 0) {
+                *(s16 *)(state + 4) -= (int)timeDelta;
+            } else {
+                if (*(u8 *)(state + 8) != 0) {
+                    fx.col[0] = lbl_803E63D8;
+                    fx.col[1] = lbl_803E63DC;
+                    fx.col[2] = lbl_803E63D8;
+                    (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x1f7, &fx, 0x12, -1, 0);
+                }
+                *(s16 *)(state + 4) = (s16)(randomGetRange(-10, 10) + 0x3c);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
