@@ -313,7 +313,7 @@ void *objSeqCmd3(u8 *obj, u8 *seq, u8 *src)
                 *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc);
                 *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10);
                 *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14);
-                objAnimCurvFn_800849e8(obj, seq);
+                ObjSeq_UpdateCurvePosition(obj, seq);
             }
             if ((s8)seq[0x7a] == 1 &&
                 hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
@@ -989,7 +989,7 @@ int objSeqExecCmd06(u8 *obj, u8 *sourceObj, u8 *seq, int cmd, s8 flag)
                 }
                 *(void **)(seq + 0x2c) = mmAlloc(0x2c, 0x11, 0);
                 if (*(void **)(seq + 0x2c) != NULL) {
-                    curveFindFn_800843c4(*(RomCurveInterpState **)(seq + 0x2c),
+                    RomCurveInterp_InitFromNode(*(RomCurveInterpState **)(seq + 0x2c),
                                          *(int *)(seq + 0x28));
                 } else {
                     *(int *)(seq + 0x28) = -1;
@@ -1276,7 +1276,7 @@ void objSeqSetupFn_80085b34(u8 *obj, u8 **seqObj, u8 *seq, u8 *sourceObj, void *
     *outAction = *(void **)(*(u8 **)(activeObj + 0x7c) + (s8)activeObj[0xad] * 4);
     *seqObj = activeObj;
 
-    objAnimCurvFn_800849e8(obj, seq);
+    ObjSeq_UpdateCurvePosition(obj, seq);
     if ((s8)seq[0x7a] == 1 &&
         hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
                              *(f32 *)(obj + 0x14), groundY, 0) == 0) {
@@ -2275,7 +2275,7 @@ void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState *state, f32 t) {
 
 #pragma peephole off
 #pragma scheduling off
-void curveFindFn_800843c4(RomCurveInterpState *out, int id) {
+void RomCurveInterp_InitFromNode(RomCurveInterpState *out, int id) {
     RomCurveNode *curve;
     int i;
     int mask;
@@ -2308,8 +2308,8 @@ void curveFindFn_800843c4(RomCurveInterpState *out, int id) {
 
 #pragma peephole off
 #pragma scheduling off
-int romCurveFn_800844b8(RomCurveInterpState *state, f32 *offset, f32 *outPos, s16 *outAngle,
-                        int ignoreY) {
+int RomCurveInterp_EvaluateOffsetPosition(RomCurveInterpState *state, f32 *offset, f32 *outPos, s16 *outAngle,
+                                          int ignoreY) {
     RomCurveNode *from;
     RomCurveNode *to;
     f32 t;
@@ -2405,7 +2405,7 @@ int romCurveFn_800844b8(RomCurveInterpState *state, f32 *offset, f32 *outPos, s1
 
 #pragma peephole off
 #pragma scheduling off
-void objAnimCurvFn_800849e8(u8 *obj, u8 *seq) {
+void ObjSeq_UpdateCurvePosition(u8 *obj, u8 *seq) {
     u8 *base;
     RomCurveNode *node;
     f32 outPos[3];
@@ -2459,8 +2459,8 @@ void objAnimCurvFn_800849e8(u8 *obj, u8 *seq) {
         return;
     }
 
-    if (romCurveFn_800844b8(*(RomCurveInterpState **)(seq + 0x2c), offset, outPos,
-                            (s16 *)(seq + 0x1a), seq[0x7a]) != 0) {
+    if (RomCurveInterp_EvaluateOffsetPosition(*(RomCurveInterpState **)(seq + 0x2c), offset, outPos,
+                                              (s16 *)(seq + 0x1a), seq[0x7a]) != 0) {
         *(f32 *)(obj + 0x0c) = outPos[0];
         *(f32 *)(obj + 0x10) = outPos[1];
         *(f32 *)(obj + 0x14) = outPos[2];
