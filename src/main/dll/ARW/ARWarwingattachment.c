@@ -2206,3 +2206,121 @@ void dll_200_update(int obj)
 #pragma opt_strength_reduction reset
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct LightSourceFlagByte {
+    u8 looped : 1;
+} LightSourceFlagByte;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_strength_reduction off
+void lightsource_update(int obj)
+{
+    extern void *Obj_GetPlayerObject(void);
+    extern int ObjHits_GetPriorityHit(int obj, int a, int b, int c);
+    extern uint GameBit_Get(int id);
+    extern void Sfx_PlayFromObject(int obj, int sfx);
+    extern void Sfx_AddLoopedObjectSound(int obj, int sfx);
+    extern void Sfx_RemoveLoopedObjectSound(int obj, int sfx);
+    extern void fn_80098B18(int obj, f32 scale, u8 a, u8 b, int c, f32 *vec);
+    extern int *gExpgfxInterface;
+    extern int *gPartfxInterface;
+    extern f32 timeDelta;
+    extern f32 lbl_803E5E08;
+    extern f32 lbl_803E5E0C;
+    extern f32 lbl_803E5E10;
+    extern f32 lbl_803E5E14;
+    extern f32 lbl_803E5E18;
+    extern f32 lbl_803E5E1C;
+    char *b;
+    char *t;
+    s16 sum;
+    u8 sfxFlag;
+    f32 vec[3];
+    struct {
+        u8 pad[8];
+        f32 scale;
+        u8 pad2[0xc];
+    } fx;
+
+    b = *(char **)(obj + 0xb8);
+    switch (*(u8 *)(b + 0x14)) {
+    case 0:
+        break;
+    case 1:
+        *(u8 *)(b + 0x18) = *(u8 *)(b + 0x17);
+        if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
+            *(u8 *)(b + 0x17) = (u8)(1 - *(u8 *)(b + 0x17));
+        }
+        if (*(u8 *)(b + 0x17) != *(u8 *)(b + 0x18)) {
+            if (*(u8 *)(b + 0x17) != 0) {
+                if (*(int *)(b + 0x10) != -1 && GameBit_Get(*(int *)(b + 0x10)) == 0) {
+                    GameBit_Set(*(int *)(b + 0x10), 1);
+                }
+                Sfx_PlayFromObject(obj, 0x80);
+            } else {
+                (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x14)))(obj);
+                if (*(int *)(b + 0x10) != -1 && GameBit_Get(*(int *)(b + 0x10)) != 0) {
+                    GameBit_Set(*(int *)(b + 0x10), 0);
+                }
+            }
+        }
+        break;
+    }
+    if (*(u8 *)(b + 0x17) != 0 && (*(u16 *)(obj + 0xb0) & 0x800)) {
+        *(f32 *)(b + 4) = *(f32 *)(b + 4) - timeDelta;
+        if (*(f32 *)(b + 4) <= lbl_803E5E0C) {
+            sfxFlag = *(u8 *)(b + 0x16);
+            *(f32 *)(b + 4) = *(f32 *)(b + 4) + lbl_803E5E10;
+        } else {
+            sfxFlag = 0;
+        }
+        if (*(u8 *)(b + 0x15) != 0 || *(u8 *)(b + 0x16) != 0) {
+            vec[0] = lbl_803E5E0C;
+            if (*(s16 *)(obj + 0x46) == 0x717) {
+                vec[1] = vec[0];
+            } else {
+                vec[1] = lbl_803E5E14;
+            }
+            vec[2] = lbl_803E5E0C;
+            fn_80098B18(obj, lbl_803E5E18 * *(f32 *)(obj + 8), *(u8 *)(b + 0x15), sfxFlag, 0, vec);
+        }
+        if (*(u8 *)(b + 0x19) != 0) {
+            *(f32 *)(b + 0xc) = *(f32 *)(b + 0xc) - timeDelta;
+            if (*(f32 *)(b + 0xc) <= lbl_803E5E0C) {
+                fx.scale = lbl_803E5E08;
+                (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 8)))(
+                    obj, 0x7cb, &fx, 2, -1, 0);
+                *(f32 *)(b + 0xc) = *(f32 *)(b + 0xc) + lbl_803E5E1C;
+            }
+        }
+    }
+    t = *(char **)b;
+    if (t != NULL && *(u8 *)(t + 0x2f8) != 0 && *(u8 *)(t + 0x4c) != 0) {
+        sum = (s16)(*(u8 *)(t + 0x2f9) + *(s8 *)(t + 0x2fa));
+        if (sum < 0) {
+            sum = 0;
+            *(u8 *)(t + 0x2fa) = 0;
+        } else if (sum > 255) {
+            sum = 255;
+            *(u8 *)(t + 0x2fa) = 0;
+        }
+        *(u8 *)(*(char **)b + 0x2f9) = (u8)sum;
+    }
+    if (*(s16 *)(obj + 0x46) != 0x705 && *(s16 *)(obj + 0x46) != 0x712) {
+        if (*(u8 *)(b + 0x17) != 0) {
+            if (!((LightSourceFlagByte *)(b + 0x1a))->looped) {
+                Sfx_AddLoopedObjectSound(obj, 0x72);
+                ((LightSourceFlagByte *)(b + 0x1a))->looped = 1;
+            }
+        } else {
+            if (((LightSourceFlagByte *)(b + 0x1a))->looped) {
+                Sfx_RemoveLoopedObjectSound(obj, 0x72);
+                ((LightSourceFlagByte *)(b + 0x1a))->looped = 0;
+            }
+        }
+    }
+}
+#pragma opt_strength_reduction reset
+#pragma peephole reset
+#pragma scheduling reset
