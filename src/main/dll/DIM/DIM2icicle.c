@@ -25,7 +25,7 @@ extern undefined4 FUN_800175d8();
 extern undefined4 FUN_800175ec();
 extern void* FUN_80017624();
 extern undefined8 GameBit_Set(int eventId, int value);
-extern u32 randomGetRange(int min, int max);
+extern int randomGetRange(int min, int max);
 extern int FUN_80017a90();
 extern int FUN_80017a98();
 extern undefined4 ObjHits_EnableObject();
@@ -34,9 +34,6 @@ extern undefined4 ObjMsg_SendToObject();
 extern uint ObjPath_GetPointModelMtx();
 extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 FUN_80053c98();
-extern undefined4 skyFn_800894a8();
-extern undefined4 skyFn_800895e0();
-extern undefined4 skyFn_80089710();
 extern undefined8 FUN_8012e0b8();
 extern undefined4 FUN_801bbf98();
 extern undefined4 FUN_80247bf8();
@@ -302,6 +299,37 @@ void fn_801BB598(int objIndex, int param_2)
   gDIMbossSequenceFlags = gDIMbossSequenceFlags & 0xffffe1ef;
 }
 
+extern void setShowWorldMapHud(int show);
+extern void warpToMap(int map, int p2);
+extern void getEnvfxAct(int a, int b, int c, int d);
+extern void skyFn_80089710(int id, int enabled, int arg);
+extern void skyFn_800894a8(int id, f32 x, f32 y, f32 z);
+extern void skyFn_800895e0(int id, int red, int green, int blue, int alpha, int arg);
+extern void Sfx_PlayFromObject(int obj, u16 sfxId);
+extern void doRumble(f32 v);
+extern void Camera_EnableViewYOffset(void);
+extern void CameraShake_Start(f32 a, f32 b, f32 c);
+extern void CameraShake_SetAllMagnitudes(f32 mag);
+extern void *lbl_803DCAB4;
+extern int lbl_80325AB8[];
+extern f32 lbl_803E4BC4;
+extern f32 lbl_803E4BF4;
+extern f32 lbl_803E4BF8;
+extern f32 lbl_803E4C4C;
+extern f32 lbl_803E4C50;
+extern f32 lbl_803E4C54;
+extern const f32 lbl_803E4C58;
+extern const f32 lbl_803E4C5C;
+extern f32 lbl_803E4C60;
+extern f32 lbl_803E4C64;
+extern f32 lbl_803E4C68;
+extern f32 lbl_803E4C6C;
+
+typedef struct IcicleWarpFlags {
+    u8 pending : 1;
+    u8 rest : 7;
+} IcicleWarpFlags;
+
 /*
  * --INFO--
  *
@@ -314,211 +342,157 @@ void fn_801BB598(int objIndex, int param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void warpDarkIceMines_801bbb44(undefined8 param_1,double param_2,double param_3,
-                               undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                               undefined8 param_7,undefined8 param_8,undefined4 param_9,
-                               undefined4 param_10,undefined4 param_11,undefined4 param_12,
-                               undefined4 param_13,undefined4 param_14,undefined4 param_15,
-                               undefined4 param_16)
+void warpDarkIceMines_801bbb44(int obj, int param_2)
 {
-  uint uVar1;
-  uint uVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  undefined8 extraout_f1;
-  double dVar6;
-  double in_f29;
-  double in_f30;
-  double dVar7;
-  double in_f31;
-  double dVar8;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar9;
-  float local_78;
-  float local_74;
-  float local_70;
-  undefined4 local_68;
-  uint uStack_64;
-  undefined4 local_60;
-  uint uStack_5c;
-  undefined4 local_58;
-  uint uStack_54;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  uVar9 = FUN_80286840();
-  uVar1 = (uint)((ulonglong)uVar9 >> 0x20);
-  iVar4 = (int)uVar9;
-  iVar5 = *(int *)(iVar4 + 0x40c);
-  if ((*(int *)(iVar5 + 0xb0) == 0) ||
-     (*(int *)(iVar5 + 0xb0) = *(int *)(iVar5 + 0xb0) + -1, 0 < *(int *)(iVar5 + 0xb0))) {
-    if (*(char *)(iVar5 + 0xb6) < '\0') {
-      uVar9 = FUN_80006728(extraout_f1,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,
-                           0xdb,0,param_13,param_14,param_15,param_16);
-      FUN_80006728(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0xdc,0,param_13
-                   ,param_14,param_15,param_16);
-      skyFn_80089710(7,1,0);
-      skyFn_800894a8((double)lbl_803E58E4,(double)lbl_803E58E8,(double)lbl_803E58EC,7);
-      skyFn_800895e0(7,0xa0,0xa0,0xff,0x7f,0x28);
-      *(byte *)(iVar5 + 0xb6) = *(byte *)(iVar5 + 0xb6) & 0x7f;
+  u8 *state;
+  int counter;
+  int i;
+  u32 flags;
+  f32 vec[3];
+
+  state = *(u8 **)(param_2 + 0x40c);
+  counter = *(int *)(state + 0xb0);
+  if (counter != 0) {
+    *(int *)(state + 0xb0) = counter - 1;
+    if (*(int *)(state + 0xb0) <= 0) {
+      *(int *)(state + 0xb0) = 0;
+      setShowWorldMapHud(0);
+      warpToMap(0x77, 1);
+      return;
     }
-    if ((*(uint *)(iVar4 + 0x314) & 4) != 0) {
-      *(uint *)(iVar4 + 0x314) = *(uint *)(iVar4 + 0x314) & 0xfffffffb;
-      FUN_80006824(uVar1,(ushort)DAT_803266f8);
-      DAT_803de800 = DAT_803de800 | 0x204;
-      FUN_80006b94((double)lbl_803E5890);
-    }
-    if ((*(uint *)(iVar4 + 0x314) & 2) != 0) {
-      *(uint *)(iVar4 + 0x314) = *(uint *)(iVar4 + 0x314) & 0xfffffffd;
-      FUN_80006824(uVar1,(ushort)DAT_803266fc);
-      DAT_803de800 = DAT_803de800 | 0x404;
-      FUN_80006b94((double)lbl_803E5890);
-    }
-    if ((*(uint *)(iVar4 + 0x314) & 0x10) != 0) {
-      *(uint *)(iVar4 + 0x314) = *(uint *)(iVar4 + 0x314) & 0xffffffef;
-      FUN_80006824(uVar1,(ushort)DAT_80326700);
-      DAT_803de800 = DAT_803de800 | 0x804;
-      FUN_80006b94((double)lbl_803E5890);
-    }
-    if ((*(uint *)(iVar4 + 0x314) & 8) != 0) {
-      *(uint *)(iVar4 + 0x314) = *(uint *)(iVar4 + 0x314) & 0xfffffff7;
-      FUN_80006824(uVar1,(ushort)DAT_80326704);
-      DAT_803de800 = DAT_803de800 | 0x1004;
-      FUN_80006b94((double)lbl_803E5890);
-    }
-    if ((DAT_803de800 & 0x2000) != 0) {
-      iVar3 = 0;
+  }
+  if (((IcicleWarpFlags *)(state + 0xb6))->pending) {
+    getEnvfxAct(0, 0, 0xdb, 0);
+    getEnvfxAct(0, 0, 0xdc, 0);
+    skyFn_80089710(7, 1, 0);
+    skyFn_800894a8(7, lbl_803E4C4C, lbl_803E4C50, lbl_803E4C54);
+    skyFn_800895e0(7, 0xa0, 0xa0, 0xff, 0x7f, 0x28);
+    ((IcicleWarpFlags *)(state + 0xb6))->pending = 0;
+  }
+  if (*(int *)(param_2 + 0x314) & 4) {
+    *(int *)(param_2 + 0x314) = *(int *)(param_2 + 0x314) & ~4;
+    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[0]);
+    gDIMbossSequenceFlags |= 0x204;
+    doRumble(lbl_803E4BF8);
+  }
+  if (*(int *)(param_2 + 0x314) & 2) {
+    *(int *)(param_2 + 0x314) = *(int *)(param_2 + 0x314) & ~2;
+    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[1]);
+    gDIMbossSequenceFlags |= 0x404;
+    doRumble(lbl_803E4BF8);
+  }
+  if (*(int *)(param_2 + 0x314) & 0x10) {
+    *(int *)(param_2 + 0x314) = *(int *)(param_2 + 0x314) & ~0x10;
+    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[2]);
+    gDIMbossSequenceFlags |= 0x804;
+    doRumble(lbl_803E4BF8);
+  }
+  if (*(int *)(param_2 + 0x314) & 8) {
+    *(int *)(param_2 + 0x314) = *(int *)(param_2 + 0x314) & ~8;
+    Sfx_PlayFromObject(obj, (u16)lbl_80325AB8[3]);
+    gDIMbossSequenceFlags |= 0x1004;
+    doRumble(lbl_803E4BF8);
+  }
+  if (gDIMbossSequenceFlags & 0x2000) {
+    i = 0;
+    do {
+      ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b1, state + 0x4c, 0x200001, -1, 0);
+      i = i + 1;
+    } while (i < 0x32);
+    ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b2, state + 0x4c, 0x200001, -1, 0);
+    ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b3, state + 0x4c, 0x200001, -1, 0);
+  }
+  if (gDIMbossSequenceFlags & 0x80000) {
+    ((void (*)(int, int, int, int, int))*(code **)(*(int *)lbl_803DCAB4 + 0xc))(obj, 0x800, 0, 1, 0);
+  }
+  if ((gDIMbossSequenceFlags & 0x8020) || *(s8 *)(param_2 + 0x354) < 2) {
+    if (gDIMbossSequenceFlags & 0x20) {
+      i = 0;
       do {
-        (**(code **)(*DAT_803dd708 + 8))(uVar1,0x4b1,iVar5 + 0x4c,0x200001,0xffffffff,0);
-        iVar3 = iVar3 + 1;
-      } while (iVar3 < 0x32);
-      (**(code **)(*DAT_803dd708 + 8))(uVar1,0x4b2,iVar5 + 0x4c,0x200001,0xffffffff,0);
-      (**(code **)(*DAT_803dd708 + 8))(uVar1,0x4b3,iVar5 + 0x4c,0x200001,0xffffffff,0);
-    }
-    if ((DAT_803de800 & 0x80000) != 0) {
-      (**(code **)(*DAT_803dd734 + 0xc))(uVar1,0x800,0,1,0);
-    }
-    if (((DAT_803de800 & 0x8020) != 0) || (*(char *)(iVar4 + 0x354) < '\x02')) {
-      if ((DAT_803de800 & 0x20) == 0) {
-        uVar2 = randomGetRange(0,(int)*(char *)(iVar4 + 0x354));
-        if ((uVar2 == 0) && (*(short *)(iVar4 + 0x402) == 2)) {
-          (**(code **)(*DAT_803dd708 + 8))(uVar1,0x4b4,iVar5 + 0x34,0x200001,0xffffffff,0);
-        }
-      }
-      else {
-        iVar4 = 0;
-        do {
-          (**(code **)(*DAT_803dd708 + 8))(uVar1,0x4b4,iVar5 + 0x34,0x200001,0xffffffff,0);
-          iVar4 = iVar4 + 1;
-        } while (iVar4 < 7);
-      }
-      if ((DAT_803de800 & 0x8000) != 0) {
-        (**(code **)(*DAT_803dd708 + 8))(uVar1,0x4b2,iVar5 + 0x34,0x200001,0xffffffff,0);
-        (**(code **)(*DAT_803dd708 + 8))(uVar1,0x4b3,iVar5 + 0x34,0x200001,0xffffffff,0);
-      }
-    }
-    if ((DAT_803de800 & 0x101c0) != 0) {
-      if ((DAT_803de800 & 0x40) != 0) {
-        iVar4 = 0;
-        dVar7 = (double)lbl_803E58F0;
-        dVar8 = (double)lbl_803E58F4;
-        dVar6 = DOUBLE_803e5878;
-        do {
-          uStack_64 = randomGetRange(0xfffffffb,5);
-          uStack_64 = uStack_64 ^ 0x80000000;
-          local_68 = 0x43300000;
-          local_78 = (float)(dVar7 * (double)(float)((double)CONCAT44(0x43300000,uStack_64) - dVar6)
-                            );
-          uStack_5c = randomGetRange(0xfffffffb,5);
-          uStack_5c = uStack_5c ^ 0x80000000;
-          local_60 = 0x43300000;
-          local_74 = (float)(dVar7 * (double)(float)((double)CONCAT44(0x43300000,uStack_5c) - dVar6)
-                            );
-          uStack_54 = randomGetRange(2,8);
-          uStack_54 = uStack_54 ^ 0x80000000;
-          local_58 = 0x43300000;
-          local_70 = (float)(dVar8 * (double)(float)((double)CONCAT44(0x43300000,uStack_54) - dVar6)
-                            );
-          FUN_80247bf8((float *)(iVar5 + 100),&local_78,&local_78);
-          (**(code **)(*DAT_803dd708 + 8))(uVar1,0x4b5,iVar5 + 0x1c,0x200001,0xffffffff,&local_78);
-          iVar4 = iVar4 + 1;
-        } while (iVar4 < 5);
-      }
-      if ((DAT_803de800 & 0x80) != 0) {
-        (**(code **)(*DAT_803dd708 + 8))(uVar1,0x4b5,iVar5 + 4,0x200001,0xffffffff,0);
-      }
-      if ((DAT_803de800 & 0x100) != 0) {
-        local_78 = lbl_803E58F0;
-        local_74 = lbl_803E58F8;
-        uStack_54 = randomGetRange(4,8);
-        uStack_54 = uStack_54 ^ 0x80000000;
-        local_58 = 0x43300000;
-        local_70 = lbl_803E58FC *
-                   (float)((double)CONCAT44(0x43300000,uStack_54) - DOUBLE_803e5878);
-        FUN_80247bf8((float *)(iVar5 + 100),&local_78,&local_78);
-        (**(code **)(*DAT_803dd708 + 8))(uVar1,0x4b6,iVar5 + 4,0x200001,0xffffffff,&local_78);
-      }
-      if ((DAT_803de800 & 0x10000) != 0) {
-        local_78 = lbl_803E5870;
-        local_74 = lbl_803E58F8;
-        local_70 = lbl_803E5900;
-        FUN_80247bf8((float *)(iVar5 + 100),&local_78,&local_78);
-        FUN_80003494(iVar5 + 0x94,(uint)&local_78,0xc);
-        DAT_803de800 = DAT_803de800 | 0x20000;
-      }
-    }
-    if ((DAT_803de800 & 0x4000) != 0) {
-      iVar4 = 0;
-      do {
-        (**(code **)(*DAT_803dd708 + 8))(uVar1,0x4b7,0,1,0xffffffff,0);
-        iVar4 = iVar4 + 1;
-      } while (iVar4 < 0x32);
-    }
-    if ((DAT_803de800 & 1) != 0) {
-      FUN_800069bc();
-      FUN_80006b94((double)lbl_803E5890);
-      FUN_8000691c((double)lbl_803E585C,(double)lbl_803E5860,(double)lbl_803E5864);
-    }
-    if ((DAT_803de800 & 0x40000) != 0) {
-      FUN_800069bc();
-      FUN_80006b94((double)lbl_803E5904);
-      FUN_8000691c((double)lbl_803E5860,(double)lbl_803E588C,(double)lbl_803E5890);
-    }
-    if ((DAT_803de800 & 2) != 0) {
-      FUN_800069bc();
-      dVar6 = (double)lbl_803E5870;
-      FUN_8000691c(dVar6,dVar6,dVar6);
-      FUN_80006920((double)lbl_803E5870);
-    }
-    if ((DAT_803de800 & 4) == 0) {
-      GameBit_Set(0x25e,0);
+        ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b4, state + 0x34, 0x200001, -1, 0);
+        i = i + 1;
+      } while (i < 7);
     }
     else {
-      GameBit_Set(0x25e,1);
+      if (randomGetRange(0, *(s8 *)(param_2 + 0x354)) == 0 && *(s16 *)(param_2 + 0x402) == 2) {
+        ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b4, state + 0x34, 0x200001, -1, 0);
+      }
     }
-    DAT_803de800 = DAT_803de800 & 0xa1ff0;
+    if (gDIMbossSequenceFlags & 0x8000) {
+      ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b2, state + 0x34, 0x200001, -1, 0);
+      ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b3, state + 0x34, 0x200001, -1, 0);
+    }
+  }
+  if (gDIMbossSequenceFlags & 0x101c0) {
+    if (gDIMbossSequenceFlags & 0x40) {
+      i = 0;
+      do {
+        vec[0] = lbl_803E4C58 * (f32)(int)randomGetRange(-5, 5);
+        vec[1] = lbl_803E4C58 * (f32)(int)randomGetRange(-5, 5);
+        vec[2] = lbl_803E4C5C * (f32)(int)randomGetRange(2, 8);
+        PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
+        ((void (*)(int, int, u8 *, int, int, f32 *))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b5, state + 0x1c, 0x200001, -1, vec);
+        i = i + 1;
+      } while (i < 5);
+    }
+    if (gDIMbossSequenceFlags & 0x80) {
+      ((void (*)(int, int, u8 *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b5, state + 4, 0x200001, -1, 0);
+    }
+    if (gDIMbossSequenceFlags & 0x100) {
+      vec[0] = lbl_803E4C58;
+      vec[1] = lbl_803E4C60;
+      vec[2] = lbl_803E4C64 * (f32)(int)randomGetRange(4, 8);
+      PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
+      ((void (*)(int, int, u8 *, int, int, f32 *))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b6, state + 4, 0x200001, -1, vec);
+    }
+    if (gDIMbossSequenceFlags & 0x10000) {
+      vec[0] = lbl_803E4BD8;
+      vec[1] = lbl_803E4C60;
+      vec[2] = lbl_803E4C68;
+      PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
+      memcpy(state + 0x94, vec, 0xc);
+      {
+        /* MWCC quirk: target materializes 0x20000 via lis; clean C folds to oris */
+        register u32 tmp;
+        register u32 fl;
+        fl = gDIMbossSequenceFlags;
+        asm {
+          lis tmp, 2
+          or tmp, fl, tmp
+        }
+        gDIMbossSequenceFlags = tmp;
+      }
+    }
+  }
+  if (gDIMbossSequenceFlags & 0x4000) {
+    i = 0;
+    do {
+      ((void (*)(int, int, int, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(obj, 0x4b7, 0, 1, -1, 0);
+      i = i + 1;
+    } while (i < 0x32);
+  }
+  if (gDIMbossSequenceFlags & 1) {
+    Camera_EnableViewYOffset();
+    doRumble(lbl_803E4BF8);
+    CameraShake_Start(lbl_803E4BC4, lbl_803E4BC8, lbl_803E4BCC);
+  }
+  if (gDIMbossSequenceFlags & 0x40000) {
+    Camera_EnableViewYOffset();
+    doRumble(lbl_803E4C6C);
+    CameraShake_Start(lbl_803E4BC8, lbl_803E4BF4, lbl_803E4BF8);
+  }
+  if (gDIMbossSequenceFlags & 2) {
+    Camera_EnableViewYOffset();
+    CameraShake_Start(lbl_803E4BD8, lbl_803E4BD8, lbl_803E4BD8);
+    CameraShake_SetAllMagnitudes(lbl_803E4BD8);
+  }
+  if (gDIMbossSequenceFlags & 4) {
+    GameBit_Set(0x25e, 1);
   }
   else {
-    *(undefined4 *)(iVar5 + 0xb0) = 0;
-    uVar9 = FUN_8012e0b8('\0');
-    FUN_80053c98(uVar9,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x77,'\x01',param_11,
-                 param_12,param_13,param_14,param_15,param_16);
+    GameBit_Set(0x25e, 0);
   }
-  FUN_8028688c();
-  return;
+  gDIMbossSequenceFlags = gDIMbossSequenceFlags & 0xa1ff0;
 }
 
 /*
