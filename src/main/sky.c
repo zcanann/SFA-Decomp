@@ -1537,3 +1537,101 @@ void skyFn_8008a500(void)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void sky2_update(int a, int b, u8 *cfg)
+{
+    u8 *env;
+    u16 bits;
+    u8 *st;
+    int m40;
+    u8 flags;
+    u8 flags58;
+    u8 b1;
+    u8 i;
+
+    flags = 0;
+    env = saveGameGetEnvState();
+    if (cfg != NULL) {
+        (&lbl_803DB610)[1] = lbl_803DB610 = (s16)*(u16 *)(cfg + 0x24) - 1;
+        *(s16 *)(env + 0xc) = (s16)*(u16 *)(cfg + 0x24) - 1;
+        flags58 = cfg[0x58];
+        b1 = (flags58 & 0x80) ? 1 : 0;
+        if (*(s8 *)((&lbl_803DD184)[b1] + 0x317) == 0) {
+            if ((flags58 & 0x40) != 0) {
+                flags |= 0x40;
+            }
+            fn_8008C9F4(cfg, flags);
+            if ((cfg[0x58] & 0x40) != 0) {
+                (&lbl_803DD184)[b1][0x316] = 1;
+            }
+            *(u16 *)((&lbl_803DD184)[b1] + 4) = cfg[0x58] | 0x100;
+            (&lbl_803DD184)[b1][0x315] = 1;
+            *(f32 *)((&lbl_803DD184)[b1] + 0x304) = lbl_803DF108;
+        } else if ((flags58 & 0x20) != 0) {
+            getEnvfxAct(0, 0, 9, 0);
+        } else {
+            *(u16 *)((&lbl_803DD184)[b1] + 4) = flags58 | 0x100;
+            (&lbl_803DD184)[b1][0x315] = 1;
+            *(f32 *)((&lbl_803DD184)[b1] + 0x304) = lbl_803DF108;
+            for (i = 0; i < 0xb; i++) {
+                *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0xf4) =
+                    (f32)(u32)cfg[lbl_8030F4A0[i] + 0xc];
+                *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x120) =
+                    (f32)(u32)cfg[lbl_8030F4A0[i] + 0x14];
+                *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x14c) =
+                    (f32)(u32)cfg[lbl_8030F4A0[i] + 0x1c];
+                *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x254) =
+                    (f32)(u32)*(u16 *)(cfg + lbl_8030F4A0[i] * 2 + 0x3e);
+                *(f32 *)((&lbl_803DD184)[b1] + i * 4 + 0x280) =
+                    (f32)(u32)*(u16 *)(cfg + lbl_8030F4A0[i] * 2 + 0x2e);
+            }
+            *(int *)((&lbl_803DD184)[b1] + 0x3c) = *(u16 *)(cfg + 0x2a);
+            *(int *)((&lbl_803DD184)[b1] + 0x40) = *(u16 *)(cfg + 0x2c);
+            *(s8 *)((&lbl_803DD184)[b1] + 0x314) = -1;
+            if ((cfg[0x59] & 0x20) != 0) {
+                st = (&lbl_803DD184)[b1];
+                bits = *(u16 *)(st + 6);
+                if ((bits & 0x20) == 0) {
+                    *(u16 *)(st + 6) = bits | 0x20;
+                }
+            }
+            if ((cfg[0x59] & 0x20) == 0) {
+                st = (&lbl_803DD184)[b1];
+                bits = *(u16 *)(st + 6);
+                if ((bits & 0x20) != 0) {
+                    *(u16 *)(st + 6) = bits ^ 0x20;
+                }
+            }
+            if ((cfg[0x58] & 0x40) != 0) {
+                *(u16 *)((&lbl_803DD184)[b1] + 6) |= 0x40;
+                (&lbl_803DD184)[b1][0x316] = 1;
+            } else {
+                st = (&lbl_803DD184)[b1];
+                bits = *(u16 *)(st + 6);
+                if ((bits & 0x40) != 0) {
+                    *(u16 *)(st + 6) = bits ^ 0x40;
+                }
+            }
+            m40 = cfg[0x59] & 0x40;
+            if (m40 != 0) {
+                st = (&lbl_803DD184)[b1];
+                bits = *(u16 *)(st + 6);
+                if ((bits & 0x40) == 0) {
+                    *(u16 *)(st + 6) = bits | 0x40;
+                    return;
+                }
+            }
+            if (m40 == 0) {
+                st = (&lbl_803DD184)[b1];
+                bits = *(u16 *)(st + 6);
+                if ((bits & 0x40) != 0) {
+                    *(u16 *)(st + 6) = bits ^ 0x40;
+                }
+            }
+        }
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
