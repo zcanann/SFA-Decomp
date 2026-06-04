@@ -8066,7 +8066,7 @@ extern u8 lbl_803DCA3D;
 extern u8 lbl_803DCA3C;
 extern u8 lbl_803DCA3E;
 extern s8 lbl_803DCA3A;
-extern u8 lbl_803DCA3B;
+extern s8 lbl_803DCA3B;
 extern s16 lbl_803DCA46;
 extern int curLanguage;
 extern void *curGameTextDir;
@@ -16803,6 +16803,122 @@ void fn_80026928(int *obj, int b, int *p3)
             e2 = 0;
         }
         PSMTXMultVec((f32 *)(obj[(*(u16 *)((u8 *)obj + 0x18) & 1) + 3] + e2 * 0x40), (f32 *)(out + 0x18), (f32 *)out);
+    }
+}
+#pragma dont_inline reset
+#pragma pop
+
+extern void uiDll_runFrameStartAndLoadNext(void);
+extern void getButtonsJustPressed(int pad);
+extern void updateEnvironment(int a);
+extern void timeFn_8006f400(f32 dt);
+extern void uiDll_runFrameEndAndLoadNext(void);
+extern void trackIntersect(void);
+extern void doPendingMapLoads(void);
+extern void resetSomeGxFlags(void);
+extern void sceneRender(int a, int b, int c, int d, int e, int f);
+extern void curUiDllDraw(int a, int b, int c, int d);
+extern void Camera_ApplyCurrentViewport(int a);
+extern int lbl_803DCAD0;
+extern f32 lbl_803DE7B0;
+extern f32 lbl_803DE7B8;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void gameUpdate(void)
+{
+    Obj_GetPlayerObject();
+    lbl_803DCA42 = 0;
+    mainLoopDoGameText();
+    if (lbl_803DCA3A == 0) {
+        (*(void (**)(void))(*(int *)gCameraInterface + 0x54))();
+    }
+    uiDll_runFrameStartAndLoadNext();
+    camcontrol_playTargetTypeSfx();
+    getButtonsJustPressed(0);
+    Obj_UpdateAllObjects(lbl_803DCA3C);
+    if (lbl_803DCA3A == 0) {
+        void *player;
+        int idx;
+        u8 *rec;
+        int t;
+
+        updateEnvironment(0);
+        (*(void (**)(void))(*(int *)gMapEventInterface + 0x70))();
+        player = Obj_GetPlayerObject();
+        idx = lbl_803DCAD4;
+        rec = (u8 *)lbl_8033BFB8 + idx * 16;
+        t = lbl_803DCAD0 + framesThisStep;
+        lbl_803DCAD0 = t;
+        if (player != 0) {
+            *(f32 *)(rec + 0) = *(f32 *)((u8 *)player + 0xc);
+            *(f32 *)(rec + 4) = *(f32 *)((u8 *)player + 0x10);
+            *(f32 *)(rec + 8) = *(f32 *)((u8 *)player + 0x14);
+            *(int *)(rec + 0xc) = t;
+            lbl_803DCAD4 = idx + 1;
+            if (lbl_803DCAD4 >= 0x3c) {
+                lbl_803DCAD4 = 0;
+            }
+        }
+    }
+    timeFn_8006f400(timeDelta);
+    uiDll_runFrameEndAndLoadNext();
+    trackIntersect();
+    playerUpdateFn_8005649c();
+    doPendingMapLoads();
+    Obj_ApplyPendingParentLinks();
+    (*(void (**)(void))(*(int *)gCheckpointInterface + 0x3c))();
+    resetSomeGxFlags();
+    if (lbl_803DCA46 == 0) {
+        sceneRender(0, 0, 0, 0, 0, 0);
+        (*(void (**)(int))(*(int *)gScreensInterface + 0xc))(0);
+        if (lbl_803DCA48 == 0) {
+            curUiDllDraw(0, 0, 0, 0);
+        }
+        (*(void (**)(void))(*(int *)gMinimapInterface + 8))();
+        if (lbl_803DCA48 == 0) {
+            dvdCheckError();
+        }
+        gameTextRun();
+    } else {
+        lbl_803DCA46 = lbl_803DCA46 - 1;
+        if (lbl_803DCA46 < 0) {
+            lbl_803DCA46 = 0;
+        }
+    }
+    if (lbl_803DCA42 != 0) {
+        if (lbl_803DCA44 == 0) {
+            lbl_803DB420 = lbl_803DB420 + timeDelta;
+            if (lbl_803DB420 >= lbl_803DE7B0) {
+                Music_Trigger(lbl_803DCAF0, 1);
+                lbl_803DCA44 = 1;
+            }
+        }
+        if (lbl_803DB420 >= lbl_803DE7B0) {
+            lbl_803DB420 = lbl_803DE7B8;
+        }
+    } else {
+        if (lbl_803DCA44 != 0) {
+            lbl_803DB420 = lbl_803DB420 - timeDelta;
+            if (lbl_803DB420 <= lbl_803DE7B0) {
+                Music_Trigger(0xc9, 0);
+                Music_Trigger(0xd0, 0);
+                lbl_803DCA44 = 0;
+            }
+        }
+        if (lbl_803DB420 <= lbl_803DE7B0) {
+            lbl_803DB420 = lbl_803DE7B4;
+        }
+    }
+    Camera_ApplyCurrentViewport(0);
+    {
+        s8 t = lbl_803DCA3B - framesThisStep;
+        lbl_803DCA3B = t;
+        if (t < 0) {
+            lbl_803DCA3B = 0;
+        }
     }
 }
 #pragma dont_inline reset
