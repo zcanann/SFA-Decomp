@@ -13549,3 +13549,51 @@ void Obj_BuildWorldTransformMatrix(u8 *obj, f32 *mtx, int flags) {
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern f32 fsin16(int angle);
+extern f32 lbl_803DE7F0;
+
+#pragma push
+#pragma scheduling off
+#pragma fp_contract off
+void mtxRotateByVec3s(f32 *mtx, void *transform) {
+    f32 cx;
+    f32 sx;
+    f32 cy;
+    f32 sy;
+    f32 cz;
+    f32 sz;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 zero;
+
+    cx = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)transform)) * lbl_803DE7F0;
+    sx = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)transform)) * lbl_803DE7F0;
+    cy = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)((u8 *)transform + 2))) * lbl_803DE7F0;
+    sy = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)((u8 *)transform + 2))) * lbl_803DE7F0;
+    cz = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)((u8 *)transform + 4))) * lbl_803DE7F0;
+    sz = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)((u8 *)transform + 4))) * lbl_803DE7F0;
+
+    mtx[0] = sx * sz - (cy * cz) * cx;
+    mtx[1] = (cy * sz) * cx + sx * cz;
+    mtx[2] = -(cx * sy);
+    zero = lbl_803DE7C0;
+    mtx[3] = zero;
+    mtx[4] = -(sy * cz);
+    mtx[5] = sy * sz;
+    mtx[6] = cy;
+    mtx[7] = zero;
+    mtx[8] = (cy * cz) * sx + cx * sz;
+    mtx[9] = cx * cz - (cy * sz) * sx;
+    mtx[10] = sx * sy;
+    mtx[11] = zero;
+    x = *(f32 *)((u8 *)transform + 0xc);
+    y = *(f32 *)((u8 *)transform + 0x10);
+    z = *(f32 *)((u8 *)transform + 0x14);
+    mtx[12] = mtx[4] * y + mtx[0] * x + mtx[8] * z;
+    mtx[13] = mtx[5] * y + mtx[1] * x + mtx[9] * z;
+    mtx[14] = mtx[6] * y + mtx[2] * x + mtx[10] * z;
+    mtx[15] = lbl_803DE7C4;
+}
+#pragma pop
