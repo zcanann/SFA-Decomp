@@ -387,12 +387,11 @@ void andross_update(int obj)
     fstate[0x1c] = *(f32 *)(*piVar14 + 0x14);
         fn_8022D460(*piVar14,(f32)lbl_803DC438);
   }
-  for (bVar13 = 0; bVar13 < 4; bVar13 = bVar13 + 1) {
-    uVar6 = (u32)bVar13;
-    if (piVar14[uVar6 + 6] == 0) {
-      iVar5 = ObjList_FindObjectById(lbl_8032C088[uVar6]);
-      piVar14[uVar6 + 6] = iVar5;
-      if (piVar14[uVar6 + 6] != 0) {
+  for (iVar8 = 0; (u8)iVar8 < 4; iVar8 = iVar8 + 1) {
+    uVar6 = (u8)iVar8;
+    if (*(void **)(piVar14 + uVar6 + 6) == NULL) {
+      piVar14[uVar6 + 6] = ObjList_FindObjectById(lbl_8032C088[uVar6]);
+      if (*(void **)(piVar14 + uVar6 + 6) != NULL) {
         fstate[uVar6 * 3 + 10] = *(float *)(piVar14[uVar6 + 6] + 0xc) - *(float *)(obj + 0xc);
         fstate[uVar6 * 3 + 0xb] = *(float *)(piVar14[uVar6 + 6] + 0x10) - *(float *)(obj + 0x10);
         fstate[uVar6 * 3 + 0xc] = *(float *)(piVar14[uVar6 + 6] + 0x14) - *(float *)(obj + 0x14);
@@ -816,9 +815,8 @@ LAB_8023ad84:
       GameBit_Set(0xd,1);
       fstate[0x27] = lbl_803E7504;
     }
-    for (bVar13 = 0; bVar13 < 6; bVar13 = bVar13 + 1) {
-      iVar12 = GameBit_Get(bVar13 + 0x108);
-      if (iVar12 != 0) {
+    for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
+      if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
         *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
         goto LAB_8023bb18;
       }
@@ -1050,9 +1048,8 @@ LAB_8023bb18:
       }
     }
     if ((piVar14[0x1f] == 5) && (piVar14[0x22] == 0xb)) {
-      for (bVar13 = 0; bVar13 < 6; bVar13 = bVar13 + 1) {
-        iVar12 = GameBit_Get(bVar13 + 0x108);
-        if (iVar12 != 0) {
+      for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
+        if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
           *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
           goto LAB_8023c584;
         }
@@ -1211,9 +1208,8 @@ LAB_8023c584:
     }
     Sfx_KeepAliveLoopedObjectSound(obj,0x466);
     if (piVar14[0x1f] == 5) {
-      for (bVar13 = 0; bVar13 < 6; bVar13 = bVar13 + 1) {
-        iVar12 = GameBit_Get(bVar13 + 0x108);
-        if (iVar12 != 0) {
+      for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
+        if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
           *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
           goto LAB_8023cbdc;
         }
@@ -1448,9 +1444,8 @@ LAB_8023cbdc:
       local_88 = dVar19;
     }
     if ((piVar14[0x1f] == 5) && (*(char *)(piVar14 + 0x2b) == '\0')) {
-      for (bVar13 = 0; bVar13 < 6; bVar13 = bVar13 + 1) {
-        iVar12 = GameBit_Get(bVar13 + 0x108);
-        if (iVar12 != 0) {
+      for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
+        if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
           *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
           goto LAB_8023d59c;
         }
@@ -1503,9 +1498,8 @@ LAB_8023d59c:
     }
     Sfx_KeepAliveLoopedObjectSound(obj,0x469);
     if ((piVar14[0x1f] == 5) && (*(char *)(piVar14 + 0x2b) == '\0')) {
-      for (bVar13 = 0; bVar13 < 6; bVar13 = bVar13 + 1) {
-        iVar12 = GameBit_Get(bVar13 + 0x108);
-        if (iVar12 != 0) {
+      for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
+        if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
           *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
           goto LAB_8023d7cc;
         }
@@ -1550,9 +1544,9 @@ LAB_8023d7cc:
       local_130[0] = 0x122;
       local_130[1] = 0x28;
     }
-    for (bVar13 = 0; bVar13 < 2; bVar13 = bVar13 + 1) {
-      if ((((piVar14[5] == 0) && (*(short *)(piVar14 + 0x26) <= local_130[bVar13])) &&
-          (local_130[bVar13] < (short)iVar12)) && (cVar11 = Obj_IsLoadingLocked(), cVar11 != '\0')) {
+    for (iVar8 = 0; (u8)iVar8 < 2; iVar8 = iVar8 + 1) {
+      if ((((piVar14[5] == 0) && (*(short *)(piVar14 + 0x26) <= local_130[(u8)iVar8])) &&
+          (local_130[(u8)iVar8] < (short)iVar12)) && (cVar11 = Obj_IsLoadingLocked(), cVar11 != '\0')) {
         iVar5 = Obj_AllocObjectSetup(0x24,0x819);
         *(int *)(iVar5 + 8) = piVar14[0x30];
         *(int *)(iVar5 + 0xc) = piVar14[0x31];
@@ -1584,9 +1578,8 @@ LAB_8023d7cc:
       *(f32 *)(iVar12 + 100) = lbl_8032C0E8[0];
     }
     if ((piVar14[0x1f] == 5) && (*(char *)(piVar14 + 0x2b) == '\0')) {
-      for (bVar13 = 0; bVar13 < 6; bVar13 = bVar13 + 1) {
-        iVar12 = GameBit_Get(bVar13 + 0x108);
-        if (iVar12 != 0) {
+      for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
+        if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
           *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
           goto LAB_8023db24;
         }
@@ -1676,9 +1669,8 @@ LAB_8023db24:
       fVar2 = lbl_803E7534;
     }
     fstate[0x1a] = fVar2;
-    for (bVar13 = 0; bVar13 < 6; bVar13 = bVar13 + 1) {
-      iVar12 = GameBit_Get(bVar13 + 0x108);
-      if (iVar12 != 0) {
+    for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
+      if ((u32)GameBit_Get((u8)iVar12 + 0x108) != 0) {
         *(s16 *)((int)piVar14 + 0xa6) = 0x3c;
         goto LAB_8023de5c;
       }
