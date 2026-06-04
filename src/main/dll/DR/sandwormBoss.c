@@ -4464,3 +4464,45 @@ int fn_8019E3F4(int* obj)
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int objUpdateOpacity(int sub);
+extern f32 lbl_803E4288;
+
+/* EN v1.0 0x8019FCF4  size: 484b  cfprisonuncle_render: render the uncle and/or
+ * his held model depending on the rescue gamebits, opacity and visibility;
+ * when path-following, snap the held model to the path point first. */
+#pragma scheduling off
+#pragma peephole off
+void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    int* sub = *(int**)((char*)obj + 0xb8);
+    if (GameBit_Get(0x50) != 0) {
+        if (*(void**)sub != NULL && objUpdateOpacity(*sub) != 0) {
+            ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(*sub, p2, p3, p4, p5, lbl_803E4288);
+        }
+    } else if (GameBit_Get(0x4d) != 0 && visible != 0) {
+        ((void(*)(int*,int,int,int,int,f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
+        if (*(void**)sub != NULL && objUpdateOpacity(*sub) != 0) {
+            ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(*sub, p2, p3, p4, p5, lbl_803E4288);
+        }
+    } else if (sub != NULL && *(void**)sub != NULL) {
+        if (*(s8*)((char*)sub + 0x73) == 0) {
+            if (visible != 0) {
+                if (objUpdateOpacity(*sub) != 0) {
+                    ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(*sub, p2, p3, p4, p5, lbl_803E4288);
+                    ObjPath_GetPointWorldPosition(*sub, 0, (char*)obj + 0xc, (char*)obj + 0x10, (char*)obj + 0x14, 0);
+                }
+                ((void(*)(int*,int,int,int,int,f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
+            }
+        } else {
+            if (objUpdateOpacity(*sub) != 0) {
+                ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(*sub, p2, p3, p4, p5, lbl_803E4288);
+            }
+            if (visible != 0) {
+                ((void(*)(int*,int,int,int,int,f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4288);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
