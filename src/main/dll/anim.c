@@ -5861,3 +5861,82 @@ void dfplevelcontrol_update(int obj)
     GameBit_Set(0xdcf, 0);
 }
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80202A2C(int obj, int *objs, f32 *weights, int n, f32 limit)
+{
+    extern int ObjGroup_FindNearestObjectForObject(int, int, f32 *);
+    extern f32 fn_80293E80(f32);
+    extern f32 sin(f32);
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E635C;
+    extern f32 lbl_803E62C8;
+    extern f32 lbl_803E6360;
+    extern f32 lbl_803E6364;
+    int *po;
+    f32 *pw;
+    int state = *(int *)(obj + 0xb8);
+    int i;
+    f32 rangeInit;
+    f32 accX;
+    f32 accZ;
+    u32 o;
+    f32 k;
+    f32 scale;
+    f32 cosv;
+    f32 sinv;
+    f32 neg;
+    f32 v;
+    struct {
+        f32 range;
+        f32 d[3];
+    } stk;
+
+    accX = lbl_803E62A8;
+    accZ = lbl_803E62A8;
+    i = 0;
+    po = objs;
+    pw = weights;
+    rangeInit = lbl_803E635C;
+    for (; i < n; i++) {
+        stk.range = rangeInit;
+        o = ObjGroup_FindNearestObjectForObject(*po, obj, &stk.range);
+        if (o != 0) {
+            if (stk.range == lbl_803E62A8) {
+                return 0;
+            }
+            k = lbl_803E62C8 - stk.range / lbl_803E635C;
+            k = k * k;
+            k = k * k;
+            stk.d[0] = *(f32 *)(o + 0xc) - *(f32 *)(obj + 0xc);
+            stk.d[1] = *(f32 *)(o + 0x10) - *(f32 *)(obj + 0x10);
+            stk.d[2] = *(f32 *)(o + 0x14) - *(f32 *)(obj + 0x14);
+            scale = lbl_803E62C8 / stk.range;
+            stk.d[0] *= scale;
+            stk.d[1] *= scale;
+            stk.d[2] *= scale;
+            accX = accX - limit * (stk.d[0] * k * *pw);
+            accZ = accZ - limit * (stk.d[2] * k * *pw);
+        }
+        po++;
+        pw++;
+    }
+    cosv = fn_80293E80(lbl_803E6360 * (f32)*(s16 *)(obj + 0) / lbl_803E6364);
+    sinv = sin(lbl_803E6360 * (f32)*(s16 *)(obj + 0) / lbl_803E6364);
+    *(f32 *)(state + 0x284) = *(f32 *)(state + 0x284) + (accX * sinv - accZ * cosv);
+    *(f32 *)(state + 0x280) = *(f32 *)(state + 0x280) + (-accZ * sinv - accX * cosv);
+    v = *(f32 *)(state + 0x280);
+    neg = -limit;
+    if (v < neg) {
+        v = neg;
+    } else if (v > limit) {
+        v = limit;
+    }
+    *(f32 *)(state + 0x280) = v;
+    v = *(f32 *)(state + 0x284);
+    *(f32 *)(state + 0x284) = (v < neg) ? neg : (v > limit) ? limit : v;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
