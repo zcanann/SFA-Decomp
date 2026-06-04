@@ -1006,7 +1006,7 @@ void hudDrawButtons(int param1, int param2, int param3)
         }
       }
       k = k + 1;
-      if (lbl_803DD8B0 <= k) {
+      if (k >= lbl_803DD8B0) {
         k = k - lbl_803DD8B0;
       }
     }
@@ -1034,9 +1034,9 @@ void hudDrawButtons(int param1, int param2, int param3)
         GXSetScissor(0, 0, 0x280, 0x1E0);
         sprintf((char *)&label, &lbl_803DBB58, *iconPtr);
         gameTextSetColor(0, 0, 0, a16 & 0xFF);
-        gameTextShowStr((char *)&label, 0x93, 0x247, yOff + 0x2B + lbl_803DD796);
+        gameTextShowStr((char *)&label, 0x93, 0x247, 0x2B + yOff + lbl_803DD796);
         gameTextSetColor(0xFF, 0xFF, 0xFF, a16 & 0xFF);
-        gameTextShowStr((char *)&label, 0x93, 0x246, yOff + 0x2A + lbl_803DD796);
+        gameTextShowStr((char *)&label, 0x93, 0x246, 0x2A + yOff + lbl_803DD796);
       }
       iconPtr = iconPtr + 1;
       yOff += 0x32;
