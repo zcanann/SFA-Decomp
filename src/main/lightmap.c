@@ -3309,6 +3309,238 @@ extern void GXSetChanAmbColor(int chan, GXColor8 *c);
 extern void GXSetNumChans(int n);
 extern void setupToRenderMapBlock(int *block, void *posMtx);
 
+
+extern u32 skyTextureFn_80094390(f32 *a, f32 *b);
+extern u32 lbl_803DCE34;
+extern f32 shdwChangeMode_803DEC10;
+extern f32 lbl_803DEBCC;
+extern int Camera_GetInverseViewMatrix(void);
+extern void mapDebugRender(void *p);
+extern void fn_80062894(void);
+extern void fn_80062808(void);
+extern u16 lbl_803DCEAC;
+extern u8 lbl_803DCE06;
+extern void drawReflectionTexture(void);
+void getVisibleObjects(s8 *opacity);
+extern void gxTextureFn_80052efc(void);
+extern void perspectiveFn_80129db4(void);
+extern void GXPixModeSync(void);
+extern void Camera_UpdateProjection(int a, int b);
+extern void Camera_UpdateViewMatrices(void);
+extern void Camera_RebuildProjectionMatrix(void);
+extern void *gSHthorntailAnimationInterface;
+extern void *gCloudActionInterface;
+extern void *gSky2Interface;
+extern void *gNewCloudsInterface;
+extern s32 heatEffectIntensity;
+extern f32 lbl_803DEBDC;
+extern void drawSkyStars(void);
+extern u8 lbl_803DCE05;
+extern void screenImageDraw(void);
+extern void renderFn_8008faf4(void);
+extern void getAmbientColor(int slot, u8 *r, u8 *g, u8 *b);
+extern s8 lbl_8030E65C[];
+extern s8 lbl_8030E66C[];
+void renderSceneGeometry(int *p1, s8 *order);
+extern void renderResetFn_8003fc60(void);
+void renderObjects(s8 *arg0);
+extern u8 CameraShake_IsActive(void);
+extern u8 bEnableMotionBlur;
+extern f32 lbl_803DB62C;
+extern void renderMotionBlur(f32 v);
+extern int getHudHiddenFrameCount(void);
+extern void updateReflectionTextures(void);
+extern u8 bEnableBlurFilter;
+extern f32 lbl_803DCE50;
+extern f32 lbl_803DCE4C;
+extern f32 blurFilterArea;
+extern u8 bBlurFilterUseArea;
+extern u8 bBiggerBlurFilter;
+extern void doBlurFilter(f32 a, f32 b, f32 c, u8 d, u8 e);
+extern void doHeatEffect(int v);
+extern void objRender(int a, int b, int c, int d, void *obj, int f);
+extern void renderParticles(void);
+void sceneDrawTransparentPolys(void);
+extern void quakeSpellTextureFn_8016dbf4(void);
+extern u8 bEnableDistortionFilter;
+extern f32 distortionFilterAngle1;
+extern f32 distortionFilterAngle2;
+extern char distortionFilterColor;
+extern void doDistortionFilter(void *buf, f32 a2, void *color, f32 a1);
+extern void renderGlows(void);
+extern void *gCameraInterface;
+extern u8 bEnableMonochromeFilter;
+extern char colorFilterColor;
+extern void doColorFilter(void *color);
+extern u8 bEnableSpiritVision;
+extern void doSpiritVisionFilter(void);
+extern u8 bEnableViewFinderHud;
+extern f32 lbl_803DEC14;
+extern void drawViewFinderAperture(f32 a, f32 b, int c, int d);
+extern s32 bEnableColorFilter;
+extern void setShadowFlag_803db658(int v);
+
+#pragma scheduling off
+#pragma peephole off
+void sceneDraw(void)
+{
+    char *q;
+    u8 *cursor;
+    int *player;
+    u8 flag;
+    int t;
+    int i;
+    GXColor8 c;
+    f32 skyA;
+    f32 skyB;
+    GXColor8 ccopy;
+    s8 buf[616];
+
+    q = (char *)lbl_8037E0C0;
+    lbl_803DCE34 = skyTextureFn_80094390(&skyA, &skyB);
+    if (lbl_803DCE34 != 0) {
+        *(f32 *)(q + 0x3f48) = shdwChangeMode_803DEC10;
+        *(f32 *)(q + 0x3f4c) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f50) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f54) = shdwChangeMode_803DEC10 * playerMapOffsetX + skyA;
+        *(f32 *)(q + 0x3f58) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f5c) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f60) = shdwChangeMode_803DEC10;
+        *(f32 *)(q + 0x3f64) = shdwChangeMode_803DEC10 * playerMapOffsetZ + skyB;
+        *(f32 *)(q + 0x3f68) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f6c) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f70) = lbl_803DEBCC;
+        *(f32 *)(q + 0x3f74) = lbl_803DEBDC;
+        PSMTXConcat((f32 *)(q + 0x3f48), (f32 *)Camera_GetInverseViewMatrix(),
+                    (f32 *)(q + 0x3f48));
+    }
+    mapDebugRender(q + 0x4164);
+    fn_80062894();
+    fn_80062808();
+    gVisibleObjectSortKeyCount = 1;
+    lbl_803DCEAC = 0;
+    lbl_803DCE06 = 0;
+    drawReflectionTexture();
+    lbl_803DCE30 = 0;
+    getVisibleObjects(buf);
+    gxTextureFn_80052efc();
+    perspectiveFn_80129db4();
+    GXPixModeSync();
+    Camera_UpdateProjection(0, 0);
+    Camera_UpdateViewMatrices();
+    Camera_RebuildProjectionMatrix();
+    t = 0;
+    if ((renderFlags & 0x40) != 0 && (renderFlags & 0x80000) == 0) {
+        t = 1;
+    }
+    flag = t;
+    if ((renderFlags & 0x40000) != 0) {
+        (*(void (***)(int, int))gSHthorntailAnimationInterface)[14](0, 0);
+        if (flag != 0) {
+            drawSkyStars();
+        }
+        (*(void (***)(int, int, int, int, int))gSHthorntailAnimationInterface)[4](0, 0, 0, 0, flag);
+        if ((renderFlags & 0x10) != 0) {
+            (*(void (***)(int, int, int, int))gCloudActionInterface)[4](0, 0, 0, 0);
+        }
+    } else {
+        (*(void (***)(int, int, int, int, int))gSHthorntailAnimationInterface)[4](0, 0, 0, 0, flag);
+        (*(void (***)(int, int, int, int))gCloudActionInterface)[4](0, 0, 0, 0);
+        drawSkyStars();
+    }
+    if (lbl_803DCE05 != 0) {
+        screenImageDraw();
+    }
+    renderFn_8008faf4();
+    (*(void (***)(int))gSky2Interface)[4](0);
+    lbl_803DCDF0 = 0;
+    getAmbientColor(0, (u8 *)&c, (u8 *)&c + 1, (u8 *)&c + 2);
+    GXSetChanCtrl(0, 1, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(2, 0, 0, 1, 0, 0, 2);
+    GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
+    ccopy = c;
+    GXSetChanAmbColor(0, &ccopy);
+    GXSetNumChans(1);
+    renderSceneGeometry((int *)0, lbl_8030E65C);
+    renderResetFn_8003fc60();
+    renderObjects(buf);
+    if (CameraShake_IsActive() != 0 || (int)bEnableMotionBlur != 0) {
+        renderMotionBlur(lbl_803DB62C);
+    }
+    if (getHudHiddenFrameCount() == 0) {
+        updateReflectionTextures();
+    }
+    if (bEnableBlurFilter != 0) {
+        doBlurFilter(lbl_803DCE50, lbl_803DCE4C, blurFilterArea, bBlurFilterUseArea,
+                     bBiggerBlurFilter);
+    }
+    if (heatEffectIntensity != 0) {
+        doHeatEffect(heatEffectIntensity & 0xff);
+    }
+    i = 0;
+    cursor = (u8 *)(q + 0x4114);
+    for (; i < lbl_803DCDF0; i++) {
+        (*(void (***)(int, int, int, int, u32))gModgfxInterface)[7](0, 0, 0, 1, *(u32 *)cursor);
+        objRender(0, 0, 0, 0, (void *)*(u32 *)cursor, 1);
+        cursor += 4;
+    }
+    renderParticles();
+    renderSceneGeometry((int *)1, lbl_8030E66C);
+    renderSceneGeometry((int *)2, lbl_8030E66C);
+    if (lbl_803DCE30 == 1000) {
+        sceneDrawTransparentPolys();
+        lbl_803DCE30 = 0;
+    }
+    ((u32 *)(q + 8))[lbl_803DCE30 * 4] = 0x78000000;
+    ((u32 *)(q + 12))[lbl_803DCE30 * 4] = 8;
+    lbl_803DCE30++;
+    if (lbl_803DCE30 == 1000) {
+        sceneDrawTransparentPolys();
+        lbl_803DCE30 = 0;
+    }
+    ((u32 *)(q + 8))[lbl_803DCE30 * 4] = 0x50000000;
+    ((u32 *)(q + 12))[lbl_803DCE30 * 4] = 9;
+    lbl_803DCE30++;
+    sceneDrawTransparentPolys();
+    (*(void (***)(s8 *))gModgfxInterface)[12](buf);
+    (*(void (***)(int, int, int, int, int))gModgfxInterface)[7](0, 0, 0, 0, 0);
+    player = Obj_GetPlayerObject();
+    if (player != NULL) {
+        i = 0;
+        cursor = (u8 *)player;
+        for (; i < *(u8 *)((u8 *)player + 0xeb); i++) {
+            u8 *m = *(u8 **)(cursor + 200);
+            if (*(s16 *)(m + 0x44) == 45) {
+                (*(void (***)(void))*(int *)(m + 0x68))[11]();
+            }
+            cursor += 4;
+        }
+    }
+    quakeSpellTextureFn_8016dbf4();
+    (*(void (***)(int))gNewCloudsInterface)[5](0);
+    if (bEnableDistortionFilter != 0) {
+        updateReflectionTextures();
+        doDistortionFilter(q + 0x4108, distortionFilterAngle2, &distortionFilterColor,
+                           distortionFilterAngle1);
+    }
+    renderGlows();
+    (*(void (***)(int, int, int, int))gCameraInterface)[22](0, 0, 0, 0);
+    if (bEnableMonochromeFilter != 0) {
+        doColorFilter(&colorFilterColor);
+    } else if (bEnableSpiritVision != 0) {
+        doSpiritVisionFilter();
+    }
+    if (bEnableViewFinderHud != 0) {
+        drawViewFinderAperture(lbl_803DEC14, shdwChanged_803DEC18, 0x40, 0);
+    }
+    if (bEnableColorFilter == 1) {
+        doColorFilter(&colorFilterColor);
+    }
+    setShadowFlag_803db658(0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 void sceneDrawTransparentPolys(void)
 {
