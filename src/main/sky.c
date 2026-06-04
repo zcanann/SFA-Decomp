@@ -1806,3 +1806,127 @@ void fn_8008BDA8(void)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void skyFn_8008a04c(void)
+{
+    int t2;
+    int c1;
+    int i;
+    int part4;
+    u8 *color;
+    int idx14;
+    int idx7;
+    f32 *pC;
+    f32 *pB;
+    f32 *pA;
+    int iofs;
+    f32 *vec;
+    u8 cA;
+    int cB;
+    int cC;
+    int part;
+    int red;
+    int green;
+    int blue;
+    f32 t;
+    f32 tc;
+    f32 blend;
+    f32 time2;
+    u8 *p;
+    f32 dayStart;
+    f32 frac;
+    f32 zero;
+
+    vec = lbl_8030F2C8;
+    if (lbl_803DD12C == NULL) {
+        for (t2 = 0; t2 < 3; t2++) {
+            fn_80089A60(t2, vec[0], vec[1], vec[2], 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
+        }
+    } else {
+        t = *(f32 *)(lbl_803DD12C + 0x20c) / lbl_803DF078;
+        tc = (t < pEXIInputFlag) ? pEXIInputFlag : ((t > EXIInputFlag) ? EXIInputFlag : t);
+        if (tc <= lbl_803DF07C) {
+            frac = tc / lbl_803DF07C;
+            part = 0;
+        } else if (tc <= lbl_803DF068) {
+            frac = (tc - lbl_803DF07C) / lbl_803DF07C;
+            part = 1;
+        } else if (tc <= init_803DF080) {
+            frac = (tc - lbl_803DF068) / lbl_803DF07C;
+            part = 2;
+        } else {
+            frac = (tc - init_803DF080) / lbl_803DF07C;
+            part = 3;
+        }
+        i = 0;
+        iofs = 0;
+        part4 = part * 4;
+        pA = (f32 *)((u8 *)lbl_8030F2C8 + part4 + 0x40);
+        pB = (f32 *)((u8 *)lbl_8030F2C8 + part4 + 0x18);
+        pC = (f32 *)((u8 *)lbl_8030F2C8 + part4 + 0x2c);
+        idx7 = (part + 7) * 4;
+        idx14 = (part + 0xe) * 4;
+        color = &gSkyCurrentTextureColor;
+        zero = pEXIInputFlag;
+        dayStart = lbl_803DF084;
+        do {
+            if ((u32)((lbl_803DD12C[iofs + 0xc1] >> 7) & 1) != 0) {
+                cA = 0xc8;
+                cB = 0;
+                cC = 0x60;
+            } else {
+                cA = (u8)(int)fn_80010C50(pA, frac, 0);
+                cB = (int)fn_80010C50(pB, frac, 0);
+                cC = (int)fn_80010C50(pC, frac, 0);
+            }
+            c1 = (int)mathFn_80010c64(lbl_803DD12C + iofs + part4 + 0x20, frac, 0);
+            t2 = (int)mathFn_80010c64(lbl_803DD12C + iofs + idx7 + 0x20, frac, 0);
+            blue = (int)mathFn_80010c64(lbl_803DD12C + iofs + idx14 + 0x20, frac, 0);
+            p = lbl_803DD12C + iofs;
+            blend = *(f32 *)(p + 0xb8);
+            if (blend != zero) {
+                c1 = (int)(blend * ((f32)p[0x74] - (f32)c1) + (f32)c1);
+                t2 = (int)(blend * ((f32)p[0x75] - (f32)t2) + (f32)t2);
+                blue = (int)(blend * ((f32)p[0x76] - (f32)blue) + (f32)blue);
+            }
+            if (c1 < 0) {
+                red = 0;
+            } else if (c1 > 0xff) {
+                red = 0xff;
+            } else {
+                red = c1;
+            }
+            if (t2 < 0) {
+                green = 0;
+            } else if (t2 > 0xff) {
+                green = 0xff;
+            } else {
+                green = t2;
+            }
+            if (blue < 0) {
+                blue = 0;
+            } else if (blue > 0xff) {
+                blue = 0xff;
+            }
+            if (i == 0) {
+                gSkyCurrentTextureColor = (u8)red;
+                color[1] = (u8)green;
+                color[2] = (u8)blue;
+            }
+            time2 = *(f32 *)(lbl_803DD12C + 0x20c);
+            if (time2 >= dayStart && time2 <= lbl_803DF088) {
+                fn_80089A60(i, vec[0], vec[1], vec[2], red, green, blue, cB, cC, cA);
+            } else {
+                fn_80089A60(i, -vec[3], vec[4], -vec[5], red, green, blue, cB, cC, cA);
+            }
+            iofs += 0xa4;
+            i++;
+        } while (i < 2);
+        fn_80089A60(2, pEXIInputFlag, pEXIInputFlag, pEXIInputFlag, 0xff, 0xff, 0xff, 0xff, 0xff,
+                    0xff);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
