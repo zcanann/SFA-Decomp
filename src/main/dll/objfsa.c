@@ -54,6 +54,7 @@ extern undefined4 FUN_80293f90();
 extern undefined4 FUN_80294964();
 extern f32 sqrtf(f32 x);
 extern uint countLeadingZeros();
+extern int __cntlzw(unsigned int value);
 extern void voxmaps_worldToGrid(f32 *world,s16 *grid);
 extern int voxmaps_traceLine(s16 *start,s16 *end,void *coordOut,u8 *occOut,int skipFirst);
 
@@ -4381,40 +4382,38 @@ int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroup
  */
 #pragma scheduling off
 #pragma peephole off
-uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,uint groupId)
+uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,int groupId)
 {
-  u8 patchListIndex;
-  u8 patchIndex;
-  u8 edgeIndex;
-  ObjfsaWalkGroup *walkGroup;
+  u8 k;
+  uint pidx;
+  uint j;
   ObjfsaPatch *patch;
+  f32 y;
 
-  patchListIndex = 0;
-  walkGroup = Objfsa_GetWalkGroup(patchGroupIndex);
-  do {
-    if (OBJFSA_PATCHGROUP_PATCH_COUNT <= patchListIndex) {
-      OSReport(sObjfsaIsPointWithinPatchGroupError);
-      return 0;
-    }
-
-    patchIndex = walkGroup->patchIndices[patchListIndex];
-    if (patchIndex != 0) {
-      patch = Objfsa_GetPatch(patchIndex);
+  for (k = 0; k < 4; k++) {
+    pidx = lbl_8039FAE8[patchGroupIndex].patchIndices[k];
+    if (pidx != 0) {
+      patch = &lbl_8039CAE8[pidx];
       if (patch->groupId == groupId) {
-        edgeIndex = 0;
-        if (point[1] < (f32)patch->maxY && (f32)patch->minY < point[1]) {
-          while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
-                 patch->planeOffsets[edgeIndex] +
-                     point[0] * (f32)patch->planes[edgeIndex].normalX +
-                     point[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
-            edgeIndex++;
+        y = point[1];
+        if (y < (f32)patch->maxY && y > (f32)patch->minY) {
+          patchGroupIndex = 0;
+          j = 0;
+          for (; (patchGroupIndex & 0xff) < 4; patchGroupIndex++, j += 2) {
+            if (patch->planeOffsets[patchGroupIndex & 0xff] +
+                    (point[0] * (f32)((s16 *)patch)[j & 0xff] +
+                     point[2] * (f32)((s16 *)patch)[(j & 0xff) + 1]) >
+                0.0f) {
+              break;
+            }
           }
         }
-        return edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT;
+        return (uint)__cntlzw(4 - (patchGroupIndex & 0xff)) >> 5;
       }
     }
-    patchListIndex++;
-  } while (true);
+  }
+  OSReport(sObjfsaIsPointWithinPatchGroupError);
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -4437,39 +4436,47 @@ uint isPointWithinPatchGroup(float *point,uint patchGroupIndex,uint groupId)
 u16 getPatchGroup(float *point,int patchGroupIndex,undefined4 param_3,undefined4 param_4,
                   u8 startPatchIndex)
 {
-  u8 patchListIndex;
-  u8 patchIndex;
-  u8 edgeIndex;
-  ObjfsaWalkGroup *walkGroup;
+  char *base;
+  u8 *active;
+  char *wg;
   ObjfsaPatch *patch;
+  u8 k;
+  uint pidx;
+  u8 i;
+  u8 j;
+  f32 y;
 
-  patchListIndex = 0;
-  walkGroup = Objfsa_GetWalkGroup(patchGroupIndex);
-  do {
-    if (OBJFSA_PATCHGROUP_PATCH_COUNT <= patchListIndex) {
-      return 0;
+  base = (char *)lbl_8039CAE8;
+  active = (u8 *)(base + patchGroupIndex + OBJFSA_ACTIVE_WALKGROUPS_OFFSET);
+  wg = base + patchGroupIndex * OBJFSA_PATCHGROUP_STRIDE + 0x3000;
+
+  for (k = 0; k < 4; k++) {
+    if (*active == 0) {
+      continue;
     }
-
-    if (Objfsa_IsWalkGroupActive(patchGroupIndex) != 0) {
-      patchIndex = walkGroup->patchIndices[patchListIndex];
-      if (patchIndex != 0) {
-        patch = Objfsa_GetPatch(patchIndex);
-        if (point[1] < (f32)patch->maxY && (f32)patch->minY < point[1]) {
-          edgeIndex = 0;
-          while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
-                 patch->planeOffsets[edgeIndex] +
-                     point[0] * (f32)patch->planes[edgeIndex].normalX +
-                     point[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
-            edgeIndex++;
-          }
-          if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
-            return patch->groupId;
-          }
+    pidx = *(u8 *)(wg + k + 0x24);
+    if (pidx == 0) {
+      continue;
+    }
+    patch = (ObjfsaPatch *)(base + pidx * 0x30);
+    y = point[1];
+    if (y < (f32)patch->maxY && y > (f32)patch->minY) {
+      i = 0;
+      j = 0;
+      for (; i < 4; i++, j += 2) {
+        if (patch->planeOffsets[i] +
+                (point[0] * (f32)((s16 *)patch)[j] +
+                 point[2] * (f32)((s16 *)patch)[j + 1]) >
+            0.0f) {
+          break;
         }
       }
     }
-    patchListIndex++;
-  } while (true);
+    if (i == 4) {
+      return patch->groupId;
+    }
+  }
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
