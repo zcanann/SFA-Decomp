@@ -18053,3 +18053,28 @@ void playerTailFn_80026b3c(int *a, int b, u8 *p, int d) {
     }
 }
 #pragma pop
+
+#pragma push
+#pragma scheduling off
+void mathFn_80021ac8(u8 *p, f32 *v) {
+    f32 s2;
+    f32 c2;
+    f32 s1;
+    f32 c1;
+    f32 s0;
+    f32 c0;
+    f32 t5;
+    f32 t3;
+    f32 t2;
+
+    angleToVec2(*(u16 *)(p + 0x0), &s0, &c0);
+    angleToVec2(*(u16 *)(p + 0x2), &s1, &c1);
+    angleToVec2(*(u16 *)(p + 0x4), &s2, &c2);
+    t5 = v[0] * c2 - v[1] * s2;
+    t3 = v[1] * c2 + v[0] * s2;
+    v[1] = t3 * c1 - v[2] * s1;
+    t2 = v[2] * c1 + t3 * s1;
+    v[0] = t5 * c0 + t2 * s0;
+    v[2] = t2 * c0 - t5 * s0;
+}
+#pragma pop
