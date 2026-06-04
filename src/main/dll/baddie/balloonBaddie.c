@@ -129,50 +129,204 @@ extern f32 FLOAT_803e2cbc;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void cMenuSetItems(void)
+extern u8 lbl_803A87F0[];
+extern s16 lbl_8031B4E0[];
+extern s16 lbl_803DD894;
+extern s8 lbl_803DD896;
+extern u16 yButtonState;
+extern u16 yButtonItem;
+extern s16 yButtonItemTextureId;
+extern int gTrickyHudItemMask;
+extern int gTrickyHudActionMask;
+extern int getTrickyObject(void);
+extern int getLoadedFileFlags(int flags);
+extern void textureFree();
+extern void *textureLoadAsset(int idx);
+
+#pragma peephole off
+#pragma scheduling off
+int cMenuSetItems(s16 *itemsIn, char useTricky)
 {
-  if (DAT_803dc6cd < '\0') {
-    DAT_803de416 = DAT_803de416 + (ushort)DAT_803dc070 * -(short)DAT_803dc6cd;
-    if (0 < DAT_803de416) {
-      DAT_803de416 = 0;
-      DAT_803dc6cd = '\0';
-      DAT_803de40e = 0;
+    int count;
+    u8 *base;
+    s16 *ids;
+    u8 *flP;
+    int *wordP;
+    s16 *stP;
+    s16 *dst;
+    s16 *items;
+    int halfOff;
+    int wordOff;
+    s16 *src;
+    int active;
+    int i;
+    s16 *w1;
+    s16 *w2;
+    s16 *w3;
+    u8 *w4;
+    s16 *idsW2;
+    void **texW;
+    void **texP2;
+    s16 saved[64];
+
+    items = itemsIn;
+    base = lbl_803A87F0;
+    ids = (s16 *)(base + 0x948);
+    w1 = ids;
+    dst = saved;
+    w2 = dst;
+    stP = (s16 *)(base + 0x548);
+    w3 = stP;
+    flP = base + 0x448;
+    w4 = flP;
+    for (i = 0; i < 64; i++) {
+        *w2 = *w1;
+        *w1 = -1;
+        halfOff = 0;
+        *w3 = halfOff;
+        *w4 = 1;
+        w1++;
+        w2++;
+        w3++;
+        w4++;
     }
-  }
-  else {
-    DAT_803de416 = DAT_803de416 - (ushort)DAT_803dc070 * (short)DAT_803dc6cd;
-    if (DAT_803de416 < 0) {
-      DAT_803de416 = 0;
-      DAT_803dc6cd = '\0';
-      DAT_803de40e = 0;
+    count = 0;
+    wordOff = 0;
+    wordP = (int *)(base + 0x848);
+    *wordP = -1;
+    if (useTricky == 0) {
+        lbl_803DD894 = -1;
+        for (src = items; *src > -1; src += 8) {
+            active = GameBit_Get(*src);
+            if (active != 0) {
+                if (items == lbl_8031B4E0) {
+                    if (src[1] < 0 || GameBit_Get(src[1]) == 0) {
+                        *(s16 *)(base + halfOff + 0x948) = src[3];
+                        *(int *)(base + wordOff + 0x848) = src[0];
+                        *(int *)(base + wordOff + 0x748) = src[2];
+                        *(int *)(base + wordOff + 0x648) = src[1];
+                        *(u8 *)(base + count + 0x448) = active;
+                        *(s16 *)(base + halfOff + 0x548) = src[6];
+                        *(s16 *)(base + halfOff + 0x5c8) = src[5];
+                        *(u8 *)(base + count + 0x508) = *(u8 *)(src + 7);
+                        *(u8 *)(base + count + 0x4c8) = ((u8 *)src)[0xf];
+                        if (src[2] < 0 || GameBit_Get(src[2]) == 0) {
+                            *(u8 *)(base + count + 0x488) = 1;
+                        } else {
+                            *(u8 *)(base + count + 0x488) = 0;
+                        }
+                        count++;
+                        wordOff += 4;
+                        halfOff += 2;
+                    }
+                } else if (src[1] < 0 || GameBit_Get(src[1]) == 0) {
+                    if (lbl_803DD896 != 0 && lbl_803DD896 == *src) {
+                        lbl_803DD894 = count;
+                    }
+                    *(s16 *)(base + halfOff + 0x948) = src[3];
+                    *(int *)(base + wordOff + 0x848) = src[0];
+                    *(int *)(base + wordOff + 0x748) = src[2];
+                    *(int *)(base + wordOff + 0x648) = src[1];
+                    *(u8 *)(base + count + 0x448) = active;
+                    *(s16 *)(base + halfOff + 0x548) = src[6];
+                    *(s16 *)(base + halfOff + 0x5c8) = src[5];
+                    *(u8 *)(base + count + 0x508) = *(u8 *)(src + 7);
+                    *(u8 *)(base + count + 0x4c8) = ((u8 *)src)[0xf];
+                    if (src[2] < 0 || GameBit_Get(src[2]) == 0) {
+                        *(u8 *)(base + count + 0x488) = 1;
+                    } else {
+                        *(u8 *)(base + count + 0x488) = 0;
+                    }
+                    count++;
+                    wordOff += 4;
+                    halfOff += 2;
+                }
+            }
+        }
+    } else {
+        int itemMask;
+        int actionMask;
+        int yItem;
+        s16 *idsW;
+        s16 *aW;
+        u8 *cW;
+        u8 *dW;
+        u8 *eW;
+
+        getTrickyObject();
+        itemMask = gTrickyHudItemMask;
+        if (itemMask == -1) {
+            if (yButtonState == 2) {
+                yButtonState = 0;
+                yButtonItemTextureId = -1;
+            }
+        } else {
+            idsW = ids;
+            aW = (s16 *)(base + 0x5c8);
+            cW = base + 0x508;
+            dW = base + 0x4c8;
+            eW = base + 0x488;
+            actionMask = gTrickyHudActionMask;
+            yItem = yButtonItem;
+            for (src = items; *src > -1; src += 8) {
+                if ((actionMask & *src) != 0) {
+                    *idsW = src[3];
+                    *flP = 1;
+                    *wordP = src[2];
+                    *stP = src[6];
+                    *aW = src[5];
+                    *cW = *(u8 *)(src + 7);
+                    *dW = ((u8 *)src)[0xf];
+                    if ((itemMask & *src) != 0) {
+                        *eW = 1;
+                    } else {
+                        *eW = 0;
+                    }
+                    idsW++;
+                    flP++;
+                    wordP++;
+                    stP++;
+                    aW++;
+                    cW++;
+                    dW++;
+                    eW++;
+                    count++;
+                } else if (yButtonState == 2 && yItem == src[2]) {
+                    yButtonState = 0;
+                    yButtonItemTextureId = -1;
+                }
+            }
+        }
     }
-  }
-  if (DAT_803de415 == '\0') {
-    if ((DAT_803de556 == 0) &&
-       (DAT_803de418 = DAT_803de418 + (ushort)DAT_803dc070 * -8, DAT_803de418 < 0)) {
-      DAT_803de418 = 0;
+    i = 0;
+    idsW2 = ids;
+    texP2 = (void **)(base + 0x9c8);
+    texW = texP2;
+    do {
+        if (*dst > -1 && *dst != *idsW2 && *texW != 0) {
+            textureFree(*texW);
+            *texW = 0;
+        }
+        dst++;
+        idsW2++;
+        texW++;
+        i++;
+    } while (i < 0x40);
+    if (getLoadedFileFlags(0) == 0) {
+        i = 0;
+        do {
+            if (*ids > -1 && *texP2 == 0) {
+                *texP2 = textureLoadAsset(*ids);
+            }
+            ids++;
+            texP2++;
+            i++;
+        } while (i < 0x40);
     }
-  }
-  else {
-    DAT_803de418 = DAT_803de418 + (ushort)DAT_803dc070 * 8;
-    if (0xff < DAT_803de418) {
-      DAT_803de418 = 0xff;
-    }
-  }
-  if ((DAT_803de415 == '\0') || (DAT_803de418 < 0x41)) {
-    DAT_803de556 = DAT_803de556 + (ushort)DAT_803dc070 * -0x10;
-    if (DAT_803de556 < 0) {
-      DAT_803de556 = 0;
-    }
-  }
-  else {
-    DAT_803de556 = DAT_803de556 + (ushort)DAT_803dc070 * 0x10;
-    if (DAT_803dc6ce < DAT_803de556) {
-      DAT_803de556 = DAT_803dc6ce;
-    }
-  }
-  return;
+    return count;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
