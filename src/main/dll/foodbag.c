@@ -359,6 +359,22 @@ extern f32 lbl_803E0E10;
 extern f32 lbl_803E0E14;
 extern f32 lbl_803E0E18;
 extern f32 lbl_803E0E1C;
+extern u8 lbl_80315328[];
+extern u8 lbl_803DB8E8;
+extern f32 lbl_803E0E20;
+extern f32 lbl_803E0E24;
+extern f32 lbl_803E0E28;
+extern f32 lbl_803E0E2C;
+extern f32 lbl_803E0E30;
+extern f32 lbl_803E0E34;
+extern f32 lbl_803E0E38;
+extern f32 lbl_803E0E3C;
+extern f32 lbl_803E0E40;
+extern f32 lbl_803E0E44;
+extern f32 lbl_803E0E48;
+extern f32 lbl_803E0E4C;
+extern f32 lbl_803E0E50;
+extern f32 lbl_803E0E54;
 extern u8 lbl_80315468[];
 extern u8 lbl_80316240[];
 extern f32 lbl_803E1010;
@@ -935,221 +951,100 @@ void dll_7E_func03(int param_1,int param_2,int param_3,uint param_4,undefined4 p
  */
 void dll_7F_func03(int param_1,int param_2,int param_3,uint param_4)
 {
-  int iVar1;
-  undefined4 *puVar2;
-  undefined4 *puVar3;
-  undefined4 *local_368;
-  int local_364;
-  float local_348;
-  float local_344;
-  float local_340;
-  float local_33c;
-  float local_338;
-  float local_334;
-  float local_330;
-  undefined4 local_32c;
-  undefined4 local_328;
-  undefined2 local_324;
-  undefined2 local_322;
-  undefined2 local_320;
-  undefined2 local_31e;
-  undefined2 local_31c;
-  undefined2 local_31a;
-  undefined2 local_318;
-  undefined2 local_316;
-  uint local_314;
-  undefined local_310;
-  undefined local_30f;
-  undefined local_30e;
-  undefined local_30d;
-  char local_30b;
-  undefined4 local_308;
-  float local_304;
-  float local_300;
-  float local_2fc;
-  undefined4 local_2f8;
-  undefined2 local_2f4;
-  undefined local_2f2;
-  undefined4 local_2f0;
-  float local_2ec;
-  float local_2e8;
-  float local_2e4;
-  undefined *local_2e0;
-  undefined2 local_2dc;
-  undefined local_2da [2];
-  undefined4 local_2d8 [5];
-  undefined local_2c2 [706];
-  
-  local_2f2 = 0;
-  local_2f4 = 0x8c;
-  local_2f8 = 0;
-  local_308 = 0x20000000;
-  local_304 = lbl_803E1AA0;
-  local_300 = lbl_803E1AA4;
-  local_2fc = lbl_803E1AA8;
-  puVar2 = &local_2f0;
+  FbBuf buf;
+  u8 *base = lbl_80315328;
+  FbCmd *e = buf.entries;
+  FbCmd *p = &e[1];
+
+  e[0].layer = 0; e[0].flags = 0x8c; e[0].tex = (void *)0; e[0].mode = 0x2000;
+  e[0].x = lbl_803E0E20; e[0].y = lbl_803E0E24; e[0].z = lbl_803E0E28;
   if (param_2 != 2) {
-    local_2da[0] = 0;
-    local_2dc = 9;
-    local_2e0 = &DAT_80316060;
-    local_2f0 = 0x80;
-    local_2ec = lbl_803E1AAC;
-    local_2e8 = lbl_803E1AAC;
-    local_2e4 = lbl_803E1AB0;
-    puVar2 = (undefined4 *)(local_2da + 2);
+    p->layer = 0; p->flags = 9; p->tex = base + 0xe8; p->mode = 0x80;
+    p->x = lbl_803E0E2C; p->y = lbl_803E0E2C; p->z = lbl_803E0E30;
+    p++;
   }
   if (param_2 == 0) {
-    *(undefined *)((int)puVar2 + 0x16) = 0;
-    *(undefined2 *)(puVar2 + 5) = 8;
-    puVar2[4] = (undefined4)&DAT_80316074;
-    *puVar2 = 2;
-    puVar2[1] = lbl_803E1AB4;
-    puVar2[2] = lbl_803E1AB4;
-    puVar2[3] = lbl_803E1AB8;
-  }
-  else {
-    *(undefined *)((int)puVar2 + 0x16) = 0;
-    *(undefined2 *)(puVar2 + 5) = 8;
-    puVar2[4] = (undefined4)&DAT_80316074;
-    *puVar2 = 2;
-    puVar2[1] = lbl_803E1ABC;
-    puVar2[2] = lbl_803E1ABC;
-    puVar2[3] = lbl_803E1AC0;
+    p->layer = 0; p->flags = 8; p->tex = base + 0xfc; p->mode = 2;
+    p->x = lbl_803E0E34; p->y = lbl_803E0E34; p->z = lbl_803E0E38;
+    p++;
+  } else {
+    p->layer = 0; p->flags = 8; p->tex = base + 0xfc; p->mode = 2;
+    p->x = lbl_803E0E3C; p->y = lbl_803E0E3C; p->z = lbl_803E0E40;
+    p++;
   }
   if (param_2 == 0) {
-    *(undefined *)((int)puVar2 + 0x2e) = 1;
-    *(undefined2 *)(puVar2 + 0xb) = 8;
-    puVar2[10] = (undefined4)&DAT_80316060;
-    puVar2[6] = 2;
-    puVar2[7] = lbl_803E1AC4;
-    puVar2[8] = lbl_803E1AC4;
-    puVar2[9] = lbl_803E1AC4;
-  }
-  else {
-    *(undefined *)((int)puVar2 + 0x2e) = 1;
-    *(undefined2 *)(puVar2 + 0xb) = 8;
-    puVar2[10] = (undefined4)&DAT_80316060;
-    puVar2[6] = 2;
-    puVar2[7] = lbl_803E1AC4;
-    puVar2[8] = lbl_803E1AC4;
-    puVar2[9] = lbl_803E1AC4;
-  }
-  puVar3 = puVar2 + 0xc;
-  if (param_2 == 0) {
-    *(undefined *)((int)puVar2 + 0x46) = 1;
-    *(undefined2 *)(puVar2 + 0x11) = 9;
-    puVar2[0x10] = (undefined4)&DAT_80316060;
-    *puVar3 = 0x100;
-    puVar2[0xd] = lbl_803E1AC8;
-    puVar2[0xe] = lbl_803E1AAC;
-    puVar2[0xf] = lbl_803E1AAC;
-    puVar3 = puVar2 + 0x12;
-    *(undefined *)((int)puVar2 + 0x5e) = 1;
-    *(undefined2 *)(puVar2 + 0x17) = 1;
-    puVar2[0x16] = (undefined4)&DAT_803dc548;
-    *puVar3 = 0x4000;
-    puVar2[0x13] = lbl_803E1ACC;
-    puVar2[0x14] = lbl_803E1ACC;
-    puVar2[0x15] = lbl_803E1AAC;
-  }
-  else if (param_2 == 1) {
-    *(undefined *)((int)puVar2 + 0x46) = 1;
-    *(undefined2 *)(puVar2 + 0x11) = 9;
-    puVar2[0x10] = (undefined4)&DAT_80316060;
-    *puVar3 = 0x100;
-    puVar2[0xd] = lbl_803E1AD0;
-    puVar2[0xe] = lbl_803E1AAC;
-    puVar2[0xf] = lbl_803E1AAC;
-    puVar3 = puVar2 + 0x12;
+    p->layer = 1; p->flags = 8; p->tex = base + 0xe8; p->mode = 2;
+    p->x = lbl_803E0E44; p->y = lbl_803E0E44; p->z = lbl_803E0E44;
+    p++;
+  } else {
+    p->layer = 1; p->flags = 8; p->tex = base + 0xe8; p->mode = 2;
+    p->x = lbl_803E0E44; p->y = lbl_803E0E44; p->z = lbl_803E0E44;
+    p++;
   }
   if (param_2 == 0) {
-    *(undefined *)((int)puVar3 + 0x16) = 2;
-    *(undefined2 *)(puVar3 + 5) = 9;
-    puVar3[4] = (undefined4)&DAT_80316060;
-    *puVar3 = 0x100;
-    puVar3[1] = lbl_803E1AC8;
-    puVar3[2] = lbl_803E1AAC;
-    puVar3[3] = lbl_803E1AAC;
-    *(undefined *)((int)puVar3 + 0x2e) = 2;
-    *(undefined2 *)(puVar3 + 0xb) = 1;
-    puVar3[10] = (undefined4)&DAT_803dc548;
-    puVar3[6] = 0x4000;
-    puVar3[7] = lbl_803E1ACC;
-    puVar3[8] = lbl_803E1ACC;
-    puVar3[9] = lbl_803E1AAC;
-    puVar3 = puVar3 + 6;
+    p->layer = 1; p->flags = 9; p->tex = base + 0xe8; p->mode = 0x100;
+    p->x = lbl_803E0E48; p->y = lbl_803E0E2C; p->z = lbl_803E0E2C;
+    p++;
+    p->layer = 1; p->flags = 1; p->tex = &lbl_803DB8E8; p->mode = 0x4000;
+    p->x = lbl_803E0E4C; p->y = lbl_803E0E4C; p->z = lbl_803E0E2C;
+    p++;
+  } else if (param_2 == 1) {
+    p->layer = 1; p->flags = 9; p->tex = base + 0xe8; p->mode = 0x100;
+    p->x = lbl_803E0E50; p->y = lbl_803E0E2C; p->z = lbl_803E0E2C;
+    p++;
   }
-  else if (param_2 == 1) {
-    *(undefined *)((int)puVar3 + 0x16) = 2;
-    *(undefined2 *)(puVar3 + 5) = 9;
-    puVar3[4] = (undefined4)&DAT_80316060;
-    *puVar3 = 0x100;
-    puVar3[1] = lbl_803E1AD0;
-    puVar3[2] = lbl_803E1AAC;
-    puVar3[3] = lbl_803E1AAC;
-    puVar3 = puVar3 + 6;
+  if (param_2 == 0) {
+    p->layer = 2; p->flags = 9; p->tex = base + 0xe8; p->mode = 0x100;
+    p->x = lbl_803E0E48; p->y = lbl_803E0E2C; p->z = lbl_803E0E2C;
+    p++;
+    p->layer = 2; p->flags = 1; p->tex = &lbl_803DB8E8; p->mode = 0x4000;
+    p->x = lbl_803E0E4C; p->y = lbl_803E0E4C; p->z = lbl_803E0E2C;
+    p++;
+  } else if (param_2 == 1) {
+    p->layer = 2; p->flags = 9; p->tex = base + 0xe8; p->mode = 0x100;
+    p->x = lbl_803E0E50; p->y = lbl_803E0E2C; p->z = lbl_803E0E2C;
+    p++;
   }
-  *(undefined *)((int)puVar3 + 0x16) = 2;
-  *(undefined2 *)(puVar3 + 5) = 9;
-  puVar3[4] = (undefined4)&DAT_80316060;
-  *puVar3 = 4;
-  puVar3[1] = lbl_803E1AAC;
-  puVar3[2] = lbl_803E1AAC;
-  puVar3[3] = lbl_803E1AAC;
-  *(undefined *)((int)puVar3 + 0x2e) = 3;
-  *(undefined2 *)(puVar3 + 0xb) = 0;
-  puVar3[10] = 0;
-  puVar3[6] = 0x20000000;
-  puVar3[7] = lbl_803E1AA0;
-  puVar3[8] = lbl_803E1AA4;
-  puVar3[9] = lbl_803E1AA8;
-  local_324 = (undefined2)param_2;
-  local_33c = lbl_803E1AAC;
-  local_338 = lbl_803E1AAC;
-  local_334 = lbl_803E1AAC;
-  local_348 = lbl_803E1AAC;
-  local_344 = lbl_803E1AAC;
-  local_340 = lbl_803E1AAC;
-  local_330 = lbl_803E1AD4;
-  local_328 = 1;
-  local_32c = 0;
-  local_30f = 9;
-  local_30e = 0;
-  local_30d = 0x20;
-  iVar1 = (int)puVar3 + (0x30 - (int)&local_308);
-  iVar1 = iVar1 / 0x18 + (iVar1 >> 0x1f);
-  local_30b = (char)iVar1 - (char)(iVar1 >> 0x1f);
-  local_322 = DAT_80316084;
-  local_320 = DAT_80316086;
-  local_31e = DAT_80316088;
-  local_31c = DAT_8031608a;
-  local_31a = DAT_8031608c;
-  local_318 = DAT_8031608e;
-  local_316 = DAT_80316090;
-  local_368 = &local_308;
-  local_314 = param_4 | 0x4000000;
-  if ((param_4 & 1) != 0) {
-    if (param_1 == 0) {
-      local_33c = lbl_803E1AAC + *(float *)(param_3 + 0xc);
-      local_338 = lbl_803E1AAC + *(float *)(param_3 + 0x10);
-      local_334 = lbl_803E1AAC + *(float *)(param_3 + 0x14);
-    }
-    else {
-      local_33c = lbl_803E1AAC + *(float *)(param_1 + 0x18);
-      local_338 = lbl_803E1AAC + *(float *)(param_1 + 0x1c);
-      local_334 = lbl_803E1AAC + *(float *)(param_1 + 0x20);
+  p[0].layer = 2; p[0].flags = 9; p[0].tex = base + 0xe8; p[0].mode = 4;
+  p[0].x = lbl_803E0E2C; p[0].y = lbl_803E0E2C; p[0].z = lbl_803E0E2C;
+  p[1].layer = 3; p[1].flags = 0; p[1].tex = (void *)0; p[1].mode = 0x2000;
+  p[1].x = lbl_803E0E20; p[1].y = lbl_803E0E24; p[1].z = lbl_803E0E28;
+  buf.ctx = param_1;
+  buf.v44 = (s16)param_2;
+  buf.pos[0] = lbl_803E0E2C; buf.pos[1] = lbl_803E0E2C; buf.pos[2] = lbl_803E0E2C;
+  buf.col[0] = lbl_803E0E2C; buf.col[1] = lbl_803E0E2C; buf.col[2] = lbl_803E0E2C;
+  buf.scale = lbl_803E0E54;
+  buf.v40 = 1;
+  buf.v3c = 0;
+  buf.v59 = 9;
+  buf.v5a = 0;
+  buf.v5b = 0x20;
+  buf.count = (FbCmd *)((u8 *)p + 0x30) - e;
+  buf.hw[0] = *(s16 *)(base + 0x10c); buf.hw[1] = *(s16 *)(base + 0x10e);
+  buf.hw[2] = *(s16 *)(base + 0x110); buf.hw[3] = *(s16 *)(base + 0x112);
+  buf.hw[4] = *(s16 *)(base + 0x114); buf.hw[5] = *(s16 *)(base + 0x116);
+  buf.hw[6] = *(s16 *)(base + 0x118);
+  buf.cmds = buf.entries;
+  buf.flags = 0x400;
+  buf.flags |= param_4;
+  if ((buf.flags & 1) != 0) {
+    if ((uint)param_1 != 0) {
+      buf.pos[0] = lbl_803E0E2C + *(f32 *)(param_1 + 0x18);
+      buf.pos[1] = lbl_803E0E2C + *(f32 *)(param_1 + 0x1c);
+      buf.pos[2] = lbl_803E0E2C + *(f32 *)(param_1 + 0x20);
+    } else {
+      buf.pos[0] = lbl_803E0E2C + *(f32 *)(param_3 + 0xc);
+      buf.pos[1] = lbl_803E0E2C + *(f32 *)(param_3 + 0x10);
+      buf.pos[2] = lbl_803E0E2C + *(f32 *)(param_3 + 0x14);
     }
   }
-  local_364 = param_1;
   if (param_2 == 0) {
-    local_310 = 0;
-    (**(code **)(*gModgfxInterface + 8))(&local_368,0,9,&DAT_80315f78,8,&DAT_80316030,0x156,0);
+    buf.v58 = 0;
+    (*(code *)(*gModgfxInterface + 8))(&buf,0,9,base,8,base + 0xb8,0x156,0);
+  } else {
+    buf.v58 = 0;
+    (*(code *)(*gModgfxInterface + 8))(&buf,0,9,base + 0x5c,8,base + 0xb8,0x8a,0);
   }
-  else {
-    local_310 = 0;
-    (**(code **)(*gModgfxInterface + 8))(&local_368,0,9,&DAT_80315fd4,8,&DAT_80316030,0x8a,0);
-  }
-  return;
 }
 
 /*
