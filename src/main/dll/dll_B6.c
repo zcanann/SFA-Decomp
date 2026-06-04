@@ -1,30 +1,29 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_B6.h"
 
-extern undefined4 FUN_80006a64();
-extern undefined8 FUN_80006a68();
-extern int FUN_80017a98();
-extern int FUN_80017b00();
-extern undefined4 FUN_80286830();
-extern undefined4 FUN_8028687c();
-extern uint FUN_80294bfc();
-extern int FUN_80294c98();
+extern void *Obj_GetPlayerObject(void);
+extern int objAnimFn_80296328(void);
+extern u8 **ObjList_GetObjects(int *idx, int *count);
+extern int fn_80295C24(void *player);
+extern void voxmaps_worldToGrid(f32 *world, int *grid);
+extern u8 voxmaps_traceLine(int *from, int *to, int *out, u8 *occOut, int e);
+extern f32 PSVECMag(void *vec);
+extern float sqrtf(float x);
 
-extern undefined4 gCamcontrolTargetTypeMask;
-extern undefined4 gCamcontrolCurrentActionId;
-extern f64 DOUBLE_803e22d0;
-extern f32 lbl_803E22B0;
-extern f32 lbl_803E22C4;
-extern f32 lbl_803E22C8;
+extern int gCamcontrolActiveActionId;
+extern u16 lbl_803DB992;
+extern f32 lbl_803E1630;
+extern f32 lbl_803E1644;
+extern f32 lbl_803E1648;
+extern f32 lbl_803E1658;
 
 /*
  * --INFO--
  *
  * Function: camcontrol_findBestTarget
  * EN v1.0 Address: 0x801010B4
- * EN v1.0 Size: 1344b
+ * EN v1.0 Size: 1268b
  * EN v1.1 Address: 0x80101350
- * EN v1.1 Size: 1268b
  * JP Address: TODO
  * JP Size: TODO
  * PAL Address: TODO
@@ -32,198 +31,160 @@ extern f32 lbl_803E22C8;
  */
 #pragma scheduling off
 #pragma peephole off
-void camcontrol_findBestTarget(undefined8 param_1,double param_2,undefined8 param_3,
-                               undefined8 param_4,undefined8 param_5,undefined8 param_6,
-                               undefined8 param_7,undefined8 param_8)
+void *camcontrol_findBestTarget(int param_1, u8 *focus)
 {
-  float fVar1;
-  bool bVar2;
-  int iVar3;
-  int iVar4;
-  int extraout_r4;
-  uint uVar5;
-  undefined4 *puVar6;
-  int iVar7;
-  float *pfVar8;
-  undefined4 *puVar9;
-  float *pfVar10;
-  int iVar11;
-  int iVar12;
-  float fVar13;
-  uint uVar14;
-  float *pfVar15;
-  uint uVar16;
-  undefined8 uVar17;
-  double in_f31;
-  double dVar18;
-  double in_ps31_1;
-  undefined local_c8 [4];
-  int local_c4;
-  int local_c0;
-  undefined4 auStack_bc [3];
-  short asStack_b0 [6];
-  short local_a4 [6];
-  float local_98;
-  undefined4 local_94;
-  undefined4 local_90;
-  float local_8c;
-  float local_88;
-  undefined4 local_84;
-  undefined4 local_80 [8];
-  float local_60 [8];
-  undefined4 local_40;
-  uint uStack_3c;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  FUN_80286830();
-  uVar14 = 0xffffffff;
-  iVar12 = 0;
-  iVar11 = 0;
-  iVar3 = FUN_80017a98();
-  if ((((iVar3 != 0) && (extraout_r4 != 0)) && (gCamcontrolCurrentActionId != 0x44)) &&
-     (iVar4 = FUN_80294c98(iVar3), iVar4 != 0)) {
-    iVar4 = FUN_80017b00(&local_c0,&local_c4);
-    pfVar15 = (float *)(iVar4 + local_c0 * 4);
-    for (; local_c0 < local_c4; local_c0 = local_c0 + 1) {
-      fVar13 = *pfVar15;
-      iVar4 = *(int *)((int)fVar13 + 0x78);
-      if ((((iVar4 == 0) || (*(char *)((int)fVar13 + 0x36) != -1)) ||
-          (((*(byte *)((int)fVar13 + 0xaf) & 0x28) != 0 ||
-           (((*(ushort *)((int)fVar13 + 0xb0) & 0x800) == 0 &&
-            ((*(uint *)(*(int *)((int)fVar13 + 0x50) + 0x44) & 1) == 0)))))) ||
-         (((*(ushort *)((int)fVar13 + 6) & 0x4000) != 0 ||
-          (((*(ushort *)((int)fVar13 + 0xb0) & 0x40) != 0 ||
-           (bVar2 = true,
-           ((uint)gCamcontrolTargetTypeMask &
-           1 << (*(byte *)(iVar4 + (uint)*(byte *)((int)fVar13 + 0xe4) * 5 + 4) & 0xf)) == 0)))))) {
-        bVar2 = false;
-      }
-      if (bVar2) {
-        uVar5 = (uint)*(byte *)((int)fVar13 + 0xe4);
-        iVar7 = uVar5 * 0x18;
-        if ((int)uVar14 <=
-            (int)(uint)*(byte *)(*(int *)(*(int *)((int)fVar13 + 0x50) + 0x40) + iVar7 + 0x11)) {
-          fVar1 = lbl_803E22B0;
-          if (((*(byte *)((int)fVar13 + 0xaf) & 0x80) == 0) &&
-             ((*(byte *)(iVar4 + uVar5 * 5 + 4) & 0x80) == 0)) {
-            fVar1 = *(float *)(extraout_r4 + 0x1c) -
-                    *(float *)(*(int *)((int)fVar13 + 0x74) + iVar7 + 0x10);
-          }
-          if ((lbl_803E22C4 < fVar1) && (fVar1 < lbl_803E22C8)) {
-            iVar7 = *(int *)((int)fVar13 + 0x74) + iVar7;
-            param_2 = (double)(*(float *)(extraout_r4 + 0x18) - *(float *)(iVar7 + 0xc));
-            fVar1 = *(float *)(extraout_r4 + 0x20) - *(float *)(iVar7 + 0x14);
-            dVar18 = (double)(float)(param_2 * param_2 + (double)(fVar1 * fVar1));
-            iVar4 = iVar4 + uVar5 * 5;
-            uStack_3c = (uint)*(byte *)(iVar4 + 2) << 2 ^ 0x80000000;
-            local_40 = 0x43300000;
-            fVar1 = (float)((double)CONCAT44(0x43300000,uStack_3c) - DOUBLE_803e22d0);
-            if (dVar18 < (double)(fVar1 * fVar1)) {
-              bVar2 = true;
-              if (((*(byte *)(iVar4 + 4) & 0xf) == 2) && (uVar5 = FUN_80294bfc(iVar3), uVar5 != 0))
-              {
-                bVar2 = false;
-              }
-              if (bVar2) {
-                uVar14 = (uint)*(byte *)(*(int *)(*(int *)((int)fVar13 + 0x50) + 0x40) +
-                                        (uint)*(byte *)((int)fVar13 + 0xe4) * 0x18 + 0x11);
-                iVar4 = 0;
-                pfVar8 = local_60;
-                while ((iVar4 < iVar12 &&
-                       (uVar14 < *(byte *)(*(int *)(*(int *)((int)*pfVar8 + 0x50) + 0x40) +
-                                          (uint)*(byte *)((int)*pfVar8 + 0xe4) * 0x18 + 0x11)))) {
-                  pfVar8 = pfVar8 + 1;
-                  iVar4 = iVar4 + 1;
-                }
-                pfVar8 = local_60 + iVar4 + -8;
-                pfVar10 = local_60 + iVar4;
-                while (((iVar4 < iVar12 && ((double)*pfVar8 < dVar18)) &&
-                       (uVar14 == *(byte *)(*(int *)(*(int *)((int)*pfVar10 + 0x50) + 0x40) +
-                                           (uint)*(byte *)((int)*pfVar10 + 0xe4) * 0x18 + 0x11)))) {
-                  pfVar8 = pfVar8 + 1;
-                  pfVar10 = pfVar10 + 1;
-                  iVar4 = iVar4 + 1;
-                }
-                puVar6 = (undefined4 *)((int)local_80 + iVar11);
-                puVar9 = (undefined4 *)((int)local_60 + iVar11);
-                uVar5 = iVar12 - iVar4;
-                if (iVar4 < iVar12) {
-                  uVar16 = uVar5 >> 3;
-                  if (uVar16 != 0) {
-                    do {
-                      *puVar6 = puVar6[-1];
-                      *puVar9 = puVar9[-1];
-                      puVar6[-1] = puVar6[-2];
-                      puVar9[-1] = puVar9[-2];
-                      puVar6[-2] = puVar6[-3];
-                      puVar9[-2] = puVar9[-3];
-                      puVar6[-3] = puVar6[-4];
-                      puVar9[-3] = puVar9[-4];
-                      puVar6[-4] = puVar6[-5];
-                      puVar9[-4] = puVar9[-5];
-                      puVar6[-5] = puVar6[-6];
-                      puVar9[-5] = puVar9[-6];
-                      puVar6[-6] = puVar6[-7];
-                      puVar9[-6] = puVar9[-7];
-                      puVar6[-7] = puVar6[-8];
-                      puVar9[-7] = puVar9[-8];
-                      puVar6 = puVar6 + -8;
-                      puVar9 = puVar9 + -8;
-                      uVar16 = uVar16 - 1;
-                    } while (uVar16 != 0);
-                    uVar5 = uVar5 & 7;
-                    if (uVar5 == 0) goto LAB_80101720;
-                  }
-                  do {
-                    *puVar6 = puVar6[-1];
-                    *puVar9 = puVar9[-1];
-                    puVar6 = puVar6 + -1;
-                    puVar9 = puVar9 + -1;
-                    uVar5 = uVar5 - 1;
-                  } while (uVar5 != 0);
-                }
-LAB_80101720:
-                local_60[iVar4 + -8] = (float)dVar18;
-                local_60[iVar4] = fVar13;
-                iVar12 = iVar12 + 1;
-                iVar11 = iVar11 + 4;
-                if (iVar12 == 8) break;
-              }
-            }
-          }
+    int objIndex;
+    int objCount;
+    u8 out2[4];
+    f32 v1[3];
+    f32 v2[3];
+    int g1[3];
+    int g2[3];
+    int out1[3];
+    u8 *arr[8];
+    f32 dist[8];
+    u8 **ptr;
+    int bestPri;
+    u8 *obj;
+    int idx;
+    int count;
+    u8 *player;
+    u8 *f;
+    u8 canTarget;
+    u8 *data;
+    u8 *entry;
+    u8 *pp;
+    u8 *row;
+    u8 *src;
+    u8 *best;
+    int i;
+    int k;
+    int t;
+    int ok;
+    f32 dx, dz, dy, distsq, range;
+    f32 *pd;
+    u8 **pa;
+
+    f = focus;
+    bestPri = -1;
+    count = 0;
+    player = Obj_GetPlayerObject();
+    if (player == NULL || f == NULL || gCamcontrolActiveActionId == 0x44 ||
+        objAnimFn_80296328() == 0) {
+        return NULL;
+    }
+    ptr = ObjList_GetObjects(&objIndex, &objCount);
+    idx = objIndex;
+    ptr += idx;
+    for (; idx < objCount; ptr++, idx++) {
+        obj = *ptr;
+        data = *(u8 **)(obj + 0x78);
+        if (data == NULL
+           || *(u8 *)(obj + 0x36) != 0xff
+           || (*(u8 *)(obj + 0xaf) & 0x28)
+           || (!(*(u16 *)(obj + 0xb0) & 0x800) && !(*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 1))
+           || (*(s16 *)(obj + 6) & 0x4000)
+           || (*(u16 *)(obj + 0xb0) & 0x40)
+           || (lbl_803DB992 & ((ok = 1) << (data[*(u8 *)(obj + 0xe4) * 5 + 4] & 0xf))) == 0) {
+            ok = 0;
         }
-      }
-      pfVar15 = pfVar15 + 1;
+        if (ok == 0) {
+            continue;
+        }
+        if ((int)*(u8 *)(*(u8 **)(*(u8 **)(obj + 0x50) + 0x40) + *(u8 *)(obj + 0xe4) * 0x18 + 0x11) < bestPri) {
+            continue;
+        }
+        if ((*(u8 *)(obj + 0xaf) & 0x80) || (data[*(u8 *)(obj + 0xe4) * 5 + 4] & 0x80)) {
+            dy = lbl_803E1630;
+        } else {
+            dy = *(f32 *)(f + 0x1c) - *(f32 *)(*(u8 **)(obj + 0x74) + *(u8 *)(obj + 0xe4) * 0x18 + 0x10);
+        }
+        if (dy <= lbl_803E1644) {
+            continue;
+        }
+        if (dy >= lbl_803E1648) {
+            continue;
+        }
+        dx = *(f32 *)(f + 0x18) - *(f32 *)(*(u8 **)(obj + 0x74) + *(u8 *)(obj + 0xe4) * 0x18 + 0xc);
+        dz = *(f32 *)(f + 0x20) - *(f32 *)(*(u8 **)(obj + 0x74) + *(u8 *)(obj + 0xe4) * 0x18 + 0x14);
+        distsq = dz * dz + dx * dx;
+        entry = data + *(u8 *)(obj + 0xe4) * 5;
+        range = (f32)(int)(entry[2] << 2);
+        if (distsq >= range * range) {
+            continue;
+        }
+        canTarget = 1;
+        if ((entry[4] & 0xf) == 2 && fn_80295C24(player) != 0) {
+            canTarget = 0;
+        }
+        if (canTarget == 0) {
+            continue;
+        }
+        bestPri = *(u8 *)(*(u8 **)(*(u8 **)(obj + 0x50) + 0x40) + *(u8 *)(obj + 0xe4) * 0x18 + 0x11);
+        i = 0;
+        pa = arr;
+        while (i < count
+            && (int)*(u8 *)(*(u8 **)(*(u8 **)(*pa + 0x50) + 0x40) + *(u8 *)(*pa + 0xe4) * 0x18 + 0x11) > bestPri) {
+            pa++;
+            i++;
+        }
+        pd = dist + i;
+        pa = arr + i;
+        while (i < count && *pd < distsq
+            && bestPri == (int)*(u8 *)(*(u8 **)(*(u8 **)(*pa + 0x50) + 0x40) + *(u8 *)(*pa + 0xe4) * 0x18 + 0x11)) {
+            pd++;
+            pa++;
+            i++;
+        }
+        for (k = count; k > i; k--) {
+            dist[k] = dist[k - 1];
+            arr[k] = arr[k - 1];
+        }
+        dist[i] = distsq;
+        arr[i] = obj;
+        count++;
+        if (count == 8) {
+            break;
+        }
     }
-    if ((0 < iVar12) &&
-       (iVar3 = (uint)*(byte *)((int)local_60[0] + 0xe4) * 0x18,
-       (*(byte *)(*(int *)(*(int *)((int)local_60[0] + 0x50) + 0x40) + iVar3 + 0x10) & 0x20) != 0))
-    {
-      local_8c = *(float *)(extraout_r4 + 0x18);
-      local_88 = lbl_803E22C8 + *(float *)(extraout_r4 + 0x1c);
-      local_84 = *(undefined4 *)(extraout_r4 + 0x20);
-      local_98 = *(float *)(*(int *)((int)local_60[0] + 0x74) + iVar3);
-      iVar3 = *(int *)((int)local_60[0] + 0x74) + iVar3;
-      local_94 = *(undefined4 *)(iVar3 + 4);
-      local_90 = *(undefined4 *)(iVar3 + 8);
-      FUN_80006a68(&local_8c,local_a4);
-      uVar17 = FUN_80006a68(&local_98,asStack_b0);
-      FUN_80006a64(uVar17,param_2,param_3,param_4,param_5,param_6,param_7,param_8,local_a4,
-                   asStack_b0,auStack_bc,local_c8,0);
+    if (count > 0) {
+        best = arr[0];
+        pp = *(u8 **)(*(u8 **)(best + 0x50) + 0x40);
+        t = *(u8 *)(best + 0xe4) * 0x18;
+        row = pp + t;
+        if (row[0x10] & 0x20) {
+            v1[0] = *(f32 *)(f + 0x18);
+            v1[1] = lbl_803E1648 + *(f32 *)(f + 0x1c);
+            v1[2] = *(f32 *)(f + 0x20);
+            src = *(u8 **)(best + 0x74);
+            v2[0] = *(f32 *)(src + t);
+            v2[1] = *(f32 *)(src + t + 4);
+            v2[2] = *(f32 *)(src + t + 8);
+            voxmaps_worldToGrid(v1, g1);
+            voxmaps_worldToGrid(v2, g2);
+            if (voxmaps_traceLine(g1, g2, out1, out2, 0) == 0 && out2[0] != 1) {
+                return NULL;
+            }
+        }
+        return arr[0];
     }
-  }
-  FUN_8028687c();
-  return;
+    return NULL;
 }
 #pragma peephole reset
 #pragma scheduling reset
-extern f32 PSVECMag(void *vec);
-extern float sqrtf(float x);
-extern f32 lbl_803E1630;
-extern f32 lbl_803E1658;
+
+/*
+ * --INFO--
+ *
+ * Function: camcontrol_updateMoveAverage
+ * EN v1.0 Address: 0x801015A8
+ * EN v1.0 Size: 232b
+ * EN v1.1 Address: 0x801018A4
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
 #pragma scheduling off
 #pragma peephole off
 void camcontrol_updateMoveAverage(int *obj, void *p) {
