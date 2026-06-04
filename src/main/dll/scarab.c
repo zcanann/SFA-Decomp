@@ -4762,6 +4762,70 @@ int fn_801615C8(int obj, u8 *p)
   return 0;
 }
 
+int fn_80161880(short *obj, u8 *p, f32 spd)
+{
+  extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
+  extern f32 sqrtf(f32);
+  extern int getAngle(f32 a, f32 b);
+  extern int randomGetRange(int min, int max);
+  extern f32 lbl_803E2EB8;
+  extern f32 lbl_803E2EF0;
+  extern f32 lbl_803E2EF4;
+  extern f32 lbl_803E2EF8;
+  extern f32 lbl_803E2EFC;
+  extern f64 lbl_803E2ED8;
+  int hit;
+  f64 d;
+  f32 r;
+  struct {
+    f32 x, y, z;
+  } b;
+  struct {
+    f32 x, y, z;
+  } a;
+
+  hit = *(int *)(*(int *)((char *)obj + 0xb8) + 0x40c);
+  *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6e) = 9;
+  *(u8 *)(*(int *)((char *)obj + 0x54) + 0x6f) = 1;
+  ObjHits_RegisterActiveHitVolumeObject(obj);
+  if (randomGetRange(0, 100) < 50) {
+    if (*(char *)(p + 0x27a) != '\0') {
+      ObjAnim_SetCurrentMove(obj, 1, lbl_803E2EB8, 0);
+      *(s8 *)(p + 0x346) = 0;
+    }
+  } else if (*(char *)(p + 0x27a) != '\0') {
+    ObjAnim_SetCurrentMove(obj, 4, lbl_803E2EB8, 0);
+    *(s8 *)(p + 0x346) = 0;
+  }
+  *(f32 *)(p + 0x2a0) = lbl_803E2EF0;
+  (*(void (**)(short *, u8 *, f32, int))((char *)*gPlayerInterface + 0x20))(obj, p, spd, 1);
+  (*(void (**)(void *, void *, f32))(**(int **)(*(int *)(hit + 0x38) + 0x68) + 0x28))(
+      *(void **)(hit + 0x38), (void *)(hit + 0x48),
+      *(f32 *)(p + 0x280) * (f32)(1 - (*(s8 *)(hit + 0x45) << 1)));
+  if (*(f32 *)(hit + 0x48) < lbl_803E2EF4) {
+    *(f32 *)(hit + 0x48) = lbl_803E2EF4;
+  } else if (*(f32 *)(hit + 0x48) > lbl_803E2EF8) {
+    *(f32 *)(hit + 0x48) = lbl_803E2EF8;
+  }
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+                                                  0x24))(
+      *(void **)(hit + 0x38), *(f32 *)(hit + 0x48) - lbl_803E2EFC, &a.x, &a.y, &a.z);
+  (*(void (**)(void *, f32, f32 *, f32 *, f32 *))(**(int **)(*(int *)(hit + 0x38) + 0x68) +
+                                                  0x24))(
+      *(void **)(hit + 0x38), lbl_803E2EFC + *(f32 *)(hit + 0x48), &b.x, &b.y, &b.z);
+  a.x = a.x - b.x;
+  a.y = a.y - b.y;
+  a.z = a.z - b.z;
+  r = sqrtf(a.x * a.x + a.z * a.z);
+  d = r;
+  a.x = r;
+  obj[1] = ((*(s8 *)(hit + 0x45) << 1) - 1) * (s16)getAngle(a.y, (f32)d);
+  if (*(char *)(p + 0x346) != '\0') {
+    return 5;
+  }
+  return 0;
+}
+
 int fn_8016176C(short *obj, u8 *p)
 {
   extern void ObjAnim_SetCurrentMove(short *obj, int n, f32 v, int m);
