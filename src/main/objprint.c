@@ -4271,3 +4271,90 @@ void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 val)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8003ADC4(int obj, char *tgt, char *p3, int a, u8 inv, int b)
+{
+    extern f32 sqrtf(f32);
+    extern f32 lbl_803DE9EC;
+    s16 ang[2];
+    s16 *found;
+    void *m;
+
+    found = NULL;
+    m = *(void **)(obj + 0x50);
+    if (m != NULL) {
+        int entryIdx = 0, vecOffset = 0;
+        int n = *(u8 *)((char *)m + 0x5a);
+        int j;
+        for (j = 0; j < n; j++) {
+            u8 *entries = *(u8 **)((char *)m + 0x10);
+            int idx = (s8)*(s8 *)(obj + 0xad) + entryIdx + 1;
+            if ((int)entries[idx] != 0xff && entries[entryIdx] == 0) {
+                found = (s16 *)((char *)*(void **)(obj + 0x6c) + vecOffset);
+            }
+            entryIdx += (s8)*(s8 *)((char *)m + 0x55) + 1;
+            vecOffset += 0x12;
+        }
+    }
+    if (found != NULL) {
+        if (tgt == NULL) {
+            found[1] = found[1] >> 1;
+            found[0] = found[0] >> 1;
+        } else {
+            f32 dx = *(f32 *)(obj + 0xc) - *(f32 *)(tgt + 0xc);
+            f32 dy = *(f32 *)(obj + 0x14) - *(f32 *)(tgt + 0x14);
+            f32 dz = *(f32 *)(obj + 0x10) - *(f32 *)(tgt + 0x10);
+            f32 dist = sqrtf(dx * dx + dy * dy);
+            s16 limA;
+            int minB;
+            int negA;
+            char *p;
+            s16 *ap;
+            int i;
+
+            ang[0] = (s16)getAngle(dx, dy) - (u16)*(s16 *)obj;
+            if (ang[0] > 0x8000) {
+                ang[0] = (s16)(ang[0] - 0xffff);
+            }
+            if (ang[0] < -0x8000) {
+                ang[0] = (s16)(ang[0] + 0xffff);
+            }
+            if (inv != 0) {
+                ang[0] = (s16)(ang[0] + 0x8000);
+            }
+            ang[1] = (s16)((s16)getAngle(dist, dz) - 0x3fff);
+
+            limA = (s16)(s32)(lbl_803DE9EC * (f32)a);
+            p = p3;
+            ap = ang;
+            minB = -(s16)(s32)(lbl_803DE9EC * (f32)b);
+            negA = -limA;
+            for (i = 0; i < 2; i++) {
+                s16 v;
+                *ap = *ap - *(s16 *)(p + 0x14);
+                v = *ap;
+                if (v < minB) {
+                    v = (s16)minB;
+                } else if ((s16)(s32)(lbl_803DE9EC * (f32)b) < v) {
+                    v = (s16)(s32)(lbl_803DE9EC * (f32)b);
+                }
+                *ap = v;
+                *(s16 *)(p + 0x14) = *(s16 *)(p + 0x14) + *ap;
+                if (*(s16 *)(p + 0x14) > limA) {
+                    *(s16 *)(p + 0x14) = limA;
+                }
+                if (*(s16 *)(p + 0x14) < negA) {
+                    *(s16 *)(p + 0x14) = (s16)negA;
+                }
+                p += 0x30;
+                ap++;
+            }
+            found[1] = *(s16 *)(p3 + 0x14);
+            found[0] = *(s16 *)(p3 + 0x44);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
