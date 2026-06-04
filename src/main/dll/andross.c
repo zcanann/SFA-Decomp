@@ -57,17 +57,19 @@ void andross_setPartSignal(int obj, int signal)
 int andross_updateModelAlpha(int obj)
 {
     int state = *(int *)(obj + 0xb8);
+    int i;
     f32 v;
     f32 alpha;
     int model;
-    int i;
+    int op;
 
     *(f32 *)(state + 0x68) = lbl_803E74D4;
     v = *(f32 *)(state + 0x68);
     model = *(int *)Obj_GetActiveModel(obj);
     alpha = lbl_803E74B4 * v;
     for (i = 0; i < *(u8 *)(model + 0xf8); i++) {
-        *(s8 *)(ObjModel_GetRenderOp(model, i) + 0x43) = (int)alpha;
+        op = ObjModel_GetRenderOp(model, i);
+        *(s8 *)(op + 0x43) = alpha;
     }
     return 0;
 }
@@ -1027,9 +1029,14 @@ LAB_8023bb18:
         androsshand_setState(piVar14[1],5,0);
         androsshand_setState(piVar14[2],5,0);
       }
-      bVar13 = *(u8 *)(*(int *)(obj + 0xb8) + 0xad);
+      bVar15 = 0;
+      iVar5 = *(int *)(obj + 0xb8);
+      bVar13 = *(u8 *)(iVar5 + 0xad);
       if ((bVar13 & 1) != 0) {
-        *(u8 *)(*(int *)(obj + 0xb8) + 0xad) = bVar13 & 0xfe;
+        *(u8 *)(iVar5 + 0xad) = bVar13 & ~1;
+        bVar15 = 1;
+      }
+      if (bVar15 != 0) {
         piVar14[0x21] = 1;
       }
     }
@@ -1087,23 +1094,26 @@ LAB_8023c584:
                      (float)(*(f32 *)(piVar14 + 0x17) + dVar17));
     *(f32 *)(piVar14 + 0x35) = *(f32 *)(piVar14 + 0x18);
     if (*(float *)(obj + 0x98) >= lbl_803E74DC) {
-      iVar12 = piVar14[0x22];
-      if (((iVar12 == 0xc) || (iVar12 < 0xc)) || (0xd < iVar12)) {
+      switch (piVar14[0x22]) {
+      default:
+      case 0xb:
+      case 0xc:
         piVar14[0x22] = 0xc;
-      }
-      else {
+        break;
+      case 0xd:
         piVar14[0x22] = 0xe;
+        break;
       }
     }
     fVar2 = lbl_803E74B8 * *(float *)(obj + 0x98);
-    if (lbl_803E74B8 <= fVar2) {
-      dVar19 = lbl_803E74CC;
-    }
-    else {
-      dVar19 = -(lbl_803E74C0 * lbl_803E74C4 * fVar2 - lbl_803E74BC);
+    if (fVar2 < lbl_803E74B8) {
+      dVar19 = -(lbl_803E74C0 * (lbl_803E74C4 * fVar2) - lbl_803E74BC);
       if (fVar2 < lbl_803E74C8) {
         lbl_803DDDB8 = lbl_803DC4D4;
       }
+    }
+    else {
+      dVar19 = lbl_803E74CC;
     }
     lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
     if (lbl_803DDDB8 > lbl_803E74D0) {
@@ -1113,14 +1123,14 @@ LAB_8023c584:
     break;
   case 0xe:
     fVar2 = lbl_803E74B8 * *(float *)(obj + 0x98) + lbl_803E74B8;
-    if (lbl_803E74B8 <= fVar2) {
-      dVar19 = lbl_803E74CC;
-    }
-    else {
-      dVar19 = -(lbl_803E74C0 * lbl_803E74C4 * fVar2 - lbl_803E74BC);
+    if (fVar2 < lbl_803E74B8) {
+      dVar19 = -(lbl_803E74C0 * (lbl_803E74C4 * fVar2) - lbl_803E74BC);
       if (fVar2 < lbl_803E74C8) {
         lbl_803DDDB8 = lbl_803DC4D4;
       }
+    }
+    else {
+      dVar19 = lbl_803E74CC;
     }
     lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
     if (lbl_803DDDB8 > lbl_803E74D0) {
@@ -1186,14 +1196,14 @@ LAB_8023c584:
     break;
   case 0xc:
     fVar2 = lbl_803E74B8 * *(float *)(obj + 0x98) + lbl_803E74B8;
-    if (lbl_803E74B8 <= fVar2) {
-      dVar19 = lbl_803E74CC;
-    }
-    else {
-      dVar19 = -(lbl_803E74C0 * lbl_803E74C4 * fVar2 - lbl_803E74BC);
+    if (fVar2 < lbl_803E74B8) {
+      dVar19 = -(lbl_803E74C0 * (lbl_803E74C4 * fVar2) - lbl_803E74BC);
       if (fVar2 < lbl_803E74C8) {
         lbl_803DDDB8 = lbl_803DC4D4;
       }
+    }
+    else {
+      dVar19 = lbl_803E74CC;
     }
     lbl_803DDDB8 = lbl_803DDDB8 + lbl_803DC4D0;
     if (lbl_803DDDB8 > lbl_803E74D0) {
@@ -1444,7 +1454,8 @@ LAB_8023cbdc:
     iVar8 = *(int *)Obj_GetActiveModel(obj);
     fVar2 = lbl_803E74B4 * dVar19;
     for (iVar12 = 0; iVar12 < (int)(u32)*(u8 *)(iVar8 + 0xf8); iVar12 = iVar12 + 1) {
-      *(s8 *)(ObjModel_GetRenderOp(iVar8,iVar12) + 0x43) = (int)fVar2;
+      iVar5 = ObjModel_GetRenderOp(iVar8,iVar12);
+      *(s8 *)(iVar5 + 0x43) = fVar2;
     }
     if ((piVar14[0x1f] == 5) && (*(u8 *)(piVar14 + 0x2b) == 0)) {
       for (iVar12 = 0; (u8)iVar12 < 6; iVar12 = iVar12 + 1) {
@@ -1727,7 +1738,8 @@ LAB_8023de5c:
     iVar8 = *(int *)Obj_GetActiveModel(obj);
     fVar2 = lbl_803E74B4 * dVar19;
     for (iVar12 = 0; iVar12 < (int)(u32)*(u8 *)(iVar8 + 0xf8); iVar12 = iVar12 + 1) {
-      *(s8 *)(ObjModel_GetRenderOp(iVar8,iVar12) + 0x43) = (int)fVar2;
+      iVar5 = ObjModel_GetRenderOp(iVar8,iVar12);
+      *(s8 *)(iVar5 + 0x43) = fVar2;
     }
     break;
   case 0x1d:

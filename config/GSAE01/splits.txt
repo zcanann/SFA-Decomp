@@ -89,13 +89,10 @@ track/intersect.c:
 	.text       start:0x8006EF38 end:0x8007E77C
 
 main/maketex.c:
-	.text       start:0x8007E77C end:0x80080E28
-
-main/unknown/autos/placeholder_80080E28.c:
-	.text       start:0x80080E28 end:0x80080E58
+	.text       start:0x8007E77C end:0x80080DE8
 
 main/objseq.c:
-	.text       start:0x80080E58 end:0x80088758
+	.text       start:0x80080DE8 end:0x80088758
 
 main/sky.c:
 	.text       start:0x80088758 end:0x8008EE18

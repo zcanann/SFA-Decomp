@@ -129,6 +129,10 @@ extern f32 lbl_803DD120;
 extern void *lbl_803DD144;
 extern u16 lbl_803DD0B6;
 extern void *lbl_803DD0B8;
+extern u8 lbl_803DD110;
+extern u8 lbl_803DD124;
+extern f32 lbl_803DD0DC;
+extern u8 lbl_803DD0F8;
 extern u8 framesThisStep;
 extern f32 gSkyOverrideLightDirection[];
 extern const f32 pEXIInputFlag;
@@ -207,7 +211,7 @@ extern f32 lbl_803DF120;
 extern f32 lbl_803DF138;
 extern f32 lbl_803DF13C;
 extern f32 lbl_803DF140;
-extern f32 lbl_803DF144;
+extern const f32 lbl_803DF144;
 extern f32 lbl_803DF1A0;
 extern f32 lbl_803DF1D8;
 extern f32 lbl_803DF1DC;
@@ -4233,6 +4237,8 @@ extern f32 lbl_803DD1E0;
 extern void padUpdate(void);
 extern void checkReset(void);
 void skyFn_80088c94(int flags, int mode);
+void fn_8008D088(int slot);
+void sky2_run(void);
 extern void waitNextFrame(void);
 extern void loadDataFiles(void);
 extern void dvdCheckError(void);
@@ -4420,6 +4426,57 @@ extern void selectTexture(void *tex, int slot);
 extern void fn_8007880C(void);
 extern void fn_80069B1C(void *a, void *b, f32 t, void *c);
 
+typedef struct SkyBestIdx {
+    u8 best;
+    u8 second;
+    u8 pad;
+} SkyBestIdx;
+
+extern void fn_8005CECC(int mode);
+extern const f32 lbl_803DF150;
+extern const f32 lbl_803DF154;
+extern const f32 lbl_803DF158;
+extern const f32 lbl_803DF15C;
+extern const f32 lbl_803DF160;
+extern const f32 lbl_803DF164;
+extern const f32 lbl_803DF168;
+extern const f32 lbl_803DF16C;
+extern const f32 lbl_803DF170;
+extern const f32 lbl_803DF174;
+extern const f32 lbl_803DF178;
+extern const f32 lbl_803DF17C;
+extern const f32 lbl_803DF180;
+extern const f32 lbl_803DF184;
+extern const f32 lbl_803DF188;
+extern const f32 lbl_803DF18C;
+extern u8 lbl_803DB758;
+extern u16 lbl_803E8460;
+extern u8 lbl_803E8462;
+extern f32 lbl_8039A7B8[];
+extern f32 lbl_802C1F98[];
+
+typedef struct SkySlotAnim {
+    u8 pad00[4];        /* 0x00 */
+    u16 flags4;         /* 0x04 */
+    u16 flags6;         /* 0x06 */
+    u8 pad08[0x34];     /* 0x08 */
+    int frameCount;     /* 0x3c */
+    u8 pad40[0x30];     /* 0x40 */
+    f32 cur[0x21];      /* 0x70 */
+    f32 target[0x21];   /* 0xf4 */
+    f32 vel[0x21];      /* 0x178 */
+    f32 cur2[0x16];     /* 0x1fc */
+    f32 target2[0x16];  /* 0x254 */
+    f32 vel2[0x16];     /* 0x2ac */
+    f32 t;              /* 0x304 */
+    f32 step;           /* 0x308 */
+    f32 prevT;          /* 0x30c */
+    f32 blend;          /* 0x310 */
+    s8 b314;            /* 0x314 */
+    s8 b315;            /* 0x315 */
+    s8 b316;            /* 0x316 */
+} SkySlotAnim;
+
 typedef struct SkyTimeBlend {
     void *texA;          /* 0x00 */
     void *texB;          /* 0x04 */
@@ -4599,5 +4656,7 @@ void newclouds_snowKillSnowCloud(int cloudId, int flag);
 void *skyTextureFn_80094390(f32 *out1, f32 *out2);
 void sky2_onMapSetup(void);
 void skyFn_80088c94(int flags, int mode);
+void fn_8008D088(int slot);
+void sky2_run(void);
 
 #endif

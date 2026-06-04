@@ -1,6 +1,25 @@
 #include "main/sky_80080E58_shared.h"
 #include "main/mapEventTypes.h"
 
+extern int getTabEntry(void *p, int sz, int off, int unk);
+extern int getTableFileEntry(int fileId, int index, int *out);
+extern int loadAndDecompressDataFile(int id, void *buf, int blockOff, int len, int a, int b, int c);
+extern int strncmp(const char *a, const char *b, u32 n);
+extern void fn_80137948(char *fmt, ...);
+extern char sObjLoadAnimdataNullACRomTabWarning[];
+extern char sSeqAAnimDataTag;
+extern char sSeqBAnimDataTag;
+void ObjSeq_seqState_init(u8 *seq);
+extern void endObjSequence(int seq);
+extern int *gCameraInterface;
+extern u8 lbl_80399E50[];
+extern int lbl_803DD064;
+extern int lbl_803DD084;
+extern s16 lbl_803DD060;
+extern s16 lbl_803DD062;
+extern char sObjSequenceMissingObjectFormat[];
+void ObjSeq_update(u8 *obj, f32 t);
+
 void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
 {
     lbl_803DD10C = camA;
@@ -163,6 +182,218 @@ void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, int action)
     if (*(void **)(obj + 0x58) != NULL) {
         *(u8 *)(*(u8 **)(obj + 0x58) + 0x10f) = 0;
     }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void *objSeqCmd3(u8 *obj, u8 *seq, u8 *src)
+{
+    void *result;
+    u8 *activeObj;
+    u8 *entry;
+    int j;
+    u8 *slotBase;
+    int slotOff;
+    u8 *seqObj;
+    f32 groundY[2];
+
+    result = obj;
+    *(s8 *)(seq + 0x79) = (s8)(seq[0x79] ^ 1);
+    if ((s8)seq[0x79] != 0) {
+        fn_8008196C(obj);
+        seqObj = *(u8 **)seq;
+        if (seqObj != NULL) {
+            result = seqObj;
+            *(void **)(seqObj + 0xc0) = obj;
+            *(u16 *)(seqObj + 0xb0) |= 0x1000;
+            *(void **)(seq + 0x110) = seqObj;
+
+            activeObj = *(u8 **)seq;
+            j = 0;
+            slotOff = (s8)seq[0x57] * 0x80;
+            slotBase = lbl_80396918 + slotOff;
+            entry = slotBase;
+            for (; j < 16; j++) {
+                if (*(u8 **)entry == NULL || *(u8 **)entry == activeObj) {
+                    break;
+                }
+                entry += 8;
+            }
+            *(u8 **)(slotBase + j * 8) = activeObj;
+            *(u8 **)(lbl_80396918 + slotOff + j * 8 + 4) = obj;
+        }
+    } else {
+        if (*(void **)seq != NULL) {
+            if ((*(s16 *)(seq + 0x6e) & 1) != 0) {
+                *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0xc);
+                *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10);
+                *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x14);
+                objAnimCurvFn_800849e8(obj, seq);
+            }
+            if ((s8)seq[0x7a] == 1 &&
+                hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                                     *(f32 *)(obj + 0x14), groundY, 0) == 0) {
+                *(f32 *)(obj + 0x10) =
+                    *(f32 *)(obj + 0x10) +
+                    ((*(f32 *)(obj + 0x10) - groundY[0]) - *(f32 *)(src + 0xc));
+            }
+            if ((*(s16 *)(seq + 0x6e) & 2) != 0) {
+                *(u16 *)obj = *(s16 *)obj + *(s16 *)(seq + 0x1a);
+            }
+            *(void **)(obj + 0xc0) = NULL;
+            *(u16 *)(obj + 0xb0) &= ~0x1000;
+            *(void **)seq = NULL;
+            result = obj;
+        }
+    }
+    return result;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void ObjSeq_run(void)
+{
+    int count;
+    int matchCount;
+    int ok;
+    int keepCount;
+    void **objects;
+    u8 *base;
+    void **objPtr;
+    u8 *cmd;
+    s16 *keepWalk;
+    s16 *keepBase;
+    int i;
+    int index;
+    int xrot;
+    u8 *model;
+    u8 *seqp;
+    u8 *candidate;
+    u8 **mp;
+    int n;
+    int k;
+    u8 *pending;
+    u8 *results;
+    u8 *actions;
+    f32 *dists;
+    f32 *frames;
+    u8 *marks;
+    s8 frames8;
+    u8 *matched[0x28];
+    s16 keepBuf[0x5a];
+    int objectCount;
+    void *unused;
+
+    base = lbl_80396918;
+    objects = ObjList_GetObjects(&unused, &objectCount);
+    if (lbl_803DD060 != lbl_803DD062) {
+        lbl_803DD062 = lbl_803DD060;
+    }
+
+    pending = base + 0x39e8;
+    results = base + 0x3bf4;
+    actions = base + 0x3c4c;
+    dists = (f32 *)(base + 0x3740);
+    frames = (f32 *)(base + 0x3894);
+    marks = base + 0x338c;
+    frames8 = framesThisStep;
+
+    for (i = 0; i < 0x55; i++) {
+        *pending = 0;
+        if ((s8)*results != 0 && (s8)*actions == 0) {
+            *pending = frames8;
+        }
+        *actions = *results;
+        *results = 0;
+        *frames = *dists;
+        *dists = lbl_803DEFF0;
+        if (*marks == 2) {
+            *marks = 1;
+        } else {
+            *marks = 0;
+        }
+        pending++;
+        results++;
+        actions++;
+        dists++;
+        frames++;
+        marks++;
+    }
+
+    count = (s8)lbl_803DD0BC;
+    keepCount = 0;
+    cmd = base + count * 6 + 0x2a80;
+    keepBase = keepBuf;
+    keepWalk = keepBase;
+    while (count > 0) {
+        cmd -= 6;
+        count--;
+        index = *(s16 *)cmd;
+        xrot = *(s16 *)(cmd + 2);
+        i = 0;
+        base[index + 0x3b44] = 0;
+        base[index + 0x3b9c] = 0;
+        base[index + 0x3a40] = 0;
+        matchCount = 0;
+        ok = 1;
+        objPtr = objects;
+        for (; i < objectCount; i++) {
+            candidate = *objPtr;
+            if (*(s16 *)(candidate + 0x44) == 0x10) {
+                model = *(u8 **)(candidate + 0x4c);
+                seqp = *(u8 **)(candidate + 0xb8);
+                if (model != NULL && (s8)model[0x1f] == index) {
+                    if (*(s16 *)(model + 0x1c) >= 4 &&
+                        objFindForSeqFn_80081bf0(candidate) == NULL) {
+                        ok = 0;
+                        fn_80137948(sObjSequenceMissingObjectFormat,
+                                    *(s16 *)(model + 0x1c) - 4);
+                    } else {
+                        *(void **)seqp = NULL;
+                    }
+                    if (matchCount < 0x28) {
+                        matched[matchCount++] = candidate;
+                    }
+                }
+            }
+            objPtr++;
+        }
+
+        mp = matched;
+        for (n = 0; n < matchCount; n++) {
+            candidate = *mp;
+            model = *(u8 **)(candidate + 0x4c);
+            if (model != NULL && (s8)model[0x1f] == index) {
+                seqp = *(u8 **)(candidate + 0xb8);
+                if (ok != 0) {
+                    seqp[0x7e] = 2;
+                    *(s16 *)(seqp + 0x5e) = xrot;
+                    ObjSeq_update(candidate, lbl_803DEFC8);
+                    Obj_GetWorldPosition(candidate, (f32 *)(candidate + 0x18),
+                                         (f32 *)(candidate + 0x1c), (f32 *)(candidate + 0x20));
+                } else {
+                    seqp[0x7e] = 3;
+                }
+            }
+            mp++;
+        }
+
+        if (ok == 0) {
+            *keepWalk = index;
+            keepWalk += 3;
+            keepBuf[keepCount++ * 3 + 1] = xrot;
+        }
+    }
+
+    for (k = 0; k < keepCount; k++) {
+        ((s16 *)(base + 0x2a80))[k * 3] = keepBase[k * 3];
+        ((s16 *)(base + 0x2a80))[k * 3 + 1] = keepBase[k * 3 + 1];
+    }
+    lbl_803DD0BC = (s8)keepCount;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -585,6 +816,78 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
 
 #pragma peephole off
 #pragma scheduling off
+void ObjSeq_objLoadAnimData(u8 *seq, u8 *obj)
+{
+    u8 *base = lbl_80396918;
+    int animId;
+    int fileOffset;
+    struct {
+        char tag[4];
+        s16 size;
+        s16 count;
+    } hdr;
+
+    if (*(s16 *)(obj + 0x18) == -1) {
+        return;
+    }
+
+    *(s16 *)(seq + 0x64) = 0;
+    *(s16 *)(seq + 0x62) = 0;
+    animId = *(s16 *)(obj + 0x18);
+    if ((animId & 0x8000) != 0) {
+        getTabEntry(lbl_803DD0D4, 0xf, ((animId & 0x7ff0) >> 4) * 2, 8);
+        animId = *(s16 *)lbl_803DD0D4 + (animId & 0xf);
+    } else {
+        animId = animId + 1;
+    }
+
+    if (getTableFileEntry(0xe, animId, &fileOffset) == 0) {
+        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        return;
+    }
+
+    loadAndDecompressDataFile(0xd, &hdr, fileOffset, 8, 0, 0, 0);
+    if (strncmp(hdr.tag, &sSeqAAnimDataTag, 4) != 0 &&
+        strncmp(hdr.tag, &sSeqBAnimDataTag, 4) != 0) {
+        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        return;
+    }
+
+    *(s16 *)(seq + 0x62) = hdr.count;
+    if (hdr.size == 0) {
+        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        return;
+    }
+
+    *(void **)(seq + 0x94) = mmAlloc(hdr.size, 0x11, 0);
+    if (*(void **)(seq + 0x94) == NULL) {
+        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        return;
+    }
+
+    loadAndDecompressDataFile(0xd, *(void **)(seq + 0x94), fileOffset + 8, hdr.size, 0, 0, 0);
+    *(s16 *)(seq + 0x64) = (s16)(((hdr.size >> 2) - hdr.count) >> 1);
+    *(void **)(seq + 0x98) = *(u8 **)(seq + 0x94) + hdr.count * 4;
+
+    seq[0x57] = obj[0x1f];
+    if ((s8)seq[0x57] > -1) {
+        base[(s8)seq[0x57] + 0x3b9c] = 0;
+        base[(s8)seq[0x57] + 0x3b44] = 0;
+        base[(s8)seq[0x57] + 0x3a40] = 0;
+    }
+
+    if ((s8)obj[0x22] != 0) {
+        seq[0x7e] = 2;
+    } else {
+        seq[0x7e] = 0;
+    }
+    ObjSeq_seqState_init(seq);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
 void ObjSeq_seqState_free(u8 *seq)
 {
     void *ptr;
@@ -648,6 +951,143 @@ void ObjSeq_seqState_init(u8 *seq)
         }
         commandIndex++;
     }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+void fn_80081940(void)
+{
+}
+
+int fn_80081944(void)
+{
+    return 0;
+}
+
+int fn_8008194C(void)
+{
+    return 0;
+}
+
+void fn_80081954(int value)
+{
+    lbl_803DD084 = value;
+}
+
+int fn_8008195C(void)
+{
+    return lbl_803DD084;
+}
+
+int fn_80081964(void)
+{
+    return 1;
+}
+
+#pragma peephole off
+#pragma scheduling off
+int fn_8008196C(u8 *obj)
+{
+    int objectCount;
+    void *unused;
+    void **objects;
+    u8 *seqObj;
+    u8 *model;
+    u8 *found;
+    int j;
+    u8 *entry;
+    u8 *slotBase;
+    u8 *candidate;
+    int objType;
+    int i;
+    u8 *linked;
+    f32 bestDist;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 distSq;
+
+    objects = ObjList_GetObjects(&unused, &objectCount);
+    seqObj = *(u8 **)(obj + 0xb8);
+    model = *(u8 **)(obj + 0x4c);
+    if (*(s16 *)(obj + 0x44) == 0x11) {
+        *(void **)seqObj = NULL;
+        return -1;
+    }
+
+    switch (*(s16 *)(model + 0x1c)) {
+    case 0:
+        *(void **)seqObj = NULL;
+        break;
+    case 1:
+        *(void **)seqObj = Obj_GetPlayerObject();
+        break;
+    case 2:
+        *(void **)seqObj = getTrickyObject();
+        break;
+    case 3:
+        *(void **)seqObj = NULL;
+        *(s8 *)(seqObj + 0x7b) = (s8)(*(s16 *)(model + 0x1c) - 2);
+        if (lbl_803DD064 != 0) {
+            lbl_803DD064 = 0;
+        }
+        if ((lbl_80399E50[(s8)seqObj[0x57]] & 0x10) == 0) {
+            (*(void (*)(int, int))(*(int *)(*gCameraInterface + 0x5c)))(0x41, 1);
+        }
+        break;
+    default:
+        *(void **)seqObj = NULL;
+        objType = *(s16 *)(model + 0x1c) - 4;
+        if (objType == 0x1f || objType == 0) {
+            *(void **)seqObj = Obj_GetPlayerObject();
+        } else if (*(int *)(seqObj + 0x10c) != 0) {
+            *(void **)seqObj = ObjList_FindObjectById(*(int *)(seqObj + 0x10c));
+        } else {
+            bestDist = lbl_803DEFF0;
+            for (i = 0; i < objectCount; i++) {
+                candidate = objects[i];
+                slotBase = lbl_80396918 + (s8)seqObj[0x57] * 0x80;
+                entry = slotBase;
+                for (j = 0; j < 16; j++) {
+                    if (*(u8 **)entry == candidate) {
+                        linked = *(u8 **)(slotBase + j * 8 + 4);
+                        goto check;
+                    }
+                    entry += 8;
+                }
+                linked = NULL;
+            check:
+                if (linked == obj) {
+                    *(void **)seqObj = candidate;
+                    break;
+                }
+                if (linked == NULL) {
+                    if (*(s16 *)(candidate + 0x46) == objType) {
+                        dx = *(f32 *)(obj + 0xc) - *(f32 *)(candidate + 0xc);
+                        dy = *(f32 *)(obj + 0x10) - *(f32 *)(candidate + 0x10);
+                        dz = *(f32 *)(obj + 0x14) - *(f32 *)(candidate + 0x14);
+                        distSq = dx * dx + dy * dy + dz * dz;
+                        if (bestDist < lbl_803DEFB0 || distSq < bestDist) {
+                            bestDist = distSq;
+                            *(void **)seqObj = candidate;
+                        }
+                    }
+                }
+            }
+        }
+        break;
+    }
+
+    found = *(u8 **)seqObj;
+    if (found != NULL) {
+        if ((s8)seqObj[0x57] < 0x19) {
+            if (*(s16 *)(found + 0xb4) != -1) {
+                endObjSequence(*(s16 *)(found + 0xb4));
+            }
+        }
+        return *(s16 *)(*(u8 **)seqObj + 0x48);
+    }
+    return -1;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -749,6 +1189,164 @@ void seq_findAction(void *obj, void *seqFile, u8 *seq)
             stop = 1;
         }
     }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void objSeq_onMapSetup(void)
+{
+    u8 *base = lbl_80396918;
+    u8 *flagsB = base + 0x3b9c;
+    u8 *flagsA = base + 0x3b44;
+    s16 *modes = (s16 *)(base + 0x3a98);
+    u8 *actions = base + 0x3c4c;
+    u8 *results = base + 0x3bf4;
+    u8 *states = base + 0x3a40;
+    u8 *pending = base + 0x39e8;
+    f32 *frames = (f32 *)(base + 0x3894);
+    f32 *dists = (f32 *)(base + 0x3740);
+    u8 *counts = base + 0x3590;
+    int *handles = (int *)(base + 0x33e4);
+    u8 *marks = base + 0x338c;
+    int i = 0;
+
+    {
+        for (; i < 0x50; i += 8) {
+            flagsB[0] = 0;
+            flagsA[0] = 0;
+            modes[0] = 0;
+            actions[0] = 0;
+            results[0] = 0;
+            states[0] = 0;
+            pending[0] = 0;
+            frames[0] = lbl_803DEFB0;
+            dists[0] = lbl_803DEFF0;
+            counts[0] = 0;
+            handles[0] = 0;
+            marks[0] = 0;
+            flagsB[1] = 0;
+            flagsA[1] = 0;
+            modes[1] = 0;
+            actions[1] = 0;
+            results[1] = 0;
+            states[1] = 0;
+            pending[1] = 0;
+            frames[1] = lbl_803DEFB0;
+            dists[1] = lbl_803DEFF0;
+            counts[1] = 0;
+            handles[1] = 0;
+            marks[1] = 0;
+            flagsB[2] = 0;
+            flagsA[2] = 0;
+            modes[2] = 0;
+            actions[2] = 0;
+            results[2] = 0;
+            states[2] = 0;
+            pending[2] = 0;
+            frames[2] = lbl_803DEFB0;
+            dists[2] = lbl_803DEFF0;
+            counts[2] = 0;
+            handles[2] = 0;
+            marks[2] = 0;
+            flagsB[3] = 0;
+            flagsA[3] = 0;
+            modes[3] = 0;
+            actions[3] = 0;
+            results[3] = 0;
+            states[3] = 0;
+            pending[3] = 0;
+            frames[3] = lbl_803DEFB0;
+            dists[3] = lbl_803DEFF0;
+            counts[3] = 0;
+            handles[3] = 0;
+            marks[3] = 0;
+            flagsB[4] = 0;
+            flagsA[4] = 0;
+            modes[4] = 0;
+            actions[4] = 0;
+            results[4] = 0;
+            states[4] = 0;
+            pending[4] = 0;
+            frames[4] = lbl_803DEFB0;
+            dists[4] = lbl_803DEFF0;
+            counts[4] = 0;
+            handles[4] = 0;
+            marks[4] = 0;
+            flagsB[5] = 0;
+            flagsA[5] = 0;
+            modes[5] = 0;
+            actions[5] = 0;
+            results[5] = 0;
+            states[5] = 0;
+            pending[5] = 0;
+            frames[5] = lbl_803DEFB0;
+            dists[5] = lbl_803DEFF0;
+            counts[5] = 0;
+            handles[5] = 0;
+            marks[5] = 0;
+            flagsB[6] = 0;
+            flagsA[6] = 0;
+            modes[6] = 0;
+            actions[6] = 0;
+            results[6] = 0;
+            states[6] = 0;
+            pending[6] = 0;
+            frames[6] = lbl_803DEFB0;
+            dists[6] = lbl_803DEFF0;
+            counts[6] = 0;
+            handles[6] = 0;
+            marks[6] = 0;
+            flagsB[7] = 0;
+            flagsA[7] = 0;
+            modes[7] = 0;
+            actions[7] = 0;
+            results[7] = 0;
+            states[7] = 0;
+            pending[7] = 0;
+            frames[7] = lbl_803DEFB0;
+            dists[7] = lbl_803DEFF0;
+            counts[7] = 0;
+            handles[7] = 0;
+            marks[7] = 0;
+            flagsB += 8;
+            flagsA += 8;
+            modes += 8;
+            actions += 8;
+            results += 8;
+            states += 8;
+            pending += 8;
+            frames += 8;
+            dists += 8;
+            counts += 8;
+            handles += 8;
+            marks += 8;
+        }
+    }
+
+    for (; i < 0x55; i++) {
+        base[i + 0x3b9c] = 0;
+        base[i + 0x3b44] = 0;
+        *(s16 *)(base + i * 2 + 0x3a98) = 0;
+        base[i + 0x3c4c] = 0;
+        base[i + 0x3bf4] = 0;
+        base[i + 0x3a40] = 0;
+        base[i + 0x39e8] = 0;
+        *(f32 *)(base + i * 4 + 0x3894) = lbl_803DEFB0;
+        *(f32 *)(base + i * 4 + 0x3740) = lbl_803DEFF0;
+        base[i + 0x3590] = 0;
+        *(int *)(base + i * 4 + 0x33e4) = 0;
+        base[i + 0x338c] = 0;
+    }
+
+    lbl_803DD124 = 0;
+    lbl_803DD10C = 0;
+    lbl_803DD110 = 0;
+    lbl_803DD0DC = lbl_803DEFB0;
+    lbl_803DD0B8 = NULL;
+    lbl_803DD0F8 = 0;
+    lbl_803DD0BC = 0;
 }
 #pragma scheduling reset
 #pragma peephole reset
