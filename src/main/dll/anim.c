@@ -5486,3 +5486,45 @@ void dfpobjcreator_update(int obj)
     }
 }
 #pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802025C0(int obj, int p2)
+{
+    extern void ObjHits_EnableObject(int);
+    extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
+    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E6344;
+    extern f32 lbl_803E6348;
+    int state = *(int *)(obj + 0xb8);
+    int sub = *(int *)(state + 0x40c);
+
+    if (*(s8 *)(p2 + 0x27a) != 0) {
+        ObjHits_EnableObject(obj);
+    }
+    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    if (*(s8 *)(p2 + 0x27a) != 0) {
+        if ((int)randomGetRange(0, 1) != 0) {
+            if (*(s8 *)(p2 + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove(obj, 6, lbl_803E62A8, 0);
+                *(u8 *)(p2 + 0x346) = 0;
+            }
+        } else {
+            if (*(s8 *)(p2 + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove(obj, 7, lbl_803E62A8, 0);
+                *(u8 *)(p2 + 0x346) = 0;
+            }
+        }
+        *(u8 *)(p2 + 0x34d) = 1;
+        *(f32 *)(p2 + 0x2a0) = lbl_803E6344 + (f32)*(u8 *)(state + 0x406) / lbl_803E6348;
+    }
+    *(f32 *)(p2 + 0x280) = lbl_803E62A8;
+    if (*(s8 *)(p2 + 0x346) != 0) {
+        *(u8 *)(sub + 0x34) = 1;
+    }
+    *(u8 *)(sub + 0x14) |= 2;
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
