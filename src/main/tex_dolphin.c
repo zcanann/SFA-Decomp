@@ -683,7 +683,7 @@ end:
 /*
  * --INFO--
  *
- * Function: fn_8005F1E0
+ * Function: mapBlockRender_setupShaderTextures
  * EN v1.0 Address: 0x8005F1E0
  * EN v1.0 Size: 888b
  * EN v1.1 Address: 0x8005F35C
@@ -691,7 +691,7 @@ end:
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_8005F1E0(int param_1, int param_2)
+void mapBlockRender_setupShaderTextures(int param_1, int param_2)
 {
   int iVar1;
   int *piVar2;
@@ -887,7 +887,7 @@ LAB_8005F608:
     fn_8004DA54(iVar1);
     goto LAB_8005F690;
   }
-  fn_8005F1E0(iVar1,(int)0x80);
+  mapBlockRender_setupShaderTextures(iVar1,(int)0x80);
 LAB_8005F690:
   if ((*(uint *)(iVar1 + 0x3c) & 0x20) != 0) {
     int *lPtr = lbl_803DCE34;
