@@ -5104,7 +5104,7 @@ extern int fn_80202428();
 extern int fn_80201BD8();
 extern int fn_802017A4();
 extern int fn_80201358();
-extern int fn_80200E44();
+extern int fn_80200E44(int obj, int p2, f32 t);
 extern int fn_80200A70();
 extern int fn_80200850();
 extern int fn_80200750();
@@ -5356,7 +5356,8 @@ void fn_80202EF0(int obj, int p2)
 #pragma scheduling off
 #pragma peephole off
 #pragma opt_common_subs off
-int fn_80202C78(f32 p1, f32 p2, f32 p3, f32 p4, int obj, int p6)
+#pragma dont_inline on
+int fn_80202C78(int obj, int p6, f32 p1, f32 p2, f32 p3, f32 p4)
 {
     extern int Obj_GetYawDeltaToObject(int, int, f32 *);
     extern f32 lbl_803E62A8;
@@ -5401,6 +5402,7 @@ int fn_80202C78(f32 p1, f32 p2, f32 p3, f32 p4, int obj, int p6)
     *(f32 *)(state + 0x284) = lbl_803E62A8;
     return 0;
 }
+#pragma dont_inline reset
 #pragma opt_common_subs reset
 #pragma peephole reset
 #pragma scheduling reset
@@ -6280,6 +6282,215 @@ int fn_80201358(int obj, int p2)
         }
         return 0;
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_80200E44(int obj, int p2, f32 t)
+{
+    extern int Stack_IsFull(int sp);
+    extern void Stack_Push(int sp, int *args);
+    extern int ObjGroup_ContainsObject(int, int);
+    extern int *ObjGroup_GetObjects(int, int *);
+    extern int ObjGroup_FindNearestObject(int, int, f32 *);
+    extern int Obj_GetPlayerObject(void);
+    extern int Obj_GetYawDeltaToObject(int, int, f32 *);
+    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+    extern int *seqFn_800394a0(void);
+    extern s16 *objModelGetVecFn_800395d8(int, int);
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E62B4;
+    extern f32 lbl_803E62C4;
+    extern f32 lbl_803E62CC;
+    extern f32 lbl_803E62D0;
+    extern int lbl_8032971C[];
+    extern f32 lbl_8032972C[];
+    int blob = *(int *)(obj + 0xb8);
+    int sub = *(int *)(blob + 0x40c);
+    int c30 = *(int *)(sub + 0x30);
+    int tmpA;
+    int tmpB;
+    int i;
+    int found;
+    int q;
+    int *objs;
+    int player;
+    int d;
+    int flag;
+    int zero;
+    int *ptr;
+    s16 *vec;
+    f32 frac;
+    int msg0[3];
+    int msgA[3];
+    int msgB[3];
+    int msgC[3];
+    int msgD[3];
+    int msgE[3];
+    int msgF[3];
+    int msgG[3];
+    int msgH[3];
+    int msgI[3];
+    int cnt1;
+    int cnt2;
+    f32 yawf;
+
+    *(u8 *)(sub + 0x14) |= 2;
+    *(u8 *)(sub + 0x15) &= ~4;
+    if (ObjGroup_ContainsObject(*(int *)(p2 + 0x2d0), c30) == 0) {
+        ObjGroup_GetObjects(c30, &cnt1);
+        if (cnt1 == 0) {
+            player = Obj_GetPlayerObject();
+            q = *(int *)(sub + 0x24);
+            msg0[0] = 0xf;
+            msg0[1] = 1;
+            msg0[2] = player;
+            if (Stack_IsFull(q) == 0) {
+                Stack_Push(q, msg0);
+            }
+            *(u8 *)(sub + 0x34) = 1;
+            return 0;
+        }
+    }
+    q = *(int *)(p2 + 0x2d0);
+    found = 0;
+    objs = ObjGroup_GetObjects(3, &cnt2);
+    for (i = 0; i < cnt2; i++) {
+        if (*(s16 *)(*objs + 0x46) == 0x539) {
+            if ((u32)(**(int (**)(int, int, int))(*(int *)(*(int *)(*objs + 0x68)) + 0x24))(*objs, 0x83, 0) == (u32)q) {
+                found = 1;
+            }
+        }
+        objs++;
+    }
+    if (found == 0) {
+        if ((u32)obj == (u32)ObjGroup_FindNearestObject(3, *(int *)(p2 + 0x2d0), 0)) {
+            *(int *)(sub + 0x3c) = *(int *)(p2 + 0x2d0);
+            tmpA = *(int *)(sub + 0x30);
+            tmpB = *(int *)(sub + 0x2c);
+            q = *(int *)(sub + 0x24);
+            msgA[0] = *(int *)(sub + 0x28);
+            msgA[1] = tmpB;
+            msgA[2] = tmpA;
+            if (Stack_IsFull(q) == 0) {
+                Stack_Push(q, msgA);
+            }
+            q = *(int *)(sub + 0x24);
+            msgB[0] = 0xc;
+            msgB[1] = 0;
+            msgB[2] = 3;
+            if (Stack_IsFull(q) == 0) {
+                Stack_Push(q, msgB);
+            }
+            *(u8 *)(sub + 0x34) = 1;
+            q = *(int *)(sub + 0x24);
+            msgC[0] = 9;
+            msgC[1] = 0;
+            msgC[2] = c30;
+            if (Stack_IsFull(q) == 0) {
+                Stack_Push(q, msgC);
+            }
+            *(u8 *)(sub + 0x34) = 1;
+            tmpA = *(int *)(sub + 0x3c);
+            q = *(int *)(sub + 0x24);
+            msgD[0] = 7;
+            msgD[1] = 1;
+            msgD[2] = tmpA;
+            if (Stack_IsFull(q) == 0) {
+                Stack_Push(q, msgD);
+            }
+            *(u8 *)(sub + 0x34) = 1;
+            return 0;
+        }
+    }
+    sub = *(int *)(blob + 0x40c);
+    *(u8 *)(p2 + 0x34d) = 0x1f;
+    if (*(s8 *)(p2 + 0x27a) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0xf, lbl_803E62A8, 0);
+        *(u8 *)(p2 + 0x346) = 0;
+    }
+    if (*(void **)(sub + 0x3c) != NULL) {
+        if (ObjGroup_ContainsObject(*(int *)(p2 + 0x2d0), c30) != 0) {
+            tmpA = *(int *)(sub + 0x30);
+            tmpB = *(int *)(sub + 0x2c);
+            q = *(int *)(sub + 0x24);
+            msgE[0] = *(int *)(sub + 0x28);
+            msgE[1] = tmpB;
+            msgE[2] = tmpA;
+            if (Stack_IsFull(q) == 0) {
+                Stack_Push(q, msgE);
+            }
+            q = *(int *)(sub + 0x24);
+            msgF[0] = 0xc;
+            msgF[1] = 0;
+            msgF[2] = 3;
+            if (Stack_IsFull(q) == 0) {
+                Stack_Push(q, msgF);
+            }
+            *(u8 *)(sub + 0x34) = 1;
+            tmpA = *(int *)(sub + 0x3c);
+            q = *(int *)(sub + 0x24);
+            msgG[0] = 0xd;
+            msgG[1] = 1;
+            msgG[2] = tmpA;
+            if (Stack_IsFull(q) == 0) {
+                Stack_Push(q, msgG);
+            }
+            *(u8 *)(sub + 0x34) = 1;
+            return 0;
+        }
+    }
+    frac = (f32)*(u8 *)(blob + 0x406) / lbl_803E62C4;
+    fn_80202C78(obj, *(int *)(p2 + 0x2d0), lbl_803E62B4, frac, lbl_803E62CC, t);
+    if ((*(u8 *)(sub + 0x44) >> 5) & 1) {
+        fn_80202A2C(obj, lbl_8032971C, lbl_8032972C, 4, frac);
+    }
+    player = Obj_GetPlayerObject();
+    d = (s16)Obj_GetYawDeltaToObject(obj, player, &yawf);
+    flag = 0;
+    if (d >= 0) {
+    } else {
+        d = -d;
+    }
+    if (d < 0x1c71 && yawf < lbl_803E62D0) {
+        flag = 1;
+    }
+    if (flag != 0) {
+        ptr = seqFn_800394a0();
+        q = 1;
+        ptr = ptr + 1;
+        zero = 0;
+        for (; q < 9; q++) {
+            vec = objModelGetVecFn_800395d8(obj, *ptr);
+            if (vec != 0) {
+                vec[2] = zero;
+                vec[0] = zero;
+            }
+            ptr++;
+        }
+        player = Obj_GetPlayerObject();
+        *(int *)(p2 + 0x2d0) = player;
+        tmpA = *(int *)(sub + 0x30);
+        tmpB = *(int *)(sub + 0x2c);
+        q = *(int *)(sub + 0x24);
+        msgH[0] = *(int *)(sub + 0x28);
+        msgH[1] = tmpB;
+        msgH[2] = tmpA;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, msgH);
+        }
+        q = *(int *)(sub + 0x24);
+        msgI[0] = 2;
+        msgI[1] = 0;
+        msgI[2] = 0;
+        if (Stack_IsFull(q) == 0) {
+            Stack_Push(q, msgI);
+        }
+        *(u8 *)(sub + 0x34) = 1;
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
