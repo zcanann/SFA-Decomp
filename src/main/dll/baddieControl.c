@@ -3972,82 +3972,86 @@ extern f32 lbl_803E1C64;
 #pragma peephole off
 #pragma scheduling off
 int dll_19_func14(u8 *p1, u8 *p2, f32 frange, int p4) {
+    f32 bboxOut[20];
     int objs[2];
+    f32 diff[3];
+    f32 gridIn[3];
+    int gridB[2];
+    int gridA[2];
+    u8 losOut;
+    f32 *dp = diff;
     int *list;
     int obj;
-    int found;
+    int found = 0;
     int negP4;
     int newangle;
     int delta;
-    int traced;
-    f32 diff[3];
-    f32 gridIn[3];
-    int gridA[2];
-    int gridB[2];
-    u8 losOut;
-    f32 bboxOut[20];
+    u8 traced;
 
     objs[0] = Obj_GetPlayerObject();
     objs[1] = 0;
-    found = 0;
-    negP4 = -p4;
     list = objs;
+    negP4 = -p4;
 
-    while (found == 0) {
-        obj = *list;
-        list++;
-        if (obj == 0) {
-            break;
-        }
-        diff[0] = *(f32 *)(obj + 0x18) - *(f32 *)(p1 + 0x18);
-        diff[1] = *(f32 *)(obj + 0x1c) - *(f32 *)(p1 + 0x1c);
-        diff[2] = *(f32 *)(obj + 0x20) - *(f32 *)(p1 + 0x20);
-        if (sqrtf(diff[0] * diff[0] + diff[1] * diff[1] + diff[2] * diff[2]) >= frange) {
-            continue;
-        }
-        if ((s8)p2[852] == 0) {
-            continue;
-        }
-        if (fn_8029610C(obj) > lbl_803E1C64) {
-            found = 1;
-        }
-        newangle = (u16)getAngle(-diff[0], -diff[2]);
-        if (*(int *)(p1 + 0x30) != 0) {
-            delta = newangle - (u16)(*(s16 *)p1 + *(s16 *)(*(int *)(p1 + 0x30)));
-        } else {
-            delta = newangle - (u16)*(s16 *)p1;
-        }
-        if (delta > 0x8000) {
-            delta -= 0xffff;
-        }
-        if (delta < -0x8000) {
-            delta += 0xffff;
-        }
-        if (delta < p4 && delta > negP4) {
-            found = 1;
-        }
-        if (fn_80295A04(obj, 1) == 0) {
-            found = 0;
-        }
-        if (fn_80296AE8(obj) <= 0) {
-            found = 0;
-            continue;
-        }
-        gridIn[0] = *(f32 *)(p1 + 12);
-        gridIn[1] = lbl_803E1C68 + *(f32 *)(p1 + 16);
-        gridIn[2] = *(f32 *)(p1 + 20);
-        voxmaps_worldToGrid(gridIn, gridA);
-        gridIn[0] = *(f32 *)(obj + 12);
-        gridIn[1] = lbl_803E1C68 + *(f32 *)(obj + 16);
-        gridIn[2] = *(f32 *)(obj + 20);
-        voxmaps_worldToGrid(gridIn, gridB);
-        traced = voxmaps_traceLine(gridB, gridA, 0, &losOut, 0);
-        if (losOut == 1 || traced != 0) {
-            if (objBboxFn_800640cc((int)(p1 + 12), gridIn, lbl_803E1C48, 0, bboxOut, (int)p1, 4, -1, 0, 0) != 0) {
-                found = 0;
+    while ((obj = *list) != 0) {
+        dp[0] = *(f32 *)(obj + 0x18) - *(f32 *)(p1 + 0x18);
+        dp[1] = *(f32 *)(obj + 0x1c) - *(f32 *)(p1 + 0x1c);
+        dp[2] = *(f32 *)(obj + 0x20) - *(f32 *)(p1 + 0x20);
+        if (sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1])) < frange) {
+            if ((s8)p2[852] != 0) {
+                if (fn_8029610C(obj) > lbl_803E1C64) {
+                    found = 1;
+                }
+                newangle = (u16)getAngle(-dp[0], -dp[2]);
+                if (*(void **)(p1 + 0x30) != NULL) {
+                    delta = newangle - (u16)(*(s16 *)p1 + *(s16 *)(*(int *)(p1 + 0x30)));
+                    if (delta > 0x8000) {
+                        delta -= 0xffff;
+                    }
+                    if (delta < -0x8000) {
+                        delta += 0xffff;
+                    }
+                } else {
+                    delta = newangle - (u16)*(s16 *)p1;
+                    if (delta > 0x8000) {
+                        delta -= 0xffff;
+                    }
+                    if (delta < -0x8000) {
+                        delta += 0xffff;
+                    }
+                }
+                if (delta < p4 && delta > negP4) {
+                    found = 1;
+                }
+                if (fn_80295A04(obj, 1) == 0) {
+                    found = 0;
+                }
+                if (fn_80296AE8(obj) <= 0) {
+                    found = 0;
+                } else {
+                    gridIn[0] = *(f32 *)(p1 + 12);
+                    gridIn[1] = lbl_803E1C68 + *(f32 *)(p1 + 16);
+                    gridIn[2] = *(f32 *)(p1 + 20);
+                    voxmaps_worldToGrid(gridIn, gridA);
+                    gridIn[0] = *(f32 *)(obj + 12);
+                    gridIn[1] = lbl_803E1C68 + *(f32 *)(obj + 16);
+                    gridIn[2] = *(f32 *)(obj + 20);
+                    voxmaps_worldToGrid(gridIn, gridB);
+                    traced = voxmaps_traceLine(gridB, gridA, 0, &losOut, 0);
+                    if (losOut == 1 || traced != 0) {
+                        if (objBboxFn_800640cc((int)(p1 + 12), gridIn, lbl_803E1C48, 0, bboxOut,
+                                               (int)p1, 4, -1, 0, 0) != 0) {
+                            found = 0;
+                        }
+                    } else {
+                        found = 0;
+                    }
+                }
             }
-        } else {
-            found = 0;
+        }
+        list++;
+        if (found != 0) {
+            break;
         }
     }
     return obj;
