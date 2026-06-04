@@ -5022,6 +5022,170 @@ extern void *lbl_803DD30C;
 extern void *lbl_803DD310;
 extern void *lbl_803DD314;
 
+extern f32 lbl_803DB7A8;
+extern f32 lbl_803DB7AC;
+extern f32 lbl_803DF4C8;
+extern f32 lbl_803DF4CC;
+extern f32 lbl_803DF4D0;
+extern f32 lbl_803DF4D8;
+extern s32 lbl_803DD318;
+extern s32 lbl_803DD31C;
+extern f32 lbl_803DD320;
+extern f32 lbl_803DD324;
+extern f32 lbl_803DF718;
+extern f32 lbl_803DF71C;
+extern f32 timeDelta;
+extern u8 framesThisStep;
+extern f32 fn_80293E80(f32);
+
+/* EN v1.0 0x800AEC50  size: 1992b  tick global effect phases and expire
+ * the 20 cached particle resource slots. */
+#pragma scheduling off
+#pragma peephole off
+void ParticleEffectController_func05(void)
+{
+    lbl_803DB7A8 = lbl_803DB7A8 + lbl_803DF4C8 * timeDelta;
+    if (lbl_803DB7A8 > lbl_803DF4D0) {
+        lbl_803DB7A8 = lbl_803DF4CC;
+    }
+    lbl_803DB7AC = lbl_803DB7AC + lbl_803DF4C8 * timeDelta;
+    if (lbl_803DB7AC > lbl_803DF4D0) {
+        lbl_803DB7AC = lbl_803DF4D8;
+    }
+    lbl_803DD318 = lbl_803DD318 + framesThisStep * 100;
+    if (lbl_803DD318 > 0x7fff) {
+        lbl_803DD318 = 0;
+    }
+    lbl_803DD324 = fn_80293E80(lbl_803DF718 * (f32)(s16)lbl_803DD318 / lbl_803DF71C);
+    lbl_803DD31C = lbl_803DD31C + framesThisStep * 0x32;
+    if (lbl_803DD31C > 0x7fff) {
+        lbl_803DD31C = 0;
+    }
+    lbl_803DD320 = fn_80293E80(lbl_803DF718 * (f32)(s16)lbl_803DD31C / lbl_803DF71C);
+    if (((s16 *)lbl_8039C2E0)[0] != 0 && (((s16 *)lbl_8039C2E0)[0] -= framesThisStep) <= 0) {
+        if (lbl_803DD2C8 != NULL) Resource_Release(lbl_803DD2C8);
+        lbl_803DD2C8 = NULL;
+        ((s16 *)lbl_8039C2E0)[0] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[1] != 0 && (((s16 *)lbl_8039C2E0)[1] -= framesThisStep) <= 0) {
+        if (lbl_803DD2CC != NULL) Resource_Release(lbl_803DD2CC);
+        lbl_803DD2CC = NULL;
+        ((s16 *)lbl_8039C2E0)[1] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[2] != 0 && (((s16 *)lbl_8039C2E0)[2] -= framesThisStep) <= 0) {
+        if (lbl_803DD2D0 != NULL) Resource_Release(lbl_803DD2D0);
+        lbl_803DD2D0 = NULL;
+        ((s16 *)lbl_8039C2E0)[2] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[3] != 0 && (((s16 *)lbl_8039C2E0)[3] -= framesThisStep) <= 0) {
+        if (lbl_803DD2D4 != NULL) Resource_Release(lbl_803DD2D4);
+        lbl_803DD2D4 = NULL;
+        ((s16 *)lbl_8039C2E0)[3] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[4] != 0 && (((s16 *)lbl_8039C2E0)[4] -= framesThisStep) <= 0) {
+        if (lbl_803DD2D8 != NULL) Resource_Release(lbl_803DD2D8);
+        lbl_803DD2D8 = NULL;
+        ((s16 *)lbl_8039C2E0)[4] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[5] != 0 && (((s16 *)lbl_8039C2E0)[5] -= framesThisStep) <= 0) {
+        if (lbl_803DD2DC != NULL) Resource_Release(lbl_803DD2DC);
+        lbl_803DD2DC = NULL;
+        ((s16 *)lbl_8039C2E0)[5] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[16] != 0 && (((s16 *)lbl_8039C2E0)[16] -= framesThisStep) <= 0) {
+        if (lbl_803DD2E0 != NULL) Resource_Release(lbl_803DD2E0);
+        lbl_803DD2E0 = NULL;
+        ((s16 *)lbl_8039C2E0)[16] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[6] != 0 && (((s16 *)lbl_8039C2E0)[6] -= framesThisStep) <= 0) {
+        if (lbl_803DD2E4 != NULL) Resource_Release(lbl_803DD2E4);
+        lbl_803DD2E4 = NULL;
+        ((s16 *)lbl_8039C2E0)[6] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[7] != 0 && (((s16 *)lbl_8039C2E0)[7] -= framesThisStep) <= 0) {
+        if (lbl_803DD2E8 != NULL) Resource_Release(lbl_803DD2E8);
+        lbl_803DD2E8 = NULL;
+        ((s16 *)lbl_8039C2E0)[7] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[8] != 0 && (((s16 *)lbl_8039C2E0)[8] -= framesThisStep) <= 0) {
+        if (lbl_803DD2EC != NULL) Resource_Release(lbl_803DD2EC);
+        lbl_803DD2EC = NULL;
+        ((s16 *)lbl_8039C2E0)[8] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[9] != 0 && (((s16 *)lbl_8039C2E0)[9] -= framesThisStep) <= 0) {
+        if (lbl_803DD2F0 != NULL) Resource_Release(lbl_803DD2F0);
+        lbl_803DD2F0 = NULL;
+        ((s16 *)lbl_8039C2E0)[9] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[10] != 0 && (((s16 *)lbl_8039C2E0)[10] -= framesThisStep) <= 0) {
+        if (lbl_803DD2F4 != NULL) Resource_Release(lbl_803DD2F4);
+        lbl_803DD2F4 = NULL;
+        ((s16 *)lbl_8039C2E0)[10] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[11] != 0 && (((s16 *)lbl_8039C2E0)[11] -= framesThisStep) <= 0) {
+        if (lbl_803DD2F8 != NULL) Resource_Release(lbl_803DD2F8);
+        lbl_803DD2F8 = NULL;
+        ((s16 *)lbl_8039C2E0)[11] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[12] != 0 && (((s16 *)lbl_8039C2E0)[12] -= framesThisStep) <= 0) {
+        if (lbl_803DD2FC != NULL) Resource_Release(lbl_803DD2FC);
+        lbl_803DD2FC = NULL;
+        ((s16 *)lbl_8039C2E0)[12] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[13] != 0 && (((s16 *)lbl_8039C2E0)[13] -= framesThisStep) <= 0) {
+        if (lbl_803DD300 != NULL) Resource_Release(lbl_803DD300);
+        lbl_803DD300 = NULL;
+        ((s16 *)lbl_8039C2E0)[13] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[14] != 0 && (((s16 *)lbl_8039C2E0)[14] -= framesThisStep) <= 0) {
+        if (lbl_803DD304 != NULL) Resource_Release(lbl_803DD304);
+        lbl_803DD304 = NULL;
+        ((s16 *)lbl_8039C2E0)[14] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[15] != 0 && (((s16 *)lbl_8039C2E0)[15] -= framesThisStep) <= 0) {
+        if (lbl_803DD308 != NULL) Resource_Release(lbl_803DD308);
+        lbl_803DD308 = NULL;
+        ((s16 *)lbl_8039C2E0)[15] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[17] != 0 && (((s16 *)lbl_8039C2E0)[17] -= framesThisStep) <= 0) {
+        if (lbl_803DD30C != NULL) Resource_Release(lbl_803DD30C);
+        lbl_803DD30C = NULL;
+        ((s16 *)lbl_8039C2E0)[17] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[18] != 0 && (((s16 *)lbl_8039C2E0)[18] -= framesThisStep) <= 0) {
+        if (lbl_803DD310 != NULL) Resource_Release(lbl_803DD310);
+        lbl_803DD310 = NULL;
+        ((s16 *)lbl_8039C2E0)[18] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+    if (((s16 *)lbl_8039C2E0)[19] != 0 && (((s16 *)lbl_8039C2E0)[19] -= framesThisStep) <= 0) {
+        if (lbl_803DD314 != NULL) Resource_Release(lbl_803DD314);
+        lbl_803DD314 = NULL;
+        ((s16 *)lbl_8039C2E0)[19] = 0;
+        lbl_803DD2C0 -= 1;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 /* EN v1.0 0x800AF41C  size: 560b  partfx_release: clear the 20-slot
  * effect-id table and free all 20 cached particle resources. */
 #pragma scheduling off
