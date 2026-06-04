@@ -14535,7 +14535,7 @@ void setLanguageFn_8001ad64(void *reqp) {
 
 extern void fn_802B4DE0(u8 *obj, int flag);
 extern void Resource_Release(void *res);
-extern void Obj_FreeObject(void *obj);
+extern void Obj_FreeObject(u8 *obj);
 extern void fn_80059A50(int arg);
 extern void setShadowFlag_803db658(int v);
 extern void *textureFn_8006c5c4(void);
@@ -16126,6 +16126,105 @@ void Obj_RegisterObject(u8 *obj, int flags)
     }
     if (*(u32 *)(*(u8 **)(obj + 0x50) + 0x44) & 1) {
         lbl_803DCBC4 = 0;
+    }
+}
+#pragma dont_inline reset
+#pragma pop
+
+extern void Sfx_RemoveLoopedObjectSoundForObject(u8 *obj);
+extern void Sfx_StopObjectChannel(u8 *obj, int ch);
+extern char sObjFreeNonExistentObjectWarning[];
+extern void *lbl_803DCB90;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void Obj_FreeObject(u8 *obj)
+{
+    u8 **p;
+    int n;
+    int i;
+    u8 **base;
+    int off;
+    u8 *q;
+
+    if (*(u16 *)(obj + 0xb0) & 0x40) {
+        return;
+    }
+    Sfx_RemoveLoopedObjectSoundForObject(obj);
+    Sfx_StopObjectChannel(obj, 0x7f);
+    if (*(u16 *)(obj + 0xb0) & 0x10) {
+        i = 0;
+        p = (u8 **)lbl_803DCB88;
+        for (n = lbl_803DCB84; n > 0; n--) {
+            if (*p == obj) {
+                break;
+            }
+            p++;
+            i++;
+        }
+        if (i < lbl_803DCB84) {
+            lbl_803DCB84--;
+            off = i << 2;
+            for (; i < lbl_803DCB84; i++) {
+                q = (u8 *)lbl_803DCB88 + off;
+                *(int *)q = *(int *)(q + 4);
+                off += 4;
+            }
+        } else {
+            OSReport(sObjFreeNonExistentObjectWarning);
+        }
+        if (*(u16 *)(obj + 0xb0) & 0x10) {
+            objList_remove(&lbl_803DCB7C, obj);
+        }
+        lbl_803DCBC4 = 0;
+    }
+    for (i = 0; i < lbl_803DCB94; i++) {
+    }
+    *(u16 *)(obj + 0xb0) |= 0x40;
+    if (*(u8 *)(obj + 0xea) != 0) {
+        i = 0;
+        base = (u8 **)lbl_803DCB90;
+        p = base;
+        for (n = lbl_803DCB8C; n > 0; n--) {
+            if (*p == obj) {
+                break;
+            }
+            p++;
+            i++;
+        }
+        if (i != lbl_803DCB8C) {
+            return;
+        }
+        if (lbl_803DCB8C < 0x18) {
+            base[lbl_803DCB8C] = obj;
+            lbl_803DCB8C++;
+            return;
+        }
+    }
+    if (lbl_803DB448 == 2) {
+        i = lbl_803DCB94;
+        if (lbl_803DCB94 != 0) {
+            i = 0;
+            p = (u8 **)lbl_803DCB98;
+            for (n = lbl_803DCB94; n > 0; n--) {
+                if (*p == obj) {
+                    break;
+                }
+                p++;
+                i++;
+            }
+        }
+        if (i == lbl_803DCB94) {
+            ((u8 **)lbl_803DCB98)[lbl_803DCB94] = obj;
+            lbl_803DCB94++;
+            if (lbl_803DCB94 == 400) {
+                lbl_803DCB94--;
+            }
+        }
+    } else {
+        objFreeObjDef(obj, !lbl_803DB448);
     }
 }
 #pragma dont_inline reset
