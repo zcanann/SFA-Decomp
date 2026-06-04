@@ -859,14 +859,14 @@ extern void objRender(int p1, int p2, int p3, int p4, int obj, int p6);
 extern void GXSetViewport(f32 x, f32 y, f32 w, f32 h, f32 nearz, f32 farz);
 extern void GXSetScissor(int x, int y, int w, int h);
 extern f32 sin(f32 x);
-extern u8 cMenuState;
+extern s8 cMenuState;
 extern u8 framesThisStep;
 extern s16 lbl_803DD796;
 extern s16 cMenuFadeCounter;
 extern s16 lbl_803DD79A;
 extern s16 lbl_803DD79C;
 extern s16 lbl_803DD79E;
-extern s16 lbl_803DBA30;
+extern u16 lbl_803DBA30;
 extern int lbl_803DCCF0;
 extern int lbl_803DD7E0;
 extern u8 lbl_803DD8B6;
@@ -890,95 +890,107 @@ extern f32 lbl_803E2024;
 extern f64 lbl_803E2028;
 extern f64 lbl_803E2030;
 
+#pragma peephole off
+#pragma scheduling off
 void hudDrawCMenu(int p1, int p2, int p3) {
-    int slot;
-    int i;
+    u8 slot;
     int sel;
     int model;
-    char used[5];
-    f32 vals[4];
-    f32 sx;
+    int *objs;
+    u8 *u;
+    f32 *v;
+    int i;
+    int j;
+    f32 div;
     f32 sy;
-    f32 fov;
-    f32 small;
+    f32 sx;
+    f32 mul;
+    f32 thresh;
+    u8 used[4];
+    f32 vals[3];
 
     Camera_GetCurrentViewSlot();
     slot = 0;
-    if (cMenuState == 3) {
+    switch (cMenuState) {
+    case 2:
+        slot = 0;
+        break;
+    case 3:
         slot = 1;
-    } else if (cMenuState < 3) {
-        if (cMenuState > 1) {
-            slot = 0;
-        }
-    } else if (cMenuState < 5) {
+        break;
+    case 4:
         slot = 2;
+        break;
     }
-    vals[3] = 176.0f;
     *(f32 *)(lbl_803A93E0[slot] + 0x10) =
-        lbl_803E1E40 + (f32)(-lbl_803DD796 * (u16)lbl_803DBA30) / lbl_803E201C;
+        lbl_803E1E40 + (f32)(-lbl_803DD796 * lbl_803DBA30) / lbl_803E201C;
     sy = lbl_803DBAC8;
     sx = lbl_803DBAC4;
-    fov = Camera_GetFovY();
-    lbl_803DBAA4 = fov;
+    lbl_803DBAA4 = Camera_GetFovY();
     Camera_SetFovY(lbl_803E2020);
     Camera_SetCurrentViewIndex(1);
     lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
     Camera_DisableViewYOffset();
-    small = lbl_803E1E3C;
-    Camera_SetCurrentViewPosition(small, small, small);
+    {
+        f32 small = lbl_803E1E3C;
+        Camera_SetCurrentViewPosition(small, small, small);
+    }
     Camera_SetCurrentViewRotation(0x8000, 0, 0);
     Camera_UpdateViewMatrices();
     Camera_RebuildProjectionMatrix();
     GXSetViewport(sx - lbl_803E1F34, sy - lbl_803E2024, (f32)(u32)*(u16 *)(lbl_803DCCF0 + 4),
                   (f32)(u32)*(u16 *)(lbl_803DCCF0 + 8), lbl_803E1E3C, lbl_803E1E68);
-    {
-        char *u = used;
-        int *objs = lbl_803A93EC;
-        f32 *v = vals;
-        i = 0;
-        do {
-            u += 1;
-            *u = 0;
-            *v = sin(lbl_803E1EC8 * (f32)*(s16 *)*objs / lbl_803E1E94);
-            objs += 1;
-            v += 1;
-            i += 1;
-        } while (i < 3);
-    }
     i = 0;
+    u = used;
+    objs = lbl_803A93EC;
+    v = vals;
+    mul = lbl_803E1EC8;
+    div = lbl_803E1E94;
+    do {
+        *u = 0;
+        *v = sin(mul * (f32)*(s16 *)*objs / div);
+        u++;
+        objs++;
+        v++;
+        i++;
+    } while (i < 3);
+    j = 0;
+    thresh = lbl_803E1E3C;
     do {
         f32 best = lbl_803E1EC4;
         sel = -1;
-        if (used[1] == 0 && vals[0] < best) {
-            sel = 0;
+        if (used[0] == 0 && vals[0] < best) {
             best = vals[0];
+            sel = 0;
         }
-        if (used[2] == 0 && vals[1] < best) {
-            sel = 1;
+        if (used[1] == 0 && vals[1] < best) {
             best = vals[1];
+            sel = 1;
         }
-        if (used[3] == 0 && vals[2] < best) {
-            sel = 2;
+        if (used[2] == 0 && vals[2] < best) {
             best = vals[2];
+            sel = 2;
         }
-        if (sel == -1) break;
+        if (sel == -1) {
+            break;
+        }
         model = Obj_GetActiveModel(lbl_803A93EC[sel]);
         *(u16 *)(model + 0x18) &= ~8;
-        *(s8 *)(lbl_803A93EC[sel] + 0x37) = cMenuFadeCounter;
+        *(u8 *)(lbl_803A93EC[sel] + 0x37) = cMenuFadeCounter;
         model = Obj_GetActiveModel(lbl_803A93E0[sel]);
         *(u16 *)(model + 0x18) &= ~8;
-        *(s8 *)(lbl_803A93E0[sel] + 0x37) = (s8)(cMenuFadeCounter * lbl_803DD8D4 / 0xff);
-        if (best <= lbl_803E1E3C) {
-            objRender(p1, p2, p3, 0, lbl_803A93EC[sel], 1);
-        } else {
+        *(u8 *)(lbl_803A93E0[sel] + 0x37) = cMenuFadeCounter * lbl_803DD8D4 / 0xff;
+        if (best > thresh) {
             objRender(p1, p2, p3, 0, lbl_803A93EC[sel], 1);
             GXSetScissor(0, 0x79, 0x280, 0x95);
             objRender(p1, p2, p3, 0, lbl_803A93E0[sel], 1);
             GXSetScissor(0, 0, 0x280, 0x1e0);
+        } else {
+            objRender(p1, p2, p3, 0, lbl_803A93EC[sel], 1);
         }
-        used[sel + 1] = 1;
-        i += 1;
-    } while (i < 3);
+        used[sel] = 1;
+        j++;
+    } while (j < 3);
     Camera_SetCurrentViewIndex(0);
     if (lbl_803DD7E0 != 0) {
         Camera_EnableViewYOffset();
@@ -988,6 +1000,9 @@ void hudDrawCMenu(int p1, int p2, int p3) {
     Camera_RebuildProjectionMatrix();
     Camera_ApplyFullViewport();
 }
+#pragma peephole reset
+#pragma scheduling reset
+
 
 #pragma peephole off
 #pragma scheduling off
