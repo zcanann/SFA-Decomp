@@ -1689,6 +1689,7 @@ extern f32 vec3f_distanceSquared(f32* a, f32* b);
 extern f32 lbl_803E4B9C, lbl_803E4BA0, lbl_803E4BA4;
 extern f32 timeDelta;
 extern int* gPartfxInterface;
+typedef void (*PartfxSpawnFn)(void *obj, int id, int a, int b, int c, int d);
 #pragma peephole off
 #pragma scheduling off
 void dll_1DF_update(void* obj)
@@ -1698,29 +1699,29 @@ void dll_1DF_update(void* obj)
     void* player;
     f32 dist;
     f32 t;
-    void (*fn)(void*, int, int, int, int, int);
 
     tex = objFindTexture(obj, 0, 0);
     if (tex != 0) {
         if (*(s16*)((char*)obj + 0x46) == 209) {
-            *(u8*)((char*)tex + 0xC) = (u8)(int)lbl_803E4B9C;
-            *(u8*)((char*)tex + 0xD) = (u8)(int)lbl_803E4B9C;
-            *(u8*)((char*)tex + 0xE) = (u8)(int)lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xC) = lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xD) = lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xE) = lbl_803E4B9C;
         } else {
-            *(u8*)((char*)tex + 0xC) = (u8)(int)lbl_803E4B9C;
-            *(u8*)((char*)tex + 0xD) = (u8)(int)lbl_803E4B9C;
-            *(u8*)((char*)tex + 0xE) = (u8)(int)lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xC) = lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xD) = lbl_803E4B9C;
+            *(u8*)((char*)tex + 0xE) = lbl_803E4B9C;
         }
     }
     player = Obj_GetPlayerObject();
     dist = vec3f_distanceSquared((f32*)((char*)player + 0x18), (f32*)((char*)obj + 0x18));
-    if (dist >= lbl_803E4BA0) return;
-    t = *(f32*)((char*)sub + 0x24) - timeDelta;
-    *(f32*)((char*)sub + 0x24) = t;
-    if (t >= lbl_803E4B9C) return;
-    fn = (void (*)(void*, int, int, int, int, int))((int**)*gPartfxInterface)[0][2];
-    fn(obj, 525, 0, 2, -1, 0);
-    *(f32*)((char*)sub + 0x24) = lbl_803E4BA4;
+    if (dist < lbl_803E4BA0) {
+        t = *(f32*)((char*)sub + 0x24) - timeDelta;
+        *(f32*)((char*)sub + 0x24) = t;
+        if (t < lbl_803E4B9C) {
+            (*(PartfxSpawnFn)*(int*)(*gPartfxInterface + 8))(obj, 525, 0, 2, -1, 0);
+            *(f32*)((char*)sub + 0x24) = lbl_803E4BA4;
+        }
+    }
 }
 #pragma scheduling reset
 #pragma peephole reset
