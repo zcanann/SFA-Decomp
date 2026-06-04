@@ -11955,6 +11955,7 @@ extern f32 lbl_803DE7F8;
 extern f64 lbl_803DE800;
 extern f64 lbl_803DE7E0;
 
+#pragma dont_inline on
 int randomGetRange(int lo, int hi) {
     f32 v;
     if (lo == hi) {
@@ -11963,6 +11964,7 @@ int randomGetRange(int lo, int hi) {
     v = ((f32)(u32)rand() / lbl_803DE7F8) * (lbl_803DE7C4 + (f32)hi - (f32)lo);
     return (int)(v + (f32)lo);
 }
+#pragma dont_inline reset
 
 extern s16 lbl_803DCAD8;
 extern u8 *lbl_803DCAE0;
@@ -17163,6 +17165,11 @@ typedef struct {
     u16 r, g, b, a;
 } SubtitleCmd;
 
+typedef struct {
+    u8 pad[0xc];
+    u8 *buf;
+} AnimBufSel;
+
 extern SubtitleCmd *textFn_80018bc4(int str, int *count);
 extern void gameTextShowStr(int str, int a, int b, int c);
 
@@ -17428,6 +17435,63 @@ void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
         *out0 = s * yaw / d;
         *out1 = s * sinp / d;
         *out2 = s * roll / d;
+    }
+}
+#pragma pop
+
+extern f32 lbl_802CABB8[];
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void modelAnimFn_80026790(u8 *model, int idx, u8 *m, u8 *anim)
+{
+    extern f32 lbl_803DCB48;
+    extern f32 lbl_803DE844;
+    extern f32 lbl_803DE848;
+    extern f32 lbl_803DE84C;
+    extern f32 lbl_803DE850;
+    f32 vec[3];
+    u8 *hdr;
+    int total;
+    u8 *base;
+    f32 dot;
+    f32 scaled;
+    f32 amp;
+    int off;
+    int i;
+    int r;
+
+    idx = 0;
+    hdr = *(u8 **)model;
+    if (hdr[0xf3] != 0) {
+        total = hdr[0xf3] + hdr[0xf4];
+    } else {
+        total = 1;
+    }
+    if (idx >= total) {
+        idx = 0;
+    }
+    base = ((AnimBufSel *)(model + ((*(u16 *)(model + 0x18) & 1) << 2)))->buf + idx * 0x40;
+    vec[0] = *(f32 *)(base + 0x20);
+    vec[1] = *(f32 *)(base + 0x24);
+    vec[2] = *(f32 *)(base + 0x28);
+    dot = PSVECDotProduct(vec, lbl_802CABB8);
+    if (dot < lbl_803DE828) {
+        dot = lbl_803DE828;
+    }
+    scaled = lbl_803DCB48 * (lbl_803DE844 - dot);
+    r = randomGetRange((int)(lbl_803DE84C * scaled), (int)(lbl_803DE850 * scaled));
+    amp = (f32)r * lbl_803DE848;
+    i = 0;
+    off = 0;
+    while (i < *(int *)(anim + 8) + 1) {
+        u8 *p = *(u8 **)anim + off;
+        *(f32 *)(p + 0xc) = *(f32 *)(p + 0xc) * *(f32 *)(m + 0xc) + lbl_802CABB8[0] * amp;
+        *(f32 *)(p + 0x10) = lbl_802CABB8[1] * amp + (*(f32 *)(p + 0x10) * *(f32 *)(m + 0xc) + *(f32 *)(m + 0x10));
+        *(f32 *)(p + 0x14) = *(f32 *)(p + 0x14) * *(f32 *)(m + 0xc) + lbl_802CABB8[2] * amp;
+        off += 0x54;
+        i++;
     }
 }
 #pragma pop
