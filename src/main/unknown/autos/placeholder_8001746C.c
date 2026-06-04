@@ -14126,6 +14126,7 @@ extern void initLoadingScreenTextures(void);
 extern void mmInit(void);
 extern void gxTransformFn_8004a83c(void);
 extern void Camera_InitState(void);
+extern void doQueuedLoads(void);
 extern void initControllers(void);
 extern int mmSetFreeDelay(int delay);
 extern void padUpdate(void);
@@ -16939,7 +16940,6 @@ extern void objRenderFn_8003b8f4(int obj, int b, int c, int d, int e, f32 a);
 extern void objRenderFuzz(void);
 extern void textFn_8001b46c(int a);
 extern void doNothing_endOfFrame(void);
-extern int doQueuedLoads();
 extern f32 lbl_803DE7A8;
 
 #pragma push
@@ -16990,6 +16990,72 @@ void gameLoop(void)
     Obj_FlushDeferredFreeList();
     mmFreeTick(1);
     doQueuedLoads();
+}
+#pragma dont_inline reset
+#pragma pop
+
+extern u8 lbl_803DCAC4;
+extern int lbl_803DB41C;
+extern void setColor_803db5d0(int r, int g, int b);
+extern void unloadMap(void);
+extern void mapUnload(int a, int b);
+extern void fn_801375A0(void);
+extern void setForceLoadImmediately(void);
+extern void loadMapAndParent(int map);
+extern void mapLoadDataFiles(int map);
+extern void clearForceLoadImmediately(void);
+extern void beginLoadingMap(void);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void doQueuedLoads(void)
+{
+    if ((s8)lbl_803DCA39 != 0) {
+        int old;
+
+        waitNextFrame();
+        GXFlush_(1, 0);
+        waitNextFrame();
+        GXFlush_(1, 0);
+        waitNextFrame();
+        GXFlush_(1, 0);
+        mmSetFreeDelay(0);
+        if (lbl_803DCAC4 != 0) {
+            setColor_803db5d0(0, 0, 0);
+            unloadMap();
+            if (lbl_803DCA40 != 0) {
+                mapUnload(0, 0x80000000);
+                lbl_803DCA40 = 0;
+            }
+        }
+        old = mmSetFreeDelay(0);
+        lbl_803DCA39 = 0;
+        Camera_InitState();
+        fn_801375A0();
+        if (lbl_803DB41C > -1) {
+            loadUiDll(lbl_803DB41C);
+            lbl_803DB41C = -1;
+        }
+        mmFreeTick(1);
+        mmFreeTick(1);
+        if (lbl_803DCA41 != 0 && lbl_803DCAF8 != -1) {
+            setForceLoadImmediately();
+            loadMapAndParent(lbl_803DCAF8);
+            if (lbl_803DCAF4 != -1) {
+                mapLoadDataFiles(lbl_803DCAF4);
+            }
+            clearForceLoadImmediately();
+            lbl_803DCA41 = 0;
+        }
+        beginLoadingMap();
+        if (lbl_803DCA94 != 0) {
+            (*(void (**)(int))(*(int *)lbl_803DCA94 + 0xc))(1);
+        }
+        mmSetFreeDelay(old);
+        lbl_803DCAC4 = 1;
+    }
 }
 #pragma dont_inline reset
 #pragma pop
