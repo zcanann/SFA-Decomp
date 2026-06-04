@@ -484,7 +484,7 @@ void FUN_801287ac();
 void FUN_80128db8();
 void FUN_801291ac();
 void FUN_801294d8();
-undefined4 pauseMenuDoSave();
+void pauseMenuDoSave(void);
 void FUN_80129a98(void);
 void FUN_80129d10();
 void fn_80129FB0(void);
@@ -574,11 +574,6 @@ void FUN_801291ac()
 
 void FUN_801294d8()
 {
-}
-
-undefined4 pauseMenuDoSave()
-{
-    return 0;
 }
 
 void FUN_80129a98(void)
@@ -1107,9 +1102,18 @@ extern void  gameTextFn_80019804(s32);
 extern void  gameTextAppendStr(void*, s32);
 
 typedef struct BabySnowwormBitTableEntry {
-    u8  _0[0x16];   /* 0x00 */
+    u16 hint0;      /* 0x00 */
+    u16 hint2;      /* 0x02 */
+    u16 hint4;      /* 0x04 */
+    u8  _6[0x2];    /* 0x06 */
+    s32 hint8;      /* 0x08 */
+    s32 hintC;      /* 0x0c */
+    s32 hint10;     /* 0x10 */
+    u8  _14[0x2];   /* 0x14 */
     u16 bit_id;     /* 0x16 */
-    u8  _18[0x4];   /* 0x18 */
+    u8  thresh;     /* 0x18 */
+    u8  _19;        /* 0x19 */
+    u16 bit1a;      /* 0x1a */
 } BabySnowwormBitTableEntry;       /* sizeof = 0x1c */
 extern BabySnowwormBitTableEntry lbl_8031B074[5];
 extern u32 GameBit_Get(u32);
@@ -1358,6 +1362,7 @@ void timeListFn_8012be84(void)
  * 0 if any of the table entries match the slot's lookup byte. */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 int pauseMenuIsFox(void)
 {
     void* s;
@@ -1385,6 +1390,7 @@ int pauseMenuIsFox(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /* EN v1.0 0x80129698  size: 196b  Pickup-pickup state hook: latches the
  * resulting object id from saveScoreFn_800e88b4 into lbl_803DBA91, and on the
@@ -1467,6 +1473,7 @@ void viewFn_80129cbc(f32 fov, f32 x, f32 y)
  */
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void pauseMenuInit(void)
 {
     void* obj = Obj_GetPlayerObject();
@@ -1503,6 +1510,7 @@ void pauseMenuInit(void)
 }
 #pragma peephole reset
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /* EN v1.0 0x8012E880  size: 452b  Per-frame death-FX state machine.
  *
@@ -1735,6 +1743,2458 @@ void pauseMenuDrawText(void)
     gameTextAppendStr(handle, 0x49);
     gameTextFn_80019804(2);
     gameTextSetCharset(saved, 3);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s8  padGetCX(s32 chan);
+extern s16 lbl_803DD75C;
+extern f32 lbl_803DD7BC;
+extern f32 lbl_803DD7C0;
+extern u8  lbl_803DD7C4;
+extern int lbl_803DD7D8;
+extern f32 lbl_803E216C;
+extern f32 lbl_803E2170;
+extern f32 lbl_803E1E94;
+
+typedef struct {
+    s16 id;         /* 0x00 */
+    u16 x;          /* 0x02 */
+    u16 y;          /* 0x04 */
+    s16 ofs6;       /* 0x06 */
+    u8  trailX;     /* 0x08 */
+    u8  trailY;     /* 0x09 */
+    u8  count;      /* 0x0a */
+    u8  _b;         /* 0x0b */
+    u8  nav[4];     /* 0x0c */
+    f32 f10;        /* 0x10 */
+    s32 f14;        /* 0x14 */
+    s32 f18;        /* 0x18 */
+    u8  f1c;        /* 0x1c */
+    u8  _1d[3];
+} GridEntry;                       /* sizeof = 0x20 */
+extern GridEntry *lbl_803DD824;
+
+/* EN v1.0 0x8012B4C4  size: 504b  Pause-menu grid cursor stepper. Reads the
+ * C-stick X axis, derives a one-step direction, and tweens the grid cursor
+ * offsets toward the next cell, clamping when the tween crosses zero. */
+#pragma scheduling off
+#pragma peephole off
+int pauseMenuGridFn_8012b4c4(void)
+{
+    int ret = 0;
+    s8 cx = padGetCX(0);
+    s8 dir;
+    int mag = cx;
+
+    if (mag < 0) mag = -mag;
+    if (mag >= 0xf) {
+        if (cx < 0) dir = -1;
+        else if (cx > 0) dir = 1;
+        else dir = 0;
+    } else {
+        dir = 0;
+    }
+
+    if (lbl_803DD75C == 0 && dir != 0 && lbl_803DD7BC == 0.0f) {
+        int idx = lbl_803DD7D8;
+        pauseMenuSetupTitle(lbl_803DD824[idx].f18, lbl_803DD824[idx].f1c, 2, 0);
+        lbl_803DD7BC = (f32)dir;
+        lbl_803DD7C0 = (f32)(dir * 0x320);
+        lbl_803DD7D8 = 0;
+        Sfx_PlayFromObject(0, 0x100);
+    }
+
+    if (lbl_803DD7C0 > 0.0f) {
+        f32 prev = lbl_803DD7BC;
+        lbl_803DD7BC = prev + lbl_803DD7C0;
+        if (lbl_803DD7BC >= lbl_803E216C) {
+            lbl_803DD7C4 ^= 1;
+            lbl_803DD7BC -= lbl_803E1E94;
+        }
+        if (lbl_803DD7BC > 0.0f && prev < 0.0f) {
+            lbl_803DD7BC = 0.0f;
+            lbl_803DD7C0 = 0.0f;
+            ret = 1;
+        }
+    }
+
+    if (lbl_803DD7C0 < 0.0f) {
+        f32 prev = lbl_803DD7BC;
+        lbl_803DD7BC = prev + lbl_803DD7C0;
+        if (lbl_803DD7BC < lbl_803E2170) {
+            lbl_803DD7C4 ^= 1;
+            lbl_803DD7BC += lbl_803E1E94;
+        }
+        if (lbl_803DD7BC < 0.0f && prev > 0.0f) {
+            lbl_803DD7BC = 0.0f;
+            lbl_803DD7C0 = 0.0f;
+            ret = 1;
+        }
+    }
+
+    return ret;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 lbl_803DD760;
+extern f32 lbl_803DD764;
+extern f64 lbl_803E2160;
+extern f64 lbl_803E1F60;
+extern f32 lbl_803E2168;
+extern int lbl_803DD81C;
+extern u8  lbl_803DD781;
+extern s16 lbl_803DD784;
+extern GridEntry lbl_8031BD30[];
+extern int  randomGetRange(s32 lo, s32 hi);
+extern void AudioStream_Play(s32 id, void *cb);
+extern void AudioStream_StartPrepared(void);
+extern void ObjAnim_SetCurrentMove(void *anim, int active, f32 t, int mode);
+extern void fn_8012C000(void);
+
+/* EN v1.0 0x8012B77C  size: 508b  Pause-menu open/close animator. Advances
+ * the open tween, clamps it, then on the close button fires the per-state
+ * close SFX and kicks the menu-item exit animations. */
+#pragma scheduling off
+#pragma peephole off
+void pauseMenuFn_8012b77c(void)
+{
+    u32 btn = (u16)getButtonsJustPressed(0);
+    double v = lbl_803DD764 * timeDelta + lbl_803DD760;
+
+    lbl_803DD760 = v;
+    if (v <= lbl_803E2160) v = lbl_803E2160;
+    lbl_803DD760 = v;
+    if (v >= lbl_803E1F60) v = lbl_803E1F60;
+    lbl_803DD760 = v;
+
+    if ((pauseMenuState >= 0xc || pauseMenuState < 8) &&
+        (btn & 0x200) && lbl_803DD764 > lbl_803E2160) {
+        u8 i;
+        buttonDisable(0, 0x200);
+        lbl_803DD764 = lbl_803E2168;
+        if (lbl_803DD824 == lbl_8031BD30) {
+            lbl_803DD7D8 = 1;
+        }
+        lbl_803DD81C = 0;
+        switch (pauseMenuState) {
+        case 3:
+            AudioStream_Play(randomGetRange(0, 1) + 0x271b, AudioStream_StartPrepared);
+            lbl_803DD781 = 2;
+            break;
+        case 4:
+            AudioStream_Play(randomGetRange(0, 1) + 0x2727, AudioStream_StartPrepared);
+            lbl_803DD781 = 3;
+            break;
+        case 5:
+            AudioStream_Play(randomGetRange(0, 1) + 0x2739, AudioStream_StartPrepared);
+            lbl_803DD781 = 1;
+            break;
+        }
+        for (i = 1; i < 4; i++) {
+            ObjAnim_SetCurrentMove(lbl_803A9410[i], i == (s8)lbl_803DD781, 0.0f, 0);
+        }
+    }
+
+    lbl_803DD784 -= framesThisStep * 0x50;
+    if (lbl_803DD784 < 0) lbl_803DD784 = 0;
+    fn_8012C000();
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+
+extern s16 lbl_803DD770;
+extern void drawTexture(void *tex, f32 x, f32 y, int alpha, int u);
+extern void drawScaledTexture(void *tex, f32 x, f32 y, int alpha, int u, int w, int h, int q);
+extern f32 lbl_803E213C;
+extern f32 lbl_803E2140;
+extern f64 lbl_803E2148;
+extern f64 lbl_803E2150;
+extern f64 lbl_803E2158;
+
+/* EN v1.0 0x8012975C  size: 632b  Draws the help-text frame: a base panel
+ * then a row of edge/corner segments tweened in from both directions. */
+#pragma scheduling off
+#pragma peephole off
+void boxDrawFn_8012975c(void)
+{
+    s8 idx;
+    s8 j;
+    int alpha;
+    int i;
+    int t;
+    int a;
+    int u;
+    f64 c0;
+    f64 c1;
+    f64 c2;
+    f64 scaled;
+
+    if (lbl_803DD770 == 0) {
+        return;
+    }
+    idx = lbl_803DD770 & 0x1f;
+    drawTexture(*(void **)(hudTextures + 0x110), lbl_803E213C, lbl_803E2140, 0xff, 0x100);
+    j = 2;
+    alpha = 0xaa;
+    c0 = lbl_803E2148;
+    c1 = lbl_803E2150;
+    c2 = lbl_803E2158;
+    for (; j >= 0; j--) {
+        i = idx;
+        drawTexture(*(void **)(hudTextures + 0x114), (f32)(c0 + (scaled = c1 * i)),
+                    (f32)(t = 0x5f - i / 4), (u8)(a = 0xff - alpha),
+                    (u16)(u = i * 2 + 0xbb));
+        drawScaledTexture(*(void **)(hudTextures + 0x114), (f32)(c2 - scaled), (f32)t, (u8)a,
+                          (u16)u, 0x18, 0x34, 1);
+        idx = (i + 3) & 0x1f;
+        alpha -= 0x55;
+    }
+    idx = (lbl_803DD770 & 0x1f) ^ 0x10;
+    j = 2;
+    alpha = 0xaa;
+    c0 = lbl_803E2148;
+    c1 = lbl_803E2150;
+    c2 = lbl_803E2158;
+    for (; j >= 0; j--) {
+        i = idx;
+        drawTexture(*(void **)(hudTextures + 0x114), (f32)(c0 + (scaled = c1 * i)),
+                    (f32)(t = 0x5f - i / 4), (u8)(a = 0xff - alpha),
+                    (u16)(u = i * 2 + 0xbb));
+        drawScaledTexture(*(void **)(hudTextures + 0x114), (f32)(c2 - scaled), (f32)t, (u8)a,
+                          (u16)u, 0x18, 0x34, 1);
+        idx = (i + 3) & 0x1f;
+        alpha -= 0x55;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int pauseMenuDrawElement(int handle, f32 x, f32 y, int n, int p2, int w, int flag);
+extern int drawFn_8011eb3c(int handle, f32 x, f32 y, int n, int p2, int w, int a, int b, int c);
+extern int getNextTaskHintText(void);
+extern u8  lbl_803DBA9C[6];
+extern f32 lbl_803E1FA8;
+extern f32 lbl_803E1FD0;
+extern f32 lbl_803E20D4;
+extern f32 lbl_803E20D8;
+extern f32 lbl_803E20DC;
+extern f32 lbl_803E20E0;
+extern f32 lbl_803E20E4;
+extern f32 lbl_803E20E8;
+extern f32 lbl_803E20EC;
+extern f32 lbl_803E20F0;
+extern f32 lbl_803E20F4;
+extern f32 lbl_803E20F8;
+extern f32 lbl_803E20FC;
+extern f32 lbl_803E2100;
+
+typedef struct { s16 f0; u8 _2[0x1e]; } HintCell;   /* 0x20 */
+extern HintCell lbl_8031BB90[13];
+
+/* EN v1.0 0x80128120  size: 848b  Draws the pause-menu task panel layout and
+ * lights the task-progress pips according to the current hint text level. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80128120(int unused, int p2)
+{
+    s16 n = 0xc8 - lbl_803DD75C;
+    int v;
+    int level;
+    s8 i;
+
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x38), lbl_803E20D4, lbl_803E20D8, n, p2, (int)lbl_803E1F34, 0);
+    drawFn_8011eb3c(*(int *)(hudTextures + 0x38), lbl_803E1FA8, lbl_803E20D8, n, p2, (int)lbl_803E1F34, 0x1c, 0x1e, 1);
+    drawFn_8011eb3c(*(int *)(hudTextures + 0x38), lbl_803E20D4, lbl_803E20DC, n, p2, (int)lbl_803E1F34, 0x1c, 0x1e, 2);
+    drawFn_8011eb3c(*(int *)(hudTextures + 0x38), lbl_803E1FA8, lbl_803E20DC, n, p2, (int)lbl_803E1F34, 0x1c, 0x1e, 3);
+    drawFn_8011eb3c(*(int *)(hudTextures + 0x3c), lbl_803E20E0, lbl_803E20E4, n, p2, (int)lbl_803E1F34, 0x8, 0x20, 0);
+    drawFn_8011eb3c(*(int *)(hudTextures + 0x3c), lbl_803E20E0, lbl_803E20E8, n, p2, (int)lbl_803E1F34, 0x8, 0x20, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20EC, lbl_803E1FD0, n, p2, (int)lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20F0, lbl_803E20F4, n, p2, (int)lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20F8, lbl_803E20F4, n, p2, (int)lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20F0, lbl_803E20FC, n, p2, (int)lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20F8, lbl_803E20FC, n, p2, (int)lbl_803E1F34, 0);
+    pauseMenuDrawElement(*(int *)(hudTextures + 0x40), lbl_803E20EC, lbl_803E2100, n, p2, (int)lbl_803E1F34, 0);
+
+    v = (u16)getNextTaskHintText();
+    if (v > 0xb3) level = 6;
+    else if (v > 0xb0) level = 5;
+    else if (v > 0x8a) level = 4;
+    else if (v > 0x71) level = 3;
+    else if (v > 0x48) level = 2;
+    else if (v > 0x8) level = 1;
+    else level = 0;
+
+    for (i = 0; i < 6; i++) {
+        s16 t = 0x11;
+        if (i >= level) t = -1;
+        lbl_8031BB90[lbl_803DBA9C[i]].f0 = t;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x8012C6AC  size: 848b  Draws a 9-patch HUD box: center fill, the
+ * four edges (stretched), and the four 5x5 corners, from hudTextures. */
+#pragma scheduling off
+#pragma peephole off
+void drawHudBox(s16 x, s16 y, s16 w, s16 h, int alpha, u8 flag)
+{
+    drawTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y - 5), alpha, 0x100);
+    drawScaledTexture(*(void **)(hudTextures + 0x34), (f32)x, (f32)(y - 5), alpha, 0x100, w, 5, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x2c), (f32)(x - 5), (f32)y, alpha, 0x100, 5, h, 0);
+    if (flag != 0) {
+        drawScaledTexture(*(void **)(hudTextures + 0x30), (f32)x, (f32)y, alpha, 0x100, w, h, 0);
+    }
+    drawScaledTexture(*(void **)(hudTextures + 0x34), (f32)x, (f32)(y + h), alpha, 0x100, w, 5, 2);
+    drawScaledTexture(*(void **)(hudTextures + 0x2c), (f32)(x + w), (f32)y, alpha, 0x100, 5, h, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y + h), alpha, 0x100, 5, 5, 3);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y - 5), alpha, 0x100, 5, 5, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + h), alpha, 0x100, 5, 5, 2);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+
+extern u8  lbl_803DD77A;
+extern u8  lbl_803DBA94[8];
+extern int *gMapEventInterface;
+
+/* EN v1.0 0x8012D96C  size: 936b  World-map HUD voiceover scheduler: rate
+ * limits, picks the quest-progress hint stream and starts it. */
+#pragma scheduling off
+#pragma peephole off
+void drawWorldMapHud(void)
+{
+    u16 raw = lbl_803DD776;
+    s16 sv = (s16)raw;
+
+    if (raw == 0) {
+        return;
+    }
+    if (raw >= 0x78 && raw <= 0x82) {
+        return;
+    }
+    lbl_803DD776 = 0x78;
+    if (sv < 0x1e) {
+        s8 fi;
+        s8 li_;
+        u8 lv;
+        int n, t;
+        int hint;
+
+        {
+            u8 *p;
+            u8 *base = lbl_803DBA94;
+            int i;
+            p = base;
+            for (i = 0; i < 5; i++) {
+                if (GameBit_Get(lbl_8031B074[*p].bit_id)) {
+                    fi = (s8)lbl_803DBA94[i];
+                    goto haveIdx;
+                }
+                p++;
+            }
+            fi = -1;
+        haveIdx:
+        n = GameBit_Get(0x63c);
+        t = GameBit_Get(0x4e9);
+        n += GameBit_Get(0x5f3);
+        n += GameBit_Get(0x5f4);
+        n = t + n;
+        if (GameBit_Get(0x123)) {
+            n++;
+        }
+        if (GameBit_Get(0x2e8)) {
+            n++;
+        }
+        if (GameBit_Get(0x83b)) {
+            n++;
+        }
+        if (GameBit_Get(0x83c)) {
+            n++;
+        }
+
+        if (n >= lbl_8031B074[base[0]].thresh) li_ = (s8)lbl_803DBA94[0];
+        else if (n >= lbl_8031B074[base[1]].thresh) li_ = (s8)lbl_803DBA94[1];
+        else if (n >= lbl_8031B074[base[2]].thresh) li_ = (s8)lbl_803DBA94[2];
+        else if (n >= lbl_8031B074[base[3]].thresh) li_ = (s8)lbl_803DBA94[3];
+        else if (n >= lbl_8031B074[base[4]].thresh) li_ = (s8)lbl_803DBA94[4];
+        else li_ = -1;
+        }
+
+        lv = 0;
+        if ((u16)getNextTaskHintText() > 0xad) {
+            lv = 1;
+        }
+        {
+            u8 cur = lbl_803DD77A;
+            if (cur == 2 && lv != 0) {
+                hint = 0x51e4;
+            } else if (fi == cur && li_ != cur) {
+                hint = lbl_8031B074[cur].hint8;
+            } else if (cur == 2) {
+                if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(0xd) == 2 && lv == 0) {
+                    hint = 0x51e5;
+                } else if (fi == li_) {
+                    if (GameBit_Get(lbl_8031B074[li_].bit1a)) {
+                        hint = 0x51e6;
+                    } else {
+                        hint = lbl_8031B074[li_].hint10;
+                    }
+                } else {
+                    hint = lbl_8031B074[lbl_803DD77A].hintC;
+                }
+            } else if (cur == 0) {
+                if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(0xd) == 2 && lv == 0) {
+                    hint = 0x51e2;
+                } else {
+                    hint = lbl_8031B074[lbl_803DD77A].hintC;
+                }
+            } else {
+                hint = lbl_8031B074[lbl_803DD77A].hintC;
+            }
+        }
+        if (hint != 0) {
+            AudioStream_Play(hint, AudioStream_StartPrepared);
+        }
+    }
+    if ((u16)lbl_803DD776 > 0xff) {
+        lbl_803DD776 = 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void MWTRACE(int boxId);
+extern int  sprintf(char *buf, const char *fmt, ...);
+extern f32  fsin16Precise(u16 angle);
+extern void gameTextShow(int id);
+extern void gameTextShowTimeStr(char *str);
+extern char sBabySnowwormTimerFormat[];
+extern s16  lbl_803DD7E6;
+extern s16  lbl_803DBAB4;
+extern f32  lbl_803DBAB8;
+extern f32  lbl_803DBABC;
+extern f32  lbl_803E1E40;
+extern f32  lbl_803E2090;
+extern f32  lbl_803E20BC;
+extern f32  lbl_803E2130;
+extern f32  lbl_803E2134;
+extern f32  lbl_803E2138;
+
+/* EN v1.0 0x80128E70  size: 812b  Draws the race-times list panel and the six
+ * best-time entries with a pulsing header. */
+#pragma scheduling off
+#pragma peephole off
+void timeListDraw(void)
+{
+    u16 bits[6] = { 0x2b7, 0x2cb, 0x2cc, 0x2b6, 0x2d7, 0x2d8 };
+    char buf[0x24];
+
+    if (pauseMenuState != 0) {
+        return;
+    }
+    drawTexture(*(void **)(hudTextures + 0x28), lbl_803E2130, lbl_803E1E40, 0xff, 0x100);
+    drawScaledTexture(*(void **)(hudTextures + 0x34), lbl_803E20BC, lbl_803E1E40, 0xff, 0x100, 0x258, 5, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x2c), lbl_803E2130, lbl_803E2090, 0xff, 0x100, 5, 0x190, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x30), lbl_803E20BC, lbl_803E2090, 0xff, 0x100, 0x258, 0x190, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x34), lbl_803E20BC, lbl_803E2134, 0xff, 0x100, 0x258, 5, 2);
+    drawScaledTexture(*(void **)(hudTextures + 0x2c), lbl_803E2138, lbl_803E2090, 0xff, 0x100, 5, 0x190, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E2138, lbl_803E2134, 0xff, 0x100, 5, 5, 3);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E2138, lbl_803E1E40, 0xff, 0x100, 5, 5, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E2130, lbl_803E2134, 0xff, 0x100, 5, 5, 2);
+
+    {
+        s16 ang = (s16)(lbl_803DD7E6 + lbl_803DBAB4);
+        int pulse;
+        int a, b;
+        lbl_803DD7E6 = ang;
+        pulse = (int)(lbl_803DBAB8 * fsin16Precise((u16)ang) + lbl_803DBABC);
+        if (lbl_803DD75B == 1) {
+            a = pulse;
+            b = 0xff;
+        } else {
+            a = 0xff;
+            b = pulse;
+        }
+        gameTextFn_80016810(0x2f7, 0, 5);
+        gameTextSetColor(a, a, a, 0xff);
+        gameTextShow(0x2f8);
+        gameTextSetColor(b, b, b, 0xff);
+        gameTextShow(0x2fb);
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+    }
+    {
+        u16 *p;
+        int k = 0;
+        p = bits;
+        for (; k < 6; k++) {
+            int v = GameBit_Get(*p);
+            int mins;
+            if (k == 0) {
+                MWTRACE(6);
+                gameTextShow(0x2fa);
+            } else if (k == 3) {
+                MWTRACE(7);
+                gameTextShow(0x2fa);
+            }
+            mins = v / 6000;
+            sprintf(buf, sBabySnowwormTimerFormat, mins, v / 100 - mins * 60, v - (v / 100) * 100);
+            gameTextShowTimeStr(buf);
+            p++;
+        }
+    }
+    MWTRACE(0xff);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern char *fn_800E888C(int track, int row);
+extern void gameTextShowStr(char *str, int box, int x, int y);
+extern u8   lbl_8031AF00[];
+extern u8   lbl_803DBA91;
+extern s16  lbl_803DBAA8;
+extern f32  lbl_803DBAAC;
+extern f32  lbl_803DBAB0;
+extern char lbl_803DBBA0;
+extern char lbl_803DBBA8;
+extern s16  lbl_803DD7E4;
+
+/* EN v1.0 0x8012919C  size: 1276b  High-score screen: draws the 9-patch box
+ * around the text area, the track title, and five score rows with the
+ * selection pulse highlight. */
+#pragma scheduling off
+#pragma peephole off
+void highScoreScreenDraw(int p1, int p2, int p3)
+{
+    s16 x, y, w, h;
+    u8 *box = gameTextGetBox(0x36);
+    int pulse;
+    s16 ang = (s16)(lbl_803DD7E4 + lbl_803DBAA8);
+    char buf[0x20];
+
+    lbl_803DD7E4 = ang;
+    pulse = (int)(lbl_803DBAAC * fsin16Precise((u16)ang) + lbl_803DBAB0);
+    h = (s16)*(u16 *)(box + 0xa);
+    w = (s16)*(u16 *)(box + 0x8);
+    y = *(s16 *)(box + 0x16);
+    x = *(s16 *)(box + 0x14);
+
+    drawTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y - 5), 0xff, 0x100);
+    drawScaledTexture(*(void **)(hudTextures + 0x34), (f32)x, (f32)(y - 5), 0xff, 0x100, w, 5, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x2c), (f32)(x - 5), (f32)y, 0xff, 0x100, 5, h, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x30), (f32)x, (f32)y, 0xff, 0x100, w, h, 0);
+    drawScaledTexture(*(void **)(hudTextures + 0x34), (f32)x, (f32)(y + h), 0xff, 0x100, w, 5, 2);
+    drawScaledTexture(*(void **)(hudTextures + 0x2c), (f32)(x + w), (f32)y, 0xff, 0x100, 5, h, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y + h), 0xff, 0x100, 5, 5, 3);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y - 5), 0xff, 0x100, 5, 5, 1);
+    drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + h), 0xff, 0x100, 5, 5, 2);
+
+    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+    gameTextFn_80016810(0x345, 0, 0xa);
+    gameTextFn_80016810(*(u16 *)(lbl_8031AF00 + (s8)lbl_803DBA90 * 4 + 2), 0, 0x28);
+
+    {
+        u8 k;
+        for (k = 0; k < 5; k++) {
+            char *e = fn_800E888C(lbl_803DBA90, k);
+            char *name = e + 4;
+            u8 starred = *(u8 *)(e + 3) & 1;
+            int rowMul, rowY;
+            sprintf(buf, &lbl_803DBBA0, *(u32 *)e >> 1);
+            if (k == lbl_803DBA91) {
+                gameTextSetColor(pulse, pulse, pulse, 0xff);
+            } else if (k == lbl_803DBA91 + 1) {
+                gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+            }
+            rowMul = k * 0x1e;
+            rowY = rowMul + 0x5a;
+            gameTextShowStr(name, 0x86, 0, rowY);
+            gameTextShowStr(buf, 0x87, 0, rowY);
+            if (starred != 0) {
+                u8 *box2 = gameTextGetBox(0x87);
+                drawTexture(*(void **)(hudTextures + 0xf8),
+                            (f32)(*(s16 *)(box2 + 0x14) + 0x64),
+                            (f32)(*(s16 *)(box2 + 0x16) + rowMul + 0x57), 0xff, 0x100);
+                gameTextShowStr(&lbl_803DBBA8, 0x87, 0x82, rowY);
+            }
+        }
+    }
+    gameTextFn_80016810(0x346, 0, 0x104);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s8  lbl_803DD75E;
+extern f32 lbl_803DD768;
+extern f32 lbl_803E2068;
+extern f32 lbl_803E2174;
+extern u8  lbl_803DD7D6;
+extern int lbl_803DD8E0;
+extern s16 lbl_803A8B48[];
+extern GridEntry lbl_8031BD90[];
+
+/* EN v1.0 0x8012B978  size: 1292b  Pause-menu submenu driver: input nav,
+ * voiceover scheduling, selection SFX, and title refresh. */
+#pragma scheduling off
+#pragma peephole off
+void pauseMenuRunSubmenu(u8 p1)
+{
+    s8 sel = -1;
+    u8 valid = 0;
+    u32 btn = getButtonsJustPressed(0);
+
+    lbl_803DD8A4 = btn;
+    if (lbl_803DD75C != 0) {
+        s16 v;
+        if (btn & 0x300) {
+            Sfx_PlayFromObject(0, 0x41c);
+            buttonDisable(0, 0x300);
+            lbl_803DD75E = -0x28;
+        }
+        v = (s16)(lbl_803DD75C + lbl_803DD75E);
+        lbl_803DD75C = v;
+        if (v > 0x200) {
+            v = 0x200;
+        }
+        lbl_803DD75C = v;
+        if (v < 0) {
+            v = 0;
+        }
+        lbl_803DD75C = v;
+    } else {
+        f32 old = lbl_803DD768;
+        f32 now = old + timeDelta;
+        GridEntry *tbl;
+        lbl_803DD768 = now;
+        switch (pauseMenuState) {
+        case 3:
+            if (now >= lbl_803E2068 && old < lbl_803E2068) {
+                if (lbl_803DD7D6 == lbl_803DD8E0) {
+                    AudioStream_Play(0x271a, AudioStream_StartPrepared);
+                } else {
+                    AudioStream_Play(0x2715, AudioStream_StartPrepared);
+                }
+            }
+            if (lbl_803DD768 > lbl_803E2174) {
+                AudioStream_Play(randomGetRange(0, 3) + 0x2716, AudioStream_StartPrepared);
+                lbl_803DD768 = 0.0f;
+            }
+            break;
+        case 5:
+            if (now >= lbl_803E2068 && old < lbl_803E2068) {
+                int id = randomGetRange(0, 3) + 0x2730;
+                int skip = 0x2731;
+                if (lbl_803DD824 == lbl_8031BD90) {
+                    skip = 0x2732;
+                }
+                if (id >= skip) {
+                    id++;
+                }
+                AudioStream_Play(id, AudioStream_StartPrepared);
+                lbl_803DD768 = 0.0f;
+            }
+            break;
+        }
+        if (lbl_803DD764 > 0.0f) {
+            u8 a1;
+            u8 a2;
+            padGetAnalogInput(0, &a1, &a2);
+            if ((s8)a2 == 1) {
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[0];
+            }
+            if ((s8)a2 == -1) {
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[1];
+            }
+            if ((s8)a1 == -1 && sel == -1) {
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[2];
+            }
+            if ((s8)a1 == 1 && sel == -1) {
+                sel = (s8)lbl_803DD824[lbl_803DD7D8].nav[3];
+            }
+        }
+        if (sel >= 0) {
+            s16 id;
+            Sfx_PlayFromObject(0, 0x405);
+            lbl_803DD7D8 = sel;
+            id = lbl_803DD824[sel].id;
+            if (id < 0x4d && id >= 0x4b) {
+                AudioStream_Play(0x2714, AudioStream_StartPrepared);
+            }
+        }
+        tbl = lbl_803DD824;
+        if (tbl == lbl_8031BD90) {
+            if (lbl_803A8B48[tbl[lbl_803DD7D8].id] != 0xbf0) {
+                valid = 1;
+            }
+        } else {
+            s16 id2 = tbl[lbl_803DD7D8].id;
+            if (id2 >= 0 && id2 != 0x25 && id2 != 0x24 && id2 != 0x49) {
+                valid = 1;
+            }
+        }
+        if ((lbl_803DD8A4 & 0x100) && tbl != lbl_8031BD30 && 0.0f == lbl_803DD7C0) {
+            if (valid != 0) {
+                Sfx_PlayFromObject(0, 0x41b);
+                switch (pauseMenuState) {
+                case 3:
+                    AudioStream_Play(randomGetRange(0, 1) + 0x2712, AudioStream_StartPrepared);
+                    lbl_803DD768 = 0.0f;
+                    break;
+                case 5:
+                    AudioStream_Play(randomGetRange(0, 1) + 0x2735, AudioStream_StartPrepared);
+                    lbl_803DD768 = 0.0f;
+                    break;
+                }
+                buttonDisable(0, 0x100);
+                lbl_803DD75C = 1;
+                lbl_803DD75E = 0x1e;
+                return;
+            }
+            if (pauseMenuState == 5) {
+                AudioStream_Play(randomGetRange(0, 1) + 0x2737, AudioStream_StartPrepared);
+                lbl_803DD768 = 0.0f;
+            }
+        }
+        if (valid == 0) {
+            pauseMenuSetupTitle(lbl_803DD824[lbl_803DD7D8].f18, lbl_803DD824[lbl_803DD7D8].f1c, 2, 0);
+            return;
+        }
+        if (sel >= 0 || p1 != 0 ||
+            (lbl_803DD760 == lbl_803E2160 && lbl_803DD764 > lbl_803E2160)) {
+            if (lbl_803DD824[lbl_803DD7D8].f18 != 0) {
+                pauseMenuSetupTitle(lbl_803DD824[lbl_803DD7D8].f18, lbl_803DD824[lbl_803DD7D8].f1c, 1, 0);
+            }
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void cMenuRotateFn_80124d80(void);
+extern void cMenuPlaySelectedItemSfx(u8 *player);
+extern int  cMenuSetItems(int handle, int flag);
+extern s8   padGetCY(int chan);
+extern u8   lbl_803A87F0[];
+extern u8   cMenuOpen;
+extern u8   cMenuEnabled;
+extern s8   shouldCloseCMenu;
+extern u8   lbl_803DD8AC;
+extern int  lbl_803DD8A0;
+extern s8   lbl_803DD8B6;
+extern s16  lbl_803DD8C0;
+extern s16  lbl_803DD8B4;
+extern int  lbl_803DD8B0;
+extern s16  lbl_803DD8BC;
+extern s16  lbl_803DD8BE;
+extern s16  lbl_803DD8D6;
+extern s16  lbl_803DBA66;
+extern s16  aButtonIcon;
+extern u8   bButtonIcon;
+extern s16  lbl_803DD89C;
+extern s16  lbl_803DD790;
+extern s16  lbl_803DD796;
+extern u8   lbl_803DD7B8;
+extern s16  lbl_803DD79A;
+extern s8   lbl_803DBA65;
+extern s16  lbl_803DD7B6;
+extern s16  lbl_803DD894;
+extern int  lbl_803DD8A8;
+extern u16  yButtonState;
+extern u16  yButtonItem;
+extern s16  yButtonItemTextureId;
+extern int  yButtonItemFlags;
+extern int  gTrickyHudItemMask;
+extern u8   lbl_803DD87C;
+extern s16  lbl_803DD886;
+extern s16  lbl_803DD888;
+extern f32  lbl_803DD878;
+extern f32  lbl_803DBA84;
+
+typedef struct {
+    u8  _pad0[0x190];
+    int times190[12];      /* 0x190 */
+    int textures1C0[0x66]; /* 0x1c0 */
+    s16 texIds358[0x28];   /* 0x358 */
+    int textures3A8[0x28]; /* 0x3a8 */
+    u8  _pad448[0x40];     /* 0x448 */
+    u8  enabled[0x40];     /* 0x488 */
+    u8  closeMode[0x40];   /* 0x4c8 */
+    u8  _pad508[0x40];     /* 0x508 */
+    s16 icons[0x40];       /* 0x548 */
+    u8  _pad5c8[0x80];     /* 0x5c8 */
+    int ids648[0x40];      /* 0x648 */
+    int ids748[0x40];      /* 0x748 */
+    int ids848[0x40];      /* 0x848 */
+    s16 texIds[0x40];      /* 0x948 */
+    u8  _pad9c8[0x258];    /* 0x9c8 */
+    char *anims[4];        /* 0xc20 */
+} CMenuHud;
+
+/* EN v1.0 0x8012DF68  size: 2328b  C-menu per-frame driver: input gating,
+ * item set selection, Y-button assignment, scroll, select/close handling. */
+#pragma scheduling off
+#pragma peephole off
+void cMenuRun(void)
+{
+    CMenuHud *hud = (CMenuHud *)lbl_803A87F0;
+    u8 *player;
+    s8 isTricky = 0;
+    u16 btn16;
+    u32 btn;
+    s16 *cursor;
+    int flags;
+
+    player = Obj_GetPlayerObject();
+    lbl_803DD8C0 = -1;
+    if (player == 0) {
+        return;
+    }
+
+    if ((*(int (**)(void))(*(int *)gCameraInterface + 0x10))() == 0x44 ||
+        (*(u16 *)(player + 0xb0) & 0x1000) != 0 || pauseMenuState != 0) {
+        buttonDisable(0, 0xe0800);
+    } else {
+        if ((s8)shouldCloseCMenu != 0) {
+            buttonDisable(0, (s8)shouldCloseCMenu);
+        }
+    }
+
+    btn = getButtonsJustPressed(0);
+    lbl_803DD8A4 = btn;
+    btn16 = (u16)btn;
+
+    if ((*(int (**)(void))(*(int *)gCameraInterface + 0x10))() == 0x44 ||
+        (*(u16 *)(player + 0xb0) & 0x1000) != 0 || pauseMenuState != 0 ||
+        (s8)shouldCloseCMenu != 0 || lbl_803DD75B != 0) {
+        lbl_803DD8A4 |= 0x200;
+    } else {
+        if ((s8)lbl_803DD8AC != 0) {
+            lbl_803DD8A4 = lbl_803DD8A0;
+            btn16 = (u16)lbl_803DD8A0;
+        }
+    }
+
+    switch ((s8)lbl_803DD8B8) {
+    case 0:
+        break;
+    case 1:
+        Sfx_PlayFromObject(0, 0xfd);
+        break;
+    case 2:
+        Sfx_PlayFromObject(0, 0xfb);
+        break;
+    }
+    lbl_803DD8C2 = -1;
+    lbl_803DD8B8 = 0;
+
+    {
+        s8 mi = (s8)lbl_803DD8B6;
+        char *set = (char *)lbl_8031B5D8 + mi * 16;
+        int handle = *(int *)set;
+        cursor = (s16 *)(set + 4);
+        flags = *(int *)(set + 8);
+        if (mi == 2) {
+            isTricky = 1;
+        }
+        lbl_803DD8B4 = *cursor;
+        lbl_803DD8B0 = cMenuSetItems(handle, isTricky);
+    }
+
+    switch (yButtonState) {
+    case 2:
+        if (!GameBit_Get(0x4e4)) {
+            yButtonState = 0;
+            yButtonItemTextureId = -1;
+        }
+        if (gTrickyHudItemMask & (1 << yButtonItem)) {
+            lbl_803DD87C = 0;
+        } else {
+            lbl_803DD87C = 1;
+        }
+        break;
+    case 1:
+    case 3:
+        if (GameBit_Get(yButtonItem) == 0 ||
+            (lbl_803DD886 > -1 && GameBit_Get(lbl_803DD886) != 0)) {
+            yButtonState = 0;
+            yButtonItemTextureId = -1;
+        } else if (lbl_803DD888 > -1 && GameBit_Get(lbl_803DD888) != 0) {
+            lbl_803DD87C = 1;
+        } else {
+            lbl_803DD87C = 0;
+        }
+        break;
+    }
+
+    if (lbl_803DD8B4 >= lbl_803DD8B0) {
+        lbl_803DD8B4 = 0;
+    }
+
+    {
+        int open;
+        if ((s8)cMenuOpen == 0) open = 0;
+        else if (lbl_803DD8D6 == lbl_803DBA66) open = 1;
+        else open = 0;
+        if (open) {
+            s16 cur = lbl_803DD8B4;
+            s16 cy;
+            lbl_803DD8C0 = (s16)hud->ids848[cur];
+            lbl_803DD8BC = (s16)hud->ids648[cur];
+            lbl_803DD8BE = (s16)hud->ids748[cur];
+            {
+                s16 icon = hud->icons[cur];
+                if (aButtonIcon == 0) {
+                    aButtonIcon = icon;
+                }
+            }
+            if (bButtonIcon == 0) {
+                bButtonIcon = 0xa;
+            }
+            if ((s8)lbl_803DD8AC != 0) {
+                cy = lbl_803DD89C;
+            } else {
+                cy = padGetCY(0);
+            }
+            if ((cy <= -0xa && lbl_803DD790 > -0xa) || cy < -0x3c) {
+                s16 m = lbl_803DD796;
+                if (m < 0) m = -m;
+                if (m < 8 && lbl_803DD7B8 == 0 && lbl_803DD79A == 0) {
+                    if ((s8)lbl_803DBA65 == 0) {
+                        Sfx_PlayFromObject(0, 0xfc);
+                    }
+                    lbl_803DD7B6 = 1;
+                    goto scrolled;
+                }
+            }
+            if ((cy >= 0xa && lbl_803DD790 < 0xa) || cy > 0x3c) {
+                s16 m = lbl_803DD796;
+                if (m < 0) m = -m;
+                if (m < 8 && lbl_803DD7B8 == 0 && lbl_803DD79A == 0) {
+                    if ((s8)lbl_803DBA65 == 0) {
+                        Sfx_PlayFromObject(0, 0xfc);
+                    }
+                    lbl_803DD7B6 = -1;
+                }
+            }
+        scrolled:
+            lbl_803DD790 = cy;
+            if (lbl_803DD7B6 > 0xff) {
+                lbl_803DD7B6 = 0xff;
+            }
+            if (lbl_803DD7B6 < -0xff) {
+                lbl_803DD7B6 = -0xff;
+            }
+            if (lbl_803DD894 != -1) {
+                lbl_803DD8B4 = lbl_803DD894;
+            }
+            {
+                s16 vel = lbl_803DD7B6;
+                if (vel != 0 && lbl_803DD796 == 0) {
+                    if (vel > 0) {
+                        int count;
+                        lbl_803DD7B6 = (s16)(vel - 1);
+                        count = lbl_803DD8B0;
+                        if (count > 1) {
+                            if (count == 2 && lbl_803DD8B4 == 1) {
+                                lbl_803DD796 = 0x64;
+                            } else {
+                                lbl_803DD796 = 0x32;
+                            }
+                            lbl_803DBA65 = 3;
+                            lbl_803DD7B8 = 0;
+                            lbl_803DD8B4 = (s16)(lbl_803DD8B4 + 1);
+                            if (lbl_803DD8B4 >= count) {
+                                lbl_803DD8B4 = 0;
+                            }
+                        }
+                    } else {
+                        int count;
+                        lbl_803DD7B6 = (s16)(vel + 1);
+                        count = lbl_803DD8B0;
+                        if (count > 1) {
+                            if (count == 2 && lbl_803DD8B4 == 0) {
+                                lbl_803DD796 = -0x64;
+                            } else {
+                                lbl_803DD796 = -0x32;
+                            }
+                            lbl_803DBA65 = -3;
+                            lbl_803DD7B8 = 0;
+                            lbl_803DD8B4 = (s16)(lbl_803DD8B4 - 1);
+                            if (lbl_803DD8B4 < 0) {
+                                lbl_803DD8B4 = (s16)(count - 1);
+                            }
+                        }
+                    }
+                } else if (lbl_803DD8A4 & 0x200) {
+                    Sfx_PlayFromObject(0, 0x37c);
+                    cMenuOpen = 0;
+                } else {
+                    u16 b2 = btn16;
+                    if (b2 & 0x900) {
+                        int open2;
+                        if ((s8)cMenuOpen == 0) open2 = 0;
+                        else if (lbl_803DD8D6 == lbl_803DBA66) open2 = 1;
+                        else open2 = 0;
+                        if (open2) {
+                            u8 matched = 0;
+                            if (b2 & 0x800) {
+                                if (yButtonState != 0 && yButtonItem == lbl_803DD8C0) {
+                                    matched = 1;
+                                } else {
+                                    Sfx_PlayFromObject(0, 0x408);
+                                    yButtonItemTextureId = hud->texIds[lbl_803DD8B4];
+                                    yButtonItem = (u16)lbl_803DD8C0;
+                                    lbl_803DD888 = lbl_803DD8BE;
+                                    lbl_803DD886 = lbl_803DD8BC;
+                                    lbl_803DD878 = lbl_803DBA84;
+                                    if (isTricky == 0) {
+                                        if ((s8)cMenuState == 4) {
+                                            yButtonState = 1;
+                                        } else {
+                                            yButtonState = 3;
+                                        }
+                                        yButtonItemFlags = flags;
+                                    } else {
+                                        yButtonState = 2;
+                                    }
+                                }
+                            }
+                            buttonDisable(0, 0x900);
+                            if (isTricky == 0) {
+                                if (hud->enabled[lbl_803DD8B4] != 0) {
+                                    if ((b2 & 0x100) || matched != 0) {
+                                        ObjMsg_SendToObject(player, flags, 0, lbl_803DD8C0);
+                                        lbl_803DD8C2 = lbl_803DD8C0;
+                                        lbl_803DD8B8 = (s8)hud->closeMode[lbl_803DD8B4];
+                                        cMenuOpen = 0;
+                                    }
+                                    Sfx_PlayFromObject(0, 0xf7);
+                                } else {
+                                    lbl_803DD8C2 = -1;
+                                    lbl_803DD8B8 = 0;
+                                    Sfx_PlayFromObject(0, 0xfd);
+                                }
+                            } else {
+                                if (hud->enabled[lbl_803DD8B4] != 0) {
+                                    if ((b2 & 0x100) || matched != 0) {
+                                        cMenuOpen = 0;
+                                        lbl_803DD8C2 = lbl_803DD8C0;
+                                        cMenuPlaySelectedItemSfx(player);
+                                        lbl_803DD8B8 = 0;
+                                    }
+                                } else {
+                                    lbl_803DD8C2 = -1;
+                                    lbl_803DD8B8 = 0;
+                                    Sfx_PlayFromObject(0, 0xfd);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            if (btn16 & 0x800) {
+                u16 ys = yButtonState;
+                if (ys == 3 && lbl_803DD87C == 0) {
+                    ObjMsg_SendToObject(player, yButtonItemFlags, 0, yButtonItem);
+                    lbl_803DD8C2 = (s16)yButtonItem;
+                    buttonDisable(0, 0x900);
+                } else if (ys == 2) {
+                    if (gTrickyHudItemMask & (1 << yButtonItem)) {
+                        lbl_803DD8C2 = (s16)yButtonItem;
+                        cMenuPlaySelectedItemSfx(player);
+                        buttonDisable(0, 0x900);
+                    }
+                }
+            }
+        }
+    }
+
+    if (cMenuEnabled != 0) {
+        cMenuRotateFn_80124d80();
+    }
+    {
+        u8 isOpen = cMenuOpen;
+        int notOpen;
+        if ((s8)isOpen != 0) notOpen = 0;
+        else if (lbl_803DD8D6 != 0) notOpen = 0;
+        else notOpen = 1;
+        if (notOpen) {
+            cMenuState = 0;
+            lbl_803DD8A8 = 0;
+            lbl_803DD7B6 = 0;
+        }
+        if ((s8)isOpen != 0) {
+            buttonDisable(0, 0x300);
+        }
+    }
+    *cursor = lbl_803DD8B4;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void gameTextSetDrawFunc(void *fn);
+extern void pauseMenuTextDrawFn(void);
+extern void gameTextFn_8001628c(int phrase, int a, int b, int *o1, int *o2, int *o3, int *o4);
+extern f32  fn_80293E80(f32 x);
+extern GridEntry lbl_8031B818[];
+extern s16  lbl_803DBA8A;
+extern f32  lbl_803DBA8C;
+extern f32  lbl_803DBAC0;
+extern f32  lbl_803DD748;
+extern f64  lbl_803E2088;
+extern f32  lbl_803E20A0;
+extern f32  lbl_803E2104;
+extern f32  lbl_803E1EC8;
+extern f64  lbl_803E2108;
+extern f32  lbl_803E2110;
+extern f32  lbl_803E2114;
+
+void fn_80128A7C(u8 i, s16 p2, int p3);
+
+/* EN v1.0 0x80128470  size: 1548b  Pause-menu grid renderer: draws all cells
+ * (selection last), the breathing selected cell, header/footer text, and the
+ * flashing corner cursor. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80128470(int p1)
+{
+    gameTextSetDrawFunc(pauseMenuTextDrawFn);
+    lbl_803DBA8C = lbl_803E20A0;
+
+    if (lbl_803DD7BC <= 0.0f) {
+        int off = 0;
+        s8 i = 0;
+        while (*(int *)((char *)lbl_803DD824 + off + 0x18) > -1) {
+            if (i != lbl_803DD7D8) {
+                fn_80128A7C((u8)i, p1, 0);
+            }
+            off += 0x20;
+            i++;
+        }
+    } else {
+        s8 j = 0;
+        GridEntry *e = lbl_803DD824;
+        while (e->f18 > -1) {
+            e++;
+            j++;
+        }
+        j--;
+        for (; j >= 0; j--) {
+            if (j != lbl_803DD7D8) {
+                fn_80128A7C((u8)j, p1, 0);
+            }
+        }
+    }
+    fn_80128A7C((u8)lbl_803DD7D8, p1, 0);
+    {
+        f32 base = lbl_803DBAC0;
+        f32 s = fn_80293E80(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) / lbl_803E1E94);
+        fn_80128A7C((u8)lbl_803DD7D8, (int)((base * s + base) * (f32)(s16)p1), 4);
+    }
+    gameTextSetColor(0xff, 0xff, 0xff,
+                     (int)((double)((s16)p1 * (0x200 - lbl_803DD75C)) * lbl_803E2088));
+    lbl_803DBA8A = (s16)(0x100 - lbl_803DD75C);
+    if (pauseMenuState < 0xb && pauseMenuState >= 8) {
+        gameTextFn_80016810(0x3e8, 0xc8, 0x154);
+    } else {
+        gameTextFn_80016810(0x3dd, 0xc8, 0x154);
+    }
+    if (lbl_803DD75C != 0) {
+        s16 tx;
+        gameTextSetColor(0xff, 0xff, 0xff,
+                         (int)((double)((s16)p1 * lbl_803DD75C) * lbl_803E2088));
+        lbl_803DBA8A = (s16)(lbl_803DD75C - 0xff);
+        if (lbl_803DD824 == lbl_8031B818) {
+            int o1, o2, o3, o4;
+            gameTextFn_8001628c(lbl_803DD824[lbl_803DD7D8].f14, 0, 0, &o1, &o2, &o3, &o4);
+            tx = (s16)(0xdc - (o4 - o3) / 2);
+        } else {
+            tx = 0xdc;
+        }
+        gameTextFn_80016810(lbl_803DD824[lbl_803DD7D8].f14, 0xc8, tx);
+        gameTextFn_80016810(0x3de, 0xc8, 0x154);
+    }
+    if (lbl_803DD75C == 0) {
+        GridEntry *e = &lbl_803DD824[lbl_803DD7D8];
+        f32 scale = (f32)(lbl_803E2108 * e->f10);
+        int w = (int)lbl_803E1F34;
+        int cw = (int)(scale * (f32)*(u8 *)((char *)e + 0x8));
+        int ch = (int)(scale * (f32)*(u8 *)((char *)e + 0x9));
+        int vx = *(u16 *)((char *)e + 0x2) + *(s8 *)((char *)e + 0xb);
+        int x1 = (int)((f32)vx - lbl_803E2110 - (f32)(u8)cw);
+        s16 x2 = (s16)((u8)cw + vx);
+        int vy = *(u16 *)((char *)e + 0x4);
+        int y1 = (int)((f32)(u32)vy - lbl_803E2114 - (f32)(u8)ch);
+        s16 y2 = (s16)((u8)ch + vy);
+        s16 ph = (s16)((int)lbl_803DD748 & 0x3f);
+        s16 alpha;
+        u16 w16;
+        if (ph & 0x20) {
+            ph = (s16)(ph ^ 0x3f);
+        }
+        alpha = (s16)(ph * ((s16)p1 * 0xc0 / 0x100 + 0x40) / 31);
+        w16 = (u16)w;
+        pauseMenuDrawElement(*(int *)(hudTextures + 0x80), (f32)(s16)x1, (f32)(s16)y1,
+                             0x100, (u8)alpha, w16, 0);
+        drawFn_8011eb3c(*(int *)(hudTextures + 0x80), (f32)x2, (f32)(s16)y1,
+                        0x100, (u8)alpha, w16, 0x12, 0xa, 1);
+        drawFn_8011eb3c(*(int *)(hudTextures + 0x80), (f32)(s16)x1, (f32)y2,
+                        0x100, (u8)alpha, w16, 0x12, 0xa, 2);
+        drawFn_8011eb3c(*(int *)(hudTextures + 0x80), (f32)x2, (f32)y2,
+                        0x100, (u8)alpha, w16, 0x12, 0xa, 3);
+    }
+    gameTextSetDrawFunc(0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32  fsin16Approx(u16 angle);
+extern void drawPartialTexture(void *tex, f32 x, f32 y, int alpha, int u, int w, int h, int a, int b);
+extern u8   lbl_802C7400[];
+extern u16  lbl_803DD77C;
+extern f32  lbl_803E1E9C;
+extern f32  lbl_803E1ECC;
+extern f32  lbl_803E1EDC;
+extern f32  lbl_803E1F48;
+extern f32  lbl_803E1F9C;
+extern f32  lbl_803E1FB8;
+extern f32  lbl_803E1FF0;
+extern f32  lbl_803E2010;
+extern f32  lbl_803E204C;
+extern f32  lbl_803E2050;
+extern f32  lbl_803E2058;
+extern f32  lbl_803E2198;
+extern f32  lbl_803E219C;
+extern f32  lbl_803E21A0;
+extern f32  lbl_803E21A4;
+extern f32  lbl_803E21A8;
+extern f32  lbl_803E21AC;
+extern f32  lbl_803E21B0;
+extern f32  lbl_803E21B4;
+extern f32  lbl_803E21B8;
+extern f32  lbl_803E21BC;
+extern f32  lbl_803E21C0;
+extern f32  lbl_803E21C4;
+extern f32  lbl_803E21C8;
+extern f32  lbl_803E21CC;
+
+/* EN v1.0 0x8012C9FC  size: 3456b  Map screen HUD: rising panel with quest
+ * hint voice line and dust shimmer while opening, then the full two-panel
+ * map layout with location labels. */
+#pragma scheduling off
+#pragma peephole off
+void mapScreenDrawHud(int p1, int p2, int p3)
+{
+    if (pauseMenuState != 0) {
+        return;
+    }
+    if (lbl_803DD776 != 0) {
+        s16 v = (s16)lbl_803DD776;
+        s16 alpha = (s16)(v * 0xf);
+        s16 h0;
+        s16 x, y, h, w;
+        if (alpha > 0xff) {
+            alpha = 0xff;
+        }
+        h0 = (s16)(v - 0x14);
+        if (h0 < 0) {
+            h0 = 0;
+        }
+        h0 = (s16)(h0 << 4);
+        if (h0 > *(u16 *)(lbl_802C7400 + 0x186)) {
+            h0 = (s16)*(u16 *)(lbl_802C7400 + 0x186);
+        }
+        x = *(s16 *)(lbl_802C7400 + 0x194);
+        y = *(s16 *)(lbl_802C7400 + 0x196);
+        h = h0;
+        w = (s16)*(u16 *)(lbl_802C7400 + 0x182);
+        drawTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y - 5), (u8)alpha, 0x100);
+        drawScaledTexture(*(void **)(hudTextures + 0x34), (f32)x, (f32)(y - 5), (u8)alpha, 0x100, w, 5, 0);
+        drawScaledTexture(*(void **)(hudTextures + 0x2c), (f32)(x - 5), (f32)y, (u8)alpha, 0x100, 5, h, 0);
+        drawScaledTexture(*(void **)(hudTextures + 0x30), (f32)x, (f32)y, (u8)alpha, 0x100, w, h, 0);
+        drawScaledTexture(*(void **)(hudTextures + 0x34), (f32)x, (f32)(y + h), (u8)alpha, 0x100, w, 5, 2);
+        drawScaledTexture(*(void **)(hudTextures + 0x2c), (f32)(x + w), (f32)y, (u8)alpha, 0x100, 5, h, 1);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y + h), (u8)alpha, 0x100, 5, 5, 3);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x + w), (f32)(y - 5), (u8)alpha, 0x100, 5, 5, 1);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), (f32)(x - 5), (f32)(y + h), (u8)alpha, 0x100, 5, 5, 2);
+        *(u16 *)(lbl_802C7400 + 0x18a) = (u16)h0;
+        {
+            s8 fi;
+            s8 li_;
+            u8 lv;
+            int n, t;
+            int hint;
+            {
+                u8 *p;
+                u8 *base = lbl_803DBA94;
+                int i;
+                p = base;
+                for (i = 0; i < 5; i++) {
+                    if (GameBit_Get(lbl_8031B074[*p].bit_id)) {
+                        fi = (s8)lbl_803DBA94[i];
+                        goto haveIdx2;
+                    }
+                    p++;
+                }
+                fi = -1;
+            haveIdx2:
+                n = GameBit_Get(0x63c);
+                t = GameBit_Get(0x4e9);
+                n += GameBit_Get(0x5f3);
+                n += GameBit_Get(0x5f4);
+                n = t + n;
+                if (GameBit_Get(0x123)) {
+                    n++;
+                }
+                if (GameBit_Get(0x2e8)) {
+                    n++;
+                }
+                if (GameBit_Get(0x83b)) {
+                    n++;
+                }
+                if (GameBit_Get(0x83c)) {
+                    n++;
+                }
+                if (n >= lbl_8031B074[base[0]].thresh) li_ = (s8)lbl_803DBA94[0];
+                else if (n >= lbl_8031B074[base[1]].thresh) li_ = (s8)lbl_803DBA94[1];
+                else if (n >= lbl_8031B074[base[2]].thresh) li_ = (s8)lbl_803DBA94[2];
+                else if (n >= lbl_8031B074[base[3]].thresh) li_ = (s8)lbl_803DBA94[3];
+                else if (n >= lbl_8031B074[base[4]].thresh) li_ = (s8)lbl_803DBA94[4];
+                else li_ = -1;
+            }
+            lv = 0;
+            if ((u16)getNextTaskHintText() > 0xad) {
+                lv = 1;
+            }
+            {
+                u8 cur = lbl_803DD77A;
+                if (cur == 2 && lv != 0) {
+                    hint = 0x574;
+                } else if (fi == cur && li_ != cur) {
+                    hint = lbl_8031B074[cur].hint0;
+                } else if (cur == 2) {
+                    if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(0xd) == 2 && lv == 0) {
+                        hint = 0x577;
+                    } else if (fi == li_) {
+                        if (GameBit_Get(lbl_8031B074[li_].bit1a)) {
+                            hint = 0x578;
+                        } else {
+                            hint = lbl_8031B074[li_].hint4;
+                        }
+                    } else {
+                        hint = lbl_8031B074[lbl_803DD77A].hint2;
+                    }
+                } else if (cur == 0) {
+                    if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(0xd) == 2 && lv == 0) {
+                        hint = 0x568;
+                    } else {
+                        hint = lbl_8031B074[lbl_803DD77A].hint2;
+                    }
+                } else {
+                    hint = lbl_8031B074[lbl_803DD77A].hint2;
+                }
+                gameTextShow(hint);
+            }
+        }
+        lbl_803DD77C++;
+        drawTexture(*(void **)(hudTextures + 0x28), lbl_803E2198, lbl_803E219C, (u8)alpha, 0x100);
+        drawScaledTexture(*(void **)(hudTextures + 0x34), lbl_803E1F48, lbl_803E219C, (u8)alpha, 0x100, 0x82, 5, 0);
+        drawScaledTexture(*(void **)(hudTextures + 0x2c), lbl_803E2198, lbl_803E1E9C, (u8)alpha, 0x100, 5, 0x96, 0);
+        drawScaledTexture(*(void **)(hudTextures + 0x34), lbl_803E1F48, lbl_803E1ECC, (u8)alpha, 0x100, 0x82, 5, 2);
+        drawScaledTexture(*(void **)(hudTextures + 0x2c), lbl_803E2058, lbl_803E1E9C, (u8)alpha, 0x100, 5, 0x96, 1);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E2058, lbl_803E1ECC, (u8)alpha, 0x100, 5, 5, 3);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E2058, lbl_803E219C, (u8)alpha, 0x100, 5, 5, 1);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E2198, lbl_803E1ECC, (u8)alpha, 0x100, 5, 5, 2);
+        {
+            int row;
+            int ph1 = 0;
+            int ph2 = 0;
+            f32 k = lbl_803E204C;
+            for (row = 0; row < 0x96; row += 4) {
+                f32 s = k * fsin16Approx((u16)(lbl_803DD77C * 0x1838 + ph1));
+                int a2, b2, r1, r2;
+                s = k * fsin16Approx((u16)(lbl_803DD77C * 0xfa0 + ph2)) + s;
+                a2 = (int)((f32)alpha * (lbl_803E2050 + s));
+                if (a2 < 0) {
+                    a2 = 0;
+                }
+                r1 = randomGetRange(0, 0x1e) << 1;
+                r2 = randomGetRange(0, 0x1e) << 1;
+                if (a2 > 0xff) {
+                    a2 = 0xff;
+                }
+                drawPartialTexture(*(void **)(hudTextures + 0x150), lbl_803E1F48, (f32)(row + 0x32),
+                                   (u8)a2, 0x100, 0x82, 2, r2, r1);
+                b2 = (int)((f32)alpha * (lbl_803E2010 + s));
+                if (b2 < 0) {
+                    b2 = 0;
+                }
+                r1 = randomGetRange(0, 0x1e) << 1;
+                r2 = randomGetRange(0, 0x1e) << 1;
+                if (b2 > 0xff) {
+                    b2 = 0xff;
+                }
+                drawPartialTexture(*(void **)(hudTextures + 0x150), lbl_803E1F48, (f32)(row + 0x34),
+                                   (u8)b2, 0x100, 0x82, 2, r2, r1);
+                ph1 += 0x3520;
+                ph2 += 0x1f40;
+            }
+        }
+        gameTextFn_80016810(0x3dd, 0x64, 0x15e);
+    } else {
+        char *gt;
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        drawTexture(*(void **)(hudTextures + 0x28), lbl_803E21A0, lbl_803E21A4, 0xff, 0x100);
+        drawScaledTexture(*(void **)(hudTextures + 0x34), lbl_803E1F9C, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
+        drawScaledTexture(*(void **)(hudTextures + 0x2c), lbl_803E21A0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
+        drawScaledTexture(*(void **)(hudTextures + 0x30), lbl_803E1F9C, lbl_803E1EDC, 0xff, 0x100, 0xa8, 0x30, 0);
+        drawScaledTexture(*(void **)(hudTextures + 0x34), lbl_803E1F9C, lbl_803E21A8, 0xff, 0x100, 0xa8, 5, 2);
+        drawScaledTexture(*(void **)(hudTextures + 0x2c), lbl_803E21AC, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E21AC, lbl_803E21A8, 0xff, 0x100, 5, 5, 3);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E21AC, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E21A0, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
+        drawTexture(*(void **)(hudTextures + 0xfc), lbl_803E1FF0, lbl_803E21B0, 0xff, 0x100);
+        gt = (char *)gameTextGet(0x2ac);
+        if (*(u16 *)(gt + 2) > 1) {
+            gameTextShowStr(*(char **)(*(char **)(gt + 8) + 4), 0x93, 0x69, 0x17f);
+        }
+        drawTexture(*(void **)(hudTextures + 0x10c), lbl_803E1E9C, lbl_803E21B4, 0xff, 0x100);
+        if (*(u16 *)(gt + 2) > 2) {
+            gameTextShowStr(*(char **)(*(char **)(gt + 8) + 8), 0x93, 0x51, 0x194);
+        }
+        drawTexture(*(void **)(hudTextures + 0x28), lbl_803E21B8, lbl_803E21A4, 0xff, 0x100);
+        drawScaledTexture(*(void **)(hudTextures + 0x34), lbl_803E21BC, lbl_803E21A4, 0xff, 0x100, 0xa8, 5, 0);
+        drawScaledTexture(*(void **)(hudTextures + 0x2c), lbl_803E21B8, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 0);
+        drawScaledTexture(*(void **)(hudTextures + 0x30), lbl_803E21BC, lbl_803E1EDC, 0xff, 0x100, 0xa8, 0x30, 0);
+        drawScaledTexture(*(void **)(hudTextures + 0x34), lbl_803E21BC, lbl_803E21A8, 0xff, 0x100, 0xa8, 5, 2);
+        drawScaledTexture(*(void **)(hudTextures + 0x2c), lbl_803E21C0, lbl_803E1EDC, 0xff, 0x100, 5, 0x30, 1);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E21C0, lbl_803E21A8, 0xff, 0x100, 5, 5, 3);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E21C0, lbl_803E21A4, 0xff, 0x100, 5, 5, 1);
+        drawScaledTexture(*(void **)(hudTextures + 0x28), lbl_803E21B8, lbl_803E21A8, 0xff, 0x100, 5, 5, 2);
+        drawTexture(*(void **)(hudTextures + 0x100), lbl_803E21C4, lbl_803E21C8, 0xff, 0x100);
+        if (*(u16 *)(gt + 2) > 4) {
+            gameTextShowStr(*(char **)(*(char **)(gt + 8) + 0x10), 0x93, 0x20c, 0x17f);
+        }
+        drawTexture(*(void **)(hudTextures + 0x104), lbl_803E21CC, lbl_803E1FB8, 0xff, 0x100);
+        if (*(u16 *)(gt + 2) > 5) {
+            gameTextShowStr(*(char **)(*(char **)(gt + 8) + 0x14), 0x93, 0x1f6, 0x195);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32  gameTextFn_80019c00(void);
+extern int  getCurSeqNo(void);
+extern u8   AudioStream_IsPreparing(void);
+extern void pauseMenuInit(void);
+extern int  getCurGameText(void);
+extern int  hintTextMapFn_800ea264(void);
+extern void gameTextLoadDir(int dir);
+extern int  pauseMenuIsFox(void);
+extern u8   getCurTaskHintTextMap(void);
+extern int *gScreenTransitionInterface;
+extern void hintTextFn_800ea174(u8 *buf);
+extern int *textureLoadAsset(int id);
+extern void textureFree(void *tex);
+extern void Obj_FreeObject(char *obj);
+extern int  fn_80296C4C(u8 *player);
+extern void fn_80296C84(u8 *player);
+extern void AudioStream_StopCurrent(void);
+extern void updateSavedHealth(void);
+extern u16 *saveGameGetCurHint(void);
+extern void gameTextLoadForMap_800571f0(int v);
+extern u8   pauseDisabled;
+extern u8   arwingHudVisible;
+extern u8   lbl_803DB424;
+extern s16  lbl_803DD772;
+extern s16  lbl_803DD778;
+extern u8   lbl_803DD794;
+extern s16  lbl_803DD756;
+extern u8   lbl_803DD758;
+extern int  lbl_803DD730;
+extern void *lbl_803DD7C8;
+extern f32  lbl_803DD7DC;
+extern int  lbl_803DD7A4;
+extern int  lbl_803DD8D8;
+extern int  lbl_803DD8DC;
+extern f32  lbl_803DD820;
+extern u8   lbl_803DBAA2;
+extern f32  lbl_803E1E60;
+extern f32  lbl_803E1F9C_;
+extern f64  lbl_803E1F60;
+
+typedef struct {
+    u8  _pad0[0x210];
+    struct { s16 bitA; s16 bitB; u8 thresh; u8 _5[3]; } tokens[4];  /* 0x210 */
+    u8  _pad230[0x490];                                             /* 0x230 */
+    struct { s16 id; u8 _2[4]; s16 alt; u8 _8[8]; } items[8];       /* 0x6c0 */
+    int list740[4];                                                 /* 0x740 */
+    struct { u8 _0[0xe]; s16 alt; } alts[31];                       /* 0x750 */
+    u8  _pad940[4];                                                 /* 0x940 */
+    struct { u16 cell; u16 code; } cellMap[0x2d];                   /* 0x944 */
+    GridEntry grid9F8[14];                                          /* 0x9f8 */
+    s16 gbids[12];                                                  /* 0xbb8 */
+    GridEntry gridBD0[13];                                          /* 0xbd0 */
+    GridEntry gridD70[13];                                          /* 0xd70 */
+    GridEntry gridF10[3];                                           /* 0xf10 */
+    GridEntry gridF70[19];                                          /* 0xf70 */
+    int flags11D0[12];                                              /* 0x11d0 */
+} PauseTbl;
+extern PauseTbl lbl_8031AE20;
+
+/* EN v1.0 0x80129EE0  size: 5604b  Pause menu master state machine. */
+#pragma scheduling off
+#pragma peephole off
+void pauseMenuFn_80129ee0(void)
+{
+    PauseTbl *tbl = &lbl_8031AE20;
+    CMenuHud *hud = (CMenuHud *)lbl_803A87F0;
+    u8 *player;
+    u16 btn = 0;
+    u8 isArwing = 0;
+    s8 menuMin = 1;
+    s8 menuMax = 5;
+    int mapVal;
+    u8 hintBuf[13];
+    u8 a1;
+    u8 a2;
+
+    player = (u8 *)Obj_GetPlayerObject();
+    objIsCurModelNotZero();
+    mapVal = (*(int (**)(void))(*(int *)gMapEventInterface + 0x8c))();
+    if (gameTextFn_80019c00() == 0.0f) {
+        btn = (u16)getButtonsJustPressed(0);
+        getButtonsHeld(0);
+    }
+    lbl_803DD778 = (s16)(lbl_803DD778 - framesThisStep);
+    if (lbl_803DD778 < 0) {
+        lbl_803DD778 = 0;
+    }
+    if (player == 0) {
+        player = (u8 *)getArwing();
+        if (player != 0) {
+            isArwing = 1;
+        }
+    }
+    if ((u8)pauseMenuIsFox() == 0) {
+        menuMin = 4;
+    }
+    if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 ||
+        (player != 0 && coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14)) == 0 &&
+         fn_802972A8(player) != 0)) {
+        menuMax = 4;
+    }
+    lbl_803DD7D6 = getCurTaskHintTextMap();
+    if (player != 0) {
+        int cell;
+        if (*(int *)(player + 0x30) != 0) {
+            cell = *(s8 *)(*(char **)(player + 0x30) + 0xac);
+        } else {
+            cell = coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
+        }
+        lbl_803DD8E0 = cell;
+        if (cell == 0x36) {
+            if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(cell) == 1) {
+                if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 0)) {
+                    lbl_803DD8E0 = 5;
+                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 1)) {
+                    lbl_803DD8E0 = 6;
+                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 2)) {
+                    lbl_803DD8E0 = 0xc;
+                }
+            } else if ((u8)(*(int (**)(int))(*(int *)gMapEventInterface + 0x40))(lbl_803DD8E0) == 2) {
+                if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 0)) {
+                    lbl_803DD8E0 = 6;
+                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 1)) {
+                    lbl_803DD8E0 = 6;
+                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 2)) {
+                    lbl_803DD8E0 = 6;
+                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 3)) {
+                    lbl_803DD8E0 = 0xa;
+                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 4)) {
+                    lbl_803DD8E0 = 9;
+                } else if ((u8)(*(int (**)(int, int))(*(int *)gMapEventInterface + 0x4c))(lbl_803DD8E0, 5)) {
+                    lbl_803DD8E0 = 3;
+                }
+            }
+        } else {
+            int i;
+            for (i = 0; i < 0x2d; i++) {
+                if (cell == tbl->cellMap[(u8)i].cell) {
+                    break;
+                }
+            }
+            if ((u8)i != 0x2d) {
+                int code = tbl->cellMap[(u8)i].code;
+                lbl_803DD8E0 = code;
+                GameBit_Set(code + 0xf10, 1);
+            }
+        }
+    }
+    if ((*(f32 (**)(void))(*(int *)gScreenTransitionInterface + 0x18))() == 0.0f) {
+        int c = pauseMenuFrameCounter - framesThisStep;
+        if (c < 0) {
+            c = 0;
+        }
+        pauseMenuFrameCounter = (s8)c;
+    }
+    {
+        u8 state = pauseMenuState;
+        if (state == 1 || state >= 3) {
+            int t = lbl_803DD78C + framesThisStep * 0x32;
+            if (t > 0x400) {
+                t = 0x400;
+            }
+            lbl_803DD78C = (s16)t;
+        }
+        switch (state) {
+        case 0: {
+            int camMode;
+            int audioFree = 0;
+            int canOpen = 1;
+            camMode = (*(int (**)(void))(*(int *)gCameraInterface + 0x10))();
+            if ((player == 0 || !(*(u16 *)(player + 0xb0) & 0x1000)) &&
+                getCurSeqNo() == 0 && AudioStream_IsPreparing() == 0) {
+                audioFree = 1;
+            }
+            if (audioFree == 0 && camMode != 0x51) {
+                canOpen = 0;
+            }
+            if ((btn & 0x1000) && (s8)pauseMenuFrameCounter == 0 && pauseDisabled == 0 &&
+                (*(f32 (**)(void))(*(int *)gScreenTransitionInterface + 0x18))() == 0.0f &&
+                canOpen != 0 && lbl_803DD75B == 0 && getHudHiddenFrameCount() == 0) {
+                pauseMenuFrameCounter = 0x3c;
+                cutsceneFadeInOut(1);
+                setTimeStop(0xff);
+                buttonDisable(0, 0x1000);
+                pauseMenuInit();
+                lbl_803DBA64 = 5;
+                if (isArwing != 0) {
+                    arwingHudVisible = 0;
+                }
+                if (lbl_803DD772 != 0 || lbl_803DD770 != 0) {
+                    lbl_803DD8DC = getCurGameText();
+                    if (lbl_803DD8E0 == lbl_803DD7D6) {
+                        hintTextMapFn_800ea264();
+                    }
+                    pauseMenuState = 4;
+                    if (lbl_803DD8E0 == lbl_803DD7D6) {
+                        lbl_803DD8D8 = hintTextMapFn_800ea264();
+                    } else {
+                        gameTextLoadDir(0xb);
+                        lbl_803DD8D8 = 0xb;
+                    }
+                    lbl_803DD764 = lbl_803E1E60;
+                } else {
+                    pauseMenuState = 1;
+                    lbl_803DD8DC = getCurGameText();
+                    gameTextLoadDir(0xb);
+                }
+            }
+            {
+                s16 tm = lbl_803DD772;
+                if (tm != 0 && player != 0 && !(*(u16 *)(player + 0xb0) & 0x1000) &&
+                    (u8)pauseMenuIsFox() != 0) {
+                    s16 nv = (s16)(lbl_803DD772 + framesThisStep);
+                    lbl_803DD772 = nv;
+                    if (nv >= 0x1518) {
+                        lbl_803DD772 = 0;
+                        lbl_803DD770 = 1;
+                        Sfx_PlayFromObject(0, 0x38d);
+                    } else if ((nv >= 0xa && tm < 0xa) || (nv >= 0x708 && tm < 0x708)) {
+                        lbl_803DD770 = 1;
+                    }
+                }
+            }
+            if (lbl_803DD770 != 0) {
+                f32 dt = lbl_803DD7DC;
+                f32 nt = dt + timeDelta;
+                lbl_803DD7DC = nt;
+                if (lbl_803DD770 == 1 || nt >= lbl_803E1F9C_) {
+                    lbl_803DD7DC = 0.0f;
+                    Sfx_PlayFromObject(0, 0x38d);
+                }
+                lbl_803DD770 = (s16)(lbl_803DD770 + framesThisStep);
+                if (lbl_803DD770 > 0xff) {
+                    lbl_803DD770 = 0;
+                }
+            }
+            break;
+        }
+        case 1: {
+            u16 b2;
+            padGetAnalogInput(0, &a1, &a2);
+            pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
+            if ((s8)lbl_803DD781 != 0 && AudioStream_GetCurrentId() == 0 &&
+                AudioStream_IsPreparing() == 0) {
+                ObjAnim_SetCurrentMove((int *)hud->anims[(s8)lbl_803DD781], 0, 0.0f, 0);
+                lbl_803DD781 = 0;
+            }
+            if ((s8)a1 == 0 || lbl_803DD78C == 0 ||
+                (s8)lbl_803DBA64 < (u8)menuMin || (s8)lbl_803DBA64 > (u8)menuMax) {
+                if ((s8)lbl_803DBA64 >= 1 && (s8)lbl_803DBA64 < 4) {
+                    char *anim = hud->anims[(s8)lbl_803DBA64];
+                    if (*(u32 *)(anim + 0x4c) > 0x90000000) {
+                        *(u32 *)(anim + 0x4c) = 0;
+                    }
+                }
+                {
+                    u8 prev = lbl_803DBA64;
+                    lbl_803DBA64 = (u8)(prev + a1);
+                    if ((s8)lbl_803DBA64 < (u8)menuMin) {
+                        lbl_803DBA64 = menuMax;
+                    }
+                    if ((s8)lbl_803DBA64 > (u8)menuMax) {
+                        lbl_803DBA64 = menuMin;
+                    }
+                    if ((s8)lbl_803DBA64 != prev) {
+                        Sfx_PlayFromObject(0, 0x37b);
+                    }
+                }
+                if ((s8)lbl_803DBA64 >= 1 && (s8)lbl_803DBA64 < 4) {
+                    char *anim = hud->anims[(s8)lbl_803DBA64];
+                    if (*(u32 *)(anim + 0x4c) > 0x90000000) {
+                        *(u32 *)(anim + 0x4c) = 0;
+                    }
+                }
+            }
+            if (lbl_803DD786 < lbl_803DBAA2) {
+                s16 nv = (s16)(lbl_803DD786 + framesThisStep);
+                lbl_803DD786 = nv;
+                if (nv >= lbl_803DBAA2) {
+                    pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 1, 3);
+                }
+            } else {
+                int t = lbl_803DD784 + framesThisStep * 0x28;
+                lbl_803DD784 = (s16)t;
+                if (t > 0x400) {
+                    lbl_803DD784 = 0x400;
+                }
+            }
+            b2 = btn;
+            if (b2 & 0x100) {
+                u8 prev;
+                Sfx_PlayFromObject(0, 0x98);
+                buttonDisable(0, 0x100);
+                lbl_803DD7BC = 0.0f;
+                lbl_803DD7C0 = 0.0f;
+                lbl_803DD764 = lbl_803E1E60;
+                lbl_803DD7D8 = 0;
+                lbl_803DD768 = 0.0f;
+                prev = lbl_803DBA64;
+                switch ((s8)prev) {
+                case 1:
+                    pauseMenuSetupTitle(0x2b1, prev, 2, 3);
+                    pauseMenuState = 5;
+                    lbl_803DD7C4 = 0;
+                    lbl_803DD7D8 = 2;
+                    AudioStream_Play(0x272f, AudioStream_StartPrepared);
+                    break;
+                case 2:
+                    pauseMenuSetupTitle(0x2b1, prev, 2, 3);
+                    pauseMenuState = 3;
+                    lbl_803DD7C4 = 0;
+                    AudioStream_Play(randomGetRange(0, 1) + 0x2710, AudioStream_StartPrepared);
+                    break;
+                case 3:
+                    pauseMenuSetupTitle(0x2b1, prev, 4, 3);
+                    pauseMenuState = 4;
+                    if (lbl_803DD8E0 == lbl_803DD7D6) {
+                        lbl_803DD8D8 = hintTextMapFn_800ea264();
+                    } else {
+                        lbl_803DD8D8 = getCurGameText();
+                    }
+                    AudioStream_Play(randomGetRange(0, 1) + 0x271d, AudioStream_StartPrepared);
+                    break;
+                case 4:
+                    pauseMenuState = 6;
+                    lbl_803DD7D8 = 1;
+                    break;
+                case 5:
+                    pauseMenuState = 7;
+                    lbl_803DD7D8 = 1;
+                    break;
+                }
+                if (tbl->flags11D0[pauseMenuState] != 0) {
+                    lbl_803DD820 = (f32)(u32)(hud->times190[pauseMenuState] * 0x3c);
+                    lbl_803DD81C = 1;
+                }
+            }
+            fn_8012C000();
+            if ((b2 & 0x1200) && (s8)pauseMenuFrameCounter == 0) {
+                Sfx_PlayFromObject(0, 0x100);
+                Sfx_PlayFromObject(0, 0x3f2);
+                pauseMenuFrameCounter = 0x3c;
+                gameTextLoadForMap_800571f0(1);
+                cutsceneFadeInOut(0);
+                buttonDisable(0, 0x1200);
+                pauseMenuState = 2;
+                pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 2, 3);
+            }
+            break;
+        }
+        case 2: {
+            s16 t = (s16)(lbl_803DD78C - framesThisStep * 0x32);
+            lbl_803DD78C = t;
+            if (t < 0) {
+                int k;
+                lbl_803DD78C = 0;
+                if (isArwing != 0) {
+                    arwingHudVisible = 1;
+                }
+                pauseMenuState = 0;
+                if (player == 0 || fn_80296C4C(player) == 0) {
+                    AudioStream_StopCurrent();
+                }
+                for (k = 0; k < 4; k++) {
+                    char *anim = hud->anims[k];
+                    if (anim != 0) {
+                        *(int *)(*(char **)(anim + 0x64) + 0x4) = 0;
+                        *(int *)(*(char **)(hud->anims[k] + 0x64) + 0x8) = 0;
+                        if (*(u32 *)(hud->anims[k] + 0x4c) > 0x90000000) {
+                            *(u32 *)(hud->anims[k] + 0x4c) = 0;
+                        }
+                        Obj_FreeObject(hud->anims[k]);
+                        hud->anims[k] = 0;
+                    }
+                }
+                Music_Trigger(0x23, 0);
+                pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 4, 3);
+            } else {
+                fn_8012C000();
+            }
+            {
+                s16 v = (s16)(lbl_803DD784 - framesThisStep * 0x50);
+                lbl_803DD784 = v;
+                if (v < 0) {
+                    lbl_803DD784 = 0;
+                }
+            }
+            break;
+        }
+        case 3:
+            if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160) {
+                int r = pauseMenuGridFn_8012b4c4();
+                if (lbl_803DD7C4 != 0) {
+                    lbl_803DD824 = tbl->gridBD0;
+                } else {
+                    lbl_803DD824 = tbl->grid9F8;
+                }
+                if (lbl_803DD7C4 == 0) {
+                    hintTextFn_800ea174(hintBuf);
+                    if ((u8)r != 0 ||
+                        (lbl_803DD760 == lbl_803E2160 && lbl_803DD764 > lbl_803E2160)) {
+                        lbl_803DD7D8 = lbl_803DD8E0;
+                    }
+                    {
+                        int k;
+                        for (k = 0; k < 0xd; k++) {
+                            if (hintBuf[(u8)k] != 0) {
+                                lbl_803DD824[(u8)k].id = 0x48;
+                            } else {
+                                lbl_803DD824[(u8)k].id = 0x49;
+                            }
+                            *(u8 *)((char *)&lbl_803DD824[(u8)k] + 0x8) = 0x10;
+                            *(u8 *)((char *)&lbl_803DD824[(u8)k] + 0x9) = 0xc;
+                        }
+                    }
+                    if (lbl_803DD7D6 == lbl_803DD8E0) {
+                        lbl_803DD824[lbl_803DD8E0].id = 0x4c;
+                    } else {
+                        lbl_803DD824[lbl_803DD8E0].id = 0x4b;
+                        lbl_803DD824[lbl_803DD7D6].id = 0x4a;
+                        *(u8 *)((char *)&lbl_803DD824[lbl_803DD7D6] + 0x8) = 0x14;
+                        *(u8 *)((char *)&lbl_803DD824[lbl_803DD7D6] + 0x9) = 0x10;
+                    }
+                    *(u8 *)((char *)&lbl_803DD824[lbl_803DD8E0] + 0x8) = 0x1a;
+                    *(u8 *)((char *)&lbl_803DD824[lbl_803DD8E0] + 0x9) = 0x18;
+                } else {
+                    u8 k;
+                    for (k = 0; k < 0xc; k++) {
+                        if (GameBit_Get(tbl->gbids[k])) {
+                            lbl_803DD824[k].id = 0x26;
+                        } else {
+                            lbl_803DD824[k].id = 0x25;
+                        }
+                    }
+                }
+                pauseMenuRunSubmenu(r);
+                pauseMenuFn_8012b77c();
+            } else {
+                if (lbl_803DD7C8 != 0) {
+                    textureFree(lbl_803DD7C8);
+                    lbl_803DD7C8 = 0;
+                }
+                pauseMenuSetupTitle(0x3a9, 0, 2, 0);
+                pauseMenuState = 1;
+                lbl_803DD784 = 0;
+            }
+            break;
+        case 5:
+            if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160) {
+                pauseMenuGridFn_8012b4c4();
+                if (lbl_803DD7C4 != 0) {
+                    lbl_803DD824 = tbl->gridF70;
+                } else {
+                    lbl_803DD824 = tbl->gridD70;
+                }
+                pauseMenuRunSubmenu(0);
+                {
+                    u8 i = 0;
+                    int k = 0;
+                    while (tbl->list740[(u8)k] > -1) {
+                        s16 texId = 0xbf0;
+                        if (GameBit_Get(0xbf0)) {
+                            texId = tbl->alts[(u8)k].alt;
+                        }
+                        hud->textures3A8[(u8)i] = (int)textureLoadAsset(texId);
+                        hud->texIds358[(u8)i] = texId;
+                        i++;
+                        k++;
+                    }
+                }
+                {
+                    int i = 0xa;
+                    int k = 0;
+                    while (tbl->items[(u8)k].id > -1) {
+                        s16 texId = 0xbf0;
+                        if (GameBit_Get(0xbf0)) {
+                            texId = tbl->items[(u8)k].alt;
+                        }
+                        hud->textures3A8[(u8)i] = (int)textureLoadAsset(texId);
+                        hud->texIds358[(u8)i] = texId;
+                        i++;
+                        k++;
+                    }
+                }
+                {
+                    s16 texId = 0xbf0;
+                    if (GameBit_Get(0x1ee)) {
+                        texId = 0xc8a;
+                    }
+                    hud->textures3A8[0x14] = (int)textureLoadAsset(texId);
+                    hud->texIds358[0x14] = texId;
+                    texId = 0xbf0;
+                    if (GameBit_Get(0x13e)) {
+                        texId = 0xc06;
+                    }
+                    hud->textures3A8[0x15] = (int)textureLoadAsset(texId);
+                    hud->texIds358[0x15] = texId;
+                    texId = 0xbf0;
+                    if (GameBit_Get(0xc64)) {
+                        texId = 0xc05;
+                    }
+                    hud->textures3A8[0x16] = (int)textureLoadAsset(texId);
+                    hud->texIds358[0x16] = texId;
+                }
+                pauseMenuFn_8012b77c();
+            } else {
+                u8 k;
+                for (k = 0; k < 0x28; k++) {
+                    if (hud->textures3A8[k] != 0) {
+                        textureFree((void *)hud->textures3A8[k]);
+                        hud->textures3A8[k] = 0;
+                        hud->texIds358[k] = 0;
+                    }
+                }
+                pauseMenuSetupTitle(0x3a9, 0, 2, 0);
+                pauseMenuState = 1;
+                lbl_803DD784 = 0;
+            }
+            break;
+        case 4:
+            if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160) {
+                lbl_803DD730 = (u16)getNextTaskHintText();
+                lbl_803DD770 = 0;
+                lbl_803DD772 = 0;
+                pauseMenuFn_8012b77c();
+                if (lbl_803DD7A4 == 0 || *(u16 *)lbl_803DD7A4 == 0xffff) {
+                    lbl_803DD7A4 = (int)saveGameGetCurHint();
+                }
+            } else {
+                gameTextLoadDir(lbl_803DD8D8);
+                pauseMenuState = 1;
+                lbl_803DD784 = 0;
+                if (lbl_803DD7A4 != 0) {
+                    lbl_803DD7A4 = 0;
+                }
+            }
+            break;
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 0xa:
+            if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160) {
+                lbl_803DD824 = tbl->gridF10;
+                pauseMenuRunSubmenu(0);
+                pauseMenuFn_8012b77c();
+                if ((btn & 0x100) && lbl_803DD764 > lbl_803E2160) {
+                    Sfx_PlayFromObject(0, 0x418);
+                    buttonDisable(0, 0x100);
+                    lbl_803DD764 = lbl_803E2168;
+                }
+            } else if (lbl_803DD7D8 == 1) {
+                switch (state) {
+                case 8:
+                    if (lbl_803DB424 != 0) {
+                        pauseMenuState = 9;
+                    } else {
+                        pauseMenuState = 0xa;
+                    }
+                    lbl_803DD764 = lbl_803E1E60;
+                    break;
+                case 9:
+                    pauseMenuState = 0xa;
+                    lbl_803DD764 = lbl_803E1E60;
+                    break;
+                case 0xa:
+                    Music_Trigger(0x23, 0);
+                    if ((*(int (**)(void))(*(int *)gMapEventInterface + 0x30))() != 0) {
+                        (*(void (**)(void))(*(int *)gMapEventInterface + 0x28))();
+                    } else {
+                        (*(void (**)(void))(*(int *)gMapEventInterface + 0x20))();
+                    }
+                    break;
+                default:
+                    pauseMenuState = 1;
+                    lbl_803DD784 = 0;
+                    break;
+                }
+            } else {
+                switch (state) {
+                case 7:
+                    saveGame_save();
+                    lbl_803DD778 = 0x80;
+                    pauseMenuState = 1;
+                    lbl_803DD784 = 0;
+                    break;
+                case 8:
+                    *(u8 *)(player + 0x9) = (u8)(*(u8 *)(player + 0x9) - 1);
+                    fn_80296C84(player);
+                    gameTextLoadDir(lbl_803DD8DC);
+                    pauseMenuState = 2;
+                    pauseMenuFrameCounter = 0x3c;
+                    pauseMenuSetupTitle(0x2b1, lbl_803DBA64, 2, 3);
+                    break;
+                case 9:
+                    updateSavedHealth();
+                    saveGame_save();
+                    lbl_803DD778 = 0x80;
+                    pauseMenuState = 0xa;
+                    lbl_803DD7D8 = 1;
+                    lbl_803DD764 = lbl_803E1E60;
+                    lbl_803DD784 = 0;
+                    break;
+                case 6:
+                case 0xa:
+                    lbl_803DD8DC = 0x15;
+                    gameTextLoadDir(0x15);
+                    mapScreenVisible = 0;
+                    lbl_803DD774 = 0;
+                    lbl_803DD776 = 0;
+                    lbl_803DBA5C = -1;
+                    pauseMenuSetupTitle(0x2b1, 1, 4, 3);
+                    pauseMenuState = 2;
+                    pauseMenuFrameCounter = 0x3c;
+                    (*(void (**)(int, int))(*(int *)gScreenTransitionInterface + 0x8))(0x14, 1);
+                    lbl_803DD794 = 1;
+                    break;
+                }
+            }
+            break;
+        case 0xb:
+            if (lbl_803DD760 > lbl_803E2160 || lbl_803DD764 > lbl_803E2160) {
+                int have = GameBit_Get(0x3f5);
+                lbl_803DD758 = 0;
+                if (player != 0) {
+                    lbl_803DD8E0 = coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14));
+                    if (lbl_803DD8E0 == 7) {
+                        for (lbl_803DD756 = 0; lbl_803DD756 < 4;) {
+                            if (!GameBit_Get(tbl->tokens[lbl_803DD756].bitA)) {
+                                break;
+                            }
+                            if (GameBit_Get(tbl->tokens[lbl_803DD756].bitB) == 0) {
+                                if (have >= tbl->tokens[lbl_803DD756].thresh) {
+                                    lbl_803DD758 = 2;
+                                } else {
+                                    lbl_803DD758 = 1;
+                                }
+                                break;
+                            }
+                            lbl_803DD756 = (s16)(lbl_803DD756 + 1);
+                        }
+                    }
+                }
+                if ((btn & 0x100) && lbl_803DD764 > lbl_803E2160 && lbl_803DD760 >= lbl_803E1F60) {
+                    if (lbl_803DD758 == 2) {
+                        GameBit_Set(0x3f5, have - tbl->tokens[lbl_803DD756].thresh);
+                        GameBit_Set(tbl->tokens[lbl_803DD756].bitB, 1);
+                    }
+                    lbl_803DD759 = 1;
+                    buttonDisable(0, 0x100);
+                    lbl_803DD764 = lbl_803E2168;
+                } else if ((btn & 0x200) && lbl_803DD764 > lbl_803E2160 &&
+                           lbl_803DD760 >= lbl_803E1F60) {
+                    buttonDisable(0, 0x200);
+                    lbl_803DD764 = lbl_803E2168;
+                    lbl_803DD759 = 0;
+                }
+                pauseMenuFn_8012b77c();
+            } else {
+                cutsceneFadeInOut(0);
+                gameTextLoadForMap_800571f0(1);
+                pauseMenuState = 2;
+                pauseMenuFrameCounter = 0x3c;
+            }
+            break;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void objRender(int a, int b, int c, int d, void *obj, int e);
+extern int *Obj_GetActiveModel(void *obj);
+extern void objShadowFn_8006c5f0(void *obj, u32 *outTexture, f32 *outScale, int *outX, int *outY);
+extern void hudDrawColored(u32 texture, int x, int y, u32 *color, int scale, int flags);
+extern void *lbl_803DD868[2];
+extern u32 lbl_803E1E00;  /* default HUD colour */
+extern f32 lbl_803E20B8;  /* 0.25f */
+
+/* EN v1.0 0x801299D4  size: 672b  Pause-menu save-screen render pass.
+ * Saves the live FOV, swaps to view 1 at the origin facing 0x8000,
+ * sets the viewport from the global render obj, then renders slots
+ * 1..5 of lbl_803A9410 (clearing the model dirty bit and forcing the
+ * alpha byte), drawing the selected slot's shadow blob via
+ * hudDrawColored when lbl_803DD78C is past its threshold. A second
+ * pass renders both lbl_803DD868 slots the same way. Tail restores
+ * the camera state and pops the save-confirm text when flagged. */
+#pragma scheduling off
+#pragma peephole off
+void pauseMenuDoSave(void)
+{
+    u32 color[2];
+    int y;
+    int x;
+    f32 scale;
+    u32 texture;
+    u8 i;
+    u8 j;
+
+    color[1] = lbl_803E1E00;
+    lbl_803DBAA4 = Camera_GetFovY();
+    Camera_SetFovY(lbl_803E2044);
+    Camera_SetCurrentViewIndex(1);
+    lbl_803DD7E0 = Camera_IsViewYOffsetEnabled();
+    Camera_DisableViewYOffset();
+    Camera_SetCurrentViewPosition(lbl_803E1E3C, lbl_803E1E3C, lbl_803E1E3C);
+    Camera_SetCurrentViewRotation(0x8000, 0, 0);
+    Camera_UpdateViewMatrices();
+    Camera_RebuildProjectionMatrix();
+    {
+        u16 *obj = (u16 *)lbl_803DCCF0;
+        GXSetViewport(lbl_803E1E3C, lbl_803E1E3C, (f32)obj[2], (f32)obj[4],
+                      lbl_803E1E3C, lbl_803E1E68);
+    }
+    for (i = 1; i < 6; i++) {
+        if (lbl_803A9410[i] == NULL) {
+            continue;
+        }
+        if (*(u32 *)((u8 *)lbl_803A9410[i] + 0x4c) > 0x90000000U) {
+            *(u32 *)((u8 *)lbl_803A9410[i] + 0x4c) = 0;
+        }
+        objRender(0, 0, 0, 0, lbl_803A9410[i], 1);
+        *(u16 *)((u8 *)Obj_GetActiveModel(lbl_803A9410[i]) + 0x18) &= ~0x8;
+        *((u8 *)lbl_803A9410[i] + 0x37) = 0xff;
+        if (i == lbl_803DBA64) {
+            if (lbl_803DD78C > 0x1f4) {
+                objShadowFn_8006c5f0(lbl_803A9410[i], &texture, &scale, &x, &y);
+                color[0] = color[1];
+                hudDrawColored(texture, x, y, color, (s32)(lbl_803E20B8 * scale), 1);
+            }
+        }
+    }
+    for (j = 0; j < 2; j++) {
+        objRender(0, 0, 0, 0, lbl_803DD868[j], 1);
+        *(u16 *)((u8 *)Obj_GetActiveModel(lbl_803DD868[j]) + 0x18) &= ~0x8;
+        *((u8 *)lbl_803DD868[j] + 0x37) = 0xff;
+    }
+    Camera_SetCurrentViewIndex(0);
+    if (lbl_803DD7E0 != 0) {
+        Camera_EnableViewYOffset();
+    }
+    Camera_UpdateViewMatrices();
+    Camera_SetFovY(lbl_803DBAA4);
+    Camera_RebuildProjectionMatrix();
+    Camera_ApplyFullViewport();
+    if (lbl_803DD778 & 0x10) {
+        if (lbl_803DB424 != 0) {
+            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+            gameTextShow(0x46e);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f64 lbl_803E2080;
+extern f64 lbl_803E2118;
+extern f32 lbl_803E2120;
+extern f64 lbl_803E2128;
+
+typedef struct {
+    u8  _0[0x358];
+    s16 texId;          /* hud+0x358, indexed by id*2 */
+} CMenuHudIdx2;
+typedef struct {
+    u8  _0[0x1c0];
+    int texSecondary;   /* hud+0x1c0, indexed by id*4 */
+    u8  _1c4[0x1e4];
+    int texPrimary;     /* hud+0x3a8, indexed by id*4 */
+} CMenuHudIdx4;
+
+/* EN v1.0 0x80128A7C  size: 1012b  Draws one pause-menu grid cell with its
+ * motion trail: each trail step (count, stepping by 4) redraws the cell's
+ * texture offset along the entry's trail vector, fading via the scaled
+ * alpha. The selected cell on the main grid breathes (sin pulse) and slides
+ * toward the panel edge while lbl_803DD75C runs. */
+#pragma scheduling off
+#pragma peephole off
+void fn_80128A7C(u8 i, s16 p2, int p3)
+{
+    CMenuHud *hud = (CMenuHud *)lbl_803A87F0;
+    int div15;
+    s8 cnt;
+    s16 v;
+    int scaled;
+    s16 ofs;
+    f32 quarter;
+    f32 spd;
+    f32 x;
+    f32 y;
+    f64 k2128;
+    f64 k2108;
+    f64 t;
+
+    t = (f64)p2 * (lbl_803E2080 - (f64)lbl_803DD75C);
+    scaled = (s32)(t * lbl_803E2088);
+    if (lbl_803DD824[i].id < 0) {
+        return;
+    }
+    cnt = (s8)lbl_803DD824[i].count;
+    div15 = (s16)scaled / 15;
+    quarter = lbl_803E20B8;
+    k2108 = lbl_803E2108;
+    k2128 = lbl_803E2128;
+    for (; cnt >= 0; cnt -= 4) {
+        spd = quarter * lbl_803DD824[i].f10;
+        x = (f32)lbl_803DD824[i].x;
+        y = (f32)lbl_803DD824[i].y;
+        ofs = lbl_803DD824[i].ofs6 - cnt;
+        if (i != lbl_803DD7D8 || lbl_803DD824 == lbl_8031B818) {
+            s16 idv = lbl_803DD824[i].id;
+            if (idv == 0x4a || idv == 0x4c) {
+                v = (s32)lbl_803DD748 & 0x1f;
+                if (v & 0x10) {
+                    v ^= 0x1f;
+                }
+                v *= div15;
+            } else {
+                v = scaled;
+            }
+            ofs -= lbl_803DD75C;
+        } else {
+            f32 dx;
+            f32 dy;
+            f32 pr;
+            v = p2;
+            spd = (f32)(spd * (lbl_803E1F60 + (f64)lbl_803DD75C / lbl_803E2118));
+            spd += lbl_803E20BC * fn_80293E80(lbl_803E1EC8 * (lbl_803E2104 * lbl_803DD748) /
+                                              lbl_803E1E94) +
+                   lbl_803E2090;
+            dx = lbl_803E1F34 - x;
+            pr = dx * (f32)lbl_803DD75C;
+            x = (f32)(pr * lbl_803E2088 + x);
+            dy = lbl_803E2120 - y;
+            pr = dy * (f32)lbl_803DD75C;
+            y = (f32)(pr * lbl_803E2088 + y);
+        }
+        {
+            f32 prod = spd * (f32)lbl_803DD824[i].trailX;
+            x -= k2108 * (prod * k2128);
+            prod = spd * (f32)lbl_803DD824[i].trailY;
+            y -= k2108 * (prod * k2128);
+        }
+        if (lbl_803DD824 == lbl_8031BD90) {
+            int idv = lbl_803DD824[i].id;
+            u32 tex;
+            if (((CMenuHudIdx2 *)((u8 *)hud + idv * 2))->texId == 0xbf0) {
+                ofs -= 0x14;
+            }
+            tex = ((CMenuHudIdx4 *)((u8 *)hud + idv * 4))->texPrimary;
+            if (tex == 0) {
+                continue;
+            }
+            pauseMenuDrawElement(tex, x, y, ofs, (u8)v, (s32)spd, p3);
+        } else {
+            int idv = lbl_803DD824[i].id;
+            if (idv == 0) {
+                continue;
+            }
+            if (idv == 0x25) {
+                ofs -= 0x14;
+            }
+            pauseMenuDrawElement(((CMenuHudIdx4 *)((u8 *)hud + idv * 4))->texSecondary, x, y, ofs,
+                                 (u8)v, (s32)spd, p3);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int  ObjAnim_AdvanceCurrentMove(f32 scale, f32 dt, void *obj, void *events);
+extern int  fn_802972A8(void *player);
+extern f32  lbl_8031BFA8[30];
+extern s16  lbl_803DD782;
+extern s16  lbl_803DD78A;
+extern f32  lbl_803E1E58;
+extern f32  lbl_803E1E64;
+extern f32  lbl_803E1FC0;
+extern f32  lbl_803E2178;
+extern f32  lbl_803E217C;
+extern f64  lbl_803E2180;
+extern f32  lbl_803E2188;
+extern f32  lbl_803E218C;
+extern f32  lbl_803E2190;
+extern f32  lbl_803E2194;
+extern f32  sin(f32 x);
+
+/* EN v1.0 0x8012C000  size: 1368b  Pause-menu character carousel driver:
+ * eases the swivel angle lbl_803DD782 toward the selected slot, spins the
+ * podium objects (lbl_803DD868), then bobs/sways each character model in
+ * lbl_803A9410 with phase-shifted sine waves around the podium centre. */
+#pragma scheduling off
+#pragma peephole off
+void fn_8012C000(void)
+{
+    u8 flag;
+    u8 k;
+    u8 last;
+    u8 *player;
+    s16 step;
+    int kk;
+    s16 delta;
+    u32 watermark;
+    f32 c2010;
+    f32 c2050;
+    f32 c1E64;
+    f32 c1E94;
+    f32 c1EC8;
+    f32 c2190;
+    f32 base;
+    u8 animOut[0x20];
+
+    player = Obj_GetPlayerObject();
+    step = 5;
+    objIsCurModelNotZero();
+    last = 5;
+    k = 1;
+    if ((u8)pauseMenuIsFox() == 0) {
+        k = 4;
+        step = 2;
+    }
+    if (player != NULL) {
+        int t = 0;
+        if (coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14)) != 0 ||
+            fn_802972A8(player) == 0) {
+            t = 1;
+        }
+        flag = t;
+    } else {
+        flag = 1;
+    }
+    if (lbl_803DB424 == 0 || (u16)getNextTaskHintText() < 3 || flag == 0) {
+        step -= 1;
+        last = 4;
+    }
+    {
+        u16 cur;
+        int neg;
+        cur = (u16)lbl_803DD782;
+        neg = -lbl_803DBA64;
+        step = 0x10000 / (u8)step;
+        delta = neg * step - cur;
+    }
+    if (delta > 0x8000) {
+        delta -= 0xffff;
+    }
+    if (delta < -0x8000) {
+        delta += 0xffff;
+    }
+    lbl_803DD782 += delta / 7;
+    lbl_803DD78A += framesThisStep;
+    *(s16 *)lbl_803DD868[0] = (s16)(lbl_803DD78A << 9);
+    *(s16 *)((u8 *)lbl_803DD868[0] + 0x4) =
+        lbl_803E2178 * fn_80293E80(lbl_803E1EC8 * (f32)(lbl_803DD78A * 1000) / lbl_803E1E94);
+    *(f32 *)((u8 *)lbl_803DD868[0] + 0x10) =
+        (f32)(lbl_803E2180 * fn_80293E80(lbl_803E1EC8 * (f32)(lbl_803DD78A * 400) / lbl_803E1E94) +
+              lbl_803E217C);
+    {
+        int d = 0x400 - lbl_803DD78C;
+        *(f32 *)((u8 *)lbl_803DD868[0] + 0x10) =
+            *(f32 *)((u8 *)lbl_803DD868[0] + 0x10) - (f32)(d * d) / lbl_803E2188;
+    }
+    *(f32 *)((u8 *)lbl_803DD868[1] + 0x10) = *(f32 *)((u8 *)lbl_803DD868[0] + 0x10);
+    {
+        f32 spin = lbl_803E218C * (f32)lbl_803DD78C;
+        *(f32 *)((u8 *)lbl_803DD868[1] + 0x8) = spin * lbl_803E2190;
+    }
+    ObjAnim_AdvanceCurrentMove(lbl_803E1E58, timeDelta, lbl_803DD868[1], animOut);
+    watermark = 0x90000000;
+    c2010 = lbl_803E2010;
+    c2050 = lbl_803E2050;
+    c1E64 = lbl_803E1E64;
+    c1E94 = lbl_803E1E94;
+    c1EC8 = lbl_803E1EC8;
+    c2190 = lbl_803E2190;
+    for (; k <= last; k++) {
+        f32 sel;
+        f32 a;
+        if (*(u32 *)((u8 *)lbl_803A9410[k] + 0x4c) > watermark) {
+            *(u32 *)((u8 *)lbl_803A9410[k] + 0x4c) = 0;
+        }
+        kk = k;
+        if (kk == lbl_803DBA64) {
+            sel = lbl_803E1FC0;
+        } else {
+            sel = lbl_803E2194;
+        }
+        sel = (f32)lbl_803DD784 * sel;
+        *(f32 *)((u8 *)lbl_803A9410[k] + 0x8) = sel * c2190;
+        *((u8 *)lbl_803A9410[k] + 0x37) = 0xff;
+        ObjAnim_AdvanceCurrentMove(lbl_8031BFA8[k], timeDelta, lbl_803A9410[k], animOut);
+        kk *= step;
+        a = c1E64 * fn_80293E80(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
+        a = (f32)lbl_803DD784 * a;
+        *(f32 *)((u8 *)lbl_803A9410[k] + 0xc) =
+            a * c2190 + *(f32 *)((u8 *)lbl_803DD868[0] + 0xc);
+        base = c2050 * fn_80293E80(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94) +
+               (*(f32 *)((u8 *)lbl_803DD868[0] + 0x10) + c2010);
+        a = c1E64 - sin(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
+        a = (f32)lbl_803DD784 * a;
+        *(f32 *)((u8 *)lbl_803A9410[k] + 0x10) = a * c2190 + base;
+        a = c1E64 * sin(c1EC8 * (f32)(lbl_803DD782 + kk) / c1E94);
+        a = (f32)lbl_803DD784 * a;
+        *(f32 *)((u8 *)lbl_803A9410[k] + 0x14) =
+            a * c2190 + *(f32 *)((u8 *)lbl_803DD868[0] + 0x14);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

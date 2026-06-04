@@ -58,16 +58,16 @@ int andross_updateModelAlpha(int obj)
 {
     int state = *(int *)(obj + 0xb8);
     f32 v;
+    f32 alpha;
     int model;
     int i;
-    int alpha;
 
     *(f32 *)(state + 0x68) = lbl_803E74D4;
     v = *(f32 *)(state + 0x68);
     model = *(int *)Obj_GetActiveModel(obj);
-    alpha = (int)(lbl_803E74B4 * v);
+    alpha = lbl_803E74B4 * v;
     for (i = 0; i < *(u8 *)(model + 0xf8); i++) {
-        *(u8 *)(ObjModel_GetRenderOp(model, i) + 0x43) = alpha;
+        *(u8 *)(ObjModel_GetRenderOp(model, i) + 0x43) = (int)alpha;
     }
     return 0;
 }
@@ -132,7 +132,7 @@ void fn_8023A87C(int p1, int p2)
         if (*(f32 *)(p2 + 0x6c) < lbl_803E74D4)
             fn_80239DD8(p1, p2);
     } else if ((u32)GameBit_Get(0x12) != 0) {
-        *(f32 *)(p2 + 0x6c) = (f32)(u32)randomGetRange(1, 0x14);
+        *(f32 *)(p2 + 0x6c) = (f32)(int)randomGetRange(1, 0x14);
         GameBit_Set(0x12, 0);
     }
 }
@@ -162,7 +162,7 @@ int fn_8023A6A4(int p1, f32 a, f32 b, f32 c)
         val = -a;
     else if (val > a)
         val = a;
-    ang = lbl_803E74A0 * (f32)(u32)yaw / lbl_803E74A4;
+    ang = lbl_803E74A0 * (f32)yaw / lbl_803E74A4;
     *(f32 *)(p1 + 0xd8) = val * fn_80293E80(ang);
     *(f32 *)(p1 + 0xdc) = val * sin(ang);
     fn_8022D48C((int)vel, *(int *)p1);

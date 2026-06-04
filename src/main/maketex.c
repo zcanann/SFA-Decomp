@@ -1233,15 +1233,22 @@ void fn_8008020C(s16 a, s16 b, s16 c, f32 x, f32 y, f32 z, f32 w)
 /* fn_8007FE04 (112b): array remove-and-swap by value */
 int fn_8007FE04(int *arr, int *count_ptr, int target)
 {
-    int n = *count_ptr;
-    int *p = arr;
-    int i = 0;
+    int i;
+    int *p;
+    int n;
+    int v;
     int j;
+    n = *count_ptr;
+    p = arr;
+    i = 0;
     for (j = 0; j < n; j++) {
-        int v = *p;
+        v = *p;
         p++;
-        if (v == target) goto found;
-        i++;
+        if (v == target) {
+            goto found;
+        } else {
+            i++;
+        }
     }
     i = -1;
 found:
@@ -1378,15 +1385,18 @@ void s16toFloat(f32 *p, s16 val)
     *p = (f32)val;
 }
 
-extern u8 lbl_803DD0B4;
+typedef struct {
+    u8 active : 1;
+} SeqB4Flags;
+extern SeqB4Flags lbl_803DD0B4;
 int ObjSeq_func23(int unused, int x)
 {
     switch (x) {
     case 0:
-        lbl_803DD0B4 |= 0x80;
+        lbl_803DD0B4.active = 1;
         break;
     case 1:
-        lbl_803DD0B4 &= 0x7f;
+        lbl_803DD0B4.active = 0;
         break;
     }
     return 0;
@@ -1394,27 +1404,26 @@ int ObjSeq_func23(int unused, int x)
 
 int seqStreamLookupFn_8007fff8(int arr[][2], int count, int key)
 {
-    int lo, hi, mid, v;
+    int lo, mid;
     int i;
     if (count <= 16) {
-        for (i = 0; i < count; i++) {
+        for (i = 0; i != count; i++) {
             if ((*arr)[0] == key) return (*arr)[1];
             arr++;
         }
         return 0;
     }
     lo = 0;
-    hi = count;
     do {
-        mid = (lo + hi) >> 1;
-        v = arr[mid][0];
-        if (key <= v) {
-            if (key == v) return arr[mid][1];
-            hi = mid;
-        } else {
+        mid = (count + lo) >> 1;
+        if (key > arr[mid][0]) {
             lo = mid;
+        } else if (key == arr[mid][0]) {
+            return arr[mid][1];
+        } else {
+            count = mid;
         }
-    } while (hi > lo);
+    } while (count <= lo);
     return 0;
 }
 #pragma scheduling reset
@@ -1473,6 +1482,900 @@ void cameraFocusNpc(int param1, u8 *obj)
     }
     buf.tag = (u8)param1;
     (*(void (**)(int, int, int, int, f32 *, int, int))(*gCameraInterface + 0x1c))(0x4d, 1, 0, 0x10, buf.vec, 0, 0xff);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+typedef struct {
+    int key;
+    int val;
+} SeqSortPair;
+
+/* EN v1.0 0x8007FEAC  size: 332b  Shell sort over (key, val) pairs,
+ * ascending by key. */
+#pragma dont_inline on
+#pragma peephole off
+#pragma scheduling off
+void objSeqInitFn_8007feac(SeqSortPair *arr, int n)
+{
+    int j;
+    int i;
+    int val;
+    int key;
+    int h;
+
+    h = 1;
+    while (h <= (n - 1) / 9) {
+        h = h * 3 + 1;
+    }
+    for (; h > 0; h /= 3) {
+        for (i = h + 1; i < n; i++) {
+            key = arr[i].key;
+            val = arr[i].val;
+            j = i;
+            while (j > h && arr[j - h].key > key) {
+                arr[j].key = arr[j - h].key;
+                arr[j].val = arr[j - h].val;
+                j -= h;
+            }
+            arr[j].key = key;
+            arr[j].val = val;
+        }
+    }
+    for (i = 1; i < n; i++) {
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+#pragma dont_inline reset
+
+/* EN v1.0 0x80080078  size: 136b  Spin-delay then sort when the pair list
+ * is large enough. */
+#pragma peephole off
+#pragma scheduling off
+void objSeqInitFn_80080078(SeqSortPair *arr, int n)
+{
+    int i;
+    int j;
+
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+        }
+    }
+    if (n > 0x10) {
+        objSeqInitFn_8007feac(arr, n);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern int *ObjList_GetObjects(int *idx, int *count);
+extern void debugPrintf(char *fmt, ...);
+extern char sEndObjSequenceMaxFreesError[];
+extern void Pause_ResetMenuFrameCounter(void);
+extern void AudioStream_CancelPrepared(void);
+extern void Obj_FreeObject(int obj);
+extern void *lbl_803DD0B8;
+extern int  lbl_803DB720;
+extern int  lbl_803DD064;
+
+/* EN v1.0 0x80080C18  size: 464b  Tears down an object sequence: unbinds
+ * every object still tagged with the sequence id, runs each freed object's
+ * completion callback, frees the collected objects, and resets the global
+ * sequence/camera state when this was the active sequence. */
+#pragma peephole off
+#pragma scheduling off
+extern s32 CARDWrite(int *fileInfo, void *buf, s32 length, s32 offset);
+extern s32 CARDRead(int *fileInfo, void *buf, s32 length, s32 offset);
+extern s32 CARDDelete(s32 chan, char *fileName);
+extern void DCFlushRange(void *addr, u32 nBytes);
+extern void DCInvalidateRange(void *addr, u32 nBytes);
+extern int lbl_80396900[];
+extern char *sMemoryCardFileName;
+extern u64 lbl_803DD050;
+
+/* EN v1.0 0x8007E7C0  size: 900b  Checksums the save buffer, writes it to the
+ * memory card, then reads it back and verifies the checksum. */
+#pragma peephole off
+#pragma scheduling off
+int saveGame_doWrite(int slot)
+{
+    u64 x;
+    u16 i;
+    u64 *p;
+    u64 a;
+    u64 chk;
+    u64 chk2;
+    int result;
+    int offset;
+
+    p = (u64 *)lbl_803DD044;
+    x = 0;
+    a = 1;
+    for (i = 0; (int)i < 0x3ff; i++) {
+        u64 v = p[i];
+        x ^= v;
+        a += v;
+    }
+    chk = x ^ (a + 13);
+    ((u32 *)p)[0x7ff] = (u32)chk;
+    ((u32 *)p)[0x7fe] = (u32)(chk >> 32);
+    DCFlushRange((void *)lbl_803DD044, 0x2000);
+    result = CARDWrite(lbl_80396900, (void *)lbl_803DD044, 0x2000, offset = (u8)slot << 13);
+    if (result == -5) {
+        CARDDelete(0, sMemoryCardFileName);
+    }
+    if (result == 0) {
+        DCInvalidateRange((void *)lbl_803DD044, 0x2000);
+        result = CARDRead(lbl_80396900, (void *)lbl_803DD044, 0x2000, offset);
+        if (result == 0) {
+            p = (u64 *)lbl_803DD044;
+            x = 0;
+            a = 1;
+            for (i = 0; (int)i < 0x3ff; i++) {
+                u64 v = p[i];
+                x ^= v;
+                a += v;
+            }
+            chk2 = x ^ (a + 13);
+            if (chk != chk2) {
+                result = -0x55;
+                lbl_803DB700 = 10;
+            } else {
+                lbl_803DD050 = chk2;
+            }
+        }
+    }
+    return result;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+typedef struct {
+    u8 pad[0x3c];
+} DVDFileInfoStub;
+extern int DVDOpen(char *fileName, DVDFileInfoStub *fi);
+extern int DVDClose(DVDFileInfoStub *fi);
+extern s32 DVDRead(DVDFileInfoStub *fi, void *addr, s32 length, s32 offset);
+extern int sprintf(char *s, ...);
+extern u8 lbl_803DC968;
+extern int lbl_803DD05C;
+extern char sMemoryCardFileNameString[];
+
+/* EN v1.0 0x8007F358  size: 1372b  Builds the memory card comment strings
+ * (Shift-JIS title on JP cards), loads the banner/icon images from disc, and
+ * checksums both halves of the card image buffer. */
+#pragma peephole off
+#pragma scheduling off
+void loadMemCardImages(void)
+{
+    char *names = sMemoryCardFileNameString;
+    DVDFileInfoStub fi;
+    u64 x;
+    u16 i;
+    u64 *p;
+    u64 *q;
+    u64 a;
+    u64 chk;
+
+    if (lbl_803DC968 != 0) {
+        *(u8 *)(lbl_803DD05C + 0x00) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x01) = 0x58;
+        *(u8 *)(lbl_803DD05C + 0x02) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x03) = 0x5e;
+        *(u8 *)(lbl_803DD05C + 0x04) = 0x81;
+        *(u8 *)(lbl_803DD05C + 0x05) = 0x5b;
+        *(u8 *)(lbl_803DD05C + 0x06) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x07) = 0x74;
+        *(u8 *)(lbl_803DD05C + 0x08) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x09) = 0x48;
+        *(u8 *)(lbl_803DD05C + 0x0a) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x0b) = 0x62;
+        *(u8 *)(lbl_803DD05C + 0x0c) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x0d) = 0x4e;
+        *(u8 *)(lbl_803DD05C + 0x0e) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x0f) = 0x58;
+        *(u8 *)(lbl_803DD05C + 0x10) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x11) = 0x41;
+        *(u8 *)(lbl_803DD05C + 0x12) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x13) = 0x68;
+        *(u8 *)(lbl_803DD05C + 0x14) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x15) = 0x78;
+        *(u8 *)(lbl_803DD05C + 0x16) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x17) = 0x93;
+        *(u8 *)(lbl_803DD05C + 0x18) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x19) = 0x60;
+        *(u8 *)(lbl_803DD05C + 0x1a) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x1b) = 0x83;
+        *(u8 *)(lbl_803DD05C + 0x1c) = 0x81;
+        *(u8 *)(lbl_803DD05C + 0x1d) = 0x5b;
+        *(u8 *)(lbl_803DD05C + 0x1e) = 0x00;
+        *(u8 *)(lbl_803DD05C + 0x1f) = 0x00;
+        sprintf((char *)(lbl_803DD05C + 0x20), names + 0xa0);
+    } else {
+        sprintf((char *)lbl_803DD05C, names);
+        sprintf((char *)(lbl_803DD05C + 0x20), names + 0xb4);
+    }
+    if (DVDOpen(names + 0xc4, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x40), 0x1800, 0x20);
+        DVDClose(&fi);
+    }
+    if (DVDOpen(names + 0xd0, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x1840), 0x400, 0);
+        DVDClose(&fi);
+    }
+    if (DVDOpen(names + 0xe8, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x1c40), 0x400, 0);
+        DVDClose(&fi);
+    }
+    if (DVDOpen(names + 0x100, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x2040), 0x400, 0);
+        DVDClose(&fi);
+    }
+    if (DVDOpen(names + 0x118, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x2440), 0x400, 0);
+        DVDClose(&fi);
+    }
+    if (DVDOpen(names + 0x130, &fi)) {
+        DVDRead(&fi, (void *)(lbl_803DD05C + 0x2840), 0x200, 0);
+        DVDClose(&fi);
+    }
+    p = (u64 *)lbl_803DD05C;
+    x = 0;
+    a = 1;
+    for (i = 0; (int)i < 0x400; i++) {
+        u64 v = p[i];
+        x ^= v;
+        a += v;
+    }
+    chk = x ^ (a + 13);
+    ((u32 *)p)[0xa91] = (u32)chk;
+    ((u32 *)p)[0xa90] = (u32)(chk >> 32);
+    q = (u64 *)lbl_803DD05C;
+    p = q + 0x400;
+    x = 0;
+    a = 1;
+    for (i = 0; (int)i < 0x3ff; i++) {
+        u64 v = p[i];
+        x ^= v;
+        a += v;
+    }
+    chk = x ^ (a + 13);
+    ((u32 *)q)[0xfff] = (u32)chk;
+    ((u32 *)q)[0xffe] = (u32)(chk >> 32);
+    DCFlushRange((void *)lbl_803DD05C, 0x4000);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+typedef struct {
+    char fileName[32];
+    u32 length;
+    u32 time;
+    u8 gameName[4];
+    u8 company[2];
+    u8 bannerFormat;
+    u8 pad;
+    u32 iconAddr;
+    u16 iconFormat;
+    u16 iconSpeed;
+    u32 commentAddr;
+    u8 pad2[0x30];
+} CARDStatStub;
+extern int cardProbe(int chan);
+extern void *mmAlloc(u32 size, int tag, int unk);
+extern void mm_free(void *ptr);
+extern void *memset(void *dst, int c, u32 n);
+extern s32 CARDMount(s32 chan, void *workArea, void (*detachCb)(void));
+extern s32 CARDCheck(s32 chan);
+extern s32 CARDGetSerialNo(s32 chan, u64 *serialNo);
+extern s32 CARDOpen(s32 chan, char *fileName, int *fileInfo);
+extern s32 CARDClose(int *fileInfo);
+extern s32 CARDUnmount(s32 chan);
+extern s32 CARDCreate(s32 chan, char *fileName, u32 size, int *fileInfo);
+extern s32 CARDGetStatus(s32 chan, s32 fileNo, CARDStatStub *stat);
+extern s32 CARDSetStatus(s32 chan, s32 fileNo, CARDStatStub *stat);
+extern void *lbl_803DD040;
+extern u64 lbl_803DD048;
+extern u8 lbl_803DD059;
+extern u8 lbl_803DD05A;
+
+/* EN v1.0 0x8007F818  size: 1468b  Mounts the memory card, validates its
+ * serial number, opens or creates the save file (writing the card image
+ * buffer for a fresh file), and maps any CARD error to a status code. */
+#pragma peephole off
+#pragma scheduling off
+int saveGame(int writeImages)
+{
+    u8 created;
+    u8 fresh;
+    int result;
+    int ok;
+    int ret;
+    u64 serial;
+    CARDStatStub stat;
+    void *m;
+
+    created = 0;
+    fresh = 0;
+    if (cardProbe(0) == 0) {
+        ok = 0;
+    } else {
+        if ((lbl_803DD040 = mmAlloc(0xa000, -1, 0)) == NULL) {
+            lbl_803DB700 = 8;
+            ok = 0;
+        } else {
+            ok = 1;
+        }
+    }
+    if (ok == 0) {
+        return 0;
+    }
+    lbl_803DB700 = 0;
+    result = CARDMount(0, lbl_803DD040, cardSetStatusNoCard2);
+    if (result == -6) {
+        result = CARDCheck(0);
+    }
+    if (result == 0 || result == -13) {
+        int err;
+        result = CARDCheck(0);
+        err = CARDGetSerialNo(0, &serial);
+        if (err == 0) {
+            if (lbl_803DD059 != 0) {
+                if (lbl_803DD048 != 0) {
+                    if (serial != lbl_803DD048) {
+                        result = -0x55;
+                        lbl_803DB700 = 0xb;
+                    }
+                } else {
+                    lbl_803DD048 = serial;
+                }
+            } else {
+                lbl_803DD048 = serial;
+            }
+        } else {
+            result = err;
+        }
+    }
+    if (result == 0) {
+        result = CARDOpen(0, sMemoryCardFileName, lbl_80396900);
+        if (result == -4 && (u8)writeImages == 0) {
+            created = 1;
+            fresh = 1;
+        }
+        if (result == 0) {
+            lbl_803DD05A = 1;
+        }
+    }
+    if (result == 0) {
+        result = CARDGetStatus(0, lbl_80396900[1], &stat);
+        if (result == 0) {
+            if (stat.iconAddr == 0xffffffff || stat.commentAddr == 0xffffffff) {
+                if ((u8)writeImages != 0) {
+                    result = -4;
+                } else {
+                    fresh = 1;
+                }
+            }
+        }
+    }
+    if (fresh != 0) {
+        m = mmAlloc(0x4000, -1, 0);
+        lbl_803DD05C = (int)m;
+        if (m != NULL) {
+            memset(m, 0, 0x4000);
+            loadMemCardImages();
+        } else {
+            lbl_803DB700 = 8;
+            CARDUnmount(0);
+            mm_free(lbl_803DD040);
+            lbl_803DD040 = NULL;
+            return 0;
+        }
+    }
+    if (created != 0) {
+        result = CARDCreate(0, sMemoryCardFileName, 0x6000, lbl_80396900);
+    }
+    if (fresh != 0) {
+        if (result == 0) {
+            result = CARDWrite(lbl_80396900, (void *)lbl_803DD05C, 0x4000, 0);
+            if (result == 0) {
+                result = CARDWrite(lbl_80396900, (void *)(lbl_803DD05C + 0x2000), 0x2000, 0x4000);
+            }
+            if (result == -5) {
+                CARDDelete(0, sMemoryCardFileName);
+            }
+            if (created != 0 && result == 0) {
+                result = CARDGetStatus(0, lbl_80396900[1], &stat);
+            }
+            if (result == 0) {
+                stat.commentAddr = 0;
+                stat.bannerFormat = (stat.bannerFormat & ~0x3) | 2;
+                stat.iconAddr = 0x40;
+                stat.bannerFormat = (stat.bannerFormat & ~0x4) | 4;
+                stat.iconFormat = (stat.iconFormat & ~0x3) | 1;
+                stat.iconSpeed = (stat.iconSpeed & ~0x3) | 3;
+                stat.iconFormat = (stat.iconFormat & ~0xc) | 4;
+                stat.iconSpeed = (stat.iconSpeed & ~0xc) | 0xc;
+                stat.iconFormat = (stat.iconFormat & ~0x30) | 0x10;
+                stat.iconSpeed = (stat.iconSpeed & ~0x30) | 0x30;
+                stat.iconFormat = (stat.iconFormat & ~0xc0) | 0x40;
+                stat.iconSpeed = (stat.iconSpeed & ~0xc0) | 0xc0;
+                stat.iconSpeed = stat.iconSpeed & ~0x300;
+                result = CARDSetStatus(0, lbl_80396900[1], &stat);
+                if (result == 0) {
+                    lbl_803DD050 = *(u64 *)(lbl_803DD05C + 0x3ff8);
+                }
+            }
+        }
+        mm_free((void *)lbl_803DD05C);
+    }
+    switch (result) {
+    case 0:
+        if (fresh != 0) {
+            return 1;
+        }
+        return 2;
+    case 1:
+        lbl_803DB700 = 1;
+        ret = 0;
+        break;
+    case -3:
+        if ((int)lbl_803DB700 != 3) {
+            lbl_803DB700 = 2;
+        }
+        ret = 0;
+        break;
+    case -4:
+        lbl_803DB700 = 0xc;
+        ret = 0;
+        break;
+    case -5:
+        lbl_803DB700 = 4;
+        ret = 0;
+        break;
+    case -6:
+        lbl_803DB700 = 5;
+        ret = 0;
+        break;
+    case -13:
+        lbl_803DB700 = 6;
+        ret = 0;
+        break;
+    case -8:
+    case -9:
+        lbl_803DB700 = 9;
+        ret = 0;
+        break;
+    case -0x55:
+        ret = 0;
+        break;
+    default:
+        ret = 0;
+        break;
+    }
+    if (lbl_803DD05A != 0) {
+        lbl_803DD05A = 0;
+        CARDClose(lbl_80396900);
+    }
+    CARDUnmount(0);
+    mm_free(lbl_803DD040);
+    lbl_803DD040 = NULL;
+    return ret;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+/* EN v1.0 0x8007EB04  size: 1948b  Saves the game: verifies the existing save
+ * slots' checksums, rewrites stale slots and card images, then runs the
+ * caller's callback and maps the result to a status code. */
+#pragma peephole off
+#pragma scheduling off
+int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD,
+                             int (*cb)(int, int, int, int))
+{
+    u64 x;
+    u16 i;
+    u64 *p;
+    u64 acc;
+    u64 chk;
+    u64 chk2;
+    u64 c;
+    u64 t;
+    int result;
+    void *m;
+
+    m = mmAlloc(0x2000, -1, 0);
+    lbl_803DD044 = (int)m;
+    if (m == NULL) {
+        lbl_803DB700 = 8;
+        return 0;
+    }
+    if (saveGame(writeImages) == 0) {
+        mm_free((void *)lbl_803DD044);
+        lbl_803DD044 = 0;
+        return 0;
+    }
+    DCInvalidateRange((void *)lbl_803DD044, 0x2000);
+    result = CARDRead(lbl_80396900, (void *)lbl_803DD044, 0x2000, 0x2000);
+    if (result == 0) {
+        p = (u64 *)lbl_803DD044;
+        x = 0;
+        acc = 1;
+        for (i = 0; (int)i < 0x3ff; i++) {
+            u64 v = p[i];
+            x ^= v;
+            acc += v;
+        }
+        c = x ^ (acc + 13);
+        chk = c;
+        if (c != *(u64 *)(lbl_803DD044 + 0x1ff8)) {
+            DCInvalidateRange((void *)lbl_803DD044, 0x2000);
+            result = CARDRead(lbl_80396900, (void *)lbl_803DD044, 0x2000, 0x4000);
+            if (result == 0) {
+                p = (u64 *)lbl_803DD044;
+                x = 0;
+                acc = 1;
+                for (i = 0; (int)i < 0x3ff; i++) {
+                    u64 v = p[i];
+                    x ^= v;
+                    acc += v;
+                }
+                c = x ^ (acc + 13);
+                chk = c;
+                if (c == *(u64 *)(lbl_803DD044 + 0x1ff8)) {
+                    result = saveGame_doWrite(1);
+                } else {
+                    result = -0x55;
+                    lbl_803DB700 = 10;
+                }
+            }
+        }
+    }
+    if (result == 0) {
+        if (lbl_803DD059 != 0) {
+            if (lbl_803DD050 != 0) {
+                if (chk != lbl_803DD050) {
+                    result = -0x55;
+                    lbl_803DB700 = 0xb;
+                }
+            } else {
+                lbl_803DD050 = chk;
+            }
+        } else {
+            lbl_803DD050 = chk;
+        }
+    }
+    if (result == 0) {
+        lbl_803DD05C = (int)(m = mmAlloc(0x4000, -1, 0));
+        if (m == NULL) {
+            if (lbl_803DD05A != 0) {
+                lbl_803DD05A = 0;
+                CARDClose(lbl_80396900);
+            }
+            CARDUnmount(0);
+            mm_free(lbl_803DD040);
+            lbl_803DD040 = NULL;
+            mm_free((void *)lbl_803DD044);
+            lbl_803DD044 = 0;
+            lbl_803DB700 = 8;
+            return 0;
+        }
+        result = CARDRead(lbl_80396900, m, 0x2000, 0);
+        if (result == 0) {
+            p = (u64 *)lbl_803DD05C;
+            x = 0;
+            acc = 1;
+            for (i = 0; (int)i < 0x400; i++) {
+                u64 v = p[i];
+                x ^= v;
+                acc += v;
+            }
+            chk2 = x ^ (acc + 13);
+            if (chk2 != *(u64 *)(lbl_803DD044 + 0xa40)) {
+                if ((u8)writeImages != 0) {
+                    result = -4;
+                    lbl_803DB700 = 0xc;
+                } else {
+                    memset((void *)lbl_803DD05C, 0, 0x4000);
+                    loadMemCardImages();
+                    result = CARDWrite(lbl_80396900, (void *)lbl_803DD05C, 0x2000, 0);
+                    if (result == -5) {
+                        CARDDelete(0, sMemoryCardFileName);
+                    }
+                    if (result == 0) {
+                        t = *(u64 *)(lbl_803DD05C + 0x2a40);
+                        if (t != *(u64 *)(lbl_803DD044 + 0xa40)) {
+                            int e;
+                            *(u64 *)(lbl_803DD044 + 0xa40) = t;
+                            e = saveGame_doWrite(2);
+                            if (e == 0) {
+                                e = saveGame_doWrite(1);
+                            }
+                            result = e;
+                        }
+                    }
+                }
+            }
+        }
+        mm_free((void *)lbl_803DD05C);
+    }
+    if (result == 0 && cb != NULL) {
+        result = cb(cbA, cbB, cbC, cbD);
+    }
+    if (lbl_803DD05A != 0) {
+        lbl_803DD05A = 0;
+        CARDClose(lbl_80396900);
+    }
+    CARDUnmount(0);
+    mm_free(lbl_803DD040);
+    lbl_803DD040 = NULL;
+    mm_free((void *)lbl_803DD044);
+    lbl_803DD044 = 0;
+    switch (result) {
+    case -5:
+        lbl_803DB700 = 4;
+        break;
+    case 0:
+        lbl_803DB700 = 0xd;
+        return 1;
+    case -4:
+        break;
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern int Obj_GetPlayerObject(void);
+extern s16 getAngle(f32 x, f32 z);
+extern f32 sqrtf(f32 x);
+extern int ObjAnim_SetCurrentMove(int objAnim, int moveId, f32 moveProgress, int flags);
+extern int ObjAnim_SampleRootCurvePhase(f32 distance, int objAnim, f32 *phaseOut);
+extern int ObjAnim_AdvanceCurrentMove(int objAnim, f32 moveStepScale, f32 deltaTime, int flags);
+extern u8 framesThisStep;
+void objModelResetVecFn_80080548(int obj);
+
+/* EN v1.0 0x800805A4  size: 1564b  Object-sequence turn-to-face-player step:
+ * starts (mode 4) or advances (mode 5) a smooth turn of the object toward the
+ * player, blending the model vector and animation as it goes. */
+#pragma peephole off
+#pragma scheduling off
+int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
+{
+    int player;
+    s16 *v;
+    s16 yawd;
+    s16 turn;
+    int mode;
+    f32 out;
+    f32 d[3];
+    f32 dist;
+    f32 rate;
+    f32 g;
+
+    player = Obj_GetPlayerObject();
+    p4 = (s16)(182.04445f * p4);
+    p5 = (s16)(182.04445f * p5);
+    p3 = (s16)(182.04445f * p3);
+    mode = (s8)*(u8 *)(state + 0x56);
+    if (mode == 4) {
+        *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~2;
+        v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
+        if (v != NULL) {
+            *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~8;
+        }
+        *(void (**)(int))(state + 0xe8) = objModelResetVecFn_80080548;
+        *(f32 *)(state + 0x40) = 0.0f;
+        *(f32 *)(state + 0x44) = 0.0f;
+        *(f32 *)(state + 0x48) = 0.0f;
+        yawd = Obj_GetYawDeltaToObject(obj, player, 0);
+        if ((yawd >= 0 ? yawd : -yawd) < p4) {
+            turn = 0;
+        } else {
+            turn = (s16)(yawd > 0 ? yawd - p4 : yawd + p4);
+        }
+        *(s16 *)(state + 0x50) = turn;
+        {
+            f32 *dp = d;
+            f32 *ovr = *(f32 **)(obj + 0x74);
+            if (ovr == NULL) {
+                dp[0] = *(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc);
+                dp[1] = *(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10);
+                dp[2] = *(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14);
+            } else {
+                dp[0] = *(f32 *)(player + 0xc) - ovr[0];
+                dp[1] = *(f32 *)(player + 0x10) - ovr[1];
+                dp[2] = *(f32 *)(player + 0x14) - ovr[2];
+            }
+            dp[1] += 30.0f;
+            dist = sqrtf(dp[0] * dp[0] + dp[2] * dp[2]);
+            *(s16 *)(state + 0x52) = (s16)getAngle(dp[1], dist);
+        }
+        *(s16 *)(state + 0x54) = 0;
+        *(u8 *)(state + 0x56) = 5;
+        *(f32 *)(state + 0x4c) = 0.0f;
+        if (turn != 0) {
+            rate = (f32)p3 / (f32)turn;
+            *(f32 *)(state + 0x24) = rate >= 0.0f ? rate : -rate;
+        } else {
+            *(f32 *)(state + 0x24) = 1.0f;
+        }
+        {
+            f32 c = *(f32 *)(state + 0x24);
+            *(f32 *)(state + 0x24) = c < 0.0f ? 0.0f : (c > 0.25f ? 0.25f : c);
+        }
+        if (p6 != -1) {
+            if (p7 != -1) {
+                *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~4;
+                if (*(s16 *)(state + 0x50) < 0) {
+                    if (p7 != -1) {
+                        ObjAnim_SetCurrentMove(obj, p7, 0.0f, 0);
+                    }
+                } else {
+                    if (p6 != -1) {
+                        ObjAnim_SetCurrentMove(obj, p6, 0.0f, 0);
+                    }
+                }
+            }
+        }
+        *(void (**)(int))(state + 0xe8) = objModelResetVecFn_80080548;
+        return 1;
+    } else if (mode == 5) {
+        *(f32 *)(state + 0x4c) = *(f32 *)(state + 0x4c) + *(f32 *)(state + 0x24);
+        if (*(f32 *)(state + 0x4c) > 1.0f) {
+            *(f32 *)(state + 0x4c) = 1.0001f;
+        }
+        *(s16 *)(obj + 0x0) += (s16)(*(f32 *)(state + 0x24) * (f32)*(s16 *)(state + 0x50));
+        v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
+        if (v != NULL) {
+            *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~8;
+            yawd = Obj_GetYawDeltaToObject(obj, player, 0);
+            {
+                f32 yf = (f32)yawd;
+                f32 blend = *(f32 *)(state + 0x4c);
+                f32 cur = (f32)v[1];
+                g = cur * (1.0f - blend) + yf * blend;
+            }
+            if (g < (f32)-p5) {
+                g = (f32)-p5;
+            } else if (g > (f32)p5) {
+                g = (f32)p5;
+            }
+            v[1] = g;
+            v[0] = (f32)*(s16 *)(state + 0x52) * *(f32 *)(state + 0x4c);
+        }
+        if (p6 != -1) {
+            if (p7 != -1) {
+                s16 t50 = *(s16 *)(state + 0x50);
+                ObjAnim_SampleRootCurvePhase((f32)(t50 >= 0 ? t50 : -t50) * 3.142f / 325767.0f,
+                                             obj, &out);
+                ObjAnim_AdvanceCurrentMove(obj, out, (f32)framesThisStep, 0);
+            }
+        }
+        if (*(f32 *)(state + 0x4c) > 1.0f) {
+            *(u8 *)(state + 0x56) = 0;
+            *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 8;
+            v = (s16 *)objModelGetVecFn_800395d8(obj, 0);
+            if (v != NULL) {
+                *(s16 *)(state + 0x114) = v[1];
+                *(s16 *)(state + 0x116) = v[0];
+            } else {
+                *(s16 *)(state + 0x114) = 0;
+                *(s16 *)(state + 0x116) = 0;
+            }
+            if (*(f32 *)(state + 0x4c) > 1.0f) {
+                *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 4;
+            }
+        }
+        return 1;
+    }
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+extern void AudioStream_StartPrepared(void);
+extern int lbl_803DD094;
+extern int lbl_803DB728;
+extern f32 lbl_803DEFB0;
+extern f32 lbl_803DD074;
+extern int lbl_803DB724;
+extern f32 lbl_8039A1AC[];
+
+/* EN v1.0 0x8008023C  size: 260b  Starts the prepared audio stream for a
+ * sequence slot and records its subtitle timing. */
+#pragma peephole off
+#pragma scheduling off
+int seqStreamFn_8008023c(int x)
+{
+    int seqId = lbl_8039A3B0[x] - 1;
+    f32 v;
+
+    if (lbl_803DD094 != 0 || AudioStream_IsPreparing() != 0) {
+        return 0;
+    }
+    v = lbl_8039A1AC[x] - (f32)lbl_803DB728;
+    lbl_803DD074 = v;
+    if (lbl_803DEFB0 != lbl_803DD074) {
+        lbl_803DB724 = x;
+    }
+    lbl_803DB728 = -1;
+    if (seqId == 0x54b || seqId == 0x550 || seqId == 0x551 || seqId == 0x574 || seqId == 0x579 ||
+        seqId == 0x57a) {
+        lbl_803DD074 = 0.0f;
+        lbl_803DB724 = -1;
+    }
+    lbl_803DB720 = -1;
+    AudioStream_StartPrepared();
+    return 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+void endObjSequence(int seq)
+{
+    int objCount;
+    int objIdx;
+    int frees[32];
+    int *objs;
+    int i;
+    int nFree;
+
+    objs = ObjList_GetObjects(&objIdx, &objCount);
+    nFree = 0;
+    for (i = 0; i < objCount; i++) {
+        int obj = *objs;
+        if (*(s16 *)(obj + 0xb4) == seq) {
+            *(s16 *)(obj + 0xb4) = -1;
+        }
+        if (*(s16 *)(obj + 0x44) == 0x10) {
+            int st = *(int *)(obj + 0xb8);
+            if ((s8)*(u8 *)(st + 0x57) == seq) {
+                if ((void *)obj == lbl_803DD0B8) {
+                    lbl_803DD0B8 = 0;
+                }
+                frees[nFree++] = obj;
+                if (*(void **)(st + 0xe8) != NULL) {
+                    (*(void (**)(int, int, int))(st + 0xe8))(*(int *)(st + 0x110), obj, st);
+                    *(int *)(st + 0xe8) = 0;
+                }
+                if (nFree == 0x10) {
+                    debugPrintf(sEndObjSequenceMaxFreesError);
+                }
+            }
+        }
+        objs++;
+    }
+    if (curSeqNo == seq) {
+        curSeqNo = 0;
+        Pause_ResetMenuFrameCounter();
+    }
+    if (seq == lbl_803DB720) {
+        AudioStream_CancelPrepared();
+        lbl_803DB720 = -1;
+    }
+    {
+        int j;
+        int *p;
+        j = 0;
+        p = frees;
+        for (; j < nFree; j++) {
+            Obj_FreeObject(*p);
+            p++;
+        }
+    }
+    if (seq == lbl_803DD064) {
+        if ((*(int (**)(void))((char *)*gCameraInterface + 0x10))() == 0x4d) {
+            (*(void (**)(int, int, int, int, int, int, int))((char *)*gCameraInterface +
+                                                             0x1c))(0x42, 0, 3, 0, 0, 0, 0);
+            lbl_803DD064 = 0;
+            curSeqNo = 0;
+            Pause_ResetMenuFrameCounter();
+        }
+    }
+    lbl_803DD07C = 0;
+    lbl_8039A3B0[seq] = 0;
 }
 #pragma scheduling reset
 #pragma peephole reset

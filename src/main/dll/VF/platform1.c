@@ -71,394 +71,278 @@ extern f32 lbl_803E633C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+extern u32  getButtonsJustPressedIfNotBusy(int pad);
+extern int  isGameTimerDisabled(void);
+extern f64  fn_8001461C(void);
+extern void fn_801DE320(void *dst, int val);
+extern void fn_800882C8(void);
+extern void hudFn_8011f38c(int n);
+extern int *gCameraInterface;
+extern int *gObjectTriggerInterface;
+extern int *gScreenTransitionInterface;
+extern int  lbl_803DDC10;
+extern int  lbl_803DC070;
+extern u8   framesThisStep;
+extern f32  timeDelta;
+extern f32  lbl_803E5668;
+extern f32  lbl_803E566C;
+extern f32  lbl_803E5670;
+extern f32  lbl_803E5674;
+extern f32  lbl_803E5678;
+extern f32  lbl_803E567C;
+extern f32  lbl_803E5680;
+extern f32  lbl_803E5684;
+extern f32  lbl_803E5688;
+extern f32  lbl_803E568C;
+extern f32  lbl_803E5690;
+extern f32  lbl_803E5694;
+extern f32  lbl_803E5698;
+extern f32  lbl_803E569C;
+extern f32  lbl_803E56A0;
+extern f32  lbl_803E56A4;
+
+/* EN v1.0 0x801DE430  size: 2596b  platform1_control: tug-of-war rope
+ * minigame. Resolves the anchor object, applies sequence events, then per
+ * frame works the rope position from A-press mashing, runs both pull anims
+ * and grunt/creak sfx, and ends the game through the screen transition
+ * when either side wins. */
 #pragma scheduling off
 #pragma peephole off
-void platform1_control(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                       undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                       undefined4 param_9,undefined4 param_10,int param_11,int param_12,
-                       int *param_13,undefined4 param_14,undefined4 param_15,int param_16)
+int platform1_control(int obj, int p2, u8 *data)
 {
-  float fVar1;
-  uint uVar2;
-  uint uVar3;
-  int iVar4;
-  byte bVar7;
-  int iVar5;
-  uint uVar6;
-  uint *puVar8;
-  Platform1State *state;
-  double dVar10;
-  double dVar11;
-  double dVar12;
-  double in_f19;
-  double in_f20;
-  double in_f21;
-  double in_f22;
-  double dVar13;
-  double in_f23;
-  double dVar14;
-  double in_f24;
-  double dVar15;
-  double in_f25;
-  double dVar16;
-  double in_f26;
-  double dVar17;
-  double in_f27;
-  double dVar18;
-  double in_f28;
-  double dVar19;
-  double in_f29;
-  double dVar20;
-  double in_f30;
-  double dVar21;
-  double in_f31;
-  double dVar22;
-  double in_ps19_1;
-  double in_ps20_1;
-  double in_ps21_1;
-  double in_ps22_1;
-  double in_ps23_1;
-  double in_ps24_1;
-  double in_ps25_1;
-  double in_ps26_1;
-  double in_ps27_1;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  int local_128;
-  int local_124;
-  int local_120;
-  int local_11c;
-  int *local_118;
-  int local_114;
-  int *local_110;
-  int local_10c;
-  int local_108;
-  int local_104 [2];
-  undefined local_fc;
-  undefined4 local_f8;
-  uint uStack_f4;
-  undefined8 local_f0;
-  float local_c8;
-  float fStack_c4;
-  float local_b8;
-  float fStack_b4;
-  float local_a8;
-  float fStack_a4;
-  float local_98;
-  float fStack_94;
-  float local_88;
-  float fStack_84;
-  float local_78;
-  float fStack_74;
-  float local_68;
-  float fStack_64;
-  float local_58;
-  float fStack_54;
-  float local_48;
-  float fStack_44;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  local_48 = (float)in_f27;
-  fStack_44 = (float)in_ps27_1;
-  local_58 = (float)in_f26;
-  fStack_54 = (float)in_ps26_1;
-  local_68 = (float)in_f25;
-  fStack_64 = (float)in_ps25_1;
-  local_78 = (float)in_f24;
-  fStack_74 = (float)in_ps24_1;
-  local_88 = (float)in_f23;
-  fStack_84 = (float)in_ps23_1;
-  local_98 = (float)in_f22;
-  fStack_94 = (float)in_ps22_1;
-  local_a8 = (float)in_f21;
-  fStack_a4 = (float)in_ps21_1;
-  local_b8 = (float)in_f20;
-  fStack_b4 = (float)in_ps20_1;
-  local_c8 = (float)in_f19;
-  fStack_c4 = (float)in_ps19_1;
-  uVar2 = (uint)param_1;
-  state = *(Platform1State **)(uVar2 + PLATFORM1_STATE_OFFSET);
-  uVar3 = (uint)Obj_GetPlayerObject();
-  state->flags = state->flags | PLATFORM1_FLAG_ACTIVE;
-  setAButtonIcon(0xf);
-  DAT_803de890 = 0;
-  state->linkedObject = 0;
-  iVar4 = ObjList_GetObjects(local_104,&local_108);
-  while (local_104[0] < local_108) {
-    state->linkedObject = *(int *)(iVar4 + local_104[0] * 4);
-    local_104[0] = local_104[0] + 1;
-    if (*(short *)(state->linkedObject + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_ANCHOR_OBJECT_TYPE) {
-      local_104[0] = local_108;
-    }
-  }
-  for (iVar4 = 0; fVar1 = lbl_803E6300, iVar4 < (int)(uint)*(byte *)(param_11 + 0x8b);
-      iVar4 = iVar4 + 1) {
-    bVar7 = *(byte *)(param_11 + iVar4 + 0x81);
-    if (bVar7 == 3) {
-      iVar5 = ObjList_GetObjects(&local_110,&local_10c);
-      puVar8 = (uint *)(iVar5 + (int)local_110 * 4);
-      for (; param_12 = local_10c, param_13 = local_110, (int)local_110 < local_10c;
-          local_110 = (int *)((int)local_110 + 1)) {
-        if ((*puVar8 != uVar2) &&
-            (*(short *)(*puVar8 + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE)) {
-          iVar5 = *(int *)(iVar5 + (int)local_110 * 4);
-          (**(code **)(**(int **)(iVar5 + 0x68) + 0x20))(iVar5,2);
-          break;
+    Platform1State *st;
+    int player;
+    int *list;
+    int *p;
+    int o;
+    int i;
+    u8 ev;
+    u32 buttons;
+    f32 wob1, wob2, push;
+    f32 diff;
+    f32 t;
+    u32 vol;
+    int ret;
+    f32 c566C, c5674, c5670, c5678, c5684, c5680, c567C, c568C, c5690, c569C;
+    int idx1, cnt1, idx2, cnt2, idx3, cnt3, idx4, cnt4, idx5, cnt5;
+    struct {
+        int mode;
+        u8 flag;
+    } evt;
+
+    st = *(Platform1State **)(obj + PLATFORM1_STATE_OFFSET);
+    player = (int)Obj_GetPlayerObject();
+    st->flags = (u8)(st->flags | PLATFORM1_FLAG_ACTIVE);
+    setAButtonIcon(0xf);
+    lbl_803DDC10 = 0;
+    st->linkedObject = 0;
+    list = (int *)ObjList_GetObjects(&idx1, &cnt1);
+    while (idx1 < cnt1) {
+        st->linkedObject = list[idx1++];
+        if (*(s16 *)(st->linkedObject + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_ANCHOR_OBJECT_TYPE) {
+            idx1 = cnt1;
         }
-        puVar8 = puVar8 + 1;
-      }
     }
-    else if (bVar7 < 3) {
-      if (bVar7 == 1) {
-        state->flags = state->flags | PLATFORM1_TRIGGER_FLAG_01;
-      }
-      else if (bVar7 != 0) {
-        state->flags = state->flags | PLATFORM1_TRIGGER_FLAG_02;
-        state->transitionStep = 0;
-        param_12 = 0;
-        param_13 = (int *)*DAT_803dd6d4;
-        (*(code *)param_13[0x14])(0x48,3,0);
-      }
-    }
-    else if (bVar7 == 5) {
-      if (state->linkedObject != 0) {
-        *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E6300;
-        *(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = fVar1;
-        ObjAnim_SetCurrentMove(uVar3,PLATFORM1_ACTIVE_MODEL_ID,
-                     *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),0);
-        ObjAnim_SetCurrentMove(state->linkedObject,PLATFORM1_IDLE_MODEL_ID,
-                     *(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET),0);
-        state->prevTrackOffset = state->currentTrackOffset;
-      }
-    }
-    else if (bVar7 < 5) {
-      iVar5 = ObjList_GetObjects(&local_118,&local_114);
-      puVar8 = (uint *)(iVar5 + (int)local_118 * 4);
-      for (; param_12 = local_114, param_13 = local_118, (int)local_118 < local_114;
-          local_118 = (int *)((int)local_118 + 1)) {
-        if ((*puVar8 != uVar2) &&
-            (*(short *)(*puVar8 + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE)) {
-          iVar5 = *(int *)(iVar5 + (int)local_118 * 4);
-          (**(code **)(**(int **)(iVar5 + 0x68) + 0x20))(iVar5,3);
-          break;
+    for (i = 0; i < data[0x8b]; i++) {
+        ev = data[i + 0x81];
+        switch (ev) {
+        case 1:
+            st->flags = (u8)(st->flags | PLATFORM1_TRIGGER_FLAG_01);
+            break;
+        case 2:
+            st->flags = (u8)(st->flags | PLATFORM1_TRIGGER_FLAG_02);
+            st->transitionStep = 0;
+            ((void (*)(int, int, int, int))*(void **)((char *)(*gObjectTriggerInterface) + 0x50))(0x48, 3, 0, 0);
+            break;
+        case 3:
+            list = (int *)ObjList_GetObjects(&idx2, &cnt2);
+            p = &list[idx2];
+            for (; idx2 < cnt2; idx2++) {
+                if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                    o = list[idx2];
+                    ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 2);
+                    break;
+                }
+                p++;
+            }
+            break;
+        case 4:
+            list = (int *)ObjList_GetObjects(&idx3, &cnt3);
+            p = &list[idx3];
+            for (; idx3 < cnt3; idx3++) {
+                if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                    o = list[idx3];
+                    ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 3);
+                    break;
+                }
+                p++;
+            }
+            break;
+        case 5:
+            if ((u32)st->linkedObject != 0) {
+                *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E5668;
+                *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E5668;
+                ObjAnim_SetCurrentMove(player, PLATFORM1_ACTIVE_MODEL_ID,
+                                       *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET), 0);
+                ObjAnim_SetCurrentMove(st->linkedObject, PLATFORM1_IDLE_MODEL_ID,
+                                       *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET), 0);
+                st->prevTrackOffset = st->currentTrackOffset;
+            }
+            break;
         }
-        puVar8 = puVar8 + 1;
-      }
     }
-  }
-  if (((state->flags & PLATFORM1_TRIGGER_MASK) != 0) && (0x18 < state->loopSfxHandle)) {
-    iVar4 = (**(code **)(*DAT_803dd6d0 + 0x10))();
-    if (iVar4 != 0x48) {
-      local_104[1] = 3;
-      local_fc = 1;
-      param_12 = 8;
-      param_13 = local_104 + 1;
-      param_14 = 0;
-      param_15 = 0xff;
-      param_16 = *DAT_803dd6d0;
-      (**(code **)(param_16 + 0x1c))(0x48,1,3);
-    }
-    if (*(short *)(uVar3 + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_ACTIVE_MODEL_ID) {
-      ObjAnim_SetCurrentMove(uVar3,PLATFORM1_ACTIVE_MODEL_ID,
-                   *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET),0);
-    }
-    iVar4 = state->linkedObject;
-    if (*(short *)(iVar4 + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_IDLE_MODEL_ID) {
-      ObjAnim_SetCurrentMove(iVar4,PLATFORM1_IDLE_MODEL_ID,
-                   *(float *)(iVar4 + PLATFORM1_TRACK_VALUE_OFFSET),0);
-    }
-    *(undefined2 *)(param_11 + 0x6e) = 0xffff;
-    *(undefined *)(param_11 + 0x56) = 0;
-    Sfx_KeepAliveLoopedObjectSound(uVar2,PLATFORM1_LOOP_SFX_ID);
-    dVar13 = (double)lbl_803E6304;
-    dVar14 = (double)lbl_803E630C;
-    dVar15 = (double)lbl_803E6308;
-    dVar16 = (double)lbl_803E6310;
-    dVar17 = (double)lbl_803E631C;
-    dVar18 = (double)lbl_803E6318;
-    dVar19 = (double)lbl_803E6314;
-    dVar20 = (double)lbl_803E6324;
-    dVar21 = (double)lbl_803E6328;
-    dVar22 = (double)lbl_803E6334;
-    dVar12 = DOUBLE_803e6340;
-    for (iVar4 = 0; iVar4 < (int)(uint)DAT_803dc070; iVar4 = iVar4 + 1) {
-      if (state->linkedObject == 0) goto LAB_801df3c4;
-      uStack_f4 = state->currentTrackOffset + 0xb24U ^ 0x80000000;
-      local_f8 = 0x43300000;
-      dVar10 = (double)(float)((double)(float)((double)CONCAT44(0x43300000,uStack_f4) - dVar12) /
-                              dVar13);
-      dVar11 = (double)(float)(dVar14 * dVar10 + dVar15);
-      if (dVar11 < dVar16) {
-        dVar11 = -dVar11;
-      }
-      dVar10 = (double)(float)((double)(float)(dVar17 * dVar10 + dVar18) * dVar11 + dVar19);
-      uVar6 = FUN_80006bf8(0);
-      if (((uVar6 & 0x100) != 0) && (bVar7 = FUN_80006b44(), bVar7 == 0)) {
-        state->offsetVelocity = (int)((float)state->offsetVelocity - lbl_803E6320);
-      }
-      if ((double)(float)state->offsetVelocity < dVar20) {
-        state->offsetVelocity = (int)(float)dVar20;
-      }
-      uVar6 = state->currentTrackOffset;
-      if ((-0x46dd < (int)uVar6) && ((int)uVar6 < -0xb23)) {
-        state->currentTrackOffset =
-            (int)((f32)(s32)(uVar6) +
-                  (float)state->offsetVelocity);
-      }
-      local_f0 = (double)CONCAT44(0x43300000,state->prevTrackOffset ^ 0x80000000);
-      uVar6 = state->currentTrackOffset;
-      uStack_f4 = uVar6 ^ 0x80000000;
-      local_f8 = 0x43300000;
-      in_f19 = (double)(float)((double)((float)(local_f0 - dVar12) -
-                                       (float)((double)CONCAT44(0x43300000,uStack_f4) - dVar12)) /
-                              dVar21);
-      if ((int)uVar6 < -0x46dc) {
-        state->transitionStep = 0;
-        state->flags = state->flags & ~PLATFORM1_TRIGGER_MASK;
-        state->flags = state->flags | PLATFORM1_FLAG_EXIT_NEGATIVE;
-        iVar4 = ObjList_GetObjects(&local_120,&local_11c);
-        puVar8 = (uint *)(iVar4 + local_120 * 4);
-        goto LAB_801defcc;
-      }
-      if (-0xb24 < (int)uVar6) {
-        state->transitionStep = 3;
-        state->flags = state->flags & ~PLATFORM1_TRIGGER_MASK;
-        state->flags = state->flags | PLATFORM1_FLAG_EXIT_POSITIVE;
-        iVar4 = ObjList_GetObjects(&local_128,&local_124);
-        puVar8 = (uint *)(iVar4 + local_128 * 4);
-        goto LAB_801df0d8;
-      }
-      if (0 < state->loopSfxHandle) {
-        (**(code **)(*DAT_803dd6d4 + 0x74))();
-      }
-      if ((double)(float)state->offsetVelocity < dVar21) {
-        state->offsetVelocity =
-            (int)(float)((double)lbl_803E6330 * dVar10 + (double)(float)state->offsetVelocity);
-      }
-      local_f0 = (double)CONCAT44(0x43300000,state->prevTrackOffset ^ 0x80000000);
-      uStack_f4 = state->currentTrackOffset ^ 0x80000000;
-      local_f8 = 0x43300000;
-      iVar5 = FUN_8002fc3c((double)(float)((double)((float)(local_f0 - dVar12) -
-                                                   (float)((double)CONCAT44(0x43300000,uStack_f4) -
-                                                          dVar12)) / dVar22),(double)lbl_803DC074)
-      ;
-      if ((iVar5 != 0) && (*(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET) < lbl_803E6310)) {
-        *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET) =
-            lbl_803E6314 + *(float *)(uVar3 + PLATFORM1_TRACK_VALUE_OFFSET);
-      }
-      local_f0 = (double)CONCAT44(0x43300000,state->currentTrackOffset ^ 0x80000000);
-      uStack_f4 = state->prevTrackOffset ^ 0x80000000;
-      local_f8 = 0x43300000;
-      iVar5 = FUN_8002fc3c((double)(float)((double)((float)(local_f0 - dVar12) -
-                                                   (float)((double)CONCAT44(0x43300000,uStack_f4) -
-                                                          dVar12)) / dVar22),(double)lbl_803DC074)
-      ;
-      if (iVar5 != 0) {
-        fVar1 = *(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET);
-        if (fVar1 < lbl_803E6310) {
-          *(float *)(state->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = lbl_803E6314 + fVar1;
+    if ((st->flags & PLATFORM1_TRIGGER_MASK) == 0) {
+        ret = 0;
+    } else if (st->loopSfxHandle < 0x19) {
+        ret = 0;
+    } else {
+        if ((*(int (**)(void))((char *)(*gCameraInterface) + 0x10))() != 0x48) {
+            evt.mode = 3;
+            evt.flag = 1;
+            (*(void (**)(int, int, int, int, void *, int, int))((char *)(*gCameraInterface) + 0x1c))(0x48, 1, 3, 8, &evt, 0, 0xff);
         }
-      }
-      state->prevTrackOffset = state->currentTrackOffset;
+        if (*(s16 *)(player + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_ACTIVE_MODEL_ID) {
+            ObjAnim_SetCurrentMove(player, PLATFORM1_ACTIVE_MODEL_ID,
+                                   *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET), 0);
+        }
+        o = st->linkedObject;
+        if (*(s16 *)(o + PLATFORM1_MODEL_ID_OFFSET) != PLATFORM1_IDLE_MODEL_ID) {
+            ObjAnim_SetCurrentMove(o, PLATFORM1_IDLE_MODEL_ID,
+                                   *(f32 *)(o + PLATFORM1_TRACK_VALUE_OFFSET), 0);
+        }
+        *(u16 *)(data + 0x6e) = 0xffff;
+        data[0x56] = 0;
+        Sfx_KeepAliveLoopedObjectSound(obj, PLATFORM1_LOOP_SFX_ID);
+        c566C = lbl_803E566C;
+        c5674 = lbl_803E5674;
+        c5670 = lbl_803E5670;
+        c5678 = lbl_803E5678;
+        c5684 = lbl_803E5684;
+        c5680 = lbl_803E5680;
+        c567C = lbl_803E567C;
+        c568C = lbl_803E568C;
+        c5690 = lbl_803E5690;
+        c569C = lbl_803E569C;
+        for (i = 0; i < framesThisStep; i++) {
+            if ((u32)st->linkedObject == 0) {
+                ret = 0;
+                goto done;
+            }
+            wob1 = (f32)(st->currentTrackOffset + 0xb24) / c566C;
+            wob2 = c5674 * wob1 + c5670;
+            if (wob2 < c5678) {
+                wob2 = -wob2;
+            }
+            push = (c5684 * wob1 + c5680) * wob2 + c567C;
+            buttons = getButtonsJustPressedIfNotBusy(0);
+            if ((buttons & 0x100) != 0 && isGameTimerDisabled() == 0) {
+                st->offsetVelocity = st->offsetVelocity - lbl_803E5688;
+            }
+            if (st->offsetVelocity < c568C) {
+                st->offsetVelocity = c568C;
+            }
+            if (st->currentTrackOffset > -0x46de && st->currentTrackOffset < -0xb23) {
+                st->currentTrackOffset = (int)((f32)st->currentTrackOffset + st->offsetVelocity);
+            }
+            diff = ((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / c5690;
+            if (st->currentTrackOffset < -0x46dc) {
+                st->transitionStep = 0;
+                st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
+                st->flags = (u8)(st->flags | PLATFORM1_FLAG_EXIT_NEGATIVE);
+                list = (int *)ObjList_GetObjects(&idx4, &cnt4);
+                p = &list[idx4];
+                for (; idx4 < cnt4; idx4++) {
+                    if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                        o = list[idx4];
+                        ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 4);
+                        break;
+                    }
+                    p++;
+                }
+                fn_801DE320(&lbl_803DC070, (int)(fn_8001461C() / lbl_803E5694));
+                hudFn_8011f38c(0);
+                if (st->loopSfxHandle > 0) {
+                    fn_800882C8();
+                }
+                (*(void (**)(int, int))((char *)(*gScreenTransitionInterface) + 0xc))(0x14, 1);
+                lbl_803DDC10 = 2;
+                ret = 4;
+                goto done;
+            }
+            if (st->currentTrackOffset > -0xb24) {
+                st->transitionStep = 3;
+                st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
+                st->flags = (u8)(st->flags | PLATFORM1_FLAG_EXIT_POSITIVE);
+                list = (int *)ObjList_GetObjects(&idx5, &cnt5);
+                p = &list[idx5];
+                for (; idx5 < cnt5; idx5++) {
+                    if ((u32)*p != (u32)obj && *(s16 *)(*p + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE) {
+                        o = list[idx5];
+                        ((void (*)(int, int))*(void **)(*(int *)(*(int *)(o + 0x68)) + 0x20))(o, 4);
+                        break;
+                    }
+                    p++;
+                }
+                hudFn_8011f38c(0);
+                if (st->loopSfxHandle > 0) {
+                    fn_800882C8();
+                }
+                (*(void (**)(int, int))((char *)(*gScreenTransitionInterface) + 0xc))(0x14, 1);
+                lbl_803DDC10 = 2;
+                ret = 4;
+                goto done;
+            }
+            if (st->loopSfxHandle > 0) {
+                ((void (*)(void))*(void **)((char *)(*gObjectTriggerInterface) + 0x74))();
+            }
+            if (st->offsetVelocity < c5690) {
+                st->offsetVelocity = lbl_803E5698 * push + st->offsetVelocity;
+            }
+            if (ObjAnim_AdvanceCurrentMove(((f32)st->prevTrackOffset - (f32)st->currentTrackOffset) / c569C,
+                                           timeDelta, player, 0) != 0 &&
+                *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET) < c5678) {
+                *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET) =
+                    c567C + *(f32 *)(player + PLATFORM1_TRACK_VALUE_OFFSET);
+            }
+            if (ObjAnim_AdvanceCurrentMove(((f32)st->currentTrackOffset - (f32)st->prevTrackOffset) / c569C,
+                                           timeDelta, st->linkedObject, 0) != 0) {
+                t = *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET);
+                if (t < c5678) {
+                    *(f32 *)(st->linkedObject + PLATFORM1_TRACK_VALUE_OFFSET) = c567C + t;
+                }
+            }
+            st->prevTrackOffset = st->currentTrackOffset;
+        }
+        st->playerSfxTimer = st->playerSfxTimer - timeDelta;
+        if (st->playerSfxTimer < lbl_803E5678) {
+            if (lbl_803E5678 <= diff) {
+                st->playerSfxTimer = (f32)(int)randomGetRange(0x78, 0xf0);
+            } else {
+                st->playerSfxTimer = (f32)(int)randomGetRange(0x28, 100);
+            }
+            Sfx_PlayFromObject(player, PLATFORM1_PLAYER_SFX_ID);
+        }
+        st->platformSfxTimer = st->platformSfxTimer - timeDelta;
+        if (st->platformSfxTimer < lbl_803E5678) {
+            if (diff <= lbl_803E5678) {
+                st->platformSfxTimer = (f32)(int)randomGetRange(0x78, 0xf0);
+            } else {
+                st->platformSfxTimer = (f32)(int)randomGetRange(0x28, 100);
+            }
+            Sfx_PlayFromObject(obj, PLATFORM1_PLATFORM_SFX_ID);
+        }
+        if (diff < lbl_803E5678) {
+            diff = -diff;
+        }
+        vol = (u32)(lbl_803E56A0 * diff);
+        if ((int)vol > 100) {
+            vol = 100;
+        }
+        Sfx_SetObjectSfxVolume(obj, PLATFORM1_LOOP_SFX_ID, vol & 0xff, lbl_803E56A4);
+        ret = 0;
     }
-    state->playerSfxTimer = (int)((float)state->playerSfxTimer - lbl_803DC074);
-    if ((double)(float)state->playerSfxTimer < (double)lbl_803E6310) {
-      if ((double)lbl_803E6310 <= in_f19) {
-        uVar6 = randomGetRange(0x78,0xf0);
-        local_f0 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-        state->playerSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
-      }
-      else {
-        uVar6 = randomGetRange(0x28,100);
-        local_f0 = (double)CONCAT44(0x43300000,uVar6 ^ 0x80000000);
-        state->playerSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
-      }
-      Sfx_PlayFromObject(uVar3,PLATFORM1_PLAYER_SFX_ID);
-    }
-    state->platformSfxTimer = (int)((float)state->platformSfxTimer - lbl_803DC074);
-    if ((double)(float)state->platformSfxTimer < (double)lbl_803E6310) {
-      if (in_f19 <= (double)lbl_803E6310) {
-        uVar3 = randomGetRange(0x78,0xf0);
-        local_f0 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-        state->platformSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
-      }
-      else {
-        uVar3 = randomGetRange(0x28,100);
-        local_f0 = (double)CONCAT44(0x43300000,uVar3 ^ 0x80000000);
-        state->platformSfxTimer = (int)(float)(local_f0 - DOUBLE_803e6340);
-      }
-      Sfx_PlayFromObject(uVar2,PLATFORM1_PLATFORM_SFX_ID);
-    }
-    if (in_f19 < (double)lbl_803E6310) {
-      in_f19 = -in_f19;
-    }
-    iVar4 = (int)((double)lbl_803E6338 * in_f19);
-    local_f0 = (double)(longlong)iVar4;
-    if (100 < iVar4) {
-      iVar4 = 100;
-    }
-    Sfx_SetObjectSfxVolume((double)lbl_803E633C,uVar2,PLATFORM1_LOOP_SFX_ID,(byte)iVar4);
-  }
-LAB_801df3c4:
-  return;
-LAB_801defcc:
-  if (local_11c <= local_120) goto LAB_801defd8;
-  if ((*puVar8 != uVar2) &&
-      (*(short *)(*puVar8 + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE)) {
-    iVar4 = *(int *)(iVar4 + local_120 * 4);
-    (**(code **)(**(int **)(iVar4 + 0x68) + 0x20))(iVar4,4);
-    goto LAB_801defd8;
-  }
-  puVar8 = puVar8 + 1;
-  local_120 = local_120 + 1;
-  goto LAB_801defcc;
-LAB_801defd8:
-  dVar12 = FUN_80006b34();
-  local_f0 = (double)(longlong)(int)(dVar12 / (double)lbl_803E632C);
-  sc_totemstrength_sortCompletionGameBits();
-  FUN_8011e800(0);
-  if (0 < state->loopSfxHandle) {
-    FUN_80080eec(state->loopSfxHandle);
-  }
-  (**(code **)(*DAT_803dd6cc + 0xc))(0x14,1);
-  DAT_803de890 = 2;
-  goto LAB_801df3c4;
-LAB_801df0d8:
-  if (local_124 <= local_128) goto LAB_801df0e4;
-  if ((*puVar8 != uVar2) &&
-      (*(short *)(*puVar8 + PLATFORM1_OBJECT_TYPE_OFFSET) == PLATFORM1_PEER_OBJECT_TYPE)) {
-    iVar4 = *(int *)(iVar4 + local_128 * 4);
-    (**(code **)(**(int **)(iVar4 + 0x68) + 0x20))(iVar4,4);
-    goto LAB_801df0e4;
-  }
-  puVar8 = puVar8 + 1;
-  local_128 = local_128 + 1;
-  goto LAB_801df0d8;
-LAB_801df0e4:
-  FUN_8011e800(0);
-  if (0 < state->loopSfxHandle) {
-    FUN_80080eec(state->loopSfxHandle);
-  }
-  (**(code **)(*DAT_803dd6cc + 0xc))(0x14,1);
-  DAT_803de890 = 2;
-  goto LAB_801df3c4;
+done:
+    return ret;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -496,6 +380,189 @@ void sc_totemstrength_init(int *obj) {
     *(f32 *)((char *)inner + 0xc) = *(f32 *)((char *)obj + 0xc);
     *(f32 *)((char *)inner + 0x10) = *(f32 *)((char *)obj + 0x10);
     *(f32 *)((char *)inner + 0x14) = *(f32 *)((char *)obj + 0x14);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void GameBit_Set(int eventId, int value);
+extern u32  GameBit_Get(int eventId);
+extern int *gMapEventInterface;
+extern u32  getButtonsJustPressed(int pad);
+extern int  playerGetMoney(int player);
+extern void playerAddMoney(int player, int amount);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShow(int id);
+extern void objRenderFn_80041018(int obj);
+typedef struct KioskTextPair {
+    int approachText;
+    int poorText;
+} KioskTextPair;
+extern KioskTextPair lbl_80327AF0[];
+
+/* EN v1.0 0x801DEE90  size: 548b  sc_totemstrength_update: drive the
+ * tug-of-war intro/outro sequencing once map event 0xe reaches state 6. */
+#pragma scheduling off
+#pragma peephole off
+void sc_totemstrength_update(u8 *obj)
+{
+    Platform1State *st = *(Platform1State **)(obj + 0xb8);
+    u8 t;
+    s16 step;
+    u8 b;
+    f32 fz;
+
+    Obj_GetPlayerObject();
+    GameBit_Set(0xf1d, 0);
+    t = (u8)(*(int (**)(int))((char *)(*gMapEventInterface) + 0x40))(0xe);
+    if (t == 6) {
+        if ((st->flags & PLATFORM1_FLAG_ACTIVE) != 0) {
+            if (st->loopSfxHandle > 0) {
+                (*(void (**)(void))((char *)(*gObjectTriggerInterface) + 0x4c))();
+                fn_800882C8();
+            }
+            if (lbl_803DDC10-- == 0) {
+                st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_ACTIVE);
+                *(int *)(obj + 0xc) = st->savedPosXBits;
+                *(int *)(obj + 0x10) = st->savedPosYBits;
+                *(int *)(obj + 0x14) = st->savedPosZBits;
+                st->linkedObject = 0;
+                *(s16 *)obj = -0x2900;
+                st->currentTrackOffset = -0x2900;
+                b = st->flags;
+                if ((b & PLATFORM1_FLAG_EXIT_NEGATIVE) != 0) {
+                    GameBit_Set(0x784, 1);
+                    st->loopSfxHandle = -1;
+                    st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_MASK);
+                    st->flags = (u8)(st->flags & ~PLATFORM1_FLAG_EXIT_NEGATIVE);
+                } else if ((b & PLATFORM1_FLAG_EXIT_POSITIVE) != 0) {
+                    st->flags = (u8)(b & ~PLATFORM1_FLAG_EXIT_POSITIVE);
+                    st->loopSfxHandle = -1;
+                    GameBit_Set(0x786, 1);
+                }
+            }
+        } else if ((st->flags & PLATFORM1_TRIGGER_FLAG_02) != 0) {
+            step = st->transitionStep;
+            if (step == 0) {
+                *(s16 *)obj = -0x2900;
+                st->currentTrackOffset = -0x2900;
+                st->prevTrackOffset = st->currentTrackOffset;
+                fz = lbl_803E5678;
+                *(f32 *)&st->motionValue0 = lbl_803E5678;
+                st->offsetVelocity = fz;
+                st->transitionStep = 1;
+                st->flags = (u8)(st->flags & ~PLATFORM1_TRIGGER_FLAG_01);
+            } else if (step == 1) {
+                GameBit_Set(0xf1d, 1);
+                hudFn_8011f38c(1);
+                st->loopSfxHandle =
+                    (*(int (**)(int, u8 *, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
+            } else if (step == 2) {
+                st->transitionStep = 0;
+            } else if (step == 3) {
+                st->transitionStep = 0;
+            }
+        }
+    }
+}
+
+/* EN v1.0 0x801DF110  size: 220b  PaymentKiosk_testEvent. */
+u32 PaymentKiosk_testEvent(int obj, int p2, int ev)
+{
+    u8 *setup = *(u8 **)(obj + 0x4c);
+    u8 *st = *(u8 **)(obj + 0xb8);
+    int player;
+    u32 r;
+
+    player = (int)Obj_GetPlayerObject();
+    r = getButtonsJustPressed(0);
+    if ((r & 0x100) == 0) {
+        r = 0;
+    } else {
+        st[2] = 0;
+        if (playerGetMoney(player) >= *(s16 *)(setup + 0x1a)) {
+            r = 1;
+            st[2] = 0;
+        } else {
+            r = 0;
+            st[2] = 2;
+        }
+        switch (ev) {
+        case 0x15:
+            r = !r;
+            break;
+        case 0x14:
+            r = !(1 - r);
+            break;
+        default:
+            r = 0;
+            break;
+        }
+    }
+    return r;
+}
+
+/* EN v1.0 0x801DF1EC  size: 280b  PaymentKiosk_SeqFn. */
+int PaymentKiosk_SeqFn(int obj, int p2, u8 *data)
+{
+    u8 *st = *(u8 **)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+    int player;
+    int i;
+    u8 ev;
+
+    player = (int)Obj_GetPlayerObject();
+    *(void **)(data + 0xec) = (void *)PaymentKiosk_testEvent;
+    for (i = 0; i < data[0x8b]; i++) {
+        ev = data[i + 0x81];
+        switch (ev) {
+        case 2:
+            GameBit_Set(*(s16 *)(setup + 0x1e), 1);
+            playerAddMoney(player, -*(s16 *)(setup + 0x1a));
+            st[0] = 2;
+            break;
+        case 1:
+            st[2] = 1;
+            break;
+        }
+    }
+    gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+    if (st[2] == 1) {
+        gameTextShow(lbl_80327AF0[st[1]].approachText);
+    } else if (st[2] == 2) {
+        gameTextShow(lbl_80327AF0[st[1]].poorText);
+    }
+    return 0;
+}
+
+/* EN v1.0 0x801DF328  size: 276b  paymentkiosk_update. */
+void paymentkiosk_update(int obj)
+{
+    u8 *st = *(u8 **)(obj + 0xb8);
+    int setup = *(int *)(obj + 0x4c);
+    u8 b = st[0];
+
+    switch (b) {
+    case 0:
+        if (*(s16 *)(setup + 0x1e) != -1 && GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+            st[0] = 2;
+        } else {
+            st[0] = 1;
+        }
+        break;
+    case 1:
+        if ((*(u8 *)(obj + 0xaf) & 1) != 0) {
+            (*(int (**)(int, int, int))((char *)(*gObjectTriggerInterface) + 0x48))(0, obj, -1);
+        }
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~8);
+        break;
+    case 2:
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 8);
+        break;
+    }
+    st[2] = 0;
+    if ((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0 && *(void **)(obj + 0x74) != NULL) {
+        objRenderFn_80041018(obj);
+    }
 }
 #pragma peephole reset
 #pragma scheduling reset

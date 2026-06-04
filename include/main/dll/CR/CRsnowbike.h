@@ -8,9 +8,7 @@
 extern ObjectDescriptor12 gSC_levelcontrolObjDescriptor;
 extern ObjectDescriptor gSC_MusicTreeObjDescriptor;
 
-void sh_emptytumblew_init(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 uint param_9);
+void sh_emptytumblew_init(s16 *p1, int p2);
 void FUN_801db57c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  undefined2 *param_9,int param_10);
@@ -24,14 +22,14 @@ void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_
                  undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9);
 
 u8 sc_levelcontrol_func11(int *obj);
-void sc_levelcontrol_setScale(void);
+void sc_levelcontrol_setScale(int obj, u8 scale);
 int sc_levelcontrol_getExtraSize(void);
 int sc_levelcontrol_getObjectTypeId(void);
 void sc_levelcontrol_free(int obj);
 void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void sc_levelcontrol_hitDetect(void);
-void sc_levelcontrol_update(void);
-void sc_levelcontrol_init(void);
+void sc_levelcontrol_update(int obj);
+void sc_levelcontrol_init(int obj);
 void sc_levelcontrol_release(void);
 void sc_levelcontrol_initialise(void);
 

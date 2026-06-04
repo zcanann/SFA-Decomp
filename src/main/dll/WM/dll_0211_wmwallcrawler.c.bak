@@ -1,0 +1,45 @@
+#include "main/dll/WM/wm_shared.h"
+
+int wmwallcrawler_getExtraSize(void) { return 0x29c; }
+
+int wmwallcrawler_getObjectTypeId(void) { return 0x0; }
+
+void wmwallcrawler_release(void) {}
+
+void wmwallcrawler_initialise(void) {}
+
+#pragma peephole off
+#pragma scheduling off
+int fn_801F7FF4(int obj) {
+    *(u8 *)(*(int *)(obj + 0xb8) + 0x296) = 1;
+    return 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void wmwallcrawler_free(int obj) {
+    ObjGroup_RemoveObject(obj, 3);
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void wmwallcrawler_render(int p1, int p2, int p3, int p4, int p5, s8 vis) {
+    int *inner = *(int **)(p1 + 0xb8);
+    if ((*(u16 *)((char *)inner + 0x294) & 0x40) != 0 && (u8)*(u8 *)(p1 + 0x36) < 0xff) {
+        if (*(u8 *)(p1 + 0x36) > 0xff - framesThisStep) {
+            *(u8 *)(p1 + 0x36) = 0xff;
+            *(u16 *)((char *)inner + 0x294) &= ~0x40;
+        } else {
+            *(u8 *)(p1 + 0x36) += framesThisStep;
+        }
+    }
+    if (vis != 0 && *(s16 *)((char *)inner + 0x28c) == 0) {
+        objRenderFn_8003b8f4(lbl_803E5FB4);
+    }
+}
+#pragma scheduling reset
+#pragma peephole reset

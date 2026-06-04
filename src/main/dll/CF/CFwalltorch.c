@@ -35,286 +35,211 @@ extern f32 FLOAT_803e4b30;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void Transporter_SeqFn(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11,int param_12,
-                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16)
+extern void Sfx_PlayFromObject(int* obj, int soundId);
+extern void unlockLevel(int a, int b, int c);
+extern void lockLevel(int dirIdx, int v);
+extern int mapGetDirIdx(int mapId);
+extern void loadMapAndParent(int mapId);
+extern void setLoadedFileFlags_blocks1(void);
+extern void clearLoadedFileFlags_blocks1(void);
+extern void warpToMap(int warpId, int p2);
+extern void getEnvfxActImmediately(int* a, int* b, int id, int p4);
+extern void setDrawCloudsAndLights(int v);
+extern void skyFn_80088c94(int a, int b);
+extern void skyFn_80088e54(int mode, f32 brightness);
+extern void timeOfDayFn_80055000(void);
+extern int* gMapEventInterface;
+extern f32 lbl_803E3E98;
+
+#pragma peephole off
+#pragma scheduling off
+int Transporter_SeqFn(int* obj, int p2, u8* seq)
 {
-  uint uVar1;
-  undefined4 uVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  undefined8 extraout_f1;
-  undefined8 uVar8;
-  
-  uVar1 = FUN_80286840();
-  iVar6 = *(int *)(uVar1 + 0x4c);
-  iVar5 = *(int *)(uVar1 + 0xb8);
-  iVar7 = 0;
-  iVar4 = param_11;
-  uVar8 = extraout_f1;
-  do {
-    if ((int)(uint)*(byte *)(param_11 + 0x8b) <= iVar7) {
-      warpPadFn_8019042c(uVar1);
-      FUN_8028688c();
-      return;
-    }
-    switch(*(undefined *)(param_11 + iVar7 + 0x81)) {
-    case 1:
-      if (*(int *)(iVar6 + 0x14) == 0x47064) {
-        uVar8 = FUN_800427c8();
-      }
-      uVar8 = FUN_80053c98(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,
-                           (int)*(char *)(iVar6 + 0x1a),'\0',iVar4,param_12,param_13,param_14,
-                           param_15,param_16);
-      break;
-    case 2:
-      iVar4 = *(int *)(iVar6 + 0x14);
-      if (iVar4 == 0x48018) {
-        iVar4 = FUN_80044404(0x22);
-        FUN_80042b9c(iVar4,1,0);
-        GameBit_Set(0x36a,0);
-        (**(code **)(*DAT_803dd72c + 0x50))(0xd,0,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(0xd,1,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(0xd,5,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(0xd,10,1);
-        iVar4 = 1;
-        param_12 = *DAT_803dd72c;
-        (**(code **)(param_12 + 0x50))(0xd,0xb);
-        uVar8 = GameBit_Set(0xe05,0);
-      }
-      else if (iVar4 < 0x48018) {
-        if (iVar4 == 0x45dd6) {
-          iVar4 = 1;
-          FUN_80042b9c(0,0,1);
-          uVar2 = FUN_80044404(4);
-          FUN_80042bec(uVar2,0);
-        }
-        else if (iVar4 < 0x45dd6) {
-          if (iVar4 == 0x2ba7) {
-            iVar4 = 1;
-            FUN_80042b9c(0,0,1);
-            uVar2 = FUN_80044404(0x12);
-            FUN_80042bec(uVar2,0);
-            uVar2 = FUN_80044404(0x1f);
-            FUN_80042bec(uVar2,1);
-            FUN_80041ff8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x1f);
-          }
-          else if (iVar4 < 0x2ba7) {
-            if (iVar4 == 0xc5d) {
-              iVar3 = FUN_80044404(0x21);
-              iVar4 = 0;
-              FUN_80042b9c(iVar3,1,0);
+    int i;
+    int* setup = *(int**)((char*)obj + 0x4c);
+    u8* state = *(u8**)((char*)obj + 0xb8);
+    int id;
+
+    for (i = 0; i < *(u8*)(seq + 0x8b); i++) {
+        switch (seq[i + 0x81]) {
+        case 7:
+            state[0xe] = state[0xe] | 4;
+            Sfx_PlayFromObject(obj, 0x420);
+            break;
+        case 2:
+            id = *(int*)((char*)setup + 0x14);
+            switch (id) {
+            case 0x49c33:
+                GameBit_Set(0x884, 1);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(7, 0, 1);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(7, 2, 1);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(7, 3, 1);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(7, 7, 1);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(7, 10, 1);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(10, 7, 0);
+                /* fallthrough */
+            case 0x48506:
+            case 0x4977d:
+                loadMapAndParent(7);
+                unlockLevel(0, 0, 1);
+                lockLevel(mapGetDirIdx(7), 1);
+                break;
+            case 0x43f83:
+                loadMapAndParent(0x21);
+                lockLevel(mapGetDirIdx(0x21), 1);
+                break;
+            case 0x4a533:
+                loadMapAndParent(0x28);
+                lockLevel(mapGetDirIdx(0x28), 1);
+                break;
+            case 0xc5d:
+                unlockLevel(mapGetDirIdx(0x21), 1, 0);
+                break;
+            case 0x47064:
+                loadMapAndParent(0x1c);
+                lockLevel(mapGetDirIdx(0x1c), 1);
+                lockLevel(mapGetDirIdx(0x1b), 0);
+                break;
+            case 0x4800c:
+                loadMapAndParent(0x22);
+                lockLevel(mapGetDirIdx(0xd), 0);
+                lockLevel(mapGetDirIdx(0x22), 1);
+                break;
+            case 0x48018:
+                unlockLevel(mapGetDirIdx(0x22), 1, 0);
+                GameBit_Set(0x36a, 0);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(0xd, 0, 1);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(0xd, 1, 1);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(0xd, 5, 1);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(0xd, 10, 1);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(0xd, 0xb, 1);
+                GameBit_Set(0xe05, 0);
+                break;
+            case 0x45dd6:
+                unlockLevel(0, 0, 1);
+                lockLevel(mapGetDirIdx(4), 0);
+                break;
+            case 0x2ba7:
+                unlockLevel(0, 0, 1);
+                lockLevel(mapGetDirIdx(0x12), 0);
+                lockLevel(mapGetDirIdx(0x1f), 1);
+                loadMapAndParent(0x1f);
+                break;
+            case 0x46a40:
+                unlockLevel(0, 0, 1);
+                lockLevel(mapGetDirIdx(0xe), 0);
+                lockLevel(mapGetDirIdx(0x20), 1);
+                loadMapAndParent(0x20);
+                break;
+            case 0x4b666:
+                unlockLevel(0, 0, 1);
+                lockLevel(mapGetDirIdx(0x32), 0);
+                lockLevel(mapGetDirIdx(0x15), 1);
+                loadMapAndParent(0x15);
+                break;
+            case 0x497f4:
+                unlockLevel(0, 0, 1);
+                lockLevel(mapGetDirIdx(10), 0);
+                lockLevel(mapGetDirIdx(0x27), 1);
+                loadMapAndParent(0x27);
+                break;
+            case 0x4cde6:
+                unlockLevel(0, 0, 1);
+                lockLevel(mapGetDirIdx(10), 0);
+                break;
             }
-          }
-          else if (iVar4 == 0x43f83) {
-            FUN_80041ff8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x21);
-            uVar2 = FUN_80044404(0x21);
-            FUN_80042bec(uVar2,1);
-          }
+            break;
+        case 3:
+            switch (*(int*)((char*)setup + 0x14)) {
+            case 0x47064:
+                unlockLevel(0, 0, 1);
+                break;
+            }
+            break;
+        case 5:
+            switch (*(int*)((char*)setup + 0x14)) {
+            case 0x47064:
+                setLoadedFileFlags_blocks1();
+                break;
+            }
+            break;
+        case 6:
+            switch (*(int*)((char*)setup + 0x14)) {
+            case 0x47064:
+                clearLoadedFileFlags_blocks1();
+                break;
+            }
+            break;
+        case 1:
+            switch (*(int*)((char*)setup + 0x14)) {
+            case 0x47064:
+                clearLoadedFileFlags_blocks1();
+                break;
+            }
+            warpToMap(*(s8*)((char*)setup + 0x1a), 0);
+            break;
+        case 8:
+            id = *(int*)((char*)setup + 0x14);
+            switch (id) {
+            case 0x43f83:
+            case 0x4977d:
+                getEnvfxActImmediately(obj, obj, 0x224, 0);
+                getEnvfxActImmediately(obj, obj, 0x223, 0);
+                getEnvfxActImmediately(obj, obj, 0x22e, 0);
+                getEnvfxActImmediately(obj, obj, 0x218, 0);
+                setDrawCloudsAndLights(0);
+                skyFn_80088c94(1, 1);
+                skyFn_80088e54(0, lbl_803E3E98);
+                break;
+            case 0x48506:
+            case 0x4a533:
+                getEnvfxActImmediately(obj, obj, 0x217, 0);
+                getEnvfxActImmediately(obj, obj, 0x216, 0);
+                getEnvfxActImmediately(obj, obj, 0x22e, 0);
+                getEnvfxActImmediately(obj, obj, 0x218, 0);
+                setDrawCloudsAndLights(1);
+                getEnvfxActImmediately(obj, obj, 0x84, 0);
+                getEnvfxActImmediately(obj, obj, 0x8a, 0);
+                skyFn_80088c94(1, 0);
+                skyFn_80088e54(0, lbl_803E3E98);
+                break;
+            case 0x4b666:
+                getEnvfxActImmediately(obj, obj, 0x23a, 0);
+                getEnvfxActImmediately(obj, obj, 0x23b, 0);
+                break;
+            case 0x4b667:
+                getEnvfxActImmediately(obj, obj, 0x23a, 0);
+                getEnvfxActImmediately(obj, obj, 0x23b, 0);
+                ((void(*)(int,int,int))((void**)*gMapEventInterface)[20])(0x15, 2, 1);
+                getEnvfxActImmediately(0, 0, 0x23e, 0);
+                skyFn_80088e54(1, lbl_803E3E98);
+                break;
+            case 0x4670d:
+            case 0x4827e:
+            case 0x49267:
+                getEnvfxActImmediately(obj, obj, 0x247, 0);
+                getEnvfxActImmediately(obj, obj, 0x248, 0);
+                timeOfDayFn_80055000();
+                GameBit_Set(0xef6, 1);
+                break;
+            case 0x4cb6a:
+                getEnvfxActImmediately(obj, obj, 0x238, 0);
+                getEnvfxActImmediately(obj, obj, 0x239, 0);
+                skyFn_80088c94(1, 1);
+                skyFn_80088e54(0, lbl_803E3E98);
+                /* fallthrough */
+            case 0x4cb84:
+                GameBit_Set(0xef6, 0);
+                break;
+            }
+            break;
         }
-        else if (iVar4 == 0x47064) {
-          FUN_80041ff8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x1c);
-          uVar2 = FUN_80044404(0x1c);
-          FUN_80042bec(uVar2,1);
-          uVar2 = FUN_80044404(0x1b);
-          FUN_80042bec(uVar2,0);
-        }
-        else if (iVar4 < 0x47064) {
-          if (iVar4 == 0x46a40) {
-            iVar4 = 1;
-            FUN_80042b9c(0,0,1);
-            uVar2 = FUN_80044404(0xe);
-            FUN_80042bec(uVar2,0);
-            uVar2 = FUN_80044404(0x20);
-            FUN_80042bec(uVar2,1);
-            FUN_80041ff8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x20);
-          }
-        }
-        else if (iVar4 == 0x4800c) {
-          FUN_80041ff8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x22);
-          uVar2 = FUN_80044404(0xd);
-          FUN_80042bec(uVar2,0);
-          uVar2 = FUN_80044404(0x22);
-          FUN_80042bec(uVar2,1);
-        }
-      }
-      else if (iVar4 == 0x49c33) {
-        GameBit_Set(0x884,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(7,0,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(7,2,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(7,3,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(7,7,1);
-        (**(code **)(*DAT_803dd72c + 0x50))(7,10,1);
-        param_12 = *DAT_803dd72c;
-        uVar8 = (**(code **)(param_12 + 0x50))(10,7,0);
-LAB_80191384:
-        FUN_80041ff8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,7);
-        iVar4 = 1;
-        FUN_80042b9c(0,0,1);
-        uVar2 = FUN_80044404(7);
-        FUN_80042bec(uVar2,1);
-      }
-      else if (iVar4 < 0x49c33) {
-        if (iVar4 == 0x4977d) goto LAB_80191384;
-        if (iVar4 < 0x4977d) {
-          if (iVar4 == 0x48506) goto LAB_80191384;
-        }
-        else if (iVar4 == 0x497f4) {
-          iVar4 = 1;
-          FUN_80042b9c(0,0,1);
-          uVar2 = FUN_80044404(10);
-          FUN_80042bec(uVar2,0);
-          uVar2 = FUN_80044404(0x27);
-          FUN_80042bec(uVar2,1);
-          FUN_80041ff8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x27);
-        }
-      }
-      else if (iVar4 == 0x4b666) {
-        iVar4 = 1;
-        FUN_80042b9c(0,0,1);
-        uVar2 = FUN_80044404(0x32);
-        FUN_80042bec(uVar2,0);
-        uVar2 = FUN_80044404(0x15);
-        FUN_80042bec(uVar2,1);
-        FUN_80041ff8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x15);
-      }
-      else if (iVar4 < 0x4b666) {
-        if (iVar4 == 0x4a533) {
-          FUN_80041ff8(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x28);
-          uVar2 = FUN_80044404(0x28);
-          FUN_80042bec(uVar2,1);
-        }
-      }
-      else if (iVar4 == 0x4cde6) {
-        iVar4 = 1;
-        FUN_80042b9c(0,0,1);
-        uVar2 = FUN_80044404(10);
-        FUN_80042bec(uVar2,0);
-      }
-      break;
-    case 3:
-      if (*(int *)(iVar6 + 0x14) == 0x47064) {
-        iVar4 = 1;
-        FUN_80042b9c(0,0,1);
-      }
-      break;
-    case 5:
-      if (*(int *)(iVar6 + 0x14) == 0x47064) {
-        uVar8 = FUN_80042800();
-      }
-      break;
-    case 6:
-      if (*(int *)(iVar6 + 0x14) == 0x47064) {
-        uVar8 = FUN_800427c8();
-      }
-      break;
-    case 7:
-      *(byte *)(iVar5 + 0xe) = *(byte *)(iVar5 + 0xe) | 4;
-      uVar8 = FUN_80006824(uVar1,0x420);
-      break;
-    case 8:
-      iVar3 = *(int *)(iVar6 + 0x14);
-      if (iVar3 == 0x4977d) {
-LAB_801917b8:
-        uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                             uVar1,0x224,0,param_13,param_14,param_15,param_16);
-        uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                             uVar1,0x223,0,param_13,param_14,param_15,param_16);
-        uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                             uVar1,0x22e,0,param_13,param_14,param_15,param_16);
-        iVar4 = 0x218;
-        param_12 = 0;
-        FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,uVar1,0x218
-                     ,0,param_13,param_14,param_15,param_16);
-        FUN_8005d17c(0);
-        FUN_80080f28(1,'\x01');
-        uVar8 = FUN_80080f3c((double)FLOAT_803e4b30,0);
-      }
-      else if (iVar3 < 0x4977d) {
-        if (iVar3 == 0x4827e) {
-LAB_80191960:
-          uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                               uVar1,0x247,0,param_13,param_14,param_15,param_16);
-          iVar4 = 0x248;
-          param_12 = 0;
-          FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,uVar1,
-                       0x248,0,param_13,param_14,param_15,param_16);
-          FUN_80053b3c();
-          uVar8 = GameBit_Set(0xef6,1);
-        }
-        else if (iVar3 < 0x4827e) {
-          if (iVar3 == 0x4670d) goto LAB_80191960;
-          if ((iVar3 < 0x4670d) && (iVar3 == 0x43f83)) goto LAB_801917b8;
-        }
-        else {
-          if (iVar3 == 0x49267) goto LAB_80191960;
-          if ((iVar3 < 0x49267) && (iVar3 == 0x48506)) goto LAB_8019182c;
-        }
-      }
-      else if (iVar3 == 0x4b667) {
-        uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                             uVar1,0x23a,0,param_13,param_14,param_15,param_16);
-        FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,uVar1,0x23b
-                     ,0,param_13,param_14,param_15,param_16);
-        uVar8 = (**(code **)(*DAT_803dd72c + 0x50))(0x15,2,1);
-        iVar4 = 0x23e;
-        param_12 = 0;
-        FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x23e,0,
-                     param_13,param_14,param_15,param_16);
-        uVar8 = FUN_80080f3c((double)FLOAT_803e4b30,1);
-      }
-      else if (iVar3 < 0x4b667) {
-        if (iVar3 == 0x4a533) {
-LAB_8019182c:
-          uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                               uVar1,0x217,0,param_13,param_14,param_15,param_16);
-          uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                               uVar1,0x216,0,param_13,param_14,param_15,param_16);
-          uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                               uVar1,0x22e,0,param_13,param_14,param_15,param_16);
-          FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,uVar1,
-                       0x218,0,param_13,param_14,param_15,param_16);
-          uVar8 = FUN_8005d17c(1);
-          uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                               uVar1,0x84,0,param_13,param_14,param_15,param_16);
-          iVar4 = 0x8a;
-          param_12 = 0;
-          FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,uVar1,
-                       0x8a,0,param_13,param_14,param_15,param_16);
-          FUN_80080f28(1,'\0');
-          uVar8 = FUN_80080f3c((double)FLOAT_803e4b30,0);
-        }
-        else if ((0x4a532 < iVar3) && (0x4b665 < iVar3)) {
-          uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                               uVar1,0x23a,0,param_13,param_14,param_15,param_16);
-          iVar4 = 0x23b;
-          param_12 = 0;
-          uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                               uVar1,0x23b,0,param_13,param_14,param_15,param_16);
-        }
-      }
-      else {
-        if (iVar3 != 0x4cb84) {
-          if ((0x4cb83 < iVar3) || (iVar3 != 0x4cb6a)) break;
-          uVar8 = FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,
-                               uVar1,0x238,0,param_13,param_14,param_15,param_16);
-          iVar4 = 0x239;
-          param_12 = 0;
-          FUN_80006724(uVar8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,uVar1,uVar1,
-                       0x239,0,param_13,param_14,param_15,param_16);
-          FUN_80080f28(1,'\x01');
-          FUN_80080f3c((double)FLOAT_803e4b30,0);
-        }
-        uVar8 = GameBit_Set(0xef6,0);
-      }
     }
-    iVar7 = iVar7 + 1;
-  } while( true );
+    warpPadFn_8019042c((int)obj);
+    return 0;
 }
+#pragma scheduling reset
+#pragma peephole reset
 
 /*
  * --INFO--

@@ -554,14 +554,20 @@ extern void Obj_FreeObject(int obj);
 #pragma scheduling off
 #pragma peephole off
 void explodable_free(int obj, int flag) {
-    int *state = *(int **)((char *)obj + 0xB8);
-    int *p;
-    int i;
-    ObjGroup_RemoveObject(obj, 33);
-    if (flag != 0) return;
-    for (i = 0, p = state; i < 15; i++, p++) {
-        if (*(int *)((char *)p + 0x690) != 0) {
-            Obj_FreeObject(*(int *)((char *)p + 0x690));
+    int state;
+    int i = -1;
+    int p;
+    void *o;
+
+    state = *(int *)(obj + 0xb8);
+    ObjGroup_RemoveObject(obj, 0x21);
+    if (flag == 0) {
+        p = state - 4;
+        while (p += 4, ++i < 15) {
+            o = *(void **)(p + 0x690);
+            if (o != NULL) {
+                Obj_FreeObject((int)o);
+            }
         }
     }
 }
@@ -579,6 +585,7 @@ void blasted_init(int param_1, int param_2)
     int* state = *(int**)(param_1 + 0xb8);
     int* targ;
     s16 gbid;
+    u8 v;
 
     state[0xc / 4] = 0;
     objSetSlot((int*)param_1, 0x51);
@@ -587,15 +594,354 @@ void blasted_init(int param_1, int param_2)
     *(u8*)((char*)state + 0x10) = (u8)*(s16*)(param_2 + 0x1a);
     gbid = *(s16*)(param_2 + 0x20);
     if (gbid != -1) {
-        *(u8*)((char*)state + 0x11) = (u8)GameBit_Get(gbid);
-        if (*(u8*)((char*)state + 0x11) != 0) {
+        v = (u8)GameBit_Get(gbid);
+        *(u8*)((char*)state + 0x11) = v;
+        if (v != 0) {
             Obj_SetActiveModelIndex((int*)param_1, (int)*(u8*)((char*)state + 0x11));
         }
     }
     GameBit_Set(0x2de, 1);
     *(s16*)param_1 = (s16)((s32)*(s8*)(param_2 + 0x18) << 8);
-    if (GameBit_Get(*(s16*)(param_2 + 0x1e)) != 0) {
+    if ((u32)GameBit_Get(*(s16*)(param_2 + 0x1e)) != 0) {
         state[0xc / 4] = fn_801A27B8((int*)param_1, (int)*(s16*)(param_2 + 0x1c));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_801A2E80(int obj, int def, int p3, int state);
+#pragma scheduling off
+#pragma peephole off
+void explodable_update(int obj)
+{
+    int p;
+    int def;
+    int i;
+    int state;
+    int r;
+    int o;
+
+    state = *(int *)(obj + 0xb8);
+    def = *(int *)(obj + 0x4c);
+    if (*(u8 *)(state + 0x6e4) != 2) {
+        if (*(u8 *)(state + 0x6e4) == 0) {
+            if ((u32)GameBit_Get(*(s16 *)(def + 0x40)) != 0) {
+                fn_801A2E80(obj, def, 0, state);
+                if (*(int *)(state + 0x6d0) != 0) {
+                    Sfx_PlayFromObject(obj, *(int *)(state + 0x6d0) & 0xffff);
+                }
+                *(u8 *)(state + 0x6e4) = 1;
+                *(u8 *)(obj + 0x36) = 0;
+            } else {
+                return;
+            }
+        } else {
+            i = 0;
+            p = state;
+            do {
+                o = *(int *)(p + 0x690);
+                if ((void *)o != NULL) {
+                    r = (*(code *)(*(int *)*(int *)(o + 0x68) + 0x20))(o);
+                    switch (r) {
+                    case 2:
+                        GameBit_Set(*(s16 *)(def + 0x3e), 1);
+                        Obj_FreeObject(*(int *)(p + 0x690));
+                        *(int *)(p + 0x690) = 0;
+                        break;
+                    case 0:
+                        GameBit_Set(*(s16 *)(def + 0x3e), 1);
+                        if ((*(u32 *)(state + 0x6cc) & (1 << i)) == 0) {
+                            *(u32 *)(state + 0x6cc) |= 1 << i;
+                        }
+                        break;
+                    }
+                }
+                p += 4;
+                i++;
+            } while (i < 0xf);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int lbl_80322DA0[];
+extern f32 lbl_803E435C;
+
+typedef struct {
+    int key;
+    int objType;
+    int sfx;
+    u8 mode;
+    u8 flags;
+    u8 pad[2];
+} GasVentTableEntry;
+
+#pragma scheduling off
+#pragma peephole off
+void explodable_init(int obj, int setup)
+{
+    int state = *(int *)(obj + 0xb8);
+    int *tbl;
+    int base;
+    GasVentTableEntry *e;
+    u32 c1;
+
+    ObjGroup_AddObject(obj, 0x21);
+    state = *(int *)(obj + 0xb8);
+    c1 = *(u8 *)(setup + 0x18);
+    if (c1 == 0) {
+        c1 = 1;
+    }
+    *(u8 *)(state + 0x6d4) = c1;
+    *(int *)(state + 0x6cc) = 0;
+    *(int *)(state + 0x690) = 0;
+    *(int *)(state + 0x694) = 0;
+    *(int *)(state + 0x698) = 0;
+    *(int *)(state + 0x69c) = 0;
+    *(int *)(state + 0x6a0) = 0;
+    *(int *)(state + 0x6a4) = 0;
+    *(int *)(state + 0x6a8) = 0;
+    *(int *)(state + 0x6ac) = 0;
+    *(int *)(state + 0x6b0) = 0;
+    *(int *)(state + 0x6b4) = 0;
+    *(int *)(state + 0x6b8) = 0;
+    *(int *)(state + 0x6bc) = 0;
+    *(int *)(state + 0x6c0) = 0;
+    *(int *)(state + 0x6c4) = 0;
+    *(int *)(state + 0x6c8) = 0;
+    *(s16 *)(obj + 0) = *(s16 *)(setup + 0x1a);
+    *(s16 *)(obj + 2) = *(s16 *)(setup + 0x1c);
+    *(s16 *)(obj + 4) = *(s16 *)(setup + 0x1e);
+    if ((u32)GameBit_Get(*(s16 *)(setup + 0x3e)) != 0) {
+        *(u8 *)(state + 0x6e4) = 2;
+    }
+    base = 0;
+    for (tbl = lbl_80322DA0; base < 16; base++) {
+        if (*(s16 *)(obj + 0x46) == *tbl) {
+            *(u8 *)(state + 0x6e5) = base;
+            break;
+        }
+        tbl += 4;
+    }
+    if (*(s8 *)(setup + 0x3d) == 0) {
+        *(u8 *)(setup + 0x3d) = 0x14;
+    }
+    *(f32 *)(obj + 8) =
+        *(f32 *)(*(int *)(obj + 0x50) + 4) * (f32)(int)*(s8 *)(setup + 0x3d) / lbl_803E435C;
+    e = (GasVentTableEntry *)lbl_80322DA0;
+    if ((e[*(u8 *)(state + 0x6e5)].flags & 1) != 0) {
+        *(u16 *)(obj + 0xb0) |= 0x4000;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern u8 Obj_IsLoadingLocked(void);
+extern int Obj_AllocObjectSetup(int a, int b);
+extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
+extern f32 lbl_803E4350;
+extern f32 lbl_803E4354;
+extern f32 lbl_803E4358;
+extern f32 lbl_803E435C;
+#pragma scheduling off
+#pragma peephole off
+int fn_801A2BDC(int p1, int p2, int p3, int p4)
+{
+    int s;
+    f32 f1;
+
+    if (Obj_IsLoadingLocked() == 0) {
+        return 0;
+    }
+    s = Obj_AllocObjectSetup(0x44, p2);
+    *(s16 *)(s + 0) = (s16)p2;
+    *(u8 *)(s + 4) = 2;
+    *(u8 *)(s + 6) = 0xff;
+    *(u8 *)(s + 5) = 1;
+    *(u8 *)(s + 7) = 0xff;
+    *(f32 *)(s + 8) = *(f32 *)(p1 + 0xc);
+    *(f32 *)(s + 0xc) = *(f32 *)(p1 + 0x10);
+    *(f32 *)(s + 0x10) = *(f32 *)(p1 + 0x14);
+    f1 = lbl_803E4350;
+    *(u16 *)(s + 0x20) = lbl_803E4350 * *(f32 *)(p3 + 0x40);
+    *(u16 *)(s + 0x22) = f1 * *(f32 *)(p3 + 0x44);
+    *(u16 *)(s + 0x24) = f1 * *(f32 *)(p3 + 0x48);
+    *(s16 *)(s + 0x1a) = *(s16 *)(p3 + 0x68);
+    *(s16 *)(s + 0x1c) = *(s16 *)(p3 + 0x66);
+    *(s16 *)(s + 0x1e) = *(s16 *)(p3 + 0x64);
+    *(u16 *)(s + 0x2c) = *(f32 *)(p3 + 0x1c) * (f32)(u32)*(u8 *)(p3 + 0x6d);
+    *(u16 *)(s + 0x2e) = *(f32 *)(p3 + 0x20) * (f32)(u32)*(u8 *)(p3 + 0x6d);
+    *(u16 *)(s + 0x30) = *(f32 *)(p3 + 0x24) * (f32)(u32)*(u8 *)(p3 + 0x6d);
+    f1 = lbl_803E4354;
+    *(u16 *)(s + 0x32) = lbl_803E4354 * *(f32 *)(p3 + 0x28);
+    *(u16 *)(s + 0x36) = f1 * *(f32 *)(p3 + 0x30);
+    *(u16 *)(s + 0x34) = f1 * *(f32 *)(p3 + 0x2c);
+    f1 = lbl_803E4358;
+    *(u16 *)(s + 0x26) = lbl_803E4358 * *(f32 *)(p3 + 0x34);
+    *(u16 *)(s + 0x28) = f1 * *(f32 *)(p3 + 0x38);
+    *(u16 *)(s + 0x2a) = f1 * *(f32 *)(p3 + 0x3c);
+    *(u8 *)(s + 0x18) = p4;
+    *(s8 *)(s + 0x3d) = (s8)(int)(lbl_803E435C * (*(f32 *)(p1 + 8) / *(f32 *)(*(int *)(p1 + 0x50) + 4)));
+    *(u16 *)(s + 0x38) = *(int *)(p3 + 0x5c);
+    *(u16 *)(s + 0x3a) = (int)*(f32 *)(p3 + 0x58);
+    return Obj_SetupObject(s, 5, (int)*(s8 *)(p1 + 0xac), -1, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_801A30C0(int obj, int slot, int def);
+extern void Model_GetVertexPosition(int model, int i, f32 *out);
+extern f32 lbl_803E4368;
+extern f32 lbl_803E436C;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A2E80(int obj, int def, int p3, int state)
+{
+    int i15;
+    int i14;
+    int i8;
+    int i13;
+    int iVar12;
+    u8 uVar1;
+    int j;
+    int model;
+    GasVentTableEntry *e;
+    f32 z;
+    struct {
+        f32 v[3];
+        f32 acc[3];
+    } s;
+
+    e = (GasVentTableEntry *)lbl_80322DA0;
+    iVar12 = e[*(u8 *)(state + 0x6e5)].objType;
+    *(int *)(state + 0x6d0) = e[*(u8 *)(state + 0x6e5)].sfx;
+    uVar1 = e[*(u8 *)(state + 0x6e5)].mode;
+    if (iVar12 != -1) {
+        i13 = 0;
+        i15 = state;
+        i14 = 0;
+        i8 = state;
+        for (; i13 < *(u8 *)(state + 0x6d4); i13++) {
+            *(u8 *)(state + i13 + 0x6d5) = 1;
+            *(u8 *)(i15 + 0x6d) = uVar1;
+            if (p3 == 0) {
+                z = lbl_803E4368;
+                *(f32 *)(i15 + 4) = z;
+                *(f32 *)(i15 + 8) = z;
+                *(f32 *)(i15 + 0xc) = z;
+                model = *(int *)(*(int *)(*(int *)(obj + 0x7c) + i14));
+                s.acc[0] = z;
+                s.acc[1] = z;
+                s.acc[2] = z;
+                for (j = 0; j < *(u16 *)(model + 0xe4); j++) {
+                    Model_GetVertexPosition(model, j, s.v);
+                    s.acc[0] = s.v[0] + s.acc[0];
+                    s.acc[1] = s.v[1] + s.acc[1];
+                    s.acc[2] = s.v[2] + s.acc[2];
+                }
+                *(f32 *)(i15 + 4) = s.acc[0] * ((z = lbl_803E436C) / (f32)(u32)*(u16 *)(model + 0xe4));
+                *(f32 *)(i15 + 8) = s.acc[1] * (z / (f32)(u32)*(u16 *)(model + 0xe4));
+                *(f32 *)(i15 + 0xc) = s.acc[2] * (z / (f32)(u32)*(u16 *)(model + 0xe4));
+            }
+            *(f32 *)(i15 + 0x10) = *(f32 *)(i15 + 4);
+            *(f32 *)(i15 + 0x14) = *(f32 *)(i15 + 8);
+            *(f32 *)(i15 + 0x18) = *(f32 *)(i15 + 0xc);
+            fn_801A30C0(obj, i15, def);
+            *(u8 *)(i15 + 0x6b) = 0xff;
+            *(u8 *)(i15 + 0x6a) = (u32)GameBit_Get(*(s16 *)(def + 0x3e)) != 0 ? 2 : 0;
+            *(int *)(i8 + 0x690) = fn_801A2BDC(obj, iVar12, i15, i13);
+            i15 += 0x70;
+            i14 += 4;
+            i8 += 4;
+        }
+        *(u8 *)(state + 0x6e4) = ((u32)GameBit_Get(*(s16 *)(def + 0x3e)) != 0) ? 1 : 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void mathFn_80021ac8(s16 *rot, f32 *vec);
+extern f32 sqrtf(f32 x);
+extern void normalize(f32 *x, f32 *y, f32 *z);
+extern f32 lbl_803E4368;
+extern f32 lbl_803E4370;
+extern f32 lbl_803E4374;
+extern f32 lbl_803E4378;
+extern f32 lbl_803E437C;
+extern f32 lbl_803E4380;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A30C0(int obj, int slot, int def)
+{
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 mag;
+    f32 scale;
+    int max2;
+    int max;
+
+    mathFn_80021ac8((s16 *)(def + 0x1a), (f32 *)(slot + 0x10));
+    *(f32 *)(slot + 0x4c) = *(f32 *)(slot + 0x10) * *(f32 *)(obj + 8) + *(f32 *)(def + 8);
+    *(f32 *)(slot + 0x50) = *(f32 *)(slot + 0x14) * *(f32 *)(obj + 8) + *(f32 *)(def + 0xc);
+    *(f32 *)(slot + 0x54) = *(f32 *)(slot + 0x18) * *(f32 *)(obj + 8) + *(f32 *)(def + 0x10);
+    *(s16 *)(slot + 0x68) = *(s16 *)(def + 0x1a);
+    *(s16 *)(slot + 0x66) = *(s16 *)(def + 0x1c);
+    *(s16 *)(slot + 0x64) = *(s16 *)(def + 0x1e);
+    dx = *(f32 *)(slot + 0x10) - (f32)*(s16 *)(def + 0x20);
+    dy = *(f32 *)(slot + 0x14) - (f32)*(s16 *)(def + 0x22);
+    dz = *(f32 *)(slot + 0x18) - (f32)*(s16 *)(def + 0x24);
+    mag = sqrtf(dz * dz + (dx * dx + dy * dy));
+    if (mag != lbl_803E4368) {
+        scale = (f32)*(s16 *)(def + 0x2c) / (lbl_803E4370 * mag);
+        if (dx != lbl_803E4368 || dy != lbl_803E4368 || dz != lbl_803E4368) {
+            normalize(&dx, &dy, &dz);
+        }
+        *(f32 *)(slot + 0x40) = dx * scale;
+        *(f32 *)(slot + 0x44) = dy * scale;
+        *(f32 *)(slot + 0x48) = dz * scale;
+        max = (int)(lbl_803E4374 * (lbl_803E4378 + scale));
+        *(f32 *)(slot + 0x1c) = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
+        *(f32 *)(slot + 0x20) = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
+        *(f32 *)(slot + 0x24) = (f32)(int)randomGetRange(0, max) / lbl_803E437C;
+        scale = (f32)*(s16 *)(def + 0x30) / lbl_803E4358;
+        if (*(f32 *)(obj + 0x24) > lbl_803E4368) {
+            *(u8 *)(slot + 0x6c) |= 1;
+        }
+        if (*(f32 *)(obj + 0x2c) > lbl_803E4368) {
+            *(u8 *)(slot + 0x6c) |= 2;
+        }
+        if (*(f32 *)(slot + 0x1c) > lbl_803E4368) {
+            *(u8 *)(slot + 0x6c) |= 4;
+        }
+        if (*(f32 *)(slot + 0x20) > lbl_803E4368) {
+            *(u8 *)(slot + 0x6c) |= 8;
+        }
+        if (*(f32 *)(slot + 0x24) > lbl_803E4368) {
+            *(u8 *)(slot + 0x6c) |= 0x10;
+        }
+        max2 = (int)(lbl_803E4374 * (lbl_803E4378 + scale));
+        *(f32 *)(slot + 0x28) = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        *(f32 *)(slot + 0x2c) = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        *(f32 *)(slot + 0x30) = (f32)(int)randomGetRange(0, max2) / lbl_803E4374;
+        *(f32 *)(slot + 0x34) = dx * scale;
+        *(f32 *)(slot + 0x38) = dy * scale - lbl_803E4380;
+        *(f32 *)(slot + 0x3c) = dz * scale;
+        {
+            int height = *(s16 *)(def + 0x2e);
+            if (height != 0) {
+                *(f32 *)(slot + 0x58) = (f32)height;
+            }
+        }
+        *(u32 *)(slot + 0x5c) = *(u16 *)(def + 0x38);
+        if (*(u16 *)(def + 0x38) != 0) {
+            *(int *)(slot + 0x60) = (int)(*(u16 *)(def + 0x38) * (randomGetRange(0, 100) + 100)) / 200;
+        } else {
+            *(int *)(slot + 0x60) = -1;
+        }
     }
 }
 #pragma peephole reset

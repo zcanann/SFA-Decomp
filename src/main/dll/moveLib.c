@@ -86,26 +86,120 @@ extern f32 lbl_803E294C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void dll_19_func0F(double param_1,int param_2,uint *param_3,char param_4)
+#pragma scheduling off
+#pragma peephole off
+int dll_19_func0F(int obj, char *state, char *st, int p4, int p5, s16 p6)
 {
-  float fVar1;
-  
-  *param_3 = *param_3 | 0x8000;
-  *(undefined2 *)(param_3 + 0xcc) = 0;
-  if (*(int *)(param_2 + 0x54) != 0) {
-    ObjHits_SetHitVolumeSlot(param_2,0,0,-1);
-  }
-  if (param_4 != -1) {
-    *(char *)((int)param_3 + 0x25f) = param_4;
-  }
-  param_3[0xa9] = (uint)(float)param_1;
-  fVar1 = lbl_803E28AC;
-  param_3[0xa4] = (uint)lbl_803E28AC;
-  param_3[0xa3] = (uint)fVar1;
-  param_3[199] = 0;
-  param_3[0xc6] = 0;
-  return;
+    extern int *gPlayerInterface;
+    extern f32 lbl_803DD5D8;
+    extern s8 lbl_803DD5DC;
+    extern f32 lbl_803E1C2C;
+    extern f32 lbl_803E1C70;
+    extern f32 lbl_803E1C74;
+    extern f32 lbl_803E1C6C;
+    extern f32 lbl_803E1C5C;
+    extern f32 timeDelta;
+    extern f32 sqrtf(f32 x);
+    extern u8 framesThisStep;
+    f32 dist;
+    f32 nx;
+    f32 nz;
+    char *t;
+
+    *(int *)(st + 0x318) = 0;
+    *(int *)(st + 0x31c) = 0;
+    *(s16 *)(st + 0x330) = 0;
+    {
+        f32 rest = lbl_803E1C2C;
+        *(f32 *)(st + 0x290) = rest;
+        *(f32 *)(st + 0x28c) = rest;
+    }
+    if ((s8)*(u8 *)(state + 0x56) != 1) {
+        *(f32 *)(state + 0x40) = *(f32 *)(obj + 0xc);
+        *(f32 *)(state + 0x44) = *(f32 *)(obj + 0x10);
+        *(f32 *)(state + 0x48) = *(f32 *)(obj + 0x14);
+        lbl_803DD5D8 = lbl_803E1C70;
+        lbl_803DD5DC = 0;
+    }
+    *(s16 *)(state + 0x6e) = 0;
+    *(u8 *)(state + 0x56) = 1;
+    {
+        f32 ex = *(f32 *)(state + 0x40) - *(f32 *)(obj + 0xc);
+        f32 ez = *(f32 *)(state + 0x48) - *(f32 *)(obj + 0x14);
+        dist = sqrtf(ex * ex + ez * ez);
+    }
+    t = *(char **)(st + 0x2d0);
+    if (t == NULL) {
+        return 0;
+    }
+    nx = *(f32 *)(t + 0xc) - *(f32 *)(state + 0x40);
+    nz = *(f32 *)(t + 0x14) - *(f32 *)(state + 0x48);
+    {
+        f32 total = sqrtf(nx * nx + nz * nz);
+        f32 step = timeDelta * (total - dist) * lbl_803E1C74;
+        f32 td;
+        if (step > lbl_803E1C6C) {
+            step = lbl_803E1C6C;
+        } else if (step < lbl_803E1C5C) {
+            step = lbl_803E1C5C;
+        }
+        if (dist <= lbl_803DD5D8) {
+            lbl_803DD5DC = lbl_803DD5DC + 1;
+        }
+        if (dist >= total || (s8)lbl_803DD5DC > 9) {
+            char *t2 = *(char **)(st + 0x2d0);
+            int delta = *(s16 *)(obj + 0x0) - (u16)*(s16 *)t2;
+            if (delta > 0x8000) {
+                delta -= 0xffff;
+            }
+            if (delta < -0x8000) {
+                delta += 0xffff;
+            }
+            if (delta > 0x2000) {
+                delta = 0x2000;
+            }
+            if (delta < -0x2000) {
+                delta = -0x2000;
+            }
+            *(s16 *)(obj + 0x0) -= (s16)((delta * framesThisStep) >> 3);
+            if ((s8)lbl_803DD5DC > 10) {
+                delta = 0;
+            }
+            if (delta < 0x100 && delta > -0x100) {
+                *(u8 *)(state + 0x56) = 0;
+                *(s16 *)(state + 0x5a) = (s16)(*(s16 *)(state + 0x58) - 1);
+            } else {
+                td = timeDelta;
+                (*(void (**)(int, char *, f32, f32, int, int))(*gPlayerInterface + 0x8))(
+                    obj, st, td, td, p4, p5);
+            }
+        } else {
+            nx = nx / total;
+            nz = nz / total;
+            *(f32 *)(st + 0x290) = -nx * step;
+            *(f32 *)(st + 0x28c) = nz * step;
+            *(f32 *)(obj + 0xc) = dist * nx + *(f32 *)(state + 0x40);
+            *(f32 *)(obj + 0x14) = dist * nz + *(f32 *)(state + 0x48);
+            td = timeDelta;
+            (*(void (**)(int, char *, f32, f32, int, int))(*gPlayerInterface + 0x8))(
+                obj, st, td, td, p4, p5);
+        }
+    }
+    lbl_803DD5D8 = dist;
+    if ((s8)*(u8 *)(state + 0x56) == 0) {
+        *(u8 *)(st + 0x405) = 0;
+        *(s16 *)(st + 0x274) = p6;
+        *(int *)(st + 0x2d0) = 0;
+        *(s16 *)(state + 0x6e) = -1;
+        *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~0x60;
+        *(u8 *)(st + 0x25f) = 0;
+        GameBit_Set(*(s16 *)(st + 0x3f4), 0);
+    }
+    return 1;
 }
+
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -726,7 +820,7 @@ undefined4 FUN_80114340(int param_1,undefined2 *param_2)
   return uVar1;
 }
 
-extern f32 curveFn_80010dc0(f32* points, int unused, f32 t);
+extern f32 curveFn_80010dc0(f32 *points, f32 t, int unused);
 extern f32 sqrtf(f32 x);
 extern f64 lbl_803E1C98;
 
@@ -748,29 +842,28 @@ f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
     prev_z = *(f32*)(p1 + 8);
     total = lbl_803E1C90;
 
-    for (i = 1; i <= n; i++) {
-        t = (f32)((f64)CONCAT44(0x43300000, i ^ 0x80000000) - lbl_803E1C98) /
-            (f32)((f64)CONCAT44(0x43300000, n ^ 0x80000000) - lbl_803E1C98);
+    for (i = 1; i < n + 1; i++) {
+        t = (f32)i / (f32)n;
 
         buf[0] = *(f32*)(p1 + 0);
         buf[1] = *(f32*)(p3 + 0);
         buf[2] = *(f32*)(p2 + 0);
         buf[3] = *(f32*)(p4 + 0);
-        cur_x = curveFn_80010dc0(buf, 0, t);
+        cur_x = curveFn_80010dc0(buf, t, 0);
         dx = cur_x - prev_x;
 
         buf[0] = *(f32*)(p1 + 4);
         buf[1] = *(f32*)(p3 + 4);
         buf[2] = *(f32*)(p2 + 4);
         buf[3] = *(f32*)(p4 + 4);
-        cur_y = curveFn_80010dc0(buf, 0, t);
+        cur_y = curveFn_80010dc0(buf, t, 0);
         dy = cur_y - prev_y;
 
         buf[0] = *(f32*)(p1 + 8);
         buf[1] = *(f32*)(p3 + 8);
         buf[2] = *(f32*)(p2 + 8);
         buf[3] = *(f32*)(p4 + 8);
-        cur_z = curveFn_80010dc0(buf, 0, t);
+        cur_z = curveFn_80010dc0(buf, t, 0);
         dz = cur_z - prev_z;
 
         total += sqrtf(dx * dx + dy * dy + dz * dz);
@@ -790,7 +883,6 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
 {
   extern void fn_800218AC(int, int);
   extern f32 fn_80114224(int, int, int, int, int);
-  extern f32 curveFn_80010dc0(int, int, f32);
   extern u8 framesThisStep;
   extern f32 lbl_803E1C90;
   extern f32 lbl_803E1CA0;
@@ -799,12 +891,12 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
 
   if ((void *)p2 != NULL) {
     s16 tmp[3];
-    f32 va = lbl_803E1CA0;
-    f32 vb = lbl_803E1C90;
-    *(f32 *)(p3 + 0x18) = va;
+    f32 vb;
+    *(f32 *)(p3 + 0x18) = lbl_803E1CA0;
+    vb = lbl_803E1C90;
     *(f32 *)(p3 + 0x1c) = vb;
     *(f32 *)(p3 + 0x20) = vb;
-    *(f32 *)(p3 + 0x24) = va;
+    *(f32 *)(p3 + 0x24) = vb;
     *(f32 *)(p3 + 0x28) = vb;
     *(f32 *)(p3 + 0x2c) = vb;
     fn_800218AC(p1, p3 + 0x18);
@@ -816,7 +908,7 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     *(f32 *)(p3 + 0x34) = fn_80114224(p3, p3 + 0x18, p3 + 0xc, p3 + 0x24, 10);
   } else {
     *(f32 *)p4 = *(f32 *)p4 + p5 * (f32)(u32)framesThisStep / *(f32 *)(p3 + 0x34);
-    if (*(f32 *)p4 > lbl_803E1CA4) {
+    if (*(f32 *)p4 >= lbl_803E1CA4) {
       ret = 1;
       *(f32 *)p4 = lbl_803E1CA4;
     }
@@ -828,17 +920,17 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     buf[1] = *(f32 *)(p3 + 0x0c);
     buf[2] = *(f32 *)(p3 + 0x18);
     buf[3] = *(f32 *)(p3 + 0x24);
-    *(f32 *)(p1 + 0x0c) = curveFn_80010dc0((int)buf, 0, *(f32 *)p4);
+    *(f32 *)(p1 + 0x0c) = curveFn_80010dc0(buf, *(f32 *)p4, 0);
     buf[0] = *(f32 *)(p3 + 0x04);
     buf[1] = *(f32 *)(p3 + 0x10);
     buf[2] = *(f32 *)(p3 + 0x1c);
     buf[3] = *(f32 *)(p3 + 0x28);
-    *(f32 *)(p1 + 0x10) = curveFn_80010dc0((int)buf, 0, *(f32 *)p4);
+    *(f32 *)(p1 + 0x10) = curveFn_80010dc0(buf, *(f32 *)p4, 0);
     buf[0] = *(f32 *)(p3 + 0x08);
     buf[1] = *(f32 *)(p3 + 0x14);
     buf[2] = *(f32 *)(p3 + 0x20);
     buf[3] = *(f32 *)(p3 + 0x2c);
-    *(f32 *)(p1 + 0x14) = curveFn_80010dc0((int)buf, 0, *(f32 *)p4);
+    *(f32 *)(p1 + 0x14) = curveFn_80010dc0(buf, *(f32 *)p4, 0);
   }
   return ret;
 }
@@ -1347,18 +1439,590 @@ extern void fn_8003A9C0(char *p, int count, s16 a, s16 b);
 #pragma scheduling off
 #pragma peephole off
 void fn_80114B1C(int *obj) {
-    int *state;
+    char *state;
     int *types;
 
     types = (int *)seqFn_800394a0();
-    state = *(int **)((char *)obj + 0xb8);
+    state = *(char **)((char *)obj + 0xb8);
 
     (*((void (***)(int))gCameraInterface))[18](0);
 
-    *(u8 *)((char *)state + 0x600) = 0;
-    objFn_8003acfc(obj, types, *(u8 *)((char *)state + 0x610), (char *)state + 0x1c);
-    *(int *)((char *)state + 0x5f8) = 0x50;
-    fn_8003A9C0((char *)state + 0x1c, *(u8 *)((char *)state + 0x610), 0, 0);
+    *(u8 *)(state + 0x600) = 0;
+    objFn_8003acfc(obj, types, *(u8 *)(state + 0x610), state + 0x1c);
+    *(int *)(state + 0x5f8) = 0x50;
+    fn_8003A9C0(state + 0x1c, *(u8 *)(state + 0x610), 0, 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* EN v1.0 0x80114184  size: 160b  Copies a curve point's position and packed
+ * angle into the caller's record. */
+#pragma scheduling off
+#pragma peephole off
+int dll_2E_func0A(int idx, char *out)
+{
+    int r;
+
+    if (idx >= 0x1c) {
+        return 0;
+    }
+    r = (*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x40)))(idx);
+    if (r > -1) {
+        char *p = (char *)(*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x1c)))(r);
+        *(f32 *)(out + 0xc) = *(f32 *)(p + 0x8);
+        *(f32 *)(out + 0x10) = *(f32 *)(p + 0xc);
+        *(f32 *)(out + 0x14) = *(f32 *)(p + 0x10);
+        *(s16 *)(out + 0x0) = (s16)(*(s8 *)(p + 0x2c) << 8);
+        return 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s16 atan2i(int x, int z);
+extern f32 lbl_803E1C8C;
+
+/* EN v1.0 0x80114084  size: 256b  Copies a curve point's position into the
+ * caller's record and aims its angle at the nearest group-8 object (falling
+ * back to the point's packed angle). */
+#pragma scheduling off
+#pragma peephole off
+int dll_2E_func0C(int idx, char *out)
+{
+    f32 range;
+    int r;
+
+    range = lbl_803E1C8C;
+    r = (*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x40)))(idx);
+    if (r > -1) {
+        char *p = (char *)(*(int (*)(int))(*(int *)(*gRomCurveInterface + 0x1c)))(r);
+        char *q;
+        *(f32 *)(out + 0xc) = *(f32 *)(p + 0x8);
+        *(f32 *)(out + 0x10) = *(f32 *)(p + 0xc);
+        *(f32 *)(out + 0x14) = *(f32 *)(p + 0x10);
+        q = (char *)ObjGroup_FindNearestObjectToPoint(8, out + 0xc, &range);
+        if (q != NULL) {
+            *(s16 *)(out + 0x0) = (s16)atan2i((int)(*(f32 *)(q + 0xc) - *(f32 *)(out + 0xc)),
+                                         (int)(*(f32 *)(q + 0x14) - *(f32 *)(out + 0x14)));
+        } else {
+            *(s16 *)(out + 0x0) = (s16)(*(s8 *)(p + 0x2c) << 8);
+        }
+        return 1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32 timeDelta;
+extern f32 lbl_803E1C78;
+extern f32 lbl_803E1C2C;
+extern f32 lbl_803E1C7C;
+
+/* EN v1.0 0x80113864  size: 248b  Steps the movement blend factors toward the
+ * current target and turns the yaw by the buffered turn rate. */
+#pragma scheduling off
+#pragma peephole off
+void dll_19_func06(s16 *yaw, char *st, f32 cap, f32 speed)
+{
+    if (*(f32 *)(st + 0x298) < lbl_803E1C78) {
+        f32 rest;
+        *(s16 *)(st + 0x334) = 0;
+        *(s16 *)(st + 0x336) = 0;
+        rest = lbl_803E1C2C;
+        *(f32 *)(st + 0x298) = rest;
+        *(f32 *)(st + 0x280) = rest;
+    }
+    *(f32 *)(st + 0x284) = lbl_803E1C2C;
+    *yaw = lbl_803E1C7C * ((f32)*(s16 *)(st + 0x336) * timeDelta / speed) + (f32)*yaw;
+    *(f32 *)(st + 0x294) +=
+        timeDelta * ((*(f32 *)(st + 0x298) - *(f32 *)(st + 0x294)) / *(f32 *)(st + 0x2b8));
+    *(f32 *)(st + 0x280) +=
+        timeDelta * ((*(f32 *)(st + 0x298) - *(f32 *)(st + 0x280)) / *(f32 *)(st + 0x2b8));
+    if (*(f32 *)(st + 0x294) > cap) {
+        *(f32 *)(st + 0x294) = cap;
+    }
+    if (*(f32 *)(st + 0x280) > cap) {
+        *(f32 *)(st + 0x280) = cap;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void fn_8003AC14(int obj, void *types, int count);
+extern f32 lbl_803E1C90;
+
+/* EN v1.0 0x80114F64  size: 280b  Initializes the movement-state block and
+ * primes the animation channel tables. */
+#pragma scheduling off
+#pragma peephole off
+void dll_2E_func05(int obj, char *st, s16 a, s16 b, int count)
+{
+    f32 z;
+
+    *(s16 *)(st + 0x60c) = a;
+    *(s16 *)(st + 0x60e) = b;
+    *(u8 *)(st + 0x610) = (u8)count;
+    *(int *)(st + 0x5fc) = 0;
+    z = lbl_803E1C90;
+    *(f32 *)(st + 0x0) = z;
+    *(int *)(st + 0x5f8) = 0;
+    *(int *)(st + 0x604) = 0;
+    *(int *)(st + 0x608) = 0;
+    *(f32 *)(st + 0x614) = lbl_803E1C8C;
+    *(u8 *)(st + 0x600) = 0;
+    *(u8 *)(st + 0x601) = 1;
+    *(f32 *)(st + 0x4) = z;
+    *(f32 *)(st + 0x8) = z;
+    *(f32 *)(st + 0xc) = z;
+    *(int *)(st + 0x618) = -1;
+    fn_8003AC14(obj, seqFn_800394a0(), count);
+    objFn_8003acfc((int *)obj, (int *)seqFn_800394a0(), count, st + 0x1c);
+    fn_8003A9C0(st + 0x1c, *(u8 *)(st + 0x610), 0, 0);
+    dll_2E_func09((int)st, lbl_8031A0E0, lbl_8031A0E0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void mathFn_80021ac8(s16 *angles, f32 *vec);
+extern f32 lbl_803E1CC8;
+extern f32 lbl_803E1CCC;
+
+/* EN v1.0 0x80114DEC  size: 376b  Latches the path-relative start offset on
+ * first use and refreshes the current path point position. */
+#pragma scheduling off
+#pragma peephole off
+void dll_2E_func06(int obj, char *st, int point)
+{
+    f32 z1;
+    f32 y1;
+    f32 x1;
+    f32 z0;
+    f32 y0;
+    f32 x0;
+    s16 ang[3];
+
+    if (*(u8 *)(st + 0x601) != 0) {
+        f32 cA;
+        f32 cB;
+        fn_8003AC14(obj, seqFn_800394a0(), *(u8 *)(st + 0x610));
+        ObjPath_GetPointWorldPosition(obj, point, &x0, &y0, &z0, 0);
+        ObjPath_GetPointWorldPosition(obj, point + 1, &x1, &y1, &z1, 0);
+        cA = lbl_803E1CC8;
+        *(f32 *)(st + 0x4) = (cA * x0 + x1) * (cB = lbl_803E1CCC);
+        *(f32 *)(st + 0x8) = y0;
+        *(f32 *)(st + 0xc) = (cA * z0 + z1) * cB;
+        *(f32 *)(st + 0x4) -= *(f32 *)(obj + 0xc);
+        *(f32 *)(st + 0x8) -= *(f32 *)(obj + 0x10);
+        *(f32 *)(st + 0xc) -= *(f32 *)(obj + 0x14);
+        ang[0] = (s16)-*(s16 *)(obj + 0x4);
+        ang[1] = (s16)-*(s16 *)(obj + 0x2);
+        ang[2] = (s16)-*(s16 *)(obj + 0x0);
+        mathFn_80021ac8(ang, (f32 *)(st + 0x4));
+        *(u8 *)(st + 0x601) = 0;
+    }
+    ObjPath_GetPointWorldPosition(obj, point, &x0, &y0, &z0, 0);
+    *(f32 *)(st + 0x10) = x0;
+    *(f32 *)(st + 0x14) = y0;
+    *(f32 *)(st + 0x18) = z0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s16 getAngle(f32 x, f32 z);
+extern f32 sqrtf(f32 x);
+
+/* EN v1.0 0x80113BD0  size: 396b  Computes the yaw step, signed yaw delta and
+ * distance from an object to its target, updating the wide-turn flag. */
+#pragma scheduling off
+#pragma peephole off
+void dll_19_func07(int obj, int target, int div, u16 *outYaw, u16 *outDelta, u16 *outDist)
+{
+    char *st = *(char **)(obj + 0xb8);
+    f32 d[3];
+    f32 *dp = d;
+    s16 *ovr;
+    u16 ang;
+    int cur;
+    int delta;
+
+    if ((void *)obj == NULL || (void *)target == NULL) {
+        *outYaw = 0;
+        *outDelta = 0;
+        *outDist = 0;
+    } else {
+        dp[0] = *(f32 *)(target + 0x18) - *(f32 *)(obj + 0x18);
+        dp[1] = *(f32 *)(target + 0x1c) - *(f32 *)(obj + 0x1c);
+        dp[2] = *(f32 *)(target + 0x20) - *(f32 *)(obj + 0x20);
+        ang = getAngle(-dp[0], -dp[2]);
+        ovr = *(s16 **)(obj + 0x30);
+        if (ovr != NULL) {
+            cur = (s16)(*(s16 *)(obj + 0x0) + *ovr);
+        } else {
+            cur = *(s16 *)(obj + 0x0);
+        }
+        delta = ang - (u16)(s16)cur;
+        if (delta > 0x8000) {
+            delta -= 0xffff;
+        }
+        if (delta < -0x8000) {
+            delta += 0xffff;
+        }
+        *outDelta = (u16)delta;
+        if ((u16)delta < 0x31c4 || (u16)delta > 0xce3b) {
+            *(u16 *)(st + 0x400) &= ~0x10;
+        } else {
+            *(u16 *)(st + 0x400) |= 0x10;
+        }
+        *outYaw = (u16)delta / (0x10000 / (u8)div);
+        *outDist = sqrtf(dp[2] * dp[2] + (dp[0] * dp[0] + dp[1] * dp[1]));
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void voxmaps_worldToGrid(f32 *world, int *grid);
+extern u8 voxmaps_traceLine(int *from, int *to, int a, u8 *outFlag, int b);
+extern int objBboxFn_800640cc(void *pos, f32 *world, f32 rad, int a, void *out, int obj, int b,
+                              int c, int d, int e);
+extern f32 fn_80293E80(f32 x);
+extern f32 sin(f32 x);
+extern const f32 lbl_803E1C68;
+extern const f32 lbl_803E1C80;
+extern const f32 lbl_803E1C84;
+extern f32 lbl_803E1C48;
+
+/* EN v1.0 0x80113D64  size: 544b  Probes the four compass directions around
+ * the object for walkable space, returning a bitmask of clear directions. */
+#pragma scheduling off
+#pragma peephole off
+u8 dll_19_func08(int obj, char *st, f32 dist)
+{
+    u16 i;
+    u8 mask;
+    u8 hitFlag;
+    int grid1[2];
+    int grid0[2];
+    f32 world[3];
+    u8 bboxOut[0x80];
+    int cur;
+    s16 *ovr;
+    u8 ok;
+    f32 a;
+
+    mask = 0;
+    world[0] = *(f32 *)(obj + 0xc);
+    world[1] = lbl_803E1C68 + *(f32 *)(obj + 0x10);
+    world[2] = *(f32 *)(obj + 0x14);
+    voxmaps_worldToGrid(world, grid0);
+    ovr = *(s16 **)(obj + 0x30);
+    if (ovr != NULL) {
+        cur = (s16)(*(s16 *)(obj + 0x0) + *ovr);
+    } else {
+        cur = *(s16 *)(obj + 0x0);
+    }
+    for (i = 0; i < 4; i++) {
+        a = lbl_803E1C80 * (f32)((s16)cur + (i << 14)) / lbl_803E1C84;
+        world[0] = *(f32 *)(obj + 0xc) - dist * fn_80293E80(a);
+        world[1] = lbl_803E1C68 + *(f32 *)(obj + 0x10);
+        world[2] = *(f32 *)(obj + 0x14) - dist * sin(a);
+        voxmaps_worldToGrid(world, grid1);
+        if (*(void **)(obj + 0x30) != NULL) {
+            ok = 1;
+        } else {
+            ok = (u8)voxmaps_traceLine(grid1, grid0, 0, &hitFlag, 0);
+            if (hitFlag == 1) {
+                ok = 1;
+            }
+        }
+        if (ok != 0) {
+            if (objBboxFn_800640cc((char *)(obj + 0xc), world, lbl_803E1C48, 0, bboxOut, obj,
+                                   *(u8 *)(st + 0x261), -1, 0, 0) != 0) {
+                ok = 0;
+            }
+        }
+        mask |= ok << i;
+    }
+    return mask;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int curveFn_80010320(int curve);
+extern int ObjAnim_SampleRootCurvePhase(int objAnim, f32 distance, f32 *phaseOut);
+extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32 *out, int flag);
+extern f32 lbl_803E1CB0;
+
+/* EN v1.0 0x801145BC  size: 512b  Advances the object along its movement
+ * curve, snapping to ground and easing the yaw toward the path direction. */
+#pragma scheduling off
+#pragma peephole off
+int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32 *d, int *flags)
+{
+    int moved;
+    int hit;
+    f32 ground;
+    int fl;
+    int args[2];
+
+    moved = 1;
+    hit = 0;
+    ground = lbl_803E1C90;
+    fl = *flags;
+    if (fl & 0x10) {
+        return 1;
+    }
+    if (fl & 0x4) {
+        if (fn_80114408(obj, 0, p4, p4 + 0x30, phase) != 0) {
+            args[0] = 0x19;
+            args[1] = 0x15;
+            (*(int (*)(int, int, f32, int *, u8))(*(int *)(*gRomCurveInterface + 0x8c)))(
+                curve, obj, lbl_803E1CB0, args, (u8)c);
+            *flags |= 8;
+            moved = 1;
+        }
+    } else {
+        hit = 0;
+        if (curveFn_80010320(curve) != 0 || *(int *)(curve + 0x10) != 0) {
+            hit = (*(u8 (*)(int))(*(int *)(*gRomCurveInterface + 0x90)))(curve);
+        }
+        *(f32 *)(obj + 0xc) = *(f32 *)(curve + 0x68);
+        *(f32 *)(obj + 0x10) = *(f32 *)(curve + 0x6c);
+        *(f32 *)(obj + 0x14) = *(f32 *)(curve + 0x70);
+        if (hit != 0) {
+            *flags |= 0x10;
+        }
+    }
+    ObjAnim_SampleRootCurvePhase(obj, phase, d);
+    if (*flags & 1) {
+        if (hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                                 *(f32 *)(obj + 0x14), &ground, 0) == 0) {
+            *(f32 *)(obj + 0x10) -= ground;
+        }
+    }
+    if (moved != 0 && (*flags & 0x2) != 0) {
+        int t = (s16)(getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
+                               *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88)) +
+                      0x8000);
+        *(s16 *)(obj + 0x0) =
+            (s16)(*(s16 *)(obj + 0x0) + ((t - *(s16 *)(obj + 0x0)) >> 3));
+    }
+    return hit;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern int Obj_GetPlayerObject(void);
+extern s16 *objModelGetVecFn_800395d8(int obj, int idx);
+extern int ObjAnim_AdvanceCurrentMove(int objAnim, f32 moveStepScale, f32 deltaTime, int flags);
+extern u8 framesThisStep;
+extern f32 lbl_803E1CC4;
+
+/* EN v1.0 0x80114BB0  size: 572b  Object-sequence scripted-move step: phase 4
+ * arms the move, phase 5 walks the setup/playback sub-phases. */
+#pragma scheduling off
+#pragma peephole off
+int dll_2E_func07(int obj, char *state, char *st, s16 a, s16 b)
+{
+    s16 pair[2];
+    int mode;
+    int player;
+
+    player = Obj_GetPlayerObject();
+    pair[0] = a;
+    pair[1] = b;
+    {
+        char *p = *(char **)(obj + 0x54);
+        *(s16 *)(p + 0x60) = *(s16 *)(p + 0x60) | 1;
+    }
+    mode = (s8)*(u8 *)(state + 0x56);
+    if (mode == 4) {
+        *(int *)(st + 0x5f8) = 0x50;
+        *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~8;
+        *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~2;
+        *(u8 *)(st + 0x600) = 3;
+        *(u8 *)(state + 0x56) = 5;
+        if ((*(u8 *)(st + 0x611) & 2) == 0) {
+            *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~4;
+        }
+        *(void (**)(int *))(state + 0xe8) = fn_80114B1C;
+        return 0;
+    } else if (mode == 5) {
+        if (*(u8 *)(st + 0x600) >= 2 && *(u8 *)(st + 0x600) <= 7) {
+            void *types = seqFn_800394a0();
+            switch (*(u8 *)(st + 0x600)) {
+            case 3:
+                objFn_8003acfc((int *)obj, (int *)types, *(u8 *)(st + 0x610), st + 0x1c);
+                *(int *)(st + 0x5f8) = 0;
+                *(u8 *)(st + 0x600) = 2;
+            case 2:
+                if (objAnimFn_80115650(obj, player, st + 0x5fc, st, st, pair, st + 0x10) == 0) {
+                    *(u8 *)(st + 0x600) = 6;
+                }
+                break;
+            case 6:
+                *(u8 *)(st + 0x600) = 7;
+            case 7:
+                *(f32 *)(st + 0x0) = lbl_803E1CC4;
+                break;
+            }
+            *(int *)(st + 0x604) = player;
+            ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(st + 0x0), (f32)framesThisStep, 0);
+            if (*(u8 *)(st + 0x600) == 7) {
+                s16 *v;
+                *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 8;
+                v = objModelGetVecFn_800395d8(obj, 0);
+                if (v != NULL) {
+                    *(s16 *)(state + 0x114) = v[1];
+                    *(s16 *)(state + 0x116) = v[0];
+                }
+                *(u8 *)(st + 0x600) = 0;
+                *(u8 *)(state + 0x56) = 0;
+                *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 4;
+                return 0;
+            }
+            return 0;
+        }
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *outY, f32 *outZ,
+                                           u32 obj);
+extern f32 lbl_803E1C40;
+extern f32 lbl_803E1C2C;
+
+/* EN v1.0 0x8011395C  size: 628b  Constrains a follow point against the
+ * object's facing plane and returns the lateral offset of the result. */
+#pragma scheduling off
+#pragma peephole off
+f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char *st)
+{
+    f32 dist;
+    f32 fx;
+    f32 fz;
+    f32 c;
+    f32 s;
+    f32 dx;
+    f32 dz;
+
+    dx = *(f32 *)(st + 0x18) - px;
+    dz = *(f32 *)(st + 0x20) - pz;
+    dist = sqrtf(dx * dx + dz * dz);
+    if (dist < range) {
+        f32 base;
+        f32 d1;
+        f32 d2;
+        c = fn_80293E80(lbl_803E1C80 * (f32)*(s16 *)(obj + 0x0) / lbl_803E1C84);
+        s = sin(lbl_803E1C80 * (f32)*(s16 *)(obj + 0x0) / lbl_803E1C84);
+        base = -(c * (px - c) + s * (pz - s));
+        d1 = base + (c * *(f32 *)(st + 0x18) + s * *(f32 *)(st + 0x20));
+        d2 = base + (c * *(f32 *)(st + 0x8c) + s * *(f32 *)(st + 0x94));
+        if (d1 > lbl_803E1C2C && d2 <= lbl_803E1C48) {
+            *(f32 *)(st + 0x18) = *(f32 *)(st + 0x18) - c * d1;
+            *(f32 *)(st + 0x20) = *(f32 *)(st + 0x20) - s * d1;
+            Obj_TransformWorldPointToLocal(*(f32 *)(st + 0x18), *(f32 *)(st + 0x1c),
+                                           *(f32 *)(st + 0x20), (f32 *)(st + 0xc),
+                                           (f32 *)(st + 0x10), (f32 *)(st + 0x14),
+                                           *(u32 *)(st + 0x30));
+        } else if (d2 > lbl_803E1C48) {
+            dist = lbl_803E1C40 * range;
+        }
+    }
+    if (dist < range) {
+        fx = *(f32 *)(st + 0x18);
+        fz = *(f32 *)(st + 0x20);
+    } else {
+        fx = px;
+        fz = pz;
+    }
+    c = fn_80293E80(lbl_803E1C80 * (f32)(*(s16 *)(obj + 0x0) + 0x4000) / lbl_803E1C84);
+    s = sin(lbl_803E1C80 * (f32)(*(s16 *)(obj + 0x0) + 0x4000) / lbl_803E1C84);
+    return -(-(*(f32 *)(obj + 0xc) * c + *(f32 *)(obj + 0x14) * s) + (c * fx + s * fz));
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void normalize(f32 *x, f32 *y, f32 *z);
+extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
+extern int ObjAnim_SetCurrentMove(int objAnim, int moveId, f32 moveProgress, int flags);
+extern f32 lbl_803E1CB4;
+extern f32 lbl_803E1CB8;
+extern f32 lbl_803E1CBC;
+extern f32 lbl_803E1CC0;
+
+/* EN v1.0 0x801147BC  size: 864b  Homes the object toward its target at the
+ * given speed, snapping when close, easing yaw and pacing the walk anim. */
+#pragma scheduling off
+#pragma peephole off
+int dll_2E_func0D(int obj, int target, f32 speed, int move, f32 *out, u8 *flags)
+{
+    f32 ground;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    f32 dist;
+    s16 delta;
+
+    if ((void *)target == NULL) {
+        return 0;
+    }
+    dx = *(f32 *)(target + 0xc) - *(f32 *)(obj + 0xc);
+    dy = *(f32 *)(target + 0x10) - *(f32 *)(obj + 0x10);
+    dz = *(f32 *)(target + 0x14) - *(f32 *)(obj + 0x14);
+    dist = sqrtf(dz * dz + (dx * dx + dy * dy));
+    if (dist < lbl_803E1CB4 * speed) {
+        *(f32 *)(obj + 0xc) = *(f32 *)(target + 0xc);
+        *(f32 *)(obj + 0x10) = *(f32 *)(target + 0x10);
+        *(f32 *)(obj + 0x14) = *(f32 *)(target + 0x14);
+        if (*flags & 1) {
+            if (hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                                     *(f32 *)(obj + 0x14), &ground, 0) == 0) {
+                *(f32 *)(obj + 0x10) -= ground;
+            }
+        }
+        return 1;
+    }
+    normalize(&dx, &dy, &dz);
+    *(f32 *)(obj + 0x24) = dx * (speed * timeDelta);
+    *(f32 *)(obj + 0x28) = dy * (speed * timeDelta);
+    *(f32 *)(obj + 0x2c) = dz * (speed * timeDelta);
+    if (*flags & 1) {
+        if (hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
+                                 *(f32 *)(obj + 0x14), &ground, 0) == 0) {
+            *(f32 *)(obj + 0x10) -= ground;
+        }
+    }
+    if (*flags & 2) {
+        delta = *(s16 *)(target + 0x0) - (u16)*(s16 *)(obj + 0x0);
+        if (delta > 0x8000) {
+            delta = delta - 0xffff;
+        }
+        if (delta < -0x8000) {
+            delta = delta + 0xffff;
+        }
+        *(s16 *)(obj + 0x0) = (f32)*(s16 *)(obj + 0x0) +
+                              (lbl_803E1CB8 + (f32)delta) * (speed * timeDelta) / dist;
+    }
+    objMove(obj, *(f32 *)(obj + 0x24), *(f32 *)(obj + 0x28), *(f32 *)(obj + 0x2c));
+    if (move != -1) {
+        if (*(s16 *)(obj + 0xa0) != move) {
+            ObjAnim_SetCurrentMove(obj, move, lbl_803E1C90, 0);
+        }
+        delta = *(s16 *)(obj + 0x0) - (u16)(s16)getAngle(dx, dz);
+        if (delta > 0x8000) {
+            delta = delta - 0xffff;
+        }
+        if (delta < -0x8000) {
+            delta = delta + 0xffff;
+        }
+        speed = speed * -sin(lbl_803E1CBC * (f32)delta / lbl_803E1CC0);
+        ObjAnim_SampleRootCurvePhase(obj, speed, out);
+    }
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
