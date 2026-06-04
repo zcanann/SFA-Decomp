@@ -146,7 +146,7 @@ int TitleMenu_run(void)
   }
   if ((gAttractMovieRetraceCountdown != 0) && (--gAttractMovieRetraceCountdown == 0) &&
       (gAttractMoviePlaybackEnabled != 0)) {
-    Movie_SetVolumeFade(100,1000);
+    Movie_SetVolumeFade(NATTRACTMODE_MOVIE_VOLUME_TITLE,NATTRACTMODE_MOVIE_VOLUME_FADE_LONG);
   }
   if ((gAttractMovieState == NATTRACTMODE_MOVIE_STATE_PREPARED) &&
       (++gAttractMovieIdleFrameCount > NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN)) {
@@ -175,7 +175,7 @@ int TitleMenu_run(void)
     if (inputPressed) {
       if (((buttons == 0) && (dpad == 0)) && (face == 0)) {
         gAttractMovieReplayCountdown = 1;
-        gTitleMenuInputCooldown = 0x3c;
+        gTitleMenuInputCooldown = TITLE_MENU_ATTRACT_INPUT_COOLDOWN_FRAMES;
       } else {
         gAttractMovieReplayCountdown = 2;
       }
@@ -194,13 +194,13 @@ int TitleMenu_run(void)
     padGetAnalogInput(0,&dpad,&face);
     if ((buttons == 0) && ((dpad == 0 && (face == 0)))) {
       if ((gAttractMovieLoopCompleted != 0) && (gAttractMovieLoopCompleted = 0, gTitleMenuInputCooldown == 0)) {
-        gTitleMenuInputCooldown = 0x3c;
+        gTitleMenuInputCooldown = TITLE_MENU_ATTRACT_INPUT_COOLDOWN_FRAMES;
         gAttractMovieReplayCountdown--;
         if (gAttractMovieReplayCountdown == 0) {
           gAttractMovieReplayCountdown = 1;
-          TitleMenu_SetMenuState(4,1);
+          TitleMenu_SetMenuState(TITLE_MENU_ATTRACT_MOVIE_STATE,1);
           gAttractMoviePlaybackEnabled = 1;
-          gTitleMenuSelectionFadeStep = -0x19;
+          gTitleMenuSelectionFadeStep = -TITLE_MENU_SELECTION_FADE_STEP;
         }
       }
     } else {
@@ -215,7 +215,7 @@ int TitleMenu_run(void)
     gTitleMenuLoadDelay -= frames;
   }
   menuId = TitleMenu_GetMenuId();
-  if (menuId != 0x57) {
+  if (menuId != TITLE_MENU_CAMERA_ACTION_ACTIVE) {
     gTitleMenuReadyForInput = 0;
     return 0;
   }
@@ -224,9 +224,10 @@ int TitleMenu_run(void)
   if (gTitleMenuNextDllId == 0) {
     menuId = TitleMenu_GetFadeState();
     gTitleMenuSelection = TitleMenu_GetSelection();
-    if ((((double)lbl_803E1D28 == (double)titleScreenGetCamProgress()) && (gTitleMenuSelectionFade < 0xff)) &&
+    if ((((double)lbl_803E1D28 == (double)titleScreenGetCamProgress()) &&
+        (gTitleMenuSelectionFade < TITLE_MENU_SELECTION_FADE_MAX)) &&
         (gAttractMoviePlaybackEnabled == 0)) {
-      gTitleMenuSelectionFadeStep = 0x19;
+      gTitleMenuSelectionFadeStep = TITLE_MENU_SELECTION_FADE_STEP;
       if (gTitleMenuSelection == 0) {
         lbl_803DD618 = 1;
       } else {
@@ -235,11 +236,12 @@ int TitleMenu_run(void)
     } else if (gTitleMenuPreviousSelection != gTitleMenuSelection) {
       TitleMenu_SetMenuState(gTitleMenuSelection,1);
       Sfx_PlayFromObject(0,0x37b);
-      gTitleMenuSelectionFadeStep = -0x19;
+      gTitleMenuSelectionFadeStep = -TITLE_MENU_SELECTION_FADE_STEP;
       gTitleMenuPreviousSelection = gTitleMenuSelection;
       titleScreenFn_80130464(0);
     }
-    if ((int)((uint)gTitleMenuSelectionFade + (int)gTitleMenuSelectionFadeStep) < 0xff) {
+    if ((int)((uint)gTitleMenuSelectionFade + (int)gTitleMenuSelectionFadeStep) <
+        TITLE_MENU_SELECTION_FADE_MAX) {
       if ((int)((uint)gTitleMenuSelectionFade + (int)gTitleMenuSelectionFadeStep) < 1) {
         TitleMenu_SetEntryHighlight(gTitleMenuSelection);
         gTitleMenuSelectionFade = 0;
@@ -251,7 +253,7 @@ int TitleMenu_run(void)
         gTitleMenuSelectionFade += gTitleMenuSelectionFadeStep;
       }
     } else {
-      gTitleMenuSelectionFade = 0xff;
+      gTitleMenuSelectionFade = TITLE_MENU_SELECTION_FADE_MAX;
       gTitleMenuSelectionFadeStep = 0;
       titleScreenFn_80130464(1);
     }
@@ -263,7 +265,7 @@ int TitleMenu_run(void)
       }
     } else {
       titleScreenFn_801368c4(gTitleMenuSelection);
-      if ((menuId == 1) && (gTitleMenuSelectionFade == 0xff)) {
+      if ((menuId == 1) && (gTitleMenuSelectionFade == TITLE_MENU_SELECTION_FADE_MAX)) {
         titleScreenFn_801368a4(1);
         gTitleMenuLoadDelay = 1;
         titleScreenFn_80130464(1);
@@ -317,7 +319,7 @@ void TitleMenu_setSelection(int selection)
 {
   u8 v = (u8)selection;
   gTitleMenuSelection = v;
-  gTitleMenuPreviousSelection = 0xff;
+  gTitleMenuPreviousSelection = TITLE_MENU_SELECTION_INVALID;
   (*(*(void (**)(int))((int)gTitleMenuLinkInterface->vtable + 0x18)))(v);
 }
 #pragma peephole reset

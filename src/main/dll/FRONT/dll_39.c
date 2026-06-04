@@ -15,7 +15,7 @@ extern undefined4 FUN_80053c98();
 extern undefined4 FUN_800723a0();
 extern undefined8 FUN_80080f24();
 extern undefined8 camcontrol_findBestTarget();
-extern undefined4 Movie_SetVolumeFade();
+extern void Movie_SetVolumeFade(int volume,int fadeFrames);
 extern bool prepareAttractMode();
 extern void gameUiLoadResources(void);
 extern int FUN_80241de8();
@@ -389,11 +389,13 @@ void n_attractmode_prepareMovie(void)
         VIWaitForRetrace();
         gAttractMovieRetraceCountdown = NATTRACTMODE_MOVIE_RETRACE_COUNTDOWN;
         gAttractMovieIdleFrameCount = 0;
-        if ((int)gTitleMenuSelection == NATTRACTMODE_MOVIE_STATE_RELEASED) {
-          Movie_SetVolumeFade(NATTRACTMODE_MOVIE_START_FRAME_ALTERNATE,1);
+        if ((int)gTitleMenuSelection == TITLE_MENU_ATTRACT_MOVIE_STATE) {
+          Movie_SetVolumeFade(NATTRACTMODE_MOVIE_VOLUME_TITLE,
+                              NATTRACTMODE_MOVIE_VOLUME_FADE_IMMEDIATE);
         }
         else {
-          Movie_SetVolumeFade(NATTRACTMODE_MOVIE_START_FRAME_DEFAULT,1);
+          Movie_SetVolumeFade(NATTRACTMODE_MOVIE_VOLUME_MUTED,
+                              NATTRACTMODE_MOVIE_VOLUME_FADE_IMMEDIATE);
         }
       }
     }
@@ -428,7 +430,7 @@ void TitleMenu_render(u8 *param_1)
   }
 
   menuAction = (*(code *)(*gCameraInterface + 0x10))();
-  if (menuAction == 0x57) {
+  if (menuAction == TITLE_MENU_CAMERA_ACTION_ACTIVE) {
     gameTextSetDrawFunc(titleScreenTextDrawFunc);
     titleScreenPositionElements(lbl_803E1D10 + (f32)(gTitleMenuSelectionFade * 0x1a4) / lbl_803E1D14,
                 lbl_803E1D18);
