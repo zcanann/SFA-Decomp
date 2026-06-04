@@ -162,7 +162,7 @@ int dbegg_getObjectTypeId(void);
 void dbegg_free(void);
 void dbegg_render(void);
 void dbegg_hitDetect(void);
-void dbegg_update(void);
+void dbegg_update(int obj);
 void dbegg_init(int obj);
 void dbegg_release(void);
 void dbegg_initialise(void);
