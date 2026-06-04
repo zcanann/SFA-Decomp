@@ -6030,3 +6030,79 @@ void baddieinterestp_update(int *obj)
 #pragma opt_loop_invariants reset
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int *ObjList_GetObjects(int *startIndex, int *objectCount);
+extern void ObjAnim_SetCurrentMove(int *obj, int move, f32 blend, int flag);
+extern void ObjAnim_AdvanceCurrentMove(int *obj, f32 a, f32 b, int flag);
+extern f32 lbl_803E3228;
+extern f32 lbl_803E322C;
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_loop_invariants off
+void animatedobj_update(int *obj)
+{
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    int *params = *(int **)((char *)obj + 0x4c);
+
+    if (params != NULL && *(s16 *)((char *)params + 0x18) != -1) {
+        int res;
+        int count;
+        res = ((int (*)(f32))((int *)*(int **)gObjectTriggerInterface)[0x14 / 4])(timeDelta);
+        if (res != 0 && *(s16 *)((char *)obj + 0xb4) == -2) {
+            int slot8 = *(s8 *)(state + 0x57);
+            int *match = NULL;
+            int *list;
+            int cnt;
+            int slot;
+            list = ObjList_GetObjects(&res, &count);
+            cnt = 0;
+            slot = slot8;
+            for (res = 0; res < count; res++) {
+                int *other = (int *)*list;
+                if (*(s16 *)((char *)other + 0xb4) == slot8) {
+                    match = other;
+                }
+                if (*(s16 *)((char *)other + 0xb4) == -2 && *(s16 *)((char *)other + 0x44) == 0x10) {
+                    u8 *st2 = *(u8 **)((char *)other + 0xb8);
+                    if (slot == *(s8 *)(st2 + 0x57)) {
+                        cnt++;
+                    }
+                }
+                list++;
+            }
+            if (cnt <= 1 && match != NULL && *(s16 *)((char *)match + 0xb4) != -1) {
+                *(s16 *)((char *)match + 0xb4) = -1;
+                ((void (*)(int))((int *)*(int **)gObjectTriggerInterface)[0x4c / 4])(slot);
+            }
+            *(s16 *)((char *)obj + 0xb4) = -1;
+            *(u16 *)((char *)obj + 0xb0) |= 0x8000;
+            *(s16 *)((char *)obj + 6) |= 0x4000;
+        }
+        if (*(s16 *)((char *)obj + 0x46) == 0x774) {
+            int i;
+            for (i = 0; i < *(u8 *)(state + 0x8b); i++) {
+                int b = *(u8 *)(state + i + 0x81);
+                if (b == 0xb) {
+                    if (*(u8 *)((char *)obj + 0xeb) != 0) {
+                        Obj_FreeObject(*(int **)((char *)obj + 0xc8));
+                        ObjLink_DetachChild(obj, *(int *)((char *)obj + 0xc8));
+                    }
+                } else if (b < 0xb && b > 9) {
+                    if ((u8)Obj_IsLoadingLocked() != 0) {
+                        void *alloc;
+                        int *child;
+                        alloc = Obj_AllocObjectSetup(0x18, 0x69);
+                        child = Obj_SetupObject(alloc, 4, -1, -1, (void *)0);
+                        ObjLink_AttachChild(obj, child, 0);
+                        ObjAnim_SetCurrentMove(child, 0, lbl_803E322C, 0);
+                        ObjAnim_AdvanceCurrentMove(child, lbl_803E3228, timeDelta, 0);
+                    }
+                }
+            }
+        }
+    }
+}
+#pragma opt_loop_invariants reset
+#pragma peephole reset
+#pragma scheduling reset
