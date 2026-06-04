@@ -4280,41 +4280,53 @@ LAB_800e19bc:
 #pragma peephole off
 int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroupIndex)
 {
-  u8 patchListIndex;
-  u8 linkedPatchListIndex;
-  u8 patchIndex;
-  u8 linkedPatchIndex;
-  u8 edgeIndex;
-  u16 patchGroupId;
-  u16 linkedWalkGroupIndex;
-  ObjfsaWalkGroup *walkGroup;
-  ObjfsaWalkGroup *linkedWalkGroup;
+  u8 k;
+  u8 k2;
+  uint pidx;
+  uint lpidx;
+  uint clz;
+  uint lidx;
+  u16 pgid;
+  u8 i;
+  u8 j;
   ObjfsaPatch *patch;
-  ObjfsaPatch *linkedPatch;
+  ObjfsaPatch *lp;
+  ObjfsaWalkGroup *wg;
+  f32 y;
 
-  walkGroup = Objfsa_GetWalkGroup(currentWalkGroupIndex);
-  for (patchListIndex = 0; patchListIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; patchListIndex++) {
-    patchIndex = walkGroup->patchIndices[patchListIndex];
-    if (patchIndex != 0) {
-      patch = Objfsa_GetPatch(patchIndex);
-      if (prevPoint[1] < (f32)patch->maxY && (f32)patch->minY < prevPoint[1]) {
-        edgeIndex = 0;
-        while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
-               patch->planeOffsets[edgeIndex] +
-                   prevPoint[0] * (f32)patch->planes[edgeIndex].normalX +
-                   prevPoint[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
-          edgeIndex++;
+  wg = &lbl_8039FAE8[currentWalkGroupIndex];
+  for (k = 0; k < 4; k++) {
+    pidx = wg->patchIndices[k];
+    if (pidx == 0) {
+      continue;
+    }
+    patch = &lbl_8039CAE8[pidx];
+    y = prevPoint[1];
+    if (y < (f32)patch->maxY && y > (f32)patch->minY) {
+      i = 0;
+      j = 0;
+      for (; i < 4; i++, j += 2) {
+        if (patch->planeOffsets[i] +
+                (prevPoint[0] * (f32)((s16 *)patch)[j] +
+                 prevPoint[2] * (f32)((s16 *)patch)[j + 1]) >
+            0.0f) {
+          break;
         }
-        if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT &&
-            nextPoint[1] < (f32)patch->maxY && (f32)patch->minY < nextPoint[1]) {
-          edgeIndex = 0;
-          while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
-                 patch->planeOffsets[edgeIndex] +
-                     nextPoint[0] * (f32)patch->planes[edgeIndex].normalX +
-                     nextPoint[2] * (f32)patch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
-            edgeIndex++;
+      }
+      if (i == 4) {
+        y = nextPoint[1];
+        if (y < (f32)patch->maxY && y > (f32)patch->minY) {
+          i = 0;
+          j = 0;
+          for (; i < 4; i++, j += 2) {
+            if (patch->planeOffsets[i] +
+                    (nextPoint[0] * (f32)((s16 *)patch)[j] +
+                     nextPoint[2] * (f32)((s16 *)patch)[j + 1]) >
+                0.0f) {
+              break;
+            }
           }
-          if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
+          if (i == 4) {
             return currentWalkGroupIndex;
           }
         }
@@ -4322,42 +4334,54 @@ int walkGroupFn_800db3e4(float *prevPoint,float *nextPoint,uint currentWalkGroup
     }
   }
 
-  for (patchListIndex = 0; patchListIndex < OBJFSA_PATCHGROUP_PATCH_COUNT; patchListIndex++) {
-    patchIndex = walkGroup->patchIndices[patchListIndex];
-    if (patchIndex != 0) {
-      patch = Objfsa_GetPatch(patchIndex);
-      patchGroupId = patch->groupId;
-      linkedWalkGroupIndex = Objfsa_GetLinkedWalkGroup(patchGroupId,currentWalkGroupIndex);
-      linkedWalkGroup = Objfsa_GetWalkGroup(linkedWalkGroupIndex);
-
-      for (linkedPatchListIndex = 0; linkedPatchListIndex < OBJFSA_PATCHGROUP_PATCH_COUNT;
-           linkedPatchListIndex++) {
-        linkedPatchIndex = linkedWalkGroup->patchIndices[linkedPatchListIndex];
-        if (linkedPatchIndex != 0) {
-          linkedPatch = Objfsa_GetPatch(linkedPatchIndex);
-          if (linkedPatch->groupId != patchGroupId &&
-              prevPoint[1] < (f32)linkedPatch->maxY &&
-              (f32)linkedPatch->minY < prevPoint[1]) {
-            edgeIndex = 0;
-            while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
-                   linkedPatch->planeOffsets[edgeIndex] +
-                       prevPoint[0] * (f32)linkedPatch->planes[edgeIndex].normalX +
-                       prevPoint[2] * (f32)linkedPatch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
-              edgeIndex++;
+  for (k = 0; k < 4; k++) {
+    pidx = wg->patchIndices[k];
+    if (pidx == 0) {
+      continue;
+    }
+    patch = &lbl_8039CAE8[pidx];
+    clz = (uint)__cntlzw(0xff - currentWalkGroupIndex);
+    pgid = patch->groupId;
+    if (((clz >> 5) & pgid) == 0) {
+      lidx = pgid & 0xff;
+    } else {
+      lidx = (int)(pgid & 0xff00) >> 8;
+    }
+    for (k2 = 0; k2 < 4; k2++) {
+      lpidx = *((u8 *)lbl_8039FAE8 + lidx * OBJFSA_PATCHGROUP_STRIDE + k2 + 0x24);
+      if (lpidx == 0) {
+        continue;
+      }
+      lp = &lbl_8039CAE8[lpidx];
+      if (lp->groupId != pgid) {
+        y = prevPoint[1];
+        if (y < (f32)lp->maxY && y > (f32)lp->minY) {
+          i = 0;
+          j = 0;
+          for (; i < 4; i++, j += 2) {
+            if (lp->planeOffsets[i] +
+                    (prevPoint[0] * (f32)((s16 *)lp)[j] +
+                     prevPoint[2] * (f32)((s16 *)lp)[j + 1]) >
+                0.0f) {
+              break;
             }
-            if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT &&
-                nextPoint[1] < (f32)linkedPatch->maxY &&
-                (f32)linkedPatch->minY < nextPoint[1]) {
-              edgeIndex = 0;
-              while (edgeIndex < OBJFSA_PATCHGROUP_PATCH_COUNT &&
-                     linkedPatch->planeOffsets[edgeIndex] +
-                         nextPoint[0] * (f32)linkedPatch->planes[edgeIndex].normalX +
-                         nextPoint[2] * (f32)linkedPatch->planes[edgeIndex].normalZ <= lbl_803E05F0) {
-                edgeIndex++;
+          }
+          if (i == 4) {
+            y = nextPoint[1];
+            if (y < (f32)lp->maxY && y > (f32)lp->minY) {
+              i = 0;
+              j = 0;
+              for (; i < 4; i++, j += 2) {
+                if (lp->planeOffsets[i] +
+                        (nextPoint[0] * (f32)((s16 *)lp)[j] +
+                         nextPoint[2] * (f32)((s16 *)lp)[j + 1]) >
+                    0.0f) {
+                  break;
+                }
               }
-              if (edgeIndex == OBJFSA_PATCHGROUP_PATCH_COUNT) {
-                OSReport(sObjfsaFoundNewWalkGroupPatch,linkedWalkGroupIndex);
-                return linkedWalkGroupIndex;
+              if (i == 4) {
+                OSReport(sObjfsaFoundNewWalkGroupPatch, lidx);
+                return lidx;
               }
             }
           }
