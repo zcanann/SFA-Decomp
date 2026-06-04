@@ -65,6 +65,23 @@ extern undefined4 FUN_8028688c();
 extern double FUN_80293900();
 extern int Sfx_PlayFromObjectLimited(int obj,int sfxId,int maxCount);
 extern void s16toFloat(void *timer,int duration);
+
+typedef struct {
+    s16 unk00;         /* 0x00 */
+    s16 loopSfx;       /* 0x02 */
+    s16 explodeSfx;    /* 0x04 */
+    s16 unk06;         /* 0x06 */
+    s16 burstFx;       /* 0x08 */
+    s16 auraFx;        /* 0x0A */
+    s16 unk0C;         /* 0x0C */
+    s16 unk0E;         /* 0x0E */
+    s16 targetGroup;   /* 0x10 */
+    u8 noVertical : 1; /* 0x12 bit 7 */
+    u8 timed : 1;      /* 0x12 bit 6 */
+    u8 smoothTurn : 1; /* 0x12 bit 5 */
+    u8 usePath : 1;    /* 0x12 bit 4 */
+} PollenFragmentDef;
+
 extern void storeZeroToFloatParam(void *timer);
 
 extern undefined4 DAT_803dc070;
@@ -800,7 +817,7 @@ void FUN_8016ae64(double param_1,double param_2,double param_3,undefined8 param_
 void pollenfragment_init(int obj,int config)
 {
   bool keepSpawning;
-  byte pollenType;
+  s8 pollenType;
   uint randomValue;
   int spawnCount;
   undefined4 *state;
@@ -813,14 +830,14 @@ void pollenfragment_init(int obj,int config)
     randomValue = randomGetRange(0xb4,300);
     *(float *)(state + 2) = (float)(int)randomValue;
   }
-  pollenType = *(byte *)(config + 0x19);
-  if ((char)pollenType < '\0') {
+  pollenType = *(s8 *)(config + 0x19);
+  if ((s8)pollenType < 0) {
     pollenType = 0;
   }
-  else if (5 < pollenType) {
+  else if (pollenType > 5u) {
     pollenType = 5;
   }
-  *(byte *)(config + 0x19) = pollenType;
+  *(s8 *)(config + 0x19) = pollenType;
   state[7] = (u32)lbl_8032059C[*(char *)(config + 0x19)];
   if ((int)*(short *)state[7] != 0) {
     Sfx_PlayFromObjectLimited(obj,(int)*(short *)state[7] & 0xffff,3);
@@ -828,14 +845,13 @@ void pollenfragment_init(int obj,int config)
   spawnCount = 4;
   do {
     (*(code *)(*gPartfxInterface + 8))(obj,(int)*(short *)(state[7] + 6),0,1,0xffffffff,0);
-    spawnCount = spawnCount + -1;
-  } while (spawnCount != -1);
-  if ((*(byte *)(state[7] + 0x12) >> 6 & 1) == 0) {
+  } while (spawnCount-- != 0);
+  if (!((PollenFragmentDef *)state[7])->timed) {
     *(float *)(state + 2) = lbl_803E319C;
   }
   ObjHits_SetTargetMask(obj,4);
   state[6] = 0;
-  state[1] = *(undefined4 *)(state[7] + 0xc);
+  *(f32 *)(state + 1) = *(f32 *)(state[7] + 0xc);
   *state = 0;
   s16toFloat(state + 9,0xe10);
   storeZeroToFloatParam(state + 8);
@@ -1418,21 +1434,6 @@ void pollen_init(int *obj) {
 
 /* ==== v1.0 recovered functions (drift additions) ==== */
 
-typedef struct {
-    s16 unk00;         /* 0x00 */
-    s16 loopSfx;       /* 0x02 */
-    s16 explodeSfx;    /* 0x04 */
-    s16 unk06;         /* 0x06 */
-    s16 burstFx;       /* 0x08 */
-    s16 auraFx;        /* 0x0A */
-    s16 unk0C;         /* 0x0C */
-    s16 unk0E;         /* 0x0E */
-    s16 targetGroup;   /* 0x10 */
-    u8 noVertical : 1; /* 0x12 bit 7 */
-    u8 timed : 1;      /* 0x12 bit 6 */
-    u8 smoothTurn : 1; /* 0x12 bit 5 */
-    u8 usePath : 1;    /* 0x12 bit 4 */
-} PollenFragmentDef;
 
 typedef struct {
     f32 x, y, z;
@@ -1473,7 +1474,7 @@ extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern int getCurSeqNo(void);
 extern int timerCountDown(int timer);
-extern void spawnExplosion(f32 scale, int obj, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
+extern void spawnExplosion(int obj, f32 scale, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
 extern void Obj_SmoothTurnAnglesTowardVelocity(int obj, void *vel, int rate, f32 a, f32 b);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern void PSVECSubtract(void *a, void *b, void *out);
@@ -1485,18 +1486,21 @@ extern void PSVECAdd(void *a, void *b, void *out);
 #pragma scheduling off
 #pragma peephole off
 int fn_80169EF4(f32 speed, f32 grav, f32 *from, f32 *to, u8 flag) {
-    f32 dist;
     f32 a;
+    f32 dist;
+    f32 dx;
     f32 dy;
+    f32 dz;
     f32 t;
     f32 disc;
 
-    dist = sqrtf((from[0] - to[0]) * (from[0] - to[0]) + (from[2] - to[2]) * (from[2] - to[2]));
+    dx = from[0] - to[0];
+    dz = from[2] - to[2];
+    dist = sqrtf(dx * dx + dz * dz);
     dy = from[1] - to[1];
     dist = dist * lbl_803E3110;
-    a = (lbl_803E3114 * grav) * grav;
-    speed = speed * speed;
-    grav = -(grav * dy) - speed;
+    a = grav * (lbl_803E3114 * grav);
+    grav = -(grav * dy) - (speed = speed * speed);
     disc = grav * grav - (lbl_803E3118 * a) * (dy * dy + dist * dist);
     if (disc >= lbl_803E311C) {
         if (flag) {
@@ -1625,7 +1629,7 @@ void pollenfragment_hitDetect(int obj) {
         hit = ObjHits_GetPriorityHit(obj, buf, 0, 0);
         if (hit == 0xe || hit == 0xf) {
             if ((*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx != -1) {
-                spawnExplosion(lbl_803E315C, obj, 0, 1, 0, 1, 0, 1, 0);
+                spawnExplosion(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
                 Sfx_PlayFromObjectLimited(obj, (u16)(*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx, 3);
             }
             ObjHits_DisableObject(obj);
@@ -1635,7 +1639,7 @@ void pollenfragment_hitDetect(int obj) {
             ObjHits_DisableObject(obj);
             *(f32 *)(extra + 8) = lbl_803E3160;
             if ((*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx != -1) {
-                spawnExplosion(lbl_803E315C, obj, 0, 1, 0, 1, 0, 1, 0);
+                spawnExplosion(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
                 Sfx_PlayFromObjectLimited(obj, (u16)(*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx, 3);
             }
             s16toFloat(extra + 0x20, 0x78);
@@ -1751,7 +1755,7 @@ void pollenfragment_update(int obj) {
         *(f32 *)(extra + 8) = lbl_803E3160;
         ObjHits_DisableObject(obj);
         if ((*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx != -1) {
-            spawnExplosion(lbl_803E315C, obj, 0, 1, 0, 1, 0, 1, 0);
+            spawnExplosion(obj, lbl_803E315C, 0, 1, 0, 1, 0, 1, 0);
             Sfx_PlayFromObjectLimited(obj, (u16)(*(PollenFragmentDef **)(extra + 0x1c))->explodeSfx, 3);
         }
         s16toFloat(extra + 0x20, 0x78);
