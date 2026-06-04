@@ -13,24 +13,21 @@ typedef struct SynthVoiceKeyGroups {
 #define KEYGROUP_STATE(voice, index) \
     (((SynthVoiceKeyGroups*)(voice))->keyGroupStates[index])
 
-#pragma scheduling off
 SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
+    u32 trackId;
     SynthTrackCursor* track;
     SynthSequenceEvent* ev;
-    u32 trackId;
-    SynthVoice* voice;
     SynthSequenceState* pattern;
     u32 patternTime;
     u32 pitchTime;
     u32 modTime;
 
     trackId = channel;
-    voice = gSynthCurrentVoice;
-    track = SYNTH_TRACK_CURSOR(voice, trackId);
-    pattern = SYNTH_SEQUENCE_STATE(voice, trackId);
+    track = SYNTH_TRACK_CURSOR(gSynthCurrentVoice, trackId);
+    pattern = SYNTH_SEQUENCE_STATE(gSynthCurrentVoice, trackId);
 
     if (track->current != 0) {
-        ev = SYNTH_CHANNEL_EVENT(voice, trackId);
+        ev = SYNTH_CHANNEL_EVENT(gSynthCurrentVoice, trackId);
         ev->channel = channel;
         ev->state = pattern;
 
@@ -117,8 +114,6 @@ SynthSequenceEvent* synthGetNextChannelEvent(u8 channel) {
 
     return 0;
 }
-
-#pragma scheduling reset
 
 /*
  * Sorted-by-time insert into a channel event queue.
