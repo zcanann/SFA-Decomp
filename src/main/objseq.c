@@ -128,7 +128,7 @@ extern void warpToMap(int map, int mode);
 extern int ObjAnim_SampleRootCurvePhase(void *obj, f32 *out, f32 dist);
 extern void ObjAnim_AdvanceCurrentMove(void *obj, void *state, f32 speed, f32 t);
 int ObjSeq_ExecuteActionCommand(u8 *obj, u8 *action, u8 **cmd, int flags, void *out);
-void *objSeqCmd3(u8 *obj, u8 *seq, u8 *src);
+void *ObjSeq_ToggleCommand3Target(u8 *obj, u8 *seq, u8 *src);
 
 typedef struct CamRequest {
     s16 rot[3];
@@ -348,7 +348,7 @@ void objCallSeqFn(u8 *obj, u8 *sourceObj, u8 *seq, int action)
 
 #pragma peephole off
 #pragma scheduling off
-void *objSeqCmd3(u8 *obj, u8 *seq, u8 *src)
+void *ObjSeq_ToggleCommand3Target(u8 *obj, u8 *seq, u8 *src)
 {
     void *result;
     u8 *activeObj;
@@ -1385,7 +1385,7 @@ void objSeqUpdateCurves(u8 *obj, u8 *seqObj, u8 *seq, int mode)
         switch (opcode) {
         case 3:
             flags = (s8)(flags | 4);
-            activeObj = objSeqCmd3(obj, seq, model);
+            activeObj = ObjSeq_ToggleCommand3Target(obj, seq, model);
             *(s16 *)(activeObj + 0xa2) = -1;
             break;
         case 0:
@@ -2105,7 +2105,7 @@ int ObjSeq_ExecuteActionCommand(u8 *obj, u8 *action, u8 **cmdPtr, int flags, voi
         if ((flags & 4) != 0) {
             break;
         }
-        activeObj = objSeqCmd3(obj, seq, model);
+        activeObj = ObjSeq_ToggleCommand3Target(obj, seq, model);
         *(s16 *)(activeObj + 0xa2) = -1;
         break;
     case 0xb:
