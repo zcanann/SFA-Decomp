@@ -6816,3 +6816,114 @@ void shield_update(int *obj)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+typedef struct DllF7Vec {
+    u8 b[16];
+} DllF7Vec;
+
+extern DllF7Vec lbl_802C2260;
+extern void Sfx_PlayAtPositionFromObject(int *obj, f32 x, f32 y, f32 z, int sfx);
+extern void Obj_SetActiveModelIndex(int *obj, int idx);
+extern f32 lbl_803E3400;
+extern f32 lbl_803E3404;
+extern f32 lbl_803E3408;
+extern f32 lbl_803E340C;
+extern f32 lbl_803E3410;
+extern f32 lbl_803E3414;
+extern f32 lbl_803E3418;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_F7_update(int *obj)
+{
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    f32 pz;
+    f32 py;
+    f32 px;
+    f32 fz2;
+    s16 trio[3];
+    DllF7Vec vec = lbl_802C2260;
+    f32 radius;
+    int hit;
+
+    if (*(s8 *)(state + 9) != 0) {
+        int *params = *(int **)((char *)obj + 0x4c);
+        if (*(s8 *)(state + 0xb) == 0 &&
+            ((int (*)(int))((int *)*(int **)gMapEventInterface)[0x68 / 4])(*(int *)((char *)params + 0x14)) != 0) {
+            *(u8 *)(state + 9) = 0;
+            *(u8 *)(state + 8) = 1;
+            *(u8 *)(state + 0xa) = 2;
+            *(s16 *)((char *)*(int **)((char *)obj + 0x54) + 0x60) |= 1;
+            *(u8 *)((char *)obj + 0xaf) &= ~0x8;
+        } else {
+            *(u8 *)((char *)obj + 0xaf) |= 8;
+        }
+        return;
+    }
+    if (ObjHits_GetPriorityHitWithPosition(obj, 0, 0, &hit, &px, &py, &pz) != 0) {
+        if ((*(s8 *)(state + 0xa) -= hit) > 0) {
+            Sfx_PlayAtPositionFromObject(obj, px, py, pz, 72);
+            Obj_SetActiveModelIndex(obj, 2 - *(s8 *)(state + 0xa));
+            {
+                f32 fz = lbl_803E3404;
+                *(f32 *)state = fz;
+                *(f32 *)(state + 4) = lbl_803E3408;
+                px += playerMapOffsetX;
+                pz += playerMapOffsetZ;
+                fz2 = fz;
+            }
+            trio[2] = 0;
+            trio[1] = 0;
+            trio[0] = 0;
+            ((void (*)(int, int, s16 *, int, int, DllF7Vec *))((int *)*(int **)lbl_803DDAB4)[1])(0, 1, trio, 1025, -1, &vec);
+        }
+    }
+    if (*(s8 *)(state + 0xa) <= 0) {
+        int *params = *(int **)((char *)obj + 0x4c);
+        if (*(s8 *)(state + 0xb) == 0) {
+            ((void (*)(int, f32))((int *)*(int **)gMapEventInterface)[0x64 / 4])(*(int *)((char *)params + 0x14), lbl_803E340C);
+        }
+        *(u8 *)(state + 9) = 1;
+        *(u8 *)(state + 8) = 0;
+        Sfx_PlayFromObject(obj, 74);
+        *(s16 *)((char *)*(int **)((char *)obj + 0x54) + 0x60) &= ~1;
+        if ((int)*(s16 *)((char *)params + 0x1e) != -1) {
+            GameBit_Set((int)*(s16 *)((char *)params + 0x1e), 1);
+        }
+        if (*(s8 *)(state + 0xb) == 0) {
+            if ((u8)Obj_IsLoadingLocked() != 0) {
+                s16 *alloc = (s16 *)Obj_AllocObjectSetup(0x30, 0xb);
+                alloc[0xe] = -1;
+                *(f32 *)((char *)alloc + 8) = *(f32 *)((char *)obj + 0xc);
+                *(f32 *)((char *)alloc + 0xc) = lbl_803E3410 + *(f32 *)((char *)obj + 0x10);
+                *(f32 *)((char *)alloc + 0x10) = *(f32 *)((char *)obj + 0x14);
+                *(u8 *)((char *)alloc + 0x1a) = 3;
+                alloc[0x16] = -1;
+                alloc[0x12] = -1;
+                Obj_SetupObject(alloc, 5, *(s8 *)((char *)obj + 0xac), -1, *(void **)((char *)obj + 0x30));
+            }
+        } else {
+            int *near;
+            radius = lbl_803E3414;
+            near = (int *)ObjGroup_FindNearestObject(4, (int)obj, &radius);
+            if (near != NULL) {
+                *(f32 *)((char *)near + 0x18) = *(f32 *)((char *)near + 0xc) = *(f32 *)((char *)obj + 0xc);
+                *(f32 *)((char *)near + 0x1c) = *(f32 *)((char *)near + 0x10) = lbl_803E3410 + *(f32 *)((char *)obj + 0x10);
+                *(f32 *)((char *)near + 0x20) = *(f32 *)((char *)near + 0x14) = *(f32 *)((char *)obj + 0x14);
+                *(s16 *)near = *(s16 *)obj;
+            }
+        }
+        ((void (*)(int *, int, int, int, int, int))((int *)*(int **)lbl_803DDAB0)[1])(obj, 1, 0, 2, -1, 0);
+    }
+    if (*(f32 *)state > lbl_803E3400) {
+        *(f32 *)state = timeDelta * *(f32 *)(state + 4) + *(f32 *)state;
+        if (*(f32 *)state < lbl_803E3400) {
+            *(f32 *)state = lbl_803E3400;
+        } else if (*(f32 *)state > lbl_803E3418) {
+            *(f32 *)state = lbl_803E3418 - (*(f32 *)state - lbl_803E3418);
+            *(f32 *)(state + 4) = -*(f32 *)(state + 4);
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
