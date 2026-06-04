@@ -1050,6 +1050,7 @@ LAB_80185bfc:
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
 #pragma scheduling off
 void fn_80185868(int obj, f32 arg)
 {
@@ -1090,6 +1091,7 @@ void fn_80185868(int obj, f32 arg)
   ObjHits_EnableObject(obj);
 }
 #pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -1154,245 +1156,235 @@ LAB_801860b0:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void fn_80185B74(undefined8 param_1,undefined8 param_2,undefined8 param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+#pragma scheduling off
+#pragma peephole off
+void fn_80185B74(int obj)
 {
-  float fVar1;
-  ushort *puVar2;
-  ushort *puVar3;
-  uint uVar4;
-  ushort *puVar5;
-  undefined uVar6;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  int in_r9;
-  undefined4 in_r10;
-  int iVar7;
-  int *piVar8;
-  int iVar9;
-  double dVar10;
-  undefined8 uVar11;
-  double in_f31;
-  double in_ps31_1;
-  float fStack_98;
-  float local_94;
-  undefined auStack_90 [8];
-  undefined4 local_88;
-  undefined auStack_78 [8];
-  undefined4 local_70;
-  undefined auStack_60 [8];
-  undefined4 local_58;
-  ushort local_48 [4];
-  float local_40;
-  float local_3c;
-  float local_38;
-  float local_34;
-  undefined8 local_30;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  puVar2 = (ushort *)FUN_80286840();
-  iVar9 = *(int *)(puVar2 + 0x26);
-  local_94 = FLOAT_803e46f4;
-  (**(code **)(*DAT_803dd6d8 + 0x18))(&local_94);
-  piVar8 = *(int **)(puVar2 + 0x5c);
-  puVar3 = (ushort *)FUN_80017a98();
-  iVar7 = *(int *)(puVar3 + 0x5c);
-  dVar10 = (double)FUN_8001771c((float *)(puVar3 + 0xc),(float *)(puVar2 + 0xc));
-  if (*(short *)((int)piVar8 + 0x1a) < 1) {
-    *(undefined2 *)(piVar8 + 4) = 1;
-    *(undefined *)((int)piVar8 + 0x23) = 0;
-    *(byte *)((int)puVar2 + 0xaf) = *(byte *)((int)puVar2 + 0xaf) | 8;
-    fVar1 = FLOAT_803e46f0;
-    *(float *)(puVar2 + 0x12) = FLOAT_803e46f0;
-    *(float *)(puVar2 + 0x16) = fVar1;
-  }
-  if (*(short *)((int)piVar8 + 0x1e) != 0) {
-    FUN_80006824((uint)puVar2,SFXmn_dimspit6);
-    *(ushort *)((int)piVar8 + 0x1e) = *(short *)((int)piVar8 + 0x1e) - (ushort)DAT_803dc070;
-    uVar4 = randomGetRange(0,2);
-    if (uVar4 == 2) {
-      in_r7 = 0xffffffff;
-      in_r8 = 0;
-      in_r9 = *DAT_803dd708;
-      (**(code **)(in_r9 + 8))(puVar2,0x51c,0,1);
+    extern void *lbl_803DDAD4;
+    extern void *gSHthorntailAnimationInterface;
+    extern void *gPartfxInterface;
+    extern void *gCameraInterface;
+    extern f32 lbl_803E3A58;
+    extern f32 lbl_803E3A5C;
+    extern f32 lbl_803E3A60;
+    extern f32 lbl_803E3A64;
+    extern f32 lbl_803E3A68;
+    extern f32 lbl_803E3A6C;
+    extern f32 lbl_803E3A70;
+    extern f32 lbl_803E3A74;
+    extern f64 lbl_803E3A78;
+    extern void Sfx_PlayFromObject(int obj, int sfx);
+    extern void Sfx_StopObjectChannel(int obj, int channel);
+    extern int buttonDisable(int p1, int p2);
+    extern u32 getButtonsJustPressed(int controller);
+    extern f32 getXZDistance(void *a, void *b);
+    extern void ObjHits_ClearHitVolumes(int obj);
+    typedef struct { s16 ang; s16 b; s16 c; f32 scale; f32 x; f32 y; f32 z; } WindLiftRot;
+    typedef struct { u8 pad[8]; f32 val; u8 pad2[12]; } WindLiftStk;
+
+    WindLiftRot rot;
+    WindLiftStk stkA;
+    WindLiftStk stkB;
+    WindLiftStk stkC;
+    f32 spd;
+    u8 yawBuf[4];
+    int player;
+    int p4c;
+    int state;
+    int sub;
+    f32 dist;
+    char ph;
+    char on;
+    char held;
+
+    p4c = *(int *)(obj + 0x4c);
+    spd = lbl_803E3A5C;
+    (*(code *)(*(int *)gSHthorntailAnimationInterface + 0x18))(&spd);
+    state = *(int *)(obj + 0xb8);
+    player = Obj_GetPlayerObject();
+    sub = *(int *)(player + 0xb8);
+    dist = Vec_distance((void *)(player + 0x18), (void *)(obj + 0x18));
+    if (*(s16 *)(state + 0x1a) <= 0) {
+        *(s16 *)(state + 0x10) = 1;
+        *(u8 *)(state + 0x23) = 0;
+        *(u8 *)(obj + 0xaf) |= 8;
+        {
+            f32 fz = lbl_803E3A58;
+            *(f32 *)(obj + 0x24) = fz;
+            *(f32 *)(obj + 0x2c) = fz;
+        }
     }
-    if (*(short *)((int)piVar8 + 0x1e) < 1) {
-      fn_80185868((int)puVar2,dVar10);
-      goto LAB_80186804;
+    if (*(s16 *)(state + 0x1e) != 0) {
+        Sfx_PlayFromObject(obj, SFXmn_dimspit6);
+        *(s16 *)(state + 0x1e) -= framesThisStep;
+        if ((int)randomGetRange(0, 2) == 2) {
+            (*(code *)(*(int *)gPartfxInterface + 8))(obj, 0x51c, 0, 1, -1, 0);
+        }
+        if (*(s16 *)(state + 0x1e) <= 0) {
+            fn_80185868(obj, dist);
+            return;
+        }
     }
-  }
-  if (*piVar8 != 0) {
-    local_30 = (double)(longlong)(int)(FLOAT_803dc074 * local_94);
-    *piVar8 = *piVar8 - (int)(short)(int)(FLOAT_803dc074 * local_94);
-    if (*piVar8 < 1) {
-      *piVar8 = 0;
-      *(undefined2 *)(piVar8 + 4) = 0;
-      ObjHits_EnableObject((int)puVar2);
-      *(byte *)((int)puVar2 + 0xaf) = *(byte *)((int)puVar2 + 0xaf) & 0xf7;
-      puVar2[0x7a] = 0;
-      puVar2[0x7b] = 0;
+    if (*(int *)state != 0) {
+        *(int *)state = *(int *)state - (s16)(int)(timeDelta * spd);
+        if (*(int *)state <= 0) {
+            *(int *)state = 0;
+            *(s16 *)(state + 0x10) = 0;
+            ObjHits_EnableObject(obj);
+            *(u8 *)(obj + 0xaf) &= ~8;
+            *(int *)(obj + 0xf4) = 0;
+        }
+        return;
     }
-    goto LAB_80186804;
-  }
-  if (*(short *)(piVar8 + 4) != 0) {
-    FUN_8000680c((int)puVar2,0x40);
-    *(ushort *)(piVar8 + 4) = *(short *)(piVar8 + 4) - (ushort)DAT_803dc070;
-    if (*(short *)(piVar8 + 4) < 1) {
-      if (piVar8[1] == 0) {
-        *piVar8 = 1;
-      }
-      else {
-        *piVar8 = piVar8[1];
-      }
+    if (*(s16 *)(state + 0x10) != 0) {
+        Sfx_StopObjectChannel(obj, SFXen_firlp6);
+        *(s16 *)(state + 0x10) -= framesThisStep;
+        if (*(s16 *)(state + 0x10) <= 0) {
+            if (*(int *)(state + 4) != 0) {
+                *(int *)state = *(int *)(state + 4);
+            } else {
+                *(int *)state = 1;
+            }
+        }
+        if (*(s16 *)(state + 0x10) <= 50) {
+            return;
+        }
     }
-    if (*(short *)(piVar8 + 4) < 0x33) goto LAB_80186804;
-  }
-  if (*(char *)((int)piVar8 + 0x23) == '\0') {
-    if (*(char *)((int)piVar8 + 0x21) == '\0') {
-      puVar5 = (ushort *)(**(code **)(*DAT_803dd6d0 + 0x3c))();
-      uVar6 = 0;
-      if (((puVar5 != puVar2) && ((*(byte *)((int)puVar2 + 0xaf) & 1) != 0)) &&
-         (*(int *)(puVar2 + 0x7c) == 0)) {
-        FUN_80006ba8(0,0x100);
-        Obj_GetYawDeltaToObject(puVar2,(int)puVar3,&fStack_98);
-        *(undefined2 *)(piVar8 + 3) = 0x8000;
-        *(undefined2 *)((int)piVar8 + 0xe) = 0;
-        uVar6 = 1;
-      }
-      *(undefined *)((int)piVar8 + 0x21) = uVar6;
-      if (*(char *)((int)piVar8 + 0x21) != '\0') {
-        *(undefined *)((int)piVar8 + 0x22) = 1;
-        *(undefined2 *)((int)piVar8 + 0x1e) = 600;
-      }
-      if (*(int *)(puVar2 + 0x7c) == 0) {
-        ObjHits_EnableObject((int)puVar2);
-        *(byte *)((int)puVar2 + 0xaf) = *(byte *)((int)puVar2 + 0xaf) & 0xf7;
-      }
-      *(undefined4 *)(puVar2 + 0x40) = *(undefined4 *)(puVar2 + 6);
-      *(undefined4 *)(puVar2 + 0x42) = *(undefined4 *)(puVar2 + 10);
-      *(undefined4 *)(puVar2 + 0x44) = *(undefined4 *)(puVar2 + 10);
+    if (*(s8 *)(state + 0x23) == 0) {
+        if (*(s8 *)(state + 0x21) == 0) {
+            on = 0;
+            if ((void *)(*(code *)(*(int *)gCameraInterface + 0x3c))() != (void *)obj &&
+                (*(u8 *)(obj + 0xaf) & 1) != 0 && *(int *)(obj + 0xf8) == 0) {
+                buttonDisable(0, 0x100);
+                Obj_GetYawDeltaToObject(obj, player, yawBuf);
+                *(s16 *)(state + 0xc) = -32768;
+                *(s16 *)(state + 0xe) = 0;
+                on = 1;
+            }
+            *(s8 *)(state + 0x21) = on;
+            if (*(s8 *)(state + 0x21) != 0) {
+                *(u8 *)(state + 0x22) = 1;
+                *(s16 *)(state + 0x1e) = 600;
+            }
+            if (*(int *)(obj + 0xf8) == 0) {
+                ObjHits_EnableObject(obj);
+                *(u8 *)(obj + 0xaf) &= ~8;
+            }
+            *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
+            *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x14);
+            *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
+        } else {
+            char st21;
+            ObjHits_DisableObject(obj);
+            *(f32 *)(*(int *)(obj + 0x54) + 0x10) = *(f32 *)(obj + 0xc);
+            *(f32 *)(*(int *)(obj + 0x54) + 0x14) = *(f32 *)(obj + 0x10);
+            *(f32 *)(*(int *)(obj + 0x54) + 0x18) = *(f32 *)(obj + 0x14);
+            *(u8 *)(obj + 0xaf) |= 8;
+            if ((getButtonsJustPressed(0) & 0x100) != 0) {
+                *(u8 *)(state + 0x22) = 0;
+            }
+            if (*(s8 *)(state + 0x22) != 0) {
+                *(s16 *)(state + 0x10) = 0;
+                *(int *)state = 0;
+                ObjMsg_SendToObject(player, 0x100010, obj,
+                                    (*(s16 *)(state + 0xe) << 0x10) | ((u16)*(s16 *)(state + 0xc)));
+            }
+            if (*(int *)(obj + 0xf8) == 1) {
+                *(u8 *)(state + 0x21) = 2;
+            }
+            st21 = *(s8 *)(state + 0x21);
+            if (st21 == 2 && *(int *)(obj + 0xf8) == 0 && *(s16 *)(player + 0xa0) != 0x447) {
+                *(u8 *)(state + 0x21) = 0;
+                *(u8 *)(state + 0x23) = 1;
+                {
+                    f32 fz = lbl_803E3A58;
+                    *(f32 *)(obj + 0x24) = fz;
+                    *(f32 *)(obj + 0x28) = lbl_803E3A64 * *(f32 *)(sub + 0x298) + lbl_803E3A60;
+                    *(f32 *)(obj + 0x2c) = lbl_803E3A6C * *(f32 *)(sub + 0x298) + lbl_803E3A68;
+                    rot.x = fz;
+                    rot.y = fz;
+                    rot.z = fz;
+                }
+                rot.scale = lbl_803E3A5C;
+                rot.c = 0;
+                rot.b = 0;
+                rot.ang = *(s16 *)player;
+                mathFn_80021ac8(&rot, (f32 *)(obj + 0x24));
+                Sfx_PlayFromObject(obj, SFXmn_dimbos46);
+            } else if (st21 == 2 && *(int *)(obj + 0xf8) == 0) {
+                f32 fz;
+                *(u8 *)(state + 0x21) = 0;
+                *(u8 *)(state + 0x23) = 2;
+                fz = lbl_803E3A58;
+                *(f32 *)(obj + 0x24) = fz;
+                *(f32 *)(obj + 0x28) = fz;
+                *(f32 *)(obj + 0x2c) = fz;
+                Sfx_PlayFromObject(obj, SFXmn_dimbos46);
+            }
+        }
     }
-    else {
-      uVar11 = ObjHits_DisableObject((int)puVar2);
-      *(undefined4 *)(*(int *)(puVar2 + 0x2a) + 0x10) = *(undefined4 *)(puVar2 + 6);
-      *(undefined4 *)(*(int *)(puVar2 + 0x2a) + 0x14) = *(undefined4 *)(puVar2 + 8);
-      *(undefined4 *)(*(int *)(puVar2 + 0x2a) + 0x18) = *(undefined4 *)(puVar2 + 10);
-      *(byte *)((int)puVar2 + 0xaf) = *(byte *)((int)puVar2 + 0xaf) | 8;
-      uVar4 = FUN_80006c00(0);
-      if ((uVar4 & 0x100) != 0) {
-        *(undefined *)((int)piVar8 + 0x22) = 0;
-      }
-      if (*(char *)((int)piVar8 + 0x22) != '\0') {
-        *(undefined2 *)(piVar8 + 4) = 0;
-        *piVar8 = 0;
-        ObjMsg_SendToObject(uVar11,param_2,param_3,param_4,param_5,param_6,param_7,param_8,(int)puVar3,
-                     0x100010,(uint)puVar2,
-                     CONCAT22(*(undefined2 *)((int)piVar8 + 0xe),*(undefined2 *)(piVar8 + 3)),in_r7,
-                     in_r8,in_r9,in_r10);
-      }
-      if (*(int *)(puVar2 + 0x7c) == 1) {
-        *(undefined *)((int)piVar8 + 0x21) = 2;
-      }
-      if (((*(char *)((int)piVar8 + 0x21) == '\x02') && (*(int *)(puVar2 + 0x7c) == 0)) &&
-         (puVar3[0x50] != 0x447)) {
-        *(undefined *)((int)piVar8 + 0x21) = 0;
-        *(undefined *)((int)piVar8 + 0x23) = 1;
-        local_3c = FLOAT_803e46f0;
-        *(float *)(puVar2 + 0x12) = FLOAT_803e46f0;
-        *(float *)(puVar2 + 0x14) = FLOAT_803e46fc * *(float *)(iVar7 + 0x298) + FLOAT_803e46f8;
-        *(float *)(puVar2 + 0x16) = FLOAT_803e4704 * *(float *)(iVar7 + 0x298) + FLOAT_803e4700;
-        local_38 = local_3c;
-        local_34 = local_3c;
-        local_40 = FLOAT_803e46f4;
-        local_48[2] = 0;
-        local_48[1] = 0;
-        local_48[0] = *puVar3;
-        FUN_80017748(local_48,(float *)(puVar2 + 0x12));
-        FUN_80006824((uint)puVar2,SFXmn_dimbos46);
-      }
-      else if ((*(char *)((int)piVar8 + 0x21) == '\x02') && (*(int *)(puVar2 + 0x7c) == 0)) {
-        *(undefined *)((int)piVar8 + 0x21) = 0;
-        *(undefined *)((int)piVar8 + 0x23) = 2;
-        fVar1 = FLOAT_803e46f0;
-        *(float *)(puVar2 + 0x12) = FLOAT_803e46f0;
-        *(float *)(puVar2 + 0x14) = fVar1;
-        *(float *)(puVar2 + 0x16) = fVar1;
-        FUN_80006824((uint)puVar2,SFXmn_dimbos46);
-      }
+    ph = *(s8 *)(state + 0x23);
+    if (ph == 0 && *(s8 *)(state + 0x21) == 0) {
+        if (ObjHits_GetPriorityHit(obj, 0, 0, 0) != 0) {
+            sub = *(int *)(obj + 0xb8);
+            stkA.val = *(f32 *)(sub + 8);
+            (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stkA.pad, 2, -1, 0);
+            *(s16 *)(sub + 0x1e) = 1;
+            return;
+        }
+    } else if (ph != 0) {
+        *(s16 *)(state + 0x1a) -= framesThisStep;
+        if (*(s8 *)(state + 0x23) == 1) {
+            ObjHits_SetHitVolumeSlot(obj, 0xe, 3, 0);
+            if (*(f32 *)(obj + 0x28) > lbl_803E3A70) {
+                *(f32 *)(obj + 0x28) = lbl_803E3A74 * timeDelta + *(f32 *)(obj + 0x28);
+            }
+            ObjHits_EnableObject(obj);
+        }
+        held = *(s8 *)(*(int *)(obj + 0x54) + 0xad);
+        if (held != 0 && *(s8 *)(state + 0x23) == 1) {
+            *(f32 *)(obj + 0x28) = lbl_803E3A58;
+            *(u8 *)(state + 0x23) = 0;
+            sub = *(int *)(obj + 0xb8);
+            stkB.val = *(f32 *)(sub + 8);
+            (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stkB.pad, 2, -1, 0);
+            *(s16 *)(sub + 0x1e) = 1;
+            return;
+        }
+        if (held != 0 && *(s8 *)(state + 0x23) == 2) {
+            *(u8 *)(state + 0x23) = 0;
+            sub = *(int *)(obj + 0xb8);
+            stkC.val = *(f32 *)(sub + 8);
+            (*(code *)(*(int *)lbl_803DDAD4 + 4))(obj, 0, stkC.pad, 2, -1, 0);
+            *(s16 *)(sub + 0x1e) = 1;
+            *(f32 *)(obj + 0x28) = lbl_803E3A58;
+            return;
+        }
+        *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x28) * timeDelta + *(f32 *)(obj + 0x10);
+        *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
     }
-  }
-  if ((*(char *)((int)piVar8 + 0x23) == '\0') && (*(char *)((int)piVar8 + 0x21) == '\0')) {
-    iVar7 = ObjHits_GetPriorityHit((int)puVar2,(undefined4 *)0x0,(int *)0x0,(uint *)0x0);
-    if (iVar7 != 0) {
-      iVar7 = *(int *)(puVar2 + 0x5c);
-      local_58 = *(undefined4 *)(iVar7 + 8);
-      (**(code **)(*DAT_803de754 + 4))(puVar2,0,auStack_60,2,0xffffffff,0);
-      *(undefined2 *)(iVar7 + 0x1e) = 1;
-      goto LAB_80186804;
+    *(f32 *)(obj + 0x18) = *(f32 *)(obj + 0xc);
+    *(f32 *)(obj + 0x1c) = *(f32 *)(obj + 0x10);
+    *(f32 *)(obj + 0x20) = *(f32 *)(obj + 0x14);
+    *(s16 *)(state + 0x16) -= framesThisStep;
+    if (*(s8 *)(state + 0x21) != 0) {
+        if (getXZDistance((void *)(obj + 0x18), (void *)(p4c + 8)) >=
+            (f32)(*(s16 *)(state + 0x12) * *(s16 *)(state + 0x12))) {
+            f32 fz = lbl_803E3A58;
+            *(f32 *)(obj + 0x24) = fz;
+            *(f32 *)(obj + 0x2c) = fz;
+            *(s16 *)(state + 0x10) = 500;
+            *(u8 *)(state + 0x23) = 0;
+            *(int *)(obj + 0xf8) = 0;
+            ObjHits_EnableObject(obj);
+            *(u8 *)(obj + 0xaf) &= ~8;
+            ObjHits_ClearHitVolumes(obj);
+        }
     }
-  }
-  else if (*(char *)((int)piVar8 + 0x23) != '\0') {
-    *(ushort *)((int)piVar8 + 0x1a) = *(short *)((int)piVar8 + 0x1a) - (ushort)DAT_803dc070;
-    if (*(char *)((int)piVar8 + 0x23) == '\x01') {
-      ObjHits_SetHitVolumeSlot((int)puVar2,0xe,3,0);
-      if (FLOAT_803e4708 < *(float *)(puVar2 + 0x14)) {
-        *(float *)(puVar2 + 0x14) = FLOAT_803e470c * FLOAT_803dc074 + *(float *)(puVar2 + 0x14);
-      }
-      ObjHits_EnableObject((int)puVar2);
-    }
-    if ((*(char *)(*(int *)(puVar2 + 0x2a) + 0xad) != '\0') &&
-       (*(char *)((int)piVar8 + 0x23) == '\x01')) {
-      *(float *)(puVar2 + 0x14) = FLOAT_803e46f0;
-      *(undefined *)((int)piVar8 + 0x23) = 0;
-      iVar7 = *(int *)(puVar2 + 0x5c);
-      local_70 = *(undefined4 *)(iVar7 + 8);
-      (**(code **)(*DAT_803de754 + 4))(puVar2,0,auStack_78,2,0xffffffff,0);
-      *(undefined2 *)(iVar7 + 0x1e) = 1;
-      goto LAB_80186804;
-    }
-    if ((*(char *)(*(int *)(puVar2 + 0x2a) + 0xad) != '\0') &&
-       (*(char *)((int)piVar8 + 0x23) == '\x02')) {
-      *(undefined *)((int)piVar8 + 0x23) = 0;
-      iVar7 = *(int *)(puVar2 + 0x5c);
-      local_88 = *(undefined4 *)(iVar7 + 8);
-      (**(code **)(*DAT_803de754 + 4))(puVar2,0,auStack_90,2,0xffffffff,0);
-      *(undefined2 *)(iVar7 + 0x1e) = 1;
-      *(float *)(puVar2 + 0x14) = FLOAT_803e46f0;
-      goto LAB_80186804;
-    }
-    *(float *)(puVar2 + 6) = *(float *)(puVar2 + 0x12) * FLOAT_803dc074 + *(float *)(puVar2 + 6);
-    *(float *)(puVar2 + 8) = *(float *)(puVar2 + 0x14) * FLOAT_803dc074 + *(float *)(puVar2 + 8);
-    *(float *)(puVar2 + 10) = *(float *)(puVar2 + 0x16) * FLOAT_803dc074 + *(float *)(puVar2 + 10);
-  }
-  *(undefined4 *)(puVar2 + 0xc) = *(undefined4 *)(puVar2 + 6);
-  *(undefined4 *)(puVar2 + 0xe) = *(undefined4 *)(puVar2 + 8);
-  *(undefined4 *)(puVar2 + 0x10) = *(undefined4 *)(puVar2 + 10);
-  *(ushort *)((int)piVar8 + 0x16) = *(short *)((int)piVar8 + 0x16) - (ushort)DAT_803dc070;
-  if (*(char *)((int)piVar8 + 0x21) != '\0') {
-    dVar10 = FUN_80017708((float *)(puVar2 + 0xc),(float *)(iVar9 + 8));
-    fVar1 = FLOAT_803e46f0;
-    local_30 = (double)CONCAT44(0x43300000,
-                                (int)*(short *)((int)piVar8 + 0x12) *
-                                (int)*(short *)((int)piVar8 + 0x12) ^ 0x80000000);
-    if ((double)(float)(local_30 - DOUBLE_803e4710) <= dVar10) {
-      *(float *)(puVar2 + 0x12) = FLOAT_803e46f0;
-      *(float *)(puVar2 + 0x16) = fVar1;
-      *(undefined2 *)(piVar8 + 4) = 500;
-      *(undefined *)((int)piVar8 + 0x23) = 0;
-      puVar2[0x7c] = 0;
-      puVar2[0x7d] = 0;
-      ObjHits_EnableObject((int)puVar2);
-      *(byte *)((int)puVar2 + 0xaf) = *(byte *)((int)puVar2 + 0xaf) & 0xf7;
-      ObjHits_ClearHitVolumes((int)puVar2);
-    }
-  }
-LAB_80186804:
-  FUN_8028688c();
-  return;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
