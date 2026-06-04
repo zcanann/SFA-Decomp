@@ -27,9 +27,9 @@ typedef struct TrickyCurveTriggerState {
     s16 yExtent;
     s16 cooldown;
     u8 unk8[8];
-    s8 xSide;
-    s8 ySide;
-    s8 zSide;
+    u8 xSide;
+    u8 ySide;
+    u8 zSide;
 } TrickyCurveTriggerState;
 
 typedef struct TrickyCurveBurstPartfxArgs {
@@ -41,11 +41,6 @@ typedef struct TrickyCurveBurstPartfxArgs {
     f32 yDelta;
     f32 zDelta;
 } TrickyCurveBurstPartfxArgs;
-
-typedef union TrickyCurveIntToDouble {
-    u64 bits;
-    f64 value;
-} TrickyCurveIntToDouble;
 
 typedef void (*PartfxSpawnFn)(int obj, int effectId, void *args, int mode, int arg5, int arg6);
 
@@ -59,7 +54,6 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern int *gPartfxInterface;
 extern u8 gTrickyCurveBurstCounter;
 extern f32 timeDelta;
-extern f32 lbl_803E6438;
 extern f64 lbl_803E6440;
 extern f32 lbl_803E6448;
 
@@ -83,16 +77,15 @@ extern f32 lbl_803E6448;
 #pragma peephole off
 void fn_80206968(TrickyCurveObject *obj)
 {
-    f32 xDelta;
-    f32 yDelta;
-    f32 zDelta;
-    int player;
-    int insideAxes;
-    s8 xSide;
-    s8 ySide;
-    s8 zSide;
+    u8 insideAxes;
     TrickyCurveTriggerState *state;
-    TrickyCurveIntToDouble extent;
+    int player;
+    u8 xSide;
+    u8 ySide;
+    u8 zSide;
+    f32 xDelta;
+    f32 zDelta;
+    f32 yDelta;
 
     state = obj->state;
     player = Obj_GetPlayerObject();
@@ -105,51 +98,45 @@ void fn_80206968(TrickyCurveObject *obj)
     yDelta = *(f32 *)(player + 0x10) - obj->y;
     zDelta = *(f32 *)(player + 0x14) - obj->z;
 
-    if (xDelta <= lbl_803E6438) {
-        extent.bits = CONCAT44(0x43300000, (int)state->xExtent ^ 0x80000000);
-        if (-(f32)(extent.value - lbl_803E6440) < xDelta) {
+    if (xDelta <= 0.0f) {
+        if (xDelta > -(f32)state->xExtent) {
             insideAxes = 1;
             xSide = 1;
         }
     }
-    if (lbl_803E6438 < xDelta) {
-        extent.bits = CONCAT44(0x43300000, (int)state->xExtent ^ 0x80000000);
-        if (xDelta < (f32)(extent.value - lbl_803E6440)) {
+    if (xDelta > 0.0f) {
+        if (xDelta < (f32)state->xExtent) {
             insideAxes++;
             xSide--;
         }
     }
-    if (zDelta <= lbl_803E6438) {
-        extent.bits = CONCAT44(0x43300000, (int)state->zExtent ^ 0x80000000);
-        if (-(f32)(extent.value - lbl_803E6440) < zDelta) {
+    if (zDelta <= 0.0f) {
+        if (zDelta > -(f32)state->zExtent) {
             insideAxes++;
             zSide = 1;
         }
     }
-    if (lbl_803E6438 < zDelta) {
-        extent.bits = CONCAT44(0x43300000, (int)state->zExtent ^ 0x80000000);
-        if (zDelta < (f32)(extent.value - lbl_803E6440)) {
+    if (zDelta > 0.0f) {
+        if (zDelta < (f32)state->zExtent) {
             insideAxes++;
             zSide--;
         }
     }
-    if (yDelta <= lbl_803E6438) {
-        extent.bits = CONCAT44(0x43300000, (int)state->yExtent ^ 0x80000000);
-        if (-(f32)(extent.value - lbl_803E6440) < yDelta) {
+    if (yDelta <= 0.0f) {
+        if (yDelta > -(f32)state->yExtent) {
             insideAxes++;
             ySide = 1;
         }
     }
-    if (lbl_803E6438 < yDelta) {
-        extent.bits = CONCAT44(0x43300000, (int)state->yExtent ^ 0x80000000);
-        if (yDelta < (f32)(extent.value - lbl_803E6440)) {
+    if (yDelta > 0.0f) {
+        if (yDelta < (f32)state->yExtent) {
             insideAxes++;
             ySide--;
         }
     }
 
     if (state->cooldown >= 0) {
-        state->cooldown = state->cooldown - (s16)(int)timeDelta;
+        state->cooldown -= (int)timeDelta;
     }
     if (insideAxes == 3 && state->cooldown <= 0) {
         if (objGetAnimState80A(player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE) {
@@ -184,17 +171,16 @@ void fn_80206968(TrickyCurveObject *obj)
 #pragma peephole off
 void fn_80206C18(TrickyCurveObject *obj)
 {
-    f32 xDelta;
-    f32 yDelta;
-    f32 zDelta;
-    int player;
-    int insideAxes;
-    s8 xSide;
-    s8 ySide;
-    s8 zSide;
+    u8 insideAxes;
     TrickyCurveTriggerState *state;
+    int player;
+    u8 xSide;
+    u8 ySide;
+    u8 zSide;
+    f32 xDelta;
+    f32 zDelta;
+    f32 yDelta;
     TrickyCurveBurstPartfxArgs partfxArgs;
-    TrickyCurveIntToDouble extent;
 
     state = obj->state;
     player = Obj_GetPlayerObject();
@@ -208,44 +194,38 @@ void fn_80206C18(TrickyCurveObject *obj)
     zDelta = *(f32 *)(player + 0x14) - obj->z;
     gTrickyCurveBurstCounter++;
 
-    if (xDelta <= lbl_803E6438) {
-        extent.bits = CONCAT44(0x43300000, (int)state->xExtent ^ 0x80000000);
-        if (-(f32)(extent.value - lbl_803E6440) < xDelta) {
+    if (xDelta <= 0.0f) {
+        if (xDelta > -(f32)state->xExtent) {
             insideAxes = 1;
             xSide = 1;
         }
     }
-    if (lbl_803E6438 < xDelta) {
-        extent.bits = CONCAT44(0x43300000, (int)state->xExtent ^ 0x80000000);
-        if (xDelta < (f32)(extent.value - lbl_803E6440)) {
+    if (xDelta > 0.0f) {
+        if (xDelta < (f32)state->xExtent) {
             insideAxes++;
             xSide--;
         }
     }
-    if (zDelta <= lbl_803E6438) {
-        extent.bits = CONCAT44(0x43300000, (int)state->zExtent ^ 0x80000000);
-        if (-(f32)(extent.value - lbl_803E6440) < zDelta) {
+    if (zDelta <= 0.0f) {
+        if (zDelta > -(f32)state->zExtent) {
             insideAxes++;
             zSide = 1;
         }
     }
-    if (lbl_803E6438 < zDelta) {
-        extent.bits = CONCAT44(0x43300000, (int)state->zExtent ^ 0x80000000);
-        if (zDelta < (f32)(extent.value - lbl_803E6440)) {
+    if (zDelta > 0.0f) {
+        if (zDelta < (f32)state->zExtent) {
             insideAxes++;
             zSide--;
         }
     }
-    if (yDelta <= lbl_803E6438) {
-        extent.bits = CONCAT44(0x43300000, (int)state->yExtent ^ 0x80000000);
-        if (-(f32)(extent.value - lbl_803E6440) < yDelta) {
+    if (yDelta <= 0.0f) {
+        if (yDelta > -(f32)state->yExtent) {
             insideAxes++;
             ySide = 1;
         }
     }
-    if (lbl_803E6438 < yDelta) {
-        extent.bits = CONCAT44(0x43300000, (int)state->yExtent ^ 0x80000000);
-        if (yDelta < (f32)(extent.value - lbl_803E6440)) {
+    if (yDelta > 0.0f) {
+        if (yDelta < (f32)state->yExtent) {
             insideAxes++;
             ySide--;
         }
@@ -264,7 +244,7 @@ void fn_80206C18(TrickyCurveObject *obj)
         }
 
         if (objGetAnimState80A(player) == TRICKY_CURVE_PLAYER_ANIM_SLIDE) {
-            if (TRICKY_CURVE_BURST_LIMIT < gTrickyCurveBurstCounter) {
+            if (gTrickyCurveBurstCounter > TRICKY_CURVE_BURST_LIMIT) {
                 gTrickyCurveBurstCounter = 0;
                 GameBit_Set(TRICKY_CURVE_GAMEBIT_HIT, 1);
                 Sfx_PlayFromObject((int)obj, TRICKY_CURVE_SFX_BURST);
