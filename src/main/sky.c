@@ -1704,3 +1704,105 @@ void fn_8008C9F4(u8 *cfg, u8 flags)
 }
 #pragma scheduling reset
 #pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void fn_8008BDA8(void)
+{
+    u8 *tex0;
+    int iofs;
+    int jofs;
+    int i;
+    int j;
+
+    if (lbl_803DD12C != NULL) {
+        if (lbl_803DD12C != NULL) {
+            if (*(u8 **)lbl_803DD12C != NULL) {
+                textureFree(*(u8 **)lbl_803DD12C);
+            }
+            if (*(u8 **)(lbl_803DD12C + 4) != NULL) {
+                textureFree(*(u8 **)(lbl_803DD12C + 4));
+            }
+            mm_free(*(u8 **)(lbl_803DD12C + 8));
+            mm_free(*(u8 **)(lbl_803DD12C + 0x10));
+            mm_free(lbl_803DD12C);
+        }
+        lbl_803DD12C = NULL;
+    }
+    lbl_803DD12C = mmAlloc(600, 0x17, 0);
+    memset(lbl_803DD12C, 0, 600);
+    *(s8 *)(lbl_803DD12C + 0x250) = -1;
+    *(int *)(lbl_803DD12C + 0x218) = randomGetRange(0, 0x1c);
+    lbl_803DD12C[0x252] = 0xc;
+    lbl_803DD12C[0x253] = 0;
+    *(f32 *)(lbl_803DD12C + 0x20c) = lbl_803DF0F4;
+    *(int *)(lbl_803DD12C + 0x210) = 0xb4;
+    *(f32 *)(lbl_803DD12C + 0x1c) = lbl_803DF0F8;
+    *(f32 *)(lbl_803DD12C + 0x214) = (f32)*(int *)(lbl_803DD12C + 0x210) / lbl_803DF060;
+    *(int *)(lbl_803DD12C + 0x21c) = 0xc38;
+    *(int *)(lbl_803DD12C + 0x220) = 0xc38;
+    *(int *)(lbl_803DD12C + 0x224) = 0xc38;
+    *(int *)(lbl_803DD12C + 0x228) = 0xc38;
+    *(int *)(lbl_803DD12C + 0x22c) = 0xc38;
+    *(int *)(lbl_803DD12C + 0x230) = 0xc38;
+    *(int *)(lbl_803DD12C + 0x234) = 0xc38;
+    *(int *)(lbl_803DD12C + 0x238) = 0xc38;
+    *(u8 **)lbl_803DD12C = textureLoadAsset(*(int *)(lbl_803DD12C + 0x21c));
+    *(u8 **)(lbl_803DD12C + 4) = textureLoadAsset(*(int *)(lbl_803DD12C + 0x220));
+    *(int *)(lbl_803DD12C + 0x14) = 0xc38;
+    *(int *)(lbl_803DD12C + 0x18) = 0xc38;
+    tex0 = *(u8 **)lbl_803DD12C;
+    *(u8 **)(lbl_803DD12C + 8) = textureAlloc(*(u16 *)(tex0 + 0xa), *(u16 *)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
+    *(u8 **)(lbl_803DD12C + 0x10) = textureAlloc(*(u16 *)(tex0 + 0xa), *(u16 *)(tex0 + 0xc), 6, 0, 0, 1, 0, 1, 1);
+    iofs = 0;
+    i = 0;
+    do {
+        jofs = 0;
+        for (j = 0; j < 3; j++) {
+            *(f32 *)((int)lbl_803DD12C + iofs + jofs + 0x20) = lbl_803DF0FC;
+            *(f32 *)((int)lbl_803DD12C + iofs + jofs + 0x24) = lbl_803DF0FC;
+            *(f32 *)((int)lbl_803DD12C + iofs + jofs + 0x28) = lbl_803DF0FC;
+            *(f32 *)((int)lbl_803DD12C + iofs + jofs + 0x2c) = lbl_803DF0FC;
+            *(f32 *)((int)lbl_803DD12C + iofs + jofs + 0x30) = lbl_803DF0FC;
+            *(f32 *)((int)lbl_803DD12C + iofs + jofs + 0x34) = lbl_803DF0FC;
+            *(f32 *)((int)lbl_803DD12C + iofs + jofs + 0x38) = lbl_803DF0FC;
+            jofs += 0x1c;
+        }
+        lbl_803DD12C[iofs + 0x74] = 0xff;
+        lbl_803DD12C[iofs + 0x75] = 0xff;
+        lbl_803DD12C[iofs + 0x76] = 0xff;
+        lbl_803DD12C[iofs + 0x78] = 0xff;
+        lbl_803DD12C[iofs + 0x79] = 0xff;
+        lbl_803DD12C[iofs + 0x7a] = 0xff;
+        lbl_803DD12C[iofs + 0x80] = 0xff;
+        lbl_803DD12C[iofs + 0x81] = 0xff;
+        lbl_803DD12C[iofs + 0x82] = 0xff;
+        lbl_803DD12C[iofs + 0x88] = 0xff;
+        lbl_803DD12C[iofs + 0x89] = 0xff;
+        lbl_803DD12C[iofs + 0x8a] = 0xff;
+        *(f32 *)(lbl_803DD12C + iofs + 0x90) = pEXIInputFlag;
+        *(f32 *)(lbl_803DD12C + iofs + 0x94) = lbl_803DF06C;
+        *(f32 *)(lbl_803DD12C + iofs + 0x98) = pEXIInputFlag;
+        *(f32 *)(lbl_803DD12C + iofs + 0x9c) = pEXIInputFlag;
+        *(f32 *)(lbl_803DD12C + iofs + 0xa0) = lbl_803DF06C;
+        *(f32 *)(lbl_803DD12C + iofs + 0xa4) = pEXIInputFlag;
+        ((SkyBlendStateFlags *)(lbl_803DD12C + iofs + 0xc1))->active = 0;
+        *(f32 *)(lbl_803DD12C + iofs + 0xa8) = lbl_803DF100;
+        *(f32 *)(lbl_803DD12C + iofs + 0xac) = EXIInputFlag;
+        *(f32 *)(lbl_803DD12C + iofs + 0xb0) = lbl_803DF100;
+        lbl_803DD12C[iofs + 0x7c] = 0xff;
+        lbl_803DD12C[iofs + 0x7d] = 0xff;
+        lbl_803DD12C[iofs + 0x7e] = 0xff;
+        lbl_803DD12C[iofs + 0x84] = 0xff;
+        lbl_803DD12C[iofs + 0x85] = 0xff;
+        lbl_803DD12C[iofs + 0x86] = 0xff;
+        lbl_803DD12C[iofs + 0x8c] = 0xff;
+        lbl_803DD12C[iofs + 0x8d] = 0xff;
+        lbl_803DD12C[iofs + 0x8e] = 0xff;
+        lbl_803DD12C[iofs + 0xc0] = 0x80;
+        iofs += 0xa4;
+        i++;
+    } while (i < 3);
+}
+#pragma scheduling reset
+#pragma peephole reset
