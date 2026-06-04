@@ -3701,5 +3701,129 @@ void loadNextMap(void)
     }
 }
 
+extern f32 fastFloorf(f32 x);
+extern f32 gMapBlockWorldSize;
+extern u8 *gMapBlockLayerTables[5];
+extern f32 lbl_803DEBB8;
+typedef struct WarpVec {
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 pad;
+} WarpVec;
+extern WarpVec lbl_80386648[];
+
+int objShouldUnload(u8 *obj)
+{
+    u8 *def;
+    u8 *p;
+    u8 *src;
+    u8 **tp;
+    int m;
+    int keep;
+    int bx;
+    int bz;
+    int k;
+    int flags;
+    int idx2;
+    s8 found;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 dist;
+
+    def = *(u8 **)(obj + 0x4c);
+    if (def == NULL) {
+        return 0;
+    }
+    if (def[4] & 2) {
+        return 0;
+    }
+    m = (*gMapEventInterface)->getMode((s8)obj[0xac]);
+    if (m == -1) {
+        keep = 0;
+    } else if (m == 0) {
+        keep = 1;
+    } else if (m < 9) {
+        if ((def[3] >> (m - 1)) & 1) {
+            keep = 0;
+        } else {
+            keep = 1;
+        }
+    } else if ((def[5] >> (0x10 - m)) & 1) {
+        keep = 0;
+    } else {
+        keep = 1;
+    }
+    if (keep == 0) {
+        return 1;
+    }
+    flags = def[4];
+    if (flags & 1) {
+        return 0;
+    }
+    if (flags & 0x10) {
+        return !(*gMapEventInterface)->getAnimEvent((s8)obj[0xac], def[6]);
+    }
+    if (*(void **)(obj + 0xc0) != NULL && *(s16 *)(obj + 0xb4) < 0) {
+        return 0;
+    }
+    if (*(void **)(obj + 0xc4) != NULL) {
+        return 0;
+    }
+    if (*(void **)(obj + 0x30) == NULL) {
+        bx = (int)fastFloorf((*(f32 *)(obj + 0xc) - playerMapOffsetX) / gMapBlockWorldSize);
+        bz = (int)fastFloorf((*(f32 *)(obj + 0x14) - playerMapOffsetZ) / gMapBlockWorldSize);
+        if (bx < 0 || bz < 0 || bx >= 0x10 || bz >= 0x10) {
+            return 1;
+        }
+        found = 0;
+        bx = bx + (bz << 4);
+        tp = gMapBlockLayerTables;
+        for (k = 0; k < 5; k++) {
+            if (*(s8 *)(*tp + bx) >= 0) {
+                found = 1;
+            }
+            tp++;
+        }
+        if (found == 0) {
+            return 1;
+        }
+    }
+    flags = def[4];
+    if (flags & 0x20) {
+        return 0;
+    }
+    if ((flags & 4) && (p = (u8 *)Obj_GetPlayerObject()) != NULL && *(void **)(obj + 0x30) == NULL) {
+        x = *(f32 *)(p + 0x18);
+        y = *(f32 *)(p + 0x1c);
+        z = *(f32 *)(p + 0x20);
+    } else {
+        src = *(u8 **)(obj + 0x30);
+        if (src != NULL) {
+            idx2 = (s8)src[0x35] + 1;
+        } else {
+            idx2 = 0;
+        }
+        x = lbl_80386648[idx2].x;
+        y = lbl_80386648[idx2].y;
+        z = lbl_80386648[idx2].z;
+    }
+    dist = *(f32 *)(obj + 0x3c);
+    if (*(void **)(obj + 0x30) != NULL) {
+        x -= *(f32 *)(obj + 0xc);
+        y -= *(f32 *)(obj + 0x10);
+        z -= *(f32 *)(obj + 0x14);
+    } else {
+        x -= *(f32 *)(obj + 0x18);
+        y -= *(f32 *)(obj + 0x1c);
+        z -= *(f32 *)(obj + 0x20);
+    }
+    if (x * x + y * y + z * z < (lbl_803DEBB8 + dist) * (lbl_803DEBB8 + dist)) {
+        return 0;
+    }
+    return 1;
+}
+
 #pragma scheduling reset
 #pragma peephole reset
