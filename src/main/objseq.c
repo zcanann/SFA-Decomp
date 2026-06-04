@@ -1,6 +1,16 @@
 #include "main/sky_80080E58_shared.h"
 #include "main/mapEventTypes.h"
 
+extern int getTabEntry(void *p, int sz, int off, int unk);
+extern int getTableFileEntry(int fileId, int index, int *out);
+extern int loadAndDecompressDataFile(int id, void *buf, int blockOff, int len, int a, int b, int c);
+extern int strncmp(const char *a, const char *b, u32 n);
+extern void fn_80137948(char *fmt, ...);
+extern char sObjLoadAnimdataNullACRomTabWarning[];
+extern char sSeqAAnimDataTag;
+extern char sSeqBAnimDataTag;
+void ObjSeq_seqState_init(u8 *seq);
+
 void ObjSeq_setCamVars(int camA, int camB, int camC, int camD)
 {
     lbl_803DD10C = camA;
@@ -579,6 +589,78 @@ void ObjSeq_addBgCmd(int index, int xrot, int yrot)
     shortXrot = xrot;
     lbl_803DD0BC++;
     lbl_80399398[count * 3 + 1] = shortXrot;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void ObjSeq_objLoadAnimData(u8 *seq, u8 *obj)
+{
+    u8 *base = lbl_80396918;
+    int animId;
+    int fileOffset;
+    struct {
+        char tag[4];
+        s16 size;
+        s16 count;
+    } hdr;
+
+    if (*(s16 *)(obj + 0x18) == -1) {
+        return;
+    }
+
+    *(s16 *)(seq + 0x64) = 0;
+    *(s16 *)(seq + 0x62) = 0;
+    animId = *(s16 *)(obj + 0x18);
+    if ((animId & 0x8000) != 0) {
+        getTabEntry(lbl_803DD0D4, 0xf, ((animId & 0x7ff0) >> 4) * 2, 8);
+        animId = *(s16 *)lbl_803DD0D4 + (animId & 0xf);
+    } else {
+        animId = animId + 1;
+    }
+
+    if (getTableFileEntry(0xe, animId, &fileOffset) == 0) {
+        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        return;
+    }
+
+    loadAndDecompressDataFile(0xd, &hdr, fileOffset, 8, 0, 0, 0);
+    if (strncmp(hdr.tag, &sSeqAAnimDataTag, 4) != 0 &&
+        strncmp(hdr.tag, &sSeqBAnimDataTag, 4) != 0) {
+        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        return;
+    }
+
+    *(s16 *)(seq + 0x62) = hdr.count;
+    if (hdr.size == 0) {
+        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        return;
+    }
+
+    *(void **)(seq + 0x94) = mmAlloc(hdr.size, 0x11, 0);
+    if (*(void **)(seq + 0x94) == NULL) {
+        fn_80137948(sObjLoadAnimdataNullACRomTabWarning);
+        return;
+    }
+
+    loadAndDecompressDataFile(0xd, *(void **)(seq + 0x94), fileOffset + 8, hdr.size, 0, 0, 0);
+    *(s16 *)(seq + 0x64) = (s16)(((hdr.size >> 2) - hdr.count) >> 1);
+    *(void **)(seq + 0x98) = *(u8 **)(seq + 0x94) + hdr.count * 4;
+
+    seq[0x57] = obj[0x1f];
+    if ((s8)seq[0x57] > -1) {
+        base[(s8)seq[0x57] + 0x3b9c] = 0;
+        base[(s8)seq[0x57] + 0x3b44] = 0;
+        base[(s8)seq[0x57] + 0x3a40] = 0;
+    }
+
+    if ((s8)obj[0x22] != 0) {
+        seq[0x7e] = 2;
+    } else {
+        seq[0x7e] = 0;
+    }
+    ObjSeq_seqState_init(seq);
 }
 #pragma scheduling reset
 #pragma peephole reset
