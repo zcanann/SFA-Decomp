@@ -14983,3 +14983,66 @@ void modelLoadColorFn_80024ec8(void *m, void *data)
 }
 #pragma dont_inline reset
 #pragma pop
+
+#define BLENDTBL_ENTRY(K, OFF)                              \
+    if (p[K] != 0) {                                        \
+        ((s16 *)lbl_80340740)[w++] = (s16)(v1 + (OFF));     \
+        ((s16 *)lbl_80340740)[w++] = (s16)(v2 + (OFF));     \
+        ((s16 *)lbl_80340740)[w++] = p[K];                  \
+        ((s16 *)lbl_80340740)[w++] = p[K];                  \
+    }
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void ObjModel_BuildAnimBlendTable(u8 *obj, u8 *p2, u8 *hdr)
+{
+    int poff;
+    u8 *md;
+    int boff;
+    int i;
+    u32 u;
+    int v1;
+    int w;
+    s16 *p;
+    u8 *b1;
+    int v2;
+    u8 *b2;
+
+    if (*(u16 *)(hdr + 2) & 0x40) {
+        b1 = *(u8 **)(p2 + *(u16 *)(p2 + 0x44) * 4 + 0x1c);
+        b2 = *(u8 **)(p2 + *(u16 *)(p2 + 0x46) * 4 + 0x1c);
+    } else {
+        b1 = *(u8 **)(hdr + 0x68) + *(u16 *)(p2 + 0x44) * (((*(u8 *)(hdr + 0xf3) - 1) & ~7) + 8);
+        b2 = *(u8 **)(hdr + 0x68) + *(u16 *)(p2 + 0x46) * (((*(u8 *)(hdr + 0xf3) - 1) & ~7) + 8);
+    }
+    md = *(u8 **)(obj + 0x50);
+    boff = 0;
+    w = 0;
+    i = 0;
+    poff = 0;
+    for (; i < (int)*(u8 *)(md + 0x5a); i++) {
+        u = *(u8 *)(*(u8 **)(md + 0x10) + boff + *(s8 *)(obj + 0xad) + 1);
+        if (u != 0xff) {
+            p = (s16 *)(*(u8 **)(obj + 0x6c) + poff);
+            v1 = *(s8 *)(b1 + u) << 6;
+            v2 = *(s8 *)(b2 + u) << 6;
+            BLENDTBL_ENTRY(0, 0)
+            BLENDTBL_ENTRY(1, 2)
+            BLENDTBL_ENTRY(2, 4)
+            BLENDTBL_ENTRY(3, 0xc)
+            BLENDTBL_ENTRY(4, 0xe)
+            BLENDTBL_ENTRY(5, 0x10)
+            BLENDTBL_ENTRY(6, 0x18)
+            BLENDTBL_ENTRY(7, 0x1a)
+            BLENDTBL_ENTRY(8, 0x1c)
+        }
+        boff = *(s8 *)(md + 0x55) + boff + 1;
+        poff += 0x12;
+    }
+    ((s16 *)lbl_80340740)[w++] = 0x1000;
+    ((s16 *)lbl_80340740)[w] = 0x1000;
+}
+#pragma dont_inline reset
+#pragma pop
