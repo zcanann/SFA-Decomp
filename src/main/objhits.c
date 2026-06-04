@@ -51,6 +51,14 @@ extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern f32 lbl_803DE960;
 extern f32 lbl_803DE91C;
+extern f32 lbl_803DE958;
+extern f32 lbl_803DE95C;
+
+typedef struct ObjHitsVec3 {
+  f32 x;
+  f32 y;
+  f32 z;
+} ObjHitsVec3;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC078;
 extern f32 lbl_803DC0B0;
@@ -2642,135 +2650,158 @@ LAB_800344f4:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_3)
+void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void *scratchC,
+                               void *scratchD,void *scratchE,int depth)
 {
-  byte bVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  int iVar5;
-  int iVar7;
-  int *piVar8;
-  int iVar9;
-  int recursionDepth;
-  f64 dVar10;
-  f64 dVar11;
-  undefined8 uVar12;
-  int local_68;
-  f32 local_64;
-  f32 local_60;
-  f32 local_5c;
-  f32 local_58;
-  f32 local_54;
-  f32 local_50;
-  f32 local_4c;
-  f32 local_48;
-  f32 local_44;
-  f32 local_40;
-  f32 local_3c;
-  f32 local_38;
-  f32 local_34;
+  ObjHitsPriorityState *objAState;
+  ObjHitsPriorityState *objBState;
+  int *hitboxBuf;
+  u8 shapeFlags;
+  int hitCount;
+  f32 ratio;
+  f32 clamped;
+  f32 fVar2;
+  f32 fVar3;
+  f32 fVar4;
+  f32 outAxial;
+  int outCount;
+  ObjHitsVec3 point;
+  f32 response[3];
+  ObjHitsVec3 point3D;
+  ObjHitsVec3 pointXZ;
 
-  uVar12 = _savegpr_27();
-  iVar5 = (int)((ulonglong)uVar12 >> 0x20);
-  iVar7 = (int)uVar12;
-  iVar9 = *(int *)(iVar7 + OBJHITBOX_DEF_OFFSET);
-  if ((((*(char *)(*(int *)(iVar5 + OBJHITBOX_DEF_OFFSET) + OBJHITBOX_DEF_SKIP_SKELETON_PAIRS_OFFSET) == '\0') &&
-        (*(char *)(iVar9 + OBJHITBOX_DEF_SKIP_SKELETON_PAIRS_OFFSET) == '\0'))
-      && (*(char *)(iVar9 + OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET) == '\0')) &&
-      (*(char *)(*(int *)(iVar5 + OBJHITBOX_DEF_OFFSET) + OBJHITBOX_DEF_SKIP_OBJECT_PAIRS_OFFSET) == '\0'))
-  {
-    piVar8 = *(int **)(*(int *)(iVar5 + 0x7c) + *(char *)(iVar5 + 0xad) * 4);
-    bVar1 = *(byte *)(iVar9 + OBJHITBOX_DEF_SHAPE_FLAGS_OFFSET);
-    if ((bVar1 & OBJHITBOX_SHAPE_SKELETON_3D) == 0) {
-      if ((bVar1 & OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
-        if (((bVar1 & OBJHITBOX_SHAPE_CHECK_REVERSE) != 0) && (recursionDepth < 1)) {
-          ObjHits_CheckSkeletonPair(iVar7,iVar5,param_3);
+  objBState = *(ObjHitsPriorityState **)(objB + 0x54);
+  objAState = *(ObjHitsPriorityState **)(objA + 0x54);
+  if (((*(s8 *)((int)objAState + 0xaf) == 0) && (*(s8 *)((int)objBState + 0xaf) == 0)) &&
+      (*(u8 *)((int)objBState + 0xae) == 0) && (*(u8 *)((int)objAState + 0xae) == 0)) {
+    hitboxBuf = *(int **)(*(int *)(objA + 0x7c) + *(s8 *)(objA + 0xad) * 4);
+    shapeFlags = objBState->shapeFlags;
+    if ((shapeFlags & 1) != 0) {
+      point.x = *(f32 *)(objB + 0x18) - playerMapOffsetX;
+      point.y = *(f32 *)(objB + 0x1c);
+      point.z = *(f32 *)(objB + 0x20) - playerMapOffsetZ;
+      point3D = point;
+      hitCount = ((int (*)(f32 *, f32, int, int *, void *, int *, f32 *))
+                      ObjHits_CollectSkeletonHits3D)(
+          &point3D.x, (f32)*(s16 *)((int)objBState + 0x5a), hitboxBuf[5], hitboxBuf, hits,
+          &outCount, &outAxial);
+      if (hitCount != 0) {
+        ratio = (*(f32 *)(objB + 0xa8) * *(f32 *)(objB + 8)) /
+                (*(f32 *)(objA + 0xa8) * *(f32 *)(objA + 8));
+
+        clamped = gObjHitsScalarZero;
+        if (ratio < clamped) {
+        } else {
+          clamped = gObjHitsScalarOne;
+          if (ratio > clamped) {
+          } else {
+            clamped = ratio;
+          }
         }
-      } else {
-        local_60 = *(f32 *)(iVar7 + 0x18) - playerMapOffsetX;
-        local_5c = *(f32 *)(iVar7 + 0x1c);
-        local_58 = *(f32 *)(iVar7 + 0x20) - playerMapOffsetZ;
-        local_3c = local_60;
-        local_38 = local_5c;
-        local_34 = local_58;
-        local_68 = 0;
-        ObjHits_CollectSkeletonHitsXZ(
-            (f64)(f32)(s32)*(s16 *)(iVar9 + 0x5a),
-            (f64)(local_5c + (f32)(s32)*(s16 *)(iVar9 + 0x5e)),
-            (f64)(local_5c + (f32)(s32)*(s16 *)(iVar9 + 0x5c)),
-            (undefined4)&local_60, piVar8[5], piVar8, param_3, &local_68, &local_64);
-        if (local_68 != 0) {
-          dVar11 = (f64)((*(f32 *)(iVar7 + 0xa8) * *(f32 *)(iVar7 + 8)) /
-                            (*(f32 *)(iVar5 + 0xa8) * *(f32 *)(iVar7 + 8)));
-          dVar10 = (f64)lbl_803DF590;
-          if ((dVar10 <= dVar11) && (dVar10 = dVar11, (f64)lbl_803DF598 < dVar11)) {
-            dVar10 = (f64)lbl_803DF598;
+        ((void (*)(f32 *, f32, int, void *, int, int, int, f32, f32, f32 *))
+             ObjHits_CalcSkeletonResponse3D)(&point.x, (f32)*(s16 *)((int)objBState + 0x5a),
+                                             objB, hits, hitboxBuf[5], *hitboxBuf, outCount,
+                                             clamped, outAxial, response);
+        fVar2 = lbl_803DE958;
+        if (response[0] < fVar2) {
+        } else {
+          fVar2 = lbl_803DE95C;
+          if (response[0] > fVar2) {
+          } else {
+            fVar2 = response[0];
           }
-          ObjHits_CalcSkeletonResponseXZ(
-              (f64)(f32)(s32)*(s16 *)(iVar9 + 0x5a),dVar10,
-              (f64)local_64,(undefined4)&local_3c,iVar7,(int)param_3,piVar8[5],*piVar8,
-              local_68,&local_48);
-          fVar2 = lbl_803DF5D8;
-          if ((lbl_803DF5D8 <= local_48) && (fVar2 = local_48, lbl_803DF5DC < local_48)) {
-            fVar2 = lbl_803DF5DC;
-          }
-          fVar3 = lbl_803DF5D8;
-          if ((lbl_803DF5D8 <= local_44) && (fVar3 = local_44, lbl_803DF5DC < local_44)) {
-            fVar3 = lbl_803DF5DC;
-          }
-          fVar4 = lbl_803DF5D8;
-          if ((lbl_803DF5D8 <= local_40) && (fVar4 = local_40, lbl_803DF5DC < local_40)) {
-            fVar4 = lbl_803DF5DC;
-          }
-          local_48 = fVar2;
-          local_44 = fVar3;
-          local_40 = fVar4;
-          ObjHits_ApplyPairResponse((f64)fVar2, (f64)fVar3, (f64)fVar4, iVar5, iVar7, 0);
         }
+        response[0] = fVar2;
+        fVar3 = lbl_803DE958;
+        if (response[1] < fVar3) {
+        } else {
+          fVar3 = lbl_803DE95C;
+          if (response[1] > fVar3) {
+          } else {
+            fVar3 = response[1];
+          }
+        }
+        response[1] = fVar3;
+        fVar4 = lbl_803DE958;
+        if (response[2] < fVar4) {
+        } else {
+          fVar4 = lbl_803DE95C;
+          if (response[2] > fVar4) {
+          } else {
+            fVar4 = response[2];
+          }
+        }
+        response[2] = fVar4;
+        ((void (*)(int, int, f32, f32, f32, int))ObjHits_ApplyPairResponse)(
+            objA, objB, response[0], response[1], fVar4, 0);
       }
-    } else {
-      local_54 = *(f32 *)(iVar7 + 0x18) - playerMapOffsetX;
-      local_50 = *(f32 *)(iVar7 + 0x1c);
-      local_4c = *(f32 *)(iVar7 + 0x20) - playerMapOffsetZ;
-      local_3c = local_54;
-      local_38 = local_50;
-      local_34 = local_4c;
-      local_68 = 0;
-      ObjHits_CollectSkeletonHits3D((undefined4)&local_54, piVar8[5], piVar8, param_3, &local_68,
-                                    &local_64);
-      if (local_68 != 0) {
-        dVar11 = (f64)((*(f32 *)(iVar7 + 0xa8) * *(f32 *)(iVar7 + 8)) /
-                          (*(f32 *)(iVar5 + 0xa8) * *(f32 *)(iVar5 + 8)));
-        dVar10 = (f64)lbl_803DF590;
-        if ((dVar10 <= dVar11) && (dVar10 = dVar11, (f64)lbl_803DF598 < dVar11)) {
-          dVar10 = (f64)lbl_803DF598;
+    } else if ((shapeFlags & 2) != 0) {
+      point.x = *(f32 *)(objB + 0x18) - playerMapOffsetX;
+      point.y = *(f32 *)(objB + 0x1c);
+      point.z = *(f32 *)(objB + 0x20) - playerMapOffsetZ;
+      pointXZ = point;
+      hitCount = ((int (*)(f32 *, f32, int, int *, void *, int *, f32, f32, f32 *))
+                      ObjHits_CollectSkeletonHitsXZ)(
+          &pointXZ.x, (f32)*(s16 *)((int)objBState + 0x5a), hitboxBuf[5], hitboxBuf, hits,
+          &outCount, point.y + (f32)*(s16 *)((int)objBState + 0x5e),
+          point.y + (f32)*(s16 *)((int)objBState + 0x5c), &outAxial);
+      if (hitCount != 0) {
+        ratio = (*(f32 *)(objB + 0xa8) * *(f32 *)(objB + 8)) /
+                (*(f32 *)(objA + 0xa8) * *(f32 *)(objB + 8));
+
+        clamped = gObjHitsScalarZero;
+        if (ratio < clamped) {
+        } else {
+          clamped = gObjHitsScalarOne;
+          if (ratio > clamped) {
+          } else {
+            clamped = ratio;
+          }
         }
-        ObjHits_CalcSkeletonResponse3D(
-            (f64)(f32)(s32)*(s16 *)(iVar9 + 0x5a),dVar10,
-            (f64)local_64,(undefined4)&local_3c,iVar7,(int)param_3,piVar8[5],*piVar8,
-            local_68,&local_48);
-        fVar2 = lbl_803DF5D8;
-        if ((lbl_803DF5D8 <= local_48) && (fVar2 = local_48, lbl_803DF5DC < local_48)) {
-          fVar2 = lbl_803DF5DC;
+        ((void (*)(f32 *, f32, int, void *, int, int, int, f32, f32, f32 *))
+             ObjHits_CalcSkeletonResponseXZ)(&point.x, (f32)*(s16 *)((int)objBState + 0x5a),
+                                             objB, hits, hitboxBuf[5], *hitboxBuf, outCount,
+                                             clamped, outAxial, response);
+        fVar2 = lbl_803DE958;
+        if (response[0] < fVar2) {
+        } else {
+          fVar2 = lbl_803DE95C;
+          if (response[0] > fVar2) {
+          } else {
+            fVar2 = response[0];
+          }
         }
-        fVar3 = lbl_803DF5D8;
-        if ((lbl_803DF5D8 <= local_44) && (fVar3 = local_44, lbl_803DF5DC < local_44)) {
-          fVar3 = lbl_803DF5DC;
+        response[0] = fVar2;
+        fVar3 = lbl_803DE958;
+        if (response[1] < fVar3) {
+        } else {
+          fVar3 = lbl_803DE95C;
+          if (response[1] > fVar3) {
+          } else {
+            fVar3 = response[1];
+          }
         }
-        fVar4 = lbl_803DF5D8;
-        if ((lbl_803DF5D8 <= local_40) && (fVar4 = local_40, lbl_803DF5DC < local_40)) {
-          fVar4 = lbl_803DF5DC;
+        response[1] = fVar3;
+        fVar4 = lbl_803DE958;
+        if (response[2] < fVar4) {
+        } else {
+          fVar4 = lbl_803DE95C;
+          if (response[2] > fVar4) {
+          } else {
+            fVar4 = response[2];
+          }
         }
-        local_48 = fVar2;
-        local_44 = fVar3;
-        local_40 = fVar4;
-        ObjHits_ApplyPairResponse((f64)fVar2, (f64)fVar3, (f64)fVar4, iVar5, iVar7, 0);
+        response[2] = fVar4;
+        ((void (*)(int, int, f32, f32, f32, int))ObjHits_ApplyPairResponse)(
+            objA, objB, response[0], response[1], fVar4, 0);
       }
+    } else if (((shapeFlags & 0x20) != 0) && (depth < 1)) {
+      ObjHits_CheckSkeletonPair(objB, objA, hits, scratchB, scratchC, scratchD, scratchE,
+                                depth + 1);
     }
   }
-  _restgpr_27();
 }
+
 
 /*
  * --INFO--

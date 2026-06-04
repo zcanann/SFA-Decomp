@@ -267,7 +267,8 @@ void ObjHits_RegisterActiveHitVolumeObject(int obj);
 void ObjHits_ApplyPairResponse(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                                undefined4 param_5,int param_6);
 void ObjHits_DetectObjectPair(void);
-void ObjHits_CheckSkeletonPair(undefined4 param_1,undefined4 param_2,int *param_3);
+void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void *scratchC,
+                               void *scratchD,void *scratchE,int depth);
 void ObjHits_CheckTrackContact(int objA,int objB);
 void ObjHits_Update(int objectCount);
 int ObjHits_GetPriorityHitWithPosition(int obj,int *outHitObject,int *outSphereIndex,
