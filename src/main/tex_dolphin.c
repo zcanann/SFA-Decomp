@@ -65,7 +65,7 @@ extern int *lbl_803DCE34;
 extern int lbl_803DCE68;
 extern int lbl_803DCE6C;
 extern int lbl_802C1E40;
-extern int lbl_8037E0C0;
+extern u8 lbl_8037E0C0[];
 extern byte lbl_803DB638;
 extern int lbl_803DB63C;
 extern int lbl_803DB640;
@@ -87,36 +87,73 @@ extern undefined4 jumptable_8030E844;
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4 fn_8005DF5C(int param_1,float *param_2)
+u8 fn_8005DF5C(int param_1,float *param_2)
 {
-  undefined4 uVar1;
-  int iVar2;
-  uint uVar3;
-  float local_10;
-  float local_C;
-  float local_8;
+  float v[3];
+  uint i;
+  f32 fbset;
+  f32 timing;
 
-  uVar3 = 0;
-  iVar2 = 0;
-  while( true ) {
-    if (uVar3 < 8) {
-                    /* WARNING: Could not recover jumptable. Too many branches */
-                    /* WARNING: Treating indirect jump as call */
-      uVar1 = (**(code **)((int)&jumptable_8030E844 + iVar2))();
-      return uVar1;
+  i = 0;
+  timing = CurrTiming_803DEC20;
+  fbset = FBSet_803DEC28;
+  while (1) {
+    {
+      switch (i) {
+      case 0:
+        v[0] = (f32)*(s16 *)(param_1 + 0x6);
+        v[1] = (f32)*(s16 *)(param_1 + 0x8);
+        v[2] = (f32)*(s16 *)(param_1 + 0xa);
+        break;
+      case 1:
+        v[0] = (f32)*(s16 *)(param_1 + 0xc);
+        v[1] = (f32)*(s16 *)(param_1 + 0x8);
+        v[2] = (f32)*(s16 *)(param_1 + 0xa);
+        break;
+      case 2:
+        v[0] = (f32)*(s16 *)(param_1 + 0x6);
+        v[1] = (f32)*(s16 *)(param_1 + 0xe);
+        v[2] = (f32)*(s16 *)(param_1 + 0xa);
+        break;
+      case 3:
+        v[0] = (f32)*(s16 *)(param_1 + 0xc);
+        v[1] = (f32)*(s16 *)(param_1 + 0xe);
+        v[2] = (f32)*(s16 *)(param_1 + 0xa);
+        break;
+      case 4:
+        v[0] = (f32)*(s16 *)(param_1 + 0x6);
+        v[1] = (f32)*(s16 *)(param_1 + 0x8);
+        v[2] = (f32)*(s16 *)(param_1 + 0x10);
+        break;
+      case 5:
+        v[0] = (f32)*(s16 *)(param_1 + 0xc);
+        v[1] = (f32)*(s16 *)(param_1 + 0x8);
+        v[2] = (f32)*(s16 *)(param_1 + 0x10);
+        break;
+      case 6:
+        v[0] = (f32)*(s16 *)(param_1 + 0x6);
+        v[1] = (f32)*(s16 *)(param_1 + 0xe);
+        v[2] = (f32)*(s16 *)(param_1 + 0x10);
+        break;
+      case 7:
+        v[0] = (f32)*(s16 *)(param_1 + 0xc);
+        v[1] = (f32)*(s16 *)(param_1 + 0xe);
+        v[2] = (f32)*(s16 *)(param_1 + 0x10);
+        break;
+      }
     }
-    local_8 = local_8 * CurrTiming_803DEC20;
-    local_C = local_C * CurrTiming_803DEC20;
-    local_10 = local_10 * CurrTiming_803DEC20;
-    PSMTXMultVec((const float (*)[4])param_2,(Vec *)&local_8,(Vec *)&local_8);
-    if (local_10 >= FBSet_803DEC28) break;
-    uVar3 = uVar3 + 1;
-    iVar2 = iVar2 + 4;
-    if (7 < (int)uVar3) {
+    v[0] = v[0] * timing;
+    v[1] = v[1] * timing;
+    v[2] = v[2] * timing;
+    PSMTXMultVec((const float (*)[4])param_2,(Vec *)v,(Vec *)v);
+    if (v[2] >= fbset) {
+      return 1;
+    }
+    i = i + 1;
+    if (7 < (int)i) {
       return 0;
     }
   }
-  return 1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -424,7 +461,7 @@ fn_8005E97C(float param_1,float param_2,float param_3,float param_4,float param_
  */
 #pragma scheduling off
 #pragma peephole off
-undefined4
+u8
 fn_8005EAA4(int param_1,int param_2,float *param_3,int param_4,float *param_5,float *param_6,
             float *param_7,float *param_8,float *param_9,float *param_10)
 {
@@ -514,84 +551,167 @@ fn_8005EAA4(int param_1,int param_2,float *param_3,int param_4,float *param_5,fl
  */
 #pragma scheduling off
 #pragma peephole off
-void mapBlockRender_callList(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-                int *param_5,undefined4 param_6,float *param_7,undefined4 param_8)
+void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float *mtx)
 {
-  int iVar1;
-  int iVar2;
-  int *piVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  uint uVar7;
-  int local_30;
-  byte local_13;
-  byte local_12;
-  byte local_11;
-  byte local_10;
-  byte local_17;
-  byte local_16;
-  byte local_15;
-  byte local_14;
-  int local_34;
-  int local_38;
-  int local_3c;
-  float local_1c;
-  float local_18;
-  float local_20;
-  float local_24;
-  float local_28;
-  float local_2c;
-  undefined4 uStack_8;
-  undefined4 uStack_9;
-  undefined4 uStack_a;
-  undefined4 uStack_b;
+  u8 dBig[16];
+  int dOut1;
+  int dOut0;
+  int count;
+  float x1;
+  float y1;
+  float z1;
+  float x2;
+  float y2;
+  float z2;
+  u8 c3;
+  u8 c2;
+  u8 c1;
+  u8 c0;
+  u8 g3;
+  u8 g2;
+  u8 g1;
+  u8 g0;
+  u8 *base;
+  u8 *pc1;
+  u8 *pc2;
+  u8 *pc3;
+  int *pd1;
+  u8 *pdb;
+  int ptr;
+  int *p;
+  int i;
+  uint vis;
+  uint flags;
+  int pos;
+  uint word;
+  int bptr;
 
-  /* decode bitstream */
-  {
-    uint uBits;
-    undefined uV1, uV2, uV3;
-    int iOff;
-    uint uPos;
-    uPos = param_5[4];
-    uV3 = *(undefined*)(*param_5 + ((int)uPos >> 3));
-    iOff = *param_5 + ((int)uPos >> 3);
-    uV1 = *(undefined*)(iOff + 1);
-    uV2 = *(undefined*)(iOff + 2);
-    param_5[4] = uPos + 8;
-    iVar1 = *(int *)((int)param_3 + 0x68);
-    uBits = (uint3)(CONCAT12(uV2,CONCAT11(uV1,uV3)) >> (uPos & 7)) & 0xff;
-    iVar1 = iVar1 + uBits * 0x1c;
+  base = lbl_8037E0C0;
+  pc1 = &c1;
+  pc2 = &c2;
+  pc3 = &c3;
+  pd1 = &dOut1;
+  pdb = dBig;
+  pos = stream[4];
+  word = ((u8 *)*stream)[pos >> 3];
+  bptr = *stream + (pos >> 3);
+  word = word | (u32)(*(u8 *)(bptr + 1) << 8);
+  word = word | (u32)(*(u8 *)(bptr + 2) << 16);
+  stream[4] = pos + 8;
+  ptr = *(int *)(block + 0x68) + ((word >> (pos & 7)) & 0xff) * 0x1c;
+  if ((obj != NULL) && ((*(uint *)(obj + 0x3c) & 2) != 0)) {
+    goto end;
   }
-
-  if ((param_4 != 0) && ((*(uint *)((int)param_4 + 0x3c) & 2) != 0)) {
-    goto LAB_8005F1C8;
+  if (fn_8005EAA4(ptr,block,(float *)(base + 0x987c),5,&x1,&y1,&z1,&x2,&y2,&z2) == 0) {
+    goto end;
   }
-
-  {
-    int local_8[2];
-    int local_c[2];
-    int local_2c_x, local_28_x, local_24_x, local_20_x;
-    int res;
-    local_8[0] = (int)&lbl_803E8444 + 0x1c;  /* placeholder for plane list ptr */
-    local_c[0] = (int)&lbl_803E8444 + 0x18;
-    local_2c_x = 0x2c;
-    local_28_x = 0x28;
-    local_24_x = 0x24;
-    local_20_x = 0x20;
-    res = fn_8005EAA4(iVar1,param_2,
-                      (float*)((int)&lbl_8037E0C0 + lbl_803DCE30 * 16 + 0xc - lbl_803DCE30 * 16),
-                      5,
-                      (float*)(local_2c_x + (int)&local_2c_x - local_2c_x),
-                      (float*)(local_28_x + (int)&local_28_x - local_28_x),
-                      (float*)(local_24_x + (int)&local_24_x - local_24_x),
-                      (float*)(local_20_x + (int)&local_20_x - local_20_x),
-                      (float*)(local_2c_x),
-                      (float*)(local_28_x));
-    (void)res;
+  if ((u8)hi == 0) {
+    flags = *(uint *)(obj + 0x3c);
+    if ((flags & 0x80000000) != 0) {
+      fn_8005D3B4(ptr,block,*(u8 *)(ptr + 0x18));
+      *(int *)(base + lbl_803DCE30 * 16 + 0xc) = 5;
+      lbl_803DCE30 = lbl_803DCE30 + 1;
+    }
+    else if (((flags & 0x40000000) != 0) || ((flags & 0x2000) != 0)) {
+      fn_8005D3B4(ptr,block,*(u8 *)(ptr + 0x18));
+      *(int *)(base + lbl_803DCE30 * 16 + 0xc) = 4;
+      lbl_803DCE30 = lbl_803DCE30 + 1;
+    }
   }
-
-LAB_8005F1C8:
+  else {
+    if (obj != NULL) {
+      flags = *(uint *)(obj + 0x3c);
+      if (((flags & 0x80000000) == 0) && ((flags & 0x20000) == 0)) {
+        if ((obj != NULL) && ((flags & 0x80000) != 0)) {
+          count = 0;
+        }
+        else {
+          fn_8001E928((undefined *)&lbl_803DCE28,2,&count,x1 + playerMapOffsetX,y1,
+                      z1 + playerMapOffsetZ,x2 + playerMapOffsetX,y2,z2 + playerMapOffsetZ);
+        }
+        if ((obj == NULL) ||
+            (((*(uint *)(obj + 0x3c) & 0x800) == 0 && ((*(uint *)(obj + 0x3c) & 0x1000) == 0)))) {
+          p = &lbl_803DCE28;
+          for (i = 0; i < count; i = i + 1) {
+            fn_8001DACC((void *)*p,&c0,pc1,pc2,pc3);
+            fn_8001DD50((void *)*p,&dOut0,pd1,pdb);
+            fn_8001DD48((void *)*p);
+            fn_8004FA30(&c0,&dOut0);
+            p = p + 1;
+          }
+        }
+        else {
+          fn_80088730(&g0);
+          g3 = 0;
+          g2 = 0;
+          g1 = 0;
+          g0 = 0;
+          if (count == 0) {
+            if ((obj != NULL) && ((*(uint *)(obj + 0x3c) & 0x800) != 0)) {
+              fn_8004EF9C(&g0);
+            }
+            else {
+              fn_8004EECC(&g0);
+            }
+          }
+          else {
+            fn_8001DACC((void *)lbl_803DCE28,&c0,pc1,pc2,pc3);
+            fn_8001DD50((void *)lbl_803DCE28,&dOut0,pd1,pdb);
+            fn_8001DD48((void *)lbl_803DCE28);
+            fn_8004F6D8(&c0,&dOut0,&g0);
+            p = &lbl_803DCE28 + 1;
+            for (i = 1; i < count; i = i + 1) {
+              fn_8001DACC((void *)*p,&c0,pc1,pc2,pc3);
+              fn_8001DD50((void *)*p,&dOut0,pd1,pdb);
+              fn_8001DD48((void *)*p);
+              fn_8004F380(&c0,&dOut0);
+              p = p + 1;
+            }
+            if ((obj != NULL) && ((*(uint *)(obj + 0x3c) & 0x800) != 0)) {
+              fn_8004F2B0();
+            }
+            else {
+              fn_8004F080();
+            }
+          }
+        }
+        if ((obj != NULL) && ((*(uint *)(obj + 0x3c) & 0x2000) != 0)) {
+          if ((obj != NULL) && ((*(uint *)(obj + 0x3c) & 0x40000000) != 0)) {
+            vis = lo;
+          }
+          else {
+            u8 res2 = fn_8005EAA4(ptr,block,(float *)(base + 0x9818),5,&x1,&y1,&z1,&x2,&y2,&z2);
+            if (((res2 == 0) || ((u8)lo == 0)) && ((res2 != 0) || ((u8)lo != 0))) {
+              vis = 0;
+            }
+            else {
+              vis = 1;
+            }
+            if ((u8)lo != 0) {
+              GXSetBlendMode(1,4,5,5);
+              gxSetZMode_(1,3,0);
+              gxSetPeControl_ZCompLoc_(1);
+              GXSetAlphaCompare(7,0,0,7,0);
+            }
+          }
+          if ((u8)vis == 0) {
+            goto end;
+          }
+          fn_8004D230();
+        }
+        textureFn_800528bc();
+      }
+    }
+    GXCallDisplayList(*(void **)ptr,*(u16 *)(ptr + 4));
+    flags = *(uint *)(obj + 0x3c);
+    if ((((flags & 0x4000) != 0) || ((flags & 0x8000) != 0) || ((flags & 0x10000) != 0)) &&
+        (fn_8005DF5C(ptr,mtx) != 0)) {
+      fn_8005D3B4(ptr,block,0x17);
+      *(int *)(base + lbl_803DCE30 * 16 + 0xc) = 6;
+      lbl_803DCE30 = lbl_803DCE30 + 1;
+    }
+  }
+end:
   return;
 }
 #pragma peephole reset
