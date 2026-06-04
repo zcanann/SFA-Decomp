@@ -2149,8 +2149,8 @@ void fn_80088730(u8 *out)
 
 #pragma peephole off
 #pragma scheduling off
-void curveFn_80083e00(RomCurveInterpState *out, RomCurveNode *curve, RomCurveNode *next, f32 t,
-                      int flag) {
+void RomCurveInterp_BuildSegmentTimeTable(RomCurveInterpState *out, RomCurveNode *curve, RomCurveNode *next, f32 t,
+                                          int flag) {
     f32 curveScale;
     f32 nextScale;
     f32 xPoints[4];
@@ -2206,7 +2206,7 @@ void curveFn_80083e00(RomCurveInterpState *out, RomCurveNode *curve, RomCurveNod
 
 #pragma peephole off
 #pragma scheduling off
-void romCurveFn_80084190(RomCurveInterpState *state, f32 t) {
+void RomCurveInterp_UpdateSegmentWindow(RomCurveInterpState *state, f32 t) {
     RomCurveNode *node;
     RomCurveNode *prev;
     int found;
@@ -2240,7 +2240,7 @@ void romCurveFn_80084190(RomCurveInterpState *state, f32 t) {
             state->fromNodeId = found;
             prev = node;
             node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->fromNodeId);
-            curveFn_80083e00(state, node, prev, state->fromTime, 1);
+            RomCurveInterp_BuildSegmentTimeTable(state, node, prev, state->fromTime, 1);
         }
     }
     node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
@@ -2267,7 +2267,7 @@ void romCurveFn_80084190(RomCurveInterpState *state, f32 t) {
         state->toNodeId = found;
         prev = node;
         node = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
-        curveFn_80083e00(state, prev, node, state->toTime, 0);
+        RomCurveInterp_BuildSegmentTimeTable(state, prev, node, state->toTime, 0);
     }
 }
 #pragma scheduling reset
@@ -2298,9 +2298,9 @@ void curveFindFn_800843c4(RomCurveInterpState *out, int id) {
         out->fromNodeId = -1;
     } else {
         out->toNodeId = found;
-        curveFn_80083e00(out, curve,
-                         (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out->toNodeId),
-                         lbl_803DEFB0, 0);
+        RomCurveInterp_BuildSegmentTimeTable(out, curve,
+                                             (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(out->toNodeId),
+                                             lbl_803DEFB0, 0);
     }
 }
 #pragma scheduling reset
@@ -2330,7 +2330,7 @@ int romCurveFn_800844b8(RomCurveInterpState *state, f32 *offset, f32 *outPos, s1
     int i;
 
     t = offset[2];
-    romCurveFn_80084190(state, t);
+    RomCurveInterp_UpdateSegmentWindow(state, t);
     from = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->fromNodeId);
     if (from != NULL && state->toNodeId > -1) {
         to = (RomCurveNode *)(*(int (**)(int))((char *)*gRomCurveInterface + 0x1c))(state->toNodeId);
