@@ -34,6 +34,15 @@ extern u8 gSHthorntailDataTables[];
 #define SHTHORNTAIL_LEVEL_MODE0_SFX_LOC5_CLEAR 0x588
 #define SHTHORNTAIL_LEVEL_MODE0_SFX_LOC8 0x594
 
+#define SHTHORNTAIL_LEVEL_MODE1_GATE_OPEN_GAMEBIT 0x13E
+#define SHTHORNTAIL_LEVEL_MODE1_FREEZE_GAMEBIT 0x168
+#define SHTHORNTAIL_LEVEL_MODE1_PRIMARY_TRIGGER_GAMEBIT 0xCD5
+#define SHTHORNTAIL_LEVEL_MODE1_SECONDARY_TRIGGER_GAMEBIT 0xCD6
+#define SHTHORNTAIL_LEVEL_MODE1_CLOSE_ATTACK_DISABLE_GAMEBIT 0x1AB
+#define SHTHORNTAIL_LEVEL_MODE0_LOCOMOTION2_GAMEBIT 0x09E
+#define SHTHORNTAIL_LEVELCONTROL_AUDIO_CHANNEL 0x7F
+#define SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG 0x40
+
 /*
  * --INFO--
  *
@@ -66,9 +75,9 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
     closeToPlayer = cmp;
   }
   if (config->impactSfxVariant == 0) {
-    gameBit = GameBit_Get(0x13e);
+    gameBit = GameBit_Get(SHTHORNTAIL_LEVEL_MODE1_GATE_OPEN_GAMEBIT);
     if (gameBit != 0) {
-      gameBit = GameBit_Get(0x168);
+      gameBit = GameBit_Get(SHTHORNTAIL_LEVEL_MODE1_FREEZE_GAMEBIT);
       if (gameBit != 0) {
         runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_FREEZE_MOTION;
         runtime->freezeFrameCounter = 0;
@@ -78,7 +87,7 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
         triggerIsSet = ObjTrigger_IsSet(objectId);
         if (triggerIsSet != 0) {
           runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
-          GameBit_Set(0xcd6,1);
+          GameBit_Set(SHTHORNTAIL_LEVEL_MODE1_SECONDARY_TRIGGER_GAMEBIT,1);
         }
       }
     }
@@ -86,12 +95,12 @@ void SHthorntail_updateLevelControlMode1(uint objectId,SHthorntailRuntime *runti
       triggerIsSet = ObjTrigger_IsSet(objectId);
       if (triggerIsSet != 0) {
         runtime->behaviorFlags = runtime->behaviorFlags | SHTHORNTAIL_FLAG_TRIGGER_EVENT_PENDING;
-        GameBit_Set(0xcd5,1);
+        GameBit_Set(SHTHORNTAIL_LEVEL_MODE1_PRIMARY_TRIGGER_GAMEBIT,1);
       }
     }
   }
   else {
-    gameBit = GameBit_Get(0x1ab);
+    gameBit = GameBit_Get(SHTHORNTAIL_LEVEL_MODE1_CLOSE_ATTACK_DISABLE_GAMEBIT);
     if (gameBit != 0) {
       closeToPlayer = FALSE;
     }
@@ -176,7 +185,7 @@ void SHthorntail_updateLevelControlMode0(SHthorntailObject *obj,SHthorntailRunti
         levelControlTables + config->impactSfxVariant * 2 + SHTHORNTAIL_LEVEL_MODE0_SFX_LOC1;
     break;
   case SHTHORNTAIL_LOCOMOTION_2:
-    gameBit = GameBit_Get(0x9e);
+    gameBit = GameBit_Get(SHTHORNTAIL_LEVEL_MODE0_LOCOMOTION2_GAMEBIT);
     if (gameBit != 0) {
       runtime->impactSfxTable =
           levelControlTables + config->impactSfxVariant * 2 +
@@ -262,7 +271,7 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
   runtime = obj->runtime;
   levelControlReady = (int)(runtime->behaviorFlags & SHTHORNTAIL_FLAG_LEVELCONTROL_READY);
   if (levelControlReady == 0) {
-    Sfx_StopObjectChannel((int)obj,0x7f);
+    Sfx_StopObjectChannel((int)obj,SHTHORNTAIL_LEVELCONTROL_AUDIO_CHANNEL);
     runtime->behaviorState = SHTHORNTAIL_STATE_IDLE;
     randomIdleWait = randomGetRange(SHTHORNTAIL_IDLE_WAIT_MIN,SHTHORNTAIL_IDLE_WAIT_MAX);
     runtime->idleTimer = (float)randomIdleWait;
@@ -278,7 +287,8 @@ undefined4 SHthorntail_updateLevelControlState(SHthorntailObject *obj,undefined4
     if (impactHandled != 0) {
       return 0;
     }
-    *(short *)(param_3 + 0x6e) = *(short *)(param_3 + 0x6e) & ~0x40;
+    *(short *)(param_3 + 0x6e) =
+        *(short *)(param_3 + 0x6e) & ~SHTHORNTAIL_LEVELCONTROL_COLLISION_FLAG;
     characterDoEyeAnims((int)obj,(int)runtime->collisionShapeState);
   }
   runtime->activeMoveValid = 0;
