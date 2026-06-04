@@ -4458,7 +4458,7 @@ int fn_8019E3F4(int* obj)
             ((WormSpitByte*)(sub + 0x244))->spitLatch = 0;
         }
     }
-    ObjAnim_AdvanceCurrentMove(speed, timeDelta, (int)obj, 0);
+    ((int(*)(int, f32, f32, int))ObjAnim_AdvanceCurrentMove)((int)obj, speed, timeDelta, 0);
     return 1;
 }
 #pragma opt_common_subs reset
@@ -4503,6 +4503,58 @@ void cfprisonuncle_render(int* obj, int p2, int p3, int p4, int p5, s8 visible)
             }
         }
     }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern f32  sqrtf(f32 x);
+extern void normalize(f32* x, f32* y, f32* z);
+extern void objMove(int obj, f32 x, f32 y, f32 z);
+extern f32  lbl_803E4110;
+extern f32  lbl_803E4124;
+extern f32  lbl_803E4128;
+
+/* EN v1.0 0x8019B1D8  size: 544b  fn_8019B1D8: steer the object toward the
+ * target: scale its velocity along the normalized delta, blend the yaw by
+ * speed over distance, move it and keep the chase move playing. Returns 1
+ * when already within the closing threshold. */
+#pragma scheduling off
+#pragma peephole off
+int fn_8019B1D8(int* obj, int* target, f32 speed, int p4)
+{
+    f32 dist;
+    f32 dx;
+    f32 dy;
+    f32 dz;
+    s16 d;
+    if (target == NULL) {
+        return 0;
+    }
+    dx = *(f32*)((char*)target + 0xc) - *(f32*)((char*)obj + 0xc);
+    dy = *(f32*)((char*)target + 0x10) - *(f32*)((char*)obj + 0x10);
+    dz = *(f32*)((char*)target + 0x14) - *(f32*)((char*)obj + 0x14);
+    dist = sqrtf(dz * dz + (dx * dx + dy * dy));
+    if (dist < lbl_803E4124 * speed) {
+        return 1;
+    }
+    normalize(&dx, &dy, &dz);
+    *(f32*)((char*)obj + 0x24) = timeDelta * (dx * speed);
+    *(f32*)((char*)obj + 0x28) = timeDelta * (dy * speed);
+    *(f32*)((char*)obj + 0x2c) = timeDelta * (dz * speed);
+    d = (*(s16*)target + 0x8000) - (u16)*(s16*)obj;
+    if (d > 0x8000) {
+        d = d - 0xffff;
+    }
+    if (d < -0x8000) {
+        d = d + 0xffff;
+    }
+    *(s16*)obj = (f32)*(s16*)obj + ((lbl_803E4128 + (f32)d) * (speed * timeDelta)) / dist;
+    objMove((int)obj, *(f32*)((char*)obj + 0x24), *(f32*)((char*)obj + 0x28), *(f32*)((char*)obj + 0x2c));
+    if (*(s16*)((char*)obj + 0xa0) != 0x1a) {
+        ObjAnim_SetCurrentMove((int)obj, 0x1a, lbl_803E4110, 0);
+    }
+    ((int(*)(int*, f32, int))ObjAnim_SampleRootCurvePhase)(obj, speed, p4);
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
