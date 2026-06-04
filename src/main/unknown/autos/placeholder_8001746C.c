@@ -12533,7 +12533,7 @@ extern void *ObjModel_LoadModelData(int id);
 extern void ObjModel_RelocateModelData(u8 *model);
 extern void ObjModel_ResolveRenderOpTextures(u8 *model);
 extern int modelLoadAnimations(void *model, int id, void *animBase);
-extern int modelLoad_calcSizes(void *model, int arg, void *out, int flag);
+extern int modelLoad_calcSizes(void *model, int arg, int *out, int flag);
 extern int ModelList_getHeader(void *list, int index, void *out);
 extern void modelInitModelList(void *list, s16 index, void *out);
 extern int textureLoad(int id, int flag);
@@ -16628,6 +16628,81 @@ void fn_800218AC(s16 *a, f32 *v)
     v[0] = x;
     v[1] = y;
     v[2] = z;
+}
+#pragma dont_inline reset
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+int modelLoad_calcSizes(void *model, int flags, int *sizes, int a4)
+{
+    u8 *hdr = (u8 *)model;
+    int total;
+
+    if (*(u16 *)(hdr + 0xec) != 0) {
+        sizes[6] = ((u32)*(u8 *)(hdr + 0xf3) + (u32)*(u8 *)(hdr + 0xf4)) * 0x80;
+    } else {
+        sizes[6] = 0x80;
+    }
+    if (*(u8 *)(hdr + 0xf9) != 0 || *(void **)(hdr + 0xa4) != 0 || (*(u16 *)(hdr + 2) & 0x10) != 0) {
+        sizes[0] = (u32)*(u16 *)(hdr + 0xe4) * 0xc + 0x60;
+    } else {
+        sizes[0] = 0;
+    }
+    if (*(void **)(hdr + 0xc8) != 0) {
+        int cur = sizes[0];
+        int n = *(u16 *)(hdr + 0xe6);
+        int k;
+        if (*(u8 *)(hdr + 0x24) & 8) {
+            k = 9;
+        } else {
+            k = 3;
+        }
+        cur = n * k + cur;
+        sizes[0] = cur + 0x40;
+    }
+    {
+        int half = *(u8 *)(hdr + 0xf7) << 4;
+        sizes[1] = half << 1;
+    }
+    sizes[3] = 0;
+    if ((*(u16 *)(hdr + 2) & 0x40) != 0) {
+        sizes[5] = *(s16 *)(hdr + 0x84);
+        while ((sizes[5] & 7) != 0) {
+            sizes[5] = sizes[5] + 1;
+        }
+        sizes[3] = sizes[5] << 2;
+    }
+    sizes[4] = 0x68;
+    if ((flags & 0x80) != 0) {
+        sizes[4] = sizes[4] << 1;
+        sizes[3] = sizes[3] << 1;
+    }
+    if (*(u8 *)(hdr + 0xf9) != 0 || a4 != 0) {
+        sizes[4] = sizes[4] + 0x30;
+        total = sizes[6] + sizes[1] + sizes[3] + sizes[4] + 0x6c;
+    } else {
+        total = sizes[3] + sizes[6] + sizes[1] + sizes[4] + 0x6c;
+    }
+    total = total + sizes[0];
+    if (*(void **)(hdr + 0x3c) != 0 && *(u8 *)(hdr + 0xf3) != 0 && *(void **)(hdr + 0x18) != 0) {
+        total = (u32)*(u8 *)(hdr + 0xf3) * 0x1e + 0x1c + total;
+    }
+    if (*(void **)(hdr + 0xa4) != 0) {
+        total = (u32)*(u16 *)(hdr + 0x8a) * 4 + total;
+        total = total + 4;
+    }
+    if (*(void **)(hdr + 0xc8) != 0) {
+        total = (u32)*(u16 *)(hdr + 0xae) * 4 + total;
+        total = total + 4;
+    }
+    total = total + (u32)*(u8 *)(hdr + 0xf8) * 0xc;
+    if ((flags & 0x8000) != 0) {
+        total = total + 0x1a;
+    }
+    return roundUpTo32(((total + 0x2f) & ~0xf) + 0x10);
 }
 #pragma dont_inline reset
 #pragma pop
