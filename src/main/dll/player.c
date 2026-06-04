@@ -7583,6 +7583,265 @@ int fn_8029C9C8(int obj, int state)
 
 #pragma scheduling off
 #pragma peephole off
+extern int gameBitDecrement(int);
+extern u8 objGetByteParam1C(int obj);
+extern f32 lbl_803E8054;
+int fn_802A418C(int obj, int state, f32 fv)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    int i;
+    s8 c;
+    int *list;
+    u8 buf[64];
+    f32 dist;
+    int cnt41;
+    int cnt20;
+    int cnt30;
+
+    dist = lbl_803E8050;
+    if (*(u8 *)((char *)inner + 0x8c8) == 0x44) {
+        goto ui_block;
+    }
+    if (*(void **)((char *)inner + 0x7f8) != NULL) {
+        c = ((s8 (*)(int, int, int, void *, int))fn_802A74A4)(obj, inner, state, buf, 0x22);
+    } else {
+        c = ((s8 (*)(int, int, int, void *, int))fn_802A74A4)(obj, inner, state, buf, -0x141);
+    }
+    if (c == -1) {
+        *(s8 *)((char *)inner + 0x8c2) = -1;
+        *(u8 *)((char *)inner + 0x8c3) = 0;
+    } else if (c == *(s8 *)((char *)inner + 0x8c2)) {
+        int n = *(s8 *)((char *)inner + 0x8c3) + 1;
+        *(u8 *)((char *)inner + 0x8c3) = n;
+        if ((u8)n > 200) {
+            *(u8 *)((char *)inner + 0x8c3) = 200;
+        }
+    } else {
+        *(s8 *)((char *)inner + 0x8c2) = c;
+        *(u8 *)((char *)inner + 0x8c3) = 0;
+    }
+    switch (*(s8 *)((char *)inner + 0x8c2)) {
+    case 0:
+        if (((ByteFlags *)((char *)inner + 0x3f1))->b01) {
+            *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
+            return 0xf;
+        }
+        goto deflt;
+    case 9:
+        if (((ByteFlags *)((char *)inner + 0x3f1))->b01) {
+            *(int *)((char *)state + 0x308) = (int)fn_8029FFD0;
+            return 0x13;
+        }
+        goto deflt;
+    case 4:
+        lbl_803DC6A0 = -1;
+        *(int *)((char *)state + 0x308) = 0;
+        return 0xd;
+    case 5:
+        if (*(void **)((char *)inner + 0x7f8) == NULL) {
+            lbl_803DC6A0 = -1;
+            *(int *)((char *)state + 0x308) = 0;
+            return 0xc;
+        }
+        goto deflt;
+    case 6:
+        *(int *)((char *)state + 0x308) = (int)fn_8029DAE0;
+        return -0x1d;
+    case 0xd:
+        *(int *)((char *)state + 0x308) = 0;
+        return 0x1d;
+    case 7:
+        fn_802AE9C8(obj, inner, state);
+        return 0;
+    case 8:
+        *(int *)((char *)state + 0x308) = 0;
+        return 0xb;
+    case 0xb:
+        *(int *)((char *)state + 0x308) = (int)fn_802A00C0;
+        return 0x1c;
+    case 10:
+        *(int *)((char *)state + 0x308) = 0;
+        return 0x17;
+    default:
+    deflt:
+        if (*(void **)((char *)inner + 0x7f8) == NULL &&
+            ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+            list = (int *)ObjGroup_GetObjects(0x41, &cnt41);
+            for (i = 0; i < cnt41; i++) {
+                int o = *list;
+                lbl_803DE434 = o;
+                if ((*(u8 *)((char *)o + 0xaf) & 4) != 0 &&
+                    (*(u8 *)((char *)o + 0xaf) & 0x10) == 0) {
+                    switch ((u8)objGetByteParam1C(o)) {
+                    case 2:
+                        setAButtonIcon(2);
+                        if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
+                            buttonDisable(0, 0x100);
+                            *(int *)((char *)state + 0x308) = (int)fn_80298924;
+                            return 0x34;
+                        }
+                        break;
+                    case 4:
+                    case 5:
+                        setAButtonIcon(0xe);
+                        if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
+                            buttonDisable(0, 0x100);
+                            *(int *)((char *)state + 0x308) = (int)fn_80298924;
+                            return 0x36;
+                        }
+                        break;
+                    case 3:
+                        setAButtonIcon(2);
+                        if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
+                            buttonDisable(0, 0x100);
+                            *(int *)((char *)state + 0x308) = (int)fn_80298924;
+                            return 0x35;
+                        }
+                        break;
+                    case 0:
+                        break;
+                    }
+                }
+                list++;
+            }
+        }
+    ui_block:
+        ((void (*)(int, int *))ObjGroup_GetObjects)(0x20, &cnt20);
+        GameBit_Set(0xeb5, !cnt20);
+        if ((*(int (*)(void))(*(int *)(*gGameUIInterface + 0x1c)))() != 0) {
+            if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x1ee) != 0) {
+                char *found;
+                s16 *def = NULL;
+                buttonDisable(0, 0x100);
+                found = ((char *(*)(int, int, f32 *))ObjGroup_FindNearestObject)(0xf, obj, &dist);
+                if (found != NULL) {
+                    def = *(s16 **)((char *)found + 0x4c);
+                }
+                if (def != NULL && *def == 0x860 && (*(u8 *)((char *)found + 0xaf) & 4) != 0) {
+                    GameBit_Set(0x3f1, 1);
+                    GameBit_Set(0x3d8, 1);
+                    GameBit_Set(0x651, 1);
+                }
+                return 0;
+            }
+            if ((*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x953) != 0 &&
+                lbl_803DE444 == NULL) {
+                int player;
+                void *att;
+                buttonDisable(0, 0x100);
+                if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                    *(u8 *)((char *)inner + 0x8b4) = 1;
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+                }
+                player = Obj_GetPlayerObject();
+                if (Obj_IsLoadingLocked() == 0) {
+                    att = NULL;
+                } else {
+                    char *setup = (char *)Obj_AllocObjectSetup(0x24, 0x62d);
+                    *(s16 *)setup = 0x62d;
+                    *(u8 *)(setup + 0x4) = 2;
+                    *(u8 *)(setup + 0x6) = 0xff;
+                    *(u8 *)(setup + 0x5) = 1;
+                    *(u8 *)(setup + 0x7) = 0xff;
+                    *(int *)(setup + 0x8) = *(int *)((char *)player + 0xc);
+                    *(int *)(setup + 0xc) = *(int *)((char *)player + 0x10);
+                    *(int *)(setup + 0x10) = *(int *)((char *)player + 0x14);
+                    att = (void *)Obj_SetupObject((int)setup, 4, *(s8 *)((char *)player + 0xac),
+                                                  -1, *(int *)((char *)player + 0x30));
+                    lbl_803DE444 = att;
+                }
+                ((void (*)(int, void *, int))ObjLink_AttachChild)(obj, att, 1);
+                (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0xd, obj, -1);
+            }
+        }
+        if (*(u8 *)((char *)inner + 0x8c8) != 0x44 &&
+            (*(int (*)(void))(*(int *)(*gGameUIInterface + 0x1c)))() != 0 &&
+            (*(int (*)(int))(*(int *)(*gGameUIInterface + 0x20)))(0x13e) != 0 &&
+            (((void (*)(int, int *))ObjGroup_GetObjects)(0x30, &cnt30), cnt30 == 0)) {
+            gameBitDecrement(0x13d);
+            if (Obj_IsLoadingLocked() != 0) {
+                char *setup = (char *)Obj_AllocObjectSetup(0x24, 0x43b);
+                *(s16 *)setup = 0x43b;
+                *(u8 *)(setup + 0x2) = 9;
+                *(u8 *)(setup + 0x4) = 2;
+                *(u8 *)(setup + 0x6) = 0xff;
+                *(u8 *)(setup + 0x5) = 1;
+                *(u8 *)(setup + 0x7) = 0xff;
+                *(int *)(setup + 0x8) = *(int *)((char *)obj + 0xc);
+                *(f32 *)(setup + 0xc) = lbl_803E7F58 + *(f32 *)((char *)obj + 0x10);
+                *(int *)(setup + 0x10) = *(int *)((char *)obj + 0x14);
+                *(u8 *)(setup + 0x19) = 1;
+                Obj_SetupObject((int)setup, 5, -1, -1, *(int *)((char *)obj + 0x30));
+            }
+            (*(void (*)(void))(*(int *)(*gGameUIInterface + 0x10)))();
+            return 0;
+        }
+        {
+            if (*(s8 *)((char *)inner + 0x8b3) == 0) {
+                if ((*(int *)((char *)state + 0x31c) & 0x100) != 0) {
+                    int ok2;
+                    if (*(void **)((char *)inner + 0x7f8) != NULL ||
+                        !((ByteFlags *)((char *)inner + 0x3f4))->b40 ||
+                        ((ByteFlags *)((char *)inner + 0x3f0))->b20 ||
+                        ((ByteFlags *)((char *)inner + 0x3f0))->b10) {
+                        ok2 = 0;
+                    } else {
+                        ok2 = 1;
+                    }
+                    if (ok2 != 0) {
+                        if (*(s8 *)((char *)inner + 0x8b4) == 2 ||
+                            (*(void **)((char *)inner + 0x4b8) != NULL &&
+                             *(f32 *)((char *)inner + 0x4b0) < lbl_803E8054 &&
+                             *(int *)((char *)inner + 0x4a8) < 0x4000 &&
+                             *(s16 *)((char *)inner + 0x4b4) == 1)) {
+                            if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                                *(u8 *)((char *)inner + 0x8b4) = 4;
+                                ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 1;
+                            }
+                            *(int *)((char *)state + 0x308) = 0;
+                            return 0x32;
+                        }
+                        if (lbl_803DE44C != NULL && ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                            *(u8 *)((char *)inner + 0x8b4) = 2;
+                            ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+                        }
+                    }
+                }
+            } else {
+                int r2;
+                if ((*(int *)((char *)state + 0x31c) & 0x200) != 0 && lbl_803DE44C != NULL &&
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b40) {
+                    *(u8 *)((char *)inner + 0x8b4) = 0;
+                    ((ByteFlags *)((char *)inner + 0x3f4))->b08 = 0;
+                }
+                {
+                    int in2 = *(int *)((char *)obj + 0xb8);
+                    u8 b;
+                    if ((*(int *)((char *)state + 0x31c) & 0x100) == 0 ||
+                        (b = ((ByteFlags *)((char *)in2 + 0x3f4))->b40, b == 0)) {
+                        r2 = 0;
+                    } else {
+                        if (lbl_803DE44C != NULL && b != 0) {
+                            *(u8 *)((char *)in2 + 0x8b4) = 4;
+                            ((ByteFlags *)((char *)in2 + 0x3f4))->b08 = 1;
+                        }
+                        *(int *)((char *)state + 0x308) = 0;
+                        r2 = 0x32;
+                    }
+                    if (r2 != 0) {
+                        return r2;
+                    }
+                }
+            }
+            return 0;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 extern u64 lbl_803DE4A0;
 extern u64 lbl_803DE4A8;
 typedef struct { int a; int b; } IntPair2;

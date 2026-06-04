@@ -1323,7 +1323,7 @@ extern int fn_8029DB70();
 extern int fn_802A0680();
 extern int fn_802A1CA8();
 extern int fn_802A2EE0();
-extern int fn_802A418C();
+extern int fn_802A418C(int obj, int state, f32 fv);
 extern int fn_802A5384();
 extern int fn_802A6694();
 extern f32 lbl_803E8010;
