@@ -18918,3 +18918,145 @@ void askProgressiveScanMode(void) {
     } while (counter < 0xf0);
 }
 #pragma pop
+
+extern u32 getNewInputs(int pad);
+extern int DVDGetDriveStatus(void);
+extern void AISetStreamVolLeft(int vol);
+extern void AISetStreamVolRight(int vol);
+extern void audioStopAll(void);
+extern void AISetStreamPlayState(int state);
+extern void audioReset(void);
+extern void LCDisable(void);
+extern void DVDSetAutoInvalidation(int enable);
+extern void OSResetSystem(int reset, u32 resetCode, int forceMenu);
+extern u8 gAudioStreamPlaying;
+extern u8 gAudioStreamDvdState;
+extern u8 lbl_803DC950;
+extern int lbl_803DC960;
+extern u8 lbl_803DCCA6;
+extern u8 lbl_803DC951;
+extern u8 lbl_803DB425;
+extern f32 lbl_803DCAC8;
+extern f32 lbl_803DCB00;
+extern u8 lbl_803DCAC5;
+extern char lbl_802CA460[];
+extern f32 lbl_803DE7AC;
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+void checkReset(void) {
+    char *msg;
+    u8 pressed;
+    f32 t;
+    int status;
+
+    msg = lbl_802CA460;
+    if (lbl_803DCCA6 == 0) {
+        return;
+    }
+    if (lbl_803DC951 != 0) {
+        return;
+    }
+    lbl_803DCCA6 = 0;
+    switch (lbl_803DCA3D) {
+    case 0:
+    case 1:
+        if (lbl_803DCA3E != 0) {
+            lbl_803DCA3D = 2;
+        }
+        if ((getNewInputs(0) & 0x200) != 0 && (getNewInputs(0) & 0x400) != 0 &&
+            (getNewInputs(0) & 0x1000) != 0) {
+            pressed = 1;
+        } else {
+            pressed = 0;
+            if (lbl_803DB425 != 0) {
+                lbl_803DB425--;
+            }
+        }
+        if (pressed != 0 && lbl_803DB425 == 0) {
+            t = lbl_803DCAC8 + lbl_803DE7A8;
+            lbl_803DCAC8 = t;
+            if (t >= lbl_803DE7AC) {
+                lbl_803DCA3D = 2;
+            }
+        } else {
+            lbl_803DCAC8 = lbl_803DE7B0;
+        }
+        break;
+    case 2:
+    case 6:
+        OSReport(msg + 0xd0);
+        if (lbl_803DCA49 != 0) {
+            (*(void (**)(int, int))((*(u8 **)gScreenTransitionInterface) + 8))(0x1e, 1);
+        }
+        if (lbl_803DCA3D == 6) {
+            lbl_803DCAC5 = 1;
+        } else {
+            lbl_803DCAC5 = 0;
+        }
+        stopRumble2();
+        AISetStreamVolLeft(0);
+        AISetStreamVolRight(0);
+        audioStopAll();
+        lbl_803DCA3D = 3;
+        lbl_803DCB00 = lbl_803DE7AC;
+        break;
+    case 3:
+        t = lbl_803DCB00 - lbl_803DE7A8;
+        lbl_803DCB00 = t;
+        if (t <= lbl_803DE7B0) {
+            lbl_803DCA3D = 4;
+        }
+        break;
+    case 4:
+        OSReport(msg + 0xec);
+        while (lbl_803DC950 == 0 && (gAudioStreamPlaying != 0 || gAudioStreamDvdState != 0)) {
+            status = DVDGetDriveStatus();
+            lbl_803DC960 = status;
+            switch (status) {
+            case -1:
+                lbl_803DC950 = 1;
+                break;
+            case 4:
+                lbl_803DC950 = 1;
+                break;
+            case 5:
+                lbl_803DC950 = 1;
+                break;
+            case 6:
+                lbl_803DC950 = 1;
+                break;
+            case 11:
+                lbl_803DC950 = 1;
+                break;
+            }
+        }
+        AISetStreamPlayState(0);
+        audioReset();
+        OSReport(msg + 0x104);
+        stopRumble2();
+        waitNextFrame();
+        GXFlush_(1, 0);
+        waitNextFrame();
+        GXFlush_(1, 0);
+        OSReport(msg + 0x118);
+        LCDisable();
+        DVDSetAutoInvalidation(1);
+        VISetBlack(1);
+        VIFlush();
+        VIWaitForRetrace();
+        OSReport(msg + 0x12c);
+        lbl_803DCA3D = 5;
+        if (lbl_803DCAC5 != 0) {
+            OSResetSystem(1, 0x80000000, 1);
+        } else {
+            OSResetSystem(0, 0x80000000, 0);
+        }
+        break;
+    default:
+        OSReport(msg + 0x13c);
+        break;
+    }
+}
+#pragma pop
