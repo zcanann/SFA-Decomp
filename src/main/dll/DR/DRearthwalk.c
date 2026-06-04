@@ -1058,4 +1058,125 @@ void sh_beacon_init(int obj, int defData)
 }
 #pragma peephole reset
 #pragma scheduling reset
-void sh_beacon_update(int obj) {}
+extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
+extern int GameBit_Set(int eventId, int value);
+extern void gameBitDecrement(int eventId);
+extern void *getTrickyObject(void);
+extern void fn_8002B6D8(int obj, int p2, int p3, int p4, int p5, int p6);
+extern f32 lbl_803E5528;
+extern f32 lbl_803E5530;
+extern f32 lbl_803E5534;
+extern f32 lbl_803E5538;
+extern f32 lbl_803E553C;
+extern int lbl_803DDBF8;
+
+typedef struct {
+    u8 looping : 1;
+    u8 rest : 7;
+} BeaconFlags;
+
+/*
+ * --INFO--
+ *
+ * Function: sh_beacon_update
+ * EN v1.0 Address: 0x801DAA58
+ * EN v1.0 Size: 1080b
+ */
+void sh_beacon_update(int obj)
+{
+  u8 *state;
+  int def;
+  int tmp;
+  int *setup;
+  int mode;
+  int state2;
+
+  state = *(u8 **)(obj + 0xb8);
+  def = *(int *)(obj + 0x4c);
+  switch (state[0x14]) {
+  case 0:
+    if (((*(u8 *)(obj + 0xaf) & 1) != 0) &&
+        ((*(int (*)(int))(*gGameUIInterface + 0x20))(0x194) != 0)) {
+      gameBitDecrement(0x194);
+      GameBit_Set(*(s16 *)(def + 0x20), 1);
+      if (Obj_IsLoadingLocked() != 0) {
+        setup = Obj_AllocObjectSetup(0x20, 0x55);
+        *(f32 *)((char *)setup + 8) = *(f32 *)(obj + 0xc);
+        *(f32 *)((char *)setup + 0xc) = *(f32 *)(obj + 0x10);
+        *(f32 *)((char *)setup + 0x10) = *(f32 *)(obj + 0x14);
+        *(u8 *)((char *)setup + 4) = 2;
+        *(u8 *)((char *)setup + 5) = *(u8 *)(*(int *)(obj + 0x4c) + 5);
+        *(u8 *)((char *)setup + 7) = *(u8 *)(*(int *)(obj + 0x4c) + 7);
+        *(int *)state = loadObjectAtObject(obj, setup);
+      }
+      (*(code *)(*gObjectTriggerInterface + 0x48))(0, obj, -1);
+      state[0x14] = 2;
+    }
+  case 2:
+    state2 = *(int *)(obj + 0xb8);
+    *(f32 *)(state2 + 4) = *(f32 *)(state2 + 4) + timeDelta;
+    if (*(f32 *)(state2 + 4) >= lbl_803E5528) {
+      *(f32 *)(state2 + 4) = *(f32 *)(state2 + 4) - lbl_803E5528;
+      if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
+        fn_80098B18(obj, *(f32 *)(obj + 8), 0, 2, 0, 0);
+      }
+    }
+    break;
+  case 1:
+    if ((((BeaconFlags *)(state + 0x15))->looping) == 0) {
+      Sfx_AddLoopedObjectSound(obj, 0x9e);
+      ((BeaconFlags *)(state + 0x15))->looping = 1;
+    }
+    if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
+      *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) + timeDelta;
+      if (*(f32 *)(state + 0x10) > lbl_803E5530) {
+        mode = 2;
+        *(f32 *)(state + 0x10) = *(f32 *)(state + 0x10) - lbl_803E5530;
+      } else {
+        mode = 0;
+      }
+      *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) + timeDelta;
+      if (*(f32 *)(state + 0xc) > lbl_803E5534) {
+        *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - lbl_803E5534;
+        fn_80098B18(obj, *(f32 *)(obj + 8), 2, mode, 0, 0);
+      }
+    }
+    break;
+  }
+  if (state[0x14] != 1) {
+    *(u8 *)(obj + 0xaf) &= ~8;
+    if (state[0x14] == 2) {
+      fn_8002B6D8(obj, 0, 0, 0, 0, 8);
+    } else if ((state[0x14] == 0) && (GameBit_Get(0x194) == 0)) {
+      *(u8 *)(obj + 0xaf) |= 0x10;
+    } else {
+      *(u8 *)(obj + 0xaf) &= ~0x10;
+    }
+    tmp = (int)getTrickyObject();
+    if (((void *)tmp != NULL) && ((*(u8 *)(obj + 0xaf) & 4) != 0)) {
+      (*(code *)(*(int *)(*(int *)(tmp + 0x68)) + 0x28))(tmp, obj, 1, 4);
+    }
+  } else {
+    if ((GameBit_Get(0x193) != 0) || (*(s16 *)(def + 0x1e) != 0x95)) {
+      *(u8 *)(obj + 0xaf) |= 8;
+    } else {
+      *(u8 *)(obj + 0xaf) |= 0x10;
+    }
+  }
+  if (*(f32 *)(state + 8) > lbl_803E5538) {
+    *(f32 *)(state + 8) = *(f32 *)(state + 8) - timeDelta;
+    if ((*(u16 *)(obj + 0xb0) & 0x800) != 0) {
+      fn_80098B18(obj, lbl_803E553C * *(f32 *)(obj + 8), 3, 0, 0, 0);
+    }
+    if ((*(f32 *)(state + 8) <= lbl_803E5538) && (state[0x14] == 2)) {
+      state[0x14] = 1;
+      GameBit_Set(*(s16 *)(def + 0x1e), 1);
+      if ((GameBit_Get(0x190) != 0) && (GameBit_Get(0x191) != 0) && (GameBit_Get(0x192) != 0)) {
+        Sfx_PlayFromObject(0, 0x7e);
+      } else {
+        Sfx_PlayFromObject(0, 0x409);
+      }
+    }
+  }
+  ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, &lbl_803DDBF8);
+}
