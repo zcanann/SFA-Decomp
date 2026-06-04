@@ -5143,7 +5143,7 @@ void DBstealerwo_setFuncPtrs_80203c78(void)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int fn_80202EF0();
+extern void fn_80202EF0(int obj, int p2);
 extern int *gPartfxInterface;
 
 #pragma peephole off
@@ -5310,6 +5310,221 @@ void DFP_Torch_init(int obj, int param2)
     }
     *(u8 *)(state + 0xd) = (u8)*(s16 *)(param2 + 0x1c);
     *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_80202EF0(int obj, int p2)
+{
+    extern u8 Obj_IsLoadingLocked(void);
+    extern u8 *Obj_AllocObjectSetup(int, int);
+    extern u8 *Obj_SetupObject(u8 *, int, int, int, int);
+    extern f32 lbl_803E637C;
+    extern f32 lbl_803E62B4;
+    extern f32 lbl_803E62B8;
+    extern f32 lbl_803E6380;
+    u8 *setup;
+    u8 *newObj;
+    f32 dur;
+    f32 t;
+
+    if (Obj_IsLoadingLocked() != 0) {
+        setup = Obj_AllocObjectSetup(0x24, 0x30a);
+        *(f32 *)(setup + 8) = *(f32 *)(obj + 0xc);
+                *(f32 *)(setup + 0xc) = lbl_803E637C + *(f32 *)(obj + 0x10);
+                *(f32 *)(setup + 0x10) = *(f32 *)(obj + 0x14);
+                setup[4] = 1;
+                setup[5] = 1;
+                setup[6] = 0xff;
+                setup[7] = 0xff;
+        newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, 0);
+        if (newObj != NULL) {
+            t = *(f32 *)(p2 + 0x2c0) / lbl_803E62B4;
+            dur = lbl_803E62B8 * t;
+            *(f32 *)(newObj + 0x24) = (*(f32 *)(*(int *)(p2 + 0x2d0) + 0xc) - *(f32 *)(obj + 0xc)) / dur;
+            *(f32 *)(newObj + 0x28) = ((lbl_803E6380 * t + *(f32 *)(*(int *)(p2 + 0x2d0) + 0x10)) - *(f32 *)(obj + 0x10)) / dur;
+            *(f32 *)(newObj + 0x2c) = (*(f32 *)(*(int *)(p2 + 0x2d0) + 0x14) - *(f32 *)(obj + 0x14)) / dur;
+            *(int *)(newObj + 0xc4) = obj;
+        }
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+#pragma opt_common_subs off
+int fn_80202C78(f32 p1, f32 p2, f32 p3, f32 p4, int obj, int p6)
+{
+    extern int Obj_GetYawDeltaToObject(int, int, f32 *);
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E6370;
+    extern f32 timeDelta;
+    extern f32 lbl_803E634C;
+    extern f32 lbl_803E62C8;
+    extern f32 lbl_803E6374;
+    int state = *(int *)(obj + 0xb8);
+    f32 yawF;
+    int yaw;
+    f32 zero;
+    f32 a;
+    f32 ratio;
+    f32 k;
+    f32 cur;
+    f32 prod;
+
+    yaw = Obj_GetYawDeltaToObject(obj, p6, &yawF);
+    zero = lbl_803E62A8;
+    if (zero == p4) {
+        return 0;
+    }
+    yawF -= p1;
+    ratio = yawF / p4;
+    yawF = ratio;
+    if (ratio >= zero) {
+        a = ratio;
+    } else {
+        a = -ratio;
+    }
+    if (a < lbl_803E6370) {
+        return 1;
+    }
+    if (ratio < lbl_803E62A8) {
+        p2 = -p2;
+    }
+    cur = *(f32 *)(state + 0x280);
+    k = timeDelta * lbl_803E634C;
+    prod = p2 * (lbl_803E62C8 - (f32)(s16)yaw / lbl_803E6374);
+    *(f32 *)(state + 0x280) = k * (prod - cur) + cur;
+    *(f32 *)(state + 0x284) = lbl_803E62A8;
+    return 0;
+}
+#pragma opt_common_subs reset
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+int fn_80202DA4(u8 *obj, u8 *p6, f32 p1, f32 p2, f32 p3, f32 p4)
+{
+    extern int Obj_GetYawDeltaToObject(u8 *, u8 *, f32 *);
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E6378;
+    extern f32 timeDelta;
+    extern f32 lbl_803E634C;
+    extern f32 lbl_803E62C8;
+    extern f32 lbl_803E6374;
+    int state = *(int *)(obj + 0xb8);
+    f32 yawF;
+    int yaw;
+    f32 dy;
+    f32 zero;
+    f32 k;
+    f32 cur;
+    f32 prod;
+
+    if (obj == NULL || p6 == NULL) {
+        return 0;
+    }
+    yaw = Obj_GetYawDeltaToObject(obj, p6, &yawF);
+    zero = lbl_803E62A8;
+    if (zero == p4) {
+        return 0;
+    }
+    if (yawF < p1) {
+        dy = *(f32 *)(obj + 0x10) - *(f32 *)(p6 + 0x10);
+        dy = (dy >= zero) ? dy : -dy;
+        if (dy < lbl_803E6378) {
+            return 1;
+        }
+    }
+    cur = *(f32 *)(state + 0x280);
+    k = timeDelta * lbl_803E634C;
+    prod = p2 * (lbl_803E62C8 - (f32)(s16)yaw / lbl_803E6374);
+    *(f32 *)(state + 0x280) = k * (prod - cur) + cur;
+    *(f32 *)(state + 0x284) = lbl_803E62A8;
+    return 0;
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+void dfpobjcreator_update(int obj)
+{
+    extern u8 Obj_IsLoadingLocked(void);
+    extern uint GameBit_Get(int);
+    extern u8 *Obj_AllocObjectSetup(int, int);
+    extern u8 *Obj_SetupObject(u8 *, int, int, int, int);
+    extern f32 timeDelta;
+    int data = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + 0xb8);
+    u8 *setup;
+    u8 *newObj;
+
+    if (Obj_IsLoadingLocked() != 0) {
+        switch (*(s16 *)(data + 0x1a)) {
+        case 7:
+            *(s16 *)(state + 0x10) -= (int)timeDelta;
+            if (*(s16 *)(state + 0x10) <= 0 && GameBit_Get(*(s16 *)(state + 0xc)) != 0) {
+                *(s16 *)(state + 0x10) = *(s16 *)(state + 0xe);
+                setup = Obj_AllocObjectSetup(0x24, 0x71b);
+                *(f32 *)(setup + 0x8) = *(f32 *)(data + 0x8);
+                *(f32 *)(setup + 0xc) = *(f32 *)(data + 0xc);
+                *(f32 *)(setup + 0x10) = *(f32 *)(data + 0x10);
+                setup[4] = *(u8 *)(data + 4);
+                setup[5] = *(u8 *)(data + 5);
+                setup[6] = *(u8 *)(data + 6);
+                setup[7] = *(u8 *)(data + 7);
+                *(s16 *)(setup + 0x1e) = -1;
+                *(s16 *)(setup + 0x20) = -1;
+                *(s16 *)(setup + 0x1a) = 0xdc;
+                newObj = Obj_SetupObject(setup, 5, *(s8 *)(obj + 0xac), -1, *(int *)(obj + 0x30));
+                *(int *)(newObj + 0xf4) = *(s8 *)(data + 0x1e);
+            }
+            break;
+        }
+    }
+}
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802025C0(int obj, int p2)
+{
+    extern void ObjHits_EnableObject(int);
+    extern void ObjHits_SetHitVolumeSlot(int, int, int, int);
+    extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
+    extern f32 lbl_803E62A8;
+    extern f32 lbl_803E6344;
+    extern f32 lbl_803E6348;
+    int state = *(int *)(obj + 0xb8);
+    int sub = *(int *)(state + 0x40c);
+
+    if (*(s8 *)(p2 + 0x27a) != 0) {
+        ObjHits_EnableObject(obj);
+    }
+    ObjHits_SetHitVolumeSlot(obj, 10, 1, -1);
+    if (*(s8 *)(p2 + 0x27a) != 0) {
+        if ((int)randomGetRange(0, 1) != 0) {
+            if (*(s8 *)(p2 + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove(obj, 6, lbl_803E62A8, 0);
+                *(u8 *)(p2 + 0x346) = 0;
+            }
+        } else {
+            if (*(s8 *)(p2 + 0x27a) != 0) {
+                ObjAnim_SetCurrentMove(obj, 7, lbl_803E62A8, 0);
+                *(u8 *)(p2 + 0x346) = 0;
+            }
+        }
+        *(u8 *)(p2 + 0x34d) = 1;
+        *(f32 *)(p2 + 0x2a0) = lbl_803E6344 + (f32)*(u8 *)(state + 0x406) / lbl_803E6348;
+    }
+    *(f32 *)(p2 + 0x280) = lbl_803E62A8;
+    if (*(s8 *)(p2 + 0x346) != 0) {
+        *(u8 *)(sub + 0x34) = 1;
+    }
+    *(u8 *)(sub + 0x14) |= 2;
+    return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

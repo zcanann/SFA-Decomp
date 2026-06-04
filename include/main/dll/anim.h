@@ -227,7 +227,7 @@ int dfpobjcreator_getObjectTypeId(void);
 void dfpobjcreator_free(int obj, int flag);
 void dfpobjcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dfpobjcreator_hitDetect(void);
-void dfpobjcreator_update(void);
+void dfpobjcreator_update(int obj);
 void dfpobjcreator_init(int obj, s8 *def);
 void dfpobjcreator_release(void);
 void dfpobjcreator_initialise(void);
