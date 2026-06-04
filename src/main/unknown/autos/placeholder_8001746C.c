@@ -14903,7 +14903,7 @@ void modelWalkAnimFn_800248b8(u8 *a, u8 *b, u8 *c, int d, f32 e)
 #pragma dont_inline reset
 #pragma pop
 
-extern void animLoadFromTable(u8 *hdr, int idx, int a, int b);
+extern void *animLoadFromTable(u8 *hdr, int idx, int a, u8 *b);
 
 #define LOADCOLOR_BLOCK(OFF)                                                          \
     {                                                                                 \
@@ -14930,7 +14930,7 @@ extern void animLoadFromTable(u8 *hdr, int idx, int a, int b);
                     *hp += 1;                                                         \
                 }                                                                     \
             } else {                                                                  \
-                animLoadFromTable(hdr, idx, 0, (int)v);                               \
+                animLoadFromTable(hdr, idx, 0, (u8 *)v);                               \
             }                                                                         \
         }                                                                             \
     }
@@ -17057,5 +17057,40 @@ void doQueuedLoads(void)
         lbl_803DCAC4 = 1;
     }
 }
+#pragma dont_inline reset
+#pragma pop
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+#pragma opt_common_subs off
+void *animLoadFromTable(u8 *hdr, int id, int idx, u8 *out)
+{
+    int size;
+    int flags;
+    int out2;
+    u8 *buf;
+    int stride;
+
+    flags = 0;
+    fileLoadToBufferOffset(0x52, &flags, id << 2, 4);
+    if (flags & 0x10000000) {
+        loadAndDecompressDataFile(0x51, 0, flags, 0, (int)&size, id, 1);
+        buf = out + 0x80;
+        loadAndDecompressDataFile(0x51, buf, flags, size, (int)&out2, id, 0);
+        stride = ((*(u8 *)(hdr + 0xf3) - 1) & ~7) + 8;
+        fileLoadToBufferOffset(0x32, out, *(int *)(hdr + 0x80) + idx * stride, stride);
+    } else {
+        flags = *(u32 *)((int)lbl_803DCB4C + id * 4);
+        loadAndDecompressDataFile(0x30, 0, flags, 0, (int)&size, id, 1);
+        buf = out + 0x80;
+        loadAndDecompressDataFile(0x30, buf, flags, size, (int)&out2, id, 0);
+        stride = ((*(u8 *)(hdr + 0xf3) - 1) & ~7) + 8;
+        fileLoadToBufferOffset(0x32, out, *(int *)(hdr + 0x80) + idx * stride, stride);
+    }
+    return buf;
+}
+#pragma opt_common_subs reset
 #pragma dont_inline reset
 #pragma pop
