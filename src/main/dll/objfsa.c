@@ -4635,52 +4635,68 @@ u16 Objfsa_GetPatchGroupIdAtPoint(float *point)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#define WALKGROUP_TRY_RETURN(idx)                                                  \
+    if (Objfsa_IsWalkGroupActive(idx)) {                                           \
+        g = &lbl_8039FAE8[idx];                                                    \
+        y = point[1];                                                              \
+        if (y < (f32)g->maxY && y > (f32)g->minY) {                                \
+            z = point[2];                                                          \
+            x = point[0];                                                          \
+            i = 0;                                                                 \
+            j = i;                                                                 \
+            for (; i < 4; i++, j += 2) {                                           \
+                if (g->planeOffsets[i] +                                           \
+                        (x * (f32)((s16 *)g)[j] + z * (f32)((s16 *)g)[j + 1]) >    \
+                    0.0f) {                                                        \
+                    break;                                                         \
+                }                                                                  \
+            }                                                                      \
+            if (i == 4) {                                                          \
+                lbl_803DD464 = (idx);                                              \
+                return (idx);                                                      \
+            }                                                                      \
+        }                                                                          \
+    }
+
+#pragma scheduling off
+#pragma peephole off
 int mathFn_800dbff0(float *point)
 {
-  s16 prevGroupIndex;
-  s16 nextGroupIndex;
+    s16 down;
+    s16 up;
+    ObjfsaWalkGroup *g;
+    f32 y;
+    f32 z;
+    f32 x;
+    u8 i;
+    u8 j;
 
-  prevGroupIndex = (s16)lbl_803DD464;
-  if (lbl_803DD464 == OBJFSA_WALKGROUP_COUNT - 1) {
-    nextGroupIndex = 0;
-  }
-  else {
-    nextGroupIndex = prevGroupIndex + 1;
-  }
-
-  do {
-    if (prevGroupIndex == nextGroupIndex) {
-      if (Objfsa_IsWalkGroupActive(prevGroupIndex) &&
-          Objfsa_IsPointInsideWalkGroup(point,Objfsa_GetWalkGroup(prevGroupIndex))) {
-        lbl_803DD464 = prevGroupIndex;
-        return prevGroupIndex;
-      }
-      return 0;
+    down = (s16)lbl_803DD464;
+    if (lbl_803DD464 == OBJFSA_WALKGROUP_COUNT - 1) {
+        up = 0;
+    } else {
+        up = down + 1;
     }
 
-    if (Objfsa_IsWalkGroupActive(prevGroupIndex) &&
-        Objfsa_IsPointInsideWalkGroup(point,Objfsa_GetWalkGroup(prevGroupIndex))) {
-      lbl_803DD464 = prevGroupIndex;
-      return prevGroupIndex;
+    while (down != up) {
+        WALKGROUP_TRY_RETURN(down);
+        WALKGROUP_TRY_RETURN(up);
+
+        down--;
+        if (down == -1) {
+            down = OBJFSA_WALKGROUP_COUNT - 1;
+        }
+        up++;
+        if (up == OBJFSA_WALKGROUP_COUNT) {
+            up = 0;
+        }
     }
 
-    if (Objfsa_IsWalkGroupActive(nextGroupIndex) &&
-        Objfsa_IsPointInsideWalkGroup(point,Objfsa_GetWalkGroup(nextGroupIndex))) {
-      lbl_803DD464 = nextGroupIndex;
-      return nextGroupIndex;
-    }
-
-    prevGroupIndex--;
-    if (prevGroupIndex == -1) {
-      prevGroupIndex = OBJFSA_WALKGROUP_COUNT - 1;
-    }
-
-    nextGroupIndex++;
-    if (nextGroupIndex == OBJFSA_WALKGROUP_COUNT) {
-      nextGroupIndex = 0;
-    }
-  } while (true);
+    WALKGROUP_TRY_RETURN(down);
+    return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
