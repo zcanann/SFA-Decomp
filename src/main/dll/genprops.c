@@ -6659,3 +6659,86 @@ void fireball_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 }
 #pragma peephole reset
 #pragma scheduling reset
+
+extern int getAngle(f32 a, f32 b);
+extern f32 sqrtf(f32 x);
+extern f32 lbl_803E3340;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_8016F260(int *obj, int *state, int *other)
+{
+    f32 *pt = (f32 *)(*(int *)((char *)other + 0x74) + *(u8 *)((char *)other + 0xe4) * 24);
+    if (pt != NULL) {
+        f32 dx = pt[0] - *(f32 *)((char *)state + 0x24);
+        f32 dy = pt[1] - lbl_803E3334 - *(f32 *)((char *)state + 0x28);
+        f32 dz = pt[2] - *(f32 *)((char *)state + 0x2c);
+        s16 angY;
+        s16 angP;
+        s16 difY;
+        s16 difP;
+        s16 targY;
+        s16 targP;
+        f32 t1;
+        f32 t2;
+        f32 f;
+        f32 c;
+
+        angY = getAngle(*(f32 *)((char *)obj + 0x24), *(f32 *)((char *)obj + 0x2c));
+        t1 = *(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24);
+        t2 = *(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c);
+        angP = getAngle(*(f32 *)((char *)obj + 0x28), sqrtf(t1 + t2));
+        targY = getAngle(dx, dz);
+        targP = getAngle(dy, sqrtf(dx * dx + dz * dz));
+
+        difY = targY - (u16)angY;
+        if (difY > 0x8000) {
+            difY -= 0xffff;
+        }
+        if (difY < -0x8000) {
+            difY += 0xffff;
+        }
+        difP = targP - (u16)angP;
+        if (difP > 0x8000) {
+            difP -= 0xffff;
+        }
+        if (difP < -0x8000) {
+            difP += 0xffff;
+        }
+        difY >>= 5;
+        if (difY > 364) {
+            difY = 364;
+        }
+        if (difY < -364) {
+            difY = -364;
+        }
+        difP >>= 4;
+        if (difP > 728) {
+            difP = 728;
+        }
+        if (difP < -728) {
+            difP = -728;
+        }
+        angY += framesThisStep * difY;
+        angP += framesThisStep * difP;
+
+        f = lbl_803E3338 * (f32)angY / lbl_803E333C;
+        *(f32 *)((char *)obj + 0x24) = fn_80293E80(f);
+        *(f32 *)((char *)obj + 0x2c) = sin(f);
+        f = lbl_803E3338 * (f32)angP / lbl_803E333C;
+        c = fn_80293E80(f);
+        if (lbl_803E3330 != sin(f)) {
+            c = c / sin(f);
+        }
+        *(f32 *)((char *)obj + 0x28) = c;
+
+        c = lbl_803E3340 / sqrtf(*(f32 *)((char *)obj + 0x2c) * *(f32 *)((char *)obj + 0x2c) +
+                                 (*(f32 *)((char *)obj + 0x24) * *(f32 *)((char *)obj + 0x24) +
+                                  *(f32 *)((char *)obj + 0x28) * *(f32 *)((char *)obj + 0x28)));
+        *(f32 *)((char *)obj + 0x24) *= c;
+        *(f32 *)((char *)obj + 0x28) *= c;
+        *(f32 *)((char *)obj + 0x2c) *= c;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
