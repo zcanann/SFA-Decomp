@@ -721,21 +721,25 @@ LAB_801ffe48:
 #pragma peephole off
 int GCRobotBlast_SeqFn(int obj, int unused, int p3)
 {
-  extern void objfx_spawnDirectionalBurst(int, int, int, int, int, int, int, f32, f32);
+  extern void objfx_spawnDirectionalBurst(int, int, f32, int, int, int, f32, int, int);
   extern f32 lbl_803E6270;
   extern f32 lbl_803E6274;
+  typedef struct {
+    u8 b80 : 1;
+  } BlastFlags4;
   int sub = *(int *)(obj + 0xb8);
   int i;
 
   for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
-    *(u8 *)(sub + 4) = (u8)((*(u8 *)(sub + 4) & ~0x80) | ((*(u8 *)(p3 + 0x81 + i) << 7) & 0x80));
+    ((BlastFlags4 *)(sub + 4))->b80 = *(u8 *)(p3 + i + 0x81);
   }
-
-  if ((*(u8 *)(sub + 4) & 0x80) != 0) {
-    int s = *(int *)(sub + 0);
-    if (s < 2 && s >= 0) {
-      objfx_spawnDirectionalBurst(obj, 7, 5, 6, 100, 0, 0x200000, lbl_803E6270, lbl_803E6274);
-      objfx_spawnDirectionalBurst(obj, 6, 1, 6, 100, 0, 0x200000, lbl_803E6270, lbl_803E6274);
+  if (((u32)*(u8 *)(sub + 4) >> 7 & 1) != 0) {
+    switch (*(int *)sub) {
+    case 0:
+    case 1:
+      objfx_spawnDirectionalBurst(obj, 7, lbl_803E6270, 5, 6, 0x64, lbl_803E6274, 0, 0x200000);
+      objfx_spawnDirectionalBurst(obj, 6, lbl_803E6270, 1, 6, 0x64, lbl_803E6274, 0, 0x200000);
+      break;
     }
   }
   return 0;
@@ -4660,9 +4664,12 @@ void dbstealerworm_hitDetect(int obj) {
     (*(void (*)(int, int *, int *))(*(int *)(*gPlayerInterface + 0xc)))(obj, inner, lbl_803AD0F4);
 }
 void GCRobotBlast_init(int obj, s8 *p) {
+    typedef struct {
+        u8 b80 : 1;
+    } BlastFlags4;
     char *inner = *(char **)(obj + 0xb8);
     *(int *)inner = (s8)p[0x19];
-    inner[4] &= ~0x80;
+    ((BlastFlags4 *)(inner + 4))->b80 = 0;
     *(void (**)(void))((char *)obj + 0xbc) = (void (*)(void))GCRobotBlast_SeqFn;
 }
 #pragma peephole reset
@@ -4837,12 +4844,12 @@ void dfpobjcreator_init(int obj, s8 *def) {
 }
 
 void dfplevelcontrol_setScale(int unused, u8 *out) {
+    s16 i = 0;
     s16 *p = lbl_80329848;
-    s16 i;
-    for (i = 0; i < 9; i = (s16)(i + 3)) {
-        out[i] = (u8)p[0];
-        out[(s16)(i + 1)] = (u8)p[1];
-        out[(s16)(i + 2)] = (u8)p[2];
+    for (; i < 9; i += 3) {
+        out[i] = p[0];
+        out[(s16)(i + 1)] = p[1];
+        out[(s16)(i + 2)] = p[2];
         p += 3;
     }
 }
@@ -4953,27 +4960,34 @@ int dbstealerworm_func0B(int obj, u8 msg, int *out)
     int state = *(int *)(obj + 0xb8);
     int sub = *(int *)(state + 0x40c);
     int result = 0;
+    u8 b;
     switch (msg) {
+    case 0x80:
+        break;
     case 0x81:
-        if ((*(u8 *)(state + 0x404) & 2) == 0) {
-            return result;
+        b = *(u8 *)(state + 0x404);
+        if ((b & 2) == 0) {
+            break;
         }
-        *(u8 *)(state + 0x404) = *(u8 *)(state + 0x404) & ~4;
+        *(u8 *)(state + 0x404) = b & ~2;
         if (out != 0) {
             *out = 1;
         }
-        return 1;
+        result = 1;
+        break;
     case 0x82:
         if (*(s16 *)(state + 0x274) != 0xb) {
-            return result;
+            break;
         }
         if (out == 0) {
-            return result;
+            break;
         }
         *(int *)(sub + 0x3c) = (int)out;
-        return 1;
+        result = 1;
+        break;
     case 0x83:
-        return *(int *)(sub + 0x3c);
+        result = *(int *)(sub + 0x3c);
+        break;
     }
     return result;
 }
