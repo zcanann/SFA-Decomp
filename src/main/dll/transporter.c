@@ -606,9 +606,9 @@ LAB_80176578:
 /*
  * --INFO--
  *
- * Function: FUN_801760a4
- * EN v1.0 Address: 0x801760A4
- * EN v1.0 Size: 1316b
+ * Function: pushable_hitDetect
+ * EN v1.0 Address: 0x801760E4
+ * EN v1.0 Size: 1540b
  * EN v1.1 Address: 0x80176590
  * EN v1.1 Size: 1540b
  * JP Address: TODO
@@ -616,7 +616,7 @@ LAB_80176578:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801760a4(void)
+void pushable_hitDetect(void)
 {
   float fVar1;
   short sVar2;
