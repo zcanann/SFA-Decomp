@@ -15474,3 +15474,139 @@ skip:
 }
 #pragma dont_inline reset
 #pragma pop
+
+extern void objFn_80065604(void);
+extern void Obj_UpdateModelBlendStates(void);
+extern void ObjHitReact_ResetActiveObjects(int);
+extern int Obj_BuildTransformMatrixSlot(int obj);
+extern void playerDoHitDetection(int obj);
+
+#pragma push
+#pragma scheduling off
+#pragma peephole off
+#pragma dont_inline on
+void Obj_UpdateAllObjects(u8 flags)
+{
+    int f;
+    int off;
+    int timeStop;
+    u8 *obj2;
+    int child;
+    int obj;
+    int count1;
+    int count2;
+    u8 *t;
+    void (*cb)(int);
+
+    f = flags;
+    lbl_803DCB78 = f;
+    off = *(s16 *)((u8 *)&lbl_803DCB7C + 2);
+    timeStop = f & 1;
+    if (timeStop == 0) {
+        objFn_80065604();
+    }
+    Obj_UpdateModelBlendStates();
+    ObjHitReact_ResetActiveObjects(lbl_803DCB84);
+    obj = *(int *)((u8 *)&lbl_803DCB7C + 4);
+    while (obj != 0 && *(s8 *)(obj + 0xae) == 0x64) {
+        Obj_UpdateObject((u8 *)obj);
+        obj = *(int *)(obj + off);
+    }
+    while (obj != 0 && (*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 0x40)) {
+        Obj_UpdateObject((u8 *)obj);
+        *(s8 *)(obj + 0x35) = (s8)Obj_BuildTransformMatrixSlot(obj);
+        obj = *(int *)(obj + off);
+    }
+    if (timeStop == 0) {
+        ObjHitReact_UpdateResetObjects();
+    }
+    for (; obj != 0; obj = *(int *)(obj + off)) {
+        t = *(u8 **)(obj + 0x54);
+        if (t != 0) {
+            if ((*(u8 *)(t + 0x62) & 8) == 0 || (*(s16 *)(t + 0x60) & 1) == 0) {
+                Obj_UpdateObject((u8 *)obj);
+            }
+        } else {
+            Obj_UpdateObject((u8 *)obj);
+        }
+    }
+    obj2 = (u8 *)ObjGroup_GetObjects(0, &count1);
+    if (count1 != 0) {
+        obj2 = *(u8 **)obj2;
+    } else {
+        obj2 = 0;
+    }
+    if (obj2 != 0 && *(u8 **)(obj2 + 0xc8) != 0) {
+        *(int *)(*(u8 **)(obj2 + 0xc8) + 0x30) = *(int *)(obj2 + 0x30);
+        Obj_UpdateObject(*(u8 **)(obj2 + 0xc8));
+    }
+    if (timeStop == 0) {
+        ObjHits_Update(lbl_803DCB84);
+        obj = *(int *)((u8 *)&lbl_803DCB7C + 4);
+        for (; obj != 0; obj = *(int *)(obj + off)) {
+            if ((*(u16 *)(obj + 0xb0) & 0x2000) == 0) {
+                switch (*(s16 *)(obj + 0x46)) {
+                case 0:
+                case 0x1f:
+                    playerDoHitDetection(obj);
+                    break;
+                default:
+                    if (*(int **)(obj + 0x68) == 0) {
+                        goto next;
+                    }
+                    cb = (void (*)(int))*(int *)(**(int **)(obj + 0x68) + 0xc);
+                    if (cb == 0) {
+                        goto next;
+                    }
+                    cb(obj);
+                    break;
+                }
+                Obj_GetWorldPosition((u8 *)obj, (u8 *)(obj + 0x18), (u8 *)(obj + 0x1c), (u8 *)(obj + 0x20));
+            }
+        next:;
+        }
+        obj2 = (u8 *)ObjGroup_GetObjects(0, &count2);
+        if (count2 != 0) {
+            obj2 = *(u8 **)obj2;
+        } else {
+            obj2 = 0;
+        }
+        if (obj2 != 0 && *(u8 **)(obj2 + 0xc8) != 0) {
+            *(int *)(*(u8 **)(obj2 + 0xc8) + 0x30) = *(int *)(obj2 + 0x30);
+            child = *(int *)(obj2 + 0xc8);
+            if ((*(u16 *)(child + 0xb0) & 0x2000) == 0) {
+                switch (*(s16 *)(child + 0x46)) {
+                case 0:
+                case 0x1f:
+                    playerDoHitDetection(child);
+                    break;
+                default:
+                    if (*(int **)(child + 0x68) == 0) {
+                        goto done;
+                    }
+                    cb = (void (*)(int))*(int *)(**(int **)(child + 0x68) + 0xc);
+                    if (cb == 0) {
+                        goto done;
+                    }
+                    cb(child);
+                    break;
+                }
+                Obj_GetWorldPosition((u8 *)child, (u8 *)(child + 0x18), (u8 *)(child + 0x1c), (u8 *)(child + 0x20));
+            }
+        }
+    done:
+        (*(void (**)(u8))(*(int *)gWaterfxInterface + 4))(framesThisStep);
+    }
+    if ((f & 2) == 0) {
+        (*(void (**)(int, int, int))(*(int *)gModgfxInterface + 0xc))(0, 0, 0);
+        (*(void (**)(int, u8, int, int))(*(int *)gExpgfxInterface + 0xc))(0, framesThisStep, 0, 0);
+    }
+    if (timeStop == 0) {
+        ObjHits_TickPriorityHitCooldowns();
+        (*(void (**)(void))(*(int *)gObjectTriggerInterface + 0x28))();
+        (*(void (**)(void))(*(int *)gObjectTriggerInterface + 0x18))();
+        (*(void (**)(u8))(*(int *)gCameraInterface + 8))(framesThisStep);
+    }
+}
+#pragma dont_inline reset
+#pragma pop
