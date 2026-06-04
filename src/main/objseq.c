@@ -755,6 +755,164 @@ void seq_findAction(void *obj, void *seqFile, u8 *seq)
 
 #pragma peephole off
 #pragma scheduling off
+void objSeq_onMapSetup(void)
+{
+    u8 *base = lbl_80396918;
+    u8 *flagsB = base + 0x3b9c;
+    u8 *flagsA = base + 0x3b44;
+    s16 *modes = (s16 *)(base + 0x3a98);
+    u8 *actions = base + 0x3c4c;
+    u8 *results = base + 0x3bf4;
+    u8 *states = base + 0x3a40;
+    u8 *pending = base + 0x39e8;
+    f32 *frames = (f32 *)(base + 0x3894);
+    f32 *dists = (f32 *)(base + 0x3740);
+    u8 *counts = base + 0x3590;
+    int *handles = (int *)(base + 0x33e4);
+    u8 *marks = base + 0x338c;
+    int i = 0;
+
+    {
+        for (; i < 0x50; i += 8) {
+            flagsB[0] = 0;
+            flagsA[0] = 0;
+            modes[0] = 0;
+            actions[0] = 0;
+            results[0] = 0;
+            states[0] = 0;
+            pending[0] = 0;
+            frames[0] = lbl_803DEFB0;
+            dists[0] = lbl_803DEFF0;
+            counts[0] = 0;
+            handles[0] = 0;
+            marks[0] = 0;
+            flagsB[1] = 0;
+            flagsA[1] = 0;
+            modes[1] = 0;
+            actions[1] = 0;
+            results[1] = 0;
+            states[1] = 0;
+            pending[1] = 0;
+            frames[1] = lbl_803DEFB0;
+            dists[1] = lbl_803DEFF0;
+            counts[1] = 0;
+            handles[1] = 0;
+            marks[1] = 0;
+            flagsB[2] = 0;
+            flagsA[2] = 0;
+            modes[2] = 0;
+            actions[2] = 0;
+            results[2] = 0;
+            states[2] = 0;
+            pending[2] = 0;
+            frames[2] = lbl_803DEFB0;
+            dists[2] = lbl_803DEFF0;
+            counts[2] = 0;
+            handles[2] = 0;
+            marks[2] = 0;
+            flagsB[3] = 0;
+            flagsA[3] = 0;
+            modes[3] = 0;
+            actions[3] = 0;
+            results[3] = 0;
+            states[3] = 0;
+            pending[3] = 0;
+            frames[3] = lbl_803DEFB0;
+            dists[3] = lbl_803DEFF0;
+            counts[3] = 0;
+            handles[3] = 0;
+            marks[3] = 0;
+            flagsB[4] = 0;
+            flagsA[4] = 0;
+            modes[4] = 0;
+            actions[4] = 0;
+            results[4] = 0;
+            states[4] = 0;
+            pending[4] = 0;
+            frames[4] = lbl_803DEFB0;
+            dists[4] = lbl_803DEFF0;
+            counts[4] = 0;
+            handles[4] = 0;
+            marks[4] = 0;
+            flagsB[5] = 0;
+            flagsA[5] = 0;
+            modes[5] = 0;
+            actions[5] = 0;
+            results[5] = 0;
+            states[5] = 0;
+            pending[5] = 0;
+            frames[5] = lbl_803DEFB0;
+            dists[5] = lbl_803DEFF0;
+            counts[5] = 0;
+            handles[5] = 0;
+            marks[5] = 0;
+            flagsB[6] = 0;
+            flagsA[6] = 0;
+            modes[6] = 0;
+            actions[6] = 0;
+            results[6] = 0;
+            states[6] = 0;
+            pending[6] = 0;
+            frames[6] = lbl_803DEFB0;
+            dists[6] = lbl_803DEFF0;
+            counts[6] = 0;
+            handles[6] = 0;
+            marks[6] = 0;
+            flagsB[7] = 0;
+            flagsA[7] = 0;
+            modes[7] = 0;
+            actions[7] = 0;
+            results[7] = 0;
+            states[7] = 0;
+            pending[7] = 0;
+            frames[7] = lbl_803DEFB0;
+            dists[7] = lbl_803DEFF0;
+            counts[7] = 0;
+            handles[7] = 0;
+            marks[7] = 0;
+            flagsB += 8;
+            flagsA += 8;
+            modes += 8;
+            actions += 8;
+            results += 8;
+            states += 8;
+            pending += 8;
+            frames += 8;
+            dists += 8;
+            counts += 8;
+            handles += 8;
+            marks += 8;
+        }
+    }
+
+    for (; i < 0x55; i++) {
+        base[i + 0x3b9c] = 0;
+        base[i + 0x3b44] = 0;
+        *(s16 *)(base + i * 2 + 0x3a98) = 0;
+        base[i + 0x3c4c] = 0;
+        base[i + 0x3bf4] = 0;
+        base[i + 0x3a40] = 0;
+        base[i + 0x39e8] = 0;
+        *(f32 *)(base + i * 4 + 0x3894) = lbl_803DEFB0;
+        *(f32 *)(base + i * 4 + 0x3740) = lbl_803DEFF0;
+        base[i + 0x3590] = 0;
+        *(int *)(base + i * 4 + 0x33e4) = 0;
+        base[i + 0x338c] = 0;
+    }
+
+    lbl_803DD124 = 0;
+    lbl_803DD10C = 0;
+    lbl_803DD110 = 0;
+    lbl_803DD0DC = lbl_803DEFB0;
+    lbl_803DD0B8 = NULL;
+    lbl_803DD0F8 = 0;
+    lbl_803DD0BC = 0;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
 void ObjSeq_release(void)
 {
     mm_free(lbl_803DD0D4);
