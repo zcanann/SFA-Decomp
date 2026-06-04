@@ -3272,5 +3272,125 @@ void fn_80051D5C(u8 *tex, f32 *mtx, int mode, int *kparam)
     lbl_803DCD6A++;
     lbl_803DCD69++;
 }
+extern void GXSetTevSwapModeTable(int table, int r, int g, int b, int a);
+extern void GXSetTevKColor(int id, int *color);
+typedef struct TevSwapEntry {
+    int r;
+    int g;
+    int b;
+} TevSwapEntry;
+extern TevSwapEntry lbl_8030CF04[];
+extern u8 lbl_803779A0[];
+void fn_80053C40(u8 *tex, u8 *obj);
+
+void gxFn_80051fb8(u8 *tex, f32 *mtx, int mode, int *kparam, u8 swapsel, u8 useK)
+{
+    int sel;
+    int v1;
+    int color;
+    int map;
+    GXSetTevDirect(lbl_803DCD90);
+    GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+    GXSetTevSwapMode(lbl_803DCD90, 0, 1);
+    GXSetTevSwapModeTable(1, lbl_8030CF04[swapsel].r, lbl_8030CF04[swapsel].g,
+                          lbl_8030CF04[swapsel].b, 3);
+    if (mtx != NULL) {
+        GXLoadTexMtxImm(mtx, lbl_803DCD80, 0);
+        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, 0, lbl_803DCD80);
+        lbl_803DCD80 = lbl_803DCD80 + 3;
+    } else {
+        GXSetTexCoordGen2(lbl_803DCD88, 1, lbl_803DCD78, 0x3c, 0, 0x7d);
+    }
+    if (useK != 0) {
+        gxTextureFn_8004bf88(kparam, 1, 1, &sel, &v1);
+        GXSetTevKColorSel(lbl_803DCD90, sel);
+        if (*(void **)(tex + 0x50) != NULL) {
+            GXSetTevKAlphaSel(lbl_803DCD90 + 1, v1);
+        } else {
+            GXSetTevKAlphaSel(lbl_803DCD90, v1);
+        }
+    } else {
+        color = *kparam;
+        GXSetTevKColor(lbl_803DCD74, &color);
+        GXSetTevKColorSel(lbl_803DCD90, lbl_803DCD70);
+        if (*(void **)(tex + 0x50) != NULL) {
+            GXSetTevKAlphaSel(lbl_803DCD90 + 1, lbl_803DCD6C);
+        } else {
+            GXSetTevKAlphaSel(lbl_803DCD90, lbl_803DCD6C);
+        }
+        lbl_803DCD74 = lbl_803DCD74 + 1;
+        lbl_803DCD70 = lbl_803DCD70 + 1;
+        lbl_803DCD6C = lbl_803DCD6C + 1;
+    }
+    if (mode == 0) {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 8, 0xe, 0xf);
+    } else if (mode == 8) {
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 8, 4, 6);
+    } else {
+        GXSetTevColorIn(lbl_803DCD90, 8, 0, 1, 0xf);
+    }
+    if (lbl_803DCD6B != 0) {
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 4, 0, 7);
+    } else {
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 4, 6, 7);
+    }
+    GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    lbl_803DCD30 = 1;
+    map = lbl_803DCD8C;
+    if (tex != NULL) {
+        u8 *to = tex + 0x20;
+        if (tex[0x48] != 0) {
+            GXLoadTexObjPreLoaded(to, *(u32 **)(tex + 0x40), map);
+        } else {
+            GXLoadTexObj(to, map);
+        }
+        if (*(void **)(tex + 0x50) != NULL) {
+            fn_80053C40(tex, lbl_803779A0);
+            GXLoadTexObj(lbl_803779A0, 1);
+        }
+    }
+    if (*(void **)(tex + 0x50) != NULL) {
+        lbl_803DCD6A++;
+        lbl_803DCD90 = lbl_803DCD90 + 1;
+        lbl_803DCD8C = lbl_803DCD8C + 1;
+        GXSetTevDirect(lbl_803DCD90);
+        GXSetTevOrder(lbl_803DCD90, lbl_803DCD88, lbl_803DCD8C, 0xff);
+        GXSetTevSwapMode(lbl_803DCD90, 0, 0);
+        GXSetTevColorIn(lbl_803DCD90, 0xf, 0xf, 0xf, 0);
+        GXSetTevAlphaIn(lbl_803DCD90, 7, 4, 6, 7);
+        GXSetTevColorOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+        GXSetTevAlphaOp(lbl_803DCD90, 0, 0, 0, 1, 0);
+    }
+    lbl_803DCD6B = 1;
+    lbl_803DCD78 = lbl_803DCD78 + 1;
+    lbl_803DCD88 = lbl_803DCD88 + 1;
+    lbl_803DCD90 = lbl_803DCD90 + 1;
+    lbl_803DCD8C = lbl_803DCD8C + 1;
+    lbl_803DCD6A++;
+    lbl_803DCD69++;
+}
+
+void fn_80053C40(u8 *tex, u8 *obj)
+{
+    u8 mipmap;
+    if ((int)tex[0x1d] - (int)tex[0x1c] > 0) {
+        mipmap = 1;
+    } else {
+        mipmap = 0;
+    }
+    GXInitTexObj(obj, &tex[*(int *)(tex + 0x50) + 0x60],
+                 *(u16 *)(tex + 0xa), *(u16 *)(tex + 0xc),
+                 0, tex[0x17], tex[0x18], mipmap);
+    if (mipmap != 0) {
+        GXInitTexObjLOD(obj, tex[0x19], tex[0x1a],
+                        (f32)(u32)tex[0x1c], (f32)(s32)tex[0x1d],
+                        lbl_803DEB98, 0, 0, 0);
+    } else {
+        GXInitTexObjLOD(obj, tex[0x19], tex[0x1a],
+                        lbl_803DEB9C, lbl_803DEB9C, lbl_803DEB9C, 0, 0, 0);
+    }
+}
+
 #pragma scheduling reset
 #pragma peephole reset
