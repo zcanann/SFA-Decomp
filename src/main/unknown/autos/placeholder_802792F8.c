@@ -6,11 +6,21 @@ extern u8 vidListNodes[];
 #define voicePriorityLinks (vidListNodes + 0x8c0)
 #define voicePriorityGroupHeads (vidListNodes + 0x9c0)
 #define voicePrioritySortLinks (vidListNodes + 0xac0)
+typedef struct SynthVoiceRec {
+    u8 pad[0xec];
+    u32 prevId;
+    u32 nextId;
+    u32 vid;
+    u32 vidList;
+    u32 vidMasterList;
+    u8 pad2[0x404 - 0x100];
+} SynthVoiceRec;
+
 extern u32 vidCurrentId;
 extern void *vidRoot;
 extern void *vidFree;
 extern u16 voicePrioSortRootListRoot;
-extern u8 *synthVoice;
+extern SynthVoiceRec *synthVoice;
 extern void voiceUnregister(int state);
 
 typedef struct VoicePriorityLink {
@@ -27,121 +37,55 @@ typedef struct VoicePrioritySortLink {
 /*
  * Remove a voice from the vid id list, recycling any allocated id-list nodes.
  */
+#define VID_UNLINK(off) \
+    if ((u32 *)(*(u32 **)(state + (off)))[1] != 0) { \
+        *(u32 *)(*(u32 **)(state + (off)))[1] = (*(u32 **)(state + (off)))[0]; \
+    } else { \
+        vidRoot = (void *)(*(u32 **)(state + (off)))[0]; \
+    } \
+    if ((u32 *)(*(u32 **)(state + (off)))[0] != 0) { \
+        *(u32 *)((*(u32 **)(state + (off)))[0] + 4) = (*(u32 **)(state + (off)))[1]; \
+    } \
+    (*(u32 **)(state + (off)))[0] = (u32)vidFree; \
+    if (vidFree != 0) { \
+        *(u32 *)((u8 *)vidFree + 4) = *(u32 *)(state + (off)); \
+    } \
+    (*(u32 **)(state + (off)))[1] = 0; \
+    vidFree = *(void **)(state + (off))
+
 void vidRemoveVoice(int state)
 {
-    u32 *node;
-    int next;
-
-    if (*(int *)(state + 0xf4) != -1) {
+    if (*(u32 *)(state + 0xf4) != 0xffffffff) {
         voiceUnregister(state);
-        if (*(u32 *)(state + 0xf0) == 0xffffffff) {
-            if (*(int *)(state + 0xec) == -1) {
-                node = *(u32 **)(state + 0xf8);
-                if (node == *(u32 **)(state + 0xfc)) {
-                    if ((u32 *)node[1] == 0) {
-                        vidRoot = (void *)node[0];
-                    } else {
-                        *(u32 *)node[1] = node[0];
-                    }
-                    next = *(int *)*(u32 **)(state + 0xf8);
-                    if (next != 0) {
-                        *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
-                    }
-                    **(u32 **)(state + 0xf8) = (u32)vidFree;
-                    if (vidFree != 0) {
-                        *(u32 *)((u8 *)vidFree + 4) = *(u32 *)(state + 0xf8);
-                    }
-                    *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
-                    vidFree = *(void **)(state + 0xf8);
-                    *(u32 *)(state + 0xf8) = 0;
-                    *(u32 *)(state + 0xfc) = 0;
-                } else {
-                    if ((u32 *)node[1] == 0) {
-                        vidRoot = (void *)node[0];
-                    } else {
-                        *(u32 *)node[1] = node[0];
-                    }
-                    next = *(int *)*(u32 **)(state + 0xf8);
-                    if (next != 0) {
-                        *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
-                    }
-                    **(u32 **)(state + 0xf8) = (u32)vidFree;
-                    if (vidFree != 0) {
-                        *(u32 *)((u8 *)vidFree + 4) = *(u32 *)(state + 0xf8);
-                    }
-                    *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
-                    vidFree = *(void **)(state + 0xf8);
-                    *(u32 *)(state + 0xf8) = 0;
-                    node = *(u32 **)(state + 0xfc);
-                    if ((u32 *)node[1] == 0) {
-                        vidRoot = (void *)node[0];
-                    } else {
-                        *(u32 *)node[1] = node[0];
-                    }
-                    next = *(int *)*(u32 **)(state + 0xfc);
-                    if (next != 0) {
-                        *(u32 *)(next + 4) = (*(u32 **)(state + 0xfc))[1];
-                    }
-                    **(u32 **)(state + 0xfc) = (u32)vidFree;
-                    if (vidFree != 0) {
-                        *(u32 *)((u8 *)vidFree + 4) = *(u32 *)(state + 0xfc);
-                    }
-                    *(u32 *)(*(int *)(state + 0xfc) + 4) = 0;
-                    vidFree = *(void **)(state + 0xfc);
-                    *(u32 *)(state + 0xfc) = 0;
-                }
-            } else {
-                *(u32 *)(*(int *)(state + 0xf8) + 0xc) = *(u32 *)(state + 0xec);
-                *(u32 *)(synthVoice + (*(u32 *)(state + 0xec) & 0xff) * 0x404 + 0xf0) =
-                    0xffffffff;
-                *(u32 *)(synthVoice + (*(u32 *)(state + 0xec) & 0xff) * 0x404 + 0xfc) =
-                    *(u32 *)(state + 0xfc);
-                node = *(u32 **)(state + 0xf8);
-                if (node != *(u32 **)(state + 0xfc)) {
-                    if ((u32 *)node[1] == 0) {
-                        vidRoot = (void *)node[0];
-                    } else {
-                        *(u32 *)node[1] = node[0];
-                    }
-                    next = *(int *)*(u32 **)(state + 0xf8);
-                    if (next != 0) {
-                        *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
-                    }
-                    **(u32 **)(state + 0xf8) = (u32)vidFree;
-                    if (vidFree != 0) {
-                        *(u32 *)((u8 *)vidFree + 4) = *(u32 *)(state + 0xf8);
-                    }
-                    *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
-                    vidFree = *(void **)(state + 0xf8);
-                    *(u32 *)(state + 0xf8) = 0;
-                }
-                *(u32 *)(state + 0xf8) = 0;
-                *(u32 *)(state + 0xfc) = 0;
-            }
-        } else {
-            *(u32 *)(synthVoice + (*(u32 *)(state + 0xf0) & 0xff) * 0x404 + 0xec) =
+        if (*(u32 *)(state + 0xf0) != 0xffffffff) {
+            synthVoice[*(u32 *)(state + 0xf0) & 0xff].prevId =
                 *(u32 *)(state + 0xec);
             if (*(u32 *)(state + 0xec) != 0xffffffff) {
-                *(u32 *)(synthVoice + (*(u32 *)(state + 0xec) & 0xff) * 0x404 + 0xf0) =
+                synthVoice[*(u32 *)(state + 0xec) & 0xff].nextId =
                     *(u32 *)(state + 0xf0);
             }
-            node = *(u32 **)(state + 0xf8);
-            if ((u32 *)node[1] == 0) {
-                vidRoot = (void *)node[0];
-            } else {
-                *(u32 *)node[1] = node[0];
-            }
-            next = *(int *)*(u32 **)(state + 0xf8);
-            if (next != 0) {
-                *(u32 *)(next + 4) = (*(u32 **)(state + 0xf8))[1];
-            }
-            **(u32 **)(state + 0xf8) = (u32)vidFree;
-            if (vidFree != 0) {
-                *(u32 *)((u8 *)vidFree + 4) = *(u32 *)(state + 0xf8);
-            }
-            *(u32 *)(*(int *)(state + 0xf8) + 4) = 0;
-            vidFree = *(void **)(state + 0xf8);
+            VID_UNLINK(0xf8);
             *(u32 *)(state + 0xf8) = 0;
+        } else if (*(u32 *)(state + 0xec) != 0xffffffff) {
+            *(u32 *)(*(u32 *)(state + 0xf8) + 0xc) = *(u32 *)(state + 0xec);
+            synthVoice[*(u32 *)(state + 0xec) & 0xff].nextId = 0xffffffff;
+            synthVoice[*(u32 *)(state + 0xec) & 0xff].vidMasterList =
+                *(u32 *)(state + 0xfc);
+            if (*(u32 *)(state + 0xf8) != *(u32 *)(state + 0xfc)) {
+                VID_UNLINK(0xf8);
+                *(u32 *)(state + 0xf8) = 0;
+            }
+            *(u32 *)(state + 0xf8) = 0;
+            *(u32 *)(state + 0xfc) = 0;
+        } else if (*(u32 *)(state + 0xf8) != *(u32 *)(state + 0xfc)) {
+            VID_UNLINK(0xf8);
+            *(u32 *)(state + 0xf8) = 0;
+            VID_UNLINK(0xfc);
+            *(u32 *)(state + 0xfc) = 0;
+        } else {
+            VID_UNLINK(0xf8);
+            *(u32 *)(state + 0xf8) = 0;
+            *(u32 *)(state + 0xfc) = 0;
         }
     }
 }
@@ -200,36 +144,31 @@ u32 vidMakeNew(int state, int returnNewId)
         cursor = (int **)*node;
     }
 
-    freeNode = vidFree;
-    if (freeNode != 0) {
-        vidFree = *(void **)vidFree;
-        if (vidFree != 0) {
-            *(u32 *)((u8 *)vidFree + 4) = 0;
-        }
-        if (prev == 0) {
-            vidRoot = freeNode;
-        } else {
-            *prev = (int *)freeNode;
-        }
-        freeNode[1] = (int *)prev;
-        *freeNode = (int *)node;
-        if (node != 0) {
-            node[1] = (int *)freeNode;
-        }
-        freeNode[2] = (int *)nextId;
-        freeNode[3] = *(int **)(state + 0xf4);
-        cursor = freeNode;
-        if (returnNewId == 0) {
-            cursor = 0;
-        }
-        *(int ***)(state + 0xfc) = cursor;
-        *(int ***)(state + 0xf8) = freeNode;
-        if (returnNewId == 0) {
-            return *(u32 *)(state + 0xf4);
-        }
+    freeNode = (int **)vidFree;
+    if (freeNode == 0) {
+        return 0xffffffffU;
+    }
+    if ((vidFree = *(void **)vidFree) != 0) {
+        *(u32 *)((u8 *)vidFree + 4) = 0;
+    }
+    if (prev == 0) {
+        vidRoot = freeNode;
+    } else {
+        *prev = (int *)freeNode;
+    }
+    freeNode[1] = (int *)prev;
+    *freeNode = (int *)node;
+    if (node != 0) {
+        node[1] = (int *)freeNode;
+    }
+    freeNode[2] = (int *)nextId;
+    freeNode[3] = *(int **)(state + 0xf4);
+    *(u32 *)(state + 0xfc) = ((u32)returnNewId != 0) ? (u32)freeNode : 0;
+    *(u32 *)(state + 0xf8) = (u32)freeNode;
+    if ((u32)returnNewId != 0) {
         return nextId;
     }
-    return 0xffffffffU;
+    return *(u32 *)(state + 0xf4);
 }
 
 /*
@@ -245,25 +184,19 @@ int vidGetInternalId(u32 id)
 {
     int *node;
 
-    if (id == 0xffffffffU) {
-        goto fail;
-    }
-    node = vidRoot;
-    while (node != NULL) {
-        if (*(u32 *)(node + 2) != id) {
-            if (*(u32 *)(node + 2) > id) {
-                node = NULL;
-                break;
-            }
+    if (id != 0xffffffffU) {
+        node = vidRoot;
+        while (node != NULL) {
+            if (*(u32 *)(node + 2) == id) goto found;
+            if (*(u32 *)(node + 2) > id) break;
             node = *(int **)node;
-        } else {
-            break;
+        }
+        node = NULL;
+found:
+        if (node != NULL) {
+            return *(int *)(node + 3);
         }
     }
-    if (node != NULL) {
-        return *(int *)(node + 3);
-    }
-fail:
     return -1;
 }
 
@@ -277,45 +210,52 @@ fail:
  * EN v1.1 Address: 0x802794EC
  * EN v1.1 Size: 224b
  */
-#pragma dont_inline on
+typedef struct VoicePrioVoiceRec {
+    u8 prev;
+    u8 next;
+    u16 user;
+} VoicePrioVoiceRec;
+
+typedef struct VoicePrioRootRec {
+    u16 next;
+    u16 prev;
+} VoicePrioRootRec;
+
+typedef struct VoicePrioBlockRec {
+    u8 vidNodes[0x8C0];
+    VoicePrioVoiceRec prioVoices[64];   /* 0x8C0 */
+    u8 prioVoicesRoot[256];             /* 0x9C0 */
+    VoicePrioRootRec prioRootList[256]; /* 0xAC0 */
+} VoicePrioBlockRec;
+
 void voiceRemovePriority(int state)
 {
-    u8 *nodes;
-    int offset;
-    u8 group;
-    VoicePriorityLink *links;
-    VoicePriorityLink *slot;
-    VoicePrioritySortLink *sortLinks;
-    VoicePrioritySortLink *sortNode;
+    VoicePrioBlockRec *vb;
+    VoicePrioVoiceRec *vps;
+    VoicePrioRootRec *pr;
 
-    nodes = vidListNodes;
-    links = (VoicePriorityLink *)voicePriorityLinks;
-    sortLinks = (VoicePrioritySortLink *)voicePrioritySortLinks;
-    offset = (*(u32 *)(state + 0xf4) << 2) & 0x3fc;
-    slot = (VoicePriorityLink *)(nodes + 0x8c0 + offset);
-    if (slot->active != 1) {
+    vb = (VoicePrioBlockRec *)vidListNodes;
+    vps = &vb->prioVoices[*(u32 *)(state + 0xf4) & 0xff];
+    if (vps->user != 1) {
         return;
     }
-    if (slot->prev != 0xff) {
-        links[slot->prev].next = slot->next;
+    if (vps->prev != 0xff) {
+        vb->prioVoices[vps->prev].next = vps->next;
     } else {
-        group = *(u8 *)(state + 0x10c);
-        (nodes + group)[0x9c0] = slot->next;
+        vb->prioVoicesRoot[*(u8 *)(state + 0x10c)] = vps->next;
     }
-    if (slot->next != 0xff) {
-        links[slot->next].prev = slot->prev;
-    } else if (slot->prev == 0xff) {
-        group = *(u8 *)(state + 0x10c);
-        sortNode = &sortLinks[group];
-        if (sortNode->prev == 0xffff) {
-            voicePrioSortRootListRoot = sortNode->next;
+    if (vps->next != 0xff) {
+        vb->prioVoices[vps->next].prev = vps->prev;
+    } else if (vps->prev == 0xff) {
+        pr = &vb->prioRootList[*(u8 *)(state + 0x10c)];
+        if (pr->prev != 0xffff) {
+            vb->prioRootList[pr->prev].next = pr->next;
         } else {
-            sortLinks[sortNode->prev].next = sortNode->next;
+            voicePrioSortRootListRoot = pr->next;
         }
-        if (sortNode->next != 0xffff) {
-            sortLinks[sortNode->next].prev = sortNode->prev;
+        if (pr->next != 0xffff) {
+            vb->prioRootList[pr->next].prev = pr->prev;
         }
     }
-    slot->active = 0;
+    vps->user = 0;
 }
-#pragma dont_inline reset
