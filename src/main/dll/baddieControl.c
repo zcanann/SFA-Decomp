@@ -3287,9 +3287,12 @@ extern f32 lbl_803E1BD0;
 extern f32 lbl_803E1BD4;
 extern f32 lbl_803E1BD8;
 extern f32 lbl_803E1BDC;
+#pragma opt_common_subs off
 void CameraModeArwing_init(int *obj, int mode, int unused)
 {
     int *a4 = ((int**)obj)[0xA4/4];
+    char *base;
+    f32 *p;
     f32 fc;
     f32 fc2;
     if (mode != 1) {
@@ -3297,10 +3300,12 @@ void CameraModeArwing_init(int *obj, int mode, int unused)
         *(f32*)((char*)lbl_803A43C0 + 16) = *(f32*)((char*)a4 + 0x1C);
         *(f32*)((char*)lbl_803A43C0 + 20) = *(f32*)((char*)a4 + 0x20);
     }
-    *(f32*)((char*)lbl_803A43C0 + 48) = lbl_803E1BA4;
-    *(f32*)((char*)lbl_803A43C0 + 52) = lbl_803E1BC0;
-    *(f32*)((char*)lbl_803A43C0 + 56) = lbl_803E1BC4;
-    PSVECAdd((f32*)((char*)a4 + 0x18), (f32*)((char*)lbl_803A43C0 + 48), (f32*)((char*)obj + 0x18));
+    base = (char *)lbl_803A43C0;
+    p = (f32 *)(base + 48);
+    *p = lbl_803E1BA4;
+    *(f32 *)(base + 52) = lbl_803E1BC0;
+    *(f32 *)(base + 56) = lbl_803E1BC4;
+    PSVECAdd((f32*)((char*)a4 + 0x18), p, (f32*)((char*)obj + 0x18));
     *(u8*)((char*)lbl_803A43C0 + 0x5E) = 1;
     *(f32*)((char*)lbl_803A43C0 + 68) = lbl_803E1BC8;
     *(f32*)((char*)lbl_803A43C0 + 72) = lbl_803E1BCC;
@@ -3319,8 +3324,9 @@ void CameraModeArwing_init(int *obj, int mode, int unused)
     *(f32*)((char*)lbl_803A43C0 + 0) = fc;
     *(f32*)((char*)obj + 0x18) = *(f32*)((char*)a4 + 0x18);
     *(f32*)((char*)obj + 0x1C) = *(f32*)((char*)a4 + 0x1C);
-    *(f32*)((char*)obj + 0x20) = *(f32*)((char*)a4 + 0x20) + *(f32*)((char*)lbl_803A43C0 + 56);
+    *(f32*)((char*)obj + 0x20) = *(f32*)((char*)a4 + 0x20) + *(f32 *)(base + 56);
 }
+#pragma opt_common_subs reset
 
 extern u8 lbl_80319FB8[];
 extern u8 lbl_803DD5D2;
