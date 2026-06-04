@@ -2361,6 +2361,151 @@ u32 Checkpoint_find(s32 key, s32 *idx_out)
 #pragma pop
 #pragma dont_inline off
 
+extern f32 lbl_803E04D8;
+extern f32 lbl_803E04DC;
+extern f32 lbl_803E04E0;
+extern f32 lbl_803E04E4;
+extern f32 sin(f32 x);
+
+typedef struct CheckpointPair {
+    u8 pad[0x20];
+    s32 keys[2];
+} CheckpointPair;
+
+/* Build particle quad positions from a checkpoint pair. */
+#pragma push
+#pragma scheduling off
+s32 fn_800D55BC(u8 *p, s32 idx, f32 *out1, f32 *out2, f32 *out3, u8 mode, f32 fa, f32 fb)
+{
+    s32 local_idx;
+    u8 *q;
+    f32 cosA;
+    f32 sinA;
+    f32 cosB;
+    f32 sinB;
+    f32 sclA;
+    f32 sclB;
+    s32 ret;
+    s32 i;
+    s32 j;
+    f32 *v3;
+
+    ret = 1;
+    if (p == NULL) {
+        return 0;
+    }
+    q = (u8 *)Checkpoint_find(((CheckpointPair *)p)->keys[idx], &local_idx);
+    if (q == NULL) {
+        q = (u8 *)Checkpoint_find(((CheckpointPair *)p)->keys[1 - idx], &local_idx);
+        ret = 2;
+    }
+    if (q == NULL) {
+        return 0;
+    }
+
+    cosA = -fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x29) << 8) / lbl_803E04DC);
+    sinA = -sin(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x29) << 8) / lbl_803E04DC);
+    cosB = -fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x29) << 8) / lbl_803E04DC);
+    sinB = -sin(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x29) << 8) / lbl_803E04DC);
+    sclA = lbl_803E04E0 * (f32)(u32)*(u8 *)(p + 0x2a);
+    sclB = lbl_803E04E0 * (f32)(u32)*(u8 *)(q + 0x2a);
+
+    if (mode == 1) {
+        f32 prodA;
+        f32 prodB;
+        f32 prodC;
+        f32 prodD;
+        f32 kD8;
+        f32 kDC;
+        f32 kE4;
+        f32 kE8;
+        j = 0;
+        i = 0;
+        v3 = out3;
+        prodA = sclA * sinA;
+        prodB = sclB * sinB;
+        prodC = sclA * -cosA;
+        prodD = sclB * -cosB;
+        kD8 = lbl_803E04D8;
+        kDC = lbl_803E04DC;
+        kE4 = lbl_803E04E4;
+        kE8 = lbl_803E04E8;
+        do {
+            u8 *pp;
+            u8 *qq;
+            pp = p + i;
+            out1[0] = (f32)*(s8 *)(pp + 0x2d) * prodA + *(f32 *)(p + 8);
+            qq = q + i;
+            out1[1] = (f32)*(s8 *)(qq + 0x2d) * prodB + *(f32 *)(q + 8);
+            out1[2] = kE4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
+                             fn_80293E80(kD8 * (f32)(*(u8 *)(p + 0x3e) << 8) / kDC));
+            out1[3] = kE4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
+                             fn_80293E80(kD8 * (f32)(*(u8 *)(q + 0x3e) << 8) / kDC));
+            out2[0] = sclA * (f32)*(s8 *)(pp + 0x31) + *(f32 *)(p + 0xc);
+            out2[1] = sclB * (f32)*(s8 *)(qq + 0x31) + *(f32 *)(q + 0xc);
+            out2[2] = kE8;
+            out2[3] = kE8;
+            v3[0] = (f32)*(s8 *)(pp + 0x2d) * prodC + *(f32 *)(p + 0x10);
+            v3[1] = (f32)*(s8 *)(qq + 0x2d) * prodD + *(f32 *)(q + 0x10);
+            v3[2] = kE4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
+                           sin(kD8 * (f32)(*(u8 *)(p + 0x3e) << 8) / kDC));
+            v3[3] = kE4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
+                           sin(kD8 * (f32)(*(u8 *)(q + 0x3e) << 8) / kDC));
+            i += 1;
+            out1 += 4;
+            out2 += 4;
+            v3 += 4;
+            j += 4;
+        } while (j < 0x10);
+    } else if (mode == 0) {
+        out1[0] = fa * (sclA * sinA) + *(f32 *)(p + 8);
+        out1[1] = fa * (sclB * sinB) + *(f32 *)(q + 8);
+        out1[2] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
+                                  fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
+        out1[3] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
+                                  fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
+        out2[0] = sclA * fb + *(f32 *)(p + 0xc);
+        out2[1] = sclB * fb + *(f32 *)(q + 0xc);
+        {
+            f32 e8 = lbl_803E04E8;
+            out2[2] = e8;
+            out2[3] = e8;
+        }
+        out3[0] = fa * (sclA * -cosA) + *(f32 *)(p + 0x10);
+        out3[1] = fa * (sclB * -cosB) + *(f32 *)(q + 0x10);
+        out3[2] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
+                                  sin(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
+        out3[3] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
+                                  sin(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
+    } else {
+        u8 *pp;
+        u8 *qq;
+        pp = p + (mode - 2);
+        out1[0] = (f32)*(s8 *)(pp + 0x2d) * (sclA * sinA) + *(f32 *)(p + 8);
+        qq = q + (mode - 2);
+        out1[1] = (f32)*(s8 *)(qq + 0x2d) * (sclB * sinB) + *(f32 *)(q + 8);
+        out1[2] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
+                                  fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
+        out1[3] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
+                                  fn_80293E80(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
+        out2[0] = sclA * (f32)*(s8 *)(pp + 0x31) + *(f32 *)(p + 0xc);
+        out2[1] = sclB * (f32)*(s8 *)(qq + 0x31) + *(f32 *)(q + 0xc);
+        {
+            f32 e8 = lbl_803E04E8;
+            out2[2] = e8;
+            out2[3] = e8;
+        }
+        out3[0] = (f32)*(s8 *)(pp + 0x2d) * (sclA * -cosA) + *(f32 *)(p + 0x10);
+        out3[1] = (f32)*(s8 *)(qq + 0x2d) * (sclB * -cosB) + *(f32 *)(q + 0x10);
+        out3[2] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(p + 0x3d) *
+                                  sin(lbl_803E04D8 * (f32)(*(u8 *)(p + 0x3e) << 8) / lbl_803E04DC));
+        out3[3] = lbl_803E04E4 * ((f32)(u32)*(u8 *)(q + 0x3d) *
+                                  sin(lbl_803E04D8 * (f32)(*(u8 *)(q + 0x3e) << 8) / lbl_803E04DC));
+    }
+    return ret;
+}
+#pragma pop
+
 /* Set *p to lbl_803DD414 (sign-extended) and return lbl_803DD418. */
 u32 Checkpoint_func0E(s32 *p)
 {
@@ -6475,6 +6620,126 @@ void Effect20_initialise(void) {}
 
 /* 8b "li r3, N; blr" returners. */
 int Checkpoint_func09_ret_1(void) { return 0x1; }
+
+extern f32 lbl_803E0504;
+extern f32 lbl_803E0508;
+extern f32 curveFn_80010dc0(f32 *values, f32 t, f32 *outTangent);
+extern u16 getAngle(f32 a, f32 b);
+
+/* Advance along the checkpoint curve by dist; write position/angles to out. */
+#pragma push
+#pragma scheduling off
+s32 Checkpoint_func08(u8 *out, u8 *o, f32 dist, s32 p3, u8 flag)
+{
+    f32 v1[4];
+    f32 v2[4];
+    f32 v3[4];
+    f32 outX;
+    f32 outY;
+    f32 outZ;
+    s32 local_idx;
+    s32 mode;
+    s32 alt;
+    u8 *n;
+    s32 i;
+    s8 clamp;
+    s32 ang1;
+    s32 ang2;
+    f32 kMax;
+    f32 kMin;
+    f32 t;
+    f32 seg;
+    f32 x;
+    f32 y;
+    f32 z;
+    f32 len;
+
+    i = 0;
+    mode = p3 + 2;
+    kMin = lbl_803E04E8;
+    kMax = lbl_803E0504;
+    do {
+        if (*(s32 *)(o + 0x10) < 0) {
+            return 1;
+        }
+        n = (u8 *)Checkpoint_find(*(s32 *)(o + 0x10), &local_idx);
+        if (n == NULL) {
+            return 1;
+        }
+        if (*(s32 *)(n + 0x20) < 0) {
+            *(s32 *)(o + 0x10) = -1;
+            return 1;
+        }
+        alt = 0;
+        if (*(s32 *)(n + 0x24) > -1 && *(u8 *)(o + 0x30) != 0) {
+            alt = 1;
+        }
+        if (fn_800D55BC(n, alt, v1, v2, v3, mode, lbl_803E04E8, lbl_803E04E8) == 0) {
+            return 1;
+        }
+        len = sqrtf((v3[0] - v3[1]) * (v3[0] - v3[1]) +
+                    ((v1[0] - v1[1]) * (v1[0] - v1[1]) + (v2[0] - v2[1]) * (v2[0] - v2[1])));
+        t = *(f32 *)(o + 8) + dist / len;
+        clamp = 0;
+        if (t < kMin) {
+            t = kMin;
+            clamp = -1;
+        }
+        if (t > kMax) {
+            t = kMax;
+            clamp = 1;
+        }
+        x = curveFn_80010dc0(v1, t, &outX);
+        y = curveFn_80010dc0(v2, t, &outY);
+        z = curveFn_80010dc0(v3, t, &outZ);
+        ang1 = getAngle(outX, outZ) + 0x8000;
+        if (flag != 0) {
+            f32 xd;
+            f32 zd;
+            ang2 = getAngle(sqrtf(outX * outX + outZ * outZ), outY) - 0x4000;
+            xd = x - *(f32 *)(out + 0xc);
+            zd = z - *(f32 *)(out + 0x14);
+            seg = sqrtf(xd * xd + zd * zd);
+        } else {
+            f32 xd;
+            f32 zd;
+            xd = x - *(f32 *)(out + 0xc);
+            zd = z - *(f32 *)(out + 0x14);
+            seg = sqrtf(xd * xd + zd * zd);
+        }
+        if (dist < kMin) {
+            seg = -seg;
+        }
+        if (clamp == -1 && seg < dist) {
+            *(s32 *)(o + 0x10) = *(s32 *)(n + alt * 4 + 0x18);
+            *(f32 *)(o + 8) = lbl_803E0508;
+            if (alt != 0 && *(s32 *)(o + 0x10) < 0) {
+                *(s32 *)(o + 0x10) = *(s32 *)(n + 0x18);
+            }
+        } else if (clamp == 1 && seg < dist) {
+            *(s32 *)(o + 0x10) = *(s32 *)(n + alt * 4 + 0x20);
+            *(f32 *)(o + 8) = lbl_803E04E8;
+            if (alt != 0 && *(s32 *)(o + 0x10) < 0) {
+                *(s32 *)(o + 0x10) = *(s32 *)(n + 0x20);
+            }
+        } else {
+            *(f32 *)(o + 8) = t;
+        }
+        dist -= seg;
+        *(f32 *)(out + 0xc) = x;
+        if (flag != 0) {
+            *(f32 *)(out + 0x10) = y;
+        }
+        *(f32 *)(out + 0x14) = z;
+        i += 1;
+    } while (i < 3);
+    *(s16 *)(out + 0) = (s16)ang1;
+    if (flag != 0) {
+        *(s16 *)(out + 2) = (s16)ang2;
+    }
+    return 0;
+}
+#pragma pop
 
 #pragma peephole off
 #pragma scheduling off
