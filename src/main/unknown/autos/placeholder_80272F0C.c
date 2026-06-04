@@ -14,55 +14,20 @@ extern u32 lbl_803DE284;
  * Function: synthInitJobTable
  * EN v1.0 Address: 0x80272EA4
  * EN v1.0 Size: 200b
+ *
+ * MWCC auto-unrolls this loop x8; residual is the remainder-loop preheader
+ * being placed at the end of the function in the target (block-layout cap).
  */
-#pragma scheduling off
-#pragma peephole off
 void synthInitJobTable(void)
 {
-    int count;
-    int progress;
-    SynthJob *outerEntry;
-    SynthJob *tailEntry;
-    int outerLoops;
-    int tailRemaining;
+    int i;
 
     synthJobTableCountdown = 0;
     synthJobTablePeriod = 3;
-    count = lbl_803BD150[0x210];
-    progress = 0;
-    if (count != 0) {
-        if (8 < count) {
-            outerLoops = (count - 1) >> 3;
-            outerEntry = synthJobTable;
-            if ((int)(count - 8) > 0) {
-                do {
-                    outerEntry[0].state = 0;
-                    progress += 8;
-                    outerEntry[1].state = 0;
-                    outerEntry[2].state = 0;
-                    outerEntry[3].state = 0;
-                    outerEntry[4].state = 0;
-                    outerEntry[5].state = 0;
-                    outerEntry[6].state = 0;
-                    outerEntry[7].state = 0;
-                    outerEntry += 8;
-                    outerLoops--;
-                } while (outerLoops != 0);
-            }
-        }
-        tailEntry = synthJobTable + progress;
-        tailRemaining = count - progress;
-        if (progress < (int)count) {
-            do {
-                tailEntry->state = 0;
-                tailEntry++;
-                tailRemaining--;
-            } while (tailRemaining != 0);
-        }
+    for (i = 0; i < lbl_803BD150[0x210]; i++) {
+        synthJobTable[i].state = 0;
     }
     lbl_803DE284 = 0;
 }
 
 void fn_80272F6C(void) {}
-#pragma peephole reset
-#pragma scheduling reset
