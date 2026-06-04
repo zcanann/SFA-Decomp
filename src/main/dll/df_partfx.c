@@ -1890,6 +1890,55 @@ void player_followCurve(int* obj, int* state, int p5, f32 cx, f32 cz, f32 t)
 #pragma peephole reset
 #pragma scheduling reset
 
+extern f32 sin(f32 x);
+extern f32 fn_80293E80(f32 x);
+extern u8 lbl_803DD434;
+extern f32 lbl_803E05A4;
+extern f32 lbl_803E05A8;
+extern f32 lbl_803E05AC;
+extern f32 lbl_803E05B0;
+extern f32 lbl_803E0570;
+
+#pragma scheduling off
+#pragma peephole off
+void dll_0F_func13(s16* obj, int* state, int angle, f32 t, f32 scale)
+{
+    f32 ang, vx, vz, q, w, dist, c, s;
+
+    *(s8*)((char*)state + 0x34c) |= 1;
+    if ((s8)lbl_803DD434 == 0) {
+        ang = (lbl_803E05A4 * (f32)angle) / lbl_803E05A8;
+        vx = scale * (*(f32*)((char*)state + 0x298) * -fn_80293E80(ang));
+        vz = scale * (*(f32*)((char*)state + 0x298) * -sin(ang));
+        if (*(f32*)((char*)state + 0x298) < lbl_803E05AC) {
+            vx = lbl_803E0570;
+            vz = vx;
+        }
+        *(f32*)((char*)obj + 0x24) = *(f32*)((char*)obj + 0x24)
+            + (t * (vx - *(f32*)((char*)obj + 0x24))) / *(f32*)((char*)state + 0x2b8);
+        *(f32*)((char*)obj + 0x2c) = *(f32*)((char*)obj + 0x2c)
+            + (t * (vz - *(f32*)((char*)obj + 0x2c))) / *(f32*)((char*)state + 0x2b8);
+    } else {
+        *(s8*)((char*)state + 0x34c) &= ~1;
+    }
+    q = *(f32*)((char*)obj + 0x24) * *(f32*)((char*)obj + 0x24);
+    w = *(f32*)((char*)obj + 0x2c) * *(f32*)((char*)obj + 0x2c);
+    dist = sqrtf(q + w);
+    *(f32*)((char*)state + 0x294) = dist;
+    if (*(f32*)((char*)state + 0x294) < lbl_803E05B0) {
+        f32 z = lbl_803E0570;
+        *(f32*)((char*)state + 0x294) = z;
+        *(f32*)((char*)obj + 0x24) = z;
+        *(f32*)((char*)obj + 0x2c) = z;
+    }
+    c = fn_80293E80((lbl_803E05A4 * (f32)*obj) / lbl_803E05A8);
+    s = sin((lbl_803E05A4 * (f32)*obj) / lbl_803E05A8);
+    *(f32*)((char*)state + 0x284) = *(f32*)((char*)obj + 0x24) * s - *(f32*)((char*)obj + 0x2c) * c;
+    *(f32*)((char*)state + 0x280) = -*(f32*)((char*)obj + 0x2c) * s - *(f32*)((char*)obj + 0x24) * c;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
 #pragma scheduling off
 #pragma peephole off
 void Checkpoint_initialise(void) {
