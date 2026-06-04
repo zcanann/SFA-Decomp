@@ -52,10 +52,12 @@ def main(unit_s, fn):
             elif s == 'r1':
                 off = int(imm, 16)
                 reg[d] = f'&{field(off)}' if off >= 8 else f'sp+{imm}'
+                out.append(f'  // {d} = {reg[d]}')
             elif isinstance(sv, str) and sv.startswith('lbl_'):
                 reg[d] = f'{sv}+{imm}'
             elif sv and not isinstance(sv, tuple):
                 reg[d] = f'({sv}+{imm})'
+                out.append(f'  // {d} = {s}+{imm}  [{s}={sv}]')
             else:
                 reg[d] = f'{s}+{imm}'
         elif op == 'mr': reg[a[0]] = reg.get(a[1], a[1])
