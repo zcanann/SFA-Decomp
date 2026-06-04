@@ -4563,7 +4563,7 @@ void gcbaddieshield_init(int *obj, void *initData);
 extern void baddieinterestp_update();
 extern void baddieinterestp_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 extern void animatedobj_free();
-extern void animatedobj_render();
+extern void animatedobj_render(int *obj, int p2, int p3, int p4, int p5, s8 visible);
 extern void animatedobj_update();
 extern void animatedobj_init();
 extern void dim2roofrub_render();
@@ -6104,5 +6104,68 @@ void animatedobj_update(int *obj)
     }
 }
 #pragma opt_loop_invariants reset
+#pragma peephole reset
+#pragma scheduling reset
+
+extern void Obj_BuildWorldTransformMatrix(int *obj, f32 *m, int p3);
+extern void PSMTXTrans(f32 *m, f32 x, f32 y, f32 z);
+extern void PSMTXConcat(f32 *a, f32 *b, f32 *out);
+extern void PSMTXRotRad(f32 *m, int axis, f32 rad);
+extern void objRenderModel(int *obj);
+extern void objSetMtxFn_800412d4(f32 *m);
+extern int *gCameraInterface;
+extern f32 playerMapOffsetX;
+extern f32 playerMapOffsetZ;
+extern f32 lbl_803E3230;
+
+#pragma scheduling off
+#pragma peephole off
+void animatedobj_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    f32 mWorld[12];
+    f32 mTransPlayer[12];
+    f32 mWorldCombined[12];
+    f32 mTransNeg[12];
+    f32 mRotY[12];
+    f32 mRotZ[12];
+    f32 mTransPos[12];
+    f32 mCam[12];
+    f32 mA[12];
+    f32 mB[12];
+    f32 mC[12];
+    f32 mD[12];
+    f32 mFinal[12];
+
+    u8 *state = *(u8 **)((char *)obj + 0xb8);
+    if ((state[0x7f] & 4) != 0) {
+        int *prm;
+        s16 *cam;
+        Obj_BuildWorldTransformMatrix(obj, mWorld, 0);
+        prm = *(int **)((char *)obj + 0x4c);
+        PSMTXTrans(mTransPlayer, -(*(f32 *)((char *)prm + 8) - playerMapOffsetX),
+                   -*(f32 *)((char *)prm + 0xc),
+                   -(*(f32 *)((char *)prm + 0x10) - playerMapOffsetZ));
+        PSMTXConcat(mTransPlayer, mWorld, mWorldCombined);
+        cam = ((s16 *(*)(void))((int *)*gCameraInterface)[3])();
+        *(s16 *)((char *)cam + 2) += 0x8000;
+        *(f32 *)((char *)cam + 8) = lbl_803E3228;
+        Obj_BuildWorldTransformMatrix((int *)cam, mCam, 0);
+        *(s16 *)((char *)cam + 2) += 0x8000;
+        *(f32 *)((char *)cam + 8) = lbl_803E322C;
+        PSMTXTrans(mTransNeg, -mCam[3], -mCam[7], -mCam[11]);
+        PSMTXRotRad(mRotY, 'y', lbl_803E3230);
+        PSMTXRotRad(mRotZ, 'z', lbl_803E3230);
+        PSMTXTrans(mTransPos, mCam[3], mCam[7], mCam[11]);
+        PSMTXConcat(mTransNeg, mCam, mA);
+        PSMTXConcat(mRotY, mA, mB);
+        PSMTXConcat(mRotZ, mB, mC);
+        PSMTXConcat(mTransPos, mC, mD);
+        PSMTXConcat(mD, mWorldCombined, mFinal);
+        objSetMtxFn_800412d4(mFinal);
+        objRenderModel(obj);
+    } else {
+        objRenderFn_8003b8f4(lbl_803E3228);
+    }
+}
 #pragma peephole reset
 #pragma scheduling reset
