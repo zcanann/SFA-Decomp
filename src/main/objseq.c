@@ -3311,13 +3311,13 @@ int objRunSeq(int seqIdx, u8 *obj, int flags)
 {
     u8 *base;
     u8 *walk2;
-    int i;
+    u8 *walk;
     int packed;
     u8 *mon;
-    u8 *walk;
+    int i;
     int idx;
     int count;
-    int size;
+    int first;
     int bit;
     int objId;
     int slot;
@@ -3326,7 +3326,7 @@ int objRunSeq(int seqIdx, u8 *obj, int flags)
     u8 *srcSeq;
     u8 *setup;
     u8 *seq;
-    int first;
+    int size;
     s16 heading;
     int camArg;
     u8 *player;
@@ -3339,6 +3339,7 @@ int objRunSeq(int seqIdx, u8 *obj, int flags)
     s16 *mapTbl;
     int j;
     int k;
+    int v;
     int seqFlags;
     int found;
     int cur;
@@ -3620,7 +3621,7 @@ checked:
             lbl_803DD124 -= 1;
             p = base + j * 8 + 0x3d4c;
             for (k = 0; k < (s8)lbl_803DD124 - j; k++) {
-                int v = *(int *)(p + 8);
+                v = *(int *)(p + 8);
                 *(int *)p = v;
                 *(int *)(p + 4) = v;
                 p += 8;
