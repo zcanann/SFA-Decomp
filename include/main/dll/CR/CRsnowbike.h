@@ -21,8 +21,9 @@ void FUN_801db924(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 void FUN_801db94c(undefined8 param_1,double param_2,double param_3,double param_4,double param_5,
                  undefined8 param_6,undefined8 param_7,undefined8 param_8,int param_9);
 
-u8 sc_levelcontrol_func11(int *obj);
-void sc_levelcontrol_setScale(int obj, u8 scale);
+u8 sc_levelcontrol_getAnimEventState(int *obj);
+int sc_levelcontrol_processAnimEventsCallback(int obj, int p2, int p3);
+void sc_levelcontrol_applyAnimEventState(int obj, u8 scale);
 int sc_levelcontrol_getExtraSize(void);
 int sc_levelcontrol_getObjectTypeId(void);
 void sc_levelcontrol_free(int obj);

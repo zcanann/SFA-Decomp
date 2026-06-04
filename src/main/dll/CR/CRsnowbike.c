@@ -671,7 +671,7 @@ int sc_musictree_getExtraSize(void) { return 0x50; }
 int sc_musictree_getObjectTypeId(void) { return 0x0; }
 
 /* Pattern wrappers. */
-u8 sc_levelcontrol_func11(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1d); }
+u8 sc_levelcontrol_getAnimEventState(int *obj) { return *(u8*)((char*)((int**)obj)[0xb8/4] + 0x1d); }
 
 /* render-with-objRenderFn_8003b8f4 pattern. */
 extern f32 lbl_803E5554;
@@ -732,7 +732,7 @@ extern f32 lbl_803E5550;
 
 #pragma peephole off
 #pragma scheduling off
-int fn_801DB098(int obj, int p2, int p3)
+int sc_levelcontrol_processAnimEventsCallback(int obj, int p2, int p3)
 {
     int state = *(int *)(obj + 0xb8);
     int i;
@@ -742,10 +742,10 @@ int fn_801DB098(int obj, int p2, int p3)
         int b = *(u8 *)(p3 + i + 0x81);
         switch (b) {
         case 1:
-            sc_levelcontrol_setScale(obj, 7);
+            sc_levelcontrol_applyAnimEventState(obj, 7);
             break;
         case 2:
-            sc_levelcontrol_setScale(obj, 5);
+            sc_levelcontrol_applyAnimEventState(obj, 5);
             break;
         case 3:
             *(u8 *)(state + 0x1f) |= 2;
@@ -775,7 +775,7 @@ int fn_801DB098(int obj, int p2, int p3)
 
 #pragma peephole on
 #pragma scheduling off
-void sc_levelcontrol_setScale(int obj, u8 scale)
+void sc_levelcontrol_applyAnimEventState(int obj, u8 scale)
 {
     int state = *(int *)(obj + 0xb8);
     u8 v;
@@ -833,7 +833,7 @@ void sc_levelcontrol_init(int obj)
     ((SnowFlags22 *)(state + 0x22))->bit7 = 0;
     *(u8 *)(state + 0x1e) = 0xff;
     *(u8 *)(state + 0x1d) = 0;
-    *(void **)(obj + 0xbc) = (void *)fn_801DB098;
+    *(void **)(obj + 0xbc) = (void *)sc_levelcontrol_processAnimEventsCallback;
     GameBit_Set(0x60f, 1);
     GameBit_Set(0x2b8, 0);
     GameBit_Set(0x4bd, 1);

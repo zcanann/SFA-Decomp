@@ -16,5 +16,5 @@
 // - 7: sc_levelcontrol_free (0x801DB314)
 // - 8: sc_levelcontrol_getObjectTypeId (0x801DB30C)
 // - 9: sc_levelcontrol_getExtraSize (0x801DB304)
-// - 10: sc_levelcontrol_setScale (0x801DB1F8)
-// - 11: sc_levelcontrol_func11 (0x801DB1EC)
+// - 10: sc_levelcontrol_applyAnimEventState (0x801DB1F8)
+// - 11: sc_levelcontrol_getAnimEventState (0x801DB1EC)
