@@ -1015,6 +1015,7 @@ int fn_8015DC04(int obj, u8 *p)
   return 0;
 }
 
+#pragma dont_inline on
 void fn_8015DAE8(void)
 {
   extern void *lbl_803AC528[];
@@ -1065,6 +1066,7 @@ void fn_8015DAE8(void)
   lbl_803AC528[6] = (void *)fn_8015B2A0;
   lbl_803AC528[7] = (void *)fn_8015AF10;
 }
+#pragma dont_inline reset
 
 void dll_CA_init(int obj, u8 *p, int flags)
 {
