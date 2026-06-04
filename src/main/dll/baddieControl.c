@@ -3704,6 +3704,86 @@ extern f32 lbl_803DD5AC;
 extern f32 lbl_803DD5B0;
 extern f32 sqrtf(f32 x);
 
+extern f32 lbl_803DD5A8;
+extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, int mtx);
+extern f32 interpolate(f32 cur, f32 target, f32 t);
+extern void fn_8029697C(int state, s16 *a, s16 *b);
+extern f32 lbl_803E1B18;
+
+/* CameraModeForceBehind_update  addr=0x8010FC7C  size=0x43C  linkage=global */
+#pragma peephole off
+#pragma scheduling off
+void CameraModeForceBehind_update(u8 *obj) {
+    u8 *state = *(u8 **)(obj + 0xa4);
+    u8 extra[2];
+    s16 vert;
+    s16 angles[2];
+    f32 pos[3];
+    f32 angle;
+    f32 cosv, sinv;
+    f32 baseX, baseY, baseZ;
+    f32 dx, dz;
+    f32 r, rh;
+    f32 c1, s1, s2, c2;
+
+    angle = lbl_803E1B00 * (f32)(s32)(0x8000 - (int)*(s16 *)obj) / lbl_803E1B04;
+    cosv = fn_80293E80(angle);
+    sinv = sin(angle);
+    baseX = *(f32 *)(state + 0x18);
+    pos[0] = cosv * lbl_803DB9C8 + baseX;
+    pos[1] = lbl_803E1B08 + *(f32 *)(state + 0x1c);
+    baseZ = *(f32 *)(state + 0x20);
+    pos[2] = sinv * lbl_803DB9C8 + baseZ;
+    camcontrol_traceFromTarget(pos, state, pos, extra);
+    dx = pos[0] - baseX;
+    dz = pos[2] - baseZ;
+    r = sqrtf(dx * dx + dz * dz);
+    lbl_803DD5B0 = r;
+    lbl_803DD5A8 = r;
+
+    fn_8029697C((int)state, angles, &vert);
+    vert >>= 1;
+    baseX = *(f32 *)(state + 0x18);
+    baseY = *(f32 *)(state + 0x1c) + lbl_803DD5AC;
+    baseZ = *(f32 *)(state + 0x20);
+
+    angles[0] = ((-0x8000 - *(s16 *)state) + (angles[0] >> 1)) - *(s16 *)obj;
+    if (angles[0] > 0x8000) {
+        angles[0] += 1;
+    }
+    if (angles[0] < -0x8000) {
+        angles[0] -= 1;
+    }
+    *(s16 *)obj = (s16)(s32)((f32)(s32)*(s16 *)obj +
+                             interpolate((f32)angles[0], lbl_803E1B18, timeDelta));
+
+    vert = vert - *(s16 *)(obj + 2);
+    if (vert > 0x8000) {
+        vert += 1;
+    }
+    if (vert < -0x8000) {
+        vert -= 1;
+    }
+    *(s16 *)(obj + 2) = (s16)(s32)((f32)(s32)*(s16 *)(obj + 2) +
+                                   interpolate((f32)vert, lbl_803E1B18, timeDelta));
+
+    c1 = fn_80293E80(lbl_803E1B00 * (f32)(s32)((int)*(s16 *)obj - 0x4000) / lbl_803E1B04);
+    s1 = sin(lbl_803E1B00 * (f32)(s32)((int)*(s16 *)obj - 0x4000) / lbl_803E1B04);
+    s2 = sin(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
+    c2 = fn_80293E80(lbl_803E1B00 * (f32)(s32)*(s16 *)(obj + 2) / lbl_803E1B04);
+    r = lbl_803DD5A8;
+    rh = r * s2;
+    *(f32 *)(obj + 0x18) = baseX + rh * s1;
+    *(f32 *)(obj + 0x1c) = baseY + r * c2;
+    *(f32 *)(obj + 0x20) = baseZ + rh * c1;
+    camcontrol_traceFromTarget((f32 *)(obj + 0x18), state, (f32 *)(obj + 0x18), obj + 2);
+    Obj_TransformWorldPointToLocal(*(f32 *)(obj + 0x18), *(f32 *)(obj + 0x1c), *(f32 *)(obj + 0x20),
+                                   (f32 *)(obj + 0xc), (f32 *)(obj + 0x10), (f32 *)(obj + 0x14),
+                                   *(int *)(obj + 0x30));
+}
+#pragma scheduling reset
+#pragma peephole reset
+
 /* CameraModeForceBehind_init  addr=0x801100B8  size=0x124  linkage=global */
 #pragma peephole off
 #pragma scheduling off
