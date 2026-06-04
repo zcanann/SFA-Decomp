@@ -146,6 +146,28 @@ typedef struct IcicleState {
     u8 index;
 } IcicleState;
 
+extern void lightVecFn_8001dd88(int *light, f32 x, f32 y, f32 z);
+extern void fn_8001D9F4(int light, u8 *a, u8 *b, u8 *c, u8 *d);
+extern void fn_8001D71C(int light, u8 a, u8 b, u8 c, int d);
+extern void PSMTXMultVec(f32 *mtx, f32 *src, f32 *dst);
+extern void memcpy(void *dst, void *src, int n);
+extern void *gPartfxInterface;
+extern const f32 lbl_803E4BCC;
+extern const f32 lbl_803E4C34;
+extern const f32 lbl_803E4C38;
+extern f32 lbl_803E4C3C;
+extern f32 lbl_803E4C40;
+extern f32 lbl_803E4C48;
+extern u8 lbl_803AC97C[];
+extern f32 lbl_803AC970[];
+
+typedef struct IcicleFxPos {
+    u8 pad[0xc];
+    f32 x;
+    f32 y;
+    f32 z;
+} IcicleFxPos;
+
 /*
  * --INFO--
  *
@@ -160,179 +182,124 @@ typedef struct IcicleState {
  */
 #pragma scheduling off
 #pragma peephole off
-void fn_801BB598(void)
+void fn_801BB598(int objIndex, int param_2)
 {
-  float fVar1;
-  short sVar2;
-  int iVar3;
   int *piVar4;
-  uint uVar5;
+  int *state;
+  s16 brightness;
+  int i;
   int iVar6;
-  int *piVar7;
-  double in_f28;
-  double dVar8;
-  double in_f29;
-  double dVar9;
-  double in_f30;
-  double dVar10;
-  double in_f31;
-  double dVar11;
-  double in_ps28_1;
-  double in_ps29_1;
-  double in_ps30_1;
-  double in_ps31_1;
-  undefined8 uVar12;
-  undefined uStack_b8;
-  undefined local_b7;
-  undefined local_b6;
-  undefined local_b5;
-  float afStack_b4 [3];
-  float local_a8;
-  float local_98;
-  float local_88;
-  undefined4 local_80;
-  uint uStack_7c;
-  undefined4 local_78;
-  uint uStack_74;
-  float local_38;
-  float fStack_34;
-  float local_28;
-  float fStack_24;
-  float local_18;
-  float fStack_14;
-  float local_8;
-  float fStack_4;
-  
-  local_8 = (float)in_f31;
-  fStack_4 = (float)in_ps31_1;
-  local_18 = (float)in_f30;
-  fStack_14 = (float)in_ps30_1;
-  local_28 = (float)in_f29;
-  fStack_24 = (float)in_ps29_1;
-  local_38 = (float)in_f28;
-  fStack_34 = (float)in_ps28_1;
-  uVar12 = FUN_80286824();
-  iVar3 = (int)((ulonglong)uVar12 >> 0x20);
-  piVar7 = *(int **)((int)uVar12 + 0x40c);
-  piVar4 = (int *)*piVar7;
-  if (piVar4 != (int *)0x0) {
-    if (*(short *)((int)uVar12 + 0x402) == 1) {
-      FUN_800175ec((double)(float)piVar7[0x16],(double)(float)piVar7[0x17],
-                   (double)(float)piVar7[0x18],piVar4);
+  f32 zero;
+  f32 m[12];
+  u8 colA;
+  u8 colB;
+  u8 colG;
+  u8 colR;
+
+  state = *(int **)(param_2 + 0x40c);
+  piVar4 = (int *)*state;
+  if (piVar4 != NULL) {
+    if (*(s16 *)(param_2 + 0x402) == 1) {
+      lightVecFn_8001dd88(piVar4, *(f32 *)(state + 0x16), *(f32 *)(state + 0x17), *(f32 *)(state + 0x18));
     }
     else {
-      FUN_800175ec((double)(float)piVar7[0x10],(double)(float)piVar7[0x11],
-                   (double)(float)piVar7[0x12],piVar4);
+      lightVecFn_8001dd88(piVar4, *(f32 *)(state + 0x10), *(f32 *)(state + 0x11), *(f32 *)(state + 0x12));
     }
-    FUN_80017584(*piVar7,&local_b5,&local_b6,&local_b7,&uStack_b8);
-    FUN_80017548(*piVar7,local_b5,local_b6,local_b7,0xc0);
-    iVar6 = *piVar7;
-    if ((*(char *)(iVar6 + 0x2f8) != '\0') && (*(char *)(iVar6 + 0x4c) != '\0')) {
-      sVar2 = (ushort)*(byte *)(iVar6 + 0x2f9) + (short)*(char *)(iVar6 + 0x2fa);
-      if (sVar2 < 0) {
-        sVar2 = 0;
-        *(undefined *)(iVar6 + 0x2fa) = 0;
+    fn_8001D9F4(*state, &colA, &colB, &colG, &colR);
+    fn_8001D71C(*state, colA, colB, colG, 0xc0);
+    iVar6 = *state;
+    if (*(u8 *)(iVar6 + 0x2f8) != 0 && *(u8 *)(iVar6 + 0x4c) != 0) {
+      brightness = *(u8 *)(iVar6 + 0x2f9) + *(s8 *)(iVar6 + 0x2fa);
+      if (brightness < 0) {
+        brightness = 0;
+        *(u8 *)(iVar6 + 0x2fa) = 0;
       }
-      else if (0xc < sVar2) {
-        uVar5 = randomGetRange(0xfffffff4,0xc);
-        sVar2 = sVar2 + (short)uVar5;
-        if (0xff < sVar2) {
-          sVar2 = 0xff;
-          *(undefined *)(*piVar7 + 0x2fa) = 0;
+      else if (brightness > 0xc) {
+        brightness = brightness + randomGetRange(-0xc, 0xc);
+        if (brightness > 0xff) {
+          brightness = 0xff;
+          *(u8 *)(*state + 0x2fa) = 0;
         }
       }
-      *(char *)(*piVar7 + 0x2f9) = (char)sVar2;
+      *(u8 *)(*state + 0x2f9) = brightness;
     }
   }
-  if ((DAT_803de800 & 0x200) != 0) {
-    ObjPath_GetPointWorldPosition(iVar3,7,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
-    iVar6 = 0;
+  if (gDIMbossSequenceFlags & 0x200) {
+    ObjPath_GetPointWorldPosition(objIndex, 7, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 0);
+    i = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(iVar3,0x4b7,&DAT_803ad5dc,0x200001,0xffffffff,0);
-      iVar6 = iVar6 + 1;
-    } while (iVar6 < 0xf);
+      ((void (*)(int, int, void *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, 0);
+      i = i + 1;
+    } while (i < 0xf);
   }
-  if ((DAT_803de800 & 0x400) != 0) {
-    ObjPath_GetPointWorldPosition(iVar3,8,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
-    iVar6 = 0;
+  if (gDIMbossSequenceFlags & 0x400) {
+    ObjPath_GetPointWorldPosition(objIndex, 8, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 0);
+    i = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(iVar3,0x4b7,&DAT_803ad5dc,0x200001,0xffffffff,0);
-      iVar6 = iVar6 + 1;
-    } while (iVar6 < 0xf);
+      ((void (*)(int, int, void *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, 0);
+      i = i + 1;
+    } while (i < 0xf);
   }
-  if ((DAT_803de800 & 0x800) != 0) {
-    ObjPath_GetPointWorldPosition(iVar3,9,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
-    iVar6 = 0;
+  if (gDIMbossSequenceFlags & 0x800) {
+    ObjPath_GetPointWorldPosition(objIndex, 9, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 0);
+    i = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(iVar3,0x4b7,&DAT_803ad5dc,0x200001,0xffffffff,0);
-      iVar6 = iVar6 + 1;
-    } while (iVar6 < 0xf);
+      ((void (*)(int, int, void *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, 0);
+      i = i + 1;
+    } while (i < 0xf);
   }
-  if ((DAT_803de800 & 0x1000) != 0) {
-    ObjPath_GetPointWorldPosition(iVar3,10,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,0);
-    iVar6 = 0;
+  if (gDIMbossSequenceFlags & 0x1000) {
+    ObjPath_GetPointWorldPosition(objIndex, 10, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 0);
+    i = 0;
     do {
-      (**(code **)(*DAT_803dd708 + 8))(iVar3,0x4b7,&DAT_803ad5dc,0x200001,0xffffffff,0);
-      iVar6 = iVar6 + 1;
-    } while (iVar6 < 0xf);
+      ((void (*)(int, int, void *, int, int, int))*(code **)(*(int *)gPartfxInterface + 8))(objIndex, 0x4b7, &lbl_803AC97C, 0x200001, -1, 0);
+      i = i + 1;
+    } while (i < 0xf);
   }
-  if ((DAT_803de800 & 0x10) != 0) {
-    uVar5 = ObjPath_GetPointModelMtx(iVar3,0xb);
-    FUN_80003494((uint)afStack_b4,uVar5,0x30);
-    local_a8 = lbl_803E5870;
-    local_98 = lbl_803E5870;
-    local_88 = lbl_803E5870;
-    iVar6 = 0;
-    dVar9 = (double)lbl_803E58CC;
-    dVar10 = (double)(float)(dVar9 * (double)lbl_803E58D0);
-    dVar11 = (double)lbl_803E5864;
-    dVar8 = DOUBLE_803e5878;
+  if (gDIMbossSequenceFlags & 0x10) {
+    memcpy(m, (void *)ObjPath_GetPointModelMtx(objIndex, 0xb), 0x30);
+    zero = lbl_803E4BD8;
+    m[3] = zero;
+    m[7] = zero;
+    m[11] = zero;
+    i = 0;
     do {
-      uStack_7c = randomGetRange(0xffffffe7,0x19);
-      uStack_7c = uStack_7c ^ 0x80000000;
-      local_80 = 0x43300000;
-      DAT_803ad5e8 = (float)((double)CONCAT44(0x43300000,uStack_7c) - dVar8);
-      uStack_74 = randomGetRange(0xffffffe7,0x19);
-      uStack_74 = uStack_74 ^ 0x80000000;
-      local_78 = 0x43300000;
-      DAT_803ad5ec = (float)((double)CONCAT44(0x43300000,uStack_74) - dVar8);
-      DAT_803ad5f0 = (float)dVar9;
-      DAT_803ad5d0 = (float)((double)DAT_803ad5e8 / dVar10);
-      DAT_803ad5d4 = (float)((double)DAT_803ad5ec / dVar10);
-      DAT_803ad5d8 = (float)dVar11;
-      FUN_80247bf8(afStack_b4,&DAT_803ad5d0,&DAT_803ad5d0);
-      ObjPath_GetPointWorldPosition(iVar3,0xb,&DAT_803ad5e8,&DAT_803ad5ec,&DAT_803ad5f0,1);
-      (**(code **)(*DAT_803dd708 + 8))(iVar3,0x4b8,&DAT_803ad5dc,0x200001,0xffffffff,&DAT_803ad5d0);
-      iVar6 = iVar6 + 1;
-    } while (iVar6 < 5);
+      ((IcicleFxPos *)&lbl_803AC97C)->x = (f32)(int)randomGetRange(-0x19, 0x19);
+      ((IcicleFxPos *)&lbl_803AC97C)->y = (f32)(int)randomGetRange(-0x19, 0x19);
+      ((IcicleFxPos *)&lbl_803AC97C)->z = lbl_803E4C34;
+      lbl_803AC970[0] = ((IcicleFxPos *)&lbl_803AC97C)->x / (lbl_803E4C34 * lbl_803E4C38);
+      lbl_803AC970[1] = ((IcicleFxPos *)&lbl_803AC97C)->y / (lbl_803E4C34 * lbl_803E4C38);
+      lbl_803AC970[2] = lbl_803E4BCC;
+      PSMTXMultVec(m, lbl_803AC970, lbl_803AC970);
+      ObjPath_GetPointWorldPosition(objIndex, 0xb, &((IcicleFxPos *)&lbl_803AC97C)->x, &((IcicleFxPos *)&lbl_803AC97C)->y, &((IcicleFxPos *)&lbl_803AC97C)->z, 1);
+      ((void (*)(int, int, void *, int, int, f32 *))*(code **)(*(int *)gPartfxInterface + 8))(objIndex, 0x4b8, &lbl_803AC97C, 0x200001, -1, lbl_803AC970);
+      i = i + 1;
+    } while (i < 5);
   }
-  piVar7[10] = (int)lbl_803E5870;
-  piVar7[0xb] = (int)lbl_803E58D4;
-  piVar7[0xc] = (int)lbl_803E58D8;
-  piVar7[9] = (int)lbl_803E58DC;
-  *(undefined2 *)(piVar7 + 8) = 0;
-  *(undefined2 *)((int)piVar7 + 0x1e) = 0;
-  *(undefined2 *)(piVar7 + 7) = 0;
-  ObjPath_GetPointWorldPosition(iVar3,0xd,(float *)(piVar7 + 10),piVar7 + 0xb,(float *)(piVar7 + 0xc),1);
-  ObjPath_GetPointWorldPosition(iVar3,0xd,(float *)(piVar7 + 4),piVar7 + 5,(float *)(piVar7 + 6),0);
-  ObjPath_GetPointWorldPosition(iVar3,0xb,(float *)(piVar7 + 0x10),piVar7 + 0x11,(float *)(piVar7 + 0x12),0);
-  piVar7[0x16] = (int)lbl_803E5870;
-  piVar7[0x17] = (int)lbl_803E58E0;
-  piVar7[0x18] = (int)lbl_803E5860;
-  piVar7[0x15] = (int)lbl_803E58DC;
-  *(undefined2 *)(piVar7 + 0x14) = 0;
-  *(undefined2 *)((int)piVar7 + 0x4e) = 0;
-  *(undefined2 *)(piVar7 + 0x13) = 0;
-  ObjPath_GetPointWorldPosition(iVar3,0xc,(float *)(piVar7 + 0x16),piVar7 + 0x17,(float *)(piVar7 + 0x18),1);
-  uVar5 = ObjPath_GetPointModelMtx(iVar3,0);
-  FUN_80003494((uint)(piVar7 + 0x19),uVar5,0x30);
-  fVar1 = lbl_803E5870;
-  piVar7[0x1c] = (int)lbl_803E5870;
-  piVar7[0x20] = (int)fVar1;
-  piVar7[0x24] = (int)fVar1;
-  DAT_803de800 = DAT_803de800 & 0xffffe1ef;
-  FUN_80286870();
-  return;
+  *(f32 *)(state + 10) = lbl_803E4BD8;
+  *(f32 *)(state + 0xb) = lbl_803E4C3C;
+  *(f32 *)(state + 0xc) = lbl_803E4C40;
+  *(f32 *)(state + 9) = lbl_803E4C44;
+  *(u16 *)(state + 8) = 0;
+  *(u16 *)((int)state + 0x1e) = 0;
+  *(u16 *)(state + 7) = 0;
+  ObjPath_GetPointWorldPosition(objIndex, 0xd, (f32 *)(state + 10), (f32 *)(state + 0xb), (f32 *)(state + 0xc), 1);
+  ObjPath_GetPointWorldPosition(objIndex, 0xd, (f32 *)(state + 4), (f32 *)(state + 5), (f32 *)(state + 6), 0);
+  ObjPath_GetPointWorldPosition(objIndex, 0xb, (f32 *)(state + 0x10), (f32 *)(state + 0x11), (f32 *)(state + 0x12), 0);
+  *(f32 *)(state + 0x16) = lbl_803E4BD8;
+  *(f32 *)(state + 0x17) = lbl_803E4C48;
+  *(f32 *)(state + 0x18) = lbl_803E4BC8;
+  *(f32 *)(state + 0x15) = lbl_803E4C44;
+  *(u16 *)(state + 0x14) = 0;
+  *(u16 *)((int)state + 0x4e) = 0;
+  *(u16 *)(state + 0x13) = 0;
+  ObjPath_GetPointWorldPosition(objIndex, 0xc, (f32 *)(state + 0x16), (f32 *)(state + 0x17), (f32 *)(state + 0x18), 1);
+  memcpy(state + 0x19, (void *)ObjPath_GetPointModelMtx(objIndex, 0), 0x30);
+  zero = lbl_803E4BD8;
+  *(f32 *)(state + 0x1c) = zero;
+  *(f32 *)(state + 0x20) = zero;
+  *(f32 *)(state + 0x24) = zero;
+  gDIMbossSequenceFlags = gDIMbossSequenceFlags & 0xffffe1ef;
 }
 
 /*

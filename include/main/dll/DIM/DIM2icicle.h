@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void fn_801BB598(void);
+void fn_801BB598(int objIndex, int param_2);
 void warpDarkIceMines_801bbb44(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                                undefined8 param_5,undefined8 param_6,undefined8 param_7,
                                undefined8 param_8,undefined4 param_9,undefined4 param_10,
