@@ -8,8 +8,8 @@ extern void sndSeqMute(u32 handle, u32 value0, u32 value1);
 extern void sndSeqContinue(u32 handle);
 extern void sndSeqSpeed(u32 handle, u16 speed);
 extern u32 synthResolveHandle(u32 handle);
-extern u32 fn_8027B89C(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 noLock, u8 studio);
-extern u32 fn_8027B9DC(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 studio);
+extern u32 seqPlaySong(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 noLock, u8 studio);
+extern u32 sndSeqPlayEx(u16 groupId, u16 sampleId, u32 seqId, void* params, u8 studio);
 
 #define SYNTH_START_FLAG_VOLUME_MODE2 0x01
 #define SYNTH_START_FLAG_REUSE_HANDLE 0x02
@@ -291,7 +291,7 @@ resolved_reuse:
     params.active = 0;
 
     if (noLock != 0) {
-        newHandle = fn_8027B89C(request->groupId, request->sampleId, request->seqId, &params, 1, request->startStudio);
+        newHandle = seqPlaySong(request->groupId, request->sampleId, request->seqId, &params, 1, request->startStudio);
         *outHandle = newHandle;
         if ((newHandle != SYNTH_HANDLE_INVALID) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0)) {
             newHandle = synthResolveHandle(*outHandle);
@@ -307,7 +307,7 @@ resolved_reuse:
             }
         }
     } else {
-        newHandle = fn_8027B9DC(request->groupId, request->sampleId, request->seqId, &params, request->startStudio);
+        newHandle = sndSeqPlayEx(request->groupId, request->sampleId, request->seqId, &params, request->startStudio);
         *outHandle = newHandle;
         if ((newHandle != SYNTH_HANDLE_INVALID) && ((request->flags & SYNTH_START_FLAG_CLEAR_MUTE) != 0)) {
             sndSeqMute(*outHandle, 0, 0);

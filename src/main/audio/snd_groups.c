@@ -84,7 +84,7 @@ extern s16 synthLoadedGroupCount;
 extern GSTACK synthLoadedGroupTable[];
 
 #pragma dont_inline on
-void audioFn_8027b42c(u16 id, void *data, u8 dataType, u32 remove)
+void InsertData(u16 id, void *data, u8 dataType, u32 remove)
 {
     MEM_DATA *m;
 
@@ -213,12 +213,12 @@ void audioFn_8027b690(u16 *ref, void *data, u8 dataType, u32 remove)
         if ((*ref & 0x8000)) {
             id = *ref & 0x3fff;
             while (id <= ref[1]) {
-                audioFn_8027b42c(id, data, dataType, remove);
+                InsertData(id, data, dataType, remove);
                 ++id;
             }
             ref += 2;
         } else {
-            audioFn_8027b42c(*ref++, data, dataType, remove);
+            InsertData(*ref++, data, dataType, remove);
         }
     }
 }
@@ -263,7 +263,7 @@ s32 sndPushGroup(void *prj_data, u16 gid, void *samples, void *sdir, void *pool)
     return 0;
 }
 
-u32 fn_8027B89C(u16 sgid, u16 sid, void *arrfile, void *para, u8 irq_call, u8 studio)
+u32 seqPlaySong(u16 sgid, u16 sid, void *arrfile, void *para, u8 irq_call, u8 studio)
 {
     int i;
     GROUP_DATA *g;
@@ -309,7 +309,7 @@ u32 fn_8027B89C(u16 sgid, u16 sid, void *arrfile, void *para, u8 irq_call, u8 st
     return 0xffffffff;
 }
 
-u32 fn_8027B9DC(u16 sgid, u16 sid, void *arrfile, void *para, u8 studio)
+u32 sndSeqPlayEx(u16 sgid, u16 sid, void *arrfile, void *para, u8 studio)
 {
-    return fn_8027B89C(sgid, sid, arrfile, para, 0, studio);
+    return seqPlaySong(sgid, sid, arrfile, para, 0, studio);
 }

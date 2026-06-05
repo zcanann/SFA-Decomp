@@ -1096,7 +1096,7 @@ extern int lbl_802C18C0[];
 extern int lbl_802C1A24[];
 extern MusicSeqStartParams lbl_802C1A68;
 extern f32 lbl_803DE560;
-extern int fn_8027B9DC(int a, int b, void *bank, MusicSeqStartParams *params, int e);
+extern int sndSeqPlayEx(int a, int b, void *bank, MusicSeqStartParams *params, int e);
 extern void sndSeqVolume(int voice, int a, int handle, int b);
 extern int synthResolveHandle(int handle);
 extern int randomGetRange(int min, int max);
