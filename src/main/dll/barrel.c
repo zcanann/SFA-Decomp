@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/barrel.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017730();
@@ -48,7 +49,6 @@ extern f32 lbl_803E3BBC;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 extern int getAngle(f32 dx, f32 dz);
 extern double sqrtf(double x);
 extern void Sfx_PlayFromObject(int obj, u16 sfxId);

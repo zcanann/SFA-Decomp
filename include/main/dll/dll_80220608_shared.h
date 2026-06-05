@@ -291,10 +291,8 @@ extern f32 lbl_803E6E38;
 
 
 extern f32 lbl_803E72F4;
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 extern void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz);
 extern int getAngle(f32 dx, f32 dz);
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 extern f32 lbl_803E72EC;
 extern f32 lbl_803E72F0;
 
@@ -809,7 +807,6 @@ extern int lbl_803DC508;
 extern f32 lbl_803E75A8;
 
 
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 extern f32 lbl_803E75AC;
 extern f32 lbl_8032C270[];
 

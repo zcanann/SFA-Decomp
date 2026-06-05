@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/ladders.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006824();
@@ -94,12 +95,10 @@ extern f32 lbl_803E3BF0;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-/* Actual cannonclaw_update is 188b — trigger-once cannon-arm awakener.
+/* Actual cannonclaw_update is 188b -- trigger-once cannon-arm awakener.
  * The 668b "Ghidra body" was misattributed; replaced with the right one. */
 extern void getTrickyObject(void);
 extern void* ObjList_FindObjectById(int id);
-extern void ObjAnim_SetCurrentMove(void* obj, int move, f32 weight, int flag);
-extern void ObjAnim_AdvanceCurrentMove(void* obj, f32 weight, f32 dt, int flag);
 extern f32 timeDelta;
 extern f32 lbl_803E2F34;
 extern f32 lbl_803E2F38;
@@ -112,9 +111,9 @@ void cannonclaw_update(u8* obj)
     trickyState = (u8*)ObjList_FindObjectById(0x1723);
     if (*(s32*)(obj + 0xf4) != 0) return;
     if (*(s16*)(obj + 0xa0) != 0x208) {
-        ObjAnim_SetCurrentMove(obj, 0x208, lbl_803E2F34, 0);
+        ObjAnim_SetCurrentMove((int)obj, 0x208, lbl_803E2F34, 0);
     }
-    ObjAnim_AdvanceCurrentMove(obj, lbl_803E2F38, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove(lbl_803E2F38, timeDelta, (int)obj, NULL);
     if (trickyState == NULL) return;
     if (GameBit_Get(*(s16*)(*(u8**)(trickyState + 0x4c) + 0x1a)) == 0) return;
     *(s32*)(obj + 0xf4) = 1;
