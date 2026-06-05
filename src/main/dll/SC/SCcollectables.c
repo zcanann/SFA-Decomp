@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/SC/SCcollectables.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
@@ -276,7 +277,6 @@ int warpstone_handleMenuOptionInput(undefined4 p1, undefined4 p2, int option)
 extern int animatedObjGetSeqId(int obj);
 extern int fn_80080360(int obj, int seqId);
 extern int getCurUiDll(void);
-extern void ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, void *events);
 extern int playerFn_801d6d58(void);
 extern void AudioStream_CancelPrepared(void);
 extern void seqClearTaskTexts(void);
@@ -307,7 +307,8 @@ int warpstone_updateMenuAnimObj(int obj, undefined4 p2, int animObj)
 
     child = *(int *)state;
     if (child != 0) {
-        ObjAnim_AdvanceCurrentMove(child, *(f32 *)(obj + 0x98) - *(f32 *)(child + 0x98), timeDelta, NULL);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+            (child, *(f32 *)(obj + 0x98) - *(f32 *)(child + 0x98), timeDelta, NULL);
     }
 
     *(void **)(animObj + 0xec) = warpstone_handleMenuOptionInput;

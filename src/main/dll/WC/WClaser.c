@@ -1,6 +1,7 @@
 #include "global.h"
 #include "ghidra_import.h"
 #include "main/dll/WC/WClaser.h"
+#include "main/objanim.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId, int value);
@@ -15,8 +16,6 @@ extern int WM_Galleon_SeqFn(int p1, int p2, void *p3);
 extern void fn_80296BBC(int player);
 extern void buttonDisable(int controller, int mask);
 extern void textureFree(void *resource);
-extern int ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, void *events);
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 moveProgress, int flags);
 
 typedef struct WCLaserMapEventInterface {
     u8 pad00[0x4C];
@@ -367,7 +366,8 @@ void dll_1FB_update(int *obj)
         buttonDisable(0, 0x100);
         GameBit_Set(0x9ad, 1);
     }
-    ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5D04, timeDelta, 0);
+    ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+        ((int)obj, lbl_803E5D04, timeDelta, NULL);
 }
 
 void dll_1FB_init(int *obj, u8 *def)

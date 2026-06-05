@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/SC/SCanimobj.h"
 #include "main/dll/SC/SClantern.h"
+#include "main/objanim.h"
 
 
 extern undefined8 FUN_80006824();
@@ -27,7 +28,6 @@ extern int ObjGroup_FindNearestObject(int group, int obj, f32 *outDistance);
 extern void fn_8003ADC4(int obj, int target, void *state, int a, int b, int c);
 extern s16 *objModelGetVecFn_800395d8(int obj, int index);
 extern s16 Obj_GetYawDeltaToObject(int obj, int target, int flags);
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 moveProgress, int flags);
 extern void Sfx_StopFromObject(int obj, int sfxId);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void objAnimFn_80038f38(int obj, int *animState);
@@ -139,17 +139,21 @@ void warpstone_update(int obj)
                 moveId = 0x18;
             }
             if (*(s16 *)(obj + 0xa0) != moveId) {
-                ObjAnim_SetCurrentMove(obj, moveId, lbl_803E5460, 0);
+                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                    (obj, moveId, lbl_803E5460, 0);
             }
         } else if (*(s16 *)(obj + 0xa0) != 0) {
-            ObjAnim_SetCurrentMove(obj, 0, lbl_803E5460, 0);
+            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                (obj, 0, lbl_803E5460, 0);
             Sfx_StopFromObject(obj, 0x2f1);
         } else if (randFn_80080100(lbl_803DC048) != 0) {
             Sfx_PlayFromObject(obj, 0x416);
-            ObjAnim_SetCurrentMove(obj, 0x1b, lbl_803E5460, 0);
+            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                (obj, 0x1b, lbl_803E5460, 0);
         } else if (randFn_80080100(lbl_803DC04C) != 0) {
             Sfx_PlayFromObject(obj, 0x2f1);
-            ObjAnim_SetCurrentMove(obj, 0x1a, lbl_803E5460, 0);
+            ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                (obj, 0x1a, lbl_803E5460, 0);
         }
     }
 
