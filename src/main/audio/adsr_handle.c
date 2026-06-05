@@ -1,13 +1,13 @@
 #include "ghidra_import.h"
 
-extern int fn_8027A8FC(int state, u32 divisor);
+extern int adsrStartRelease(int state, u32 divisor);
 extern int fn_8027A660(int state);
 
 extern u8 voiceAdsrDecayTable[];
 extern f32 lbl_803E7848;
 
 #pragma dont_inline on
-int fn_8027A8FC(int state, u32 divisor)
+int adsrStartRelease(int state, u32 divisor)
 {
     int m = *(u8 *)state;
     if (m != 1) {
@@ -43,16 +43,16 @@ int fn_8027A8FC(int state, u32 divisor)
 #pragma dont_inline reset
 
 /*
- * Wrapper for fn_8027A8FC: dispatches when state mode is 0 or 1.
+ * Wrapper for adsrStartRelease: dispatches when state mode is 0 or 1.
  *
  * EN v1.1 Address: 0x8027AA50, size 68b
  */
-int fn_8027AA50(int state)
+int adsrRelease(int state)
 {
     switch (*(u8 *)(state + 0)) {
     case 0:
     case 1:
-        return fn_8027A8FC(state, *(int *)(state + 0x20));
+        return adsrStartRelease(state, *(int *)(state + 0x20));
     }
     return 0;
 }
@@ -60,7 +60,7 @@ int fn_8027AA50(int state)
 extern u16 lbl_8032F618[];
 
 #pragma dont_inline on
-int fn_8027AA94(int state, u16 *out1, u16 *out2)
+int adsrHandle(int state, u16 *out1, u16 *out2)
 {
     int ret = 0;
     int m = *(u8 *)state;

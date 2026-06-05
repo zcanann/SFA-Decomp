@@ -196,7 +196,7 @@ extern void hwStart(u32 voice, u8 studio);
 extern void hwKeyOff(u32 voice);
 extern void macSetPedalState(SynthHwVoice* sv, u32 state);
 extern u32 fn_8027AC34(SynthVoiceAdsr* adsr, u16* start, u16* delta);
-extern u32 fn_8027AA50(SynthVoiceAdsr* adsr);
+extern u32 adsrRelease(SynthVoiceAdsr* adsr);
 extern u32 synthFlags;
 extern const f32 lbl_803E7798;
 extern const f32 lbl_803E779C;
@@ -709,7 +709,7 @@ void EventHandler(int voice)
     if ((HWVOICE_FLAGS(sv) & 0x10000000090ULL) == 0x90) {
         HWVOICE_FLAGS(sv) &= ~0x90;
         hwKeyOff(voice);
-        if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0 && fn_8027AA50(&sv->pitchADSR)) {
+        if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0 && adsrRelease(&sv->pitchADSR)) {
             HWVOICE_FLAGS(sv) &= ~0x20000000000ULL;
         }
     }

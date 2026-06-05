@@ -90,9 +90,9 @@ extern int fn_8027BFE4(u16 *dsp_vol, u16 *dsp_delta, u16 *last_vol, u16 targetVo
 extern void fn_8027C0D8(DSPstudioinfo *stp, DSPvoice *dsp_vptr); /* HandleDepopVoice */
 extern void fn_8027C390(DSPvoice **voices, int l, int r); /* SortVoices */
 extern int fn_8027A8D4(ADSR_VARS *adsr); /* adsrSetup */
-extern u32 fn_8027A8FC(ADSR_VARS *adsr, u32 rtime); /* adsrStartRelease */
-extern int fn_8027AA50(ADSR_VARS *adsr); /* adsrRelease */
-extern u32 fn_8027AA94(ADSR_VARS *adsr, u16 *adsr_start, u16 *adsr_delta); /* adsrHandle */
+extern u32 adsrStartRelease(ADSR_VARS *adsr, u32 rtime); /* adsrStartRelease */
+extern int adsrRelease(ADSR_VARS *adsr); /* adsrRelease */
+extern u32 adsrHandle(ADSR_VARS *adsr, u16 *adsr_start, u16 *adsr_delta); /* adsrHandle */
 extern void DCStoreRangeNoSync(void *addr, u32 len);
 extern void DCFlushRange(void *addr, u32 len);
 extern void *memset(void *dst, int c, u32 n);
@@ -673,14 +673,14 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                         (pb->addr.currentAddressHi << 0x10) | pb->addr.currentAddressLo;
                 block_186:
                     if ((dsp_vptr->changed[mix_start] & 0x40) != 0) {
-                        fn_8027AA50(&dsp_vptr->adsr);
+                        adsrRelease(&dsp_vptr->adsr);
                     }
                     if ((dsp_vptr->changed[mix_start] & 8) != 0) {
                         pb->src.ratioHi = dsp_vptr->pitch[mix_start] >> 0x10;
                         pb->src.ratioLo = dsp_vptr->pitch[mix_start];
                         dsp_vptr->playInfo.pitch = dsp_vptr->pitch[mix_start];
                     }
-                    VoiceDone = fn_8027AA94(&dsp_vptr->adsr, &pb->ve.currentVolume,
+                    VoiceDone = adsrHandle(&dsp_vptr->adsr, &pb->ve.currentVolume,
                                             &pb->ve.currentDelta);
                     old_adsr_delta = pb->ve.currentDelta;
                     for (s = 0; s < 5; s++) {
@@ -716,11 +716,11 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                                 }
                             }
                             if ((dsp_vptr->changed[s] & 0x20) != 0) {
-                                fn_8027A8FC(&dsp_vptr->adsr, 10);
+                                adsrStartRelease(&dsp_vptr->adsr, 10);
                                 dsp_vptr->postBreak = 1;
                             } else if (dsp_vptr->postBreak == 0) {
                                 if ((dsp_vptr->changed[s] & 0x40) != 0) {
-                                    fn_8027AA50(&dsp_vptr->adsr);
+                                    adsrRelease(&dsp_vptr->adsr);
                                 }
                                 if ((dsp_vptr->changed[s] & 8) != 0) {
                                     pptr[0] = 0x53;
@@ -733,7 +733,7 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                                 }
                             }
                             current_delta = dsp_vptr->adsr.currentDelta;
-                            VoiceDone = fn_8027AA94(&dsp_vptr->adsr, &adsr_start, &adsr_delta);
+                            VoiceDone = adsrHandle(&dsp_vptr->adsr, &adsr_start, &adsr_delta);
                             if (old_adsr_delta == adsr_delta) {
                                 if (current_delta != 0) {
                                     pptr[0] = 0x32;
