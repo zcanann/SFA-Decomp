@@ -201,10 +201,6 @@ RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
                                       float *outPhase)
 {
   RomCurveDef *curves[4];
-  RomCurveDef *prevCurve;
-  RomCurveDef *segmentStart;
-  RomCurveDef *segmentEnd;
-  RomCurveDef *nextCurve;
   f32 segmentDx;
   f32 segmentDy;
   f32 segmentDz;
@@ -228,18 +224,13 @@ RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
     curves[i] = RomCurve_FindByIdInline(curveIds[i]);
   }
 
-  prevCurve = curves[0];
-  segmentStart = curves[1];
-  segmentEnd = curves[2];
-  nextCurve = curves[3];
-
-  segmentDx = segmentEnd->x - segmentStart->x;
-  segmentDz = segmentEnd->z - segmentStart->z;
+  segmentDx = curves[2]->x - curves[1]->x;
+  segmentDz = curves[2]->z - curves[1]->z;
   tangentDx = segmentDx;
   tangentDz = segmentDz;
-  if (prevCurve != NULL) {
-    tangentDx = segmentStart->x - prevCurve->x;
-    tangentDz = segmentStart->z - prevCurve->z;
+  if (curves[0] != NULL) {
+    tangentDx = curves[1]->x - curves[0]->x;
+    tangentDz = curves[1]->z - curves[0]->z;
   }
   tangentDx = gFloatHalf * (tangentDx + segmentDx);
   tangentDz = gFloatHalf * (tangentDz + segmentDz);
@@ -253,16 +244,16 @@ RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
   startPhase = gFloatZero;
   if (startDenom != gFloatZero) {
     startPhase =
-        -(-((tangentDx * segmentStart->x) + (tangentDz * segmentStart->z)) +
+        -(-((tangentDx * curves[1]->x) + (tangentDz * curves[1]->z)) +
           ((tangentDx * x) + (tangentDz * z))) /
         startDenom;
   }
 
   nextTangentDx = segmentDx;
   nextTangentDz = segmentDz;
-  if (nextCurve != NULL) {
-    nextTangentDx = nextCurve->x - segmentEnd->x;
-    nextTangentDz = nextCurve->z - segmentEnd->z;
+  if (curves[3] != NULL) {
+    nextTangentDx = curves[3]->x - curves[2]->x;
+    nextTangentDz = curves[3]->z - curves[2]->z;
   }
   nextTangentDx = gFloatHalf * (nextTangentDx + segmentDx);
   nextTangentDz = gFloatHalf * (nextTangentDz + segmentDz);
@@ -276,7 +267,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
   endPhase = gFloatZero;
   if (endDenom != gFloatZero) {
     endPhase =
-        -(-((nextTangentDx * segmentEnd->x) + (nextTangentDz * segmentEnd->z)) +
+        -(-((nextTangentDx * curves[2]->x) + (nextTangentDz * curves[2]->z)) +
           ((nextTangentDx * x) + (nextTangentDz * z))) /
         endDenom;
   }
@@ -286,7 +277,7 @@ RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
     return 0;
   }
 
-  segmentDy = segmentEnd->y - segmentStart->y;
+  segmentDy = curves[2]->y - curves[1]->y;
   segmentLen = sqrtf(segmentDz * segmentDz + segmentDx * segmentDx + segmentDy * segmentDy);
   lateralX = segmentDx;
   lateralZ = segmentDz;
@@ -295,10 +286,10 @@ RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
     lateralZ = -segmentDz * (gFloatOne / segmentLen);
   }
 
-  *outLateralOffset = -(((segmentDx * phase + segmentStart->x) * lateralZ) -
-                        ((segmentDz * phase + segmentStart->z) * lateralX)) +
+  *outLateralOffset = -(((segmentDx * phase + curves[1]->x) * lateralZ) -
+                        ((segmentDz * phase + curves[1]->z) * lateralX)) +
                       (x * lateralZ - z * lateralX);
-  *outVerticalOffset = y - (segmentDy * phase + segmentStart->y);
+  *outVerticalOffset = y - (segmentDy * phase + curves[1]->y);
   *outPhase = phase;
   return 1;
 }
