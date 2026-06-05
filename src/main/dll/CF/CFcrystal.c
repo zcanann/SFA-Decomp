@@ -33,8 +33,8 @@ extern undefined4* DAT_803dd6f8;
 extern undefined4* DAT_803dd708;
 extern undefined4 DAT_803de758;
 extern f64 DOUBLE_803e4748;
-extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803dca40;
+extern f32 timeDelta;
 extern f32 FLOAT_803e4724;
 extern f32 FLOAT_803e4728;
 extern f32 FLOAT_803e4730;
@@ -94,7 +94,7 @@ void LanternFireFly_hitDetect(void) {}
 #define LANTERN_SPAWN_FX_VEC(obj, id, a, b, c, d, vx, vy, vz) \
     ((void (*)(int, int, int, int, int, int, f32, f32, f32))(*(int *)(*(int *)gPartfxInterface + 8)))(obj, id, a, b, c, d, vx, vy, vz)
 
-#define LANTERN_FIREFLY_MODE(state) ((u32)(state)->modeFlags >> 6)
+#define LANTERN_FIREFLY_MODE(state) (((u32)(state)->modeFlags >> 6) & 3)
 #define LANTERN_FIREFLY_IS_ACTIVE(state) (LANTERN_FIREFLY_MODE(state) == 1u)
 
 extern void fn_801868D0(int obj);
@@ -106,9 +106,7 @@ void LanternFireFly_update(int obj)
 {
     LanternFireFlyState *state;
     int player;
-    f32 dx;
-    f32 dy;
-    f32 dz;
+    f32 velocity[3];
     f32 stepScale;
 
     state = *(LanternFireFlyState **)(obj + 0xb8);
@@ -117,7 +115,7 @@ void LanternFireFly_update(int obj)
     *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
     *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
 
-    if (lbl_803E3AA0 < state->splineT) {
+    if (state->splineT > lbl_803E3AA0) {
         state->splineT -= lbl_803E3AA0;
         if (state->animFrame < 4) {
             fn_801868D0(obj);
@@ -135,9 +133,9 @@ void LanternFireFly_update(int obj)
 
     if (LANTERN_FIREFLY_IS_ACTIVE(state)) {
         state->speed =
-            (f32)(lbl_803E3AC4 * Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) + lbl_803E3AC0);
+            (f32)(lbl_803E3AC4 * Vec_distance((void *)(obj + 0x18), (void *)(Obj_GetPlayerObject() + 0x18)) + lbl_803E3AC0);
     }
-    state->splineT += state->speed * FLOAT_803dc074;
+    state->splineT += state->speed * timeDelta;
 
     if ((state->stateId == 1 || state->stateId == 4) && LANTERN_FIREFLY_IS_ACTIVE(state) && state->lightSpawned == 0) {
         int light;
@@ -157,10 +155,16 @@ void LanternFireFly_update(int obj)
         }
     }
 
-    dx = *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80);
-    dy = *(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84);
-    dz = *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88);
-    stepScale = lbl_803E3AA0 / ((f32)(s32)(sqrtf(dx * dx + dy * dy + dz * dz) / lbl_803E3AC8) + 1.0f);
+    velocity[0] = *(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80);
+    velocity[1] = *(f32 *)(obj + 0x10) - *(f32 *)(obj + 0x84);
+    velocity[2] = *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88);
+    stepScale = lbl_803E3AA0 /
+        ((f32)(s32)(sqrtf(velocity[0] * velocity[0] + velocity[1] * velocity[1] + velocity[2] * velocity[2]) /
+                         lbl_803E3AC8) +
+            1.0f);
+    velocity[0] *= stepScale;
+    velocity[1] *= stepScale;
+    velocity[2] *= stepScale;
 
     if (LANTERN_FIREFLY_IS_ACTIVE(state)) {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x43b);
@@ -190,7 +194,7 @@ void LanternFireFly_update(int obj)
             modelLightStruct_setDistanceAttenuation(state->light, atten, lbl_803E3AD4 + atten);
         }
     } else {
-        LANTERN_SPAWN_FX_VEC(obj, 0x19f, 0, 1, -1, 0, dx * stepScale, dy * stepScale, dz * stepScale);
+        LANTERN_SPAWN_FX_VEC(obj, 0x19f, 0, 1, -1, 0, velocity[0], velocity[1], velocity[2]);
         LANTERN_SPAWN_FX(obj, 0x1a0, 0, 1, -1, 0);
     }
 }
