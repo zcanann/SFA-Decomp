@@ -3851,7 +3851,7 @@ extern void modelTextureFn_80089970(int n);
 extern void textureFn_8004ff20(void *asset, f32 *mtx, void *out, int p4);
 extern void GXCopyTex(void *dst, int clear);
 extern void GXPreLoadEntireTexture(void *obj, u32 *region);
-extern void modelLightFn_8001ec94(int model, int *lights, int max, int *count, int p5);
+extern void modelLightStruct_selectObjectLights(int model, int *lights, int max, int *count, int p5);
 extern void lightGetColor(int idx, u8 *r, u8 *g, u8 *b);
 extern void Camera_ApplyFullViewport(void);
 extern u32 lbl_803DB600;
@@ -3930,7 +3930,7 @@ void gxTextureFn_80052efc(void)
         if (*(u16 *)(*(u8 **)e + 0xe) != 0 && e[0x1b] == 0 && lbl_803DCDA4 == e[0x1a]) {
             model = *(int *)(e + 4);
             modelTextureFn_80089970(2 - (i - 3));
-            modelLightFn_8001ec94(model, lights, 8, &count, 4);
+            modelLightStruct_selectObjectLights(model, lights, 8, &count, 4);
             modelLightChannels_reset(1);
             modelLightChannel_configure(0, 0, 0);
             lp = lights;

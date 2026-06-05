@@ -1757,7 +1757,7 @@ void fn_8008923C(u8 *obj, f32 *x, f32 *y, f32 *z)
             flag = 0;
         }
         if (flag != 0) {
-            modelLightFn_8001ec94(obj, lights, 4, &count, 2);
+            modelLightStruct_selectObjectLights(obj, lights, 4, &count, 2);
             if (count > 0) {
                 if (*(u8 **)(obj + 0x64) != NULL) {
                     found = *(u8 **)(*(u8 **)(obj + 0x64) + 0x3c);

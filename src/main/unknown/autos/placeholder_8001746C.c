@@ -8294,8 +8294,8 @@ void modelLightStruct_setLightKind(ModelLightStruct *p, int v) {
     p->lightKind = v;
 }
 
-extern u8 lbl_803DCA30;
-extern void *lbl_8033BEC0[];
+extern u8 gModelLightCount;
+extern void *gModelLightList[];
 extern void *objAllocLight(void *owner);
 extern void GXInitLightDistAttn(u8 *lt_obj, f32 ref_dist, f32 ref_br, int dist_func);
 extern void GXGetLightAttnK(u8 *lt_obj, f32 *k0, f32 *k1, f32 *k2);
@@ -8330,7 +8330,7 @@ extern void textureFree(void *tex);
 void *objCreateLight(int arg, u8 addToList) {
     void *light;
     if (addToList) {
-        if (lbl_803DCA30 >= 0x32) {
+        if (gModelLightCount >= 0x32) {
             return NULL;
         }
         light = objAllocLight((void *)arg);
@@ -8338,8 +8338,8 @@ void *objCreateLight(int arg, u8 addToList) {
             return NULL;
         }
         {
-            int i = lbl_803DCA30++;
-            lbl_8033BEC0[i] = light;
+            int i = gModelLightCount++;
+            gModelLightList[i] = light;
         }
         return light;
     }
@@ -8363,9 +8363,9 @@ void fn_8001CB3C(void **lightSlot) {
     light = *lightSlot;
     if (light != NULL) {
         i = 0;
-        count = lbl_803DCA30;
+        count = gModelLightCount;
         while (i < count) {
-            if (lbl_8033BEC0[i] == light) {
+            if (gModelLightList[i] == light) {
                 break;
             }
             i++;
@@ -8373,10 +8373,10 @@ void fn_8001CB3C(void **lightSlot) {
 
         if (i < count) {
             while (i < count - 1) {
-                lbl_8033BEC0[i] = lbl_8033BEC0[i + 1];
+                gModelLightList[i] = gModelLightList[i + 1];
                 i++;
             }
-            lbl_803DCA30--;
+            gModelLightCount--;
         }
 
         if (light->glowType == 2 && light->glowTexture != NULL) {
@@ -8392,9 +8392,9 @@ void ModelLightStruct_free(ModelLightStruct *light) {
     int i;
 
     i = 0;
-    count = lbl_803DCA30;
+    count = gModelLightCount;
     while (i < count) {
-        if (lbl_8033BEC0[i] == light) {
+        if (gModelLightList[i] == light) {
             break;
         }
         i++;
@@ -8402,10 +8402,10 @@ void ModelLightStruct_free(ModelLightStruct *light) {
 
     if (i < count) {
         while (i < count - 1) {
-            lbl_8033BEC0[i] = lbl_8033BEC0[i + 1];
+            gModelLightList[i] = gModelLightList[i + 1];
             i++;
         }
-        lbl_803DCA30--;
+        gModelLightCount--;
     }
 
     if (light->glowType == 2 && light->glowTexture != NULL) {
@@ -8418,15 +8418,15 @@ void *fn_8001CC9C(int unused, u8 red, u8 green, u8 blue, u8 setFlag) {
     u8 *light;
     u8 *newLight;
 
-    if (lbl_803DCA30 >= 0x32) {
+    if (gModelLightCount >= 0x32) {
         light = NULL;
     } else {
         newLight = objAllocLight((void *)unused);
         if (newLight == NULL) {
             light = NULL;
         } else {
-            int index = lbl_803DCA30++;
-            lbl_8033BEC0[index] = newLight;
+            int index = gModelLightCount++;
+            gModelLightList[index] = newLight;
             light = newLight;
         }
     }
@@ -10083,8 +10083,8 @@ void updateLights(void) {
     int fadeState;
 
     view = Camera_GetViewMatrix();
-    for (i = 0; i < lbl_803DCA30; i++) {
-        light = lbl_8033BEC0[i];
+    for (i = 0; i < gModelLightCount; i++) {
+        light = gModelLightList[i];
         fadeState = *(int *)(light + 0x58);
         if (fadeState == 1) {
             *(f32 *)(light + 0x138) += *(f32 *)(light + 0x13c);
@@ -11271,7 +11271,7 @@ void modelLightStruct_setDistanceAttenuation(u8 *obj, f32 a, f32 b) {
 }
 
 #pragma dont_inline on
-int modelColorFn_8001cdac(u8 *light, u8 *obj) {
+int modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
     f32 localPos[3];
     f32 worldPos[3];
     f32 projected[3];
@@ -11361,7 +11361,7 @@ int modelColorFn_8001cdac(u8 *light, u8 *obj) {
 #pragma dont_inline reset
 
 #pragma dont_inline on
-f32 ModelLightStruct_getLightAmount(u8 *light, u8 *obj) {
+f32 modelLightStruct_getObjectIntensity(u8 *light, u8 *obj) {
     f32 delta[3];
     f32 dist;
     f32 amount;
@@ -11414,8 +11414,8 @@ void modelLightStruct_selectBrightestAabbLights(u8 **outLights, int maxLights, i
     center[2] = lbl_803DE790 * (minZ + maxZ);
 
     candidateCount = 0;
-    for (i = 0; i < lbl_803DCA30; i++) {
-        light = lbl_8033BEC0[i];
+    for (i = 0; i < gModelLightCount; i++) {
+        light = gModelLightList[i];
         if (light[0x4c] != 0 && *(int *)(light + 0x50) == 2 && *(f32 *)(light + 0x144) > lbl_803DE75C &&
             light[0x2fb] != 0) {
             PSVECSubtract(center, (f32 *)(light + 0x10), delta);
@@ -11489,7 +11489,7 @@ void modelLightStruct_selectBrightestAabbLights(u8 **outLights, int maxLights, i
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void modelLightFn_8001ec94(u8 *obj, u8 **outLights, int maxLights, int *outCount, int typeMask) {
+void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights, int *outCount, int typeMask) {
     f32 delta[3];
     u8 *candidates[20];
     u8 *light;
@@ -11511,25 +11511,25 @@ void modelLightFn_8001ec94(u8 *obj, u8 **outLights, int maxLights, int *outCount
     }
 
     candidateCount = 0;
-    for (i = 0; i < lbl_803DCA30; i++) {
-        light = lbl_8033BEC0[i];
+    for (i = 0; i < gModelLightCount; i++) {
+        light = gModelLightList[i];
         lightType = *(int *)(light + 0x50);
         if (light[0x4c] != 0 && (lightType & typeMask) != 0 &&
             (light[0x64] & objectLightMask) != 0) {
             if (lightType == 4) {
                 *(f32 *)(light + 0x130) = lbl_803DE768;
             } else if (lightType == 8) {
-                if (*(void **)(light + 0x16c) == NULL || modelColorFn_8001cdac(light, obj) == 0) {
+                if (*(void **)(light + 0x16c) == NULL || modelLightStruct_projectedLightIntersectsObject(light, obj) == 0) {
                     *(f32 *)(light + 0x130) = lbl_803DE75C;
                 } else {
                     PSVECSubtract((f32 *)(obj + 0x18), (f32 *)(light + 0x10), delta);
                     dist = PSVECMag(delta);
                     intensity = lbl_803DE764;
                     *(f32 *)(light + 0x130) = intensity + intensity / dist;
-                    *(f32 *)(light + 0x134) = ModelLightStruct_getLightAmount(light, obj);
+                    *(f32 *)(light + 0x134) = modelLightStruct_getObjectIntensity(light, obj);
                 }
             } else {
-                intensity = ModelLightStruct_getLightAmount(light, obj);
+                intensity = modelLightStruct_getObjectIntensity(light, obj);
                 *(f32 *)(light + 0x134) = intensity;
                 red = intensity * (f32)light[0xa8];
                 if (red < lbl_803DE75C) {

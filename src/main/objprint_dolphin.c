@@ -5364,7 +5364,7 @@ extern void modelLightChannel_configure(u8 chan, int p2, int p3);
 extern void modelTextureFn_80089970(int idx);
 extern void textureColorFn_8008991c(int idx, u8 *r, u8 *g, u8 *b);
 extern void lightGetColor(int light, u8 *r, u8 *g, u8 *b);
-extern void modelLightFn_8001ec94(u8 *model, int *arr, u32 n, s32 *cnt, int mode);
+extern void modelLightStruct_selectObjectLights(u8 *model, int *arr, u32 n, s32 *cnt, int mode);
 extern void modelLightStruct_loadChannelLight(u8 chan, int light, u8 *model);
 extern int fn_8001DB1C(int light);
 extern void modelLightChannels_applyGXControls(void);
@@ -5440,7 +5440,7 @@ void objFn_8003dc50(u8 *obj, u8 *model) {
             {
                 u32 nl = (*(u8 **)(model + 0x50))[0x8c];
                 if (nl != 0) {
-                    modelLightFn_8001ec94(model, larr, nl, &count, mode);
+                    modelLightStruct_selectObjectLights(model, larr, nl, &count, mode);
                 }
             }
             if (count == 0) {
@@ -5468,7 +5468,7 @@ void objFn_8003dc50(u8 *obj, u8 *model) {
         {
             u32 nf = obj[0xfa];
             if (nf != 0) {
-                modelLightFn_8001ec94(model, &lbl_803DCC64, nf, &lbl_803DCC5C, 8);
+                modelLightStruct_selectObjectLights(model, &lbl_803DCC64, nf, &lbl_803DCC5C, 8);
                 if (((*(u8 **)(model + 0x50))[0x5f] & 4) || lbl_803DCC4C) {
                     lbl_803DCC5C = 0;
                 }
