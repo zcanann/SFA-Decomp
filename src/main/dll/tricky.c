@@ -3193,7 +3193,7 @@ void drawViewFinderHud(void) {
         {
             GXColor _c2; GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
             *(int *)&_c = lbl_803E1E2C;
-            _c.a = (u8)(int)(hudElementOpacity * lbl_803DD7F0);
+            _c.a = hudElementOpacity * lbl_803DD7F0;
             _a = (s16)getAngle(lbl_803E1E3C, lbl_803E1F08 - f18v);
             _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
             _cs = fn_80293E80(_r); _sn = sin(_r);
@@ -3205,7 +3205,7 @@ void drawViewFinderHud(void) {
         {
             GXColor _c2; GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
             *(int *)&_c = lbl_803E1E2C;
-            _c.a = (u8)(int)(hudElementOpacity * lbl_803DD7F0);
+            _c.a = hudElementOpacity * lbl_803DD7F0;
             _a = (s16)getAngle(lbl_803E1E3C, (f19v = lbl_803E1F14 + f15v) - f15v);
             _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
             _cs = fn_80293E80(_r); _sn = sin(_r);
