@@ -68,9 +68,9 @@ void explodeplan_update(int obj) {
 #pragma scheduling off
 #pragma peephole off
 int explodeplan_updateTriggerCallback(int obj) {
+    int ret;
     int q = *(int *)((char *)obj + 0x4c);
     char *runtime = *(char **)((char *)obj + 0xb8);
-    int ret;
     if (*(int *)runtime == 0) {
         if (GameBit_Get(*(s16 *)(q + 0x1e)) != 0) {
             Sfx_StopObjectChannel(obj, 8);
