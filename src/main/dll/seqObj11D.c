@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/seqObj11D.h"
+#include "main/objanim.h"
 
 
 extern undefined4 FUN_80006824();
@@ -456,7 +457,6 @@ void fn_80152004(int obj, int *state) {
 }
 
 extern void fn_8014D08C(int obj, u8 *state, int a, int b, int c, f32 f);
-extern f32 ObjAnim_SetMoveProgress(int obj, f32 f);
 extern char lbl_8031F16C[];
 extern char lbl_8031DD30[];
 extern f32 lbl_803E27A4;
@@ -500,7 +500,9 @@ void fn_801511E8(int obj, u8 *state)
     *(u8 *)(state + 0x2f3) = ((SeqEntry *)(entry + state[0x33a] * 16))->g;
     *(u8 *)(state + 0x2f4) = ((SeqEntry *)(entry + state[0x33a] * 16))->b;
     fn_8014D08C(obj, state, ((SeqEntry *)(entry + state[0x33a] * 16))->anim, 0, 3, *(f32 *)(entry + state[0x33a] * 16));
-    ObjAnim_SetMoveProgress(obj, *(f32 *)(lbl_8031DD30 + ((SeqEntry *)(entry + state[0x33a] * 16))->anim * 4));
+    ObjAnim_SetMoveProgress(
+        *(f32 *)(lbl_8031DD30 + ((SeqEntry *)(entry + state[0x33a] * 16))->anim * 4),
+        (ObjAnimComponent *)obj);
     (*(u8 *)(state + 0x33a))++;
     if (state[0x33a] > entry[8]) {
         state[0x33a] = 1;
@@ -562,7 +564,9 @@ void fn_801513AC(int obj, u8 *state)
     *(u8 *)(state + 0x2f3) = ((SeqEntry *)(entry + state[0x33a] * 16))->g;
     *(u8 *)(state + 0x2f4) = ((SeqEntry *)(entry + state[0x33a] * 16))->b;
     fn_8014D08C(obj, state, ((SeqEntry *)(entry + state[0x33a] * 16))->anim, 0, 3, *(f32 *)(entry + state[0x33a] * 16));
-    ObjAnim_SetMoveProgress(obj, *(f32 *)(lbl_8031DD30 + ((SeqEntry *)(entry + state[0x33a] * 16))->anim * 4));
+    ObjAnim_SetMoveProgress(
+        *(f32 *)(lbl_8031DD30 + ((SeqEntry *)(entry + state[0x33a] * 16))->anim * 4),
+        (ObjAnimComponent *)obj);
     (*(u8 *)(state + 0x33a))++;
     if (state[0x33a] > entry[8]) {
         state[0x33a] = 1;
@@ -622,7 +626,9 @@ void fn_8015165C(int obj, u8 *state)
                 fn_8014D08C(obj, state, *(u8 *)(p28 + *(u16 *)(state + 0x338) * 16 + 8), 0,
                             (u8)*(u32 *)(p28 + *(u16 *)(state + 0x338) * 16 + 4),
                             *(f32 *)(p28 + *(u16 *)(state + 0x338) * 16));
-                ObjAnim_SetMoveProgress(obj, *(f32 *)(lbl_8031DD30 + *(u8 *)(p28 + *(u16 *)(state + 0x338) * 16 + 8) * 4));
+                ObjAnim_SetMoveProgress(
+                    *(f32 *)(lbl_8031DD30 + *(u8 *)(p28 + *(u16 *)(state + 0x338) * 16 + 8) * 4),
+                    (ObjAnimComponent *)obj);
                 *(u16 *)(state + 0x338) = *(u8 *)(p28 + *(u16 *)(state + 0x338) * 16 + 9);
             } else {
                 if (player != NULL && ((*(u32 *)(state + 0x2dc) & 0x800080) != 0 || fn_80296118(player) == 0)) {

@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DR/DRearthwalk.h"
+#include "main/objanim.h"
 
 
 #pragma peephole off
@@ -1048,7 +1049,6 @@ extern f32 getXZDistance(f32 *a, f32 *b);
 extern void *fn_802966CC(int player);
 extern int fn_80295CF4(int player, int a);
 extern int fn_8029672C(int player, int a);
-extern void ObjAnim_SetMoveProgress(int obj, f32 p);
 extern int ObjTrigger_IsSet(int obj);
 extern u8 Obj_IsLoadingLocked(void);
 extern int *Obj_AllocObjectSetup(int a, int b);
@@ -1139,7 +1139,7 @@ void sh_staff_update(int obj)
         } else {
             int loadResult;
             fn_80295CF4((int)player, 0);
-            ObjAnim_SetMoveProgress(obj, lbl_803E54D0);
+            ObjAnim_SetMoveProgress(lbl_803E54D0, (ObjAnimComponent *)obj);
             *(s16 *)(obj + 2) = (s16)(*(u8 *)(setup + 0x19) << 8);
             *(s16 *)(obj + 4) = (s16)(*(u8 *)(setup + 0x18) << 8);
             *(int (**)(int, int, u8 *))(obj + 0xbc) = sh_staff_SeqFn;

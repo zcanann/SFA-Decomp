@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/CF/CFPrisonGuard.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b94();
@@ -19,7 +20,6 @@ extern undefined8 FUN_80286840();
 extern undefined4 FUN_8028688c();
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void doRumble(f32 strength);
-extern void ObjAnim_SetMoveProgress(int obj, f32 progress);
 extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);
 extern u8 Obj_IsLoadingLocked(void);
@@ -107,7 +107,8 @@ void staffactivated_updateLiftHeight(int obj, int state)
       ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xb4, 0xf0, 0xff, 0x6f,
                                                 (f32 *)(state + 0x20));
       *(s32 *)(state + 0x10) = *(s32 *)(state + 0x14);
-      ObjAnim_SetMoveProgress(obj, (f32)*(s32 *)(state + 0x14) / lbl_803E3BCC);
+      ObjAnim_SetMoveProgress((f32)*(s32 *)(state + 0x14) / lbl_803E3BCC,
+                              (ObjAnimComponent *)obj);
     } else {
       goto done;
     }
