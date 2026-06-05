@@ -346,7 +346,7 @@ int sh_queenearthwalker_processAnimEvents(void *obj, void *unused, ObjAnimUpdate
             void *player;
             animUpdate->hitVolumePair &= ~0x8;
             player = Obj_GetPlayerObject();
-            *(u8 *)((u8 *)pState + 0x8) = 1;
+            *(u8 *)((int)pState + 0x8) = 1;
             *(f32 *)((u8 *)pState + 0xc) = *(f32 *)((u8 *)player + 0xc);
             *(f32 *)((u8 *)pState + 0x10) = *(f32 *)((u8 *)player + 0x10);
             *(f32 *)((u8 *)pState + 0x14) = *(f32 *)((u8 *)player + 0x14);
