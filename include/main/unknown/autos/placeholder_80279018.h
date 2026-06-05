@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80279018_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80279018_H_
-
-#include "ghidra_import.h"
-
-u32 *get_vidlist(u32 key);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80279018_H_ */

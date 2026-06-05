@@ -2286,7 +2286,7 @@ main/audio/snd_synth_api.c:
 main/unknown/autos/placeholder_80272EEC.c:
 	.text       start:0x80272EA4 end:0x80272EA4
 
-main/unknown/autos/placeholder_80272F0C.c:
+main/audio/synth_job_init.c:
 	.text       start:0x80272EA4 end:0x80272F70
 
 main/unknown/autos/placeholder_80273608.c:
@@ -2316,7 +2316,7 @@ main/unknown/autos/placeholder_80275684.c:
 main/unknown/autos/placeholder_802757AC.c:
 	.text       start:0x8027566C end:0x8027566C
 
-main/unknown/autos/placeholder_802757BC.c:
+main/audio/mcmd_loop.c:
 	extab       start:0x80005888 end:0x80005890
 	extabindex  start:0x8000605C end:0x80006068
 	.text       start:0x8027566C end:0x802757C4
@@ -2345,10 +2345,10 @@ main/audio/mcmd_exec.c:
 	extabindex  start:0x800060C8 end:0x80006194
 	.text       start:0x8027656C end:0x80278F0C
 
-main/unknown/autos/placeholder_80278F74.c:
+main/audio/vid_init.c:
 	.text       start:0x80278F0C end:0x80279004
 
-main/unknown/autos/placeholder_80279018.c:
+main/audio/vid_get.c:
 	.text       start:0x80279004 end:0x80279038
 
 main/unknown/autos/placeholder_802791FC.c:
@@ -2374,7 +2374,7 @@ main/audio/voice_manage.c:
 	extabindex  start:0x800061B8 end:0x800061DC
 	.text       start:0x80279C7C end:0x8027A2B4
 
-main/unknown/autos/placeholder_8027A2FC.c:
+main/audio/voice_unregister.c:
 	.text       start:0x8027A2B4 end:0x8027A330
 
 main/audio/voice_conv.c:
