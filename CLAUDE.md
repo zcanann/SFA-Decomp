@@ -1022,7 +1022,20 @@ properties:
 Cost: each family file initially carries the FULL original decl/typedef set
 + FUN_ extern decls (files are 4.5-6.5K lines vs. the few-hundred-line "clean"
 form). That's a Phase-3 cleanup target — conservation-gated trims, the same
-discipline as newclouds-style dup-def cleanup (recipe #56).
+discipline as newclouds-style dup-def cleanup (recipe #56). Transitive-closure
+dead-decl analysis (start from retained-fn bodies, walk all referenced
+identifiers, drop unreached typedefs/externs/defines) takes 7 carved files
+38K → 18K lines (alpha-35 task #134) with byte-identical .o output.
+
+**Trim-tool failure modes to avoid** (alpha-35 task #134):
+- Multi-line `#define NAME(...) \\` macros must be span-tracked; trimming the
+  primary line without its continuations orphans the body lines.
+- Multi-bracket array externs (`extern char x[6][8];`) need name extraction
+  before the type-bracket parser sees them, or they get wrongly dropped.
+- Pragma `push`/`pop` regions emptied by the trim must keep their empty
+  push/pop pair intact — orphaning one side throws off the pragma stack
+  state of every fn after it. Empty push/pop pairs are state-neutral; leave
+  them.
 
 When to use:
 - **Multi-family unit with messy call sites** (implicit-decl arity-0 calls,
