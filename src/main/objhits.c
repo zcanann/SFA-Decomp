@@ -1124,8 +1124,6 @@ void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount)
   int maxGap;
   int index;
   int insertIndex;
-  ObjHitsSweepEntry **entrySlot;
-  ObjHitsSweepEntry **insertSlot;
   ObjHitsSweepEntry *entry;
   ObjHitsSweepEntry *prevEntry;
 
@@ -1134,23 +1132,15 @@ void ObjHits_SortSweepEntries(ObjHitsSweepEntry **sweepPtrs,int entryCount)
   for (; gap <= maxGap; gap = gap * 3 + 1) {
   }
   for (; gap > 0; gap = gap / 3) {
-    index = gap + 1;
-    entrySlot = sweepPtrs + index;
-    if (index < entryCount) {
-      do {
-        entry = *entrySlot;
-        insertSlot = sweepPtrs + index;
-        insertIndex = index;
-        while ((gap < insertIndex) &&
-               (prevEntry = sweepPtrs[insertIndex - gap], prevEntry->minX > entry->minX)) {
-          *insertSlot = prevEntry;
-          insertSlot -= gap;
-          insertIndex -= gap;
-        }
-        sweepPtrs[insertIndex] = entry;
-        entrySlot++;
-        index++;
-      } while (index < entryCount);
+    for (index = gap + 1; index < entryCount; index++) {
+      entry = sweepPtrs[index];
+      insertIndex = index;
+      while ((gap < insertIndex) &&
+             (prevEntry = sweepPtrs[insertIndex - gap], prevEntry->minX > entry->minX)) {
+        sweepPtrs[insertIndex] = prevEntry;
+        insertIndex -= gap;
+      }
+      sweepPtrs[insertIndex] = entry;
     }
   }
   return;
