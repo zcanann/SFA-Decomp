@@ -36,7 +36,7 @@ extern int FUN_8007f764();
 extern undefined4 FUN_800e8630();
 extern undefined4 FUN_8011e868();
 extern undefined4 FUN_8019f1dc();
-extern undefined4 FUN_801a1230();
+extern void gunpowderbarrel_triggerExplosion(int obj);
 extern undefined4 FUN_801a136c();
 extern undefined4 FUN_801a1654();
 extern int FUN_8020a468();
@@ -447,7 +447,7 @@ void FUN_801a1fb8(int *param_1)
         *(undefined *)(iVar6 + 0x16) = 4;
       }
       if ((*(char *)(iVar6 + 0x4a) < '\0') && (local_17 == '\x03')) {
-        FUN_801a1230((int)param_1,'\0');
+        gunpowderbarrel_triggerExplosion((int)param_1);
         ObjGroup_RemoveObject((int)param_1,0x16);
       }
       else {
@@ -559,13 +559,13 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
       local_50 = 0;
       while (iVar5 = ObjMsg_Pop(uVar2,&local_54,(uint *)0x0,&local_50), iVar5 != 0) {
         if (local_54 == 0x10) {
-          FUN_801a1230(uVar2,'\0');
+          gunpowderbarrel_triggerExplosion(uVar2);
           if (local_50 != 0) {
             ObjGroup_AddObject(uVar2,0x16);
           }
         }
         else if (((int)local_54 < 0x10) && (0xe < (int)local_54)) {
-          FUN_801a1230(uVar2,'\x01');
+          gunpowderbarrel_triggerExplosion(uVar2);
         }
       }
       if ((*(byte *)(iVar12 + 0x4a) >> 5 & 1) == 0) {
@@ -692,7 +692,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
         }
         if (0x14 < *(byte *)(iVar12 + 0x17)) {
           if (*(char *)(iVar12 + 0x4a) < '\0') {
-            FUN_801a1230(uVar2,'\0');
+            gunpowderbarrel_triggerExplosion(uVar2);
           }
           iVar5 = 0;
           if (*(short *)(iVar10 + 0x1a) == 0) {
@@ -759,7 +759,7 @@ void FUN_801a2350(undefined8 param_1,double param_2,double param_3,undefined8 pa
       ObjHits_EnableObject(uVar2);
       ObjHits_SyncObjectPositionIfDirty(uVar2);
       gunpowderbarrel_hitDetect(uVar2);
-      FUN_801a1230(uVar2,'\0');
+      gunpowderbarrel_triggerExplosion(uVar2);
     }
   }
   FUN_80286884();
