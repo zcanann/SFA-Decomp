@@ -779,6 +779,21 @@ Heuristic:
     one line. (Found via MP4 musyx synthdata.c reference + objdiff
     instruction-level inspection.)
 
+59. **Defeat MWCC's commutative-FP-reassociation by lifting the LEADING term
+    to its own statement BEFORE the dot/sum expression.** When target's
+    fmuls+fmadds chain follows your written source order (e.g. C says
+    `a[1]*n[1] + a[0]*n[0] + a[2]*n[2]` and target multiplies `a[1]*n[1]`
+    first) but your output reorders to canonical index order (`a[0]*n[0]`
+    first), MWCC is reassociating commutatively. **`#pragma scheduling off`
+    does NOT fix this** — it's reassociation, not scheduling.
+    Fix: `f32 yy = a[1] * n[1]; f32 dot = yy + a[0] * n[0] + a[2] * n[2];`
+    — pulling the leading term into a statement before the dot expression
+    pins it as the first fmuls and the dot chain becomes
+    fmuls(yy) → fmadds(+a[0]*n[0]) → fmadds(+a[2]*n[2]) matching target.
+    Took Vec3_ReflectAgainstNormal 98.43→100%. **Sibling of #27** (lead
+    with unary-negated operand for fneg+fadds) — both are statement-level
+    expression-restructure to control MWCC's commutative reordering.
+
 ## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
