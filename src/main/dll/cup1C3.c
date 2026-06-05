@@ -4,6 +4,9 @@
 
 #pragma peephole off
 #pragma scheduling off
+
+#define DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG 0x4
+
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006818();
 extern undefined4 FUN_80006824();
@@ -330,17 +333,7 @@ void dbsh_symbol_update(uint param_1)
   else {
     sVar1 = *(short *)((int)puVar4 + 0x1e);
     if (sVar1 == 0) {
-      {
-        register u32 m;
-        register u32 v;
-        register int pReg = *(int *)(param_1 + 100);
-        asm {
-            lwz v, 0x30(pReg)
-            li m, -5
-            and m, v, m
-            stw m, 0x30(pReg)
-        }
-      }
+      *(u32 *)(*(int *)(param_1 + 100) + 0x30) &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
       *(undefined2 *)((int)puVar4 + 0x1e) = 1;
     }
     else if (sVar1 == 2) {
@@ -357,17 +350,7 @@ void dbsh_symbol_update(uint param_1)
       lbl_803DBF68 = '\x01';
     }
     else if (sVar1 == 3) {
-      {
-        register u32 m;
-        register u32 v;
-        register int pReg = *(int *)(param_1 + 100);
-        asm {
-            lwz v, 0x30(pReg)
-            li m, -5
-            and m, v, m
-            stw m, 0x30(pReg)
-        }
-      }
+      *(u32 *)(*(int *)(param_1 + 100) + 0x30) &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
       if (((DbshSymbolFlags *)((char *)puVar4 + 0x20))->finished != 0) {
         GameBit_Set(0x16b,1);
       }
@@ -797,17 +780,7 @@ void dbsh_symbol_init(int* obj)
     *(int**)((char*)obj + 0xbc) = (int*)DBSH_Symbol_SeqFn;
 
     otherPtr = *(int**)((char*)obj + 0x64);
-    {
-        register u32 m;
-        register u32 v;
-        register int *pReg = otherPtr;
-        asm {
-            lwz v, 0x30(pReg)
-            li m, -5
-            and m, v, m
-            stw m, 0x30(pReg)
-        }
-    }
+    *(u32 *)((char *)otherPtr + 0x30) &= ~DBSH_SYMBOL_OBJECT_MODEL_ACTIVE_FLAG;
 }
 #pragma peephole reset
 #pragma scheduling reset
