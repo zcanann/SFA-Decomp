@@ -1414,103 +1414,98 @@ int RomCurve_countRandomPoints(RomCurveDef *curve)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void RomCurve_func1E(uint *curveIds,float *outX,float *outY,float *outZ)
+int RomCurve_func1E(uint *curveIds,float *outX,float *outY,float *outZ)
 {
-  uint *puVar1;
-  float *pfVar2;
+  uint *idCursor;
+  float *outXStart;
   float *outXCursor;
-  int *piVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  int iVar8;
-  float *pfVar9;
-  float *pfVar10;
-  int *piVar11;
-  uint uVar12;
-  int iVar13;
-  int local_28 [10];
+  RomCurveDef **windowCursor;
+  int foundCount;
+  int low;
+  int mid;
+  int high;
+  RomCurveDef *resolvedCurve;
+  float *outZCursor;
+  float *outYCursor;
+  RomCurveDef **resolveCursor;
+  uint curveId;
+  int remaining;
+  RomCurveDef *windowCurves[4];
   
-  puVar1 = curveIds;
-  pfVar2 = outX;
+  idCursor = curveIds;
+  outXStart = outX;
   outXCursor = outX;
-  iVar4 = 0;
-  piVar3 = local_28;
-  iVar13 = 4;
-  pfVar9 = outZ;
-  pfVar10 = outY;
-  piVar11 = piVar3;
+  foundCount = 0;
+  windowCursor = windowCurves;
+  remaining = 4;
+  outZCursor = outZ;
+  outYCursor = outY;
+  resolveCursor = windowCursor;
   do {
-    uVar12 = *puVar1;
-    if ((int)uVar12 < 0) {
-      iVar8 = 0;
+    curveId = *idCursor;
+    if ((int)curveId < 0) {
+      resolvedCurve = NULL;
     }
     else {
-      iVar7 = nRomCurves + -1;
-      iVar5 = 0;
-      while (iVar5 <= iVar7) {
-        iVar6 = iVar7 + iVar5 >> 1;
-        iVar8 = (int)romCurves[iVar6];
-        if (*(uint *)(iVar8 + 0x14) < uVar12) {
-          iVar5 = iVar6 + 1;
+      high = nRomCurves + -1;
+      low = 0;
+      while (low <= high) {
+        mid = high + low >> 1;
+        resolvedCurve = romCurves[mid];
+        if (resolvedCurve->id < curveId) {
+          low = mid + 1;
         }
         else {
-          if (*(uint *)(iVar8 + 0x14) <= uVar12) goto LAB_800e48f4;
-          iVar7 = iVar6 + -1;
+          if (resolvedCurve->id <= curveId) goto LAB_800e48f4;
+          high = mid + -1;
         }
       }
-      iVar8 = 0;
+      resolvedCurve = NULL;
     }
 LAB_800e48f4:
-    *piVar11 = iVar8;
-    iVar5 = *piVar11;
-    if (iVar5 != 0) {
-      *outXCursor = *(float *)(iVar5 + 8);
-      *pfVar10 = *(float *)(iVar5 + 0xc);
-      *pfVar9 = *(float *)(iVar5 + 0x10);
-      iVar4 = iVar4 + 1;
+    *resolveCursor = resolvedCurve;
+    resolvedCurve = *resolveCursor;
+    if (resolvedCurve != NULL) {
+      *outXCursor = resolvedCurve->x;
+      *outYCursor = resolvedCurve->y;
+      *outZCursor = resolvedCurve->z;
+      foundCount = foundCount + 1;
     }
-    piVar11 = piVar11 + 1;
-    puVar1++;
+    resolveCursor = resolveCursor + 1;
+    idCursor++;
     outXCursor++;
-    pfVar10 = pfVar10 + 1;
-    pfVar9 = pfVar9 + 1;
-    iVar13 = iVar13 + -1;
-    if (iVar13 == 0) {
-      if (((1 < iVar4) && (local_28[1] != 0)) && (local_28[2] != 0)) {
-        iVar4 = 0;
-        iVar13 = 4;
-        do {
-          if (*piVar3 == 0) {
-            if (iVar4 == 0) {
-              *pfVar2 = *(float *)(local_28[1] + 8) +
-                        (*(float *)(local_28[1] + 8) - *(float *)(local_28[2] + 8));
-              *outY = *(float *)(local_28[1] + 0xc) +
-                      (*(float *)(local_28[1] + 0xc) - *(float *)(local_28[2] + 0xc));
-              *outZ = *(float *)(local_28[1] + 0x10) +
-                      (*(float *)(local_28[1] + 0x10) - *(float *)(local_28[2] + 0x10));
-            }
-            else if (iVar4 == 3) {
-              *pfVar2 = *(float *)(local_28[2] + 8) +
-                        (*(float *)(local_28[2] + 8) - *(float *)(local_28[1] + 8));
-              *outY = *(float *)(local_28[2] + 0xc) +
-                      (*(float *)(local_28[2] + 0xc) - *(float *)(local_28[1] + 0xc));
-              *outZ = *(float *)(local_28[2] + 0x10) +
-                      (*(float *)(local_28[2] + 0x10) - *(float *)(local_28[1] + 0x10));
-            }
-          }
-          piVar3 = piVar3 + 1;
-          pfVar2 = pfVar2 + 1;
-          outY = outY + 1;
-          outZ = outZ + 1;
-          iVar4 = iVar4 + 1;
-          iVar13 = iVar13 + -1;
-        } while (iVar13 != 0);
+    outYCursor = outYCursor + 1;
+    outZCursor = outZCursor + 1;
+    remaining = remaining + -1;
+  } while (remaining != 0);
+
+  if (((foundCount < 2) || (windowCurves[1] == NULL)) || (windowCurves[2] == NULL)) {
+    return 0;
+  }
+
+  foundCount = 0;
+  remaining = 4;
+  do {
+    if (*windowCursor == NULL) {
+      if (foundCount == 0) {
+        *outXStart = windowCurves[1]->x + (windowCurves[1]->x - windowCurves[2]->x);
+        *outY = windowCurves[1]->y + (windowCurves[1]->y - windowCurves[2]->y);
+        *outZ = windowCurves[1]->z + (windowCurves[1]->z - windowCurves[2]->z);
       }
-      return;
+      else if (foundCount == 3) {
+        *outXStart = windowCurves[2]->x + (windowCurves[2]->x - windowCurves[1]->x);
+        *outY = windowCurves[2]->y + (windowCurves[2]->y - windowCurves[1]->y);
+        *outZ = windowCurves[2]->z + (windowCurves[2]->z - windowCurves[1]->z);
+      }
     }
-  } while( true );
+    windowCursor = windowCursor + 1;
+    outXStart = outXStart + 1;
+    outY = outY + 1;
+    outZ = outZ + 1;
+    foundCount = foundCount + 1;
+    remaining = remaining + -1;
+  } while (remaining != 0);
+  return 1;
 }
 
 /*
