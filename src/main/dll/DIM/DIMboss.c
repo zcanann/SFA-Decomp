@@ -226,7 +226,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
   Obj_GetPlayerObject();
   topState = runtime->topState;
   runtime->phase = DIMBOSS_PHASE_START;
-  (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,5,0);
+  (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_INTRO_GATE,0);
   if (obj->renderPause != 0) {
     return 0;
   }
@@ -256,15 +256,15 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
       break;
     case DIMBOSS_EVENT_LAUNCH_LIFT:
       runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
-      obj->objectFlags &= ~8;
-      obj->objectFlags |= 0x80;
-      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,0,0);
+      obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
+      obj->objectFlags |= DIMBOSS_OBJECT_FLAG_ACTIVE;
+      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_LIFT,0);
       break;
     case DIMBOSS_EVENT_ENABLE_DIMBOSS_MAP_AREA:
-      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,1);
+      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_BOSS,1);
       break;
     case DIMBOSS_EVENT_DISABLE_DIMBOSS_MAP_AREA:
-      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,2,0);
+      (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_BOSS,0);
       break;
     case DIMBOSS_EVENT_SET_SEQUENCE_FLAGS_40004:
       gDIMbossSequenceFlags = gDIMbossSequenceFlags | DIMBOSS_SEQUENCE_FLAGS_40004;
@@ -523,7 +523,7 @@ void DIMboss_free(DIMbossObject *obj)
   GameBit_Set(0xc20,0);
   GameBit_Set(0xd8f,0);
   GameBit_Set(0x3e2,0);
-  obj->objectFlags &= ~0x80;
+  obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_ACTIVE;
   Camera_DisableViewYOffset();
   ObjGroup_RemoveObject(obj,3);
   childObject = obj->childObject;
@@ -646,19 +646,19 @@ void DIMboss_update(DIMbossObject *obj)
                   (obj,runtime,runtime->moveScratch,(int)runtime->activeMoveId,
                    &runtime->hitReactMode,0,0,0,1);
         runtime->stateFlags &= ~DIMBOSS_STATE_FLAG_START_MOVE;
-        obj->objectFlags &= ~8;
-        obj->objectFlags |= 0x80;
+        obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
+        obj->objectFlags |= DIMBOSS_OBJECT_FLAG_ACTIVE;
         gameBitCount = GameBit_Get(DIMBOSS_GAMEBIT_TONSIL_HIT_COUNT);
         if (gameBitCount >= 3) {
           runtime->phase = DIMBOSS_PHASE_GAMEBIT_COUNT_MET;
           runtime->animMode = 3;
-          obj->objectFlags &= ~8;
+          obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
           GameBit_Set(DIMBOSS_GAMEBIT_LIGHTFOOT_SNOWBALL_GATE,0);
         }
         else {
           runtime->phase = DIMBOSS_PHASE_LAUNCH_LIFT;
           runtime->animMode = 3;
-          obj->objectFlags &= ~8;
+          obj->objectFlags &= ~DIMBOSS_OBJECT_FLAG_HIDDEN;
           topState->launchLift = lbl_803E4C44;
           GameBit_Set(DIMBOSS_GAMEBIT_LIGHTFOOT_SNOWBALL_GATE,1);
         }
@@ -747,7 +747,8 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   (*(code *)(*(int *)gPlayerInterface + 0x14))(obj,runtime,0);
   runtime->field270 = 0;
   runtime->animMode = 3;
-  obj->objectFlags = (u8)(obj->objectFlags | 0x88);
+  obj->objectFlags = (u8)(obj->objectFlags |
+                          (DIMBOSS_OBJECT_FLAG_HIDDEN | DIMBOSS_OBJECT_FLAG_ACTIVE));
   if (GameBit_Get(DIMBOSS_GAMEBIT_RENDER_PAUSE) != 0) {
     runtime->phase = DIMBOSS_PHASE_RENDER_PAUSE;
     obj->renderPause = 1;
@@ -775,10 +776,10 @@ void DIMboss_init(DIMbossObject *obj,undefined4 param_2,int param_3)
   if (GameBit_Get(DIMBOSS_GAMEBIT_INTRO_SEEN) == 0) {
     topState->stompDustDelay = 2;
     topState->introSinkHeight = lbl_803E4C78;
-    (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,5,1);
+    (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_INTRO_GATE,1);
   }
   else {
-    (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,5,0);
+    (*gMapEventInterface)->triggerArea(DIMBOSS_MAP_DIR,DIMBOSS_MAP_AREA_INTRO_GATE,0);
   }
   topState->defeatTimer = 0;
   if ((*gMapEventInterface)->getAreaState(7) == 2) {
