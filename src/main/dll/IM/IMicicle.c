@@ -142,75 +142,98 @@ void cfforcefield_update(u8 *obj)
     int pad10;
     f32 waveScale;
   } ForceFieldEmitter;
+  typedef struct ForceFieldFlags {
+    u8 disabled : 1;
+    u8 rest : 7;
+  } ForceFieldFlags;
+  f32 *wavePtr;
+  int *stepPtr;
+  ForceFieldEmitter *emitter;
+  int angle;
   u8 *data;
   u8 *state;
   int style;
+  f32 val;
+  int isZero;
+  f32 kA4;
+  f32 kA8;
+  f32 kAC;
+  f32 kA0;
   f32 strength;
+  f32 kZero;
+  f32 z;
+  f32 mtx[3][4];
+  f32 world[6];
+  f32 local[3];
 
   data = *(u8 **)(obj + 0x4c);
   state = *(u8 **)(obj + 0xb8);
-  *(f32 *)(obj + 0x24) = lbl_803E4390;
-  *(f32 *)(obj + 0x28) = lbl_803E4390;
-  *(f32 *)(obj + 0x2c) = lbl_803E4390;
+  z = lbl_803E4390;
+  *(f32 *)(obj + 0x2c) = z;
+  *(f32 *)(obj + 0x28) = z;
+  *(f32 *)(obj + 0x24) = z;
 
-  if (GameBit_Get(*(s16 *)(data + 0x1e)) == 0) {
-    return;
-  }
+  if (GameBit_Get(*(s16 *)(data + 0x1e)) != 0) {
+    if (!((ForceFieldFlags *)state)->disabled) {
+      style = (s8)data[0x19] % 3;
+      val = *(f32 *)(state + 4);
+      isZero = (val != lbl_803E4390);
+      isZero = !isZero;
+      if (isZero) {
+        strength = lbl_803E4394;
+      } else {
+        strength = lbl_803E4398 * val;
+      }
 
-  if ((s8)state[0] < 0) {
-    state[0] = (u8)((state[0] & ~0x80) | (((u8)GameBit_Get(*(s16 *)(data + 0x20)) & 1) << 7));
-    return;
-  }
+      {
+        Obj_BuildWorldTransformMatrix(obj, (f32 *)mtx, 0);
+        *(s16 *)(obj + 4) = (s16)(lbl_803E439C * timeDelta + (f32)(s32)*(s16 *)(obj + 4));
 
-  style = (s8)data[0x19] % 3;
-  if (*(f32 *)(state + 4) == lbl_803E4390) {
-    strength = lbl_803E4394;
-  } else {
-    strength = lbl_803E4398 * *(f32 *)(state + 4);
-  }
+        angle = -0x7fff;
+        emitter = (ForceFieldEmitter *)((u8 *)lbl_80322ED8 + style * 0x18);
+        wavePtr = &emitter->waveScale;
+        stepPtr = &emitter->angleStep;
+        kA4 = lbl_803E43A4;
+        kA8 = lbl_803E43A8;
+        kAC = lbl_803E43AC;
+        kA0 = lbl_803E43A0;
+        kZero = lbl_803E4390;
+        for (; angle < 0x7fff; angle += *stepPtr) {
+          local[0] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
+                     kA0 * (strength * lbl_803DBE90) *
+                         sin(kA4 * (f32)(angle + (s32)(kA8 * *wavePtr)) / kAC);
+          local[1] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
+                     kA0 * (strength * lbl_803DBE90) *
+                         fn_80293E80(kA4 * (f32)(angle + (s32)(kA8 * *wavePtr)) / kAC);
+          local[2] = kZero;
+          PSMTXMultVecSR((f32 *)mtx, local, local);
+          world[3] = local[0] + *(f32 *)(obj + 0xc);
+          world[4] = local[1] + *(f32 *)(obj + 0x10);
+          world[5] = local[2] + *(f32 *)(obj + 0x14);
+          ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
+              obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
+          ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
+              obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
+          ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
+              obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
+        }
+      }
 
-  {
-    f32 mtx[3][4];
-    ForceFieldEmitter *emitter = (ForceFieldEmitter *)((u8 *)lbl_80322ED8 + style * 0x18);
-    int angle;
-    Obj_BuildWorldTransformMatrix(obj, (f32 *)mtx, 0);
-    *(s16 *)(obj + 4) = (s16)((f32)(s32)*(s16 *)(obj + 4) + lbl_803E439C * timeDelta);
-
-    for (angle = -0x7fff; angle < 0x7fff; angle += emitter->angleStep) {
-      f32 local[3];
-      f32 world[3];
-      int phaseOffset = (s32)(lbl_803E43A8 * emitter->waveScale);
-      f32 phase = (lbl_803E43A4 * (f32)(angle + phaseOffset)) / lbl_803E43AC;
-
-      local[0] = lbl_803E43A0 * (strength * lbl_803DBE90) * sin(phase) +
-                 (f32)randomGetRange(-lbl_803DBE94, lbl_803DBE94);
-      local[1] = lbl_803E43A0 * (strength * lbl_803DBE90) * fn_80293E80(phase) +
-                 (f32)randomGetRange(-lbl_803DBE94, lbl_803DBE94);
-      local[2] = lbl_803E4390;
-      PSMTXMultVecSR((f32 *)mtx, local, local);
-      world[0] = local[0] + *(f32 *)(obj + 0xc);
-      world[1] = local[1] + *(f32 *)(obj + 0x10);
-      world[2] = local[2] + *(f32 *)(obj + 0x14);
-      ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
-          obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
-      ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
-          obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
-      ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
-          obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
-    }
-  }
-
-  if (fn_80080150(state + 4) != 0) {
-    *(s16 *)(obj + 2) = (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)*(s16 *)(obj + 2));
-    if (timerCountDown(state + 4) != 0) {
-      state[0] = (u8)(state[0] | 0x80);
-      *(s16 *)(obj + 2) = 0;
-    }
-  } else if (GameBit_Get(*(s16 *)(data + 0x20)) != 0) {
-    s16toFloat(state + 4, 0x3c);
-    Sfx_PlayFromObject((int)obj, 0x366);
-    if (*(int *)(*(int *)(obj + 0x4c) + 0x14) != 0x47f5e) {
-      Sfx_PlayFromObject((int)obj, 0x409);
+      if (fn_80080150(state + 4) != 0) {
+        *(s16 *)(obj + 2) = (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)*(s16 *)(obj + 2));
+        if (timerCountDown(state + 4) != 0) {
+          ((ForceFieldFlags *)state)->disabled = 1;
+          *(s16 *)(obj + 2) = 0;
+        }
+      } else if (GameBit_Get(*(s16 *)(data + 0x20)) != 0) {
+        s16toFloat(state + 4, 0x3c);
+        Sfx_PlayFromObject((int)obj, 0x366);
+        if (*(int *)(*(int *)(obj + 0x4c) + 0x14) != 0x47f5e) {
+          Sfx_PlayFromObject((int)obj, 0x409);
+        }
+      }
+    } else {
+      ((ForceFieldFlags *)state)->disabled = (u8)GameBit_Get(*(s16 *)(data + 0x20));
     }
   }
 }
