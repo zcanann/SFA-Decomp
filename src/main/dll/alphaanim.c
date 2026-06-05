@@ -1014,8 +1014,10 @@ int dll_115_seqFn(int *obj, int p2, void *p3) {
         int v = state[0];
         if (v >= 10 || v < 8) {
             if (v + 1 < 8) {
-                s16 newId = *(s16 *)((char *)def + (v + 1) * 2 + 0x28);
-                if (newId != -1 && newId != *(s16 *)((char *)def + v * 2 + 0x28)) {
+                s16 *nextDef = def + v + 1;
+                s16 *curDef = def + v;
+                s16 newId = nextDef[0x14];
+                if (newId != -1 && newId != curDef[0x14]) {
                     if (GameBit_Get(newId) != 0) {
                         ((void (*)(int))((int **)*gObjectTriggerInterface)[0x13])(*(s16 *)((char *)obj + 0xb4));
                     }
