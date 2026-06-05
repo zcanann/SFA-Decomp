@@ -1,4 +1,46 @@
+#include "global.h"
 #include "main/dll/DR/dr_shared.h"
+
+typedef struct DRChimmeySetup {
+    u8 pad00[0x18];
+    s8 yawByte;
+    u8 pad19[5];
+    s16 completionGameBit;
+    s16 enableGameBit;
+} DRChimmeySetup;
+
+typedef struct DRChimmeyState {
+    void *linkedObject;
+    u8 pad04[8];
+    f32 timerDuration;
+    f32 timer;
+    s16 completionGameBit;
+    s8 offeringsRemaining;
+    u8 eventActive;
+} DRChimmeyState;
+
+typedef struct DRChimmeyObject {
+    s16 yaw;
+    u8 pad02[0x4a];
+    DRChimmeySetup *setup;
+    u8 pad50[0x5f];
+    u8 renderFlags;
+    u8 padB0[8];
+    DRChimmeyState *state;
+} DRChimmeyObject;
+
+STATIC_ASSERT(sizeof(DRChimmeyState) == 0x18);
+STATIC_ASSERT(offsetof(DRChimmeyState, timerDuration) == 0x0c);
+STATIC_ASSERT(offsetof(DRChimmeyState, timer) == 0x10);
+STATIC_ASSERT(offsetof(DRChimmeyState, completionGameBit) == 0x14);
+STATIC_ASSERT(offsetof(DRChimmeyState, offeringsRemaining) == 0x16);
+STATIC_ASSERT(offsetof(DRChimmeyState, eventActive) == 0x17);
+STATIC_ASSERT(offsetof(DRChimmeySetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(DRChimmeySetup, completionGameBit) == 0x1e);
+STATIC_ASSERT(offsetof(DRChimmeySetup, enableGameBit) == 0x20);
+STATIC_ASSERT(offsetof(DRChimmeyObject, setup) == 0x4c);
+STATIC_ASSERT(offsetof(DRChimmeyObject, renderFlags) == 0xaf);
+STATIC_ASSERT(offsetof(DRChimmeyObject, state) == 0xb8);
 
 int drchimmey_getExtraSize(void) { return 0x18; }
 
@@ -14,59 +56,61 @@ void drchimmey_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, un
 
 #pragma scheduling off
 #pragma peephole off
-void drchimmey_init(int obj, char *arg) {
-    int p;
-    *(s16 *)obj = (s16)((s8)arg[0x18] << 8);
-    p = *(int *)((char *)obj + 0xb8);
-    *(f32 *)(p + 0xc) = lbl_803E69E8;
-    *(s16 *)(p + 0x14) = *(s16 *)(arg + 0x1e);
-    *(u8 *)(p + 0x16) = 3;
-    storeZeroToFloatParam((void *)(p + 0x10));
+void drchimmey_init(DRChimmeyObject *obj, DRChimmeySetup *setup) {
+    DRChimmeyState *state;
+
+    obj->yaw = (s16)(setup->yawByte << 8);
+    state = obj->state;
+    state->timerDuration = lbl_803E69E8;
+    state->completionGameBit = setup->completionGameBit;
+    state->offeringsRemaining = 3;
+    storeZeroToFloatParam(&state->timer);
 }
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-int drchimmey_countdownCallback(int obj, int dec) {
-    s8 *p = (s8 *)*(char **)((char *)obj + 0xb8);
-    p[0x16] -= dec;
-    return p[0x16] == 0;
+int drchimmey_countdownCallback(DRChimmeyObject *obj, int amount) {
+    DRChimmeyState *state = obj->state;
+    state->offeringsRemaining -= amount;
+    return state->offeringsRemaining <= 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
-void drchimmey_update(int obj) {
-    int q = *(int *)((char *)obj + 0x4c);
-    char *p = *(char **)((char *)obj + 0xb8);
-    *(u8 *)((char *)obj + 0xaf) |= 8;
-    if (*(s16 *)(q + 0x20) != -1 && GameBit_Get(*(s16 *)(q + 0x20)) == 0) {
+void drchimmey_update(DRChimmeyObject *obj) {
+    DRChimmeySetup *setup = obj->setup;
+    DRChimmeyState *state = obj->state;
+
+    obj->renderFlags |= 8;
+    if (setup->enableGameBit != -1 && GameBit_Get(setup->enableGameBit) == 0) {
         return;
     }
-    if (fn_80080150((void *)(p + 0x10)) == 0) {
-        if ((s8)p[0x16] <= 0) {
-            p[0x17] = 1;
-            s16toFloat((void *)(p + 0x10), (int)*(f32 *)(p + 0xc));
-            GameBit_Set(*(s16 *)(p + 0x14), 1);
+    if (fn_80080150(&state->timer) == 0) {
+        if (state->offeringsRemaining <= 0) {
+            state->eventActive = 1;
+            s16toFloat(&state->timer, (int)state->timerDuration);
+            GameBit_Set(state->completionGameBit, 1);
         } else {
             int *tricky = getTrickyObject();
             if (tricky != 0) {
-                if ((*(u8 *)((char *)obj + 0xaf) & 4) != 0) {
-                    (*(void (**)(int *, int, int, int))((char *)*(void **)*(void **)((char *)tricky + 0x68) + 0x28))(tricky, obj, 1, 4);
+                if ((obj->renderFlags & 4) != 0) {
+                    (*(void (**)(int *, int, int, int))((char *)*(void **)*(void **)((char *)tricky + 0x68) + 0x28))(tricky, (int)obj, 1, 4);
                 }
-                *(u8 *)((char *)obj + 0xaf) &= ~8;
-                objRenderFn_80041018(obj);
+                obj->renderFlags &= ~8;
+                objRenderFn_80041018((int)obj);
             }
         }
     }
-    if (timerCountDown((void *)(p + 0x10)) != 0) {
-        *(int *)p = 0;
-        *(f32 *)(p + 0x10) = lbl_803E69E4;
-        p[0x17] = 0;
-        p[0x16] = 1;
-        GameBit_Set(*(s16 *)(p + 0x14), 0);
+    if (timerCountDown(&state->timer) != 0) {
+        state->linkedObject = NULL;
+        state->timer = lbl_803E69E4;
+        state->eventActive = 0;
+        state->offeringsRemaining = 1;
+        GameBit_Set(state->completionGameBit, 0);
         GameBit_Set(0xea4, 0);
     }
 }
