@@ -310,10 +310,11 @@ void synthRefreshJobVolumes(void)
     sndEnd();
 }
 
-#define DATA_KEYMAP_TAB ((DataRefEntry*)(dataSmpSDirTable + 0x4600))
+#define DATA_KEYMAP_TAB ((DataRefEntry *)(base + 0x4600))
 
 int dataInsertKeymap(u16 cid, void *keymapdata)
 {
+    u8 *base = dataSmpSDirTable;
     long i;
     long j;
 
@@ -349,42 +350,24 @@ int dataInsertKeymap(u16 cid, void *keymapdata)
     return 1;
 }
 
-int dataRemoveKeymap(u32 keymapId)
+int dataRemoveKeymap(u16 sid)
 {
-    DataRefEntry *entry;
-    u8 *tableBase;
-    u16 count;
-    int index;
-    int moveCount;
-    u32 key;
-    u16 refs;
+    u8 *base = dataSmpSDirTable;
+    long i;
+    long j;
+    long n;
 
-    tableBase = dataSmpSDirTable;
     sndBegin();
-    count = dataKeymapNum;
-    key = keymapId & 0xffff;
-    entry = (DataRefEntry *)(tableBase + 0x4600);
-    index = 0;
-    while (index < count && entry->key != key) {
-        entry++;
-        index++;
-    }
-    if (index != count) {
-        entry = (DataRefEntry *)(tableBase + 0x4600 + index * sizeof(DataRefEntry));
-        refs = entry->refCount - 1;
-        entry->refCount = refs;
-        if (refs == 0) {
-            entry = (DataRefEntry *)(tableBase + 0x4600 + (index + 1) * sizeof(DataRefEntry));
-            moveCount = count - (index + 1);
-            while (moveCount > 0) {
-                entry[-1] = entry[0];
-                entry++;
-                moveCount--;
-            }
-            dataKeymapNum--;
-            sndEnd();
-            return 1;
+    n = dataKeymapNum;
+    for (i = 0; i < n && sid != DATA_KEYMAP_TAB[i].key; ++i)
+        ;
+    if (i != n && --DATA_KEYMAP_TAB[i].refCount == 0) {
+        for (j = i + 1; j < n; j++) {
+            DATA_KEYMAP_TAB[j - 1] = DATA_KEYMAP_TAB[j];
         }
+        --dataKeymapNum;
+        sndEnd();
+        return 1;
     }
     sndEnd();
     return 0;
