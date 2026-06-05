@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/dll/CF/CFforcecontrol.h"
 
 
@@ -109,7 +110,6 @@ extern f32 FLOAT_803e49a8;
  */
 extern s16* Camera_GetCurrentViewSlot(void);
 extern int* gScreenTransitionInterface;
-extern int ObjAnim_SetCurrentMove(int* obj, int moveId, f32 moveProgress, int flags);
 extern void setScreenTransitionPause(int v);
 extern void addButtonObject(int* obj);
 extern f32 lbl_803E3D1C;
@@ -124,7 +124,7 @@ void deathseq_init(int* obj)
 
   setScreenTransitionPause(1);
   ((void(*)(int,int))((void**)*gScreenTransitionInterface)[2])(1, 1);
-  ObjAnim_SetCurrentMove(obj, 0x8e, lbl_803E3D1C, 0);
+  ObjAnim_SetCurrentMove((int)obj, 0x8e, lbl_803E3D1C, 0);
   state[0] = lbl_803E3D58;
   state[1] = *(f32*)((char*)cam + 0xc);
   state[2] = *(f32*)((char*)cam + 0x10);
@@ -1254,7 +1254,6 @@ extern void fn_80296C6C(int* player, int v);
 extern void AudioStream_StopCurrent(void);
 extern void AudioStream_StartPrepared(void);
 extern void AudioStream_Play(int streamId, void* cb);
-extern int ObjAnim_AdvanceCurrentMove(int* obj, f32 speed, f32 dt, int flags);
 extern int* objFindTexture(int* obj, int idx, int p3);
 extern void cutsceneFadeInOut(int v);
 extern void Obj_FreeObject(int* obj);
@@ -1290,9 +1289,9 @@ void deathseq_update(int* obj)
         if (*(s16*)((char*)obj + 0xa0) != 0x92) {
             AudioStream_StopCurrent();
             AudioStream_Play(0x51e1, (void*)AudioStream_StartPrepared);
-            ObjAnim_SetCurrentMove(obj, 0x92, lbl_803E3D1C, 0);
+            ObjAnim_SetCurrentMove((int)obj, 0x92, lbl_803E3D1C, 0);
         }
-        ObjAnim_AdvanceCurrentMove(obj, lbl_803E3D20, timeDelta, 0);
+        ObjAnim_AdvanceCurrentMove(lbl_803E3D20, timeDelta, (int)obj, NULL);
         if (*(f32*)((char*)obj + 0x98) > lbl_803E3D24) {
             tex = objFindTexture(obj, 5, 0);
             *tex = 0;
@@ -1319,7 +1318,7 @@ void deathseq_update(int* obj)
     } else {
         state->distTarget = lbl_803E3D2C;
         if (((int(*)(void))((void**)*gScreenTransitionInterface)[5])() != 0) {
-            ObjAnim_AdvanceCurrentMove(obj, lbl_803E3D20, timeDelta, 0);
+            ObjAnim_AdvanceCurrentMove(lbl_803E3D20, timeDelta, (int)obj, NULL);
             ready = 1;
         }
         if (*(f32*)((char*)obj + 0x98) > lbl_803E3D24) {
