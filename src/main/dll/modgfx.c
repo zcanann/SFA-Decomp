@@ -5205,7 +5205,7 @@ void ParticleEffectController_func05(void)
         lbl_803DB7A8 = lbl_803DF4CC;
     }
     lbl_803DB7AC = lbl_803DB7AC + lbl_803DF4C8 * timeDelta;
-    if (lbl_803DB7AC > lbl_803DF4D0) {
+    if (lbl_803DB7AC > *(f32 *)&lbl_803DF4D0) {
         lbl_803DB7AC = lbl_803DF4D8;
     }
     lbl_803DD318 = lbl_803DD318 + framesThisStep * 100;
