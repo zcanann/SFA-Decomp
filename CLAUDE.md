@@ -967,6 +967,52 @@ match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
    pre-move total (NOT the headline %, which shifts with the denominator).
    Revert any family that doesn't conserve. Build green, **land on `main`**.
 
+### Skeleton-copy carve method (preferred for messy multi-family units)
+
+For units where the original `.c` has **sloppy call sites** (implicit-decl
+arity-0 calls, missing prototypes, calls-before-defs that compile because the
+def lives in the same TU), the "complete extern set in a shared header"
+approach (procedure step 4 + the shared-header lesson below) **FAILS** — adding
+full prototypes to the carved files changes f32-promotion codegen at the
+implicit-decl call sites, producing per-fn fuzzy regressions even though the
+fns being moved are unchanged. The textrender/model carves in 8001746C hit
+this on the first build attempt.
+
+The fix that lands byte-exact on the first try: **each family file is the
+ENTIRE original `.c`** with other families' definitions collapsed to a
+**one-line prototype AT THE SAME POSITION** the def used to occupy. Key
+properties:
+
+- **A definition IS a declaration** — collapsing a def to its prototype at the
+  same line preserves the decl environment exactly. The carved-away fn's
+  signature is still in scope, so any sloppy implicit-decl call site sees the
+  same visible signature it saw pre-carve.
+- **All `#pragma` lines stay verbatim** — pragma stack state at every retained
+  fn is identical by construction. No pragma-stack recomputation, no
+  effective-state derivation, no risk of mis-classifying a fn's pragma scope.
+- **No decl reconstruction** — typedefs, externs, includes all stay in place.
+  No SJIS-encoding surprises from header rewriting.
+- **No shared-header authoring** — the `engine_XXXXXXXX_shared.h` /
+  `engine_XXXXXXXX_phantoms.h` pattern is OPTIONAL with this method; the
+  shrinking placeholder carries the shared decls until it's empty, then the
+  last carve absorbs them.
+
+Cost: each family file initially carries the FULL original decl/typedef set
++ FUN_ extern decls (files are 4.5-6.5K lines vs. the few-hundred-line "clean"
+form). That's a Phase-3 cleanup target — conservation-gated trims, the same
+discipline as newclouds-style dup-def cleanup (recipe #56).
+
+When to use:
+- **Multi-family unit with messy call sites** (implicit-decl arity-0 calls,
+  unprototyped intra-TU references) — skeleton-copy is the safe path.
+- **Multi-family unit with clean prototypes throughout** (DLL TUs with
+  ObjectDescriptor handlers, no sloppy calls) — the shared-header procedure
+  still works fine.
+- **Single-TU 1:1 rename** — N/A, the file isn't being split.
+
+Took 8001746C from 96KB / 354 fns / 7 families → 7 clean engine files in one
+session, every carve byte-exact first try. (alpha-35, task #134.)
+
 ### Lessons from the 6-unit graduation wave (8020C9CC/800944A0/80220608/80295318/800066E0/80080E58)
 
 - **Pre-build + DRY-RUN the split script in /tmp** (parse all bodies, classify every
