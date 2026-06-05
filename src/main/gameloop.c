@@ -2137,9 +2137,9 @@ extern void OSResetSystem(int reset, u32 resetCode, int forceMenu);
 extern u8 gAudioStreamPlaying;
 extern u8 gAudioStreamDvdState;
 extern u8 gDvdErrorPauseActive;
-extern int lbl_803DC960;
+extern int gDvdLastDriveStatus;
 extern u8 lbl_803DCCA6;
-extern u8 lbl_803DC951;
+extern u8 gDvdCoverOpenErrorActive;
 extern u8 lbl_803DB425;
 extern f32 lbl_803DCAC8;
 extern f32 lbl_803DCB00;
@@ -2160,7 +2160,7 @@ void checkReset(void) {
     if (lbl_803DCCA6 == 0) {
         return;
     }
-    if (lbl_803DC951 != 0) {
+    if (gDvdCoverOpenErrorActive != 0) {
         return;
     }
     lbl_803DCCA6 = 0;
@@ -2218,7 +2218,7 @@ void checkReset(void) {
         OSReport(msg + 0xec);
         while (gDvdErrorPauseActive == 0 && (gAudioStreamPlaying != 0 || gAudioStreamDvdState != 0)) {
             status = DVDGetDriveStatus();
-            lbl_803DC960 = status;
+            gDvdLastDriveStatus = status;
             switch (status) {
             case -1:
                 gDvdErrorPauseActive = 1;

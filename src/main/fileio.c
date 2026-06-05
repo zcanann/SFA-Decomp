@@ -15,7 +15,7 @@ void dvdCheckError(void)
     }
 
     status = DVDGetDriveStatus();
-    lbl_803DC960 = status;
+    gDvdLastDriveStatus = status;
     switch (status) {
     case -1:
         msgId = 0x339;
@@ -24,7 +24,7 @@ void dvdCheckError(void)
             gDvdErrorPauseActive = 1;
             setTimeStop(0xff);
             cutsceneFadeInOut(1);
-            lbl_803DC951 = 1;
+            gDvdCoverOpenErrorActive = 1;
         }
         break;
     case 4:
@@ -94,7 +94,7 @@ void dvdCheckError(void)
 #pragma peephole off
 void fileReadCb_80015954(void* result)
 {
-    lbl_803DC958 = (int)result;
+    gDvdReadCallbackResult = (int)result;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -151,10 +151,11 @@ void* loadFileByPath(char* path, int* outSize)
 int DVDRead(void* fileInfo, void* buf, int size, int offset)
 {
     u8 resetSeen = 0;
-    lbl_803DC958 = 0;
-    while (lbl_803DC958 == 0 || lbl_803DC958 == -1 || lbl_803DC958 == -3) {
+    gDvdReadCallbackResult = 0;
+    while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1 ||
+           gDvdReadCallbackResult == -3) {
         DVDReadAsyncPrio(fileInfo, buf, size, offset, fileReadCb_80015954, 2);
-        while (lbl_803DC958 == 0 || lbl_803DC958 == -1) {
+        while (gDvdReadCallbackResult == 0 || gDvdReadCallbackResult == -1) {
             padUpdate();
             checkReset();
             if (resetSeen) {
@@ -171,7 +172,7 @@ int DVDRead(void* fileInfo, void* buf, int size, int offset)
             }
         }
     }
-    return lbl_803DC958;
+    return gDvdReadCallbackResult;
 }
 #pragma peephole reset
 #pragma scheduling reset
