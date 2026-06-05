@@ -18,7 +18,7 @@ u32 MagicPlant_getObjectTypeId(int *obj);
 void MagicPlant_free(int obj, int param_2);
 void MagicPlant_render(int obj, int p2, int p3, int p4, int p5, s8 visible);
 void MagicPlant_update(int obj);
-void MagicPlant_init();
+void MagicPlant_init(int obj, MagicPlantSetup *setup);
 void FUN_8017fa14(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
                  undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
                  int param_9,undefined2 param_10);

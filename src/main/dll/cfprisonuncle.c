@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "global.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfprisonuncle.h"
 #include "main/objanim.h"
@@ -220,7 +221,7 @@ extern void vecRotateZXY(void *angles,void *outVec);
 struct MagicPlantSetup {
   u8 pad00[0x14];
   int eventId;
-  u16 eventDivisor;
+  u16 eventDuration;
   u8 pad1A;
   u8 variant;
   u8 modelIndex;
@@ -228,13 +229,33 @@ struct MagicPlantSetup {
 };
 
 struct MagicPlantState {
-  u32 childObj;
-  f32 moveProgress;
-  f32 moveStepScale;
-  s16 timer;
+  u32 childObject;
+  f32 animProgress;
+  f32 animStepScale;
+  s16 idleTimer;
   u8 pad0E;
   s8 mode;
 };
+
+enum MagicPlantMode {
+  MAGICPLANT_MODE_WAIT_FOR_EVENT,
+  MAGICPLANT_MODE_ACTIVE,
+  MAGICPLANT_MODE_FADE_OUT,
+  MAGICPLANT_MODE_FADE_IN,
+  MAGICPLANT_MODE_HIT_REACT
+};
+
+STATIC_ASSERT(sizeof(MagicPlantState) == 0x10);
+STATIC_ASSERT(offsetof(MagicPlantState, childObject) == 0x00);
+STATIC_ASSERT(offsetof(MagicPlantState, animProgress) == 0x04);
+STATIC_ASSERT(offsetof(MagicPlantState, animStepScale) == 0x08);
+STATIC_ASSERT(offsetof(MagicPlantState, idleTimer) == 0x0c);
+STATIC_ASSERT(offsetof(MagicPlantState, mode) == 0x0f);
+STATIC_ASSERT(offsetof(MagicPlantSetup, eventId) == 0x14);
+STATIC_ASSERT(offsetof(MagicPlantSetup, eventDuration) == 0x18);
+STATIC_ASSERT(offsetof(MagicPlantSetup, variant) == 0x1b);
+STATIC_ASSERT(offsetof(MagicPlantSetup, modelIndex) == 0x1c);
+STATIC_ASSERT(offsetof(MagicPlantSetup, yawByte) == 0x1d);
 
 typedef struct MagicPlantChildSetup {
   u8 pad00[4];
@@ -298,8 +319,8 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
       break;
     default:
       Sfx_PlayFromObject(obj, 0x5c);
-      stateParam->mode = 4;
-      stateParam->moveStepScale = lbl_803E3884;
+      stateParam->mode = MAGICPLANT_MODE_HIT_REACT;
+      stateParam->animStepScale = lbl_803E3884;
       ObjAnim_SetCurrentMove(obj, 3, lbl_803E385C, 0);
 
       i = 0x14;
@@ -316,19 +337,19 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
     }
   }
 
-  if (stateParam->mode == 1) {
+  if (stateParam->mode == MAGICPLANT_MODE_ACTIVE) {
     if (*(s16 *)(obj + 0xa0) == 1) {
       if (*(f32 *)(obj + 0x98) >= lbl_803E3858) {
-        stateParam->moveStepScale = lbl_803E388C;
+        stateParam->animStepScale = lbl_803E388C;
         ObjAnim_SetCurrentMove(obj, 4, lbl_803E385C, 0);
       } else {
-        stateParam->moveStepScale = lbl_803E3890;
+        stateParam->animStepScale = lbl_803E3890;
       }
     } else {
-      if ((stateParam->timer -= framesThisStep) <= 0) {
-        stateParam->timer = (s16)randomGetRange(300, 600);
+      if ((stateParam->idleTimer -= framesThisStep) <= 0) {
+        stateParam->idleTimer = (s16)randomGetRange(300, 600);
       } else if (*(s16 *)(obj + 0xa0) != 4) {
-        stateParam->moveStepScale = lbl_803E388C;
+        stateParam->animStepScale = lbl_803E388C;
         ObjAnim_SetCurrentMove(obj, 4, lbl_803E3890 * (f32)(int)randomGetRange(0, 99), 0);
       }
     }
@@ -387,11 +408,11 @@ void fn_8017F7B8(int obj,int objectId)
     childObj = Obj_SetupObject(setup,5,*(s8 *)(obj + 0xac),-1,*(void **)(obj + 0x30));
     if (childObj != 0) {
       ObjLink_AttachChild(obj,childObj,0);
-      state->childObj = childObj;
+      state->childObject = childObj;
     }
     else {
       mm_free(setup);
-      state->childObj = 0;
+      state->childObject = 0;
     }
   }
   return;
@@ -483,8 +504,8 @@ void MagicPlant_update(int obj)
   setup = *(MagicPlantSetup **)(obj + 0x4c);
   state = *(MagicPlantState **)(obj + 0xb8);
 
-  if ((state->childObj != 0) && (*(u8 *)(obj + 0xeb) == 0)) {
-    state->childObj = 0;
+  if ((state->childObject != 0) && (*(u8 *)(obj + 0xeb) == 0)) {
+    state->childObject = 0;
     Obj_FreeObject(obj);
     return;
   }
@@ -503,14 +524,14 @@ void MagicPlant_update(int obj)
   }
 
   switch (state->mode) {
-    case 0:
+    case MAGICPLANT_MODE_WAIT_FOR_EVENT:
       if ((*(int (**)(int))(*(int *)gMapEventInterface + 0x68))(setup->eventId) != 0) {
         fn_8017F7B8(obj, lbl_803DBD98[setup->variant & 3]);
-        state->mode = 1;
-        state->timer = (s16)randomGetRange(300, 600);
+        state->mode = MAGICPLANT_MODE_ACTIVE;
+        state->idleTimer = (s16)randomGetRange(300, 600);
       } else {
         progress = (*(f32 (**)(int))(*(int *)gMapEventInterface + 0x6c))(setup->eventId);
-        divisor = setup->eventDivisor;
+        divisor = setup->eventDuration;
         if (divisor < 100) {
           divisor = 100;
         }
@@ -520,28 +541,28 @@ void MagicPlant_update(int obj)
         } else if (progress < lbl_803E385C) {
           progress = lbl_803E385C;
         }
-        state->moveProgress = lbl_803E3858 - progress;
+        state->animProgress = lbl_803E3858 - progress;
       }
       if (*(s16 *)(obj + 0xa0) != 0) {
-        ObjAnim_SetCurrentMove(obj, 0, state->moveProgress, 0);
+        ObjAnim_SetCurrentMove(obj, 0, state->animProgress, 0);
       }
-      ObjAnim_SetMoveProgress(state->moveProgress, (ObjAnimComponent *)obj);
+      ObjAnim_SetMoveProgress(state->animProgress, (ObjAnimComponent *)obj);
       break;
 
-    case 1:
+    case MAGICPLANT_MODE_ACTIVE:
       fn_8017F4F4(obj, setup, state);
       break;
 
-    case 2:
+    case MAGICPLANT_MODE_FADE_OUT:
       if (*(f32 *)(obj + 0x98) >= lbl_803E3858) {
         alpha = *(u8 *)(obj + 0x36);
         alpha -= framesThisStep * 2;
         if (alpha < 0) {
           alpha = 0;
-          state->mode = 3;
+          state->mode = MAGICPLANT_MODE_FADE_IN;
           fz = lbl_803E385C;
-          state->moveProgress = fz;
-          state->moveStepScale = fz;
+          state->animProgress = fz;
+          state->animStepScale = fz;
           ObjAnim_SetCurrentMove(obj, 0, fz, 0);
           ObjAnim_SetMoveProgress(lbl_803E385C, (ObjAnimComponent *)obj);
         }
@@ -551,26 +572,25 @@ void MagicPlant_update(int obj)
           (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) & ~1);
       break;
 
-    case 3:
+    case MAGICPLANT_MODE_FADE_IN:
       alpha = *(u8 *)(obj + 0x36);
       alpha += framesThisStep;
       if (alpha >= 0xff) {
         alpha = 0xff;
-        state->mode = 0;
-        (*(void (**)(int, f32))(*(int *)gMapEventInterface + 0x64))(setup->eventId,
-                                                                    (f32)setup->eventDivisor);
+        state->mode = MAGICPLANT_MODE_WAIT_FOR_EVENT;
+        (*(void (**)(int, f32))(*(int *)gMapEventInterface + 0x64))(setup->eventId, (f32)setup->eventDuration);
       }
       *(u8 *)(obj + 0x36) = (u8)alpha;
       *(s16 *)(*(int *)(obj + 0x54) + 0x60) =
           (s16)(*(s16 *)(*(int *)(obj + 0x54) + 0x60) | 1);
       break;
 
-    case 4:
+    case MAGICPLANT_MODE_HIT_REACT:
       fn_8017F334(obj, setup, state);
       break;
   }
 
-  ObjAnim_AdvanceCurrentMove(state->moveStepScale, timeDelta, obj, NULL);
+  ObjAnim_AdvanceCurrentMove(state->animStepScale, timeDelta, obj, NULL);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2281,19 +2301,19 @@ extern void *gMapEventInterface;
 
 #pragma scheduling off
 #pragma peephole off
-void MagicPlant_init(int obj, u8 *params) {
-    int state;
+void MagicPlant_init(int obj, MagicPlantSetup *setup) {
+    MagicPlantState *state;
     s32 r;
     f32 t;
     int divisor;
 
-    state = *(int *)(obj + 0xb8);
+    state = *(MagicPlantState **)(obj + 0xb8);
     ObjGroup_AddObject(obj, 52);
     ObjGroup_AddObject(obj, 62);
-    r = ((int (**)(int))((int **)gMapEventInterface)[0])[26](*(int *)(params + 20));
+    r = ((int (**)(int))((int **)gMapEventInterface)[0])[26](setup->eventId);
     if (r == 0) {
-        t = ((f32 (**)(int))((int **)gMapEventInterface)[0])[27](*(int *)(params + 20));
-        divisor = *(u16 *)(params + 24);
+        t = ((f32 (**)(int))((int **)gMapEventInterface)[0])[27](setup->eventId);
+        divisor = setup->eventDuration;
         if (divisor < 100) divisor = 100;
         t /= (f32)divisor;
         if (t > lbl_803E3858) {
@@ -2301,16 +2321,16 @@ void MagicPlant_init(int obj, u8 *params) {
         } else if (t < lbl_803E385C) {
             t = lbl_803E385C;
         }
-        *(f32 *)(state + 4) = lbl_803E3858 - t;
+        state->animProgress = lbl_803E3858 - t;
     } else {
-        *(f32 *)(state + 4) = lbl_803E3858;
+        state->animProgress = lbl_803E3858;
     }
-    *(u8 *)(state + 15) = 0;
-    *(f32 *)(state + 8) = lbl_803E385C;
-    ObjAnim_SetMoveProgress((double)*(f32 *)(state + 4), (ObjAnimComponent *)obj);
-    *(s16 *)obj = (s16)((u32)params[29] << 8);
+    state->mode = MAGICPLANT_MODE_WAIT_FOR_EVENT;
+    state->animStepScale = lbl_803E385C;
+    ObjAnim_SetMoveProgress((double)state->animProgress, (ObjAnimComponent *)obj);
+    *(s16 *)obj = (s16)((u32)setup->yawByte << 8);
     *(u16 *)(obj + 0xb0) |= 0x2000;
-    *(s8 *)(obj + 0xad) = (s8)params[28];
+    *(s8 *)(obj + 0xad) = (s8)setup->modelIndex;
     if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
         *(u8 *)(obj + 0xad) = 0;
     }
