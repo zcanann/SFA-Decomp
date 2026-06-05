@@ -1,6 +1,25 @@
 #include "ghidra_import.h"
 #include "main/dll/weaponE6.h"
 
+#define TRICKY_STATE_FLAGS_OFFSET 0x54
+#define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
+#define TRICKY_STATE_RESET_FLAG_10 0x00000010
+#define TRICKY_STATE_RESET_FLAG_10000 0x00010000
+#define TRICKY_STATE_RESET_FLAG_20000 0x00020000
+#define TRICKY_STATE_RESET_FLAG_40000 0x00040000
+
+#define TRICKY_CLEAR_TARGET_DIRTY(st) \
+    (*(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_TARGET_DIRTY_FLAG)
+
+#define TRICKY_CLEAR_RESET_FLAGS(st) \
+    { \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10000; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_20000; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_40000; \
+        *(s8 *)((st) + 0xd) = -1; \
+    }
+
 extern uint GameBit_Get(int bit);
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
 extern u32 randomGetRange(int min, int max);
@@ -102,35 +121,7 @@ void fn_8013F100(int obj, register int state)
                 fz = lbl_803E23DC;
                 *(float *)(state + 0x71c) = fz;
                 *(float *)(state + 0x720) = fz;
-                /* MWCC materializes these mask constants (li/lis;addi + and)
-                   where clean C folds to rlwinm - sanctioned asm */
-                {
-                    register u32 m;
-                    register u32 t;
-                    register u32 v;
-                    asm {
-                        lwz t, 0x54(state)
-                        li m, -17
-                        and m, t, m
-                        stw m, 0x54(state)
-                        lwz v, 0x54(state)
-                        lis t, -1
-                        addi m, t, -1
-                        and m, v, m
-                        stw m, 0x54(state)
-                        lwz v, 0x54(state)
-                        lis t, -2
-                        addi m, t, -1
-                        and m, v, m
-                        stw m, 0x54(state)
-                        lwz v, 0x54(state)
-                        lis t, -4
-                        addi m, t, -1
-                        and m, v, m
-                        stw m, 0x54(state)
-                    }
-                }
-                *(s8 *)(state + 0xd) = -1;
+                TRICKY_CLEAR_RESET_FLAGS(state);
             }
         } else {
             iVar2 = trickyFn_8013b368(obj, lbl_803E2408, state);
@@ -238,32 +229,12 @@ void fn_8013F100(int obj, register int state)
             } else {
                 *(u8 *)(iVar2 + 2) += 1;
             }
-            /* MWCC materializes the mask constant - sanctioned asm */
-            {
-                register u32 m;
-                register u32 v;
-                asm {
-                    lwz v, 0x54(state)
-                    li m, -17
-                    and m, v, m
-                    stw m, 0x54(state)
-                }
-            }
+            *(u32 *)(state + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10;
             *(u8 *)(state + 0xa) = 7;
             pTgt = *(u8 **)(state + 0x24) + 24;
             if (*(u8 **)(state + 0x28) != pTgt) {
                 *(u8 **)(state + 0x28) = pTgt;
-                /* MWCC materializes the mask constant - sanctioned asm */
-                {
-                    register u32 m;
-                    register u32 v;
-                    asm {
-                        lwz v, 0x54(state)
-                        li m, -1025
-                        and m, v, m
-                        stw m, 0x54(state)
-                    }
-                }
+                TRICKY_CLEAR_TARGET_DIRTY(state);
                 *(short *)(state + 0xd2) = 0;
             }
         }
@@ -306,17 +277,7 @@ void fn_8013F100(int obj, register int state)
             pTgt = *(u8 **)(state + 4) + 24;
             if (*(u8 **)(state + 0x28) != pTgt) {
                 *(u8 **)(state + 0x28) = pTgt;
-                /* MWCC materializes the mask constant - sanctioned asm */
-                {
-                    register u32 m;
-                    register u32 v;
-                    asm {
-                        lwz v, 0x54(state)
-                        li m, -1025
-                        and m, v, m
-                        stw m, 0x54(state)
-                    }
-                }
+                TRICKY_CLEAR_TARGET_DIRTY(state);
                 *(short *)(state + 0xd2) = 0;
             }
             *(u8 *)(state + 0xa) = 5;
@@ -451,17 +412,7 @@ void fn_8013FBE4(int obj, register int state)
             if (trackedObj != *(u8 **)(state + 0x710) &&
                 *(u8 **)(state + 0x28) != (u8 *)(state + 0x704)) {
                 *(u8 **)(state + 0x28) = (u8 *)(state + 0x704);
-                /* MWCC materializes the mask constant (li -1025) - sanctioned asm */
-                {
-                    register u32 m;
-                    register u32 v;
-                    asm {
-                        lwz v, 0x54(state)
-                        li m, -1025
-                        and m, v, m
-                        stw m, 0x54(state)
-                    }
-                }
+                TRICKY_CLEAR_TARGET_DIRTY(state);
                 *(short *)(state + 0xd2) = 0;
             }
             dx = *targetPos - *(float *)(obj + 0x18);
@@ -501,34 +452,7 @@ void fn_8013FBE4(int obj, register int state)
             fz = lbl_803E23DC;
             *(float *)(state + 0x71c) = fz;
             *(float *)(state + 0x720) = fz;
-            /* MWCC materializes these mask constants - sanctioned asm */
-            {
-                register u32 m;
-                register u32 t;
-                register u32 v;
-                asm {
-                    lwz t, 0x54(state)
-                    li m, -17
-                    and m, t, m
-                    stw m, 0x54(state)
-                    lwz v, 0x54(state)
-                    lis t, -1
-                    addi m, t, -1
-                    and m, v, m
-                    stw m, 0x54(state)
-                    lwz v, 0x54(state)
-                    lis t, -2
-                    addi m, t, -1
-                    and m, v, m
-                    stw m, 0x54(state)
-                    lwz v, 0x54(state)
-                    lis t, -4
-                    addi m, t, -1
-                    and m, v, m
-                    stw m, 0x54(state)
-                }
-            }
-            *(s8 *)(state + 0xd) = -1;
+            TRICKY_CLEAR_RESET_FLAGS(state);
         }
         break;
     }
