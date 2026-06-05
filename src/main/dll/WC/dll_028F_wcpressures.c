@@ -207,12 +207,9 @@ void wcpressures_update(int obj)
         fn_80137948(sWCPressuresActivateFormat, setup->activateBit);
         return;
     }
-    {
-        int n = state->pressTimer - 1;
-        state->pressTimer = n;
-        if ((s8)n < 0)
-            state->pressTimer = 0;
-    }
+    state->pressTimer--;
+    if (state->pressTimer < 0)
+        state->pressTimer = 0;
     if ((s8)*(u8 *)(*(int *)(obj + WCPRESSURES_HITLIST_OFFSET) + WCPRESSURES_HITLIST_COUNT_OFFSET) > 0) {
         for (i = 0;
              i < (s8)*(u8 *)(*(int *)(obj + WCPRESSURES_HITLIST_OFFSET) + WCPRESSURES_HITLIST_COUNT_OFFSET);
@@ -262,11 +259,12 @@ void wcpressures_update(int obj)
             state->mode = WCPRESSURES_MODE_LOWERING;
         }
         break;
-    case WCPRESSURES_MODE_RISING:
-        *(f32 *)(obj + 0x10) = lbl_803E6E04 * timeDelta + *(f32 *)(obj + 0x10);
-        if (*(f32 *)(obj + 0x10) > setup->y) {
-            *(f32 *)(obj + 0x10) = setup->y;
-            state->mode = WCPRESSURES_MODE_RAISED;
+    case WCPRESSURES_MODE_LOWERING:
+        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E6E04 * timeDelta;
+        if (*(f32 *)(obj + 0x10) < thr) {
+            GameBit_Set(setup->solvedBit, 1);
+            state->mode = WCPRESSURES_MODE_PRESSED;
+            *(f32 *)(obj + 0x10) = thr;
         }
         break;
     case WCPRESSURES_MODE_PRESSED:
@@ -275,12 +273,11 @@ void wcpressures_update(int obj)
             state->mode = WCPRESSURES_MODE_RISING;
         }
         break;
-    case WCPRESSURES_MODE_LOWERING:
-        *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E6E04 * timeDelta;
-        if (*(f32 *)(obj + 0x10) < thr) {
-            GameBit_Set(setup->solvedBit, 1);
-            state->mode = WCPRESSURES_MODE_PRESSED;
-            *(f32 *)(obj + 0x10) = thr;
+    case WCPRESSURES_MODE_RISING:
+        *(f32 *)(obj + 0x10) = lbl_803E6E04 * timeDelta + *(f32 *)(obj + 0x10);
+        if (*(f32 *)(obj + 0x10) > setup->y) {
+            *(f32 *)(obj + 0x10) = setup->y;
+            state->mode = WCPRESSURES_MODE_RAISED;
         }
         break;
     }
