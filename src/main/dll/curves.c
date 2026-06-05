@@ -3107,7 +3107,6 @@ curves_getCurves(f32 x,f32 z,int obj,u32 *outCount,int queryAll)
 {
   int queryMode;
   RomCurvePoint *outPoint;
-  RomCurvePoint *point;
   uint remaining;
   uint pairCount;
   RomCurvePoint **hitPoints;
@@ -3133,21 +3132,19 @@ curves_getCurves(f32 x,f32 z,int obj,u32 *outCount,int queryAll)
       pairCount = sCurvesCachedHitCount >> 1;
       if (pairCount != 0) {
         do {
-          point = *hitPointCursor;
-          outPoint->x = point->x;
-          outPoint->y = point->y;
-          outPoint->z = point->z;
-          outPoint->w = point->w;
-          outPoint->flags = point->flags;
-          outPoint->type = point->type;
+          outPoint->x = (*hitPointCursor)->x;
+          outPoint->y = (*hitPointCursor)->y;
+          outPoint->z = (*hitPointCursor)->z;
+          outPoint->w = (*hitPointCursor)->w;
+          outPoint->flags = (*hitPointCursor)->flags;
+          outPoint->type = (*hitPointCursor)->type;
           outPoint = outPoint + 1;
-          point = hitPointCursor[1];
-          outPoint->x = point->x;
-          outPoint->y = point->y;
-          outPoint->z = point->z;
-          outPoint->w = point->w;
-          outPoint->flags = point->flags;
-          outPoint->type = point->type;
+          outPoint->x = hitPointCursor[1]->x;
+          outPoint->y = hitPointCursor[1]->y;
+          outPoint->z = hitPointCursor[1]->z;
+          outPoint->w = hitPointCursor[1]->w;
+          outPoint->flags = hitPointCursor[1]->flags;
+          outPoint->type = hitPointCursor[1]->type;
           hitPointCursor = hitPointCursor + 2;
           outPoint = outPoint + 1;
           pairCount = pairCount - 1;
@@ -3156,13 +3153,12 @@ curves_getCurves(f32 x,f32 z,int obj,u32 *outCount,int queryAll)
         if (remaining == 0) goto LAB_800e6f44;
       }
       do {
-        point = *hitPointCursor;
-        outPoint->x = point->x;
-        outPoint->y = point->y;
-        outPoint->z = point->z;
-        outPoint->w = point->w;
-        outPoint->flags = point->flags;
-        outPoint->type = point->type;
+        outPoint->x = (*hitPointCursor)->x;
+        outPoint->y = (*hitPointCursor)->y;
+        outPoint->z = (*hitPointCursor)->z;
+        outPoint->w = (*hitPointCursor)->w;
+        outPoint->flags = (*hitPointCursor)->flags;
+        outPoint->type = (*hitPointCursor)->type;
         hitPointCursor = hitPointCursor + 1;
         outPoint = outPoint + 1;
         remaining = remaining - 1;
