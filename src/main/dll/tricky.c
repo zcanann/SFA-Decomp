@@ -3221,14 +3221,14 @@ void drawViewFinderHud(void) {
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);
 
         {
+            f32 kOpac, kF4C;
             f32 kF30, kEC8, kF34, kEC4, kE94;
             f64 kF38;
-            f32 kE68;
-            f64 kF40;
-            f64 kOpac;
             f32 kF48;
-            f64 kF4C;
+            f64 kF40;
+            f32 kE68;
             f32 f27;
+            f32 fdx, f29, f30, f31;
             f27 = lbl_803E1E3C;
             kF30 = lbl_803E1F30;
             kEC8 = lbl_803E1EC8;
@@ -3242,7 +3242,6 @@ void drawViewFinderHud(void) {
             kF48 = lbl_803E1F48;
             kF4C = lbl_803E1F4C;
             for (; f27 < kF4C; f27 += kEC4) {
-                f32 f31, f30, f29, fdx;
                 {
                     GXColor _c2; GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
                     f32 f15, f16;
@@ -3307,8 +3306,7 @@ void drawViewFinderHud(void) {
             }
         }
         {
-            u8 r30v, r29v;
-            int r5v, r28v;
+            int r30v, r29v, r5v, r28v;
             int t;
             f32 f18, f19, num;
             t = (int)((xc - lbl_803E1F50) * lbl_803E1F58);
@@ -3338,10 +3336,10 @@ void drawViewFinderHud(void) {
                     r26v = 0xc8;
                     q = r28v / lbl_803E1EF8;
                     if (q != (int)q) {
-                        r27v = r30v;
+                        r27v = (u8)r30v;
                         r25v = 7;
                     } else {
-                        r27v = r29v;
+                        r27v = (u8)r29v;
                         r25v = 0xa;
                     }
                 }
