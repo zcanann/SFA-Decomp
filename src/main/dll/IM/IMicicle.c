@@ -1,9 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/IM/IMicicle.h"
-
-#define SFXmn_sml_trex_fstep 126
-#define SFXsp_lf_mutter4 265
 
 #pragma peephole off
 #pragma scheduling off

@@ -1,8 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/IM/IMspacecraft.h"
-
-#define SFXsp_lf_mutter1 262
-#define SFXsp_lf_mutter4 265
 
 /* SDK / engine externs */
 extern int Obj_GetPlayerObject(void);

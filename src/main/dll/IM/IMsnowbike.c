@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/IM/IMsnowbike.h"
-
-#define SFXmn_sml_trex_fstep 126
 
 extern u32 GameBit_Get(u32 id);
 extern void GameBit_Set(u32 id, u32 value);
