@@ -78,6 +78,7 @@ void androssbrain_update(int obj)
     int hitVol;
     int hit;
     int t;
+    u8 currentState;
 
     if (*(void **)state == NULL) {
         *(int *)state = ObjList_FindObjectById(0x47b77);
@@ -92,10 +93,11 @@ void androssbrain_update(int obj)
         *(f32 *)(obj + 0x10) = *(f32 *)(*(int *)state + 0x10);
         *(f32 *)(obj + 0x14) = *(f32 *)(*(int *)state + 0x14);
     }
-    if (*(s8 *)(state + 0x1c) != *(s8 *)(state + 0x1d)) {
+    currentState = *(u8 *)(state + 0x1c);
+    if ((s8)currentState != *(s8 *)(state + 0x1d)) {
         flag = 1;
     }
-    *(u8 *)(state + 0x1d) = *(u8 *)(state + 0x1c);
+    *(u8 *)(state + 0x1d) = currentState;
     switch (*(s8 *)(state + 0x1c)) {
     case 0:
         if (flag != 0) {
