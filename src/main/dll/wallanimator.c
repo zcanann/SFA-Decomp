@@ -41,82 +41,91 @@ extern f32 lbl_803E3D78;
 extern f32 timeDelta;
 extern f32 lbl_803E30D0;
 extern f32 lbl_803E30D4;
+extern f32 lbl_803E30D8;
 extern f32 lbl_803E30E0;
+
+extern int ObjList_FindObjectById(int id);
 
 /*
  * --INFO--
  *
- * Function: FUN_80169360
+ * Function: fn_80169360
  * EN v1.0 Address: 0x80169360
- * EN v1.0 Size: 648b
- * EN v1.1 Address: 0x80169564
- * EN v1.1 Size: 680b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
+ * EN v1.0 Size: 556b
  */
-void FUN_80169360(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8,
-                 undefined4 param_9,undefined4 param_10,int param_11)
+#pragma scheduling off
+#pragma peephole off
+void fn_80169360(u8 *obj, u8 mode)
 {
-  double dVar1;
-  int iVar2;
-  uint uVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  int iVar8;
-  undefined4 *puVar9;
-  int iVar10;
-  undefined8 uVar11;
-  
-  uVar11 = FUN_80286840();
-  iVar2 = (int)((ulonglong)uVar11 >> 0x20);
-  iVar10 = *(int *)(iVar2 + 0xb8);
-  uVar7 = 6;
-  if (param_11 != 0) {
-    uVar7 = 7;
-  }
-  uVar4 = 8;
-  uVar5 = 6;
-  uVar6 = 0;
-  iVar8 = *DAT_803dd738;
-  (**(code **)(iVar8 + 0x58))((double)lbl_803E3D60,iVar2,(int)uVar11,iVar10);
-  *(undefined4 *)(iVar2 + 0xbc) = 0;
-  puVar9 = *(undefined4 **)(iVar10 + 0x40c);
-  FUN_800305f8((double)lbl_803E3CF8,param_2,param_3,param_4,param_5,param_6,param_7,param_8,iVar2,
-               4,0x10,uVar4,uVar5,uVar6,uVar7,iVar8);
-  *(float *)(iVar2 + 0x98) = lbl_803E3D14;
-  *(byte *)(iVar2 + 0xaf) = *(byte *)(iVar2 + 0xaf) | 8;
-  (**(code **)(*DAT_803dd70c + 0x14))(iVar2,iVar10,0);
-  *(undefined2 *)(iVar10 + 0x270) = 0;
-  *(float *)(iVar10 + 0x2a0) = lbl_803E3D14;
-  *(float *)(iVar10 + 0x280) = lbl_803E3CF8;
-  uVar7 = FUN_80017a98();
-  *(undefined4 *)(iVar10 + 0x2d0) = uVar7;
-  *(undefined *)(iVar10 + 0x25f) = 0;
-  ObjHits_DisableObject(iVar2);
-  uVar3 = randomGetRange(300,600);
-  puVar9[0xd] = (f32)(s32)(uVar3);
-  uVar3 = randomGetRange(0,499);
-  dVar1 = DOUBLE_803e3d08;
-  puVar9[0xe] = (f32)(s32)(uVar3);
-  puVar9[0xf] = lbl_803E3CF8;
-  *puVar9 = 0;
-  *(ushort *)(iVar2 + 0xb0) = *(ushort *)(iVar2 + 0xb0) | 0x2000;
-  *(float *)(iVar2 + 8) =
-       lbl_803E3D38 +
-       (float)((double)CONCAT44(0x43300000,(int)*(char *)((int)uVar11 + 0x28) ^ 0x80000000) - dVar1)
-       / lbl_803E3D3C;
-  ObjHitbox_SetSphereRadius(iVar2,(short)(int)(lbl_803E3D64 * *(float *)(iVar2 + 8)));
-  if (param_11 == 0) {
-    DAT_803de710 = FUN_80006b14(0x5a);
-  }
-  FUN_8028688c();
-  return;
+    f32 *state;
+    int obj2;
+
+    if (obj == NULL) {
+        return;
+    }
+    switch (*(int *)(*(int *)(obj + 0x4c) + 0x14)) {
+    case 0x43d14:
+        obj2 = ObjList_FindObjectById(0x4b3b5);
+        break;
+    case 0x41be9:
+        obj2 = ObjList_FindObjectById(0x4b3f9);
+        break;
+    case 0x41cc4:
+        obj2 = ObjList_FindObjectById(0x4b402);
+        break;
+    case 0x41cc5:
+        obj2 = ObjList_FindObjectById(0x4b403);
+        break;
+    case 0x41cc6:
+        obj2 = ObjList_FindObjectById(0x4b404);
+        break;
+    case 0x41cc7:
+        obj2 = ObjList_FindObjectById(0x4b40b);
+        break;
+    case 0x41cc8:
+        obj2 = ObjList_FindObjectById(0x4b40c);
+        break;
+    case 0x41cc9:
+        obj2 = ObjList_FindObjectById(0x4b40f);
+        break;
+    case 0x41cd2:
+        obj2 = ObjList_FindObjectById(0x4b410);
+        break;
+    case 0x41ccc:
+        obj2 = ObjList_FindObjectById(0x4b411);
+        break;
+    case 0x41cd5:
+        obj2 = ObjList_FindObjectById(0x4b414);
+        break;
+    case 0x41cd6:
+        obj2 = ObjList_FindObjectById(0x4b415);
+        break;
+    case 0x41cd9:
+        obj2 = ObjList_FindObjectById(0x4b453);
+        break;
+    default:
+        return;
+    }
+    state = *(f32 **)(obj2 + 0xb8);
+    if (state != NULL) {
+        switch (mode) {
+        case 1:
+            state[2] = lbl_803E30D0;
+            state[0] = lbl_803E30D4;
+            state[1] = lbl_803E30D8;
+            *(u8 *)(state + 3) = 0;
+            break;
+        case 2:
+            state[2] = lbl_803E30D0;
+            state[0] = lbl_803E30D4;
+            state[1] = lbl_803E30D8;
+            *(u8 *)(state + 3) = 1;
+            break;
+        }
+    }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 int kaldachompme_getExtraSize(void)
 {
@@ -522,7 +531,6 @@ void kaldachompspit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int ObjList_FindObjectById(int id);
 extern void modelLightStruct_setEnabled(int light, int onoff, f32 intensity);
 extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void Sfx_PlayFromObject(int obj, u32 sfxId);
@@ -538,7 +546,6 @@ extern int Obj_GetPlayerObject(void);
 extern int getTrickyObject(void);
 extern void fn_80098B18(int obj, f32 scale, int a, int b, int c, int d);
 extern int *gPartfxInterface;
-extern f32 lbl_803E30D8;
 extern f64 lbl_803E30E8;
 extern f32 lbl_803E30F0;
 extern f32 lbl_803E30F4;
@@ -546,87 +553,6 @@ extern f32 lbl_803E30F8;
 extern f32 lbl_803E30FC;
 extern f64 lbl_803E3100;
 void kaldachompspit_burst(int obj);
-
-/*
- * --INFO--
- *
- * Function: fn_80169360
- * EN v1.0 Address: 0x80169360
- * EN v1.0 Size: 556b
- */
-#pragma scheduling off
-#pragma peephole off
-void fn_80169360(u8 *obj, u8 mode)
-{
-    f32 *state;
-    int obj2;
-
-    if (obj == NULL) {
-        return;
-    }
-    switch (*(int *)(*(int *)(obj + 0x4c) + 0x14)) {
-    case 0x43d14:
-        obj2 = ObjList_FindObjectById(0x4b3b5);
-        break;
-    case 0x41be9:
-        obj2 = ObjList_FindObjectById(0x4b3f9);
-        break;
-    case 0x41cc4:
-        obj2 = ObjList_FindObjectById(0x4b402);
-        break;
-    case 0x41cc5:
-        obj2 = ObjList_FindObjectById(0x4b403);
-        break;
-    case 0x41cc6:
-        obj2 = ObjList_FindObjectById(0x4b404);
-        break;
-    case 0x41cc7:
-        obj2 = ObjList_FindObjectById(0x4b40b);
-        break;
-    case 0x41cc8:
-        obj2 = ObjList_FindObjectById(0x4b40c);
-        break;
-    case 0x41cc9:
-        obj2 = ObjList_FindObjectById(0x4b40f);
-        break;
-    case 0x41cd2:
-        obj2 = ObjList_FindObjectById(0x4b410);
-        break;
-    case 0x41ccc:
-        obj2 = ObjList_FindObjectById(0x4b411);
-        break;
-    case 0x41cd5:
-        obj2 = ObjList_FindObjectById(0x4b414);
-        break;
-    case 0x41cd6:
-        obj2 = ObjList_FindObjectById(0x4b415);
-        break;
-    case 0x41cd9:
-        obj2 = ObjList_FindObjectById(0x4b453);
-        break;
-    default:
-        return;
-    }
-    state = *(f32 **)(obj2 + 0xb8);
-    if (state != NULL) {
-        switch (mode) {
-        case 1:
-            state[2] = lbl_803E30D0;
-            state[0] = lbl_803E30D4;
-            state[1] = lbl_803E30D8;
-            *(u8 *)(state + 3) = 0;
-            break;
-        case 2:
-            state[2] = lbl_803E30D0;
-            state[0] = lbl_803E30D4;
-            state[1] = lbl_803E30D8;
-            *(u8 *)(state + 3) = 1;
-            break;
-        }
-    }
-}
-#pragma peephole reset
-#pragma scheduling reset
 
 /*
  * --INFO--
