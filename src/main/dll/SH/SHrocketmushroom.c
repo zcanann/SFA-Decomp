@@ -1,9 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/SH/SHrocketmushroom.h"
-
-#define SFXen_tiles_lightup 89
-#define SFXmv_torclp_6 162
-#define SFXmv_totem_slide 167
 
 #pragma peephole off
 #pragma scheduling off

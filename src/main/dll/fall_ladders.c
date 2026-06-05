@@ -2,9 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/fall_ladders.h"
 
-#define SFXfox_healthgasp2 0x25d
-#define SFXstaff_proj_putaway 565
-
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
 extern int FUN_80006a10();

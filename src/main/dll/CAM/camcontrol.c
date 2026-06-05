@@ -1,12 +1,9 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "dolphin/os.h"
 #include "main/dll/CAM/camcontrol.h"
 #include "main/objanim.h"
 #include "string.h"
-
-#define SFXsc_snort04 0x287
-#define SFXsc_spotfox01 0x288
-#define SFXsc_spotfox02 0x289
 
 extern void Sfx_PlayFromObject(int obj,int sfxId);
 extern void Obj_TransformWorldPointToLocal(f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *outZ,u32 obj);

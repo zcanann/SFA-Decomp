@@ -2,11 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
 
-#define SFXmv_cflap2_c 0xa4
-#define SFXmv_missingcog_lp 0xa6
-#define SFXsp_lfoot_taunt3 0x113
-#define SFXchar_on_firelp 0x1f8
-
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();

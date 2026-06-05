@@ -1,13 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DB/DBbonedust.h"
 #include "main/dll/DB/DBstealerworm.h"
-
-#define SFXen_sbalhis6 0x37
-#define SFXen_scrap1_c 0x38
-#define SFXen_diallp_c 0x3f
-#define SFXbaddie_eggsnatch_carry3 0x2c7
-#define SFXbaddie_eggsnatch_carry4 0x2c8
-#define SFXfend_rob_armin 0x312
 
 #pragma peephole off
 #pragma scheduling off

@@ -2,8 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/engine_shared.h"
 
-#define SFXsc_clubhit01 652
-
 #pragma scheduling off
 #pragma peephole off
 RingBufferQueue* allocModelStruct_800139e8(int capacity, int elemSize)

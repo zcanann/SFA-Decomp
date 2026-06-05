@@ -2,8 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/SH/SHkillermushroom.h"
 
-#define SFXmv_sliftloop11 161
-
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_80006824();

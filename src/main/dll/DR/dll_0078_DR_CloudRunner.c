@@ -1,7 +1,6 @@
 #include "main/dll/DR/dr_802bbc10_shared.h"
 
-#define SFXtr_cnflyby6 0x11E
-
+#include "main/audio/sfx_ids.h"
 int fn_802BF728(void) { return 0x0; }
 
 void DR_CloudRunner_func21(void) {}

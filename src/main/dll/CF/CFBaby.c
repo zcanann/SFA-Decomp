@@ -3,8 +3,6 @@
 #include "main/mapEvent.h"
 #include "main/dll/CF/CFBaby.h"
 
-#define SFXen_rfall5_c 72
-
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();
 extern undefined4 FUN_80006ba8();

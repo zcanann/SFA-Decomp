@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/CAM/dll_59.h"
-
-#define SFXsc_snort03 0x286
 
 extern void *mmAlloc(int size, int heap, int flags);
 extern void memset(void *ptr, int value, int size);

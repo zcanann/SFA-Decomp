@@ -3,13 +3,6 @@
 #include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
 
-#define SFXfoot_ice_run_2 0x1ea
-#define SFXfoot_ice_run_3 0x1eb
-#define SFXfoot_wood_run_2 0x1c4
-#define SFXfoot_water_run_1 0x1cb
-#define SFXsp_lfoot_taunt6 0x116
-#define SFXswapstone_move_long 0x2df
-
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_800033a8();

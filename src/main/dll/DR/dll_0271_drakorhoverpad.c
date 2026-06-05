@@ -1,10 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 
-#define SFXfend_fox_keytap2 0x308
-#define SFXfend_fox_keytap3 0x309
-#define SFXfend_pep_wakeup 0x30a
-#define SFXfend_rob_servo1 0x30b
-
+#include "main/audio/sfx_ids.h"
 int drakorhoverpad_func0B(void) { return 0x1; }
 
 int drakorhoverpad_func0E(void) { return 0x1; }

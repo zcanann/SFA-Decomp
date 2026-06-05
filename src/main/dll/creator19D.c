@@ -2,10 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/creator19D.h"
 
-#define SFXmn_lummy311 0x77
-#define SFXmn_spdrcollapse11 0x78
-#define SFXmn_spdrmove11 0x79
-
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006814();
 extern undefined4 FUN_80006824();

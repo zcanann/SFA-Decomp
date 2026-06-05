@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/door.h"
 #include "main/dll/fruit.h"
-
-#define SFXfoot_dirt_scuff 464
 
 extern undefined4 FUN_80006b4c();
 extern int objBboxFn_800640cc(f32 *from,f32 *to,f32 radius,int mode,void *hit,

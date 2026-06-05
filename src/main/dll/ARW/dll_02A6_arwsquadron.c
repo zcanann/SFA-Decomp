@@ -1,9 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/audio/sfx_ids.h"
 
-#define SFXbaddie_mika_death 670
-#define SFXbaddie_eba_smallswipe1 693
-
 #pragma peephole on
 #pragma scheduling on
 int arwsquadron_getExtraSize(void) { return 0x164; }

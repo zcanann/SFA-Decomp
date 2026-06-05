@@ -5,8 +5,6 @@
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 
-#define SFXmn_crusty9c 0x7d
-
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_8000680c();

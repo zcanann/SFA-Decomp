@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#define SFXsc_lockon2_on 199
-
+#include "main/audio/sfx_ids.h"
 #pragma peephole on
 #pragma scheduling on
 int wcpressures_getExtraSize(void) { return 0x7c; }

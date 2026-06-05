@@ -2,11 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/mediumbasket.h"
 
-#define SFXsc_fox_commdown 0xcf
-#define SFXkr_jump2 0x26c
-#define SFXkr_panting1 0x26e
-#define SFXkr_panting2 0x26f
-
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006920();

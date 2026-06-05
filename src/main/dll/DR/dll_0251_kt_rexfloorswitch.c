@@ -1,7 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 
-#define SFXmv_bodyf2_c 133
-
+#include "main/audio/sfx_ids.h"
 void ktrexfloorswitch_free(void) {}
 
 int ktrexfloorswitch_getExtraSize(void) { return 0x14; }

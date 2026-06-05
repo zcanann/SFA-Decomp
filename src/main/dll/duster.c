@@ -3,19 +3,6 @@
 #include "main/dll/duster.h"
 #include "main/objanim.h"
 
-#define SFXfox_fightbreath3 0x24d
-#define SFXfox_roll1 0x24f
-#define SFXfox_roll2 0x250
-#define SFXfox_roll3 0x251
-#define SFXfox_roll4 0x252
-#define SFXfox_runbreath1 0x253
-#define SFXfox_runbreath2 0x254
-#define SFXfox_climbgrunt1 0x258
-#define SFXfox_climbgrunt2 0x259
-#define SFXfox_cough3 0x260
-#define SFXfox_cough4 0x261
-#define SFXfoxcom_decoy 0x262
-
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on

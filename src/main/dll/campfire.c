@@ -3,13 +3,6 @@
 #include "main/dll/campfire.h"
 #include "main/objanim.h"
 
-#define SFXfox_runbreath3 0x255
-#define SFXkr_pullup1 0x270
-#define SFXkr_pullup2 0x271
-#define SFXkr_climb1 0x273
-#define SFXkr_land1 0x275
-#define SFXkr_land2 0x276
-
 extern undefined4 FUN_80006824();
 extern undefined4 Sfx_PlayFromObject();
 extern undefined4 FUN_80017a28();

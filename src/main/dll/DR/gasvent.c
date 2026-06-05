@@ -1,9 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DR/gasvent.h"
 
-
-#define SFXsk_bapt11_c 209
-#define SFXsk_baptr1_c 210
 
 #pragma peephole off
 #pragma scheduling off

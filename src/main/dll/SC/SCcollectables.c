@@ -3,8 +3,6 @@
 #include "main/mapEvent.h"
 #include "main/dll/SC/SCcollectables.h"
 
-#define SFXnewtricky_01o 756
-
 extern undefined4 FUN_80006820();
 extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006bb4();

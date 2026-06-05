@@ -3,14 +3,6 @@
 #include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
 
-#define SFXen_nlite1_c 0x34
-#define SFXen_ripefruit11 0x35
-#define SFXen_rockshat16 0x36
-#define SFXbaddie_crater_call 0x2ca
-#define SFXfend_rob_beep2 0x315
-#define SFXfend_rob_beep3 0x316
-#define SFXspirit_voice4 0x31d
-
 extern undefined4 getLActions();
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();

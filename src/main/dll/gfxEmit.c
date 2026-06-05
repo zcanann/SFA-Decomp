@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/gfxEmit.h"
-
-#define SFXwp_whiz3_c 0x169
 
 extern undefined4 FUN_80006824();
 extern uint FUN_80017690();

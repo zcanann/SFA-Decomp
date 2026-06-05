@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DR/DRcloudcage.h"
 #include "main/dll/DR/DRhightop.h"
 
@@ -138,8 +139,6 @@ extern f32 lbl_803E6858;
 extern f32 lbl_803E685C;
 extern f32 lbl_803E6860;
 extern f32 lbl_803E6864;
-
-#define SFXsp_lfoot_taunt7 0x117
 
 /*
  * --INFO--

@@ -3,12 +3,6 @@
 #include "main/mapEventTypes.h"
 
 #define PB_IFACE (*(int *)(*(int *)(*(int *)(state + 0x268) + 0x68)))
-#define SFXsc_lockon2_off 200
-#define SFXsc_lockon3_on 201
-#define SFXsc_lockon3_off 202
-#define SFXsc_lifeforcedoor 203
-#define SFXsc_golfbar_swipe 204
-
 #pragma peephole on
 #pragma scheduling on
 int wcpushblock_getExtraSize(void) { return 0x288; }

@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#define SFXbaddie_eba_death 0x2a5
-
+#include "main/audio/sfx_ids.h"
 #pragma peephole on
 #pragma scheduling on
 int arwarwingbo_getExtraSize(void) { return 0xc; }

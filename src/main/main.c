@@ -1,10 +1,9 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/CF/laser.h"
 #include "main/dll/anim_internal.h"
 #include "main/main.h"
-
-#define SFXsp_lfoot_treasure 273
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();

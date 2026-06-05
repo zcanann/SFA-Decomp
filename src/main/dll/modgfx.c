@@ -40,9 +40,6 @@ typedef struct ModgfxState {
 
 #define MODGFX_ACTIVE_EFFECT_COUNT 0x32
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
-#define SFXsc_mumble01 641
-#define SFXsc_mumble02 642
-
 typedef struct ModgfxActiveEffect {
   int instanceHandle;
   int ownerToken;

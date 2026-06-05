@@ -1,8 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/cfguardian.h"
-
-#define SFXen_weetinkoneshot 75
-#define SFXms_baddie_beamin 97
 
 extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();

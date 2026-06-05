@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/wall_crawler.h"
-
-#define SFXsp_sa_def03 245
 
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006824();

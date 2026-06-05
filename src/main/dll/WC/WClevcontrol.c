@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/WC/WClevcontrol.h"
-
-#define SFXtr_bcrek2_c 293
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();

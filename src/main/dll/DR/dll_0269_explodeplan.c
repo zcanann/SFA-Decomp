@@ -1,9 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 
-#define SFXar_ring_pickup 402
-#define SFXar_generic_pickup 403
-#define SFXar_bomb_pickup 404
-
+#include "main/audio/sfx_ids.h"
 void explodeplan_free(void) {}
 
 int explodeplan_getExtraSize(void) { return 0x4; }

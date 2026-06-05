@@ -2,9 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/screenOverlay.h"
 
-#define SFXms_windlift_loop 98
-#define SFXmn_cling01 99
-
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 extern void ObjHitbox_SetSphereRadius(int obj, short radius);

@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/crfueltank.h"
-
-#define SFXsp_sabrepush162 0xee
 
 extern void *Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(void *obj,u16 volumeId);

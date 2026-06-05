@@ -2,8 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/groundAnimator.h"
 
-#define SFXen_bridge_stops 82
-
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80017710();
 extern undefined4 FUN_8001771c();

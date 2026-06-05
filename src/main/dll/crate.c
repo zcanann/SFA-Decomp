@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/crate.h"
 
 extern undefined4 FUN_80006824();
@@ -10,8 +11,6 @@ extern void GameBit_Set(int eventId,int value);
 #define SFXPLAYER_EVENT_DEACTIVATE 2
 #define SFXPLAYER_EVENT_VARIANT 3
 #define SFXPLAYER_VARIANT_TIMER_FRAMES 0x96
-#define SFXfoot_water_run_4 462
-
 /*
  * --INFO--
  *

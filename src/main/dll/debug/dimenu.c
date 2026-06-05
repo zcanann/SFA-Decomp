@@ -2,8 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/debug/dimenu.h"
 
-#define SFXqu_shortsob1 0x104
-
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
 extern undefined8 FUN_80006b84();

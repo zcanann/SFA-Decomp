@@ -2,10 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/mmshrine/shrine1C2.h"
 
-#define SFXwp_mflop7_c 0x16d
-#define SFXwp_roboalarm 0x16f
-#define SFXwp_fox_kick1 0x170
-
 #pragma peephole off
 #pragma scheduling off
 extern undefined8 FUN_80006728();

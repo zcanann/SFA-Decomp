@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#define SFXfend_rob_servo2 780
-
+#include "main/audio/sfx_ids.h"
 int drenergydisc_getExtraSize(void) { return 1; }
 
 int drenergydisc_getObjectTypeId(void) { return 0; }

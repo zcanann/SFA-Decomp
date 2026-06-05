@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/ladders.h"
-
-#define SFXsc_gethit04 640
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006824();

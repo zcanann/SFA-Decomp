@@ -1,8 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#define SFXpda_fper_camoff 808
-#define SFXpda_compassbeep 809
-
+#include "main/audio/sfx_ids.h"
 #pragma peephole on
 #pragma scheduling on
 int barrelgener_getLinkId(int obj)

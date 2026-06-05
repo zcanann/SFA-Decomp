@@ -1,9 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 
-#define SFXfoot_dirt_run_1 427
-#define SFXfoot_dirt_run_2 428
-#define SFXfoot_dirt_run_3 429
-
+#include "main/audio/sfx_ids.h"
 int drlasercannon_getExtraSize(void) { return 0x1ac; }
 
 int drlasercannon_getObjectTypeId(void) { return 0x0; }

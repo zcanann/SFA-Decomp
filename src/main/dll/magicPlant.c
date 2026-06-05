@@ -2,16 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/magicPlant.h"
 
-#define SFXen_mazewall 0x31
-#define SFXwatery_bubble3 0x245
-#define SFXfox_bigfallgrunt1 0x246
-#define SFXfox_bigfallgrunt2 0x247
-#define SFXfox_cough2 0x249
-#define SFXfox_bigfallrecover1 0x24a
-#define SFXfox_climbgrunt3 0x25a
-#define SFXfox_climbgrunt4 0x25b
-#define SFXfox_healthgasp1 0x25c
-
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068d0();

@@ -2,8 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/creator1C4.h"
 
-#define SFXwp_swtst1_c 359
-
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006770();
 extern undefined4 FUN_800067c0();

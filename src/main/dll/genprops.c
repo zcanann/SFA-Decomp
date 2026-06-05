@@ -2,12 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/genprops.h"
 
-#define SFXen_weetinklp22 0x4a
-#define SFXsc_scabshort32 0xba
-#define SFXsc_text_appears_lp 0xc0
-#define SFXsc_nolock 0xc1
-#define SFXwp_gprop2_c 0x16a
-
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_80003494();

@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DF/DFcradle.h"
-
-#define SFXar_boost16 392
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);

@@ -2,10 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/xyzanimator.h"
 
-#define SFXsc_objselectyeah22 0xb6
-#define SFXsc_projhitneg22 0xb7
-#define SFXsc_attack02 0x278
-
 #pragma peephole off
 #pragma scheduling off
 extern undefined4 FUN_800067e8();

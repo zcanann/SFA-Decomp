@@ -2,19 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/scarab.h"
 
-#define SFXfoot_ice_run_4 0x1ec
-#define SFXfoxcom_find 0x263
-#define SFXfoxcom_flame 0x264
-#define SFXfoxcom_gogetit 0x265
-#define SFXfoxcom_heel 0x266
-#define SFXfoxcom_stay 0x267
-#define SFXkr_impact1 0x268
-#define SFXkr_impact2 0x269
-#define SFXkr_impact3 0x26a
-#define SFXkr_jump1 0x26b
-#define SFXsc_attack04 0x27a
-#define SFXsc_death02 0x27c
-
 extern undefined8 FUN_80003494();
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80006920();

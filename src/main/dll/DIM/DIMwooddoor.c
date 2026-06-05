@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMwooddoor.h"
 #include "main/objanim.h"
-
-#define SFXfoot_run_jingle4 509
 
 typedef struct DIMWoodDoorConfig {
     u8 pad00[0x4];

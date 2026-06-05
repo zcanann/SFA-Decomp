@@ -1,8 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMExplosion.h"
-
-#define SFXthorntail_chew1 518
-#define SFXthorntail_chew2 519
 
 extern undefined4 FUN_80006824();
 extern uint GameBit_Get(int eventId);

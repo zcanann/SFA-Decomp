@@ -1,9 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/baddie/chuka.h"
 #include "main/dll/baddie/chukachuck.h"
-
-#define SFXfoot_water_walk_2 456
 
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);

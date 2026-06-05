@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/seqObj.h"
-
-#define SFXfox_swimstroke122 571
 
 extern undefined4 FUN_800033a8();
 extern void *mmAlloc(int size,int tag,int flags);

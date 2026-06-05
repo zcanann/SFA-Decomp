@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2lift.h"
-
-#define SFXwmap_swoosh 381
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_8000691c();

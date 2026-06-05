@@ -1,9 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/waterfallControl.h"
 
-
-#define SFXsc_gethit02 638
-#define SFXsc_gethit03 639
 
 extern int hitDetectFn_80065e50(f32 x, f32 y, f32 z, int obj, int *hitsOut, int pointCount,
                                 int mask);

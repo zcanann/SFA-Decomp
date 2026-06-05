@@ -1,7 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 
-#define SFXbaddie_haga_spin 696
-
+#include "main/audio/sfx_ids.h"
 int ktfallingrocks_getExtraSize(void) { return 0x0; }
 
 int ktfallingrocks_getObjectTypeId(void) { return 0x0; }

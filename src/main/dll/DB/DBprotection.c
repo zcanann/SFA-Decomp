@@ -2,9 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DB/DBprotection.h"
 
-#define SFXwp_cahit2_c 0x143
-#define SFXwp_dsmk2_c 0x146
-
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c
 #define DBPROTECTION_GAMEBIT_CYCLE_B_PENDING 0xa3d
 #define DBPROTECTION_GAMEBIT_CYCLE_A_DONE 0xa3e

@@ -1,10 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "global.h"
 #include "main/dll/firepipe.h"
 #include "string.h"
-
-#define SFXand_missilelaunch 812
-#define SFXand_suck_lp 813
 
 extern undefined4 modelLightStruct_freeSlot(int param_1);
 extern undefined4 GameBit_Get(int eventId);

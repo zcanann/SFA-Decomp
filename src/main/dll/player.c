@@ -5,37 +5,6 @@
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
 
-#define SFXdn_rexhurt13 16
-#define SFXdn_rexroarlng11 17
-#define SFXdn_hightop_hurt1 27
-#define SFXen_lflsh2_b 44
-#define SFXen_liftstpc 46
-#define SFXen_littletink22 47
-#define SFXmn_dimbos36 105
-#define SFXtr_gal_prophit 302
-#define SFXtr_jbike_snowhit 304
-#define SFXtr_barrelgrabber_eloop 307
-#define SFXtr_jbike_snowspray 309
-#define SFXtr_jbike_boost 310
-#define SFXmammoth_snowstep 520
-#define SFXmammoth_annoyed 521
-#define SFXmammoth_attacks 522
-#define SFXmammoth_suck 523
-#define SFXthorntail_injured2 528
-#define SFXthorntail_snort1 529
-#define SFXthorntail_snort2 530
-#define SFXhightop_call1 533
-#define SFXhightop_call2 534
-#define SFXmammoth_annoyed2 535
-#define SFXmammoth_breath1 536
-#define SFXmammoth_breath2 537
-#define SFXmammoth_huff1 538
-#define SFXmammoth_huff2 539
-#define SFXmammoth_dirtstep 540
-#define SFXbaddie_eggsnatch_sniff3 707
-#define SFXspirit_pool_wobble2 799
-#define SFXdrak_roar1 826
-
 void fn_802960E4(void) {}
 
 int fn_80297498(void) { return 0x0; }

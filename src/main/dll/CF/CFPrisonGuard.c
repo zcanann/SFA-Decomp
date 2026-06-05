@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/CF/CFPrisonGuard.h"
-
-#define SFXmn_dimraw36 110
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b94();

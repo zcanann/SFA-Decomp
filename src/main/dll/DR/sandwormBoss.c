@@ -3,15 +3,6 @@
 #include "main/dll/DR/sandwormBoss.h"
 #include "main/objanim.h"
 
-#define SFXsk_baptr6_c 0xd3
-#define SFXsk_baptr9_c 0xd4
-#define SFXsk_planteater11 0xd5
-#define SFXsk_toysq2_c 0xd6
-#define SFXsk_trbark1 0xd7
-#define SFXsk_trwhin3 0xe1
-#define SFXsk_doggydig11 0xe3
-#define SFXand_spitout 0x334
-
 extern undefined4 getLActions();
 extern undefined4 FUN_80006728();
 extern undefined4 FUN_800067c0();

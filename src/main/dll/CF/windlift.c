@@ -1,12 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/CF/windlift.h"
-
-#define SFXen_firlp6 0x40
-#define SFXen_lwfl1_c 0x45
-#define SFXen_mossyloop16 0x46
-#define SFXmn_dimbos46 0x6a
-#define SFXmn_dimspit6 0x70
-#define SFXmn_eggylaugh116 0x71
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();

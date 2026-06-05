@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#define SFXfend_pep_snoreout 783
-
+#include "main/audio/sfx_ids.h"
 #pragma peephole on
 #pragma scheduling on
 int drlightbea_getExtraSize(void) { return 0xc; }

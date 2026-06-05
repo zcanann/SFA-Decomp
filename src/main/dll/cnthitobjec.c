@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#define SFXdn_hightop_ambi1 24
-
+#include "main/audio/sfx_ids.h"
 #pragma peephole on
 #pragma scheduling on
 int cnthitobjec_getExtraSize(void) { return 0xc; }

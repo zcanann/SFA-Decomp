@@ -1,7 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 
-#define SFXfoot_stone_run_1 0x1B3
-
+#include "main/audio/sfx_ids.h"
 int drshackle_getExtraSize(void) { return 0x20; }
 
 int drshackle_getObjectTypeId(void) { return 0x0; }

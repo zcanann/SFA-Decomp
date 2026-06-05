@@ -2,9 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/smallbasket.h"
 
-#define SFXfox_swimstroke322 0x23d
-#define SFXfox_swimstroke422 0x23e
-
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006810();
 extern undefined4 FUN_80006818();

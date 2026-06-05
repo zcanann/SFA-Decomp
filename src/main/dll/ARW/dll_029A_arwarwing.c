@@ -1,15 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
-
-#define SFXbaddie_rach_bite 0x2a0
-#define SFXbaddie_rach_call1 0x2a1
-#define SFXbaddie_rach_call2 0x2a2
-#define SFXbaddie_vambat_death 0x2ac
-#define SFXbaddie_eba_bigswipe 0x2b4
-#define SFXbaddie_eba_smallswipe2 0x2b6
-#define SFXbaddie_kalda_distress 0x2b7
-#define SFXbaddie_pinpon_launch 0x29f
-#define SFXbaddie_eggsnatch_movelp 0x2c0
 
 #pragma peephole on
 #pragma scheduling on

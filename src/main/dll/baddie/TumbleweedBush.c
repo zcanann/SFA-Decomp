@@ -2,8 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/TumbleweedBush.h"
 
-#define SFXsp_sa_def02 244
-
 typedef struct TitleMenuItem {
     s16 x;
     s16 y;

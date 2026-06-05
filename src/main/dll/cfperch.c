@@ -1,9 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/cfperch.h"
-
-#define SFXmn_dimexp01 0x6b
-#define SFXmn_dimprup6 0x6c
-#define SFXfend_rob_wave 0x313
 
 #define SMALLBASKET_LINKED_ID_BASE 0x40000
 #define SMALLBASKET_ROB_WAVE_DIRECT_ID 0x66

@@ -1,7 +1,6 @@
 #include "main/dll/VF/vf_shared.h"
 
-#define SFXen_flybuzz_loop 84
-
+#include "main/audio/sfx_ids.h"
 extern f32 lbl_803E60D8;
 extern f32 lbl_803E60DC;
 

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/WM/WMcrystal.h"
 #include "main/objanim_update.h"
@@ -104,9 +105,6 @@ extern void fn_80296124(int player, void *pos, void *obj, int arg);
 #define SC_TOTEMPUZZLE_WRONG_SFX_ID 0x487
 #define SC_TOTEMPUZZLE_COMPLETE_SFX_ID 0x7e
 #define SC_TOTEMPUZZLE_PROGRESS_SFX_ID 0x409
-#define SFXtr_jbike_whine2 311
-#define SFXtr_gal_prophitbird 312
-
 #define SC_TOTEMBOND_ORB_COUNT 8
 #define SC_TOTEMBOND_ORB_SETUP_SIZE 0x38
 #define SC_TOTEMBOND_ORB_OBJECT_ID 0x27b

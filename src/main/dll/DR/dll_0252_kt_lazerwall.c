@@ -1,9 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 
-#define SFXmn_sml_trex_snap3 130
-#define SFXmv_bflconc1 131
-#define SFXmv_blkhit_c 132
-
+#include "main/audio/sfx_ids.h"
 int ktlazerwall_getExtraSize(void) { return 0x14; }
 
 int ktlazerwall_getObjectTypeId(void) { return 0x0; }

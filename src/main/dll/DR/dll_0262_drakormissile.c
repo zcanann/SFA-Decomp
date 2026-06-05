@@ -1,8 +1,6 @@
 #include "main/dll/DR/dr_shared.h"
 
-#define SFXwp_barrel_bounce1 370
-#define SFXwp_barrel_bounce2 371
-
+#include "main/audio/sfx_ids.h"
 int drakormissile_getExtraSize(void) { return 0x38; }
 
 int drakormissile_getObjectTypeId(void) { return 0x2; }

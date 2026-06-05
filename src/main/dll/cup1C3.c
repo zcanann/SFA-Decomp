@@ -1,8 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/cup1C3.h"
-
-#define SFXtr_jbike_lowfuel 314
-#define SFXfoot_stone_scuff 468
 
 #pragma peephole off
 #pragma scheduling off

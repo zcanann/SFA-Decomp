@@ -2,8 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/transporter.h"
 
-#define SFXmn_cling02 100
-
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068f8();
 extern undefined4 FUN_80006904();

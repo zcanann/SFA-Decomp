@@ -1,9 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/TrickyCurve.h"
 #include "main/dll/sfxplayer.h"
-
-#define SFXfoot_water_walk_3 457
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();

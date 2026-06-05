@@ -1,9 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/worldobj.h"
-
-#define SFXwp_gcfir1_c 331
-#define SFXwp_hitpos_6 332
-#define SFXwp_mpwru1 333
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();

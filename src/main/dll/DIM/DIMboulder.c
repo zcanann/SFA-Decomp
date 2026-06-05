@@ -3,8 +3,6 @@
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMboulder.h"
 
-#define SFXwp_simp1_c 342
-
 extern undefined4 getLActions();
 extern undefined4 FUN_80006724();
 extern undefined8 FUN_80006728();

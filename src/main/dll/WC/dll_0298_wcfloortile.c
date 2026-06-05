@@ -1,9 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#define SFXsc_strafe_active 198
-#define SFXbaddie_rach_call3 675
-#define SFXbaddie_rach_death 676
-
+#include "main/audio/sfx_ids.h"
 #pragma peephole on
 #pragma scheduling on
 int wcfloortile_getExtraSize(void) { return 8; }

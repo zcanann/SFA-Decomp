@@ -1,10 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
-
-#define SFXfoot_dinostep 0x1fe
-#define SFXfoot_water_roll 0x201
-#define SFXthorntail_annoyed1 0x202
-#define SFXbaddie_eggsnatch_sniff1 705
 
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();

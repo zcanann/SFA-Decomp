@@ -1,10 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DF/rope.h"
 #include "main/dll/mmsh_waterspike.h"
 
-
-#define SFXwmap_name 382
-#define SFXar_bblast16 390
 
 #pragma peephole off
 #pragma scheduling off

@@ -1,11 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/cfprisonuncle.h"
 #include "main/objanim.h"
-
-#define SFXen_riverloop11 0x4c
-#define SFXen_trpcls_c 0x4d
-#define SFXen_generic_placeobj 0x4e
-#define SFXen_lrope_powerdown 0x5e
 
 extern bool FUN_800067f0();
 extern bool FUN_800067f8();

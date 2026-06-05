@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/barrel.h"
-
-#define SFXsc_death01 635
 
 extern undefined4 FUN_80006824();
 extern int FUN_80017730();

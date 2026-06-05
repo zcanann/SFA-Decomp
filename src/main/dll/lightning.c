@@ -2,11 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/lightning.h"
 
-#define SFXen_statue_wave 0x56
-#define SFXen_waterblock_wave 0x57
-#define SFXmn_craterspit11 0x66
-#define SFXwp_iceywindlp16 0x16b
-
 #pragma peephole off
 #pragma scheduling off
 extern int Sfx_PlayFromObject(int obj, int sfxId);

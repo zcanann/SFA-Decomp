@@ -4,10 +4,6 @@
 #include "main/light.h"
 #include "main/objanim.h"
 
-#define SFXsp_skeep_mumb4 0x10d
-#define SFXsp_guardian_call2 0x110
-#define SFXsp_lfoot_taunt5 0x115
-
 extern bool FUN_800067f0();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006824();

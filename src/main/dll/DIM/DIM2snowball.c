@@ -3,11 +3,6 @@
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 
-#define SFXfoot_metal_scuff 0x1f5
-#define SFXfoot_metal_land 0x1f6
-#define SFXfoot_ice_scuff 0x1f7
-#define SFXfoot_run_jingle1 0x1fa
-
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();

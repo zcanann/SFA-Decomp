@@ -3,12 +3,6 @@
 #include "main/dll/pressureSwitch.h"
 #include "main/mapEvent.h"
 
-#define SFXstaff_proj_outofmagic 0x236
-#define SFXfox_treadwater122 0x237
-#define SFXfox_treadwater222 0x238
-#define SFXfox_treadwater422 0x23a
-#define SFXand_swipe2 0x32b
-
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006810();

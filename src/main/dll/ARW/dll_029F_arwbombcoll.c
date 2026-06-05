@@ -1,11 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 
-#define SFXbaddie_eba_hit 0x2a6
-#define SFXbaddie_eba_leavesclose 0x2a7
-#define SFXbaddie_eba_leavesopen 0x2a8
-#define SFXbaddie_eba_pollenspin 0x2a9
-#define SFXbaddie_vambat_attack 0x2ab
-
+#include "main/audio/sfx_ids.h"
 #pragma peephole on
 #pragma scheduling on
 int arwbombcoll_getExtraSize(void) { return 8; }

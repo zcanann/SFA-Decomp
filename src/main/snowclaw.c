@@ -1,9 +1,6 @@
 #include "ghidra_import.h"
 
-#define SFXdn_rexthrash11 20
-#define SFXsp_sa_climb02 242
-#define SFXswapstone_mumble 740
-
+#include "main/audio/sfx_ids.h"
 typedef struct {
     u8 b0 : 1;
     u8 flag6 : 1;

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DR/DRcloudcage.h"
 
 extern int Sfx_IsPlayingFromObjectChannel(int obj, int channel);
@@ -50,8 +51,6 @@ extern f32 lbl_803E5B58;
 extern f32 lbl_803E5B5C;
 extern f32 lbl_803E5B60;
 extern f32 lbl_803E5B64;
-
-#define SFXsp_htop_hurry2 0x11B
 
 #pragma scheduling off
 #pragma peephole off

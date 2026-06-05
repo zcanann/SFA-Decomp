@@ -3,9 +3,6 @@
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMsnowball.h"
 
-#define SFXtr_gal_sailflap2 297
-#define SFXtr_jbike_bombbeep 308
-
 extern undefined4 FUN_800067c0();
 extern undefined4 FUN_80006818();
 extern undefined4 FUN_80006824();
