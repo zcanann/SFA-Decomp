@@ -2844,17 +2844,11 @@ main/dll/player.c:
 main/dll/dll_01B5_lightfoot.c:
 	.text       start:0x802B8A58 end:0x802B9780
 
-main/unknown/autos/placeholder_80295318.c:
-	.text       start:0x802B9780 end:0x802BACC0
+main/dll/DIM/dll_0256_dimsnowhorn1.c:
+	.text       start:0x802B9780 end:0x802BC0D0
 
-main/unknown/autos/placeholder_802BACC0.c:
-	.text       start:0x802BACC0 end:0x802BB4B0
-
-main/unknown/autos/placeholder_802BB4B0.c:
-	.text       start:0x802BB4B0 end:0x802BB720
-
-main/unknown/autos/placeholder_802BBC10.c:
-	.text       start:0x802BB720 end:0x802BC7C0
+main/dll/DIM/dll_01D9_dim2prisonmammoth.c:
+	.text       start:0x802BC0D0 end:0x802BC7C0
 
 main/dll/DR/dll_0077_DR_EarthWarrior.c:
 	.text       start:0x802BC7C0 end:0x802BF0C8
