@@ -89,8 +89,8 @@ void synthUpdateJobTable(void)
         return;
     }
     synthJobTableCountdown = synthJobTablePeriod;
-    freqScale = lbl_803E77E8;
     volScale = lbl_803E77D8;
+    freqScale = lbl_803E77E8;
     si = synthJobTable;
     for (i = 0; i < lbl_803BD150[0x210]; ++i, ++si) {
         switch (si->state) {
@@ -132,59 +132,46 @@ void synthUpdateJobTable(void)
 
             if (si->last != cpos) {
                 if (si->last < cpos) {
-                    if (si->format == 1) {
-                        off = (si->last / 14) * 8;
-                        if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off, cpos - si->last,
-                                                                       0, 0, si->callbackUser)) != 0 &&
-                            si->state == 2) {
-                            cpos = (si->last + len) % si->size;
-                            if (!(si->flags & 0x20000)) {
-                                if (cpos == 0) {
-                                    hwGetPos(si->buffer, off, si->bytes - off, si->streamHandle, 0, 0);
-                                } else {
-                                    hwGetPos(si->buffer, off, ((cpos + 13) / 14) * 8 - off,
-                                             si->streamHandle, 0, 0);
-                                }
-                            }
-                            si->last = cpos;
-                        }
-                    } else if (si->format == 0) {
+                    switch (si->format) {
+                    case 0:
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2,
                                                                        cpos - si->last, 0, 0,
                                                                        si->callbackUser)) != 0 &&
                             si->state == 2) {
                             cpos = (si->last + len) % si->size;
                             if (!(si->flags & 0x20000)) {
-                                if (cpos == 0) {
-                                    hwGetPos(si->buffer, si->last * 2, (si->size - si->last) * 2,
+                                if (cpos != 0) {
+                                    hwGetPos(si->buffer, si->last * 2, (cpos - si->last) * 2,
                                              si->streamHandle, 0, 0);
                                 } else {
-                                    hwGetPos(si->buffer, si->last * 2, (cpos - si->last) * 2,
+                                    hwGetPos(si->buffer, si->last * 2, (si->size - si->last) * 2,
                                              si->streamHandle, 0, 0);
                                 }
                             }
                             si->last = cpos;
                         }
-                    }
-                } else if (cpos == 0) {
-                    if (si->format == 1) {
+                        break;
+                    case 1:
                         off = (si->last / 14) * 8;
-                        if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off,
-                                                                       si->size - si->last, 0, 0,
-                                                                       si->callbackUser)) != 0 &&
+                        if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off, cpos - si->last,
+                                                                       0, 0, si->callbackUser)) != 0 &&
                             si->state == 2) {
                             cpos = (si->last + len) % si->size;
                             if (!(si->flags & 0x20000)) {
-                                if (cpos == 0) {
-                                    hwGetPos(si->buffer, off, si->bytes - off, si->streamHandle, 0, 0);
-                                } else {
+                                if (cpos != 0) {
                                     hwGetPos(si->buffer, off, ((cpos + 13) / 14) * 8 - off,
                                              si->streamHandle, 0, 0);
+                                } else {
+                                    hwGetPos(si->buffer, off, si->bytes - off, si->streamHandle, 0, 0);
                                 }
                             }
                             si->last = cpos;
                         }
-                    } else if (si->format == 0) {
+                        break;
+                    }
+                } else if (cpos == 0) {
+                    switch (si->format) {
+                    case 0:
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2,
                                                                        si->size - si->last, 0, 0,
                                                                        si->callbackUser)) != 0 &&
@@ -201,20 +188,16 @@ void synthUpdateJobTable(void)
                             }
                             si->last = cpos;
                         }
-                    }
-                } else {
-                    if (si->format == 1) {
+                        break;
+                    case 1:
                         off = (si->last / 14) * 8;
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off,
-                                                                       si->size - si->last, si->buffer,
-                                                                       cpos, si->callbackUser)) != 0 &&
+                                                                       si->size - si->last, 0, 0,
+                                                                       si->callbackUser)) != 0 &&
                             si->state == 2) {
                             cpos = (si->last + len) % si->size;
                             if (!(si->flags & 0x20000)) {
-                                if (si->size - si->last < len) {
-                                    hwGetPos(si->buffer, off, si->bytes - off, si->streamHandle, 0, 0);
-                                    hwGetPos(si->buffer, 0, (cpos / 14) * 8, si->streamHandle, 0, 0);
-                                } else if (cpos == 0) {
+                                if (cpos == 0) {
                                     hwGetPos(si->buffer, off, si->bytes - off, si->streamHandle, 0, 0);
                                 } else {
                                     hwGetPos(si->buffer, off, ((cpos + 13) / 14) * 8 - off,
@@ -223,14 +206,18 @@ void synthUpdateJobTable(void)
                             }
                             si->last = cpos;
                         }
-                    } else if (si->format == 0) {
+                        break;
+                    }
+                } else {
+                    switch (si->format) {
+                    case 0:
                         if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + si->last * 2,
                                                                        si->size - si->last, si->buffer,
                                                                        cpos, si->callbackUser)) != 0 &&
                             si->state == 2) {
                             cpos = (si->last + len) % si->size;
                             if (!(si->flags & 0x20000)) {
-                                if (si->size - si->last < len) {
+                                if (len > si->size - si->last) {
                                     hwGetPos(si->buffer, si->last * 2, si->bytes - si->last * 2,
                                              si->streamHandle, 0, 0);
                                     hwGetPos(si->buffer, 0, cpos * 2, si->streamHandle, 0, 0);
@@ -244,6 +231,28 @@ void synthUpdateJobTable(void)
                             }
                             si->last = cpos;
                         }
+                        break;
+                    case 1:
+                        off = (si->last / 14) * 8;
+                        if ((len = ((SynthStreamUpdateFn)si->callback)(si->buffer + off,
+                                                                       si->size - si->last, si->buffer,
+                                                                       cpos, si->callbackUser)) != 0 &&
+                            si->state == 2) {
+                            cpos = (si->last + len) % si->size;
+                            if (!(si->flags & 0x20000)) {
+                                if (len > si->size - si->last) {
+                                    hwGetPos(si->buffer, off, si->bytes - off, si->streamHandle, 0, 0);
+                                    hwGetPos(si->buffer, 0, (cpos / 14) * 8, si->streamHandle, 0, 0);
+                                } else if (cpos == 0) {
+                                    hwGetPos(si->buffer, off, si->bytes - off, si->streamHandle, 0, 0);
+                                } else {
+                                    hwGetPos(si->buffer, off, ((cpos + 13) / 14) * 8 - off,
+                                             si->streamHandle, 0, 0);
+                                }
+                            }
+                            si->last = cpos;
+                        }
+                        break;
                     }
                 }
 
