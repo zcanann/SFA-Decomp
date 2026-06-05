@@ -682,23 +682,38 @@ void sc_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 extern void fn_8003B608(int a, int b, int c);
 extern int ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int p6);
 extern f32 lbl_803E558C;
+typedef struct SCMusicTreeState {
+    int ambientEffect[3];
+    f32 pathPoint[3][3];
+    f32 proximityBurstTimer;
+    f32 animSpeed;
+    f32 scale;
+    f32 proximityCooldown;
+    f32 hitCooldown;
+    int hitCooldownState;
+    u16 hearRadius;
+    s16 previousDistance;
+    u8 flags;
+    u8 pad4D[0x50 - 0x4D];
+} SCMusicTreeState;
+
 #pragma scheduling off
 #pragma peephole off
 void sc_musictree_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
     int *def = *(int **)((char *)obj + 0x4C);
-    int *state = *(int **)((char *)obj + 0xB8);
+    SCMusicTreeState *state = *(SCMusicTreeState **)((char *)obj + 0xB8);
     int i;
     if (visible == 0) return;
     fn_8003B608((int)*(u8 *)((char *)def + 0x20), (int)*(u8 *)((char *)def + 0x21), (int)*(u8 *)((char *)def + 0x22));
     ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E558C);
-    if ((*(u8 *)((char *)state + 0x4C) & 0x80) == 0) return;
+    if ((state->flags & 0x80) == 0) return;
     for (i = 0; i < 3; i++) {
         ObjPath_GetPointWorldPosition(obj, i,
-            (f32 *)((char *)state + 12),
-            (f32 *)((char *)state + 16),
-            (f32 *)((char *)state + 20),
+            &state->pathPoint[0][0],
+            &state->pathPoint[0][1],
+            &state->pathPoint[0][2],
             0);
-        state = (int *)((char *)state + 12);
+        state = (SCMusicTreeState *)((char *)state + 12);
     }
     *(int *)((char *)obj + 0xF8) = 1;
 }
@@ -869,8 +884,8 @@ extern int Obj_SetupObject(int setup, int a, int b, int c, int d);
 void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
 {
     int def = *(int *)(obj + 0x4c);
+    SCMusicTreeState *state = (SCMusicTreeState *)p2;
     int setup;
-    int row;
 
     if (Obj_IsLoadingLocked() != 0) {
         setup = Obj_AllocObjectSetup(0x28, 0x210);
@@ -878,10 +893,9 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
         *(u8 *)(setup + 6) = *(u8 *)(def + 6);
         *(u8 *)(setup + 5) = *(u8 *)(def + 5);
         *(u8 *)(setup + 7) = *(u8 *)(def + 7) - 10;
-        row = p2 + idx * 0xc;
-        *(f32 *)(setup + 8) = *(f32 *)(row + 0xc);
-        *(f32 *)(setup + 0xc) = *(f32 *)(row + 0x10);
-        *(f32 *)(setup + 0x10) = *(f32 *)(row + 0x14);
+        *(f32 *)(setup + 8) = state->pathPoint[idx][0];
+        *(f32 *)(setup + 0xc) = state->pathPoint[idx][1];
+        *(f32 *)(setup + 0x10) = state->pathPoint[idx][2];
         *(u16 *)(setup + 0x1c) = randomGetRange(0x708, 0x1770);
         *(u16 *)(setup + 0x1e) = 1;
         *(u8 *)(setup + 0x20) = 10;
@@ -892,7 +906,7 @@ void sc_musictree_spawnAmbientEffect(int obj, int p2, int p3, s8 idx)
         *(u8 *)(setup + 0x25) = -50;
         *(s16 *)(setup + 0x26) = -1;
         *(int *)(setup + 0x18) = 0;
-        *(int *)(p2 + idx * 4) = Obj_SetupObject(setup, 5, -1, -1, *(int *)(obj + 0x30));
+        state->ambientEffect[idx] = Obj_SetupObject(setup, 5, -1, -1, *(int *)(obj + 0x30));
     }
 }
 #pragma scheduling reset
@@ -904,6 +918,7 @@ extern f32 lbl_803E5588;
 void sc_musictree_handleHitObject(int p1, int p2, int effectType)
 {
     int id = *(int *)(*(int *)(p1 + 0x4c) + 0x14);
+    SCMusicTreeState *state = (SCMusicTreeState *)p2;
     (void)effectType;
 
     switch (id) {
@@ -935,7 +950,7 @@ void sc_musictree_handleHitObject(int p1, int p2, int effectType)
             GameBit_Set(0xc45, 1);
         break;
     }
-    *(f32 *)(p2 + 0x34) = lbl_803E5588;
+    state->animSpeed = lbl_803E5588;
 }
 #pragma scheduling reset
 #pragma peephole reset
