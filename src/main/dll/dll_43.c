@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_43.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXsp_snrot1_c 256
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void saveSelectGoToChooseSlot(int arg);

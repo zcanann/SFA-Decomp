@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/dim_bossgut.h"
 
-#define SFXmv_curtainloop16 157
 #define SFXmv_curtainrustle 163
 
 extern undefined4 FUN_80006824();

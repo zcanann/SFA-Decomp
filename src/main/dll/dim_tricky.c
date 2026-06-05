@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/dim_tricky.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXmn_eggylaugh216 114
-#define SFXmn_sml_trex_snap1 128
 
 extern void *Resource_Acquire(int id, int mode);
 extern void Resource_Release(void *handle);

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/projswitch.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXmv_liftloop 158
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_800068c4();

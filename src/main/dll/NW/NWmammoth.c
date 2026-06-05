@@ -3,8 +3,6 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 
-#define SFXen_waterblock_stop 88
-#define SFXmv_curtainloop16 157
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80017688();

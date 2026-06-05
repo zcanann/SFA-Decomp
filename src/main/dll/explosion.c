@@ -1,8 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/explosion.h"
 
-#define SFXmn_eggylaugh216 114
-#define SFXmn_sml_trex_snap1 128
 
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_800067c0();

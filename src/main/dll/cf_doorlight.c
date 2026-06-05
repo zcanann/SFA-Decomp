@@ -1,9 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/cf_doorlight.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXdoor_unlocked 562
-#define SFXdoor_creak 563
-#define SFXkr_climb2 628
 #define SFXsc_attack01 631
 
 extern undefined4 FUN_800033a8();

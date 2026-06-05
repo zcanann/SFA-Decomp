@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/smallbasket.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXen_blkscrp6 0x22
 #define SFXfox_swimstroke322 0x23d
 #define SFXfox_swimstroke422 0x23e
 #define SFXfox_outofwater122 0x23f

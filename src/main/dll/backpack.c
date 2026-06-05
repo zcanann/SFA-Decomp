@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/backpack.h"
 #include "main/objanim.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXen_treadlpc 73
 
 extern void tumbleweed_updateStateMachine(int obj);
 extern void tumbleweed_updateTargetedStateMachine(int obj);

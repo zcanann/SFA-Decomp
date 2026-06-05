@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/NW/dll_1DB.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXen_waterblock_stop 88
-#define SFXmv_curtainloop16 157
 
 extern f32 lbl_803E52A8;
 

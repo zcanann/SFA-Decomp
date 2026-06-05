@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/groundAnimator.h"
+#include "main/audio/sfx_ids.h"
 
 #define SFXen_bridge_stops 82
-#define SFXen_waterblock_stop 88
 
 extern undefined8 FUN_80006824();
 extern undefined4 FUN_80017710();

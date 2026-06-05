@@ -2,10 +2,10 @@
 #include "main/dll/dll_47.h"
 #include "main/dll/FRONT/frontend_control.h"
 #include "main/dll/FRONT/title_menu.h"
+#include "main/audio/sfx_ids.h"
 
 
 #define SFXsp_sa_off03 252
-#define SFXsp_snrot1_c 256
 
 #pragma peephole off
 #pragma scheduling off

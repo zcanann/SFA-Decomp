@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/duster.h"
 #include "main/objanim.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXen_blkscrp6 0x22
 #define SFXwatery_bubble2 0x244
 #define SFXfox_fightbreath1 0x24b
 #define SFXfox_fightbreath2 0x24c

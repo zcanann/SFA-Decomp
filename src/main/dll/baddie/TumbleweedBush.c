@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/baddie/TumbleweedBush.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXsp_sa_def01 243
 #define SFXsp_sa_def02 244
 
 typedef struct TitleMenuItem {

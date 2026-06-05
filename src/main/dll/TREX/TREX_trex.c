@@ -1,11 +1,11 @@
 #include "ghidra_import.h"
 #include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
+#include "main/audio/sfx_ids.h"
 
 #define SFXen_nlite1_c 0x34
 #define SFXen_ripefruit11 0x35
 #define SFXen_rockshat16 0x36
-#define SFXmn_eggylaugh216 0x72
 #define SFXbaddie_crater_call 0x2ca
 #define SFXfend_rob_beep2 0x315
 #define SFXfend_rob_beep3 0x316

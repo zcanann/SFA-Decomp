@@ -5,7 +5,6 @@
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 
-#define SFXmn_eggylaugh216 0x72
 #define SFXmn_crusty9c 0x7d
 #define SFXmn_sml_trex_roar 0x7f
 

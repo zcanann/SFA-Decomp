@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/debug/dimenu.h"
+#include "main/audio/sfx_ids.h"
 
 #define SFXsp_sa_off03 0xfc
-#define SFXsp_snrot1_c 0x100
 #define SFXqu_longsob2 0x103
 #define SFXqu_shortsob1 0x104
 

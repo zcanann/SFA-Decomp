@@ -1,7 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/mapEventTypes.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXmv_liftloop 158
 #define SFXmv_mushdizzylp12 159
 
 #pragma peephole on

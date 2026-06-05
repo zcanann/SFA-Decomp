@@ -1,10 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/genprops.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXen_treadlpc 0x49
 #define SFXen_weetinklp22 0x4a
-#define SFXen_waterblock_stop 0x58
-#define SFXsc_mpick1_b 0xb3
 #define SFXsc_scabshort32 0xba
 #define SFXsc_text_appears_lp 0xc0
 #define SFXsc_nolock 0xc1

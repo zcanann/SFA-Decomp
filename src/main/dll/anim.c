@@ -9,9 +9,6 @@
 #define SFXfoot_wood_run_2 0x1c4
 #define SFXfoot_water_run_1 0x1cb
 #define SFXsp_lfoot_taunt6 0x116
-#define SFXmn_eggylaugh216 0x72
-#define SFXmn_sml_trex_snap1 0x80
-#define SFXen_treadlpc 0x49
 #define SFXswapstone_move_long 0x2df
 
 #pragma peephole off

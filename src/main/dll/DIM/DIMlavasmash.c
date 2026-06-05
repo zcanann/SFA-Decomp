@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMlavasmash.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXmn_eggylaugh216 114
 #define SFXfoot_run_jingle2 507
 
 extern undefined4 FUN_8000680c();

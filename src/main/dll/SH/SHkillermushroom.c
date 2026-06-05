@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/SH/SHkillermushroom.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXmv_curtainloop16 157
 #define SFXmv_sliftloop11 161
 #define SFXmv_curtainrustle 163
 

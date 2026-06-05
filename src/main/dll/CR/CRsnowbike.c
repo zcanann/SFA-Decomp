@@ -2,7 +2,6 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/CR/CRsnowbike.h"
 
-#define SFXsp_skeep_mumb1 266
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();

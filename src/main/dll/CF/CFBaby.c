@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
 #include "main/mapEvent.h"
 #include "main/dll/CF/CFBaby.h"
+#include "main/audio/sfx_ids.h"
 
 #define SFXen_rfall5_c 72
-#define SFXmv_liftloop 158
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();

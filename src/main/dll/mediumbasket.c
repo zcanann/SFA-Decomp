@@ -1,10 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/mediumbasket.h"
+#include "main/audio/sfx_ids.h"
 
 #define SFXsc_fox_commdown 0xcf
-#define SFXfoot_metal_run_2 0x1f2
-#define SFXdoor_unlocked 0x232
-#define SFXdoor_creak 0x233
 #define SFXfox_treadwater322 0x239
 #define SFXkr_jump2 0x26c
 #define SFXkr_panting1 0x26e

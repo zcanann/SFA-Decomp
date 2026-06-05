@@ -28,8 +28,8 @@
 
 #include "ghidra_import.h"
 #include "main/dll/baddie/baby_snowworm.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXsp_sa_def01 243
 #define SFXsp_snrin2_c 255
 
 extern undefined4 FUN_800067c0();

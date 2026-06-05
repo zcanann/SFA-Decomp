@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXsp_skeep_mumb1 266
 
 typedef struct { u32 mode; f32 x, y, z; void *tex; s16 flags; u8 layer; } GfxCmd;
 extern undefined4* gModgfxInterface;

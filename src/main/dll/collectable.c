@@ -2,6 +2,7 @@
 #include "dolphin/mtx.h"
 #include "main/dll/collectable.h"
 #include "main/objanim.h"
+#include "main/audio/sfx_ids.h"
 
 
 #pragma peephole off
@@ -18,7 +19,6 @@
 #define TRICKY_HEIGHT_TRACK_GROUP 0x51
 #define TRICKY_HEIGHT_TRACK_MODEL_SLOT 3
 #define TRICKY_BBOX_HIT_SCRATCH_SIZE 84
-#define SFXdoor_creak 563
 
 typedef struct TrickyInitFlags {
   u8 initBit7 : 1;

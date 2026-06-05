@@ -4,7 +4,6 @@
 #define SFXmn_dimexp01 0x6b
 #define SFXmn_dimprup6 0x6c
 #define SFXmn_dimraw26 0x6d
-#define SFXsp_skeep_mumb1 0x10a
 #define SFXfend_rob_wave 0x313
 
 #define SMALLBASKET_LINKED_ID_BASE 0x40000

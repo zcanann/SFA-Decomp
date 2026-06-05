@@ -1,13 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/campfire.h"
 #include "main/objanim.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXen_blkscrp6 0x22
 #define SFXfox_runbreath3 0x255
 #define SFXkr_pullup1 0x270
 #define SFXkr_pullup2 0x271
 #define SFXkr_climb1 0x273
-#define SFXkr_climb2 0x274
 #define SFXkr_land1 0x275
 #define SFXkr_land2 0x276
 

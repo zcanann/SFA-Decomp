@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/CFforcecontrol.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXen_treadlpc 73
 
 #pragma peephole off
 #pragma scheduling off

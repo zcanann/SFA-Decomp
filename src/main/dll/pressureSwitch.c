@@ -1,10 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/pressureSwitch.h"
 #include "main/mapEvent.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXfoot_metal_run_2 0x1f2
-#define SFXdoor_unlocked 0x232
-#define SFXdoor_creak 0x233
 #define SFXstaff_proj_outofmagic 0x236
 #define SFXfox_treadwater122 0x237
 #define SFXfox_treadwater222 0x238

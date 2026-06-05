@@ -1,9 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/texscroll2.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXdoor_unlocked 0x232
-#define SFXdoor_creak 0x233
-#define SFXkr_climb2 0x274
 #define SFXsc_attack01 0x277
 
 extern undefined4 FUN_80006824();

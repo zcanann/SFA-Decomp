@@ -1,11 +1,10 @@
 #include "ghidra_import.h"
 #include "main/dll/scarab.h"
+#include "main/audio/sfx_ids.h"
 
 #define SFXmv_ropecreak22 0x95
-#define SFXdoor_creak 0x233
 #define SFXfox_treadwater322 0x239
 #define SFXfoot_ice_run_4 0x1ec
-#define SFXfoot_metal_run_2 0x1f2
 #define SFXfoxcom_find 0x263
 #define SFXfoxcom_flame 0x264
 #define SFXfoxcom_gogetit 0x265
@@ -15,7 +14,6 @@
 #define SFXkr_impact2 0x269
 #define SFXkr_impact3 0x26a
 #define SFXkr_jump1 0x26b
-#define SFXdoor_unlocked 562
 #define SFXsc_attack04 0x27a
 #define SFXsc_death02 0x27c
 

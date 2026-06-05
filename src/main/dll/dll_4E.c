@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/dll_4E.h"
+#include "main/audio/sfx_ids.h"
 
 #define OPTIONS_MENU_ACTION_CLOSE 0
 #define OPTIONS_MENU_ACTION_SELECT 1
@@ -25,7 +26,6 @@
 #define OPTIONS_SUBMENU_AUDIO 2
 #define OPTIONS_SUBMENU_LANGUAGE 3
 
-#define SFXsp_snrot1_c 256
 
 extern undefined4 FUN_80006768();
 extern undefined4 FUN_8000676c();

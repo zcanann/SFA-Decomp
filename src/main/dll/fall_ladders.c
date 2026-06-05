@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/fall_ladders.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXdoor_unlocked 0x232
-#define SFXdoor_creak 0x233
 #define SFXfox_healthgasp2 0x25d
 #define SFXfox_healthgasp3 0x25e
 #define SFXfox_healthgasp4 0x25f

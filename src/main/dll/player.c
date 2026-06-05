@@ -13,7 +13,6 @@
 #define SFXen_littletink22 47
 #define SFXmn_dimbos36 105
 #define SFXmn_dimraw26 109
-#define SFXsp_skeep_mumb1 266
 #define SFXtr_gal_prophit 302
 #define SFXtr_jbike_snowhit 304
 #define SFXtr_barrelgrabber_eloop 307

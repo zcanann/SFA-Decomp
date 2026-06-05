@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMcannon.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXmn_eggylaugh216 114
 
 extern undefined4 FUN_80006724();
 extern undefined8 FUN_80006728();
