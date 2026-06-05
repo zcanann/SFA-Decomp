@@ -99,49 +99,7 @@ extern f32 lbl_803E5768;
  *
  * Function: dim_levelcontrol_update
  * EN v1.0 Address: 0x801B6464
- * EN v1.0 Size: 56b
- * EN v1.1 Address: 0x801B69B0
- * EN v1.1 Size: 56b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void dim_levelcontrol_update(void)
-{
-  FUN_800067c0((int *)0xa1,0);
-  FUN_800067c0((int *)0xed,0);
-  FUN_80053b3c();
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801b649c
- * EN v1.0 Address: 0x801B649C
- * EN v1.0 Size: 40b
- * EN v1.1 Address: 0x801B69E8
- * EN v1.1 Size: 48b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801b649c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible)
-{
-  if (visible != 0) {
-    FUN_8003b818(param_1);
-  }
-  return;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801b64c4
- * EN v1.0 Address: 0x801B64C4
- * EN v1.0 Size: 2144b
+ * EN v1.0 Size: 1352b
  * EN v1.1 Address: 0x801B6A18
  * EN v1.1 Size: 1352b
  * JP Address: TODO
@@ -149,140 +107,144 @@ void FUN_801b649c(int param_1,int param_2,int param_3,int param_4,int param_5,s8
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void FUN_801b64c4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8)
+typedef struct DimLevelControlState {
+    f32 timer;
+    int latch;
+    u8 saveState;
+    u8 unk9;
+    s16 musicTrack;
+    u8 unkC;
+    u8 unkD;
+    u8 b7 : 1;
+    u8 b6 : 1;
+    u8 b5 : 1;
+    u8 b4 : 1;
+    u8 b3 : 1;
+} DimLevelControlState;
+
+extern int Sfx_PlayFromObject(int obj, int id);
+extern void getEnvfxActImmediately(int a, int b, int id, int d);
+extern void getEnvfxAct(int a, int b, int id, int d);
+extern void gameTextSetColor(int r, int g, int b, int a);
+extern void gameTextShow(int id);
+extern void Music_Trigger(int id, int value);
+extern void SCGameBitLatch_Update(int *state, int mask, int a, int b, int bit, int value);
+extern MapEventInterface **gMapEventInterface;
+extern int *gGameUIInterface;
+extern int *gSHthorntailAnimationInterface;
+extern f32 lbl_803E4A24;
+extern f32 timeDelta;
+
+#pragma scheduling off
+#pragma peephole off
+void dim_levelcontrol_update(int obj)
 {
-  int iVar1;
-  uint uVar2;
-  uint uVar3;
-  uint uVar4;
-  uint uVar5;
-  undefined4 in_r7;
-  undefined4 in_r8;
-  undefined4 in_r9;
-  undefined4 in_r10;
-  float *pfVar6;
-  undefined8 extraout_f1;
-  undefined8 uVar7;
-  
-  iVar1 = FUN_8028683c();
-  uVar7 = extraout_f1;
-  uVar2 = GameBit_Get(0xd0b);
-  uVar3 = GameBit_Get(0xd0c);
-  uVar4 = GameBit_Get(0xd0d);
-  uVar5 = GameBit_Get(0xd0e);
-  pfVar6 = *(float **)(iVar1 + 0xb8);
-  if ((((((uVar2 & 0xff) != 0) && (-1 < *(char *)((int)pfVar6 + 0xe))) ||
-       (((uVar3 & 0xff) != 0 && ((*(byte *)((int)pfVar6 + 0xe) >> 6 & 1) == 0)))) ||
-      (((uVar4 & 0xff) != 0 && ((*(byte *)((int)pfVar6 + 0xe) >> 5 & 1) == 0)))) ||
-     (((uVar5 & 0xff) != 0 && ((*(byte *)((int)pfVar6 + 0xe) >> 4 & 1) == 0)))) {
-    uVar7 = FUN_80006824(0,SFXsp_lf_mutter4);
-  }
-  *(byte *)((int)pfVar6 + 0xe) = (byte)((uVar2 & 0xff) << 7) | *(byte *)((int)pfVar6 + 0xe) & 0x7f;
-  *(byte *)((int)pfVar6 + 0xe) =
-       (byte)((uVar3 & 0xff) << 6) & 0x40 | *(byte *)((int)pfVar6 + 0xe) & 0xbf;
-  *(byte *)((int)pfVar6 + 0xe) =
-       (byte)((uVar4 & 0xff) << 5) & 0x20 | *(byte *)((int)pfVar6 + 0xe) & 0xdf;
-  *(byte *)((int)pfVar6 + 0xe) =
-       (byte)((uVar5 & 0xff) << 4) & 0x10 | *(byte *)((int)pfVar6 + 0xe) & 0xef;
-  if (((*(byte *)((int)pfVar6 + 0xe) >> 3 & 1) == 0) && (uVar2 = GameBit_Get(0xa21), uVar2 != 0)) {
-    uVar7 = FUN_80006824(0,SFXsp_lf_mutter4);
-    *(byte *)((int)pfVar6 + 0xe) = *(byte *)((int)pfVar6 + 0xe) & 0xf7 | 8;
-  }
-  if (*(int *)(iVar1 + 0xf4) != 0) {
-    uVar2 = GameBit_Get(0xa82);
-    if ((uVar2 == 0) ||
-       ((uVar2 = GameBit_Get(0x17), uVar2 != 0 && (uVar2 = GameBit_Get(0xead), uVar2 == 0)))) {
-      if (*(int *)(iVar1 + 0xf4) == 2) {
-        uVar7 = FUN_80006724(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x160
-                             ,0,in_r7,in_r8,in_r9,in_r10);
-        uVar7 = FUN_80006724(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x15a
-                             ,0,in_r7,in_r8,in_r9,in_r10);
-        uVar7 = FUN_80006724(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x15c
-                             ,0,in_r7,in_r8,in_r9,in_r10);
-        FUN_80006724(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x15f,0,in_r7
-                     ,in_r8,in_r9,in_r10);
-      }
-      else {
-        uVar7 = FUN_80006728(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x160
-                             ,0,in_r7,in_r8,in_r9,in_r10);
-        uVar7 = FUN_80006728(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x15a
-                             ,0,in_r7,in_r8,in_r9,in_r10);
-        uVar7 = FUN_80006728(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x15c
-                             ,0,in_r7,in_r8,in_r9,in_r10);
-        FUN_80006728(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0,0,0x15f,0,in_r7
-                     ,in_r8,in_r9,in_r10);
-      }
+    u8 a;
+    u8 b;
+    u8 c;
+    u8 d;
+    DimLevelControlState *st;
+    u32 t;
+    u32 t2;
+
+    a = GameBit_Get(0xd0b);
+    b = GameBit_Get(0xd0c);
+    c = GameBit_Get(0xd0d);
+    d = GameBit_Get(0xd0e);
+    st = *(DimLevelControlState **)(obj + 0xb8);
+    if ((a && !st->b7) || (b && !st->b6) || (c && !st->b5) || (d && !st->b4)) {
+        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
     }
-    *(undefined4 *)(iVar1 + 0xf4) = 0;
-  }
-  if (*(char *)((int)pfVar6 + 0xd) == '\0') {
-    uVar2 = GameBit_Get(0x651);
-    if (uVar2 != 0) {
-      (**(code **)(*DAT_803dd72c + 0x50))(0x13,0xd,1);
-      *(undefined *)((int)pfVar6 + 0xd) = 1;
+    st->b7 = a;
+    st->b6 = b;
+    st->b5 = c;
+    st->b4 = d;
+    if (!st->b3 && (u32)GameBit_Get(0xa21) != 0) {
+        Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
+        st->b3 = 1;
     }
-  }
-  else {
-    uVar2 = GameBit_Get(0x651);
-    if (uVar2 == 0) {
-      (**(code **)(*DAT_803dd72c + 0x50))(0x13,0xd,0);
-      *(undefined *)((int)pfVar6 + 0xd) = 0;
+    if (*(int *)(obj + 0xf4) != 0) {
+        if ((u32)GameBit_Get(0xa82) == 0 ||
+            ((u32)GameBit_Get(0x17) != 0 && (u32)GameBit_Get(0xead) == 0)) {
+            if (*(int *)(obj + 0xf4) == 2) {
+                getEnvfxActImmediately(0, 0, 0x160, 0);
+                getEnvfxActImmediately(0, 0, 0x15a, 0);
+                getEnvfxActImmediately(0, 0, 0x15c, 0);
+                getEnvfxActImmediately(0, 0, 0x15f, 0);
+            } else {
+                getEnvfxAct(0, 0, 0x160, 0);
+                getEnvfxAct(0, 0, 0x15a, 0);
+                getEnvfxAct(0, 0, 0x15c, 0);
+                getEnvfxAct(0, 0, 0x15f, 0);
+            }
+        }
+        *(int *)(obj + 0xf4) = 0;
     }
-  }
-  if (lbl_803E56BC < *pfVar6) {
-    uVar7 = FUN_80017484(0xff,0xff,0xff,0xff);
-    FUN_80006c88(uVar7,param_2,param_3,param_4,param_5,param_6,param_7,param_8,0x430);
-    *pfVar6 = *pfVar6 - lbl_803DC074;
-    if (*pfVar6 < lbl_803E56BC) {
-      *pfVar6 = lbl_803E56BC;
+    if (st->unkD != 0) {
+        if ((u32)GameBit_Get(0x651) == 0) {
+            (*gMapEventInterface)->setAnimEvent(0x13, 0xd, 0);
+            st->unkD = 0;
+        }
+    } else {
+        if ((u32)GameBit_Get(0x651) != 0) {
+            (*gMapEventInterface)->setAnimEvent(0x13, 0xd, 1);
+            st->unkD = 1;
+        }
     }
-  }
-  if (*(char *)(pfVar6 + 3) == '\0') {
-    uVar2 = GameBit_Get(0x3e2);
-    uVar3 = GameBit_Get(0x3e3);
-    *(byte *)(pfVar6 + 3) = (byte)uVar3 & (byte)uVar2;
-    if (*(char *)(pfVar6 + 3) != '\0') {
-      (**(code **)(*DAT_803dd6e8 + 0x38))(0x4ba,0x14,0x8c,1);
+    if (st->timer > lbl_803E4A24) {
+        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
+        gameTextShow(0x430);
+        st->timer = st->timer - timeDelta;
+        if (st->timer < lbl_803E4A24) {
+            st->timer = lbl_803E4A24;
+        }
     }
-  }
-  uVar3 = GameBit_Get(0x3e2);
-  uVar2 = GameBit_Get(0x3e3);
-  uVar2 = countLeadingZeros(uVar2);
-  uVar3 = uVar2 >> 5 & uVar3;
-  uVar2 = uVar3 & 0xff;
-  if (uVar2 != *(byte *)(pfVar6 + 2)) {
-    GameBit_Set(1000,uVar2);
-    *(char *)(pfVar6 + 2) = (char)uVar3;
-  }
-  uVar2 = GameBit_Get(0x8a5);
-  if (((uVar2 & 0xff) == 0) && (uVar2 = GameBit_Get(0x89d), uVar2 != 0)) {
-    GameBit_Set(0x8a4,1);
-  }
-  iVar1 = (**(code **)(*DAT_803dd6d8 + 0x24))(0);
-  if (iVar1 == 0) {
-    if ((*(short *)((int)pfVar6 + 10) != 0xe2) &&
-       (*(undefined2 *)((int)pfVar6 + 10) = 0xe2, ((uint)pfVar6[1] & 4) != 0)) {
-      FUN_800067c0((int *)0xc5,0);
-      FUN_800067c0((int *)0xe2,1);
+    if (st->unkC == 0) {
+        t = GameBit_Get(0x3e2);
+        t2 = GameBit_Get(0x3e3);
+        st->unkC = (u8)(t2 & t);
+        if (st->unkC != 0) {
+            (*(void (**)(int, int, int, int))(*(int *)gGameUIInterface + 0x38))(0x4ba, 0x14, 0x8c, 1);
+        }
     }
-  }
-  else if ((*(short *)((int)pfVar6 + 10) != 0xc5) &&
-          (*(undefined2 *)((int)pfVar6 + 10) = 0xc5, ((uint)pfVar6[1] & 4) != 0)) {
-    FUN_800067c0((int *)0xe2,0);
-    FUN_800067c0((int *)0xc5,1);
-  }
-  SH_LevelControl_runBloopEvent(pfVar6 + 1,1,0x1a7,0x64b,0xc1e,(int *)0xa1);
-  SH_LevelControl_runBloopEvent(pfVar6 + 1,2,0x1a8,0xc0,0xc1f,(int *)0xcf);
-  SH_LevelControl_runBloopEvent(pfVar6 + 1,4,0x1ba,0x1b9,0xc20,(int *)(int)*(short *)((int)pfVar6 + 10));
-  SH_LevelControl_runBloopEvent(pfVar6 + 1,8,-1,-1,0xd8f,(int *)0xdc);
-  SH_LevelControl_runBloopEvent(pfVar6 + 1,0x10,0x1a7,0x64b,0xc1e,(int *)0xed);
-  SH_LevelControl_runBloopEvent(pfVar6 + 1,0x20,0x1a8,0xc0,0xc1f,(int *)0x36);
-  SH_LevelControl_runBloopEvent(pfVar6 + 1,0x40,0x1ba,0x1b9,0xc20,(int *)0x35);
-  SH_LevelControl_runBloopEvent(pfVar6 + 1,0x100,-1,-1,0x3e2,(int *)0x2b);
-  FUN_80286888();
-  return;
+    t = GameBit_Get(0x3e2);
+    t = !GameBit_Get(0x3e3) & t;
+    t2 = t & 0xff;
+    if (t2 != st->saveState) {
+        GameBit_Set(0x3e8, t2);
+        st->saveState = t2;
+    }
+    if (!(u8)GameBit_Get(0x8a5) && (u32)GameBit_Get(0x89d) != 0) {
+        GameBit_Set(0x8a4, 1);
+    }
+    if ((*(int (**)(int))(*(int *)gSHthorntailAnimationInterface + 0x24))(0) == 0) {
+        if (st->musicTrack != 0xe2) {
+            st->musicTrack = 0xe2;
+            if (st->latch & 4) {
+                Music_Trigger(0xc5, 0);
+                Music_Trigger(0xe2, 1);
+            }
+        }
+    } else {
+        if (st->musicTrack != 0xc5) {
+            st->musicTrack = 0xc5;
+            if (st->latch & 4) {
+                Music_Trigger(0xe2, 0);
+                Music_Trigger(0xc5, 1);
+            }
+        }
+    }
+    SCGameBitLatch_Update(&st->latch, 1, 0x1a7, 0x64b, 0xc1e, 0xa1);
+    SCGameBitLatch_Update(&st->latch, 2, 0x1a8, 0xc0, 0xc1f, 0xcf);
+    SCGameBitLatch_Update(&st->latch, 4, 0x1ba, 0x1b9, 0xc20, st->musicTrack);
+    SCGameBitLatch_Update(&st->latch, 8, -1, -1, 0xd8f, 0xdc);
+    SCGameBitLatch_Update(&st->latch, 0x10, 0x1a7, 0x64b, 0xc1e, 0xed);
+    SCGameBitLatch_Update(&st->latch, 0x20, 0x1a8, 0xc0, 0xc1f, 0x36);
+    SCGameBitLatch_Update(&st->latch, 0x40, 0x1ba, 0x1b9, 0xc20, 0x35);
+    SCGameBitLatch_Update(&st->latch, 0x100, -1, -1, 0x3e2, 0x2b);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -1381,36 +1343,38 @@ void dll_1CF_init(int* obj, int* def)
 
 extern f32 lbl_803E4A28;
 extern int getSaveGameLoadStatus(void);
-extern void gameBitFn_800ea2e0(int n);
+extern void gameBitFn_800ea2e0(u8 n);
 extern MapEventInterface **gMapEventInterface;
 extern void unlockLevel(int a, int b, int c);
-void dim_levelcontrol_init(int *obj) {
-    u8 *state;
-    int i;
+void dim_levelcontrol_init(int obj)
+{
+    DimLevelControlState *st;
+    u8 i;
+
     randomGetRange(0, 11);
-    state = *(u8 **)((char *)obj + 0xb8);
-    state[8] = 0;
-    *(f32 *)state = lbl_803E4A28;
+    st = *(DimLevelControlState **)(obj + 0xb8);
+    st->saveState = 0;
+    st->timer = lbl_803E4A28;
     if (getSaveGameLoadStatus() != 0) {
-        *(int *)((char *)obj + 0xf4) = 2;
+        *(int *)(obj + 0xf4) = 2;
     } else {
-        *(int *)((char *)obj + 0xf4) = 1;
+        *(int *)(obj + 0xf4) = 1;
     }
     for (i = 1; i <= 38; i++) {
         gameBitFn_800ea2e0(i);
     }
-    state[12] = (u8)GameBit_Get(220);
-    GameBit_Set(3850, 0);
-    if (GameBit_Get(2205) != 0 && GameBit_Get(2213) == 0) {
-        GameBit_Set(2205, 0);
+    st->unkC = (u8)GameBit_Get(0xdc);
+    GameBit_Set(0xf0a, 0);
+    if ((u32)GameBit_Get(0x89d) != 0 && (u32)GameBit_Get(0x8a5) == 0) {
+        GameBit_Set(0x89d, 0);
     }
-    state[14] = (u8)((state[14] & ~0x80) | (((u32)GameBit_Get(3339) & 1) << 7));
-    state[14] = (u8)((state[14] & ~0x40) | (((u32)GameBit_Get(3340) & 1) << 6));
-    state[14] = (u8)((state[14] & ~0x20) | (((u32)GameBit_Get(3341) & 1) << 5));
-    state[14] = (u8)((state[14] & ~0x10) | (((u32)GameBit_Get(3342) & 1) << 4));
-    state[14] = (u8)((state[14] & ~0x08) | (((u32)GameBit_Get(2593) & 1) << 3));
-    (*gMapEventInterface)->setMode((s32)*(s8 *)((char *)obj + 172), 1);
-    *(u16 *)((char *)obj + 176) = (u16)(*(u16 *)((char *)obj + 176) | 0x6000);
+    st->b7 = (u8)GameBit_Get(0xd0b);
+    st->b6 = (u8)GameBit_Get(0xd0c);
+    st->b5 = (u8)GameBit_Get(0xd0d);
+    st->b4 = (u8)GameBit_Get(0xd0e);
+    st->b3 = (u8)GameBit_Get(0xa21);
+    (*gMapEventInterface)->setMode(*(s8 *)(obj + 0xac), 1);
+    *(u16 *)(obj + 0xb0) |= 0x6000;
     unlockLevel(0, 0, 1);
 }
 
