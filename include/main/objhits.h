@@ -193,6 +193,28 @@ typedef struct ObjHitsPriorityState {
   u8 secondaryShapeFlags;
 } ObjHitsPriorityState;
 
+typedef struct ObjHitsModelJointInfo {
+  s8 parentJoint;
+  u8 pad01[0x1C - 0x01];
+} ObjHitsModelJointInfo;
+
+typedef struct ObjHitsModelFileHeader {
+  u8 pad00[0x3C];
+  ObjHitsModelJointInfo *joints;
+  u8 pad40[0xF3 - 0x40];
+  u8 jointCount;
+} ObjHitsModelFileHeader;
+
+typedef struct ObjHitsSkeletonJointData {
+  u8 pad00[0x04];
+  f32 *jointRadii;
+  u8 pad08[0x0C - 0x08];
+  f32 *jointLengths;
+  f32 *jointCullDistances;
+  u8 pad14[0x18 - 0x14];
+  u8 *touchedJoints;
+} ObjHitsSkeletonJointData;
+
 /*
  * The skeleton collectors fill a 0x48-byte hit record and terminate the list
  * by writing -1 to pointIndexA. Response code then walks the same records to
@@ -229,6 +251,14 @@ STATIC_ASSERT(offsetof(ObjHitsPriorityState, skeletonHitMask) == 0x4C);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, lateralResponseWeight) == 0x6A);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, axialResponseWeight) == 0x6B);
 
+STATIC_ASSERT(sizeof(ObjHitsModelJointInfo) == 0x1C);
+STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, joints) == 0x3C);
+STATIC_ASSERT(offsetof(ObjHitsModelFileHeader, jointCount) == 0xF3);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointRadii) == 0x04);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointLengths) == 0x0C);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, jointCullDistances) == 0x10);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonJointData, touchedJoints) == 0x18);
+
 STATIC_ASSERT(sizeof(ObjHitsSkeletonHit) == OBJHITS_SKELETON_HIT_SIZE);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointARef) == 0x00);
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointBRef) == 0x04);
@@ -246,14 +276,18 @@ STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexA) ==
 STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexB) ==
               OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET);
 
-int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model,int *hits,
-                                  int *outBest,f32 yMax,f32 yMin,f32 *outAccum);
-int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,int jointData,int *model,int *hits,
-                                  int *outBest,f32 *outAccum);
-void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,int hits,int jointPoints,
-                                    int jointModel,int bestHit,f32 t,f32 axial,f32 *out);
-void ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,int hits,int jointPoints,
-                                    int jointModel,int bestHit,f32 t,f32 axial,f32 *out);
+int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,ObjHitsSkeletonJointData *jointData,
+                                  int *model,ObjHitsSkeletonHit *hits,
+                                  ObjHitsSkeletonHit **outBest,f32 yMax,f32 yMin,f32 *outAccum);
+int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,ObjHitsSkeletonJointData *jointData,
+                                  int *model,ObjHitsSkeletonHit *hits,
+                                  ObjHitsSkeletonHit **outBest,f32 *outAccum);
+void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
+                                    ObjHitsSkeletonJointData *jointPoints,int jointModel,
+                                    ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out);
+void ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
+                                    ObjHitsSkeletonJointData *jointPoints,int jointModel,
+                                    ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out);
 float *ObjHits_ProjectPointToTaperedCapsuleXZ(float pointRadius,float axial,float baseRadius,
                                               float tipRadius,float length,float *point,
                                               float *base,float *tip,float *out);

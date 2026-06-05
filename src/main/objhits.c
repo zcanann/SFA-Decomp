@@ -105,8 +105,9 @@ extern f32 lbl_803DF5E0;
  */
 #pragma scheduling off
 #pragma peephole off
-int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model,int *hits,
-                                  int *outBest,f32 yMax,f32 yMin,f32 *outAccum)
+int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,ObjHitsSkeletonJointData *jointData,
+                                  int *model,ObjHitsSkeletonHit *hits,
+                                  ObjHitsSkeletonHit **outBest,f32 yMax,f32 yMin,f32 *outAccum)
 {
   float dVar1;
   float fVar2;
@@ -115,11 +116,10 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model
   int iVar6;
   int iVar7;
   uint uVar8;
-  int iVar10;
+  ObjHitsModelFileHeader *modelFile;
   int iVar11;
   int iVar12;
   uint uVar13;
-  int iVar14;
   float *pfVar15;
   int iVar16;
   float dVar17;
@@ -151,10 +151,9 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model
   
   iVar11 = 0;
   if (jointData != 0) {
-    iVar10 = *model;
-    iVar14 = *(int *)(jointData + 4);
+    modelFile = *(ObjHitsModelFileHeader **)model;
     dVar21 = (float)(radius + radius);
-    *outBest = (int)hits;
+    *outBest = hits;
     *outAccum = gObjHitsScalarZero;
     dVar20 = radius;
     iVar6 = ObjModel_GetJointMatrix(model,0);
@@ -166,18 +165,18 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model
     dVar17 = (float)(dVar17 - dVar20);
     dVar23 = (*point + *point);
     dVar22 = (point[2] + point[2]);
-    uVar13 = (uint)*(byte *)(iVar10 + 0xf3);
+    uVar13 = modelFile->jointCount;
     iVar6 = uVar13 * 4;
     iVar16 = uVar13 * 0x1c;
-    pfVar15 = (float *)(iVar14 + iVar6);
+    pfVar15 = jointData->jointRadii + uVar13;
     while( true ) {
       iVar6 = iVar6 + -4;
       iVar16 = iVar16 + -0x1c;
       pfVar15 = pfVar15 + -1;
       uVar13 = uVar13 - 1;
       if (uVar13 == 0) break;
-      if (dVar17 < *(float *)(*(int *)(jointData + 0x10) + iVar6)) {
-        iVar12 = (int)*(char *)(*(int *)(iVar10 + 0x3c) + iVar16);
+      if (dVar17 < jointData->jointCullDistances[uVar13]) {
+        iVar12 = modelFile->joints[uVar13].parentJoint;
         iVar7 = ObjModel_GetJointMatrix(model,uVar13);
         local_c4 = *(float *)(iVar7 + 0xc);
         local_c0 = *(float *)(iVar7 + 0x1c);
@@ -186,10 +185,10 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model
         local_d0 = *(float *)(iVar7 + 0xc);
         local_cc = *(float *)(iVar7 + 0x1c);
         local_c8 = *(float *)(iVar7 + 0x2c);
-        *(undefined *)(*(int *)(jointData + 0x18) + uVar13) = 1;
-        *(undefined *)(*(int *)(jointData + 0x18) + iVar12) = 1;
+        jointData->touchedJoints[uVar13] = 1;
+        jointData->touchedJoints[iVar12] = 1;
         dVar18 = *pfVar15;
-        dVar19 = *(float *)(iVar14 + iVar12 * 4);
+        dVar19 = jointData->jointRadii[iVar12];
         if ((((float)(local_c0 - dVar18) <= yMax) ||
             ((float)(local_cc - dVar19) <= yMax)) &&
            ((yMin <= (float)(local_c0 + dVar18) ||
@@ -202,61 +201,60 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model
           else {
             dVar1 = dVar18 + dVar18;
           }
-          fVar2 = (float)(dVar21 + (*(float *)(*(int *)(jointData + 0xc) + iVar6) + (float)dVar1
-                                           ));
+          fVar2 = (float)(dVar21 + (jointData->jointLengths[uVar13] + (float)dVar1));
           if (fVar4 * fVar4 + fVar3 * fVar3 + gObjHitsScalarZero < fVar2 * fVar2) {
             local_dc = local_d0 - local_c4;
             local_d8 = local_cc - local_c0;
             local_d4 = local_c8 - local_bc;
-            fVar3 = *(float *)(*(int *)(jointData + 0xc) + iVar6);
+            fVar3 = jointData->jointLengths[uVar13];
             if (fVar3 != gObjHitsScalarZero) {
               fVar3 = gObjHitsScalarOne / fVar3;
               local_dc = local_dc * fVar3;
               local_d8 = local_d8 * fVar3;
               local_d4 = local_d4 * fVar3;
             }
-            *(undefined *)(*(int *)(jointData + 0x18) + uVar13) = 0;
-            *(undefined *)(*(int *)(jointData + 0x18) + iVar12) = 0;
+            jointData->touchedJoints[uVar13] = 0;
+            jointData->touchedJoints[iVar12] = 0;
             uVar8 = ObjHits_TestTaperedCapsuleXZ(dVar20,dVar18,dVar19,
-                                                 *(float *)(*(int *)(jointData + 0xc) + iVar6),
-                                                 point,&local_c4,&local_dc,&local_d0,&local_e0,
+                                                 jointData->jointLengths[uVar13],point,&local_c4,
+                                                 &local_dc,&local_d0,&local_e0,
                                                  &local_e4,&local_e8);
             if (uVar8 != 0) {
-              *(undefined *)(*(int *)(jointData + 0x18) + uVar13) = 1;
-              *(undefined *)(*(int *)(jointData + 0x18) + iVar12) = 1;
+              jointData->touchedJoints[uVar13] = 1;
+              jointData->touchedJoints[iVar12] = 1;
               dVar18 = sqrtf(local_e4);
-              *(float *)(hits + 0xc) = (float)(dVar20 + (float)(dVar18 - local_e8));
-              if (gObjHitsScalarZero == *(float *)(hits + 0xc)) {
-                *(float *)(hits + 0xc) = lbl_803DE920;
+              hits->signedSurfaceDistance = (float)(dVar20 + (float)(dVar18 - local_e8));
+              if (gObjHitsScalarZero == hits->signedSurfaceDistance) {
+                hits->signedSurfaceDistance = lbl_803DE920;
               }
-              fVar3 = *(float *)(hits + 0xc);
+              fVar3 = hits->signedSurfaceDistance;
               if (fVar3 <= gObjHitsScalarZero) {
                 fVar3 = -fVar3;
               }
-              *(float *)(hits + 0xf) = (gObjHitsScalarOne / fVar3);
-              *outAccum = *outAccum + *(float *)(hits + 0xf);
-              if (*(float *)(hits + 0xc) < *(float *)(*outBest + 0x30)) {
-                *outBest = (int)hits;
+              hits->inverseDistance = (gObjHitsScalarOne / fVar3);
+              *outAccum = *outAccum + hits->inverseDistance;
+              if (hits->signedSurfaceDistance < (*outBest)->signedSurfaceDistance) {
+                *outBest = hits;
               }
-              *hits = (int)&local_c4;
-              hits[1] = (int)&local_d0;
-              *(float *)(hits + 2) = local_c4;
-              *(float *)(hits + 3) = local_c0;
-              *(float *)(hits + 4) = local_bc;
-              *(float *)(hits + 5) = local_d0;
-              *(float *)(hits + 6) = local_cc;
-              *(float *)(hits + 7) = local_c8;
-              *(float *)(hits + 0xb) = local_e0;
-              *(float *)(hits + 0xe) = local_e8;
+              hits->pointARef = &local_c4;
+              hits->pointBRef = &local_d0;
+              hits->pointA[0] = local_c4;
+              hits->pointA[1] = local_c0;
+              hits->pointA[2] = local_bc;
+              hits->pointB[0] = local_d0;
+              hits->pointB[1] = local_cc;
+              hits->pointB[2] = local_c8;
+              hits->capsuleAxial = local_e0;
+              hits->radiusSum = local_e8;
               dVar18 = sqrtf(local_e4);
-              *(float *)(hits + 0xd) = (float)dVar18;
-              *(float *)(hits + 8) = local_dc;
-              *(float *)(hits + 9) = local_d8;
-              *(float *)(hits + 10) = local_d4;
-              hits[OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD] = uVar13;
-              hits[OBJHITS_SKELETON_HIT_POINT_INDEX_B_WORD] = iVar12;
+              hits->centerDistance = (float)dVar18;
+              hits->axisDir[0] = local_dc;
+              hits->axisDir[1] = local_d8;
+              hits->axisDir[2] = local_d4;
+              hits->pointIndexA = uVar13;
+              hits->pointIndexB = iVar12;
               if (iVar11 < OBJHITS_SKELETON_HIT_CAPACITY) {
-                hits = hits + OBJHITS_SKELETON_HIT_WORD_COUNT;
+                hits = hits + 1;
                 iVar11 = iVar11 + 1;
               }
             }
@@ -264,7 +262,7 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model
         }
       }
     }
-    hits[OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD] = OBJHITS_SKELETON_HIT_SENTINEL;
+    hits->pointIndexA = OBJHITS_SKELETON_HIT_SENTINEL;
   }
   return iVar11;
 }
@@ -286,8 +284,9 @@ int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model
  * PAL Address: TODO
  * PAL Size: TODO
  */
-int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,int jointData,int *model,int *hits,
-                                  int *outBest,f32 *outAccum)
+int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,ObjHitsSkeletonJointData *jointData,
+                                  int *model,ObjHitsSkeletonHit *hits,
+                                  ObjHitsSkeletonHit **outBest,f32 *outAccum)
 {
   float fVar1;
   float fVar2;
@@ -295,11 +294,10 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,int jointData,int *model
   int iVar5;
   int iVar6;
   uint uVar7;
-  int iVar9;
+  ObjHitsModelFileHeader *modelFile;
   int iVar10;
   int iVar11;
   uint uVar12;
-  int iVar13;
   float *pfVar14;
   int iVar15;
   float dVar16;
@@ -330,10 +328,9 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,int jointData,int *model
   
   iVar10 = 0;
   if (jointData != 0) {
-    iVar9 = *model;
-    iVar13 = *(int *)(jointData + 4);
+    modelFile = *(ObjHitsModelFileHeader **)model;
     dVar21 = (float)(radius + radius);
-    *outBest = (int)hits;
+    *outBest = hits;
     *outAccum = gObjHitsScalarZero;
     dVar20 = radius;
     iVar5 = ObjModel_GetJointMatrix(model,0);
@@ -345,18 +342,18 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,int jointData,int *model
     dVar16 = (float)(dVar16 - dVar20);
     dVar23 = (*point + *point);
     dVar22 = (point[2] + point[2]);
-    uVar12 = (uint)*(byte *)(iVar9 + 0xf3);
+    uVar12 = modelFile->jointCount;
     iVar5 = uVar12 * 4;
     iVar15 = uVar12 * 0x1c;
-    pfVar14 = (float *)(iVar13 + iVar5);
+    pfVar14 = jointData->jointRadii + uVar12;
     while( true ) {
       iVar5 = iVar5 + -4;
       iVar15 = iVar15 + -0x1c;
       pfVar14 = pfVar14 + -1;
       uVar12 = uVar12 - 1;
       if (uVar12 == 0) break;
-      if (dVar16 < *(float *)(*(int *)(jointData + 0x10) + iVar5)) {
-        iVar11 = (int)*(char *)(*(int *)(iVar9 + 0x3c) + iVar15);
+      if (dVar16 < jointData->jointCullDistances[uVar12]) {
+        iVar11 = modelFile->joints[uVar12].parentJoint;
         iVar6 = ObjModel_GetJointMatrix(model,uVar12);
         local_a4 = *(float *)(iVar6 + 0xc);
         local_a0 = *(float *)(iVar6 + 0x1c);
@@ -366,9 +363,9 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,int jointData,int *model
         local_ac = *(float *)(iVar6 + 0x1c);
         local_a8 = *(float *)(iVar6 + 0x2c);
         dVar17 = *pfVar14;
-        dVar18 = *(float *)(iVar13 + iVar11 * 4);
-        *(undefined *)(*(int *)(jointData + 0x18) + uVar12) = 1;
-        *(undefined *)(*(int *)(jointData + 0x18) + iVar11) = 1;
+        dVar18 = jointData->jointRadii[iVar11];
+        jointData->touchedJoints[uVar12] = 1;
+        jointData->touchedJoints[iVar11] = 1;
         fVar2 = (float)((local_b0 + local_a4) - dVar23);
         fVar3 = (float)((local_a8 + local_9c) - dVar22);
         if (dVar17 <= dVar18) {
@@ -377,10 +374,9 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,int jointData,int *model
         else {
           dVar19 = dVar17 + dVar17;
         }
-        fVar1 = (float)(dVar21 + (*(float *)(*(int *)(jointData + 0xc) + iVar5) + (float)dVar19)
-                       );
+        fVar1 = (float)(dVar21 + (jointData->jointLengths[uVar12] + (float)dVar19));
         if (fVar3 * fVar3 + fVar2 * fVar2 + gObjHitsScalarZero < fVar1 * fVar1) {
-          dVar19 = *(float *)(*(int *)(jointData + 0xc) + iVar5);
+          dVar19 = jointData->jointLengths[uVar12];
           local_b4 = (float)(gObjHitsScalarOne / dVar19);
           local_bc = (local_b0 - local_a4) * local_b4;
           local_b8 = (local_ac - local_a0) * local_b4;
@@ -388,48 +384,48 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,int jointData,int *model
           uVar7 = ObjHits_TestTaperedCapsule3D(dVar20,dVar17,dVar18,dVar19,point,&local_a4,
                                                &local_bc,&local_b0,&local_c0,&local_c4,&local_c8);
           if (uVar7 != 0) {
-            *(undefined *)(*(int *)(jointData + 0x18) + uVar12) = 1;
-            *(undefined *)(*(int *)(jointData + 0x18) + iVar11) = 1;
+            jointData->touchedJoints[uVar12] = 1;
+            jointData->touchedJoints[iVar11] = 1;
             dVar17 = sqrtf(local_c4);
-            *(float *)(hits + 0xc) = (float)(dVar20 + (float)(dVar17 - local_c8));
-            if (gObjHitsScalarZero == *(float *)(hits + 0xc)) {
-              *(float *)(hits + 0xc) = lbl_803DE920;
+            hits->signedSurfaceDistance = (float)(dVar20 + (float)(dVar17 - local_c8));
+            if (gObjHitsScalarZero == hits->signedSurfaceDistance) {
+              hits->signedSurfaceDistance = lbl_803DE920;
             }
-            fVar2 = *(float *)(hits + 0xc);
+            fVar2 = hits->signedSurfaceDistance;
             if (fVar2 <= gObjHitsScalarZero) {
               fVar2 = -fVar2;
             }
-            *(float *)(hits + 0xf) = (gObjHitsScalarOne / fVar2);
-            *outAccum = *outAccum + *(float *)(hits + 0xf);
-            if (*(float *)(hits + 0xc) < *(float *)(*outBest + 0x30)) {
-              *outBest = (int)hits;
+            hits->inverseDistance = (gObjHitsScalarOne / fVar2);
+            *outAccum = *outAccum + hits->inverseDistance;
+            if (hits->signedSurfaceDistance < (*outBest)->signedSurfaceDistance) {
+              *outBest = hits;
             }
-            *hits = (int)&local_a4;
-            hits[1] = (int)&local_b0;
-            *(float *)(hits + 2) = local_a4;
-            *(float *)(hits + 3) = local_a0;
-            *(float *)(hits + 4) = local_9c;
-            *(float *)(hits + 5) = local_b0;
-            *(float *)(hits + 6) = local_ac;
-            *(float *)(hits + 7) = local_a8;
-            *(float *)(hits + 0xb) = local_c0;
-            *(float *)(hits + 0xe) = local_c8;
+            hits->pointARef = &local_a4;
+            hits->pointBRef = &local_b0;
+            hits->pointA[0] = local_a4;
+            hits->pointA[1] = local_a0;
+            hits->pointA[2] = local_9c;
+            hits->pointB[0] = local_b0;
+            hits->pointB[1] = local_ac;
+            hits->pointB[2] = local_a8;
+            hits->capsuleAxial = local_c0;
+            hits->radiusSum = local_c8;
             dVar17 = sqrtf(local_c4);
-            *(float *)(hits + 0xd) = (float)dVar17;
-            *(float *)(hits + 8) = local_bc;
-            *(float *)(hits + 9) = local_b8;
-            *(float *)(hits + 10) = local_b4;
-            hits[OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD] = uVar12;
-            hits[OBJHITS_SKELETON_HIT_POINT_INDEX_B_WORD] = iVar11;
+            hits->centerDistance = (float)dVar17;
+            hits->axisDir[0] = local_bc;
+            hits->axisDir[1] = local_b8;
+            hits->axisDir[2] = local_b4;
+            hits->pointIndexA = uVar12;
+            hits->pointIndexB = iVar11;
             if (iVar10 < OBJHITS_SKELETON_HIT_CAPACITY) {
               iVar10 = iVar10 + 1;
-              hits = hits + OBJHITS_SKELETON_HIT_WORD_COUNT;
+              hits = hits + 1;
             }
           }
         }
       }
     }
-    hits[OBJHITS_SKELETON_HIT_POINT_INDEX_A_WORD] = OBJHITS_SKELETON_HIT_SENTINEL;
+    hits->pointIndexA = OBJHITS_SKELETON_HIT_SENTINEL;
   }
   return iVar10;
 }
@@ -451,11 +447,11 @@ int ObjHits_CollectSkeletonHits3D(f32 *point,f32 radius,int jointData,int *model
  */
 #pragma scheduling off
 #pragma peephole off
-void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,int hits,int jointPoints,
-                                    int jointModel,int bestHit,f32 t,f32 axial,f32 *out)
+void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
+                                    ObjHitsSkeletonJointData *jointPoints,int jointModel,
+                                    ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out)
 {
-  int iVar5;
-  int iVar1;
+  ObjHitsSkeletonHit *hit;
   float fVar2;
   float *pfVar4;
   float dVar6;
@@ -504,47 +500,34 @@ void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,int hits,int joi
   local_c4 = gObjHitsScalarZero;
   local_c0 = gObjHitsScalarZero;
   local_bc = gObjHitsScalarZero;
-  iVar5 = *(int *)(bestHit + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
   pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-      *(float *)(bestHit + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
-      *(float *)(*(int *)(jointPoints + 4) + iVar5),
-      *(float *)(*(int *)(jointPoints + 4) +
-                         *(int *)(bestHit + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
-      *(float *)(*(int *)(jointPoints + 0xc) + iVar5),&local_e8,(float *)(bestHit + 8),
-      (float *)(bestHit + 0x14),afStack_b8);
+      bestHit->capsuleAxial,jointPoints->jointRadii[bestHit->pointIndexA],
+      jointPoints->jointRadii[bestHit->pointIndexB],
+      jointPoints->jointLengths[bestHit->pointIndexA],&local_e8,bestHit->pointA,
+      bestHit->pointB,afStack_b8);
   Vec3_Normalize(pfVar4);
   dVar8 = gObjHitsScalarZero;
-  for (iVar5 = hits;
-       *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) != OBJHITS_SKELETON_HIT_SENTINEL;
-       iVar5 = iVar5 + OBJHITS_SKELETON_HIT_SIZE) {
-    iVar1 = *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
+  for (hit = hits; hit->pointIndexA != OBJHITS_SKELETON_HIT_SENTINEL; hit = hit + 1) {
     pfVar4 = ObjHits_ProjectPointToTaperedCapsuleXZ(
-        dVar7,*(float *)(iVar5 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
-        *(float *)(*(int *)(jointPoints + 4) + iVar1),
-        *(float *)(*(int *)(jointPoints + 4) +
-                           *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
-        *(float *)(*(int *)(jointPoints + 0xc) + iVar1),&local_e8,(float *)(iVar5 + 8),
-        (float *)(iVar5 + 0x14),afStack_a0);
+        dVar7,hit->capsuleAxial,jointPoints->jointRadii[hit->pointIndexA],
+        jointPoints->jointRadii[hit->pointIndexB],jointPoints->jointLengths[hit->pointIndexA],
+        &local_e8,hit->pointA,hit->pointB,afStack_a0);
     if (axial <= dVar8) {
-      *(float *)(iVar5 + 0x3c) = (float)dVar8;
+      hit->inverseDistance = (float)dVar8;
     }
     else {
-      *(float *)(iVar5 + 0x3c) = (float)(*(float *)(iVar5 + 0x3c) / axial);
+      hit->inverseDistance = (float)(hit->inverseDistance / axial);
     }
-    *pfVar4 = *pfVar4 * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
-    pfVar4[1] = pfVar4[1] * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
-    pfVar4[2] = pfVar4[2] * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+    *pfVar4 = *pfVar4 * hit->inverseDistance;
+    pfVar4[1] = pfVar4[1] * hit->inverseDistance;
+    pfVar4[2] = pfVar4[2] * hit->inverseDistance;
     local_7c = local_7c + *pfVar4;
     local_78 = local_78 + pfVar4[1];
     local_74 = local_74 + pfVar4[2];
-    iVar1 = *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
     pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-        *(float *)(iVar5 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
-        *(float *)(*(int *)(jointPoints + 4) + iVar1),
-        *(float *)(*(int *)(jointPoints + 4) +
-                           *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
-        *(float *)(*(int *)(jointPoints + 0xc) + iVar1),pos,(float *)(iVar5 + 8),
-        (float *)(iVar5 + 0x14),afStack_b8);
+        hit->capsuleAxial,jointPoints->jointRadii[hit->pointIndexA],
+        jointPoints->jointRadii[hit->pointIndexB],jointPoints->jointLengths[hit->pointIndexA],
+        pos,hit->pointA,hit->pointB,afStack_b8);
     Vec3_Normalize(pfVar4);
     local_c4 = local_c4 + *pfVar4;
     local_c0 = local_c0 + pfVar4[1];
@@ -579,20 +562,14 @@ void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,int hits,int joi
   local_ac = gObjHitsScalarZero;
   local_a8 = gObjHitsScalarZero;
   local_a4 = gObjHitsScalarZero;
-  for (; *(int *)(hits + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) !=
-         OBJHITS_SKELETON_HIT_SENTINEL;
-       hits = hits + OBJHITS_SKELETON_HIT_SIZE) {
-    iVar5 = *(int *)(hits + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
+  for (; hits->pointIndexA != OBJHITS_SKELETON_HIT_SENTINEL; hits = hits + 1) {
     pfVar4 = ObjHits_ProjectPointToTaperedCapsuleXZ(
-        dVar7,*(float *)(hits + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
-        *(float *)(*(int *)(jointPoints + 4) + iVar5),
-        *(float *)(*(int *)(jointPoints + 4) +
-                           *(int *)(hits + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
-        *(float *)(*(int *)(jointPoints + 0xc) + iVar5),&local_7c,(float *)(hits + 8),
-        (float *)(hits + 0x14),afStack_a0);
-    *pfVar4 = *pfVar4 * *(float *)(hits + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
-    pfVar4[1] = pfVar4[1] * *(float *)(hits + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
-    pfVar4[2] = pfVar4[2] * *(float *)(hits + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+        dVar7,hits->capsuleAxial,jointPoints->jointRadii[hits->pointIndexA],
+        jointPoints->jointRadii[hits->pointIndexB],jointPoints->jointLengths[hits->pointIndexA],
+        &local_7c,hits->pointA,hits->pointB,afStack_a0);
+    *pfVar4 = *pfVar4 * hits->inverseDistance;
+    pfVar4[1] = pfVar4[1] * hits->inverseDistance;
+    pfVar4[2] = pfVar4[2] * hits->inverseDistance;
     local_ac = local_ac + *pfVar4;
     local_a8 = local_a8 + pfVar4[1];
     local_a4 = local_a4 + pfVar4[2];
@@ -620,13 +597,14 @@ void ObjHits_CalcSkeletonResponseXZ(f32 *pos,f32 radius,int obj,int hits,int joi
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,int hits,int jointPoints,
-                                    int jointModel,int bestHit,f32 t,f32 axial,f32 *out)
+void ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,ObjHitsSkeletonHit *hits,
+                                    ObjHitsSkeletonJointData *jointPoints,int jointModel,
+                                    ObjHitsSkeletonHit *bestHit,f32 t,f32 axial,f32 *out)
 {
   float local_68;
-  int iVar5;
+  ObjHitsSkeletonHit *hit;
   float fVar1;
-  int iVar2;
+  int iVar5;
   float *pfVar4;
   float dVar6;
   float in_f28;
@@ -669,47 +647,34 @@ void ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,int hits,int joi
   local_b4 = gObjHitsScalarZero;
   local_b0 = gObjHitsScalarZero;
   local_ac = gObjHitsScalarZero;
-  iVar5 = *(int *)(bestHit + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
   pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-      *(float *)(bestHit + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
-      *(float *)(*(int *)(jointPoints + 4) + iVar5),
-      *(float *)(*(int *)(jointPoints + 4) +
-                         *(int *)(bestHit + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
-      *(float *)(*(int *)(jointPoints + 0xc) + iVar5),&local_d8,(float *)(bestHit + 8),
-      (float *)(bestHit + 0x14),afStack_a8);
+      bestHit->capsuleAxial,jointPoints->jointRadii[bestHit->pointIndexA],
+      jointPoints->jointRadii[bestHit->pointIndexB],
+      jointPoints->jointLengths[bestHit->pointIndexA],&local_d8,bestHit->pointA,
+      bestHit->pointB,afStack_a8);
   Vec3_Normalize(pfVar4);
   dVar8 = gObjHitsScalarZero;
-  for (iVar5 = hits;
-       *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) != OBJHITS_SKELETON_HIT_SENTINEL;
-       iVar5 = iVar5 + OBJHITS_SKELETON_HIT_SIZE) {
-    iVar2 = *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
+  for (hit = hits; hit->pointIndexA != OBJHITS_SKELETON_HIT_SENTINEL; hit = hit + 1) {
     pfVar4 = ObjHits_ProjectPointToTaperedCapsule3D(
-        dVar7,*(float *)(iVar5 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
-        *(float *)(*(int *)(jointPoints + 4) + iVar2),
-        *(float *)(*(int *)(jointPoints + 4) +
-                           *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
-        *(float *)(*(int *)(jointPoints + 0xc) + iVar2),&local_d8,(float *)(iVar5 + 8),
-        (float *)(iVar5 + 0x14),afStack_90);
+        dVar7,hit->capsuleAxial,jointPoints->jointRadii[hit->pointIndexA],
+        jointPoints->jointRadii[hit->pointIndexB],jointPoints->jointLengths[hit->pointIndexA],
+        &local_d8,hit->pointA,hit->pointB,afStack_90);
     if (axial <= dVar8) {
-      *(float *)(iVar5 + 0x3c) = (float)dVar8;
+      hit->inverseDistance = (float)dVar8;
     }
     else {
-      *(float *)(iVar5 + 0x3c) = (float)(*(float *)(iVar5 + 0x3c) / axial);
+      hit->inverseDistance = (float)(hit->inverseDistance / axial);
     }
-    *pfVar4 = *pfVar4 * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
-    pfVar4[1] = pfVar4[1] * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
-    pfVar4[2] = pfVar4[2] * *(float *)(iVar5 + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+    *pfVar4 = *pfVar4 * hit->inverseDistance;
+    pfVar4[1] = pfVar4[1] * hit->inverseDistance;
+    pfVar4[2] = pfVar4[2] * hit->inverseDistance;
     local_6c = local_6c + *pfVar4;
     local_68 = local_68 + pfVar4[1];
     local_64 = local_64 + pfVar4[2];
-    iVar2 = *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
     pfVar4 = ObjHits_CalcTaperedCapsuleNormal(
-        *(float *)(iVar5 + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
-        *(float *)(*(int *)(jointPoints + 4) + iVar2),
-        *(float *)(*(int *)(jointPoints + 4) +
-                           *(int *)(iVar5 + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
-        *(float *)(*(int *)(jointPoints + 0xc) + iVar2),pos,(float *)(iVar5 + 8),
-        (float *)(iVar5 + 0x14),afStack_a8);
+        hit->capsuleAxial,jointPoints->jointRadii[hit->pointIndexA],
+        jointPoints->jointRadii[hit->pointIndexB],jointPoints->jointLengths[hit->pointIndexA],
+        pos,hit->pointA,hit->pointB,afStack_a8);
     Vec3_Normalize(pfVar4);
     local_b4 = local_b4 + *pfVar4;
     local_b0 = local_b0 + pfVar4[1];
@@ -742,20 +707,14 @@ void ObjHits_CalcSkeletonResponse3D(f32 *pos,f32 radius,int obj,int hits,int joi
   local_9c = gObjHitsScalarZero;
   local_98 = gObjHitsScalarZero;
   local_94 = gObjHitsScalarZero;
-  for (; *(int *)(hits + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) !=
-         OBJHITS_SKELETON_HIT_SENTINEL;
-       hits = hits + OBJHITS_SKELETON_HIT_SIZE) {
-    iVar5 = *(int *)(hits + OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET) * 4;
+  for (; hits->pointIndexA != OBJHITS_SKELETON_HIT_SENTINEL; hits = hits + 1) {
     pfVar4 = ObjHits_ProjectPointToTaperedCapsule3D(
-        dVar7,*(float *)(hits + OBJHITS_SKELETON_HIT_AXIAL_OFFSET),
-        *(float *)(*(int *)(jointPoints + 4) + iVar5),
-        *(float *)(*(int *)(jointPoints + 4) +
-                           *(int *)(hits + OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET) * 4),
-        *(float *)(*(int *)(jointPoints + 0xc) + iVar5),&local_6c,(float *)(hits + 8),
-        (float *)(hits + 0x14),afStack_90);
-    *pfVar4 = *pfVar4 * *(float *)(hits + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
-    pfVar4[1] = pfVar4[1] * *(float *)(hits + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
-    pfVar4[2] = pfVar4[2] * *(float *)(hits + OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+        dVar7,hits->capsuleAxial,jointPoints->jointRadii[hits->pointIndexA],
+        jointPoints->jointRadii[hits->pointIndexB],jointPoints->jointLengths[hits->pointIndexA],
+        &local_6c,hits->pointA,hits->pointB,afStack_90);
+    *pfVar4 = *pfVar4 * hits->inverseDistance;
+    pfVar4[1] = pfVar4[1] * hits->inverseDistance;
+    pfVar4[2] = pfVar4[2] * hits->inverseDistance;
     local_9c = local_9c + *pfVar4;
     local_98 = local_98 + pfVar4[1];
     local_94 = local_94 + pfVar4[2];
@@ -2313,7 +2272,7 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
   f32 fVar3;
   f32 fVar4;
   f32 outAxial;
-  int outCount;
+  ObjHitsSkeletonHit *bestHit;
   ObjHitsVec3 point;
   f32 response[3];
   ObjHitsVec3 point3D;
@@ -2331,8 +2290,8 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
       point.z = *(f32 *)(objB + 0x20) - playerMapOffsetZ;
       point3D = point;
       hitCount = ObjHits_CollectSkeletonHits3D(&point3D.x, (f32)*(s16 *)((int)objBState + 0x5a),
-                                               hitboxBuf[5], hitboxBuf, (int *)hits, &outCount,
-                                               &outAxial);
+                                               (ObjHitsSkeletonJointData *)hitboxBuf[5], hitboxBuf,
+                                               (ObjHitsSkeletonHit *)hits, &bestHit, &outAxial);
       if (hitCount != 0) {
         ratio = (*(f32 *)(objB + 0xa8) * *(f32 *)(objB + 8)) /
                 (*(f32 *)(objA + 0xa8) * *(f32 *)(objA + 8));
@@ -2347,8 +2306,9 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
           }
         }
         ObjHits_CalcSkeletonResponse3D(&point.x, (f32)*(s16 *)((int)objBState + 0x5a), objB,
-                                       (int)hits, hitboxBuf[5], *hitboxBuf, outCount, clamped,
-                                       outAxial, response);
+                                       (ObjHitsSkeletonHit *)hits,
+                                       (ObjHitsSkeletonJointData *)hitboxBuf[5], *hitboxBuf,
+                                       bestHit, clamped, outAxial, response);
         fVar2 = lbl_803DE958;
         if (response[0] < fVar2) {
         } else {
@@ -2387,7 +2347,8 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
       point.z = *(f32 *)(objB + 0x20) - playerMapOffsetZ;
       pointXZ = point;
       hitCount = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, (f32)*(s16 *)((int)objBState + 0x5a),
-                                               hitboxBuf[5], hitboxBuf, (int *)hits, &outCount,
+                                               (ObjHitsSkeletonJointData *)hitboxBuf[5], hitboxBuf,
+                                               (ObjHitsSkeletonHit *)hits, &bestHit,
                                                point.y + (f32)*(s16 *)((int)objBState + 0x5e),
                                                point.y + (f32)*(s16 *)((int)objBState + 0x5c),
                                                &outAxial);
@@ -2405,8 +2366,9 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
           }
         }
         ObjHits_CalcSkeletonResponseXZ(&point.x, (f32)*(s16 *)((int)objBState + 0x5a), objB,
-                                       (int)hits, hitboxBuf[5], *hitboxBuf, outCount, clamped,
-                                       outAxial, response);
+                                       (ObjHitsSkeletonHit *)hits,
+                                       (ObjHitsSkeletonJointData *)hitboxBuf[5], *hitboxBuf,
+                                       bestHit, clamped, outAxial, response);
         fVar2 = lbl_803DE958;
         if (response[0] < fVar2) {
         } else {
