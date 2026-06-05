@@ -34,105 +34,95 @@ extern f32 lbl_803E16D4;
  */
 #pragma scheduling off
 #pragma peephole off
-void camcontrol_updateVerticalBounds(int camera,int flags,s8 param_3,float *upperBound,
+void camcontrol_updateVerticalBounds(int camera,int flags,int param_3,float *upperBound,
                                      float *lowerBound)
 {
-  float fVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  int iVar7;
-  int iVar9;
-  int iVar8;
-  int iVar10;
-  int iVar11;
-  int iVar12;
-  int local_40;
-  float local_3c;
-  undefined4 local_38;
-  undefined4 local_34;
-  uint auStack_30 [12];
-  
-  iVar7 = camera;
-  iVar11 = *(int *)(iVar7 + 0xa4);
+  float zLim;
+  float pt0;
+  float zB;
+  float diff;
+  float bestUpper;
+  float bestLower;
+  int res;
+  int count;
+  int i;
+  int j;
+  int off;
+  int off2;
+  int camObj;
+  uint bounds[6];
+  f32 pos[3];
+  int hits;
+
+  camObj = *(int *)(camera + 0xa4);
   if ((flags & 1) != 0) {
-    *(float *)(iVar7 + 0x74) = lbl_803E1688;
-    *(undefined *)(iVar7 + 0x84) = 0xff;
-    *(undefined *)(iVar7 + 0x88) = param_3;
-    iVar9 = objBboxFn_800640cc(iVar7 + 0xb8,iVar7 + 0x18,1,0,0,0x10,0xffffffff,0xff,0);
-    *(u8 *)(iVar7 + 0x142) = iVar9;
-    local_3c = *(float *)(iVar7 + 0x18);
-    local_38 = *(undefined4 *)(iVar7 + 0x1c);
-    local_34 = *(undefined4 *)(iVar7 + 0x20);
-    hitDetect_calcSweptSphereBounds(auStack_30,(float *)(iVar7 + 0xb8),&local_3c,(float *)(iVar7 + 0x74),1);
-    hitDetectFn_800691c0(iVar11,auStack_30,0x240,1);
-    hitDetectFn_80067958(iVar11,(float *)(iVar7 + 0xb8),&local_3c,1,iVar7 + 0x34,0);
-    *(float *)(iVar7 + 0x18) = local_3c;
-    *(undefined4 *)(iVar7 + 0x1c) = local_38;
-    *(undefined4 *)(iVar7 + 0x20) = local_34;
+    zB = lbl_803E1688;
+    *(float *)(camera + 0x74) = zB;
+    *(s8 *)(camera + 0x84) = -1;
+    *(s8 *)(camera + 0x88) = (s8)param_3;
+    res = objBboxFn_800640cc(camera + 0xb8,camera + 0x18,1,0,0,0x10,0xffffffff,0xff,0);
+    *(u8 *)(camera + 0x142) = res;
+    pos[0] = *(f32 *)(camera + 0x18);
+    pos[1] = *(f32 *)(camera + 0x1c);
+    pos[2] = *(f32 *)(camera + 0x20);
+    hitDetect_calcSweptSphereBounds(bounds,(float *)(camera + 0xb8),pos,(float *)(camera + 0x74),1);
+    hitDetectFn_800691c0(camObj,bounds,0x240,1);
+    hitDetectFn_80067958(camObj,(float *)(camera + 0xb8),pos,1,camera + 0x34,0);
+    *(f32 *)(camera + 0x18) = pos[0];
+    *(f32 *)(camera + 0x1c) = pos[1];
+    *(f32 *)(camera + 0x20) = pos[2];
   }
   if ((flags & 2) != 0) {
-    iVar8 = hitDetectFn_80065e50(*(float *)(iVar7 + 0x18),*(float *)(iVar7 + 0x1c),
-                                 *(float *)(iVar7 + 0x20),iVar11,&local_40,1,0x40);
+    count = hitDetectFn_80065e50(*(float *)(camera + 0x18),*(float *)(camera + 0x1c),
+                                 *(float *)(camera + 0x20),camObj,&hits,1,0x40);
     *upperBound = lbl_803E16D0;
-    fVar5 = lbl_803E16D4;
-    *lowerBound = lbl_803E16D4;
-    fVar2 = lbl_803E16B4;
-    fVar6 = lbl_803E16AC;
-    iVar10 = 0;
-    iVar12 = iVar8;
-    fVar3 = fVar5;
-    if (0 < iVar8) {
-      do {
-        if ((*(float **)(local_40 + iVar10))[2] < fVar6) {
-          fVar1 = **(float **)(local_40 + iVar10);
-          if (*(float *)(iVar7 + 0x1c) - fVar2 < fVar1) {
-            fVar4 = *(float *)(iVar7 + 0x1c) - fVar1;
-            if (fVar4 < fVar6) {
-              fVar4 = -fVar4;
-            }
-            if (fVar4 < fVar3) {
-              *lowerBound = fVar1;
-              *(undefined4 *)(iVar7 + 300) = *(undefined4 *)(*(int *)(local_40 + iVar10) + 8);
-              fVar3 = fVar4;
-            }
+    bestUpper = (*lowerBound = lbl_803E16D4);
+    bestLower = bestUpper;
+    off = 0;
+    zLim = lbl_803E16AC;
+    for (i = 0; i < count; i++) {
+      zB = lbl_803E16B4;
+      if ((*(float **)(hits + off))[2] < zLim) {
+        pt0 = **(float **)(hits + off);
+        if (pt0 > *(float *)(camera + 0x1c) - zB) {
+          diff = *(float *)(camera + 0x1c) - pt0;
+          if (diff < zLim) {
+            diff = -diff;
+          }
+          if (diff < bestLower) {
+            *lowerBound = pt0;
+            *(f32 *)(camera + 0x12c) = (*(float **)(hits + off))[2];
+            bestLower = diff;
           }
         }
-        iVar10 = iVar10 + 4;
-        iVar12 = iVar12 + -1;
-      } while (iVar12 != 0);
+      }
+      off += 4;
     }
-    fVar6 = lbl_803E16B4;
-    fVar3 = lbl_803E16AC;
-    iVar12 = 0;
-    if (0 < iVar8) {
-      do {
-        if (fVar3 < (*(float **)(local_40 + iVar12))[2]) {
-          fVar2 = **(float **)(local_40 + iVar12);
-          if (fVar2 < fVar6 + *(float *)(iVar7 + 0x1c)) {
-            fVar1 = *(float *)(iVar7 + 0x1c) - fVar2;
-            if (fVar1 < fVar3) {
-              fVar1 = -fVar1;
-            }
-            if (fVar1 < fVar5) {
-              *upperBound = fVar2;
-              *(undefined4 *)(iVar7 + 0x130) = *(undefined4 *)(*(int *)(local_40 + iVar12) + 8);
-              fVar5 = fVar1;
-            }
+    off2 = 0;
+    zLim = lbl_803E16AC;
+    for (j = 0; j < count; j++) {
+      zB = lbl_803E16B4;
+      if ((*(float **)(hits + off2))[2] > zLim) {
+        pt0 = **(float **)(hits + off2);
+        if (pt0 < zB + *(float *)(camera + 0x1c)) {
+          diff = *(float *)(camera + 0x1c) - pt0;
+          if (diff < zLim) {
+            diff = -diff;
+          }
+          if (diff < bestUpper) {
+            *upperBound = pt0;
+            *(f32 *)(camera + 0x130) = (*(float **)(hits + off2))[2];
+            bestUpper = diff;
           }
         }
-        iVar12 = iVar12 + 4;
-        iVar8 = iVar8 + -1;
-      } while (iVar8 != 0);
+      }
+      off2 += 4;
     }
   }
-  Obj_TransformWorldPointToLocal(*(float *)(iVar7 + 0x18),*(float *)(iVar7 + 0x1c),
-                                 *(float *)(iVar7 + 0x20),(float *)(iVar7 + 0xc),
-                                 (float *)(iVar7 + 0x10),(float *)(iVar7 + 0x14),
-                                 *(int *)(iVar7 + 0x30));
-  return;
+  Obj_TransformWorldPointToLocal(*(float *)(camera + 0x18),*(float *)(camera + 0x1c),
+                                 *(float *)(camera + 0x20),(float *)(camera + 0xc),
+                                 (float *)(camera + 0x10),(float *)(camera + 0x14),
+                                 *(int *)(camera + 0x30));
 }
 #pragma peephole reset
 #pragma scheduling reset

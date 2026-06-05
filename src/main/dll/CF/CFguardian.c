@@ -318,9 +318,15 @@ void scarab_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole reset
 #pragma scheduling reset
 
+typedef struct GuardianAngleParams {
+  s16 a, b, c;
+  f32 w;
+  f32 x, y, z;
+} GuardianAngleParams;
+
 #pragma scheduling off
 #pragma peephole off
-void fn_801845FC(int obj, int p2, u8 mode, int p3)
+void fn_801845FC(u8 *obj, f32 *p2, u8 mode, f32 *p3)
 {
   extern int getAngle(f32, f32);
   extern f32 sqrtf(f32);
@@ -328,58 +334,56 @@ void fn_801845FC(int obj, int p2, u8 mode, int p3)
   extern f32 lbl_803E39F8;
   extern f32 lbl_803E39FC;
   extern f32 lbl_803E3A00;
-  int sub = *(int *)(obj + 0xb8);
-  f32 buf[4];
-  f32 magic[4];
-  s16 hwords[6];
+  f32 *sub = *(f32 **)(obj + 0xb8);
+  GuardianAngleParams st;
+  f32 buf[3];
 
   if (mode == 1) {
-    buf[0] = *(f32 *)(p2 + 0x4);
-    buf[1] = *(f32 *)(p2 + 0x8);
-    buf[2] = *(f32 *)(p2 + 0xc);
+    buf[0] = p2[1];
+    buf[1] = p2[2];
+    buf[2] = p2[3];
   } else if (mode == 0) {
-    buf[0] = *(f32 *)(p3 + 0x0);
-    buf[1] = *(f32 *)(p3 + 0x4);
-    buf[2] = *(f32 *)(p3 + 0x8);
+    buf[0] = p3[0];
+    buf[1] = p3[1];
+    buf[2] = p3[2];
   } else if (mode == 2) {
-    *(f32 *)(obj + 0x24) = *(f32 *)(p3 + 0x0);
-    *(f32 *)(obj + 0x2c) = *(f32 *)(p3 + 0x8);
-    {
-      f32 sq = *(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24)
-             + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c);
-      f32 d = (sq == lbl_803E39F8) ? sq : sqrtf(sq);
-      d = lbl_803E39FC * d;
-      *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) / d;
-      *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) / d;
-      *(f32 *)(sub + 0) = *(f32 *)(obj + 0x24);
-      *(f32 *)(sub + 4) = *(f32 *)(obj + 0x2c);
-      *(s16 *)(obj + 0) = (s16)getAngle(-*(f32 *)(p3 + 0x0), -*(f32 *)(p3 + 0x8));
+    f32 sq, d;
+    *(f32 *)(obj + 0x24) = p3[0];
+    *(f32 *)(obj + 0x2c) = p3[2];
+    sq = *(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24)
+       + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c);
+    if (sq != lbl_803E39F8) {
+      sq = sqrtf(sq);
     }
+    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) / (d = lbl_803E39FC * sq);
+    *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x2c) / d;
+    sub[0] = *(f32 *)(obj + 0x24);
+    sub[1] = *(f32 *)(obj + 0x2c);
+    *(s16 *)(obj + 0) = (u16)getAngle(-p3[0], -p3[2]);
     return;
   }
 
-  magic[3] = lbl_803E39F8;
-  magic[2] = lbl_803E39F8;
-  magic[1] = lbl_803E39F8;
-  magic[0] = lbl_803E3A00;
-  hwords[5] = 0;
-  hwords[4] = 0;
-  hwords[3] = *(s16 *)(obj + 0);
-  /* hwords[0..2] alias magic[0]'s prefix or are stack-adjacent — laid out so struct passed at hwords+0x6 covers magic too */
+  st.x = lbl_803E39F8;
+  st.y = lbl_803E39F8;
+  st.z = lbl_803E39F8;
+  st.w = lbl_803E3A00;
+  st.c = 0;
+  st.b = 0;
+  st.a = *(s16 *)(obj + 0);
 
-  mathFn_80021ac8(&hwords[3], buf);
+  mathFn_80021ac8(&st, buf);
 
-  if (p2 == 0) {
-    *(s16 *)(obj + 4) = 0;
-    *(s16 *)(obj + 2) = (s16)getAngle(*(f32 *)(p3 + 0x0) + *(f32 *)(p3 + 0x8), *(f32 *)(p3 + 0x4));
-    if (*(s16 *)(obj + 2) < 0) {
-      *(s16 *)(obj + 2) = (s16)(*(s16 *)(obj + 2) * -1);
-    }
-    *(s16 *)(obj + 0) = (s16)getAngle(*(f32 *)(p3 + 0x0), *(f32 *)(p3 + 0x8));
-  } else {
-    s16 a = (s16)getAngle(buf[0], buf[1]);
-    *(s16 *)(obj + 2) = (s16)getAngle(buf[2], buf[1]);
+  if (p2) {
+    u16 a = getAngle(buf[0], buf[1]);
+    *(s16 *)(obj + 2) = (u16)getAngle(buf[2], buf[1]);
     *(s16 *)(obj + 4) = a;
+  } else {
+    *(s16 *)(obj + 4) = 0;
+    *(s16 *)(obj + 2) = (s16)getAngle(p3[0] + p3[2], p3[1]);
+    if (*(s16 *)(obj + 2) < 0) {
+      *(s16 *)(obj + 2) *= -1;
+    }
+    *(s16 *)(obj + 0) = (s16)getAngle(p3[0], p3[2]);
   }
 }
 #pragma peephole reset
