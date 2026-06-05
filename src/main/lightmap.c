@@ -3362,7 +3362,7 @@ extern f32 lbl_803DEBDC;
 extern void drawSkyStars(void);
 extern u8 lbl_803DCE05;
 extern void screenImageDraw(void);
-extern void renderFn_8008faf4(void);
+extern void lightningRenderActive(void);
 extern void getAmbientColor(int slot, u8 *r, u8 *g, u8 *b);
 extern s8 lbl_8030E65C[];
 extern s8 lbl_8030E66C[];
@@ -3476,7 +3476,7 @@ void sceneDraw(void)
     if (lbl_803DCE05 != 0) {
         screenImageDraw();
     }
-    renderFn_8008faf4();
+    lightningRenderActive();
     (*(void (***)(int))gSky2Interface)[4](0);
     lbl_803DCDF0 = 0;
     getAmbientColor(0, (u8 *)&c, (u8 *)&c + 1, (u8 *)&c + 2);

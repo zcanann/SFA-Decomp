@@ -2258,7 +2258,7 @@ main/audio/synth_scale.c:
 main/unknown/autos/placeholder_8026FD1C.c:
 	.text       start:0x8026FC8C end:0x8026FC8C
 
-main/unknown/autos/placeholder_8026FD94.c:
+main/audio/synth_voice.c:
 	extab       start:0x80005698 end:0x800056F8
 	extabindex  start:0x80005D74 end:0x80005E04
 	.text       start:0x8026FC8C end:0x8027186C
@@ -2297,16 +2297,10 @@ main/unknown/autos/placeholder_802736D4.c:
 	extabindex  start:0x80005F3C end:0x80005F78
 	.text       start:0x80272F70 end:0x80273D2C
 
-main/unknown/autos/placeholder_80273F4C.c:
-	.text       start:0x80273D2C end:0x80273D2C
-
-main/unknown/autos/placeholder_80273F50.c:
+main/audio/data_tables.c:
 	extab       start:0x800057F0 end:0x80005880
 	extabindex  start:0x80005F78 end:0x80006050
 	.text       start:0x80273D2C end:0x80275364
-
-main/unknown/autos/placeholder_802755D0.c:
-	.text       start:0x80275364 end:0x80275364
 
 main/unknown/autos/placeholder_802755E0.c:
 	extab       start:0x80005880 end:0x80005888

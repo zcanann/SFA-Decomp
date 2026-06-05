@@ -1,9 +1,9 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80273F50_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80273F50_H_
+#ifndef MAIN_AUDIO_DATA_TABLES_H_
+#define MAIN_AUDIO_DATA_TABLES_H_
 
 #include "ghidra_import.h"
 
-/* MusyX synthdata.c — see src/main/unknown/autos/placeholder_80273F50.c */
+/* MusyX synthdata.c — see src/main/audio/data_tables.c */
 
 s32 dataInsertLayer(u16 cid, void *layerdata, u16 size);
 s32 dataRemoveLayer(u16 sid);
@@ -20,4 +20,4 @@ void *dataGetLayer(u16 cid, u16 *n);
 void dataInit(u32 smpBase, u32 smpLength);
 int IFFifoAlloc(int addr);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80273F50_H_ */
+#endif /* MAIN_AUDIO_DATA_TABLES_H_ */

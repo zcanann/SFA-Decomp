@@ -47,7 +47,7 @@ extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
 extern void Obj_BuildWorldTransformMatrix(void *obj, f32 mtx[3][4], int flags);
 extern void skyFn_8008a04c(void);
 extern void skyFn_8008a500(void);
-extern void renderFn_8008f904(void *state);
+extern void lightningRender(void *state);
 extern void Obj_GetWorldPosition(void *obj, f32 *x, f32 *y, f32 *z);
 extern s16 *Camera_GetCurrentViewSlot(void);
 extern int randomGetRange(int min, int max);
@@ -1172,10 +1172,10 @@ extern void getEnvfxActImmediately(void *obj, void *target, int effectId, int fl
 #pragma peephole off
 #pragma pop
 
-void renderFn_8008faf4(void)
+void lightningRenderActive(void)
 {
     if (lbl_803DD19C != NULL) {
-        renderFn_8008f904(lbl_803DD19C);
+        lightningRender(lbl_803DD19C);
     }
 }
 
@@ -1821,19 +1821,19 @@ extern f32 playerMapOffsetZ;
 extern int lbl_803DF19C;
 extern f32 lbl_803DF1D4;
 
-void fn_8008F2C8(f32 *start, f32 *end, int width, f32 c, f32 d, int *seed, int e, int f);
+void lightningDrawBolt(f32 *start, f32 *end, int width, f32 c, f32 d, int *seed, int e, int f);
 
 /*
  * --INFO--
  *
- * Function: renderFn_8008f904
+ * Function: lightningRender
  * EN v1.0 Address: 0x8008F904
  * EN v1.0 Size: 496b
  */
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void renderFn_8008f904(void *state) {
+void lightningRender(void *state) {
     u8 *p = state;
     f32 start[3];
     f32 end[3];
@@ -1883,7 +1883,7 @@ void renderFn_8008f904(void *state) {
     srand(*(u16 *)(p + 0x24));
     PSVECSubtract(end, start, diff);
     PSVECMag(diff);
-    fn_8008F2C8(start, end, p[0x26], *(f32 *)(p + 0x18), *(f32 *)(p + 0x1c), &savedSeed, 0,
+    lightningDrawBolt(start, end, p[0x26], *(f32 *)(p + 0x18), *(f32 *)(p + 0x1c), &savedSeed, 0,
                 p[0x27]);
     srand(savedSeed);
 }
@@ -2139,13 +2139,13 @@ extern f32 lbl_803DF1CC;
 /*
  * --INFO--
  *
- * Function: drawFn_8008ee18
+ * Function: lightningDrawStrand
  * EN v1.0 Address: 0x8008EE18
  * EN v1.0 Size: 1200b
  */
 #pragma push
 #pragma scheduling off
-void drawFn_8008ee18(f32 *from, f32 *to, int width, f32 segScale, int *seed) {
+void lightningDrawStrand(f32 *from, f32 *to, int width, f32 segScale, int *seed) {
     int savedRand;
     int segs;
     int i;
@@ -2320,13 +2320,13 @@ extern f32 lbl_803DF1D0;
 /*
  * --INFO--
  *
- * Function: fn_8008F2C8
+ * Function: lightningDrawBolt
  * EN v1.0 Address: 0x8008F2C8
  * EN v1.0 Size: 1596b
  */
 #pragma push
 #pragma scheduling off
-void fn_8008F2C8(f32 *start, f32 *end, int width, f32 segScale, f32 d, int *seed, int depth,
+void lightningDrawBolt(f32 *start, f32 *end, int width, f32 segScale, f32 d, int *seed, int depth,
                  int flags) {
     f32 len;
     int segs;
@@ -2426,7 +2426,7 @@ void fn_8008F2C8(f32 *start, f32 *end, int width, f32 segScale, f32 d, int *seed
                                len);
                 PSVECAdd(start, branchEnd, branchEnd);
                 PSVECAdd(branchEnd, offset, branchEnd);
-                fn_8008F2C8(next, branchEnd, (u8)halfWidth, segScale, d, seed, depth + 1,
+                lightningDrawBolt(next, branchEnd, (u8)halfWidth, segScale, d, seed, depth + 1,
                             flags);
             }
         } else {
@@ -2434,7 +2434,7 @@ void fn_8008F2C8(f32 *start, f32 *end, int width, f32 segScale, f32 d, int *seed
             next[1] = end[1];
             next[2] = end[2];
         }
-        drawFn_8008ee18(cur, next, width, d, seed);
+        lightningDrawStrand(cur, next, width, d, seed);
         px = nx;
         py = ny;
         pz = nz;

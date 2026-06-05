@@ -212,7 +212,7 @@ extern const f32 lbl_803E77B8;
  * Resolve an indirection-table sample entry, then dispatch the resolved
  * sample or nested sample group.
  */
-int audioKeymapFn_8026fc8c(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan,
+int StartKeymap(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, u8 vol, u8 pan,
                            u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid, u32 vidFlag,
                            u8 vGroup, u8 studio, u32 itd)
 {
@@ -284,7 +284,7 @@ int audioKeymapFn_8026fc8c(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, 
  * Start a sample/FX id, handling direct samples, table-expanded sample
  * groups, and already-linked voice chains.
  */
-int audioFn_8026feec(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
+int synthStartSound(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 midi, u8 midiSet,
                      u8 section, u16 step, u16 trackid, u8 vGroup, s16 prioOffset, u8 studio, u32 itd)
 {
     u32 handle;
@@ -318,7 +318,7 @@ int audioFn_8026feec(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
         return macStart(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,
                                 step, trackid, 1, vGroup, studio, itd);
     case 0x4000:
-        vid = audioKeymapFn_8026fc8c(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,
+        vid = StartKeymap(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,
                                      step, trackid, 1, vGroup, studio, itd);
         if (vid != 0xFFFFFFFF) {
             vi = vidGetInternalId(vid);
@@ -350,7 +350,7 @@ int audioFn_8026feec(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
  *
  * EN v1.0 Address: 0x80270184, size 1972b
  */
-void audioFn_80270184(int voice)
+void LowPrecisionHandler(int voice)
 {
     u32 j;
     s32 pbend;
@@ -544,7 +544,7 @@ end:
  *
  * EN v1.0 Address: 0x80270938, size 1712b
  */
-void fn_80270938(int voice)
+void ZeroOffsetHandler(int voice)
 {
     SynthHwVoice* sv;
     u32 lowDeltaTime;
@@ -689,7 +689,7 @@ end:
  *
  * EN v1.0 Address: 0x80270FE8, size 400b
  */
-void fn_80270FE8(int voice)
+void EventHandler(int voice)
 {
     SynthHwVoice* sv;
 
@@ -922,9 +922,9 @@ void audioFn_80271498(u32 delta)
     if (*(u32 *)(stateBase + 0x3c4) != 0) {
         macHandle(delta);
         jobTab = &SYNTH_JOB_TABLE[gSynthDelayBucketCursor];
-        synthDrainDelayedBucket(&jobTab->lowPrecision, audioFn_80270184);
-        synthDrainDelayedBucket(&jobTab->event, fn_80270FE8);
-        synthDrainDelayedBucket(&jobTab->zeroOffset, fn_80270938);
+        synthDrainDelayedBucket(&jobTab->lowPrecision, LowPrecisionHandler);
+        synthDrainDelayedBucket(&jobTab->event, EventHandler);
+        synthDrainDelayedBucket(&jobTab->zeroOffset, ZeroOffsetHandler);
         gSynthDelayBucketCursor = (gSynthDelayBucketCursor + 1) & 0x1f;
         if (hwGetTimeOffset() == 0) {
             if ((synthMasterFaderActiveFlags | synthMasterFaderPauseActiveFlags) != 0) {
@@ -1021,7 +1021,7 @@ int synthFXStart(u32 fxId, u32 volume, u32 pan, u32 studio, u8 studioAux)
         if ((pan & 0xff) == 0xff) {
             pan = sampleInfo->defaultPan;
         }
-        handle = audioFn_8026feec(sampleInfo->sampleId, sampleInfo->key, sampleInfo->velocity,
+        handle = synthStartSound(sampleInfo->sampleId, sampleInfo->key, sampleInfo->velocity,
                              sampleInfo->flags | 0x80, volume, pan, 0xff, 0xff, 0, 0, 0xff,
                              sampleInfo->auxIndex, 0, studio, studioAux);
     }

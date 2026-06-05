@@ -137,7 +137,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
     } else if (mode == 6) {
         if (*(void **)(state + 0) != NULL) {
             u32 frame;
-            renderFn_8008f904(*(void **)(state + 0));
+            lightningRender(*(void **)(state + 0));
             *(f32 *)(state + 4) += timeDelta;
             frame = (u16)(lbl_803E7458 + *(f32 *)(state + 4));
             *(u16 *)((int)*(void **)(state + 0) + 0x20) = frame;

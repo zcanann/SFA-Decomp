@@ -370,7 +370,7 @@ void ktrex_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefi
     for (i = 0; i < 5; i++) {
         e = *(void **)((char *)gKTRexState + 380 + i * 4);
         if (e != NULL) {
-            renderFn_8008f904(e);
+            lightningRender(e);
             *(u16 *)((char *)*(void **)((char *)gKTRexState + 380 + i * 4) + 0x20) =
                 (f32)(u32)*(u16 *)((char *)*(void **)((char *)gKTRexState + 380 + i * 4) + 0x20) + timeDelta;
             if (*(u16 *)((char *)*(void **)((char *)gKTRexState + 380 + i * 4) + 0x20) >=

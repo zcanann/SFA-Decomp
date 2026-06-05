@@ -115,7 +115,7 @@ void ktlazerwall_render(int obj) {
             m = *(int *)(p + 0x10);
             *(f32 *)(m + 0x10) = *(f32 *)(p + 0xc) * timeDelta + *(f32 *)(m + 0x10);
         }
-        renderFn_8008f904(*(void **)(p + 0x10));
+        lightningRender(*(void **)(p + 0x10));
         *(u16 *)(*(int *)(p + 0x10) + 0x20) += framesThisStep;
         m = *(int *)(p + 0x10);
         if (*(u16 *)(m + 0x20) >= *(u16 *)(m + 0x22)) {

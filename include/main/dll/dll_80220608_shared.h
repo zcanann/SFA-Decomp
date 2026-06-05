@@ -748,7 +748,7 @@ extern void fn_802315EC(int obj, int state, int setup);
 
 extern void fn_8006CB24(int obj);
 extern void Rcp_DisableDistortionFilter(void);
-extern void renderFn_8008f904(void *p);
+extern void lightningRender(void *p);
 extern f32 lbl_803E74DC;
 extern f32 lbl_803E75B0;
 extern f32 lbl_803E7600;

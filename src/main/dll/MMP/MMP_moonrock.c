@@ -106,13 +106,13 @@ void lightning_free(u8* obj, int p2)
 #pragma scheduling reset
 
 /* lightning_render: deref obj->_b8->_0 (effect handle); if non-null call
- * renderFn_8008f904(handle). */
-extern void renderFn_8008f904(u32 handle);
+ * lightningRender(handle). */
+extern void lightningRender(u32 handle);
 void lightning_render(u8* obj)
 {
     u32 handle = *(u32*)(*(u8**)(obj + 0xb8));
     if (handle != 0) {
-        renderFn_8008f904(handle);
+        lightningRender(handle);
     }
 }
 

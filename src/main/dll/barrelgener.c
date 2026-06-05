@@ -321,7 +321,7 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
 
     for (i = 0, p = entries; i < count; p++, i++) {
         if (*p != 0) {
-            renderFn_8008f904(*p);
+            lightningRender(*p);
             *(u16 *)((char *)*p + 0x20) += framesThisStep;
             if ((f32)(u32)*(u16 *)((char *)*p + 0x20) > lbl_803DC3A8) {
                 mm_free_(*p);
