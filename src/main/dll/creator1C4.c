@@ -321,7 +321,7 @@ void gpsh_objcreator_release(void) {}
 void gpsh_objcreator_initialise(void) {}
 
 extern u8 Obj_IsLoadingLocked(void);
-extern void hitDetectFn_80097070(int *obj, int a, int b, int c, int d, f32 e);
+extern void hitDetectFn_80097070(int *obj, f32 e, int a, int b, int c, int d);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfx, int v);
 extern void *Obj_AllocObjectSetup(int size, int type);
 extern int* Obj_SetupObject(void *setup, int a, int b, int c, void *d);
@@ -354,7 +354,7 @@ void gpsh_objcreator_update(int *obj) {
     if ((u8)Obj_IsLoadingLocked() == 0) return;
     if (*(f32*)sub == lbl_803E5050) return;
     *(f32*)sub = *(f32*)sub - timeDelta;
-    hitDetectFn_80097070(obj, 2, 1, 1, 0, lbl_803E5054);
+    hitDetectFn_80097070(obj, lbl_803E5054, 2, 1, 1, 0);
     if (*(f32*)sub <= lbl_803E5050) {
         Sfx_PlayFromObjectLimited(0, SFXwp_swtst1_c, 1);
         setup = Obj_AllocObjectSetup(0x24, sub[4] + 0x1f4);
