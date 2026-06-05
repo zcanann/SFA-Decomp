@@ -2178,13 +2178,12 @@ void GameUI_airMeterRun(int v) {
     int *m = (int *)airMeter;
     int clamped;
     if (m == NULL) return;
-    if (v < 0) clamped = 0;
-    else if (v > m[1]) clamped = m[1];
-    else clamped = v;
+    clamped = (v < 0) ? 0 : ((v > m[1]) ? m[1] : v);
+    v = clamped;
     if (m[0x10] == 1) {
-        clamped = clamped * 0x9e / m[1];
+        v = clamped * 0x9e / m[1];
     }
-    m[3] = clamped;
+    m[3] = v;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2340,37 +2339,36 @@ extern void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c);
 #pragma scheduling off
 #pragma peephole off
 void pauseMenuDrawElement(void *this, f32 fx, f32 fy, int p4, int p5, int p6, int p7) {
-    f32 sx, sy;
-    int w, dx, dy;
-    s16 z;
+    int dx, dy;
+    f32 c0, c1;
     pauseMenuMapFn_8011de20(this, p5, (s16)p4, p7 & 4);
-    w = (u16)p6;
-    dx = (*(u16 *)((char *)this + 0xa) << 2) * w / 256;
-    dy = (*(u16 *)((char *)this + 0xc) << 2) * w / 256;
-    sx = lbl_803E1E80 * fx;
-    sy = lbl_803E1E80 * fy;
+    dx = (*(u16 *)((char *)this + 0xa) << 2) * (u16)p6 / 256;
+    dy = (*(u16 *)((char *)this + 0xc) << 2) * (u16)p6 / 256;
+    fx = lbl_803E1E80 * fx;
+    fy = lbl_803E1E80 * fy;
     GXBegin(0x80, 1, 4);
-    z = (s16)(p4 << 2);
-    GXWGFifo.s16 = (s16)sx;
-    GXWGFifo.s16 = (s16)sy;
-    GXWGFifo.s16 = z;
-    GXWGFifo.f32 = lbl_803E1E3C;
-    GXWGFifo.f32 = lbl_803E1E3C;
-    GXWGFifo.s16 = (s16)(sx + (f32)(u32)dx);
-    GXWGFifo.s16 = (s16)sy;
-    GXWGFifo.s16 = z;
-    GXWGFifo.f32 = lbl_803E1E68;
-    GXWGFifo.f32 = lbl_803E1E3C;
-    GXWGFifo.s16 = (s16)(sx + (f32)(u32)dx);
-    GXWGFifo.s16 = (s16)(sy + (f32)(u32)dy);
-    GXWGFifo.s16 = z;
-    GXWGFifo.f32 = lbl_803E1E68;
-    GXWGFifo.f32 = lbl_803E1E68;
-    GXWGFifo.s16 = (s16)sx;
-    GXWGFifo.s16 = (s16)(sy + (f32)(u32)dy);
-    GXWGFifo.s16 = z;
-    GXWGFifo.f32 = lbl_803E1E3C;
-    GXWGFifo.f32 = lbl_803E1E68;
+    c0 = lbl_803E1E3C;
+    c1 = lbl_803E1E68;
+    GXWGFifo.s16 = (s16)fx;
+    GXWGFifo.s16 = (s16)fy;
+    GXWGFifo.s16 = (s16)(p4 << 2);
+    GXWGFifo.f32 = c0;
+    GXWGFifo.f32 = c0;
+    GXWGFifo.s16 = (s16)(fx + (f32)(u32)dx);
+    GXWGFifo.s16 = (s16)fy;
+    GXWGFifo.s16 = (s16)(p4 << 2);
+    GXWGFifo.f32 = c1;
+    GXWGFifo.f32 = c0;
+    GXWGFifo.s16 = (s16)(fx + (f32)(u32)dx);
+    GXWGFifo.s16 = (s16)(fy + (f32)(u32)dy);
+    GXWGFifo.s16 = (s16)(p4 << 2);
+    GXWGFifo.f32 = c1;
+    GXWGFifo.f32 = c1;
+    GXWGFifo.s16 = (s16)fx;
+    GXWGFifo.s16 = (s16)(fy + (f32)(u32)dy);
+    GXWGFifo.s16 = (s16)(p4 << 2);
+    GXWGFifo.f32 = c0;
+    GXWGFifo.f32 = c1;
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -2510,7 +2508,6 @@ void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1,
 void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9) {
     f32 sx, sy, u0, v0, u1, v1;
     u32 w, h;
-    s16 z;
     pauseMenuMapFn_8011de20(this, p5, (s16)p4, 0);
     sx = lbl_803E1E80 * f1;
     sy = lbl_803E1E80 * f2;
@@ -2521,25 +2518,24 @@ void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
     u1 = (f32)(u32)(p6 + p8) / (f32)w;
     v1 = (f32)(u32)(p7 + p9) / (f32)h;
     GXBegin(0x80, 1, 4);
-    z = (s16)(p4 << 2);
     GXWGFifo.s16 = (s16)sx;
     GXWGFifo.s16 = (s16)sy;
-    GXWGFifo.s16 = z;
+    GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v0;
     GXWGFifo.s16 = (s16)(sx + (f32)(u32)(p6 << 2));
     GXWGFifo.s16 = (s16)sy;
-    GXWGFifo.s16 = z;
+    GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v0;
     GXWGFifo.s16 = (s16)(sx + (f32)(u32)(p6 << 2));
     GXWGFifo.s16 = (s16)(sy + (f32)(u32)(p7 << 2));
-    GXWGFifo.s16 = z;
+    GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = u1;
     GXWGFifo.f32 = v1;
     GXWGFifo.s16 = (s16)sx;
     GXWGFifo.s16 = (s16)(sy + (f32)(u32)(p7 << 2));
-    GXWGFifo.s16 = z;
+    GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = u0;
     GXWGFifo.f32 = v1;
 }
@@ -2551,7 +2547,6 @@ void drawFn_8011e8d8(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
 void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7, int p8, int p9) {
     f32 sx, sy, ua, ub, va, vb, tu, tv;
     u32 dx, dy;
-    s16 z;
     u8 flags = (u8)p9;
     pauseMenuMapFn_8011de20(this, p5, (s16)p4, flags & 4);
     dx = ((u32)(p7 << 2) * (u16)p6) >> 8;
@@ -2575,25 +2570,24 @@ void drawFn_8011eb3c(void *this, f32 f1, f32 f2, int p4, int p5, int p6, int p7,
         vb = tv;
     }
     GXBegin(0x80, 1, 4);
-    z = (s16)(p4 << 2);
     GXWGFifo.s16 = (s16)sx;
     GXWGFifo.s16 = (s16)sy;
-    GXWGFifo.s16 = z;
+    GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = ua;
     GXWGFifo.f32 = va;
     GXWGFifo.s16 = (s16)(sx + (f32)(u32)dx);
     GXWGFifo.s16 = (s16)sy;
-    GXWGFifo.s16 = z;
+    GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = ub;
     GXWGFifo.f32 = va;
     GXWGFifo.s16 = (s16)(sx + (f32)(u32)dx);
     GXWGFifo.s16 = (s16)(sy + (f32)(u32)dy);
-    GXWGFifo.s16 = z;
+    GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = ub;
     GXWGFifo.f32 = vb;
     GXWGFifo.s16 = (s16)sx;
     GXWGFifo.s16 = (s16)(sy + (f32)(u32)dy);
-    GXWGFifo.s16 = z;
+    GXWGFifo.s16 = (s16)(p4 << 2);
     GXWGFifo.f32 = ua;
     GXWGFifo.f32 = vb;
 }

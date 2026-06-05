@@ -171,20 +171,20 @@ void sh_levelcontrol_update(int param_1)
       }
     }
     else {
-      *(byte *)(puVar5 + 1) = *(byte *)(puVar5 + 1) + 1;
+      *(byte *)(puVar5 + 1) += 1;
     }
     break;
   case 5:
     iVar1 = GameBit_Get(0x23c);
-    if (iVar1 == 0) {
-      if (*(short *)((int)puVar5 + 0x12) == 0xcc) {
-        *(undefined2 *)((int)puVar5 + 0x12) = 0xffff;
+    if (iVar1 != 0) {
+      if (*(short *)((int)puVar5 + 0x12) != 0xcc) {
+        *(undefined2 *)((int)puVar5 + 0x12) = 0xcc;
+        GameBit_Set(0xc0, 1);
+        *puVar5 = *puVar5 & 0xfffffffd;
       }
     }
-    else if (*(short *)((int)puVar5 + 0x12) != 0xcc) {
-      *(undefined2 *)((int)puVar5 + 0x12) = 0xcc;
-      GameBit_Set(0xc0, 1);
-      *puVar5 = *puVar5 & 0xfffffffd;
+    else if (*(short *)((int)puVar5 + 0x12) == 0xcc) {
+      *(s16 *)((int)puVar5 + 0x12) = -1;
     }
     iVar1 = GameBit_Get(0x90);
     if (((iVar1 != 0) && (iVar1 = GameBit_Get(0xeb3), iVar1 == 0)) &&
@@ -197,15 +197,15 @@ void sh_levelcontrol_update(int param_1)
     break;
   case 7:
     iVar1 = GameBit_Get(0x1a0);
-    if (iVar1 == 0) {
-      if (*(short *)((int)puVar5 + 0x12) == 0xcc) {
-        *(undefined2 *)((int)puVar5 + 0x12) = 0xffff;
+    if (iVar1 != 0) {
+      if (*(short *)((int)puVar5 + 0x12) != 0xcc) {
+        *(undefined2 *)((int)puVar5 + 0x12) = 0xcc;
+        GameBit_Set(0xc0, 1);
+        *puVar5 = *puVar5 & 0xfffffffd;
       }
     }
-    else if (*(short *)((int)puVar5 + 0x12) != 0xcc) {
-      *(undefined2 *)((int)puVar5 + 0x12) = 0xcc;
-      GameBit_Set(0xc0, 1);
-      *puVar5 = *puVar5 & 0xfffffffd;
+    else if (*(short *)((int)puVar5 + 0x12) == 0xcc) {
+      *(s16 *)((int)puVar5 + 0x12) = -1;
     }
     if (*(byte *)(puVar5 + 1) >= 2) {
       iVar1 = GameBit_Get(0x177);
@@ -223,7 +223,7 @@ void sh_levelcontrol_update(int param_1)
       }
     }
     else {
-      *(byte *)(puVar5 + 1) = *(byte *)(puVar5 + 1) + 1;
+      *(byte *)(puVar5 + 1) += 1;
     }
     break;
   case 8:
@@ -242,56 +242,58 @@ void sh_levelcontrol_update(int param_1)
     }
   }
   iVar1 = GameBit_Get(0xd36);
-  if (iVar1 == 0) {
-    iVar1 = GameBit_Get(0xd35);
-    if (iVar1 == 0) {
-      if (*(int *)(param_1 + 0xf8) != 0) {
-        *(undefined4 *)(param_1 + 0xf8) = 0;
-        if (*(int *)(param_1 + 0xf4) == 2) {
-          fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
-          envFxActFn_800887f8(0x3f);
-          getEnvfxActImmediately(0, 0, 0x244, 0);
-          skyFn_80088e54(0, lbl_803E54B4);
-        }
-        else {
-          fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
-          envFxActFn_800887f8(0x1f);
-          getEnvfxAct(0, 0, 0x244, 0);
-        }
-      }
-    }
-    else if (*(int *)(param_1 + 0xf8) != 1) {
-      *(undefined4 *)(param_1 + 0xf8) = 1;
+  if (iVar1 != 0) {
+    if (*(int *)(param_1 + 0xf8) != 2) {
+      *(undefined4 *)(param_1 + 0xf8) = 2;
+      envFxActFn_800887f8(0);
       if (*(int *)(param_1 + 0xf4) == 2) {
-        envFxActFn_800887f8(0);
         getEnvfxActImmediately(0, 0, 0x1bf, 0);
-        getEnvfxActImmediately(0, 0, 0x1be, 0);
-        getEnvfxActImmediately(0, 0, 0x1c0, 0);
+        getEnvfxActImmediately(0, 0, 0x231, 0);
+        getEnvfxActImmediately(0, 0, 0x232, 0);
         getEnvfxActImmediately(0, 0, 0x244, 0);
       }
       else {
-        envFxActFn_800887f8(0);
         getEnvfxAct(0, 0, 0x1bf, 0);
-        getEnvfxAct(0, 0, 0x1be, 0);
-        getEnvfxAct(0, 0, 0x1c0, 0);
+        getEnvfxAct(0, 0, 0x231, 0);
+        getEnvfxAct(0, 0, 0x232, 0);
         getEnvfxAct(0, 0, 0x244, 0);
       }
     }
   }
-  else if (*(int *)(param_1 + 0xf8) != 2) {
-    *(undefined4 *)(param_1 + 0xf8) = 2;
-    envFxActFn_800887f8(0);
-    if (*(int *)(param_1 + 0xf4) == 2) {
-      getEnvfxActImmediately(0, 0, 0x1bf, 0);
-      getEnvfxActImmediately(0, 0, 0x231, 0);
-      getEnvfxActImmediately(0, 0, 0x232, 0);
-      getEnvfxActImmediately(0, 0, 0x244, 0);
+  else {
+    iVar1 = GameBit_Get(0xd35);
+    if (iVar1 != 0) {
+      if (*(int *)(param_1 + 0xf8) != 1) {
+        *(undefined4 *)(param_1 + 0xf8) = 1;
+        if (*(int *)(param_1 + 0xf4) == 2) {
+          envFxActFn_800887f8(0);
+          getEnvfxActImmediately(0, 0, 0x1bf, 0);
+          getEnvfxActImmediately(0, 0, 0x1be, 0);
+          getEnvfxActImmediately(0, 0, 0x1c0, 0);
+          getEnvfxActImmediately(0, 0, 0x244, 0);
+        }
+        else {
+          envFxActFn_800887f8(0);
+          getEnvfxAct(0, 0, 0x1bf, 0);
+          getEnvfxAct(0, 0, 0x1be, 0);
+          getEnvfxAct(0, 0, 0x1c0, 0);
+          getEnvfxAct(0, 0, 0x244, 0);
+        }
+      }
     }
-    else {
-      getEnvfxAct(0, 0, 0x1bf, 0);
-      getEnvfxAct(0, 0, 0x231, 0);
-      getEnvfxAct(0, 0, 0x232, 0);
-      getEnvfxAct(0, 0, 0x244, 0);
+    else if (*(int *)(param_1 + 0xf8) != 0) {
+      *(undefined4 *)(param_1 + 0xf8) = 0;
+      if (*(int *)(param_1 + 0xf4) == 2) {
+        fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
+        envFxActFn_800887f8(0x3f);
+        getEnvfxActImmediately(0, 0, 0x244, 0);
+        skyFn_80088e54(0, lbl_803E54B4);
+      }
+      else {
+        fn_80088870(&base[0x5c], &base[0x24], &base[0x94], &base[0xcc]);
+        envFxActFn_800887f8(0x1f);
+        getEnvfxAct(0, 0, 0x244, 0);
+      }
     }
   }
   mapUnloadFn_801d7c94(param_1, puVar5);
