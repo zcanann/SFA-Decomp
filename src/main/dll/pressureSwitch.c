@@ -1029,68 +1029,63 @@ void fn_8014F620(int obj, int *state)
 {
     int curve;
     int done;
-    int player;
     f32 step;
     f32 wave;
 
     curve = state[0];
-    *(s16 *)((u8 *)state + 0x26) =
-        *(s16 *)((u8 *)state + 0x26) + (int)(lbl_803E26D0 * timeDelta);
-    *(s16 *)(state + 10) = *(s16 *)(state + 10) + (int)(lbl_803E26D4 * timeDelta);
+    *(s16 *)((u8 *)state + 0x26) += (s16)(lbl_803E26D0 * timeDelta);
+    *(s16 *)(state + 10) += (s16)(lbl_803E26D4 * timeDelta);
 
-    wave = fn_80293E80((lbl_803E26DC * (f32)*(s16 *)((u8 *)state + 0x26)) /
-                       lbl_803E26E0);
-    done = Curve_AdvanceAlongPath(curve, *(f32 *)(state + 2) * (lbl_803E26D8 + wave));
+    wave = lbl_803E26D8 + fn_80293E80((lbl_803E26DC * (f32)*(s16 *)((u8 *)state + 0x26)) /
+                                      lbl_803E26E0);
+    done = Curve_AdvanceAlongPath(curve, *(f32 *)(state + 2) * wave);
     if (((done != 0) || (*(int *)(curve + 0x10) != lbl_803DDA68)) &&
         ((*(u8(**)(int))(*gRomCurveInterface + 0x90))(curve) != 0) &&
         ((*(u8(**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
              state[0], obj, lbl_803E26E4, &lbl_803DBC80, -1) != 0)) {
-        *(u8 *)((u8 *)state + 0x24) &= 0xfe;
+        *(u8 *)((u8 *)state + 0x24) = *(u8 *)((u8 *)state + 0x24) & ~1;
     }
     lbl_803DDA68 = *(int *)(curve + 0x10);
 
-    if ((*(u8 *)((u8 *)state + 0x24) & 2) == 0) {
+    if ((*(u8 *)((u8 *)state + 0x24) & 2) != 0) {
+        *(f32 *)(obj + 0x24) =
+            lbl_803E26E8 * (*(f32 *)(state[1] + 0xc) - *(f32 *)(obj + 0xc)) +
+            *(f32 *)(obj + 0x24);
+
+        wave = fn_80293E80((lbl_803E26DC * (f32)*(s16 *)(state + 10)) /
+                           lbl_803E26E0);
+        *(f32 *)(obj + 0x28) =
+            ((lbl_803E26F0 * wave + (lbl_803E26EC + *(f32 *)(state[1] + 0x10))) -
+             *(f32 *)(obj + 0x10)) * lbl_803E26E8 +
+            *(f32 *)(obj + 0x28);
+        *(f32 *)(obj + 0x2c) =
+            lbl_803E26E8 * (*(f32 *)(state[1] + 0x14) - *(f32 *)(obj + 0x14)) +
+            *(f32 *)(obj + 0x2c);
+    } else {
         *(f32 *)(obj + 0x24) = lbl_803E26E8 * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc)) +
                                *(f32 *)(obj + 0x24);
 
         wave = fn_80293E80((lbl_803E26DC * (f32)*(s16 *)(state + 10)) /
                            lbl_803E26E0);
         *(f32 *)(obj + 0x28) =
-            lbl_803E26E8 *
-                ((lbl_803E26F0 * wave + *(f32 *)(curve + 0x6c)) - *(f32 *)(obj + 0x10)) +
+            ((lbl_803E26F0 * wave + *(f32 *)(curve + 0x6c)) - *(f32 *)(obj + 0x10)) *
+                lbl_803E26E8 +
             *(f32 *)(obj + 0x28);
         *(f32 *)(obj + 0x2c) = lbl_803E26E8 * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14)) +
                                *(f32 *)(obj + 0x2c);
-    } else {
-        player = state[1];
-        *(f32 *)(obj + 0x24) =
-            lbl_803E26E8 * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc)) +
-            *(f32 *)(obj + 0x24);
-
-        wave = fn_80293E80((lbl_803E26DC * (f32)*(s16 *)(state + 10)) /
-                           lbl_803E26E0);
-        *(f32 *)(obj + 0x28) =
-            lbl_803E26E8 *
-                ((lbl_803E26F0 * wave + (lbl_803E26EC + *(f32 *)(player + 0x10))) -
-                 *(f32 *)(obj + 0x10)) +
-            *(f32 *)(obj + 0x28);
-        *(f32 *)(obj + 0x2c) =
-            lbl_803E26E8 * (*(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) +
-            *(f32 *)(obj + 0x2c);
     }
 
-    step = lbl_803E26F4;
-    *(f32 *)(obj + 0x24) *= step;
+    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (step = lbl_803E26F4);
     *(f32 *)(obj + 0x28) *= step;
     *(f32 *)(obj + 0x2c) *= step;
 
-    if (lbl_803E26F8 < *(f32 *)(obj + 0x24)) {
+    if (*(f32 *)(obj + 0x24) > lbl_803E26F8) {
         *(f32 *)(obj + 0x24) = lbl_803E26F8;
     }
-    if (lbl_803E26F8 < *(f32 *)(obj + 0x28)) {
+    if (*(f32 *)(obj + 0x28) > lbl_803E26F8) {
         *(f32 *)(obj + 0x28) = lbl_803E26F8;
     }
-    if (lbl_803E26F8 < *(f32 *)(obj + 0x2c)) {
+    if (*(f32 *)(obj + 0x2c) > lbl_803E26F8) {
         *(f32 *)(obj + 0x2c) = lbl_803E26F8;
     }
     if (*(f32 *)(obj + 0x24) < lbl_803E26FC) {
