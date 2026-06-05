@@ -8,12 +8,18 @@
 
 #define WCBLOCK_GRID_IFACE(state) (*(int *)(*(int *)(*(int *)((state) + WCBLOCK_GRID_OBJECT_OFFSET) + 0x68)))
 
-#define WCBLOCK_METHOD_GET_CELL_WORLD_A 0x20
-#define WCBLOCK_METHOD_GET_CELL_XY_A 0x30
-#define WCBLOCK_METHOD_GET_CELL_WORLD_B 0x3c
-#define WCBLOCK_METHOD_GET_CELL_XY_B 0x4c
-
 #define WCBLOCK_PLAYER_CELL_MARGIN lbl_803E6D50
+
+typedef struct WCBlockGridInterface {
+    char pad0[0x20];
+    void (*getCellWorldA)(int obj, s16 cellX, s16 cellZ, f32 *worldX, f32 *worldZ, struct WCBlockGridInterface *self);
+    char pad24[0x0c];
+    void (*getCellXYA)(u8 tileIndex, s16 *cellX, s16 *cellZ, struct WCBlockGridInterface *self);
+    char pad34[0x08];
+    void (*getCellWorldB)(int obj, s16 cellX, s16 cellZ, f32 *worldX, f32 *worldZ, struct WCBlockGridInterface *self);
+    char pad40[0x0c];
+    void (*getCellXYB)(u8 tileIndex, s16 *cellX, s16 *cellZ, struct WCBlockGridInterface *self);
+} WCBlockGridInterface;
 
 #define WBOUNCY_EXTRA_SIZE 0xc
 #define WBOUNCY_STATE_HOME_Y 0x00
@@ -144,24 +150,24 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
     f32 pos;
     f32 min;
     f32 max;
-    int iface;
+    WCBlockGridInterface *iface;
 
     if ((s8)*(u8 *)(obj + 0xad) == WCBLOCK_VARIANT_A) {
-        iface = WCBLOCK_GRID_IFACE(state);
-        (*(void (**)(int, int, int, int))(iface + WCBLOCK_METHOD_GET_CELL_XY_A))(
-            *(u8 *)(state + WCBLOCK_TILE_INDEX_OFFSET), state + WCBLOCK_CELL_X_OFFSET,
-            state + WCBLOCK_CELL_Z_OFFSET, iface);
-        iface = WCBLOCK_GRID_IFACE(state);
-        (*(void (**)(int, int, int, f32 *, f32 *, int))(iface + WCBLOCK_METHOD_GET_CELL_WORLD_A))(
+        iface = (WCBlockGridInterface *)WCBLOCK_GRID_IFACE(state);
+        iface->getCellXYA(
+            *(u8 *)(state + WCBLOCK_TILE_INDEX_OFFSET), (s16 *)(state + WCBLOCK_CELL_X_OFFSET),
+            (s16 *)(state + WCBLOCK_CELL_Z_OFFSET), iface);
+        iface = (WCBlockGridInterface *)WCBLOCK_GRID_IFACE(state);
+        iface->getCellWorldA(
             obj, *(s16 *)(state + WCBLOCK_CELL_X_OFFSET), *(s16 *)(state + WCBLOCK_CELL_Z_OFFSET), &cellX,
             &cellZ, iface);
     } else {
-        iface = WCBLOCK_GRID_IFACE(state);
-        (*(void (**)(int, int, int, int))(iface + WCBLOCK_METHOD_GET_CELL_XY_B))(
-            *(u8 *)(state + WCBLOCK_TILE_INDEX_OFFSET), state + WCBLOCK_CELL_X_OFFSET,
-            state + WCBLOCK_CELL_Z_OFFSET, iface);
-        iface = WCBLOCK_GRID_IFACE(state);
-        (*(void (**)(int, int, int, f32 *, f32 *, int))(iface + WCBLOCK_METHOD_GET_CELL_WORLD_B))(
+        iface = (WCBlockGridInterface *)WCBLOCK_GRID_IFACE(state);
+        iface->getCellXYB(
+            *(u8 *)(state + WCBLOCK_TILE_INDEX_OFFSET), (s16 *)(state + WCBLOCK_CELL_X_OFFSET),
+            (s16 *)(state + WCBLOCK_CELL_Z_OFFSET), iface);
+        iface = (WCBlockGridInterface *)WCBLOCK_GRID_IFACE(state);
+        iface->getCellWorldB(
             obj, *(s16 *)(state + WCBLOCK_CELL_X_OFFSET), *(s16 *)(state + WCBLOCK_CELL_Z_OFFSET), &cellX,
             &cellZ, iface);
     }
@@ -173,11 +179,17 @@ int wcblock_isPlayerAwayFromStoredCell(int obj, int state, int player)
         return 1;
     }
 
-    min = cellZ - WCBLOCK_PLAYER_CELL_MARGIN;
-    pos = *(f32 *)(player + 0x14);
-    max = WCBLOCK_PLAYER_CELL_MARGIN + cellZ;
-    if (pos > max || pos < min) {
-        return 1;
+    {
+        f32 posZ;
+        f32 minZ;
+        f32 maxZ;
+
+        minZ = cellZ - WCBLOCK_PLAYER_CELL_MARGIN;
+        posZ = *(f32 *)(player + 0x14);
+        maxZ = WCBLOCK_PLAYER_CELL_MARGIN + cellZ;
+        if (posZ > maxZ || posZ < minZ) {
+            return 1;
+        }
     }
 
     return 0;
