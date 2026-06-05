@@ -1311,7 +1311,20 @@ void fn_8015383C(int obj, int state)
         *(u8*)(state + 0x33a) = 0;
     } else if ((*(u32*)(state + 0x2dc) & 0x40000000) != 0) {
         u8 mode;
-        if ((u8)hit == 0) {
+        if ((u8)hit != 0) {
+            if (*(u8*)(state + 0x33a) != 0) {
+                *(u8*)(state + 0x33a) = *(u8*)(state + 0x33a) - 1;
+                mode = (u8)*(s16*)(obj + 0xa0);
+            } else if (*(s16*)(obj + 0xa0) != 5 && losDetected) {
+                mode = 5;
+                *(u8*)(state + 0x33a) = lbl_803DBCC0[*(u8*)(state + 0x33b) & 3];
+                *(u8*)(state + 0x33b) = (u8)((*(s8*)(state + 0x33b) + 1) & 0xc3);
+            } else {
+                mode = 4;
+                rnd = randomGetRange(1, 2);
+                *(u8*)(state + 0x33a) = (u8)rnd;
+            }
+        } else {
             rnd = randomGetRange(2, 4);
             mode = (u8)rnd;
             if (mode == 2) {
@@ -1319,17 +1332,6 @@ void fn_8015383C(int obj, int state)
             } else if (mode == 4) {
                 Sfx_PlayFromObject(obj, 0x357);
             }
-        } else if (*(u8*)(state + 0x33a) != 0) {
-            *(u8*)(state + 0x33a) = *(u8*)(state + 0x33a) - 1;
-            mode = (u8)*(s16*)(obj + 0xa0);
-        } else if (*(s16*)(obj + 0xa0) != 5 && losDetected) {
-            mode = 5;
-            *(u8*)(state + 0x33a) = lbl_803DBCC0[*(u8*)(state + 0x33b) & 3];
-            *(u8*)(state + 0x33b) = (u8)((*(s8*)(state + 0x33b) + 1) & 0xc3);
-        } else {
-            mode = 4;
-            rnd = randomGetRange(1, 2);
-            *(u8*)(state + 0x33a) = (u8)rnd;
         }
         ((void(*)(int, int, int, f32, int, int))fn_8014D08C)(obj, state, mode, lbl_803E2910, 0, 0);
     }
@@ -1338,21 +1340,15 @@ void fn_8015383C(int obj, int state)
         if ((double)sct >= lbl_803E2918
             && (double)sct < lbl_803E2918 + *(f32*)(state + 0x308) * timeDelta) {
             fn_80153640(obj, state);
-        } else {
-            *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
-            if (*(f32*)(state + 0x324) <= lbl_803E2920) {
-                rnd = randomGetRange(0x96, 0x12c);
-                *(f32*)(state + 0x324) = (f32)(s32)rnd;
-                Sfx_PlayFromObject(obj, SFXwatery_bubble3);
-            }
+            fn_8015355C(obj, state);
+            return;
         }
-    } else {
-        *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
-        if (*(f32*)(state + 0x324) <= lbl_803E2920) {
-            rnd = randomGetRange(0x96, 0x12c);
-            *(f32*)(state + 0x324) = (f32)(s32)rnd;
-            Sfx_PlayFromObject(obj, SFXwatery_bubble3);
-        }
+    }
+    *(f32*)(state + 0x324) = *(f32*)(state + 0x324) - timeDelta;
+    if (*(f32*)(state + 0x324) <= lbl_803E2920) {
+        rnd = randomGetRange(0x96, 0x12c);
+        *(f32*)(state + 0x324) = (f32)(s32)rnd;
+        Sfx_PlayFromObject(obj, SFXwatery_bubble3);
     }
     fn_8015355C(obj, state);
 }
