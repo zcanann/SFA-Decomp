@@ -2382,7 +2382,7 @@ main/audio/voice_conv.c:
 	extabindex  start:0x800061DC end:0x800061F4
 	.text       start:0x8027A330 end:0x8027A660
 
-main/unknown/autos/placeholder_8027A710.c:
+main/audio/adsr_setup.c:
 	extab       start:0x80005998 end:0x800059A0
 	extabindex  start:0x800061F4 end:0x80006200
 	.text       start:0x8027A660 end:0x8027A8FC
@@ -2392,7 +2392,7 @@ main/audio/adsr_handle.c:
 	extabindex  start:0x80006200 end:0x80006224
 	.text       start:0x8027A8FC end:0x8027AC34
 
-main/unknown/autos/placeholder_8027AC80.c:
+main/audio/adsr_lowprec.c:
 	extab       start:0x800059B8 end:0x800059C0
 	extabindex  start:0x80006224 end:0x80006230
 	.text       start:0x8027AC34 end:0x8027ACB8
@@ -2407,7 +2407,7 @@ main/audio/vsample_events.c:
 	extabindex  start:0x8000623C end:0x80006254
 	.text       start:0x8027AFC0 end:0x8027B25C
 
-main/unknown/autos/placeholder_8027B41C.c:
+main/audio/vsample_update.c:
 	extab       start:0x800059D8 end:0x800059E0
 	extabindex  start:0x80006254 end:0x80006260
 	.text       start:0x8027B25C end:0x8027B42C
@@ -2417,7 +2417,7 @@ main/audio/snd_groups.c:
 	extabindex  start:0x80006260 end:0x8000629C
 	.text       start:0x8027B42C end:0x8027BA04
 
-main/unknown/autos/placeholder_8027BB90.c:
+main/audio/sal_studio.c:
 	extab       start:0x80005A08 end:0x80005A30
 	extabindex  start:0x8000629C end:0x800062D8
 	.text       start:0x8027BA04 end:0x8027C48C

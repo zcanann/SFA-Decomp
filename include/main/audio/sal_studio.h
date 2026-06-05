@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027BB90_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027BB90_H_
+#ifndef MAIN_AUDIO_SAL_STUDIO_H_
+#define MAIN_AUDIO_SAL_STUDIO_H_
 
 #include "ghidra_import.h"
 
@@ -13,4 +13,4 @@ int fn_8027BFE4(u16 *active, u16 *direction, u16 *current, u16 target, u16 *step
 void fn_8027C0D8(int accum, int *voiceRef);
 void fn_8027C390(int *items, int left, int right);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027BB90_H_ */
+#endif /* MAIN_AUDIO_SAL_STUDIO_H_ */

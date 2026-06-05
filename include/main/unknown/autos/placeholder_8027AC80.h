@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027AC80_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027AC80_H_
-
-#include "ghidra_import.h"
-
-int fn_8027AC34(int p1, int p2, int p3);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027AC80_H_ */
