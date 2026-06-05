@@ -1,20 +1,41 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/mapEventTypes.h"
 
+#define WCTREXSTATU_CALLBACK_COMMANDS_OFFSET 0x81
+#define WCTREXSTATU_CALLBACK_COMMAND_COUNT_OFFSET 0x8b
+#define WCTREXSTATU_CALLBACK_TRIGGER 1
+
+#define WCTREXSTATU_SETUP_TYPE_OFFSET 0x18
+#define WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET 0x19
+#define WCTREXSTATU_SETUP_RAISED_BIT_OFFSET 0x1e
+
+#define WCTREXSTATU_RENDER_TYPE_BASE 0x400
+#define WCTREXSTATU_RENDER_TYPE_SHIFT 0xb
+#define WCTREXSTATU_TEXTURE_TRIGGERED 0x100
+#define WCTREXSTATU_TRIGGERED_FLAG_OFFSET 0xf4
+
+#define WCTREXSTATU_PARTFX_VARIANT_0 0x73f
+#define WCTREXSTATU_PARTFX_VARIANT_1 0x740
+#define WCTREXSTATU_PARTFX_CHANCE 5
+#define WCTREXSTATU_PARTFX_KIND 2
+#define WCTREXSTATU_PARTFX_INVALID_HANDLE -1
+
+#define WCTREXSTATU_MAPEVENT_RAISED 2
+
 #pragma peephole on
 #pragma scheduling off
 int wctrexstatu_interactCallback(int obj, int unused, int callbackData)
 {
     int i;
 
-    for (i = 0; i < *(u8 *)(callbackData + 0x8b); i++) {
-        if (*(u8 *)(callbackData + 0x81 + i) == 1) {
+    for (i = 0; i < *(u8 *)(callbackData + WCTREXSTATU_CALLBACK_COMMAND_COUNT_OFFSET); i++) {
+        if (*(u8 *)(callbackData + WCTREXSTATU_CALLBACK_COMMANDS_OFFSET + i) == WCTREXSTATU_CALLBACK_TRIGGER) {
             int *texture = objFindTexture(obj, 0, 0);
 
             if (texture != NULL) {
-                *texture = 0x100;
+                *texture = WCTREXSTATU_TEXTURE_TRIGGERED;
             }
-            *(int *)(obj + 0xf4) = 1;
+            *(int *)(obj + WCTREXSTATU_TRIGGERED_FLAG_OFFSET) = 1;
         }
     }
 
@@ -33,13 +54,13 @@ int wctrexstatu_getExtraSize(void) { return 0; }
 #pragma scheduling off
 int wctrexstatu_getObjectTypeId(int obj)
 {
-    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
     int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
     }
-    return (modelIndex << 0xb) | 0x400;
+    return (modelIndex << WCTREXSTATU_RENDER_TYPE_SHIFT) | WCTREXSTATU_RENDER_TYPE_BASE;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -65,11 +86,15 @@ void wctrexstatu_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 #pragma scheduling off
 void wctrexstatu_hitDetect(u8 *obj)
 {
-    if (*(int *)(obj + 0xf4) != 0 && randomGetRange(0, 5) == 0) {
+    if (*(int *)(obj + WCTREXSTATU_TRIGGERED_FLAG_OFFSET) != 0 && randomGetRange(0, WCTREXSTATU_PARTFX_CHANCE) == 0) {
         if (*(s8 *)(obj + 0xad) == 0) {
-            (*(void (**)(u8 *, int, int, int, int, u8 *))(*gPartfxInterface + 8))(obj, 0x73f, 0, 2, -1, obj);
+            (*(void (**)(u8 *, int, int, int, int, u8 *))(*gPartfxInterface + 8))(
+                obj, WCTREXSTATU_PARTFX_VARIANT_0, 0, WCTREXSTATU_PARTFX_KIND, WCTREXSTATU_PARTFX_INVALID_HANDLE,
+                obj);
         } else {
-            (*(void (**)(u8 *, int, int, int, int, u8 *))(*gPartfxInterface + 8))(obj, 0x740, 0, 2, -1, obj);
+            (*(void (**)(u8 *, int, int, int, int, u8 *))(*gPartfxInterface + 8))(
+                obj, WCTREXSTATU_PARTFX_VARIANT_1, 0, WCTREXSTATU_PARTFX_KIND, WCTREXSTATU_PARTFX_INVALID_HANDLE,
+                obj);
         }
     }
 }
@@ -87,25 +112,25 @@ void wctrexstatu_update(void) {}
 void wctrexstatu_init(int obj, int setup, int fromLoad)
 {
     *(void **)(obj + 0xbc) = wctrexstatu_interactCallback;
-    *(u8 *)(obj + 0xad) = *(u8 *)(setup + 0x19);
+    *(u8 *)(obj + 0xad) = *(u8 *)(setup + WCTREXSTATU_SETUP_MODEL_INDEX_OFFSET);
     if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
         *(u8 *)(obj + 0xad) = 0;
     }
 
-    *(s16 *)obj = (s16)((s8)*(u8 *)(setup + 0x18) << 8);
+    *(s16 *)obj = (s16)((s8)*(u8 *)(setup + WCTREXSTATU_SETUP_TYPE_OFFSET) << 8);
     if (fromLoad == 0) {
-        if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == 2) {
+        if (((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac)) == WCTREXSTATU_MAPEVENT_RAISED) {
             *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) + lbl_803E6E14;
         }
     }
 
-    if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
+    if ((u32)GameBit_Get(*(s16 *)(setup + WCTREXSTATU_SETUP_RAISED_BIT_OFFSET)) != 0) {
         int *texture = objFindTexture(obj, 0, 0);
 
         if (texture != NULL) {
-            *texture = 0x100;
+            *texture = WCTREXSTATU_TEXTURE_TRIGGERED;
         }
-        *(int *)(obj + 0xf4) = 1;
+        *(int *)(obj + WCTREXSTATU_TRIGGERED_FLAG_OFFSET) = 1;
     }
 }
 #pragma scheduling reset
