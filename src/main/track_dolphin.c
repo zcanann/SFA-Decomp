@@ -5854,8 +5854,8 @@ extern void fn_800659A8(f32 a, f32 b, void *p3, void *p4, void *desc, int e);
 int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f)
 {
     u8 *base = lbl_8038D840;
-    u8 *desc;
-    u8 *end;
+    TrackBlockDescriptor *desc;
+    TrackBlockDescriptor *end;
     u8 *ptr;
     int i, j;
     int bVar7;
@@ -5876,19 +5876,19 @@ int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f)
     lbl_803DCF68 = (int)(base + 0xdc);
     lbl_803DCF64 = (int)(base + 0x50);
     lbl_803DCF60 = 0;
-    end = base + (u32)lbl_803DCF6C * 0x18 + 0x424;
-    for (desc = base + 0x424; desc < end; desc += 0x18) {
+    end = (TrackBlockDescriptor *)(base + 0x424) + (u32)lbl_803DCF6C;
+    for (desc = (TrackBlockDescriptor *)(base + 0x424); desc < end; desc++) {
         if (lbl_803DCF60 >= 0x23) break;
-        if (*(void **)desc != NULL) {
-            Matrix_TransformPoint(*(void **)(desc + 8), b, __AR_Callback, d, &tx, &ty, &tz);
+        if (desc->object != NULL) {
+            Matrix_TransformPoint(desc->currentMatrix, b, __AR_Callback, d, &tx, &ty, &tz);
             fn_800659A8(tx, tz,
-                        (void *)(lbl_803DCF30 + *(s16 *)(desc + 4) * 0x4c),
-                        (void *)(lbl_803DCF30 + *(s16 *)(desc + 0x1c) * 0x4c),
+                        (void *)(lbl_803DCF30 + desc->firstTriangle * 0x4c),
+                        (void *)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c),
                         desc, e);
         } else {
             fn_800659A8(b, d,
-                        (void *)(lbl_803DCF30 + *(s16 *)(desc + 4) * 0x4c),
-                        (void *)(lbl_803DCF30 + *(s16 *)(desc + 0x1c) * 0x4c),
+                        (void *)(lbl_803DCF30 + desc->firstTriangle * 0x4c),
+                        (void *)(lbl_803DCF30 + desc[1].firstTriangle * 0x4c),
                         desc, e);
         }
     }
