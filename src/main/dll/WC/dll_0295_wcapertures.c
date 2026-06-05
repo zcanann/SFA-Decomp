@@ -109,8 +109,8 @@ void wcapertures_hitDetect(int obj)
     int state = *(int *)(obj + 0xb8);
 
     if (WCAPERTURES_MODE(state) == WCAPERTURES_MODE_OPEN) {
+        s16 ev[18];
         f32 col[3];
-        s16 ev[2];
 
         if ((s8)*(u8 *)(obj + 0xad) == 0)
             ev[1] = 1;
