@@ -2034,7 +2034,7 @@ typedef struct DusterState {
   u8 active;
   u8 complete;
   u8 useLaunchVelocity;
-  u8 flags;
+  u8 hasFloor : 1;
 } DusterState;
 
 typedef struct DusterSetup {
@@ -2097,12 +2097,12 @@ void duster_update(int obj) {
   DusterState *state;
   DusterSetup *setup;
   int player;
-  int msg;
-  int completeMsg;
   void *floorHits;
+  int msg;
+  int next;
   int floorHitCount;
-  int bestFloorIndex;
   int i;
+  int bestFloorIndex;
   f32 bestFloorDelta;
   f32 floorDelta;
   DusterLaunchRotation launch;
@@ -2111,10 +2111,9 @@ void duster_update(int obj) {
   state = *(DusterState **)(obj + 0xb8);
   setup = *(DusterSetup **)(obj + 0x4c);
   player = (int)Obj_GetPlayerObject();
-  completeMsg = 0x7000b;
 
   while (ObjMsg_Pop(obj, &msg, 0, 0) != 0) {
-    if (msg == completeMsg) {
+    if (msg == 0x7000b) {
       Sfx_PlayFromObject(obj, SFXen_generic_placeobj);
       (*(void (**)(int, int, int, int, int, int))(*(int *)gPartfxInterface + 8))(
           obj, 0x51a, 0, 1, -1, 0);
@@ -2125,11 +2124,10 @@ void duster_update(int obj) {
       GameBit_Set(state->completeGameBit, 1);
       mapState = (DusterMapEventState *)(*(int (**)(int))(*(int *)gMapEventInterface + 0x8c))(
           *(int *)gMapEventInterface);
-      if (mapState->maxCollectedCount < (u8)(mapState->collectedCount + 1)) {
-        mapState->collectedCount = mapState->maxCollectedCount;
-      } else {
-        mapState->collectedCount++;
-      }
+      mapState->collectedCount =
+          (mapState->maxCollectedCount >= (next = mapState->collectedCount + 1))
+              ? next
+              : mapState->maxCollectedCount;
       state->complete = 1;
     }
   }
@@ -2147,7 +2145,7 @@ void duster_update(int obj) {
   }
 
   state->priorityHit = 0;
-  if ((s8)state->flags >= 0) {
+  if (state->hasFloor == 0) {
     floorHitCount = hitDetectFn_80065e50(obj, &floorHits, 0, 0, *(f32 *)(obj + 0xc),
                                          *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
     bestFloorIndex = -1;
@@ -2163,13 +2161,13 @@ void duster_update(int obj) {
       }
     }
     if (bestFloorIndex != -1) {
-      state->flags |= 0x80;
+      state->hasFloor = 1;
       state->floorY = **(f32 **)((int)floorHits + bestFloorIndex * 4);
       *(f32 *)(obj + 0x28) = lbl_803E38C4;
     }
-    if ((s8)state->flags >= 0) {
+    if (state->hasFloor == 0) {
       state->floorY = *(f32 *)((u8 *)setup + 0xc);
-      state->flags |= 0x80;
+      state->hasFloor = 1;
     }
   }
 
@@ -2189,17 +2187,14 @@ void duster_update(int obj) {
       state->driftDir = (u8)randomGetRange(0, 4);
       if (state->useLaunchVelocity != 0) {
         *(f32 *)(obj + 0x24) = lbl_803E38C8;
-        *(f32 *)(obj + 0x2c) = lbl_803E38C4;
-        launch.y = lbl_803E38C4;
-        launch.z = lbl_803E38C4;
+        launch.z = launch.y = launch.x = *(f32 *)(obj + 0x2c) = lbl_803E38C4;
         launch.scale = lbl_803E38B0;
-        launch.pitch = 0;
         launch.roll = 0;
+        launch.pitch = 0;
         launch.yaw = *(s16 *)obj;
         mathFn_80021ac8(&launch, (void *)(obj + 0x24));
       } else {
-        *(f32 *)(obj + 0x24) = lbl_803E38C4;
-        *(f32 *)(obj + 0x2c) = lbl_803E38C4;
+        *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x24) = lbl_803E38C4;
       }
       if (state->hitReactActive != 0) {
         state->hitReactTimer = 0xfa;
@@ -2215,13 +2210,13 @@ void duster_update(int obj) {
     }
   } else {
     if (state->settleTimer != 0) {
-      state->settleTimer -= (int)timeDelta;
+      state->settleTimer -= (s16)timeDelta;
       if (state->settleTimer <= 0) {
         state->settleTimer = 0;
       }
     }
     if (state->hitReactTimer != 0) {
-      state->hitReactTimer -= (int)timeDelta;
+      state->hitReactTimer -= (s16)timeDelta;
       if (state->hitReactTimer <= 0) {
         state->hitReactTimer = 0;
         state->hitReactActive = 0;
@@ -2263,11 +2258,10 @@ void duster_update(int obj) {
         GameBit_Set(state->completeGameBit, 1);
         mapState = (DusterMapEventState *)(*(int (**)(int))(*(int *)gMapEventInterface + 0x8c))(
             *(int *)gMapEventInterface);
-        if (mapState->maxCollectedCount < (u8)(mapState->collectedCount + 1)) {
-          mapState->collectedCount = mapState->maxCollectedCount;
-        } else {
-          mapState->collectedCount++;
-        }
+        mapState->collectedCount =
+            (mapState->maxCollectedCount >= (next = mapState->collectedCount + 1))
+                ? next
+                : mapState->maxCollectedCount;
         state->complete = 1;
         *(u8 *)(obj + 0x36) = 1;
       }
