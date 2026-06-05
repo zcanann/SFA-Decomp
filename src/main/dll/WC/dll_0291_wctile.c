@@ -106,7 +106,7 @@ void wctile_init(u8 *obj, u8 *setup)
         obj[0xad] = 0;
     }
     WCTILE_TARGET_TILE((int)state) = *(s16 *)(setup + WCTILE_INITIAL_TILE_OFFSET);
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), fn_800284CC);
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
     obj[0x36] = 0;
 }
 #pragma scheduling reset

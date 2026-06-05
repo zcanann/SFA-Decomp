@@ -297,7 +297,7 @@ void wctemplebri_init(int obj, int initData)
         *(u8 *)(obj + 0x36) = 0;
     }
     *(u16 *)(obj + 0xb0) |= 0x6000;
-    ObjModel_SetPostRenderCallback(model, fn_800284CC);
+    ObjModel_SetPostRenderCallback(model, postRenderSetAlphaBlendState);
 }
 #pragma scheduling reset
 #pragma peephole reset

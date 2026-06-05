@@ -770,7 +770,7 @@ void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag) 
 extern void mtxRotateByVec3s(f32 *mtx, void *transform);
 extern void mtx44Transpose(f32 *src, f32 *dst);
 
-void fn_8002B2AC(f32 *out, u8 *transform, f32 *in) {
+void objWorldToLocalPos(f32 *out, u8 *transform, f32 *in) {
     f32 rotated[3];
     struct {
         s16 rotX;
@@ -941,7 +941,7 @@ extern f32 lbl_803DE8B8;
 
 #pragma dont_inline reset
 
-int fn_8002B8F0(u8 *obj) {
+int objApplyVelocity(u8 *obj) {
     *(f32 *)(obj + 0xc) += timeDelta * (lbl_803DE8B8 * (*(f32 *)(obj + 0xfc) + *(f32 *)(obj + 0x24)));
     *(f32 *)(obj + 0x10) += timeDelta * (lbl_803DE8B8 * (*(f32 *)(obj + 0x100) + *(f32 *)(obj + 0x28)));
     *(f32 *)(obj + 0x14) += timeDelta * (lbl_803DE8B8 * (*(f32 *)(obj + 0x104) + *(f32 *)(obj + 0x2c)));
