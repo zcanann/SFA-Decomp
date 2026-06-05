@@ -53,10 +53,10 @@ main/objhits.c:
 	.text       start:0x80030688 end:0x800353A4
 
 main/objHitReact.c:
-	.text       start:0x800353A4 end:0x800356F0
+	.text       start:0x800353A4 end:0x800358D4
 
 main/objlib.c:
-	.text       start:0x800356F0 end:0x80038F38
+	.text       start:0x800358D4 end:0x80038F38
 
 main/objprint.c:
 	.text       start:0x80038F38 end:0x8003D6F8

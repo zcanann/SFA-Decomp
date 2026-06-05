@@ -11,7 +11,6 @@ typedef void (*ObjContactCallback)(int objA,int objB);
 extern char sObjAddObjectTypeReachedMaxTypes[];
 extern char sObjMsgOverflowInObjectWarning[];
 
-int ObjHitbox_AllocRotatedBounds(ushort *hitbox,uint arena);
 void ObjHitbox_SetStateIndex(int obj,int hitbox,int stateIndex);
 void ObjHits_SetTargetMask(int obj,undefined targetMask);
 void ObjHitbox_SetSphereRadius(int obj,undefined2 radius);

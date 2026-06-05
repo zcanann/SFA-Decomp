@@ -130,6 +130,7 @@ STATIC_ASSERT(offsetof(ObjHitReactEntry, cooldown) == 0x0C);
 int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEntryCount,
                        u32 reactionState,float *reactionStepScale);
 void ObjHitReact_ResetActiveObjects(int objectCount);
+int ObjHitbox_AllocRotatedBounds(ushort *hitbox,uint arena);
 void ObjHitReact_LoadMoveEntries(ObjAnimComponent *objAnim,ObjAnimBank *bank,int objType,
                                  ObjHitReactState *hitState,int moveId,int async);
 uint ObjHitReact_InitState(int objType,ObjAnimBank *bank,ObjHitReactState *hitState,
