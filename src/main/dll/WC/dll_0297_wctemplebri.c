@@ -245,9 +245,9 @@ void wctemplebri_init(int obj, int initData)
 {
     int state;
     int model;
-    int modelData;
-    int maxY;
     int i;
+    int maxY;
+    int modelData;
     int p, k;
     int done;
 
