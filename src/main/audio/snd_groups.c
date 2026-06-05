@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_8027B53C.h"
+#include "main/audio/snd_groups.h"
 
 typedef struct GROUP_DATA {
     u32 nextOff;

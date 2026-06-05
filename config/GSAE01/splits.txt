@@ -2418,13 +2418,10 @@ main/unknown/autos/placeholder_8027B41C.c:
 	extabindex  start:0x80006254 end:0x80006260
 	.text       start:0x8027B25C end:0x8027B42C
 
-main/unknown/autos/placeholder_8027B53C.c:
+main/audio/snd_groups.c:
 	extab       start:0x800059E0 end:0x80005A08
 	extabindex  start:0x80006260 end:0x8000629C
 	.text       start:0x8027B42C end:0x8027BA04
-
-main/unknown/autos/placeholder_8027BB84.c:
-	.text       start:0x8027BA04 end:0x8027BA04
 
 main/unknown/autos/placeholder_8027BB90.c:
 	extab       start:0x80005A08 end:0x80005A30
