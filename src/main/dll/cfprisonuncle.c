@@ -514,7 +514,7 @@ void MagicPlant_update(int obj)
         if (divisor < 100) {
           divisor = 100;
         }
-        progress = progress / (f32)divisor;
+        progress /= (f32)divisor;
         if (progress > lbl_803E3858) {
           progress = lbl_803E3858;
         } else if (progress < lbl_803E385C) {
@@ -1785,11 +1785,15 @@ int duster_getExtraSize(void) { return 0x20; }
 int curvefish_getExtraSize(void) { return 0x120; }
 
 /* duster_SeqFn: clear bit 0x80 of obj->_b8->_1e, return 0. */
+typedef struct {
+    u8 flag80 : 1;
+} DusterStateFlags;
+
 #pragma scheduling off
 #pragma peephole off
 int duster_SeqFn(u8* obj) {
     u8* sub = *(u8**)(obj + 0xb8);
-    sub[0x1e] = (u8)(sub[0x1e] & ~0x80);
+    ((DusterStateFlags *)(sub + 0x1e))->flag80 = 0;
     return 0;
 }
 #pragma peephole reset
@@ -1882,16 +1886,17 @@ typedef struct TrickyWarpCurveNode {
   s16 forbiddenGameBit;
 } TrickyWarpCurveNode;
 
+#pragma scheduling off
 int fn_8017FFD0(int obj, TrickyWarpState *state) {
   int curveCount;
   TrickyWarpCurveEntry **curveEntries;
-  TrickyWarpCurveEntry *entry;
-  TrickyWarpCurveNode *node;
-  int *outNodeId;
-  int playerObj;
-  int playerPatchGroup;
   int i;
   int linkIndex;
+  TrickyWarpCurveEntry *entry;
+  TrickyWarpCurveNode *node;
+  int n;
+  int playerObj;
+  int playerPatchGroup;
 
   if (GameBit_Get(0x4e5) == 0) {
     return 0;
@@ -1903,14 +1908,14 @@ int fn_8017FFD0(int obj, TrickyWarpState *state) {
     state->patchGroup = (u8)Objfsa_GetWalkGroupIndexAtPoint((f32 *)(obj + 0xc),0);
     if (state->patchGroup != 0) {
       curveEntries = (*(TrickyWarpCurveEntry **(**)(int *))(*(int *)gRomCurveInterface + 0x10))(&curveCount);
-      outNodeId = state->curveNodeIds;
+      n = 0;
       for (i = 0; i < curveCount; i++) {
         entry = curveEntries[i];
         if (entry->type == '$' && entry->entryPatchGroup == 0) {
           for (linkIndex = 0; linkIndex < 4; linkIndex++) {
             if (entry->linkPatchGroups[linkIndex] == state->patchGroup) {
-              *outNodeId = entry->nodeId;
-              outNodeId++;
+              state->curveNodeIds[n] = entry->nodeId;
+              n++;
               break;
             }
           }
@@ -1956,6 +1961,7 @@ int fn_8017FFD0(int obj, TrickyWarpState *state) {
   }
   return getPatchGroup((f32 *)(playerObj + 0xc),state->patchGroup);
 }
+#pragma scheduling reset
 
 #pragma peephole off
 void trickywarp_init(s16 *obj, u8 *param_2) {
@@ -2292,10 +2298,10 @@ void MagicPlant_init(int obj, u8 *params) {
     ObjGroup_AddObject(obj, 62);
     r = ((int (**)(int))((int **)gMapEventInterface)[0])[26](*(int *)(params + 20));
     if (r == 0) {
-        t = (f32)((int (**)(int))((int **)gMapEventInterface)[0])[27](*(int *)(params + 20));
+        t = ((f32 (**)(int))((int **)gMapEventInterface)[0])[27](*(int *)(params + 20));
         divisor = *(u16 *)(params + 24);
         if (divisor < 100) divisor = 100;
-        t = t / (f32)divisor;
+        t /= (f32)divisor;
         if (t > lbl_803E3858) {
             t = lbl_803E3858;
         } else if (t < lbl_803E385C) {
@@ -2314,7 +2320,7 @@ void MagicPlant_init(int obj, u8 *params) {
     if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
         *(u8 *)(obj + 0xad) = 0;
     }
-    if (*(int *)(obj + 0x64) != 0) {
+    if (*(void **)(obj + 0x64) != NULL) {
         *(u32 *)(*(int *)(obj + 0x64) + 48) |= 0x810;
     }
     *(void **)(obj + 0xbc) = (void *)MagicPlant_SeqFn;
