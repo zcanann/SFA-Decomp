@@ -124,8 +124,8 @@ void Music_ChannelLoadedCallback(MusicBank *bank, MusicChannel *channel, MusicTr
             channel->field_12 = 0;
             channel->field_20 = lbl_803DE560;
         } else {
-            int voice;
             int seqHandle;
+            int voice;
             if (trigger->field_6 != -1) {
                 params.field_c = trigger->field_6;
                 params.flags |= 2;

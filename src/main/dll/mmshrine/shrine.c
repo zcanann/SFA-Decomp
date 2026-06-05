@@ -535,7 +535,7 @@ void mmsh_scales_init(int *obj, s16 *def) {
     *(int *)(state + 40) = -1;
     active = *(int *)((char *)obj + 0xf4);
     if (active == 0 && def[12] != 1) {
-        ((void(*)(u8 *))((void **)*gObjectTriggerInterface)[7])(state);
+        ((void(*)(u8 *, s16 *))((void **)*gObjectTriggerInterface)[7])(state, def);
         *(int *)((char *)obj + 0xf4) = (int)def[12] + 1;
     } else if (active != 0 && def[12] != active - 1) {
         ((void(*)(u8 *))((void **)*gObjectTriggerInterface)[9])(state);

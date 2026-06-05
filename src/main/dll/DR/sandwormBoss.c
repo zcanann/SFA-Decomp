@@ -4199,7 +4199,7 @@ int *findRomCurvePointNearObject(int *obj, int p2, int *outVec, int p4) {
         local, 2, p2);
 
     if (found > -1) {
-        result = (int *)(*(int *(***)(void))gRomCurveInterface)[7]();
+        result = (int *)(*(int *(***)(int))gRomCurveInterface)[7](found);
         if (outVec != NULL) {
             *(f32 *)((char *)outVec + 0) = *(f32 *)((char *)result + 8);
             *(f32 *)((char *)outVec + 4) = *(f32 *)((char *)result + 12);

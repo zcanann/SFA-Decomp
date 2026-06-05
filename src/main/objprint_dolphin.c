@@ -5694,7 +5694,7 @@ void modelDoAltRenderInstrs(int *obj, int *obj2, u8 *m, int p4) {
         {
             u8 *att = *(u8 **)((char *)obj + 0x54);
             if (att != NULL) {
-                att[0xaf] = att[0xaf] - 1;
+                att[0xaf]--;
                 if (*(s8 *)(*(char **)((char *)obj + 0x54) + 0xaf) < 0) {
                     *(u8 *)(*(char **)((char *)obj + 0x54) + 0xaf) = 0;
                 }
@@ -5867,7 +5867,7 @@ void objRenderShadow2(int *obj, int *obj2, u8 *m, int p4) {
         } else {
             u8 *att = *(u8 **)((char *)obj + 0x54);
             if (att != NULL) {
-                att[0xaf] = att[0xaf] - 1;
+                att[0xaf]--;
                 if (*(s8 *)(*(char **)((char *)obj + 0x54) + 0xaf) < 0) {
                     *(u8 *)(*(char **)((char *)obj + 0x54) + 0xaf) = 0;
                 }
@@ -6149,7 +6149,7 @@ void modelDoRenderInstrs(int *obj, int *obj2, u8 *m, u8 mode) {
         } else {
             u8 *att = *(u8 **)((char *)obj + 0x54);
             if (att != NULL) {
-                att[0xaf] = att[0xaf] - 1;
+                att[0xaf]--;
                 if (*(s8 *)(*(char **)((char *)obj + 0x54) + 0xaf) < 0) {
                     *(u8 *)(*(char **)((char *)obj + 0x54) + 0xaf) = 0;
                 }

@@ -5026,13 +5026,15 @@ void *shadowInit(int *obj, int size)
   int rounded;
   void *base;
   void *state;
+  s16 texId;
 
   rounded = roundUpTo4(size);
   *(int *)((char *)obj + 0x64) = rounded;
   base = *(void **)((char *)obj + 0x64);
   state = *(void **)((char *)obj + 0x50);
-  if (*(s16 *)((char *)state + 0x4a) != -1 && *(s16 *)((char *)state + 0x48) != 2) {
-    *(int *)((char *)base + 0x4) = textureLoad(-*(s16 *)((char *)state + 0x4a), 0);
+  texId = *(s16 *)((char *)state + 0x4a);
+  if (texId != -1 && *(s16 *)((char *)state + 0x48) != 2) {
+    *(int *)((char *)base + 0x4) = textureLoad(-texId, 0);
   } else if (*(u8 *)((char *)state + 0x5f) & 0x4) {
     *(int *)((char *)base + 0x4) = textureAlloc512();
   } else if (*(u8 *)((char *)state + 0x5f) & 0x2) {

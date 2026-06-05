@@ -334,7 +334,7 @@ extern f32 lbl_803DD52C;
 int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
 {
   int tgt0;
-  float probe[35];
+  float probe[75];
   u8 box[136];
   float pathA[21];
   float pathB[21];
@@ -370,6 +370,7 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
   (*(void (**)(short *, f32 *, f32 *, f32 *, f32 *, f32, int))(*gCameraInterface + 0x38))
       (cam, &spinB, &spinC, &spinD, &spinA, *(f32 *)((char *)cameraMtxVar57 + 0x8c), 0);
   tgt0 = *(int *)((char *)cam + 0xa4);
+  *(int *)&probe[35] = tgt0;
   probe[1] = *(f32 *)((char *)cam + 0x1c);
   pathA[0] = *(f32 *)((char *)cam + 0x18);
   pathA[1] = *(f32 *)((char *)cam + 0x1c);
@@ -501,7 +502,7 @@ int cameraFn_80103b40(short *cam, f32 *outA, f32 *outB, int angle)
     if (g < lbl_803E16B4) {
       g = lbl_803E16B4;
     }
-    if (lbl_803E16B8 < g) {
+    if (g > lbl_803E16B8) {
       g = lbl_803E16B8;
     }
     if (dir == -1) {

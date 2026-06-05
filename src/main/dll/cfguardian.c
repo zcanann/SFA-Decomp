@@ -1027,7 +1027,7 @@ void doorlock_update(int obj)
     } else {
       if (*(int *)(obj + 0xf4) == 0) {
         if ((*(s8 *)(def + 0x20) != -1) && (*(s16 *)(def + 0x24) != 0)) {
-          (*(code *)(*gObjectTriggerInterface + 0x54))(obj);
+          (*(code *)(*gObjectTriggerInterface + 0x54))(obj, *(s16 *)(def + 0x24));
           flags = 1;
           b = *(u8 *)(def + 0x1b);
           if ((b & 0x20) != 0) {
@@ -1045,7 +1045,7 @@ void doorlock_update(int obj)
       }
       *(u8 *)(obj + 0xaf) |= 8;
     }
-    if (((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0) && (*(int *)(obj + 0x74) != 0)) {
+    if (((*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 1) != 0) && (*(void **)(obj + 0x74) != NULL)) {
       objRenderFn_80041018((int *)obj);
     }
   }

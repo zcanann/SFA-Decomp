@@ -892,6 +892,91 @@ Heuristic:
     sense differs from the import's, suspect inverted logic (drift section)
     before a codegen cap. fn_80151DB8 98.16→100.
 
+64. **`int` local + `(u32)` cast in the test for a direct saved-reg `lbz` +
+    `cmplwi`.** A `u8 vr = p->byteField; if (vr != 0)` local that lives across
+    calls routes through a volatile (`lbz r4; mr r24,r4`); typing it `int vr =
+    p->byteField;` makes MWCC load DIRECTLY into the saved reg — but flips the
+    compare to signed `cmpwi`. Write the test `if ((u32)vr != 0)` to get
+    `cmplwi` back while keeping the direct load. Extends recipe #58 (type
+    controls compare width) with the load-homing direction. Remaining
+    saved-reg permutations can be PER-BLOCK asymmetric — one block wanted an
+    `int hi;` declared before the byte local, the sibling block wanted it
+    after; A/B each block independently. Took Sfx_ReadTriggerParams
+    99.53→100.
+
+65. **Allocator SKIPS a low volatile around a call → that reg is a HIDDEN
+    live ARGUMENT — find the missing param.** When target's scratch/iface-
+    chain registers jump over rN (e.g. chain in r5/r6/r8 where yours uses
+    r4/r5/r3), rN is being kept live INTO the upcoming call — the call takes
+    one more argument than your C passes. Recovers recipe #9's corollary by
+    reading the ALLOCATION GAP instead of the call-site span. Four wins in
+    one session: dll_19_func0C (vcall takes p7; extsh CSEs into r5),
+    mmsh_scales_init (trigger-iface slot-7 takes (state, def) — def parked
+    in r4 from entry, zero extra instrs), dimlogfire_render (inner
+    objRenderFn takes the full 6-arg p2-p5 pass-through, recipe #9 verbatim),
+    findRomCurvePointNearObject (slot-7 vcall takes the previous vcall's
+    return — recipe #50's nested-call form: `vcall7(found)` keeps r3
+    untouched between the two bctrls). The tell is ALWAYS "why didn't MWCC
+    use the obvious next reg?" — answer: because target's source had it
+    occupied.
+
+66. **Volatile-pair number swap on two chained loads → give the SECOND
+    value an explicit block-local, declared AFTER the first.** When target
+    assigns ptrA→r3/valB→r4 but yours emits ptrA→r4/valB→r3 (same loads,
+    numbers swapped), introduce a local for the value that's read MULTIPLE
+    times inline (`s16 texId = *(s16 *)(state + 0x4a);` /
+    `f32 *q = (f32 *)lbl_xxx;`) and use it at every site. The explicit local
+    (declared after its partner) re-orders MWCC's vreg creation and lands
+    both numbers. Works where pure decl-reorder of EXISTING locals does
+    nothing. shadowInit 99.58→100 (texId local, declared LAST — declaring it
+    FIRST regressed), CameraModeCloudRunner_init 99.60→100 (q local for the
+    global pointer). Sibling of #16, for the volatile-pair case.
+
+### 99.5%+ tier sweep findings (task #142) — category triage table
+
+Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
+(12 fns → 100%, ~10 capped after exhaustive source-form A/B):
+
+- **TRACTABLE — spurious narrow-store extension (`extsh`/`clrlwi` before
+  `sth`/`stb`).** Simple same-lvalue compound (`x = x ± K`) → write `--`/`+=`
+  (recipe #20; modelDoAltRenderInstrs → 100%). Explicit `(s32)` cast around a
+  float→s16 conversion store → DROP the cast (fn_80039DF8 → 100%). BUT when
+  the subtrahend is a converted float (`h - (int)timeDelta`) or the value
+  pairs with a separate compare local, the extension survives every form
+  (7 tried) — cap (DFP_Torch_update, shopitem_update).
+- **TRACTABLE — stack-address re-derive vs CSE reuse.** Target re-derives
+  `addi r0,r1,K` where current reuses a live reg: write the address as a
+  formally different expression — `(GfxCmd *)((u8 *)&buf + 0x60)` — to kill
+  the CSE (dll_A0/dll_9F_func03 → 100%, +4 sibling partials lifted). Same
+  family as recipe #62.
+- **TRACTABLE — loop-init `li` order** → recipe #43 comma-init
+  (staff_release → 100%). But a compiler-HOISTED invariant constant ordered
+  before/after the counter init does NOT respond (Sfx_StopAllObjectSounds —
+  cap).
+- **TRACTABLE — audio/musyx: A/B the upstream MP4 musyx source verbatim
+  FIRST** (inpSetMidiCtrl14 → 100% from MP4 snd_midictrl.c form: else-if
+  chain, no `& 0xff`, repeated subexpressions, no locals).
+- **CAP — FP volatile reg-number permutation** within a statement window
+  (fcmpo operand pairs, lfs/stfs bursts, fdivs/fmuls chains, fctiwz). Decl
+  order, temp locals, statement order, compare-direction flips all invariant
+  (wctemple_update 8 forms, LanternFireFly_func0B 4 forms, arwbombcoll
+  delta-order 6 forms). Signature: N same-opcode instr pairs with only FP reg
+  numbers swapped. ~10 fns in the tier (dll_127_init, Curve_SampleSegmentPoints,
+  exploded_seedDebrisMotion, scarab fn_8015EA48, drawTexture, pi_dolphin
+  fn_8004E0FC, magiccavetop fmr) — skip on sight.
+- **CAP — `addi r0,rH,lo; mr rX,r0` vs direct `addi rX,rH,lo` global-address
+  materialization** (foodbag dll_82_func03, mapSetupPlayer,
+  camcontrol_loadTriggeredCamAction). Initializer-decl form, statement
+  position, array-decay all invariant — yet other fns (player fn_8029DB70)
+  get the direct form from identical-looking C; discriminator unknown.
+- **CAP — web-split reload coloring** (reloaded pointer gets a fresh saved
+  reg where target reuses the original — MoonSeedPlantingSpot_setScale;
+  decl-perms and second-local splits all regress) and **reverse-order saved
+  pairs** (worldasteroids_init — recipe #16's documented reverse cap).
+- **CAP — materialized-mask `lis;or` for `|= 0x20000`** (warpDarkIceMines)
+  — recipe #2 inverse re-confirmed; const-lift and expanded `x = x | K`
+  still fold to `oris`.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
