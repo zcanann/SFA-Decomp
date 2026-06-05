@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
-#include "main/dll/groundAnimator.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/groundAnimator.h"
 
 #define SFXen_bridge_stops 82
 

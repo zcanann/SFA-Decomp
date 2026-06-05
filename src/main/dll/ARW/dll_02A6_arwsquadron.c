@@ -1,7 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx_ids.h"
 
 #define SFXbaddie_mika_death 670
-#define SFXbaddie_invin_hit 691
 #define SFXbaddie_eba_smallswipe1 693
 
 #pragma peephole on

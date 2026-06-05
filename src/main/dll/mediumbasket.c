@@ -1,9 +1,8 @@
 #include "ghidra_import.h"
-#include "main/dll/mediumbasket.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/mediumbasket.h"
 
 #define SFXsc_fox_commdown 0xcf
-#define SFXfox_treadwater322 0x239
 #define SFXkr_jump2 0x26c
 #define SFXkr_panting1 0x26e
 #define SFXkr_panting2 0x26f

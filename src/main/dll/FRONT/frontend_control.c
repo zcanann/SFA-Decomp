@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
-#include "main/dll/FRONT/frontend_control.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/FRONT/frontend_control.h"
 
 
 extern u32 getButtonsHeld(int port);

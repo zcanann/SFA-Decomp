@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/backpack.h"
 #include "main/objanim.h"
-#include "main/audio/sfx_ids.h"
 
 
 extern void tumbleweed_updateStateMachine(int obj);

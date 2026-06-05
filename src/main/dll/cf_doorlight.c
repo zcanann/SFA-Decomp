@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
-#include "main/dll/cf_doorlight.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/cf_doorlight.h"
 
-#define SFXsc_attack01 631
 
 extern undefined4 FUN_800033a8();
 extern u32 randomGetRange(int min, int max);

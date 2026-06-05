@@ -1,9 +1,7 @@
 #include "ghidra_import.h"
-#include "main/dll/scarab.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/scarab.h"
 
-#define SFXmv_ropecreak22 0x95
-#define SFXfox_treadwater322 0x239
 #define SFXfoot_ice_run_4 0x1ec
 #define SFXfoxcom_find 0x263
 #define SFXfoxcom_flame 0x264

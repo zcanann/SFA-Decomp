@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
-#include "main/dll/projswitch.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/projswitch.h"
 
 
 extern undefined4 FUN_800033a8();

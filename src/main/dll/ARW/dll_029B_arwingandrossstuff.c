@@ -1,6 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXbaddie_invin_hit 691
 
 #pragma peephole on
 #pragma scheduling on

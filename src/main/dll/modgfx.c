@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/expgfx_internal.h"
 #include "main/dll/modgfx.h"
 #include "main/object_descriptor.h"
@@ -41,7 +42,6 @@ typedef struct ModgfxState {
 #define PROJGFX_SPAWN_FLAG_USE_ATTACHED_SOURCE 0x200000
 #define SFXsc_mumble01 641
 #define SFXsc_mumble02 642
-#define SFXsc_snort02 645
 
 typedef struct ModgfxActiveEffect {
   int instanceHandle;

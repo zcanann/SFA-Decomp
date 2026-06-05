@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
 #include "main/audio/sfx_ids.h"
 
-#define SFXmn_sml_trex_roar 127
 
 #pragma peephole off
 #pragma scheduling off

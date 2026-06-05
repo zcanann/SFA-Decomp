@@ -1,9 +1,8 @@
 #include "ghidra_import.h"
-#include "main/dll/shrine1CE.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/shrine1CE.h"
 
 
-#define SFXsc_gemrun1022 175
 
 #pragma peephole off
 #pragma scheduling off

@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/DR/DRpushcart.h"
-#include "main/audio/sfx_ids.h"
 
 
 extern undefined4 FUN_80006824();

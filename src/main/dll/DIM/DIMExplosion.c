@@ -1,7 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIMExplosion.h"
 
-#define SFXfoot_run_jingle2 507
 #define SFXthorntail_chew1 518
 #define SFXthorntail_chew2 519
 

@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/newSeqObj.h"
 #include "main/objanim.h"
 
-#define SFXdn_boar5_c 23
 
 #pragma peephole off
 #pragma scheduling off

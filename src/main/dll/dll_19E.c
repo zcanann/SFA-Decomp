@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/dll_19E.h"
 
-#define SFXsc_gemrun1022 175
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b0c();

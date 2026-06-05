@@ -1,12 +1,9 @@
 #include "ghidra_import.h"
-#include "main/dll/smallbasket.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/smallbasket.h"
 
 #define SFXfox_swimstroke322 0x23d
 #define SFXfox_swimstroke422 0x23e
-#define SFXfox_outofwater122 0x23f
-#define SFXwatery_bubble2 0x244
-#define SFXfox_fightbreath4 0x24e
 
 extern undefined4 FUN_800067e8();
 extern undefined4 FUN_80006810();

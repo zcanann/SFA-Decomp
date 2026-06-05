@@ -3,9 +3,9 @@
  *   python3 tools/function_objdump.py --diff main/main/dll/baddie/skeetla <symbol>
  */
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/baddie/skeetla.h"
 
-#define SFXfox_outofwater122 575
 
 extern f32 lbl_803E23DC;
 extern f32 lbl_803E23E0;

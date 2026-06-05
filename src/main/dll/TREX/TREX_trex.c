@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/TREX/TREX_trex.h"
-#include "main/audio/sfx_ids.h"
 
 #define SFXen_nlite1_c 0x34
 #define SFXen_ripefruit11 0x35

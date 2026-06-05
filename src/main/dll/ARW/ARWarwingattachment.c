@@ -6,7 +6,6 @@
 #include "main/objanim.h"
 
 #define SFXmn_crusty9c 0x7d
-#define SFXmn_sml_trex_roar 0x7f
 
 #pragma peephole off
 #pragma scheduling off

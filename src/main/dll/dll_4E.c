@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_4E.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/dll_4E.h"
 
 #define OPTIONS_MENU_ACTION_CLOSE 0
 #define OPTIONS_MENU_ACTION_SELECT 1

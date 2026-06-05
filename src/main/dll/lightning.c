@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/lightning.h"
 
 #define SFXen_statue_wave 0x56
 #define SFXen_waterblock_wave 0x57
 #define SFXmn_craterspit11 0x66
-#define SFXmn_dimbos26 0x68
 #define SFXwp_iceywindlp16 0x16b
 
 #pragma peephole off

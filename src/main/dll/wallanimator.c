@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/wallanimator.h"
 #include "main/objanim.h"
 
-#define SFXsc_attack03 633
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_80006b14();

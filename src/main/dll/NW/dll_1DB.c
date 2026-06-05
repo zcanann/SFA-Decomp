@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
-#include "main/dll/NW/dll_1DB.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/NW/dll_1DB.h"
 
 
 extern f32 lbl_803E52A8;

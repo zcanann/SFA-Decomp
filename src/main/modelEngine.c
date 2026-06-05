@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/engine_shared.h"
 
 #define SFXsc_clubhit01 652
-#define SFXsc_clubhit02 653
 
 #pragma scheduling off
 #pragma peephole off

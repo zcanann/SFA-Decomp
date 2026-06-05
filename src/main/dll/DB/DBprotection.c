@@ -1,9 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DB/DBprotection.h"
 
 #define SFXwp_cahit2_c 0x143
-#define SFXwp_crthit6 0x144
-#define SFXwp_crtsmsh6 0x145
 #define SFXwp_dsmk2_c 0x146
 
 #define DBPROTECTION_GAMEBIT_CYCLE_A_PENDING 0xa3c

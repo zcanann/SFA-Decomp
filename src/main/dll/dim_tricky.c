@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
-#include "main/dll/dim_tricky.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/dim_tricky.h"
 
 
 extern void *Resource_Acquire(int id, int mode);

@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/fireflyLantern.h"
 
-#define SFXfox_fightbreath1 0x24b
-#define SFXfox_fightbreath2 0x24c
 
 extern int Sfx_PlayFromObject(int obj, int sfxId);
 extern int Curve_AdvanceAlongPath(int curve, f32 t);

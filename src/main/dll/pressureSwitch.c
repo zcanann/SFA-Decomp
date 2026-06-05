@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/pressureSwitch.h"
 #include "main/mapEvent.h"
-#include "main/audio/sfx_ids.h"
 
 #define SFXstaff_proj_outofmagic 0x236
 #define SFXfox_treadwater122 0x237

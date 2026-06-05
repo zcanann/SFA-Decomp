@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/SC/SCcollectables.h"
 
-#define SFXbaddie_haga_death 700
 #define SFXnewtricky_01o 756
 
 extern undefined4 FUN_80006820();

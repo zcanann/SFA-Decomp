@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/campfire.h"
 #include "main/objanim.h"
-#include "main/audio/sfx_ids.h"
 
 #define SFXfox_runbreath3 0x255
 #define SFXkr_pullup1 0x270

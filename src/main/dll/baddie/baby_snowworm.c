@@ -27,10 +27,9 @@
  */
 
 #include "ghidra_import.h"
-#include "main/dll/baddie/baby_snowworm.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/baddie/baby_snowworm.h"
 
-#define SFXsp_snrin2_c 255
 
 extern undefined4 FUN_800067c0();
 extern undefined8 FUN_80006824();

@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/FRONT/n_filemenu.h"
 #include "main/dll/FRONT/dll_39.h"
 
-#define SFXsp_snrin2_c 255
 
 extern void Sfx_PlayFromObject(uint obj, ushort sfxId);
 extern void buttonDisable(int controller, uint buttons);

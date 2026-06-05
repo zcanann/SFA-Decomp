@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/dim_partfx.h"
 
 
-#define SFXsc_snort02 645
 
 #pragma peephole off
 #pragma scheduling off

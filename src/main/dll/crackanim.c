@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
-#include "main/dll/crackanim.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/crackanim.h"
 
 
 extern undefined8 FUN_80006824();

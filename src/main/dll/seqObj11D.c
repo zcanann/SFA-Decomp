@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/seqObj11D.h"
 
-#define SFXdn_boar5_c 23
-#define SFXen_cavedirt22 35
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_8001766c();

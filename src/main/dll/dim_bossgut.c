@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/dim_bossgut.h"
 
-#define SFXmv_curtainrustle 163
 
 extern undefined4 FUN_80006824();
 extern undefined4 FUN_800068c4();

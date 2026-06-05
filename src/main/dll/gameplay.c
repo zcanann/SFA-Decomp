@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/gameplay.h"
 #include "main/mapEventTypes.h"
-#include "main/audio/sfx_ids.h"
 
 
 typedef struct { u32 mode; f32 x, y, z; void *tex; s16 flags; u8 layer; } GfxCmd;

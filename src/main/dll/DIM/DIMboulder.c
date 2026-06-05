@@ -1,9 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMboulder.h"
 
-#define SFXmv_blockscrape_lp 165
-#define SFXwp_sexpl2_c 341
 #define SFXwp_simp1_c 342
 
 extern undefined4 getLActions();

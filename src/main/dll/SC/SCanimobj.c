@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/SC/SCanimobj.h"
 #include "main/dll/SC/SClantern.h"
 
-#define SFXbaddie_haga_death 700
 
 extern undefined8 FUN_80006824();
 extern int ObjHits_GetPriorityHitWithPosition();

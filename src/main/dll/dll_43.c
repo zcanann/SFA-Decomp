@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
-#include "main/dll/dll_43.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/dll_43.h"
 
 
 extern void Sfx_PlayFromObject(int obj, int sfxId);

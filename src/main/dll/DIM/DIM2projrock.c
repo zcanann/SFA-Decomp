@@ -1,13 +1,11 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2projrock.h"
 
 #define SFXmv_cflap2_c 0xa4
-#define SFXmv_blockscrape_lp 0xa5
 #define SFXmv_missingcog_lp 0xa6
 #define SFXsp_lfoot_taunt3 0x113
-#define SFXwp_sexpl2_c 0x155
 #define SFXchar_on_firelp 0x1f8
-#define SFXchar_puts_out_fire 0x1f9
 
 extern undefined8 FUN_80006724();
 extern undefined8 FUN_80006728();

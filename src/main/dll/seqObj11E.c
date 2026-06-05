@@ -1,12 +1,11 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/seqObj11E.h"
 
-#define SFXen_cavedirt22 35
 #define SFXsp_literun114 0xe7
 #define SFXsp_literun115 232
 #define SFXsp_literun116 0xe9
 #define SFXar_laser216 0x18d
-#define SFXfox_cough1 584
 #define SFXspirit_voice2 0x31b
 
 extern bool FUN_800067f8();

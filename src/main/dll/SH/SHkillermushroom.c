@@ -1,9 +1,8 @@
 #include "ghidra_import.h"
-#include "main/dll/SH/SHkillermushroom.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/SH/SHkillermushroom.h"
 
 #define SFXmv_sliftloop11 161
-#define SFXmv_curtainrustle 163
 
 #pragma peephole off
 #pragma scheduling off

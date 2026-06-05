@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
-#include "main/dll/genprops.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/genprops.h"
 
 #define SFXen_weetinklp22 0x4a
 #define SFXsc_scabshort32 0xba

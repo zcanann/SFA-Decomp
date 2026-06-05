@@ -1,4 +1,5 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/audio/sfx_ids.h"
 
 extern f32 lbl_803E608C;
 extern f32 lbl_803E6094;
@@ -12,7 +13,6 @@ extern void Sfx_StopObjectChannel(int obj, int channel);
 #define VFPMINIFIRE_BURST_EFFECT 0x38e
 #define VFPMINIFIRE_EFFECT_FLAGS 0x80001
 #define VFPMINIFIRE_BURST_COUNT 10
-#define SFXqu_longsob2 0x103
 
 typedef struct VfpMinifireState {
     f32 baseY;

@@ -1,10 +1,8 @@
 #include "ghidra_import.h"
-#include "main/dll/fall_ladders.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/fall_ladders.h"
 
 #define SFXfox_healthgasp2 0x25d
-#define SFXfox_healthgasp3 0x25e
-#define SFXfox_healthgasp4 0x25f
 #define SFXstaff_proj_putaway 565
 
 extern undefined4 FUN_80006820();

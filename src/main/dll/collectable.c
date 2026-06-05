@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "dolphin/mtx.h"
 #include "main/dll/collectable.h"
 #include "main/objanim.h"
-#include "main/audio/sfx_ids.h"
 
 
 #pragma peephole off

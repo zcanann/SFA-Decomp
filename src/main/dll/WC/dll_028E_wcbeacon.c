@@ -1,8 +1,7 @@
 #include "main/dll/dll_80220608_shared.h"
-#include "main/mapEventTypes.h"
 #include "main/audio/sfx_ids.h"
+#include "main/mapEventTypes.h"
 
-#define SFXmv_mushdizzylp12 159
 
 #pragma peephole on
 #pragma scheduling off

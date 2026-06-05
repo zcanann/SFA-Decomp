@@ -1,4 +1,5 @@
 #include "main/dll/DR/dr_shared.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 
 #define SFXmv_bodyf4_c 0x86
@@ -14,7 +15,6 @@
 #define SFXmv_ladderslide16 0x91
 #define SFXmv_persquk1 0x92
 #define SFXmv_roothack16 0x94
-#define SFXmv_ropecreak22 0x95
 #define SFXbaddie_haga_talk1 0x2b9
 
 int ktrex_stateHandlerA00(void) { return 0x0; }

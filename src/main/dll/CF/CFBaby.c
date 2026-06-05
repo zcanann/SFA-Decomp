@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/CF/CFBaby.h"
-#include "main/audio/sfx_ids.h"
 
 #define SFXen_rfall5_c 72
 

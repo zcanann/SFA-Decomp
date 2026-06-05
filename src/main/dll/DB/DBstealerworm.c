@@ -5,8 +5,6 @@
 #define SFXen_sbalhis6 0x37
 #define SFXen_scrap1_c 0x38
 #define SFXen_diallp_c 0x3f
-#define SFXwp_crthit6 0x144
-#define SFXwp_crtsmsh6 0x145
 #define SFXbaddie_eggsnatch_carry3 0x2c7
 #define SFXbaddie_eggsnatch_carry4 0x2c8
 #define SFXfend_rob_armin 0x312

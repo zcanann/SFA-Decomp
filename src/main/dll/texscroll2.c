@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
-#include "main/dll/texscroll2.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/texscroll2.h"
 
-#define SFXsc_attack01 0x277
 
 extern undefined4 FUN_80006824();
 extern undefined4 GameBit_Set(int eventId, int value);

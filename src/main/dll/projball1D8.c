@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/flybaddie1D7.h"
 #include "main/dll/projball1D8.h"
 
-#define SFXsc_clubhit02 653
 
 extern undefined4 Music_Trigger();
 extern undefined4 FUN_80006824();
