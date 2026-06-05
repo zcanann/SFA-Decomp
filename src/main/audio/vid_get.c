@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80279018.h"
+#include "main/audio/vid_get.h"
 
 extern undefined4 FUN_80271a90();
 

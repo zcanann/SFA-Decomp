@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80278F74_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80278F74_H_
-
-#include "ghidra_import.h"
-
-void vidInit(void);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80278F74_H_ */

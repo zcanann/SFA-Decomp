@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/synth_job.h"
-#include "main/unknown/autos/placeholder_80272F0C.h"
+#include "main/audio/synth_job_init.h"
 
 extern u8 lbl_803BD150[];
 extern SynthJob synthJobTable[];

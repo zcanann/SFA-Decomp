@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80278F74.h"
+#include "main/audio/vid_init.h"
 
 typedef struct VoiceNode {
     struct VoiceNode *next;

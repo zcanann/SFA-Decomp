@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
-#include "main/unknown/autos/placeholder_802757BC.h"
+#include "main/audio/mcmd_loop.h"
 
 extern u32 sndRand(void);
 extern u32 hwIsActive(u8 voiceId);
