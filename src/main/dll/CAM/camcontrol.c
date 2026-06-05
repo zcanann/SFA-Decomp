@@ -3,6 +3,7 @@
 #include "dolphin/os.h"
 #include "main/dll/CAM/camcontrol.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 #include "string.h"
 
 extern void Sfx_PlayFromObject(int obj,int sfxId);
@@ -68,8 +69,41 @@ typedef struct CamcontrolBaddieControlInterface {
   f32 (*getTargetReticleDistance)(int obj);
 } CamcontrolBaddieControlInterface;
 
+typedef struct CamcontrolTargetSetup {
+  u8 pad00[0x04];
+  u8 targetKind;
+} CamcontrolTargetSetup;
+
+typedef struct CamcontrolTargetObject {
+  u8 pad00[0x46];
+  s16 objType;
+  u8 pad48[0x78 - 0x48];
+  CamcontrolTargetSetup *targetSetup;
+  u8 pad7C[0xAF - 0x7C];
+  u8 targetFlags;
+  u8 padB0[0xE4 - 0xB0];
+  u8 targetSetupIndex;
+} CamcontrolTargetObject;
+
+#define CAMCONTROL_TARGET_KIND_MASK 0x0F
+#define CAMCONTROL_TARGET_FLAG_RETICLE_TOUCHING 0x04
+#define CAMCONTROL_TARGET_FLAG_ACCEPTS_INPUT 0x10
+#define CAMCONTROL_TARGET_FLAG_INPUT_PRESSED 0x01
+#define CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT 0x20
+
+STATIC_ASSERT(sizeof(CamcontrolTargetSetup) == 0x05);
+STATIC_ASSERT(offsetof(CamcontrolTargetSetup, targetKind) == 0x04);
+STATIC_ASSERT(offsetof(CamcontrolTargetObject, objType) == 0x46);
+STATIC_ASSERT(offsetof(CamcontrolTargetObject, targetSetup) == 0x78);
+STATIC_ASSERT(offsetof(CamcontrolTargetObject, targetFlags) == 0xAF);
+STATIC_ASSERT(offsetof(CamcontrolTargetObject, targetSetupIndex) == 0xE4);
+
 static inline CamcontrolBaddieControlInterface *camcontrol_GetBaddieControlInterface(void) {
   return (CamcontrolBaddieControlInterface *)*gBaddieControlInterface;
+}
+
+static inline uint camcontrol_GetTargetKind(CamcontrolTargetObject *target) {
+  return target->targetSetup[target->targetSetupIndex].targetKind & CAMCONTROL_TARGET_KIND_MASK;
 }
 
 /*
@@ -89,187 +123,184 @@ static inline CamcontrolBaddieControlInterface *camcontrol_GetBaddieControlInter
 #pragma peephole off
 void camcontrol_updateTargetFeedback(void)
 {
-  byte cVar2;
-  short sVar3;
+  uint targetKind;
+  s16 objType;
   float fVar4;
-  int iVar11;
-  short *psVar6;
+  CamcontrolTargetObject *target;
+  ObjAnimComponent *reticle;
   u8 buttonPressed;
-  byte bVar7;
-  u8 *targetSetup;
-  int iVar8;
-  uint uVar9;
-  uint uVar10;
+  int result;
+  uint buttons;
+  uint buttonMask;
   f32 targetDistance;
   
-  iVar11 = CAMCONTROL_CAMERA->currentTarget;
-  psVar6 = gCamcontrolTargetReticle;
+  target = (CamcontrolTargetObject *)CAMCONTROL_CAMERA->currentTarget;
+  reticle = (ObjAnimComponent *)gCamcontrolTargetReticle;
   buttonPressed = false;
-  if (psVar6 == (short *)0x0) {
+  if (reticle == NULL) {
     return;
   }
-  iVar8 = gameTextFn_80134be8();
-  if (iVar8 != 0) {
+  result = gameTextFn_80134be8();
+  if (result != 0) {
     return;
   }
-  if ((gCamcontrolTargetChanged != '\0') && (gCamcontrolTargetChanged = '\0', iVar11 != 0)) {
-    cVar2 = CAMCONTROL_CAMERA->targetKind;
-    if (cVar2 == 1) {
+  if ((gCamcontrolTargetChanged != '\0') && (gCamcontrolTargetChanged = '\0', target != NULL)) {
+    targetKind = CAMCONTROL_CAMERA->targetKind;
+    if (targetKind == 1) {
       Sfx_PlayFromObject(0,0x3ff);
-      objShowButtonGlow(psVar6,lbl_803E162C,2);
+      objShowButtonGlow(reticle,lbl_803E162C,2);
     }
-    else if ((cVar2 == 4) || (cVar2 == 9)) {
+    else if ((targetKind == 4) || (targetKind == 9)) {
       Sfx_PlayFromObject(0,0x402);
-      objShowButtonGlow(psVar6,lbl_803E162C,3);
+      objShowButtonGlow(reticle,lbl_803E162C,3);
     }
-    else if (cVar2 != 8) {
+    else if (targetKind != 8) {
       Sfx_PlayFromObject(0,SFXsc_spotfox01);
-      objShowButtonGlow(psVar6,lbl_803E162C,1);
+      objShowButtonGlow(reticle,lbl_803E162C,1);
     }
   }
-  if (iVar11 != 0) {
-    *(byte *)(iVar11 + 0xaf) = *(byte *)(iVar11 + 0xaf) | 4;
-    uVar9 = getButtonsJustPressed(0);
-    uVar10 = 0x100;
-    targetSetup = (u8 *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5);
-    bVar7 = targetSetup[4] & 0xf;
-    if ((bVar7 == 4) || (bVar7 == 9)) {
-      uVar10 = 0x900;
+  if (target != NULL) {
+    target->targetFlags = target->targetFlags | CAMCONTROL_TARGET_FLAG_RETICLE_TOUCHING;
+    buttons = getButtonsJustPressed(0);
+    buttonMask = 0x100;
+    targetKind = camcontrol_GetTargetKind(target);
+    if ((targetKind == 4) || (targetKind == 9)) {
+      buttonMask = 0x900;
     }
-    if ((uVar9 & uVar10) != 0) {
+    if ((buttons & buttonMask) != 0) {
       buttonPressed = true;
     }
-    if ((*(byte *)(iVar11 + 0xaf) & 0x10) == 0) {
+    if ((target->targetFlags & CAMCONTROL_TARGET_FLAG_ACCEPTS_INPUT) == 0) {
       if (buttonPressed) {
-        *(byte *)(iVar11 + 0xaf) = *(byte *)(iVar11 + 0xaf) | 1;
+        target->targetFlags = target->targetFlags | CAMCONTROL_TARGET_FLAG_INPUT_PRESSED;
       }
     }
-    else if ((buttonPressed) && (iVar8 = isTalkingToNpc(), iVar8 == 0)) {
+    else if ((buttonPressed) && (result = isTalkingToNpc(), result == 0)) {
       Sfx_PlayFromObject(0,SFXsc_snort04);
     }
   }
   if (gCamcontrolTargetState == '\0') {
-    if (*(float *)(psVar6 + 0x4c) <= lbl_803E1630) {
-      if (iVar11 == 0) {
+    if (reticle->currentMoveProgress <= lbl_803E1630) {
+      if (target == NULL) {
         CAMCONTROL_CAMERA->targetReticleFocus = 0;
       }
       else {
-        CAMCONTROL_CAMERA->targetReticleFocus = iVar11;
-        targetSetup = (u8 *)(*(int *)(iVar11 + 0x78) + (uint)*(byte *)(iVar11 + 0xe4) * 5);
-        CAMCONTROL_CAMERA->targetKind =
-             targetSetup[4] & 0xf;
+        CAMCONTROL_CAMERA->targetReticleFocus = (int)target;
+        CAMCONTROL_CAMERA->targetKind = camcontrol_GetTargetKind(target);
         gCamcontrolTargetState = '\x03';
         gCamcontrolTargetChanged = '\x01';
       }
     }
     else {
-      ObjAnim_AdvanceCurrentMove(lbl_803E1670,timeDelta,(int)psVar6,
+      ObjAnim_AdvanceCurrentMove(lbl_803E1670,timeDelta,(int)reticle,
                                  (ObjAnimEventList *)0x0);
     }
   }
-  else if ((CAMCONTROL_CAMERA->targetReticleFocus == iVar11) ||
-          (*(float *)(psVar6 + 0x4c) < lbl_803E162C)) {
-    ObjAnim_AdvanceCurrentMove(lbl_803E1674,timeDelta,(int)psVar6,
+  else if (((uint)CAMCONTROL_CAMERA->targetReticleFocus == (uint)target) ||
+          (reticle->currentMoveProgress < lbl_803E162C)) {
+    ObjAnim_AdvanceCurrentMove(lbl_803E1674,timeDelta,(int)reticle,
                                (ObjAnimEventList *)0x0);
   }
   else {
     gCamcontrolTargetState = '\0';
-    if (iVar11 == 0) {
-      cVar2 = CAMCONTROL_CAMERA->targetKind;
-      if (cVar2 == 1) {
+    if (target == NULL) {
+      targetKind = CAMCONTROL_CAMERA->targetKind;
+      if (targetKind == 1) {
         Sfx_PlayFromObject(0,0x400);
       }
-      else if ((cVar2 == 4) || (cVar2 == 9)) {
+      else if ((targetKind == 4) || (targetKind == 9)) {
         Sfx_PlayFromObject(0,0x401);
       }
-      else if (cVar2 != 8) {
+      else if (targetKind != 8) {
         Sfx_PlayFromObject(0,SFXsc_spotfox02);
       }
     }
     else {
-      ObjAnim_SetMoveProgress(lbl_803E1630,(ObjAnimComponent *)psVar6);
+      ObjAnim_SetMoveProgress(lbl_803E1630,reticle);
     }
   }
-  iVar11 = Obj_IsObjectAlive(CAMCONTROL_CAMERA->targetReticleFocus);
-  if (iVar11 == 0) {
+  result = Obj_IsObjectAlive(CAMCONTROL_CAMERA->targetReticleFocus);
+  if (result == 0) {
     CAMCONTROL_CAMERA->targetReticleFocus = 0;
   }
-  if ((gCamcontrolTargetState != '\x03') || (CAMCONTROL_CAMERA->targetReticleFocus == 0))
+  if ((gCamcontrolTargetState != '\x03') || ((uint)CAMCONTROL_CAMERA->targetReticleFocus == 0))
   goto LAB_80102ab4;
-  if ((*(byte *)(CAMCONTROL_CAMERA->targetReticleFocus + 0xaf) & 0x10) == 0) {
-    CAMCONTROL_CAMERA->targetFlags = CAMCONTROL_CAMERA->targetFlags & 0xdf;
+  target = (CamcontrolTargetObject *)CAMCONTROL_CAMERA->targetReticleFocus;
+  if ((target->targetFlags & CAMCONTROL_TARGET_FLAG_ACCEPTS_INPUT) != 0) {
+    CAMCONTROL_CAMERA->targetFlags =
+        CAMCONTROL_CAMERA->targetFlags | CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT;
   }
   else {
-    CAMCONTROL_CAMERA->targetFlags = CAMCONTROL_CAMERA->targetFlags | 0x20;
+    CAMCONTROL_CAMERA->targetFlags =
+        CAMCONTROL_CAMERA->targetFlags & ~CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT;
   }
-  iVar11 = CAMCONTROL_CAMERA->targetReticleFocus;
-  sVar3 = *(short *)(iVar11 + 0x46);
-  if (sVar3 == 0x49f) {
+  objType = target->objType;
+  if (objType == 0x49f) {
 LAB_80102994:
-    targetDistance = fn_80183204(iVar11);
+    targetDistance = fn_80183204((int)target);
   }
   else {
-    if (sVar3 < 0x49f) {
-      if (sVar3 != 0x281) {
-        if (sVar3 < 0x281) {
-          if (sVar3 != 0x13a) {
-            if (sVar3 < 0x13a) {
-              if (sVar3 == 0x31) {
+    if (objType < 0x49f) {
+      if (objType != 0x281) {
+        if (objType < 0x281) {
+          if (objType != 0x13a) {
+            if (objType < 0x13a) {
+              if (objType == 0x31) {
                 targetDistance = lbl_803E162C;
                 goto LAB_801029e0;
               }
-              if (sVar3 < 0x31) {
-                if (sVar3 != 0x11) goto LAB_801029ac;
+              if (objType < 0x31) {
+                if (objType != 0x11) goto LAB_801029ac;
               }
-              else if (sVar3 != 0xd8) goto LAB_801029ac;
+              else if (objType != 0xd8) goto LAB_801029ac;
             }
-            else if ((sVar3 != 0x25d) && ((0x25c < sVar3 || (sVar3 != 0x251)))) goto LAB_801029ac;
+            else if ((objType != 0x25d) && ((0x25c < objType || (objType != 0x251)))) goto LAB_801029ac;
           }
         }
-        else if (sVar3 != 0x3fe) {
-          if (sVar3 < 0x3fe) {
-            if (sVar3 == 0x3de) goto LAB_80102994;
-            if ((0x3dd < sVar3) || (sVar3 != 0x369)) goto LAB_801029ac;
+        else if (objType != 0x3fe) {
+          if (objType < 0x3fe) {
+            if (objType == 0x3de) goto LAB_80102994;
+            if ((0x3dd < objType) || (objType != 0x369)) goto LAB_801029ac;
           }
-          else if (sVar3 < 0x457) {
-            if (sVar3 != 0x427) goto LAB_801029ac;
+          else if (objType < 0x457) {
+            if (objType != 0x427) goto LAB_801029ac;
           }
-          else if (0x458 < sVar3) goto LAB_801029ac;
+          else if (0x458 < objType) goto LAB_801029ac;
         }
       }
     }
-    else if (sVar3 != 0x613) {
-      if (sVar3 < 0x613) {
-        if (sVar3 != 0x58b) {
-          if (sVar3 < 0x58b) {
-            if ((sVar3 != 0x4d7) && ((0x4d6 < sVar3 || (sVar3 != 0x4ac)))) {
+    else if (objType != 0x613) {
+      if (objType < 0x613) {
+        if (objType != 0x58b) {
+          if (objType < 0x58b) {
+            if ((objType != 0x4d7) && ((0x4d6 < objType || (objType != 0x4ac)))) {
 LAB_801029ac:
-              iVar8 = dll_19_func1B(iVar11);
-              if (iVar8 == 0) {
+              result = dll_19_func1B((int)target);
+              if (result == 0) {
                 targetDistance = lbl_803E162C;
               }
               else {
                 targetDistance =
-                    camcontrol_GetBaddieControlInterface()->getTargetReticleDistance(iVar11);
+                    camcontrol_GetBaddieControlInterface()->getTargetReticleDistance((int)target);
               }
               goto LAB_801029e0;
             }
           }
-          else if ((sVar3 != 0x5e1) && (((0x5e0 < sVar3 || (0x5b9 < sVar3)) || (sVar3 < 0x5b7))))
+          else if ((objType != 0x5e1) && (((0x5e0 < objType || (0x5b9 < objType)) || (objType < 0x5b7))))
           goto LAB_801029ac;
         }
       }
-      else if (sVar3 != 0x842) {
-        if (sVar3 < 0x842) {
-          if (sVar3 < 0x6a2) {
-            if (sVar3 != 0x642) goto LAB_801029ac;
+      else if (objType != 0x842) {
+        if (objType < 0x842) {
+          if (objType < 0x6a2) {
+            if (objType != 0x642) goto LAB_801029ac;
           }
-          else if (0x6a5 < sVar3) goto LAB_801029ac;
+          else if (0x6a5 < objType) goto LAB_801029ac;
         }
-        else if ((sVar3 != 0x851) && ((0x850 < sVar3 || (sVar3 != 0x84b)))) goto LAB_801029ac;
+        else if ((objType != 0x851) && ((0x850 < objType || (objType != 0x84b)))) goto LAB_801029ac;
       }
     }
-    targetDistance = fn_8014C5D0(iVar11);
+    targetDistance = fn_8014C5D0((int)target);
   }
 LAB_801029e0:
   if ((lbl_803E1630 < targetDistance) ||
@@ -280,32 +311,32 @@ LAB_801029e0:
          (CAMCONTROL_CAMERA->targetDistance <= lbl_803E1638)) {
         if ((targetDistance <= lbl_803E163C) &&
            (lbl_803E163C < CAMCONTROL_CAMERA->targetDistance)) {
-          objShowButtonGlow(psVar6,lbl_803E162C,4);
+          objShowButtonGlow(reticle,lbl_803E162C,4);
         }
       }
       else {
-        objShowButtonGlow(psVar6,lbl_803E162C,4);
+        objShowButtonGlow(reticle,lbl_803E162C,4);
       }
     }
     else {
-      objShowButtonGlow(psVar6,lbl_803E162C,4);
+      objShowButtonGlow(reticle,lbl_803E162C,4);
     }
   }
   else {
-    objShowButtonGlow(psVar6,lbl_803E162C,4);
+    objShowButtonGlow(reticle,lbl_803E162C,4);
   }
   CAMCONTROL_CAMERA->targetDistance = targetDistance;
 LAB_80102ab4:
-  fVar4 = lbl_803E1678 * *(float *)(psVar6 + 0x4c);
+  fVar4 = lbl_803E1678 * reticle->currentMoveProgress;
   if (fVar4 < lbl_803E1630) {
     fVar4 = lbl_803E1630;
   }
   else if (lbl_803E1678 < fVar4) {
     fVar4 = lbl_803E1678;
   }
-  *(u8 *)(psVar6 + 0x1b) = (int)fVar4;
+  *(u8 *)((u8 *)reticle + 0x36) = (int)fVar4;
   lbl_803DD4C8 = 0x400;
-  *psVar6 = (short)(int)(lbl_803E167C * timeDelta + (float)*psVar6);
+  *(s16 *)reticle = (short)(int)(lbl_803E167C * timeDelta + (float)*(s16 *)reticle);
   return;
 }
 #pragma peephole reset
