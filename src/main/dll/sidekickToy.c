@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/objanim.h"
 #include "main/dll/sidekickToy.h"
 
 extern undefined4 ABS();
@@ -125,9 +126,6 @@ extern void fn_8003B0D0(short *obj, int b, void *c, int d);
 extern void trickyFn_80148d8c(short *obj, int state);
 extern void Tricky_resumeAfterCommand(short *obj, int state);
 extern void Tricky_applyFloorResponse(short *obj, int state);
-extern int ObjAnim_SetCurrentMove(short *obj, int moveId, f32 progress, int flags);
-extern int ObjAnim_AdvanceCurrentMove(short *obj, f32 scale, f32 dt, void *events);
-extern int ObjAnim_SampleRootCurvePhase(short *obj, f32 dist, f32 *out);
 extern void setMatrixFromObjectPos(f32 *mtx, void *rec);
 extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
 extern f32 sqrtf(f32);
@@ -361,7 +359,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
       int moveId = *(u8 *)(state + 0x322);
       *(f32 *)(state + 0x308) = lbl_803E256C / (lbl_803E2570 * *(f32 *)(state + 0x31c));
       *(u8 *)(state + 0x323) = 1;
-      ObjAnim_SetCurrentMove(obj, moveId, lbl_803E2574, 0x10);
+      ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E2574, 0x10);
       if (*(void **)(obj + 0x2a) != 0) {
         *(u8 *)(*(int *)(obj + 0x2a) + 0x70) = 0;
       }
@@ -369,7 +367,7 @@ void objAnimFn_8014a9f0(short *obj, int state)
     if ((*(uint *)(state + 0x2dc) & 0x40000000) != 0) {
       *(f32 *)(state + 0x308) = lbl_803E2578;
       *(u8 *)(state + 0x323) = 0;
-      ObjAnim_SetCurrentMove(obj, 0, lbl_803E2574, 0);
+      ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E2574, 0);
       if (*(void **)(obj + 0x2a) != 0) {
         *(u8 *)(*(int *)(obj + 0x2a) + 0x70) = 0;
       }
@@ -451,7 +449,8 @@ void objAnimFn_8014a9f0(short *obj, int state)
     *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) & 0x7fffffff;
   }
   res.eventCount = 0;
-  if (ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(state + 0x308), timeDelta, &res) != 0) {
+  if (ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 0x308), timeDelta, (int)obj,
+                                 (ObjAnimEventList *)&res) != 0) {
     *(uint *)(state + 0x2dc) = *(uint *)(state + 0x2dc) | 0x40000000;
   }
   else {
@@ -540,9 +539,10 @@ void objAnimFn_8014a9f0(short *obj, int state)
     }
   }
   else if (mode == 2) {
-    if (ObjAnim_SampleRootCurvePhase(obj,
-            sqrtf(*(f32 *)(obj + 0x12) * *(f32 *)(obj + 0x12) + *(f32 *)(obj + 0x16) * *(f32 *)(obj + 0x16)),
-            &phase) != 0) {
+    if (ObjAnim_SampleRootCurvePhase(
+            sqrtf(*(f32 *)(obj + 0x12) * *(f32 *)(obj + 0x12) +
+                  *(f32 *)(obj + 0x16) * *(f32 *)(obj + 0x16)),
+            (ObjAnimComponent *)obj, &phase) != 0) {
       *(f32 *)(state + 0x308) = phase;
     }
   }
@@ -2075,7 +2075,6 @@ null_state:
 #pragma peephole off
 void fn_8014D08C(int obj, int p2, f32 mult, int a, int b, u8 c)
 {
-  extern void ObjAnim_SetCurrentMove(int, int, f32, int);
   extern f32 lbl_803E256C;
   extern f32 lbl_803E2570;
   extern f32 lbl_803E2574;
