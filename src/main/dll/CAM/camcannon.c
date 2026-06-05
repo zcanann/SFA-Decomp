@@ -36,100 +36,86 @@ extern f32 lbl_803E18B8;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-uint fn_8010AEA8(short *param_1,uint param_2)
+uint fn_8010AEA8(s16 *st, uint flagsIn)
 {
-  float fVar1;
-  double dVar2;
-  double dVar3;
-  undefined8 local_28;
-  
-  *(float *)(lbl_803DD560 + 0x14) = *(float *)(param_1 + 6);
-  *(float *)(lbl_803DD560 + 0x1c) = *(float *)(param_1 + 8);
-  *(float *)(lbl_803DD560 + 0x24) = *(float *)(param_1 + 10);
-  dVar2 = lbl_803E18A0;
-  *(float *)(lbl_803DD560 + 0x2c) =
-       (float)((double)CONCAT44(0x43300000,(int)*param_1 ^ 0x80000000) - lbl_803E18A0);
-  *(float *)(lbl_803DD560 + 0x34) =
-       (float)((double)CONCAT44(0x43300000,(int)param_1[1] ^ 0x80000000) - dVar2);
-  local_28 = (double)CONCAT44(0x43300000,(int)param_1[2] ^ 0x80000000);
-  *(float *)(lbl_803DD560 + 0x3c) = (float)(local_28 - dVar2);
-  *(float *)(lbl_803DD560 + 0x44) = *(float *)(param_1 + 0x5a);
-  dVar2 = (double)lbl_803E1888;
-  if (dVar2 != (double)*(float *)(lbl_803DD560 + 0x60)) {
-    dVar2 = (double)(float)((double)*(float *)(lbl_803DD560 + 0x5c) /
-                           (double)*(float *)(lbl_803DD560 + 0x60));
+  u8 flags;
+  f32 d;
+  f32 t;
+  f32 q;
+
+  *(f32 *)(lbl_803DD560 + 0x14) = *(f32 *)(st + 6);
+  *(f32 *)(lbl_803DD560 + 0x1c) = *(f32 *)(st + 8);
+  *(f32 *)(lbl_803DD560 + 0x24) = *(f32 *)(st + 10);
+  *(f32 *)(lbl_803DD560 + 0x2c) = (f32)st[0];
+  *(f32 *)(lbl_803DD560 + 0x34) = (f32)st[1];
+  *(f32 *)(lbl_803DD560 + 0x3c) = (f32)st[2];
+  *(f32 *)(lbl_803DD560 + 0x44) = *(f32 *)(st + 0x5a);
+
+  if (lbl_803E1888 != *(f32 *)(lbl_803DD560 + 0x60)) {
+    t = *(f32 *)(lbl_803DD560 + 0x5c) / *(f32 *)(lbl_803DD560 + 0x60);
+  } else {
+    t = lbl_803E1888;
   }
-  if ((double)lbl_803E188C < dVar2) {
-    dVar2 = (double)lbl_803E188C;
+  if (t > lbl_803E188C) {
+    t = lbl_803E188C;
   }
-  dVar2 = Curve_EvalHermite(dVar2,(float *)(lbl_803DD560 + 0x48),(float *)0x0);
-  if (dVar2 < (double)lbl_803E18AC) {
-    dVar2 = (double)lbl_803E18AC;
+  t = Curve_EvalHermite(t, (f32 *)(lbl_803DD560 + 0x48), (f32 *)0x0);
+  if (t < lbl_803E18AC) {
+    t = lbl_803E18AC;
   }
-  *(float *)(lbl_803DD560 + 0x5c) =
-       (float)(dVar2 * (double)timeDelta + (double)*(float *)(lbl_803DD560 + 0x5c));
-  dVar2 = (double)lbl_803E1888;
-  if (dVar2 != (double)*(float *)(lbl_803DD560 + 0x60)) {
-    dVar2 = (double)(float)((double)*(float *)(lbl_803DD560 + 0x5c) /
-                           (double)*(float *)(lbl_803DD560 + 0x60));
+  *(f32 *)(lbl_803DD560 + 0x5c) = t * timeDelta + *(f32 *)(lbl_803DD560 + 0x5c);
+
+  q = lbl_803E1888;
+  if (q != *(f32 *)(lbl_803DD560 + 0x60)) {
+    q = *(f32 *)(lbl_803DD560 + 0x5c) / *(f32 *)(lbl_803DD560 + 0x60);
   }
-  if ((double)lbl_803E188C < dVar2) {
-    dVar2 = (double)lbl_803E188C;
+  if (q > lbl_803E188C) {
+    q = lbl_803E188C;
   }
-  dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x10),(float *)0x0);
-  *(float *)(param_1 + 6) = (float)dVar3;
-  dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x18),(float *)0x0);
-  *(float *)(param_1 + 8) = (float)dVar3;
-  dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x20),(float *)0x0);
-  *(float *)(param_1 + 10) = (float)dVar3;
-  dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x40),(float *)0x0);
-  *(float *)(param_1 + 0x5a) = (float)dVar3;
-  fVar1 = *(float *)(lbl_803DD560 + 0x28) - *(float *)(lbl_803DD560 + 0x2c);
-  if ((lbl_803E1890 < fVar1) || (fVar1 < lbl_803E1894)) {
-    if (lbl_803E1888 <= *(float *)(lbl_803DD560 + 0x28)) {
-      if (*(float *)(lbl_803DD560 + 0x2c) < lbl_803E1888) {
-        *(float *)(lbl_803DD560 + 0x2c) = *(float *)(lbl_803DD560 + 0x2c) + lbl_803E1898;
-      }
+  *(f32 *)(st + 6) = Curve_EvalLinear(q, (f32 *)(lbl_803DD560 + 0x10), (f32 *)0x0);
+  *(f32 *)(st + 8) = Curve_EvalLinear(q, (f32 *)(lbl_803DD560 + 0x18), (f32 *)0x0);
+  *(f32 *)(st + 10) = Curve_EvalLinear(q, (f32 *)(lbl_803DD560 + 0x20), (f32 *)0x0);
+  *(f32 *)(st + 0x5a) = Curve_EvalLinear(q, (f32 *)(lbl_803DD560 + 0x40), (f32 *)0x0);
+
+  d = *(f32 *)(lbl_803DD560 + 0x28) - *(f32 *)(lbl_803DD560 + 0x2c);
+  if ((d > lbl_803E1890) || (d < lbl_803E1894)) {
+    if (*(f32 *)(lbl_803DD560 + 0x28) < lbl_803E1888) {
+      *(f32 *)(lbl_803DD560 + 0x28) = *(f32 *)(lbl_803DD560 + 0x28) + lbl_803E1898;
     }
-    else {
-      *(float *)(lbl_803DD560 + 0x28) = *(float *)(lbl_803DD560 + 0x28) + lbl_803E1898;
+    else if (*(f32 *)(lbl_803DD560 + 0x2c) < lbl_803E1888) {
+      *(f32 *)(lbl_803DD560 + 0x2c) = *(f32 *)(lbl_803DD560 + 0x2c) + lbl_803E1898;
     }
   }
-  fVar1 = *(float *)(lbl_803DD560 + 0x30) - *(float *)(lbl_803DD560 + 0x34);
-  if ((lbl_803E1890 < fVar1) || (fVar1 < lbl_803E1894)) {
-    if (lbl_803E1888 <= *(float *)(lbl_803DD560 + 0x30)) {
-      if (*(float *)(lbl_803DD560 + 0x34) < lbl_803E1888) {
-        *(float *)(lbl_803DD560 + 0x34) = *(float *)(lbl_803DD560 + 0x34) + lbl_803E1898;
-      }
+  d = *(f32 *)(lbl_803DD560 + 0x30) - *(f32 *)(lbl_803DD560 + 0x34);
+  if ((d > lbl_803E1890) || (d < lbl_803E1894)) {
+    if (*(f32 *)(lbl_803DD560 + 0x30) < lbl_803E1888) {
+      *(f32 *)(lbl_803DD560 + 0x30) = *(f32 *)(lbl_803DD560 + 0x30) + lbl_803E1898;
     }
-    else {
-      *(float *)(lbl_803DD560 + 0x30) = *(float *)(lbl_803DD560 + 0x30) + lbl_803E1898;
+    else if (*(f32 *)(lbl_803DD560 + 0x34) < lbl_803E1888) {
+      *(f32 *)(lbl_803DD560 + 0x34) = *(f32 *)(lbl_803DD560 + 0x34) + lbl_803E1898;
     }
   }
-  fVar1 = *(float *)(lbl_803DD560 + 0x38) - *(float *)(lbl_803DD560 + 0x3c);
-  if ((lbl_803E1890 < fVar1) || (fVar1 < lbl_803E1894)) {
-    if (lbl_803E1888 <= *(float *)(lbl_803DD560 + 0x38)) {
-      if (*(float *)(lbl_803DD560 + 0x3c) < lbl_803E1888) {
-        *(float *)(lbl_803DD560 + 0x3c) = *(float *)(lbl_803DD560 + 0x3c) + lbl_803E1898;
-      }
+  d = *(f32 *)(lbl_803DD560 + 0x38) - *(f32 *)(lbl_803DD560 + 0x3c);
+  if ((d > lbl_803E1890) || (d < lbl_803E1894)) {
+    if (*(f32 *)(lbl_803DD560 + 0x38) < lbl_803E1888) {
+      *(f32 *)(lbl_803DD560 + 0x38) = *(f32 *)(lbl_803DD560 + 0x38) + lbl_803E1898;
     }
-    else {
-      *(float *)(lbl_803DD560 + 0x38) = *(float *)(lbl_803DD560 + 0x38) + lbl_803E1898;
+    else if (*(f32 *)(lbl_803DD560 + 0x3c) < lbl_803E1888) {
+      *(f32 *)(lbl_803DD560 + 0x3c) = *(f32 *)(lbl_803DD560 + 0x3c) + lbl_803E1898;
     }
   }
-  if ((param_2 & 1) == 0) {
-    dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x28),(float *)0x0);
-    *param_1 = (short)(int)dVar3;
+
+  flags = flagsIn;
+  if ((flags & 1) == 0) {
+    st[0] = (s16)(int)Curve_EvalLinear(q, (f32 *)(lbl_803DD560 + 0x28), (f32 *)0x0);
   }
-  if ((param_2 & 2) == 0) {
-    dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x30),(float *)0x0);
-    param_1[1] = (short)(int)dVar3;
+  if ((flags & 2) == 0) {
+    st[1] = (s16)(int)Curve_EvalLinear(q, (f32 *)(lbl_803DD560 + 0x30), (f32 *)0x0);
   }
-  if ((param_2 & 4) == 0) {
-    dVar3 = Curve_EvalLinear(dVar2,(float *)(lbl_803DD560 + 0x38),(float *)0x0);
-    param_1[2] = (short)(int)dVar3;
+  if ((flags & 4) == 0) {
+    st[2] = (s16)(int)Curve_EvalLinear(q, (f32 *)(lbl_803DD560 + 0x38), (f32 *)0x0);
   }
-  return ((uint)(byte)(((double)lbl_803E188C <= dVar2) << 1) << 0x1c) >> 0x1d;
+  return q >= lbl_803E188C;
 }
 
 /*

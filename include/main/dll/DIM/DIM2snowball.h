@@ -8,10 +8,7 @@ extern ObjectDescriptor gDIM_trickyObjDescriptor;
 extern ObjectDescriptor12 gDIM2ConveyorObjDescriptor;
 extern ObjectDescriptor gDIM2SnowBallObjDescriptor;
 
-void dim_levelcontrol_update(void);
-void FUN_801b649c(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
-void FUN_801b64c4(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
-                 undefined8 param_5,undefined8 param_6,undefined8 param_7,undefined8 param_8);
+void dim_levelcontrol_update(int obj);
 void FUN_801b6d24(int param_1);
 void FUN_801b6eb8(int param_1,int param_2,int param_3,int param_4,int param_5,s8 visible);
 void FUN_801b6ee0(undefined2 *param_1,int param_2);
