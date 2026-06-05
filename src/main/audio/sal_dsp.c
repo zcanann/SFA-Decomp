@@ -12,7 +12,7 @@ extern u32 dspCmdList;
 extern u32 salDspCallbackEnabled;
 extern volatile u32 salDspInitIsDone;
 extern u32 salGetStartDelay(void);
-extern void fn_8027C48C(u32 param_1, u32 elapsed);
+extern void salBuildCommandList(s16 *dest, u32 nsDelay);
 extern DSPTaskInfo lbl_803D4880;
 extern u16 lbl_80330840[];
 extern u16 lbl_803DC628[4];
@@ -105,7 +105,7 @@ int salStartDsp(void)
 void salCtrlDsp(u32 param_1)
 {
     u32 elapsed = salGetStartDelay();
-    fn_8027C48C(param_1, elapsed);
+    salBuildCommandList((s16 *)param_1, elapsed);
     {
         u32 saved = dspCmdList;
         salDspCallbackEnabled = 0;

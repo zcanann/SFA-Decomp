@@ -2434,16 +2434,10 @@ main/unknown/autos/placeholder_8027BB90.c:
 	extabindex  start:0x8000629C end:0x800062D8
 	.text       start:0x8027BA04 end:0x8027C48C
 
-main/unknown/autos/placeholder_8027C728.c:
-	.text       start:0x8027C48C end:0x8027C48C
-
-main/unknown/autos/placeholder_8027CAF4.c:
+main/audio/hw_dspctrl.c:
 	extab       start:0x80005A30 end:0x80005A50
 	extabindex  start:0x800062D8 end:0x80006308
 	.text       start:0x8027C48C end:0x8027F2AC
-
-main/unknown/autos/placeholder_8027F724.c:
-	.text       start:0x8027F2AC end:0x8027F2AC
 
 main/audio/snd3d_room.c:
 	extab       start:0x80005A50 end:0x80005A68
