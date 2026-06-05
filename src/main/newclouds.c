@@ -1247,13 +1247,13 @@ extern f32 lbl_803DD1E8;
 extern f32 lbl_803DD1E4;
 extern f32 lbl_803DD1E0;
 
-void fn_8009436C(void) {
+void cloudClearOverridePosition(void) {
     lbl_803DD1EC = 0;
 }
 
 #pragma push
 #pragma scheduling off
-void fn_80094378(f32 a, f32 b, f32 c) {
+void cloudSetOverridePosition(f32 a, f32 b, f32 c) {
     lbl_803DD1EC = 1;
     lbl_803DD1E8 = a;
     lbl_803DD1E4 = b;
@@ -1613,7 +1613,7 @@ extern f32 lbl_803DF2B4;
 
 #pragma push
 #pragma scheduling off
-void *skyTextureFn_80094390(f32 *out1, f32 *out2) {
+void *cloudGetLayerTextureSize(f32 *out1, f32 *out2) {
     int *tex;
     int *layer;
 

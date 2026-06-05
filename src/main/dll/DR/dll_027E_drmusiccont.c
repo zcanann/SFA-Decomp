@@ -16,7 +16,7 @@ int drmusiccont_getObjectTypeId(void) { return 0; }
 
 #pragma peephole on
 #pragma scheduling on
-void drmusiccont_free(int obj) { fn_8009436C(obj); }
+void drmusiccont_free(int obj) { cloudClearOverridePosition(obj); }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -85,7 +85,7 @@ void drmusiccont_update(int obj)
     u32 c;
     u32 d;
 
-    fn_80094378(obj, lbl_803E6BCC, lbl_803E6BD0, lbl_803E6BD4);
+    cloudSetOverridePosition(obj, lbl_803E6BCC, lbl_803E6BD0, lbl_803E6BD4);
     if (*(int *)(obj + 0xf4) == 0) {
         if ((u32)GameBit_Get(0xe7b) == 0) {
             getEnvfxActImmediately(obj, obj, 0x210, 0);

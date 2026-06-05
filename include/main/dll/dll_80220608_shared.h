@@ -16,7 +16,7 @@ extern void mm_free(void *ptr);
 extern int GameBit_Get(int id);
 extern void Obj_FreeObject(int obj);
 extern f32 lbl_803E6BC8;
-extern void fn_8009436C(int obj);
+extern void cloudClearOverridePosition(int obj);
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
 extern void ObjGroup_RemoveObject(int obj, int group);
 extern void ObjGroup_AddObject(int obj, int group);
@@ -1517,7 +1517,7 @@ typedef struct DrMusicContFlags {
 } DrMusicContFlags;
 
 
-extern void fn_80094378(int obj, f32 a, f32 b, f32 c);
+extern void cloudSetOverridePosition(int obj, f32 a, f32 b, f32 c);
 extern void getEnvfxActImmediately(int a, int b, int c, int d);
 extern void skyFn_80088e54(int a, f32 b);
 extern void SCGameBitLatch_Update(int state, int a, int b, int c, int d, int e);

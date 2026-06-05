@@ -3335,7 +3335,7 @@ extern void GXSetNumChans(int n);
 extern void setupToRenderMapBlock(int *block, void *posMtx);
 
 
-extern u32 skyTextureFn_80094390(f32 *a, f32 *b);
+extern u32 cloudGetLayerTextureSize(f32 *a, f32 *b);
 extern u32 lbl_803DCE34;
 extern f32 shdwChangeMode_803DEC10;
 extern f32 lbl_803DEBCC;
@@ -3422,7 +3422,7 @@ void sceneDraw(void)
     s8 buf[616];
 
     q = (char *)lbl_8037E0C0;
-    lbl_803DCE34 = skyTextureFn_80094390(&skyA, &skyB);
+    lbl_803DCE34 = cloudGetLayerTextureSize(&skyA, &skyB);
     if (lbl_803DCE34 != 0) {
         *(f32 *)(q + 0x3f48) = shdwChangeMode_803DEC10;
         *(f32 *)(q + 0x3f4c) = lbl_803DEBCC;
