@@ -1,11 +1,10 @@
 #include "ghidra_import.h"
+#include "main/objanim.h"
 
 extern u32 GameBit_Get(int id);
 extern void GameBit_Set(int id, int value);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u32 randomGetRange(int min, int max);
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
-extern void ObjAnim_AdvanceCurrentMove(int obj, void *stk, f32 a, f32 b);
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
 extern int ObjHits_GetPriorityHitWithPosition(int obj, int *type, int *a, int *b, f32 *x, f32 *y, f32 *z);
 extern int ObjHits_PollPriorityHitEffectWithCooldown(int obj, int a, int b, int c, int d, int e, int *state);
@@ -106,7 +105,8 @@ void sc_musictree_update(int obj)
     f32 vec[3];
     s16 dist;
 
-    ObjAnim_AdvanceCurrentMove(obj, &stk, *(f32 *)(inner + 0x34), timeDelta);
+    ObjAnim_AdvanceCurrentMove(*(f32 *)(inner + 0x34), timeDelta, obj,
+                               (ObjAnimEventList *)&stk);
     if (*(u8 *)(inner + 0x4c) == 0) {
         return;
     }
@@ -241,7 +241,8 @@ void sc_musictree_init(int obj, SCMusicTreeSetup *setup)
     rnd = randomGetRange(1, 99);
     ratio = (f32)(s32)rnd / lbl_803E55BC;
     ObjAnim_SetCurrentMove(obj, 0, ratio, 0);
-    ObjAnim_AdvanceCurrentMove(obj, &stk, lbl_803E558C, lbl_803E558C);
+    ObjAnim_AdvanceCurrentMove(lbl_803E558C, lbl_803E558C, obj,
+                               (ObjAnimEventList *)&stk);
     ObjHitbox_SetCapsuleBounds(obj, (s16)(s32)(lbl_803E55C0 * state->scale), -5, 0xff);
     if (state->flags & 0x80) {
         state->flags = state->flags | 0x20;
@@ -358,7 +359,7 @@ void sc_totempole_update(int obj)
             state->animSpeed = lbl_803E55DC;
         }
     }
-    ObjAnim_AdvanceCurrentMove(obj, &stk, state->animSpeed, timeDelta);
+    ObjAnim_AdvanceCurrentMove(state->animSpeed, timeDelta, obj, (ObjAnimEventList *)&stk);
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int *)&lbl_803DDC08);
 }
 #pragma scheduling reset
