@@ -684,7 +684,7 @@ void dll_A0_func03(u8 *param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)&tab[0x1fc]; buf.hw[3] = *(s16 *)&tab[0x1fe];
   buf.hw[4] = *(s16 *)&tab[0x200]; buf.hw[5] = *(s16 *)&tab[0x202];
   buf.hw[6] = *(s16 *)&tab[0x204];
-  buf.cmds = buf.entries;
+  buf.cmds = (GfxCmd *)((u8 *)&buf + 0x60);
   fl = 0xc010480;
   buf.flags = fl;
   fl |= param_4;
