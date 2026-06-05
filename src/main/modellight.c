@@ -80,7 +80,6 @@ extern int FUN_80006ca4();
 extern undefined4 ObjHits_TickPriorityHitCooldowns();
 extern undefined4 ObjHits_Update();
 extern undefined8 FUN_800356f0();
-extern uint ObjHitbox_AllocRotatedBounds();
 extern uint ObjHitReact_InitState();
 extern uint ObjHits_AllocObjectState();
 extern undefined8 ObjHitReact_UpdateResetObjects();

@@ -4,6 +4,7 @@
 #include "ghidra_import.h"
 
 void FUN_80017434(int param_1);
+uint ObjHitbox_AllocRotatedBounds();
 void FUN_80017438(undefined8 param_1,double param_2,double param_3,undefined4 param_4,
                  undefined4 param_5,int param_6);
 void FUN_8001743c(int param_1);
