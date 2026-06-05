@@ -5,7 +5,7 @@ extern u16 sndRand(void);
 extern void sndConvertTicks(u32 *p, McmdVoiceState *state);
 extern void sndConvertMs(u32 *p);
 extern void TimeQueueAdd(McmdVoiceState *state);
-extern void fn_80278A98(McmdVoiceState *state, int mode);
+extern void macMakeInactive(McmdVoiceState *state, int mode);
 extern u32 hwIsActive(int slot);
 extern u64 macRealTimeHi; /* u64 macRealTime: lo word = macRealTimeLo */
 
@@ -87,7 +87,7 @@ int mcmdWait(McmdVoiceState *svoice, McmdCommandArgs *cstep)
             if (MAC_WAIT(svoice) != (u64)-1) {
                 TimeQueueAdd(svoice);
             }
-            fn_80278A98(svoice, 1);
+            macMakeInactive(svoice, 1);
             return 1;
         }
     }
