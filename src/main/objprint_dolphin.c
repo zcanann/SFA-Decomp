@@ -5356,7 +5356,7 @@ void objRenderFn_8003d980(u8 *obj, int *p2) {
 
 extern s32 lbl_803DCC5C;
 extern int lbl_803DCC64;
-extern void fn_8001D7F8(int p1, int *a, int *b);
+extern void modelLightStruct_getProjectionTevModes(int p1, int *a, int *b);
 
 typedef struct { u8 r, g, b, a; } ObjGXColor;
 extern void fn_8001E8F4(int);
@@ -5538,7 +5538,7 @@ void modelRenderFn_setVtxDescr(u8 *hdr, u8 *m, u32 *p3, MtxBitStream *bs, u8 p5,
                     if (lbl_803DCC5C != 0) {
                         int a;
                         int b;
-                        fn_8001D7F8(lbl_803DCC64, &a, &b);
+                        modelLightStruct_getProjectionTevModes(lbl_803DCC64, &a, &b);
                         if (a == 0) {
                             use = 1;
                         } else {
@@ -6518,7 +6518,7 @@ extern void fn_80050FF4(int p1);
 extern void fn_8004D230(void);
 extern void fn_8005011C(f32 *m);
 extern void fn_8004D6D8(void);
-extern u32 fn_8001D984(int light);
+extern u32 modelLightStruct_getProjectionTexture(int light);
 extern void fn_80050558(u32 t, int p2, int p3, int p4, int p5);
 extern void fn_80050A28(int t);
 extern void fn_80050F2C(void);
@@ -6627,13 +6627,13 @@ u32 objRenderFn_8003edf4(u8 *obj, u8 *p2, int *am, MtxBitStream *bs) {
             lp = &lbl_803DCC64;
             sp = &lbl_803DCC60;
             for (; i < lbl_803DCC5C; i++) {
-                u32 t = fn_8001D984(*lp);
+                u32 t = modelLightStruct_getProjectionTexture(*lp);
                 if (t != 0) {
-                    fn_8001D7F8(*lp, &a, &b);
+                    modelLightStruct_getProjectionTevModes(*lp, &a, &b);
                     if (a == 2) {
                         shad = 1;
                     }
-                    fn_80050558(t, fn_8001D818(*lp), a, b, *sp);
+                    fn_80050558(t, modelLightStruct_getProjectionTexMtx(*lp), a, b, *sp);
                 }
                 lp++;
                 sp++;

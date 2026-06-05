@@ -391,12 +391,12 @@ extern f32 lbl_803E7260;
 extern void textureFree(void *tex);
 extern void *textureLoadAsset(int id);
 extern void fn_8001DB24(void *light, int v);
-extern void fn_8001D98C(void *light, void *tex);
-extern void fn_8001D8F0(void *light, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
-extern void fn_8001D878(void *light, f32 a, f32 b);
-extern void fn_8001D80C(void *light, int a, int b);
-extern void fn_8001D84C(void *light, f32 v);
-extern void fn_8001D820(void *light, f32 v);
+extern void modelLightStruct_setProjectionTexture(void *light, void *tex);
+extern void modelLightStruct_setupOrthoProjection(void *light, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
+extern void modelLightStruct_setupPerspectiveProjection(void *light, f32 a, f32 b);
+extern void modelLightStruct_setProjectionTevModes(void *light, int a, int b);
+extern void modelLightStruct_setProjectionNearZ(void *light, f32 v);
+extern void modelLightStruct_setProjectionFarZ(void *light, f32 v);
 
 
 

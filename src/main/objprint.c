@@ -5033,9 +5033,9 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     extern void GXSetCullMode(int mode);
     extern void GXSetFog(int type, f32 a, f32 b, f32 c, f32 d, ObjPrintGXColor color);
     extern void GXSetBlendMode(int a, int b, int c, int d);
-    extern void fn_8001D7F8(int p, int *a, int *b);
-    extern f32 *fn_8001D818(int p);
-    extern void *fn_8001D984(int p);
+    extern void modelLightStruct_getProjectionTevModes(int p, int *a, int *b);
+    extern f32 *modelLightStruct_getProjectionTexMtx(int p);
+    extern void *modelLightStruct_getProjectionTexture(int p);
     extern void _gxSetFogParams(void);
     extern IndTexMtx23 lbl_802C1B10;
     extern IndTexMtx23 lbl_802C1B28;
@@ -5148,7 +5148,7 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     GXSetTevAlphaOp(1, 0, 0, 0, 0, 0);
     fancy = 0;
     if (lbl_803DCC5C != 0) {
-        fn_8001D7F8(lbl_803DCC64, &t170, &stk364);
+        modelLightStruct_getProjectionTevModes(lbl_803DCC64, &t170, &stk364);
         fancy = 1;
         if (t170 != 0) {
             fancy = 0;
@@ -5156,15 +5156,15 @@ int shaderFuzzFn_8003cc1c(int obj, int *p2, int p3)
     }
     if (fancy) {
         GXSetTevDirect(2);
-        GXLoadTexMtxImm(fn_8001D818(lbl_803DCC64), 0x49, 0);
+        GXLoadTexMtxImm(modelLightStruct_getProjectionTexMtx(lbl_803DCC64), 0x49, 0);
         GXSetTexCoordGen2(1, 0, 0, 0, 0, 0x49);
         if (lbl_803DCC60 == 0 || lbl_803DCC60 == 2) {
             GXSetTevOrder(2, 1, 5, 4);
         } else {
             GXSetTevOrder(2, 1, 5, 5);
         }
-        selectTexture(fn_8001D984(lbl_803DCC64), 5);
-        fn_8001D7F8(lbl_803DCC64, &stk348, &t160);
+        selectTexture(modelLightStruct_getProjectionTexture(lbl_803DCC64), 5);
+        modelLightStruct_getProjectionTevModes(lbl_803DCC64, &stk348, &t160);
         if (t160 == 2) {
             GXSetTevColorIn(2, 0xf, 4, 8, 0xf);
         } else if (t160 == 3) {

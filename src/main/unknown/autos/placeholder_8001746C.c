@@ -8230,16 +8230,16 @@ void modelLightStruct_setGlowProjectionRadius(ModelLightStruct *light, f32 radiu
     light->glowProjectionRadius = radius;
 }
 
-void *fn_8001D818(u8 *p) {
-    return p + 0x230;
+f32 *modelLightStruct_getProjectionTexMtx(ModelLightStruct *p) {
+    return p->projectionTexMtx;
 }
 
-void *fn_8001D984(u8 *p) {
-    return *(void **)(p + 0x16c);
+void *modelLightStruct_getProjectionTexture(ModelLightStruct *p) {
+    return p->projectionTexture;
 }
 
-void fn_8001D98C(u8 *p, void *v) {
-    *(void **)(p + 0x16c) = v;
+void modelLightStruct_setProjectionTexture(ModelLightStruct *p, void *v) {
+    p->projectionTexture = v;
 }
 
 void *fn_8001DB1C(ModelLightStruct *p) {
@@ -8584,9 +8584,9 @@ void *objAllocLight(void *owner) {
 #pragma pop
 #pragma dont_inline reset
 
-void fn_8001D80C(u8 *p, void *a, void *b) {
-    *(void **)(p + 0x270) = a;
-    *(void **)(p + 0x274) = b;
+void modelLightStruct_setProjectionTevModes(ModelLightStruct *p, void *a, void *b) {
+    p->projectionTevColorMode = (int)a;
+    p->projectionTevAlphaMode = (int)b;
 }
 
 f32 gameTextFn_80019c00(void) {
@@ -8634,9 +8634,9 @@ void modelLightStruct_setGlowColor(ModelLightStruct *light, u8 red, u8 green, u8
     light->glowColor[3] = alpha;
 }
 
-void fn_8001D7F8(u8 *p, void **a, void **b) {
-    *a = *(void **)(p + 0x270);
-    *b = *(void **)(p + 0x274);
+void modelLightStruct_getProjectionTevModes(ModelLightStruct *p, void **a, void **b) {
+    *a = (void *)p->projectionTevColorMode;
+    *b = (void *)p->projectionTevAlphaMode;
 }
 
 void fn_8001D9E0(u8 *p, u8 a, u8 b, u8 c, u8 d) {
@@ -8996,26 +8996,26 @@ void modelLightStruct_setEnabled(ModelLightStruct *light, u8 enabled, f32 durati
     light->activeIntensity = lbl_803DE760;
 }
 
-void fn_8001D820(u8 *p, f32 v) {
-    f32 clamped = *(f32 *)(p + 0x160);
+void modelLightStruct_setProjectionFarZ(ModelLightStruct *p, f32 v) {
+    f32 clamped = p->projectionNearZ;
     if (v >= clamped) {
         clamped = lbl_803DE764;
         if (v <= clamped) {
             clamped = v;
         }
     }
-    *(f32 *)(p + 0x164) = clamped;
+    p->projectionFarZ = clamped;
 }
 
-void fn_8001D84C(u8 *p, f32 v) {
+void modelLightStruct_setProjectionNearZ(ModelLightStruct *p, f32 v) {
     f32 clamped = lbl_803DE78C;
     if (v >= clamped) {
-        clamped = *(f32 *)(p + 0x164);
+        clamped = p->projectionFarZ;
         if (v <= clamped) {
             clamped = v;
         }
     }
-    *(f32 *)(p + 0x160) = clamped;
+    p->projectionNearZ = clamped;
 }
 
 int Obj_IsLoadingLocked(void) {
@@ -10146,8 +10146,8 @@ void updateLights(void) {
 
             if (*(int *)(light + 0x50) == 8) {
                 Obj_BuildInverseWorldTransformMatrix(*(u8 **)light, (f32 *)(light + 0x170));
-                PSMTXConcat((f32 *)(light + 0x170), Camera_GetInverseViewMatrix(), concatMtx);
-                PSMTXConcat((f32 *)(light + 0x1b0), concatMtx, (f32 *)(light + 0x230));
+        PSMTXConcat((f32 *)(light + 0x170), Camera_GetInverseViewMatrix(), concatMtx);
+        PSMTXConcat((f32 *)(light + 0x1b0), concatMtx, (f32 *)(light + 0x230));
             }
         }
     }
@@ -12229,35 +12229,35 @@ extern u8 *lbl_80340880[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void fn_8001D878(u8 *obj, f32 a, f32 b) {
-    *(f32 *)(obj + 0x148) = a;
-    *(f32 *)(obj + 0x14c) = b;
-    *(int *)(obj + 0x168) = 1;
-    C_MTXLightPerspective((f32 *)(obj + 0x1b0), *(f32 *)(obj + 0x148), *(f32 *)(obj + 0x14c),
+void modelLightStruct_setupPerspectiveProjection(ModelLightStruct *obj, f32 a, f32 b) {
+    obj->projectionFovY = a;
+    obj->projectionAspect = b;
+    obj->projectionType = 1;
+    C_MTXLightPerspective(obj->lightProjectionTexMtx, obj->projectionFovY, obj->projectionAspect,
                           lbl_803DE790, lbl_803DE790, lbl_803DE790, lbl_803DE790);
-    C_MTXLightPerspective((f32 *)(obj + 0x1f0), *(f32 *)(obj + 0x148), *(f32 *)(obj + 0x14c),
+    C_MTXLightPerspective(obj->lightProjectionClipMtx, obj->projectionFovY, obj->projectionAspect,
                           lbl_803DE790, lbl_803DE790, lbl_803DE790, lbl_803DE790);
 }
 
 extern void C_MTXLightOrtho(f32 *m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
                             f32 transS, f32 transT);
 
-void fn_8001D8F0(u8 *obj, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f) {
+void modelLightStruct_setupOrthoProjection(ModelLightStruct *obj, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f) {
     f32 fScale;
     f32 eScale;
 
-    *(f32 *)(obj + 0x150) = a;
-    *(f32 *)(obj + 0x154) = b;
-    *(f32 *)(obj + 0x158) = c;
-    *(f32 *)(obj + 0x15c) = d;
-    *(int *)(obj + 0x168) = 0;
+    obj->projectionTop = a;
+    obj->projectionBottom = b;
+    obj->projectionLeft = c;
+    obj->projectionRight = d;
+    obj->projectionType = 0;
     fScale = f * lbl_803DE790;
     eScale = e * lbl_803DE790;
-    C_MTXLightOrtho((f32 *)(obj + 0x1b0), *(f32 *)(obj + 0x150), *(f32 *)(obj + 0x154),
-                    *(f32 *)(obj + 0x158), *(f32 *)(obj + 0x15c), fScale, eScale, fScale,
+    C_MTXLightOrtho(obj->lightProjectionTexMtx, obj->projectionTop, obj->projectionBottom,
+                    obj->projectionLeft, obj->projectionRight, fScale, eScale, fScale,
                     eScale);
-    C_MTXLightOrtho((f32 *)(obj + 0x1f0), *(f32 *)(obj + 0x150), *(f32 *)(obj + 0x154),
-                    *(f32 *)(obj + 0x158), *(f32 *)(obj + 0x15c), lbl_803DE790, lbl_803DE790,
+    C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom,
+                    obj->projectionLeft, obj->projectionRight, lbl_803DE790, lbl_803DE790,
                     lbl_803DE790, lbl_803DE790);
 }
 

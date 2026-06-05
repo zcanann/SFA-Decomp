@@ -89,7 +89,7 @@ void projectedlight_init(int obj, int setup)
             } else {
                 *(void **)(state + 4) = textureLoadAsset(0x5dc);
             }
-            fn_8001D98C(*(void **)state, *(void **)(state + 4));
+            modelLightStruct_setProjectionTexture(*(void **)state, *(void **)(state + 4));
         }
 
         if (*(u8 *)(setup + 0x26) == 0) {
@@ -111,7 +111,7 @@ void projectedlight_init(int obj, int setup)
                 lo = lbl_803E7260;
                 hi = lo;
             }
-            fn_8001D8F0(*(void **)state, b, -b, -a, a, lo, hi);
+            modelLightStruct_setupOrthoProjection(*(void **)state, b, -b, -a, a, lo, hi);
         } else {
             f32 c = (f32)(u32)*(u16 *)(setup + 0x28) / lbl_803E7274;
             f32 d;
@@ -122,12 +122,12 @@ void projectedlight_init(int obj, int setup)
             if (d < lbl_803E7260) {
                 d = lbl_803E7260;
             }
-            fn_8001D878(*(void **)state, (f32)(u32)*(u8 *)(setup + 0x27), c / d);
+            modelLightStruct_setupPerspectiveProjection(*(void **)state, (f32)(u32)*(u8 *)(setup + 0x27), c / d);
         }
 
-        fn_8001D80C(*(void **)state, *(u8 *)(setup + 0x36), *(u8 *)(setup + 0x3e));
-        fn_8001D84C(*(void **)state, (f32)(u32)*(u8 *)(setup + 0x3b));
-        fn_8001D820(*(void **)state, (f32)(u32)*(u16 *)(setup + 0x3c));
+        modelLightStruct_setProjectionTevModes(*(void **)state, *(u8 *)(setup + 0x36), *(u8 *)(setup + 0x3e));
+        modelLightStruct_setProjectionNearZ(*(void **)state, (f32)(u32)*(u8 *)(setup + 0x3b));
+        modelLightStruct_setProjectionFarZ(*(void **)state, (f32)(u32)*(u16 *)(setup + 0x3c));
         modelLightStruct_startColorFade(*(void **)state, *(u8 *)(setup + 0x33), *(s16 *)(setup + 0x1e));
         modelLightStruct_setDiffuseTargetColor(*(void **)state, *(u8 *)(setup + 0x30), *(u8 *)(setup + 0x31),
             *(u8 *)(setup + 0x32), *(u8 *)(setup + 0x38));
