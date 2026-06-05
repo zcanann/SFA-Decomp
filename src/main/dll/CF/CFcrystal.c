@@ -16,7 +16,7 @@ extern uint GameBit_Get(int eventId);
 extern undefined4 FUN_8001771c();
 extern undefined4 FUN_80017748();
 extern u32 randomGetRange(int min, int max);
-extern int FUN_80017a98();
+extern int Obj_GetPlayerObject(void);
 extern undefined4 FUN_80017ac8();
 extern undefined8 ObjGroup_RemoveObject();
 extern void ObjGroup_AddObject(int obj, int group);
@@ -94,6 +94,9 @@ void LanternFireFly_hitDetect(void) {}
 #define LANTERN_SPAWN_FX_VEC(obj, id, a, b, c, d, vx, vy, vz) \
     ((void (*)(int, int, int, int, int, int, f32, f32, f32))(*(int *)(*(int *)gPartfxInterface + 8)))(obj, id, a, b, c, d, vx, vy, vz)
 
+#define LANTERN_FIREFLY_MODE(state) ((u32)(state)->modeFlags >> 6)
+#define LANTERN_FIREFLY_IS_ACTIVE(state) (LANTERN_FIREFLY_MODE(state) == 1u)
+
 extern void fn_801868D0(int obj);
 extern void fn_801869DC(int obj);
 
@@ -101,45 +104,45 @@ extern void fn_801869DC(int obj);
 #pragma peephole off
 void LanternFireFly_update(int obj)
 {
-    u8 *state;
+    LanternFireFlyState *state;
     int player;
     f32 dx;
     f32 dy;
     f32 dz;
     f32 stepScale;
 
-    state = *(u8 **)(obj + 0xb8);
-    player = FUN_80017a98();
+    state = *(LanternFireFlyState **)(obj + 0xb8);
+    player = Obj_GetPlayerObject();
     *(f32 *)(obj + 0x80) = *(f32 *)(obj + 0xc);
     *(f32 *)(obj + 0x84) = *(f32 *)(obj + 0x10);
     *(f32 *)(obj + 0x88) = *(f32 *)(obj + 0x14);
 
-    if (lbl_803E3AA0 < *(f32 *)(state + 0x40)) {
-        *(f32 *)(state + 0x40) -= lbl_803E3AA0;
-        if (state[0x6c] < 4) {
+    if (lbl_803E3AA0 < state->splineT) {
+        state->splineT -= lbl_803E3AA0;
+        if (state->animFrame < 4) {
             fn_801868D0(obj);
-        } else if (state[0x6c] == 7) {
-            state[0x6c] = 0;
+        } else if (state->animFrame == 7) {
+            state->animFrame = 0;
         } else {
-            state[0x6c]++;
+            state->animFrame++;
         }
         fn_801869DC(obj);
     }
 
-    *(f32 *)(obj + 0xc) = *(f32 *)(state + 0x54) + Curve_EvalBSpline(*(f32 *)(state + 0x40), state + 4, 0);
-    *(f32 *)(obj + 0x10) = *(f32 *)(state + 0x58) + Curve_EvalBSpline(*(f32 *)(state + 0x40), state + 0x14, 0);
-    *(f32 *)(obj + 0x14) = *(f32 *)(state + 0x5c) + Curve_EvalBSpline(*(f32 *)(state + 0x40), state + 0x24, 0);
+    *(f32 *)(obj + 0xc) = state->anchorX + Curve_EvalBSpline(state->splineT, state->controlX, 0);
+    *(f32 *)(obj + 0x10) = state->anchorY + Curve_EvalBSpline(state->splineT, state->controlY, 0);
+    *(f32 *)(obj + 0x14) = state->anchorZ + Curve_EvalBSpline(state->splineT, state->controlZ, 0);
 
-    if ((state[0x70] >> 6) == 1) {
-        *(f32 *)(state + 0x44) =
+    if (LANTERN_FIREFLY_IS_ACTIVE(state)) {
+        state->speed =
             (f32)(lbl_803E3AC4 * Vec_distance((void *)(obj + 0x18), (void *)(player + 0x18)) + lbl_803E3AC0);
     }
-    *(f32 *)(state + 0x40) += *(f32 *)(state + 0x44) * FLOAT_803dc074;
+    state->splineT += state->speed * FLOAT_803dc074;
 
-    if ((state[0x6a] == 1 || state[0x6a] == 4) && (state[0x70] >> 6) == 1 && state[0x6e] == 0) {
+    if ((state->stateId == 1 || state->stateId == 4) && LANTERN_FIREFLY_IS_ACTIVE(state) && state->lightSpawned == 0) {
         int light;
 
-        state[0x6e] = 1;
+        state->lightSpawned = 1;
         light = objCreateLight(obj, 1);
         if (light != 0) {
             modelLightStruct_setLightKind(light, 2);
@@ -148,8 +151,8 @@ void LanternFireFly_update(int obj)
             modelLightStruct_setDistanceAttenuation(light, lbl_803E3A98, lbl_803E3A9C);
             modelLightStruct_setAffectsAabbLightSelection(light, 1);
         }
-        *(int *)state = light;
-        if ((state[0x70] >> 6) != 1) {
+        state->light = light;
+        if (!LANTERN_FIREFLY_IS_ACTIVE(state)) {
             lbl_803DDAD8 = 1;
         }
     }
@@ -159,32 +162,32 @@ void LanternFireFly_update(int obj)
     dz = *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88);
     stepScale = lbl_803E3AA0 / ((f32)(s32)(sqrtf(dx * dx + dy * dy + dz * dz) / lbl_803E3AC8) + 1.0f);
 
-    if ((state[0x70] >> 6) == 1) {
+    if (LANTERN_FIREFLY_IS_ACTIVE(state)) {
         Sfx_KeepAliveLoopedObjectSound(obj, 0x43b);
-        if (lbl_803DBDD8 < (f32)*(int *)(state + 0x60)) {
-            if (state[0x6a] == 1 || state[0x6a] == 4) {
+        if (lbl_803DBDD8 < (f32)state->timer) {
+            if (state->stateId == 1 || state->stateId == 4) {
                 LANTERN_SPAWN_FX(obj, 0x19f, 0, 1, -1, 0);
                 LANTERN_SPAWN_FX(obj, 0x1a0, 0, 1, -1, 0);
             } else {
                 LANTERN_SPAWN_FX(obj, 0x1bd, 0, 1, -1, 0);
             }
         }
-        *(int *)(state + 0x60) -= framesThisStep;
-        if (*(int *)(state + 0x60) < 0) {
+        state->timer -= framesThisStep;
+        if (state->timer < 0) {
             gameBitDecrement(0x698);
             Obj_FreeObject(obj);
             return;
         }
-        *(f32 *)(state + 0x54) = *(f32 *)(player + 0x18);
-        *(f32 *)(state + 0x58) = lbl_803E3AA8 + *(f32 *)(player + 0x1c);
-        *(f32 *)(state + 0x5c) = *(f32 *)(player + 0x20);
-        if (*(int *)state != 0 && *(int *)(state + 0x60) < 0xb4) {
+        state->anchorX = *(f32 *)(player + 0x18);
+        state->anchorY = lbl_803E3AA8 + *(f32 *)(player + 0x1c);
+        state->anchorZ = *(f32 *)(player + 0x20);
+        if (state->light != 0 && state->timer < 0xb4) {
             f32 atten;
 
-            atten = (f32)*(int *)(state + 0x60) *
-                fn_80293E80((lbl_803E3ACC * (f32)(*(int *)(state + 0x60) << 0xb)) / lbl_803E3AD0);
+            atten = (f32)state->timer *
+                fn_80293E80((lbl_803E3ACC * (f32)(state->timer << 0xb)) / lbl_803E3AD0);
             Sfx_KeepAliveLoopedObjectSound(0, 0x460);
-            modelLightStruct_setDistanceAttenuation(*(int *)state, atten, lbl_803E3AD4 + atten);
+            modelLightStruct_setDistanceAttenuation(state->light, atten, lbl_803E3AD4 + atten);
         }
     } else {
         LANTERN_SPAWN_FX_VEC(obj, 0x19f, 0, 1, -1, 0, dx * stepScale, dy * stepScale, dz * stepScale);
@@ -196,6 +199,8 @@ void LanternFireFly_update(int obj)
 
 #undef LANTERN_SPAWN_FX
 #undef LANTERN_SPAWN_FX_VEC
+#undef LANTERN_FIREFLY_IS_ACTIVE
+#undef LANTERN_FIREFLY_MODE
 
 #pragma scheduling off
 #pragma peephole off
