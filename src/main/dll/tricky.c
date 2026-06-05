@@ -343,9 +343,116 @@ extern char s_x___2f_8031ccf4[];
  * PAL Address: TODO
  * PAL Size: TODO
  */
+extern u8 gameUiResourcesLoaded;
+extern char lbl_803A87F0[];
+extern char *lbl_803DD85C;
+extern char *lbl_803DD860[2];
+extern char *lbl_803DD868[2];
+extern int lbl_8031BF90[];
+extern f32 lbl_803E1E3C, lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
+extern f32 lbl_803E1E50, lbl_803E1E54, lbl_803E1E58, lbl_803E1E5C;
+extern char *Obj_AllocObjectSetup(int size, int id);
+extern char *Obj_SetupObject(char *obj, int a, int b, int c, int d);
+extern void *Obj_GetActiveModel(char *obj);
+extern void ObjModel_SetRenderCallback(void *model, void *cb);
+extern u8 modelFn_80124794[];
+extern u8 cMenuRenderFn_80124854[];
+extern int fn_8011E0D8();
+
+#pragma scheduling off
+#pragma peephole off
 void gameUiLoadResources(void)
 {
+    char *base = lbl_803A87F0;
+    if (gameUiResourcesLoaded == 0) {
+        char **arrA;
+        char **arrB;
+        int i;
+        int val;
+        u32 limit;
+        char **arrC;
+        int *ids;
+        char *p;
+        u32 *cnt;
+        f32 fb, fc, fa;
+        f32 ga, gb;
+
+        val = 0;
+        i = 0;
+        arrA = (char **)(base + 0xbfc);
+        arrB = (char **)(base + 0xbf0);
+        fa = lbl_803E1E3C;
+        fb = lbl_803E1E40;
+        fc = lbl_803E1E44;
+        for (; i < 3; i++) {
+            *arrA = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x65e), 4, -1, -1, 0);
+            *(f32 *)(*arrA + 0xc) = fa;
+            *(f32 *)(*arrA + 0x10) = fb;
+            *(f32 *)(*arrA + 0x14) = fc;
+            *(s16 *)(*arrA + 0x0) = (s16)val;
+            *(s8 *)(*arrA + 0xad) = (s8)i;
+            ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrA), modelFn_80124794);
+            *arrB = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x65f), 4, -1, -1, 0);
+            *(f32 *)(*arrB + 0xc) = fa;
+            *(f32 *)(*arrB + 0x10) = fb;
+            *(f32 *)(*arrB + 0x14) = fc;
+            *(s16 *)(*arrB + 0x0) = (s16)val;
+            ObjModel_SetRenderCallback(Obj_GetActiveModel(*arrB), cMenuRenderFn_80124854);
+            val += 0x5555;
+            arrA++;
+            arrB++;
+        }
+
+        lbl_803DD868[0] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x6e9), 4, -1, -1, 0);
+        *(f32 *)(lbl_803DD868[0] + 0xc) = lbl_803E1E3C;
+        *(f32 *)(lbl_803DD868[0] + 0x10) = lbl_803E1E48;
+        *(f32 *)(lbl_803DD868[0] + 0x14) = lbl_803E1E4C;
+        *(s16 *)(lbl_803DD868[0] + 0x0) = 0x7447;
+        *(f32 *)(lbl_803DD868[0] + 0x8) = lbl_803E1E50;
+
+        lbl_803DD868[1] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x602), 4, -1, -1, 0);
+        *(f32 *)(lbl_803DD868[1] + 0xc) = lbl_803E1E3C;
+        *(f32 *)(lbl_803DD868[1] + 0x10) = lbl_803E1E54;
+        *(f32 *)(lbl_803DD868[1] + 0x14) = lbl_803E1E4C;
+        *(s16 *)(lbl_803DD868[1] + 0x0) = 0x7447;
+        *(f32 *)(lbl_803DD868[1] + 0x8) = lbl_803E1E58;
+
+        p = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x755), 4, -1, -1, 0);
+        lbl_803DD860[0] = p;
+        ObjModel_SetRenderCallback(*(void **)*(int *)(p + 0x7c), fn_8011E0D8);
+
+        lbl_803DD860[1] = Obj_SetupObject(Obj_AllocObjectSetup(0x20, 0x756), 4, -1, -1, 0);
+        ObjModel_SetRenderCallback(*(void **)*(int *)(lbl_803DD860[1] + 0x7c), fn_8011E0D8);
+
+        i = 4;
+        ids = &lbl_8031BF90[4];
+        arrC = (char **)(base + 0xc30);
+        ga = lbl_803E1E3C;
+        gb = lbl_803E1E5C;
+        limit = 0x90000000;
+        for (; i < 6; i++) {
+            *arrC = Obj_SetupObject(Obj_AllocObjectSetup(0x20, *ids), 4, -1, -1, 0);
+            *(f32 *)(*arrC + 0xc) = ga;
+            *(f32 *)(*arrC + 0x10) = gb;
+            *(f32 *)(*arrC + 0x14) = gb;
+            *(s16 *)(*arrC + 0x0) = 0x7447;
+            *(f32 *)(*arrC + 0x8) = ga;
+            cnt = (u32 *)(*arrC + 0x4c);
+            if (*cnt > limit) {
+                *cnt = 0;
+            }
+            ids++;
+            arrC++;
+        }
+
+        p = Obj_AllocObjectSetup(0x24, 0x14b);
+        *(s16 *)(p + 0x1c) = 1;
+        lbl_803DD85C = Obj_SetupObject(p, 4, -1, -1, 0);
+        gameUiResourcesLoaded = 1;
+    }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -2343,6 +2450,57 @@ void pauseMenuMapFn_8011de20(void *this, int a, s16 b, int c) {
     GXClearVtxDesc();
     GXSetVtxDesc(9, 1);
     GXSetVtxDesc(0xd, 1);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+extern s16 lbl_803DBA8A;
+extern f32 lbl_803DBA8C;
+
+#pragma scheduling off
+#pragma peephole off
+void pauseMenuTextDrawFn(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u1, f32 v1) {
+    s16 z;
+    GXLoadPosMtxImm(lbl_803A8830, 0);
+    GXLoadNrmMtxImm(lbl_803A8830, 0);
+    GXSetCurrentMtx(0);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxDesc(0xd, 1);
+    GXSetCullMode(0);
+    x0 -= 0x500;
+    y0 -= 0x3c0;
+    x1 -= 0x500;
+    y1 -= 0x3c0;
+    x0 = (f32)x0 * lbl_803DBA8C;
+    y0 = (f32)y0 * lbl_803DBA8C;
+    x1 = (f32)x1 * lbl_803DBA8C;
+    y1 = (f32)y1 * lbl_803DBA8C;
+    GXBegin(0x80, 1, 4);
+    z = (s16)(lbl_803DBA8A << 2);
+    GXWGFifo.s16 = (s16)(x0 + 0x500);
+    GXWGFifo.s16 = (s16)(y0 + 0x3c0);
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = u0;
+    GXWGFifo.f32 = v0;
+    z = (s16)(lbl_803DBA8A << 2);
+    GXWGFifo.s16 = (s16)(x1 + 0x500);
+    GXWGFifo.s16 = (s16)(y0 + 0x3c0);
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = u1;
+    GXWGFifo.f32 = v0;
+    z = (s16)(lbl_803DBA8A << 2);
+    GXWGFifo.s16 = (s16)(x1 + 0x500);
+    GXWGFifo.s16 = (s16)(y1 + 0x3c0);
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = u1;
+    GXWGFifo.f32 = v1;
+    z = (s16)(lbl_803DBA8A << 2);
+    GXWGFifo.s16 = (s16)(x0 + 0x500);
+    GXWGFifo.s16 = (s16)(y1 + 0x3c0);
+    GXWGFifo.s16 = z;
+    GXWGFifo.f32 = u0;
+    GXWGFifo.f32 = v1;
 }
 #pragma peephole reset
 #pragma scheduling reset
