@@ -349,7 +349,8 @@ extern char *lbl_803DD85C;
 extern char *lbl_803DD860[];
 extern char *lbl_803DD868[];
 extern int lbl_8031BF90[];
-extern f32 lbl_803E1E3C, lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
+extern const f32 lbl_803E1E3C;
+extern f32 lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
 extern f32 lbl_803E1E50, lbl_803E1E54, lbl_803E1E58, lbl_803E1E5C;
 extern char *Obj_AllocObjectSetup(int size, int id);
 extern char *Obj_SetupObject(char *obj, int a, int b, int c, int d);
@@ -2067,7 +2068,7 @@ void GameUI_airMeterSetShutdown(void) {
 #pragma scheduling reset
 
 extern void *textureLoadAsset(int id);
-extern f32 lbl_803E1E3C;
+extern const f32 lbl_803E1E3C;
 extern int lbl_803A9398[];
 
 extern void textureFree(int handle);
@@ -2100,7 +2101,7 @@ void GameUI_airMeterShutdown(void) {
 
 extern void *mmAlloc(int size, int type, int x);
 extern void *memset(void *p, int v, int n);
-extern f32 lbl_803E1E68;
+extern const f32 lbl_803E1E68;
 
 #pragma scheduling off
 #pragma peephole off
@@ -2236,7 +2237,7 @@ void gameUiResetMenuState(void) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_803E1E68;
+extern const f32 lbl_803E1E68;
 #pragma scheduling off
 #pragma peephole off
 void GameUI_airMeterInitType0(int a, int b, int c) {
@@ -2285,7 +2286,7 @@ void GameUI_func14(s16 a, int b, int c) {
 #pragma scheduling reset
 
 extern u8 framesThisStep;
-extern f32 hudElementOpacity;
+extern const f32 hudElementOpacity;
 extern f32 lbl_803E1F9C;
 extern f32 lbl_803E1FA0;
 extern f32 lbl_803E1FA4;
@@ -2608,7 +2609,8 @@ extern void Camera_SetCurrentViewRotation(s32, s32, s32);
 extern void Camera_UpdateViewMatrices(void);
 extern f32 lbl_803DD818, lbl_803DD814, lbl_803DD810, lbl_803DD80C;
 extern f32 lbl_803DD808, lbl_803DD804, lbl_803DD800, lbl_803DD7FC;
-extern f32 lbl_803E1E90, lbl_803E1E94, lbl_803E1E98;
+extern const f32 lbl_803E1E94;
+extern f32 lbl_803E1E90, lbl_803E1E98;
 extern f32 lbl_803DBB04, lbl_803DBB08, lbl_803DBB0C;
 extern f32 lbl_803DBAF4, lbl_803DBAF8, lbl_803DBAFC, lbl_803DBB00;
 extern char lbl_803A87F0[];
@@ -2964,7 +2966,8 @@ extern void hudDrawCounter(int id, int a, int b, int c, int d, int *e, int f);
 extern int *gCameraInterface;
 extern s16 cMenuFadeCounter;
 extern f32 lbl_803DD844, lbl_803DD83C;
-extern f32 lbl_803E1FA8, lbl_803E1FAC, lbl_803E1FB0, lbl_803E1FB4, lbl_803E1F98;
+extern const f32 lbl_803E1F98;
+extern f32 lbl_803E1FA8, lbl_803E1FAC, lbl_803E1FB0, lbl_803E1FB4;
 extern f32 timeDelta;
 #pragma scheduling off
 #pragma peephole off
@@ -3090,19 +3093,22 @@ extern u8 Rcp_GetViewFinderHudEnabled(void);
 extern int getAngle(f32, f32);
 extern f32 fn_80293E80(f32);
 extern f32 sin(f32);
-extern void drawViewFinderLine(u8 *color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
+extern void drawViewFinderLine(GXColor color, f32 x1, f32 y1, f32 x2, f32 y2, f32 x3, f32 y3, f32 x4, f32 y4);
 extern f32 fn_8029454C(f32);
-extern f64 lbl_803E1E78, lbl_803E1EA0, lbl_803E1EA8, lbl_803E1EB0, lbl_803E1EB8;
-extern f64 lbl_803E1EF0, lbl_803E1EF8, lbl_803E1F00, lbl_803E1F20, lbl_803E1F28;
-extern f32 lbl_803DD7F0, lbl_803DD7F4, lbl_803E1EC4, lbl_803E1EC8, lbl_803E1ECC, lbl_803E1ED0;
-extern f32 lbl_803E1ED4, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE0, lbl_803E1EE4, lbl_803E1EE8, lbl_803E1E94;
-extern f32 lbl_803E1F08, lbl_803E1F0C, lbl_803E1F10, lbl_803E1F14, lbl_803E1F18;
-extern f32 lbl_803E1F30, lbl_803E1F34, lbl_803E1F48, lbl_803E1F4C, lbl_803DBAE0, lbl_803DBAE4;
-extern double lbl_803E1F38, lbl_803E1F40;
-extern f32 lbl_803E1F94;
+extern const f64 lbl_803E1EA0, lbl_803E1EA8, lbl_803E1EB0, lbl_803E1EB8;
+extern f64 lbl_803E1E78;
+extern const f64 lbl_803E1EF0, lbl_803E1EF8, lbl_803E1F00, lbl_803E1F20, lbl_803E1F28;
+extern const f32 lbl_803E1EC4, lbl_803E1EC8, lbl_803E1ECC, lbl_803E1ED0;
+extern f32 lbl_803DD7F0, lbl_803DD7F4;
+extern const f32 lbl_803E1ED4, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE0, lbl_803E1EE4, lbl_803E1EE8, lbl_803E1E94;
+extern const f32 lbl_803E1F08, lbl_803E1F0C, lbl_803E1F10, lbl_803E1F14, lbl_803E1F18;
+extern const f32 lbl_803E1F30, lbl_803E1F34, lbl_803E1F48, lbl_803E1F4C;
+extern f32 lbl_803DBAE0, lbl_803DBAE4;
+extern const double lbl_803E1F38, lbl_803E1F40;
+extern const f32 lbl_803E1F94;
 extern char lbl_803DBB40;
-extern f32 lbl_803E1F70, lbl_803E1F90;
-extern double lbl_803E1F50, lbl_803E1F58, lbl_803E1F60, lbl_803E1F68, lbl_803E1F78, lbl_803E1F80, lbl_803E1F88, lbl_803E1EF8;
+extern const f32 lbl_803E1F70, lbl_803E1F90;
+extern const double lbl_803E1F50, lbl_803E1F58, lbl_803E1F60, lbl_803E1F68, lbl_803E1F78, lbl_803E1F80, lbl_803E1F88, lbl_803E1EF8;
 extern int lbl_803DBAE8;
 extern char lbl_803DBB18, lbl_803DBB1C, lbl_803DBB20, lbl_803DBB24, lbl_803DBB28, lbl_803DBB2C, lbl_803DBB30, lbl_803DBB34, lbl_803DBB38;
 extern f32 Camera_GetFarPlane(void);
@@ -3126,7 +3132,7 @@ extern void gameTextSetColor(int, int, int, int);
     _sn = sin(_r); \
     _cx = lbl_803E1E68 * _cs; \
     _sx = lbl_803E1E68 * _sn; \
-    drawViewFinderLine((u8 *)&_c, (B) + _sx, (A) - _cx, (B) - _sx, (A) + _cx, (C) - _sx, (A) + _cx, (C) + _sx, (A) - _cx); \
+    drawViewFinderLine(_c, (B) + _sx, (A) - _cx, (B) - _sx, (A) + _cx, (C) - _sx, (A) + _cx, (C) + _sx, (A) - _cx); \
 } while (0)
 
 #define VBLK(gA1, gA2, A, B, C) do { \
@@ -3141,7 +3147,7 @@ extern void gameTextSetColor(int, int, int, int);
     _sn = sin(_r); \
     _cx = lbl_803E1E68 * _cs; \
     _sx = lbl_803E1E68 * _sn; \
-    drawViewFinderLine((u8 *)&_c, (A) + _sx, (B) - _cx, (A) - _sx, (B) + _cx, (A) - _sx, (C) + _cx, (A) + _sx, (C) - _cx); \
+    drawViewFinderLine(_c, (A) + _sx, (B) - _cx, (A) - _sx, (B) + _cx, (A) - _sx, (C) + _cx, (A) + _sx, (C) - _cx); \
 } while (0)
 
 void drawViewFinderHud(void) {
@@ -3156,9 +3162,8 @@ void drawViewFinderHud(void) {
     } else {
         lbl_803DD7F0 = (f32)(lbl_803DD7F0 - lbl_803E1EA8 * timeDelta);
     }
-    v = lbl_803DD7F0;
-    if (v < lbl_803E1E3C) v = lbl_803E1E3C;
-    else if (v > lbl_803E1E68) v = lbl_803E1E68;
+    v = (lbl_803DD7F0 < lbl_803E1E3C) ? lbl_803E1E3C
+                                      : ((lbl_803DD7F0 > lbl_803E1E68) ? lbl_803E1E68 : lbl_803DD7F0);
     lbl_803DD7F0 = v;
     if (v == lbl_803E1E3C) return;
     lbl_803DD7F4 = (f32)(lbl_803E1EB0 - lbl_803E1EB8 * v);
@@ -3187,20 +3192,20 @@ void drawViewFinderHud(void) {
             _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
             _cs = fn_80293E80(_r); _sn = sin(_r);
             _cx = lbl_803E1E68 * _cs; _sx = lbl_803E1E68 * _sn;
-            drawViewFinderLine((u8 *)&_c, lbl_803E1F10 + _sx, f18v - _cx, lbl_803E1F10 - _sx, f18v + _cx, lbl_803E1F10 - _sx, lbl_803E1F08 + _cx, lbl_803E1F10 + _sx, lbl_803E1F08 - _cx);
+            drawViewFinderLine(_c, lbl_803E1F10 + _sx, f18v - _cx, lbl_803E1F10 - _sx, f18v + _cx, lbl_803E1F10 - _sx, lbl_803E1F08 + _cx, lbl_803E1F10 + _sx, lbl_803E1F08 - _cx);
         }
-        f19v = lbl_803E1F14 + f15v;
         {
             GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
             *(int *)&_c = lbl_803E1E2C;
             _c.a = (u8)(int)(hudElementOpacity * lbl_803DD7F0);
-            _a = (s16)getAngle(lbl_803E1E3C, f19v - f15v);
+            _a = (s16)getAngle(lbl_803E1E3C, (f19v = lbl_803E1F14 + f15v) - f15v);
             _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
             _cs = fn_80293E80(_r); _sn = sin(_r);
             _cx = lbl_803E1F18 * _cs; _sx = lbl_803E1F18 * _sn;
-            drawViewFinderLine((u8 *)&_c, lbl_803E1F10 + _sx, f15v - _cx, lbl_803E1F10 - _sx, f15v + _cx, lbl_803E1F10 - _sx, f19v + _cx, lbl_803E1F10 + _sx, f19v - _cx);
+            drawViewFinderLine(_c, lbl_803E1F10 + _sx, f15v - _cx, lbl_803E1F10 - _sx, f15v + _cx, lbl_803E1F10 - _sx, f19v + _cx, lbl_803E1F10 + _sx, f19v - _cx);
         }
-        xc = (f32)(lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28)));
+        xc = lbl_803E1F20 / fn_8029454C((f32)(lbl_803E1EC8 * fovY / lbl_803E1F28));
+        xc = (f32)xc;
         sprintf(buf, sTrickyDebugXCoordFormat, xc);
         gameTextSetColor(0, 0xff, 0, (int)(hudElementOpacity * lbl_803DD7F0));
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);
@@ -3211,63 +3216,67 @@ void drawViewFinderHud(void) {
                 f32 f31 = lbl_803E1EC4 + f27;
                 f32 f30 = lbl_803E1F34 - f31;
                 f32 f29 = lbl_803E1F34 - f27;
+                f32 fdx;
                 {
                     GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
-                    f32 f15 = lbl_803DD7F4 + (lbl_803E1F38 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f30 * lbl_803DBAE0) / lbl_803E1E94));
-                    f32 f16 = lbl_803DD7F4 + (lbl_803E1F38 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f29 * lbl_803DBAE0) / lbl_803E1E94));
+                    int alpha = (int)(lbl_803E1F30 * lbl_803DD7F0);
+                    f32 f15 = (f32)(lbl_803DD7F4 + (lbl_803E1F38 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f30 * lbl_803DBAE0) / lbl_803E1E94)));
+                    f32 f16 = (f32)(lbl_803DD7F4 + (lbl_803E1F38 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f29 * lbl_803DBAE0) / lbl_803E1E94)));
                     *(int *)&_c = lbl_803E1E2C;
-                    _c.a = (u8)(int)(lbl_803E1F30 * lbl_803DD7F0);
-                    _a = (s16)getAngle(f31 - f27, f15 - f16);
+                    _c.a = alpha;
+                    fdx = f31 - f27;
+                    _a = (s16)getAngle(fdx, f15 - f16);
                     _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
                     _cs = fn_80293E80(_r);
                     _sn = sin(_r);
                     _cx = lbl_803E1E68 * _cs;
                     _sx = lbl_803E1E68 * _sn;
-                    drawViewFinderLine((u8 *)&_c, f27 + _sx, f16 - _cx, f27 - _sx, f16 + _cx, f31 - _sx, f15 + _cx, f31 + _sx, f15 - _cx);
+                    drawViewFinderLine(_c, f27 + _sx, f16 - _cx, f27 - _sx, f16 + _cx, f31 - _sx, f15 + _cx, f31 + _sx, f15 - _cx);
                 }
                 {
                     GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
-                    f32 f16 = lbl_803DD7F4 + (lbl_803E1F40 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f30 * lbl_803DBAE0) / lbl_803E1E94));
-                    f32 f15 = lbl_803DD7F4 + (lbl_803E1F40 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f29 * lbl_803DBAE0) / lbl_803E1E94));
+                    int alpha = (int)(lbl_803E1F30 * lbl_803DD7F0);
+                    f32 f16 = (f32)(lbl_803DD7F4 + (lbl_803E1F40 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f30 * lbl_803DBAE0) / lbl_803E1E94)));
+                    f32 f15 = (f32)(lbl_803DD7F4 + (lbl_803E1F40 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f29 * lbl_803DBAE0) / lbl_803E1E94)));
                     *(int *)&_c = lbl_803E1E2C;
-                    _c.a = (u8)(int)(lbl_803E1F30 * lbl_803DD7F0);
-                    _a = (s16)getAngle(f31 - f27, f16 - f15);
+                    _c.a = alpha;
+                    _a = (s16)getAngle(fdx, f16 - f15);
                     _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
                     _cs = fn_80293E80(_r);
                     _sn = sin(_r);
                     _cx = lbl_803E1E68 * _cs;
                     _sx = lbl_803E1E68 * _sn;
-                    drawViewFinderLine((u8 *)&_c, f27 + _sx, f15 - _cx, f27 - _sx, f15 + _cx, f31 - _sx, f16 + _cx, f31 + _sx, f16 - _cx);
+                    drawViewFinderLine(_c, f27 + _sx, f15 - _cx, f27 - _sx, f15 + _cx, f31 - _sx, f16 + _cx, f31 + _sx, f16 - _cx);
                 }
                 {
                     GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
+                    int alpha = (int)(hudElementOpacity * lbl_803DD7F0);
                     f32 f16 = lbl_803DD7F4 + (lbl_803E1F48 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f30 * lbl_803DBAE0) / lbl_803E1E94));
                     f32 f15 = lbl_803DD7F4 + (lbl_803E1F48 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f29 * lbl_803DBAE0) / lbl_803E1E94));
                     *(int *)&_c = lbl_803E1E2C;
-                    _c.a = (u8)(int)(hudElementOpacity * lbl_803DD7F0);
-                    _a = (s16)getAngle(f31 - f27, f16 - f15);
+                    _c.a = alpha;
+                    _a = (s16)getAngle(fdx, f16 - f15);
                     _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
                     _cs = fn_80293E80(_r);
                     _sn = sin(_r);
                     _cx = lbl_803E1E68 * _cs;
                     _sx = lbl_803E1E68 * _sn;
-                    drawViewFinderLine((u8 *)&_c, f27 + _sx, f15 - _cx, f27 - _sx, f15 + _cx, f31 - _sx, f16 + _cx, f31 + _sx, f16 - _cx);
+                    drawViewFinderLine(_c, f27 + _sx, f15 - _cx, f27 - _sx, f15 + _cx, f31 - _sx, f16 + _cx, f31 + _sx, f16 - _cx);
                 }
             }
         }
         {
             int r30v, r29v, r5v, r28v;
-            f32 f18, f19;
-            r30v = (int)((xc - lbl_803E1F50) * lbl_803E1F58);
-            if (r30v < 0) r30v = 0;
-            else if (r30v > 0x8c) r30v = 0x8c;
-            r29v = (int)((xc - lbl_803E1F60) * lbl_803E1F68);
-            if (r29v < 0) r29v = 0;
-            else if (r29v > 0xc8) r29v = 0xc8;
+            int t;
+            f32 f18, f19, num;
+            t = (int)((xc - lbl_803E1F50) * lbl_803E1F58);
+            r30v = (t < 0) ? 0 : ((t > 0x8c) ? 0x8c : t);
+            t = (int)((xc - lbl_803E1F60) * lbl_803E1F68);
+            r29v = (t < 0) ? 0 : ((t > 0xc8) ? 0xc8 : t);
             r5v = (int)((f32)(u16)lbl_803DD7EC / lbl_803E1F70);
+            num = (f32)(u16)lbl_803DD7EC - (f32)r5v * lbl_803E1F70;
             f19 = xc * (lbl_803E1F70 / (f32)lbl_803DBAE8);
-            f18 = ((f32)(u16)lbl_803DD7EC - (f32)r5v * lbl_803E1F70) / (f32)lbl_803DBAE8;
-            f18 = lbl_803E1F78 + f18 * xc;
+            f18 = (f32)(lbl_803E1F78 + (num / (f32)lbl_803DBAE8) * xc);
             r28v = -r5v;
             while (f18 > lbl_803E1E3C) {
                 f18 -= f19;
@@ -3280,13 +3289,13 @@ void drawViewFinderHud(void) {
                 int r27v = 0xff;
                 int r26v = 0xff;
                 int r25v = 0xf;
-                f32 q;
+                f64 q;
                 if (r28v >= 0x168) r28v -= 0x168;
-                q = (f32)r28v / lbl_803E1F80;
-                if (q != (f32)(int)q) {
+                q = r28v / lbl_803E1F80;
+                if (q != (int)q) {
                     r26v = 0xc8;
-                    q = (f32)r28v / lbl_803E1EF8;
-                    if (q == (f32)(int)q) {
+                    q = r28v / lbl_803E1EF8;
+                    if (q != (int)q) {
                         r27v = (u8)r30v;
                         r25v = 7;
                     } else {
@@ -3296,38 +3305,39 @@ void drawViewFinderHud(void) {
                 }
                 switch (r28v) {
                 case 0:     sprintf(buf, &lbl_803DBB18, r28v); break;
-                case 0x2d:  sprintf(buf, &lbl_803DBB28, r28v); break;
                 case 0x5a:  sprintf(buf, &lbl_803DBB1C, r28v); break;
-                case 0x87:  sprintf(buf, &lbl_803DBB2C, r28v); break;
                 case 0xb4:  sprintf(buf, &lbl_803DBB20, r28v); break;
-                case 0xe1:  sprintf(buf, &lbl_803DBB30, r28v); break;
                 case 0x10e: sprintf(buf, &lbl_803DBB24, r28v); break;
+                case 0x2d:  sprintf(buf, &lbl_803DBB28, r28v); break;
+                case 0x87:  sprintf(buf, &lbl_803DBB2C, r28v); break;
+                case 0xe1:  sprintf(buf, &lbl_803DBB30, r28v); break;
                 case 0x13b: sprintf(buf, &lbl_803DBB34, r28v); break;
                 default:    sprintf(buf, &lbl_803DBB38, r28v); break;
                 }
                 r28v++;
                 if ((u8)r27v != 0) {
-                    f32 sn = sin(lbl_803E1EC8 * ((lbl_803E1F34 - f18) * lbl_803DBAE0) / lbl_803E1E94);
                     gameTextSetColor(0, 0xff, 0, (int)((f32)(u8)r27v * lbl_803DD7F0));
                     gameTextShowStr(buf, 0x93,
                         (int)(lbl_803E1F88 * (f18 - lbl_803E1F78) + lbl_803E1F78),
-                        (int)(lbl_803DD7F4 + (lbl_803E1F90 + lbl_803DBAE4 * sn)));
+                        (int)(lbl_803DD7F4 + (lbl_803E1F90 + lbl_803DBAE4 * sin(lbl_803E1EC8 * ((lbl_803E1F34 - f18) * lbl_803DBAE0) / lbl_803E1E94))));
                 }
                 {
                     GXColor _c; s16 _a; f32 _r, _cs, _sn, _cx, _sx;
-                    f32 f15p = lbl_803E1F34 - f18;
-                    f32 f16 = lbl_803DD7F4 + ((f32)((u8)r25v + 0x1e0) + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f15p * lbl_803DBAE0) / lbl_803E1E94));
-                    f32 f15 = lbl_803DD7F4 + (lbl_803E1F48 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f15p * lbl_803DBAE0) / lbl_803E1E94));
-                    f32 f17 = lbl_803E1F88 * (f18 - lbl_803E1F78) + lbl_803E1F78;
+                    int alpha = (int)((f32)(u8)r26v * lbl_803DD7F0);
+                    f32 f15 = lbl_803E1F34 - f18;
+                    f32 f16 = lbl_803DD7F4 + ((f32)((u8)r25v + 0x1e0) + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f15 * lbl_803DBAE0) / lbl_803E1E94));
+                    f64 fx;
+                    f15 = lbl_803DD7F4 + (lbl_803E1F48 + lbl_803DBAE4 * sin(lbl_803E1EC8 * (f15 * lbl_803DBAE0) / lbl_803E1E94));
                     *(int *)&_c = lbl_803E1E2C;
-                    _c.a = (u8)(int)((f32)(u8)r26v * lbl_803DD7F0);
-                    _a = (s16)getAngle(f17 - f18, f16 - f15);
+                    _c.a = alpha;
+                    fx = lbl_803E1F88 * (f18 - lbl_803E1F78) + lbl_803E1F78;
+                    _a = (s16)getAngle((f32)fx - f18, f16 - f15);
                     _r = lbl_803E1EC8 * (f32)_a / lbl_803E1E94;
                     _cs = fn_80293E80(_r);
                     _sn = sin(_r);
                     _cx = lbl_803E1E68 * _cs;
                     _sx = lbl_803E1E68 * _sn;
-                    drawViewFinderLine((u8 *)&_c, f18 + _sx, f15 - _cx, f18 - _sx, f15 + _cx, f17 - _sx, f16 + _cx, f17 + _sx, f16 - _cx);
+                    drawViewFinderLine(_c, f18 + _sx, f15 - _cx, f18 - _sx, f15 + _cx, (f32)fx - _sx, f16 + _cx, (f32)fx + _sx, f16 - _cx);
                 }
             }
         }
