@@ -98,43 +98,53 @@ f32 wallanimator_setScale(int obj,int target)
   int count;
   int *state;
   f32 scale;
+  f32 kD0;
+  f32 kD4;
+  f32 kD8;
+  f32 kDC;
 
   desc = *(int *)(obj + 0x4c);
   count = 6;
+  kD0 = lbl_803E3FD0;
+  kD4 = lbl_803E3FD4;
+  kD8 = lbl_803E3FD8;
+  kDC = lbl_803E3FDC;
   do {
-    out[0] = lbl_803E3FD0 * (f32)((double)(int)randomGetRange(-0x64,0x64) - lbl_803E3FF0);
-    out[1] = lbl_803E3FD4;
-    out[2] = lbl_803E3FD4;
+    out[0] = kD0 * (f32)(int)randomGetRange(-0x64,0x64);
+    out[1] = kD4;
+    out[2] = kD4;
     effect.rot[2] = (s16)randomGetRange(-0x7fff,0x8000);
     effect.rot[1] = 0;
     effect.rot[0] = 0;
     mathFn_80021ac8(effect.rot,out);
-    out[2] -= lbl_803E3FD8;
+    out[2] -= kD8;
     mathFn_80021ac8((void *)obj,out);
     effect.rot[2] = *(s16 *)(desc + 0x1c);
     effect.rot[0] = *(s16 *)obj;
     effect.pos[0] = *(f32 *)(obj + 0x18) + out[0];
-    effect.pos[1] = lbl_803E3FDC + (*(f32 *)(obj + 0x1c) + out[1]);
+    effect.pos[1] = kDC + (*(f32 *)(obj + 0x1c) + out[1]);
     effect.pos[2] = *(f32 *)(obj + 0x20) + out[2];
-    (**(code **)(*gPartfxInterface + 8))(obj,0xca,effect.rot,0x200001,-1,0);
-    (**(code **)(*gPartfxInterface + 8))(obj,0xcb,effect.rot,0x200001,-1,0);
+    ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(
+        obj, 0xca, effect.rot, 0x200001, -1, 0);
+    ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(
+        obj, 0xcb, effect.rot, 0x200001, -1, 0);
     count--;
   } while (count != 0);
 
   state = *(int **)(obj + 0xb8);
   deltaY = *(f32 *)(target + 0x10) - *(f32 *)(obj + 0x10);
-  if ((deltaY < lbl_803E3FE0) || (lbl_803E3FE4 < deltaY)) {
+  if ((lbl_803E3FE0 > deltaY) || (lbl_803E3FE4 < deltaY)) {
     scale = lbl_803E3FD4;
   }
   else {
     deltaX = *(f32 *)(target + 0xc) - *(f32 *)(obj + 0xc);
     deltaZ = *(f32 *)(target + 0x14) - *(f32 *)(obj + 0x14);
-    if (deltaX * deltaX + deltaZ * deltaZ <= lbl_803E3FE8) {
-      *state += 0x3c;
-      scale = (f32)((double)*state - lbl_803E3FF0) / lbl_803E3FEC;
+    if (deltaX * deltaX + deltaZ * deltaZ > lbl_803E3FE8) {
+      scale = lbl_803E3FD4;
     }
     else {
-      scale = lbl_803E3FD4;
+      *state += 0x3c;
+      scale = (f32)*state / lbl_803E3FEC;
     }
   }
   return scale;
@@ -619,6 +629,27 @@ void FUN_80194b10(undefined4 param_1,undefined4 param_2,int param_3)
   return;
 }
 
+typedef struct MapBlockHdr {
+  u16 start;
+  u16 pad1[2];
+  s16 posA;
+  s16 posB;
+} MapBlockHdr;
+typedef struct VertexS16 {
+  s16 x;
+  s16 y;
+  s16 z;
+} VertexS16;
+typedef struct EdgeVerts {
+  u8 pad[6];
+  s16 a;
+  s16 b;
+  s16 c;
+  s16 d;
+  s16 e;
+  s16 f;
+} EdgeVerts;
+
 #pragma scheduling off
 #pragma peephole off
 void fn_80194964(int obj,int state,int block)
@@ -627,7 +658,7 @@ void fn_80194964(int obj,int state,int block)
   ushort *mapBlock;
   int blockLayer;
   int coordOffset;
-  undefined2 *vertex;
+  VertexS16 *vtx;
   uint triangle;
   int triangleOffset;
   int edge;
@@ -641,25 +672,26 @@ void fn_80194964(int obj,int state,int block)
     mapBlock = (ushort *)mapBlockFn_800606ec((int *)block,blockIndex);
     blockLayer = mapBlockFn_80060678((int *)mapBlock);
     if ((int)*(char *)(obj + 0x28) == blockLayer) {
-      *(ushort *)(*(int *)(state + 0x10) + coordOffset) = mapBlock[3];
-      *(ushort *)(*(int *)(state + 0x14) + coordOffset) = mapBlock[4];
+      *(s16 *)(*(int *)(state + 0x10) + coordOffset) = ((MapBlockHdr *)mapBlock)->posA;
+      *(s16 *)(*(int *)(state + 0x14) + coordOffset) = ((MapBlockHdr *)mapBlock)->posB;
       coordOffset += 2;
       blockEnd = mapBlock[10];
+      triangle = (uint)*mapBlock;
       edgeOffset = triangleOffset;
-      for (triangle = (uint)*mapBlock; (int)triangle < (int)(uint)blockEnd; triangle++) {
+      for (; (int)triangle < (int)(uint)blockEnd; triangle++) {
         mapBlock = (ushort *)fn_800606DC((int *)block,triangle);
-        vertex = (undefined2 *)(*(int *)(block + 0x58) + (uint)*mapBlock * 6);
-        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset) = *vertex;
-        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 2) = vertex[1];
-        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 4) = vertex[2];
-        vertex = (undefined2 *)(*(int *)(block + 0x58) + (uint)mapBlock[1] * 6);
-        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 6) = *vertex;
-        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 8) = vertex[1];
-        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 10) = vertex[2];
-        vertex = (undefined2 *)(*(int *)(block + 0x58) + (uint)mapBlock[2] * 6);
-        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 0xc) = *vertex;
-        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 0xe) = vertex[1];
-        *(undefined2 *)(*(int *)(state + 0xc) + edgeOffset + 0x10) = vertex[2];
+        vtx = (VertexS16 *)(*(int *)(block + 0x58) + (uint)*mapBlock * 6);
+        *(s16 *)(*(int *)(state + 0xc) + edgeOffset) = vtx->x;
+        *(s16 *)(*(int *)(state + 0xc) + edgeOffset + 2) = vtx->y;
+        *(s16 *)(*(int *)(state + 0xc) + edgeOffset + 4) = vtx->z;
+        vtx = (VertexS16 *)(*(int *)(block + 0x58) + (uint)mapBlock[1] * 6);
+        *(s16 *)(*(int *)(state + 0xc) + edgeOffset + 6) = vtx->x;
+        *(s16 *)(*(int *)(state + 0xc) + edgeOffset + 8) = vtx->y;
+        *(s16 *)(*(int *)(state + 0xc) + edgeOffset + 10) = vtx->z;
+        vtx = (VertexS16 *)(*(int *)(block + 0x58) + (uint)mapBlock[2] * 6);
+        *(s16 *)(*(int *)(state + 0xc) + edgeOffset + 0xc) = vtx->x;
+        *(s16 *)(*(int *)(state + 0xc) + edgeOffset + 0xe) = vtx->y;
+        *(s16 *)(*(int *)(state + 0xc) + edgeOffset + 0x10) = vtx->z;
         edgeOffset += 0x12;
         triangleOffset += 0x12;
       }
@@ -668,12 +700,12 @@ void fn_80194964(int obj,int state,int block)
   edge = 0;
   for (edgeOffset = 0; edgeOffset < (int)(uint)*(byte *)(block + 0xa1); edgeOffset++) {
     blockIndex = (int)fn_800606FC((int *)block,edgeOffset);
-    *(undefined2 *)(*(int *)(state + 0x28) + edge) = *(undefined2 *)(blockIndex + 6);
-    *(undefined2 *)(*(int *)(state + 0x2c) + edge) = *(undefined2 *)(blockIndex + 0xc);
-    *(undefined2 *)(*(int *)(state + 0x30) + edge) = *(undefined2 *)(blockIndex + 8);
-    *(undefined2 *)(*(int *)(state + 0x34) + edge) = *(undefined2 *)(blockIndex + 0xe);
-    *(undefined2 *)(*(int *)(state + 0x38) + edge) = *(undefined2 *)(blockIndex + 10);
-    *(undefined2 *)(*(int *)(state + 0x3c) + edge) = *(undefined2 *)(blockIndex + 0x10);
+    *(s16 *)(*(int *)(state + 0x28) + edge) = ((EdgeVerts *)blockIndex)->a;
+    *(s16 *)(*(int *)(state + 0x2c) + edge) = ((EdgeVerts *)blockIndex)->d;
+    *(s16 *)(*(int *)(state + 0x30) + edge) = ((EdgeVerts *)blockIndex)->b;
+    *(s16 *)(*(int *)(state + 0x34) + edge) = ((EdgeVerts *)blockIndex)->e;
+    *(s16 *)(*(int *)(state + 0x38) + edge) = ((EdgeVerts *)blockIndex)->c;
+    *(s16 *)(*(int *)(state + 0x3c) + edge) = ((EdgeVerts *)blockIndex)->f;
     edge += 2;
   }
 }
@@ -690,7 +722,7 @@ void fn_80194C40(undefined4 def,int state,int block)
   ushort *mapBlock;
   int blockLayer;
   void *shader;
-  undefined2 *vertex;
+  VertexS16 *vtx;
   uint triangle;
   int triangleOffset;
   int vertexOffset;
@@ -699,35 +731,34 @@ void fn_80194C40(undefined4 def,int state,int block)
   int edgeIndex;
   int edgeOffset;
   int vertexIndex;
-  f64 bias;
 
   triangleOffset = 0;
-  coordOffset = 0;
-  vertexOffset = 0;
+  coordOffset = triangleOffset;
+  vertexOffset = coordOffset;
   for (blockIndex = 0; blockIndex < (int)(uint)*(ushort *)(block + 0x9a); blockIndex++) {
     mapBlock = (ushort *)mapBlockFn_800606ec((int *)block,blockIndex);
     blockLayer = mapBlockFn_80060678((int *)mapBlock);
     if ((int)*(char *)(def + 0x28) == blockLayer) {
-      bias = lbl_803E4010;
-      mapBlock[3] = (ushort)(int)(*(float *)(state + 0x44) +
-                                  (float)((double)*(short *)(*(int *)(state + 0x10) + coordOffset) - bias));
-      mapBlock[4] = (ushort)(int)(*(float *)(state + 0x44) +
-                                  (float)((double)*(short *)(*(int *)(state + 0x14) + coordOffset) - bias));
+      ((MapBlockHdr *)mapBlock)->posA = (int)(*(float *)(state + 0x44) +
+                                  (f32)*(s16 *)(*(int *)(state + 0x10) + coordOffset));
+      ((MapBlockHdr *)mapBlock)->posB = (int)(*(float *)(state + 0x44) +
+                                  (f32)*(s16 *)(*(int *)(state + 0x14) + coordOffset));
       coordOffset += 2;
       blockEnd = mapBlock[10];
       scale = lbl_803E4008;
+      triangle = (uint)*mapBlock;
       edgeOffset = vertexOffset;
-      for (triangle = (uint)*mapBlock; (int)triangle < (int)(uint)blockEnd; triangle++) {
+      for (; (int)triangle < (int)(uint)blockEnd; triangle++) {
         mapBlock = (ushort *)fn_800606DC((int *)block,triangle);
         vertexIndex = edgeOffset;
         for (edgeIndex = 3; edgeIndex != 0; edgeIndex--) {
-          vertex = (undefined2 *)(*(int *)(block + 0x58) + (uint)*mapBlock * 6);
-          *(short *)vertex = (short)(int)(scale * *(float *)(state + 0x40) +
-                                (float)((double)*(short *)(*(int *)(state + 0xc) + edgeOffset) - bias));
-          vertex[1] = (short)(int)(scale * *(float *)(state + 0x44) +
-                                (float)((double)*(short *)(*(int *)(state + 0xc) + edgeOffset + 2) - bias));
-          vertex[2] = (short)(int)(scale * *(float *)(state + 0x48) +
-                                (float)((double)*(short *)(*(int *)(state + 0xc) + edgeOffset + 4) - bias));
+          vtx = (VertexS16 *)(*(int *)(block + 0x58) + (uint)*mapBlock * 6);
+          vtx->x = (int)(scale * *(float *)(state + 0x40) +
+                                (f32)*(s16 *)(*(int *)(state + 0xc) + edgeOffset));
+          vtx->y = (int)(scale * *(float *)(state + 0x44) +
+                                (f32)*(s16 *)(*(int *)(state + 0xc) + edgeOffset + 2));
+          vtx->z = (int)(scale * *(float *)(state + 0x48) +
+                                (f32)*(s16 *)(*(int *)(state + 0xc) + edgeOffset + 4));
           edgeOffset += 6;
           vertexIndex += 6;
           vertexOffset += 6;
@@ -743,21 +774,20 @@ void fn_80194C40(undefined4 def,int state,int block)
     vertexOffset = (int)fn_800606FC((int *)block,edgeOffset);
     shader = fn_8006070C((int *)block,*(byte *)(vertexOffset + 0x13));
     shader = Shader_getLayer(shader,0);
-    bias = lbl_803E4010;
     scale = lbl_803E4008;
     if ((uint)*(byte *)((int)shader + 5) == (int)*(char *)(def + 0x28)) {
-      *(short *)(vertexOffset + 6) = (short)(int)(scale * *(float *)(state + 0x40) +
-            (float)((double)*(short *)(*(int *)(state + 0x28) + edgeData) - bias));
-      *(short *)(vertexOffset + 0xc) = (short)(int)(scale * *(float *)(state + 0x40) +
-            (float)((double)*(short *)(*(int *)(state + 0x2c) + edgeData) - bias));
-      *(short *)(vertexOffset + 8) = (short)(int)(scale * *(float *)(state + 0x44) +
-            (float)((double)*(short *)(*(int *)(state + 0x30) + edgeData) - bias));
-      *(short *)(vertexOffset + 0xe) = (short)(int)(scale * *(float *)(state + 0x44) +
-            (float)((double)*(short *)(*(int *)(state + 0x34) + edgeData) - bias));
-      *(short *)(vertexOffset + 10) = (short)(int)(scale * *(float *)(state + 0x48) +
-            (float)((double)*(short *)(*(int *)(state + 0x38) + edgeData) - bias));
-      *(short *)(vertexOffset + 0x10) = (short)(int)(scale * *(float *)(state + 0x48) +
-            (float)((double)*(short *)(*(int *)(state + 0x3c) + edgeData) - bias));
+      ((EdgeVerts *)vertexOffset)->a = (int)(scale * *(float *)(state + 0x40) +
+            (f32)*(s16 *)(*(int *)(state + 0x28) + edgeData));
+      ((EdgeVerts *)vertexOffset)->d = (int)(scale * *(float *)(state + 0x40) +
+            (f32)*(s16 *)(*(int *)(state + 0x2c) + edgeData));
+      ((EdgeVerts *)vertexOffset)->b = (int)(scale * *(float *)(state + 0x44) +
+            (f32)*(s16 *)(*(int *)(state + 0x30) + edgeData));
+      ((EdgeVerts *)vertexOffset)->e = (int)(scale * *(float *)(state + 0x44) +
+            (f32)*(s16 *)(*(int *)(state + 0x34) + edgeData));
+      ((EdgeVerts *)vertexOffset)->c = (int)(scale * *(float *)(state + 0x48) +
+            (f32)*(s16 *)(*(int *)(state + 0x38) + edgeData));
+      ((EdgeVerts *)vertexOffset)->f = (int)(scale * *(float *)(state + 0x48) +
+            (f32)*(s16 *)(*(int *)(state + 0x3c) + edgeData));
     }
     edgeData += 2;
   }

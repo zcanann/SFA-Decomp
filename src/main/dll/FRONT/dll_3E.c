@@ -95,124 +95,119 @@ extern OSMessage lbl_803DD67C;
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
 #pragma peephole off
 void PlayControl(void)
 {
-  AttractMoviePlayer *player;
-  AttractMovieTextureSet *textureSet;
-  s32 pendingFrames;
+  AttractMovieTextureSet *decodedTexture;
+  s32 frame;
   u32 allowPop;
-  u32 framesPerGroup;
-  u32 frameOffset;
 
   if (lbl_803DD664 != NULL) {
     lbl_803DD664();
   }
 
-  textureSet = (AttractMovieTextureSet *)-1;
-  player = &lbl_803A5D60;
-  if (player->isOpen == 0) {
+  decodedTexture = (AttractMovieTextureSet *)-1;
+  if (lbl_803A5D60.isOpen == 0) {
     return;
   }
-  if (player->state != 2) {
+  if (lbl_803A5D60.state != 2) {
     return;
   }
-  if ((player->dvdError != 0) || (player->videoError != 0)) {
-    player->internalState = 5;
-    player->state = 5;
+  if ((lbl_803A5D60.dvdError != 0) || (lbl_803A5D60.videoError != 0)) {
+    lbl_803A5D60.internalState = 5;
+    lbl_803A5D60.state = 5;
     return;
   }
 
-  if ((player->retraceCount == 0) &&
-      ((player->internalState == 0) || (player->internalState == 4))) {
-    player->internalState = 2;
+  if ((lbl_803A5D60.retraceCount == 0) &&
+      ((lbl_803A5D60.internalState == 0) || (lbl_803A5D60.internalState == 4))) {
+    lbl_803A5D60.internalState = 2;
   }
-  player->retraceCount++;
+  lbl_803A5D60.retraceCount++;
 
-  if ((player->internalState == 0) || (player->internalState == 4)) {
-    if ((player->playFlags & 2) != 0) {
-      allowPop = VIGetNextField() == 0;
+  if ((lbl_803A5D60.internalState == 0) || (lbl_803A5D60.internalState == 4)) {
+    if ((lbl_803A5D60.playFlags & 2) != 0) {
+      allowPop = (VIGetNextField() == 0) ? 1 : 0;
     }
-    else if ((player->playFlags & 4) != 0) {
-      allowPop = VIGetNextField() == 1;
+    else if ((lbl_803A5D60.playFlags & 4) != 0) {
+      allowPop = (VIGetNextField() == 1) ? 1 : 0;
     }
     else {
       allowPop = 1;
     }
 
     if (allowPop != 0) {
-      if (player->audioExists != 0) {
-        pendingFrames = player->curAudioTrack - player->curVideoNumber;
-        if (pendingFrames <= 1) {
-          textureSet = (AttractMovieTextureSet *)PopDecodedTextureSet(0);
-          if (pendingFrames < player->videoDecodeCount) {
-            player->videoDecodeCount--;
+      if (lbl_803A5D60.audioExists != 0) {
+        frame = lbl_803A5D60.curAudioTrack - lbl_803A5D60.curVideoNumber;
+        if (frame <= 1) {
+          decodedTexture = (AttractMovieTextureSet *)PopDecodedTextureSet(0);
+          if (lbl_803A5D60.videoDecodeCount > frame) {
+            lbl_803A5D60.videoDecodeCount--;
           }
         }
         else {
-          player->internalState = 2;
+          lbl_803A5D60.internalState = 2;
         }
       }
       else {
-        textureSet = (AttractMovieTextureSet *)PopDecodedTextureSet(0);
-        player->internalState = 2;
+        decodedTexture = (AttractMovieTextureSet *)PopDecodedTextureSet(0);
+        lbl_803A5D60.internalState = 2;
       }
     }
     else {
-      player->retraceCount = -1;
+      lbl_803A5D60.retraceCount = -1;
     }
   }
   else if (ProperTimingForGettingNextFrame() != 0) {
-    if (player->audioExists != 0) {
-      pendingFrames = player->curAudioTrack - player->curVideoNumber;
-      if (pendingFrames <= 1) {
-        textureSet = (AttractMovieTextureSet *)PopDecodedTextureSet(0);
-        if (pendingFrames < player->videoDecodeCount) {
-          player->videoDecodeCount--;
+    if (lbl_803A5D60.audioExists != 0) {
+      frame = lbl_803A5D60.curAudioTrack - lbl_803A5D60.curVideoNumber;
+      if (frame <= 1) {
+        decodedTexture = (AttractMovieTextureSet *)PopDecodedTextureSet(0);
+        if (lbl_803A5D60.videoDecodeCount > frame) {
+          lbl_803A5D60.videoDecodeCount--;
         }
       }
     }
     else {
-      textureSet = (AttractMovieTextureSet *)PopDecodedTextureSet(0);
+      decodedTexture = (AttractMovieTextureSet *)PopDecodedTextureSet(0);
     }
   }
 
-  if ((textureSet != NULL) && (textureSet != (AttractMovieTextureSet *)-1)) {
-    player->curAudioTrack = textureSet->frameNumber;
-    if (player->curAudioNumber != 0) {
-      OSSendMessage(&lbl_803A5CCC, (OSMessage)player->curAudioNumber, OS_MESSAGE_NOBLOCK);
+  if ((decodedTexture != NULL) && ((u32)decodedTexture != 0xffffffff)) {
+    lbl_803A5D60.curAudioTrack = decodedTexture->frameNumber;
+    if (lbl_803A5D60.curAudioNumber != 0) {
+      OSSendMessage(&lbl_803A5CCC, (OSMessage)lbl_803A5D60.curAudioNumber, OS_MESSAGE_NOBLOCK);
     }
-    player->curAudioNumber = (s32)textureSet;
+    lbl_803A5D60.curAudioNumber = (s32)decodedTexture;
   }
 
-  framesPerGroup = player->header.mNumFrames;
-  frameOffset = player->initReadFrame;
-  if ((player->playFlags & 1) == 0) {
-    if (player->audioExists != 0) {
-      if ((((player->curVideoNumber + frameOffset) % framesPerGroup) !=
-           (framesPerGroup - 1)) ||
-          (player->dispTextureSet != NULL) ||
-          (((player->curAudioTrack + frameOffset) % framesPerGroup) !=
-           (framesPerGroup - 1)) ||
-          (textureSet != NULL)) {
-        return;
+  if ((lbl_803A5D60.playFlags & 1) == 0) {
+    if (lbl_803A5D60.audioExists != 0) {
+      if ((((lbl_803A5D60.curVideoNumber + lbl_803A5D60.initReadFrame) %
+            lbl_803A5D60.header.mNumFrames) == (lbl_803A5D60.header.mNumFrames - 1)) &&
+          (lbl_803A5D60.dispTextureSet == NULL) &&
+          (((lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
+            lbl_803A5D60.header.mNumFrames) == (lbl_803A5D60.header.mNumFrames - 1)) &&
+          (decodedTexture == NULL)) {
+        lbl_803A5D60.internalState = 3;
+        lbl_803A5D60.state = 3;
       }
-      player->internalState = 3;
-      player->state = 3;
     }
-    else if ((((player->curAudioTrack + frameOffset) % framesPerGroup) ==
-              (framesPerGroup - 1)) &&
-             (textureSet == NULL)) {
-      player->internalState = 3;
-      player->state = 3;
+    else if ((((lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
+               lbl_803A5D60.header.mNumFrames) == (lbl_803A5D60.header.mNumFrames - 1)) &&
+             (decodedTexture == NULL)) {
+      lbl_803A5D60.internalState = 3;
+      lbl_803A5D60.state = 3;
     }
   }
-  else if (((player->curAudioTrack + frameOffset) % framesPerGroup) ==
-           (framesPerGroup - 1)) {
+  else if (((lbl_803A5D60.curAudioTrack + lbl_803A5D60.initReadFrame) %
+             lbl_803A5D60.header.mNumFrames) == (lbl_803A5D60.header.mNumFrames - 1)) {
     gAttractMovieLoopCompleted = 1;
   }
 }
 #pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -308,6 +303,7 @@ bool FUN_80118574(undefined8 param_1,undefined8 param_2,undefined8 param_3,undef
 }
 
 #pragma scheduling off
+#pragma peephole off
 void THPPlayerStop(void) {
     OSMessage msg;
 
@@ -327,9 +323,10 @@ void THPPlayerStop(void) {
         }
 
         do {
-            if (OSReceiveMessage(&lbl_803A5CCC, &msg, OS_MESSAGE_NOBLOCK) != TRUE) {
-                msg = NULL;
+            if (OSReceiveMessage(&lbl_803A5CCC, &msg, OS_MESSAGE_NOBLOCK) == TRUE) {
+                continue;
             }
+            msg = NULL;
         } while (msg != NULL);
 
         lbl_803A5D60.curVolume = lbl_803A5D60.targetVolume;
@@ -339,6 +336,7 @@ void THPPlayerStop(void) {
     }
 }
 
+#pragma peephole reset
 BOOL THPPlayerPlay(void) {
     if ((lbl_803A5D60.isOpen != 0) &&
         ((lbl_803A5D60.state == 1) || (lbl_803A5D60.state == 4))) {
@@ -351,6 +349,7 @@ BOOL THPPlayerPlay(void) {
     return FALSE;
 }
 
+#pragma peephole off
 BOOL prepareAttractMode(u32 movieIndex, s32 playFlags) {
     char *base;
     void *readyMsg;
@@ -433,18 +432,21 @@ BOOL prepareAttractMode(u32 movieIndex, s32 playFlags) {
     lbl_803DD664 = (void (*)(void))VISetPostRetraceCallback((void (*)(u32))PlayControl);
     return TRUE;
 }
+#pragma peephole reset
 
 void PrepareReady(void *msg) {
     OSSendMessage(&lbl_803A5CEC, msg, OS_MESSAGE_BLOCK);
 }
 
+#pragma peephole off
 void InitAllMessageQueue(void) {
     char *player;
-    char *walk;
     s32 i;
+    char *walk;
+    s32 j;
 
     player = (char *)&lbl_803A5D60;
-    if (*(s32 *)(player + 0xa8) == 0) {
+    if (lbl_803A5D60.isOnMemory == 0) {
         i = 0;
         do {
             PushFreeReadBuffer((OSMessage)(player + 0xf4));
@@ -454,23 +456,24 @@ void InitAllMessageQueue(void) {
     }
 
     i = 0;
-    player = (char *)&lbl_803A5D60;
-    walk = player;
+    walk = (char *)&lbl_803A5D60;
+    player = walk;
     do {
-        PushFreeTextureSet((OSMessage)(walk + 0x144));
-        walk += sizeof(AttractMovieTextureSet);
+        PushFreeTextureSet((OSMessage)(player + 0x144));
+        player += sizeof(AttractMovieTextureSet);
         i++;
     } while (i < 3);
 
     if (lbl_803A5D60.audioExists != 0) {
-        i = 0;
+        j = 0;
         do {
-            PushFreeAudioBuffer(player + 0x174);
-            player += sizeof(AttractMovieAudioBuffer);
-            i++;
-        } while (i < 3);
+            PushFreeAudioBuffer(walk + 0x174);
+            walk += sizeof(AttractMovieAudioBuffer);
+            j++;
+        } while (j < 3);
     }
 
     OSInitMessageQueue(&lbl_803A5CEC, &lbl_803DD67C, 1);
 }
+#pragma peephole reset
 #pragma scheduling reset

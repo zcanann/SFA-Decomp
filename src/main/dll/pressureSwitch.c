@@ -698,7 +698,7 @@ extern f32 sqrtf(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern int getAngle(f32 dx, f32 dz);
 extern void ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, void *events);
-extern void Sfx_SetObjectChannelVolume(double volumeScale, int obj, int channel, int volume);
+extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 
 typedef union PressureSwitchIntToDouble {
     u64 bits;
@@ -950,10 +950,8 @@ void fn_8014EE8C(int obj, SwarmBaddieState *state)
 {
     int curve;
     int done;
-    int player;
     f32 step;
     f32 wave;
-    PressureSwitchIntToDouble angleAsDouble;
 
     curve = state->curve;
     done = Curve_AdvanceAlongPath(curve, state->curveStep);
@@ -964,37 +962,36 @@ void fn_8014EE8C(int obj, SwarmBaddieState *state)
         state->flags &= ~SWARMBADDIE_FLAG_PATH_NEEDS_LINK;
     }
     lbl_803DDA60 = *(int *)(curve + 0x10);
-    step = lbl_803E267C;
-    if ((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) == 0) {
+    if ((state->flags & SWARMBADDIE_FLAG_CHASE_PLAYER) != 0) {
+        step = lbl_803E267C;
+        *(f32 *)(obj + 0x24) = step * (*(f32 *)(state->player + 0xc) - *(f32 *)(obj + 0xc)) +
+                               *(f32 *)(obj + 0x24);
+        *(f32 *)(obj + 0x28) =
+            step * ((lbl_803E2680 + *(f32 *)(state->player + 0x10)) - *(f32 *)(obj + 0x10)) +
+            *(f32 *)(obj + 0x28);
+        *(f32 *)(obj + 0x2c) = step * (*(f32 *)(state->player + 0x14) - *(f32 *)(obj + 0x14)) +
+                               *(f32 *)(obj + 0x2c);
+    } else {
+        step = lbl_803E267C;
         *(f32 *)(obj + 0x24) = step * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc)) +
                                *(f32 *)(obj + 0x24);
         *(f32 *)(obj + 0x28) = step * (*(f32 *)(curve + 0x6c) - *(f32 *)(obj + 0x10)) +
                                *(f32 *)(obj + 0x28);
         *(f32 *)(obj + 0x2c) = step * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14)) +
                                *(f32 *)(obj + 0x2c);
-    } else {
-        player = state->player;
-        *(f32 *)(obj + 0x24) = step * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc)) +
-                               *(f32 *)(obj + 0x24);
-        *(f32 *)(obj + 0x28) =
-            step * ((lbl_803E2680 + *(f32 *)(player + 0x10)) - *(f32 *)(obj + 0x10)) +
-            *(f32 *)(obj + 0x28);
-        *(f32 *)(obj + 0x2c) = step * (*(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) +
-                               *(f32 *)(obj + 0x2c);
     }
 
-    step = lbl_803E2684;
-    *(f32 *)(obj + 0x24) *= step;
+    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (step = lbl_803E2684);
     *(f32 *)(obj + 0x28) *= step;
     *(f32 *)(obj + 0x2c) *= step;
 
-    if (lbl_803E2688 < *(f32 *)(obj + 0x24)) {
+    if (*(f32 *)(obj + 0x24) > lbl_803E2688) {
         *(f32 *)(obj + 0x24) = lbl_803E2688;
     }
-    if (lbl_803E2688 < *(f32 *)(obj + 0x28)) {
+    if (*(f32 *)(obj + 0x28) > lbl_803E2688) {
         *(f32 *)(obj + 0x28) = lbl_803E2688;
     }
-    if (lbl_803E2688 < *(f32 *)(obj + 0x2c)) {
+    if (*(f32 *)(obj + 0x2c) > lbl_803E2688) {
         *(f32 *)(obj + 0x2c) = lbl_803E2688;
     }
     if (*(f32 *)(obj + 0x24) < lbl_803E268C) {
@@ -1010,19 +1007,16 @@ void fn_8014EE8C(int obj, SwarmBaddieState *state)
     objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta,
             *(f32 *)(obj + 0x2c) * timeDelta);
 
-    state->yawWavePhase = state->yawWavePhase + (s16)(int)(lbl_803E2690 * timeDelta);
-    state->rollWavePhase = state->rollWavePhase + (s16)(int)(lbl_803E2694 * timeDelta);
+    state->yawWavePhase += (s16)(lbl_803E2690 * timeDelta);
+    state->rollWavePhase += (s16)(lbl_803E2694 * timeDelta);
 
-    angleAsDouble.bits =
-        CONCAT44(0x43300000, (s32)state->yawWavePhase ^ 0x80000000);
-    wave = fn_80293E80((lbl_803E26A0 * (f32)(angleAsDouble.value - lbl_803E26A8)) /
-                       lbl_803E26A4);
-    *(s16 *)obj = *(s16 *)obj + (s16)(int)(lbl_803E2698 * (lbl_803E269C * wave));
+    *(s16 *)obj += (s16)(lbl_803E2698 *
+                         (lbl_803E269C *
+                          fn_80293E80((lbl_803E26A0 * (f32)state->yawWavePhase) / lbl_803E26A4)));
 
-    angleAsDouble.bits = CONCAT44(0x43300000, (s32)state->rollWavePhase ^ 0x80000000);
-    wave = fn_80293E80((lbl_803E26A0 * (f32)(angleAsDouble.value - lbl_803E26A8)) /
-                       lbl_803E26A4);
-    *(s16 *)(obj + 4) = *(s16 *)(obj + 4) + (s16)(int)(lbl_803E2698 * (lbl_803E269C * wave));
+    *(s16 *)(obj + 4) += (s16)(lbl_803E2698 *
+                               (lbl_803E269C *
+                                fn_80293E80((lbl_803E26A0 * (f32)state->rollWavePhase) / lbl_803E26A4)));
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1033,73 +1027,63 @@ void fn_8014F620(int obj, int *state)
 {
     int curve;
     int done;
-    int player;
     f32 step;
     f32 wave;
-    PressureSwitchIntToDouble angleAsDouble;
 
     curve = state[0];
-    *(s16 *)((u8 *)state + 0x26) =
-        *(s16 *)((u8 *)state + 0x26) + (int)(lbl_803E26D0 * timeDelta);
-    *(s16 *)(state + 10) = *(s16 *)(state + 10) + (int)(lbl_803E26D4 * timeDelta);
+    *(s16 *)((u8 *)state + 0x26) += (s16)(lbl_803E26D0 * timeDelta);
+    *(s16 *)(state + 10) += (s16)(lbl_803E26D4 * timeDelta);
 
-    angleAsDouble.bits =
-        CONCAT44(0x43300000, (s32)*(s16 *)((u8 *)state + 0x26) ^ 0x80000000);
-    wave = fn_80293E80((lbl_803E26DC * (f32)(angleAsDouble.value - lbl_803E2700)) /
-                       lbl_803E26E0);
-    done = Curve_AdvanceAlongPath(curve, *(f32 *)(state + 2) * (lbl_803E26D8 + wave));
+    wave = lbl_803E26D8 + fn_80293E80((lbl_803E26DC * (f32)*(s16 *)((u8 *)state + 0x26)) /
+                                      lbl_803E26E0);
+    done = Curve_AdvanceAlongPath(curve, *(f32 *)(state + 2) * wave);
     if (((done != 0) || (*(int *)(curve + 0x10) != lbl_803DDA68)) &&
         ((*(u8(**)(int))(*gRomCurveInterface + 0x90))(curve) != 0) &&
         ((*(u8(**)(int, int, f32, int *, int))(*gRomCurveInterface + 0x8c))(
              state[0], obj, lbl_803E26E4, &lbl_803DBC80, -1) != 0)) {
-        *(u8 *)((u8 *)state + 0x24) &= 0xfe;
+        *(u8 *)((u8 *)state + 0x24) = *(u8 *)((u8 *)state + 0x24) & ~1;
     }
     lbl_803DDA68 = *(int *)(curve + 0x10);
 
-    if ((*(u8 *)((u8 *)state + 0x24) & 2) == 0) {
+    if ((*(u8 *)((u8 *)state + 0x24) & 2) != 0) {
+        *(f32 *)(obj + 0x24) =
+            lbl_803E26E8 * (*(f32 *)(state[1] + 0xc) - *(f32 *)(obj + 0xc)) +
+            *(f32 *)(obj + 0x24);
+
+        wave = fn_80293E80((lbl_803E26DC * (f32)*(s16 *)(state + 10)) /
+                           lbl_803E26E0);
+        *(f32 *)(obj + 0x28) =
+            ((lbl_803E26F0 * wave + (lbl_803E26EC + *(f32 *)(state[1] + 0x10))) -
+             *(f32 *)(obj + 0x10)) * lbl_803E26E8 +
+            *(f32 *)(obj + 0x28);
+        *(f32 *)(obj + 0x2c) =
+            lbl_803E26E8 * (*(f32 *)(state[1] + 0x14) - *(f32 *)(obj + 0x14)) +
+            *(f32 *)(obj + 0x2c);
+    } else {
         *(f32 *)(obj + 0x24) = lbl_803E26E8 * (*(f32 *)(curve + 0x68) - *(f32 *)(obj + 0xc)) +
                                *(f32 *)(obj + 0x24);
 
-        angleAsDouble.bits = CONCAT44(0x43300000, (s32)*(s16 *)(state + 10) ^ 0x80000000);
-        wave = fn_80293E80((lbl_803E26DC * (f32)(angleAsDouble.value - lbl_803E2700)) /
+        wave = fn_80293E80((lbl_803E26DC * (f32)*(s16 *)(state + 10)) /
                            lbl_803E26E0);
         *(f32 *)(obj + 0x28) =
-            lbl_803E26E8 *
-                ((lbl_803E26F0 * wave + *(f32 *)(curve + 0x6c)) - *(f32 *)(obj + 0x10)) +
+            ((lbl_803E26F0 * wave + *(f32 *)(curve + 0x6c)) - *(f32 *)(obj + 0x10)) *
+                lbl_803E26E8 +
             *(f32 *)(obj + 0x28);
         *(f32 *)(obj + 0x2c) = lbl_803E26E8 * (*(f32 *)(curve + 0x70) - *(f32 *)(obj + 0x14)) +
                                *(f32 *)(obj + 0x2c);
-    } else {
-        player = state[1];
-        *(f32 *)(obj + 0x24) =
-            lbl_803E26E8 * (*(f32 *)(player + 0xc) - *(f32 *)(obj + 0xc)) +
-            *(f32 *)(obj + 0x24);
-
-        angleAsDouble.bits = CONCAT44(0x43300000, (s32)*(s16 *)(state + 10) ^ 0x80000000);
-        wave = fn_80293E80((lbl_803E26DC * (f32)(angleAsDouble.value - lbl_803E2700)) /
-                           lbl_803E26E0);
-        *(f32 *)(obj + 0x28) =
-            lbl_803E26E8 *
-                ((lbl_803E26F0 * wave + (lbl_803E26EC + *(f32 *)(player + 0x10))) -
-                 *(f32 *)(obj + 0x10)) +
-            *(f32 *)(obj + 0x28);
-        *(f32 *)(obj + 0x2c) =
-            lbl_803E26E8 * (*(f32 *)(player + 0x14) - *(f32 *)(obj + 0x14)) +
-            *(f32 *)(obj + 0x2c);
     }
 
-    step = lbl_803E26F4;
-    *(f32 *)(obj + 0x24) *= step;
+    *(f32 *)(obj + 0x24) = *(f32 *)(obj + 0x24) * (step = lbl_803E26F4);
     *(f32 *)(obj + 0x28) *= step;
     *(f32 *)(obj + 0x2c) *= step;
 
-    if (lbl_803E26F8 < *(f32 *)(obj + 0x24)) {
+    if (*(f32 *)(obj + 0x24) > lbl_803E26F8) {
         *(f32 *)(obj + 0x24) = lbl_803E26F8;
     }
-    if (lbl_803E26F8 < *(f32 *)(obj + 0x28)) {
+    if (*(f32 *)(obj + 0x28) > lbl_803E26F8) {
         *(f32 *)(obj + 0x28) = lbl_803E26F8;
     }
-    if (lbl_803E26F8 < *(f32 *)(obj + 0x2c)) {
+    if (*(f32 *)(obj + 0x2c) > lbl_803E26F8) {
         *(f32 *)(obj + 0x2c) = lbl_803E26F8;
     }
     if (*(f32 *)(obj + 0x24) < lbl_803E26FC) {
@@ -1118,23 +1102,24 @@ void fn_8014F620(int obj, int *state)
 #pragma peephole reset
 #pragma scheduling reset
 
+#pragma scheduling off
+#pragma peephole off
 void swarmbaddie_update(int obj)
 {
     int hitObj;
-    int player;
     int *state;
-    f32 dx;
-    f32 dy;
-    f32 dz;
+    f32 d[3];
+    f32 sqz;
+    f32 sqx;
+    f32 sqy;
     f32 volume;
-    int volumeByte;
     int oldTarget;
-    int hitA;
-    int hitB;
-    int hitC;
     int hitD;
     int hitE;
+    int hitC;
     int hitF;
+    int hitB;
+    int hitA;
 
     state = *(int **)(obj + 0xb8);
     oldTarget = state[0];
@@ -1143,51 +1128,52 @@ void swarmbaddie_update(int obj)
     }
     ObjHits_SetHitVolumeSlot(obj, 10, 1, 0);
     ObjHits_EnableObject(obj);
-    if (lbl_803E26B4 < *(f32 *)(state + 6)) {
+    if (*(f32 *)(state + 6) > lbl_803E26B4) {
         *(f32 *)(state + 6) = *(f32 *)(state + 6) - lbl_803E26B8;
     }
     volume = *(f32 *)(state + 6);
-    volumeByte = (int)(lbl_803E26BC * volume);
     Sfx_SetObjectChannelVolume(
-        (double)(lbl_803E26C0 *
-                     fn_80293E80((lbl_803E26A0 *
-                                  (f32)((double)CONCAT44(0x43300000,
-                                                         ((s32)*(s16 *)((u8 *)state + 0x1e) +
-                                                          (s32)*(s16 *)(state + 8)) ^
-                                                             0x80000000) -
-                                         lbl_803E26A8)) /
-                                 lbl_803E26A4) +
-                 volume),
-        obj, 0x40, volumeByte);
+        lbl_803E26C0 * fn_80293E80((lbl_803E26A0 *
+                                    (f32)(*(s16 *)((u8 *)state + 0x1e) + *(s16 *)(state + 8))) /
+                                   lbl_803E26A4) +
+            volume,
+        obj, 0x40, (int)(lbl_803E26BC * volume));
     (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 0x336, 0, 2, -1,
                                                                        (int)(state + 6));
-    player = Obj_GetPlayerObject();
-    state[1] = player;
-    if (player != 0) {
-        dx = *(f32 *)(player + 0x18) - *(f32 *)(obj + 0x18);
-        dy = *(f32 *)(player + 0x1c) - *(f32 *)(obj + 0x1c);
-        dz = *(f32 *)(player + 0x20) - *(f32 *)(obj + 0x20);
-        *(f32 *)(state + 3) = sqrtf(dz * dz + dx * dx + dy * dy);
+    state[1] = Obj_GetPlayerObject();
+    if (*(void **)(state + 1) != NULL) {
+        d[0] = *(f32 *)(state[1] + 0x18) - *(f32 *)(obj + 0x18);
+        d[1] = *(f32 *)(state[1] + 0x1c) - *(f32 *)(obj + 0x1c);
+        d[2] = *(f32 *)(state[1] + 0x20) - *(f32 *)(obj + 0x20);
+        sqz = d[2] * d[2];
+        sqx = d[0] * d[0];
+        sqy = d[1] * d[1];
+        *(f32 *)(state + 3) = sqrtf(sqz + (sqx + sqy));
     }
-    if (oldTarget != 0) {
-        dx = *(f32 *)(oldTarget + 0x68) - *(f32 *)(obj + 0x18);
-        dy = *(f32 *)(oldTarget + 0x6c) - *(f32 *)(obj + 0x1c);
-        dz = *(f32 *)(oldTarget + 0x70) - *(f32 *)(obj + 0x20);
-        *(f32 *)(state + 4) = sqrtf(dz * dz + dx * dx + dy * dy);
+    if ((void *)oldTarget != NULL) {
+        d[0] = *(f32 *)(oldTarget + 0x68) - *(f32 *)(obj + 0x18);
+        d[1] = *(f32 *)(oldTarget + 0x6c) - *(f32 *)(obj + 0x1c);
+        d[2] = *(f32 *)(oldTarget + 0x70) - *(f32 *)(obj + 0x20);
+        sqz = d[2] * d[2];
+        sqx = d[0] * d[0];
+        sqy = d[1] * d[1];
+        *(f32 *)(state + 4) = sqrtf(sqz + (sqx + sqy));
     }
-    if (((*(u8 *)(state + 7) & 2) != 0) && (lbl_803E26C4 < *(f32 *)(state + 4))) {
-        *(u8 *)(state + 7) &= 0xfd;
-        *(u8 *)(state + 7) |= 4;
+    if (((*(u8 *)(state + 7) & 2) != 0) && (*(f32 *)(state + 4) > lbl_803E26C4)) {
+        *(u8 *)(state + 7) = *(u8 *)(state + 7) & ~2;
+        *(u8 *)(state + 7) = *(u8 *)(state + 7) | 4;
     }
     if (((*(u8 *)(state + 7) & 4) != 0) && (*(f32 *)(state + 4) < lbl_803E26C8)) {
-        *(u8 *)(state + 7) &= 0xfb;
+        *(u8 *)(state + 7) = *(u8 *)(state + 7) & ~4;
     }
-    if (((*(u8 *)(state + 7) & 6) == 0) && (state[1] != 0) &&
+    if (((*(u8 *)(state + 7) & 6) == 0) && (*(void **)(state + 1) != NULL) &&
         (*(f32 *)(state + 3) < *(f32 *)(state + 5))) {
-        *(u8 *)(state + 7) |= 2;
+        *(u8 *)(state + 7) = *(u8 *)(state + 7) | 2;
     }
     fn_8014EE8C(obj, (SwarmBaddieState *)state);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
