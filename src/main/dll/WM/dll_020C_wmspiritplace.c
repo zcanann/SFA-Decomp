@@ -24,8 +24,8 @@ void fn_801F568C(void) {}
 #pragma scheduling off
 int wmspiritplace_SeqFn(int obj, int unused, int actor)
 {
-    WmSpiritPlaceState *state;
     int i;
+    WmSpiritPlaceState *state;
     int mapId;
     u8 action;
     u8 fxPos[24];
@@ -37,7 +37,7 @@ int wmspiritplace_SeqFn(int obj, int unused, int actor)
     }
 
     *(u8 *)(actor + 0x56) = 0;
-    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & 0xf7);
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
     *(void **)(actor + 0xe8) = fn_801F568C;
 
     for (i = 0; i < *(u8 *)(actor + 0x8b); i++) {
