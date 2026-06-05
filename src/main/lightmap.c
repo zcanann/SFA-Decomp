@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/expgfx.h"
+#include "main/frustum.h"
 #include "main/lightmap.h"
 
 
@@ -300,7 +301,6 @@ extern f32 sqrtf(f32 v);
 extern f32 fn_80292248(f32 v);
 extern f32 floor(f32 v);
 extern f32 fn_802943F4(f32 v);
-extern void fn_8005A8A4(f32 *planes, int n);
 
 
 #pragma scheduling off
@@ -382,7 +382,7 @@ void updateVisibleGeometry(void)
     pz[n * 5] = oz;
     pd[n * 5] = -(zz * oz + (xx * ox + yy * oy));
     n++;
-    fn_8005A8A4(gViewFrustumPlanes, 5);
+    frustumPlanes_updateAabbCornerIndices((FrustumPlane*)gViewFrustumPlanes, 5);
 }
 #pragma peephole reset
 #pragma scheduling reset

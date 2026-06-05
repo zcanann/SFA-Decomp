@@ -2668,13 +2668,13 @@ int mapLoadBlock(int p1, int p2, int p3, int p4, int layer)
 #pragma peephole reset
 #pragma scheduling reset
 
-typedef struct { f32 v[15]; } _PlanePack;
+typedef struct { f32 v[15]; } _PlaneDirPack;
 typedef struct { f32 v[5]; } _ScalePack;
 typedef struct { f32 x, y, z; } _Vec3;
 
-extern _PlanePack lbl_802C1E58;
-extern _ScalePack lbl_802C1E94;
-extern f32 lbl_803878D8[];
+extern _PlaneDirPack sPlayerFrustumPlaneDirs;
+extern _ScalePack sPlayerFrustumPlaneScales;
+extern FrustumPlane gPlayerRelativeFrustumPlanes[];
 extern f32 PostCB_803DEBF4;
 extern int* Obj_GetPlayerObject(void);
 extern int* Camera_GetCurrentViewSlot(void);
@@ -2684,7 +2684,6 @@ extern void PSMTXMultVec(f32* mtx, _Vec3* in, f32* out);
 extern void PSVECScale(f32* in, _Vec3* out, f32 s);
 extern void PSVECAdd(_Vec3* a, _Vec3* b, _Vec3* out);
 extern f32 PSVECDotProduct(_Vec3* a, f32* b);
-extern void fn_8005A8A4(f32* planes, int count);
 
 #pragma scheduling off
 #pragma peephole off
@@ -2693,7 +2692,7 @@ void playerVecFn_8005a9b0(void)
     _Vec3 camPos;
     _Vec3 tmp;
     _ScalePack scales;
-    _PlanePack planes;
+    _PlaneDirPack planes;
     int* player;
     int* viewSlot;
     f32* invRotMtx;
@@ -2703,8 +2702,8 @@ void playerVecFn_8005a9b0(void)
     f32* scalePtr;
     f32 clipDist;
 
-    planes = lbl_802C1E58;
-    scales = lbl_802C1E94;
+    planes = sPlayerFrustumPlaneDirs;
+    scales = sPlayerFrustumPlaneScales;
     player = Obj_GetPlayerObject();
     viewSlot = Camera_GetCurrentViewSlot();
     camPos.x = *(f32*)((char*)viewSlot + 0x44) - playerMapOffsetX;
@@ -2722,7 +2721,7 @@ void playerVecFn_8005a9b0(void)
     scales.v[0] = clipDist;
 
     i = 0;
-    outPtr = lbl_803878D8;
+    outPtr = (f32*)gPlayerRelativeFrustumPlanes;
     dirPtr = planes.v;
     scalePtr = scales.v;
     for (; i < 5; i++) {
@@ -2734,7 +2733,7 @@ void playerVecFn_8005a9b0(void)
         dirPtr += 3;
         scalePtr++;
     }
-    fn_8005A8A4(lbl_803878D8, 5);
+    frustumPlanes_updateAabbCornerIndices(gPlayerRelativeFrustumPlanes, 5);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -3530,11 +3529,11 @@ int mapCoordsToId(int x, int z, int layerIdx)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern f32 lbl_8030E5D4[];
+extern f32 sAabbCornerDirections[];
 
 #pragma scheduling off
 #pragma peephole off
-void fn_8005A8A4(f32* planes, int count)
+void frustumPlanes_updateAabbCornerIndices(FrustumPlane* planes, int count)
 {
     int k;
     int j;
@@ -3546,9 +3545,9 @@ void fn_8005A8A4(f32* planes, int count)
         best = lbl_803DEBCC;
         j = 0;
         while (j < 24) {
-            v = planes[0] * lbl_8030E5D4[j++];
-            v += planes[1] * lbl_8030E5D4[j++];
-            v += planes[2] * lbl_8030E5D4[j++];
+            v = planes->normalX * sAabbCornerDirections[j++];
+            v += planes->normalY * sAabbCornerDirections[j++];
+            v += planes->normalZ * sAabbCornerDirections[j++];
             if (best < v) {
                 best = v;
                 bi = j - 3;
@@ -3556,31 +3555,31 @@ void fn_8005A8A4(f32* planes, int count)
         }
         switch (bi) {
         case 0:
-            ((u8*)planes)[16] = 0;
+            planes->aabbCornerIndex = 0;
             break;
         case 3:
-            ((u8*)planes)[16] = 2;
+            planes->aabbCornerIndex = 2;
             break;
         case 6:
-            ((u8*)planes)[16] = 5;
+            planes->aabbCornerIndex = 5;
             break;
         case 9:
-            ((u8*)planes)[16] = 7;
+            planes->aabbCornerIndex = 7;
             break;
         case 0xc:
-            ((u8*)planes)[16] = 1;
+            planes->aabbCornerIndex = 1;
             break;
         case 0xf:
-            ((u8*)planes)[16] = 3;
+            planes->aabbCornerIndex = 3;
             break;
         case 0x12:
-            ((u8*)planes)[16] = 4;
+            planes->aabbCornerIndex = 4;
             break;
         case 0x15:
-            ((u8*)planes)[16] = 6;
+            planes->aabbCornerIndex = 6;
             break;
         }
-        planes += 5;
+        planes++;
     }
 }
 #pragma peephole reset

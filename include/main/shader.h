@@ -2,6 +2,7 @@
 #define MAIN_SHADER_H_
 
 #include "ghidra_import.h"
+#include "main/frustum.h"
 
 int objShouldLoad(int param_1,int param_2,int param_3);
 void FUN_80055d0c(undefined8 param_1,double param_2,double param_3,undefined8 param_4,
