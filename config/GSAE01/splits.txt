@@ -549,7 +549,7 @@ main/dll/FRONT/n_filemenu.c:
 main/dll/FRONT/dll_3B.c:
 	.text       start:0x80116F84 end:0x801175A4
 
-main/unknown/autos/placeholder_801175B4.c:
+main/audio_decode_thread.c:
 	.text       start:0x801175A4 end:0x80117668
 
 dolphin/ax/AX.c:
@@ -985,7 +985,7 @@ main/dll/DIM/DIMcannon.c:
 main/dll/DIM/DIMlavasmash.c:
 	.text       start:0x801B0924 end:0x801B1354
 
-main/unknown/autos/placeholder_801B1354.c:
+main/dll/DIM/dimsnowball_init.c:
 	.text       start:0x801B1354 end:0x801B13F0
 
 dolphin/TRK_MINNOW_DOLPHIN/MWCriticalSection_gc.c:
@@ -1576,7 +1576,7 @@ main/worldasteroids.c:
 	.text       start:0x8020C278 end:0x8020C5EC
 	.data       start:0x8032A140 end:0x8032A178
 
-main/unknown/autos/placeholder_8020C5EC.c:
+main/worldplanet_lighting.c:
 	.text       start:0x8020C5EC end:0x8020C964
 
 main/worldplanet.c:
@@ -1592,27 +1592,24 @@ main/crcloudrace.c:
 	.text       start:0x802106C0 end:0x80210BE8
 	.data       start:0x8032A3C8 end:0x8032A400
 
-main/unknown/autos/placeholder_80210BE8.c:
+main/spellstone_idle.c:
 	.text       start:0x80210BE8 end:0x80210BF0
 
 main/spellstone.c:
 	.text       start:0x80210BF0 end:0x80210E8C
 	.data       start:0x8032A428 end:0x8032A468
 
-main/unknown/autos/placeholder_80210E8C.c:
-	.text       start:0x80210E8C end:0x80210E8C
-
 main/crfueltank.c:
 	.text       start:0x80210E8C end:0x802110F8
 	.data       start:0x8032A468 end:0x8032A4A0
 
-main/unknown/autos/placeholder_802110F8.c:
+main/proximitymine_reset.c:
 	.text       start:0x802110F8 end:0x8021122C
 
 main/proximitymine.c:
 	.text       start:0x8021122C end:0x802113F8
 
-main/unknown/autos/placeholder_802113F8.c:
+main/proximitymine_update.c:
 	.text       start:0x802113F8 end:0x80211A10
 
 main/proximitymine_init.c:
@@ -2179,13 +2176,13 @@ dolphin/card/CARDMount.c:
 	.text       start:0x80261A7C end:0x8026253C
 	.data       start:0x8032ED40 end:0x8032ED80
 
-main/unknown/autos/placeholder_8032EDD0.c:
+main/audio/mcmd_data.c:
 	.data       start:0x8032EDD0 end:0x8032F218
 
 dolphin/gx/GXTextureTables.c:
 	.data       start:0x8032F218 end:0x8032F618
 
-main/unknown/autos/placeholder_8032F618.c:
+main/audio/adsr_data.c:
 	.data       start:0x8032F618 end:0x8032F79C
 
 dolphin/card/CARDFormat.c:
@@ -2269,9 +2266,6 @@ main/audio/synth_init.c:
 	extab       start:0x80005690 end:0x80005698
 	extabindex  start:0x80005D68 end:0x80005D74
 	.text       start:0x8026F8B8 end:0x8026FC8C
-
-main/audio/synth_scale.c:
-	.text       start:0x8026FC8C end:0x8026FC8C
 
 main/audio/synth_voice.c:
 	extab       start:0x80005698 end:0x800056F8
@@ -2844,17 +2838,11 @@ main/dll/player.c:
 main/dll/dll_01B5_lightfoot.c:
 	.text       start:0x802B8A58 end:0x802B9780
 
-main/unknown/autos/placeholder_80295318.c:
-	.text       start:0x802B9780 end:0x802BACC0
+main/dll/DIM/dll_0256_dimsnowhorn1.c:
+	.text       start:0x802B9780 end:0x802BC0D0
 
-main/unknown/autos/placeholder_802BACC0.c:
-	.text       start:0x802BACC0 end:0x802BB4B0
-
-main/unknown/autos/placeholder_802BB4B0.c:
-	.text       start:0x802BB4B0 end:0x802BB720
-
-main/unknown/autos/placeholder_802BBC10.c:
-	.text       start:0x802BB720 end:0x802BC7C0
+main/dll/DIM/dll_01D9_dim2prisonmammoth.c:
+	.text       start:0x802BC0D0 end:0x802BC7C0
 
 main/dll/DR/dll_0077_DR_EarthWarrior.c:
 	.text       start:0x802BC7C0 end:0x802BF0C8

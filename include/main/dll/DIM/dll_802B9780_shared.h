@@ -1,107 +1,55 @@
-#ifndef MAIN_DLL_DR_DR_802BBC10_SHARED_H
-#define MAIN_DLL_DR_DR_802BBC10_SHARED_H
+#ifndef MAIN_DLL_DIM_DLL_802B9780_SHARED_H_
+#define MAIN_DLL_DIM_DLL_802B9780_SHARED_H_
 
 #include "ghidra_import.h"
+#include "main/dll/DB/DBbonedust.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
+#include "main/unknown/autos/placeholder_80295318.h"
+#include "main/dll/player_80295318_shared.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
 
-typedef struct {
-    u8 b80 : 1;
-    u8 b40 : 1;
-    u8 b20 : 1;
-    u8 b10 : 1;
-    u8 b08 : 1;
-    u8 b04 : 1;
-    u8 b02 : 1;
-    u8 b01 : 1;
-} ByteFlags;
+extern f32 lbl_803E8298;
+extern f32 lbl_803E829C;
+extern f32 lbl_803E82A0;
 
-typedef struct {
-    f32 f0;
-    f32 f4;
-    f32 f8;
-    s16 hc;
-    u8 pad_e[2];
-    f32 f10;
-    f32 f14;
-    f32 f18;
-    s16 h1c;
-    u16 h1e;
-    u16 h20;
-    u8 pad_22[2];
-} SnowHornEntry;
+extern void ObjPath_GetPointLocalPosition(int obj, int point, f32 *out_x, f32 *out_y,
+                                          f32 *out_z);
+extern void mtx44_mult(void *lhs, void *rhs, void *out);
+extern void fn_8003B950(void *matrix);
 
-extern undefined8 FUN_80006824();
-extern undefined8 FUN_80006920();
-extern void* FUN_800069a8();
-extern undefined4 FUN_800069bc();
+extern undefined lbl_803DB0F0[];
+
+/*
+ * Build a transform from a packed rotation/translation record and sample
+ * one fixed local point through it.
+ */
+
+/*
+ * DIMSnowHorn1_animEventCallback - large interrupt-init helper (~140 instructions).
+ */
+extern f32 lbl_803E82A4;
+extern f32 lbl_803E82A8;
+extern f32 lbl_803DE4C4;
+extern int lbl_803DB130[];
+
+extern void fn_802BB998(int obj, int state, int state2);
+/* DLL 0x76 (DIMSnowHorn1 / dim2prisonmammoth) fragment: head/vtable live in placeholder_802BACC0 + placeholder_802BB4B0; consolidate when those adjacent units are graduated. */
+
 extern int FUN_80006a64();
 extern undefined8 FUN_80006a68();
 extern undefined4 FUN_80006a6c();
-extern undefined4 FUN_80006b0c();
-extern undefined4 FUN_80006b14();
-extern undefined4 FUN_80006b94();
-extern undefined4 FUN_80006ba8();
-extern char FUN_80006bc8();
-extern char FUN_80006bd0();
-extern uint FUN_80006c00();
-extern uint FUN_80006c10();
-extern uint FUN_80017690();
-extern undefined4 FUN_80017698();
-extern double FUN_800176f4();
 extern double FUN_80017708();
-extern undefined4 FUN_8001771c();
-extern int FUN_80017730();
-extern undefined4 FUN_80017748();
-extern undefined4 FUN_80017754();
-extern uint FUN_80017758();
 extern undefined4 FUN_8001776c();
-extern undefined4 FUN_80017778();
-extern undefined4 FUN_80017784();
-extern undefined4 FUN_8001789c();
-extern undefined4 FUN_800178a0();
-extern undefined4 FUN_800178a4();
-extern undefined4 FUN_800178ac();
-extern undefined4 FUN_800178b0();
-extern uint FUN_800178b4();
-extern byte FUN_80017a20();
-extern undefined4 FUN_80017a88();
-extern int FUN_80017a98();
-extern void* FUN_80017aa4();
-extern undefined4 FUN_80017ac8();
-extern int FUN_80017ae4();
-extern uint FUN_80017ae8();
-extern int FUN_8002f6ac();
-extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
-extern undefined4 ObjHits_MarkObjectPositionDirty();
-extern undefined4 ObjHits_SyncObjectPositionIfDirty();
-extern undefined4 ObjHits_DisableObject();
-extern undefined4 ObjHits_EnableObject();
-extern int ObjHits_GetPriorityHitWithPosition();
-extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjGroup_FindNearestObject();
-extern undefined8 ObjGroup_RemoveObject();
-extern undefined4 ObjGroup_AddObject();
-extern undefined8 ObjLink_DetachChild();
-extern undefined4 ObjLink_AttachChild();
-extern undefined4 ObjPath_GetPointWorldPositionArray();
-extern undefined4 ObjPath_GetPointLocalPosition();
-extern undefined4 ObjPath_GetPointModelMtx();
-extern undefined4 ObjPath_GetPointWorldPosition();
 extern undefined4 objAnimFn_80038f38();
 extern undefined4 FUN_80039468();
-extern undefined4 FUN_8003964c();
 extern undefined4 FUN_8003a1c4();
-extern undefined4 FUN_8003b280();
 extern undefined4 FUN_8003b444();
-extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8003b870();
 extern undefined4 FUN_80053754();
 extern undefined4 FUN_80053758();
 extern int FUN_80056600();
-extern undefined4 FUN_8006dca8();
 extern undefined4 FUN_8007f6e4();
 extern undefined4 FUN_8007f718();
 extern undefined4 FUN_800e8630();
@@ -113,40 +61,12 @@ extern undefined4 FUN_801149bc();
 extern undefined4 FUN_80114b10();
 extern undefined4 dll_2E_func03();
 extern undefined4 FUN_801150ac();
-extern undefined4 FUN_8011e868();
 extern undefined4 FUN_80135814();
 extern undefined4 FUN_8020a498();
 extern undefined4 FUN_8020a4a4();
-extern undefined8 FUN_80286834();
-extern undefined4 FUN_80286838();
-extern undefined4 FUN_8028683c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_80286880();
-extern undefined4 FUN_80286884();
-extern undefined4 FUN_80286888();
-extern undefined4 FUN_8028688c();
-extern double FUN_80293900();
-extern undefined4 FUN_80293f90();
-extern undefined4 FUN_80294964();
-extern undefined4 FUN_80294d60();
-extern undefined4 FUN_80295098();
-extern undefined4 FUN_802950a4();
-extern undefined4 FUN_802950a8();
-extern undefined4 FUN_80295140();
-extern undefined4 FUN_80295148();
-extern undefined4 FUN_80295150();
-extern undefined4 FUN_80295158();
-extern undefined4 FUN_80295160();
-extern undefined4 FUN_80295168();
-extern undefined4 FUN_80295170();
-extern undefined4 FUN_80295174();
-extern undefined4 FUN_8029517c();
-extern undefined4 FUN_80295184();
-extern undefined4 FUN_8029518c();
-extern undefined4 FUN_80295194();
 extern undefined4 FUN_802bb420();
 extern undefined4 FUN_802bb998();
-extern uint countLeadingZeros();
+
 extern undefined4 DAT_802c3428;
 extern undefined4 DAT_802c342c;
 extern undefined4 DAT_802c3430;
@@ -229,7 +149,6 @@ extern undefined4 DAT_803dbe14;
 extern undefined4 DAT_803dbe18;
 extern undefined4 DAT_803dbe1c;
 extern undefined4 DAT_803dbe20;
-extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dd39c;
 extern undefined4 DAT_803dd3b8;
 extern undefined4 DAT_803dd3bc;
@@ -243,14 +162,7 @@ extern undefined4 DAT_803dd3ec;
 extern undefined4 DAT_803dd3fc;
 extern undefined4 DAT_803dd402;
 extern undefined4 DAT_803dd404;
-extern undefined4* DAT_803dd6d4;
 extern undefined4* DAT_803dd6e0;
-extern undefined4* DAT_803dd6e8;
-extern undefined4* DAT_803dd708;
-extern undefined4* DAT_803dd70c;
-extern undefined4* DAT_803dd71c;
-extern undefined4* DAT_803dd728;
-extern undefined4* DAT_803dd72c;
 extern undefined4 DAT_803df144;
 extern undefined4 DAT_803df148;
 extern undefined4* DAT_803df150;
@@ -263,17 +175,12 @@ extern undefined4 DAT_803e8f70;
 extern undefined4 DAT_803e9030;
 extern undefined4 DAT_803e9034;
 extern undefined4 DAT_803e9038;
-extern f64 DOUBLE_803e8f08;
 extern f64 DOUBLE_803e8f78;
 extern f64 DOUBLE_803e9098;
-extern f32 FLOAT_803dc074;
 extern f32 FLOAT_803dc078;
 extern f32 FLOAT_803dd3d4;
 extern f32 FLOAT_803dd3f4;
 extern f32 FLOAT_803dd3f8;
-extern f32 FLOAT_803e8ecc;
-extern f32 FLOAT_803e8ed8;
-extern f32 FLOAT_803e8ef0;
 extern f32 FLOAT_803e8f3c;
 extern f32 FLOAT_803e8f40;
 extern f32 FLOAT_803e8f44;
@@ -356,18 +263,58 @@ extern f32 FLOAT_803e90b4;
 extern f32 FLOAT_803e90b8;
 extern f32 FLOAT_803e90bc;
 extern undefined4 _DAT_803df140;
-extern int GameBit_Get(int id);
+
+/*
+ * --INFO--
+ *
+ * Function: DIMSnowHorn1_update
+ * EN v1.0 Address: 0x802BB720
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x802BBC14
+ * EN v1.1 Size: 620b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+typedef struct {
+    f32 f0;
+    f32 f4;
+    f32 f8;
+    s16 hc;
+    u8 pad_e[2];
+    f32 f10;
+    f32 f14;
+    f32 f18;
+    s16 h1c;
+    u16 h1e;
+    u16 h20;
+    u8 pad_22[2];
+} SnowHornEntry;
+
+typedef struct {
+    u8 pad[0x94];
+    u8 flag;
+} SnowHornFlags;
+
+extern u8 lbl_80335030[];
+extern void fn_8003A168(int obj, int q);
+extern void fn_8003B500(int obj, int q, f32 f);
+extern void fn_802BB4B4(int obj, int a, int slot);
+extern int getCurMapLayer(void);
+extern f32 getXZDistance(int a, int b);
+extern int *gNewCloudsInterface;
+extern f32 lbl_803E82AC;
+extern f32 lbl_803E82B0;
+extern f32 lbl_803E82B4;
+
 extern f32 lbl_803E82D0;
-extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+
 extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
-extern void fn_8003B950(int mtx);
-extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
-extern void Resource_Release(int handle);
-extern u8 framesThisStep;
+
 extern void *lbl_803DE4D0;
-extern int GameBit_Set(int id, int value);
-extern int *gGameUIInterface;
+
 extern int lbl_803DB1C0[];
 extern void *lbl_803DE4E0;
 extern int fn_802C0B84(int obj);
@@ -375,8 +322,9 @@ extern int fn_802C0A5C(int obj, int p2);
 extern int fn_802C0978(int obj, int p2);
 extern int fn_802C0830(int obj, int p2);
 extern int fn_802C0550(int obj, int p2);
-extern int fn_802BF934(int obj, int p2, f32 f);
-extern int fn_802BF75C(int obj, int p2);
+extern void fn_802BF934();
+extern void fn_802BF75C();
+
 extern int Resource_Acquire(int id, int kind);
 extern int lbl_803DB160[];
 extern int lbl_803DB1B0[];
@@ -385,33 +333,23 @@ extern void *lbl_803DE4D4;
 extern int fn_802BC27C(int obj, int p2);
 extern int fn_802BC19C(int obj, int p2);
 extern int fn_802BC0D8(int obj, int p2);
-int fn_802BD7AC(int obj, int p2);
-int fn_802BCE14(int obj, int p2);
+extern void fn_802BD7AC();
+extern void fn_802BCE14();
 extern int fn_802BCD04(int obj, int p2);
+
 extern f32 lbl_803E82C0;
 extern f32 lbl_803E82C4;
 extern f32 lbl_803E82C8;
 extern f32 lbl_803E82CC;
 extern f32 lbl_803DC758;
 extern s16 lbl_803DC754;
-extern int randomGetRange(int lo, int hi);
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
-extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
-extern int *gObjectTriggerInterface;
-extern void buttonDisable(int a, int b);
-extern void Sfx_PlayFromObject(int obj, int id);
+
 extern f32 lbl_803E83F4;
 extern f32 lbl_803E83F8;
 extern f32 lbl_803E83BC;
 extern f32 lbl_803E8408;
 extern f32 lbl_803E840C;
 extern s16 lbl_803DC79A;
-extern s16 lbl_803DC79C;
-extern s16 lbl_803DE4DC;
-extern s16 lbl_803E8398;
-extern int lbl_802C2D3C[];
-extern f32 Vec_distance(int a, int b);
-extern void *Obj_GetPlayerObject(void);
 extern void fn_802BF0C8(int obj, int p2, int mode);
 extern f32 lbl_803E8304;
 extern f32 GX_F32_256;
@@ -419,70 +357,49 @@ extern f32 lbl_803DC76C;
 extern f32 lbl_803E8338;
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 m);
-extern void playerAddHealth(int obj, int amt);
+
 extern void dll_2E_func06();
-extern f32 lbl_803E8338;
 extern f32 lbl_803E83A8;
 extern f32 lbl_803E8360;
 extern f32 lbl_803E8354;
 extern f32 lbl_803E8364;
-extern f32 lbl_803E8304;
-extern void fn_80026C88(int p);
-extern int Obj_FreeObject(int obj);
+
 extern int objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, int p5, int p6);
 extern void textureFree(int handle);
 extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
 extern void *lbl_803DE4C0;
-extern int *gObjectTriggerInterface;
-extern int *gRomCurveInterface;
+
 extern f32 lbl_803E8410;
-extern int *gPlayerInterface;
-extern void setMatrixFromObjectPos(f32 *out, void *vec);
-extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
-extern f32 lbl_803E82C0;
-extern void *Obj_GetPlayerObject(void);
+
+int fn_802BC3F0(int obj, int p2, int p3);
+
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
-extern void mtx44_mult(void *lhs, void *rhs, void *out);
+
 extern f32 lbl_803DB170[];
-extern void fn_802BABB4();
-extern void fn_802BAA54();
-extern void fn_802BA938();
-extern void fn_802BA7EC();
-extern void fn_802BA6E0();
-extern void fn_802BA3EC();
-extern void fn_802BA1D4();
-extern void fn_802B9FC0();
-extern void fn_802B9E38();
-extern void fn_802B9CC4();
-extern void fn_802B98F0();
-extern void fn_802B978C();
-extern void fn_802B9784();
-extern int lbl_803DB130[];
-extern void *lbl_803DE4C4;
+
 extern s16 lbl_803DC730;
 extern int textureLoad(int id, int p2);
-extern u8 lbl_80335030[];
-extern void DIMSnowHorn1_animEventCallback();
+
+extern int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup);
 extern int lbl_803E8230;
 extern int lbl_803DC734;
 extern f32 lbl_803E82B8;
-extern int *gPathControlInterface;
 extern void dll_2E_func05(int obj, int q, int a, int b, int c);
+
 extern int dll_2E_func07(int obj, int p3, void *q, int a, int b);
-extern int *gPathControlInterface;
+
 extern int dll_2E_func0A(int a, void *out);
-extern void dll_2E_func05(int obj, int q, int a, int b, int c);
 extern void dll_2E_func08(int q, int a, int b);
 extern f32 lbl_803E8414;
 extern f32 lbl_803E8424;
+void fn_802BF0C8(int obj, int inner, int bit);
+
 extern u8 lbl_803DC750;
-extern u8 lbl_803351A8[];
-extern f32 timeDelta;
-extern void fn_8003A168(int obj, int q);
-extern void characterDoEyeAnims(int obj, int q);
+extern ObjHitReactEntry lbl_803351A8[];
 extern void saveGame_saveObjectPos(int obj);
+
 extern u8 lbl_803356F0[];
 extern int lbl_803E83A0;
 extern int lbl_803DC770;
@@ -491,54 +408,24 @@ extern int lbl_803DC778;
 extern int lbl_803DC77C;
 extern int lbl_803DC780;
 extern int lbl_803DC784;
-extern void *Camera_GetCurrentViewSlot(void);
-extern int padGetStickX(int p);
-extern int padGetStickY(int p);
-extern int getButtonsJustPressed(int p);
-extern int getButtonsHeld(int p);
+
 extern int Obj_UpdateRomCurveFollowVelocity(int obj, int q, f32 a, f32 b, f32 c, int d);
 extern int lbl_803DE4D8;
 extern f32 lbl_803E83B4;
-extern f32 lbl_803E83B8;
-extern f32 lbl_803E83C0;
-extern f32 lbl_803E83C4;
-extern f32 lbl_803E83C8;
-extern f32 lbl_803E83CC;
-extern f32 lbl_803E83D0;
-extern f32 lbl_803E83D4;
-extern f32 lbl_803E83D8;
-extern f32 lbl_803E83DC;
-extern f32 lbl_803E83E0;
-extern f32 lbl_803E83E4;
-extern f32 lbl_803E83EC;
-extern f32 lbl_803E83F0;
-extern int lbl_802C2D00[];
-extern s16 lbl_803DC794;
-extern void Vec3_Normalize(void *v);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
-extern void fn_802B0EA4(int obj, int q, int inner);
-extern void fn_802B1BF8(int obj, int q, int inner, f32 t);
-extern void fn_802B1B28(int obj, f32 t);
+void fn_802BF4D8(int obj);
+
 extern void fn_80137948(const char *fmt, ...);
 extern char sOnCloudFormat[];
-extern void buttonDisable(int a, int b);
-extern void fn_8003B500(int obj, int q, f32 f);
-extern int *gMapEventInterface;
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
 extern f32 lbl_803E8420;
-extern u8 Obj_IsLoadingLocked();
-extern void Sfx_PlayFromObject(int obj, int id);
-extern int Obj_AllocObjectSetup(int a, int b);
-extern int Obj_SetupObject(int s, int b, int c, int d, int e);
-extern void mathFn_80021ac8(void *a, void *b);
+
 extern void voxmaps_worldToGrid(void *src, void *grid);
 extern int voxmaps_traceLine(void *a, void *b, void *c, int d, int e);
 extern void voxmaps_gridToWorld(void *grid, void *out);
-extern f32 sqrtf(f32 x);
-extern int *gPartfxInterface;
 extern f32 lbl_803E83AC;
 extern f32 lbl_803E83B0;
+
 extern f32 lbl_803E82EC;
 extern f32 GXInit_ClearColor;
 extern f32 GXInit_BlackColor;
@@ -547,11 +434,7 @@ extern f32 lbl_803E82FC;
 extern f32 lbl_803E8300;
 extern f32 lbl_803E8308;
 extern f32 lbl_803E830C;
-extern int getAngle(f32 deltaX, f32 deltaZ);
-extern f32 interpolate(f32 cur, f32 target, f32 t);
+
 extern f32 lbl_803E83FC;
-int fn_802BC3F0(int obj, int p2, int p3);
-void fn_802BF0C8(int obj, int inner, int bit);
-void fn_802BF4D8(int obj);
 
 #endif

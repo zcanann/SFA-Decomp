@@ -1,10 +1,9 @@
-#ifndef MAIN_DLL_DR_DR_802BBC10_SHARED_H
-#define MAIN_DLL_DR_DR_802BBC10_SHARED_H
-
 #include "ghidra_import.h"
 #include "main/objHitReact.h"
 #include "main/objanim.h"
 #include "main/unknown/autos/placeholder_802BBC10.h"
+
+/* DLL 0x76 (DIMSnowHorn1 / dim2prisonmammoth) fragment: head/vtable live in placeholder_802BACC0 + placeholder_802BB4B0; consolidate when those adjacent units are graduated. */
 
 typedef struct {
     u8 b80 : 1;
@@ -16,21 +15,6 @@ typedef struct {
     u8 b02 : 1;
     u8 b01 : 1;
 } ByteFlags;
-
-typedef struct {
-    f32 f0;
-    f32 f4;
-    f32 f8;
-    s16 hc;
-    u8 pad_e[2];
-    f32 f10;
-    f32 f14;
-    f32 f18;
-    s16 h1c;
-    u16 h1e;
-    u16 h20;
-    u8 pad_22[2];
-} SnowHornEntry;
 
 extern undefined8 FUN_80006824();
 extern undefined8 FUN_80006920();
@@ -81,7 +65,6 @@ extern undefined4 ObjHits_DisableObject();
 extern undefined4 ObjHits_EnableObject();
 extern int ObjHits_GetPriorityHitWithPosition();
 extern int ObjHits_GetPriorityHit();
-extern undefined4 ObjGroup_FindNearestObject();
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern undefined8 ObjLink_DetachChild();
@@ -147,6 +130,7 @@ extern undefined4 FUN_80295194();
 extern undefined4 FUN_802bb420();
 extern undefined4 FUN_802bb998();
 extern uint countLeadingZeros();
+
 extern undefined4 DAT_802c3428;
 extern undefined4 DAT_802c342c;
 extern undefined4 DAT_802c3430;
@@ -356,16 +340,80 @@ extern f32 FLOAT_803e90b4;
 extern f32 FLOAT_803e90b8;
 extern f32 FLOAT_803e90bc;
 extern undefined4 _DAT_803df140;
+
+/*
+ * --INFO--
+ *
+ * Function: DIMSnowHorn1_update
+ * EN v1.0 Address: 0x802BB720
+ * EN v1.0 Size: 4b
+ * EN v1.1 Address: 0x802BBC14
+ * EN v1.1 Size: 620b
+ * JP Address: TODO
+ * JP Size: TODO
+ * PAL Address: TODO
+ * PAL Size: TODO
+ */
+typedef struct {
+    f32 f0;
+    f32 f4;
+    f32 f8;
+    s16 hc;
+    u8 pad_e[2];
+    f32 f10;
+    f32 f14;
+    f32 f18;
+    s16 h1c;
+    u16 h1e;
+    u16 h20;
+    u8 pad_22[2];
+} SnowHornEntry;
+
+typedef struct {
+    u8 pad[0x94];
+    u8 flag;
+} SnowHornFlags;
+
+extern void *Obj_GetPlayerObject(void);
+extern u8 lbl_80335030[];
+extern void fn_8003A168(int obj, int q);
+extern void characterDoEyeAnims(int obj, int q);
+extern void fn_8003B500(int obj, int q, f32 f);
+extern void fn_802BB4B4(int obj, int a, int slot);
+extern void buttonDisable(int a, int b);
+extern void setAButtonIcon(int icon);
+extern int getCurMapLayer(void);
+extern int GameBit_Set(int bit, int val);
+extern f32 Vec_distance(int a, int b);
+extern f32 getXZDistance(int a, int b);
+extern char *ObjGroup_FindNearestObject(int group, int obj, f32 *distInOut);
+extern void setMatrixFromObjectPos(f32 *out, void *vec);
+extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
+extern int *gPathControlInterface;
+extern int *gNewCloudsInterface;
+extern int *gMapEventInterface;
+extern int *gGameUIInterface;
+extern u8 framesThisStep;
+extern f32 lbl_803E8234;
+extern f32 lbl_803E8240;
+extern f32 lbl_803E8258;
+extern f32 lbl_803E82AC;
+extern f32 lbl_803E82B0;
+extern f32 lbl_803E82B4;
+
 extern int GameBit_Get(int id);
 extern f32 lbl_803E82D0;
 extern void objRenderFn_8003b8f4(int obj, int p2, int p3, int p4, int p5, f32 scale);
+
 extern f32 lbl_803E83E8;
 extern f32 lbl_803E83A4;
 extern void fn_8003B950(int mtx);
+
 extern void playerTailFn_80026b3c(int *p1, int p2, int p3, void *p4);
 extern void Resource_Release(int handle);
 extern u8 framesThisStep;
 extern void *lbl_803DE4D0;
+
 extern int GameBit_Set(int id, int value);
 extern int *gGameUIInterface;
 extern int lbl_803DB1C0[];
@@ -375,8 +423,9 @@ extern int fn_802C0A5C(int obj, int p2);
 extern int fn_802C0978(int obj, int p2);
 extern int fn_802C0830(int obj, int p2);
 extern int fn_802C0550(int obj, int p2);
-extern int fn_802BF934(int obj, int p2, f32 f);
-extern int fn_802BF75C(int obj, int p2);
+extern void fn_802BF934();
+extern void fn_802BF75C();
+
 extern int Resource_Acquire(int id, int kind);
 extern int lbl_803DB160[];
 extern int lbl_803DB1B0[];
@@ -385,9 +434,10 @@ extern void *lbl_803DE4D4;
 extern int fn_802BC27C(int obj, int p2);
 extern int fn_802BC19C(int obj, int p2);
 extern int fn_802BC0D8(int obj, int p2);
-int fn_802BD7AC(int obj, int p2);
-int fn_802BCE14(int obj, int p2);
+extern void fn_802BD7AC();
+extern void fn_802BCE14();
 extern int fn_802BCD04(int obj, int p2);
+
 extern f32 lbl_803E82C0;
 extern f32 lbl_803E82C4;
 extern f32 lbl_803E82C8;
@@ -400,16 +450,13 @@ extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
 extern int *gObjectTriggerInterface;
 extern void buttonDisable(int a, int b);
 extern void Sfx_PlayFromObject(int obj, int id);
+
 extern f32 lbl_803E83F4;
 extern f32 lbl_803E83F8;
 extern f32 lbl_803E83BC;
 extern f32 lbl_803E8408;
 extern f32 lbl_803E840C;
 extern s16 lbl_803DC79A;
-extern s16 lbl_803DC79C;
-extern s16 lbl_803DE4DC;
-extern s16 lbl_803E8398;
-extern int lbl_802C2D3C[];
 extern f32 Vec_distance(int a, int b);
 extern void *Obj_GetPlayerObject(void);
 extern void fn_802BF0C8(int obj, int p2, int mode);
@@ -420,6 +467,7 @@ extern f32 lbl_803E8338;
 extern void Camera_EnableViewYOffset(void);
 extern void CameraShake_SetAllMagnitudes(f32 m);
 extern void playerAddHealth(int obj, int amt);
+
 extern void dll_2E_func06();
 extern f32 lbl_803E8338;
 extern f32 lbl_803E83A8;
@@ -427,25 +475,35 @@ extern f32 lbl_803E8360;
 extern f32 lbl_803E8354;
 extern f32 lbl_803E8364;
 extern f32 lbl_803E8304;
+
 extern void fn_80026C88(int p);
 extern int Obj_FreeObject(int obj);
+
 extern int objAudioFn_800393f8(int obj, void *audio, int soundId, int volume, int p5, int p6);
 extern void textureFree(int handle);
 extern f32 lbl_803E82E8;
 extern int lbl_8033527C[];
 extern void *lbl_803DE4C0;
+
 extern int *gObjectTriggerInterface;
+
 extern int *gRomCurveInterface;
 extern f32 lbl_803E8410;
+
 extern int *gPlayerInterface;
+int fn_802BC3F0(int obj, int p2, int p3);
+
 extern void setMatrixFromObjectPos(f32 *out, void *vec);
 extern void Matrix_TransformPoint(f32 *mtx, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
 extern f32 lbl_803E82C0;
+
 extern void *Obj_GetPlayerObject(void);
 extern f32 lbl_803DC78C;
 extern f32 lbl_803DC790;
+
 extern void mtx44_mult(void *lhs, void *rhs, void *out);
 extern f32 lbl_803DB170[];
+
 extern void fn_802BABB4();
 extern void fn_802BAA54();
 extern void fn_802BA938();
@@ -463,6 +521,7 @@ extern int lbl_803DB130[];
 extern void *lbl_803DE4C4;
 extern s16 lbl_803DC730;
 extern int textureLoad(int id, int p2);
+
 extern u8 lbl_80335030[];
 extern void DIMSnowHorn1_animEventCallback();
 extern int lbl_803E8230;
@@ -470,19 +529,24 @@ extern int lbl_803DC734;
 extern f32 lbl_803E82B8;
 extern int *gPathControlInterface;
 extern void dll_2E_func05(int obj, int q, int a, int b, int c);
+
 extern int dll_2E_func07(int obj, int p3, void *q, int a, int b);
 extern int *gPathControlInterface;
+
 extern int dll_2E_func0A(int a, void *out);
 extern void dll_2E_func05(int obj, int q, int a, int b, int c);
 extern void dll_2E_func08(int q, int a, int b);
 extern f32 lbl_803E8414;
 extern f32 lbl_803E8424;
+void fn_802BF0C8(int obj, int inner, int bit);
+
 extern u8 lbl_803DC750;
-extern u8 lbl_803351A8[];
+extern ObjHitReactEntry lbl_803351A8[];
 extern f32 timeDelta;
 extern void fn_8003A168(int obj, int q);
 extern void characterDoEyeAnims(int obj, int q);
 extern void saveGame_saveObjectPos(int obj);
+
 extern u8 lbl_803356F0[];
 extern int lbl_803E83A0;
 extern int lbl_803DC770;
@@ -491,6 +555,7 @@ extern int lbl_803DC778;
 extern int lbl_803DC77C;
 extern int lbl_803DC780;
 extern int lbl_803DC784;
+
 extern void *Camera_GetCurrentViewSlot(void);
 extern int padGetStickX(int p);
 extern int padGetStickY(int p);
@@ -499,26 +564,12 @@ extern int getButtonsHeld(int p);
 extern int Obj_UpdateRomCurveFollowVelocity(int obj, int q, f32 a, f32 b, f32 c, int d);
 extern int lbl_803DE4D8;
 extern f32 lbl_803E83B4;
-extern f32 lbl_803E83B8;
-extern f32 lbl_803E83C0;
-extern f32 lbl_803E83C4;
-extern f32 lbl_803E83C8;
-extern f32 lbl_803E83CC;
-extern f32 lbl_803E83D0;
-extern f32 lbl_803E83D4;
-extern f32 lbl_803E83D8;
-extern f32 lbl_803E83DC;
-extern f32 lbl_803E83E0;
-extern f32 lbl_803E83E4;
-extern f32 lbl_803E83EC;
-extern f32 lbl_803E83F0;
-extern int lbl_802C2D00[];
-extern s16 lbl_803DC794;
-extern void Vec3_Normalize(void *v);
-extern void objMove(int obj, f32 x, f32 y, f32 z);
+void fn_802BF4D8(int obj);
+
 extern void fn_802B0EA4(int obj, int q, int inner);
 extern void fn_802B1BF8(int obj, int q, int inner, f32 t);
 extern void fn_802B1B28(int obj, f32 t);
+
 extern void fn_80137948(const char *fmt, ...);
 extern char sOnCloudFormat[];
 extern void buttonDisable(int a, int b);
@@ -527,7 +578,8 @@ extern int *gMapEventInterface;
 extern f32 lbl_803E8418;
 extern f32 lbl_803E841C;
 extern f32 lbl_803E8420;
-extern u8 Obj_IsLoadingLocked();
+
+extern u8 Obj_IsLoadingLocked(int obj);
 extern void Sfx_PlayFromObject(int obj, int id);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int s, int b, int c, int d, int e);
@@ -539,6 +591,7 @@ extern f32 sqrtf(f32 x);
 extern int *gPartfxInterface;
 extern f32 lbl_803E83AC;
 extern f32 lbl_803E83B0;
+
 extern f32 lbl_803E82EC;
 extern f32 GXInit_ClearColor;
 extern f32 GXInit_BlackColor;
@@ -547,11 +600,255 @@ extern f32 lbl_803E82FC;
 extern f32 lbl_803E8300;
 extern f32 lbl_803E8308;
 extern f32 lbl_803E830C;
+
 extern int getAngle(f32 deltaX, f32 deltaZ);
 extern f32 interpolate(f32 cur, f32 target, f32 t);
 extern f32 lbl_803E83FC;
-int fn_802BC3F0(int obj, int p2, int p3);
-void fn_802BF0C8(int obj, int inner, int bit);
-void fn_802BF4D8(int obj);
 
-#endif
+/* Pattern wrappers. */
+int fn_802BC0D0(void) { return 0x0; }
+
+int dim2prisonmammoth_getExtraSize(void) { return 0x604; }
+
+int dim2prisonmammoth_getObjectTypeId(void) { return 0; }
+
+void dim2prisonmammoth_free(void) {}
+
+void dim2prisonmammoth_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
+{
+    if (visible != 0) {
+        ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E82D0);
+    }
+}
+
+void dim2prisonmammoth_hitDetect(void) {}
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802BC36C(int* obj) {
+    int* sub = *(int**)((char*)obj + 76);
+    switch ((s8)*(s8*)((char*)sub + 25)) {
+        case 0:
+            if ((u32)GameBit_Get(548) != 0) return 3;
+            return 2;
+        case 1:
+            if ((u32)GameBit_Get(707) != 0) return 3;
+            return 3;
+        default:
+            return 0;
+    }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dim2prisonmammoth_release(void) {}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void fn_802BC788(int a, int b)
+{
+    playerTailFn_80026b3c((int *)b, *(int *)b, *(int *)(*(int *)((char *)a + 0xb8) + 0x14f8), 0);
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dim2prisonmammoth_initialise(void)
+{
+    ((void **)lbl_803DB160)[0] = (void *)fn_802BC36C;
+    ((void **)lbl_803DB160)[1] = (void *)fn_802BC27C;
+    ((void **)lbl_803DB160)[2] = (void *)fn_802BC19C;
+    ((void **)lbl_803DB160)[3] = (void *)fn_802BC0D8;
+    lbl_803DE4C8 = (void *)fn_802BC0D0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802BC0D8(int obj, int p2)
+{
+    f32 fz = lbl_803E82C0;
+    *(f32 *)((char *)p2 + 0x294) = fz;
+    *(f32 *)((char *)p2 + 0x284) = fz;
+    *(f32 *)((char *)p2 + 0x280) = fz;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(int *)((char *)p2 + 0) |= 0x200000;
+    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+        int k = randomGetRange(0, 1);
+        *(f32 *)((char *)p2 + 0x2a0) = (&lbl_803DC758)[k];
+        ObjAnim_SetCurrentMove(obj, (&lbl_803DC754)[k], lbl_803E82C0, 0);
+    }
+    if (*(s8 *)((char *)p2 + 0x346) != 0) {
+        return -1;
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802BC19C(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 fz = lbl_803E82C0;
+    *(f32 *)((char *)p2 + 0x294) = fz;
+    *(f32 *)((char *)p2 + 0x284) = fz;
+    *(f32 *)((char *)p2 + 0x280) = fz;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(int *)((char *)p2 + 0) |= 0x200000;
+    *(f32 *)((char *)p2 + 0x2a0) = lbl_803E82C4;
+    if (*(s16 *)((char *)obj + 0xa0) != 0) {
+        ObjAnim_SetCurrentMove(obj, 0, fz, 0);
+    }
+    *(s16 *)((char *)inner + 0x38c) = randomGetRange(0x4b0, 0x960);
+    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    if (*(u8 *)((char *)obj + 0xaf) & 1) {
+        (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
+        buttonDisable(0, 0x100);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802BC27C(int obj, int p2)
+{
+    int inner = *(int *)((char *)obj + 0xb8);
+    f32 fz = lbl_803E82C0;
+    *(f32 *)((char *)p2 + 0x294) = fz;
+    *(f32 *)((char *)p2 + 0x284) = fz;
+    *(f32 *)((char *)p2 + 0x280) = fz;
+    *(f32 *)((char *)obj + 0x24) = fz;
+    *(f32 *)((char *)obj + 0x28) = fz;
+    *(f32 *)((char *)obj + 0x2c) = fz;
+    *(int *)((char *)p2 + 0) |= 0x200000;
+    if (*(s8 *)((char *)p2 + 0x27a) != 0) {
+        *(f32 *)((char *)p2 + 0x2a0) = lbl_803E82C4;
+        if (*(s16 *)((char *)obj + 0xa0) != 5) {
+            ObjAnim_SetCurrentMove(obj, 5, fz, 0);
+        }
+        *(s16 *)((char *)inner + 0x38c) = randomGetRange(0x4b0, 0x960);
+    }
+    if (*(u8 *)((char *)obj + 0xaf) & 1) {
+        GameBit_Set(0x223, 1);
+        buttonDisable(0, 0x100);
+    }
+    if (RandomTimer_UpdateRangeTrigger(inner + 0x600, lbl_803E82C8, lbl_803E82CC)) {
+        Sfx_PlayFromObject(obj, 0x43a);
+    }
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dim2prisonmammoth_init(int obj, int p2)
+{
+    int inner;
+    *(s16 *)((char *)obj + 0) = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
+    *(int *)((char *)obj + 0xbc) = (int)fn_802BC3F0;
+    inner = *(int *)((char *)obj + 0xb8);
+    if (*(void **)((char *)obj + 0x64) != NULL) {
+        *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0xa10;
+        *(int *)((char *)*(int *)((char *)obj + 0x64) + 0x30) |= 0x8020;
+    }
+    (*(void (*)(int, int, int, int))(*(int *)(*gPlayerInterface + 0x4)))(obj, inner, 4, 1);
+    *(u8 *)((char *)inner + 0x25f) = 0;
+    *(u16 *)((char *)obj + 0xb0) |= 0x2000;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+int fn_802BC3F0(int obj, int p2, int p3)
+{
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+    f32 matrix[16];
+    int inner;
+    int p;
+
+    *(u8 *)((char *)p3 + 0x56) = 0;
+    *(s16 *)((char *)p3 + 0x6e) = *(s16 *)((char *)p3 + 0x70);
+    inner = *(int *)((char *)obj + 0xb8);
+    (*(void (*)(int, int, int))(*(int *)(*gPlayerInterface + 0x14)))(obj, inner, 2);
+
+    v.mat[1] = *(f32 *)((char *)obj + 0xc);
+    v.mat[2] = *(f32 *)((char *)obj + 0x10);
+    v.mat[3] = *(f32 *)((char *)obj + 0x14);
+    v.angles[0] = *(s16 *)((char *)obj + 0);
+    v.angles[1] = *(s16 *)((char *)obj + 2);
+    v.angles[2] = *(s16 *)((char *)obj + 4);
+    v.mat[0] = *(f32 *)((char *)obj + 8);
+    setMatrixFromObjectPos(matrix, v.angles);
+
+    p = *(int *)((char *)obj + 0x64);
+    Matrix_TransformPoint(matrix, lbl_803E82C0, lbl_803E82C0, lbl_803E82C0,
+                          (f32 *)((char *)p + 0x20), (f32 *)((char *)p + 0x24), (f32 *)((char *)p + 0x28));
+    return 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
+void dim2prisonmammoth_update(int obj)
+{
+    struct {
+        s16 angles[4];
+        f32 mat[4];
+    } v;
+    f32 matrix[16];
+    int inner = *(int *)((char *)obj + 0xb8);
+    int p;
+    *(u8 *)((char *)obj + 0xaf) &= ~8;
+    if (((&lbl_803DC750)[*(s16 *)((char *)inner + 0x274)] & 8) == 0) {
+        *(u8 *)((char *)inner + 0x5fc) = ((u8 (*)(int, ObjHitReactEntry *, u32, u32, f32 *))ObjHitReact_Update)(obj, lbl_803351A8, 1, *(u8 *)((char *)inner + 0x5fc), (f32 *)(inner + 0x390));
+        if (*(u8 *)((char *)inner + 0x5fc) != 0) {
+            fn_8003A168(obj, inner + 0x35c);
+            characterDoEyeAnims(obj, inner + 0x35c);
+            return;
+        }
+    }
+    characterDoEyeAnims(obj, inner + 0x35c);
+    v.mat[1] = *(f32 *)((char *)obj + 0xc);
+    v.mat[2] = *(f32 *)((char *)obj + 0x10);
+    v.mat[3] = *(f32 *)((char *)obj + 0x14);
+    v.angles[0] = *(s16 *)((char *)obj + 0);
+    v.angles[1] = *(s16 *)((char *)obj + 2);
+    v.angles[2] = *(s16 *)((char *)obj + 4);
+    v.mat[0] = *(f32 *)((char *)obj + 8);
+    setMatrixFromObjectPos(matrix, v.angles);
+    p = *(int *)((char *)obj + 0x64);
+    Matrix_TransformPoint(matrix, lbl_803E82C0, lbl_803E82C0, lbl_803E82C0,
+                          (f32 *)((char *)p + 0x20), (f32 *)((char *)p + 0x24), (f32 *)((char *)p + 0x28));
+    *(u8 *)((char *)inner + 0x354) = 0;
+    *(int *)((char *)inner + 0) &= ~0x8000;
+    *(f32 *)((char *)inner + 0x290) = lbl_803E82C0;
+    *(f32 *)((char *)inner + 0x28c) = lbl_803E82C0;
+    *(int *)((char *)inner + 0x31c) = 0;
+    *(int *)((char *)inner + 0x318) = 0;
+    *(s16 *)((char *)inner + 0x330) = 0;
+    *(int *)((char *)inner + 0) |= 0x400000;
+    (*(void (*)(int, int, f32, f32, int, void *))(*(int *)(*gPlayerInterface + 0x8)))(obj, inner, timeDelta, timeDelta, (int)lbl_803DB160, &lbl_803DE4C8);
+    saveGame_saveObjectPos(obj);
+}
+#pragma peephole reset
+#pragma scheduling reset
