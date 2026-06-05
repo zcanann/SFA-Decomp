@@ -21,11 +21,13 @@ void dustmotesou_free(int obj)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling on
 void dustmotesou_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 {
-    if (visible != 0) {}
+    if (visible != 0) {
+        return;
+    }
 }
 #pragma scheduling reset
 #pragma peephole reset
