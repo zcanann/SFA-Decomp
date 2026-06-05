@@ -2,6 +2,42 @@
 #include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 
+#define WCBEACON_EXTRA_SIZE 0x8
+
+#define WCBEACON_RENDER_TYPE_BASE 0x400
+#define WCBEACON_RENDER_TYPE_SHIFT 0xb
+
+#define WCBEACON_SETUP_TYPE_OFFSET 0x18
+#define WCBEACON_SETUP_MODEL_INDEX_OFFSET 0x19
+#define WCBEACON_SETUP_SOLVED_BIT_OFFSET 0x1e
+#define WCBEACON_SETUP_ARM_BIT_OFFSET 0x20
+
+#define WCBEACON_STATE_TIMER 0x0
+#define WCBEACON_STATE_PHASE 0x4
+#define WCBEACON_STATE_ACCEPTED_INTERACTION 0x5
+
+#define WCBEACON_PHASE_IDLE 0
+#define WCBEACON_PHASE_WAITING_FOR_TRICKY 1
+#define WCBEACON_PHASE_ACTIVATING 2
+#define WCBEACON_PHASE_ACTIVE 3
+
+#define WCBEACON_BLOCK_PLAYER_FLAG 0x8
+#define WCBEACON_TRICKY_PROMPT_FLAG 0x4
+#define WCBEACON_VISIBLE_PARTFX_FLAG 0x800
+
+#define WCBEACON_PARTFX_ACTIVE 0x73a
+#define WCBEACON_PARTFX_KIND 2
+#define WCBEACON_TRIGGER_ARM_SLOT 0
+#define WCBEACON_TRIGGER_RELEASE_SLOT 1
+#define WCBEACON_TRIGGER_ACCEPT_ARG 1
+#define WCBEACON_TRIGGER_NO_ARG -1
+#define WCBEACON_FINAL_TRIGGER_ID 105
+
+#define WCBEACON_STATE_TIMER_VALUE(state) (*(f32 *)((state) + WCBEACON_STATE_TIMER))
+#define WCBEACON_STATE_PHASE_VALUE(state) (*(u8 *)((state) + WCBEACON_STATE_PHASE))
+#define WCBEACON_STATE_ACCEPTED_INTERACTION_VALUE(state) \
+    (*(u8 *)((state) + WCBEACON_STATE_ACCEPTED_INTERACTION))
+
 
 #pragma peephole on
 #pragma scheduling off
@@ -11,8 +47,8 @@ int wcbeacon_aButtonCallback(int obj)
     int setup = *(int *)(obj + 0x4c);
 
     if (isGameTimerDisabled() == 0) {
-        *(u8 *)(state + 5) = 1;
-        GameBit_Set(*(s16 *)(setup + 0x1e), 1);
+        WCBEACON_STATE_ACCEPTED_INTERACTION_VALUE(state) = 1;
+        GameBit_Set(*(s16 *)(setup + WCBEACON_SETUP_SOLVED_BIT_OFFSET), 1);
     }
     return 1;
 }
@@ -21,7 +57,7 @@ int wcbeacon_aButtonCallback(int obj)
 
 #pragma peephole on
 #pragma scheduling on
-int wcbeacon_getExtraSize(void) { return 8; }
+int wcbeacon_getExtraSize(void) { return WCBEACON_EXTRA_SIZE; }
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -29,13 +65,13 @@ int wcbeacon_getExtraSize(void) { return 8; }
 #pragma scheduling off
 int wcbeacon_getObjectTypeId(int obj)
 {
-    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + 0x19);
+    int modelIndex = *(s8 *)(*(int *)(obj + 0x4c) + WCBEACON_SETUP_MODEL_INDEX_OFFSET);
     int modelCount = *(s8 *)(*(int *)(obj + 0x50) + 0x55);
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
     }
-    return (modelIndex << 0xb) | 0x400;
+    return (modelIndex << WCBEACON_RENDER_TYPE_SHIFT) | WCBEACON_RENDER_TYPE_BASE;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -53,81 +89,86 @@ void wcbeacon_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
 
 #pragma peephole off
 #pragma scheduling off
-void wcbeacon_init(u8 *obj, u8 *setup)
-{
-    u8 *state = *(u8 **)(obj + 0xb8);
-    s16 objType;
-
-    ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
-    objType = (s16)((s8)setup[0x18] << 8);
-    *(s16 *)obj = objType;
-    obj[0xad] = setup[0x19];
-    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        obj[0xad] = 0;
-    }
-    if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
-        if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
-            state[4] = 3;
-        } else {
-            state[4] = 1;
-        }
-    }
-}
-#pragma scheduling reset
-#pragma peephole reset
-
-#pragma peephole off
-#pragma scheduling off
 void wcbeacon_update(int obj)
 {
     int setup = *(int *)(obj + 0x4c);
     int state = *(int *)(obj + 0xb8);
     u32 phase;
 
-    *(u8 *)(obj + 0xaf) |= 8;
-    phase = *(u8 *)(state + 4);
-    if (phase == 1) {
+    *(u8 *)(obj + 0xaf) |= WCBEACON_BLOCK_PLAYER_FLAG;
+    phase = WCBEACON_STATE_PHASE_VALUE(state);
+    if (phase == WCBEACON_PHASE_WAITING_FOR_TRICKY) {
         int tricky = getTrickyObject();
-        if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) == 0) {
+        if ((u32)GameBit_Get(*(s16 *)(setup + WCBEACON_SETUP_ARM_BIT_OFFSET)) == 0) {
             if ((u32)fn_80138F84(tricky) != (u32)obj || trickyFn_80138f14(tricky) != 0) {
-                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(1, obj, -1);
-                *(u8 *)(state + 4) = 0;
+                (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(WCBEACON_TRIGGER_RELEASE_SLOT,
+                                                                                obj, WCBEACON_TRIGGER_NO_ARG);
+                WCBEACON_STATE_PHASE_VALUE(state) = WCBEACON_PHASE_IDLE;
             }
         } else {
-            *(u8 *)(obj + 0xaf) &= ~8;
-            if ((u32)tricky != 0 && (*(u8 *)(obj + 0xaf) & 4)) {
+            *(u8 *)(obj + 0xaf) &= ~WCBEACON_BLOCK_PLAYER_FLAG;
+            if ((u32)tricky != 0 && (*(u8 *)(obj + 0xaf) & WCBEACON_TRICKY_PROMPT_FLAG)) {
                 (*(void (**)(int, int, int, int, int))(*(int *)(*(int *)(tricky + 0x68)) + 0x28))(
-                    tricky, obj, 1, 4, *(int *)(*(int *)(tricky + 0x68)));
+                    tricky, obj, WCBEACON_TRIGGER_ACCEPT_ARG, WCBEACON_TRICKY_PROMPT_FLAG,
+                    *(int *)(*(int *)(tricky + 0x68)));
             }
         }
-        if (*(u8 *)(state + 5) != 0) {
+        if (WCBEACON_STATE_ACCEPTED_INTERACTION_VALUE(state) != 0) {
             Sfx_PlayFromObject(obj, SFXmv_mushdizzylp12);
             Sfx_PlayFromObject(obj, SFXmv_liftloop);
-            *(u8 *)(state + 4) = 2;
-            *(f32 *)(state + 0) = lbl_803E6DE4;
+            WCBEACON_STATE_PHASE_VALUE(state) = WCBEACON_PHASE_ACTIVATING;
+            WCBEACON_STATE_TIMER_VALUE(state) = lbl_803E6DE4;
         }
-    } else if (phase == 0) {
-        if ((u32)GameBit_Get(*(s16 *)(setup + 0x20)) != 0) {
-            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, -1);
-            *(u8 *)(state + 4) = 1;
+    } else if (phase == WCBEACON_PHASE_IDLE) {
+        if ((u32)GameBit_Get(*(s16 *)(setup + WCBEACON_SETUP_ARM_BIT_OFFSET)) != 0) {
+            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(WCBEACON_TRIGGER_ARM_SLOT, obj,
+                                                                            WCBEACON_TRIGGER_NO_ARG);
+            WCBEACON_STATE_PHASE_VALUE(state) = WCBEACON_PHASE_WAITING_FOR_TRICKY;
         }
-    } else if (phase == 2) {
-        f32 v = *(f32 *)(state + 0) + timeDelta;
-        *(f32 *)(state + 0) = v;
+    } else if (phase == WCBEACON_PHASE_ACTIVATING) {
+        f32 v = WCBEACON_STATE_TIMER_VALUE(state) + timeDelta;
+        WCBEACON_STATE_TIMER_VALUE(state) = v;
         if (v >= lbl_803E6DE8) {
-            *(u8 *)(state + 4) = 3;
+            WCBEACON_STATE_PHASE_VALUE(state) = WCBEACON_PHASE_ACTIVE;
         }
-    } else if (phase == 3) {
-        if (*(u16 *)(obj + 0xb0) & 0x800) {
-            (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, 1850, 0, 2, -1,
-                                                                                0);
+    } else if (phase == WCBEACON_PHASE_ACTIVE) {
+        if (*(u16 *)(obj + 0xb0) & WCBEACON_VISIBLE_PARTFX_FLAG) {
+            (*(void (**)(int, int, int, int, int, int))(*gPartfxInterface + 8))(obj, WCBEACON_PARTFX_ACTIVE, 0,
+                                                                                WCBEACON_PARTFX_KIND,
+                                                                                WCBEACON_TRIGGER_NO_ARG, 0);
         }
         if (*(int *)(obj + 0xf4) == 0) {
-            (*(void (**)(int, int))(*gObjectTriggerInterface + 0x54))(obj, 105);
-            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(0, obj, 1);
+            (*(void (**)(int, int))(*gObjectTriggerInterface + 0x54))(obj, WCBEACON_FINAL_TRIGGER_ID);
+            (*(void (**)(int, int, int))(*gObjectTriggerInterface + 0x48))(WCBEACON_TRIGGER_ARM_SLOT, obj,
+                                                                            WCBEACON_TRIGGER_ACCEPT_ARG);
         }
     }
     *(int *)(obj + 0xf4) = 1;
+}
+#pragma scheduling reset
+#pragma peephole reset
+
+#pragma peephole off
+#pragma scheduling off
+void wcbeacon_init(u8 *obj, u8 *setup)
+{
+    u8 *state = *(u8 **)(obj + 0xb8);
+    s16 objType;
+
+    ((MapEventInterface *)*gMapEventInterface)->getMode(*(s8 *)(obj + 0xac));
+    objType = (s16)((s8)setup[WCBEACON_SETUP_TYPE_OFFSET] << 8);
+    *(s16 *)obj = objType;
+    obj[0xad] = setup[WCBEACON_SETUP_MODEL_INDEX_OFFSET];
+    if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
+        obj[0xad] = 0;
+    }
+    if ((u32)GameBit_Get(*(s16 *)(setup + WCBEACON_SETUP_ARM_BIT_OFFSET)) != 0) {
+        if ((u32)GameBit_Get(*(s16 *)(setup + WCBEACON_SETUP_SOLVED_BIT_OFFSET)) != 0) {
+            state[WCBEACON_STATE_PHASE] = WCBEACON_PHASE_ACTIVE;
+        } else {
+            state[WCBEACON_STATE_PHASE] = WCBEACON_PHASE_WAITING_FOR_TRICKY;
+        }
+    }
 }
 #pragma scheduling reset
 #pragma peephole reset
