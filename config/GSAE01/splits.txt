@@ -2375,7 +2375,7 @@ main/unknown/autos/placeholder_80279AF0.c:
 main/unknown/autos/placeholder_80279D30.c:
 	.text       start:0x80279C7C end:0x80279C7C
 
-main/unknown/autos/placeholder_80279EC0.c:
+main/audio/voice_manage.c:
 	extab       start:0x80005970 end:0x80005988
 	extabindex  start:0x800061B8 end:0x800061DC
 	.text       start:0x80279C7C end:0x8027A2B4

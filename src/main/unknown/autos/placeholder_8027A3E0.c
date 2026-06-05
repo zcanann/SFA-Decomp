@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 #include "main/unknown/autos/placeholder_8027A3E0.h"
-#include "main/unknown/autos/placeholder_80279EC0.h"
+#include "main/audio/voice_manage.h"
 
 extern u32 __cvt_fp2unsigned(double x);
 extern f32 powf(f32 x, f32 y);

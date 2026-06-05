@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80279EC0_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80279EC0_H_
+#ifndef MAIN_AUDIO_VOICE_MANAGE_H_
+#define MAIN_AUDIO_VOICE_MANAGE_H_
 
 #include "ghidra_import.h"
 
@@ -54,4 +54,4 @@ int voiceKillById(u32 id);
 int voiceIsRegistered(int state);
 void voiceRegister(int state);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80279EC0_H_ */
+#endif /* MAIN_AUDIO_VOICE_MANAGE_H_ */
