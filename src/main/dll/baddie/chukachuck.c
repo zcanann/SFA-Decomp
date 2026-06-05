@@ -12,7 +12,7 @@ extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 
 extern void dfpfloorbar_SeqFn(void);
 
-u8 gDfpfloorbarModeTable[12] = {
+u8 gDfpfloorbarModeTable[DFPFLOORBAR_MODE_TABLE_STORAGE] = {
     0, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0,
@@ -206,21 +206,24 @@ void dfpfloorbar_init(int obj, int params)
 #pragma peephole reset
 #pragma scheduling reset
 
-/* EN v1.0 0x8020692C  size: 60b  Zero out the 9-byte mode table by
- * walking three rows of 3 bytes each. */
+/* EN v1.0 0x8020692C  size: 60b */
 #pragma scheduling off
 #pragma peephole off
 void dfpfloorbar_initialise(void)
 {
-    gDfpfloorbarModeTable[0] = 0;
-    gDfpfloorbarModeTable[1] = 0;
-    gDfpfloorbarModeTable[2] = 0;
-    gDfpfloorbarModeTable[3] = 0;
-    gDfpfloorbarModeTable[4] = 0;
-    gDfpfloorbarModeTable[5] = 0;
-    gDfpfloorbarModeTable[6] = 0;
-    gDfpfloorbarModeTable[7] = 0;
-    gDfpfloorbarModeTable[8] = 0;
+    u8 *modeRow = gDfpfloorbarModeTable;
+
+    modeRow[0] = 0;
+    modeRow[1] = 0;
+    modeRow[2] = 0;
+    modeRow += DFPFLOORBAR_MODE_ROW_SIZE;
+    modeRow[0] = 0;
+    modeRow[1] = 0;
+    modeRow[2] = 0;
+    modeRow += DFPFLOORBAR_MODE_ROW_SIZE;
+    modeRow[0] = 0;
+    modeRow[1] = 0;
+    modeRow[2] = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
