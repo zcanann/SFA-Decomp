@@ -1404,33 +1404,40 @@ extern int *gMapEventInterface;
 #pragma peephole off
 #pragma scheduling off
 void cflevelcontrol_init(u8* obj, u8* params) {
+    typedef struct LevelControlFlags {
+        u8 b7 : 1;
+        u8 b6 : 1;
+        u8 b5 : 1;
+        u8 b4 : 1;
+        u8 b3 : 1;
+        u8 rest : 3;
+    } LevelControlFlags;
     u8* sub;
-    int i;
     s16* p;
+    int i;
 
     sub = *(u8**)(obj + 0xb8);
     *(int*)(sub + 8) = 0;
-    sub[0xd] = (u8)-1;
+    *(s8*)(sub + 0xd) = -1;
     storeZeroToFloatParam(sub);
     s16toFloat(sub, 0x1e0);
-    sub[0xc] = (u8)(sub[0xc] & ~0x40);
+    ((LevelControlFlags *)(sub + 0xc))->b6 = 0;
     *(void**)(obj + 0xbc) = (void*)&CFLevelControl_SeqFn;
-    GameBit_Set(0x983, *(int*)(*(int*)(obj + 0x4c) + 0x14) != 0x2cef ? 1 : 0);
+    GameBit_Set(0x983, *(int*)(*(int*)(obj + 0x4c) + 0x14) != 0x2cef);
     if (GameBit_Get(0x2fe) == 0) {
-        p = lbl_80323008;
-        for (i = 0; i < 0x17; i++) {
+        for (i = 0, p = lbl_80323008; i < 0x17; i++) {
             GameBit_Set(*p, 0);
             p++;
         }
     }
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 4, 0);
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 0x11, 0);
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 0x15, 0);
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 0x16, 0);
-    sub[0xc] = (u8)((sub[0xc] & ~0x20) | (((u8)GameBit_Get(0x974) & 1) << 5));
-    sub[0xc] = (u8)((sub[0xc] & ~0x10) | (((u8)GameBit_Get(0x975) & 1) << 4));
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 4, 0);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x11, 0);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x15, 0);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x16, 0);
+    ((LevelControlFlags *)(sub + 0xc))->b5 = (u8)GameBit_Get(0x974);
+    ((LevelControlFlags *)(sub + 0xc))->b4 = (u8)GameBit_Get(0x975);
     objSetSlot(obj, 0x51);
-    sub[0xc] = (u8)(sub[0xc] | 0x08);
+    ((LevelControlFlags *)(sub + 0xc))->b3 = 1;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1759,6 +1766,10 @@ extern uint GameBit_Get(int eventId);
  * while in the static states (0/1) and 0 while in transition (2/3). */
 #pragma scheduling off
 int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
+    typedef struct DoorFlags {
+        u8 mode : 3;
+        u8 rest : 5;
+    } DoorFlags;
     register int playerNear;
     register int trickyNear;
     register u8* state;
@@ -1793,7 +1804,7 @@ int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
              GameBit_Get(*(s16*)(params + 0x22)) != 0)) {
             GameBit_Set(*(s16*)(params + 0x1a), 1);
             if (playerNear != 0 || trickyNear != 0) {
-                state[0] = (u8)((state[0] & ~0xe0) | (2 << 5));
+                ((DoorFlags*)state)->mode = 2;
             }
         }
     } else if (mode == 1) {
@@ -1801,19 +1812,19 @@ int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
              (*(s16*)(params + 0x22) != -1 &&
               GameBit_Get(*(s16*)(params + 0x22)) != 0)) &&
             playerNear == 0 && trickyNear == 0) {
-            state[0] = (u8)((state[0] & ~0xe0) | (3 << 5));
+            ((DoorFlags*)state)->mode = 3;
         }
     }
 
     {
-        register int cur = state[0];
-        if (((cur >> 5) & 7) == 2) {
+        register DoorFlags *fl = (DoorFlags*)state;
+        if (fl->mode == 2) {
             if (data[0x80] == 2) {
-                state[0] = (u8)((cur & ~0xe0) | (1 << 5));
+                fl->mode = 1;
             }
-        } else if (((cur >> 5) & 7) == 3) {
+        } else if (fl->mode == 3) {
             if (data[0x80] == 1) {
-                state[0] = (u8)(cur & ~0xe0);
+                fl->mode = 0;
             }
         }
     }
@@ -1975,16 +1986,17 @@ extern void storeZeroToFloatParam(void *p);
 #pragma scheduling off
 #pragma peephole off
 void cfforcefield_init(s16 *obj, void *data) {
+    typedef struct ForceFieldInitFlags {
+        u8 disabled : 1;
+        u8 rest : 7;
+    } ForceFieldInitFlags;
     register u8 *flagPtr = (u8*)((int**)obj)[0xb8/4];
     {
         s8 v = *((s8*)data + 0x18);
         s16 t = v << 8;
         *obj = t;
     }
-    {
-        u32 bitval = (u32)GameBit_Get(*(s16*)((char*)data + 0x20)) & 1;
-        flagPtr[0] = (u8)((flagPtr[0] & ~0x80) | (bitval << 7));
-    }
+    ((ForceFieldInitFlags *)flagPtr)->disabled = (u8)GameBit_Get(*(s16*)((char*)data + 0x20));
     storeZeroToFloatParam(flagPtr + 4);
 }
 #pragma peephole reset
@@ -2079,42 +2091,44 @@ void fn_801A4DB8(int p1, int p2, int flag, int p3)
 void exploded_seedDebrisMotion(ExplodedObject *obj, ExplodedObjectState *state, ExplodedObjectMapData *data)
 {
   f32 floorY[2];
+  f32 d1;
 
   floorY[0] = lbl_803E43F0;
   obj->angleX = data->initialAngleX;
   obj->angleY = data->initialAngleY;
   obj->angleZ = data->initialAngleZ;
 
-  obj->velocityX = (f32)(s32)data->initialVelocityX / lbl_803E4400;
-  obj->velocityY = (f32)(s32)data->initialVelocityY / lbl_803E4400;
-  obj->velocityZ = (f32)(s32)data->initialVelocityZ / lbl_803E4400;
+  obj->velocityX = (f32)(s32)data->initialVelocityX / (d1 = lbl_803E4400);
+  obj->velocityY = (f32)(s32)data->initialVelocityY / d1;
+  obj->velocityZ = (f32)(s32)data->initialVelocityZ / d1;
   state->spinX = (f32)(s32)data->spinX;
   state->spinY = (f32)(s32)data->spinY;
   state->spinZ = (f32)(s32)data->spinZ;
 
-  if (data->floorOffset == 0) {
-    fn_80065684((double)obj->x, (double)(obj->y - lbl_803E4404), (double)obj->z, obj, floorY, 0);
-    state->floorHeight = obj->y - floorY[0];
-  }
-  else {
-    state->floorHeight = obj->y + (f32)(s32)data->floorOffset;
+  {
+    u16 off = *(u16*)&data->floorOffset;
+    if (off == 0) {
+      fn_80065684((double)obj->x, (double)(obj->y - lbl_803E4404), (double)obj->z, obj, floorY, 0);
+      state->floorHeight = obj->y - floorY[0];
+    }
+    else {
+      state->floorHeight = obj->y + (f32)(s16)off;
+    }
   }
 
-  state->spinVelocityX = (f32)(s32)data->spinVelocityX / lbl_803E4404;
-  state->spinVelocityY = (f32)(s32)data->spinVelocityY / lbl_803E4404;
-  state->spinVelocityZ = (f32)(s32)data->spinVelocityZ / lbl_803E4404;
-  state->accelerationX = (f32)(s32)data->accelerationX / lbl_803E4408;
-  state->accelerationY = (f32)(s32)data->accelerationY / lbl_803E4408;
-  state->accelerationZ = (f32)(s32)data->accelerationZ / lbl_803E4408;
+  state->spinVelocityX = (f32)(s32)data->spinVelocityX / (d1 = lbl_803E4404);
+  state->spinVelocityY = (f32)(s32)data->spinVelocityY / d1;
+  state->spinVelocityZ = (f32)(s32)data->spinVelocityZ / d1;
+  state->accelerationX = (f32)(s32)data->accelerationX / (d1 = lbl_803E4408);
+  state->accelerationY = (f32)(s32)data->accelerationY / d1;
+  state->accelerationZ = (f32)(s32)data->accelerationZ / d1;
 
   state->elapsedFrames = 0;
-  if (data->lifetimeFrames == 0) {
-    state->durationFrames = -1;
+  if (*(u16*)&data->lifetimeFrames != 0) {
+    state->durationFrames = *(u16*)&data->lifetimeFrames * ((int)randomGetRange(0, 100) + 100) / 200;
   }
   else {
-    int lifetime = (u16)data->lifetimeFrames * ((int)randomGetRange(0, 100) + 100);
-    lifetime = lifetime / 200 + (lifetime >> 31);
-    state->durationFrames = lifetime - (lifetime >> 31);
+    state->durationFrames = -1;
   }
 }
 #pragma peephole reset
