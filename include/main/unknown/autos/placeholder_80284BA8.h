@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284BA8_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284BA8_H_
-
-#include "ghidra_import.h"
-
-void salFree(void *ptr);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284BA8_H_ */

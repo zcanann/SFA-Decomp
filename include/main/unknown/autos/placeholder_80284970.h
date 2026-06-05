@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284970_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284970_H_
-
-#include "ghidra_import.h"
-
-int salInitDsp(u32 flags);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80284970_H_ */

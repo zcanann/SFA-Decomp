@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028429C_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028429C_H_
-
-#include "ghidra_import.h"
-
-void aramInit(u32 extraSize);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8028429C_H_ */
