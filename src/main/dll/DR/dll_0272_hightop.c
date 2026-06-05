@@ -1019,10 +1019,16 @@ int hightop_stateHandler10(int obj, int p) {
     }
     if (Vec_distance((f32 *)((char *)Obj_GetPlayerObject() + 0x18), (f32 *)((char *)obj + 0x18)) > lbl_803E6AA4) {
         if (randFn_80080100(500) != 0) {
+            int *weights;
+            int *weight;
+
             r = randomGetRange(0, 100);
             i = 0;
-            while (lbl_8032AB3C[i] < r) {
-                r -= lbl_8032AB3C[i];
+            weights = lbl_8032AB3C;
+            weight = weights;
+            while (*weight < r) {
+                weight++;
+                r -= weights[i];
                 i++;
             }
             (*(void (**)(int, int, int))((char *)*gObjectTriggerInterface + 0x48))(lbl_8032AB30[i], obj, -1);
