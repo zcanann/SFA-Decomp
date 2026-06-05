@@ -2,6 +2,7 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/pressureSwitch.h"
 #include "main/mapEvent.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_8000680c();
@@ -691,7 +692,6 @@ extern void objLightFn_8009a1dc(int obj, f32 radius, void *pos, int type, int fl
 extern f32 sqrtf(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern int getAngle(f32 dx, f32 dz);
-extern void ObjAnim_AdvanceCurrentMove(int obj, f32 moveStepScale, f32 deltaTime, void *events);
 extern void Sfx_SetObjectChannelVolume(f32 volumeScale, int obj, int channel, int volume);
 
 typedef union PressureSwitchIntToDouble {
@@ -819,7 +819,8 @@ void fn_8014E1DC(int obj, int *state) {
             *(f32 *)(obj + 0x24) * timeDelta,
             *(f32 *)(obj + 0x28) * timeDelta,
             *(f32 *)(obj + 0x2c) * timeDelta);
-    ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(state + 3), timeDelta, animEvents);
+    ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 3), timeDelta, obj,
+                               (ObjAnimEventList *)animEvents);
 
     player = state[1];
     angle = (u16)getAngle(*(f32 *)(obj + 0x18) - *(f32 *)(player + 0x18),

@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/dll/NW/NWsfx.h"
 #include "main/dll/SH/SHthorntail_internal.h"
+#include "main/objanim.h"
 
 extern undefined8 ObjGroup_RemoveObject();
 extern int hitDetectFn_80065e50(void *obj, f32 x, f32 y, f32 z, void *hitsOut, int p6, int p7);
@@ -22,8 +23,6 @@ extern undefined4 GameBit_Set(int eventId, int value);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern void itemPickupDoParticleFx(u8 *obj, f32 scale, int mode, int count);
 extern undefined4 ObjMsg_SendToObject(u8 *obj, int msg, u8 *sender, void *data);
-extern void ObjAnim_SetCurrentMove(u8 *obj, int moveId, f32 blend, int flag);
-extern int ObjAnim_AdvanceCurrentMove(u8 *obj, f32 moveStepScale, f32 deltaTime, void *events);
 extern void objMove(u8 *obj, f32 vx, f32 vy, f32 vz);
 
 extern int *gRomCurveInterface;
@@ -318,10 +317,11 @@ void edibleMushroomFn_801d083c(u8 *obj, u8 *state, u8 *other) {
     curMove = *(s16 *)(obj + 0xa0);
     moveId = lbl_80326BD0[state[0x136]];
     if (curMove != moveId && moveId != -1) {
-        ObjAnim_SetCurrentMove(obj, moveId, lbl_803E52B0, 0);
+        ObjAnim_SetCurrentMove((int)obj, moveId, lbl_803E52B0, 0);
     }
 
-    if (ObjAnim_AdvanceCurrentMove(obj, lbl_80326BE8[state[0x136]], timeDelta, animOut) !=
+    if (ObjAnim_AdvanceCurrentMove(lbl_80326BE8[state[0x136]], timeDelta, (int)obj,
+                                   (ObjAnimEventList *)animOut) !=
         0) {
         state[0x137] |= 1;
     } else {
