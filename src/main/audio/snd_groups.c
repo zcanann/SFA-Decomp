@@ -279,8 +279,8 @@ u32 seqPlaySong(u16 sgid, u16 sid, void *arrfile, void *para, u8 irq_call, u8 st
             continue;
         }
 
-        g = gs[i].gAddr;
-        if (g->type == 0) {
+        if (gs[i].gAddr->type == 0) {
+            g = gs[i].gAddr;
             prj = gs[i].prjAddr;
             norm = (u8 *)prj + g->data.song.normpageOff;
             drum = (u8 *)prj + g->data.song.drumpageOff;
