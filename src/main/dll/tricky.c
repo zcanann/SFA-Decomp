@@ -3177,7 +3177,7 @@ void drawViewFinderHud(void) {
     VBLK(lbl_803E1E3C, lbl_803E1ED8, lbl_803E1EDC, lbl_803E1EE4, lbl_803E1ED4);
 
     {
-        char buf[64];
+        char buf[56];
         f32 f15v = (f32)(lbl_803E1EF0 * ((fovY - lbl_803E1EF8) / lbl_803E1F00) + lbl_803E1EB0);
         f32 f18v = -(lbl_803E1F0C * lbl_803DD7F0) + lbl_803E1F08;
         f32 f19v;
