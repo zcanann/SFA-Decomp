@@ -1363,12 +1363,24 @@ void fn_8015383C(int obj, int state)
 #pragma peephole off
 void fn_80153CF8(int obj, int state, int p3, int msgFlag)
 {
-    u8 cond = 0;
-    s16 kind = *(s16*)(obj + 0xa0);
-    if (kind == 5 || kind == 4
-        || (kind == 6 && (double)*(f32*)(obj + 0x98) < lbl_803E2938)) {
-        if (msgFlag != 0xe) cond = 1;
+    int cond = 0;
+    int kind = *(s16*)(obj + 0xa0);
+    if (kind == 5) {
+    } else if (kind == 4) {
+    } else if (kind == 6) {
+        if ((double)*(f32*)(obj + 0x98) < lbl_803E2938) {
+        } else {
+            goto checkedKind;
+        }
+    } else {
+        goto checkedKind;
     }
+
+    if (msgFlag != 0xe) {
+        cond = 1;
+    }
+
+checkedKind:
     if (msgFlag == 0x10) {
         if (cond != 0) {
             *(u32*)(state + 0x2e8) = *(u32*)(state + 0x2e8) | 0x20;
