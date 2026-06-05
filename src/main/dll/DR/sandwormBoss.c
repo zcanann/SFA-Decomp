@@ -3899,7 +3899,7 @@ extern f32 lbl_803E42B8;
 extern f32 lbl_803E42C0;
 extern f32 lbl_803E4130;
 extern f32 lbl_803E416C;
-extern void fn_8001CB3C(int* p);
+extern void modelLightStruct_freeSlot(int* p);
 /* ObjLink_DetachChild already declared above as undefined4 ObjLink_DetachChild() */
 extern void dll_2E_func06(int* a, int* b, int c);
 extern void objfx_spawnHitEmitterAtPos(f32* p, int a, int b, int c, int d);
@@ -3997,7 +3997,7 @@ extern f32 lbl_803E42A4;
 extern f32 lbl_80322C38[];
 extern f32 lbl_803DBE58;
 extern f32 lbl_803DBE5C;
-extern void *fn_8001CC9C(int a, int b, int c, int d);
+extern void *modelLightStruct_createPointLight(int a, int b, int c, int d);
 extern void modelLightStruct_setDistanceAttenuation(void *light, f32 a, f32 b);
 extern void modelLightStruct_setPosition(void *light, f32 x, f32 y, f32 z);
 extern void Obj_TransformLocalVectorByWorldMatrix(int *obj, void *out, void *in);
@@ -4017,7 +4017,7 @@ void gcrobotlightbea_update(int *obj) {
 
     sub = *(void***)((char*)obj + 0xb8);
     if (sub[0] == NULL) {
-        sub[0] = fn_8001CC9C(0xfa, 0xfa, 0xfa, 1);
+        sub[0] = modelLightStruct_createPointLight(0xfa, 0xfa, 0xfa, 1);
         if (sub[0] != NULL) {
             modelLightStruct_setDistanceAttenuation(sub[0], lbl_803DBE58, lbl_803E42A0 + lbl_803DBE58);
         }
@@ -4065,7 +4065,7 @@ void gcrobotlightbea_free(int* obj)
 {
     int* state = *(int**)((char*)obj + 0xb8);
     if (*(void**)state != NULL) {
-        fn_8001CB3C(state);
+        modelLightStruct_freeSlot(state);
     }
     if (*(int**)((char*)obj + 196) != NULL) {
         ObjLink_DetachChild(*(int**)((char*)obj + 196), obj);

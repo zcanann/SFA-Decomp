@@ -421,7 +421,7 @@ typedef struct TimerFlags {
 extern f32 lbl_803E7408;
 extern f32 lbl_803E7418;
 extern f32 lbl_803E7424;
-extern void fn_8001CB3C(int p);
+extern void modelLightStruct_freeSlot(int p);
 extern void gameTimerStop(void);
 extern int fn_80080150(int state);
 extern void gameTimerInit(int a, int b);
@@ -437,7 +437,7 @@ extern void timerSetToCountUp(void);
 
 
 extern int timerCountDown(void *timer);
-extern int fn_8001CC9C(int obj, int a, int b, int c, int d);
+extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
 extern f32 lbl_803DC418;
 extern f32 lbl_803DC41C;
 extern f32 lbl_803E741C;

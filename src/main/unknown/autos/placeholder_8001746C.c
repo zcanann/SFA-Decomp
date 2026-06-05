@@ -8355,7 +8355,7 @@ void *objCreateLight(int arg, u8 addToList) {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void fn_8001CB3C(void **lightSlot) {
+void modelLightStruct_freeSlot(void **lightSlot) {
     ModelLightStruct *light;
     int i;
     int count;
@@ -8414,7 +8414,7 @@ void ModelLightStruct_free(ModelLightStruct *light) {
     mm_free(light);
 }
 
-void *fn_8001CC9C(int unused, u8 red, u8 green, u8 blue, u8 setFlag) {
+void *modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u8 setFlag) {
     u8 *light;
     u8 *newLight;
 

@@ -316,7 +316,7 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
             }
         }
         if (*light != 0) {
-            fn_8001CB3C((int)light);
+            modelLightStruct_freeSlot((int)light);
         }
         return 0;
     }
@@ -343,7 +343,7 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
     }
 
     if (*light == 0) {
-        *light = (void *)fn_8001CC9C(obj, 0x80, 0x80, 0xff, 0);
+        *light = (void *)modelLightStruct_createPointLight(obj, 0x80, 0x80, 0xff, 0);
         if (*light != 0) {
             modelLightStruct_setPosition(*light, lbl_803E6C38, intensity * lbl_803E6C40, lbl_803E6C38);
             modelLightStruct_setDistanceAttenuation(*light, intensity, lbl_803E6C44 + intensity);

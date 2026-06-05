@@ -6,7 +6,7 @@
 #define SFXand_missilelaunch 812
 #define SFXand_suck_lp 813
 
-extern undefined4 fn_8001CB3C(int param_1);
+extern undefined4 modelLightStruct_freeSlot(int param_1);
 extern undefined4 GameBit_Get(int eventId);
 extern undefined4 randomGetRange(int param_1, int param_2);
 extern int Obj_GetPlayerObject(void);
@@ -32,7 +32,7 @@ extern void fn_80098B18(FirePipeObject *obj, int type, int a, int b, int c, f32 
 extern int objIsFrozen(FirePipeObject *obj);
 extern int fn_80080150(int timer);
 extern int timerCountDown(int timer);
-extern int fn_8001CC9C(FirePipeObject *obj, int r, int g, int b, int a);
+extern int modelLightStruct_createPointLight(FirePipeObject *obj, int r, int g, int b, int a);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
 extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
@@ -246,7 +246,7 @@ void firepipe_updateState(FirePipeObject *obj)
     if ((fn_80080150((int)extra + 0x24) != 0) && (flags->bit6 == 0)) {
         if (*(u8 *)&extra->cycleTimer < lbl_803DC348) {
             if ((extra->subObj == 0) && (flags->bit0 != 0)) {
-                extra->subObj = fn_8001CC9C(obj,0xff,0x80,0,0);
+                extra->subObj = modelLightStruct_createPointLight(obj,0xff,0x80,0,0);
                 if (extra->subObj != 0) {
                     modelLightStruct_setEnabled(extra->subObj,0,lbl_803E6B74);
                     modelLightStruct_setEnabled(extra->subObj,1,lbl_803E6B78);
@@ -281,7 +281,7 @@ void firepipe_updateState(FirePipeObject *obj)
         } else if (extra->subObj != 0) {
             modelLightStruct_setEnabled(extra->subObj,0,lbl_803E6B98);
             if (modelLightStruct_getActiveState(extra->subObj) == 0) {
-                fn_8001CB3C((int)&extra->subObj);
+                modelLightStruct_freeSlot((int)&extra->subObj);
             }
         }
     }
@@ -376,7 +376,7 @@ void firepipe_free(FirePipeObject *obj)
         i++;
     }
     if ((uint)extra->subObj != 0) {
-        fn_8001CB3C((int)&extra->subObj);
+        modelLightStruct_freeSlot((int)&extra->subObj);
     }
 }
 #pragma peephole reset

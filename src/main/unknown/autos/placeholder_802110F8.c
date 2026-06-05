@@ -12,7 +12,7 @@ extern void storeZeroToFloatParam(void *timer);
 extern void s16toFloat(void *timer, int duration);
 extern void fn_8009A8C8(void *obj, f32 param2);
 extern void spawnExplosion(void *obj, f32 param2, int p3, int p4, int p5, int p6, int p7, int p8, int p9);
-extern void fn_8001CB3C(void *handle);
+extern void modelLightStruct_freeSlot(void *handle);
 
 extern f32 lbl_803E6768;
 extern f32 lbl_803E676C;
@@ -50,7 +50,7 @@ void proximitymine_resetToIdle(ProximityMineObject *obj)
     ObjHits_SetHitVolumeSlot(obj, 13, 1, 0);
     ObjHits_EnableObject(obj);
     if (state->effectHandle != NULL) {
-        fn_8001CB3C(&state->effectHandle);
+        modelLightStruct_freeSlot(&state->effectHandle);
     }
 }
 #pragma peephole reset

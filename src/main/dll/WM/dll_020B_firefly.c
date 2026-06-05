@@ -92,7 +92,7 @@ void FireFlyFn_801f4f88(int obj)
 
 void firefly_free(int obj)
 {
-    fn_8001CB3C(*(void **)(obj + 0xB8));
+    modelLightStruct_freeSlot(*(void **)(obj + 0xB8));
     (*(void (*)(int))(*(int *)(*gExpgfxInterface + 0x18)))(obj);
 }
 
@@ -127,7 +127,7 @@ void firefly_update(int obj)
         *(u8 *)((u8 *)state + 0x6C) =
             (u8)((*(u8 *)((u8 *)state + 0x6C) & 0x7F) | (isActive << 7));
         if ((*(u8 *)((u8 *)state + 0x6C) & 0x80) != 0) {
-            *state = fn_8001CC9C(obj, 100, 0xFF, 100, 0);
+            *state = modelLightStruct_createPointLight(obj, 100, 0xFF, 100, 0);
         }
     } else {
         if (timerCountDown((u8 *)state + 0x74) != 0) {

@@ -15,8 +15,8 @@ extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
 
-extern int fn_8001CC9C(int obj, int a, int b, int c, int d);
-extern void fn_8001CB3C(void *p);
+extern int modelLightStruct_createPointLight(int obj, int a, int b, int c, int d);
+extern void modelLightStruct_freeSlot(void *p);
 extern void modelLightStruct_setDistanceAttenuation(void *p, f32 a, f32 b);
 extern f32 Curve_AdvanceAlongPath(void *state, f32 t);
 extern s16 getAngle(f32 dx, f32 dz);
@@ -132,7 +132,7 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 void SpiritDoorLock_free(int obj) {
     void *inner = *(void **)(obj + 0xb8);
     if (*(void **)inner != NULL) {
-        fn_8001CB3C(inner);
+        modelLightStruct_freeSlot(inner);
     }
 }
 #pragma peephole reset
@@ -222,7 +222,7 @@ void SpiritDoorLock_init(int obj, int *params, int mode)
 
     if (mode == 0) {
         *(u8 *)((char *)obj + 0x36) = 0;
-        state[0] = fn_8001CC9C(obj, 255, 0, 77, 0);
+        state[0] = modelLightStruct_createPointLight(obj, 255, 0, 77, 0);
     }
 }
 #pragma peephole reset
@@ -265,7 +265,7 @@ void SpiritDoorLock_update(int obj)
                     (f32)(int)*(s8 *)((char *)descriptor + 0x19) *
                     lbl_803E4448;
                 if (state[0] == 0) {
-                    state[0] = fn_8001CC9C(obj, 0xff, 0, 0x4d, 0);
+                    state[0] = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
                 }
             }
         } else {
@@ -274,7 +274,7 @@ void SpiritDoorLock_update(int obj)
             }
             if (*(u8 *)((char *)obj + 0x36) == 0) {
                 if (state[0] != 0) {
-                    fn_8001CB3C(state);
+                    modelLightStruct_freeSlot(state);
                 }
             } else {
                 *(u8 *)((char *)obj + 0x36) -= 1;

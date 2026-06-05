@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/proximitymine.h"
 
-extern void fn_8001CB3C(void *handle);
+extern void modelLightStruct_freeSlot(void *handle);
 extern int ObjHits_GetPriorityHit(void *obj,int param_2,int param_3,int param_4);
 extern void objRenderFn_8003b8f4(void *obj,undefined4 param_2,undefined4 param_3,undefined4 param_4,
                         undefined4 param_5,double scale);
@@ -30,7 +30,7 @@ void proximitymine_free(ProximityMineObject *obj)
 
   state = obj->state;
   if (state->effectHandle != NULL) {
-    fn_8001CB3C(&state->effectHandle);
+    modelLightStruct_freeSlot(&state->effectHandle);
   }
   return;
 }

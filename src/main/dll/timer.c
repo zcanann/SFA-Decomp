@@ -15,7 +15,7 @@ void timer_free(int obj)
     int state = *(int *)(obj + 0xb8);
     ObjGroup_RemoveObject(obj, 0x4c);
     if (*(void **)(state + 4) != NULL) {
-        fn_8001CB3C(state + 4);
+        modelLightStruct_freeSlot(state + 4);
     }
     gameTimerStop();
 }
@@ -145,7 +145,7 @@ void timer_update(int obj)
                 gameTimerStop();
                 break;
             case 2:
-                fn_8001CB3C(state + 4);
+                modelLightStruct_freeSlot(state + 4);
                 break;
             }
             f->manual = 0;
@@ -162,7 +162,7 @@ void timer_update(int obj)
                 timerSetToCountUp();
                 break;
             case 2:
-                *(int *)(state + 4) = fn_8001CC9C(obj, 255, 0, 0, 0);
+                *(int *)(state + 4) = modelLightStruct_createPointLight(obj, 255, 0, 0, 0);
                 if (*(int *)(state + 4) != 0) {
                     modelLightStruct_setupGlow((void *)*(int *)(state + 4), 0, 255, 0, 0, 100, lbl_803DC418);
                     modelLightStruct_setPosition((void *)*(int *)(state + 4), lbl_803E741C, lbl_803E7420,

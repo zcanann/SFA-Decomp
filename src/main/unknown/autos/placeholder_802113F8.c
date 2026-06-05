@@ -9,7 +9,7 @@ extern int ObjPath_GetPointWorldPosition(void *obj, int idx, f32 *x, f32 *y, f32
 extern int hitDetectFn_800658a4(void *obj, f32 x, f32 y, f32 z, f32 *out, int flag);
 extern void Sfx_PlayFromObject(void *obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(void *obj, int channel);
-extern ProximityMineEffect *fn_8001CC9C(void *obj, int r, int g, int b, int a);
+extern ProximityMineEffect *modelLightStruct_createPointLight(void *obj, int r, int g, int b, int a);
 extern int *objFindTexture(void *obj, int a, int b);
 extern void modelLightStruct_setupGlow(void *light, int a, int b, int c, int d, u8 e, f32 f);
 extern void modelLightStruct_setPosition(void *light, f32 x, f32 y, f32 z);
@@ -94,7 +94,7 @@ void proximitymine_update(ProximityMineObject *obj)
       int brightness;
       int *tex;
 
-      state->effectHandle = fn_8001CC9C(obj, 0xff, 0, 0, 0);
+      state->effectHandle = modelLightStruct_createPointLight(obj, 0xff, 0, 0, 0);
       tex = objFindTexture(obj, 0, 0);
       if (tex != NULL) {
         *tex = (*tex + 0x10) % 512;
@@ -115,7 +115,7 @@ void proximitymine_update(ProximityMineObject *obj)
     if (fn_80080150(state->resetTimer) != 0) {
       Sfx_PlayFromObject(obj, 0xef);
       if (state->effectHandle == NULL) {
-        state->effectHandle = fn_8001CC9C(obj, 0xff, 0, 0, 0);
+        state->effectHandle = modelLightStruct_createPointLight(obj, 0xff, 0, 0, 0);
         if (state->effectHandle != NULL) {
           modelLightStruct_setupGlow(state->effectHandle, 0, 0xff, 0, 0, lbl_803DC240, lbl_803DC23C);
           {
