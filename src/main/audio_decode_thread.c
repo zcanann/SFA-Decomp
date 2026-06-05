@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_801175B4.h"
+#include "main/audio_decode_thread.h"
 #include "dolphin/os.h"
 
 extern void *AudioDecoderForOnMemory(void *);
