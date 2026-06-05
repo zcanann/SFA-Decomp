@@ -471,6 +471,185 @@ Heuristic:
     codegen-heuristic cap — leave the partial. (mike14, musicInitMidiWad /
     Camera_InitState on 800066E0.)
 
+29. **Callee parameter POSITION controls caller's L2R arg-emission order.** MWCC
+    evaluates call args left-to-right; the *positions* of the float vs. int
+    params in the callee signature decide which loads/conversions the caller
+    emits first. Read the caller's asm — if target sets up `r3; f1; f2; r4`
+    where your output sets `r3; r4; f1; f2`, the callee's float params are at
+    arg-slots 2-3, not last. Reorder the extern signature to match the target
+    eval order; one signature fix can lift every call site of that callee at
+    once. (delta-28 `pauseMenuDrawElement(tex, f32, f32, s16 x, u8, s32, s32)`
+    lifted wispBaddie 3 fns; charlie-28 weaponE6
+    `objAnimFn_8013a3f0(obj, animId, f32, flags)`; charlie-28 firepipe
+    `fn_80098B18(obj, f32 scale, type, ...)`.) **Mirror of #9 + #24** for the
+    arg-eval-order direction rather than the live-range or single-precision
+    direction.
+
+30. **Alias variable `T *base32 = (T *)base;` flips `lwzx`/`lhzx` →
+    `add; lwz/lha disp`.** When you walk a `u8 *` base but want word/halfword
+    access at fixed displacements, an inline `*(s32*)(base + i*N + disp)` emits
+    the indexed-load form (`lwzx`); declaring a separate typed alias
+    `s32 *base32 = (s32*)base;` and indexing `base32[i*N/4 + disp/4]` emits
+    `add base; lwz disp` matching target. The aliased base lets MWCC compute
+    the array address once and use `disp` for the field offset, instead of
+    folding the whole `+i*N+disp` into an indexed-load. Took mazewell
+    `gmmazewell_update` 75.9 → 98.8%. (charlie-28 task #122.) Generalization of
+    #18 for raw-pointer bases.
+
+31. **Whole-struct assignment for paired `lwz`/`stw` blob copies.** When target
+    copies several adjacent fields with paired `lwz`/`stw` (not `lmw`/`stmw`,
+    not `memcpy`), expressing the copy as field-by-field stmts (`d->a=s->a;
+    d->b=s->b; ...`) emits the right loads but in the wrong order, while
+    `*dst = *src` (whole-struct assignment) emits the exact paired
+    `lwz/stw` sequence in target's order. Use whole-struct assignment when
+    every field is being copied. (charlie-28 cfforcefield —
+    `radii[4]+axisTable[12]` inside results struct.)
+
+32. **`fr = conv; fr = lbl + fr;` 3-statement form for `fadds` operand order.**
+    When target emits `fadds f1, lbl_load, conv_result` (loaded const second
+    operand, conversion first) and your `fr = lbl + (f32)i` emits
+    `fadds f1, conv, lbl`, split the expression: `fr = (f32)i; fr = lbl + fr;`
+    forces MWCC to materialize the conversion into the same reg first and then
+    use it as the *second* `fadds` operand. (charlie-28.) Generalization of #27
+    for `fadds`-not-`fsubs` cases.
+
+33. **`if (cond) { ... } else return 0;` mid-function — keep the constant
+    return in the ELSE arm, not after the body.** When target lays a
+    `cmpwi; bne body; li r3,0; b epilogue` shape, the corresponding C is
+    `if (cond) { <body> } else return 0;` — placing the `return 0` after the
+    body emits an extra `li r3,0; b` island. Sibling of #22 (positive-wrap)
+    for cases that have an explicit non-zero return path. (charlie-28.)
+
+34. **Address-taken FP outparam decl-order: first-declared gets the HIGHEST
+    stack offset.** Mirror of #5/#16 for float outparams. When passing
+    `&fA, &fB, &fC, &fD` to a callee that fills them, MWCC assigns offsets
+    based on declaration order — declare the float that lands at the HIGHEST
+    offset FIRST. Took `CameraModeClimb_update` to 99.7% via
+    `cc, d0, d4, d8` declaration order (cc gets sp+0x14, d8 gets sp+0x8).
+    Also: snd3d `s3dCalcEmitter` outparam order
+    `(&distance, &pan, &azimuth, &pitch, &frontBack)` with `pan` at lowest
+    slot passed LAST. (CAM/dll_62, snd3d, task #120.)
+
+35. **Typedef'd vtable function-pointer fixes Ghidra's `code**` double-deref
+    shape.** Ghidra often imports vtable dispatch as `(*(code**)((*obj)+0x34))(...)`
+    which compiles to extra loads. Declare a proper `typedef R (*VtblFn)(...)` and
+    use `((VtblFn*)*obj)[0x34/4](obj, ...)` (or a typed struct overlay on the
+    vtable). MWCC then emits the clean `lwz r12, off(r4); mtctr; bctrl`
+    target uses. (CAM/dll_62.) Bonus: fixes the f64 argument-position
+    misidentification (`code**` form often loses the float arg types).
+
+36. **`(int)`/`(uint)` casts at call sites INFLATE the cast param's
+    saved-reg priority — drop the casts to flip allocator coloring.** Discovered
+    on duster `fn_8015625C`/`fn_8015652C`: dropping redundant `(int)`/`(uint)`
+    casts at the call sites of a frequently-passed param flipped MWCC's saved-reg
+    assignment from `r31/r30` → `r30/r31` to match target. The casts apparently
+    raise the cost-model weight enough to win the higher saved reg. When a
+    function's only residual is a 1-bit saved-reg permutation and a param is
+    passed many times with casts, try dropping the casts. Pair with decl-order
+    #16. (dc221d25d task #121.)
+
+37. **`(u16)` on the WHOLE OR-expression for single-`clrlwi` combine.** When
+    OR-ing several byte/halfword values and storing as halfword, writing
+    `*p = (u16)(a | b | c)` emits ONE `clrlwi` at the store; per-operand casts
+    (`(u16)a | (u16)b | (u16)c`) emit per-operand `clrlwi`s. The single outer
+    cast lets MWCC OR full-width and mask once. (newshadows.)
+
+38. **`(x & N) ? 1 : 0` ternary for branchy bool materialization;
+    `(x & N) != 0` emits `neg/or/srwi`.** When target materializes a flag-bit
+    test into 0 or 1 with a branch-and-set sequence (`andi.; beq; li 1; b; li 0`)
+    rather than the `cntlzw`/`neg` arithmetic idiom, the C is the ternary
+    `(x & N) ? 1 : 0`. The bare `(x & N) != 0` (or `!!(x & N)`) takes MWCC's
+    arithmetic path. Companion to #23: pick the form by reading target's shape.
+    (MMP_moonrock lightning.)
+
+39. **Bitfield struct for byte flags at specific offsets generalizes #12 beyond
+    single bits.** When `state[0x25]` holds packed bit flags AND target uses
+    `rlwimi`/`rlwinm` to read/write individual bits, declare a struct overlay
+    with bitfield members at the right byte offset and write `s->flagX = 1;` —
+    MWCC emits the matching `rlwimi`. The bitfield approach scales to multiple
+    independent bits at the same byte, where #12 only covered single fields.
+    (MMP_moonrock lightning — `LightningFlags` / `LightningMode` structs.)
+
+40. **Embedded-assignment in `if()` condition avoids `stw`+`lwz` reload.** When
+    a function calls a helper, stores the result, then immediately tests it,
+    the natural C `h = helper(); if (h != 0) { use(h); }` emits
+    `bl; stw; lwz; cmpwi`. Writing `if ((h = helper()) != 0) { use(h); }`
+    keeps the result live in the return-value reg and skips the spill —
+    matching target's `bl; cmpwi; beq` shape. (snd3d s3dHandle.)
+
+41. **`(s32)` cast on `fctiwz` return — `f32 stopped` returned via
+    `(s32)` conversion.** When target returns an integer that's the
+    truncated form of a computed float (e.g. a return code from a physics
+    step), `return (s32)floatExpr;` emits `fctiwz; stfd; lwz; blr` — matching
+    target's `fctiwz`+`stfd`+`lwz` epilogue. A bare `int stopped = (int)f;
+    return stopped;` adds an extra temp. (IMicicle `exploded_stepDebrisPhysics`.)
+
+42. **Ternary `(cond) ? K1 : K2` into a typed lvalue reproduces per-arm
+    `li K1; b; li K2; extsX` join.** When target has two `li`s feeding a
+    sign/zero-extending store (or test), writing the ternary directly into the
+    typed lvalue `s8 t = cond ? 2 : 1;` emits `li`/`b`/`li`/`extsb` matching
+    target. Pulling the ternary out into separate `if/else` blocks fragments
+    the join. (MMP_moonrock `fn_80198DE8` `s8 triggerState`.)
+
+43. **Comma-init `for (i=0, p=base; ...; ...)` emits `li 0; mr p,base`
+    matching target's two-prologue-instruction init.** When target's loop
+    prologue is `li r3,0; mr r4,r5; b ...`, a single-init `for (i=0; ...)` with
+    `p = base` as a separate stmt swaps the order. The comma form anchors both
+    inits at the loop head. (mazewell `gmmazewell_update`.)
+
+44. **`*(u16*)&lbl` pointer-read for `lhz` when a u16 global is passed as a
+    u16 param.** Naïvely passing a `s16 lbl;` global as a `u16` callee param
+    emits `lha; clrlwi` (sign-extend then mask). Writing `*(u16*)&lbl` emits
+    a single `lhz` matching target. The cast tells MWCC to read the bytes
+    unsigned-zero-extended. (delta-28 wispBaddie `pauseMenuDrawElement` call
+    sites for `lbl_803DD750`/`752`.)
+
+45. **Loop-invariant single-deref into a local saved-reg for FP constants
+    target keeps across calls (mirror of #6 inverse caveat).** When target keeps
+    an FP constant in `f29`/`f30`/`f31` ACROSS calls inside a loop (visible as
+    a `psq_l f31, off(sp)` save-mask + reload after each `bl`), declare the FP
+    constants as locals BEFORE the loop in REVERSE order — first-declared gets
+    `f31`, second `f30`, third `f29`. The decl order controls which constant
+    lands in which callee-saved reg. (snd3d `s3dHandle` — `zeroDist`,
+    `ageStep`, `ageLimit` declared first/second/third.) Counter-caveat to #6's
+    "don't lift across calls" — when target itself has the f31 save in its
+    frame, the lift IS the match.
+
+46. **Ghidra-import wrong-offset bug class: re-derive struct field offsets from
+    target asm, not from the imported skeleton.** A surprisingly common stuck-
+    partial cause: the Ghidra C has the right *operations* but the wrong *byte
+    offsets* into the state struct, because the v1.1 layout shifted vs v1.0.
+    Read the actual offsets off the target's `lwz`/`lhz`/`lbz` displacements.
+    Pattern caught: firepipe `FirePipeMapData` `s16 cycleTime` at `0x1A`,
+    import had wrong offsets `0x20/0x22` for timer/flags; mazewell control
+    flow had non-fallthrough ifs where target's switch falls through. Treat
+    "stuck mid-partial 60-95%" as offset-bug suspicion before allocator-cap
+    suspicion. Related to the "import logic-bug class" already documented in
+    the drift-handling section.
+
+47. **Inverse-direction sda21 recipe: when the SIZED-array form FAILS for a
+    `.data` symbol >8B, use scalar extern + `(&sym)[i]` indexing.** The
+    existing recipe (give an array-typed `.sdata` extern a KNOWN SIZE to get
+    `@sda21`) only works up to ~8B objects — that's the sdata threshold MWCC
+    uses. For larger pooled-data arrays, the sized-array form mis-emits FAR
+    `lis;addi`. Use the scalar form `extern T sym;` then `(&sym)[i]` to index
+    — MWCC then folds to `@sda21`. Took newshadows `renderShadows` `FinishQueue_803DED64`
+    to match. Inverse: when target USES the far `lis/addi` for a large
+    `.data` array and your scalar extern mis-emits `@sda21`, declare it
+    incomplete `extern u8 lbl[];` (no size) to force the far form. (duster.)
+
+48. **"WCTileIface vtbl struct" form documents a CAP, not a fix — `lwz r12,
+    off(iface); mtctr; bctrl` ALWAYS hoists to statement front.** When target
+    evaluates a dispatch's args L2R but the 3-load iface chain
+    (`lha r3; addi r4; addi r5; lwz r6 x3; lwz r12, off(r6)`) sits at the
+    LAST-ARG position in target while MWCC's output puts it at the *first-arg*
+    position — there is NO clean-C form that defeats the hoist. Tested
+    exhaustively: GC 1.2.5-2.7, sched on/off, -O2/3/4, lang c/c++,
+    struct-member / raw-cast / local / inline-helper / volatile forms — all
+    no-flip. ~6 reordered instrs × N call sites is the residual. Commit the
+    partial and move on; same cap likely caps wcpushblock and other
+    iface-dispatch fns. (wctile, task #120.)
+
 ## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
@@ -548,6 +727,13 @@ get sda21.** An INCOMPLETE array `extern u8 lbl[];` emits far `lis;addi`; the
 SIZED form `extern u8 lbl[8];` lets MWCC pick `@sda21`. (mike8 — sizing
 lbl_803DC8D0[8]/lbl_803DC8C0[2]/lbl_803DC8B8[2] lifted resetLoadedMaps 88→94.3%,
 ~+3% each on two fns. Read the size from symbols.txt.)
+
+**Sized-array fails for `.sdata` objects >~8B — use scalar extern + `(&sym)[i]`
+indexing instead** (sdata threshold). For larger pooled-data arrays, the
+sized-array form mis-emits FAR `lis;addi`. See recipe #47 for the full
+two-direction recipe (also covers when target USES far `lis/addi` and your
+scalar extern wrongly emits `@sda21` — declare it incomplete to force the
+far form).
 
 ## `#pragma dont_inline on` for callees that live in the same TU
 
