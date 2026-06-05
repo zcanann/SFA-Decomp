@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/dll/DIM/DIMlevcontrol.h"
 
 extern bool FUN_800067f0();
@@ -735,7 +736,6 @@ extern void DIMwooddoor_updateFallingDebris(int *obj);
 extern void DIMwooddoor_updateShardAim(int *obj, f32 a, f32 b, f32 c, f32 d);
 extern void DIMwooddoor_spawnShard(int *obj, int p2);
 extern f32  getXZDistance(f32 *a, f32 *b);
-extern void ObjAnim_AdvanceCurrentMove(int *obj, f32 a, f32 b, int c);
 extern void *Obj_GetPlayerObject(void);
 extern void *fn_802972A8(void *player);
 extern void buttonDisable(int chan, int mask);
@@ -877,7 +877,7 @@ void dimcannon_update(int *obj)
     }
 
     lbl_803DBEF4 = lbl_803E48F0;
-    ObjAnim_AdvanceCurrentMove(obj, lbl_803E48F0, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove(lbl_803E48F0, timeDelta, (int)obj, NULL);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -1040,7 +1040,7 @@ int fn_801B2550(int *obj, int p2, char *p3)
                 }
                 Sfx_StopObjectChannel(obj, 2);
             }
-            ObjAnim_AdvanceCurrentMove(obj, lbl_803DBEF4, timeDelta, 0);
+            ObjAnim_AdvanceCurrentMove(lbl_803DBEF4, timeDelta, (int)obj, NULL);
         }
     } else {
         s16 *vec2;
