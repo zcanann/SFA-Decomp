@@ -229,7 +229,7 @@ extern void Obj_FreeObject(int obj);
 extern void lightFn_8001db6c(int light, int a, f32 b);
 extern void modelLightStruct_updateGlowAlpha(int light);
 extern void lightSetFieldB0(int light, int r, int g, int b, int a);
-extern void lightFn_8001d620(int light, int a, int b);
+extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelStruct2_setVectors(int light, f32 a, f32 b, f32 c);
 extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c, void *vec);
 extern void ObjAnim_AdvanceCurrentMove(int obj, f32 weight, f32 dt, f32 *out);
@@ -474,7 +474,7 @@ void worldobj_update(int obj) {
                         lightSetFieldB0(*(int *)state, 0, 0, 0, 0xff);
                         lightFn_8001db6c(*(int *)state, 1, lbl_803E665C);
                         lightDistAttenFn_8001dc38(*(int *)state, lbl_803E66B0, lbl_803E66B4);
-                        lightFn_8001d620(*(int *)state, 2, 0x3c);
+                        modelLightStruct_startColorFade(*(int *)state, 2, 0x3c);
                         modelStruct2_setVectors(*(int *)state, lbl_803E665C, lbl_803E6644,
                                                 lbl_803E665C);
                     }

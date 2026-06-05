@@ -66,6 +66,8 @@ typedef struct ModelLightStruct {
 
 void queueGlowRender(ModelLightStruct *light);
 void modelLightStruct_updateGlowAlpha(ModelLightStruct *light);
+void modelLightStruct_updateColorFade(ModelLightStruct *light);
+void modelLightStruct_startColorFade(ModelLightStruct *light, int mode, s16 frames);
 void modelLightStruct_setGlowProjectionRadius(ModelLightStruct *light, f32 radius);
 void modelLightStruct_setGlowColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
 void modelLightStruct_setupGlow(ModelLightStruct *light, u32 textureId, u8 red, u8 green, u8 blue, u8 alpha, f32 scale);

@@ -351,7 +351,7 @@ extern void objSetEventName(void *light, int name);
 extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
 extern void lightDistAttenFn_8001dc38(void *light, f32 near, f32 far);
 extern void fn_8001DA60(void *light, f32 v, int x);
-extern void lightFn_8001d620(void *light, int a, s16 b);
+extern void modelLightStruct_startColorFade(void *light, int a, s16 b);
 extern void modelStruct2_setVectors(void *light, f32 x, f32 y, f32 z);
 extern void Obj_SetActiveModelIndex(int obj, int index);
 extern void modelLightStruct_setupGlow(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);

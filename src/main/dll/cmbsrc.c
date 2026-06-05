@@ -481,7 +481,7 @@ void cmbsrc_init(int obj, u8 *setup)
                     *(u8 *)(state + 0x25) = 0;
                 }
             }
-            lightFn_8001d620(*(void **)state, 1, 3);
+            modelLightStruct_startColorFade(*(void **)state, 1, 3);
             lightSetFieldB0(*(void **)state,
                             (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci]),
                             (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci + 1]),

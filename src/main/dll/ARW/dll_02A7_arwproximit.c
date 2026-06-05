@@ -133,7 +133,7 @@ void arwproximit_update(int obj)
             if (*(void **)(state + 4) != NULL) {
                 modelLightStruct_setColorsA8AC(*(void **)(state + 4), 0xff, 0, 0, 0);
                 modelLightStruct_setGlowColor(*(void **)(state + 4), 0xff, 0, 0, 0x64);
-                lightFn_8001d620(*(void **)(state + 4), 2, 0xa);
+                modelLightStruct_startColorFade(*(void **)(state + 4), 2, 0xa);
             }
             s16toFloat((void *)(state + 0xc), 0x3c);
             *(u8 *)(state + 0x14) = 2;

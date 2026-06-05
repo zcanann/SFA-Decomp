@@ -128,7 +128,7 @@ void projectedlight_init(int obj, int setup)
         fn_8001D80C(*(void **)state, *(u8 *)(setup + 0x36), *(u8 *)(setup + 0x3e));
         fn_8001D84C(*(void **)state, (f32)(u32)*(u8 *)(setup + 0x3b));
         fn_8001D820(*(void **)state, (f32)(u32)*(u16 *)(setup + 0x3c));
-        lightFn_8001d620(*(void **)state, *(u8 *)(setup + 0x33), *(s16 *)(setup + 0x1e));
+        modelLightStruct_startColorFade(*(void **)state, *(u8 *)(setup + 0x33), *(s16 *)(setup + 0x1e));
         lightSetFieldB0(*(void **)state, *(u8 *)(setup + 0x30), *(u8 *)(setup + 0x31),
             *(u8 *)(setup + 0x32), *(u8 *)(setup + 0x38));
     }

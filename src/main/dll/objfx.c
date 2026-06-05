@@ -989,7 +989,7 @@ void objParticleFn_80099d84(void *obj, u8 type, void *light, f32 scale, f32 fext
         lightSetField4D(light, 0);
         lightFn_8001db6c(light, lbl_803DF35C, 1);
         lightFn_8001db6c(light, lbl_803DF354, 0);
-        lightFn_8001d620(light, 0, 0);
+        modelLightStruct_startColorFade(light, 0, 0);
         lightSetField2FB(light, 1);
     }
 }
@@ -1120,7 +1120,7 @@ void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *ligh
         lightSetField4D(light, 0);
         lightFn_8001db6c(light, lbl_803DF35C, 1);
         lightFn_8001db6c(light, lbl_803DF358, 0);
-        lightFn_8001d620(light, 0, 0);
+        modelLightStruct_startColorFade(light, 0, 0);
         lightSetField2FB(light, 1);
     }
 }

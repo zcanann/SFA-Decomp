@@ -1781,7 +1781,7 @@ extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
 extern void lightSetField4D(int light, int v);
 extern void lightSetFieldB0(int light, int a, int b, int c, int d);
 extern void fn_8001D9E0(int light, int a, int b, int c, int d);
-extern void lightFn_8001d620(int light, int a, int b);
+extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void lightSetField2FB(int light, int v);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
 extern int Obj_UpdateRomCurveFollowVelocityIndexed(f32 a, f32 b, f32 c, int obj, void *curve, int p, void *out);
@@ -1889,7 +1889,7 @@ void bossdrakor_update(int obj)
             lightFn_8001db6c(*(void **)((char *)state + 0x160), 1, lbl_803E6520);
             lightSetFieldB0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
             fn_8001D9E0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
-            lightFn_8001d620(*(int *)((char *)state + 0x160), 2, 0x28);
+            modelLightStruct_startColorFade(*(int *)((char *)state + 0x160), 2, 0x28);
             lightSetField2FB(*(int *)((char *)state + 0x160), 1);
             modelLightStruct_setGlowProjectionRadius(*(int *)((char *)state + 0x160), lbl_803E6550);
         }

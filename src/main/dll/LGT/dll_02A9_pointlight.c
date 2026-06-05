@@ -153,7 +153,7 @@ void pointlight_init(int obj, int setup)
 
         lightFn_8001db6c(state->light, *(u8 *)(setup + 0x30), lbl_803E7230);
         state->enabled = *(u8 *)(setup + 0x30);
-        lightFn_8001d620(state->light, *(u8 *)(setup + 0x26), *(s16 *)(setup + 0x2e));
+        modelLightStruct_startColorFade(state->light, *(u8 *)(setup + 0x26), *(s16 *)(setup + 0x2e));
         modelStruct2_setVectors(state->light, vec.x, vec.y, vec.z);
 
         if (*(u8 *)(setup + 0x21) != 0) {

@@ -8311,7 +8311,7 @@ extern void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8
 extern void Obj_TransformLocalVectorByWorldMatrix(void *obj, f32 *src, f32 *dst);
 extern void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);
 extern void lightFn_8001db6c(u8 *light, u8 enabled, f32 duration);
-extern void lightFn_8001d620(u8 *light, int mode, s16 frames);
+extern void modelLightStruct_startColorFade(ModelLightStruct *light, int mode, s16 frames);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
 extern f32 lbl_803DE750;
@@ -8561,7 +8561,7 @@ void *objAllocLight(void *owner) {
     zero = lbl_803DE75C;
     GXInitLightAttn(light + 0xc0, zero, zero, lbl_803DE760, atten, zero,
                     lbl_803DE760 - atten);
-    lightFn_8001d620(light, 0, 0);
+    modelLightStruct_startColorFade((ModelLightStruct *)light, 0, 0);
     light[0xb0] = 0xff;
     light[0xb1] = 0xff;
     light[0xb2] = 0xff;
@@ -8865,74 +8865,74 @@ void Vec3_ScaleAdd(f32 *a, f32 s, f32 *b, f32 *out) {
     out[2] = s * b[2] + a[2];
 }
 
-void lightFn_8001d168(u8 *light) {
+void modelLightStruct_updateColorFade(ModelLightStruct *light) {
     f32 progress;
     f32 intensity;
     int mode;
 
-    mode = *(int *)(light + 0x2d8);
+    mode = light->colorFadeMode;
     if (mode == 2) {
-        *(f32 *)(light + 0x2e0) += *(f32 *)(light + 0x2dc) * timeDelta;
+        light->colorFadeProgress += light->colorFadeStep * timeDelta;
     } else if (mode > 0 && mode < 2) {
-        *(f32 *)(light + 0x2e4) += *(f32 *)(light + 0x2dc) * timeDelta;
-        if (*(f32 *)(light + 0x2e4) >= lbl_803DE760) {
-            *(f32 *)(light + 0x2e0) = (f32)randomGetRange(0, 100) / lbl_803DE778;
-            *(f32 *)(light + 0x2e4) = lbl_803DE75C;
+        light->colorFadeTimer += light->colorFadeStep * timeDelta;
+        if (light->colorFadeTimer >= lbl_803DE760) {
+            light->colorFadeProgress = (f32)randomGetRange(0, 100) / lbl_803DE778;
+            light->colorFadeTimer = lbl_803DE75C;
         }
     }
 
-    progress = *(f32 *)(light + 0x2e0);
+    progress = light->colorFadeProgress;
     if (progress > lbl_803DE760) {
-        *(f32 *)(light + 0x2e0) = lbl_803DE760 - (progress - lbl_803DE760);
-        *(f32 *)(light + 0x2dc) = -*(f32 *)(light + 0x2dc);
+        light->colorFadeProgress = lbl_803DE760 - (progress - lbl_803DE760);
+        light->colorFadeStep = -light->colorFadeStep;
     } else if (progress < lbl_803DE75C) {
-        *(f32 *)(light + 0x2e0) = -progress;
-        *(f32 *)(light + 0x2dc) = -*(f32 *)(light + 0x2dc);
+        light->colorFadeProgress = -progress;
+        light->colorFadeStep = -light->colorFadeStep;
     }
 
-    progress = *(f32 *)(light + 0x2e0);
-    light[0xa8] = (u8)(int)(progress * (f32)(light[0xb0] - light[0xac]) + (f32)light[0xac]);
-    light[0xa9] = (u8)(int)(progress * (f32)(light[0xb1] - light[0xad]) + (f32)light[0xad]);
-    light[0xaa] = (u8)(int)(progress * (f32)(light[0xb2] - light[0xae]) + (f32)light[0xae]);
-    light[0xab] = (u8)(int)(progress * (f32)(light[0xb3] - light[0xaf]) + (f32)light[0xaf]);
+    progress = light->colorFadeProgress;
+    light->colorA8[0] = (u8)(int)(progress * (f32)(light->colorB0[0] - light->colorAC[0]) + (f32)light->colorAC[0]);
+    light->colorA8[1] = (u8)(int)(progress * (f32)(light->colorB0[1] - light->colorAC[1]) + (f32)light->colorAC[1]);
+    light->colorA8[2] = (u8)(int)(progress * (f32)(light->colorB0[2] - light->colorAC[2]) + (f32)light->colorAC[2]);
+    light->colorA8[3] = (u8)(int)(progress * (f32)(light->colorB0[3] - light->colorAC[3]) + (f32)light->colorAC[3]);
 
-    intensity = *(f32 *)(light + 0x138);
-    light[0xa8] = (u8)(int)((f32)light[0xa8] * intensity);
-    light[0xa9] = (u8)(int)((f32)light[0xa9] * intensity);
-    light[0xaa] = (u8)(int)((f32)light[0xaa] * intensity);
-    light[0xab] = (u8)(int)((f32)light[0xab] * intensity);
+    intensity = light->selectionIntensity;
+    light->colorA8[0] = (u8)(int)((f32)light->colorA8[0] * intensity);
+    light->colorA8[1] = (u8)(int)((f32)light->colorA8[1] * intensity);
+    light->colorA8[2] = (u8)(int)((f32)light->colorA8[2] * intensity);
+    light->colorA8[3] = (u8)(int)((f32)light->colorA8[3] * intensity);
 
-    light[0x100] = (u8)(int)(progress * (f32)(light[0x108] - light[0x104]) + (f32)light[0x104]);
-    light[0x101] = (u8)(int)(progress * (f32)(light[0x109] - light[0x105]) + (f32)light[0x105]);
-    light[0x102] = (u8)(int)(progress * (f32)(light[0x10a] - light[0x106]) + (f32)light[0x106]);
-    light[0x103] = (u8)(int)(progress * (f32)(light[0x10b] - light[0x107]) + (f32)light[0x107]);
+    light->color100[0] = (u8)(int)(progress * (f32)(light->color108[0] - light->color104[0]) + (f32)light->color104[0]);
+    light->color100[1] = (u8)(int)(progress * (f32)(light->color108[1] - light->color104[1]) + (f32)light->color104[1]);
+    light->color100[2] = (u8)(int)(progress * (f32)(light->color108[2] - light->color104[2]) + (f32)light->color104[2]);
+    light->color100[3] = (u8)(int)(progress * (f32)(light->color108[3] - light->color104[3]) + (f32)light->color104[3]);
 
-    light[0x100] = (u8)(int)((f32)light[0x100] * intensity);
-    light[0x101] = (u8)(int)((f32)light[0x101] * intensity);
-    light[0x102] = (u8)(int)((f32)light[0x102] * intensity);
-    light[0x103] = (u8)(int)((f32)light[0x103] * intensity);
+    light->color100[0] = (u8)(int)((f32)light->color100[0] * intensity);
+    light->color100[1] = (u8)(int)((f32)light->color100[1] * intensity);
+    light->color100[2] = (u8)(int)((f32)light->color100[2] * intensity);
+    light->color100[3] = (u8)(int)((f32)light->color100[3] * intensity);
 }
 
-void lightFn_8001d620(u8 *light, int mode, s16 frames) {
+void modelLightStruct_startColorFade(ModelLightStruct *light, int mode, s16 frames) {
     f32 denom;
 
-    *(int *)(light + 0x2d8) = mode;
+    light->colorFadeMode = mode;
     if (mode != 0) {
         if (frames != 0) {
             denom = frames;
         } else {
             denom = lbl_803DE760;
         }
-        *(f32 *)(light + 0x2dc) = lbl_803DE760 / denom;
-        light[0xac] = light[0xa8];
-        light[0xad] = light[0xa9];
-        light[0xae] = light[0xaa];
-        light[0x104] = light[0x100];
-        light[0x105] = light[0x101];
-        light[0x106] = light[0x102];
+        light->colorFadeStep = lbl_803DE760 / denom;
+        light->colorAC[0] = light->colorA8[0];
+        light->colorAC[1] = light->colorA8[1];
+        light->colorAC[2] = light->colorA8[2];
+        light->color104[0] = light->color100[0];
+        light->color104[1] = light->color100[1];
+        light->color104[2] = light->color100[2];
         denom = lbl_803DE75C;
-        *(f32 *)(light + 0x2e0) = denom;
-        *(f32 *)(light + 0x2e4) = denom;
+        light->colorFadeProgress = denom;
+        light->colorFadeTimer = denom;
     }
 }
 
@@ -10132,7 +10132,7 @@ void updateLights(void) {
             }
 
             if (*(int *)(light + 0x2d8) != 0) {
-                lightFn_8001d168(light);
+                modelLightStruct_updateColorFade((ModelLightStruct *)light);
             } else {
                 light[0xa8] = (u8)(int)((f32)light[0xac] * *(f32 *)(light + 0x138));
                 light[0xa9] = (u8)(int)((f32)light[0xad] * *(f32 *)(light + 0x138));

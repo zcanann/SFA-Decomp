@@ -11,7 +11,7 @@ extern void modelLightStruct_setColorsA8AC(int, u8, u8, u8, int);
 extern void modelLightStruct_setColors100104(int, u8, u8, u8, int);
 extern void lightDistAttenFn_8001dc38(int, f32, f32);
 extern void lightFn_8001db6c(int, int, f32);
-extern void lightFn_8001d620(int, int, int);
+extern void modelLightStruct_startColorFade(int, int, int);
 extern void lightSetFieldB0(int, int, int, int, int);
 extern void lightSetField4D(int, int);
 extern void modelLightStruct_setupGlow(int, int, u8, u8, u8, int, f32);
@@ -119,7 +119,7 @@ void lightsource_init(s16 *obj, int mapData)
       modelLightStruct_setColors100104(*state, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2], 0xff);
       lightDistAttenFn_8001dc38(*state, lbl_803E5E2C, lbl_803E5E30);
       lightFn_8001db6c(*state, 1, lbl_803E5E0C);
-      lightFn_8001d620(*state, 1, 3);
+      modelLightStruct_startColorFade(*state, 1, 3);
 
       colorBase = *(u8 *)((int)state + 0x15) * 3;
       lightSetFieldB0(*state, (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase]),

@@ -7809,7 +7809,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
 
 extern int *fn_802966CC(int *player);
 extern void modelLightStruct_setColors100104(int light, int r, int g, int b, int a);
-extern void lightFn_8001d620(int light, int a, int b);
+extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void lightSetField2FB(int light, int v);
 extern f32 lbl_803E33B0;
 extern f32 lbl_803E33B4;
@@ -7883,7 +7883,7 @@ void staffFn_80170380(int *obj, int cmd)
                 lightDistAttenFn_8001dc38(*(int *)state, lbl_803E33BC, lbl_803E33C0);
                 lightSetField4D(*(int *)state, 1);
                 lightFn_8001db6c(*(int *)state, 1, lbl_803E33AC);
-                lightFn_8001d620(*(int *)state, 0, 0);
+                modelLightStruct_startColorFade(*(int *)state, 0, 0);
                 lightSetField2FB(*(int *)state, 1);
             }
             {
@@ -7959,7 +7959,7 @@ void staffFn_80170380(int *obj, int cmd)
             lightDistAttenFn_8001dc38(*(int *)state, lbl_803E33BC, lbl_803E33C0);
             lightSetField4D(*(int *)state, 1);
             lightFn_8001db6c(*(int *)state, 1, lbl_803E33AC);
-            lightFn_8001d620(*(int *)state, 0, 0);
+            modelLightStruct_startColorFade(*(int *)state, 0, 0);
             lightSetField2FB(*(int *)state, 1);
         }
         if (lbl_803E33AC == *(f32 *)(state + 8)) {
