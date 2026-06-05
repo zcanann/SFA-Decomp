@@ -142,197 +142,6 @@ extern f32 lbl_803E6864;
 /*
  * --INFO--
  *
- * Function: FUN_801eae4c
- * EN v1.0 Address: 0x801EAE4C
- * EN v1.0 Size: 628b
- * EN v1.1 Address: 0x801EAE8C
- * EN v1.1 Size: 620b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_801eae4c(int param_1,int param_2)
-{
-  float fVar1;
-  float fVar2;
-  int iVar3;
-  int iVar4;
-  undefined4 uVar5;
-  uint uVar6;
-  double dVar7;
-  double dVar8;
-  double dVar9;
-  
-  fVar1 = *(float *)(param_1 + 0xc) - *(float *)(param_2 + 0xc);
-  fVar2 = *(float *)(param_1 + 0x14) - *(float *)(param_2 + 0x14);
-  dVar8 = FUN_80293900((double)(fVar1 * fVar1 + fVar2 * fVar2));
-  dVar8 = (double)(float)((double)lbl_803E6800 - dVar8);
-  dVar9 = (double)lbl_803E6780;
-  if ((double)*(float *)(param_2 + 0x3e4) != dVar9) {
-    dVar7 = (double)(float)(dVar8 - (double)lbl_803E67A8);
-    if ((dVar9 <= dVar7) && (dVar9 = dVar7, (double)lbl_803E67A0 < dVar7)) {
-      dVar9 = (double)lbl_803E67A0;
-    }
-    dVar8 = (double)(float)(dVar8 + dVar9);
-  }
-  if (dVar8 < (double)lbl_803E6780) {
-    dVar8 = (double)lbl_803E6780;
-  }
-  iVar4 = (**(code **)(*DAT_803dd6ec + 0x18))
-                    (dVar8,param_2,param_2 + 0x28,*(undefined *)(param_2 + 0x5d),1,0);
-  (**(code **)(*DAT_803dd6ec + 0x14))(param_1,param_2 + 0x28);
-  (**(code **)(*DAT_803dd6ec + 0x2c))(param_2 + 0x28);
-  if (iVar4 == 0) {
-    uVar6 = FUN_80017730();
-    iVar4 = (uVar6 & 0xffff) - (uint)*(ushort *)(param_2 + 0x40c);
-    if (0x8000 < iVar4) {
-      iVar4 = iVar4 + -0xffff;
-    }
-    if (iVar4 < -0x8000) {
-      iVar4 = iVar4 + 0xffff;
-    }
-    iVar3 = iVar4 / 0xb6 + (iVar4 >> 0x1f);
-    iVar3 = iVar3 - (iVar3 >> 0x1f);
-    if (iVar3 < -0x41) {
-      iVar3 = -0x41;
-    }
-    else if (0x41 < iVar3) {
-      iVar3 = 0x41;
-    }
-    *(float *)(param_2 + 0x45c) =
-         (f32)(s32)(-iVar3);
-    *(undefined2 *)(param_2 + 0x44c) = 0;
-    *(float *)(param_2 + 0x45c) = *(float *)(param_2 + 0x45c) / lbl_803E6804;
-    fVar1 = *(float *)(param_2 + 0x45c);
-    fVar2 = lbl_803E6808;
-    if ((lbl_803E6808 <= fVar1) && (fVar2 = fVar1, lbl_803E6784 < fVar1)) {
-      fVar2 = lbl_803E6784;
-    }
-    *(float *)(param_2 + 0x45c) = fVar2;
-    dVar8 = FUN_801eac78(param_1,param_2);
-    if ((((double)*(float *)(param_2 + 0x49c) < -dVar8) || (0x2aaa < iVar4)) || (iVar4 < -0x2aaa)) {
-      *(undefined4 *)(param_2 + 0x458) = 0;
-    }
-    else if (-dVar8 < (double)*(float *)(param_2 + 0x49c)) {
-      *(undefined4 *)(param_2 + 0x458) = 0x100;
-    }
-    uVar5 = 1;
-  }
-  else {
-    *(float *)(param_2 + 0x45c) = lbl_803E6780;
-    uVar5 = 0;
-  }
-  return uVar5;
-}
-
-/*
- * --INFO--
- *
- * Function: FUN_801eb0c0
- * EN v1.0 Address: 0x801EB0C0
- * EN v1.0 Size: 876b
- * EN v1.1 Address: 0x801EB0F8
- * EN v1.1 Size: 908b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-uint FUN_801eb0c0(undefined2 *param_1,int param_2)
-{
-  float fVar1;
-  uint uVar2;
-  int iVar3;
-  undefined2 uVar4;
-  double dVar5;
-  float local_18 [3];
-  
-  if ((*(byte *)(param_2 + 0x428) >> 3 & 1) == 0) {
-    uVar2 = 0;
-  }
-  else {
-    iVar3 = FUN_8005b398((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8));
-    fVar1 = lbl_803E6780;
-    if (iVar3 < 0) {
-      dVar5 = FUN_801eac78((int)param_1,param_2);
-      iVar3 = (**(code **)(*DAT_803dd6ec + 0x18))
-                        ((double)(float)((double)lbl_803DC074 * dVar5),param_2,param_2 + 0x28,
-                         *(undefined *)(param_2 + 0x5d),1,0);
-      (**(code **)(*DAT_803dd6ec + 0x14))(param_1,param_2 + 0x28);
-      (**(code **)(*DAT_803dd6ec + 0x2c))(param_2 + 0x28);
-      if (iVar3 == 0) {
-        iVar3 = FUN_80017730();
-        *param_1 = (short)iVar3;
-        *(undefined4 *)(param_1 + 6) = *(undefined4 *)(param_2 + 0xc);
-        *(undefined4 *)(param_1 + 8) = *(undefined4 *)(param_2 + 0x10);
-        *(undefined4 *)(param_1 + 10) = *(undefined4 *)(param_2 + 0x14);
-        (**(code **)(*DAT_803dd728 + 0x20))(param_1,param_2 + 0x178);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x10) = *(undefined4 *)(param_1 + 6);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x14) = *(undefined4 *)(param_1 + 8);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x18) = *(undefined4 *)(param_1 + 10);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x1c) = *(undefined4 *)(param_1 + 0xc);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x20) = *(undefined4 *)(param_1 + 0xe);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x24) = *(undefined4 *)(param_1 + 0x10);
-        *(byte *)(param_2 + 0x428) = *(byte *)(param_2 + 0x428) & 0xfe;
-        uVar2 = 0;
-      }
-      else {
-        uVar2 = 0;
-      }
-    }
-    else if ((*(byte *)(param_2 + 0x428) & 1) == 0) {
-      *(float *)(param_2 + 0x494) = lbl_803E6780;
-      *(float *)(param_2 + 0x498) = fVar1;
-      dVar5 = FUN_801eac78((int)param_1,param_2);
-      *(float *)(param_2 + 0x49c) = (float)-dVar5;
-      iVar3 = (**(code **)(*DAT_803dd6ec + 0x18))
-                        ((double)(-*(float *)(param_2 + 0x49c) * lbl_803DC074),param_2,
-                         param_2 + 0x28,*(undefined *)(param_2 + 0x5d),1,0);
-      (**(code **)(*DAT_803dd6ec + 0x14))(param_1,param_2 + 0x28);
-      (**(code **)(*DAT_803dd6ec + 0x2c))(param_2 + 0x28);
-      if (iVar3 == 0) {
-        FUN_801ecdec(param_1,param_2);
-        iVar3 = FUN_80017730();
-        uVar4 = (undefined2)iVar3;
-        *param_1 = uVar4;
-        *(undefined2 *)(param_2 + 0x40e) = uVar4;
-        *(undefined2 *)(param_2 + 0x40c) = uVar4;
-        *(float *)(param_2 + 0x430) = lbl_803E680C;
-        *(undefined4 *)(param_1 + 6) = *(undefined4 *)(param_2 + 0xc);
-        *(undefined4 *)(param_1 + 8) = *(undefined4 *)(param_2 + 0x10);
-        *(undefined4 *)(param_1 + 10) = *(undefined4 *)(param_2 + 0x14);
-        (**(code **)(*DAT_803dd728 + 0x20))(param_1,param_2 + 0x178);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x10) = *(undefined4 *)(param_1 + 6);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x14) = *(undefined4 *)(param_1 + 8);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x18) = *(undefined4 *)(param_1 + 10);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x1c) = *(undefined4 *)(param_1 + 0xc);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x20) = *(undefined4 *)(param_1 + 0xe);
-        *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x24) = *(undefined4 *)(param_1 + 0x10);
-        if (*(char *)(param_2 + 0x434) == '\0') {
-          FUN_800632e8((double)*(float *)(param_1 + 6),(double)*(float *)(param_1 + 8),
-                       (double)*(float *)(param_1 + 10),param_1,local_18,0);
-          *(float *)(param_1 + 8) = *(float *)(param_1 + 8) - local_18[0];
-          *(float *)(param_1 + 8) = *(float *)(param_1 + 8) + lbl_803E6810;
-        }
-        *(byte *)(param_2 + 0x428) = *(byte *)(param_2 + 0x428) & 0xfe | 1;
-        uVar2 = 0;
-      }
-      else {
-        uVar2 = 0;
-      }
-    }
-    else {
-      uVar2 = FUN_801eae4c((int)param_1,param_2);
-      uVar2 = (-uVar2 | uVar2) >> 0x1f;
-    }
-  }
-  return uVar2;
-}
-
-/*
- * --INFO--
- *
  * Function: fn_801EAE4C
  * EN v1.0 Address: 0x801EAE4C
  * EN v1.0 Size: 648b
@@ -512,48 +321,43 @@ void fn_801EB0D4(uint param_1,int param_2)
   return;
 }
 
-/*
- * --INFO--
- *
- * Function: FUN_801eb990
- * EN v1.0 Address: 0x801EB990
- * EN v1.0 Size: 232b
- * EN v1.1 Address: 0x801EB96C
- * EN v1.1 Size: 236b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801eb990(undefined2 *param_1)
-{
-  undefined2 uVar1;
-  float fVar2;
-  int iVar3;
-  
-  fVar2 = lbl_803E6780;
-  iVar3 = *(int *)(param_1 + 0x5c);
-  if ((*(byte *)(iVar3 + 0x428) >> 1 & 1) == 0) {
-    *(float *)(iVar3 + 0x494) = lbl_803E6780;
-    *(float *)(iVar3 + 0x498) = fVar2;
-    *(float *)(iVar3 + 0x49c) = lbl_803E6834;
-    *(byte *)(iVar3 + 0x428) = *(byte *)(iVar3 + 0x428) & 0x7f;
-    *(float *)(iVar3 + 0x424) = fVar2;
-    uVar1 = *param_1;
-    *(undefined2 *)(iVar3 + 0x40e) = uVar1;
-    *(undefined2 *)(iVar3 + 0x40c) = uVar1;
-    *(float *)(iVar3 + 0x430) = lbl_803E680C;
-  }
-  ObjHits_EnableObject((int)param_1);
-  (**(code **)(*DAT_803dd728 + 0x20))(param_1,iVar3 + 0x178);
-  *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x10) = *(undefined4 *)(param_1 + 6);
-  *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x14) = *(undefined4 *)(param_1 + 8);
-  *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x18) = *(undefined4 *)(param_1 + 10);
-  *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x1c) = *(undefined4 *)(param_1 + 0xc);
-  *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x20) = *(undefined4 *)(param_1 + 0xe);
-  *(undefined4 *)(*(int *)(param_1 + 0x2a) + 0x24) = *(undefined4 *)(param_1 + 0x10);
-  return;
+extern undefined4 *gPathControlInterface;
+extern f32 lbl_803E5B9C;
+extern f32 lbl_803E5B74;
+
+typedef struct HightopFlags {
+    u8 resetLatch : 1;
+    u8 flags : 7;
+} HightopFlags;
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801EB334(int *obj) {
+    int *state = *(int **)((char *)obj + 0xb8);
+    if ((u32)((*(u8 *)((char *)state + 0x428) >> 1) & 1) == 0) {
+        s16 sv;
+        f32 fz = lbl_803E5AE8;
+        *(f32 *)((char *)state + 0x494) = fz;
+        *(f32 *)((char *)state + 0x498) = fz;
+        *(f32 *)((char *)state + 0x49c) = lbl_803E5B9C;
+        ((HightopFlags *)((char *)state + 0x428))->resetLatch = 0;
+        *(f32 *)((char *)state + 0x424) = fz;
+        sv = *(s16 *)obj;
+        *(s16 *)((char *)state + 0x40e) = sv;
+        *(s16 *)((char *)state + 0x40c) = sv;
+        *(f32 *)((char *)state + 0x430) = lbl_803E5B74;
+    }
+    ObjHits_EnableObject(obj);
+    (*(void (**)(int *, char *))((char *)*gPathControlInterface + 32))(obj, (char *)state + 0x178);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x10) = *(f32 *)((char *)obj + 0xc);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x14) = *(f32 *)((char *)obj + 0x10);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x18) = *(f32 *)((char *)obj + 0x14);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x1c) = *(f32 *)((char *)obj + 0x18);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x20) = *(f32 *)((char *)obj + 0x1c);
+    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x24) = *(f32 *)((char *)obj + 0x20);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -767,7 +571,6 @@ extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern void Sfx_SetObjectSfxVolume(f32 ratio, s16 *obj, int sfx, int vol);
 extern f32 powfBitEstimate(f32 base, f32 exp);
 extern f32 fn_80293E80(f32 x);
-extern undefined4 *gPathControlInterface;
 
 void fn_801EB940(short *param_1,int param_2)
 {
@@ -1002,42 +805,3 @@ void fn_801EBD60(int param_1,int param_2)
   *(f32 *)(param_2 + 0x540) += timeDelta * (k * (target540 - *(f32 *)(param_2 + 0x540)));
   *(f32 *)(param_2 + 0x544) += timeDelta * (k * (target544 - *(f32 *)(param_2 + 0x544)));
 }
-
-extern undefined4 *gPathControlInterface;
-extern f32 lbl_803E5AE8;
-extern f32 lbl_803E5B9C;
-extern f32 lbl_803E5B74;
-
-typedef struct HightopFlags {
-    u8 resetLatch : 1;
-    u8 flags : 7;
-} HightopFlags;
-
-#pragma scheduling off
-#pragma peephole off
-void fn_801EB334(int *obj) {
-    int *state = *(int **)((char *)obj + 0xb8);
-    if ((u32)((*(u8 *)((char *)state + 0x428) >> 1) & 1) == 0) {
-        s16 sv;
-        f32 fz = lbl_803E5AE8;
-        *(f32 *)((char *)state + 0x494) = fz;
-        *(f32 *)((char *)state + 0x498) = fz;
-        *(f32 *)((char *)state + 0x49c) = lbl_803E5B9C;
-        ((HightopFlags *)((char *)state + 0x428))->resetLatch = 0;
-        *(f32 *)((char *)state + 0x424) = fz;
-        sv = *(s16 *)obj;
-        *(s16 *)((char *)state + 0x40e) = sv;
-        *(s16 *)((char *)state + 0x40c) = sv;
-        *(f32 *)((char *)state + 0x430) = lbl_803E5B74;
-    }
-    ObjHits_EnableObject(obj);
-    (*(void (**)(int *, char *))((char *)*gPathControlInterface + 32))(obj, (char *)state + 0x178);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x10) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x14) = *(f32 *)((char *)obj + 0x10);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x18) = *(f32 *)((char *)obj + 0x14);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x1c) = *(f32 *)((char *)obj + 0x18);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x20) = *(f32 *)((char *)obj + 0x1c);
-    *(f32 *)((char *)*(int **)((char *)obj + 0x54) + 0x24) = *(f32 *)((char *)obj + 0x20);
-}
-#pragma peephole reset
-#pragma scheduling reset
