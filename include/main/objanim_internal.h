@@ -15,10 +15,10 @@ typedef struct ObjAnimHitReactRow {
 } ObjAnimHitReactRow;
 
 #define OBJANIM_DEF_FLAG_CACHED_MOVES 0x40
-/* Bits observed in ObjAnimState::flags during move advancement. */
-#define OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN 0x02
-#define OBJANIM_STATE_FLAG_REFRESH_SAVED_STEP 0x08
-#define OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN 0x10
+/* Bits copied from set-move flags into ObjAnimState during move advancement. */
+#define OBJANIM_MOVE_CONTROL_HOLD_EVENT_COUNTDOWN 0x02
+#define OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP 0x08
+#define OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN 0x10
 #define OBJANIM_MOVE_CACHE_SLOT_COUNT 2
 #define OBJANIM_MISSING_MOVE_ID -1
 #define OBJANIM_BLEND_MOVE_INDEX_INVALID -1
@@ -106,7 +106,7 @@ typedef struct ObjAnimState {
   s8 frameType;
   s8 prevFrameType;
   s8 blendToggle;
-  s8 flags;
+  s8 moveControlFlags;
   s16 lastBlendMoveIndex;
 } ObjAnimState;
 
@@ -244,7 +244,7 @@ STATIC_ASSERT(offsetof(ObjAnimState, eventStep) == 0x5E);
 STATIC_ASSERT(offsetof(ObjAnimState, frameType) == 0x60);
 STATIC_ASSERT(offsetof(ObjAnimState, prevFrameType) == 0x61);
 STATIC_ASSERT(offsetof(ObjAnimState, blendToggle) == 0x62);
-STATIC_ASSERT(offsetof(ObjAnimState, flags) == 0x63);
+STATIC_ASSERT(offsetof(ObjAnimState, moveControlFlags) == 0x63);
 STATIC_ASSERT(offsetof(ObjAnimState, lastBlendMoveIndex) == 0x64);
 
 STATIC_ASSERT(sizeof(ObjModelInstance) == 0x5C);

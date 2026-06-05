@@ -10,7 +10,7 @@ typedef struct ObjAnimEventList ObjAnimEventList;
 
 typedef int (*ObjAnimSetProgressObjectFirstFn)(int objAnimArg,f32 progress);
 typedef int (*ObjAnimSetCurrentMoveObjectFirstFn)(int objAnimArg,int moveId,f32 moveProgress,
-                                                  int flags);
+                                                  int moveControlFlags);
 typedef int (*ObjAnimAdvanceObjectFirstFn)(int objAnimArg,double moveStepScale,double deltaTime,
                                            ObjAnimEventList *events);
 typedef int (*ObjAnimAdvanceObjectFirstF32Fn)(int objAnimArg,f32 moveStepScale,f32 deltaTime,
@@ -30,7 +30,7 @@ void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int
 void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState);
 int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim,ObjAnimEventList *events);
 int Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
-int Object_ObjAnimSetMove(f32 moveProgress,int objAnim,int moveId,int flags);
+int Object_ObjAnimSetMove(f32 moveProgress,int objAnim,int moveId,int moveControlFlags);
 u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim);
 void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordIndex,int value);
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount);
@@ -38,6 +38,6 @@ int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *p
 int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnim,
                                ObjAnimEventList *events);
 int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
-int ObjAnim_SetCurrentMove(int objAnim,int moveId,f32 moveProgress,int flags);
+int ObjAnim_SetCurrentMove(int objAnim,int moveId,f32 moveProgress,int moveControlFlags);
 
 #endif /* MAIN_OBJANIM_H_ */

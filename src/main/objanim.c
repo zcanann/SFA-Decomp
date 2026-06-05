@@ -259,7 +259,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
   state = bank->activeState;
   state->step = moveStepScale * state->segmentLength;
   if (state->eventCountdown != 0) {
-    if ((state->flags & OBJANIM_STATE_FLAG_REFRESH_SAVED_STEP) != 0) {
+    if ((state->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP) != 0) {
       state->savedStep = state->step;
     }
     state->progress += state->savedStep * deltaTime;
@@ -282,7 +282,7 @@ int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
       state->progress = value;
     }
 
-    if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
+    if ((state->moveControlFlags & OBJANIM_MOVE_CONTROL_HOLD_EVENT_COUNTDOWN) == 0) {
       countdown =
           (int)((f32)(s32)state->eventCountdown - ((f32)state->eventStep * deltaTime));
       if (countdown < 0) {
@@ -431,7 +431,7 @@ int Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
 #pragma scheduling off
 #pragma peephole off
 int
-Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
+Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int moveControlFlags)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
@@ -456,7 +456,7 @@ Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int flags)
     return 0;
   }
   state = bank->activeState;
-  state->flags = (s8)flags;
+  state->moveControlFlags = (s8)moveControlFlags;
   state->prevMoveCacheSlot = state->moveCacheSlot;
   state->progress = state->speed;
   state->prevSegmentLength = state->segmentLength;
@@ -847,7 +847,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
 
   state->step = clampedStepScale * state->segmentLength;
   if (state->eventCountdown != 0) {
-    if ((state->flags & OBJANIM_STATE_FLAG_REFRESH_SAVED_STEP) != 0) {
+    if ((state->moveControlFlags & OBJANIM_MOVE_CONTROL_REFRESH_SAVED_STEP) != 0) {
       state->savedStep = state->step;
     }
     state->progress += state->savedStep * deltaTime;
@@ -869,7 +869,7 @@ int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
       state->progress = value;
     }
 
-    if ((state->flags & OBJANIM_STATE_FLAG_HOLD_EVENT_COUNTDOWN) == 0) {
+    if ((state->moveControlFlags & OBJANIM_MOVE_CONTROL_HOLD_EVENT_COUNTDOWN) == 0) {
       countdown = (int)((f32)(s32)state->eventCountdown - ((f32)state->eventStep * deltaTime));
       if (countdown < 0) {
         value = gObjAnimProgressZero;
@@ -1117,7 +1117,7 @@ int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim)
  */
 #pragma scheduling off
 #pragma peephole off
-int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int flags)
+int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int moveControlFlags)
 {
   ObjAnimComponent *objAnim;
   ObjAnimBank *bank;
@@ -1149,7 +1149,7 @@ int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int flags)
     return 0;
   }
   state = bank->currentState;
-  state->flags = (s8)flags;
+  state->moveControlFlags = (s8)moveControlFlags;
   state->prevMoveCacheSlot = state->moveCacheSlot;
   state->progress = state->speed;
   state->prevSegmentLength = state->segmentLength;
@@ -1207,7 +1207,8 @@ int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int flags)
     state->segmentLength = state->segmentLength - gObjAnimProgressOne;
   }
   frameStep = moveData->frameInfo & OBJANIM_FRAME_STEP_MASK;
-  if ((frameStep != 0) && (((u8)flags & OBJANIM_SET_MOVE_FLAG_SKIP_EVENT_COUNTDOWN) == 0)) {
+  if ((frameStep != 0) &&
+      (((u8)moveControlFlags & OBJANIM_MOVE_CONTROL_SKIP_EVENT_COUNTDOWN) == 0)) {
     state->savedStep = state->step;
     eventStepFrames = gObjAnimEventStepScale / (float)frameStep;
     state->eventStep = eventStepFrames;
