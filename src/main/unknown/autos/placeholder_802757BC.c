@@ -21,8 +21,6 @@ extern u32 hwIsActive(u8 voiceId);
 void mcmdLoop(McmdVoiceState *state, McmdCommandArgs *params)
 {
     u16 counter;
-    u32 zero;
-    u32 flags;
 
     if (state->loopCounter == 0) {
         if (((params->flags >> 16) & 1) != 0) {
@@ -46,25 +44,14 @@ void mcmdLoop(McmdVoiceState *state, McmdCommandArgs *params)
     }
 
 check_flags:
-    flags = params->flags;
-    if (((flags >> 8) & 1) != 0) {
-        zero = 0;
-        if (((state->inputFlags & MCMD_VOICE_KEYOFF_INPUT_FLAG) == zero) &&
-            ((state->outputFlags & MCMD_VOICE_KEYOFF_OUTPUT_FLAG) ==
-             MCMD_VOICE_KEYOFF_OUTPUT_FLAG)) {
-            state->loopCounter = 0;
-            return;
-        }
+    if (((u8)(params->flags >> 8) & 1) != 0 &&
+        (*(u64 *)&state->inputFlags & 0x10000000008ULL) == 0x00000000008ULL) {
+        state->loopCounter = 0;
+    } else if (((u8)(params->flags >> 24) & 1) != 0 &&
+               (*(u64 *)&state->inputFlags & 0x20ULL) == 0 &&
+               !hwIsActive(state->voiceHandle & 0xff)) {
+        state->loopCounter = 0;
+    } else {
+        state->macroCursor = state->macroBase + ((params->value & 0xffff) << 3);
     }
-    if (((flags >> 24) & 1) != 0) {
-        zero = 0;
-        if (((state->inputFlags & zero) == zero) &&
-            ((state->outputFlags & MCMD_VOICE_ACTIVE_OUTPUT_FLAG) == zero)) {
-            if (hwIsActive(state->voiceHandle & 0xff) == 0) {
-                state->loopCounter = zero;
-                return;
-            }
-        }
-    }
-    state->macroCursor = state->macroBase + ((params->value & 0xffff) << 3);
 }
