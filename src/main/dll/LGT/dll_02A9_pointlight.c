@@ -101,7 +101,7 @@ void pointlight_update(int obj)
     }
 
     if (state->light != NULL) {
-        lightFn_8001d6b0(state->light);
+        modelLightStruct_updateGlowAlpha(state->light);
     }
 }
 #pragma scheduling reset

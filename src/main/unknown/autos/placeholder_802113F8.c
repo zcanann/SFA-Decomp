@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
 #include "main/proximitymine.h"
 
-extern void lightFn_8001d6b0(void *light);
+extern void modelLightStruct_updateGlowAlpha(void *light);
 extern int fn_80080150(void *timer);
 extern int timerCountDown(void *timer);
 extern int objUpdateOpacity(void *obj);
@@ -61,7 +61,7 @@ void proximitymine_update(ProximityMineObject *obj)
 
   state = obj->state;
   if (state->effectHandle != NULL) {
-    lightFn_8001d6b0(state->effectHandle);
+    modelLightStruct_updateGlowAlpha(state->effectHandle);
   }
   if (obj->pendingTarget != NULL) {
     state->targetObj = obj->pendingTarget;

@@ -238,7 +238,7 @@ void drakormissile_update(int obj) {
         *(int *)(*(int *)((char *)obj + 0x54) + 0x48) = 0x10;
     }
     if (*(void **)p != NULL && fn_8001DB64()) {
-        lightFn_8001d6b0(*(void **)p);
+        modelLightStruct_updateGlowAlpha(*(void **)p);
     }
 }
 #pragma peephole reset

@@ -203,7 +203,7 @@ void arwproximit_update(int obj)
     }
 
     if (*(void **)(state + 4) != NULL && fn_8001DB64(*(void **)(state + 4)) != 0)
-        lightFn_8001d6b0(*(void **)(state + 4));
+        modelLightStruct_updateGlowAlpha(*(void **)(state + 4));
 }
 #pragma scheduling reset
 #pragma peephole reset

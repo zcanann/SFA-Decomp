@@ -2668,7 +2668,7 @@ void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
 #pragma scheduling reset
 
 extern void spawnExplosion(s16 *obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
-extern void lightFn_8001d6b0(int p);
+extern void modelLightStruct_updateGlowAlpha(int p);
 extern f32 lbl_803E47D0, lbl_803E47F4, lbl_803E47F8, lbl_803E47FC;
 extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
 extern f32 lbl_803E4800, lbl_803E4804, lbl_803E4808;
@@ -2815,7 +2815,7 @@ void lavaball1be_update(s16 *obj) {
                 state[0x10] |= 8;
             }
             if (*(void **)(state + 4) != NULL && fn_8001DB64((int *)*(int *)(state + 4)) != 0) {
-                lightFn_8001d6b0(*(int *)(state + 4));
+                modelLightStruct_updateGlowAlpha(*(int *)(state + 4));
             }
         }
     }

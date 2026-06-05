@@ -78,7 +78,7 @@ void wcapertures_hitDetect(int obj)
             obj, 0x805, ev, 2, -1, col);
     }
     if (*(void **)state != NULL)
-        lightFn_8001d6b0(*(void **)state);
+        modelLightStruct_updateGlowAlpha(*(void **)state);
 }
 #pragma scheduling reset
 #pragma peephole reset

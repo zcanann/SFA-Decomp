@@ -57,5 +57,6 @@ typedef struct ModelLightStruct {
 } ModelLightStruct;
 
 void queueGlowRender(ModelLightStruct *light);
+void modelLightStruct_updateGlowAlpha(ModelLightStruct *light);
 
 #endif /* MAIN_MODEL_LIGHT_H_ */

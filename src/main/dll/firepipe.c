@@ -38,7 +38,7 @@ extern void fn_8001D730(int light, int a, int r, int g, int b, int alpha, f32 ra
 extern void lightVecFn_8001dd88(int light, f32 x, f32 y, f32 z);
 extern void lightDistAttenFn_8001dc38(int light, f32 near, f32 far);
 extern int fn_8001DB64(int light);
-extern void lightFn_8001d6b0(int light);
+extern void modelLightStruct_updateGlowAlpha(int light);
 extern void Sfx_PlayFromObjectLimited(FirePipeObject *obj, int sfxId, int limit);
 extern void Sfx_KeepAliveLoopedObjectSoundLimited(FirePipeObject *obj, int sfxId, int limit);
 
@@ -329,7 +329,7 @@ sound_update:
 
 update_light:
     if (extra->subObj != 0) {
-        lightFn_8001d6b0(extra->subObj);
+        modelLightStruct_updateGlowAlpha(extra->subObj);
     }
 }
 #pragma scheduling reset

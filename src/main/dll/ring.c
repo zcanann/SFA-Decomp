@@ -282,7 +282,7 @@ void ring_update(int obj)
     }
 
     if (*(void **)(state + 0x20) != NULL && fn_8001DB64(*(void **)(state + 0x20)) != 0) {
-        lightFn_8001d6b0(*(void **)(state + 0x20));
+        modelLightStruct_updateGlowAlpha(*(void **)(state + 0x20));
     }
 }
 #pragma scheduling reset

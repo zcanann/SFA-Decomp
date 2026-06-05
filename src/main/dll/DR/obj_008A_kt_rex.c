@@ -198,7 +198,7 @@ void ktrex_hitDetect(int obj) {
     if (*(void **)((char *)gKTRexState + 0x178) != 0) {
         ObjPath_GetPointWorldPosition(obj, 5, &x, &y, &z, 0);
         lightVecFn_8001dd88(*(void **)((char *)gKTRexState + 0x178), x, y, z);
-        lightFn_8001d6b0(*(void **)((char *)gKTRexState + 0x178));
+        modelLightStruct_updateGlowAlpha(*(void **)((char *)gKTRexState + 0x178));
     }
 }
 #pragma peephole reset

@@ -198,7 +198,7 @@ void timer_update(int obj)
             f->flag20 = (u8)tv;
         }
         if (*(int *)(state + 4) != 0) {
-            lightFn_8001d6b0((void *)*(int *)(state + 4));
+            modelLightStruct_updateGlowAlpha((void *)*(int *)(state + 4));
         }
     }
 }

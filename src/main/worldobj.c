@@ -227,7 +227,7 @@ extern f32 oneOverTimeDelta;
 extern int gAudioStreamCurrentId;
 extern void Obj_FreeObject(int obj);
 extern void lightFn_8001db6c(int light, int a, f32 b);
-extern void lightFn_8001d6b0(int light);
+extern void modelLightStruct_updateGlowAlpha(int light);
 extern void lightSetFieldB0(int light, int r, int g, int b, int a);
 extern void lightFn_8001d620(int light, int a, int b);
 extern void modelStruct2_setVectors(int light, f32 a, f32 b, f32 c);
@@ -335,7 +335,7 @@ void worldobj_update(int obj) {
             *(s16 *)(obj + 0) = lbl_803E668C * timeDelta + (f32)*(s16 *)(obj + 0);
             *(s16 *)(obj + 2) = lbl_803E6690 * timeDelta + (f32)*(s16 *)(obj + 2);
             if (*(void **)state != NULL && fn_8001DB64(*(int *)state) != 0) {
-                lightFn_8001d6b0(*(int *)state);
+                modelLightStruct_updateGlowAlpha(*(int *)state);
             }
         }
         break;

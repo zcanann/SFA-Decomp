@@ -273,7 +273,7 @@ extern f32 lbl_803E6EBC;
 extern f32 lbl_803E6E28;
 extern f32 lbl_803E6E30;
 extern f32 lbl_803E6E34;
-extern void lightFn_8001d6b0(void *light);
+extern void modelLightStruct_updateGlowAlpha(void *light);
 
 extern f32 lbl_803E6E3C;
 extern f32 lbl_803E6E40;
@@ -344,7 +344,7 @@ extern void queueGlowRender(void *light);
 extern void getAmbientColor(int id, u8 *r, u8 *g, u8 *b);
 extern void modelLightStruct_setColorsA8AC(void *light, u8 r, u8 g, u8 b, int a);
 extern void lightSetFieldB0(void *light, u8 r, u8 g, u8 b, int a);
-extern void lightFn_8001d6b0(void *light);
+extern void modelLightStruct_updateGlowAlpha(void *light);
 extern void *objCreateLight(int obj, int kind);
 extern void modelLightStruct_setField50(void *light, int v);
 extern void objSetEventName(void *light, int name);

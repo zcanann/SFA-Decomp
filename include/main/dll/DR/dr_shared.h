@@ -165,7 +165,7 @@ extern f32 lbl_803E69BC;
 extern f32 lbl_803E69B8;
 extern f32 sin(f32);
 extern f32 fn_80293E80(f32);
-extern void lightFn_8001d6b0(void *p);
+extern void modelLightStruct_updateGlowAlpha(void *p);
 extern f32 lbl_803E6898;
 extern f32 lbl_803E68BC;
 extern f32 lbl_803E67A4;

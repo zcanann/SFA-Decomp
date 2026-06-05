@@ -11692,24 +11692,24 @@ void objFn_8002b67c(u8 *obj) {
     dst[4] = src[0x10];
 }
 
-void lightFn_8001d6b0(u8 *obj) {
+void modelLightStruct_updateGlowAlpha(ModelLightStruct *light) {
     s16 v;
 
-    if (obj[0x2f8] == 0) {
+    if (light->type == 0) {
         return;
     }
-    if (obj[0x4c] == 0) {
+    if (light->enabled == 0) {
         return;
     }
-    v = obj[0x2f9] + *(s8 *)(obj + 0x2fa);
+    v = light->glowAlpha + light->glowAlphaStep;
     if (v < 0) {
         v = 0;
-        obj[0x2fa] = 0;
+        light->glowAlphaStep = 0;
     } else if (v > 0xff) {
         v = 0xff;
-        obj[0x2fa] = 0;
+        light->glowAlphaStep = 0;
     }
-    obj[0x2f9] = v;
+    light->glowAlpha = v;
 }
 
 #pragma dont_inline on
