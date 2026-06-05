@@ -1,8 +1,35 @@
 #ifndef MAIN_DLL_CF_CFCRYSTAL_H_
 #define MAIN_DLL_CF_CFCRYSTAL_H_
 
+#include "global.h"
 #include "ghidra_import.h"
 #include "main/object_descriptor.h"
+
+typedef struct FireFlyLanternSpawnSetup {
+  s16 objectType;
+  u8 setupType;
+  u8 pad03;
+  u8 field04;
+  u8 field05;
+  u8 field06;
+  u8 field07;
+  f32 x;
+  f32 y;
+  f32 z;
+  u8 pad14[0x18 - 0x14];
+  u8 field18;
+  u8 field19;
+  s16 field1A;
+  s16 field1C;
+  u8 pad1E[0x24 - 0x1E];
+} FireFlyLanternSpawnSetup;
+
+STATIC_ASSERT(sizeof(FireFlyLanternSpawnSetup) == 0x24);
+STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, x) == 0x08);
+STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field18) == 0x18);
+STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field19) == 0x19);
+STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field1A) == 0x1A);
+STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field1C) == 0x1C);
 
 extern ObjectDescriptor gLanternFireFlyObjDescriptor;
 extern ObjectDescriptor gFireFlyLanternObjDescriptor;

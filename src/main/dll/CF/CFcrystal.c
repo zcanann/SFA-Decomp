@@ -259,22 +259,22 @@ extern f32 lbl_803E3AE8;
 #pragma scheduling off
 #pragma peephole off
 int FireFlyLantern_spawnFireFly(int *obj) {
-    u8 *q;
+    FireFlyLanternSpawnSetup *setup;
     if (Obj_IsLoadingLocked() == 0) return 0;
-    q = (u8 *)Obj_AllocObjectSetup(36, 1084);
-    *(s16 *)q = 1084;
-    *(u8 *)(q + 2) = 9;
-    *(u8 *)(q + 4) = 2;
-    *(u8 *)(q + 6) = 0xff;
-    *(u8 *)(q + 5) = 4;
-    *(u8 *)(q + 7) = 8;
-    *(f32 *)(q + 8) = *(f32 *)((char *)obj + 0xc);
-    *(f32 *)(q + 12) = lbl_803E3AE8 + *(f32 *)((char *)obj + 0x10);
-    *(f32 *)(q + 16) = *(f32 *)((char *)obj + 0x14);
-    *(u8 *)(q + 0x19) = 4;
-    *(s16 *)(q + 0x1a) = 0x514;
-    *(s16 *)(q + 0x1c) = 40;
-    *(u8 *)(q + 0x18) = 30;
+    setup = (FireFlyLanternSpawnSetup *)Obj_AllocObjectSetup(sizeof(FireFlyLanternSpawnSetup), 1084);
+    setup->objectType = 1084;
+    setup->setupType = 9;
+    setup->field04 = 2;
+    setup->field06 = 0xff;
+    setup->field05 = 4;
+    setup->field07 = 8;
+    setup->x = *(f32 *)((char *)obj + 0xc);
+    setup->y = lbl_803E3AE8 + *(f32 *)((char *)obj + 0x10);
+    setup->z = *(f32 *)((char *)obj + 0x14);
+    setup->field19 = 4;
+    setup->field1A = 0x514;
+    setup->field1C = 40;
+    setup->field18 = 30;
     return loadObjectAtObject(obj);
 }
 #pragma peephole reset
