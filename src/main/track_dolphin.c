@@ -4145,13 +4145,18 @@ void setShadowFlag_803db658(s32 v) {
 /* tables exposed through wide stubs below. */
 extern u8 lbl_803DCF6C;
 extern u32 lbl_803DCF30;
-extern u8 lbl_8038DC64[];
 extern u8 lbl_8038DE44[];
 typedef struct TrackBlockDescriptor {
     void *object;
     s16 firstTriangle;
-    u8 unk06[0x12];
+    u8 pad06[2];
+    void *currentMatrix;
+    void *currentCollisionMatrix;
+    void *alternateMatrix;
+    void *alternateCollisionMatrix;
 } TrackBlockDescriptor;
+extern TrackBlockDescriptor lbl_8038DC64[];
+#define gTrackBlockDescriptors lbl_8038DC64
 
 /* fn_80069944 — store sbss byte into *p1 and return a fixed table base. */
 #pragma scheduling off
@@ -4159,7 +4164,7 @@ typedef struct TrackBlockDescriptor {
 #pragma dont_inline on
 void *fn_80069944(u32 *outVal) {
     *outVal = lbl_803DCF6C;
-    return lbl_8038DC64;
+    return gTrackBlockDescriptors;
 }
 #pragma dont_inline reset
 #pragma peephole reset
@@ -4257,7 +4262,7 @@ void fn_80062894(void) {
 #pragma peephole off
 #pragma dont_inline on
 void fn_80069968(s32 *out1, u32 *out2) {
-    TrackBlockDescriptor *descriptors = (TrackBlockDescriptor *)lbl_8038DC64;
+    TrackBlockDescriptor *descriptors = gTrackBlockDescriptors;
     *out1 = descriptors[lbl_803DCF6C].firstTriangle;
     *out2 = lbl_803DCF30;
 }
@@ -5423,16 +5428,15 @@ void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
     f32 f28 = (f32)(ranges[4] + 5);
     f32 f27 = (f32)(ranges[2] - 5);
     f32 f26 = (f32)(ranges[5] + 5);
-    u8 *tbl = lbl_8038DC64;
-    u8 *desc;
-    u8 *descEnd;
+    TrackBlockDescriptor *desc;
+    TrackBlockDescriptor *descEnd;
     int cur;
     int masked;
 
-    *(int *)tbl = 0;
-    *(s16 *)(tbl + 4) = 0;
-    desc = tbl + 0x18;
-    descEnd = tbl + 0x1e0;
+    gTrackBlockDescriptors[0].object = NULL;
+    gTrackBlockDescriptors[0].firstTriangle = 0;
+    desc = &gTrackBlockDescriptors[1];
+    descEnd = &gTrackBlockDescriptors[20];
     lbl_803DCF70 = lbl_803DCF30 + 0x16440;
     masked = a & 0xffff;
     if ((masked & 0x10) == 0) {
@@ -5481,29 +5485,29 @@ void hitDetectFn_800691c0(int *obj, int *ranges, int a, int b)
 
             sub = *(int *)((char *)o + 0x58);
             n = *(u8 *)(sub + 0x10c);
-            *(int *)(desc + 0xc) = sub + (n + 2) * 0x40;
+            desc->currentCollisionMatrix = (void *)(sub + (n + 2) * 0x40);
             sub = *(int *)((char *)o + 0x58);
             n = *(u8 *)(sub + 0x10c);
-            *(int *)(desc + 0x8) = sub + n * 0x40;
+            desc->currentMatrix = (void *)(sub + n * 0x40);
             sub = *(int *)((char *)o + 0x58);
             n = *(u8 *)(sub + 0x10c) ^ 1;
-            *(int *)(desc + 0x14) = sub + (n + 2) * 0x40;
+            desc->alternateCollisionMatrix = (void *)(sub + (n + 2) * 0x40);
             sub = *(int *)((char *)o + 0x58);
             n = *(u8 *)(sub + 0x10c) ^ 1;
-            *(int *)(desc + 0x10) = sub + n * 0x40;
+            desc->alternateMatrix = (void *)(sub + n * 0x40);
 
-            *(s16 *)(desc + 4) = (s16)((cur - (int)lbl_803DCF30) / 0x4c);
-            *(int *)desc = (int)o;
-            cur = fn_80067B84(cur, desc, (int)model, a & 0xff, lbl_803DECC4,
+            desc->firstTriangle = (s16)((cur - (int)lbl_803DCF30) / 0x4c);
+            desc->object = o;
+            cur = fn_80067B84(cur, (u8 *)desc, (int)model, a & 0xff, lbl_803DECC4,
                               f31, f29, f27, f30, f28, f26);
-            desc += 0x18;
+            desc++;
             if ((u32)cur >= lbl_803DCF70) break;
             if (desc >= descEnd) break;
         }
     }
     lbl_803DCF6E = (s16)((cur - (int)lbl_803DCF30) / 0x4c);
-    lbl_803DCF6C = (u8)((int)(desc - (u8 *)lbl_8038DC64) / 0x18);
-    *(s16 *)(desc + 4) = lbl_803DCF6E;
+    lbl_803DCF6C = (u8)(desc - gTrackBlockDescriptors);
+    desc->firstTriangle = lbl_803DCF6E;
 }
 
 extern void *fn_80069944(u32 *outVal);
@@ -6183,7 +6187,7 @@ u8 hitDetectFn_80067958(void *param_1, int param_2, int param_3, int param_4, vo
     void **pfVar6;
     s16 sVar7;
     u8 uVar4;
-    u8 *tbl = lbl_8038DC64;
+    u8 *tbl = (u8 *)gTrackBlockDescriptors;
 
     if (param_4 > 4) param_4 = 4;
     *(u16 *)((u8 *)param_5 + 0x6c) = 0;
@@ -8223,8 +8227,8 @@ u8 hitDetect_800667ec(int a, void *t1, void *t2, int p2, int p3, int p4, void *p
     u8 found;
     s16 hit;
 
-    descEnd = (u8 *)lbl_8038DC64 + lbl_803DCF6C * 0x18;
-    descBase = lbl_8038DC64;
+    descEnd = (u8 *)gTrackBlockDescriptors + lbl_803DCF6C * 0x18;
+    descBase = (u8 *)gTrackBlockDescriptors;
     offX = (f32)*(int *)lbl_8038DE44;
     offZ = (f32)*(int *)(lbl_8038DE44 + 8);
     i = 0;
