@@ -761,6 +761,39 @@ Heuristic:
     param → cmpwi) and the caller-side-width table for picking which variant
     each call site needs. (delta-29 task #133.)
 
+58. **`u16 num = field` keeps the unsigned width for `cmplwi`; `long num =
+    field` widens to signed and emits `cmpwi`.** When target shows `cmplwi`
+    on a value that was loaded from a `u16` struct field (e.g. `lhz r5, off
+    (r4); cmplwi r5, 0`) and your code uses a wider local (`long num =
+    T.uint16Field; if (num != 0) ...`), the implicit widen to `long`
+    flips the compare to signed. **Fix: type the local to match the field
+    width.** `u16 num = T.uint16Field;` preserves the unsigned width and
+    emits `cmplwi`, while keeping the local for CSE so subsequent uses of
+    `num` (e.g. as a `sndBSearch`-style `int` count param) still reuse the
+    loaded register. Caller-side-width-control mirror of recipe #14 (`int`
+    param for `cmpwi`) and recipe #3 (`*(void**)` for `cmplwi` on pointers).
+    **The cleaner "MP4-style" inline (`if (T.field != 0) { ... f(T.field) }`
+    with no local) LOSES the CSE** — MWCC re-derives the field address and
+    issues an extra `addi`+`lhz` pair for the second use, regressing fuzzy.
+    Keep the local; just type it correctly. Took dataGetMacro 98.38→100% in
+    one line. (Found via MP4 musyx synthdata.c reference + objdiff
+    instruction-level inspection.)
+
+59. **Defeat MWCC's commutative-FP-reassociation by lifting the LEADING term
+    to its own statement BEFORE the dot/sum expression.** When target's
+    fmuls+fmadds chain follows your written source order (e.g. C says
+    `a[1]*n[1] + a[0]*n[0] + a[2]*n[2]` and target multiplies `a[1]*n[1]`
+    first) but your output reorders to canonical index order (`a[0]*n[0]`
+    first), MWCC is reassociating commutatively. **`#pragma scheduling off`
+    does NOT fix this** — it's reassociation, not scheduling.
+    Fix: `f32 yy = a[1] * n[1]; f32 dot = yy + a[0] * n[0] + a[2] * n[2];`
+    — pulling the leading term into a statement before the dot expression
+    pins it as the first fmuls and the dot chain becomes
+    fmuls(yy) → fmadds(+a[0]*n[0]) → fmadds(+a[2]*n[2]) matching target.
+    Took Vec3_ReflectAgainstNormal 98.43→100%. **Sibling of #27** (lead
+    with unary-negated operand for fneg+fadds) — both are statement-level
+    expression-restructure to control MWCC's commutative reordering.
+
 ## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/

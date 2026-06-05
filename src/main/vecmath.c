@@ -371,7 +371,8 @@ extern f32 lbl_803DE808;
 extern f32 lbl_803DE80C;
 
 void Vec3_ReflectAgainstNormal(f32 *a, f32 *n, f32 *out) {
-    f32 dot = a[1] * n[1] + a[0] * n[0] + a[2] * n[2];
+    f32 yy = a[1] * n[1];
+    f32 dot = yy + a[0] * n[0] + a[2] * n[2];
     if (dot > lbl_803DE808) {
         out[0] = n[0];
         out[1] = n[1];
