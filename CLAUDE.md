@@ -713,6 +713,32 @@ Heuristic:
     this is the middle case when target actually splits the strategy.
     (echo-25 dfsh_shrine_update findings.)
 
+56. **Duplicate-def reloc-stealing: a same-TU duplicate def of an external
+    function makes `bl callee` resolve to the LOCAL copy, stealing the
+    reloc.** When a placeholder/recovered TU carries a duplicate definition
+    of a function that's *also* defined in another (already-graduated) TU,
+    the linker resolves `bl callee` in the placeholder's `.o` to the LOCAL
+    copy — not the canonical extern. The function still runs (same bytes),
+    BUT the reloc target name differs from target's binary, which shows up
+    as a per-fn fuzzy% gap that no source-form tweak can close. **The fix
+    is to DELETE the duplicate def** — once the local copy is gone, MWCC
+    has to emit an external reloc, and the link resolves to the canonical
+    sibling, matching target. Took `snowPrintSnowCloud` 87.65 → 89.24%
+    (newclouds, task #126) by dropping the local `getAmbientColor` def
+    that was stealing the reloc to sky.c's canonical copy.
+    **GUARD — only drop dups of NON-INLINED externals.** For genuine
+    `extern inline` helpers (e.g. `sqrtf__inline`), the dup IS load-bearing
+    (it's how inlining works at link time); dropping it loses the inline
+    expansion and grows the placeholder's code with a now-unresolved `bl`.
+    Test which class the dup is in: if target's call site shows a `bl` to
+    the canonical name (external resolve) → drop the dup. If target inlines
+    the body at the call site → keep the dup. This **resolves the wave-
+    lesson "−48 byte cross-inline tail TU cap"** documented in the
+    "Graduating a placeholder" section — that cap was actually duplicate-
+    def reloc-stealing, not pool migration, and is FIXABLE for the
+    non-inlined case. The CLAUDE.md wave-lessons section should be read
+    with this update in mind.
+
 ## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
