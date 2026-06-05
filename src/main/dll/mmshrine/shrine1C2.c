@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/dll/mmshrine/shrine1C2.h"
 
 #pragma peephole off
@@ -1119,7 +1120,6 @@ void ecsh_creator_update(s16 *obj) {
     }
 }
 
-extern void ObjAnim_AdvanceCurrentMove(s16 *obj, f32 a, f32 b, u8 *buf);
 extern int getAngle(f32 dx, f32 dz);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern f32 timeDelta;
@@ -1164,7 +1164,7 @@ void fn_801C70F0(s16 *obj) {
         c1 = fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0x10)) / lbl_803E5014);
         obj[1] = (int)(lbl_803E5018
                        * (fn_80293E80((lbl_803E5010 * (f32)*(s16 *)(sub + 0xc)) / lbl_803E5014) + c1));
-        ObjAnim_AdvanceCurrentMove(obj, lbl_803E501C, timeDelta, buf);
+        ObjAnim_AdvanceCurrentMove(lbl_803E501C, timeDelta, (int)obj, (ObjAnimEventList *)buf);
         if (player != NULL) {
             diff = (getAngle(((f32 *)obj)[6] - ((f32 *)player)[6],
                              ((f32 *)obj)[8] - ((f32 *)player)[8]) & 0xffff)
