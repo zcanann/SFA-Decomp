@@ -523,8 +523,10 @@ void dll_19D_update(int obj)
     int def = *(int *)(self + 0x4c);
     int linkObj;
     float vec[6];
-    s16 timer;
     int lifetime;
+    s16 timer;
+    u32 frames;
+    f32 zero;
 
     vec[3] = lbl_803E51B8;
     vec[4] = lbl_803E51B8;
@@ -547,7 +549,21 @@ void dll_19D_update(int obj)
         *(s16 *)(state + 0x32) = 0x32;
     }
 
-    if (*(s16 *)(state + 0x32) == 0) {
+    if (*(s16 *)(state + 0x32) != 0) {
+        if ((*(u8 *)(state + 0x36) & 2) == 0) {
+            getLActions(self, self, 1, 0, 0, 0);
+            *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 2);
+        }
+        zero = lbl_803E51B8;
+        *(f32 *)(self + 0x24) = zero;
+        *(f32 *)(self + 0x28) = zero;
+        *(f32 *)(self + 0x2c) = zero;
+        ObjHits_ClearHitVolumes(self);
+        *(s16 *)(state + 0x32) -= 1;
+        if (*(s16 *)(state + 0x32) <= 0) {
+            Obj_FreeObject(self);
+        }
+    } else {
         *(f32 *)(self + 0x80) = *(f32 *)(self + 0xc);
         *(f32 *)(self + 0x84) = *(f32 *)(self + 0x10);
         *(f32 *)(self + 0x88) = *(f32 *)(self + 0x14);
@@ -556,9 +572,7 @@ void dll_19D_update(int obj)
         *(s16 *)(self + 0x4) = (s16)(*(s16 *)(self + 0x4) + *(s16 *)(state + 0x2c) * (u16)framesThisStep);
         (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29d, vec, 4, -1, 0);
 
-        timer = (s16)(*(s16 *)(state + 0x30) - (u16)framesThisStep);
-        *(s16 *)(state + 0x30) = timer;
-        if (timer < 1) {
+        if ((*(s16 *)(state + 0x30) -= (u16)framesThisStep) <= 0) {
             (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29e, vec, 4, -1, 0);
             (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x29f, vec, 4, -1, 0);
             (*(code *)((char *)*(int *)gPartfxInterface + 0x8))(self, 0x2a1, vec, 4, -1, 0);
@@ -568,27 +582,15 @@ void dll_19D_update(int obj)
         *(f32 *)(state + 0x8) = *(f32 *)(self + 0x24) * timeDelta + *(f32 *)(state + 0x8);
         *(f32 *)(state + 0xc) = *(f32 *)(self + 0x28) * timeDelta + *(f32 *)(state + 0xc);
         *(f32 *)(state + 0x10) = *(f32 *)(self + 0x2c) * timeDelta + *(f32 *)(state + 0x10);
-        *(u16 *)(state + 0x34) = (u16)(*(s16 *)(state + 0x34) + (u16)framesThisStep * 0x5dc);
+        *(u16 *)(state + 0x34) = *(u16 *)(state + 0x34) + (u16)framesThisStep * 0x5dc;
         *(f32 *)(self + 0xc) = *(f32 *)(state + 0x8);
         *(f32 *)(self + 0x10) = *(f32 *)(state + 0xc);
         *(f32 *)(self + 0x14) = *(f32 *)(state + 0x10);
 
+        frames = framesThisStep;
         lifetime = *(int *)(self + 0xf4);
-        *(int *)(self + 0xf4) = lifetime - (u32)framesThisStep;
-        if ((int)(lifetime - (u32)framesThisStep) < 0) {
-            Obj_FreeObject(self);
-        }
-    } else {
-        if ((*(u8 *)(state + 0x36) & 2) == 0) {
-            getLActions(self, self, 1, 0, 0, 0);
-            *(u8 *)(state + 0x36) = (u8)((u32)*(u8 *)(state + 0x36) | 2);
-        }
-        *(f32 *)(self + 0x24) = lbl_803E51B8;
-        *(f32 *)(self + 0x28) = lbl_803E51B8;
-        *(f32 *)(self + 0x2c) = lbl_803E51B8;
-        ObjHits_ClearHitVolumes(self);
-        *(s16 *)(state + 0x32) = (s16)(*(s16 *)(state + 0x32) - 1);
-        if (*(s16 *)(state + 0x32) < 1) {
+        *(int *)(self + 0xf4) = lifetime - frames;
+        if ((int)(lifetime - frames) < 0) {
             Obj_FreeObject(self);
         }
     }
