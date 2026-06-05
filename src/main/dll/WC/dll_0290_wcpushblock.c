@@ -791,7 +791,7 @@ int wcpushblock_levelControlTriggerCallback(int obj, int p2, int p3)
         }
     }
     for (i = 0; i < *(u8 *)(p3 + 0x8b); i++) {
-        switch (*(u8 *)(p3 + (i + 0x81))) {
+        switch (*(u8 *)(p3 + i + 0x81)) {
         case 1:
             *(u8 *)(state + 0xc) = 6;
             break;
