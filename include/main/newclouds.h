@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80080E58_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80080E58_H_
+#ifndef MAIN_NEWCLOUDS_H_
+#define MAIN_NEWCLOUDS_H_
 
 #include "ghidra_import.h"
 
@@ -271,4 +271,4 @@ int FUN_80081134(undefined8 param_1,double param_2,double param_3,undefined8 par
                 int param_9,undefined4 param_10,undefined4 param_11,undefined4 param_12,
                 undefined4 param_13,undefined4 param_14,undefined4 param_15,undefined4 param_16);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80080E58_H_ */
+#endif /* MAIN_NEWCLOUDS_H_ */

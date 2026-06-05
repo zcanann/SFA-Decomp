@@ -2,7 +2,7 @@
 #include "main/audio/hw_voice_control.h"
 #include "main/audio/inp_midi.h"
 #include "main/audio/snd_core.h"
-#include "main/unknown/autos/placeholder_802765AC.h"
+#include "main/audio/mcmd_exec.h"
 #include "main/unknown/autos/placeholder_80279608.h"
 #include "main/unknown/autos/placeholder_8027591C.h"
 #include "main/unknown/autos/placeholder_8027641C.h"
@@ -12,71 +12,7 @@
 #include "main/audio/hw_voice_params.h"
 #include "main/audio/inp_ctrl.h"
 
-extern undefined4 FUN_800033a8();
-extern undefined4 audioKeymapFn_8026fc8c();
-extern undefined4 FUN_80271a2c();
-extern undefined4 FUN_80271ad4();
-extern int FUN_80275364();
 extern int mcmdLoop();
-extern uint FUN_802757d4();
-extern undefined4 FUN_802757dc();
-extern undefined4 FUN_802757e0();
-extern undefined4 FUN_802757e4();
-extern undefined4 FUN_802757e8();
-extern undefined4 FUN_802763c0();
-extern uint FUN_80279008();
-extern undefined4 FUN_8027975c();
-extern uint FUN_8027976c();
-extern undefined4 voiceInitPriorityTables();
-extern undefined4 FUN_8027a664();
-extern int FUN_8027a8fc();
-extern undefined4 FUN_8027a904();
-extern undefined4 FUN_8027ac38();
-extern undefined4 FUN_8028134c();
-extern undefined4 FUN_80281a30();
-extern uint FUN_8028343c();
-extern undefined4 FUN_80283444();
-extern undefined4 hwStart();
-extern bool FUN_80283844();
-extern undefined4 FUN_80283850();
-extern undefined4 hwAddInput();
-extern undefined4 hwRemoveInput();
-extern undefined4 FUN_80283e04();
-extern undefined4 FUN_80283e08();
-extern int aramStoreData();
-extern int FUN_80286718();
-extern uint countLeadingZeros();
-
-extern undefined4 DAT_8032fa4c;
-extern undefined4 DAT_8032fc50;
-extern undefined4 DAT_8032fc54;
-extern undefined4 DAT_8032fc80;
-extern undefined4 DAT_8032fc84;
-extern undefined4 DAT_803303fc;
-extern undefined4 DAT_803307fc;
-extern undefined4 DAT_803bdfc0;
-extern undefined4 DAT_803be654;
-extern undefined4 DAT_803be694;
-extern undefined DAT_803be6d4;
-extern undefined DAT_803beb54;
-extern undefined4 DAT_803deee8;
-extern undefined4* DAT_803deeec;
-extern undefined4 DAT_803def50;
-extern int* DAT_803def54;
-extern int* DAT_803def58;
-extern undefined4 DAT_803def60;
-extern undefined4 DAT_803def64;
-extern undefined4 DAT_803def68;
-extern f64 DOUBLE_803e8498;
-extern f64 DOUBLE_803e84a0;
-extern f32 FLOAT_803e8488;
-extern f32 FLOAT_803e848c;
-extern f32 FLOAT_803e8490;
-extern f32 FLOAT_803e84a8;
-extern f32 FLOAT_803e84ac;
-extern void* PTR_DAT_8032fc70;
-extern void* PTR_DAT_8032fca0;
-extern undefined4 uRam803def6c;
 
 extern u8 *synthVoice;
 extern u8 lbl_803BD150[];
@@ -93,8 +29,8 @@ extern u32 vidMakeNew(int state, int returnNewId);
 extern int hwIsActive(int slot);
 extern void voiceFree(int state);
 extern void inpResetChannelDefaults(u8 a, u8 b);
-void audioFn_80278990(McmdVoiceState *state);
-void fn_802788B4(McmdVoiceState *state, u32 skipFadeReset);
+void macMakeActive(McmdVoiceState *state);
+void TimeQueueRemove(McmdVoiceState *state, u32 skipFadeReset);
 extern u32 inpGetExCtrl(McmdVoiceState *state, u32 ctrl);
 extern void inpSetExCtrl(McmdVoiceState *state, u32 ctrl, s16 value);
 extern void voiceKill(u32 voice);
@@ -386,7 +322,7 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
                                 voiceState->macroCursor = voiceState->messageMacroCursor;
                                 voiceState->macroBase = voiceState->messageMacroBase;
                                 voiceState->messageMacroBase = 0;
-                                audioFn_80278990((McmdVoiceState *)voice);
+                                macMakeActive((McmdVoiceState *)voice);
                             }
                         }
                     }
@@ -412,7 +348,7 @@ void mcmdSendMessage(McmdVoiceState *state, McmdCommandArgs *args)
                     voiceState->macroCursor = voiceState->messageMacroCursor;
                     voiceState->macroBase = voiceState->messageMacroBase;
                     voiceState->messageMacroBase = 0;
-                    audioFn_80278990((McmdVoiceState *)voice);
+                    macMakeActive((McmdVoiceState *)voice);
                 }
             }
         }
@@ -1124,7 +1060,7 @@ static u32 ExecuteTrap(McmdVoiceState *sv, u8 trapType)
         sv->macroCursor = sv->trapMacroCursor[trapType];
         sv->macroBase = sv->trapMacroBase[trapType];
         sv->trapMacroBase[trapType] = 0;
-        audioFn_80278990(sv);
+        macMakeActive(sv);
         return 1;
     }
     return 0;
@@ -1143,7 +1079,7 @@ void macHandle(u32 deltaTime)
          sv != 0 && *(u64 *)&sv->wakeTimeHi <= *(u64 *)&macRealTimeHi;) {
         nextSv = sv->timeNext;
         w = *(u64 *)&sv->wakeTimeHi;
-        audioFn_80278990(sv);
+        macMakeActive(sv);
         *(u64 *)&sv->activeTimeHi = w;
         sv = nextSv;
     }
@@ -1174,7 +1110,7 @@ void macSampleEndNotify(McmdVoiceState *sv)
 {
     if (sv->queueMode == 1) {
         if (ExecuteTrap(sv, 1) == 0 && (MAC_CFLAGS(sv) & MAC_FLAG64(0, 0x40000))) {
-            audioFn_80278990(sv);
+            macMakeActive(sv);
         }
     }
 }
@@ -1188,7 +1124,7 @@ void macSetExternalKeyoff(McmdVoiceState *sv)
     if (sv->macroBase != 0) {
         if (!(MAC_CFLAGS(sv) & MAC_FLAG64(0x100, 0))) {
             if (ExecuteTrap(sv, 0) == 0 && (MAC_CFLAGS(sv) & MAC_FLAG64(0, 4))) {
-                audioFn_80278990(sv);
+                macMakeActive(sv);
             }
         } else {
             MAC_CFLAGS(sv) |= MAC_FLAG64(0x400, 0);
@@ -1206,7 +1142,7 @@ void macSetPedalState(McmdVoiceState *sv, u32 state)
     } else {
         if (sv->macroBase != 0 && (MAC_CFLAGS(sv) & MAC_FLAG64(0x400, 0))) {
             if (ExecuteTrap(sv, 0) == 0 && (MAC_CFLAGS(sv) & MAC_FLAG64(0, 4))) {
-                audioFn_80278990(sv);
+                macMakeActive(sv);
             }
         }
         MAC_CFLAGS(sv) &= ~MAC_FLAG64(0x500, 0);
@@ -1260,7 +1196,7 @@ void TimeQueueAdd(McmdVoiceState *state)
  * Remove a voice from the time queue and clear its scheduled wake time.
  */
 #pragma dont_inline on
-void fn_802788B4(McmdVoiceState *sv, u32 disableUpdate)
+void TimeQueueRemove(McmdVoiceState *sv, u32 disableUpdate)
 {
     if (*(u64 *)&sv->wakeTimeHi != 0) {
         if (*(u64 *)&sv->wakeTimeHi != (u64)-1) {
@@ -1286,7 +1222,7 @@ void fn_802788B4(McmdVoiceState *sv, u32 disableUpdate)
 /*
  * Move a yielded voice back onto the active voice list.
  */
-void audioFn_80278990(McmdVoiceState *sv)
+void macMakeActive(McmdVoiceState *sv)
 {
     if (sv->queueMode != 0) {
         if (*(u64 *)&sv->wakeTimeHi != 0) {
@@ -1317,7 +1253,7 @@ void audioFn_80278990(McmdVoiceState *sv)
 /*
  * Detach a voice from the active list and optionally stop it cold.
  */
-void fn_80278A98(McmdVoiceState *sv, int newState)
+void macMakeInactive(McmdVoiceState *sv, int newState)
 {
     if (sv->queueMode == newState) {
         return;
@@ -1357,7 +1293,7 @@ void fn_80278A98(McmdVoiceState *sv, int newState)
 /*
  * Allocate a voice and start a macro on it (MusyX macStart).
  */
-u32 audioFn_80278b94(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
+u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
                      u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                      u8 new_vid, u8 vGroup, u8 studio, u32 itd)
 {
@@ -1389,7 +1325,7 @@ u32 audioFn_80278b94(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, 
                         sv->activeNext->activePrev = sv->activePrev;
                     }
                 }
-                fn_802788B4(sv, 1);
+                TimeQueueRemove(sv, 1);
                 sv->queueMode = 2;
             }
             MAC_CFLAGS(sv) = (MAC_CFLAGS(sv) & MAC_FLAG64(0, 0x10)) | MAC_FLAG64(0, 2);
@@ -1443,7 +1379,7 @@ u32 audioFn_80278b94(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, 
 
             if ((vid = vidMakeNew((int)sv, new_vid)) != 0xffffffff) {
                 if (sv->queueMode != 0) {
-                    fn_802788B4(sv, 0);
+                    TimeQueueRemove(sv, 0);
                     if ((sv->activeNext = (McmdVoiceState *)macActiveRoot) != 0) {
                         ((McmdVoiceState *)macActiveRoot)->activePrev = sv;
                     }
@@ -1467,7 +1403,7 @@ u32 audioFn_80278b94(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, 
 /*
  * Reset the macro scheduler state and every voice slot.
  */
-void fn_80278EA4(void)
+void macInit(void)
 {
     int off;
     u32 i;

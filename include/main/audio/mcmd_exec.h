@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802765AC_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802765AC_H_
+#ifndef MAIN_AUDIO_MCMD_EXEC_H_
+#define MAIN_AUDIO_MCMD_EXEC_H_
 
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
@@ -20,12 +20,12 @@ void macSampleEndNotify(McmdVoiceState *sv);
 void macSetExternalKeyoff(McmdVoiceState *sv);
 void macSetPedalState(McmdVoiceState *sv, u32 state);
 void TimeQueueAdd(McmdVoiceState *state);
-void fn_802788B4(McmdVoiceState *sv, u32 disableUpdate);
-void audioFn_80278990(McmdVoiceState *state);
-void fn_80278A98(McmdVoiceState *sv, int newState);
-u32 audioFn_80278b94(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
+void TimeQueueRemove(McmdVoiceState *sv, u32 disableUpdate);
+void macMakeActive(McmdVoiceState *state);
+void macMakeInactive(McmdVoiceState *sv, int newState);
+u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
                      u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                      u8 new_vid, u8 vGroup, u8 studio, u32 itd);
-void fn_80278EA4(void);
+void macInit(void);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802765AC_H_ */
+#endif /* MAIN_AUDIO_MCMD_EXEC_H_ */

@@ -4,7 +4,7 @@
 #include "main/unknown/autos/placeholder_80279AF0.h"
 #include "main/unknown/autos/placeholder_80279EC0.h"
 
-extern void fn_80278A98(McmdVoiceState *state, int x);
+extern void macMakeInactive(McmdVoiceState *state, int x);
 
 extern VoiceIdSlot voiceFreeListSlots[];
 extern u8 *synthVoice;
@@ -225,7 +225,7 @@ _fail:
  */
 void voiceFree(int state)
 {
-    fn_80278A98((McmdVoiceState *)state, 2);
+    macMakeInactive((McmdVoiceState *)state, 2);
     voiceRemovePriority(state);
     *(u32 *)(state + 0x34) = 0;
     *(u8 *)(state + 0x10c) = 0;

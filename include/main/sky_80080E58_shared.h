@@ -2,7 +2,7 @@
 #define MAIN_SKY_80080E58_SHARED_H
 
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80080E58.h"
+#include "main/newclouds.h"
 
 typedef struct ObjSeqBgCmd {
     int object;

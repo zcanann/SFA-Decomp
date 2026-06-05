@@ -7,7 +7,7 @@
 extern void* salMalloc(u32 size);
 extern void memset(void* dst, int value, u32 size);
 extern void inpInit(void);
-extern void fn_80278EA4(void);
+extern void macInit(void);
 extern void vidInit(void);
 extern void voiceInitPriorityTables(void);
 extern void voiceInitRegistrationTables(void);
@@ -194,7 +194,7 @@ void synthInit(u32 sampleRate, u32 voiceCount) {
         *(u8*)(state + 0xC94 + auxIndex * 2) = 0;
     }
 
-    fn_80278EA4();
+    macInit();
     vidInit();
     voiceInitPriorityTables();
 

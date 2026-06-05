@@ -70,7 +70,7 @@ extern int audioFn_8026f630(u32 key, u32 midi, u32 midiSet, u32 vidFlag, u32 *re
 extern int audioLayerFn_8026f8b8(u16 id, s16 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
                                  u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                                  u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
-extern int audioFn_80278b94(u16 id, u8 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
+extern int macStart(u16 id, u8 prio, u8 maxVoices, u32 allocId, int key, u8 vol,
                             u8 pan, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                             u8 vidFlag, u8 vGroup, u8 studio, u32 itd);
 extern u32 vidGetInternalId(u32 handle);
@@ -268,7 +268,7 @@ int audioKeymapFn_8026fc8c(u32 id, s16 prio, u8 maxVoices, u32 allocId, u8 key, 
                 if (handle != 0xFFFFFFFF) {
                     return handle;
                 }
-                return audioFn_80278b94(*(u16 *)entry, prio, maxVoices, allocId, k | (key & 0x80), vol,
+                return macStart(*(u16 *)entry, prio, maxVoices, allocId, k | (key & 0x80), vol,
                                         pan, midi, midiSet, section, step, trackid, vidFlag, vGroup,
                                         studio, itd);
             }
@@ -315,7 +315,7 @@ int audioFn_8026feec(u32 id, u8 prio, u8 maxVoices, u8 key, u8 vol, u8 pan, u8 m
         if (handle != 0xFFFFFFFF) {
             return handle;
         }
-        return audioFn_80278b94(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,
+        return macStart(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,
                                 step, trackid, 1, vGroup, studio, itd);
     case 0x4000:
         vid = audioKeymapFn_8026fc8c(id, prio, maxVoices, id, key, vol, pan, midi, midiSet, section,

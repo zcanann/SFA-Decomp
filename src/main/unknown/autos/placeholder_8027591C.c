@@ -3,7 +3,7 @@
 #include "main/audio/mcmd.h"
 
 extern McmdVoiceState *synthVoice;
-extern u32 audioFn_80278b94(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
+extern u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
                             u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                             u8 new_vid, u8 vGroup, u8 studio, u32 itd);
 extern void synthFXCloneMidiSetup(McmdVoiceState *voice, McmdVoiceState *state);
@@ -76,7 +76,7 @@ void mcmdPlayMacro(McmdVoiceState *svoice, McmdCommandArgs *cstep)
     }
 
     svoice->macroAllocating = 1;
-    new_child = audioFn_80278b94(cstep->flags >> 0x10, (u8)(cstep->value >> 0x10),
+    new_child = macStart(cstep->flags >> 0x10, (u8)(cstep->value >> 0x10),
                                  (u8)(cstep->value >> 0x18), svoice->baseSample, key,
                                  (u8)(svoice->volume >> 0x10), (u8)(svoice->pan >> 0x10),
                                  svoice->midiSlot, svoice->midiEvent, svoice->midiLayer,
