@@ -579,14 +579,17 @@ void waterfx_initialise(void) {
     }
     lbl_803DD248 = buf;
     lbl_803DD240 = buf + 0x3c0;
-    buf += 0x780;
-    lbl_803DD24C = buf;
-    lbl_803DD244 = buf + 0x780;
-    buf += 0xf00;
-    lbl_803DD238 = buf;
-    lbl_803DD230 = buf + 0x348;
-    lbl_803DD220 = buf + 0x5a0;
-    lbl_803DD228 = buf + 0x8e8;
+    {
+        char *p2 = buf + 0x780;
+        char *p3;
+        lbl_803DD24C = p2;
+        lbl_803DD244 = p2 + 0x780;
+        p3 = p2 + 0xf00;
+        lbl_803DD238 = p3;
+        lbl_803DD230 = p3 + 0x348;
+        lbl_803DD220 = p3 + 0x5a0;
+        lbl_803DD228 = p3 + 0x8e8;
+    }
     lbl_803DD23C = NULL;
     lbl_803DD234 = NULL;
     lbl_803DD224 = NULL;

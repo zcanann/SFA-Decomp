@@ -1104,13 +1104,15 @@ void fn_80156B0C(uint param_9,int param_10)
 void fn_80156C34(uint param_9,int param_10)
 {
   int iVar1;
-  
+  uint phase;
+
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
-    if (*(byte *)(param_10 + 0x33a) == 0) {
-      *(undefined *)(param_10 + 0x33a) = 1;
+    phase = *(u8 *)(param_10 + 0x33a);
+    if (phase == 0) {
+      *(u8 *)(param_10 + 0x33a) += 1;
     }
-    else if (*(byte *)(param_10 + 0x33a) >= 2) {
-      *(undefined *)(param_10 + 0x33a) = 0;
+    else if (phase >= 2) {
+      *(u8 *)(param_10 + 0x33a) = 0;
     }
     iVar1 = (uint)*(byte *)(param_10 + 0x33a) * 0xc;
     fn_8014D08C(param_9,param_10,(uint)lbl_8031F318[iVar1 + 8],

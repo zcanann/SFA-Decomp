@@ -138,8 +138,7 @@ BOOL Stack_IsFull(RingBufferQueue* stack)
 #pragma peephole off
 void Stack_Pop(RingBufferQueue* stack, void* dst)
 {
-    stack->writeIndex--;
-    if (stack->writeIndex < 0) {
+    if (--stack->writeIndex < 0) {
         stack->writeIndex = stack->capacity - 1;
     }
     memcpy(dst, (u8*)stack->data + stack->writeIndex * stack->elemSize, stack->elemSize);

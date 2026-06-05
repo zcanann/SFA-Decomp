@@ -794,6 +794,73 @@ Heuristic:
     with unary-negated operand for fneg+fadds) — both are statement-level
     expression-restructure to control MWCC's commutative reordering.
 
+60. **"99.99% cosmetic" partials can hide REAL behavioral bugs masked by
+    `--diff`'s reloc-tolerance — always byte-compare before declaring a
+    pool-name artifact.** When a function scores 99.99% (1-2 bytes off) and
+    `function_objdump.py --diff` shows zero divergence (because the diff
+    tool tolerates reloc-target address differences from the symbol living
+    at different file offsets in target vs current `.o`), the residual may
+    NOT be a `@NNN`-vs-`lbl_xxx` pool-name artifact — it may be a single
+    literal-operand byte difference that encodes a behavioral bug. Recover
+    by raw byte-diff of the function bytes pulled from both `.o` files
+    (objdump `-t` for the symbol address, `.text` section file-offset, read
+    `sym_size` bytes from each), find the differing byte, map it back to
+    its instruction's offset (offset/4), and inspect what immediate it
+    encodes. Took `objAudioFn_8006edcc` 99.99→100% via byte-diff: the
+    differing byte was `li r0, 8` (target) vs `li r0, 4` (current) at
+    offset 0x50 — a loop-count immediate. The C had `for (bit=0; bit<16;
+    bit++) { (mask >> bit) & 1 ... }` against a 32-bit `int mask` —
+    target's unrolled-4x ctr=8 implies 32 iterations, while the C bound
+    of 16 produced ctr=4 / 16 iterations. **The C had a wrong bound** —
+    the bit-scan should walk the full int (32 bits), not 16. Fix:
+    `for (bit = 0; bit < 32; bit++)`. **Lesson: when --diff shows
+    everything-identical but the score is <100%, run the byte-diff before
+    accepting the pool-name-artifact explanation.** Some Ghidra imports
+    silently capped loop bounds to the data width the decompiler inferred
+    (here u16 vs the int param), and the unroll-factor disguises the count
+    mismatch as a single immediate byte. The script for a byte-diff:
+    ```
+    objdump -t <file>.o | grep <sym>   # get sym addr + size
+    objdump -h <file>.o | grep .text   # get .text file offset
+    # read sym_size bytes from (.text offset + sym addr) in each, diff
+    ```
+    (Found via report.json 99.99% screening + raw byte compare. The
+    `--diff` mask-tolerance was masking a genuine codegen difference,
+    not a cosmetic artifact.)
+    **Empirical observation (audit of 14 fns at 99.9-99.99%, ≤500B):
+    ALL 14 had real byte differences after reloc-mask, ZERO were purely
+    pool-name-artifact cosmetic.** Recipe #10's "@NNN-vs-named-lbl is a
+    measurement artifact" applies far less often than initial impressions
+    suggested — when objdiff scores <100%, the bytes ARE different.
+    Tool: `tools/cosmetic_audit.py [--min-pct N] [--unit-filter X]` walks
+    every fn, reloc-masks the byte diff, and reports the actual differing
+    instructions with side-by-side disasm. Use as a screening pass before
+    grinding any individual 99.9% partial. Categories observed in the
+    99.5-99.99% tier: constant-immediate bugs (loop bounds, decrements),
+    operand-order divergences (recipe #59 fmuls/fsubs), frame-size
+    differences (arg-passing area for callees with many args),
+    register-coloring residuals (recipe #16 cap), branch-displacement
+    layout (recipe #21). Not all are tractable — but knowing which
+    *category* a partial is in lets you skip the unrecoverable ones.
+
+61. **Distinct pointer locals (not `p += K`) to keep target's `addi rX,rX,K`
+    base-bump.** MWCC forward-substitutes a `buf += K;` reassignment into every
+    later use as cumulative offsets off the ORIGINAL base (`addi r0,r3,K1+K2`,
+    base reg never updated). When target actually BUMPS the base register
+    (`addi r3,r3,K; stw r3; addi r0,r3,K2`), introduce a NEW pointer local per
+    region (`char *p2 = buf + K; ... char *p3 = p2 + K2;`) instead of
+    compound-assigning the same variable. With the old pointer dead, the
+    allocator coalesces each new local onto the same reg and emits the exact
+    `addi r3,r3,K` bump chain. Took waterfx_initialise 99.52→100%.
+    **Companion (param relocation):** when target tests/uses a value in r4
+    (the COPY) but your code emits the test on r3 (the original param) — e.g.
+    `mr r4,r3; clrlwi r0,r4` vs yours `clrlwi r0,r3` — drop the separate local
+    (`int bitValue = value;`) and REASSIGN THE PARAM (`if (...) value = 0;`)
+    so the variable itself relocates to r4 and all uses reference it there.
+    Took setGameBit2BA 99.67→100%. Both are the same lesson: MWCC's
+    copy-propagation picks the SOURCE reg; restructure the variables so the
+    intended reg IS the variable's home.
+
 ## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
@@ -1282,6 +1349,35 @@ fusion, peephole behavior, rlwinm vs andi, fp_contract surprises, etc.).
   penalty, 0 = perfect). A 200/22100 scratch is mostly there; a 22000/22100
   scratch is still broken. Filter accordingly when grepping for recipes that
   actually worked.
+
+### MP4 as a "what C makes this asm?" oracle
+
+Mario Party 4 (`reference_projects/marioparty4`) is 100% byte-matched
+against the original game, so every function in MP4's compiled `.o` files
+is a definitive C↔asm pair for whatever MWCC quirk produced that
+instruction shape. When SFA is stuck trying to coax MWCC into a specific
+sequence (rlwimi at a given bit position, `cntlzw` idiom, paired-single
+`psq_st`, a specific fmuls operand order, `__cvt_` helper invocation,
+etc.), grep MP4 for the pattern and read the C that produced it —
+regardless of whether the MP4 function is semantically related to your
+SFA target. You only need the *pattern* to match, not the family.
+
+- `python3 tools/mp4_asm_search.py "<pattern>"` — grep across all MP4
+  binaries' disasm cache for the asm pattern; returns hits as
+  (MP4 unit, fn name, asm context). Cache builds on first run (~2-3min,
+  ~13MB at /tmp/mp4_asm_cache.txt); subsequent queries are <1s.
+- `--with-c` to also locate and dump the matching C definition.
+- `--unit-filter <substr>` to restrict to a subset of MP4 units.
+- `-C N` for wider asm context (default 4 lines before/after).
+- Examples:
+  - `mp4_asm_search.py "rlwimi"` — any rlwimi anywhere
+  - `mp4_asm_search.py "rlwimi.*,5,26,26"` — specific bit position
+  - `mp4_asm_search.py "cntlzw" --with-c` — find one + see the C
+  - `mp4_asm_search.py "psq_st" --max 3` — limit results
+- Best practice: when a residual category (per `cosmetic_audit.py` /
+  `function_objdump.py`) names a specific instruction or operand shape,
+  query MP4 for it FIRST — it's faster than hand-crafting a C variant
+  and bisecting.
 
 ## Reference commits
 

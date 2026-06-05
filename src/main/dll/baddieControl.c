@@ -3622,7 +3622,7 @@ void dll_19_func0C(int p1, u8 *p2, u8 *p3, s16 p4, u8 *p5, s16 p6, s16 p7, int p
         p2[0x27b] = 1;
     }
     if (p7 != -1) {
-        (*(void (**)(int, u8 *))(*(int *)gPlayerInterface + 0x14))(p1, p2);
+        (*(void (**)(int, u8 *, int))(*(int *)gPlayerInterface + 0x14))(p1, p2, p7);
     }
     if (p5 != NULL) {
         p5[0] = 2;
