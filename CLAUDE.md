@@ -739,6 +739,28 @@ Heuristic:
     non-inlined case. The CLAUDE.md wave-lessons section should be read
     with this update in mind.
 
+57. **Block-scope `extern` overrides reconcile decl-namespace conflicts when
+    merging multi-file TUs.** When graduating a multi-placeholder DLL into one
+    merged TU, the source `.c` files often disagree on the type of a shared
+    extern (one file declared `extern int GameBit_Get(...)`, the next
+    `extern u8 GameBit_Get(...)`, etc.) — and the per-file form is **required**
+    for byte-exact codegen at the corresponding call sites. Putting both forms
+    in the merged TU's global decl scope is a redeclaration conflict; picking
+    one globally regresses the other's call sites (different return-width
+    triggers `cmpwi` vs `cmplwi`, `clrlwi` insertions, sign-vs-zero extends —
+    see recipe #11 and the caller-side-width table). **Solution: BLOCK-SCOPE
+    `extern` declarations inside the specific function bodies that need the
+    non-global variant.** MWCC accepts this (legal C89 — local extern
+    redeclarations override outer scope for that block only), and the byte
+    output is identical to the per-file form. Took the 4-placeholder
+    DIMSnowHorn1 + dim2prisonmammoth merge byte-exact: 4 specific fns needed
+    block-scope overrides (`fn_802BB4B4`: `u32 getButtonsHeld/JustPressed`
+    no-clrlwi; `fn_802BB998`: `u16 audioPickSoundEffect` chain; `func15`:
+    ghidra-order Matrix_TransformPoint L2R arg eval; init: GameBit_Get
+    int-return cmpwi), all clean C, all byte-verified. Pair with #14 (`int`
+    param → cmpwi) and the caller-side-width table for picking which variant
+    each call site needs. (delta-29 task #133.)
+
 ## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
@@ -967,6 +989,52 @@ match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
    pre-move total (NOT the headline %, which shifts with the denominator).
    Revert any family that doesn't conserve. Build green, **land on `main`**.
 
+### Skeleton-copy carve method (preferred for messy multi-family units)
+
+For units where the original `.c` has **sloppy call sites** (implicit-decl
+arity-0 calls, missing prototypes, calls-before-defs that compile because the
+def lives in the same TU), the "complete extern set in a shared header"
+approach (procedure step 4 + the shared-header lesson below) **FAILS** — adding
+full prototypes to the carved files changes f32-promotion codegen at the
+implicit-decl call sites, producing per-fn fuzzy regressions even though the
+fns being moved are unchanged. The textrender/model carves in 8001746C hit
+this on the first build attempt.
+
+The fix that lands byte-exact on the first try: **each family file is the
+ENTIRE original `.c`** with other families' definitions collapsed to a
+**one-line prototype AT THE SAME POSITION** the def used to occupy. Key
+properties:
+
+- **A definition IS a declaration** — collapsing a def to its prototype at the
+  same line preserves the decl environment exactly. The carved-away fn's
+  signature is still in scope, so any sloppy implicit-decl call site sees the
+  same visible signature it saw pre-carve.
+- **All `#pragma` lines stay verbatim** — pragma stack state at every retained
+  fn is identical by construction. No pragma-stack recomputation, no
+  effective-state derivation, no risk of mis-classifying a fn's pragma scope.
+- **No decl reconstruction** — typedefs, externs, includes all stay in place.
+  No SJIS-encoding surprises from header rewriting.
+- **No shared-header authoring** — the `engine_XXXXXXXX_shared.h` /
+  `engine_XXXXXXXX_phantoms.h` pattern is OPTIONAL with this method; the
+  shrinking placeholder carries the shared decls until it's empty, then the
+  last carve absorbs them.
+
+Cost: each family file initially carries the FULL original decl/typedef set
++ FUN_ extern decls (files are 4.5-6.5K lines vs. the few-hundred-line "clean"
+form). That's a Phase-3 cleanup target — conservation-gated trims, the same
+discipline as newclouds-style dup-def cleanup (recipe #56).
+
+When to use:
+- **Multi-family unit with messy call sites** (implicit-decl arity-0 calls,
+  unprototyped intra-TU references) — skeleton-copy is the safe path.
+- **Multi-family unit with clean prototypes throughout** (DLL TUs with
+  ObjectDescriptor handlers, no sloppy calls) — the shared-header procedure
+  still works fine.
+- **Single-TU 1:1 rename** — N/A, the file isn't being split.
+
+Took 8001746C from 96KB / 354 fns / 7 families → 7 clean engine files in one
+session, every carve byte-exact first try. (alpha-35, task #134.)
+
 ### Lessons from the 6-unit graduation wave (8020C9CC/800944A0/80220608/80295318/800066E0/80080E58)
 
 - **Pre-build + DRY-RUN the split script in /tmp** (parse all bodies, classify every
@@ -991,13 +1059,25 @@ match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
 - **DROP dead v1.1 `FUN_xxx` phantoms during the carve** (unreferenced, not in
   symbols.txt ⇒ objdiff never scored them). Conservation-neutral, gives clean real
   files. 800066E0 shed 236.
-- **Two cases where a unit CANNOT carve exact → leave a RESIDUAL shrunk placeholder
-  (don't force the regression):** (a) a DLL fragmented ACROSS placeholders
-  (DIMSnowHorn1 spans 3 units → coordinate later); (b) a tail TU that **cross-inlines
-  leaves from an already-carved sibling** — pulling it into a smaller TU reorders its
-  constant pool / loses the inlined leaf (80080E58 clouds = −48). Engine units stay
-  exact ONLY when subsystems don't cross-inline (800066E0's 9 files did; 80080E58's
-  clouds didn't). Exact IS the bar — graduate the clean part, residual the rest.
+- **Multi-placeholder DLL merge: a DLL fragmented ACROSS N placeholders can
+  be MERGED into one TU per descriptor, byte-exact** — the "coordinate later"
+  case is solvable now. Procedure: descriptor-back the boundary (gFooObjDescriptor's
+  slot map gives address ranges per family); compile a /tmp dry-run of the merged
+  TU(s) with exact MWCC flags; verify per-symbol byte-AND-relocation-identical
+  vs. the current 4 .o files. Reconciling the merged decl namespace is the hard
+  part — see recipe #57 (block-scope extern overrides) for the safe technique
+  when the placeholders disagreed on extern types. Took DIMSnowHorn1 + dim2prisonmammoth
+  (4 placeholders: 80295318/802BACC0/802BB4B0/802BBC10, 55 fns, 12352B) → 2 clean
+  DIM DLL TUs in a single commit, 55/55 byte+reloc-identical. (delta-29 task #133.)
+- **80080E58 clouds = −48 was reloc-stealing, not pool migration** —
+  see recipe #56 (duplicate-def reloc-stealing). The "tail TU that cross-inlines
+  leaves from an already-carved sibling" case the original wave-lesson warned
+  about is FIXABLE when the cross-coupled leaf isn't a true `extern inline`:
+  drop the duplicate def, force the external resolve, the −48 becomes a +N.
+  Engine units stay exact when subsystems either don't cross-inline (800066E0's
+  9 files) or when reloc-stealing dups are systematically dropped (newclouds,
+  recipe #56). Exact IS the bar — and exact is now achievable in cases the
+  earlier wave gave up on.
 - **A stale task OWNER (a dead hunter still listed) reads as an "active recovery"
   conflict to a splitter** — close recovery tasks when a unit parks, or splitters
   will (correctly) refuse to edit. Three splitters flagged this; all were phantoms.
