@@ -36,6 +36,15 @@ typedef struct Dll19EState {
   u8 sequenceIndex;
 } Dll19EState;
 
+typedef struct Dll19ESetup {
+  u8 pad00[0x18];
+  s8 objectType;
+  u8 mode;
+  s16 scaleTimer;
+  s16 sequenceIndex;
+  s16 gameBitId;
+} Dll19ESetup;
+
 /*
  * --INFO--
  *
@@ -167,48 +176,43 @@ void dll_19E_update(void *obj)
  */
 #pragma scheduling off
 #pragma peephole off
-void dll_19E_init(undefined2 *obj, int def)
+void dll_19E_init(u8 *obj, Dll19ESetup *setup)
 {
-  int *state;
-  int *resource;
+  Dll19EState *state;
+  void *resource;
   undefined stackArg[16];
-  float localScale;
-  undefined4 doubleHigh;
-  uint doubleLow;
+  volatile f32 localScale;
 
-  state = *(int **)(obj + 0x5c);
-  *obj = (short)(((int)*(char *)(def + 0x18) & 0x3fU) << 10);
-  if (*(short *)(def + 0x1a) > 0) {
-    doubleLow = (int)*(short *)(def + 0x1a) ^ 0x80000000;
-    doubleHigh = 0x43300000;
-    *(float *)(obj + 4) =
-        (float)((double)CONCAT44(doubleHigh, doubleLow) - lbl_803E51F0) / lbl_803E51E4;
+  state = *(Dll19EState **)(obj + 0xb8);
+  *(s16 *)obj = (s16)(((s32)setup->objectType & 0x3f) << 10);
+  if (setup->scaleTimer > 0) {
+    *(f32 *)(obj + 0x8) = (f32)setup->scaleTimer / lbl_803E51E4;
   }
   else {
-    *(float *)(obj + 4) = lbl_803E51E8;
+    *(f32 *)(obj + 0x8) = lbl_803E51E8;
   }
 
-  *(undefined *)((int)state + 0xb) = *(undefined *)(def + 0x19);
-  *(undefined *)(state + 3) = 0;
-  *(undefined *)((int)state + 0xf) = 0;
-  *state = (int)*(short *)(def + 0x1e);
+  state->mode = setup->mode;
+  state->active = 0;
+  state->sequenceIndex = 0;
+  state->gameBitId = setup->gameBitId;
   localScale = lbl_803E51E0;
 
-  if (*(char *)((int)state + 0xb) == 1) {
-    *(char *)((int)state + 0xf) = (char)*(undefined2 *)(def + 0x1c);
-    *(undefined *)((int)state + 0xd) = 0;
-    *(ushort *)(state + 2) = (ushort)*(byte *)((int)state + 0xf) * 0x28 + 0x398;
-    *(undefined *)((int)state + 0xe) = 0;
+  if (state->mode == 1) {
+    state->sequenceIndex = (u8)setup->sequenceIndex;
+    state->needsOpenSfx = 0;
+    state->settleTimer = state->sequenceIndex * 0x28 + 0x398;
+    state->previousActive = 0;
   }
-  else if (*(char *)((int)state + 0xb) == 0) {
-    *(undefined *)(state + 3) = 1;
-    resource = (int *)Resource_Acquire(0x69, 1);
-    if (*(short *)(def + 0x1c) == 0) {
-      (*(void (**)(undefined2 *, int, undefined *, int, int, int))(*resource + 4))(
+  else if (state->mode == 0) {
+    state->active = 1;
+    resource = Resource_Acquire(0x69, 1);
+    if (setup->sequenceIndex == 0) {
+      (*(void (**)(u8 *, int, undefined *, int, int, int))(*(int *)resource + 4))(
           obj, 0, stackArg, 0x10004, -1, 0);
     }
   }
-  *(undefined2 *)(state + 1) = 0;
+  state->delayTimer = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset

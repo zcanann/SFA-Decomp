@@ -3,8 +3,10 @@
 
 #include "ghidra_import.h"
 
+typedef struct Dll19ESetup Dll19ESetup;
+
 void dll_19E_update(void *obj);
-void dll_19E_init(undefined2 *obj, int def);
+void dll_19E_init(u8 *obj, Dll19ESetup *setup);
 void dll_19E_release(void);
 void dll_19E_initialise(void);
 
