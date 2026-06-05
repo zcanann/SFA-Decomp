@@ -3185,6 +3185,7 @@ typedef struct {
 
 #pragma scheduling off
 #pragma peephole off
+#pragma dont_inline on
 void fn_8006B830(ShadowSortEntry *arr, int count)
 {
     int gap = 1;
@@ -3206,6 +3207,7 @@ void fn_8006B830(ShadowSortEntry *arr, int count)
         gap /= 3;
     }
 }
+#pragma dont_inline reset
 #pragma scheduling reset
 #pragma peephole reset
 
@@ -3898,29 +3900,31 @@ extern f32 lbl_803DED28, lbl_803DED2C, lbl_803DED30, lbl_803DED34;
 extern f32 lbl_803DED70, lbl_803DED74, lbl_803DED78, lbl_803DED7C;
 extern f32 CPUFifo_803DED38, GPFifo_803DED3C, __GXCurrentThread_803DED40;
 extern f32 CPGPLinked_803DED44, BreakPointCB_803DED4C, __GXOverflowCount_803DED50;
-extern f32 FinishQueue_803DED64[];
+extern f32 FinishQueue_803DED64;
 extern f32 Ydchuff_803DED80[];
-extern u8 lbl_803DB668[];
+extern u8 lbl_803DB668[8];
 extern f32 lbl_803DB670;
 extern int lbl_803DCCF0;
 extern f32 lbl_803DCED0, lbl_803DCECC;
 extern int lbl_803DCF84, lbl_803DCF88;
 extern char lbl_8038DF48b[];
 #pragma scheduling off
+#pragma peephole off
 void renderShadows(void) {
     char *B = (char *)lbl_8038DF48;
     int *slot;
     f32 savedFovY, sCamX, sCamY, sCamZ;
     s16 s170, s14, s19;
-    f32 v30[3];
     f32 om100[24];
+    f32 mTrans[12], mScale[12], mOrtho[16];
+    f32 mc54[3], mc48[3];
+    f32 vA[3], v30[3];
+    f32 dot24[3], proj[3];
     int blkArr, blkCount;
-    f32 vA[4], vB[4], proj[4], dot24[4];
-    f32 mc48[3], mc54[3];
-    f32 mOrtho[16], mTrans[12], mScale[12];
     int r22, r23, r24;
     char *casterPtr;
-    f32 dirX, dirY, dirZ, f22, f21, f23;
+    f32 dirX, dirY, dirZ, f22, f21, f23, vAy;
+    f32 *vAp1, *vAp2, *mc54p;
 
     if (lbl_803DCF78 == 0) return;
     Camera_DisableViewYOffset();
@@ -3928,8 +3932,8 @@ void renderShadows(void) {
     Camera_SetCurrentViewIndex(1);
     slot = Camera_GetCurrentViewSlot();
     savedFovY = Camera_GetFovY();
-    Camera_SetFovY(70.0f);
-    Camera_SetAspectRatio(1.0f);
+    Camera_SetFovY(lbl_803DED30);
+    Camera_SetAspectRatio(lbl_803DED2C);
     sCamX = *(f32 *)((char *)slot + 0xc);
     sCamY = *(f32 *)((char *)slot + 0x10);
     sCamZ = *(f32 *)((char *)slot + 0x14);
@@ -3937,14 +3941,17 @@ void renderShadows(void) {
     s14 = *(s16 *)((char *)slot + 0x0);
     s19 = *(s16 *)((char *)slot + 0x4);
     *(s16 *)((char *)slot + 0x2) = 0;
-    v30[0] = 0.0f;
-    v30[1] = 1.0f;
-    v30[2] = 0.0f;
-    fn_80061094(v30, om100, 2.0f);
+    v30[0] = lbl_803DED28;
+    v30[1] = lbl_803DED2C;
+    v30[2] = lbl_803DED28;
+    fn_80061094(v30, om100, lbl_803DED34);
     mapGetBlocks(&blkArr, &blkCount);
     r23 = 0;
     r24 = 0;
     casterPtr = B + 0x360;
+    vAp1 = &vA[1];
+    vAp2 = &vA[2];
+    mc54p = &mc54[0];
     for (r22 = 0; (s8)r22 < (int)lbl_803DCF78 && (s8)r22 < 0x64; r22++, casterPtr += 0xc) {
         int *obj = *(int **)casterPtr;
         int *of64 = (int *)obj[0x64 / 4];
@@ -3956,7 +3963,7 @@ void renderShadows(void) {
         if ((u8)lod <= 4) continue;
         if ((*(int *)((char *)of64 + 0x30) & 0x20) != 0) {
             memcpy(mc48, (char *)obj + 0xc, 0xc);
-            memcpy(mc54, (char *)obj + 0x18, 0xc);
+            memcpy(mc54p, (char *)obj + 0x18, 0xc);
             memcpy((char *)obj + 0xc, (char *)of64 + 0x20, 0xc);
             memcpy((char *)obj + 0x18, (char *)of64 + 0x20, 0xc);
         }
@@ -3970,16 +3977,21 @@ void renderShadows(void) {
             if (*(u8 *)(casterPtr + 8) == 2) {
                 screenW = *(u16 *)((char *)((int *)obj[0x64 / 4])[1] + 0xa);
             }
-            fn_8008923C(obj, vA, &mc54[0], &mc54[0]);
+            fn_8008923C(obj, vA, vAp1, vAp2);
             dot24[0] = -*(f32 *)((char *)of64 + 0x14);
             dot24[1] = -*(f32 *)((char *)of64 + 0x18);
             dot24[2] = -*(f32 *)((char *)of64 + 0x1c);
-            if (PSVECDotProduct(dot24, vA) < 1.0f && PSVECDotProduct(dot24, vA) > CPGPLinked_803DED44) {
-                proj[0] = GXOverflowSuspendInProgress_803DED48 * dot24[0] + BreakPointCB_803DED4C * vA[0];
-                proj[1] = GXOverflowSuspendInProgress_803DED48 * dot24[1] + BreakPointCB_803DED4C * vA[1];
-                proj[2] = GXOverflowSuspendInProgress_803DED48 * dot24[2] + BreakPointCB_803DED4C * vA[2];
-                if (PSVECMag(proj) > 0.0f) {
-                    PSVECScale(proj, vA, 1.0f / PSVECMag(proj));
+            {
+                f32 dot = PSVECDotProduct(dot24, vA);
+                if (dot < lbl_803DED2C && dot > CPGPLinked_803DED44) {
+                    f32 mag;
+                    proj[0] = GXOverflowSuspendInProgress_803DED48 * dot24[0] + BreakPointCB_803DED4C * vA[0];
+                    proj[1] = GXOverflowSuspendInProgress_803DED48 * dot24[1] + BreakPointCB_803DED4C * vA[1];
+                    proj[2] = GXOverflowSuspendInProgress_803DED48 * dot24[2] + BreakPointCB_803DED4C * vA[2];
+                    mag = PSVECMag(proj);
+                    if (mag > lbl_803DED28) {
+                        PSVECScale(proj, vA, lbl_803DED2C / mag);
+                    }
                 }
             }
             if (vA[1] > __GXOverflowCount_803DED50) {
@@ -3988,17 +4000,18 @@ void renderShadows(void) {
             }
             f22 = vA[0];
             dirX = -f22;
+            vAy = vA[1];
+            dirY = -vAy;
             f21 = vA[2];
             dirZ = -f21;
             lbl_803DCF84 = (u16)getAngle(dirX, f21);
-            lbl_803DCF88 = getAngle(sqrtf(f22 * f22 + f21 * f21), vA[1]) - 0x3fc8;
+            lbl_803DCF88 = getAngle(sqrtf(f22 * f22 + f21 * f21), vAy) - 0x3fc8;
             *(s16 *)((char *)slot + 0x2) = (s16)lbl_803DCF88;
             *(s16 *)((char *)slot + 0x0) = (s16)lbl_803DCF84;
-            dirY = -vA[1];
             {
                 f32 mag = sqrtf(dirX * dirX + dirY * dirY + dirZ * dirZ);
-                if (mag > 0.0f) {
-                    f32 inv = FinishQueue_803DED64[1] / mag;
+                if (mag > lbl_803DED28) {
+                    f32 inv = (&FinishQueue_803DED64)[1] / mag;
                     dirX *= inv;
                     dirY *= inv;
                     dirZ *= inv;
@@ -4015,19 +4028,19 @@ void renderShadows(void) {
                 *(f32 *)((char *)slot + 0x10) = dirY + m[7];
                 *(f32 *)((char *)slot + 0x14) = dirZ + m[11];
             }
-            if (*(int *)((char *)obj + 0x30) == 0) {
+            if (*(u32 *)((char *)obj + 0x30) == 0) {
                 *(f32 *)((char *)slot + 0xc) += lbl_803DCED0;
                 *(f32 *)((char *)slot + 0x14) += lbl_803DCECC;
             }
             f21 = *(f32 *)of64;
             f22 = -f21;
-            if (*(int *)((char *)obj + 0x30) != 0) {
+            if (*(u32 *)((char *)obj + 0x30) != 0) {
                 *(f32 *)((char *)slot + 0xc) += playerMapOffsetX;
                 *(f32 *)((char *)slot + 0x14) += playerMapOffsetZ;
             }
             GXSetScissor(2, 2, screenW - 4, screenW - 4);
-            GXSetViewport(0.0f, 0.0f, (f32)(u32)screenW, (f32)(u32)screenW, 0.0f, 1.0f);
-            C_MTXOrtho(mOrtho, f22, f21, f22, f21, 1.0f, FinishQueue_803DED64[2]);
+            GXSetViewport(lbl_803DED28, lbl_803DED28, (f32)(u32)screenW, (f32)(u32)screenW, lbl_803DED28, lbl_803DED2C);
+            C_MTXOrtho(mOrtho, f22, f21, f22, f21, lbl_803DED2C, (&FinishQueue_803DED64)[2]);
             GXSetProjection(mOrtho, 1);
             Camera_UpdateViewMatrices();
             C_MTXLightOrtho((f32 *)castSlot, f21, f22, f22, f21, f23, f23, f23, f23);
@@ -4043,10 +4056,10 @@ void renderShadows(void) {
                     objRenderShadowIfVisible(obj, 0, 0, 0, 0, 0);
                     if (*(u8 *)(casterPtr + 8) == 2) {
                         gxSetZMode_(1, 3, 1);
-                        PSMTXScale((f32 *)(castSlot + 0x30), 0.0f, 0.0f, 0.0f);
-                        *(f32 *)(castSlot + 0x38) = -0.0009765625f;
-                        *(f32 *)(castSlot + 0x3c) = -0.004875183f;
-                        *(f32 *)(castSlot + 0x5c) = 1.0f;
+                        PSMTXScale((f32 *)(castSlot + 0x30), lbl_803DED28, lbl_803DED28, lbl_803DED28);
+                        *(f32 *)(castSlot + 0x38) = lbl_803DED70;
+                        *(f32 *)(castSlot + 0x3c) = lbl_803DED74;
+                        *(f32 *)(castSlot + 0x5c) = lbl_803DED2C;
                         PSMTXConcat((f32 *)(castSlot + 0x30), vm, (f32 *)(castSlot + 0x30));
                         GXSetTexCopySrc(0, 0, screenW, screenW);
                         GXSetTexCopyDst(screenW, screenW, 0x11, 0);
@@ -4058,7 +4071,7 @@ void renderShadows(void) {
                         if ((u8)r23 == 0) {
                             gxSetZMode_(1, 3, 1);
                             GXSetTexCopySrc(0, 0, screenW, screenW);
-                            GXSetTexCopyDst(w, 0x20, 1, 0);
+                            GXSetTexCopyDst(w, w, 0x20, 1);
                             GXCopyTex((void *)(*(int *)texSlot + 0x60), 1);
                             *(int *)(castSlot + 0x60) = *(int *)texSlot;
                         }
@@ -4071,7 +4084,7 @@ void renderShadows(void) {
             *(int *)(castSlot + 0x60) = *(int *)((char *)obj[0x64 / 4] + 4);
             fx = *(f32 *)((char *)obj + 0xc);
             fz = *(f32 *)((char *)obj + 0x14);
-            if (*(int *)((char *)obj + 0x30) == 0) {
+            if (*(u32 *)((char *)obj + 0x30) == 0) {
                 fx -= playerMapOffsetX;
                 fz -= playerMapOffsetZ;
             }
@@ -4100,7 +4113,7 @@ void renderShadows(void) {
         r24++;
         if ((*(int *)((char *)of64 + 0x30) & 0x20) != 0) {
             memcpy((char *)obj + 0xc, mc48, 0xc);
-            memcpy((char *)obj + 0x18, mc54, 0xc);
+            memcpy((char *)obj + 0x18, mc54p, 0xc);
         }
     }
     if ((u8)r23 > 1) {
@@ -4122,13 +4135,13 @@ void renderShadows(void) {
     if (getDrawDistanceFlag_8005cd48() != 0) {
         Camera_SetCurrentViewIndex(0);
         Camera_SetFovY(savedFovY);
-        if (isWidescreen() != 0) Camera_SetAspectRatio(2.25f);
-        else Camera_SetAspectRatio(1.66f);
+        if (isWidescreen() != 0) Camera_SetAspectRatio(lbl_803DED78);
+        else Camera_SetAspectRatio(lbl_803DED7C);
         Camera_UpdateProjection(0, 0);
     } else if (isWidescreen() != 0) {
         Camera_SetCurrentViewIndex(0);
         Camera_SetFovY(savedFovY);
-        Camera_SetAspectRatio(1.7777778f);
+        Camera_SetAspectRatio(Ydchuff_803DED80[0]);
         Camera_UpdateProjection(0, 0);
     } else {
         Camera_SetCurrentViewIndex(0);
@@ -4141,4 +4154,5 @@ void renderShadows(void) {
     Camera_ApplyFullViewport();
     Camera_EnableViewYOffset();
 }
+#pragma peephole reset
 #pragma scheduling reset
