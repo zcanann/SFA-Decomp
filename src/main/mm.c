@@ -468,9 +468,10 @@ extern void *mmAlloc(int size, int type, int flag);
 #pragma dont_inline reset
 
 int mmGetRegionForPtr(u8 *ptr) {
+    u8 *start;
     int i;
     for (i = 0; i < lbl_803DCB42; i++) {
-        u8 *start = gMmRegionTable[i].start;
+        start = gMmRegionTable[i].start;
         if (ptr > start && ptr < start + gMmRegionTable[i].size) {
             return i;
         }
