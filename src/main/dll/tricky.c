@@ -346,8 +346,8 @@ extern char s_x___2f_8031ccf4[];
 extern u8 gameUiResourcesLoaded;
 extern char lbl_803A87F0[];
 extern char *lbl_803DD85C;
-extern char *lbl_803DD860[2];
-extern char *lbl_803DD868[2];
+extern char *lbl_803DD860[];
+extern char *lbl_803DD868[];
 extern int lbl_8031BF90[];
 extern f32 lbl_803E1E3C, lbl_803E1E40, lbl_803E1E44, lbl_803E1E48, lbl_803E1E4C;
 extern f32 lbl_803E1E50, lbl_803E1E54, lbl_803E1E58, lbl_803E1E5C;
@@ -2618,13 +2618,13 @@ extern f32 lbl_803E1E90, lbl_803E1E94, lbl_803E1E98;
 extern f32 lbl_803DBB04, lbl_803DBB08, lbl_803DBB0C;
 extern f32 lbl_803DBAF4, lbl_803DBAF8, lbl_803DBAFC, lbl_803DBB00;
 extern char lbl_803A87F0[];
-extern char *lbl_803DD860[2];
+extern char *lbl_803DD860[];
 #pragma scheduling off
 #pragma peephole off
 void fn_8011EF50(u16 a, u16 b, u16 c, f32 f1, f32 f2, f32 f3, f32 f4) {
     char *base = lbl_803A87F0;
-    f32 mB[12];
     f32 mA[12];
+    f32 mB[12];
     lbl_803DD818 = f1;
     lbl_803DD814 = f2;
     lbl_803DD810 = f3;
