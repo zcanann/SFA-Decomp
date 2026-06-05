@@ -3428,9 +3428,10 @@ void CameraModeCloudRunner_init(int *p1, int p2, f32 *p3)
         *(f32*)((char*)p1 + 0x20) - ((f32*)lbl_803DD5B8)[2]);
     {
         int *a4 = ((int**)p1)[0xA4/4];
+        f32 *q = (f32 *)lbl_803DD5B8;
         getAngle(
-            *(f32*)((char*)a4 + 0x18) - ((f32*)lbl_803DD5B8)[0],
-            *(f32*)((char*)a4 + 0x20) - ((f32*)lbl_803DD5B8)[2]);
+            *(f32*)((char*)a4 + 0x18) - q[0],
+            *(f32*)((char*)a4 + 0x20) - q[2]);
     }
 }
 
