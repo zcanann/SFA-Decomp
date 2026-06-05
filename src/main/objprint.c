@@ -3650,7 +3650,7 @@ void objPosFn_80039510(int obj, int key, int out)
     *(f32*)((char*)out + 8) = *(f32*)((char*)out + 8) + playerMapOffsetZ;
 }
 
-extern void cacheFn_800229c4(int x);
+extern void cacheQueueWait(int x);
 extern void PSMTXConcat(void *a, void *b, void *c);
 extern f32 lbl_803DEA04;
 
@@ -3669,7 +3669,7 @@ void modelMtxFn_8003be38(int p1, int p2, int p3, int p4)
     dstA = cache + 0x2700;
     mid = cache;
     dstB = cache + 0x12c0;
-    cacheFn_800229c4(0);
+    cacheQueueWait(0);
     fill = lbl_803DEA04;
     for (i = 0; i < count; i++) {
         PSMTXConcat((void*)p3, (void*)dstA, (void*)mid);

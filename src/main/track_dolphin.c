@@ -7229,7 +7229,7 @@ int fn_80067B84(int cur, u8 *desc, int model, int flags, f32 scale,
  * the query box into the buffer at cur; returns advanced cursor. */
 extern u8 *mapGetBlockAtPos(int x, int z, int layer);
 extern int fn_8001F978(void *p, int size, int *offIn, int *offOut, int base);
-extern void cacheFn_800229c4(int n);
+extern void cacheQueueWait(int n);
 extern f32 fastFloorf(f32 x);
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern f32 PSVECMag(f32 *v);
@@ -7368,9 +7368,9 @@ u8 doEdges;
             offA = dmaflip;
             c13 = fn_8001F978(p, *(u16 *)(next + 0x98) << 3, &offA, &offB, nextBase);
             c14 = fn_8001F978(*(void **)(next + 0x58), *(u16 *)(next + 0x90) * 6, &offB, &offC, nextBase);
-            cacheFn_800229c4((u8)(c13 + c14));
+            cacheQueueWait((u8)(c13 + c14));
         } else {
-            cacheFn_800229c4(0);
+            cacheQueueWait(0);
         }
 
         blk = *cellp;

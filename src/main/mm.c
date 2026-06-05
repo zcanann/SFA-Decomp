@@ -324,7 +324,7 @@ int testAndSet_onlyUseHeaps1and2(int v) {
 }
 #pragma dont_inline reset
 
-int fn_80022E0C(int x) {
+int alignUp2(int x) {
     int r = x & 1;
     if (r > 0) {
         x += 2 - r;
@@ -364,7 +364,7 @@ extern void mmFreeDeferred(void *p);
 #pragma peephole off
 
 #pragma dont_inline on
-void cacheFn_800229c4(int sync) {
+void cacheQueueWait(int sync) {
     if (lbl_803DD610 == 4 || lbl_803DD610 == 0) {
         LCQueueWait();
     }

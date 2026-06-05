@@ -648,7 +648,7 @@ extern f32 fn_8029610C(void *player);
 extern void *getCache(void);
 extern void copyToCache(void *dst, void *src, int blockCount);
 extern void memcpyToCache(void *dst, void *src, int blockCount);
-extern void cacheFn_800229c4(int wait);
+extern void cacheQueueWait(int wait);
 extern void *Camera_GetCurrentViewSlot(void);
 extern u32 randomGetRange(int min, int max);
 extern void vecRotateZXY(void *params, void *vec);
@@ -874,7 +874,7 @@ foundFirst:
         prefetched = 1;
       }
       parity ^= 1;
-      cacheFn_800229c4(prefetched);
+      cacheQueueWait(prefetched);
       slot--;
       pool4 = pool << 2;
       maskPtr = (u32 *)(runtimeBase + pool4);
@@ -1622,7 +1622,7 @@ foundFirst:
       prefetched = 1;
       pool = next;
     }
-    cacheFn_800229c4(0);
+    cacheQueueWait(0);
   }
 }
 #pragma peephole reset
@@ -1903,7 +1903,7 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
 extern void *getCache(void);
 extern int getHudHiddenFrameCount(void);
 extern void copyToCache(void *dst, void *src, int blockCount);
-extern void cacheFn_800229c4(int wait);
+extern void cacheQueueWait(int wait);
 extern int Camera_GetProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
 extern void *Camera_GetCurrentViewSlot(void);
@@ -2000,7 +2000,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
   blendMode = -1;
   zMode = -1;
   zCompLoc = -1;
-  cacheFn_800229c4(0);
+  cacheQueueWait(0);
 
   slot = (ExpgfxSlot *)((char *)dstBuf - EXPGFX_SLOT_SIZE);
   slotIndex = 0;
