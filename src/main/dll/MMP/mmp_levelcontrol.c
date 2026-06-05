@@ -98,43 +98,53 @@ f32 wallanimator_setScale(int obj,int target)
   int count;
   int *state;
   f32 scale;
+  f32 kD0;
+  f32 kD4;
+  f32 kD8;
+  f32 kDC;
 
   desc = *(int *)(obj + 0x4c);
   count = 6;
+  kD0 = lbl_803E3FD0;
+  kD4 = lbl_803E3FD4;
+  kD8 = lbl_803E3FD8;
+  kDC = lbl_803E3FDC;
   do {
-    out[0] = lbl_803E3FD0 * (f32)((double)(int)randomGetRange(-0x64,0x64) - lbl_803E3FF0);
-    out[1] = lbl_803E3FD4;
-    out[2] = lbl_803E3FD4;
+    out[0] = kD0 * (f32)(int)randomGetRange(-0x64,0x64);
+    out[1] = kD4;
+    out[2] = kD4;
     effect.rot[2] = (s16)randomGetRange(-0x7fff,0x8000);
     effect.rot[1] = 0;
     effect.rot[0] = 0;
     mathFn_80021ac8(effect.rot,out);
-    out[2] -= lbl_803E3FD8;
+    out[2] -= kD8;
     mathFn_80021ac8((void *)obj,out);
     effect.rot[2] = *(s16 *)(desc + 0x1c);
     effect.rot[0] = *(s16 *)obj;
     effect.pos[0] = *(f32 *)(obj + 0x18) + out[0];
-    effect.pos[1] = lbl_803E3FDC + (*(f32 *)(obj + 0x1c) + out[1]);
+    effect.pos[1] = kDC + (*(f32 *)(obj + 0x1c) + out[1]);
     effect.pos[2] = *(f32 *)(obj + 0x20) + out[2];
-    (**(code **)(*gPartfxInterface + 8))(obj,0xca,effect.rot,0x200001,-1,0);
-    (**(code **)(*gPartfxInterface + 8))(obj,0xcb,effect.rot,0x200001,-1,0);
+    ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(
+        obj, 0xca, effect.rot, 0x200001, -1, 0);
+    ((void (*)(int, int, void *, int, int, int))(*(int *)(*(int *)gPartfxInterface + 8)))(
+        obj, 0xcb, effect.rot, 0x200001, -1, 0);
     count--;
   } while (count != 0);
 
   state = *(int **)(obj + 0xb8);
   deltaY = *(f32 *)(target + 0x10) - *(f32 *)(obj + 0x10);
-  if ((deltaY < lbl_803E3FE0) || (lbl_803E3FE4 < deltaY)) {
+  if ((lbl_803E3FE0 > deltaY) || (lbl_803E3FE4 < deltaY)) {
     scale = lbl_803E3FD4;
   }
   else {
     deltaX = *(f32 *)(target + 0xc) - *(f32 *)(obj + 0xc);
     deltaZ = *(f32 *)(target + 0x14) - *(f32 *)(obj + 0x14);
-    if (deltaX * deltaX + deltaZ * deltaZ <= lbl_803E3FE8) {
-      *state += 0x3c;
-      scale = (f32)((double)*state - lbl_803E3FF0) / lbl_803E3FEC;
+    if (deltaX * deltaX + deltaZ * deltaZ > lbl_803E3FE8) {
+      scale = lbl_803E3FD4;
     }
     else {
-      scale = lbl_803E3FD4;
+      *state += 0x3c;
+      scale = (f32)*state / lbl_803E3FEC;
     }
   }
   return scale;
