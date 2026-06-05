@@ -2402,7 +2402,7 @@ main/audio/vsample_alloc.c:
 	extabindex  start:0x80006230 end:0x8000623C
 	.text       start:0x8027ACB8 end:0x8027AFC0
 
-main/unknown/autos/placeholder_8027B038.c:
+main/audio/vsample_events.c:
 	extab       start:0x800059C8 end:0x800059D8
 	extabindex  start:0x8000623C end:0x80006254
 	.text       start:0x8027AFC0 end:0x8027B25C

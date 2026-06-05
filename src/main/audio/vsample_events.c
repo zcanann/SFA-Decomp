@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/synth_virtual_sample.h"
-#include "main/unknown/autos/placeholder_8027B038.h"
+#include "main/audio/vsample_events.h"
 
 extern u8 synthVirtualSampleState[];
 
