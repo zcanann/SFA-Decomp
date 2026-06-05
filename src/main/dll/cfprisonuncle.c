@@ -2384,6 +2384,7 @@ void trickywarp_update(int param_1) {
 void curvefish_update(int obj) {
   CurveFishState *state;
   CurveFishSetup *setup;
+  CurveFishSetup *setup2;
   void *player;
   u32 curveQuery;
   int firstNode;
@@ -2404,47 +2405,52 @@ void curvefish_update(int obj) {
   state = *(CurveFishState **)(obj + 0xb8);
   setup = *(CurveFishSetup **)(obj + 0x4c);
   player = Obj_GetPlayerObject();
+  setup2 = *(CurveFishSetup **)(obj + 0x4c);
   curveQuery = lbl_803E38E8;
 
   state->phaseTimer += timeDelta;
 
-  if (state->mode == 0) {
+  switch (state->mode) {
+  case 0: {
     f32 waitTime = lbl_803E38EC * (f32)(u32)setup->waitFrames;
-    if (state->phaseTimer < waitTime) {
+    if (state->phaseTimer >= waitTime) {
+      state->phaseTimer -= waitTime;
+      state->mode = 1;
+    } else {
       return;
     }
-    state->phaseTimer -= waitTime;
-    state->mode = 1;
   }
+    /* fall through */
+  case 1:
+    *(f32 *)(obj + 0xc) = setup2->spawnX;
+    *(f32 *)(obj + 0x10) = setup2->spawnY;
+    *(f32 *)(obj + 0x14) = setup2->spawnZ;
 
-  if (state->mode == 1) {
-    *(f32 *)(obj + 0xc) = setup->spawnX;
-    *(f32 *)(obj + 0x10) = setup->spawnY;
-    *(f32 *)(obj + 0x14) = setup->spawnZ;
-
-    (*(void (**)(void *, int, int, f32, f32, f32))(*(int *)gRomCurveInterface + 0x14))(
-        &curveQuery, 1, -1, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
-    firstNode = (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))();
-    (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(firstNode, 0);
-    secondNode = (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))();
-    (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(secondNode, 0);
-    thirdNode = (*(int (**)(void))(*(int *)gRomCurveInterface + 0x1c))();
+    firstNode = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(
+        (*(int (**)(void *, int, int, f32, f32, f32))(*(int *)gRomCurveInterface + 0x14))(
+            &curveQuery, 1, -1, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14)));
+    secondNode = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(
+        (*(int (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(firstNode, 0));
+    thirdNode = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(
+        (*(int (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(secondNode, 0));
 
     if (fn_800DA980((int)state, firstNode, secondNode, thirdNode) != 0) {
       return;
     }
     state->mode = 2;
     state->speed = lbl_803E38F0;
-  }
-
-  if (state->mode == 2) {
+    /* fall through */
+  case 2:
     if (state->phaseTimer <= lbl_803E38EC) {
       *(u8 *)(obj + 0x36) = (u8)(int)(lbl_803E38F4 * (state->phaseTimer / lbl_803E38EC));
       return;
     }
     *(u8 *)(obj + 0x36) = 0xff;
     state->mode = 3;
-  } else if (state->mode >= 4) {
+    break;
+  case 3:
+    break;
+  default:
     return;
   }
 
@@ -2454,14 +2460,14 @@ void curvefish_update(int obj) {
              getXZDistance((f32 *)((u8 *)player + 0xc), (f32 *)(obj + 0xc)) <
                  (f32)(u32)setup->playerRadius * (f32)(u32)setup->playerRadius) {
     state->speed +=
-        ((lbl_803E38F8 * (f32)(u32)setup->speedChange) * timeDelta) / lbl_803E38FC;
+        ((lbl_803E38F8 * (f32)(u32)setup2->speedChange) * timeDelta) / lbl_803E38FC;
     maxHitSpeed = lbl_803E38F8 * state->maxSpeed;
     if (state->speed > maxHitSpeed) {
       state->speed = maxHitSpeed;
     }
   } else {
-    state->speed += ((f32)(int)randomGetRange(-(int)setup->speedChange,
-                                              (int)setup->speedChange << 1) *
+    state->speed += ((f32)(int)randomGetRange(-(int)setup2->speedChange,
+                                              (int)setup2->speedChange << 1) *
                      timeDelta) /
                     lbl_803E38FC;
     if (state->speed < lbl_803E38F0) {
