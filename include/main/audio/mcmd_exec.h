@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802765AC_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802765AC_H_
+#ifndef MAIN_AUDIO_MCMD_EXEC_H_
+#define MAIN_AUDIO_MCMD_EXEC_H_
 
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
@@ -28,4 +28,4 @@ u32 audioFn_80278b94(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, 
                      u8 new_vid, u8 vGroup, u8 studio, u32 itd);
 void fn_80278EA4(void);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802765AC_H_ */
+#endif /* MAIN_AUDIO_MCMD_EXEC_H_ */

@@ -1400,7 +1400,7 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_802757BC.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027588C.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027591C.c", mw_version="GC/1.2.5n"),
-            Object(NonMatching, "main/unknown/autos/placeholder_802765AC.c", mw_version="GC/1.2.5n"),
+            Object(NonMatching, "main/audio/mcmd_exec.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_80279018.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_802792F8.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027979C.c"),

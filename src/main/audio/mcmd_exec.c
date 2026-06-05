@@ -2,7 +2,7 @@
 #include "main/audio/hw_voice_control.h"
 #include "main/audio/inp_midi.h"
 #include "main/audio/snd_core.h"
-#include "main/unknown/autos/placeholder_802765AC.h"
+#include "main/audio/mcmd_exec.h"
 #include "main/unknown/autos/placeholder_80279608.h"
 #include "main/unknown/autos/placeholder_8027591C.h"
 #include "main/unknown/autos/placeholder_8027641C.h"
@@ -12,71 +12,7 @@
 #include "main/audio/hw_voice_params.h"
 #include "main/audio/inp_ctrl.h"
 
-extern undefined4 FUN_800033a8();
-extern undefined4 audioKeymapFn_8026fc8c();
-extern undefined4 FUN_80271a2c();
-extern undefined4 FUN_80271ad4();
-extern int FUN_80275364();
 extern int mcmdLoop();
-extern uint FUN_802757d4();
-extern undefined4 FUN_802757dc();
-extern undefined4 FUN_802757e0();
-extern undefined4 FUN_802757e4();
-extern undefined4 FUN_802757e8();
-extern undefined4 FUN_802763c0();
-extern uint FUN_80279008();
-extern undefined4 FUN_8027975c();
-extern uint FUN_8027976c();
-extern undefined4 voiceInitPriorityTables();
-extern undefined4 FUN_8027a664();
-extern int FUN_8027a8fc();
-extern undefined4 FUN_8027a904();
-extern undefined4 FUN_8027ac38();
-extern undefined4 FUN_8028134c();
-extern undefined4 FUN_80281a30();
-extern uint FUN_8028343c();
-extern undefined4 FUN_80283444();
-extern undefined4 hwStart();
-extern bool FUN_80283844();
-extern undefined4 FUN_80283850();
-extern undefined4 hwAddInput();
-extern undefined4 hwRemoveInput();
-extern undefined4 FUN_80283e04();
-extern undefined4 FUN_80283e08();
-extern int aramStoreData();
-extern int FUN_80286718();
-extern uint countLeadingZeros();
-
-extern undefined4 DAT_8032fa4c;
-extern undefined4 DAT_8032fc50;
-extern undefined4 DAT_8032fc54;
-extern undefined4 DAT_8032fc80;
-extern undefined4 DAT_8032fc84;
-extern undefined4 DAT_803303fc;
-extern undefined4 DAT_803307fc;
-extern undefined4 DAT_803bdfc0;
-extern undefined4 DAT_803be654;
-extern undefined4 DAT_803be694;
-extern undefined DAT_803be6d4;
-extern undefined DAT_803beb54;
-extern undefined4 DAT_803deee8;
-extern undefined4* DAT_803deeec;
-extern undefined4 DAT_803def50;
-extern int* DAT_803def54;
-extern int* DAT_803def58;
-extern undefined4 DAT_803def60;
-extern undefined4 DAT_803def64;
-extern undefined4 DAT_803def68;
-extern f64 DOUBLE_803e8498;
-extern f64 DOUBLE_803e84a0;
-extern f32 FLOAT_803e8488;
-extern f32 FLOAT_803e848c;
-extern f32 FLOAT_803e8490;
-extern f32 FLOAT_803e84a8;
-extern f32 FLOAT_803e84ac;
-extern void* PTR_DAT_8032fc70;
-extern void* PTR_DAT_8032fca0;
-extern undefined4 uRam803def6c;
 
 extern u8 *synthVoice;
 extern u8 lbl_803BD150[];
