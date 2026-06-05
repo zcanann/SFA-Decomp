@@ -772,21 +772,41 @@ void SpiritPrize_initialise(void) {}
 extern void *gObjectTriggerInterface;
 extern void ModelLightStruct_free(void *light);
 
+typedef struct SpiritPrizeState {
+    u8 pad00[0x24];
+    f32 spawnScale;
+    s32 triggerHandle;
+    u8 pad2C[0x57 - 0x2C];
+    u8 prizeId;
+    u8 pad58[0x6A - 0x58];
+    s16 mapParam1A;
+    u8 pad6C[0x6E - 0x6C];
+    s16 targetObjectId;
+    u8 pad70[0x81 - 0x70];
+    u8 queuedActions[0x8B - 0x81];
+    u8 queuedActionCount;
+    u8 pad8C[0x140 - 0x8C];
+    void *light;
+    u8 useDetachedLight;
+    u8 pad145[0x148 - 0x145];
+    f32 sfxTimer;
+} SpiritPrizeState;
+
 #pragma scheduling off
 #pragma peephole off
 void SpiritPrize_free(int obj)
 {
-    u8 *state;
+    SpiritPrizeState *state;
     void *light;
 
-    state = *(u8 **)(obj + 0xb8);
-    light = *(void **)(state + 0x140);
+    state = *(SpiritPrizeState **)(obj + 0xb8);
+    light = state->light;
     if (light != NULL) {
         ModelLightStruct_free(light);
-        *(void **)(state + 0x140) = NULL;
-        state[0x144] = 0;
+        state->light = NULL;
+        state->useDetachedLight = 0;
     }
-    ((void (*)(u8 *))((void **)*(int *)gObjectTriggerInterface)[9])(state);
+    ((void (*)(SpiritPrizeState *))((void **)*(int *)gObjectTriggerInterface)[9])(state);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -802,42 +822,42 @@ extern f32 lbl_803E4EB4;
 #pragma scheduling off
 #pragma peephole off
 void SpiritPrize_init(int *obj, u8 *init) {
-    u8 *sub;
+    SpiritPrizeState *state;
 
-    sub = *(u8**)((char*)obj + 0xb8);
+    state = *(SpiritPrizeState **)((char*)obj + 0xb8);
     if (*(u32*)(init + 0x14) == 0x4ca62) return;
-    *(s16*)(sub + 0x6a) = *(s16*)(init + 0x1a);
-    *(s16*)(sub + 0x6e) = -1;
-    *(f32*)(sub + 0x24) = lbl_803E4E98 / (lbl_803E4E98 + (f32)(u32)init[0x24]);
-    *(int*)(sub + 0x28) = -1;
+    state->mapParam1A = *(s16*)(init + 0x1a);
+    state->targetObjectId = -1;
+    state->spawnScale = lbl_803E4E98 / (lbl_803E4E98 + (f32)(u32)init[0x24]);
+    state->triggerHandle = -1;
     if (*(int*)((char*)obj + 0xf4) == 0) {
         if (*(s16*)(init + 0x18) != 1) {
-            ((void(*)(u8*))((void**)*(int*)gObjectTriggerInterface)[7])(sub);
+            ((void(*)(SpiritPrizeState *))((void**)*(int*)gObjectTriggerInterface)[7])(state);
             *(int*)((char*)obj + 0xf4) = *(s16*)(init + 0x18) + 1;
         }
     } else {
         if (*(s16*)(init + 0x18) != *(int*)((char*)obj + 0xf4) - 1) {
-            ((void(*)(u8*))((void**)*(int*)gObjectTriggerInterface)[9])(sub);
+            ((void(*)(SpiritPrizeState *))((void**)*(int*)gObjectTriggerInterface)[9])(state);
             if (*(s16*)(init + 0x18) != -1) {
-                ((void(*)(u8*, u8*))((void**)*(int*)gObjectTriggerInterface)[7])(sub, init);
+                ((void(*)(SpiritPrizeState *, u8 *))((void**)*(int*)gObjectTriggerInterface)[7])(state, init);
             }
             *(int*)((char*)obj + 0xf4) = *(s16*)(init + 0x18) + 1;
         }
     }
     if (*(s16*)((char*)obj + 0x46) != 0x1d9) {
-        sub[0x144] = 1;
+        state->useDetachedLight = 1;
     }
-    if (*(int*)(sub + 0x140) == 0) {
-        *(int*)(sub + 0x140) = (int)objCreateLight(sub[0x144] != 0 ? NULL : obj, 1);
-        if (*(int*)(sub + 0x140) != 0) {
-            modelLightStruct_setLightKind(*(void**)(sub + 0x140), 2);
-            modelLightStruct_setDiffuseColor(*(void**)(sub + 0x140), 0x96, 0x32, 0xff, 0xff);
-            modelLightStruct_setDistanceAttenuation(*(void**)(sub + 0x140), lbl_803E4EB0, lbl_803E4EB4);
+    if (state->light == NULL) {
+        state->light = objCreateLight(state->useDetachedLight != 0 ? NULL : obj, 1);
+        if (state->light != NULL) {
+            modelLightStruct_setLightKind(state->light, 2);
+            modelLightStruct_setDiffuseColor(state->light, 0x96, 0x32, 0xff, 0xff);
+            modelLightStruct_setDistanceAttenuation(state->light, lbl_803E4EB0, lbl_803E4EB4);
         }
     }
     *(u8*)((char*)obj + 0x36) = 0;
     *(u8*)((char*)obj + 0x37) = 0;
-    *(f32*)(sub + 0x148) = (f32)(s32)randomGetRange(0xb4, 0xf0);
+    state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -859,14 +879,14 @@ void dfsh_objcreator_render(int p1, int p2, int p3, int p4, int p5, s8 visible) 
 #pragma scheduling off
 #pragma peephole off
 void SpiritPrize_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
-    u8 *sub;
+    SpiritPrizeState *state;
     s32 v;
-    sub = *(u8**)((char*)obj + 0xb8);
+    state = *(SpiritPrizeState **)((char*)obj + 0xb8);
     v = visible;
     if (v != 0) {
         objRenderFn_8003b8f4(lbl_803E4E98);
-        if (sub[0x144] != 0) {
-            objParticleFn_80099d84(obj, 7, *(int*)(sub + 0x140), lbl_803E4E98, lbl_803E4E98);
+        if (state->useDetachedLight != 0) {
+            objParticleFn_80099d84(obj, 7, (int)state->light, lbl_803E4E98, lbl_803E4E98);
         } else {
             objParticleFn_80099d84(obj, 7, 0, lbl_803E4E98, lbl_803E4E98);
         }
@@ -880,7 +900,7 @@ void SpiritPrize_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
 void SpiritPrize_update(int obj)
 {
     u8 *params;
-    u8 *state;
+    SpiritPrizeState *state;
     int childObj;
     int objectIndex;
     int objectCount;
@@ -888,18 +908,18 @@ void SpiritPrize_update(int obj)
     int i;
 
     params = *(u8 **)(obj + 0x4c);
-    state = *(u8 **)(obj + 0xb8);
+    state = *(SpiritPrizeState **)(obj + 0xb8);
     if (params == NULL || *(s16 *)(params + 0x18) == -1 || *(int *)(params + 0x14) == 0x4ca62) {
         return;
     }
 
-    for (i = 0; i < state[0x8b]; i++) {
-        switch (state[0x81 + i]) {
+    for (i = 0; i < state->queuedActionCount; i++) {
+        switch (state->queuedActions[i]) {
         case 1:
-            state[0x144] = 0;
+            state->useDetachedLight = 0;
             break;
         case 2:
-            state[0x144] = 1;
+            state->useDetachedLight = 1;
             break;
         }
     }
@@ -911,7 +931,7 @@ void SpiritPrize_update(int obj)
         int matchingObj;
         int duplicateCount;
 
-        prizeId = (s8)state[0x57];
+        prizeId = (s8)state->prizeId;
         matchingObj = 0;
         objects = ObjList_GetObjects(&objectIndex, &objectCount);
         duplicateCount = 0;
@@ -922,7 +942,7 @@ void SpiritPrize_update(int obj)
                 matchingObj = childObj;
             }
             if (*(s16 *)(childObj + 0xb4) == -2 && *(s16 *)(childObj + 0x44) == 0x10 &&
-                prizeId == (s8)*(u8 *)(*(int *)(childObj + 0xb8) + 0x57)) {
+                prizeId == (s8)((SpiritPrizeState *)*(int *)(childObj + 0xb8))->prizeId) {
                 duplicateCount++;
             }
             objectIndex++;
@@ -935,12 +955,12 @@ void SpiritPrize_update(int obj)
         Obj_FreeObject(obj);
     }
 
-    *(f32 *)(state + 0x148) -= timeDelta;
-    if (*(f32 *)(state + 0x148) < lbl_803E4E9C) {
+    state->sfxTimer -= timeDelta;
+    if (state->sfxTimer < lbl_803E4E9C) {
         int player;
 
         player = Obj_GetPlayerObject();
-        *(f32 *)(state + 0x148) = (f32)(s32)randomGetRange(0xb4, 0xf0);
+        state->sfxTimer = (f32)(s32)randomGetRange(0xb4, 0xf0);
         if ((s8)*(u8 *)(obj + 0xac) == -1 &&
             (player == 0 || coordsToMapCell(*(f32 *)(player + 0xc), *(f32 *)(player + 0x14)) == 0xb)) {
             Sfx_PlayFromObject(obj, 0x4a0);
