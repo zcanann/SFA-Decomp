@@ -196,8 +196,10 @@ void RollingBarrel_free(int obj) {
     int count;
     int *arr = ObjGroup_GetObjects(ROLLINGBARREL_GROUP_ID, &count);
     int i;
+    u32 a;
     for (i = 0; i < count; i++) {
-        if ((u32)obj == (u32)arr[i]) {
+        a = (u32)arr[i];
+        if (a == (u32)obj) {
             ObjGroup_RemoveObject(obj, ROLLINGBARREL_GROUP_ID);
             break;
         }
