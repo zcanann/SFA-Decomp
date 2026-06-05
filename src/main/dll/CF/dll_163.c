@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "global.h"
 #include "main/dll/CF/dll_163.h"
 
 extern undefined8 ObjGroup_RemoveObject();
@@ -11,6 +12,61 @@ extern f32 lbl_803E3BF0;
 extern f32 lbl_803E3BF4;
 extern f32 lbl_803E3BF8;
 extern f32 lbl_803E3BFC;
+
+#define STAFFACTIVATED_STATE_FLAGS 0x1d
+#define STAFFACTIVATED_FLAG_ACTIVE 0x80
+#define STAFFACTIVATED_FLAG_LOCKED 0x40
+
+#define STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER 0x04
+#define STAFFACTIVATED_OBJ_FLAG_LOCKED 0x08
+#define STAFFACTIVATED_OBJ_FLAG_DISABLED 0x10
+
+#define STAFFACTIVATED_MODE_ACTION 0
+#define STAFFACTIVATED_MODE_LIFT 2
+#define STAFFACTIVATED_MODE_HIT_REACTION 3
+#define STAFFACTIVATED_MODE_DAMAGE_FIRST 4
+#define STAFFACTIVATED_MODE_DEFAULT 6
+
+#define STAFFACTIVATED_TRIGGER_GAMEBIT 0xd2a
+#define STAFFACTIVATED_ENABLE_GAMEBIT 0x957
+#define STAFFACTIVATED_PARTICLE_ID 0x7c3
+
+typedef struct StaffActivatedState {
+    f32 targetX;
+    f32 targetZ;
+    u8 pad08[4];
+    s32 liftVelocity;
+    s32 previousLiftHeight;
+    s32 liftHeight;
+    s32 peakLiftHeight;
+    u8 liftReset;
+    u8 flags;
+    u8 pad1E[2];
+    f32 hitCooldown;
+} StaffActivatedState;
+
+typedef struct StaffActivatedSetup {
+    u8 pad00[0x1c];
+    u8 mode;
+    u8 size;
+    u8 pad1E[4];
+    s16 activeGameBit;
+    s16 lockGameBit;
+} StaffActivatedSetup;
+
+STATIC_ASSERT(sizeof(StaffActivatedState) == 0x24);
+STATIC_ASSERT(offsetof(StaffActivatedState, targetX) == 0x00);
+STATIC_ASSERT(offsetof(StaffActivatedState, targetZ) == 0x04);
+STATIC_ASSERT(offsetof(StaffActivatedState, liftVelocity) == 0x0c);
+STATIC_ASSERT(offsetof(StaffActivatedState, previousLiftHeight) == 0x10);
+STATIC_ASSERT(offsetof(StaffActivatedState, liftHeight) == 0x14);
+STATIC_ASSERT(offsetof(StaffActivatedState, peakLiftHeight) == 0x18);
+STATIC_ASSERT(offsetof(StaffActivatedState, liftReset) == 0x1c);
+STATIC_ASSERT(offsetof(StaffActivatedState, flags) == STAFFACTIVATED_STATE_FLAGS);
+STATIC_ASSERT(offsetof(StaffActivatedState, hitCooldown) == 0x20);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, mode) == 0x1c);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, activeGameBit) == 0x22);
+STATIC_ASSERT(offsetof(StaffActivatedSetup, lockGameBit) == 0x24);
 
 #pragma scheduling off
 #pragma peephole off
@@ -103,6 +159,8 @@ extern void staffactivated_updateLiftHeight(int obj, int state);
 extern void landed_arwing_updateHitReaction(int obj, int state);
 extern void landed_arwing_updateDamageTexture(int obj, int state);
 
+#pragma scheduling off
+#pragma peephole off
 void staffactivated_update(int obj) {
     struct PartfxParams {
         int pad;
@@ -113,72 +171,72 @@ void staffactivated_update(int obj) {
         f32 oz;
         f32 ow;
     } stk;
-    int param = *(int *)(obj + 0x4c);
-    int state = *(int *)(obj + 0xb8);
+    StaffActivatedSetup *param = *(StaffActivatedSetup **)(obj + 0x4c);
+    StaffActivatedState *state = *(StaffActivatedState **)(obj + 0xb8);
     int mode;
     int isSet;
     int gb;
 
     Obj_GetPlayerObject();
 
-    if ((*(u8 *)(state + 0x1d) >> 6) & 1) {
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x8);
+    if ((state->flags >> 6) & 1) {
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | STAFFACTIVATED_OBJ_FLAG_LOCKED);
     } else {
-        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x8);
+        *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~STAFFACTIVATED_OBJ_FLAG_LOCKED);
     }
 
-    if ((*(u8 *)(state + 0x1d) >> 7) & 1) {
+    if ((state->flags >> 7) & 1) {
         if (fn_80295CE4() != 0) {
-            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~0x10);
+            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) & ~STAFFACTIVATED_OBJ_FLAG_DISABLED);
             goto after_bit4;
         }
     }
-    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
+    *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | STAFFACTIVATED_OBJ_FLAG_DISABLED);
 after_bit4:
 
-    mode = *(u8 *)(param + 0x1c);
-    if (mode == 2) {
-        staffactivated_updateLiftHeight(obj, state);
-    } else if (mode > 2) {
-        if (mode >= 6) {
+    mode = param->mode;
+    if (mode == STAFFACTIVATED_MODE_LIFT) {
+        staffactivated_updateLiftHeight(obj, (int)state);
+    } else if (mode > STAFFACTIVATED_MODE_LIFT) {
+        if (mode >= STAFFACTIVATED_MODE_DEFAULT) {
             goto default_case;
-        } else if (mode >= 4) {
-            landed_arwing_updateDamageTexture(obj, state);
+        } else if (mode >= STAFFACTIVATED_MODE_DAMAGE_FIRST) {
+            landed_arwing_updateDamageTexture(obj, (int)state);
         } else {
-            landed_arwing_updateHitReaction(obj, state);
+            landed_arwing_updateHitReaction(obj, (int)state);
         }
-    } else if (mode == 0) {
-        if (*(u8 *)(obj + 0xaf) & 0x4) {
-            if (GameBit_Get(0xd2a) == 0) {
+    } else if (mode == STAFFACTIVATED_MODE_ACTION) {
+        if (*(u8 *)(obj + 0xaf) & STAFFACTIVATED_OBJ_FLAG_HIT_TRIGGER) {
+            if (GameBit_Get(STAFFACTIVATED_TRIGGER_GAMEBIT) == 0) {
                 (*(void (*)(int, int, int))(*(int *)(*gObjectTriggerInterface + 0x48)))(0, obj, -1);
-                GameBit_Set(0xd2a, 1);
+                GameBit_Set(STAFFACTIVATED_TRIGGER_GAMEBIT, 1);
             }
         }
-        if (GameBit_Get(0x957) == 0) {
-            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | 0x10);
+        if (GameBit_Get(STAFFACTIVATED_ENABLE_GAMEBIT) == 0) {
+            *(u8 *)(obj + 0xaf) = (u8)(*(u8 *)(obj + 0xaf) | STAFFACTIVATED_OBJ_FLAG_DISABLED);
         }
         isSet = 0;
-        gb = *(s16 *)(param + 0x22);
+        gb = param->activeGameBit;
         if (gb == -1 || GameBit_Get(gb) != 0) {
             isSet = 1;
         }
-        *(u8 *)(state + 0x1d) =
-            (u8)(isSet << 7) | (*(u8 *)(state + 0x1d) & 0x7f);
-        if ((*(u8 *)(state + 0x1d) >> 7) & 1) {
+        state->flags =
+            (u8)(isSet << 7) | (state->flags & 0x7f);
+        if ((state->flags >> 7) & 1) {
             stk.ox = lbl_803E3BBC;
             stk.oy = lbl_803E3C00;
             stk.oz = lbl_803E3C04;
             stk.ow = lbl_803E3BDC;
             stk.life = 0x64;
             stk.extra = 0;
-            (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x7c3, &stk, 2, -1, 0);
+            (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, 0);
             stk.ox = lbl_803E3BBC;
             stk.oy = lbl_803E3C00;
             stk.oz = lbl_803E3C04;
             stk.ow = lbl_803E3BDC;
             stk.life = 0xa;
             stk.extra = 5;
-            (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, 0x7c3, &stk, 2, -1, 0);
+            (*(void (*)(int, int, void *, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(obj, STAFFACTIVATED_PARTICLE_ID, &stk, 2, -1, 0);
         }
         return;
     } else {
@@ -187,10 +245,12 @@ after_bit4:
     return;
 default_case:
     isSet = 0;
-    gb = *(s16 *)(param + 0x22);
+    gb = param->activeGameBit;
     if (gb == -1 || GameBit_Get(gb) != 0) {
         isSet = 1;
     }
-    *(u8 *)(state + 0x1d) =
-        (u8)(isSet << 7) | (*(u8 *)(state + 0x1d) & 0x7f);
+    state->flags =
+        (u8)(isSet << 7) | (state->flags & 0x7f);
 }
+#pragma peephole reset
+#pragma scheduling reset
