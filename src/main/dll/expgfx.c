@@ -1532,7 +1532,7 @@ foundFirst:
           attached = (u8 *)((ExpgfxRuntimeDataLayout *)runtimeBase)
                          ->expTab[((u32)slot->encodedTableIndex >> 1) &
                                   EXPGFX_SLOT_TABLE_INDEX_MASK]
-                         .attachedKey1;
+                         .attachedTableKey;
           rot.x = lbl_803DF35C;
           rot.y = lbl_803DF35C;
           rot.z = lbl_803DF35C;
@@ -1657,7 +1657,7 @@ int expgfx_addToTable(uint resourceHandle,uint sourceId,uint attachedTableKey,s1
   freeScan = entry;
   for (; tableIndex < EXPGFX_EXPTAB_ENTRY_COUNT; entry++, tableIndex++) {
     if ((entry->refCount != 0) && (entry->resource == resourceHandle) &&
-        (entry->sourceId == sourceId) && (entry->attachedKey1 == attachedTableKey)) {
+        (entry->sourceId == sourceId) && (entry->attachedTableKey == attachedTableKey)) {
       refCount = &gExpgfxTableEntries[tableIndex].refCount;
       if (*refCount >= EXPGFX_REFCOUNT_OVERFLOW) {
         debugPrintf(sExpgfxAddToTableUsageOverflow);
@@ -1673,7 +1673,7 @@ int expgfx_addToTable(uint resourceHandle,uint sourceId,uint attachedTableKey,s1
       gExpgfxTableEntries[freeIndex].refCount = 1;
       gExpgfxTableEntries[freeIndex].resource = resourceHandle;
       gExpgfxTableEntries[freeIndex].sourceId = sourceId;
-      gExpgfxTableEntries[freeIndex].attachedKey1 = attachedTableKey;
+      gExpgfxTableEntries[freeIndex].attachedTableKey = attachedTableKey;
       gExpgfxTableEntries[freeIndex].resourceId = resourceId;
       return (s16)freeIndex;
     }
@@ -1727,7 +1727,7 @@ int expgfx_updateSourceFrameFlags(void *sourceObject)
       bit = 1 << (signedPoolIndex >> 1);
       highBits = (u32)((s32)bit >> 31);
       mask = &gExpgfxTrackedSourceFrameMasks[signedPoolIndex & 1];
-      if ((CONCAT44(mask->high, mask->low) & CONCAT44(highBits, bit)) != 0) {
+      if ((CONCAT44(mask->highWord, mask->lowWord) & CONCAT44(highBits, bit)) != 0) {
         *poolFrameFlags = EXPGFX_SOURCE_FRAME_STATE_B;
         if ((s8)result == EXPGFX_SOURCE_FRAME_STATE_A) {
           result = EXPGFX_SOURCE_FRAME_STATE_MIXED;
@@ -2754,7 +2754,7 @@ int expgfx_addremove(ExpgfxSpawnConfig *config, int preferredPoolIndex, short sl
       config->velocityY = config->velocityY + attachedSource->velocityY;
       config->velocityZ = config->velocityZ + attachedSource->velocityZ;
     }
-    attachedTableKey = attachedSource->tableKey1;
+    attachedTableKey = attachedSource->attachedTableKey;
     attachedSource = NULL;
   }
 
@@ -2974,10 +2974,10 @@ void expgfx_onMapSetup(void)
   }
 
   trackedFrameMasks = runtime->trackedSourceFrameMasks;
-  trackedFrameMasks[0].low = 0;
-  trackedFrameMasks[0].high = 0;
-  trackedFrameMasks[1].low = 0;
-  trackedFrameMasks[1].high = 0;
+  trackedFrameMasks[0].lowWord = 0;
+  trackedFrameMasks[0].highWord = 0;
+  trackedFrameMasks[1].lowWord = 0;
+  trackedFrameMasks[1].highWord = 0;
 
   gExpgfxTextureFreeInProgress = 1;
   resourceEntry = runtime->resourceTable;

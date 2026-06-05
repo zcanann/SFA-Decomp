@@ -149,8 +149,8 @@ typedef struct ExpgfxPoolSourcePosition {
 } ExpgfxPoolSourcePosition;
 
 typedef struct ExpgfxTrackedSourceFrameMask {
-  u32 high;
-  u32 low;
+  u32 highWord;
+  u32 lowWord;
 } ExpgfxTrackedSourceFrameMask;
 
 /*
@@ -161,7 +161,7 @@ typedef struct ExpgfxTrackedSourceFrameMask {
 typedef struct ExpgfxTableEntry {
   /* The add/remove paths key entries by source identity plus an optional attached-source key. */
   uint sourceId;
-  uint attachedKey1;
+  uint attachedTableKey;
   uint resource;
   u16 refCount;
   s16 resourceId;
@@ -169,7 +169,7 @@ typedef struct ExpgfxTableEntry {
 
 STATIC_ASSERT(sizeof(ExpgfxTableEntry) == EXPGFX_TABLE_ENTRY_SIZE);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, sourceId) == 0x00);
-STATIC_ASSERT(offsetof(ExpgfxTableEntry, attachedKey1) == 0x04);
+STATIC_ASSERT(offsetof(ExpgfxTableEntry, attachedTableKey) == 0x04);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, resource) == 0x08);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, refCount) == 0x0C);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, resourceId) == 0x0E);
@@ -193,7 +193,7 @@ typedef struct ExpgfxAttachedSourceState {
   float velocityX;
   float velocityY;
   float velocityZ;
-  int tableKey1;
+  int attachedTableKey;
 } ExpgfxAttachedSourceState;
 
 /*
