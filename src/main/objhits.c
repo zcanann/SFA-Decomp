@@ -2142,13 +2142,14 @@ void ObjHits_DetectObjectPair(int objA,int objB)
   radiusB = (f32)stateB->primaryRadius;
   vertical = 0;
   shapeB = stateB->shapeFlags;
-  if (((shapeB & 2) != 0) || ((stateA->shapeFlags & 2) != 0)) {
+  if (((shapeB & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) ||
+      ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0)) {
     if (dy <= gObjHitsScalarZero) {
       span = radiusB;
-      if ((shapeB & 2) != 0) {
+      if ((shapeB & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
         span = (f32)stateB->primaryCapsuleOffsetB;
       }
-      if ((stateA->shapeFlags & 2) == 0) {
+      if ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
         yA = yA - radiusA;
       } else {
         yA = yA + (f32)stateA->primaryCapsuleOffsetA;
@@ -2156,10 +2157,10 @@ void ObjHits_DetectObjectPair(int objA,int objB)
       if (yB + span < yA) goto end;
     } else {
       span = radiusA;
-      if ((stateA->shapeFlags & 2) != 0) {
+      if ((stateA->shapeFlags & OBJHITBOX_SHAPE_VERTICAL_SPAN) != 0) {
         span = (f32)stateA->primaryCapsuleOffsetB;
       }
-      if ((shapeB & 2) == 0) {
+      if ((shapeB & OBJHITBOX_SHAPE_VERTICAL_SPAN) == 0) {
         yB = yB - radiusB;
       } else {
         yB = yB + (f32)stateB->primaryCapsuleOffsetA;
@@ -2178,21 +2179,21 @@ void ObjHits_DetectObjectPair(int objA,int objB)
   if (distInt > 0x400) {
     distClamped = 0x400;
   }
-  if (distClamped <= *(s16 *)((int)stateA + 0x58)) {
-    *(s16 *)((int)stateA + 0x58) = distClamped;
+  if (distClamped <= stateA->capsuleScale) {
+    stateA->capsuleScale = distClamped;
   }
   if (distInt > 0x400) {
     distInt = 0x400;
   }
-  if (distInt <= *(s16 *)((int)stateB + 0x58)) {
-    *(s16 *)((int)stateB + 0x58) = distInt;
+  if (distInt <= stateB->capsuleScale) {
+    stateB->capsuleScale = distInt;
   }
-  if ((stateB->flags & 1) != 0) {
+  if ((stateB->flags & OBJHITS_PRIORITY_STATE_ENABLED) != 0) {
     sumRadius = radiusB + radiusA;
-    bx = *(f32 *)((int)stateA + 0x1c);
+    bx = stateA->worldPosX;
     sx = *(f32 *)(objA + 0x18) - bx;
-    by = *(f32 *)((int)stateA + 0x20);
-    bz = *(f32 *)((int)stateA + 0x24);
+    by = stateA->worldPosY;
+    bz = stateA->worldPosZ;
     sz = *(f32 *)(objA + 0x20) - bz;
     sy = *(f32 *)(objA + 0x1c) - by;
     if (vertical) {
@@ -2210,14 +2211,15 @@ void ObjHits_DetectObjectPair(int objA,int objB)
       }
     }
     if ((dist < sumRadius) && (dist > gObjHitsScalarZero)) {
-      ObjHits_RecordObjectHit(objB, objA, *(s8 *)((int)stateA + 0x6c),
-                              *(u8 *)((int)stateA + 0x6d), 0);
-      ObjHits_RecordObjectHit(objA, objB, *(s8 *)((int)stateB + 0x6c),
-                              *(u8 *)((int)stateB + 0x6d), 0);
-      if (((stateB->flags & 2) == 0) && ((stateA->flags & 2) == 0)) {
-        nx = *(f32 *)((int)stateB + 0x1c) - *(f32 *)((int)stateA + 0x1c);
-        nz = *(f32 *)((int)stateB + 0x24) - *(f32 *)((int)stateA + 0x24);
-        ny = *(f32 *)((int)stateB + 0x20) - *(f32 *)((int)stateA + 0x20);
+      ObjHits_RecordObjectHit(objB, objA, stateA->objectPairPriority,
+                              stateA->objectPairHitVolume, 0);
+      ObjHits_RecordObjectHit(objA, objB, stateB->objectPairPriority,
+                              stateB->objectPairHitVolume, 0);
+      if (((stateB->flags & OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE) == 0) &&
+          ((stateA->flags & OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE) == 0)) {
+        nx = stateB->worldPosX - stateA->worldPosX;
+        nz = stateB->worldPosZ - stateA->worldPosZ;
+        ny = stateB->worldPosY - stateA->worldPosY;
         if (vertical) {
           ny = gObjHitsScalarZero;
         }
