@@ -19,7 +19,6 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
     int anyCurrent;
     int *objects;
     int other;
-    u8 *setup;
     f32 *current;
     f32 currentX;
     f32 currentZ;
@@ -38,41 +37,41 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
     anyCurrent = 0;
     for (i = 0; i < count; i++) {
         other = objects[i];
-        setup = *(u8 **)(other + 0x4c);
-        if ((setup[0x1a] & 2) != 0) {
+        if (((*(u8 **)(other + 0x4c))[0x1a] & 2) != 0) {
             anyCurrent = 1;
             dy = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
-            if ((dy <= lbl_803E72B4) && (lbl_803E72B8 <= dy)) {
+            if ((dy <= lbl_803E72B4) && (dy >= lbl_803E72B8)) {
                 dx = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
                 dz = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
                 distance = sqrtf(dx * dx + dz * dz);
-                radius = lbl_803E72BC * (f32)(u32)setup[0x19];
+                radius = lbl_803E72BC * (f32)(u32)(*(u8 **)(other + 0x4c))[0x19];
                 if (distance < radius) {
-                    strength = ((radius - distance) / radius) * lbl_803E72C0 * *(f32 *)(other + 8);
-                    angle = (lbl_803E72C4 * (f32)*(s16 *)other) / lbl_803E72C8;
-                    currentX += strength * fn_80293E80(angle);
-                    currentZ += strength * sin(angle);
+                    strength = ((radius - distance) / radius) * (lbl_803E72C0 * *(f32 *)(other + 8));
+                    currentX += strength * fn_80293E80((lbl_803E72C4 * (f32)*(s16 *)other) / lbl_803E72C8);
+                    currentZ += strength * sin((lbl_803E72C4 * (f32)*(s16 *)other) / lbl_803E72C8);
                 }
             }
         }
     }
 
     objects = ObjGroup_GetObjects(0x50, &count);
+    {
+        f32 strengthDiv = lbl_803E72C0;
+        f32 dyMax = lbl_803E72B4;
     for (i = 0; i < count; i++) {
         f32 objectStrength;
         s16 currentAngle;
 
         other = objects[i];
-        setup = *(u8 **)(other + 0x4c);
-        objectStrength = (f32)(u32)setup[0x32] / lbl_803E72C0;
+        objectStrength = (f32)(u32)(*(u8 **)(other + 0x4c))[0x32] / strengthDiv;
         anyCurrent = 1;
         dy = *(f32 *)(other + 0x10) - *(f32 *)(obj + 0x10);
-        if ((dy <= lbl_803E72B4) && (lbl_803E72B8 <= dy)) {
+        if ((dy <= dyMax) && (dy >= lbl_803E72B8)) {
             dx = *(f32 *)(other + 0xc) - *(f32 *)(obj + 0xc);
             dz = *(f32 *)(other + 0x14) - *(f32 *)(obj + 0x14);
-            currentAngle = (s16)(getAngle(dx, dz) - 0x7b30);
+            currentAngle = (s16)(getAngle(dx, dz) + 0x84d0);
             distance = sqrtf(dx * dx + dz * dz);
-            radius = (f32)(s32)(setup[0x29] << 3);
+            radius = (f32)(s32)((*(u8 **)(other + 0x4c))[0x29] << 3);
             if (distance < radius) {
                 strength = ((radius - distance) / radius) * objectStrength;
                 angle = (lbl_803E72C4 * (f32)currentAngle) / lbl_803E72C8;
@@ -82,14 +81,21 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
         }
     }
 
-    if (anyCurrent == 0) {
-        *vx = lbl_803E72B0;
-        *vz = lbl_803E72B0;
-    } else {
-        current[0] = current[0] - lbl_803E72CC * currentX;
-        current[1] = current[1] - lbl_803E72CC * currentZ;
-        current[0] = current[0] * lbl_803E72D0;
-        current[1] = current[1] * lbl_803E72D0;
+    }
+
+    if (anyCurrent != 0) {
+        currentX = currentX / (f32)anyCurrent;
+        currentZ = currentZ / (f32)anyCurrent;
+        {
+            f32 k = lbl_803E72CC;
+            current[0] = current[0] - k * currentX;
+            current[1] = current[1] - k * currentZ;
+        }
+        {
+            f32 k = lbl_803E72D0;
+            current[0] = current[0] * k;
+            current[1] = current[1] * k;
+        }
         distance = sqrtf(current[0] * current[0] + current[1] * current[1]);
         if (distance > lbl_803E72D4) {
             strength = lbl_803E72D4 / distance;
@@ -98,6 +104,10 @@ void waterflowwe_calcCurrentVector(int obj, f32 *vx, f32 *vz)
         }
         *vx = current[0] * timeDelta;
         *vz = current[1] * timeDelta;
+    } else {
+        f32 z = lbl_803E72B0;
+        *vx = z;
+        *vz = z;
     }
 }
 #pragma scheduling reset
@@ -115,7 +125,7 @@ int waterflowwe_getObjectTypeId(void) { return 0; }
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling off
 void waterflowwe_init(int obj, u8 *setup)
 {
@@ -129,7 +139,7 @@ void waterflowwe_init(int obj, u8 *setup)
         }
         *(f32 *)(obj + 8) = *(f32 *)(obj + 8) * *(f32 *)(*(int *)(obj + 0x50) + 4);
     }
-    *(u16 *)(obj + 0xb0) |= 0x2000;
+    *(u16 *)(obj + 0xb0) = *(u16 *)(obj + 0xb0) | 0x2000;
     ObjAnim_SetCurrentMove(obj, 0, lbl_803E72B0, 0);
 }
 #pragma scheduling reset
@@ -163,7 +173,7 @@ void waterflowwe_hitDetect(void) {}
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
+#pragma peephole off
 #pragma scheduling off
 void waterflowwe_update(int obj)
 {
