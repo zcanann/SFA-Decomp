@@ -1820,11 +1820,18 @@ extern void GXInitLightAttn(u8 *lt_obj, f32 a0, f32 a1, f32 a2, f32 k0, f32 k1, 
 #pragma peephole off
 
 void modelLightStruct_setSpecularAttenuation(ModelLightStruct *obj, f32 a, f32 b) {
+    u8 *lightObj;
+    f32 zero;
+    f32 one;
+    f32 atten;
+
     obj->specularAttenuationScale = a;
     obj->specularBrightness = b;
-    GXInitLightAttn((u8 *)obj + 0xc0, lbl_803DE75C, lbl_803DE75C, lbl_803DE760,
-                    obj->specularAttenuationScale * lbl_803DE790, lbl_803DE75C,
-                    lbl_803DE760 - obj->specularAttenuationScale * lbl_803DE790);
+    atten = obj->specularAttenuationScale * lbl_803DE790;
+    lightObj = (u8 *)obj + 0xc0;
+    zero = lbl_803DE75C;
+    one = lbl_803DE760;
+    GXInitLightAttn(lightObj, zero, zero, one, atten, zero, one - atten);
 }
 #pragma pop
 

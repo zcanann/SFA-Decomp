@@ -2493,6 +2493,13 @@ void ShaderDef_free(int *def) {
 
 extern int lbl_803DCDBC;
 extern void *lbl_803DCDC4;
+typedef struct LoadedTextureEntry {
+    int key;
+    void *texture;
+    u8 flag;
+    u8 padding[3];
+    u32 size;
+} LoadedTextureEntry;
 #pragma peephole off
 #pragma scheduling off
 void* textureIdxToPtr(int idx) {
@@ -2504,14 +2511,20 @@ void* textureIdxToPtr(int idx) {
 }
 
 void* getLoadedTexture(int key) {
-    u8 *iter = (u8 *)lbl_803DCDC4;
-    int count = lbl_803DCDBC;
+    LoadedTextureEntry *iter;
+    LoadedTextureEntry *base;
+    int count;
     int i;
-    for (i = 0; i < count; i++) {
-        if (*(int *)iter == key) {
-            return *(void **)((u8 *)lbl_803DCDC4 + i * 16 + 4);
+
+    i = 0;
+    base = (LoadedTextureEntry *)lbl_803DCDC4;
+    iter = base;
+    count = lbl_803DCDBC;
+    for (; i < count; i++) {
+        if (key == iter->key) {
+            return base[i].texture;
         }
-        iter += 16;
+        iter++;
     }
     return NULL;
 }
