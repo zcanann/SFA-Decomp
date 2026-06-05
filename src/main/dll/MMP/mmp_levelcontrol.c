@@ -684,13 +684,33 @@ void fn_80194964(int obj,int state,int block)
 #pragma peephole off
 void fn_80194C40(undefined4 def,int state,int block)
 {
+  typedef struct MapBlockHdr {
+    u16 start;
+    u16 pad1[2];
+    s16 posA;
+    s16 posB;
+  } MapBlockHdr;
+  typedef struct VertexS16 {
+    s16 x;
+    s16 y;
+    s16 z;
+  } VertexS16;
+  typedef struct EdgeVerts {
+    u8 pad[6];
+    s16 a;
+    s16 b;
+    s16 c;
+    s16 d;
+    s16 e;
+    s16 f;
+  } EdgeVerts;
   ushort blockEnd;
   f32 scale;
   int edgeData;
   ushort *mapBlock;
   int blockLayer;
   void *shader;
-  undefined2 *vertex;
+  VertexS16 *vtx;
   uint triangle;
   int triangleOffset;
   int vertexOffset;
@@ -699,35 +719,34 @@ void fn_80194C40(undefined4 def,int state,int block)
   int edgeIndex;
   int edgeOffset;
   int vertexIndex;
-  f64 bias;
 
   triangleOffset = 0;
-  coordOffset = 0;
-  vertexOffset = 0;
+  coordOffset = triangleOffset;
+  vertexOffset = coordOffset;
   for (blockIndex = 0; blockIndex < (int)(uint)*(ushort *)(block + 0x9a); blockIndex++) {
     mapBlock = (ushort *)mapBlockFn_800606ec((int *)block,blockIndex);
     blockLayer = mapBlockFn_80060678((int *)mapBlock);
     if ((int)*(char *)(def + 0x28) == blockLayer) {
-      bias = lbl_803E4010;
-      mapBlock[3] = (ushort)(int)(*(float *)(state + 0x44) +
-                                  (float)((double)*(short *)(*(int *)(state + 0x10) + coordOffset) - bias));
-      mapBlock[4] = (ushort)(int)(*(float *)(state + 0x44) +
-                                  (float)((double)*(short *)(*(int *)(state + 0x14) + coordOffset) - bias));
+      ((MapBlockHdr *)mapBlock)->posA = (int)(*(float *)(state + 0x44) +
+                                  (f32)*(s16 *)(*(int *)(state + 0x10) + coordOffset));
+      ((MapBlockHdr *)mapBlock)->posB = (int)(*(float *)(state + 0x44) +
+                                  (f32)*(s16 *)(*(int *)(state + 0x14) + coordOffset));
       coordOffset += 2;
       blockEnd = mapBlock[10];
       scale = lbl_803E4008;
+      triangle = (uint)*mapBlock;
       edgeOffset = vertexOffset;
-      for (triangle = (uint)*mapBlock; (int)triangle < (int)(uint)blockEnd; triangle++) {
+      for (; (int)triangle < (int)(uint)blockEnd; triangle++) {
         mapBlock = (ushort *)fn_800606DC((int *)block,triangle);
         vertexIndex = edgeOffset;
         for (edgeIndex = 3; edgeIndex != 0; edgeIndex--) {
-          vertex = (undefined2 *)(*(int *)(block + 0x58) + (uint)*mapBlock * 6);
-          *(short *)vertex = (short)(int)(scale * *(float *)(state + 0x40) +
-                                (float)((double)*(short *)(*(int *)(state + 0xc) + edgeOffset) - bias));
-          vertex[1] = (short)(int)(scale * *(float *)(state + 0x44) +
-                                (float)((double)*(short *)(*(int *)(state + 0xc) + edgeOffset + 2) - bias));
-          vertex[2] = (short)(int)(scale * *(float *)(state + 0x48) +
-                                (float)((double)*(short *)(*(int *)(state + 0xc) + edgeOffset + 4) - bias));
+          vtx = (VertexS16 *)(*(int *)(block + 0x58) + (uint)*mapBlock * 6);
+          vtx->x = (int)(scale * *(float *)(state + 0x40) +
+                                (f32)*(s16 *)(*(int *)(state + 0xc) + edgeOffset));
+          vtx->y = (int)(scale * *(float *)(state + 0x44) +
+                                (f32)*(s16 *)(*(int *)(state + 0xc) + edgeOffset + 2));
+          vtx->z = (int)(scale * *(float *)(state + 0x48) +
+                                (f32)*(s16 *)(*(int *)(state + 0xc) + edgeOffset + 4));
           edgeOffset += 6;
           vertexIndex += 6;
           vertexOffset += 6;
@@ -743,21 +762,20 @@ void fn_80194C40(undefined4 def,int state,int block)
     vertexOffset = (int)fn_800606FC((int *)block,edgeOffset);
     shader = fn_8006070C((int *)block,*(byte *)(vertexOffset + 0x13));
     shader = Shader_getLayer(shader,0);
-    bias = lbl_803E4010;
     scale = lbl_803E4008;
     if ((uint)*(byte *)((int)shader + 5) == (int)*(char *)(def + 0x28)) {
-      *(short *)(vertexOffset + 6) = (short)(int)(scale * *(float *)(state + 0x40) +
-            (float)((double)*(short *)(*(int *)(state + 0x28) + edgeData) - bias));
-      *(short *)(vertexOffset + 0xc) = (short)(int)(scale * *(float *)(state + 0x40) +
-            (float)((double)*(short *)(*(int *)(state + 0x2c) + edgeData) - bias));
-      *(short *)(vertexOffset + 8) = (short)(int)(scale * *(float *)(state + 0x44) +
-            (float)((double)*(short *)(*(int *)(state + 0x30) + edgeData) - bias));
-      *(short *)(vertexOffset + 0xe) = (short)(int)(scale * *(float *)(state + 0x44) +
-            (float)((double)*(short *)(*(int *)(state + 0x34) + edgeData) - bias));
-      *(short *)(vertexOffset + 10) = (short)(int)(scale * *(float *)(state + 0x48) +
-            (float)((double)*(short *)(*(int *)(state + 0x38) + edgeData) - bias));
-      *(short *)(vertexOffset + 0x10) = (short)(int)(scale * *(float *)(state + 0x48) +
-            (float)((double)*(short *)(*(int *)(state + 0x3c) + edgeData) - bias));
+      ((EdgeVerts *)vertexOffset)->a = (int)(scale * *(float *)(state + 0x40) +
+            (f32)*(s16 *)(*(int *)(state + 0x28) + edgeData));
+      ((EdgeVerts *)vertexOffset)->d = (int)(scale * *(float *)(state + 0x40) +
+            (f32)*(s16 *)(*(int *)(state + 0x2c) + edgeData));
+      ((EdgeVerts *)vertexOffset)->b = (int)(scale * *(float *)(state + 0x44) +
+            (f32)*(s16 *)(*(int *)(state + 0x30) + edgeData));
+      ((EdgeVerts *)vertexOffset)->e = (int)(scale * *(float *)(state + 0x44) +
+            (f32)*(s16 *)(*(int *)(state + 0x34) + edgeData));
+      ((EdgeVerts *)vertexOffset)->c = (int)(scale * *(float *)(state + 0x48) +
+            (f32)*(s16 *)(*(int *)(state + 0x38) + edgeData));
+      ((EdgeVerts *)vertexOffset)->f = (int)(scale * *(float *)(state + 0x48) +
+            (f32)*(s16 *)(*(int *)(state + 0x3c) + edgeData));
     }
     edgeData += 2;
   }
