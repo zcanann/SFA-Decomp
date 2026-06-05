@@ -1804,16 +1804,52 @@ int trickywarp_getExtraSize(void) { return 0x64; }
 int duster_getExtraSize(void) { return 0x20; }
 int curvefish_getExtraSize(void) { return 0x120; }
 
-/* duster_SeqFn: clear bit 0x80 of obj->_b8->_1e, return 0. */
-typedef struct {
-    u8 flag80 : 1;
+typedef struct DusterStateFlags {
+  u8 floorCached : 1;
+  u8 pad : 7;
 } DusterStateFlags;
+
+typedef struct DusterState {
+  f32 moveStepScale;
+  f32 floorY;
+  s16 settleTimer;
+  s16 hitReactTimer;
+  s16 completeGameBit;
+  s16 activeGameBit;
+  s16 heldObjectId;
+  u8 pad12[6];
+  u8 driftDir;
+  u8 hitReactActive;
+  u8 priorityHit;
+  u8 active;
+  u8 complete;
+  u8 useLaunchVelocity;
+  DusterStateFlags flags;
+  u8 pad1F;
+} DusterState;
+
+STATIC_ASSERT(sizeof(DusterStateFlags) == 1);
+STATIC_ASSERT(sizeof(DusterState) == 0x20);
+STATIC_ASSERT(offsetof(DusterState, moveStepScale) == 0x00);
+STATIC_ASSERT(offsetof(DusterState, floorY) == 0x04);
+STATIC_ASSERT(offsetof(DusterState, settleTimer) == 0x08);
+STATIC_ASSERT(offsetof(DusterState, hitReactTimer) == 0x0a);
+STATIC_ASSERT(offsetof(DusterState, completeGameBit) == 0x0c);
+STATIC_ASSERT(offsetof(DusterState, activeGameBit) == 0x0e);
+STATIC_ASSERT(offsetof(DusterState, heldObjectId) == 0x10);
+STATIC_ASSERT(offsetof(DusterState, driftDir) == 0x18);
+STATIC_ASSERT(offsetof(DusterState, hitReactActive) == 0x19);
+STATIC_ASSERT(offsetof(DusterState, priorityHit) == 0x1a);
+STATIC_ASSERT(offsetof(DusterState, active) == 0x1b);
+STATIC_ASSERT(offsetof(DusterState, complete) == 0x1c);
+STATIC_ASSERT(offsetof(DusterState, useLaunchVelocity) == 0x1d);
+STATIC_ASSERT(offsetof(DusterState, flags) == 0x1e);
 
 #pragma scheduling off
 #pragma peephole off
 int duster_SeqFn(u8* obj) {
-    u8* sub = *(u8**)(obj + 0xb8);
-    ((DusterStateFlags *)(sub + 0x1e))->flag80 = 0;
+    DusterState *state = *(DusterState **)(obj + 0xb8);
+    state->flags.floorCached = 0;
     return 0;
 }
 #pragma peephole reset
@@ -2003,10 +2039,10 @@ void trickyguard_init(s16 *obj, u8 *param_2) {
 #pragma peephole off
 #pragma scheduling off
 void duster_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
-  int state = *(int *)(obj + 0xb8);
+  DusterState *state = *(DusterState **)(obj + 0xb8);
   if (visible != 0) {
-    if (*(u8 *)(state + 0x1b) != 0) {
-      if (*(u8 *)(state + 0x1c) == 0) {
+    if (state->active != 0) {
+      if (state->complete == 0) {
         ((void(*)(int,int,int,int,int,f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E38B0);
       }
     }
@@ -2023,14 +2059,14 @@ extern f32 lbl_803E38B4;
 #pragma peephole off
 void duster_hitDetect(int param_1) {
   int obj = param_1;
-  int state;
+  DusterState *state;
   u8 hit[0x54];
   int r;
-  state = *(int *)(obj + 0xb8);
+  state = *(DusterState **)(obj + 0xb8);
   r = objBboxFn_800640cc((f32 *)(obj + 128), (f32 *)(obj + 12),
                          lbl_803E38B4, 2, hit, (void *)obj, 8, -1, 255, 0);
   if (r != 0) {
-    *(u8 *)(state + 0x1a) = 1;
+    state->priorityHit = 1;
   }
   *(f32 *)(obj + 128) = *(f32 *)(obj + 12);
   *(f32 *)(obj + 132) = *(f32 *)(obj + 16);
@@ -2038,24 +2074,6 @@ void duster_hitDetect(int param_1) {
 }
 #pragma peephole reset
 #pragma scheduling reset
-
-typedef struct DusterState {
-  f32 moveStepScale;
-  f32 floorY;
-  s16 settleTimer;
-  s16 hitReactTimer;
-  s16 completeGameBit;
-  s16 activeGameBit;
-  s16 heldObjectId;
-  u8 pad12[6];
-  u8 driftDir;
-  u8 hitReactActive;
-  u8 priorityHit;
-  u8 active;
-  u8 complete;
-  u8 useLaunchVelocity;
-  u8 hasFloor : 1;
-} DusterState;
 
 typedef struct DusterSetup {
   u8 pad00[0x24];
@@ -2165,7 +2183,7 @@ void duster_update(int obj) {
   }
 
   state->priorityHit = 0;
-  if (state->hasFloor == 0) {
+  if (state->flags.floorCached == 0) {
     floorHitCount = hitDetectFn_80065e50(obj, &floorHits, 0, 0, *(f32 *)(obj + 0xc),
                                          *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
     bestFloorIndex = -1;
@@ -2181,13 +2199,13 @@ void duster_update(int obj) {
       }
     }
     if (bestFloorIndex != -1) {
-      state->hasFloor = 1;
+      state->flags.floorCached = 1;
       state->floorY = **(f32 **)((int)floorHits + bestFloorIndex * 4);
       *(f32 *)(obj + 0x28) = lbl_803E38C4;
     }
-    if (state->hasFloor == 0) {
+    if (state->flags.floorCached == 0) {
       state->floorY = *(f32 *)((u8 *)setup + 0xc);
-      state->hasFloor = 1;
+      state->flags.floorCached = 1;
     }
   }
 
