@@ -851,9 +851,11 @@ void modelLightStruct_setEnabled(ModelLightStruct *light, u8 enabled, f32 durati
 
 void modelLightStruct_setProjectionFarZ(ModelLightStruct *p, f32 v) {
     f32 clamped = p->projectionNearZ;
-    if (v >= clamped) {
+    if (v < clamped) {
+    } else {
         clamped = lbl_803DE764;
-        if (v <= clamped) {
+        if (v > clamped) {
+        } else {
             clamped = v;
         }
     }
@@ -862,9 +864,11 @@ void modelLightStruct_setProjectionFarZ(ModelLightStruct *p, f32 v) {
 
 void modelLightStruct_setProjectionNearZ(ModelLightStruct *p, f32 v) {
     f32 clamped = lbl_803DE78C;
-    if (v >= clamped) {
+    if (v < clamped) {
+    } else {
         clamped = p->projectionFarZ;
-        if (v <= clamped) {
+        if (v > clamped) {
+        } else {
             clamped = v;
         }
     }

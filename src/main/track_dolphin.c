@@ -4094,7 +4094,7 @@ void doNothing_80062A50(void) {}
 int return0_80060B90(void) { return 0x0; }
 
 /* Pattern wrappers. */
-extern u8 lbl_803DB658;
+extern s8 lbl_803DB658;
 extern u8 lbl_803DCF4E;
 void fn_800628CC(void) { lbl_803DB658 = 0x1; }
 void setMapBlockFlag(void) { lbl_803DCF4E = 0x1; }
