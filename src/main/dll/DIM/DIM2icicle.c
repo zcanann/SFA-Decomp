@@ -1,6 +1,8 @@
 #include "ghidra_import.h"
 #include "main/dll/DIM/DIM2icicle.h"
 
+#define DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT 0x20000
+
 extern undefined4 FUN_80003494();
 extern undefined8 FUN_80006728();
 extern undefined4 FUN_80006824();
@@ -448,17 +450,7 @@ void warpDarkIceMines_801bbb44(int obj, int param_2)
       vec[2] = lbl_803E4C68;
       PSMTXMultVec((f32 *)(state + 0x64), vec, vec);
       memcpy(state + 0x94, vec, 0xc);
-      {
-        /* MWCC quirk: target materializes 0x20000 via lis; clean C folds to oris */
-        register u32 tmp;
-        register u32 fl;
-        fl = gDIMbossSequenceFlags;
-        asm {
-          lis tmp, 2
-          or tmp, fl, tmp
-        }
-        gDIMbossSequenceFlags = tmp;
-      }
+      gDIMbossSequenceFlags |= DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT;
     }
   }
   if (gDIMbossSequenceFlags & 0x4000) {
@@ -724,18 +716,8 @@ void fn_801BC7E4(int obj, int param_2, int param_3, int param_4)
     DIM2icicle_createStateLight(obj, 1);
   }
   {
-    /* MWCC quirk: target materializes ~0x20000 via lis/addi; clean C folds to rlwinm */
-    register u32 tmp;
-    register u32 hi;
-    register u32 flags;
-    flags = gDIMbossSequenceFlags;
-    if (flags & 0x20000) {
-      asm {
-        lis hi, -2
-        addi tmp, hi, -1
-        and tmp, flags, tmp
-      }
-      gDIMbossSequenceFlags = tmp;
+    if (gDIMbossSequenceFlags & DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT) {
+      gDIMbossSequenceFlags &= ~DIM_BOSS_SEQ_SPAWN_BLUE_WHITE_EFFECT;
       DIM2icicle_spawnBlueWhiteEffect((int *)(*(int *)(param_3 + 0x40c) + 4), (f32 *)(*(int *)(param_3 + 0x40c) + 0x94));
     }
   }
