@@ -390,7 +390,7 @@ extern f32 lbl_803E7274;
 extern f32 lbl_803E7260;
 extern void textureFree(void *tex);
 extern void *textureLoadAsset(int id);
-extern void fn_8001DB24(void *light, int v);
+extern void modelLightStruct_setProjectedLightChannelPreference(void *light, int v);
 extern void modelLightStruct_setProjectionTexture(void *light, void *tex);
 extern void modelLightStruct_setupOrthoProjection(void *light, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
 extern void modelLightStruct_setupPerspectiveProjection(void *light, f32 a, f32 b);

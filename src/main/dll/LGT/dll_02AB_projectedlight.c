@@ -80,7 +80,7 @@ void projectedlight_init(int obj, int setup)
             *(u8 *)(setup + 0x2e), *(u8 *)(setup + 0x2f), *(u8 *)(setup + 0x37));
         modelLightStruct_setDistanceAttenuation(*(void **)state, (f32)(u32)*(u16 *)(setup + 0x1a),
             (f32)(u32)*(u16 *)(setup + 0x1c));
-        fn_8001DB24(*(void **)state, *(u8 *)(setup + 0x39));
+        modelLightStruct_setProjectedLightChannelPreference(*(void **)state, *(u8 *)(setup + 0x39));
         modelLightStruct_setEnabled(*(void **)state, *(u8 *)(setup + 0x3a), lbl_803E7270);
 
         if (*(void **)(state + 4) == NULL) {

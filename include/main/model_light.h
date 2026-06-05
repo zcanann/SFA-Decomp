@@ -27,7 +27,7 @@ typedef struct ModelLightStruct {
     u8 field4D;
     u8 pad4e[0x50 - 0x4e];
     int lightKind;
-    void *field54;
+    int projectedLightChannelPreference;
     int activeState;
     int objectLightMaskIndex;
     int transformMode;
@@ -108,6 +108,8 @@ void modelLightStruct_setSpecularAttenuation(ModelLightStruct *light, f32 scale,
 void modelLightStruct_setSpotAttenuation(ModelLightStruct *light, f32 cutoff, int spotFunction);
 void modelLightStruct_setPosition(ModelLightStruct *light, f32 x, f32 y, f32 z);
 void modelLightStruct_setDirection(ModelLightStruct *light, f32 x, f32 y, f32 z);
+int modelLightStruct_getProjectedLightChannelPreference(ModelLightStruct *light);
+void modelLightStruct_setProjectedLightChannelPreference(ModelLightStruct *light, int preference);
 void modelLightStruct_setAffectsAabbLightSelection(ModelLightStruct *light, u8 enabled);
 void modelLightStruct_setSelectionPriority(ModelLightStruct *light, u8 priority);
 f32 *modelLightStruct_getProjectionTexMtx(ModelLightStruct *light);

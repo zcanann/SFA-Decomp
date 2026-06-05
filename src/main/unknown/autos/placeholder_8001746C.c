@@ -8242,12 +8242,12 @@ void modelLightStruct_setProjectionTexture(ModelLightStruct *p, void *v) {
     p->projectionTexture = v;
 }
 
-void *fn_8001DB1C(ModelLightStruct *p) {
-    return p->field54;
+int modelLightStruct_getProjectedLightChannelPreference(ModelLightStruct *p) {
+    return p->projectedLightChannelPreference;
 }
 
-void fn_8001DB24(ModelLightStruct *p, void *v) {
-    p->field54 = v;
+void modelLightStruct_setProjectedLightChannelPreference(ModelLightStruct *p, int v) {
+    p->projectedLightChannelPreference = v;
 }
 
 void modelLightStruct_setSelectionPriority(ModelLightStruct *p, u8 v) {

@@ -5366,7 +5366,7 @@ extern void textureColorFn_8008991c(int idx, u8 *r, u8 *g, u8 *b);
 extern void lightGetColor(int light, u8 *r, u8 *g, u8 *b);
 extern void modelLightStruct_selectObjectLights(u8 *model, int *arr, u32 n, s32 *cnt, int mode);
 extern void modelLightStruct_loadChannelLight(u8 chan, int light, u8 *model);
-extern int fn_8001DB1C(int light);
+extern int modelLightStruct_getProjectedLightChannelPreference(int light);
 extern void modelLightChannels_applyGXControls(void);
 extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
 extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
@@ -5482,7 +5482,7 @@ void objFn_8003dc50(u8 *obj, u8 *model) {
                     lp = &lbl_803DCC64;
                     sp = &lbl_803DCC60;
                     for (; k < lbl_803DCC5C; k++) {
-                        int t = fn_8001DB1C(*lp);
+                        int t = modelLightStruct_getProjectedLightChannelPreference(*lp);
                         if (!got && t == 1) {
                             *sp = 1;
                             got = 1;
