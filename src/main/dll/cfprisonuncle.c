@@ -2626,8 +2626,9 @@ void fn_801814D0(int obj, int param_2, u8 *state) {
   int hitType;
   int *objects;
   int i;
-  f32 groupObjY;
+  int *ret;
   f32 objY;
+  f32 groupObjY;
   f32 f;
 
   hitType = ObjHits_GetPriorityHitWithPosition(obj,&hitWork[3],&hitWork[2],&hitWork[1],
@@ -2646,12 +2647,14 @@ void fn_801814D0(int obj, int param_2, u8 *state) {
           }
           return;
         }
-        objects = (int *)ObjGroup_GetObjects(0x10,&hitWork[0]);
-        for (i = 0; i < hitWork[0]; i++) {
+        ret = (int *)ObjGroup_GetObjects(0x10,&hitWork[0]);
+        i = 0;
+        objects = ret;
+        for (; i < hitWork[0]; i++) {
           if (ObjHits_IsObjectEnabled(*objects) != 0) {
             groupObjY = *(f32 *)(*objects + 0x10);
             objY = *(f32 *)(obj + 0x10);
-            if (objY < groupObjY && groupObjY < objY + lbl_803DBDA8) {
+            if (groupObjY > objY && groupObjY < objY + lbl_803DBDA8) {
               if (Vec_xzDistance((f32 *)(*objects + 0x18),(f32 *)(obj + 0x18)) < lbl_803DBDA4) {
                 ObjHits_RecordObjectHit(*objects,hitWork[3],5,1,0);
               }
