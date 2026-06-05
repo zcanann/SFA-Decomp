@@ -1,5 +1,21 @@
 #include "main/dll/dll_80220608_shared.h"
 
+typedef struct WCTileIface WCTileIface;
+struct WCTileIface {
+    int pad00[8];                                                              /* 0x00 */
+    void (*moveToTileA)(int obj, int x, int y, int px, int pz, WCTileIface *); /* 0x20 */
+    int pad24[2];                                                              /* 0x24 */
+    int (*getTileIndexA)(int x, int y, WCTileIface *);                         /* 0x2c */
+    void (*getTileXYA)(int idx, void *xOut, void *yOut, WCTileIface *);        /* 0x30 */
+    int pad34[2];                                                              /* 0x34 */
+    void (*moveToTileB)(int obj, int x, int y, int px, int pz, WCTileIface *); /* 0x3c */
+    int pad40[2];                                                              /* 0x40 */
+    int (*getTileIndexB)(int x, int y, WCTileIface *);                         /* 0x48 */
+    void (*getTileXYB)(int idx, void *xOut, void *yOut, WCTileIface *);        /* 0x4c */
+};
+
+#define WCTILE_IFACE (*(WCTileIface **)(*(int *)(*(int *)(state + 0) + 0x68)))
+
 #pragma peephole on
 #pragma scheduling on
 int wctile_getExtraSize(void) { return 0xc; }
@@ -86,7 +102,7 @@ void wctile_update(int obj)
         *(u8 *)(obj + 0x36) = 0;
         return;
     }
-    *(s16 *)(obj + 0) += (int)(lbl_803E6DF8 * timeDelta);
+    *(s16 *)(obj + 0) += (s16)(lbl_803E6DF8 * timeDelta);
     if (*(s16 *)(state + 0xa) != 5) {
         if ((s8)*(u8 *)(obj + 0xad) == 1) {
             if ((u32)GameBit_Get(0x812) != 0)
@@ -103,19 +119,15 @@ void wctile_update(int obj)
     switch (*(s16 *)(state + 0xa)) {
     case 0:
         if ((s8)*(u8 *)(obj + 0xad) == 1) {
-            (*(void (**)(int, int, int, int))(*(int *)(*(int *)(*(int *)(state + 0) + 0x68)) + 0x30))(
-                *(s16 *)(state + 8), state + 4, state + 6,
-                *(int *)(*(int *)(*(int *)(state + 0) + 0x68)));
-            (*(void (**)(int, int, int, int, int, int))(*(int *)(*(int *)(*(int *)(state + 0) + 0x68)) + 0x20))(
-                obj, *(s16 *)(state + 4), *(s16 *)(state + 6), obj + 0xc, obj + 0x14,
-                *(int *)(*(int *)(*(int *)(state + 0) + 0x68)));
+            WCTILE_IFACE->getTileXYA(*(s16 *)(state + 8), (void *)(state + 4), (void *)(state + 6),
+                                     WCTILE_IFACE);
+            WCTILE_IFACE->moveToTileA(obj, *(s16 *)(state + 4), *(s16 *)(state + 6), obj + 0xc,
+                                      obj + 0x14, WCTILE_IFACE);
         } else {
-            (*(void (**)(int, int, int, int))(*(int *)(*(int *)(*(int *)(state + 0) + 0x68)) + 0x4c))(
-                *(s16 *)(state + 8), state + 4, state + 6,
-                *(int *)(*(int *)(*(int *)(state + 0) + 0x68)));
-            (*(void (**)(int, int, int, int, int, int))(*(int *)(*(int *)(*(int *)(state + 0) + 0x68)) + 0x3c))(
-                obj, *(s16 *)(state + 4), *(s16 *)(state + 6), obj + 0xc, obj + 0x14,
-                *(int *)(*(int *)(*(int *)(state + 0) + 0x68)));
+            WCTILE_IFACE->getTileXYB(*(s16 *)(state + 8), (void *)(state + 4), (void *)(state + 6),
+                                     WCTILE_IFACE);
+            WCTILE_IFACE->moveToTileB(obj, *(s16 *)(state + 4), *(s16 *)(state + 6), obj + 0xc,
+                                      obj + 0x14, WCTILE_IFACE);
         }
         *(u8 *)(obj + 0x36) = 0xff;
         *(s16 *)(state + 0xa) = 1;
@@ -135,21 +147,18 @@ void wctile_update(int obj)
         }
         if (*(u8 *)(obj + 0x36) == 0) {
             if ((s8)*(u8 *)(obj + 0xad) == 1) {
-                (*(void (**)(int, int, int, int))(*(int *)(*(int *)(*(int *)(state + 0) + 0x68)) + 0x30))(
-                    *(s16 *)(state + 8), state + 4, state + 6,
-                    *(int *)(*(int *)(*(int *)(state + 0) + 0x68)));
-                (*(void (**)(int, int, int, int, int, int))(*(int *)(*(int *)(*(int *)(state + 0) + 0x68)) + 0x20))(
-                    obj, *(s16 *)(state + 4), *(s16 *)(state + 6), obj + 0xc, obj + 0x14,
-                    *(int *)(*(int *)(*(int *)(state + 0) + 0x68)));
+                WCTILE_IFACE->getTileXYA(*(s16 *)(state + 8), (void *)(state + 4), (void *)(state + 6),
+                                         WCTILE_IFACE);
+                WCTILE_IFACE->moveToTileA(obj, *(s16 *)(state + 4), *(s16 *)(state + 6), obj + 0xc,
+                                          obj + 0x14, WCTILE_IFACE);
+                *(s16 *)(state + 0xa) = 4;
             } else {
-                (*(void (**)(int, int, int, int))(*(int *)(*(int *)(*(int *)(state + 0) + 0x68)) + 0x4c))(
-                    *(s16 *)(state + 8), state + 4, state + 6,
-                    *(int *)(*(int *)(*(int *)(state + 0) + 0x68)));
-                (*(void (**)(int, int, int, int, int, int))(*(int *)(*(int *)(*(int *)(state + 0) + 0x68)) + 0x3c))(
-                    obj, *(s16 *)(state + 4), *(s16 *)(state + 6), obj + 0xc, obj + 0x14,
-                    *(int *)(*(int *)(*(int *)(state + 0) + 0x68)));
+                WCTILE_IFACE->getTileXYB(*(s16 *)(state + 8), (void *)(state + 4), (void *)(state + 6),
+                                         WCTILE_IFACE);
+                WCTILE_IFACE->moveToTileB(obj, *(s16 *)(state + 4), *(s16 *)(state + 6), obj + 0xc,
+                                          obj + 0x14, WCTILE_IFACE);
+                *(s16 *)(state + 0xa) = 4;
             }
-            *(s16 *)(state + 0xa) = 4;
         }
         break;
     case 4:
@@ -172,15 +181,13 @@ void wctile_update(int obj)
         }
         if ((s8)*(u8 *)(obj + 0xad) == 1) {
             if (*(s16 *)(state + 8) !=
-                (u8)(*(int (**)(int, int, int))(*(int *)(*(int *)(*(int *)(state + 0) + 0x68)) + 0x2c))(
-                    *(s16 *)(state + 4), *(s16 *)(state + 6),
-                    *(int *)(*(int *)(*(int *)(state + 0) + 0x68))))
+                (u8)WCTILE_IFACE->getTileIndexA(*(s16 *)(state + 4), *(s16 *)(state + 6),
+                                                WCTILE_IFACE))
                 *(s16 *)(state + 0xa) = 2;
         } else {
             if (*(s16 *)(state + 8) !=
-                (u8)(*(int (**)(int, int, int))(*(int *)(*(int *)(*(int *)(state + 0) + 0x68)) + 0x48))(
-                    *(s16 *)(state + 4), *(s16 *)(state + 6),
-                    *(int *)(*(int *)(*(int *)(state + 0) + 0x68))))
+                (u8)WCTILE_IFACE->getTileIndexB(*(s16 *)(state + 4), *(s16 *)(state + 6),
+                                                WCTILE_IFACE))
                 *(s16 *)(state + 0xa) = 2;
         }
         break;
