@@ -1527,6 +1527,7 @@ typedef struct ShopSparkleSpawn {
     f32 y;
     f32 z;
     int owner;
+    u8 pad[0x28];
 } ShopSparkleSpawn;
 
 typedef struct PushcartStateE8 {
