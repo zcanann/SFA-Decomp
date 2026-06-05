@@ -829,8 +829,7 @@ void seqobject_update(int *obj)
 {
     u8 *state;
     u8 *def;
-    u32 bitValue;
-    s8 bitByte;
+    s32 bitValue;
 
     state = *(u8 **)((char *)obj + 0xb8);
     def = *(u8 **)((char *)obj + 0x4c);
@@ -857,11 +856,11 @@ void seqobject_update(int *obj)
             state[0] = (u8)(state[0] | SEQOBJECT_STATE_OPEN);
         }
 
-        bitByte = (s8)GameBit_Get(*(s16 *)(def + 0x1a));
-        bitValue = bitByte;
-        if ((s8)bitValue != (s8)state[1]) {
-            state[1] = (u8)bitValue;
-            if ((s8)bitValue != 0) {
+        bitValue = GameBit_Get(*(s16 *)(def + 0x1a));
+        bitValue = (s8)bitValue;
+        if (bitValue != (s8)state[1]) {
+            state[1] = bitValue;
+            if (bitValue != 0) {
                 if (*(s8 *)(def + 0x1e) != -1) {
                     ((void (*)(int *, int))((int **)*gObjectTriggerInterface)[0x21])(obj, 0);
                     ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])
@@ -875,24 +874,22 @@ void seqobject_update(int *obj)
             }
         }
     }
-    else if ((state[0] & SEQOBJECT_STATE_TRIGGER_SEQUENCE) == 0) {
-        if ((def[0x1d] & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) != 0 &&
-            GameBit_Get(*(s16 *)(def + 0x18)) == 0) {
-            state[0] = (u8)(state[0] & ~SEQOBJECT_STATE_OPEN);
-        }
-    }
-    else {
+    else if ((state[0] & SEQOBJECT_STATE_TRIGGER_SEQUENCE) != 0) {
         ((void (*)(int *, int))((int **)*gObjectTriggerInterface)[0x15])
             (obj, *(s16 *)(def + 0x20));
-        if ((def[0x1d] & SEQOBJECT_FLAG_USE_TRIGGER_PARAM) == 0) {
-            ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])
-                (*(s8 *)(def + 0x1e), obj, 1);
-        }
-        else {
+        if ((def[0x1d] & SEQOBJECT_FLAG_USE_TRIGGER_PARAM) != 0) {
             ((void (*)(int, int *, u16))((int **)*gObjectTriggerInterface)[0x12])
                 (*(s8 *)(def + 0x1e), obj, *(u16 *)(def + 0x22));
         }
+        else {
+            ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])
+                (*(s8 *)(def + 0x1e), obj, 1);
+        }
         state[0] = (u8)(state[0] & ~SEQOBJECT_STATE_TRIGGER_SEQUENCE);
+    }
+    else if ((def[0x1d] & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) != 0 &&
+             GameBit_Get(*(s16 *)(def + 0x18)) == 0) {
+        state[0] = (u8)(state[0] & ~SEQOBJECT_STATE_OPEN);
     }
 }
 
