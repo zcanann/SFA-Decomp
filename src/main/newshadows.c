@@ -3846,13 +3846,19 @@ void fn_8006CB50(void) {
             char *addr = (char *)lbl_803DCFBC + (y & 3) * 2 + (y >> 2) * 0x20 + (x & 3) * 8 + (x >> 2) * 0x800;
             f32 fx = (f32)x - 127.5f;
             f32 dist = sqrtf(fy * fy + fx * fx);
-            f32 s = 0.0f;
+            f32 ny = fy / dist;
+            f32 nx = fx / dist;
+            f32 s;
             if (dist <= 112.0f) {
-                s = 2.0f * -(0.9f * dist - 100.8f) * 0.00390625f;
+                s = lbl_803DED34 * (100.8f - GXOverflowSuspendInProgress_803DED48 * dist) * 0.00390625f;
+            } else {
+                s = lbl_803DED28;
             }
-            *(u16 *)(addr + 0x60) =
-                (u16)(int)(127.0f * (fx / dist) * s + 128.0f) |
-                (u16)(((int)(127.0f * (fy / dist) * s + 128.0f) & 0xffff) << 8);
+            {
+                f32 py = 127.0f * (ny * s) + 128.0f;
+                f32 px = 127.0f * (nx * s) + 128.0f;
+                *(u16 *)(addr + 0x60) = (u16)((int)px | (((int)py & 0xffff) << 8));
+            }
         }
     }
     DCFlushRange((char *)lbl_803DCFBC + 0x60, *(u32 *)((char *)lbl_803DCFBC + 0x44));
