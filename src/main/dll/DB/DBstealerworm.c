@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/dll/DB/DBbonedust.h"
 #include "main/dll/DB/DBstealerworm.h"
 
@@ -703,8 +704,6 @@ extern u8 Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj, f32 *x, f32 *y, f32 *z);
 extern u8 *Obj_AllocObjectSetup(int size, int objId);
 extern int Obj_SetupObject(u8 *setup, int a, int b, int c, int d);
-extern void ObjAnim_SetCurrentMove(int *obj, int a, f32 b, int c);
-extern int ObjAnim_AdvanceCurrentMove(int *obj, f32 b, f32 c, int a);
 extern u8 lbl_803DC090;
 extern int lbl_803DDC48;
 extern f32 lbl_803E5834;
@@ -798,7 +797,7 @@ void SB_ShipHead_update(int obj) {
             }
         }
         if ((state == 5) && (lbl_803DDC48 != 5)) {
-            ObjAnim_SetCurrentMove((int *)obj, 1, lbl_803E5834, 0);
+            ObjAnim_SetCurrentMove(obj, 1, lbl_803E5834, 0);
             lbl_803DC090 = 0;
         }
         if ((((*(s16 *)(obj + 0xa0) == 1) && (lbl_803E5844 <= *(f32 *)(obj + 0x98)))
@@ -843,9 +842,9 @@ void SB_ShipHead_update(int obj) {
             setup[7] = 0xff;
             Obj_SetupObject(setup, 5, -1, -1, 0);
         }
-        proj = ObjAnim_AdvanceCurrentMove((int *)obj, lbl_803E585C, timeDelta, 0);
+        proj = ObjAnim_AdvanceCurrentMove(lbl_803E585C, timeDelta, obj, NULL);
         if ((*(s16 *)(obj + 0xa0) == 1) && (proj != 0)) {
-            ObjAnim_SetCurrentMove((int *)obj, 0, lbl_803E5834, 0);
+            ObjAnim_SetCurrentMove(obj, 0, lbl_803E5834, 0);
         }
     }
     lbl_803DDC48 = state;
@@ -861,8 +860,6 @@ void SB_ShipMast_init(void) {}
 void SB_ShipMast_release(void) {}
 void SB_ShipMast_initialise(void) {}
 
-extern void ObjAnim_SetCurrentMove(int *obj, int a, f32 b, int c);
-extern int ObjAnim_AdvanceCurrentMove(int *obj, f32 b, f32 c, int a);
 extern f32 lbl_803E586C;
 extern f32 lbl_803E5870;
 extern f32 lbl_803E5874;
@@ -885,7 +882,7 @@ void SB_ShipMast_update(int *obj) {
     if (*(s16*)((char*)*(int**)((char*)obj + 0x30) + 0x46) == 0x139) {
         if (pf4 >= 0xa && pf4 < 0xd) {
             if (*(s16*)((char*)obj + 0xa0) != 0) {
-                ObjAnim_SetCurrentMove(obj, 0, lbl_803E586C, 0);
+                ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E586C, 0);
             }
             if (pf4 >= 0xc) {
                 speed = lbl_803E5870;
@@ -894,17 +891,17 @@ void SB_ShipMast_update(int *obj) {
             }
         } else {
             if (*(s16*)((char*)obj + 0xa0) != 1) {
-                ObjAnim_SetCurrentMove(obj, 1, lbl_803E586C, 0);
+                ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E586C, 0);
             }
             speed = lbl_803E5878;
         }
     } else {
         if (*(s16*)((char*)obj + 0xa0) != 1) {
-            ObjAnim_SetCurrentMove(obj, 1, lbl_803E586C, 0);
+            ObjAnim_SetCurrentMove((int)obj, 1, lbl_803E586C, 0);
         }
         speed = lbl_803E5878;
     }
-    ObjAnim_AdvanceCurrentMove(obj, speed, (f32)(u32)framesThisStep, 0);
+    ObjAnim_AdvanceCurrentMove(speed, (f32)(u32)framesThisStep, (int)obj, NULL);
 }
 #pragma peephole reset
 #pragma scheduling reset
