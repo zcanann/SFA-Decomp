@@ -1277,9 +1277,12 @@ int fn_8017DF34(int p, int state, f32 y)
             if (a <= lbl_803E37E0) {
                 r = lbl_803E37C8;
             } else {
-                f32 r1 = (-b - q) / t;
-                f32 r2 = (-b + q) / t;
-                r = (r1 > 0.0f) ? r1 : r2;
+                f32 r2;
+                f32 nb;
+                nb = -b;
+                r = (nb - q) / t;
+                r2 = (nb + q) / t;
+                r = (r > *(f32 *)&lbl_803E37D4) ? r : r2;
             }
             *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - r;
             *(f32 *)(state + 0x2c) = *(f32 *)(state + 0x2c) - *(f32 *)(state + 0x30);
@@ -1320,9 +1323,12 @@ int fn_8017DF34(int p, int state, f32 y)
         if (a <= lbl_803E37E0) {
             r = lbl_803E37C8;
         } else {
-            f32 r1 = (-b - q) / t;
-            f32 r2 = (-b + q) / t;
-            r = (r1 > 0.0f) ? r1 : r2;
+            f32 r2;
+            f32 nb;
+            nb = -b;
+            r = (nb - q) / t;
+            r2 = (nb + q) / t;
+            r = (r > *(f32 *)&lbl_803E37D4) ? r : r2;
         }
         *(f32 *)(state + 0xc) = *(f32 *)(state + 0xc) - r;
         *(f32 *)(p + 0x10) = *(f32 *)(state + 0x2c);
