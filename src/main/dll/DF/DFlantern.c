@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/mapEvent.h"
 #include "main/dll/DF/DFlantern.h"
+#include "main/objanim.h"
 
 extern uint GameBit_Get(int eventId);
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
@@ -14,7 +15,6 @@ extern void Music_Trigger(int trackId,int mode);
 extern void GameBit_Set(int bit,int value);
 extern u8 *Obj_GetPlayerObject(void);
 extern void fn_80296518(void *obj,int arg,int enable);
-extern int ObjAnim_AdvanceCurrentMove(int obj,f32 moveStepScale,f32 deltaTime,void *events);
 extern s16 getAngle(f32 deltaX,f32 deltaZ);
 extern f32 Vec_xzDistance(void *a,void *b);
 extern f32 fn_80293E80(f32 angle);
@@ -253,7 +253,7 @@ void fn_801C2914(int obj)
   trigB = trigB + trigA;
   *(s16 *)(obj + 2) = (s32)(lbl_803E4E68 * trigB);
 
-  ObjAnim_AdvanceCurrentMove(obj,lbl_803E4E6C,timeDelta,animEvents);
+  ObjAnim_AdvanceCurrentMove(lbl_803E4E6C,timeDelta,obj,(ObjAnimEventList *)animEvents);
   if (player != NULL) {
     angleDelta =
         ((u16)getAngle(*(f32 *)(obj + 0x18) - *(f32 *)(player + 0x18),
