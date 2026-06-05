@@ -2410,14 +2410,14 @@ extern char gViewFrustumPlanes[];
 
 #pragma scheduling off
 int ViewFrustum_IsSphereVisible(float* center, float radius) {
-	float* plane;
+	FrustumPlane* plane;
 	u8 i;
 	for (i = 0; i < 5; i++) {
 		float dot;
-		plane = (float*)(gViewFrustumPlanes + i * 0x14);
-		dot = plane[3]
-		          + (plane[2] * (center[2] - playerMapOffsetZ)
-		             + (center[1] * plane[1] + plane[0] * (center[0] - playerMapOffsetX)));
+		plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
+		dot = plane->distance
+		          + (plane->normalZ * (center[2] - playerMapOffsetZ)
+		             + (center[1] * plane->normalY + plane->normalX * (center[0] - playerMapOffsetX)));
 		if (radius + dot < lbl_803DEBCC) return 0;
 	}
 	return 1;
@@ -3593,7 +3593,7 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
     f32 p3;
     f32 fx, fz, x2, z2, y0, y1;
     f32 v;
-    f32* plane;
+    FrustumPlane* plane;
     int i;
     int j;
     int hit;
@@ -3609,12 +3609,12 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
         y0 = (&lbl_803DEBCC)[8];
         y1 = (&lbl_803DEBCC)[9];
     }
-    plane = (f32*)gViewFrustumPlanes;
+    plane = (FrustumPlane*)gViewFrustumPlanes;
     for (i = 0; i < 5; i++) {
-        f32 p0 = plane[0];
-        f32 p1 = plane[1];
-        f32 p2 = plane[2];
-        p3 = plane[3];
+        f32 p0 = plane->normalX;
+        f32 p1 = plane->normalY;
+        f32 p2 = plane->normalZ;
+        p3 = plane->distance;
         j = 0;
         hit = 0;
         a1 = fx * p0;
@@ -3643,7 +3643,7 @@ int mapRectFn_8005a728(int bx, int bz, char* obj)
         }
         if (j == 8 && hit == 0)
             return 0;
-        plane += 5;
+        plane++;
     }
     return 1;
 }
@@ -3860,10 +3860,10 @@ int objUpdateOpacity(char* obj)
     } else {
         prod = *(f32*)(obj + 0xa8) * *(f32*)(obj + 8);
         for (i = 0; i < 5; i++) {
-            f32* plane = (f32*)(gViewFrustumPlanes + i * 20);
-            if (*(f32*)(obj + 0x1c) * plane[1] +
-                    plane[0] * (*(f32*)(obj + 0x18) - playerMapOffsetX) +
-                    plane[2] * (*(f32*)(obj + 0x20) - playerMapOffsetZ) + plane[3] + prod <
+            FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
+            if (*(f32*)(obj + 0x1c) * plane->normalY +
+                    plane->normalX * (*(f32*)(obj + 0x18) - playerMapOffsetX) +
+                    plane->normalZ * (*(f32*)(obj + 0x20) - playerMapOffsetZ) + plane->distance + prod <
                 lbl_803DEBCC)
                 return 0;
         }
