@@ -59,17 +59,19 @@ extern f32 lbl_803E250C;
  */
 void trickyFn_80141290(int obj, int ball)
 {
-    int nodeIds[6];
-    int nodeCount;
-    int nodeSet;
-    int mask;
+    int nodeIds[4];
+    u8 nodeCount;
     int node;
+    int nodeSet;
+    u32 mask;
+    int bit;
     int i;
     int curve;
     int fromNode;
     int toNode;
-    int targetNode;
     int candidateNode;
+    int targetNode;
+    int walkGroup;
     int sfxState;
     float speed;
     double distance;
@@ -81,63 +83,26 @@ void trickyFn_80141290(int obj, int ball)
             if (*(int *)(ball + CANNONBALL_ROUTE_ACTIVE) != 0) {
                 nodeSet = *(int *)(ball + CANNONBALL_ROUTE_NODE_SET);
                 mask = 1;
-
-                node = *(int *)(nodeSet + 0x1c);
-                if (node > -1 && ((*(s8 *)(nodeSet + 0x1b) & mask) == 0)) {
-                    nodeIds[nodeCount] = node;
-                    nodeCount++;
-                }
-
-                mask <<= 1;
-                node = *(int *)(nodeSet + 0x20);
-                if (node > -1 && ((*(s8 *)(nodeSet + 0x1b) & mask) == 0)) {
-                    nodeIds[nodeCount] = node;
-                    nodeCount++;
-                }
-
-                mask <<= 1;
-                node = *(int *)(nodeSet + 0x24);
-                if (node > -1 && ((*(s8 *)(nodeSet + 0x1b) & mask) == 0)) {
-                    nodeIds[nodeCount] = node;
-                    nodeCount++;
-                }
-
-                mask <<= 1;
-                node = *(int *)(nodeSet + 0x28);
-                if (node > -1 && ((*(s8 *)(nodeSet + 0x1b) & mask) == 0)) {
-                    nodeIds[nodeCount] = node;
-                    nodeCount++;
+                for (bit = 0; bit < 4; bit++) {
+                    node = *(int *)(nodeSet + 0x1c + bit * 4);
+                    if (node > -1 && ((*(s8 *)(nodeSet + 0x1b) & mask) == 0)) {
+                        nodeIds[nodeCount++] = node;
+                    }
+                    mask <<= 1;
                 }
             }
         } else if (*(int *)(ball + CANNONBALL_ROUTE_ACTIVE) == 0) {
-            nodeSet = *(int *)(ball + CANNONBALL_ROUTE_NODE_SET);
-            mask = 1;
-
-            node = *(int *)(nodeSet + 0x1c);
-            if (node > -1 && ((*(s8 *)(nodeSet + 0x1b) & mask) != 0)) {
-                nodeIds[nodeCount] = node;
-                nodeCount++;
-            }
-
-            mask <<= 1;
-            node = *(int *)(nodeSet + 0x20);
-            if (node > -1 && ((*(s8 *)(nodeSet + 0x1b) & mask) != 0)) {
-                nodeIds[nodeCount] = node;
-                nodeCount++;
-            }
-
-            mask <<= 1;
-            node = *(int *)(nodeSet + 0x24);
-            if (node > -1 && ((*(s8 *)(nodeSet + 0x1b) & mask) != 0)) {
-                nodeIds[nodeCount] = node;
-                nodeCount++;
-            }
-
-            mask <<= 1;
-            node = *(int *)(nodeSet + 0x28);
-            if (node > -1 && ((*(s8 *)(nodeSet + 0x1b) & mask) != 0)) {
-                nodeIds[nodeCount] = node;
-                nodeCount++;
+            int node2;
+            int nodeSet2;
+            u32 mask2;
+            nodeSet2 = *(int *)(ball + CANNONBALL_ROUTE_NODE_SET);
+            mask2 = 1;
+            for (bit = 0; bit < 4; bit++) {
+                node2 = *(int *)(nodeSet2 + 0x1c + bit * 4);
+                if (node2 > -1 && ((*(s8 *)(nodeSet2 + 0x1b) & mask2) != 0)) {
+                    nodeIds[nodeCount++] = node2;
+                }
+                mask2 <<= 1;
             }
         }
 
@@ -160,7 +125,7 @@ void trickyFn_80141290(int obj, int ball)
         }
 
         speed = *(float *)(ball + CANNONBALL_SPEED);
-        if ((*(u32 *)(ball + CANNONBALL_FLAGS) & CANNONBALL_SPEED_DECAY_FLAG) != 0) {
+        if ((u8)(*(u32 *)(ball + CANNONBALL_FLAGS) & CANNONBALL_SPEED_DECAY_FLAG) != 0) {
             speed += lbl_803E23F4 * timeDelta;
             if (speed < lbl_803E23DC) {
                 speed = lbl_803E23DC;
@@ -181,20 +146,27 @@ void trickyFn_80141290(int obj, int ball)
         trickyAdvanceRouteTargetAhead(obj, (void *)(ball + CANNONBALL_ROUTE), *(float *)(ball + CANNONBALL_SPEED));
         trickyMove(obj, (void *)(ball + CANNONBALL_MOVE_STATE));
 
-        if (Objfsa_GetWalkGroupIndexAtPoint((float *)(obj + 0x18), (void *)0) == 0) {
-            *(u32 *)(ball + CANNONBALL_FLAGS) |= CANNONBALL_HIDE_FLAG;
+        if (Objfsa_GetWalkGroupIndexAtPoint((float *)(obj + 0x18), (void *)0) != 0) {
+            /* MWCC quirk: target materializes the mask (li -0x11; and); no C form produces it */
+            register u32 m;
+            register u32 v;
+            register int b = ball;
+            asm {
+                lwz v, 0x54(b)
+                li m, -0x11
+                and m, v, m
+                stw m, 0x54(b)
+            }
         } else {
-            *(u32 *)(ball + CANNONBALL_FLAGS) &= ~CANNONBALL_HIDE_FLAG;
+            *(u32 *)(ball + CANNONBALL_FLAGS) |= CANNONBALL_HIDE_FLAG;
         }
 
         *(float *)(ball + CANNONBALL_SFX_TIMER) -= timeDelta;
         if (*(float *)(ball + CANNONBALL_SFX_TIMER) < lbl_803E23DC) {
-            nodeIds[5] = randomGetRange(200, 600) ^ 0x80000000;
-            nodeIds[4] = 0x43300000;
-            *(float *)(ball + CANNONBALL_SFX_TIMER) = (float)(*(double *)&nodeIds[4] - lbl_803E2460);
+            *(float *)(ball + CANNONBALL_SFX_TIMER) = (f32)(int)randomGetRange(200, 600);
 
             sfxState = *(int *)(obj + 0xb8);
-            if (((*(u8 *)(sfxState + 0x58) >> 6 & 1) == 0) &&
+            if (((u32)(*(u8 *)(sfxState + 0x58) >> 6 & 1) == 0) &&
                 ((*(s16 *)(obj + 0xa0) >= 0x30 || *(s16 *)(obj + 0xa0) < 0x29) &&
                  !Sfx_IsPlayingFromObjectChannel(obj, 0x10))) {
                 objAudioFn_800393f8(obj, (void *)(sfxState + 0x3a8), 0x29b, 0x1000, -1, 0);
@@ -202,9 +174,9 @@ void trickyFn_80141290(int obj, int ball)
         }
     } else {
         trickyFn_8013b368(obj, ball, lbl_803E2488);
-        nodeCount = Objfsa_GetWalkGroupIndexAtPoint((float *)(*(int *)(ball + CANNONBALL_CURVE) + 8), (void *)0);
+        walkGroup = Objfsa_GetWalkGroupIndexAtPoint((float *)(*(int *)(ball + CANNONBALL_CURVE) + 8), (void *)0);
 
-        if (Objfsa_GetWalkGroupIndexAtPoint((float *)(obj + 0x18), (void *)0) == nodeCount) {
+        if (Objfsa_GetWalkGroupIndexAtPoint((float *)(obj + 0x18), (void *)0) == walkGroup) {
             curve = *(int *)(ball + CANNONBALL_CURVE);
 
             (*(void (**)(int, int))(*(int *)gRomCurveInterface + 0x54))(curve, 0);
