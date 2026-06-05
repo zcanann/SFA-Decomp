@@ -137,14 +137,16 @@ void fn_801EC1AC(int param_1, int param_2)
     }
     *(f32 *)(param_2 + 0x414) = fLim;
 
-    /* Apply 0x414 * timeDelta to short at 0x40e (with overflow normalization) */
+    /* Apply 0x414 * timeDelta to short at 0x40e, then chase the scaled
+       angular velocity through 0x410 with overflow normalization. */
     {
         f32 newF = (f32)(s32)*(s16 *)(param_2 + 0x40e) +
                    *(f32 *)(param_2 + 0x414) * timeDelta;
         s32 newI = (s32)newF;
         s32 delta;
-        *(s16 *)(param_2 + 0x40e) = (s16)newI;
-        delta = newI - (s32)(u16)*(u32 *)(param_2 + 0x410);
+        *(s16 *)(param_2 + 0x40e) = newI;
+        delta = (s32)(*(f32 *)(param_2 + 0x414) * *(f32 *)(param_2 + 0x550)) -
+                (s32)(u16)*(u32 *)(param_2 + 0x410);
         if (delta > 0x8000) {
             delta = delta - 0xFFFF;
         }
@@ -185,7 +187,7 @@ void fn_801EC1AC(int param_1, int param_2)
         {
             s32 newI = (s32)((f32)(s32)*(s16 *)(param_1 + 0x2) +
                              *(f32 *)(param_2 + 0x584) * timeDelta);
-            *(s16 *)(param_1 + 0x2) = (s16)newI;
+            *(s16 *)(param_1 + 0x2) = newI;
         }
     }
 
@@ -195,7 +197,7 @@ void fn_801EC1AC(int param_1, int param_2)
         vec_args[1] = *(f32 *)(param_2 + 0x49c);
         vec_args[2] = (f32)(s32)*(s16 *)(param_1 + 0x4);
         vec_args[3] = (f32)(s32)*(s16 *)(param_1 + 0x2);
-        (**(void (***)(void *, int, void *))((u8 *)*gCameraInterface + 0x60))(
+        (*(void (**)(void *, int, void *))((u8 *)*gCameraInterface + 0x60))(
             vec_args, 0x10, *gCameraInterface);
     }
 
