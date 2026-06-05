@@ -5,12 +5,14 @@
 #include "ghidra_import.h"
 
 #define EXPGFX_POOL_COUNT 0x50
-#define EXPGFX_POOL_GROUP_COUNT (EXPGFX_POOL_COUNT / 8)
+#define EXPGFX_POOL_RESET_BATCH_SIZE 8
+#define EXPGFX_POOL_GROUP_COUNT (EXPGFX_POOL_COUNT / EXPGFX_POOL_RESET_BATCH_SIZE)
 #define EXPGFX_POOL_SEARCH_BATCH_SIZE 5
 #define EXPGFX_POOL_SEARCH_BATCH_COUNT (EXPGFX_POOL_COUNT / EXPGFX_POOL_SEARCH_BATCH_SIZE)
 #define EXPGFX_SLOTS_PER_POOL 0x19
 #define EXPGFX_SLOT_SIZE 0xA0
 #define EXPGFX_POOL_BYTES (EXPGFX_SLOTS_PER_POOL * EXPGFX_SLOT_SIZE)
+#define EXPGFX_POOL_ALLOC_HEAP 0x14
 #define EXPGFX_SPAWN_CONFIG_PREFIX_BYTES 0x60
 #define EXPGFX_RESOURCE_TABLE_COUNT 0x20
 #define EXPGFX_RESOURCE_EVICTION_RESET 1000
@@ -171,6 +173,8 @@ STATIC_ASSERT(offsetof(ExpgfxTableEntry, attachedKey1) == 0x04);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, resource) == 0x08);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, refCount) == 0x0C);
 STATIC_ASSERT(offsetof(ExpgfxTableEntry, resourceId) == 0x0E);
+
+#define EXPGFX_EXPTAB_BYTES (EXPGFX_EXPTAB_ENTRY_COUNT * sizeof(ExpgfxTableEntry))
 
 /*
  * Some spawn requests materialize an inline attached-source block after the

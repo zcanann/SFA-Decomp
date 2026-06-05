@@ -3094,13 +3094,13 @@ void expgfx_initialise(void)
   slotPoolBases = (u32 *)(expgfxBase + EXPGFX_SLOT_POOL_BASES_OFFSET);
   poolIndex = 0;
   do {
-    *slotPoolBases = (u32)mmAlloc(EXPGFX_POOL_BYTES, 0x14, 0);
+    *slotPoolBases = (u32)mmAlloc(EXPGFX_POOL_BYTES, EXPGFX_POOL_ALLOC_HEAP, 0);
     memset((void *)*slotPoolBases, 0, EXPGFX_POOL_BYTES);
     DCFlushRange((void *)*slotPoolBases, EXPGFX_POOL_BYTES);
     slotPoolBases++;
     poolIndex++;
   } while (poolIndex < EXPGFX_POOL_COUNT);
-  memset(expgfxBase + EXPGFX_EXPTAB_OFFSET, 0, 0x500);
+  memset(expgfxBase + EXPGFX_EXPTAB_OFFSET, 0, EXPGFX_EXPTAB_BYTES);
   return;
 }
 #pragma peephole reset
