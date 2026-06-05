@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802792F8_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802792F8_H_
+#ifndef MAIN_AUDIO_VOICE_ID_H_
+#define MAIN_AUDIO_VOICE_ID_H_
 
 #include "ghidra_import.h"
 
@@ -9,4 +9,4 @@ u32 vidMakeNew(int state, int returnNewId);
 int vidGetInternalId(u32 id);
 void voiceRemovePriority(int state);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802792F8_H_ */
+#endif /* MAIN_AUDIO_VOICE_ID_H_ */

@@ -138,7 +138,7 @@ void Music_ChannelLoadedCallback(MusicBank *bank, MusicChannel *channel, MusicTr
             params.field_10 = 0;
             params.field_e = 0;
             params.flags |= 4;
-            seqHandle = fn_8027B9DC(bank->field_2, trigger->field_2, channel->bankData, &params, 0);
+            seqHandle = sndSeqPlayEx(bank->field_2, trigger->field_2, channel->bankData, &params, 0);
             sndSeqVolume(voice, 0x1f4, seqHandle, 0);
             channel->status = 1;
             channel->seqHandle = seqHandle;

@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
-#include "main/unknown/autos/placeholder_802792F8.h"
+#include "main/audio/voice_id.h"
 #include "main/unknown/autos/placeholder_80279AF0.h"
-#include "main/unknown/autos/placeholder_80279EC0.h"
+#include "main/audio/voice_manage.h"
 
 extern void macMakeInactive(McmdVoiceState *state, int x);
 
