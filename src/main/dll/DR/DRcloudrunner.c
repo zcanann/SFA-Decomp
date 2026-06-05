@@ -227,15 +227,32 @@ void sc_musictree_init(int obj, int p2)
 void sc_musictree_release(void) {}
 void sc_musictree_initialise(void) {}
 
+typedef struct SCTotemPoleState {
+    u16 gameBit;
+    u8 currentState;
+    u8 previousState;
+    f32 animSpeed;
+} SCTotemPoleState;
+
+#define SC_TOTEMPOLE_OBJECT_TYPE 0x282
+#define SC_TOTEMPOLE_GAMEBIT_FRONT 0x81
+#define SC_TOTEMPOLE_GAMEBIT_LEFT 0x82
+#define SC_TOTEMPOLE_GAMEBIT_RIGHT 0x83
+#define SC_TOTEMPOLE_GAMEBIT_REAR 0x84
+#define SC_TOTEMPOLE_SETUP_REAR 0x44916
+#define SC_TOTEMPOLE_SETUP_RIGHT 0x44909
+#define SC_TOTEMPOLE_SETUP_FRONT 0x4490C
+#define SC_TOTEMPOLE_SETUP_LEFT 0x4490F
+
 #pragma dont_inline on
-void sc_totempole_sortCompletionGameBits(int *bits, int param2)
+void sc_totempole_sortCompletionGameBits(u16 *bits, int param2)
 {
     u16 stk[20];
     u8 i, j;
     s32 changed = 0;
 
     for (i = 0; i < 3; i++) {
-        u32 v = GameBit_Get(*(u16 *)((char *)bits + (u32)i * 2));
+        u32 v = GameBit_Get(bits[i]);
         stk[i] = (u16)v;
     }
     stk[3] = (u16)param2;
@@ -253,7 +270,7 @@ void sc_totempole_sortCompletionGameBits(int *bits, int param2)
         }
     }
     for (i = 0; i < 3; i++) {
-        GameBit_Set(*(u16 *)((char *)bits + (u32)i * 2), (u32)stk[i]);
+        GameBit_Set(bits[i], (u32)stk[i]);
     }
     (void)changed;
 }
@@ -272,7 +289,7 @@ void sc_totempole_hitDetect(void) {}
 #pragma scheduling off
 void sc_totempole_update(int obj)
 {
-    int inner = *(int *)(obj + 0xb8);
+    SCTotemPoleState *state = *(SCTotemPoleState **)(obj + 0xb8);
     f32 stk;
     int played;
     int i;
@@ -280,19 +297,22 @@ void sc_totempole_update(int obj)
     int idx;
     int count;
 
-    *(u8 *)(inner + 3) = *(u8 *)(inner + 2);
-    *(u8 *)(inner + 2) = (u8)GameBit_Get(*(u16 *)(inner + 0));
-    if (*(u8 *)(inner + 3) != *(u8 *)(inner + 2)) {
-        if (*(u8 *)(inner + 2) != 0) {
+    state->previousState = state->currentState;
+    state->currentState = (u8)GameBit_Get(state->gameBit);
+    if (state->previousState != state->currentState) {
+        if (state->currentState != 0) {
             Sfx_PlayFromObject(obj, 0x3ad);
-            *(f32 *)(inner + 4) = lbl_803E55D4;
+            state->animSpeed = lbl_803E55D4;
             played = 0;
-            if (GameBit_Get(0x81) != 0 && GameBit_Get(0x82) != 0 && GameBit_Get(0x83) != 0 && GameBit_Get(0x84) != 0) {
+            if (GameBit_Get(SC_TOTEMPOLE_GAMEBIT_FRONT) != 0 &&
+                GameBit_Get(SC_TOTEMPOLE_GAMEBIT_LEFT) != 0 &&
+                GameBit_Get(SC_TOTEMPOLE_GAMEBIT_RIGHT) != 0 &&
+                GameBit_Get(SC_TOTEMPOLE_GAMEBIT_REAR) != 0) {
                 Sfx_PlayFromObject(0, 0x7e);
                 played = 1;
                 arr = ObjList_GetObjects(&idx, &count);
                 for (i = idx; i < count; i++) {
-                    if (arr[i] != obj && *(s16 *)(arr[i] + 0x46) == 0x282) {
+                    if (arr[i] != obj && *(s16 *)(arr[i] + 0x46) == SC_TOTEMPOLE_OBJECT_TYPE) {
                         (*(void (**)(int, int))(*(int *)(*(int *)(arr[i] + 0x68)) + 0x20))(arr[i], 6);
                         break;
                     }
@@ -302,17 +322,17 @@ void sc_totempole_update(int obj)
                     s32 t = (s32)d;
                     (void)t;
                 }
-                sc_totempole_sortCompletionGameBits((int *)&lbl_803DC068, 0);
+                sc_totempole_sortCompletionGameBits((u16 *)&lbl_803DC068, 0);
             }
             if (!played) {
                 Sfx_PlayFromObject(0, 0x109);
             }
         } else {
             Sfx_PlayFromObject(obj, 0x3ad);
-            *(f32 *)(inner + 4) = lbl_803E55DC;
+            state->animSpeed = lbl_803E55DC;
         }
     }
-    ObjAnim_AdvanceCurrentMove(obj, &stk, *(f32 *)(inner + 4), timeDelta);
+    ObjAnim_AdvanceCurrentMove(obj, &stk, state->animSpeed, timeDelta);
     ObjHits_PollPriorityHitEffectWithCooldown(obj, 8, 0xff, 0xff, 0x78, 0x129, (int *)&lbl_803DDC08);
 }
 #pragma scheduling reset
@@ -321,19 +341,19 @@ void sc_totempole_update(int obj)
 #pragma scheduling off
 void sc_totempole_init(int obj, int p2)
 {
-    int inner = *(int *)(obj + 0xb8);
+    SCTotemPoleState *state = *(SCTotemPoleState **)(obj + 0xb8);
     switch (*(int *)(p2 + 0x14)) {
-    case 0x44916:
-        *(s16 *)inner = 0x84;
+    case SC_TOTEMPOLE_SETUP_REAR:
+        state->gameBit = SC_TOTEMPOLE_GAMEBIT_REAR;
         break;
-    case 0x44909:
-        *(s16 *)inner = 0x83;
+    case SC_TOTEMPOLE_SETUP_RIGHT:
+        state->gameBit = SC_TOTEMPOLE_GAMEBIT_RIGHT;
         break;
-    case 0x4490C:
-        *(s16 *)inner = 0x81;
+    case SC_TOTEMPOLE_SETUP_FRONT:
+        state->gameBit = SC_TOTEMPOLE_GAMEBIT_FRONT;
         break;
-    case 0x4490F:
-        *(s16 *)inner = 0x82;
+    case SC_TOTEMPOLE_SETUP_LEFT:
+        state->gameBit = SC_TOTEMPOLE_GAMEBIT_LEFT;
         break;
     }
     *(s16 *)obj = (s16)((u32)*(u8 *)(p2 + 0x1a) << 8);
