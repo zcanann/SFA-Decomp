@@ -1332,6 +1332,35 @@ fusion, peephole behavior, rlwinm vs andi, fp_contract surprises, etc.).
   scratch is still broken. Filter accordingly when grepping for recipes that
   actually worked.
 
+### MP4 as a "what C makes this asm?" oracle
+
+Mario Party 4 (`reference_projects/marioparty4`) is 100% byte-matched
+against the original game, so every function in MP4's compiled `.o` files
+is a definitive C↔asm pair for whatever MWCC quirk produced that
+instruction shape. When SFA is stuck trying to coax MWCC into a specific
+sequence (rlwimi at a given bit position, `cntlzw` idiom, paired-single
+`psq_st`, a specific fmuls operand order, `__cvt_` helper invocation,
+etc.), grep MP4 for the pattern and read the C that produced it —
+regardless of whether the MP4 function is semantically related to your
+SFA target. You only need the *pattern* to match, not the family.
+
+- `python3 tools/mp4_asm_search.py "<pattern>"` — grep across all MP4
+  binaries' disasm cache for the asm pattern; returns hits as
+  (MP4 unit, fn name, asm context). Cache builds on first run (~2-3min,
+  ~13MB at /tmp/mp4_asm_cache.txt); subsequent queries are <1s.
+- `--with-c` to also locate and dump the matching C definition.
+- `--unit-filter <substr>` to restrict to a subset of MP4 units.
+- `-C N` for wider asm context (default 4 lines before/after).
+- Examples:
+  - `mp4_asm_search.py "rlwimi"` — any rlwimi anywhere
+  - `mp4_asm_search.py "rlwimi.*,5,26,26"` — specific bit position
+  - `mp4_asm_search.py "cntlzw" --with-c` — find one + see the C
+  - `mp4_asm_search.py "psq_st" --max 3` — limit results
+- Best practice: when a residual category (per `cosmetic_audit.py` /
+  `function_objdump.py`) names a specific instruction or operand shape,
+  query MP4 for it FIRST — it's faster than hand-crafting a C variant
+  and bisecting.
+
 ## Reference commits
 
 | Technique | Commit |
