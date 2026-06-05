@@ -1550,6 +1550,7 @@ extern f32 timeDelta;
 #pragma scheduling off
 #pragma peephole off
 void fn_801A7B10(int obj) {
+    extern int fn_801A78C8(int obj, f32 x, f32 y, f32 z, f32 y2, f32 *out1, int *out2);
     int state = *(int *)(obj + 0xb8);
     int auStack_14[1];
     f32 local_18;
@@ -1599,7 +1600,8 @@ void fn_801A7B10(int obj) {
     }
     objMove(obj, *(f32 *)(obj + 0x24) * timeDelta, *(f32 *)(obj + 0x28) * timeDelta, *(f32 *)(obj + 0x2c) * timeDelta);
     *(u16 *)(state + 0x24) &= ~0x80;
-    ret = fn_801A78C8(*(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14), lbl_803E4568 + *(f32 *)(obj + 0x10), obj, &local_18, auStack_14);
+    v = *(f32 *)(obj + 0x10);
+    ret = fn_801A78C8(obj, *(f32 *)(obj + 0xc), v, *(f32 *)(obj + 0x14), lbl_803E4568 + v, &local_18, auStack_14);
     if (ret == 0) return;
     if (ret == 2) {
         f32 c;
