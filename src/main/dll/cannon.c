@@ -1,6 +1,33 @@
 #include "ghidra_import.h"
 #include "main/dll/cannon.h"
 
+#define TRICKY_STATE_FLAGS_OFFSET 0x54
+#define TRICKY_STATE_TARGET_DIRTY_FLAG 0x00000400
+#define TRICKY_STATE_RESET_FLAG_10 0x00000010
+#define TRICKY_STATE_HELPERS_ACTIVE_FLAG 0x00000800
+#define TRICKY_STATE_HELPERS_FINISHED_FLAG 0x00001000
+#define TRICKY_STATE_RESET_FLAG_10000 0x00010000
+#define TRICKY_STATE_RESET_FLAG_20000 0x00020000
+#define TRICKY_STATE_RESET_FLAG_40000 0x00040000
+
+#define TRICKY_CLEAR_TARGET_DIRTY(st) \
+    (*(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_TARGET_DIRTY_FLAG)
+
+#define TRICKY_MARK_HELPERS_FINISHED(st) \
+    { \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_HELPERS_ACTIVE_FLAG; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) |= TRICKY_STATE_HELPERS_FINISHED_FLAG; \
+    }
+
+#define TRICKY_CLEAR_RESET_FLAGS(st) \
+    { \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10000; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_20000; \
+        *(u32 *)((st) + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_40000; \
+        *(s8 *)((st) + 0xd) = -1; \
+    }
+
 #pragma peephole off
 
 extern bool FUN_800067f0();
@@ -140,17 +167,7 @@ void trickyFlame(int p1, int p2) {
             newTarget = *(int *)(p2 + 0x71c) + 0x8;
             if (*(uint *)(p2 + 0x28) != (uint)newTarget) {
                 *(int *)(p2 + 0x28) = newTarget;
-                {
-                    register u32 m;
-                    register u32 v;
-                    register int pReg = p2;
-                    asm {
-                        lwz v, 0x54(pReg)
-                        li m, -1025
-                        and m, v, m
-                        stw m, 0x54(pReg)
-                    }
-                }
+                TRICKY_CLEAR_TARGET_DIRTY(p2);
                 *(u16 *)(p2 + 0xd2) = 0;
             }
             *(u8 *)(p2 + 0xa) = 1;
@@ -159,17 +176,7 @@ void trickyFlame(int p1, int p2) {
             newTarget = *(int *)(p2 + 0x720) + 0x8;
             if (*(uint *)(p2 + 0x28) != (uint)newTarget) {
                 *(int *)(p2 + 0x28) = newTarget;
-                {
-                    register u32 m;
-                    register u32 v;
-                    register int pReg = p2;
-                    asm {
-                        lwz v, 0x54(pReg)
-                        li m, -1025
-                        and m, v, m
-                        stw m, 0x54(pReg)
-                    }
-                }
+                TRICKY_CLEAR_TARGET_DIRTY(p2);
                 *(u16 *)(p2 + 0xd2) = 0;
             }
             *(u8 *)(p2 + 0xa) = 3;
@@ -247,18 +254,7 @@ void trickyFlame(int p1, int p2) {
                 if (cb != NULL && cb(*(int *)(p2 + 0x24), 1) == 0) {
                     dieFlag = 1;
                 } else if ((double)*(f32 *)(p1 + 0x98) > (double)lbl_803E2504) {
-                    {
-                        register u32 m;
-                        register u32 v;
-                        register int pReg = p2;
-                        asm {
-                            lwz v, 0x54(pReg)
-                            li m, -2049
-                            and m, v, m
-                            stw m, 0x54(pReg)
-                        }
-                    }
-                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x1000;
+                    TRICKY_MARK_HELPERS_FINISHED(p2);
                     for (i = 0, slot = (void **)p2; i < 7; i++) {
                         objSetAnimSpeedTo1(slot[0x700 / 4]);
                         slot++;
@@ -299,35 +295,7 @@ void trickyFlame(int p1, int p2) {
                 fz = lbl_803E23DC;
                 *(f32 *)(p2 + 0x71c) = fz;
                 *(f32 *)(p2 + 0x720) = fz;
-                {
-                register u32 m;
-                register u32 v;
-                register u32 v2;
-                register int pReg = p2;
-                asm {
-                    lwz v, 0x54(pReg)
-                    li m, -17
-                    and m, v, m
-                    stw m, 0x54(pReg)
-                    lwz v2, 0x54(pReg)
-                    lis v, -1
-                    addi m, v, -1
-                    and m, v2, m
-                    stw m, 0x54(pReg)
-                    lwz v2, 0x54(pReg)
-                    lis v, -2
-                    addi m, v, -1
-                    and m, v2, m
-                    stw m, 0x54(pReg)
-                    lwz v2, 0x54(pReg)
-                    lis v, -4
-                    addi m, v, -1
-                    and m, v2, m
-                    stw m, 0x54(pReg)
-                    li m, -1
-                    stb m, 0xd(pReg)
-                }
-                }
+                TRICKY_CLEAR_RESET_FLAGS(p2);
             }
         }
         break;
@@ -364,18 +332,7 @@ void trickyFlame(int p1, int p2) {
                 if (cb != NULL && cb(*(int *)(p2 + 0x24), 1) == 0) {
                     dieFlag = 1;
                 } else if ((double)*(f32 *)(p1 + 0x98) > (double)lbl_803E2504) {
-                    {
-                        register u32 m;
-                        register u32 v;
-                        register int pReg = p2;
-                        asm {
-                            lwz v, 0x54(pReg)
-                            li m, -2049
-                            and m, v, m
-                            stw m, 0x54(pReg)
-                        }
-                    }
-                    *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x1000;
+                    TRICKY_MARK_HELPERS_FINISHED(p2);
                     for (i = 0, slot = (void **)p2; i < 7; i++) {
                         objSetAnimSpeedTo1(slot[0x700 / 4]);
                         slot++;
@@ -404,35 +361,7 @@ void trickyFlame(int p1, int p2) {
             fz = lbl_803E23DC;
             *(f32 *)(p2 + 0x71c) = fz;
             *(f32 *)(p2 + 0x720) = fz;
-            {
-            register u32 m;
-            register u32 v;
-            register u32 v2;
-            register int pReg = p2;
-            asm {
-                lwz v, 0x54(pReg)
-                li m, -17
-                and m, v, m
-                stw m, 0x54(pReg)
-                lwz v2, 0x54(pReg)
-                lis v, -1
-                addi m, v, -1
-                and m, v2, m
-                stw m, 0x54(pReg)
-                lwz v2, 0x54(pReg)
-                lis v, -2
-                addi m, v, -1
-                and m, v2, m
-                stw m, 0x54(pReg)
-                lwz v2, 0x54(pReg)
-                lis v, -4
-                addi m, v, -1
-                and m, v2, m
-                stw m, 0x54(pReg)
-                li m, -1
-                stb m, 0xd(pReg)
-            }
-            }
+            TRICKY_CLEAR_RESET_FLAGS(p2);
         }
         break;
     case 8:
@@ -448,35 +377,7 @@ void trickyFlame(int p1, int p2) {
                 fz = lbl_803E23DC;
                 *(f32 *)(p2 + 0x71c) = fz;
                 *(f32 *)(p2 + 0x720) = fz;
-                {
-                register u32 m;
-                register u32 v;
-                register u32 v2;
-                register int pReg = p2;
-                asm {
-                    lwz v, 0x54(pReg)
-                    li m, -17
-                    and m, v, m
-                    stw m, 0x54(pReg)
-                    lwz v2, 0x54(pReg)
-                    lis v, -1
-                    addi m, v, -1
-                    and m, v2, m
-                    stw m, 0x54(pReg)
-                    lwz v2, 0x54(pReg)
-                    lis v, -2
-                    addi m, v, -1
-                    and m, v2, m
-                    stw m, 0x54(pReg)
-                    lwz v2, 0x54(pReg)
-                    lis v, -4
-                    addi m, v, -1
-                    and m, v2, m
-                    stw m, 0x54(pReg)
-                    li m, -1
-                    stb m, 0xd(pReg)
-                }
-                }
+                TRICKY_CLEAR_RESET_FLAGS(p2);
             }
         }
         break;
@@ -542,17 +443,7 @@ void trickyGuard(int p1, int p2) {
         if (trickyFn_8013b368((void *)p1, lbl_803E2488, (void *)p2) == 0) {
             if (*(uint *)(p2 + 0x28) != (uint)(p2 + 0x71c)) {
                 *(int *)(p2 + 0x28) = p2 + 0x71c;
-                {
-                    register u32 m;
-                    register u32 v;
-                    register int pReg = p2;
-                    asm {
-                        lwz v, 0x54(pReg)
-                        li m, -1025
-                        and m, v, m
-                        stw m, 0x54(pReg)
-                    }
-                }
+                TRICKY_CLEAR_TARGET_DIRTY(p2);
                 *(u16 *)(p2 + 0xd2) = 0;
             }
             *(u8 *)(p2 + 0xa) = 3;
@@ -616,17 +507,7 @@ void trickyGuard(int p1, int p2) {
             newTarget = *(int *)(p2 + 0x24) + 0x18;
             if (*(uint *)(p2 + 0x28) != (uint)newTarget) {
                 *(int *)(p2 + 0x28) = newTarget;
-                {
-                    register u32 m;
-                    register u32 v;
-                    register int pReg = p2;
-                    asm {
-                        lwz v, 0x54(pReg)
-                        li m, -1025
-                        and m, v, m
-                        stw m, 0x54(pReg)
-                    }
-                }
+                TRICKY_CLEAR_TARGET_DIRTY(p2);
                 *(u16 *)(p2 + 0xd2) = 0;
             }
             *(u8 *)(p2 + 0xa) = 2;
@@ -636,18 +517,7 @@ void trickyGuard(int p1, int p2) {
     case 5:
         trickyDebugPrint(strBase + 0x694);
         if ((double)*(f32 *)(p1 + 0x98) >= (double)lbl_803E24D0) {
-            {
-                register u32 m;
-                register u32 v;
-                register int pReg = p2;
-                asm {
-                    lwz v, 0x54(pReg)
-                    li m, -2049
-                    and m, v, m
-                    stw m, 0x54(pReg)
-                }
-            }
-            *(u32 *)(p2 + 0x54) = *(u32 *)(p2 + 0x54) | 0x1000;
+            TRICKY_MARK_HELPERS_FINISHED(p2);
             for (i = 0, slot = (void **)p2; i < 7; i++) {
                 objSetAnimSpeedTo1(slot[0x700 / 4]);
                 slot++;
@@ -662,32 +532,12 @@ void trickyGuard(int p1, int p2) {
                     }
                 }
             }
-            {
-                register u32 m;
-                register u32 v;
-                register int pReg = p2;
-                asm {
-                    lwz v, 0x54(pReg)
-                    li m, -17
-                    and m, v, m
-                    stw m, 0x54(pReg)
-                }
-            }
+            *(u32 *)(p2 + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10;
             if (trickyGuardFindBaddieTarget(p2) == 0) {
                 newTarget = *(int *)(p2 + 0x24) + 0x18;
                 if (*(uint *)(p2 + 0x28) != (uint)newTarget) {
                     *(int *)(p2 + 0x28) = newTarget;
-                    {
-                        register u32 m;
-                        register u32 v;
-                        register int pReg = p2;
-                        asm {
-                            lwz v, 0x54(pReg)
-                            li m, -1025
-                            and m, v, m
-                            stw m, 0x54(pReg)
-                        }
-                    }
+                    TRICKY_CLEAR_TARGET_DIRTY(p2);
                     *(u16 *)(p2 + 0xd2) = 0;
                 }
                 *(u8 *)(p2 + 0xa) = 2;
@@ -750,32 +600,12 @@ void trickyGuard(int p1, int p2) {
     case 8:
         trickyDebugPrint(strBase + 0x6c8);
         if ((double)*(f32 *)(p1 + 0x98) <= (double)lbl_803E2420) {
-            {
-                register u32 m;
-                register u32 v;
-                register int pReg = p2;
-                asm {
-                    lwz v, 0x54(pReg)
-                    li m, -17
-                    and m, v, m
-                    stw m, 0x54(pReg)
-                }
-            }
+            *(u32 *)(p2 + TRICKY_STATE_FLAGS_OFFSET) &= ~TRICKY_STATE_RESET_FLAG_10;
             if (trickyGuardFindBaddieTarget(p2) == 0) {
                 newTarget = *(int *)(p2 + 0x24) + 0x18;
                 if (*(uint *)(p2 + 0x28) != (uint)newTarget) {
                     *(int *)(p2 + 0x28) = newTarget;
-                    {
-                        register u32 m;
-                        register u32 v;
-                        register int pReg = p2;
-                        asm {
-                            lwz v, 0x54(pReg)
-                            li m, -1025
-                            and m, v, m
-                            stw m, 0x54(pReg)
-                        }
-                    }
+                    TRICKY_CLEAR_TARGET_DIRTY(p2);
                     *(u16 *)(p2 + 0xd2) = 0;
                 }
                 *(u8 *)(p2 + 0xa) = 2;
@@ -822,17 +652,7 @@ int trickyGuardFindBaddieTarget(int p) {
         *(int *)(p + 0x72c) = best;
         if (*(uint *)(p + 0x28) != (best + 0x18)) {
             *(int *)(p + 0x28) = best + 0x18;
-            {
-                register u32 m;
-                register u32 v;
-                register int pReg = p;
-                asm {
-                    lwz v, 0x54(pReg)
-                    li m, -1025
-                    and m, v, m
-                    stw m, 0x54(pReg)
-                }
-            }
+            TRICKY_CLEAR_TARGET_DIRTY(p);
             *(u16 *)(p + 0xd2) = 0;
         }
         *(u8 *)(p + 0xa) = 4;
