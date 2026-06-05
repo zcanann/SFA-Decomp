@@ -252,10 +252,12 @@ void hightop_playMovementSfx(int obj, int p2, int p3) {
 void hightop_getLookTargetYaw(int obj, int mode, int *out) {
     f32 buf[6];
     char *p;
+    int yaw;
     switch (mode) {
     case 2:
         if (dll_2E_func0A(0x11, buf) != 0) {
-            *out = getAngle(buf[3] - *(f32 *)((char *)obj + 0xc), buf[5] - *(f32 *)((char *)obj + 0x14)) + lbl_803DC328;
+            yaw = getAngle(buf[3] - *(f32 *)((char *)obj + 0xc), buf[5] - *(f32 *)((char *)obj + 0x14));
+            *out = yaw + lbl_803DC328;
             p = *(char **)((char *)obj + 0xb8);
             *(f32 *)(p + 0xc1c) = buf[3];
             *(f32 *)(p + 0xc20) = buf[4];
