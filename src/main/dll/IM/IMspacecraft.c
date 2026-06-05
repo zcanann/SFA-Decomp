@@ -89,6 +89,49 @@ extern f32 lbl_803E44C4;
 extern f32 lbl_803DDB28;
 extern int lbl_803DDB2C;
 
+#define SPIRITDOORLOCK_EXTRA_SIZE 0x14
+#define SPIRITDOORLOCK_LIGHT_OFFSET 0x00
+#define SPIRITDOORLOCK_SPIN_ANGLE_OFFSET 0x04
+#define SPIRITDOORLOCK_ACTIVE_OFFSET 0x08
+#define SPIRITDOORLOCK_ORBIT_COUNT_OFFSET 0x0c
+#define SPIRITDOORLOCK_FLAGS_OFFSET 0x10
+
+#define SPIRITDOORLOCK_SETUP_YAW 0x18
+#define SPIRITDOORLOCK_SETUP_SCALE 0x19
+#define SPIRITDOORLOCK_SETUP_ORBIT_COUNT 0x1a
+#define SPIRITDOORLOCK_SETUP_DONE_GAMEBIT 0x1e
+#define SPIRITDOORLOCK_SETUP_ACTIVE_GAMEBIT 0x20
+#define SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED 0xab9
+#define SPIRITDOORLOCK_ORBIT_OBJECT_GROUP 0x4e
+#define SPIRITDOORLOCK_LOOP_SFX 0x423
+
+#define SPIRITDOORLOCK_LIGHT(state) (*(int *)((char *)(state) + SPIRITDOORLOCK_LIGHT_OFFSET))
+#define SPIRITDOORLOCK_SPIN_ANGLE(state) (*(int *)((char *)(state) + SPIRITDOORLOCK_SPIN_ANGLE_OFFSET))
+#define SPIRITDOORLOCK_ACTIVE(state) (*(int *)((char *)(state) + SPIRITDOORLOCK_ACTIVE_OFFSET))
+#define SPIRITDOORLOCK_ORBIT_COUNT(state) (*(int *)((char *)(state) + SPIRITDOORLOCK_ORBIT_COUNT_OFFSET))
+#define SPIRITDOORLOCK_FLAGS(state) (*(u8 *)((char *)(state) + SPIRITDOORLOCK_FLAGS_OFFSET))
+
+#define ROLLINGBARREL_EXTRA_SIZE 0x118
+#define ROLLINGBARREL_GROUP_ID 0x2f
+#define ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE 0x72a
+#define ROLLINGBARREL_CURVE_SPEED_OFFSET 0x108
+#define ROLLINGBARREL_VERTICAL_SPEED_OFFSET 0x10c
+#define ROLLINGBARREL_TIMER_OFFSET 0x110
+#define ROLLINGBARREL_STATE_OFFSET 0x114
+#define ROLLINGBARREL_PITCH_RISING_OFFSET 0x115
+#define ROLLINGBARREL_HIT_VOLUME_SLOT_OFFSET 0x116
+#define ROLLINGBARREL_STATE_ROLLING 0
+#define ROLLINGBARREL_STATE_EXPLODED_WAIT 1
+#define ROLLINGBARREL_STATE_RESPAWN_WAIT 2
+#define ROLLINGBARREL_STATE_CLEANUP 3
+
+#define ROLLINGBARREL_CURVE_SPEED(state) (*(f32 *)((char *)(state) + ROLLINGBARREL_CURVE_SPEED_OFFSET))
+#define ROLLINGBARREL_VERTICAL_SPEED(state) (*(f32 *)((char *)(state) + ROLLINGBARREL_VERTICAL_SPEED_OFFSET))
+#define ROLLINGBARREL_TIMER(state) (*(f32 *)((char *)(state) + ROLLINGBARREL_TIMER_OFFSET))
+#define ROLLINGBARREL_STATE(state) (*(u8 *)((char *)(state) + ROLLINGBARREL_STATE_OFFSET))
+#define ROLLINGBARREL_PITCH_RISING(state) (*(u8 *)((char *)(state) + ROLLINGBARREL_PITCH_RISING_OFFSET))
+#define ROLLINGBARREL_HIT_VOLUME_SLOT(state) (*(u8 *)((char *)(state) + ROLLINGBARREL_HIT_VOLUME_SLOT_OFFSET))
+
 /* Trivial 4b 0-arg blr leaves. */
 void SpiritDoorLock_hitDetect(void) {}
 void SpiritDoorLock_release(void) {}
@@ -98,9 +141,9 @@ void RollingBarrel_release(void) {}
 void MMP_levelcontrol_hitDetect(void) {}
 
 /* 8b "li r3, N; blr" returners. */
-int SpiritDoorLock_getExtraSize(void) { return 0x14; }
+int SpiritDoorLock_getExtraSize(void) { return SPIRITDOORLOCK_EXTRA_SIZE; }
 int SpiritDoorLock_getObjectTypeId(void) { return 0x0; }
-int RollingBarrel_getExtraSize(void) { return 0x118; }
+int RollingBarrel_getExtraSize(void) { return ROLLINGBARREL_EXTRA_SIZE; }
 int RollingBarrel_getObjectTypeId(void) { return 0x0; }
 int MMP_levelcontrol_getExtraSize(void) { return 0x0; }
 int MMP_levelcontrol_getObjectTypeId(void) { return 0x0; }
@@ -118,7 +161,7 @@ void MMP_levelcontrol_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 #pragma peephole off
 void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
     u8 *inner = *(u8 **)(obj + 0xb8);
-    if (visible != 0 && inner[0x114] < 1) {
+    if (visible != 0 && inner[ROLLINGBARREL_STATE_OFFSET] < ROLLINGBARREL_STATE_EXPLODED_WAIT) {
         ((void(*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p1, p2, p3, p4, lbl_803E4474);
     }
 }
@@ -129,7 +172,7 @@ void RollingBarrel_render(int obj, int p1, int p2, int p3, int p4, s8 visible) {
 #pragma peephole off
 void SpiritDoorLock_free(int obj) {
     void *inner = *(void **)(obj + 0xb8);
-    if (*(void **)inner != NULL) {
+    if (*(void **)((char *)inner + SPIRITDOORLOCK_LIGHT_OFFSET) != NULL) {
         modelLightStruct_freeSlot(inner);
     }
 }
@@ -151,15 +194,15 @@ void MMP_levelcontrol_free(int obj) {
 void RollingBarrel_free(int obj) {
     char *inner = *(char **)(obj + 0xb8);
     int count;
-    int *arr = ObjGroup_GetObjects(0x2f, &count);
+    int *arr = ObjGroup_GetObjects(ROLLINGBARREL_GROUP_ID, &count);
     int i;
     for (i = 0; i < count; i++) {
         if ((u32)obj == (u32)arr[i]) {
-            ObjGroup_RemoveObject(obj, 0x2f);
+            ObjGroup_RemoveObject(obj, ROLLINGBARREL_GROUP_ID);
             break;
         }
     }
-    if (*(u8 *)(inner + 0x114) == 1) {
+    if (ROLLINGBARREL_STATE(inner) == ROLLINGBARREL_STATE_EXPLODED_WAIT) {
         lbl_803DDB20 -= 1;
     }
 }
@@ -186,11 +229,11 @@ void RollingBarrel_init(int obj, int *params)
     *(f32 *)((char *)obj + 20) = *(f32 *)((char *)params + 16);
     *(f32 *)((char *)obj + 32) = *(f32 *)((char *)params + 16);
 
-    *(f32 *)((char *)state + 0x10c) = (f32) * (s16 *)((char *)params + 0x1a) / lbl_803E447C;
-    *(f32 *)((char *)state + 0x108) = (f32) * (s16 *)((char *)params + 0x1c) / lbl_803E447C;
-    *(u8 *)((char *)state + 0x114) = 0;
-    *(u8 *)((char *)state + 0x115) = 1;
-    *(f32 *)((char *)state + 0x110) = lbl_803E4468;
+    ROLLINGBARREL_VERTICAL_SPEED(state) = (f32) * (s16 *)((char *)params + 0x1a) / lbl_803E447C;
+    ROLLINGBARREL_CURVE_SPEED(state) = (f32) * (s16 *)((char *)params + 0x1c) / lbl_803E447C;
+    ROLLINGBARREL_STATE(state) = ROLLINGBARREL_STATE_ROLLING;
+    ROLLINGBARREL_PITCH_RISING(state) = 1;
+    ROLLINGBARREL_TIMER(state) = lbl_803E4468;
 
     ((void (*)(int *, int, int *, int, f32))((void **)*gRomCurveInterface)[35])(state, obj, tmp, -1, lbl_803E44B8);
 }
@@ -204,23 +247,23 @@ void SpiritDoorLock_init(int obj, int *params, int mode)
     int *state = *(int **)((char *)obj + 0xb8);
     f32 mult;
 
-    *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + 0x18) << 8);
-    state[3] = *(s16 *)((char *)params + 0x1a);
-    state[2] = 0;
+    *(s16 *)obj = (s16)((s8) * (s8 *)((char *)params + SPIRITDOORLOCK_SETUP_YAW) << 8);
+    SPIRITDOORLOCK_ORBIT_COUNT(state) = *(s16 *)((char *)params + SPIRITDOORLOCK_SETUP_ORBIT_COUNT);
+    SPIRITDOORLOCK_ACTIVE(state) = 0;
 
-    mult = (f32)*(s8 *)((char *)params + 0x19) * lbl_803E4448;
+    mult = (f32)*(s8 *)((char *)params + SPIRITDOORLOCK_SETUP_SCALE) * lbl_803E4448;
     if (mult < lbl_803E4430) {
         mult = lbl_803E4440;
     }
     *(f32 *)((char *)obj + 8) = (*(f32 **)((char *)obj + 0x50))[1] * mult;
-    state[1] = 0;
+    SPIRITDOORLOCK_SPIN_ANGLE(state) = 0;
 
     ObjHits_DisableObject(obj);
-    *(u8 *)((char *)state + 0x10) &= ~0x80;
+    SPIRITDOORLOCK_FLAGS(state) &= ~0x80;
 
     if (mode == 0) {
         *(u8 *)((char *)obj + 0x36) = 0;
-        state[0] = modelLightStruct_createPointLight(obj, 255, 0, 77, 0);
+        SPIRITDOORLOCK_LIGHT(state) = modelLightStruct_createPointLight(obj, 255, 0, 77, 0);
     }
 }
 #pragma peephole reset
@@ -245,25 +288,26 @@ void SpiritDoorLock_update(int obj)
 
     player = Obj_GetPlayerObject();
 
-    if (GameBit_Get(0xab9) == 0) {
+    if (GameBit_Get(SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED) == 0) {
         if (Vec_xzDistance((f32 *)((char *)obj + 0x18), (f32 *)((char *)player + 0x18)) < lbl_803E4444) {
-            if (state[2] != 0) {
+            if (SPIRITDOORLOCK_ACTIVE(state) != 0) {
                 ((void (*)(int, int, int))((void **)*gObjectTriggerInterface)[18])(0, obj, -1);
             }
-            GameBit_Set(0xab9, 1);
+            GameBit_Set(SPIRITDOORLOCK_GAMEBIT_PLAYER_APPROACHED, 1);
         }
     }
 
-    if (state[2] == 0) {
-        if (GameBit_Get(*(s16 *)((char *)descriptor + 0x1e)) == 0) {
-            state[2] = GameBit_Get(*(s16 *)((char *)descriptor + 0x20));
-            if (state[2] != 0) {
+    if (SPIRITDOORLOCK_ACTIVE(state) == 0) {
+        if (GameBit_Get(*(s16 *)((char *)descriptor + SPIRITDOORLOCK_SETUP_DONE_GAMEBIT)) == 0) {
+            SPIRITDOORLOCK_ACTIVE(state) =
+                GameBit_Get(*(s16 *)((char *)descriptor + SPIRITDOORLOCK_SETUP_ACTIVE_GAMEBIT));
+            if (SPIRITDOORLOCK_ACTIVE(state) != 0) {
                 *(f32 *)((char *)obj + 8) =
                     (*(f32 **)((char *)obj + 0x50))[1] *
-                    (f32)(int)*(s8 *)((char *)descriptor + 0x19) *
+                    (f32)(int)*(s8 *)((char *)descriptor + SPIRITDOORLOCK_SETUP_SCALE) *
                     lbl_803E4448;
-                if (state[0] == 0) {
-                    state[0] = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
+                if (SPIRITDOORLOCK_LIGHT(state) == 0) {
+                    SPIRITDOORLOCK_LIGHT(state) = modelLightStruct_createPointLight(obj, 0xff, 0, 0x4d, 0);
                 }
             }
         } else {
@@ -271,14 +315,15 @@ void SpiritDoorLock_update(int obj)
                 Sfx_PlayFromObject(0, SFXsp_lf_mutter4);
             }
             if (*(u8 *)((char *)obj + 0x36) == 0) {
-                if (state[0] != 0) {
+                if (SPIRITDOORLOCK_LIGHT(state) != 0) {
                     modelLightStruct_freeSlot(state);
                 }
             } else {
                 *(u8 *)((char *)obj + 0x36) -= 1;
-                if (state[0] != 0) {
+                if (SPIRITDOORLOCK_LIGHT(state) != 0) {
                     u32 b = *(u8 *)((char *)obj + 0x36) >> 2;
-                    modelLightStruct_setDistanceAttenuation((void *)state[0], (f32)(int)b, (f32)(int)(b + 10));
+                    modelLightStruct_setDistanceAttenuation((void *)SPIRITDOORLOCK_LIGHT(state), (f32)(int)b,
+                        (f32)(int)(b + 10));
                 }
                 *(f32 *)((char *)obj + 8) *= lbl_803E444C;
                 *(s16 *)((char *)obj + 4) =
@@ -295,11 +340,11 @@ void SpiritDoorLock_update(int obj)
         f32 max_dist;
         cam_state = ((int (*)(void))((void **)*gCameraInterface)[4])();
         if (cam_state != 0x51) {
-            Sfx_KeepAliveLoopedObjectSound(obj, 0x423);
+            Sfx_KeepAliveLoopedObjectSound(obj, SPIRITDOORLOCK_LOOP_SFX);
         }
-        list_ptr = ObjGroup_GetObjects(0x4e, &local_68);
-        stride = (s16)(0x10000 / state[3]);
-        angle = (s16)state[1];
+        list_ptr = ObjGroup_GetObjects(SPIRITDOORLOCK_ORBIT_OBJECT_GROUP, &local_68);
+        stride = (s16)(0x10000 / SPIRITDOORLOCK_ORBIT_COUNT(state));
+        angle = (s16)SPIRITDOORLOCK_SPIN_ANGLE(state);
         local_58[1] = lbl_803E4454;
         max_dist = lbl_803E4458;
         for (i = 0; i < local_68; i++) {
@@ -313,11 +358,11 @@ void SpiritDoorLock_update(int obj)
                 angle = (s16)(angle + stride);
             }
         }
-        state[1] += (int)lbl_803DBED0;
+        SPIRITDOORLOCK_SPIN_ANGLE(state) += (int)lbl_803DBED0;
         *(s16 *)((char *)obj + 4) = 0;
         if (local_68 == 0) {
-            state[2] = 0;
-            GameBit_Set(*(s16 *)((char *)descriptor + 0x1e), 1);
+            SPIRITDOORLOCK_ACTIVE(state) = 0;
+            GameBit_Set(*(s16 *)((char *)descriptor + SPIRITDOORLOCK_SETUP_DONE_GAMEBIT), 1);
             ObjHits_DisableObject(obj);
         }
         piTex = objFindTexture(obj, 0, 0);
@@ -358,23 +403,23 @@ void RollingBarrel_update(int obj)
     descriptor = *(int **)((char *)obj + 0x4c);
     blocked = 0;
     dist_sq = lbl_803E4468;
-    bVar1 = *(u8 *)((char *)state + 0x114);
+    bVar1 = ROLLINGBARREL_STATE(state);
 
-    if (bVar1 == 2) {
-        *(f32 *)((char *)state + 0x110) += timeDelta;
-        if (*(f32 *)((char *)state + 0x110) >= lbl_803E44B0) {
-            *(u8 *)((char *)state + 0x116) = 0;
-            *(u8 *)((char *)state + 0x114) = 3;
-            *(f32 *)((char *)state + 0x110) -= lbl_803E44B0;
-            ObjGroup_AddObject(obj, 0x2f);
+    if (bVar1 == ROLLINGBARREL_STATE_RESPAWN_WAIT) {
+        ROLLINGBARREL_TIMER(state) += timeDelta;
+        if (ROLLINGBARREL_TIMER(state) >= lbl_803E44B0) {
+            ROLLINGBARREL_HIT_VOLUME_SLOT(state) = 0;
+            ROLLINGBARREL_STATE(state) = ROLLINGBARREL_STATE_CLEANUP;
+            ROLLINGBARREL_TIMER(state) -= lbl_803E44B0;
+            ObjGroup_AddObject(obj, ROLLINGBARREL_GROUP_ID);
             lbl_803DDB20 -= 1;
         }
-    } else if (bVar1 < 2) {
-        if (bVar1 == 0) {
-            if (*(s16 *)descriptor == 0x72a) {
+    } else if (bVar1 < ROLLINGBARREL_STATE_RESPAWN_WAIT) {
+        if (bVar1 == ROLLINGBARREL_STATE_ROLLING) {
+            if (*(s16 *)descriptor == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE) {
                 f32 vmax = lbl_803E446C;
                 while (blocked == 0 && dist_sq < vmax * timeDelta) {
-                    blocked = (int)Curve_AdvanceAlongPath(state, *(f32 *)((char *)state + 0x108));
+                    blocked = (int)Curve_AdvanceAlongPath(state, ROLLINGBARREL_CURVE_SPEED(state));
                     if (blocked == 0 && *(int *)((char *)state + 0x10) != 0) {
                         ((void (*)(int *))((void **)*gRomCurveInterface)[36])(state);
                     }
@@ -385,88 +430,91 @@ void RollingBarrel_update(int obj)
                     }
                 }
             } else {
-                blocked = (int)Curve_AdvanceAlongPath(state, *(f32 *)((char *)state + 0x108));
+                blocked = (int)Curve_AdvanceAlongPath(state, ROLLINGBARREL_CURVE_SPEED(state));
                 if (blocked == 0 && *(int *)((char *)state + 0x10) != 0) {
                     ((void (*)(int *))((void **)*gRomCurveInterface)[36])(state);
                 }
             }
 
-            *(u8 *)((char *)state + 0x116) = 10;
+            ROLLINGBARREL_HIT_VOLUME_SLOT(state) = 10;
             ObjHitbox_SetSphereRadius(obj, *(u8 *)(*(int *)((char *)obj + 0x50) + 0x62));
 
-            if (*(s16 *)descriptor == 0x72a) {
+            if (*(s16 *)descriptor == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE) {
                 floor_y = lbl_803E4478 + *(f32 *)((char *)state + 0x6c);
             } else {
                 floor_y = *(f32 *)((char *)state + 0x6c);
             }
 
-            *(f32 *)((char *)state + 0x10c) = lbl_803E4498 * timeDelta + *(f32 *)((char *)state + 0x10c);
-            *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)state + 0x10c) * timeDelta + *(f32 *)((char *)obj + 0x10);
+            ROLLINGBARREL_VERTICAL_SPEED(state) = lbl_803E4498 * timeDelta + ROLLINGBARREL_VERTICAL_SPEED(state);
+            *(f32 *)((char *)obj + 0x10) =
+                ROLLINGBARREL_VERTICAL_SPEED(state) * timeDelta + *(f32 *)((char *)obj + 0x10);
 
             if (*(f32 *)((char *)obj + 0x10) < floor_y) {
-                if (*(s16 *)descriptor == 0x72a && *(f32 *)((char *)obj + 0x10) < lbl_803E449C) {
+                if (*(s16 *)descriptor == ROLLINGBARREL_SPECIAL_DESCRIPTOR_TYPE &&
+                    *(f32 *)((char *)obj + 0x10) < lbl_803E449C) {
                     blocked = 1;
                 }
-                if (blocked == 0 && *(f32 *)((char *)state + 0x10c) * *(f32 *)((char *)state + 0x10c) > lbl_803E446C) {
+                if (blocked == 0 &&
+                    ROLLINGBARREL_VERTICAL_SPEED(state) * ROLLINGBARREL_VERTICAL_SPEED(state) > lbl_803E446C) {
                     Sfx_PlayFromObjectLimited(obj, 0x41e, 6);
                 }
-                *(f32 *)((char *)state + 0x10c) *= lbl_803E44A0;
+                ROLLINGBARREL_VERTICAL_SPEED(state) *= lbl_803E44A0;
                 *(f32 *)((char *)obj + 0x10) = lbl_803E44A4 * floor_y - *(f32 *)((char *)obj + 0x10);
             }
             *(f32 *)((char *)obj + 0xc) = *(f32 *)((char *)state + 0x68);
             *(f32 *)((char *)obj + 0x14) = *(f32 *)((char *)state + 0x70);
             *(s16 *)obj = (s16)getAngle(*(f32 *)((char *)state + 0x74), *(f32 *)((char *)state + 0x7c));
 
-            if (*(u8 *)((char *)state + 0x115) != 0) {
+            if (ROLLINGBARREL_PITCH_RISING(state) != 0) {
                 *(s16 *)((char *)obj + 4) =
                     (s16)(s32)(lbl_803E44A8 * timeDelta + (f32)(int)*(s16 *)((char *)obj + 4));
                 if (*(s16 *)((char *)obj + 4) > 0x5000) {
-                    *(u8 *)((char *)state + 0x115) = 0;
+                    ROLLINGBARREL_PITCH_RISING(state) = 0;
                 }
             } else {
                 *(s16 *)((char *)obj + 4) =
                     (s16)(s32) - (lbl_803E44A8 * timeDelta - (f32)(int)*(s16 *)((char *)obj + 4));
                 if (*(s16 *)((char *)obj + 4) < 0x3a00) {
-                    *(u8 *)((char *)state + 0x115) = 1;
+                    ROLLINGBARREL_PITCH_RISING(state) = 1;
                 }
             }
 
             *(s16 *)((char *)obj + 2) =
-                (s16)(s32)(lbl_803E44AC * timeDelta * *(f32 *)((char *)state + 0x108) +
+                (s16)(s32)(lbl_803E44AC * timeDelta * ROLLINGBARREL_CURVE_SPEED(state) +
                            (f32)(int)*(s16 *)((char *)obj + 2));
             hitResult = ObjHits_GetPriorityHit(obj, &hitInfo, &hitB, &hitC);
 
             if (blocked != 0 || hitInfo == Obj_GetPlayerObject() || (u32)(hitResult - 0xe) <= 1u ||
                 hitResult == 0x13) {
                 if (blocked == 0) {
-                    *(u8 *)((char *)state + 0x116) = 0;
+                    ROLLINGBARREL_HIT_VOLUME_SLOT(state) = 0;
                 } else {
-                    *(u8 *)((char *)state + 0x116) = 5;
+                    ROLLINGBARREL_HIT_VOLUME_SLOT(state) = 5;
                 }
                 r = randomGetRange(0, 2);
                 fn_801A5D88(obj, (int)r);
             }
         } else {
-            *(f32 *)((char *)state + 0x110) += timeDelta;
-            if (*(f32 *)((char *)state + 0x110) >= lbl_803E44B0) {
-                *(u8 *)((char *)state + 0x114) = 2;
-                *(f32 *)((char *)state + 0x110) -= lbl_803E44B0;
+            ROLLINGBARREL_TIMER(state) += timeDelta;
+            if (ROLLINGBARREL_TIMER(state) >= lbl_803E44B0) {
+                ROLLINGBARREL_STATE(state) = ROLLINGBARREL_STATE_RESPAWN_WAIT;
+                ROLLINGBARREL_TIMER(state) -= lbl_803E44B0;
             }
         }
     } else if (bVar1 < 4) {
-        *(f32 *)((char *)state + 0x110) += timeDelta;
-        if (*(f32 *)((char *)state + 0x110) >= lbl_803E44B4) {
+        ROLLINGBARREL_TIMER(state) += timeDelta;
+        if (ROLLINGBARREL_TIMER(state) >= lbl_803E44B4) {
             Obj_FreeObject(obj);
             return;
         }
     }
 
-    if (*(u8 *)((char *)state + 0x116) != 0) {
+    if (ROLLINGBARREL_HIT_VOLUME_SLOT(state) != 0) {
         ObjHits_EnableObject(obj);
-        ObjHits_SetHitVolumeSlot(obj, *(u8 *)((char *)state + 0x116), 1, 0);
+        ObjHits_SetHitVolumeSlot(obj, ROLLINGBARREL_HIT_VOLUME_SLOT(state), 1, 0);
     } else {
         ObjHits_DisableObject(obj);
-        ObjHits_SetHitVolumeSlot(obj, *(u8 *)((char *)state + 0x116), 0, 0);
+        ObjHits_SetHitVolumeSlot(obj, ROLLINGBARREL_HIT_VOLUME_SLOT(state), 0, 0);
     }
 }
 #pragma scheduling reset
@@ -521,8 +569,8 @@ void fn_801A5D88(int obj, int unused) {
         size = (f32)(int)r2;
         spawnExplosion(obj, 1, 1, 0, (int)r, 0, 1, 0, size);
     }
-    *(u8*)(state + 0x114) = 1;
-    *(f32*)(state + 0x110) = lbl_803E4468;
+    ROLLINGBARREL_STATE(state) = ROLLINGBARREL_STATE_EXPLODED_WAIT;
+    ROLLINGBARREL_TIMER(state) = lbl_803E4468;
     *(s16*)(obj + 6) = (s16)(*(s16*)(obj + 6) | 0x4000);
     ObjHitbox_SetSphereRadius(obj,
         (s32)(lbl_803E446C * (f32)(u32) * (u8*)(*(int*)(obj + 0x50) + 0x62)));
