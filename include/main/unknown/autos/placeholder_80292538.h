@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80292538_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80292538_H_
-
-#include "ghidra_import.h"
-
-float fn_802924B4(float y, float x);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80292538_H_ */

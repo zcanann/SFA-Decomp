@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8029312C_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8029312C_H_
-
-#include "ghidra_import.h"
-
-float sqrtf_8029312c(float x);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8029312C_H_ */
