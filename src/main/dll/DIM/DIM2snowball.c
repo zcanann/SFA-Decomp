@@ -1247,9 +1247,9 @@ extern int* getTrickyObject(void);
 #pragma scheduling off
 int fn_801B6D40(int* obj, int v)
 {
-    s8* state = *(s8**)((char*)obj + 0xb8);
+    u8* state = *(u8**)((char*)obj + 0xb8);
     state[2] = (s8)(state[2] - v);
-    return state[2] == 0;
+    return *(s8 *)(state + 2) == 0;
 }
 #pragma scheduling reset
 
@@ -1703,14 +1703,17 @@ extern f32 lbl_803E4A90;
 #pragma peephole off
 void dll_1D6_update(int *obj)
 {
-    int *def = *(int **)((char *)obj + 0x4c);
-    int *extra = *(int **)((char *)obj + 0xb8);
+    int *extra;
+    int *def;
     int *model;
     int *tex;
     int *player;
-    f32 mtx[12];
-    s16 ang[3];
+    f32 mtx[20];
+    s16 ang[6];
     f32 lx, ly, lz;
+
+    def = *(int **)((char *)obj + 0x4c);
+    extra = *(int **)((char *)obj + 0xb8);
 
     if ((*(u8 *)((char *)extra + 0x1d) & 1) != 0) {
         if ((*(u8 *)((char *)extra + 0x1d) & 4) == 0) {
@@ -1718,7 +1721,7 @@ void dll_1D6_update(int *obj)
             *(f32 *)((char *)extra + 0x10) = (f32)(int)randomGetRange(20, 40);
             *(f32 *)((char *)extra + 0x14) = (f32)(int)randomGetRange(6, 10) / lbl_803E4A7C;
         }
-        *(s16 *)((char *)extra + 0x1a) = *(s16 *)((char *)extra + 0x1a) - framesThisStep;
+        *(s16 *)((char *)extra + 0x1a) -= framesThisStep;
         *(s8 *)((char *)extra + 0x1c) = *(s8 *)((char *)extra + 0x1c) - framesThisStep;
         if (*(s8 *)((char *)extra + 0x1c) <= 0) {
             Sfx_PlayFromObject((int)obj, SFXmv_mushdizzylp12);
@@ -1740,7 +1743,7 @@ void dll_1D6_update(int *obj)
                 *(u8 *)((char *)extra + 0x1d) &= ~4;
             }
         }
-        *(s16 *)((char *)extra + 0x18) = *(s16 *)((char *)extra + 0x18) - framesThisStep;
+        *(s16 *)((char *)extra + 0x18) -= framesThisStep;
         if (*(s16 *)((char *)extra + 0x18) <= 0) {
             ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4A84, 16);
             *(s16 *)((char *)extra + 0x1a) = *(s16 *)((char *)def + 0x1c);
@@ -1769,20 +1772,23 @@ void dll_1D6_update(int *obj)
         *(s16 *)((char *)tex + 0xa) = -v;
     }
     player = (int *)Obj_GetPlayerObject();
+    mtx[0] = -*(f32 *)((char *)obj + 0xc);
+    mtx[1] = -*(f32 *)((char *)obj + 0x10);
+    mtx[2] = -*(f32 *)((char *)obj + 0x14);
     ang[0] = -*(s16 *)obj;
     ang[1] = 0;
     ang[2] = 0;
-    mtxRotateByVec3s(mtx, ang);
-    Matrix_TransformPoint(mtx, *(f32 *)((char *)player + 0xc), *(f32 *)((char *)player + 0x10),
+    mtxRotateByVec3s(&mtx[3], ang);
+    Matrix_TransformPoint(&mtx[3], *(f32 *)((char *)player + 0xc), *(f32 *)((char *)player + 0x10),
                           *(f32 *)((char *)player + 0x14), &lx, &ly, &lz);
     if ((*(u8 *)((char *)extra + 0x1d) & 2) != 0) {
-        f32 dy = *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)player + 0x10);
-        if (dy < lbl_803E4A88) {
-            dy = -dy;
+        ly = *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)player + 0x10);
+        if (ly < lbl_803E4A88) {
+            ly = -ly;
         }
-        if (dy < lbl_803E4A8C) {
-            f32 zsq = lz * lz;
-            if (zsq <= *(f32 *)((char *)extra + 8)) {
+        if (ly < lbl_803E4A8C) {
+            lz = lz * lz;
+            if (lz <= *(f32 *)((char *)extra + 8)) {
                 int *row;
                 f32 lim;
                 model = (int *)(*(int **)((char *)obj + 0x7c))[(s8)*(s8 *)((char *)obj + 0xad)];
@@ -1823,7 +1829,7 @@ extern int **ObjList_GetObjects(int *startOut, int *countOut);
 extern void objMove(int *obj, f32 dx, f32 dy, f32 dz);
 extern int objBboxFn_800640cc(void *a, void *b, f32 c, int d, int e, int *f, int g, int h, int i, int j);
 extern int getAngle(f32 a, f32 b);
-extern int hitDetectFn_80065e50(int *obj, int ***listOut, int p3, int p4, f32 x, f32 y, f32 z);
+extern int hitDetectFn_80065e50(int *obj, f32 x, f32 y, f32 z, int ***listOut, int p3, int p4);
 extern void Sfx_KeepAliveLoopedObjectSound(int *obj, int sfx);
 extern void Obj_FreeObject(int *obj);
 extern f32 oneOverTimeDelta;
@@ -1843,6 +1849,12 @@ extern f32 lbl_803E4AD0;
 void dim2snowball_update(int *obj)
 {
     int *extra = *(int **)((char *)obj + 0xb8);
+    int **p;
+    int **results;
+    int count;
+    int start;
+    f32 evt[6];
+    f32 k;
 
     if ((*(u8 *)((char *)extra + 0xac) & 4) != 0) {
         int v = *(u8 *)((char *)obj + 0x36) + framesThisStep * 2;
@@ -1874,38 +1886,35 @@ void dim2snowball_update(int *obj)
 
     if ((*(u8 *)((char *)extra + 0xac) & 2) != 0) {
         if (*(f32 *)((char *)obj + 0x10) < *(f32 *)((char *)extra + 0xa4)) {
-            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4AA4;
+            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4AA4);
             *(f32 *)((char *)obj + 0x28) = lbl_803E4AA8;
-            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4AA4;
-            if ((*(u8 *)((char *)extra + 0xac) & 0x20) == 0) {
-                int start;
-                int count;
-                int j;
+            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
+            if ((*(u8 *)((char *)extra + 0xac) & 0x10) == 0) {
                 int **list;
-                int *hit = NULL;
-                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4AAC;
-                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4AAC;
+                int *hit;
+                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4AAC);
+                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
                 *(u8 *)((char *)extra + 0xac) |= 0x18;
                 list = ObjList_GetObjects(&start, &count);
-                for (j = start; j < count; j++) {
-                    if (*(s16 *)((char *)list[j] + 0x46) == 214) {
-                        hit = list[j];
-                        break;
+                for (p = &list[start]; start < count; start++) {
+                    if (*(s16 *)((char *)*p + 0x46) == 214) {
+                        hit = list[start];
+                        goto checkHit;
                     }
+                    p++;
                 }
+                hit = NULL;
+checkHit:
                 if (hit != NULL) {
                     (*(void (**)(int *))(**(int **)((char *)hit + 0x68) + 0x20))(hit);
                 }
                 Sfx_PlayFromObject((int)obj, SFXfoot_run_jingle1);
             }
-            {
-                f32 pos[3];
-                pos[0] = *(f32 *)((char *)obj + 0xc);
-                pos[1] = *(f32 *)((char *)obj + 0x10);
-                pos[2] = *(f32 *)((char *)obj + 0x14);
-                ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
-                    obj, 518, pos, 4, -1, 0);
-            }
+            evt[3] = *(f32 *)((char *)obj + 0xc);
+            evt[4] = *(f32 *)((char *)obj + 0x10);
+            evt[5] = *(f32 *)((char *)obj + 0x14);
+            ((void (*)(int *, int, void *, int, int, int))((int *)*gPartfxInterface)[8 / 4])(
+                obj, 518, evt, 4, -1, 0);
             if (*(u8 *)((char *)obj + 0x36) == 0) {
                 Obj_FreeObject(obj);
                 return;
@@ -1915,20 +1924,20 @@ void dim2snowball_update(int *obj)
                     *(f32 *)((char *)obj + 0x2c) * timeDelta);
         } else {
             int bbox;
-            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4AB0;
+            *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4AB0);
             *(f32 *)((char *)obj + 0x28) =
                 *(f32 *)((char *)obj + 0x28) - lbl_803E4AB4 * timeDelta;
-            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4AB0;
+            *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
             objMove(obj, *(f32 *)((char *)obj + 0x24) * timeDelta,
                     *(f32 *)((char *)obj + 0x28) * timeDelta,
                     *(f32 *)((char *)obj + 0x2c) * timeDelta);
-            bbox = objBboxFn_800640cc((char *)extra + 0x80, (char *)obj + 0xc, lbl_803E4AB8, 0, 0,
+            bbox = objBboxFn_800640cc((char *)obj + 0x80, (char *)obj + 0xc, lbl_803E4AB8, 0, 0,
                                       obj, 8, -1, 0, 0);
             if (bbox != 0) {
                 *(f32 *)((char *)obj + 0x24) = -*(f32 *)((char *)obj + 0x24);
                 *(f32 *)((char *)obj + 0x2c) = -*(f32 *)((char *)obj + 0x2c);
-                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4ABC;
-                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4ABC;
+                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4ABC);
+                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
             }
         }
     } else {
@@ -1949,24 +1958,26 @@ void dim2snowball_update(int *obj)
         }
         if (*(u8 *)((char *)*(int **)((char *)extra + 0xa8) + (*(int *)((char *)extra + 0x10) >> 2)) == 32) {
             if (GameBit_Get(648) != 0) {
-                int **results;
                 int n;
                 *(u8 *)((char *)extra + 0xac) |= 2;
-                n = hitDetectFn_80065e50(obj, &results, 0, 0, *(f32 *)((char *)obj + 0xc),
-                                         *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14));
+                n = hitDetectFn_80065e50(obj, *(f32 *)((char *)obj + 0xc),
+                                         *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14),
+                                         &results, 0, 0);
                 *(f32 *)((char *)extra + 0xa4) = *(f32 *)((char *)obj + 0x10);
                 while (n > 0) {
-                    int *r = results[--n];
+                    int *r;
+                    n--;
+                    r = results[n];
                     if (*(f32 *)r < *(f32 *)((char *)obj + 0x10)) {
                         s8 t = *(s8 *)((char *)r + 0x14);
                         if (t == 26 || t == 8) {
                             *(f32 *)((char *)extra + 0xa4) = *(f32 *)r;
-                            break;
+                            n = 0;
                         }
                     }
                 }
-                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * lbl_803E4ABC;
-                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * lbl_803E4ABC;
+                *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) * (k = lbl_803E4ABC);
+                *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) * k;
             }
         }
     }

@@ -13,6 +13,7 @@ typedef struct WmSeqPointState {
     u8 skyWasOn;
 } WmSeqPointState;
 
+#pragma scheduling off
 void fn_801F654C(int obj)
 {
     WmSeqPointState *state;
@@ -43,12 +44,15 @@ void fn_801F654C(int obj)
     }
 }
 
+#pragma scheduling reset
+
+#pragma scheduling off
+#pragma peephole off
 int wmseqpoint_SeqFn(int obj, int unused, int actor)
 {
     WmSeqPointState *state;
     int player;
     int i;
-    u8 action;
 
     state = *(WmSeqPointState **)(obj + 0xb8);
     player = (int)Obj_GetPlayerObject();
@@ -56,55 +60,66 @@ int wmseqpoint_SeqFn(int obj, int unused, int actor)
     *(void **)(actor + 0xe8) = fn_801F654C;
 
     for (i = 0; i < *(u8 *)(actor + 0x8b); i++) {
-        action = *(u8 *)(actor + i + 0x81);
-        if (state->triggerId == 0) {
-            if (action != 0) {
-                state->command = action;
-                switch (action) {
+        switch (state->triggerId) {
+        case 0:
+            if (*(u8 *)(actor + i + 0x81) != 0) {
+                state->command = *(u8 *)(actor + i + 0x81);
+                switch (*(u8 *)(actor + i + 0x81)) {
                     case 1:
                         GameBit_Set(0x143, 1);
                         break;
                     case 2:
                         GameBit_Set(0x143, 0);
                         break;
+                    case 5:
+                        GameBit_Set(0x21d, 1);
+                        break;
                     case 4:
                         GameBit_Set(0x21d, 1);
                         fn_80296518(player, 8, 0);
                         GameBit_Set(0x277, 1);
                         break;
-                    case 5:
-                        GameBit_Set(0x21d, 1);
-                        break;
                     default:
                         break;
                 }
             }
-        } else if (action == 0xb) {
-            if ((getSkyColorFn_80088e08(0) & 0xff) != 0) {
-                getEnvfxActImmediately(0, 0, 0x217, 0);
-                getEnvfxActImmediately(obj, obj, 0x216, 0);
-                getEnvfxActImmediately(obj, obj, 0x84, 0);
-                getEnvfxActImmediately(obj, obj, 0x8a, 0);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 0);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 1);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
+            break;
+        default:
+            switch (*(u8 *)(actor + i + 0x81)) {
+                case 0xb:
+                    if ((u32)(getSkyColorFn_80088e08(0) & 0xff) != 0) {
+                        getEnvfxActImmediately(0, 0, 0x217, 0);
+                        getEnvfxActImmediately(obj, obj, 0x216, 0);
+                        getEnvfxActImmediately(obj, obj, 0x84, 0);
+                        getEnvfxActImmediately(obj, obj, 0x8a, 0);
+                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 0);
+                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 1);
+                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 1);
+                    }
+                    break;
+                case 0xa:
+                    if ((u32)(getSkyColorFn_80088e08(0) & 0xff) == 0) {
+                        getEnvfxActImmediately(0, 0, 0x22d, 0);
+                        getEnvfxActImmediately(obj, obj, 0x22c, 0);
+                        getEnvfxActImmediately(obj, obj, 0x229, 0);
+                        getEnvfxActImmediately(obj, obj, 0x22a, 0);
+                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
+                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
+                        ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 0);
+                    }
+                    break;
+                default:
+                    break;
             }
-        } else if (action == 0xa) {
-            if ((getSkyColorFn_80088e08(0) & 0xff) == 0) {
-                getEnvfxActImmediately(0, 0, 0x22d, 0);
-                getEnvfxActImmediately(obj, obj, 0x22c, 0);
-                getEnvfxActImmediately(obj, obj, 0x229, 0);
-                getEnvfxActImmediately(obj, obj, 0x22a, 0);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 4, 1);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 10, 0);
-                ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8 *)(obj + 0xac), 0xb, 0);
-            }
+            break;
         }
         *(u8 *)(actor + i + 0x81) = 0;
     }
 
     return 0;
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 int wmseqpoint_getExtraSize(void) { return 0x10; }
 
@@ -126,6 +141,7 @@ void wmseqpoint_render(int p1, int p2, int p3, int p4, int p5, s8 visible)
 
 void wmseqpoint_hitDetect(void) {}
 
+#pragma scheduling off
 void wmseqpoint_update(int obj)
 {
     WmSeqPointState *state;
@@ -219,6 +235,7 @@ void wmseqpoint_update(int obj)
             break;
     }
 }
+#pragma scheduling reset
 
 #pragma scheduling off
 #pragma peephole off
