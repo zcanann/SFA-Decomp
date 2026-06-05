@@ -2772,6 +2772,7 @@ u8 *loadObjectFile(int id)
 int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
 {
     int size;
+    int r;
     int extra;
     int (*cb)(void *, int);
 
@@ -2812,19 +2813,23 @@ int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
         }
     }
     if (*(u8 *)(def + 0x5a) != 0) {
-        size = roundUpTo4(size) + *(u8 *)(def + 0x5a) * 0x12;
+        r = roundUpTo4(size);
+        size = r + *(u8 *)(def + 0x5a) * 0x12;
     }
     if (*(u8 *)(def + 0x59) != 0) {
-        size = roundUpTo4(size) + *(u8 *)(def + 0x59) * 0x10;
+        r = roundUpTo4(size);
+        size = r + *(u8 *)(def + 0x59) * 0x10;
     }
     if (*(u8 *)(def + 0x72) != 0) {
-        size = roundUpTo4(size) + *(u8 *)(def + 0x72) * 0x18;
+        r = roundUpTo4(size);
+        size = r + *(u8 *)(def + 0x72) * 0x18;
     }
     if (*(u8 *)(def + 0x61) != 0 && *(u8 *)(def + 0x66) != 0) {
         size = roundUpTo8(size) + 0x12c;
     }
     if (*(u8 *)(def + 0x72) != 0) {
-        size = roundUpTo4(size) + *(u8 *)(def + 0x72) * 5;
+        r = roundUpTo4(size);
+        size = r + *(u8 *)(def + 0x72) * 5;
     }
     return roundUpTo32(size);
 }
