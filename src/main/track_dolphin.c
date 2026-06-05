@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/frustum.h"
 #include "main/track_dolphin.h"
 #include "dolphin/os/OSFastCast.h"
 
@@ -4338,11 +4339,11 @@ void queueGlowRender(int* obj)
     if (lbl_803DCE06 >= 100) return;
 
     for (i = 0; i < 5; i++) {
-        f32* plane = (f32*)(gViewFrustumPlanes + i * 0x14);
-        f32 dot = plane[0] * (*(f32*)((char*)obj + 0x10) - playerMapOffsetX)
-                + *(f32*)((char*)obj + 0x14) * plane[1]
-                + plane[2] * (*(f32*)((char*)obj + 0x18) - playerMapOffsetZ)
-                + plane[3];
+        FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
+        f32 dot = plane->normalX * (*(f32*)((char*)obj + 0x10) - playerMapOffsetX)
+                + *(f32*)((char*)obj + 0x14) * plane->normalY
+                + plane->normalZ * (*(f32*)((char*)obj + 0x18) - playerMapOffsetZ)
+                + plane->distance;
         if (lbl_803DEBCC + dot < lbl_803DEBCC) {
             visible = 0;
             goto check;
