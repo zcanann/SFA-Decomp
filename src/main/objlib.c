@@ -1688,7 +1688,7 @@ undefined4 * ObjGroup_GetObjects(int group,int *countOut)
 void ObjGroup_RemoveObject(uint obj,int group)
 {
   u8 *offset;
-  int count;
+  u8 count;
   int index;
   int limit;
   uint *entries;
@@ -1705,11 +1705,10 @@ void ObjGroup_RemoveObject(uint obj,int group)
     entries++;
     index++;
   }
-  if (limit <= index) {
+  if (index >= limit) {
     return;
   }
-  count = (int)gObjGroupObjectCount - 1;
-  gObjGroupObjectCount = count;
+  count = (gObjGroupObjectCount -= 1);
   entries = gObjGroupObjects + index;
   while (index < count) {
     *entries = entries[1];
