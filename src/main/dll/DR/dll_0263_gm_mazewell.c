@@ -48,26 +48,31 @@ int gmmazewell_clearPendingTriggerCallback(int obj, int unused, u8 *arg) {
 #pragma peephole reset
 #pragma scheduling reset
 
+typedef struct {
+    s16 unlockBits[28];
+    s32 itemIds[9];
+} MazewellTable;
+
 #pragma scheduling off
 #pragma peephole off
 void gmmazewell_update(void *obj) {
     s16 *base = lbl_8032A730;
+    s32 *base32 = (s32 *)base;
     u8 *runtime = *(u8 **)((char *)obj + 0xb8);
-    int player;
+    u8 *player;
     int value;
     s16 *p;
     int i;
     if (runtime[1] == 0) {
-        player = (int)Obj_GetPlayerObject();
+        player = (u8 *)Obj_GetPlayerObject();
         if (player != 0) {
             ((MapEventInterface *)*gMapEventInterface)->triggerEvent(
-                player + 0xc, *(s16 *)player, 0, getCurMapLayer());
+                (int)(player + 0xc), *(s16 *)player, 0, getCurMapLayer());
             runtime[1] = 1;
         }
     }
     *(u8 *)((char *)obj + 0xaf) &= ~8;
-    p = base;
-    for (i = 0; i < 9; i++) {
+    for (i = 0, p = base; (u32)i < 9; i++) {
         if (GameBit_Get(*p) != 0) {
             value = base[i];
             goto checkValue;
@@ -83,28 +88,35 @@ checkValue:
     }
     if ((*(u8 *)((char *)obj + 0xaf) & 1) != 0) {
         int found;
-        p = base;
-        for (i = 0; i < 9; i++) {
+        for (i = 0, p = base; (u32)i < 9; i++) {
             if ((*(int (**)(int))((char *)*gGameUIInterface + 0x20))(*p) != 0) {
                 if (lbl_803DC968 != 0) {
                     runtime = *(u8 **)((char *)obj + 0xb8);
-                    if (i < 3 && i >= 0) {
-                        GameBit_Set(*(s16 *)((char *)&base[i] + 0x14), 1);
+                    switch (i) {
+                    case 0:
+                    case 1:
+                    case 2:
+                        GameBit_Set(base[i + 10], 1);
                         saveFileStruct_unlockCheat((u8)i);
+                        break;
                     }
-                    *(int *)(runtime + 4) = *(s32 *)((char *)&base[i * 2] + 0x38);
-                    GameBit_Set(*(s16 *)((char *)&base[i] + 0x28), 1);
+                    *(int *)(runtime + 4) = base32[i + 14];
+                    GameBit_Set(base[i + 20], 1);
                 } else {
                     runtime = *(u8 **)((char *)obj + 0xb8);
-                    *(int *)(runtime + 4) = *(s32 *)((char *)&base[i * 2] + 0x38);
-                    if (i == 3) {
+                    *(int *)(runtime + 4) = base32[i + 14];
+                    switch (i) {
+                    case 3:
                         *(int *)(runtime + 4) = 1316;
-                    }
-                    if (i < 3 && i >= 0) {
-                        GameBit_Set(*(s16 *)((char *)&base[i] + 0x14), 1);
+                        /* fall through */
+                    case 0:
+                    case 1:
+                    case 2:
+                        GameBit_Set(base[i + 10], 1);
                         saveFileStruct_unlockCheat((u8)i);
+                        break;
                     }
-                    GameBit_Set(*(s16 *)((char *)&base[i] + 0x28), 1);
+                    GameBit_Set(base[i + 20], 1);
                 }
                 found = 1;
                 goto checkFound;
