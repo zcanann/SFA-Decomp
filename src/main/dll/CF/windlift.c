@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/dll/CF/windlift.h"
 
 extern undefined4 FUN_8000680c();
@@ -195,8 +196,6 @@ extern f32 FLOAT_803e471c;
 void scarab_update(int obj)
 {
     extern void Sfx_PlayFromObject(int obj, int sfx);
-    extern void ObjAnim_SampleRootCurvePhase(int obj, f32 *out);
-    extern int ObjAnim_AdvanceCurrentMove(int obj, f32 a, f32 b, int c);
     extern f32 Vec_xzDistance(f32 *a, f32 *b);
     extern void PSVECSubtract(void *a, void *b, void *out);
     extern void itemPickupDoParticleFx(int obj, f32 scale, int a, int b);
@@ -455,9 +454,10 @@ void scarab_update(int obj)
                 } else {
                     *(f32 *)(obj + 0xc) = *(f32 *)(obj + 0x24) * timeDelta + *(f32 *)(obj + 0xc);
                     *(f32 *)(obj + 0x14) = *(f32 *)(obj + 0x2c) * timeDelta + *(f32 *)(obj + 0x14);
-                    sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) + *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c));
-                    ObjAnim_SampleRootCurvePhase(obj, &phase);
-                    ObjAnim_AdvanceCurrentMove(obj, phase, timeDelta, 0);
+                    sumsq = sqrtf(*(f32 *)(obj + 0x24) * *(f32 *)(obj + 0x24) +
+                                  *(f32 *)(obj + 0x2c) * *(f32 *)(obj + 0x2c));
+                    ObjAnim_SampleRootCurvePhase(sumsq, (ObjAnimComponent *)obj, &phase);
+                    ObjAnim_AdvanceCurrentMove(phase, timeDelta, obj, NULL);
                 }
                 flag = objBboxFn_800640cc(obj + 0x80, obj + 0xc, lbl_803E3A00, 0, hitResults, obj, 8, -1, 0, 0);
                 sph.vals[0] = lbl_803E3A00;
