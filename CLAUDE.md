@@ -866,6 +866,32 @@ Heuristic:
     copy-propagation picks the SOURCE reg; restructure the variables so the
     intended reg IS the variable's home.
 
+62. **`(int)`-cast the store base to defeat address-CSE with a later
+    `(u8 *)p + off` call arg — restores the displacement-form store.** When a
+    function stores to `*(u8 *)((u8 *)p + off) = K` AND later passes the same
+    address `(u8 *)p + off` to a callee, MWCC CSEs the address computation:
+    it materializes `addi r4, base, off` EARLY and stores via `stb r0,0(r4)`
+    (indexed-zero form, +1 instr vs target's direct `stb r0,off(base)` with
+    the `addi` recomputed later at the call). Writing the STORE's base with an
+    `(int)` cast — `*(u8 *)((int)p + off) = K;` — makes the two address
+    expressions formally distinct, killing the CSE: the store folds to the
+    displacement form and the call re-derives its own `addi`, matching target.
+    Mirror of #30 (which forces the OPPOSITE direction). Took
+    sh_queenearthwalker_processAnimEvents 98.21→100 byte-exact.
+
+63. **Ternary `x = (cond) ? x : -x;` reproduces the `bne then; b end; then:
+    fneg` empty-then layout; `if (!(x>=K)) x = -x;` and `if (x>=K){}else{}`
+    both materialize the bool (mfcr) instead.** When target shows the odd
+    `fcmpo; cror eq,gt,eq; bne L1; b L2; L1: fneg; L2:` shape for a
+    conditional negate, the C is the ternary keep-or-negate assignment, NOT
+    an if-statement. BUT for a conditional RETURN with the same cror+bne
+    shape, `if (!(f >= K)) return;` works directly (no mfcr) — the
+    materialization only bites in an assignment context. Both instances were
+    real Ghidra import condition-INVERSIONS on fn_80151DB8 (the import
+    negated/returned on the opposite branch) — whenever target's branch
+    sense differs from the import's, suspect inverted logic (drift section)
+    before a codegen cap. fn_80151DB8 98.16→100.
+
 ## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
