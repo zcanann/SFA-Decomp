@@ -3118,6 +3118,7 @@ extern u16 lbl_803DD7EC;
 extern int lbl_803E1E2C;
 extern char sTrickyDebugXCoordFormat[];
 extern void gameTextSetColor(int, int, int, int);
+extern int sprintf(char *, ...);
 #pragma scheduling off
 
 #define VFTICK(gA1, gA2, A, B, C) do { \
@@ -3146,6 +3147,7 @@ extern void gameTextSetColor(int, int, int, int);
     drawViewFinderLine(_c, (A) + lbl_803E1E68 * _sn, (B) - lbl_803E1E68 * _cs, (A) - lbl_803E1E68 * _sn, (B) + lbl_803E1E68 * _cs, (A) - lbl_803E1E68 * _sn, (C) + lbl_803E1E68 * _cs, (A) + lbl_803E1E68 * _sn, (C) - lbl_803E1E68 * _cs); \
 } while (0)
 
+#pragma peephole off
 void drawViewFinderHud(void) {
     f32 fovY;
     int slot;
@@ -3340,4 +3342,5 @@ void drawViewFinderHud(void) {
         }
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
