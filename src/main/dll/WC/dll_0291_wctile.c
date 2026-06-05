@@ -58,12 +58,23 @@ typedef struct WCTileState {
     s16 mode;
 } WCTileState;
 
+typedef struct WCTileSetup {
+    u8 pad00[0x0C];
+    f32 yOffset;
+    u8 pad10[WCTILE_MODEL_INDEX_OFFSET - 0x10];
+    s8 modelIndex;
+    s16 initialTile;
+} WCTileSetup;
+
 STATIC_ASSERT(sizeof(WCTileState) == WCTILE_EXTRA_SIZE);
 STATIC_ASSERT(offsetof(WCTileState, controller) == WCTILE_STATE_CONTROLLER);
 STATIC_ASSERT(offsetof(WCTileState, tileX) == WCTILE_STATE_TILE_X);
 STATIC_ASSERT(offsetof(WCTileState, tileY) == WCTILE_STATE_TILE_Y);
 STATIC_ASSERT(offsetof(WCTileState, targetTile) == WCTILE_STATE_TARGET_TILE);
 STATIC_ASSERT(offsetof(WCTileState, mode) == WCTILE_STATE_MODE);
+STATIC_ASSERT(offsetof(WCTileSetup, yOffset) == 0x0c);
+STATIC_ASSERT(offsetof(WCTileSetup, modelIndex) == WCTILE_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCTileSetup, initialTile) == WCTILE_INITIAL_TILE_OFFSET);
 
 #define WCTILE_STATE_IFACE(state) (*(WCTileIface **)(*(int *)((state)->controller + 0x68)))
 
@@ -113,16 +124,17 @@ void wctile_hitDetect(void) {}
 
 #pragma peephole off
 #pragma scheduling off
-void wctile_init(u8 *obj, u8 *setup)
+void wctile_init(u8 *obj, u8 *setupBytes)
 {
-    u8 *state = *(u8 **)(obj + 0xb8);
+    WCTileState *state = *(WCTileState **)(obj + 0xb8);
+    WCTileSetup *setup = (WCTileSetup *)setupBytes;
 
-    *(f32 *)(obj + 0x10) = lbl_803E6DFC + *(f32 *)(setup + 0xc);
-    obj[0xad] = setup[WCTILE_MODEL_INDEX_OFFSET];
+    *(f32 *)(obj + 0x10) = lbl_803E6DFC + setup->yOffset;
+    obj[0xad] = setup->modelIndex;
     if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
         obj[0xad] = 0;
     }
-    WCTILE_TARGET_TILE((int)state) = *(s16 *)(setup + WCTILE_INITIAL_TILE_OFFSET);
+    state->targetTile = setup->initialTile;
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel((int)obj), postRenderSetAlphaBlendState);
     obj[0x36] = 0;
 }
