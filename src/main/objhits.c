@@ -1780,11 +1780,11 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
     attStateB = NULL;
   }
   result = 0;
-  if ((stateA->objectHitMask != 0) && (*(s8 *)((int)stateA + 0x70) == 0)) {
+    if ((stateA->objectHitMask != 0) && (*(s8 *)((int)stateA + 0x70) == 0)) {
     if (*(s16 *)(objA + 0x44) == 1) {
       hitboxBuf = *(int **)(*(int *)(objA + 0x7c) + *(s8 *)(objA + 0xad) * 4);
       bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
-      if ((stateA->flags & 0x2000) != 0) {
+      if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
         memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsPrimaryHitboxBufferScratch0,
                (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
         memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsPrimaryHitboxBufferScratch1,
@@ -1798,7 +1798,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
       if (attA != 0) {
         hitboxBuf = *(int **)(*(int *)(attA + 0x7c) + *(s8 *)(attA + 0xad) * 4);
         bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
-        if ((stateA->flags & 0x2000) != 0) {
+        if ((stateA->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
           memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsSecondaryHitboxBufferScratch0,
                  (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
           memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsSecondaryHitboxBufferScratch1,
@@ -1808,7 +1808,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
                  (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
           memcpy(gObjHitsSecondaryHitboxBufferScratch1, (void *)hitboxBuf[(bufIndex ^ 1) + 0x12],
                  (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
-          stateA->flags = stateA->flags | 0x2000;
+          stateA->flags = stateA->flags | OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
         }
       }
     }
@@ -1825,12 +1825,12 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
     }
   }
   result = 0;
-  if (((*(u8 *)((int)stateB + 0xb4) & 0x80) == 0) && (stateB->objectHitMask != 0) &&
+  if (((stateB->sourceMask & 0x80) == 0) && (stateB->objectHitMask != 0) &&
       (*(s8 *)((int)stateB + 0x70) == 0)) {
     if (*(s16 *)(objB + 0x44) == 1) {
       hitboxBuf = *(int **)(*(int *)(objB + 0x7c) + *(s8 *)(objB + 0xad) * 4);
       bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
-      if ((stateB->flags & 0x2000) != 0) {
+      if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
         memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsPrimaryHitboxBufferScratch0,
                (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
         memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsPrimaryHitboxBufferScratch1,
@@ -1844,7 +1844,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
       if (attB != 0) {
         hitboxBuf = *(int **)(*(int *)(attB + 0x7c) + *(s8 *)(attB + 0xad) * 4);
         bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
-        if ((stateB->flags & 0x2000) != 0) {
+        if ((stateB->flags & OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED) != 0) {
           memcpy((void *)hitboxBuf[bufIndex + 0x12], gObjHitsSecondaryHitboxBufferScratch0,
                  (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
           memcpy((void *)hitboxBuf[(bufIndex ^ 1) + 0x12], gObjHitsSecondaryHitboxBufferScratch1,
@@ -1854,7 +1854,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
                  (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
           memcpy(gObjHitsSecondaryHitboxBufferScratch1, (void *)hitboxBuf[(bufIndex ^ 1) + 0x12],
                  (uint)*(u8 *)(*hitboxBuf + 0xf7) << 4);
-          stateB->flags = stateB->flags | 0x2000;
+          stateB->flags = stateB->flags | OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
         }
       }
     }
@@ -2132,37 +2132,37 @@ void ObjHits_DetectObjectPair(int objA,int objB)
 
   stateA = *(ObjHitsPriorityState **)(objA + 0x54);
   stateB = *(ObjHitsPriorityState **)(objB + 0x54);
-  if ((*(u8 *)((int)stateA + 0xae) != 0) || (*(u8 *)((int)stateB + 0xae) != 0)) goto end;
+  if ((stateA->activeHitboxMode != 0) || (stateB->activeHitboxMode != 0)) goto end;
   dx = *(f32 *)(objB + 0x18) - *(f32 *)(objA + 0x18);
   yB = *(f32 *)(objB + 0x1c);
   yA = *(f32 *)(objA + 0x1c);
   dy = yB - yA;
   dz = *(f32 *)(objB + 0x20) - *(f32 *)(objA + 0x20);
-  radiusA = (f32)*(s16 *)((int)stateA + 0x5a);
-  radiusB = (f32)*(s16 *)((int)stateB + 0x5a);
+  radiusA = (f32)stateA->primaryRadius;
+  radiusB = (f32)stateB->primaryRadius;
   vertical = 0;
   shapeB = stateB->shapeFlags;
   if (((shapeB & 2) != 0) || ((stateA->shapeFlags & 2) != 0)) {
     if (dy <= gObjHitsScalarZero) {
       span = radiusB;
       if ((shapeB & 2) != 0) {
-        span = (f32)*(s16 *)((int)stateB + 0x5e);
+        span = (f32)stateB->primaryCapsuleOffsetB;
       }
       if ((stateA->shapeFlags & 2) == 0) {
         yA = yA - radiusA;
       } else {
-        yA = yA + (f32)*(s16 *)((int)stateA + 0x5c);
+        yA = yA + (f32)stateA->primaryCapsuleOffsetA;
       }
       if (yB + span < yA) goto end;
     } else {
       span = radiusA;
       if ((stateA->shapeFlags & 2) != 0) {
-        span = (f32)*(s16 *)((int)stateA + 0x5e);
+        span = (f32)stateA->primaryCapsuleOffsetB;
       }
       if ((shapeB & 2) == 0) {
         yB = yB - radiusB;
       } else {
-        yB = yB + (f32)*(s16 *)((int)stateB + 0x5c);
+        yB = yB + (f32)stateB->primaryCapsuleOffsetA;
       }
       if (yA + span < yB) goto end;
     }
@@ -2280,8 +2280,8 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
 
   objBState = *(ObjHitsPriorityState **)(objB + 0x54);
   objAState = *(ObjHitsPriorityState **)(objA + 0x54);
-  if (((*(s8 *)((int)objAState + 0xaf) == 0) && (*(s8 *)((int)objBState + 0xaf) == 0)) &&
-      (*(u8 *)((int)objBState + 0xae) == 0) && (*(u8 *)((int)objAState + 0xae) == 0)) {
+  if (((objAState->resetHitboxMode == 0) && (objBState->resetHitboxMode == 0)) &&
+      (objBState->activeHitboxMode == 0) && (objAState->activeHitboxMode == 0)) {
     hitboxBuf = *(int **)(*(int *)(objA + 0x7c) + *(s8 *)(objA + 0xad) * 4);
     shapeFlags = objBState->shapeFlags;
     if ((shapeFlags & 1) != 0) {
@@ -2289,7 +2289,7 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
       point.y = *(f32 *)(objB + 0x1c);
       point.z = *(f32 *)(objB + 0x20) - playerMapOffsetZ;
       point3D = point;
-      hitCount = ObjHits_CollectSkeletonHits3D(&point3D.x, (f32)*(s16 *)((int)objBState + 0x5a),
+      hitCount = ObjHits_CollectSkeletonHits3D(&point3D.x, (f32)objBState->primaryRadius,
                                                (ObjHitsSkeletonJointData *)hitboxBuf[5], hitboxBuf,
                                                (ObjHitsSkeletonHit *)hits, &bestHit, &outAxial);
       if (hitCount != 0) {
@@ -2305,7 +2305,7 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
             clamped = ratio;
           }
         }
-        ObjHits_CalcSkeletonResponse3D(&point.x, (f32)*(s16 *)((int)objBState + 0x5a), objB,
+        ObjHits_CalcSkeletonResponse3D(&point.x, (f32)objBState->primaryRadius, objB,
                                        (ObjHitsSkeletonHit *)hits,
                                        (ObjHitsSkeletonJointData *)hitboxBuf[5], *hitboxBuf,
                                        bestHit, clamped, outAxial, response);
@@ -2346,11 +2346,11 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
       point.y = *(f32 *)(objB + 0x1c);
       point.z = *(f32 *)(objB + 0x20) - playerMapOffsetZ;
       pointXZ = point;
-      hitCount = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, (f32)*(s16 *)((int)objBState + 0x5a),
+      hitCount = ObjHits_CollectSkeletonHitsXZ(&pointXZ.x, (f32)objBState->primaryRadius,
                                                (ObjHitsSkeletonJointData *)hitboxBuf[5], hitboxBuf,
                                                (ObjHitsSkeletonHit *)hits, &bestHit,
-                                               point.y + (f32)*(s16 *)((int)objBState + 0x5e),
-                                               point.y + (f32)*(s16 *)((int)objBState + 0x5c),
+                                               point.y + (f32)objBState->primaryCapsuleOffsetB,
+                                               point.y + (f32)objBState->primaryCapsuleOffsetA,
                                                &outAxial);
       if (hitCount != 0) {
         ratio = (*(f32 *)(objB + 0xa8) * *(f32 *)(objB + 8)) /
@@ -2365,7 +2365,7 @@ void ObjHits_CheckSkeletonPair(int objA,int objB,void *hits,void *scratchB,void 
             clamped = ratio;
           }
         }
-        ObjHits_CalcSkeletonResponseXZ(&point.x, (f32)*(s16 *)((int)objBState + 0x5a), objB,
+        ObjHits_CalcSkeletonResponseXZ(&point.x, (f32)objBState->primaryRadius, objB,
                                        (ObjHitsSkeletonHit *)hits,
                                        (ObjHitsSkeletonJointData *)hitboxBuf[5], *hitboxBuf,
                                        bestHit, clamped, outAxial, response);
