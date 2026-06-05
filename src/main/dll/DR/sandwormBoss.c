@@ -4319,7 +4319,7 @@ void cfmaincrystal_init(int *obj, u8 *def) {
 #pragma scheduling reset
 
 extern void* Obj_GetPlayerObject(void);
-extern void mathFn_80021ac8(s16* rotIn, f32* outVec);
+extern void vecRotateZXY(s16* rotIn, f32* outVec);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void saveGame_saveObjectPos(int obj);
 extern int barrelgener_getLinkId(int barrel);
@@ -4336,7 +4336,7 @@ extern f32 lbl_803E42DC;
  * launch velocity (state+0x20..28) from a per-axis pair scaled by the
  * player's strength (player_state[0x298]), or a fixed pair when the flag
  * is clear. Builds a rotation-vec from state[0x50], runs the 3-vec rotor
- * via mathFn_80021ac8, sets thrown/inflight flags, plays sfx 0xd3. When
+ * via vecRotateZXY, sets thrown/inflight flags, plays sfx 0xd3. When
  * state[0x48] bit 0x40 is set, looks up the linked barrel by data[0x1a]
  * (or the nearest one if 0), temporarily moves obj to that barrel's
  * position so saveGame_saveObjectPos latches the target slot, then
@@ -4368,7 +4368,7 @@ void gunpowderbarrel_launchAtTarget(int obj, u8 flag) {
     stk[2] = 0;
     stk[1] = 0;
     stk[0] = *(s16*)(state + 0x50);
-    mathFn_80021ac8(stk, (f32*)(state + 0x20));
+    vecRotateZXY(stk, (f32*)(state + 0x20));
     state[0x49] = (u8)(state[0x49] | 1);
     Sfx_PlayFromObject(obj, SFXsk_baptr6_c);
     state[0x49] = (u8)(state[0x49] | 2);

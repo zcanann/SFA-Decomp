@@ -531,7 +531,7 @@ extern u8 Obj_IsLoadingLocked();
 extern void Sfx_PlayFromObject(int obj, int id);
 extern int Obj_AllocObjectSetup(int a, int b);
 extern int Obj_SetupObject(int s, int b, int c, int d, int e);
-extern void mathFn_80021ac8(void *a, void *b);
+extern void vecRotateZXY(void *a, void *b);
 extern void voxmaps_worldToGrid(void *src, void *grid);
 extern int voxmaps_traceLine(void *a, void *b, void *c, int d, int e);
 extern void voxmaps_gridToWorld(void *grid, void *out);

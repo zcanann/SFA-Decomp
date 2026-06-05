@@ -82,7 +82,7 @@ extern f32 lbl_803E2488;  /*  5.0f  */
 extern f32 lbl_803E248C;  /*  3.0f  */
 
 extern f32 getXZDistance(f32 *a, f32 *b);
-extern void mathFn_80021ac8(void *params, void *outVec);
+extern void vecRotateZXY(void *params, void *outVec);
 extern f32 sqrtf(f32 x);
 
 extern f32 lbl_803E23E0;
@@ -660,7 +660,7 @@ state_selected:
             rot.yaw = -*(s16 *)obj;
             rot.b = 0;
             rot.c = 0;
-            mathFn_80021ac8(&rot, delta);
+            vecRotateZXY(&rot, delta);
             if ((lbl_803E23DC < delta[2]) && (lbl_803E23DC != *(f32 *)(state + 0x14))) {
                 step = 0;
                 while ((step < 4) &&
@@ -1206,7 +1206,7 @@ void trickyUpdateApproachSpeed(u8 *obj, f32 baseRadius, u8 *state, f32 *targetPo
         params.a = -*(s16 *)(obj + 0x0);
         params.angle = 0;
         params.c = 0;
-        mathFn_80021ac8(&params, delta);
+        vecRotateZXY(&params, delta);
         if (delta[2] > lbl_803E23DC) {
             candidate = lbl_803E241C * timeDelta + *(f32 *)(state + 0x14);
             if (candidate < lbl_803E23DC) {

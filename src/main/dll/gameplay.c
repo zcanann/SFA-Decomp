@@ -16542,7 +16542,7 @@ void dll_7B_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
   (*(code *)(*gModgfxInterface + 8))(&buf, 0, 0xe, base, 0xc, &base[0x8c], 0x8e, 0);
 }
 
-extern void mathFn_80021ac8(void *p, f32 *v);
+extern void vecRotateZXY(void *p, f32 *v);
 extern u8 lbl_80311DA8[];
 extern u8 lbl_803DB898, lbl_803DB8A0, lbl_803DB8A8;
 extern const f32 lbl_803E0710, lbl_803E0714, lbl_803E0718, lbl_803E071C, lbl_803E0720;
@@ -16615,7 +16615,7 @@ void StaffCollision_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, 
     m.h2 = 0;
     m.h1 = (s16)(int)rb;
     m.h0 = (s16)(int)ra;
-    mathFn_80021ac8(&m, &ents[3].x);
+    vecRotateZXY(&m, &ents[3].x);
     buf.v58 = 0;
     buf.ctx = param_1;
     buf.v44 = param_2;
@@ -16929,7 +16929,7 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
       e[2].z = lbl_803E0750 + (f32)(int)randomGetRange(0, 300);
       m.h1 = randomGetRange(-0x7fff, -0xfa0);
       m.h0 = randomGetRange(0, 0xffff);
-      mathFn_80021ac8(&m, &e[2].x);
+      vecRotateZXY(&m, &e[2].x);
       e += 3;
     } else if (param_2 == 0x11) {
       e[2].layer = 1; e[2].flags = 0; e[2].tex = (void *)0; e[2].mode = 0x400000;
@@ -16937,7 +16937,7 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
       e[2].z = lbl_803E0750 + (f32)(int)randomGetRange(0, 300);
       m.h1 = randomGetRange(-0x7fff, -0xfa0);
       m.h0 = randomGetRange(0, 0xffff);
-      mathFn_80021ac8(&m, &e[2].x);
+      vecRotateZXY(&m, &e[2].x);
       e += 3;
     } else {
       e[2].layer = 1; e[2].flags = 0; e[2].tex = (void *)0; e[2].mode = 0x400000;
@@ -16945,7 +16945,7 @@ int modgfx_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4, int param
       e[2].z = lbl_803E0754 + (f32)(int)randomGetRange(0, 100);
       m.h1 = randomGetRange(-0x7fff, -0xfa0);
       m.h0 = randomGetRange(0, 0xffff);
-      mathFn_80021ac8(&m, &e[2].x);
+      vecRotateZXY(&m, &e[2].x);
       e += 3;
     }
     e[0].layer = 1; e[0].flags = 4; e[0].tex = &lbl_803DB8B4; e[0].mode = 4;

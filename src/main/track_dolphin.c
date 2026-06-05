@@ -350,7 +350,7 @@ extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 __AR_Callback;
 extern f32 __AR_Size;
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f);
-extern void mathFn_80021ac8(void *xf, f32 *out);
+extern void vecRotateZXY(void *xf, f32 *out);
 extern f32 lbl_8038D7DC[];
 extern s16 lbl_803DCEF2;
 extern f32 PSVECDotProduct(f32 *a, f32 *b);
@@ -5154,7 +5154,7 @@ void fn_80061094(f32 *vec, f32 *out, f32 scale)
       out[1] = scale * lbl_8038D7DC[i * 3 + 1];
     }
     out[2] = lbl_8038D7DC[i * 3 + 2];
-    mathFn_80021ac8(&xf, out);
+    vecRotateZXY(&xf, out);
     out += 3;
   }
 }

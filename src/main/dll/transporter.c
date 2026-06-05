@@ -1299,7 +1299,7 @@ extern f32 lbl_803E3604;
 extern f32 lbl_803E3608;
 extern f32 lbl_803E360C;
 extern void *Obj_GetPlayerObject(void);
-extern void mathFn_80021ac8(void *in, void *out);
+extern void vecRotateZXY(void *in, void *out);
 extern f32 lbl_803E3638;
 
 #pragma scheduling off
@@ -1366,7 +1366,7 @@ void iceblast_update(int *obj) {
         vec.dir[2] = *(s16 *)((char *)path + 4);
         vec.dir[1] = *(s16 *)((char *)path + 2);
         vec.dir[0] = *(s16 *)path;
-        mathFn_80021ac8(&vec, (f32 *)((char *)obj + 0x24));
+        vecRotateZXY(&vec, (f32 *)((char *)obj + 0x24));
         ObjPath_GetPointWorldPosition((int)path, 0, (f32 *)((char *)obj + 0xc), (f32 *)((char *)obj + 0x10), (f32 *)((char *)obj + 0x14), 0);
         ObjHits_EnableObject((u32)obj);
     }
@@ -1414,7 +1414,7 @@ int fn_8017805C(int *obj, f32 *state) {
     vec.dir[2] = tricky[2];
     vec.dir[1] = tricky[1];
     vec.dir[0] = tricky[0] + fn_80138F90();
-    mathFn_80021ac8(&vec, (f32 *)((char *)obj + 0x24));
+    vecRotateZXY(&vec, (f32 *)((char *)obj + 0x24));
     if ((*(u16 *)((char *)tricky + 0xb0) & 0x800) != 0) {
         pf = trickyGetQueuedPathParticlePos(tricky);
     } else {

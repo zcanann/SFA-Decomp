@@ -224,7 +224,7 @@ typedef struct EffectSpawnParams {
 
 extern int *gExpgfxInterface;
 extern EffectSrcParams lbl_8039C3F8;
-extern void mathFn_80021ac8(void *params, f32 *vec);
+extern void vecRotateZXY(void *params, f32 *vec);
 
 extern f32 lbl_803DFEB8;
 extern f32 lbl_803DFEBC;
@@ -1069,7 +1069,7 @@ int Effect11_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     p.velX = lbl_803DFF94 * (f32)(int)randomGetRange(0, 100) + lbl_803DFF90;
     p.velY = lbl_803DFF98 * (f32)(int)randomGetRange(0, 100) + lbl_803DFF74;
     p.velZ = lbl_803DFF98 * (f32)(int)randomGetRange(0, 100) + lbl_803DFF74;
-    mathFn_80021ac8(src, &p.velX);
+    vecRotateZXY(src, &p.velX);
     p.scale = lbl_803DFF9C * (f32)(int)randomGetRange(0x14, 0x1e);
     p.alpha = 0xff;
     p.count = 0xf0;
@@ -1393,7 +1393,7 @@ int Effect12_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
       local.rot2 = 0;
       local.rot1 = 0;
       local.rot0 = obj[0];
-      mathFn_80021ac8(&local, &p.velX);
+      vecRotateZXY(&local, &p.velX);
       p.scale = lbl_803DFFB4;
       p.count = 100;
       p.alpha = 0xff;
@@ -1847,7 +1847,7 @@ int Effect14_func04(s16 *obj, int id, EffectSrcParams *src, uint flags, u8 srcBy
     local.rot2 = obj[2];
     local.rot1 = obj[1];
     local.rot0 = obj[0];
-    mathFn_80021ac8(&local, &p.velX);
+    vecRotateZXY(&local, &p.velX);
     p.flagsA = 0x3000000;
     p.flagsB = 0x200000;
     p.scale = lbl_803E000C;

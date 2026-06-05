@@ -170,7 +170,7 @@ extern f32 *Camera_GetInverseViewMatrix(void);
 extern f32 Camera_GetFarPlane(void);
 extern void Camera_SetFarPlane(f32 dist, int mode);
 extern void Camera_RebuildProjectionMatrix(void);
-extern void mathFn_80021ac8(void *rot, f32 *vec);
+extern void vecRotateZXY(void *rot, f32 *vec);
 extern void objRender(int a, int b, int c, int d, void *obj, int mode);
 extern u16 lbl_803DD128;
 extern u16 lbl_803DD12A;

@@ -330,7 +330,7 @@ void fn_801845FC(u8 *obj, f32 *p2, u8 mode, f32 *p3)
 {
   extern int getAngle(f32, f32);
   extern f32 sqrtf(f32);
-  extern void mathFn_80021ac8(void *, f32 *);
+  extern void vecRotateZXY(void *, f32 *);
   extern f32 lbl_803E39F8;
   extern f32 lbl_803E39FC;
   extern f32 lbl_803E3A00;
@@ -371,7 +371,7 @@ void fn_801845FC(u8 *obj, f32 *p2, u8 mode, f32 *p3)
   st.b = 0;
   st.a = *(s16 *)(obj + 0);
 
-  mathFn_80021ac8(&st, buf);
+  vecRotateZXY(&st, buf);
 
   if (p2) {
     u16 a = getAngle(buf[0], buf[1]);

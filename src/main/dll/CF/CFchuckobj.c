@@ -11,7 +11,7 @@ extern undefined4 GameBit_Set(int eventId,int value);
 extern undefined4 FUN_80017710();
 extern double FUN_80017714();
 extern undefined4 FUN_80017748();
-extern void mathFn_80021ac8(s16* in, f32* out);
+extern void vecRotateZXY(s16* in, f32* out);
 extern u32 randomGetRange(int min, int max);
 extern void* Resource_Acquire(int id, int flags);
 extern void Resource_Release(void* handle);
@@ -197,7 +197,7 @@ void areafxemit_emitBurst(int obj, int count)
         u16 sz = *(u16 *)(sub + 0x16);
         args.vec[2] = (f32)(s32)randomGetRange(-sz, sz);
       }
-      mathFn_80021ac8((s16 *)(sub + 0x1a), args.vec);
+      vecRotateZXY((s16 *)(sub + 0x1a), args.vec);
       {
         u8 type = *(u8 *)(sub + 8);
         if (type == 4 || type == 6) {
@@ -1061,7 +1061,7 @@ typedef struct CFEmitterFxArgs {
         if (*(int*)((obj) + 0x30) != 0) {                         \
             rot[2] += *(s16*)(*(int*)((obj) + 0x30) + 4);         \
         }                                                         \
-        mathFn_80021ac8(rot, (args)->pos);                        \
+        vecRotateZXY(rot, (args)->pos);                        \
     } while (0)
 
 #define CF_EMITTER_ADD_OBJECT_POSITION(obj, args)                 \
@@ -1139,7 +1139,7 @@ void areafxemit_emitEffect(int* obj)
         if (count > 0) {
             for (i = 0; i < count; i++) {
                 CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-                mathFn_80021ac8((s16*)(state + 0x1a), args.pos);
+                vecRotateZXY((s16*)(state + 0x1a), args.pos);
                 if (*(u8*)(state + 8) == 6) {
                     CF_EMITTER_ADD_OBJECT_POSITION(object, &args);
                     CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 0x200001, -1, 0);
@@ -1149,7 +1149,7 @@ void areafxemit_emitEffect(int* obj)
             }
         } else {
             CF_EMITTER_RANDOMIZE_OFFSET(state, args.pos);
-            mathFn_80021ac8((s16*)(state + 0x1a), args.pos);
+            vecRotateZXY((s16*)(state + 0x1a), args.pos);
             if (*(u8*)(state + 8) == 6) {
                 CF_EMITTER_ADD_OBJECT_POSITION(object, &args);
                 CF_EMITTER_SPAWN_PARTFX(object, *(u16*)(state + 0xa), &args, 0x200001, -1, 0);

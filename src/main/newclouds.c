@@ -2415,7 +2415,7 @@ void snowReposSnowCloud(int cloudId) {
             args.fc = 0;
             args.fa = 0;
             args.f8 = 0xffff - (*(s16 *)cam + randomGetRange(-5000, 5000));
-            mathFn_80021ac8(&args.f8, dir);
+            vecRotateZXY(&args.f8, dir);
         }
         args.f14 = dir[0];
         args.f18 = dir[1];
@@ -2867,7 +2867,7 @@ void newclouds_update(u8 *objA, u8 *objB, u8 *params) {
             args.fc = 0;
             args.fa = 0;
             args.f8 = *(s16 *)objA;
-            mathFn_80021ac8(&args.f8, vec);
+            vecRotateZXY(&args.f8, vec);
             *(f32 *)(NC_CLOUD + 0x140c) = vec[0] + *(f32 *)(objA + 0x18);
             *(f32 *)(NC_CLOUD + 0x1410) = vec[1] + *(f32 *)(objA + 0x1c);
             *(f32 *)(NC_CLOUD + 0x1414) = vec[2] + *(f32 *)(objA + 0x20);
@@ -3036,7 +3036,7 @@ void dll_07_func06(void) {
                     args.fc = 0;
                     args.fa = 0;
                     args.f8 = 0xffff - *cam;
-                    mathFn_80021ac8(&args.f8, vec);
+                    vecRotateZXY(&args.f8, vec);
                     pos[0] = *(f32 *)((u8 *)cam + 0x44) + vec[0];
                     pos[1] = (*(f32 *)((u8 *)cam + 0x48) - lbl_803DF24C) + vec[1];
                     pos[2] = *(f32 *)((u8 *)cam + 0x4c) + vec[2];

@@ -2021,7 +2021,7 @@ void exploded_initDebrisState(ExplodedObject *obj, ExplodedObjectMapData *data,
                               int computeModelCenter, ExplodedObjectState *state)
 {
   extern void Model_GetVertexPosition(int, int, f32 *);
-  extern void fn_800218AC(int, int);
+  extern void vecRotateYXZ(int, int);
   extern f32 lbl_803E43F0;
   extern f32 lbl_803E43F4;
 
@@ -2067,7 +2067,7 @@ void exploded_initDebrisState(ExplodedObject *obj, ExplodedObjectMapData *data,
     tv[0] = state->localCenterX;
     tv[1] = state->localCenterY;
     tv[2] = state->localCenterZ;
-    fn_800218AC((int)obj, (int)tv);
+    vecRotateYXZ((int)obj, (int)tv);
     tv[0] = tv[0] * obj->modelScale;
     tv[1] = tv[1] * obj->modelScale;
     tv[2] = tv[2] * obj->modelScale;

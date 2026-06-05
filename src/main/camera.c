@@ -212,7 +212,7 @@ void Obj_BuildTransformMatricesForYaw(u32 obj, s32 yawIndex)
             setMatrixFromObjectPos(yawMatrix, (void *)current);
         } else {
             setMatrixFromObjectPos((f32 *)&DAT_80338c30, (void *)current);
-            mtxFn_80022404(yawMatrix, (f32 *)&DAT_80338c30, yawMatrix);
+            mtx44_multSafe(yawMatrix, (f32 *)&DAT_80338c30, yawMatrix);
         }
 
         *(f32 *)(current + 0x08) = savedScale;
@@ -435,7 +435,7 @@ void Camera_LoadModelViewMatrix(f32 scale, void* unused0, void* unused1, CameraV
     transform->z -= playerMapOffsetZ;
     setMatrixFromObjectPos(modelMatrix, transform);
     if (lbl_803DE5F0 != scale) {
-        mtxFn_80021ec0(modelMatrix, scale);
+        mtx44ScaleRow1(modelMatrix, scale);
     }
 
     if (matrix == NULL) {

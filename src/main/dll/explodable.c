@@ -7,7 +7,7 @@ extern char *Obj_AllocObjectSetup(int size, int typeId);
 extern char *Obj_SetupObject(char *setup, int a, int b, int c, int d);
 extern u32 randomGetRange(int min, int max);
 extern f32 sqrtf(f32 x);
-extern void mathFn_80021ac8(void *p, f32 *v);
+extern void vecRotateZXY(void *p, f32 *v);
 extern int getAngle(f32 a, f32 b);
 extern int Obj_GetPlayerObject(void);
 extern void ObjHits_DisableObject(int obj);
@@ -120,7 +120,7 @@ int fn_801833E4(int obj, int player, int state)
         blk.h2 = 0;
         blk.h1 = 0;
         blk.h0 = (s16)randomGetRange(-10000, 10000);
-        mathFn_80021ac8(&blk, (f32 *)(newObj + 0x24));
+        vecRotateZXY(&blk, (f32 *)(newObj + 0x24));
         angle = *(s16 *)newObj -
                 ((int)(s16)getAngle(*(f32 *)(newObj + 0x24), -*(f32 *)(newObj + 0x2c)) & 0xffff);
         if (angle > 0x8000) {
@@ -162,7 +162,7 @@ int fn_801833E4(int obj, int player, int state)
         blk.h2 = 0;
         blk.h1 = 0;
         blk.h0 = (s16)randomGetRange(-10000, 10000);
-        mathFn_80021ac8(&blk, (f32 *)(newObj + 0x24));
+        vecRotateZXY(&blk, (f32 *)(newObj + 0x24));
         angle = *(s16 *)newObj -
                 ((int)(s16)getAngle(*(f32 *)(newObj + 0x24), -*(f32 *)(newObj + 0x2c)) & 0xffff);
         if (angle > 0x8000) {
@@ -204,7 +204,7 @@ int fn_801833E4(int obj, int player, int state)
         blk.h2 = 0;
         blk.h1 = 0;
         blk.h0 = (s16)randomGetRange(-10000, 10000);
-        mathFn_80021ac8(&blk, (f32 *)(newObj + 0x24));
+        vecRotateZXY(&blk, (f32 *)(newObj + 0x24));
         angle = *(s16 *)newObj -
                 ((int)(s16)getAngle(*(f32 *)(newObj + 0x24), -*(f32 *)(newObj + 0x2c)) & 0xffff);
         if (angle > 0x8000) {

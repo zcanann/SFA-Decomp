@@ -23,7 +23,7 @@ extern int lbl_803DDD34;
 extern int modelLightStruct_getActiveState(int model);
 extern void queueGlowRender(int model);
 extern int *gPartfxInterface;
-extern void mathFn_80021ac8(void *in, void *out);
+extern void vecRotateZXY(void *in, void *out);
 extern int ObjList_FindObjectById(int id);
 extern f32 Vec_distance(void *a, void *b);
 extern int objCreateLight(int obj, int arg);
@@ -317,7 +317,7 @@ void worldobj_update(int obj) {
                 rot[0] = getAngle(dx, dz);
                 rot[1] = 0;
                 rot[2] = 0;
-                mathFn_80021ac8(rot, vec);
+                vecRotateZXY(rot, vec);
                 *(f32 *)(obj + 0xc) = vec[0] + (*(f32 *)(objA + 0xc) - dx);
                 *(f32 *)(obj + 0x10) =
                     *(f32 *)(state + 0x264) +
@@ -610,7 +610,7 @@ void worldobj_spawnAsteroidBatch(int obj, int xMin, int xMax, int yMin, int yMax
         rot[0] = 0;
         rot[1] = 0;
         rot[2] = (s16)randomGetRange(-0x7fff, 0x7fff);
-        mathFn_80021ac8(rot, vec);
+        vecRotateZXY(rot, vec);
         params.fc = vec[0];
         params.f10 = vec[1];
         params.f14 = vec[2];

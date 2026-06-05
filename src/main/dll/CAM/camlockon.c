@@ -4,7 +4,7 @@
 #pragma peephole off
 #pragma scheduling off
 
-extern void mathFn_80021ac8(s16 *rot, f32 *vec);
+extern void vecRotateZXY(s16 *rot, f32 *vec);
 
 extern u8 *lbl_803DD538;
 extern f64 lbl_803E1750;
@@ -90,7 +90,7 @@ void camcontrol_buildPathPoints(f32 baseX, f32 baseZ, f32 targetX, f32 baseY, f3
     rot[0] = angleRange < 0 ? pathAngles[i] : -pathAngles[i];
     rot[1] = 0;
     rot[2] = 0;
-    mathFn_80021ac8(rot, vec);
+    vecRotateZXY(rot, vec);
 
     *(f32 *)(gCamcontrolPathState + pointCount * 4 + 0x1c) = baseX + vec[0];
     *(f32 *)(gCamcontrolPathState + pointCount * 4 + 0x6c) =

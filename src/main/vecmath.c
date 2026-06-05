@@ -331,7 +331,7 @@ extern f32 lbl_803DE7D0;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void mtxFn_80021ec0(u8 *p, f32 s) {
+void mtx44ScaleRow1(u8 *p, f32 s) {
     *(f32 *)(p + 0x10) *= s;
     *(f32 *)(p + 0x14) *= s;
     *(f32 *)(p + 0x18) *= s;
@@ -957,7 +957,7 @@ extern f32 sin(f32);
 #pragma dont_inline on
 #pragma opt_strength_reduction off
 #pragma opt_loop_invariants off
-void mtxFn_80022404(int a, int b, f32 *out)
+void mtx44_multSafe(int a, int b, f32 *out)
 {
     f32 tmp[16];
     int j;
@@ -1011,7 +1011,7 @@ extern f32 lbl_803DE7EC;
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void fn_800218AC(s16 *a, f32 *v)
+void vecRotateYXZ(s16 *a, f32 *v)
 {
     f32 x, y, z;
     f32 s1, s2;
@@ -1298,7 +1298,7 @@ int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, f32 *timer) {
 
 #pragma push
 #pragma scheduling off
-void mathFn_80021ac8(u8 *p, f32 *v) {
+void vecRotateZXY(u8 *p, f32 *v) {
     f32 s2;
     f32 c2;
     f32 s1;

@@ -4409,7 +4409,7 @@ extern f32 lbl_803E04C4;
 extern f32 lbl_803E04C8;
 extern u8 framesThisStep;
 extern f32 sin(f32 x);
-extern void mathFn_80021ac8(void *params, f32 *vec);
+extern void vecRotateZXY(void *params, f32 *vec);
 extern int randFn_80080100(int range);
 
 int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
@@ -4841,7 +4841,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       }
       cfg.f34 = *(f32 *)(param_3 + 8) * *(f32 *)(param_3 + 4);
       cfg.f2c = lbl_803E0314 * *(f32 *)(param_3 + 4) * lbl_803E03A4 * (f32)(s32)randomGetRange(100,0x96);
-      mathFn_80021ac8(param_1,&cfg.f24);
+      vecRotateZXY(param_1,&cfg.f24);
       cfg.f42 = 0xc0a;
       cfg.f48 = cfg.f48 | 0x20;
       cfg.f4c = 0xffff;
@@ -4871,7 +4871,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       cfg.f34 = *(f32 *)(param_3 + 8) * *(f32 *)(param_3 + 4);
       cfg.f38 = *(f32 *)(param_3 + 10);
       cfg.f2c = lbl_803E0314 * *(f32 *)(param_3 + 4) * lbl_803E03A4 * (f32)(s32)randomGetRange(100,0x96);
-      mathFn_80021ac8(param_1,&cfg.f24);
+      vecRotateZXY(param_1,&cfg.f24);
       cfg.f42 = 0x5f5;
     }
     break;
@@ -4962,7 +4962,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       }
       cfg.f34 = *(f32 *)(param_3 + 8) * *(f32 *)(param_3 + 4);
       cfg.f2c = lbl_803E03B4 * *(f32 *)(param_3 + 4) * lbl_803E03A8 * (f32)(s32)randomGetRange(100,0x96);
-      mathFn_80021ac8(param_1,&cfg.f24);
+      vecRotateZXY(param_1,&cfg.f24);
       cfg.f42 = 0xc10;
     }
     break;
@@ -4985,7 +4985,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       }
       cfg.f34 = *(f32 *)(param_3 + 8) * *(f32 *)(param_3 + 4);
       cfg.f2c = lbl_803E03B4 * *(f32 *)(param_3 + 4) * lbl_803E03B8 * (f32)(s32)randomGetRange(100,0x96);
-      mathFn_80021ac8(param_1,&cfg.f24);
+      vecRotateZXY(param_1,&cfg.f24);
       cfg.f42 = 0xc10;
     }
     break;
@@ -5000,7 +5000,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       cfg.f24 = lbl_803E03BC * *(f32 *)(param_3 + 4) * lbl_803E0330 * (f32)(s32)randomGetRange(0xffffff6a,0x96);
       cfg.f28 = lbl_803E03BC * *(f32 *)(param_3 + 4) * lbl_803E0330 * (f32)(s32)randomGetRange(0xffffff6a,0x96);
       cfg.f2c = lbl_803E0314 * *(f32 *)(param_3 + 4) * lbl_803E03C0 * (f32)(s32)randomGetRange(100,0x96);
-      mathFn_80021ac8(param_1,&cfg.f24);
+      vecRotateZXY(param_1,&cfg.f24);
       cfg.f42 = 0xc10;
     }
     break;
@@ -5104,7 +5104,7 @@ int Effect20_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
       cfg.f28 = lbl_803E0324;
       cfg.f24 = lbl_803E0324;
       if (param_6 != NULL) {
-        mathFn_80021ac8(param_6,&cfg.f24);
+        vecRotateZXY(param_6,&cfg.f24);
       }
       cfg.f42 = param_3[3];
     }
@@ -5712,13 +5712,13 @@ LAB_800d20d4:
   case 0x7df:
     if (param_3 != NULL) {
       cfg.f2c = *(f32 *)(param_3 + 4);
-      mathFn_80021ac8(param_3,&cfg.f24);
+      vecRotateZXY(param_3,&cfg.f24);
       cfg.f30 = cfg.f30 + cfg.f24;
       cfg.f38 = cfg.f38 + cfg.f2c;
       cfg.f24 = lbl_803E0324;
       cfg.f28 = *(f32 *)(param_3 + 4) * lbl_803E044C * (f32)(s32)randomGetRange(0x32,100);
       cfg.f2c = *(f32 *)(param_3 + 4) * lbl_803E0310 * (f32)(s32)randomGetRange(0x4b,100);
-      mathFn_80021ac8(param_3,&cfg.f24);
+      vecRotateZXY(param_3,&cfg.f24);
       cfg.f3c = lbl_803E034C;
       cfg.f08 = (int)(cfg.f28 * (f32)(s32)randomGetRange(0x32,100));
       cfg.f60 = 0x7f;
@@ -6198,7 +6198,7 @@ LAB_800d20d4:
         cfg.f08 = 10;
       }
       cfg.f28 = lbl_803E0314 * *(f32 *)(param_3 + 4) * lbl_803E04A0 * (f32)(s32)randomGetRange(100,0x96);
-      mathFn_80021ac8(param_1,&cfg.f24);
+      vecRotateZXY(param_1,&cfg.f24);
       cfg.f42 = 0x5f5;
       cfg.f60 = 0x80;
     }
@@ -6462,7 +6462,7 @@ LAB_800d20d4:
     break;
   case 0x806:
     cfg.f38 = lbl_803E0488;
-    mathFn_80021ac8(param_1,&cfg.f30);
+    vecRotateZXY(param_1,&cfg.f30);
     cfg.f28 = lbl_803E04C0;
     cfg.f3c = lbl_803E0328 * (f32)(s32)randomGetRange(0x50,0x5f);
     cfg.f08 = 0xfa;
@@ -6479,7 +6479,7 @@ LAB_800d20d4:
     break;
   case 0x807:
     cfg.f38 = lbl_803E0488;
-    mathFn_80021ac8(param_1,&cfg.f30);
+    vecRotateZXY(param_1,&cfg.f30);
     cfg.f28 = lbl_803E04C4;
     cfg.f3c = lbl_803E0328 * (f32)(s32)randomGetRange(0x50,0x5f);
     cfg.f08 = 0xfa;

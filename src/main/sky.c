@@ -1285,7 +1285,7 @@ void sky2_run(void)
     *(s16 *)&q.rx = -cam[0];
     q.rz = 0;
     q.ry = 0;
-    mathFn_80021ac8(&q, vec);
+    vecRotateZXY(&q, vec);
     i = 0;
     pp = &lbl_803DD184;
     do {
@@ -2563,12 +2563,12 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         vec[2] = lbl_803DF0B8 * sunDir.z;
         yaw = *(f32 *)(lbl_803DD12C + 0x1c);
         q1.rx = (u16)(int)sunT;
-        mathFn_80021ac8(&q1, vec);
+        vecRotateZXY(&q1, vec);
         q1.w = EXIInputFlag;
         q1.rz = (u16)(int)yaw;
         q1.ry = 0;
         q1.rx = 0;
-        mathFn_80021ac8(&q1, vec);
+        vecRotateZXY(&q1, vec);
         lbl_8030F2C8[0] = vec[0];
         lbl_8030F2C8[1] = vec[1];
         lbl_8030F2C8[2] = vec[2];
@@ -2621,12 +2621,12 @@ void renderSunAndMoon(int a, int b, int c, int d, int visible)
         vec[1] = lbl_803DF0B8 * moonDir.y;
         vec[2] = lbl_803DF0B8 * moonDir.z;
         q2.rx = (u16)(int)moonTC;
-        mathFn_80021ac8(&q2, vec);
+        vecRotateZXY(&q2, vec);
         q2.w = EXIInputFlag;
         q2.rz = (u16)(int)yaw;
         q2.ry = 0;
         q2.rx = 0;
-        mathFn_80021ac8(&q2, vec);
+        vecRotateZXY(&q2, vec);
         lbl_8030F2D4[0] = vec[0];
         lbl_8030F2D4[1] = vec[1];
         lbl_8030F2D4[2] = vec[2];

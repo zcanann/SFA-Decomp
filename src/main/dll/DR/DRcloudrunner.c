@@ -23,7 +23,7 @@ extern void objSetSlot(int obj, int slot);
 extern void Obj_SetModelColorFadeRecursive(int obj, int r, int g, int b, int a, int frames);
 extern void objLightFn_8009a1dc(int obj, f32 *pos, int kind, int p4);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void *vec, f32 f, int flag);
-extern void mathFn_80021ac8(int obj, void *vec);
+extern void vecRotateZXY(int obj, void *vec);
 extern f32 sqrtf(f32 x);
 extern f32 fn_8001461C(void);
 extern void sc_musictree_spawnAmbientEffect(int obj, int inner, u8 frames, int idx);
@@ -177,7 +177,7 @@ end:
                 vec[0] = lbl_803E5590;
                 vec[1] = lbl_803E55A0 * *(f32 *)(inner + 0x38);
                 vec[2] = lbl_803E5590;
-                mathFn_80021ac8(obj, vec);
+                vecRotateZXY(obj, vec);
                 objfx_spawnRandomBurst(obj, *(u8 *)(inner + 0x4c) & 0xf, 1, vec, lbl_803E55A4 * *(f32 *)(inner + 0x38), 0);
                 *(f32 *)(inner + 0x30) = *(f32 *)(inner + 0x30) + lbl_803E55B4;
             }

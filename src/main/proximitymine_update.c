@@ -17,7 +17,7 @@ extern void *Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 *a, f32 *b);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern f32 sqrtf(f32 x);
-extern void mathFn_80021ac8(void *params, f32 *vec);
+extern void vecRotateZXY(void *params, f32 *vec);
 extern void Obj_FreeObject(void *obj);
 extern void ObjHits_EnableObject(void *obj);
 extern void ObjHits_SetHitVolumeSlot(void *obj, int p2, int p3, int p4);
@@ -168,7 +168,7 @@ void proximitymine_update(ProximityMineObject *obj)
       params.unk4 = 0;
       params.unk2 = 0;
       params.angle = obj->angle;
-      mathFn_80021ac8(&params, &obj->velocityX);
+      vecRotateZXY(&params, &obj->velocityX);
       Sfx_PlayFromObject(obj, 0xf0);
     }
     case 1:
