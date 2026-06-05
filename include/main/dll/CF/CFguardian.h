@@ -3,8 +3,6 @@
 
 #include "ghidra_import.h"
 
-void FUN_801845fc(undefined2 *param_1,int param_2);
-void FUN_80184600(void);
 void fn_801845FC(u8 *obj, f32 *posOrHit, u8 mode, f32 *fallbackPos);
 int scarab_getExtraSize(void);
 void scarab_free(void);
