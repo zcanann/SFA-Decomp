@@ -5,7 +5,6 @@
 #include "main/audio/synth_jobs.h"
 
 extern undefined4 FUN_802420b0();
-extern undefined4 FUN_8028383c();
 extern undefined4 FUN_80283d78();
 extern undefined4 hwSaveSample();
 extern undefined4 FUN_80283e00();
