@@ -230,30 +230,30 @@ void bombplantspore_update(void *obj) {
 }
 
 void bombplantspore_init(void *obj, void *param2) {
-    void *state;
+    BombPlantSporeState *state;
     void *light;
     f32 randomPhase;
     u32 randAsDouble[2];
     u8 events[8];
 
-    state = *(void **)((u8 *)obj + 0xb8);
+    state = *(BombPlantSporeState **)((u8 *)obj + 0xb8);
     events[0] = 5;
-    *(f32 *)((u8 *)state + 0x274) = lbl_803E53F0;
+    state->fuseTimer = lbl_803E53F0;
     *(u16 *)((u8 *)obj + 0xb0) |= 0x6000;
     *(f32 *)((u8 *)obj + 0x28) = lbl_803E53F4;
     ObjHits_DisableObject(obj);
-    *(s16 *)((u8 *)state + 0x2ac) = (s16)randomGetRange(0, 0xffff);
+    state->spinAngle = (s16)randomGetRange(0, 0xffff);
 
     randAsDouble[1] = randomGetRange(0, 1000) ^ 0x80000000;
     randAsDouble[0] = 0x43300000;
     randomPhase = *(f64 *)randAsDouble - lbl_803E53A0;
-    *(f32 *)((u8 *)state + 0x280) = randomPhase / lbl_803E5390;
+    state->randomPhase = randomPhase / lbl_803E5390;
 
     (*(void (***)(void *, int, int, int))gPathControlInterface)[1](
-        (u8 *)state + 0x8, 0, 0x40002, 1);
+        state->pathState, 0, 0x40002, 1);
     (*(void (***)(void *, int, u8 *, u8 *, u8 *))gPathControlInterface)[3](
-        (u8 *)state + 0x8, 1, lbl_80326D98, &lbl_803DBFC0, events);
-    (*(void (***)(void *, void *))gPathControlInterface)[8](obj, (u8 *)state + 0x8);
+        state->pathState, 1, lbl_80326D98, &lbl_803DBFC0, events);
+    (*(void (***)(void *, void *))gPathControlInterface)[8](obj, state->pathState);
     (*(void (***)(void *, int, int, int, int, int))gPartfxInterface)[2](
         obj, 0x3f1, 0, 4, -1, 0);
 
@@ -264,9 +264,9 @@ void bombplantspore_init(void *obj, void *param2) {
         lightSetFieldBC_8001db14(light, 1);
         modelLightStruct_setDistanceAttenuation(light, lbl_803E5388, lbl_803E538C);
     }
-    *(void **)((u8 *)state + 0x270) = light;
+    state->light = light;
     ObjMsg_AllocQueue(obj, 2);
-    *(s16 *)((u8 *)state + 0x2ae) = (s16)randomGetRange(-0x200, 0x200);
+    state->yawStep = (s16)randomGetRange(-0x200, 0x200);
 }
 
 void bombplantingspot_update(void *obj) {
