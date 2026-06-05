@@ -76,6 +76,7 @@ void synthSetStudioChannelScale(int value, u8 bank, u32 key);
  * fn_8026EC44 - per-song pitch/mod LFO + event update pass.
  * EN v1.0 Address: 0x8026EC44, size 1736b
  */
+#pragma fp_contract off
 void fn_8026EC44(u32 dt)
 {
     SynthSong *song;
@@ -90,12 +91,12 @@ void fn_8026EC44(u32 dt)
     int hasFree;
     u32 sum;
     int cnt;
-    f64 range;
+    f32 c0;
     f64 absRange;
-    f64 c0;
-    f64 c1;
+    f32 range;
+    f32 c1;
     f32 freq;
-    f64 val;
+    f32 val;
     u8 fade;
     u32 *node;
     u32 *nnode;
@@ -115,8 +116,10 @@ void fn_8026EC44(u32 dt)
             if (cs->multiMode == 0) {
                 st = &cs->streams[0];
                 if (st->base != NULL) {
-                    while ((evt = st->evt, *evt != 0xffffffff) &&
-                           (*evt <= *(u32 *)((u8 *)st + st->idx * 8 + 0x24))) {
+                    while (*(evt = st->evt) != 0xffffffff) {
+                        if (*evt > *(u32 *)((u8 *)st + st->idx * 8 + 0x24)) {
+                            break;
+                        }
                         if ((gSynthCurrentVoice->seqWnd[4] & 0x40000000) != 0) {
                             u32 *cv = (u32 *)evt[1];
                             st->cur = (u32)cv;
@@ -130,11 +133,10 @@ void fn_8026EC44(u32 dt)
                 }
                 cs = gSynthCurrentVoice;
                 st = &cs->streams[0];
-                freq = (f32)(c0 * ((f32)st->cur * (f32)dt)) *
-                       (f32)(c1 * (f32)(u32)st->vol);
-                val = (f32)(range * freq);
-                if (absRange <= fabs(val)) {
-                    val = (f32)(val - (f64)(f32)(range * (f32)(s64)(u64)(f32)(val / range)));
+                freq = (c0 * ((f32)st->cur * (f32)dt)) * (c1 * (f32)(u32)st->vol);
+                val = range * freq;
+                if (!(absRange > fabs(val))) {
+                    val = val - range * (f32)(s64)(u64)(val / range);
                 }
                 *(u32 *)((u8 *)st + st->idx * 8 + 0xc) = (u32)val;
                 *(int *)((u8 *)st + st->idx * 8 + 0x10) = (int)floorf(freq);
@@ -163,8 +165,10 @@ void fn_8026EC44(u32 dt)
                 for (ch = 0; ch < 0x10; ch++) {
                     st = &gSynthCurrentVoice->streams[ch & 0xff];
                     if (st->base != NULL) {
-                        while ((evt = st->evt, *evt != 0xffffffff) &&
-                               (*evt <= *(u32 *)((u8 *)st + st->idx * 8 + 0x24))) {
+                        while (*(evt = st->evt) != 0xffffffff) {
+                            if (*evt > *(u32 *)((u8 *)st + st->idx * 8 + 0x24)) {
+                                break;
+                            }
                             if ((gSynthCurrentVoice->seqWnd[4] & 0x40000000) != 0) {
                                 u32 *cv = (u32 *)evt[1];
                                 st->cur = (u32)cv;
@@ -180,11 +184,10 @@ void fn_8026EC44(u32 dt)
                     }
                     cs = gSynthCurrentVoice;
                     st = &cs->streams[ch];
-                    freq = (f32)(c0 * ((f32)st->cur * (f32)dt)) *
-                           (f32)(c1 * (f32)(u32)st->vol);
-                    val = (f32)(range * freq);
-                    if (absRange <= fabs(val)) {
-                        val = (f32)(val - (f64)(f32)(range * (f32)(s64)(u64)(f32)(val / range)));
+                    freq = (c0 * ((f32)st->cur * (f32)dt)) * (c1 * (f32)(u32)st->vol);
+                    val = range * freq;
+                    if (!(absRange > fabs(val))) {
+                        val = val - range * (f32)(s64)(u64)(val / range);
                     }
                     *(u32 *)((u8 *)st + st->idx * 8 + 0xc) = (u32)val;
                     *(int *)((u8 *)st + st->idx * 8 + 0x10) = (int)floorf(freq);
@@ -233,6 +236,7 @@ void fn_8026EC44(u32 dt)
         }
     }
 }
+#pragma fp_contract reset
 
 typedef struct {
     u8 callbacks[0x1400];     /* 0x0000: 0x100 nodes of 0x14 */
@@ -280,16 +284,15 @@ int fn_8026F30C(void)
     }
     pool->songs[i - 1].next = NULL;
     prev = NULL;
-    n = 0;
-    gSynthFreeCallbacks = (u32 *)pool;
-    for (cb = (u32 *)pool, i = 0; i < 0x100; i++) {
+    cb = (u32 *)pool;
+    gSynthFreeCallbacks = cb;
+    for (n = 0; n < 0x100; n++) {
         cb[1] = (u32)prev;
         if (prev != NULL) {
             *prev = (u32)cb;
         }
         prev = cb;
         cb += 5;
-        n++;
     }
     *prev = 0;
     gSynthNextHandle = 0;
@@ -351,18 +354,16 @@ void fn_8026F5B8(int state)
  */
 int audioFn_8026f630(u8 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlags)
 {
-    u32 sawHeldVoice;
-    int result;
     u32 i;
+    u32 result;
+    u32 previousId;
     u8 *voice;
     u8 *selectedVoice;
-    u32 previousId;
+    u32 sawHeldVoice;
     u64 flags;
     s32 bend;
 
     sawHeldVoice = 0;
-    selectedVoice = 0;
-    previousId = 0;
     result = -1;
     i = 0;
     voice = synthVoice;
@@ -373,16 +374,16 @@ int audioFn_8026f630(u8 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlag
             if ((flags & 2) != 0) {
                 sawHeldVoice = 1;
             }
-            if ((flags & 0x10) != 0 && (((flags & 8) ^ 8) | (flags & 0x10000000000ULL)) != 0 &&
+            if ((flags & 0x10) != 0 && (flags & 0x10000000008ULL) != 8 &&
                 hwIsActive(i) != 0) {
-                if (result == -1 && (flags & 0x20002) == 0x20002) {
+                if (result == 0xffffffff && (*(u64 *)(voice + 0x114) & 0x20002) == 0x20002) {
                     *outFlags = 1;
                     return -1;
                 }
 
+                selectedVoice = voice;
                 bend = ((s32)*(s8 *)(voice + 0x12e) << 16) / 100;
-                *(u32 *)(voice + 0x138) = ((u32)*(u16 *)(voice + 0x12c) << 16) +
-                                          (bend - (bend >> 31));
+                *(u32 *)(voice + 0x138) = ((u32)*(u16 *)(voice + 0x12c) << 16) + bend;
                 *(u8 *)(voice + 0x130) = *(u16 *)(voice + 0x12c);
                 *(u16 *)(voice + 0x12c) =
                     (u16)key + ((*(u16 *)(voice + 0x12c) & 0xff) - *(u8 *)(voice + 0x12f));
@@ -391,8 +392,7 @@ int audioFn_8026f630(u8 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlag
                 *(u32 *)(voice + 0x13c) = 0;
                 *(u32 *)(voice + 0x118) |= 0x20000;
                 vidRemoveVoice((int)(synthVoice + i * 0x404));
-                selectedVoice = voice;
-                if (result == -1) {
+                if (result == 0xffffffff) {
                     *(u32 *)(voice + 0xec) = 0xffffffff;
                     *(u32 *)(voice + 0xf0) = 0xffffffff;
                     result = vidMakeNew((int)(synthVoice + i * 0x404), voiceGroup);
@@ -409,7 +409,7 @@ int audioFn_8026f630(u8 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlag
         voice += 0x404;
     }
 
-    if (result == -1) {
+    if (result == 0xffffffff) {
         *outFlags = sawHeldVoice;
     } else {
         voiceRegister((int)selectedVoice);
