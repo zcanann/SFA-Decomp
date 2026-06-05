@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIM2snowball.h"
 
 #define SFXmv_mushdizzylp12 0x9f
-#define SFXsp_lf_mutter4 0x109
 #define SFXfoot_metal_scuff 0x1f5
 #define SFXfoot_metal_land 0x1f6
 #define SFXfoot_ice_scuff 0x1f7

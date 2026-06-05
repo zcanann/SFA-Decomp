@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/CR/CRsnowbike.h"
 
-#define SFXmn_sml_trex_fstep 126
 #define SFXsp_skeep_mumb1 266
 
 extern undefined8 FUN_80006724();

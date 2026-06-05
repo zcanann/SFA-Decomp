@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 #include "main/dll/anim.h"
 
@@ -6,7 +7,6 @@
 #define SFXfoot_ice_run_3 0x1eb
 #define SFXmn_spithit6 0x7a
 #define SFXfoot_wood_run_2 0x1c4
-#define SFXsp_lf_mutter4 0x109
 #define SFXfoot_water_run_1 0x1cb
 #define SFXsp_lfoot_taunt6 0x116
 #define SFXmn_eggylaugh216 0x72

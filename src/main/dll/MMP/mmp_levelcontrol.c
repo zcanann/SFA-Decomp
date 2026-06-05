@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/MMP/mmp_levelcontrol.h"
 
-#define SFXsp_lf_mutter4 265
 
 extern undefined4 FUN_80006824();
 extern void Sfx_PlayFromObject(int obj, int sfxId);

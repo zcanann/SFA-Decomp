@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/mmshrine/shrine1C2.h"
 
-#define SFXmn_sml_trex_fstep 0x7e
 #define SFXwp_mflop7_c 0x16d
 #define SFXwp_roboalarm 0x16f
 #define SFXwp_fox_kick1 0x170

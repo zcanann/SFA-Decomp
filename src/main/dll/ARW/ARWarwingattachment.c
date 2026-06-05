@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/ARW/ARWarwingattachment.h"
 #include "main/objHitReact.h"
@@ -6,7 +7,6 @@
 
 #define SFXmn_eggylaugh216 0x72
 #define SFXmn_crusty9c 0x7d
-#define SFXmn_sml_trex_fstep 0x7e
 #define SFXmn_sml_trex_roar 0x7f
 
 #pragma peephole off

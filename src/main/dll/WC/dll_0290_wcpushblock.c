@@ -1,14 +1,13 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEventTypes.h"
 
 #define PB_IFACE (*(int *)(*(int *)(*(int *)(state + 0x268) + 0x68)))
-#define SFXmn_sml_trex_fstep 126
 #define SFXsc_lockon2_off 200
 #define SFXsc_lockon3_on 201
 #define SFXsc_lockon3_off 202
 #define SFXsc_lifeforcedoor 203
 #define SFXsc_golfbar_swipe 204
-#define SFXsp_lf_mutter4 265
 
 #pragma peephole on
 #pragma scheduling on

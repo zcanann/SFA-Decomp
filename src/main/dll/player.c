@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DB/DBbonedust.h"
 #include "main/objanim.h"
 #include "main/unknown/autos/placeholder_80295318.h"
@@ -12,7 +13,6 @@
 #define SFXen_littletink22 47
 #define SFXmn_dimbos36 105
 #define SFXmn_dimraw26 109
-#define SFXsp_lf_mutter4 265
 #define SFXsp_skeep_mumb1 266
 #define SFXtr_gal_prophit 302
 #define SFXtr_jbike_snowhit 304

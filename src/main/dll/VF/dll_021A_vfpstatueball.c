@@ -1,8 +1,8 @@
 #include "main/dll/VF/vf_shared.h"
+#include "main/audio/sfx_ids.h"
 
 #define SFXmn_sml_trex_snap1 128
 #define SFXsc_mpick1_b 179
-#define SFXsp_lf_mutter4 265
 
 extern void objfx_spawnDirectionalBurst(int *obj, u8 idx, f32 scale, int model, int mode, u8 chance,
                            f32 alpha, int flags, int unused);

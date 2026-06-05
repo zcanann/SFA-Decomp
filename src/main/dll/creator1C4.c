@@ -1,8 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/creator1C4.h"
 
-#define SFXmn_sml_trex_fstep 126
-#define SFXsp_lf_mutter4 265
 #define SFXwp_swtst1_c 359
 
 extern undefined8 FUN_80006728();

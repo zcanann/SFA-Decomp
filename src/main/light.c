@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/light.h"
 #include "main/objanim.h"
 
-#define SFXsp_lf_mutter4 0x109
 #define SFXsp_skeep_mumb4 0x10d
 #define SFXsp_guardian_call2 0x110
 #define SFXsp_lfoot_taunt5 0x115

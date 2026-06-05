@@ -1,7 +1,7 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/dll_138.h"
 
-#define SFXsp_lf_mutter4 265
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006824();

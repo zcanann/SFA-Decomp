@@ -1,8 +1,8 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
 #include "main/dll/DIM/DIMsnowball.h"
 
-#define SFXsp_lf_mutter4 265
 #define SFXtr_gal_sailflap2 297
 #define SFXtr_jbike_bombbeep 308
 

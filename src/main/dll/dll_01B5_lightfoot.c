@@ -1,10 +1,10 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/DB/DBbonedust.h"
 #include "main/objanim.h"
 #include "main/unknown/autos/placeholder_80295318.h"
 #include "main/dll/player_80295318_shared.h"
 
-#define SFXmn_sml_trex_fstep 126
 
 #pragma scheduling off
 #pragma peephole off

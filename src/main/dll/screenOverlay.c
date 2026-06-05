@@ -1,9 +1,9 @@
 #include "ghidra_import.h"
+#include "main/audio/sfx_ids.h"
 #include "main/dll/screenOverlay.h"
 
 #define SFXms_windlift_loop 98
 #define SFXmn_cling01 99
-#define SFXsp_lf_mutter4 265
 
 extern uint GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);

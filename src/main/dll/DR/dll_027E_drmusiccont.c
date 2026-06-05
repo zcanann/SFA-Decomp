@@ -1,7 +1,6 @@
 #include "main/dll/dll_80220608_shared.h"
+#include "main/audio/sfx_ids.h"
 
-#define SFXmn_sml_trex_fstep 126
-#define SFXsp_lf_mutter4 265
 
 #pragma peephole on
 #pragma scheduling on
