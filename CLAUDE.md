@@ -827,6 +827,21 @@ Heuristic:
     (Found via report.json 99.99% screening + raw byte compare. The
     `--diff` mask-tolerance was masking a genuine codegen difference,
     not a cosmetic artifact.)
+    **Empirical observation (audit of 14 fns at 99.9-99.99%, ≤500B):
+    ALL 14 had real byte differences after reloc-mask, ZERO were purely
+    pool-name-artifact cosmetic.** Recipe #10's "@NNN-vs-named-lbl is a
+    measurement artifact" applies far less often than initial impressions
+    suggested — when objdiff scores <100%, the bytes ARE different.
+    Tool: `tools/cosmetic_audit.py [--min-pct N] [--unit-filter X]` walks
+    every fn, reloc-masks the byte diff, and reports the actual differing
+    instructions with side-by-side disasm. Use as a screening pass before
+    grinding any individual 99.9% partial. Categories observed in the
+    99.5-99.99% tier: constant-immediate bugs (loop bounds, decrements),
+    operand-order divergences (recipe #59 fmuls/fsubs), frame-size
+    differences (arg-passing area for callees with many args),
+    register-coloring residuals (recipe #16 cap), branch-displacement
+    layout (recipe #21). Not all are tractable — but knowing which
+    *category* a partial is in lets you skip the unrecoverable ones.
 
 ## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
 
