@@ -3111,7 +3111,7 @@ void objRenderShadowIfVisible(void* obj) {
 #pragma dont_inline on
 int fn_800399C0(s16 *curve, s16 *state)
 {
-  extern f32 Curve_EvalHermite(int, int, f32);
+  extern f32 Curve_EvalHermite(int, f32, int);
   extern f32 timeDelta;
   extern f32 lbl_803DE99C;
   extern f32 lbl_803DE9A4;
@@ -3143,7 +3143,7 @@ int fn_800399C0(s16 *curve, s16 *state)
   }
 
   {
-    f32 rate = Curve_EvalHermite((int)buf, 0, ratio);
+    f32 rate = Curve_EvalHermite((int)buf, ratio, 0);
     if (curve[10] < curve[11]) {
       rate = -rate;
     }

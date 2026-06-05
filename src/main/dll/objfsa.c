@@ -4564,12 +4564,12 @@ uint isInWalkGroupOrPatch(float *point)
 int Objfsa_GetWalkGroupIndexAtPoint(float *point,ObjfsaWalkGroupPatchInfo *patchInfo)
 {
   uint wgi;
+  ObjfsaWalkGroup *wg;
   u8 k;
   u8 mask;
   uint pidx;
   u8 i;
   u8 j;
-  ObjfsaWalkGroup *wg;
   ObjfsaPatch *patch;
   f32 y;
 

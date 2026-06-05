@@ -246,9 +246,9 @@ int waterfx_spawnSplashDrops(WaterParticle *src, int idx, int count, f32 v) {
         i = 0;
         scale = lbl_803DF324 * v;
         for (; i < count; i++) {
+            j = 0;
             base = (ExpParticle *)lbl_803DD220;
             p = base;
-            j = 0;
             while (j < 30 && p->active != -1) {
                 p++;
                 j++;
