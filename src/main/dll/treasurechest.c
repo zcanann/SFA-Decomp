@@ -290,6 +290,16 @@ void skeetlawall_initialise(void) {}
 int skeetlawall_getExtraSize(void) { return 0x7; }
 int skeetlawall_getObjectTypeId(void) { return 0x0; }
 
+typedef struct SkeetlaWallState {
+    u8 negXExtent;
+    u8 posXExtent;
+    u8 posZExtent;
+    u8 negZExtent;
+    u8 posYExtent;
+    u8 negYExtent;
+    u8 shapeFlag;
+} SkeetlaWallState;
+
 #pragma scheduling off
 #pragma peephole off
 void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
@@ -302,14 +312,14 @@ void skeetlawall_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 }
 
 void skeetlawall_init(int obj, u8 *def) {
-    u8 *state = *(u8 **)((char *)obj + 0xB8);
-    state[0] = def[0x18];
-    state[1] = def[0x19];
-    state[2] = def[0x1A];
-    state[3] = def[0x1B];
-    state[4] = def[0x1C];
-    state[5] = def[0x1D];
-    state[6] = def[0x1E];
+    SkeetlaWallState *state = *(SkeetlaWallState **)((char *)obj + 0xB8);
+    state->negXExtent = def[0x18];
+    state->posXExtent = def[0x19];
+    state->posZExtent = def[0x1A];
+    state->negZExtent = def[0x1B];
+    state->posYExtent = def[0x1C];
+    state->negYExtent = def[0x1D];
+    state->shapeFlag = def[0x1E];
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -347,14 +357,14 @@ void fn_80167550(int *obj) {
 #pragma scheduling off
 #pragma peephole off
 void skeetlawall_setScale(int *obj, f32 *outVec, u8 *outByte) {
-    u8 *state = *(u8 **)((char *)obj + 0xb8);
-    outVec[0] = *(f32 *)((char *)obj + 0x18) - (f32)(u32)state[0];
-    outVec[1] = *(f32 *)((char *)obj + 0x18) + (f32)(u32)state[1];
-    outVec[2] = *(f32 *)((char *)obj + 0x20) + (f32)(u32)state[2];
-    outVec[3] = *(f32 *)((char *)obj + 0x20) - (f32)(u32)state[3];
-    outVec[4] = *(f32 *)((char *)obj + 0x1c) + (f32)(u32)state[4];
-    outVec[5] = *(f32 *)((char *)obj + 0x1c) - (f32)(u32)state[5];
-    outByte[0] = state[6];
+    SkeetlaWallState *state = *(SkeetlaWallState **)((char *)obj + 0xb8);
+    outVec[0] = *(f32 *)((char *)obj + 0x18) - (f32)(u32)state->negXExtent;
+    outVec[1] = *(f32 *)((char *)obj + 0x18) + (f32)(u32)state->posXExtent;
+    outVec[2] = *(f32 *)((char *)obj + 0x20) + (f32)(u32)state->posZExtent;
+    outVec[3] = *(f32 *)((char *)obj + 0x20) - (f32)(u32)state->negZExtent;
+    outVec[4] = *(f32 *)((char *)obj + 0x1c) + (f32)(u32)state->posYExtent;
+    outVec[5] = *(f32 *)((char *)obj + 0x1c) - (f32)(u32)state->negYExtent;
+    outByte[0] = state->shapeFlag;
 }
 #pragma peephole reset
 #pragma scheduling reset
