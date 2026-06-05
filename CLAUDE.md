@@ -85,9 +85,8 @@ Heuristic:
    `&= ~K`, `|= 0x800000`) target emits a materialized-constant `li`/`lis;or`
    form while every clean-C spelling gives `rlwinm`/`oris`. This is NOT
    peephole-controllable (confirmed: peephole-off region still emits `rlwinm`).
-   Caps tiny flag fns ~70% — leave partial, don't grind. (november9, 80295318
-   fn_80296BBC.) **Leave as documented partial — the Prime Directive forbids
-   asm; there is no asm fallback.**
+   Caps tiny flag fns ~70%. **Leave as documented partial — the Prime
+   Directive forbids asm; there is no asm fallback.**
 
 3. **`*(void **)ptr != NULL` instead of `*(int *)ptr != 0`**. The pointer form
    emits `cmplwi` (unsigned); the int form emits `cmpwi` (signed). Target
@@ -266,10 +265,9 @@ Heuristic:
     assigns the LOWER reg# (r27/r29) to the longer-lived / earlier variable (the
     obj/setup base), MWCC does the reverse, and it cascades through every
     instruction referencing that var. Declaration-order reorder (both directions)
-    does NOT flip it. This caps every fresh function on the affected unit at
-    ~74-90% — it is the dominant residual on placeholder_80220608 (zulu15:
-    wcpushblock obj/player r29↔r30, wcfloortile setup r27↔r29). Don't grind it;
-    the partial still banks real fuzzy%.
+    does NOT flip it. This caps fresh functions at ~74-90% on units where
+    MWCC's coloring inverts target's saved-reg priority. The partial still
+    banks real fuzzy%; commit and move on rather than grinding.
     **BUT before declaring a coloring cap, try making the base a REAL PARAM
     instead of `void*` + a local copy.** If the function is `f(void *p){ Obj *o =
     (Obj*)p; ... }` and the saved-reg coloring is off, change the signature to the
@@ -397,12 +395,13 @@ Heuristic:
     it.)
     **`#pragma fp_contract off` IS available per-function** (used in several real
     DLLs) — wrap a function in it when target does a SEPARATE `fmul`+`fadd` where
-    MWCC fuses to `fmadds`. (Corrects the earlier "no fp_contract control"
-    assumption behind the mtx44_mult tar pit.) CAVEAT: it only controls the
-    fmadds FUSION — it does NOT fix eval-order / FP-register-allocation
-    divergences. hotel7 confirmed Matrix_TransformVector still capped ~55% with
-    fp_contract off (its divergence is FP-reg/eval-order, not fusion), so try it
-    on a true fmadds-vs-fmul+fadd mismatch but don't expect it to fix coloring.
+    MWCC fuses to `fmadds`. (Corrects an earlier "no fp_contract control"
+    assumption that flagged some matrix/vector fns as untouchable.) CAVEAT:
+    it only controls the fmadds FUSION — it does NOT fix eval-order /
+    FP-register-allocation divergences. A function whose divergence is
+    FP-reg/eval-order, not fusion, will still cap with fp_contract off, so
+    try it on a true fmadds-vs-fmul+fadd mismatch but don't expect it to fix
+    coloring.
 
 25. **An FP comparison feeding a BRANCH is NOT a cap — write the plain
     operator.** `if (a >= b)` / `while (a < b)` / `a <= b ? x : y` on floats
@@ -421,8 +420,8 @@ Heuristic:
     #25 cuts both ways: when target has the cror combine, write the operator (not
     a cap); when target has a plain `bge`/`ble` and your `>=`/`<=` emits the cror,
     that 1-2 instr divergence is a genuine residual — leave it, and DON'T rewrite
-    the clamp chasing it (hotel5's logically-correct rewrite scored *lower*).
-    (hotel5, fn_8001D820/fn_8001D84C ~68%.)
+    the clamp chasing it (a logically-correct rewrite of this pattern has been
+    confirmed to score *lower*).
     **A MATERIALIZED float-bool (stored to a GPR) is NOT always a cap — two
     confirmed recipes, pick by the FORM target uses:** (a) **mfcr/srwi form** —
     target does `fcmpo … ; mfcr; rlwinm/srwi` to land 0/1 in a reg: reproduce with
@@ -469,15 +468,13 @@ Heuristic:
     MWCC keeps a REAL loop from your for-loop (won't unroll) AND manual-unroll
     folds `1<<const`→`clrlwi` (losing the slw machinery, ~18 instr short) — so
     such fns just CAP at ~66-70%; commit the for-loop partial and move on.
-    (november12, skyFn_80088c94/skyFn_80089710.)
     **Unroll-FACTOR mismatch is a separate, often-uncontrollable cap.** Even with
     the right loop form, MWCC sometimes picks a DIFFERENT unroll factor than target
     for a fixed-trip loop (target unrolls a 16-trip init to ctr=4 / x4, a 12-trip
     to x3; MWCC unrolls your identical-body source MORE — x8 / x4). Field-reorder
     and constant-lift don't flip it, and there's no per-loop unroll pragma. When
     the only residual is "target unrolls x4, mine x8" on an init/clear loop, it's a
-    codegen-heuristic cap — leave the partial. (mike14, musicInitMidiWad /
-    Camera_InitState on 800066E0.)
+    codegen-heuristic cap — leave the partial.
 
 29. **Callee parameter POSITION controls caller's L2R arg-emission order.** MWCC
     evaluates call args left-to-right; the *positions* of the float vs. int
@@ -869,15 +866,16 @@ Heuristic:
     copy-propagation picks the SOURCE reg; restructure the variables so the
     intended reg IS the variable's home.
 
-## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
+## Compiler-emitted 64-bit / fixed-point math: a recognizable cap class
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
 `subfe` long-long arithmetic, and unrolled rounding-division/reciprocal loops
 (often 10×-then-7× `rlwimi` rotate sequences) is **compiler-emitted s64/fixed-
-point math** — the exact unrolled sequence is near-impossible to reproduce from
-clean C and asm-forcing it violates the Prime Directive. Treat these as a
-TAR-PIT cap: deprioritize, don't grind, don't burn a session on one. (mike13,
-fn_80007F78 ~2212B on 800066E0.) Spend the budget on tractable handlers instead.
+point math**. The exact unrolled sequence is near-impossible to reproduce from
+clean C with current playbook recipes. When you recognize the pattern,
+commit your best clean-C partial and document the residual — don't grind.
+If a future recipe lands that cracks this class, it will become tractable
+across every such function at once.
 
 ## No `asm { }` blocks — ever
 
@@ -997,8 +995,8 @@ guessing which leaf inlined, diff the partial's CALL SET against target
 *target* but NOT in your output has been auto-inlined into your function. Wrap
 that leaf's definition in `#pragma dont_inline on` — fixes the caller AND lifts
 the leaf standalone. Catches hidden ones a size-check misses (a small leaf
-inlined into a big caller barely moves the symbol size). On inline-heavy TUs
-(placeholder_800066E0), run this check first on any partial <90%.
+inlined into a big caller barely moves the symbol size). On any inline-heavy
+TU, run this check first on any partial <90%.
 **Inverse direction — extra `bl`s in YOURS (not target) of the SAME callee
 repeated = a DUPLICATED code BLOCK, not an inline victim.** If your call set has
 *more* `bl`s than target and the extras are repeats of the same callee(s), it's
@@ -1029,8 +1027,7 @@ right.
 emits `addi ptr; addi counter; cmpwi counter; b`; clean-C array-index form emits
 `addi counter; cmpwi; addi ptr` (counter bumped/tested before the pointer). This
 does NOT respond to index-vs-pointer-walk OR scheduling toggle — it's allocator/
-loop-form internal. Caps array-walk loops at ~93-95%; leave partial, don't grind.
-(november12, newclouds loops.)
+loop-form internal. Caps some array-walk loops at ~93-95%; leave partial.
 
 **Passing a small by-value struct (e.g. `GXColor`, 4 bytes) goes BY ADDRESS in
 this ABI — load the global STRAIGHT into the outgoing-arg slot.** Write
