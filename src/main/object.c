@@ -699,12 +699,14 @@ void *getTrickyObject(void) {
 }
 
 ObjListObject *ObjList_FindObjectById(u32 objectId) {
+    ObjListObjectDef *def;
+    ObjListObject *obj;
     int i;
     int count = lbl_803DCB84;
     ObjListObject **arr = lbl_803DCB88;
     for (i = 0; i < count; i++) {
-        ObjListObject *obj = arr[i];
-        ObjListObjectDef *def = obj->def;
+        obj = arr[i];
+        def = obj->def;
         if (def != NULL && def->objectId == objectId) {
             return obj;
         }
