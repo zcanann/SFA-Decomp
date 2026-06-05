@@ -65,6 +65,32 @@ extern f32 lbl_803E55DC;
 extern f32 lbl_803E55E0;
 extern f64 lbl_803E55E8;
 
+typedef struct SCMusicTreeState {
+    int ambientEffect[3];
+    f32 pathPoint[3][3];
+    f32 proximityBurstTimer;
+    f32 animSpeed;
+    f32 scale;
+    f32 proximityCooldown;
+    f32 hitCooldown;
+    int hitCooldownState;
+    u16 hearRadius;
+    s16 previousDistance;
+    u8 flags;
+    u8 pad4D[0x50 - 0x4D];
+} SCMusicTreeState;
+
+typedef struct SCMusicTreeSetup {
+    u8 pad00[0x18];
+    u8 rotXByte;
+    u8 rotZByte;
+    u8 yawByte;
+    u8 hearRadiusHalf;
+    f32 scale;
+    u8 pad20[0x23 - 0x20];
+    u8 flags;
+} SCMusicTreeSetup;
+
 #pragma peephole off
 #pragma scheduling off
 void sc_musictree_update(int obj)
@@ -191,34 +217,34 @@ end:
 
 #pragma peephole off
 #pragma scheduling off
-void sc_musictree_init(int obj, int p2)
+void sc_musictree_init(int obj, SCMusicTreeSetup *setup)
 {
-    int inner = *(int *)(obj + 0xb8);
+    SCMusicTreeState *state = *(SCMusicTreeState **)(obj + 0xb8);
     f32 stk;
     u32 rnd;
     f32 ratio;
     f32 zero;
 
-    *(f32 *)(inner + 0x34) = lbl_803E5594;
+    state->animSpeed = lbl_803E5594;
     zero = lbl_803E5590;
-    *(f32 *)(inner + 0x30) = zero;
-    *(u16 *)(inner + 0x48) = (u16)((u32)*(u8 *)(p2 + 0x1b) << 1);
-    *(u8 *)(inner + 0x4c) = *(u8 *)(p2 + 0x23);
-    *(f32 *)(inner + 0x3c) = zero;
-    *(f32 *)(inner + 0x38) = *(f32 *)(p2 + 0x1c);
-    *(s16 *)(obj + 4) = (s16)((*(u8 *)(p2 + 0x18) - 0x7f) << 7);
-    *(s16 *)(obj + 2) = (s16)((*(u8 *)(p2 + 0x19) - 0x7f) << 7);
-    *(s16 *)(obj + 0) = (s16)((u32)*(u8 *)(p2 + 0x1a) << 8);
-    *(f32 *)(obj + 8) = lbl_803E55B8 * *(f32 *)(p2 + 0x1c);
+    state->proximityBurstTimer = zero;
+    state->hearRadius = (u16)((u32)setup->hearRadiusHalf << 1);
+    state->flags = setup->flags;
+    state->proximityCooldown = zero;
+    state->scale = setup->scale;
+    *(s16 *)(obj + 4) = (s16)((setup->rotXByte - 0x7f) << 7);
+    *(s16 *)(obj + 2) = (s16)((setup->rotZByte - 0x7f) << 7);
+    *(s16 *)(obj + 0) = (s16)((u32)setup->yawByte << 8);
+    *(f32 *)(obj + 8) = lbl_803E55B8 * setup->scale;
     *(int *)(obj + 0xf8) = 0;
     *(u16 *)(obj + 0xb0) = (u16)(*(u16 *)(obj + 0xb0) | 0x2000);
     rnd = randomGetRange(1, 99);
     ratio = (f32)(s32)rnd / lbl_803E55BC;
     ObjAnim_SetCurrentMove(obj, 0, ratio, 0);
     ObjAnim_AdvanceCurrentMove(obj, &stk, lbl_803E558C, lbl_803E558C);
-    ObjHitbox_SetCapsuleBounds(obj, (s16)(s32)(lbl_803E55C0 * *(f32 *)(inner + 0x38)), -5, 0xff);
-    if (*(u8 *)(inner + 0x4c) & 0x80) {
-        *(u8 *)(inner + 0x4c) = *(u8 *)(inner + 0x4c) | 0x20;
+    ObjHitbox_SetCapsuleBounds(obj, (s16)(s32)(lbl_803E55C0 * state->scale), -5, 0xff);
+    if (state->flags & 0x80) {
+        state->flags = state->flags | 0x20;
     }
 }
 #pragma scheduling reset
