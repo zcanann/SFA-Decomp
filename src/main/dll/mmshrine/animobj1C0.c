@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/mmshrine/animobj1C0.h"
+#include "main/objanim.h"
 
 extern u32 randomGetRange(int min, int max);
 extern void* FUN_80017aa4();
@@ -11,7 +12,6 @@ extern int FUN_800632f4();
 extern undefined4 FUN_80135814();
 extern double FUN_80194a70();
 extern void *Obj_GetPlayerObject(void);
-extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnim, void *events);
 extern s16 getAngle(f32 deltaX, f32 deltaZ);
 extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern f32 fn_80293E80(f32 x);
@@ -257,7 +257,8 @@ void fn_801C5990(MmShrineAnimObj *obj)
     trigB = fn_80293E80((lbl_803E4FA0 * (f32)state->orbitA) / lbl_803E4FA4);
     obj->pitch = lbl_803E4FA8 * (trigB + trigA);
 
-    ObjAnim_AdvanceCurrentMove(lbl_803E4FAC, timeDelta, (int)obj, &animEvents);
+    ObjAnim_AdvanceCurrentMove(lbl_803E4FAC, timeDelta, (int)obj,
+                               (ObjAnimEventList *)&animEvents);
 
     if (player != NULL) {
         angleDelta = (u16)getAngle(obj->posX - *(f32 *)((u8 *)player + 0x18),

@@ -541,7 +541,6 @@ void campfire_init(int obj, int p2)
     }
 }
 
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 extern f32 lbl_803E3DC0;
 extern f32 lbl_803E3DC4;
 extern f32 lbl_803E3DC8;

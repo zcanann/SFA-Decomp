@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/objfsa.h"
+#include "main/objanim.h"
 
 extern void OSReport(const char *fmt, ...);
 typedef struct RomCurveDef RomCurveDef;
@@ -285,8 +286,6 @@ static inline u16 Objfsa_GetLinkedWalkGroup(u16 patchGroupId,uint currentWalkGro
  */
 extern u8 lbl_803DD440;
 extern f32 lbl_803E0570;
-extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimArg, void *events);
-
 typedef struct PlayerMoveBuf {
   f32 a;
   f32 b;
@@ -310,7 +309,7 @@ void player_setScale(f32 dt, short *moveState, uint *obj, uint flags)
 
   buf.flag = 0;
   *(s8 *)((char *)obj + 0x346) = (s8)ObjAnim_AdvanceCurrentMove(
-      *(f32 *)((char *)obj + 0x2a0), dt, (int)moveState, &buf);
+      *(f32 *)((char *)obj + 0x2a0), dt, (int)moveState, (ObjAnimEventList *)&buf);
 
   *(u32 *)((char *)obj + 0x314) = 0;
   ptr = (s8 *)&buf;
@@ -4867,7 +4866,6 @@ extern f32 lbl_803E05C4;
 extern f32 lbl_803DD444;
 extern f32 lbl_803DD448;
 extern void *gPathControlInterface;
-extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnimArg, void *events);
 extern void fn_800D915C(int pos, int *obj, void *fnTable, f32 fval);
 extern void fn_800D8414(char *pos, char *state);
 extern void player_applyVelocityStep(char *pos, char *state, f32 dt);
@@ -4960,7 +4958,8 @@ void playerRunStateMachine(char *pos, char *state, float dt, int stateFns) {
         int i;
 
         animEvents[0x1b] = 0;
-        *(s8 *)(state + 0x346) = ObjAnim_AdvanceCurrentMove(*(f32 *)(state + 0x2a0), dt, (int)pos, animEvents);
+        *(s8 *)(state + 0x346) = ObjAnim_AdvanceCurrentMove(
+            *(f32 *)(state + 0x2a0), dt, (int)pos, (ObjAnimEventList *)animEvents);
         *(u32 *)(state + 0x314) = 0;
         for (i = 0; i < (s8)animEvents[0x1b]; i++) {
             *(u32 *)(state + 0x314) |= 1 << (s32)(s8)animEvents[0x13 + i];

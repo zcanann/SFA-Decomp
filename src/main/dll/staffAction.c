@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/staffAction.h"
+#include "main/objanim.h"
 
 extern uint GameBit_Get(int eventId);
 extern int FUN_80017728();
@@ -17,7 +18,6 @@ extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_RegisterActiveHitVolumeObject();
 extern undefined4 ObjHits_SetHitVolumeSlot();
 extern undefined4 ObjHits_EnableObject();
-extern void ObjAnim_SetCurrentMove(int obj,int moveId,f32 blend,int flags);
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 FUN_8003b818();
 extern undefined4 FUN_8003b870();

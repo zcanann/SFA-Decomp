@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/creator19D.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_8000680c();
 extern undefined4 FUN_80006814();
@@ -9,7 +10,6 @@ extern int FUN_80017a98();
 extern undefined4 ObjMsg_SendToObject();
 extern void ObjMsg_AllocQueue(void *obj,int capacity);
 extern void *Obj_GetPlayerObject(void);
-extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnim,void *events);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId,int value);
 extern int Sfx_PlayFromObject(void *obj,int sfxId);
@@ -480,7 +480,7 @@ void fn_801C4664(void *objArg)
                       lbl_803E4F1C);
   obj->pitch = (s16)(int)(lbl_803E4F20 * (trigB + trigA));
 
-  ObjAnim_AdvanceCurrentMove(lbl_803E4F24,timeDelta,(int)obj,&animEvents);
+  ObjAnim_AdvanceCurrentMove(lbl_803E4F24,timeDelta,(int)obj,(ObjAnimEventList *)&animEvents);
   if (playerObj == NULL) {
     return;
   }

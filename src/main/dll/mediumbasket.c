@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/mediumbasket.h"
+#include "main/objanim.h"
 
 extern undefined8 FUN_80003494();
 extern undefined4 FUN_80006824();
@@ -1022,7 +1023,6 @@ FUN_8015c654(undefined8 param_1,double param_2,double param_3,undefined8 param_4
 #pragma peephole off
 int mediumbasket_updateOpenState(int obj, int p)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern int *gPlayerInterface;
   extern f32 timeDelta;
   extern f32 lbl_803E2D14;
@@ -1073,7 +1073,6 @@ int mediumbasket_updateOpenState(int obj, int p)
 #pragma peephole off
 int mediumbasket_updateOpenHitState(int obj, int p)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern int *gPlayerInterface;
   extern f32 timeDelta;
   extern f32 lbl_803E2D14;
@@ -1977,7 +1976,6 @@ extern void objRenderFn_8003b8f4(int obj, int arg1, int arg2, int arg3, int arg4
 extern void fn_8015CE68(int obj, int state);
 extern u8 lbl_803AC548[];
 extern u8 lbl_803AC528[];
-extern void ObjAnim_SetCurrentMove(int obj, int moveId, f32 progress, int flags);
 extern int Obj_GetPlayerObject(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern f32 sqrtf(f32 value);
