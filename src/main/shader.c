@@ -2782,10 +2782,12 @@ void mapTextureOverrideRelease(int key, int type)
 {
     int i;
     int off;
+    u32 entryKey;
 
     for (i = 0; i < 80; i++) {
         off = i * 0x10;
-        if (key == *(u32 *)(lbl_803DCE6C + off) &&
+        entryKey = *(u32 *)(lbl_803DCE6C + off);
+        if (entryKey == key &&
             *(u8 *)(lbl_803DCE6C + off + 0xe) == type &&
             *(s16 *)(lbl_803DCE6C + off + 0xc) > 0) {
             *(s16 *)(lbl_803DCE6C + off + 0xc) -= 1;
