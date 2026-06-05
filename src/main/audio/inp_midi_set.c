@@ -168,27 +168,22 @@ void inpSetMidiCtrl(u8 ctrl, u8 channel, u8 set, u8 value)
  * inpSetMidiCtrl14 - wrapper that splits a 16-bit data word into two
  * 7-bit MIDI controller bytes and dispatches to the MIDI-control setter.
  */
-void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 data)
-{
-    if (channel == 0xFF) {
-        return;
-    }
+void inpSetMidiCtrl14(u8 ctrl, u8 channel, u8 set, u16 value) {
 
-    if (ctrl < 64) {
-        u32 base = ctrl & 31;
-        inpSetMidiCtrl(base, channel, set, (data >> 7) & 0xff);
-        inpSetMidiCtrl(base + 32, channel, set, data & 0x7f);
-        return;
-    }
-    if (ctrl == 128 || ctrl == 129) {
-        inpSetMidiCtrl(ctrl & 254, channel, set, (data >> 7) & 0xff);
-        inpSetMidiCtrl((ctrl & 254) + 1, channel, set, data & 0x7f);
-        return;
-    }
-    if (ctrl == 132 || ctrl == 133) {
-        inpSetMidiCtrl(ctrl & 254, channel, set, (data >> 7) & 0xff);
-        inpSetMidiCtrl((ctrl & 254) + 1, channel, set, data & 0x7f);
-        return;
-    }
-    inpSetMidiCtrl(ctrl, channel, set, (data >> 7) & 0xff);
+  if (channel == 0xFF) {
+    return;
+  }
+
+  if (ctrl < 64) {
+    inpSetMidiCtrl(ctrl & 31, channel, set, value >> 7);
+    inpSetMidiCtrl((ctrl & 31) + 32, channel, set, value & 0x7f);
+  } else if (ctrl == 128 || ctrl == 129) {
+    inpSetMidiCtrl(ctrl & 254, channel, set, value >> 7);
+    inpSetMidiCtrl((ctrl & 254) + 1, channel, set, value & 0x7f);
+  } else if (ctrl == 132 || ctrl == 133) {
+    inpSetMidiCtrl(ctrl & 254, channel, set, value >> 7);
+    inpSetMidiCtrl((ctrl & 254) + 1, channel, set, value & 0x7f);
+  } else {
+    inpSetMidiCtrl(ctrl, channel, set, value >> 7);
+  }
 }
