@@ -203,11 +203,11 @@ typedef struct ObjHitsSkeletonHit {
   float *pointBRef;
   float pointA[3];
   float pointB[3];
-  float axis[3];
-  float axial;
-  float surfaceDistance;
-  float distance;
+  float axisDir[3];
   float capsuleAxial;
+  float signedSurfaceDistance;
+  float centerDistance;
+  float radiusSum;
   float inverseDistance;
   s32 pointIndexA;
   s32 pointIndexB;
@@ -228,6 +228,23 @@ STATIC_ASSERT(offsetof(ObjHitsPriorityState, objectHitMask) == 0x48);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, skeletonHitMask) == 0x4C);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, lateralResponseWeight) == 0x6A);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, axialResponseWeight) == 0x6B);
+
+STATIC_ASSERT(sizeof(ObjHitsSkeletonHit) == OBJHITS_SKELETON_HIT_SIZE);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointARef) == 0x00);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointBRef) == 0x04);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointA) == OBJHITS_SKELETON_HIT_POINT_A_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointB) == OBJHITS_SKELETON_HIT_POINT_B_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, axisDir) == 0x20);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, capsuleAxial) == OBJHITS_SKELETON_HIT_AXIAL_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, signedSurfaceDistance) == 0x30);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, centerDistance) == 0x34);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, radiusSum) == 0x38);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, inverseDistance) ==
+              OBJHITS_SKELETON_HIT_INVERSE_DISTANCE_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexA) ==
+              OBJHITS_SKELETON_HIT_POINT_INDEX_A_OFFSET);
+STATIC_ASSERT(offsetof(ObjHitsSkeletonHit, pointIndexB) ==
+              OBJHITS_SKELETON_HIT_POINT_INDEX_B_OFFSET);
 
 int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model,int *hits,
                                   int *outBest,f32 yMax,f32 yMin,f32 *outAccum);
