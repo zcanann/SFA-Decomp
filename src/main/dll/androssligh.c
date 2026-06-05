@@ -128,7 +128,7 @@ void androssligh_updateBeam(int obj, int beam)
     PSMTXMultVec(Camera_GetInverseViewRotationMatrix(), tmp, tmp);
     PSVECAdd((int)end, (int)tmp, (int)end);
     if (*(void **)(beam + 4) == NULL) {
-        *(int *)(beam + 4) = (int)fn_8008FB20(start, end, lbl_803DC518, lbl_803DC51C,
+        *(int *)(beam + 4) = (int)lightningCreate(start, end, lbl_803DC518, lbl_803DC51C,
                                               (int)lbl_803DC520, (int)lbl_803DC524, 0);
         *(f32 *)(beam + 8) = lbl_803E7608;
     } else {

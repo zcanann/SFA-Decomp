@@ -121,7 +121,7 @@ extern f32 lbl_803E69A8;
 extern void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int b);
 extern f32 lbl_803E68B8;
 extern void mathFn_80021ac8(int obj, f32 *v);
-extern void *fn_8008FB20(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
+extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
 extern f32 lbl_803E689C;
 extern f32 lbl_803E68A0;
 extern f32 lbl_803E68A4;

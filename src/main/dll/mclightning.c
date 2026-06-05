@@ -114,7 +114,7 @@ void mclightning_render(int obj, int p2, int p3, int p4, int p5, f32 scale) {
             int foundState;
             McLightningFlags *ff;
             *(void **)(state + 0) =
-                fn_8008FB20((f32 *)(obj + 0xc), (f32 *)(objs[i] + 0xc), *(f32 *)(state + 8),
+                lightningCreate((f32 *)(obj + 0xc), (f32 *)(objs[i] + 0xc), *(f32 *)(state + 8),
                             *(f32 *)(state + 0xc), *(u8 *)(state + 0x18), *(u8 *)(state + 0x19), 0);
             f->hi = 6;
             *(f32 *)(state + 4) = lbl_803E7450;

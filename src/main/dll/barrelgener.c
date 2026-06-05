@@ -334,7 +334,7 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
             pos[0] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[1] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
             pos[2] += lbl_803E6C3C * (intensity * (f32)(int)(randomGetRange(0, 0x7d0) - 0x3e8));
-            *p = fn_8008FB20((f32 *)(obj + 0xc), pos, lbl_803DC3A0, lbl_803DC3A4,
+            *p = lightningCreate((f32 *)(obj + 0xc), pos, lbl_803DC3A0, lbl_803DC3A4,
                              (int)lbl_803DC3A8, (u8)lbl_803DC3AC, 0);
             spawned = 1;
         }
