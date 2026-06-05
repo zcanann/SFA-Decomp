@@ -966,7 +966,21 @@ Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
   cap).
 - **TRACTABLE — audio/musyx: A/B the upstream MP4 musyx source verbatim
   FIRST** (inpSetMidiCtrl14 → 100% from MP4 snd_midictrl.c form: else-if
-  chain, no `& 0xff`, repeated subexpressions, no locals).
+  chain, no `& 0xff`, repeated subexpressions, no locals). COUNTEREXAMPLE:
+  mcmdSetADSR — the MP4 single-expression form fixed the frame (+8B temp
+  slot) but scored 92% vs the prod-local form's 99.74% because it changed
+  conversion INTERLEAVING. ALWAYS verify via report.json, not ndiff: objdiff
+  penalizes TRANSPOSED instructions far more than same-position byte diffs —
+  a "2-instr swap" can score WORSE than a "3-instr same-slot" diff
+  (ObjModel_LoadModelData 99.75→96.6 on a 2-instr transposition "fix").
+- **TRACTABLE — int compare/`+`-operand swaps respond to recipe #66** (a
+  block-local for one operand) where the bare source flip does NOT — MWCC
+  canonicalizes `cmplw`/`add` operand order regardless of source order
+  (mapTextureOverrideRelease, RollingBarrel_free, objGetTotalDataSize all
+  won via the local; the flips alone were no-ops). FP `fcmpo` + branch-sense
+  pairs DO respond to the plain source flip (`best < v` → `v > best`,
+  frustumPlanes 99.78→100) — flip when the BRANCH differs (ble vs bge),
+  add a local when only REGISTERS differ.
 - **CAP — FP volatile reg-number permutation** within a statement window
   (fcmpo operand pairs, lfs/stfs bursts, fdivs/fmuls chains, fctiwz). Decl
   order, temp locals, statement order, compare-direction flips all invariant
