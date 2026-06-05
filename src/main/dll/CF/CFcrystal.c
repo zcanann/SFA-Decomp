@@ -201,49 +201,51 @@ void LanternFireFly_update(int obj)
 #pragma peephole off
 void LanternFireFly_init(int obj, int def)
 {
-    u8 *state;
+    LanternFireFlyState *state;
+    LanternFireFlySpawnDef *spawnDef;
     f32 zero;
     s16 randValue;
     int flagValue;
 
-    state = *(u8 **)(obj + 0xB8);
+    state = *(LanternFireFlyState **)(obj + 0xB8);
+    spawnDef = (LanternFireFlySpawnDef *)def;
     ObjGroup_AddObject(obj, 0x30);
 
     zero = lbl_803E3AB8;
-    *(f32 *)(state + 0x04) = zero;
-    *(f32 *)(state + 0x14) = zero;
-    *(f32 *)(state + 0x24) = zero;
-    *(f32 *)(state + 0x08) = zero;
-    *(f32 *)(state + 0x18) = zero;
-    *(f32 *)(state + 0x28) = zero;
-    *(f32 *)(state + 0x0C) = zero;
-    *(f32 *)(state + 0x1C) = zero;
-    *(f32 *)(state + 0x2C) = zero;
-    *(f32 *)(state + 0x10) = zero;
-    *(f32 *)(state + 0x20) = zero;
-    *(f32 *)(state + 0x30) = zero;
+    state->controlX[0] = zero;
+    state->controlY[0] = zero;
+    state->controlZ[0] = zero;
+    state->controlX[1] = zero;
+    state->controlY[1] = zero;
+    state->controlZ[1] = zero;
+    state->controlX[2] = zero;
+    state->controlY[2] = zero;
+    state->controlZ[2] = zero;
+    state->controlX[3] = zero;
+    state->controlY[3] = zero;
+    state->controlZ[3] = zero;
 
-    *(int *)(state + 0x00) = 0;
-    *(u8 *)(state + 0x6E) = 0;
-    *(f32 *)(state + 0x44) = lbl_803E3AD8;
-    *(f32 *)(state + 0x48) = lbl_803E3ADC;
-    *(f32 *)(state + 0x40) = lbl_803E3AA0;
-    *(u8 *)(state + 0x6C) = 0;
-    *(u8 *)(state + 0x6B) = 0;
+    state->light = 0;
+    state->lightSpawned = 0;
+    state->speed = lbl_803E3AD8;
+    state->field48 = lbl_803E3ADC;
+    state->splineT = lbl_803E3AA0;
+    state->animFrame = 0;
+    state->field6B = 0;
     randValue = (s16)randomGetRange(0x1F4, 0x5DC);
-    *(s16 *)(state + 0x66) = randValue;
+    state->randPeriod = randValue;
     randValue = (s16)randomGetRange(0, 0xFDE8);
-    *(s16 *)(state + 0x64) = randValue;
-    *(s16 *)(state + 0x68) = 4;
-    *(u8 *)(state + 0x6A) = 4;
-    *(f32 *)(state + 0x4C) = lbl_803E3AB8;
-    *(f32 *)(state + 0x50) = lbl_803E3AE0;
-    *(f32 *)(state + 0x54) = *(f32 *)(def + 0x08);
-    *(f32 *)(state + 0x58) = *(f32 *)(def + 0x0C);
-    *(f32 *)(state + 0x5C) = *(f32 *)(def + 0x10);
+    state->randAngle = randValue;
+    state->field68 = 4;
+    state->stateId = 4;
+    state->field4C = lbl_803E3AB8;
+    state->field50 = lbl_803E3AE0;
+    state->anchorX = spawnDef->x;
+    state->anchorY = spawnDef->y;
+    state->anchorZ = spawnDef->z;
     flagValue = 0;
-    *(u8 *)(state + 0x6F) = flagValue;
-    *(u8 *)(state + 0x70) = (u8)((*(u8 *)(state + 0x70) & 0x3F) | (flagValue << 6));
+    state->field6F = flagValue;
+    state->modeFlags = (u8)((state->modeFlags & 0x3F) | (flagValue << 6));
 }
 #pragma peephole reset
 #pragma scheduling reset
