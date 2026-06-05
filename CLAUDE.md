@@ -843,6 +843,24 @@ Heuristic:
     layout (recipe #21). Not all are tractable — but knowing which
     *category* a partial is in lets you skip the unrecoverable ones.
 
+61. **Distinct pointer locals (not `p += K`) to keep target's `addi rX,rX,K`
+    base-bump.** MWCC forward-substitutes a `buf += K;` reassignment into every
+    later use as cumulative offsets off the ORIGINAL base (`addi r0,r3,K1+K2`,
+    base reg never updated). When target actually BUMPS the base register
+    (`addi r3,r3,K; stw r3; addi r0,r3,K2`), introduce a NEW pointer local per
+    region (`char *p2 = buf + K; ... char *p3 = p2 + K2;`) instead of
+    compound-assigning the same variable. With the old pointer dead, the
+    allocator coalesces each new local onto the same reg and emits the exact
+    `addi r3,r3,K` bump chain. Took waterfx_initialise 99.52→100%.
+    **Companion (param relocation):** when target tests/uses a value in r4
+    (the COPY) but your code emits the test on r3 (the original param) — e.g.
+    `mr r4,r3; clrlwi r0,r4` vs yours `clrlwi r0,r3` — drop the separate local
+    (`int bitValue = value;`) and REASSIGN THE PARAM (`if (...) value = 0;`)
+    so the variable itself relocates to r4 and all uses reference it there.
+    Took setGameBit2BA 99.67→100%. Both are the same lesson: MWCC's
+    copy-propagation picks the SOURCE reg; restructure the variables so the
+    intended reg IS the variable's home.
+
 ## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
