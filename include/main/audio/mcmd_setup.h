@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027591C_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027591C_H_
+#ifndef MAIN_AUDIO_MCMD_SETUP_H_
+#define MAIN_AUDIO_MCMD_SETUP_H_
 
 #include "ghidra_import.h"
 #include "main/audio/mcmd.h"
@@ -12,4 +12,4 @@ void mcmdSetADSR(McmdVoiceState *state, McmdCommandArgs *args);
 void mcmdSetPitchADSR(McmdVoiceState *state, McmdCommandArgs *args);
 void voiceConfigureParamRamp(McmdVoiceState *state, McmdCommandArgs *args, u8 idx);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027591C_H_ */
+#endif /* MAIN_AUDIO_MCMD_SETUP_H_ */
