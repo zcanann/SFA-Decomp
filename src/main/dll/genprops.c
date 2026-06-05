@@ -5367,8 +5367,7 @@ void staff_release(void)
     void **p;
     int i;
     if (lbl_803DDAA8[0] != NULL) {
-        p = lbl_803DDAA8;
-        for (i = 0; i < 2; i++) {
+        for (i = 0, p = lbl_803DDAA8; i < 2; i++) {
             textureFree((int)*p);
             *p = NULL;
             p++;

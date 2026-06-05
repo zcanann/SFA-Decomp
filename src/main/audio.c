@@ -190,17 +190,18 @@ int Sfx_ReadTriggerParams(SfxTriggerFull *trigger, u16 *outSfxId, u8 *outVol, f3
     }
 
     {
-        u8 vr = trigger->volRand;
-        if (vr != 0) {
-            int hi = trigger->volBase + randomGetRange(0, vr);
+        int hi;
+        int vr = trigger->volRand;
+        if ((u32)vr != 0) {
+            hi = trigger->volBase + randomGetRange(0, vr);
             *outVol = hi - randomGetRange(0, vr);
         } else {
             *outVol = trigger->volBase;
         }
     }
     {
-        u8 pr = trigger->pitchRand;
-        if (pr != 0) {
+        int pr = trigger->pitchRand;
+        if ((u32)pr != 0) {
             int hi = trigger->pitchBase + randomGetRange(0, pr);
             *outF6 = (f32)(hi - randomGetRange(0, pr));
         } else {
