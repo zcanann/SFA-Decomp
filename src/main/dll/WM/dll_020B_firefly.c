@@ -120,7 +120,7 @@ STATIC_ASSERT(offsetof(FireFlyState, messageParam) == FIREFLY_STATE_MESSAGE_PARA
 #pragma scheduling off
 void FireFlyFn_801f4f88(int obj)
 {
-    int state = *(int *)(obj + 0xb8);
+    FireFlyState *state = *(FireFlyState **)(obj + 0xb8);
     int player = (int)Obj_GetPlayerObject();
     if (*(u8 *)(obj + 0x36) < FIREFLY_ALPHA_OPAQUE) {
         int v = (int)(lbl_803E5EDC * timeDelta + (f32)*(u8 *)(obj + 0x36));
@@ -132,25 +132,25 @@ void FireFlyFn_801f4f88(int obj)
         if (FIREFLY_PATH_AGE(state) >= 4) {
             FIREFLY_PATH_AGE(state) = FIREFLY_PATH_AGE(state) + 1;
         } else {
-            fn_801F4D54(obj, state);
+            fn_801F4D54(obj, (int)state);
         }
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_X0) = *(f32 *)(state + FIREFLY_STATE_SPLINE_X1);
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_Y0) = *(f32 *)(state + FIREFLY_STATE_SPLINE_Y1);
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_Z0) = *(f32 *)(state + FIREFLY_STATE_SPLINE_Z1);
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_X1) = *(f32 *)(state + FIREFLY_STATE_SPLINE_X2);
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_Y1) = *(f32 *)(state + FIREFLY_STATE_SPLINE_Y2);
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_Z1) = *(f32 *)(state + FIREFLY_STATE_SPLINE_Z2);
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_X2) = *(f32 *)(state + FIREFLY_STATE_SPLINE_X3);
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_Y2) = *(f32 *)(state + FIREFLY_STATE_SPLINE_Y3);
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_Z2) = *(f32 *)(state + FIREFLY_STATE_SPLINE_Z3);
+        state->splineX[0] = state->splineX[1];
+        state->splineY[0] = state->splineY[1];
+        state->splineZ[0] = state->splineZ[1];
+        state->splineX[1] = state->splineX[2];
+        state->splineY[1] = state->splineY[2];
+        state->splineZ[1] = state->splineZ[2];
+        state->splineX[2] = state->splineX[3];
+        state->splineY[2] = state->splineY[3];
+        state->splineZ[2] = state->splineZ[3];
         FIREFLY_SPLINE_SPEED(state) = lbl_803E5ED8 * (f32)(int)randomGetRange(0xa0, 0xb4);
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_X3) = *(f32 *)(state + FIREFLY_STATE_TARGET_X);
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_Y3) = *(f32 *)(state + FIREFLY_STATE_TARGET_Y);
-        *(f32 *)(state + FIREFLY_STATE_SPLINE_Z3) = *(f32 *)(state + FIREFLY_STATE_TARGET_Z);
+        state->splineX[3] = state->targetX;
+        state->splineY[3] = state->targetY;
+        state->splineZ[3] = state->targetZ;
     }
-    *(f32 *)(obj + 0xc) = Curve_EvalBSpline((f32 *)(state + FIREFLY_STATE_SPLINE_X0), 0, FIREFLY_SPLINE_T(state));
-    *(f32 *)(obj + 0x10) = Curve_EvalBSpline((f32 *)(state + FIREFLY_STATE_SPLINE_Y0), 0, FIREFLY_SPLINE_T(state));
-    *(f32 *)(obj + 0x14) = Curve_EvalBSpline((f32 *)(state + FIREFLY_STATE_SPLINE_Z0), 0, FIREFLY_SPLINE_T(state));
+    *(f32 *)(obj + 0xc) = Curve_EvalBSpline(state->splineX, 0, FIREFLY_SPLINE_T(state));
+    *(f32 *)(obj + 0x10) = Curve_EvalBSpline(state->splineY, 0, FIREFLY_SPLINE_T(state));
+    *(f32 *)(obj + 0x14) = Curve_EvalBSpline(state->splineZ, 0, FIREFLY_SPLINE_T(state));
     FIREFLY_SPLINE_T(state) = FIREFLY_SPLINE_SPEED(state) * timeDelta + FIREFLY_SPLINE_T(state);
     *(s16 *)obj = (s16)getAngle(*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80),
                                  *(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
@@ -194,7 +194,7 @@ void FireFlyFn_801f4f88(int obj)
                 FIREFLY_FLAGS(state) = (u8)(FIREFLY_FLAGS(state) | FIREFLY_FLAG_PLAYER_TOUCHED);
                 if (GameBit_Get(FIREFLY_FIRST_TOUCH_BIT) == 0) {
                     FIREFLY_MESSAGE_PARAM(state) = -1;
-                    ObjMsg_SendToObject(player, FIREFLY_MESSAGE_TALK, obj, (void *)(state + FIREFLY_STATE_MESSAGE_PARAM));
+                    ObjMsg_SendToObject(player, FIREFLY_MESSAGE_TALK, obj, &state->messageParam);
                     GameBit_Set(FIREFLY_FIRST_TOUCH_BIT, 1);
                 } else {
                     *(s16 *)(obj + 0x6) = (s16)(*(s16 *)(obj + 0x6) | FIREFLY_OBJFLAG_HIDDEN);
