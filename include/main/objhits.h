@@ -224,6 +224,8 @@ STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryRadiusXZ) == 0x2C);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadiusY) == 0x30);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadiusXZ) == 0x34);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, sweepRadiusX) == 0x38);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, objectHitMask) == 0x48);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, skeletonHitMask) == 0x4C);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, lateralResponseWeight) == 0x6A);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, axialResponseWeight) == 0x6B);
 

@@ -1821,7 +1821,7 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
     attStateB = NULL;
   }
   result = 0;
-  if ((*(uint *)((int)stateA + 0x48) != 0) && (*(s8 *)((int)stateA + 0x70) == 0)) {
+  if ((stateA->objectHitMask != 0) && (*(s8 *)((int)stateA + 0x70) == 0)) {
     if (*(s16 *)(objA + 0x44) == 1) {
       hitboxBuf = *(int **)(*(int *)(objA + 0x7c) + *(s8 *)(objA + 0xad) * 4);
       bufIndex = (*(u16 *)((int)hitboxBuf + 0x18) >> 2) & 1;
@@ -1853,20 +1853,20 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
         }
       }
     }
-    mask = *(uint *)((int)stateA + 0x48) >> 4;
+    mask = stateA->objectHitMask >> 4;
     if (mask != 0) {
-      result = ObjHits_CheckHitVolumes(objA, objB, objA, 1, 0, mask, *(uint *)((int)stateA + 0x4c) >> 4);
+      result = ObjHits_CheckHitVolumes(objA, objB, objA, 1, 0, mask, stateA->skeletonHitMask >> 4);
     }
     if (((attA != 0) && (result == 0)) &&
-        (mask = *(uint *)((int)stateA + 0x48) & 0xf, mask != 0)) {
-      result = ObjHits_CheckHitVolumes(attA, objB, objA, 1, 0, mask, *(uint *)((int)stateA + 0x4c) & 0xf);
+        (mask = stateA->objectHitMask & 0xf, mask != 0)) {
+      result = ObjHits_CheckHitVolumes(attA, objB, objA, 1, 0, mask, stateA->skeletonHitMask & 0xf);
     }
     if ((result == 0) && (*(s16 *)(objA + 0x44) == 1)) {
       doNothing_800333C8(objA, objB, attA, stateA, attStateA, dt);
     }
   }
   result = 0;
-  if (((*(u8 *)((int)stateB + 0xb4) & 0x80) == 0) && (*(uint *)((int)stateB + 0x48) != 0) &&
+  if (((*(u8 *)((int)stateB + 0xb4) & 0x80) == 0) && (stateB->objectHitMask != 0) &&
       (*(s8 *)((int)stateB + 0x70) == 0)) {
     if (*(s16 *)(objB + 0x44) == 1) {
       hitboxBuf = *(int **)(*(int *)(objB + 0x7c) + *(s8 *)(objB + 0xad) * 4);
@@ -1899,13 +1899,13 @@ void ObjHits_CheckObjectHitVolumes(int objA,int objB,int attA,int attB,f32 dt)
         }
       }
     }
-    mask = *(uint *)((int)stateB + 0x48) >> 4;
+    mask = stateB->objectHitMask >> 4;
     if (mask != 0) {
-      result = ObjHits_CheckHitVolumes(objB, objA, objB, 1, 0, mask, *(uint *)((int)stateB + 0x4c) >> 4);
+      result = ObjHits_CheckHitVolumes(objB, objA, objB, 1, 0, mask, stateB->skeletonHitMask >> 4);
     }
     if (((attB != 0) && (result == 0)) &&
-        (mask = *(uint *)((int)stateB + 0x48) & 0xf, mask != 0)) {
-      result = ObjHits_CheckHitVolumes(attB, objA, objB, 1, 0, mask, *(uint *)((int)stateB + 0x4c) & 0xf);
+        (mask = stateB->objectHitMask & 0xf, mask != 0)) {
+      result = ObjHits_CheckHitVolumes(attB, objA, objB, 1, 0, mask, stateB->skeletonHitMask & 0xf);
     }
     if ((result == 0) && (*(s16 *)(objB + 0x44) == 1)) {
       doNothing_800333C8(objB, objA, attB, stateB, attStateB, dt);
