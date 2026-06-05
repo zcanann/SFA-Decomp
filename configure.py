@@ -793,7 +793,7 @@ config.libs = [
             Object(NonMatching, "main/dll/VF/dll_021D_vfplift.c"),
             Object(NonMatching, "main/dll/VF/dll_021E_vfpblock1.c"),
             Object(NonMatching, "main/dll/DR/dll_024D_bossdrakor.c"),
-            Object(NonMatching, "main/unknown/autos/placeholder_80209FE0.c"),
+            Object(NonMatching, "main/dll/DR/dll_024E_drakord_thornbush.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8026FD1C.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80272EEC.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_80273608.c"),

@@ -1551,7 +1551,7 @@ main/dfppowersl.c:
 main/dll/DR/dll_024D_bossdrakor.c:
 	.text       start:0x8020A1C8 end:0x8020BAB4
 
-main/unknown/autos/placeholder_80209FE0.c:
+main/dll/DR/dll_024E_drakord_thornbush.c:
 	.text       start:0x8020BAB4 end:0x8020C278
 
 main/worldasteroids.c:
