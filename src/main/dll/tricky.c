@@ -2217,7 +2217,7 @@ void gameUiResetMenuState(void) {
     lbl_803DD760 = lbl_803E1E3C;
     {
         int **p = (int **)lbl_803A9410;
-        for (i = 0; i < 4; i++, p++) {
+        for (i = 0; i < 4; p++, i++) {
             if (*p != NULL) {
                 ((int *)(*p)[0x19])[1] = 0;
                 ((int *)(*p)[0x19])[2] = 0;
