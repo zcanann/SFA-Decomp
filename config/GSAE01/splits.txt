@@ -2354,7 +2354,7 @@ main/unknown/autos/placeholder_80279018.c:
 main/unknown/autos/placeholder_802791FC.c:
 	.text       start:0x80279038 end:0x80279038
 
-main/unknown/autos/placeholder_802792F8.c:
+main/audio/voice_id.c:
 	extab       start:0x80005958 end:0x80005960
 	extabindex  start:0x80006194 end:0x800061A0
 	.text       start:0x80279038 end:0x802795CC

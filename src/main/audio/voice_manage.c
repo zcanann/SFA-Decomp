@@ -1,6 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/hw_voice_control.h"
-#include "main/unknown/autos/placeholder_802792F8.h"
+#include "main/audio/voice_id.h"
 #include "main/unknown/autos/placeholder_80279AF0.h"
 #include "main/audio/voice_manage.h"
 
