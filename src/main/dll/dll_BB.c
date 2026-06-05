@@ -53,8 +53,6 @@ void camcontrol_applyState(short *param_1)
   float fVar5;
   float fVar6;
   float delta[3];
-  undefined8 local_28;
-  undefined8 local_20;
   
   Camera_SetCurrentViewIndex(0);
   psVar3 = (short *)Camera_GetCurrentViewSlot();
@@ -64,7 +62,7 @@ void camcontrol_applyState(short *param_1)
   if ((*(byte *)((int)param_1 + 0x143) & 0x80) != 0) {
     PSVECSubtract((float *)(param_1 + 0xc),(float *)(psVar3 + 6),delta);
     fVar5 = PSVECMag(delta);
-    if (lbl_803E1630 < fVar5) {
+    if (fVar5 > lbl_803E1630) {
       PSVECNormalize(delta,delta);
     }
     fVar6 = interpolate(fVar5,lbl_803E1668,timeDelta);
@@ -77,9 +75,9 @@ void camcontrol_applyState(short *param_1)
     *(float *)(psVar3 + 10) = fVar5 * delta[2] + *(float *)(psVar3 + 10);
   }
   else {
-    *(undefined4 *)(psVar3 + 6) = *(undefined4 *)(param_1 + 0xc);
-    *(undefined4 *)(psVar3 + 8) = *(undefined4 *)(param_1 + 0xe);
-    *(undefined4 *)(psVar3 + 10) = *(undefined4 *)(param_1 + 0x10);
+    *(float *)(psVar3 + 6) = *(float *)(param_1 + 0xc);
+    *(float *)(psVar3 + 8) = *(float *)(param_1 + 0xe);
+    *(float *)(psVar3 + 10) = *(float *)(param_1 + 0x10);
   }
   fVar2 = lbl_803E1630;
   lbl_803DD4D0 = *(float *)(param_1 + 0x5a);
@@ -129,9 +127,7 @@ void camcontrol_applyState(short *param_1)
       if (param_1[0x80] < -0x8000) {
         param_1[0x80] = param_1[0x80] + -1;
       }
-      local_28 = (double)CONCAT44(0x43300000,(int)param_1[0x80] ^ 0x80000000);
-      iVar4 = (int)((float)(local_28 - lbl_803E1650) * fVar6);
-      local_20 = (double)(longlong)iVar4;
+      iVar4 = (int)((float)param_1[0x80] * fVar6);
       *psVar3 = param_1[0x83] - (short)iVar4;
     }
     if ((*(byte *)((int)param_1 + 0x13f) & 2) != 0) {
@@ -142,9 +138,7 @@ void camcontrol_applyState(short *param_1)
       if (param_1[0x81] < -0x8000) {
         param_1[0x81] = param_1[0x81] + -1;
       }
-      local_20 = (double)CONCAT44(0x43300000,(int)param_1[0x81] ^ 0x80000000);
-      iVar4 = (int)((float)(local_20 - lbl_803E1650) * fVar6);
-      local_28 = (double)(longlong)iVar4;
+      iVar4 = (int)((float)param_1[0x81] * fVar6);
       psVar3[1] = param_1[0x84] - (short)iVar4;
     }
     if ((*(byte *)((int)param_1 + 0x13f) & 4) != 0) {
@@ -155,9 +149,7 @@ void camcontrol_applyState(short *param_1)
       if (param_1[0x82] < -0x8000) {
         param_1[0x82] = param_1[0x82] + -1;
       }
-      local_20 = (double)CONCAT44(0x43300000,(int)param_1[0x82] ^ 0x80000000);
-      iVar4 = (int)((float)(local_20 - lbl_803E1650) * fVar6);
-      local_28 = (double)(longlong)iVar4;
+      iVar4 = (int)((float)param_1[0x82] * fVar6);
       psVar3[2] = param_1[0x85] - (short)iVar4;
     }
   }
@@ -169,14 +161,12 @@ void camcontrol_applyState(short *param_1)
   lbl_803DD4C0 = (short)iVar4;
   if ((int)lbl_803DD4C0 != (int)*(char *)((int)param_1 + 0x13b)) {
     if ((int)lbl_803DD4C0 < (int)*(char *)((int)param_1 + 0x13b)) {
-      local_20 = (double)(longlong)(int)timeDelta;
       lbl_803DD4C0 = lbl_803DD4C0 + (short)*(char *)(param_1 + 0x9e) * (short)(int)timeDelta;
       if ((int)*(char *)((int)param_1 + 0x13b) < (int)lbl_803DD4C0) {
         lbl_803DD4C0 = (short)*(char *)((int)param_1 + 0x13b);
       }
     }
     else {
-      local_20 = (double)(longlong)(int)timeDelta;
       lbl_803DD4C0 = lbl_803DD4C0 - (short)*(char *)(param_1 + 0x9e) * (short)(int)timeDelta;
       if ((int)lbl_803DD4C0 < (int)*(char *)((int)param_1 + 0x13b)) {
         lbl_803DD4C0 = (short)*(char *)((int)param_1 + 0x13b);
