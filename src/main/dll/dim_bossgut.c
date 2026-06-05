@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/dll/dim_bossgut.h"
 
 
@@ -351,8 +352,6 @@ extern void objFn_8002b67c(int *obj);
 extern void Obj_StartModelFadeIn(int *obj, int frames);
 extern void Obj_ResetModelColorState(int *obj);
 extern void objLightFn_8009a1dc(int *obj, f32 a, void *vec, int b, int c);
-extern void ObjAnim_SetCurrentMove(int *obj, int move, f32 t, int mode);
-extern int  ObjAnim_AdvanceCurrentMove(int *obj, f32 speed, f32 dt, int mode);
 extern int  Sfx_PlayFromObject(int *obj, int id);
 extern f32  sqrtf(f32 x);
 extern int *gExpgfxInterface;
@@ -607,9 +606,10 @@ void enemymushroom_update(int *obj)
     }
 
     if (*(s16 *)((char *)obj + 0xa0) != lbl_80326C78[*(u8 *)(state + 0x36)]) {
-        ObjAnim_SetCurrentMove(obj, lbl_80326C78[*(u8 *)(state + 0x36)], lbl_803E52FC, 0);
+        ObjAnim_SetCurrentMove((int)obj, lbl_80326C78[*(u8 *)(state + 0x36)], lbl_803E52FC, 0);
     }
-    if (ObjAnim_AdvanceCurrentMove(obj, lbl_80326C90[*(u8 *)(state + 0x36)], timeDelta, 0) != 0) {
+    if (ObjAnim_AdvanceCurrentMove(lbl_80326C90[*(u8 *)(state + 0x36)], timeDelta,
+                                   (int)obj, NULL) != 0) {
         *(u8 *)(state + 0x37) |= 0x2;
     } else {
         *(u8 *)(state + 0x37) = (u8)(*(u8 *)(state + 0x37) & ~0x2);
