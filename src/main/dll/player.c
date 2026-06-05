@@ -1699,17 +1699,7 @@ int fn_802A5384(int obj, int state)
     ((ByteFlags *)((char *)inner + 0x3f1))->b08 = 0;
     ((ByteFlags *)((char *)inner + 0x3f2))->b10 = 0;
     if (*(s8 *)((char *)state + 0x27a) != 0) {
-        {
-            register u32 m;
-            register u32 v;
-            register int base = inner;
-            asm {
-                lwz v, 0x360(base)
-                lis m, 0x200
-                or m, v, m
-                stw m, 0x360(base)
-            }
-        }
+        *(u32 *)((char *)inner + 0x360) |= 0x2000000;
         ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 0;
         ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
         ((ByteFlags *)((char *)inner + 0x3f3))->b40 = 0;
@@ -1729,17 +1719,7 @@ int fn_802A5384(int obj, int state)
         if ((fl >> 5 & 1) != 0) {
             *(u32 *)state |= 0x200000;
             *(u32 *)((char *)inner + 0x360) |= 0x2000;
-            {
-            register u32 m;
-            register u32 v;
-            register int base = inner;
-            asm {
-                lwz v, 0x360(base)
-                lis m, 0x200
-                or m, v, m
-                stw m, 0x360(base)
-            }
-        }
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
             *(s16 *)((char *)state + 0x278) = 2;
             *(int *)((char *)inner + 0x898) = (int)fn_802A514C;
             if (((u32)*(u8 *)((char *)inner + 0x3f1) >> 5 & 1) != 0) {
@@ -1748,46 +1728,16 @@ int fn_802A5384(int obj, int state)
                 *(f32 *)((char *)inner + 0x404) = lbl_803E8064;
             }
         } else if (((u32)*(u8 *)((char *)inner + 0x3f1) >> 5 & 1) != 0) {
-            {
-            register u32 m;
-            register u32 v;
-            register int base = inner;
-            asm {
-                lwz v, 0x360(base)
-                lis m, 0x200
-                or m, v, m
-                stw m, 0x360(base)
-            }
-        }
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
             *(u32 *)state |= 0x800000;
             *(s16 *)((char *)state + 0x278) = 0;
             *(f32 *)((char *)inner + 0x404) = lbl_803E7ED4;
         } else if ((fl >> 3 & 1) != 0 || (fl >> 2 & 1) != 0) {
             *(u32 *)state |= 0x200000;
-            {
-            register u32 m;
-            register u32 v;
-            register int base = inner;
-            asm {
-                lwz v, 0x360(base)
-                lis m, 0x200
-                or m, v, m
-                stw m, 0x360(base)
-            }
-        }
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
             *(f32 *)((char *)inner + 0x404) = lbl_803E8068;
         } else {
-            {
-            register u32 m;
-            register u32 v;
-            register int base = inner;
-            asm {
-                lwz v, 0x360(base)
-                lis m, 0x200
-                or m, v, m
-                stw m, 0x360(base)
-            }
-        }
+            *(u32 *)((char *)inner + 0x360) |= 0x2000000;
             *(u32 *)state |= 0x800000;
             *(s16 *)((char *)state + 0x278) = 0;
             *(f32 *)((char *)inner + 0x404) = lbl_803E806C;
@@ -1820,17 +1770,7 @@ int fn_802A5384(int obj, int state)
     {
         u32 fl = *(u8 *)((char *)inner + 0x3f0);
         if ((fl >> 6 & 1) != 0) {
-            {
-            register u32 m;
-            register u32 v;
-            register int base = inner;
-            asm {
-                lwz v, 0x360(base)
-                lis m, 0x100
-                or m, v, m
-                stw m, 0x360(base)
-            }
-        }
+            *(u32 *)((char *)inner + 0x360) |= 0x1000000;
             *(f32 *)((char *)state + 0x2a0) = lbl_803E8070;
             {
                 int cd = (int)(lbl_803E7F98 * *(f32 *)((char *)obj + 0x98) +
@@ -1914,17 +1854,7 @@ int fn_802A5384(int obj, int state)
                     }
                     staffFn_80170380(lbl_803DE450, 2);
                     ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 0;
-                    {
-                        register u32 m;
-                        register u32 v;
-                        register int base = inner;
-                        asm {
-                            lwz v, 0x360(base)
-                            lis m, 0x80
-                            or m, v, m
-                            stw m, 0x360(base)
-                        }
-                    }
+                    *(u32 *)((char *)inner + 0x360) |= 0x800000;
                     ObjHits_SyncObjectPositionIfDirty(obj);
                     leave = 1;
                 } else {
@@ -1984,17 +1914,7 @@ int fn_802A5384(int obj, int state)
             *(u16 *)((char *)inner + 0x8d8) |= 8;
             ((ByteFlags *)((char *)inner + 0x3f0))->b80 = 1;
             *(u8 *)((char *)inner + 0x8a6) = *(u8 *)((char *)inner + 0x8a7);
-            {
-            register u32 m;
-            register u32 v;
-            register int base = inner;
-            asm {
-                lwz v, 0x360(base)
-                lis m, 0x100
-                or m, v, m
-                stw m, 0x360(base)
-            }
-        }
+            *(u32 *)((char *)inner + 0x360) |= 0x1000000;
             *(f32 *)((char *)inner + 0x844) = *(f32 *)((char *)state + 0x280);
             ObjAnim_SetCurrentMove(obj,
                                    *(s16 *)(*(int *)((char *)inner + 0x3f8) + 0x3c),
@@ -2407,15 +2327,8 @@ int fn_802A1CA8(int obj, int state)
         setAButtonIcon(0x1c);
     }
     {
-        register u32 m;
-        register u32 v;
-        register int base = *(int *)((char *)obj + 0xb8);
-        asm {
-            lwz v, 0x360(base)
-            li m, -3
-            and m, v, m
-            stw m, 0x360(base)
-        }
+        int base = *(int *)((char *)obj + 0xb8);
+        *(u32 *)((char *)base + 0x360) &= ~0x2;
         *(u32 *)((char *)base + 0x360) |= 0x2000;
     }
     *(u32 *)((char *)state + 4) |= 0x100000;
@@ -2532,17 +2445,7 @@ int fn_802A1CA8(int obj, int state)
             }
             ObjAnim_SetCurrentMove(obj, **(s16 **)((char *)inner + 0x3f8),
                                    lbl_803E7EA4, 1);
-            {
-                register u32 m;
-                register u32 v;
-                register int base = inner;
-                asm {
-                    lwz v, 0x360(base)
-                    lis m, 0x80
-                    or m, v, m
-                    stw m, 0x360(base)
-                }
-            }
+            *(u32 *)((char *)inner + 0x360) |= 0x800000;
             *(int *)((char *)state + 0x308) = (int)fn_802A514C;
             return 2;
         }
@@ -2671,17 +2574,7 @@ int fn_802A1CA8(int obj, int state)
                             ((ByteFlags *)((char *)inner + 0x3f0))->b08 = 0;
                             staffFn_80170380(lbl_803DE450, 2);
                             ((ByteFlags *)((char *)inner + 0x3f0))->b02 = 0;
-                            {
-                                register u32 m;
-                                register u32 v;
-                                register int base = inner;
-                                asm {
-                                    lwz v, 0x360(base)
-                                    lis m, 0x80
-                                    or m, v, m
-                                    stw m, 0x360(base)
-                                }
-                            }
+                            *(u32 *)((char *)inner + 0x360) |= 0x800000;
                             ObjHits_SyncObjectPositionIfDirty(obj);
                             ((ByteFlags *)((char *)inner + 0x3f0))->b40 = 0;
                             ((ByteFlags *)((char *)inner + 0x3f0))->b04 = 1;
@@ -2873,15 +2766,8 @@ int fn_802A0680(int obj, int state)
         ObjHits_MarkObjectPositionDirty();
     }
     {
-        register u32 m;
-        register u32 v;
-        register int base = *(int *)((char *)obj + 0xb8);
-        asm {
-            lwz v, 0x360(base)
-            li m, -3
-            and m, v, m
-            stw m, 0x360(base)
-        }
+        int base = *(int *)((char *)obj + 0xb8);
+        *(u32 *)((char *)base + 0x360) &= ~0x2;
         *(u32 *)((char *)base + 0x360) |= 0x2000;
     }
     *(u32 *)((char *)state + 4) |= 0x100000;
@@ -3277,28 +3163,10 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
         *(s16 *)((char *)inner + 0x80a) = -1;
     }
     ObjHits_DisableObject(obj);
-    {
-        register u32 m;
-        register u32 v;
-        asm {
-            lwz v, 0x360(inner)
-            li m, -3
-            and m, v, m
-            stw m, 0x360(inner)
-        }
-    }
+    *(u32 *)((char *)inner + 0x360) &= ~0x2;
     if (*(s8 *)((char *)seq + 0x56) != 0) {
         s8 c;
-        {
-            register u32 m;
-            register u32 v;
-            asm {
-                lwz v, 0x360(inner)
-                li m, -0x401
-                and m, v, m
-                stw m, 0x360(inner)
-            }
-        }
+        *(u32 *)((char *)inner + 0x360) &= ~0x400;
         {
             f32 fz = lbl_803E7EA4;
             *(f32 *)((char *)inner + 0x79c) = fz;
@@ -3785,17 +3653,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 obj2 = *(int *)((char *)obj + 0xb8);
                 (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, obj2, 1);
                 *(void (**)(int, int))(obj2 + 0x304) = fn_802A514C;
-                {
-                    register u32 m;
-                    register u32 v;
-                    register int base = obj2;
-                    asm {
-                        lwz v, 0x360(base)
-                        li m, -2
-                        and m, v, m
-                        stw m, 0x360(base)
-                    }
-                }
+                *(u32 *)((char *)obj2 + 0x360) &= ~0x1;
                 *(s16 *)((char *)obj + 6) &= ~8;
                 break;
             }
@@ -3871,68 +3729,26 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                             *(int *)(va + 0x7f8) = 0;
                         }
                     }
-                    {
-                        register u32 m;
-                        register u32 v;
-                        register int base = va;
-                        asm {
-                            lwz v, 0x360(base)
-                            lis m, 0x80
-                            or m, v, m
-                            stw m, 0x360(base)
-                        }
-                    }
+                    *(u32 *)((char *)va + 0x360) |= 0x800000;
                     (**(void (**)(int, int, int))((char *)(*gPlayerInterface) + 0x14))(obj, va,
                                                                                        1);
                     *(void (**)(int, int))(va + 0x304) = fn_802A514C;
                 }
                 break;
             case 0x14: {
-                register u32 m;
-                register u32 v;
-                asm {
-                    lwz v, 0x360(inner)
-                    lis m, 0x4
-                    or m, v, m
-                    stw m, 0x360(inner)
-                }
+                *(u32 *)((char *)inner + 0x360) |= 0x40000;
                 break;
             }
             case 0x15: {
-                register u32 t15;
-                register u32 m;
-                register u32 v;
-                asm {
-                    lwz v, 0x360(inner)
-                    lis t15, 0xfffc
-                    subi m, t15, 0x1
-                    and m, v, m
-                    stw m, 0x360(inner)
-                }
+                *(u32 *)((char *)inner + 0x360) &= ~0x40000;
                 break;
             }
             case 0x16: {
-                register u32 m;
-                register u32 v;
-                asm {
-                    lwz v, 0x360(inner)
-                    lis m, 0x2
-                    or m, v, m
-                    stw m, 0x360(inner)
-                }
+                *(u32 *)((char *)inner + 0x360) |= 0x20000;
                 break;
             }
             case 0x12: {
-                register u32 t12;
-                register u32 m;
-                register u32 v;
-                asm {
-                    lwz v, 0x360(inner)
-                    lis t12, 0x1
-                    addi m, t12, -0x8000
-                    or m, v, m
-                    stw m, 0x360(inner)
-                }
+                *(u32 *)((char *)inner + 0x360) |= 0x8000;
                 break;
             }
             case 0x13:
@@ -4061,15 +3877,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
                 break;
             case 0x2b: {
                 register u32 m;
-                register u32 v;
-                register int base;
-                base = *(int *)((char *)obj + 0x64);
-                asm {
-                    lwz v, 0x30(base)
-                    li m, -5
-                    and m, v, m
-                    stw m, 0x30(base)
-                }
+                *(u32 *)(*(int *)((char *)obj + 0x64) + 0x30) &= ~0x4;
                 break;
             }
             case 0x2c:
@@ -4114,16 +3922,7 @@ int player_SeqFn(int obj, int obj2, int seq, int endFlag)
             *(u16 *)((char *)lbl_803DE44C + 0xb0) |= 2;
         }
     }
-    {
-        register u32 m;
-        register u32 v;
-        asm {
-            lwz v, 0x360(inner)
-            lis m, 0x80
-            or m, v, m
-            stw m, 0x360(inner)
-        }
-    }
+    *(u32 *)((char *)inner + 0x360) |= 0x800000;
     ((void (*)(int, int, int, int, int, f32, f32))objAudioFn_8006ef38)(
         obj, (int)((char *)seq + 0xf0), *(u8 *)((char *)inner + 0x8a6),
         (int)((char *)inner + 0x3c4), (int)((char *)inner + 4),
@@ -4212,17 +4011,7 @@ s8 fn_802A74A4(int obj, int p2, int p3, void *out, f32 fv, u32 mask)
     sc0[0] = lbl_803E808C * vec[0];
     sc0[1] = lbl_803E808C * vec[1];
     sc0[2] = lbl_803E808C * vec[2];
-    {
-        register u32 m;
-        register u32 v;
-        register int base = p2;
-        asm {
-            lwz v, 0x360(base)
-            li m, -0x101
-            and m, v, m
-            stw m, 0x360(base)
-        }
-    }
+    *(u32 *)((char *)p2 + 0x360) &= ~0x100;
     for (i = 0; i < 13; i++) {
         if ((mask & dirMasks[i]) == 0) {
             continue;
