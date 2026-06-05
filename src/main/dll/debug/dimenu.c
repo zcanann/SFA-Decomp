@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/dll/dll_4E.h"
 #include "main/dll/debug/dimenu.h"
 
 extern undefined4 FUN_800067e8();
@@ -28,9 +29,7 @@ extern undefined4 saveFileStruct_isCheatActive();
 extern uint isCheatUnlocked();
 extern u8 *getSaveFileStruct();
 extern void saveGame_save();
-extern undefined4 FUN_8011bfc8();
 extern undefined4 languageMenuInit();
-extern int fn_8011C51C(int selection, int item);
 extern undefined4 FUN_80133790();
 extern char FUN_801339f8();
 extern undefined4 FUN_80133a68();
@@ -193,8 +192,6 @@ extern void setDrawCloudsAndLights(int v);
 extern void setWidescreen(u8 enabled);
 extern void setRumbleEnabled(u8 enabled);
 extern void setSubtitlesEnabled(u8 enabled);
-extern void fn_8011BFC8(int selection, int item);
-extern void fn_8011C318(int selection, int item);
 extern u8 framesThisStep;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 #pragma scheduling off
@@ -285,12 +282,12 @@ int OptionsScreen_run(void)
     switch ((s8)lbl_803DBA28) {
         case 0:
             lbl_803DD70C = (s8)item;
-            if (fn_8011C51C(selection, item) != 0) {
+            if (optionsMenu_openSelectedSubmenu(selection, item) != 0) {
                 return 0;
             }
             break;
         case 2:
-            fn_8011C318(selection, item);
+            optionsMenu_applyGameplaySetting(selection, item);
             if (selection == 0) {
                 ((u8 *)lbl_803DD708)[6] =
                     (*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
@@ -301,7 +298,7 @@ int OptionsScreen_run(void)
             }
             break;
         case 1:
-            fn_8011BFC8(selection, item);
+            optionsMenu_applyAudioSetting(selection, item);
             if (selection == 0) {
                 ((u8 *)lbl_803DD708)[9] =
                     (*(int (*)(int))(*(int *)(*gTitleMenuItemInterface + 0x24)))(lbl_803A87D0[0]);
