@@ -25,8 +25,6 @@ extern undefined4 fn_801EAE4C();
 extern undefined4 fn_801EB0D4();
 extern undefined4 fn_801EB634();
 extern void fn_801EC1AC(int obj,int state);
-extern undefined4 FUN_801ec7a0();
-extern undefined4 FUN_801ecd30();
 extern undefined4 FUN_80247e94();
 extern undefined4 FUN_80247edc();
 extern undefined4 FUN_80293130();
