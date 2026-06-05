@@ -30,12 +30,13 @@ extern int trickyDebugPrint(const char *fmt, ...);
  */
 #pragma scheduling off
 #pragma peephole off
-void trickyFn_8013d8f0(u8 *arg1, u8 *arg2)
+void trickyFn_8013d8f0(u8 *self, u8 *state)
 {
-  f32 minDist;
-  f32 rejectDist;
-  f32 dist;
   u8 *nearest;
+  f32 rejectDist;
+  f32 minDist;
+  f32 dist;
+  f32 zero;
   u8 **objs;
   int count;
   int i;
@@ -44,26 +45,27 @@ void trickyFn_8013d8f0(u8 *arg1, u8 *arg2)
   nearest = NULL;
   minDist = lbl_803E2418;
 
-  if (trickyFoodFn_8013db3c(arg1, arg2) == 0) {
-    arg2[0x8] = 1;
-    arg2[0xA] = 0;
-    *(f32 *)(arg2 + 0x71C) = lbl_803E23DC;
-    *(f32 *)(arg2 + 0x720) = lbl_803E23DC;
-    *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFFFFEF;
-    *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFEFFFF;
-    *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFDFFFF;
-    *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFBFFFF;
-    *(s8 *)(arg2 + 0xD) = -1;
+  if (trickyFoodFn_8013db3c(self, state) == 0) {
+    state[0x8] = 1;
+    state[0xA] = 0;
+    zero = lbl_803E23DC;
+    *(f32 *)(state + 0x71C) = zero;
+    *(f32 *)(state + 0x720) = zero;
+    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & 0xFFFFFFEF;
+    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & 0xFFFEFFFF;
+    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & 0xFFFDFFFF;
+    *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & 0xFFFBFFFF;
+    *(s8 *)(state + 0xD) = -1;
     return;
   }
 
   objs = ObjGroup_GetObjects(0x4B, &count);
   rejectDist = lbl_803E24C4;
   for (i = 0; i < count; i++) {
-    dist = getXZDistance((f32 *)((u8 *)*(int *)(arg2 + 4) + 0x18),
+    dist = getXZDistance((f32 *)((u8 *)*(int *)(state + 4) + 0x18),
                        (f32 *)(*objs + 0x18));
     if (dist > rejectDist) {
-      dist = getXZDistance((f32 *)(arg1 + 0x18), (f32 *)(*objs + 0x18));
+      dist = getXZDistance((f32 *)(self + 0x18), (f32 *)(*objs + 0x18));
       if (dist < minDist) {
         nearest = *objs;
         minDist = dist;
@@ -73,32 +75,32 @@ void trickyFn_8013d8f0(u8 *arg1, u8 *arg2)
   }
 
   if (nearest != NULL) {
-    *(u8 **)(arg2 + 0x24) = nearest;
-    if (*(u32 *)(arg2 + 0x28) != (u32)(nearest + 0x18)) {
-      *(u32 *)(arg2 + 0x28) = (u32)(nearest + 0x18);
-      *(u32 *)(arg2 + 0x54) = *(u32 *)(arg2 + 0x54) & 0xFFFFFBFF;
-      *(s16 *)(arg2 + 0xD2) = 0;
+    *(u8 **)(state + 0x24) = nearest;
+    if (*(u32 *)(state + 0x28) != (u32)(nearest + 0x18)) {
+      *(u32 *)(state + 0x28) = (u32)(nearest + 0x18);
+      *(u32 *)(state + 0x54) = *(u32 *)(state + 0x54) & 0xFFFFFBFF;
+      *(s16 *)(state + 0xD2) = 0;
     }
-    if (trickyFn_8013b368(arg1, arg2, lbl_803E247C) == 1) return;
+    if (trickyFn_8013b368(self, state, lbl_803E247C) == 1) return;
   }
 
-  if (lbl_803E23DC == *(f32 *)(arg2 + 0x2AC)) {
+  if (lbl_803E23DC == *(f32 *)(state + 0x2AC)) {
     waterFlag = 0;
-  } else if (lbl_803E2410 == *(f32 *)(arg2 + 0x2B0)) {
+  } else if (lbl_803E2410 == *(f32 *)(state + 0x2B0)) {
     waterFlag = 1;
-  } else if (*(f32 *)(arg2 + 0x2B4) - *(f32 *)(arg2 + 0x2B0) > lbl_803E2414) {
+  } else if (*(f32 *)(state + 0x2B4) - *(f32 *)(state + 0x2B0) > lbl_803E2414) {
     waterFlag = 1;
   } else {
     waterFlag = 0;
   }
 
   if (waterFlag != 0) {
-    objAnimFn_8013a3f0(arg1, 8, 0, lbl_803E243C);
-    *(f32 *)(arg2 + 0x79C) = lbl_803E2440;
-    *(f32 *)(arg2 + 0x838) = lbl_803E23DC;
+    objAnimFn_8013a3f0(self, 8, 0, lbl_803E243C);
+    *(f32 *)(state + 0x79C) = lbl_803E2440;
+    *(f32 *)(state + 0x838) = lbl_803E23DC;
     trickyDebugPrint(sInWaterMessage);
   } else {
-    objAnimFn_8013a3f0(arg1, 0, 0, lbl_803E2444);
+    objAnimFn_8013a3f0(self, 0, 0, lbl_803E2444);
     trickyDebugPrint(lbl_8031D478);
   }
 }
