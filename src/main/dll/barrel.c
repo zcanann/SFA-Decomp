@@ -341,22 +341,21 @@ void grimble_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
   char *state = *(char **)(obj + 0xb8);
   char *sub = *(char **)(state + 0x40c);
 
-  if (visible != 0) {
-    if (*(int *)(obj + 0xf4) == 0) {
-      ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5,
-                                                                     lbl_803E2EBC);
-      if (*(f32 *)(sub + 0x50) > lbl_803E2EB8) {
-        (*(void (**)(int, int, int, int, int))(*(int *)lbl_803DCAB4 + 0xc))(obj, 0x52a, 0, 0x64,
-                                                                            0);
-      }
-      if ((*(u16 *)(state + 0x400) & 0x60) != 0) {
-        objParticleFn_80099d84(obj, lbl_803E2EBC, 3, *(f32 *)(state + 0x3e8), 0);
-      }
-      if ((*(u16 *)(state + 0x400) & 0x100) != 0) {
-        objParticleFn_80099d84(obj, lbl_803E2EBC, 4, *(f32 *)(state + 0x3e8), 0);
-        *(u16 *)(state + 0x400) = *(u16 *)(state + 0x400) & ~0x100;
-      }
-    }
+  if (visible == 0 || *(int *)(obj + 0xf4) != 0) {
+    return;
+  }
+  ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5,
+                                                                 lbl_803E2EBC);
+  if (*(f32 *)(sub + 0x50) > lbl_803E2EB8) {
+    (*(void (**)(int, int, int, int, int))(*(int *)lbl_803DCAB4 + 0xc))(obj, 0x52a, 0, 0x64,
+                                                                        0);
+  }
+  if ((*(u16 *)(state + 0x400) & 0x60) != 0) {
+    objParticleFn_80099d84(obj, lbl_803E2EBC, 3, *(f32 *)(state + 0x3e8), 0);
+  }
+  if ((*(u16 *)(state + 0x400) & 0x100) != 0) {
+    objParticleFn_80099d84(obj, lbl_803E2EBC, 4, *(f32 *)(state + 0x3e8), 0);
+    *(u16 *)(state + 0x400) = *(u16 *)(state + 0x400) & ~0x100;
   }
 }
 
