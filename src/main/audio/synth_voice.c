@@ -195,7 +195,7 @@ extern void hwSetPriority(u32 voice, u32 prio);
 extern void hwStart(u32 voice, u8 studio);
 extern void hwKeyOff(u32 voice);
 extern void macSetPedalState(SynthHwVoice* sv, u32 state);
-extern u32 fn_8027AC34(SynthVoiceAdsr* adsr, u16* start, u16* delta);
+extern u32 adsrHandleLowPrecision(SynthVoiceAdsr* adsr, u16* start, u16* delta);
 extern u32 adsrRelease(SynthVoiceAdsr* adsr);
 extern u32 synthFlags;
 extern const f32 lbl_803E7798;
@@ -436,7 +436,7 @@ void LowPrecisionHandler(int voice)
     }
 
     if ((HWVOICE_FLAGS(sv) & 0x20000000000ULL) != 0 &&
-        fn_8027AC34(&sv->pitchADSR, &adsr_start, &adsr_delta)) {
+        adsrHandleLowPrecision(&sv->pitchADSR, &adsr_start, &adsr_delta)) {
         HWVOICE_FLAGS(sv) &= ~0x20000000000ULL;
     }
 

@@ -106,7 +106,7 @@ int fn_8027A660(int state)
  *
  * EN v1.1 Address: 0x8027A8D4, size 40b
  */
-int fn_8027A8D4(int state)
+int adsrSetup(int state)
 {
     *(u8 *)(state + 1) = 0;
     return fn_8027A660(state);

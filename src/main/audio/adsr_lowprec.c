@@ -6,11 +6,11 @@ extern u32 adsrHandle(int p1, int p2, int p3);
 /*
  * --INFO--
  *
- * Function: fn_8027AC34
+ * Function: adsrHandleLowPrecision
  * EN v1.0 Address: 0x8027AC34
  * EN v1.0 Size: 132b
  */
-int fn_8027AC34(int p1, int p2, int p3)
+int adsrHandleLowPrecision(int p1, int p2, int p3)
 {
     u8 i;
 

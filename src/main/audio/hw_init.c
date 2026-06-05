@@ -79,11 +79,11 @@ extern u32 salMessageCallback;
 extern u8 *dspVoice;
 
 void hwSetTimeOffset(u8 value);
-extern void audioFreeFn_8027bde0(void);
+extern void salExitDspCtrl(void);
 extern int salStartDsp(void);
 extern void sndBegin(void);
 extern void hwInitIrq(void);
-extern u32 fn_8027BA04(u32 valueA, u32 valueB, u32 enabled);
+extern u32 salInitDspCtrl(u32 valueA, u32 valueB, u32 enabled);
 extern int salInitDsp(u32 flags);
 extern void doNothing_802737E8(void);
 extern void salCtrlDsp(u32 param_1);
@@ -193,7 +193,7 @@ int hwInit(u32 *sampleRate, u8 valueA, u8 valueB, u32 flags)
     salMessageCallback = 0;
 
     if (salInitAi(snd_handle_irq, flags, sampleRate) != 0 &&
-        fn_8027BA04(valueA, valueB, (flags & 1) != 0) != 0 &&
+        salInitDspCtrl(valueA, valueB, (flags & 1) != 0) != 0 &&
         (u32)salInitDsp(flags) != 0) {
         sndEnd();
         salStartAi();
@@ -207,7 +207,7 @@ void hwExit(void)
 {
     sndBegin();
     salStartDsp();
-    audioFreeFn_8027bde0();
+    salExitDspCtrl();
     salExitAi();
     sndEnd();
     hwEnableIrq();
