@@ -751,7 +751,7 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_8027A940.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/voice_alloc.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027B41C.c", mw_version="GC/1.2.5n"),
-            Object(NonMatching, "main/unknown/autos/placeholder_8027A3E0.c", mw_version="GC/1.2.5n"),
+            Object(NonMatching, "main/audio/voice_conv.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/render.c"),
             Object(NonMatching, "main/audio.c"),
             Object(NonMatching, "main/camera.c"),
