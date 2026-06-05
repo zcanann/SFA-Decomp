@@ -126,11 +126,10 @@ void SHthorntail_update(SHthorntailObject *obj)
   int iVar9;
   s8 *eventId;
   u8 *stateTables;
-  double dVar11;
-  double dVar12;
   f32 facingAngleRadians;
   f32 facingCos;
   f32 facingSin;
+  f32 leashDistance;
   ObjAnimEventList animEvents;
   SHthorntailTailSwingEffectScratch effectScratch;
   
@@ -148,8 +147,7 @@ void SHthorntail_update(SHthorntailObject *obj)
       }
       runtime->effectTimer = lbl_803E5450;
     }
-    dVar11 = (double)runtime->effectTimer;
-    runtime->effectTimer = (float)(dVar11 - (double)timeDelta);
+    runtime->effectTimer = runtime->effectTimer - timeDelta;
   }
   runtime->behaviorFlags = runtime->behaviorFlags & 0xf7;
   if ((SHTHORNTAIL_STATE_FLAGS(stateTables)[runtime->behaviorState] &
@@ -228,16 +226,10 @@ void SHthorntail_update(SHthorntailObject *obj)
       facingAngleRadians =
           (lbl_803E5454 * (f32)(s32)runtime->storedFacingAngle) / lbl_803E5458;
       facingSin = -sin(facingAngleRadians);
-      dVar11 = (double)facingCos;
-      dVar12 = (double)facingSin;
-      obj->modelPos.x =
-           (float)(dVar11 * -(double)animEvents.rootDeltaZ + (double)obj->modelPos.x);
-      obj->modelPos.z =
-           (float)(-dVar12 * -(double)animEvents.rootDeltaZ + (double)obj->modelPos.z);
-      obj->modelPos.x =
-           (float)(-dVar12 * -(double)animEvents.rootDeltaX + (double)obj->modelPos.x);
-      obj->modelPos.z =
-           (float)(dVar11 * (double)animEvents.rootDeltaX + (double)obj->modelPos.z);
+      obj->modelPos.x = facingCos * -animEvents.rootDeltaZ + obj->modelPos.x;
+      obj->modelPos.z = -facingSin * -animEvents.rootDeltaZ + obj->modelPos.z;
+      obj->modelPos.x = -facingSin * animEvents.rootDeltaX + obj->modelPos.x;
+      obj->modelPos.z = facingCos * animEvents.rootDeltaX + obj->modelPos.z;
       obj->facingAngle = obj->facingAngle + animEvents.rootPitch;
     }
     eventId = animEvents.triggeredIds;
@@ -280,8 +272,8 @@ void SHthorntail_update(SHthorntailObject *obj)
                 (*(undefined *)(runtime->impactSfxTable + uVar7),obj,0xffffffff);
     }
     if (config->leashRadiusByte != '\0') {
-      dVar11 = getXZDistance(&obj->pos.x,(float *)&config->homePos);
-      if ((dVar11 > (double)(f32)(s32)((uint)config->leashRadiusByte *
+      leashDistance = getXZDistance(&obj->pos.x,(float *)&config->homePos);
+      if ((leashDistance > (f32)(s32)((uint)config->leashRadiusByte *
                                       (uint)config->leashRadiusByte)) &&
          (iVar9 = ViewFrustum_IsSphereVisible(&obj->modelPos.x,
                                               obj->cullRadius * obj->modelScale),
