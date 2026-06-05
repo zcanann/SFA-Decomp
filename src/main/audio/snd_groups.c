@@ -75,7 +75,7 @@ extern u32 hwInitStream(void *samples);
 extern u32 dataInsertSDir(void *sdir, u32 addr);
 extern void hwSyncSampleMem(void);
 extern void dataInsertFX(u16 gid, void *fx, u16 num);
-extern u32 fn_8026C488(void *norm, void *drum, void *midiSetup, void *arrfile, void *para, u8 studio, u16 sgid);
+extern u32 seqStartPlay(void *norm, void *drum, void *midiSetup, void *arrfile, void *para, u8 studio, u16 sgid);
 extern void sndBegin(void);
 extern void sndEnd(void);
 
@@ -288,10 +288,10 @@ u32 seqPlaySong(u16 sgid, u16 sid, void *arrfile, void *para, u8 irq_call, u8 st
             while (midiSetup->songId != 0xFFFF) {
                 if (midiSetup->songId == sid) {
                     if (irq_call != 0) {
-                        seqId = fn_8026C488(norm, drum, midiSetup, arrfile, para, studio, sgid);
+                        seqId = seqStartPlay(norm, drum, midiSetup, arrfile, para, studio, sgid);
                     } else {
                         sndBegin();
-                        seqId = fn_8026C488(norm, drum, midiSetup, arrfile, para, studio, sgid);
+                        seqId = seqStartPlay(norm, drum, midiSetup, arrfile, para, studio, sgid);
                         sndEnd();
                     }
                     return seqId;
