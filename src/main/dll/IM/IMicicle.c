@@ -142,75 +142,98 @@ void cfforcefield_update(u8 *obj)
     int pad10;
     f32 waveScale;
   } ForceFieldEmitter;
+  typedef struct ForceFieldFlags {
+    u8 disabled : 1;
+    u8 rest : 7;
+  } ForceFieldFlags;
+  f32 *wavePtr;
+  int *stepPtr;
+  ForceFieldEmitter *emitter;
+  int angle;
   u8 *data;
   u8 *state;
   int style;
+  f32 val;
+  int isZero;
+  f32 kA4;
+  f32 kA8;
+  f32 kAC;
+  f32 kA0;
   f32 strength;
+  f32 kZero;
+  f32 z;
+  f32 mtx[3][4];
+  f32 world[6];
+  f32 local[3];
 
   data = *(u8 **)(obj + 0x4c);
   state = *(u8 **)(obj + 0xb8);
-  *(f32 *)(obj + 0x24) = lbl_803E4390;
-  *(f32 *)(obj + 0x28) = lbl_803E4390;
-  *(f32 *)(obj + 0x2c) = lbl_803E4390;
+  z = lbl_803E4390;
+  *(f32 *)(obj + 0x2c) = z;
+  *(f32 *)(obj + 0x28) = z;
+  *(f32 *)(obj + 0x24) = z;
 
-  if (GameBit_Get(*(s16 *)(data + 0x1e)) == 0) {
-    return;
-  }
+  if (GameBit_Get(*(s16 *)(data + 0x1e)) != 0) {
+    if (!((ForceFieldFlags *)state)->disabled) {
+      style = (s8)data[0x19] % 3;
+      val = *(f32 *)(state + 4);
+      isZero = (val != lbl_803E4390);
+      isZero = !isZero;
+      if (isZero) {
+        strength = lbl_803E4394;
+      } else {
+        strength = lbl_803E4398 * val;
+      }
 
-  if ((s8)state[0] < 0) {
-    state[0] = (u8)((state[0] & ~0x80) | (((u8)GameBit_Get(*(s16 *)(data + 0x20)) & 1) << 7));
-    return;
-  }
+      {
+        Obj_BuildWorldTransformMatrix(obj, (f32 *)mtx, 0);
+        *(s16 *)(obj + 4) = (s16)(lbl_803E439C * timeDelta + (f32)(s32)*(s16 *)(obj + 4));
 
-  style = (s8)data[0x19] % 3;
-  if (*(f32 *)(state + 4) == lbl_803E4390) {
-    strength = lbl_803E4394;
-  } else {
-    strength = lbl_803E4398 * *(f32 *)(state + 4);
-  }
+        angle = -0x7fff;
+        emitter = (ForceFieldEmitter *)((u8 *)lbl_80322ED8 + style * 0x18);
+        wavePtr = &emitter->waveScale;
+        stepPtr = &emitter->angleStep;
+        kA4 = lbl_803E43A4;
+        kA8 = lbl_803E43A8;
+        kAC = lbl_803E43AC;
+        kA0 = lbl_803E43A0;
+        kZero = lbl_803E4390;
+        for (; angle < 0x7fff; angle += *stepPtr) {
+          local[0] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
+                     kA0 * (strength * lbl_803DBE90) *
+                         sin(kA4 * (f32)(angle + (s32)(kA8 * *wavePtr)) / kAC);
+          local[1] = (f32)(int)randomGetRange(-lbl_803DBE94, lbl_803DBE94) +
+                     kA0 * (strength * lbl_803DBE90) *
+                         fn_80293E80(kA4 * (f32)(angle + (s32)(kA8 * *wavePtr)) / kAC);
+          local[2] = kZero;
+          PSMTXMultVecSR((f32 *)mtx, local, local);
+          world[3] = local[0] + *(f32 *)(obj + 0xc);
+          world[4] = local[1] + *(f32 *)(obj + 0x10);
+          world[5] = local[2] + *(f32 *)(obj + 0x14);
+          ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
+              obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
+          ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
+              obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
+          ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
+              obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
+        }
+      }
 
-  {
-    f32 mtx[3][4];
-    ForceFieldEmitter *emitter = (ForceFieldEmitter *)((u8 *)lbl_80322ED8 + style * 0x18);
-    int angle;
-    Obj_BuildWorldTransformMatrix(obj, (f32 *)mtx, 0);
-    *(s16 *)(obj + 4) = (s16)((f32)(s32)*(s16 *)(obj + 4) + lbl_803E439C * timeDelta);
-
-    for (angle = -0x7fff; angle < 0x7fff; angle += emitter->angleStep) {
-      f32 local[3];
-      f32 world[3];
-      int phaseOffset = (s32)(lbl_803E43A8 * emitter->waveScale);
-      f32 phase = (lbl_803E43A4 * (f32)(angle + phaseOffset)) / lbl_803E43AC;
-
-      local[0] = lbl_803E43A0 * (strength * lbl_803DBE90) * sin(phase) +
-                 (f32)randomGetRange(-lbl_803DBE94, lbl_803DBE94);
-      local[1] = lbl_803E43A0 * (strength * lbl_803DBE90) * fn_80293E80(phase) +
-                 (f32)randomGetRange(-lbl_803DBE94, lbl_803DBE94);
-      local[2] = lbl_803E4390;
-      PSMTXMultVecSR((f32 *)mtx, local, local);
-      world[0] = local[0] + *(f32 *)(obj + 0xc);
-      world[1] = local[1] + *(f32 *)(obj + 0x10);
-      world[2] = local[2] + *(f32 *)(obj + 0x14);
-      ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
-          obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
-      ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
-          obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
-      ((void (*)(u8 *, int, f32 *, int, int, f32 *))(*(int *)(*gPartfxInterface + 8)))(
-          obj, emitter->effectId, world, 0x200001, -1, (f32 *)(obj + 0x24));
-    }
-  }
-
-  if (fn_80080150(state + 4) != 0) {
-    *(s16 *)(obj + 2) = (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)*(s16 *)(obj + 2));
-    if (timerCountDown(state + 4) != 0) {
-      state[0] = (u8)(state[0] | 0x80);
-      *(s16 *)(obj + 2) = 0;
-    }
-  } else if (GameBit_Get(*(s16 *)(data + 0x20)) != 0) {
-    s16toFloat(state + 4, 0x3c);
-    Sfx_PlayFromObject((int)obj, 0x366);
-    if (*(int *)(*(int *)(obj + 0x4c) + 0x14) != 0x47f5e) {
-      Sfx_PlayFromObject((int)obj, 0x409);
+      if (fn_80080150(state + 4) != 0) {
+        *(s16 *)(obj + 2) = (s16)((f32)(s32)lbl_803DBE98 * timeDelta + (f32)(s32)*(s16 *)(obj + 2));
+        if (timerCountDown(state + 4) != 0) {
+          ((ForceFieldFlags *)state)->disabled = 1;
+          *(s16 *)(obj + 2) = 0;
+        }
+      } else if (GameBit_Get(*(s16 *)(data + 0x20)) != 0) {
+        s16toFloat(state + 4, 0x3c);
+        Sfx_PlayFromObject((int)obj, 0x366);
+        if (*(int *)(*(int *)(obj + 0x4c) + 0x14) != 0x47f5e) {
+          Sfx_PlayFromObject((int)obj, 0x409);
+        }
+      }
+    } else {
+      ((ForceFieldFlags *)state)->disabled = (u8)GameBit_Get(*(s16 *)(data + 0x20));
     }
   }
 }
@@ -1381,33 +1404,40 @@ extern int *gMapEventInterface;
 #pragma peephole off
 #pragma scheduling off
 void cflevelcontrol_init(u8* obj, u8* params) {
+    typedef struct LevelControlFlags {
+        u8 b7 : 1;
+        u8 b6 : 1;
+        u8 b5 : 1;
+        u8 b4 : 1;
+        u8 b3 : 1;
+        u8 rest : 3;
+    } LevelControlFlags;
     u8* sub;
-    int i;
     s16* p;
+    int i;
 
     sub = *(u8**)(obj + 0xb8);
     *(int*)(sub + 8) = 0;
-    sub[0xd] = (u8)-1;
+    *(s8*)(sub + 0xd) = -1;
     storeZeroToFloatParam(sub);
     s16toFloat(sub, 0x1e0);
-    sub[0xc] = (u8)(sub[0xc] & ~0x40);
+    ((LevelControlFlags *)(sub + 0xc))->b6 = 0;
     *(void**)(obj + 0xbc) = (void*)&CFLevelControl_SeqFn;
-    GameBit_Set(0x983, *(int*)(*(int*)(obj + 0x4c) + 0x14) != 0x2cef ? 1 : 0);
+    GameBit_Set(0x983, *(int*)(*(int*)(obj + 0x4c) + 0x14) != 0x2cef);
     if (GameBit_Get(0x2fe) == 0) {
-        p = lbl_80323008;
-        for (i = 0; i < 0x17; i++) {
+        for (i = 0, p = lbl_80323008; i < 0x17; i++) {
             GameBit_Set(*p, 0);
             p++;
         }
     }
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 4, 0);
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 0x11, 0);
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 0x15, 0);
-    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent((s8)obj[0xac], 0x16, 0);
-    sub[0xc] = (u8)((sub[0xc] & ~0x20) | (((u8)GameBit_Get(0x974) & 1) << 5));
-    sub[0xc] = (u8)((sub[0xc] & ~0x10) | (((u8)GameBit_Get(0x975) & 1) << 4));
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 4, 0);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x11, 0);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x15, 0);
+    ((MapEventInterface *)*gMapEventInterface)->setAnimEvent(*(s8*)(obj + 0xac), 0x16, 0);
+    ((LevelControlFlags *)(sub + 0xc))->b5 = (u8)GameBit_Get(0x974);
+    ((LevelControlFlags *)(sub + 0xc))->b4 = (u8)GameBit_Get(0x975);
     objSetSlot(obj, 0x51);
-    sub[0xc] = (u8)(sub[0xc] | 0x08);
+    ((LevelControlFlags *)(sub + 0xc))->b3 = 1;
 }
 #pragma scheduling reset
 #pragma peephole reset
@@ -1736,6 +1766,10 @@ extern uint GameBit_Get(int eventId);
  * while in the static states (0/1) and 0 while in transition (2/3). */
 #pragma scheduling off
 int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
+    typedef struct DoorFlags {
+        u8 mode : 3;
+        u8 rest : 5;
+    } DoorFlags;
     register int playerNear;
     register int trickyNear;
     register u8* state;
@@ -1770,7 +1804,7 @@ int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
              GameBit_Get(*(s16*)(params + 0x22)) != 0)) {
             GameBit_Set(*(s16*)(params + 0x1a), 1);
             if (playerNear != 0 || trickyNear != 0) {
-                state[0] = (u8)((state[0] & ~0xe0) | (2 << 5));
+                ((DoorFlags*)state)->mode = 2;
             }
         }
     } else if (mode == 1) {
@@ -1778,19 +1812,19 @@ int slidingdoor_SeqFn(u8* obj, int unused, u8* data) {
              (*(s16*)(params + 0x22) != -1 &&
               GameBit_Get(*(s16*)(params + 0x22)) != 0)) &&
             playerNear == 0 && trickyNear == 0) {
-            state[0] = (u8)((state[0] & ~0xe0) | (3 << 5));
+            ((DoorFlags*)state)->mode = 3;
         }
     }
 
     {
-        register int cur = state[0];
-        if (((cur >> 5) & 7) == 2) {
+        register DoorFlags *fl = (DoorFlags*)state;
+        if (fl->mode == 2) {
             if (data[0x80] == 2) {
-                state[0] = (u8)((cur & ~0xe0) | (1 << 5));
+                fl->mode = 1;
             }
-        } else if (((cur >> 5) & 7) == 3) {
+        } else if (fl->mode == 3) {
             if (data[0x80] == 1) {
-                state[0] = (u8)(cur & ~0xe0);
+                fl->mode = 0;
             }
         }
     }
@@ -1952,16 +1986,17 @@ extern void storeZeroToFloatParam(void *p);
 #pragma scheduling off
 #pragma peephole off
 void cfforcefield_init(s16 *obj, void *data) {
+    typedef struct ForceFieldInitFlags {
+        u8 disabled : 1;
+        u8 rest : 7;
+    } ForceFieldInitFlags;
     register u8 *flagPtr = (u8*)((int**)obj)[0xb8/4];
     {
         s8 v = *((s8*)data + 0x18);
         s16 t = v << 8;
         *obj = t;
     }
-    {
-        u32 bitval = (u32)GameBit_Get(*(s16*)((char*)data + 0x20)) & 1;
-        flagPtr[0] = (u8)((flagPtr[0] & ~0x80) | (bitval << 7));
-    }
+    ((ForceFieldInitFlags *)flagPtr)->disabled = (u8)GameBit_Get(*(s16*)((char*)data + 0x20));
     storeZeroToFloatParam(flagPtr + 4);
 }
 #pragma peephole reset
@@ -1981,130 +2016,7 @@ extern f32 lbl_803E441C;
 extern f32 lbl_803E4420;
 extern f32 lbl_803E4424;
 
-/* Exploded debris setup: seed object angles, linear velocity, angular velocity,
- * ground clearance, and the randomized lifetime countdown. */
-#pragma scheduling off
-#pragma peephole off
-void exploded_seedDebrisMotion(ExplodedObject *obj, ExplodedObjectState *state, ExplodedObjectMapData *data)
-{
-  f32 floorY[2];
-
-  floorY[0] = lbl_803E43F0;
-  obj->angleX = data->initialAngleX;
-  obj->angleY = data->initialAngleY;
-  obj->angleZ = data->initialAngleZ;
-
-  obj->velocityX = (f32)(s32)data->initialVelocityX / lbl_803E4400;
-  obj->velocityY = (f32)(s32)data->initialVelocityY / lbl_803E4400;
-  obj->velocityZ = (f32)(s32)data->initialVelocityZ / lbl_803E4400;
-  state->spinX = (f32)(s32)data->spinX;
-  state->spinY = (f32)(s32)data->spinY;
-  state->spinZ = (f32)(s32)data->spinZ;
-
-  if (data->floorOffset == 0) {
-    fn_80065684((double)obj->x, (double)(obj->y - lbl_803E4404), (double)obj->z, obj, floorY, 0);
-    state->floorHeight = obj->y - floorY[0];
-  }
-  else {
-    state->floorHeight = obj->y + (f32)(s32)data->floorOffset;
-  }
-
-  state->spinVelocityX = (f32)(s32)data->spinVelocityX / lbl_803E4404;
-  state->spinVelocityY = (f32)(s32)data->spinVelocityY / lbl_803E4404;
-  state->spinVelocityZ = (f32)(s32)data->spinVelocityZ / lbl_803E4404;
-  state->accelerationX = (f32)(s32)data->accelerationX / lbl_803E4408;
-  state->accelerationY = (f32)(s32)data->accelerationY / lbl_803E4408;
-  state->accelerationZ = (f32)(s32)data->accelerationZ / lbl_803E4408;
-
-  state->elapsedFrames = 0;
-  if (data->lifetimeFrames == 0) {
-    state->durationFrames = -1;
-  }
-  else {
-    int lifetime = (u16)data->lifetimeFrames * ((int)randomGetRange(0, 100) + 100);
-    lifetime = lifetime / 200 + (lifetime >> 31);
-    state->durationFrames = lifetime - (lifetime >> 31);
-  }
-}
-#pragma peephole reset
-#pragma scheduling reset
-
-/* Exploded debris physics step: integrate local velocity and spin, bounce from
- * the stored floor height, and return nonzero once the shard comes to rest. */
-#pragma scheduling off
-#pragma peephole off
-int exploded_stepDebrisPhysics(ExplodedObject *obj, ExplodedObjectState *state)
-{
-  int stopped;
-  f32 speed;
-  f32 worldBefore[3];
-  f32 worldAfter[3];
-
-  stopped = 0;
-  Obj_TransformLocalPointByWorldMatrix(obj, state, worldBefore, 0);
-  obj->velocityX = timeDelta * state->accelerationX + obj->velocityX;
-  obj->velocityY = timeDelta * state->accelerationY + obj->velocityY;
-  obj->velocityZ = timeDelta * state->accelerationZ + obj->velocityZ;
-  state->spinX = timeDelta * state->spinVelocityX + state->spinX;
-  state->spinY = timeDelta * state->spinVelocityY + state->spinY;
-  state->spinZ = timeDelta * state->spinVelocityZ + state->spinZ;
-
-  if (state->floorHeight <= worldBefore[1]) {
-    state->physicsFlags &= ~0x04;
-  }
-  else {
-    if (((obj->velocityY < lbl_803E43F0) && ((state->physicsFlags & 4) != 0)) ||
-        (lbl_803E43F0 == obj->velocityY)) {
-      state->accelerationY = lbl_803E43F0;
-      state->spinVelocityZ = lbl_803E43F0;
-      state->spinZ = lbl_803E43F0;
-      state->spinVelocityY = lbl_803E43F0;
-      state->spinY = lbl_803E43F0;
-      state->spinVelocityX = lbl_803E43F0;
-      state->spinX = lbl_803E43F0;
-      obj->velocityY = lbl_803E43F0;
-      state->accelerationX = state->accelerationX * lbl_803E4418;
-      obj->velocityX = obj->velocityX * lbl_803E4418;
-      state->accelerationZ = state->accelerationZ * lbl_803E4418;
-      obj->velocityZ = obj->velocityZ * lbl_803E4418;
-      speed = obj->velocityX;
-      if (speed < lbl_803E43F0) {
-        speed = -speed;
-      }
-      if (speed < lbl_803E441C) {
-        speed = obj->velocityZ;
-        if (speed < lbl_803E43F0) {
-          speed = -speed;
-        }
-        if (speed < lbl_803E441C) {
-          stopped = 1;
-        }
-      }
-    }
-    if (obj->velocityY < lbl_803E43F0) {
-      obj->velocityY = lbl_803E4420 * -obj->velocityY;
-      obj->velocityX = obj->velocityX * lbl_803E4418;
-      obj->velocityZ = obj->velocityZ * lbl_803E4418;
-      state->accelerationY = lbl_803E4424;
-      state->spinVelocityZ = -state->spinVelocityZ;
-    }
-    state->physicsFlags |= 4;
-  }
-
-  obj->angleX = (s16)(s32)(state->spinX * timeDelta + (f32)(s32)obj->angleX);
-  obj->angleY = (s16)(s32)(state->spinY * timeDelta + (f32)(s32)obj->angleY);
-  obj->angleZ = (s16)(s32)(state->spinZ * timeDelta + (f32)(s32)obj->angleZ);
-  Obj_TransformLocalPointByWorldMatrix(obj, state, worldAfter, 0);
-  obj->x += worldBefore[0] - worldAfter[0];
-  obj->y += worldBefore[1] - worldAfter[1];
-  obj->z += worldBefore[2] - worldAfter[2];
-  obj->x = obj->velocityX * timeDelta + obj->x;
-  obj->y = obj->velocityY * timeDelta + obj->y;
-  obj->z = obj->velocityZ * timeDelta + obj->z;
-  return stopped;
-}
-#pragma peephole reset
-#pragma scheduling reset
+void exploded_seedDebrisMotion(ExplodedObject *obj, ExplodedObjectState *state, ExplodedObjectMapData *data);
 
 #pragma scheduling off
 #pragma peephole off
@@ -2120,29 +2032,31 @@ void fn_801A4DB8(int p1, int p2, int flag, int p3)
   *(f32 *)(p1 + 0x14) = *(f32 *)(p2 + 0x10);
 
   if (flag == 0) {
-    int *mesh;
-    f32 sum[3];
-    f32 pos[3];
-    int i;
+    register int *mesh;
+    register int i;
+    f32 v[6];
+    f32 z;
+    f32 k;
 
-    *(f32 *)(p3 + 0) = lbl_803E43F0;
-    *(f32 *)(p3 + 4) = lbl_803E43F0;
-    *(f32 *)(p3 + 8) = lbl_803E43F0;
-    sum[0] = lbl_803E43F0;
-    sum[1] = lbl_803E43F0;
-    sum[2] = lbl_803E43F0;
+    z = lbl_803E43F0;
+    *(f32 *)(p3 + 0) = z;
+    *(f32 *)(p3 + 4) = z;
+    *(f32 *)(p3 + 8) = z;
+    v[3] = z;
+    v[4] = z;
+    v[5] = z;
 
     mesh = *(int **)(*(int *)(*(int *)(p1 + 0x7c) + (u32)*(u8 *)(p2 + 0x18) * 4));
     for (i = 0; i < *(u16 *)((char *)mesh + 0xe4); i++) {
-      Model_GetVertexPosition((int)mesh, i, pos);
-      sum[0] = pos[0] + sum[0];
-      sum[1] = pos[1] + sum[1];
-      sum[2] = pos[2] + sum[2];
+      Model_GetVertexPosition((int)mesh, i, v);
+      v[3] = v[0] + v[3];
+      v[4] = v[1] + v[4];
+      v[5] = v[2] + v[5];
     }
 
-    *(f32 *)(p3 + 0) = sum[0] * (lbl_803E43F4 / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
-    *(f32 *)(p3 + 4) = sum[1] * (lbl_803E43F4 / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
-    *(f32 *)(p3 + 8) = sum[2] * (lbl_803E43F4 / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+    *(f32 *)(p3 + 0) = v[3] * ((k = lbl_803E43F4) / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+    *(f32 *)(p3 + 4) = v[4] * (k / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+    *(f32 *)(p3 + 8) = v[5] * (k / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
   }
 
   *(f32 *)(p3 + 0xc) = *(f32 *)(p3 + 0);
@@ -2164,6 +2078,139 @@ void fn_801A4DB8(int p1, int p2, int flag, int p3)
 
   *(u8 *)(p3 + 0x67) = 255;
   *(u8 *)(p3 + 0x66) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+
+
+/* Exploded debris setup: seed object angles, linear velocity, angular velocity,
+ * ground clearance, and the randomized lifetime countdown. */
+#pragma scheduling off
+#pragma peephole off
+void exploded_seedDebrisMotion(ExplodedObject *obj, ExplodedObjectState *state, ExplodedObjectMapData *data)
+{
+  f32 floorY[2];
+  f32 d1;
+
+  floorY[0] = lbl_803E43F0;
+  obj->angleX = data->initialAngleX;
+  obj->angleY = data->initialAngleY;
+  obj->angleZ = data->initialAngleZ;
+
+  obj->velocityX = (f32)(s32)data->initialVelocityX / (d1 = lbl_803E4400);
+  obj->velocityY = (f32)(s32)data->initialVelocityY / d1;
+  obj->velocityZ = (f32)(s32)data->initialVelocityZ / d1;
+  state->spinX = (f32)(s32)data->spinX;
+  state->spinY = (f32)(s32)data->spinY;
+  state->spinZ = (f32)(s32)data->spinZ;
+
+  {
+    u16 off = *(u16*)&data->floorOffset;
+    if (off == 0) {
+      fn_80065684((double)obj->x, (double)(obj->y - lbl_803E4404), (double)obj->z, obj, floorY, 0);
+      state->floorHeight = obj->y - floorY[0];
+    }
+    else {
+      state->floorHeight = obj->y + (f32)(s16)off;
+    }
+  }
+
+  state->spinVelocityX = (f32)(s32)data->spinVelocityX / (d1 = lbl_803E4404);
+  state->spinVelocityY = (f32)(s32)data->spinVelocityY / d1;
+  state->spinVelocityZ = (f32)(s32)data->spinVelocityZ / d1;
+  state->accelerationX = (f32)(s32)data->accelerationX / (d1 = lbl_803E4408);
+  state->accelerationY = (f32)(s32)data->accelerationY / d1;
+  state->accelerationZ = (f32)(s32)data->accelerationZ / d1;
+
+  state->elapsedFrames = 0;
+  if (*(u16*)&data->lifetimeFrames != 0) {
+    state->durationFrames = *(u16*)&data->lifetimeFrames * ((int)randomGetRange(0, 100) + 100) / 200;
+  }
+  else {
+    state->durationFrames = -1;
+  }
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+/* Exploded debris physics step: integrate local velocity and spin, bounce from
+ * the stored floor height, and return nonzero once the shard comes to rest. */
+#pragma scheduling off
+#pragma peephole off
+int exploded_stepDebrisPhysics(ExplodedObject *obj, ExplodedObjectState *state)
+{
+  f32 stopped;
+  f32 speed;
+  f32 worldAfter[3];
+  f32 worldBefore[3];
+
+  stopped = lbl_803E43F0;
+  Obj_TransformLocalPointByWorldMatrix(obj, state, worldBefore, 0);
+  obj->velocityX = timeDelta * state->accelerationX + obj->velocityX;
+  obj->velocityY = timeDelta * state->accelerationY + obj->velocityY;
+  obj->velocityZ = timeDelta * state->accelerationZ + obj->velocityZ;
+  state->spinX = timeDelta * state->spinVelocityX + state->spinX;
+  state->spinY = timeDelta * state->spinVelocityY + state->spinY;
+  state->spinZ = timeDelta * state->spinVelocityZ + state->spinZ;
+
+  if (worldBefore[1] < state->floorHeight) {
+    if (((obj->velocityY < lbl_803E43F0) && ((state->physicsFlags & 4) != 0)) ||
+        (lbl_803E43F0 == obj->velocityY)) {
+      f32 t;
+      f32 k;
+      t = lbl_803E43F0;
+      state->accelerationY = t;
+      state->spinVelocityZ = t;
+      state->spinZ = t;
+      state->spinVelocityY = t;
+      state->spinY = t;
+      state->spinVelocityX = t;
+      state->spinX = t;
+      obj->velocityY = t;
+      k = lbl_803E4418;
+      state->accelerationX = state->accelerationX * k;
+      obj->velocityX = obj->velocityX * k;
+      state->accelerationZ = state->accelerationZ * k;
+      obj->velocityZ = obj->velocityZ * k;
+      speed = obj->velocityX;
+      speed = (speed >= t) ? speed : -speed;
+      if (speed < lbl_803E441C) {
+        speed = obj->velocityZ;
+        speed = (speed >= lbl_803E43F0) ? speed : -speed;
+        if (speed < lbl_803E441C) {
+          stopped = lbl_803E43F4;
+        }
+      }
+    }
+    if (obj->velocityY < lbl_803E43F0) {
+      f32 k2;
+      obj->velocityY = lbl_803E4420 * -obj->velocityY;
+      k2 = lbl_803E4418;
+      obj->velocityX = obj->velocityX * k2;
+      obj->velocityZ = obj->velocityZ * k2;
+      state->accelerationY = lbl_803E4424;
+      state->spinVelocityZ = -state->spinVelocityZ;
+    }
+    state->physicsFlags |= 4;
+  } else {
+    state->physicsFlags &= ~4;
+  }
+
+  obj->angleX = (s32)(state->spinX * timeDelta + (f32)(s32)obj->angleX);
+  obj->angleY = (s32)(state->spinY * timeDelta + (f32)(s32)obj->angleY);
+  obj->angleZ = (s32)(state->spinZ * timeDelta + (f32)(s32)obj->angleZ);
+  Obj_TransformLocalPointByWorldMatrix(obj, state, worldAfter, 0);
+  worldAfter[0] = worldBefore[0] - worldAfter[0];
+  worldAfter[1] = worldBefore[1] - worldAfter[1];
+  worldAfter[2] = worldBefore[2] - worldAfter[2];
+  obj->x = obj->x + worldAfter[0];
+  obj->y = obj->y + worldAfter[1];
+  obj->z = obj->z + worldAfter[2];
+  obj->x = obj->velocityX * timeDelta + obj->x;
+  obj->y = obj->velocityY * timeDelta + obj->y;
+  obj->z = obj->velocityZ * timeDelta + obj->z;
+  return (s32)stopped;
 }
 #pragma peephole reset
 #pragma scheduling reset
