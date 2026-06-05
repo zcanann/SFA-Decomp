@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sal_dsp.h"
+#include "main/audio/hw_dspctrl.h"
 #include "dolphin/os.h"
 #include "dolphin/dsp.h"
 
@@ -12,7 +13,6 @@ extern u32 dspCmdList;
 extern u32 salDspCallbackEnabled;
 extern volatile u32 salDspInitIsDone;
 extern u32 salGetStartDelay(void);
-extern void salBuildCommandList(s16 *dest, u32 nsDelay);
 extern DSPTaskInfo lbl_803D4880;
 extern u16 lbl_80330840[];
 extern u16 lbl_803DC628[4];
