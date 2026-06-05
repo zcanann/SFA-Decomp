@@ -1,4 +1,5 @@
 #include "main/dll/WM/wm_shared.h"
+#include "main/objanim.h"
 
 int wmwallcrawler_getExtraSize(void) { return 0x29c; }
 
@@ -10,8 +11,6 @@ void wmwallcrawler_initialise(void) {}
 
 
 extern int getTrickyObject(void);
-extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
-extern int ObjAnim_AdvanceCurrentMove(int obj, f32 v, f32 t, int n);
 extern void objRemoveFromListFn_8002ce88(int obj);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern int fn_80080150(void *timer);
@@ -95,7 +94,7 @@ void wmwallcrawler_update(s16 *obj)
             if (lbl_803E5FC4 < *(f32 *)(obj + 0x4c)) {
                 *(f32 *)(obj + 4) = *(f32 *)(obj + 4) * lbl_803E5FC8;
             }
-            if (ObjAnim_AdvanceCurrentMove((int)obj, lbl_803E5FCC, (f32)framesThisStep, 0) != 0) {
+            if (ObjAnim_AdvanceCurrentMove(lbl_803E5FCC, (f32)framesThisStep, (int)obj, NULL) != 0) {
                 if (*(s16 *)(st + 0x292) != 0 && *(s16 *)(st + 0x292) != -1) {
                     GameBit_Set(*(s16 *)(st + 0x292), GameBit_Get(*(s16 *)(st + 0x292)) + 1);
                 }
@@ -194,7 +193,8 @@ void wmwallcrawler_update(s16 *obj)
                             speed = sqrtf(sq);
                         }
                         *(f32 *)(st + 0x284) = lbl_803E5FDC * speed;
-                        ObjAnim_AdvanceCurrentMove((int)obj, *(f32 *)(st + 0x284), (f32)framesThisStep, 0);
+                        ObjAnim_AdvanceCurrentMove(*(f32 *)(st + 0x284), (f32)framesThisStep,
+                                                   (int)obj, NULL);
                         *(f32 *)(obj + 6) = *(f32 *)(obj + 0x12) * timeDelta + *(f32 *)(obj + 6);
                         *(f32 *)(obj + 10) = *(f32 *)(obj + 0x16) * timeDelta + *(f32 *)(obj + 10);
                         *(u16 *)(st + 0x290) -= framesThisStep;
@@ -358,7 +358,8 @@ void wmwallcrawler_update(s16 *obj)
                                     *(f32 *)(st + 0x284) = lbl_803E5FCC;
                                     break;
                                 }
-                                if (ObjAnim_AdvanceCurrentMove((int)obj, *(f32 *)(st + 0x284), (f32)framesThisStep, 0) != 0 && obj[0x50] != 0) {
+                                if (ObjAnim_AdvanceCurrentMove(*(f32 *)(st + 0x284), (f32)framesThisStep,
+                                                               (int)obj, NULL) != 0 && obj[0x50] != 0) {
                                     ObjAnim_SetCurrentMove((int)obj, 0, lbl_803E5FB0, 0);
                                 }
                                 *(f32 *)(obj + 6) = *(f32 *)(obj + 0x12) * timeDelta + *(f32 *)(obj + 6);
