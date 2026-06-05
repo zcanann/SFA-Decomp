@@ -3221,12 +3221,14 @@ void drawViewFinderHud(void) {
         gameTextShowStr(buf, 0x93, 0x21c, 0x46);
 
         {
-            f32 f27;
             f32 kF30, kEC8, kF34, kEC4, kE94;
             f64 kF38;
             f32 kE68;
             f64 kF40;
-            f32 kOpac, kF48, kF4C;
+            f64 kOpac;
+            f32 kF48;
+            f64 kF4C;
+            f32 f27;
             f27 = lbl_803E1E3C;
             kF30 = lbl_803E1F30;
             kEC8 = lbl_803E1EC8;
@@ -3307,13 +3309,14 @@ void drawViewFinderHud(void) {
         {
             u8 r30v, r29v;
             int r5v, r28v;
+            int t;
             f32 f18, f19, num;
-            r30v = ((int)((xc - lbl_803E1F50) * lbl_803E1F58) < 0) ? 0
-                 : (((int)((xc - lbl_803E1F50) * lbl_803E1F58) > 0x8c) ? 0x8c : (int)((xc - lbl_803E1F50) * lbl_803E1F58));
-            r29v = ((int)((xc - lbl_803E1F60) * lbl_803E1F68) < 0) ? 0
-                 : (((int)((xc - lbl_803E1F60) * lbl_803E1F68) > 0xc8) ? 0xc8 : (int)((xc - lbl_803E1F60) * lbl_803E1F68));
-            r5v = (int)((f32)(u16)lbl_803DD7EC / lbl_803E1F70);
-            num = (f32)(u16)lbl_803DD7EC - (f32)r5v * lbl_803E1F70;
+            t = (int)((xc - lbl_803E1F50) * lbl_803E1F58);
+            r30v = (t < 0) ? 0 : ((t > 0x8c) ? 0x8c : t);
+            t = (int)((xc - lbl_803E1F60) * lbl_803E1F68);
+            r29v = (t < 0) ? 0 : ((t > 0xc8) ? 0xc8 : t);
+            r5v = (int)((f32)lbl_803DD7EC / lbl_803E1F70);
+            num = (f32)lbl_803DD7EC - (f32)r5v * lbl_803E1F70;
             f19 = xc * (lbl_803E1F70 / (f32)lbl_803DBAE8);
             f18 = (f32)(lbl_803E1F78 + (num / (f32)lbl_803DBAE8) * xc);
             r28v = -r5v;
