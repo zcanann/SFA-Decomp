@@ -1082,7 +1082,7 @@ void fn_8010A104(int *p1, int *p2, f32 x, f32 y, f32 z, int tag)
   do {
     done = 1;
     curve = (*(int (**)(int))(*(int *)gRomCurveInterface + 0x1c))(*p1);
-    pathcam_findTaggedNodeWindow(curve, window, tag);
+    pathcam_findTaggedNodeWindow((u8 *)curve, window, tag);
     dist = fn_8010AC48(window, x, y, z);
     if (dist < lbl_803E1888) {
       if (window[0] > -1) {
