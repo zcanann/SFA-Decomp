@@ -116,12 +116,24 @@ void lightning_render(u8* obj)
     }
 }
 
-extern int fn_8008FB20(double radiusX,double radiusY,float *start,float *end,int param_5,
-                       int param_6,int param_7);
-extern void hitDetectFn_80097070(double radius,u8 *obj,int param_3,int param_4,int param_5,
+extern int fn_8008FB20(float *start,float *end,double radiusX,double radiusY,int delay,
+                       int param_6,u8 param_7);
+extern void hitDetectFn_80097070(u8 *obj,double radius,int param_3,int param_4,int param_5,
                                  int param_6);
-extern void objfx_spawnDirectionalBurst(double radius,double scale,u8 *obj,int param_4,int param_5,
-                           int param_6,int param_7,int param_8,int param_9);
+extern void objfx_spawnDirectionalBurst(u8 *obj,int param_2,double radius,int param_4,int param_5,
+                           int param_6,double scale,int param_8,int param_9);
+
+typedef struct LightningFlags {
+    u8 enabled : 1; /* 0x80 */
+    u8 noAge : 1;   /* 0x40 */
+    u8 style : 1;   /* 0x20 */
+    u8 pad : 5;
+} LightningFlags;
+
+typedef struct LightningMode {
+    u8 pad : 4;
+    u8 mode : 4; /* 0x0f */
+} LightningMode;
 
 #pragma scheduling off
 #pragma peephole off
@@ -134,15 +146,14 @@ void lightning_update(u8 *obj)
     int objectCount;
     int objectIndex;
     int spawnLightning;
-    s16 delayJitter;
     int handle;
 
     state = *(u8 **)(obj + 0xb8);
     data = *(u8 **)(obj + 0x4c);
     if (*(s16 *)(data + 0x24) != -1) {
-        if ((state[0x25] & 0x80) != 0) {
+        if (((LightningFlags *)(state + 0x25))->enabled) {
             if (GameBit_Get(*(s16 *)(data + 0x24)) == 0) {
-                state[0x25] = state[0x25] & ~0x80;
+                ((LightningFlags *)(state + 0x25))->enabled = 0;
                 if (*(u32 *)state != 0) {
                     mm_free(*(void **)state);
                     *(u32 *)state = 0;
@@ -150,11 +161,11 @@ void lightning_update(u8 *obj)
             }
         }
         else if (GameBit_Get(*(s16 *)(data + 0x24)) != 0) {
-            state[0x25] = (state[0x25] & ~0x80) | 0x80;
+            ((LightningFlags *)(state + 0x25))->enabled = 1;
         }
     }
 
-    if (*(u32 *)state == 0 && (state[0x25] & 0x80) != 0) {
+    if (*(u32 *)state == 0 && ((LightningFlags *)(state + 0x25))->enabled) {
         spawnLightning = 0;
         *(f32 *)(state + 0x18) -= timeDelta;
         if (*(f32 *)(state + 0x18) <= lbl_803E4088) {
@@ -172,41 +183,40 @@ void lightning_update(u8 *obj)
                 objectIndex++;
             }
             if (objectIndex == objectCount) {
-                state[0x25] = state[0x25] & ~0x80;
+                ((LightningFlags *)(state + 0x25))->enabled = 0;
                 return;
             }
 
-            delayJitter = (s16)randomGetRange(-5,5);
-            handle = fn_8008FB20(*(f32 *)(state + 0x08),*(f32 *)(state + 0x0c),
-                                 (float *)(obj + 0x0c),(float *)(objects[objectIndex] + 0x0c),
-                                 (u16)state[0x1c] + delayJitter,state[0x1d],
-                                 (state[0x25] >> 5) & 1);
+            handle = fn_8008FB20((float *)(obj + 0x0c),(float *)(objects[objectIndex] + 0x0c),
+                                 *(f32 *)(state + 0x08),*(f32 *)(state + 0x0c),
+                                 (u16)(state[0x1c] + randomGetRange(-5,5)),state[0x1d],
+                                 ((LightningFlags *)(state + 0x25))->style ? 1 : 0);
             *(int *)state = handle;
             *(f32 *)(state + 0x04) = lbl_803E4088;
-            if ((state[0x24] & 1) != 0) {
-                hitDetectFn_80097070(*(f32 *)(state + 0x10),obj,1,7,0x1e,0);
+            if ((((LightningMode *)(state + 0x24))->mode & 1) != 0) {
+                hitDetectFn_80097070(obj,*(f32 *)(state + 0x10),1,7,0x1e,0);
             }
             otherState = *(u8 **)(objects[objectIndex] + 0xb8);
-            if ((otherState[0x24] & 1) != 0) {
-                hitDetectFn_80097070(*(f32 *)(otherState + 0x10),(u8 *)objects[objectIndex],1,7,
+            if ((((LightningMode *)(otherState + 0x24))->mode & 1) != 0) {
+                hitDetectFn_80097070((u8 *)objects[objectIndex],*(f32 *)(otherState + 0x10),1,7,
                                      0x1e,0);
             }
-            if ((state[0x24] & 2) != 0) {
-                objfx_spawnDirectionalBurst(*(f32 *)(state + 0x14),lbl_803E408C,obj,5,1,1,100,0,0);
+            if ((((LightningMode *)(state + 0x24))->mode & 2) != 0) {
+                objfx_spawnDirectionalBurst(obj,5,*(f32 *)(state + 0x14),1,1,100,lbl_803E408C,0,0);
             }
-            if ((otherState[0x24] & 2) != 0) {
-                objfx_spawnDirectionalBurst(*(f32 *)(otherState + 0x14),lbl_803E408C,
-                               (u8 *)objects[objectIndex],5,1,1,100,0,0);
+            if ((((LightningMode *)(otherState + 0x24))->mode & 2) != 0) {
+                objfx_spawnDirectionalBurst((u8 *)objects[objectIndex],5,*(f32 *)(otherState + 0x14),
+                               1,1,100,lbl_803E408C,0,0);
             }
         }
     }
 
     if (*(u32 *)state != 0) {
-        if (((state[0x25] >> 6) & 1) == 0) {
+        if (((LightningFlags *)(state + 0x25))->noAge == 0) {
             *(f32 *)(state + 0x04) += timeDelta;
-            *(s16 *)(*(u32 *)state + 0x20) = (s16)(int)(lbl_803E4090 + *(f32 *)(state + 0x04));
+            *(u16 *)(*(u32 *)state + 0x20) = (u16)(int)(lbl_803E4090 + *(f32 *)(state + 0x04));
         }
-        if (*(u16 *)(*(u32 *)state + 0x22) <= *(u16 *)(*(u32 *)state + 0x20)) {
+        if (*(u16 *)(*(u32 *)state + 0x20) >= *(u16 *)(*(u32 *)state + 0x22)) {
             mm_free(*(void **)state);
             *(u32 *)state = 0;
         }
@@ -220,12 +230,11 @@ void lightning_update(u8 *obj)
 void lightning_init(u8 *obj, u8 *data)
 {
     u8 *state;
-    u8 flags;
     f32 defaultScale;
 
     state = *(u8 **)(obj + 0xb8);
     ObjGroup_AddObject(obj, MMP_LIGHTNING_OBJGROUP);
-    state[0x24] = (state[0x24] & 0xf0) | (data[0x21] & 0x0f);
+    ((LightningMode *)(state + 0x24))->mode = data[0x21];
     defaultScale = lbl_803E40A0;
     *(f32 *)(state + 0x10) = defaultScale;
     *(f32 *)(state + 0x14) = defaultScale;
@@ -235,32 +244,9 @@ void lightning_init(u8 *obj, u8 *data)
     state[0x1d] = data[0x1f];
     *(u32 *)(state + 0x20) = *(u32 *)(data + 0x18);
 
-    flags = state[0x25];
-    if ((data[0x20] & 1) != 0) {
-        flags |= 0x80;
-    }
-    else {
-        flags &= 0x7f;
-    }
-    state[0x25] = flags;
-
-    flags = state[0x25];
-    if ((data[0x20] & 2) != 0) {
-        flags |= 0x20;
-    }
-    else {
-        flags &= 0xdf;
-    }
-    state[0x25] = flags;
-
-    flags = state[0x25];
-    if ((data[0x20] & 4) != 0) {
-        flags |= 0x40;
-    }
-    else {
-        flags &= 0xbf;
-    }
-    state[0x25] = flags;
+    ((LightningFlags *)(state + 0x25))->enabled = (data[0x20] & 1) ? 1 : 0;
+    ((LightningFlags *)(state + 0x25))->style = (data[0x20] & 2) ? 1 : 0;
+    ((LightningFlags *)(state + 0x25))->noAge = (data[0x20] & 4) ? 1 : 0;
 
     *(f32 *)(state + 0x18) = (f32)(s32)((u32)data[0x22] * 0x3c);
 }
@@ -413,7 +399,7 @@ void sfxplayerObj_init(u8* obj, u8* data) {
         break;
     case SFXPLAYER_MODE_RANDOM_DELAY: {
         int v = randomGetRange(data[0x1e], data[0x1f]);
-        *(f32*)sub = lbl_803E40BC * (f32)v;
+        *(f32*)sub = (f32)v * lbl_803E40BC;
         break;
     }
     }
@@ -461,8 +447,8 @@ void sfxplayerObj_free(u8* obj)
     do { \
         soundId = (sfxExpr); \
         if (soundId != 0) { \
-            state[4] = state[4] | SFXPLAYER_RUNTIME_ACTIVE_FLAG; \
             soundObj = obj; \
+            state[4] = state[4] | SFXPLAYER_RUNTIME_ACTIVE_FLAG; \
             if ((data[0x1c] & 0x10) == 0) { \
                 soundObj = NULL; \
             } \
@@ -482,14 +468,25 @@ void sfxplayerObj_free(u8* obj)
         } \
     } while (0)
 
-#define SFXPLAYER_STOP_SOUND(sfxExpr) \
+#define SFXPLAYER_STOP_PAIR() \
     do { \
-        soundId = (sfxExpr); \
-        if (soundId != 0) { \
-            if (data[0x1d] == SFXPLAYER_MODE_LOOPED) { \
+        if (data[0x1d] == SFXPLAYER_MODE_LOOPED) { \
+            soundId = *(u16 *)(data + 0x1a); \
+            if (soundId != 0) { \
                 Sfx_RemoveLoopedObjectSound(obj, soundId); \
             } \
-            else { \
+            soundId = *(u16 *)(data + 0x22); \
+            if (soundId != 0) { \
+                Sfx_RemoveLoopedObjectSound(obj, soundId); \
+            } \
+        } \
+        else { \
+            soundId = *(u16 *)(data + 0x1a); \
+            if (soundId != 0) { \
+                Sfx_StopFromObject(obj, soundId); \
+            } \
+            soundId = *(u16 *)(data + 0x22); \
+            if (soundId != 0) { \
                 Sfx_StopFromObject(obj, soundId); \
             } \
         } \
@@ -505,36 +502,53 @@ void sfxplayerObj_update(u8 *obj)
     u8 *soundObj;
     u16 soundId;
     int bitState;
-    u8 mode;
-    int active;
-    int hasEventId;
 
     state = *(u8 **)(obj + 0xb8);
     data = *(u8 **)(obj + 0x4c);
     if ((data[0x1c] & 8) != 0) {
         if (getCurSeqNo() != 0) {
             focusObj = (*(u8 *(**)(void))(*gCameraInterface + 0x0c))();
+            (*(void (**)(f32, f32, f32, int, int, u8 *, u8 *, u8 *))(*gRomCurveInterface + 0x20))(
+                *(f32 *)(focusObj + 0x18), *(f32 *)(focusObj + 0x1c), *(f32 *)(focusObj + 0x20),
+                7, (s8)data[0x20], obj + 0x0c, obj + 0x10, obj + 0x14);
         }
         else {
             focusObj = Obj_GetPlayerObject();
+            (*(void (**)(f32, f32, f32, int, int, u8 *, u8 *, u8 *))(*gRomCurveInterface + 0x20))(
+                *(f32 *)(focusObj + 0x18), *(f32 *)(focusObj + 0x1c), *(f32 *)(focusObj + 0x20),
+                7, (s8)data[0x20], obj + 0x0c, obj + 0x10, obj + 0x14);
         }
-        (*(void (**)(f32, f32, f32, int, int, u8 *, u8 *, u8 *))(*gRomCurveInterface + 0x20))(
-            *(f32 *)(focusObj + 0x18), *(f32 *)(focusObj + 0x1c), *(f32 *)(focusObj + 0x20),
-            7, (s8)data[0x20], obj + 0x0c, obj + 0x10, obj + 0x14);
     }
 
-    bitState = 0;
-    hasEventId = *(s16 *)(data + 0x18) > 0;
-    if (hasEventId) {
+    if (*(s16 *)(data + 0x18) > 0) {
         bitState = GameBit_Get(*(s16 *)(data + 0x18));
     }
 
-    mode = data[0x1d];
-    if (mode == SFXPLAYER_MODE_LOOPED) {
-        active = (*(s16 *)(data + 0x18) == -1) ||
-                 (((data[0x1c] & 2) != 0) && (bitState != 0)) ||
-                 (((data[0x1c] & 4) != 0) && (bitState == 0));
-        if (active) {
+    switch (data[0x1d]) {
+    case SFXPLAYER_MODE_GAMEBIT:
+        if (*(s16 *)(data + 0x18) > 0) {
+            if (*(int *)state != 0) {
+                if (bitState == 0) {
+                    *(u32 *)state = 0;
+                    if ((data[0x1c] & 4) != 0) {
+                        SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
+                        SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                    }
+                }
+            }
+            else if (bitState != 0) {
+                *(u32 *)state = 1;
+                if ((data[0x1c] & 2) != 0) {
+                    SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
+                    SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
+                }
+            }
+        }
+        break;
+    case SFXPLAYER_MODE_LOOPED:
+        if ((*(s16 *)(data + 0x18) == -1) ||
+            (((data[0x1c] & 2) != 0) && (bitState != 0)) ||
+            (((data[0x1c] & 4) != 0) && (bitState == 0))) {
             if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) == 0) {
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
@@ -542,47 +556,25 @@ void sfxplayerObj_update(u8 *obj)
         }
         else if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0) {
             state[4] = state[4] & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG;
-            SFXPLAYER_STOP_SOUND(*(u16 *)(data + 0x1a));
-            SFXPLAYER_STOP_SOUND(*(u16 *)(data + 0x22));
+            SFXPLAYER_STOP_PAIR();
         }
-    }
-    else if (mode == SFXPLAYER_MODE_GAMEBIT) {
-        if (hasEventId) {
-            if (*(f32 *)state == lbl_803E40B8) {
-                if (bitState != 0) {
-                    *(u32 *)state = 1;
-                    if ((data[0x1c] & 2) != 0) {
-                        SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                        SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
-                    }
-                }
-            }
-            else if (bitState == 0) {
-                *(f32 *)state = lbl_803E40B8;
-                if ((data[0x1c] & 4) != 0) {
-                    SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
-                    SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
-                }
-            }
-        }
-    }
-    else if (mode < 3) {
-        active = (*(s16 *)(data + 0x18) == -1) ||
-                 (((data[0x1c] & 2) != 0) && (bitState != 0)) ||
-                 (((data[0x1c] & 4) != 0) && (bitState == 0));
-        if (active) {
+        break;
+    case 2:
+        if ((*(s16 *)(data + 0x18) == -1) ||
+            (((data[0x1c] & 2) != 0) && (bitState != 0)) ||
+            (((data[0x1c] & 4) != 0) && (bitState == 0))) {
             *(f32 *)state -= lbl_803DC074;
             if (*(f32 *)state <= lbl_803E40B8) {
-                *(f32 *)state = lbl_803E40BC * (f32)(s32)randomGetRange(data[0x1e], data[0x1f]);
+                *(f32 *)state = (f32)(s32)randomGetRange(data[0x1e], data[0x1f]) * lbl_803E40BC;
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
             }
         }
         else if ((state[4] & SFXPLAYER_RUNTIME_ACTIVE_FLAG) != 0) {
             state[4] = state[4] & ~SFXPLAYER_RUNTIME_ACTIVE_FLAG;
-            SFXPLAYER_STOP_SOUND(*(u16 *)(data + 0x1a));
-            SFXPLAYER_STOP_SOUND(*(u16 *)(data + 0x22));
+            SFXPLAYER_STOP_PAIR();
         }
+        break;
     }
 }
 #pragma peephole reset
@@ -703,6 +695,8 @@ void fn_80198DE8(u8 *obj, int seqArg)
     f32 farX;
     f32 farY;
     f32 farZ;
+    f32 prodY;
+    f32 prodZ;
     f32 nearDist;
     f32 farDist;
     f32 deltaX;
@@ -710,7 +704,6 @@ void fn_80198DE8(u8 *obj, int seqArg)
     f32 deltaZ;
     f32 t;
     f32 localPos[3];
-    f32 radius;
     s8 triggerState;
 
     data = *(u8 **)(obj + 0x4c);
@@ -719,49 +712,41 @@ void fn_80198DE8(u8 *obj, int seqArg)
     planeBase = *(f32 *)(state + 0x18);
     normalZ = *(f32 *)(state + 0x14);
     nearZ = *(f32 *)(state + 0x24);
+    prodZ = normalZ * nearZ;
     normalX = *(f32 *)(state + 0x0c);
     nearX = *(f32 *)(state + 0x1c);
     normalY = *(f32 *)(state + 0x10);
     nearY = *(f32 *)(state + 0x20);
-
-    nearDist = planeBase + ((normalZ * nearZ) + (normalX * nearX + normalY * nearY));
+    prodY = normalY * nearY;
+    nearDist = planeBase + (prodZ + (normalX * nearX + prodY));
     farZ = *(f32 *)(state + 0x30);
     farX = *(f32 *)(state + 0x28);
     farY = *(f32 *)(state + 0x2c);
     farDist = planeBase + (normalZ * farZ + (normalX * farX + normalY * farY));
 
     if (farDist < lbl_803E40D8) {
-        if (nearDist < lbl_803E40D8) {
-            triggerState = 2;
-        }
-        else {
-            triggerState = 1;
-        }
-    }
-    else if (nearDist < lbl_803E40D8) {
-        triggerState = -1;
+        triggerState = (nearDist < lbl_803E40D8) ? 2 : 1;
     }
     else {
-        triggerState = -2;
+        triggerState = (nearDist < lbl_803E40D8) ? -1 : -2;
     }
 
     if ((triggerState == 1) || (triggerState == -1)) {
         deltaX = farX - nearX;
         deltaY = farY - nearY;
         deltaZ = farZ - nearZ;
-        t = (((-normalX * nearX - (normalY * nearY)) - (normalZ * nearZ)) - planeBase) /
+        t = (((-normalX * nearX - prodY) - prodZ) - planeBase) /
             ((normalY * deltaY) + (normalX * deltaX) + (normalZ * deltaZ));
 
         localPos[0] = t * deltaX + nearX;
-        localPos[1] = t * deltaY + nearY;
-        localPos[2] = t * deltaZ + nearZ;
+        localPos[1] = t * deltaY + *(f32 *)(state + 0x20);
+        localPos[2] = t * deltaZ + *(f32 *)(state + 0x24);
         PSMTXMultVec((f32 *)(state + 0x38), localPos, localPos);
 
-        radius = *(f32 *)(state + 0x34);
-        if ((localPos[0] >= -radius) && (localPos[0] <= radius) &&
-            (localPos[1] >= -radius) && (localPos[1] <= radius)) {
-            OSReport(sMoonrockTriggerIdentFormat, (int)triggerState, *(u32 *)(data + 0x14));
-            objInterpretSeq(obj, seqArg, (int)triggerState, (int)farDist);
+        if ((localPos[0] >= -*(f32 *)(state + 0x34)) && (localPos[0] <= *(f32 *)(state + 0x34)) &&
+            (localPos[1] >= -*(f32 *)(state + 0x34)) && (localPos[1] <= *(f32 *)(state + 0x34))) {
+            OSReport(sMoonrockTriggerIdentFormat, triggerState, *(u32 *)(data + 0x14));
+            objInterpretSeq(obj, seqArg, triggerState, (int)farDist);
         }
     }
 }

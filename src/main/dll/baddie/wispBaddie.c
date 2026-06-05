@@ -161,6 +161,7 @@ extern f32 lbl_803E20D0;
 void pauseMenuDrawStatus_801274a0(int *arg1);
 void fn_80127F24(s32 param_1);
 
+#pragma peephole off
 #pragma scheduling off
 void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
     int *player;
@@ -205,7 +206,7 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803DD750, lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
+        fn_8011EF50(*(u16 *)&lbl_803DD750, *(u16 *)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         *(u16 *)((u8 *)model + 0x18) &= ~0x8;
@@ -261,7 +262,7 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803DD750, lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
+        fn_8011EF50(*(u16 *)&lbl_803DD750, *(u16 *)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         *(u16 *)((u8 *)model + 0x18) &= ~0x8;
@@ -335,7 +336,7 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803DD750, lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
+        fn_8011EF50(*(u16 *)&lbl_803DD750, *(u16 *)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         *(u16 *)((u8 *)model + 0x18) &= ~0x8;
@@ -433,7 +434,7 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
         lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
         lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-        fn_8011EF50(lbl_803DD750, lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
+        fn_8011EF50(*(u16 *)&lbl_803DD750, *(u16 *)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
         model = Obj_GetActiveModel(lbl_803DD860[0]);
         objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
         *(u16 *)((u8 *)model + 0x18) &= ~0x8;
@@ -491,8 +492,10 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
         break;
     }
 }
+#pragma peephole reset
 #pragma scheduling reset
 
+#pragma peephole off
 #pragma scheduling off
 void pauseMenuDrawStatus_801274a0(int *arg1) {
     int *model;
@@ -512,7 +515,7 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
     lbl_803DD754 = (s16)(lbl_803DBA50 * fn_802943F4(lbl_803DD748 * lbl_803DBA48) + lbl_803DD7BC);
     lbl_803DBA3C = (f32)(lbl_803E2070 * lbl_803DD760);
     lbl_803DBA34 = (f32)(lbl_803E2078 - lbl_803E2070 * (lbl_803E1F60 - lbl_803DD760));
-    fn_8011EF50(lbl_803DD750, lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
+    fn_8011EF50(*(u16 *)&lbl_803DD750, *(u16 *)&lbl_803DD752, lbl_803DD754, lbl_803E1E3C, lbl_803DBA34, lbl_803DBA38, 0);
     model = Obj_GetActiveModel(lbl_803DD860[0]);
     objRender(0, 0, 0, 0, lbl_803DD860[0], 1);
     *(u16 *)((u8 *)model + 0x18) &= ~0x8;
@@ -655,6 +658,7 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
     Camera_RebuildProjectionMatrix();
     Camera_ApplyFullViewport();
 }
+#pragma peephole reset
 #pragma scheduling reset
 
 #pragma peephole off
