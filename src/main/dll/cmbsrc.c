@@ -209,7 +209,7 @@ int cmbsrc_cycleColor(int obj, int state)
                                            lbl_8032BD50[base + 1], lbl_8032BD50[base + 2], 0xff);
             modelLightStruct_setColors100104(*(void **)state, lbl_8032BD50[base],
                                              lbl_8032BD50[base + 1], lbl_8032BD50[base + 2], 0xff);
-            lightSetFieldB0(*(void **)state,
+            modelLightStruct_setDiffuseTargetColor(*(void **)state,
                             (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base]),
                             (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base + 1]),
                             (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base + 2]), 0xff);
@@ -456,7 +456,7 @@ void cmbsrc_init(int obj, u8 *setup)
             *(void **)state = objCreateLight(obj, 1);
         }
         if (*(void **)state != NULL) {
-            modelLightStruct_setField50(*(void **)state, 2);
+            modelLightStruct_setLightKind(*(void **)state, 2);
             if (*(s16 *)(obj + 0x46) == 0x758) {
                 lightVecFn_8001dd88(*(void **)state, lbl_803E7360, lbl_803E7360, lbl_803E7360);
             } else {
@@ -482,12 +482,12 @@ void cmbsrc_init(int obj, u8 *setup)
                 }
             }
             modelLightStruct_startColorFade(*(void **)state, 1, 3);
-            lightSetFieldB0(*(void **)state,
+            modelLightStruct_setDiffuseTargetColor(*(void **)state,
                             (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci]),
                             (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci + 1]),
                             (int)(lbl_803E7368 * (f32)(u32)colorTbl[ci + 2]), 0xff);
             if (setup[0x29] & 0x20) {
-                lightSetField2FB(*(void **)state, 1);
+                modelLightStruct_setAffectsAabbLightSelection(*(void **)state, 1);
             }
             if (setup[0x29] & 0x40) {
                 if (setup[0x29] & 0x80) {

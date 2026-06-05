@@ -73,7 +73,7 @@ void projectedlight_init(int obj, int setup)
     }
 
     if (*(void **)state != NULL) {
-        modelLightStruct_setField50(*(void **)state, 8);
+        modelLightStruct_setLightKind(*(void **)state, 8);
         lightVecFn_8001dd88(*(void **)state, lbl_803E7270, lbl_803E7270, lbl_803E7270);
         modelStruct2_setVectors(*(void **)state, vec.x, vec.y, vec.z);
         modelLightStruct_setColorsA8AC(*(void **)state, *(u8 *)(setup + 0x2d),
@@ -129,7 +129,7 @@ void projectedlight_init(int obj, int setup)
         fn_8001D84C(*(void **)state, (f32)(u32)*(u8 *)(setup + 0x3b));
         fn_8001D820(*(void **)state, (f32)(u32)*(u16 *)(setup + 0x3c));
         modelLightStruct_startColorFade(*(void **)state, *(u8 *)(setup + 0x33), *(s16 *)(setup + 0x1e));
-        lightSetFieldB0(*(void **)state, *(u8 *)(setup + 0x30), *(u8 *)(setup + 0x31),
+        modelLightStruct_setDiffuseTargetColor(*(void **)state, *(u8 *)(setup + 0x30), *(u8 *)(setup + 0x31),
             *(u8 *)(setup + 0x32), *(u8 *)(setup + 0x38));
     }
 }

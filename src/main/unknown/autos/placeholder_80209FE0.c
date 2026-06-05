@@ -1773,16 +1773,16 @@ extern int getEnvfxActImmediately(int obj, int target, int actId, int flags);
 extern void skyFn_80088e54(int p, f32 v);
 extern void timeOfDayFn_80055038(void);
 extern int objCreateLight(int a, int b);
-extern void modelLightStruct_setField50(int light, int v);
+extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setColors100104(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 v);
 extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
 extern void lightSetField4D(int light, int v);
-extern void lightSetFieldB0(int light, int a, int b, int c, int d);
+extern void modelLightStruct_setDiffuseTargetColor(int light, int a, int b, int c, int d);
 extern void fn_8001D9E0(int light, int a, int b, int c, int d);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void lightSetField2FB(int light, int v);
+extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
 extern int Obj_UpdateRomCurveFollowVelocityIndexed(f32 a, f32 b, f32 c, int obj, void *curve, int p, void *out);
 extern void Obj_SmoothTurnAnglesTowardVelocity(int obj, void *angles, int p, f32 a, f32 b);
@@ -1880,17 +1880,17 @@ void bossdrakor_update(int obj)
         ((DrakorFlags *)((char *)state + 0x198))->b10 = 0;
         *(int *)((char *)state + 0x160) = objCreateLight(0, 1);
         if (*(void **)((char *)state + 0x160) != NULL) {
-            modelLightStruct_setField50(*(int *)((char *)state + 0x160), 2);
+            modelLightStruct_setLightKind(*(int *)((char *)state + 0x160), 2);
             modelLightStruct_setColorsA8AC(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
             modelLightStruct_setColors100104(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
             modelLightStruct_setupGlow(*(int *)((char *)state + 0x160), 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
             lightDistAttenFn_8001dc38(*(int *)((char *)state + 0x160), lbl_803E6544, lbl_803E6540);
             lightSetField4D(*(int *)((char *)state + 0x160), 0);
             modelLightStruct_setEnabled(*(void **)((char *)state + 0x160), 1, lbl_803E6520);
-            lightSetFieldB0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
+            modelLightStruct_setDiffuseTargetColor(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
             fn_8001D9E0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
             modelLightStruct_startColorFade(*(int *)((char *)state + 0x160), 2, 0x28);
-            lightSetField2FB(*(int *)((char *)state + 0x160), 1);
+            modelLightStruct_setAffectsAabbLightSelection(*(int *)((char *)state + 0x160), 1);
             modelLightStruct_setGlowProjectionRadius(*(int *)((char *)state + 0x160), lbl_803E6550);
         }
     }

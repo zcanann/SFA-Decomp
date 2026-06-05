@@ -24,7 +24,7 @@ void drakormissile_startActiveLaunch(int obj) {
     *(s16 *)((char *)obj + 4) = 0;
     light = objCreateLight(obj, 1);
     if (light != NULL) {
-        modelLightStruct_setField50(light, 2);
+        modelLightStruct_setLightKind(light, 2);
         modelLightStruct_setColorsA8AC(light, 255, 128, 0, 0);
         lightSetFieldBC_8001db14(light, 1);
         lightDistAttenFn_8001dc38(light, lbl_803E6940, lbl_803E6944);
@@ -106,7 +106,7 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed) {
     }
     light = objCreateLight(obj, 1);
     if (light != NULL) {
-        modelLightStruct_setField50(light, 2);
+        modelLightStruct_setLightKind(light, 2);
         modelLightStruct_setColorsA8AC(light, 0, 255, 255, 0);
         lightSetFieldBC_8001db14(light, 1);
         lightDistAttenFn_8001dc38(light, lbl_803E6940, lbl_803E6944);

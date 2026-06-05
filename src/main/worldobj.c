@@ -27,7 +27,7 @@ extern void mathFn_80021ac8(void *in, void *out);
 extern int ObjList_FindObjectById(int id);
 extern f32 Vec_distance(void *a, void *b);
 extern int objCreateLight(int obj, int arg);
-extern void modelLightStruct_setField50(int light, int v);
+extern void modelLightStruct_setLightKind(int light, int v);
 extern void lightVecFn_8001dd88(int light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
 extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
@@ -147,7 +147,7 @@ void worldobj_init(int obj, int arg) {
         *(f32 *)(inner + 0x260) = *(f32 *)(inner + 0x25c) * (lbl_803E66CC * ((f32)(int)randomGetRange(0, 0x64) / lbl_803E66B4) + lbl_803E66CC);
         *(int *)(obj + 0) = objCreateLight(obj, 1);
         if (*(int *)(obj + 0) != 0) {
-            modelLightStruct_setField50(*(int *)(obj + 0), 2);
+            modelLightStruct_setLightKind(*(int *)(obj + 0), 2);
             lightVecFn_8001dd88(*(int *)(obj + 0), lbl_803E665C, lbl_803E665C, lbl_803E665C);
             modelLightStruct_setColorsA8AC(*(int *)(obj + 0), 0xff, 0xff, 0xff, 0);
             lightDistAttenFn_8001dc38(*(int *)(obj + 0), lbl_803E66AC, lbl_803E66D0);
@@ -228,7 +228,7 @@ extern int gAudioStreamCurrentId;
 extern void Obj_FreeObject(int obj);
 extern void modelLightStruct_setEnabled(int light, int a, f32 b);
 extern void modelLightStruct_updateGlowAlpha(int light);
-extern void lightSetFieldB0(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelStruct2_setVectors(int light, f32 a, f32 b, f32 c);
 extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c, void *vec);
@@ -467,11 +467,11 @@ void worldobj_update(int obj) {
                 if (*(void **)state == NULL) {
                     *(int *)state = objCreateLight(obj, 1);
                     if (*(void **)state != NULL) {
-                        modelLightStruct_setField50(*(int *)state, 2);
+                        modelLightStruct_setLightKind(*(int *)state, 2);
                         lightVecFn_8001dd88(*(int *)state, lbl_803E665C, lbl_803E66AC,
                                             lbl_803E665C);
                         modelLightStruct_setColorsA8AC(*(int *)state, 0xff, 0, 0, 0xff);
-                        lightSetFieldB0(*(int *)state, 0, 0, 0, 0xff);
+                        modelLightStruct_setDiffuseTargetColor(*(int *)state, 0, 0, 0, 0xff);
                         modelLightStruct_setEnabled(*(int *)state, 1, lbl_803E665C);
                         lightDistAttenFn_8001dc38(*(int *)state, lbl_803E66B0, lbl_803E66B4);
                         modelLightStruct_startColorFade(*(int *)state, 2, 0x3c);

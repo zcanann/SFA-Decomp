@@ -9,8 +9,8 @@ extern void lockIconTexCb(void);
 extern void aButtonIconTexCb(void);
 extern void colorFn_8001efe0(int a, int b, int c, int d);
 extern u8 *objCreateLight(int a, int b);
-extern void modelLightStruct_setField50(u8 *p, int a);
-extern void modelFn_8001db3c(u8 *p, int a);
+extern void modelLightStruct_setLightKind(u8 *p, int a);
+extern void modelLightStruct_setObjectLightMaskIndex(u8 *p, int a);
 extern void objSetEventName(u8 *p, int a);
 extern void modelStruct2_setVectors(u8 *p, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setColorsA8AC(u8 *p, int a, int b, int c, int d);
@@ -42,8 +42,8 @@ void lockIconInit(void)
     colorFn_8001efe0(1, 0x32, 0x3C, 0x28);
     lbl_803DD4C4 = objCreateLight(0, 1);
     if (lbl_803DD4C4 != NULL) {
-      modelLightStruct_setField50(lbl_803DD4C4, 4);
-      modelFn_8001db3c(lbl_803DD4C4, 1);
+      modelLightStruct_setLightKind(lbl_803DD4C4, 4);
+      modelLightStruct_setObjectLightMaskIndex(lbl_803DD4C4, 1);
       objSetEventName(lbl_803DD4C4, 1);
       modelStruct2_setVectors(lbl_803DD4C4, lbl_803E162C, lbl_803E1630, lbl_803E1640);
       modelLightStruct_setColorsA8AC(lbl_803DD4C4, 0xB4, 0xC8, 0xFF, 0xFF);

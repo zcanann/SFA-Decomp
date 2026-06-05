@@ -5639,7 +5639,7 @@ extern void gameTextRun(void);
 extern void GXFlush_(int, int);
 extern int getLoadedFileFlags(int);
 extern void *objCreateLight(int, int);
-extern void modelLightStruct_setField50(void *, int);
+extern void modelLightStruct_setLightKind(void *, int);
 extern void modelLightStruct_setColors100104(void *, int, int, int, int);
 extern void *textureLoadAsset(int);
 extern u8 lbl_803DC950;
@@ -5680,14 +5680,14 @@ void loadLightFn_8008bbc4(void)
     if (lbl_803DD144 == NULL) {
         lbl_803DD144 = objCreateLight(0, 1);
         if (lbl_803DD144 != NULL) {
-            modelLightStruct_setField50(lbl_803DD144, 4);
+            modelLightStruct_setLightKind(lbl_803DD144, 4);
             modelStruct2_setVectors(lbl_803DD144, pEXIInputFlag, lbl_803DF06C, pEXIInputFlag);
             modelLightStruct_setColorsA8AC(lbl_803DD144, 0xff, 0xff, 0xff, 0xff);
             modelLightStruct_setColors100104(lbl_803DD144, 0xff, 0xff, 0xff, 0xff);
         }
         lbl_803DD168 = objCreateLight(0, 1);
         if (lbl_803DD168 != NULL) {
-            modelLightStruct_setField50(lbl_803DD168, 4);
+            modelLightStruct_setLightKind(lbl_803DD168, 4);
             modelStruct2_setVectors(lbl_803DD168, pEXIInputFlag, EXIInputFlag, pEXIInputFlag);
             modelLightStruct_setColorsA8AC(lbl_803DD168, 0xff, 0xff, 0xff, 0xff);
             modelLightStruct_setColors100104(lbl_803DD168, 0xff, 0xff, 0xff, 0xff);

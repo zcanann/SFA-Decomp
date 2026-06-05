@@ -410,7 +410,7 @@ extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int **out, int a, 
 extern void ObjAnim_SetCurrentMove(int obj, f32 t, int a, int b);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void *objCreateLight(int obj, int n);
-extern void modelLightStruct_setField50(int light, int v);
+extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d);
 extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
@@ -466,7 +466,7 @@ void dimbossgut2_init(int obj, int def, int p3)
   ObjAnim_AdvanceCurrentMove(obj, lbl_803E4D20, timeDelta, 0);
   *(int *)(p + 0x18) = (int)objCreateLight(obj, 1);
   if (*(void **)(p + 0x18) != NULL) {
-    modelLightStruct_setField50(*(int *)(p + 0x18), 2);
+    modelLightStruct_setLightKind(*(int *)(p + 0x18), 2);
     modelLightStruct_setColorsA8AC(*(int *)(p + 0x18), 0, 255, 0, 0);
     lightSetFieldBC_8001db14(*(int *)(p + 0x18), 1);
     lightDistAttenFn_8001dc38(*(int *)(p + 0x18), lbl_803E4D2C, lbl_803E4CE0);
@@ -693,13 +693,13 @@ void DIMbossspit_update(int obj)
  * PAL Size: TODO
  */
 extern void *objCreateLight(int obj, int n);
-extern void modelLightStruct_setField50(int light, int v);
+extern void modelLightStruct_setLightKind(int light, int v);
 extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setColors100104(int light, int a, int b, int c, int d);
 extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
 extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setEnabled(int light, int v, f32 f);
-extern void lightSetField2FB(int light, int v);
+extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
 extern int Obj_GetActiveModel(int obj);
@@ -717,13 +717,13 @@ void DIMbossspit_init(int obj)
 
   *(void **)(state + 4) = objCreateLight(obj, 1);
   if (*(void **)(state + 4) != NULL) {
-    modelLightStruct_setField50(*(int *)(state + 4), 2);
+    modelLightStruct_setLightKind(*(int *)(state + 4), 2);
     modelLightStruct_setColorsA8AC(*(int *)(state + 4), 0, 255, 0, 0);
     modelLightStruct_setColors100104(*(int *)(state + 4), 0, 255, 0, 0);
     lightDistAttenFn_8001dc38(*(int *)(state + 4), lbl_803E4D70, lbl_803E4D74);
     lightSetField4D(*(int *)(state + 4), 1);
     modelLightStruct_setEnabled(*(int *)(state + 4), 1, lbl_803E4D78);
-    lightSetField2FB(*(int *)(state + 4), 1);
+    modelLightStruct_setAffectsAabbLightSelection(*(int *)(state + 4), 1);
     modelLightStruct_setupGlow(*(int *)(state + 4), 0, 0, 255, 0, 127, lbl_803E4D7C);
     modelLightStruct_setGlowProjectionRadius(*(int *)(state + 4), lbl_803E4D80);
   }

@@ -271,7 +271,7 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable) {
     *(void **)(state + 0x14) = objCreateLight(obj, 1);
     if (*(void **)(state + 0x14) == NULL)
         return;
-    modelLightStruct_setField50(*(void **)(state + 0x14), 2);
+    modelLightStruct_setLightKind(*(void **)(state + 0x14), 2);
     lightVecFn_8001dd88(*(void **)(state + 0x14), lbl_803E7008, lbl_803E7008, lbl_803E7008);
     lightSetFieldBC_8001db14(*(void **)(state + 0x14), 1);
     if (*(s16 *)(obj + 0x46) == 0x6ae) {
@@ -286,7 +286,7 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable) {
     } else {
         lightDistAttenFn_8001dc38(*(void **)(state + 0x14), lbl_803E7014, lbl_803E7018);
     }
-    lightSetField2FB(*(void **)(state + 0x14), 1);
+    modelLightStruct_setAffectsAabbLightSelection(*(void **)(state + 0x14), 1);
 }
 #pragma scheduling reset
 #pragma peephole reset

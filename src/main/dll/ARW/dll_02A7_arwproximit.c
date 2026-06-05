@@ -103,11 +103,11 @@ void arwproximit_update(int obj)
         if (Vec_distance(obj + 0x18, (int)(arwing + 0x18)) < lbl_803E71EC) {
             *(void **)(state + 4) = objCreateLight(obj, 1);
             if (*(void **)(state + 4) != NULL) {
-                modelLightStruct_setField50(*(void **)(state + 4), 2);
+                modelLightStruct_setLightKind(*(void **)(state + 4), 2);
                 lightVecFn_8001dd88(*(void **)(state + 4), lbl_803E71D8, lbl_803E71D8,
                                     lbl_803E71F0);
                 modelLightStruct_setColorsA8AC(*(void **)(state + 4), 0, 0xff, 0, 0);
-                lightSetFieldB0(*(void **)(state + 4), 0, 0, 0, 0);
+                modelLightStruct_setDiffuseTargetColor(*(void **)(state + 4), 0, 0, 0, 0);
                 lightDistAttenFn_8001dc38(*(void **)(state + 4), lbl_803E71F0, lbl_803E71F4);
                 modelLightStruct_setupGlow(*(void **)(state + 4), 0, 0, 0xff, 0, 0x64, lbl_803E71F8);
                 modelLightStruct_setGlowProjectionRadius(*(void **)(state + 4), lbl_803E71F0);

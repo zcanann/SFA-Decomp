@@ -5,14 +5,14 @@
 #pragma peephole off
 #pragma scheduling off
 extern int objCreateLight(void *obj, int);
-extern void modelLightStruct_setField50(int, int);
+extern void modelLightStruct_setLightKind(int, int);
 extern void lightVecFn_8001dd88(f32, f32, f32);
 extern void modelLightStruct_setColorsA8AC(int, u8, u8, u8, int);
 extern void modelLightStruct_setColors100104(int, u8, u8, u8, int);
 extern void lightDistAttenFn_8001dc38(int, f32, f32);
 extern void modelLightStruct_setEnabled(int, int, f32);
 extern void modelLightStruct_startColorFade(int, int, int);
-extern void lightSetFieldB0(int, int, int, int, int);
+extern void modelLightStruct_setDiffuseTargetColor(int, int, int, int, int);
 extern void lightSetField4D(int, int);
 extern void modelLightStruct_setupGlow(int, int, u8, u8, u8, int, f32);
 extern void modelLightStruct_setGlowProjectionRadius(int, f32);
@@ -101,7 +101,7 @@ void lightsource_init(s16 *obj, int mapData)
     if (*(void **)state == NULL) {
       *state = objCreateLight(obj, 1);
       if (*(void **)state != NULL) {
-        modelLightStruct_setField50(*state, 2);
+        modelLightStruct_setLightKind(*state, 2);
       }
     }
     if (*(void **)state != NULL) {
@@ -122,7 +122,7 @@ void lightsource_init(s16 *obj, int mapData)
       modelLightStruct_startColorFade(*state, 1, 3);
 
       colorBase = *(u8 *)((int)state + 0x15) * 3;
-      lightSetFieldB0(*state, (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase]),
+      modelLightStruct_setDiffuseTargetColor(*state, (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase]),
                       (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase + 1]),
                       (int)(lbl_803E5E34 * (f32)(u32)colors.c[colorBase + 2]), 0xff);
       lightSetField4D(*state, 1);

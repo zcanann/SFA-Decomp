@@ -33,14 +33,14 @@ extern void fn_80098B18(int obj,f32 scale,int type,int param_4,int param_5,int p
 extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int objCreateLight(int obj,int param_2);
-extern void modelLightStruct_setField50(int light,int value);
+extern void modelLightStruct_setLightKind(int light,int value);
 extern void modelLightStruct_setColorsA8AC(int light,int r,int g,int b,int a);
 extern void modelLightStruct_setColors100104(int light,int r,int g,int b,int a);
 extern void lightDistAttenFn_8001dc38(int light,f32 near,f32 far);
 extern void modelLightStruct_setEnabled(int light,int mode,f32 value);
 extern void lightVecFn_8001dd88(int light,f32 x,f32 y,f32 z);
 extern void modelLightStruct_startColorFade(int light,int param_2,int param_3);
-extern void lightSetFieldB0(int light,int r,int g,int b,int a);
+extern void modelLightStruct_setDiffuseTargetColor(int light,int r,int g,int b,int a);
 extern void modelLightStruct_setupGlow(int light,int param_2,int r,int g,int b,int a,f32 radius);
 extern void modelLightStruct_setGlowProjectionRadius(int light,f32 radius);
 extern undefined4 FUN_8003b818();
@@ -312,7 +312,7 @@ void dimlogfire_init(int obj, int def)
         *state = objCreateLight(obj, 1);
     }
     if (*(void **)state != NULL) {
-        modelLightStruct_setField50(*state, 2);
+        modelLightStruct_setLightKind(*state, 2);
         modelLightStruct_setColorsA8AC(*state, 0xff, 0x7f, 0, 0xff);
         modelLightStruct_setColors100104(*state, 0xff, 0x7f, 0, 0xff);
         radius = (int)(lbl_803E4830 * *(f32 *)(obj + 8));
@@ -320,7 +320,7 @@ void dimlogfire_init(int obj, int def)
         modelLightStruct_setEnabled(*state, 1, lbl_803E4828);
         lightVecFn_8001dd88(*state, lbl_803E4828, lbl_803E4838, lbl_803E4828);
         modelLightStruct_startColorFade(*state, 1, 3);
-        lightSetFieldB0(*state, 0xff, 0x5c, 0, 0xff);
+        modelLightStruct_setDiffuseTargetColor(*state, 0xff, 0x5c, 0, 0xff);
         modelLightStruct_setupGlow(*state, 0, 0xff, 0x7f, 0, 0x87, lbl_803E483C * *(f32 *)(obj + 8));
         modelLightStruct_setGlowProjectionRadius(*state, lbl_803E4834);
     }

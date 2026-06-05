@@ -298,12 +298,12 @@ void FUN_80169d38(undefined8 param_1,undefined8 param_2,undefined8 param_3,doubl
  */
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void *objCreateLight(int obj, int kind);
-extern void modelLightStruct_setField50(int light, int value);
+extern void modelLightStruct_setLightKind(int light, int value);
 extern void lightVecFn_8001dd88(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setColors100104(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
-extern void lightSetFieldB0(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int b, int a);
 extern void lightDistAttenFn_8001dc38(int light, f32 near, f32 far);
 extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
@@ -326,7 +326,7 @@ void kaldachompspit_init(int obj)
     if (*(void **)extra == NULL) {
         *extra = (int)objCreateLight(obj, 1);
         if (*(void **)extra != NULL) {
-            modelLightStruct_setField50(*extra, 2);
+            modelLightStruct_setLightKind(*extra, 2);
         }
     }
     if (*(void **)extra != NULL) {
@@ -336,12 +336,12 @@ void kaldachompspit_init(int obj)
             modelLightStruct_setColorsA8AC(*extra, 0xff, 0xc0, 0, 0xff);
             modelLightStruct_setColors100104(*extra, 0xff, 0xc0, 0, 0xff);
             modelLightStruct_setupGlow(*extra, 0, 0xff, 0xc0, 0, 0x7f, lbl_803E3108 * (lbl_803E310C * *(f32 *)(obj + 8)));
-            lightSetFieldB0(*extra, 0xff, 0xd2, 0, 0xff);
+            modelLightStruct_setDiffuseTargetColor(*extra, 0xff, 0xd2, 0, 0xff);
         } else {
             modelLightStruct_setColorsA8AC(*extra, 0, 0xff, 0, 0xff);
             modelLightStruct_setColors100104(*extra, 0, 0xff, 0, 0xff);
             modelLightStruct_setupGlow(*extra, 0, 0, 0xff, 0, 0x28, lbl_803E310C * *(f32 *)(obj + 8));
-            lightSetFieldB0(*extra, 0, 0xff, 0, 0xff);
+            modelLightStruct_setDiffuseTargetColor(*extra, 0, 0xff, 0, 0xff);
         }
         {
             int a = (int)(lbl_803E310C * *(f32 *)(obj + 8));

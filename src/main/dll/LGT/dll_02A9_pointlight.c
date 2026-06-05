@@ -90,7 +90,7 @@ void pointlight_update(int obj)
         if ((*(u8 *)(setup + 0x2a) & 1) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
             modelLightStruct_setColorsA8AC(state->light, colorR, colorG, colorB, 0xff);
-            lightSetFieldB0(state->light, colorR, colorG, colorB, 0xff);
+            modelLightStruct_setDiffuseTargetColor(state->light, colorR, colorG, colorB, 0xff);
         }
     } else {
         s16 bit = *(s16 *)(setup + 0x1e);
@@ -125,18 +125,18 @@ void pointlight_init(int obj, int setup)
     }
 
     if (state->light != NULL) {
-        modelLightStruct_setField50(state->light, 2);
+        modelLightStruct_setLightKind(state->light, 2);
         objSetEventName(state->light, *(u8 *)(setup + 0x1d));
         lightVecFn_8001dd88(state->light, lbl_803E7230, lbl_803E7230, lbl_803E7230);
 
         if ((*(u8 *)(setup + 0x2a) & 1) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
             modelLightStruct_setColorsA8AC(state->light, colorR, colorG, colorB, 0xff);
-            lightSetFieldB0(state->light, colorR, colorG, colorB, 0xff);
+            modelLightStruct_setDiffuseTargetColor(state->light, colorR, colorG, colorB, 0xff);
         } else {
             modelLightStruct_setColorsA8AC(state->light, *(u8 *)(setup + 0x1a),
                 *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), 0xff);
-            lightSetFieldB0(state->light, *(u8 *)(setup + 0x27),
+            modelLightStruct_setDiffuseTargetColor(state->light, *(u8 *)(setup + 0x27),
                 *(u8 *)(setup + 0x28), *(u8 *)(setup + 0x29), 0xff);
         }
 
@@ -170,11 +170,11 @@ void pointlight_init(int obj, int setup)
         }
 
         if (*(u8 *)(setup + 0x3f) != 0) {
-            lightSetField2FB(state->light, 1);
+            modelLightStruct_setAffectsAabbLightSelection(state->light, 1);
         }
 
         if (*(u8 *)(setup + 0x2c) != 0) {
-            fn_8001DB5C(state->light, *(u8 *)(setup + 0x2c));
+            modelLightStruct_setSelectionPriority(state->light, *(u8 *)(setup + 0x2c));
         }
     }
 

@@ -169,18 +169,18 @@ void directionallight_init(int obj, int setup)
     }
 
     if (*(void **)(state + 8) != NULL) {
-        modelLightStruct_setField50(*(void **)(state + 8), 4);
+        modelLightStruct_setLightKind(*(void **)(state + 8), 4);
         objSetEventName(*(void **)(state + 8), *(u8 *)(setup + 0x1d));
         modelStruct2_setVectors(*(void **)(state + 8), vec.x, vec.y, vec.z);
 
         if ((*(u8 *)(setup + 0x2a) & 1) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
             modelLightStruct_setColorsA8AC(*(void **)(state + 8), colorR, colorG, colorB, 0xff);
-            lightSetFieldB0(*(void **)(state + 8), colorR, colorG, colorB, 0xff);
+            modelLightStruct_setDiffuseTargetColor(*(void **)(state + 8), colorR, colorG, colorB, 0xff);
         } else {
             modelLightStruct_setColorsA8AC(*(void **)(state + 8), *(u8 *)(setup + 0x1a),
                 *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), 0xff);
-            lightSetFieldB0(*(void **)(state + 8), *(u8 *)(setup + 0x27),
+            modelLightStruct_setDiffuseTargetColor(*(void **)(state + 8), *(u8 *)(setup + 0x27),
                 *(u8 *)(setup + 0x28), *(u8 *)(setup + 0x29), 0xff);
         }
 
@@ -189,7 +189,7 @@ void directionallight_init(int obj, int setup)
         modelLightStruct_startColorFade(*(void **)(state + 8), *(u8 *)(setup + 0x26), *(s16 *)(setup + 0x2e));
 
         if (*(u8 *)(setup + 0x2c) != 0) {
-            fn_8001DB5C(*(void **)(state + 8), *(u8 *)(setup + 0x2c));
+            modelLightStruct_setSelectionPriority(*(void **)(state + 8), *(u8 *)(setup + 0x2c));
         }
     }
 }

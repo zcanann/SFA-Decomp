@@ -71,10 +71,10 @@ extern void *gPartfxInterface;
 extern f32 Curve_EvalBSpline(f32 t, void *control, int mode);
 extern f32 Vec_distance(void *a, void *b);
 extern int objCreateLight(int obj, int type);
-extern void modelLightStruct_setField50(int light, int value);
+extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
 extern void lightSetFieldBC_8001db14(int light, int value);
-extern void lightSetField2FB(int light, int value);
+extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
 extern void lightDistAttenFn_8001dc38(int light, f32 near, f32 far);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern f32 sqrtf(f32 value);
@@ -142,11 +142,11 @@ void LanternFireFly_update(int obj)
         state[0x6e] = 1;
         light = objCreateLight(obj, 1);
         if (light != 0) {
-            modelLightStruct_setField50(light, 2);
+            modelLightStruct_setLightKind(light, 2);
             modelLightStruct_setColorsA8AC(light, 100, 0xff, 100, 0);
             lightSetFieldBC_8001db14(light, 1);
             lightDistAttenFn_8001dc38(light, lbl_803E3A98, lbl_803E3A9C);
-            lightSetField2FB(light, 1);
+            modelLightStruct_setAffectsAabbLightSelection(light, 1);
         }
         *(int *)state = light;
         if ((state[0x70] >> 6) != 1) {

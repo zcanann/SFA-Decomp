@@ -278,7 +278,7 @@ extern void modelLightStruct_updateGlowAlpha(void *light);
 extern f32 lbl_803E6E3C;
 extern f32 lbl_803E6E40;
 extern void *objCreateLight(int obj, int kind);
-extern void modelLightStruct_setField50(void *light, int v);
+extern void modelLightStruct_setLightKind(void *light, int v);
 extern void modelLightStruct_setupGlow(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(void *light, f32 v);
 
@@ -343,10 +343,10 @@ extern void modelLightStruct_setEnabled(void *light, int flag, f32 val);
 extern void queueGlowRender(void *light);
 extern void getAmbientColor(int id, u8 *r, u8 *g, u8 *b);
 extern void modelLightStruct_setColorsA8AC(void *light, u8 r, u8 g, u8 b, int a);
-extern void lightSetFieldB0(void *light, u8 r, u8 g, u8 b, int a);
+extern void modelLightStruct_setDiffuseTargetColor(void *light, u8 r, u8 g, u8 b, int a);
 extern void modelLightStruct_updateGlowAlpha(void *light);
 extern void *objCreateLight(int obj, int kind);
-extern void modelLightStruct_setField50(void *light, int v);
+extern void modelLightStruct_setLightKind(void *light, int v);
 extern void objSetEventName(void *light, int name);
 extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
 extern void lightDistAttenFn_8001dc38(void *light, f32 near, f32 far);
@@ -356,8 +356,8 @@ extern void modelStruct2_setVectors(void *light, f32 x, f32 y, f32 z);
 extern void Obj_SetActiveModelIndex(int obj, int index);
 extern void modelLightStruct_setupGlow(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(void *light, f32 v);
-extern void lightSetField2FB(void *light, int v);
-extern void fn_8001DB5C(void *light, u8 v);
+extern void modelLightStruct_setAffectsAabbLightSelection(void *light, int v);
+extern void modelLightStruct_setSelectionPriority(void *light, u8 v);
 
 
 #pragma dont_inline on

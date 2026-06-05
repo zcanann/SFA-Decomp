@@ -6395,7 +6395,7 @@ extern void lightVecFn_8001dd88(int light, f32 a, f32 b, f32 c);
 extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
-extern void modelLightStruct_setField50(int light, int v);
+extern void modelLightStruct_setLightKind(int light, int v);
 extern f32 lbl_803E3378;
 extern f32 lbl_803E337C;
 extern f32 lbl_803E3380;
@@ -6425,7 +6425,7 @@ void fireball_init(int *obj)
             *(int *)state = objCreateLight(obj, 1);
             if (*(void **)state != NULL) {
                 int c;
-                modelLightStruct_setField50(*(int *)state, 2);
+                modelLightStruct_setLightKind(*(int *)state, 2);
                 lightSetField4D(*(int *)state, 0);
                 lightVecFn_8001dd88(*(int *)state, lbl_803E3330, lbl_803E3330, lbl_803E3330);
                 lightSetFieldBC_8001db14(*(int *)state, 1);
@@ -7810,7 +7810,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
 extern int *fn_802966CC(int *player);
 extern void modelLightStruct_setColors100104(int light, int r, int g, int b, int a);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
-extern void lightSetField2FB(int light, int v);
+extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern f32 lbl_803E33B0;
 extern f32 lbl_803E33B4;
 extern f32 lbl_803E33B8;
@@ -7876,7 +7876,7 @@ void staffFn_80170380(int *obj, int cmd)
                 *(int *)state = objCreateLight(0, 1);
             }
             if (*(int **)state != NULL) {
-                modelLightStruct_setField50(*(int *)state, 2);
+                modelLightStruct_setLightKind(*(int *)state, 2);
                 lightVecFn_8001dd88(*(int *)state, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10) - lbl_803E33B8, *(f32 *)((char *)obj + 0x14));
                 modelLightStruct_setColorsA8AC(*(int **)state, 0, 255, 255, 255);
                 modelLightStruct_setColors100104(*(int *)state, 0, 255, 255, 255);
@@ -7884,7 +7884,7 @@ void staffFn_80170380(int *obj, int cmd)
                 lightSetField4D(*(int *)state, 1);
                 modelLightStruct_setEnabled(*(int *)state, 1, lbl_803E33AC);
                 modelLightStruct_startColorFade(*(int *)state, 0, 0);
-                lightSetField2FB(*(int *)state, 1);
+                modelLightStruct_setAffectsAabbLightSelection(*(int *)state, 1);
             }
             {
                 f32 v1 = lbl_803E33AC;
@@ -7952,7 +7952,7 @@ void staffFn_80170380(int *obj, int cmd)
             *(int *)state = objCreateLight(0, 1);
         }
         if (*(int **)state != NULL) {
-            modelLightStruct_setField50(*(int *)state, 2);
+            modelLightStruct_setLightKind(*(int *)state, 2);
             lightVecFn_8001dd88(*(int *)state, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10) - lbl_803E33B8, *(f32 *)((char *)obj + 0x14));
             modelLightStruct_setColorsA8AC(*(int **)state, 0, 255, 255, 255);
             modelLightStruct_setColors100104(*(int *)state, 0, 255, 255, 255);
@@ -7960,7 +7960,7 @@ void staffFn_80170380(int *obj, int cmd)
             lightSetField4D(*(int *)state, 1);
             modelLightStruct_setEnabled(*(int *)state, 1, lbl_803E33AC);
             modelLightStruct_startColorFade(*(int *)state, 0, 0);
-            lightSetField2FB(*(int *)state, 1);
+            modelLightStruct_setAffectsAabbLightSelection(*(int *)state, 1);
         }
         if (lbl_803E33AC == *(f32 *)(state + 8)) {
             *(f32 *)(state + 0x10) = lbl_803E33CC;

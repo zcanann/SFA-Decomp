@@ -133,7 +133,7 @@ void wcapertures_init(int obj, int initData)
     ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_800284CC);
     *(void **)(state + 0) = objCreateLight(obj, 1);
     if (*(void **)(state + 0) != NULL) {
-        modelLightStruct_setField50(*(void **)(state + 0), 2);
+        modelLightStruct_setLightKind(*(void **)(state + 0), 2);
         if ((s8)*(u8 *)(obj + 0xad) == 0)
             modelLightStruct_setupGlow(*(void **)(state + 0), 0, 0xff, 0xff, 0x4d, 0x96, lbl_803E6E3C);
         else

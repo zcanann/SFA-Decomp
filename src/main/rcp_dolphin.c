@@ -3497,7 +3497,7 @@ extern void *fn_80089A50(void);
 extern void fn_8001E8F4(int n);
 extern void fn_8001E608(int idx, int a, int b);
 extern void fn_8001D994(void *light, f32 a, f32 b);
-extern void fn_8001DA3C(void *light, f32 a, f32 b, f32 c);
+extern void modelLightStruct_setAngularAttenuation(void *light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setColors100104(void *light, int r, int g, int b, int a);
 extern void modelStruct2_setLights(int idx, void *light, int model);
 extern void gxColorFn_8001e634(void);
@@ -3523,7 +3523,7 @@ int textureFn_80052bb4(int model, f32 *params)
     fn_8001D994(la, params[1], LastCommandWasRead_803DEB60);
     modelLightStruct_setColors100104(la, 0, 0, 0xff, 0xff);
     modelStruct2_setLights(0, la, model);
-    fn_8001DA3C(la, lbl_803DEB70, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
+    modelLightStruct_setAngularAttenuation(la, lbl_803DEB70, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
     modelStruct2_setLights(2, la, model);
     fn_8001E608(1, 1, 0);
     fn_8001E608(3, 0, 0);
@@ -3533,11 +3533,11 @@ int textureFn_80052bb4(int model, f32 *params)
     fn_8001D994(lb, params[1], LastCommandWasRead_803DEB60);
     modelLightStruct_setColors100104(lb, 0, 0, 0xff, 0xff);
     modelStruct2_setLights(1, lb, model);
-    fn_8001DA3C(lb, lbl_803DEB74, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
+    modelLightStruct_setAngularAttenuation(lb, lbl_803DEB74, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
     modelStruct2_setLights(3, lb, model);
     gxColorFn_8001e634();
-    fn_8001DA3C(la, LastReadIssued_803DEB58.hi, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
-    fn_8001DA3C(lb, LastReadIssued_803DEB58.hi, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
+    modelLightStruct_setAngularAttenuation(la, LastReadIssued_803DEB58.hi, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
+    modelLightStruct_setAngularAttenuation(lb, LastReadIssued_803DEB58.hi, LastCommandWasRead_803DEB60, LastCommandWasRead_803DEB60);
     return 0;
 }
 #pragma dont_inline reset

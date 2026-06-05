@@ -30,9 +30,9 @@ void ktlazerlight_init(int obj, char *arg) {
     char *p = *(char **)((char *)obj + 0xb8);
     *(void **)(p + 0x4) = objCreateLight(0, 1);
     if (*(void **)(p + 0x4) != 0) {
-        modelLightStruct_setField50(*(void **)(p + 0x4), 2);
+        modelLightStruct_setLightKind(*(void **)(p + 0x4), 2);
         lightVecFn_8001dd88(*(void **)(p + 0x4), *(f32 *)(arg + 0x8), *(f32 *)(arg + 0xc), *(f32 *)(arg + 0x10));
-        lightSetField2FB(*(void **)(p + 0x4), 1);
+        modelLightStruct_setAffectsAabbLightSelection(*(void **)(p + 0x4), 1);
     }
 }
 #pragma peephole reset

@@ -8250,8 +8250,8 @@ void fn_8001DB24(ModelLightStruct *p, void *v) {
     p->field54 = v;
 }
 
-void fn_8001DB5C(ModelLightStruct *p, u8 v) {
-    p->field2FC = v;
+void modelLightStruct_setSelectionPriority(ModelLightStruct *p, u8 v) {
+    p->selectionPriority = v;
 }
 
 int modelLightStruct_getActiveState(ModelLightStruct *p) {
@@ -8278,7 +8278,7 @@ void gameTextSetDrawFunc(void *fn) {
 }
 #pragma dont_inline reset
 
-void lightSetField2FB(ModelLightStruct *p, u8 v) {
+void modelLightStruct_setAffectsAabbLightSelection(ModelLightStruct *p, u8 v) {
     p->affectsAabbLightSelection = v;
 }
 
@@ -8290,7 +8290,7 @@ void lightSetFieldBC_8001db14(ModelLightStruct *p, u8 v) {
     p->fieldBC = v;
 }
 
-void modelLightStruct_setField50(ModelLightStruct *p, int v) {
+void modelLightStruct_setLightKind(ModelLightStruct *p, int v) {
     p->lightKind = v;
 }
 
@@ -8646,11 +8646,11 @@ void fn_8001D9E0(u8 *p, u8 a, u8 b, u8 c, u8 d) {
     p[0x10b] = d;
 }
 
-void lightSetFieldB0(u8 *p, u8 a, u8 b, u8 c, u8 d) {
-    p[0xb0] = a;
-    p[0xb1] = b;
-    p[0xb2] = c;
-    p[0xb3] = d;
+void modelLightStruct_setDiffuseTargetColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
+    p->colorFadeTargetA8[0] = a;
+    p->colorFadeTargetA8[1] = b;
+    p->colorFadeTargetA8[2] = c;
+    p->colorFadeTargetA8[3] = d;
 }
 
 void fn_8001FE90(void) {
@@ -8757,9 +8757,9 @@ int fn_80022E0C(int x) {
     return x;
 }
 
-void modelFn_8001db3c(u8 *p, int n) {
-    *(int *)(p + 0x5c) = n;
-    p[0x64] = (u8)(1 << n);
+void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct *p, int n) {
+    p->objectLightMaskIndex = n;
+    p->objectLightMask = (u8)(1 << n);
 }
 
 void objSetHintTextIdx(u8 *obj, u16 idx) {
@@ -8804,8 +8804,8 @@ void modelLightStruct_getColorsA8AC(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8
     *d = p->colorA8[3];
 }
 
-void fn_8001DA3C(u8 *p, f32 a, f32 b, f32 c) {
-    GXInitLightAttnA(p + 0x68, a, b, c);
+void modelLightStruct_setAngularAttenuation(ModelLightStruct *p, f32 a, f32 b, f32 c) {
+    GXInitLightAttnA((u8 *)p + 0x68, a, b, c);
 }
 
 void modelLightStruct_setColors100104(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
@@ -8891,10 +8891,10 @@ void modelLightStruct_updateColorFade(ModelLightStruct *light) {
     }
 
     progress = light->colorFadeProgress;
-    light->colorA8[0] = (u8)(int)(progress * (f32)(light->colorB0[0] - light->colorAC[0]) + (f32)light->colorAC[0]);
-    light->colorA8[1] = (u8)(int)(progress * (f32)(light->colorB0[1] - light->colorAC[1]) + (f32)light->colorAC[1]);
-    light->colorA8[2] = (u8)(int)(progress * (f32)(light->colorB0[2] - light->colorAC[2]) + (f32)light->colorAC[2]);
-    light->colorA8[3] = (u8)(int)(progress * (f32)(light->colorB0[3] - light->colorAC[3]) + (f32)light->colorAC[3]);
+    light->colorA8[0] = (u8)(int)(progress * (f32)(light->colorFadeTargetA8[0] - light->colorAC[0]) + (f32)light->colorAC[0]);
+    light->colorA8[1] = (u8)(int)(progress * (f32)(light->colorFadeTargetA8[1] - light->colorAC[1]) + (f32)light->colorAC[1]);
+    light->colorA8[2] = (u8)(int)(progress * (f32)(light->colorFadeTargetA8[2] - light->colorAC[2]) + (f32)light->colorAC[2]);
+    light->colorA8[3] = (u8)(int)(progress * (f32)(light->colorFadeTargetA8[3] - light->colorAC[3]) + (f32)light->colorAC[3]);
 
     intensity = light->activeIntensity;
     light->colorA8[0] = (u8)(int)((f32)light->colorA8[0] * intensity);

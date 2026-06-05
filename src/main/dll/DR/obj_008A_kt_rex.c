@@ -777,7 +777,7 @@ void ktrex_init(int obj, char *arg) {
     lbl_803DDD50 = (void *)mapBlockFn_800592e4();
     *(void **)((char *)gKTRexState + 0x178) = objCreateLight(0, 1);
     if (*(void **)((char *)gKTRexState + 0x178) != 0) {
-        modelLightStruct_setField50(*(void **)((char *)gKTRexState + 0x178), 2);
+        modelLightStruct_setLightKind(*(void **)((char *)gKTRexState + 0x178), 2);
         lightVecFn_8001dd88(*(void **)((char *)gKTRexState + 0x178), *(f32 *)((char *)obj + 0xc),
             *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14));
         modelLightStruct_setColorsA8AC(*(void **)((char *)gKTRexState + 0x178), 0xff, 0, 0, 0);

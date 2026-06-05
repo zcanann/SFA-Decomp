@@ -21,13 +21,13 @@ typedef struct ModelLightStruct {
     int lightKind;
     void *field54;
     int activeState;
-    int field5C;
+    int objectLightMaskIndex;
     int transformMode;
-    u8 field64;
+    u8 objectLightMask;
     u8 pad65[0xa8 - 0x65];
     u8 colorA8[4];
     u8 colorAC[4];
-    u8 colorB0[4];
+    u8 colorFadeTargetA8[4];
     f32 fieldB4;
     int fieldB8;
     u8 fieldBC;
@@ -61,7 +61,7 @@ typedef struct ModelLightStruct {
     u8 glowAlpha;
     s8 glowAlphaStep;
     u8 affectsAabbLightSelection;
-    u8 field2FC;
+    u8 selectionPriority;
     u8 pad2fd[0x300 - 0x2fd];
 } ModelLightStruct;
 
@@ -71,6 +71,12 @@ void modelLightStruct_updateColorFade(ModelLightStruct *light);
 void modelLightStruct_startColorFade(ModelLightStruct *light, int mode, s16 frames);
 void modelLightStruct_setEnabled(ModelLightStruct *light, u8 enabled, f32 duration);
 int modelLightStruct_getActiveState(ModelLightStruct *light);
+void modelLightStruct_setLightKind(ModelLightStruct *light, int lightKind);
+void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct *light, int objectLightMaskIndex);
+void modelLightStruct_setAngularAttenuation(ModelLightStruct *light, f32 a0, f32 a1, f32 a2);
+void modelLightStruct_setDiffuseTargetColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
+void modelLightStruct_setAffectsAabbLightSelection(ModelLightStruct *light, u8 enabled);
+void modelLightStruct_setSelectionPriority(ModelLightStruct *light, u8 priority);
 void modelLightStruct_setGlowProjectionRadius(ModelLightStruct *light, f32 radius);
 void modelLightStruct_setGlowColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
 void modelLightStruct_setupGlow(ModelLightStruct *light, u32 textureId, u8 red, u8 green, u8 blue, u8 alpha, f32 scale);

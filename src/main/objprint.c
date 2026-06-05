@@ -4797,7 +4797,7 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     extern void GXSetNumIndStages(int n);
     extern void GXSetNumTexGens(int n);
     extern int *objCreateLight(int obj, int p2);
-    extern void modelLightStruct_setField50(int *lt, int v);
+    extern void modelLightStruct_setLightKind(int *lt, int v);
     extern void modelStruct2_setVectors(f32 x, f32 y, f32 z, int *lt);
     extern void modelLightStruct_setColorsA8AC(int *lt, int r, int g, int b, int a);
     extern void fn_8001E8F4(int x);
@@ -4944,7 +4944,7 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
         kc2 = *(ObjPrintGXColor *)&lbl_803DEA00;
         lt = objCreateLight(obj, 0);
         if (lt != NULL) {
-            modelLightStruct_setField50(lt, 4);
+            modelLightStruct_setLightKind(lt, 4);
             modelStruct2_setVectors(lbl_803DEA04, lbl_803DEA34, lbl_803DEA04, lt);
             modelLightStruct_setColorsA8AC(lt, 0xff, 0xff, 0xff, 0xff);
             fn_8001E8F4(0);

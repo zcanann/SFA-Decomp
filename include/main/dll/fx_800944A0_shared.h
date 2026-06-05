@@ -301,7 +301,7 @@ extern int lbl_802C212C[];
 extern int *lbl_803DCAB4;
 extern f32 lbl_803DF394;
 extern f32 lbl_803DF398;
-extern void modelLightStruct_setField50(void *light, int v);
+extern void modelLightStruct_setLightKind(void *light, int v);
 extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setColorsA8AC(void *light, int r, int g, int b, int a);
 extern void modelLightStruct_setColors100104(void *light, int r, int g, int b, int a);
@@ -309,7 +309,7 @@ extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
 extern void lightSetField4D(void *light, int v);
 extern void modelLightStruct_setEnabled(void *light, f32 a, int b);
 extern void modelLightStruct_startColorFade(void *light, int a, int b);
-extern void lightSetField2FB(void *light, int v);
+extern void modelLightStruct_setAffectsAabbLightSelection(void *light, int v);
 
 /* forward declarations for graduated FX functions */
 void cloudaction_func08_nop(void);

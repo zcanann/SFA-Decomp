@@ -2997,7 +2997,7 @@ void fn_80159284(int* obj, u8* state)
 #pragma scheduling reset
 
 extern int objCreateLight(int a, int b);
-extern void modelLightStruct_setField50();
+extern void modelLightStruct_setLightKind();
 extern void lightVecFn_8001dd88();
 extern void modelLightStruct_setColorsA8AC();
 extern void modelLightStruct_setColors100104();
@@ -3005,7 +3005,7 @@ extern void lightDistAttenFn_8001dc38();
 extern void lightSetField4D();
 extern void modelLightStruct_setEnabled();
 extern void modelLightStruct_startColorFade();
-extern void lightSetField2FB();
+extern void modelLightStruct_setAffectsAabbLightSelection();
 extern void sidekickToy_accelerateTowardTarget3D(s16* obj, f32 x, f32 y, f32 z, f32 a, f32 b, f32 c, f32 spd);
 extern f32 powfBitEstimate(f32 base, f32 exp);
 extern f32 sqrtf(f32 x);
@@ -3068,7 +3068,7 @@ void fn_80159FCC(s16* obj, u8* state)
                 *(int*)(state + 0x368) = objCreateLight(0, 1);
             }
             if (*(void**)(state + 0x368) != NULL) {
-                modelLightStruct_setField50(*(int*)(state + 0x368), 2);
+                modelLightStruct_setLightKind(*(int*)(state + 0x368), 2);
                 lightVecFn_8001dd88(*(int*)(state + 0x368), *(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
                 modelLightStruct_setColorsA8AC(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
                 modelLightStruct_setColors100104(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
@@ -3076,7 +3076,7 @@ void fn_80159FCC(s16* obj, u8* state)
                 lightSetField4D(*(int*)(state + 0x368), 1);
                 modelLightStruct_setEnabled(*(int*)(state + 0x368), 1, lbl_803E2C18);
                 modelLightStruct_startColorFade(*(int*)(state + 0x368), 0, 0);
-                lightSetField2FB(*(int*)(state + 0x368), 0);
+                modelLightStruct_setAffectsAabbLightSelection(*(int*)(state + 0x368), 0);
             }
         } else {
             lightVecFn_8001dd88(*(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
@@ -3901,7 +3901,7 @@ void fn_80159958(s16* obj, u8* state)
                 *(int*)(state + 0x368) = objCreateLight(0, 1);
             }
             if (*(void**)(state + 0x368) != NULL) {
-                modelLightStruct_setField50(*(int*)(state + 0x368), 2);
+                modelLightStruct_setLightKind(*(int*)(state + 0x368), 2);
                 lightVecFn_8001dd88(*(int*)(state + 0x368), *(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
                 modelLightStruct_setColorsA8AC(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
                 modelLightStruct_setColors100104(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
@@ -3909,7 +3909,7 @@ void fn_80159958(s16* obj, u8* state)
                 lightSetField4D(*(int*)(state + 0x368), 1);
                 modelLightStruct_setEnabled(*(int*)(state + 0x368), 1, lbl_803E2C18);
                 modelLightStruct_startColorFade(*(int*)(state + 0x368), 0, 0);
-                lightSetField2FB(*(int*)(state + 0x368), 0);
+                modelLightStruct_setAffectsAabbLightSelection(*(int*)(state + 0x368), 0);
             }
         } else {
             lightVecFn_8001dd88(*(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));

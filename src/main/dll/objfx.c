@@ -976,7 +976,7 @@ void objParticleFn_80099d84(void *obj, u8 type, void *light, f32 scale, f32 fext
     }
 
     if (light != NULL) {
-        modelLightStruct_setField50(light, 2);
+        modelLightStruct_setLightKind(light, 2);
         lightVecFn_8001dd88(light, *(f32 *)((char *)obj + 0x18),
                             *(f32 *)((char *)obj + 0x1c) + zoff,
                             *(f32 *)((char *)obj + 0x20));
@@ -990,7 +990,7 @@ void objParticleFn_80099d84(void *obj, u8 type, void *light, f32 scale, f32 fext
         modelLightStruct_setEnabled(light, lbl_803DF35C, 1);
         modelLightStruct_setEnabled(light, lbl_803DF354, 0);
         modelLightStruct_startColorFade(light, 0, 0);
-        lightSetField2FB(light, 1);
+        modelLightStruct_setAffectsAabbLightSelection(light, 1);
     }
 }
 #pragma peephole reset
@@ -1110,7 +1110,7 @@ void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *ligh
     }
 
     if (light != NULL) {
-        modelLightStruct_setField50(light, 2);
+        modelLightStruct_setLightKind(light, 2);
         lightVecFn_8001dd88(light, *(f32 *)((char *)origin + 0xc),
                             lbl_803DF384 + *(f32 *)((char *)origin + 0x10),
                             *(f32 *)((char *)origin + 0x14));
@@ -1121,7 +1121,7 @@ void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *ligh
         modelLightStruct_setEnabled(light, lbl_803DF35C, 1);
         modelLightStruct_setEnabled(light, lbl_803DF358, 0);
         modelLightStruct_startColorFade(light, 0, 0);
-        lightSetField2FB(light, 1);
+        modelLightStruct_setAffectsAabbLightSelection(light, 1);
     }
 }
 #pragma peephole reset

@@ -4247,7 +4247,7 @@ extern void gameTextRun(void);
 extern void GXFlush_(int, int);
 extern int getLoadedFileFlags(int);
 extern void *objCreateLight(int, int);
-extern void modelLightStruct_setField50(void *, int);
+extern void modelLightStruct_setLightKind(void *, int);
 extern void modelLightStruct_setColors100104(void *, int, int, int, int);
 extern void *textureLoadAsset(int);
 extern u8 lbl_803DC950;
