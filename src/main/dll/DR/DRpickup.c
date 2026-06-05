@@ -195,7 +195,7 @@ void fn_801EC1AC(int param_1, int param_2)
         vec_args[1] = *(f32 *)(param_2 + 0x49c);
         vec_args[2] = (f32)(s32)*(s16 *)(param_1 + 0x4);
         vec_args[3] = (f32)(s32)*(s16 *)(param_1 + 0x2);
-        (*(void (**)(void *, int, void *))(((void **)*gCameraInterface)[0x60 / 4]))(
+        (**(void (***)(void *, int, void *))((u8 *)*gCameraInterface + 0x60))(
             vec_args, 0x10, *gCameraInterface);
     }
 
