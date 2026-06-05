@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_8027AC80.h"
+#include "main/audio/adsr_lowprec.h"
 
 extern u32 adsrHandle(int p1, int p2, int p3);
 

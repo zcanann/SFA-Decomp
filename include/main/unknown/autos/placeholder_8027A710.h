@@ -1,9 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027A710_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027A710_H_
-
-#include "ghidra_import.h"
-
-int fn_8027A660(int state);
-int fn_8027A8D4(int state);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8027A710_H_ */
