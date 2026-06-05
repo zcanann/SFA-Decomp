@@ -120,8 +120,9 @@ int platform1_control(int obj, int p2, u8 *data)
     u32 buttons;
     f32 wob1, wob2, push;
     f32 diff;
+    f32 absDiff;
     f32 t;
-    u32 vol;
+    int vol;
     int ret;
     f32 c566C, c5674, c5670, c5678, c5684, c5680, c567C, c568C, c5690, c569C;
     int idx1, cnt1, idx2, cnt2, idx3, cnt3, idx4, cnt4, idx5, cnt5;
@@ -332,10 +333,12 @@ int platform1_control(int obj, int p2, u8 *data)
             Sfx_PlayFromObject(obj, PLATFORM1_PLATFORM_SFX_ID);
         }
         if (diff < lbl_803E5678) {
-            diff = -diff;
+            absDiff = -diff;
+        } else {
+            absDiff = diff;
         }
-        vol = (u32)(lbl_803E56A0 * diff);
-        if ((int)vol > 100) {
+        vol = (int)(lbl_803E56A0 * absDiff);
+        if (vol > 100) {
             vol = 100;
         }
         Sfx_SetObjectSfxVolume(obj, PLATFORM1_LOOP_SFX_ID, vol & 0xff, lbl_803E56A4);
