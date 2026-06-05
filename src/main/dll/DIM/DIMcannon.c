@@ -2634,7 +2634,7 @@ void dimlogfire_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
             int *q = ((int **)p)[idx];
             *(u16 *)((char *)q + 0x18) = (u16)(*(u16 *)((char *)q + 0x18) & ~0x8);
             *(u8 *)((char *)(int *)state[1] + 0x37) = *(u8 *)((char *)obj + 0x37);
-            ((void (*)(int *, f32))objRenderFn_8003b8f4)((int *)state[1], lbl_803E4820);
+            ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)((int *)state[1], p2, p3, p4, p5, lbl_803E4820);
         }
         ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4820);
         if (*(void **)state != NULL) {
