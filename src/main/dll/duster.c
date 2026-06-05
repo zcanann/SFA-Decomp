@@ -31,7 +31,7 @@ extern uint fn_80154FB4(double, short *, int, uint);
 extern int fn_80169EF4(f32 speed, f32 arc, float *src, float *dst, char flag);
 extern undefined4 PSVECSubtract();
 extern undefined4 PSVECNormalize();
-extern double PSVECDotProduct();
+extern f32 PSVECDotProduct(f32 *a, f32 *b);
 extern undefined4 PSVECCrossProduct();
 extern void fn_80293018(int angle, float *outSin, float *outCos);
 extern double fn_80293900();
@@ -177,33 +177,20 @@ void fn_8015536C(float param_1,float param_2,float *param_3,float *param_4)
 void fn_801554B4(int *param_1,int param_2)
 {
   u8 cVar3;
-  int iVar4;
   float *pfVar5;
-  double dVar6;
+  int iVar4;
+  f32 dVar6;
   float dv[3];
-  float local_c4 [3];
+  float local_c4[3];
   float bv[3];
-  float afStack_ac [3];
+  float afStack_ac[3];
   float av[3];
   float cv[3];
-  float afStack_88 [3];
+  float afStack_88[3];
   float minv[3];
   float maxv[3];
-  int iStack_64;
-  undefined4 local_60;
-  float local_5c;
-  float local_58;
-  float local_54;
-  undefined4 local_50;
-  float local_4c;
-  undefined4 local_48;
-  undefined4 local_44;
-  undefined4 local_40;
-  undefined4 local_3c;
-  float local_28;
-  float local_24;
-  float local_20;
-  
+  float hit[18];
+
   cVar3 = 0;
   pfVar5 = (float *)&lbl_8031F2F8;
   for (iVar4 = 0; cVar3 == 0 && iVar4 < 4; iVar4 = iVar4 + 1) {
@@ -213,57 +200,48 @@ void fn_801554B4(int *param_1,int param_2)
     minv[0] = *(float *)(param_1 + 3) - *pfVar5;
     minv[1] = *(float *)(param_1 + 4);
     minv[2] = *(float *)(param_1 + 5) - pfVar5[1];
-    cVar3 = objBboxFn_800640cc(maxv,minv,(float *)0x3,&iStack_64,param_1,5,3,0xff,0);
+    cVar3 = objBboxFn_800640cc(maxv,minv,lbl_803E2A00,3,hit,param_1,5,3,0xff,0);
     pfVar5 = pfVar5 + 2;
   }
-  if (cVar3 != '\0') {
-    *(float *)(param_1 + 3) = (local_20 - lbl_803E2A20) * ((minv[0] - maxv[0]) / lbl_803E2A24) +
-                      maxv[0];
-    *(float *)(param_1 + 5) = (local_20 - lbl_803E2A20) * ((minv[2] - maxv[2]) / lbl_803E2A24) +
-                      maxv[2];
-    *(undefined4 *)(param_2 + 0x344) = local_48;
-    *(undefined4 *)(param_2 + 0x348) = local_44;
-    *(undefined4 *)(param_2 + 0x34c) = local_40;
-    *(undefined4 *)(param_2 + 0x350) = local_3c;
-    if (local_54 < local_58) {
-      local_54 = local_58;
-    }
-    *(float *)(param_2 + 0x358) = local_54;
-    if (local_28 < local_24) {
-      local_24 = local_28;
-    }
-    *(float *)(param_2 + 0x35c) = local_24;
+  if (cVar3 != 0) {
+    *(float *)(param_1 + 3) = (hit[17] - lbl_803E2A20) * ((minv[0] - maxv[0]) / lbl_803E2A24) + maxv[0];
+    *(float *)(param_1 + 5) = (hit[17] - lbl_803E2A20) * ((minv[2] - maxv[2]) / lbl_803E2A24) + maxv[2];
+    *(float *)(param_2 + 0x344) = hit[7];
+    *(float *)(param_2 + 0x348) = hit[8];
+    *(float *)(param_2 + 0x34c) = hit[9];
+    *(float *)(param_2 + 0x350) = hit[10];
+    *(float *)(param_2 + 0x358) = (hit[3] > hit[4]) ? hit[3] : hit[4];
+    *(float *)(param_2 + 0x35c) = (hit[15] < hit[16]) ? hit[15] : hit[16];
     av[0] = lbl_803E2A00;
     av[1] = lbl_803E2A04;
     av[2] = lbl_803E2A00;
     PSVECCrossProduct(av,(float *)(param_2 + 0x344),afStack_88);
     PSVECNormalize(afStack_88,afStack_88);
-    *(undefined4 *)(param_2 + 0x360) = local_60;
-    *(undefined4 *)(param_2 + 0x364) = local_50;
-    cv[0] = local_5c;
-    cv[2] = local_4c;
+    *(float *)(param_2 + 0x360) = hit[1];
+    *(float *)(param_2 + 0x364) = hit[5];
+    cv[0] = hit[2];
+    cv[2] = hit[6];
     bv[0] = *(float *)(param_2 + 0x360);
     bv[1] = *(float *)(param_2 + 0x358);
     bv[2] = *(float *)(param_2 + 0x364);
     PSVECSubtract(bv,cv,afStack_ac);
     dVar6 = PSVECDotProduct(afStack_ac,(float *)(param_2 + 0x344));
-    bv[0] = (float)((double)*(float *)(param_2 + 0x344) * dVar6 + (double)cv[0]);
-    bv[1] = (float)((double)*(float *)(param_2 + 0x348) * dVar6 + (double)cv[1]);
-    bv[2] = (float)((double)*(float *)(param_2 + 0x34c) * dVar6 + (double)cv[2]);
+    bv[0] = *(float *)(param_2 + 0x344) * dVar6 + cv[0];
+    bv[1] = *(float *)(param_2 + 0x348) * dVar6 + cv[1];
+    bv[2] = *(float *)(param_2 + 0x34c) * dVar6 + cv[2];
     dv[0] = lbl_803E2A00;
     dv[1] = lbl_803E2A04;
     dv[2] = lbl_803E2A00;
     PSVECCrossProduct(dv,(float *)(param_2 + 0x344),local_c4);
     PSVECNormalize(local_c4,local_c4);
-    if (lbl_803E2A00 == local_c4[0]) {
-      *(float *)(param_2 + 0x354) = (cv[2] - *(float *)(param_2 + 0x364)) / local_c4[2];
-    }
-    else {
+    if (lbl_803E2A00 != local_c4[0]) {
       *(float *)(param_2 + 0x354) = (cv[0] - *(float *)(param_2 + 0x360)) / local_c4[0];
     }
-    *(undefined *)(param_2 + 0x33a) = 1;
+    else {
+      *(float *)(param_2 + 0x354) = (cv[2] - *(float *)(param_2 + 0x364)) / local_c4[2];
+    }
+    *(u8 *)(param_2 + 0x33a) = 1;
   }
-  return;
 }
 
 /*
