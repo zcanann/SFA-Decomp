@@ -116,7 +116,10 @@ typedef struct DFSHLaserBeamRuntime {
   s16 lockTimer;
   s16 cycleTimer;
   s16 warmupThreshold;
-  u8 pad30[0x48 - 0x30];
+  f32 hitPos[3];
+  f32 hitX;
+  u8 pad40[0x44 - 0x40];
+  f32 hitZ;
   u8 modgfxAttached;
   u8 blastPhase;
   u8 proximityMode;
