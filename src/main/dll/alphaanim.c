@@ -725,14 +725,15 @@ int immultiseq_SeqFn(int* obj, int* anim, u8* buf) {
         return 0;
     }
     {
-        u32 v = state[0];
+        int v = state[0];
         if (v != 4) {
-            u32 next = v + 1;
+            int next = v + 1;
             if ((s32)next < 4) {
-                s16 gbit = *(s16*)((char*)def + 0x20 + next * 2);
+                u8 *nextDef = def + next * 2;
+                s16 gbit = *(s16*)(nextDef + 0x20);
                 if (gbit != -1) {
                     int bv = GameBit_Get(gbit);
-                    if ((u32)!(((u32)def[0x30] >> next) & 1) == (u32)bv) {
+                    if ((u32)!((def[0x30] >> next) & 1) == (u32)bv) {
                         ((void (*)(int))((int **)*gObjectTriggerInterface)[0x13])(*(s16 *)((char *)obj + 0xb4));
                     }
                 }
@@ -956,6 +957,7 @@ void immultiseq_update(int *obj)
     u8 *state;
     u8 *def;
     u8 step;
+    u8 *stepDef;
     int prevStep;
     s16 bitId;
 
@@ -964,14 +966,16 @@ void immultiseq_update(int *obj)
 
     if ((state[1] & IMMULTISEQ_LATCH_ADVANCE_BIT) != 0) {
         step = state[0];
-        bitId = *(s16 *)(def + 0x18 + step * 2);
+        stepDef = def + step * 2;
+        bitId = *(s16 *)(stepDef + 0x18);
         GameBit_Set(bitId, (u32)!((def[0x30] >> (step + 4)) & 1));
         state[1] = (u8)(state[1] & ~IMMULTISEQ_LATCH_ADVANCE_BIT);
         state[0]++;
     }
 
     if (state[0] != 4) {
-        bitId = *(s16 *)(def + 0x20 + state[0] * 2);
+        stepDef = def + state[0] * 2;
+        bitId = *(s16 *)(stepDef + 0x20);
         if (bitId == -1) {
             state[0] = 4;
         }
