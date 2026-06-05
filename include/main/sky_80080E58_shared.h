@@ -4250,7 +4250,7 @@ extern void *objCreateLight(int, int);
 extern void modelLightStruct_setLightKind(void *, int);
 extern void modelLightStruct_setSpecularColor(void *, int, int, int, int);
 extern void *textureLoadAsset(int);
-extern u8 lbl_803DC950;
+extern u8 gDvdErrorPauseActive;
 extern f32 lbl_8030F2C8[];
 extern f32 lbl_8030F2D4[];
 void skyFn_80088e54(int mode, f32 brightness);

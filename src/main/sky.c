@@ -978,7 +978,7 @@ void loadLightFn_8008bbc4(void)
             gameTextRun();
             GXFlush_(1, 0);
         }
-        if (lbl_803DC950 != 0) {
+        if (gDvdErrorPauseActive != 0) {
             done = 1;
         }
     }

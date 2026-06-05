@@ -2136,7 +2136,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
             gameTextRun();
             GXFlush_(1, 0);
         }
-        if (lbl_803DC950 != 0) {
+        if (gDvdErrorPauseActive != 0) {
             stopped = 1;
             gAudioStreamPlaying = 0;
         }

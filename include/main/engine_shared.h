@@ -1139,7 +1139,7 @@ int Curve_AdvanceAlongPath(Curve *curve, f32 dt);
 void Curve_BuildSegmentLengthTable(Curve *curve, int count);
 extern char sCurvesMoveTooFewControlPoints[];
 extern char sCurvesMoveBadControlPointCount[];
-extern u8 lbl_803DC950;
+extern u8 gDvdErrorPauseActive;
 extern u8 lbl_803DC951;
 extern int lbl_803DC960;
 extern u8 lbl_80339950[];

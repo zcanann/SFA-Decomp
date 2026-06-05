@@ -99,7 +99,7 @@ extern void fn_801BB598(DIMbossObject *obj,DIMbossRuntime *runtime);
 
 extern f32 timeDelta;
 extern undefined4 DAT_803ad60c;
-extern u8 lbl_803DC950;
+extern u8 gDvdErrorPauseActive;
 extern u32 gDIMbossSequenceFlags;
 extern undefined4 DAT_803de808;
 extern f32 lbl_803E58DC;
@@ -365,7 +365,7 @@ int DIMboss_updateState(DIMbossObject *obj,undefined4 param_2,ObjAnimUpdateState
           gameTextRun();
           GXFlush_(1,0);
         }
-        if (lbl_803DC950 != '\0') {
+        if (gDvdErrorPauseActive != '\0') {
           loadWaitStarted = true;
         }
       }

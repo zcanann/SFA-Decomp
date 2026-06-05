@@ -2365,7 +2365,7 @@ typedef struct {
     u8 b;
     u8 a;
 } HudColor;
-extern u8 lbl_803DC950;
+extern u8 gDvdErrorPauseActive;
 extern f32 lbl_803E0568;
 extern void *gScreenTransitionInterface;
 extern void GXGetScissor(int *x, int *y, int *w, int *h);
@@ -2411,7 +2411,7 @@ void screenTransition_do2(int p1, int p2, int p3) {
     } else {
         lbl_803DD42D = 0;
     }
-    if (lbl_803DC950 != 0) {
+    if (gDvdErrorPauseActive != 0) {
         return;
     }
     switch (lbl_803DD42C) {

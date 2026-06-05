@@ -2136,7 +2136,7 @@ extern void DVDSetAutoInvalidation(int enable);
 extern void OSResetSystem(int reset, u32 resetCode, int forceMenu);
 extern u8 gAudioStreamPlaying;
 extern u8 gAudioStreamDvdState;
-extern u8 lbl_803DC950;
+extern u8 gDvdErrorPauseActive;
 extern int lbl_803DC960;
 extern u8 lbl_803DCCA6;
 extern u8 lbl_803DC951;
@@ -2216,24 +2216,24 @@ void checkReset(void) {
         break;
     case 4:
         OSReport(msg + 0xec);
-        while (lbl_803DC950 == 0 && (gAudioStreamPlaying != 0 || gAudioStreamDvdState != 0)) {
+        while (gDvdErrorPauseActive == 0 && (gAudioStreamPlaying != 0 || gAudioStreamDvdState != 0)) {
             status = DVDGetDriveStatus();
             lbl_803DC960 = status;
             switch (status) {
             case -1:
-                lbl_803DC950 = 1;
+                gDvdErrorPauseActive = 1;
                 break;
             case 4:
-                lbl_803DC950 = 1;
+                gDvdErrorPauseActive = 1;
                 break;
             case 5:
-                lbl_803DC950 = 1;
+                gDvdErrorPauseActive = 1;
                 break;
             case 6:
-                lbl_803DC950 = 1;
+                gDvdErrorPauseActive = 1;
                 break;
             case 11:
-                lbl_803DC950 = 1;
+                gDvdErrorPauseActive = 1;
                 break;
             }
         }

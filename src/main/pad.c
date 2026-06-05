@@ -116,7 +116,7 @@ void setRumbleEnabled(u8 enabled)
 #pragma peephole off
 void padGetAnalogInput(int port, u8* x, u8* y)
 {
-    if (lbl_803DC908 != 0 || port > 0 || lbl_803DC950 != 0) {
+    if (lbl_803DC908 != 0 || port > 0 || gDvdErrorPauseActive != 0) {
         *x = 0;
         *y = 0;
         return;
@@ -136,7 +136,7 @@ u8 padGetCY(int port)
     if (port > 0) {
         return 0;
     }
-    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -154,7 +154,7 @@ u8 padGetCX(int port)
     if (port > 0) {
         return 0;
     }
-    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -172,7 +172,7 @@ u8 padGetStickY(int port)
     if (port > 0) {
         return 0;
     }
-    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -190,7 +190,7 @@ u8 padGetStickX(int port)
     if (port > 0) {
         return 0;
     }
-    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -205,7 +205,7 @@ u8 padGetLTrigger(int port)
 {
     PadStatusLite* statuses;
 
-    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -220,7 +220,7 @@ u8 padGetRTrigger(int port)
 {
     PadStatusLite* statuses;
 
-    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     statuses = (PadStatusLite*)lbl_803398F0;
@@ -236,7 +236,7 @@ u16 getPadFn_80014d9c(int port)
     if (port > 0) {
         port = 0;
     }
-    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     return (&lbl_803DC92C)[port];
@@ -251,7 +251,7 @@ u16 getButtons_80014dd8(int port)
     if (port > 0) {
         port = 0;
     }
-    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     return (&lbl_803DC91C)[port];
@@ -266,7 +266,7 @@ u32 getButtonsJustPressedIfNotBusy(int port)
     if (port > 0) {
         return 0;
     }
-    if (lbl_803DC950 != 0) {
+    if (gDvdErrorPauseActive != 0) {
         return 0;
     }
     if (lbl_803DC908 != 0) {
@@ -284,7 +284,7 @@ u32 getButtonsJustPressed(int port)
     if (port > 0) {
         return 0;
     }
-    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     return lbl_803398E0[port] & lbl_802C6E50[port];
@@ -311,7 +311,7 @@ u32 getButtonsHeld(int port)
     if (port > 0) {
         return 0;
     }
-    if (lbl_803DC908 != 0 || lbl_803DC950 != 0) {
+    if (lbl_803DC908 != 0 || gDvdErrorPauseActive != 0) {
         return 0;
     }
     return lbl_803398C0[port] & lbl_802C6E50[port];

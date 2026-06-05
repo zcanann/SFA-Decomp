@@ -7374,7 +7374,7 @@ extern void dvdCheckError(void);
 extern void mmFreeTick(int);
 extern void gameTextRun(void);
 extern void GXFlush_(int, int);
-extern u8 lbl_803DC950;
+extern u8 gDvdErrorPauseActive;
 int mergeTableFiles(u32 *tbl, int id, int idx, int count_);
 
 int mapUnload(int mapId, int flags)
@@ -7424,7 +7424,7 @@ int mapUnload(int mapId, int flags)
                 gameTextRun();
                 GXFlush_(1, 0);
             }
-            if (lbl_803DC950) {
+            if (gDvdErrorPauseActive) {
                 needWait = 1;
             }
         }

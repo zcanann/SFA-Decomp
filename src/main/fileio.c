@@ -20,8 +20,8 @@ void dvdCheckError(void)
     case -1:
         msgId = 0x339;
         stopRumble2();
-        if (lbl_803DC950 == 0) {
-            lbl_803DC950 = 1;
+        if (gDvdErrorPauseActive == 0) {
+            gDvdErrorPauseActive = 1;
             setTimeStop(0xff);
             cutsceneFadeInOut(1);
             lbl_803DC951 = 1;
@@ -30,8 +30,8 @@ void dvdCheckError(void)
     case 4:
         msgId = 0x33d;
         stopRumble2();
-        if (lbl_803DC950 == 0) {
-            lbl_803DC950 = 1;
+        if (gDvdErrorPauseActive == 0) {
+            gDvdErrorPauseActive = 1;
             setTimeStop(0xff);
             cutsceneFadeInOut(1);
         }
@@ -39,8 +39,8 @@ void dvdCheckError(void)
     case 5:
         msgId = 0x33c;
         stopRumble2();
-        if (lbl_803DC950 == 0) {
-            lbl_803DC950 = 1;
+        if (gDvdErrorPauseActive == 0) {
+            gDvdErrorPauseActive = 1;
             setTimeStop(0xff);
             cutsceneFadeInOut(1);
         }
@@ -48,8 +48,8 @@ void dvdCheckError(void)
     case 6:
         msgId = 0x33e;
         stopRumble2();
-        if (lbl_803DC950 == 0) {
-            lbl_803DC950 = 1;
+        if (gDvdErrorPauseActive == 0) {
+            gDvdErrorPauseActive = 1;
             setTimeStop(0xff);
             cutsceneFadeInOut(1);
         }
@@ -57,17 +57,17 @@ void dvdCheckError(void)
     case 11:
         msgId = 0x33a;
         stopRumble2();
-        if (lbl_803DC950 == 0) {
-            lbl_803DC950 = 1;
+        if (gDvdErrorPauseActive == 0) {
+            gDvdErrorPauseActive = 1;
             setTimeStop(0xff);
             cutsceneFadeInOut(1);
         }
         break;
     default:
-        if (lbl_803DC950 != 0) {
+        if (gDvdErrorPauseActive != 0) {
             if ((getLoadedFileFlags(0) & ~0x100000) == 0) {
                 if (getGameState() != 1 || DVDCheckDisk() != 0) {
-                    lbl_803DC950 = 0;
+                    gDvdErrorPauseActive = 0;
                     cutsceneFadeInOut(0);
                     Sfx_SetObjectSoundsPaused(0);
                 }
@@ -166,7 +166,7 @@ int DVDRead(void* fileInfo, void* buf, int size, int offset)
                 gameTextRun();
                 GXFlush_(1, 0);
             }
-            if (lbl_803DC950 != 0) {
+            if (gDvdErrorPauseActive != 0) {
                 resetSeen = 1;
             }
         }

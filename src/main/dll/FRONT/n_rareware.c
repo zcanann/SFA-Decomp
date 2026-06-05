@@ -28,7 +28,7 @@ extern void warpToMap(int mapId, int param_2);
 extern void loadUiDll(int dllNo);
 
 extern int lbl_803A4438[];
-extern u8 lbl_803DC950;
+extern u8 gDvdErrorPauseActive;
 extern u8 lbl_803DC968;
 extern u8 lbl_803DD5E8;
 extern uint lbl_803DD5EC;
@@ -138,7 +138,7 @@ void runLoadingScreens(void)
                 lbl_803A4438[2],alpha,0x119);
   }
 
-  loadingStatus = lbl_803DC950;
+  loadingStatus = gDvdErrorPauseActive;
   if ((u8)loadingStatus != 0) {
     lbl_803DD5E8 = 1;
   }
@@ -146,7 +146,7 @@ void runLoadingScreens(void)
     lbl_803DD5EC++;
   }
 
-  if ((lbl_803DD5E8 != 0) && (lbl_803DD5EC > 600) && (*(volatile u8 *)&lbl_803DC950 == 0)) {
+  if ((lbl_803DD5E8 != 0) && (lbl_803DD5EC > 600) && (*(volatile u8 *)&gDvdErrorPauseActive == 0)) {
     gameTextSetColor(0xff,0xff,0xff,0xff);
     gameTextShowStr(gameTextGetStr(0x565),0,0x118,300);
   }

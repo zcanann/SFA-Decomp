@@ -1626,7 +1626,7 @@ extern void waitNextFrame(void);
 extern void dvdCheckError(void);
 extern void mmFreeTick(int a);
 extern void gameTextRun(void);
-extern u8 lbl_803DC950;
+extern u8 gDvdErrorPauseActive;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern u8 framesThisStep;
@@ -1699,7 +1699,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -1722,7 +1722,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -1767,7 +1767,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -1790,7 +1790,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -1855,7 +1855,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -1878,7 +1878,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -2046,7 +2046,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -2069,7 +2069,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -2148,7 +2148,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -2171,7 +2171,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -2291,7 +2291,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -2314,7 +2314,7 @@ void loadAndDecompressDataFile(int param_1,int param_2,u32 param_3,u32 param_4,u
         gameTextRun();
         GXFlush_(1, 0);
       }
-      if (lbl_803DC950 != 0) {
+      if (gDvdErrorPauseActive != 0) {
         frame = 1;
       }
       }
@@ -10262,7 +10262,7 @@ extern void THPPlayerPostDrawDone(void);
 extern void GXPeekZ(int x, int y, void *out);
 extern f32 lbl_803DCCC0;
 extern f64 lbl_803DEA80;
-extern u8 lbl_803DC950;
+extern u8 gDvdErrorPauseActive;
 extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern u8 framesThisStep;
@@ -10398,7 +10398,7 @@ void waitNextFrame(void)
     OSResetStopwatch(lbl_8035F680);
     OSStartStopwatch(lbl_8035F680);
     timeDelta = lbl_803DEA9C * lbl_803DEAA0 * lbl_803DCCC0;
-    if (lbl_803DC950 != 0) {
+    if (gDvdErrorPauseActive != 0) {
         timeDelta = lbl_803DEA70;
     }
     if (lbl_803DEA74 < timeDelta) {

@@ -2898,7 +2898,7 @@ extern void gameTextRun(void);
 extern void GXFlush_(int, int);
 extern int saveGame_restoreObjectPosToRomList(void* object);
 extern char lbl_8037E0C0[];
-extern u8 lbl_803DC950;
+extern u8 gDvdErrorPauseActive;
 extern int lbl_803DB620;
 
 #pragma scheduling off
@@ -2932,7 +2932,7 @@ int mapProcessRomList(int slot)
             gameTextRun();
             GXFlush_(1, 0);
         }
-        if (lbl_803DC950)
+        if (gDvdErrorPauseActive)
             flag = 1;
     }
     i = 0;
@@ -4528,7 +4528,7 @@ void doPendingMapLoads(void)
                             gameTextRun();
                             GXFlush_(1, 0);
                         }
-                        if (lbl_803DC950)
+                        if (gDvdErrorPauseActive)
                             waited = 1;
                     }
                 } else {

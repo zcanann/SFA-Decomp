@@ -93,7 +93,7 @@ extern f64 DOUBLE_803e38c0;
 extern f32 lbl_803DC074;
 extern f32 lbl_803DC948;
 extern f32 lbl_803DC94C;
-extern f32 lbl_803DC950;
+extern f32 gDvdErrorPauseActive;
 extern f32 lbl_803DC954;
 extern f32 lbl_803DE6F0;
 extern f32 lbl_803E379C;
@@ -582,7 +582,7 @@ void FUN_8015750c(undefined8 param_1,undefined8 param_2,double param_3,undefined
     }
     if ((*(int *)(iVar10 + 0x29c) != 0) &&
        (lbl_803E37E8 < *(float *)(*(int *)(iVar10 + 0x29c) + 0xa8))) {
-      *(float *)(iVar10 + 0x2ac) = lbl_803DC950;
+      *(float *)(iVar10 + 0x2ac) = gDvdErrorPauseActive;
     }
     if ((((*(uint *)(iVar10 + 0x2dc) & 0x40000000) != 0) || (uVar4 == 0)) ||
        ((uVar5 < 3000 && ((uVar4 != 0 && (puVar3[0x50] != 0)))))) {
