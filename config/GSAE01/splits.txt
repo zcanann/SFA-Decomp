@@ -2359,13 +2359,10 @@ main/audio/voice_id.c:
 	extabindex  start:0x80006194 end:0x800061A0
 	.text       start:0x80279038 end:0x802795CC
 
-main/unknown/autos/placeholder_80279608.c:
+main/audio/voice_prio.c:
 	extab       start:0x80005960 end:0x80005968
 	extabindex  start:0x800061A0 end:0x800061AC
 	.text       start:0x802795CC end:0x8027975C
-
-main/unknown/autos/placeholder_8027979C.c:
-	.text       start:0x8027975C end:0x8027975C
 
 main/unknown/autos/placeholder_80279AF0.c:
 	extab       start:0x80005968 end:0x80005970
