@@ -173,10 +173,7 @@ void objfx_spawnMaskedHitEffect(void *obj, u8 a, u8 b, u8 mask, void *p7, f32 fv
     PartfxParams params;
     Tbl11 table1 = *(Tbl11 *)lbl_802C20EC;
     Tbl7 table2 = *(Tbl7 *)lbl_802C2104;
-    if (a == 0) {
-        return;
-    }
-    if (b == 0) {
+    if (a == 0 || b == 0) {
         return;
     }
     if ((mask & (u16)(int)gExpgfxFrameTimerA) == 0) {
@@ -688,6 +685,9 @@ void objfx_spawnFlaggedTrailBurst(void *obj, u8 mode, int p5, int p6, int p7, f3
     params.f6 = (s16)p5;
     params.f4 = (s16)p6;
     params.f8 = fval;
+    if (mode == 0) {
+        return;
+    }
     switch (mode) {
     case 1:
         params.a = 0;
