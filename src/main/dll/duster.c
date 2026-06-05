@@ -38,7 +38,7 @@ extern double fn_80293900();
 extern uint fn_80295CBC();
 
 extern undefined4 lbl_8031F2F8;
-extern undefined4 lbl_8031F318;
+extern u8 lbl_8031F318[];
 extern undefined4 lbl_8031F320;
 extern undefined4 lbl_803DC940;
 extern undefined4* gSHthorntailAnimationInterface;
@@ -989,26 +989,24 @@ void fn_80156950(uint param_1,int param_2)
     break;
   case 7:
     if (*(ushort *)(param_2 + 0x2f8) != 0) {
-      if (*(float *)(param_1 + 0x98) >= lbl_803E2AF8) {
-        Sfx_PlayFromObject(param_1,SFXfox_fightbreath2);
+      if (*(float *)(param_1 + 0x98) < lbl_803E2AF8) {
+        Sfx_PlayFromObject(param_1,SFXfox_fightbreath3);
       }
       else {
-        Sfx_PlayFromObject(param_1,SFXfox_fightbreath3);
+        Sfx_PlayFromObject(param_1,SFXfox_fightbreath2);
       }
     }
     break;
   case 8:
     if (*(ushort *)(param_2 + 0x2f8) != 0) {
-      if (*(float *)(param_1 + 0x98) >= lbl_803E2AFC) {
-        if (*(float *)(param_1 + 0x98) >= lbl_803E2B00) {
-          Sfx_PlayFromObject(param_1,SFXfox_fightbreath2);
-        }
-        else {
-          Sfx_PlayFromObject(param_1,SFXfox_fightbreath4);
-        }
+      if (*(float *)(param_1 + 0x98) < lbl_803E2AFC) {
+        Sfx_PlayFromObject(param_1,SFXfox_fightbreath1);
+      }
+      else if (*(float *)(param_1 + 0x98) < lbl_803E2B00) {
+        Sfx_PlayFromObject(param_1,SFXfox_fightbreath4);
       }
       else {
-        Sfx_PlayFromObject(param_1,SFXfox_fightbreath1);
+        Sfx_PlayFromObject(param_1,SFXfox_fightbreath2);
       }
     }
     break;
@@ -1078,19 +1076,19 @@ void fn_80156B0C(uint param_9,int param_10)
     *(uint *)(param_10 + 0x2dc) = *(uint *)(param_10 + 0x2dc) | 0x40000000;
   }
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
-    *(byte *)(param_10 + 0x33a) = *(byte *)(param_10 + 0x33a) + 1;
+    *(byte *)(param_10 + 0x33a) += 1;
     if (10 < *(byte *)(param_10 + 0x33a)) {
       *(undefined *)(param_10 + 0x33a) = 3;
     }
     if (*(ushort *)(param_10 + 0x2a0) < 4) {
       iVar1 = (uint)*(byte *)(param_10 + 0x33a) * 0xc;
-      fn_8014D08C(param_9,param_10,(uint)((byte *)&lbl_8031F318)[iVar1 + 8],
-                   *(float *)((byte *)&lbl_8031F318 + iVar1),0,0);
+      fn_8014D08C(param_9,param_10,(uint)lbl_8031F318[iVar1 + 8],
+                   *(float *)(lbl_8031F318 + iVar1),0,0);
     }
     else {
       iVar1 = (uint)*(byte *)(param_10 + 0x33a) * 0xc;
-      fn_8014D08C(param_9,param_10,(uint)((byte *)&lbl_8031F318)[iVar1 + 9],
-                   *(float *)((byte *)&lbl_8031F318 + iVar1),0,0);
+      fn_8014D08C(param_9,param_10,(uint)lbl_8031F318[iVar1 + 9],
+                   *(float *)(lbl_8031F318 + iVar1),0,0);
     }
   }
   fn_80156950(param_9,param_10);
@@ -1115,8 +1113,8 @@ void fn_80156C34(uint param_9,int param_10)
       *(undefined *)(param_10 + 0x33a) = 0;
     }
     iVar1 = (uint)*(byte *)(param_10 + 0x33a) * 0xc;
-    fn_8014D08C(param_9,param_10,(uint)((byte *)&lbl_8031F318)[iVar1 + 8],
-                 *(float *)((byte *)&lbl_8031F318 + iVar1),0,0);
+    fn_8014D08C(param_9,param_10,(uint)lbl_8031F318[iVar1 + 8],
+                 *(float *)(lbl_8031F318 + iVar1),0,0);
   }
   fn_80156950(param_9,param_10);
   return;
