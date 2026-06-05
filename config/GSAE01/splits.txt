@@ -2268,7 +2268,7 @@ main/audio/synth_delay.c:
 	extabindex  start:0x80005E04 end:0x80005E34
 	.text       start:0x8027186C end:0x80271B4C
 
-main/unknown/autos/placeholder_80271BFC.c:
+main/audio/synth_volume.c:
 	extab       start:0x80005718 end:0x80005728
 	extabindex  start:0x80005E34 end:0x80005E4C
 	.text       start:0x80271B4C end:0x802720A8

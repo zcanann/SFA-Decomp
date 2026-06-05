@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80271BFC_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80271BFC_H_
+#ifndef MAIN_AUDIO_SYNTH_VOLUME_H_
+#define MAIN_AUDIO_SYNTH_VOLUME_H_
 
 #include "ghidra_import.h"
 
@@ -8,4 +8,4 @@ int synthIsFadeOutActive(u8 voiceIdx);
 void synthSetMusicVolumeType(u32 voiceIdx, u8 value);
 int synthHWMessageHandler(int mode, u32 arg);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80271BFC_H_ */
+#endif /* MAIN_AUDIO_SYNTH_VOLUME_H_ */
