@@ -904,6 +904,34 @@ Heuristic:
     after; A/B each block independently. Took Sfx_ReadTriggerParams
     99.53→100.
 
+65. **Allocator SKIPS a low volatile around a call → that reg is a HIDDEN
+    live ARGUMENT — find the missing param.** When target's scratch/iface-
+    chain registers jump over rN (e.g. chain in r5/r6/r8 where yours uses
+    r4/r5/r3), rN is being kept live INTO the upcoming call — the call takes
+    one more argument than your C passes. Recovers recipe #9's corollary by
+    reading the ALLOCATION GAP instead of the call-site span. Four wins in
+    one session: dll_19_func0C (vcall takes p7; extsh CSEs into r5),
+    mmsh_scales_init (trigger-iface slot-7 takes (state, def) — def parked
+    in r4 from entry, zero extra instrs), dimlogfire_render (inner
+    objRenderFn takes the full 6-arg p2-p5 pass-through, recipe #9 verbatim),
+    findRomCurvePointNearObject (slot-7 vcall takes the previous vcall's
+    return — recipe #50's nested-call form: `vcall7(found)` keeps r3
+    untouched between the two bctrls). The tell is ALWAYS "why didn't MWCC
+    use the obvious next reg?" — answer: because target's source had it
+    occupied.
+
+66. **Volatile-pair number swap on two chained loads → give the SECOND
+    value an explicit block-local, declared AFTER the first.** When target
+    assigns ptrA→r3/valB→r4 but yours emits ptrA→r4/valB→r3 (same loads,
+    numbers swapped), introduce a local for the value that's read MULTIPLE
+    times inline (`s16 texId = *(s16 *)(state + 0x4a);` /
+    `f32 *q = (f32 *)lbl_xxx;`) and use it at every site. The explicit local
+    (declared after its partner) re-orders MWCC's vreg creation and lands
+    both numbers. Works where pure decl-reorder of EXISTING locals does
+    nothing. shadowInit 99.58→100 (texId local, declared LAST — declaring it
+    FIRST regressed), CameraModeCloudRunner_init 99.60→100 (q local for the
+    global pointer). Sibling of #16, for the volatile-pair case.
+
 ### 99.5%+ tier sweep findings (task #142) — category triage table
 
 Empirical verdicts from sweeping the 99.5-100% tier with cosmetic_audit.py
