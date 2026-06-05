@@ -1648,42 +1648,6 @@ void FUN_801101b0(void)
 /*
  * --INFO--
  *
- * Function: FUN_801101dc
- * EN v1.0 Address: 0x801101DC
- * EN v1.0 Size: 320b
- * EN v1.1 Address: 0x80110F4C
- * EN v1.1 Size: 268b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-void FUN_801101dc(undefined2 *param_1)
-{
-  int iVar1;
-  double dVar2;
-  
-  iVar1 = *(int *)(param_1 + 0x52);
-  *DAT_803de240 = -(lbl_803E27F8 * lbl_803DC074 - *DAT_803de240);
-  if (*DAT_803de240 < lbl_803E27FC) {
-    *DAT_803de240 = lbl_803E27FC;
-  }
-  dVar2 = (double)FUN_80293f90();
-  *(float *)(param_1 + 6) =
-       -(float)((double)lbl_803E2800 * dVar2 - (double)*(float *)(iVar1 + 0x18));
-  *(float *)(param_1 + 8) = DAT_803de240[1];
-  dVar2 = (double)FUN_80294964();
-  *(float *)(param_1 + 10) =
-       -(float)((double)lbl_803E2800 * dVar2 - (double)*(float *)(iVar1 + 0x20));
-  *param_1 = 0;
-  param_1[1] = 0xc000;
-  param_1[2] = 0;
-  return;
-}
-
-/*
- * --INFO--
- *
  * Function: FUN_8011031c
  * EN v1.0 Address: 0x8011031C
  * EN v1.0 Size: 4b

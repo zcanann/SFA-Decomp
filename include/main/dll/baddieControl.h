@@ -29,7 +29,6 @@ void FUN_8010fc88(void);
 void FUN_8010fcb4(short *param_1);
 void FUN_801101ac(undefined2 *param_1,undefined4 param_2,undefined2 *param_3);
 void FUN_801101b0(void);
-void FUN_801101dc(undefined2 *param_1);
 void FUN_8011031c(int param_1);
 void FUN_80110320(ushort *param_1);
 void FUN_80110a44(int param_1,int param_2);
