@@ -399,7 +399,7 @@ void sfxplayerObj_init(u8* obj, u8* data) {
         break;
     case SFXPLAYER_MODE_RANDOM_DELAY: {
         int v = randomGetRange(data[0x1e], data[0x1f]);
-        *(f32*)sub = lbl_803E40BC * (f32)v;
+        *(f32*)sub = (f32)v * lbl_803E40BC;
         break;
     }
     }
@@ -565,7 +565,7 @@ void sfxplayerObj_update(u8 *obj)
             (((data[0x1c] & 4) != 0) && (bitState == 0))) {
             *(f32 *)state -= lbl_803DC074;
             if (*(f32 *)state <= lbl_803E40B8) {
-                *(f32 *)state = lbl_803E40BC * (f32)(s32)randomGetRange(data[0x1e], data[0x1f]);
+                *(f32 *)state = (f32)(s32)randomGetRange(data[0x1e], data[0x1f]) * lbl_803E40BC;
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x1a));
                 SFXPLAYER_START_SOUND(*(u16 *)(data + 0x22));
             }
@@ -695,6 +695,8 @@ void fn_80198DE8(u8 *obj, int seqArg)
     f32 farX;
     f32 farY;
     f32 farZ;
+    f32 prodY;
+    f32 prodZ;
     f32 nearDist;
     f32 farDist;
     f32 deltaX;
@@ -702,7 +704,6 @@ void fn_80198DE8(u8 *obj, int seqArg)
     f32 deltaZ;
     f32 t;
     f32 localPos[3];
-    f32 radius;
     s8 triggerState;
 
     data = *(u8 **)(obj + 0x4c);
@@ -711,49 +712,41 @@ void fn_80198DE8(u8 *obj, int seqArg)
     planeBase = *(f32 *)(state + 0x18);
     normalZ = *(f32 *)(state + 0x14);
     nearZ = *(f32 *)(state + 0x24);
+    prodZ = normalZ * nearZ;
     normalX = *(f32 *)(state + 0x0c);
     nearX = *(f32 *)(state + 0x1c);
     normalY = *(f32 *)(state + 0x10);
     nearY = *(f32 *)(state + 0x20);
-
-    nearDist = planeBase + ((normalZ * nearZ) + (normalX * nearX + normalY * nearY));
+    prodY = normalY * nearY;
+    nearDist = planeBase + (prodZ + (normalX * nearX + prodY));
     farZ = *(f32 *)(state + 0x30);
     farX = *(f32 *)(state + 0x28);
     farY = *(f32 *)(state + 0x2c);
     farDist = planeBase + (normalZ * farZ + (normalX * farX + normalY * farY));
 
     if (farDist < lbl_803E40D8) {
-        if (nearDist < lbl_803E40D8) {
-            triggerState = 2;
-        }
-        else {
-            triggerState = 1;
-        }
-    }
-    else if (nearDist < lbl_803E40D8) {
-        triggerState = -1;
+        triggerState = (nearDist < lbl_803E40D8) ? 2 : 1;
     }
     else {
-        triggerState = -2;
+        triggerState = (nearDist < lbl_803E40D8) ? -1 : -2;
     }
 
     if ((triggerState == 1) || (triggerState == -1)) {
         deltaX = farX - nearX;
         deltaY = farY - nearY;
         deltaZ = farZ - nearZ;
-        t = (((-normalX * nearX - (normalY * nearY)) - (normalZ * nearZ)) - planeBase) /
+        t = (((-normalX * nearX - prodY) - prodZ) - planeBase) /
             ((normalY * deltaY) + (normalX * deltaX) + (normalZ * deltaZ));
 
         localPos[0] = t * deltaX + nearX;
-        localPos[1] = t * deltaY + nearY;
-        localPos[2] = t * deltaZ + nearZ;
+        localPos[1] = t * deltaY + *(f32 *)(state + 0x20);
+        localPos[2] = t * deltaZ + *(f32 *)(state + 0x24);
         PSMTXMultVec((f32 *)(state + 0x38), localPos, localPos);
 
-        radius = *(f32 *)(state + 0x34);
-        if ((localPos[0] >= -radius) && (localPos[0] <= radius) &&
-            (localPos[1] >= -radius) && (localPos[1] <= radius)) {
-            OSReport(sMoonrockTriggerIdentFormat, (int)triggerState, *(u32 *)(data + 0x14));
-            objInterpretSeq(obj, seqArg, (int)triggerState, (int)farDist);
+        if ((localPos[0] >= -*(f32 *)(state + 0x34)) && (localPos[0] <= *(f32 *)(state + 0x34)) &&
+            (localPos[1] >= -*(f32 *)(state + 0x34)) && (localPos[1] <= *(f32 *)(state + 0x34))) {
+            OSReport(sMoonrockTriggerIdentFormat, triggerState, *(u32 *)(data + 0x14));
+            objInterpretSeq(obj, seqArg, triggerState, (int)farDist);
         }
     }
 }
