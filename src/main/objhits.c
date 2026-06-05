@@ -2648,7 +2648,10 @@ void ObjHits_Update(int objectCount)
       obj = *objectList;
       objState = *(ObjHitsPriorityState **)(obj + 0x54);
       if (objState != NULL) {
-        if (((objState->flags & 3) != 0) && (objState->shapeFlags != 8) && (slotCount < 400)) {
+        if (((objState->flags &
+              (OBJHITS_PRIORITY_STATE_ENABLED |
+               OBJHITS_PRIORITY_STATE_NO_SEPARATION_RESPONSE)) != 0) &&
+            (objState->shapeFlags != 8) && (slotCount < 400)) {
           *entrySlot = nextEntry;
           (*entrySlot)->obj = obj;
           (*entrySlot)->minX = *(f32 *)(obj + 0x18) - objState->sweepRadiusX;
@@ -2656,14 +2659,14 @@ void ObjHits_Update(int objectCount)
           entrySlot++;
           gObjHitsSweepEntryPtrs[slotCount++]->maxX = *(f32 *)(obj + 0x18) + objState->sweepRadiusX;
         }
-        objState->flags = objState->flags & ~0x8;
+        objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
         objState->contactFlags = 0;
         *(s8 *)&objState->contactHitVolume = -1;
         *(int *)objState = 0;
         attachedObj = *(uint *)(obj + 0xc8);
         if ((attachedObj != 0) && (*(s16 *)(attachedObj + 0x44) == 0x2d)) {
           objState = *(ObjHitsPriorityState **)(attachedObj + 0x54);
-          objState->flags = objState->flags & ~0x8;
+          objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED;
           objState->contactFlags = 0;
           *(s8 *)&objState->contactHitVolume = -1;
           *(int *)objState = 0;
@@ -2683,7 +2686,8 @@ void ObjHits_Update(int objectCount)
     attachedObj = *(uint *)(obj + 0xc8);
     if ((attachedObj != 0) &&
         ((*(void **)(attachedObj + 0x54) == NULL) ||
-         (((*(ObjHitsPriorityState **)(attachedObj + 0x54))->flags & 1) == 0))) {
+         (((*(ObjHitsPriorityState **)(attachedObj + 0x54))->flags &
+           OBJHITS_PRIORITY_STATE_ENABLED) == 0))) {
       attachedObj = 0;
     }
     if ((objState->flags & 4) != 0) {
@@ -2722,16 +2726,17 @@ void ObjHits_Update(int objectCount)
                 diff = -diff;
               }
               if ((diff < objState->primaryRadiusY + candState->primaryRadiusY) &&
-                  ((objState->flags & 0x40) == 0) && ((candState->flags & 0x40) == 0) &&
+                  ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
+                  ((candState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
                   (((candState->flags & 4) == 0) || (slotIndex >= candidateIndex)) &&
                   ((*(u8 *)(*(int *)(obj + 0x50) + 0x71) & candState->targetMask) != 0) &&
                   ((*(u8 *)(*(int *)(candObj + 0x50) + 0x71) & objState->targetMask) != 0)) {
-                if ((candState->shapeFlags & 0x20) != 0) {
+                if ((candState->shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) {
                   ((void (*)(int, int, void *, void *, void *, void *, void *, int))
                        ObjHits_CheckSkeletonPair)(candObj, obj, skeletonHits, skeletonScratchB,
                                                   skeletonScratchC, skeletonScratchD,
                                                   skeletonScratchE, 0);
-                } else if ((objState->shapeFlags & 0x20) != 0) {
+                } else if ((objState->shapeFlags & OBJHITS_SHAPE_SKELETON) != 0) {
                   ((void (*)(int, int, void *, void *, void *, void *, void *, int))
                        ObjHits_CheckSkeletonPair)(obj, candObj, skeletonHits, skeletonScratchB,
                                                   skeletonScratchC, skeletonScratchD,
@@ -2761,7 +2766,8 @@ void ObjHits_Update(int objectCount)
                 candAttachedObj = *(uint *)(candObj + 0xc8);
                 if ((candAttachedObj != 0) &&
                     ((*(void **)(candAttachedObj + 0x54) == NULL) ||
-                     (((*(ObjHitsPriorityState **)(candAttachedObj + 0x54))->flags & 1) == 0))) {
+                     (((*(ObjHitsPriorityState **)(candAttachedObj + 0x54))->flags &
+                       OBJHITS_PRIORITY_STATE_ENABLED) == 0))) {
                   candAttachedObj = 0;
                 }
                 ObjHits_CheckObjectHitVolumes(obj, candObj, attachedObj, candAttachedObj,
@@ -2776,7 +2782,8 @@ void ObjHits_Update(int objectCount)
   entrySlot = entrySlotBase;
   for (slotIndex = 1; slotIndex < slotCount; slotIndex++, entrySlot++) {
     obj = (*entrySlot)->obj;
-    if (((*(ObjHitsPriorityState **)(obj + 0x54))->flags & 0x200) != 0) {
+    if (((*(ObjHitsPriorityState **)(obj + 0x54))->flags &
+         OBJHITS_PRIORITY_STATE_TRACK_CONTACT) != 0) {
       ObjHits_CheckTrackContact(obj, obj);
       attachedObj = *(uint *)(obj + 0xc8);
       if (attachedObj != 0) {
@@ -2800,9 +2807,11 @@ void ObjHits_Update(int objectCount)
       objState->worldPosZ = *(f32 *)(obj + 0x14);
     }
     objState->activeHitboxMode = 0;
-    objState->flags = objState->flags & ~0x2000;
-    if (((objState->priorityHitCount != 0) || ((objState->flags & 8) != 0)) &&
-        ((objState->flags & 0x40) == 0) && ((objState->flags & 0x4000) == 0)) {
+    objState->flags = objState->flags & ~OBJHITS_PRIORITY_STATE_HITBOX_BUFFER_CACHED;
+    if (((objState->priorityHitCount != 0) ||
+         ((objState->flags & OBJHITS_PRIORITY_STATE_PAIR_RESPONSE_APPLIED) != 0)) &&
+        ((objState->flags & OBJHITS_PRIORITY_STATE_POSITION_DIRTY) == 0) &&
+        ((objState->flags & 0x4000) == 0)) {
       *(f32 *)(obj + 0x24) = oneOverTimeDelta * (*(f32 *)(obj + 0xc) - *(f32 *)(obj + 0x80));
       *(f32 *)(obj + 0x2c) = oneOverTimeDelta * (*(f32 *)(obj + 0x14) - *(f32 *)(obj + 0x88));
     }
