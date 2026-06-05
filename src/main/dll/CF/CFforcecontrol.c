@@ -111,7 +111,7 @@ extern s16* Camera_GetCurrentViewSlot(void);
 extern int* gScreenTransitionInterface;
 extern int ObjAnim_SetCurrentMove(int* obj, int moveId, f32 moveProgress, int flags);
 extern void setScreenTransitionPause(int v);
-extern void fn_8001FE74(int* obj);
+extern void addButtonObject(int* obj);
 extern f32 lbl_803E3D1C;
 extern f32 lbl_803E3D58;
 extern f32 lbl_803E3D2C;
@@ -134,7 +134,7 @@ void deathseq_init(int* obj)
   f = lbl_803E3D2C;
   state[4] = f;
   state[5] = f;
-  fn_8001FE74(obj);
+  addButtonObject(obj);
   *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x400);
 }
 

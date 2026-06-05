@@ -312,7 +312,7 @@ extern void *memset(void *dst, int val, int n);
 #pragma pop
 #pragma dont_inline reset
 
-u8 fn_8001FD88(void **p) {
+u8 getButtonObjects(void **p) {
     *p = lbl_803DCAE8;
     return lbl_803DCA48;
 }
@@ -351,7 +351,7 @@ void blankScreen(int frames) {
 }
 
 #pragma peephole on
-void fn_8001FE74(void *v) {
+void addButtonObject(void *v) {
     int i = lbl_803DCA48;
     lbl_803DCA48 = i + 1;
     lbl_803DCAE8[i] = (int)v;
@@ -609,7 +609,7 @@ void copyToCache(void *dst, void *src, u32 count);
 #pragma dont_inline reset
 
 #pragma dont_inline on
-int fn_8001F978(u32 srcAddr, u32 size, u32 *cacheCursor, u32 *outEnd, u32 limit) {
+int cacheAllocAndCopy(u32 srcAddr, u32 size, u32 *cacheCursor, u32 *outEnd, u32 limit) {
     register u32 src;
     register u32 copySize;
     register u32 *cursor;

@@ -7924,7 +7924,7 @@ void cardShowLoadingMsg(u8 kind)
     extern int padUpdate(void);
     extern void mmFreeTick(int);
     extern void waitNextFrame(void);
-    extern int fn_8001FD88(int**);
+    extern int getButtonObjects(int**);
     extern void** gScreenTransitionInterface;
     extern f32 lbl_803DEF98;
     extern f32 lbl_803DEF9C;
@@ -7953,7 +7953,7 @@ void cardShowLoadingMsg(u8 kind)
         padUpdate();
         mmFreeTick(0);
         waitNextFrame();
-        count = fn_8001FD88(&buttons) & 0xFF;
+        count = getButtonObjects(&buttons) & 0xFF;
         if ((u32)count != 0) {
             draw = (void (*)(int, int, int))((void**)*gScreenTransitionInterface)[1];
             draw(0, 0, 0);

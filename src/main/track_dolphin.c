@@ -7228,7 +7228,7 @@ int fn_80067B84(int cur, u8 *desc, int model, int flags, f32 scale,
 /* mapLoadBlocksFn_800685cc — gather map-block collision triangles overlapping
  * the query box into the buffer at cur; returns advanced cursor. */
 extern u8 *mapGetBlockAtPos(int x, int z, int layer);
-extern int fn_8001F978(void *p, int size, int *offIn, int *offOut, int base);
+extern int cacheAllocAndCopy(void *p, int size, int *offIn, int *offOut, int base);
 extern void cacheQueueWait(int n);
 extern f32 fastFloorf(f32 x);
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
@@ -7328,8 +7328,8 @@ u8 doEdges;
         void *p = fn_800606DC((int *)c0, 0);
         dmaflip = 0;
         offA = 0;
-        fn_8001F978(p, *(u16 *)(c0 + 0x98) << 3, &offA, &offB, 0x2000);
-        fn_8001F978(*(void **)(c0 + 0x58), *(u16 *)(c0 + 0x90) * 6, &offB, &offC, 0x2000);
+        cacheAllocAndCopy(p, *(u16 *)(c0 + 0x98) << 3, &offA, &offB, 0x2000);
+        cacheAllocAndCopy(*(void **)(c0 + 0x58), *(u16 *)(c0 + 0x90) * 6, &offB, &offC, 0x2000);
     }
     i = 0;
     firstp = (int *)lbl_8038DE44;
@@ -7366,8 +7366,8 @@ u8 doEdges;
             nextBase = dmaflip + 0x2000;
             p = fn_800606DC((int *)next, 0);
             offA = dmaflip;
-            c13 = fn_8001F978(p, *(u16 *)(next + 0x98) << 3, &offA, &offB, nextBase);
-            c14 = fn_8001F978(*(void **)(next + 0x58), *(u16 *)(next + 0x90) * 6, &offB, &offC, nextBase);
+            c13 = cacheAllocAndCopy(p, *(u16 *)(next + 0x98) << 3, &offA, &offB, nextBase);
+            c14 = cacheAllocAndCopy(*(void **)(next + 0x58), *(u16 *)(next + 0x90) * 6, &offB, &offC, nextBase);
             cacheQueueWait((u8)(c13 + c14));
         } else {
             cacheQueueWait(0);
