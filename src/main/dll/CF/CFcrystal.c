@@ -304,26 +304,32 @@ int FireFlyLantern_SeqFn(int obj, int unused, int events)
 
     state = *(FireFlyLanternState **)(obj + 0xB8);
     eventData = (u8 *)events;
-    for (i = 0; i < eventData[0x8B]; i++) {
-        if ((eventData[i + 0x81] == 1) && (state->fireflyCount != 0)) {
-            child = (void *)state->fireflies[state->fireflyCount - 1];
-            if (child != 0) {
-                (*(void (*)(void *))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x24)))(child);
+    i = 0;
+    while (i < eventData[0x8B]) {
+        if (eventData[i + 0x81] == 1) {
+            if (state->fireflyCount != 0) {
+                child = (void *)state->fireflies[state->fireflyCount - 1];
+                if (child != 0) {
+                    (*(void (*)(void *))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x24)))(child);
+                }
+                --state->fireflyCount;
+                --state->remainingCount;
+                GameBit_Set(state->gameBit, state->remainingCount);
             }
-            state->fireflyCount = state->fireflyCount - 1;
-            state->remainingCount = state->remainingCount - 1;
-            GameBit_Set(state->gameBit, state->remainingCount);
         }
+        i++;
     }
 
     ((FireFlyLanternStateFlags *)&state->flags)->finished = 1;
-    yOffset = lbl_803E3AEC;
+    i = 0;
     slot = state->fireflies;
-    for (i = 0; i < state->fireflyCount; i++) {
+    yOffset = lbl_803E3AEC;
+    while (i < state->fireflyCount) {
         child = (void *)*slot;
         (*(void (*)(void *, f32, f32, f32))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x28)))(
             child, *(f32 *)(obj + 0xC), yOffset + *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
         slot++;
+        i++;
     }
 
     return 0;
