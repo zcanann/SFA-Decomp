@@ -23,6 +23,9 @@ temp/
 .ninja_*
 build.ninja
 
+# Fetched matching-help corpus (large, regeneratable via tools/decompme_fetch.py)
+reference_projects/decompme_scratches.jsonl
+
 # Reference projects
 reference_projects/
 reference_projects/*
