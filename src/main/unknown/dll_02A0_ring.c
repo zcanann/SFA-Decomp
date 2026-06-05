@@ -14,7 +14,7 @@
 // - update has a pull-in/orbit state at extra byte +0x15 == 2, then restores position
 //   from the object definition and hides the model while waiting for ARW shot/contact
 //   checks.
-// - ring collection dispatches back into the arwing controller through FUN_8022D520 and
+// - ring collection dispatches back into the arwing controller through arwarwing_addScore and
 //   the 0x8022FA00/0x8022FB5C/0x8022FCD8 helper group, with WCSunRing/WCMoonRing using
 //   the same family as ARWGoldRing/ARWSilverRi.
 //
