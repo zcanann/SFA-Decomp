@@ -147,16 +147,7 @@ void trickyFn_80141290(int obj, int ball)
         trickyMove(obj, (void *)(ball + CANNONBALL_MOVE_STATE));
 
         if (Objfsa_GetWalkGroupIndexAtPoint((float *)(obj + 0x18), (void *)0) != 0) {
-            /* MWCC quirk: target materializes the mask (li -0x11; and); no C form produces it */
-            register u32 m;
-            register u32 v;
-            register int b = ball;
-            asm {
-                lwz v, 0x54(b)
-                li m, -0x11
-                and m, v, m
-                stw m, 0x54(b)
-            }
+            *(u32 *)(ball + CANNONBALL_FLAGS) &= ~CANNONBALL_HIDE_FLAG;
         } else {
             *(u32 *)(ball + CANNONBALL_FLAGS) |= CANNONBALL_HIDE_FLAG;
         }
