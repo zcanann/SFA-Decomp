@@ -2,12 +2,21 @@
 
 #include "main/audio/sfx_ids.h"
 
+#define WCPRESSURES_OBJECT_DEF_ID 0x0128
+#define WCPRESSURES_DLL_ID 0x028f
+#define WCPRESSURES_CLASS_ID 0x0052
+
 #define WCPRESSURES_EXTRA_SIZE 0x7c
 #define WCPRESSURES_TRACKED_COUNT 10
 #define WCPRESSURES_OBJECT_GROUP 0x31
+#define WCPRESSURES_OBJECT_FLAGS_INIT 0x6000
 #define WCPRESSURES_RENDER_TYPE_BASE 0x400
 #define WCPRESSURES_RENDER_TYPE_SHIFT 0xb
 
+#define WCPRESSURES_SETUP_POS_X_OFFSET 0x08
+#define WCPRESSURES_SETUP_POS_Y_OFFSET 0x0c
+#define WCPRESSURES_SETUP_POS_Z_OFFSET 0x10
+#define WCPRESSURES_SETUP_OBJECT_TYPE_HI_OFFSET 0x18
 #define WCPRESSURES_SETUP_MODEL_INDEX_OFFSET 0x19
 #define WCPRESSURES_SETUP_SOLVED_BIT_OFFSET 0x1a
 #define WCPRESSURES_SETUP_PRESS_DEPTH_OFFSET 0x1c
@@ -27,11 +36,28 @@
 #define WCPRESSURES_MODE_LOWERING 3
 
 #define WCPRESSURES_FOUND_TIMER 5
+#define WCPRESSURES_SOLVED_TIMER 0x1e
+
+#define WCPRESSURES_OBJECT_SETUP_OFFSET 0x4c
+#define WCPRESSURES_OBJECT_MODEL_DATA_OFFSET 0x50
+#define WCPRESSURES_OBJECT_Y_OFFSET 0x10
+#define WCPRESSURES_OBJECT_Z_OFFSET 0x14
+#define WCPRESSURES_OBJECT_MODEL_INDEX_OFFSET 0xad
+#define WCPRESSURES_OBJECT_FLAGS_OFFSET 0xb0
+#define WCPRESSURES_OBJECT_STATE_OFFSET 0xb8
+#define WCPRESSURES_OBJECT_TILE_CALLBACK_OFFSET 0xbc
+#define WCPRESSURES_MODEL_COUNT_OFFSET 0x55
+
+#define WCPRESSURES_CALLBACK_COMMAND_OFFSET 0x80
+#define WCPRESSURES_CALLBACK_NONE 0
+#define WCPRESSURES_CALLBACK_SNAPSHOT_TILES 1
+#define WCPRESSURES_CALLBACK_RESET 2
 
 #define WCPRESSURES_HITLIST_OFFSET 0x58
 #define WCPRESSURES_HITLIST_OBJECTS_OFFSET 0x100
 #define WCPRESSURES_HITLIST_COUNT_OFFSET 0x10f
 
+#define WCPRESSURES_TEXTURE_DEFAULT 0
 #define WCPRESSURES_TEXTURE_PRESSED 1
 #define WCPRESSURES_TEXTURE_SHIFT 8
 
@@ -54,27 +80,29 @@ int wcpressures_getExtraSize(void) { return WCPRESSURES_EXTRA_SIZE; }
 #pragma scheduling off
 int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
 {
-    int state = *(int *)(obj + 0xb8);
-    int setup = *(int *)(obj + 0x4c);
+    int state = *(int *)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
+    int setup = *(int *)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
     u8 i;
 
-    if (*(u8 *)(callbackData + 0x80) == 1) {
-        for (i = 0; i < 10; i++) {
+    if (*(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) == WCPRESSURES_CALLBACK_SNAPSHOT_TILES) {
+        for (i = 0; i < WCPRESSURES_TRACKED_COUNT; i++) {
             if (((void **)state)[i + 1] != NULL) {
-                *(f32 *)(state + 0x2c + i * 8) = *(f32 *)(((int *)state)[i + 1] + 0xc);
-                *(f32 *)(state + 0x30 + i * 8) = *(f32 *)(((int *)state)[i + 1] + 0x14);
+                *(f32 *)(state + WCPRESSURES_STATE_SAVED_X + i * WCPRESSURES_STATE_SAVED_POS_STRIDE) =
+                    *(f32 *)(((int *)state)[i + 1] + 0xc);
+                *(f32 *)(state + WCPRESSURES_STATE_SAVED_Z + i * WCPRESSURES_STATE_SAVED_POS_STRIDE) =
+                    *(f32 *)(((int *)state)[i + 1] + WCPRESSURES_OBJECT_Z_OFFSET);
             }
         }
-        *(u8 *)(callbackData + 0x80) = 0;
-    } else if (*(u8 *)(callbackData + 0x80) == 2) {
-        for (i = 0; i < 10; i++) {
-            *(int *)(state + 4 + i * 4) = 0;
+        *(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) = WCPRESSURES_CALLBACK_NONE;
+    } else if (*(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) == WCPRESSURES_CALLBACK_RESET) {
+        for (i = 0; i < WCPRESSURES_TRACKED_COUNT; i++) {
+            *(int *)(state + WCPRESSURES_STATE_OBJECTS + i * 4) = 0;
         }
-        *(f32 *)(obj + 0x14) = *(f32 *)(setup + 8);
-        *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc);
-        *(f32 *)(obj + 0x14) = *(f32 *)(setup + 0x10);
-        GameBit_Set(*(s16 *)(setup + 0x1a), 0);
-        *(u8 *)(callbackData + 0x80) = 0;
+        *(f32 *)(obj + WCPRESSURES_OBJECT_Z_OFFSET) = *(f32 *)(setup + WCPRESSURES_SETUP_POS_X_OFFSET);
+        *(f32 *)(obj + WCPRESSURES_OBJECT_Y_OFFSET) = *(f32 *)(setup + WCPRESSURES_SETUP_POS_Y_OFFSET);
+        *(f32 *)(obj + WCPRESSURES_OBJECT_Z_OFFSET) = *(f32 *)(setup + WCPRESSURES_SETUP_POS_Z_OFFSET);
+        GameBit_Set(*(s16 *)(setup + WCPRESSURES_SETUP_SOLVED_BIT_OFFSET), 0);
+        *(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) = WCPRESSURES_CALLBACK_NONE;
     }
 
     return 0;
@@ -86,8 +114,10 @@ int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
 #pragma scheduling off
 int wcpressures_getObjectTypeId(int obj)
 {
-    int modelIndex = *(u8 *)(*(int *)(obj + 0x4c) + WCPRESSURES_SETUP_MODEL_INDEX_OFFSET);
-    int modelCount = (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55);
+    int modelIndex = *(u8 *)(*(int *)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET) +
+                             WCPRESSURES_SETUP_MODEL_INDEX_OFFSET);
+    int modelCount = (s8)*(u8 *)(*(int *)(obj + WCPRESSURES_OBJECT_MODEL_DATA_OFFSET) +
+                                  WCPRESSURES_MODEL_COUNT_OFFSET);
 
     if (modelIndex >= modelCount) {
         modelIndex = 0;
@@ -124,8 +154,8 @@ void wcpressures_hitDetect(void) {}
 #pragma scheduling off
 void wcpressures_update(int obj)
 {
-    int r4c = *(int *)(obj + 0x4c);
-    int state = *(int *)(obj + 0xb8);
+    int r4c = *(int *)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
+    int state = *(int *)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
     int i;
     int j;
     f32 thr;
@@ -149,7 +179,7 @@ void wcpressures_update(int obj)
                                (i * 4 + WCPRESSURES_HITLIST_OBJECTS_OFFSET));
             if (*(f32 *)(ent + 0x10) - *(f32 *)(obj + 0x10) >
                 (f32)(u32) * (u8 *)(r4c + WCPRESSURES_SETUP_TRIGGER_HEIGHT_OFFSET)) {
-                int s2 = *(int *)(obj + 0xb8);
+                int s2 = *(int *)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
                 int slot;
 
                 for (j = 0; (void *)WCPRESSURES_SLOT_OBJECT(s2, j) != NULL ||
@@ -164,7 +194,7 @@ void wcpressures_update(int obj)
         }
     }
     {
-        int s2 = *(int *)(obj + 0xb8);
+        int s2 = *(int *)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
         int found = 0;
 
         for (j = 0; (u8)j < WCPRESSURES_TRACKED_COUNT; j++) {
@@ -213,10 +243,10 @@ void wcpressures_update(int obj)
         break;
     }
     {
-        int *tex = objFindTexture(obj, 0, 0);
+        int *tex = objFindTexture(obj, WCPRESSURES_TEXTURE_DEFAULT, WCPRESSURES_TEXTURE_DEFAULT);
         if (tex != 0) {
             *tex = WCPRESSURES_STATE_MODE_BYTE(state) == WCPRESSURES_MODE_PRESSED ? WCPRESSURES_TEXTURE_PRESSED
-                                                                                  : 0;
+                                                                                  : WCPRESSURES_TEXTURE_DEFAULT;
             *tex = *tex << WCPRESSURES_TEXTURE_SHIFT;
         }
     }
