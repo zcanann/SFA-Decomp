@@ -288,7 +288,7 @@ typedef struct {
     s16 rot[3];
     f32 quad[4];
 } SBRotQuad;
-extern void fn_8002B8F0(int obj);
+extern void objApplyVelocity(int obj);
 extern int Rcp_GetMotionBlurEnabled(void);
 extern void setMotionBlur(int a, f32 b);
 extern void PSVECScale(f32 *src, f32 *dst, f32 scale);
@@ -397,7 +397,7 @@ void SnowBike_update(int obj)
                     *(f32 *)(state + 0x49c) *= p;
                     fn_801EC1AC(obj, (int)state);
                     Matrix_TransformPoint((f32 *)(state + 0xec), *(f32 *)(state + 0x494), *(f32 *)(state + 0x498), *(f32 *)(state + 0x49c), (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
-                    fn_8002B8F0(obj);
+                    objApplyVelocity(obj);
                 }
             } else {
                 setAButtonIcon(0x10);
@@ -456,7 +456,7 @@ void SnowBike_update(int obj)
                 *(f32 *)(state + 0x49c) *= p;
                 fn_801EC1AC(obj, (int)state);
                 Matrix_TransformPoint((f32 *)(state + 0xec), *(f32 *)(state + 0x494), *(f32 *)(state + 0x498), *(f32 *)(state + 0x49c), (f32 *)(obj + 0x24), (f32 *)(obj + 0x28), (f32 *)(obj + 0x2c));
-                fn_8002B8F0(obj);
+                objApplyVelocity(obj);
             }
             fn_801EB0D4(obj, state);
             fn_801EA240(obj, state, *(f32 *)(state + 0x49c), (int)(lbl_803E5BA0 * -*(f32 *)(state + 0x430)), state + 0x461, 7);

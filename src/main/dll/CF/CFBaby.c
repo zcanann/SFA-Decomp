@@ -2830,7 +2830,7 @@ extern f64 lbl_803E3B80;
 extern f32 lbl_803E3B88;
 extern f64 lbl_803E3B90;
 extern f32 Vec_distance(f32 *a, f32 *b);
-extern void fn_8002B2AC(f32 *out, int obj, f32 *pos);
+extern void objWorldToLocalPos(f32 *out, int obj, f32 *pos);
 extern void Model_GetVertexPosition(int *model, int idx, f32 *out);
 extern void decoration11a_expandBoundsWithVertex(f32 *vertex, f32 *maxOut, f32 *minOut);
 extern void PSVECScale(f32 *dst, f32 *src, f32 s);
@@ -2868,7 +2868,7 @@ check_decor_objects:
         if (Vec_distance((f32 *)(*objects + 0x18), (f32 *)(obj + 0x18)) < state[6]) {
             if (*(void **)(*objects + 0x54) != NULL) {
                 radius = (f32)*(s16 *)(*(int *)(*objects + 0x54) + 0x5a);
-                fn_8002B2AC(localPos, obj, (f32 *)(*objects + 0xc));
+                objWorldToLocalPos(localPos, obj, (f32 *)(*objects + 0xc));
 
                 if (localPos[0] < state[3]) {
                     delta = localPos[0] - state[3];
