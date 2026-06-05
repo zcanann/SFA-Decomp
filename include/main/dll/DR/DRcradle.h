@@ -6,7 +6,6 @@
 
 extern ObjectDescriptor24 gSnowBikeObjDescriptor;
 
-void FUN_801ecdec(undefined4 param_1,int param_2);
 void SnowBike_func17(void);
 void SnowBike_func16(void);
 int SnowBike_func0E(void);
