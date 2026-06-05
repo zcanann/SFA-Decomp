@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cup1C3.h"
+#include "main/objanim.h"
 
 #pragma peephole off
 #pragma scheduling off
@@ -109,8 +110,6 @@ extern void gameTimerStop(void);
 extern int isGameTimerDisabled(void);
 extern int getButtonsJustPressedIfNotBusy(int p);
 extern int ObjList_GetObjects(int *idx, int *count);
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 progress, int flags);
-extern int ObjAnim_AdvanceCurrentMove(int obj, f32 scale, f32 dt, int flags);
 extern f32 timeDelta;
 extern f32 lbl_803E50E0;
 extern f32 lbl_803E50E4;
@@ -213,17 +212,17 @@ int DBSH_Symbol_SeqFn(int *obj, int *anim, u8 *seq)
         if (*(f32 *)((char *)state + 4) > spdThresh) {
             *(f32 *)((char *)state + 4) = *(f32 *)((char *)state + 4) - lbl_803E50FC;
         }
-        if (ObjAnim_AdvanceCurrentMove(player,
+        if (ObjAnim_AdvanceCurrentMove(
                 ((f32)*(int *)((char *)state + 0x10) - (f32)*(int *)((char *)state + 0x14)) / animDiv,
-                timeDelta, 0) != 0) {
+                timeDelta, player, NULL) != 0) {
             if (*(f32 *)(player + 0x98) < lbl_803E50EC) {
                 *(f32 *)(player + 0x98) = lbl_803E5104 + *(f32 *)(player + 0x98);
             }
         }
         if (*(void **)state != NULL) {
-            if (ObjAnim_AdvanceCurrentMove(*state,
+            if (ObjAnim_AdvanceCurrentMove(
                     -((f32)*(int *)((char *)state + 0x10) - (f32)*(int *)((char *)state + 0x14)) / lbl_803E5100,
-                    timeDelta, 0) != 0) {
+                    timeDelta, *state, NULL) != 0) {
                 f32 h = *(f32 *)(*state + 0x98);
                 if (h < lbl_803E50EC) {
                     *(f32 *)(*state + 0x98) = lbl_803E5104 + h;
