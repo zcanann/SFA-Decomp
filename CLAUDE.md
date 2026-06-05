@@ -866,6 +866,17 @@ Heuristic:
     copy-propagation picks the SOURCE reg; restructure the variables so the
     intended reg IS the variable's home.
 
+61b. **Saved-reg coloring IS often source-flippable: declare a late-used
+    scratch local (`int ret;`/loop counter) FIRST.** Three confirmed wins in
+    one session: when target colors params/early locals to HIGHER saved regs
+    than yours (obj→r31 vs your obj→r29, with the whole body cascading),
+    insert/move a plain `int` local that's only used LATE to the TOP of the
+    decl list. MWCC then assigns it last-internally and the param/early-local
+    coloring shifts up to match (endObjSequence j-first → j=r31;
+    explodeplan_updateTriggerCallback ret-first → obj/q/runtime=r31/r30/r29;
+    fn_802C0A5C inner-before-q → p2/q=r31/r30). Try this BEFORE declaring a
+    recipe #16 coloring cap.
+
 62. **`(int)`-cast the store base to defeat address-CSE with a later
     `(u8 *)p + off` call arg — restores the displacement-form store.** When a
     function stores to `*(u8 *)((u8 *)p + off) = K` AND later passes the same
