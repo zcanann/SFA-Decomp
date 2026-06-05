@@ -401,13 +401,19 @@ void Curve_BuildHermiteCoeffs(f32* values, f32* coefficients)
 #pragma peephole off
 f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent)
 {
-    f32 a = values[3] + (values[2] + (lbl_803DE660 * values[0] + lbl_803DE698 * values[1]));
-    f32 b = (lbl_803DE698 * values[2] + (lbl_803DE668 * values[0] + lbl_803DE664 * values[1])) - values[3];
+    f32 p3 = values[3];
+    f32 tangent1 = values[2];
+    f32 k660 = lbl_803DE660;
+    f32 p0 = values[0];
+    f32 k698 = lbl_803DE698;
+    f32 tangent0 = values[1];
+    f32 a = p3 + (tangent1 + (k660 * p0 + k698 * tangent0));
+    f32 b = (k698 * tangent1 + (lbl_803DE668 * p0 + lbl_803DE664 * tangent0)) - p3;
 
     if (outTangent != NULL) {
-        *outTangent = t * (lbl_803DE660 * b + (lbl_803DE664 * a) * t) + values[2];
+        *outTangent = t * (k660 * b + (lbl_803DE664 * a) * t) + tangent1;
     }
-    return t * (t * (a * t + b) + values[2]) + values[0];
+    return t * (t * (a * t + b) + tangent1) + p0;
 }
 #pragma peephole reset
 #pragma scheduling reset
