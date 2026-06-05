@@ -20,11 +20,15 @@ void cfccrate_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     state = *(u8 **)(obj + 0xb8);
     if ((s32)visible != 0) {
         objectType = *(s16 *)(obj + 0x46);
-        if (objectType != 0x1b8) {
-            if (objectType != 0x6bf || GameBit_Get(*(s16 *)(state + 0x3a)) != 0) {
-                objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3DD8);
+        if (objectType == 0x1b8) {
+            return;
+        }
+        if (visible == 0 || objectType == 0x6bf) {
+            if (GameBit_Get(*(s16 *)(state + 0x3a)) == 0) {
+                return;
             }
         }
+        objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E3DD8);
     }
 }
 
@@ -34,7 +38,27 @@ int CFCrate_SeqFn(int obj, int unused, u8 *seq)
     int i;
 
     state = *(u8 **)(obj + 0xb8);
-    if (*(s16 *)(obj + 0x46) == 0x2b7) {
+    switch (*(s16 *)(obj + 0x46)) {
+    case 0x85:
+    case 0x87:
+    case 0x88:
+    case 0x89:
+    case 0x8A:
+    case 0x8B:
+    case 0x8C:
+    case 0x8D:
+        break;
+    case 0x8E:
+        return 0;
+    case 0xAB:
+        break;
+    case 0xAE:
+        break;
+    case 0x10D:
+        break;
+    case 0x409:
+        break;
+    case 0x2B7:
         if (GameBit_Get(*(s16 *)(state + 0x3a)) != 0) {
             seq[0x90] = (u8)(seq[0x90] | 4);
         }
@@ -44,6 +68,7 @@ int CFCrate_SeqFn(int obj, int unused, u8 *seq)
             }
             seq[0x81 + i] = 0;
         }
+        break;
     }
     return 0;
 }
