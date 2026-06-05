@@ -27,7 +27,7 @@ extern void titleScreenFn_80130464(u8 v);
 extern void setLinkNotRotated(void);
 extern u8 shouldShowCredits(void);
 extern void titleScreenFn_801368a4(u8 arg);
-extern void titleScreenFn_801368c4(u8 arg);
+extern void titleScreenFn_801368c4(s8 arg);
 extern void titleScreenFn_801368d4(void);
 extern void saveFn_8007d960(int);
 
@@ -47,20 +47,20 @@ extern u8 gAttractMovieReplayCountdown;
 extern u8 lbl_803DD64D;
 extern u8 gTitleMenuReadyForInput;
 extern u8 lbl_803DD64F;
-extern u8 gTitleMenuNextDllId;
-extern u8 gTitleMenuLoadDelay;
+extern s8 gTitleMenuNextDllId;
+extern s8 gTitleMenuLoadDelay;
 extern u8 gTitleMenuPanelOpen;
 extern u8 gAttractMovieLoopCompleted;
 extern s32 lbl_803DD698;
 extern u8 lbl_803DD6F8;
 extern TitleMenuControl *gCameraInterface;
 extern TitleMenuControl *gTitleMenuLinkInterface;
-extern f64 lbl_803E1D28;
+extern f32 lbl_803E1D28;
 
 #define TitleMenu_GetMenuId() (*(int (**)(void))((int)gCameraInterface->vtable + 0x10))()
 #define TitleMenu_SetMenuState(state, arg) (*(void (**)(int, int))((int)gCameraInterface->vtable + 0x60))(state,arg)
 #define TitleMenu_GetFadeState() (*(int (**)(void))((int)gTitleMenuLinkInterface->vtable + 0xc))()
-#define TitleMenu_GetSelection() (*(u8 (**)(void))((int)gTitleMenuLinkInterface->vtable + 0x14))()
+#define TitleMenu_GetSelection() (*(int (**)(void))((int)gTitleMenuLinkInterface->vtable + 0x14))()
 #define TitleMenu_BindEntries() (*(void (**)(TitleMenuTextEntry *))((int)gTitleMenuLinkInterface->vtable + 0x2c))(lbl_8031A214)
 #define TitleMenu_ClearPanel() (*(void (**)(void))((int)gTitleMenuLinkInterface->vtable + 8))()
 #define TitleMenu_OpenPanel() (*(void (**)(TitleMenuTextEntry *, int, int, int, int, int, int, int, int, int, int, int))((int)gTitleMenuLinkInterface->vtable + 4))(lbl_8031A214,9,5,0,0,0,0x14,200,0xff,0xff,0xff,0xff)
@@ -70,7 +70,7 @@ extern f64 lbl_803E1D28;
     int i; \
     for (i = 0; i < 4; i++) { \
       if (i == (entry)) { \
-        lbl_8031A214[i].flags &= 0xbfff; \
+        lbl_8031A214[i].flags &= ~0x4000; \
       } else { \
         lbl_8031A214[i].flags |= 0x4000; \
       } \
@@ -104,11 +104,12 @@ extern f64 lbl_803E1D28;
 #pragma peephole off
 int TitleMenu_run(void)
 {
-  bool inputPressed;
   int menuId;
-  uint buttons;
-  u8 previousFadeTimer;
-  u8 frames;
+  int buttons;
+  int sum;
+  s8 previousFadeTimer;
+  int frames;
+  u8 inputPressed;
   s8 dpad;
   s8 face;
 
@@ -161,23 +162,21 @@ int TitleMenu_run(void)
     padClearAnalogInputX(0);
     padClearAnalogInputY(0);
 
-    inputPressed = false;
-    if ((gAttractMovieLoopCompleted == 0) || (gTitleMenuInputCooldown != 0)) {
-      if ((buttons != 0) || ((dpad != 0 || (face != 0)))) {
-        inputPressed = true;
-      }
-    } else {
-      inputPressed = true;
+    inputPressed = 0;
+    if ((gAttractMovieLoopCompleted != 0) && (gTitleMenuInputCooldown == 0)) {
+      inputPressed = 1;
+    } else if ((buttons != 0) || ((dpad != 0 || (face != 0)))) {
+      inputPressed = 1;
     }
     if (gAttractMovieLoopCompleted != 0) {
       gAttractMovieLoopCompleted = 0;
     }
     if (inputPressed) {
-      if (((buttons == 0) && (dpad == 0)) && (face == 0)) {
+      if (((buttons != 0) || (dpad != 0)) || (face != 0)) {
+        gAttractMovieReplayCountdown = 2;
+      } else {
         gAttractMovieReplayCountdown = 1;
         gTitleMenuInputCooldown = TITLE_MENU_ATTRACT_INPUT_COOLDOWN_FRAMES;
-      } else {
-        gAttractMovieReplayCountdown = 2;
       }
       TitleMenu_SetPanelSelection(0);
       gAttractMoviePlaybackEnabled = 0;
@@ -192,8 +191,11 @@ int TitleMenu_run(void)
   } else if ((gTitleMenuReadyForInput != 0) && (gAttractMoviePlaybackEnabled == 0)) {
     buttons = getButtonsJustPressed(0);
     padGetAnalogInput(0,&dpad,&face);
-    if ((buttons == 0) && ((dpad == 0 && (face == 0)))) {
-      if ((gAttractMovieLoopCompleted != 0) && (gAttractMovieLoopCompleted = 0, gTitleMenuInputCooldown == 0)) {
+    if ((buttons != 0) || ((dpad != 0 || (face != 0)))) {
+      gAttractMovieReplayCountdown = 2;
+    } else if (gAttractMovieLoopCompleted != 0) {
+      gAttractMovieLoopCompleted = 0;
+      if (gTitleMenuInputCooldown == 0) {
         gTitleMenuInputCooldown = TITLE_MENU_ATTRACT_INPUT_COOLDOWN_FRAMES;
         gAttractMovieReplayCountdown--;
         if (gAttractMovieReplayCountdown == 0) {
@@ -203,8 +205,6 @@ int TitleMenu_run(void)
           gTitleMenuSelectionFadeStep = -TITLE_MENU_SELECTION_FADE_STEP;
         }
       }
-    } else {
-      gAttractMovieReplayCountdown = 2;
     }
   }
 
@@ -221,83 +221,84 @@ int TitleMenu_run(void)
   }
 
   gTitleMenuReadyForInput = 1;
-  if (gTitleMenuNextDllId == 0) {
-    menuId = TitleMenu_GetFadeState();
-    gTitleMenuSelection = TitleMenu_GetSelection();
-    if ((((double)lbl_803E1D28 == (double)titleScreenGetCamProgress()) &&
-        (gTitleMenuSelectionFade < TITLE_MENU_SELECTION_FADE_MAX)) &&
-        (gAttractMoviePlaybackEnabled == 0)) {
-      gTitleMenuSelectionFadeStep = TITLE_MENU_SELECTION_FADE_STEP;
-      if (gTitleMenuSelection == 0) {
-        lbl_803DD618 = 1;
-      } else {
-        lbl_803DD618 = 0;
-      }
-    } else if (gTitleMenuPreviousSelection != gTitleMenuSelection) {
-      TitleMenu_SetMenuState(gTitleMenuSelection,1);
-      Sfx_PlayFromObject(0,0x37b);
-      gTitleMenuSelectionFadeStep = -TITLE_MENU_SELECTION_FADE_STEP;
-      gTitleMenuPreviousSelection = gTitleMenuSelection;
-      titleScreenFn_80130464(0);
+  if (gTitleMenuNextDllId != 0) {
+    if (((previousFadeTimer <= 12) || (gTitleMenuLoadDelay > 12)) && (gTitleMenuLoadDelay <= 0)) {
+      TitleMenu_ClearPanel();
+      titleScreenFn_8005cdd4(0);
+      setLinkNotRotated();
+      loadUiDll(gTitleMenuNextDllId);
     }
-    if ((int)((uint)gTitleMenuSelectionFade + (int)gTitleMenuSelectionFadeStep) <
-        TITLE_MENU_SELECTION_FADE_MAX) {
-      if ((int)((uint)gTitleMenuSelectionFade + (int)gTitleMenuSelectionFadeStep) < 1) {
-        TitleMenu_SetEntryHighlight(gTitleMenuSelection);
-        gTitleMenuSelectionFade = 0;
-        gTitleMenuSelectionFadeStep = 0;
-        if (gTitleMenuSelection != 0) {
-          lbl_803DD618 = 0;
-        }
-      } else {
-        gTitleMenuSelectionFade += gTitleMenuSelectionFadeStep;
-      }
-    } else {
-      gTitleMenuSelectionFade = TITLE_MENU_SELECTION_FADE_MAX;
-      gTitleMenuSelectionFadeStep = 0;
-      titleScreenFn_80130464(1);
-    }
-    if (gTitleMenuPanelOpen == 0) {
-      if (menuId == 1) {
-        TitleMenu_ClearPanel();
-        TitleMenu_OpenPanel();
-        gTitleMenuPanelOpen = 1;
-      }
-    } else {
-      titleScreenFn_801368c4(gTitleMenuSelection);
-      if ((menuId == 1) && (gTitleMenuSelectionFade == TITLE_MENU_SELECTION_FADE_MAX)) {
-        titleScreenFn_801368a4(1);
-        gTitleMenuLoadDelay = 1;
-        titleScreenFn_80130464(1);
-        Sfx_PlayFromObject(0,SFXsp_snrin2_c);
-        if (gTitleMenuSelection == 2) {
-          gTitleMenuNextDllId = 7;
-          lbl_803DD6F8 = 1;
-        } else if (gTitleMenuSelection < 2) {
-          if (gTitleMenuSelection == 0) {
-            gTitleMenuNextDllId = 5;
-          } else {
-            gTitleMenuNextDllId = 7;
-            lbl_803DD6F8 = 0;
-          }
-        } else if (gTitleMenuSelection < 4) {
-          gTitleMenuNextDllId = 7;
-          lbl_803DD6F8 = 2;
-        }
-        return 0;
-      }
-      titleScreenFn_801368a4(0);
-    }
-    return 0;
+    return gTitleMenuLoadDelay <= 12;
   }
 
-  if (((previousFadeTimer < 0xd) || (gTitleMenuLoadDelay > 0xc)) && (gTitleMenuLoadDelay < 1)) {
-    TitleMenu_ClearPanel();
-    titleScreenFn_8005cdd4(0);
-    setLinkNotRotated();
-    loadUiDll(gTitleMenuNextDllId);
+  menuId = TitleMenu_GetFadeState();
+  gTitleMenuSelection = TitleMenu_GetSelection();
+  if (((lbl_803E1D28 == titleScreenGetCamProgress()) &&
+      (gTitleMenuSelectionFade < TITLE_MENU_SELECTION_FADE_MAX)) &&
+      (gAttractMoviePlaybackEnabled == 0)) {
+    gTitleMenuSelectionFadeStep = TITLE_MENU_SELECTION_FADE_STEP;
+    if (gTitleMenuSelection == 0) {
+      lbl_803DD618 = 1;
+    } else {
+      lbl_803DD618 = 0;
+    }
+  } else if (gTitleMenuPreviousSelection != gTitleMenuSelection) {
+    TitleMenu_SetMenuState(gTitleMenuSelection,1);
+    Sfx_PlayFromObject(0,0x37b);
+    gTitleMenuSelectionFadeStep = -TITLE_MENU_SELECTION_FADE_STEP;
+    gTitleMenuPreviousSelection = gTitleMenuSelection;
+    titleScreenFn_80130464(0);
   }
-  return (uint)((uint)(int)gTitleMenuLoadDelay < 0xd) - ((int)gTitleMenuLoadDelay >> 0x1f);
+  sum = gTitleMenuSelectionFade + gTitleMenuSelectionFadeStep;
+  if (sum >= TITLE_MENU_SELECTION_FADE_MAX) {
+    gTitleMenuSelectionFade = TITLE_MENU_SELECTION_FADE_MAX;
+    gTitleMenuSelectionFadeStep = 0;
+    titleScreenFn_80130464(1);
+  } else if (sum <= 0) {
+    TitleMenu_SetEntryHighlight(gTitleMenuSelection);
+    gTitleMenuSelectionFade = 0;
+    gTitleMenuSelectionFadeStep = 0;
+    if (gTitleMenuSelection != 0) {
+      lbl_803DD618 = 0;
+    }
+  } else {
+    gTitleMenuSelectionFade += gTitleMenuSelectionFadeStep;
+  }
+  if (gTitleMenuPanelOpen == 0) {
+    if (menuId == 1) {
+      TitleMenu_ClearPanel();
+      TitleMenu_OpenPanel();
+      gTitleMenuPanelOpen = 1;
+    }
+  } else {
+    titleScreenFn_801368c4(gTitleMenuSelection);
+    if ((menuId == 1) && (gTitleMenuSelectionFade == TITLE_MENU_SELECTION_FADE_MAX)) {
+      titleScreenFn_801368a4(1);
+      gTitleMenuLoadDelay = 1;
+      titleScreenFn_80130464(1);
+      Sfx_PlayFromObject(0,SFXsp_snrin2_c);
+      switch (gTitleMenuSelection) {
+      case 0:
+        gTitleMenuNextDllId = 5;
+        break;
+      case 1:
+        gTitleMenuNextDllId = 7;
+        lbl_803DD6F8 = 0;
+        break;
+      case 2:
+        gTitleMenuNextDllId = 7;
+        lbl_803DD6F8 = 1;
+        break;
+      case 3:
+        gTitleMenuNextDllId = 7;
+        lbl_803DD6F8 = 2;
+        break;
+      }
+      return 0;
+    }
+    titleScreenFn_801368a4(0);
+  }
+  return 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
