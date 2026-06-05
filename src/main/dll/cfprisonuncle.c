@@ -210,7 +210,7 @@ extern f32 lbl_803E3894;
 extern f32 lbl_803E3898;
 extern f32 timeDelta;
 extern u8 framesThisStep;
-extern s16 lbl_803DBD98[];
+extern s16 lbl_803DBD98[4];
 extern void *gRomCurveInterface;
 extern void *gPartfxInterface;
 extern void *gMapEventInterface;
@@ -228,7 +228,7 @@ struct MagicPlantSetup {
 };
 
 struct MagicPlantState {
-  int childObj;
+  u32 childObj;
   f32 moveProgress;
   f32 moveStepScale;
   s16 timer;
@@ -270,29 +270,33 @@ extern void fn_8017F334(int obj, MagicPlantSetup *setup, MagicPlantState *state)
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *stateParam)
 {
-  int player;
   int hitObj;
-  int hitA;
   int hitB;
+  int hitA;
+  f32 hitPos[3];
   u8 lightPos[0x0c];
-  f32 hitX;
-  f32 hitY;
-  f32 hitZ;
   int hitKind;
   int i;
   s16 timer;
+  int player;
   f32 distance;
 
   player = (int)Obj_GetPlayerObject();
   *(u8 *)(obj + 0xaf) &= ~8;
 
-  hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitA, &hitB, &hitObj, &hitX, &hitY, &hitZ);
+  hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitA, &hitB, &hitObj, &hitPos[0], &hitPos[1], &hitPos[2]);
   if ((hitKind != 0) && (hitObj != 0)) {
-    if (hitKind == 0x10) {
+    switch (hitKind) {
+    case 0x10:
       Obj_StartModelFadeIn(obj, 300);
-    } else {
+      break;
+    case 0:
+      break;
+    default:
       Sfx_PlayFromObject(obj, 0x5c);
       stateParam->mode = 4;
       stateParam->moveStepScale = lbl_803E3884;
@@ -304,10 +308,11 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
         i--;
       } while (i != 0);
 
-      hitX += playerMapOffsetX;
-      hitZ += playerMapOffsetZ;
+      hitPos[0] += playerMapOffsetX;
+      hitPos[2] += playerMapOffsetZ;
       objLightFn_8009a1dc(obj, lbl_803E3888, lightPos, 1, 0);
       Obj_SetModelColorFadeRecursive(obj, 0xf, 200, 0, 0, 1);
+      break;
     }
   }
 
@@ -320,13 +325,11 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
         stateParam->moveStepScale = lbl_803E3890;
       }
     } else {
-      timer = stateParam->timer - framesThisStep;
-      stateParam->timer = timer;
-      if (timer < 1) {
+      if ((stateParam->timer -= framesThisStep) <= 0) {
         stateParam->timer = (s16)randomGetRange(300, 600);
       } else if (*(s16 *)(obj + 0xa0) != 4) {
         stateParam->moveStepScale = lbl_803E388C;
-        ObjAnim_SetCurrentMove(obj, 4, lbl_803E3890 * (f32)randomGetRange(0, 99), 0);
+        ObjAnim_SetCurrentMove(obj, 4, lbl_803E3890 * (f32)(int)randomGetRange(0, 99), 0);
       }
     }
   }
@@ -340,6 +343,8 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
     Sfx_StopObjectChannel(obj, 0x40);
   }
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
@@ -354,10 +359,13 @@ void fn_8017F4F4(int obj, MagicPlantSetup *setupParam, MagicPlantState *statePar
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma dont_inline on
+#pragma scheduling off
+#pragma peephole off
 void fn_8017F7B8(int obj,int objectId)
 {
   MagicPlantChildSetup *setup;
-  int childObj;
+  u32 childObj;
   u8 *mapData;
   MagicPlantState *state;
 
@@ -376,7 +384,7 @@ void fn_8017F7B8(int obj,int objectId)
     setup->mapByte6 = mapData[0x06];
     setup->mapByte5 = mapData[0x05];
     setup->yawByte = (u8)(mapData[0x07] - 0xf);
-    childObj = Obj_SetupObject(setup,5,(s8)*(u8 *)(obj + 0xac),-1,*(void **)(obj + 0x30));
+    childObj = Obj_SetupObject(setup,5,*(s8 *)(obj + 0xac),-1,*(void **)(obj + 0x30));
     if (childObj != 0) {
       ObjLink_AttachChild(obj,childObj,0);
       state->childObj = childObj;
@@ -388,6 +396,9 @@ void fn_8017F7B8(int obj,int objectId)
   }
   return;
 }
+#pragma peephole reset
+#pragma scheduling reset
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -452,20 +463,21 @@ void FUN_8017f7ec(undefined8 param_1,double param_2,double param_3,undefined8 pa
  * PAL Address: TODO
  * PAL Size: TODO
  */
+#pragma scheduling off
+#pragma peephole off
 void MagicPlant_update(int obj)
 {
   MagicPlantSetup *setup;
   MagicPlantState *state;
   int hitObj;
-  int hitA;
   int hitB;
+  int hitA;
+  f32 hitPos[3];
   u8 lightPos[0x0c];
-  f32 hitX;
-  f32 hitY;
-  f32 hitZ;
   int hitKind;
   s32 alpha;
   f32 progress;
+  f32 fz;
   int divisor;
 
   setup = *(MagicPlantSetup **)(obj + 0x4c);
@@ -479,10 +491,10 @@ void MagicPlant_update(int obj)
 
   *(u8 *)(obj + 0xaf) |= 8;
   if (objIsFrozen(obj) != 0) {
-    hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, &hitA, &hitB, &hitX, &hitY, &hitZ);
+    hitKind = ObjHits_GetPriorityHitWithPosition(obj, &hitObj, &hitA, &hitB, &hitPos[0], &hitPos[1], &hitPos[2]);
     if ((hitKind != 0) && (hitKind != 0x10)) {
-      hitX += playerMapOffsetX;
-      hitZ += playerMapOffsetZ;
+      hitPos[0] += playerMapOffsetX;
+      hitPos[2] += playerMapOffsetZ;
       objLightFn_8009a1dc(obj, lbl_803E3888, lightPos, 1, 0);
       Sfx_PlayFromObject(obj, 0x47b);
       Obj_ResetModelColorState(obj);
@@ -522,13 +534,15 @@ void MagicPlant_update(int obj)
 
     case 2:
       if (*(f32 *)(obj + 0x98) >= lbl_803E3858) {
-        alpha = *(u8 *)(obj + 0x36) - (framesThisStep * 2);
+        alpha = *(u8 *)(obj + 0x36);
+        alpha -= framesThisStep * 2;
         if (alpha < 0) {
           alpha = 0;
           state->mode = 3;
-          state->moveProgress = lbl_803E385C;
-          state->moveStepScale = lbl_803E385C;
-          ObjAnim_SetCurrentMove(obj, 0, lbl_803E385C, 0);
+          fz = lbl_803E385C;
+          state->moveProgress = fz;
+          state->moveStepScale = fz;
+          ObjAnim_SetCurrentMove(obj, 0, fz, 0);
           ObjAnim_SetMoveProgress(lbl_803E385C, (ObjAnimComponent *)obj);
         }
         *(u8 *)(obj + 0x36) = (u8)alpha;
@@ -538,7 +552,8 @@ void MagicPlant_update(int obj)
       break;
 
     case 3:
-      alpha = *(u8 *)(obj + 0x36) + framesThisStep;
+      alpha = *(u8 *)(obj + 0x36);
+      alpha += framesThisStep;
       if (alpha >= 0xff) {
         alpha = 0xff;
         state->mode = 0;
@@ -557,6 +572,8 @@ void MagicPlant_update(int obj)
 
   ObjAnim_AdvanceCurrentMove(state->moveStepScale, timeDelta, obj, NULL);
 }
+#pragma peephole reset
+#pragma scheduling reset
 
 /*
  * --INFO--
