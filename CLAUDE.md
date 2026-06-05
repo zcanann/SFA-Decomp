@@ -650,6 +650,69 @@ Heuristic:
     partial and move on; same cap likely caps wcpushblock and other
     iface-dispatch fns. (wctile, task #120.)
 
+49. **Switch with case-FALLTHROUGH (case 0→1→2 with no re-tests) reproduces
+    target's compare-chain dispatch when cases run sequentially.** When target
+    dispatches an enum/int with `cmpwi 0; bne L1; <body 0+1+2>; b end;
+    L1: cmpwi 1; ...` (one body shared by multiple values via fallthrough),
+    write the switch with empty fallthrough cases:
+    `case 0: case 1: case 2: { <body>; break; }`. Each-case-its-own-body
+    emits per-case re-tests and an extra branch island. Took curvefish_update
+    +4.2pts. (alpha-34 task #123.) Related to #13/#21 but for *sequential
+    fallthrough*, not block reorder or condition flip.
+
+50. **Nested `vcall(vcall(...))` keeps r3 live across calls — MWCC fetches the
+    inner result via r4 instead of clobbering r3.** When target shows
+    `bl outer; bl inner` where both calls take a chained result and target
+    keeps the first call's return in r3 to feed the second's vtable lookup,
+    write the inner call as an embedded argument: `outer(vcall(x), y)`. The
+    bare `int r = inner(x); outer(r, y);` spills `r` to stack and reloads via
+    `lwz` — mismatch. The embedded form keeps the chain in regs. (alpha-34.)
+
+51. **Chained `x = y = z = K;` assignment CSEs ONE constant load across multiple
+    stores.** When target emits `li r3, K; stw r3, off1(p); stw r3, off2(p);
+    stw r3, off3(p)` (single materialization, three stores), write a single
+    chained assignment instead of three independent stores. The chained form
+    forces MWCC to share the materialized constant in one reg; separate
+    statements may reload the constant per store. Sibling of #6 (lift for CSE)
+    for assign-stores rather than reads. (alpha-34.)
+
+52. **Ternary `(a >= b) ? b : a` clamp gives `mr+clrlwi` store shape vs.
+    `if/else`.** When clamping to a max with an unsigned-narrow target store
+    (the store is a `stb`/`sth` after the choice), the ternary lands the
+    "winner" in the same reg both arms use, emitting `mr; clrlwi; stb`
+    matching target. An `if (a >= b) v = b; else v = a;` form fragments the
+    join into two basic blocks. Companion to #4 for the case that ends in a
+    narrow store, not a return. (alpha-34 curvefish.)
+
+53. **`(s16)` cast on a compound `-=` SUBTRAHEND drops the spurious `extsh`.**
+    Similar to #20 (compound `+= K`), but specifically for subtraction: when
+    target emits `lha; subf; sth` without the `extsh` re-sign-extend that
+    `*p -= v` produces, write `*p -= (s16)v;` (cast the subtrahend, not the
+    lvalue or the result). The narrow cast tells MWCC the subtrahend is
+    already sign-correct width, skipping the redundant extension. (alpha-34
+    duster_update.)
+
+54. **Two locals = SAME base pointer when target holds the pointer in two
+    DIFFERENT saved regs.** When target dereferences the same base
+    (`*(obj+0x4c)`) via TWO different saved regs (e.g. both r28 and r30 hold
+    the same loaded pointer at different points in the function), declare
+    TWO locals that both alias the base. The duplicated decl forces MWCC to
+    allocate the pointer to two saved regs rather than CSE-ing it to one —
+    matching target's reg coloring. Use ONLY when the target visibly holds
+    the same value in two saved regs; otherwise this regresses. (alpha-34.)
+
+55. **Mixed-hoist pattern: target HOISTS a global to a saved reg at prologue
+    AND RE-DERIVES it fresh inside specific loops.** When a function's
+    prologue loads `lis;addi` for a global into a saved reg (r31), but a
+    specific inner loop has its own `lis;addi` for the SAME global re-derived
+    per-iteration, write a mid-fn re-read of the global: declare a
+    block-local pointer inside the loop scope that re-reads the address,
+    while a top-of-fn local holds the hoisted version for the rest of the
+    body. MWCC then matches both placements. The "always hoist" advice in #6
+    and "never hoist" in the existing Don't-hoist section are extremes;
+    this is the middle case when target actually splits the strategy.
+    (echo-25 dfsh_shrine_update findings.)
+
 ## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/
