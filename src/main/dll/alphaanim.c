@@ -897,21 +897,23 @@ void seqobj2_update(int *obj)
 {
     u8 *state;
     u8 *def;
+    char *descriptor;
     u32 bitValue;
 
+    descriptor = (char *)&gSeqObj2ObjDescriptor;
     state = *(u8 **)((char *)obj + 0xb8);
     def = *(u8 **)((char *)obj + 0x4c);
 
     if ((state[0] & SEQOBJECT_STATE_OPEN) != 0) {
         if ((def[0x1d] & SEQOBJECT_FLAG_LATCH_SOURCE_CLEAR) != 0) {
             GameBit_Set(*(s16 *)(def + 0x1a), 0);
-            OSReport((char *)&gSeqObj2ObjDescriptor + 0x94, *(int *)(def + 0x14));
+            OSReport(descriptor + 0x94, *(int *)(def + 0x14));
         }
         if ((def[0x1d] & SEQOBJECT_FLAG_SET_SOURCE_ON_DONE) != 0) {
             GameBit_Set(*(s16 *)(def + 0x18), 1);
-            OSReport((char *)&gSeqObj2ObjDescriptor + 0xd0, *(int *)(def + 0x14));
+            OSReport(descriptor + 0xd0, *(int *)(def + 0x14));
         }
-        OSReport((char *)&gSeqObj2ObjDescriptor + 0x108, *(int *)(def + 0x14),
+        OSReport(descriptor + 0x108, *(int *)(def + 0x14),
                  *(u16 *)(def + 0x22));
         ((void (*)(int *, int))((int **)*gObjectTriggerInterface)[0x15])
             (obj, *(s16 *)(def + 0x20));
@@ -923,11 +925,11 @@ void seqobj2_update(int *obj)
     else if ((state[0] & SEQOBJECT_STATE_TRIGGER_SEQUENCE) != 0) {
         if ((def[0x1d] & SEQOBJECT_FLAG_SET_SOURCE_ON_SEQUENCE) != 0) {
             GameBit_Set(*(s16 *)(def + 0x1a), 0);
-            OSReport((char *)&gSeqObj2ObjDescriptor + 0x140, *(int *)(def + 0x14));
+            OSReport(descriptor + 0x140, *(int *)(def + 0x14));
         }
         if ((def[0x1d] & SEQOBJECT_FLAG_USE_TRIGGER_PARAM) != 0) {
             GameBit_Set(*(s16 *)(def + 0x18), 1);
-            OSReport((char *)&gSeqObj2ObjDescriptor + 0x170, *(int *)(def + 0x14));
+            OSReport(descriptor + 0x170, *(int *)(def + 0x14));
         }
         state[0] = (u8)(state[0] & ~SEQOBJECT_STATE_TRIGGER_SEQUENCE);
     }
@@ -936,13 +938,13 @@ void seqobj2_update(int *obj)
             (*(s16 *)(def + 0x18) == -1 || GameBit_Get(*(s16 *)(def + 0x18)) == 0)) {
             if ((def[0x1d] & SEQOBJECT_FLAG_CLEAR_TARGET_ON_DONE) != 0) {
                 GameBit_Set(*(s16 *)(def + 0x1a), 0);
-                OSReport((char *)&gSeqObj2ObjDescriptor + 0x19c, *(int *)(def + 0x14));
+                OSReport(descriptor + 0x19c, *(int *)(def + 0x14));
             }
             if ((def[0x1d] & SEQOBJECT_FLAG_UNUSED_20) != 0) {
                 GameBit_Set(*(s16 *)(def + 0x18), 1);
-                OSReport((char *)&gSeqObj2ObjDescriptor + 0x1cc, *(int *)(def + 0x14));
+                OSReport(descriptor + 0x1cc, *(int *)(def + 0x14));
             }
-            OSReport((char *)&gSeqObj2ObjDescriptor + 0x1f8, *(int *)(def + 0x14));
+            OSReport(descriptor + 0x1f8, *(int *)(def + 0x14));
             ((void (*)(int, int *, int))((int **)*gObjectTriggerInterface)[0x12])
                 (*(s8 *)(def + 0x1e), obj, -1);
         }
