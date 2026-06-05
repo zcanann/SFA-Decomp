@@ -86,10 +86,16 @@ typedef struct CamcontrolTargetObject {
 } CamcontrolTargetObject;
 
 #define CAMCONTROL_TARGET_KIND_MASK 0x0F
+#define CAMCONTROL_TARGET_KIND_LOCKON 1
+#define CAMCONTROL_TARGET_KIND_CONTEXT_A 4
+#define CAMCONTROL_TARGET_KIND_SUPPRESSED 8
+#define CAMCONTROL_TARGET_KIND_CONTEXT_B 9
 #define CAMCONTROL_TARGET_FLAG_RETICLE_TOUCHING 0x04
 #define CAMCONTROL_TARGET_FLAG_ACCEPTS_INPUT 0x10
 #define CAMCONTROL_TARGET_FLAG_INPUT_PRESSED 0x01
 #define CAMCONTROL_CAMERA_TARGET_FLAG_ACCEPTS_INPUT 0x20
+#define CAMCONTROL_TARGET_BUTTON_PRIMARY 0x100
+#define CAMCONTROL_TARGET_BUTTON_CONTEXT 0x900
 
 STATIC_ASSERT(sizeof(CamcontrolTargetSetup) == 0x05);
 STATIC_ASSERT(offsetof(CamcontrolTargetSetup, targetKind) == 0x04);
@@ -146,15 +152,16 @@ void camcontrol_updateTargetFeedback(void)
   }
   if ((gCamcontrolTargetChanged != '\0') && (gCamcontrolTargetChanged = '\0', target != NULL)) {
     targetKind = CAMCONTROL_CAMERA->targetKind;
-    if (targetKind == 1) {
+    if (targetKind == CAMCONTROL_TARGET_KIND_LOCKON) {
       Sfx_PlayFromObject(0,0x3ff);
       objShowButtonGlow(reticle,lbl_803E162C,2);
     }
-    else if ((targetKind == 4) || (targetKind == 9)) {
+    else if ((targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_A) ||
+             (targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_B)) {
       Sfx_PlayFromObject(0,0x402);
       objShowButtonGlow(reticle,lbl_803E162C,3);
     }
-    else if (targetKind != 8) {
+    else if (targetKind != CAMCONTROL_TARGET_KIND_SUPPRESSED) {
       Sfx_PlayFromObject(0,SFXsc_spotfox01);
       objShowButtonGlow(reticle,lbl_803E162C,1);
     }
@@ -162,10 +169,11 @@ void camcontrol_updateTargetFeedback(void)
   if (target != NULL) {
     target->targetFlags = target->targetFlags | CAMCONTROL_TARGET_FLAG_RETICLE_TOUCHING;
     buttons = getButtonsJustPressed(0);
-    buttonMask = 0x100;
+    buttonMask = CAMCONTROL_TARGET_BUTTON_PRIMARY;
     targetKind = camcontrol_GetTargetKind(target);
-    if ((targetKind == 4) || (targetKind == 9)) {
-      buttonMask = 0x900;
+    if ((targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_A) ||
+        (targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_B)) {
+      buttonMask = CAMCONTROL_TARGET_BUTTON_CONTEXT;
     }
     if ((buttons & buttonMask) != 0) {
       buttonPressed = true;
@@ -205,13 +213,14 @@ void camcontrol_updateTargetFeedback(void)
     gCamcontrolTargetState = '\0';
     if (target == NULL) {
       targetKind = CAMCONTROL_CAMERA->targetKind;
-      if (targetKind == 1) {
+      if (targetKind == CAMCONTROL_TARGET_KIND_LOCKON) {
         Sfx_PlayFromObject(0,0x400);
       }
-      else if ((targetKind == 4) || (targetKind == 9)) {
+      else if ((targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_A) ||
+               (targetKind == CAMCONTROL_TARGET_KIND_CONTEXT_B)) {
         Sfx_PlayFromObject(0,0x401);
       }
-      else if (targetKind != 8) {
+      else if (targetKind != CAMCONTROL_TARGET_KIND_SUPPRESSED) {
         Sfx_PlayFromObject(0,SFXsc_spotfox02);
       }
     }
