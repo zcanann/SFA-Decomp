@@ -3,7 +3,7 @@
 #include "main/audio/inp_midi.h"
 #include "main/audio/snd_core.h"
 #include "main/audio/mcmd_exec.h"
-#include "main/unknown/autos/placeholder_80279608.h"
+#include "main/audio/voice_prio.h"
 #include "main/unknown/autos/placeholder_8027591C.h"
 #include "main/unknown/autos/placeholder_8027641C.h"
 #include "main/audio/hw_adsr.h"
