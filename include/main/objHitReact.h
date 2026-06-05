@@ -38,8 +38,8 @@ typedef struct ObjHitReactEffectHandle {
 
 typedef struct ObjHitReactMoveEntry {
   s16 moveId;
-  s16 firstEntryOffset;
-  s16 entryBytes;
+  s16 firstEntryByteOffset;
+  s16 entryByteCount;
 } ObjHitReactMoveEntry;
 
 #define OBJHITREACT_MAX_RESET_OBJECTS 0x32
@@ -85,13 +85,13 @@ typedef struct ObjHitReactState {
 } ObjHitReactState;
 
 struct ObjHitReactEntry {
-  s16 hitSfxA;
-  s16 hitSfxB;
-  s16 reactionAnim;
+  s16 primaryHitSfxId;
+  s16 secondaryHitSfxId;
+  s16 reactionMoveId;
   u8 pad06[2];
-  u8 hitFxMode;
+  u8 hitEffectMode;
   u8 pad09[3];
-  f32 cooldown;
+  f32 reactionStepScale;
   u8 pad10[4];
 };
 
@@ -107,8 +107,8 @@ STATIC_ASSERT(offsetof(ObjHitReactEffectHandle, vtable) == 0x00);
 
 STATIC_ASSERT(sizeof(ObjHitReactMoveEntry) == 0x06);
 STATIC_ASSERT(offsetof(ObjHitReactMoveEntry, moveId) == 0x00);
-STATIC_ASSERT(offsetof(ObjHitReactMoveEntry, firstEntryOffset) == 0x02);
-STATIC_ASSERT(offsetof(ObjHitReactMoveEntry, entryBytes) == 0x04);
+STATIC_ASSERT(offsetof(ObjHitReactMoveEntry, firstEntryByteOffset) == 0x02);
+STATIC_ASSERT(offsetof(ObjHitReactMoveEntry, entryByteCount) == 0x04);
 
 STATIC_ASSERT(sizeof(ObjHitReactState) == 0xB0);
 STATIC_ASSERT(offsetof(ObjHitReactState, activeHit) == 0x00);
@@ -122,11 +122,11 @@ STATIC_ASSERT(offsetof(ObjHitReactState, activeHitboxMode) == 0xAE);
 STATIC_ASSERT(offsetof(ObjHitReactState, resetHitboxMode) == 0xAF);
 
 STATIC_ASSERT(sizeof(ObjHitReactEntry) == 0x14);
-STATIC_ASSERT(offsetof(ObjHitReactEntry, hitSfxA) == 0x00);
-STATIC_ASSERT(offsetof(ObjHitReactEntry, hitSfxB) == 0x02);
-STATIC_ASSERT(offsetof(ObjHitReactEntry, reactionAnim) == 0x04);
-STATIC_ASSERT(offsetof(ObjHitReactEntry, hitFxMode) == 0x08);
-STATIC_ASSERT(offsetof(ObjHitReactEntry, cooldown) == 0x0C);
+STATIC_ASSERT(offsetof(ObjHitReactEntry, primaryHitSfxId) == 0x00);
+STATIC_ASSERT(offsetof(ObjHitReactEntry, secondaryHitSfxId) == 0x02);
+STATIC_ASSERT(offsetof(ObjHitReactEntry, reactionMoveId) == 0x04);
+STATIC_ASSERT(offsetof(ObjHitReactEntry, hitEffectMode) == 0x08);
+STATIC_ASSERT(offsetof(ObjHitReactEntry, reactionStepScale) == 0x0C);
 
 int ObjHitReact_Update(int obj,ObjHitReactEntry *reactionEntries,u32 reactionEntryCount,
                        u32 reactionState,float *reactionStepScale);
