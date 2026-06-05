@@ -10,7 +10,7 @@ extern void *memcpy(void *dst, const void *src, u32 size);
 extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
 extern void lightSetFieldBC_8001db14(int light, int value);
 extern void modelLightStruct_setField50(int light, int value);
-extern void lightFn_8001db6c(f32 value, int light, int which);
+extern void modelLightStruct_setEnabled(f32 value, int light, int which);
 extern void lightDistAttenFn_8001dc38(f32 min, f32 max, int light);
 extern void ModelLightStruct_free(void *light);
 extern int objCreateLight(int obj, int param_2);
@@ -157,8 +157,8 @@ void dimbossfire_update(int param_1)
             modelLightStruct_setColorsA8AC(*(int *)(pbVar5 + 0x10),0xff,0x7f,0,0);
           }
           lightDistAttenFn_8001dc38(lbl_803E4DB8,lbl_803E4DBC,*(int *)(pbVar5 + 0x10));
-          lightFn_8001db6c(lbl_803E4DA0,*(int *)(pbVar5 + 0x10),1);
-          lightFn_8001db6c(*(float *)(pbVar5 + 4) / lbl_803E4DC0,*(int *)(pbVar5 + 0x10),0);
+          modelLightStruct_setEnabled(lbl_803E4DA0,*(int *)(pbVar5 + 0x10),1);
+          modelLightStruct_setEnabled(*(float *)(pbVar5 + 4) / lbl_803E4DC0,*(int *)(pbVar5 + 0x10),0);
         }
       }
       Sfx_PlayFromObject(param_1,SFXar_boost16);

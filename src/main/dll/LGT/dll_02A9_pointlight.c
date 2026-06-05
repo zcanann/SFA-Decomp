@@ -25,7 +25,7 @@ void pointlight_setEffectState(int obj, int flag)
     PointLightState *state = *(PointLightState **)(obj + 0xb8);
     void *light = state->light;
     if (light != NULL) {
-        lightFn_8001db6c(light, flag, lbl_803E7230);
+        modelLightStruct_setEnabled(light, flag, lbl_803E7230);
     }
 }
 #pragma scheduling reset
@@ -85,7 +85,7 @@ void pointlight_update(int obj)
         s16 bit = *(s16 *)(setup + 0x1e);
         if (bit > 0 && (u32)GameBit_Get(bit) == 0) {
             state->enabled = 0;
-            lightFn_8001db6c(state->light, 0, lbl_803E7234);
+            modelLightStruct_setEnabled(state->light, 0, lbl_803E7234);
         }
         if ((*(u8 *)(setup + 0x2a) & 1) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
@@ -96,7 +96,7 @@ void pointlight_update(int obj)
         s16 bit = *(s16 *)(setup + 0x1e);
         if (bit > 0 && (u32)GameBit_Get(bit) != 0) {
             state->enabled = 1;
-            lightFn_8001db6c(state->light, 1, lbl_803E7234);
+            modelLightStruct_setEnabled(state->light, 1, lbl_803E7234);
         }
     }
 
@@ -151,7 +151,7 @@ void pointlight_init(int obj, int setup)
             fn_8001DA60(state->light, (f32)brightness, *(u8 *)(setup + 0x21));
         }
 
-        lightFn_8001db6c(state->light, *(u8 *)(setup + 0x30), lbl_803E7230);
+        modelLightStruct_setEnabled(state->light, *(u8 *)(setup + 0x30), lbl_803E7230);
         state->enabled = *(u8 *)(setup + 0x30);
         modelLightStruct_startColorFade(state->light, *(u8 *)(setup + 0x26), *(s16 *)(setup + 0x2e));
         modelStruct2_setVectors(state->light, vec.x, vec.y, vec.z);

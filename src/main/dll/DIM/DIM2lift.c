@@ -591,7 +591,7 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
   extern void modelLightStruct_setupGlow(int, int, int, int, int, int, f32);
   extern void lightDistAttenFn_8001dc38(int, f32, f32);
   extern void lightSetField4D(int, int);
-  extern void lightFn_8001db6c(int, int, f32);
+  extern void modelLightStruct_setEnabled(int, int, f32);
   extern void lightSetFieldB0(int, int, int, int, int);
   extern void fn_8001D9E0(int, int, int, int, int);
   extern void modelLightStruct_startColorFade(int, int, int);
@@ -624,7 +624,7 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
 
   lightDistAttenFn_8001dc38(lightSlot[0], lbl_803E4C2C, lbl_803E4C30);
   lightSetField4D(lightSlot[0], 1);
-  lightFn_8001db6c(lightSlot[0], 1, lbl_803E4BD8);
+  modelLightStruct_setEnabled(lightSlot[0], 1, lbl_803E4BD8);
   lightSetFieldB0(lightSlot[0], 64, 0, 0, 64);
   fn_8001D9E0(lightSlot[0], 64, 0, 0, 64);
   modelLightStruct_startColorFade(lightSlot[0], 2, 40);

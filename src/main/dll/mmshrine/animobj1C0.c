@@ -17,7 +17,7 @@ extern f32 Vec_xzDistance(f32 *a, f32 *b);
 extern f32 fn_80293E80(f32 x);
 extern void fn_80296518(void *obj, int arg, int enable);
 extern void GameBit_Set(int eventId, int value);
-extern void lightFn_8001db6c(int light, int mode, f32 value);
+extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 
 extern undefined4 DAT_803dc070;
 extern undefined4* DAT_803dd6d4;
@@ -315,13 +315,13 @@ int fn_801C5CE4(void *objArg, int unused, void *eventListArg)
             case 14:
                 obj->flags |= 0x4000;
                 if (state->light != 0) {
-                    lightFn_8001db6c(state->light, 0, lbl_803E4FC8);
+                    modelLightStruct_setEnabled(state->light, 0, lbl_803E4FC8);
                 }
                 break;
             case 15:
                 obj->flags &= ~0x4000;
                 if (state->light != 0) {
-                    lightFn_8001db6c(state->light, 0, lbl_803E4FC8);
+                    modelLightStruct_setEnabled(state->light, 0, lbl_803E4FC8);
                 }
                 break;
             }

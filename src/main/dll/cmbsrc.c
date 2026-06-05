@@ -108,7 +108,7 @@ int cmbsrc_shouldActivate(int obj, int state, int setup)
     int result = 0;
     int hitOut;
 
-    if (*(void **)state != NULL && fn_8001DB64(*(void **)state) != 0) {
+    if (*(void **)state != NULL && modelLightStruct_getActiveState(*(void **)state) != 0) {
         return 0;
     }
     if (*(s16 *)(setup + 0x24) != -1 && GameBit_Get(*(s16 *)(setup + 0x24)) != 0) {
@@ -137,7 +137,7 @@ int cmbsrc_shouldDeactivate(int obj, int state, int setup)
     int result = 0;
     int hitOut;
 
-    if (*(void **)state != NULL && fn_8001DB64(*(void **)state) != 2) {
+    if (*(void **)state != NULL && modelLightStruct_getActiveState(*(void **)state) != 2) {
         return 0;
     }
     if (*(s16 *)(setup + 0x24) != -1 && (u32)GameBit_Get(*(s16 *)(setup + 0x24)) == 0) {
@@ -359,7 +359,7 @@ int cmbsrc_update(int obj)
         if (cmbsrc_shouldDeactivate(obj, state, setup)) {
             *(u8 *)(state + 0x25) = 0;
             if (*(void **)state != NULL) {
-                lightFn_8001db6c(*(void **)state, 0, lbl_803E7374);
+                modelLightStruct_setEnabled(*(void **)state, 0, lbl_803E7374);
             }
             if (*(u8 *)(setup + 0x29) & 0x2) {
                 Sfx_StopObjectChannel(obj, 0x40);
@@ -394,7 +394,7 @@ int cmbsrc_update(int obj)
         if (cmbsrc_shouldActivate(obj, state, setup)) {
             *(u8 *)(state + 0x25) = 1;
             if (*(void **)state != NULL) {
-                lightFn_8001db6c(*(void **)state, 1, lbl_803E7374);
+                modelLightStruct_setEnabled(*(void **)state, 1, lbl_803E7374);
             }
             if (!((CmbsrcHitFlag *)(state + 0x27))->disabled) {
                 ObjHits_EnableObject(obj);
@@ -475,9 +475,9 @@ void cmbsrc_init(int obj, u8 *setup)
             }
             if (*(u8 *)(state + 0x22) & 0x4) {
                 if ((*(int (**)(void *))(*gSHthorntailAnimationInterface + 0x24))(&local) != 0) {
-                    lightFn_8001db6c(*(void **)state, 1, lbl_803E7374);
+                    modelLightStruct_setEnabled(*(void **)state, 1, lbl_803E7374);
                 } else {
-                    lightFn_8001db6c(*(void **)state, 0, lbl_803E7374);
+                    modelLightStruct_setEnabled(*(void **)state, 0, lbl_803E7374);
                     *(u8 *)(state + 0x25) = 0;
                 }
             }

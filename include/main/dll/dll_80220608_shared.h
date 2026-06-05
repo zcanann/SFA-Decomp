@@ -286,7 +286,7 @@ extern void modelLightStruct_setGlowProjectionRadius(void *light, f32 v);
 extern int *gCameraInterface;
 extern int fn_802969F0(int player);
 extern f32 Camera_GetFovY(void);
-extern void lightFn_8001db6c(void *light, int flag, f32 val);
+extern void modelLightStruct_setEnabled(void *light, int flag, f32 val);
 extern f32 lbl_803E6E38;
 
 
@@ -339,7 +339,7 @@ extern f32 lbl_803E7230;
 extern f32 lbl_803E7234;
 extern f32 lbl_803E7240;
 extern void ModelLightStruct_free(void *light);
-extern void lightFn_8001db6c(void *light, int flag, f32 val);
+extern void modelLightStruct_setEnabled(void *light, int flag, f32 val);
 extern void queueGlowRender(void *light);
 extern void getAmbientColor(int id, u8 *r, u8 *g, u8 *b);
 extern void modelLightStruct_setColorsA8AC(void *light, u8 r, u8 g, u8 b, int a);
@@ -497,7 +497,7 @@ extern int getHudHiddenFrameCount(void);
 
 
 
-extern int fn_8001DB64(void *light);
+extern int modelLightStruct_getActiveState(void *light);
 extern f32 lbl_803E70B0;
 
 

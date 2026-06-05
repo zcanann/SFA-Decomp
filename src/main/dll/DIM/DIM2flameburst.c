@@ -2161,7 +2161,7 @@ extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setField50(int h, int v);
 extern void lightVecFn_8001dd88(int h, f32 x, f32 y, f32 z);
 extern void lightSetField2FB(int h, int v);
-extern void lightFn_8001db6c(int h, int n, f32 v);
+extern void modelLightStruct_setEnabled(int h, int n, f32 v);
 extern void lightDistAttenFn_8001dc38(int h, f32 a, f32 b);
 extern void modelLightStruct_setColorsA8AC(int h, int r, int g, int b, int a);
 extern void Obj_FreeObject(int obj);
@@ -2553,7 +2553,7 @@ void explosion_update(int obj)
         } else {
             if (d < e) {
                 if (*(int *)((char *)state + 0xa40) != 0) {
-                    lightFn_8001db6c(*(int *)((char *)state + 0xa40), 0, lbl_803E4960);
+                    modelLightStruct_setEnabled(*(int *)((char *)state + 0xa40), 0, lbl_803E4960);
                 }
             } else {
                 fn_801B40B8(*(u8 *)((char *)state + 0xa5d), rgb, (f32)(int)e, (f32)(int)d);
@@ -2668,7 +2668,7 @@ void explosion_init(int obj, int p2)
             modelLightStruct_setField50(*(int *)((char *)state + 0xa40), 2);
             lightVecFn_8001dd88(*(int *)((char *)state + 0xa40), *(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c), *(f32 *)((char *)obj + 0x20));
             lightSetField2FB(*(int *)((char *)state + 0xa40), 1);
-            lightFn_8001db6c(*(int *)((char *)state + 0xa40), 1, lbl_803E4960);
+            modelLightStruct_setEnabled(*(int *)((char *)state + 0xa40), 1, lbl_803E4960);
             lightDistAttenFn_8001dc38(*(int *)((char *)state + 0xa40), (f32)(lbl_803E49CC * scale), (f32)(lbl_803E4958 * scale));
             modelLightStruct_setColorsA8AC(*(int *)((char *)state + 0xa40), 0xff, 0xeb, 0xa0, 0xff);
         }

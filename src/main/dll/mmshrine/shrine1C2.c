@@ -886,7 +886,7 @@ extern void gameTimerStop(void);
 extern void Music_Trigger(int id, int restart);
 extern void GameBit_Set(int bit, int value);
 extern int GameBit_Get(int bit);
-extern void lightFn_8001db6c(void *light, int enabled, f32 scale);
+extern void modelLightStruct_setEnabled(void *light, int enabled, f32 scale);
 extern void objRenderFn_8003b8f4(f32);
 extern void objParticleFn_80099d84(void *obj, int type, void *light, f32 scale, f32 extraScale);
 extern f32 lbl_803E5038;
@@ -923,12 +923,12 @@ void gpsh_shrine_render(void *obj, int p2, int p3, int p4, int p5, s8 visible)
     if (visible == 0) {
         void *light = state[0];
         if (light != NULL) {
-            lightFn_8001db6c(light, 0, lbl_803E5038);
+            modelLightStruct_setEnabled(light, 0, lbl_803E5038);
         }
     } else {
         void *light = state[0];
         if (light != NULL) {
-            lightFn_8001db6c(light, 1, lbl_803E5038);
+            modelLightStruct_setEnabled(light, 1, lbl_803E5038);
         }
         ((void (*)(void *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5038);
         objParticleFn_80099d84(obj, 7, state[0], lbl_803E5038, lbl_803E5038);
@@ -1005,14 +1005,14 @@ int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq) {
                 *(s16 *)((char *)obj + 6) |= 0x4000;
                 light = *(void **)sub;
                 if (light != NULL) {
-                    lightFn_8001db6c(light, 0, lbl_803E5038);
+                    modelLightStruct_setEnabled(light, 0, lbl_803E5038);
                 }
                 break;
             case 15:
                 *(s16 *)((char *)obj + 6) &= ~0x4000;
                 light = *(void **)sub;
                 if (light != NULL) {
-                    lightFn_8001db6c(light, 0, lbl_803E5038);
+                    modelLightStruct_setEnabled(light, 0, lbl_803E5038);
                 }
                 break;
             }

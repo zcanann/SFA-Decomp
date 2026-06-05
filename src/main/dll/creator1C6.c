@@ -20,7 +20,7 @@ extern void GameBit_Set(int eventId,int value);
 extern void unlockLevel(int param_1,int param_2,int param_3);
 extern int mapGetDirIdx(int idx);
 extern void lockLevel(int idx,int param_2);
-extern void lightFn_8001db6c(int light,int enabled,double scale);
+extern void modelLightStruct_setEnabled(int light,int enabled,double scale);
 extern void objRenderFn_8003b8f4(double scale,int obj,undefined4 p2,undefined4 p3,undefined4 p4,undefined4 p5);
 extern void objParticleFn_80099d84(double scale1,double scale2,int obj,int type,int light);
 extern void fn_80296518(int obj,int param_2,int param_3);
@@ -90,13 +90,13 @@ int fn_801C8EBC(int obj,undefined4 unused,int animEvents)
       case 0xe:
         *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) | 0x4000);
         if (state[0] != NULL) {
-          lightFn_8001db6c((int)state[0],0,(double)lbl_803E50D8);
+          modelLightStruct_setEnabled((int)state[0],0,(double)lbl_803E50D8);
         }
         break;
       case 0xf:
         *(s16 *)(obj + 6) = (s16)(*(s16 *)(obj + 6) & ~0x4000);
         if (state[0] != NULL) {
-          lightFn_8001db6c((int)state[0],0,(double)lbl_803E50D8);
+          modelLightStruct_setEnabled((int)state[0],0,(double)lbl_803E50D8);
         }
         break;
       }
@@ -249,12 +249,12 @@ void dbsh_shrine_render(int obj,undefined4 p2,undefined4 p3,undefined4 p4,undefi
   state = *(void ***)(obj + 0xb8);
   if (visible == 0) {
     if (state[0] != NULL) {
-      lightFn_8001db6c((int)state[0],0,(double)lbl_803E50D8);
+      modelLightStruct_setEnabled((int)state[0],0,(double)lbl_803E50D8);
     }
   }
   else {
     if (state[0] != NULL) {
-      lightFn_8001db6c((int)state[0],1,(double)lbl_803E50D8);
+      modelLightStruct_setEnabled((int)state[0],1,(double)lbl_803E50D8);
     }
     objRenderFn_8003b8f4((double)lbl_803E50D8,obj,p2,p3,p4,p5);
     objParticleFn_80099d84((double)lbl_803E50D8,(double)lbl_803E50D8,obj,7,(int)state[0]);

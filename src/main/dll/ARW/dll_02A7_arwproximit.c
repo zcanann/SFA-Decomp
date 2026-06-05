@@ -36,7 +36,7 @@ void arwproximit_hitDetect(void) {}
 void arwproximit_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     int state = *(int *)(obj + 0xb8);
-    if (*(void **)(state + 4) != NULL && fn_8001DB64(*(void **)(state + 4)) != 0) {
+    if (*(void **)(state + 4) != NULL && modelLightStruct_getActiveState(*(void **)(state + 4)) != 0) {
         queueGlowRender(*(void **)(state + 4));
     }
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E71E4);
@@ -159,7 +159,7 @@ void arwproximit_update(int obj)
             storeZeroToFloatParam((void *)(state + 0xc));
             s16toFloat((void *)(state + 0x10), 0x14);
             if (*(void **)(state + 4) != NULL)
-                lightFn_8001db6c(*(void **)(state + 4), 0, lbl_803E71D8);
+                modelLightStruct_setEnabled(*(void **)(state + 4), 0, lbl_803E71D8);
             spawnExplosion(obj, lbl_803E71E0, 1, 0, 1, 1, 0, 0, 1);
             ObjHitbox_SetSphereRadius(obj, 0x12c);
             ObjHits_SetHitVolumeSlot(obj, 5, 1, 0);
@@ -189,7 +189,7 @@ void arwproximit_update(int obj)
             if (*(u8 *)(state + 0x15) == 3)
                 gameTextFn_80125ba4(0xe);
             if (*(void **)(state + 4) != NULL)
-                lightFn_8001db6c(*(void **)(state + 4), 0, lbl_803E71D8);
+                modelLightStruct_setEnabled(*(void **)(state + 4), 0, lbl_803E71D8);
             spawnExplosion(obj, lbl_803E71DC, 1, 0, 0, 0, 0, 0, 1);
             ObjHits_DisableObject(obj);
             *(s16 *)(obj + 6) |= 0x4000;
@@ -202,7 +202,7 @@ void arwproximit_update(int obj)
             timeDelta * (f32)*(s16 *)(state + 0) + (f32)*(s16 *)(obj + 2);
     }
 
-    if (*(void **)(state + 4) != NULL && fn_8001DB64(*(void **)(state + 4)) != 0)
+    if (*(void **)(state + 4) != NULL && modelLightStruct_getActiveState(*(void **)(state + 4)) != 0)
         modelLightStruct_updateGlowAlpha(*(void **)(state + 4));
 }
 #pragma scheduling reset

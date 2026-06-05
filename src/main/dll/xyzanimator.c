@@ -306,7 +306,7 @@ extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, in
 extern void lightSetFieldB0(int light, int r, int g, int b, int a);
 extern void lightDistAttenFn_8001dc38(int light, f32 near, f32 far);
 extern void lightSetField4D(int light, int v);
-extern void lightFn_8001db6c(int light, int enabled, f32 scale);
+extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern f32 lbl_803E30E0;
 extern f32 lbl_803E30F8;
@@ -348,7 +348,7 @@ void kaldachompspit_init(int obj)
             lightDistAttenFn_8001dc38(*extra, (f32)a, (f32)(a + 0x28));
         }
         lightSetField4D(*extra, 1);
-        lightFn_8001db6c(*extra, 1, lbl_803E30E0);
+        modelLightStruct_setEnabled(*extra, 1, lbl_803E30E0);
         modelLightStruct_startColorFade(*extra, 1, 3);
     }
 }

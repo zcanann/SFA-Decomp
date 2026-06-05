@@ -81,7 +81,7 @@ void projectedlight_init(int obj, int setup)
         lightDistAttenFn_8001dc38(*(void **)state, (f32)(u32)*(u16 *)(setup + 0x1a),
             (f32)(u32)*(u16 *)(setup + 0x1c));
         fn_8001DB24(*(void **)state, *(u8 *)(setup + 0x39));
-        lightFn_8001db6c(*(void **)state, *(u8 *)(setup + 0x3a), lbl_803E7270);
+        modelLightStruct_setEnabled(*(void **)state, *(u8 *)(setup + 0x3a), lbl_803E7270);
 
         if (*(void **)(state + 4) == NULL) {
             if (*(u16 *)(setup + 0x24) != 0) {

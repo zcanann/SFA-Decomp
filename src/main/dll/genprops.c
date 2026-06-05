@@ -5589,7 +5589,7 @@ int depthoffieldpoint_SeqFn(int *obj, int msg, u8 *cmds)
     return 0;
 }
 
-extern void lightFn_8001db6c(int handle, int flag, f32 v);
+extern void modelLightStruct_setEnabled(int handle, int flag, f32 v);
 extern f32 lbl_803E3330;
 int Fireball_SeqFn(int *obj, int msg, u8 *cmds)
 {
@@ -5602,12 +5602,12 @@ int Fireball_SeqFn(int *obj, int msg, u8 *cmds)
         u8 cmd = cmds[i + 0x81];
         if (cmd == 1) {
             if (*(void **)state != NULL) {
-                lightFn_8001db6c(*(int *)state, 1, lbl_803E3330);
+                modelLightStruct_setEnabled(*(int *)state, 1, lbl_803E3330);
             }
             *(s16 *)((char *)obj + 6) &= ~0x4000;
         } else if (cmd == 2) {
             if (*(void **)state != NULL) {
-                lightFn_8001db6c(*(int *)state, 0, lbl_803E3330);
+                modelLightStruct_setEnabled(*(int *)state, 0, lbl_803E3330);
             }
             *(s16 *)((char *)obj + 6) |= 0x4000;
         }
@@ -6490,7 +6490,7 @@ void fireball_update(int *obj)
     }
     if (*(s16 *)((char *)obj + 0x46) == 2110) {
         if (*(void **)state != NULL) {
-            lightFn_8001db6c(*(int *)state, 0, lbl_803E3330);
+            modelLightStruct_setEnabled(*(int *)state, 0, lbl_803E3330);
         }
         *(s16 *)((char *)obj + 6) |= 0x4000;
         return;
@@ -7836,7 +7836,7 @@ void staffFn_80170380(int *obj, int cmd)
             staffSetGlow(glow, 7, 0);
         }
         if (*(int **)state != NULL) {
-            lightFn_8001db6c(*(int *)state, 0, lbl_803E33A8);
+            modelLightStruct_setEnabled(*(int *)state, 0, lbl_803E33A8);
         }
         {
             f32 v = lbl_803E33AC;
@@ -7852,7 +7852,7 @@ void staffFn_80170380(int *obj, int cmd)
         break;
     case 0:
         if (*(int **)state != NULL) {
-            lightFn_8001db6c(*(int *)state, 0, lbl_803E33A8);
+            modelLightStruct_setEnabled(*(int *)state, 0, lbl_803E33A8);
         }
         if (lbl_803E33AC != *(f32 *)(state + 8)) {
             f32 v = lbl_803E33B0;
@@ -7882,7 +7882,7 @@ void staffFn_80170380(int *obj, int cmd)
                 modelLightStruct_setColors100104(*(int *)state, 0, 255, 255, 255);
                 lightDistAttenFn_8001dc38(*(int *)state, lbl_803E33BC, lbl_803E33C0);
                 lightSetField4D(*(int *)state, 1);
-                lightFn_8001db6c(*(int *)state, 1, lbl_803E33AC);
+                modelLightStruct_setEnabled(*(int *)state, 1, lbl_803E33AC);
                 modelLightStruct_startColorFade(*(int *)state, 0, 0);
                 lightSetField2FB(*(int *)state, 1);
             }
@@ -7939,7 +7939,7 @@ void staffFn_80170380(int *obj, int cmd)
         *(f32 *)(state + 8) = lbl_803E33AC;
         *(f32 *)(state + 0xc) = lbl_803E33B4;
         if (*(int **)state != NULL) {
-            lightFn_8001db6c(*(int *)state, 0, lbl_803E33A8);
+            modelLightStruct_setEnabled(*(int *)state, 0, lbl_803E33A8);
         }
         Sfx_StopFromObject((int)obj, 0x42c);
         Sfx_StopFromObject((int)obj, 0x42d);
@@ -7958,7 +7958,7 @@ void staffFn_80170380(int *obj, int cmd)
             modelLightStruct_setColors100104(*(int *)state, 0, 255, 255, 255);
             lightDistAttenFn_8001dc38(*(int *)state, lbl_803E33BC, lbl_803E33C0);
             lightSetField4D(*(int *)state, 1);
-            lightFn_8001db6c(*(int *)state, 1, lbl_803E33AC);
+            modelLightStruct_setEnabled(*(int *)state, 1, lbl_803E33AC);
             modelLightStruct_startColorFade(*(int *)state, 0, 0);
             lightSetField2FB(*(int *)state, 1);
         }

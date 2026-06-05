@@ -184,7 +184,7 @@ void directionallight_init(int obj, int setup)
                 *(u8 *)(setup + 0x28), *(u8 *)(setup + 0x29), 0xff);
         }
 
-        lightFn_8001db6c(*(void **)(state + 8), *(u8 *)(setup + 0x30), lbl_803E7250);
+        modelLightStruct_setEnabled(*(void **)(state + 8), *(u8 *)(setup + 0x30), lbl_803E7250);
         *(u8 *)(state + 0xe) = *(u8 *)(setup + 0x30);
         modelLightStruct_startColorFade(*(void **)(state + 8), *(u8 *)(setup + 0x26), *(s16 *)(setup + 0x2e));
 
@@ -216,7 +216,7 @@ void directionallight_update(int obj)
     if (*(u8 *)(state + 0xe) != 0) {
         if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) == 0) {
             *(u8 *)(state + 0xe) = 0;
-            lightFn_8001db6c(*(void **)(state + 8), 0, lbl_803E7254);
+            modelLightStruct_setEnabled(*(void **)(state + 8), 0, lbl_803E7254);
         }
         if ((*(u8 *)(setup + 0x2a) & 1) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
@@ -225,7 +225,7 @@ void directionallight_update(int obj)
     } else {
         if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
             *(u8 *)(state + 0xe) = 1;
-            lightFn_8001db6c(*(void **)(state + 8), 1, lbl_803E7254);
+            modelLightStruct_setEnabled(*(void **)(state + 8), 1, lbl_803E7254);
         }
     }
 

@@ -20,7 +20,7 @@ extern void GXSetScissor(int x, int y, int w, int h);
 extern void Camera_ApplyCurrentViewport(int cam);
 extern int fn_8012DDAC(void);
 extern int lbl_803DDD34;
-extern int fn_8001DB64(int model);
+extern int modelLightStruct_getActiveState(int model);
 extern void queueGlowRender(int model);
 extern int *gPartfxInterface;
 extern void mathFn_80021ac8(void *in, void *out);
@@ -226,7 +226,7 @@ extern f32 timeDelta;
 extern f32 oneOverTimeDelta;
 extern int gAudioStreamCurrentId;
 extern void Obj_FreeObject(int obj);
-extern void lightFn_8001db6c(int light, int a, f32 b);
+extern void modelLightStruct_setEnabled(int light, int a, f32 b);
 extern void modelLightStruct_updateGlowAlpha(int light);
 extern void lightSetFieldB0(int light, int r, int g, int b, int a);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
@@ -291,7 +291,7 @@ void worldobj_update(int obj) {
     case 0x80f:
         if (*(int *)(state + 0x270) > 0x8000 || *(int *)(state + 0x270) < 0) {
             if (*(void **)state != NULL) {
-                lightFn_8001db6c(*(int *)state, 0, lbl_803E6678);
+                modelLightStruct_setEnabled(*(int *)state, 0, lbl_803E6678);
             }
             tmp = (int)((f32)*(u8 *)(obj + 0x36) - lbl_803E667C * timeDelta);
             if (tmp < 0) {
@@ -334,7 +334,7 @@ void worldobj_update(int obj) {
                                          8, vec);
             *(s16 *)(obj + 0) = lbl_803E668C * timeDelta + (f32)*(s16 *)(obj + 0);
             *(s16 *)(obj + 2) = lbl_803E6690 * timeDelta + (f32)*(s16 *)(obj + 2);
-            if (*(void **)state != NULL && fn_8001DB64(*(int *)state) != 0) {
+            if (*(void **)state != NULL && modelLightStruct_getActiveState(*(int *)state) != 0) {
                 modelLightStruct_updateGlowAlpha(*(int *)state);
             }
         }
@@ -472,7 +472,7 @@ void worldobj_update(int obj) {
                                             lbl_803E665C);
                         modelLightStruct_setColorsA8AC(*(int *)state, 0xff, 0, 0, 0xff);
                         lightSetFieldB0(*(int *)state, 0, 0, 0, 0xff);
-                        lightFn_8001db6c(*(int *)state, 1, lbl_803E665C);
+                        modelLightStruct_setEnabled(*(int *)state, 1, lbl_803E665C);
                         lightDistAttenFn_8001dc38(*(int *)state, lbl_803E66B0, lbl_803E66B4);
                         modelLightStruct_startColorFade(*(int *)state, 2, 0x3c);
                         modelStruct2_setVectors(*(int *)state, lbl_803E665C, lbl_803E6644,
@@ -663,7 +663,7 @@ void worldobj_render(int p1, int p2, int p3, int p4, int p5, s8 visible) {
         }
         break;
     case 0x80f:
-        if (*(void **)inner != NULL && fn_8001DB64(*(int *)inner) != 0) {
+        if (*(void **)inner != NULL && modelLightStruct_getActiveState(*(int *)inner) != 0) {
             queueGlowRender(*(int *)inner);
         }
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(p1, p2, p3, p4, p5, lbl_803E6678);

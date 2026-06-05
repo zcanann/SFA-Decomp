@@ -237,7 +237,7 @@ void drakormissile_update(int obj) {
         *(int *)(*(int *)((char *)obj + 0x54) + 0x4c) = 0x10;
         *(int *)(*(int *)((char *)obj + 0x54) + 0x48) = 0x10;
     }
-    if (*(void **)p != NULL && fn_8001DB64()) {
+    if (*(void **)p != NULL && modelLightStruct_getActiveState()) {
         modelLightStruct_updateGlowAlpha(*(void **)p);
     }
 }
@@ -318,7 +318,7 @@ void drakormissile_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
         *(f32 *)((char *)obj + 0x8) = sv8;
         *(u8 *)((char *)obj + 0xad) = 0;
         objRenderFn_8003b8f4(obj, p2, p3, p4, p5, (double)lbl_803E6964);
-        if (*(void **)p != 0 && fn_8001DB64() != 0) {
+        if (*(void **)p != 0 && modelLightStruct_getActiveState() != 0) {
             queueGlowRender(*(void **)p);
         }
     }

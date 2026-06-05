@@ -523,7 +523,7 @@ void kaldachompspit_render(void *obj, int p2, int p3, int p4, int p5, s8 visible
 #pragma scheduling reset
 
 extern int ObjList_FindObjectById(int id);
-extern void lightFn_8001db6c(int light, int onoff, f32 intensity);
+extern void modelLightStruct_setEnabled(int light, int onoff, f32 intensity);
 extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);
 extern void Sfx_PlayFromObject(int obj, u32 sfxId);
 extern void Sfx_StopObjectChannel(int obj, int channel);
@@ -746,7 +746,7 @@ void kaldachompspit_burst(int obj)
     *(int *)(obj + 0xf4) = 0xdc;
     *(s16 *)(*(int *)(obj + 0x54) + 0x60) &= ~1;
     if (*state != 0) {
-        lightFn_8001db6c(*state, 0, lbl_803E30E0);
+        modelLightStruct_setEnabled(*state, 0, lbl_803E30E0);
     }
     if (*(s16 *)(obj + 0x46) == 0x869) {
         rnd = randomGetRange(0, 1);

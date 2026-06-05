@@ -16,7 +16,7 @@ extern void skyFn_800895e0(int id,int red,int green,int blue,int alpha,int arg);
 extern void getEnvfxAct(void *obj,void *source,int effectId,int arg);
 extern void Sfx_PlayFromObject(void *obj,int sfxId);
 extern void doRumble(f32 strength);
-extern void lightFn_8001db6c(void *light,int enabled,f32 value);
+extern void modelLightStruct_setEnabled(void *light,int enabled,f32 value);
 extern int dimBossTonsil_newState_hitFightMain(void *obj,ObjAnimUpdateState *animUpdate,
                                                 DIMbosstonsilState *state,
                                                 DIMbosstonsilState *updateState);
@@ -109,12 +109,12 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
       break;
     case DIMBOSSTONSIL_ANIM_EVENT_ENABLE_LIGHT:
       if (gDIMbosstonsilLight != NULL) {
-        lightFn_8001db6c(gDIMbosstonsilLight,1,lbl_803E4CB8);
+        modelLightStruct_setEnabled(gDIMbosstonsilLight,1,lbl_803E4CB8);
       }
       break;
     case DIMBOSSTONSIL_ANIM_EVENT_DISABLE_LIGHT:
       if (gDIMbosstonsilLight != NULL) {
-        lightFn_8001db6c(gDIMbosstonsilLight,0,lbl_803E4CB8);
+        modelLightStruct_setEnabled(gDIMbosstonsilLight,0,lbl_803E4CB8);
       }
       break;
     }

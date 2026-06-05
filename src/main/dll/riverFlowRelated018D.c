@@ -8,7 +8,7 @@ extern void modelLightStruct_setColorsA8AC(void *handle,int r,int g,int b,int a)
 extern void modelLightStruct_setColors100104(void *handle,int r,int g,int b,int a);
 extern void lightDistAttenFn_8001dc38(void *handle,f32 param_2,f32 param_3);
 extern void lightSetField4D(void *handle,int param_2);
-extern void lightFn_8001db6c(void *handle,f32 param_2,int param_3);
+extern void modelLightStruct_setEnabled(void *handle,f32 param_2,int param_3);
 extern void modelLightStruct_setGlowProjectionRadius(void *handle,f32 param_2);
 extern void lightSetFieldB0(void *handle,int r,int g,int b,int a);
 extern void fn_8001D9E0(void *handle,int r,int g,int b,int a);
@@ -80,7 +80,7 @@ void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
     modelLightStruct_setColors100104(gDIMbosstonsilLight,0xff,0,0,0x7f);
     lightDistAttenFn_8001dc38(gDIMbosstonsilLight,lbl_803E4C9C,lbl_803E4CA0);
     lightSetField4D(gDIMbosstonsilLight,1);
-    lightFn_8001db6c(gDIMbosstonsilLight,lbl_803E4C90,1);
+    modelLightStruct_setEnabled(gDIMbosstonsilLight,lbl_803E4C90,1);
     modelLightStruct_setGlowProjectionRadius(gDIMbosstonsilLight,lbl_803E4CA0);
     lightSetFieldB0(gDIMbosstonsilLight,0xff,0x7f,0,0x40);
     fn_8001D9E0(gDIMbosstonsilLight,0xff,0x7f,0,0x40);

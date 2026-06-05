@@ -987,8 +987,8 @@ void objParticleFn_80099d84(void *obj, u8 type, void *light, f32 scale, f32 fext
                                          cbuf[type * 3 + 2], 0xff);
         lightDistAttenFn_8001dc38(light, lbl_803DF34C, lbl_803DF398);
         lightSetField4D(light, 0);
-        lightFn_8001db6c(light, lbl_803DF35C, 1);
-        lightFn_8001db6c(light, lbl_803DF354, 0);
+        modelLightStruct_setEnabled(light, lbl_803DF35C, 1);
+        modelLightStruct_setEnabled(light, lbl_803DF354, 0);
         modelLightStruct_startColorFade(light, 0, 0);
         lightSetField2FB(light, 1);
     }
@@ -1118,8 +1118,8 @@ void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *ligh
         modelLightStruct_setColors100104(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1], lbl_8030FA30[type * 3 + 2], 0xff);
         lightDistAttenFn_8001dc38(light, lbl_803DF394, lbl_803DF39C);
         lightSetField4D(light, 0);
-        lightFn_8001db6c(light, lbl_803DF35C, 1);
-        lightFn_8001db6c(light, lbl_803DF358, 0);
+        modelLightStruct_setEnabled(light, lbl_803DF35C, 1);
+        modelLightStruct_setEnabled(light, lbl_803DF358, 0);
         modelLightStruct_startColorFade(light, 0, 0);
         lightSetField2FB(light, 1);
     }

@@ -37,7 +37,7 @@ extern void modelLightStruct_setField50(int light,int value);
 extern void modelLightStruct_setColorsA8AC(int light,int r,int g,int b,int a);
 extern void modelLightStruct_setColors100104(int light,int r,int g,int b,int a);
 extern void lightDistAttenFn_8001dc38(int light,f32 near,f32 far);
-extern void lightFn_8001db6c(int light,int mode,f32 value);
+extern void modelLightStruct_setEnabled(int light,int mode,f32 value);
 extern void lightVecFn_8001dd88(int light,f32 x,f32 y,f32 z);
 extern void modelLightStruct_startColorFade(int light,int param_2,int param_3);
 extern void lightSetFieldB0(int light,int r,int g,int b,int a);
@@ -117,7 +117,7 @@ void dimlogfire_update(int obj)
     switch (*(u8 *)((u8 *)state + 0x1a)) {
     case 1:
         if (*(void **)state != NULL) {
-            lightFn_8001db6c(*state, 1, lbl_803E4824);
+            modelLightStruct_setEnabled(*state, 1, lbl_803E4824);
         }
         Sfx_PlayFromObject(obj, SFXmn_eggylaugh216);
         *(f32 *)(state + 4) = *(f32 *)(state + 4) - timeDelta;
@@ -142,7 +142,7 @@ void dimlogfire_update(int obj)
         break;
     case 2:
         if (*(void **)state != NULL) {
-            lightFn_8001db6c(*state, 0, lbl_803E4824);
+            modelLightStruct_setEnabled(*state, 0, lbl_803E4824);
         }
         if (*(s8 *)((u8 *)state + 0x1c) <= 0) {
             ObjHits_DisableObject(obj);
@@ -317,7 +317,7 @@ void dimlogfire_init(int obj, int def)
         modelLightStruct_setColors100104(*state, 0xff, 0x7f, 0, 0xff);
         radius = (int)(lbl_803E4830 * *(f32 *)(obj + 8));
         lightDistAttenFn_8001dc38(*state, (f32)radius, lbl_803E4834 + (f32)radius);
-        lightFn_8001db6c(*state, 1, lbl_803E4828);
+        modelLightStruct_setEnabled(*state, 1, lbl_803E4828);
         lightVecFn_8001dd88(*state, lbl_803E4828, lbl_803E4838, lbl_803E4828);
         modelLightStruct_startColorFade(*state, 1, 3);
         lightSetFieldB0(*state, 0xff, 0x5c, 0, 0xff);

@@ -30,7 +30,7 @@ extern s16 getAngle(f32 deltaX,f32 deltaZ);
 extern f32 Vec_xzDistance(void *a,void *b);
 extern f32 fn_80293E80(f32 angle);
 extern MapEventInterface **gMapEventInterface;
-extern void lightFn_8001db6c(int light,int mode,f32 value);
+extern void modelLightStruct_setEnabled(int light,int mode,f32 value);
 
 extern undefined4 DAT_803dc070;
 extern undefined4 DAT_803dcba8;
@@ -695,13 +695,13 @@ int dfsh_shrine_SeqFn(int obj,int unused,void *seq)
       case 0xe:
         *(s16 *)(objLocal + 6) = (s16)(*(s16 *)(objLocal + 6) | 0x4000);
         if (state->light != NULL) {
-          lightFn_8001db6c((int)state->light,0,lbl_803E4E88);
+          modelLightStruct_setEnabled((int)state->light,0,lbl_803E4E88);
         }
         break;
       case 0xf:
         *(s16 *)(objLocal + 6) = (s16)(*(s16 *)(objLocal + 6) & ~0x4000);
         if (state->light != NULL) {
-          lightFn_8001db6c((int)state->light,0,lbl_803E4E88);
+          modelLightStruct_setEnabled((int)state->light,0,lbl_803E4E88);
         }
         break;
       }

@@ -6734,7 +6734,7 @@ void renderGlows(void)
         for (i = 0; i < lbl_803DCE06; i++) {
             ModelLightStruct *e = (ModelLightStruct *)lbl_80382038[i];
             if (e->glowAlpha != 0) {
-                f32 f = e->selectionIntensity;
+                f32 f = e->activeIntensity;
                 f32 cx, cy, cz, hs;
                 selectTexture((int)e->glowTexture, 0);
                 _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * f),

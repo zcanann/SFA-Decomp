@@ -51,13 +51,13 @@ void ktlazerlight_update(int obj) {
             v = 0x10;
         }
         if (light != 0) {
-            lightFn_8001db6c(light, 1, lbl_803E68C0);
+            modelLightStruct_setEnabled(light, 1, lbl_803E68C0);
             modelLightStruct_setColorsA8AC(light, 0x64, 0x6e, 0xff, 0xff);
             lightDistAttenFn_8001dc38(*(void **)(p + 0x4), (f32)(v * 0x1a), (f32)(v * 0x1a + 0x14));
         }
     } else {
         if (light != 0) {
-            lightFn_8001db6c(light, 0, lbl_803E68C0);
+            modelLightStruct_setEnabled(light, 0, lbl_803E68C0);
         }
     }
 }

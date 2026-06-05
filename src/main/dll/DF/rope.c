@@ -123,7 +123,7 @@ extern void objMove(int obj, f32 x, f32 y, f32 z);
 extern void Sfx_PlayFromObject(int obj, int id);
 extern void CameraShake_SetAllMagnitudes(f32 mag);
 extern void doRumble(f32 v);
-extern void lightFn_8001db6c(int light, int v, f32 f);
+extern void modelLightStruct_setEnabled(int light, int v, f32 f);
 extern f32 lbl_803E4D38;
 extern f32 lbl_803E4D3C;
 extern f32 lbl_803E4D40;
@@ -514,7 +514,7 @@ void DIMbossspit_updateBurst(int obj)
     CameraShake_SetAllMagnitudes(lbl_803E4D3C);
     doRumble(lbl_803E4D40);
     if (*(void **)(state + 4) != NULL) {
-      lightFn_8001db6c(*(int *)(state + 4), 0, lbl_803E4D44);
+      modelLightStruct_setEnabled(*(int *)(state + 4), 0, lbl_803E4D44);
     }
   }
   *(s16 *)state = *(s16 *)state + (u8)framesThisStep;
@@ -698,7 +698,7 @@ extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d
 extern void modelLightStruct_setColors100104(int light, int a, int b, int c, int d);
 extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
 extern void lightSetField4D(int light, int v);
-extern void lightFn_8001db6c(int light, int v, f32 f);
+extern void modelLightStruct_setEnabled(int light, int v, f32 f);
 extern void lightSetField2FB(int light, int v);
 extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
@@ -722,7 +722,7 @@ void DIMbossspit_init(int obj)
     modelLightStruct_setColors100104(*(int *)(state + 4), 0, 255, 0, 0);
     lightDistAttenFn_8001dc38(*(int *)(state + 4), lbl_803E4D70, lbl_803E4D74);
     lightSetField4D(*(int *)(state + 4), 1);
-    lightFn_8001db6c(*(int *)(state + 4), 1, lbl_803E4D78);
+    modelLightStruct_setEnabled(*(int *)(state + 4), 1, lbl_803E4D78);
     lightSetField2FB(*(int *)(state + 4), 1);
     modelLightStruct_setupGlow(*(int *)(state + 4), 0, 0, 255, 0, 127, lbl_803E4D7C);
     modelLightStruct_setGlowProjectionRadius(*(int *)(state + 4), lbl_803E4D80);

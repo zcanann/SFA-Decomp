@@ -307,7 +307,7 @@ extern void modelLightStruct_setColorsA8AC(void *light, int r, int g, int b, int
 extern void modelLightStruct_setColors100104(void *light, int r, int g, int b, int a);
 extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
 extern void lightSetField4D(void *light, int v);
-extern void lightFn_8001db6c(void *light, f32 a, int b);
+extern void modelLightStruct_setEnabled(void *light, f32 a, int b);
 extern void modelLightStruct_startColorFade(void *light, int a, int b);
 extern void lightSetField2FB(void *light, int v);
 

@@ -36,7 +36,7 @@ void ring_hitDetect(void) {}
 void ring_render(int obj, int p2, int p3, int p4, int p5, f32 scale)
 {
     int state = *(int *)(obj + 0xb8);
-    if (*(void **)(state + 0x20) != NULL && fn_8001DB64(*(void **)(state + 0x20)) != 0) {
+    if (*(void **)(state + 0x20) != NULL && modelLightStruct_getActiveState(*(void **)(state + 0x20)) != 0) {
         queueGlowRender(*(void **)(state + 0x20));
     }
     objRenderFn_8003b8f4(obj, p2, p3, p4, p5, lbl_803E70B0);
@@ -281,7 +281,7 @@ void ring_update(int obj)
         break;
     }
 
-    if (*(void **)(state + 0x20) != NULL && fn_8001DB64(*(void **)(state + 0x20)) != 0) {
+    if (*(void **)(state + 0x20) != NULL && modelLightStruct_getActiveState(*(void **)(state + 0x20)) != 0) {
         modelLightStruct_updateGlowAlpha(*(void **)(state + 0x20));
     }
 }

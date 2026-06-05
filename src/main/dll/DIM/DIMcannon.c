@@ -2649,7 +2649,7 @@ void dimlogfire_render(int *obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int fn_8001DB64(int* p);
+extern int modelLightStruct_getActiveState(int* p);
 extern f32 lbl_803E47F0;
 
 #pragma scheduling off
@@ -2658,7 +2658,7 @@ void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
 {
     int* state = *(int**)((char*)obj + 0xb8);
     if ((int*)state[1] != NULL) {
-        if (fn_8001DB64((int*)state[1]) != 0) {
+        if (modelLightStruct_getActiveState((int*)state[1]) != 0) {
             queueGlowRender((int*)state[1]);
         }
     }
@@ -2814,7 +2814,7 @@ void lavaball1be_update(s16 *obj) {
             if (!(state[0x10] & 8)) {
                 state[0x10] |= 8;
             }
-            if (*(void **)(state + 4) != NULL && fn_8001DB64((int *)*(int *)(state + 4)) != 0) {
+            if (*(void **)(state + 4) != NULL && modelLightStruct_getActiveState((int *)*(int *)(state + 4)) != 0) {
                 modelLightStruct_updateGlowAlpha(*(int *)(state + 4));
             }
         }

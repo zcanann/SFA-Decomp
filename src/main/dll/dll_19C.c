@@ -60,7 +60,7 @@ extern f32 lbl_803E5B20;
 extern f32 lbl_803E5B24;
 extern f32 lbl_803E5B30;
 extern f32 lbl_803E4E88;
-extern void lightFn_8001db6c(int light, int enabled, f32 scale);
+extern void modelLightStruct_setEnabled(int light, int enabled, f32 scale);
 extern void objRenderFn_8003b8f4(f32 scale);
 extern void objParticleFn_80099d84(int *obj, int kind, int light, f32 scale1, f32 scale2);
 extern f32 timeDelta;
@@ -124,12 +124,12 @@ void dfsh_shrine_render(int obj, int p2, int p3, int p4, int p5, s8 visible)
     if (isVisible == 0) {
         light = state[0];
         if (light != NULL) {
-            lightFn_8001db6c((int)light, 0, lbl_803E4E88);
+            modelLightStruct_setEnabled((int)light, 0, lbl_803E4E88);
         }
     } else {
         light = state[0];
         if (light != NULL) {
-            lightFn_8001db6c((int)light, 1, lbl_803E4E88);
+            modelLightStruct_setEnabled((int)light, 1, lbl_803E4E88);
         }
         ((void (*)(int, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E4E88);
         objParticleFn_80099d84((int *)obj, 7, (int)state[0], lbl_803E4E88, lbl_803E4E88);

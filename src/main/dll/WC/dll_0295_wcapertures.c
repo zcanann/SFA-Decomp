@@ -192,9 +192,9 @@ void wcapertures_update(int obj)
     light = *(void **)(state + 0);
     if (light != NULL) {
         if (*(u8 *)(obj + 0x36) > 128) {
-            lightFn_8001db6c(light, 1, lbl_803E6E2C);
+            modelLightStruct_setEnabled(light, 1, lbl_803E6E2C);
         } else {
-            lightFn_8001db6c(light, 0, lbl_803E6E2C);
+            modelLightStruct_setEnabled(light, 0, lbl_803E6E2C);
         }
     }
 }

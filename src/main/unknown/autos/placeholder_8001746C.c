@@ -8254,8 +8254,8 @@ void fn_8001DB5C(ModelLightStruct *p, u8 v) {
     p->field2FC = v;
 }
 
-void *fn_8001DB64(ModelLightStruct *p) {
-    return p->field58;
+int modelLightStruct_getActiveState(ModelLightStruct *p) {
+    return p->activeState;
 }
 
 f32 modelLightStruct_getRadius(ModelLightStruct *p) {
@@ -8310,7 +8310,7 @@ extern void Vec_normalize(f32 *dst, f32 *src);
 extern void Obj_TransformLocalPointByWorldMatrix(u8 *obj, f32 *src, f32 *dst, u8 flag);
 extern void Obj_TransformLocalVectorByWorldMatrix(void *obj, f32 *src, f32 *dst);
 extern void Obj_BuildInverseWorldTransformMatrix(u8 *obj, f32 *out);
-extern void lightFn_8001db6c(u8 *light, u8 enabled, f32 duration);
+extern void modelLightStruct_setEnabled(ModelLightStruct *light, u8 enabled, f32 duration);
 extern void modelLightStruct_startColorFade(ModelLightStruct *light, int mode, s16 frames);
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;
@@ -8520,7 +8520,7 @@ void *objAllocLight(void *owner) {
         *(IVec3 *)(light + 0x40) = *(IVec3 *)(light + 0x34);
     }
 
-    lightFn_8001db6c(light, 1, lbl_803DE75C);
+    modelLightStruct_setEnabled((ModelLightStruct *)light, 1, lbl_803DE75C);
     *(int *)(light + 0x50) = 4;
     *(int *)(light + 0x54) = 1;
     *(f32 *)(light + 0x140) = lbl_803DE750;
@@ -8896,7 +8896,7 @@ void modelLightStruct_updateColorFade(ModelLightStruct *light) {
     light->colorA8[2] = (u8)(int)(progress * (f32)(light->colorB0[2] - light->colorAC[2]) + (f32)light->colorAC[2]);
     light->colorA8[3] = (u8)(int)(progress * (f32)(light->colorB0[3] - light->colorAC[3]) + (f32)light->colorAC[3]);
 
-    intensity = light->selectionIntensity;
+    intensity = light->activeIntensity;
     light->colorA8[0] = (u8)(int)((f32)light->colorA8[0] * intensity);
     light->colorA8[1] = (u8)(int)((f32)light->colorA8[1] * intensity);
     light->colorA8[2] = (u8)(int)((f32)light->colorA8[2] * intensity);
@@ -8962,38 +8962,38 @@ void modelLightStruct_setupGlow(ModelLightStruct *light, u32 textureId, u8 red, 
     light->glowProjectionRadius = lbl_803DE788 * light->glowScale;
 }
 
-void lightFn_8001db6c(u8 *light, u8 enabled, f32 duration) {
+void modelLightStruct_setEnabled(ModelLightStruct *light, u8 enabled, f32 duration) {
     f32 zero;
 
     zero = lbl_803DE75C;
     if (zero == duration) {
         if (enabled != 0) {
-            *(int *)(light + 0x58) = 2;
-            *(f32 *)(light + 0x138) = lbl_803DE760;
+            light->activeState = 2;
+            light->activeIntensity = lbl_803DE760;
         } else {
-            *(int *)(light + 0x58) = 0;
-            *(f32 *)(light + 0x138) = zero;
+            light->activeState = 0;
+            light->activeIntensity = zero;
         }
-        light[0x4c] = enabled;
+        light->enabled = enabled;
         return;
     }
 
     if (enabled != 0) {
-        if (*(int *)(light + 0x58) == 0 || *(int *)(light + 0x58) == 3) {
-            *(int *)(light + 0x58) = 1;
-            *(f32 *)(light + 0x13c) = lbl_803DE760 / (lbl_803DE794 * duration);
-            *(f32 *)(light + 0x138) = lbl_803DE75C;
+        if (light->activeState == 0 || light->activeState == 3) {
+            light->activeState = 1;
+            light->activeIntensityStep = lbl_803DE760 / (lbl_803DE794 * duration);
+            light->activeIntensity = lbl_803DE75C;
         }
-        light[0x4c] = 1;
+        light->enabled = 1;
         return;
     }
 
-    if (*(int *)(light + 0x58) != 2 && *(int *)(light + 0x58) != 1) {
+    if (light->activeState != 2 && light->activeState != 1) {
         return;
     }
-    *(int *)(light + 0x58) = 3;
-    *(f32 *)(light + 0x13c) = lbl_803DE798 / (lbl_803DE794 * duration);
-    *(f32 *)(light + 0x138) = lbl_803DE760;
+    light->activeState = 3;
+    light->activeIntensityStep = lbl_803DE798 / (lbl_803DE794 * duration);
+    light->activeIntensity = lbl_803DE760;
 }
 
 void fn_8001D820(u8 *p, f32 v) {

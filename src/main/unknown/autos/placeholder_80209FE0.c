@@ -1717,7 +1717,7 @@ extern f32 lbl_803E65A8;
 extern f32 lbl_803E65AC;
 extern f32 lbl_803E65B0;
 extern f32 lbl_803E65B8;
-extern void lightFn_8001db6c(void *light, int onoff, f32 intensity);
+extern void modelLightStruct_setEnabled(void *light, int onoff, f32 intensity);
 extern void drakorhoverpad_resetPendingMotion(int obj);
 extern int GameBit_Get(int bit);
 extern f32 lbl_803E6540;
@@ -1886,7 +1886,7 @@ void bossdrakor_update(int obj)
             modelLightStruct_setupGlow(*(int *)((char *)state + 0x160), 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
             lightDistAttenFn_8001dc38(*(int *)((char *)state + 0x160), lbl_803E6544, lbl_803E6540);
             lightSetField4D(*(int *)((char *)state + 0x160), 0);
-            lightFn_8001db6c(*(void **)((char *)state + 0x160), 1, lbl_803E6520);
+            modelLightStruct_setEnabled(*(void **)((char *)state + 0x160), 1, lbl_803E6520);
             lightSetFieldB0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
             fn_8001D9E0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
             modelLightStruct_startColorFade(*(int *)((char *)state + 0x160), 2, 0x28);
@@ -2381,12 +2381,12 @@ void bossdrakor_handleActionEvent(int obj, int state, int action)
         if (((DrakorFlags *)((char *)state + 0x198))->b40) {
             *(int *)((char *)state + 0x168) = 0x12;
             if (*(void **)((char *)state + 0x160) != NULL) {
-                lightFn_8001db6c(*(void **)((char *)state + 0x160), 0, lbl_803E651C);
+                modelLightStruct_setEnabled(*(void **)((char *)state + 0x160), 0, lbl_803E651C);
             }
         } else {
             ((DrakorFlags *)((char *)state + 0x198))->b40 = 1;
             if (*(void **)((char *)state + 0x160) != NULL) {
-                lightFn_8001db6c(*(void **)((char *)state + 0x160), 1, lbl_803E651C);
+                modelLightStruct_setEnabled(*(void **)((char *)state + 0x160), 1, lbl_803E651C);
             }
         }
         break;

@@ -193,7 +193,7 @@ void timer_update(int obj)
                 if (tv == 1 && tv != f->flag20) {
                     Sfx_PlayFromObject(obj, 986);
                 }
-                lightFn_8001db6c((void *)*(int *)(state + 4), (u8)tv, lbl_803E741C);
+                modelLightStruct_setEnabled((void *)*(int *)(state + 4), (u8)tv, lbl_803E741C);
             }
             f->flag20 = (u8)tv;
         }

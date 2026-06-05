@@ -8,7 +8,7 @@
 extern undefined8 FUN_80006b14();
 extern char FUN_80006bd0();
 extern undefined4 FUN_800175cc();
-extern void lightFn_8001db6c(int p1, int p2, f32 f);
+extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
 extern undefined4 GameBit_Set(int eventId, int value);
 extern undefined4 FUN_80017710();
 extern uint FUN_80017730();
@@ -181,13 +181,13 @@ int MMSH_Shrine_SeqFn(int objArg, undefined4 unused, int seqArg)
       case 0xe:
         obj->flags06 |= MMSH_SHRINE_FLAG_LIT;
         if (runtime->light != NULL) {
-          lightFn_8001db6c((int)runtime->light,0,lbl_803E4F50);
+          modelLightStruct_setEnabled((int)runtime->light,0,lbl_803E4F50);
         }
         break;
       case 0xf:
         obj->flags06 &= ~MMSH_SHRINE_FLAG_LIT;
         if (runtime->light != NULL) {
-          lightFn_8001db6c((int)runtime->light,0,lbl_803E4F50);
+          modelLightStruct_setEnabled((int)runtime->light,0,lbl_803E4F50);
         }
         break;
       case 1:
@@ -290,7 +290,7 @@ void mmsh_shrine_hitDetect(void)
 {
 }
 
-extern void lightFn_8001db6c(int p1, int p2, f32 f);
+extern void modelLightStruct_setEnabled(int p1, int p2, f32 f);
 extern void fn_8011F6D4(int p);
 extern void ModelLightStruct_free(void *p);
 extern void Music_Trigger(int id, int p2);
@@ -362,11 +362,11 @@ void mmsh_shrine_render(int obj, undefined4 a2, undefined4 a3, undefined4 a4, un
 
     if (visible == 0) {
         if (runtime->light != NULL) {
-            lightFn_8001db6c((int)runtime->light, 0, lbl_803E4F50);
+            modelLightStruct_setEnabled((int)runtime->light, 0, lbl_803E4F50);
         }
     } else {
         if (runtime->light != NULL) {
-            lightFn_8001db6c((int)runtime->light, 1, lbl_803E4F50);
+            modelLightStruct_setEnabled((int)runtime->light, 1, lbl_803E4F50);
         }
         objRenderFn_8003b8f4(obj, a2, a3, a4, a5, lbl_803E4F50);
         objParticleFn_80099d84(obj, 7, (int)runtime->light, lbl_803E4F50, lbl_803E4F50);

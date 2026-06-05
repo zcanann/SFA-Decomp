@@ -373,7 +373,7 @@ void dll_127_initialise_nop(void) {}
 
 extern int Obj_GetPlayerObject(void);
 extern int *gSHthorntailAnimationInterface;
-extern void lightFn_8001db6c(int light, int arg, f32 f);
+extern void modelLightStruct_setEnabled(int light, int arg, f32 f);
 extern void Sfx_AddLoopedObjectSound(int obj, int sfxId);
 extern void Sfx_RemoveLoopedObjectSound(int obj, int sfxId);
 extern void fn_80098B18(int obj, f32 scale, int type, int mode, int arg5, f32 *vec);
@@ -403,7 +403,7 @@ void campfire_update(int obj)
     Obj_GetPlayerObject();
     if ((*(ThorntailQueryFn *)(*gSHthorntailAnimationInterface + 0x24))(buf) != 0) {
         if (*(void **)state != NULL) {
-            lightFn_8001db6c(*state, 1, lbl_803E3D78);
+            modelLightStruct_setEnabled(*state, 1, lbl_803E3D78);
         }
         ObjHits_SetHitVolumeSlot(obj, 0x1f, 1, 0);
         *(f32 *)((char *)state + 8) -= timeDelta;
@@ -421,7 +421,7 @@ void campfire_update(int obj)
         }
     } else {
         if (*(void **)state != NULL) {
-            lightFn_8001db6c(*state, 0, lbl_803E3D78);
+            modelLightStruct_setEnabled(*state, 0, lbl_803E3D78);
         }
         ObjHits_ClearHitVolumes(obj);
         *(f32 *)((char *)state + 4) -= timeDelta;
@@ -529,9 +529,9 @@ void campfire_init(int obj, int p2)
         atten = (int)(lbl_803E3D8C * *(f32 *)(obj + 8));
         lightDistAttenFn_8001dc38(*state, (f32)atten, lbl_803E3D90 + (f32)atten);
         if ((*(ThorntailQueryFn *)(*gSHthorntailAnimationInterface + 0x24))(buf) != 0) {
-            lightFn_8001db6c(*state, 1, lbl_803E3D7C);
+            modelLightStruct_setEnabled(*state, 1, lbl_803E3D7C);
         } else {
-            lightFn_8001db6c(*state, 0, lbl_803E3D7C);
+            modelLightStruct_setEnabled(*state, 0, lbl_803E3D7C);
         }
         lightVecFn_8001dd88(*state, lbl_803E3D7C, lbl_803E3D94, lbl_803E3D7C);
         modelLightStruct_startColorFade(*state, 1, 3);
