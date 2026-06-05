@@ -2,6 +2,7 @@
 #define SFA_DLL_PLAYER_80295318_SHARED_H
 
 #include "ghidra_import.h"
+#include "main/objanim.h"
 
 /* typedefs (verbatim from placeholder_80295318) */
 typedef struct {
@@ -903,7 +904,6 @@ extern int lbl_803DE450;
 extern void staffFn_80170380(int a, int b);
 extern void objThrowFn_80182504(int a);
 extern void objSaveFn_800ea774(int a);
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 extern int *gPlayerInterface;
 extern void GameBit_Set(int bit, int value);
 extern void Sfx_PlayFromObject(int obj, int id);
@@ -993,7 +993,6 @@ extern int getYButtonItem(s16 *out);
 extern void buttonDisable(int a, int b);
 extern s16 lbl_803DE4B2;
 extern f32 lbl_803DE430;
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 extern void ObjModel_SampleJointTransform(int model, int a, int b, f32 blend, f32 frame, void *out1, void *out2);
 extern void fn_8014C540(int obj, void *a, void *b, void *c);
 extern void objHitDetectFn_80062e84(int obj, int a, int b);

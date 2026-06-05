@@ -395,7 +395,6 @@ extern f32 lbl_803E82CC;
 extern f32 lbl_803DC758;
 extern s16 lbl_803DC754;
 extern int randomGetRange(int lo, int hi);
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 blend, int flag);
 extern int RandomTimer_UpdateRangeTrigger(int p, f32 a, f32 b);
 extern int *gObjectTriggerInterface;
 extern void buttonDisable(int a, int b);
