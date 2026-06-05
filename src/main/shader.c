@@ -3550,7 +3550,7 @@ void frustumPlanes_updateAabbCornerIndices(FrustumPlane* planes, int count)
             v = planes->normalX * sAabbCornerDirections[j++];
             v += planes->normalY * sAabbCornerDirections[j++];
             v += planes->normalZ * sAabbCornerDirections[j++];
-            if (best < v) {
+            if (v > best) {
                 best = v;
                 bi = j - 3;
             }
