@@ -167,7 +167,7 @@ void wcpushblock_init(int obj, int setup)
     if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
         *(u8 *)(obj + 0xad) = 0;
     }
-    ObjHitbox_SetStateIndex(obj, *(int *)(obj + 0x54), (s8)*(u8 *)(obj + 0xad));
+    ObjHitbox_SetStateIndex(obj, *(int *)(obj + 0x54), *(s8 *)(obj + 0xad));
     state->initialTile = (u8)setupData->initialTile;
     state->baseY = lbl_803E6DA0 + setupData->y;
 }
