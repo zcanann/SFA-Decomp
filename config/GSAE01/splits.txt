@@ -97,7 +97,7 @@ main/objseq.c:
 main/sky.c:
 	.text       start:0x80088758 end:0x8008EE18
 
-main/unknown/autos/placeholder_80080E58.c:
+main/newclouds.c:
 	.text       start:0x8008EE18 end:0x80094494
 
 dolphin/MSL_C/PPCEABI/bare/H/gamecube.c:

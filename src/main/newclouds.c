@@ -1,5 +1,5 @@
 #include "ghidra_import.h"
-#include "main/unknown/autos/placeholder_80080E58.h"
+#include "main/newclouds.h"
 
 typedef struct ObjSeqBgCmd {
     int object;
