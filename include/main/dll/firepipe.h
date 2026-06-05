@@ -10,7 +10,7 @@ typedef struct FirePipeExtra {
     u8 pad21[0x24 - 0x21];
     f32 cycleTimer;
     f32 emitTimer;
-    int subObj;
+    u32 subObj;
     int activeSpawn;
     int effectType;
     f32 effectScale;
@@ -25,7 +25,7 @@ typedef struct FirePipeMapData {
     u8 pad00[0x18];
     s8 modeX;
     u8 modeY;
-    u8 pad1A[0x1C - 0x1A];
+    s16 cycleTime;
     s16 scale;
     s16 gameBit;
     s16 timer;
