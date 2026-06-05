@@ -259,7 +259,8 @@ void kytesmum_init(int obj, char *arg) {
     runtime->idleSfxTable = &moveSets[3];
     runtime->animSpeed = lbl_803E699C;
     r = randomGetRange(0, 1) * 2;
-    ObjAnim_SetCurrentMove(obj, *(s16 *)((char *)runtime->moveSet + r), lbl_803E698C, 0);
+    r = *(s16 *)((char *)runtime->moveSet + r);
+    ObjAnim_SetCurrentMove(obj, r, lbl_803E698C, 0);
     kytesMum->objectFlags |= 0x2000;
 }
 #pragma peephole reset

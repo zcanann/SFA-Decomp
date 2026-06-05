@@ -6,7 +6,7 @@
 extern u32 getButtonsHeld(int port);
 extern u32 getButtonsJustPressed(int port);
 extern void Sfx_PlayFromObject(int sfx, int id);
-extern void drawTexture(void *tex, int p2, f32 x, f32 y, int alpha);
+extern void drawTexture(void *tex, f32 x, f32 y, int p2, int alpha);
 extern void gameTextSetColor(int r, int g, int b, int a);
 extern void gameTextShowStr(void *str, int id, int p3, int p4);
 extern int sprintf(char *buf, const char *fmt, ...);
@@ -111,8 +111,8 @@ void saveSelect_drawText(int unused, int alpha)
 {
     char buf[16];
 
-    drawTexture(lbl_803A8680[1], alpha, lbl_803E1D58, lbl_803E1D5C, 0x100);
-    drawTexture(lbl_803A8680[2], alpha, lbl_803E1D60, lbl_803E1D5C, 0x100);
+    drawTexture(lbl_803A8680[1], lbl_803E1D58, lbl_803E1D5C, alpha, 0x100);
+    drawTexture(lbl_803A8680[2], lbl_803E1D60, lbl_803E1D5C, alpha, 0x100);
     gameTextSetColor(0xff, 0xff, 0xff, alpha);
 
     saveFileSelect_saveSlots = saveFileSelect_saveSlotsBase;

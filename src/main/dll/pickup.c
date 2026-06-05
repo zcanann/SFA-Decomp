@@ -582,7 +582,7 @@ void dll_9F_func03(short *param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)&tab[0x1fc]; buf.hw[3] = *(s16 *)&tab[0x1fe];
   buf.hw[4] = *(s16 *)&tab[0x200]; buf.hw[5] = *(s16 *)&tab[0x202];
   buf.hw[6] = *(s16 *)&tab[0x204];
-  buf.cmds = buf.entries;
+  buf.cmds = (GfxCmd *)((u8 *)&buf + 0x60);
   fl = 0xc0104c0;
   buf.flags = fl;
   fl |= param_4;
@@ -684,7 +684,7 @@ void dll_A0_func03(u8 *param_1,int param_2,int param_3,uint param_4)
   buf.hw[2] = *(s16 *)&tab[0x1fc]; buf.hw[3] = *(s16 *)&tab[0x1fe];
   buf.hw[4] = *(s16 *)&tab[0x200]; buf.hw[5] = *(s16 *)&tab[0x202];
   buf.hw[6] = *(s16 *)&tab[0x204];
-  buf.cmds = buf.entries;
+  buf.cmds = (GfxCmd *)((u8 *)&buf + 0x60);
   fl = 0xc010480;
   buf.flags = fl;
   fl |= param_4;
@@ -1117,7 +1117,7 @@ void dll_A7_func03(short *param_1, int param_2, u8 *param_3, uint param_4, undef
   buf.hw[2] = *(s16 *)&tab[0x7c]; buf.hw[3] = *(s16 *)&tab[0x7e];
   buf.hw[4] = *(s16 *)&tab[0x80]; buf.hw[5] = *(s16 *)&tab[0x82];
   buf.hw[6] = *(s16 *)&tab[0x84];
-  buf.cmds = buf.entries;
+  buf.cmds = (GfxCmd *)((u8 *)&buf + 0x60);
   fl = 0x4040000;
   buf.flags = fl;
   fl |= (param_4 | 0x80);
@@ -1235,7 +1235,7 @@ void dll_A6_func03(short *param_1,int param_2,u8 *param_3,uint param_4)
   buf.hw[2] = *(s16 *)&lbl_80318E10[4]; buf.hw[3] = *(s16 *)&lbl_80318E10[6];
   buf.hw[4] = *(s16 *)&lbl_80318E10[8]; buf.hw[5] = *(s16 *)&lbl_80318E10[10];
   buf.hw[6] = *(s16 *)&lbl_80318E10[12];
-  buf.cmds = buf.entries;
+  buf.cmds = (GfxCmd *)((u8 *)&buf + 0x60);
   fl = 0x4000400;
   buf.flags = fl;
   fl |= param_4;
@@ -1366,7 +1366,7 @@ void dll_A8_func03(u8 *param_1,int param_2,u8 *param_3,uint param_4,undefined4 p
   buf.hw[2] = *(s16 *)&tab[0x114]; buf.hw[3] = *(s16 *)&tab[0x116];
   buf.hw[4] = *(s16 *)&tab[0x118]; buf.hw[5] = *(s16 *)&tab[0x11a];
   buf.hw[6] = *(s16 *)&tab[0x11c];
-  buf.cmds = buf.entries;
+  buf.cmds = (GfxCmd *)((u8 *)&buf + 0x60);
   fl = 0xc010040;
   buf.flags = fl;
   fl |= param_4;
@@ -1475,7 +1475,7 @@ void dll_A9_func03(u8 *param_1,int param_2,u8 *param_3,uint param_4,undefined4 p
   buf.hw[2] = *(s16 *)&tab[0x114]; buf.hw[3] = *(s16 *)&tab[0x116];
   buf.hw[4] = *(s16 *)&tab[0x118]; buf.hw[5] = *(s16 *)&tab[0x11a];
   buf.hw[6] = *(s16 *)&tab[0x11c];
-  buf.cmds = buf.entries;
+  buf.cmds = (GfxCmd *)((u8 *)&buf + 0x60);
   fl = 0xc010040;
   buf.flags = fl;
   fl |= param_4;
