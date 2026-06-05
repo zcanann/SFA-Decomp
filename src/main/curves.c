@@ -416,16 +416,16 @@ f32 Curve_EvalHermite(f32 t, f32* values, f32* outTangent)
 #pragma peephole off
 void Curve_BuildBSplineCoeffs(f32* values, f32* coefficients)
 {
+    f32 k668 = lbl_803DE668;
+    f32 k664 = lbl_803DE664;
     f32 scale;
 
-    coefficients[0] = values[3] + (lbl_803DE668 * values[2] + (-values[0] + lbl_803DE664 * values[1]));
-    coefficients[1] = lbl_803DE664 * values[2] +
-                      (lbl_803DE664 * values[0] + lbl_803DE66C * values[1]);
-    coefficients[2] = lbl_803DE668 * values[0] + lbl_803DE664 * values[2];
+    coefficients[0] = values[3] + (k668 * values[2] + (-values[0] + k664 * values[1]));
+    coefficients[1] = k664 * values[2] + (k664 * values[0] + lbl_803DE66C * values[1]);
+    coefficients[2] = k668 * values[0] + k664 * values[2];
     coefficients[3] = values[2] + (values[0] + lbl_803DE65C * values[1]);
 
-    scale = lbl_803DE670;
-    coefficients[0] *= scale;
+    coefficients[0] *= (scale = lbl_803DE670);
     coefficients[1] *= scale;
     coefficients[2] *= scale;
     coefficients[3] *= scale;
