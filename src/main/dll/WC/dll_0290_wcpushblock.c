@@ -54,19 +54,62 @@
 #define WCPUSHBLOCK_GAMEBIT_B_COUNT 0x811
 #define WCPUSHBLOCK_REQUIRED_LOCK_COUNT 4
 
-#define WCPUSHBLOCK_CONTROLLER(state) (*(int *)((u8 *)(state) + WCPUSHBLOCK_STATE_CONTROLLER))
+typedef struct WCPushBlockSetup {
+    u8 pad00[0xc];
+    f32 y;
+    u8 pad10[WCPUSHBLOCK_MODEL_INDEX_OFFSET - 0x10];
+    u8 modelIndex;
+    s16 initialTile;
+} WCPushBlockSetup;
+
+typedef struct WCPushBlockRuntimeState {
+    u8 pad00[WCPUSHBLOCK_STATE_CONTROLLER];
+    int controller;
+    f32 targetX;
+    f32 targetZ;
+    f32 baseY;
+    f32 bobY;
+    u16 bobAngle;
+    s16 tileX;
+    s16 tileY;
+    u8 pushDir;
+    u8 initialTile;
+    u8 moveResult;
+    PushBlockFlags flags;
+    u8 pad286[2];
+} WCPushBlockRuntimeState;
+
+STATIC_ASSERT(sizeof(PushBlockFlags) == 1);
+STATIC_ASSERT(sizeof(WCPushBlockRuntimeState) == WCPUSHBLOCK_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, controller) == WCPUSHBLOCK_STATE_CONTROLLER);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, targetX) == WCPUSHBLOCK_STATE_TARGET_X);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, targetZ) == WCPUSHBLOCK_STATE_TARGET_Z);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, baseY) == WCPUSHBLOCK_STATE_BASE_Y);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, bobY) == WCPUSHBLOCK_STATE_BOB_Y);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, bobAngle) == WCPUSHBLOCK_STATE_BOB_ANGLE);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, tileX) == WCPUSHBLOCK_STATE_TILE_X);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, tileY) == WCPUSHBLOCK_STATE_TILE_Y);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, pushDir) == WCPUSHBLOCK_STATE_PUSH_DIR);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, initialTile) == WCPUSHBLOCK_STATE_INITIAL_TILE);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, moveResult) == WCPUSHBLOCK_STATE_MOVE_RESULT);
+STATIC_ASSERT(offsetof(WCPushBlockRuntimeState, flags) == WCPUSHBLOCK_STATE_FLAGS);
+STATIC_ASSERT(offsetof(WCPushBlockSetup, y) == 0xc);
+STATIC_ASSERT(offsetof(WCPushBlockSetup, modelIndex) == WCPUSHBLOCK_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCPushBlockSetup, initialTile) == WCPUSHBLOCK_INITIAL_TILE_OFFSET);
+
+#define WCPUSHBLOCK_CONTROLLER(state) (((WCPushBlockRuntimeState *)(state))->controller)
 #define WCPUSHBLOCK_IFACE (*(int *)(*(int *)(WCPUSHBLOCK_CONTROLLER(state) + 0x68)))
-#define WCPUSHBLOCK_TARGET_X(state) (*(f32 *)((u8 *)(state) + WCPUSHBLOCK_STATE_TARGET_X))
-#define WCPUSHBLOCK_TARGET_Z(state) (*(f32 *)((u8 *)(state) + WCPUSHBLOCK_STATE_TARGET_Z))
-#define WCPUSHBLOCK_BASE_Y(state) (*(f32 *)((u8 *)(state) + WCPUSHBLOCK_STATE_BASE_Y))
-#define WCPUSHBLOCK_BOB_Y(state) (*(f32 *)((u8 *)(state) + WCPUSHBLOCK_STATE_BOB_Y))
-#define WCPUSHBLOCK_BOB_ANGLE(state) (*(u16 *)((u8 *)(state) + WCPUSHBLOCK_STATE_BOB_ANGLE))
-#define WCPUSHBLOCK_TILE_X(state) (*(s16 *)((u8 *)(state) + WCPUSHBLOCK_STATE_TILE_X))
-#define WCPUSHBLOCK_TILE_Y(state) (*(s16 *)((u8 *)(state) + WCPUSHBLOCK_STATE_TILE_Y))
-#define WCPUSHBLOCK_PUSH_DIR(state) (*(u8 *)((u8 *)(state) + WCPUSHBLOCK_STATE_PUSH_DIR))
-#define WCPUSHBLOCK_INITIAL_TILE(state) (*(u8 *)((u8 *)(state) + WCPUSHBLOCK_STATE_INITIAL_TILE))
-#define WCPUSHBLOCK_MOVE_RESULT(state) (*(u8 *)((u8 *)(state) + WCPUSHBLOCK_STATE_MOVE_RESULT))
-#define WCPUSHBLOCK_FLAGS(state) (*(PushBlockFlags *)((u8 *)(state) + WCPUSHBLOCK_STATE_FLAGS))
+#define WCPUSHBLOCK_TARGET_X(state) (((WCPushBlockRuntimeState *)(state))->targetX)
+#define WCPUSHBLOCK_TARGET_Z(state) (((WCPushBlockRuntimeState *)(state))->targetZ)
+#define WCPUSHBLOCK_BASE_Y(state) (((WCPushBlockRuntimeState *)(state))->baseY)
+#define WCPUSHBLOCK_BOB_Y(state) (((WCPushBlockRuntimeState *)(state))->bobY)
+#define WCPUSHBLOCK_BOB_ANGLE(state) (((WCPushBlockRuntimeState *)(state))->bobAngle)
+#define WCPUSHBLOCK_TILE_X(state) (((WCPushBlockRuntimeState *)(state))->tileX)
+#define WCPUSHBLOCK_TILE_Y(state) (((WCPushBlockRuntimeState *)(state))->tileY)
+#define WCPUSHBLOCK_PUSH_DIR(state) (((WCPushBlockRuntimeState *)(state))->pushDir)
+#define WCPUSHBLOCK_INITIAL_TILE(state) (((WCPushBlockRuntimeState *)(state))->initialTile)
+#define WCPUSHBLOCK_MOVE_RESULT(state) (((WCPushBlockRuntimeState *)(state))->moveResult)
+#define WCPUSHBLOCK_FLAGS(state) (((WCPushBlockRuntimeState *)(state))->flags)
 
 #pragma peephole on
 #pragma scheduling on
@@ -116,16 +159,17 @@ void wcpushblock_hitDetect(void) {}
 #pragma scheduling off
 void wcpushblock_init(int obj, int setup)
 {
-    int state = *(int *)(obj + 0xb8);
+    WCPushBlockRuntimeState *state = *(WCPushBlockRuntimeState **)(obj + 0xb8);
+    WCPushBlockSetup *setupData = (WCPushBlockSetup *)setup;
 
     *(u8 *)(obj + 0x36) = 0;
-    *(u8 *)(obj + 0xad) = *(u8 *)(setup + WCPUSHBLOCK_MODEL_INDEX_OFFSET);
+    *(u8 *)(obj + 0xad) = setupData->modelIndex;
     if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
         *(u8 *)(obj + 0xad) = 0;
     }
     ObjHitbox_SetStateIndex(obj, *(int *)(obj + 0x54), (s8)*(u8 *)(obj + 0xad));
-    WCPUSHBLOCK_INITIAL_TILE(state) = (u8)*(s16 *)(setup + WCPUSHBLOCK_INITIAL_TILE_OFFSET);
-    WCPUSHBLOCK_BASE_Y(state) = lbl_803E6DA0 + *(f32 *)(setup + 0xc);
+    state->initialTile = (u8)setupData->initialTile;
+    state->baseY = lbl_803E6DA0 + setupData->y;
 }
 #pragma scheduling reset
 #pragma peephole reset
