@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/maketex.h"
+#include "main/objanim.h"
 
 
 #pragma peephole off
@@ -2130,9 +2131,6 @@ int saveGame_prepareAndWrite(int writeImages, int cbA, int cbB, int cbC, int cbD
 extern int Obj_GetPlayerObject(void);
 extern s16 getAngle(f32 x, f32 z);
 extern f32 sqrtf(f32 x);
-extern int ObjAnim_SetCurrentMove(int objAnim, int moveId, f32 moveProgress, int flags);
-extern int ObjAnim_SampleRootCurvePhase(f32 distance, int objAnim, f32 *phaseOut);
-extern int ObjAnim_AdvanceCurrentMove(int objAnim, f32 moveStepScale, f32 deltaTime, int flags);
 extern u8 framesThisStep;
 void objModelResetVecFn_80080548(int obj);
 
@@ -2210,11 +2208,13 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
                 *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) & ~4;
                 if (*(s16 *)(state + 0x50) < 0) {
                     if (p7 != -1) {
-                        ObjAnim_SetCurrentMove(obj, p7, 0.0f, 0);
+                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                            (obj, p7, 0.0f, 0);
                     }
                 } else {
                     if (p6 != -1) {
-                        ObjAnim_SetCurrentMove(obj, p6, 0.0f, 0);
+                        ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                            (obj, p6, 0.0f, 0);
                     }
                 }
             }
@@ -2249,8 +2249,9 @@ int ObjSeq_func20(int obj, int state, s16 p3, s16 p4, s16 p5, s16 p6, s16 p7)
             if (p7 != -1) {
                 s16 t50 = *(s16 *)(state + 0x50);
                 ObjAnim_SampleRootCurvePhase((f32)(t50 >= 0 ? t50 : -t50) * 3.142f / 325767.0f,
-                                             obj, &out);
-                ObjAnim_AdvanceCurrentMove(obj, out, (f32)framesThisStep, 0);
+                                             (ObjAnimComponent *)obj, &out);
+                ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+                    (obj, out, (f32)framesThisStep, NULL);
             }
         }
         if (*(f32 *)(state + 0x4c) > 1.0f) {

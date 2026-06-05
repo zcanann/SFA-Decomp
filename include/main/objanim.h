@@ -28,16 +28,17 @@ void ObjAnim_SetBlendMove(ObjAnimComponent *objAnim,ObjAnimDef *animDef,ObjAnimS
                           uint moveId,s16 eventState);
 void Object_ObjAnimSetPrimaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState);
 void Object_ObjAnimSetSecondaryBlendMove(ObjAnimComponent *objAnim,uint moveId,int eventState);
-int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnim,ObjAnimEventList *events);
+int Object_ObjAnimAdvanceMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
+                              ObjAnimEventList *events);
 int Object_ObjAnimSetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
-int Object_ObjAnimSetMove(f32 moveProgress,int objAnim,int moveId,int moveControlFlags);
+int Object_ObjAnimSetMove(f32 moveProgress,int objAnimArg,int moveId,int moveControlFlags);
 u16 ObjAnim_GetCurrentEventCountdown(ObjAnimComponent *objAnim);
 void ObjAnim_WriteStateWord(ObjAnimComponent *objAnim,int stateIndex,short wordIndex,int value);
 void ObjAnim_SetCurrentEventStepFrames(ObjAnimComponent *objAnim,uint frameCount);
 int ObjAnim_SampleRootCurvePhase(f32 distance,ObjAnimComponent *objAnim,float *phaseOut);
-int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnim,
+int ObjAnim_AdvanceCurrentMove(f32 moveStepScale,f32 deltaTime,int objAnimArg,
                                ObjAnimEventList *events);
 int ObjAnim_SetMoveProgress(f32 moveProgress,ObjAnimComponent *objAnim);
-int ObjAnim_SetCurrentMove(int objAnim,int moveId,f32 moveProgress,int moveControlFlags);
+int ObjAnim_SetCurrentMove(int objAnimArg,int moveId,f32 moveProgress,int moveControlFlags);
 
 #endif /* MAIN_OBJANIM_H_ */

@@ -1199,7 +1199,6 @@ void vfpcoreplat_render(void) { objRenderFn_8003b8f4(lbl_803E6140); }
 
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern void vfpdoorswitch_updateExplodingVariant(int obj);
-extern int ObjAnim_SetMoveProgress(f32 progress, ObjAnimComponent *anim);
 
 typedef struct {
     s16 gameBitId;

@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/objanim.h"
 
 typedef struct {
     f32 f0;
@@ -232,8 +233,6 @@ extern void modelLightStruct_setDiffuseTargetColor(int light, int r, int g, int 
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setDirection(int light, f32 a, f32 b, f32 c);
 extern void objfx_spawnFlaggedTrailBurst(int obj, f32 scale, int a, int b, int c, void *vec);
-extern void ObjAnim_AdvanceCurrentMove(int obj, f32 weight, f32 dt, f32 *out);
-extern void ObjAnim_SetCurrentMove(int obj, int moveId, f32 progress, int flags);
 extern void ObjLink_AttachChild(int obj, int child, int slot);
 extern void ObjPath_GetPointWorldPosition(int obj, int idx, f32 *x, f32 *y, f32 *z, int flag);
 extern int objFindTexture(int obj, int a, int b);
@@ -340,7 +339,8 @@ void worldobj_update(int obj) {
         }
         break;
     case 0x740:
-        ObjAnim_AdvanceCurrentMove(obj, lbl_803E6694, timeDelta, NULL);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+            (obj, lbl_803E6694, timeDelta, NULL);
         *(s16 *)(obj + 0) = lbl_803E668C * timeDelta + (f32)*(s16 *)(obj + 0);
         break;
     case 0x5dc:
@@ -407,7 +407,8 @@ void worldobj_update(int obj) {
         *(s16 *)(obj + 0) += 1;
         break;
     case 0x602:
-        ObjAnim_AdvanceCurrentMove(obj, lbl_803E66A4, timeDelta, &vec[3]);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+            (obj, lbl_803E66A4, timeDelta, (ObjAnimEventList *)&vec[3]);
         break;
     case 0x5e3:
         if (*(u8 *)(state + 0x27c) != *(s8 *)(obj + 0xad)) {
@@ -415,14 +416,17 @@ void worldobj_update(int obj) {
         }
         if (*(s8 *)(state + 0x27e) != (gAudioStreamCurrentId != 0)) {
             if (gAudioStreamCurrentId != 0) {
-                ObjAnim_SetCurrentMove(obj, 1, lbl_803E665C, 0);
+                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                    (obj, 1, lbl_803E665C, 0);
             } else {
-                ObjAnim_SetCurrentMove(obj, 0, lbl_803E665C, 0);
+                ((ObjAnimSetCurrentMoveObjectFirstFn)ObjAnim_SetCurrentMove)
+                    (obj, 0, lbl_803E665C, 0);
             }
         }
         *(s8 *)(state + 0x27e) = gAudioStreamCurrentId != 0;
-        ObjAnim_AdvanceCurrentMove(obj, lbl_8032A200[*(u8 *)(state + 0x27c)], timeDelta,
-                                   &vec[3]);
+        ((ObjAnimAdvanceObjectFirstF32Fn)ObjAnim_AdvanceCurrentMove)
+            (obj, lbl_8032A200[*(u8 *)(state + 0x27c)], timeDelta,
+             (ObjAnimEventList *)&vec[3]);
         if (*(u8 *)(state + 0x27d) == 0 && *(void **)state != NULL) {
             ModelLightStruct_free(*(int *)state);
             *(int *)state = 0;

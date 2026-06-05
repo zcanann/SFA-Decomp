@@ -4,15 +4,10 @@
 #include "main/objanim.h"
 #include "main/objanim_internal.h"
 
-extern undefined4 FUN_800723a0();
 extern void ObjAnim_LoadCachedMove(int animId,int moveIndex,u8 *cache,ObjAnimDef *animDef);
 extern void ObjAnim_LoadMoveEvents(int objAnim,int objType,ObjAnimEventTable *eventTable,u32 moveId,
                                    int async);
-extern void _savegpr_27(void);
-extern void _restgpr_27(void);
 
-extern f64 gObjAnimU32ToDoubleBias;
-extern f64 gObjAnimS32ToDoubleBias;
 extern f32 gObjAnimProgressOne;
 extern f32 gObjAnimProgressZero;
 extern f32 gObjAnimEventStepScale;
