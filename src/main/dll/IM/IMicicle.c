@@ -1756,7 +1756,6 @@ extern void* Obj_GetPlayerObject(void);
 extern void* getTrickyObject(void);
 extern f32 Vec_xzDistance(f32* a, f32* b);
 extern int atan2i(int y, int x);
-extern void fn_801A4DB8(int obj, int data, int extra, int sub);
 extern void GameBit_Set(int eventId, int value);
 extern uint GameBit_Get(int eventId);
 
@@ -1881,7 +1880,7 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra) 
     obj->objectTypeTag = data->objectTypeTag;
     state = obj->state;
     obj->modelScale = (*(f32*)((char*)obj->modelData + 4) * (f32)(s32)data->scaleByte) / lbl_803E4428;
-    fn_801A4DB8((int)obj, (int)data, extra, (int)state);
+    exploded_initDebrisState(obj, data, extra, state);
     if (data->initialVelocityX != 0 ||
         data->initialVelocityY != 0 ||
         data->initialVelocityZ != 0 ||
@@ -1896,7 +1895,7 @@ void exploded_init(ExplodedObject* obj, ExplodedObjectMapData* data, int extra) 
 #pragma peephole reset
 #pragma scheduling reset
 
-/* attractor_func0B: dispatch on (s8)obj->_4c->_19 — state 0/3+ store NULL,
+/* attractor_func0B: dispatch on (s8)obj->_4c->_19 - state 0/3+ store NULL,
  * state 1 stores obj, state 2 computes atan2 of (player - obj) deltas
  * (truncated to int), latches angle+0x8000 into obj+0, then stores obj. */
 #pragma scheduling off
@@ -2020,18 +2019,19 @@ void exploded_seedDebrisMotion(ExplodedObject *obj, ExplodedObjectState *state, 
 
 #pragma scheduling off
 #pragma peephole off
-void fn_801A4DB8(int p1, int p2, int flag, int p3)
+void exploded_initDebrisState(ExplodedObject *obj, ExplodedObjectMapData *data,
+                              int computeModelCenter, ExplodedObjectState *state)
 {
   extern void Model_GetVertexPosition(int, int, f32 *);
   extern void fn_800218AC(int, int);
   extern f32 lbl_803E43F0;
   extern f32 lbl_803E43F4;
 
-  *(f32 *)(p1 + 0xc) = *(f32 *)(p2 + 0x8);
-  *(f32 *)(p1 + 0x10) = *(f32 *)(p2 + 0xc);
-  *(f32 *)(p1 + 0x14) = *(f32 *)(p2 + 0x10);
+  obj->x = data->positionX;
+  obj->y = data->positionY;
+  obj->z = data->positionZ;
 
-  if (flag == 0) {
+  if (computeModelCenter == 0) {
     register int *mesh;
     register int i;
     f32 v[6];
@@ -2039,14 +2039,14 @@ void fn_801A4DB8(int p1, int p2, int flag, int p3)
     f32 k;
 
     z = lbl_803E43F0;
-    *(f32 *)(p3 + 0) = z;
-    *(f32 *)(p3 + 4) = z;
-    *(f32 *)(p3 + 8) = z;
+    state->localCenterX = z;
+    state->localCenterY = z;
+    state->localCenterZ = z;
     v[3] = z;
     v[4] = z;
     v[5] = z;
 
-    mesh = *(int **)(*(int *)(*(int *)(p1 + 0x7c) + (u32)*(u8 *)(p2 + 0x18) * 4));
+    mesh = *(int **)(*(int *)(*(int *)((u8 *)obj + 0x7c) + (u32)data->objectTypeTag * 4));
     for (i = 0; i < *(u16 *)((char *)mesh + 0xe4); i++) {
       Model_GetVertexPosition((int)mesh, i, v);
       v[3] = v[0] + v[3];
@@ -2054,30 +2054,29 @@ void fn_801A4DB8(int p1, int p2, int flag, int p3)
       v[5] = v[2] + v[5];
     }
 
-    *(f32 *)(p3 + 0) = v[3] * ((k = lbl_803E43F4) / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
-    *(f32 *)(p3 + 4) = v[4] * (k / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
-    *(f32 *)(p3 + 8) = v[5] * (k / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+    state->localCenterX = v[3] * ((k = lbl_803E43F4) / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+    state->localCenterY = v[4] * (k / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+    state->localCenterZ = v[5] * (k / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
   }
 
-  *(f32 *)(p3 + 0xc) = *(f32 *)(p3 + 0);
-  *(f32 *)(p3 + 0x10) = *(f32 *)(p3 + 4);
-  *(f32 *)(p3 + 0x14) = *(f32 *)(p3 + 8);
-  exploded_seedDebrisMotion((ExplodedObject *)p1, (ExplodedObjectState *)p3,
-                            (ExplodedObjectMapData *)p2);
+  state->initialLocalCenterX = state->localCenterX;
+  state->initialLocalCenterY = state->localCenterY;
+  state->initialLocalCenterZ = state->localCenterZ;
+  exploded_seedDebrisMotion(obj, state, data);
 
   {
     f32 tv[3];
-    tv[0] = *(f32 *)(p3 + 0);
-    tv[1] = *(f32 *)(p3 + 4);
-    tv[2] = *(f32 *)(p3 + 8);
-    fn_800218AC(p1, (int)tv);
-    tv[0] = tv[0] * *(f32 *)(p1 + 0x8);
-    tv[1] = tv[1] * *(f32 *)(p1 + 0x8);
-    tv[2] = tv[2] * *(f32 *)(p1 + 0x8);
+    tv[0] = state->localCenterX;
+    tv[1] = state->localCenterY;
+    tv[2] = state->localCenterZ;
+    fn_800218AC((int)obj, (int)tv);
+    tv[0] = tv[0] * obj->modelScale;
+    tv[1] = tv[1] * obj->modelScale;
+    tv[2] = tv[2] * obj->modelScale;
   }
 
-  *(u8 *)(p3 + 0x67) = 255;
-  *(u8 *)(p3 + 0x66) = 0;
+  *((u8 *)state + 0x67) = 255;
+  state->physicsFlags = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
