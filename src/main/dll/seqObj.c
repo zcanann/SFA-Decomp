@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/seqObj.h"
+#include "main/objanim.h"
 
 #define SEQOBJ_ANIM_BLEND_ACTIVE_FLAG 0x40
 #define SEQOBJ_ANIM_EVENT_HOLD_FLAG 0x40000000
@@ -662,7 +663,6 @@ extern u8 lbl_8031DD30[];
 #pragma scheduling off
 #pragma peephole off
 extern void fn_8014D08C(int obj, int state, int moveId, f32 speed, int p5, int flags);
-extern void ObjAnim_SetMoveProgress(int obj, f32 progress);
 extern void fn_801513AC(int obj, int state);
 extern f32 lbl_803E2740;
 extern f32 lbl_803E2744;
@@ -746,7 +746,7 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent) {
             *(u8 *)(state + 0x2f3) = 0;
             *(u8 *)(state + 0x2f4) = 0;
             fn_8014D08C(obj, state, row[8], blendScale * *(f32 *)row, 0, *(u32 *)(row + 4) & 0xff);
-            ObjAnim_SetMoveProgress(obj, *(f32 *)(base + row[8] * 4));
+            ObjAnim_SetMoveProgress(*(f32 *)(base + row[8] * 4), (ObjAnimComponent *)obj);
             *(u8 *)(state + 0x33c) = eventIndex;
             return 1;
         }
@@ -766,8 +766,9 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent) {
             row = eventRows + eventTableIndex;
             fn_8014D08C(obj, state, row[8], *(f32 *)(eventRows + eventTableIndex), 0,
                         *(u32 *)(row + 4) & 0xff);
-            ObjAnim_SetMoveProgress(obj,
-                *(f32 *)(base + eventRows[*(u8 *)(state + 0x33c) * 0xc + 8] * 4));
+            ObjAnim_SetMoveProgress(
+                *(f32 *)(base + eventRows[*(u8 *)(state + 0x33c) * 0xc + 8] * 4),
+                (ObjAnimComponent *)obj);
         }
         *(f32 *)(state + 0x32c) = *(f32 *)(state + 0x32c) - timeDelta;
         if (*(f32 *)(state + 0x32c) <= lbl_803E2740) {

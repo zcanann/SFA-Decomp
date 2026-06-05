@@ -1,12 +1,12 @@
 #include "ghidra_import.h"
 #include "main/dll/CF/dll_165.h"
+#include "main/objanim.h"
 
 extern uint GameBit_Get(int eventId);
 extern undefined4 GameBit_Set(int eventId,int value);
 extern void ObjHits_DisableObject(int obj);
 extern void ObjGroup_AddObject(int obj, int group);
 extern void ObjHitbox_SetSphereRadius(int obj, int radius);
-extern void ObjAnim_SetMoveProgress(int obj, f32 progress);
 extern f32 fn_80293E80(f32 angle);
 extern f32 sin(f32 angle);
 
@@ -133,7 +133,7 @@ void staffactivated_init(int obj, int setup)
     if ((flags->b6 = (u8)GameBit_Get(*(s16 *)(setup + 0x24))) != 0) {
       switch (*(u8 *)(setup + 0x1c)) {
       case 3:
-        ObjAnim_SetMoveProgress(obj, lbl_803E3BBC);
+        ObjAnim_SetMoveProgress(lbl_803E3BBC, (ObjAnimComponent *)obj);
         break;
       case 4:
         flags->b6 = 0;
