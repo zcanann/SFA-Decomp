@@ -282,10 +282,10 @@ int ccriverflow_getExtraSize(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccriverflow_free(int obj)
+void ccriverflow_free(CCriverflowObject *obj)
 {
-  if (**(byte **)(obj + 0xb8) != 0) {
-    ObjGroup_RemoveObject(obj,0x14);
+  if (obj->state->active != 0) {
+    ObjGroup_RemoveObject((int)obj,CCRIVERFLOW_OBJECT_GROUP);
   }
   return;
 }
@@ -320,23 +320,25 @@ void ccriverflow_render(void)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccriverflow_update(int obj)
+void ccriverflow_update(CCriverflowObject *obj)
 {
-  uint uVar1;
-  byte *state;
+  uint isGameBitSet;
+  CCriverflowMapData *mapData;
+  CCriverflowState *state;
 
-  if (*(short *)(*(int *)(obj + 0x4c) + 0x1c) != -1) {
-    state = *(byte **)(obj + 0xb8);
-    uVar1 = GameBit_Get((int)*(short *)(*(int *)(obj + 0x4c) + 0x1c));
-    if (uVar1 != 0) {
-      if (*state != 0) {
-        *state = 0;
-        ObjGroup_RemoveObject(obj,0x14);
+  mapData = obj->mapData;
+  if (mapData->gameBit != -1) {
+    state = obj->state;
+    isGameBitSet = GameBit_Get((int)mapData->gameBit);
+    if (isGameBitSet != 0) {
+      if (state->active != 0) {
+        state->active = 0;
+        ObjGroup_RemoveObject((int)obj,CCRIVERFLOW_OBJECT_GROUP);
       }
     }
-    else if (*state == 0) {
-      *state = 1;
-      ObjGroup_AddObject(obj,0x14);
+    else if (state->active == 0) {
+      state->active = 1;
+      ObjGroup_AddObject((int)obj,CCRIVERFLOW_OBJECT_GROUP);
     }
   }
   return;
@@ -355,21 +357,20 @@ void ccriverflow_update(int obj)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void ccriverflow_init(short *obj,int params)
+void ccriverflow_init(CCriverflowObject *obj,CCriverflowMapData *params)
 {
-  if (*(short *)(params + 0x1c) == -1) {
-    ObjGroup_AddObject((int)obj,0x14);
-    **(undefined **)(obj + 0x5c) = 1;
+  if (params->gameBit == -1) {
+    ObjGroup_AddObject((int)obj,CCRIVERFLOW_OBJECT_GROUP);
+    obj->state->active = 1;
   }
-  *obj = (ushort)*(byte *)(params + 0x18) << 8;
-  *(float *)(obj + 4) = *(float *)(*(int *)(obj + 0x28) + 4);
-  *(float *)(obj + 4) =
-       (f32)(u32)*(byte *)(params + 0x19) * lbl_803E4DD0 + *(float *)(obj + 4);
-  if (*(float *)(obj + 4) < lbl_803E4DD4) {
-    *(float *)(obj + 4) = lbl_803E4DD4;
+  obj->angle = (u16)params->angleByte << 8;
+  obj->height = obj->model->baseHeight;
+  obj->height = (f32)(u32)params->heightOffset * lbl_803E4DD0 + obj->height;
+  if (obj->height < lbl_803E4DD4) {
+    obj->height = lbl_803E4DD4;
   }
-  if (*(byte *)(params + 0x1a) == 0) {
-    *(undefined *)(params + 0x1a) = 0xff;
+  if (params->speedByte == 0) {
+    params->speedByte = CCRIVERFLOW_DEFAULT_SPEED;
   }
   return;
 }
