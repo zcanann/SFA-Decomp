@@ -42,17 +42,14 @@ void largecrate_init(int obj, u8 *initData)
 {
   int state;
   u32 r3rand;
+  f32 fr;
   LargeCrateVariantRemap constArrA;
   LargeCrateVariantRemap constArrB;
   short id;
 
   /* copy two constant blobs to stack (used as lookup arrays) */
-  constArrA.words[0] = lbl_802C2280.words[0];
-  constArrA.words[1] = lbl_802C2280.words[1];
-  constArrA.words[2] = lbl_802C2280.words[2];
-  constArrB.words[0] = lbl_802C228C.words[0];
-  constArrB.words[1] = lbl_802C228C.words[1];
-  constArrB.words[2] = lbl_802C228C.words[2];
+  constArrA = lbl_802C2280;
+  constArrB = lbl_802C228C;
 
   state = *(int *)(obj + 0xb8);
   *(void (**)(void))(obj + 0xbc) = LargeCrate_SeqFn;
@@ -98,7 +95,9 @@ void largecrate_init(int obj, u8 *initData)
 
   *(short *)(state + 0x20) = 0;
   r3rand = randomGetRange(LARGECRATE_RANDOM_DELAY_MIN, LARGECRATE_RANDOM_BOB_MAX);
-  *(float *)(state + 0x1c) = (float)(int)r3rand + lbl_803E39E8;
+  fr = (float)(int)r3rand;
+  fr = lbl_803E39E8 + fr;
+  *(float *)(state + 0x1c) = fr;
   *(float *)(state + 0x24) = *(float *)(obj + 0xc);
 
   if (*(short *)(obj + 0x46) == LARGECRATE_VARIANT_C) {
@@ -142,41 +141,38 @@ int objHitboxFn_801843c0(int obj)
 {
   typedef struct HitDetectResults {
     f32 hitInfo[4][4];
-    u8 pad40[0x1c];
+    f32 radii[4];
+    u8 axisTable[12];
     u32 solidFlags[4];
   } HitDetectResults;
 
-  int state;
-  f32 endPoints[12];
-  f32 startPoints[3];
+  u8 *state;
   u32 sweptBounds[6];
-  f32 radii[4];
-  HitDetectResults hitResults;
-  u8 hitAxisTable[16];
+  f32 endPoints[12];
+  f32 startPoints[12];
+  HitDetectResults results;
   int idx;
-  u8 hitMask;
   u8 hit;
 
-  state = *(int *)(obj + 0x54);
-  if (state == 0) {
+  state = *(u8 **)(obj + 0x54);
+  if (state != 0) {
+    endPoints[0] = *(float *)(obj + 0xc);
+    endPoints[1] = *(float *)(obj + 0x10);
+    endPoints[2] = *(float *)(obj + 0x14);
+    startPoints[0] = *(float *)(obj + 0x80);
+    startPoints[1] = *(float *)(obj + 0x84);
+    startPoints[2] = *(float *)(obj + 0x88);
+    results.radii[0] = lbl_803E39F4;
+    *(s8 *)&results.axisTable[0] = -1;
+    results.axisTable[4] = 0x3;
+  } else {
     return 0;
   }
-  endPoints[0] = *(float *)(obj + 0xc);
-  endPoints[1] = *(float *)(obj + 0x10);
-  endPoints[2] = *(float *)(obj + 0x14);
-  startPoints[0] = *(float *)(obj + 0x80);
-  startPoints[1] = *(float *)(obj + 0x84);
-  startPoints[2] = *(float *)(obj + 0x88);
-  radii[0] = lbl_803E39F4;
-  hitAxisTable[0] = 0xff;
-  hitAxisTable[4] = 0x3;
 
-  hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, radii, 1);
+  hitDetect_calcSweptSphereBounds(sweptBounds, startPoints, endPoints, results.radii, 1);
   hitDetectFn_800691c0(obj, sweptBounds, *(ushort *)(state + 0xb2), 1);
-  hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &hitResults, 0);
-  if (hit == 0) {
-    return 0;
-  }
+  hit = hitDetectFn_80067958(obj, startPoints, endPoints, 1, &results, 0);
+  if (hit != 0) {
 
   if ((hit & 1) != 0) {
     idx = 0;
@@ -191,22 +187,26 @@ int objHitboxFn_801843c0(int obj)
     idx = 3;
   }
 
-  hitMask = ((u8 *)&hitAxisTable)[idx];
-  *(u8 *)(state + 0xac) = hitMask;
+  *(u8 *)(state + 0xac) = results.axisTable[idx];
   *(float *)(state + 0x3c) = endPoints[idx * 3];
   *(float *)(state + 0x40) = endPoints[idx * 3 + 1];
   *(float *)(state + 0x44) = endPoints[idx * 3 + 2];
-  lbl_803AC7A0[0] = hitResults.hitInfo[idx][0];
-  lbl_803AC7A0[1] = hitResults.hitInfo[idx][1];
-  lbl_803AC7A0[2] = hitResults.hitInfo[idx][2];
-  lbl_803AC7A0[3] = hitResults.hitInfo[idx][3];
+  lbl_803AC7A0[0] = results.hitInfo[idx][0];
+  lbl_803AC7A0[1] = results.hitInfo[idx][1];
+  lbl_803AC7A0[2] = results.hitInfo[idx][2];
+  lbl_803AC7A0[3] = results.hitInfo[idx][3];
 
-  if (hitResults.solidFlags[idx] != 0) {
-    *(u8 *)(state + 0xad) = (u8)((int)(signed char)*(u8 *)(state + 0xad) | 2);
+  if (results.solidFlags[idx] != 0) {
+    *(s8 *)(state + 0xad) = *(u8 *)(state + 0xad) | 2;
+    *(float *)(obj + 0xc) = *(float *)(state + 0x3c);
+    *(float *)(obj + 0x10) = *(float *)(state + 0x40);
+    *(float *)(obj + 0x14) = *(float *)(state + 0x44);
+    *(float *)(state + 0x10) = *(float *)(obj + 0x80);
+    *(float *)(state + 0x14) = *(float *)(obj + 0x84);
+    *(float *)(state + 0x18) = *(float *)(obj + 0x88);
+    return 1;
   }
-  else {
-    *(u8 *)(state + 0xad) = (u8)((int)(signed char)*(u8 *)(state + 0xad) | 1);
-  }
+  *(s8 *)(state + 0xad) = *(u8 *)(state + 0xad) | 1;
   *(float *)(obj + 0xc) = *(float *)(state + 0x3c);
   *(float *)(obj + 0x10) = *(float *)(state + 0x40);
   *(float *)(obj + 0x14) = *(float *)(state + 0x44);
@@ -214,4 +214,6 @@ int objHitboxFn_801843c0(int obj)
   *(float *)(state + 0x14) = *(float *)(obj + 0x84);
   *(float *)(state + 0x18) = *(float *)(obj + 0x88);
   return 1;
+  }
+  return 0;
 }
