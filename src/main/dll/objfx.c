@@ -145,10 +145,7 @@ void hitDetectFn_80097070(void *obj, u8 a, u8 b, u8 count, void *p7, f32 fval) {
     int i;
     *(int *)ps = lbl_803DF340;
     ps[2] = lbl_803DF344;
-    if (a == 0) {
-        return;
-    }
-    if (b == 0) {
+    if (a == 0 || b == 0) {
         return;
     }
     params.f8 = fval;
