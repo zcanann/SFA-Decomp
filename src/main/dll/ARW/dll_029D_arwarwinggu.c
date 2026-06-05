@@ -96,7 +96,7 @@ void arwarwinggu_update(int obj)
         int state = *(int *)(obj + 0xb8);
         int model = Obj_GetActiveModel(obj);
         int texture = (int)objFindTexture(obj, 0, 0);
-        int anim = fn_800283E8(*(int *)model, 0);
+        int anim = ObjModel_GetTexture(*(int *)model, 0);
         fn_800541A4(anim, (u16)*(int *)(state + 4));
         textureAnimFn_80053f2c(anim, state, texture);
         break;
@@ -147,7 +147,7 @@ void fn_8022F27C(int obj)
     int state = *(int *)(obj + 0xb8);
     int model = Obj_GetActiveModel(obj);
     int *texture = objFindTexture(obj, 0, 0);
-    int anim = fn_800283E8(*(int *)model, 0);
+    int anim = ObjModel_GetTexture(*(int *)model, 0);
     fn_800541A4(anim, (u16)*(int *)(state + 4));
     textureAnimFn_80053f2c(anim, state, (int)texture);
 }

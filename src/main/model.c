@@ -249,7 +249,7 @@ void ObjModel_CopyJointTranslation(u8 *modelBytes, int jointIndex, f32 *out) {
     out[2] = *(f32 *)(jointMtx + 0x2c);
 }
 
-void *fn_800283E8(u8 *model, int textureIndex) {
+void *ObjModel_GetTexture(u8 *model, int textureIndex) {
     return textureIdxToPtr(*(int *)(*(u8 **)(model + 0x20) + textureIndex * 4));
 }
 
@@ -295,7 +295,7 @@ void *ObjModel_GetPostRenderCallback(u8 *model) {
     return *(void **)(model + 0x3c);
 }
 
-void fn_800284CC(void) {
+void postRenderSetAlphaBlendState(void) {
     GXSetBlendMode(1, 4, 1, 5);
     gxSetZMode_(1, 3, 0);
     gxSetPeControl_ZCompLoc_(1);
@@ -522,7 +522,7 @@ asm void setGQR7(register u32 v) {
 }
 
 #pragma dont_inline on
-void fn_8002A3D4(int a, int b, int c, int d) {
+void setGQR7Packed(int a, int b, int c, int d) {
     setGQR7((((a << 8) + b) << 16) | ((c << 8) + d));
 }
 #pragma dont_inline reset
@@ -3177,7 +3177,7 @@ extern void ObjModel_TransformVerticesWithTranslation(u8 *m1, u8 *m2, u8 *src, i
 void ObjModel_BlendPrimaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, int *offs, u8 *out) {
     u16 sizes[2];
 
-    fn_8002A3D4(hdr[6], 7, hdr[6], 7);
+    setGQR7Packed(hdr[6], 7, hdr[6], 7);
     ObjModel_InitScratchBuffers();
     if (*(u16 *)(hdr + 2) != 0) {
         u8 *q;
@@ -3239,7 +3239,7 @@ extern void ObjModel_TransformQuadVerticesLinear(u8 *m1, u8 *m2, u8 *src, int d1
 void ObjModel_BlendSecondaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, u8 **outs, int quad) {
     u16 sizes[2];
 
-    fn_8002A3D4(hdr[6], 6, hdr[6], 6);
+    setGQR7Packed(hdr[6], 6, hdr[6], 6);
     ObjModel_InitScratchBuffers();
     if (*(u16 *)(hdr + 2) != 0) {
         u8 *q;

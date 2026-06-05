@@ -219,7 +219,7 @@ void vortex_init(int obj, int initData)
         }
     }
     *(u16 *)(obj + 0xb0) |= 0x2000;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_800284CC);
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
     if (((VortexFlags *)(state + 0x26))->active != 0)
         *(f32 *)(state + 0) = lbl_803E73E0;
     else

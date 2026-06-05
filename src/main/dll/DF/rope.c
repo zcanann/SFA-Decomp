@@ -702,7 +702,7 @@ extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, in
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void *cb);
-extern void fn_800284CC(void);
+extern void postRenderSetAlphaBlendState(void);
 extern f32 lbl_803E4D70;
 extern f32 lbl_803E4D74;
 extern f32 lbl_803E4D78;
@@ -731,7 +731,7 @@ void DIMbossspit_init(int obj)
   *(s16 *)(state + 0) = 0;
   *(s16 *)(state + 2) = 0;
   ObjHits_EnableObject(obj);
-  ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_800284CC);
+  ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
 }
 
 

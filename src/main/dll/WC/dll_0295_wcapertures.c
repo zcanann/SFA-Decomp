@@ -175,7 +175,7 @@ void wcapertures_init(int obj, int initData)
     }
     *(u8 *)(obj + 0x36) = WCAPERTURES_INITIAL_ALPHA;
     WCAPERTURES_TARGET_ALPHA(state) = WCAPERTURES_ALPHA_OPAQUE;
-    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), fn_800284CC);
+    ObjModel_SetPostRenderCallback(Obj_GetActiveModel(obj), postRenderSetAlphaBlendState);
     WCAPERTURES_LIGHT(state) = objCreateLight(obj, 1);
     if (WCAPERTURES_LIGHT(state) != NULL) {
         modelLightStruct_setLightKind(WCAPERTURES_LIGHT(state), WCAPERTURES_LIGHT_KIND);

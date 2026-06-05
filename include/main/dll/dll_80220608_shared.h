@@ -52,7 +52,7 @@ extern void ObjHitbox_SetStateIndex(int obj, int hitbox, int stateIndex);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void *callback);
 extern void objRenderFn_80041018(int obj);
-extern void fn_800284CC(void);
+extern void postRenderSetAlphaBlendState(void);
 
 
 typedef struct DrEnergyDiscState {
@@ -718,7 +718,7 @@ extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
 extern void Sfx_PlayFromObjectLimited(int obj, int sfxId, int limit);
 extern void ObjHits_SetHitVolumeSlot(int obj, int p2, int p3, int p4);
 extern void projectileParticleFxFn_80099660(int obj, f32 p2, int p3);
-extern int fn_800283E8(int p1, int p2);
+extern int ObjModel_GetTexture(int p1, int p2);
 extern void fn_800541A4(int p1, int p2);
 extern void textureAnimFn_80053f2c(int p1, int p2, int p3);
 
