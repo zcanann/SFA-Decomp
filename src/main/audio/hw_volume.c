@@ -3,8 +3,8 @@
 #include "main/audio/snd3d_room.h"
 
 extern void salDeactivateVoice(void *entry);
-extern void fn_8027BEBC(void);
-extern void fn_8027BFC4(void);
+extern void salActivateStudio(void);
+extern void salDeactivateStudio(void);
 extern u8 *dspVoice;
 extern u8 lbl_803CC1E0[];
 extern u8 lbl_802C2820[];
@@ -126,7 +126,7 @@ void hwSetAUXProcessingCallbacks(u8 idx, void *cb0, void *cb1, void *cb2, void *
  */
 void hwActivateStudio(void)
 {
-    fn_8027BEBC();
+    salActivateStudio();
 }
 
 /*
@@ -137,5 +137,5 @@ void hwActivateStudio(void)
  */
 void hwDeactivateStudio(void)
 {
-    fn_8027BFC4();
+    salDeactivateStudio();
 }

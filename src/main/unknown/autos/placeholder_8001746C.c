@@ -1343,17 +1343,7 @@ extern CtrlCharEntry lbl_802C86F0[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-int getControlCharLen(u32 c) {
-    CtrlCharEntry *p = lbl_802C86F0;
-    int i;
-    for (i = 45; i >= 0; i--) {
-        if (p->key == c) {
-            return p->len;
-        }
-        p++;
-    }
-    return 0;
-}
+int getControlCharLen(u32 c);
 #pragma pop
 
 extern int utf8GetNextChar(u8 *p, int *outLen);
@@ -1375,411 +1365,13 @@ extern void textRenderChar(int x0, int y0, int x1, int y1, f32 u0, f32 v0, f32 u
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH) {
-    int byteOff;
-    int glyphLang;
-    int curTexPage;
-    int realign;
-    int ch;
-    int charLen;
-    int n2;
-    int i;
-    int cnt;
-    int skipGlyph;
-    u8 *p;
-    u8 *g;
-    u8 *winBase;
-    void *tex;
-    f32 spaceExtra;
-    f32 measW;
-    f32 measN;
-    f32 fx0, fy0, fx1, fy1;
-    f32 u0, v0;
-    int params[8];
-    u32 scisX, scisY, scisW, scisH;
-
-    byteOff = 0;
-    spaceExtra = lbl_803DE704;
-    if (lbl_803DC9E8 == 2) {
-        glyphLang = 6;
-    } else {
-        glyphLang = ((u8 *)sLanguageNameTable)[curLanguage * 8 + 4];
-    }
-    curTexPage = -1;
-    realign = 1;
-    if (str == NULL) {
-        return;
-    }
-    if (*(int *)(gameTextFonts + 0x1c) != 2) {
-        return;
-    }
-
-    if (curLanguage != 4 && mode == 1 && saveFileStruct_isCheatActive(3) &&
-        win == lbl_802C7400 + 0x140) {
-        translateToDinoLanguage(str);
-    }
-
-    gameTextMeasureString(str, &measW, &measN, lbl_803DC9A0, 0, 0, -1);
-    if (lbl_803DC9BC == 0) {
-        setTextColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
-        _textSetColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
-        textureSetupFn_800799c0();
-        textRenderSetup();
-        textRenderSetupFn_80079804();
-        textBlendSetupFn_80078a7c();
-    }
-
-    x = x + (f32)*(s16 *)(win + 0x14);
-    y = y + (f32)*(s16 *)(win + 0x16);
-    winBase = lbl_802C7400;
-
-    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0) {
-        byteOff += charLen;
-        skipGlyph = 0;
-        if (ch >= 0xe000 && ch <= 0xf8ff) {
-            n2 = getControlCharLen(ch);
-            for (i = 0; i < n2; i++) {
-                int hi = str[byteOff++];
-                int lo = str[byteOff++];
-                params[i] = (hi << 8) | lo;
-            }
-            if ((u32)(ch - 0xf8f4) <= 0xb) {
-                switch (ch) {
-                case 0xf8f4:
-                    lbl_803DC9A0 = (f32)params[0] * lbl_803DE708;
-                    break;
-                case 0xf8f7:
-                    glyphLang = params[0];
-                    break;
-                case 0xf8f8:
-                    win[0x12] = 0;
-                    realign = 1;
-                    break;
-                case 0xf8f9:
-                    win[0x12] = 1;
-                    realign = 1;
-                    break;
-                case 0xf8fa:
-                    win[0x12] = 2;
-                    realign = 1;
-                    break;
-                case 0xf8fb:
-                    win[0x12] = 3;
-                    realign = 1;
-                    break;
-                case 0xf8ff:
-                    if (mode == 0) {
-                        lbl_803DC9A4 = params[3] * (lbl_803DC9A4 + 1) >> 8;
-                        lbl_803DC9A7 = params[0];
-                        lbl_803DC9A6 = params[1];
-                        lbl_803DC9A5 = params[2];
-                        if (lbl_803DC9BC == 0) {
-                            setTextColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
-                            _textSetColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
-                            textureSetupFn_800799c0();
-                            textRenderSetup();
-                            textRenderSetupFn_80079804();
-                            textBlendSetupFn_80078a7c();
-                        }
-                    }
-                    skipGlyph = 1;
-                    break;
-                }
-            }
-            if (skipGlyph) {
-                continue;
-            }
-        } else {
-            if (mode == 0) {
-                lbl_803DC998++;
-            }
-        }
-
-        if (realign != 0) {
-            switch (win[0x12]) {
-            case 0:
-                spaceExtra = lbl_803DE704;
-                break;
-            case 1:
-                spaceExtra = lbl_803DE704;
-                gameTextMeasureString(p, &measW, NULL, lbl_803DC9A0, 0, 0, -1);
-                x = (f32)*(s16 *)(win + 0x14) +
-                    ((f32)(u32)*(u16 *)(win + 8) - measW);
-                break;
-            case 2:
-                spaceExtra = lbl_803DE704;
-                gameTextMeasureString(p, &measW, NULL, lbl_803DC9A0, 0, 0, -1);
-                x = ((f32)(u32)*(u16 *)(win + 8) - measW) * lbl_803DE70C +
-                    (f32)*(s16 *)(win + 0x14);
-                break;
-            case 3: {
-                int acc = 0;
-                int spaceCount = 0;
-                int innerCh;
-                int innerLen;
-                gameTextMeasureString(p, &measW, NULL, lbl_803DC9A0, 0, 0, -1);
-                while ((innerCh = utf8GetNextChar(p + acc, &innerLen)) != 0) {
-                    acc += innerLen;
-                    if (innerCh == 0x20) {
-                        spaceCount++;
-                    }
-                    if (innerCh >= 0xe000 && innerCh <= 0xf8ff) {
-                        acc += getControlCharLen(innerCh) * 2;
-                    }
-                }
-                spaceExtra = ((f32)(u32)*(u16 *)(win + 8) - measW) / (f32)spaceCount;
-                break;
-            }
-            }
-            realign = 0;
-        }
-
-        g = *(u8 **)gameTextFonts;
-        cnt = *(int *)(gameTextFonts + 8);
-        while (cnt-- != 0) {
-            if (*(u32 *)g == (u32)ch && g[0xe] == glyphLang) {
-                goto matched;
-            }
-            g += 0x10;
-        }
-        g = NULL;
-    matched:
-        if (g == NULL) {
-            continue;
-        }
-
-        if (ch == 0xa) {
-            x = lbl_803DE704;
-            y = y + lineH;
-            continue;
-        }
-        if (ch == 0x20) {
-            x = lbl_803DC9A0 * (f32)(g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9))) + x;
-            x = x + spaceExtra;
-            continue;
-        }
-
-        u0 = (f32)(*(u16 *)(g + 4) << 5);
-        v0 = (f32)(*(u16 *)(g + 6) << 5);
-        fx0 = lbl_803DE710 * (x + (f32)*(s8 *)(g + 8) * lbl_803DC9A0);
-        fy0 = lbl_803DE710 * (y + (f32)*(s8 *)(g + 0xa) * lbl_803DC9A0);
-        fx1 = lbl_803DE710 * ((f32)(u32)g[0xc] * lbl_803DC9A0) + fx0;
-        fy1 = lbl_803DE710 * ((f32)(u32)g[0xd] * lbl_803DC9A0) + fy0;
-        if (fx0 < lbl_803DE704 && fx1 > lbl_803DE704) {
-            u0 = lbl_803DE714 * -fx0 + u0;
-            fx0 = lbl_803DE704;
-        }
-        if (fy0 < lbl_803DE704 && fy1 > lbl_803DE704) {
-            v0 = lbl_803DE714 * -fy0 + v0;
-            fy0 = lbl_803DE704;
-        }
-
-        if (lbl_803DC9BC != 0) {
-            if (fx0 < (f32)lbl_803DC9B0) {
-                lbl_803DC9B0 = (int)fx0;
-            }
-            if (fx1 > (f32)lbl_803DC9AC) {
-                lbl_803DC9AC = (int)fx1;
-            }
-            if (fy0 < (f32)lbl_803DC9B8) {
-                lbl_803DC9B8 = (int)fy0;
-            }
-            if (fy1 > (f32)lbl_803DC9B4) {
-                lbl_803DC9B4 = (int)fy1;
-            }
-        } else {
-            if (g[0xe] == 3) {
-                f32 shift = (f32)(lbl_803DB3CC << 2);
-                fy0 = fy0 - shift;
-                fy1 = fy1 - shift;
-                GXGetScissor(&scisX, &scisY, &scisW, &scisH);
-                if (scisY < lbl_803DB3CC) {
-                    GXSetScissor(scisX, 0, scisW, scisH);
-                } else {
-                    GXSetScissor(scisX, scisY - lbl_803DB3CC, scisW, scisH);
-                }
-            }
-            if (g[0xe] == 5) {
-                int iw = g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9));
-                int ih = g[0xd] + (*(s8 *)(g + 0xa) + *(s8 *)(g + 0xb));
-                GXGetScissor(&scisX, &scisY, &scisW, &scisH);
-                gxSetScissorRect(0, 0, *(s16 *)(winBase + 0xfd4), *(s16 *)(winBase + 0xfd6),
-                                 *(s16 *)(winBase + 0xfd4) + *(u16 *)(winBase + 0xfc8),
-                                 *(s16 *)(winBase + 0xfd6) + *(u16 *)(winBase + 0xfca));
-                fx0 = (f32)(*(s16 *)(winBase + 0xfd4) + ((*(u16 *)(winBase + 0xfc8) - iw) >> 1));
-                fx1 = fx0 + (f32)iw;
-                fy0 = (f32)(*(s16 *)(winBase + 0xfd6) + ((*(u16 *)(winBase + 0xfca) - ih) >> 1));
-                fy1 = fy0 + (f32)ih;
-                fx0 = fx0 * lbl_803DE710;
-                fx1 = fx1 * lbl_803DE710;
-                fy0 = fy0 * lbl_803DE710;
-                fy1 = fy1 * lbl_803DE710;
-            }
-
-            if (mode != 0) {
-                f32 ox = (f32)lbl_803DC98C;
-                f32 oy = (f32)lbl_803DC988;
-                fx0 = fx0 + ox;
-                fx1 = fx1 + ox;
-                fy0 = fy0 + oy;
-                fy1 = fy1 + oy;
-            }
-
-            if (lbl_803DC9BC == 0) {
-                if (curTexPage != g[0xf]) {
-                    curTexPage = g[0xf];
-                    tex = *(void **)(gameTextFonts + 0x10 + g[0xf] * 4);
-                    selectTexture(tex, 0);
-                    if (lbl_802C8680[g[0xe] * 16 + 6] == 1) {
-                        if (mode != 0) {
-                            setTextColor(0, 0, 0, 0, lbl_803DC9A4);
-                        } else {
-                            setTextColor(0, 0xff, 0xff, 0xff, lbl_803DC9A4);
-                            textureSetupFn_800799c0();
-                            textRenderSetupFn_800795e8();
-                            textRenderSetupFn_80079804();
-                        }
-                    } else {
-                        setTextColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
-                        _textSetColor(0, lbl_803DC9A7, lbl_803DC9A6, lbl_803DC9A5, lbl_803DC9A4);
-                        textureSetupFn_800799c0();
-                        textRenderSetup();
-                        textRenderSetupFn_80079804();
-                    }
-                }
-            }
-
-            if (lbl_803DC99C != 0 && mode == 0 && g[0xe] != 5 &&
-                (f32)lbl_803DC998 >= lbl_803DC994) {
-                setTextColor(0, 0, 0, 0, 0);
-            }
-
-            if (gameTextDrawFunc != NULL) {
-                f32 sW = lbl_803DE718 * (f32)(u32)*(u16 *)((u8 *)tex + 0xa);
-                f32 sH = lbl_803DE718 * (f32)(u32)*(u16 *)((u8 *)tex + 0xc);
-                ((void (*)(int, int, int, int, f32, f32, f32, f32))gameTextDrawFunc)(
-                    (int)fx0, (int)fy0, (int)fx1, (int)fy1,
-                    u0 / sW, v0 / sH,
-                    (u0 + (f32)(g[0xc] << 5)) / sW,
-                    (v0 + (f32)(g[0xd] << 5)) / sH);
-            } else {
-                f32 sW = lbl_803DE718 * (f32)(u32)*(u16 *)((u8 *)tex + 0xa);
-                f32 sH = lbl_803DE718 * (f32)(u32)*(u16 *)((u8 *)tex + 0xc);
-                textRenderChar((int)fx0, (int)fy0, (int)fx1, (int)fy1,
-                               u0 / sW, v0 / sH,
-                               (u0 + (f32)(g[0xc] << 5)) / sW,
-                               (v0 + (f32)(g[0xd] << 5)) / sH);
-            }
-
-            if (g[0xe] == 3 || g[0xe] == 5) {
-                GXSetScissor(scisX, scisY, scisW, scisH);
-            }
-        }
-
-        if (g[0xe] != 5) {
-            x = lbl_803DC9A0 * (f32)(g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9))) + x;
-        }
-    }
-}
+void textRenderStr(u8 *str, u8 *win, int mode, f32 x, f32 y, f32 lineH);
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *outMaxAdv, f32 *outMaxH, int glyphLang) {
-    int byteOff;
-    u32 ch;
-    int charLen;
-    int n2;
-    int i;
-    int cnt;
-    u8 *p;
-    u8 *g;
-    u8 *tbl;
-    f32 width;
-    f32 mAdv;
-    f32 mH;
-    int params[8];
-
-    byteOff = 0;
-    width = lbl_803DE704;
-    if (str == NULL) {
-        return;
-    }
-    if (glyphLang == -1) {
-        if (lbl_803DC9E8 == 2) {
-            glyphLang = 6;
-        } else {
-            glyphLang = ((u8 *)sLanguageNameTable)[curLanguage * 8 + 4];
-        }
-    }
-    tbl = &lbl_802C8680[glyphLang * 16];
-    if (glyphLang != 5) {
-        if (outMaxAdv != NULL) {
-            *outMaxAdv = (f32)(u32)*(u16 *)(tbl + 8) * scale;
-        }
-        if (outMaxH != NULL) {
-            *outMaxH = (f32)(u32)*(u16 *)(tbl + 0xa) * scale;
-        }
-    }
-
-    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0) {
-        byteOff += charLen;
-        if (ch >= 0xe000 && ch <= 0xf8ff) {
-            n2 = getControlCharLen(ch);
-            for (i = 0; i < n2; i++) {
-                int hi = str[byteOff++];
-                int lo = str[byteOff++];
-                params[i] = (hi << 8) | lo;
-            }
-            switch (ch) {
-            case 0xf8f7:
-                glyphLang = params[0];
-                tbl = &lbl_802C8680[glyphLang * 16];
-                if (glyphLang != 5) {
-                    mAdv = (f32)(u32)*(u16 *)(tbl + 8) * scale;
-                    if (outMaxAdv != NULL && mAdv > *outMaxAdv) {
-                        *outMaxAdv = mAdv;
-                    }
-                    mH = (f32)(u32)*(u16 *)(tbl + 0xa) * scale;
-                    if (outMaxH != NULL && mH > *outMaxH) {
-                        *outMaxH = mH;
-                    }
-                }
-                break;
-            case 0xf8f4:
-                scale = (f32)params[0] * lbl_803DE708;
-                break;
-            }
-            continue;
-        }
-
-        g = *(u8 **)gameTextFonts;
-        cnt = *(int *)(gameTextFonts + 8);
-        while (cnt-- != 0) {
-            if (*(u32 *)g == (u32)ch && g[0xe] == glyphLang) {
-                goto matched;
-            }
-            g += 0x10;
-        }
-        g = NULL;
-    matched:
-        if (g == NULL) {
-            continue;
-        }
-        if (glyphLang == 5) {
-            continue;
-        }
-        width = scale * (f32)(g[0xc] + (*(s8 *)(g + 8) + *(s8 *)(g + 9))) + width;
-    }
-
-    if (outW != NULL) {
-        *outW = width;
-    }
-    if (outZero != NULL) {
-        *outZero = lbl_803DE704;
-    }
-}
+void gameTextMeasureString(u8 *str, f32 *outW, f32 *outZero, f32 scale, f32 *outMaxAdv, f32 *outMaxH, int glyphLang);
 #pragma pop
 
 extern u8 sGameTextGlyphOrder[];
@@ -1787,34 +1379,7 @@ extern u8 sGameTextGlyphOrder[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void translateToDinoLanguage(u8 *str) {
-    int byteOff = 0;
-    u32 ch;
-    int charLen;
-    u8 *p;
-
-    if (str == NULL) {
-        return;
-    }
-    while (p = str + byteOff, (ch = utf8GetNextChar(p, &charLen)) != 0) {
-        if (ch >= 0xe000 && ch <= 0xf8ff) {
-            byteOff += getControlCharLen(ch) * 2;
-        } else {
-            int base;
-            if (ch >= 0x61 && ch <= 0x7a) {
-                base = 0x61;
-            } else if (ch >= 0x41 && ch <= 0x5a) {
-                base = 0x41;
-            } else {
-                base = 0;
-            }
-            if (base != 0) {
-                *p = sGameTextGlyphOrder[ch - base] + base - 0x61;
-            }
-        }
-        byteOff += charLen;
-    }
-}
+void translateToDinoLanguage(u8 *str);
 #pragma pop
 
 extern char lbl_802C8F40[];
@@ -1836,205 +1401,16 @@ extern int sprintf(char *dst, const char *fmt, ...);
 
 #pragma push
 #pragma scheduling off
-void *gameTextGetPhrase(int textId, int phraseIndex) {
-    char *strings;
-    u16 *entry;
-
-    strings = lbl_802C8F40;
-    if (*(int *)(gameTextFonts + 0x1c) != 2) {
-        lbl_803DC97C = lbl_803DC97C + 1;
-        if (lbl_803DC97C >= 8) {
-            lbl_803DC97C = 0;
-        }
-        entry = (u16 *)(lbl_803399C0 + lbl_803DC97C * 0xc);
-        lbl_803DC974 = (u8 *)entry;
-        lbl_803DC978 = *(int *)*(int **)((u8 *)entry + 8);
-        *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
-        switch (*(int *)(gameTextFonts + 0x1c)) {
-        case 0:
-            sprintf((char *)lbl_803DC978, strings + 0xec4);
-            break;
-        case 1:
-            sprintf((char *)lbl_803DC978, strings + 0xed4);
-            break;
-        case 3:
-            sprintf((char *)lbl_803DC978, strings + 0xee0);
-            break;
-        case 4:
-            sprintf((char *)lbl_803DC978, strings + 0xef0);
-            break;
-        }
-        return lbl_803DC974;
-    }
-
-    entry = gameTextGet();
-    if (*entry == 0xffff) {
-        lbl_803DC97C = lbl_803DC97C + 1;
-        if (lbl_803DC97C >= 8) {
-            lbl_803DC97C = 0;
-        }
-        entry = (u16 *)(lbl_803399C0 + lbl_803DC97C * 0xc);
-        lbl_803DC974 = (u8 *)entry;
-        lbl_803DC978 = *(int *)*(int **)((u8 *)entry + 8);
-        *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
-        sprintf((char *)lbl_803DC978, strings + 0xefc, textId,
-                sMapDirectoryNameTable[(int)curGameTextDir]);
-        return lbl_803DC974;
-    }
-
-    if (phraseIndex >= entry[1]) {
-        lbl_803DC97C = lbl_803DC97C + 1;
-        if (lbl_803DC97C >= 8) {
-            lbl_803DC97C = 0;
-        }
-        entry = (u16 *)(lbl_803399C0 + lbl_803DC97C * 0xc);
-        lbl_803DC974 = (u8 *)entry;
-        lbl_803DC978 = *(int *)*(int **)((u8 *)entry + 8);
-        *entry = 0xffff;
-        lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
-        sprintf((char *)lbl_803DC978, strings + 0xf10, textId, phraseIndex);
-        return lbl_803DC974;
-    }
-
-    return *(void **)(*(int *)((u8 *)entry + 8) + phraseIndex * 4);
-}
+void *gameTextGetPhrase(int textId, int phraseIndex);
 
 #pragma dont_inline on
-void *gameTextGetStr(int textId) {
-    u8 *entry;
-    void *t;
-
-    if (*(int *)(gameTextFonts + 0x1c) == 2) {
-        t = gameTextGet();
-        return *(void **)*(u8 **)((u8 *)t + 8);
-    }
-    lbl_803DC97C = lbl_803DC97C + 1;
-    if (lbl_803DC97C >= 8) {
-        lbl_803DC97C = 0;
-    }
-    entry = lbl_803399C0 + lbl_803DC97C * 0xc;
-    lbl_803DC974 = entry;
-    lbl_803DC978 = *(int *)*(int **)(entry + 8);
-    *(u16 *)entry = 0xffff;
-    lbl_803DC970 = (int)(lbl_803399A0 + lbl_803DC97C * 4);
-    switch (*(int *)(gameTextFonts + 0x1c)) {
-    case 0:
-        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xec4);
-        break;
-    case 1:
-        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xed4);
-        break;
-    case 3:
-        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xee0);
-        break;
-    case 4:
-        sprintf((char *)lbl_803DC978, lbl_802C8F40 + 0xef0);
-        break;
-    }
-    return lbl_803DC974;
-}
+void *gameTextGetStr(int textId);
 #pragma dont_inline reset
 #pragma pop
 
 #pragma push
 #pragma scheduling off
-void *gameTextGet(int textId) {
-    u8 *gameTextBase;
-    char *strings;
-    u8 *fonts;
-    u16 *entry;
-    int count;
-    int slotIndex;
-    u16 *cachedEntry;
-    u16 *prevCachedEntry;
-    f32 zero;
-    f32 fadeLimit;
-    f32 *cachedAlpha;
-
-    gameTextBase = lbl_80339980;
-    strings = lbl_802C8F40;
-    fonts = gameTextFonts;
-
-    if (*(int *)(fonts + 0x1c) != 2) {
-        lbl_803DC97C++;
-        if (lbl_803DC97C >= 8) {
-            lbl_803DC97C = 0;
-        }
-        entry = (u16 *)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
-        lbl_803DC974 = (u8 *)entry;
-        lbl_803DC978 = *(int *)*(int **)((u8 *)entry + 8);
-        *entry = 0xffff;
-        lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
-
-        switch (*(int *)(gameTextFonts + 0x1c)) {
-        case 0:
-            sprintf((char *)lbl_803DC978, (char *)strings + 0xec4);
-            break;
-        case 1:
-            sprintf((char *)lbl_803DC978, (char *)strings + 0xed4);
-            break;
-        case 3:
-            sprintf((char *)lbl_803DC978, (char *)strings + 0xee0);
-            break;
-        case 4:
-            sprintf((char *)lbl_803DC978, (char *)strings + 0xef0);
-            break;
-        }
-        return lbl_803DC974;
-    }
-
-    entry = *(u16 **)(fonts + 4);
-    count = *(int *)(fonts + 0xc);
-    while (count != 0) {
-        if (*entry == textId) {
-            return entry;
-        }
-        entry += 6;
-        count--;
-    }
-
-    slotIndex = 8;
-    cachedEntry = (u16 *)(gameTextBase + 0xa0);
-    while (1) {
-        prevCachedEntry = cachedEntry;
-        cachedEntry = prevCachedEntry - 6;
-        if (slotIndex == 0) {
-            break;
-        }
-        slotIndex--;
-        if (*cachedEntry == textId) {
-            zero = lbl_803DE704;
-            *(f32 *)(gameTextBase + slotIndex * 4) = zero;
-            cachedAlpha = (f32 *)(gameTextBase + 0x20 + slotIndex * 4);
-            fadeLimit = lbl_803DE71C;
-            if (zero < fadeLimit) {
-                *cachedAlpha = zero + timeDelta;
-                if (*cachedAlpha >= fadeLimit) {
-                    sprintf((char *)*(int *)*(int **)((u8 *)cachedEntry + 8), strings + 0xefc, textId,
-                            sMapDirectoryNameTable[(int)curGameTextDir]);
-                }
-            }
-            return cachedEntry;
-        }
-    }
-
-    lbl_803DC97C++;
-    if (lbl_803DC97C >= 8) {
-        lbl_803DC97C = 0;
-    }
-    entry = (u16 *)(gameTextBase + 0x40 + lbl_803DC97C * 0xc);
-    lbl_803DC974 = (u8 *)entry;
-    lbl_803DC978 = *(int *)*(int **)((u8 *)entry + 8);
-    *entry = 0xffff;
-    lbl_803DC970 = (int)(gameTextBase + 0x20 + lbl_803DC97C * 4);
-    sprintf((char *)lbl_803DC978, lbl_803DB3D4, textId,
-            sMapDirectoryNameTable[(int)curGameTextDir]);
-    *(u16 *)lbl_803DC974 = (u16)textId;
-    *(f32 *)lbl_803DC970 = lbl_803DE704;
-    return lbl_803DC974;
-}
+void *gameTextGet(int textId);
 #pragma pop
 
 /*
@@ -7726,12 +7102,12 @@ void FUN_80017b20(undefined8 param_1,double param_2,double param_3,undefined8 pa
 }
 
 /* Pattern wrappers. */
-void doNothing_8001F678(void) {}
+void doNothing_8001F678(void);
 #pragma dont_inline on
-void doNothing_startOfFrame(void) {}
+void doNothing_startOfFrame(void);
 #pragma dont_inline reset
-void doNothing_onSaveSelectScreenExit(void) {}
-int return1_800202BC(void) { return 0x1; }
+void doNothing_onSaveSelectScreenExit(void);
+int return1_800202BC(void);
 int return0_8002969C(void) { return 0x0; }
 int return0_8002A5B8(void) { return 0x0; }
 void doNothing_afterRenderObject(void) {}
@@ -8102,9 +7478,7 @@ extern int curLanguage;
 extern void *curGameTextDir;
 
 #pragma dont_inline on
-int getGameState(void) {
-    return lbl_803DCA3D;
-}
+int getGameState(void);
 #pragma dont_inline reset
 
 extern u8 lbl_803DCA49;
@@ -8112,54 +7486,28 @@ extern void init(void);
 extern void checkReset(void);
 extern void gameLoop(void);
 
-void main(void) {
-    lbl_803DCA3D = 0;
-    lbl_803DCA49 = 0;
-    init();
-    lbl_803DCA49 = 1;
-    lbl_803DCA3D = 1;
-    do {
-        checkReset();
-        gameLoop();
-    } while (1);
-}
+void main(void);
 
 #pragma peephole off
-void setGameState(int state) {
-    lbl_803DCA3D = (u8)state;
-}
+void setGameState(int state);
 
-void setTimeStop(int v) {
-    lbl_803DCA3C = (u8)v;
-}
+void setTimeStop(int v);
 
-void setShouldResetNextFrame(int v) {
-    lbl_803DCA3E = (u8)v;
-}
+void setShouldResetNextFrame(int v);
 #pragma peephole reset
 
-void setFrameCountdown_800202c4(u8 v) {
-    lbl_803DCA3B = v;
-}
+void setFrameCountdown_800202c4(u8 v);
 
 #pragma dont_inline on
-int getHudHiddenFrameCount(void) {
-    return lbl_803DCA3A;
-}
+int getHudHiddenFrameCount(void);
 #pragma dont_inline reset
 
-s16 getScreenBlankFrameCount(void) {
-    return lbl_803DCA46;
-}
+s16 getScreenBlankFrameCount(void);
 
-int getCurLanguage(void) {
-    return curLanguage;
-}
+int getCurLanguage(void);
 
 #pragma dont_inline on
-void *getCurGameText(void) {
-    return curGameTextDir;
-}
+void *getCurGameText(void);
 #pragma dont_inline reset
 
 int objIsFrozen(u8 *obj) {
@@ -8170,51 +7518,23 @@ int objGetFlagsE5_2(u8 *obj) {
     return obj[0xe5] & 2;
 }
 
-void objSetEventName(u8 *obj, void *name) {
-    *(void **)(obj + 0x60) = name;
-}
+void objSetEventName(u8 *obj, void *name);
 
-void crash(void) {
-    *(u8 *)0 = 0;
-}
+void crash(void);
 
 void __set_debug_bba(u8 *p) {
     p[0x19] = 0;
 }
 
 #pragma peephole off
-int roundUpTo4(int x) {
-    int r = x & 3;
-    if (r > 0) {
-        x += 4 - r;
-    }
-    return x;
-}
+int roundUpTo4(int x);
 
 #pragma dont_inline on
-int roundUpTo8(int x) {
-    int r = x & 7;
-    if (r > 0) {
-        x += 8 - r;
-    }
-    return x;
-}
+int roundUpTo8(int x);
 
-int roundUpTo16(int x) {
-    int r = x & 0xf;
-    if (r > 0) {
-        x += 0x10 - r;
-    }
-    return x;
-}
+int roundUpTo16(int x);
 
-int roundUpTo32(int x) {
-    int r = x & 0x1f;
-    if (r > 0) {
-        x += 0x20 - r;
-    }
-    return x;
-}
+int roundUpTo32(int x);
 #pragma dont_inline reset
 #pragma peephole reset
 
@@ -8226,73 +7546,43 @@ extern u8 lbl_803DCB10;
 extern int lbl_803DCAE8[2];
 extern u8 lbl_803DCA48;
 
-void modelLightStruct_setGlowProjectionRadius(ModelLightStruct *light, f32 radius) {
-    light->glowProjectionRadius = radius;
-}
+void modelLightStruct_setGlowProjectionRadius(ModelLightStruct *light, f32 radius);
 
-f32 *modelLightStruct_getProjectionTexMtx(ModelLightStruct *p) {
-    return p->projectionTexMtx;
-}
+f32 *modelLightStruct_getProjectionTexMtx(ModelLightStruct *p);
 
-void *modelLightStruct_getProjectionTexture(ModelLightStruct *p) {
-    return p->projectionTexture;
-}
+void *modelLightStruct_getProjectionTexture(ModelLightStruct *p);
 
-void modelLightStruct_setProjectionTexture(ModelLightStruct *p, void *v) {
-    p->projectionTexture = v;
-}
+void modelLightStruct_setProjectionTexture(ModelLightStruct *p, void *v);
 
-int modelLightStruct_getProjectedLightChannelPreference(ModelLightStruct *p) {
-    return p->projectedLightChannelPreference;
-}
+int modelLightStruct_getProjectedLightChannelPreference(ModelLightStruct *p);
 
-void modelLightStruct_setProjectedLightChannelPreference(ModelLightStruct *p, int v) {
-    p->projectedLightChannelPreference = v;
-}
+void modelLightStruct_setProjectedLightChannelPreference(ModelLightStruct *p, int v);
 
-void modelLightStruct_setSelectionPriority(ModelLightStruct *p, u8 v) {
-    p->selectionPriority = v;
-}
+void modelLightStruct_setSelectionPriority(ModelLightStruct *p, u8 v);
 
-int modelLightStruct_getActiveState(ModelLightStruct *p) {
-    return p->activeState;
-}
+int modelLightStruct_getActiveState(ModelLightStruct *p);
 
-f32 modelLightStruct_getRadius(ModelLightStruct *p) {
-    return p->attenuationFar;
-}
+f32 modelLightStruct_getRadius(ModelLightStruct *p);
 
 void fn_80026C30(u8 *p, u8 v) {
     p[0x1a] = v;
 }
 
 #pragma dont_inline on
-int gameTextFn_80019b14(void) {
-    return lbl_803DC9E8;
-}
+int gameTextFn_80019b14(void);
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void gameTextSetDrawFunc(void *fn) {
-    gameTextDrawFunc = fn;
-}
+void gameTextSetDrawFunc(void *fn);
 #pragma dont_inline reset
 
-void modelLightStruct_setAffectsAabbLightSelection(ModelLightStruct *p, u8 v) {
-    p->affectsAabbLightSelection = v;
-}
+void modelLightStruct_setAffectsAabbLightSelection(ModelLightStruct *p, u8 v);
 
-void lightSetField4D(ModelLightStruct *p, u8 v) {
-    p->field4D = v;
-}
+void lightSetField4D(ModelLightStruct *p, u8 v);
 
-void lightSetFieldBC_8001db14(ModelLightStruct *p, u8 v) {
-    p->fieldBC = v;
-}
+void lightSetFieldBC_8001db14(ModelLightStruct *p, u8 v);
 
-void modelLightStruct_setLightKind(ModelLightStruct *p, int v) {
-    p->lightKind = v;
-}
+void modelLightStruct_setLightKind(ModelLightStruct *p, int v);
 
 extern u8 gModelLightCount;
 extern void *gModelLightList[];
@@ -8327,276 +7617,33 @@ extern void textureFree(void *tex);
 
 #pragma peephole off
 #pragma scheduling off
-void *objCreateLight(int arg, u8 addToList) {
-    void *light;
-    if (addToList) {
-        if (gModelLightCount >= 0x32) {
-            return NULL;
-        }
-        light = objAllocLight((void *)arg);
-        if (light == NULL) {
-            return NULL;
-        }
-        {
-            int i = gModelLightCount++;
-            gModelLightList[i] = light;
-        }
-        return light;
-    }
-    light = objAllocLight((void *)arg);
-    if (light != NULL) {
-        return light;
-    }
-    return NULL;
-}
+void *objCreateLight(int arg, u8 addToList);
 #pragma scheduling reset
 #pragma peephole reset
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void modelLightStruct_freeSlot(void **lightSlot) {
-    ModelLightStruct *light;
-    int i;
-    int count;
+void modelLightStruct_freeSlot(void **lightSlot);
 
-    light = *lightSlot;
-    if (light != NULL) {
-        i = 0;
-        count = gModelLightCount;
-        while (i < count) {
-            if (gModelLightList[i] == light) {
-                break;
-            }
-            i++;
-        }
+void ModelLightStruct_free(ModelLightStruct *light);
 
-        if (i < count) {
-            while (i < count - 1) {
-                gModelLightList[i] = gModelLightList[i + 1];
-                i++;
-            }
-            gModelLightCount--;
-        }
-
-        if (light->glowType == 2 && light->glowTexture != NULL) {
-            textureFree(light->glowTexture);
-        }
-        mm_free(light);
-        *lightSlot = NULL;
-    }
-}
-
-void ModelLightStruct_free(ModelLightStruct *light) {
-    int count;
-    int i;
-
-    i = 0;
-    count = gModelLightCount;
-    while (i < count) {
-        if (gModelLightList[i] == light) {
-            break;
-        }
-        i++;
-    }
-
-    if (i < count) {
-        while (i < count - 1) {
-            gModelLightList[i] = gModelLightList[i + 1];
-            i++;
-        }
-        gModelLightCount--;
-    }
-
-    if (light->glowType == 2 && light->glowTexture != NULL) {
-        textureFree(light->glowTexture);
-    }
-    mm_free(light);
-}
-
-void *modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u8 setFlag) {
-    u8 *light;
-    u8 *newLight;
-
-    if (gModelLightCount >= 0x32) {
-        light = NULL;
-    } else {
-        newLight = objAllocLight((void *)unused);
-        if (newLight == NULL) {
-            light = NULL;
-        } else {
-            int index = gModelLightCount++;
-            gModelLightList[index] = newLight;
-            light = newLight;
-        }
-    }
-
-    if (light != NULL) {
-        *(int *)(light + 0x50) = 2;
-        light[0xac] = red;
-        light[0xa8] = red;
-        light[0xad] = green;
-        light[0xa9] = green;
-        light[0xae] = blue;
-        light[0xaa] = blue;
-        light[0xaf] = 0;
-        light[0xab] = 0;
-        light[0xbc] = 1;
-        *(f32 *)(light + 0x140) = lbl_803DE750;
-        *(f32 *)(light + 0x144) = lbl_803DE754;
-        GXInitLightDistAttn(light + 0x68, *(f32 *)(light + 0x140), lbl_803DE758, 2);
-        GXGetLightAttnK(light + 0x68, (f32 *)(light + 0x124), (f32 *)(light + 0x128),
-                        (f32 *)(light + 0x12c));
-        if (setFlag != 0) {
-            light[0x2fb] = 1;
-        }
-    }
-
-    return light;
-}
+void *modelLightStruct_createPointLight(int unused, u8 red, u8 green, u8 blue, u8 setFlag);
 #pragma pop
 
 #pragma dont_inline on
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void *objAllocLight(void *owner) {
-    u8 *light;
-    f32 tmp[3];
-    f32 *view;
-    f32 zero;
-    f32 atten;
-
-    light = mmAlloc(0x300, 0x1a, 0);
-    if (light == NULL) {
-        return NULL;
-    }
-
-    memset(light, 0, 0x300);
-    *(void **)light = owner;
-
-    if (*(void **)light != NULL) {
-        zero = lbl_803DE75C;
-        *(f32 *)(light + 4) = zero;
-        *(f32 *)(light + 8) = zero;
-        *(f32 *)(light + 0xc) = zero;
-        Obj_TransformLocalPointByWorldMatrix(*(u8 **)light, (f32 *)(light + 4), (f32 *)(light + 0x10), 1);
-    } else {
-        zero = lbl_803DE75C;
-        *(f32 *)(light + 0x10) = zero;
-        *(f32 *)(light + 0x14) = zero;
-        *(f32 *)(light + 0x18) = zero;
-    }
-
-    view = Camera_GetViewMatrix();
-    if (*(int *)(light + 0x60) == 0) {
-        tmp[0] = *(f32 *)(light + 0x10) - playerMapOffsetX;
-        tmp[1] = *(f32 *)(light + 0x14);
-        tmp[2] = *(f32 *)(light + 0x18) - playerMapOffsetZ;
-        PSMTXMultVec(view, tmp, (f32 *)(light + 0x1c));
-    } else {
-        *(IVec3 *)(light + 0x1c) = *(IVec3 *)(light + 0x10);
-    }
-
-    if (*(void **)light != NULL) {
-        zero = lbl_803DE75C;
-        *(f32 *)(light + 0x28) = zero;
-        *(f32 *)(light + 0x2c) = zero;
-        *(f32 *)(light + 0x30) = lbl_803DE760;
-        Vec_normalize((f32 *)(light + 0x28), (f32 *)(light + 0x28));
-        Obj_TransformLocalVectorByWorldMatrix(*(void **)light, (f32 *)(light + 0x28), (f32 *)(light + 0x34));
-    } else {
-        zero = lbl_803DE75C;
-        *(f32 *)(light + 0x34) = zero;
-        *(f32 *)(light + 0x38) = zero;
-        *(f32 *)(light + 0x3c) = lbl_803DE760;
-        Vec_normalize((f32 *)(light + 0x34), (f32 *)(light + 0x34));
-    }
-
-    view = Camera_GetViewMatrix();
-    if (*(int *)(light + 0x60) == 0) {
-        PSMTXMultVecSR(view, (f32 *)(light + 0x34), (f32 *)(light + 0x40));
-    } else {
-        *(IVec3 *)(light + 0x40) = *(IVec3 *)(light + 0x34);
-    }
-
-    modelLightStruct_setEnabled((ModelLightStruct *)light, 1, lbl_803DE75C);
-    *(int *)(light + 0x50) = 4;
-    *(int *)(light + 0x54) = 1;
-    *(f32 *)(light + 0x140) = lbl_803DE750;
-    *(f32 *)(light + 0x144) = lbl_803DE754;
-    GXInitLightDistAttn(light + 0x68, *(f32 *)(light + 0x140), lbl_803DE758, 2);
-    GXGetLightAttnK(light + 0x68, (f32 *)(light + 0x124), (f32 *)(light + 0x128), (f32 *)(light + 0x12c));
-    zero = lbl_803DE75C;
-    *(f32 *)(light + 0x144) = zero;
-    light[0x2fc] = 0x7f;
-    *(int *)(light + 0x5c) = 0;
-    light[0x64] = 1;
-    *(int *)(light + 0x60) = 0;
-    light[0x4d] = 0;
-    light[0xbc] = 0;
-    light[0xac] = 0xff;
-    light[0xa8] = 0xff;
-    light[0xad] = 0xff;
-    light[0xa9] = 0xff;
-    light[0xae] = 0xff;
-    light[0xaa] = 0xff;
-    light[0xaf] = 0xff;
-    light[0xab] = 0xff;
-    *(f32 *)(light + 0xb4) = lbl_803DE79C;
-    *(int *)(light + 0xb8) = 0;
-    GXInitLightAttnA(light + 0x68, lbl_803DE760, zero, zero);
-    light[0x114] = 0;
-    light[0x104] = 0xff;
-    light[0x100] = 0xff;
-    light[0x105] = 0xff;
-    light[0x101] = 0xff;
-    light[0x106] = 0xff;
-    light[0x102] = 0xff;
-    light[0x107] = 0xff;
-    light[0x103] = 0xff;
-    *(f32 *)(light + 0x10c) = lbl_803DE7A0;
-    *(f32 *)(light + 0x110) = lbl_803DE76C;
-    atten = *(f32 *)(light + 0x10c) * lbl_803DE790;
-    zero = lbl_803DE75C;
-    GXInitLightAttn(light + 0xc0, zero, zero, lbl_803DE760, atten, zero,
-                    lbl_803DE760 - atten);
-    modelLightStruct_startColorFade((ModelLightStruct *)light, 0, 0);
-    light[0xb0] = 0xff;
-    light[0xb1] = 0xff;
-    light[0xb2] = 0xff;
-    light[0xb3] = 0xff;
-    light[0x108] = 0xff;
-    light[0x109] = 0xff;
-    light[0x10a] = 0xff;
-    light[0x10b] = 0xff;
-    if (*(void **)light != NULL) {
-        Obj_BuildInverseWorldTransformMatrix(*(u8 **)light, (f32 *)(light + 0x170));
-    }
-    atten = lbl_803DE760;
-    *(f32 *)(light + 0x134) = atten;
-    *(f32 *)(light + 0x124) = atten;
-    zero = lbl_803DE75C;
-    *(f32 *)(light + 0x128) = zero;
-    *(f32 *)(light + 0x12c) = zero;
-    return light;
-}
+void *objAllocLight(void *owner);
 #pragma pop
 #pragma dont_inline reset
 
-void modelLightStruct_setProjectionTevModes(ModelLightStruct *p, void *a, void *b) {
-    p->projectionTevColorMode = (int)a;
-    p->projectionTevAlphaMode = (int)b;
-}
+void modelLightStruct_setProjectionTevModes(ModelLightStruct *p, void *a, void *b);
 
-f32 gameTextFn_80019c00(void) {
-    return *(f32 *)(gameTextFonts + 0x20);
-}
+f32 gameTextFn_80019c00(void);
 
-u8 fn_8001FD88(void **p) {
-    *p = lbl_803DCAE8;
-    return lbl_803DCA48;
-}
+u8 fn_8001FD88(void **p);
 
 void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
     *(f32 *)(p + 8) = a;
@@ -8605,9 +7652,7 @@ void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
 }
 
 #pragma peephole off
-void texFlagFn_80023cbc(int v) {
-    lbl_803DCB10 = (u8)v;
-}
+void texFlagFn_80023cbc(int v);
 #pragma peephole reset
 
 extern u16 lbl_803DCA42;
@@ -8627,46 +7672,20 @@ extern int lbl_803DB434;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void modelLightStruct_setGlowColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha) {
-    light->glowColor[0] = red;
-    light->glowColor[1] = green;
-    light->glowColor[2] = blue;
-    light->glowColor[3] = alpha;
-}
+void modelLightStruct_setGlowColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
 
-void modelLightStruct_getProjectionTevModes(ModelLightStruct *p, void **a, void **b) {
-    *a = (void *)p->projectionTevColorMode;
-    *b = (void *)p->projectionTevAlphaMode;
-}
+void modelLightStruct_getProjectionTevModes(ModelLightStruct *p, void **a, void **b);
 
-void modelLightStruct_setSpecularTargetColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
-    p->specularFadeTargetColor[0] = a;
-    p->specularFadeTargetColor[1] = b;
-    p->specularFadeTargetColor[2] = c;
-    p->specularFadeTargetColor[3] = d;
-}
+void modelLightStruct_setSpecularTargetColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d);
 
-void modelLightStruct_setDiffuseTargetColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
-    p->diffuseFadeTargetColor[0] = a;
-    p->diffuseFadeTargetColor[1] = b;
-    p->diffuseFadeTargetColor[2] = c;
-    p->diffuseFadeTargetColor[3] = d;
-}
+void modelLightStruct_setDiffuseTargetColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d);
 
-void fn_8001FE90(void) {
-    lbl_803DCA42++;
-    lbl_803DCAF0 = 0xd0;
-}
+void fn_8001FE90(void);
 
-void fn_8001FEA8(void) {
-    lbl_803DCA42++;
-    lbl_803DCAF0 = 0xc9;
-}
+void fn_8001FEA8(void);
 
 #pragma dont_inline on
-int gameTextGetState(int i) {
-    return lbl_8033AF40[i].state;
-}
+int gameTextGetState(int i);
 #pragma dont_inline reset
 
 extern void textFn_8001b7b8(void);
@@ -8674,93 +7693,31 @@ extern int lbl_803DC9F0;
 extern int lbl_803DCA04;
 extern void *lbl_803DC9F8;
 
-void mainLoopDoGameText(void) {
-    if (lbl_803DC9F0 != 0) {
-        if (gameTextGetState(1) == 2 && lbl_803DCA04 == 1) {
-            textFn_8001b7b8();
-        }
-    } else {
-        if (gameTextGetState(0) == 2 && (int)lbl_803DC9F8 == (int)getCurGameText() &&
-            lbl_803DCA04 == 1) {
-            textFn_8001b7b8();
-        }
-    }
-}
+void mainLoopDoGameText(void);
 
-void blankScreen(int frames) {
-    s16 v = frames;
-    lbl_803DCA46 = v;
-    if (v < 0) {
-        lbl_803DCA46 = 0;
-    }
-}
+void blankScreen(int frames);
 
-void modelLightStruct_getPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 *c) {
-    *a = p->viewX;
-    *b = p->viewY;
-    *c = p->viewZ;
-}
+void modelLightStruct_getPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 *c);
 
-void modelLightStruct_getWorldPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 *c) {
-    *a = p->worldX;
-    *b = p->worldY;
-    *c = p->worldZ;
-}
+void modelLightStruct_getWorldPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 *c);
 
 #pragma peephole on
-void fn_8001FE74(void *v) {
-    int i = lbl_803DCA48;
-    lbl_803DCA48 = i + 1;
-    lbl_803DCAE8[i] = (int)v;
-}
+void fn_8001FE74(void *v);
 #pragma peephole reset
 
 #pragma dont_inline on
-int mmSetFreeDelay(int v) {
-    int old = gMmFreeDelay;
-    lbl_803DCB14++;
-    gMmFreeDelay = v;
-    return old;
-}
+int mmSetFreeDelay(int v);
 
-int testAndSet_onlyUseHeap3(int v) {
-    lbl_803DCB14++;
-    {
-        int old = lbl_803DCB08;
-        lbl_803DCB08 = v;
-        return old;
-    }
-}
+int testAndSet_onlyUseHeap3(int v);
 
-int testAndSet_onlyUseHeaps1and2(int v) {
-    lbl_803DCB14++;
-    {
-        int old = lbl_803DB434;
-        lbl_803DB434 = v;
-        return old;
-    }
-}
+int testAndSet_onlyUseHeaps1and2(int v);
 #pragma dont_inline reset
 
-void colorFn_8001efe0(int i, u8 a, u8 b, u8 c) {
-    u8 *base = &lbl_803DB408;
-    base[i * 4] = a;
-    base[i * 4 + 1] = b;
-    base[i * 4 + 2] = c;
-}
+void colorFn_8001efe0(int i, u8 a, u8 b, u8 c);
 
-int fn_80022E0C(int x) {
-    int r = x & 1;
-    if (r > 0) {
-        x += 2 - r;
-    }
-    return x;
-}
+int fn_80022E0C(int x);
 
-void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct *p, int n) {
-    p->objectLightMaskIndex = n;
-    p->objectLightMask = (u8)(1 << n);
-}
+void modelLightStruct_setObjectLightMaskIndex(ModelLightStruct *p, int n);
 
 void objSetHintTextIdx(u8 *obj, u16 idx) {
     if (idx > 4) {
@@ -8790,233 +7747,39 @@ extern int randomGetRange(int lo, int hi);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void modelLightStruct_getSpecularColor(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d) {
-    *a = p->specularColor[0];
-    *b = p->specularColor[1];
-    *c = p->specularColor[2];
-    *d = p->specularColor[3];
-}
+void modelLightStruct_getSpecularColor(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d);
 
-void modelLightStruct_getDiffuseColor(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d) {
-    *a = p->diffuseColor[0];
-    *b = p->diffuseColor[1];
-    *c = p->diffuseColor[2];
-    *d = p->diffuseColor[3];
-}
+void modelLightStruct_getDiffuseColor(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d);
 
-void modelLightStruct_setAngularAttenuation(ModelLightStruct *p, f32 a, f32 b, f32 c) {
-    GXInitLightAttnA((u8 *)p + 0x68, a, b, c);
-}
+void modelLightStruct_setAngularAttenuation(ModelLightStruct *p, f32 a, f32 b, f32 c);
 
-void modelLightStruct_setSpecularColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
-    p->specularFadeStartColor[0] = a;
-    p->specularColor[0] = a;
-    p->specularFadeStartColor[1] = b;
-    p->specularColor[1] = b;
-    p->specularFadeStartColor[2] = c;
-    p->specularColor[2] = c;
-    p->specularFadeStartColor[3] = d;
-    p->specularColor[3] = d;
-}
+void modelLightStruct_setSpecularColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d);
 
-void modelLightStruct_setDiffuseColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
-    p->diffuseFadeStartColor[0] = a;
-    p->diffuseColor[0] = a;
-    p->diffuseFadeStartColor[1] = b;
-    p->diffuseColor[1] = b;
-    p->diffuseFadeStartColor[2] = c;
-    p->diffuseColor[2] = c;
-    p->diffuseFadeStartColor[3] = d;
-    p->diffuseColor[3] = d;
-}
+void modelLightStruct_setDiffuseColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d);
 
-void lightGetColor(int i, u8 *a, u8 *b, u8 *c) {
-    u8 *base = &lbl_803DB408;
-    *a = base[i * 4];
-    *b = base[i * 4 + 1];
-    *c = base[i * 4 + 2];
-}
+void lightGetColor(int i, u8 *a, u8 *b, u8 *c);
 
 #pragma dont_inline on
-void *getCache(void) {
-    if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
-        return lbl_803DD61C;
-    }
-    return (void *)0xe0000000;
-}
+void *getCache(void);
 #pragma dont_inline reset
 
-f32 getXZDistance(f32 *a, f32 *b) {
-    f32 dx = a[0] - b[0];
-    f32 dz = a[2] - b[2];
-    return dx * dx + dz * dz;
-}
+f32 getXZDistance(f32 *a, f32 *b);
 
-f32 vec3f_distanceSquared(f32 *a, f32 *b) {
-    f32 dx = a[0] - b[0];
-    f32 dy = a[1] - b[1];
-    f32 dz = a[2] - b[2];
-    return dx * dx + dy * dy + dz * dz;
-}
+f32 vec3f_distanceSquared(f32 *a, f32 *b);
 
-void Vec3_ScaleAdd(f32 *a, f32 s, f32 *b, f32 *out) {
-    out[0] = s * b[0] + a[0];
-    out[1] = s * b[1] + a[1];
-    out[2] = s * b[2] + a[2];
-}
+void Vec3_ScaleAdd(f32 *a, f32 s, f32 *b, f32 *out);
 
-void modelLightStruct_updateColorFade(ModelLightStruct *light) {
-    f32 progress;
-    f32 intensity;
-    int mode;
+void modelLightStruct_updateColorFade(ModelLightStruct *light);
 
-    mode = light->colorFadeMode;
-    if (mode == 2) {
-        light->colorFadeProgress += light->colorFadeStep * timeDelta;
-    } else if (mode > 0 && mode < 2) {
-        light->colorFadeTimer += light->colorFadeStep * timeDelta;
-        if (light->colorFadeTimer >= lbl_803DE760) {
-            light->colorFadeProgress = (f32)randomGetRange(0, 100) / lbl_803DE778;
-            light->colorFadeTimer = lbl_803DE75C;
-        }
-    }
+void modelLightStruct_startColorFade(ModelLightStruct *light, int mode, s16 frames);
 
-    progress = light->colorFadeProgress;
-    if (progress > lbl_803DE760) {
-        light->colorFadeProgress = lbl_803DE760 - (progress - lbl_803DE760);
-        light->colorFadeStep = -light->colorFadeStep;
-    } else if (progress < lbl_803DE75C) {
-        light->colorFadeProgress = -progress;
-        light->colorFadeStep = -light->colorFadeStep;
-    }
+void modelLightStruct_setupGlow(ModelLightStruct *light, u32 textureId, u8 red, u8 green, u8 blue, u8 alpha, f32 scale);
 
-    progress = light->colorFadeProgress;
-    light->diffuseColor[0] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[0] - light->diffuseFadeStartColor[0]) + (f32)light->diffuseFadeStartColor[0]);
-    light->diffuseColor[1] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[1] - light->diffuseFadeStartColor[1]) + (f32)light->diffuseFadeStartColor[1]);
-    light->diffuseColor[2] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[2] - light->diffuseFadeStartColor[2]) + (f32)light->diffuseFadeStartColor[2]);
-    light->diffuseColor[3] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[3] - light->diffuseFadeStartColor[3]) + (f32)light->diffuseFadeStartColor[3]);
+void modelLightStruct_setEnabled(ModelLightStruct *light, u8 enabled, f32 duration);
 
-    intensity = light->activeIntensity;
-    light->diffuseColor[0] = (u8)(int)((f32)light->diffuseColor[0] * intensity);
-    light->diffuseColor[1] = (u8)(int)((f32)light->diffuseColor[1] * intensity);
-    light->diffuseColor[2] = (u8)(int)((f32)light->diffuseColor[2] * intensity);
-    light->diffuseColor[3] = (u8)(int)((f32)light->diffuseColor[3] * intensity);
+void modelLightStruct_setProjectionFarZ(ModelLightStruct *p, f32 v);
 
-    light->specularColor[0] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[0] - light->specularFadeStartColor[0]) + (f32)light->specularFadeStartColor[0]);
-    light->specularColor[1] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[1] - light->specularFadeStartColor[1]) + (f32)light->specularFadeStartColor[1]);
-    light->specularColor[2] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[2] - light->specularFadeStartColor[2]) + (f32)light->specularFadeStartColor[2]);
-    light->specularColor[3] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[3] - light->specularFadeStartColor[3]) + (f32)light->specularFadeStartColor[3]);
-
-    light->specularColor[0] = (u8)(int)((f32)light->specularColor[0] * intensity);
-    light->specularColor[1] = (u8)(int)((f32)light->specularColor[1] * intensity);
-    light->specularColor[2] = (u8)(int)((f32)light->specularColor[2] * intensity);
-    light->specularColor[3] = (u8)(int)((f32)light->specularColor[3] * intensity);
-}
-
-void modelLightStruct_startColorFade(ModelLightStruct *light, int mode, s16 frames) {
-    f32 denom;
-
-    light->colorFadeMode = mode;
-    if (mode != 0) {
-        if (frames != 0) {
-            denom = frames;
-        } else {
-            denom = lbl_803DE760;
-        }
-        light->colorFadeStep = lbl_803DE760 / denom;
-        light->diffuseFadeStartColor[0] = light->diffuseColor[0];
-        light->diffuseFadeStartColor[1] = light->diffuseColor[1];
-        light->diffuseFadeStartColor[2] = light->diffuseColor[2];
-        light->specularFadeStartColor[0] = light->specularColor[0];
-        light->specularFadeStartColor[1] = light->specularColor[1];
-        light->specularFadeStartColor[2] = light->specularColor[2];
-        denom = lbl_803DE75C;
-        light->colorFadeProgress = denom;
-        light->colorFadeTimer = denom;
-    }
-}
-
-void modelLightStruct_setupGlow(ModelLightStruct *light, u32 textureId, u8 red, u8 green, u8 blue, u8 alpha, f32 scale) {
-    void *texture;
-
-    if (textureId != 0) {
-        texture = textureLoadAsset(textureId);
-        light->glowTexture = texture;
-        if (texture != NULL) {
-            light->glowType = 2;
-        }
-    } else {
-        texture = textureLoadAsset(0x605);
-        light->glowTexture = texture;
-        if (texture != NULL) {
-            light->glowType = 2;
-        }
-    }
-    light->glowColor[0] = red;
-    light->glowColor[1] = green;
-    light->glowColor[2] = blue;
-    light->glowColor[3] = alpha;
-    light->glowScale = scale;
-    light->glowAlpha = 0;
-    light->glowAlphaStep = 0;
-    light->glowProjectionRadius = lbl_803DE788 * light->glowScale;
-}
-
-void modelLightStruct_setEnabled(ModelLightStruct *light, u8 enabled, f32 duration) {
-    f32 zero;
-
-    zero = lbl_803DE75C;
-    if (zero == duration) {
-        if (enabled != 0) {
-            light->activeState = 2;
-            light->activeIntensity = lbl_803DE760;
-        } else {
-            light->activeState = 0;
-            light->activeIntensity = zero;
-        }
-        light->enabled = enabled;
-        return;
-    }
-
-    if (enabled != 0) {
-        if (light->activeState == 0 || light->activeState == 3) {
-            light->activeState = 1;
-            light->activeIntensityStep = lbl_803DE760 / (lbl_803DE794 * duration);
-            light->activeIntensity = lbl_803DE75C;
-        }
-        light->enabled = 1;
-        return;
-    }
-
-    if (light->activeState != 2 && light->activeState != 1) {
-        return;
-    }
-    light->activeState = 3;
-    light->activeIntensityStep = lbl_803DE798 / (lbl_803DE794 * duration);
-    light->activeIntensity = lbl_803DE760;
-}
-
-void modelLightStruct_setProjectionFarZ(ModelLightStruct *p, f32 v) {
-    f32 clamped = p->projectionNearZ;
-    if (v >= clamped) {
-        clamped = lbl_803DE764;
-        if (v <= clamped) {
-            clamped = v;
-        }
-    }
-    p->projectionFarZ = clamped;
-}
-
-void modelLightStruct_setProjectionNearZ(ModelLightStruct *p, f32 v) {
-    f32 clamped = lbl_803DE78C;
-    if (v >= clamped) {
-        clamped = p->projectionFarZ;
-        if (v <= clamped) {
-            clamped = v;
-        }
-    }
-    p->projectionNearZ = clamped;
-}
+void modelLightStruct_setProjectionNearZ(ModelLightStruct *p, f32 v);
 
 int Obj_IsLoadingLocked(void) {
     return !(getLoadedFileFlags(0) & 0x100000);
@@ -9090,32 +7853,16 @@ extern ModelLightChannelState gModelLightChannelStates[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void cutsceneExit(void) {
-    lbl_803DCA3A = 0;
-    lbl_803DCA3C = 0;
-    Sfx_SetObjectSoundsPaused(0);
-}
+void cutsceneExit(void);
 
-void gameTextInit(void) {
-    gameTextInitFn_8001c794();
-    lbl_803DC980 = 1;
-    gameTextLoadDir(0x1c);
-}
+void gameTextInit(void);
 
-int getAngle(float y, float x) {
-    return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
-}
+int getAngle(float y, float x);
 
-int atan2_8002178c(float y, float x) {
-    return (int)(lbl_803DE7D8 * fn_802924B4(y, x));
-}
+int atan2_8002178c(float y, float x);
 
 #pragma dont_inline on
-void cacheFn_800229c4(int sync) {
-    if (lbl_803DD610 == 4 || lbl_803DD610 == 0) {
-        LCQueueWait();
-    }
-}
+void cacheFn_800229c4(int sync);
 #pragma dont_inline reset
 
 void fn_80026C54(u8 *p) {
@@ -9127,13 +7874,7 @@ void fn_80026C54(u8 *p) {
 }
 
 #pragma dont_inline on
-void mm_free(void *p) {
-    if (gMmFreeDelay == 0) {
-        mmFree(p);
-    } else {
-        mmFreeDeferred(p);
-    }
-}
+void mm_free(void *p);
 #pragma dont_inline reset
 
 void *getTablesBinEntry(int i) {
@@ -9172,24 +7913,10 @@ void *Obj_GetPlayerObject(void) {
     return NULL;
 }
 
-void modelLightChannel_configure(int i, int a, int b) {
-    gModelLightChannelStates[i].mode = a;
-    gModelLightChannelStates[i].lightMask = 0;
-    gModelLightChannelStates[i].matSrc = b;
-    gModelLightChannelStates[i].active = 1;
-}
+void modelLightChannel_configure(int i, int a, int b);
 
 #pragma peephole off
-void modelLightChannels_reset(u8 v) {
-    gModelLightUseModelRelativePositions = v;
-    gModelLightNextGXLightId = 1;
-    gModelLightChannelStates[0].active = 0;
-    gModelLightChannelStates[1].active = 0;
-    gModelLightChannelStates[2].active = 0;
-    gModelLightChannelStates[3].active = 0;
-    gModelLightChannelStates[4].active = 0;
-    gModelLightChannelStates[5].active = 0;
-}
+void modelLightChannels_reset(u8 v);
 #pragma peephole reset
 #pragma pop
 
@@ -9224,52 +7951,12 @@ extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *paren
 extern int textureLoad(int id, int flag);
 extern void *loadAnimation(int hdr, s16 id, int b, u8 *bufout);
 
-void *loadAsset(void *reqVoid) {
-    u8 tmp[0x14];
-    AssetReq *req;
-
-    req = reqVoid;
-    switch (req->f1) {
-        case 0:
-            *(void **)req->f8 = fileLoad(req->f4, 0);
-            break;
-        case 1:
-            fileLoadToBuffer(req->f4, (void *)req->f8);
-            break;
-        case 2:
-            fileLoadToBufferOffset(req->f4, (void *)req->f8, req->f10, req->fc);
-            break;
-        case 4:
-            *(void **)req->f8 =
-                loadCharacter(*(s16 **)((u8 *)req + 0x18), *(int *)((u8 *)req + 0x1c),
-                              *(int *)((u8 *)req + 0x24), *(int *)((u8 *)req + 0x20),
-                              *(void **)((u8 *)req + 0x14), *(int *)((u8 *)req + 0x28));
-            break;
-        case 3:
-            *(void **)req->f8 = (void *)textureLoad(req->f4, 0);
-            break;
-        case 5:
-            *(void **)req->f8 = Resource_Acquire(req->f4 & 0xffff, req->fc & 0xffff);
-            break;
-        case 6:
-            *(void **)req->f8 = (void *)((int (*)(int, int, void *))return0_8002969C)(req->f4, req->fc, tmp);
-            break;
-        case 7:
-            *(void **)req->f8 =
-                loadAnimation(*(int *)((u8 *)req + 0x24), (s16)req->f4, (s16)req->fc,
-                              *(u8 **)((u8 *)req + 0x20));
-            break;
-    }
-}
+void *loadAsset(void *reqVoid);
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void mtxFn_80021ec0(u8 *p, f32 s) {
-    *(f32 *)(p + 0x10) *= s;
-    *(f32 *)(p + 0x14) *= s;
-    *(f32 *)(p + 0x18) *= s;
-}
+void mtxFn_80021ec0(u8 *p, f32 s);
 
 void *ObjList_GetObjects(int *outA, int *outB) {
     if (outA != NULL) {
@@ -9281,14 +7968,9 @@ void *ObjList_GetObjects(int *outA, int *outB) {
     return lbl_803DCB88;
 }
 
-void mapReload(void) {
-    mapReloadWithFadeout();
-    lbl_803DCA39 = 1;
-}
+void mapReload(void);
 
-int cos16(u16 angle) {
-    return (int)(lbl_803DE7D0 * fcos16(angle));
-}
+int cos16(u16 angle);
 
 asm void setGQR6(register u32 v) {
     nofralloc
@@ -9308,68 +7990,23 @@ void fn_8002A3D4(int a, int b, int c, int d) {
 }
 #pragma dont_inline reset
 
-f32 Vec3_Length(f32 *v) {
-    return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-}
+f32 Vec3_Length(f32 *v);
 
-f32 Vec_xzDistance(f32 *a, f32 *b) {
-    f32 dx = a[0] - b[0];
-    f32 dz = a[2] - b[2];
-    return sqrtf(dx * dx + dz * dz);
-}
+f32 Vec_xzDistance(f32 *a, f32 *b);
 
-f32 Vec_distance(f32 *a, f32 *b) {
-    f32 dx = a[0] - b[0];
-    f32 dy = a[1] - b[1];
-    f32 dz = a[2] - b[2];
-    return sqrtf(dx * dx + dy * dy + dz * dz);
-}
+f32 Vec_distance(f32 *a, f32 *b);
 
-void Vec3_Cross(f32 *a, f32 *b, f32 *out) {
-    out[0] = a[1] * b[2] - a[2] * b[1];
-    out[1] = a[2] * b[0] - a[0] * b[2];
-    out[2] = a[0] * b[1] - a[1] * b[0];
-}
+void Vec3_Cross(f32 *a, f32 *b, f32 *out);
 
 extern f32 lbl_803DE808;
 extern f32 lbl_803DE80C;
 
-void Vec3_ReflectAgainstNormal(f32 *a, f32 *n, f32 *out) {
-    f32 dot = a[1] * n[1] + a[0] * n[0] + a[2] * n[2];
-    if (dot > lbl_803DE808) {
-        out[0] = n[0];
-        out[1] = n[1];
-        out[2] = n[2];
-    } else {
-        f32 s = dot * lbl_803DE80C;
-        out[0] = a[0];
-        out[1] = a[1];
-        out[2] = a[2];
-        out[0] *= s;
-        out[1] *= s;
-        out[2] *= s;
-        out[0] += n[0];
-        out[1] += n[1];
-        out[2] += n[2];
-    }
-}
+void Vec3_ReflectAgainstNormal(f32 *a, f32 *n, f32 *out);
 
 #pragma dont_inline on
-void *loadAssetFileById(int id, int arg) {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 0;
-    lbl_8033BF88.f4 = arg;
-    lbl_8033BF88.f8 = id;
-    return loadAsset(&lbl_8033BF88);
-}
+void *loadAssetFileById(int id, int arg);
 
-void *loadTextureFile(int id, int arg) {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 3;
-    lbl_8033BF88.f4 = arg;
-    lbl_8033BF88.f8 = id;
-    return loadAsset(&lbl_8033BF88);
-}
+void *loadTextureFile(int id, int arg);
 #pragma dont_inline reset
 
 void Obj_SetActiveModelIndex(u8 *obj, int idx) {
@@ -9417,14 +8054,7 @@ typedef struct ObjListObject {
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-int setSubtitlesEnabled(int enabled) {
-    int old = lbl_803DCA00;
-    lbl_803DCA00 = enabled;
-    if (enabled == 0) {
-        subtitleFn_8001b700();
-    }
-    return old;
-}
+int setSubtitlesEnabled(int enabled);
 
 void *getTrickyObject(void) {
     int count;
@@ -9435,12 +8065,7 @@ void *getTrickyObject(void) {
     return NULL;
 }
 
-void AtomicSList_Push(void **list, void *node) {
-    int intr = OSDisableInterrupts();
-    *(void **)node = *list;
-    *list = node;
-    OSRestoreInterrupts(intr);
-}
+void AtomicSList_Push(void **list, void *node);
 
 ObjListObject *ObjList_FindObjectById(u32 objectId) {
     int i;
@@ -9464,149 +8089,23 @@ extern int gameTextFn_8001b44c(int x);
 extern void gameTextLoadForCurMap(int sourceId);
 
 #pragma dont_inline on
-void gameTextSetCharset(int charset, int flags) {
-    if (gameTextDrawFunc != NULL || (flags & 1)) {
-        gameTextFonts = (u8 *)&lbl_8033AF40[charset];
-        lbl_803DC9E8 = charset;
-        if (charset == 2) {
-            int color = lbl_803DB3C8;
-            hudDrawRect(0, 0, 0xa00, 0x780, &color);
-            lbl_803DC99C = 0;
-        }
-    }
-    if (gameTextDrawFunc == NULL || (flags & 2)) {
-        int i = lbl_803DC9C8;
-        GameTextSlot *s;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
-        s->v = 0xf;
-        s->f4 = charset;
-    }
-}
+void gameTextSetCharset(int charset, int flags);
 
 #pragma dont_inline reset
 
-void gameTextLoadDir(int dirId) {
-    GameTextSlot *cmd;
-    int color;
-    int slotIndex;
+void gameTextLoadDir(int dirId);
 
-    lbl_803DC9A7 = 0xff;
-    lbl_803DC9A6 = 0xff;
-    lbl_803DC9A5 = 0xff;
-    lbl_803DC9A4 = 0xff;
-
-    if (dirId == 3) {
-        gameTextFonts = (u8 *)&lbl_8033AF40[2];
-        lbl_803DC9E8 = 2;
-        color = lbl_803DB3C8;
-        hudDrawRect(0, 0, 0xa00, 0x780, &color);
-        lbl_803DC99C = 0;
-        if (gameTextDrawFunc == NULL) {
-            slotIndex = lbl_803DC9C8;
-            lbl_803DC9C8 = slotIndex + 1;
-            cmd = &lbl_8033A540[slotIndex];
-            cmd->v = 0xf;
-            cmd->f4 = 2;
-        }
-    } else if (dirId == 0x1c) {
-        curGameTextDir = (void *)dirId;
-        gameTextFonts = (u8 *)&lbl_8033AF40[3];
-        lbl_803DC9E8 = 3;
-        if (gameTextDrawFunc == NULL) {
-            slotIndex = lbl_803DC9C8;
-            lbl_803DC9C8 = slotIndex + 1;
-            cmd = &lbl_8033A540[slotIndex];
-            cmd->v = 0xf;
-            cmd->f4 = 3;
-        }
-        gameTextLoadForCurMap(3);
-    } else {
-        gameTextFonts = (u8 *)&lbl_8033AF40[0];
-        lbl_803DC9E8 = 0;
-        if (gameTextDrawFunc == NULL) {
-            slotIndex = lbl_803DC9C8;
-            lbl_803DC9C8 = slotIndex + 1;
-            cmd = &lbl_8033A540[slotIndex];
-            cmd->v = 0xf;
-            cmd->f4 = 0;
-        }
-        curGameTextDir = (void *)dirId;
-        if ((gameTextFn_8001bcb4() == 0 || gameTextFn_8001b44c(dirId) == 0) &&
-            (int)curGameTextDir != lbl_803DC9D8) {
-            gameTextLoadForCurMap(0);
-        }
-    }
-}
-
-void gameTextFn_80019804(int flags) {
-    if (flags & 1) {
-        lbl_803DC9AA = 0;
-        lbl_803DC9A8 = 0;
-    }
-    if (flags & 2) {
-        int i = lbl_803DC9C8;
-        lbl_803DC9C8 = i + 1;
-        lbl_8033A540[i].v = 0xb;
-    }
-}
+void gameTextFn_80019804(int flags);
 
 extern u8 lbl_802C7400[];
 extern void *lbl_803DC9CC;
 
-void gameTextFn_80017434(u8 *param_1) {
-    int i;
-    GameTextSlot *s;
-    int idx;
+void gameTextFn_80017434(u8 *param_1);
 
-    if (param_1 == NULL) {
-        i = lbl_803DC9C8;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
-        lbl_803DC9CC = NULL;
-        s->v = 8;
-        s->f4 = 0xff;
-    } else {
-        i = lbl_803DC9C8;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
-        idx = (param_1 - lbl_802C7400) / 0x20;
-        if (idx == 0xff) {
-            lbl_803DC9CC = NULL;
-        } else {
-            lbl_803DC9CC = lbl_802C7400 + idx * 0x20;
-        }
-        s->v = 8;
-        s->f4 = idx;
-    }
-}
-
-void gameTextFn_8001984c(s16 x, s16 y, int flags) {
-    if (flags & 1) {
-        lbl_803DC9AA = x;
-        lbl_803DC9A8 = y;
-    }
-    if (flags & 2) {
-        int i = lbl_803DC9C8;
-        GameTextSlot *s;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
-        s->v = 0xa;
-        s->f4 = (u16)x;
-        s->f8 = (u16)y;
-    }
-}
+void gameTextFn_8001984c(s16 x, s16 y, int flags);
 
 #pragma dont_inline on
-void *getTabEntry(int id, int arg, int e, int d) {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 2;
-    lbl_8033BF88.f4 = arg;
-    lbl_8033BF88.f8 = id;
-    lbl_8033BF88.f10 = e;
-    lbl_8033BF88.fc = d;
-    return loadAsset(&lbl_8033BF88);
-}
+void *getTabEntry(int id, int arg, int e, int d);
 #pragma dont_inline reset
 
 int ObjModel_HasActiveBlendChannels(u8 *model) {
@@ -9682,75 +8181,16 @@ extern MmRegion gMmRegionTable[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void cutsceneFadeInOut(int a) {
-    cutsceneEnterExit(a, 1);
-}
+void cutsceneFadeInOut(int a);
 
-int gameTextFn_8001b44c(int x) {
-    if (lbl_803DC9F0 == 0) {
-        lbl_803DB3E0 = x;
-        return 1;
-    }
-    return 0;
-}
+int gameTextFn_8001b44c(int x);
 
 #pragma optimize_for_size on
-void gameTextLoadTaskText(int taskId) {
-    int textId;
-    int dirId;
-    s16 *taskList;
-    int count;
-    int allowed;
-
-    if (gameTextGetTaskText(taskId, &textId, &dirId) != 0) {
-        if (lbl_803DCA00 == 0) {
-            taskList = lbl_802C9EE8;
-            count = 0xb;
-            do {
-                if (taskId == *taskList) {
-                    allowed = 1;
-                    goto checkAllowed;
-                }
-                taskList++;
-            } while (--count != 0);
-            allowed = 0;
-checkAllowed:
-            if (allowed == 0) {
-                return;
-            }
-        }
-
-        lbl_803DC9FC = textId;
-        lbl_803DC9F8 = (void *)dirId;
-        if (dirId == 0x29) {
-            loadGameTextSequence();
-            lbl_803DC9F0 = 1;
-        } else {
-            lbl_803DB3E0 = (int)getCurGameText();
-            gameTextLoadDir((int)lbl_803DC9F8);
-            lbl_803DC9F0 = 0;
-        }
-        lbl_803DCA04 = 1;
-        lbl_803DC9F7 = 0xff;
-        lbl_803DC9F6 = 0xff;
-        lbl_803DC9F5 = 0xff;
-        lbl_803DC9F4 = 0xff;
-    }
-}
+void gameTextLoadTaskText(int taskId);
 #pragma optimize_for_size reset
 
 #pragma optimize_for_size on
-int gameTextFn_8001bcb4(void) {
-    int ret;
-
-    ret = 0;
-    if (lbl_803DCA00 != 0) {
-        if (lbl_803DCA04 != 0) {
-            ret = 1;
-        }
-    }
-    return ret;
-}
+int gameTextFn_8001bcb4(void);
 #pragma optimize_for_size reset
 
 #pragma dont_inline on
@@ -9819,55 +8259,9 @@ void fn_8002B2AC(f32 *out, u8 *transform, f32 *in) {
     *(u32 *)(out + 2) = *(u32 *)(rotated + 2);
 }
 
-void modelLightStruct_setDirection(ModelLightStruct *s, f32 x, f32 y, f32 z) {
-    f32 *view;
-    if (s->owner != NULL) {
-        s->localDirX = x;
-        s->localDirY = y;
-        s->localDirZ = z;
-        Vec_normalize(&s->localDirX, &s->localDirX);
-        Obj_TransformLocalVectorByWorldMatrix(s->owner, &s->localDirX, &s->worldDirX);
-    } else {
-        s->worldDirX = x;
-        s->worldDirY = y;
-        s->worldDirZ = z;
-        Vec_normalize(&s->worldDirX, &s->worldDirX);
-    }
-    view = Camera_GetViewMatrix();
-    if (s->transformMode == 0) {
-        PSMTXMultVecSR(view, &s->worldDirX, &s->viewDirX);
-    } else {
-        *(int *)&s->viewDirX = *(int *)&s->worldDirX;
-        *(int *)&s->viewDirY = *(int *)&s->worldDirY;
-        *(int *)&s->viewDirZ = *(int *)&s->worldDirZ;
-    }
-}
+void modelLightStruct_setDirection(ModelLightStruct *s, f32 x, f32 y, f32 z);
 
-void modelLightStruct_setPosition(ModelLightStruct *s, f32 x, f32 y, f32 z) {
-    f32 tmp[3];
-    f32 *view;
-    if (s->owner != NULL) {
-        s->localX = x;
-        s->localY = y;
-        s->localZ = z;
-        Obj_TransformLocalPointByWorldMatrix(s->owner, &s->localX, &s->worldX, 1);
-    } else {
-        s->worldX = x;
-        s->worldY = y;
-        s->worldZ = z;
-    }
-    view = Camera_GetViewMatrix();
-    if (s->transformMode == 0) {
-        tmp[0] = s->worldX - playerMapOffsetX;
-        tmp[1] = s->worldY;
-        tmp[2] = s->worldZ - playerMapOffsetZ;
-        PSMTXMultVec(view, tmp, &s->viewX);
-    } else {
-        *(int *)&s->viewX = *(int *)&s->worldX;
-        *(int *)&s->viewY = *(int *)&s->worldY;
-        *(int *)&s->viewZ = *(int *)&s->worldZ;
-    }
-}
+void modelLightStruct_setPosition(ModelLightStruct *s, f32 x, f32 y, f32 z);
 
 extern void GXInitSpecularDir(u8 *lt_obj, f32 x, f32 y, f32 z);
 extern void GXInitLightColor(u8 *lt_obj, void *color);
@@ -9888,270 +8282,14 @@ extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void modelLightStruct_loadDiffuseGXLight(u8 *light, u8 *obj, int lightId) {
-    f32 viewPos[3];
-    f32 *view;
-    int lightType;
-
-    view = Camera_GetViewMatrix();
-    lightType = *(int *)(light + 0x50);
-    switch (lightType) {
-    case 2:
-    case 8:
-        if (gModelLightUseModelRelativePositions != 0) {
-            f32 worldPos[3];
-            if (*(int *)(light + 0x60) == 0) {
-                worldPos[0] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
-                worldPos[1] = *(f32 *)(obj + 0x10);
-                worldPos[2] = *(f32 *)(obj + 0x14) - playerMapOffsetZ;
-                PSMTXMultVec(view, worldPos, viewPos);
-            } else {
-                *(IVec3 *)viewPos = *(IVec3 *)(obj + 0xc);
-            }
-            PSVECSubtract((f32 *)(light + 0x1c), viewPos, viewPos);
-            GXInitLightPos(light + 0x68, viewPos[0], viewPos[1], viewPos[2]);
-        } else {
-            GXInitLightPos(light + 0x68, *(f32 *)(light + 0x1c), *(f32 *)(light + 0x20),
-                           *(f32 *)(light + 0x24));
-        }
-        GXInitLightDir(light + 0x68, *(f32 *)(light + 0x40), *(f32 *)(light + 0x44),
-                       *(f32 *)(light + 0x48));
-        if (obj != NULL && (*(u32 *)(*(int *)(obj + 0x50) + 0x44) & 0x10) == 0) {
-            u8 rgba[4];
-            u32 color;
-            rgba[0] = (f32)light[0xa8] * *(f32 *)(light + 0x134);
-            rgba[1] = (f32)light[0xa9] * *(f32 *)(light + 0x134);
-            rgba[2] = (f32)light[0xaa] * *(f32 *)(light + 0x134);
-            rgba[3] = (f32)light[0xab] * *(f32 *)(light + 0x134);
-            color = *(u32 *)rgba;
-            GXInitLightColor(light + 0x68, &color);
-            GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
-        } else {
-            u32 color;
-            color = *(u32 *)(light + 0xa8);
-            GXInitLightColor(light + 0x68, &color);
-            GXInitLightAttnK(light + 0x68, *(f32 *)(light + 0x124), *(f32 *)(light + 0x128),
-                             *(f32 *)(light + 0x12c));
-        }
-        break;
-    case 4: {
-        f32 worldPos[3];
-        u32 color;
-        if (obj != NULL) {
-            if (*(int *)(light + 0x60) == 0) {
-                worldPos[0] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
-                worldPos[1] = *(f32 *)(obj + 0x10);
-                worldPos[2] = *(f32 *)(obj + 0x14) - playerMapOffsetZ;
-                PSMTXMultVec(view, worldPos, viewPos);
-            } else {
-                *(IVec3 *)viewPos = *(IVec3 *)(obj + 0xc);
-            }
-        } else {
-            viewPos[0] = lbl_803DE75C;
-            viewPos[1] = lbl_803DE75C;
-            viewPos[2] = lbl_803DE75C;
-        }
-        PSVECScale((f32 *)(light + 0x40), (f32 *)(light + 0x1c), lbl_803DE7A4);
-        PSVECAdd((f32 *)(light + 0x1c), viewPos, viewPos);
-        GXInitLightPos(light + 0x68, viewPos[0], viewPos[1], viewPos[2]);
-        color = *(u32 *)(light + 0xa8);
-        GXInitLightColor(light + 0x68, &color);
-        GXInitLightAttnK(light + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
-        break;
-    }
-    }
-    GXLoadLightObjImm(light + 0x68, lightId);
-}
+void modelLightStruct_loadDiffuseGXLight(u8 *light, u8 *obj, int lightId);
 #pragma pop
 
-void modelLightStruct_loadChannelLight(int channel, u8 *light, u8 *obj) {
-    f32 viewDir[3];
-    f32 localDir[3];
-    u32 color;
-    f32 *view;
-    int lightId;
-    int offset;
-    int lightType;
+void modelLightStruct_loadChannelLight(int channel, u8 *light, u8 *obj);
 
-    offset = channel * 0x10;
-    if (gModelLightChannelStates[channel].mode == 0 || gModelLightChannelStates[channel].mode == 2) {
-        modelLightStruct_loadDiffuseGXLight(light, obj, gModelLightNextGXLightId);
-    } else {
-        lightId = gModelLightNextGXLightId;
-        view = Camera_GetViewMatrix();
-        lightType = *(int *)(light + 0x50);
-        if (lightType != 3) {
-            if (lightType < 3) {
-                if (lightType < 2) {
-                } else {
-                    PSVECSubtract((f32 *)(obj + 0xc), (f32 *)(light + 0x10), localDir);
-                    PSVECNormalize(localDir, localDir);
-                    if (*(int *)(light + 0x60) == 0) {
-                        PSMTXMultVecSR(view, localDir, viewDir);
-                    } else {
-                        *(int *)&viewDir[0] = *(int *)&localDir[0];
-                        *(int *)&viewDir[1] = *(int *)&localDir[1];
-                        *(int *)&viewDir[2] = *(int *)&localDir[2];
-                    }
-                    GXInitSpecularDir(light + 0xc0, viewDir[0], viewDir[1], viewDir[2]);
-                }
-            } else if (lightType < 5) {
-                GXInitSpecularDir(light + 0xc0, *(f32 *)(light + 0x40), *(f32 *)(light + 0x44),
-                                  *(f32 *)(light + 0x48));
-            }
-        }
-        color = *(u32 *)(light + 0x100);
-        GXInitLightColor(light + 0xc0, &color);
-        GXLoadLightObjImm(light + 0xc0, lightId);
-    }
-    gModelLightChannelStates[channel].lightMask |= gModelLightNextGXLightId;
-    gModelLightNextGXLightId <<= 1;
-}
+void modelLightChannels_applyGXControls(void);
 
-void modelLightChannels_applyGXControls(void) {
-    int activeMask;
-    int lightMask;
-    int channel;
-    int attnFn;
-    ModelLightChannelState *entry;
-
-    activeMask = 0;
-    channel = 0;
-    entry = gModelLightChannelStates;
-    do {
-        if (entry->active != 0) {
-            if (entry->mode == 0) {
-                lightMask = entry->lightMask;
-                if (lightMask != 0) {
-                    attnFn = 1;
-                } else {
-                    attnFn = 2;
-                }
-                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, lightMask != 0 ? 2 : 0,
-                              attnFn);
-            } else if (entry->mode == 2) {
-                lightMask = entry->lightMask;
-                attnFn = lightMask != 0 ? 1 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
-            } else {
-                lightMask = entry->lightMask;
-                attnFn = lightMask != 0 ? 0 : 2;
-                GXSetChanCtrl(channel, lightMask != 0, 0, entry->matSrc, lightMask, 0, attnFn);
-            }
-            activeMask = (activeMask | (1 << channel)) & 0xff;
-        }
-        entry++;
-        channel++;
-    } while (channel <= 5);
-
-    activeMask &= 0xff;
-
-    if ((activeMask & 1) != 0) {
-        if ((activeMask & 4) == 0) {
-            GXSetChanCtrl(2, 0, 0, 0, 0, 0, 2);
-        }
-    } else if ((activeMask & 4) != 0) {
-        GXSetChanCtrl(0, 0, 0, 0, 0, 0, 2);
-    }
-
-    if ((activeMask & 2) != 0) {
-        if ((activeMask & 8) == 0) {
-            GXSetChanCtrl(3, 0, 0, 0, 0, 0, 2);
-        }
-    } else if ((activeMask & 8) != 0) {
-        GXSetChanCtrl(1, 0, 0, 0, 0, 0, 2);
-    }
-
-    if ((activeMask & 0x2a) != 0) {
-        GXSetNumChans(2);
-    } else if ((activeMask & 0x15) != 0) {
-        GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
-        GXSetNumChans(1);
-    } else {
-        GXSetChanCtrl(4, 0, 0, 0, 0, 0, 2);
-        GXSetChanCtrl(5, 0, 0, 0, 0, 0, 2);
-        GXSetNumChans(0);
-    }
-}
-
-void updateLights(void) {
-    f32 viewPos[3];
-    f32 concatMtx[16];
-    f32 *view;
-    u8 *light;
-    int i;
-    int fadeState;
-
-    view = Camera_GetViewMatrix();
-    for (i = 0; i < gModelLightCount; i++) {
-        light = gModelLightList[i];
-        fadeState = *(int *)(light + 0x58);
-        if (fadeState == 1) {
-            *(f32 *)(light + 0x138) += *(f32 *)(light + 0x13c);
-            if (*(f32 *)(light + 0x138) >= lbl_803DE760) {
-                *(f32 *)(light + 0x138) = lbl_803DE760;
-                *(int *)(light + 0x58) = 2;
-            }
-        } else if (fadeState == 3) {
-            *(f32 *)(light + 0x138) += *(f32 *)(light + 0x13c);
-            if (*(f32 *)(light + 0x138) <= lbl_803DE788) {
-                *(f32 *)(light + 0x138) = lbl_803DE788;
-                *(int *)(light + 0x58) = 0;
-                light[0x4c] = 0;
-            }
-        }
-
-        if (light[0x4c] != 0) {
-            if (*(int *)(light + 0x50) != 4) {
-                if (*(void **)light != NULL) {
-                    Obj_TransformLocalPointByWorldMatrix(*(u8 **)light, (f32 *)(light + 4), (f32 *)(light + 0x10),
-                                                         1);
-                }
-                if (*(int *)(light + 0x60) == 0) {
-                    viewPos[0] = *(f32 *)(light + 0x10) - playerMapOffsetX;
-                    viewPos[1] = *(f32 *)(light + 0x14);
-                    viewPos[2] = *(f32 *)(light + 0x18) - playerMapOffsetZ;
-                    PSMTXMultVec(view, viewPos, (f32 *)(light + 0x1c));
-                } else {
-                    *(int *)(light + 0x1c) = *(int *)(light + 0x10);
-                    *(int *)(light + 0x20) = *(int *)(light + 0x14);
-                    *(int *)(light + 0x24) = *(int *)(light + 0x18);
-                }
-            }
-
-            if (*(void **)light != NULL) {
-                Obj_TransformLocalVectorByWorldMatrix(*(void **)light, (f32 *)(light + 0x28),
-                                                       (f32 *)(light + 0x34));
-            }
-            if (*(int *)(light + 0x60) == 0) {
-                PSMTXMultVecSR(view, (f32 *)(light + 0x34), (f32 *)(light + 0x40));
-            } else {
-                *(int *)(light + 0x40) = *(int *)(light + 0x34);
-                *(int *)(light + 0x44) = *(int *)(light + 0x38);
-                *(int *)(light + 0x48) = *(int *)(light + 0x3c);
-            }
-
-            if (*(int *)(light + 0x2d8) != 0) {
-                modelLightStruct_updateColorFade((ModelLightStruct *)light);
-            } else {
-                light[0xa8] = (u8)(int)((f32)light[0xac] * *(f32 *)(light + 0x138));
-                light[0xa9] = (u8)(int)((f32)light[0xad] * *(f32 *)(light + 0x138));
-                light[0xaa] = (u8)(int)((f32)light[0xae] * *(f32 *)(light + 0x138));
-                light[0xab] = (u8)(int)((f32)light[0xaf] * *(f32 *)(light + 0x138));
-                light[0x100] = (u8)(int)((f32)light[0x104] * *(f32 *)(light + 0x138));
-                light[0x101] = (u8)(int)((f32)light[0x105] * *(f32 *)(light + 0x138));
-                light[0x102] = (u8)(int)((f32)light[0x106] * *(f32 *)(light + 0x138));
-                light[0x103] = (u8)(int)((f32)light[0x107] * *(f32 *)(light + 0x138));
-            }
-
-            if (*(int *)(light + 0x50) == 8) {
-                Obj_BuildInverseWorldTransformMatrix(*(u8 **)light, (f32 *)(light + 0x170));
-        PSMTXConcat((f32 *)(light + 0x170), Camera_GetInverseViewMatrix(), concatMtx);
-        PSMTXConcat((f32 *)(light + 0x1b0), concatMtx, (f32 *)(light + 0x230));
-            }
-        }
-    }
-}
+void updateLights(void);
 
 extern int *lbl_803DCB60;
 extern void fileLoadToBufferOffset(int id, void *buf, int offset, int size);
@@ -10401,81 +8539,14 @@ int loadModelAndAnimTabs(void) {
     return 1;
 }
 
-int gameBitDecrement(int bit) {
-    int val = GameBit_Get(bit);
-    if (val != 0) {
-        val--;
-        GameBit_Set(bit, val);
-        return val;
-    }
-    return 0;
-}
+int gameBitDecrement(int bit);
 
-void initRotationMtx(f32 *m, f32 a, f32 b, f32 c) {
-    f32 z = lbl_803DE7C0;
-    m[0] = z;
-    m[1] = z;
-    m[2] = z;
-    m[3] = z;
-    m[4] = z;
-    m[5] = z;
-    m[6] = z;
-    m[7] = z;
-    m[8] = z;
-    m[9] = z;
-    m[10] = z;
-    m[11] = z;
-    m[12] = z;
-    m[13] = z;
-    m[14] = z;
-    m[15] = z;
-    m[0] = a;
-    m[5] = b;
-    m[10] = c;
-}
+void initRotationMtx(f32 *m, f32 a, f32 b, f32 c);
 
-int mmGetRegionForPtr(u8 *ptr) {
-    int i;
-    for (i = 0; i < lbl_803DCB42; i++) {
-        u8 *start = gMmRegionTable[i].start;
-        if (ptr > start && ptr < start + gMmRegionTable[i].size) {
-            return i;
-        }
-    }
-    return -1;
-}
+int mmGetRegionForPtr(u8 *ptr);
 
 #pragma dont_inline on
-void *mmInitRegion(u8 *buf, int size, int numSlots) {
-    int regIdx = lbl_803DCB42++;
-    int after = size - numSlots * 0x1c;
-    int i;
-    u8 *slot;
-    int freePtr;
-    gMmRegionTable[regIdx].numSlots = numSlots;
-    gMmRegionTable[regIdx].f4 = 0;
-    gMmRegionTable[regIdx].start = buf;
-    gMmRegionTable[regIdx].size = size;
-    gMmRegionTable[regIdx].f10 = 0;
-    slot = gMmRegionTable[regIdx].start;
-    for (i = 0; i < gMmRegionTable[regIdx].numSlots; i++) {
-        *(s16 *)(slot + 0xe) = i;
-        slot += 0x1c;
-    }
-    slot = gMmRegionTable[regIdx].start;
-    freePtr = (int)buf + numSlots * 0x1c;
-    if (freePtr & 0x1f) {
-        *(int *)(slot + 0) = (freePtr & ~0x1f) + 0x20;
-    } else {
-        *(int *)(slot + 0) = freePtr;
-    }
-    *(int *)(slot + 4) = after;
-    *(s16 *)(slot + 8) = 0;
-    *(s16 *)(slot + 0xa) = -1;
-    *(s16 *)(slot + 0xc) = -1;
-    gMmRegionTable[regIdx].f4++;
-    return gMmRegionTable[regIdx].start;
-}
+void *mmInitRegion(u8 *buf, int size, int numSlots);
 #pragma dont_inline reset
 
 extern u32 OSGetTick(void);
@@ -10508,88 +8579,9 @@ typedef struct {
     int handle;
 } MmStore;
 
-int mmCreateMemoryStore(int size) {
-    char *msg = sMmShowInfoFBMemoryStoreMessageBlock;
-    MmStore *store;
-    void **p;
-    int i = 0;
-    if (size <= 0) {
-        OSReport(msg + 0x1e8, size);
-        return 0;
-    }
-    if (size > 0x4000) {
-        OSReport(msg + 0x218, size, 0x4000);
-        return 0;
-    }
-    store = (MmStore *)mmAlloc(0x10, 0, (int)&sMmStoreAllocationTag);
-    if (store == NULL) {
-        OSReport(msg + 0x26c);
-        return 0;
-    }
-    store->size = size;
-    store->handle = gMmNextStoreHandle++;
-    store->buf = NULL;
-    store->bufCur = NULL;
-    store->buf = mmAlloc(store->size, 0, (int)(msg + 0x2a8));
-    if (store->buf == NULL) {
-        OSReport(msg + 0x2bc);
-        if (gMmFreeDelay == 0) {
-            mmFree(store);
-        } else {
-            mmFreeDeferred(store);
-        }
-        return 0;
-    }
-    store->bufCur = store->buf;
-    p = gMmStoreArray;
-    while (i < 0x20) {
-        if (*p == NULL) {
-            gMmStoreArray[i] = store;
-            break;
-        }
-        p++;
-        if (++i == 0x20) {
-            void *buf;
-            OSReport(msg + 0x2f8);
-            buf = store->buf;
-            if (gMmFreeDelay == 0) {
-                mmFree(buf);
-            } else {
-                mmFreeDeferred(buf);
-            }
-            if (gMmFreeDelay == 0) {
-                mmFree(store);
-            } else {
-                mmFreeDeferred(store);
-            }
-            return 0;
-        }
-    }
-    return store->handle;
-}
+int mmCreateMemoryStore(int size);
 
-void mmFreeDeferred(void *p) {
-    DeferredFree *stack;
-    if (gMmDeferredFreeCount == 0x7d0) {
-        waitNextFrame();
-        GXFlush_(1, 0);
-        waitNextFrame();
-        GXFlush_(1, 0);
-        stack = gMmDeferredFreeStack;
-        while (gMmDeferredFreeCount > 0) {
-            DeferredFree *top;
-            mmFree(stack[0].ptr);
-            top = &stack[gMmDeferredFreeCount];
-            stack[0].ptr = top[-1].ptr;
-            stack[0].delay = top[-1].delay;
-            gMmDeferredFreeCount--;
-        }
-        OSReport(sMmStbfStackTooDeepError);
-    }
-    gMmDeferredFreeStack[gMmDeferredFreeCount].ptr = p;
-    gMmDeferredFreeStack[gMmDeferredFreeCount].delay = gMmFreeDelay;
-    gMmDeferredFreeCount++;
-}
+void mmFreeDeferred(void *p);
 
 typedef struct {
     void *key;
@@ -10619,159 +8611,16 @@ extern int lbl_803DCB28;
 extern int lbl_803DCB2C;
 
 #pragma peephole on
-void mmFreeTick(int arg) {
-    MmGlobal *g = (MmGlobal *)gMmStoreArray;
-    int i;
-    DeferredFree *d;
-    int k;
-    HeapItem *base;
-    HeapItem *item;
-    s16 next;
-
-    lbl_803DCB1C++;
-    lbl_803DCB14++;
-
-    d = g->deferred;
-    for (i = 0; i < gMmDeferredFreeCount;) {
-        d->delay--;
-        if (d->delay == 0) {
-            mmFree(d->ptr);
-            d->ptr = g->deferred[gMmDeferredFreeCount - 1].ptr;
-            d->delay = g->deferred[gMmDeferredFreeCount - 1].delay;
-            gMmDeferredFreeCount--;
-        } else {
-            d++;
-            i++;
-        }
-    }
-
-    for (k = 0; k < 0x20; k++) {
-        MmStore *s = (MmStore *)g->stores[k];
-        if (s != NULL) {
-            s->bufCur = s->buf;
-        }
-    }
-    SaveGame_updateTransientMapBits();
-
-    lbl_803DCB20 = 0;
-    lbl_803DCB28 = 0;
-    lbl_803DCB24 = 0;
-    lbl_803DCB2C = 0;
-
-    if (lbl_803DCB42 > 1) {
-        base = (HeapItem *)g->regions[1].start;
-        item = base;
-        do {
-            if (item->type != 0) {
-                lbl_803DCB24 += item->size;
-            }
-            next = item->next;
-            if (next != -1) {
-                item = &base[next];
-            }
-        } while (next != -1);
-
-        base = (HeapItem *)g->regions[2].start;
-        item = base;
-        do {
-            if (item->type != 0) {
-                lbl_803DCB28 += item->size;
-            }
-            next = item->next;
-            if (next != -1) {
-                item = &base[next];
-            }
-        } while (next != -1);
-
-        base = (HeapItem *)g->regions[3].start;
-        item = base;
-        do {
-            if (item->type != 0) {
-                lbl_803DCB2C += item->size;
-            }
-            next = item->next;
-            if (next != -1) {
-                item = &base[next];
-            }
-        } while (next != -1);
-    }
-
-    if (lbl_803DCB30++ % 500 == 0) {
-        OSReport(sMemStatsFormat,
-            0, g->regions[0].size,
-            lbl_803DCB24, g->regions[1].size,
-            lbl_803DCB28, g->regions[2].size,
-            lbl_803DCB2C, g->regions[3].size,
-            g->regions[0].f4, g->regions[0].numSlots,
-            g->regions[1].f4, g->regions[1].numSlots,
-            g->regions[2].f4, g->regions[2].numSlots,
-            g->regions[3].f4, g->regions[3].numSlots);
-    }
-}
+void mmFreeTick(int arg);
 #pragma peephole reset
 
-void mmFree(void *p) {
-    int region;
-    int i;
-    u8 *slot;
-    u8 *base;
-    lbl_803DCB34 = OSGetTick();
-    region = mmGetRegionForPtr(p);
-    if (region != -1) {
-        base = gMmRegionTable[region].start;
-        i = 0;
-        do {
-            slot = base + i * 0x1c;
-            if (*(void **)slot == p) {
-                s16 t = *(s16 *)(slot + 8);
-                if (t == 1 || t == 4) {
-                    heapFree(region, i);
-                } else {
-                    OSReport(sMmFreeInvalidLocationError, p);
-                }
-                return;
-            }
-            i = *(s16 *)(slot + 0xc);
-        } while (i != -1);
-    }
-    OSReport(sMmAllocFreeMessageBlock, p);
-}
+void mmFree(void *p);
 
 extern void *gMmStoreArray[];
 extern char sMmAllocateFromFBMemoryStoreMissingHandleError[];
 extern char sMmMemoryStoreMessageBlock[];
 
-int mmAllocateFromFBMemoryStore(int handle, int size) {
-    void **p;
-    int *found;
-    int i;
-    int avail;
-    found = NULL;
-    i = 0;
-    p = gMmStoreArray;
-    while (i < 0x20) {
-        int *store = (int *)*p;
-        if (store != NULL && handle == store[3]) {
-            found = (int *)gMmStoreArray[i];
-            break;
-        }
-        p++;
-        if (++i == 0x20) {
-            OSReport(sMmAllocateFromFBMemoryStoreMissingHandleError);
-            return 0;
-        }
-    }
-    if (found != NULL) {
-        avail = found[2] - (found[1] - found[0]);
-        if (avail < size) {
-            OSReport(sMmMemoryStoreMessageBlock);
-            return 0;
-        }
-        found[1] += size;
-        return found[1] - size;
-    }
-    return 0;
-}
+int mmAllocateFromFBMemoryStore(int handle, int size);
 
 extern void *OSGetArenaLo(void);
 extern void *OSGetArenaHi(void);
@@ -10782,38 +8631,7 @@ extern int lbl_803DCB18;
 extern void *lbl_803DD498;
 extern void *lbl_803DCAFC;
 
-void mmInit(void) {
-    int size;
-    void *p;
-    u8 *lo;
-    lbl_803DCB42 = 0;
-    lo = OSGetArenaLo();
-    size = (u8 *)OSGetArenaHi() - lo - 0x6c0000 - 0x720;
-    lbl_803DCB18 = size;
-    p = OSAllocFromHeap(__OSCurrHeap, size);
-    DCFlushRange(p, size);
-    mmInitRegion(p, size, 0xfa);
-
-    p = OSAllocFromHeap(__OSCurrHeap, 0x6ed);
-    lbl_803DD498 = p;
-    lbl_803DCAFC = (u8 *)p + 0x6ec;
-
-    p = OSAllocFromHeap(__OSCurrHeap, 0x1c0000);
-    DCFlushRange(p, 0x1c0000);
-    mmInitRegion(p, 0x1c0000, 0x352);
-
-    p = OSAllocFromHeap(__OSCurrHeap, 0x9ffa0);
-    DCFlushRange(p, 0x9ffa0);
-    mmInitRegion(p, 0x9ffa0, 0x352);
-
-    p = OSAllocFromHeap(__OSCurrHeap, 0x45ffa0);
-    DCFlushRange(p, 0x45ffa0);
-    mmInitRegion(p, 0x45ffa0, 0x244);
-
-    lbl_803DCB14++;
-    gMmFreeDelay = 2;
-    gMmDeferredFreeCount = 0;
-}
+void mmInit(void);
 
 extern char sMmSpawnedUnalignedSlotWarning[];
 extern int lbl_803DCB1C;
@@ -10823,18 +8641,7 @@ extern int lbl_803DCB24;
 extern int lbl_803DCB28;
 extern int lbl_803DCB2C;
 
-int printHeapStats(void) {
-    OSReport(sMemStatsFormat,
-        lbl_803DCB20, gMmRegionTable[0].size,
-        lbl_803DCB24, gMmRegionTable[1].size,
-        lbl_803DCB28, gMmRegionTable[2].size,
-        lbl_803DCB2C, gMmRegionTable[3].size,
-        gMmRegionTable[0].f4, gMmRegionTable[0].numSlots,
-        gMmRegionTable[1].f4, gMmRegionTable[1].numSlots,
-        gMmRegionTable[2].f4, gMmRegionTable[2].numSlots,
-        gMmRegionTable[3].f4, gMmRegionTable[3].numSlots);
-    return lbl_803DCB20 + (lbl_803DCB24 + lbl_803DCB28 + lbl_803DCB2C);
-}
+int printHeapStats(void);
 
 int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag);
 int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag);
@@ -10843,272 +8650,23 @@ extern int lbl_803DB430;
 extern int lbl_803DCB0C;
 extern int lbl_803DCC7C;
 
-int mmAllocFromRegion(int region, int size, int type, int tag) {
-    char *msg = sMmShowInfoFBMemoryStoreMessageBlock;
-    int bestIdx;
-    HeapItem *base;
-    HeapItem *it;
-    HeapItem *res;
-    int bestSize;
-    int largest;
-    int t28;
-    int t27;
-    int idx;
+int mmAllocFromRegion(int region, int size, int type, int tag);
 
-    largest = 0;
-    t28 = 0;
-    t27 = 0;
+int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag);
 
-    if (gMmRegionTable[region].f4 + 1 == gMmRegionTable[region].numSlots) {
-        OSReport(msg + 0x4b8, tag, region);
-        return 0;
-    }
-
-    if (size & 0x1f) {
-        size = (size & ~0x1f) + 0x20;
-    }
-
-    bestIdx = -1;
-    bestSize = 0x7fffffff;
-    base = (HeapItem *)gMmRegionTable[region].start;
-    idx = 0;
-
-    if (region == 0 && size < 0x33450) {
-        it = base;
-        while (it->next != -1) {
-            idx = it->next;
-            it = &base[idx];
-        }
-        do {
-            it = &base[idx];
-            if (it->type == 0) {
-                if (it->size >= size) {
-                    if (it->size < bestSize) {
-                        bestSize = it->size;
-                        bestIdx = idx;
-                    }
-                } else if (it->size > largest) {
-                    largest = it->size;
-                }
-            }
-            idx = it->prev;
-        } while (idx != -1);
-    } else {
-        do {
-            it = &base[idx];
-            if (it->type == 0) {
-                if (it->size >= size) {
-                    if (it->size < bestSize) {
-                        bestSize = it->size;
-                        bestIdx = idx;
-                        if (region == 0) {
-                            break;
-                        }
-                    }
-                } else if (it->size > largest) {
-                    largest = it->size;
-                }
-            }
-            idx = it->next;
-        } while (idx != -1);
-    }
-
-    if (bestIdx != -1) {
-        gMmRegionTable[region].f10 += size;
-        if (gMmRegionTable[region].f10 < 0 || gMmRegionTable[region].f10 > gMmRegionTable[region].size) {
-            OSReport(msg + 0x50c);
-        }
-        if (lbl_803DB430 != 0 && region == 0 && size < 0x33450) {
-            bestIdx = heapSpawnSlot(region, bestIdx, size, 1, 0, type, tag);
-        } else {
-            changeHeapSlot(region, bestIdx, size, 1, 0, type, tag);
-        }
-        res = &base[bestIdx];
-        if (lbl_803DCB0C == 0x3ef) {
-            OSReport(msg + 0x53c);
-        }
-        res->f18 = lbl_803DCB0C++;
-        lbl_803DCB14++;
-        return (int)res->key;
-    }
-
-    if ((region == 2 && size > 0x3000) || region == 3 || region == 1) {
-        HeapItem *b0;
-        HeapItem *b1;
-        OSReport(msg + 0x54c, tag, region, type, size);
-        b0 = (HeapItem *)gMmRegionTable[0].start;
-        it = b0;
-        while (it->next != -1) {
-            it = &b0[it->next];
-            if (it->size > t28 && it->type == 0) {
-                t28 = it->size;
-            }
-        }
-        b1 = (HeapItem *)gMmRegionTable[1].start;
-        it = b1;
-        while (it->next != -1) {
-            it = &b1[it->next];
-            if (it->size > t27 && it->type == 0) {
-                t27 = it->size;
-            }
-        }
-        reportAllocFail(
-            gMmRegionTable[0].size / 1024,
-            gMmRegionTable[0].size / 1024 - lbl_803DCB20 / 1024,
-            gMmRegionTable[1].size / 1024,
-            gMmRegionTable[1].size / 1024 - lbl_803DCB24 / 1024,
-            gMmRegionTable[2].size / 1024,
-            gMmRegionTable[2].size / 1024 - lbl_803DCB28 / 1024,
-            lbl_803DCC7C,
-            lbl_803DCB1C,
-            size, t28, t27);
-    }
-    return 0;
-}
-
-int heapSpawnSlot(int region, int idx, int size, int type, int newType, int f10val, int tag) {
-    MmRegion *reg;
-    HeapItem *base;
-    int oldSize;
-    while (size % 32 != 0) {
-        size++;
-    }
-    reg = &gMmRegionTable[region];
-    base = (HeapItem *)reg->start;
-    base[idx].type = type;
-    oldSize = base[idx].size;
-    base[idx].size = size;
-    base[idx].f10 = f10val;
-    if (oldSize > size) {
-        s16 oldNext;
-        int ni = base[reg->f4++].stack;
-        base[idx].type = newType;
-        while ((oldSize - size) % 32 != 0) {
-            size++;
-        }
-        base[idx].size = oldSize - size;
-        base[ni].type = type;
-        base[ni].key = (char *)base[idx].key + oldSize - size;
-        if ((int)base[ni].key % 32 != 0) {
-            OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
-        }
-        base[ni].size = size;
-        base[ni].f10 = f10val;
-        base[ni].f14 = lbl_803DCB1C;
-        oldNext = base[idx].next;
-        base[ni].next = oldNext;
-        base[ni].prev = idx;
-        base[idx].next = ni;
-        if (oldNext != -1) {
-            base[oldNext].prev = ni;
-        }
-        return ni;
-    }
-    return idx;
-}
-
-int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag) {
-    MmRegion *reg = &gMmRegionTable[region];
-    HeapItem *base = (HeapItem *)reg->start;
-    int oldSize;
-    base[idx].type = type;
-    oldSize = base[idx].size;
-    base[idx].size = newSize;
-    base[idx].f10 = f10val;
-    if (oldSize > newSize) {
-        s16 oldNext;
-        int ni = base[reg->f4++].stack;
-        base[ni].key = (char *)base[idx].key + newSize;
-        if ((int)base[ni].key % 32 != 0) {
-            OSReport(sMmSpawnedUnalignedSlotWarning, base[ni].stack, base[ni].key, base[ni].size);
-        }
-        base[ni].size = oldSize - newSize;
-        base[ni].type = newType;
-        oldNext = base[idx].next;
-        base[ni].next = oldNext;
-        base[ni].prev = idx;
-        base[idx].next = ni;
-        if (oldNext != -1) {
-            base[oldNext].prev = ni;
-        }
-        base[idx].f14 = lbl_803DCB1C;
-        return ni;
-    }
-    return idx;
-}
+int changeHeapSlot(int region, int idx, int newSize, int type, int newType, int f10val, int tag);
 
 extern char sMmFreeMemoryUsageCorruptedError[];
 
-void heapFree(int region, int idx) {
-    HeapItem *base = (HeapItem *)gMmRegionTable[region].start;
-    s16 next = base[idx].next;
-    s16 prev = base[idx].prev;
-    base[idx].type = 0;
-    lbl_803DCB14++;
-    gMmRegionTable[region].f10 -= base[idx].size;
-    if (gMmRegionTable[region].f10 < 0 || gMmRegionTable[region].f10 > gMmRegionTable[region].size) {
-        OSReport(sMmFreeMemoryUsageCorruptedError);
-    }
-    if (next != -1 && base[next].type == 0) {
-        s16 nn;
-        base[idx].size += base[next].size;
-        nn = base[next].next;
-        base[idx].next = nn;
-        if (nn != -1) {
-            base[nn].prev = idx;
-        }
-        base[--gMmRegionTable[region].f4].stack = next;
-    }
-    if (prev != -1 && base[prev].type == 0) {
-        s16 in;
-        base[prev].size += base[idx].size;
-        in = base[idx].next;
-        base[prev].next = in;
-        if (in != -1) {
-            base[in].prev = prev;
-        }
-        base[--gMmRegionTable[region].f4].stack = idx;
-    }
-}
+void heapFree(int region, int idx);
 
-int getHeapItemSize(void *ptr) {
-    int i = mmGetRegionForPtr(ptr);
-    HeapItem *items = (HeapItem *)gMmRegionTable[i].start;
-    int idx = 0;
-    for (;;) {
-        HeapItem *item = &items[idx];
-        if (item->key == ptr) {
-            return item->size;
-        }
-        idx = item->next;
-        if (idx == -1) {
-            return -1;
-        }
-    }
-}
+int getHeapItemSize(void *ptr);
 
-void *AtomicSList_Pop(void **list) {
-    int intr = OSDisableInterrupts();
-    void *head = *list;
-    if (head == NULL) {
-        OSRestoreInterrupts(intr);
-        return NULL;
-    }
-    *list = *(void **)head;
-    OSRestoreInterrupts(intr);
-    return head;
-}
+void *AtomicSList_Pop(void **list);
 
-f32 interpolate(f32 a, f32 t, f32 exp) {
-    if (t <= lbl_803DE7C4) {
-        return a * (lbl_803DE7C4 - powfBitEstimate(lbl_803DE7C4 - t, exp));
-    }
-    return lbl_803DE7C0;
-}
+f32 interpolate(f32 a, f32 t, f32 exp);
 
-int atan2i(int y, int x) {
-    return (int)(lbl_803DE7D8 * fn_802924B4((f32)y, (f32)x));
-}
+int atan2i(int y, int x);
 #pragma pop
 
 extern void *memcpy(void *dst, const void *src, int n);
@@ -11146,62 +8704,11 @@ int objMove(u8 *obj, f32 dx, f32 dy, f32 dz) {
 }
 
 #pragma dont_inline on
-void copyToCache(void *dst, void *src, u32 count) {
-    if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
-        int len;
-        if (count != 0) {
-            len = count << 5;
-        } else {
-            len = 0x1000;
-        }
-        memcpy(dst, src, len);
-    } else {
-        LCLoadBlocks(dst, src, count);
-    }
-}
+void copyToCache(void *dst, void *src, u32 count);
 #pragma dont_inline reset
 
 #pragma dont_inline on
-int fn_8001F978(u32 srcAddr, u32 size, u32 *cacheCursor, u32 *outEnd, u32 limit) {
-    register u32 src;
-    register u32 copySize;
-    register u32 *cursor;
-    register u32 *endOut;
-    register u32 maxEnd;
-    u32 alignOffset;
-    u32 end;
-    u8 *dst;
-
-    src = srcAddr;
-    copySize = size;
-    cursor = cacheCursor;
-    endOut = outEnd;
-    maxEnd = limit;
-    dst = getCache();
-    alignOffset = src & 0x1f;
-    copySize = (copySize + alignOffset + 0x1f) & ~0x1f;
-    end = *cursor + copySize;
-    if (end <= maxEnd) {
-        src -= alignOffset;
-        *endOut = end;
-        dst += *cursor;
-        *cursor = (u32)(dst + alignOffset);
-        copySize >>= 5;
-        while (copySize > 0x7f) {
-            copyToCache(dst, (void *)src, 0);
-            dst += 0x1000;
-            src += 0x1000;
-            copySize -= 0x80;
-        }
-        if (copySize != 0) {
-            copyToCache(dst, (void *)src, copySize);
-        }
-        return 1;
-    }
-    *endOut = *cursor;
-    *cursor = src;
-    return 0;
-}
+int fn_8001F978(u32 srcAddr, u32 size, u32 *cacheCursor, u32 *outEnd, u32 limit);
 #pragma dont_inline reset
 
 void ObjModel_InitRenderBuffers(void) {
@@ -11241,355 +8748,27 @@ void modelFn_800292e0(void) {
 }
 
 #pragma dont_inline on
-void *animationLoad(int id, s16 a, s16 b, int e, int f) {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 7;
-    lbl_8033BF88.f4 = a;
-    lbl_8033BF88.f8 = id;
-    lbl_8033BF88.fc = b;
-    lbl_8033BF88.f20 = e;
-    lbl_8033BF88.f24 = f;
-    return loadAsset(&lbl_8033BF88);
-}
+void *animationLoad(int id, s16 a, s16 b, int e, int f);
 #pragma dont_inline reset
 
-void modelLightStruct_setSpotAttenuation(ModelLightStruct *obj, f32 cutoff, int mode) {
-    obj->spotCutoff = cutoff;
-    obj->spotFunction = mode;
-    if (mode == 0) {
-        GXInitLightAttnA((u8 *)obj + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
-    } else {
-        GXInitLightSpot((u8 *)obj + 0x68, obj->spotCutoff, obj->spotFunction);
-    }
-}
+void modelLightStruct_setSpotAttenuation(ModelLightStruct *obj, f32 cutoff, int mode);
 
-void modelLightStruct_setDistanceAttenuation(u8 *obj, f32 a, f32 b) {
-    *(f32 *)(obj + 0x140) = a;
-    *(f32 *)(obj + 0x144) = b;
-    GXInitLightDistAttn(obj + 0x68, *(f32 *)(obj + 0x140), lbl_803DE758, 2);
-    GXGetLightAttnK(obj + 0x68, (f32 *)(obj + 0x124), (f32 *)(obj + 0x128), (f32 *)(obj + 0x12c));
-}
+void modelLightStruct_setDistanceAttenuation(u8 *obj, f32 a, f32 b);
 
 #pragma dont_inline on
-int modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
-    f32 localPos[3];
-    f32 worldPos[3];
-    f32 projected[3];
-    f32 cornerPos[3];
-    f32 corners[24];
-    f32 extent;
-    f32 scaledExtent;
-    u32 clipMask;
-    u32 combinedClipMask;
-    u32 *cornerWords;
-    u32 *sourceWords;
-    int i;
-
-    extent = *(f32 *)(obj + 0xa8);
-    scaledExtent = *(f32 *)(obj + 8) * extent;
-    cornerWords = (u32 *)corners;
-    sourceWords = (u32 *)lbl_802C1A88;
-    i = 12;
-    do {
-        cornerWords[0] = sourceWords[0];
-        cornerWords[1] = sourceWords[1];
-        cornerWords += 2;
-        sourceWords += 2;
-    } while (--i != 0);
-
-    worldPos[0] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
-    worldPos[1] = *(f32 *)(obj + 0x10);
-    worldPos[2] = *(f32 *)(obj + 0x14) - playerMapOffsetZ;
-    PSMTXMultVec((f32 *)(light + 0x170), worldPos, localPos);
-
-    if (*(int *)(light + 0x168) == 0) {
-        if (*(f32 *)(light + 0x15c) < localPos[0] - extent ||
-            localPos[0] + scaledExtent < *(f32 *)(light + 0x158) ||
-            *(f32 *)(light + 0x150) < localPos[1] - extent ||
-            localPos[1] + scaledExtent < *(f32 *)(light + 0x154) ||
-            *(f32 *)(light + 0x164) < localPos[2] - extent ||
-            localPos[2] + scaledExtent < *(f32 *)(light + 0x160)) {
-            return 0;
-        }
-        return 1;
-    }
-
-    if (*(f32 *)(light + 0x164) < localPos[2] - extent ||
-        localPos[2] + scaledExtent < *(f32 *)(light + 0x160)) {
-        return 0;
-    }
-
-    combinedClipMask = 0x3f;
-    for (i = 0; i < 8; i++) {
-        cornerPos[0] = localPos[0] + scaledExtent * corners[i * 3 + 0];
-        cornerPos[1] = localPos[1] + scaledExtent * corners[i * 3 + 1];
-        cornerPos[2] = localPos[2] + scaledExtent * corners[i * 3 + 2];
-        PSMTXMultVec((f32 *)(light + 0x1f0), cornerPos, projected);
-        if (projected[2] != lbl_803DE75C) {
-            projected[0] /= projected[2];
-            projected[1] /= projected[2];
-        }
-
-        clipMask = 0;
-        if (cornerPos[2] < *(f32 *)(light + 0x160)) {
-            clipMask |= 0x10;
-        }
-        if (*(f32 *)(light + 0x164) < cornerPos[2]) {
-            clipMask |= 0x20;
-        }
-        if (projected[0] < lbl_803DE75C) {
-            clipMask |= 1;
-        } else if (projected[0] > lbl_803DE760) {
-            clipMask |= 2;
-        }
-        if (projected[1] < lbl_803DE75C) {
-            clipMask |= 4;
-        } else if (projected[1] > lbl_803DE760) {
-            clipMask |= 8;
-        }
-        if (clipMask == 0) {
-            return 1;
-        }
-        combinedClipMask &= clipMask;
-        if (combinedClipMask == 0) {
-            return 1;
-        }
-    }
-
-    return 0;
-}
+int modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj);
 #pragma dont_inline reset
 
 #pragma dont_inline on
-f32 modelLightStruct_getObjectIntensity(u8 *light, u8 *obj) {
-    f32 delta[3];
-    f32 dist;
-    f32 amount;
-
-    if (*(void **)(obj + 0xc4) != NULL) {
-        obj = *(u8 **)(obj + 0xc4);
-    }
-
-    PSVECSubtract((f32 *)(obj + 0x18), (f32 *)(light + 0x10), delta);
-    dist = PSVECMag(delta) - *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8);
-    if (dist > lbl_803DE768 || dist > *(f32 *)(light + 0x144)) {
-        return lbl_803DE75C;
-    }
-
-    if (dist < *(f32 *)(light + 0x140)) {
-        amount = lbl_803DE760;
-    } else {
-        amount = lbl_803DE760 - (dist - *(f32 *)(light + 0x140)) /
-                                    (*(f32 *)(light + 0x144) - *(f32 *)(light + 0x140));
-    }
-
-    if (*(int *)(light + 0xb8) != 0) {
-        PSVECScale(delta, delta, lbl_803DE760 / dist);
-        PSVECDotProduct((f32 *)(light + 0x34), delta);
-    }
-
-    return amount;
-}
+f32 modelLightStruct_getObjectIntensity(u8 *light, u8 *obj);
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void modelLightStruct_selectBrightestAabbLights(u8 **outLights, int maxLights, int *outCount, f32 minX, f32 minY, f32 minZ, f32 maxX,
-                 f32 maxY, f32 maxZ) {
-    f32 center[3];
-    f32 delta[3];
-    u8 *candidates[20];
-    u8 *light;
-    f32 dist;
-    f32 radius;
-    f32 intensity;
-    f32 red;
-    f32 green;
-    f32 blue;
-    int candidateCount;
-    int selectedCount;
-    int i;
-
-    center[0] = lbl_803DE790 * (minX + maxX);
-    center[1] = lbl_803DE790 * (minY + maxY);
-    center[2] = lbl_803DE790 * (minZ + maxZ);
-
-    candidateCount = 0;
-    for (i = 0; i < gModelLightCount; i++) {
-        light = gModelLightList[i];
-        if (light[0x4c] != 0 && *(int *)(light + 0x50) == 2 && *(f32 *)(light + 0x144) > lbl_803DE75C &&
-            light[0x2fb] != 0) {
-            PSVECSubtract(center, (f32 *)(light + 0x10), delta);
-            dist = PSVECMag(delta);
-            radius = *(f32 *)(light + 0x144);
-            if (*(f32 *)(light + 0x10) + radius >= minX &&
-                *(f32 *)(light + 0x14) + radius >= minY &&
-                *(f32 *)(light + 0x18) + radius >= minZ &&
-                *(f32 *)(light + 0x10) - radius <= maxX &&
-                *(f32 *)(light + 0x14) - radius <= maxY &&
-                *(f32 *)(light + 0x18) - radius <= maxZ) {
-                intensity = lbl_803DE760 /
-                            (*(f32 *)(light + 0x124) +
-                             dist * (*(f32 *)(light + 0x12c) * dist + *(f32 *)(light + 0x128)));
-                red = intensity * (f32)light[0xa8];
-                if (red < lbl_803DE75C) {
-                    red = lbl_803DE75C;
-                } else if (red > lbl_803DE76C) {
-                    red = lbl_803DE76C;
-                }
-                green = intensity * (f32)light[0xa9];
-                if (green < lbl_803DE75C) {
-                    green = lbl_803DE75C;
-                } else if (green > lbl_803DE76C) {
-                    green = lbl_803DE76C;
-                }
-                blue = intensity * (f32)light[0xaa];
-                if (blue < lbl_803DE75C) {
-                    blue = lbl_803DE75C;
-                } else if (blue > lbl_803DE76C) {
-                    blue = lbl_803DE76C;
-                }
-                if (green < red) {
-                    green = red;
-                }
-                *(f32 *)(light + 0x130) = green;
-                if (blue < *(f32 *)(light + 0x130)) {
-                    blue = *(f32 *)(light + 0x130);
-                }
-                *(f32 *)(light + 0x130) = blue;
-
-                selectedCount = candidateCount;
-                candidateCount++;
-                candidates[selectedCount] = light;
-                if (candidateCount >= 20) {
-                    break;
-                }
-            }
-        }
-    }
-
-    if (maxLights > candidateCount) {
-        maxLights = candidateCount;
-    }
-
-    *outCount = 0;
-    while (*outCount < maxLights) {
-        intensity = lbl_803DE75C;
-        for (i = 0; i < candidateCount; i++) {
-            if (*(f32 *)(candidates[i] + 0x130) > intensity) {
-                light = candidates[i];
-                intensity = *(f32 *)(light + 0x130);
-            }
-        }
-        selectedCount = *outCount;
-        *outCount = selectedCount + 1;
-        outLights[selectedCount] = light;
-        *(f32 *)(light + 0x130) = lbl_803DE75C;
-    }
-}
+void modelLightStruct_selectBrightestAabbLights(u8 **outLights, int maxLights, int *outCount, f32 minX, f32 minY, f32 minZ, f32 maxX, f32 maxY, f32 maxZ);
 #pragma dont_inline reset
 
 #pragma dont_inline on
-void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights, int *outCount, int typeMask) {
-    f32 delta[3];
-    u8 *candidates[20];
-    u8 *light;
-    f32 intensity;
-    f32 dist;
-    f32 red;
-    f32 green;
-    f32 blue;
-    u32 objectLightMask;
-    int candidateCount;
-    int i;
-    int selectedCount;
-    int lightType;
-
-    if (obj != NULL) {
-        objectLightMask = (1 << *(u8 *)(*(u32 *)(obj + 0x50) + 0x8d)) & 0xff;
-    } else {
-        objectLightMask = 1;
-    }
-
-    candidateCount = 0;
-    for (i = 0; i < gModelLightCount; i++) {
-        light = gModelLightList[i];
-        lightType = *(int *)(light + 0x50);
-        if (light[0x4c] != 0 && (lightType & typeMask) != 0 &&
-            (light[0x64] & objectLightMask) != 0) {
-            if (lightType == 4) {
-                *(f32 *)(light + 0x130) = lbl_803DE768;
-            } else if (lightType == 8) {
-                if (*(void **)(light + 0x16c) == NULL || modelLightStruct_projectedLightIntersectsObject(light, obj) == 0) {
-                    *(f32 *)(light + 0x130) = lbl_803DE75C;
-                } else {
-                    PSVECSubtract((f32 *)(obj + 0x18), (f32 *)(light + 0x10), delta);
-                    dist = PSVECMag(delta);
-                    intensity = lbl_803DE764;
-                    *(f32 *)(light + 0x130) = intensity + intensity / dist;
-                    *(f32 *)(light + 0x134) = modelLightStruct_getObjectIntensity(light, obj);
-                }
-            } else {
-                intensity = modelLightStruct_getObjectIntensity(light, obj);
-                *(f32 *)(light + 0x134) = intensity;
-                red = intensity * (f32)light[0xa8];
-                if (red < lbl_803DE75C) {
-                    red = lbl_803DE75C;
-                } else if (red > lbl_803DE76C) {
-                    red = lbl_803DE76C;
-                }
-                green = intensity * (f32)light[0xa9];
-                if (green < lbl_803DE75C) {
-                    green = lbl_803DE75C;
-                } else if (green > lbl_803DE76C) {
-                    green = lbl_803DE76C;
-                }
-                blue = intensity * (f32)light[0xaa];
-                if (blue < lbl_803DE75C) {
-                    blue = lbl_803DE75C;
-                } else if (blue > lbl_803DE76C) {
-                    blue = lbl_803DE76C;
-                }
-                if (green < red) {
-                    green = red;
-                }
-                *(f32 *)(light + 0x130) = green;
-                if (blue < *(f32 *)(light + 0x130)) {
-                    blue = *(f32 *)(light + 0x130);
-                }
-                *(f32 *)(light + 0x130) = blue;
-            }
-
-            if (*(f32 *)(light + 0x130) > lbl_803DE75C) {
-                *(f32 *)(light + 0x130) += (f32)((int)light[0x2fc] << 8);
-                selectedCount = candidateCount;
-                candidateCount++;
-                candidates[selectedCount] = light;
-                if (candidateCount >= 20) {
-                    break;
-                }
-            }
-        }
-    }
-
-    if (maxLights > candidateCount) {
-        maxLights = candidateCount;
-    }
-
-    *outCount = 0;
-    while (*outCount < maxLights) {
-        intensity = lbl_803DE75C;
-        for (i = 0; i < candidateCount; i++) {
-            if (*(f32 *)(candidates[i] + 0x130) > intensity) {
-                light = candidates[i];
-                intensity = *(f32 *)(light + 0x130);
-            }
-        }
-        selectedCount = *outCount;
-        *outCount = selectedCount + 1;
-        outLights[selectedCount] = light;
-        *(f32 *)(light + 0x130) = -*(f32 *)(light + 0x130);
-    }
-}
+void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights, int *outCount, int typeMask);
 #pragma dont_inline reset
 #pragma pop
 
@@ -11603,20 +8782,7 @@ extern u8 lbl_802C7400[];
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void mtx44Transpose(f32 *src, f32 *dst) {
-    dst[0] = src[0];
-    dst[1] = src[4];
-    dst[2] = src[8];
-    dst[4] = src[1];
-    dst[5] = src[5];
-    dst[6] = src[9];
-    dst[8] = src[2];
-    dst[9] = src[6];
-    dst[10] = src[10];
-    dst[3] = src[12];
-    dst[7] = src[13];
-    dst[11] = src[14];
-}
+void mtx44Transpose(f32 *src, f32 *dst);
 #pragma dont_inline reset
 
 extern void setMatrixFromObjectPos(f32 *mtx, u8 *obj);
@@ -11645,29 +8811,10 @@ void model_multMtxs(u8 *model, f32 *out) {
 }
 
 #pragma dont_inline on
-void setMatrixFromObjectTransposed(void *obj, f32 *out) {
-    f32 m[16];
-    setMatrixFromObjectPos(m, (u8 *)obj);
-    out[0] = m[0];
-    out[1] = m[4];
-    out[2] = m[8];
-    out[4] = m[1];
-    out[5] = m[5];
-    out[6] = m[9];
-    out[8] = m[2];
-    out[9] = m[6];
-    out[10] = m[10];
-    out[3] = m[12];
-    out[7] = m[13];
-    out[11] = m[14];
-}
+void setMatrixFromObjectTransposed(void *obj, f32 *out);
 #pragma dont_inline reset
 
-void Matrix_TransformPoint(f32 *m, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz) {
-    *ox = m[12] + (m[0] * x + m[4] * y + m[8] * z);
-    *oy = m[13] + (m[1] * x + m[5] * y + m[9] * z);
-    *oz = m[14] + (m[2] * x + m[6] * y + m[10] * z);
-}
+void Matrix_TransformPoint(f32 *m, f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz);
 
 void objFn_8002b67c(u8 *obj) {
     u8 *dst;
@@ -11692,64 +8839,13 @@ void objFn_8002b67c(u8 *obj) {
     dst[4] = src[0x10];
 }
 
-void modelLightStruct_updateGlowAlpha(ModelLightStruct *light) {
-    s16 v;
-
-    if (light->glowType == 0) {
-        return;
-    }
-    if (light->enabled == 0) {
-        return;
-    }
-    v = light->glowAlpha + light->glowAlphaStep;
-    if (v < 0) {
-        v = 0;
-        light->glowAlphaStep = 0;
-    } else if (v > 0xff) {
-        v = 0xff;
-        light->glowAlphaStep = 0;
-    }
-    light->glowAlpha = v;
-}
+void modelLightStruct_updateGlowAlpha(ModelLightStruct *light);
 
 #pragma dont_inline on
-void gameTextSetColor(u8 r, u8 g, u8 b, u8 a) {
-    if (gameTextDrawFunc != NULL) {
-        lbl_803DC9A7 = r;
-        lbl_803DC9A6 = g;
-        lbl_803DC9A5 = b;
-        lbl_803DC9A4 = a;
-    } else {
-        int i = lbl_803DC9C8;
-        GameTextSlot *s;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
-        s->v = 3;
-        s->f4 = r;
-        s->f8 = g;
-        s->fc = b;
-        s->f10 = a;
-    }
-}
+void gameTextSetColor(u8 r, u8 g, u8 b, u8 a);
 #pragma dont_inline reset
 
-void gameTextSetWindowStrPos(int idx, int x, int y) {
-    if (gameTextDrawFunc != NULL) {
-        s16 sx = x;
-        u8 *p = lbl_802C7400 + idx * 0x20;
-        *(s16 *)(p + 0x18) = sx;
-        *(s16 *)(p + 0x1a) = y;
-    } else {
-        int i = lbl_803DC9C8;
-        GameTextSlot *s;
-        lbl_803DC9C8 = i + 1;
-        s = &lbl_8033A540[i];
-        s->v = 4;
-        s->f4 = idx;
-        s->f8 = x;
-        s->fc = y;
-    }
-}
+void gameTextSetWindowStrPos(int idx, int x, int y);
 #pragma pop
 
 extern void textureFree(void *tex);
@@ -11769,109 +8865,17 @@ extern u8 lbl_803DC9F4;
 #pragma scheduling off
 #pragma peephole off
 #pragma optimize_for_size on
-void gameTextInitFn_8001bd14(void) {
-    int i;
-    int zero;
-    int *scratch;
-
-    zero = 0;
-    lbl_803DCA04 = zero;
-    lbl_803DCA00 = 1;
-    lbl_803DB3E0 = -1;
-
-    scratch = (int *)lbl_8033B240;
-    i = 8;
-    do {
-        scratch[0] = zero;
-        scratch[1] = zero;
-        scratch[2] = zero;
-        scratch[3] = zero;
-        scratch[4] = zero;
-        scratch[5] = zero;
-        scratch[6] = zero;
-        scratch[7] = zero;
-        scratch += 8;
-        scratch[0] = zero;
-        scratch[1] = zero;
-        scratch[2] = zero;
-        scratch[3] = zero;
-        scratch[4] = zero;
-        scratch[5] = zero;
-        scratch[6] = zero;
-        scratch[7] = zero;
-        scratch += 8;
-        scratch[0] = zero;
-        scratch[1] = zero;
-        scratch[2] = zero;
-        scratch[3] = zero;
-        scratch[4] = zero;
-        scratch[5] = zero;
-        scratch[6] = zero;
-        scratch[7] = zero;
-        scratch += 8;
-        scratch[0] = zero;
-        scratch[1] = zero;
-        scratch[2] = zero;
-        scratch[3] = zero;
-        scratch[4] = zero;
-        scratch[5] = zero;
-        scratch[6] = zero;
-        scratch[7] = zero;
-        scratch += 8;
-        i--;
-    } while (i != 0);
-}
+void gameTextInitFn_8001bd14(void);
 #pragma optimize_for_size reset
 
 #pragma dont_inline on
-void subtitleFn_8001b700(void) {
-    void **slot;
-    int i;
-    int oldDelay;
-
-    if (lbl_803DCA04 != 0) {
-        lbl_803DCA04 = 0;
-        i = 0;
-        slot = lbl_8033B240;
-        while (i < lbl_803DCA14) {
-            if (*slot != NULL) {
-                oldDelay = mmSetFreeDelay(0);
-                mm_free(*slot);
-                mmSetFreeDelay(oldDelay);
-                *slot = NULL;
-            }
-            slot++;
-            i++;
-        }
-
-        if (lbl_803DB3E0 != -1) {
-            gameTextLoadDir(lbl_803DB3E0);
-            lbl_803DB3E0 = -1;
-        }
-    }
-}
+void subtitleFn_8001b700(void);
 
 #pragma dont_inline reset
 
-void fn_8001BDD4(int mode) {
-    switch (mode) {
-    case 3:
-        textureFree(lbl_8033BE54[0]);
-        textureFree(lbl_8033BE54[1]);
-        textureFree(lbl_8033BE54[2]);
-        break;
-    }
-}
+void fn_8001BDD4(int mode);
 
-void fn_8001BE2C(int mode) {
-    switch (mode) {
-    case 3:
-        lbl_8033BE54[0] = textureLoadAsset(0x43b);
-        lbl_8033BE54[1] = textureLoadAsset(0x43e);
-        lbl_8033BE54[2] = textureLoadAsset(0x43d);
-        break;
-    }
-}
+void fn_8001BE2C(int mode);
 
 int fn_8002B8F0(u8 *obj) {
     *(f32 *)(obj + 0xc) += timeDelta * (lbl_803DE8B8 * (*(f32 *)(obj + 0xfc) + *(f32 *)(obj + 0x24)));
@@ -11941,19 +8945,7 @@ void Model_GetVertexPosition(u8 *model, int vertexIndex, f32 *out) {
     }
 }
 
-void textFn_8001bb78(int x) {
-    if (lbl_803DCA00 != 0) {
-        lbl_803DC9FC = x;
-        lbl_803DC9F8 = getCurGameText();
-        lbl_803DC9F0 = 0;
-        lbl_803DB3E0 = -1;
-        lbl_803DCA04 = 1;
-        lbl_803DC9F7 = 0xff;
-        lbl_803DC9F6 = 0xff;
-        lbl_803DC9F5 = 0xff;
-        lbl_803DC9F4 = 0xff;
-    }
-}
+void textFn_8001bb78(int x);
 
 void Obj_ApplyPendingParentLinks(void) {
     int i;
@@ -11985,14 +8977,7 @@ extern void **lbl_803DCB98;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void Matrix_TransformVector(f32 *m, f32 *v, f32 *out) {
-    f32 vx = v[0];
-    f32 vy = v[1];
-    f32 vz = v[2];
-    out[0] = vx * m[0] + vy * m[4] + vz * m[8];
-    out[1] = vx * m[1] + vy * m[5] + vz * m[9];
-    out[2] = vx * m[2] + vy * m[6] + vz * m[10];
-}
+void Matrix_TransformVector(f32 *m, f32 *v, f32 *out);
 
 extern int rand(void);
 extern f32 lbl_803DE7F8;
@@ -12000,14 +8985,7 @@ extern f64 lbl_803DE800;
 extern f64 lbl_803DE7E0;
 
 #pragma dont_inline on
-int randomGetRange(int lo, int hi) {
-    f32 v;
-    if (lo == hi) {
-        return lo;
-    }
-    v = ((f32)(u32)rand() / lbl_803DE7F8) * (lbl_803DE7C4 + (f32)hi - (f32)lo);
-    return (int)(v + (f32)lo);
-}
+int randomGetRange(int lo, int hi);
 #pragma dont_inline reset
 
 extern s16 lbl_803DCAD8;
@@ -12015,57 +8993,7 @@ extern u8 *lbl_803DCAE0;
 #define gGameBitCount lbl_803DCAD8
 #define gGameBitSaveData lbl_803DCAE0
 
-u32 GameBit_Get(int eventId) {
-    s16 id = (s16)eventId & 0xfff;
-    u8 flags;
-    u8 *base;
-    int start;
-    int i;
-    u32 bit;
-    u32 result;
-
-    if (id == 0x95) {
-        return 1;
-    }
-    if (id == 0x96) {
-        return 0;
-    }
-    if (eventId == -1) {
-        return 0;
-    }
-    if (id < 0 || id >= gGameBitCount) {
-        return 0;
-    }
-    flags = gGameBitTable[id * 4 + 2];
-    switch (flags >> 6) {
-    case 0:
-        base = gGameBitSaveData + 0xef0;
-        break;
-    case 1:
-        base = gGameBitSaveData + 0x564;
-        break;
-    case 2:
-        base = gGameBitSaveData + 0x24;
-        break;
-    case 3:
-        base = gGameBitSaveData + 0x5d8;
-        break;
-    }
-    start = *(u16 *)(gGameBitTable + id * 4);
-    result = 0;
-    bit = 1;
-    for (i = start; i <= (flags & 0x1f) + start; i++) {
-        if ((1 << (i & 7)) & base[i >> 3]) {
-            result |= bit;
-        }
-        bit <<= 1;
-    }
-    if (eventId & 0x8000) {
-        result &= 1;
-        result ^= 1;
-    }
-    return result;
-}
+u32 GameBit_Get(int eventId);
 
 extern int isSaveGameLoading(void);
 extern void gameBitFn_800ea2e0(int a);
@@ -12074,132 +9002,16 @@ extern void OSReport(char *fmt, ...);
 #define GameBit_RequestSync gameBitFn_800ea2e0
 #define sGameBitSetDuringSaveLoadWarning lbl_802CA4E0
 
-void GameBit_Set(int eventId, int value) {
-    s16 id;
-    u8 flags;
-    u8 *base;
-    int limit;
-    int start;
-    int end;
-    int i;
-    u32 bit;
+void GameBit_Set(int eventId, int value);
 
-    if (isSaveGameLoading()) {
-        OSReport(sGameBitSetDuringSaveLoadWarning, eventId, value);
-        return;
-    }
-    if (eventId & 0x8000) {
-        value = (value & 1) ^ 1;
-    }
-    id = (s16)eventId & 0xfff;
-    if (id == 0x95) {
-        return;
-    }
-    if (id == 0x96) {
-        return;
-    }
-    if (eventId == -1) {
-        return;
-    }
-    if (id < 0 || id >= gGameBitCount) {
-        return;
-    }
-    flags = gGameBitTable[id * 4 + 2];
-    switch (flags >> 6) {
-    case 0:
-        base = gGameBitSaveData + 0xef0;
-        limit = 0x80;
-        break;
-    case 1:
-        base = gGameBitSaveData + 0x564;
-        limit = 0x74;
-        break;
-    case 2:
-        base = gGameBitSaveData + 0x24;
-        limit = 0x144;
-        break;
-    case 3:
-        base = gGameBitSaveData + 0x5d8;
-        limit = 0xac;
-        break;
-    }
-    if (flags & 0x20) {
-        GameBit_RequestSync(gGameBitTable[id * 4 + 3]);
-    }
-    start = *(u16 *)(gGameBitTable + id * 4);
-    bit = 1;
-    end = (gGameBitTable[id * 4 + 2] & 0x1f) + start + 1;
-    for (i = start; i < end; i++) {
-        int byteIdx = i >> 3;
-        int mask;
-        if (byteIdx >= limit) {
-            break;
-        }
-        mask = 1 << (i & 7);
-        if (value & bit) {
-            base[byteIdx] |= mask;
-        } else {
-            base[byteIdx] &= ~mask;
-        }
-        bit <<= 1;
-    }
-}
+void copyMatrix44(f32 *src, f32 *dst);
 
-void copyMatrix44(f32 *src, f32 *dst) {
-    dst[0] = src[0];
-    dst[1] = src[1];
-    dst[2] = src[2];
-    dst[3] = src[3];
-    dst[4] = src[4];
-    dst[5] = src[5];
-    dst[6] = src[6];
-    dst[7] = src[7];
-    dst[8] = src[8];
-    dst[9] = src[9];
-    dst[10] = src[10];
-    dst[11] = src[11];
-    dst[12] = src[12];
-    dst[13] = src[13];
-    dst[14] = src[14];
-    dst[15] = src[15];
-}
+void Vec3_Normalize(f32 *v);
 
-void Vec3_Normalize(f32 *v) {
-    f32 len = sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-    if (len != lbl_803DE808) {
-        f32 s = lbl_803DE810 / len;
-        v[0] *= s;
-        v[1] *= s;
-        v[2] *= s;
-    }
-}
-
-int gameBitIncrement(int bit) {
-    int val = GameBit_Get(bit) + 1;
-    int max = 1 << ((gGameBitTable[bit * 4 + 2] & 0x1f) + 1);
-    if (val < max) {
-        GameBit_Set(bit, val);
-    } else {
-        val--;
-    }
-    return val;
-}
+int gameBitIncrement(int bit);
 
 #pragma dont_inline on
-void memcpyToCache(void *dst, void *src, u32 count) {
-    if (lbl_803DD610 != 4 && lbl_803DD610 != 0) {
-        int len;
-        if (count != 0) {
-            len = count << 5;
-        } else {
-            len = 0x1000;
-        }
-        memcpy(dst, src, len);
-        DCFlushRange(dst, len);
-    } else {
-        LCStoreBlocks(dst, src, count);
-    }
-}
+void memcpyToCache(void *dst, void *src, u32 count);
 #pragma dont_inline reset
 
 void Obj_FlushDeferredFreeList(void) {
@@ -12229,37 +9041,12 @@ extern u8 *lbl_80340880[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void modelLightStruct_setupPerspectiveProjection(ModelLightStruct *obj, f32 a, f32 b) {
-    obj->projectionFovY = a;
-    obj->projectionAspect = b;
-    obj->projectionType = 1;
-    C_MTXLightPerspective(obj->lightProjectionTexMtx, obj->projectionFovY, obj->projectionAspect,
-                          lbl_803DE790, lbl_803DE790, lbl_803DE790, lbl_803DE790);
-    C_MTXLightPerspective(obj->lightProjectionClipMtx, obj->projectionFovY, obj->projectionAspect,
-                          lbl_803DE790, lbl_803DE790, lbl_803DE790, lbl_803DE790);
-}
+void modelLightStruct_setupPerspectiveProjection(ModelLightStruct *obj, f32 a, f32 b);
 
 extern void C_MTXLightOrtho(f32 *m, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT,
                             f32 transS, f32 transT);
 
-void modelLightStruct_setupOrthoProjection(ModelLightStruct *obj, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f) {
-    f32 fScale;
-    f32 eScale;
-
-    obj->projectionTop = a;
-    obj->projectionBottom = b;
-    obj->projectionLeft = c;
-    obj->projectionRight = d;
-    obj->projectionType = 0;
-    fScale = f * lbl_803DE790;
-    eScale = e * lbl_803DE790;
-    C_MTXLightOrtho(obj->lightProjectionTexMtx, obj->projectionTop, obj->projectionBottom,
-                    obj->projectionLeft, obj->projectionRight, fScale, eScale, fScale,
-                    eScale);
-    C_MTXLightOrtho(obj->lightProjectionClipMtx, obj->projectionTop, obj->projectionBottom,
-                    obj->projectionLeft, obj->projectionRight, lbl_803DE790, lbl_803DE790,
-                    lbl_803DE790, lbl_803DE790);
-}
+void modelLightStruct_setupOrthoProjection(ModelLightStruct *obj, f32 a, f32 b, f32 c, f32 d, f32 e, f32 f);
 
 #pragma dont_inline on
 void ObjModel_InitScratchBuffers(void) {
@@ -12312,48 +9099,11 @@ void fn_8002B6D8(u8 *obj, int a, int b, int c, u8 d, u8 e) {
     }
 }
 
-void dvdCancelCallback_8001b39c(int a, u8 *match) {
-    int i;
-    u8 *p = curGameTexts;
-    for (i = 8; i != 0; i--) {
-        if (match == p) {
-            *(int *)(p + 0x44) = 5;
-            return;
-        }
-        p += 0x4c;
-    }
-}
+void dvdCancelCallback_8001b39c(int a, u8 *match);
 
-void gameTextOpenCallback_8001b3d0(int status, u8 *match) {
-    int i;
-    u8 *p = curGameTexts;
-    if (status != -1 && status != -3) {
-        for (i = 8; i != 0; i--) {
-            if (match == p) {
-                *(int *)(p + 0x44) = 2;
-                return;
-            }
-            p += 0x4c;
-        }
-    } else {
-        p = curGameTexts;
-        for (i = 8; i != 0; i--) {
-            if (match == p) {
-                *(int *)(p + 0x44) = 5;
-                return;
-            }
-            p += 0x4c;
-        }
-    }
-}
+void gameTextOpenCallback_8001b3d0(int status, u8 *match);
 
-void modelLightStruct_setSpecularAttenuation(ModelLightStruct *obj, f32 a, f32 b) {
-    obj->specularAttenuationScale = a;
-    obj->specularBrightness = b;
-    GXInitLightAttn((u8 *)obj + 0xc0, lbl_803DE75C, lbl_803DE75C, lbl_803DE760,
-                    obj->specularAttenuationScale * lbl_803DE790, lbl_803DE75C,
-                    lbl_803DE760 - obj->specularAttenuationScale * lbl_803DE790);
-}
+void modelLightStruct_setSpecularAttenuation(ModelLightStruct *obj, f32 a, f32 b);
 #pragma pop
 
 extern void ObjModel_SetBlendChannelTargets(u8 *model, int ch, int a, int b, f32 w, int c);
@@ -12766,19 +9516,7 @@ void setGQR6_2(int a, int b, int c, int d) {
     setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
 }
 
-void mapLoadByCoords(int arg) {
-    lbl_803DCA38 = 0;
-    mapSetup(arg, &lbl_803DCAF8, &lbl_803DCAF4);
-    lbl_803DCA40 = 1;
-    lbl_803DCA41 = 1;
-    memset(lbl_8033BFB8, 0, 0x3c0);
-    lbl_803DCAD4 = 0;
-    lbl_803DCA39 = 1;
-    lbl_803DCA44 = 0;
-    Music_Trigger(0xc9, 0);
-    Music_Trigger(0xd0, 0);
-    lbl_803DB420 = lbl_803DE7B4;
-}
+void mapLoadByCoords(int arg);
 
 extern void objLoadPlayerFromSave(u8 *obj);
 extern f32 lbl_803DE88C;
@@ -12975,516 +9713,14 @@ extern void mtxRotateByVec3s(f32 *mtx, void *transform);
 #pragma scheduling off
 #pragma peephole off
 #pragma optimize_for_size on
-void gameTextInitFn_8001a234(void) {
-    u8 *gameTextBase;
-    u8 *p;
-    u8 *textWindow;
-    u8 *glyphPage;
-    u8 **glyphPagePtr;
-    u8 *fontState;
-    u8 *request;
-    u8 *clearPtr;
-    f32 zero;
-    int i;
-    int j;
-
-    gameTextBase = lbl_80339980;
-
-    i = 0x94;
-    textWindow = lbl_802C7400 + 0x1280;
-    p = textWindow;
-    while (p -= 0x20, i-- != 0) {
-        *(u16 *)(p + 8) = *(u16 *)(p + 2);
-        *(u16 *)(p + 0xa) = *(u16 *)(p + 6);
-    }
-
-    i = 8;
-    glyphPage = gameTextBase + 0x2c0;
-    glyphPagePtr = (u8 **)(gameTextBase + 0xc0);
-    fontState = gameTextBase + 0xa0;
-    while (glyphPage -= 0x40, glyphPagePtr--, fontState -= 0xc, i-- != 0) {
-        *glyphPagePtr = glyphPage;
-        *(u16 *)fontState = 0xffff;
-        *(u16 *)(fontState + 2) = 1;
-        fontState[4] = 0xff;
-        fontState[5] = 0;
-        fontState[6] = 0;
-        fontState[7] = 0;
-        *(u8 ***)(fontState + 8) = glyphPagePtr;
-    }
-
-    i = 0x94;
-    while (textWindow -= 0x20, i-- != 0) {
-        textWindow[0x1e] = 0xff;
-    }
-
-    i = 4;
-    request = gameTextBase + 0x1660;
-    zero = lbl_803DE704;
-    while (request -= 0x28, i-- != 0) {
-        *(int *)(request + 8) = 0;
-        *(int *)(request + 0xc) = 0;
-        *(int *)(request + 0) = 0;
-        *(int *)(request + 4) = 0;
-        *(int *)(request + 0x1c) = 0;
-        *(f32 *)(request + 0x20) = zero;
-        request[0x24] = 0xff;
-        request[0x25] = 6;
-
-        j = 3;
-        clearPtr = request + 0xc;
-        while (clearPtr -= 4, j-- != 0) {
-            *(int *)(clearPtr + 0x10) = 0;
-        }
-    }
-
-    gameTextFonts = gameTextBase + GAMETEXT_FONT_SLOT_OFFSET;
-    lbl_803DC9E8 = 2;
-    curLanguage = -1;
-    curGameTextDir = (void *)-1;
-    lbl_803DC9CC = NULL;
-    lbl_803DC9E0 = -1;
-    lbl_803DC9D8 = -1;
-    lbl_803DC9BC = 0;
-    lbl_803DC9A7 = 0xff;
-    lbl_803DC9A6 = 0xff;
-    lbl_803DC9A5 = 0xff;
-    lbl_803DC9A4 = 0xff;
-    lbl_803DC9C8 = 0;
-    lbl_803DC9C4 = gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET;
-    lbl_803DC97C = 0;
-    textWindow = gameTextBase + 0x40;
-    lbl_803DC974 = textWindow;
-    lbl_803DC978 = *(int *)*(void **)(textWindow + 8);
-    lbl_803DC992 = 0;
-    lbl_803DC991 = 0;
-    lbl_803DC990 = 0;
-    lbl_803DC98C = 5;
-    lbl_803DC988 = 5;
-    lbl_803DC984 = 1;
-    lbl_803DC980 = 0;
-    gameTextLoadGraphicsFn_8001a918();
-    curGameTextDir = (void *)3;
-    lbl_803DB378 = mmCreateMemoryStore(0x800);
-}
+void gameTextInitFn_8001a234(void);
 #pragma optimize_for_size reset
 
-void gameTextRun(void) {
-    u8 *gameTextBase;
-    GameTextLoadSlot *slot;
-    GameTextLoadSlot *freeSlot;
-    u8 *pending;
-    char *path;
-    int sourceId;
-    int dirId;
-    int languageId;
-    int i;
-    GameTextSlot *cmd;
-    u8 *textWindow;
-    int color;
-    double zero;
-    double fadeLimit;
+void gameTextRun(void);
 
-    gameTextBase = lbl_80339980;
+void loadGameTextSequence(int sequenceSlotDir, int sequenceId);
 
-    slot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
-    i = GAMETEXT_LOAD_SLOT_COUNT - 1;
-    do {
-        if (slot->state == 2) {
-            setLanguageFn_8001ad64(slot);
-        }
-        slot++;
-    } while (i-- != 0);
-
-    sourceId = 0;
-    pending = gameTextBase + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET;
-    do {
-        dirId = pending[0x24];
-        if ((u8)dirId != GAMETEXT_INVALID_DIR) {
-            freeSlot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
-            if (freeSlot->active != 0) {
-                freeSlot++;
-                if (freeSlot->active != 0) {
-                    freeSlot++;
-                    if (freeSlot->active != 0) {
-                        freeSlot++;
-                        if (freeSlot->active != 0) {
-                            freeSlot++;
-                            if (freeSlot->active != 0) {
-                                freeSlot++;
-                                if (freeSlot->active != 0) {
-                                    freeSlot++;
-                                    if (freeSlot->active != 0) {
-                                        freeSlot++;
-                                        if (freeSlot->active != 0) {
-                                            freeSlot = NULL;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (freeSlot != NULL) {
-                languageId = pending[0x25];
-                freeSlot->state = 1;
-                freeSlot->dirId = (u8)dirId;
-                freeSlot->languageId = (u8)languageId;
-                freeSlot->active = 1;
-                freeSlot->sourceId = (u8)sourceId;
-                path = (char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET);
-                sprintf(path, sGameTextMapPathFormat, sMapDirectoryNameTable[dirId],
-                        sLanguageNameTable[languageId][0]);
-                setFileInfo(freeSlot);
-                freeSlot->loadHandle =
-                    loadFileByPathAsync(path, &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
-                setFileInfo(NULL);
-                pending[0x24] = GAMETEXT_INVALID_DIR;
-                pending[0x25] = GAMETEXT_INVALID_LANGUAGE;
-            }
-        }
-        pending += 0x28;
-        sourceId++;
-    } while (sourceId < GAMETEXT_PENDING_SOURCE_COUNT);
-
-    slot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
-    i = GAMETEXT_LOAD_SLOT_COUNT - 1;
-    do {
-        if ((slot->state == 5 || slot->state == 6) && slot->loadHandle != NULL) {
-            mm_free(slot->loadHandle);
-            slot->loadHandle = NULL;
-            slot->dvdFileInfo = NULL;
-            slot->active = 0;
-        }
-        slot++;
-    } while (i-- != 0);
-
-    zero = lbl_803DE704;
-    fadeLimit = lbl_803DE71C;
-    for (i = 7; i >= 0; i--) {
-        f32 *alpha = (f32 *)(gameTextBase + 0x20 + i * 4);
-        f32 *timer = (f32 *)(gameTextBase + 0x40 + i * 4);
-        u8 *entry = gameTextBase + 0xa0 + i * 0xc;
-
-        if ((double)*timer > zero) {
-            *alpha += timeDelta;
-            if ((double)*alpha > fadeLimit) {
-                *timer = (f32)zero;
-                *alpha = (f32)zero;
-                sprintf(**(char ***)(entry + 8), lbl_803DB3D4);
-            }
-        }
-    }
-
-    if (*(int *)(gameTextFonts + 0x1c) == 1) {
-        *(f32 *)(gameTextFonts + 0x20) += timeDelta;
-    } else {
-        *(f32 *)(gameTextFonts + 0x20) = lbl_803DE704;
-    }
-
-    textWindow = lbl_802C7400;
-    for (i = 0x25; i > 0; i--) {
-        *(u16 *)(textWindow + 0x1c) &= 0xfffe;
-        textWindow += 0x20;
-        *(u16 *)(textWindow + 0x1c) &= 0xfffe;
-        textWindow += 0x20;
-        *(u16 *)(textWindow + 0x1c) &= 0xfffe;
-        textWindow += 0x20;
-        *(u16 *)(textWindow + 0x1c) &= 0xfffe;
-        textWindow += 0x20;
-    }
-
-    lbl_803DC99C = 0;
-    lbl_803DC9AA = 0;
-    lbl_803DC9A8 = 0;
-
-    cmd = lbl_8033A540;
-    i = lbl_803DC9C8;
-    while (i-- != 0) {
-        switch (cmd->v) {
-        case 3:
-            lbl_803DC9A7 = (u8)cmd->f4;
-            lbl_803DC9A6 = (u8)cmd->f8;
-            lbl_803DC9A5 = (u8)cmd->fc;
-            lbl_803DC9A4 = (u8)cmd->f10;
-            break;
-        case 4:
-            textWindow = lbl_802C7400 + cmd->f4 * 0x20;
-            *(s16 *)(textWindow + 0x18) = (s16)cmd->f8;
-            *(s16 *)(textWindow + 0x1a) = (s16)cmd->fc;
-            break;
-        case 1:
-            textDisplayFn_800168dc(cmd->f4, cmd->f8);
-            break;
-        case 2:
-            gameTextFn_8001658c(cmd->f4, cmd->f8, cmd->fc);
-            break;
-        case 5:
-            if (lbl_803DC9CC != NULL) {
-                gameTextRenderStrs(cmd->f4, ((u8 *)lbl_803DC9CC - lbl_802C7400) / 0x20);
-            }
-            break;
-        case 6:
-            gameTextRenderStrs(cmd->f4, cmd->f8);
-            break;
-        case 7:
-            textWindow = lbl_802C7400 + cmd->f8 * 0x20;
-            *(s16 *)(textWindow + 0x18) = (s16)cmd->fc;
-            *(s16 *)(textWindow + 0x1a) = (s16)cmd->f10;
-            gameTextRenderStrs(cmd->f4, cmd->f8);
-            break;
-        case 8:
-            if (cmd->f4 == 0xff) {
-                lbl_803DC9CC = NULL;
-            } else {
-                lbl_803DC9CC = lbl_802C7400 + cmd->f4 * 0x20;
-            }
-            break;
-        case 9:
-            ((void (*)(void))cmd->f4)();
-            break;
-        case 10:
-            lbl_803DC9AA = (u16)cmd->f4;
-            lbl_803DC9A8 = (u16)cmd->f8;
-            break;
-        case 11:
-            lbl_803DC9AA = 0;
-            lbl_803DC9A8 = 0;
-            break;
-        case 12:
-            lbl_803DC984 = cmd->f4;
-            break;
-        case 14:
-            lbl_803DC992 = (u8)cmd->f4;
-            lbl_803DC991 = (u8)cmd->f8;
-            lbl_803DC990 = (u8)cmd->fc;
-            break;
-        case 13:
-            lbl_803DC98C = cmd->f4;
-            lbl_803DC988 = cmd->f8;
-            break;
-        case 15:
-            gameTextFonts = gameTextBase + GAMETEXT_PENDING_REQUEST_SCAN_OFFSET + cmd->f4 * 0x28;
-            lbl_803DC9E8 = cmd->f4;
-            if (cmd->f4 == 2) {
-                color = lbl_803DB3C8;
-                hudDrawRect(0, 0, 0xa00, 0x780, &color);
-                lbl_803DC99C = 0;
-            }
-            break;
-        }
-        cmd++;
-    }
-
-    if (lbl_803DC99C == 0) {
-        Sfx_StopFromObject(0, 0x397);
-    }
-    lbl_803DC9C8 = 0;
-    lbl_803DC9C4 = gameTextBase + GAMETEXT_COMMAND_STRING_BUFFER_OFFSET;
-
-    textWindow = lbl_802C7400 + 0x1280;
-    for (i = 0x94; i > 0; i--) {
-        textWindow -= 0x20;
-        *(s16 *)(textWindow + 0x18) = 0;
-        *(s16 *)(textWindow + 0x1a) = 0;
-    }
-    lbl_803DC9CC = NULL;
-}
-
-void loadGameTextSequence(int sequenceSlotDir, int sequenceId) {
-    int oldHeap;
-    int languageId;
-    int languageTableOffset;
-    GameTextLoadSlot *slot;
-    GameTextLoadSlot *freeSlot;
-    char *path;
-    u8 *gameTextBase;
-    u8 *languageTable;
-    int i;
-
-    gameTextBase = lbl_80339980;
-    languageId = curLanguage;
-    languageTableOffset = languageId << 3;
-    languageTable = (u8 *)sLanguageNameTable;
-    oldHeap = testAndSet_onlyUseHeap3(0);
-    if (getGameState() != 0 && getGameState() != 1) {
-        testAndSet_onlyUseHeap3(oldHeap);
-        return;
-    }
-
-    lbl_803DC9D0 = lbl_803DC9D4;
-    if (curLanguage < 0 || curLanguage >= 6) {
-        testAndSet_onlyUseHeap3(oldHeap);
-        return;
-    }
-
-    slot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
-    i = GAMETEXT_LOAD_SLOT_COUNT - 1;
-    do {
-        if (slot->sourceId == GAMETEXT_SEQUENCE_SOURCE_ID) {
-            if (slot->state == 1) {
-                slot->state = 4;
-                DVDCancelAsync(slot, dvdCancelCallback_8001b39c);
-            }
-            if (slot->state == 3 && slot->active != 0) {
-                mmSetFreeDelay(0);
-                mm_free(slot->loadHandle);
-                mmSetFreeDelay(2);
-                slot->loadHandle = NULL;
-                slot->dvdFileInfo = NULL;
-                slot->active = 0;
-            }
-        }
-        slot++;
-    } while (i-- != 0);
-
-    *(int *)(gameTextBase + GAMETEXT_SEQUENCE_LOAD_STATE_OFFSET) = 1;
-    freeSlot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
-    if (freeSlot->active != 0) {
-        freeSlot++;
-        if (freeSlot->active != 0) {
-            freeSlot++;
-            if (freeSlot->active != 0) {
-                freeSlot++;
-                if (freeSlot->active != 0) {
-                    freeSlot++;
-                    if (freeSlot->active != 0) {
-                        freeSlot++;
-                        if (freeSlot->active != 0) {
-                            freeSlot++;
-                            if (freeSlot->active != 0) {
-                                freeSlot++;
-                                if (freeSlot->active != 0) {
-                                    freeSlot = NULL;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    freeSlot->state = 1;
-    freeSlot->dirId = (u8)sequenceSlotDir;
-    freeSlot->languageId = (u8)curLanguage;
-    freeSlot->active = 1;
-    freeSlot->sourceId = GAMETEXT_SEQUENCE_SOURCE_ID;
-    path = (char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET);
-    sprintf(path, sGameTextSequencePathFormat, sequenceId,
-            *(char **)(languageTable + languageTableOffset));
-    setFileInfo(freeSlot);
-    freeSlot->loadHandle =
-        loadFileByPathAsync(path, &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
-    setFileInfo(NULL);
-    testAndSet_onlyUseHeap3(oldHeap);
-}
-
-void gameTextLoadForCurMap(int sourceId) {
-    int oldHeap;
-    int dirId;
-    int languageId;
-    GameTextLoadSlot *slot;
-    GameTextLoadSlot *freeSlot;
-    GameTextLoadRequest *request;
-    char *path;
-    u8 *gameTextBase;
-    int i;
-
-    gameTextBase = lbl_80339980;
-    oldHeap = testAndSet_onlyUseHeap3(0);
-    if (getGameState() != 0 && getGameState() != 1) {
-        testAndSet_onlyUseHeap3(oldHeap);
-        return;
-    }
-
-    dirId = (int)curGameTextDir;
-    languageId = curLanguage;
-    lbl_803DC9D8 = dirId;
-    lbl_803DC9E0 = languageId;
-    if (dirId < 0 || dirId >= GAMETEXT_MAP_DIR_COUNT ||
-        languageId < 0 || languageId >= GAMETEXT_LANGUAGE_COUNT) {
-        testAndSet_onlyUseHeap3(oldHeap);
-        return;
-    }
-
-    slot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
-    i = GAMETEXT_LOAD_SLOT_COUNT - 1;
-    do {
-        if (slot->sourceId == sourceId) {
-            if (slot->state == 1) {
-                slot->state = 4;
-                DVDCancelAsync(slot, dvdCancelCallback_8001b39c);
-            }
-            if (slot->state == 3 && slot->active != 0) {
-                mmSetFreeDelay(0);
-                if (slot->loadHandle != NULL) {
-                    mm_free(slot->loadHandle);
-                }
-                mmSetFreeDelay(2);
-                slot->loadHandle = NULL;
-                slot->dvdFileInfo = NULL;
-                slot->active = 0;
-            }
-        }
-        slot++;
-    } while (i-- != 0);
-
-    request = (GameTextLoadRequest *)(gameTextBase + GAMETEXT_LOAD_REQUESTS_OFFSET +
-                                      sourceId * sizeof(GameTextLoadRequest));
-    request->state = 1;
-    request->dirId = (u8)curGameTextDir;
-    request->languageId = (u8)curLanguage;
-
-    freeSlot = (GameTextLoadSlot *)(gameTextBase + GAMETEXT_LOAD_SLOTS_OFFSET);
-    if (freeSlot->active != 0) {
-        freeSlot++;
-        if (freeSlot->active != 0) {
-            freeSlot++;
-            if (freeSlot->active != 0) {
-                freeSlot++;
-                if (freeSlot->active != 0) {
-                    freeSlot++;
-                    if (freeSlot->active != 0) {
-                        freeSlot++;
-                        if (freeSlot->active != 0) {
-                            freeSlot++;
-                            if (freeSlot->active != 0) {
-                                freeSlot++;
-                                if (freeSlot->active != 0) {
-                                    freeSlot = NULL;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    if (freeSlot != NULL) {
-        dirId = request->dirId;
-        languageId = request->languageId;
-        freeSlot->state = 1;
-        freeSlot->dirId = (u8)dirId;
-        freeSlot->languageId = (u8)languageId;
-        freeSlot->active = 1;
-        freeSlot->sourceId = (u8)sourceId;
-        path = (char *)(gameTextBase + GAMETEXT_PATH_BUFFER_OFFSET);
-        sprintf(path, sGameTextMapPathFormat, sMapDirectoryNameTable[dirId],
-                sLanguageNameTable[languageId][0]);
-        setFileInfo(freeSlot);
-        freeSlot->loadHandle =
-            loadFileByPathAsync(path, &freeSlot->dvdFileInfo, 1, gameTextOpenCallback_8001b3d0);
-        setFileInfo(NULL);
-        request->dirId = GAMETEXT_INVALID_DIR;
-        request->languageId = GAMETEXT_INVALID_LANGUAGE;
-    }
-
-    testAndSet_onlyUseHeap3(oldHeap);
-}
+void gameTextLoadForCurMap(int sourceId);
 #pragma pop
 
 #pragma push
@@ -13605,46 +9841,7 @@ extern f32 lbl_803DE7F0;
 #pragma push
 #pragma scheduling off
 #pragma fp_contract off
-void mtxRotateByVec3s(f32 *mtx, void *transform) {
-    f32 cx;
-    f32 sx;
-    f32 cy;
-    f32 sy;
-    f32 cz;
-    f32 sz;
-    f32 x;
-    f32 y;
-    f32 z;
-    f32 zero;
-
-    cx = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)transform)) * lbl_803DE7F0;
-    sx = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)transform)) * lbl_803DE7F0;
-    cy = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)((u8 *)transform + 2))) * lbl_803DE7F0;
-    sy = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)((u8 *)transform + 2))) * lbl_803DE7F0;
-    cz = (f32)(int)(lbl_803DE7D0 * fcos16((u16)*(s16 *)((u8 *)transform + 4))) * lbl_803DE7F0;
-    sz = (f32)(int)(lbl_803DE7D0 * fsin16((u16)*(s16 *)((u8 *)transform + 4))) * lbl_803DE7F0;
-
-    mtx[0] = sx * sz - (cy * cz) * cx;
-    mtx[1] = (cy * sz) * cx + sx * cz;
-    mtx[2] = -(cx * sy);
-    zero = lbl_803DE7C0;
-    mtx[3] = zero;
-    mtx[4] = -(sy * cz);
-    mtx[5] = sy * sz;
-    mtx[6] = cy;
-    mtx[7] = zero;
-    mtx[8] = (cy * cz) * sx + cx * sz;
-    mtx[9] = cx * cz - (cy * sz) * sx;
-    mtx[10] = sx * sy;
-    mtx[11] = zero;
-    x = *(f32 *)((u8 *)transform + 0xc);
-    y = *(f32 *)((u8 *)transform + 0x10);
-    z = *(f32 *)((u8 *)transform + 0x14);
-    mtx[12] = mtx[4] * y + mtx[0] * x + mtx[8] * z;
-    mtx[13] = mtx[5] * y + mtx[1] * x + mtx[9] * z;
-    mtx[14] = mtx[6] * y + mtx[2] * x + mtx[10] * z;
-    mtx[15] = lbl_803DE7C4;
-}
+void mtxRotateByVec3s(f32 *mtx, void *transform);
 #pragma pop
 
 extern int lbl_803DCB9C;
@@ -14019,142 +10216,7 @@ extern void boxDrawFn_8001c5ac(u16 *strPtr, int boxId, u8 *box);
 #pragma push
 #pragma scheduling off
 #pragma dont_inline on
-void gameTextDrawBox(u16 *strPtr, int boxId, u8 *box) {
-    u32 colorB;
-    u32 colorA;
-    int c6y1;
-    int c6y0;
-    int c6x1;
-    int c6x0;
-    int c3y1;
-    int c3y0;
-    int c3x1;
-    int c3x0;
-    s16 savedX;
-    s16 savedY;
-    u16 f;
-    u8 *cur;
-    int hw;
-    int hh;
-    int cx;
-    int cy;
-    u16 h7;
-    u16 w7;
-    s16 y7;
-    s16 x7;
-    s16 x2;
-    int w2;
-    int xw;
-    s16 y2;
-    int half;
-    int rem;
-
-    savedX = *(s16 *)(box + 0x18);
-    savedY = *(s16 *)(box + 0x1a);
-    f = *(u16 *)(box + 0x1c);
-    if (f & 1) {
-        return;
-    }
-    *(u16 *)(box + 0x1c) = f | 1;
-    switch (*(u8 *)(box + 0x13)) {
-    case 5:
-        return;
-    case 7:
-        if ((int)getCurGameText() == 3) {
-            colorB = lbl_803DE740;
-            hudDrawRect(*(s16 *)(box + 0x14), *(s16 *)(box + 0x16),
-                        *(s16 *)(box + 0x14) + *(u16 *)(box + 8),
-                        *(s16 *)(box + 0x16) + *(u16 *)(box + 0xa), &colorB);
-        } else {
-            h7 = *(u16 *)(box + 0xa);
-            w7 = *(u16 *)(box + 8);
-            y7 = *(s16 *)(box + 0x16);
-            x7 = *(s16 *)(box + 0x14);
-            GXSetScissor(0, 0, 0x280, 0x1e0);
-            drawHudBox(x7, y7, (s16)w7, (s16)h7, 0xff, 1);
-        }
-        break;
-    case 1:
-        colorA = lbl_803DE740;
-        hudDrawRect(*(s16 *)(box + 0x14), *(s16 *)(box + 0x16),
-                    *(s16 *)(box + 0x14) + *(u16 *)(box + 8),
-                    *(s16 *)(box + 0x16) + *(u16 *)(box + 0xa), &colorA);
-        break;
-    case 6:
-        if (strPtr == NULL) {
-            return;
-        }
-        cur = gameTextGetCurBox();
-        if (strPtr != NULL) {
-            gameTextFn_8001628c(*strPtr, 0, 0, &c6x0, &c6x1, &c6y0, &c6y1);
-        } else if (boxId != 0) {
-            gameTextBoxFn_800164b0(boxId, (int)(box - lbl_802C7400) / 0x20, &c6x0, &c6x1, &c6y0, &c6y1);
-        }
-        gameTextFn_80017434(cur);
-        hw = (c6x1 - c6x0) >> 1;
-        hh = (c6y1 - c6y0) >> 1;
-        cx = c6x0 + hw;
-        cy = c6y0 + hh;
-        drawScaledTexture((f32)(c6x0 - lbl_803DB3EC), (f32)(c6y0 - lbl_803DB3EC), lbl_803DCA24, 0xff, 0x100,
-                          hw + lbl_803DB3EC, hh + lbl_803DB3EC, 0);
-        drawScaledTexture((f32)cx, (f32)(c6y0 - lbl_803DB3EC), lbl_803DCA24, 0xff, 0x100,
-                          hw + lbl_803DB3EC, hh + lbl_803DB3EC, 1);
-        drawScaledTexture((f32)(c6x0 - lbl_803DB3EC), (f32)cy, lbl_803DCA24, 0xff, 0x100,
-                          hw + lbl_803DB3EC, hh + lbl_803DB3EC, 2);
-        drawScaledTexture((f32)cx, (f32)cy, lbl_803DCA24, 0xff, 0x100,
-                          hw + lbl_803DB3EC, hh + lbl_803DB3EC, 3);
-        break;
-    case 0:
-        drawScaledTexture((f32)*(s16 *)(box + 0x14), (f32)*(s16 *)(box + 0x16), lbl_803DCA28, 0xff, 0x100,
-                          *(u16 *)(box + 8), *(u16 *)(box + 0xa), 0);
-        break;
-    case 3:
-        cur = gameTextGetCurBox();
-        if (strPtr != NULL) {
-            gameTextFn_8001628c(*strPtr, 0, 0, &c3x0, &c3x1, &c3y0, &c3y1);
-        } else if (boxId != 0) {
-            gameTextBoxFn_800164b0(boxId, (int)(box - lbl_802C7400) / 0x20, &c3x0, &c3x1, &c3y0, &c3y1);
-        }
-        gameTextFn_80017434(cur);
-        drawTexture((f32)(c3x0 - 0x16), (f32)(c3y0 - 9), lbl_8033BE40[5], *(u8 *)(box + 0x1e), 0x100);
-        drawScaledTexture((f32)c3x0, (f32)(c3y0 - 9), lbl_8033BE40[6], *(u8 *)(box + 0x1e), 0x100,
-                          c3x1 - c3x0, 0x24, 0);
-        drawTexture((f32)c3x1, (f32)(c3y0 - 9), lbl_8033BE40[7], *(u8 *)(box + 0x1e), 0x100);
-        break;
-    case 2:
-        x2 = *(s16 *)(box + 0x14);
-        w2 = *(u16 *)(box + 8);
-        xw = x2 + w2;
-        y2 = *(s16 *)(box + 0x16);
-        half = w2 >> 1;
-        if (half > 0xc) {
-            half = 0xc;
-        }
-        rem = w2 - half * 2;
-        if (rem < 0) {
-            rem = 0;
-        }
-        GXSetScissor(0, 0, 0x280, 0x1e0);
-        drawTexture((f32)(x2 - 0x34), (f32)(y2 - 0x23), lbl_8033BE40[0], *(u8 *)(box + 0x1e), 0x100);
-        drawTexture((f32)xw, (f32)(y2 - 0x23), lbl_8033BE40[4], *(u8 *)(box + 0x1e), 0x100);
-        if (half != 0) {
-            drawScaledTexture((f32)x2, (f32)(y2 - 0x13), lbl_8033BE40[1], *(u8 *)(box + 0x1e), 0x100,
-                              half, 0x3a, 0);
-            drawPartialTexture((f32)(xw - half), (f32)(y2 - 0x13), lbl_8033BE40[3], *(u8 *)(box + 0x1e), 0x100,
-                               half, 0x3a, 0xc - half, 0);
-        }
-        if (rem != 0) {
-            drawScaledTexture((f32)(x2 + half), (f32)(y2 - 0x13), lbl_8033BE40[2], *(u8 *)(box + 0x1e), 0x100,
-                              rem, 0x3a, 0);
-        }
-        break;
-    case 4:
-        boxDrawFn_8001c5ac(strPtr, boxId, box);
-        break;
-    }
-    *(s16 *)(box + 0x18) = savedX;
-    *(s16 *)(box + 0x1a) = savedY;
-}
+void gameTextDrawBox(u16 *strPtr, int boxId, u8 *box);
 #pragma dont_inline reset
 #pragma pop
 
@@ -14255,182 +10317,7 @@ extern u8 lbl_803DCA3F;
 #pragma push
 #pragma scheduling off
 #pragma dont_inline on
-void init(void) {
-    u8 audioDone;
-    u8 filesDone;
-    u8 once;
-    int delay;
-    u8 dtv;
-
-    audioDone = 0;
-    filesDone = 0;
-    once = 0;
-    OSInit();
-    DVDInit();
-    VIInit();
-    PADInit();
-    LCEnable();
-    {
-        register u32 v;
-        asm {
-            li v, 0x4
-            oris v, v, 0x4
-            mtspr 914, v
-            li v, 0x5
-            oris v, v, 0x5
-            mtspr 915, v
-            li v, 0x6
-            oris v, v, 0x6
-            mtspr 916, v
-            li v, 0x7
-            oris v, v, 0x7
-            mtspr 917, v
-        }
-    }
-    lbl_803DCCF0 = GXNtsc480IntDf;
-    lbl_803DCAE4 = OSGetProgressiveMode();
-    if (OSGetResetCode() != 0 && lbl_803DCAE4 == 1) {
-        lbl_803DCCF0 = GXNtsc480Prog;
-        OSSetProgressiveMode(1);
-    } else {
-        OSSetProgressiveMode(0);
-    }
-    videoInit(lbl_8033C3B8, 0);
-    setDisplayCopyFilter();
-    initLoadingScreenTextures();
-    mmInit();
-    testAndSet_onlyUseHeap3(1);
-    gxTransformFn_8004a83c();
-    testAndSet_onlyUseHeap3(0);
-    Camera_InitState();
-    testAndSet_onlyUseHeap3(1);
-    gameTextInitFn_8001a234();
-    testAndSet_onlyUseHeap3(0);
-    gameTextLoadDir(3);
-    testAndSet_onlyUseHeap3(1);
-    initControllers();
-    delay = mmSetFreeDelay(0);
-    do {
-        mmFreeTick(0);
-        padUpdate();
-        checkReset();
-        waitNextFrame();
-        if (audioDone == 0) {
-            audioDone = audioInit();
-        }
-        if (once == 0) {
-            testAndSet_onlyUseHeap3(1);
-            allocSomething32bytes();
-        }
-        if (audioDone != 0 && filesDone == 0) {
-            testAndSet_onlyUseHeap3(1);
-            filesDone = initLoadFiles();
-        }
-        if (once == 0) {
-            testAndSet_onlyUseHeap3(1);
-            initFn_8006d020();
-        }
-        once = 1;
-        runLoadingScreens();
-        dvdCheckError();
-        gameTextRun();
-        if (*(u8 *)lbl_803DCAFC == 0) {
-            dtv = 0;
-            if (VIGetDTVStatus() != 0) {
-                if (OSGetResetCode() != 0 && lbl_803DCAE4 != 1 && (getButtonsHeld(0) & 0x200) != 0) {
-                    dtv = 1;
-                }
-                if (OSGetResetCode() == 0 && (lbl_803DCAE4 == 1 || (getButtonsHeld(0) & 0x200) != 0)) {
-                    dtv = 1;
-                }
-            }
-            *(u8 *)lbl_803DCAFC = dtv;
-        }
-        GXFlush_(1, 0);
-    } while ((filesDone == 0 || audioDone == 0) && lbl_803DCA3D == 0);
-    while (lbl_803DCA3D != 0) {
-        mmFreeTick(0);
-        padUpdate();
-        checkReset();
-        waitNextFrame();
-        GXFlush_(1, 0);
-    }
-    mmSetFreeDelay(delay);
-    testAndSet_onlyUseHeap3(1);
-    viFn_8004a56c(5);
-    fn_80137D28();
-    loadTextureFiles();
-    initMapBlocks();
-    ObjModel_InitResourceCaches();
-    Resource_ResetRefCounts();
-    gameTextInit();
-    gameTextLoadDir(0x15);
-    Obj_InitObjectSystem();
-    fn_80137998();
-    mapInitFn_80069990();
-    initTextures();
-    mapInitFn_8006fccc();
-    initGameTimer();
-    ObjModel_InitRenderBuffers();
-    _initCardAndDsp();
-    fn_802B6F48();
-    loadTaskTexts();
-    gameTextInitFn_8001bd14();
-    initMaps();
-    gGameUIInterface = Resource_Acquire(0, 0xf);
-    gCameraInterface = Resource_Acquire(1, 0x17);
-    lbl_803DCA94 = Resource_Acquire(0x12, 8);
-    gPlayerInterface = Resource_Acquire(0xf, 0x16);
-    gObjectTriggerInterface = Resource_Acquire(2, 0x1d);
-    gScreenTransitionInterface = Resource_Acquire(0x16, 4);
-    gSHthorntailAnimationInterface = Resource_Acquire(5, 0xf);
-    gSky2Interface = Resource_Acquire(6, 0xc);
-    gNewCloudsInterface = Resource_Acquire(7, 8);
-    gCloudActionInterface = Resource_Acquire(9, 0xa);
-    gCheckpointInterface = Resource_Acquire(3, 0xd);
-    gTitleMenuControlInterface = Resource_Acquire(4, 0x24);
-    gTitleMenuControlInterfaceCopy = gTitleMenuControlInterface;
-    gExpgfxInterface = Resource_Acquire(0xa, 0xa);
-    gModgfxInterface = Resource_Acquire(0xb, 0xc);
-    gProjgfxInterface = Resource_Acquire(0xc, 8);
-    gPlayerShadowInterface = Resource_Acquire(0xd, 3);
-    gPartfxInterface = Resource_Acquire(0xe, 2);
-    gScreensInterface = Resource_Acquire(0x11, 3);
-    gWaterfxInterface = Resource_Acquire(0x13, 7);
-    gRomCurveInterface = Resource_Acquire(0x14, 0x26);
-    gTitleMenuLinkInterface = Resource_Acquire(0x3c, 7);
-    gPathControlInterface = Resource_Acquire(0x15, 9);
-    gMapEventInterface = Resource_Acquire(0x17, 0x24);
-    lbl_803DCAB4 = (int *)Resource_Acquire(0x18, 6);
-    gBaddieControlInterface = Resource_Acquire(0x19, 0x16);
-    gMinimapInterface = Resource_Acquire(0x31, 2);
-    lbl_803DCAC0 = Resource_Acquire(0x2f, 0xc);
-    gTitleMenuItemInterface = Resource_Acquire(0x3d, 0xa);
-    initFn_800534f8();
-    titleScreenDrawFn_80093db4();
-    testAndSet_onlyUseHeap3(0);
-    loadAssetFileById((int)&lbl_803DCADC, 0x33);
-    lbl_803DCAD8 = (s16)(getDataFileSize(0x33) >> 1);
-    lbl_803DCAE0 = (*(u8 *(**)(void))(*(int *)gMapEventInterface + 0x88))();
-    lbl_803DCA3F = 1;
-    loadUiDll(2);
-    doNothing_beforeTitleScreen();
-    doQueuedLoads();
-    setDrawCloudsAndLights(0);
-    if (*(u8 *)lbl_803DCAFC != 0) {
-        OSSetSaveRegion(lbl_803DCAFC, (u8 *)lbl_803DCAFC + 1);
-        VISetBlack(0);
-        VIFlush();
-        VIWaitForRetrace();
-        askProgressiveScanMode();
-    }
-    OSSetSaveRegion(NULL, NULL);
-    memcpy(lbl_8033C378, lbl_803DCCF0, 0x3c);
-    lbl_803DCCF0 = lbl_8033C378;
-    initViewport();
-    tvInit();
-    OSReport(sMainFinishedInitMessage);
-}
+void init(void);
 #pragma dont_inline reset
 #pragma pop
 
@@ -14448,138 +10335,7 @@ typedef struct GameTextCharset {
 #pragma push
 #pragma scheduling off
 #pragma dont_inline on
-void setLanguageFn_8001ad64(void *reqp) {
-    u8 *req = (u8 *)reqp;
-    GameTextCharset *cs;
-    int *data;
-    u8 *hdr;
-    int ofs;
-    int *table;
-    int numStrings;
-    int *strs;
-    int i;
-    u8 *txt;
-    int *texHdr;
-    u16 *p;
-    u16 *texStart;
-    int **slot;
-    int kind;
-    u32 bpp;
-    u32 w;
-    u32 h;
-    int n;
-    u32 size;
-    u16 *newBuf;
-    u16 *old;
-    int delta;
-    int *strs2;
-
-    DCStoreRange(*(void **)(req + 0x3c), *(u32 *)(req + 0x40));
-    if (req[0x4b] == 1) {
-        cs = (GameTextCharset *)&lbl_8033AF40[1];
-    } else if (req[0x4b] == 3) {
-        cs = (GameTextCharset *)&lbl_8033AF40[3];
-    } else {
-        cs = (GameTextCharset *)&lbl_8033AF40[0];
-        curGameTextDir = (void *)req[0x48];
-        curLanguage = req[0x49];
-    }
-    data = *(int **)(req + 0x3c);
-    cs->headerCount = data[0];
-    if (cs->headerCount == 0) {
-        cs->status = 3;
-        *(int *)(req + 0x44) = 6;
-        return;
-    }
-    cs->strings = (u8 *)(data + 1);
-    hdr = (u8 *)data + cs->headerCount * 16;
-    cs->count = *(u16 *)(hdr + 4);
-    ofs = *(u16 *)(hdr + 6);
-    cs->entries = hdr + 8;
-    table = (int *)(cs->entries + cs->count * 12);
-    numStrings = table[0];
-    strs = table + 1;
-    for (i = 0; i < cs->count; i++) {
-        *(int **)(cs->entries + i * 12 + 8) = strs + *(int *)(cs->entries + i * 12 + 8);
-    }
-    txt = (u8 *)(table + numStrings + 1);
-    for (i = 0; i < numStrings; i++) {
-        strs[i] = strs[i] + (int)txt;
-    }
-    texHdr = (int *)(txt + ofs);
-    p = (u16 *)((u8 *)texHdr + texHdr[0] + 4);
-    texStart = p;
-    slot = (int **)cs;
-    while (1) {
-        kind = p[0];
-        bpp = p[1];
-        w = p[2];
-        h = p[3];
-        p += 4;
-        if (w == 0 && h == 0) {
-            break;
-        }
-        switch (kind) {
-        case 1:
-            kind = 5;
-            break;
-        case 2:
-            kind = 0;
-            break;
-        }
-        if (slot[4] != NULL) {
-            mmSetFreeDelay(0);
-            mm_free(slot[4]);
-            mmSetFreeDelay(2);
-        }
-        slot[4] = (int *)textureAlloc(w, h, kind, 0, 0, 0, 0, 1, 1);
-        if (slot[4] != NULL) {
-            if (bpp == 4) {
-                u8 *dst8 = (u8 *)slot[4] + 0x60;
-                u8 *src8 = (u8 *)p;
-                n = (int)(w * h) >> 1;
-                for (i = 0; i < n; i++) {
-                    dst8[i] = src8[i];
-                }
-                DCFlushRange((u8 *)slot[4] + 0x60, *(u32 *)((u8 *)slot[4] + 0x44));
-            } else {
-                u16 *dst16 = (u16 *)((u8 *)slot[4] + 0x60);
-                u16 *src16 = p;
-                n = w * h;
-                for (i = 0; i < n; i++) {
-                    dst16[i] = src16[i];
-                }
-                DCFlushRange((u8 *)slot[4] + 0x60, *(u32 *)((u8 *)slot[4] + 0x44));
-            }
-        }
-        p += (int)(w * h * bpp) >> 4;
-        slot = slot + 1;
-    }
-    size = (u32)((u8 *)texStart - *(u8 **)(req + 0x3c));
-    newBuf = (u16 *)mmAlloc(size, 0x1a, 0);
-    old = *(u16 **)(req + 0x3c);
-    delta = (int)newBuf - (int)old;
-    n = size >> 1;
-    for (i = 0; i < n; i++) {
-        newBuf[i] = old[i];
-    }
-    cs->strings = cs->strings + delta;
-    cs->entries = cs->entries + delta;
-    for (i = 0; i < cs->count; i++) {
-        *(int *)(cs->entries + i * 12 + 8) = *(int *)(cs->entries + i * 12 + 8) + delta;
-    }
-    strs2 = (int *)((u8 *)strs + delta);
-    for (i = 0; i < numStrings; i++) {
-        strs2[i] = strs2[i] + delta;
-    }
-    mmSetFreeDelay(0);
-    mm_free(*(void **)(req + 0x3c));
-    *(int *)(req + 0x3c) = 0;
-    mmSetFreeDelay(2);
-    *(u16 **)(req + 0x3c) = newBuf;
-    cs->status = 2;
-    *(int *)(req + 0x44) = 3;
-}
+void setLanguageFn_8001ad64(void *reqp);
 #pragma dont_inline reset
 #pragma pop
 
@@ -15783,190 +11539,7 @@ extern int lbl_803DB3C4;
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void gameTextLoadGraphicsFn_8001a918(void)
-{
-    u8 *fontData;
-    u8 *base30;
-    u8 *base31;
-    u8 *buf;
-    int sizeA;
-    int sizeB;
-    u8 *bufA;
-    u8 *bufB;
-    int savedHeap;
-    int count;
-    u8 *glyph;
-    int x;
-    int y;
-    int wbytes;
-    u8 s[3];
-    int width;
-
-    fontData = (u8 *)lbl_802C8F40;
-    base30 = (u8 *)lbl_802C8680;
-    base31 = (u8 *)lbl_8033AF40;
-    savedHeap = testAndSet_onlyUseHeap3(0);
-    buf = mmAlloc(0x120, 0x1a, 0);
-    switch (OSGetFontEncode()) {
-    case 0:
-        sizeA = 0x3000;
-        sizeB = 0x10120;
-        curLanguage = 0;
-        lbl_803DC968 = 0;
-        break;
-    case 1:
-        sizeA = 0x4d000;
-        sizeB = 0x90ee4;
-        curLanguage = 4;
-        lbl_803DC968 = 1;
-        break;
-    }
-    bufA = mmAlloc(sizeA, 0x1a, 0);
-    bufB = mmAlloc(sizeB, 0x1a, 0);
-    OSLoadFont(bufB, bufA);
-    if (*(int *)(base31 + 0x58) == 0) {
-        if (lbl_803DC968) {
-            *(u8 **)(base31 + 0x50) = fontData;
-            *(int *)(base31 + 0x58) = 0x55;
-            *(u8 **)(base31 + 0x54) = fontData + 0x8ec;
-            *(int *)(base31 + 0x5c) = 7;
-        } else {
-            *(u8 **)(base31 + 0x50) = fontData + 0x940;
-            *(int *)(base31 + 0x58) = 0x2b;
-            *(u8 **)(base31 + 0x54) = fontData + 0xe24;
-            *(int *)(base31 + 0x5c) = 7;
-        }
-    }
-    *(u8 **)(base31 + 0x60) = textureAlloc(0x200, 0x60, 0, 0, 0, 0, 0, 1, 1);
-    *(u16 *)(base30 + 0x60) = *(int *)(base31 + 0x58);
-    *(u8 *)(base30 + 0x64) = 0x30;
-    *(u8 *)(base30 + 0x65) = 0x20;
-    *(u16 *)(base30 + 0x68) = 0;
-    *(u16 *)(base30 + 0x6a) = 0x18;
-    count = *(int *)(base31 + 0x58);
-    glyph = *(u8 **)(base31 + 0x50);
-    x = 0;
-    y = 0;
-    while (count--) {
-        if (lbl_803DC968) {
-            int c = *(int *)glyph;
-            u16 *p = lbl_802C8D40;
-            int i;
-            u32 val;
-            int hi;
-            u8 lo;
-            for (i = 0xfd; i > 0; i -= 2) {
-                if (p[0] == c) {
-                    val = p[1];
-                    goto found;
-                }
-                p++;
-                if (p[0] == c) {
-                    val = p[1];
-                    goto found;
-                }
-                p++;
-            }
-            val = 0;
-        found:
-            hi = (val >> 8) & 0xff;
-            lo = val;
-            if (hi == 0) {
-                s[0] = lo;
-                s[1] = 0;
-            } else {
-                s[0] = hi;
-                s[1] = lo;
-                s[2] = 0;
-            }
-        } else {
-            s[0] = *(int *)glyph;
-            s[1] = 0;
-        }
-        OSGetFontWidth(s, &width);
-        if (width > *(u16 *)(base30 + 0x68)) {
-            *(u16 *)(base30 + 0x68) = width;
-        }
-        wbytes = width >> 3;
-        if ((width & 7) != 0) {
-            wbytes++;
-        }
-        {
-            u32 *q = (u32 *)buf;
-            int j = 0x47;
-            do {
-                q[0] = 0;
-                q[1] = 0;
-                q[2] = 0;
-                q[3] = 0;
-                q[4] = 0;
-                q[5] = 0;
-                q[6] = 0;
-                q[7] = 0;
-                q[8] = 0;
-                q += 9;
-                j -= 9;
-            } while (j > 0);
-        }
-        OSGetFontTexel(s, buf, 0, 6, &width);
-        if (x + 0x18 > 0x200) {
-            x = 0;
-            y += 0x18;
-        }
-        *(u16 *)(glyph + 4) = x;
-        *(u16 *)(glyph + 6) = y;
-        *(u8 *)(glyph + 8) = 0;
-        *(u8 *)(glyph + 9) = 0;
-        *(u8 *)(glyph + 0xa) = 0;
-        *(u8 *)(glyph + 0xb) = 0;
-        *(u8 *)(glyph + 0xc) = width;
-        *(u8 *)(glyph + 0xd) = 0x18;
-        *(u8 *)(glyph + 0xe) = 6;
-        *(u8 *)(glyph + 0xf) = 0;
-        {
-            u32 *src = (u32 *)buf;
-            int tx = *(u16 *)(glyph + 4) >> 3;
-            int ty = *(u16 *)(glyph + 6) >> 3;
-            int txEnd = tx + 3;
-            int tyEnd = ty + 3;
-            int cnt = txEnd - tx;
-            int row;
-            for (row = ty; row < tyEnd; row++) {
-                int off = tx << 5;
-                int j2 = tx;
-                int n;
-                if (j2 < txEnd) {
-                    n = cnt;
-                    do {
-                        u8 *dst = *(u8 **)(base31 + 0x60) + off;
-                        u32 tmp;
-                        dst += row * lbl_803DB3C4;
-                        *(u32 *)(dst + 0x60) = src[0];
-                        *(u32 *)(dst + 0x64) = src[1];
-                        *(u32 *)(dst + 0x68) = src[2];
-                        *(u32 *)(dst + 0x6c) = src[3];
-                        *(u32 *)(dst + 0x70) = src[4];
-                        *(u32 *)(dst + 0x74) = src[5];
-                        *(u32 *)(dst + 0x78) = src[6];
-                        tmp = src[7];
-                        src += 8;
-                        *(u32 *)(dst + 0x7c) = tmp;
-                        off += 0x20;
-                        j2++;
-                    } while (--n != 0);
-                }
-            }
-        }
-        x += wbytes << 3;
-        glyph += 0x10;
-    }
-    DCFlushRange(*(u8 **)(base31 + 0x60) + 0x60, 0x20000);
-    mm_free(bufA);
-    mm_free(bufB);
-    mm_free(buf);
-    testAndSet_onlyUseHeap3(savedHeap);
-    *(int *)(base31 + 0x6c) = 2;
-}
+void gameTextLoadGraphicsFn_8001a918(void);
 #pragma dont_inline reset
 #pragma pop
 
@@ -16477,46 +12050,7 @@ int objGetTotalDataSize(void *tmpl, u8 *def, s16 *data, int flags)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void *stackCreate(int count, int size)
-{
-    u8 *s;
-    int prev;
-    void **first;
-    void **cur;
-    u8 *next;
-    int n;
-
-    prev = testAndSet_onlyUseHeaps1and2(2);
-    s = mmAlloc(size * count + 0x20, 0x11, 0);
-    testAndSet_onlyUseHeaps1and2(prev);
-    *(s16 *)(s + 0xc) = size;
-    *(s16 *)(s + 0xe) = count;
-    *(u16 *)(s + 0x10) = 0;
-    *(int *)(s + 4) = *(s16 *)(s + 0xe) * *(s16 *)(s + 0xc) + 0x20 + (int)s;
-    first = (void **)(s + 0x20);
-    cur = first;
-    next = (u8 *)first + size;
-    n = count - 2;
-    for (; n > 0; n--) {
-        *cur = next;
-        cur = (void **)*cur;
-        next += size;
-    }
-    *cur = 0;
-    *(void **)s = first;
-    cur = *(void ***)s;
-    while (cur != 0) {
-        int ok = 0;
-        if (cur >= first && cur < *(void ***)(s + 4)) {
-            ok = 1;
-        }
-        if (ok == 0) {
-            break;
-        }
-        cur = (void **)*cur;
-    }
-    return s;
-}
+void *stackCreate(int count, int size);
 #pragma dont_inline reset
 #pragma pop
 
@@ -16524,59 +12058,9 @@ void *stackCreate(int count, int size)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void *mmAlloc(int size, int type, int flag)
-{
-    void *result;
-    u8 ok;
-    u8 i;
-
-    if (size == 0) {
-        return 0;
-    }
-    ok = 1;
-    for (i = 0; ok && i < 100; i++) {
-        if (lbl_803DB434 == 1) {
-            result = (void *)mmAllocFromRegion(1, size, type, flag);
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(2, size, type, flag);
-            }
-            if (result == 0) {
-                return result;
-            }
-        } else if (lbl_803DCB08 != 0) {
-            result = (void *)mmAllocFromRegion(3, size, type, flag);
-            if (result == 0) {
-                return result;
-            }
-        } else if (size >= 0x3000) {
-            result = (void *)mmAllocFromRegion(0, size, type, flag);
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(1, size, type, flag);
-            }
-        } else if (size >= 0x400) {
-            result = (void *)mmAllocFromRegion(1, size, type, flag);
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(2, size, type, flag);
-            }
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(0, size, type, flag);
-            }
-        } else {
-            result = (void *)mmAllocFromRegion(2, size, type, flag);
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(1, size, type, flag);
-            }
-            if (result == 0) {
-                result = (void *)mmAllocFromRegion(0, size, type, flag);
-            }
-        }
-        ok = 0;
-    }
-    return result;
-}
+void *mmAlloc(int size, int type, int flag);
 #pragma dont_inline reset
 #pragma pop
-
 
 #pragma push
 #pragma scheduling off
@@ -16584,48 +12068,7 @@ void *mmAlloc(int size, int type, int flag)
 #pragma dont_inline on
 #pragma opt_strength_reduction off
 #pragma opt_loop_invariants off
-void mtxFn_80022404(int a, int b, f32 *out)
-{
-    f32 tmp[16];
-    int j;
-    int i;
-    int row;
-    int aoff;
-    f32 zero;
-    int toff;
-    int boff;
-    int o3, o2, o1;
-    f32 a0, a1, a2, a3;
-
-    row = 0;
-    aoff = 0;
-    zero = lbl_803DE7C0;
-    for (i = 0; i < 4; i++) {
-        boff = 0;
-        toff = row << 2;
-        o1 = (row + 1) * 4;
-        o2 = (row + 2) * 4;
-        o3 = (row + 3) * 4;
-        for (j = 0; j < 4; j++) {
-            *(f32 *)((int)tmp + toff) = zero;
-            a0 = *(f32 *)(a + aoff);
-            *(f32 *)((int)tmp + toff) += a0 * *(f32 *)(b + boff);
-            a1 = *(f32 *)(a + o1);
-            *(f32 *)((int)tmp + toff) += a1 * *(f32 *)(b + (j + 4) * 4);
-            a2 = *(f32 *)(a + o2);
-            *(f32 *)((int)tmp + toff) += a2 * *(f32 *)(b + (j + 8) * 4);
-            a3 = *(f32 *)(a + o3);
-            *(f32 *)((int)tmp + toff) += a3 * *(f32 *)(b + (j + 12) * 4);
-            toff += 4;
-            boff += 4;
-        }
-        row += 4;
-        aoff += 0x10;
-    }
-    for (i = 0; i < 16; i++) {
-        *(f32 *)((int)out + i * 4) = *(f32 *)((int)tmp + i * 4);
-    }
-}
+void mtxFn_80022404(int a, int b, f32 *out);
 #pragma opt_loop_invariants reset
 #pragma opt_strength_reduction reset
 #pragma dont_inline reset
@@ -16638,47 +12081,7 @@ extern f32 lbl_803DE7EC;
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void fn_800218AC(s16 *a, f32 *v)
-{
-    f32 x, y, z;
-    f32 s1, s2;
-    f32 c;
-
-    x = v[0];
-    y = v[1];
-    z = v[2];
-
-    c = fn_80293E80((lbl_803DE7E8 * (f32)a[0]) / lbl_803DE7EC);
-    s1 = x * c;
-    s2 = z * c;
-    c = sin((lbl_803DE7E8 * (f32)a[0]) / lbl_803DE7EC);
-    x *= c;
-    z *= c;
-    x += s2;
-    z -= s1;
-
-    c = fn_80293E80((lbl_803DE7E8 * (f32)a[1]) / lbl_803DE7EC);
-    s1 = y * c;
-    s2 = z * c;
-    c = sin((lbl_803DE7E8 * (f32)a[1]) / lbl_803DE7EC);
-    y *= c;
-    z *= c;
-    y -= s2;
-    z += s1;
-
-    c = fn_80293E80((lbl_803DE7E8 * (f32)a[2]) / lbl_803DE7EC);
-    s1 = x * c;
-    s2 = y * c;
-    c = sin((lbl_803DE7E8 * (f32)a[2]) / lbl_803DE7EC);
-    x *= c;
-    y *= c;
-    x -= s2;
-    y += s1;
-
-    v[0] = x;
-    v[1] = y;
-    v[2] = z;
-}
+void fn_800218AC(s16 *a, f32 *v);
 #pragma dont_inline reset
 #pragma pop
 
@@ -16879,100 +12282,7 @@ extern f32 lbl_803DE7B8;
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void gameUpdate(void)
-{
-    Obj_GetPlayerObject();
-    lbl_803DCA42 = 0;
-    mainLoopDoGameText();
-    if (lbl_803DCA3A == 0) {
-        (*(void (**)(void))(*(int *)gCameraInterface + 0x54))();
-    }
-    uiDll_runFrameStartAndLoadNext();
-    camcontrol_playTargetTypeSfx();
-    getButtonsJustPressed(0);
-    Obj_UpdateAllObjects(lbl_803DCA3C);
-    if (lbl_803DCA3A == 0) {
-        void *player;
-        int idx;
-        u8 *rec;
-        int t;
-
-        updateEnvironment(0);
-        (*(void (**)(void))(*(int *)gMapEventInterface + 0x70))();
-        player = Obj_GetPlayerObject();
-        idx = lbl_803DCAD4;
-        rec = (u8 *)lbl_8033BFB8 + idx * 16;
-        t = lbl_803DCAD0 + framesThisStep;
-        lbl_803DCAD0 = t;
-        if (player != 0) {
-            *(f32 *)(rec + 0) = *(f32 *)((u8 *)player + 0xc);
-            *(f32 *)(rec + 4) = *(f32 *)((u8 *)player + 0x10);
-            *(f32 *)(rec + 8) = *(f32 *)((u8 *)player + 0x14);
-            *(int *)(rec + 0xc) = t;
-            lbl_803DCAD4 = idx + 1;
-            if (lbl_803DCAD4 >= 0x3c) {
-                lbl_803DCAD4 = 0;
-            }
-        }
-    }
-    timeFn_8006f400(timeDelta);
-    uiDll_runFrameEndAndLoadNext();
-    trackIntersect();
-    playerUpdateFn_8005649c();
-    doPendingMapLoads();
-    Obj_ApplyPendingParentLinks();
-    (*(void (**)(void))(*(int *)gCheckpointInterface + 0x3c))();
-    resetSomeGxFlags();
-    if (lbl_803DCA46 == 0) {
-        sceneRender(0, 0, 0, 0, 0, 0);
-        (*(void (**)(int))(*(int *)gScreensInterface + 0xc))(0);
-        if (lbl_803DCA48 == 0) {
-            curUiDllDraw(0, 0, 0, 0);
-        }
-        (*(void (**)(void))(*(int *)gMinimapInterface + 8))();
-        if (lbl_803DCA48 == 0) {
-            dvdCheckError();
-        }
-        gameTextRun();
-    } else {
-        lbl_803DCA46 = lbl_803DCA46 - 1;
-        if (lbl_803DCA46 < 0) {
-            lbl_803DCA46 = 0;
-        }
-    }
-    if (lbl_803DCA42 != 0) {
-        if (lbl_803DCA44 == 0) {
-            lbl_803DB420 = lbl_803DB420 + timeDelta;
-            if (lbl_803DB420 >= lbl_803DE7B0) {
-                Music_Trigger(lbl_803DCAF0, 1);
-                lbl_803DCA44 = 1;
-            }
-        }
-        if (lbl_803DB420 >= lbl_803DE7B0) {
-            lbl_803DB420 = lbl_803DE7B8;
-        }
-    } else {
-        if (lbl_803DCA44 != 0) {
-            lbl_803DB420 = lbl_803DB420 - timeDelta;
-            if (lbl_803DB420 <= lbl_803DE7B0) {
-                Music_Trigger(0xc9, 0);
-                Music_Trigger(0xd0, 0);
-                lbl_803DCA44 = 0;
-            }
-        }
-        if (lbl_803DB420 <= lbl_803DE7B0) {
-            lbl_803DB420 = lbl_803DE7B4;
-        }
-    }
-    Camera_ApplyCurrentViewport(0);
-    {
-        s8 t = lbl_803DCA3B - framesThisStep;
-        lbl_803DCA3B = t;
-        if (t < 0) {
-            lbl_803DCA3B = 0;
-        }
-    }
-}
+void gameUpdate(void);
 #pragma dont_inline reset
 #pragma pop
 
@@ -16993,51 +12303,7 @@ extern f32 lbl_803DE7A8;
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void gameLoop(void)
-{
-    waitNextFrame();
-    if (lbl_803DCA3D == 1) {
-        padUpdate();
-        voxmaps_updateTimers();
-        gameUpdate();
-        viewportEffectFn_8000e380();
-        doNothing_startOfFrame();
-        loadDataFiles();
-        audioUpdate();
-        Sfx_UpdateLoopedObjectSounds();
-    }
-    debugPrintDraw(0);
-    (*(void (**)(int, int, int))(*(int *)gScreenTransitionInterface + 4))(0, 0, 0);
-    if (lbl_803DCA3D == 1) {
-        if (lbl_803DCA48 != 0) {
-            if (lbl_803DCA46 == 0) {
-                int *p;
-                int i;
-
-                drawRect(lbl_803DE7B0, lbl_803DE7B0, 0x280, 0x1e0);
-                i = 0;
-                p = (int *)&lbl_803DCAE8;
-                for (; i < lbl_803DCA48; i++) {
-                    objRenderFn_8003b8f4(*p, 0, 0, 0, 0, lbl_803DE7A8);
-                    if (*(s16 *)(*p + 0x46) == 0x882 || *(s16 *)(*p + 0x46) == 0x887) {
-                        objRenderFuzz();
-                    }
-                    p++;
-                }
-                curUiDllDraw(0, 0, 0, 0);
-            }
-            dvdCheckError();
-            gameTextRun();
-        }
-        textFn_8001b46c(0);
-        doNothing_endOfFrame();
-        gameTextSetDrawFunc(0);
-    }
-    GXFlush_(1, 1);
-    Obj_FlushDeferredFreeList();
-    mmFreeTick(1);
-    doQueuedLoads();
-}
+void gameLoop(void);
 #pragma dont_inline reset
 #pragma pop
 
@@ -17057,53 +12323,7 @@ extern void beginLoadingMap(void);
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void doQueuedLoads(void)
-{
-    if ((s8)lbl_803DCA39 != 0) {
-        int old;
-
-        waitNextFrame();
-        GXFlush_(1, 0);
-        waitNextFrame();
-        GXFlush_(1, 0);
-        waitNextFrame();
-        GXFlush_(1, 0);
-        mmSetFreeDelay(0);
-        if (lbl_803DCAC4 != 0) {
-            setColor_803db5d0(0, 0, 0);
-            unloadMap();
-            if (lbl_803DCA40 != 0) {
-                mapUnload(0, 0x80000000);
-                lbl_803DCA40 = 0;
-            }
-        }
-        old = mmSetFreeDelay(0);
-        lbl_803DCA39 = 0;
-        Camera_InitState();
-        fn_801375A0();
-        if (lbl_803DB41C > -1) {
-            loadUiDll(lbl_803DB41C);
-            lbl_803DB41C = -1;
-        }
-        mmFreeTick(1);
-        mmFreeTick(1);
-        if (lbl_803DCA41 != 0 && lbl_803DCAF8 != -1) {
-            setForceLoadImmediately();
-            loadMapAndParent(lbl_803DCAF8);
-            if (lbl_803DCAF4 != -1) {
-                mapLoadDataFiles(lbl_803DCAF4);
-            }
-            clearForceLoadImmediately();
-            lbl_803DCA41 = 0;
-        }
-        beginLoadingMap();
-        if (lbl_803DCA94 != 0) {
-            (*(void (**)(int))(*(int *)lbl_803DCA94 + 0xc))(1);
-        }
-        mmSetFreeDelay(old);
-        lbl_803DCAC4 = 1;
-    }
-}
+void doQueuedLoads(void);
 #pragma dont_inline reset
 #pragma pop
 
@@ -17200,56 +12420,7 @@ extern void gameTextShowStr(int str, int a, int b, int c);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void textFn_8001b46c(int a)
-{
-    int charset;
-    SubtitleCmd *cmds;
-    int delay;
-    int n;
-
-    if (lbl_803DCA04 == 2) {
-        if (lbl_803DC9F0 != 0) {
-            charset = gameTextFn_80019b14();
-            gameTextSetCharset(1, 2);
-        }
-        if (getHudHiddenFrameCount() == 0) {
-            lbl_803DCA10 += framesThisStep;
-        }
-        lbl_803DCA0C = (f32)lbl_803DCA10 / lbl_803DE720;
-        if (lbl_803DCA08 + 1 < lbl_803DCA18 && lbl_803DCA0C >= lbl_8033BA40[lbl_803DCA08 + 1]) {
-            cmds = textFn_80018bc4(lbl_8033B640[lbl_803DCA08], &n);
-            if (cmds != NULL) {
-                SubtitleCmd *p = &cmds[n];
-                while (p--, n-- != 0) {
-                    if (p->code == 0xf8ff) {
-                        SubtitleCmd *e = &cmds[n];
-                        lbl_803DC9F7 = e->r;
-                        lbl_803DC9F6 = e->g;
-                        lbl_803DC9F5 = e->b;
-                        lbl_803DC9F4 = e->a;
-                        break;
-                    }
-                }
-                delay = mmSetFreeDelay(0);
-                mm_free(cmds);
-                mmSetFreeDelay(delay);
-            }
-            lbl_803DCA08++;
-            if (lbl_803DCA08 + 1 >= lbl_803DCA18) {
-                subtitleFn_8001b700();
-                if (lbl_803DC9F0 != 0) {
-                    gameTextSetCharset(charset, 2);
-                }
-                return;
-            }
-        }
-        gameTextSetColor(lbl_803DC9F7, lbl_803DC9F6, lbl_803DC9F5, lbl_803DC9F4);
-        gameTextShowStr(lbl_8033B640[lbl_803DCA08], 10, 0, 0);
-        if (lbl_803DC9F0 != 0) {
-            gameTextSetCharset(charset, 2);
-        }
-    }
-}
+void textFn_8001b46c(int a);
 #pragma pop
 
 extern int lbl_803DB3F0;
@@ -17261,32 +12432,7 @@ extern void *lbl_803DCA20;
 
 #pragma push
 #pragma scheduling off
-void boxDrawFn_8001c5ac(u16 *strPtr, int boxId, u8 *p)
-{
-    int x;
-    int y;
-    int alpha;
-    int halfW;
-    int halfH;
-    int midX;
-    int midY;
-
-    alpha = *(u8 *)(p + 0x1e);
-    x = *(s16 *)(p + 0x14);
-    y = *(s16 *)(p + 0x16);
-    halfW = ((x + *(u16 *)(p + 0x8)) - *(s16 *)(p + 0x14)) >> 1;
-    halfH = ((y + *(u16 *)(p + 0xa)) - *(s16 *)(p + 0x16)) >> 1;
-    midX = x + halfW;
-    midY = y + halfH;
-    setTextColor(0, lbl_803DB3F4 & 0xff, lbl_803DB3F8 & 0xff, lbl_803DB3FC & 0xff, lbl_803DB400 & 0xff);
-    textureSetupFn_800799c0();
-    textRenderSetupFn_800795e8();
-    textRenderSetupFn_80079804();
-    ((void (*)(void *, f32, f32, int, int, int, int, int))drawScaledTexture)(lbl_803DCA20, (f32)(x - lbl_803DB3F0), (f32)(y - lbl_803DB3F0), alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 0);
-    ((void (*)(void *, f32, f32, int, int, int, int, int))drawScaledTexture)(lbl_803DCA20, (f32)midX, (f32)(y - lbl_803DB3F0), alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 1);
-    ((void (*)(void *, f32, f32, int, int, int, int, int))drawScaledTexture)(lbl_803DCA20, (f32)(x - lbl_803DB3F0), (f32)midY, alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 2);
-    ((void (*)(void *, f32, f32, int, int, int, int, int))drawScaledTexture)(lbl_803DCA20, (f32)midX, (f32)midY, alpha, 0x100, halfW + lbl_803DB3F0, halfH + lbl_803DB3F0, 3);
-}
+void boxDrawFn_8001c5ac(u16 *strPtr, int boxId, u8 *p);
 #pragma pop
 
 extern int saveGameGetStatus(void);
@@ -17301,113 +12447,14 @@ extern u8 lbl_803DB424;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void cardShowMessage(void)
-{
-    u32 held;
-    int st;
-    u8 ok;
-
-    st = saveGameGetStatus();
-    ok = 0;
-    if (st < 0xc) {
-        cutsceneEnterExit(1, 1);
-        lbl_803DCA3C = 0xff;
-        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        if (lbl_803DCACC == 0) {
-            switch (st) {
-            case 1:
-                gameTextShow(0x325);
-                break;
-            case 2:
-                gameTextShow(0x494);
-                break;
-            case 3:
-                gameTextShow(0x496);
-                break;
-            case 4:
-                gameTextShow(0x32c);
-                break;
-            case 5:
-            case 6:
-                gameTextShow(0x326);
-                ok = 1;
-                break;
-            case 9:
-                gameTextShow(0x32a);
-                break;
-            case 10:
-                gameTextShow(0x497);
-                ok = 1;
-                break;
-            case 0xb:
-                gameTextShow(0x4c7);
-                break;
-            }
-        }
-        held = getButtonsHeld(0);
-        if (ok) {
-            gameTextFn_80016810(0x495, 0, 0xc8);
-        } else {
-            gameTextFn_80016810(0x493, 0, 0xc8);
-        }
-        if (held & 0x100) {
-            buttonDisable(0, 0x100);
-            cardSetStatusNeedInit();
-            lbl_803DCA3A = 0;
-            lbl_803DCA3C = 0;
-            Sfx_SetObjectSoundsPaused(0);
-            if (st == 0xa) {
-                cardDeleteFn_8007d99c();
-            }
-        } else if (ok && (held & 0x200)) {
-            buttonDisable(0, 0x200);
-            lbl_803DB424 = 0;
-            lbl_803DCA3A = 0;
-            lbl_803DCA3C = 0;
-            Sfx_SetObjectSoundsPaused(0);
-            cardSetStatusNeedInit();
-        }
-    }
-}
+void cardShowMessage(void);
 #pragma pop
 
 extern void angleToVec2(int angle, f32 *cosOut, f32 *sinOut);
 
 #pragma push
 #pragma scheduling off
-void setMatrixFromObjectPos(f32 *m, u8 *p)
-{
-    f32 scale;
-    f32 zero;
-    f32 s0;
-    f32 c0;
-    f32 s1;
-    f32 c1;
-    f32 s2;
-    f32 c2;
-
-    angleToVec2((u16)*(s16 *)(p + 0x0), &s0, &c0);
-    angleToVec2((u16)*(s16 *)(p + 0x2), &s1, &c1);
-    angleToVec2((u16)*(s16 *)(p + 0x4), &s2, &c2);
-    scale = *(f32 *)(p + 0x8);
-    m[0] = scale * (s2 * (s1 * s0) + c2 * c0);
-    m[1] = scale * (s2 * c1);
-    m[2] = scale * (s2 * (s1 * c0) - c2 * s0);
-    zero = lbl_803DE7C0;
-    m[3] = zero;
-    m[4] = scale * (c2 * (s1 * s0) - s2 * c0);
-    m[5] = scale * (c2 * c1);
-    m[6] = scale * (c2 * (s1 * c0) + s2 * s0);
-    m[7] = zero;
-    m[8] = scale * (c1 * s0);
-    m[9] = -s1 * scale;
-    m[10] = scale * (c1 * c0);
-    m[11] = zero;
-    m[12] = *(f32 *)(p + 0xc);
-    m[13] = *(f32 *)(p + 0x10);
-    m[14] = *(f32 *)(p + 0x14);
-    m[15] = lbl_803DE7C4;
-}
+void setMatrixFromObjectPos(f32 *m, u8 *p);
 #pragma pop
 
 extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
@@ -17416,52 +12463,7 @@ extern void PSVECCrossProduct(f32 *a, f32 *b, f32 *out);
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2)
-{
-    extern f32 __kernel_sin(f32);
-    extern f32 __kernel_cos(f32, f32);
-    extern f32 lbl_803DE7C8;
-    extern f32 lbl_803DE7CC;
-    extern f32 lbl_803DE7D4;
-    f32 cross[3];
-    f32 sinp;
-    f32 c0;
-    f32 c1;
-    f32 c2;
-    f32 b0;
-    f32 b1;
-    f32 a2;
-    f32 roll;
-    f32 yaw;
-
-    PSVECCrossProduct(b, a, cross);
-    c0 = cross[0];
-    c1 = cross[1];
-    c2 = cross[2];
-    b0 = b[0];
-    b1 = b[1];
-    a2 = a[2];
-    sinp = __kernel_sin(-b[2]);
-    if (sinp < lbl_803DE7C8) {
-        if (sinp > lbl_803DE7CC) {
-            roll = __kernel_cos(c2, a2);
-            yaw = __kernel_cos(b0, b1);
-        } else {
-            roll = lbl_803DE7C0 - __kernel_cos(c1, c0);
-            yaw = lbl_803DE7C0;
-        }
-    } else {
-        roll = __kernel_cos(c1, c0) - lbl_803DE7C0;
-        yaw = lbl_803DE7C0;
-    }
-    {
-        f32 s = lbl_803DE7D0;
-        f32 d = lbl_803DE7D4;
-        *out0 = s * yaw / d;
-        *out1 = s * sinp / d;
-        *out2 = s * roll / d;
-    }
-}
+void fn_800213D0(f32 *a, f32 *b, s16 *out0, s16 *out1, s16 *out2);
 #pragma pop
 
 extern f32 lbl_802CABB8[];
@@ -17583,105 +12585,7 @@ extern u16 lbl_802CA100[];
 #pragma push
 #pragma scheduling off
 #pragma opt_strength_reduction off
-void gameTextInitFn_8001c794(void) {
-    s16 *p;
-    void **q;
-    int i;
-    int j;
-    int x;
-    int xb;
-    int y;
-    u16 *dst;
-    u16 *src;
-
-    i = 1;
-    p = &lbl_803DB3E8 + 1;
-    q = (void **)&lbl_803DCA28 + 1;
-    while (p--, q--, i-- != 0) {
-        *q = textureLoadAsset(*p);
-    }
-
-    lbl_803DCA24 = textureAlloc(0x10, 0x10, 5, 0, 0, 0, 0, 1, 1);
-    dst = (u16 *)((u8 *)lbl_803DCA24 + 0x60);
-    y = 0;
-    src = lbl_802C9F00;
-    for (i = 0; i < 4; i++) {
-        x = 0;
-        xb = 0;
-        for (j = 0; j < 2; j++) {
-            dst[0] = *(u16 *)((u8 *)src + y * 32 + xb);
-            dst[1] = src[y * 16 + x + 1];
-            dst[2] = src[y * 16 + x + 2];
-            dst[3] = src[y * 16 + x + 3];
-            dst[4] = *(u16 *)((u8 *)src + y * 32 + 32 + xb);
-            dst[5] = src[y * 16 + x + 17];
-            dst[6] = src[y * 16 + x + 18];
-            dst[7] = src[y * 16 + x + 19];
-            dst[8] = *(u16 *)((u8 *)src + y * 32 + 64 + xb);
-            dst[9] = src[y * 16 + x + 33];
-            dst[10] = src[y * 16 + x + 34];
-            dst[11] = src[y * 16 + x + 35];
-            dst[12] = *(u16 *)((u8 *)src + y * 32 + 96 + xb);
-            dst[13] = src[y * 16 + x + 49];
-            dst[14] = src[y * 16 + x + 50];
-            dst[15] = src[y * 16 + x + 51];
-            xb += 8;
-            dst[16] = *(u16 *)((u8 *)src + y * 32 + xb);
-            dst[17] = src[y * 16 + x + 5];
-            dst[18] = src[y * 16 + x + 6];
-            dst[19] = src[y * 16 + x + 7];
-            dst[20] = *(u16 *)((u8 *)src + y * 32 + 32 + xb);
-            dst[21] = src[y * 16 + x + 21];
-            dst[22] = src[y * 16 + x + 22];
-            dst[23] = src[y * 16 + x + 23];
-            dst[24] = *(u16 *)((u8 *)src + y * 32 + 64 + xb);
-            dst[25] = src[y * 16 + x + 37];
-            dst[26] = src[y * 16 + x + 38];
-            dst[27] = src[y * 16 + x + 39];
-            dst[28] = *(u16 *)((u8 *)src + y * 32 + 96 + xb);
-            dst[29] = src[y * 16 + x + 53];
-            dst[30] = src[y * 16 + x + 54];
-            dst[31] = src[y * 16 + x + 55];
-            dst += 32;
-            x += 8;
-            xb += 8;
-        }
-        y += 4;
-    }
-    DCFlushRange((u8 *)lbl_803DCA24 + 0x60, 0x200);
-
-    lbl_803DCA20 = textureAlloc(0x14, 0x14, 5, 0, 0, 0, 0, 1, 1);
-    dst = (u16 *)((u8 *)lbl_803DCA20 + 0x60);
-    y = 0;
-    src = lbl_802CA100;
-    for (i = 0; i < 5; i++) {
-        x = 0;
-        xb = 0;
-        for (j = 0; j < 5; j++) {
-            dst[0] = *(u16 *)((u8 *)src + y * 40 + xb);
-            dst[1] = src[y * 20 + x + 1];
-            dst[2] = src[y * 20 + x + 2];
-            dst[3] = src[y * 20 + x + 3];
-            dst[4] = *(u16 *)((u8 *)src + y * 40 + 40 + xb);
-            dst[5] = src[y * 20 + x + 21];
-            dst[6] = src[y * 20 + x + 22];
-            dst[7] = src[y * 20 + x + 23];
-            dst[8] = *(u16 *)((u8 *)src + y * 40 + 80 + xb);
-            dst[9] = src[y * 20 + x + 41];
-            dst[10] = src[y * 20 + x + 42];
-            dst[11] = src[y * 20 + x + 43];
-            dst[12] = *(u16 *)((u8 *)src + y * 40 + 120 + xb);
-            dst[13] = src[y * 20 + x + 61];
-            dst[14] = src[y * 20 + x + 62];
-            dst[15] = src[y * 20 + x + 63];
-            dst += 16;
-            x += 4;
-            xb += 8;
-        }
-        y += 4;
-    }
-    DCFlushRange((u8 *)lbl_803DCA20 + 0x60, 800);
-}
+void gameTextInitFn_8001c794(void);
 #pragma pop
 
 typedef struct ObjHitBufs {
@@ -18012,37 +12916,7 @@ void modelApplyBoneTransforms(int a, int b, u16 c, void *d, void *e, int f) {
 #pragma push
 #pragma scheduling off
 #pragma fp_contract off
-int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, f32 *timer) {
-    extern f32 oneOverTimeDelta;
-    extern f32 lbl_803DE7F4;
-    int trig;
-    int range;
-    int val;
-    u32 rv;
-    f32 freq;
-
-    *timer += timeDelta / (freq = lbl_803DE7F4);
-    if (*timer > lo) {
-        if (*timer > hi) {
-            trig = 1;
-        } else {
-            range = (int)(oneOverTimeDelta * (freq * (hi - lo)));
-            if (range == 0) {
-                val = 0;
-            } else {
-                rv = rand();
-                val = (int)((f32)rv / lbl_803DE7F8 *
-                            ((lbl_803DE7C4 + (f32)range) - lbl_803DE7C0) + lbl_803DE7C0);
-            }
-            trig = !val;
-        }
-        if (trig != 0) {
-            *timer = lbl_803DE7C0;
-        }
-        return trig;
-    }
-    return 0;
-}
+int RandomTimer_UpdateRangeTrigger(f32 lo, f32 hi, f32 *timer);
 #pragma pop
 
 extern void fn_80026308(int *a, int b, u8 *p, u8 *q, int d, int i);
@@ -18077,27 +12951,7 @@ void playerTailFn_80026b3c(int *a, int b, u8 *p, int d) {
 
 #pragma push
 #pragma scheduling off
-void mathFn_80021ac8(u8 *p, f32 *v) {
-    f32 s2;
-    f32 c2;
-    f32 s1;
-    f32 c1;
-    f32 s0;
-    f32 c0;
-    f32 t5;
-    f32 t3;
-    f32 t2;
-
-    angleToVec2(*(u16 *)(p + 0x0), &s0, &c0);
-    angleToVec2(*(u16 *)(p + 0x2), &s1, &c1);
-    angleToVec2(*(u16 *)(p + 0x4), &s2, &c2);
-    t5 = v[0] * c2 - v[1] * s2;
-    t3 = v[1] * c2 + v[0] * s2;
-    v[1] = t3 * c1 - v[2] * s1;
-    t2 = v[2] * c1 + t3 * s1;
-    v[0] = t5 * c0 + t2 * s0;
-    v[2] = t2 * c0 - t5 * s0;
-}
+void mathFn_80021ac8(u8 *p, f32 *v);
 #pragma pop
 
 extern void stopRumble2(void);
@@ -18105,25 +12959,7 @@ extern void stopRumble2(void);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void cutsceneEnterExit(int entering, int affectSounds) {
-    if (entering != 0) {
-        stopRumble2();
-        if (lbl_803DCA3A == 0 && affectSounds != 0) {
-            Sfx_SetObjectSoundsPaused(1);
-        }
-        if ((s8)(u8)++lbl_803DCA3A > 2) {
-            lbl_803DCA3A = 2;
-        }
-    } else {
-        if ((s8)(u8)--lbl_803DCA3A <= 0) {
-            lbl_803DCA3C = 0;
-            lbl_803DCA3A = 0;
-            if (affectSounds != 0) {
-                Sfx_SetObjectSoundsPaused(0);
-            }
-        }
-    }
-}
+void cutsceneEnterExit(int entering, int affectSounds);
 #pragma pop
 
 extern int lbl_803DCA18;
@@ -18152,121 +12988,13 @@ typedef struct SubtitleTextEntry {
 #pragma optimization_level 1
 #pragma scheduling off
 #pragma peephole off
-void textFn_8001b7b8(void) {
-    int total;
-    SubtitleLineTable *s = (SubtitleLineTable *)lbl_8033B240;
-    f32 delta;
-    f32 curTime;
-    int savedCharset;
-    SubtitleTextEntry *t;
-    u8 *win;
-    int i;
-    char *str;
-    int k;
-    int m;
-    int oldDelay;
-    char **strLines;
-    int found;
-    int q;
-    int n;
-    int count;
-    int args[3];
-    f32 ftotal;
-
-    total = 0;
-    curTime = lbl_803DE730;
-    if (lbl_803DC9F0 != 0) {
-        savedCharset = gameTextFn_80019b14();
-        gameTextSetCharset(1, 1);
-    }
-    t = (SubtitleTextEntry *)gameTextGet(lbl_803DC9FC);
-    win = lbl_802C7400 + 0x140;
-    lbl_803DCA18 = 0;
-    lbl_803DCA14 = 0;
-    for (i = 0; i < 256; i++) {
-        s->times[i] = lbl_803DE734;
-    }
-    for (i = 0; i < t->count; i++) {
-        str = t->strs[i];
-        n = GameText_FindControlCodeArgs((u8 *)str, 0xE018, args);
-        if (n != 0) {
-            q = args[2] / 60;
-            s->times[lbl_803DCA18] = (f32)(args[1] + (args[0] * 60 + q));
-        }
-        strLines = textMeasureFn_80016c9c(str, (f32)(u32)*(u16 *)(win + 2), *(f32 *)(win + 0xc), &count, NULL);
-        if (strLines != NULL) {
-            for (k = 0; k < count; k++) {
-                s->lines[lbl_803DCA18++] = strLines[k];
-            }
-            if (s->blocks[lbl_803DCA14] != NULL) {
-                oldDelay = mmSetFreeDelay(0);
-                mm_free(s->blocks[lbl_803DCA14]);
-                mmSetFreeDelay(oldDelay);
-            }
-            s->blocks[lbl_803DCA14++] = strLines;
-        }
-    }
-    for (k = 0; k < lbl_803DCA18; k++) {
-        if (lbl_803DE734 != s->times[k]) {
-            curTime = s->times[k];
-            total = GameText_CountPrintableChars((u8 *)s->lines[k]);
-        } else {
-            found = 0;
-            m = k;
-            for (i = 0; i < 256; i++) {
-                ftotal = (f32)total;
-                if (m < 255) {
-                    if (lbl_803DE734 != s->times[m + 1]) {
-                        delta = s->times[m + 1] - curTime;
-                        found = 1;
-                    }
-                    n = GameText_CountPrintableChars((u8 *)s->lines[m]);
-                    s->times[m] = (f32)n;
-                    total += n;
-                    if (found != 0) {
-                        for (q = m; q >= k; q--) {
-                            s->times[q] = s->times[q + 1] - delta * (s->times[q] / (f32)total);
-                        }
-                        break;
-                    }
-                    m++;
-                }
-            }
-        }
-    }
-    lbl_803DCA08 = 0;
-    lbl_803DCA10 = 0;
-    lbl_803DCA04 = 2;
-    if (lbl_803DC9F0 != 0) {
-        gameTextSetCharset(savedCharset, 1);
-    }
-}
+void textFn_8001b7b8(void);
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-int GameText_CountPrintableChars(u8 *str) {
-    int count;
-    int off;
-    int len;
-    u32 ch;
-
-    count = 0;
-    off = 0;
-    if (str == NULL) {
-        return 0;
-    }
-    while ((ch = utf8GetNextChar(str + off, &len)) != 0) {
-        off += len;
-        if (ch >= 0xE000 && ch <= 0xF8FF) {
-            off += getControlCharLen(ch) * 2;
-        } else {
-            count++;
-        }
-    }
-    return count;
-}
+int GameText_CountPrintableChars(u8 *str);
 #pragma pop
 
 #pragma push
@@ -18298,61 +13026,13 @@ int loadModLines(int idx, s16 *outCount) {
 
 #pragma push
 #pragma scheduling off
-void deathRenderFn_8001fd98(u32 h) {
-    int *p;
-    int n;
-    int i;
-    int idx;
-
-    idx = -1;
-    i = 0;
-    p = lbl_803DCAE8;
-    n = lbl_803DCA48;
-    for (; i < n; i++) {
-        if (*p == h) {
-            idx = i;
-            break;
-        }
-        p++;
-    }
-    for (i = idx; i < n - 1; i++) {
-        lbl_803DCAE8[i] = lbl_803DCAE8[i + 1];
-    }
-    lbl_803DCA48--;
-}
+void deathRenderFn_8001fd98(u32 h);
 #pragma pop
 
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-int GameText_FindControlCodeArgs(u8 *str, u32 target, int *out) {
-    int off;
-    int len;
-    u32 ch;
-    int n;
-    int i;
-
-    off = 0;
-    if (str == NULL) {
-        return 0;
-    }
-    while ((ch = utf8GetNextChar(str + off, &len)) != 0) {
-        off += len;
-        if (ch >= 0xE000 && ch <= 0xF8FF) {
-            n = getControlCharLen(ch);
-            if (ch == target) {
-                for (i = 0; i < n; i++) {
-                    u32 hi = str[off++];
-                    u32 lo = str[off++];
-                    out[i] = (hi << 8) | lo;
-                }
-                return 1;
-            }
-            off += n * 2;
-        }
-    }
-    return 0;
-}
+int GameText_FindControlCodeArgs(u8 *str, u32 target, int *out);
 #pragma pop
 
 typedef struct {
@@ -18686,55 +13366,7 @@ extern u32 lbl_80339C40[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-SubtitleCmd *textFn_80018bc4(int str, int *count) {
-    int off;
-    int n;
-    u8 *tbl;
-    int len;
-    u32 ch;
-
-    off = 0;
-    n = 0;
-    tbl = (u8 *)lbl_80339C40;
-    if ((u8 *)str == NULL) {
-        return NULL;
-    }
-    while ((ch = utf8GetNextChar((u8 *)(str + off), &len)) != 0) {
-        off += len;
-        if (ch >= 0xE000 && ch <= 0xF8FF) {
-            int i;
-            int n2;
-            u8 *q;
-
-            n++;
-            if (n > 0x10) {
-                break;
-            }
-            *(u32 *)tbl = ch;
-            q = tbl + 4;
-            n2 = getControlCharLen(ch);
-            if (n2 > 4) {
-                n2 = 4;
-            }
-            for (i = 0; i < n2; i++) {
-                u32 hi = ((u8 *)str)[off++];
-                u32 lo = ((u8 *)str)[off++];
-                *(u16 *)q = (hi << 8) | lo;
-                q += 2;
-            }
-        }
-    }
-    if (n == 0) {
-        return NULL;
-    }
-    {
-        int size = n * 0xc;
-        u8 *buf = mmAlloc(size, 0x1a, 0);
-        memcpy(buf, lbl_80339C40, size);
-        *count = n;
-        return (SubtitleCmd *)buf;
-    }
-}
+SubtitleCmd *textFn_80018bc4(int str, int *count);
 #pragma pop
 
 extern f32 lbl_803DE880;
@@ -18819,105 +13451,7 @@ extern void *gameTextGetStr(int textId);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void askProgressiveScanMode(void) {
-    u32 counter;
-    int sel;
-    u8 *box;
-    u8 savedByte;
-    int showId;
-
-    counter = 0;
-    sel = 1;
-    box = gameTextGetBox(0);
-    savedByte = box[0x10];
-    box[0x10] = 0;
-    do {
-        counter++;
-        padUpdate();
-        checkReset();
-        mmFreeTick(0);
-        waitNextFrame();
-        gameTextSetColor(0xc0, 0xc0, 0xc0, 0xff);
-        gameTextShow(0x33f);
-        if ((u8)sel == 1) {
-            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        } else {
-            gameTextSetColor(0x80, 0x80, 0x80, 0x80);
-        }
-        gameTextShowStr((int)gameTextGetStr(0x3cd), 0, lbl_803DB428, 0x64);
-        if ((u8)sel == 1) {
-            gameTextSetColor(0x80, 0x80, 0x80, 0x80);
-        } else {
-            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        }
-        gameTextShowStr((int)gameTextGetStr(0x3cc), 0, lbl_803DB42C, 0x64);
-        gameTextRun();
-        dvdCheckError();
-        doNothing_endOfFrame();
-        GXFlush_(0, 0);
-        if ((s8)padGetStickX(0) < 0 || (s8)padGetCX(0) < 0) {
-            sel = 1;
-        } else if ((s8)padGetStickX(0) > 0 || (s8)padGetCX(0) > 0) {
-            sel = 0;
-        }
-    } while ((getButtonsJustPressed(0) & 0x100) == 0 && counter < 600);
-    box[0x10] = savedByte;
-    waitNextFrame();
-    GXFlush_(0, 0);
-    waitNextFrame();
-    GXFlush_(0, 0);
-    VISetBlack(1);
-    VIFlush();
-    VIWaitForRetrace();
-    VIWaitForRetrace();
-    VIWaitForRetrace();
-    VIWaitForRetrace();
-    if ((u8)sel != 0) {
-        lbl_803DCCF0 = GXNtsc480Prog;
-        OSSetProgressiveMode(1);
-        GXSetCopyFilter(((u8 *)lbl_803DCCF0)[0x19], (u8 *)lbl_803DCCF0 + 0x1a, 0, (u8 *)lbl_803DCCF0 + 0x32);
-        VIConfigure(lbl_803DCCF0);
-        VISetBlack(1);
-        VIFlush();
-        sel = 0x340;
-    } else {
-        lbl_803DCCF0 = GXNtsc480IntDf;
-        OSSetProgressiveMode(0);
-        GXSetCopyFilter(((u8 *)lbl_803DCCF0)[0x19], (u8 *)lbl_803DCCF0 + 0x1a, 1, (u8 *)lbl_803DCCF0 + 0x32);
-        VIConfigure(lbl_803DCCF0);
-        VISetBlack(1);
-        VIFlush();
-        sel = 0x341;
-    }
-    counter = 0;
-    do {
-        VIWaitForRetrace();
-        counter++;
-    } while (counter < 100);
-    VISetBlack(0);
-    VIFlush();
-    VIWaitForRetrace();
-    VIWaitForRetrace();
-    counter = 0;
-    showId = sel;
-    do {
-        counter++;
-        padUpdate();
-        checkReset();
-        mmFreeTick(0);
-        waitNextFrame();
-        if (counter < 0xff) {
-            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        } else {
-            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        }
-        gameTextShow(showId);
-        gameTextRun();
-        dvdCheckError();
-        doNothing_endOfFrame();
-        GXFlush_(0, 0);
-    } while (counter < 0xf0);
-}
+void askProgressiveScanMode(void);
 #pragma pop
 
 extern u32 getNewInputs(int pad);
@@ -18946,120 +13480,7 @@ extern f32 lbl_803DE7AC;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void checkReset(void) {
-    char *msg;
-    u8 pressed;
-    f32 t;
-    int status;
-
-    msg = lbl_802CA460;
-    if (lbl_803DCCA6 == 0) {
-        return;
-    }
-    if (lbl_803DC951 != 0) {
-        return;
-    }
-    lbl_803DCCA6 = 0;
-    switch (lbl_803DCA3D) {
-    case 0:
-    case 1:
-        if (lbl_803DCA3E != 0) {
-            lbl_803DCA3D = 2;
-        }
-        if ((getNewInputs(0) & 0x200) != 0 && (getNewInputs(0) & 0x400) != 0 &&
-            (getNewInputs(0) & 0x1000) != 0) {
-            pressed = 1;
-        } else {
-            pressed = 0;
-            if (lbl_803DB425 != 0) {
-                lbl_803DB425--;
-            }
-        }
-        if (pressed != 0 && lbl_803DB425 == 0) {
-            t = lbl_803DCAC8 + lbl_803DE7A8;
-            lbl_803DCAC8 = t;
-            if (t >= lbl_803DE7AC) {
-                lbl_803DCA3D = 2;
-            }
-        } else {
-            lbl_803DCAC8 = lbl_803DE7B0;
-        }
-        break;
-    case 2:
-    case 6:
-        OSReport(msg + 0xd0);
-        if (lbl_803DCA49 != 0) {
-            (*(void (**)(int, int))((*(u8 **)gScreenTransitionInterface) + 8))(0x1e, 1);
-        }
-        if (lbl_803DCA3D == 6) {
-            lbl_803DCAC5 = 1;
-        } else {
-            lbl_803DCAC5 = 0;
-        }
-        stopRumble2();
-        AISetStreamVolLeft(0);
-        AISetStreamVolRight(0);
-        audioStopAll();
-        lbl_803DCA3D = 3;
-        lbl_803DCB00 = lbl_803DE7AC;
-        break;
-    case 3:
-        t = lbl_803DCB00 - lbl_803DE7A8;
-        lbl_803DCB00 = t;
-        if (t <= lbl_803DE7B0) {
-            lbl_803DCA3D = 4;
-        }
-        break;
-    case 4:
-        OSReport(msg + 0xec);
-        while (lbl_803DC950 == 0 && (gAudioStreamPlaying != 0 || gAudioStreamDvdState != 0)) {
-            status = DVDGetDriveStatus();
-            lbl_803DC960 = status;
-            switch (status) {
-            case -1:
-                lbl_803DC950 = 1;
-                break;
-            case 4:
-                lbl_803DC950 = 1;
-                break;
-            case 5:
-                lbl_803DC950 = 1;
-                break;
-            case 6:
-                lbl_803DC950 = 1;
-                break;
-            case 11:
-                lbl_803DC950 = 1;
-                break;
-            }
-        }
-        AISetStreamPlayState(0);
-        audioReset();
-        OSReport(msg + 0x104);
-        stopRumble2();
-        waitNextFrame();
-        GXFlush_(1, 0);
-        waitNextFrame();
-        GXFlush_(1, 0);
-        OSReport(msg + 0x118);
-        LCDisable();
-        DVDSetAutoInvalidation(1);
-        VISetBlack(1);
-        VIFlush();
-        VIWaitForRetrace();
-        OSReport(msg + 0x12c);
-        lbl_803DCA3D = 5;
-        if (lbl_803DCAC5 != 0) {
-            OSResetSystem(1, 0x80000000, 1);
-        } else {
-            OSResetSystem(0, 0x80000000, 0);
-        }
-        break;
-    default:
-        OSReport(msg + 0x13c);
-        break;
-    }
-}
+void checkReset(void);
 #pragma pop
 
 extern void PSMTXCopy(f32 *src, f32 *dst);

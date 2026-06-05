@@ -85,11 +85,11 @@ extern u16 lbl_8032FDA0[3][3]; /* dspSRCCycles */
 #define dspSRCCycles lbl_8032FDA0
 #define __OSBusClock (*(u32 *)0x800000F8)
 
-extern int fn_8027BFE4(u16 *dsp_vol, u16 *dsp_delta, u16 *last_vol, u16 targetVol,
+extern int salCheckVolErrorAndResetDelta(u16 *dsp_vol, u16 *dsp_delta, u16 *last_vol, u16 targetVol,
                        u16 *resetFlags, u16 resetMask); /* salCheckVolErrorAndResetDelta */
-extern void fn_8027C0D8(DSPstudioinfo *stp, DSPvoice *dsp_vptr); /* HandleDepopVoice */
-extern void fn_8027C390(DSPvoice **voices, int l, int r); /* SortVoices */
-extern int fn_8027A8D4(ADSR_VARS *adsr); /* adsrSetup */
+extern void HandleDepopVoice(DSPstudioinfo *stp, DSPvoice *dsp_vptr); /* HandleDepopVoice */
+extern void SortVoices(DSPvoice **voices, int l, int r); /* SortVoices */
+extern int adsrSetup(ADSR_VARS *adsr); /* adsrSetup */
 extern u32 adsrStartRelease(ADSR_VARS *adsr, u32 rtime); /* adsrStartRelease */
 extern int adsrRelease(ADSR_VARS *adsr); /* adsrRelease */
 extern u32 adsrHandle(ADSR_VARS *adsr, u16 *adsr_start, u16 *adsr_delta); /* adsrHandle */
@@ -219,7 +219,7 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
             for (dsp_vptr = stp->voiceRoot; dsp_vptr; dsp_vptr = next_dsp_vptr) {
                 next_dsp_vptr = dsp_vptr->next;
                 if ((dsp_vptr->postBreak != 0) || ((dsp_vptr->changed[0] & 0x20) != 0)) {
-                    fn_8027C0D8(stp, dsp_vptr);
+                    HandleDepopVoice(stp, dsp_vptr);
                     if (dsp_vptr->virtualSampleID != -1) {
                         salSynthSendMessage((int)dsp_vptr, 3);
                     }
@@ -230,7 +230,7 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                 }
             }
             for (dsp_vptr = stp->alienVoiceRoot; dsp_vptr; dsp_vptr = dsp_vptr->nextAlien) {
-                fn_8027C0D8(stp, dsp_vptr);
+                HandleDepopVoice(stp, dsp_vptr);
             }
             stp->alienVoiceRoot = 0;
             SAL_CHECK_CMD_SPACE(3);
@@ -257,7 +257,7 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                 v++;
             }
             voiceNum = v;
-            fn_8027C390(dspSortedVoices, 0, voiceNum - 1);
+            SortVoices(dspSortedVoices, 0, voiceNum - 1);
             procVoiceFlag = 0;
             for (v = voiceNum; v > 0; v--) {
                 dsp_vptr = dspSortedVoices[v - 1];
@@ -270,7 +270,7 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                     if (dsp_vptr->state == 1) {
                         dsp_vptr->virtualSampleID = -1;
                         dsp_vptr->pb->ve.currentDelta = 0x8000;
-                        if (fn_8027A8D4(&dsp_vptr->adsr) != 0) {
+                        if (adsrSetup(&dsp_vptr->adsr) != 0) {
                             salSynthSendMessage((int)dsp_vptr, 0);
                             salDeactivateVoice((SalVoice *)dsp_vptr);
                             continue;
@@ -507,7 +507,7 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                         continue;
                     }
                     if (((dsp_vptr->changed[0] & 0x10) != 0) &&
-                        (fn_8027A8D4(&dsp_vptr->adsr) != 0)) {
+                        (adsrSetup(&dsp_vptr->adsr) != 0)) {
                         salSynthSendMessage((int)dsp_vptr, 0);
                         salDeactivateVoice((SalVoice *)dsp_vptr);
                         continue;
@@ -518,12 +518,12 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                         sal_setup_dspvol(&pb->mix.vDeltaS, &dsp_vptr->lastVolS, dsp_vptr->volS);
                         needsDelta = 1;
                     } else {
-                        needsDelta = fn_8027BFE4(&pb->mix.vL, &pb->mix.vDeltaL, &dsp_vptr->lastVolL,
+                        needsDelta = salCheckVolErrorAndResetDelta(&pb->mix.vL, &pb->mix.vDeltaL, &dsp_vptr->lastVolL,
                                                  dsp_vptr->volL, rampResetOffsetFlags, 1);
-                        needsDelta |= fn_8027BFE4(&pb->mix.vR, &pb->mix.vDeltaR,
+                        needsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vR, &pb->mix.vDeltaR,
                                                   &dsp_vptr->lastVolR, dsp_vptr->volR,
                                                   rampResetOffsetFlags, 2);
-                        needsDelta |= fn_8027BFE4(&pb->mix.vS, &pb->mix.vDeltaS,
+                        needsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vS, &pb->mix.vDeltaS,
                                                   &dsp_vptr->lastVolS, dsp_vptr->volS,
                                                   rampResetOffsetFlags, 4);
                     }
@@ -545,13 +545,13 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                         }
                     } else if ((pb->mixerCtrl & 1) != 0) {
                         u32 localNeedsDelta;
-                        localNeedsDelta = fn_8027BFE4(&pb->mix.vAuxAL, &pb->mix.vDeltaAuxAL,
+                        localNeedsDelta = salCheckVolErrorAndResetDelta(&pb->mix.vAuxAL, &pb->mix.vDeltaAuxAL,
                                                       &dsp_vptr->lastVolLa, dsp_vptr->volLa,
                                                       rampResetOffsetFlags, 8);
-                        localNeedsDelta |= fn_8027BFE4(&pb->mix.vAuxAR, &pb->mix.vDeltaAuxAR,
+                        localNeedsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vAuxAR, &pb->mix.vDeltaAuxAR,
                                                        &dsp_vptr->lastVolRa, dsp_vptr->volRa,
                                                        rampResetOffsetFlags, 0x10);
-                        localNeedsDelta |= fn_8027BFE4(&pb->mix.vAuxAS, &pb->mix.vDeltaAuxAS,
+                        localNeedsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vAuxAS, &pb->mix.vDeltaAuxAS,
                                                        &dsp_vptr->lastVolSa, dsp_vptr->volSa,
                                                        rampResetOffsetFlags, 0x20);
                         if ((localNeedsDelta |
@@ -601,13 +601,13 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                     } else if (stp->type == 0) {
                         if ((pb->mixerCtrl & 2) != 0) {
                             u32 localNeedsDelta;
-                            localNeedsDelta = fn_8027BFE4(&pb->mix.vAuxBL, &pb->mix.vDeltaAuxBL,
+                            localNeedsDelta = salCheckVolErrorAndResetDelta(&pb->mix.vAuxBL, &pb->mix.vDeltaAuxBL,
                                                           &dsp_vptr->lastVolLb, dsp_vptr->volLb,
                                                           rampResetOffsetFlags, 0x40);
-                            localNeedsDelta |= fn_8027BFE4(&pb->mix.vAuxBR, &pb->mix.vDeltaAuxBR,
+                            localNeedsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vAuxBR, &pb->mix.vDeltaAuxBR,
                                                            &dsp_vptr->lastVolRb, dsp_vptr->volRb,
                                                            rampResetOffsetFlags, 0x80);
-                            localNeedsDelta |= fn_8027BFE4(&pb->mix.vAuxBS, &pb->mix.vDeltaAuxBS,
+                            localNeedsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vAuxBS, &pb->mix.vDeltaAuxBS,
                                                            &dsp_vptr->lastVolSb, dsp_vptr->volSb,
                                                            rampResetOffsetFlags, 0x100);
                             if ((localNeedsDelta |
@@ -623,10 +623,10 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                         }
                     } else if ((pb->mixerCtrl & 0x10) != 0) {
                         u32 localNeedsDelta;
-                        localNeedsDelta = fn_8027BFE4(&pb->mix.vAuxBL, &pb->mix.vDeltaAuxBL,
+                        localNeedsDelta = salCheckVolErrorAndResetDelta(&pb->mix.vAuxBL, &pb->mix.vDeltaAuxBL,
                                                       &dsp_vptr->lastVolLb, dsp_vptr->volLb,
                                                       rampResetOffsetFlags, 0x40);
-                        localNeedsDelta |= fn_8027BFE4(&pb->mix.vAuxBR, &pb->mix.vDeltaAuxBR,
+                        localNeedsDelta |= salCheckVolErrorAndResetDelta(&pb->mix.vAuxBR, &pb->mix.vDeltaAuxBR,
                                                        &dsp_vptr->lastVolRb, dsp_vptr->volRb,
                                                        rampResetOffsetFlags, 0x80);
                         if ((localNeedsDelta | (pb->mix.vAuxBL | pb->mix.vAuxBR)) == 0) {
@@ -774,13 +774,13 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                     }
                     if (cyclesUsed > frameCycles) {
                         if ((newVoice == 0) && (VoiceDone == 0)) {
-                            fn_8027C0D8(stp, dsp_vptr);
+                            HandleDepopVoice(stp, dsp_vptr);
                         }
                         salDeactivateVoice((SalVoice *)dsp_vptr);
                         salSynthSendMessage((int)dsp_vptr, 1);
                         for (v = v - 1; v > 0; v--) {
                             if (dspSortedVoices[v - 1]->state == 2) {
-                                fn_8027C0D8(stp, dspSortedVoices[v - 1]);
+                                HandleDepopVoice(stp, dspSortedVoices[v - 1]);
                             }
                             salDeactivateVoice((SalVoice *)dspSortedVoices[v - 1]);
                             salSynthSendMessage((int)dspSortedVoices[v - 1], 1);
@@ -791,7 +791,7 @@ void salBuildCommandList(s16 *dest, u32 nsDelay)
                                      dsp_vptr = next_dsp_vptr) {
                                     next_dsp_vptr = dsp_vptr->next;
                                     if (dsp_vptr->state == 2) {
-                                        fn_8027C0D8(&dspStudio[st1], dsp_vptr);
+                                        HandleDepopVoice(&dspStudio[st1], dsp_vptr);
                                     }
                                     salDeactivateVoice((SalVoice *)dsp_vptr);
                                     salSynthSendMessage((int)dsp_vptr, 1);

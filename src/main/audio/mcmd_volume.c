@@ -13,7 +13,7 @@ extern s32 sndConvert2Ms(u32 v);
 /*
  * Translate a 16.16 volume through a curve table (MusyX TranslateVolume).
  */
-u32 fn_802763C0(u32 volume, u16 curve)
+u32 TranslateVolume(u32 volume, u16 curve)
 {
     u8 *ptr;
     u32 vlow;
@@ -70,7 +70,7 @@ void mcmdScaleVolume(McmdVoiceState *svoice, McmdCommandArgs *cstep, s32 start_v
 
     curve = (u16)(u8)(cstep->flags >> 0x18);
     curve |= (((u16)(u8)cstep->value) << 8);
-    tvol = fn_802763C0(tvol, curve);
+    tvol = TranslateVolume(tvol, curve);
     svoice->volumeTarget = tvol;
     svoice->volumeStart = start_vol;
     svoice->volumeStep = (s32)(tvol - start_vol) / mstime;

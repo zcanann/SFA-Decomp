@@ -26,15 +26,15 @@ extern u8 salNumVoices;
 #define dspARAMZeroBuffer lbl_803DE310
 #define dspStudio lbl_803CC1E0
 
-void fn_8027BDA8(void);                   /* salInitHRTFBuffer */
-void fn_8027BEBC(u8 studio, u32 isMaster, u32 type); /* salActivateStudio */
+void salInitHRTFBuffer(void);                   /* salInitHRTFBuffer */
+void salActivateStudio(u8 studio, u32 isMaster, u32 type); /* salActivateStudio */
 
 /*
  * salInitDspCtrl
  *
  * EN v1.0 Address: 0x8027BA04, size 932b
  */
-u32 fn_8027BA04(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
+u32 salInitDspCtrl(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
 {
     u32 i;
     u32 j;
@@ -105,11 +105,11 @@ u32 fn_8027BA04(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
                         DCFlushRangeNoSync(dspStudio[i].spb, sizeof(_SPB));
                     }
 
-                    fn_8027BEBC(0, 1, defaultStudioDPL2 != 0 ? 1 : 0);
+                    salActivateStudio(0, 1, defaultStudioDPL2 != 0 ? 1 : 0);
                     if (!(dspCmdBuffer = salMalloc(0x100))) {
                         return 0;
                     }
-                    fn_8027BDA8();
+                    salInitHRTFBuffer();
                     return 1;
                 }
             }
@@ -124,7 +124,7 @@ u32 fn_8027BA04(u8 numVoices, u8 numStudios, u32 defaultStudioDPL2)
  *
  * EN v1.0 Address: 0x8027BDA8, size 56b
  */
-void fn_8027BDA8(void)
+void salInitHRTFBuffer(void)
 {
     memset(dspCmdBuffer, 0, 0x100);
     DCFlushRangeNoSync(dspCmdBuffer, 0x100);
@@ -135,7 +135,7 @@ void fn_8027BDA8(void)
  *
  * EN v1.0 Address: 0x8027BDE0, size 220b
  */
-int audioFreeFn_8027bde0(void)
+int salExitDspCtrl(void)
 {
     u8 i;
 
@@ -160,7 +160,7 @@ int audioFreeFn_8027bde0(void)
  *
  * EN v1.0 Address: 0x8027BEBC, size 264b
  */
-void fn_8027BEBC(u8 studio, u32 isMaster, u32 type)
+void salActivateStudio(u8 studio, u32 isMaster, u32 type)
 {
     memset(dspStudio[studio].main[0], 0, 0x3c00);
     DCFlushRangeNoSync(dspStudio[studio].main[0], 0x3c00);
@@ -190,7 +190,7 @@ void fn_8027BEBC(u8 studio, u32 isMaster, u32 type)
  *
  * EN v1.0 Address: 0x8027BFC4, size 32b
  */
-void fn_8027BFC4(u8 studio)
+void salDeactivateStudio(u8 studio)
 {
     dspStudio[studio].state = 0;
 }
@@ -201,7 +201,7 @@ void fn_8027BFC4(u8 studio)
  * EN v1.0 Address: 0x8027BFE4, size 244b
  */
 #pragma dont_inline on
-int fn_8027BFE4(u16 *dsp_vol, u16 *dsp_delta, u16 *last_vol, u16 targetVol, u16 *resetFlags,
+int salCheckVolErrorAndResetDelta(u16 *dsp_vol, u16 *dsp_delta, u16 *last_vol, u16 targetVol, u16 *resetFlags,
                 u16 resetMask)
 {
     int delta;
@@ -249,7 +249,7 @@ static void AddDpop(s32 *sum, s16 delta)
  *
  * EN v1.0 Address: 0x8027C0D8, size 696b
  */
-void fn_8027C0D8(DSPstudioinfo *stp, DSPvoice *dsp_vptr)
+void HandleDepopVoice(DSPstudioinfo *stp, DSPvoice *dsp_vptr)
 {
     _PB *pb;
 
@@ -288,7 +288,7 @@ void fn_8027C0D8(DSPstudioinfo *stp, DSPvoice *dsp_vptr)
  *
  * EN v1.0 Address: 0x8027C390, size 252b
  */
-void fn_8027C390(DSPvoice **voices, int l, int r)
+void SortVoices(DSPvoice **voices, int l, int r)
 {
     int i;
     int last;
@@ -316,6 +316,6 @@ void fn_8027C390(DSPvoice **voices, int l, int r)
     tmp = voices[l];
     voices[l] = voices[last];
     voices[last] = tmp;
-    fn_8027C390(voices, l, last - 1);
-    fn_8027C390(voices, last + 1, r);
+    SortVoices(voices, l, last - 1);
+    SortVoices(voices, last + 1, r);
 }

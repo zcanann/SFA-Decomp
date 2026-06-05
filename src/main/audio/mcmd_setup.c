@@ -12,7 +12,7 @@ extern void sndConvertMs(u32 *p);
 extern void sndConvertTicks(u32 *p, McmdVoiceState *state);
 extern void synthQueueVoiceInputUpdate(McmdVoiceState *state);
 extern u32 voiceConvertDbToLinear(s32 value);
-extern int fn_8027A8D4(McmdEnvelopeState *state);
+extern int adsrSetup(McmdEnvelopeState *state);
 extern u8 voiceAdsrDecayTable[];
 extern f32 voiceAdsrSustainTable[];
 extern u8 lbl_8032EDD0[]; /* pitch ratio table (u16[13]) heads the macro data tables */
@@ -391,7 +391,7 @@ void mcmdSetPitchADSR(McmdVoiceState *svoice, McmdCommandArgs *cstep)
     }
     svoice->pitchAdsr.sustain = 0xc1 - voiceAdsrDecayTable[sl];
     svoice->pitchAdsr.release = adsr.dls.rtime;
-    fn_8027A8D4(&svoice->pitchAdsr);
+    adsrSetup(&svoice->pitchAdsr);
     MAC_CFLAGS(svoice) |= MAC_FLAG64(0x200, 0);
 }
 
