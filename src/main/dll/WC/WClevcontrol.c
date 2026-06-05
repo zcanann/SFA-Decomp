@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/dll/WC/WClevcontrol.h"
 
 extern undefined4 FUN_80006824();
@@ -786,8 +787,6 @@ void fn_801EEE0C(int *obj, f32 *x, f32 *y, f32 *z) {
 /* Path-follow steering update for the cloudrunner block (target 0x801EE668;
  * Ghidra split this body as FUN_801eeafc). */
 extern u32 getButtonsHeld(int pad);
-extern void ObjAnim_SetCurrentMove(s16 *obj, int move, f32 t, int p4);
-extern void ObjAnim_AdvanceCurrentMove(s16 *obj, f32 moveStepScale, f32 deltaTime, void *events);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern u8 framesThisStep;
 extern f32 timeDelta;
@@ -864,15 +863,15 @@ void fn_801EE668(s16 *obj, u8 *state) {
     spd = lbl_803E5CB0 * (f32)obj[1] + lbl_803E5CAC;
     if (spd > lbl_803E5CB4) {
         if (obj[0x50] != 5) {
-            ObjAnim_SetCurrentMove(obj, 5, lbl_803E5C70, 0);
+            ObjAnim_SetCurrentMove((int)obj, 5, lbl_803E5C70, 0);
         }
     } else {
         spd = lbl_803E5CAC;
         if (obj[0x50] != 256) {
-            ObjAnim_SetCurrentMove(obj, 256, lbl_803E5C70, 0);
+            ObjAnim_SetCurrentMove((int)obj, 256, lbl_803E5C70, 0);
         }
     }
-    ObjAnim_AdvanceCurrentMove(obj, spd, timeDelta, &events);
+    ObjAnim_AdvanceCurrentMove(spd, timeDelta, (int)obj, (ObjAnimEventList *)&events);
 
     *(f32 *)(obj + 6) = *(f32 *)(state + 0x4c);
     *(f32 *)(obj + 8) = *(f32 *)(state + 0x50);
