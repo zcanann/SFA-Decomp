@@ -850,7 +850,7 @@ void DIMSnowHorn1_modelMtxFn(int obj, f32 *out_x, f32 *out_y, f32 *out_z)
 /*
  * Returns 1 if state->[0xa90] != 0, else 2.
  */
-int gdev_cc_initinterrupts(int obj)
+int DIMSnowHorn1_func11(int obj)
 {
     if (*(u8 *)(*(int *)(obj + 0xb8) + 0xa90) != 0) {
         return 1;
@@ -863,7 +863,7 @@ int gdev_cc_initinterrupts(int obj)
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-int ddh_cc_initinterrupts(int obj, undefined4 unused, int setup)
+int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup)
 {
     int state;
     int animState;
@@ -1426,7 +1426,7 @@ void DIMSnowHorn1_init(int obj, int p2, int p3)
     int q;
     s8 idx;
     *(s16 *)((char *)obj + 0) = (s16)((s8)*(s8 *)((char *)p2 + 0x18) << 8);
-    *(int *)((char *)obj + 0xbc) = (int)ddh_cc_initinterrupts;
+    *(int *)((char *)obj + 0xbc) = (int)DIMSnowHorn1_animEventCallback;
     ObjGroup_AddObject(obj, 0xa);
     inner = *(int *)((char *)obj + 0xb8);
     *(u8 *)((char *)inner + 0xa8c) = *(u8 *)((char *)p2 + 0x19);

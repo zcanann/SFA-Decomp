@@ -464,7 +464,7 @@ extern void *lbl_803DE4C4;
 extern s16 lbl_803DC730;
 extern int textureLoad(int id, int p2);
 extern u8 lbl_80335030[];
-extern void ddh_cc_initinterrupts();
+extern void DIMSnowHorn1_animEventCallback();
 extern int lbl_803E8230;
 extern int lbl_803DC734;
 extern f32 lbl_803E82B8;

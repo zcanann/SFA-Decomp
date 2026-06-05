@@ -26,7 +26,7 @@ extern undefined lbl_803DB0F0[];
  */
 
 /*
- * ddh_cc_initinterrupts - large interrupt-init helper (~140 instructions).
+ * DIMSnowHorn1_animEventCallback - large interrupt-init helper (~140 instructions).
  */
 extern f32 lbl_803E82A4;
 extern f32 lbl_803E82A8;
@@ -382,7 +382,7 @@ extern f32 lbl_803DB170[];
 extern s16 lbl_803DC730;
 extern int textureLoad(int id, int p2);
 
-extern int ddh_cc_initinterrupts(int obj, undefined4 unused, int setup);
+extern int DIMSnowHorn1_animEventCallback(int obj, undefined4 unused, int setup);
 extern int lbl_803E8230;
 extern int lbl_803DC734;
 extern f32 lbl_803E82B8;
