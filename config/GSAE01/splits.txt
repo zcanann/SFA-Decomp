@@ -58,8 +58,11 @@ main/vecmath.c:
 main/mm.c:
 	.text       start:0x80022948 end:0x8002430C
 
+main/model.c:
+	.text       start:0x8002430C end:0x8002A5D4
+
 main/unknown/autos/placeholder_8001746C.c:
-	.text       start:0x8002430C end:0x8002EB54
+	.text       start:0x8002A5D4 end:0x8002EB54
 
 main/objanim.c:
 	.text       start:0x8002EB54 end:0x80030688

@@ -765,6 +765,7 @@ config.libs = [
             Object(NonMatching, "main/gameloop.c"),
             Object(NonMatching, "main/vecmath.c"),
             Object(NonMatching, "main/mm.c"),
+            Object(NonMatching, "main/model.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8001746C.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8002F604.c"),
             Object(NonMatching, "main/objseq.c"),
