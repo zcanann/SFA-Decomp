@@ -166,8 +166,8 @@ int fn_802C0978(int obj, int p2)
 #pragma peephole off
 int fn_802C0A5C(int obj, int p2)
 {
-    int q = *(int *)((char *)obj + 0x4c);
     int inner;
+    int q = *(int *)((char *)obj + 0x4c);
     *(int *)((char *)p2 + 0) |= 0x200000;
     if (*(s8 *)((char *)p2 + 0x27a) != 0) {
         f32 fz;
@@ -188,7 +188,7 @@ int fn_802C0A5C(int obj, int p2)
     if (RandomTimer_UpdateRangeTrigger(inner + 0xb54, lbl_803E83F8, lbl_803E840C)) {
         Sfx_PlayFromObject(obj, 0x464);
     }
-    if (GameBit_Get(*(s16 *)((char *)q + 0x1e))) {
+    if ((u32)GameBit_Get(*(s16 *)((char *)q + 0x1e)) != 0) {
         *(int *)((char *)obj + 0xf4) = 0;
         ObjHits_EnableObject(obj);
         ObjHits_SyncObjectPositionIfDirty(obj);
