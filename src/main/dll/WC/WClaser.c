@@ -1,3 +1,4 @@
+#include "global.h"
 #include "ghidra_import.h"
 #include "main/dll/WC/WClaser.h"
 
@@ -53,6 +54,32 @@ extern f32 lbl_803E5D08;
     ((void (*)(int, int *, int))(*(u32 *)((u8 *)*gObjectTriggerInterface + 0x48)))((eventId), (obj), (arg))
 #define SCREEN_TRANSITION_START(kind, value) \
     ((void (*)(int, int))(*(u32 *)((u8 *)*gScreenTransitionInterface + 0xc)))((kind), (value))
+
+typedef struct Dll1FBSetup {
+    u8 pad00[0x18];
+    s8 yawByte;
+    s8 baseMove;
+    s16 triggerMode;
+    s16 objectParam;
+} Dll1FBSetup;
+
+typedef struct Dll1FBState {
+    u8 pad00[4];
+    s16 baseMove;
+    s16 triggerMode;
+    u8 pad08;
+    u8 hideModel;
+    u8 pad0A[2];
+} Dll1FBState;
+
+STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
+STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
+STATIC_ASSERT(offsetof(Dll1FBState, triggerMode) == 0x06);
+STATIC_ASSERT(offsetof(Dll1FBState, hideModel) == 0x09);
+STATIC_ASSERT(offsetof(Dll1FBSetup, yawByte) == 0x18);
+STATIC_ASSERT(offsetof(Dll1FBSetup, baseMove) == 0x19);
+STATIC_ASSERT(offsetof(Dll1FBSetup, triggerMode) == 0x1a);
+STATIC_ASSERT(offsetof(Dll1FBSetup, objectParam) == 0x1c);
 
 #pragma scheduling off
 #pragma peephole off
@@ -269,8 +296,8 @@ void WM_seqobject_initialise(void) {}
 #pragma peephole off
 int dll_1FB_SeqFn(int *obj, int unused, s16 *p)
 {
-    int *state = (int *)OBJ_PTR(obj, 0xb8);
-    s16 mode = *(s16 *)((u8 *)state + 6);
+    Dll1FBState *state = (Dll1FBState *)OBJ_PTR(obj, 0xb8);
+    s16 mode = state->triggerMode;
     u8 flags;
 
     if ((mode == 1) || (mode == 2)) {
@@ -292,13 +319,15 @@ void dll_1FB_free_nop(void) {}
 #pragma peephole off
 void dll_1FB_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
 {
-    u8 *state = (u8 *)OBJ_PTR(obj, 0xb8);
+    Dll1FBState *state = (Dll1FBState *)OBJ_PTR(obj, 0xb8);
 
-    if (visible != 0) {
-        if (state[9] == 0) {
-            ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5D00);
-        }
+    if (visible == 0) {
+        return;
     }
+    if (state->hideModel != 0) {
+        return;
+    }
+    ((void (*)(int *, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E5D00);
 }
 #pragma peephole reset
 #pragma scheduling reset
@@ -309,9 +338,9 @@ void dll_1FB_hitDetect_nop(void) {}
 #pragma peephole off
 void dll_1FB_update(int *obj)
 {
-    u8 *state = (u8 *)OBJ_PTR(obj, 0xb8);
+    Dll1FBState *state = (Dll1FBState *)OBJ_PTR(obj, 0xb8);
 
-    if (((OBJ_U8(obj, 0xaf) & 1) != 0) && (*(s16 *)(state + 6) == 2) &&
+    if (((OBJ_U8(obj, 0xaf) & 1) != 0) && (state->triggerMode == 2) &&
         (GameBit_Get(0x9ad) == 0)) {
         OBJECT_TRIGGER_REFRESH(4, obj, -1);
         buttonDisable(0, 0x100);
@@ -322,16 +351,18 @@ void dll_1FB_update(int *obj)
 
 void dll_1FB_init(int *obj, u8 *def)
 {
-    u8 *state;
+    Dll1FBState *state;
+    Dll1FBSetup *setup;
 
-    state = (u8 *)OBJ_PTR(obj, 0xb8);
+    state = (Dll1FBState *)OBJ_PTR(obj, 0xb8);
+    setup = (Dll1FBSetup *)def;
     ObjMsg_AllocQueue(obj, 4);
     OBJ_PTR(obj, 0xbc) = (void *)dll_1FB_SeqFn;
-    OBJ_S16(obj, 0) = (s16)((s8)def[0x18] << 8);
-    OBJ_S16(obj, 2) = *(s16 *)(def + 0x1c);
-    *(s16 *)(state + 4) = (s16)(s8)def[0x19];
-    *(s16 *)(state + 6) = *(s16 *)(def + 0x1a);
-    ObjAnim_SetCurrentMove((int)obj, (int)*(s16 *)(state + 4) + 0x100, lbl_803E5D08, 0);
+    OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
+    OBJ_S16(obj, 2) = setup->objectParam;
+    state->baseMove = setup->baseMove;
+    state->triggerMode = setup->triggerMode;
+    ObjAnim_SetCurrentMove((int)obj, (int)state->baseMove + 0x100, lbl_803E5D08, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset
