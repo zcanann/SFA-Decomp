@@ -794,6 +794,40 @@ Heuristic:
     with unary-negated operand for fneg+fadds) — both are statement-level
     expression-restructure to control MWCC's commutative reordering.
 
+60. **"99.99% cosmetic" partials can hide REAL behavioral bugs masked by
+    `--diff`'s reloc-tolerance — always byte-compare before declaring a
+    pool-name artifact.** When a function scores 99.99% (1-2 bytes off) and
+    `function_objdump.py --diff` shows zero divergence (because the diff
+    tool tolerates reloc-target address differences from the symbol living
+    at different file offsets in target vs current `.o`), the residual may
+    NOT be a `@NNN`-vs-`lbl_xxx` pool-name artifact — it may be a single
+    literal-operand byte difference that encodes a behavioral bug. Recover
+    by raw byte-diff of the function bytes pulled from both `.o` files
+    (objdump `-t` for the symbol address, `.text` section file-offset, read
+    `sym_size` bytes from each), find the differing byte, map it back to
+    its instruction's offset (offset/4), and inspect what immediate it
+    encodes. Took `objAudioFn_8006edcc` 99.99→100% via byte-diff: the
+    differing byte was `li r0, 8` (target) vs `li r0, 4` (current) at
+    offset 0x50 — a loop-count immediate. The C had `for (bit=0; bit<16;
+    bit++) { (mask >> bit) & 1 ... }` against a 32-bit `int mask` —
+    target's unrolled-4x ctr=8 implies 32 iterations, while the C bound
+    of 16 produced ctr=4 / 16 iterations. **The C had a wrong bound** —
+    the bit-scan should walk the full int (32 bits), not 16. Fix:
+    `for (bit = 0; bit < 32; bit++)`. **Lesson: when --diff shows
+    everything-identical but the score is <100%, run the byte-diff before
+    accepting the pool-name-artifact explanation.** Some Ghidra imports
+    silently capped loop bounds to the data width the decompiler inferred
+    (here u16 vs the int param), and the unroll-factor disguises the count
+    mismatch as a single immediate byte. The script for a byte-diff:
+    ```
+    objdump -t <file>.o | grep <sym>   # get sym addr + size
+    objdump -h <file>.o | grep .text   # get .text file offset
+    # read sym_size bytes from (.text offset + sym addr) in each, diff
+    ```
+    (Found via report.json 99.99% screening + raw byte compare. The
+    `--diff` mask-tolerance was masking a genuine codegen difference,
+    not a cosmetic artifact.)
+
 ## Tar-pit cap class: compiler-emitted 64-bit / fixed-point math — DEPRIORITIZE
 
 A function full of `__shl2i`/`__shr2u` runtime-shift helpers, `addc`/`adde`/

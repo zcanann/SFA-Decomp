@@ -3716,7 +3716,7 @@ void objAudioFn_8006edcc(int p1, int mask, int p5, int p6, int p7, f32 f1, f32 f
     s8 buf[0x1c];
     int bit;
     memset(buf, 0, 0x1c);
-    for (bit = 0; bit < 16; bit++) {
+    for (bit = 0; bit < 32; bit++) {
         if ((mask >> bit) & 1) {
             buf[buf[0x1b] + 0x13] = (s8)bit;
             buf[0x1b]++;
