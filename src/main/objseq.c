@@ -1,5 +1,6 @@
 #include "main/sky_80080E58_shared.h"
 #include "main/mapEventTypes.h"
+#include "main/objanim.h"
 
 extern int getTabEntry(void *p, int sz, int off, int unk);
 extern int getTableFileEntry(int fileId, int index, int *out);
@@ -118,15 +119,12 @@ extern void setJoypadDisabled(void);
 extern u8 lbl_803DD111;
 extern u8 lbl_803DD112;
 extern f32 lbl_803DF02C;
-extern void ObjAnim_SetCurrentMove(void *obj, int move, int p3, f32 phase);
 extern void ObjModel_SetBlendChannelTargets(void *action, int mode, int target, int channel, int p5, f32 t);
 extern void Sfx_PlayFromObject(void *obj, int sfxId);
 extern void Sfx_RemoveLoopedObjectSound(void *obj, int sfxId);
 extern void Sfx_AddLoopedObjectSound(void *obj, int sfxId);
 extern void Music_Trigger(int id, int mode);
 extern void warpToMap(int map, int mode);
-extern int ObjAnim_SampleRootCurvePhase(void *obj, f32 *out, f32 dist);
-extern void ObjAnim_AdvanceCurrentMove(void *obj, void *state, f32 speed, f32 t);
 int ObjSeq_ExecuteActionCommand(u8 *obj, u8 *action, u8 **cmd, int flags, void *out);
 void *ObjSeq_ToggleCommand3Target(u8 *obj, u8 *seq, u8 *src);
 
@@ -1478,9 +1476,9 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
         if (*(s16 *)(seq + 0x58) > 0 && mode != 0) {
             if ((s8)seq[0x78] == 1 && (s8)seq[0x7b] == 0 && action != NULL) {
                 if (ObjAnim_SampleRootCurvePhase(
-                        activeObj, &speed,
                         sqrtf((pos.x - prevX) * (pos.x - prevX) +
-                              (pos.z - prevZ) * (pos.z - prevZ))) == 0) {
+                              (pos.z - prevZ) * (pos.z - prevZ)),
+                        (ObjAnimComponent *)activeObj, &speed) == 0) {
                     frame = *(s16 *)(seq + 0x58) - 1;
                     if (*(void **)(seq + 0x98) == NULL) {
                         val = lbl_803DEFB0;
@@ -1510,7 +1508,8 @@ void ObjSeq_RebuildCurveStateToFrame(u8 *obj, u8 *seqObj, u8 *seq, int mode)
             }
 
             if (action != NULL) {
-                ObjAnim_AdvanceCurrentMove(activeObj, seq + 0xf0, speed, lbl_803DEFC8);
+                ObjAnim_AdvanceCurrentMove(speed, lbl_803DEFC8, (int)activeObj,
+                                           (ObjAnimEventList *)(seq + 0xf0));
                 if (mode != 0) {
                     if (*(f32 *)(seq + 0x20) > lbl_803DEFB0) {
                         if (*(s16 *)(seq + 0xd6) != 0) {
@@ -2082,8 +2081,8 @@ int ObjSeq_ExecuteActionCommand(u8 *obj, u8 *action, u8 **cmdPtr, int flags, voi
             }
         }
         *(f32 *)(seq + 0x20) = lbl_803DEFC8;
-        ObjAnim_SetCurrentMove(activeObj, *(s16 *)(seq + 0x6c), 0,
-                               (f32)seq[0x8c] * lbl_803DF02C);
+        ObjAnim_SetCurrentMove((int)activeObj, *(s16 *)(seq + 0x6c),
+                               (f32)seq[0x8c] * lbl_803DF02C, 0);
         break;
     case 1:
         if (flag8 != 0) {
@@ -2548,9 +2547,9 @@ int ObjSeq_update(u8 *obj, f32 t)
             if (*(s16 *)(seq + 0x58) > 0 && (*(s16 *)(seq + 0x6e) & 4) != 0) {
                 if ((s8)seq[0x78] == 1 && (s8)seq[0x7b] == 0 && action != NULL) {
                     if (ObjAnim_SampleRootCurvePhase(
-                            activeObj, &scratch[1],
                             sqrtf((px - prevX) * (px - prevX) +
-                                  (pz - prevZ) * (pz - prevZ))) == 0) {
+                                  (pz - prevZ) * (pz - prevZ)),
+                            (ObjAnimComponent *)activeObj, &scratch[1]) == 0) {
                         i = *(s16 *)(seq + 0x58) - 1;
                         if (*(void **)(seq + 0x98) == NULL) {
                             val = lbl_803DEFB0;
@@ -2582,8 +2581,8 @@ int ObjSeq_update(u8 *obj, f32 t)
                 }
 
                 if (action != NULL) {
-                    ObjAnim_AdvanceCurrentMove(activeObj, seq + 0xf0, scratch[1],
-                                               lbl_803DEFC8);
+                    ObjAnim_AdvanceCurrentMove(scratch[1], lbl_803DEFC8, (int)activeObj,
+                                               (ObjAnimEventList *)(seq + 0xf0));
                     if (*(f32 *)(seq + 0x20) > lbl_803DEFB0) {
                         if (*(s16 *)(seq + 0xd6) != 0) {
                             i = *(s16 *)(seq + 0x58) - 1;
