@@ -2,6 +2,9 @@
 #include "main/audio/sfx_ids.h"
 #include "main/dll/seqObj.h"
 
+#define SEQOBJ_ANIM_BLEND_ACTIVE_FLAG 0x40
+#define SEQOBJ_ANIM_EVENT_HOLD_FLAG 0x40000000
+
 extern undefined4 FUN_800033a8();
 extern void *mmAlloc(int size,int tag,int flags);
 extern void *memset(void *dst,int value,uint size);
@@ -769,21 +772,9 @@ u32 fn_8014FFB4(int obj, int state, u32 allowNewEvent) {
         *(f32 *)(state + 0x32c) = *(f32 *)(state + 0x32c) - timeDelta;
         if (*(f32 *)(state + 0x32c) <= lbl_803E2740) {
             *(f32 *)(state + 0x32c) = lbl_803E2740;
-            {
-                register u32 m;
-                register u32 v;
-                register int pReg = state;
-                asm {
-                    lwz v, 0x2dc(pReg)
-                    li m, -65
-                    and m, v, m
-                    stw m, 0x2dc(pReg)
-                    lwz v, 0x2dc(pReg)
-                    lis m, 16384
-                    or m, v, m
-                    stw m, 0x2dc(pReg)
-                }
-            }
+            *(u32 *)(state + 0x2dc) =
+                (*(u32 *)(state + 0x2dc) & ~SEQOBJ_ANIM_BLEND_ACTIVE_FLAG) |
+                SEQOBJ_ANIM_EVENT_HOLD_FLAG;
             *(u8 *)(state + 0x2f2) = *(u8 *)(state + 0x2f2) & 0x7f;
             *(u8 *)(state + 0x33c) = 0;
             return 0;
