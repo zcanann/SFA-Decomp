@@ -2403,7 +2403,7 @@ main/unknown/autos/placeholder_8027AC80.c:
 	extabindex  start:0x80006224 end:0x80006230
 	.text       start:0x8027AC34 end:0x8027ACB8
 
-main/unknown/autos/placeholder_8027ADC4.c:
+main/audio/vsample_alloc.c:
 	extab       start:0x800059C0 end:0x800059C8
 	extabindex  start:0x80006230 end:0x8000623C
 	.text       start:0x8027ACB8 end:0x8027AFC0
