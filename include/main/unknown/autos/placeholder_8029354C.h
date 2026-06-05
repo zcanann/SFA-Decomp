@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8029354C_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8029354C_H_
-
-#include "ghidra_import.h"
-
-float fsin16Precise(int angle);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8029354C_H_ */
