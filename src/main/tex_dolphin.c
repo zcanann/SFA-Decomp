@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/frustum.h"
 #include "main/tex_dolphin.h"
 #include "dolphin/gx.h"
 #include "dolphin/mtx.h"
@@ -80,7 +81,7 @@ extern int lbl_803DB63C;
 extern int lbl_803DB640;
 extern byte lbl_803DB644;
 extern int lbl_80382008[5];
-extern int gViewFrustumPlanes[25];
+extern FrustumPlane gViewFrustumPlanes[5];
 extern int lbl_803E8444;
 extern int lbl_803E8448;
 extern undefined4 jumptable_8030E844;
@@ -389,45 +390,45 @@ void mapBlockRender_drawDimmedAabbLights(undefined4 param_1,undefined4 param_2,i
 #pragma scheduling off
 #pragma peephole off
 undefined4
-frustumTestAabbWithPlaneOffsets(float param_1,float param_2,float param_3,float param_4,float param_5,
-            float param_6,float *param_7)
+frustumTestAabbWithPlaneOffsets(f32 minX, f32 maxX, f32 minY, f32 maxY, f32 minZ,
+            f32 maxZ, f32 *planeOffsets)
 {
-  byte bVar1;
-  float *pfVar2;
+  byte cornerIndex;
+  FrustumPlane *plane;
   int i;
-  float dVar4;
-  float dVar5;
-  float dVar6;
-  float dVar7;
-  float dVar8;
-  float dVar9;
+  float nearY;
+  float nearX;
+  float nearZ;
+  float farY;
+  float farX;
+  float farZ;
 
-  pfVar2 = (float *)&gViewFrustumPlanes;
-  for (i = 5; i != 0; i--, pfVar2 = pfVar2 + 5, param_7 = param_7 + 1) {
-    bVar1 = *(byte *)(pfVar2 + 4);
-    if ((bVar1 & 1) != 0) {
-      dVar5 = param_2;
-      dVar8 = param_1;
+  plane = gViewFrustumPlanes;
+  for (i = 5; i != 0; i--, plane++, planeOffsets++) {
+    cornerIndex = plane->aabbCornerIndex;
+    if ((cornerIndex & 1) != 0) {
+      nearX = maxX;
+      farX = minX;
     } else {
-      dVar5 = param_1;
-      dVar8 = param_2;
+      nearX = minX;
+      farX = maxX;
     }
-    if ((bVar1 & 2) != 0) {
-      dVar4 = param_4;
-      dVar7 = param_3;
+    if ((cornerIndex & 2) != 0) {
+      nearY = maxY;
+      farY = minY;
     } else {
-      dVar4 = param_3;
-      dVar7 = param_4;
+      nearY = minY;
+      farY = maxY;
     }
-    if ((bVar1 & 4) != 0) {
-      dVar9 = param_6;
-      dVar6 = param_5;
+    if ((cornerIndex & 4) != 0) {
+      nearZ = maxZ;
+      farZ = minZ;
     } else {
-      dVar9 = param_5;
-      dVar6 = param_6;
+      nearZ = minZ;
+      farZ = maxZ;
     }
-    if ((dVar4 * pfVar2[1] + dVar5 * *pfVar2 + dVar9 * pfVar2[2] + pfVar2[3] + *param_7 < lbl_803DEBCC) &&
-        (dVar7 * pfVar2[1] + dVar8 * *pfVar2 + dVar6 * pfVar2[2] + pfVar2[3] + *param_7 < lbl_803DEBCC))
+    if ((nearY * plane->normalY + nearX * plane->normalX + nearZ * plane->normalZ + plane->distance + *planeOffsets < lbl_803DEBCC) &&
+        (farY * plane->normalY + farX * plane->normalX + farZ * plane->normalZ + plane->distance + *planeOffsets < lbl_803DEBCC))
       return 0;
   }
   return 1;
@@ -447,56 +448,56 @@ frustumTestAabbWithPlaneOffsets(float param_1,float param_2,float param_3,float 
 #pragma scheduling off
 #pragma peephole off
 u8
-mapBlockBounds_ComputeAndTestPlanes(int param_1,int param_2,float *param_3,int param_4,float *param_5,float *param_6,
-            float *param_7,float *param_8,float *param_9,float *param_10)
+mapBlockBounds_ComputeAndTestPlanes(int bounds,int block,FrustumPlane *planes,int planeCount,f32 *minX,
+            f32 *minY,f32 *minZ,f32 *maxX,f32 *maxY,f32 *maxZ)
 {
-  byte bVar1;
-  float fVar2;
-  float fVar3;
-  float fVar4;
-  float fVar5;
-  float fVar6;
-  float fVar7;
+  byte cornerIndex;
+  float nearX;
+  float farX;
+  float nearY;
+  float farY;
+  float nearZ;
+  float farZ;
   int i;
 
-  *param_8 = (f32)(*(short *)(param_1 + 0xc) >> 3) + *(float *)(param_2 + 0x18);
-  *param_5 = (f32)(*(short *)(param_1 + 6) >> 3) + *(float *)(param_2 + 0x18);
-  *param_9 = (f32)(*(short *)(param_1 + 0xe) >> 3) + *(float *)(param_2 + 0x28);
-  *param_6 = (f32)(*(short *)(param_1 + 8) >> 3) + *(float *)(param_2 + 0x28);
-  *param_10 = (f32)(*(short *)(param_1 + 0x10) >> 3) + *(float *)(param_2 + 0x38);
-  *param_7 = (f32)(*(short *)(param_1 + 10) >> 3) + *(float *)(param_2 + 0x38);
-  for (i = 0; i < param_4; i = i + 1) {
-    bVar1 = *(byte *)(param_3 + 4);
-    if ((bVar1 & 1) != 0) {
-      fVar2 = *param_8;
-      fVar3 = *param_5;
+  *maxX = (f32)(*(short *)(bounds + 0xc) >> 3) + *(float *)(block + 0x18);
+  *minX = (f32)(*(short *)(bounds + 6) >> 3) + *(float *)(block + 0x18);
+  *maxY = (f32)(*(short *)(bounds + 0xe) >> 3) + *(float *)(block + 0x28);
+  *minY = (f32)(*(short *)(bounds + 8) >> 3) + *(float *)(block + 0x28);
+  *maxZ = (f32)(*(short *)(bounds + 0x10) >> 3) + *(float *)(block + 0x38);
+  *minZ = (f32)(*(short *)(bounds + 10) >> 3) + *(float *)(block + 0x38);
+  for (i = 0; i < planeCount; i = i + 1) {
+    cornerIndex = planes->aabbCornerIndex;
+    if ((cornerIndex & 1) != 0) {
+      nearX = *maxX;
+      farX = *minX;
     }
     else {
-      fVar2 = *param_5;
-      fVar3 = *param_8;
+      nearX = *minX;
+      farX = *maxX;
     }
-    if ((bVar1 & 2) != 0) {
-      fVar4 = *param_9;
-      fVar5 = *param_6;
-    }
-    else {
-      fVar4 = *param_6;
-      fVar5 = *param_9;
-    }
-    if ((bVar1 & 4) != 0) {
-      fVar6 = *param_10;
-      fVar7 = *param_7;
+    if ((cornerIndex & 2) != 0) {
+      nearY = *maxY;
+      farY = *minY;
     }
     else {
-      fVar6 = *param_7;
-      fVar7 = *param_10;
+      nearY = *minY;
+      farY = *maxY;
     }
-    if ((param_3[3] + (fVar4 * param_3[1] + fVar2 * *param_3 + fVar6 * param_3[2]) < lbl_803DEBCC)
-       && (param_3[3] + (fVar5 * param_3[1] + fVar3 * *param_3 + fVar7 * param_3[2]) <
+    if ((cornerIndex & 4) != 0) {
+      nearZ = *maxZ;
+      farZ = *minZ;
+    }
+    else {
+      nearZ = *minZ;
+      farZ = *maxZ;
+    }
+    if ((planes->distance + (nearY * planes->normalY + nearX * planes->normalX + nearZ * planes->normalZ) < lbl_803DEBCC)
+       && (planes->distance + (farY * planes->normalY + farX * planes->normalX + farZ * planes->normalZ) <
            lbl_803DEBCC)) {
       return 0;
     }
-    param_3 = param_3 + 5;
+    planes++;
   }
   return 1;
 }
@@ -565,7 +566,7 @@ void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float
   if ((obj != NULL) && ((*(uint *)(obj + 0x3c) & 2) != 0)) {
     goto end;
   }
-  if (mapBlockBounds_ComputeAndTestPlanes(ptr,block,(float *)(base + 0x987c),5,&x1,&y1,&z1,&x2,&y2,&z2) == 0) {
+  if (mapBlockBounds_ComputeAndTestPlanes(ptr,block,(FrustumPlane *)(base + 0x987c),5,&x1,&y1,&z1,&x2,&y2,&z2) == 0) {
     goto end;
   }
   if ((u8)hi == 0) {
@@ -643,7 +644,7 @@ void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float
             vis = lo;
           }
           else {
-            u8 res2 = mapBlockBounds_ComputeAndTestPlanes(ptr,block,(float *)(base + 0x9818),5,&x1,&y1,&z1,&x2,&y2,&z2);
+            u8 res2 = mapBlockBounds_ComputeAndTestPlanes(ptr,block,(FrustumPlane *)(base + 0x9818),5,&x1,&y1,&z1,&x2,&y2,&z2);
             if (((res2 == 0) || ((u8)lo == 0)) && ((res2 != 0) || ((u8)lo != 0))) {
               vis = 0;
             }
