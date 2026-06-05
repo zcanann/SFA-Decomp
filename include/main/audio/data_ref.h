@@ -43,4 +43,28 @@ typedef struct DataMacroBucket {
     u16 startIndex;
 } DataMacroBucket;
 
+typedef struct DataFXEntry {
+    u16 id;
+    u16 macro;
+    u8 maxVoices;
+    u8 priority;
+    u8 volume;
+    u8 panning;
+    u8 key;
+    u8 voiceGroup;
+} DataFXEntry;
+
+typedef struct SynthDataTables {
+    DataSampleDirBucket sampleDirs[128];  /* 0x0000 dataSmpSDirTable */
+    DataRefEntry curves[2048];            /* 0x0600 dataCurveTable */
+    DataRefEntry keymaps[256];            /* 0x4600 dataKeymapTable */
+    DataLayerRef layers[256];             /* 0x4E00 dataLayerTable */
+    DataMacroBucket macroBuckets[512];    /* 0x5A00 dataMacroBucketTable */
+    DataRefEntry macros[2048];            /* 0x6200 dataMacroTable */
+    DataFXGroupRef fxGroups[128];         /* 0xA200 dataFXGroupTable */
+    DataSampleDirEntry sampleSearchKey;   /* 0xA600 dataGetSampleSearchKey */
+    DataLayerRef layerSearchKey;          /* 0xA620 dataGetLayerSearchKey */
+    DataFXEntry fxSearchKey;              /* 0xA62C dataGetFXSearchKey */
+} SynthDataTables;
+
 #endif /* MAIN_AUDIO_DATA_REF_H_ */
