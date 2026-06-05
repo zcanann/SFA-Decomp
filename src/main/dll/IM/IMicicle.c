@@ -2126,12 +2126,12 @@ void exploded_seedDebrisMotion(ExplodedObject *obj, ExplodedObjectState *state, 
 #pragma peephole off
 int exploded_stepDebrisPhysics(ExplodedObject *obj, ExplodedObjectState *state)
 {
-  int stopped;
+  f32 stopped;
   f32 speed;
-  f32 worldBefore[3];
   f32 worldAfter[3];
+  f32 worldBefore[3];
 
-  stopped = 0;
+  stopped = lbl_803E43F0;
   Obj_TransformLocalPointByWorldMatrix(obj, state, worldBefore, 0);
   obj->velocityX = timeDelta * state->accelerationX + obj->velocityX;
   obj->velocityY = timeDelta * state->accelerationY + obj->velocityY;
@@ -2140,59 +2140,63 @@ int exploded_stepDebrisPhysics(ExplodedObject *obj, ExplodedObjectState *state)
   state->spinY = timeDelta * state->spinVelocityY + state->spinY;
   state->spinZ = timeDelta * state->spinVelocityZ + state->spinZ;
 
-  if (state->floorHeight <= worldBefore[1]) {
-    state->physicsFlags &= ~0x04;
-  }
-  else {
+  if (worldBefore[1] < state->floorHeight) {
     if (((obj->velocityY < lbl_803E43F0) && ((state->physicsFlags & 4) != 0)) ||
         (lbl_803E43F0 == obj->velocityY)) {
-      state->accelerationY = lbl_803E43F0;
-      state->spinVelocityZ = lbl_803E43F0;
-      state->spinZ = lbl_803E43F0;
-      state->spinVelocityY = lbl_803E43F0;
-      state->spinY = lbl_803E43F0;
-      state->spinVelocityX = lbl_803E43F0;
-      state->spinX = lbl_803E43F0;
-      obj->velocityY = lbl_803E43F0;
-      state->accelerationX = state->accelerationX * lbl_803E4418;
-      obj->velocityX = obj->velocityX * lbl_803E4418;
-      state->accelerationZ = state->accelerationZ * lbl_803E4418;
-      obj->velocityZ = obj->velocityZ * lbl_803E4418;
+      f32 t;
+      f32 k;
+      t = lbl_803E43F0;
+      state->accelerationY = t;
+      state->spinVelocityZ = t;
+      state->spinZ = t;
+      state->spinVelocityY = t;
+      state->spinY = t;
+      state->spinVelocityX = t;
+      state->spinX = t;
+      obj->velocityY = t;
+      k = lbl_803E4418;
+      state->accelerationX = state->accelerationX * k;
+      obj->velocityX = obj->velocityX * k;
+      state->accelerationZ = state->accelerationZ * k;
+      obj->velocityZ = obj->velocityZ * k;
       speed = obj->velocityX;
-      if (speed < lbl_803E43F0) {
-        speed = -speed;
-      }
+      speed = (speed >= t) ? speed : -speed;
       if (speed < lbl_803E441C) {
         speed = obj->velocityZ;
-        if (speed < lbl_803E43F0) {
-          speed = -speed;
-        }
+        speed = (speed >= lbl_803E43F0) ? speed : -speed;
         if (speed < lbl_803E441C) {
-          stopped = 1;
+          stopped = lbl_803E43F4;
         }
       }
     }
     if (obj->velocityY < lbl_803E43F0) {
+      f32 k2;
       obj->velocityY = lbl_803E4420 * -obj->velocityY;
-      obj->velocityX = obj->velocityX * lbl_803E4418;
-      obj->velocityZ = obj->velocityZ * lbl_803E4418;
+      k2 = lbl_803E4418;
+      obj->velocityX = obj->velocityX * k2;
+      obj->velocityZ = obj->velocityZ * k2;
       state->accelerationY = lbl_803E4424;
       state->spinVelocityZ = -state->spinVelocityZ;
     }
     state->physicsFlags |= 4;
+  } else {
+    state->physicsFlags &= ~4;
   }
 
-  obj->angleX = (s16)(s32)(state->spinX * timeDelta + (f32)(s32)obj->angleX);
-  obj->angleY = (s16)(s32)(state->spinY * timeDelta + (f32)(s32)obj->angleY);
-  obj->angleZ = (s16)(s32)(state->spinZ * timeDelta + (f32)(s32)obj->angleZ);
+  obj->angleX = (s32)(state->spinX * timeDelta + (f32)(s32)obj->angleX);
+  obj->angleY = (s32)(state->spinY * timeDelta + (f32)(s32)obj->angleY);
+  obj->angleZ = (s32)(state->spinZ * timeDelta + (f32)(s32)obj->angleZ);
   Obj_TransformLocalPointByWorldMatrix(obj, state, worldAfter, 0);
-  obj->x += worldBefore[0] - worldAfter[0];
-  obj->y += worldBefore[1] - worldAfter[1];
-  obj->z += worldBefore[2] - worldAfter[2];
+  worldAfter[0] = worldBefore[0] - worldAfter[0];
+  worldAfter[1] = worldBefore[1] - worldAfter[1];
+  worldAfter[2] = worldBefore[2] - worldAfter[2];
+  obj->x = obj->x + worldAfter[0];
+  obj->y = obj->y + worldAfter[1];
+  obj->z = obj->z + worldAfter[2];
   obj->x = obj->velocityX * timeDelta + obj->x;
   obj->y = obj->velocityY * timeDelta + obj->y;
   obj->z = obj->velocityZ * timeDelta + obj->z;
-  return stopped;
+  return (s32)stopped;
 }
 #pragma peephole reset
 #pragma scheduling reset
