@@ -319,7 +319,7 @@ extern f32 lbl_803E695C;
 extern f32 timeDelta;
 extern f32 lbl_803E68B0;
 extern f32 lbl_803E68B4;
-extern void renderFn_8008f904(void *p);
+extern void lightningRender(void *p);
 extern int ObjHits_GetPriorityHitWithPosition(int obj, void *a, int b, int *c, f32 *x, f32 *y, f32 *z);
 extern void Obj_SpawnHitLightAndFade(int obj, f32 *p, f32 v);
 extern void spawnExplosion(int obj, f32 scale, int a, int b, int c, int d, int e, int f, int g);

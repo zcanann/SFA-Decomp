@@ -25,7 +25,7 @@ void androssligh_render(int obj)
     void *p = *(void **)(*(int *)(obj + 0xb8) + 4);
 
     if (p != NULL) {
-        renderFn_8008f904(p);
+        lightningRender(p);
     }
 }
 #pragma scheduling reset

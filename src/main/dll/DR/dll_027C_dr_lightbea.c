@@ -91,7 +91,7 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
             *(f32 *)(*(int *)state + 0x10) = lbl_803E6BB8 + *(f32 *)(player + 0x10);
             *(f32 *)(*(int *)state + 0x14) = *(f32 *)(player + 0x14);
         }
-        renderFn_8008f904(*(void **)state);
+        lightningRender(*(void **)state);
         *(u16 *)(*(int *)state + 0x20) += 1;
         if (*(u16 *)(*(int *)state + 0x20) >= *(u16 *)(*(int *)state + 0x22)) {
             mm_free(*(void **)state);

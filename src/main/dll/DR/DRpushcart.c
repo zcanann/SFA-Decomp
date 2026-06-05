@@ -1517,7 +1517,7 @@ extern f32 lbl_803E5A4C;
 extern f32 lbl_803E5A50;
 extern void objfx_spawnDirectionalBurst(int obj, int a, f32 radius, int c, int d, int e, f32 scale, int g, int h);
 extern int ObjModel_GetRenderOp(int model, int idx);
-extern void renderFn_8008f904(void);
+extern void lightningRender(void);
 extern int getHudHiddenFrameCount(void);
 extern void mm_free_(int p);
 extern int fn_8008FB20(f32 *start, void *end, f32 a, f32 b, int c, int d, int e);
@@ -1557,7 +1557,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
     for (i = 0; i < 10; i++) {
         slot = state + i * 4;
         if (*(int *)(slot + 0x98) != 0) {
-            renderFn_8008f904();
+            lightningRender();
             if (getHudHiddenFrameCount() == 0) {
                 *(f32 *)(slot + 0xC0) += timeDelta;
                 *(u16 *)(*(int *)(slot + 0x98) + 0x20) = (u16)(int)(lbl_803E5A3C + *(f32 *)(slot + 0xC0));

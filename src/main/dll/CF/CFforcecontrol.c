@@ -1116,7 +1116,7 @@ void fuelcell_update(int* obj)
 
 extern void objfx_spawnDirectionalBurst(int* obj, int idx, f32 scale, int b, int c, int d, f32 speed, int e, int f);
 extern int ObjModel_GetRenderOp(int model, int idx);
-extern void renderFn_8008f904(void* particle);
+extern void lightningRender(void* particle);
 extern int getHudHiddenFrameCount(void);
 extern f32 vec3f_distanceSquared(void* a, void* b);
 extern int fn_8008FB20(double radiusX, double radiusY, float* start, float* end, int param_5, int param_6, int param_7);
@@ -1176,7 +1176,7 @@ void fuelcell_render(int* obj, int p2, int p3, int p4, int p5)
         for (i = 0; i < 10; i++) {
             slot = (u8*)state + i * 4;
             if (*(void**)(slot + 8) != NULL) {
-                renderFn_8008f904(*(void**)(slot + 8));
+                lightningRender(*(void**)(slot + 8));
                 if (getHudHiddenFrameCount() == 0) {
                     *(f32*)(slot + 0x34) += timeDelta;
                     *(u16*)(*(char**)(slot + 8) + 0x20) = (int)(lbl_803E3CD8 + *(f32*)(slot + 0x34));
