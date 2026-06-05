@@ -7102,12 +7102,12 @@ void FUN_80017b20(undefined8 param_1,double param_2,double param_3,undefined8 pa
 }
 
 /* Pattern wrappers. */
-void doNothing_8001F678(void) {}
+void doNothing_8001F678(void);
 #pragma dont_inline on
-void doNothing_startOfFrame(void) {}
+void doNothing_startOfFrame(void);
 #pragma dont_inline reset
-void doNothing_onSaveSelectScreenExit(void) {}
-int return1_800202BC(void) { return 0x1; }
+void doNothing_onSaveSelectScreenExit(void);
+int return1_800202BC(void);
 int return0_8002969C(void) { return 0x0; }
 int return0_8002A5B8(void) { return 0x0; }
 void doNothing_afterRenderObject(void) {}
@@ -7478,9 +7478,7 @@ extern int curLanguage;
 extern void *curGameTextDir;
 
 #pragma dont_inline on
-int getGameState(void) {
-    return lbl_803DCA3D;
-}
+int getGameState(void);
 #pragma dont_inline reset
 
 extern u8 lbl_803DCA49;
@@ -7488,45 +7486,23 @@ extern void init(void);
 extern void checkReset(void);
 extern void gameLoop(void);
 
-void main(void) {
-    lbl_803DCA3D = 0;
-    lbl_803DCA49 = 0;
-    init();
-    lbl_803DCA49 = 1;
-    lbl_803DCA3D = 1;
-    do {
-        checkReset();
-        gameLoop();
-    } while (1);
-}
+void main(void);
 
 #pragma peephole off
-void setGameState(int state) {
-    lbl_803DCA3D = (u8)state;
-}
+void setGameState(int state);
 
-void setTimeStop(int v) {
-    lbl_803DCA3C = (u8)v;
-}
+void setTimeStop(int v);
 
-void setShouldResetNextFrame(int v) {
-    lbl_803DCA3E = (u8)v;
-}
+void setShouldResetNextFrame(int v);
 #pragma peephole reset
 
-void setFrameCountdown_800202c4(u8 v) {
-    lbl_803DCA3B = v;
-}
+void setFrameCountdown_800202c4(u8 v);
 
 #pragma dont_inline on
-int getHudHiddenFrameCount(void) {
-    return lbl_803DCA3A;
-}
+int getHudHiddenFrameCount(void);
 #pragma dont_inline reset
 
-s16 getScreenBlankFrameCount(void) {
-    return lbl_803DCA46;
-}
+s16 getScreenBlankFrameCount(void);
 
 int getCurLanguage(void);
 
@@ -7544,9 +7520,7 @@ int objGetFlagsE5_2(u8 *obj) {
 
 void objSetEventName(u8 *obj, void *name);
 
-void crash(void) {
-    *(u8 *)0 = 0;
-}
+void crash(void);
 
 void __set_debug_bba(u8 *p) {
     p[0x19] = 0;
@@ -7693,10 +7667,7 @@ void modelLightStruct_setProjectionTevModes(ModelLightStruct *p, void *a, void *
 
 f32 gameTextFn_80019c00(void);
 
-u8 fn_8001FD88(void **p) {
-    *p = lbl_803DCAE8;
-    return lbl_803DCA48;
-}
+u8 fn_8001FD88(void **p);
 
 void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
     *(f32 *)(p + 8) = a;
@@ -7735,15 +7706,9 @@ void modelLightStruct_setSpecularTargetColor(ModelLightStruct *p, u8 a, u8 b, u8
 
 void modelLightStruct_setDiffuseTargetColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d);
 
-void fn_8001FE90(void) {
-    lbl_803DCA42++;
-    lbl_803DCAF0 = 0xd0;
-}
+void fn_8001FE90(void);
 
-void fn_8001FEA8(void) {
-    lbl_803DCA42++;
-    lbl_803DCAF0 = 0xc9;
-}
+void fn_8001FEA8(void);
 
 #pragma dont_inline on
 int gameTextGetState(int i);
@@ -7756,24 +7721,14 @@ extern void *lbl_803DC9F8;
 
 void mainLoopDoGameText(void);
 
-void blankScreen(int frames) {
-    s16 v = frames;
-    lbl_803DCA46 = v;
-    if (v < 0) {
-        lbl_803DCA46 = 0;
-    }
-}
+void blankScreen(int frames);
 
 void modelLightStruct_getPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 *c);
 
 void modelLightStruct_getWorldPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 *c);
 
 #pragma peephole on
-void fn_8001FE74(void *v) {
-    int i = lbl_803DCA48;
-    lbl_803DCA48 = i + 1;
-    lbl_803DCAE8[i] = (int)v;
-}
+void fn_8001FE74(void *v);
 #pragma peephole reset
 
 #pragma dont_inline on
@@ -7967,11 +7922,7 @@ extern ModelLightChannelState gModelLightChannelStates[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void cutsceneExit(void) {
-    lbl_803DCA3A = 0;
-    lbl_803DCA3C = 0;
-    Sfx_SetObjectSoundsPaused(0);
-}
+void cutsceneExit(void);
 
 void gameTextInit(void);
 
@@ -8083,43 +8034,7 @@ extern void *loadCharacter(s16 *data, int flags, int arg2, int arg3, void *paren
 extern int textureLoad(int id, int flag);
 extern void *loadAnimation(int hdr, s16 id, int b, u8 *bufout);
 
-void *loadAsset(void *reqVoid) {
-    u8 tmp[0x14];
-    AssetReq *req;
-
-    req = reqVoid;
-    switch (req->f1) {
-        case 0:
-            *(void **)req->f8 = fileLoad(req->f4, 0);
-            break;
-        case 1:
-            fileLoadToBuffer(req->f4, (void *)req->f8);
-            break;
-        case 2:
-            fileLoadToBufferOffset(req->f4, (void *)req->f8, req->f10, req->fc);
-            break;
-        case 4:
-            *(void **)req->f8 =
-                loadCharacter(*(s16 **)((u8 *)req + 0x18), *(int *)((u8 *)req + 0x1c),
-                              *(int *)((u8 *)req + 0x24), *(int *)((u8 *)req + 0x20),
-                              *(void **)((u8 *)req + 0x14), *(int *)((u8 *)req + 0x28));
-            break;
-        case 3:
-            *(void **)req->f8 = (void *)textureLoad(req->f4, 0);
-            break;
-        case 5:
-            *(void **)req->f8 = Resource_Acquire(req->f4 & 0xffff, req->fc & 0xffff);
-            break;
-        case 6:
-            *(void **)req->f8 = (void *)((int (*)(int, int, void *))return0_8002969C)(req->f4, req->fc, tmp);
-            break;
-        case 7:
-            *(void **)req->f8 =
-                loadAnimation(*(int *)((u8 *)req + 0x24), (s16)req->f4, (s16)req->fc,
-                              *(u8 **)((u8 *)req + 0x20));
-            break;
-    }
-}
+void *loadAsset(void *reqVoid);
 
 #pragma push
 #pragma scheduling off
@@ -8140,10 +8055,7 @@ void *ObjList_GetObjects(int *outA, int *outB) {
     return lbl_803DCB88;
 }
 
-void mapReload(void) {
-    mapReloadWithFadeout();
-    lbl_803DCA39 = 1;
-}
+void mapReload(void);
 
 int cos16(u16 angle) {
     return (int)(lbl_803DE7D0 * fcos16(angle));
@@ -8214,21 +8126,9 @@ void Vec3_ReflectAgainstNormal(f32 *a, f32 *n, f32 *out) {
 }
 
 #pragma dont_inline on
-void *loadAssetFileById(int id, int arg) {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 0;
-    lbl_8033BF88.f4 = arg;
-    lbl_8033BF88.f8 = id;
-    return loadAsset(&lbl_8033BF88);
-}
+void *loadAssetFileById(int id, int arg);
 
-void *loadTextureFile(int id, int arg) {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 3;
-    lbl_8033BF88.f4 = arg;
-    lbl_8033BF88.f8 = id;
-    return loadAsset(&lbl_8033BF88);
-}
+void *loadTextureFile(int id, int arg);
 #pragma dont_inline reset
 
 void Obj_SetActiveModelIndex(u8 *obj, int idx) {
@@ -8332,15 +8232,7 @@ void gameTextFn_80017434(u8 *param_1);
 void gameTextFn_8001984c(s16 x, s16 y, int flags);
 
 #pragma dont_inline on
-void *getTabEntry(int id, int arg, int e, int d) {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 2;
-    lbl_8033BF88.f4 = arg;
-    lbl_8033BF88.f8 = id;
-    lbl_8033BF88.f10 = e;
-    lbl_8033BF88.fc = d;
-    return loadAsset(&lbl_8033BF88);
-}
+void *getTabEntry(int id, int arg, int e, int d);
 #pragma dont_inline reset
 
 int ObjModel_HasActiveBlendChannels(u8 *model) {
@@ -8416,9 +8308,7 @@ extern MmRegion gMmRegionTable[];
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void cutsceneFadeInOut(int a) {
-    cutsceneEnterExit(a, 1);
-}
+void cutsceneFadeInOut(int a);
 
 int gameTextFn_8001b44c(int x);
 
@@ -8776,15 +8666,7 @@ int loadModelAndAnimTabs(void) {
     return 1;
 }
 
-int gameBitDecrement(int bit) {
-    int val = GameBit_Get(bit);
-    if (val != 0) {
-        val--;
-        GameBit_Set(bit, val);
-        return val;
-    }
-    return 0;
-}
+int gameBitDecrement(int bit);
 
 void initRotationMtx(f32 *m, f32 a, f32 b, f32 c) {
     f32 z = lbl_803DE7C0;
@@ -9537,46 +9419,7 @@ void copyToCache(void *dst, void *src, u32 count) {
 #pragma dont_inline reset
 
 #pragma dont_inline on
-int fn_8001F978(u32 srcAddr, u32 size, u32 *cacheCursor, u32 *outEnd, u32 limit) {
-    register u32 src;
-    register u32 copySize;
-    register u32 *cursor;
-    register u32 *endOut;
-    register u32 maxEnd;
-    u32 alignOffset;
-    u32 end;
-    u8 *dst;
-
-    src = srcAddr;
-    copySize = size;
-    cursor = cacheCursor;
-    endOut = outEnd;
-    maxEnd = limit;
-    dst = getCache();
-    alignOffset = src & 0x1f;
-    copySize = (copySize + alignOffset + 0x1f) & ~0x1f;
-    end = *cursor + copySize;
-    if (end <= maxEnd) {
-        src -= alignOffset;
-        *endOut = end;
-        dst += *cursor;
-        *cursor = (u32)(dst + alignOffset);
-        copySize >>= 5;
-        while (copySize > 0x7f) {
-            copyToCache(dst, (void *)src, 0);
-            dst += 0x1000;
-            src += 0x1000;
-            copySize -= 0x80;
-        }
-        if (copySize != 0) {
-            copyToCache(dst, (void *)src, copySize);
-        }
-        return 1;
-    }
-    *endOut = *cursor;
-    *cursor = src;
-    return 0;
-}
+int fn_8001F978(u32 srcAddr, u32 size, u32 *cacheCursor, u32 *outEnd, u32 limit);
 #pragma dont_inline reset
 
 void ObjModel_InitRenderBuffers(void) {
@@ -9616,16 +9459,7 @@ void modelFn_800292e0(void) {
 }
 
 #pragma dont_inline on
-void *animationLoad(int id, s16 a, s16 b, int e, int f) {
-    lbl_8033BF88.f0 = 1;
-    lbl_8033BF88.f1 = 7;
-    lbl_8033BF88.f4 = a;
-    lbl_8033BF88.f8 = id;
-    lbl_8033BF88.fc = b;
-    lbl_8033BF88.f20 = e;
-    lbl_8033BF88.f24 = f;
-    return loadAsset(&lbl_8033BF88);
-}
+void *animationLoad(int id, s16 a, s16 b, int e, int f);
 #pragma dont_inline reset
 
 void modelLightStruct_setSpotAttenuation(ModelLightStruct *obj, f32 cutoff, int mode);
@@ -9916,57 +9750,7 @@ extern u8 *lbl_803DCAE0;
 #define gGameBitCount lbl_803DCAD8
 #define gGameBitSaveData lbl_803DCAE0
 
-u32 GameBit_Get(int eventId) {
-    s16 id = (s16)eventId & 0xfff;
-    u8 flags;
-    u8 *base;
-    int start;
-    int i;
-    u32 bit;
-    u32 result;
-
-    if (id == 0x95) {
-        return 1;
-    }
-    if (id == 0x96) {
-        return 0;
-    }
-    if (eventId == -1) {
-        return 0;
-    }
-    if (id < 0 || id >= gGameBitCount) {
-        return 0;
-    }
-    flags = gGameBitTable[id * 4 + 2];
-    switch (flags >> 6) {
-    case 0:
-        base = gGameBitSaveData + 0xef0;
-        break;
-    case 1:
-        base = gGameBitSaveData + 0x564;
-        break;
-    case 2:
-        base = gGameBitSaveData + 0x24;
-        break;
-    case 3:
-        base = gGameBitSaveData + 0x5d8;
-        break;
-    }
-    start = *(u16 *)(gGameBitTable + id * 4);
-    result = 0;
-    bit = 1;
-    for (i = start; i <= (flags & 0x1f) + start; i++) {
-        if ((1 << (i & 7)) & base[i >> 3]) {
-            result |= bit;
-        }
-        bit <<= 1;
-    }
-    if (eventId & 0x8000) {
-        result &= 1;
-        result ^= 1;
-    }
-    return result;
-}
+u32 GameBit_Get(int eventId);
 
 extern int isSaveGameLoading(void);
 extern void gameBitFn_800ea2e0(int a);
@@ -9975,76 +9759,7 @@ extern void OSReport(char *fmt, ...);
 #define GameBit_RequestSync gameBitFn_800ea2e0
 #define sGameBitSetDuringSaveLoadWarning lbl_802CA4E0
 
-void GameBit_Set(int eventId, int value) {
-    s16 id;
-    u8 flags;
-    u8 *base;
-    int limit;
-    int start;
-    int end;
-    int i;
-    u32 bit;
-
-    if (isSaveGameLoading()) {
-        OSReport(sGameBitSetDuringSaveLoadWarning, eventId, value);
-        return;
-    }
-    if (eventId & 0x8000) {
-        value = (value & 1) ^ 1;
-    }
-    id = (s16)eventId & 0xfff;
-    if (id == 0x95) {
-        return;
-    }
-    if (id == 0x96) {
-        return;
-    }
-    if (eventId == -1) {
-        return;
-    }
-    if (id < 0 || id >= gGameBitCount) {
-        return;
-    }
-    flags = gGameBitTable[id * 4 + 2];
-    switch (flags >> 6) {
-    case 0:
-        base = gGameBitSaveData + 0xef0;
-        limit = 0x80;
-        break;
-    case 1:
-        base = gGameBitSaveData + 0x564;
-        limit = 0x74;
-        break;
-    case 2:
-        base = gGameBitSaveData + 0x24;
-        limit = 0x144;
-        break;
-    case 3:
-        base = gGameBitSaveData + 0x5d8;
-        limit = 0xac;
-        break;
-    }
-    if (flags & 0x20) {
-        GameBit_RequestSync(gGameBitTable[id * 4 + 3]);
-    }
-    start = *(u16 *)(gGameBitTable + id * 4);
-    bit = 1;
-    end = (gGameBitTable[id * 4 + 2] & 0x1f) + start + 1;
-    for (i = start; i < end; i++) {
-        int byteIdx = i >> 3;
-        int mask;
-        if (byteIdx >= limit) {
-            break;
-        }
-        mask = 1 << (i & 7);
-        if (value & bit) {
-            base[byteIdx] |= mask;
-        } else {
-            base[byteIdx] &= ~mask;
-        }
-        bit <<= 1;
-    }
-}
+void GameBit_Set(int eventId, int value);
 
 void copyMatrix44(f32 *src, f32 *dst) {
     dst[0] = src[0];
@@ -10075,16 +9790,7 @@ void Vec3_Normalize(f32 *v) {
     }
 }
 
-int gameBitIncrement(int bit) {
-    int val = GameBit_Get(bit) + 1;
-    int max = 1 << ((gGameBitTable[bit * 4 + 2] & 0x1f) + 1);
-    if (val < max) {
-        GameBit_Set(bit, val);
-    } else {
-        val--;
-    }
-    return val;
-}
+int gameBitIncrement(int bit);
 
 #pragma dont_inline on
 void memcpyToCache(void *dst, void *src, u32 count) {
@@ -10605,19 +10311,7 @@ void setGQR6_2(int a, int b, int c, int d) {
     setGQR6((((a << 8) + b) << 16) | ((c << 8) + d));
 }
 
-void mapLoadByCoords(int arg) {
-    lbl_803DCA38 = 0;
-    mapSetup(arg, &lbl_803DCAF8, &lbl_803DCAF4);
-    lbl_803DCA40 = 1;
-    lbl_803DCA41 = 1;
-    memset(lbl_8033BFB8, 0, 0x3c0);
-    lbl_803DCAD4 = 0;
-    lbl_803DCA39 = 1;
-    lbl_803DCA44 = 0;
-    Music_Trigger(0xc9, 0);
-    Music_Trigger(0xd0, 0);
-    lbl_803DB420 = lbl_803DE7B4;
-}
+void mapLoadByCoords(int arg);
 
 extern void objLoadPlayerFromSave(u8 *obj);
 extern f32 lbl_803DE88C;
@@ -11457,182 +11151,7 @@ extern u8 lbl_803DCA3F;
 #pragma push
 #pragma scheduling off
 #pragma dont_inline on
-void init(void) {
-    u8 audioDone;
-    u8 filesDone;
-    u8 once;
-    int delay;
-    u8 dtv;
-
-    audioDone = 0;
-    filesDone = 0;
-    once = 0;
-    OSInit();
-    DVDInit();
-    VIInit();
-    PADInit();
-    LCEnable();
-    {
-        register u32 v;
-        asm {
-            li v, 0x4
-            oris v, v, 0x4
-            mtspr 914, v
-            li v, 0x5
-            oris v, v, 0x5
-            mtspr 915, v
-            li v, 0x6
-            oris v, v, 0x6
-            mtspr 916, v
-            li v, 0x7
-            oris v, v, 0x7
-            mtspr 917, v
-        }
-    }
-    lbl_803DCCF0 = GXNtsc480IntDf;
-    lbl_803DCAE4 = OSGetProgressiveMode();
-    if (OSGetResetCode() != 0 && lbl_803DCAE4 == 1) {
-        lbl_803DCCF0 = GXNtsc480Prog;
-        OSSetProgressiveMode(1);
-    } else {
-        OSSetProgressiveMode(0);
-    }
-    videoInit(lbl_8033C3B8, 0);
-    setDisplayCopyFilter();
-    initLoadingScreenTextures();
-    mmInit();
-    testAndSet_onlyUseHeap3(1);
-    gxTransformFn_8004a83c();
-    testAndSet_onlyUseHeap3(0);
-    Camera_InitState();
-    testAndSet_onlyUseHeap3(1);
-    gameTextInitFn_8001a234();
-    testAndSet_onlyUseHeap3(0);
-    gameTextLoadDir(3);
-    testAndSet_onlyUseHeap3(1);
-    initControllers();
-    delay = mmSetFreeDelay(0);
-    do {
-        mmFreeTick(0);
-        padUpdate();
-        checkReset();
-        waitNextFrame();
-        if (audioDone == 0) {
-            audioDone = audioInit();
-        }
-        if (once == 0) {
-            testAndSet_onlyUseHeap3(1);
-            allocSomething32bytes();
-        }
-        if (audioDone != 0 && filesDone == 0) {
-            testAndSet_onlyUseHeap3(1);
-            filesDone = initLoadFiles();
-        }
-        if (once == 0) {
-            testAndSet_onlyUseHeap3(1);
-            initFn_8006d020();
-        }
-        once = 1;
-        runLoadingScreens();
-        dvdCheckError();
-        gameTextRun();
-        if (*(u8 *)lbl_803DCAFC == 0) {
-            dtv = 0;
-            if (VIGetDTVStatus() != 0) {
-                if (OSGetResetCode() != 0 && lbl_803DCAE4 != 1 && (getButtonsHeld(0) & 0x200) != 0) {
-                    dtv = 1;
-                }
-                if (OSGetResetCode() == 0 && (lbl_803DCAE4 == 1 || (getButtonsHeld(0) & 0x200) != 0)) {
-                    dtv = 1;
-                }
-            }
-            *(u8 *)lbl_803DCAFC = dtv;
-        }
-        GXFlush_(1, 0);
-    } while ((filesDone == 0 || audioDone == 0) && lbl_803DCA3D == 0);
-    while (lbl_803DCA3D != 0) {
-        mmFreeTick(0);
-        padUpdate();
-        checkReset();
-        waitNextFrame();
-        GXFlush_(1, 0);
-    }
-    mmSetFreeDelay(delay);
-    testAndSet_onlyUseHeap3(1);
-    viFn_8004a56c(5);
-    fn_80137D28();
-    loadTextureFiles();
-    initMapBlocks();
-    ObjModel_InitResourceCaches();
-    Resource_ResetRefCounts();
-    gameTextInit();
-    gameTextLoadDir(0x15);
-    Obj_InitObjectSystem();
-    fn_80137998();
-    mapInitFn_80069990();
-    initTextures();
-    mapInitFn_8006fccc();
-    initGameTimer();
-    ObjModel_InitRenderBuffers();
-    _initCardAndDsp();
-    fn_802B6F48();
-    loadTaskTexts();
-    gameTextInitFn_8001bd14();
-    initMaps();
-    gGameUIInterface = Resource_Acquire(0, 0xf);
-    gCameraInterface = Resource_Acquire(1, 0x17);
-    lbl_803DCA94 = Resource_Acquire(0x12, 8);
-    gPlayerInterface = Resource_Acquire(0xf, 0x16);
-    gObjectTriggerInterface = Resource_Acquire(2, 0x1d);
-    gScreenTransitionInterface = Resource_Acquire(0x16, 4);
-    gSHthorntailAnimationInterface = Resource_Acquire(5, 0xf);
-    gSky2Interface = Resource_Acquire(6, 0xc);
-    gNewCloudsInterface = Resource_Acquire(7, 8);
-    gCloudActionInterface = Resource_Acquire(9, 0xa);
-    gCheckpointInterface = Resource_Acquire(3, 0xd);
-    gTitleMenuControlInterface = Resource_Acquire(4, 0x24);
-    gTitleMenuControlInterfaceCopy = gTitleMenuControlInterface;
-    gExpgfxInterface = Resource_Acquire(0xa, 0xa);
-    gModgfxInterface = Resource_Acquire(0xb, 0xc);
-    gProjgfxInterface = Resource_Acquire(0xc, 8);
-    gPlayerShadowInterface = Resource_Acquire(0xd, 3);
-    gPartfxInterface = Resource_Acquire(0xe, 2);
-    gScreensInterface = Resource_Acquire(0x11, 3);
-    gWaterfxInterface = Resource_Acquire(0x13, 7);
-    gRomCurveInterface = Resource_Acquire(0x14, 0x26);
-    gTitleMenuLinkInterface = Resource_Acquire(0x3c, 7);
-    gPathControlInterface = Resource_Acquire(0x15, 9);
-    gMapEventInterface = Resource_Acquire(0x17, 0x24);
-    lbl_803DCAB4 = (int *)Resource_Acquire(0x18, 6);
-    gBaddieControlInterface = Resource_Acquire(0x19, 0x16);
-    gMinimapInterface = Resource_Acquire(0x31, 2);
-    lbl_803DCAC0 = Resource_Acquire(0x2f, 0xc);
-    gTitleMenuItemInterface = Resource_Acquire(0x3d, 0xa);
-    initFn_800534f8();
-    titleScreenDrawFn_80093db4();
-    testAndSet_onlyUseHeap3(0);
-    loadAssetFileById((int)&lbl_803DCADC, 0x33);
-    lbl_803DCAD8 = (s16)(getDataFileSize(0x33) >> 1);
-    lbl_803DCAE0 = (*(u8 *(**)(void))(*(int *)gMapEventInterface + 0x88))();
-    lbl_803DCA3F = 1;
-    loadUiDll(2);
-    doNothing_beforeTitleScreen();
-    doQueuedLoads();
-    setDrawCloudsAndLights(0);
-    if (*(u8 *)lbl_803DCAFC != 0) {
-        OSSetSaveRegion(lbl_803DCAFC, (u8 *)lbl_803DCAFC + 1);
-        VISetBlack(0);
-        VIFlush();
-        VIWaitForRetrace();
-        askProgressiveScanMode();
-    }
-    OSSetSaveRegion(NULL, NULL);
-    memcpy(lbl_8033C378, lbl_803DCCF0, 0x3c);
-    lbl_803DCCF0 = lbl_8033C378;
-    initViewport();
-    tvInit();
-    OSReport(sMainFinishedInitMessage);
-}
+void init(void);
 #pragma dont_inline reset
 #pragma pop
 
@@ -13766,100 +13285,7 @@ extern f32 lbl_803DE7B8;
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void gameUpdate(void)
-{
-    Obj_GetPlayerObject();
-    lbl_803DCA42 = 0;
-    mainLoopDoGameText();
-    if (lbl_803DCA3A == 0) {
-        (*(void (**)(void))(*(int *)gCameraInterface + 0x54))();
-    }
-    uiDll_runFrameStartAndLoadNext();
-    camcontrol_playTargetTypeSfx();
-    getButtonsJustPressed(0);
-    Obj_UpdateAllObjects(lbl_803DCA3C);
-    if (lbl_803DCA3A == 0) {
-        void *player;
-        int idx;
-        u8 *rec;
-        int t;
-
-        updateEnvironment(0);
-        (*(void (**)(void))(*(int *)gMapEventInterface + 0x70))();
-        player = Obj_GetPlayerObject();
-        idx = lbl_803DCAD4;
-        rec = (u8 *)lbl_8033BFB8 + idx * 16;
-        t = lbl_803DCAD0 + framesThisStep;
-        lbl_803DCAD0 = t;
-        if (player != 0) {
-            *(f32 *)(rec + 0) = *(f32 *)((u8 *)player + 0xc);
-            *(f32 *)(rec + 4) = *(f32 *)((u8 *)player + 0x10);
-            *(f32 *)(rec + 8) = *(f32 *)((u8 *)player + 0x14);
-            *(int *)(rec + 0xc) = t;
-            lbl_803DCAD4 = idx + 1;
-            if (lbl_803DCAD4 >= 0x3c) {
-                lbl_803DCAD4 = 0;
-            }
-        }
-    }
-    timeFn_8006f400(timeDelta);
-    uiDll_runFrameEndAndLoadNext();
-    trackIntersect();
-    playerUpdateFn_8005649c();
-    doPendingMapLoads();
-    Obj_ApplyPendingParentLinks();
-    (*(void (**)(void))(*(int *)gCheckpointInterface + 0x3c))();
-    resetSomeGxFlags();
-    if (lbl_803DCA46 == 0) {
-        sceneRender(0, 0, 0, 0, 0, 0);
-        (*(void (**)(int))(*(int *)gScreensInterface + 0xc))(0);
-        if (lbl_803DCA48 == 0) {
-            curUiDllDraw(0, 0, 0, 0);
-        }
-        (*(void (**)(void))(*(int *)gMinimapInterface + 8))();
-        if (lbl_803DCA48 == 0) {
-            dvdCheckError();
-        }
-        gameTextRun();
-    } else {
-        lbl_803DCA46 = lbl_803DCA46 - 1;
-        if (lbl_803DCA46 < 0) {
-            lbl_803DCA46 = 0;
-        }
-    }
-    if (lbl_803DCA42 != 0) {
-        if (lbl_803DCA44 == 0) {
-            lbl_803DB420 = lbl_803DB420 + timeDelta;
-            if (lbl_803DB420 >= lbl_803DE7B0) {
-                Music_Trigger(lbl_803DCAF0, 1);
-                lbl_803DCA44 = 1;
-            }
-        }
-        if (lbl_803DB420 >= lbl_803DE7B0) {
-            lbl_803DB420 = lbl_803DE7B8;
-        }
-    } else {
-        if (lbl_803DCA44 != 0) {
-            lbl_803DB420 = lbl_803DB420 - timeDelta;
-            if (lbl_803DB420 <= lbl_803DE7B0) {
-                Music_Trigger(0xc9, 0);
-                Music_Trigger(0xd0, 0);
-                lbl_803DCA44 = 0;
-            }
-        }
-        if (lbl_803DB420 <= lbl_803DE7B0) {
-            lbl_803DB420 = lbl_803DE7B4;
-        }
-    }
-    Camera_ApplyCurrentViewport(0);
-    {
-        s8 t = lbl_803DCA3B - framesThisStep;
-        lbl_803DCA3B = t;
-        if (t < 0) {
-            lbl_803DCA3B = 0;
-        }
-    }
-}
+void gameUpdate(void);
 #pragma dont_inline reset
 #pragma pop
 
@@ -13880,51 +13306,7 @@ extern f32 lbl_803DE7A8;
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void gameLoop(void)
-{
-    waitNextFrame();
-    if (lbl_803DCA3D == 1) {
-        padUpdate();
-        voxmaps_updateTimers();
-        gameUpdate();
-        viewportEffectFn_8000e380();
-        doNothing_startOfFrame();
-        loadDataFiles();
-        audioUpdate();
-        Sfx_UpdateLoopedObjectSounds();
-    }
-    debugPrintDraw(0);
-    (*(void (**)(int, int, int))(*(int *)gScreenTransitionInterface + 4))(0, 0, 0);
-    if (lbl_803DCA3D == 1) {
-        if (lbl_803DCA48 != 0) {
-            if (lbl_803DCA46 == 0) {
-                int *p;
-                int i;
-
-                drawRect(lbl_803DE7B0, lbl_803DE7B0, 0x280, 0x1e0);
-                i = 0;
-                p = (int *)&lbl_803DCAE8;
-                for (; i < lbl_803DCA48; i++) {
-                    objRenderFn_8003b8f4(*p, 0, 0, 0, 0, lbl_803DE7A8);
-                    if (*(s16 *)(*p + 0x46) == 0x882 || *(s16 *)(*p + 0x46) == 0x887) {
-                        objRenderFuzz();
-                    }
-                    p++;
-                }
-                curUiDllDraw(0, 0, 0, 0);
-            }
-            dvdCheckError();
-            gameTextRun();
-        }
-        textFn_8001b46c(0);
-        doNothing_endOfFrame();
-        gameTextSetDrawFunc(0);
-    }
-    GXFlush_(1, 1);
-    Obj_FlushDeferredFreeList();
-    mmFreeTick(1);
-    doQueuedLoads();
-}
+void gameLoop(void);
 #pragma dont_inline reset
 #pragma pop
 
@@ -13944,53 +13326,7 @@ extern void beginLoadingMap(void);
 #pragma scheduling off
 #pragma peephole off
 #pragma dont_inline on
-void doQueuedLoads(void)
-{
-    if ((s8)lbl_803DCA39 != 0) {
-        int old;
-
-        waitNextFrame();
-        GXFlush_(1, 0);
-        waitNextFrame();
-        GXFlush_(1, 0);
-        waitNextFrame();
-        GXFlush_(1, 0);
-        mmSetFreeDelay(0);
-        if (lbl_803DCAC4 != 0) {
-            setColor_803db5d0(0, 0, 0);
-            unloadMap();
-            if (lbl_803DCA40 != 0) {
-                mapUnload(0, 0x80000000);
-                lbl_803DCA40 = 0;
-            }
-        }
-        old = mmSetFreeDelay(0);
-        lbl_803DCA39 = 0;
-        Camera_InitState();
-        fn_801375A0();
-        if (lbl_803DB41C > -1) {
-            loadUiDll(lbl_803DB41C);
-            lbl_803DB41C = -1;
-        }
-        mmFreeTick(1);
-        mmFreeTick(1);
-        if (lbl_803DCA41 != 0 && lbl_803DCAF8 != -1) {
-            setForceLoadImmediately();
-            loadMapAndParent(lbl_803DCAF8);
-            if (lbl_803DCAF4 != -1) {
-                mapLoadDataFiles(lbl_803DCAF4);
-            }
-            clearForceLoadImmediately();
-            lbl_803DCA41 = 0;
-        }
-        beginLoadingMap();
-        if (lbl_803DCA94 != 0) {
-            (*(void (**)(int))(*(int *)lbl_803DCA94 + 0xc))(1);
-        }
-        mmSetFreeDelay(old);
-        lbl_803DCAC4 = 1;
-    }
-}
+void doQueuedLoads(void);
 #pragma dont_inline reset
 #pragma pop
 
@@ -14114,74 +13450,7 @@ extern u8 lbl_803DB424;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void cardShowMessage(void)
-{
-    u32 held;
-    int st;
-    u8 ok;
-
-    st = saveGameGetStatus();
-    ok = 0;
-    if (st < 0xc) {
-        cutsceneEnterExit(1, 1);
-        lbl_803DCA3C = 0xff;
-        gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        if (lbl_803DCACC == 0) {
-            switch (st) {
-            case 1:
-                gameTextShow(0x325);
-                break;
-            case 2:
-                gameTextShow(0x494);
-                break;
-            case 3:
-                gameTextShow(0x496);
-                break;
-            case 4:
-                gameTextShow(0x32c);
-                break;
-            case 5:
-            case 6:
-                gameTextShow(0x326);
-                ok = 1;
-                break;
-            case 9:
-                gameTextShow(0x32a);
-                break;
-            case 10:
-                gameTextShow(0x497);
-                ok = 1;
-                break;
-            case 0xb:
-                gameTextShow(0x4c7);
-                break;
-            }
-        }
-        held = getButtonsHeld(0);
-        if (ok) {
-            gameTextFn_80016810(0x495, 0, 0xc8);
-        } else {
-            gameTextFn_80016810(0x493, 0, 0xc8);
-        }
-        if (held & 0x100) {
-            buttonDisable(0, 0x100);
-            cardSetStatusNeedInit();
-            lbl_803DCA3A = 0;
-            lbl_803DCA3C = 0;
-            Sfx_SetObjectSoundsPaused(0);
-            if (st == 0xa) {
-                cardDeleteFn_8007d99c();
-            }
-        } else if (ok && (held & 0x200)) {
-            buttonDisable(0, 0x200);
-            lbl_803DB424 = 0;
-            lbl_803DCA3A = 0;
-            lbl_803DCA3C = 0;
-            Sfx_SetObjectSoundsPaused(0);
-            cardSetStatusNeedInit();
-        }
-    }
-}
+void cardShowMessage(void);
 #pragma pop
 
 extern void angleToVec2(int angle, f32 *cosOut, f32 *sinOut);
@@ -14820,25 +14089,7 @@ extern void stopRumble2(void);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void cutsceneEnterExit(int entering, int affectSounds) {
-    if (entering != 0) {
-        stopRumble2();
-        if (lbl_803DCA3A == 0 && affectSounds != 0) {
-            Sfx_SetObjectSoundsPaused(1);
-        }
-        if ((s8)(u8)++lbl_803DCA3A > 2) {
-            lbl_803DCA3A = 2;
-        }
-    } else {
-        if ((s8)(u8)--lbl_803DCA3A <= 0) {
-            lbl_803DCA3C = 0;
-            lbl_803DCA3A = 0;
-            if (affectSounds != 0) {
-                Sfx_SetObjectSoundsPaused(0);
-            }
-        }
-    }
-}
+void cutsceneEnterExit(int entering, int affectSounds);
 #pragma pop
 
 extern int lbl_803DCA18;
@@ -14905,28 +14156,7 @@ int loadModLines(int idx, s16 *outCount) {
 
 #pragma push
 #pragma scheduling off
-void deathRenderFn_8001fd98(u32 h) {
-    int *p;
-    int n;
-    int i;
-    int idx;
-
-    idx = -1;
-    i = 0;
-    p = lbl_803DCAE8;
-    n = lbl_803DCA48;
-    for (; i < n; i++) {
-        if (*p == h) {
-            idx = i;
-            break;
-        }
-        p++;
-    }
-    for (i = idx; i < n - 1; i++) {
-        lbl_803DCAE8[i] = lbl_803DCAE8[i + 1];
-    }
-    lbl_803DCA48--;
-}
+void deathRenderFn_8001fd98(u32 h);
 #pragma pop
 
 #pragma push
@@ -15351,105 +14581,7 @@ extern void *gameTextGetStr(int textId);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void askProgressiveScanMode(void) {
-    u32 counter;
-    int sel;
-    u8 *box;
-    u8 savedByte;
-    int showId;
-
-    counter = 0;
-    sel = 1;
-    box = gameTextGetBox(0);
-    savedByte = box[0x10];
-    box[0x10] = 0;
-    do {
-        counter++;
-        padUpdate();
-        checkReset();
-        mmFreeTick(0);
-        waitNextFrame();
-        gameTextSetColor(0xc0, 0xc0, 0xc0, 0xff);
-        gameTextShow(0x33f);
-        if ((u8)sel == 1) {
-            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        } else {
-            gameTextSetColor(0x80, 0x80, 0x80, 0x80);
-        }
-        gameTextShowStr((int)gameTextGetStr(0x3cd), 0, lbl_803DB428, 0x64);
-        if ((u8)sel == 1) {
-            gameTextSetColor(0x80, 0x80, 0x80, 0x80);
-        } else {
-            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        }
-        gameTextShowStr((int)gameTextGetStr(0x3cc), 0, lbl_803DB42C, 0x64);
-        gameTextRun();
-        dvdCheckError();
-        doNothing_endOfFrame();
-        GXFlush_(0, 0);
-        if ((s8)padGetStickX(0) < 0 || (s8)padGetCX(0) < 0) {
-            sel = 1;
-        } else if ((s8)padGetStickX(0) > 0 || (s8)padGetCX(0) > 0) {
-            sel = 0;
-        }
-    } while ((getButtonsJustPressed(0) & 0x100) == 0 && counter < 600);
-    box[0x10] = savedByte;
-    waitNextFrame();
-    GXFlush_(0, 0);
-    waitNextFrame();
-    GXFlush_(0, 0);
-    VISetBlack(1);
-    VIFlush();
-    VIWaitForRetrace();
-    VIWaitForRetrace();
-    VIWaitForRetrace();
-    VIWaitForRetrace();
-    if ((u8)sel != 0) {
-        lbl_803DCCF0 = GXNtsc480Prog;
-        OSSetProgressiveMode(1);
-        GXSetCopyFilter(((u8 *)lbl_803DCCF0)[0x19], (u8 *)lbl_803DCCF0 + 0x1a, 0, (u8 *)lbl_803DCCF0 + 0x32);
-        VIConfigure(lbl_803DCCF0);
-        VISetBlack(1);
-        VIFlush();
-        sel = 0x340;
-    } else {
-        lbl_803DCCF0 = GXNtsc480IntDf;
-        OSSetProgressiveMode(0);
-        GXSetCopyFilter(((u8 *)lbl_803DCCF0)[0x19], (u8 *)lbl_803DCCF0 + 0x1a, 1, (u8 *)lbl_803DCCF0 + 0x32);
-        VIConfigure(lbl_803DCCF0);
-        VISetBlack(1);
-        VIFlush();
-        sel = 0x341;
-    }
-    counter = 0;
-    do {
-        VIWaitForRetrace();
-        counter++;
-    } while (counter < 100);
-    VISetBlack(0);
-    VIFlush();
-    VIWaitForRetrace();
-    VIWaitForRetrace();
-    counter = 0;
-    showId = sel;
-    do {
-        counter++;
-        padUpdate();
-        checkReset();
-        mmFreeTick(0);
-        waitNextFrame();
-        if (counter < 0xff) {
-            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        } else {
-            gameTextSetColor(0xff, 0xff, 0xff, 0xff);
-        }
-        gameTextShow(showId);
-        gameTextRun();
-        dvdCheckError();
-        doNothing_endOfFrame();
-        GXFlush_(0, 0);
-    } while (counter < 0xf0);
-}
+void askProgressiveScanMode(void);
 #pragma pop
 
 extern u32 getNewInputs(int pad);
@@ -15478,120 +14610,7 @@ extern f32 lbl_803DE7AC;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void checkReset(void) {
-    char *msg;
-    u8 pressed;
-    f32 t;
-    int status;
-
-    msg = lbl_802CA460;
-    if (lbl_803DCCA6 == 0) {
-        return;
-    }
-    if (lbl_803DC951 != 0) {
-        return;
-    }
-    lbl_803DCCA6 = 0;
-    switch (lbl_803DCA3D) {
-    case 0:
-    case 1:
-        if (lbl_803DCA3E != 0) {
-            lbl_803DCA3D = 2;
-        }
-        if ((getNewInputs(0) & 0x200) != 0 && (getNewInputs(0) & 0x400) != 0 &&
-            (getNewInputs(0) & 0x1000) != 0) {
-            pressed = 1;
-        } else {
-            pressed = 0;
-            if (lbl_803DB425 != 0) {
-                lbl_803DB425--;
-            }
-        }
-        if (pressed != 0 && lbl_803DB425 == 0) {
-            t = lbl_803DCAC8 + lbl_803DE7A8;
-            lbl_803DCAC8 = t;
-            if (t >= lbl_803DE7AC) {
-                lbl_803DCA3D = 2;
-            }
-        } else {
-            lbl_803DCAC8 = lbl_803DE7B0;
-        }
-        break;
-    case 2:
-    case 6:
-        OSReport(msg + 0xd0);
-        if (lbl_803DCA49 != 0) {
-            (*(void (**)(int, int))((*(u8 **)gScreenTransitionInterface) + 8))(0x1e, 1);
-        }
-        if (lbl_803DCA3D == 6) {
-            lbl_803DCAC5 = 1;
-        } else {
-            lbl_803DCAC5 = 0;
-        }
-        stopRumble2();
-        AISetStreamVolLeft(0);
-        AISetStreamVolRight(0);
-        audioStopAll();
-        lbl_803DCA3D = 3;
-        lbl_803DCB00 = lbl_803DE7AC;
-        break;
-    case 3:
-        t = lbl_803DCB00 - lbl_803DE7A8;
-        lbl_803DCB00 = t;
-        if (t <= lbl_803DE7B0) {
-            lbl_803DCA3D = 4;
-        }
-        break;
-    case 4:
-        OSReport(msg + 0xec);
-        while (lbl_803DC950 == 0 && (gAudioStreamPlaying != 0 || gAudioStreamDvdState != 0)) {
-            status = DVDGetDriveStatus();
-            lbl_803DC960 = status;
-            switch (status) {
-            case -1:
-                lbl_803DC950 = 1;
-                break;
-            case 4:
-                lbl_803DC950 = 1;
-                break;
-            case 5:
-                lbl_803DC950 = 1;
-                break;
-            case 6:
-                lbl_803DC950 = 1;
-                break;
-            case 11:
-                lbl_803DC950 = 1;
-                break;
-            }
-        }
-        AISetStreamPlayState(0);
-        audioReset();
-        OSReport(msg + 0x104);
-        stopRumble2();
-        waitNextFrame();
-        GXFlush_(1, 0);
-        waitNextFrame();
-        GXFlush_(1, 0);
-        OSReport(msg + 0x118);
-        LCDisable();
-        DVDSetAutoInvalidation(1);
-        VISetBlack(1);
-        VIFlush();
-        VIWaitForRetrace();
-        OSReport(msg + 0x12c);
-        lbl_803DCA3D = 5;
-        if (lbl_803DCAC5 != 0) {
-            OSResetSystem(1, 0x80000000, 1);
-        } else {
-            OSResetSystem(0, 0x80000000, 0);
-        }
-        break;
-    default:
-        OSReport(msg + 0x13c);
-        break;
-    }
-}
+void checkReset(void);
 #pragma pop
 
 extern void PSMTXCopy(f32 *src, f32 *dst);
