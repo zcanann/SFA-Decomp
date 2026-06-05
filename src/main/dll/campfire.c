@@ -24,7 +24,7 @@ extern int Obj_AllocObjectSetup();
 extern int Obj_SetupObject();
 extern undefined4 Obj_SetModelColorFadeRecursive();
 extern undefined4 ObjHitbox_SetSphereRadius();
-extern undefined4 Obj_IsLoadingLocked();
+extern u8 Obj_IsLoadingLocked();
 extern undefined4 Obj_GetPlayerObject();
 extern undefined4 FUN_800305f8();
 extern undefined4 ObjHits_DisableObject();
@@ -194,58 +194,49 @@ void kaldaChomFn_8016821c(int param_1,int *param_2)
  * PAL Address: TODO
  * PAL Size: TODO
  */
-void kaldaChomFn_80168374(int param_1,int param_2,char param_3)
+#pragma dont_inline on
+void kaldaChomFn_80168374(int param_1, int param_2, u8 param_3)
 {
-  uint uVar1;
-  int iVar3;
   int iVar4;
-  double dVar5;
-  double dVar6;
-  double dVar7;
+  int iVar3;
+  u8 *setup;
+  f32 h;
+  f32 spd;
+  f32 r;
 
   iVar4 = *(int *)(param_2 + 0x40c);
   iVar3 = *(int *)(param_1 + 0x4c);
-  if ((char)Obj_IsLoadingLocked() != '\0') {
-    dVar6 = (double)(lbl_803E30A0 +
-                    (float)((double)CONCAT44(0x43300000,(int)*(char *)(iVar3 + 0x28) ^ 0x80000000) -
-                           DOUBLE_803E3070) / lbl_803E30A4);
-    iVar3 = Obj_AllocObjectSetup(0x24,0x51b);
-    if (param_3 == '\0') {
-      *(undefined4 *)(iVar3 + 8) = *(undefined4 *)(iVar4 + 0x28);
-      *(undefined4 *)(iVar3 + 0xc) = *(undefined4 *)(iVar4 + 0x2c);
-      *(undefined4 *)(iVar3 + 0x10) = *(undefined4 *)(iVar4 + 0x30);
+  if (Obj_IsLoadingLocked() != 0) {
+    h = lbl_803E30A0 + (f32)(s32)*(s8 *)(iVar3 + 0x28) / lbl_803E30A4;
+    iVar3 = Obj_AllocObjectSetup(0x24, 0x51b);
+    if (param_3 != 0) {
+      *(f32 *)(iVar3 + 8) = *(f32 *)(iVar4 + 0x10);
+      *(f32 *)(iVar3 + 0xc) = *(f32 *)(iVar4 + 0x14);
+      *(f32 *)(iVar3 + 0x10) = *(f32 *)(iVar4 + 0x18);
     }
     else {
-      *(undefined4 *)(iVar3 + 8) = *(undefined4 *)(iVar4 + 0x10);
-      *(undefined4 *)(iVar3 + 0xc) = *(undefined4 *)(iVar4 + 0x14);
-      *(undefined4 *)(iVar3 + 0x10) = *(undefined4 *)(iVar4 + 0x18);
+      *(f32 *)(iVar3 + 8) = *(f32 *)(iVar4 + 0x28);
+      *(f32 *)(iVar3 + 0xc) = *(f32 *)(iVar4 + 0x2c);
+      *(f32 *)(iVar3 + 0x10) = *(f32 *)(iVar4 + 0x30);
     }
-    *(undefined *)(iVar3 + 4) = 1;
-    *(undefined *)(iVar3 + 5) = 4;
-    *(undefined *)(iVar3 + 6) = 0xff;
-    *(undefined *)(iVar3 + 7) = 0xff;
-    iVar4 = Obj_SetupObject(iVar3,5,0xffffffff,0xffffffff,0);
-    if (iVar4 != 0) {
-      dVar7 = (double)(lbl_803E30AC *
-                      (*(float *)(param_2 + 0x2c0) /
-                      (float)((double)CONCAT44(0x43300000,(uint)*(ushort *)(param_2 + 0x3fe)) -
-                             lbl_803E3068)));
-      dVar5 = dVar7;
-      *(float *)(iVar4 + 0x24) =
-           (float)((double)(*(float *)(*(int *)(param_2 + 0x2d0) + 0xc) - *(float *)(iVar3 + 8)) /
-                  dVar5);
-      uVar1 = randomGetRange(0xfffffff6,10);
-      *(float *)(iVar4 + 0x28) =
-           (float)((double)(((float)((double)lbl_803E30A8 * dVar6 +
-                                    (double)*(float *)(*(int *)(param_2 + 0x2d0) + 0x10)) +
-                            (f32)(s32)(uVar1)) - *(float *)(iVar3 + 0xc)) / dVar5);
-      *(float *)(iVar4 + 0x2c) =
-           (float)((double)(*(float *)(*(int *)(param_2 + 0x2d0) + 0x14) - *(float *)(iVar3 + 0x10))
-                  / dVar5);
+    *(u8 *)(iVar3 + 4) = 1;
+    *(u8 *)(iVar3 + 5) = 4;
+    *(u8 *)(iVar3 + 6) = 0xff;
+    *(u8 *)(iVar3 + 7) = 0xff;
+    setup = (u8 *)Obj_SetupObject(iVar3, 5, 0xffffffff, 0xffffffff, 0);
+    if (setup != NULL) {
+      spd = lbl_803E30AC * (*(f32 *)(param_2 + 0x2c0) / (f32)(u32)*(u16 *)(param_2 + 0x3fe));
+      *(f32 *)(setup + 0x24) =
+          (*(f32 *)(*(int *)(param_2 + 0x2d0) + 0xc) - *(f32 *)(iVar3 + 8)) / spd;
+      r = (f32)(s32)randomGetRange(-0xa, 0xa);
+      *(f32 *)(setup + 0x28) =
+          (lbl_803E30A8 * h + *(f32 *)(*(int *)(param_2 + 0x2d0) + 0x10) + r - *(f32 *)(iVar3 + 0xc)) / spd;
+      *(f32 *)(setup + 0x2c) =
+          (*(f32 *)(*(int *)(param_2 + 0x2d0) + 0x14) - *(f32 *)(iVar3 + 0x10)) / spd;
     }
   }
-  return;
 }
+#pragma dont_inline reset
 
 /*
  * --INFO--
@@ -264,7 +255,6 @@ void kaldaChomFn_80168374(int param_1,int param_2,char param_3)
 #pragma peephole off
 void kaldachom_handleAnimEvents(int obj, int p2, int p3)
 {
-  extern int kaldaChomFn_80168374(int, int, int);
   int sub_40c = *(int *)(p2 + 0x40c);
 
   lbl_803DDA98 = lbl_803E30A0 + (f32)(s32)(s8)*(u8 *)(*(int *)(obj + 0x4c) + 0x28) / lbl_803E30A4;
