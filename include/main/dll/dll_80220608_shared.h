@@ -822,7 +822,7 @@ extern void androssligh_updateBeam(int obj, int state);
 
 extern void *Camera_GetViewMatrix(void);
 extern void *Camera_GetInverseViewRotationMatrix(void);
-extern void *fn_8008FB20(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
+extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
 extern void PSVECScale(void *dst, void *src, f32 scale);
 extern void PSVECAdd(int p1, int p2, int p3);
 extern f32 lbl_803DC518;
@@ -876,7 +876,7 @@ typedef struct McLightningFlags {
 
 
 
-extern void *fn_8008FB20(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
+extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
 extern f32 lbl_803E7450;
 extern f32 lbl_803E7454;
 extern f32 lbl_803E7458;
@@ -1574,7 +1574,7 @@ typedef struct DrBarrelGrRenderParams {
 
 
 extern int dll_2E_func0A(int a, void *out);
-extern void *fn_8008FB20(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
+extern void *lightningCreate(f32 *pos, f32 *dir, f32 a, f32 b, u16 angle, int c, int d);
 extern f32 lbl_803E6BB8;
 extern f32 lbl_803E6BBC;
 extern f32 lbl_803E6BC0;

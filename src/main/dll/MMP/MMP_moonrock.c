@@ -116,7 +116,7 @@ void lightning_render(u8* obj)
     }
 }
 
-extern int fn_8008FB20(float *start,float *end,double radiusX,double radiusY,int delay,
+extern int lightningCreate(float *start,float *end,double radiusX,double radiusY,int delay,
                        int param_6,u8 param_7);
 extern void hitDetectFn_80097070(u8 *obj,double radius,int param_3,int param_4,int param_5,
                                  int param_6);
@@ -187,7 +187,7 @@ void lightning_update(u8 *obj)
                 return;
             }
 
-            handle = fn_8008FB20((float *)(obj + 0x0c),(float *)(objects[objectIndex] + 0x0c),
+            handle = lightningCreate((float *)(obj + 0x0c),(float *)(objects[objectIndex] + 0x0c),
                                  *(f32 *)(state + 0x08),*(f32 *)(state + 0x0c),
                                  (u16)(state[0x1c] + randomGetRange(-5,5)),state[0x1d],
                                  ((LightningFlags *)(state + 0x25))->style ? 1 : 0);

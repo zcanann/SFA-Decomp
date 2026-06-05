@@ -81,7 +81,7 @@ void ktrex_spawnRandomEnergyArc(int obj, u16 angle, int slot) {
     point2[2] = point2[2] + playerMapOffsetZ;
 
     *(void **)((char *)gKTRexState + slot * 4 + 0x17c) =
-        fn_8008FB20(point1, point2, lbl_803E67B4, lbl_803E67C0, angle, 96, 0);
+        lightningCreate(point1, point2, lbl_803E67B4, lbl_803E67C0, angle, 96, 0);
 }
 #pragma scheduling reset
 

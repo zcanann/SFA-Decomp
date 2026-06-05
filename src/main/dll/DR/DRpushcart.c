@@ -1520,7 +1520,7 @@ extern int ObjModel_GetRenderOp(int model, int idx);
 extern void lightningRender(void);
 extern int getHudHiddenFrameCount(void);
 extern void mm_free_(int p);
-extern int fn_8008FB20(f32 *start, void *end, f32 a, f32 b, int c, int d, int e);
+extern int lightningCreate(f32 *start, void *end, f32 a, f32 b, int c, int d, int e);
 
 typedef struct ShopSparkleSpawn {
     f32 x;
@@ -1582,7 +1582,7 @@ void fn_801E83B0(int obj, int p2, int p3, int p4, int p5)
                     v.y = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.y;
                     v.z = scale * (f32)(int)(randomGetRange(0, 2000) - 1000) + v.z;
                 }
-                *(int *)(slot + 0x98) = fn_8008FB20((f32 *)(obj + 0xC), &v, lbl_803E5A48, lbl_803E5A4C, 0x14, 0x40, 0);
+                *(int *)(slot + 0x98) = lightningCreate((f32 *)(obj + 0xC), &v, lbl_803E5A48, lbl_803E5A4C, 0x14, 0x40, 0);
                 *(f32 *)(slot + 0xC0) = lbl_803E5A50;
                 spawned = 1;
             }

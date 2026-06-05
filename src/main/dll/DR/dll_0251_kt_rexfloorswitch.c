@@ -67,7 +67,7 @@ void ktrexfloorswitch_spawnEnergyArc(int obj, f32 scale, int angle) {
     dir[1] += *(f32 *)((char *)obj + 0x10);
     dir[2] += *(f32 *)((char *)obj + 0x14);
     *(f32 *)(runtime + 8) = (f32)(int)randomGetRange(10, angle);
-    *(void **)(runtime + 0x10) = fn_8008FB20(pos, dir, lbl_803E68A0, lbl_803E68A4, (u16)angle, 96, 0);
+    *(void **)(runtime + 0x10) = lightningCreate(pos, dir, lbl_803E68A0, lbl_803E68A4, (u16)angle, 96, 0);
 }
 #pragma peephole reset
 #pragma scheduling reset

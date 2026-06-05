@@ -122,7 +122,7 @@ void drlightbea_render(int obj, int p2, int p3, int p4, int p5)
                 vecB[1] = lbl_803E6BB8 + *(f32 *)(player + 0x10);
                 vecB[2] = *(f32 *)(player + 0x14);
             }
-            *(void **)state = fn_8008FB20(vecA, vecB, lbl_803E6BBC, lbl_803E6BC0,
+            *(void **)state = lightningCreate(vecA, vecB, lbl_803E6BBC, lbl_803E6BC0,
                                          (u16)randomGetRange(5, 0xf), 0x60, 0);
         }
     }

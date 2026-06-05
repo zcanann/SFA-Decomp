@@ -1179,7 +1179,7 @@ void lightningRenderActive(void)
     }
 }
 
-void fn_8008FC00(f32 *out, f32 height, f32 scale)
+void snowCloudBuildBoxVerts(f32 *out, f32 height, f32 scale)
 {
     f32 side;
     f32 zero;
@@ -1388,7 +1388,7 @@ extern void Obj_SetModelColorOverrideRecursive(int obj, int r, int g, int b, int
 #pragma push
 #pragma scheduling off
 #pragma dont_inline on
-void *fn_8008FB20(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
+void *lightningCreate(f32 *a, f32 *b, f32 c, f32 d, int e, int f, int g) {
     u8 *p = mmAlloc(40, 23, 0);
 
     if (p == NULL) {
@@ -1746,14 +1746,14 @@ extern f32 lbl_803DF1DC;
 /*
  * --INFO--
  *
- * Function: fn_800916C0
+ * Function: snowCloudComputeDrift
  * EN v1.0 Address: 0x800916C0
  * EN v1.0 Size: 776b
  */
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void fn_800916C0(f32 *out, f32 *pos, f32 scale) {
+void snowCloudComputeDrift(f32 *out, f32 *pos, f32 scale) {
     f32 accX;
     f32 accZ;
     f32 dx;
@@ -1903,14 +1903,14 @@ extern const f32 lbl_803DF1F8;
 /*
  * --INFO--
  *
- * Function: snowCloudFn_8008fc9c
+ * Function: snowCloudInitFlakes
  * EN v1.0 Address: 0x8008FC9C
  * EN v1.0 Size: 988b
  */
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void snowCloudFn_8008fc9c(f32 *buf, int cloudId, f32 a, f32 b) {
+void snowCloudInitFlakes(f32 *buf, int cloudId, f32 a, f32 b) {
     u8 *p;
     u8 *e;
     f32 *dst;
@@ -2242,13 +2242,13 @@ void lightningDrawStrand(f32 *from, f32 *to, int width, f32 segScale, int *seed)
 /*
  * --INFO--
  *
- * Function: fn_80090C0C
+ * Function: snowCloudUpdateFlakes
  * EN v1.0 Address: 0x80090C0C
  * EN v1.0 Size: 892b
  */
 #pragma push
 #pragma scheduling off
-void fn_80090C0C(u8 *snow) {
+void snowCloudUpdateFlakes(u8 *snow) {
     s16 *cam;
     u8 *e;
     f32 *m;
@@ -2694,7 +2694,7 @@ void snowReposSnowCloud(int cloudId) {
                 lbl_803DF22C * fwd[1];
         to[2] = (cam[0x4c / 4] + (f32)(int)randomGetRange(-3000, 3000)) -
                 lbl_803DF22C * fwd[2];
-        lbl_803DD19C = (u8 *)fn_8008FB20(from, to, lbl_803DF230, lbl_803DF1BC, 0xf, 0xc0, 0);
+        lbl_803DD19C = (u8 *)lightningCreate(from, to, lbl_803DF230, lbl_803DF1BC, 0xf, 0xc0, 0);
         Sfx_PlayAtPositionFromObject(0, 0x2c9, from[0], from[1], from[2]);
         fl = ((u8 *)lbl_8039A828[cloudId])[0x144b];
         if (fl & 8) {
@@ -2705,7 +2705,7 @@ void snowReposSnowCloud(int cloudId) {
             *(s16 *)((u8 *)lbl_8039A828[cloudId] + 0x1448) = (s16)randomGetRange(0x5a, 0xb4);
         }
     }
-    fn_80090C0C(lbl_8039A828[i]);
+    snowCloudUpdateFlakes(lbl_8039A828[i]);
     for (j = 0; j < *(int *)((u8 *)lbl_8039A828[i] + 0x13fc); j++) {
         if (*(int *)((u8 *)lbl_8039A828[i] + 0x13f4) == 0) {
             *(u16 *)(part + 0x10) =
@@ -2827,9 +2827,9 @@ void newClouds(u8 *params, void *owner, f32 x, f32 y, f32 z) {
     } else if (fl & 0x20) {
         *(s16 *)(NC_CLOUD + 0x1448) = 0x64;
     }
-    snowCloudFn_8008fc9c((f32 *)(NC_CLOUD + 8), id, *(f32 *)(NC_CLOUD + 0x1418),
+    snowCloudInitFlakes((f32 *)(NC_CLOUD + 8), id, *(f32 *)(NC_CLOUD + 0x1418),
                          *(f32 *)(NC_CLOUD + 0x141c));
-    fn_8008FC00((f32 *)(NC_CLOUD + 0x1378), *(f32 *)(NC_CLOUD + 0x1418),
+    snowCloudBuildBoxVerts((f32 *)(NC_CLOUD + 0x1378), *(f32 *)(NC_CLOUD + 0x1418),
                 *(f32 *)(NC_CLOUD + 0x141c));
     *(void **)(NC_CLOUD + 4) = mmAlloc(*(int *)(NC_CLOUD + 0x13fc) * 0x18, 0x17, 0);
     if (*(void **)(NC_CLOUD + 4) == NULL) {
@@ -3250,7 +3250,7 @@ void dll_07_func06(void) {
             continue;
         }
         if (p != NULL && *(int *)(p + 0x1400) != 0) {
-            snowCloudFn_8008fc9c((f32 *)(p + 8), i, *(f32 *)(p + 0x1418),
+            snowCloudInitFlakes((f32 *)(p + 8), i, *(f32 *)(p + 0x1418),
                                  *(f32 *)(p + 0x141c));
         } else if (p != NULL && p[0x144f] == 0) {
             if (*(int *)(p + 0x13f4) == 4) {
@@ -3318,7 +3318,7 @@ void dll_07_func06(void) {
                 inpos[0] = pos[0];
                 inpos[1] = pos[1];
                 inpos[2] = pos[2];
-                fn_800916C0(wind, inpos, *(f32 *)(D7_CLOUD + 0x1438));
+                snowCloudComputeDrift(wind, inpos, *(f32 *)(D7_CLOUD + 0x1438));
                 if (*(int *)(D7_CLOUD + 0x13f4) == 0) {
                     *(f32 *)(D7_CLOUD + 0x1420) = -wind[0];
                     *(f32 *)(D7_CLOUD + 0x1424) = -wind[2];
@@ -3336,7 +3336,7 @@ void dll_07_func06(void) {
                 inpos[0] = *(f32 *)(p + 0x140c);
                 inpos[1] = *(f32 *)(p + 0x1410);
                 inpos[2] = *(f32 *)(p + 0x1414);
-                fn_800916C0(wind, inpos, *(f32 *)(p + 0x1438));
+                snowCloudComputeDrift(wind, inpos, *(f32 *)(p + 0x1438));
                 *(f32 *)(D7_CLOUD + 0x1420) = -wind[0] + *(f32 *)(D7_CLOUD + 0x1440);
                 *(f32 *)(D7_CLOUD + 0x1424) = -wind[2] + *(f32 *)(D7_CLOUD + 0x1440);
                 *(f32 *)(D7_CLOUD + 0x1428) = lbl_803DF1A0;

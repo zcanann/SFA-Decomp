@@ -8,7 +8,7 @@ extern void mm_free(u32 handle);
 extern u8 *Obj_GetPlayerObject(void);
 extern int ObjHits_GetPriorityHit(u8 *obj,int *out,int param_3,int param_4);
 extern void lightningRender(u32 handle);
-extern int fn_8008FB20(double radiusX,double radiusY,float *start,float *end,int param_5,int param_6,int param_7);
+extern int lightningCreate(double radiusX,double radiusY,float *start,float *end,int param_5,int param_6,int param_7);
 
 extern undefined4 *gPartfxInterface;
 extern f32 timeDelta;
@@ -157,7 +157,7 @@ void dfplightni_update(u8 *obj)
             clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
                        : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
             state->effectHandle =
-                fn_8008FB20(clampX,clampY,effectStart,effectEnd,
+                lightningCreate(clampX,clampY,effectStart,effectEnd,
                             DFPLIGHTNI_EVENT_ACTIVE_EFFECT_FRAMES,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
                                 DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
@@ -170,7 +170,7 @@ void dfplightni_update(u8 *obj)
             clampX = (radiusX < (double)lbl_803E6500) ? (double)lbl_803E6500
                        : (radiusX > (double)lbl_803E6504) ? (double)lbl_803E6504 : radiusX;
             state->effectHandle =
-                fn_8008FB20(clampX,clampY,effectStart,effectEnd,(u16)state->delayFrames,
+                lightningCreate(clampX,clampY,effectStart,effectEnd,(u16)state->delayFrames,
                             state->angleIndex * DFPLIGHTNI_ANGLE_STEP &
                                 DFPLIGHTNI_EFFECT_ANGLE_MASK,0);
           }
