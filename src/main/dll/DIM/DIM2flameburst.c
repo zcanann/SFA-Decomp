@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/DIM/DIM2flameburst.h"
+#include "main/objanim.h"
 
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_800067e8();
@@ -1936,7 +1937,6 @@ int dimmagicbridge_flameSeqFn(int* obj, int p2, u8* p3)
 
 extern f32 timeDelta;
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern int ObjAnim_AdvanceCurrentMove(f32 moveStepScale, f32 deltaTime, int objAnim, void* events);
 extern f32 lbl_803E49D8;
 extern f32 lbl_803E49DC;
 extern f32 lbl_803E49E0;

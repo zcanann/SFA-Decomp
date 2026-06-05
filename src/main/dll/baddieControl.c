@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/dll/baddieControl.h"
+#include "main/objanim.h"
 
 typedef struct {
     u8 b7 : 1;
@@ -3604,7 +3605,6 @@ void dll_19_func19(u8 *cam, u8 *ctx) {
 
 extern void *gPlayerInterface;
 extern void *gPathControlInterface;
-extern void ObjAnim_SetCurrentMove(int obj, int move, f32 speed, int flags);
 
 /* dll_19_func0C  addr=0x80112D80  size=0x114  linkage=global */
 #pragma dont_inline on

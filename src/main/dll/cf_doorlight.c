@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cf_doorlight.h"
+#include "main/objanim.h"
 
 
 extern undefined4 FUN_800033a8();
@@ -283,7 +284,6 @@ undefined4 FUN_80167ad4(int param_1,int param_2)
 #pragma peephole off
 int fn_80167B60(int obj, int p)
 {
-  extern void ObjAnim_SetCurrentMove(int obj, int n, f32 v, int m);
   extern void fn_80169360(int obj, int n);
   extern int *gBaddieControlInterface;
   extern f32 lbl_803E3060;
