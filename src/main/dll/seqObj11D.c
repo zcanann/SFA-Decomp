@@ -834,28 +834,28 @@ void fn_80151DB8(int obj, u8 *state)
     f32 base;
     f32 f5;
     f32 f2v;
+    f32 dx;
+    f32 dz;
 
     player = Obj_GetPlayerObject();
     setup = *(u8 **)(obj + 0x4c);
     dy = *(f32 *)(player + 0x10) - *(f32 *)(obj + 0x10);
-    if (dy >= lbl_803E27D8) {
-        dy = -dy;
-    }
+    dy = (dy >= lbl_803E27D8) ? dy : -dy;
     if (dy > lbl_803E27DC) {
         return;
     }
     px0 = *(f32 *)(setup + 8) - lbl_803E27DC * fn_80293E80(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
     pz0 = *(f32 *)(setup + 0x10) - lbl_803E27DC * sin(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
-    if (sqrtf((*(f32 *)(player + 0x18) - px0) * (*(f32 *)(player + 0x18) - px0)
-              + (*(f32 *)(player + 0x20) - pz0) * (*(f32 *)(player + 0x20) - pz0))
-        < *(f32 *)(state + 0x2ac)) {
+    dx = *(f32 *)(player + 0x18) - px0;
+    dz = *(f32 *)(player + 0x20) - pz0;
+    if (sqrtf(dx * dx + dz * dz) < *(f32 *)(state + 0x2ac)) {
         cosA = fn_80293E80(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
         sinA = sin(lbl_803E27E0 * (f32)*(s16 *)obj / lbl_803E27E4);
         base = -(cosA * (px0 - cosA) + sinA * (pz0 - sinA));
         f5 = base + (cosA * *(f32 *)(player + 0x8c) + sinA * *(f32 *)(player + 0x94));
         f2v = base + (cosA * *(f32 *)(player + 0x18) + sinA * *(f32 *)(player + 0x20));
         if (f2v > lbl_803E27D8) {
-            if (f5 >= lbl_803E27E8) {
+            if (!(f5 >= lbl_803E27E8)) {
                 return;
             }
             *(f32 *)(player + 0x18) = *(f32 *)(player + 0x18) - cosA * f5;
