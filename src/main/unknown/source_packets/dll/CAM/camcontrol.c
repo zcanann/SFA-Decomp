@@ -18,7 +18,7 @@
  * Live EN anchors:
  * - camcontrol_loadTriggeredCamAction @ 0x80102AA0 is the translated function
  *   carrying the triggered camera action load path.
- * - camcontrol_initialise @ 0x80102A04 and camcontrol_release @ 0x80102EB8
+ * - camcontrol_initialise @ 0x80102A04 and camcontrol_release @ 0x80102F08
  *   match the current reference-side function hints.
  * - Rena's EN map also anchors nearby camera accessors:
  *   Camera_isZooming @ 0x801028C0, Camera_setTarget @ 0x801028E8,
