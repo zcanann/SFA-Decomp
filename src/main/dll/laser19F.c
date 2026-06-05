@@ -417,10 +417,13 @@ void mmsh_shrine_update(int objArg)
 
   switch (runtime->phase) {
   case 0:
-    runtime->idleSfxTimer -= timeDelta;
-    if (runtime->idleSfxTimer <= lbl_803E4F40) {
-      Sfx_PlayFromObject((int)obj,MMSH_SHRINE_SFX_IDLE);
-      runtime->idleSfxTimer = (f32)(s32)randomGetRange(500,1000);
+    {
+      f32 idleSfxTimer = runtime->idleSfxTimer - timeDelta;
+      runtime->idleSfxTimer = idleSfxTimer;
+      if (idleSfxTimer <= lbl_803E4F40) {
+        Sfx_PlayFromObject((int)obj,MMSH_SHRINE_SFX_IDLE);
+        runtime->idleSfxTimer = (f32)(s32)randomGetRange(500,1000);
+      }
     }
     if ((obj->objectFlags & 1) == 0) {
       break;
@@ -441,14 +444,6 @@ void mmsh_shrine_update(int objArg)
     GameBit_Set(MMSH_SHRINE_GB_OPEN,1);
     OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(2,(int)obj,-1);
     break;
-  case 2:
-    if (objGetAnimStateFlags(playerObj,4) == 0) {
-      audioStopByMask(3);
-      OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(1,(int)obj,-1);
-    }
-    runtime->phase = 5;
-    GameBit_Set(MMSH_SHRINE_GB_OPEN,0);
-    break;
   case 3:
     OBJECT_TRIGGER_FN(0x4c,ObjectTriggerReleaseFn)(obj->triggerHandle);
     OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(3,(int)obj,-1);
@@ -459,6 +454,14 @@ void mmsh_shrine_update(int objArg)
     runtime->phase = 5;
     GameBit_Set(MMSH_SHRINE_GB_OPEN,0);
     GameBit_Set(MMSH_SHRINE_GB_COMPLETE,1);
+    break;
+  case 2:
+    if (objGetAnimStateFlags(playerObj,4) == 0) {
+      audioStopByMask(3);
+      OBJECT_TRIGGER_FN(0x48,ObjectTriggerRefreshFn)(1,(int)obj,-1);
+    }
+    runtime->phase = 5;
+    GameBit_Set(MMSH_SHRINE_GB_OPEN,0);
     break;
   case 5:
     runtime->phase = 0;
