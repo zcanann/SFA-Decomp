@@ -49,7 +49,7 @@ extern undefined4 FUN_8007005c();
 extern undefined4 FUN_800709d8();
 extern undefined4 FUN_800709e0();
 extern undefined4 FUN_800709e8();
-extern uint playerHasKrazoaSpirit();
+extern int playerHasKrazoaSpirit();
 extern undefined4 hudDrawMagicBar();
 extern undefined8 FUN_801225a8();
 extern undefined4 fn_80124A78();
