@@ -2315,16 +2315,20 @@ int seqStreamFn_8008023c(int x)
 
 void endObjSequence(int seq)
 {
+    int j;
     int objCount;
     int objIdx;
     int frees[32];
     int *objs;
     int i;
     int nFree;
+    int *ret;
 
-    objs = ObjList_GetObjects(&objIdx, &objCount);
+    ret = ObjList_GetObjects(&objIdx, &objCount);
     nFree = 0;
-    for (i = 0; i < objCount; i++) {
+    i = 0;
+    objs = ret;
+    for (; i < objCount; i++) {
         int obj = *objs;
         if (*(s16 *)(obj + 0xb4) == seq) {
             *(s16 *)(obj + 0xb4) = -1;
@@ -2355,15 +2359,8 @@ void endObjSequence(int seq)
         AudioStream_CancelPrepared();
         lbl_803DB720 = -1;
     }
-    {
-        int j;
-        int *p;
-        j = 0;
-        p = frees;
-        for (; j < nFree; j++) {
-            Obj_FreeObject(*p);
-            p++;
-        }
+    for (j = 0; j < nFree; j++) {
+        Obj_FreeObject(frees[j]);
     }
     if (seq == lbl_803DD064) {
         if ((*(int (**)(void))((char *)*gCameraInterface + 0x10))() == 0x4d) {
