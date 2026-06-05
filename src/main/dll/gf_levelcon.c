@@ -364,79 +364,98 @@ void fn_80239FCC(int p1, int p2)
 #pragma scheduling reset
 #pragma peephole reset
 
-#pragma peephole on
+typedef struct GfHitState {
+    u8 pad0[0x88];
+    int mode;
+    u8 pad1[0x16];
+    s16 pitchVel;
+    s16 rollVel;
+    u8 pad2[8];
+    u8 hits[4];
+    u8 timer[4];
+    u8 pad3[3];
+    u8 texState[3];
+} GfHitState;
+
+#pragma peephole off
 #pragma scheduling off
 void fn_8023A3E4(int p1, int p2)
 {
+    u8 i;
     int hitVol;
     int hitType;
     int hitObj;
-    u8 i;
     int got;
+    GfHitState *s = (GfHitState *)p2;
+    int obj = p1;
+    u8 adjusted;
+    u8 texIdx;
+    u8 state;
+    int *tex;
 
-    got = ObjHits_GetPriorityHit(p1, &hitObj, &hitType, &hitVol);
+    got = ObjHits_GetPriorityHit(obj, &hitObj, &hitType, &hitVol);
     for (i = 0; i < 4; i++) {
-        int v = *(u8 *)(p2 + 0xb2 + i) - framesThisStep;
+        int v = s->timer[i] - framesThisStep;
         if (v < 0)
             v = 0;
-        *(u8 *)(p2 + 0xb2 + i) = v;
+        s->timer[i] = v;
     }
     if (got != 0) {
-        if (hitType == 3) {
-            if (*(s16 *)(hitObj + 0x46) == 0x605 &&
-                *(u8 *)(p2 + hitType + 0xb2) == 0 &&
-                *(u8 *)(p2 + hitType + 0xae) != 0 &&
-                *(int *)(p2 + 0x88) == 0xc) {
-                Obj_SetModelColorFadeRecursive(p1, 0x19, 0xc8, 0, 0, 1);
-                *(u8 *)(p2 + hitType + 0xae) = *(u8 *)(p2 + hitType + 0xae) - 1;
-                *(u8 *)(p2 + hitType + 0xb2) = 0xc8;
-            }
-        } else if (hitType >= 0 && hitType < 3) {
-            if (*(u8 *)(p2 + hitType + 0xae) != 0 && *(u8 *)(p2 + hitType + 0xb2) == 0) {
-                *(u8 *)(p2 + hitType + 0xae) = *(u8 *)(p2 + hitType + 0xae) - 1;
-                *(u8 *)(p2 + hitType + 0xb2) = 6;
-                if (*(u8 *)(p2 + hitType + 0xae) != 0)
-                    Sfx_PlayFromObject(p1, 0x484);
+        switch (hitType) {
+        case 0:
+        case 1:
+        case 2:
+            if (s->hits[hitType] != 0 && s->timer[hitType] == 0) {
+                s->hits[hitType] -= 1;
+                s->timer[hitType] = 6;
+                if (s->hits[hitType] != 0)
+                    Sfx_PlayFromObject(obj, 0x484);
                 else
-                    Sfx_PlayFromObject(p1, 0x485);
+                    Sfx_PlayFromObject(obj, 0x485);
                 switch (hitType) {
                 case 0:
-                    *(s16 *)(p2 + 0xa2) = -0xfa;
+                    s->pitchVel = -0xfa;
                     break;
                 case 1:
-                    *(s16 *)(p2 + 0xa2) = 0xfa;
+                    s->pitchVel = 0xfa;
                     break;
                 case 2:
-                    *(s16 *)(p2 + 0xa4) = -0xc8;
+                    s->rollVel = -0xc8;
                     break;
                 }
             }
+            break;
+        case 3:
+            if (*(s16 *)(hitObj + 0x46) == 0x605 &&
+                s->timer[hitType] == 0 &&
+                s->hits[hitType] != 0 &&
+                s->mode == 0xc) {
+                Obj_SetModelColorFadeRecursive(obj, 0x19, 0xc8, 0, 0, 1);
+                s->hits[hitType] -= 1;
+                s->timer[hitType] = 0xc8;
+            }
+            break;
         }
     }
     for (i = 0; i < 3; i++) {
-        int state;
-        int adjusted;
-        int texIdx;
-        int *tex;
-
-        if (*(u8 *)(p2 + i + 0xae) != 0) {
-            if (*(u8 *)(p2 + i + 0xb2) != 0)
-                *(u8 *)(p2 + i + 0xb9) = 1;
+        if (s->hits[i] != 0) {
+            if (s->timer[i] != 0)
+                s->texState[i] = 1;
             else
-                *(u8 *)(p2 + i + 0xb9) = 0;
+                s->texState[i] = 0;
         } else {
-            *(u8 *)(p2 + i + 0xb9) = 2;
+            s->texState[i] = 2;
         }
-        state = *(u8 *)(p2 + i + 0xb9);
+        state = s->texState[i];
         adjusted = state;
         texIdx = (&lbl_803DC4C8)[i];
         if (texIdx < 2 && state == 1)
             adjusted = 0;
-        tex = objFindTexture(p1, texIdx * 2, 0);
+        tex = objFindTexture(obj, texIdx * 2, 0);
         *tex = adjusted << 8;
         if (texIdx == 2 && state == 1)
             state = 0;
-        tex = objFindTexture(p1, texIdx * 2 + 1, 0);
+        tex = objFindTexture(obj, texIdx * 2 + 1, 0);
         *tex = state << 8;
     }
 }
