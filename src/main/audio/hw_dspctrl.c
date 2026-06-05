@@ -48,7 +48,7 @@ typedef struct SalStudio {
 
 
 /* ================= MusyX hardware DSP control (hw_dspctrl.c) =================
- * fn_8027C48C = salBuildCommandList (EN v1.0 0x8027C48C, 10828b).
+ * salBuildCommandList (was fn_8027C48C) (EN v1.0 0x8027C48C, 10828b).
  * Recovered against the public MusyX runtime source (hw_dspctrl.c,
  * MUSY_VERSION <= 2.0.0 paths), adapted to SFA's symbol set. */
 
@@ -162,7 +162,7 @@ static void DoDepopFade(s32 *dspStart, s16 *dspDelta, s32 *hostSum) {
         dspCmdMaxPtr = dspCmdPtr + 0xC0;                                                \
     }
 
-void fn_8027C48C(s16 *dest, u32 nsDelay)
+void salBuildCommandList(s16 *dest, u32 nsDelay)
 {
     u8 s;
     u8 mix_start;
