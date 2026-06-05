@@ -17,7 +17,7 @@ extern void GameBit_Set(int eventId, int value);
 
 extern int fn_8001CC9C(int obj, int a, int b, int c, int d);
 extern void fn_8001CB3C(void *p);
-extern void lightDistAttenFn_8001dc38(void *p, f32 a, f32 b);
+extern void modelLightStruct_setDistanceAttenuation(void *p, f32 a, f32 b);
 extern f32 Curve_AdvanceAlongPath(void *state, f32 t);
 extern s16 getAngle(f32 dx, f32 dz);
 
@@ -280,7 +280,7 @@ void SpiritDoorLock_update(int obj)
                 *(u8 *)((char *)obj + 0x36) -= 1;
                 if (state[0] != 0) {
                     u32 b = *(u8 *)((char *)obj + 0x36) >> 2;
-                    lightDistAttenFn_8001dc38((void *)state[0], (f32)(int)b, (f32)(int)(b + 10));
+                    modelLightStruct_setDistanceAttenuation((void *)state[0], (f32)(int)b, (f32)(int)(b + 10));
                 }
                 *(f32 *)((char *)obj + 8) *= lbl_803E444C;
                 *(s16 *)((char *)obj + 4) =

@@ -25,15 +25,15 @@ void drakormissile_startActiveLaunch(int obj) {
     light = objCreateLight(obj, 1);
     if (light != NULL) {
         modelLightStruct_setLightKind(light, 2);
-        modelLightStruct_setColorsA8AC(light, 255, 128, 0, 0);
+        modelLightStruct_setDiffuseColor(light, 255, 128, 0, 0);
         lightSetFieldBC_8001db14(light, 1);
-        lightDistAttenFn_8001dc38(light, lbl_803E6940, lbl_803E6944);
+        modelLightStruct_setDistanceAttenuation(light, lbl_803E6940, lbl_803E6944);
         modelLightStruct_setupGlow(light, 0, 0, 255, 255, 128, lbl_803E6948);
         modelLightStruct_setGlowProjectionRadius(light, lbl_803E694C);
     }
     *(void **)p = light;
     if (*(void **)p != NULL) {
-        lightDistAttenFn_8001dc38(*(void **)p, lbl_803E6950, lbl_803E6954);
+        modelLightStruct_setDistanceAttenuation(*(void **)p, lbl_803E6950, lbl_803E6954);
     }
     *(u8 *)((char *)obj + 0x36) = 255;
     *(f32 *)((char *)obj + 8) = lbl_803E6958 * *(f32 *)(*(int *)((char *)obj + 0x50) + 4);
@@ -107,9 +107,9 @@ void drakormissile_func0B(int obj, int from, int target, f32 speed) {
     light = objCreateLight(obj, 1);
     if (light != NULL) {
         modelLightStruct_setLightKind(light, 2);
-        modelLightStruct_setColorsA8AC(light, 0, 255, 255, 0);
+        modelLightStruct_setDiffuseColor(light, 0, 255, 255, 0);
         lightSetFieldBC_8001db14(light, 1);
-        lightDistAttenFn_8001dc38(light, lbl_803E6940, lbl_803E6944);
+        modelLightStruct_setDistanceAttenuation(light, lbl_803E6940, lbl_803E6944);
         modelLightStruct_setupGlow(light, 0, 0, 255, 255, 128, lbl_803E6948);
         modelLightStruct_setGlowProjectionRadius(light, lbl_803E694C);
     }

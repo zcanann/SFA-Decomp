@@ -272,19 +272,19 @@ void arwprojectile_createLinkedEffect(int obj, u8 enable) {
     if (*(void **)(state + 0x14) == NULL)
         return;
     modelLightStruct_setLightKind(*(void **)(state + 0x14), 2);
-    lightVecFn_8001dd88(*(void **)(state + 0x14), lbl_803E7008, lbl_803E7008, lbl_803E7008);
+    modelLightStruct_setPosition(*(void **)(state + 0x14), lbl_803E7008, lbl_803E7008, lbl_803E7008);
     lightSetFieldBC_8001db14(*(void **)(state + 0x14), 1);
     if (*(s16 *)(obj + 0x46) == 0x6ae) {
-        modelLightStruct_setColorsA8AC(*(void **)(state + 0x14), 0xff, 0x14, 0x50, 0);
+        modelLightStruct_setDiffuseColor(*(void **)(state + 0x14), 0xff, 0x14, 0x50, 0);
     } else if ((s8) * (u8 *)(obj + 0xad) == 0) {
-        modelLightStruct_setColorsA8AC(*(void **)(state + 0x14), 0x3c, 0xff, 0x5a, 0);
+        modelLightStruct_setDiffuseColor(*(void **)(state + 0x14), 0x3c, 0xff, 0x5a, 0);
     } else {
-        modelLightStruct_setColorsA8AC(*(void **)(state + 0x14), 0x3c, 0x5a, 0xff, 0);
+        modelLightStruct_setDiffuseColor(*(void **)(state + 0x14), 0x3c, 0x5a, 0xff, 0);
     }
     if (*(s16 *)(obj + 0x46) == 0x655) {
-        lightDistAttenFn_8001dc38(*(void **)(state + 0x14), lbl_803E700C, lbl_803E7010);
+        modelLightStruct_setDistanceAttenuation(*(void **)(state + 0x14), lbl_803E700C, lbl_803E7010);
     } else {
-        lightDistAttenFn_8001dc38(*(void **)(state + 0x14), lbl_803E7014, lbl_803E7018);
+        modelLightStruct_setDistanceAttenuation(*(void **)(state + 0x14), lbl_803E7014, lbl_803E7018);
     }
     modelLightStruct_setAffectsAabbLightSelection(*(void **)(state + 0x14), 1);
 }

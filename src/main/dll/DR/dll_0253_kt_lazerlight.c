@@ -31,7 +31,7 @@ void ktlazerlight_init(int obj, char *arg) {
     *(void **)(p + 0x4) = objCreateLight(0, 1);
     if (*(void **)(p + 0x4) != 0) {
         modelLightStruct_setLightKind(*(void **)(p + 0x4), 2);
-        lightVecFn_8001dd88(*(void **)(p + 0x4), *(f32 *)(arg + 0x8), *(f32 *)(arg + 0xc), *(f32 *)(arg + 0x10));
+        modelLightStruct_setPosition(*(void **)(p + 0x4), *(f32 *)(arg + 0x8), *(f32 *)(arg + 0xc), *(f32 *)(arg + 0x10));
         modelLightStruct_setAffectsAabbLightSelection(*(void **)(p + 0x4), 1);
     }
 }
@@ -52,8 +52,8 @@ void ktlazerlight_update(int obj) {
         }
         if (light != 0) {
             modelLightStruct_setEnabled(light, 1, lbl_803E68C0);
-            modelLightStruct_setColorsA8AC(light, 0x64, 0x6e, 0xff, 0xff);
-            lightDistAttenFn_8001dc38(*(void **)(p + 0x4), (f32)(v * 0x1a), (f32)(v * 0x1a + 0x14));
+            modelLightStruct_setDiffuseColor(light, 0x64, 0x6e, 0xff, 0xff);
+            modelLightStruct_setDistanceAttenuation(*(void **)(p + 0x4), (f32)(v * 0x1a), (f32)(v * 0x1a + 0x14));
         }
     } else {
         if (light != 0) {

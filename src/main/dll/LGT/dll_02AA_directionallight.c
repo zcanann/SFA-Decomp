@@ -171,14 +171,14 @@ void directionallight_init(int obj, int setup)
     if (*(void **)(state + 8) != NULL) {
         modelLightStruct_setLightKind(*(void **)(state + 8), 4);
         objSetEventName(*(void **)(state + 8), *(u8 *)(setup + 0x1d));
-        modelStruct2_setVectors(*(void **)(state + 8), vec.x, vec.y, vec.z);
+        modelLightStruct_setDirection(*(void **)(state + 8), vec.x, vec.y, vec.z);
 
         if ((*(u8 *)(setup + 0x2a) & 1) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
-            modelLightStruct_setColorsA8AC(*(void **)(state + 8), colorR, colorG, colorB, 0xff);
+            modelLightStruct_setDiffuseColor(*(void **)(state + 8), colorR, colorG, colorB, 0xff);
             modelLightStruct_setDiffuseTargetColor(*(void **)(state + 8), colorR, colorG, colorB, 0xff);
         } else {
-            modelLightStruct_setColorsA8AC(*(void **)(state + 8), *(u8 *)(setup + 0x1a),
+            modelLightStruct_setDiffuseColor(*(void **)(state + 8), *(u8 *)(setup + 0x1a),
                 *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), 0xff);
             modelLightStruct_setDiffuseTargetColor(*(void **)(state + 8), *(u8 *)(setup + 0x27),
                 *(u8 *)(setup + 0x28), *(u8 *)(setup + 0x29), 0xff);
@@ -220,7 +220,7 @@ void directionallight_update(int obj)
         }
         if ((*(u8 *)(setup + 0x2a) & 1) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
-            modelLightStruct_setColorsA8AC(*(void **)(state + 8), colorR, colorG, colorB, 0xff);
+            modelLightStruct_setDiffuseColor(*(void **)(state + 8), colorR, colorG, colorB, 0xff);
         }
     } else {
         if ((u32)GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {

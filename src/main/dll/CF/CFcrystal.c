@@ -72,10 +72,10 @@ extern f32 Curve_EvalBSpline(f32 t, void *control, int mode);
 extern f32 Vec_distance(void *a, void *b);
 extern int objCreateLight(int obj, int type);
 extern void modelLightStruct_setLightKind(int light, int value);
-extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
 extern void lightSetFieldBC_8001db14(int light, int value);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int value);
-extern void lightDistAttenFn_8001dc38(int light, f32 near, f32 far);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sfxId);
 extern f32 sqrtf(f32 value);
 extern f32 fn_80293E80(f32 value);
@@ -143,9 +143,9 @@ void LanternFireFly_update(int obj)
         light = objCreateLight(obj, 1);
         if (light != 0) {
             modelLightStruct_setLightKind(light, 2);
-            modelLightStruct_setColorsA8AC(light, 100, 0xff, 100, 0);
+            modelLightStruct_setDiffuseColor(light, 100, 0xff, 100, 0);
             lightSetFieldBC_8001db14(light, 1);
-            lightDistAttenFn_8001dc38(light, lbl_803E3A98, lbl_803E3A9C);
+            modelLightStruct_setDistanceAttenuation(light, lbl_803E3A98, lbl_803E3A9C);
             modelLightStruct_setAffectsAabbLightSelection(light, 1);
         }
         *(int *)state = light;
@@ -184,7 +184,7 @@ void LanternFireFly_update(int obj)
             atten = (f32)*(int *)(state + 0x60) *
                 fn_80293E80((lbl_803E3ACC * (f32)(*(int *)(state + 0x60) << 0xb)) / lbl_803E3AD0);
             Sfx_KeepAliveLoopedObjectSound(0, 0x460);
-            lightDistAttenFn_8001dc38(*(int *)state, atten, lbl_803E3AD4 + atten);
+            modelLightStruct_setDistanceAttenuation(*(int *)state, atten, lbl_803E3AD4 + atten);
         }
     } else {
         LANTERN_SPAWN_FX_VEC(obj, 0x19f, 0, 1, -1, 0, dx * stepScale, dy * stepScale, dz * stepScale);

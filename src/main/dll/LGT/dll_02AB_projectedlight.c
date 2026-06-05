@@ -74,11 +74,11 @@ void projectedlight_init(int obj, int setup)
 
     if (*(void **)state != NULL) {
         modelLightStruct_setLightKind(*(void **)state, 8);
-        lightVecFn_8001dd88(*(void **)state, lbl_803E7270, lbl_803E7270, lbl_803E7270);
-        modelStruct2_setVectors(*(void **)state, vec.x, vec.y, vec.z);
-        modelLightStruct_setColorsA8AC(*(void **)state, *(u8 *)(setup + 0x2d),
+        modelLightStruct_setPosition(*(void **)state, lbl_803E7270, lbl_803E7270, lbl_803E7270);
+        modelLightStruct_setDirection(*(void **)state, vec.x, vec.y, vec.z);
+        modelLightStruct_setDiffuseColor(*(void **)state, *(u8 *)(setup + 0x2d),
             *(u8 *)(setup + 0x2e), *(u8 *)(setup + 0x2f), *(u8 *)(setup + 0x37));
-        lightDistAttenFn_8001dc38(*(void **)state, (f32)(u32)*(u16 *)(setup + 0x1a),
+        modelLightStruct_setDistanceAttenuation(*(void **)state, (f32)(u32)*(u16 *)(setup + 0x1a),
             (f32)(u32)*(u16 *)(setup + 0x1c));
         fn_8001DB24(*(void **)state, *(u8 *)(setup + 0x39));
         modelLightStruct_setEnabled(*(void **)state, *(u8 *)(setup + 0x3a), lbl_803E7270);

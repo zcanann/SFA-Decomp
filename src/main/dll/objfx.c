@@ -977,15 +977,15 @@ void objParticleFn_80099d84(void *obj, u8 type, void *light, f32 scale, f32 fext
 
     if (light != NULL) {
         modelLightStruct_setLightKind(light, 2);
-        lightVecFn_8001dd88(light, *(f32 *)((char *)obj + 0x18),
+        modelLightStruct_setPosition(light, *(f32 *)((char *)obj + 0x18),
                             *(f32 *)((char *)obj + 0x1c) + zoff,
                             *(f32 *)((char *)obj + 0x20));
         cbuf = (u8 *)&colors;
-        modelLightStruct_setColorsA8AC(light, cbuf[type * 3], cbuf[type * 3 + 1],
+        modelLightStruct_setDiffuseColor(light, cbuf[type * 3], cbuf[type * 3 + 1],
                                        cbuf[type * 3 + 2], 0xff);
-        modelLightStruct_setColors100104(light, cbuf[type * 3], cbuf[type * 3 + 1],
+        modelLightStruct_setSpecularColor(light, cbuf[type * 3], cbuf[type * 3 + 1],
                                          cbuf[type * 3 + 2], 0xff);
-        lightDistAttenFn_8001dc38(light, lbl_803DF34C, lbl_803DF398);
+        modelLightStruct_setDistanceAttenuation(light, lbl_803DF34C, lbl_803DF398);
         lightSetField4D(light, 0);
         modelLightStruct_setEnabled(light, lbl_803DF35C, 1);
         modelLightStruct_setEnabled(light, lbl_803DF354, 0);
@@ -1111,12 +1111,12 @@ void objLightFn_8009a1dc(f32 scale, void *obj, void *origin, u8 type, void *ligh
 
     if (light != NULL) {
         modelLightStruct_setLightKind(light, 2);
-        lightVecFn_8001dd88(light, *(f32 *)((char *)origin + 0xc),
+        modelLightStruct_setPosition(light, *(f32 *)((char *)origin + 0xc),
                             lbl_803DF384 + *(f32 *)((char *)origin + 0x10),
                             *(f32 *)((char *)origin + 0x14));
-        modelLightStruct_setColorsA8AC(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1], lbl_8030FA30[type * 3 + 2], 0xff);
-        modelLightStruct_setColors100104(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1], lbl_8030FA30[type * 3 + 2], 0xff);
-        lightDistAttenFn_8001dc38(light, lbl_803DF394, lbl_803DF39C);
+        modelLightStruct_setDiffuseColor(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1], lbl_8030FA30[type * 3 + 2], 0xff);
+        modelLightStruct_setSpecularColor(light, lbl_8030FA30[type * 3], lbl_8030FA30[type * 3 + 1], lbl_8030FA30[type * 3 + 2], 0xff);
+        modelLightStruct_setDistanceAttenuation(light, lbl_803DF394, lbl_803DF39C);
         lightSetField4D(light, 0);
         modelLightStruct_setEnabled(light, lbl_803DF35C, 1);
         modelLightStruct_setEnabled(light, lbl_803DF358, 0);

@@ -6,10 +6,10 @@
 #pragma scheduling off
 extern int objCreateLight(void *obj, int);
 extern void modelLightStruct_setLightKind(int, int);
-extern void lightVecFn_8001dd88(f32, f32, f32);
-extern void modelLightStruct_setColorsA8AC(int, u8, u8, u8, int);
-extern void modelLightStruct_setColors100104(int, u8, u8, u8, int);
-extern void lightDistAttenFn_8001dc38(int, f32, f32);
+extern void modelLightStruct_setPosition(f32, f32, f32);
+extern void modelLightStruct_setDiffuseColor(int, u8, u8, u8, int);
+extern void modelLightStruct_setSpecularColor(int, u8, u8, u8, int);
+extern void modelLightStruct_setDistanceAttenuation(int, f32, f32);
 extern void modelLightStruct_setEnabled(int, int, f32);
 extern void modelLightStruct_startColorFade(int, int, int);
 extern void modelLightStruct_setDiffuseTargetColor(int, int, int, int, int);
@@ -107,17 +107,17 @@ void lightsource_init(s16 *obj, int mapData)
     if (*(void **)state != NULL) {
       type = *(s16 *)((u8 *)obj + 0x46);
       if (type == 0x705 || type == 0x712) {
-        lightVecFn_8001dd88(lbl_803E5E0C, lbl_803E5E0C, lbl_803E5E0C);
+        modelLightStruct_setPosition(lbl_803E5E0C, lbl_803E5E0C, lbl_803E5E0C);
       }
       else {
-        lightVecFn_8001dd88(lbl_803E5E0C, lbl_803E5E28, lbl_803E5E0C);
+        modelLightStruct_setPosition(lbl_803E5E0C, lbl_803E5E28, lbl_803E5E0C);
       }
 
       colorBase = *(u8 *)((int)state + 0x15) * 3;
-      modelLightStruct_setColorsA8AC(*state, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2], 0xff);
+      modelLightStruct_setDiffuseColor(*state, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2], 0xff);
       colorBase = *(u8 *)((int)state + 0x15) * 3;
-      modelLightStruct_setColors100104(*state, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2], 0xff);
-      lightDistAttenFn_8001dc38(*state, lbl_803E5E2C, lbl_803E5E30);
+      modelLightStruct_setSpecularColor(*state, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2], 0xff);
+      modelLightStruct_setDistanceAttenuation(*state, lbl_803E5E2C, lbl_803E5E30);
       modelLightStruct_setEnabled(*state, 1, lbl_803E5E0C);
       modelLightStruct_startColorFade(*state, 1, 3);
 

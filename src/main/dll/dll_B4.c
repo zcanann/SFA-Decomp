@@ -12,8 +12,8 @@ extern u8 *objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind(u8 *p, int a);
 extern void modelLightStruct_setObjectLightMaskIndex(u8 *p, int a);
 extern void objSetEventName(u8 *p, int a);
-extern void modelStruct2_setVectors(u8 *p, f32 a, f32 b, f32 c);
-extern void modelLightStruct_setColorsA8AC(u8 *p, int a, int b, int c, int d);
+extern void modelLightStruct_setDirection(u8 *p, f32 a, f32 b, f32 c);
+extern void modelLightStruct_setDiffuseColor(u8 *p, int a, int b, int c, int d);
 
 extern u8 *gCamcontrolTargetReticle;
 extern u8 *lbl_803DD4C4;
@@ -45,8 +45,8 @@ void lockIconInit(void)
       modelLightStruct_setLightKind(lbl_803DD4C4, 4);
       modelLightStruct_setObjectLightMaskIndex(lbl_803DD4C4, 1);
       objSetEventName(lbl_803DD4C4, 1);
-      modelStruct2_setVectors(lbl_803DD4C4, lbl_803E162C, lbl_803E1630, lbl_803E1640);
-      modelLightStruct_setColorsA8AC(lbl_803DD4C4, 0xB4, 0xC8, 0xFF, 0xFF);
+      modelLightStruct_setDirection(lbl_803DD4C4, lbl_803E162C, lbl_803E1630, lbl_803E1640);
+      modelLightStruct_setDiffuseColor(lbl_803DD4C4, 0xB4, 0xC8, 0xFF, 0xFF);
     }
   }
 }

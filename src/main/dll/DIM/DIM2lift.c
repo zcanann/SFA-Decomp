@@ -585,15 +585,15 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
 {
   extern int objCreateLight(int, int);
   extern void modelLightStruct_setLightKind(int, int);
-  extern void lightVecFn_8001dd88(int, f32, f32, f32);
-  extern void modelLightStruct_setColorsA8AC(int, int, int, int, int);
-  extern void modelLightStruct_setColors100104(int, int, int, int, int);
+  extern void modelLightStruct_setPosition(int, f32, f32, f32);
+  extern void modelLightStruct_setDiffuseColor(int, int, int, int, int);
+  extern void modelLightStruct_setSpecularColor(int, int, int, int, int);
   extern void modelLightStruct_setupGlow(int, int, int, int, int, int, f32);
-  extern void lightDistAttenFn_8001dc38(int, f32, f32);
+  extern void modelLightStruct_setDistanceAttenuation(int, f32, f32);
   extern void lightSetField4D(int, int);
   extern void modelLightStruct_setEnabled(int, int, f32);
   extern void modelLightStruct_setDiffuseTargetColor(int, int, int, int, int);
-  extern void fn_8001D9E0(int, int, int, int, int);
+  extern void modelLightStruct_setSpecularTargetColor(int, int, int, int, int);
   extern void modelLightStruct_startColorFade(int, int, int);
   extern void modelLightStruct_setAffectsAabbLightSelection(int, int);
   extern void modelLightStruct_setGlowProjectionRadius(int, f32);
@@ -610,23 +610,23 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
   if (*(void **)lightSlot == NULL) return;
 
   modelLightStruct_setLightKind(lightSlot[0], 2);
-  lightVecFn_8001dd88(lightSlot[0], ((f32 *)lightSlot)[0x16], ((f32 *)lightSlot)[0x17], ((f32 *)lightSlot)[0x18]);
+  modelLightStruct_setPosition(lightSlot[0], ((f32 *)lightSlot)[0x16], ((f32 *)lightSlot)[0x17], ((f32 *)lightSlot)[0x18]);
 
   if (isGreen != 0) {
-    modelLightStruct_setColorsA8AC(lightSlot[0], 0, 255, 0, 255);
-    modelLightStruct_setColors100104(lightSlot[0], 0, 255, 0, 255);
+    modelLightStruct_setDiffuseColor(lightSlot[0], 0, 255, 0, 255);
+    modelLightStruct_setSpecularColor(lightSlot[0], 0, 255, 0, 255);
     modelLightStruct_setupGlow(lightSlot[0], 0, 0, 255, 0, 192, lbl_803E4C28);
   } else {
-    modelLightStruct_setColorsA8AC(lightSlot[0], 255, 0, 0, 255);
-    modelLightStruct_setColors100104(lightSlot[0], 255, 0, 0, 255);
+    modelLightStruct_setDiffuseColor(lightSlot[0], 255, 0, 0, 255);
+    modelLightStruct_setSpecularColor(lightSlot[0], 255, 0, 0, 255);
     modelLightStruct_setupGlow(lightSlot[0], 0, 255, 0, 0, 192, lbl_803E4C2C);
   }
 
-  lightDistAttenFn_8001dc38(lightSlot[0], lbl_803E4C2C, lbl_803E4C30);
+  modelLightStruct_setDistanceAttenuation(lightSlot[0], lbl_803E4C2C, lbl_803E4C30);
   lightSetField4D(lightSlot[0], 1);
   modelLightStruct_setEnabled(lightSlot[0], 1, lbl_803E4BD8);
   modelLightStruct_setDiffuseTargetColor(lightSlot[0], 64, 0, 0, 64);
-  fn_8001D9E0(lightSlot[0], 64, 0, 0, 64);
+  modelLightStruct_setSpecularTargetColor(lightSlot[0], 64, 0, 0, 64);
   modelLightStruct_startColorFade(lightSlot[0], 2, 40);
   modelLightStruct_setAffectsAabbLightSelection(lightSlot[0], 1);
   modelLightStruct_setGlowProjectionRadius(lightSlot[0], lbl_803E4BBC);

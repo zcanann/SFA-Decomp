@@ -35,8 +35,8 @@ extern int timerCountDown(int timer);
 extern int fn_8001CC9C(FirePipeObject *obj, int r, int g, int b, int a);
 extern void modelLightStruct_setEnabled(int light, int mode, f32 value);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
-extern void lightVecFn_8001dd88(int light, f32 x, f32 y, f32 z);
-extern void lightDistAttenFn_8001dc38(int light, f32 near, f32 far);
+extern void modelLightStruct_setPosition(int light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 near, f32 far);
 extern int modelLightStruct_getActiveState(int light);
 extern void modelLightStruct_updateGlowAlpha(int light);
 extern void Sfx_PlayFromObjectLimited(FirePipeObject *obj, int sfxId, int limit);
@@ -257,7 +257,7 @@ void firepipe_updateState(FirePipeObject *obj)
                         modelLightStruct_setupGlow(extra->subObj,0,0xff,0x80,0,0x64,
                                     lbl_803DC34C * obj->scale);
                     }
-                    lightVecFn_8001dd88(extra->subObj,lbl_803E6B74,lbl_803E6B74,lbl_803E6B7C);
+                    modelLightStruct_setPosition(extra->subObj,lbl_803E6B74,lbl_803E6B74,lbl_803E6B7C);
                     radius = lbl_803E6B80 * obj->scale;
                     nearAtten = radius;
                     if (radius >= lbl_803E6B84) {
@@ -275,7 +275,7 @@ void firepipe_updateState(FirePipeObject *obj)
                     } else {
                         farAtten = lbl_803E6B90;
                     }
-                    lightDistAttenFn_8001dc38(extra->subObj,nearAtten,farAtten);
+                    modelLightStruct_setDistanceAttenuation(extra->subObj,nearAtten,farAtten);
                 }
             }
         } else if (extra->subObj != 0) {

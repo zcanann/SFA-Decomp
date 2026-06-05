@@ -3,11 +3,11 @@
 #include "main/dll/DIM/DIMbossspit.h"
 
 extern void objRenderFn_8003b8f4(void *obj, undefined4 p2, undefined4 p3, undefined4 p4, undefined4 p5, double scale);
-extern void lightVecFn_8001dd88(f32 x, f32 y, f32 z);
+extern void modelLightStruct_setPosition(f32 x, f32 y, f32 z);
 extern void queueGlowRender(void *p);
 extern void ObjPath_GetPointWorldPosition(void *obj, int idx, void *out0, void *out1, void *out2, int flag);
 extern void *Obj_GetPlayerObject(void);
-extern void modelLightStruct_getColors100104(void *light, void *p1, void *p2, void *p3, void *p4);
+extern void modelLightStruct_getSpecularColor(void *light, void *p1, void *p2, void *p3, void *p4);
 extern void modelLightStruct_setGlowColor(void *p1, u8 a, u8 b, u8 c, int d);
 extern int randomGetRange(int min, int max);
 
@@ -56,7 +56,7 @@ void DIMbosstonsil_render(void *obj, undefined4 p2, undefined4 p3, undefined4 p4
             (*(void (***)(void *, int, int *, int, int, int))gPartfxInterface)[2](obj, 0x4bd, partfxArgs, 0x200001, -1, 0);
 
             if (gDIMbosstonsilLight != 0 && gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0) {
-                lightVecFn_8001dd88(*outXPtr, *outYPtr, *outZPtr);
+                modelLightStruct_setPosition(*outXPtr, *outYPtr, *outZPtr);
                 queueGlowRender(gDIMbosstonsilLight);
             }
         }
@@ -125,7 +125,7 @@ void DIMbosstonsil_update(void *obj)
 
     if (gDIMbosstonsilLight == 0) return;
 
-    modelLightStruct_getColors100104(gDIMbosstonsilLight, &b1, &b2, &b3, &b4);
+    modelLightStruct_getSpecularColor(gDIMbosstonsilLight, &b1, &b2, &b3, &b4);
     modelLightStruct_setGlowColor(gDIMbosstonsilLight, b1, b2, b3, 0xc0);
 
     if (gDIMbosstonsilLight->active == 0) return;

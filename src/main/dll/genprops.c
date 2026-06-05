@@ -5616,7 +5616,7 @@ int Fireball_SeqFn(int *obj, int msg, u8 *cmds)
 }
 
 extern int cmbsrc_getColorIndex(int *p);
-extern void modelLightStruct_setColorsA8AC(int *light, int r, int g, int b, int a);
+extern void modelLightStruct_setDiffuseColor(int *light, int r, int g, int b, int a);
 extern void projectileParticleFxFn_80099660(int *obj, f32 v, int kind);
 extern f32 lbl_803E3354;
 extern f32 lbl_803E3358;
@@ -5635,7 +5635,7 @@ void fireball_hitDetect(int *obj)
             if (*(void **)state != NULL) {
                 u8 *pal = (u8 *)lbl_80320978;
                 int c = *(u8 *)((char *)state + 0x71) * 3;
-                modelLightStruct_setColorsA8AC(*(int **)state, pal[c], pal[c + 1], pal[c + 2], 0);
+                modelLightStruct_setDiffuseColor(*(int **)state, pal[c], pal[c + 1], pal[c + 2], 0);
             }
         }
         ObjHits_EnableObject(obj);
@@ -6391,8 +6391,8 @@ void dim2roofrub_update(int *obj)
 extern int objCreateLight(int *obj, int arg);
 extern void lightSetField4D(int light, int v);
 extern void lightSetFieldBC_8001db14(int light, int v);
-extern void lightVecFn_8001dd88(int light, f32 a, f32 b, f32 c);
-extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
+extern void modelLightStruct_setPosition(int light, f32 a, f32 b, f32 c);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
 extern void modelLightStruct_setLightKind(int light, int v);
@@ -6427,12 +6427,12 @@ void fireball_init(int *obj)
                 int c;
                 modelLightStruct_setLightKind(*(int *)state, 2);
                 lightSetField4D(*(int *)state, 0);
-                lightVecFn_8001dd88(*(int *)state, lbl_803E3330, lbl_803E3330, lbl_803E3330);
+                modelLightStruct_setPosition(*(int *)state, lbl_803E3330, lbl_803E3330, lbl_803E3330);
                 lightSetFieldBC_8001db14(*(int *)state, 1);
                 c = *(u8 *)((char *)state + 0x71) * 3;
-                modelLightStruct_setColorsA8AC(*(int **)state, ((u8 *)lbl_80320978)[c],
+                modelLightStruct_setDiffuseColor(*(int **)state, ((u8 *)lbl_80320978)[c],
                                                ((u8 *)lbl_80320978 + 1)[c], ((u8 *)lbl_80320978 + 2)[c], 0);
-                lightDistAttenFn_8001dc38(*(int *)state, lbl_803E3358, lbl_803E3378);
+                modelLightStruct_setDistanceAttenuation(*(int *)state, lbl_803E3358, lbl_803E3378);
                 c = *(u8 *)((char *)state + 0x71) * 3;
                 modelLightStruct_setupGlow(*(int *)state, 0, ((u8 *)lbl_80320978)[c], ((u8 *)lbl_80320978 + 1)[c],
                             ((u8 *)lbl_80320978 + 2)[c], 32, lbl_803E337C);
@@ -7808,7 +7808,7 @@ void staff_setupSwipe(int p1, int p2, int p3, int p4)
 #pragma scheduling reset
 
 extern int *fn_802966CC(int *player);
-extern void modelLightStruct_setColors100104(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setSpecularColor(int light, int r, int g, int b, int a);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern f32 lbl_803E33B0;
@@ -7877,10 +7877,10 @@ void staffFn_80170380(int *obj, int cmd)
             }
             if (*(int **)state != NULL) {
                 modelLightStruct_setLightKind(*(int *)state, 2);
-                lightVecFn_8001dd88(*(int *)state, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10) - lbl_803E33B8, *(f32 *)((char *)obj + 0x14));
-                modelLightStruct_setColorsA8AC(*(int **)state, 0, 255, 255, 255);
-                modelLightStruct_setColors100104(*(int *)state, 0, 255, 255, 255);
-                lightDistAttenFn_8001dc38(*(int *)state, lbl_803E33BC, lbl_803E33C0);
+                modelLightStruct_setPosition(*(int *)state, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10) - lbl_803E33B8, *(f32 *)((char *)obj + 0x14));
+                modelLightStruct_setDiffuseColor(*(int **)state, 0, 255, 255, 255);
+                modelLightStruct_setSpecularColor(*(int *)state, 0, 255, 255, 255);
+                modelLightStruct_setDistanceAttenuation(*(int *)state, lbl_803E33BC, lbl_803E33C0);
                 lightSetField4D(*(int *)state, 1);
                 modelLightStruct_setEnabled(*(int *)state, 1, lbl_803E33AC);
                 modelLightStruct_startColorFade(*(int *)state, 0, 0);
@@ -7953,10 +7953,10 @@ void staffFn_80170380(int *obj, int cmd)
         }
         if (*(int **)state != NULL) {
             modelLightStruct_setLightKind(*(int *)state, 2);
-            lightVecFn_8001dd88(*(int *)state, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10) - lbl_803E33B8, *(f32 *)((char *)obj + 0x14));
-            modelLightStruct_setColorsA8AC(*(int **)state, 0, 255, 255, 255);
-            modelLightStruct_setColors100104(*(int *)state, 0, 255, 255, 255);
-            lightDistAttenFn_8001dc38(*(int *)state, lbl_803E33BC, lbl_803E33C0);
+            modelLightStruct_setPosition(*(int *)state, *(f32 *)((char *)obj + 0xc), *(f32 *)((char *)obj + 0x10) - lbl_803E33B8, *(f32 *)((char *)obj + 0x14));
+            modelLightStruct_setDiffuseColor(*(int **)state, 0, 255, 255, 255);
+            modelLightStruct_setSpecularColor(*(int *)state, 0, 255, 255, 255);
+            modelLightStruct_setDistanceAttenuation(*(int *)state, lbl_803E33BC, lbl_803E33C0);
             lightSetField4D(*(int *)state, 1);
             modelLightStruct_setEnabled(*(int *)state, 1, lbl_803E33AC);
             modelLightStruct_startColorFade(*(int *)state, 0, 0);

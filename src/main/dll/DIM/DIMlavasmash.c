@@ -34,11 +34,11 @@ extern undefined8 ObjGroup_RemoveObject();
 extern undefined4 ObjGroup_AddObject();
 extern int objCreateLight(int obj,int param_2);
 extern void modelLightStruct_setLightKind(int light,int value);
-extern void modelLightStruct_setColorsA8AC(int light,int r,int g,int b,int a);
-extern void modelLightStruct_setColors100104(int light,int r,int g,int b,int a);
-extern void lightDistAttenFn_8001dc38(int light,f32 near,f32 far);
+extern void modelLightStruct_setDiffuseColor(int light,int r,int g,int b,int a);
+extern void modelLightStruct_setSpecularColor(int light,int r,int g,int b,int a);
+extern void modelLightStruct_setDistanceAttenuation(int light,f32 near,f32 far);
 extern void modelLightStruct_setEnabled(int light,int mode,f32 value);
-extern void lightVecFn_8001dd88(int light,f32 x,f32 y,f32 z);
+extern void modelLightStruct_setPosition(int light,f32 x,f32 y,f32 z);
 extern void modelLightStruct_startColorFade(int light,int param_2,int param_3);
 extern void modelLightStruct_setDiffuseTargetColor(int light,int r,int g,int b,int a);
 extern void modelLightStruct_setupGlow(int light,int param_2,int r,int g,int b,int a,f32 radius);
@@ -313,12 +313,12 @@ void dimlogfire_init(int obj, int def)
     }
     if (*(void **)state != NULL) {
         modelLightStruct_setLightKind(*state, 2);
-        modelLightStruct_setColorsA8AC(*state, 0xff, 0x7f, 0, 0xff);
-        modelLightStruct_setColors100104(*state, 0xff, 0x7f, 0, 0xff);
+        modelLightStruct_setDiffuseColor(*state, 0xff, 0x7f, 0, 0xff);
+        modelLightStruct_setSpecularColor(*state, 0xff, 0x7f, 0, 0xff);
         radius = (int)(lbl_803E4830 * *(f32 *)(obj + 8));
-        lightDistAttenFn_8001dc38(*state, (f32)radius, lbl_803E4834 + (f32)radius);
+        modelLightStruct_setDistanceAttenuation(*state, (f32)radius, lbl_803E4834 + (f32)radius);
         modelLightStruct_setEnabled(*state, 1, lbl_803E4828);
-        lightVecFn_8001dd88(*state, lbl_803E4828, lbl_803E4838, lbl_803E4828);
+        modelLightStruct_setPosition(*state, lbl_803E4828, lbl_803E4838, lbl_803E4828);
         modelLightStruct_startColorFade(*state, 1, 3);
         modelLightStruct_setDiffuseTargetColor(*state, 0xff, 0x5c, 0, 0xff);
         modelLightStruct_setupGlow(*state, 0, 0xff, 0x7f, 0, 0x87, lbl_803E483C * *(f32 *)(obj + 8));

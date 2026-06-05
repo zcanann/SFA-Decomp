@@ -205,9 +205,9 @@ int cmbsrc_cycleColor(int obj, int state)
         idx = lbl_803DC3E0[*(u8 *)(state + 0x23)];
         if (*(void **)state != NULL) {
             int base = idx * 3;
-            modelLightStruct_setColorsA8AC(*(void **)state, lbl_8032BD50[base],
+            modelLightStruct_setDiffuseColor(*(void **)state, lbl_8032BD50[base],
                                            lbl_8032BD50[base + 1], lbl_8032BD50[base + 2], 0xff);
-            modelLightStruct_setColors100104(*(void **)state, lbl_8032BD50[base],
+            modelLightStruct_setSpecularColor(*(void **)state, lbl_8032BD50[base],
                                              lbl_8032BD50[base + 1], lbl_8032BD50[base + 2], 0xff);
             modelLightStruct_setDiffuseTargetColor(*(void **)state,
                             (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base]),
@@ -458,20 +458,20 @@ void cmbsrc_init(int obj, u8 *setup)
         if (*(void **)state != NULL) {
             modelLightStruct_setLightKind(*(void **)state, 2);
             if (*(s16 *)(obj + 0x46) == 0x758) {
-                lightVecFn_8001dd88(*(void **)state, lbl_803E7360, lbl_803E7360, lbl_803E7360);
+                modelLightStruct_setPosition(*(void **)state, lbl_803E7360, lbl_803E7360, lbl_803E7360);
             } else {
-                lightVecFn_8001dd88(*(void **)state, lbl_803E7360, lbl_803E73A8, lbl_803E7360);
+                modelLightStruct_setPosition(*(void **)state, lbl_803E7360, lbl_803E73A8, lbl_803E7360);
             }
             colorTbl = &lbl_8032BD50[lightVariant * 0x30];
             ci = setup[0x1b] * 3;
-            modelLightStruct_setColorsA8AC(*(void **)state, colorTbl[ci], colorTbl[ci + 1],
+            modelLightStruct_setDiffuseColor(*(void **)state, colorTbl[ci], colorTbl[ci + 1],
                                            colorTbl[ci + 2], 0xff);
-            modelLightStruct_setColors100104(*(void **)state, colorTbl[ci], colorTbl[ci + 1],
+            modelLightStruct_setSpecularColor(*(void **)state, colorTbl[ci], colorTbl[ci + 1],
                                              colorTbl[ci + 2], 0xff);
             {
                 int n = (int)((setup[0x2a] & 0x8 ? lbl_803E73AC : lbl_803E73B0) *
                               *(f32 *)(obj + 8));
-                lightDistAttenFn_8001dc38(*(void **)state, (f32)n, lbl_803E73B4 + (f32)n);
+                modelLightStruct_setDistanceAttenuation(*(void **)state, (f32)n, lbl_803E73B4 + (f32)n);
             }
             if (*(u8 *)(state + 0x22) & 0x4) {
                 if ((*(int (**)(void *))(*gSHthorntailAnimationInterface + 0x24))(&local) != 0) {

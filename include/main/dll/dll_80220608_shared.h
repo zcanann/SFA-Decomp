@@ -342,17 +342,17 @@ extern void ModelLightStruct_free(void *light);
 extern void modelLightStruct_setEnabled(void *light, int flag, f32 val);
 extern void queueGlowRender(void *light);
 extern void getAmbientColor(int id, u8 *r, u8 *g, u8 *b);
-extern void modelLightStruct_setColorsA8AC(void *light, u8 r, u8 g, u8 b, int a);
+extern void modelLightStruct_setDiffuseColor(void *light, u8 r, u8 g, u8 b, int a);
 extern void modelLightStruct_setDiffuseTargetColor(void *light, u8 r, u8 g, u8 b, int a);
 extern void modelLightStruct_updateGlowAlpha(void *light);
 extern void *objCreateLight(int obj, int kind);
 extern void modelLightStruct_setLightKind(void *light, int v);
 extern void objSetEventName(void *light, int name);
-extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
-extern void lightDistAttenFn_8001dc38(void *light, f32 near, f32 far);
-extern void fn_8001DA60(void *light, f32 v, int x);
+extern void modelLightStruct_setPosition(void *light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setDistanceAttenuation(void *light, f32 near, f32 far);
+extern void modelLightStruct_setSpotAttenuation(void *light, f32 v, int x);
 extern void modelLightStruct_startColorFade(void *light, int a, s16 b);
-extern void modelStruct2_setVectors(void *light, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setDirection(void *light, f32 x, f32 y, f32 z);
 extern void Obj_SetActiveModelIndex(int obj, int index);
 extern void modelLightStruct_setupGlow(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
 extern void modelLightStruct_setGlowProjectionRadius(void *light, f32 v);
@@ -887,7 +887,7 @@ extern f32 lbl_803E738C;
 extern int cmbsrc_update(int obj);
 
 
-extern void modelLightStruct_setColors100104(void *light, u8 r, u8 g, u8 b, int a);
+extern void modelLightStruct_setSpecularColor(void *light, u8 r, u8 g, u8 b, int a);
 extern void Sfx_KeepAliveLoopedObjectSound(int obj, int sound);
 extern int *gSHthorntailAnimationInterface;
 extern f32 lbl_803E7360;
@@ -1122,7 +1122,7 @@ extern f32 lbl_803E721C;
 extern f32 lbl_803E7220;
 
 
-extern void modelLightStruct_getColorsA8AC(void *light, u8 *a, u8 *b, u8 *c, u8 *d);
+extern void modelLightStruct_getDiffuseColor(void *light, u8 *a, u8 *b, u8 *c, u8 *d);
 extern void modelLightStruct_setGlowColor(void *light, u8 r, u8 g, u8 b, int e);
 extern f32 lbl_803E71D8;
 extern f32 lbl_803E71DC;

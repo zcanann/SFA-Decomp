@@ -39,8 +39,8 @@ extern void *Obj_GetActiveModel(void *obj);
 extern void ObjModel_SetRenderCallback(void *model, void *callback);
 extern int moonFxCb_80074110(int obj, int *model, int param);
 extern int getCurMapLayer(void);
-extern void modelStruct2_setVectors(void *model, f32 x, f32 y, f32 z);
-extern void modelLightStruct_setColorsA8AC(void *model, int red, int green, int blue, int alpha);
+extern void modelLightStruct_setDirection(void *model, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setDiffuseColor(void *model, int red, int green, int blue, int alpha);
 extern void colorFn_8001efe0(int index, int red, int green, int blue);
 extern void PSMTXScale(f32 mtx[3][4], f32 x, f32 y, f32 z);
 extern void PSMTXConcat(f32 a[3][4], f32 b[3][4], f32 out[3][4]);
@@ -5217,18 +5217,18 @@ void modelTextureFn_80089970(int slot)
     if (lbl_803DD144 != NULL) {
         offset = slot * 0xa4;
         sky = lbl_803DD12C + offset;
-        modelStruct2_setVectors(lbl_803DD144, *(f32 *)(sky + 0x90), *(f32 *)(sky + 0x94),
+        modelLightStruct_setDirection(lbl_803DD144, *(f32 *)(sky + 0x90), *(f32 *)(sky + 0x94),
                                 *(f32 *)(sky + 0x98));
-        modelLightStruct_setColorsA8AC(lbl_803DD144, lbl_803DD12C[offset + 0x78],
+        modelLightStruct_setDiffuseColor(lbl_803DD144, lbl_803DD12C[offset + 0x78],
                                        lbl_803DD12C[offset + 0x79],
                                        lbl_803DD12C[offset + 0x7a], 0xff);
     }
     if (lbl_803DD168 != NULL) {
         offset = slot * 0xa4;
         sky = lbl_803DD12C + offset;
-        modelStruct2_setVectors(lbl_803DD168, *(f32 *)(sky + 0x9c), *(f32 *)(sky + 0xa0),
+        modelLightStruct_setDirection(lbl_803DD168, *(f32 *)(sky + 0x9c), *(f32 *)(sky + 0xa0),
                                 *(f32 *)(sky + 0xa4));
-        modelLightStruct_setColorsA8AC(lbl_803DD168, lbl_803DD12C[offset + 0x80],
+        modelLightStruct_setDiffuseColor(lbl_803DD168, lbl_803DD12C[offset + 0x80],
                                        lbl_803DD12C[offset + 0x81],
                                        lbl_803DD12C[offset + 0x82], 0xff);
     }
@@ -5640,7 +5640,7 @@ extern void GXFlush_(int, int);
 extern int getLoadedFileFlags(int);
 extern void *objCreateLight(int, int);
 extern void modelLightStruct_setLightKind(void *, int);
-extern void modelLightStruct_setColors100104(void *, int, int, int, int);
+extern void modelLightStruct_setSpecularColor(void *, int, int, int, int);
 extern void *textureLoadAsset(int);
 extern u8 lbl_803DC950;
 extern f32 lbl_8030F2C8[];
@@ -5681,16 +5681,16 @@ void loadLightFn_8008bbc4(void)
         lbl_803DD144 = objCreateLight(0, 1);
         if (lbl_803DD144 != NULL) {
             modelLightStruct_setLightKind(lbl_803DD144, 4);
-            modelStruct2_setVectors(lbl_803DD144, pEXIInputFlag, lbl_803DF06C, pEXIInputFlag);
-            modelLightStruct_setColorsA8AC(lbl_803DD144, 0xff, 0xff, 0xff, 0xff);
-            modelLightStruct_setColors100104(lbl_803DD144, 0xff, 0xff, 0xff, 0xff);
+            modelLightStruct_setDirection(lbl_803DD144, pEXIInputFlag, lbl_803DF06C, pEXIInputFlag);
+            modelLightStruct_setDiffuseColor(lbl_803DD144, 0xff, 0xff, 0xff, 0xff);
+            modelLightStruct_setSpecularColor(lbl_803DD144, 0xff, 0xff, 0xff, 0xff);
         }
         lbl_803DD168 = objCreateLight(0, 1);
         if (lbl_803DD168 != NULL) {
             modelLightStruct_setLightKind(lbl_803DD168, 4);
-            modelStruct2_setVectors(lbl_803DD168, pEXIInputFlag, EXIInputFlag, pEXIInputFlag);
-            modelLightStruct_setColorsA8AC(lbl_803DD168, 0xff, 0xff, 0xff, 0xff);
-            modelLightStruct_setColors100104(lbl_803DD168, 0xff, 0xff, 0xff, 0xff);
+            modelLightStruct_setDirection(lbl_803DD168, pEXIInputFlag, EXIInputFlag, pEXIInputFlag);
+            modelLightStruct_setDiffuseColor(lbl_803DD168, 0xff, 0xff, 0xff, 0xff);
+            modelLightStruct_setSpecularColor(lbl_803DD168, 0xff, 0xff, 0xff, 0xff);
         }
     }
     fn_8008BDA8();

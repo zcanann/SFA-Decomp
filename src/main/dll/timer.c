@@ -165,7 +165,7 @@ void timer_update(int obj)
                 *(int *)(state + 4) = fn_8001CC9C(obj, 255, 0, 0, 0);
                 if (*(int *)(state + 4) != 0) {
                     modelLightStruct_setupGlow((void *)*(int *)(state + 4), 0, 255, 0, 0, 100, lbl_803DC418);
-                    lightVecFn_8001dd88((void *)*(int *)(state + 4), lbl_803E741C, lbl_803E7420,
+                    modelLightStruct_setPosition((void *)*(int *)(state + 4), lbl_803E741C, lbl_803E7420,
                                         lbl_803E741C);
                 }
                 break;

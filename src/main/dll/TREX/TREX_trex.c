@@ -2098,9 +2098,9 @@ void SB_CloudBall_hitDetect(int *obj)
 #pragma scheduling reset
 extern int objCreateLight(int *obj, int mode);
 extern void modelLightStruct_setLightKind(int light, int v);
-extern void modelLightStruct_setColorsA8AC(int light, int p, int r, int g, int p2);
+extern void modelLightStruct_setDiffuseColor(int light, int p, int r, int g, int p2);
 extern void lightSetFieldBC_8001db14(int light, int v);
-extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern f32 lbl_803E5910;
 extern f32 lbl_803E5914;
 
@@ -2118,9 +2118,9 @@ void SB_CloudBall_init(int *obj)
         state[6] = objCreateLight(obj, 1);
         if (((void **)state)[6] != NULL) {
             modelLightStruct_setLightKind(state[6], 2);
-            modelLightStruct_setColorsA8AC(state[6], 0, 90, 150, 0);
+            modelLightStruct_setDiffuseColor(state[6], 0, 90, 150, 0);
             lightSetFieldBC_8001db14(state[6], 1);
-            lightDistAttenFn_8001dc38(state[6], lbl_803E5910, lbl_803E5914);
+            modelLightStruct_setDistanceAttenuation(state[6], lbl_803E5910, lbl_803E5914);
         }
     }
 }
@@ -2587,8 +2587,8 @@ light_setup:
         light = objCreateLight((int *)obj, 1);
         if (light != 0) {
             modelLightStruct_setLightKind(light, 2);
-            modelLightStruct_setColorsA8AC(light, 200, 60, 0, 0);
-            lightDistAttenFn_8001dc38(light, lbl_803E5970, lbl_803E5974);
+            modelLightStruct_setDiffuseColor(light, 200, 60, 0, 0);
+            modelLightStruct_setDistanceAttenuation(light, lbl_803E5970, lbl_803E5974);
         }
         *(int *)(obj + 0xf8) = light;
     }

@@ -2159,11 +2159,11 @@ extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern int hitDetectFn_800658a4(int obj, int out, int p3, f32 x, f32 y, f32 z);
 extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind(int h, int v);
-extern void lightVecFn_8001dd88(int h, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setPosition(int h, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setAffectsAabbLightSelection(int h, int v);
 extern void modelLightStruct_setEnabled(int h, int n, f32 v);
-extern void lightDistAttenFn_8001dc38(int h, f32 a, f32 b);
-extern void modelLightStruct_setColorsA8AC(int h, int r, int g, int b, int a);
+extern void modelLightStruct_setDistanceAttenuation(int h, f32 a, f32 b);
+extern void modelLightStruct_setDiffuseColor(int h, int r, int g, int b, int a);
 extern void Obj_FreeObject(int obj);
 extern void DCStoreRange(void *p, int n);
 extern void *memcpy(void *dst, const void *src, unsigned long n);
@@ -2558,7 +2558,7 @@ void explosion_update(int obj)
             } else {
                 fn_801B40B8(*(u8 *)((char *)state + 0xa5d), rgb, (f32)(int)e, (f32)(int)d);
                 if (*(int *)((char *)state + 0xa40) != 0) {
-                    modelLightStruct_setColorsA8AC(*(int *)((char *)state + 0xa40), rgb[0], rgb[1], rgb[2], 0xff);
+                    modelLightStruct_setDiffuseColor(*(int *)((char *)state + 0xa40), rgb[0], rgb[1], rgb[2], 0xff);
                 }
             }
             {
@@ -2666,11 +2666,11 @@ void explosion_init(int obj, int p2)
         *(int *)((char *)state + 0xa40) = objCreateLight(0, 1);
         if (*(int *)((char *)state + 0xa40) != 0) {
             modelLightStruct_setLightKind(*(int *)((char *)state + 0xa40), 2);
-            lightVecFn_8001dd88(*(int *)((char *)state + 0xa40), *(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c), *(f32 *)((char *)obj + 0x20));
+            modelLightStruct_setPosition(*(int *)((char *)state + 0xa40), *(f32 *)((char *)obj + 0x18), *(f32 *)((char *)obj + 0x1c), *(f32 *)((char *)obj + 0x20));
             modelLightStruct_setAffectsAabbLightSelection(*(int *)((char *)state + 0xa40), 1);
             modelLightStruct_setEnabled(*(int *)((char *)state + 0xa40), 1, lbl_803E4960);
-            lightDistAttenFn_8001dc38(*(int *)((char *)state + 0xa40), (f32)(lbl_803E49CC * scale), (f32)(lbl_803E4958 * scale));
-            modelLightStruct_setColorsA8AC(*(int *)((char *)state + 0xa40), 0xff, 0xeb, 0xa0, 0xff);
+            modelLightStruct_setDistanceAttenuation(*(int *)((char *)state + 0xa40), (f32)(lbl_803E49CC * scale), (f32)(lbl_803E4958 * scale));
+            modelLightStruct_setDiffuseColor(*(int *)((char *)state + 0xa40), 0xff, 0xeb, 0xa0, 0xff);
         }
     }
     *(u8 *)((char *)obj + 0x36) = 0xff;

@@ -104,11 +104,11 @@ void arwproximit_update(int obj)
             *(void **)(state + 4) = objCreateLight(obj, 1);
             if (*(void **)(state + 4) != NULL) {
                 modelLightStruct_setLightKind(*(void **)(state + 4), 2);
-                lightVecFn_8001dd88(*(void **)(state + 4), lbl_803E71D8, lbl_803E71D8,
+                modelLightStruct_setPosition(*(void **)(state + 4), lbl_803E71D8, lbl_803E71D8,
                                     lbl_803E71F0);
-                modelLightStruct_setColorsA8AC(*(void **)(state + 4), 0, 0xff, 0, 0);
+                modelLightStruct_setDiffuseColor(*(void **)(state + 4), 0, 0xff, 0, 0);
                 modelLightStruct_setDiffuseTargetColor(*(void **)(state + 4), 0, 0, 0, 0);
-                lightDistAttenFn_8001dc38(*(void **)(state + 4), lbl_803E71F0, lbl_803E71F4);
+                modelLightStruct_setDistanceAttenuation(*(void **)(state + 4), lbl_803E71F0, lbl_803E71F4);
                 modelLightStruct_setupGlow(*(void **)(state + 4), 0, 0, 0xff, 0, 0x64, lbl_803E71F8);
                 modelLightStruct_setGlowProjectionRadius(*(void **)(state + 4), lbl_803E71F0);
             }
@@ -131,7 +131,7 @@ void arwproximit_update(int obj)
             arwing = (char *)Obj_GetPlayerObject();
         if (Vec_distance(obj + 0x18, (int)(arwing + 0x18)) < lbl_803E7200) {
             if (*(void **)(state + 4) != NULL) {
-                modelLightStruct_setColorsA8AC(*(void **)(state + 4), 0xff, 0, 0, 0);
+                modelLightStruct_setDiffuseColor(*(void **)(state + 4), 0xff, 0, 0, 0);
                 modelLightStruct_setGlowColor(*(void **)(state + 4), 0xff, 0, 0, 0x64);
                 modelLightStruct_startColorFade(*(void **)(state + 4), 2, 0xa);
             }
@@ -150,7 +150,7 @@ void arwproximit_update(int obj)
         u8 b0, b1, b2, b3;
         *(u8 *)(obj + 0x36) = 0xff;
         if (*(void **)(state + 4) != NULL) {
-            modelLightStruct_getColorsA8AC(*(void **)(state + 4), &b0, &b1, &b2, &b3);
+            modelLightStruct_getDiffuseColor(*(void **)(state + 4), &b0, &b1, &b2, &b3);
             modelLightStruct_setGlowColor(*(void **)(state + 4), b0, b1, b2, 0x64);
         }
         if (timerCountDown((void *)(state + 0xc)) != 0 ||

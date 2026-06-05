@@ -345,8 +345,8 @@ int fn_80221978(int obj, void **entries, int count, void **light, f32 intensity)
     if (*light == 0) {
         *light = (void *)fn_8001CC9C(obj, 0x80, 0x80, 0xff, 0);
         if (*light != 0) {
-            lightVecFn_8001dd88(*light, lbl_803E6C38, intensity * lbl_803E6C40, lbl_803E6C38);
-            lightDistAttenFn_8001dc38(*light, intensity, lbl_803E6C44 + intensity);
+            modelLightStruct_setPosition(*light, lbl_803E6C38, intensity * lbl_803E6C40, lbl_803E6C38);
+            modelLightStruct_setDistanceAttenuation(*light, intensity, lbl_803E6C44 + intensity);
         }
     }
     return 1;

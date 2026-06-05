@@ -776,8 +776,8 @@ void SpiritPrize_free(int obj)
 
 extern void *objCreateLight(int *obj, int v);
 extern void modelLightStruct_setLightKind(void *light, int v);
-extern void modelLightStruct_setColorsA8AC(void *light, int a, int b, int c, int d);
-extern void lightDistAttenFn_8001dc38(void *light, f32 a, f32 b);
+extern void modelLightStruct_setDiffuseColor(void *light, int a, int b, int c, int d);
+extern void modelLightStruct_setDistanceAttenuation(void *light, f32 a, f32 b);
 extern f32 lbl_803E4E98;
 extern f32 lbl_803E4EB0;
 extern f32 lbl_803E4EB4;
@@ -814,8 +814,8 @@ void SpiritPrize_init(int *obj, u8 *init) {
         *(int*)(sub + 0x140) = (int)objCreateLight(sub[0x144] != 0 ? NULL : obj, 1);
         if (*(int*)(sub + 0x140) != 0) {
             modelLightStruct_setLightKind(*(void**)(sub + 0x140), 2);
-            modelLightStruct_setColorsA8AC(*(void**)(sub + 0x140), 0x96, 0x32, 0xff, 0xff);
-            lightDistAttenFn_8001dc38(*(void**)(sub + 0x140), lbl_803E4EB0, lbl_803E4EB4);
+            modelLightStruct_setDiffuseColor(*(void**)(sub + 0x140), 0x96, 0x32, 0xff, 0xff);
+            modelLightStruct_setDistanceAttenuation(*(void**)(sub + 0x140), lbl_803E4EB0, lbl_803E4EB4);
         }
     }
     *(u8*)((char*)obj + 0x36) = 0;

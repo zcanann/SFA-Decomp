@@ -7,11 +7,11 @@ extern void Sfx_PlayFromObject(int obj, int sfxId);
 extern void CameraShake_Start(f32 magnitude, f32 duration, f32 param_3);
 extern void doRumble(f32 val);
 extern void *memcpy(void *dst, const void *src, u32 size);
-extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
+extern void modelLightStruct_setDiffuseColor(int light, int r, int g, int b, int a);
 extern void lightSetFieldBC_8001db14(int light, int value);
 extern void modelLightStruct_setLightKind(int light, int value);
 extern void modelLightStruct_setEnabled(f32 value, int light, int which);
-extern void lightDistAttenFn_8001dc38(f32 min, f32 max, int light);
+extern void modelLightStruct_setDistanceAttenuation(f32 min, f32 max, int light);
 extern void ModelLightStruct_free(void *light);
 extern int objCreateLight(int obj, int param_2);
 extern uint GameBit_Get(int eventId);
@@ -151,12 +151,12 @@ void dimbossfire_update(int param_1)
           modelLightStruct_setLightKind(*(int *)(pbVar5 + 0x10),2);
           lightSetFieldBC_8001db14(*(int *)(pbVar5 + 0x10),1);
           if (*(short *)(iVar4 + 0x1a) == 0) {
-            modelLightStruct_setColorsA8AC(*(int *)(pbVar5 + 0x10),0x7f,0xff,0,0);
+            modelLightStruct_setDiffuseColor(*(int *)(pbVar5 + 0x10),0x7f,0xff,0,0);
           }
           else {
-            modelLightStruct_setColorsA8AC(*(int *)(pbVar5 + 0x10),0xff,0x7f,0,0);
+            modelLightStruct_setDiffuseColor(*(int *)(pbVar5 + 0x10),0xff,0x7f,0,0);
           }
-          lightDistAttenFn_8001dc38(lbl_803E4DB8,lbl_803E4DBC,*(int *)(pbVar5 + 0x10));
+          modelLightStruct_setDistanceAttenuation(lbl_803E4DB8,lbl_803E4DBC,*(int *)(pbVar5 + 0x10));
           modelLightStruct_setEnabled(lbl_803E4DA0,*(int *)(pbVar5 + 0x10),1);
           modelLightStruct_setEnabled(*(float *)(pbVar5 + 4) / lbl_803E4DC0,*(int *)(pbVar5 + 0x10),0);
         }

@@ -499,9 +499,9 @@ void SB_CannonBall_hitDetect(int *obj) {
 
 extern u8 *objCreateLight(int *obj, int v);
 extern void modelLightStruct_setLightKind(u8 *p, int v);
-extern void modelLightStruct_setColorsA8AC(u8 *p, int a, int b, int c, int d);
+extern void modelLightStruct_setDiffuseColor(u8 *p, int a, int b, int c, int d);
 extern void lightSetFieldBC_8001db14(u8 *p, int v);
-extern void lightDistAttenFn_8001dc38(u8 *p, f32 a, f32 b);
+extern void modelLightStruct_setDistanceAttenuation(u8 *p, f32 a, f32 b);
 extern f32 lbl_803E58C8;
 extern f32 lbl_803E58CC;
 extern f32 lbl_803E58D0;
@@ -513,9 +513,9 @@ void SB_CannonBall_init(int *obj) {
         *(u8 **)((char *)state + 0x20) = objCreateLight(obj, SB_CANNONBALL_LIGHT_KIND);
         if (*(u8 **)((char *)state + 0x20) != NULL) {
             modelLightStruct_setLightKind(*(u8 **)((char *)state + 0x20), SB_CANNONBALL_LIGHT_FIELD50);
-            modelLightStruct_setColorsA8AC(*(u8 **)((char *)state + 0x20), SB_CANNONBALL_LIGHT_RED, SB_CANNONBALL_LIGHT_GREEN, SB_CANNONBALL_LIGHT_BLUE, SB_CANNONBALL_LIGHT_ALPHA);
+            modelLightStruct_setDiffuseColor(*(u8 **)((char *)state + 0x20), SB_CANNONBALL_LIGHT_RED, SB_CANNONBALL_LIGHT_GREEN, SB_CANNONBALL_LIGHT_BLUE, SB_CANNONBALL_LIGHT_ALPHA);
             lightSetFieldBC_8001db14(*(u8 **)((char *)state + 0x20), SB_CANNONBALL_LIGHT_FIELD_BC);
-            lightDistAttenFn_8001dc38(*(u8 **)((char *)state + 0x20), lbl_803E58C8, lbl_803E58CC);
+            modelLightStruct_setDistanceAttenuation(*(u8 **)((char *)state + 0x20), lbl_803E58C8, lbl_803E58CC);
         }
     }
     {

@@ -811,10 +811,10 @@ void fn_8022CDEC(int obj, int state)
             *(int *)(state + 0x450) = (int)objCreateLight(obj, 1);
             if (*(void **)(state + 0x450) != 0) {
                 modelLightStruct_setLightKind(*(void **)(state + 0x450), 2);
-                lightVecFn_8001dd88(*(void **)(state + 0x450), lbl_803E6ECC, lbl_803E6FC4, lbl_803E6FC8);
+                modelLightStruct_setPosition(*(void **)(state + 0x450), lbl_803E6ECC, lbl_803E6FC4, lbl_803E6FC8);
                 lightSetFieldBC_8001db14(*(void **)(state + 0x450), 1);
-                modelLightStruct_setColorsA8AC(*(void **)(state + 0x450), 0x28, 0x7d, 0xff, 0);
-                lightDistAttenFn_8001dc38(*(void **)(state + 0x450), lbl_803E6FCC, lbl_803E6FD0);
+                modelLightStruct_setDiffuseColor(*(void **)(state + 0x450), 0x28, 0x7d, 0xff, 0);
+                modelLightStruct_setDistanceAttenuation(*(void **)(state + 0x450), lbl_803E6FCC, lbl_803E6FD0);
                 modelLightStruct_startColorFade(*(void **)(state + 0x450), 1, 1);
                 modelLightStruct_setDiffuseTargetColor(*(void **)(state + 0x450), 0x14, 0x64, 0xc8, 0);
             }

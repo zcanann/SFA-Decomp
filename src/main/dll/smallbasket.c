@@ -2998,10 +2998,10 @@ void fn_80159284(int* obj, u8* state)
 
 extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind();
-extern void lightVecFn_8001dd88();
-extern void modelLightStruct_setColorsA8AC();
-extern void modelLightStruct_setColors100104();
-extern void lightDistAttenFn_8001dc38();
+extern void modelLightStruct_setPosition();
+extern void modelLightStruct_setDiffuseColor();
+extern void modelLightStruct_setSpecularColor();
+extern void modelLightStruct_setDistanceAttenuation();
 extern void lightSetField4D();
 extern void modelLightStruct_setEnabled();
 extern void modelLightStruct_startColorFade();
@@ -3069,17 +3069,17 @@ void fn_80159FCC(s16* obj, u8* state)
             }
             if (*(void**)(state + 0x368) != NULL) {
                 modelLightStruct_setLightKind(*(int*)(state + 0x368), 2);
-                lightVecFn_8001dd88(*(int*)(state + 0x368), *(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
-                modelLightStruct_setColorsA8AC(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
-                modelLightStruct_setColors100104(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
-                lightDistAttenFn_8001dc38(*(int*)(state + 0x368), lbl_803E2C10, lbl_803E2C14);
+                modelLightStruct_setPosition(*(int*)(state + 0x368), *(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
+                modelLightStruct_setDiffuseColor(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
+                modelLightStruct_setSpecularColor(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
+                modelLightStruct_setDistanceAttenuation(*(int*)(state + 0x368), lbl_803E2C10, lbl_803E2C14);
                 lightSetField4D(*(int*)(state + 0x368), 1);
                 modelLightStruct_setEnabled(*(int*)(state + 0x368), 1, lbl_803E2C18);
                 modelLightStruct_startColorFade(*(int*)(state + 0x368), 0, 0);
                 modelLightStruct_setAffectsAabbLightSelection(*(int*)(state + 0x368), 0);
             }
         } else {
-            lightVecFn_8001dd88(*(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
+            modelLightStruct_setPosition(*(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
         }
     }
     if ((*(u32*)(state + 0x2dc) & 0x80000000) != 0) {
@@ -3902,17 +3902,17 @@ void fn_80159958(s16* obj, u8* state)
             }
             if (*(void**)(state + 0x368) != NULL) {
                 modelLightStruct_setLightKind(*(int*)(state + 0x368), 2);
-                lightVecFn_8001dd88(*(int*)(state + 0x368), *(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
-                modelLightStruct_setColorsA8AC(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
-                modelLightStruct_setColors100104(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
-                lightDistAttenFn_8001dc38(*(int*)(state + 0x368), lbl_803E2C10, lbl_803E2C14);
+                modelLightStruct_setPosition(*(int*)(state + 0x368), *(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
+                modelLightStruct_setDiffuseColor(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
+                modelLightStruct_setSpecularColor(*(int*)(state + 0x368), 0xc0, 0x40, 0xff, 0xff);
+                modelLightStruct_setDistanceAttenuation(*(int*)(state + 0x368), lbl_803E2C10, lbl_803E2C14);
                 lightSetField4D(*(int*)(state + 0x368), 1);
                 modelLightStruct_setEnabled(*(int*)(state + 0x368), 1, lbl_803E2C18);
                 modelLightStruct_startColorFade(*(int*)(state + 0x368), 0, 0);
                 modelLightStruct_setAffectsAabbLightSelection(*(int*)(state + 0x368), 0);
             }
         } else {
-            lightVecFn_8001dd88(*(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
+            modelLightStruct_setPosition(*(f32*)((char*)obj + 0xc), *(f32*)((char*)obj + 0x10), *(f32*)((char*)obj + 0x14));
         }
     }
 

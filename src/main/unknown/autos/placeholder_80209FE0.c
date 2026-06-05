@@ -1688,7 +1688,7 @@ extern void Music_Trigger(int id, int value);
 extern void fn_80221978(int obj, int p1, int n, int p2, f32 v);
 extern int objRenderFn_8003b8f4(int, int, int, int, int, f32);
 extern void storeZeroToFloatParam(f32 *p);
-extern void lightVecFn_8001dd88(int model, f32 x, f32 y, f32 z);
+extern void modelLightStruct_setPosition(int model, f32 x, f32 y, f32 z);
 extern void queueGlowRender(int model);
 extern int randomGetRange(int lo, int hi);
 extern int bossdrakor_animEventCallback(int obj, int a2, int events);
@@ -1774,13 +1774,13 @@ extern void skyFn_80088e54(int p, f32 v);
 extern void timeOfDayFn_80055038(void);
 extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setLightKind(int light, int v);
-extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d);
-extern void modelLightStruct_setColors100104(int light, int a, int b, int c, int d);
+extern void modelLightStruct_setDiffuseColor(int light, int a, int b, int c, int d);
+extern void modelLightStruct_setSpecularColor(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 v);
-extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
+extern void modelLightStruct_setDistanceAttenuation(int light, f32 a, f32 b);
 extern void lightSetField4D(int light, int v);
 extern void modelLightStruct_setDiffuseTargetColor(int light, int a, int b, int c, int d);
-extern void fn_8001D9E0(int light, int a, int b, int c, int d);
+extern void modelLightStruct_setSpecularTargetColor(int light, int a, int b, int c, int d);
 extern void modelLightStruct_startColorFade(int light, int a, int b);
 extern void modelLightStruct_setAffectsAabbLightSelection(int light, int v);
 extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
@@ -1881,14 +1881,14 @@ void bossdrakor_update(int obj)
         *(int *)((char *)state + 0x160) = objCreateLight(0, 1);
         if (*(void **)((char *)state + 0x160) != NULL) {
             modelLightStruct_setLightKind(*(int *)((char *)state + 0x160), 2);
-            modelLightStruct_setColorsA8AC(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
-            modelLightStruct_setColors100104(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
+            modelLightStruct_setDiffuseColor(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
+            modelLightStruct_setSpecularColor(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
             modelLightStruct_setupGlow(*(int *)((char *)state + 0x160), 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
-            lightDistAttenFn_8001dc38(*(int *)((char *)state + 0x160), lbl_803E6544, lbl_803E6540);
+            modelLightStruct_setDistanceAttenuation(*(int *)((char *)state + 0x160), lbl_803E6544, lbl_803E6540);
             lightSetField4D(*(int *)((char *)state + 0x160), 0);
             modelLightStruct_setEnabled(*(void **)((char *)state + 0x160), 1, lbl_803E6520);
             modelLightStruct_setDiffuseTargetColor(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
-            fn_8001D9E0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
+            modelLightStruct_setSpecularTargetColor(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
             modelLightStruct_startColorFade(*(int *)((char *)state + 0x160), 2, 0x28);
             modelLightStruct_setAffectsAabbLightSelection(*(int *)((char *)state + 0x160), 1);
             modelLightStruct_setGlowProjectionRadius(*(int *)((char *)state + 0x160), lbl_803E6550);
@@ -2622,7 +2622,7 @@ void bossdrakor_render(int p1, int p2, int p3, int p4, int p5, s8 vis)
     ObjPath_GetPointWorldPosition(p1, 0, (char *)inner + 0x1c, (char *)inner + 0x20, (char *)inner + 0x24, 0);
     if (*(void **)((char *)inner + 0x160) != NULL) {
         ObjPath_GetPointWorldPosition(p1, 5, &pos0, &pos1, &pos2, 0);
-        lightVecFn_8001dd88(*(int *)((char *)inner + 0x160), pos0, pos1, pos2);
+        modelLightStruct_setPosition(*(int *)((char *)inner + 0x160), pos0, pos1, pos2);
         light = *(int *)((char *)inner + 0x160);
         if (*(u8 *)((char *)light + 0x2f8) != 0 && *(u8 *)((char *)light + 0x4c) != 0) {
             val = *(u8 *)((char *)light + 0x2f9) + (s8)*(u8 *)((char *)light + 0x2fa);

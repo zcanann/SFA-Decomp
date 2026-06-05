@@ -4798,8 +4798,8 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
     extern void GXSetNumTexGens(int n);
     extern int *objCreateLight(int obj, int p2);
     extern void modelLightStruct_setLightKind(int *lt, int v);
-    extern void modelStruct2_setVectors(f32 x, f32 y, f32 z, int *lt);
-    extern void modelLightStruct_setColorsA8AC(int *lt, int r, int g, int b, int a);
+    extern void modelLightStruct_setDirection(f32 x, f32 y, f32 z, int *lt);
+    extern void modelLightStruct_setDiffuseColor(int *lt, int r, int g, int b, int a);
     extern void fn_8001E8F4(int x);
     extern void fn_8001E608(int a, int b, int c);
     extern void GXSetChanAmbColor(int chan, ObjPrintGXColor c);
@@ -4945,8 +4945,8 @@ int modelRenderCb_8003c268(int obj, int *p2, int p3)
         lt = objCreateLight(obj, 0);
         if (lt != NULL) {
             modelLightStruct_setLightKind(lt, 4);
-            modelStruct2_setVectors(lbl_803DEA04, lbl_803DEA34, lbl_803DEA04, lt);
-            modelLightStruct_setColorsA8AC(lt, 0xff, 0xff, 0xff, 0xff);
+            modelLightStruct_setDirection(lbl_803DEA04, lbl_803DEA34, lbl_803DEA04, lt);
+            modelLightStruct_setDiffuseColor(lt, 0xff, 0xff, 0xff, 0xff);
             fn_8001E8F4(0);
             fn_8001E608(2, 0, 0);
             GXSetChanAmbColor(2, *(ObjPrintGXColor *)&lbl_803DB470);

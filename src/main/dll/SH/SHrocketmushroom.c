@@ -30,9 +30,9 @@ extern int characterDoEyeAnims(void *obj, void *p2);
 extern void *objCreateLight(void *obj, int arg);
 extern void modelLightStruct_setEnabled(f32 f1, void *light, int arg);
 extern void modelLightStruct_setLightKind(void *light, int value);
-extern void modelLightStruct_setColorsA8AC(void *light, int r, int g, int b, int a);
+extern void modelLightStruct_setDiffuseColor(void *light, int r, int g, int b, int a);
 extern void lightSetFieldBC_8001db14(void *light, int value);
-extern void lightDistAttenFn_8001dc38(void *light, f32 min, f32 max);
+extern void modelLightStruct_setDistanceAttenuation(void *light, f32 min, f32 max);
 extern void ObjMsg_AllocQueue(void *obj, int count);
 extern void ObjMsg_SendToObject(void *dst, int msg, void *src, void *payload);
 extern void objfx_spawnDirectionalBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance, void *origin,
@@ -263,9 +263,9 @@ void bombplantspore_init(void *obj, void *param2) {
     light = objCreateLight(obj, 1);
     if (light != NULL) {
         modelLightStruct_setLightKind(light, 2);
-        modelLightStruct_setColorsA8AC(light, 0xff, 0, 0xff, 0);
+        modelLightStruct_setDiffuseColor(light, 0xff, 0, 0xff, 0);
         lightSetFieldBC_8001db14(light, 1);
-        lightDistAttenFn_8001dc38(light, lbl_803E5388, lbl_803E538C);
+        modelLightStruct_setDistanceAttenuation(light, lbl_803E5388, lbl_803E538C);
     }
     *(void **)((u8 *)state + 0x270) = light;
     ObjMsg_AllocQueue(obj, 2);

@@ -89,7 +89,7 @@ void pointlight_update(int obj)
         }
         if ((*(u8 *)(setup + 0x2a) & 1) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
-            modelLightStruct_setColorsA8AC(state->light, colorR, colorG, colorB, 0xff);
+            modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
             modelLightStruct_setDiffuseTargetColor(state->light, colorR, colorG, colorB, 0xff);
         }
     } else {
@@ -127,20 +127,20 @@ void pointlight_init(int obj, int setup)
     if (state->light != NULL) {
         modelLightStruct_setLightKind(state->light, 2);
         objSetEventName(state->light, *(u8 *)(setup + 0x1d));
-        lightVecFn_8001dd88(state->light, lbl_803E7230, lbl_803E7230, lbl_803E7230);
+        modelLightStruct_setPosition(state->light, lbl_803E7230, lbl_803E7230, lbl_803E7230);
 
         if ((*(u8 *)(setup + 0x2a) & 1) != 0) {
             getAmbientColor(0, &colorR, &colorG, &colorB);
-            modelLightStruct_setColorsA8AC(state->light, colorR, colorG, colorB, 0xff);
+            modelLightStruct_setDiffuseColor(state->light, colorR, colorG, colorB, 0xff);
             modelLightStruct_setDiffuseTargetColor(state->light, colorR, colorG, colorB, 0xff);
         } else {
-            modelLightStruct_setColorsA8AC(state->light, *(u8 *)(setup + 0x1a),
+            modelLightStruct_setDiffuseColor(state->light, *(u8 *)(setup + 0x1a),
                 *(u8 *)(setup + 0x1b), *(u8 *)(setup + 0x1c), 0xff);
             modelLightStruct_setDiffuseTargetColor(state->light, *(u8 *)(setup + 0x27),
                 *(u8 *)(setup + 0x28), *(u8 *)(setup + 0x29), 0xff);
         }
 
-        lightDistAttenFn_8001dc38(state->light, (f32)(u32)*(u16 *)(setup + 0x22),
+        modelLightStruct_setDistanceAttenuation(state->light, (f32)(u32)*(u16 *)(setup + 0x22),
             (f32)(u32)*(u16 *)(setup + 0x24));
 
         {
@@ -148,13 +148,13 @@ void pointlight_init(int obj, int setup)
             if (brightness >= 0x5a) {
                 brightness = 0x5a;
             }
-            fn_8001DA60(state->light, (f32)brightness, *(u8 *)(setup + 0x21));
+            modelLightStruct_setSpotAttenuation(state->light, (f32)brightness, *(u8 *)(setup + 0x21));
         }
 
         modelLightStruct_setEnabled(state->light, *(u8 *)(setup + 0x30), lbl_803E7230);
         state->enabled = *(u8 *)(setup + 0x30);
         modelLightStruct_startColorFade(state->light, *(u8 *)(setup + 0x26), *(s16 *)(setup + 0x2e));
-        modelStruct2_setVectors(state->light, vec.x, vec.y, vec.z);
+        modelLightStruct_setDirection(state->light, vec.x, vec.y, vec.z);
 
         if (*(u8 *)(setup + 0x21) != 0) {
             Obj_SetActiveModelIndex(obj, 1);

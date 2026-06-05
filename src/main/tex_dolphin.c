@@ -13,7 +13,7 @@ typedef union {
     } words;
 } SfaIntDouble;
 
-extern void modelLightStruct_getColorsA8AC(void *light, u8 *a, u8 *b, u8 *c, u8 *d);
+extern void modelLightStruct_getDiffuseColor(void *light, u8 *a, u8 *b, u8 *c, u8 *d);
 extern f32 modelLightStruct_getRadius(void *light);
 extern void modelLightStruct_getPosition(void *light, void *a, void *b, void *c);
 extern void modelLightStruct_selectBrightestAabbLights(undefined *dest, int count, int *out, f32 x1, f32 y1, f32 z1, f32 x2, f32 y2, f32 z2);
@@ -357,7 +357,7 @@ void mapBlockRender_drawDimmedAabbLights(undefined4 param_1,undefined4 param_2,i
     f32 *p18 = &fStack_18;
     f32 *p14 = &fStack_14;
     for (; param_3 < local_C; piVar3 = piVar3 + 1, param_3 = param_3 + 1) {
-      modelLightStruct_getColorsA8AC((void *)*piVar3,&local_8,p9,pA,pB);
+      modelLightStruct_getDiffuseColor((void *)*piVar3,&local_8,p9,pA,pB);
       local_8 = ((int)local_8 >> 1) + ((int)local_8 >> 2);
       local_9 = ((int)local_9 >> 1) + ((int)local_9 >> 2);
       local_A = ((int)local_A >> 1) + ((int)local_A >> 2);
@@ -597,7 +597,7 @@ void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float
             (((*(uint *)(obj + 0x3c) & 0x800) == 0 && ((*(uint *)(obj + 0x3c) & 0x1000) == 0)))) {
           p = &lbl_803DCE28;
           for (i = 0; i < count; i = i + 1) {
-            modelLightStruct_getColorsA8AC((void *)*p,&c0,pc1,pc2,pc3);
+            modelLightStruct_getDiffuseColor((void *)*p,&c0,pc1,pc2,pc3);
             modelLightStruct_getPosition((void *)*p,&dOut0,pd1,pdb);
             modelLightStruct_getRadius((void *)*p);
             fn_8004FA30(&c0,&dOut0);
@@ -619,13 +619,13 @@ void mapBlockRender_callList(uint hi,uint lo,int block,u8 *obj,int *stream,float
             }
           }
           else {
-            modelLightStruct_getColorsA8AC((void *)lbl_803DCE28,&c0,pc1,pc2,pc3);
+            modelLightStruct_getDiffuseColor((void *)lbl_803DCE28,&c0,pc1,pc2,pc3);
             modelLightStruct_getPosition((void *)lbl_803DCE28,&dOut0,pd1,pdb);
             modelLightStruct_getRadius((void *)lbl_803DCE28);
             fn_8004F6D8(&c0,&dOut0,&g0);
             p = &lbl_803DCE28 + 1;
             for (i = 1; i < count; i = i + 1) {
-              modelLightStruct_getColorsA8AC((void *)*p,&c0,pc1,pc2,pc3);
+              modelLightStruct_getDiffuseColor((void *)*p,&c0,pc1,pc2,pc3);
               modelLightStruct_getPosition((void *)*p,&dOut0,pd1,pdb);
               modelLightStruct_getRadius((void *)*p);
               fn_8004F380(&c0,&dOut0);

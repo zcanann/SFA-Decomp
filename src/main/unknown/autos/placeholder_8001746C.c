@@ -8259,7 +8259,7 @@ int modelLightStruct_getActiveState(ModelLightStruct *p) {
 }
 
 f32 modelLightStruct_getRadius(ModelLightStruct *p) {
-    return p->outerRadius;
+    return p->attenuationFar;
 }
 
 void fn_80026C30(u8 *p, u8 v) {
@@ -8639,18 +8639,18 @@ void modelLightStruct_getProjectionTevModes(ModelLightStruct *p, void **a, void 
     *b = (void *)p->projectionTevAlphaMode;
 }
 
-void fn_8001D9E0(u8 *p, u8 a, u8 b, u8 c, u8 d) {
-    p[0x108] = a;
-    p[0x109] = b;
-    p[0x10a] = c;
-    p[0x10b] = d;
+void modelLightStruct_setSpecularTargetColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
+    p->specularFadeTargetColor[0] = a;
+    p->specularFadeTargetColor[1] = b;
+    p->specularFadeTargetColor[2] = c;
+    p->specularFadeTargetColor[3] = d;
 }
 
 void modelLightStruct_setDiffuseTargetColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
-    p->colorFadeTargetA8[0] = a;
-    p->colorFadeTargetA8[1] = b;
-    p->colorFadeTargetA8[2] = c;
-    p->colorFadeTargetA8[3] = d;
+    p->diffuseFadeTargetColor[0] = a;
+    p->diffuseFadeTargetColor[1] = b;
+    p->diffuseFadeTargetColor[2] = c;
+    p->diffuseFadeTargetColor[3] = d;
 }
 
 void fn_8001FE90(void) {
@@ -8790,44 +8790,44 @@ extern int randomGetRange(int lo, int hi);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void modelLightStruct_getColors100104(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d) {
-    *a = p->color100[0];
-    *b = p->color100[1];
-    *c = p->color100[2];
-    *d = p->color100[3];
+void modelLightStruct_getSpecularColor(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d) {
+    *a = p->specularColor[0];
+    *b = p->specularColor[1];
+    *c = p->specularColor[2];
+    *d = p->specularColor[3];
 }
 
-void modelLightStruct_getColorsA8AC(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d) {
-    *a = p->colorA8[0];
-    *b = p->colorA8[1];
-    *c = p->colorA8[2];
-    *d = p->colorA8[3];
+void modelLightStruct_getDiffuseColor(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d) {
+    *a = p->diffuseColor[0];
+    *b = p->diffuseColor[1];
+    *c = p->diffuseColor[2];
+    *d = p->diffuseColor[3];
 }
 
 void modelLightStruct_setAngularAttenuation(ModelLightStruct *p, f32 a, f32 b, f32 c) {
     GXInitLightAttnA((u8 *)p + 0x68, a, b, c);
 }
 
-void modelLightStruct_setColors100104(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
-    p->color104[0] = a;
-    p->color100[0] = a;
-    p->color104[1] = b;
-    p->color100[1] = b;
-    p->color104[2] = c;
-    p->color100[2] = c;
-    p->color104[3] = d;
-    p->color100[3] = d;
+void modelLightStruct_setSpecularColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
+    p->specularFadeStartColor[0] = a;
+    p->specularColor[0] = a;
+    p->specularFadeStartColor[1] = b;
+    p->specularColor[1] = b;
+    p->specularFadeStartColor[2] = c;
+    p->specularColor[2] = c;
+    p->specularFadeStartColor[3] = d;
+    p->specularColor[3] = d;
 }
 
-void modelLightStruct_setColorsA8AC(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
-    p->colorAC[0] = a;
-    p->colorA8[0] = a;
-    p->colorAC[1] = b;
-    p->colorA8[1] = b;
-    p->colorAC[2] = c;
-    p->colorA8[2] = c;
-    p->colorAC[3] = d;
-    p->colorA8[3] = d;
+void modelLightStruct_setDiffuseColor(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
+    p->diffuseFadeStartColor[0] = a;
+    p->diffuseColor[0] = a;
+    p->diffuseFadeStartColor[1] = b;
+    p->diffuseColor[1] = b;
+    p->diffuseFadeStartColor[2] = c;
+    p->diffuseColor[2] = c;
+    p->diffuseFadeStartColor[3] = d;
+    p->diffuseColor[3] = d;
 }
 
 void lightGetColor(int i, u8 *a, u8 *b, u8 *c) {
@@ -8891,26 +8891,26 @@ void modelLightStruct_updateColorFade(ModelLightStruct *light) {
     }
 
     progress = light->colorFadeProgress;
-    light->colorA8[0] = (u8)(int)(progress * (f32)(light->colorFadeTargetA8[0] - light->colorAC[0]) + (f32)light->colorAC[0]);
-    light->colorA8[1] = (u8)(int)(progress * (f32)(light->colorFadeTargetA8[1] - light->colorAC[1]) + (f32)light->colorAC[1]);
-    light->colorA8[2] = (u8)(int)(progress * (f32)(light->colorFadeTargetA8[2] - light->colorAC[2]) + (f32)light->colorAC[2]);
-    light->colorA8[3] = (u8)(int)(progress * (f32)(light->colorFadeTargetA8[3] - light->colorAC[3]) + (f32)light->colorAC[3]);
+    light->diffuseColor[0] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[0] - light->diffuseFadeStartColor[0]) + (f32)light->diffuseFadeStartColor[0]);
+    light->diffuseColor[1] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[1] - light->diffuseFadeStartColor[1]) + (f32)light->diffuseFadeStartColor[1]);
+    light->diffuseColor[2] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[2] - light->diffuseFadeStartColor[2]) + (f32)light->diffuseFadeStartColor[2]);
+    light->diffuseColor[3] = (u8)(int)(progress * (f32)(light->diffuseFadeTargetColor[3] - light->diffuseFadeStartColor[3]) + (f32)light->diffuseFadeStartColor[3]);
 
     intensity = light->activeIntensity;
-    light->colorA8[0] = (u8)(int)((f32)light->colorA8[0] * intensity);
-    light->colorA8[1] = (u8)(int)((f32)light->colorA8[1] * intensity);
-    light->colorA8[2] = (u8)(int)((f32)light->colorA8[2] * intensity);
-    light->colorA8[3] = (u8)(int)((f32)light->colorA8[3] * intensity);
+    light->diffuseColor[0] = (u8)(int)((f32)light->diffuseColor[0] * intensity);
+    light->diffuseColor[1] = (u8)(int)((f32)light->diffuseColor[1] * intensity);
+    light->diffuseColor[2] = (u8)(int)((f32)light->diffuseColor[2] * intensity);
+    light->diffuseColor[3] = (u8)(int)((f32)light->diffuseColor[3] * intensity);
 
-    light->color100[0] = (u8)(int)(progress * (f32)(light->color108[0] - light->color104[0]) + (f32)light->color104[0]);
-    light->color100[1] = (u8)(int)(progress * (f32)(light->color108[1] - light->color104[1]) + (f32)light->color104[1]);
-    light->color100[2] = (u8)(int)(progress * (f32)(light->color108[2] - light->color104[2]) + (f32)light->color104[2]);
-    light->color100[3] = (u8)(int)(progress * (f32)(light->color108[3] - light->color104[3]) + (f32)light->color104[3]);
+    light->specularColor[0] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[0] - light->specularFadeStartColor[0]) + (f32)light->specularFadeStartColor[0]);
+    light->specularColor[1] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[1] - light->specularFadeStartColor[1]) + (f32)light->specularFadeStartColor[1]);
+    light->specularColor[2] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[2] - light->specularFadeStartColor[2]) + (f32)light->specularFadeStartColor[2]);
+    light->specularColor[3] = (u8)(int)(progress * (f32)(light->specularFadeTargetColor[3] - light->specularFadeStartColor[3]) + (f32)light->specularFadeStartColor[3]);
 
-    light->color100[0] = (u8)(int)((f32)light->color100[0] * intensity);
-    light->color100[1] = (u8)(int)((f32)light->color100[1] * intensity);
-    light->color100[2] = (u8)(int)((f32)light->color100[2] * intensity);
-    light->color100[3] = (u8)(int)((f32)light->color100[3] * intensity);
+    light->specularColor[0] = (u8)(int)((f32)light->specularColor[0] * intensity);
+    light->specularColor[1] = (u8)(int)((f32)light->specularColor[1] * intensity);
+    light->specularColor[2] = (u8)(int)((f32)light->specularColor[2] * intensity);
+    light->specularColor[3] = (u8)(int)((f32)light->specularColor[3] * intensity);
 }
 
 void modelLightStruct_startColorFade(ModelLightStruct *light, int mode, s16 frames) {
@@ -8924,12 +8924,12 @@ void modelLightStruct_startColorFade(ModelLightStruct *light, int mode, s16 fram
             denom = lbl_803DE760;
         }
         light->colorFadeStep = lbl_803DE760 / denom;
-        light->colorAC[0] = light->colorA8[0];
-        light->colorAC[1] = light->colorA8[1];
-        light->colorAC[2] = light->colorA8[2];
-        light->color104[0] = light->color100[0];
-        light->color104[1] = light->color100[1];
-        light->color104[2] = light->color100[2];
+        light->diffuseFadeStartColor[0] = light->diffuseColor[0];
+        light->diffuseFadeStartColor[1] = light->diffuseColor[1];
+        light->diffuseFadeStartColor[2] = light->diffuseColor[2];
+        light->specularFadeStartColor[0] = light->specularColor[0];
+        light->specularFadeStartColor[1] = light->specularColor[1];
+        light->specularFadeStartColor[2] = light->specularColor[2];
         denom = lbl_803DE75C;
         light->colorFadeProgress = denom;
         light->colorFadeTimer = denom;
@@ -9819,53 +9819,53 @@ void fn_8002B2AC(f32 *out, u8 *transform, f32 *in) {
     *(u32 *)(out + 2) = *(u32 *)(rotated + 2);
 }
 
-void modelStruct2_setVectors(u8 *s, f32 x, f32 y, f32 z) {
+void modelLightStruct_setDirection(ModelLightStruct *s, f32 x, f32 y, f32 z) {
     f32 *view;
-    if (*(void **)s != NULL) {
-        *(f32 *)(s + 0x28) = x;
-        *(f32 *)(s + 0x2c) = y;
-        *(f32 *)(s + 0x30) = z;
-        Vec_normalize((f32 *)(s + 0x28), (f32 *)(s + 0x28));
-        Obj_TransformLocalVectorByWorldMatrix(*(void **)s, (f32 *)(s + 0x28), (f32 *)(s + 0x34));
+    if (s->owner != NULL) {
+        s->localDirX = x;
+        s->localDirY = y;
+        s->localDirZ = z;
+        Vec_normalize(&s->localDirX, &s->localDirX);
+        Obj_TransformLocalVectorByWorldMatrix(s->owner, &s->localDirX, &s->worldDirX);
     } else {
-        *(f32 *)(s + 0x34) = x;
-        *(f32 *)(s + 0x38) = y;
-        *(f32 *)(s + 0x3c) = z;
-        Vec_normalize((f32 *)(s + 0x34), (f32 *)(s + 0x34));
+        s->worldDirX = x;
+        s->worldDirY = y;
+        s->worldDirZ = z;
+        Vec_normalize(&s->worldDirX, &s->worldDirX);
     }
     view = Camera_GetViewMatrix();
-    if (*(int *)(s + 0x60) == 0) {
-        PSMTXMultVecSR(view, (f32 *)(s + 0x34), (f32 *)(s + 0x40));
+    if (s->transformMode == 0) {
+        PSMTXMultVecSR(view, &s->worldDirX, &s->viewDirX);
     } else {
-        *(int *)(s + 0x40) = *(int *)(s + 0x34);
-        *(int *)(s + 0x44) = *(int *)(s + 0x38);
-        *(int *)(s + 0x48) = *(int *)(s + 0x3c);
+        *(int *)&s->viewDirX = *(int *)&s->worldDirX;
+        *(int *)&s->viewDirY = *(int *)&s->worldDirY;
+        *(int *)&s->viewDirZ = *(int *)&s->worldDirZ;
     }
 }
 
-void lightVecFn_8001dd88(u8 *s, f32 x, f32 y, f32 z) {
+void modelLightStruct_setPosition(ModelLightStruct *s, f32 x, f32 y, f32 z) {
     f32 tmp[3];
     f32 *view;
-    if (*(void **)s != NULL) {
-        *(f32 *)(s + 0x4) = x;
-        *(f32 *)(s + 0x8) = y;
-        *(f32 *)(s + 0xc) = z;
-        Obj_TransformLocalPointByWorldMatrix(*(void **)s, (f32 *)(s + 0x4), (f32 *)(s + 0x10), 1);
+    if (s->owner != NULL) {
+        s->localX = x;
+        s->localY = y;
+        s->localZ = z;
+        Obj_TransformLocalPointByWorldMatrix(s->owner, &s->localX, &s->worldX, 1);
     } else {
-        *(f32 *)(s + 0x10) = x;
-        *(f32 *)(s + 0x14) = y;
-        *(f32 *)(s + 0x18) = z;
+        s->worldX = x;
+        s->worldY = y;
+        s->worldZ = z;
     }
     view = Camera_GetViewMatrix();
-    if (*(int *)(s + 0x60) == 0) {
-        tmp[0] = *(f32 *)(s + 0x10) - playerMapOffsetX;
-        tmp[1] = *(f32 *)(s + 0x14);
-        tmp[2] = *(f32 *)(s + 0x18) - playerMapOffsetZ;
-        PSMTXMultVec(view, tmp, (f32 *)(s + 0x1c));
+    if (s->transformMode == 0) {
+        tmp[0] = s->worldX - playerMapOffsetX;
+        tmp[1] = s->worldY;
+        tmp[2] = s->worldZ - playerMapOffsetZ;
+        PSMTXMultVec(view, tmp, &s->viewX);
     } else {
-        *(int *)(s + 0x1c) = *(int *)(s + 0x10);
-        *(int *)(s + 0x20) = *(int *)(s + 0x14);
-        *(int *)(s + 0x24) = *(int *)(s + 0x18);
+        *(int *)&s->viewX = *(int *)&s->worldX;
+        *(int *)&s->viewY = *(int *)&s->worldY;
+        *(int *)&s->viewZ = *(int *)&s->worldZ;
     }
 }
 
@@ -11253,17 +11253,17 @@ void *animationLoad(int id, s16 a, s16 b, int e, int f) {
 }
 #pragma dont_inline reset
 
-void fn_8001DA60(u8 *obj, f32 cutoff, int mode) {
-    *(f32 *)(obj + 0xb4) = cutoff;
-    *(int *)(obj + 0xb8) = mode;
+void modelLightStruct_setSpotAttenuation(ModelLightStruct *obj, f32 cutoff, int mode) {
+    obj->spotCutoff = cutoff;
+    obj->spotFunction = mode;
     if (mode == 0) {
-        GXInitLightAttnA(obj + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
+        GXInitLightAttnA((u8 *)obj + 0x68, lbl_803DE760, lbl_803DE75C, lbl_803DE75C);
     } else {
-        GXInitLightSpot(obj + 0x68, *(f32 *)(obj + 0xb4), *(int *)(obj + 0xb8));
+        GXInitLightSpot((u8 *)obj + 0x68, obj->spotCutoff, obj->spotFunction);
     }
 }
 
-void lightDistAttenFn_8001dc38(u8 *obj, f32 a, f32 b) {
+void modelLightStruct_setDistanceAttenuation(u8 *obj, f32 a, f32 b) {
     *(f32 *)(obj + 0x140) = a;
     *(f32 *)(obj + 0x144) = b;
     GXInitLightDistAttn(obj + 0x68, *(f32 *)(obj + 0x140), lbl_803DE758, 2);
@@ -12347,12 +12347,12 @@ void gameTextOpenCallback_8001b3d0(int status, u8 *match) {
     }
 }
 
-void fn_8001D994(u8 *obj, f32 a, f32 b) {
-    *(f32 *)(obj + 0x10c) = a;
-    *(f32 *)(obj + 0x110) = b;
-    GXInitLightAttn(obj + 0xc0, lbl_803DE75C, lbl_803DE75C, lbl_803DE760,
-                    *(f32 *)(obj + 0x10c) * lbl_803DE790, lbl_803DE75C,
-                    lbl_803DE760 - *(f32 *)(obj + 0x10c) * lbl_803DE790);
+void modelLightStruct_setSpecularAttenuation(ModelLightStruct *obj, f32 a, f32 b) {
+    obj->specularAttenuationScale = a;
+    obj->specularBrightness = b;
+    GXInitLightAttn((u8 *)obj + 0xc0, lbl_803DE75C, lbl_803DE75C, lbl_803DE760,
+                    obj->specularAttenuationScale * lbl_803DE790, lbl_803DE75C,
+                    lbl_803DE760 - obj->specularAttenuationScale * lbl_803DE790);
 }
 #pragma pop
 
