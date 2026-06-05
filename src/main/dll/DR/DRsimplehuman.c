@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/objanim.h"
 #include "main/dll/DR/DRsimplehuman.h"
 
 extern undefined4 FUN_8000680c();
@@ -69,8 +70,6 @@ extern f32 getXZDistance(f32 *a, f32 *b);
 extern void Sfx_PlayFromObject(int obj, int sfx);
 extern void Sfx_StopObjectChannel(int obj, int channel);
 extern u32 randomGetRange(int min, int max);
-extern void ObjAnim_SetCurrentMove(int obj, int animId, f32 speed, int flag);
-extern u8 ObjAnim_AdvanceCurrentMove(int obj, f32 cur, f32 dt, int flag);
 extern void Camera_GetCurrentViewSlot(void);
 extern f32 lbl_803DC0B0;
 extern f32 lbl_803DC0B4;
@@ -161,7 +160,7 @@ void spdrape_update(int obj)
         }
         break;
     }
-    *(u8 *)((char *)state + 0x16) = ObjAnim_AdvanceCurrentMove(obj, *state, timeDelta, 0);
+    *(u8 *)((char *)state + 0x16) = ObjAnim_AdvanceCurrentMove(*state, timeDelta, obj, NULL);
 }
 #pragma peephole reset
 #pragma scheduling reset
