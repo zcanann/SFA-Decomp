@@ -179,20 +179,20 @@ void ObjHitReact_ResetActiveObjects(int objectCount)
  */
 #pragma scheduling off
 #pragma peephole off
-int ObjHitbox_AllocRotatedBounds(ushort *param_1,uint param_2)
+int ObjHitbox_AllocRotatedBounds(ObjHitbox *hitbox,uint arena)
 {
-  uint uVar1;
+  ObjHitboxTransformState *transformState;
 
-  uVar1 = roundUpTo4(param_2);
-  *(uint *)(param_1 + 0x2c) = uVar1;
-  if (*(uint *)(param_1 + 0x2c) != 0) {
-    *(undefined *)(*(uint *)(param_1 + 0x2c) + 0x10c) = 0;
-    *(undefined *)(*(uint *)(param_1 + 0x2c) + 0x10d) = 10;
-    *(undefined *)(*(uint *)(param_1 + 0x2c) + 0x10f) = 0;
-    ObjHitbox_UpdateRotatedBounds((ObjHitbox *)param_1,1);
-    ObjHitbox_UpdateRotatedBounds((ObjHitbox *)param_1,1);
+  transformState = (ObjHitboxTransformState *)roundUpTo4(arena);
+  hitbox->transformState = transformState;
+  if (hitbox->transformState != (ObjHitboxTransformState *)0x0) {
+    hitbox->transformState->activeMatrixIndex = 0;
+    hitbox->transformState->resetFrames = 10;
+    hitbox->transformState->contactObjectCount = 0;
+    ObjHitbox_UpdateRotatedBounds(hitbox,1);
+    ObjHitbox_UpdateRotatedBounds(hitbox,1);
   }
-  return uVar1 + 0x110;
+  return (uint)transformState + sizeof(ObjHitboxTransformState);
 }
 #pragma peephole reset
 #pragma scheduling reset
