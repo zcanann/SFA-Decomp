@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
+#include "main/objanim.h"
 #include "main/dll/DIM/DIMsnowball.h"
 
 extern undefined4 FUN_800067c0();
@@ -1452,7 +1453,6 @@ extern f32 timeDelta;
 extern uint GameBit_Get(int eventId);
 extern unsigned long GameBit_Set(int eventId, int value);
 extern f32 vec3f_distanceSquared(f32* p1, f32* p2);
-extern int ObjAnim_AdvanceCurrentMove(void* obj, f32 weight, f32 dt, int flag);
 extern void characterDoEyeAnims(int obj, void* p);
 extern void *Obj_GetPlayerObject(void);
 extern void ObjHits_DisableObject_xx(int *obj);
@@ -1475,7 +1475,7 @@ void ccqueen_update(int *obj) {
         *(u16*)((char*)obj + 0xb0) = (u16)(*(u16*)((char*)obj + 0xb0) | 0x8000);
         ObjHits_DisableObject(obj);
     } else {
-        ObjAnim_AdvanceCurrentMove(obj, lbl_803E4668, timeDelta, 0);
+        ObjAnim_AdvanceCurrentMove(lbl_803E4668, timeDelta, (int)obj, NULL);
         dll_2E_func03(obj, sub);
         characterDoEyeAnims((int)obj, sub + 0x624);
     }
@@ -1790,7 +1790,6 @@ extern void Obj_SetModelColorFadeRecursive(int obj, int frames, int red, int gre
 extern int ObjList_FindObjectById(int id);
 extern void objfx_spawnHitEmitterAtPos(f32 *p, int a, int b, int c, int d);
 extern void objLightFn_8009a1dc(int obj, f32 v, f32 *pos, int a, int b);
-extern int ObjAnim_SetCurrentMove(int obj, int moveId, f32 speed, int flag);
 
 typedef struct LightfootAnimTable {
     u8 stateFlags[0x10];
@@ -2089,7 +2088,8 @@ void cclightfoot_update(int obj)
             ObjAnim_SetCurrentMove(obj, animId, lbl_803E4680, 0);
         }
     }
-    if (ObjAnim_AdvanceCurrentMove((void *)obj, tbl->animSpeeds[*((u8 *)state + 0x10)], timeDelta, 0) != 0) {
+    if (ObjAnim_AdvanceCurrentMove(tbl->animSpeeds[*((u8 *)state + 0x10)], timeDelta,
+                                   obj, NULL) != 0) {
         *((u8 *)state + 0x11) |= 1;
     } else {
         *((u8 *)state + 0x11) &= ~1;
