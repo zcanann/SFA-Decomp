@@ -2013,29 +2013,29 @@ int RomCurve_find(int *types,int typeCount,f32 x,f32 y,f32 z,int action)
 #pragma peephole off
 void curves_remove(RomCurveDef *curve)
 {
-  int curveCount;
+  int sortedCurveCount;
   RomCurveDef **tableSlot;
   int removeIndex;
   u32 remaining;
 
   removeIndex = 0;
   tableSlot = romCurves;
-  curveCount = nRomCurves;
-  while ((removeIndex < curveCount) &&
+  sortedCurveCount = nRomCurves;
+  while ((removeIndex < sortedCurveCount) &&
          (curve->id != (*tableSlot)->id)) {
     tableSlot = tableSlot + 1;
     removeIndex = removeIndex + 1;
   }
 
-  if (removeIndex >= curveCount) {
+  if (removeIndex >= sortedCurveCount) {
     return;
   }
 
-  curveCount = nRomCurves - 1;
-  nRomCurves = curveCount;
+  sortedCurveCount = nRomCurves - 1;
+  nRomCurves = sortedCurveCount;
   tableSlot = romCurves + removeIndex;
-  remaining = curveCount - removeIndex;
-  if (removeIndex >= curveCount) {
+  remaining = sortedCurveCount - removeIndex;
+  if (removeIndex >= sortedCurveCount) {
     return;
   }
   for (; remaining != 0; remaining--) {
@@ -2063,27 +2063,28 @@ void curves_remove(RomCurveDef *curve)
  */
 void curves_addCurveDef(RomCurveDef *curve)
 {
-  int curveCount;
-  RomCurveDef **scanSlot;
-  RomCurveDef **shiftSlot;
+  int sortedCurveCount;
+  RomCurveDef **insertSlot;
+  RomCurveDef **tailSlot;
   int insertIndex;
 
-  curveCount = nRomCurves;
-  if (curveCount == ROMCURVE_MAX_CURVES) {
+  sortedCurveCount = nRomCurves;
+  if (sortedCurveCount == ROMCURVE_MAX_CURVES) {
     OSReport(sCurvesMaxRomCurvesExceeded);
     return;
   }
 
   insertIndex = 0;
-  scanSlot = romCurves;
-  while ((insertIndex < curveCount) && (curve->id > (*scanSlot)->id)) {
-    scanSlot++;
+  insertSlot = romCurves;
+  while ((insertIndex < sortedCurveCount) && (curve->id > (*insertSlot)->id)) {
+    insertSlot++;
     insertIndex++;
   }
 
-  for (shiftSlot = romCurves + curveCount; insertIndex < curveCount; curveCount--) {
-    shiftSlot[0] = shiftSlot[-1];
-    shiftSlot--;
+  for (tailSlot = romCurves + sortedCurveCount; insertIndex < sortedCurveCount;
+       sortedCurveCount--) {
+    tailSlot[0] = tailSlot[-1];
+    tailSlot--;
   }
 
   nRomCurves++;
