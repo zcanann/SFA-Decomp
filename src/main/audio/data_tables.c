@@ -499,7 +499,7 @@ s32 maccmp(void *p1, void *p2) {
 }
 
 void *dataGetMacro(u16 mid) {
-    long num;
+    u16 num;
 
     dataGetMacro_bucket = (mid >> 6) & 0x3fff;
     num = dataMacMainTab[dataGetMacro_bucket].num;
