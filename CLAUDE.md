@@ -989,6 +989,27 @@ match-preserving** when the preconditions hold. Done twice (80211C24→19 files,
    pre-move total (NOT the headline %, which shifts with the denominator).
    Revert any family that doesn't conserve. Build green, **land on `main`**.
 
+### Don't delete a "zero-text" placeholder before checking its data sections
+
+A placeholder showing `total_code: 0` / `fuzzy_match_percent: 100` is **NOT
+automatically a stub** — it may own `.data` / `.bss` / `.rodata` / `.sdata`
+ranges that other TUs `lis;addi` into. Deleting the file orphans those ranges
+and breaks the link.
+
+Test before deletion: grep the unit's `.s` file (`build/GSAE01/asm/<unit>.s`)
+for non-`.text` sections. A placeholder with `.data` / `.bss` lines is a
+**data-owning TU** — graduate it to a topical filename (e.g. `audio/mcmd_data.c`
+for an audio pitch/midi2time table) and reference it from the consumer TU as
+a normal extern. Only delete when the unit truly has *no* sections at all.
+
+Charlie-29 task #138 found 4 of 5 "zero-byte stubs" in the 0x8032xxxx range
+were actually data-owning: 8032EDD0 (1096B mcmd pitch/midi2time/aux tables,
+referenced from mcmd_exec.c → became `audio/mcmd_data.c`) and 8032F618
+(388B adsr volume-curve, referenced from adsr_handle.c → became
+`audio/adsr_data.c`). The other two (8032C984 OSContext FPU sliver, 803D8888
+TRK 8.7KB) belong to SDK units (OSContext.c, TRK.c) and need an SDK-side
+splits change — leave in place until that's done; deleting wedges the link.
+
 ### Skeleton-copy carve method (preferred for messy multi-family units)
 
 For units where the original `.c` has **sloppy call sites** (implicit-decl
