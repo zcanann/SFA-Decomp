@@ -350,7 +350,7 @@ extern f32 Camera_DistanceToCurrentViewPosition(f32 x, f32 y, f32 z);
 extern f32 __AR_Callback;
 extern f32 __AR_Size;
 extern int hitDetectFn_80065e50(int a, f32 b, f32 c, f32 d, void *out, int e, int f);
-extern void mathFn_80021ac8(void *xf, f32 *out);
+extern void vecRotateZXY(void *xf, f32 *out);
 extern f32 lbl_8038D7DC[];
 extern s16 lbl_803DCEF2;
 extern f32 PSVECDotProduct(f32 *a, f32 *b);
@@ -5154,7 +5154,7 @@ void fn_80061094(f32 *vec, f32 *out, f32 scale)
       out[1] = scale * lbl_8038D7DC[i * 3 + 1];
     }
     out[2] = lbl_8038D7DC[i * 3 + 2];
-    mathFn_80021ac8(&xf, out);
+    vecRotateZXY(&xf, out);
     out += 3;
   }
 }
@@ -7229,7 +7229,7 @@ int fn_80067B84(int cur, u8 *desc, int model, int flags, f32 scale,
  * the query box into the buffer at cur; returns advanced cursor. */
 extern u8 *mapGetBlockAtPos(int x, int z, int layer);
 extern int fn_8001F978(void *p, int size, int *offIn, int *offOut, int base);
-extern void cacheFn_800229c4(int n);
+extern void cacheQueueWait(int n);
 extern f32 fastFloorf(f32 x);
 extern void PSVECSubtract(f32 *a, f32 *b, f32 *out);
 extern f32 PSVECMag(f32 *v);
@@ -7368,9 +7368,9 @@ u8 doEdges;
             offA = dmaflip;
             c13 = fn_8001F978(p, *(u16 *)(next + 0x98) << 3, &offA, &offB, nextBase);
             c14 = fn_8001F978(*(void **)(next + 0x58), *(u16 *)(next + 0x90) * 6, &offB, &offC, nextBase);
-            cacheFn_800229c4((u8)(c13 + c14));
+            cacheQueueWait((u8)(c13 + c14));
         } else {
-            cacheFn_800229c4(0);
+            cacheQueueWait(0);
         }
 
         blk = *cellp;

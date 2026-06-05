@@ -199,7 +199,7 @@ extern void setAButtonIcon(int icon);
 extern int fn_80295BF0(int player);
 extern int fn_8029669C(int player);
 extern int fn_802966B4(int player);
-extern void mathFn_80021ac8(void *p, void *v);
+extern void vecRotateZXY(void *p, void *v);
 extern void ObjMsg_SendToObject(int target, int msg, int obj, u32 value);
 extern void fn_801816F8(int obj, int player, int state);
 extern void fn_801814D0(int obj, int player, int state);
@@ -395,7 +395,7 @@ void smallbasket_update(int obj)
                         if (*(void **)(player + 0x30) != NULL) {
                             blk.h0 = blk.h0 + **(s16 **)(player + 0x30);
                         }
-                        mathFn_80021ac8(&blk, (void *)(obj + 0x24));
+                        vecRotateZXY(&blk, (void *)(obj + 0x24));
                         Sfx_PlayFromObject(obj, 0x6b);
                     } else if (fn_802966B4(player) != 0) {
                         *(u8 *)(state + 0x5) = 0;
@@ -419,7 +419,7 @@ void smallbasket_update(int obj)
                         blk.h2 = 0;
                         blk.h1 = 0;
                         blk.h0 = *(s16 *)player;
-                        mathFn_80021ac8(&blk, (void *)(obj + 0x24));
+                        vecRotateZXY(&blk, (void *)(obj + 0x24));
                         Sfx_PlayFromObject(obj, 0x6b);
                         *(u8 *)(state + 0x6) = 0;
                         *(u8 *)(obj + 0xaf) |= 8;

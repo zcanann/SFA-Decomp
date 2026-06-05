@@ -7,7 +7,7 @@ extern void Obj_TransformWorldPointToLocal(f32 x, f32 y, f32 z, f32 *outX, f32 *
 extern undefined4 FUN_80006a1c();
 extern undefined4 FUN_80006a30();
 extern int FUN_80017730();
-extern void mathFn_80021ac8(void *param_1, void *outVec);
+extern void vecRotateZXY(void *param_1, void *outVec);
 extern undefined4 setMatrixFromObjectPos();
 extern void Matrix_TransformPoint(f32 x, f32 y, f32 z, void *matrix, f32 *outX, f32 *outY, f32 *outZ);
 extern undefined4 FUN_80017814();
@@ -250,7 +250,7 @@ void firstPersonPlaceCamera(int param_1,int param_2)
       local_1c[0] = *(float *)(self + 0x18) - *(float *)(puVar1 + 6);
       local_1c[1] = (lbl_803E17C0 + *(float *)(self + 0x1c)) - *(float *)(puVar1 + 7);
       local_1c[2] = *(float *)(self + 0x20) - *(float *)(puVar1 + 8);
-      mathFn_80021ac8(puVar1,local_1c);
+      vecRotateZXY(puVar1,local_1c);
       *(float *)(lbl_803DD548 + 0x120) = *(float *)(puVar1 + 6) + local_1c[0];
       *(float *)(lbl_803DD548 + 0x124) = *(float *)(puVar1 + 7) + local_1c[1];
       *(float *)(lbl_803DD548 + 0x128) = *(float *)(puVar1 + 8) + local_1c[2];

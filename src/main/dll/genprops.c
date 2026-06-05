@@ -5734,7 +5734,7 @@ void animatedobj_init(int *obj, int *params)
 
 extern void objMove(int *obj, f32 x, f32 y, f32 z);
 extern void s16toFloat(f32 *out, s16 v);
-extern void mathFn_80021ac8(int *obj, f32 *p);
+extern void vecRotateZXY(int *obj, f32 *p);
 extern void firepipe_releaseEffectObject(int *obj);
 extern int timerCountDown(f32 *p);
 extern f32 lbl_803E3390;
@@ -5752,7 +5752,7 @@ void flamethrowerspe_update(int *obj)
         *(f32 *)((char *)obj + 0x2c) =
             lbl_803DBD68 * (lbl_803E3390 * (*(f32 *)((char *)state + 8) *
                             (lbl_803E3394 * (f32)(s32)randomGetRange(0x64, 0x96))));
-        mathFn_80021ac8(obj, (f32 *)((char *)obj + 0x24));
+        vecRotateZXY(obj, (f32 *)((char *)obj + 0x24));
         *(f32 *)((char *)state + 0xc) = lbl_803DBD6C * *(f32 *)((char *)state + 8);
         s16toFloat((f32 *)((char *)state + 4), (s16)lbl_803DBD64);
         *(int *)((char *)state + 0x10) = 2;
@@ -7042,7 +7042,7 @@ void shield_render(int *obj, int p2, int p3, int p4, int p5, s8 visible)
                             pv[1] = cB * f8v;
                             pv[2] = cC;
                             *(s16 *)obj += 32767;
-                            mathFn_80021ac8(obj, pv);
+                            vecRotateZXY(obj, pv);
                             pv[0] += *(f32 *)((char *)obj + 0xc);
                             pv[1] += *(f32 *)((char *)obj + 0x10);
                             pv[2] += *(f32 *)((char *)obj + 0x14);

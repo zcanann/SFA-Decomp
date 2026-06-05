@@ -663,7 +663,7 @@ void dbegg_processMessages(int obj)
   extern void ObjHits_EnableObject(int);
   extern int gameBitIncrement(int);
   extern void objRemoveFromListFn_8002ce88(int);
-  extern void mathFn_80021ac8(void *, int);
+  extern void vecRotateZXY(void *, int);
   extern int ObjMsg_Pop(int, int *, int *, int *);
   extern f32 lbl_803E61C8;
   extern f32 lbl_803E61CC;
@@ -703,7 +703,7 @@ void dbegg_processMessages(int obj)
           hbuf[2] = 0;
           hbuf[1] = 0;
           hbuf[0] = *(s16 *)msgArg;
-          mathFn_80021ac8(buf, obj + 0x24);
+          vecRotateZXY(buf, obj + 0x24);
         }
         /* fallthrough */
         case 16:

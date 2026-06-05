@@ -881,7 +881,7 @@ f32 fn_80114224(int p1, int p2, int p3, int p4, int n)
 #pragma peephole off
 int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
 {
-  extern void fn_800218AC(int, int);
+  extern void vecRotateYXZ(int, int);
   extern f32 fn_80114224(int, int, int, int, int);
   extern u8 framesThisStep;
   extern f32 lbl_803E1C90;
@@ -899,11 +899,11 @@ int fn_80114408(int p1, int p2, int p3, int p4, f32 p5)
     *(f32 *)(p3 + 0x24) = vb;
     *(f32 *)(p3 + 0x28) = vb;
     *(f32 *)(p3 + 0x2c) = vb;
-    fn_800218AC(p1, p3 + 0x18);
+    vecRotateYXZ(p1, p3 + 0x18);
     tmp[2] = 0;
     tmp[1] = (s16)(s8)*(u8 *)(p2 + 0x2d);
     tmp[0] = (s16)(s8)*(u8 *)(p2 + 0x2c);
-    fn_800218AC((int)tmp, p3 + 0x24);
+    vecRotateYXZ((int)tmp, p3 + 0x24);
     *(f32 *)p4 = lbl_803E1C90;
     *(f32 *)(p3 + 0x34) = fn_80114224(p3, p3 + 0x18, p3 + 0xc, p3 + 0x24, 10);
   } else {
@@ -1585,7 +1585,7 @@ void dll_2E_func05(int obj, char *st, s16 a, s16 b, int count)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void mathFn_80021ac8(s16 *angles, f32 *vec);
+extern void vecRotateZXY(s16 *angles, f32 *vec);
 extern f32 lbl_803E1CC8;
 extern f32 lbl_803E1CCC;
 
@@ -1619,7 +1619,7 @@ void dll_2E_func06(int obj, char *st, int point)
         ang[0] = (s16)-*(s16 *)(obj + 0x4);
         ang[1] = (s16)-*(s16 *)(obj + 0x2);
         ang[2] = (s16)-*(s16 *)(obj + 0x0);
-        mathFn_80021ac8(ang, (f32 *)(st + 0x4));
+        vecRotateZXY(ang, (f32 *)(st + 0x4));
         *(u8 *)(st + 0x601) = 0;
     }
     ObjPath_GetPointWorldPosition(obj, point, &x0, &y0, &z0, 0);

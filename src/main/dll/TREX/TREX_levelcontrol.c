@@ -64,7 +64,7 @@ extern s16 getAngle(f32 dx,f32 dz);
 extern f32 sqrtf(f32);
 extern char Obj_IsLoadingLocked(void);
 extern void Obj_GetWorldPosition(int obj,float *x,float *y,float *z);
-extern void mathFn_80021ac8(void *a,void *b);
+extern void vecRotateZXY(void *a,void *b);
 extern void *Obj_AllocObjectSetup(int size,int objType);
 extern u16 *Obj_SetupObject(void *setup,int p2,int p3,int p4,int p5);
 extern void Camera_EnableViewYOffset(void);
@@ -213,7 +213,7 @@ void SB_ShipGun_update(int obj)
             local_74 = lbl_803E5890;
             local_70 = lbl_803E5894;
             local_6c = lbl_803E588C;
-            mathFn_80021ac8(local_68,&local_74);
+            vecRotateZXY(local_68,&local_74);
             iVar11 = (int)Obj_AllocObjectSetup(SB_SHIPGUN_CANNONBALL_ALLOC_SIZE,SB_CANNONBALL_ALIAS_OBJECT_TYPE);
             *(float *)(iVar11 + 8) = local_78;
             *(float *)(iVar11 + 0xc) = local_7c;

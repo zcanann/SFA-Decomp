@@ -42,7 +42,7 @@ extern u8 *Obj_AllocObjectSetup(int size, int typeId);
 extern u8 *Obj_SetupObject(u8 *setup, int a, int b, int c, void *d);
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 dx, f32 dz);
-extern void mathFn_80021ac8(void *in, void *out);
+extern void vecRotateZXY(void *in, void *out);
 
 extern f32 lbl_803AC790[];
 extern f32 lbl_803E3930;
@@ -170,7 +170,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
-        mathFn_80021ac8(&spread.f8, spawned + 0x24);
+        vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)getAngle(*(f32 *)(spawned + 0x24), -*(f32 *)(spawned + 0x2c));
         diff = *(s16 *)spawned - ang;
         if (diff > 0x8000) {
@@ -219,7 +219,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
-        mathFn_80021ac8(&spread.f8, spawned + 0x24);
+        vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)getAngle(*(f32 *)(spawned + 0x24), -*(f32 *)(spawned + 0x2c));
         diff = *(s16 *)spawned - ang;
         if (diff > 0x8000) {
@@ -268,7 +268,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
-        mathFn_80021ac8(&spread.f8, spawned + 0x24);
+        vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)getAngle(*(f32 *)(spawned + 0x24), -*(f32 *)(spawned + 0x2c));
         diff = *(s16 *)spawned - ang;
         if (diff > 0x8000) {
@@ -332,7 +332,7 @@ int fn_801816F8(u8 *obj, u8 *player, u8 *dataIn) {
         spread.fc = 0;
         spread.fa = 0;
         spread.f8 = (s16)randomGetRange(-10000, 10000);
-        mathFn_80021ac8(&spread.f8, spawned + 0x24);
+        vecRotateZXY(&spread.f8, spawned + 0x24);
         ang = (u16)(s16)getAngle(*(f32 *)(spawned + 0x24), -*(f32 *)(spawned + 0x2c));
         diff = *(s16 *)spawned - ang;
         if (diff > 0x8000) {
@@ -518,7 +518,7 @@ extern f32 lbl_803E3974;
 extern void objRenderFn_8003b8f4(void* obj, undefined4 p2, undefined4 p3, undefined4 p4,
                                  undefined4 p5, double scale);
 extern void* Obj_GetPlayerObject(void);
-extern void mathFn_80021ac8(void* in, void* out);
+extern void vecRotateZXY(void* in, void* out);
 
 /*
  * --INFO--
@@ -555,7 +555,7 @@ void objThrowFn_80182504(int param_1)
   local.fc = 0;
   local.fa = 0;
   local.f8 = *player;
-  mathFn_80021ac8(&local.f8, (void*)(param_1 + 0x24));
+  vecRotateZXY(&local.f8, (void*)(param_1 + 0x24));
 }
 
 /*

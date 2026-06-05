@@ -163,7 +163,7 @@ extern f32 sqrtf(f32 x);
 extern s16 getAngle(f32 dx, f32 dz);
 extern u32 randomGetRange(int min, int max);
 extern void objHitDetectFn_80062e84(int obj, int a, int b);
-extern void mathFn_80021ac8(void *rotation, f32 *outVec);
+extern void vecRotateZXY(void *rotation, f32 *outVec);
 extern int gameBitIncrement(int eventId);
 extern f32 Vec_distance(void *a, void *b);
 extern void playerAddMoney(int player, u8 b);
@@ -361,7 +361,7 @@ void scarab_update(int obj)
                 rot.c = 0;
                 rot.b = 0;
                 rot.ang = (s16)randomGetRange(-10000, 10000);
-                mathFn_80021ac8(&rot, (f32 *)(obj + 0x24));
+                vecRotateZXY(&rot, (f32 *)(obj + 0x24));
                 ang = (u16)getAngle(*(f32 *)(obj + 0x24), -*(f32 *)(obj + 0x2c));
                 diff = *(s16 *)obj - ang;
                 if (diff > 0x8000) {
@@ -433,7 +433,7 @@ void scarab_update(int obj)
                 rot.c = 0;
                 rot.b = 0;
                 rot.ang = *(s16 *)obj - *(s16 *)(state + 0x18);
-                mathFn_80021ac8(&rot, (f32 *)(obj + 0x24));
+                vecRotateZXY(&rot, (f32 *)(obj + 0x24));
                 *(s16 *)(state + 0x14) -= framesThisStep;
                 if (*(s16 *)(state + 0x14) <= 0) {
                     if (ViewFrustum_IsSphereVisible((f32 *)(obj + 0xc), *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8)) == 0) {
@@ -1316,7 +1316,7 @@ void fn_80185B74(int obj)
                 rot.c = 0;
                 rot.b = 0;
                 rot.ang = *(s16 *)player;
-                mathFn_80021ac8(&rot, (f32 *)(obj + 0x24));
+                vecRotateZXY(&rot, (f32 *)(obj + 0x24));
                 Sfx_PlayFromObject(obj, SFXmn_dimbos46);
             } else if ((s8)st21 == 2 && *(int *)(obj + 0xf8) == 0) {
                 f32 fz;
@@ -1653,7 +1653,7 @@ void fn_801868D0(int obj)
     rot.c = 0;
     rot.b = 0;
     rot.ang = *(s16 *)(state + 0x64);
-    mathFn_80021ac8(&rot, (f32 *)(state + 0x34));
+    vecRotateZXY(&rot, (f32 *)(state + 0x34));
 }
 
 void fn_801869DC(int obj)

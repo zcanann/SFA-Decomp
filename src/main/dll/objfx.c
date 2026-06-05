@@ -40,7 +40,7 @@ void WM_newcrystalFn_800969b0(void *obj, s16 *state, u8 flags, f32 period, f32 x
             params.vec[1] = *(f32 *)((char *)state + 8) * yMul + yOff;
             params.vec[2] = cZero;
             *(u16 *)state += 0x7fff;
-            mathFn_80021ac8(state, params.vec);
+            vecRotateZXY(state, params.vec);
             params.vec[0] += *(f32 *)((char *)obj + 0xc);
             params.vec[1] += *(f32 *)((char *)obj + 0x10);
             params.vec[2] += *(f32 *)((char *)obj + 0x14);
@@ -83,7 +83,7 @@ void objfx_spawnRandomBurst(void *obj, u8 type, u8 count, void *origin, u8 flagB
         params.vec[0] = mult * (cOne - f26 * (f26 * f26));
         params.vec[1] = cZero;
         params.vec[2] = cZero;
-        mathFn_80021ac8(rvec, params.vec);
+        vecRotateZXY(rvec, params.vec);
         if (origin != NULL) {
             params.vec[0] += *(f32 *)((char *)origin + 0xc);
             params.vec[1] += *(f32 *)((char *)origin + 0x10);
@@ -269,7 +269,7 @@ void objfx_spawnDirectionalBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
         }
         params.vec[1] = lbl_803DF35C;
         params.vec[2] = lbl_803DF35C;
-        mathFn_80021ac8(rvec, params.vec);
+        vecRotateZXY(rvec, params.vec);
         if (origin != NULL) {
             params.vec[0] += *(f32 *)((char *)origin + 0xc);
             params.vec[1] += *(f32 *)((char *)origin + 0x10);
@@ -349,7 +349,7 @@ void objfx_spawnArcedBurst(void *obj, u8 idx, u8 kind, u8 mode, u8 chance,
             break;
         }
         params.vec[0] = params.vec[0] * (f29 * fdelta + lo);
-        mathFn_80021ac8(rvec, params.vec);
+        vecRotateZXY(rvec, params.vec);
         params.vec[1] = (f29 - lbl_803DF358) * hi;
         if (origin != NULL) {
             params.vec[0] += *(f32 *)((char *)origin + 0xc);
@@ -599,7 +599,7 @@ void objfx_spawnLightPulse(void *obj, u8 type, int a3, u8 mode, void *light, f32
             lvec[0] = *(f32 *)((char *)light + 0xc);
             lvec[1] = *(f32 *)((char *)light + 0x10);
             lvec[2] = *(f32 *)((char *)light + 0x14);
-            mathFn_80021ac8(obj, lvec);
+            vecRotateZXY(obj, lvec);
             Camera_ProjectWorldPointWithOffset(
                 &proj[2], &proj[1], &proj[0],
                 *(f32 *)((char *)obj + 0x18) + lvec[0] - playerMapOffsetX,

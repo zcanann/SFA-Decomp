@@ -45,7 +45,7 @@ extern void Obj_FreeObject(int obj);
 extern void gameTimerStop(void);
 extern u32 GameBit_Get(int eventId);
 extern void GameBit_Set(int eventId, int value);
-extern void mathFn_80021ac8(s16 *rotation, f32 *outVec);
+extern void vecRotateZXY(s16 *rotation, f32 *outVec);
 extern int *gPartfxInterface;
 extern int *gExpgfxInterface;
 
@@ -605,7 +605,7 @@ void sfxplayer_updateEffectHandlePositions(short *param_1)
             *(f32 *)((handle) + 0x10) = lbl_803E6464; \
             *(f32 *)((handle) + 0x14) = lbl_803E6468; \
             (rot)[0] = (s16)(*(s16 *)(obj) + (angleStep)); \
-            mathFn_80021ac8((rot), (f32 *)((handle) + 0xc)); \
+            vecRotateZXY((rot), (f32 *)((handle) + 0xc)); \
             *(f32 *)((handle) + 0xc) += *(f32 *)((obj) + 0xc); \
             *(f32 *)((handle) + 0x10) += *(f32 *)((obj) + 0x10); \
             *(f32 *)((handle) + 0x14) += *(f32 *)((obj) + 0x14); \

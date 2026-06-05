@@ -834,7 +834,7 @@ extern f32 lbl_803DC6DC;
 extern f32 lbl_803DC6E0;
 extern f32 lbl_803DC6E4;
 extern f32 powfBitEstimate(f32 base, f32 exp);
-extern void mathFn_80021ac8(void *a, void *b);
+extern void vecRotateZXY(void *a, void *b);
 extern int *gPathControlInterface;
 extern f32 playerMapOffsetX;
 extern f32 playerMapOffsetZ;

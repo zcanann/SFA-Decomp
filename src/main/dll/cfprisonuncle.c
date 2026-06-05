@@ -215,7 +215,7 @@ extern void *gRomCurveInterface;
 extern void *gPartfxInterface;
 extern void *gMapEventInterface;
 extern int ViewFrustum_IsSphereVisible(f32 *pos,f32 radius);
-extern void mathFn_80021ac8(void *angles,void *outVec);
+extern void vecRotateZXY(void *angles,void *outVec);
 
 struct MagicPlantSetup {
   u8 pad00[0x14];
@@ -2192,7 +2192,7 @@ void duster_update(int obj) {
         launch.roll = 0;
         launch.pitch = 0;
         launch.yaw = *(s16 *)obj;
-        mathFn_80021ac8(&launch, (void *)(obj + 0x24));
+        vecRotateZXY(&launch, (void *)(obj + 0x24));
       } else {
         *(f32 *)(obj + 0x2c) = *(f32 *)(obj + 0x24) = lbl_803E38C4;
       }

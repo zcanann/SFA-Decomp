@@ -544,7 +544,7 @@ extern f32 lbl_803E2F4C;
 extern f32 lbl_803E2F50;
 extern f32 lbl_803E2F54;
 extern u8 lbl_803201E8[];
-extern void mathFn_80021ac8(void* obj, void* p);
+extern void vecRotateZXY(void* obj, void* p);
 extern void *memcpy(void *dst, const void *src, int n);
 
 #pragma peephole off
@@ -593,7 +593,7 @@ void tumbleweedbush_init(u8* obj, u8* params, int param3) {
             *(f32*)(p12 + 0x1c) = *(f32*)(p12 + 0x1c) * *(f32*)(obj + 8);
             *(f32*)(p12 + 0x20) = *(f32*)(p12 + 0x20) * *(f32*)(obj + 8);
             *(f32*)(p12 + 0x24) = *(f32*)(p12 + 0x24) * *(f32*)(obj + 8);
-            mathFn_80021ac8(obj, p12 + 0x1c);
+            vecRotateZXY(obj, p12 + 0x1c);
             p4 += 4;
             pe += 0xc;
             p12 += 0xc;

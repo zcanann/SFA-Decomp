@@ -511,8 +511,8 @@ spd_done:
             s1.mat[3] = lbl_803E83A4;
             s1.mat[0] = lbl_803E83A8;
             vecD.z = lbl_803E83C8;
-            mathFn_80021ac8(&s1, &vecC);
-            mathFn_80021ac8(&s1, &vecD);
+            vecRotateZXY(&s1, &vecC);
+            vecRotateZXY(&s1, &vecD);
             vecC.x = vecC.x * accel;
             vecC.y = vecC.y * accel;
             vecC.z = vecC.z * accel;
@@ -526,7 +526,7 @@ spd_done:
             s1.mat[2] = lbl_803E83A4;
             s1.mat[3] = lbl_803E83A4;
             s1.mat[0] = lbl_803E83A8;
-            mathFn_80021ac8(&s1, &vecD);
+            vecRotateZXY(&s1, &vecD);
             vecN.x = -*(f32 *)((char *)obj + 0x24);
             vecN.y = -*(f32 *)((char *)obj + 0x28);
             vecN.z = -*(f32 *)((char *)obj + 0x2c);
@@ -552,7 +552,7 @@ spd_done:
         vecC.x = *(f32 *)((char *)p2 + 0x290) * lbl_803E83D4 * *(f32 *)(base + ((int)idx >> 1) * 4 + 0x90);
         vecC.y = -*(f32 *)((char *)p2 + 0x28c) * lbl_803E83D4 * *(f32 *)(base + ((int)idx >> 1) * 4 + 0x9c);
         vecC.z = lbl_803E83A4;
-        mathFn_80021ac8(&s1, &vecC);
+        vecRotateZXY(&s1, &vecC);
         *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) + vecC.x;
         *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) + vecC.y;
         *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) + vecC.z;
@@ -565,7 +565,7 @@ spd_done:
         s1.mat[2] = lbl_803E83A4;
         s1.mat[3] = lbl_803E83A4;
         s1.mat[0] = lbl_803E83A8;
-        mathFn_80021ac8(&s1, &vecB);
+        vecRotateZXY(&s1, &vecB);
         *(f32 *)((char *)obj + 0x24) = *(f32 *)((char *)obj + 0x24) + vecB.x;
         *(f32 *)((char *)obj + 0x28) = *(f32 *)((char *)obj + 0x28) + vecB.y;
         *(f32 *)((char *)obj + 0x2c) = *(f32 *)((char *)obj + 0x2c) + vecB.z;
@@ -865,7 +865,7 @@ int fn_802BF75C(int obj, int p2)
             dir[0] = lbl_803E83A4;
             dir[1] = lbl_803E83A4;
             dir[2] = lbl_803E83AC;
-            mathFn_80021ac8(s1.angles, dir);
+            vecRotateZXY(s1.angles, dir);
             *(f32 *)((char *)newObj + 0x24) = dir[0];
             *(f32 *)((char *)newObj + 0x28) = dir[1];
             *(f32 *)((char *)newObj + 0x2c) = dir[2];
@@ -1078,7 +1078,7 @@ void fn_802BF4D8(int obj)
     dir[0] = lbl_803E83A4;
     dir[1] = lbl_803E83A4;
     dir[2] = lbl_803E83AC;
-    mathFn_80021ac8(s1.angles, dir);
+    vecRotateZXY(s1.angles, dir);
     *(f32 *)((char *)newObj + 0x24) = dir[0];
     *(f32 *)((char *)newObj + 0x28) = dir[1];
     *(f32 *)((char *)newObj + 0x2c) = dir[2];

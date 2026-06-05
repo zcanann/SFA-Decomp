@@ -81,7 +81,7 @@ typedef struct WCPushBlockCloudActionInterface {
 
 extern u8 Obj_IsLoadingLocked(void);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void mathFn_80021ac8(void *angles, void *out);
+extern void vecRotateZXY(void *angles, void *out);
 extern WCPushBlockObjectSetup *Obj_AllocObjectSetup(int size, int objectId);
 extern WCPushBlockObject *Obj_SetupObject(WCPushBlockObjectSetup *setup, int mode, int mapLayer,
                                           int linkId, void *parent);
@@ -132,7 +132,7 @@ void WCPushBlock_SpawnFromPath(s16 *path)
     outVec[0] = lbl_803E5C70;
     outVec[1] = lbl_803E5C78;
     outVec[2] = lbl_803E5C7C;
-    mathFn_80021ac8(&rotation, outVec);
+    vecRotateZXY(&rotation, outVec);
 
     setup = Obj_AllocObjectSetup(WCPUSHBLOCK_SPAWN_SETUP_SIZE, WCPUSHBLOCK_SPAWN_OBJECT_ID);
     setup->linkA = 0xff;
@@ -157,7 +157,7 @@ void WCPushBlock_SpawnFromPath(s16 *path)
     outVec[0] = lbl_803E5C70;
     outVec[1] = lbl_803E5C70;
     outVec[2] = lbl_803E5C80;
-    mathFn_80021ac8(&rotation, outVec);
+    vecRotateZXY(&rotation, outVec);
 
     block->velocityX = outVec[0];
     block->velocityY = outVec[1];

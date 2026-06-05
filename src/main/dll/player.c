@@ -5651,7 +5651,7 @@ int fn_8029F108(int obj, int state)
         ang[0] = *(s16 *)((char *)inner + 0x478);
         ang[1] = 0;
         ang[2] = 0;
-        mathFn_80021ac8(ang, pos2);
+        vecRotateZXY(ang, pos2);
         pos2[0] = pos2[0] + *(f32 *)((char *)obj + 0xc);
         pos2[2] = pos2[2] + *(f32 *)((char *)obj + 0x14);
         *(f32 *)((char *)obj + 0x10) = *(f32 *)((char *)obj + 0x10) - pos1[1];
@@ -7770,7 +7770,7 @@ void playerDoHitDetection(int obj)
                     *(f32 *)((char *)obj + 0x10) - *(f32 *)((char *)g + 0x10);
                 *(f32 *)(*(int *)((char *)obj + 0x64) + 0x28) =
                     *(f32 *)((char *)obj + 0x14) - *(f32 *)((char *)g + 0x14);
-                mathFn_80021ac8((void *)g, (void *)(*(int *)((char *)obj + 0x64) + 0x20));
+                vecRotateZXY((void *)g, (void *)(*(int *)((char *)obj + 0x64) + 0x20));
                 *(f32 *)(*(int *)((char *)obj + 0x64) + 0x20) =
                     *(f32 *)(*(int *)((char *)obj + 0x64) + 0x20) + *(f32 *)((char *)g + 0xc);
                 *(f32 *)(*(int *)((char *)obj + 0x64) + 0x24) =

@@ -2218,7 +2218,7 @@ extern f32 lbl_803E2590;
 extern f32 lbl_803E2594;
 extern f32 lbl_803E259C;
 extern void fn_802972B4(int player, uint *outEffects, f32 *outA, f32 *outB, f32 *outC, u16 *outSfx);
-extern void mathFn_80021ac8(int obj, void *vel);
+extern void vecRotateZXY(int obj, void *vel);
 extern int objCreateLight(int a, int b);
 extern void objLightFn_8009a1dc(int obj, f32 intensity, void *params, int mode, int light);
 extern void Obj_SetModelColorFadeRecursive(int obj, int a, int b, int c, int d, int e);
@@ -2325,7 +2325,7 @@ void baddie_updateWhileFrozen(int obj, u8 *state, u8 fromHit)
               } else {
                 *(f32 *)(obj + 0x2c) = fxB;
               }
-              mathFn_80021ac8(obj,(void *)(obj + 0x24));
+              vecRotateZXY(obj,(void *)(obj + 0x24));
             }
           }
         }

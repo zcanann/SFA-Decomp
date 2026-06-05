@@ -29,7 +29,7 @@ typedef union WmPlanetsVector {
     u32 word[3];
 } WmPlanetsVector;
 
-extern void mathFn_80021ac8(void *angles, void *outVec);
+extern void vecRotateZXY(void *angles, void *outVec);
 extern u32 lbl_802C2500[3];
 
 int wmplanets_getExtraSize(void) { return 0x1c; }
@@ -66,7 +66,7 @@ void wmplanets_update(int *obj) {
     rotate.roll = 0;
     rotate.pitch = 0;
     rotate.yaw = state->orbitYaw;
-    mathFn_80021ac8(&rotate, vec.f);
+    vecRotateZXY(&rotate, vec.f);
 
     rotate.zeroX = lbl_803E5F9C;
     rotate.zeroY = lbl_803E5F9C;
@@ -75,7 +75,7 @@ void wmplanets_update(int *obj) {
     rotate.roll = 0;
     rotate.pitch = state->orbitPitch;
     rotate.yaw = 0;
-    mathFn_80021ac8(&rotate, vec.f);
+    vecRotateZXY(&rotate, vec.f);
 
     *(f32 *)((char *)obj + 0xc) = vec.f[0] + state->baseX;
     *(f32 *)((char *)obj + 0x10) = vec.f[1] + state->baseY;

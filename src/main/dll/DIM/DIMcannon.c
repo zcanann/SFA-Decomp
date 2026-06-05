@@ -2673,7 +2673,7 @@ extern f32 lbl_803E47D0, lbl_803E47F4, lbl_803E47F8, lbl_803E47FC;
 extern f32 lbl_803E47D4, lbl_803E47D8, lbl_803E47DC, lbl_803E47E0;
 extern f32 lbl_803E4800, lbl_803E4804, lbl_803E4808;
 extern u8 lbl_802C2318[];
-extern void mathFn_80021ac8(void *in, void *out);
+extern void vecRotateZXY(void *in, void *out);
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
 extern int ObjList_FindObjectById(int id);
@@ -2699,7 +2699,7 @@ void lavaball1be_init(s16 *obj, u8 *p) {
         rot[2] = 0;
         rot[1] = (s16)randomGetRange(-0x2ee0, 0x2ee0);
         rot[0] = (s16)randomGetRange(0, 0xfffe);
-        mathFn_80021ac8(rot, &vec);
+        vecRotateZXY(rot, &vec);
         *(int *)((char *)obj + 0xf4) = 0x4b;
         *(f32 *)((char *)obj + 0x24) = vec.x;
         *(f32 *)((char *)obj + 0x28) = vec.y;

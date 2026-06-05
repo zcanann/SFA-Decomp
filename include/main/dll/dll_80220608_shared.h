@@ -943,7 +943,7 @@ extern int Obj_SetupObject(int newObj, int a, int b, int c, int d);
 extern f32 lbl_803E72F8;
 extern f32 lbl_803E7308;
 extern void ObjHitbox_SetCapsuleBounds(int obj, int radius, int a, int b);
-extern void mathFn_80021ac8(int obj, f32 *vec);
+extern void vecRotateZXY(int obj, f32 *vec);
 extern void objfx_spawnRandomBurst(int obj, int mode, int p3, void *vec, f32 f, int flag);
 extern void objLightFn_8009a1dc(int obj, f32 a, void *pos, int count, int p5);
 extern int ObjHits_GetPriorityHitWithPosition(int obj, f32 *a, f32 *b, f32 *c, f32 *x, f32 *y, f32 *z);

@@ -1830,7 +1830,7 @@ void mmp_moonrock_render(int obj, int p2, int p3, int p4, int p5, s8 visible) {
 #pragma scheduling reset
 
 extern void *Obj_GetPlayerObject(void);
-extern void mathFn_80021ac8(void *in, void *out);
+extern void vecRotateZXY(void *in, void *out);
 extern f32 lbl_803E4554;
 extern f32 lbl_803E456C;
 extern f32 lbl_803E4570;
@@ -1865,7 +1865,7 @@ void fn_801A7CC4(int obj) {
     stk.c = 0;
     stk.b = 0;
     stk.a = *(s16 *)player;
-    mathFn_80021ac8(&stk, (void *)(obj + 0x24));
+    vecRotateZXY(&stk, (void *)(obj + 0x24));
     *(u16 *)(state + 0x24) |= 0x40;
 }
 #pragma peephole reset
@@ -2097,7 +2097,7 @@ void mmp_trenchfx_update(int obj) {
             *(f32 *)(state + 0x1C) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 2), *(u16 *)(state + 2));
             *(f32 *)(state + 0x20) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 6), *(u16 *)(state + 6));
             *(f32 *)(state + 0x24) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 4), *(u16 *)(state + 4));
-            mathFn_80021ac8((void *)(state + 8), (void *)(state + 0x1C));
+            vecRotateZXY((void *)(state + 8), (void *)(state + 0x1C));
             *(f32 *)(state + 0x1C) += *(f32 *)(obj + 0xC);
             *(f32 *)(state + 0x20) += *(f32 *)(obj + 0x10);
             *(f32 *)(state + 0x24) += *(f32 *)(obj + 0x14);
@@ -2112,7 +2112,7 @@ void mmp_trenchfx_update(int obj) {
         *(f32 *)(lbl_803AC930 + 0xC) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 2), *(u16 *)(state + 2));
         *(f32 *)(lbl_803AC930 + 0x10) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 6), *(u16 *)(state + 6));
         *(f32 *)(lbl_803AC930 + 0x14) = (f32)(int)randomGetRange(-(int)*(u16 *)(state + 4), *(u16 *)(state + 4));
-        mathFn_80021ac8((void *)(state + 8), (void *)(lbl_803AC930 + 0xC));
+        vecRotateZXY((void *)(state + 8), (void *)(lbl_803AC930 + 0xC));
         *(f32 *)(lbl_803AC930 + 0xC) += *(f32 *)(obj + 0xC);
         *(f32 *)(lbl_803AC930 + 0x10) += *(f32 *)(obj + 0x10);
         *(f32 *)(lbl_803AC930 + 0x14) += *(f32 *)(obj + 0x14);

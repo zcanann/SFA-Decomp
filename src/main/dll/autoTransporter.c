@@ -800,7 +800,7 @@ extern u32 getButtonsJustPressed(int controller);
 extern int fn_80295BF0(int *player);
 extern int fn_8029669C(int *player);
 extern void Sfx_PlayFromObject(int obj, int sfxId);
-extern void mathFn_80021ac8(void *inParams, f32 *outVec);
+extern void vecRotateZXY(void *inParams, f32 *outVec);
 /* extern void ObjMsg_SendToObject(int *target, int msg, int *src, int p4); — already declared */
 extern f32 lbl_803E3688;
 extern f32 lbl_803E368C;
@@ -878,7 +878,7 @@ void trickyBallFn_801793b8(int *obj, u8 *params)
     } else {
         *(s16 *)lcl = *(s16 *)player;
     }
-    mathFn_80021ac8(lcl, (f32 *)((char *)obj + 0x24));
+    vecRotateZXY(lcl, (f32 *)((char *)obj + 0x24));
 
     fn_801796BC(obj,
                 *(f32 *)((char *)obj + 0x24),

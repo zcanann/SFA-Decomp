@@ -648,10 +648,10 @@ extern f32 fn_8029610C(void *player);
 extern void *getCache(void);
 extern void copyToCache(void *dst, void *src, int blockCount);
 extern void memcpyToCache(void *dst, void *src, int blockCount);
-extern void cacheFn_800229c4(int wait);
+extern void cacheQueueWait(int wait);
 extern void *Camera_GetCurrentViewSlot(void);
 extern u32 randomGetRange(int min, int max);
-extern void mathFn_80021ac8(void *params, void *vec);
+extern void vecRotateZXY(void *params, void *vec);
 extern int coordsToMapCell(f32 x, f32 z);
 extern void Obj_RotateLocalOffsetByYaw(void *offset, f32 *out, u8 yaw);
 extern void Sfx_PlayFromObject(void *obj, int sfxId);
@@ -874,7 +874,7 @@ foundFirst:
         prefetched = 1;
       }
       parity ^= 1;
-      cacheFn_800229c4(prefetched);
+      cacheQueueWait(prefetched);
       slot--;
       pool4 = pool << 2;
       maskPtr = (u32 *)(runtimeBase + pool4);
@@ -931,7 +931,7 @@ foundFirst:
           rot.angleZ = (s16)(int)((f32)slot->sourceVecZ * timeDelta);
           rot.angleY = (s16)(int)((f32)slot->sourceVecY * timeDelta);
           rot.angleX = (s16)(int)((f32)slot->sourceVecX * timeDelta);
-          mathFn_80021ac8(&rot, (f32 *)&slot->posX);
+          vecRotateZXY(&rot, (f32 *)&slot->posX);
         }
         if ((slot->renderFlags & 0x30000000) != 0) {
           workB = lbl_803DF3DC;
@@ -1353,11 +1353,11 @@ foundFirst:
             rot.angleZ = 0;
             rot.angleY = 0;
             rot.angleX = slot->sourceVecX;
-            mathFn_80021ac8(&rot, vecBuf);
+            vecRotateZXY(&rot, vecBuf);
             rot.angleZ = slot->sourceVecY;
             rot.angleY = slot->sourceVecZ;
             rot.angleX = 0;
-            mathFn_80021ac8(&rot, vecBuf);
+            vecRotateZXY(&rot, vecBuf);
             quad[0].x = (int)vecBuf[0];
             quad[0].y = (int)vecBuf[1];
             quad[0].z = (int)vecBuf[2];
@@ -1369,11 +1369,11 @@ foundFirst:
             rot.angleZ = 0;
             rot.angleY = 0;
             rot.angleX = slot->sourceVecX;
-            mathFn_80021ac8(&rot, vecBuf);
+            vecRotateZXY(&rot, vecBuf);
             rot.angleZ = slot->sourceVecY;
             rot.angleY = slot->sourceVecZ;
             rot.angleX = 0;
-            mathFn_80021ac8(&rot, vecBuf);
+            vecRotateZXY(&rot, vecBuf);
             quad[1].x = (int)vecBuf[0];
             quad[1].y = (int)vecBuf[1];
             quad[1].z = (int)vecBuf[2];
@@ -1385,11 +1385,11 @@ foundFirst:
             rot.angleZ = 0;
             rot.angleY = 0;
             rot.angleX = slot->sourceVecX;
-            mathFn_80021ac8(&rot, vecBuf);
+            vecRotateZXY(&rot, vecBuf);
             rot.angleZ = slot->sourceVecY;
             rot.angleY = slot->sourceVecZ;
             rot.angleX = 0;
-            mathFn_80021ac8(&rot, vecBuf);
+            vecRotateZXY(&rot, vecBuf);
             quad[2].x = (int)vecBuf[0];
             quad[2].y = (int)vecBuf[1];
             quad[2].z = (int)vecBuf[2];
@@ -1401,11 +1401,11 @@ foundFirst:
             rot.angleZ = 0;
             rot.angleY = 0;
             rot.angleX = slot->sourceVecX;
-            mathFn_80021ac8(&rot, vecBuf);
+            vecRotateZXY(&rot, vecBuf);
             rot.angleZ = slot->sourceVecY;
             rot.angleY = slot->sourceVecZ;
             rot.angleX = 0;
-            mathFn_80021ac8(&rot, vecBuf);
+            vecRotateZXY(&rot, vecBuf);
             quad[3].x = (int)vecBuf[0];
             quad[3].y = (int)vecBuf[1];
             quad[3].z = (int)vecBuf[2];
@@ -1561,7 +1561,7 @@ foundFirst:
           rotPos[1] = *(f32 *)&slot->posY;
           rotPos[2] = *(f32 *)&slot->posZ;
           if ((rot.angleZ | rot.angleX | rot.angleY) != 0) {
-            mathFn_80021ac8(&rot, rotPos);
+            vecRotateZXY(&rot, rotPos);
           }
           if ((slot->behaviorFlags & 1) == 0) {
             if (srcObj != NULL) {
@@ -1622,7 +1622,7 @@ foundFirst:
       prefetched = 1;
       pool = next;
     }
-    cacheFn_800229c4(0);
+    cacheQueueWait(0);
   }
 }
 #pragma peephole reset
@@ -1903,7 +1903,7 @@ void expgfx_renderSourcePools(int sourceId,int sourceMode)
 extern void *getCache(void);
 extern int getHudHiddenFrameCount(void);
 extern void copyToCache(void *dst, void *src, int blockCount);
-extern void cacheFn_800229c4(int wait);
+extern void cacheQueueWait(int wait);
 extern int Camera_GetProjectionMatrix(void);
 extern void Camera_ApplyFullViewport(void);
 extern void *Camera_GetCurrentViewSlot(void);
@@ -2000,7 +2000,7 @@ void drawGlow(uint slotPoolBase,int poolIndex)
   blendMode = -1;
   zMode = -1;
   zCompLoc = -1;
-  cacheFn_800229c4(0);
+  cacheQueueWait(0);
 
   slot = (ExpgfxSlot *)((char *)dstBuf - EXPGFX_SLOT_SIZE);
   slotIndex = 0;

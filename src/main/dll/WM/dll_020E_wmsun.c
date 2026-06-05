@@ -330,7 +330,7 @@ extern f32 lbl_803E5F68;
 extern f32 sqrtf(f32 x);
 extern f32 fn_80293E80(f32 x);
 extern int Camera_GetCurrentViewSlot(void);
-extern void mathFn_80021ac8(s16 *ang, WmSunVec3 *vec);
+extern void vecRotateZXY(s16 *ang, WmSunVec3 *vec);
 #pragma scheduling off
 #pragma peephole off
 void fn_801F6EA4(int obj)
@@ -358,7 +358,7 @@ void fn_801F6EA4(int obj)
     cam = Camera_GetCurrentViewSlot();
     if ((void *)cam != NULL) {
         g.ang[0] = 0x8000 - *(s16 *)cam;
-        mathFn_80021ac8(g.ang, &sun);
+        vecRotateZXY(g.ang, &sun);
         dx = *(f32 *)(obj + 0xc) - *(f32 *)(cam + 0xc);
         dy = *(f32 *)(obj + 0x10) - *(f32 *)(cam + 0x10);
         dz = *(f32 *)(obj + 0x14) - *(f32 *)(cam + 0x14);

@@ -5062,7 +5062,7 @@ void partfx_initialise(void) {
 #pragma peephole off
 void fn_800A081C(int p1, int p2, int mode)
 {
-  extern void mathFn_80021ac8(void *, f32 *);
+  extern void vecRotateZXY(void *, f32 *);
   extern f32 lbl_803DD284;
   extern f32 lbl_803DF430;
   extern f32 lbl_803DF434;
@@ -5082,7 +5082,7 @@ void fn_800A081C(int p1, int p2, int mode)
         buf[2] = v;
         buf[1] = v;
         buf[0] = v;
-        mathFn_80021ac8(buf, (f32 *)(p2 + 0x4));
+        vecRotateZXY(buf, (f32 *)(p2 + 0x4));
       }
       *(f32 *)(p1 + 0x24) = *(f32 *)(p2 + 0x4);
       *(f32 *)(p1 + 0x28) = *(f32 *)(p2 + 0x8);
@@ -6969,7 +6969,7 @@ extern u16 lbl_8039C2E0[20];
 extern s16 lbl_8039C308[12];
 extern void srand(int seed);
 extern void *Resource_Acquire(int id, int a);
-extern void mathFn_80021ac8(void *obj, f32 *vec);
+extern void vecRotateZXY(void *obj, f32 *vec);
 extern char sModgfxAlphaDebugFormat[];
 extern void fn_80137948(char *fmt, ...);
 
@@ -7617,7 +7617,7 @@ if (param_3 == NULL) {
               local_124 = 0;
               local_126 = 0;
               local_128 = *(s16 *)param_1;
-              mathFn_80021ac8(&local_128,&cfg.f30);
+              vecRotateZXY(&local_128,&cfg.f30);
               cfg.f3c = lbl_803DF520;
               cfg.f08 = 0x91;
               cfg.f60 = 0xff;
@@ -8015,7 +8015,7 @@ cfg.f30 = lbl_803DF564;
               local_124 = param_1[2];
               local_126 = param_1[1];
               local_128 = *(s16 *)param_1;
-              mathFn_80021ac8(&local_128,&cfg.f24);
+              vecRotateZXY(&local_128,&cfg.f24);
               cfg.f60 = 0xcd;
               cfg.f44 = 0x100110;
               cfg.f3c = lbl_803DF570 * (f32)(s32)randomGetRange(0x96,200);
@@ -8050,7 +8050,7 @@ if (param_3 == NULL) {
               local_124 = param_1[2];
               local_126 = param_1[1];
               local_128 = *(s16 *)param_1;
-              mathFn_80021ac8(&local_128,&cfg.f24);
+              vecRotateZXY(&local_128,&cfg.f24);
               cfg.f3c = lbl_803DF4D4 * (f32)(s32)randomGetRange(8,0x14);
               cfg.f08 = randomGetRange(0x3c,0x78);
               cfg.f44 = 0x80180000;
@@ -8092,7 +8092,7 @@ if (param_3 == NULL) {
             local_124 = param_1[2];
             local_126 = param_1[1];
             local_128 = *(s16 *)param_1;
-            mathFn_80021ac8(&local_128,&cfg.f24);
+            vecRotateZXY(&local_128,&cfg.f24);
             cfg.f60 = 0xff;
             cfg.f3c = lbl_803DF57C * (f32)(s32)randomGetRange(0x96,200);
             cfg.f44 = 0x2000110;
@@ -8113,7 +8113,7 @@ if (param_3 == NULL) {
             local_124 = param_1[2];
             local_126 = param_1[1];
             local_128 = *(s16 *)param_1;
-            mathFn_80021ac8(&local_128,&cfg.f24);
+            vecRotateZXY(&local_128,&cfg.f24);
             cfg.f60 = 0xff;
             cfg.f3c = lbl_803DF588 * (f32)(s32)randomGetRange(10,0x14);
             cfg.f44 = 0x2000110;
@@ -8865,7 +8865,7 @@ if (0x3b < param_2) goto LAB_800aa8ac;
           local_126 = 2000 - local_126;
           local_128 = randomGetRange(0,4000);
           local_128 = 2000 - local_128;
-          mathFn_80021ac8(&local_128,&cfg.f24);
+          vecRotateZXY(&local_128,&cfg.f24);
           cfg.f3c = lbl_803DF65C;
           cfg.f08 = 0x50;
           cfg.f61 = 8;
@@ -9150,7 +9150,7 @@ cfg.f30 = lbl_803DF4CC * (f32)(s32)randomGetRange(0xffffffe2,0x1e);
           local_124 = (short)iVar8;
           local_126 = (short)(int)dVar13;
           local_128 = (short)(int)dVar12;
-          mathFn_80021ac8(&local_128,&cfg.f24);
+          vecRotateZXY(&local_128,&cfg.f24);
           cfg.f3c = lbl_803DF690;
           cfg.f08 = 0x32;
           cfg.f40 = 0;
@@ -9252,7 +9252,7 @@ cfg.f30 = (f32)(s32)randomGetRange(0xffffffff,1);
           local_124 = 0;
           local_126 = 0;
           local_128 = *(s16 *)param_1;
-          mathFn_80021ac8(&local_128,&cfg.f30);
+          vecRotateZXY(&local_128,&cfg.f30);
     break;
   case 0xc:
 cfg.f3c = lbl_803DF4F0;
@@ -9797,7 +9797,7 @@ if (param_3 == NULL) {
         local_124 = randomGetRange(0xffff8001,0x7fff);
         local_126 = randomGetRange(0xffff8001,0x7fff);
         local_128 = randomGetRange(0xffff8001,0x7fff);
-        mathFn_80021ac8(&local_128,&cfg.f30);
+        vecRotateZXY(&local_128,&cfg.f30);
         cfg.f24 = -(cfg.f30 / lbl_803DF4FC);
         cfg.f28 = -(cfg.f34 / lbl_803DF4FC);
         cfg.f2c = -(cfg.f38 / lbl_803DF4FC);
@@ -11457,7 +11457,7 @@ typedef struct MtxBuildArg {
     f32 c;
 } MtxBuildArg;
 
-extern void mathFn_80021ac8(void *obj, f32 *vec);
+extern void vecRotateZXY(void *obj, f32 *vec);
 extern f32 lbl_803DB7E0;
 extern f32 lbl_803DB7E4;
 extern f32 lbl_803DFBE0;
@@ -11565,7 +11565,7 @@ int Effect5_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = 0;
         es.ry = 0;
         es.rx = *param_3;
-        mathFn_80021ac8(&es, &cfg.f24);
+        vecRotateZXY(&es, &cfg.f24);
         cfg.f3c = lbl_803DFC04 * (f32)(s32)randomGetRange(4, 8);
         cfg.f08 = 0x46;
         cfg.f60 = 0x64;
@@ -11595,7 +11595,7 @@ int Effect5_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = 0;
         es.ry = 0;
         es.rx = *param_3;
-        mathFn_80021ac8(&es, &cfg.f24);
+        vecRotateZXY(&es, &cfg.f24);
         cfg.f3c = lbl_803DFC10 * (f32)(s32)randomGetRange(4, 8);
         cfg.f08 = 0x46;
         cfg.f60 = 0xff;
@@ -12362,7 +12362,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = 0;
         es.ry = 0;
         es.rx = (s16)randomGetRange(0, 0xffff);
-        mathFn_80021ac8(&es, &cfg.f30);
+        vecRotateZXY(&es, &cfg.f30);
         cfg.f3c = lbl_803DFAAC * (f32)(s32)randomGetRange(0xc8, 0x118);
         cfg.f08 = 0x14;
         cfg.f60 = 0xe1;
@@ -12407,7 +12407,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = (s16)randomGetRange(0, 0xffff);
         es.ry = (s16)randomGetRange(0, 0xffff);
         es.rx = (s16)randomGetRange(0, 0xffff);
-        mathFn_80021ac8(&es, &cfg.f30);
+        vecRotateZXY(&es, &cfg.f30);
         cfg.f3c = lbl_803DFABC;
         cfg.f08 = 0xc8;
         cfg.f60 = 0xff;
@@ -12423,7 +12423,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = (s16)randomGetRange(0, 0xffff);
         es.ry = (s16)randomGetRange(0, 0xffff);
         es.rx = (s16)randomGetRange(0, 0xffff);
-        mathFn_80021ac8(&es, &cfg.f30);
+        vecRotateZXY(&es, &cfg.f30);
         cfg.f3c = lbl_803DFAC4;
         cfg.f08 = 0xc8;
         cfg.f60 = 0xff;
@@ -12440,7 +12440,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = 0;
         es.ry = 0;
         es.rx = (s16)randomGetRange(0, 0xffff);
-        mathFn_80021ac8(&es, &cfg.f30);
+        vecRotateZXY(&es, &cfg.f30);
         cfg.f3c = lbl_803DFACC * (f32)(s32)randomGetRange(1, 0x14);
         cfg.f08 = 0xc8;
         cfg.f60 = 0xff;
@@ -12734,7 +12734,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = (s16)randomGetRange(0, 0xffff);
         es.ry = (s16)randomGetRange(0, 0xffff);
         es.rx = (s16)randomGetRange(0, 0xffff);
-        mathFn_80021ac8(&es, &cfg.f30);
+        vecRotateZXY(&es, &cfg.f30);
         cfg.f3c = lbl_803DFB8C * (f32)(s32)randomGetRange(0xc8, 0x3e8);
         cfg.f08 = 0x50;
         cfg.f61 = 0x10;
@@ -12771,7 +12771,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = (s16)randomGetRange(0, 0xffff);
         es.ry = (s16)randomGetRange(0, 0xffff);
         es.rx = (s16)randomGetRange(0, 0xffff);
-        mathFn_80021ac8(&es, &cfg.f24);
+        vecRotateZXY(&es, &cfg.f24);
         cfg.f3c = lbl_803DFABC;
         cfg.f08 = 0x1b4;
         cfg.f60 = 0xff;
@@ -12808,7 +12808,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = 0;
         es.ry = 0;
         es.rx = *param_3;
-        mathFn_80021ac8(&es, &cfg.f24);
+        vecRotateZXY(&es, &cfg.f24);
         if (randomGetRange(0, 1) != 0) {
             cfg.f60 = 0xff;
         } else {
@@ -12894,7 +12894,7 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = (s16)randomGetRange(0, 0xffff);
         es.ry = (s16)randomGetRange(0, 0xffff);
         es.rx = (s16)randomGetRange(0, 0xffff);
-        mathFn_80021ac8(&es, &cfg.f30);
+        vecRotateZXY(&es, &cfg.f30);
         cfg.f3c = lbl_803DFB8C * (f32)(s32)randomGetRange(0xc8, 0x3e8);
         cfg.f08 = randomGetRange(0x64, 0xc8);
         cfg.f50 = 0x50;
@@ -13149,7 +13149,7 @@ extern f32 lbl_803DF854;
 extern f32 lbl_803DF858;
 extern FxNode9 lbl_8039C320;
 /* lbl_803DF860 = int->f64 magic bias (.sdata2), auto-emitted; do NOT declare. */
-/* MtxBuildArg, mathFn_80021ac8, randFn_80080100, gExpgfxInterface, randomGetRange
+/* MtxBuildArg, vecRotateZXY, randFn_80080100, gExpgfxInterface, randomGetRange
    already declared in modgfx.c. */
 
 /* ===== (2) FILL macro ===== */
@@ -13342,7 +13342,7 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = ((s16 *)param_1)[2];
         es.ry = ((s16 *)param_1)[1];
         es.rx = *(s16 *)param_1;
-        mathFn_80021ac8(&es, &cfg.f24);
+        vecRotateZXY(&es, &cfg.f24);
         cfg.f3c = lbl_803DF740;
         cfg.f08 = 0x32;
         cfg.f60 = 0xff;
@@ -13366,7 +13366,7 @@ int Effect1_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         es.rz = ((s16 *)param_1)[2];
         es.ry = ((s16 *)param_1)[1];
         es.rx = *(s16 *)param_1;
-        mathFn_80021ac8(&es, &cfg.f24);
+        vecRotateZXY(&es, &cfg.f24);
         cfg.f3c = lbl_803DF764 * (f32)(s32)randomGetRange(8, 0x14);
         cfg.f08 = randomGetRange(0x3c, 0x78);
         cfg.f44 = 0x80180000;
@@ -14706,7 +14706,7 @@ extern void selectTexture(void *tex, int slot);
 extern void drawFn_8005cf8c(void *a, void *b, int count);
 extern f32 sqrtf(f32 x);
 extern int getAngle(f32 dx, f32 dz);
-extern void mathFn_80021ac8(void *obj, f32 *vec);
+extern void vecRotateZXY(void *obj, f32 *vec);
 extern void Obj_RotateLocalOffsetByYaw(f32 *local, f32 *out, s8 yawIndex);
 extern void setMatrixFromObjectPos(f32 *mtx, s16 *src);
 extern void mtx44Transpose(f32 *src, f32 *dst);
@@ -14807,7 +14807,7 @@ int dll_0B_func09(void *a0, int a1, int a2, u8 a3, void *a4)
                     xf.ang[0] = *(s16 *)(*(char **)((char *)*p + 4));
                     xf.ang[1] = *(s16 *)(*(char **)((char *)*p + 4) + 2);
                     xf.ang[2] = *(s16 *)(*(char **)((char *)*p + 4) + 4);
-                    mathFn_80021ac8(&xf.ang[0], &pos[0]);
+                    vecRotateZXY(&xf.ang[0], &pos[0]);
                 }
             }
         }
@@ -15270,7 +15270,7 @@ void dll_0B_func05(void)
                     }
                     ang[1] = 0;
                     ang[2] = 0;
-                    mathFn_80021ac8(&ang[0], &tmpl.x);
+                    vecRotateZXY(&ang[0], &tmpl.x);
                     if (*(int *)eff == 0) {
                         if (Obj_IsLoadingLocked()) {
                             int *o;

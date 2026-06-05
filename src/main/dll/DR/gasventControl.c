@@ -862,7 +862,7 @@ void fn_801A2E80(int obj, int def, int p3, int state)
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void mathFn_80021ac8(s16 *rot, f32 *vec);
+extern void vecRotateZXY(s16 *rot, f32 *vec);
 extern f32 sqrtf(f32 x);
 extern void normalize(f32 *x, f32 *y, f32 *z);
 extern f32 lbl_803E4368;
@@ -884,7 +884,7 @@ void fn_801A30C0(int obj, int slot, int def)
     int max2;
     int max;
 
-    mathFn_80021ac8((s16 *)(def + 0x1a), (f32 *)(slot + 0x10));
+    vecRotateZXY((s16 *)(def + 0x1a), (f32 *)(slot + 0x10));
     *(f32 *)(slot + 0x4c) = *(f32 *)(slot + 0x10) * *(f32 *)(obj + 8) + *(f32 *)(def + 8);
     *(f32 *)(slot + 0x50) = *(f32 *)(slot + 0x14) * *(f32 *)(obj + 8) + *(f32 *)(def + 0xc);
     *(f32 *)(slot + 0x54) = *(f32 *)(slot + 0x18) * *(f32 *)(obj + 8) + *(f32 *)(def + 0x10);

@@ -4956,7 +4956,7 @@ void objRenderChild(int *child, int *parent, u8 p3) {
 
 extern s32 lbl_803DCC48;
 extern char *getCache(void);
-extern void cacheFn_800229c4(int);
+extern void cacheQueueWait(int);
 extern void GXLoadPosMtxImm(f32 *m, int id);
 extern u8 lbl_802CAED0[];
 
@@ -4976,7 +4976,7 @@ void modelLoadMtxsToGx(int obj, int *model, MtxBitStream *bs, f32 *mtx) {
         obj = *(u8 *)(obj + 0xf3) + *(u8 *)(obj + 0xf4);
         src = c2 + 0x2700;
         dst = c2;
-        cacheFn_800229c4(0);
+        cacheQueueWait(0);
         for (i = 0; i < obj; i++) {
             PSMTXConcat(mtx, (f32 *)src, (f32 *)dst);
             src += 0x40;
@@ -5184,7 +5184,7 @@ void renderOpMatrix(u8 *hdr, int *model, MtxBitStream *bs, f32 *m1, f32 *mtx, u8
             int total = hdr[0xf3] + hdr[0xf4];
             hdr = (u8 *)(c2 + 0x2700);
             dst = c2;
-            cacheFn_800229c4(0);
+            cacheQueueWait(0);
             for (i = 0; i < total; i++) {
                 PSMTXConcat(mtx, (f32 *)hdr, (f32 *)dst);
                 hdr += 0x40;

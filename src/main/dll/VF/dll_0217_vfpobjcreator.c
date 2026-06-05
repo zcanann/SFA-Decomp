@@ -63,7 +63,7 @@ void vfpobjcreator_init(int *obj, u8 *init) {
 extern u8 Obj_IsLoadingLocked(void);
 extern char *Obj_AllocObjectSetup(int size, int typeId);
 extern char *Obj_SetupObject(char *setup, int a, int b, int c, int d);
-extern void mathFn_80021ac8(s16 *angles, f32 *vec);
+extern void vecRotateZXY(s16 *angles, f32 *vec);
 extern f32 lbl_803E6068;
 extern f32 lbl_803E606C;
 extern f32 lbl_803E6070;
@@ -166,7 +166,7 @@ void vfpobjcreator_update(int *obj)
             m.ang[2] = 0;
             m.ang[1] = 0;
             m.ang[0] = *(s16 *)obj;
-            mathFn_80021ac8(m.ang, (f32 *)(n + 0x24));
+            vecRotateZXY(m.ang, (f32 *)(n + 0x24));
             Sfx_PlayFromObject((int)n, 0x10c);
             (*(int (*)(char *, int, int, int, int, int))(*(int *)(*gPartfxInterface + 0x8)))(
                 n, 0x39a, 0, 0x10002, -1, 0);

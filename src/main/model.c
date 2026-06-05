@@ -452,7 +452,7 @@ void tailFn_80026c38(u8 *p, f32 a, f32 b, f32 c) {
 
 #pragma dont_inline reset
 
-int fn_80022E0C(int x);
+int alignUp2(int x);
 
 #pragma pop
 
@@ -480,7 +480,7 @@ extern f32 timeDelta;
 #pragma peephole off
 
 #pragma dont_inline on
-void cacheFn_800229c4(int sync);
+void cacheQueueWait(int sync);
 #pragma dont_inline reset
 
 void fn_80026C54(u8 *p) {
@@ -2037,7 +2037,7 @@ void *modelLoadFn_80025ae4(u8 *p, int b, int isType1, int c)
         o2 += 0xc;
     }
     if (b & 0x8000) {
-        pos = fn_80022E0C(pos);
+        pos = alignUp2(pos);
         *(int *)(out + 0x54) = pos;
         *(u8 *)(*(u8 **)(out + 0x54) + 0x18) = 0;
     }
@@ -2899,7 +2899,7 @@ void modelApplyBoneTransforms(int a, int b, u16 c, void *d, void *e, int f) {
             copyToCache(cache + (buf ^ 1) * 0x2000, (u8 *)a + (pos + lbl_803DB440) * 6, nextWords);
             sync = 1;
         }
-        cacheFn_800229c4(sync);
+        cacheQueueWait(sync);
         t = buf;
         ptr = cache + t * 0x2000;
         out = ptr + 0x1000;
@@ -2911,7 +2911,7 @@ void modelApplyBoneTransforms(int a, int b, u16 c, void *d, void *e, int f) {
         chunk = nextChunk;
         words = nextWords;
     }
-    cacheFn_800229c4(0);
+    cacheQueueWait(0);
 }
 #pragma pop
 
@@ -3207,7 +3207,7 @@ void ObjModel_BlendPrimaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, int *offs, u
                 copyToCache(cp[(u8)((u8)bi + 1)], *(u8 **)(q2 + 0xd8),
                             (u32)((q2[0xe3] << 5) + 0x1f) >> 5);
             }
-            cacheFn_800229c4(2);
+            cacheQueueWait(2);
             dst = out + offs[i];
             ObjModel_TransformVerticesWithTranslation(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
                                                       cp[(u8)((i & 1) * 2) + 1],
@@ -3217,7 +3217,7 @@ void ObjModel_BlendPrimaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, int *offs, u
             memcpyToCache(dst, cp[(u8)((i & 1) * 2)], sizes[i & 1]);
         }
         q = *(u8 **)(hdr + 0xc) + i * 0x74;
-        cacheFn_800229c4(0);
+        cacheQueueWait(0);
         dst = out + offs[i];
         ObjModel_TransformVerticesWithTranslation(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
                                                   lbl_80340898[(u8)((i & 1) * 2) + 1],
@@ -3225,7 +3225,7 @@ void ObjModel_BlendPrimaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, int *offs, u
                                                   q[0x72] + (int)lbl_80340898[(u8)((i & 1) * 2)],
                                                   *(u16 *)(q + 0x70));
         memcpyToCache(dst, lbl_80340898[(u8)((i & 1) * 2)], sizes[i & 1]);
-        cacheFn_800229c4(0);
+        cacheQueueWait(0);
     }
 }
 #pragma pop
@@ -3267,7 +3267,7 @@ void ObjModel_BlendSecondaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, u8 **outs,
                 copyToCache(lbl_80340898[(u8)((u8)bi + 1)], *(u8 **)(q2 + 0xd8),
                             (u32)((q2[0xe3] << 5) + 0x1f) >> 5);
             }
-            cacheFn_800229c4(2);
+            cacheQueueWait(2);
             if ((u8)quad) {
                 dst = outs[i];
                 ObjModel_TransformQuadVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
@@ -3287,7 +3287,7 @@ void ObjModel_BlendSecondaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, u8 **outs,
             }
         }
         q = *(u8 **)(hdr + 0xc) + i * 0x74;
-        cacheFn_800229c4(0);
+        cacheQueueWait(0);
         if ((u8)quad) {
             dst = outs[i];
             ObjModel_TransformQuadVerticesLinear(mtxs + q[0x6c] * 0x30, mtxs + q[0x6d] * 0x30,
@@ -3305,7 +3305,7 @@ void ObjModel_BlendSecondaryVertexStream(u8 *mtxs, u8 *hdr, u8 *data, u8 **outs,
                                              *(u16 *)(q + 0x70));
             memcpyToCache(dst, lbl_80340898[(u8)((i & 1) * 2)], sizes[i & 1]);
         }
-        cacheFn_800229c4(0);
+        cacheQueueWait(0);
     }
 }
 #pragma pop

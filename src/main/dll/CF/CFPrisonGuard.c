@@ -27,7 +27,7 @@ extern int Obj_AllocObjectSetup(int size, int objectId);
 extern int Obj_SetupObject(int setup, int mode, int mapLayer, int objIndex, int parent);
 extern void trickyImpress(int obj);
 extern f32 sqrtf(f32 value);
-extern void mathFn_80021ac8(void *rotation, void *vec);
+extern void vecRotateZXY(void *rotation, void *vec);
 extern u16 getAngle(f32 x, f32 z);
 
 extern f64 DOUBLE_803e4868;
@@ -200,7 +200,7 @@ void staffactivated_spawnMapEventDebris(int obj)
       rotate.z = 0;
       rotate.x = 0;
       rotate.y = (s16)randomGetRange(-10000, 10000);
-      mathFn_80021ac8(&rotate, (void *)(spawnedObj + 0x24));
+      vecRotateZXY(&rotate, (void *)(spawnedObj + 0x24));
 
       yawDelta = *(s16 *)spawnedObj -
                  (u16)getAngle(*(f32 *)(spawnedObj + 0x24), -*(f32 *)(spawnedObj + 0x2c));
