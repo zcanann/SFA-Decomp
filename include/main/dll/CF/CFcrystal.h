@@ -31,6 +31,26 @@ STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field19) == 0x19);
 STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field1A) == 0x1A);
 STATIC_ASSERT(offsetof(FireFlyLanternSpawnSetup, field1C) == 0x1C);
 
+typedef struct FireFlyLanternState {
+  int fireflies[7];
+  u8 fireflyCount;
+  u8 remainingCount;
+  u8 flags;
+  u8 pad1F;
+  s16 gameBit;
+  u8 pad22[0x24 - 0x22];
+} FireFlyLanternState;
+
+typedef struct FireFlyLanternStateFlags {
+  u8 finished : 1;
+} FireFlyLanternStateFlags;
+
+STATIC_ASSERT(sizeof(FireFlyLanternState) == 0x24);
+STATIC_ASSERT(offsetof(FireFlyLanternState, fireflyCount) == 0x1C);
+STATIC_ASSERT(offsetof(FireFlyLanternState, remainingCount) == 0x1D);
+STATIC_ASSERT(offsetof(FireFlyLanternState, flags) == 0x1E);
+STATIC_ASSERT(offsetof(FireFlyLanternState, gameBit) == 0x20);
+
 typedef struct LanternFireFlyState {
   int light;
   f32 controlX[4];

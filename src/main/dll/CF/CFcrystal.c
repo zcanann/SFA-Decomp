@@ -291,33 +291,35 @@ int FireFlyLantern_spawnFireFly(int *obj) {
 #pragma peephole off
 int FireFlyLantern_SeqFn(int obj, int unused, int events)
 {
-    u8 *state;
-    u8 *slot;
+    FireFlyLanternState *state;
+    u8 *eventData;
+    int *slot;
     void *child;
     int i;
     f32 yOffset;
 
-    state = *(u8 **)(obj + 0xB8);
-    for (i = 0; i < *(u8 *)(events + 0x8B); i++) {
-        if ((*(u8 *)(events + i + 0x81) == 1) && (*(u8 *)(state + 0x1C) != 0)) {
-            child = *(void **)(state + (*(u8 *)(state + 0x1C) * 4) - 4);
+    state = *(FireFlyLanternState **)(obj + 0xB8);
+    eventData = (u8 *)events;
+    for (i = 0; i < eventData[0x8B]; i++) {
+        if ((eventData[i + 0x81] == 1) && (state->fireflyCount != 0)) {
+            child = (void *)state->fireflies[state->fireflyCount - 1];
             if (child != 0) {
                 (*(void (*)(void *))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x24)))(child);
             }
-            *(u8 *)(state + 0x1C) = (u8)(*(u8 *)(state + 0x1C) - 1);
-            *(u8 *)(state + 0x1D) = (u8)(*(u8 *)(state + 0x1D) - 1);
-            GameBit_Set(*(s16 *)(state + 0x20), *(u8 *)(state + 0x1D));
+            state->fireflyCount = state->fireflyCount - 1;
+            state->remainingCount = state->remainingCount - 1;
+            GameBit_Set(state->gameBit, state->remainingCount);
         }
     }
 
-    *(u8 *)(state + 0x1E) = (u8)((*(u8 *)(state + 0x1E) & 0x7F) | 0x80);
+    ((FireFlyLanternStateFlags *)&state->flags)->finished = 1;
     yOffset = lbl_803E3AEC;
-    slot = state;
-    for (i = 0; i < *(u8 *)(state + 0x1C); i++) {
-        child = *(void **)slot;
+    slot = state->fireflies;
+    for (i = 0; i < state->fireflyCount; i++) {
+        child = (void *)*slot;
         (*(void (*)(void *, f32, f32, f32))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x28)))(
             child, *(f32 *)(obj + 0xC), yOffset + *(f32 *)(obj + 0x10), *(f32 *)(obj + 0x14));
-        slot += 4;
+        slot++;
     }
 
     return 0;
@@ -356,32 +358,32 @@ void FireFlyLantern_render(void) { objRenderFn_8003b8f4(lbl_803E3AF0); }
 #pragma peephole off
 void FireFlyLantern_update(int obj)
 {
-    u8 *state;
-    u8 *def;
+    FireFlyLanternState *state;
+    FireFlyLanternSpawnSetup *def;
     void *child;
     int i;
     int shouldFree;
-    u8 *slot;
+    int *slot;
 
-    state = *(u8 **)(obj + 0xB8);
-    def = *(u8 **)(obj + 0x4C);
+    state = *(FireFlyLanternState **)(obj + 0xB8);
+    def = *(FireFlyLanternSpawnSetup **)(obj + 0x4C);
     shouldFree = 0;
 
-    if (*(s8 *)(def + 0x19) == 1) {
-        if (*(u8 *)(state + 0x1C) != 0) {
-            child = *(void **)state;
+    if ((s8)def->field19 == 1) {
+        if (state->fireflyCount != 0) {
+            child = (void *)state->fireflies[0];
             if (child != 0) {
                 (*(void (*)(void *))(*(int *)(*(int *)(*(int *)((u8 *)child + 0x68)) + 0x24)))(child);
             }
-            gameBitDecrement(*(s16 *)(state + 0x20));
+            gameBitDecrement(state->gameBit);
         }
         shouldFree = 1;
-    } else if ((*(u8 *)(state + 0x1E) >> 7) != 0) {
+    } else if (((FireFlyLanternStateFlags *)&state->flags)->finished != 0) {
         i = 0;
-        slot = state;
-        while (i < *(u8 *)(state + 0x1C)) {
-            Obj_FreeObject(*(int *)slot);
-            slot += 4;
+        slot = state->fireflies;
+        while (i < state->fireflyCount) {
+            Obj_FreeObject(*slot);
+            slot++;
             i++;
         }
         shouldFree = 1;
