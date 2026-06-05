@@ -4147,6 +4147,11 @@ extern u8 lbl_803DCF6C;
 extern u32 lbl_803DCF30;
 extern u8 lbl_8038DC64[];
 extern u8 lbl_8038DE44[];
+typedef struct TrackBlockDescriptor {
+    void *object;
+    s16 firstTriangle;
+    u8 unk06[0x12];
+} TrackBlockDescriptor;
 
 /* fn_80069944 — store sbss byte into *p1 and return a fixed table base. */
 #pragma scheduling off
@@ -4252,9 +4257,8 @@ void fn_80062894(void) {
 #pragma peephole off
 #pragma dont_inline on
 void fn_80069968(s32 *out1, u32 *out2) {
-    u8 *base = lbl_8038DC64;
-    u32 off = (u32)lbl_803DCF6C * 0x18;
-    *out1 = *(s16 *)(base + off + 4);
+    TrackBlockDescriptor *descriptors = (TrackBlockDescriptor *)lbl_8038DC64;
+    *out1 = descriptors[lbl_803DCF6C].firstTriangle;
     *out2 = lbl_803DCF30;
 }
 #pragma dont_inline reset
