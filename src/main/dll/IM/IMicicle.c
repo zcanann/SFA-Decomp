@@ -1981,6 +1981,74 @@ extern f32 lbl_803E441C;
 extern f32 lbl_803E4420;
 extern f32 lbl_803E4424;
 
+void exploded_seedDebrisMotion(ExplodedObject *obj, ExplodedObjectState *state, ExplodedObjectMapData *data);
+
+#pragma scheduling off
+#pragma peephole off
+void fn_801A4DB8(int p1, int p2, int flag, int p3)
+{
+  extern void Model_GetVertexPosition(int, int, f32 *);
+  extern void fn_800218AC(int, int);
+  extern f32 lbl_803E43F0;
+  extern f32 lbl_803E43F4;
+
+  *(f32 *)(p1 + 0xc) = *(f32 *)(p2 + 0x8);
+  *(f32 *)(p1 + 0x10) = *(f32 *)(p2 + 0xc);
+  *(f32 *)(p1 + 0x14) = *(f32 *)(p2 + 0x10);
+
+  if (flag == 0) {
+    register int *mesh;
+    register int i;
+    f32 v[6];
+    f32 z;
+    f32 k;
+
+    z = lbl_803E43F0;
+    *(f32 *)(p3 + 0) = z;
+    *(f32 *)(p3 + 4) = z;
+    *(f32 *)(p3 + 8) = z;
+    v[3] = z;
+    v[4] = z;
+    v[5] = z;
+
+    mesh = *(int **)(*(int *)(*(int *)(p1 + 0x7c) + (u32)*(u8 *)(p2 + 0x18) * 4));
+    for (i = 0; i < *(u16 *)((char *)mesh + 0xe4); i++) {
+      Model_GetVertexPosition((int)mesh, i, v);
+      v[3] = v[0] + v[3];
+      v[4] = v[1] + v[4];
+      v[5] = v[2] + v[5];
+    }
+
+    *(f32 *)(p3 + 0) = v[3] * ((k = lbl_803E43F4) / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+    *(f32 *)(p3 + 4) = v[4] * (k / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+    *(f32 *)(p3 + 8) = v[5] * (k / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
+  }
+
+  *(f32 *)(p3 + 0xc) = *(f32 *)(p3 + 0);
+  *(f32 *)(p3 + 0x10) = *(f32 *)(p3 + 4);
+  *(f32 *)(p3 + 0x14) = *(f32 *)(p3 + 8);
+  exploded_seedDebrisMotion((ExplodedObject *)p1, (ExplodedObjectState *)p3,
+                            (ExplodedObjectMapData *)p2);
+
+  {
+    f32 tv[3];
+    tv[0] = *(f32 *)(p3 + 0);
+    tv[1] = *(f32 *)(p3 + 4);
+    tv[2] = *(f32 *)(p3 + 8);
+    fn_800218AC(p1, (int)tv);
+    tv[0] = tv[0] * *(f32 *)(p1 + 0x8);
+    tv[1] = tv[1] * *(f32 *)(p1 + 0x8);
+    tv[2] = tv[2] * *(f32 *)(p1 + 0x8);
+  }
+
+  *(u8 *)(p3 + 0x67) = 255;
+  *(u8 *)(p3 + 0x66) = 0;
+}
+#pragma peephole reset
+#pragma scheduling reset
+
+
+
 /* Exploded debris setup: seed object angles, linear velocity, angular velocity,
  * ground clearance, and the randomized lifetime countdown. */
 #pragma scheduling off
@@ -2102,68 +2170,6 @@ int exploded_stepDebrisPhysics(ExplodedObject *obj, ExplodedObjectState *state)
   obj->y = obj->velocityY * timeDelta + obj->y;
   obj->z = obj->velocityZ * timeDelta + obj->z;
   return stopped;
-}
-#pragma peephole reset
-#pragma scheduling reset
-
-#pragma scheduling off
-#pragma peephole off
-void fn_801A4DB8(int p1, int p2, int flag, int p3)
-{
-  extern void Model_GetVertexPosition(int, int, f32 *);
-  extern void fn_800218AC(int, int);
-  extern f32 lbl_803E43F0;
-  extern f32 lbl_803E43F4;
-
-  *(f32 *)(p1 + 0xc) = *(f32 *)(p2 + 0x8);
-  *(f32 *)(p1 + 0x10) = *(f32 *)(p2 + 0xc);
-  *(f32 *)(p1 + 0x14) = *(f32 *)(p2 + 0x10);
-
-  if (flag == 0) {
-    int *mesh;
-    f32 sum[3];
-    f32 pos[3];
-    int i;
-
-    *(f32 *)(p3 + 0) = lbl_803E43F0;
-    *(f32 *)(p3 + 4) = lbl_803E43F0;
-    *(f32 *)(p3 + 8) = lbl_803E43F0;
-    sum[0] = lbl_803E43F0;
-    sum[1] = lbl_803E43F0;
-    sum[2] = lbl_803E43F0;
-
-    mesh = *(int **)(*(int *)(*(int *)(p1 + 0x7c) + (u32)*(u8 *)(p2 + 0x18) * 4));
-    for (i = 0; i < *(u16 *)((char *)mesh + 0xe4); i++) {
-      Model_GetVertexPosition((int)mesh, i, pos);
-      sum[0] = pos[0] + sum[0];
-      sum[1] = pos[1] + sum[1];
-      sum[2] = pos[2] + sum[2];
-    }
-
-    *(f32 *)(p3 + 0) = sum[0] * (lbl_803E43F4 / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
-    *(f32 *)(p3 + 4) = sum[1] * (lbl_803E43F4 / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
-    *(f32 *)(p3 + 8) = sum[2] * (lbl_803E43F4 / (f32)(u32)*(u16 *)((char *)mesh + 0xe4));
-  }
-
-  *(f32 *)(p3 + 0xc) = *(f32 *)(p3 + 0);
-  *(f32 *)(p3 + 0x10) = *(f32 *)(p3 + 4);
-  *(f32 *)(p3 + 0x14) = *(f32 *)(p3 + 8);
-  exploded_seedDebrisMotion((ExplodedObject *)p1, (ExplodedObjectState *)p3,
-                            (ExplodedObjectMapData *)p2);
-
-  {
-    f32 tv[3];
-    tv[0] = *(f32 *)(p3 + 0);
-    tv[1] = *(f32 *)(p3 + 4);
-    tv[2] = *(f32 *)(p3 + 8);
-    fn_800218AC(p1, (int)tv);
-    tv[0] = tv[0] * *(f32 *)(p1 + 0x8);
-    tv[1] = tv[1] * *(f32 *)(p1 + 0x8);
-    tv[2] = tv[2] * *(f32 *)(p1 + 0x8);
-  }
-
-  *(u8 *)(p3 + 0x67) = 255;
-  *(u8 *)(p3 + 0x66) = 0;
 }
 #pragma peephole reset
 #pragma scheduling reset
