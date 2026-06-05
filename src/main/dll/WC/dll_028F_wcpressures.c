@@ -70,6 +70,50 @@
 #define WCPRESSURES_SLOT_Z(state, slot) \
     (*(f32 *)((u8 *)(state) + WCPRESSURES_STATE_SAVED_Z + (u8)(slot) * WCPRESSURES_STATE_SAVED_POS_STRIDE))
 
+typedef struct WCPressuresSetup {
+    u8 pad00[WCPRESSURES_SETUP_POS_X_OFFSET];
+    f32 x;
+    f32 y;
+    f32 z;
+    u8 pad14[WCPRESSURES_SETUP_OBJECT_TYPE_HI_OFFSET - 0x14];
+    u8 objectTypeHi;
+    u8 modelIndex;
+    s16 solvedBit;
+    u8 pressDepth;
+    u8 triggerHeight;
+    u8 pad1E[WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET - 0x1e];
+    s16 activateBit;
+} WCPressuresSetup;
+
+typedef struct WCPressuresSavedPos {
+    f32 x;
+    f32 z;
+} WCPressuresSavedPos;
+
+typedef struct WCPressuresState {
+    s8 pressTimer;
+    s8 mode;
+    u8 pad02[2];
+    int objects[WCPRESSURES_TRACKED_COUNT];
+    WCPressuresSavedPos savedPos[WCPRESSURES_TRACKED_COUNT];
+} WCPressuresState;
+
+STATIC_ASSERT(sizeof(WCPressuresState) == WCPRESSURES_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCPressuresState, pressTimer) == WCPRESSURES_STATE_PRESS_TIMER);
+STATIC_ASSERT(offsetof(WCPressuresState, mode) == WCPRESSURES_STATE_MODE);
+STATIC_ASSERT(offsetof(WCPressuresState, objects) == WCPRESSURES_STATE_OBJECTS);
+STATIC_ASSERT(offsetof(WCPressuresState, savedPos[0].x) == WCPRESSURES_STATE_SAVED_X);
+STATIC_ASSERT(offsetof(WCPressuresState, savedPos[0].z) == WCPRESSURES_STATE_SAVED_Z);
+STATIC_ASSERT(offsetof(WCPressuresSetup, x) == WCPRESSURES_SETUP_POS_X_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, y) == WCPRESSURES_SETUP_POS_Y_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, z) == WCPRESSURES_SETUP_POS_Z_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, objectTypeHi) == WCPRESSURES_SETUP_OBJECT_TYPE_HI_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, modelIndex) == WCPRESSURES_SETUP_MODEL_INDEX_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, solvedBit) == WCPRESSURES_SETUP_SOLVED_BIT_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, pressDepth) == WCPRESSURES_SETUP_PRESS_DEPTH_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, triggerHeight) == WCPRESSURES_SETUP_TRIGGER_HEIGHT_OFFSET);
+STATIC_ASSERT(offsetof(WCPressuresSetup, activateBit) == WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET);
+
 #pragma peephole on
 #pragma scheduling on
 int wcpressures_getExtraSize(void) { return WCPRESSURES_EXTRA_SIZE; }
@@ -80,28 +124,26 @@ int wcpressures_getExtraSize(void) { return WCPRESSURES_EXTRA_SIZE; }
 #pragma scheduling off
 int wcpressures_tileStateCallback(int obj, int unused, int callbackData)
 {
-    int state = *(int *)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
-    int setup = *(int *)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
+    WCPressuresState *state = *(WCPressuresState **)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
+    WCPressuresSetup *setup = *(WCPressuresSetup **)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
     u8 i;
 
     if (*(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) == WCPRESSURES_CALLBACK_SNAPSHOT_TILES) {
         for (i = 0; i < WCPRESSURES_TRACKED_COUNT; i++) {
-            if (((void **)state)[i + 1] != NULL) {
-                *(f32 *)(state + WCPRESSURES_STATE_SAVED_X + i * WCPRESSURES_STATE_SAVED_POS_STRIDE) =
-                    *(f32 *)(((int *)state)[i + 1] + 0xc);
-                *(f32 *)(state + WCPRESSURES_STATE_SAVED_Z + i * WCPRESSURES_STATE_SAVED_POS_STRIDE) =
-                    *(f32 *)(((int *)state)[i + 1] + WCPRESSURES_OBJECT_Z_OFFSET);
+            if ((void *)state->objects[i] != NULL) {
+                state->savedPos[i].x = *(f32 *)(state->objects[i] + 0xc);
+                state->savedPos[i].z = *(f32 *)(state->objects[i] + WCPRESSURES_OBJECT_Z_OFFSET);
             }
         }
         *(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) = WCPRESSURES_CALLBACK_NONE;
     } else if (*(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) == WCPRESSURES_CALLBACK_RESET) {
         for (i = 0; i < WCPRESSURES_TRACKED_COUNT; i++) {
-            *(int *)(state + WCPRESSURES_STATE_OBJECTS + i * 4) = 0;
+            state->objects[i] = 0;
         }
-        *(f32 *)(obj + WCPRESSURES_OBJECT_Z_OFFSET) = *(f32 *)(setup + WCPRESSURES_SETUP_POS_X_OFFSET);
-        *(f32 *)(obj + WCPRESSURES_OBJECT_Y_OFFSET) = *(f32 *)(setup + WCPRESSURES_SETUP_POS_Y_OFFSET);
-        *(f32 *)(obj + WCPRESSURES_OBJECT_Z_OFFSET) = *(f32 *)(setup + WCPRESSURES_SETUP_POS_Z_OFFSET);
-        GameBit_Set(*(s16 *)(setup + WCPRESSURES_SETUP_SOLVED_BIT_OFFSET), 0);
+        *(f32 *)(obj + WCPRESSURES_OBJECT_Z_OFFSET) = setup->x;
+        *(f32 *)(obj + WCPRESSURES_OBJECT_Y_OFFSET) = setup->y;
+        *(f32 *)(obj + WCPRESSURES_OBJECT_Z_OFFSET) = setup->z;
+        GameBit_Set(setup->solvedBit, 0);
         *(u8 *)(callbackData + WCPRESSURES_CALLBACK_COMMAND_OFFSET) = WCPRESSURES_CALLBACK_NONE;
     }
 
@@ -154,22 +196,22 @@ void wcpressures_hitDetect(void) {}
 #pragma scheduling off
 void wcpressures_update(int obj)
 {
-    int r4c = *(int *)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
-    int state = *(int *)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
+    WCPressuresSetup *setup = *(WCPressuresSetup **)(obj + WCPRESSURES_OBJECT_SETUP_OFFSET);
+    WCPressuresState *state = *(WCPressuresState **)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
     int i;
     int j;
     f32 thr;
 
-    if (*(s16 *)(r4c + WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET) > 0 &&
-        (u32)GameBit_Get(*(s16 *)(r4c + WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET)) == 0) {
-        fn_80137948(sWCPressuresActivateFormat, *(s16 *)(r4c + WCPRESSURES_SETUP_ACTIVATE_BIT_OFFSET));
+    if (setup->activateBit > 0 &&
+        (u32)GameBit_Get(setup->activateBit) == 0) {
+        fn_80137948(sWCPressuresActivateFormat, setup->activateBit);
         return;
     }
     {
-        int n = WCPRESSURES_STATE_TIMER(state) - 1;
-        WCPRESSURES_STATE_TIMER(state) = n;
+        int n = state->pressTimer - 1;
+        state->pressTimer = n;
         if ((s8)n < 0)
-            WCPRESSURES_STATE_TIMER(state) = 0;
+            state->pressTimer = 0;
     }
     if ((s8)*(u8 *)(*(int *)(obj + WCPRESSURES_HITLIST_OFFSET) + WCPRESSURES_HITLIST_COUNT_OFFSET) > 0) {
         for (i = 0;
@@ -178,66 +220,66 @@ void wcpressures_update(int obj)
             int ent = *(int *)(*(int *)(obj + WCPRESSURES_HITLIST_OFFSET) +
                                (i * 4 + WCPRESSURES_HITLIST_OBJECTS_OFFSET));
             if (*(f32 *)(ent + 0x10) - *(f32 *)(obj + 0x10) >
-                (f32)(u32) * (u8 *)(r4c + WCPRESSURES_SETUP_TRIGGER_HEIGHT_OFFSET)) {
-                int s2 = *(int *)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
+                (f32)(u32)setup->triggerHeight) {
+                WCPressuresState *s2 = *(WCPressuresState **)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
                 int slot;
 
-                for (j = 0; (void *)WCPRESSURES_SLOT_OBJECT(s2, j) != NULL ||
+                for (j = 0; (void *)s2->objects[(u8)j] != NULL ||
                             (u8)j == WCPRESSURES_TRACKED_COUNT - 1;
                      j++)
                     ;
                 slot = (u8)j;
-                WCPRESSURES_SLOT_OBJECT(s2, slot) = ent;
-                WCPRESSURES_SLOT_X(s2, slot) = *(f32 *)(ent + 0xc);
-                WCPRESSURES_SLOT_Z(s2, slot) = *(f32 *)(ent + 0x14);
+                s2->objects[slot] = ent;
+                s2->savedPos[slot].x = *(f32 *)(ent + 0xc);
+                s2->savedPos[slot].z = *(f32 *)(ent + 0x14);
             }
         }
     }
     {
-        int s2 = *(int *)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
+        WCPressuresState *s2 = *(WCPressuresState **)(obj + WCPRESSURES_OBJECT_STATE_OFFSET);
         int found = 0;
 
         for (j = 0; (u8)j < WCPRESSURES_TRACKED_COUNT; j++) {
             int slot = (u8)j;
-            int val = WCPRESSURES_SLOT_OBJECT(s2, slot);
+            int val = s2->objects[slot];
             if ((u32)val != 0) {
-                if (WCPRESSURES_SLOT_X(s2, slot) == *(f32 *)(val + 0xc) &&
-                    WCPRESSURES_SLOT_Z(s2, slot) == *(f32 *)(val + 0x14)) {
+                if (s2->savedPos[slot].x == *(f32 *)(val + 0xc) &&
+                    s2->savedPos[slot].z == *(f32 *)(val + 0x14)) {
                     found = 1;
                 } else {
-                    WCPRESSURES_SLOT_OBJECT(s2, slot) = 0;
+                    s2->objects[slot] = 0;
                 }
             }
         }
         if (found)
-            WCPRESSURES_STATE_TIMER(state) = WCPRESSURES_FOUND_TIMER;
+            state->pressTimer = WCPRESSURES_FOUND_TIMER;
     }
-    thr = *(f32 *)(r4c + 0xc) - (f32)(u32) * (u8 *)(r4c + WCPRESSURES_SETUP_PRESS_DEPTH_OFFSET);
-    switch (WCPRESSURES_STATE_MODE_BYTE(state)) {
+    thr = setup->y - (f32)(u32)setup->pressDepth;
+    switch (state->mode) {
     case WCPRESSURES_MODE_RAISED:
-        if (WCPRESSURES_STATE_TIMER(state) != 0 && *(f32 *)(obj + 0x10) >= thr) {
+        if (state->pressTimer != 0 && *(f32 *)(obj + 0x10) >= thr) {
             Sfx_PlayFromObject(obj, SFXsc_lockon2_on);
-            WCPRESSURES_STATE_MODE_BYTE(state) = WCPRESSURES_MODE_LOWERING;
+            state->mode = WCPRESSURES_MODE_LOWERING;
         }
         break;
     case WCPRESSURES_MODE_RISING:
         *(f32 *)(obj + 0x10) = lbl_803E6E04 * timeDelta + *(f32 *)(obj + 0x10);
-        if (*(f32 *)(obj + 0x10) > *(f32 *)(r4c + 0xc)) {
-            *(f32 *)(obj + 0x10) = *(f32 *)(r4c + 0xc);
-            WCPRESSURES_STATE_MODE_BYTE(state) = WCPRESSURES_MODE_RAISED;
+        if (*(f32 *)(obj + 0x10) > setup->y) {
+            *(f32 *)(obj + 0x10) = setup->y;
+            state->mode = WCPRESSURES_MODE_RAISED;
         }
         break;
     case WCPRESSURES_MODE_PRESSED:
-        if ((u32)GameBit_Get(*(s16 *)(r4c + WCPRESSURES_SETUP_SOLVED_BIT_OFFSET)) == 0) {
+        if ((u32)GameBit_Get(setup->solvedBit) == 0) {
             Sfx_PlayFromObject(obj, SFXsc_lockon2_on);
-            WCPRESSURES_STATE_MODE_BYTE(state) = WCPRESSURES_MODE_RISING;
+            state->mode = WCPRESSURES_MODE_RISING;
         }
         break;
     case WCPRESSURES_MODE_LOWERING:
         *(f32 *)(obj + 0x10) = *(f32 *)(obj + 0x10) - lbl_803E6E04 * timeDelta;
         if (*(f32 *)(obj + 0x10) < thr) {
-            GameBit_Set(*(s16 *)(r4c + WCPRESSURES_SETUP_SOLVED_BIT_OFFSET), 1);
-            WCPRESSURES_STATE_MODE_BYTE(state) = WCPRESSURES_MODE_PRESSED;
+            GameBit_Set(setup->solvedBit, 1);
+            state->mode = WCPRESSURES_MODE_PRESSED;
             *(f32 *)(obj + 0x10) = thr;
         }
         break;
@@ -245,8 +287,8 @@ void wcpressures_update(int obj)
     {
         int *tex = objFindTexture(obj, WCPRESSURES_TEXTURE_DEFAULT, WCPRESSURES_TEXTURE_DEFAULT);
         if (tex != 0) {
-            *tex = WCPRESSURES_STATE_MODE_BYTE(state) == WCPRESSURES_MODE_PRESSED ? WCPRESSURES_TEXTURE_PRESSED
-                                                                                  : WCPRESSURES_TEXTURE_DEFAULT;
+            *tex = state->mode == WCPRESSURES_MODE_PRESSED ? WCPRESSURES_TEXTURE_PRESSED
+                                                            : WCPRESSURES_TEXTURE_DEFAULT;
             *tex = *tex << WCPRESSURES_TEXTURE_SHIFT;
         }
     }
@@ -258,31 +300,32 @@ void wcpressures_update(int obj)
 #pragma scheduling off
 void wcpressures_init(u8 *obj, u8 *setup)
 {
-    u8 *state = *(u8 **)(obj + 0xb8);
+    WCPressuresState *state = *(WCPressuresState **)(obj + 0xb8);
+    WCPressuresSetup *setupData = (WCPressuresSetup *)setup;
     s16 objType;
     u16 objFlags;
     s8 modelIndex;
     int i;
 
-    objType = (s16)(setup[0x18] << 8);
+    objType = (s16)(setupData->objectTypeHi << 8);
     *(s16 *)obj = objType;
     objFlags = *(u16 *)(obj + 0xb0) | 0x6000;
     *(u16 *)(obj + 0xb0) = objFlags;
-    modelIndex = (s8)setup[0x19];
+    modelIndex = (s8)setupData->modelIndex;
     *(s8 *)(obj + 0xad) = modelIndex;
     if (*(s8 *)(obj + 0xad) >= *(s8 *)(*(int *)(obj + 0x50) + 0x55)) {
         obj[0xad] = 0;
     }
 
-    if ((u32)GameBit_Get(*(s16 *)(setup + 0x1a)) != 0) {
-        *(f32 *)(obj + 0x10) = *(f32 *)(setup + 0xc) - (f32)*(u8 *)(setup + 0x1c);
-        state[0] = 0x1e;
-        state[1] = 2;
+    if ((u32)GameBit_Get(setupData->solvedBit) != 0) {
+        *(f32 *)(obj + 0x10) = setupData->y - (f32)setupData->pressDepth;
+        state->pressTimer = WCPRESSURES_SOLVED_TIMER;
+        state->mode = WCPRESSURES_MODE_PRESSED;
     }
 
     ObjGroup_AddObject((int)obj, 0x31);
     for (i = 0; i < 10; i++) {
-        *(int *)(state + 4 + i * 4) = 0;
+        state->objects[i] = 0;
     }
     *(void **)(obj + 0xbc) = wcpressures_tileStateCallback;
 }
