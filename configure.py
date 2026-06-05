@@ -801,8 +801,6 @@ config.libs = [
             Object(NonMatching, "main/unknown/autos/placeholder_802757AC.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027587C.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_8027590C.c"),
-            Object(NonMatching, "main/unknown/autos/placeholder_8027C728.c"),
-            Object(NonMatching, "main/unknown/autos/placeholder_8027F724.c"),
             Object(NonMatching, "main/unknown/autos/placeholder_802801A8.c"),
             Object(NonMatching, "main/audio/snd3d.c", mw_version="GC/1.2.5n"),
             Object(NonMatching, "main/audio/inp_midi_set.c", mw_version="GC/1.2.5n"),
