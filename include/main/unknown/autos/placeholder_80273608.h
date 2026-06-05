@@ -1,8 +1,0 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80273608_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80273608_H_
-
-#include "ghidra_import.h"
-
-void synthUpdateJobTable(void);
-
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_80273608_H_ */
