@@ -17,7 +17,7 @@
 #include "main/dll/baddie/wispBaddie.h"
 
 extern f32   fn_80293E80(f32 x);
-extern void  pauseMenuDrawElement(void* tex, s16 x, u8 alpha, s32 mode, s32 flag, f32 a, f32 b);
+extern void  pauseMenuDrawElement(void* tex, f32 a, f32 b, s16 x, u8 alpha, s32 mode, s32 flag);
 
 extern u8 hudTextures[0x198];
 
@@ -230,8 +230,8 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
                     lbl_803DD7C8 = textureLoadAsset(0xbe7);
                 }
                 if (lbl_803DD7C8 != 0) {
-                    pauseMenuDrawElement(lbl_803DD7C8, (s16)(0x96 - lbl_803DD75C), (u8)x,
-                                         (s32)lbl_803E209C, 0, lbl_803E1E80, lbl_803E2098);
+                    pauseMenuDrawElement(lbl_803DD7C8, lbl_803E1E80, lbl_803E2098, (s16)(0x96 - lbl_803DD75C), (u8)x,
+                                         (s32)lbl_803E209C, 0);
                 }
             }
             fn_80127F24(x);
@@ -370,8 +370,8 @@ void pauseMenuDraw(int *arg1, int *arg2, int *arg3) {
                 lbl_803DBA8C = lbl_803E1E64;
                 gameTextShowStr(buf, 0x93, 0x14a, 0xdc);
                 lbl_803DBA8C = lbl_803E20A0;
-                pauseMenuDrawElement(*(void **)((u8 *)hudTextures + 0x134), (s16)0x258, (u8)alpha,
-                                     0x100, 0, lbl_803E1ECC, lbl_803E2018);
+                pauseMenuDrawElement(*(void **)((u8 *)hudTextures + 0x134), lbl_803E1ECC, lbl_803E2018, (s16)0x258, (u8)alpha,
+                                     0x100, 0);
                 break;
             }
             case 6:
@@ -613,8 +613,8 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
             s16 px = (s16)(0xe6 - lbl_803DD75C);
             for (i = 0; (u16)i < 7; i++) {
                 f32 fy = lbl_803E1FAC * (f32)(u32)(u16)i + lbl_803E1F30;
-                pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0x5c), px, (u8)ty,
-                                     (s32)lbl_803E20B8, 0, fy, lbl_803E20B4);
+                pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0x5c), fy, lbl_803E20B4, px, (u8)ty,
+                                     (s32)lbl_803E20B8, 0);
             }
         }
         for (j = 0; (u16)j < (*(int *)((u8 *)lbl_803A9364 + 0x1c) >> 2); j++) {
@@ -631,16 +631,16 @@ void pauseMenuDrawStatus_801274a0(int *arg1) {
             fyj = lbl_803E1FAC * (f32)(u32)(u16)j + lbl_803E1F30;
             for (i = 0x14; (s8)i >= 0; i -= 4) {
                 s16 px = (s16)((s16)(0xff - (s8)i) - lbl_803DD75C);
-                pauseMenuDrawElement(*(int **)(lbl_8031BB90 + (u8)tex * 4), px, (u8)ty,
-                                     (s32)lbl_803E20B8, 0, fyj, lbl_803E20B4);
+                pauseMenuDrawElement(*(int **)(lbl_8031BB90 + (u8)tex * 4), fyj, lbl_803E20B4, px, (u8)ty,
+                                     (s32)lbl_803E20B8, 0);
             }
         }
-        pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0xbc), (s16)(0x100 - lbl_803DD75C), (u8)ty,
-                             0x100, 0, (f32)lbl_803DBAD0, (f32)lbl_803DBAD4);
+        pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0xbc), (f32)lbl_803DBAD0, (f32)lbl_803DBAD4, (s16)(0x100 - lbl_803DD75C), (u8)ty,
+                             0x100, 0);
         drawFn_8011eb3c(*(void **)((u8 *)hudTextures + 0xb8), (f32)(lbl_803DBAD0 + 0x18), (f32)lbl_803DBAD4,
                         (s16)(0x100 - lbl_803DD75C), (u8)ty, 0x100, 0x66, 0x12, 0);
-        pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0xc0), (s16)(0x100 - lbl_803DD75C), (u8)ty,
-                             0x100, 0, (f32)(lbl_803DBAD0 + 0x7e), (f32)lbl_803DBAD4);
+        pauseMenuDrawElement(*(int **)((u8 *)hudTextures + 0xc0), (f32)(lbl_803DBAD0 + 0x7e), (f32)lbl_803DBAD4, (s16)(0x100 - lbl_803DD75C), (u8)ty,
+                             0x100, 0);
         hudDrawMagicBar((u8)ty, 0x100 - lbl_803DD75C, 1);
         lbl_803DD824 = (void *)lbl_8031BB90;
         fn_80128470(ty1);
@@ -664,7 +664,6 @@ void fn_80127F24(s32 param_1) {
     f32 baseAdd;
     f32 denom;
     f32 phase;
-    f32 yFloat;
     s32 i;
 
     phase = lbl_803E1F18 *
@@ -672,32 +671,31 @@ void fn_80127F24(s32 param_1) {
                         lbl_803E1E94);
 
     for (i = 10; (s8)i >= 0; i -= 2) {
-        s16 x = (s16)((s16)(0xf5 - (s8)i) - lbl_803DD75C);
+        s16 x;
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
-                    x,
-                    (u8)param_1, 0x200, 0,
-                    lbl_803E20BC, lbl_803E1EE4);
+                    lbl_803E20BC, lbl_803E1EE4,
+                    x = (s16)((0xf5 - (s8)i) - lbl_803DD75C),
+                    (u8)param_1, 0x200, 0);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x11c),
+                    lbl_803E20C0, lbl_803E1EE4,
                     x,
-                    (u8)param_1, 0x200, 0,
-                    lbl_803E20C0, lbl_803E1EE4);
+                    (u8)param_1, 0x200, 0);
     }
 
-    yFloat = lbl_803E20C4 - phase * lbl_803E1E6C;
     denom = lbl_803E2090;
     baseAdd = lbl_803E20C8;
     baseSub = lbl_803E20D0;
     for (i = 10; (s8)i >= 0; i -= 10) {
-        f32 off = (denom - (f32)(s32)((s8)i)) * phase / denom;
-        s16 x = (s16)((s16)(0xff - (s8)i) - lbl_803DD75C);
+        f32 off = phase * (denom - (f32)(s32)(s8)i) / denom;
+        s16 x;
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
-                    x,
-                    (u8)param_1, (s32)yFloat, 0,
-                    baseAdd + off, lbl_803E20CC);
+                    baseAdd + off, lbl_803E20CC,
+                    x = (s16)((0xff - (s8)i) - lbl_803DD75C),
+                    (u8)param_1, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
         pauseMenuDrawElement(*(void**)((u8*)hudTextures + 0x118),
+                    baseSub - off, lbl_803E20CC,
                     x,
-                    (u8)param_1, (s32)yFloat, 0,
-                    baseSub - off, lbl_803E20CC);
+                    (u8)param_1, (s32)(lbl_803E20C4 - phase * lbl_803E1E6C), 0);
     }
 }
 #pragma peephole reset
