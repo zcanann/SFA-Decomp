@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/objanim.h"
 #include "main/dll/moveLib.h"
 
 extern undefined4 FUN_80003494();
@@ -1750,7 +1751,6 @@ u8 dll_19_func08(int obj, char *st, f32 dist)
 #pragma scheduling reset
 
 extern int Curve_AdvanceAlongPath(int curve);
-extern int ObjAnim_SampleRootCurvePhase(int objAnim, f32 distance, f32 *phaseOut);
 extern int hitDetectFn_800658a4(int obj, f32 x, f32 y, f32 z, f32 *out, int flag);
 extern f32 lbl_803E1CB0;
 
@@ -1794,7 +1794,7 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32 *d, int *fla
             *flags |= 0x10;
         }
     }
-    ObjAnim_SampleRootCurvePhase(obj, phase, d);
+    ObjAnim_SampleRootCurvePhase(phase, (ObjAnimComponent *)obj, d);
     if (*flags & 1) {
         if (hitDetectFn_800658a4(obj, *(f32 *)(obj + 0xc), *(f32 *)(obj + 0x10),
                                  *(f32 *)(obj + 0x14), &ground, 0) == 0) {
@@ -1815,7 +1815,6 @@ int dll_2E_func0E(int obj, int curve, f32 phase, int p4, int c, f32 *d, int *fla
 
 extern int Obj_GetPlayerObject(void);
 extern s16 *objModelGetVecFn_800395d8(int obj, int idx);
-extern int ObjAnim_AdvanceCurrentMove(int objAnim, f32 moveStepScale, f32 deltaTime, int flags);
 extern u8 framesThisStep;
 extern f32 lbl_803E1CC4;
 
@@ -1868,7 +1867,7 @@ int dll_2E_func07(int obj, char *state, char *st, s16 a, s16 b)
                 break;
             }
             *(int *)(st + 0x604) = player;
-            ObjAnim_AdvanceCurrentMove(obj, *(f32 *)(st + 0x0), (f32)framesThisStep, 0);
+            ObjAnim_AdvanceCurrentMove(*(f32 *)(st + 0x0), (f32)framesThisStep, obj, NULL);
             if (*(u8 *)(st + 0x600) == 7) {
                 s16 *v;
                 *(s16 *)(state + 0x6e) = *(s16 *)(state + 0x6e) | 8;
@@ -1948,7 +1947,6 @@ f32 dll_19_func05(int obj, f32 px, f32 pz, f32 range, char *st)
 
 extern void normalize(f32 *x, f32 *y, f32 *z);
 extern void objMove(int obj, f32 vx, f32 vy, f32 vz);
-extern int ObjAnim_SetCurrentMove(int objAnim, int moveId, f32 moveProgress, int flags);
 extern f32 lbl_803E1CB4;
 extern f32 lbl_803E1CB8;
 extern f32 lbl_803E1CBC;
@@ -2020,7 +2018,7 @@ int dll_2E_func0D(int obj, int target, f32 speed, int move, f32 *out, u8 *flags)
             delta = delta + 0xffff;
         }
         speed = speed * -sin(lbl_803E1CBC * (f32)delta / lbl_803E1CC0);
-        ObjAnim_SampleRootCurvePhase(obj, speed, out);
+        ObjAnim_SampleRootCurvePhase(speed, (ObjAnimComponent *)obj, out);
     }
     return 0;
 }
