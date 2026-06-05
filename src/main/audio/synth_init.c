@@ -34,7 +34,7 @@ extern u32 audioFn_8026f630(u8 key, u8 midi, u8 midiSet, u32 newVID, u32* reject
 extern u32 macStart(u16 macid, u8 priority, u8 maxVoices, u16 allocId, u8 key, u8 vol,
                             u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                             u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
-extern u32 audioKeymapFn_8026fc8c(u16 keymapID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol,
+extern u32 StartKeymap(u16 keymapID, s16 prio, u8 maxVoices, u16 allocId, u8 key, u8 vol,
                                   u8 panning, u8 midi, u8 midiSet, u8 section, u16 step, u16 trackid,
                                   u32 vidFlag, u8 vGroup, u8 studio, u32 itd);
 extern u32 vidMakeRoot(LayerVoice* voice);
@@ -102,7 +102,7 @@ u32 audioLayerFn_8026f8b8(u16 layerID, s16 prio, u8 maxVoices, u16 allocId, u8 k
                                       midiSet, section, step, trackid, 0, vGroup, studio, itd);
             break;
         case 0x4000:
-            new_id = audioKeymapFn_8026fc8c(l->id, prio, maxVoices, allocId, k | (key & 0x80), v, p,
+            new_id = StartKeymap(l->id, prio, maxVoices, allocId, k | (key & 0x80), v, p,
                                             midi, midiSet, section, step, trackid, 0, vGroup, studio,
                                             itd);
             break;

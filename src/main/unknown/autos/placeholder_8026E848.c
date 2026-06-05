@@ -14,7 +14,7 @@ extern void inpResetMidiCtrl(u8 a, u8 b, u32 mode);
 extern void synthStartHandleFromRequest(int request, u32 *outHandle, u8 noLock);
 extern void synthFlushCallbacks(void);
 extern u32 *synthAllocCallback(s32 triggerValue, u8 controllerIndex);
-extern int audioFn_8026feec(u32 sampleId, char key, u32 velocity, u32 flags, u32 volume, u32 pan,
+extern int synthStartSound(u32 sampleId, char key, u32 velocity, u32 flags, u32 volume, u32 pan,
                             u32 param_7, u32 param_8, u8 param_9, u16 param_10, u16 param_11,
                             u8 auxIndex, int keyOffset, u8 studio, u32 studioAux);
 
@@ -273,7 +273,7 @@ int fn_8026E0E4(int event, u8 voice, u32 *flag)
                         }
                         sv2 = (SynthMidiState *)gSynthCurrentVoice;
                         vt = sv2->studioIndex;
-                        vid = audioFn_8026feec(macroId, sv2->chanPatch[chan].a, sv2->chanPatch[chan].b,
+                        vid = synthStartSound(macroId, sv2->chanPatch[chan].a, sv2->chanPatch[chan].b,
                                                key & 0xff, vel & 0xff, 0x40, chan,
                                                gSynthCurrentVoiceSlotIndex & 0xff, voice, 0,
                                                *(u8 *)(event + 0x15), sv2->chanMap[*(u8 *)(event + 0x15)],
