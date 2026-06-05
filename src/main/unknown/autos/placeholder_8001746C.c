@@ -1,4 +1,5 @@
 #include "ghidra_import.h"
+#include "main/model_light.h"
 #include "main/unknown/autos/placeholder_8001746C.h"
 
 typedef struct {
@@ -8241,24 +8242,24 @@ void fn_8001D98C(u8 *p, void *v) {
     *(void **)(p + 0x16c) = v;
 }
 
-void *fn_8001DB1C(u8 *p) {
-    return *(void **)(p + 0x54);
+void *fn_8001DB1C(ModelLightStruct *p) {
+    return p->field54;
 }
 
-void fn_8001DB24(u8 *p, void *v) {
-    *(void **)(p + 0x54) = v;
+void fn_8001DB24(ModelLightStruct *p, void *v) {
+    p->field54 = v;
 }
 
-void fn_8001DB5C(u8 *p, u8 v) {
-    p[0x2fc] = v;
+void fn_8001DB5C(ModelLightStruct *p, u8 v) {
+    p->field2FC = v;
 }
 
-void *fn_8001DB64(u8 *p) {
-    return *(void **)(p + 0x58);
+void *fn_8001DB64(ModelLightStruct *p) {
+    return p->field58;
 }
 
-f32 modelLightStruct_getRadius(u8 *p) {
-    return *(f32 *)(p + 0x144);
+f32 modelLightStruct_getRadius(ModelLightStruct *p) {
+    return p->outerRadius;
 }
 
 void fn_80026C30(u8 *p, u8 v) {
@@ -8277,20 +8278,20 @@ void gameTextSetDrawFunc(void *fn) {
 }
 #pragma dont_inline reset
 
-void lightSetField2FB(u8 *p, u8 v) {
-    p[0x2fb] = v;
+void lightSetField2FB(ModelLightStruct *p, u8 v) {
+    p->affectsAabbLightSelection = v;
 }
 
-void lightSetField4D(u8 *p, u8 v) {
-    p[0x4d] = v;
+void lightSetField4D(ModelLightStruct *p, u8 v) {
+    p->field4D = v;
 }
 
-void lightSetFieldBC_8001db14(u8 *p, u8 v) {
-    p[0xbc] = v;
+void lightSetFieldBC_8001db14(ModelLightStruct *p, u8 v) {
+    p->fieldBC = v;
 }
 
-void modelLightStruct_setField50(u8 *p, void *v) {
-    *(void **)(p + 0x50) = v;
+void modelLightStruct_setField50(ModelLightStruct *p, int v) {
+    p->lightKind = v;
 }
 
 extern u8 lbl_803DCA30;
@@ -8694,16 +8695,16 @@ void blankScreen(int frames) {
     }
 }
 
-void modelLightStruct_getPosition(u8 *p, f32 *a, f32 *b, f32 *c) {
-    *a = *(f32 *)(p + 0x1c);
-    *b = *(f32 *)(p + 0x20);
-    *c = *(f32 *)(p + 0x24);
+void modelLightStruct_getPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 *c) {
+    *a = p->viewX;
+    *b = p->viewY;
+    *c = p->viewZ;
 }
 
-void fn_8001DD6C(u8 *p, f32 *a, f32 *b, f32 *c) {
-    *a = *(f32 *)(p + 0x10);
-    *b = *(f32 *)(p + 0x14);
-    *c = *(f32 *)(p + 0x18);
+void modelLightStruct_getWorldPosition(ModelLightStruct *p, f32 *a, f32 *b, f32 *c) {
+    *a = p->worldX;
+    *b = p->worldY;
+    *c = p->worldZ;
 }
 
 #pragma peephole on
@@ -8789,44 +8790,44 @@ extern int randomGetRange(int lo, int hi);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void modelLightStruct_getColors100104(u8 *p, u8 *a, u8 *b, u8 *c, u8 *d) {
-    *a = p[0x100];
-    *b = p[0x101];
-    *c = p[0x102];
-    *d = p[0x103];
+void modelLightStruct_getColors100104(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d) {
+    *a = p->color100[0];
+    *b = p->color100[1];
+    *c = p->color100[2];
+    *d = p->color100[3];
 }
 
-void modelLightStruct_getColorsA8AC(u8 *p, u8 *a, u8 *b, u8 *c, u8 *d) {
-    *a = p[0xa8];
-    *b = p[0xa9];
-    *c = p[0xaa];
-    *d = p[0xab];
+void modelLightStruct_getColorsA8AC(ModelLightStruct *p, u8 *a, u8 *b, u8 *c, u8 *d) {
+    *a = p->colorA8[0];
+    *b = p->colorA8[1];
+    *c = p->colorA8[2];
+    *d = p->colorA8[3];
 }
 
 void fn_8001DA3C(u8 *p, f32 a, f32 b, f32 c) {
     GXInitLightAttnA(p + 0x68, a, b, c);
 }
 
-void modelLightStruct_setColors100104(u8 *p, u8 a, u8 b, u8 c, u8 d) {
-    p[0x104] = a;
-    p[0x100] = a;
-    p[0x105] = b;
-    p[0x101] = b;
-    p[0x106] = c;
-    p[0x102] = c;
-    p[0x107] = d;
-    p[0x103] = d;
+void modelLightStruct_setColors100104(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
+    p->color104[0] = a;
+    p->color100[0] = a;
+    p->color104[1] = b;
+    p->color100[1] = b;
+    p->color104[2] = c;
+    p->color100[2] = c;
+    p->color104[3] = d;
+    p->color100[3] = d;
 }
 
-void modelLightStruct_setColorsA8AC(u8 *p, u8 a, u8 b, u8 c, u8 d) {
-    p[0xac] = a;
-    p[0xa8] = a;
-    p[0xad] = b;
-    p[0xa9] = b;
-    p[0xae] = c;
-    p[0xaa] = c;
-    p[0xaf] = d;
-    p[0xab] = d;
+void modelLightStruct_setColorsA8AC(ModelLightStruct *p, u8 a, u8 b, u8 c, u8 d) {
+    p->colorAC[0] = a;
+    p->colorA8[0] = a;
+    p->colorAC[1] = b;
+    p->colorA8[1] = b;
+    p->colorAC[2] = c;
+    p->colorA8[2] = c;
+    p->colorAC[3] = d;
+    p->colorA8[3] = d;
 }
 
 void lightGetColor(int i, u8 *a, u8 *b, u8 *c) {

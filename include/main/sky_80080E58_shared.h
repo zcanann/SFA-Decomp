@@ -153,7 +153,7 @@ extern f32 lbl_803DF078;
 extern f32 PSVECMag(f32 *vec);
 extern void PSVECScale(f32 scale, f32 *src, f32 *dst);
 extern void modelLightFn_8001ec94(u8 *obj, u8 **outLights, int maxLights, int *outCount, int typeMask);
-extern void fn_8001DD6C(u8 *p, f32 *a, f32 *b, f32 *c);
+extern void modelLightStruct_getWorldPosition(u8 *p, f32 *a, f32 *b, f32 *c);
 extern const f32 lbl_803DF0F0;
 extern const f32 lbl_803DF0F4;
 extern const f32 lbl_803DF0F8;

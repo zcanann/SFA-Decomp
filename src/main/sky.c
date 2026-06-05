@@ -1776,7 +1776,7 @@ void fn_8008923C(u8 *obj, f32 *x, f32 *y, f32 *z)
                         p++;
                     }
                 }
-                fn_8001DD6C(cur, &lx, &ly, &lz);
+                modelLightStruct_getWorldPosition(cur, &lx, &ly, &lz);
                 dir[0] = *(f32 *)(obj + 0x18) - lx;
                 dir[1] = *(f32 *)(obj + 0x1c) - ly;
                 dir[2] = *(f32 *)(obj + 0x20) - lz;
