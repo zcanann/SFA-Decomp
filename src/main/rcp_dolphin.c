@@ -2491,35 +2491,38 @@ void ShaderDef_free(int *def) {
 #pragma peephole reset
 #pragma scheduling reset
 
-extern int lbl_803DCDBC;
-extern void *lbl_803DCDC4;
 typedef struct LoadedTextureEntry {
     int key;
-    void *texture;
+    u8 *texture;
     u8 flag;
     u8 padding[3];
     u32 size;
 } LoadedTextureEntry;
+
+extern int lbl_803DCDBC;
+extern LoadedTextureEntry *lbl_803DCDC4;
+#define gLoadedTextureCount lbl_803DCDBC
+#define gLoadedTextures lbl_803DCDC4
 #pragma peephole off
 #pragma scheduling off
 void* textureIdxToPtr(int idx) {
     int i;
     if ((u32)idx & 0x80000000) return (void*)idx;
     i = idx - 1;
-    if (i < 0 || i >= lbl_803DCDBC) return NULL;
-    return *(void**)((u8*)lbl_803DCDC4 + i * 16 + 4);
+    if (i < 0 || i >= gLoadedTextureCount) return NULL;
+    return gLoadedTextures[i].texture;
 }
 
 void* getLoadedTexture(int key) {
-    LoadedTextureEntry *iter;
     LoadedTextureEntry *base;
+    LoadedTextureEntry *iter;
     int count;
     int i;
 
     i = 0;
-    base = (LoadedTextureEntry *)lbl_803DCDC4;
+    base = gLoadedTextures;
     iter = base;
-    count = lbl_803DCDBC;
+    count = gLoadedTextureCount;
     for (; i < count; i++) {
         if (key == iter->key) {
             return base[i].texture;
@@ -2814,11 +2817,10 @@ void textureFn_80053d58(void *vobj) {
 extern void findSomething(int);
 extern void mm_free(void *);
 void textureFree(u8 *tex) {
-    int i;
     u8 *iter;
     u8 *next;
     int count;
-    if (tex == (u8 *)*(void **)((u8 *)lbl_803DCDC4 + 4)) return;
+    if (tex == gLoadedTextures[0].texture) return;
     if (tex == NULL) {
         tex[75] = 10;
         return;
@@ -2832,13 +2834,12 @@ void textureFree(u8 *tex) {
     }
     (*(u16 *)(tex + 14))--;
     if (*(u16 *)(tex + 14) != 0) return;
-    i = 0;
-    count = lbl_803DCDBC;
+    count = gLoadedTextureCount;
     if (count <= 0) return;
     {
-        u8 *entry = (u8 *)lbl_803DCDC4;
+        LoadedTextureEntry *entry = gLoadedTextures;
         do {
-            if (*(u8 **)(entry + 4) == tex) {
+            if (entry->texture == tex) {
                 iter = *(u8 **)tex;
                 while (iter != NULL) {
                     if ((u32)iter < 0x80000000 || (u32)iter > 0x81800000) iter = NULL;
@@ -2851,12 +2852,11 @@ void textureFree(u8 *tex) {
                 }
                 if (tex[72] != 0) findSomething(*(int *)(tex + 64));
                 if (tex[73] == 0) mm_free(tex);
-                *(int *)((u8 *)lbl_803DCDC4 + i * 16) = -1;
-                *(u8 **)((u8 *)lbl_803DCDC4 + i * 16 + 4) = NULL;
+                entry->key = -1;
+                entry->texture = NULL;
                 return;
             }
-            entry += 16;
-            i++;
+            entry++;
             count--;
         } while (count != 0);
     }
@@ -3624,9 +3624,9 @@ void loadTextureFiles(void)
     int *out;
     int n;
 
-    lbl_803DCDC4 = (void *)mmAlloc(0x2bc0, 6, 0);
+    gLoadedTextures = (LoadedTextureEntry *)mmAlloc(0x2bc0, 6, 0);
     n = 0;
-    lbl_803DCDBC = n;
+    gLoadedTextureCount = n;
     p = getCurrentDataFile(0x24);
     lbl_8037E0B4[0] = p;
     if (lbl_8037E0B4 != NULL) {
@@ -3987,13 +3987,12 @@ extern char lbl_8030D058[];
 void texRestructRefs(int mode)
 {
     char *strs;
-    u8 *ent;
+    LoadedTextureEntry *entry;
     u8 *tex;
     u8 *na;
     int done;
     int pass;
     int i;
-    int off;
     u32 size;
     int d;
 
@@ -4006,13 +4005,12 @@ void texRestructRefs(int mode)
     OSReport(strs + 0x1194);
     testAndSet_onlyUseHeaps1and2(1);
     i = 0;
-    off = 0;
-    for (; i < lbl_803DCDBC; i++) {
-        ent = (u8 *)lbl_803DCDC4 + off;
-        tex = *(u8 **)(ent + 4);
-        if (tex != NULL && *(u8 *)(ent + 8) != 0 && tex[0x49] == 0 && *(int *)(ent + 0xc) != -1 &&
+    entry = gLoadedTextures;
+    for (; i < gLoadedTextureCount; i++, entry++) {
+        tex = entry->texture;
+        if (tex != NULL && entry->flag != 0 && tex[0x49] == 0 && entry->size != -1 &&
             mmGetRegionForPtr(tex) == 0 && *(void **)tex == NULL) {
-            size = *(u32 *)((u8 *)lbl_803DCDC4 + off + 0xc);
+            size = entry->size;
             na = (u8 *)mmAlloc(size, 0xa0a0a0a0, 0);
             if (na == NULL) {
                 OSReport(strs + 0x11b4, tex, getHeapItemSize(tex));
@@ -4023,12 +4021,11 @@ void texRestructRefs(int mode)
                 DCStoreRange(na, size);
                 textureFn_80053d58(na);
                 d = mmSetFreeDelay(0);
-                mm_free(*(void **)((u8 *)lbl_803DCDC4 + off + 4));
+                mm_free(entry->texture);
                 mmSetFreeDelay(d);
-                *(u8 **)((u8 *)lbl_803DCDC4 + off + 4) = na;
+                entry->texture = na;
             }
         }
-        off += 0x10;
     }
     testAndSet_onlyUseHeaps1and2(-1);
     OSReport(strs + 0x1238);
@@ -4037,14 +4034,13 @@ void texRestructRefs(int mode)
     while (done == 0 && pass < 4) {
         done = 1;
         i = 0;
-        off = 0;
-        for (; i < lbl_803DCDBC; i++) {
-            ent = (u8 *)lbl_803DCDC4 + off;
-            tex = *(u8 **)(ent + 4);
-            if (tex != NULL && *(u8 *)(ent + 8) != 0 && tex[0x49] == 0 && *(int *)(ent + 0xc) != -1) {
+        entry = gLoadedTextures;
+        for (; i < gLoadedTextureCount; i++, entry++) {
+            tex = entry->texture;
+            if (tex != NULL && entry->flag != 0 && tex[0x49] == 0 && entry->size != -1) {
                 if (mmGetRegionForPtr(tex) == 0) {
                     if (*(void **)tex == NULL) {
-                        size = *(u32 *)((u8 *)lbl_803DCDC4 + off + 0xc);
+                        size = entry->size;
                         na = (u8 *)mmAlloc(size, 0xa0a0a0a0, 0);
                         if (na == NULL) {
                             OSReport(strs + 0x125c, tex, getHeapItemSize(tex));
@@ -4065,15 +4061,15 @@ void texRestructRefs(int mode)
                             DCStoreRange(na, size);
                             textureFn_80053d58(na);
                             d = mmSetFreeDelay(0);
-                            mm_free(*(void **)((u8 *)lbl_803DCDC4 + off + 4));
+                            mm_free(entry->texture);
                             mmSetFreeDelay(d);
-                            *(u8 **)((u8 *)lbl_803DCDC4 + off + 4) = na;
+                            entry->texture = na;
                         }
                     }
                 } else if (mode == 0) {
                     if (mmGetRegionForPtr(tex) == 1 || mmGetRegionForPtr(tex) == 2) {
                         if (*(void **)tex == NULL && getHeapItemSize(tex) >= 0x3000) {
-                            size = *(u32 *)((u8 *)lbl_803DCDC4 + off + 0xc);
+                            size = entry->size;
                             na = (u8 *)mmAlloc(size, 0xa0a0a0a0, 0);
                             if (na == NULL) {
                                 OSReport(strs + 0x125c, tex, getHeapItemSize(tex));
@@ -4089,15 +4085,14 @@ void texRestructRefs(int mode)
                                 DCStoreRange(na, size);
                                 textureFn_80053d58(na);
                                 d = mmSetFreeDelay(0);
-                                mm_free(*(void **)((u8 *)lbl_803DCDC4 + off + 4));
+                                mm_free(entry->texture);
                                 mmSetFreeDelay(d);
-                                *(u8 **)((u8 *)lbl_803DCDC4 + off + 4) = na;
+                                entry->texture = na;
                             }
                         }
                     }
                 }
             }
-            off += 0x10;
         }
         printHeapStats(1);
         pass++;
@@ -4119,6 +4114,7 @@ void *textureLoad(int texId, u8 flag)
 {
     int orig;
     int *p;
+    LoadedTextureEntry *entry;
     u8 *walk;
     u8 *tex;
     u8 *first;
@@ -4139,7 +4135,6 @@ void *textureLoad(int texId, u8 flag)
     int packed;
     int base19;
     int slot;
-    int e18;
     int sizeOut;
     int frameOut;
 
@@ -4152,17 +4147,16 @@ void *textureLoad(int texId, u8 flag)
         }
     }
     n = 0;
-    walk = (u8 *)lbl_803DCDC4;
-    for (; n < lbl_803DCDBC; n++) {
-        if (*(int *)walk == texId) {
-            tex = *(u8 **)((u8 *)lbl_803DCDC4 + (n << 4) + 4);
+    entry = gLoadedTextures;
+    for (; n < gLoadedTextureCount; n++, entry++) {
+        if (entry->key == texId) {
+            tex = entry->texture;
             *(u16 *)(tex + 0xe) += 1;
-            if (flag != 0 && *(u8 *)((u8 *)lbl_803DCDC4 + (n << 4) + 8) != 0) {
+            if (flag != 0 && entry->flag != 0) {
                 return (void *)(n + 1);
             }
             return tex;
         }
-        walk += 0x10;
     }
     if (getLoadedFileFlags(0) != 0) {
         restore = OSDisableInterrupts();
@@ -4276,7 +4270,7 @@ resolved:
                 if (flag != 0) {
                     return (void *)1;
                 }
-                return *(void **)((u8 *)lbl_803DCDC4 + 4);
+                return gLoadedTextures[0].texture;
             }
         }
         if (frameOut != -1 && buf == NULL) {
@@ -4296,7 +4290,7 @@ resolved:
             if (flag != 0) {
                 return (void *)1;
             }
-            return *(void **)((u8 *)lbl_803DCDC4 + 4);
+            return gLoadedTextures[0].texture;
         }
         if (frameOut == -1) {
             buf = (u8 *)loadAndDecompressDataFile(file, 0, base19 + ((int *)lbl_803DCDB8)[k], sz2, 0,
@@ -4328,23 +4322,21 @@ resolved:
     walk = first;
     *(u32 *)(first + 0x4c) = size;
     slot = 0;
-    p = (int *)lbl_803DCDC4;
-    for (; slot < lbl_803DCDBC; slot++) {
-        if (*p == -1) {
+    entry = gLoadedTextures;
+    for (; slot < gLoadedTextureCount; slot++, entry++) {
+        if (entry->key == -1) {
             break;
         }
-        p += 4;
     }
-    if (slot == lbl_803DCDBC) {
-        lbl_803DCDBC += 1;
+    if (slot == gLoadedTextureCount) {
+        gLoadedTextureCount += 1;
+        entry = &gLoadedTextures[slot];
     }
-    e18 = slot << 4;
-    *(int *)((u8 *)lbl_803DCDC4 + e18) = orig;
-    *(u8 **)((u8 *)lbl_803DCDC4 + e18 + 4) = first;
-    *(u8 *)((u8 *)lbl_803DCDC4 + e18 + 8) = flag;
-    *(u32 *)((u8 *)lbl_803DCDC4 + e18 + 0xc) =
-        getHeapItemSize(*(void **)((u8 *)lbl_803DCDC4 + e18 + 4));
-    if (lbl_803DCDBC > 0x2bc) {
+    entry->key = orig;
+    entry->texture = first;
+    entry->flag = flag;
+    entry->size = getHeapItemSize(entry->texture);
+    if (gLoadedTextureCount > 0x2bc) {
         if (getLoadedFileFlags(0) != 0) {
             if (disabled == 1) {
                 OSRestoreInterrupts(restore);
@@ -4355,7 +4347,7 @@ resolved:
         if (flag != 0) {
             return (void *)1;
         }
-        return *(void **)((u8 *)lbl_803DCDC4 + 4);
+        return gLoadedTextures[0].texture;
     }
     while (walk != NULL) {
         textureFn_80053d58(walk);
