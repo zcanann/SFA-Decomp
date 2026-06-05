@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/frustum.h"
+#include "main/model_light.h"
 #include "main/track_dolphin.h"
 #include "dolphin/os/OSFastCast.h"
 
@@ -4330,7 +4331,7 @@ extern char gViewFrustumPlanes[];
 
 #pragma scheduling off
 #pragma peephole off
-void queueGlowRender(int* obj)
+void queueGlowRender(ModelLightStruct* light)
 {
     u8 i;
     u8 visible;
@@ -4340,9 +4341,9 @@ void queueGlowRender(int* obj)
 
     for (i = 0; i < 5; i++) {
         FrustumPlane* plane = (FrustumPlane*)(gViewFrustumPlanes + i * sizeof(FrustumPlane));
-        f32 dot = plane->normalX * (*(f32*)((char*)obj + 0x10) - playerMapOffsetX)
-                + *(f32*)((char*)obj + 0x14) * plane->normalY
-                + plane->normalZ * (*(f32*)((char*)obj + 0x18) - playerMapOffsetZ)
+        f32 dot = plane->normalX * (light->worldX - playerMapOffsetX)
+                + light->worldY * plane->normalY
+                + plane->normalZ * (light->worldZ - playerMapOffsetZ)
                 + plane->distance;
         if (lbl_803DEBCC + dot < lbl_803DEBCC) {
             visible = 0;
@@ -4351,13 +4352,13 @@ void queueGlowRender(int* obj)
     }
     visible = 1;
 check:
-    if (visible == 0 && *(u8*)((char*)obj + 0x2f9) == 0) return;
+    if (visible == 0 && light->glowAlpha == 0) return;
     if (visible == 0) {
-        *(s8*)((char*)obj + 0x2fa) = -0x10;
+        light->glowAlphaStep = -0x10;
     }
     idx = lbl_803DCE06;
     lbl_803DCE06 = (u8)(idx + 1);
-    lbl_80382038[idx] = (int)obj;
+    lbl_80382038[idx] = (int)light;
 }
 #pragma peephole reset
 #pragma scheduling reset
