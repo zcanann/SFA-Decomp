@@ -3,7 +3,6 @@
 
 #include "ghidra_import.h"
 
-undefined4 FUN_80117668(int param_1,int param_2);
 void THPPlayerDrawCurrentFrame(void *yTexture,void *uTexture,void *vTexture,uint width,uint height);
 BOOL Movie_SetVolumeFade(int volume,int fadeFrames);
 void AttractMovieAudio_Mix(s16 *dst,s16 *src,uint sampleCount);

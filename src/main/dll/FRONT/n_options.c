@@ -16,54 +16,44 @@ extern void gxSetPeControl_ZCompLoc_();
 extern void gxSetZMode_();
 extern undefined4 PopDecodedAudioBuffer(int flags);
 extern void PushFreeAudioBuffer(void *message);
-extern undefined4 FUN_801175b4();
-extern undefined4 FUN_801175b8();
 extern undefined4 FUN_80119928();
 extern undefined4 FUN_802420b0();
 extern undefined4 FUN_802420e0();
 extern undefined4 FUN_80243e74();
 extern undefined4 FUN_80243e88();
 extern undefined4 FUN_80243e9c();
-extern undefined4 FUN_802446f8();
 extern int FUN_80244820();
-extern int FUN_80246a0c();
 extern undefined4 FUN_8024fe60();
 extern uint FUN_8024ff18();
-extern undefined4 FUN_80258674();
-extern undefined4 FUN_80258944();
-extern undefined4 FUN_80259288();
-extern undefined4 FUN_8025aa74();
-extern undefined4 FUN_8025ace8();
-extern undefined4 FUN_8025b054();
-extern undefined4 FUN_8025be54();
-extern undefined4 FUN_8025be80();
-extern undefined4 FUN_8025c1a4();
-extern undefined4 FUN_8025c224();
-extern undefined4 FUN_8025c2a8();
-extern undefined4 FUN_8025c368();
-extern undefined4 FUN_8025c49c();
-extern undefined4 FUN_8025c510();
+extern undefined4 GXSetTexCoordGen2();
+extern undefined4 GXSetNumTexGens();
+extern undefined4 GXSetCullMode();
+extern undefined4 GXInitTexObj();
+extern undefined4 GXInitTexObjLOD();
+extern undefined4 GXLoadTexObj();
+extern undefined4 GXSetNumIndStages();
+extern undefined4 GXSetTevDirect();
+extern undefined4 GXSetTevColorIn();
+extern undefined4 GXSetTevAlphaIn();
+extern undefined4 GXSetTevColorOp();
+extern undefined4 GXSetTevAlphaOp();
+extern undefined4 GXSetTevColorS10();
+extern undefined4 GXSetTevKColor();
+extern undefined4 GXSetTevKColorSel();
+extern undefined4 GXSetTevKAlphaSel();
+extern undefined4 GXSetTevSwapMode();
+extern undefined4 GXSetTevSwapModeTable();
+extern undefined4 GXSetAlphaCompare();
+extern undefined4 GXSetTevOrder();
+extern undefined4 GXSetNumTevStages();
 extern undefined4 GXSetBlendMode();
-extern undefined4 FUN_8025c5f0();
-extern undefined4 FUN_8025c65c();
-extern undefined4 FUN_8025c6b4();
-extern undefined4 FUN_8025c754();
-extern undefined4 FUN_8025c828();
-extern undefined4 FUN_8025ca04();
-extern undefined4 FUN_8025cce8();
-extern undefined4 FUN_8025cdec();
-extern undefined4 FUN_8025ce2c();
-extern undefined8 FUN_80286840();
-extern undefined4 FUN_8028688c();
+extern undefined4 GXSetColorUpdate();
+extern undefined4 GXSetAlphaUpdate();
 extern void fn_8004C7AC(void *yTexture, void *uTexture, void *vTexture, int width, int height);
 extern u8 *ObjModel_GetRenderOp(undefined4 model, undefined4 idx);
 extern void PushFreeTextureSet(OSMessage msg);
 
 extern u16 lbl_8031A3B0[];
-extern undefined4 DAT_803a50a8;
-extern undefined4 DAT_803a50b4;
-extern undefined4 DAT_803a50c0;
-extern undefined4 DAT_803a50e0;
 extern undefined4 DAT_803a6420;
 extern undefined4 DAT_803a692c;
 extern undefined4 DAT_803a6a58;
@@ -82,13 +72,13 @@ extern undefined4 DAT_803de2ec;
 extern undefined4 DAT_803de2f0;
 extern undefined4 DAT_803de2f4;
 extern undefined4 DAT_803de2f8;
-extern undefined4 DAT_803e29b0;
-extern undefined4 DAT_803e29b4;
-extern undefined4 DAT_803e29b8;
-extern undefined4 DAT_803e29bc;
-extern undefined4 DAT_803e29c0;
+extern undefined4 lbl_803E1D30;
+extern undefined4 lbl_803E1D34;
+extern undefined4 lbl_803E1D38;
+extern undefined4 lbl_803E1D3C;
+extern undefined4 lbl_803E1D40;
 extern f64 DOUBLE_803e29c8;
-extern f32 FLOAT_803e29c4;
+extern f32 lbl_803E1D44;
 extern s32 lbl_803DD610;
 extern s32 lbl_803DD660;
 extern AIDCallback lbl_803DD668;
@@ -99,41 +89,6 @@ extern u32 lbl_803DD678;
 extern f32 lbl_803E1D50;
 extern char lbl_803A57C0[0x50C];
 extern OSMessageQueue lbl_803A5CCC;
-
-/*
- * --INFO--
- *
- * Function: FUN_80117668
- * EN v1.0 Address: 0x80117668
- * EN v1.0 Size: 188b
- * EN v1.1 Address: 0x8011784C
- * EN v1.1 Size: 196b
- * JP Address: TODO
- * JP Size: TODO
- * PAL Address: TODO
- * PAL Size: TODO
- */
-undefined4 FUN_80117668(int param_1,int param_2)
-{
-  int iVar1;
-  
-  if (param_2 == 0) {
-    iVar1 = FUN_80246a0c(-0x7fc59f00,FUN_801175b8,0,0x803a6100,0x1000,param_1,1);
-    if (iVar1 == 0) {
-      return 0;
-    }
-  }
-  else {
-    iVar1 = FUN_80246a0c(-0x7fc59f00,FUN_801175b4,param_2,0x803a6100,0x1000,param_1,1);
-    if (iVar1 == 0) {
-      return 0;
-    }
-  }
-  FUN_802446f8((undefined4 *)&DAT_803a50e0,&DAT_803a50b4,3);
-  FUN_802446f8((undefined4 *)&DAT_803a50c0,&DAT_803a50a8,3);
-  DAT_803de2d8 = 1;
-  return 1;
-}
 
 /*
  * --INFO--
@@ -153,88 +108,84 @@ void THPPlayerDrawCurrentFrame(void *param_1,void *param_2,void *param_3,uint pa
   uint uVar1;
   uint uVar2;
   double dVar3;
-  undefined8 uVar4;
-  undefined4 local_98;
-  undefined4 local_94;
-  undefined4 local_90;
-  undefined4 local_8c;
-  undefined4 local_88;
-  uint auStack_84 [8];
-  uint auStack_64 [8];
-  uint auStack_44 [17];
+  undefined4 kColor0;
+  undefined4 kColor1;
+  undefined4 kColor2;
+  undefined4 tevColorS10[2];
+  uint yTexObj[8];
+  uint uTexObj[8];
+  uint vTexObj[8];
   
-  uVar4 = FUN_80286840();
   gxSetZMode_(1,3,1);
-  FUN_8025cce8(0,1,0,0);
-  FUN_8025cdec(1);
-  FUN_8025ce2c(0);
-  FUN_80259288(2);
+  GXSetBlendMode(0,1,0,0);
+  GXSetColorUpdate(1);
+  GXSetAlphaUpdate(0);
+  GXSetCullMode(2);
   gxSetPeControl_ZCompLoc_(1);
-  FUN_8025c754(7,0,0,7,0);
-  FUN_80258944(2);
-  FUN_80258674(0,1,4,0x3c,0,0x7d);
-  FUN_80258674(1,1,4,0x3c,0,0x7d);
-  FUN_8025ca04(4);
-  FUN_8025be54(0);
-  FUN_8025c828(0,1,1,0xff);
-  FUN_8025be80(0);
-  FUN_8025c1a4(0,0xf,8,0xe,2);
-  FUN_8025c2a8(0,0,0,0,0,0);
-  FUN_8025c224(0,7,4,6,1);
-  FUN_8025c368(0,1,0,0,0,0);
-  GXSetBlendMode(0,0xc);
-  FUN_8025c5f0(0,0x1c);
-  FUN_8025c65c(0,0,0);
-  FUN_8025c828(1,1,2,0xff);
-  FUN_8025be80(1);
-  FUN_8025c1a4(1,0xf,8,0xe,0);
-  FUN_8025c2a8(1,0,0,1,0,0);
-  FUN_8025c224(1,7,4,6,0);
-  FUN_8025c368(1,1,0,0,0,0);
-  GXSetBlendMode(1,0xd);
-  FUN_8025c5f0(1,0x1d);
-  FUN_8025c65c(1,0,0);
-  FUN_8025c828(2,0,0,0xff);
-  FUN_8025be80(2);
-  FUN_8025c1a4(2,0xf,8,0xc,0);
-  FUN_8025c2a8(2,0,0,0,1,0);
-  FUN_8025c224(2,4,7,7,0);
-  FUN_8025c368(2,0,0,0,1,0);
-  FUN_8025c65c(2,0,0);
-  FUN_8025c828(3,0xff,0xff,0xff);
-  FUN_8025be80(3);
-  FUN_8025c1a4(3,1,0,0xe,0xf);
-  FUN_8025c2a8(3,0,0,0,1,0);
-  FUN_8025c224(3,7,7,7,7);
-  FUN_8025c368(3,0,0,0,1,0);
-  FUN_8025c65c(3,0,0);
-  GXSetBlendMode(3,0xe);
-  local_8c = DAT_803e29b0;
-  local_88 = DAT_803e29b4;
-  FUN_8025c49c(1,(short *)&local_8c);
-  local_90 = DAT_803e29b8;
-  FUN_8025c510(0,(byte *)&local_90);
-  local_94 = DAT_803e29bc;
-  FUN_8025c510(1,(byte *)&local_94);
-  local_98 = DAT_803e29c0;
-  FUN_8025c510(2,(byte *)&local_98);
-  FUN_8025c6b4(0,0,1,2,3);
-  FUN_8025aa74(auStack_44,(uint)((ulonglong)uVar4 >> 0x20),param_4 & 0xffff,param_5 & 0xffff,1,0,0,
+  GXSetAlphaCompare(7,0,0,7,0);
+  GXSetNumTexGens(2);
+  GXSetTexCoordGen2(0,1,4,0x3c,0,0x7d);
+  GXSetTexCoordGen2(1,1,4,0x3c,0,0x7d);
+  GXSetNumTevStages(4);
+  GXSetNumIndStages(0);
+  GXSetTevOrder(0,1,1,0xff);
+  GXSetTevDirect(0);
+  GXSetTevColorIn(0,0xf,8,0xe,2);
+  GXSetTevColorOp(0,0,0,0,0,0);
+  GXSetTevAlphaIn(0,7,4,6,1);
+  GXSetTevAlphaOp(0,1,0,0,0,0);
+  GXSetTevKColorSel(0,0xc);
+  GXSetTevKAlphaSel(0,0x1c);
+  GXSetTevSwapMode(0,0,0);
+  GXSetTevOrder(1,1,2,0xff);
+  GXSetTevDirect(1);
+  GXSetTevColorIn(1,0xf,8,0xe,0);
+  GXSetTevColorOp(1,0,0,1,0,0);
+  GXSetTevAlphaIn(1,7,4,6,0);
+  GXSetTevAlphaOp(1,1,0,0,0,0);
+  GXSetTevKColorSel(1,0xd);
+  GXSetTevKAlphaSel(1,0x1d);
+  GXSetTevSwapMode(1,0,0);
+  GXSetTevOrder(2,0,0,0xff);
+  GXSetTevDirect(2);
+  GXSetTevColorIn(2,0xf,8,0xc,0);
+  GXSetTevColorOp(2,0,0,0,1,0);
+  GXSetTevAlphaIn(2,4,7,7,0);
+  GXSetTevAlphaOp(2,0,0,0,1,0);
+  GXSetTevSwapMode(2,0,0);
+  GXSetTevOrder(3,0xff,0xff,0xff);
+  GXSetTevDirect(3);
+  GXSetTevColorIn(3,1,0,0xe,0xf);
+  GXSetTevColorOp(3,0,0,0,1,0);
+  GXSetTevAlphaIn(3,7,7,7,7);
+  GXSetTevAlphaOp(3,0,0,0,1,0);
+  GXSetTevSwapMode(3,0,0);
+  GXSetTevKColorSel(3,0xe);
+  tevColorS10[0] = lbl_803E1D30;
+  tevColorS10[1] = lbl_803E1D34;
+  GXSetTevColorS10(1,(short *)tevColorS10);
+  kColor0 = lbl_803E1D38;
+  GXSetTevKColor(0,(byte *)&kColor0);
+  kColor1 = lbl_803E1D3C;
+  GXSetTevKColor(1,(byte *)&kColor1);
+  kColor2 = lbl_803E1D40;
+  GXSetTevKColor(2,(byte *)&kColor2);
+  GXSetTevSwapModeTable(0,0,1,2,3);
+  GXInitTexObj(yTexObj,param_1,param_4 & 0xffff,param_5 & 0xffff,1,0,0,
                '\0');
-  dVar3 = (double)FLOAT_803e29c4;
-  FUN_8025ace8(dVar3,dVar3,dVar3,auStack_44,0,0,0,'\0',0);
-  FUN_8025b054(auStack_44,0);
+  dVar3 = (double)lbl_803E1D44;
+  GXInitTexObjLOD(yTexObj,0,0,dVar3,dVar3,dVar3,0,'\0',0);
+  GXLoadTexObj(yTexObj,0);
   uVar1 = (int)(short)param_4 >> 1;
   uVar2 = (int)(short)param_5 >> 1;
-  FUN_8025aa74(auStack_64,(uint)uVar4,uVar1 & 0xffff,uVar2 & 0xffff,1,0,0,'\0');
-  dVar3 = (double)FLOAT_803e29c4;
-  FUN_8025ace8(dVar3,dVar3,dVar3,auStack_64,0,0,0,'\0',0);
-  FUN_8025b054(auStack_64,1);
-  FUN_8025aa74(auStack_84,(uint)param_3,uVar1 & 0xffff,uVar2 & 0xffff,1,0,0,'\0');
-  dVar3 = (double)FLOAT_803e29c4;
-  FUN_8025ace8(dVar3,dVar3,dVar3,auStack_84,0,0,0,'\0',0);
-  FUN_8025b054(auStack_84,2);
-  FUN_8028688c();
+  GXInitTexObj(uTexObj,param_2,uVar1 & 0xffff,uVar2 & 0xffff,1,0,0,'\0');
+  dVar3 = (double)lbl_803E1D44;
+  GXInitTexObjLOD(uTexObj,0,0,dVar3,dVar3,dVar3,0,'\0',0);
+  GXLoadTexObj(uTexObj,1);
+  GXInitTexObj(vTexObj,param_3,uVar1 & 0xffff,uVar2 & 0xffff,1,0,0,'\0');
+  dVar3 = (double)lbl_803E1D44;
+  GXInitTexObjLOD(vTexObj,0,0,dVar3,dVar3,dVar3,0,'\0',0);
+  GXLoadTexObj(vTexObj,2);
   return;
 }
 
