@@ -1424,6 +1424,8 @@ ObjAnimComponent **ObjHitReact_GetResetObjects(int *outObjectCount)
 #pragma peephole off
 void ObjHits_InitWorkBuffers(void)
 {
+  int hitVolumeIndex;
+
   gObjHitReactResetObjects =
       (ObjAnimComponent **)mmAlloc(OBJHITREACT_MAX_RESET_OBJECTS * sizeof(ObjAnimComponent *),0xe,0);
   gObjHitsPriorityHitStates =
@@ -1434,11 +1436,10 @@ void ObjHits_InitWorkBuffers(void)
   gObjHitsSecondaryHitboxBufferScratch0 = mmAlloc(0x400,0xe,0);
   gObjHitsSecondaryHitboxBufferScratch1 = mmAlloc(0x400,0xe,0);
   gObjHitsPriorityHitTickDelta = lbl_803DE914;
-  gObjHitsActiveHitVolumeObjects[0] = 0;
-  gObjHitsActiveHitVolumeObjects[1] = 0;
-  gObjHitsActiveHitVolumeObjects[2] = 0;
-  gObjHitsActiveHitVolumeObjects[3] = 0;
-  gObjHitsActiveHitVolumeObjects[4] = 0;
+  for (hitVolumeIndex = 0; hitVolumeIndex < OBJHITS_ACTIVE_HIT_VOLUME_OBJECT_COUNT;
+       hitVolumeIndex++) {
+    gObjHitsActiveHitVolumeObjects[hitVolumeIndex] = 0;
+  }
   return;
 }
 #pragma peephole reset
