@@ -26,7 +26,7 @@
 
 extern int Sfx_PlayFromObject(u32 obj, int sfxId);
 extern int FUN_80006a10();
-extern int getAngle();
+extern int getAngle(f32 dx, f32 dz);
 extern uint randomGetRange();
 extern undefined4 fn_80017A88();
 extern void* Obj_AllocObjectSetup();
@@ -42,12 +42,12 @@ extern void fn_8014CD1C(double, double, void *, int, int, char);
 extern void fn_8014D08C(int, int, int, float, int, int);
 extern void fn_80154D0C(int, int, ushort *, float *);
 extern uint fn_80154FB4(double, short *, int, uint);
-extern int fn_80169EF4();
+extern int fn_80169EF4(f32 speed, f32 arc, float *src, float *dst, char flag);
 extern undefined4 PSVECSubtract();
 extern undefined4 PSVECNormalize();
 extern double PSVECDotProduct();
 extern undefined4 PSVECCrossProduct();
-extern undefined4 fn_80293018();
+extern void fn_80293018(int angle, float *outSin, float *outCos);
 extern double fn_80293900();
 extern uint fn_80295CBC();
 
@@ -61,7 +61,6 @@ extern f64 DOUBLE_803e36a8;
 extern f64 DOUBLE_803e36b0;
 extern f64 DOUBLE_803e3700;
 extern f64 DOUBLE_803e3738;
-extern f32 lbl_803DC074;
 extern f32 timeDelta;
 extern f32 lbl_803E2A00;
 extern f32 lbl_803E2A04;
@@ -482,54 +481,48 @@ void pollenFn_80155b10(uint param_9,int param_10)
   uint uVar1;
   int iVar2;
   undefined2 *puVar3;
-  double dVar4;
-  double dVar5;
-  float local_48;
-  float local_44;
-  float local_40;
+  f32 spd;
+  f32 t;
+  f32 dx;
+  f32 dz;
+  f32 a[3];
+  f32 b[3];
   float local_3c;
-  float local_38;
-  float local_34;
-  float local_30;
-  float local_2c;
-  float local_28;
-  undefined4 local_24;
-  undefined4 local_20;
-  uint uStack_1c;
-  
+  float local_40;
+  float local_44;
+  float local_48;
+
   uVar1 = Obj_IsLoadingLocked();
   if ((uVar1 & 0xff) != 0) {
-    local_2c = *(float *)(param_9 + 0xc);
-    local_28 = lbl_803E2A48 + *(float *)(param_9 + 0x10);
-    local_24 = *(undefined4 *)(param_9 + 0x14);
+    a[0] = *(float *)(param_9 + 0xc);
+    a[1] = lbl_803E2A48 + *(float *)(param_9 + 0x10);
+    a[2] = *(float *)(param_9 + 0x14);
     iVar2 = *(int *)(param_10 + 0x29c);
-    local_38 = *(float *)(iVar2 + 0xc);
-    local_34 = lbl_803E2A4C + *(float *)(iVar2 + 0x10);
-    local_30 = *(float *)(iVar2 + 0x14);
-    dVar5 = (double)(lbl_803E2A50 *
-                    (lbl_803E2A58 *
-                     (float)(int)randomGetRange(0xfffffff6,10) +
-                    lbl_803E2A54));
-    iVar2 = fn_80169EF4(dVar5,(double)lbl_803E2A5C,&local_2c,&local_38,'\x01');
-    fn_80293018(iVar2,&local_40,&local_3c);
-    local_3c = (float)((double)local_3c * dVar5);
-    local_40 = (float)((double)local_40 * dVar5);
-    dVar5 = (double)(local_38 - *(float *)(param_9 + 0xc));
-    dVar4 = (double)(local_30 - *(float *)(param_9 + 0x14));
-    if ((double)lbl_803E2A60 == dVar4) {
-      local_44 = lbl_803E2A60;
+    b[0] = *(float *)(iVar2 + 0xc);
+    b[1] = lbl_803E2A4C + *(float *)(iVar2 + 0x10);
+    b[2] = *(float *)(iVar2 + 0x14);
+    spd = lbl_803E2A50 *
+          (lbl_803E2A58 * (f32)(int)randomGetRange(-10, 10) + lbl_803E2A54);
+    iVar2 = fn_80169EF4(spd, lbl_803E2A5C, a, b, 1);
+    fn_80293018(iVar2, &local_40, &local_3c);
+    local_3c = local_3c * spd;
+    local_40 = local_40 * spd;
+    dx = b[0] - *(float *)(param_9 + 0xc);
+    dz = b[2] - *(float *)(param_9 + 0x14);
+    if (lbl_803E2A60 != dz) {
+      iVar2 = getAngle(dx, dz);
+      fn_80293018(iVar2, &local_48, &local_44);
+      t = local_3c;
+      local_44 = local_44 * t;
+      local_3c = t * local_48;
     }
     else {
-      iVar2 = getAngle();
-      fn_80293018(iVar2,&local_48,&local_44);
-      dVar5 = (double)local_3c;
-      local_44 = (float)((double)local_44 * dVar5);
-      local_3c = (float)(dVar5 * (double)local_48);
+      local_44 = lbl_803E2A60;
     }
     puVar3 = Obj_AllocObjectSetup(0x24,0x47b);
-    *(float *)(puVar3 + 4) = local_2c;
-    *(float *)(puVar3 + 6) = local_28;
-    *(undefined4 *)(puVar3 + 8) = local_24;
+    *(float *)(puVar3 + 4) = a[0];
+    *(float *)(puVar3 + 6) = a[1];
+    *(undefined4 *)(puVar3 + 8) = a[2];
     *(undefined *)(puVar3 + 2) = 1;
     *(undefined *)((int)puVar3 + 5) = 1;
     *(undefined *)(puVar3 + 3) = 0xff;
@@ -808,7 +801,7 @@ void fn_8015625C(ushort *param_9,int param_10)
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
     Sfx_PlayFromObject((uint)param_9,SFXfox_cough4);
   }
-  *(float *)(param_10 + 0x328) = *(float *)(param_10 + 0x328) - lbl_803DC074;
+  *(float *)(param_10 + 0x328) = *(float *)(param_10 + 0x328) - timeDelta;
   if (*(float *)(param_10 + 0x328) <= lbl_803E2A98) {
     if ((*(uint *)(param_10 + 0x2dc) & 0x600) != 0) {
       uVar2 = randomGetRange(0x96,0xfa);
@@ -832,7 +825,7 @@ void fn_8015625C(ushort *param_9,int param_10)
     }
   }
   else {
-    *(float *)(param_10 + 0x324) = *(float *)(param_10 + 0x324) - lbl_803DC074;
+    *(float *)(param_10 + 0x324) = *(float *)(param_10 + 0x324) - timeDelta;
     if (*(float *)(param_10 + 0x324) <= fVar1) {
       *(float *)(param_10 + 0x324) = lbl_803E2AB0;
       *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) | 0x10000;
@@ -857,7 +850,7 @@ void fn_8015625C(ushort *param_9,int param_10)
     *(undefined *)(param_10 + 0x33a) = 0;
     if (*(float *)(param_10 + 0x308) > lbl_803E2ADC) {
       *(float *)(param_10 + 0x308) =
-           -(lbl_803E2AE0 * lbl_803DC074 - *(float *)(param_10 + 0x308));
+           -(lbl_803E2AE0 * timeDelta - *(float *)(param_10 + 0x308));
     }
   }
   else {
@@ -906,7 +899,7 @@ void fn_8015652C(ushort *param_9,int param_10)
   if ((*(uint *)(param_10 + 0x2dc) & 0x40000000) != 0) {
     Sfx_PlayFromObject((uint)param_9,SFXfox_cough4);
   }
-  *(float *)(param_10 + 0x328) = *(float *)(param_10 + 0x328) - lbl_803DC074;
+  *(float *)(param_10 + 0x328) = *(float *)(param_10 + 0x328) - timeDelta;
   if (*(float *)(param_10 + 0x328) <= lbl_803E2A98) {
     if ((*(uint *)(param_10 + 0x2dc) & 0x600) != 0) {
       uVar2 = randomGetRange(0x96,0xfa);
@@ -925,7 +918,7 @@ void fn_8015652C(ushort *param_9,int param_10)
     *(uint *)(param_10 + 0x2e4) = *(uint *)(param_10 + 0x2e4) & 0xfffeffff;
   }
   else {
-    *(float *)(param_10 + 0x324) = *(float *)(param_10 + 0x324) - lbl_803DC074;
+    *(float *)(param_10 + 0x324) = *(float *)(param_10 + 0x324) - timeDelta;
     if (*(float *)(param_10 + 0x324) <= lbl_803E2A98) {
       *(float *)(param_10 + 0x324) = lbl_803E2A98;
     }
@@ -966,7 +959,7 @@ void fn_8015652C(ushort *param_9,int param_10)
   if ((*(byte *)(param_10 + 0x33a) == 0) || (dVar7 <= (double)lbl_803E2A98)) {
     *(undefined *)(param_10 + 0x33a) = 0;
     if (*(float *)(param_10 + 0x308) > lbl_803E2ADC) {
-      *(float *)(param_10 + 0x308) = -(lbl_803E2AE0 * lbl_803DC074 - *(float *)(param_10 + 0x308));
+      *(float *)(param_10 + 0x308) = -(lbl_803E2AE0 * timeDelta - *(float *)(param_10 + 0x308));
     }
   }
   else {
