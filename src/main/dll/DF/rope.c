@@ -1,5 +1,6 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
+#include "main/objanim.h"
 #include "main/dll/DF/rope.h"
 #include "main/dll/mmsh_waterspike.h"
 
@@ -136,7 +137,6 @@ extern f32 lbl_803E4D6C;
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern f32 fn_80293E80(f32 x);
 extern f32 sin(f32 x);
-extern void ObjAnim_AdvanceCurrentMove(int obj, f32 a, f32 b, int c);
 extern f32 lbl_803E4CD0;
 extern f32 lbl_803E4CD4;
 extern f32 lbl_803E4CD8;
@@ -370,7 +370,7 @@ void dimbossgut2_update(int obj)
     *(u16 *)((int)pfVar4 + 0x16) = *(u16 *)((int)pfVar4 + 0x16) + (u8)framesThisStep;
     fn_801BEEA0((s16 *)obj, (u8 *)state);
     dimbossgut2_updateTracking(obj, state);
-    ObjAnim_AdvanceCurrentMove(obj, lbl_803E4D20, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove(lbl_803E4D20, timeDelta, obj, NULL);
     *(u8 *)(*(int *)(obj + 0x54) + 0x6e) = 9;
     *(u8 *)(*(int *)(obj + 0x54) + 0x6f) = 1;
     ObjHits_RegisterActiveHitVolumeObject(obj);
@@ -405,7 +405,6 @@ void dimbossgut2_update(int obj)
  * PAL Size: TODO
  */
 extern int hitDetectFn_80065e50(int obj, f32 x, f32 y, f32 z, int **out, int a, int b);
-extern void ObjAnim_SetCurrentMove(int obj, f32 t, int a, int b);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void *objCreateLight(int obj, int n);
 extern void modelLightStruct_setLightKind(int light, int v);
@@ -460,8 +459,8 @@ void dimbossgut2_init(int obj, int def, int p3)
     }
   }
   *(f32 *)(p + 0xc) += *(f32 *)(obj + 0x10);
-  ObjAnim_SetCurrentMove(obj, (f32)(int)randomGetRange(0, 0x63) / lbl_803E4D28, 0, 0);
-  ObjAnim_AdvanceCurrentMove(obj, lbl_803E4D20, timeDelta, 0);
+  ObjAnim_SetCurrentMove(obj, 0, (f32)(int)randomGetRange(0, 0x63) / lbl_803E4D28, 0);
+  ObjAnim_AdvanceCurrentMove(lbl_803E4D20, timeDelta, obj, NULL);
   *(int *)(p + 0x18) = (int)objCreateLight(obj, 1);
   if (*(void **)(p + 0x18) != NULL) {
     modelLightStruct_setLightKind(*(int *)(p + 0x18), 2);
