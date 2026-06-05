@@ -5359,15 +5359,15 @@ extern int lbl_803DCC64;
 extern void modelLightStruct_getProjectionTevModes(int p1, int *a, int *b);
 
 typedef struct { u8 r, g, b, a; } ObjGXColor;
-extern void fn_8001E8F4(int);
-extern void fn_8001E608(u8 chan, int p2, int p3);
+extern void modelLightChannels_reset(int);
+extern void modelLightChannel_configure(u8 chan, int p2, int p3);
 extern void modelTextureFn_80089970(int idx);
 extern void textureColorFn_8008991c(int idx, u8 *r, u8 *g, u8 *b);
 extern void lightGetColor(int light, u8 *r, u8 *g, u8 *b);
 extern void modelLightFn_8001ec94(u8 *model, int *arr, u32 n, s32 *cnt, int mode);
-extern void modelStruct2_setLights(u8 chan, int light, u8 *model);
+extern void modelLightStruct_loadChannelLight(u8 chan, int light, u8 *model);
 extern int fn_8001DB1C(int light);
-extern void gxColorFn_8001e634(void);
+extern void modelLightChannels_applyGXControls(void);
 extern void GXSetChanAmbColor(u8 chan, ObjGXColor c);
 extern void GXSetChanMatColor(u8 chan, ObjGXColor c);
 extern void GXSetChanCtrl(int chan, int enable, int amb, int mat, int mask, int diff, int attn);
@@ -5415,9 +5415,9 @@ void objFn_8003dc50(u8 *obj, u8 *model) {
             GXSetNumChans(0);
         }
     } else {
-        fn_8001E8F4(0);
+        modelLightChannels_reset(0);
         ch = chan;
-        fn_8001E608(ch, 0, en2);
+        modelLightChannel_configure(ch, 0, en2);
         f = *(u16 *)(obj + 0xe2);
         if (!(f & 9)) {
             int mode;
@@ -5454,7 +5454,7 @@ void objFn_8003dc50(u8 *obj, u8 *model) {
                 i = 0;
                 p = larr;
                 for (; i < count; i++) {
-                    modelStruct2_setLights(ch, *p, model);
+                    modelLightStruct_loadChannelLight(ch, *p, model);
                     p++;
                 }
             }
@@ -5491,8 +5491,8 @@ void objFn_8003dc50(u8 *obj, u8 *model) {
                         } else {
                             *sp = 3;
                         }
-                        fn_8001E608(*sp, 2, 0);
-                        modelStruct2_setLights(*sp, *lp, model);
+                        modelLightChannel_configure(*sp, 2, 0);
+                        modelLightStruct_loadChannelLight(*sp, *lp, model);
                         GXSetChanAmbColor(*sp, *(ObjGXColor *)&lbl_803DB470);
                         GXSetChanMatColor(*sp, *(ObjGXColor *)&lbl_803DB468);
                         lp++;
@@ -5501,7 +5501,7 @@ void objFn_8003dc50(u8 *obj, u8 *model) {
                 }
             }
         }
-        gxColorFn_8001e634();
+        modelLightChannels_applyGXControls();
         {
             u8 b5f = (*(u8 **)(model + 0x50))[0x5f];
             if ((b5f & 4) || lbl_803DCC4C) {

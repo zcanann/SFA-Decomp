@@ -9068,8 +9068,8 @@ extern void mmFree(void *p);
 extern void mmFreeDeferred(void *p);
 extern void objList_remove(void *list, void *item);
 extern double lbl_803DE7D8;
-extern u8 lbl_803DCA31;
-extern int lbl_803DCA34;
+extern u8 gModelLightUseModelRelativePositions;
+extern int gModelLightNextGXLightId;
 extern u8 lbl_803DC980;
 extern f32 lbl_803DE854;
 extern int lbl_803DCBAC;
@@ -9084,8 +9084,8 @@ typedef struct {
     int lightMask;
     int mode;
     int matSrc;
-} Elem8033BE60;
-extern Elem8033BE60 lbl_8033BE60[];
+} ModelLightChannelState;
+extern ModelLightChannelState gModelLightChannelStates[];
 
 #pragma push
 #pragma scheduling off
@@ -9172,23 +9172,23 @@ void *Obj_GetPlayerObject(void) {
     return NULL;
 }
 
-void fn_8001E608(int i, int a, int b) {
-    lbl_8033BE60[i].mode = a;
-    lbl_8033BE60[i].lightMask = 0;
-    lbl_8033BE60[i].matSrc = b;
-    lbl_8033BE60[i].active = 1;
+void modelLightChannel_configure(int i, int a, int b) {
+    gModelLightChannelStates[i].mode = a;
+    gModelLightChannelStates[i].lightMask = 0;
+    gModelLightChannelStates[i].matSrc = b;
+    gModelLightChannelStates[i].active = 1;
 }
 
 #pragma peephole off
-void fn_8001E8F4(u8 v) {
-    lbl_803DCA31 = v;
-    lbl_803DCA34 = 1;
-    lbl_8033BE60[0].active = 0;
-    lbl_8033BE60[1].active = 0;
-    lbl_8033BE60[2].active = 0;
-    lbl_8033BE60[3].active = 0;
-    lbl_8033BE60[4].active = 0;
-    lbl_8033BE60[5].active = 0;
+void modelLightChannels_reset(u8 v) {
+    gModelLightUseModelRelativePositions = v;
+    gModelLightNextGXLightId = 1;
+    gModelLightChannelStates[0].active = 0;
+    gModelLightChannelStates[1].active = 0;
+    gModelLightChannelStates[2].active = 0;
+    gModelLightChannelStates[3].active = 0;
+    gModelLightChannelStates[4].active = 0;
+    gModelLightChannelStates[5].active = 0;
 }
 #pragma peephole reset
 #pragma pop
@@ -9888,7 +9888,7 @@ extern void PSMTXConcat(f32 *a, f32 *b, f32 *ab);
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void modelStruct2LightFn_8001e178(u8 *light, u8 *obj, int lightId) {
+void modelLightStruct_loadDiffuseGXLight(u8 *light, u8 *obj, int lightId) {
     f32 viewPos[3];
     f32 *view;
     int lightType;
@@ -9898,7 +9898,7 @@ void modelStruct2LightFn_8001e178(u8 *light, u8 *obj, int lightId) {
     switch (lightType) {
     case 2:
     case 8:
-        if (lbl_803DCA31 != 0) {
+        if (gModelLightUseModelRelativePositions != 0) {
             f32 worldPos[3];
             if (*(int *)(light + 0x60) == 0) {
                 worldPos[0] = *(f32 *)(obj + 0xc) - playerMapOffsetX;
@@ -9964,7 +9964,7 @@ void modelStruct2LightFn_8001e178(u8 *light, u8 *obj, int lightId) {
 }
 #pragma pop
 
-void modelStruct2_setLights(int channel, u8 *light, u8 *obj) {
+void modelLightStruct_loadChannelLight(int channel, u8 *light, u8 *obj) {
     f32 viewDir[3];
     f32 localDir[3];
     u32 color;
@@ -9974,10 +9974,10 @@ void modelStruct2_setLights(int channel, u8 *light, u8 *obj) {
     int lightType;
 
     offset = channel * 0x10;
-    if (lbl_8033BE60[channel].mode == 0 || lbl_8033BE60[channel].mode == 2) {
-        modelStruct2LightFn_8001e178(light, obj, lbl_803DCA34);
+    if (gModelLightChannelStates[channel].mode == 0 || gModelLightChannelStates[channel].mode == 2) {
+        modelLightStruct_loadDiffuseGXLight(light, obj, gModelLightNextGXLightId);
     } else {
-        lightId = lbl_803DCA34;
+        lightId = gModelLightNextGXLightId;
         view = Camera_GetViewMatrix();
         lightType = *(int *)(light + 0x50);
         if (lightType != 3) {
@@ -10004,20 +10004,20 @@ void modelStruct2_setLights(int channel, u8 *light, u8 *obj) {
         GXInitLightColor(light + 0xc0, &color);
         GXLoadLightObjImm(light + 0xc0, lightId);
     }
-    lbl_8033BE60[channel].lightMask |= lbl_803DCA34;
-    lbl_803DCA34 <<= 1;
+    gModelLightChannelStates[channel].lightMask |= gModelLightNextGXLightId;
+    gModelLightNextGXLightId <<= 1;
 }
 
-void gxColorFn_8001e634(void) {
+void modelLightChannels_applyGXControls(void) {
     int activeMask;
     int lightMask;
     int channel;
     int attnFn;
-    Elem8033BE60 *entry;
+    ModelLightChannelState *entry;
 
     activeMask = 0;
     channel = 0;
-    entry = lbl_8033BE60;
+    entry = gModelLightChannelStates;
     do {
         if (entry->active != 0) {
             if (entry->mode == 0) {
