@@ -57,6 +57,18 @@ typedef struct RomCurvePoint {
   u8 type;
 } RomCurvePoint;
 
+typedef struct RomCurveSegmentProjection {
+  f32 startX;
+  f32 startY;
+  f32 startZ;
+  f32 endX;
+  f32 endY;
+  f32 endZ;
+  f32 nearestX;
+  f32 nearestY;
+  f32 nearestZ;
+} RomCurveSegmentProjection;
+
 STATIC_ASSERT(sizeof(RomCurveDef) == ROMCURVE_DEF_SIZE);
 STATIC_ASSERT(offsetof(RomCurveDef, x) == ROMCURVE_X_OFFSET);
 STATIC_ASSERT(offsetof(RomCurveDef, y) == ROMCURVE_Y_OFFSET);
@@ -75,6 +87,10 @@ STATIC_ASSERT(offsetof(RomCurvePlacementDef, rotX) == ROMCURVE_PLACEMENT_ROT_X_O
 STATIC_ASSERT(sizeof(RomCurvePoint) == ROMCURVE_POINT_SIZE);
 STATIC_ASSERT(offsetof(RomCurvePoint, flags) == 0x10);
 STATIC_ASSERT(offsetof(RomCurvePoint, type) == 0x14);
+
+STATIC_ASSERT(sizeof(RomCurveSegmentProjection) == 0x24);
+STATIC_ASSERT(offsetof(RomCurveSegmentProjection, endX) == 0x0C);
+STATIC_ASSERT(offsetof(RomCurveSegmentProjection, nearestX) == 0x18);
 
 undefined4
 RomCurve_projectPointToAdjacentWindow(f32 x,f32 y,f32 z,u32 *curveIds,
@@ -96,7 +112,7 @@ int RomCurve_countRandomPoints(RomCurveDef *curve);
 int RomCurve_func1E(uint *curveIds,float *outX,float *outY,float *outZ);
 void RomCurve_getAdjacentWindow(RomCurveDef *curve,int *outIds);
 int RomCurve_getNearestAdjacentLink(f32 x,f32 y,f32 z,RomCurveDef *curve,int excludeLinkId);
-f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment);
+f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,RomCurveSegmentProjection *segment);
 int RomCurve_getRandomBlockedLink(RomCurveDef *curve,int excludeLinkId);
 int RomCurve_getLinkIds(RomCurveDef *curve,int excludeLinkId,int *outIds);
 int RomCurve_getRandomUnblockedLink(RomCurveDef *curve,int excludeLinkId);

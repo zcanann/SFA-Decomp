@@ -1083,7 +1083,7 @@ f32 curves_find(int type,int action,f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *o
   f32 bestDistance;
   f32 absDistance;
   f32 absBestDistance;
-  f32 segment[9];
+  RomCurveSegmentProjection segment;
 
   pointX = x;
   pointY = y;
@@ -1096,9 +1096,9 @@ f32 curves_find(int type,int action,f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *o
   for (curveIndex = 0; curveIndex < nRomCurves; curveIndex++) {
     curve = romCurves[curveIndex];
     if ((curve->action == action) && (curve->type == type)) {
-      segment[0] = curve->x;
-      segment[1] = curve->y;
-      segment[2] = curve->z;
+      segment.startX = curve->x;
+      segment.startY = curve->y;
+      segment.startZ = curve->z;
       for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++) {
         if (((s32)curve->blockedLinkMask & (1 << linkIndex)) == 0) {
           linkId = curve->linkIds[linkIndex];
@@ -1126,10 +1126,10 @@ f32 curves_find(int type,int action,f32 x,f32 y,f32 z,f32 *outX,f32 *outY,f32 *o
 
 foundLinkedCurve:
           if (linkedCurve != NULL) {
-            segment[3] = linkedCurve->x;
-            segment[4] = linkedCurve->y;
-            segment[5] = linkedCurve->z;
-            distance = RomCurve_distanceToSegment(pointX,pointY,pointZ,segment);
+            segment.endX = linkedCurve->x;
+            segment.endY = linkedCurve->y;
+            segment.endZ = linkedCurve->z;
+            distance = RomCurve_distanceToSegment(pointX,pointY,pointZ,&segment);
             absBestDistance = bestDistance;
             if (bestDistance < gFloatZero) {
               absBestDistance = -bestDistance;
@@ -1142,9 +1142,9 @@ foundLinkedCurve:
               lbl_803DD474 = curve;
               lbl_803DD470 = linkedCurve;
               bestDistance = distance;
-              *outX = segment[6];
-              *outY = segment[7];
-              *outZ = segment[8];
+              *outX = segment.nearestX;
+              *outY = segment.nearestY;
+              *outZ = segment.nearestZ;
             }
           }
         }
@@ -1612,7 +1612,7 @@ int RomCurve_getNearestAdjacentLink(f32 x,f32 y,f32 z,RomCurveDef *curve,int exc
 {
   f32 bestDistance[2];
   int bestLink[2];
-  f32 segment[9];
+  RomCurveSegmentProjection segment;
   f32 dx;
   f32 dy;
   f32 dz;
@@ -1629,9 +1629,9 @@ int RomCurve_getNearestAdjacentLink(f32 x,f32 y,f32 z,RomCurveDef *curve,int exc
   bestLink[0] = ROMCURVE_LINK_ID_NONE;
   bestDistance[1] = gFloatZero;
   bestDistance[0] = gFloatZero;
-  segment[0] = curve->x;
-  segment[1] = curve->y;
-  segment[2] = curve->z;
+  segment.startX = curve->x;
+  segment.startY = curve->y;
+  segment.startZ = curve->z;
 
   for (linkIndex = 0; linkIndex < ROMCURVE_LINK_COUNT; linkIndex++) {
     linkId = curve->linkIds[linkIndex];
@@ -1657,13 +1657,13 @@ int RomCurve_getNearestAdjacentLink(f32 x,f32 y,f32 z,RomCurveDef *curve,int exc
 
 foundLinkedCurve:
       if (linkedCurve != NULL) {
-        segment[3] = linkedCurve->x;
-        segment[4] = linkedCurve->y;
-        segment[5] = linkedCurve->z;
-        RomCurve_distanceToSegment(x,y,z,segment);
-        dz = segment[8] - z;
-        dx = segment[6] - x;
-        dy = segment[7] - y;
+        segment.endX = linkedCurve->x;
+        segment.endY = linkedCurve->y;
+        segment.endZ = linkedCurve->z;
+        RomCurve_distanceToSegment(x,y,z,&segment);
+        dz = segment.nearestZ - z;
+        dx = segment.nearestX - x;
+        dy = segment.nearestY - y;
         distance = dz * dz + dx * dx + dy * dy;
         slot = countLeadingZeros(excludeLinkId - linkId) >> 5;
         if (bestDistance[slot] < distance) {
@@ -1696,7 +1696,7 @@ foundLinkedCurve:
  * PAL Address: TODO
  * PAL Size: TODO
  */
-f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment)
+f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,RomCurveSegmentProjection *segment)
 {
   f32 startX;
   f32 startY;
@@ -1716,14 +1716,14 @@ f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment)
   f32 diffZ;
   f32 distance;
 
-  endX = segment[3];
-  startX = segment[0];
+  endX = segment->endX;
+  startX = segment->startX;
   deltaX = endX - startX;
-  endY = segment[4];
-  startY = segment[1];
+  endY = segment->endY;
+  startY = segment->startY;
   deltaY = endY - startY;
-  endZ = segment[5];
-  startZ = segment[2];
+  endZ = segment->endZ;
+  startZ = segment->startZ;
   deltaZ = endZ - startZ;
   if (((gFloatZero != deltaX) || (gFloatZero != deltaY)) || (gFloatZero != deltaZ)) {
     projection = (deltaY * (y - startY) + deltaX * (x - startX) + deltaZ * (z - startZ)) /
@@ -1759,9 +1759,9 @@ f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment)
     diffY = nearestY - y;
     distance = diffZ * diffZ + diffX * diffX + diffY * diffY;
   }
-  segment[6] = nearestX;
-  segment[7] = nearestY;
-  segment[8] = nearestZ;
+  segment->nearestX = nearestX;
+  segment->nearestY = nearestY;
+  segment->nearestZ = nearestZ;
   return distance;
 }
 

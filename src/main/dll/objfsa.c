@@ -3,6 +3,17 @@
 
 extern void OSReport(const char *fmt, ...);
 typedef struct RomCurveDef RomCurveDef;
+typedef struct RomCurveSegmentProjection {
+  f32 startX;
+  f32 startY;
+  f32 startZ;
+  f32 endX;
+  f32 endY;
+  f32 endZ;
+  f32 nearestX;
+  f32 nearestY;
+  f32 nearestZ;
+} RomCurveSegmentProjection;
 extern undefined4 FUN_800033a8();
 extern undefined4 FUN_80003494();
 extern undefined4 FUN_80006a10();
@@ -36,7 +47,7 @@ extern int mathFn_800dbff0(float *point);
 extern void *romCurves[];
 extern s32 nRomCurves;
 extern undefined4 RomCurve_getAdjacentWindow();
-extern f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,float *segment);
+extern f32 RomCurve_distanceToSegment(f32 x,f32 y,f32 z,RomCurveSegmentProjection *segment);
 extern int FUN_80286818();
 extern undefined4 FUN_80286824();
 extern undefined8 FUN_8028682c();
@@ -3762,23 +3773,15 @@ int FUN_800df2a4(double param_1,double param_2,double param_3,int param_4,int pa
   int iVar7;
   float local_78 [2];
   int local_70 [2];
-  float local_68;
-  undefined4 local_64;
-  undefined4 local_60;
-  undefined4 local_5c;
-  undefined4 local_58;
-  undefined4 local_54;
-  float local_50;
-  float local_4c;
-  float local_48;
+  RomCurveSegmentProjection segment;
   
   local_70[1] = -1;
   local_70[0] = -1;
   local_78[1] = lbl_803E12C4;
   local_78[0] = lbl_803E12C4;
-  local_68 = *(float *)(param_4 + 8);
-  local_64 = *(undefined4 *)(param_4 + 0xc);
-  local_60 = *(undefined4 *)(param_4 + 0x10);
+  segment.startX = *(float *)(param_4 + 8);
+  segment.startY = *(float *)(param_4 + 0xc);
+  segment.startZ = *(float *)(param_4 + 0x10);
   iVar7 = 0;
   do {
     uVar6 = *(uint *)(param_4 + 0x1c);
@@ -3804,13 +3807,16 @@ int FUN_800df2a4(double param_1,double param_2,double param_3,int param_4,int pa
       }
 LAB_800e0d84:
       if (iVar5 != 0) {
-        local_5c = *(undefined4 *)(iVar5 + 8);
-        local_58 = *(undefined4 *)(iVar5 + 0xc);
-        local_54 = *(undefined4 *)(iVar5 + 0x10);
-        RomCurve_distanceToSegment(param_1,param_2,param_3,&local_68);
-        fVar1 = (float)((double)local_48 - param_3) * (float)((double)local_48 - param_3) +
-                (float)((double)local_50 - param_1) * (float)((double)local_50 - param_1) +
-                (float)((double)local_4c - param_2) * (float)((double)local_4c - param_2);
+        segment.endX = *(float *)(iVar5 + 8);
+        segment.endY = *(float *)(iVar5 + 0xc);
+        segment.endZ = *(float *)(iVar5 + 0x10);
+        RomCurve_distanceToSegment(param_1,param_2,param_3,&segment);
+        fVar1 = (float)((double)segment.nearestZ - param_3) *
+                (float)((double)segment.nearestZ - param_3) +
+                (float)((double)segment.nearestX - param_1) *
+                (float)((double)segment.nearestX - param_1) +
+                (float)((double)segment.nearestY - param_2) *
+                (float)((double)segment.nearestY - param_2);
         uVar6 = countLeadingZeros(param_5 - uVar6);
         uVar6 = uVar6 >> 5;
         if (fVar1 < local_78[uVar6]) {
@@ -6537,7 +6543,7 @@ exit1Done:
 int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighborId) {
     float bestDistances[2];
     int bestNeighborIds[2];
-    float segment[9];
+    RomCurveSegmentProjection segment;
     int i;
     int neighborId;
     int neighborCurve;
@@ -6552,23 +6558,23 @@ int RomCurve_func1B(double x, double y, double z, int curve, int preferredNeighb
     bestDistances[1] = lbl_803E0644;
     bestDistances[0] = lbl_803E0644;
 
-    segment[0] = *(f32 *)(curve + 0x8);
-    segment[1] = *(f32 *)(curve + 0xc);
-    segment[2] = *(f32 *)(curve + 0x10);
+    segment.startX = *(f32 *)(curve + 0x8);
+    segment.startY = *(f32 *)(curve + 0xc);
+    segment.startZ = *(f32 *)(curve + 0x10);
 
     for (i = 0; i < 4; i++) {
         neighborId = *(int *)(curve + 0x1c + i * 4);
         if (neighborId > -1) {
             neighborCurve = Objfsa_FindRomCurveById(neighborId);
             if (neighborCurve != 0) {
-                segment[3] = *(f32 *)(neighborCurve + 0x8);
-                segment[4] = *(f32 *)(neighborCurve + 0xc);
-                segment[5] = *(f32 *)(neighborCurve + 0x10);
+                segment.endX = *(f32 *)(neighborCurve + 0x8);
+                segment.endY = *(f32 *)(neighborCurve + 0xc);
+                segment.endZ = *(f32 *)(neighborCurve + 0x10);
 
-                RomCurve_distanceToSegment(x, y, z, segment);
-                dx = segment[6] - x;
-                dy = segment[7] - y;
-                dz = segment[8] - z;
+                RomCurve_distanceToSegment(x, y, z, &segment);
+                dx = segment.nearestX - x;
+                dy = segment.nearestY - y;
+                dz = segment.nearestZ - z;
                 distance = dz * dz + dx * dx + dy * dy;
                 slot = (preferredNeighborId == neighborId);
                 if (distance < bestDistances[slot]) {
