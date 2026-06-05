@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802736D4_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802736D4_H_
+#ifndef MAIN_AUDIO_SYNTH_JOBS_H_
+#define MAIN_AUDIO_SYNTH_JOBS_H_
 
 #include "ghidra_import.h"
 
@@ -10,4 +10,4 @@ void synthRefreshJobVolumes(void);
 int dataInsertKeymap(u16 keymapId, void *data);
 int dataRemoveKeymap(u16 keymapId);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_802736D4_H_ */
+#endif /* MAIN_AUDIO_SYNTH_JOBS_H_ */

@@ -2,7 +2,7 @@
 #include "main/audio/data_ref.h"
 #include "main/audio/hw_volume.h"
 #include "main/audio/synth_job.h"
-#include "main/unknown/autos/placeholder_802736D4.h"
+#include "main/audio/synth_jobs.h"
 
 extern undefined4 FUN_802420b0();
 extern undefined4 FUN_8028383c();
