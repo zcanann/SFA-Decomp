@@ -112,7 +112,6 @@ void FUN_800ecfc0(int param_1,undefined2 param_2,int param_3,uint param_4);
 void FUN_800ed024(short *param_1,int param_2,int param_3,uint param_4,undefined4 param_5,
                  uint *param_6);
 void FUN_800ed228(int param_1,int param_2,int param_3,uint param_4);
-void FUN_800ed28c(int param_1,undefined2 param_2,int param_3,uint param_4);
 void FUN_800ed2f0(int param_1,undefined2 param_2,int param_3,uint param_4);
 void FUN_800ed354(int param_1,undefined2 param_2,int param_3,uint param_4);
 void FUN_800ed3b8(undefined4 param_1,undefined4 param_2,int param_3,uint param_4);
