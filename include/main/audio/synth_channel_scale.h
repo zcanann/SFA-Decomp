@@ -1,5 +1,5 @@
-#ifndef MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8026F134_H_
-#define MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8026F134_H_
+#ifndef MAIN_AUDIO_SYNTH_CHANNEL_SCALE_H_
+#define MAIN_AUDIO_SYNTH_CHANNEL_SCALE_H_
 
 #include "ghidra_import.h"
 
@@ -10,4 +10,4 @@ int synthGetVoiceSlotChannelScale(u8 *state);
 void fn_8026F5B8(int state);
 int audioFn_8026f630(u32 key, u32 slot, u32 channel, u32 voiceGroup, u32 *outFlags);
 
-#endif /* MAIN_UNKNOWN_AUTOS_PLACEHOLDER_8026F134_H_ */
+#endif /* MAIN_AUDIO_SYNTH_CHANNEL_SCALE_H_ */

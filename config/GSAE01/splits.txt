@@ -2233,7 +2233,7 @@ main/audio/synth_callback.c:
 	extabindex  start:0x80005CC0 end:0x80005CD8
 	.text       start:0x8026BF54 end:0x8026C488
 
-main/unknown/autos/placeholder_8026CBEC.c:
+main/audio/synth_queue.c:
 	extab       start:0x80005630 end:0x80005650
 	extabindex  start:0x80005CD8 end:0x80005D08
 	.text       start:0x8026C488 end:0x8026D630
@@ -2246,13 +2246,13 @@ main/audio/synth_handle.c:
 	extabindex  start:0x80005D08 end:0x80005D20
 	.text       start:0x8026D6E4 end:0x8026DE58
 
-main/unknown/autos/placeholder_8026DFE4.c:
+main/audio/synth_seq_events.c:
 	.text       start:0x8026DE58 end:0x8026E0E4
 
 main/audio/synth_sequence.c:
 	.text       start:0x8026E0E4 end:0x8026E0E4
 
-main/unknown/autos/placeholder_8026E848.c:
+main/audio/synth_seq_dispatch.c:
 	extab       start:0x80005660 end:0x80005680
 	extabindex  start:0x80005D20 end:0x80005D50
 	.text       start:0x8026E0E4 end:0x8026EC44
@@ -2260,7 +2260,7 @@ main/unknown/autos/placeholder_8026E848.c:
 main/audio/synth_seq_queue.c:
 	.text       start:0x8026EC44 end:0x8026EC44
 
-main/unknown/autos/placeholder_8026F134.c:
+main/audio/synth_channel_scale.c:
 	extab       start:0x80005680 end:0x80005690
 	extabindex  start:0x80005D50 end:0x80005D68
 	.text       start:0x8026EC44 end:0x8026F8B8
@@ -2271,9 +2271,6 @@ main/audio/synth_init.c:
 	.text       start:0x8026F8B8 end:0x8026FC8C
 
 main/audio/synth_scale.c:
-	.text       start:0x8026FC8C end:0x8026FC8C
-
-main/unknown/autos/placeholder_8026FD1C.c:
 	.text       start:0x8026FC8C end:0x8026FC8C
 
 main/audio/synth_voice.c:

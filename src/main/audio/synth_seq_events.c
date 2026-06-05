@@ -1,4 +1,4 @@
-#include "main/unknown/autos/placeholder_8026DFE4.h"
+#include "main/audio/synth_seq_events.h"
 
 #define SYNTH_TRACK_COMMAND_END 0xFFFF
 #define SYNTH_TRACK_COMMAND_JUMP 0xFFFE
