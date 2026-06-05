@@ -50,6 +50,23 @@ struct WCTileIface {
 #define WCTILE_TARGET_TILE(state) (*(s16 *)((u8 *)(state) + WCTILE_STATE_TARGET_TILE))
 #define WCTILE_MODE(state) (*(s16 *)((u8 *)(state) + WCTILE_STATE_MODE))
 
+typedef struct WCTileState {
+    int controller;
+    s16 tileX;
+    s16 tileY;
+    s16 targetTile;
+    s16 mode;
+} WCTileState;
+
+STATIC_ASSERT(sizeof(WCTileState) == WCTILE_EXTRA_SIZE);
+STATIC_ASSERT(offsetof(WCTileState, controller) == WCTILE_STATE_CONTROLLER);
+STATIC_ASSERT(offsetof(WCTileState, tileX) == WCTILE_STATE_TILE_X);
+STATIC_ASSERT(offsetof(WCTileState, tileY) == WCTILE_STATE_TILE_Y);
+STATIC_ASSERT(offsetof(WCTileState, targetTile) == WCTILE_STATE_TARGET_TILE);
+STATIC_ASSERT(offsetof(WCTileState, mode) == WCTILE_STATE_MODE);
+
+#define WCTILE_STATE_IFACE(state) (*(WCTileIface **)(*(int *)((state)->controller + 0x68)))
+
 #pragma peephole on
 #pragma scheduling on
 int wctile_getExtraSize(void) { return WCTILE_EXTRA_SIZE; }
@@ -129,42 +146,42 @@ void wctile_initialise(void) {}
 void wctile_update(int obj)
 {
     f32 nearest = lbl_803E6DF4;
-    int state = *(int *)(obj + 0xb8);
+    WCTileState *state = *(WCTileState **)(obj + 0xb8);
 
-    if ((void *)WCTILE_CONTROLLER(state) == NULL) {
-        WCTILE_CONTROLLER(state) = ObjGroup_FindNearestObject(WCTILE_CONTROLLER_GROUP, obj, &nearest);
+    if ((void *)state->controller == NULL) {
+        state->controller = ObjGroup_FindNearestObject(WCTILE_CONTROLLER_GROUP, obj, &nearest);
         *(u8 *)(obj + 0x36) = 0;
         return;
     }
     *(s16 *)(obj + 0) += (s16)(lbl_803E6DF8 * timeDelta);
-    if (WCTILE_MODE(state) != WCTILE_MODE_HIDDEN) {
+    if (state->mode != WCTILE_MODE_HIDDEN) {
         if ((s8)*(u8 *)(obj + 0xad) == WCTILE_VARIANT_A) {
             if ((u32)GameBit_Get(WCTILE_GAMEBIT_A_HIDE) != 0)
-                WCTILE_MODE(state) = WCTILE_MODE_HIDDEN;
+                state->mode = WCTILE_MODE_HIDDEN;
             else if ((u32)GameBit_Get(WCTILE_GAMEBIT_A_FADE) != 0)
-                WCTILE_MODE(state) = WCTILE_MODE_FADE_OUT;
+                state->mode = WCTILE_MODE_FADE_OUT;
         } else {
             if ((u32)GameBit_Get(WCTILE_GAMEBIT_B_HIDE) != 0)
-                WCTILE_MODE(state) = WCTILE_MODE_HIDDEN;
+                state->mode = WCTILE_MODE_HIDDEN;
             else if ((u32)GameBit_Get(WCTILE_GAMEBIT_B_FADE) != 0)
-                WCTILE_MODE(state) = WCTILE_MODE_FADE_OUT;
+                state->mode = WCTILE_MODE_FADE_OUT;
         }
     }
-    switch (WCTILE_MODE(state)) {
+    switch (state->mode) {
     case WCTILE_MODE_INIT_MOVE:
         if ((s8)*(u8 *)(obj + 0xad) == WCTILE_VARIANT_A) {
-            WCTILE_IFACE(state)->getTileXYA(WCTILE_TARGET_TILE(state), (void *)(state + WCTILE_STATE_TILE_X),
-                                            (void *)(state + WCTILE_STATE_TILE_Y), WCTILE_IFACE(state));
-            WCTILE_IFACE(state)->moveToTileA(obj, WCTILE_TILE_X(state), WCTILE_TILE_Y(state), obj + 0xc,
-                                             obj + 0x14, WCTILE_IFACE(state));
+            WCTILE_STATE_IFACE(state)->getTileXYA(state->targetTile, &state->tileX,
+                                                  &state->tileY, WCTILE_STATE_IFACE(state));
+            WCTILE_STATE_IFACE(state)->moveToTileA(obj, state->tileX, state->tileY, obj + 0xc,
+                                                   obj + 0x14, WCTILE_STATE_IFACE(state));
         } else {
-            WCTILE_IFACE(state)->getTileXYB(WCTILE_TARGET_TILE(state), (void *)(state + WCTILE_STATE_TILE_X),
-                                            (void *)(state + WCTILE_STATE_TILE_Y), WCTILE_IFACE(state));
-            WCTILE_IFACE(state)->moveToTileB(obj, WCTILE_TILE_X(state), WCTILE_TILE_Y(state), obj + 0xc,
-                                             obj + 0x14, WCTILE_IFACE(state));
+            WCTILE_STATE_IFACE(state)->getTileXYB(state->targetTile, &state->tileX,
+                                                  &state->tileY, WCTILE_STATE_IFACE(state));
+            WCTILE_STATE_IFACE(state)->moveToTileB(obj, state->tileX, state->tileY, obj + 0xc,
+                                                   obj + 0x14, WCTILE_STATE_IFACE(state));
         }
         *(u8 *)(obj + 0x36) = WCTILE_ALPHA_OPAQUE;
-        WCTILE_MODE(state) = WCTILE_MODE_SOLID;
+        state->mode = WCTILE_MODE_SOLID;
         break;
     case WCTILE_MODE_INACTIVE:
         *(u8 *)(obj + 0x36) = 0;
@@ -181,17 +198,17 @@ void wctile_update(int obj)
         }
         if (*(u8 *)(obj + 0x36) == 0) {
             if ((s8)*(u8 *)(obj + 0xad) == WCTILE_VARIANT_A) {
-                WCTILE_IFACE(state)->getTileXYA(WCTILE_TARGET_TILE(state), (void *)(state + WCTILE_STATE_TILE_X),
-                                                (void *)(state + WCTILE_STATE_TILE_Y), WCTILE_IFACE(state));
-                WCTILE_IFACE(state)->moveToTileA(obj, WCTILE_TILE_X(state), WCTILE_TILE_Y(state), obj + 0xc,
-                                                 obj + 0x14, WCTILE_IFACE(state));
-                WCTILE_MODE(state) = WCTILE_MODE_FADE_IN;
+                WCTILE_STATE_IFACE(state)->getTileXYA(state->targetTile, &state->tileX,
+                                                      &state->tileY, WCTILE_STATE_IFACE(state));
+                WCTILE_STATE_IFACE(state)->moveToTileA(obj, state->tileX, state->tileY, obj + 0xc,
+                                                       obj + 0x14, WCTILE_STATE_IFACE(state));
+                state->mode = WCTILE_MODE_FADE_IN;
             } else {
-                WCTILE_IFACE(state)->getTileXYB(WCTILE_TARGET_TILE(state), (void *)(state + WCTILE_STATE_TILE_X),
-                                                (void *)(state + WCTILE_STATE_TILE_Y), WCTILE_IFACE(state));
-                WCTILE_IFACE(state)->moveToTileB(obj, WCTILE_TILE_X(state), WCTILE_TILE_Y(state), obj + 0xc,
-                                                 obj + 0x14, WCTILE_IFACE(state));
-                WCTILE_MODE(state) = WCTILE_MODE_FADE_IN;
+                WCTILE_STATE_IFACE(state)->getTileXYB(state->targetTile, &state->tileX,
+                                                      &state->tileY, WCTILE_STATE_IFACE(state));
+                WCTILE_STATE_IFACE(state)->moveToTileB(obj, state->tileX, state->tileY, obj + 0xc,
+                                                       obj + 0x14, WCTILE_STATE_IFACE(state));
+                state->mode = WCTILE_MODE_FADE_IN;
             }
         }
         break;
@@ -203,7 +220,7 @@ void wctile_update(int obj)
             *(u8 *)(obj + 0x36) = v;
         }
         if (*(u8 *)(obj + 0x36) >= WCTILE_ALPHA_OPAQUE)
-            WCTILE_MODE(state) = WCTILE_MODE_SOLID;
+            state->mode = WCTILE_MODE_SOLID;
         break;
     case WCTILE_MODE_SOLID:
     default:
@@ -214,15 +231,15 @@ void wctile_update(int obj)
             *(u8 *)(obj + 0x36) = v;
         }
         if ((s8)*(u8 *)(obj + 0xad) == WCTILE_VARIANT_A) {
-            if (WCTILE_TARGET_TILE(state) !=
-                (u8)WCTILE_IFACE(state)->getTileIndexA(WCTILE_TILE_X(state), WCTILE_TILE_Y(state),
-                                                       WCTILE_IFACE(state)))
-                WCTILE_MODE(state) = WCTILE_MODE_INACTIVE;
+            if (state->targetTile !=
+                (u8)WCTILE_STATE_IFACE(state)->getTileIndexA(state->tileX, state->tileY,
+                                                             WCTILE_STATE_IFACE(state)))
+                state->mode = WCTILE_MODE_INACTIVE;
         } else {
-            if (WCTILE_TARGET_TILE(state) !=
-                (u8)WCTILE_IFACE(state)->getTileIndexB(WCTILE_TILE_X(state), WCTILE_TILE_Y(state),
-                                                       WCTILE_IFACE(state)))
-                WCTILE_MODE(state) = WCTILE_MODE_INACTIVE;
+            if (state->targetTile !=
+                (u8)WCTILE_STATE_IFACE(state)->getTileIndexB(state->tileX, state->tileY,
+                                                             WCTILE_STATE_IFACE(state)))
+                state->mode = WCTILE_MODE_INACTIVE;
         }
         break;
     }
