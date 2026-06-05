@@ -4,25 +4,28 @@ Short field-tested reference for getting MWCC-compiled C to match the target
 binary. Read in 60 seconds, apply in the order they appear; the later sections
 are more invasive.
 
-## Prime directive: recover plausible C, not byte-perfect asm
+## Prime directive: recover plausible C, never asm
 
-The goal of this project is plausible original source. A function at **80-99%
-fuzzy from clean C is more valuable than a 100% byte match achieved by inline
-`asm { }` blocks**. The asm-block recipes below exist for a small number of
-genuine MWCC instruction-selection bugs — they are **not** the default tool
-for "the diff is still red." If a residual won't yield to the one-liners and
-source-form tweaks in the next two sections, commit the partial and move on.
-Inline asm in production source is a code smell; we'll only keep it where a
-clear MWCC compiler quirk leaves no C alternative.
+The goal of this project is plausible original source. **Inline `asm { }` is
+forbidden — no exceptions.** A function at 80-99% fuzzy from clean C is more
+valuable than a 100% byte match achieved by `asm`. Previously-sanctioned asm
+recipes (material-mask `li`/`lis;ori` + `and`, GQR/MSR/HID0 ops, `rlwimi` bit
+inserts, `register`-decl-order forcing) are all REVOKED — the repo owner is
+actively reverting them ("Replace X flag asm with C" commits).
 
-Heuristic before reaching for `asm { }`:
-- Is the residual a single instruction / register-allocation choice? → leave at
+If a residual won't yield to the C one-liners and source-form tweaks below,
+**commit the partial, document the divergence, and move on.** There is always
+a C recipe for the divergence; we just don't know it yet. New C techniques
+land in this playbook as they're discovered. Don't reach for asm to fill the
+gap — the gap is the point.
+
+Heuristic:
+- Residual is a single instruction / register-allocation choice? → leave at
   partial, commit, move on.
-- Is the function ≥80% fuzzy on clean C? → leave at partial, commit, move on.
-- Does target's behaviour require an instruction MWCC literally cannot pick
-  from any C input (e.g. specific `rlwimi` bit insert, `cmplwi` on a value
-  MWCC sign-extends)? → only then is asm justified, and call it out in the
-  commit message.
+- Function ≥80% fuzzy on clean C? → leave at partial, commit, move on.
+- Looks like "MWCC can't pick this from any C"? → **commit the partial** and
+  flag the function so it can be revisited with the next playbook recipe.
+  Never asm.
 
 ## High-impact one-liners (try first when a function is already 80-95%)
 
@@ -478,65 +481,26 @@ clean C and asm-forcing it violates the Prime Directive. Treat these as a
 TAR-PIT cap: deprioritize, don't grind, don't burn a session on one. (mike13,
 fn_80007F78 ~2212B on 800066E0.) Spend the budget on tractable handlers instead.
 
-## Last-resort: inline `asm { }` blocks with `register` variables
+## No `asm { }` blocks — ever
 
-**Read the Prime Directive at the top of this file first.** Use this only when
-the residual is a true MWCC instruction-selection bug (e.g. specific `rlwimi`
-bit insert, register-allocation order that nothing in C controls). A clean C
-function at 85-99% beats an asm-forced 100% every time on this project.
-Recent over-use note: leaving 9 functions matched via `asm { extsb / lis /
-addi }` looks like a win on the report but leaves source nobody would
-recognise as the original — that's not the goal.
+**Hard rule, no exceptions.** Inline `asm { }` is never an acceptable match
+tool on this project, even for cases the playbook previously sanctioned
+(materialized-mask `li`/`lis;ori` + `and`, GQR/MSR/HID0 `mtspr` ops, `rlwimi`
+bit inserts, register-order forcing via `register` decls). If clean C won't
+reach 100%, **leave the partial and document the residual** — there is always
+a C recipe for the divergence; we just don't know it yet. New C techniques
+land in this playbook as they're discovered; asm escape hatches don't.
 
-When MWCC won't pick `rlwimi` / `li +/- N; and` / `cmplwi` from any C form,
-drop an inline `asm` block. The pattern:
+Previous reference commits using asm (`2e20e326`, `01400901`, `a42bb90b`) are
+being reverted by the repo owner (see "Replace X flag asm with C" commits) —
+do not cite them as precedent.
 
-```c
-{
-    register u32 m;             // declared first → gets r0 (immediate slot)
-    register u32 v;             // declared second → gets r3
-    register int pReg = obj;    // forces the parameter into a fixed register
-    /* normal C statements that precede the bit op stay outside the asm */
-    asm {
-        lwz v, 0x54(pReg)
-        li m, -1025              // forces the "long" form vs MWCC's rlwinm
-        and m, v, m
-        stw m, 0x54(pReg)
-    }
-    /* normal C resumes */
-}
-```
-
-**Critical: declaration order chooses the register.** MWCC's allocator picks
-volatile regs roughly in declaration order. To match target's
-`li r3, -1025; and r0, r3, r0` instead of `li r0, -1025; and r3, r0, r3`,
-swap which `register u32` is declared first. This is how `CameraModeCombat_free`
-and `fn_80189BE4` were taken to 100% — same body, just reordered the two
-`register` lines. See `01400901`, `a42bb90b`.
-
-For `rlwimi` (bit insert vs MWCC's `andi+ori`) — **try one-liner #12 (model the
-flag as a C bitfield) FIRST**; it produces the identical `li; rlwimi` from clean
-C and is now the preferred fix. Only fall back to this asm form if the field
-genuinely cannot be expressed as a bitfield member:
-
-```c
-{
-    register u32 b;
-    register u32 bitval;
-    bitval = 1;                              // value to insert (0 or 1)
-    asm {
-        lbz b, 0x1d(t)
-        rlwimi b, bitval, 5, 26, 26          // insert at bit position 5 (= 0x20)
-        stb b, 0x1d(t)
-    }
-}
-```
-
-**`asm { }` blocks wreck nearby FP scheduling.** MWCC treats the block as an
-opaque barrier and reschedules surrounding FP work around it. In a function
-that mixes float stores with a bit-clear, an inline asm rlwimi can shift every
-later `lfs`/`stfs` and tank the overall match. Use `asm { }` only in functions
-that don't otherwise use FP regs, or place it adjacent to function entry/exit.
+If a function is stuck below target because of an unknown-C divergence, the
+correct action is:
+1. Commit the highest clean-C partial you've reached.
+2. Document the divergence (target asm shape vs your output) in the task
+   notes or commit message.
+3. Move on. The function will be revisited once the new playbook recipe lands.
 
 ## Caller-side width controls extsb/extsh emission
 
