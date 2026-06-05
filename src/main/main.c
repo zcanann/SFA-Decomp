@@ -788,8 +788,8 @@ void FUN_801fe1c4(LaserObject *obj)
   int iVar2;
   
   state = obj->state;
-  if ((state->sequenceLatched == '\0') &&
-     (uVar1 = GameBit_Get((int)state->primarySequenceId), uVar1 != 0)) {
+  if ((state->gameBitLatched == '\0') &&
+     (uVar1 = GameBit_Get((int)state->primaryGameBit), uVar1 != 0)) {
     obj->statusFlags = obj->statusFlags & ~LASER_OBJECT_STATUS_DISABLED;
   }
   else {
@@ -801,18 +801,18 @@ void FUN_801fe1c4(LaserObject *obj)
     if (bVar3 == LASEROBJ_MODE_SEQUENCE_B) {
       iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(LASEROBJ_MAIN_SEQUENCE_B_EVENT);
       if (iVar2 != 0) {
-        GameBit_Set((int)state->primarySequenceId,1);
-        GameBit_Set((int)state->secondarySequenceId,0);
-        state->sequenceLatched = 1;
+        GameBit_Set((int)state->primaryGameBit,1);
+        GameBit_Set((int)state->secondaryGameBit,0);
+        state->gameBitLatched = 1;
         obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
       }
     }
     else if ((bVar3 < 2) && (bVar3 != 0)) {
       iVar2 = (**(code **)(*DAT_803dd6e8 + 0x20))(LASEROBJ_MAIN_SEQUENCE_A_EVENT);
       if (iVar2 != 0) {
-        GameBit_Set((int)state->primarySequenceId,1);
-        GameBit_Set((int)state->secondarySequenceId,0);
-        state->sequenceLatched = 1;
+        GameBit_Set((int)state->primaryGameBit,1);
+        GameBit_Set((int)state->secondaryGameBit,0);
+        state->gameBitLatched = 1;
         obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
       }
     }
@@ -839,13 +839,13 @@ void FUN_801fe324(LaserObject *obj,LaserObjectMapData *mapData)
   uint uVar1;
   
   state = obj->state;
-  state->primarySequenceId = mapData->primarySequenceId;
-  state->secondarySequenceId = mapData->secondarySequenceId;
-  state->sequenceLatched = 0;
+  state->primaryGameBit = mapData->primaryGameBit;
+  state->secondaryGameBit = mapData->secondaryGameBit;
+  state->gameBitLatched = 0;
   obj->modeWord = (s16)(mapData->modeIndex << LASEROBJ_MODE_WORD_SHIFT);
-  uVar1 = GameBit_Get((int)state->primarySequenceId);
+  uVar1 = GameBit_Get((int)state->primaryGameBit);
   if (uVar1 != 0) {
-    state->sequenceLatched = 1;
+    state->gameBitLatched = 1;
     obj->statusFlags = obj->statusFlags | LASER_OBJECT_STATUS_DISABLED;
   }
   obj->objectFlags = obj->objectFlags | LASER_OBJECT_FLAGS_SEQUENCE_CONTROL;
