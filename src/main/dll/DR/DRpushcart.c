@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/mapEvent.h"
+#include "main/objanim.h"
 #include "main/dll/DR/DRpushcart.h"
 
 
@@ -900,7 +901,6 @@ void FUN_801e8658(int param_1,int param_2,int param_3,int param_4,int param_5,s8
 int fn_801E86F4(int obj, int p2, int p3)
 {
   extern void fn_801E8660(void);
-  extern void ObjAnim_AdvanceCurrentMove(int obj, f32 a, f32 b, int x);
   extern void fn_801F4D54(int obj, int sub);
   extern void fn_801F4ECC(int obj, int sub);
   extern f32 Curve_EvalBSpline(int p, f32 t, int m);
@@ -916,7 +916,7 @@ int fn_801E86F4(int obj, int p2, int p3)
   *(s16 *)(p3 + 0x70) = (s16)(*(s16 *)(p3 + 0x70) & ~4);
 
   if (*(int *)(*(int *)(obj + 0x7c) + (s32)(s8)*(u8 *)(obj + 0xad) * 4) != 0) {
-    ObjAnim_AdvanceCurrentMove(obj, lbl_803E5A60, timeDelta, 0);
+    ObjAnim_AdvanceCurrentMove(lbl_803E5A60, timeDelta, obj, NULL);
   }
 
   switch (*(s16 *)(obj + 0x46)) {
@@ -1300,7 +1300,7 @@ void shopitem_update(int obj)
             }
         }
         if (*(s16 *)(obj + 0x46) != 0x464 && *(s16 *)(obj + 0x46) != 0x467) {
-            ObjAnim_AdvanceCurrentMove(obj, lbl_803E5A60, timeDelta, 0);
+            ObjAnim_AdvanceCurrentMove(lbl_803E5A60, timeDelta, obj, NULL);
         }
         if ((*(u8 *)(obj + 0xAF) & 8) == 0) {
             objRenderFn_80041018(obj);
@@ -1358,7 +1358,7 @@ int fn_801E76A0(int obj, int p2, u8 *data, s8 advance)
     *(f32 *)(state2 + 0x280) = speed;
     *(u8 *)(state + 0x9D4) |= 4;
     if (advance != 0) {
-        ObjAnim_AdvanceCurrentMove(obj, speed, timeDelta, 0);
+        ObjAnim_AdvanceCurrentMove(speed, timeDelta, obj, NULL);
     }
     if (*(s16 *)(obj + 0xB4) == -1) {
         if (*(s8 *)(data + 0x56) != 0) {
