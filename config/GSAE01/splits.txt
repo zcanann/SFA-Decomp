@@ -2420,9 +2420,6 @@ main/audio/snd3d_room.c:
 	extabindex  start:0x80006308 end:0x8000632C
 	.text       start:0x8027F2AC end:0x802800C0
 
-main/unknown/autos/placeholder_802801A8.c:
-	.text       start:0x802800C0 end:0x802800C0
-
 main/audio/snd3d_calc.c:
 	extab       start:0x80005A68 end:0x80005A80
 	extabindex  start:0x8000632C end:0x80006350
@@ -2437,12 +2434,6 @@ main/audio/snd_core.c:
 	extab       start:0x80005A90 end:0x80005A98
 	extabindex  start:0x80006368 end:0x80006374
 	.text       start:0x80281160 end:0x80281338
-
-main/unknown/autos/placeholder_80281760.c:
-	.text       start:0x80281338 end:0x80281338
-
-main/unknown/autos/placeholder_802817A8.c:
-	.text       start:0x80281338 end:0x80281338
 
 main/audio/inp_midi_set.c:
 	extab       start:0x80005A98 end:0x80005AA8
@@ -2498,14 +2489,8 @@ main/audio/hw_voice_start.c:
 main/audio/hw_keyoff.c:
 	.text       start:0x802836E8 end:0x80283710
 
-main/unknown/autos/placeholder_8028373C.c:
-	.text       start:0x80283710 end:0x80283710
-
 main/audio/hw_voice_params.c:
 	.text       start:0x80283710 end:0x8028383C
-
-main/unknown/autos/placeholder_802839B0.c:
-	.text       start:0x8028383C end:0x8028383C
 
 main/audio/hw_volume.c:
 	extab       start:0x80005B80 end:0x80005BA0
@@ -2527,9 +2512,6 @@ main/audio/hw_aram.c:
 	extabindex  start:0x80006530 end:0x80006554
 	.text       start:0x80283D5C end:0x80283DFC
 
-main/unknown/autos/placeholder_80283E10.c:
-	.text       start:0x80283DFC end:0x80283DFC
-
 main/audio/hw_samplemem.c:
 	extab       start:0x80005BD8 end:0x80005BF0
 	extabindex  start:0x80006554 end:0x80006578
@@ -2540,71 +2522,35 @@ main/audio/aram_queue.c:
 	extabindex  start:0x80006578 end:0x80006590
 	.text       start:0x80283FA0 end:0x80284224
 
-main/unknown/autos/placeholder_8028429C.c:
-	.text       start:0x80284224 end:0x80284224
-
-main/unknown/autos/placeholder_802842C4.c:
-	.text       start:0x80284224 end:0x80284224
-
-main/unknown/autos/placeholder_8028436C.c:
-	.text       start:0x80284224 end:0x80284224
-
 main/audio/aram_init.c:
 	extab       start:0x80005C00 end:0x80005C10
 	extabindex  start:0x80006590 end:0x800065A8
 	.text       start:0x80284224 end:0x80284468
-
-main/unknown/autos/placeholder_802844BC.c:
-	.text       start:0x80284468 end:0x80284468
 
 main/audio/aram_data.c:
 	extab       start:0x80005C10 end:0x80005C18
 	extabindex  start:0x800065A8 end:0x800065B4
 	.text       start:0x80284468 end:0x80284670
 
-main/unknown/autos/placeholder_80284698.c:
-	.text       start:0x80284670 end:0x80284670
-
 main/audio/sal_ai.c:
 	extab       start:0x80005C18 end:0x80005C40
 	extabindex  start:0x800065B4 end:0x800065F0
 	.text       start:0x80284670 end:0x802848D8
-
-main/unknown/autos/placeholder_80284970.c:
-	.text       start:0x802848D8 end:0x802848D8
 
 main/audio/sal_dsp.c:
 	extab       start:0x80005C40 end:0x80005C90
 	extabindex  start:0x800065F0 end:0x80006668
 	.text       start:0x802848D8 end:0x80284B94
 
-main/unknown/autos/placeholder_80284BA8.c:
-	.text       start:0x80284B94 end:0x80284B94
-
 main/audio/snd_reverb.c:
 	extab       start:0x80005C90 end:0x80005CA8
 	extabindex  start:0x80006668 end:0x8000668C
 	.text       start:0x80284B94 end:0x80284C58
 
-main/unknown/autos/placeholder_80284CBC.c:
-	.text       start:0x80284C58 end:0x80284C58
-
-main/unknown/autos/placeholder_80284E78.c:
-	.text       start:0x80284C58 end:0x80284C58
-
-main/unknown/autos/placeholder_80284EF0.c:
-	.text       start:0x80284C58 end:0x80284C58
-
-main/unknown/autos/placeholder_80285010.c:
-	.text       start:0x80284C58 end:0x80284C58
-
 dolphin/axfx/reverb_std_create.c:
 	extab       start:0x80005CA8 end:0x80005CB0
 	extabindex  start:0x8000668C end:0x80006698
 	.text       start:0x80284C58 end:0x8028504C
-
-main/unknown/autos/placeholder_8028521C.c:
-	.text       start:0x8028504C end:0x8028504C
 
 dolphin/axfx/reverb_std_callback.c:
 	extab       start:0x80005CB0 end:0x80005CB8
@@ -2615,9 +2561,6 @@ dolphin/OdemuExi2/DebuggerDriver.c:
 	.text       start:0x80285424 end:0x80285EA4
 	.sdata      start:0x803DC630 end:0x803DC638
 	.sbss       start:0x803DE3C8 end:0x803DE3E0
-
-main/unknown/autos/placeholder_80285B64.c:
-	.text       start:0x80285EA4 end:0x80285EA4
 
 Runtime.PPCEABI.H/__va_arg.c:
 	.text       start:0x80285EA4 end:0x80285F6C
