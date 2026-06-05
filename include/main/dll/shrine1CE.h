@@ -3,7 +3,7 @@
 
 #include "ghidra_import.h"
 
-void dll_19B_update(void);
+void dll_19B_update(int obj);
 int dll_19E_getExtraSize(void);
 int dll_19E_getObjectTypeId(void);
 void dll_19B_init(u8 *obj, u8 *params);
