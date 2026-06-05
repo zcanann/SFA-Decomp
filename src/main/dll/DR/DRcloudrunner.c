@@ -271,15 +271,15 @@ typedef struct SCTotemPoleState {
 #define SC_TOTEMPOLE_SETUP_LEFT 0x4490F
 
 #pragma dont_inline on
-void sc_totempole_sortCompletionGameBits(u16 *bits, int param2)
+int sc_totempole_sortCompletionGameBits(u16 *bits, int param2)
 {
-    u16 stk[20];
+    u16 stk[4];
     u8 i, j;
     s32 changed = 0;
 
     for (i = 0; i < 3; i++) {
-        u32 v = GameBit_Get(bits[i]);
-        stk[i] = (u16)v;
+        u16 v = (u16)GameBit_Get(bits[i]);
+        stk[i] = v;
     }
     stk[3] = (u16)param2;
     for (i = 0; i < 3; i++) {
@@ -298,7 +298,7 @@ void sc_totempole_sortCompletionGameBits(u16 *bits, int param2)
     for (i = 0; i < 3; i++) {
         GameBit_Set(bits[i], (u32)stk[i]);
     }
-    (void)changed;
+    return changed;
 }
 #pragma dont_inline reset
 
