@@ -166,7 +166,8 @@ typedef struct ObjHitsPriorityState {
   s16 secondaryRadius;
   s16 secondaryCapsuleOffsetA;
   s16 secondaryCapsuleOffsetB;
-  u8 pad6A[0x6C - 0x6A];
+  u8 lateralResponseWeight;
+  u8 axialResponseWeight;
   s8 objectPairPriority;
   u8 objectPairHitVolume;
   s8 hitVolumePriority;
@@ -223,6 +224,8 @@ STATIC_ASSERT(offsetof(ObjHitsPriorityState, primaryRadiusXZ) == 0x2C);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadiusY) == 0x30);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, secondaryRadiusXZ) == 0x34);
 STATIC_ASSERT(offsetof(ObjHitsPriorityState, sweepRadiusX) == 0x38);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, lateralResponseWeight) == 0x6A);
+STATIC_ASSERT(offsetof(ObjHitsPriorityState, axialResponseWeight) == 0x6B);
 
 int ObjHits_CollectSkeletonHitsXZ(f32 *point,f32 radius,int jointData,int *model,int *hits,
                                   int *outBest,f32 yMax,f32 yMin,f32 *outAccum);

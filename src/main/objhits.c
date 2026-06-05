@@ -2005,7 +2005,7 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
     localBy = y;
     localBz = z;
   }
-  if ((*(s16 *)(objA + 0x44) == 1) && (*(u8 *)((int)stateA + 0x6a) != 0) &&
+  if ((*(s16 *)(objA + 0x44) == 1) && (stateA->lateralResponseWeight != 0) &&
       ((stateB->flags & 0x400) == 0)) {
     *(f32 *)(objA + 0xc) = *(f32 *)(objA + 0xc) - localAx;
     *(f32 *)(objA + 0x10) = *(f32 *)(objA + 0x10) - localAy;
@@ -2020,7 +2020,7 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
                                      (f32 *)(objA + 0x1c), (f32 *)(objA + 0x20),
                                      *(int *)(objA + 0x30));
     }
-  } else if ((*(s16 *)(objB + 0x44) == 1) && (*(u8 *)((int)stateB + 0x6a) != 0) &&
+  } else if ((*(s16 *)(objB + 0x44) == 1) && (stateB->lateralResponseWeight != 0) &&
              ((stateA->flags & 0x400) == 0)) {
     *(f32 *)(objB + 0xc) = *(f32 *)(objB + 0xc) + localBx;
     *(f32 *)(objB + 0x10) = *(f32 *)(objB + 0x10) + localBy;
@@ -2035,8 +2035,8 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
                                      (f32 *)(objB + 0x1c), (f32 *)(objB + 0x20),
                                      *(int *)(objB + 0x30));
     }
-  } else if (*(u8 *)((int)stateB + 0x6a) == 0) {
-    if (*(u8 *)((int)stateA + 0x6a) != 0) {
+  } else if (stateB->lateralResponseWeight == 0) {
+    if (stateA->lateralResponseWeight != 0) {
       *(f32 *)(objA + 0xc) = *(f32 *)(objA + 0xc) - localAx;
       *(f32 *)(objA + 0x10) = *(f32 *)(objA + 0x10) - localAy;
       *(f32 *)(objA + 0x14) = *(f32 *)(objA + 0x14) - localAz;
@@ -2051,8 +2051,8 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
                                        *(int *)(objA + 0x30));
       }
     }
-  } else if (*(u8 *)((int)stateA + 0x6a) == 0) {
-    if (*(u8 *)((int)stateB + 0x6a) != 0) {
+  } else if (stateA->lateralResponseWeight == 0) {
+    if (stateB->lateralResponseWeight != 0) {
       *(f32 *)(objB + 0xc) = *(f32 *)(objB + 0xc) + localBx;
       *(f32 *)(objB + 0x10) = *(f32 *)(objB + 0x10) + localBy;
       *(f32 *)(objB + 0x14) = *(f32 *)(objB + 0x14) + localBz;
@@ -2085,12 +2085,12 @@ void ObjHits_ApplyPairResponse(int objA,int objB,f32 x,f32 y,f32 z,int flag)
     }
     sinVal = sin((lbl_803DE948 * (f32)angleA) / lbl_803DE94C);
     sinSq = sinVal * sinVal;
-    weightA = (f32)*(u8 *)((int)stateA + 0x6a) * sinSq +
-              (f32)*(u8 *)((int)stateA + 0x6b) * (gObjHitsScalarOne - sinSq);
+    weightA = (f32)stateA->lateralResponseWeight * sinSq +
+              (f32)stateA->axialResponseWeight * (gObjHitsScalarOne - sinSq);
     sinVal = sin((lbl_803DE948 * (f32)angleB) / lbl_803DE94C);
     sinSq = sinVal * sinVal;
-    weightB = (f32)*(u8 *)((int)stateB + 0x6a) * sinSq +
-              (f32)*(u8 *)((int)stateB + 0x6b) * (gObjHitsScalarOne - sinSq);
+    weightB = (f32)stateB->lateralResponseWeight * sinSq +
+              (f32)stateB->axialResponseWeight * (gObjHitsScalarOne - sinSq);
     if (weightA >= weightB * lbl_803DB450) {
       if (weightB < weightA * lbl_803DB450) {
         weightB = gObjHitsScalarZero;
@@ -2773,12 +2773,12 @@ void ObjHits_Update(int objectCount)
                                                   skeletonScratchC, skeletonScratchD,
                                                   skeletonScratchE, 0);
                 } else if ((objState->shapeFlags == 0x10) || (candState->shapeFlags == 0x10)) {
-                  if ((*(u8 *)((int)objState + 0x6a) != 0) ||
-                      (*(u8 *)((int)candState + 0x6a) != 0)) {
+                  if ((objState->lateralResponseWeight != 0) ||
+                      (candState->lateralResponseWeight != 0)) {
                     ObjHits_CheckHitVolumes(obj, candObj, obj, 0, 1, 0xffffffff, 0);
                   }
-                } else if ((*(u8 *)((int)objState + 0x6a) != 0) ||
-                           (*(u8 *)((int)candState + 0x6a) != 0)) {
+                } else if ((objState->lateralResponseWeight != 0) ||
+                           (candState->lateralResponseWeight != 0)) {
                   ObjHits_DetectObjectPair(obj, candObj);
                 }
               }
