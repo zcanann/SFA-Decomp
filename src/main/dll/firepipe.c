@@ -34,7 +34,7 @@ extern int fn_80080150(int timer);
 extern int timerCountDown(int timer);
 extern int fn_8001CC9C(FirePipeObject *obj, int r, int g, int b, int a);
 extern void lightFn_8001db6c(int light, int mode, f32 value);
-extern void fn_8001D730(int light, int a, int r, int g, int b, int alpha, f32 radius);
+extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
 extern void lightVecFn_8001dd88(int light, f32 x, f32 y, f32 z);
 extern void lightDistAttenFn_8001dc38(int light, f32 near, f32 far);
 extern int fn_8001DB64(int light);
@@ -251,10 +251,10 @@ void firepipe_updateState(FirePipeObject *obj)
                     lightFn_8001db6c(extra->subObj,0,lbl_803E6B74);
                     lightFn_8001db6c(extra->subObj,1,lbl_803E6B78);
                     if (obj->objectId == 0x6f9) {
-                        fn_8001D730(extra->subObj,0,0,0xb4,0xff,0x64,
+                        modelLightStruct_setupGlow(extra->subObj,0,0,0xb4,0xff,0x64,
                                     lbl_803DC34C * obj->scale);
                     } else {
-                        fn_8001D730(extra->subObj,0,0xff,0x80,0,0x64,
+                        modelLightStruct_setupGlow(extra->subObj,0,0xff,0x80,0,0x64,
                                     lbl_803DC34C * obj->scale);
                     }
                     lightVecFn_8001dd88(extra->subObj,lbl_803E6B74,lbl_803E6B74,lbl_803E6B7C);

@@ -6393,8 +6393,8 @@ extern void lightSetField4D(int light, int v);
 extern void lightSetFieldBC_8001db14(int light, int v);
 extern void lightVecFn_8001dd88(int light, f32 a, f32 b, f32 c);
 extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
-extern void fn_8001D730(int light, int a, int r, int g, int b, int e, f32 f);
-extern void fn_8001D714(int light, f32 a);
+extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
+extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
 extern void modelLightStruct_setField50(int light, int v);
 extern f32 lbl_803E3378;
 extern f32 lbl_803E337C;
@@ -6434,9 +6434,9 @@ void fireball_init(int *obj)
                                                ((u8 *)lbl_80320978 + 1)[c], ((u8 *)lbl_80320978 + 2)[c], 0);
                 lightDistAttenFn_8001dc38(*(int *)state, lbl_803E3358, lbl_803E3378);
                 c = *(u8 *)((char *)state + 0x71) * 3;
-                fn_8001D730(*(int *)state, 0, ((u8 *)lbl_80320978)[c], ((u8 *)lbl_80320978 + 1)[c],
+                modelLightStruct_setupGlow(*(int *)state, 0, ((u8 *)lbl_80320978)[c], ((u8 *)lbl_80320978 + 1)[c],
                             ((u8 *)lbl_80320978 + 2)[c], 32, lbl_803E337C);
-                fn_8001D714(*(int *)state, lbl_803E337C);
+                modelLightStruct_setGlowProjectionRadius(*(int *)state, lbl_803E337C);
             }
         }
         *(u8 *)((char *)obj + 0x36) = 200;

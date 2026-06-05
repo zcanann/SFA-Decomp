@@ -8,7 +8,7 @@
 extern void Music_Trigger(s32 triggerId,s32 mode);
 extern uint GameBit_Get(int eventId);
 extern void modelLightStruct_getColors100104(void *light,void *red,void *green,void *blue,void *alpha);
-extern void fn_8001D71C(void *light,u8 red,u8 green,u8 blue,int alpha);
+extern void modelLightStruct_setGlowColor(void *light,u8 red,u8 green,u8 blue,int alpha);
 extern int randomGetRange(int min,int max);
 extern void skyFn_80089710(int id,int enabled,int arg);
 extern void skyFn_800894a8(int id,f32 x,f32 y,f32 z);
@@ -70,7 +70,7 @@ int dll_DIM_BossGutSpik_update(void *obj,undefined4 param_2,ObjAnimUpdateState *
 
   if (gDIMbosstonsilLight != NULL) {
     modelLightStruct_getColors100104(gDIMbosstonsilLight,&red,&green,&blue,&alpha);
-    fn_8001D71C(gDIMbosstonsilLight,red,green,blue,0xc0);
+    modelLightStruct_setGlowColor(gDIMbosstonsilLight,red,green,blue,0xc0);
     if (gDIMbosstonsilLight->active != 0 && gDIMbosstonsilLight->visible != 0) {
       lightValue = gDIMbosstonsilLight->glowIntensity + gDIMbosstonsilLight->glowIntensityStep;
       if (lightValue < 0) {

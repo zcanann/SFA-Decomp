@@ -782,8 +782,8 @@ void ktrex_init(int obj, char *arg) {
             *(f32 *)((char *)obj + 0x10), *(f32 *)((char *)obj + 0x14));
         modelLightStruct_setColorsA8AC(*(void **)((char *)gKTRexState + 0x178), 0xff, 0, 0, 0);
         lightDistAttenFn_8001dc38(*(void **)((char *)gKTRexState + 0x178), lbl_803E6850, lbl_803E67F0);
-        fn_8001D730(*(void **)((char *)gKTRexState + 0x178), 0, 0xff, 0, 0, 0x50, lbl_803E67F0);
-        fn_8001D714(*(void **)((char *)gKTRexState + 0x178), lbl_803E67BC);
+        modelLightStruct_setupGlow(*(void **)((char *)gKTRexState + 0x178), 0, 0xff, 0, 0, 0x50, lbl_803E67F0);
+        modelLightStruct_setGlowProjectionRadius(*(void **)((char *)gKTRexState + 0x178), lbl_803E67BC);
     }
     streamFn_8000a380(3, 2, 0x1f4);
 }

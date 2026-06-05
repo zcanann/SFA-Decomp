@@ -14,8 +14,8 @@ extern void lightFn_8001db6c(int, int, f32);
 extern void lightFn_8001d620(int, int, int);
 extern void lightSetFieldB0(int, int, int, int, int);
 extern void lightSetField4D(int, int);
-extern void fn_8001D730(int, int, u8, u8, u8, int, f32);
-extern void fn_8001D714(int, f32);
+extern void modelLightStruct_setupGlow(int, int, u8, u8, u8, int, f32);
+extern void modelLightStruct_setGlowProjectionRadius(int, f32);
 
 extern u8 lbl_802C2488[];
 extern f32 lbl_803E5E08;
@@ -131,15 +131,15 @@ void lightsource_init(s16 *obj, int mapData)
         type = *(s16 *)((u8 *)obj + 0x46);
         if (type == 0x705 || type == 0x712) {
           colorBase = *(u8 *)((int)state + 0x15) * 3;
-          fn_8001D730(*state, 0, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2],
+          modelLightStruct_setupGlow(*state, 0, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2],
                       0x8c, lbl_803E5E38 * (lbl_803E5E3C * *(f32 *)(obj + 4)));
         }
         else {
           colorBase = *(u8 *)((int)state + 0x15) * 3;
-          fn_8001D730(*state, 0, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2],
+          modelLightStruct_setupGlow(*state, 0, colors.c[colorBase], colors.c[colorBase + 1], colors.c[colorBase + 2],
                       0x8c, lbl_803E5E3C * *(f32 *)(obj + 4));
         }
-        fn_8001D714(*state, lbl_803E5E40);
+        modelLightStruct_setGlowProjectionRadius(*state, lbl_803E5E40);
       }
     }
   }

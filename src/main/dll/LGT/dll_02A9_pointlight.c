@@ -163,10 +163,10 @@ void pointlight_init(int obj, int setup)
         }
 
         if (*(u8 *)(setup + 0x3e) != 0) {
-            fn_8001D730(state->light, *(u16 *)(setup + 0x38), *(u8 *)(setup + 0x3a),
+            modelLightStruct_setupGlow(state->light, *(u16 *)(setup + 0x38), *(u8 *)(setup + 0x3a),
                 *(u8 *)(setup + 0x3b), *(u8 *)(setup + 0x3c), *(u8 *)(setup + 0x3d),
                 (f32)(u32)*(u16 *)(setup + 0x36));
-            fn_8001D714(state->light, lbl_803E7240);
+            modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E7240);
         }
 
         if (*(u8 *)(setup + 0x3f) != 0) {

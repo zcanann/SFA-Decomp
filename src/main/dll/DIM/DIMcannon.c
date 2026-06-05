@@ -2681,8 +2681,8 @@ extern u8 *objCreateLight(s16 *obj, int b);
 extern void modelLightStruct_setField50(u8 *light, int value);
 extern void modelLightStruct_setColorsA8AC(u8 *light, int r, int g, int b, int a);
 extern void lightDistAttenFn_8001dc38(u8 *light, f32 a, f32 b);
-extern void fn_8001D730(u8 *light, int p3, int p4, int p5, int p6, int p7, f32 a);
-extern void fn_8001D714(u8 *light, f32 a);
+extern void modelLightStruct_setupGlow(u8 *light, int p3, int p4, int p5, int p6, int p7, f32 a);
+extern void modelLightStruct_setGlowProjectionRadius(u8 *light, f32 a);
 
 typedef struct {
     f32 x, y, z;
@@ -2739,8 +2739,8 @@ void lavaball1be_init(s16 *obj, u8 *p) {
             modelLightStruct_setField50(light, 2);
             modelLightStruct_setColorsA8AC(*(u8 **)(state + 4), 0xff, 0x80, 0, 0);
             lightDistAttenFn_8001dc38(*(u8 **)(state + 4), lbl_803E4800, lbl_803E4804);
-            fn_8001D730(*(u8 **)(state + 4), 0, 0xff, 0x80, 0, 0x64, lbl_803E4808);
-            fn_8001D714(*(u8 **)(state + 4), lbl_803E4808);
+            modelLightStruct_setupGlow(*(u8 **)(state + 4), 0, 0xff, 0x80, 0, 0x64, lbl_803E4808);
+            modelLightStruct_setGlowProjectionRadius(*(u8 **)(state + 4), lbl_803E4808);
         }
     }
 }

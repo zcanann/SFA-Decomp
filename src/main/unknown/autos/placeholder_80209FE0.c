@@ -1776,14 +1776,14 @@ extern int objCreateLight(int a, int b);
 extern void modelLightStruct_setField50(int light, int v);
 extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d);
 extern void modelLightStruct_setColors100104(int light, int a, int b, int c, int d);
-extern void fn_8001D730(int light, int a, int b, int c, int d, int e, f32 v);
+extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 v);
 extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
 extern void lightSetField4D(int light, int v);
 extern void lightSetFieldB0(int light, int a, int b, int c, int d);
 extern void fn_8001D9E0(int light, int a, int b, int c, int d);
 extern void lightFn_8001d620(int light, int a, int b);
 extern void lightSetField2FB(int light, int v);
-extern void fn_8001D714(int light, f32 v);
+extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
 extern int Obj_UpdateRomCurveFollowVelocityIndexed(f32 a, f32 b, f32 c, int obj, void *curve, int p, void *out);
 extern void Obj_SmoothTurnAnglesTowardVelocity(int obj, void *angles, int p, f32 a, f32 b);
 extern int Obj_GetYawDeltaToObject(int obj, int other, int flags);
@@ -1883,7 +1883,7 @@ void bossdrakor_update(int obj)
             modelLightStruct_setField50(*(int *)((char *)state + 0x160), 2);
             modelLightStruct_setColorsA8AC(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
             modelLightStruct_setColors100104(*(int *)((char *)state + 0x160), 0x40, 0, 0xff, 0xff);
-            fn_8001D730(*(int *)((char *)state + 0x160), 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
+            modelLightStruct_setupGlow(*(int *)((char *)state + 0x160), 0, 0x40, 0, 0x80, 0x5a, lbl_803E6564);
             lightDistAttenFn_8001dc38(*(int *)((char *)state + 0x160), lbl_803E6544, lbl_803E6540);
             lightSetField4D(*(int *)((char *)state + 0x160), 0);
             lightFn_8001db6c(*(void **)((char *)state + 0x160), 1, lbl_803E6520);
@@ -1891,7 +1891,7 @@ void bossdrakor_update(int obj)
             fn_8001D9E0(*(int *)((char *)state + 0x160), 0x40, 0, 0x80, 0x40);
             lightFn_8001d620(*(int *)((char *)state + 0x160), 2, 0x28);
             lightSetField2FB(*(int *)((char *)state + 0x160), 1);
-            fn_8001D714(*(int *)((char *)state + 0x160), lbl_803E6550);
+            modelLightStruct_setGlowProjectionRadius(*(int *)((char *)state + 0x160), lbl_803E6550);
         }
     }
     moveResult = Obj_UpdateRomCurveFollowVelocityIndexed(*(f32 *)state, lbl_803E6568, lbl_803E6520, obj, (void *)((char *)state + 0x28), 1, (void *)((char *)state + 0x194));

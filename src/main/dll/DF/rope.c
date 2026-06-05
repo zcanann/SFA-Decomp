@@ -413,8 +413,8 @@ extern void *objCreateLight(int obj, int n);
 extern void modelLightStruct_setField50(int light, int v);
 extern void modelLightStruct_setColorsA8AC(int light, int a, int b, int c, int d);
 extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
-extern void fn_8001D730(int light, int a, int b, int c, int d, int e, f32 f);
-extern void fn_8001D714(int light, f32 f);
+extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
+extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
 extern f32 lbl_803E4D24;
 extern f32 lbl_803E4D28;
 extern f32 lbl_803E4D2C;
@@ -470,8 +470,8 @@ void dimbossgut2_init(int obj, int def, int p3)
     modelLightStruct_setColorsA8AC(*(int *)(p + 0x18), 0, 255, 0, 0);
     lightSetFieldBC_8001db14(*(int *)(p + 0x18), 1);
     lightDistAttenFn_8001dc38(*(int *)(p + 0x18), lbl_803E4D2C, lbl_803E4CE0);
-    fn_8001D730(*(int *)(p + 0x18), 0, 0, 255, 0, 127, lbl_803E4D30);
-    fn_8001D714(*(int *)(p + 0x18), lbl_803E4D04);
+    modelLightStruct_setupGlow(*(int *)(p + 0x18), 0, 0, 255, 0, 127, lbl_803E4D30);
+    modelLightStruct_setGlowProjectionRadius(*(int *)(p + 0x18), lbl_803E4D04);
   }
 }
 
@@ -700,8 +700,8 @@ extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
 extern void lightSetField4D(int light, int v);
 extern void lightFn_8001db6c(int light, int v, f32 f);
 extern void lightSetField2FB(int light, int v);
-extern void fn_8001D730(int light, int a, int b, int c, int d, int e, f32 f);
-extern void fn_8001D714(int light, f32 f);
+extern void modelLightStruct_setupGlow(int light, int a, int b, int c, int d, int e, f32 f);
+extern void modelLightStruct_setGlowProjectionRadius(int light, f32 f);
 extern int Obj_GetActiveModel(int obj);
 extern void ObjModel_SetPostRenderCallback(int model, void *cb);
 extern void fn_800284CC(void);
@@ -724,8 +724,8 @@ void DIMbossspit_init(int obj)
     lightSetField4D(*(int *)(state + 4), 1);
     lightFn_8001db6c(*(int *)(state + 4), 1, lbl_803E4D78);
     lightSetField2FB(*(int *)(state + 4), 1);
-    fn_8001D730(*(int *)(state + 4), 0, 0, 255, 0, 127, lbl_803E4D7C);
-    fn_8001D714(*(int *)(state + 4), lbl_803E4D80);
+    modelLightStruct_setupGlow(*(int *)(state + 4), 0, 0, 255, 0, 127, lbl_803E4D7C);
+    modelLightStruct_setGlowProjectionRadius(*(int *)(state + 4), lbl_803E4D80);
   }
   *(int *)(obj + 0xf4) = 0xb4;
   ObjHits_SetHitVolumeSlot(obj, 0, 0, 0);

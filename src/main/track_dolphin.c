@@ -6716,37 +6716,36 @@ void renderGlows(void)
     if (lbl_803DCE06 != 0) {
         int i;
         for (i = 0; i < lbl_803DCE06; i++) {
-            int *e = (int *)lbl_80382038[i];
+            ModelLightStruct *e = (ModelLightStruct *)lbl_80382038[i];
             int d;
-            Camera_ProjectWorldPointWithOffset(*(f32 *)((char *)e + 0x10) - playerMapOffsetX,
-                                               *(f32 *)((char *)e + 0x14),
-                                               *(f32 *)((char *)e + 0x18) - playerMapOffsetZ,
-                                               *(f32 *)((char *)e + 0x2f4), &px, &py, &pz);
+            Camera_ProjectWorldPointWithOffset(e->worldX - playerMapOffsetX, e->worldY,
+                                               e->worldZ - playerMapOffsetZ,
+                                               e->glowProjectionRadius, &px, &py, &pz);
             Camera_NdcToScreen(px, py, pz, &sx, &sy, &sz);
             d = maybeReadDepthBuffer(sx, sy, e);
             if (sz <= d && pauseMenuGetState() == 0)
-                *(s8 *)((char *)e + 0x2fa) = 0x10;
+                e->glowAlphaStep = 0x10;
             else
-                *(s8 *)((char *)e + 0x2fa) = -0x10;
+                e->glowAlphaStep = -0x10;
         }
         GXSetCurrentMtx(0x3c);
         gxTextureFn_800794e0();
         gxBlendFn_800789ac();
         for (i = 0; i < lbl_803DCE06; i++) {
-            int *e = (int *)lbl_80382038[i];
-            if (*(u8 *)((char *)e + 0x2f9) != 0) {
-                f32 f = *(f32 *)((char *)e + 0x138);
+            ModelLightStruct *e = (ModelLightStruct *)lbl_80382038[i];
+            if (e->glowAlpha != 0) {
+                f32 f = e->selectionIntensity;
                 f32 cx, cy, cz, hs;
-                selectTexture(*(int *)((char *)e + 0x2e8), 0);
-                _gxSetTevColor2((int)((f32)(u32)*(u8 *)((char *)e + 0x2ec) * f),
-                                (int)((f32)(u32)*(u8 *)((char *)e + 0x2ed) * f),
-                                (int)((f32)(u32)*(u8 *)((char *)e + 0x2ee) * f),
-                                (*(u8 *)((char *)e + 0x2ef) * *(u8 *)((char *)e + 0x2f9)) >> 8 & 0xff);
+                selectTexture((int)e->glowTexture, 0);
+                _gxSetTevColor2((int)((f32)(u32)e->glowColor[0] * f),
+                                (int)((f32)(u32)e->glowColor[1] * f),
+                                (int)((f32)(u32)e->glowColor[2] * f),
+                                (e->glowColor[3] * e->glowAlpha) >> 8 & 0xff);
                 GXBegin(0x80, 2, 4);
-                cx = *(f32 *)((char *)e + 0x1c);
-                cy = *(f32 *)((char *)e + 0x20);
-                cz = *(f32 *)((char *)e + 0x24);
-                hs = *(f32 *)((char *)e + 0x2f0);
+                cx = e->viewX;
+                cy = e->viewY;
+                cz = e->viewZ;
+                hs = e->glowScale;
                 GXWGFifo.f32 = cx - hs;
                 GXWGFifo.f32 = cy - hs;
                 GXWGFifo.f32 = cz;

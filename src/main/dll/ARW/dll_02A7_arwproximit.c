@@ -109,8 +109,8 @@ void arwproximit_update(int obj)
                 modelLightStruct_setColorsA8AC(*(void **)(state + 4), 0, 0xff, 0, 0);
                 lightSetFieldB0(*(void **)(state + 4), 0, 0, 0, 0);
                 lightDistAttenFn_8001dc38(*(void **)(state + 4), lbl_803E71F0, lbl_803E71F4);
-                fn_8001D730(*(void **)(state + 4), 0, 0, 0xff, 0, 0x64, lbl_803E71F8);
-                fn_8001D714(*(void **)(state + 4), lbl_803E71F0);
+                modelLightStruct_setupGlow(*(void **)(state + 4), 0, 0, 0xff, 0, 0x64, lbl_803E71F8);
+                modelLightStruct_setGlowProjectionRadius(*(void **)(state + 4), lbl_803E71F0);
             }
             ObjHits_EnableObject(obj);
             ObjHits_MarkObjectPositionDirty(obj);
@@ -132,7 +132,7 @@ void arwproximit_update(int obj)
         if (Vec_distance(obj + 0x18, (int)(arwing + 0x18)) < lbl_803E7200) {
             if (*(void **)(state + 4) != NULL) {
                 modelLightStruct_setColorsA8AC(*(void **)(state + 4), 0xff, 0, 0, 0);
-                fn_8001D71C(*(void **)(state + 4), 0xff, 0, 0, 0x64);
+                modelLightStruct_setGlowColor(*(void **)(state + 4), 0xff, 0, 0, 0x64);
                 lightFn_8001d620(*(void **)(state + 4), 2, 0xa);
             }
             s16toFloat((void *)(state + 0xc), 0x3c);
@@ -151,7 +151,7 @@ void arwproximit_update(int obj)
         *(u8 *)(obj + 0x36) = 0xff;
         if (*(void **)(state + 4) != NULL) {
             modelLightStruct_getColorsA8AC(*(void **)(state + 4), &b0, &b1, &b2, &b3);
-            fn_8001D71C(*(void **)(state + 4), b0, b1, b2, 0x64);
+            modelLightStruct_setGlowColor(*(void **)(state + 4), b0, b1, b2, 0x64);
         }
         if (timerCountDown((void *)(state + 0xc)) != 0 ||
             (*(void **)(*(int *)(obj + 0x54) + 0x50) != NULL &&

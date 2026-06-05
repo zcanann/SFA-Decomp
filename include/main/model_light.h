@@ -47,8 +47,16 @@ typedef struct ModelLightStruct {
     u8 pad138[0x140 - 0x138];
     f32 innerRadius;
     f32 outerRadius;
-    u8 pad148[0x2f8 - 0x148];
-    u8 type;
+    u8 pad148[0x2d8 - 0x148];
+    int colorFadeMode;
+    f32 colorFadeStep;
+    f32 colorFadeProgress;
+    f32 colorFadeTimer;
+    void *glowTexture;
+    u8 glowColor[4];
+    f32 glowScale;
+    f32 glowProjectionRadius;
+    u8 glowType;
     u8 glowAlpha;
     s8 glowAlphaStep;
     u8 affectsAabbLightSelection;
@@ -58,5 +66,8 @@ typedef struct ModelLightStruct {
 
 void queueGlowRender(ModelLightStruct *light);
 void modelLightStruct_updateGlowAlpha(ModelLightStruct *light);
+void modelLightStruct_setGlowProjectionRadius(ModelLightStruct *light, f32 radius);
+void modelLightStruct_setGlowColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha);
+void modelLightStruct_setupGlow(ModelLightStruct *light, u32 textureId, u8 red, u8 green, u8 blue, u8 alpha, f32 scale);
 
 #endif /* MAIN_MODEL_LIGHT_H_ */

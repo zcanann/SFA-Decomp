@@ -302,7 +302,7 @@ extern void modelLightStruct_setField50(int light, int value);
 extern void lightVecFn_8001dd88(int light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
 extern void modelLightStruct_setColors100104(int light, int r, int g, int b, int a);
-extern void fn_8001D730(int light, int a, int r, int g, int b, int alpha, f32 radius);
+extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int alpha, f32 radius);
 extern void lightSetFieldB0(int light, int r, int g, int b, int a);
 extern void lightDistAttenFn_8001dc38(int light, f32 near, f32 far);
 extern void lightSetField4D(int light, int v);
@@ -335,12 +335,12 @@ void kaldachompspit_init(int obj)
         if (*(s16 *)(obj + 0x46) == 0x869) {
             modelLightStruct_setColorsA8AC(*extra, 0xff, 0xc0, 0, 0xff);
             modelLightStruct_setColors100104(*extra, 0xff, 0xc0, 0, 0xff);
-            fn_8001D730(*extra, 0, 0xff, 0xc0, 0, 0x7f, lbl_803E3108 * (lbl_803E310C * *(f32 *)(obj + 8)));
+            modelLightStruct_setupGlow(*extra, 0, 0xff, 0xc0, 0, 0x7f, lbl_803E3108 * (lbl_803E310C * *(f32 *)(obj + 8)));
             lightSetFieldB0(*extra, 0xff, 0xd2, 0, 0xff);
         } else {
             modelLightStruct_setColorsA8AC(*extra, 0, 0xff, 0, 0xff);
             modelLightStruct_setColors100104(*extra, 0, 0xff, 0, 0xff);
-            fn_8001D730(*extra, 0, 0, 0xff, 0, 0x28, lbl_803E310C * *(f32 *)(obj + 8));
+            modelLightStruct_setupGlow(*extra, 0, 0, 0xff, 0, 0x28, lbl_803E310C * *(f32 *)(obj + 8));
             lightSetFieldB0(*extra, 0, 0xff, 0, 0xff);
         }
         {

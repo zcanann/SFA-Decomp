@@ -588,7 +588,7 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
   extern void lightVecFn_8001dd88(int, f32, f32, f32);
   extern void modelLightStruct_setColorsA8AC(int, int, int, int, int);
   extern void modelLightStruct_setColors100104(int, int, int, int, int);
-  extern void fn_8001D730(int, int, int, int, int, int, f32);
+  extern void modelLightStruct_setupGlow(int, int, int, int, int, int, f32);
   extern void lightDistAttenFn_8001dc38(int, f32, f32);
   extern void lightSetField4D(int, int);
   extern void lightFn_8001db6c(int, int, f32);
@@ -596,7 +596,7 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
   extern void fn_8001D9E0(int, int, int, int, int);
   extern void lightFn_8001d620(int, int, int);
   extern void lightSetField2FB(int, int);
-  extern void fn_8001D714(int, f32);
+  extern void modelLightStruct_setGlowProjectionRadius(int, f32);
   extern f32 lbl_803E4BBC;
   extern f32 lbl_803E4BD8;
   extern f32 lbl_803E4C28;
@@ -615,11 +615,11 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
   if (isGreen != 0) {
     modelLightStruct_setColorsA8AC(lightSlot[0], 0, 255, 0, 255);
     modelLightStruct_setColors100104(lightSlot[0], 0, 255, 0, 255);
-    fn_8001D730(lightSlot[0], 0, 0, 255, 0, 192, lbl_803E4C28);
+    modelLightStruct_setupGlow(lightSlot[0], 0, 0, 255, 0, 192, lbl_803E4C28);
   } else {
     modelLightStruct_setColorsA8AC(lightSlot[0], 255, 0, 0, 255);
     modelLightStruct_setColors100104(lightSlot[0], 255, 0, 0, 255);
-    fn_8001D730(lightSlot[0], 0, 255, 0, 0, 192, lbl_803E4C2C);
+    modelLightStruct_setupGlow(lightSlot[0], 0, 255, 0, 0, 192, lbl_803E4C2C);
   }
 
   lightDistAttenFn_8001dc38(lightSlot[0], lbl_803E4C2C, lbl_803E4C30);
@@ -629,7 +629,7 @@ void DIM2icicle_createStateLight(int obj, u8 isGreen)
   fn_8001D9E0(lightSlot[0], 64, 0, 0, 64);
   lightFn_8001d620(lightSlot[0], 2, 40);
   lightSetField2FB(lightSlot[0], 1);
-  fn_8001D714(lightSlot[0], lbl_803E4BBC);
+  modelLightStruct_setGlowProjectionRadius(lightSlot[0], lbl_803E4BBC);
 }
 #pragma peephole reset
 #pragma scheduling reset

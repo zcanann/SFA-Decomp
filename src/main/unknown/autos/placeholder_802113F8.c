@@ -11,7 +11,7 @@ extern void Sfx_PlayFromObject(void *obj, u16 sfxId);
 extern void Sfx_StopObjectChannel(void *obj, int channel);
 extern ProximityMineEffect *fn_8001CC9C(void *obj, int r, int g, int b, int a);
 extern int *objFindTexture(void *obj, int a, int b);
-extern void fn_8001D730(void *light, int a, int b, int c, int d, u8 e, f32 f);
+extern void modelLightStruct_setupGlow(void *light, int a, int b, int c, int d, u8 e, f32 f);
 extern void lightVecFn_8001dd88(void *light, f32 x, f32 y, f32 z);
 extern void *Obj_GetPlayerObject(void);
 extern f32 Vec_distance(f32 *a, f32 *b);
@@ -104,7 +104,7 @@ void proximitymine_update(ProximityMineObject *obj)
       }
       if (state->effectHandle != NULL) {
         state->effectHandle->visible = brightness;
-        fn_8001D730(state->effectHandle, 0, 0xff, 0, 0, lbl_803DC238, lbl_803DC234);
+        modelLightStruct_setupGlow(state->effectHandle, 0, 0xff, 0, 0, lbl_803DC238, lbl_803DC234);
         {
           ProximityMineEffect *fx = state->effectHandle;
           lightVecFn_8001dd88(fx, lbl_803E6768, obj->unkA8, lbl_803E6768);
@@ -117,7 +117,7 @@ void proximitymine_update(ProximityMineObject *obj)
       if (state->effectHandle == NULL) {
         state->effectHandle = fn_8001CC9C(obj, 0xff, 0, 0, 0);
         if (state->effectHandle != NULL) {
-          fn_8001D730(state->effectHandle, 0, 0xff, 0, 0, lbl_803DC240, lbl_803DC23C);
+          modelLightStruct_setupGlow(state->effectHandle, 0, 0xff, 0, 0, lbl_803DC240, lbl_803DC23C);
           {
             ProximityMineEffect *fx = state->effectHandle;
             lightVecFn_8001dd88(fx, lbl_803E6768, obj->unkA8, lbl_803E6768);

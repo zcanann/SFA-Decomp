@@ -135,10 +135,10 @@ void wcapertures_init(int obj, int initData)
     if (*(void **)(state + 0) != NULL) {
         modelLightStruct_setField50(*(void **)(state + 0), 2);
         if ((s8)*(u8 *)(obj + 0xad) == 0)
-            fn_8001D730(*(void **)(state + 0), 0, 0xff, 0xff, 0x4d, 0x96, lbl_803E6E3C);
+            modelLightStruct_setupGlow(*(void **)(state + 0), 0, 0xff, 0xff, 0x4d, 0x96, lbl_803E6E3C);
         else
-            fn_8001D730(*(void **)(state + 0), 0, 0x4d, 0x4d, 0xff, 0xff, lbl_803E6E3C);
-        fn_8001D714(*(void **)(state + 0), lbl_803E6E40);
+            modelLightStruct_setupGlow(*(void **)(state + 0), 0, 0x4d, 0x4d, 0xff, 0xff, lbl_803E6E3C);
+        modelLightStruct_setGlowProjectionRadius(*(void **)(state + 0), lbl_803E6E40);
     }
 }
 #pragma scheduling reset

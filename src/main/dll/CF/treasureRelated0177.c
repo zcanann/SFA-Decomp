@@ -472,8 +472,8 @@ extern void lightDistAttenFn_8001dc38(int light, f32 min, f32 max);
 extern void lightVecFn_8001dd88(int light, f32 x, f32 y, f32 z);
 extern void lightFn_8001d620(int light, int a, int b);
 extern void lightSetFieldB0(int light, int r, int g, int b, int a);
-extern void fn_8001D730(int light, int a, int r, int g, int b, int c, f32 scale);
-extern void fn_8001D714(int light, f32 v);
+extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int c, f32 scale);
+extern void modelLightStruct_setGlowProjectionRadius(int light, f32 v);
 extern f32 lbl_803E3D88;
 extern f32 lbl_803E3D8C;
 extern f32 lbl_803E3D90;
@@ -536,8 +536,8 @@ void campfire_init(int obj, int p2)
         lightVecFn_8001dd88(*state, lbl_803E3D7C, lbl_803E3D94, lbl_803E3D7C);
         lightFn_8001d620(*state, 1, 3);
         lightSetFieldB0(*state, 0xff, 0x5c, 0, 0xff);
-        fn_8001D730(*state, 0, 0xff, 0x7f, 0, 0x87, lbl_803E3D98 * *(f32 *)(obj + 8));
-        fn_8001D714(*state, lbl_803E3D90);
+        modelLightStruct_setupGlow(*state, 0, 0xff, 0x7f, 0, 0x87, lbl_803E3D98 * *(f32 *)(obj + 8));
+        modelLightStruct_setGlowProjectionRadius(*state, lbl_803E3D90);
     }
 }
 

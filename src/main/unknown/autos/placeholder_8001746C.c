@@ -8226,8 +8226,8 @@ extern u8 lbl_803DCB10;
 extern int lbl_803DCAE8[2];
 extern u8 lbl_803DCA48;
 
-void fn_8001D714(u8 *p, f32 v) {
-    *(f32 *)(p + 0x2f4) = v;
+void modelLightStruct_setGlowProjectionRadius(ModelLightStruct *light, f32 radius) {
+    light->glowProjectionRadius = radius;
 }
 
 void *fn_8001D818(u8 *p) {
@@ -8356,7 +8356,7 @@ void *objCreateLight(int arg, u8 addToList) {
 #pragma scheduling off
 #pragma peephole off
 void fn_8001CB3C(void **lightSlot) {
-    u8 *light;
+    ModelLightStruct *light;
     int i;
     int count;
 
@@ -8379,15 +8379,15 @@ void fn_8001CB3C(void **lightSlot) {
             lbl_803DCA30--;
         }
 
-        if (light[0x2f8] == 2 && *(void **)(light + 0x2e8) != NULL) {
-            textureFree(*(void **)(light + 0x2e8));
+        if (light->glowType == 2 && light->glowTexture != NULL) {
+            textureFree(light->glowTexture);
         }
         mm_free(light);
         *lightSlot = NULL;
     }
 }
 
-void ModelLightStruct_free(u8 *light) {
+void ModelLightStruct_free(ModelLightStruct *light) {
     int count;
     int i;
 
@@ -8408,8 +8408,8 @@ void ModelLightStruct_free(u8 *light) {
         lbl_803DCA30--;
     }
 
-    if (light[0x2f8] == 2 && *(void **)(light + 0x2e8) != NULL) {
-        textureFree(*(void **)(light + 0x2e8));
+    if (light->glowType == 2 && light->glowTexture != NULL) {
+        textureFree(light->glowTexture);
     }
     mm_free(light);
 }
@@ -8627,11 +8627,11 @@ extern int lbl_803DB434;
 #pragma push
 #pragma scheduling off
 #pragma peephole off
-void fn_8001D71C(u8 *p, u8 a, u8 b, u8 c, u8 d) {
-    p[0x2ec] = a;
-    p[0x2ed] = b;
-    p[0x2ee] = c;
-    p[0x2ef] = d;
+void modelLightStruct_setGlowColor(ModelLightStruct *light, u8 red, u8 green, u8 blue, u8 alpha) {
+    light->glowColor[0] = red;
+    light->glowColor[1] = green;
+    light->glowColor[2] = blue;
+    light->glowColor[3] = alpha;
 }
 
 void fn_8001D7F8(u8 *p, void **a, void **b) {
@@ -8936,30 +8936,30 @@ void lightFn_8001d620(u8 *light, int mode, s16 frames) {
     }
 }
 
-void fn_8001D730(u8 *light, u32 textureId, u8 red, u8 green, u8 blue, u8 alpha, f32 scale) {
+void modelLightStruct_setupGlow(ModelLightStruct *light, u32 textureId, u8 red, u8 green, u8 blue, u8 alpha, f32 scale) {
     void *texture;
 
     if (textureId != 0) {
         texture = textureLoadAsset(textureId);
-        *(void **)(light + 0x2e8) = texture;
+        light->glowTexture = texture;
         if (texture != NULL) {
-            light[0x2f8] = 2;
+            light->glowType = 2;
         }
     } else {
         texture = textureLoadAsset(0x605);
-        *(void **)(light + 0x2e8) = texture;
+        light->glowTexture = texture;
         if (texture != NULL) {
-            light[0x2f8] = 2;
+            light->glowType = 2;
         }
     }
-    light[0x2ec] = red;
-    light[0x2ed] = green;
-    light[0x2ee] = blue;
-    light[0x2ef] = alpha;
-    *(f32 *)(light + 0x2f0) = scale;
-    light[0x2f9] = 0;
-    light[0x2fa] = 0;
-    *(f32 *)(light + 0x2f4) = lbl_803DE788 * *(f32 *)(light + 0x2f0);
+    light->glowColor[0] = red;
+    light->glowColor[1] = green;
+    light->glowColor[2] = blue;
+    light->glowColor[3] = alpha;
+    light->glowScale = scale;
+    light->glowAlpha = 0;
+    light->glowAlphaStep = 0;
+    light->glowProjectionRadius = lbl_803DE788 * light->glowScale;
 }
 
 void lightFn_8001db6c(u8 *light, u8 enabled, f32 duration) {
@@ -11695,7 +11695,7 @@ void objFn_8002b67c(u8 *obj) {
 void modelLightStruct_updateGlowAlpha(ModelLightStruct *light) {
     s16 v;
 
-    if (light->type == 0) {
+    if (light->glowType == 0) {
         return;
     }
     if (light->enabled == 0) {

@@ -215,10 +215,10 @@ int cmbsrc_cycleColor(int obj, int state)
                             (int)(lbl_803E7368 * (f32)(u32)lbl_8032BD50[base + 2]), 0xff);
             if (*(u8 *)(setup + 0x29) & 0x40) {
                 if (*(u8 *)(setup + 0x29) & 0x80) {
-                    fn_8001D730(*(void **)state, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
+                    modelLightStruct_setupGlow(*(void **)state, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
                                 lbl_8032BD50[base + 2], 0x87, lbl_803E736C * *(f32 *)(obj + 8));
                 } else {
-                    fn_8001D730(*(void **)state, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
+                    modelLightStruct_setupGlow(*(void **)state, 0, lbl_8032BD50[base], lbl_8032BD50[base + 1],
                                 lbl_8032BD50[base + 2], 0x87, lbl_803E7370 * *(f32 *)(obj + 8));
                 }
             }
@@ -491,23 +491,23 @@ void cmbsrc_init(int obj, u8 *setup)
             }
             if (setup[0x29] & 0x40) {
                 if (setup[0x29] & 0x80) {
-                    fn_8001D730(*(void **)state, 0, colorTbl[ci], colorTbl[ci + 1],
+                    modelLightStruct_setupGlow(*(void **)state, 0, colorTbl[ci], colorTbl[ci + 1],
                                 colorTbl[ci + 2], 0x87, lbl_803E73B8 * *(f32 *)(obj + 8));
                 } else {
-                    fn_8001D730(*(void **)state, 0, colorTbl[ci], colorTbl[ci + 1],
+                    modelLightStruct_setupGlow(*(void **)state, 0, colorTbl[ci], colorTbl[ci + 1],
                                 colorTbl[ci + 2], 0x87, lbl_803E7370 * *(f32 *)(obj + 8));
                 }
             }
             {
                 int m = setup[0x2c] & 0x3;
                 if (m == 0) {
-                    fn_8001D714(*(void **)state, lbl_803E73BC);
+                    modelLightStruct_setGlowProjectionRadius(*(void **)state, lbl_803E73BC);
                 } else if (m == 1) {
-                    fn_8001D714(*(void **)state, lbl_803E7384);
+                    modelLightStruct_setGlowProjectionRadius(*(void **)state, lbl_803E7384);
                 } else if (m == 2) {
-                    fn_8001D714(*(void **)state, lbl_803E73C0);
+                    modelLightStruct_setGlowProjectionRadius(*(void **)state, lbl_803E73C0);
                 } else {
-                    fn_8001D714(*(void **)state, lbl_803E7360);
+                    modelLightStruct_setGlowProjectionRadius(*(void **)state, lbl_803E7360);
                 }
             }
             if (setup[0x2a] & 0x4) {

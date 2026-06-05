@@ -8,7 +8,7 @@ extern void queueGlowRender(void *p);
 extern void ObjPath_GetPointWorldPosition(void *obj, int idx, void *out0, void *out1, void *out2, int flag);
 extern void *Obj_GetPlayerObject(void);
 extern void modelLightStruct_getColors100104(void *light, void *p1, void *p2, void *p3, void *p4);
-extern void fn_8001D71C(void *p1, u8 a, u8 b, u8 c, int d);
+extern void modelLightStruct_setGlowColor(void *p1, u8 a, u8 b, u8 c, int d);
 extern int randomGetRange(int min, int max);
 
 extern void *gPlayerInterface;
@@ -126,7 +126,7 @@ void DIMbosstonsil_update(void *obj)
     if (gDIMbosstonsilLight == 0) return;
 
     modelLightStruct_getColors100104(gDIMbosstonsilLight, &b1, &b2, &b3, &b4);
-    fn_8001D71C(gDIMbosstonsilLight, b1, b2, b3, 0xc0);
+    modelLightStruct_setGlowColor(gDIMbosstonsilLight, b1, b2, b3, 0xc0);
 
     if (gDIMbosstonsilLight->active == 0) return;
     if (gDIMbosstonsilLight->visible == 0) return;

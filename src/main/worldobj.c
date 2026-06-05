@@ -31,8 +31,8 @@ extern void modelLightStruct_setField50(int light, int v);
 extern void lightVecFn_8001dd88(int light, f32 a, f32 b, f32 c);
 extern void modelLightStruct_setColorsA8AC(int light, int r, int g, int b, int a);
 extern void lightDistAttenFn_8001dc38(int light, f32 a, f32 b);
-extern void fn_8001D730(int light, int a, int r, int g, int b, int e, f32 f);
-extern void fn_8001D714(int light, f32 a);
+extern void modelLightStruct_setupGlow(int light, int a, int r, int g, int b, int e, f32 f);
+extern void modelLightStruct_setGlowProjectionRadius(int light, f32 a);
 extern void Obj_SetActiveModelIndex(int obj, int idx);
 extern int Obj_SetupObject(int obj, int a, int b, int c, int d);
 extern u8 lbl_803DC210[8];
@@ -151,8 +151,8 @@ void worldobj_init(int obj, int arg) {
             lightVecFn_8001dd88(*(int *)(obj + 0), lbl_803E665C, lbl_803E665C, lbl_803E665C);
             modelLightStruct_setColorsA8AC(*(int *)(obj + 0), 0xff, 0xff, 0xff, 0);
             lightDistAttenFn_8001dc38(*(int *)(obj + 0), lbl_803E66AC, lbl_803E66D0);
-            fn_8001D730(*(int *)(obj + 0), 0, 0xff, 0xff, 0xff, 0x82, lbl_803E66D4 * *(f32 *)(inner + 0x26c));
-            fn_8001D714(*(int *)(obj + 0), lbl_803E66A0);
+            modelLightStruct_setupGlow(*(int *)(obj + 0), 0, 0xff, 0xff, 0xff, 0x82, lbl_803E66D4 * *(f32 *)(inner + 0x26c));
+            modelLightStruct_setGlowProjectionRadius(*(int *)(obj + 0), lbl_803E66A0);
         }
         break;
     case 0x5f5:

@@ -279,8 +279,8 @@ extern f32 lbl_803E6E3C;
 extern f32 lbl_803E6E40;
 extern void *objCreateLight(int obj, int kind);
 extern void modelLightStruct_setField50(void *light, int v);
-extern void fn_8001D730(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
-extern void fn_8001D714(void *light, f32 v);
+extern void modelLightStruct_setupGlow(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
+extern void modelLightStruct_setGlowProjectionRadius(void *light, f32 v);
 
 
 extern int *gCameraInterface;
@@ -354,8 +354,8 @@ extern void fn_8001DA60(void *light, f32 v, int x);
 extern void lightFn_8001d620(void *light, int a, s16 b);
 extern void modelStruct2_setVectors(void *light, f32 x, f32 y, f32 z);
 extern void Obj_SetActiveModelIndex(int obj, int index);
-extern void fn_8001D730(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
-extern void fn_8001D714(void *light, f32 v);
+extern void modelLightStruct_setupGlow(void *light, u16 a, u8 b, u8 c, u8 d, u8 e, f32 f);
+extern void modelLightStruct_setGlowProjectionRadius(void *light, f32 v);
 extern void lightSetField2FB(void *light, int v);
 extern void fn_8001DB5C(void *light, u8 v);
 
@@ -1123,7 +1123,7 @@ extern f32 lbl_803E7220;
 
 
 extern void modelLightStruct_getColorsA8AC(void *light, u8 *a, u8 *b, u8 *c, u8 *d);
-extern void fn_8001D71C(void *light, u8 r, u8 g, u8 b, int e);
+extern void modelLightStruct_setGlowColor(void *light, u8 r, u8 g, u8 b, int e);
 extern f32 lbl_803E71D8;
 extern f32 lbl_803E71DC;
 extern f32 lbl_803E71E0;

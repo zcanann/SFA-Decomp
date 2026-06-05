@@ -142,7 +142,7 @@ typedef struct IcicleState {
 
 extern void lightVecFn_8001dd88(int *light, f32 x, f32 y, f32 z);
 extern void modelLightStruct_getColors100104(int light, u8 *a, u8 *b, u8 *c, u8 *d);
-extern void fn_8001D71C(int light, u8 a, u8 b, u8 c, int d);
+extern void modelLightStruct_setGlowColor(int light, u8 a, u8 b, u8 c, int d);
 extern void PSMTXMultVec(f32 *mtx, f32 *src, f32 *dst);
 extern void memcpy(void *dst, void *src, int n);
 extern void *gPartfxInterface;
@@ -200,7 +200,7 @@ void fn_801BB598(int objIndex, int param_2)
       lightVecFn_8001dd88(piVar4, *(f32 *)(state + 0x10), *(f32 *)(state + 0x11), *(f32 *)(state + 0x12));
     }
     modelLightStruct_getColors100104(*state, &colA, &colB, &colG, &colR);
-    fn_8001D71C(*state, colA, colB, colG, 0xc0);
+    modelLightStruct_setGlowColor(*state, colA, colB, colG, 0xc0);
     iVar6 = *state;
     if (*(u8 *)(iVar6 + 0x2f8) != 0 && *(u8 *)(iVar6 + 0x4c) != 0) {
       brightness = *(u8 *)(iVar6 + 0x2f9) + *(s8 *)(iVar6 + 0x2fa);

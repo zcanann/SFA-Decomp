@@ -9,12 +9,12 @@ extern void modelLightStruct_setColors100104(void *handle,int r,int g,int b,int 
 extern void lightDistAttenFn_8001dc38(void *handle,f32 param_2,f32 param_3);
 extern void lightSetField4D(void *handle,int param_2);
 extern void lightFn_8001db6c(void *handle,f32 param_2,int param_3);
-extern void fn_8001D714(void *handle,f32 param_2);
+extern void modelLightStruct_setGlowProjectionRadius(void *handle,f32 param_2);
 extern void lightSetFieldB0(void *handle,int r,int g,int b,int a);
 extern void fn_8001D9E0(void *handle,int r,int g,int b,int a);
 extern void lightFn_8001d620(void *handle,int param_2,int param_3);
 extern void lightSetField2FB(void *handle,int param_2);
-extern void fn_8001D730(void *handle,f32 param_2,int param_3,int r,int g,int b,int a);
+extern void modelLightStruct_setupGlow(void *handle,f32 param_2,int param_3,int r,int g,int b,int a);
 extern void DIMbosstonsil_updateHitReaction(void);
 extern void DIMbosstonsil_enableHitReaction(void);
 extern void DIMbosstonsil_chooseHitReaction(void);
@@ -81,12 +81,12 @@ void DIMbosstonsil_init(int obj,undefined4 param_2,int isAltVariant)
     lightDistAttenFn_8001dc38(gDIMbosstonsilLight,lbl_803E4C9C,lbl_803E4CA0);
     lightSetField4D(gDIMbosstonsilLight,1);
     lightFn_8001db6c(gDIMbosstonsilLight,lbl_803E4C90,1);
-    fn_8001D714(gDIMbosstonsilLight,lbl_803E4CA0);
+    modelLightStruct_setGlowProjectionRadius(gDIMbosstonsilLight,lbl_803E4CA0);
     lightSetFieldB0(gDIMbosstonsilLight,0xff,0x7f,0,0x40);
     fn_8001D9E0(gDIMbosstonsilLight,0xff,0x7f,0,0x40);
     lightFn_8001d620(gDIMbosstonsilLight,2,0x3c);
     lightSetField2FB(gDIMbosstonsilLight,1);
-    fn_8001D730(gDIMbosstonsilLight,lbl_803E4CA0,0,0xff,0,0,0x7f);
+    modelLightStruct_setupGlow(gDIMbosstonsilLight,lbl_803E4CA0,0,0xff,0,0,0x7f);
   }
   return;
 }
