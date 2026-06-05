@@ -3,8 +3,10 @@
 
 #include "ghidra_import.h"
 
+typedef struct WMGalleonSetup WMGalleonSetup;
+
 void WM_Galleon_update(int *obj);
-void WM_Galleon_init(int *obj, u8 *init);
+void WM_Galleon_init(int *obj, WMGalleonSetup *setup);
 void WM_Galleon_release(void);
 void WM_Galleon_initialise(void);
 

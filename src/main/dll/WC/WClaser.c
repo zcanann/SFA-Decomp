@@ -63,6 +63,20 @@ typedef struct Dll1FBSetup {
     s16 objectParam;
 } Dll1FBSetup;
 
+typedef struct WMGalleonSetup {
+    u8 pad00[0x18];
+    s8 yawByte;
+} WMGalleonSetup;
+
+typedef struct WMGalleonState {
+    f32 savedX;
+    f32 savedY;
+    f32 savedZ;
+    u8 mapEventsLatched;
+    u8 pad0D;
+    s16 savedYaw;
+} WMGalleonState;
+
 typedef struct Dll1FBState {
     u8 pad00[4];
     s16 baseMove;
@@ -76,17 +90,24 @@ STATIC_ASSERT(sizeof(Dll1FBState) == 0xc);
 STATIC_ASSERT(offsetof(Dll1FBState, baseMove) == 0x04);
 STATIC_ASSERT(offsetof(Dll1FBState, triggerMode) == 0x06);
 STATIC_ASSERT(offsetof(Dll1FBState, hideModel) == 0x09);
+STATIC_ASSERT(sizeof(WMGalleonState) == 0x10);
+STATIC_ASSERT(offsetof(WMGalleonState, savedX) == 0x00);
+STATIC_ASSERT(offsetof(WMGalleonState, savedY) == 0x04);
+STATIC_ASSERT(offsetof(WMGalleonState, savedZ) == 0x08);
+STATIC_ASSERT(offsetof(WMGalleonState, mapEventsLatched) == 0x0C);
+STATIC_ASSERT(offsetof(WMGalleonState, savedYaw) == 0x0E);
 STATIC_ASSERT(offsetof(Dll1FBSetup, yawByte) == 0x18);
 STATIC_ASSERT(offsetof(Dll1FBSetup, baseMove) == 0x19);
 STATIC_ASSERT(offsetof(Dll1FBSetup, triggerMode) == 0x1a);
 STATIC_ASSERT(offsetof(Dll1FBSetup, objectParam) == 0x1c);
+STATIC_ASSERT(offsetof(WMGalleonSetup, yawByte) == 0x18);
 
 #pragma scheduling off
 #pragma peephole off
 void WM_Galleon_update(int *obj)
 {
     int player;
-    u8 *state;
+    WMGalleonState *state;
     int gameBitA4;
 
     if (GameBit_Get(0x78) != 0) {
@@ -99,7 +120,7 @@ void WM_Galleon_update(int *obj)
     }
 
     player = Obj_GetPlayerObject();
-    state = (u8 *)OBJ_PTR(obj, 0xb8);
+    state = (WMGalleonState *)OBJ_PTR(obj, 0xb8);
 
     if (GameBit_Get(0x429) != 0) {
         if ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 2) != 0) {
@@ -112,17 +133,17 @@ void WM_Galleon_update(int *obj)
     }
 
     if (GameBit_Get(0xd0) == 0) {
-        if ((state[0xc] == 0) && (GameBit_Get(0x429) == 0)) {
+        if ((state->mapEventsLatched == 0) && (GameBit_Get(0x429) == 0)) {
             MAP_EVENT_SET(OBJ_U8(obj, 0x34), 1, 1);
             MAP_EVENT_SET(OBJ_U8(obj, 0x34), 2, 1);
-            state[0xc] = 1;
+            state->mapEventsLatched = 1;
         }
     } else {
         if ((u8)MAP_EVENT_TEST(OBJ_U8(obj, 0x34), 4) == 0) {
             MAP_EVENT_SET(OBJ_U8(obj, 0x34), 4, 1);
         }
-        if (state[0xc] != 0) {
-            state[0xc] = 0;
+        if (state->mapEventsLatched != 0) {
+            state->mapEventsLatched = 0;
         }
     }
 
@@ -138,21 +159,21 @@ void WM_Galleon_update(int *obj)
         fn_80296BBC(player);
         OBJ_S32(obj, 0xf8) = 1;
     } else if (OBJ_S32(obj, 0xf8) == 1) {
-        OBJ_F32(obj, 0xc) = *(f32 *)(state + 0);
-        OBJ_F32(obj, 0x10) = *(f32 *)(state + 4);
-        OBJ_F32(obj, 0x14) = *(f32 *)(state + 8);
-        OBJ_S16(obj, 0) = *(s16 *)(state + 0xe);
+        OBJ_F32(obj, 0xc) = state->savedX;
+        OBJ_F32(obj, 0x10) = state->savedY;
+        OBJ_F32(obj, 0x14) = state->savedZ;
+        OBJ_S16(obj, 0) = state->savedYaw;
         OBJECT_TRIGGER_REFRESH(0, obj, -1);
         OBJ_S32(obj, 0xf8) = 2;
     }
 }
 
-void WM_Galleon_init(int *obj, u8 *init)
+void WM_Galleon_init(int *obj, WMGalleonSetup *setup)
 {
-    u8 *state;
+    WMGalleonState *state;
     int i;
 
-    state = (u8 *)OBJ_PTR(obj, 0xb8);
+    state = (WMGalleonState *)OBJ_PTR(obj, 0xb8);
     if (GameBit_Get(0x78) != 0) {
         return;
     }
@@ -161,12 +182,12 @@ void WM_Galleon_init(int *obj, u8 *init)
     }
     objSetSlot(obj, 0x5a);
     OBJ_PTR(obj, 0xbc) = (void *)&WM_Galleon_SeqFn;
-    OBJ_S16(obj, 0) = (s16)((s8)init[0x18] << 8);
+    OBJ_S16(obj, 0) = (s16)(setup->yawByte << 8);
     OBJ_S32(obj, 0xf4) = 9;
-    *(f32 *)(state + 0) = OBJ_F32(obj, 0xc);
-    *(f32 *)(state + 4) = OBJ_F32(obj, 0x10);
-    *(f32 *)(state + 8) = OBJ_F32(obj, 0x14);
-    *(s16 *)(state + 0xe) = OBJ_S16(obj, 0);
+    state->savedX = OBJ_F32(obj, 0xc);
+    state->savedY = OBJ_F32(obj, 0x10);
+    state->savedZ = OBJ_F32(obj, 0x14);
+    state->savedYaw = OBJ_S16(obj, 0);
     fn_80065574(0, obj, 0);
     for (i = 0; i < 5; i++) {
         MAP_EVENT_SET(OBJ_U8(obj, 0x34), i, 0);
