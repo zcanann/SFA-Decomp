@@ -4255,7 +4255,7 @@ void fn_80039DF8(int obj, s16 *curve, s16 *state, f32 val)
                 f32 lo = lbl_803DE9A4;
                 if (t > lo) {
                     f32 nv;
-                    state[1] = (s32)(t * (f32)(curve[11] - n) + (f32)n);
+                    state[1] = t * (f32)(curve[11] - n) + (f32)n;
                     nv = -(lbl_803DE9E8 * timeDelta - *(f32 *)((char *)curve + 0x10));
                     *(f32 *)((char *)curve + 0x10) = nv;
                     if (nv < lo) {
