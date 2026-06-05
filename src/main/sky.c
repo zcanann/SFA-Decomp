@@ -13,13 +13,10 @@ int getEnvFxBit2BA(void)
 #pragma scheduling off
 void setGameBit2BA(int value)
 {
-    int bitValue;
-
-    bitValue = value;
-    if ((u8)bitValue >= 0x1c) {
-        bitValue = 0;
+    if ((u8)value >= 0x1c) {
+        value = 0;
     }
-    GameBit_Set(0x2ba, (u8)bitValue);
+    GameBit_Set(0x2ba, (u8)value);
 }
 #pragma scheduling reset
 #pragma peephole reset
