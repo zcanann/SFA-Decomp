@@ -2387,7 +2387,7 @@ main/unknown/autos/placeholder_8027A710.c:
 	extabindex  start:0x800061F4 end:0x80006200
 	.text       start:0x8027A660 end:0x8027A8FC
 
-main/unknown/autos/placeholder_8027A940.c:
+main/audio/adsr_handle.c:
 	extab       start:0x800059A0 end:0x800059B8
 	extabindex  start:0x80006200 end:0x80006224
 	.text       start:0x8027A8FC end:0x8027AC34
