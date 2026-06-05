@@ -86,8 +86,8 @@ Heuristic:
    form while every clean-C spelling gives `rlwinm`/`oris`. This is NOT
    peephole-controllable (confirmed: peephole-off region still emits `rlwinm`).
    Caps tiny flag fns ~70% — leave partial, don't grind. (november9, 80295318
-   fn_80296BBC.) The asm `li;and` recipe at the bottom *can* force it but isn't
-   worth it for a tiny fn — Prime Directive.
+   fn_80296BBC.) **Leave as documented partial — the Prime Directive forbids
+   asm; there is no asm fallback.**
 
 3. **`*(void **)ptr != NULL` instead of `*(int *)ptr != 0`**. The pointer form
    emits `cmplwi` (unsigned); the int form emits `cmpwi` (signed). Target
@@ -188,7 +188,14 @@ Heuristic:
     *worse*). If the explicit cast doesn't flip it on a late-pool function, it's
     a genuine residual (~85-96%) — leave it, don't keep retrying.
     **The `@NNN`-vs-named-`lbl` LABEL is largely a MEASUREMENT ARTIFACT — NOT
-    fixable via symbols.txt.** objdiff content-matches the literal-pool entry by
+    fixable via symbols.txt.** ⚠️ **PARTIALLY SUPERSEDED — see recipe #60**:
+    a later byte-diff audit of 14 partials at 99.9-99.99% found ZERO of them
+    were actually pool-name-only cosmetic; all had real codegen byte differences
+    after reloc-masking. The measurement-artifact case below still applies
+    when the bytes ARE identical — but at <100% scores, always run
+    `tools/cosmetic_audit.py` first to confirm before assuming cosmetic. The
+    rest of the paragraph documents the cases where the bytes truly do match
+    (e.g. shared pool symbols at the same address). objdiff content-matches the literal-pool entry by
     the actual DATA BYTES at the resolved address; both your `.o` and target hold
     the same bias `0x4330000000000000`, so objdiff already scores it MATCHED even
     though `function_objdump.py --diff` always prints the raw local name `@NNN`.
@@ -208,9 +215,10 @@ Heuristic:
     after the call, the project treats the return as `int`. Picked up
     `MMP_levelcontrol_init` in DIMlavaball via `extern int getSaveGameLoadStatus`.
 
-12. **Model a single-bit flag as a C bitfield to get `rlwimi` from CLEAN C** —
-    this **supersedes the asm `rlwimi` recipe below** for the common single-bit
-    case. When target sets a flag with `li r3,1; rlwimi rX,r3,sh,mb,me` but your
+12. **Model a single-bit flag as a C bitfield to get `rlwimi` from CLEAN C.**
+    (The older asm `rlwimi` workaround has been revoked under the no-asm
+    Prime Directive; bitfields are now the only path to this instruction.)
+    When target sets a flag with `li r3,1; rlwimi rX,r3,sh,mb,me` but your
     `field |= 0x20` emits `ori`/`andi`, declare the flag as a bitfield member
     (`u8 x:1;` or `unsigned int x:1;`) at the bit position the `rlwimi` operands
     imply, and assign `s->x = 1;`. MWCC then emits `li; rlwimi` matching target —
@@ -249,8 +257,8 @@ Heuristic:
     register-number permutation (logic identical — e.g. target uses r6/r4 where
     you emit r4/r6), reorder the *local declarations*. MWCC colors volatiles
     roughly in declaration order, so declaring the loop pointer last, or
-    swapping two `int` locals, often flips the allocation to match. No asm —
-    try this before any `register`/asm approach. See `fa209c270`
+    swapping two `int` locals, often flips the allocation to match. Try this
+    before declaring a saved-reg-coloring cap. See `fa209c270`
     (fn_8019C3A0 → 100%).
     **But SAVED-reg coloring is sometimes allocator-internal and NOT
     source-flippable — after trying decl-order BOTH ways, treat it as a hard cap
@@ -1316,6 +1324,14 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   Prefer `drift_audit.py <unit>` + `grep '\.fn ' build/GSAE01/asm/<unit>.s` to
   find the genuinely missing-from-src symbols.
 - `python3 tools/realign_skeleton.py <unit> [--merge]` — v1.0-aligned skeleton
+- `python3 tools/cosmetic_audit.py [--min-pct N] [--max-pct N] [--unit-filter S] [--max-size N]` —
+  screen <100% partials for REAL byte differences (not pool-name artifacts).
+  Reads `report.json`, extracts the raw `.text` bytes per fn from both target
+  and current `.o` files, computes a reloc-aware byte mask, and reports only
+  fns whose remaining diff is non-empty after masking — with target/current
+  disassembly side-by-side for each differing instruction. **The empirical
+  finding** (recipe #60): out of 14 fns at 99.9-99.99%, ZERO were purely
+  cosmetic. Use as a screening pass before grinding any 99%+ partial.
 - `rm -f build/GSAE01/report.json && timeout 30 ninja build/GSAE01/report.json` — refresh report
 
 ### Matching-help corpus (Discord export + decomp.me scratches)
@@ -1383,7 +1399,7 @@ SFA target. You only need the *pattern* to match, not the family.
 
 | Technique | Commit |
 |---|---|
-| asm{} + register-order (rlwimi/li+and) | `2e20e326`, `01400901`, `a42bb90b` |
+| ~~asm{} + register-order (rlwimi/li+and)~~ — **REVOKED** under no-asm directive; repo owner reverting (do not cite) | ~~`2e20e326`, `01400901`, `a42bb90b`~~ |
 | Add-new-function for drifted .c | `aedc9605`, `fa042933`, `77438a6f` |
 | `if (v > K) v = K;` clamp form for `blelr` | `77438a6f` |
 | `u8` vs `char` to drop `extsb` | `6863ffe7` |
