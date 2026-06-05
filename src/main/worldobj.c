@@ -559,9 +559,9 @@ void worldobj_spawnGreatFoxEffects(int obj) {
     } params;
     u8 i;
     f32 s;
-    f32 k = lbl_803E6640;
+    f32 k;
 
-    for (i = 0; i < 0xa; i++) {
+    for (i = 0, k = lbl_803E6640; i < 0xa; i++) {
         GreatFoxFxEntry *e;
         s = *(f32 *)(obj + 8);
         e = &lbl_8032A210[i];
