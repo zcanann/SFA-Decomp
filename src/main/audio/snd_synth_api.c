@@ -1,4 +1,5 @@
 #include "main/audio/snd_synth_api.h"
+#include "main/audio/synth_voice.h"
 
 extern void sndBegin(void);
 extern void sndEnd(void);
@@ -289,9 +290,9 @@ void synthDeactivateStudio(u8 slot)
     offset = 0;
     for (; i < lbl_803BD150[SYNTH_STUDIO_STATE_VOICE_COUNT_OFFSET]; i++) {
         voice = synthVoice + offset;
-        if (slot == *(u8 *)(voice + 0x11f)) {
-            if (*(u32 *)(voice + 0xf4) != 0xffffffff) {
-                voiceKillById(*(u32 *)(*(u32 *)(voice + 0xf8) + 8));
+        if (slot == ((SynthVoice *)voice)->studio) {
+            if (((SynthVoice *)voice)->id != 0xffffffff) {
+                voiceKillById(*(u32 *)(((SynthVoice *)voice)->vidList + 8));
             } else {
                 if (hwIsActive(i) != 0) {
                     hwOff(i);
