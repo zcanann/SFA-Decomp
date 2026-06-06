@@ -184,8 +184,12 @@ undefined camcontrol_traceFromTarget(float *param_1,int param_2,float *param_3)
  * PAL Size: TODO
  */
 #pragma scheduling off
-undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3,short *param_4)
+undefined camcontrol_getTargetPosition(int arg0,void *arg1,void *arg2,void *arg3)
 {
+  short *param_4;
+  int param_1;
+  float *param_3;
+  short *param_2;
   u8 box[112];
   float prev[3];
   float pos[3];
@@ -198,11 +202,15 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
   uint ang;
   int d;
 
+  param_1 = arg0;
+  param_2 = (short *)arg1;
+  param_3 = (float *)arg2;
+  param_4 = (short *)arg3;
   cosv = fn_80293E80((lbl_803E168C * (f32)*param_2) / lbl_803E1690);
   sinv = sin((lbl_803E168C * (f32)*param_2) / lbl_803E1690);
   d2 = cameraMtxVar57[1] * cameraMtxVar57[1] - cameraMtxVar57[2] * cameraMtxVar57[2];
   if (d2 < lbl_803E1694) {
-    d2 = lbl_803E1694;
+    d2 = *(f32 *)&lbl_803E1694;
   }
   d2 = sqrtf(d2);
   pos[0] = cosv * d2 + *(float *)(param_2 + 0xc);
@@ -222,7 +230,8 @@ undefined camcontrol_getTargetPosition(int param_1,short *param_2,float *param_3
   b = *(float *)(param_1 + 0x1c) -
       (*(float *)(param_2 + 0xe) + cameraMtxVar57[0x23]);
   ang = getAngle(b,d2);
-  d = (ang & 0xffff) - (u16)*(s16 *)(param_1 + 2);
+  d = ang & 0xffff;
+  d -= (u16)*(s16 *)(param_1 + 2);
   if (0x8000 < d) {
     d = d - 0xffff;
   }
