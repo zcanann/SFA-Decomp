@@ -4,6 +4,62 @@
 #include "main/dll/DIM/DIMcannon.h"
 #include "main/dll/DIM/dimlogfire.h"
 #include "main/objanim_internal.h"
+#include "global.h"
+
+/* imanimspacecraft_getExtraSize == 0x4. */
+typedef struct ImAnimSpacecraftState {
+    s16 blinkTimer;  /* 0x00 */
+    u8 maskBits;     /* 0x02: per-event toggle bits (bit4..6 = group) */
+    u8 flags;        /* 0x03: 2 = blink phase, 4/8 = SeqFn toggles */
+} ImAnimSpacecraftState;
+STATIC_ASSERT(sizeof(ImAnimSpacecraftState) == 0x4);
+
+/* imspacethruster_getExtraSize == 0xc. */
+typedef struct ImSpaceThrusterState {
+    u8 kind;         /* 0x00: thruster slot from def+0x19 */
+    u8 phase;        /* 0x01 */
+    s16 blendTimer;  /* 0x02 */
+    void *bufA;      /* 0x04: mmAlloc'd getTabEntry rows */
+    void *bufB;      /* 0x08 */
+} ImSpaceThrusterState;
+STATIC_ASSERT(sizeof(ImSpaceThrusterState) == 0xC);
+
+/* link_levcontrol_getExtraSize == 0x10. */
+typedef struct LinkLevControlState {
+    s8 areaCell;     /* 0x00 */
+    u8 pad01[3];
+    int unk04;       /* 0x04: init -1 */
+    int musicTrack;  /* 0x08 */
+    int latch;       /* 0x0c: SCGameBitLatch block */
+} LinkLevControlState;
+STATIC_ASSERT(sizeof(LinkLevControlState) == 0x10);
+
+/* lavaball1be extra (getExtraSize 0x14 for the non-0x1fa variant). */
+typedef struct Lavaball1beState {
+    char *targetObj; /* 0x00: ObjList_FindObjectById(linkedId) */
+    u8 *light;       /* 0x04 */
+    f32 floorY;      /* 0x08: spawn height; falling below it re-arms */
+    int linkedId;    /* 0x0c */
+    u8 flags;        /* 0x10: 8 = ticked, 0x10 = dormant, 0x20 = whistle sfx */
+    u8 explodeCooldown; /* 0x11 */
+    u8 pad12[2];
+} Lavaball1beState;
+STATIC_ASSERT(sizeof(Lavaball1beState) == 0x14);
+
+/* lavaball1bf_getExtraSize == 0x1c (launcher). */
+typedef struct Lavaball1bfState {
+    u8 pad00[8];
+    int *spawnedObj; /* 0x08: the 0x18d cannon object */
+    f32 fireTimer;   /* 0x0c */
+    f32 firePeriod;  /* 0x10 */
+    s16 gateA;       /* 0x14 */
+    s16 pending;     /* 0x16 */
+    u8 gateB;        /* 0x18 */
+    u8 pad19;
+    u8 gbState;      /* 0x1a */
+    u8 soloLatch;    /* 0x1b */
+} Lavaball1bfState;
+STATIC_ASSERT(sizeof(Lavaball1bfState) == 0x1C);
 
 static inline int *DIMcannon_GetActiveModel(void *obj) {
   ObjAnimComponent *objAnim = (ObjAnimComponent *)obj;
@@ -1994,8 +2050,8 @@ void imanimspacecraft_init(int *obj) {
 #pragma scheduling off
 #pragma peephole off
 int imanimspacecraft_setScale(int *obj, int bitIdx) {
-    u8 *p = (u8*)((GameObject *)obj)->extra;
-    switch (p[2] & (1 << bitIdx)) {
+    ImAnimSpacecraftState *p = (ImAnimSpacecraftState *)((GameObject *)obj)->extra;
+    switch (p->maskBits & (1 << bitIdx)) {
     default:
         return TRUE;
     case 0:
@@ -2007,22 +2063,22 @@ int imanimspacecraft_setScale(int *obj, int bitIdx) {
 
 /* lavaball1bf "consume" hook: only clear pending flag if both gates set. */
 void lavaball1bf_func11(int *obj) {
-    s16 *p = (s16*)((int**)obj)[0xb8/4];
-    if (p[10] == 0) return;
-    if (p[11] == 0) return;
-    p[11] = 0;
+    Lavaball1bfState *p = (Lavaball1bfState*)((int**)obj)[0xb8/4];
+    if (p->gateA == 0) return;
+    if (p->pending == 0) return;
+    p->pending = 0;
 }
 
 /* lavaball1bf "request" hook: set pending if gated, return success. */
 #pragma scheduling off
 #pragma peephole off
 int lavaball1bf_setScale(int *obj) {
-    s16 *p;
+    Lavaball1bfState *p;
     obj = (int*)((int**)obj)[0xb8/4];
-    p = (s16*)obj;
-    if (p[10] == 0) return 0;
-    if (p[11] == 0) {
-        p[11] = 1;
+    p = (Lavaball1bfState*)obj;
+    if (p->gateA == 0) return 0;
+    if (p->pending == 0) {
+        p->pending = 1;
         return 1;
     }
     return 0;
@@ -2085,11 +2141,11 @@ void link_levcontrol_free(int obj) {
     }
 }
 void link_levcontrol_update(int *obj) {
-    s8 *inner = ((GameObject *)obj)->extra;
+    LinkLevControlState *inner = ((GameObject *)obj)->extra;
     f32 *player = (f32 *)Obj_GetPlayerObject();
     if (player == NULL) return;
 
-    if ((s32)inner[0] != (s32)*((s8 *)obj + 0xac)) {
+    if ((s32)inner->areaCell != (s32)*((s8 *)obj + 0xac)) {
         if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
             link_levcontrol_applyEnterAreaEffects(obj);
         } else {
@@ -2099,22 +2155,22 @@ void link_levcontrol_update(int *obj) {
     if ((s32)*((s8 *)obj + 0xac) == coordsToMapCell(player[3], player[5])) {
         link_levcontrol_updateAreaMusic(obj);
     }
-    inner[0] = (s8)coordsToMapCell(player[3], player[5]);
+    inner->areaCell = (s8)coordsToMapCell(player[3], player[5]);
 }
 extern void *gSHthorntailAnimationInterface;
 extern void SCGameBitLatch_Update(void *p, int a, int b, int c, int d, int e);
 void link_levcontrol_updateAreaMusic(int *obj) {
-    int *sub = ((GameObject *)obj)->extra;
+    LinkLevControlState *sub = ((GameObject *)obj)->extra;
     switch (*(s8 *)((char *)obj + 0xac)) {
     case 0x47:
         if (((int (*)(int))((void **)*(int *)gSHthorntailAnimationInterface)[9])(0) != 0) {
-            if (sub[2] != 0x2d) {
-                sub[2] = 0x2d;
+            if (sub->musicTrack != 0x2d) {
+                sub->musicTrack = 0x2d;
                 Music_Trigger(0x2d, 1);
             }
         } else {
-            if (sub[2] != 0x33) {
-                sub[2] = 0x33;
+            if (sub->musicTrack != 0x33) {
+                sub->musicTrack = 0x33;
                 Music_Trigger(0x33, 1);
             }
         }
@@ -2122,23 +2178,23 @@ void link_levcontrol_updateAreaMusic(int *obj) {
     case 0x48:
         if (GameBit_Get(0xe1e) == 0) {
             if (GameBit_Get(0xb72) != 0) {
-                if (sub[2] != 0x95) {
-                    sub[2] = 0x95;
+                if (sub->musicTrack != 0x95) {
+                    sub->musicTrack = 0x95;
                     Music_Trigger(0x95, 1);
                 }
             } else if (((int (*)(int))((void **)*(int *)gSHthorntailAnimationInterface)[9])(0) != 0) {
-                if (sub[2] != 0x2d) {
-                    sub[2] = 0x2d;
+                if (sub->musicTrack != 0x2d) {
+                    sub->musicTrack = 0x2d;
                     Music_Trigger(0x2d, 1);
                 }
             } else {
-                if (sub[2] != 0x33) {
-                    sub[2] = 0x33;
+                if (sub->musicTrack != 0x33) {
+                    sub->musicTrack = 0x33;
                     Music_Trigger(0x33, 1);
                 }
             }
         }
-        SCGameBitLatch_Update((char *)sub + 0xc, 1, -1, -1, 0xe1e, 0x36);
+        SCGameBitLatch_Update(&sub->latch, 1, -1, -1, 0xe1e, 0x36);
         break;
     }
 }
@@ -2188,14 +2244,14 @@ extern f32 lbl_803E47A8, lbl_803E47AC, lbl_803E47B0, lbl_803E47B4, lbl_803E4798,
 extern s16 lbl_80323818[], lbl_80323824[];
 void imspacethruster_init(int *obj, u8 *param2) {
     ObjAnimComponent *objAnim;
-    u8 *sub = ((GameObject *)obj)->extra;
+    ImSpaceThrusterState *sub = ((GameObject *)obj)->extra;
     int *model;
     objAnim = (ObjAnimComponent *)obj;
     *(s16 *)obj = (s16)((s8)param2[0x18] << 8);
     ((GameObject *)obj)->anim.rotY = *(s16 *)((char *)param2 + 0x1a);
     objAnim->bankIndex = (s8)*(s16 *)((char *)param2 + 0x1c);
-    sub[0] = param2[0x19];
-    switch (sub[0]) {
+    sub->kind = param2[0x19];
+    switch (sub->kind) {
     case 0:
     case 1:
         ((GameObject *)obj)->anim.rootMotionScale = lbl_803E47A8;
@@ -2216,21 +2272,21 @@ void imspacethruster_init(int *obj, u8 *param2) {
     ObjModel_SetBlendChannelTargets(model, 0, -1, 0, lbl_803E4798, 0);
     ObjModel_SetBlendChannelWeight(model, 0, lbl_803E4788);
     {
-        u32 v = sub[0];
+        u32 v = sub->kind;
         if (v < 5) {
-            *(int *)(sub + 4) = (int)mmAlloc(0x28, 0x12, 0);
-            getTabEntry(*(void **)(sub + 4), 0xc, lbl_80323818[v] * 0x28, 0x28);
-            *(int *)(sub + 8) = (int)mmAlloc(0x28, 0x12, 0);
-            getTabEntry(*(void **)(sub + 8), 0xc, lbl_80323824[v] * 0x28, 0x28);
+            *(int *)&sub->bufA = (int)mmAlloc(0x28, 0x12, 0);
+            getTabEntry(sub->bufA, 0xc, lbl_80323818[v] * 0x28, 0x28);
+            *(int *)&sub->bufB = (int)mmAlloc(0x28, 0x12, 0);
+            getTabEntry(sub->bufB, 0xc, lbl_80323824[v] * 0x28, 0x28);
         }
     }
     *(u8 *)((char *)obj + 0x36) = 0;
 }
 void link_levcontrol_init(int *obj) {
-    s8 *inner = ((GameObject *)obj)->extra;
-    inner[0] = -1;
-    *(int *)(inner + 4) = -1;
-    *(int *)(inner + 8) = -1;
+    LinkLevControlState *inner = ((GameObject *)obj)->extra;
+    inner->areaCell = -1;
+    inner->unk04 = -1;
+    inner->musicTrack = -1;
     ((GameObject *)obj)->unkB0 |= 0x4000;
     if (getSaveGameLoadStatus() != 0) {
         ((GameObject *)obj)->unkF4 = 2;
@@ -2538,35 +2594,35 @@ extern f32 lbl_803E4814;
 #pragma scheduling off
 #pragma peephole off
 void lavaball1bf_init(s16 *obj, u8 *p) {
-    u8 *inner;
+    Lavaball1bfState *inner;
     obj[0] = (s16)((s32)p[0x1c] << 8);
     inner = ((GameObject *)obj)->extra;
-    *(f32 *)(inner + 0x10) = (f32)*(s16 *)(p + 0x18);
-    *(f32 *)(inner + 0xc) = lbl_803E4814;
-    *(s16 *)(inner + 0x14) = p[0x1d];
-    inner[0x18] = (u8)GameBit_Get((int)*(s16 *)(p + 0x22));
-    if (*(s16 *)(p + 0x24) == -1 && inner[0x18] == 0) {
-        inner[0x1b] = 1;
+    inner->firePeriod = (f32)*(s16 *)(p + 0x18);
+    inner->fireTimer = lbl_803E4814;
+    inner->gateA = p[0x1d];
+    inner->gateB = (u8)GameBit_Get((int)*(s16 *)(p + 0x22));
+    if (*(s16 *)(p + 0x24) == -1 && inner->gateB == 0) {
+        inner->soloLatch = 1;
     }
     ((GameObject *)obj)->unkB0 |= 0x6000;
 }
 void lavaball1bf_free(int obj, int mode) {
-    void **inner = ((GameObject *)obj)->extra;
-    if (mode == 0 && inner[2] != 0) {
-        Obj_FreeObject(inner[2]);
+    Lavaball1bfState *inner = ((GameObject *)obj)->extra;
+    if (mode == 0 && inner->spawnedObj != 0) {
+        Obj_FreeObject(inner->spawnedObj);
     }
 }
 void lavaball1be_free(int obj) {
-    void **inner = ((GameObject *)obj)->extra;
-    if (inner[1] != 0) {
-        ModelLightStruct_free(inner[1]);
-        inner[1] = 0;
+    Lavaball1beState *inner = ((GameObject *)obj)->extra;
+    if (inner->light != 0) {
+        ModelLightStruct_free(inner->light);
+        inner->light = 0;
     }
 }
 void imspacethruster_free(int obj) {
-    void **inner = ((GameObject *)obj)->extra;
-    if (inner[1] != 0) mm_free(inner[1]);
-    if (inner[2] != 0) mm_free(inner[2]);
+    ImSpaceThrusterState *inner = ((GameObject *)obj)->extra;
+    if (inner->bufA != 0) mm_free(inner->bufA);
+    if (inner->bufB != 0) mm_free(inner->bufB);
 }
 
 void dimlogfire_free(int *obj, int mode) {
@@ -2656,10 +2712,10 @@ extern f32 lbl_803E47F0;
 #pragma peephole off
 void lavaball1be_render(int* obj, int p2, int p3, int p4, int p5)
 {
-    int* state = ((GameObject *)obj)->extra;
-    if ((int*)state[1] != NULL) {
-        if (modelLightStruct_getActiveState((int*)state[1]) != 0) {
-            queueGlowRender((int*)state[1]);
+    Lavaball1beState* state = ((GameObject *)obj)->extra;
+    if ((int*)state->light != NULL) {
+        if (modelLightStruct_getActiveState((int*)state->light) != 0) {
+            queueGlowRender((int*)state->light);
         }
     }
     ((void (*)(int*, int, int, int, int, f32))objRenderFn_8003b8f4)(obj, p2, p3, p4, p5, lbl_803E47F0);
@@ -2691,7 +2747,7 @@ typedef struct {
 #pragma scheduling off
 #pragma peephole off
 void lavaball1be_init(s16 *obj, u8 *p) {
-    u8 *state;
+    Lavaball1beState *state;
     if (obj[0x23] == 0x1fa) {
         LavaVec vec;
         s16 rot[3];
@@ -2715,8 +2771,8 @@ void lavaball1be_init(s16 *obj, u8 *p) {
         state = ((GameObject *)obj)->extra;
         vy = lbl_803E47D8 * (f32)*(s16 *)(p + 0x1a);
         vxz = lbl_803E47D8 * (f32)*(s16 *)(p + 0x1c);
-        *(f32 *)(state + 8) = ((GameObject *)obj)->anim.localPosY;
-        *(int *)(state + 0xc) = *(int *)(p + 0x14);
+        state->floorY = ((GameObject *)obj)->anim.localPosY;
+        state->linkedId = *(int *)(p + 0x14);
         *(int *)(p + 0x14) = -1;
         ((GameObject *)obj)->anim.velocityX = vxz * -mathSinf(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
         ((GameObject *)obj)->anim.velocityY = vy;
@@ -2729,23 +2785,23 @@ void lavaball1be_init(s16 *obj, u8 *p) {
         if (sub != NULL) {
             sub[0x30 / 4] |= 0x810;
         }
-        *(int *)(state + 0) = ObjList_FindObjectById(*(int *)(state + 0xc));
-        state[0x10] |= 0x10;
+        *(int *)&state->targetObj = ObjList_FindObjectById(state->linkedId);
+        state->flags |= 0x10;
         ObjHits_DisableObject(obj);
         ((GameObject *)obj)->unkB0 |= 0x2000;
-        *(u8 **)(state + 4) = objCreateLight(obj, 1);
-        light = *(u8 **)(state + 4);
+        state->light = objCreateLight(obj, 1);
+        light = state->light;
         if (light != NULL) {
             modelLightStruct_setLightKind(light, 2);
-            modelLightStruct_setDiffuseColor(*(u8 **)(state + 4), 0xff, 0x80, 0, 0);
-            modelLightStruct_setDistanceAttenuation(*(u8 **)(state + 4), lbl_803E4800, lbl_803E4804);
-            modelLightStruct_setupGlow(*(u8 **)(state + 4), 0, 0xff, 0x80, 0, 0x64, lbl_803E4808);
-            modelLightStruct_setGlowProjectionRadius(*(u8 **)(state + 4), lbl_803E4808);
+            modelLightStruct_setDiffuseColor(state->light, 0xff, 0x80, 0, 0);
+            modelLightStruct_setDistanceAttenuation(state->light, lbl_803E4800, lbl_803E4804);
+            modelLightStruct_setupGlow(state->light, 0, 0xff, 0x80, 0, 0x64, lbl_803E4808);
+            modelLightStruct_setGlowProjectionRadius(state->light, lbl_803E4808);
         }
     }
 }
 void lavaball1be_update(s16 *obj) {
-    u8 *state;
+    Lavaball1beState *state;
     int *sub;
 
     if (obj[0x23] == 0x1fa) {
@@ -2762,13 +2818,13 @@ void lavaball1be_update(s16 *obj) {
         }
     } else {
         state = ((GameObject *)obj)->extra;
-        if (state[0x10] & 0x10) {
+        if (state->flags & 0x10) {
             ObjHits_DisableObject(obj);
         } else {
             f32 dt = timeDelta;
             u8 steps = framesThisStep;
-            if (state[0x11] != 0) {
-                state[0x11]--;
+            if (state->explodeCooldown != 0) {
+                state->explodeCooldown--;
             }
             obj[0] = obj[0] + (steps << 6);
             obj[1] = obj[1] - (steps << 9);
@@ -2778,12 +2834,12 @@ void lavaball1be_update(s16 *obj) {
                 ((GameObject *)obj)->anim.velocityY * dt,
                 ((GameObject *)obj)->anim.velocityZ * dt);
             if (((GameObject *)obj)->anim.velocityY < lbl_803E47F8) {
-                if (!(state[0x10] & 0x20)) {
+                if (!(state->flags & 0x20)) {
                     Sfx_PlayFromObject((int *)obj, 0x3dd);
-                    state[0x10] |= 0x20;
+                    state->flags |= 0x20;
                 }
             } else {
-                state[0x10] &= ~0x20;
+                state->flags &= ~0x20;
             }
             sub = *(int **)&((GameObject *)obj)->anim.hitReactState;
             if (sub != NULL) {
@@ -2792,30 +2848,30 @@ void lavaball1be_update(s16 *obj) {
                 sub[0x48 / 4] = 0x10;
                 sub[0x4c / 4] = 0x10;
                 if (*(void **)((char *)sub + 0x50) != NULL) {
-                    if (state[0x11] != 0) {
+                    if (state->explodeCooldown != 0) {
                         spawnExplosion(obj, lbl_803E47FC, 0, 1, 0, 0, 0, 0, 0);
                     } else {
-                        state[0x11] = 0xa;
+                        state->explodeCooldown = 0xa;
                         spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
                     }
-                    state[0x10] |= 0x10;
+                    state->flags |= 0x10;
                     obj[3] |= 0x4000;
                 }
                 if (((ObjAnimComponent *)sub)->bankIndex & 1) {
                     spawnExplosion(obj, lbl_803E47FC, 1, 1, 0, 0, 0, 0, 0);
-                    state[0x10] |= 0x10;
+                    state->flags |= 0x10;
                     obj[3] |= 0x4000;
                     return;
                 }
             }
-            if (((GameObject *)obj)->anim.localPosY < *(f32 *)(state + 8)) {
-                state[0x10] |= 0x10;
+            if (((GameObject *)obj)->anim.localPosY < state->floorY) {
+                state->flags |= 0x10;
             }
-            if (!(state[0x10] & 8)) {
-                state[0x10] |= 8;
+            if (!(state->flags & 8)) {
+                state->flags |= 8;
             }
-            if (*(void **)(state + 4) != NULL && modelLightStruct_getActiveState((int *)*(int *)(state + 4)) != 0) {
-                modelLightStruct_updateGlowAlpha(*(int *)(state + 4));
+            if ((void *)state->light != NULL && modelLightStruct_getActiveState((int *)state->light) != 0) {
+                modelLightStruct_updateGlowAlpha((int)state->light);
             }
         }
     }
@@ -2829,22 +2885,22 @@ extern f32 lbl_803E4770, lbl_803E4774, lbl_803E4778, lbl_803E477C;
 #pragma scheduling off
 #pragma peephole off
 int imanimspacecraft_SeqFn(int *obj, int unused, u8 *p3) {
-    s16 *state;
+    ImAnimSpacecraftState *state;
     int i;
     int *tex;
 
     state = ((GameObject *)obj)->extra;
     tex = objFindTexture(obj, 1, 0);
-    *tex = ((*((u8 *)state + 3) >> 1 & 1) ^ 1) << 8;
-    if (!(*((u8 *)state + 3) & 2)) {
-        if ((state[0] -= framesThisStep) < 0) {
-            *((u8 *)state + 3) |= 2;
-            state[0] = 0x78;
+    *tex = ((state->flags >> 1 & 1) ^ 1) << 8;
+    if (!(state->flags & 2)) {
+        if ((state->blinkTimer -= framesThisStep) < 0) {
+            state->flags |= 2;
+            state->blinkTimer = 0x78;
         }
     } else {
-        *((u8 *)state + 3) &= ~2;
+        state->flags &= ~2;
     }
-    if (*((u8 *)state + 3) & 2) {
+    if (state->flags & 2) {
         *(f32 *)(lbl_803AC948 + 0xc) = lbl_803E4770;
         *(f32 *)(lbl_803AC948 + 0x10) = lbl_803E4774;
         *(f32 *)(lbl_803AC948 + 0x14) = lbl_803E4778;
@@ -2860,25 +2916,25 @@ int imanimspacecraft_SeqFn(int *obj, int unused, u8 *p3) {
         u32 ev = p3[i + 0x81];
         switch (ev) {
         case 1:
-            *((u8 *)state + 2) = (u8)(*((u8 *)state + 2) ^ (1 << (ev - 1)));
+            state->maskBits = (u8)(state->maskBits ^ (1 << (ev - 1)));
             break;
         case 2:
-            *((u8 *)state + 2) = (u8)(*((u8 *)state + 2) ^ (1 << (ev - 1)));
+            state->maskBits = (u8)(state->maskBits ^ (1 << (ev - 1)));
             break;
         case 3:
-            *((u8 *)state + 2) = (u8)(*((u8 *)state + 2) ^ (1 << (ev - 1)));
+            state->maskBits = (u8)(state->maskBits ^ (1 << (ev - 1)));
             break;
         case 4:
-            *((u8 *)state + 2) = (u8)(*((u8 *)state + 2) ^ (1 << (ev - 1)));
+            state->maskBits = (u8)(state->maskBits ^ (1 << (ev - 1)));
             break;
         case 5:
-            *((u8 *)state + 2) = (u8)(*((u8 *)state + 2) ^ 0x70);
+            state->maskBits = (u8)(state->maskBits ^ 0x70);
             break;
         case 6:
-            *((u8 *)state + 3) = (u8)(*((u8 *)state + 3) ^ 8);
+            state->flags = (u8)(state->flags ^ 8);
             break;
         case 7:
-            *((u8 *)state + 3) = (u8)(*((u8 *)state + 3) ^ 4);
+            state->flags = (u8)(state->flags ^ 4);
             break;
         }
     }
@@ -2892,20 +2948,20 @@ extern f32 lbl_803E478C, lbl_803E4790, lbl_803E4794, lbl_803E4798;
 #pragma scheduling off
 #pragma peephole off
 void imspacethruster_update(int *obj) {
-    u8 *state;
+    ImSpaceThrusterState *state;
     int mode;
     s16 v;
     int *tex;
 
     state = ((GameObject *)obj)->extra;
     if (((GameObject *)obj)->anim.parent != NULL) {
-        mode = ((s16 (*)(int, int))((void **)*(void **)*(int *)(*(int *)&((GameObject *)obj)->anim.parent + 0x68))[8])(*(int *)&((GameObject *)obj)->anim.parent, state[0]);
-        switch (state[1]) {
+        mode = ((s16 (*)(int, int))((void **)*(void **)*(int *)(*(int *)&((GameObject *)obj)->anim.parent + 0x68))[8])(*(int *)&((GameObject *)obj)->anim.parent, state->kind);
+        switch (state->phase) {
         case 0:
             if (mode == 1) {
                 ObjModel_SetBlendChannelTargets(DIMcannon_GetActiveModel(obj), 0, -1, 0, lbl_803E478C, 0x10);
                 *(u8 *)((char *)obj + 0x36) = 0xff;
-                state[1] = 1;
+                state->phase = 1;
             } else {
                 int d = *(u8 *)((char *)obj + 0x36) - framesThisStep * 8;
                 if (d < 0) {
@@ -2917,29 +2973,29 @@ void imspacethruster_update(int *obj) {
         case 1:
             if (mode == 0) {
                 ObjModel_SetBlendChannelTargets(DIMcannon_GetActiveModel(obj), 0, -1, 0, lbl_803E4790, 0x10);
-                *(s16 *)(state + 2) = 0xb4;
+                state->blendTimer = 0xb4;
                 *(u8 *)((char *)obj + 0x36) = 0xa4;
-                state[1] = 2;
+                state->phase = 2;
             }
             break;
         case 2:
             if (mode == 1) {
-                state[1] = 1;
+                state->phase = 1;
             } else {
-                if ((*(s16 *)(state + 2) -= framesThisStep) < 0) {
-                    state[1] = 0;
+                if ((state->blendTimer -= framesThisStep) < 0) {
+                    state->phase = 0;
                 }
             }
             break;
         }
-        if (state[0] < 5) {
+        if (state->kind < 5) {
             f32 a = (f32)*(u8 *)((char *)obj + 0x36) / lbl_803E4794;
             if (a > lbl_803E4788) {
                 a = lbl_803E4788;
             } else if (a < lbl_803E4798) {
                 a = lbl_803E4798;
             }
-            ((void (*)(int, f32, int))((void **)*(void **)*(int *)(*(int *)&((GameObject *)obj)->anim.parent + 0x68))[10])(*(int *)&((GameObject *)obj)->anim.parent, a, state[0]);
+            ((void (*)(int, f32, int))((void **)*(void **)*(int *)(*(int *)&((GameObject *)obj)->anim.parent + 0x68))[10])(*(int *)&((GameObject *)obj)->anim.parent, a, state->kind);
         }
         tex = objFindTexture(obj, 0, 0);
         v = -*(s16 *)((char *)tex + 0xa);
@@ -2965,23 +3021,23 @@ void imspacethruster_update(int *obj) {
 #pragma peephole off
 void lavaball1bf_update(int *obj) {
     u8 *setup;
-    u8 *state;
+    Lavaball1bfState *state;
     int *spawned;
     f32 t;
 
     state = ((GameObject *)obj)->extra;
     setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
-    state[0x1a] = GameBit_Get(*(s16 *)(setup + 0x24));
-    if (state[0x1b] != 0) {
+    state->gbState = GameBit_Get(*(s16 *)(setup + 0x24));
+    if (state->soloLatch != 0) {
         if (GameBit_Get(*(s16 *)(setup + 0x1e)) != 0) {
-            state[0x1a] = 1;
-            state[0x1b] = 0;
-            *(f32 *)(state + 0xc) = lbl_803E4814;
+            state->gbState = 1;
+            state->soloLatch = 0;
+            state->fireTimer = lbl_803E4814;
         } else {
-            state[0x1a] = 0;
+            state->gbState = 0;
         }
     }
-    if (*(void **)(state + 8) == NULL && Obj_IsLoadingLocked() != 0) {
+    if (*(void **)&state->spawnedObj == NULL && Obj_IsLoadingLocked() != 0) {
         int s = Obj_AllocObjectSetup(0x24, 0x18d);
         *(u8 *)(s + 2) = 9;
         *(u8 *)(s + 4) = 2;
@@ -2995,23 +3051,23 @@ void lavaball1bf_update(int *obj) {
         *(s16 *)(s + 0x1a) = setup[0x1a];
         *(s16 *)(s + 0x1c) = setup[0x1b];
         *(int *)(s + 0x14) = *(int *)(setup + 0x14);
-        *(int *)(state + 8) = ((int (*)(int, int, int, int, int))Obj_SetupObject)(s, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
+        *(int *)&state->spawnedObj = ((int (*)(int, int, int, int, int))Obj_SetupObject)(s, 5, *(s8 *)((char *)obj + 0xac), -1, 0);
     }
-    spawned = *(int **)(state + 8);
-    t = *(f32 *)(state + 0xc) - timeDelta;
-    *(f32 *)(state + 0xc) = t;
+    spawned = state->spawnedObj;
+    t = state->fireTimer - timeDelta;
+    state->fireTimer = t;
     if (t <= lbl_803E4814 && ((int (*)(int *))((void **)*(void **)*(int *)((char *)spawned + 0x68))[9])(spawned) != 0) {
-        if (state[0x1a] != 0) {
+        if (state->gbState != 0) {
             int a;
-            if (GameBit_Get(*(s16 *)(setup + 0x1e)) != 0 && state[0x18] == 0) {
+            if (GameBit_Get(*(s16 *)(setup + 0x1e)) != 0 && state->gateB == 0) {
                 a = setup[0x20];
-                state[0x18] = 1;
+                state->gateB = 1;
             } else {
                 a = setup[0x1a];
             }
             ((void (*)(int *, int, int))((void **)*(void **)*(int *)((char *)spawned + 0x68))[8])(spawned, a, setup[0x1b]);
         }
-        *(f32 *)(state + 0xc) = *(f32 *)(state + 0x10) + (f32)(int)randomGetRange(0, 0x3c);
+        state->fireTimer = state->firePeriod + (f32)(int)randomGetRange(0, 0x3c);
     }
 }
 #pragma peephole reset
@@ -3020,7 +3076,7 @@ void lavaball1bf_update(int *obj) {
 #pragma scheduling off
 #pragma peephole off
 void lavaball1be_setScale(s16 *obj, int p2, int p3) {
-    u8 *state;
+    Lavaball1beState *state;
     u8 *setup;
     f32 vxz;
     f32 x;
@@ -3028,13 +3084,13 @@ void lavaball1be_setScale(s16 *obj, int p2, int p3) {
     state = ((GameObject *)obj)->extra;
     setup = *(u8 **)&((GameObject *)obj)->anim.placementData;
     vxz = lbl_803E47D8 * (f32)p3;
-    x = *(f32 *)(*(char **)state + 0xc);
+    x = *(f32 *)(*(char **)&state->targetObj + 0xc);
     ((GameObject *)obj)->anim.worldPosX = x;
     ((GameObject *)obj)->anim.localPosX = x;
-    x = *(f32 *)(*(char **)state + 0x10);
+    x = *(f32 *)(*(char **)&state->targetObj + 0x10);
     ((GameObject *)obj)->anim.worldPosY = x;
     ((GameObject *)obj)->anim.localPosY = x;
-    x = *(f32 *)(*(char **)state + 0x14);
+    x = *(f32 *)(*(char **)&state->targetObj + 0x14);
     ((GameObject *)obj)->anim.worldPosZ = x;
     ((GameObject *)obj)->anim.localPosZ = x;
     x = ((GameObject *)obj)->anim.localPosX;
@@ -3052,7 +3108,7 @@ void lavaball1be_setScale(s16 *obj, int p2, int p3) {
     ((GameObject *)obj)->anim.velocityZ = vxz * -mathCosf(lbl_803E47DC * (f32)obj[0] / lbl_803E47E0);
     obj[3] &= ~0x4000;
     ObjHits_EnableObject(obj);
-    state[0x10] &= ~0x10;
+    state->flags &= ~0x10;
 }
 #pragma peephole reset
 #pragma scheduling reset
