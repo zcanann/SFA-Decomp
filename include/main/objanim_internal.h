@@ -148,7 +148,8 @@ typedef struct ObjDef {
   s16 hitboxFlags;
   u8 pad50[0x55 - 0x50];
   s8 modelCount;
-  u8 pad56[0x5A - 0x56];
+  s8 group8RegistrationCount;
+  u8 pad57[0x5A - 0x57];
   u8 jointCount;
   u8 pad5B[0x60 - 0x5B];
   u8 hitboxStateIndex;
@@ -166,7 +167,8 @@ typedef struct ObjDef {
   u8 sourceHitMask;
   u8 pad71[0x77 - 0x71];
   u8 secondaryHitboxRadius;
-  u8 pad78[0x90 - 0x78];
+  s16 mapLoadObjectId;
+  u8 pad7A[0x90 - 0x7A];
   u8 secondaryHitboxShapeFlags;
   u8 pad91[0x94 - 0x91];
 } ObjDef;
@@ -302,6 +304,7 @@ STATIC_ASSERT(offsetof(ObjDef, hitReactMoveTable) == 0x24);
 STATIC_ASSERT(offsetof(ObjDef, flags) == 0x44);
 STATIC_ASSERT(offsetof(ObjDef, hitboxFlags) == 0x4E);
 STATIC_ASSERT(offsetof(ObjDef, modelCount) == 0x55);
+STATIC_ASSERT(offsetof(ObjDef, group8RegistrationCount) == 0x56);
 STATIC_ASSERT(offsetof(ObjDef, jointCount) == 0x5A);
 STATIC_ASSERT(offsetof(ObjDef, hitboxStateIndex) == 0x60);
 STATIC_ASSERT(offsetof(ObjDef, primaryHitboxRadius) == 0x62);
@@ -315,6 +318,7 @@ STATIC_ASSERT(offsetof(ObjDef, secondaryCapsuleOffsetA) == 0x6C);
 STATIC_ASSERT(offsetof(ObjDef, secondaryCapsuleOffsetB) == 0x6E);
 STATIC_ASSERT(offsetof(ObjDef, sourceHitMask) == 0x70);
 STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxRadius) == 0x77);
+STATIC_ASSERT(offsetof(ObjDef, mapLoadObjectId) == 0x78);
 STATIC_ASSERT(offsetof(ObjDef, secondaryHitboxShapeFlags) == 0x90);
 
 STATIC_ASSERT(sizeof(ObjAnimMoveData) == 0x08);
