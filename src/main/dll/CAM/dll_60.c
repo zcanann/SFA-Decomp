@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/CAM/dll_60.h"
 
 extern undefined4 DAT_803de1e0;

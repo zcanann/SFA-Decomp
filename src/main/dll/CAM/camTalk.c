@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/CAM/camTalk.h"
 
 extern void *memset(void *dst, int val, u32 n);
