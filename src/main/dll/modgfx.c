@@ -12836,9 +12836,12 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         break;
     case 0x1a4:
         if (param_3 != 0) {
-            cfg.f34 = lbl_803DFB30;
+            cfg.f30 = *(f32 *)(param_3 + 6);
+            cfg.f34 = lbl_803DFB30 + *(f32 *)(param_3 + 8);
+            cfg.f38 = *(f32 *)(param_3 + 10);
         } else {
-            cfg.f30 = lbl_803DFB34 * (f32)(s32)randomGetRange(-0xa, 0xa);
+            cfg.f30 = (f32)(s32)randomGetRange(-0xa, 0xa);
+            cfg.f34 = lbl_803DFB34;
             cfg.f38 = (f32)(s32)randomGetRange(-0xa, 0xa);
         }
         cfg.f24 = lbl_803DFAB0 * (f32)(s32)randomGetRange(-0x14, 0x14);
@@ -12849,17 +12852,21 @@ int Effect4_func04(void *param_1, int param_2, s16 *param_3, u32 param_4,
         cfg.f60 = 0x9b;
         cfg.f04 = 0x281;
         cfg.f44 = 0x81488000;
-        if (randomGetRange(0, 2) == 0) {
+        iVar1 = randomGetRange(0, 2);
+        if (iVar1 == 0) {
             cfg.f42 = 0x208;
-        } else if (randomGetRange(0, 2) == 1) {
+        } else if (iVar1 == 1) {
             cfg.f42 = 0x209;
-        } else if (randomGetRange(0, 2) == 2) {
+        } else if (iVar1 == 2) {
             cfg.f42 = 0x20a;
         }
         break;
     case 0x1a5:
         if (param_3 != 0) {
-            cfg.f34 = lbl_803DFAB0;
+            if (*(f32 *)(param_3 + 4) <= lbl_803DFAB0) {
+                *(f32 *)(param_3 + 4) = lbl_803DFAB0;
+            }
+            cfg.f28 = -*(f32 *)(param_3 + 4);
         } else {
             cfg.f28 = lbl_803DFB44 * (f32)(s32)randomGetRange(0, 0x14);
         }
