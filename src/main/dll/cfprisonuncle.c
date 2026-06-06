@@ -4,6 +4,7 @@
 #include "main/dll/cfprisonuncle.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim.h"
+#include "main/objanim_internal.h"
 
 extern bool FUN_800067f0();
 extern bool FUN_800067f8();
@@ -2349,9 +2350,10 @@ void MagicPlant_init(int obj, MagicPlantSetup *setup) {
     ObjAnim_SetMoveProgress((double)state->animProgress, (ObjAnimComponent *)obj);
     *(s16 *)obj = (s16)((u32)setup->yawByte << 8);
     *(u16 *)(obj + 0xb0) |= 0x2000;
-    *(s8 *)(obj + 0xad) = (s8)setup->modelIndex;
-    if ((s8)*(u8 *)(obj + 0xad) >= (s8)*(u8 *)(*(int *)(obj + 0x50) + 0x55)) {
-        *(u8 *)(obj + 0xad) = 0;
+    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)setup->modelIndex;
+    if ((s8)*(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
+        (s8)*(u8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
+        *(u8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = 0;
     }
     if (*(void **)(obj + 0x64) != NULL) {
         *(u32 *)(*(int *)(obj + 0x64) + 48) |= 0x810;

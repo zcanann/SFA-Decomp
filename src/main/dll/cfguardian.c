@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/dll/cfguardian.h"
+#include "main/objanim_internal.h"
 
 extern bool FUN_800067f8();
 extern undefined4 FUN_8000680c();
@@ -599,9 +600,10 @@ void pressureswitchfb_init(u8* obj, u8* params) {
     flags = (PressureSwitchFbFlags *)(sub + 0x84);
     *(s16*)obj = (s16)(params[0x18] << 8);
     *(u16*)(obj + 0xb0) = (u16)(*(u16*)(obj + 0xb0) | 0x6000);
-    *(s8 *)(obj + 0xad) = (s8)params[0x19];
-    if (*(s8 *)(obj + 0xad) >= *(s8*)(*(int*)(obj + 0x50) + 0x55)) {
-        obj[0xad] = 0;
+    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = (s8)params[0x19];
+    if (*(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) >=
+        *(s8 *)(*(int *)(obj + offsetof(ObjAnimComponent, modelInstance)) + offsetof(ObjModelInstance, modelCount))) {
+        obj[offsetof(ObjAnimComponent, bankIndex)] = 0;
     }
     defaultOffset = lbl_803E3778;
     *(f32*)(sub + 0x80) = defaultOffset;
