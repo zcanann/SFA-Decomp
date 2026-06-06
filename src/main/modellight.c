@@ -1334,7 +1334,7 @@ void modelLightStruct_setDistanceAttenuation(u8 *obj, f32 a, f32 b) {
 }
 
 #pragma dont_inline on
-int modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
+u8 modelLightStruct_projectedLightIntersectsObject(u8 *light, u8 *obj) {
     f32 localPos[3];
     f32 worldPos[3];
     f32 projected[3];
@@ -1542,20 +1542,20 @@ void modelLightStruct_selectBrightestAabbLights(u8 **outLights, int maxLights, i
 void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights, int *outCount, int typeMask) {
     f32 delta[3];
     u8 *candidates[20];
+    int i;
     u8 *light;
     f32 intensity;
     f32 dist;
     f32 red;
     f32 green;
     f32 blue;
-    u32 objectLightMask;
+    u8 objectLightMask;
     int candidateCount;
-    int i;
     int selectedCount;
     int lightType;
 
     if (obj != NULL) {
-        objectLightMask = (1 << *(u8 *)(*(u32 *)(obj + 0x50) + 0x8d)) & 0xff;
+        objectLightMask = 1 << *(u8 *)(*(u32 *)(obj + 0x50) + 0x8d);
     } else {
         objectLightMask = 1;
     }
@@ -1563,25 +1563,24 @@ void modelLightStruct_selectObjectLights(u8 *obj, u8 **outLights, int maxLights,
     candidateCount = 0;
     for (i = 0; i < gModelLightCount; i++) {
         light = gModelLightList[i];
-        lightType = *(int *)(light + 0x50);
-        if (light[0x4c] != 0 && (lightType & typeMask) != 0 &&
+        if (light[0x4c] != 0 && (typeMask & (lightType = *(int *)(light + 0x50))) != 0 &&
             (light[0x64] & objectLightMask) != 0) {
             if (lightType == 4) {
                 *(f32 *)(light + 0x130) = lbl_803DE768;
             } else if (lightType == 8) {
-                if (*(void **)(light + 0x16c) == NULL || modelLightStruct_projectedLightIntersectsObject(light, obj) == 0) {
-                    *(f32 *)(light + 0x130) = lbl_803DE75C;
-                } else {
+                if (*(void **)(light + 0x16c) != NULL && modelLightStruct_projectedLightIntersectsObject(light, obj) != 0) {
                     PSVECSubtract((f32 *)(obj + 0x18), (f32 *)(light + 0x10), delta);
                     dist = PSVECMag(delta);
                     intensity = lbl_803DE764;
                     *(f32 *)(light + 0x130) = intensity + intensity / dist;
                     *(f32 *)(light + 0x134) = modelLightStruct_getObjectIntensity(light, obj);
+                } else {
+                    *(f32 *)(light + 0x130) = lbl_803DE75C;
                 }
             } else {
                 intensity = modelLightStruct_getObjectIntensity(light, obj);
                 *(f32 *)(light + 0x134) = intensity;
-                red = intensity * (f32)light[0xa8];
+                red = *(f32 *)(light + 0x134) * (f32)light[0xa8];
                 red = (red < 0.0f) ? 0.0f
                      : ((red > 255.0f) ? 255.0f : red);
                 green = intensity * (f32)light[0xa9];
