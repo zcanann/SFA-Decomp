@@ -2376,6 +2376,20 @@ is one level less indirect. The matched-code convention is `extern int *lbl;`
   files flag as changed — confirm any flagged .o is yours, then re-save the
   baseline after every pull+build before the next edit.**
 - `rm -f build/GSAE01/report.json && timeout 30 ninja build/GSAE01/report.json` — refresh report
+- `python3 tools/include_audit.py --audit [--filter SUBSTR] [--out F.json]`
+  then `--apply F.json [--filter SUBSTR]` — empirical unused-#include
+  detector/remover (task #168): blanks one top-level include at a time,
+  rebuilds just that TU, classifies by .o byte hash (build-fail / bytes-change
+  = NEEDED, bytes-identical = removable). MWCC .o output is deterministic and
+  carries NO line info, so deleting include lines is .o-byte-neutral when the
+  token stream is unchanged. `--apply` re-verifies per file (combined removal,
+  greedy fallback for interacting includes — includes individually removable
+  are NOT always jointly removable) and auto-reverts on any byte change. A
+  TU's own header is kept by convention even when unused (`--include-own-header`
+  to override). Full-sweep findings: ~680 includes removed across ~590 TUs
+  (`ghidra_import.h` import-era cruft was ~480 sites); `NEEDED-codegen`
+  verdicts (bytes change, no compile error) are real macro/typedef-width
+  effects — never remove those by eye.
 - `python3 tools/extern_audit.py [--csv | --symbol X | --real-conflicts-only]` —
   extern decl audit across src/+include/: canonicalizes signatures into
   CODEGEN-equivalence classes (return width/signedness, param widths, f32/f64,
