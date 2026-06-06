@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/creator1CF.h"
 
 extern void *Camera_GetCurrentViewSlot(void);

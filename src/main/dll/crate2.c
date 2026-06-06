@@ -1,6 +1,4 @@
-#include "ghidra_import.h"
 #include "main/dll/crate2.h"
-#include "main/dll/sfxplayer.h"
 
 extern undefined8 FUN_80006824();
 extern byte FUN_80006b44();

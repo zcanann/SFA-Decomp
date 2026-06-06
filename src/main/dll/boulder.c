@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/dll/boulder.h"
 
 extern u32 randomGetRange(int min, int max);

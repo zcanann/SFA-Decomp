@@ -1,4 +1,3 @@
-#include "ghidra_import.h"
 #include "main/audio/sfx_ids.h"
 #include "main/objanim.h"
 #include "main/dll/dim_bossgut.h"
