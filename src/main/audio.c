@@ -2051,7 +2051,7 @@ u32 Sfx_PlayFromObjectLimited(u32 obj, u32 sfxId, int limit)
 int AudioStream_Play(int id, void (*preparedCallback)(void))
 {
     char path[64];
-    u8* dvd = lbl_80336C40;
+    u8* dvd = (u8 *)(int)lbl_80336C40;
     int* fadeTbl = lbl_802C5DB8;
     StreamEntry* s = gStreamsData;
     int count = gStreamsCount;
@@ -2098,7 +2098,7 @@ int AudioStream_Play(int id, void (*preparedCallback)(void))
     if (gAudioStreamCurrentId != 0) {
         AISetStreamVolLeft(0);
         AISetStreamVolRight(0);
-        if (DVDCancelStreamAsync(dvd, AudioStream_CancelCallback) == 0) {
+        if (DVDCancelStreamAsync((u8 *)(int)lbl_80336C40, AudioStream_CancelCallback) == 0) {
             OSReport((char*)fadeTbl + 0xC);
             gAudioStreamPlaying = 0;
         }

@@ -15703,7 +15703,7 @@ int dll_7A_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
   int ret = 0;
   GfxCmd *entries = buf.entries;
   GfxCmd *e;
-  u8 *base = lbl_80314BD0;
+  u8 *base = (u8 *)(int)lbl_80314BD0;
   entries[0].layer = 0; entries[0].flags = 8; entries[0].tex = &base[0xa0]; entries[0].mode = 4;
   entries[0].x = lbl_803E0D08; entries[0].y = lbl_803E0D08; entries[0].z = lbl_803E0D08;
   entries[1].layer = 0; entries[1].flags = 8; entries[1].tex = &base[0x8c]; entries[1].mode = 2;
@@ -15759,10 +15759,10 @@ int dll_7A_func03(u8 *param_1, int param_2, u8 *param_3, uint param_4)
   }
   if (param_2 == 0) {
     buf.v58 = 0;
-    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, base, 8, &base[0x5c], 0x156, 0);
+    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, (u8 *)(int)lbl_80314BD0, 8, &base[0x5c], 0x156, 0);
   } else if (param_2 == 1) {
     buf.v58 = 0;
-    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, base, 8, &base[0x5c], 0xc0d, 0);
+    ret = (*(code *)(*gModgfxInterface + 8))(&buf, 0, 9, (u8 *)(int)lbl_80314BD0, 8, &base[0x5c], 0xc0d, 0);
   }
   return ret;
 }

@@ -326,7 +326,7 @@ extern f32 lbl_803E1258;
 void dll_93_func03(int param_1,int param_2,int param_3,uint param_4)
 {
   GfxBuf buf;
-  u8 *base = lbl_80317260;
+  u8 *base = (u8 *)(int)lbl_80317260;
   GfxCmd *e = buf.entries;
   f32 rval;
 
@@ -373,7 +373,7 @@ void dll_93_func03(int param_1,int param_2,int param_3,uint param_4)
       buf.pos[2] = lbl_803E1240 + *(f32 *)(param_3 + 0x14);
     }
   }
-  (*(code *)(*gModgfxInterface + 8))(&buf,0,0x15,base,0x18,base + 0xd4,0x89,0);
+  (*(code *)(*gModgfxInterface + 8))(&buf,0,0x15,(u8 *)(int)lbl_80317260,0x18,base + 0xd4,0x89,0);
 }
 #pragma scheduling reset
 #pragma peephole reset
