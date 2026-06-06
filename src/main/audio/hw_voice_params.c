@@ -34,18 +34,14 @@ void hwSetPitch(int slot, u32 pitch)
     }
     channel = entry[0xe4];
     if (channel != 0xff) {
-        channel = channel << 2;
-        channelEntry = entry + channel;
-        val = *(u32 *)(channelEntry + 0x38);
+        val = ((u32 *)(entry + 0x38))[channel];
         if (val == ((u16)pitch << 4)) {
             return;
         }
     }
     channel = salTimeOffset;
     pitch = (u16)pitch << 4;
-    channel = channel << 2;
-    channelEntry = entry + channel;
-    *(u32 *)(channelEntry + 0x38) = pitch;
+    ((u32 *)(entry + 0x38))[channel] = pitch;
     channel = salTimeOffset;
     channel = channel << 2;
     channelEntry = entry + channel;
