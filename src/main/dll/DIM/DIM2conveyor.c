@@ -1,4 +1,5 @@
 #include "main/dll/DIM/DIM2conveyor.h"
+#include "main/dll/DIM/DIMlevcontrol.h"
 #include "main/game_object.h"
 #include "main/objanim_internal.h"
 
@@ -20,7 +21,6 @@ extern undefined4 ObjGroup_AddObject();
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern int dimlavasmash_SeqFn(int obj, int p2, char *r5);
 extern void dimlavasmash_setBlockSurfaceFlags(int *block, int mode, int v);
 extern int objPosToMapBlockIdx(f32 x, f32 y, f32 z);
 extern int *mapGetBlock(int idx);
@@ -33,7 +33,7 @@ void dimlavasmash_init(s16 *obj, s8 *def) {
 
     objAnim = (ObjAnimComponent *)obj;
     obj[0] = (s16)((s32)def[0x18] << 8);
-    *(int *)&((GameObject *)obj)->animEventCallback = (int)&dimlavasmash_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dimlavasmash_SeqFn;
     inner = ((GameObject *)obj)->extra;
     *(u8 *)(inner + 1) = (u8)*(s16 *)(def + 0x1a);
     *(s8 *)(inner + 0) = (s8)*(s16 *)(def + 0x1c);
@@ -144,7 +144,6 @@ void dimdismountpoint_free(int x) { ObjGroup_RemoveObject(x, 0x13); }
 void dimbridgecogmai_release(void) {}
 int dimdismountpoint_getObjectTypeId(void) { return 0; }
 
-extern int dimbridgecogmai_SeqFn(int obj, int p2, char *r5);
 #pragma scheduling off
 #pragma peephole off
 void dimbridgecogmai_init(int *obj, int *def) {

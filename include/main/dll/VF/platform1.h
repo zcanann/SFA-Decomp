@@ -43,5 +43,6 @@ void platform1_init(void);
 void platform1_release(void);
 void platform1_initialise(void);
 int platform1_control(int obj, int p2, u8 *data);
+int PaymentKiosk_SeqFn(int obj, int unused, u8 *data);
 
 #endif /* MAIN_DLL_VF_PLATFORM1_H_ */

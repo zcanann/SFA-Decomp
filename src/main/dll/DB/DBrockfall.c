@@ -1,6 +1,7 @@
 #include "main/dll/paymentkiosk.h"
 #include "main/dll/DB/DBrockfall.h"
 #include "main/dll/VF/platform1.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 #include "main/objanim_internal.h"
 
@@ -43,20 +44,20 @@ extern f32 lbl_803E56B4;
  * PAL Address: TODO
  * PAL Size: TODO
  */
-extern void PaymentKiosk_SeqFn(void);
 #pragma scheduling off
 #pragma peephole off
 void paymentkiosk_init(int obj, u8 *initData)
 {
     register int self = obj;
-    register PaymentKioskState *state = *(PaymentKioskState **)(self + 0xb8);
+    register PaymentKioskState *state = ((GameObject *)self)->extra;
     u32 secondaryFlag;
 
-    *(void (**)(void))(self + 0xbc) = PaymentKiosk_SeqFn;
+    ((GameObject *)self)->animEventCallback = (void *)PaymentKiosk_SeqFn;
     *(short *)self = (short)((int)(signed char)initData[0x18] << 8);
     state->payState = 0;
-    *(u16 *)(self + 0xb0) = (u16)((u32)*(u16 *)(self + 0xb0) | 0x6000);
-    *(u8 *)(self + 0xaf) = (u8)((u32)*(u8 *)(self + 0xaf) | 0x8);
+    ((GameObject *)self)->objectFlags = (u16)(((GameObject *)self)->objectFlags | 0x6000);
+    *(u8 *)&((GameObject *)self)->anim.resetHitboxMode =
+        (u8)(*(u8 *)&((GameObject *)self)->anim.resetHitboxMode | 0x8);
     secondaryFlag = (*(short *)(self + 0x46) == 0x476) ? 1 : 0;
     state->textVariant = (u8)secondaryFlag;
 }

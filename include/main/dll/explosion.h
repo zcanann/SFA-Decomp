@@ -21,5 +21,6 @@ int dll_199_getExtraSize(void);
 int dll_199_getObjectTypeId(void);
 void dll_199_render(int p1, int p2, int p3, int p4, int p5, s8 visible);
 void dll_199_hitDetect(void);
+int NWSH_levcon_SeqFn(int obj, int unused, u8 *events);
 
 #endif /* MAIN_DLL_DLL_1CA_H_ */

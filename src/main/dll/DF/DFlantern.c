@@ -1,12 +1,12 @@
 #include "main/mapEvent.h"
 #include "main/game_object.h"
 #include "main/dll/DF/DFlantern.h"
+#include "main/dll/DF/dll_198.h"
 #include "main/objanim.h"
 
 extern uint GameBit_Get(int eventId);
 extern int *objFindTexture(int obj, int textureIndex, int materialIndex);
 extern void objRenderFn_8003b8f4(f32);
-extern int DFSH_Door2Speci_SeqFn(int obj);
 extern void ModelLightStruct_free(void *light);
 extern void gameTimerStop(void);
 extern int mapGetDirIdx(int mapId);
@@ -143,7 +143,7 @@ void dfsh_door2speci_init(int obj,int def)
   int *texture;
 
   state = *(int *)&((GameObject *)obj)->extra;
-  *(int *)&((GameObject *)obj)->animEventCallback = (int)&DFSH_Door2Speci_SeqFn;
+  ((GameObject *)obj)->animEventCallback = (void *)DFSH_Door2Speci_SeqFn;
   if (GameBit_Get((int)*(short *)(def + 0x22)) != 0) {
     *(unsigned char *)(state + 3) = 2;
   }

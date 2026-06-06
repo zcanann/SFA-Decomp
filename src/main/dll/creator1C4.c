@@ -34,7 +34,6 @@ extern f64 DOUBLE_803e5cc8;
 extern f32 lbl_803DC074;
 extern f32 lbl_803E5CD4;
 extern f32 lbl_803E5CD8;
-extern void gpsh_shrine_SeqFn(void);
 extern void *objCreateLight(int obj, int kind);
 
 /*

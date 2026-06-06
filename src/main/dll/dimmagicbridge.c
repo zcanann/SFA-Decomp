@@ -241,7 +241,6 @@ void dll_199_update(int obj)
 
 #pragma scheduling off
 #pragma peephole off
-extern int dll_199_SeqFn(int obj, int p2, u8 *p3);
 extern void ObjMsg_AllocQueue(int obj, int n);
 
 /*
@@ -267,7 +266,7 @@ void dll_199_init(int obj, int def)
     *(u8 *)(state + 8) = 0;
     state[1] = 0;
     *(u8 *)(state + 7) = 0;
-    ((GameObject *)obj)->animEventCallback = (void *)&dll_199_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dll_199_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     GameBit_Set(0x1cf, 0);

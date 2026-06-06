@@ -1,4 +1,5 @@
 #include "main/dll/explosion.h"
+#include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
 
@@ -446,7 +447,6 @@ void nwsh_levcon_free(int obj) {
 }
 #pragma scheduling reset
 
-extern int NWSH_levcon_SeqFn(int p1, int p2, u8 *p3);
 extern int mapGetDirIdx(int mapId);
 extern void unlockLevel(int a, int b, int c);
 extern void skyFn_80088c94(int a, int b);
@@ -471,7 +471,7 @@ void nwsh_levcon_update(int *obj) {
 #pragma scheduling off
 #pragma peephole off
 void nwsh_levcon_init(int *obj) {
-    *(void**)((char*)obj + 0xbc) = (void*)&NWSH_levcon_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)NWSH_levcon_SeqFn;
     unlockLevel(mapGetDirIdx(0x28), 1, 0);
     Music_Trigger(6, 1);
     *(int*)((char*)obj + 0xf4) = 1;

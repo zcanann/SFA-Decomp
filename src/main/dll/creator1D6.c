@@ -246,7 +246,6 @@ void nw_ice_init(int x) { ObjGroup_AddObject(x, 0x3c); }
 #pragma peephole reset
 #pragma scheduling reset
 
-extern void nw_tricky_SeqFn(void);
 #pragma scheduling off
 #pragma peephole off
 void nw_tricky_init(int *obj) {

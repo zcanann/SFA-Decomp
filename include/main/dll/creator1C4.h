@@ -5,6 +5,7 @@
 
 void gpsh_shrine_update(int obj);
 void gpsh_shrine_init(int *obj, int *def);
+int gpsh_shrine_SeqFn(int *obj, int arg1, u8 *seq);
 void gpsh_shrine_release(void);
 void gpsh_shrine_initialise(void);
 

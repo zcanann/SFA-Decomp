@@ -1,4 +1,5 @@
 #include "main/dll/dll_19C.h"
+#include "main/dll/DF/DFlantern.h"
 #include "main/game_object.h"
 #include "main/mapEventTypes.h"
 
@@ -718,7 +719,6 @@ void dfsh_shrine_hitDetect(void) {}
 void dfsh_shrine_release(void) {}
 void dfsh_shrine_initialise(void) {}
 
-extern void dfsh_shrine_SeqFn(int p1, int p2, void *p3);
 extern int mapGetDirIdx(int id);
 extern void unlockLevel(int idx, int a, int b);
 extern void *objCreateLight(int *obj, int v);
@@ -750,7 +750,7 @@ void dfsh_shrine_init(int *obj, u8 *init) {
     sub[0x1a] = 4;
     flags->openedBySequence = 0;
     *(s16*)(sub + 0x12) = 0;
-    ((GameObject *)obj)->animEventCallback = (void*)&dfsh_shrine_SeqFn;
+    ((GameObject *)obj)->animEventCallback = (void *)dfsh_shrine_SeqFn;
     ObjMsg_AllocQueue(obj, 4);
     GameBit_Set(0x129, 1);
     sub[0x1b] = 0;
