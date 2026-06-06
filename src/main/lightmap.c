@@ -2983,7 +2983,7 @@ int isInBounds(f32 x, f32 z) {
     linear = ix + (iz << 4);
     {
         int i;
-        p = &gMapBlockLayerTables[0];
+        p = gMapBlockLayerTables;
         for (i = 0; i < 5; i++) {
             if (((s8 *)*p)[linear] > -1) return 1;
             p++;
@@ -3000,21 +3000,20 @@ extern void **lbl_803DCE9C;
 int objPosToMapBlockIdx(f32 x, f32 y, f32 z) {
     int ix = (int)(fastFloorf(x / gMapBlockWorldSize) - (f32)lbl_803DCDD0);
     int iz = (int)(fastFloorf(z / gMapBlockWorldSize) - (f32)lbl_803DCDD4);
-    int linear;
     void **p;
     int i;
     if (ix < 0 || ix >= 16) return -1;
     if (iz < 0 || iz >= 16) return -1;
-    linear = ix + (iz << 4);
-    p = &gMapBlockLayerTables[0];
+    ix = ix + (iz << 4);
+    p = gMapBlockLayerTables;
     for (i = 0; i < 5; i++) {
         s8 *table = (s8 *)*p;
-        int idx = table[linear];
+        int idx = table[ix];
         if (idx > -1) {
             int *block = (int *)lbl_803DCE9C[idx];
             if (y > (f32)(*(s16 *)((char *)block + 138) - 50) &&
                 y < (f32)(*(s16 *)((char *)block + 140) + 50)) {
-                return table[linear];
+                return table[ix];
             }
         }
         p++;
