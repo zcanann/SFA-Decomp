@@ -1,6 +1,7 @@
 #include "ghidra_import.h"
 #include "main/model_light.h"
 #include "main/engine_8001746C_phantoms.h"
+#include "main/objanim_internal.h"
 #include "main/objlib.h"
 
 extern void mm_free(void *ptr);
@@ -231,7 +232,8 @@ void Obj_SetModelRenderOpAlpha(u8 *obj, int alpha) {
     ObjModelInstanceLite *model;
 
     renderOpAlpha = alpha;
-    model = *(ObjModelInstanceLite **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4);
+    model = *(ObjModelInstanceLite **)(*(u8 **)(obj + 0x7c) +
+                                       (s8)obj[offsetof(ObjAnimComponent, bankIndex)] * 4);
     if (model != NULL) {
         modelFile = model->file;
         if (modelFile != NULL) {
@@ -252,7 +254,8 @@ void Obj_ClearModelSlotIndex(u8 *obj) {
 }
 
 void *Obj_GetActiveModel(u8 *obj) {
-    return *(void **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4);
+    return *(void **)(*(u8 **)(obj + 0x7c) +
+                      (s8)obj[offsetof(ObjAnimComponent, bankIndex)] * 4);
 }
 
 extern int *lbl_803DCAB4;
@@ -401,7 +404,8 @@ void Obj_StartModelFadeIn(u8 *obj, int frames) {
             obj[0xe5] = (u8)(obj[0xe5] | 1);
             Obj_BuildWorldTransformMatrix(obj, mtx, 0);
             ((void (*)(u8 *, u8 *, f32 *, int, f32))ObjModel_EnableDefaultRenderCallback)(
-                obj, *(u8 **)(*(u8 **)(obj + 0x7c) + (s8)obj[0xad] * 4), mtx, 1,
+                obj, *(u8 **)(*(u8 **)(obj + 0x7c) +
+                               (s8)obj[offsetof(ObjAnimComponent, bankIndex)] * 4), mtx, 1,
                 *(f32 *)(obj + 0xa8) * *(f32 *)(obj + 8));
             (*(void (*)(int, int, int, int, int))(*(int *)(*lbl_803DCAB4 + 0xc)))((int)obj, 0x7fc, 0, 0x64, 0);
         }
@@ -647,18 +651,19 @@ void *loadAssetFileById(int id, int arg);
 #pragma dont_inline reset
 
 void Obj_SetActiveModelIndex(u8 *obj, int idx) {
-    if (idx == (s8)obj[0xad]) {
+    if (idx == (s8)obj[offsetof(ObjAnimComponent, bankIndex)]) {
         return;
     }
     if (idx < 0) {
         idx = 0;
     } else {
-        int max = *(s8 *)(*(u8 **)(obj + 0x50) + 0x55);
+        int max = *(s8 *)(*(u8 **)(obj + offsetof(ObjAnimComponent, modelInstance)) +
+                          offsetof(ObjModelInstance, modelCount));
         if (idx >= max) {
             idx = max - 1;
         }
     }
-    *(s8 *)(obj + 0xad) = idx;
+    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) = idx;
 }
 #pragma pop
 
@@ -1860,7 +1865,8 @@ void objFreeObjDef(void *objp, int flag) {
         mm_free(*(void **)(obj + 0xdc));
         *(int *)(obj + 0xdc) = 0;
     }
-    modelCount = *(s8 *)(*(u8 **)(obj + 0x50) + 0x55);
+    modelCount = *(s8 *)(*(u8 **)(obj + offsetof(ObjAnimComponent, modelInstance)) +
+                         offsetof(ObjModelInstance, modelCount));
     for (i = 0; i < modelCount; i++) {
         if (*(int *)(*(u8 **)(obj + 0x7c) + i * 4) != 0) {
             ObjModel_Release(*(u8 **)(*(u8 **)(obj + 0x7c) + i * 4));
@@ -1870,7 +1876,8 @@ void objFreeObjDef(void *objp, int flag) {
         *(u16 *)(obj + 0xe6) = 0;
         *(u8 *)(obj + 0xe5) = *(u8 *)(obj + 0xe5) & ~1;
         *(u8 *)(obj + 0xf0) = 0;
-        ObjModel_ClearRenderAttachment(*(u8 **)(*(u8 **)(obj + 0x7c) + *(s8 *)(obj + 0xad) * 4));
+        ObjModel_ClearRenderAttachment(*(u8 **)(*(u8 **)(obj + 0x7c) +
+                                                *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) * 4));
         cb2 = (void (*)(u8 *, int, int, int, int))*(int *)(*(int *)lbl_803DCAB4 + 0xc);
         cb2(obj, 0x7fb, 0, 0x50, 0);
         cb2 = (void (*)(u8 *, int, int, int, int))*(int *)(*(int *)lbl_803DCAB4 + 0xc);
@@ -2025,7 +2032,8 @@ void Obj_UpdateObject(u8 *obj)
             *(s16 *)(obj + 0xe6) = 0;
             *(u8 *)(obj + 0xe5) &= ~1;
             *(u8 *)(obj + 0xf0) = 0;
-            ObjModel_ClearRenderAttachment(*(u8 **)(*(u8 **)(obj + 0x7c) + *(s8 *)(obj + 0xad) * 4));
+            ObjModel_ClearRenderAttachment(*(u8 **)(*(u8 **)(obj + 0x7c) +
+                                                    *(s8 *)(obj + offsetof(ObjAnimComponent, bankIndex)) * 4));
             cb = (void (*)(u8 *, int, int, int, int))*(int *)(*lbl_803DCAB4 + 0xc);
             cb(obj, 0x7fb, 0, 0x50, 0);
             cb = (void (*)(u8 *, int, int, int, int))*(int *)(*lbl_803DCAB4 + 0xc);
@@ -2414,7 +2422,8 @@ void Obj_UpdateModelBlendStates(void)
             }
             j = 0;
             joff = 0;
-            for (; j < *(s8 *)(*(u8 **)(obj + 0x50) + 0x55); j++) {
+            for (; j < *(s8 *)(*(u8 **)(obj + offsetof(ObjAnimComponent, modelInstance)) +
+                                offsetof(ObjModelInstance, modelCount)); j++) {
                 m = *(u8 **)(*(u8 **)(obj + 0x7c) + joff);
                 if (m != 0) {
                     *(u16 *)(m + 0x18) &= ~8;
@@ -2431,7 +2440,8 @@ void Obj_UpdateModelBlendStates(void)
                 if (child != 0 && *(void **)(child + 0x50) != 0) {
                     k = 0;
                     koff = k;
-                    for (; k < *(s8 *)(*(u8 **)(child + 0x50) + 0x55); k++) {
+                    for (; k < *(s8 *)(*(u8 **)(child + offsetof(ObjAnimComponent, modelInstance)) +
+                                        offsetof(ObjModelInstance, modelCount)); k++) {
                         m = *(u8 **)(*(u8 **)(child + 0x7c) + koff);
                         if (m != 0) {
                             *(u16 *)(m + 0x18) &= ~8;
